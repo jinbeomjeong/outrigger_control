@@ -164,15 +164,26 @@ SLAB_THICKNESS_M = 0.20                     # ASSUMPTION
 SUBGRADE_MODULUS_N_M3 = 80e6                # ASSUMPTION
 CRAWLER_CLEARANCE_M = 0.05                  # ASSUMPTION, docs/dynamics_model.md 1.3 (operating point)
 BODY_DAMPING_RATIO = 0.05                   # ASSUMPTION, heave zeta (dyn_model.py modal_damping_ratio_body)
-ROD_LOCAL_DAMPING_RATIO = 0.3               # ASSUMPTION, total zeta of the L2 rod local mode, run_reference.py:316-319
+ROD_LOCAL_DAMPING_RATIO = 0.3               # ASSUMPTION, total zeta of the L2 rod local mode, run_reference.py:509-512
 SWIVEL_CENTER_ABOVE_PAD_BOTTOM_M = 0.06     # ASSUMPTION, docs/dynamics_model.md 2.1 (CAD has no swivel)
 SWIVEL_TILT_RANGE_DEG = 10.0                # ASSUMPTION, docs/dynamics_model.md 2.2
 PAD_JOINT = "spherical"                     # user decision 2026-10-19 (CLAUDE.md '다리 기하')
 F_MIN_FRACTION = 0.10                       # user decision 2026-10-19 (CLAUDE.md 'F_min')
 RIGID_FLOOR_FRICTION = 0.5                  # ASSUMPTION, docs/dynamics_model.md 4.2
 CRAWLER_KN_TOTAL_N_M = 1.0e8                # ASSUMPTION, docs/dynamics_model.md 4.2
-CRAWLER_FRICTION = 0.5                      # ASSUMPTION, docs/dynamics_model.md 4.2
-# Time step rules (docs/dynamics_model.md 4.3; run_reference.py:289-294 dt_rec).
+CRAWLER_FRICTION = 0.5                      # ASSUMPTION, docs/dynamics_model.md 4.2 (L2b-NSC crawler contact only)
+# ---- rev. 5 (docs/dynamics_model.md 4.2 / 4.5 / 10 "개정 5"): compliant crawler sphere layout for L1 (SMC) ----
+CRAWLER_PRODUCT = "REX33-REX33 - 5J286105"  # crawler compound row of parts_classified.csv (bbox -> x_range_m)
+CRAWLER_SPHERES_PER_TRACK = 9               # ASSUMPTION: 2 tracks x 9 spheres, ends included, evenly spaced
+CRAWLER_TRACK_CENTRE_Y_M = 1.066            # ASSUMPTION: crawler bbox |y| 1.366 - half an assumed 0.6 m shoe width
+CRAWLER_SPHERE_RADIUS_M = 0.05              # ASSUMPTION: sphere bottom = ground.crawler_bottom_z_m (no static effect)
+CRAWLER_DAMPING_RATIO_HEAVE = 0.10          # ASSUMPTION: heave of the machine on the crawler (8.1 Hz)
+CRAWLER_X_RANGE_TOL_M = 5e-4                # x_range_m = CAD bbox rounded to 1 mm (as dyn_model.CRAWLER_DEFAULTS)
+CRAWLER_SMC_MATERIAL = ("Hooke, kn = kn_per_sphere, gn = gn_per_sphere, kt = 0, gt = 0, mu = 0; same values on the "
+                        "crawler spheres and on a separate crawler floor patch (not the pad patches)")
+CRAWLER_COLLISION_FILTER = "disable rod-superstructure and rod-crawler pairs (collision families)"
+SETTLE_DECAY_FACTOR = 100.0                 # settle length = ln(100) x time constant (amplitude to 1 %)
+# Time step rules (docs/dynamics_model.md 4.3; run_reference.py:482-487 dt_rec).
 DT_LADDER_S = (1e-3, 5e-4, 2e-4, 1e-4, 5e-5, 2e-5, 1e-5)
 DT_POINTS_PER_PERIOD = 50
 DT_NUMERICAL_DAMPING_SHARE = 0.1  # L1: zeta_num = omega dt / 2 <= 10 % of the 1st rocking zeta
@@ -220,21 +231,26 @@ LINE_REFS = {
     ("dyn_model.py", 203, 240): ["def k_leg_lateral(", "def k_leg_lateral_legs"],
     ("dyn_model.py", 236, 240): ["def k_leg_lateral_legs"],
     ("dyn_model.py", 243, 244): ["def series"],
-    ("run_reference.py", 75, 76): ["touch = geo.touch_extension", 'e_op = touch + A_["crawler_clearance_m"]'],
-    ("run_reference.py", 84, 92): ["kc_nom = wc", "ko_eff = dm.series(ko, kr, kf)", "kh_free = dm.k_leg_lateral_legs"],
-    ("run_reference.py", 289, 294): ["def dt_rec", "if dt <= T / ppc"],
-    ("run_reference.py", 289, 297): ["def dt_rec", "f_rod_local = math.sqrt((ko_eff.mean() + kc_nom)"],
-    ("run_reference.py", 297, 297): ["f_rod_local = math.sqrt((ko_eff.mean() + kc_nom)"],
-    ("run_reference.py", 311, 336): ["zt = A_", "L1_rigid_motor_lumped_contact", "L2b_NSC_force_motor_axial_spring"],
-    ("run_reference.py", 313, 326): ["k_L1 = kv_H", "kt_L1 = dm.series(kh_free, kc_nom)", "c_tan=2 * zt"],
-    ("run_reference.py", 315, 315): ["c_o = 2 * zt * np.sqrt(ko_eff * W_tot / g / 4)"],
-    ("run_reference.py", 316, 319): ["zeta_rod = 0.3", "c_c = 2 * zeta_rod"],
-    ("run_reference.py", 334, 335): ["L2b_NSC_force_motor_axial_spring_lateral_bushing", "kh=kt_L1", "ko=kv_H"],
-    ("run_reference.py", 370, 370): ["ch=2 * zt * np.sqrt(cfg[\"kh\"] * W_tot / g / 4)"],
-    ("run_reference.py", 395, 395): ["\"c_tangential_N_s_m\": r(2 * zt * np.sqrt(cfg[\"kh\"] * W_tot / g / 4))"],
-    ("run_reference.py", 400, 402): ["L1_numerical_damping_bound_s", "0.2 * z1 / (2 * math.pi * f1)"],
-    ("run_reference.py", 404, 405): ["L2b_NSC_rod_on_axial_spring_Hz", "L2b_NSC_dt_s", "kv_H.mean() / m_rod"],
-    ("run_reference.py", 411, 426): ["A_head = dm.piston_area()", "A_ann = math.pi / 4", "p_max = 210e5",
+    ("dyn_model.py", 313, 330): ["def crawler_points", "np.full(n, c_tot / n)"],
+    ("dyn_model.py", 333, 340): ["CRAWLER_DEFAULTS = {", '"damping_total_N_s_m": None'],
+    ("dyn_model.py", 343, 346): ["def crawler_damping_total", "2 * zeta * math.sqrt(kn_total * mass_total)"],
+    ("run_reference.py", 68, 72): ["bw = dm.body_with_rods(p, geo, \"top\", e_op)", "c_tot = dm.crawler_damping_total"],
+    ("run_reference.py", 174, 191): ["crawler-on-floor modes", "settle_length_s (ln(100) x max tau)"],
+    ("run_reference.py", 268, 269): ["touch = geo.touch_extension", 'e_op = touch + A_["crawler_clearance_m"]'],
+    ("run_reference.py", 277, 285): ["kc_nom = wc", "ko_eff = dm.series(ko, kr, kf)", "kh_free = dm.k_leg_lateral_legs"],
+    ("run_reference.py", 482, 487): ["def dt_rec", "if dt <= T / ppc"],
+    ("run_reference.py", 482, 490): ["def dt_rec", "f_rod_local = math.sqrt((ko_eff.mean() + kc_nom)"],
+    ("run_reference.py", 490, 490): ["f_rod_local = math.sqrt((ko_eff.mean() + kc_nom)"],
+    ("run_reference.py", 504, 529): ["zt = A_", "L1_rigid_motor_lumped_contact", "L2b_NSC_force_motor_axial_spring"],
+    ("run_reference.py", 506, 519): ["k_L1 = kv_H", "kt_L1 = dm.series(kh_free, kc_nom)", "c_tan=2 * zt"],
+    ("run_reference.py", 508, 508): ["c_o = 2 * zt * np.sqrt(ko_eff * W_tot / g / 4)"],
+    ("run_reference.py", 509, 512): ["zeta_rod = 0.3", "c_c = 2 * zeta_rod"],
+    ("run_reference.py", 527, 528): ["L2b_NSC_force_motor_axial_spring_lateral_bushing", "kh=kt_L1", "ko=kv_H"],
+    ("run_reference.py", 563, 563): ["ch=2 * zt * np.sqrt(cfg[\"kh\"] * W_tot / g / 4)"],
+    ("run_reference.py", 607, 607): ["\"c_tangential_N_s_m\": r(2 * zt * np.sqrt(cfg[\"kh\"] * W_tot / g / 4))"],
+    ("run_reference.py", 612, 614): ["L1_numerical_damping_bound_s", "0.2 * z1 / (2 * math.pi * f1)"],
+    ("run_reference.py", 616, 617): ["L2b_NSC_rod_on_axial_spring_Hz", "L2b_NSC_dt_s", "kv_H.mean() / m_rod"],
+    ("run_reference.py", 623, 638): ["A_head = dm.piston_area()", "A_ann = math.pi / 4", "p_max = 210e5",
                                      "max_rod_side_force_N", "pump_flow_L_min"],
 }
 # Pad plate split (SCM bodies): the pad plate is the part of the rod+pad solid below this height above the pad
@@ -278,6 +294,17 @@ DOC10_EXPECTED = {
     "locked_pressure_limit_Pa": ([3.50e7], 0.005e7),
     "locked_force_limit_N (printed 3.635e5)": ([3.635e5], 0.0005e5),
     "pump_flow_m3_s": ([1.00333e-3], 0.000005e-3),
+    # ---- rev. 5 table "개정 5에서 더할 키" ----
+    "crawler.spheres_per_track": ([9], 0.5),
+    "crawler.track_centre_y_m": ([1.066], 0.0005),
+    "crawler.x_range_m": ([-1.840, 1.844], 0.0005),
+    "crawler.sphere_radius_m": ([0.05], 0.005),
+    "crawler.kn_per_sphere_N_m": ([5.5556e6], 0.00005e6),
+    "crawler.damping_ratio_heave": ([0.10], 0.005),
+    "crawler.damping_total_N_s_m": ([3.94881e5], 0.000005e5),
+    "crawler.gn_per_sphere_1_s": ([0.56899], 0.000005),
+    "settle_on_crawler_min_s": ([11.6], 0.05),
+    "settle_on_pads_min_s": ([32.0], 0.5),
 }
 
 
@@ -584,7 +611,7 @@ def k_leg_lateral_swivel(ext: float, attach_z: float, barrel_bottom_z: float, pa
 
 
 def dt_ladder(dt_max: float) -> float:
-    """run_reference.py:289-294 dt_rec(): largest ladder value <= dt_max."""
+    """run_reference.py:482-487 dt_rec(): largest ladder value <= dt_max."""
     for dt in DT_LADDER_S:
         if dt <= dt_max:
             return dt
@@ -596,11 +623,11 @@ def dynamics_derivation(pad_z: np.ndarray, attach_z: np.ndarray, barrel_bottom_z
                         superstructure_mass_top: float, l1_first_mode: tuple[float, float]) -> dict:
     """All derived dynamics values, per leg in LEG_ORDER (inputs = values as written to the YAML).
 
-    Sources: run_reference.py:75-76 (operating point), run_reference.py:84-92 (stiffness),
-    run_reference.py:311-336 (L1 / L2 / L2b / L2b-NSC configurations), run_reference.py:370 and
-    run_reference.py:395 (tangential / bushing damping), run_reference.py:297 (rod local mode),
-    run_reference.py:400-402 (L1 time step rule), run_reference.py:404-405 (L2b-NSC time step),
-    run_reference.py:411-426 (hydraulic circuit), docs/dynamics_model.md 4.1 (Chrono input conventions).
+    Sources: run_reference.py:268-269 (operating point), run_reference.py:277-285 (stiffness),
+    run_reference.py:504-529 (L1 / L2 / L2b / L2b-NSC configurations), run_reference.py:563 and
+    run_reference.py:607 (tangential / bushing damping), run_reference.py:490 (rod local mode),
+    run_reference.py:612-614 (L1 time step rule), run_reference.py:616-617 (L2b-NSC time step),
+    run_reference.py:623-638 (hydraulic circuit), docs/dynamics_model.md 4.1 (Chrono input conventions).
     rod_mass is legs.<leg>.moving_part.mass_kg (the SMC contact pair is moving part + floor, doc 4.1).
     """
     e_op = (pad_z - crawler_bottom_z) + CRAWLER_CLEARANCE_M           # touch extension + clearance
@@ -635,7 +662,7 @@ def dynamics_derivation(pad_z: np.ndarray, attach_z: np.ndarray, barrel_bottom_z
     # L2b-NSC: axial force law = series(oil, rod, frame, concrete) (operating point) = L1 kn; bushing = L1 kt
     k_axial_l2b = series(ko_eff, kc)
     bushing_l2b = kt_l1
-    bushing_damping_l2b = 2 * zeta * np.sqrt(bushing_l2b * m_tot / 4)   # run_reference.py:395 with kh = kt_L1
+    bushing_damping_l2b = 2 * zeta * np.sqrt(bushing_l2b * m_tot / 4)   # run_reference.py:607 with kh = kt_L1
     bushing_input_l2b = BUSHING_DAMPING_INPUT_FACTOR * bushing_damping_l2b
     # L2b-NSC dt: the rod is held by the rigid contact; if it separates it rides on the axial spring alone
     f_rod_axial = np.sqrt(k_axial_l2b.mean() / rod_mass.mean()) / (2 * np.pi)
@@ -660,6 +687,40 @@ def dynamics_derivation(pad_z: np.ndarray, attach_z: np.ndarray, barrel_bottom_z
         "max_force_retract": RELIEF_PRESSURE_MOVING_PA * annulus_area,
         "locked_force_limit": LOCKED_PRESSURE_LIMIT_PA * head_area,
         "pump_flow_m3_s": pump_flow_m3_s, "flow_4_legs_at_vmax_m3_s": 4 * MAX_SPEED_M_S * head_area,
+    }
+
+
+def crawler_derivation(parts: pd.DataFrame, m_tot: float, m_body: float, l1_first_mode: tuple[float, float],
+                       reference: dict) -> dict:
+    """Rev. 5 crawler contact and settle lengths (docs/dynamics_model.md 4.2 / 4.5 / 10).
+
+    x_range_m: crawler compound bbox Z_cad (= body x) from parts_classified.csv, rounded to 1 mm.
+    kn_per_sphere = kn_total / n (dyn_model.py:313-330); damping_total = 2 zeta sqrt(kn_total m_tot), m_tot =
+    superstructure top + 4 moving parts (dyn_model.py:343-346, run_reference.py:68-72); gn = damping_total / n / m_body,
+    m_body = superstructure body mass (the crawler spheres sit on that body; docs/dynamics_model.md 4.1 convention).
+    Settle lengths = ln(100) x time constant: on the crawler the largest tau of the crawler-on-floor modes
+    (reference.json lift_V4_compliant_crawler, run_reference.py:174-191); on the pads tau_1 = 1 / (zeta_1 omega_1)
+    of the 1st L1 rocking mode (top), docs/dynamics_model.md 4.5 item 1.
+    """
+    rows = parts[parts["instance_path"].str.contains(CRAWLER_PRODUCT, regex=False) & (parts["solid_count"] > 0)]
+    if len(rows) != 1:
+        raise SystemExit(f"crawler bbox: expected one solid row '{CRAWLER_PRODUCT}', got {len(rows)}")
+    x_exact = np.array([rows["bbox_min_z_mm"].iloc[0], rows["bbox_max_z_mm"].iloc[0]]) * MM  # Z_cad = body x
+    x_range = np.round(x_exact, 3)
+    n = 2 * CRAWLER_SPHERES_PER_TRACK
+    damping_total = 2 * CRAWLER_DAMPING_RATIO_HEAVE * np.sqrt(CRAWLER_KN_TOTAL_N_M * m_tot)
+    modes = reference["lift_V4_compliant_crawler"]["crawler_on_floor_modes (default layout, legs at 0)"]
+    f1, zeta1 = l1_first_mode
+    xs = np.linspace(x_range[0], x_range[1], CRAWLER_SPHERES_PER_TRACK)
+    return {
+        "x_range_exact_m": x_exact, "x_range_m": x_range, "n_spheres": n,
+        "sphere_xy_m": np.array([[x, s * CRAWLER_TRACK_CENTRE_Y_M] for s in (1.0, -1.0) for x in xs]),
+        "kn_per_sphere": CRAWLER_KN_TOTAL_N_M / n,
+        "damping_total": damping_total, "damping_mass_kg": m_tot, "gn_mass_kg": m_body,
+        "gn_per_sphere": damping_total / n / m_body,
+        "settle_on_crawler": float(np.log(SETTLE_DECAY_FACTOR) * max(modes["tau_s"])),
+        "settle_on_crawler_reference_3_digits": modes["settle_length_s (ln(100) x max tau)"],
+        "settle_on_pads": float(np.log(SETTLE_DECAY_FACTOR) / (zeta1 * 2 * np.pi * f1)),
     }
 
 
@@ -699,7 +760,7 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
         z = a["modal_damping_ratio_body"]
         cn_dm, ct_dm = 2 * z * np.sqrt(kn * m_tot / 4), 2 * z * np.sqrt(kt * m_tot / 4)
         head_dm = dm.piston_area()
-        annulus_dm = np.pi / 4 * (a["bore_diameter_m"] ** 2 - a["rod_diameter_m"] ** 2)  # run_reference.py:411-426
+        annulus_dm = np.pi / 4 * (a["bore_diameter_m"] ** 2 - a["rod_diameter_m"] ** 2)  # run_reference.py:623-638
         full = {
             "kc": kc, "ko_eff": ko_eff, "kh_free": kh, "kn_l1": kn, "kt_l1": kt,
             "cn_l1": cn_dm, "ct_l1": ct_dm,
@@ -718,9 +779,32 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
             "locked_force_limit": 350e5 * head_dm,
         }
         same_inputs["oil_bulk_modulus_range_Pa"] = list(a["oil_bulk_modulus_range_Pa"]) == OIL_BULK_MODULUS_SENSITIVITY_PA
+        # rev. 5 crawler: dyn_model.crawler_points on the YAML crawler block, crawler_damping_total, CRAWLER_DEFAULTS
+        cr = derived["crawler"]
+        cd = dm.CRAWLER_DEFAULTS
+        same_inputs["crawler_spheres_per_track"] = cd["spheres_per_track"] == CRAWLER_SPHERES_PER_TRACK
+        same_inputs["crawler_track_centre_y_m"] = cd["track_centre_y_m"] == CRAWLER_TRACK_CENTRE_Y_M
+        same_inputs["crawler_x_range_m"] = list(cd["x_range_m"]) == [float(v) for v in cr["x_range_m"]]
+        same_inputs["crawler_sphere_radius_m"] = cd["sphere_radius_m"] == CRAWLER_SPHERE_RADIUS_M
+        same_inputs["crawler_damping_ratio_heave"] = cd["damping_ratio_heave"] == CRAWLER_DAMPING_RATIO_HEAVE
+        crawler_block = {"kn_total_N_m": CRAWLER_KN_TOTAL_N_M, "damping_total_N_s_m": cr["damping_total"],
+                         "sphere_layout": {"spheres_per_track": CRAWLER_SPHERES_PER_TRACK,
+                                           "track_centre_y_m": CRAWLER_TRACK_CENTRE_Y_M,
+                                           "x_range_m": [float(v) for v in cr["x_range_m"]]}}
+        xy_dm, k_dm, c_dm = dm.crawler_points({"contact": {"crawler": crawler_block}})
+        c_tot_dm = dm.crawler_damping_total(CRAWLER_KN_TOTAL_N_M, m_tot)
+        full.update({
+            "crawler.sphere_xy_m": (cr["sphere_xy_m"], xy_dm),
+            "crawler.kn_per_sphere": (np.full(cr["n_spheres"], cr["kn_per_sphere"]), k_dm),
+            "crawler.damping_total": (cr["damping_total"], c_tot_dm),
+            "crawler.damping_per_sphere": (np.full(cr["n_spheres"], cr["damping_total"] / cr["n_spheres"]), c_dm),
+            "crawler.gn_per_sphere": (cr["gn_per_sphere"], c_tot_dm / len(k_dm) / derived["crawler"]["gn_mass_kg"]),
+        })
         out["dyn_model_import"] = "ok"
         out["dyn_model_same_inputs"] = same_inputs
-        out["dyn_model_full_precision_rel"] = {k: relative_difference(derived[k], v) for k, v in full.items()}
+        out["dyn_model_full_precision_rel"] = {
+            k: relative_difference(*v) if k.startswith("crawler.") else relative_difference(derived[k], v)
+            for k, v in full.items()}
     except Exception as error:  # noqa: BLE001 - reported as a failing check
         out["dyn_model_import"] = f"failed: {error!r}"
     # (b) reference.json (run_reference.py rounds to 6 significant digits): compare after the same rounding
@@ -774,6 +858,18 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
         "hydraulic.flow_4_legs_at_vmax_L_min (4 digits)": ([sig(derived["flow_4_legs_at_vmax_m3_s"] * 60000.0, 4)],
                                                            [hyd["flow_4_legs_at_vmax_L_min"]]),
     }
+    # rev. 5 crawler (reference.json lift_V4_compliant_crawler)
+    cr = derived["crawler"]
+    lift = reference["lift_V4_compliant_crawler"]["crawler_contact_assumptions"]
+    pairs.update({
+        "crawler.damping_total_N_s_m": (r6(cr["damping_total"]), [lift["damping_total_N_s_m"]]),
+        "crawler.damping_mass_kg": (r6(cr["damping_mass_kg"]), [lift["mass_for_damping_kg (superstructure + 4 rods)"]]),
+        "crawler.gn_mass_kg (superstructure body)": (r6(cr["gn_mass_kg"]), [lift["superstructure_body_mass_kg"]]),
+        "crawler.kn_total_N_m": ([CRAWLER_KN_TOTAL_N_M], [lift["kn_total_N_m"]]),
+        "crawler.damping_ratio_heave": ([CRAWLER_DAMPING_RATIO_HEAVE], [lift["damping_ratio_heave (ASSUMPTION)"]]),
+        "settle_on_crawler_s (3 digits)": ([sig(cr["settle_on_crawler"], 3)], [cr["settle_on_crawler_reference_3_digits"]]),
+    })
+    out["crawler_x_range_rounding_abs_m"] = float(np.max(np.abs(cr["x_range_m"] - cr["x_range_exact_m"])))
     out["reference_json_rel"] = {k: relative_difference(g, ref) for k, (g, ref) in pairs.items()}
     # rev. 4 consistency: exact m_eff (floor 1e9 kg) vs the m_moving definition of gn; pump covers 4 legs at v_max
     out["gn_m_moving_vs_exact_m_eff_rel"] = relative_difference(derived["gn_l1"], derived["gn_l1_exact_m_eff"])
@@ -808,6 +904,17 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
         "locked_pressure_limit_Pa": [LOCKED_PRESSURE_LIMIT_PA],
         "locked_force_limit_N (printed 3.635e5)": [derived["locked_force_limit"]],
         "pump_flow_m3_s": [derived["pump_flow_m3_s"]],
+        # rev. 5
+        "crawler.spheres_per_track": [CRAWLER_SPHERES_PER_TRACK],
+        "crawler.track_centre_y_m": [CRAWLER_TRACK_CENTRE_Y_M],
+        "crawler.x_range_m": cr["x_range_m"],
+        "crawler.sphere_radius_m": [CRAWLER_SPHERE_RADIUS_M],
+        "crawler.kn_per_sphere_N_m": [cr["kn_per_sphere"]],
+        "crawler.damping_ratio_heave": [CRAWLER_DAMPING_RATIO_HEAVE],
+        "crawler.damping_total_N_s_m": [cr["damping_total"]],
+        "crawler.gn_per_sphere_1_s": [cr["gn_per_sphere"]],
+        "settle_on_crawler_min_s": [cr["settle_on_crawler"]],
+        "settle_on_pads_min_s": [cr["settle_on_pads"]],
     }
     doc = {}
     for key, (expected, tol) in DOC10_EXPECTED.items():
@@ -1117,6 +1224,8 @@ def main() -> None:
         l1_first_mode=l1_first_mode,
     )
     f_min_cylinder = F_MIN_FRACTION * levels["top"]["mass_kg"] * GRAVITY_M_S2 / 4
+    derived["crawler"] = crawler_derivation(parts_raw, m_tot=derived["m_tot"], m_body=levels["top"]["mass_kg"],
+                                            l1_first_mode=l1_first_mode, reference=reference)
 
     def per_leg(values, digits=SIGNIFICANT_DIGITS):
         return {leg: sig(v, digits) for leg, v in zip(LEG_ORDER, np.broadcast_to(values, (4,)))}
@@ -1298,6 +1407,18 @@ def main() -> None:
             "crawler": {
                 "kn_total_N_m": CRAWLER_KN_TOTAL_N_M,
                 "friction": CRAWLER_FRICTION,
+                "sphere_layout": {
+                    "spheres_per_track": CRAWLER_SPHERES_PER_TRACK,
+                    "track_centre_y_m": CRAWLER_TRACK_CENTRE_Y_M,
+                    "x_range_m": [float(v) for v in derived["crawler"]["x_range_m"]],
+                    "sphere_radius_m": CRAWLER_SPHERE_RADIUS_M,
+                },
+                "kn_per_sphere_N_m": sig(derived["crawler"]["kn_per_sphere"]),
+                "damping_ratio_heave": CRAWLER_DAMPING_RATIO_HEAVE,
+                "damping_total_N_s_m": sig(derived["crawler"]["damping_total"]),
+                "gn_per_sphere_1_s": sig(derived["crawler"]["gn_per_sphere"]),
+                "smc_material": CRAWLER_SMC_MATERIAL,
+                "collision_filter": CRAWLER_COLLISION_FILTER,
             },
         },
         "control": {
@@ -1313,6 +1434,8 @@ def main() -> None:
         },
         "simulation": {
             "crawler_clearance_m": CRAWLER_CLEARANCE_M,
+            "settle_on_crawler_min_s": sig(derived["crawler"]["settle_on_crawler"]),
+            "settle_on_pads_min_s": sig(derived["crawler"]["settle_on_pads"]),
             "L1": {"dt_s": derived["dt_l1"]},
             "L2b_NSC": {"dt_s": derived["dt_l2b"]},
             "L2": {"dt_s": derived["dt_l2"]},
@@ -1356,7 +1479,7 @@ def main() -> None:
         # ---- rev. 4: hydraulic circuit (docs/hydraulic_circuit.md, docs/dynamics_model.md 2.3 / 4.4) ----
         "actuator.cylinder_type": "[common] circuit drawing, docs/hydraulic_circuit.md",
         "actuator.annulus_area_m2": ("[common] derived from CAD bore / rod: pi/4 (bore^2 - rod^2); "
-                                     "head area = pi/4 bore^2 = 0.0103869 m^2 (run_reference.py:411-426)"),
+                                     "head area = pi/4 bore^2 = 0.0103869 m^2 (run_reference.py:623-638)"),
         "actuator.rod_side_chamber_model": "[common] ASSUMPTION: docs/dynamics_model.md 2.3 (sensitivity only)",
         "actuator.relief_pressure_moving_Pa": ("[common] circuit drawing: MCV relief 210 bar, reached only at the stroke "
                                                "ends (CLAUDE.md '압력 한계')"),
@@ -1379,24 +1502,24 @@ def main() -> None:
                              "guide freed in x, y"),
         "actuator.L2b_NSC.axial_stiffness": ("ASSUMPTION (derived): k_oil(s) = oil_bulk_modulus_eff_Pa pi/4 bore^2 / "
                                              "(oil_dead_length_m + s); operating point = contact.rigid_floor.L1.kn_per_pad_N_m "
-                                             "(run_reference.py:334-335)"),
+                                             "(run_reference.py:527-528)"),
         "actuator.L2b_NSC.oil_damping_N_s_m": "ASSUMPTION (derived): = actuator.L2.oil_damping_N_s_m (heave zeta 0.05)",
         "actuator.L2b_NSC.lateral_bushing_N_m": ("ASSUMPTION (derived): = contact.rigid_floor.L1.kt_per_pad_N_m "
                                                  "(swivel leg bending in series with the concrete tangential k)"),
         "actuator.L2b_NSC.lateral_bushing_damping_input_N_s_m": (
             "ASSUMPTION (derived): Chrono input = actual / 2 (contact.rigid_floor.damping_input_convention); actual = "
-            "2 zeta sqrt(k_bushing m/4), zeta 0.05 (run_reference.py:395)"),
+            "2 zeta sqrt(k_bushing m/4), zeta 0.05 (run_reference.py:607)"),
         "actuator.L2": ("[L2] ChLinkMotorLinearForce F = k_oil(s)(s_ref - s) + c_oil(ds_ref - ds), "
                         "docs/dynamics_model.md 4.4; k_oil(s) = oil_bulk_modulus_eff_Pa * pi/4 bore^2 / (oil_dead_length_m + s)"),
         "actuator.L2.oil_damping_N_s_m": ("ASSUMPTION (derived): 2 zeta sqrt(k_axial_leg m/4), zeta 0.05, "
-                                          "run_reference.py:315"),
+                                          "run_reference.py:508"),
         "actuator.L2.lateral_bushing_N_m": ("ASSUMPTION (derived): SMC-L2b option (bushing without the concrete), swivel "
                                             "leg fixed-free beam, per-leg geometry, load at the swivel centre = "
                                             "contact.rigid_floor.L1.derivation.k_lateral_leg_swivel_N_m, "
                                             "dyn_model.py:203-240; L2b-NSC uses actuator.L2b_NSC.lateral_bushing_N_m"),
         "actuator.L2.lateral_bushing_damping_N_s_m": ("ASSUMPTION (derived): SMC-L2b lateral zeta 0.05, ACTUAL value (Chrono "
                                                       "input = half): 2 zeta sqrt(series(bushing, concrete k) m/4), "
-                                                      "run_reference.py:370 and run_reference.py:395"),
+                                                      "run_reference.py:563 and run_reference.py:607"),
         "contact": "docs/dynamics_model.md 4.1 / 4.2 (all contact parameters are assumptions)",
         "contact.rigid_floor.model": ("[common] recommendation, docs/dynamics_model.md 4.1 (rev. 4), "
                                       "docs/chrono_stick_friction_test.md"),
@@ -1411,7 +1534,7 @@ def main() -> None:
                                          "l = (D/k_s)^(1/4), D = E h^3 / (12 (1 - nu^2)); dyn_model.py:187-200"),
         "contact.rigid_floor.L1": ("[L1] ASSUMPTION (derived at the operating extension, beta_eff 1.0 GPa): "
                                    "kn = series(k_oil, k_rod, k_frame, k_concrete), kt = series(k_lateral_leg_swivel, "
-                                   "k_concrete), c = 2 zeta sqrt(k m/4) (actual values); run_reference.py:313-326, "
+                                   "k_concrete), c = 2 zeta sqrt(k m/4) (actual values); run_reference.py:506-519, "
                                    "dyn_model.py series/k_oil/k_rod/k_leg_lateral_legs (per-leg geometry, load at the "
                                    "swivel centre); kt / ct act through the ground-fixed bushing, not the SMC material; "
                                    "rerun when an assumption changes"),
@@ -1428,15 +1551,39 @@ def main() -> None:
                                                                    "this slip speed (stick friction test section 5)"),
         "contact.rigid_floor.L1.derivation": ("intermediate values; operating extension = pad bottom - "
                                               "ground.crawler_bottom_z_m + simulation.crawler_clearance_m "
-                                              "(run_reference.py:75-76); damping_mass_kg = superstructure top + 4 moving parts"),
+                                              "(run_reference.py:268-269); damping_mass_kg = superstructure top + 4 moving parts"),
         "contact.rigid_floor.L2b_NSC": ("[L2b] ChSystemNSC rigid contact (stick exact), docs/dynamics_model.md 4.1 / 4.2; "
                                         "solver: GetSolver().AsIterative().SetMaxIterations(solver_max_iterations); "
                                         "friction ASSUMPTION; no contact compliance or damping (in actuator.L2b_NSC)"),
         "contact.rigid_floor.L2": ("[L2] ASSUMPTION: kn = kt = concrete k; cn = 2 * 0.30 * sqrt((k_axial_leg + k_concrete) "
                                    "m_rod_mean) - actuator.L2.oil_damping (total rod local mode zeta 0.30, "
-                                   "run_reference.py:316-319); ct = 2 * 0.05 * sqrt(k_concrete m/4), not used in L2b "
+                                   "run_reference.py:509-512); ct = 2 * 0.05 * sqrt(k_concrete m/4), not used in L2b "
                                    "(bushing damping instead)"),
         "contact.crawler": "[common] ASSUMPTION: crawler-floor contact before lift-off, docs/dynamics_model.md 4.2",
+        "contact.crawler.friction": ("[L2b] ASSUMPTION: L2b-NSC crawler contact only (rigid NSC, no damping); "
+                                     "not used by the L1 SMC crawler material (smc_material: mu = 0)"),
+        "contact.crawler.sphere_layout": ("[common] ASSUMPTION (rev. 5, docs/dynamics_model.md 4.2): 2 tracks x "
+                                          "spheres_per_track spheres at y = +/- track_centre_y_m, x evenly spaced over "
+                                          "x_range_m (ends included); sphere bottom = ground.crawler_bottom_z_m; spheres "
+                                          "on the superstructure body"),
+        "contact.crawler.sphere_layout.spheres_per_track": "ASSUMPTION",
+        "contact.crawler.sphere_layout.track_centre_y_m": "ASSUMPTION: crawler bbox |y| 1.366 - half of an assumed 0.6 m shoe",
+        "contact.crawler.sphere_layout.x_range_m": (f"CAD: parts_classified.csv '{CRAWLER_PRODUCT}' compound bbox Z_cad "
+                                                    "(= body x), rounded to 1 mm"),
+        "contact.crawler.sphere_layout.sphere_radius_m": "ASSUMPTION (no static effect)",
+        "contact.crawler.kn_per_sphere_N_m": "[L1] ASSUMPTION (derived): kn_total_N_m / (2 x spheres_per_track), dyn_model.py:313-330",
+        "contact.crawler.damping_ratio_heave": "[L1] ASSUMPTION: heave of the machine on the crawler (8.1 Hz)",
+        "contact.crawler.damping_total_N_s_m": ("[L1] ASSUMPTION (derived): 2 zeta sqrt(kn_total m), m = superstructure "
+                                                "top + 4 moving parts, dyn_model.py:343-346, run_reference.py:68-72"),
+        "contact.crawler.gn_per_sphere_1_s": ("[L1] ASSUMPTION (derived): damping_total / n_spheres / superstructure body "
+                                              "mass (m_eff of the crawler spheres; docs/dynamics_model.md 4.1 convention)"),
+        "contact.crawler.smc_material": "[L1] recommendation, docs/dynamics_model.md 4.2",
+        "contact.crawler.collision_filter": "[common] recommendation, docs/dynamics_model.md 5 (V0)",
+        "simulation.settle_on_crawler_min_s": ("[L1] ASSUMPTION (derived): ln(100) x largest crawler-on-floor time "
+                                               "constant (reference.json lift_V4_compliant_crawler, run_reference.py:174-191)"),
+        "simulation.settle_on_pads_min_s": ("[L1] ASSUMPTION (derived): ln(100) / (zeta1 omega1), 1st L1 rocking mode "
+                                            "(top); not needed when initialised at the analytic static solution "
+                                            "(docs/dynamics_model.md 4.5 item 1)"),
         "control": "[common] CLAUDE.md 'F_min' (user decision 2026-10-19), docs/dynamics_model.md 3.2 / 6",
         "control.F_min_fraction_of_mean_leg_load": "user decision 2026-10-19",
         "control.F_min_cylinder_N": ("derived: fraction * superstructure mass * g / 4 (cylinder force basis; "
@@ -1446,10 +1593,10 @@ def main() -> None:
                           "omega1 dt / 2 <= 0.1 zeta1 (1st rocking mode, L1, top, analysis/dynamics/reference.json), "
                           "docs/dynamics_model.md 4.3"),
         "simulation.L2b_NSC": ("[L2b] ASSUMPTION (rule, confirm by V9): dt <= T / 50 of the rod on the axial spring alone "
-                               "(contact open) sqrt(mean k_ax / m_rod) / 2 pi, run_reference.py:404-405; PSOR 50 at "
+                               "(contact open) sqrt(mean k_ax / m_rod) / 2 pi, run_reference.py:616-617; PSOR 50 at "
                                "2e-4 s held a 2 deg slope (stick friction test), docs/dynamics_model.md 4.3"),
         "simulation.L2": ("[L2] ASSUMPTION (rule): dt <= T / 50 of the rod local mode sqrt((k_axial_leg + k_concrete) "
-                          "/ m_rod) / 2 pi, run_reference.py:289-297, docs/dynamics_model.md 4.3"),
+                          "/ m_rod) / 2 pi, run_reference.py:482-490, docs/dynamics_model.md 4.3"),
         "sensors": "[common] CLAUDE.md '센서' / '압력 센서' (2026-10-19), docs/hydraulic_circuit.md",
         "sensors.cylinder_pressure.location": "manufacturer description; head-side reading, rod-side pressure 0 assumed",
         "legs": ("cad_summary.json legs.<leg> (axis_cad_mm, pad_bottom_y_cad_mm, bracket_bolt_holes_y_cad_mm, ...); "
@@ -1629,6 +1776,8 @@ def evaluate_checks(checks: dict) -> list[str]:
             d["gn_m_moving_vs_exact_m_eff_rel"])
     require(d["pump_flow_covers_4_legs_at_vmax"], "dynamics.pump_flow_covers_4_legs_at_vmax",
             d["pump_flow_covers_4_legs_at_vmax"])
+    require(d["crawler_x_range_rounding_abs_m"] <= CRAWLER_X_RANGE_TOL_M, "dynamics.crawler_x_range_rounding_abs_m",
+            d["crawler_x_range_rounding_abs_m"])
     refs = d["line_references"]
     for key in ("missing_text", "unlisted_references", "old_style_references"):
         require(not refs[key], f"dynamics.line_references.{key}", refs[key])

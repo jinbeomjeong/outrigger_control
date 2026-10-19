@@ -6,7 +6,7 @@
 meta:
   name: "REXOME33 outrigger levelling - shared simulation parameters"
   generator: "scripts/cad/export_params.py"
-  generated: "2026-10-19"
+  generated: "2026-10-20"
   sources:
     step: "REXOME33_Assy_r3(미니어쳐).stp"
     parts: "cad/parts_classified.csv"
@@ -138,7 +138,7 @@ actuator:
   oil_dead_length_m: 0.05  # [common, L2b, L2] ASSUMPTION: port/pipe volume as column length, docs/dynamics_model.md 2.3 (lock valve on the cylinder supports a small value)
   frame_stiffness_N_m: 1000000000.0  # [common, L2b, L2] ASSUMPTION: bracket / outrigger box, docs/dynamics_model.md 2.3
   cylinder_type: "double-acting; dual pilot-operated check valve mounted on the cylinder (both chambers locked); hose outside the locked volume"  # [common] circuit drawing, docs/hydraulic_circuit.md
-  annulus_area_m2: 0.000883572934  # [common] derived from CAD bore / rod: pi/4 (bore^2 - rod^2); head area = pi/4 bore^2 = 0.0103869 m^2 (run_reference.py:411-426)
+  annulus_area_m2: 0.000883572934  # [common] derived from CAD bore / rod: pi/4 (bore^2 - rod^2); head area = pi/4 bore^2 = 0.0103869 m^2 (run_reference.py:623-638)
   rod_side_chamber_model: "neglected (head side only); one-sided +10 % kv when the leg unloads, sensitivity only"  # [common] ASSUMPTION: docs/dynamics_model.md 2.3 (sensitivity only)
   relief_pressure_moving_Pa: 21000000.0  # [common] circuit drawing: MCV relief 210 bar, reached only at the stroke ends (CLAUDE.md '압력 한계')
   max_force_extend_N: 218124.705  # [common] derived: relief_pressure_moving_Pa x head area; force saturation while moving (extend), docs/dynamics_model.md 4.4 / V11b
@@ -149,7 +149,7 @@ actuator:
   flow_control: "proportional directional valve, section pressure compensated (LS); load-independent speed"  # [common] ASSUMPTION (확인 필요): circuit drawing read as proportional + section pressure compensation; basis of the L1 speed-limited motor
   # [L2b] ChLinkMotorLinearForce F = k_ax(s)(s_ref - s) + c_oil(ds_ref - ds), s_ref <- clip(s_ref + sat(u) dt, 0, stroke), docs/dynamics_model.md 2.3 / 4.4; on SCM drop k_concrete from k_ax (series(k_oil(s), k_rod, k_frame)); lateral bushing with the drive guide freed in x, y
   L2b_NSC:
-    # ASSUMPTION (derived): k_oil(s) = oil_bulk_modulus_eff_Pa pi/4 bore^2 / (oil_dead_length_m + s); operating point = contact.rigid_floor.L1.kn_per_pad_N_m (run_reference.py:334-335)
+    # ASSUMPTION (derived): k_oil(s) = oil_bulk_modulus_eff_Pa pi/4 bore^2 / (oil_dead_length_m + s); operating point = contact.rigid_floor.L1.kn_per_pad_N_m (run_reference.py:527-528)
     axial_stiffness:
       formula: "series(k_oil(s), k_rod, k_frame, k_concrete)"
       operating_point_N_m:
@@ -169,7 +169,7 @@ actuator:
       FR: 8510485.28
       RL: 8403602.0
       RR: 8403602.0
-    # ASSUMPTION (derived): Chrono input = actual / 2 (contact.rigid_floor.damping_input_convention); actual = 2 zeta sqrt(k_bushing m/4), zeta 0.05 (run_reference.py:395)
+    # ASSUMPTION (derived): Chrono input = actual / 2 (contact.rigid_floor.damping_input_convention); actual = 2 zeta sqrt(k_bushing m/4), zeta 0.05 (run_reference.py:607)
     lateral_bushing_damping_input_N_s_m:
       FL: 14399.7077
       FR: 14399.7077
@@ -177,7 +177,7 @@ actuator:
       RR: 14308.999
   # [L2] ChLinkMotorLinearForce F = k_oil(s)(s_ref - s) + c_oil(ds_ref - ds), docs/dynamics_model.md 4.4; k_oil(s) = oil_bulk_modulus_eff_Pa * pi/4 bore^2 / (oil_dead_length_m + s)
   L2:
-    # ASSUMPTION (derived): 2 zeta sqrt(k_axial_leg m/4), zeta 0.05, run_reference.py:315
+    # ASSUMPTION (derived): 2 zeta sqrt(k_axial_leg m/4), zeta 0.05, run_reference.py:508
     oil_damping_N_s_m:
       FL: 46560.0331
       FR: 46560.0331
@@ -189,7 +189,7 @@ actuator:
       FR: 8740306.1
       RL: 8627610.45
       RR: 8627610.45
-    # ASSUMPTION (derived): SMC-L2b lateral zeta 0.05, ACTUAL value (Chrono input = half): 2 zeta sqrt(series(bushing, concrete k) m/4), run_reference.py:370 and run_reference.py:395
+    # ASSUMPTION (derived): SMC-L2b lateral zeta 0.05, ACTUAL value (Chrono input = half): 2 zeta sqrt(series(bushing, concrete k) m/4), run_reference.py:563 and run_reference.py:607
     lateral_bushing_damping_N_s_m:
       FL: 28799.4155
       FR: 28799.4155
@@ -444,7 +444,7 @@ contact:
       nu: 0.15
       slab_thickness_m: 0.2
       subgrade_modulus_N_m3: 80000000.0
-    # [L1] ASSUMPTION (derived at the operating extension, beta_eff 1.0 GPa): kn = series(k_oil, k_rod, k_frame, k_concrete), kt = series(k_lateral_leg_swivel, k_concrete), c = 2 zeta sqrt(k m/4) (actual values); run_reference.py:313-326, dyn_model.py series/k_oil/k_rod/k_leg_lateral_legs (per-leg geometry, load at the swivel centre); kt / ct act through the ground-fixed bushing, not the SMC material; rerun when an assumption changes
+    # [L1] ASSUMPTION (derived at the operating extension, beta_eff 1.0 GPa): kn = series(k_oil, k_rod, k_frame, k_concrete), kt = series(k_lateral_leg_swivel, k_concrete), c = 2 zeta sqrt(k m/4) (actual values); run_reference.py:506-519, dyn_model.py series/k_oil/k_rod/k_leg_lateral_legs (per-leg geometry, load at the swivel centre); kt / ct act through the ground-fixed bushing, not the SMC material; rerun when an assumption changes
     L1:
       kn_per_pad_N_m:
         FL: 20813595.4
@@ -487,7 +487,7 @@ contact:
         RL: 14308.999
         RR: 14308.999
       slip_damping_reenable_speed_m_s: 0.001  # ASSUMPTION: bushing damping is switched back on below this slip speed (stick friction test section 5)
-      # intermediate values; operating extension = pad bottom - ground.crawler_bottom_z_m + simulation.crawler_clearance_m (run_reference.py:75-76); damping_mass_kg = superstructure top + 4 moving parts
+      # intermediate values; operating extension = pad bottom - ground.crawler_bottom_z_m + simulation.crawler_clearance_m (run_reference.py:268-269); damping_mass_kg = superstructure top + 4 moving parts
       derivation:
         operating_extension_m:
           FL: 0.4011
@@ -519,7 +519,7 @@ contact:
       solver: "PSOR"
       solver_max_iterations: 50
       friction: 0.5
-    # [L2] ASSUMPTION: kn = kt = concrete k; cn = 2 * 0.30 * sqrt((k_axial_leg + k_concrete) m_rod_mean) - actuator.L2.oil_damping (total rod local mode zeta 0.30, run_reference.py:316-319); ct = 2 * 0.05 * sqrt(k_concrete m/4), not used in L2b (bushing damping instead)
+    # [L2] ASSUMPTION: kn = kt = concrete k; cn = 2 * 0.30 * sqrt((k_axial_leg + k_concrete) m_rod_mean) - actuator.L2.oil_damping (total rod local mode zeta 0.30, run_reference.py:509-512); ct = 2 * 0.05 * sqrt(k_concrete m/4), not used in L2b (bushing damping instead)
     L2:
       kn_per_pad_N_m:
         FL: 323661912.0
@@ -544,7 +544,19 @@ contact:
   # [common] ASSUMPTION: crawler-floor contact before lift-off, docs/dynamics_model.md 4.2
   crawler:
     kn_total_N_m: 100000000.0
-    friction: 0.5
+    friction: 0.5  # [L2b] ASSUMPTION: L2b-NSC crawler contact only (rigid NSC, no damping); not used by the L1 SMC crawler material (smc_material: mu = 0)
+    # [common] ASSUMPTION (rev. 5, docs/dynamics_model.md 4.2): 2 tracks x spheres_per_track spheres at y = +/- track_centre_y_m, x evenly spaced over x_range_m (ends included); sphere bottom = ground.crawler_bottom_z_m; spheres on the superstructure body
+    sphere_layout:
+      spheres_per_track: 9  # ASSUMPTION
+      track_centre_y_m: 1.066  # ASSUMPTION: crawler bbox |y| 1.366 - half of an assumed 0.6 m shoe
+      x_range_m: [-1.84, 1.844]  # CAD: parts_classified.csv 'REX33-REX33 - 5J286105' compound bbox Z_cad (= body x), rounded to 1 mm
+      sphere_radius_m: 0.05  # ASSUMPTION (no static effect)
+    kn_per_sphere_N_m: 5555555.56  # [L1] ASSUMPTION (derived): kn_total_N_m / (2 x spheres_per_track), dyn_model.py:313-330
+    damping_ratio_heave: 0.1  # [L1] ASSUMPTION: heave of the machine on the crawler (8.1 Hz)
+    damping_total_N_s_m: 394881.24  # [L1] ASSUMPTION (derived): 2 zeta sqrt(kn_total m), m = superstructure top + 4 moving parts, dyn_model.py:343-346, run_reference.py:68-72
+    gn_per_sphere_1_s: 0.568991544  # [L1] ASSUMPTION (derived): damping_total / n_spheres / superstructure body mass (m_eff of the crawler spheres; docs/dynamics_model.md 4.1 convention)
+    smc_material: "Hooke, kn = kn_per_sphere, gn = gn_per_sphere, kt = 0, gt = 0, mu = 0; same values on the crawler spheres and on a separate crawler floor patch (not the pad patches)"  # [L1] recommendation, docs/dynamics_model.md 4.2
+    collision_filter: "disable rod-superstructure and rod-crawler pairs (collision families)"  # [common] recommendation, docs/dynamics_model.md 5 (V0)
 # [common] CLAUDE.md 'F_min' (user decision 2026-10-19), docs/dynamics_model.md 3.2 / 6
 control:
   F_min_fraction_of_mean_leg_load: 0.1  # user decision 2026-10-19
@@ -556,12 +568,14 @@ sensors:
     location: "lock valve block on the cylinder (head chamber); reads the trapped load pressure while locked; p = F_cyl / head area"  # manufacturer description; head-side reading, rod-side pressure 0 assumed
 simulation:
   crawler_clearance_m: 0.05  # [common] ASSUMPTION: crawler lifted 50 mm in the levelled state, docs/dynamics_model.md 1.3
+  settle_on_crawler_min_s: 11.6188444  # [L1] ASSUMPTION (derived): ln(100) x largest crawler-on-floor time constant (reference.json lift_V4_compliant_crawler, run_reference.py:174-191)
+  settle_on_pads_min_s: 31.8390099  # [L1] ASSUMPTION (derived): ln(100) / (zeta1 omega1), 1st L1 rocking mode (top); not needed when initialised at the analytic static solution (docs/dynamics_model.md 4.5 item 1)
   # [L1] ASSUMPTION (rule, confirm by V9): dt = largest of 1e-3, 5e-4, 2e-4, ... with omega1 dt / 2 <= 0.1 zeta1 (1st rocking mode, L1, top, analysis/dynamics/reference.json), docs/dynamics_model.md 4.3
   L1:
     dt_s: 0.0002
-  # [L2b] ASSUMPTION (rule, confirm by V9): dt <= T / 50 of the rod on the axial spring alone (contact open) sqrt(mean k_ax / m_rod) / 2 pi, run_reference.py:404-405; PSOR 50 at 2e-4 s held a 2 deg slope (stick friction test), docs/dynamics_model.md 4.3
+  # [L2b] ASSUMPTION (rule, confirm by V9): dt <= T / 50 of the rod on the axial spring alone (contact open) sqrt(mean k_ax / m_rod) / 2 pi, run_reference.py:616-617; PSOR 50 at 2e-4 s held a 2 deg slope (stick friction test), docs/dynamics_model.md 4.3
   L2b_NSC:
     dt_s: 0.0002
-  # [L2] ASSUMPTION (rule): dt <= T / 50 of the rod local mode sqrt((k_axial_leg + k_concrete) / m_rod) / 2 pi, run_reference.py:289-297, docs/dynamics_model.md 4.3
+  # [L2] ASSUMPTION (rule): dt <= T / 50 of the rod local mode sqrt((k_axial_leg + k_concrete) / m_rod) / 2 pi, run_reference.py:482-490, docs/dynamics_model.md 4.3
   L2:
     dt_s: 5.0e-05

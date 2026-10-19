@@ -17,7 +17,7 @@
 | 자세 센서 | IMU |
 | 물리 엔진 | Project Chrono (PyChrono) |
 | 지면 | 강체(시멘트 바닥), 연약(단단한 토양, SCM 변형 지형) |
-| 성능 목표 | roll·pitch 목표값 대비 정상상태 오차 ±0.1° 이내 |
+| 성능 목표 | roll·pitch 목표값 대비 정상상태 오차 ±0.2° 이내 (2026-10-20 ±0.1°에서 완화, IMU 현장 영점 교정 전제) |
 | 기체 제원 | 질량·무게중심·다리 부착 위치는 CAD 검토 후 확정 |
 | 시나리오 | 마스트를 수직으로 세운 상태, 오거 위치 3단계(상단·중단·하단). 마스트를 눕힌 자세는 다루지 않음 |
 | 참조 기체 | BUMA CE REXOME33 천공기 미니어처 (`REXOME33_Assy_r3(미니어쳐).stp`) |
@@ -31,8 +31,21 @@ outrigger_control/
 ├── docs/       설계 문서, 좌표계·모델 정의, 결정 기록
 ├── params/     시뮬레이션 공통 파라미터 (scripts/cad/export_params.py가 생성)
 ├── scripts/    실행·분석 스크립트 (cad/ = CAD 추출·파라미터 생성, Chrono-dev / dynamics/ = 동역학 기준해, dynamics-dev)
-├── src/        Python 소스
-└── tests/      테스트
+├── src/outrigger_sim/  시뮬레이션 패키지 (엔진 독립 코어 + chrono/, sensors/, control/, scenarios/, verify/)
+├── tests/      pytest (unit/, chrono/, verify/)
+└── results/    시뮬레이션 원자료 (git 제외)
+```
+
+패키지 구조와 단계별 구축 계획은 [docs/chrono_build_plan.md](docs/chrono_build_plan.md)를 본다.
+
+## 테스트
+
+`pyproject.toml`에 pytest 설정이 있다(`pythonpath = src`, 마커 `chrono`/`sim`/`slow`). Chrono-dev 환경에서 프로젝트 루트에서 실행한다.
+
+```
+C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -m pytest -m "not slow"   # 일상 회귀
+C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -m pytest tests/unit      # 단위 시험만
+C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -m pytest -m chrono       # Chrono 규약 점검만
 ```
 
 ## 동역학·구동기 자료

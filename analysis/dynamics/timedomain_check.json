@@ -4,7 +4,7 @@
   "model": "nonlinear 6-DoF rigid body (superstructure + rods, top level), 4 unilateral penalty pads",
   "integrator": "solve_ivp DOP853 rtol 1e-10 atol 1e-12",
   "quaternion_order": "wxyz (scalar first)",
-  "runtime_s": 6.6
+  "runtime_s": 6.5
  },
  "L1_rigid_motor_lumped_contact": {
   "kv_N_m": [

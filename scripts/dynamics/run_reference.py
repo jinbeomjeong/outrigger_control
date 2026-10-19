@@ -55,6 +55,199 @@ def sympy_hessian_check(body, pad_pts, kv, kh, F0, g):
     return np.array(grad, float), np.array(H, float)
 
 
+def lift_reference(p, geo, e_op, k_L1, kt_L1, tests):
+    """V4 reference (rev. 5): machine resting on a compliant crawler (kn_total, sphere layout), all legs extend from 0 at
+    v_max (t = 0 = motor start), each leg stops with a step at its own e_op. Quasi-static active-set statics over the
+    whole sequence (pads + crawler spheres, unilateral, vertical 3-DoF), crawler-on-floor modes for the settle length,
+    and a linear 6-DoF L1 simulation of the residual vibration after the step stops.
+    """
+    from scipy.integrate import solve_ivp
+
+    g, xy, v = geo.g, geo.pad_xy, geo.v_max
+    touch = geo.touch_extension
+    bw = dm.body_with_rods(p, geo, "top", e_op)   # rod x,y do not change with the extension
+    W, cg = bw.mass * g, bw.com[:2]
+    kn_tot = float(p["contact"]["crawler"]["kn_total_N_m"])
+    c_tot = dm.crawler_damping_total(kn_tot, bw.mass)
+    m_b = dm.body_from_params(p, "top").mass
+    out = {
+        "procedure": ("t < 0: machine settled on the crawler, legs fully retracted (initialise at the settled pose below). "
+                      "t = 0: all four motors start at +v_max. Each leg stops with a velocity step at its own e_op "
+                      "(rear first). Quasi-static statics (rate effects neglected), body rigid, crawler spheres and "
+                      "pads unilateral vertical springs (pads: L1 kn)."),
+        "time_origin": "t = 0 at motor start (not at simulation start)",
+        "crawler_contact_assumptions": {
+            "kn_total_N_m": kn_tot,
+            "damping_ratio_heave (ASSUMPTION)": dm.CRAWLER_DEFAULTS["damping_ratio_heave"],
+            "damping_total_N_s_m": r(c_tot),
+            "mass_for_damping_kg (superstructure + 4 rods)": r(bw.mass),
+            "gn_input_rule": "gn = (damping_total / n_spheres) / m_eff, m_eff = superstructure body mass (crawler spheres are on that body; rods are separate bodies)",
+            "superstructure_body_mass_kg": r(m_b),
+            "tangential": "SMC kt = gt = mu = 0 (no crawler tangential force in L1; horizontal drift before pad touch not judged; no lift on a sloped floor with this model)",
+        },
+    }
+    sph_r = dm.CRAWLER_DEFAULTS["sphere_radius_m"]
+
+    def layout(nx, yt):
+        (x0, x1), _ = geo.crawler_xy_box
+        xs = np.linspace(x0, x1, nx)
+        pts = np.array([[x, s * yt] for s in (1.0, -1.0) for x in xs])
+        return pts, np.full(len(pts), kn_tot / len(pts))
+
+    layouts = {
+        "default 2x9 (YAML contact.crawler.sphere_layout)": (dm.CRAWLER_DEFAULTS["spheres_per_track"], dm.CRAWLER_DEFAULTS["track_centre_y_m"]),
+        "sensitivity 2x2 box corners": (2, geo.crawler_xy_box[1][1]),
+        "sensitivity 2x41 near-continuous": (41, dm.CRAWLER_DEFAULTS["track_centre_y_m"]),
+    }
+    A_pad = dm.support_matrix(xy)
+    t_stop = e_op / v
+    t_end = float(t_stop.max())
+    lay_out = {}
+    default_events = None
+    for name, (nx, yt) in layouts.items():
+        pts, kc = layout(nx, yt)
+        A_cr = dm.support_matrix(pts)
+        F_cr0, q0, _ = dm.static_unilateral(pts, kc, np.zeros(len(pts)), W, cg)
+        gap0 = touch + A_pad @ q0
+        t_touch_kin = gap0 / v
+
+        allxy = np.vstack([xy, pts]); allk = np.concatenate([k_L1, kc])
+
+        def state(t):
+            e = np.minimum(v * t, e_op)
+            delta = np.concatenate([e - touch, np.zeros(len(pts))])
+            F, q, act = dm.static_unilateral(allxy, allk, delta, W, cg)
+            return F, q, act
+
+        # event search: coarse grid, then bisection on the active-set flags
+        tg = np.arange(0.0, t_end + 1e-9, 1e-3)
+        flags = []
+        for t in tg:
+            _, _, act = state(t)
+            flags.append(np.concatenate([act[:4], [act[4:].any()]]))
+        flags = np.array(flags)
+        ev = {}
+        for col, lab in [(0, "FL"), (1, "FR"), (2, "RL"), (3, "RR"), (4, "crawler")]:
+            ch = np.where(flags[1:, col] != flags[:-1, col])[0]
+            if not len(ch):
+                continue
+            lo, hi = tg[ch[0]], tg[ch[0] + 1]
+            f_lo = flags[ch[0], col]
+            for _ in range(40):
+                mid = 0.5 * (lo + hi)
+                _, _, a = state(mid)
+                fm = a[col] if col < 4 else a[4:].any()
+                lo, hi = (mid, hi) if fm == f_lo else (lo, mid)
+            ev[lab] = 0.5 * (lo + hi)
+        F_end, q_end, act_end = state(t_end)
+        L1top = tests["L1_rigid_motor_lumped_contact"]["levels"]["top"]
+        first = min(("FL", "FR", "RL", "RR"), key=lambda n: ev.get(n, np.inf))
+        ent = {
+            "n_spheres": len(pts), "track_centre_y_m": yt,
+            "settled_on_crawler (legs at 0)": {
+                "q_about_origin (uz_mm, roll_deg, pitch_deg)": r([q0[0] * 1e3, np.degrees(q0[1]), np.degrees(q0[2])], 5),
+                "crawler_sphere_forces_N": r(F_cr0, 5),
+                "pad_gap_at_e0_mm": r(gap0 * 1e3, 5),
+            },
+            "pad_touch_time_kinematic_from_settled_pose_s": r(t_touch_kin, 5),
+            "quasi_static_events_s": {
+                "first_touch_leg": first,
+                "first_touch_s": r(ev[first], 5),
+                "touch_s (FL, FR, RL, RR)": r([ev.get(n, float("nan")) for n in dm.LEG_NAMES], 5),
+                "crawler_fully_off_s": r(ev.get("crawler", float("nan")), 5),
+                "leg_stop_s (FL, FR, RL, RR)": r(t_stop, 5),
+            },
+            "end_state (after the last stop)": {
+                "pad_contact_force_N": r(F_end[:4]),
+                "attitude_deg (roll, pitch)": r(np.degrees(q_end[1:]), 4),
+                "crawler_min_clearance_mm": r(float((A_cr @ q_end).min()) * 1e3, 5),
+                "max_abs_diff_vs_V1_contact_force_N": r(float(np.abs(F_end[:4] - np.array(L1top["contact_force_N"])).max()), 3),
+                "crawler_active_at_end": bool(act_end[4:].any()),
+            },
+        }
+        lay_out[name] = ent
+        if default_events is None:
+            default_events = (ev, pts, kc, q0, F_cr0)
+    out["layouts"] = lay_out
+    out["rigid_crawler_reference_old (operating_point.time_to_touch_s)"] = r(touch / v, 5)
+
+    # crawler-on-floor modes (legs retracted, crawler tangential stiffness 0) -> settle length
+    ev, pts, kc, q0, F_cr0 = default_events
+    b0 = dm.body_with_rods(p, geo, "top", np.zeros(4))
+    pts3 = np.column_stack([pts, np.full(len(pts), geo.crawler_bottom_z)])
+    K = dm.stiffness_6dof(b0, pts3, kc, np.zeros(len(pts)), F_cr0) if len(pts) == 4 else _stiff_n(b0, pts3, kc, F_cr0)
+    M = dm.mass_6dof(b0)
+    C = np.zeros((6, 6))
+    for j in range(len(pts)):
+        _, _, az = dm.a_vec(pts3[j] - b0.com)
+        C += (c_tot / len(pts)) * np.outer(az, az)
+    fd, zd = dm.complex_modes(M, K, C)
+    keep = fd > 0.05
+    tau = 1.0 / (zd[keep] * 2 * np.pi * fd[keep])
+    out["crawler_on_floor_modes (default layout, legs at 0)"] = {
+        "f_Hz": r(fd[keep], 4), "zeta": r(zd[keep], 4), "tau_s": r(tau, 4),
+        "note": "surge, sway, yaw have zero stiffness (no crawler tangential force) and are omitted",
+        "settle_length_s (ln(100) x max tau)": r(float(np.log(100) * tau.max()), 3),
+    }
+
+    # residual vibration after the step stops: linear 6-DoF L1 about the e_op equilibrium (top), crawler off
+    cfg = tests["L1_rigid_motor_lumped_contact"]
+    cn = np.array(cfg["c_pad_N_s_m"]); ct = np.array(cfg["c_tan_N_s_m"])
+    pad_pts = np.column_stack([xy, geo.pad_z_retracted - e_op])
+    Fc, _, _ = dm.static_loads(k_L1, xy, W, cg)
+    K6 = dm.stiffness_6dof(bw, pad_pts, k_L1, kt_L1, Fc); M6 = dm.mass_6dof(bw)
+    C6 = np.zeros((6, 6)); AZ = []
+    for i in range(4):
+        ax, ay, az = dm.a_vec(pad_pts[i] - bw.com)
+        C6 += cn[i] * np.outer(az, az) + ct[i] * (np.outer(ax, ax) + np.outer(ay, ay)); AZ.append(az)
+    AZ = np.array(AZ)
+    t_s = float(ev["crawler"]) + 0.05
+
+    def u(t):
+        return np.minimum(v * t, e_op) - e_op, np.where(v * t < e_op, v, 0.0)
+
+    def rhs(t, y):
+        uu, ud = u(t)
+        Q = AZ.T @ (k_L1 * uu + cn * ud)
+        return np.concatenate([y[6:], np.linalg.solve(M6, Q - K6 @ y[:6] - C6 @ y[6:])])
+
+    uu0, ud0 = u(t_s)
+    y0 = np.concatenate([np.linalg.solve(K6, AZ.T @ (k_L1 * uu0)), np.linalg.solve(K6, AZ.T @ (k_L1 * ud0))])
+    # integrate piecewise (input kinks at the stops)
+    seg = [t_s] + sorted(set(float(x) for x in t_stop)) + [t_end + 20.0]
+    T, Y = [], []
+    y = y0
+    for a, b_ in zip(seg[:-1], seg[1:]):
+        sol = solve_ivp(rhs, (a, b_), y, method="DOP853", rtol=1e-10, atol=1e-13, max_step=2e-3, dense_output=False)
+        T.append(sol.t); Y.append(sol.y); y = sol.y[:, -1]
+    T = np.concatenate(T); Y = np.concatenate(Y, axis=1)
+    rp = np.degrees(Y[3:5])
+    f1 = cfg["levels"]["top"]["f_damped_Hz"][0]
+
+    def amp(t_from):
+        m = (T >= t_end + t_from) & (T <= t_end + t_from + 1.0 / f1)
+        return r(np.abs(rp[:, m]).max(axis=1), 4)
+
+    out["residual_after_last_stop_linear_L1 (deg, max |dev| over one 1st-rocking period)"] = {
+        "model": "linear 6-DoF L1 (top) with reference damping, motor = pad-spring base displacement; start quasi-static 0.05 s after crawler off",
+        "integrator": "solve_ivp DOP853 rtol 1e-10 atol 1e-13, piecewise at the stops",
+        "t_last_stop_s": r(t_end, 5),
+        "roll_pitch_at_0s": amp(0.0), "roll_pitch_at_5s": amp(5.0), "roll_pitch_at_10s": amp(10.0),
+    }
+    return out
+
+
+def _stiff_n(body, pts3, k, F0):
+    """stiffness_6dof for any number of vertical-only spring points (kh = 0)."""
+    K = np.zeros((6, 6))
+    for i in range(len(pts3)):
+        d = pts3[i] - body.com
+        _, _, az = dm.a_vec(d)
+        K += k[i] * np.outer(az, az)
+        K[3:, 3:] -= F0[i] * dm._hz(d)
+    return K
+
+
 def main():
     t0 = time.perf_counter()
     p = dm.load_params()
@@ -368,8 +561,9 @@ def main():
                 M, K, C, labels, _ = dm.model_10dof(b, geo, e_op, ko=cfg.get("ko", ko_eff), kc=cfg.get("kc", np.full(4, kc_nom)),
                                                     kh=cfg["kh"],
                                                     co=cfg["c_o"], cc=cfg["c_c"], ch=2 * zt * np.sqrt(cfg["kh"] * W_tot / g / 4))
-                _, f_und, _, mcls, _ = dm.modal(M, K, labels)
+                _, f_und, Phi, mcls, _ = dm.modal(M, K, labels)
                 fd, zd = dm.complex_modes(M, K, C)
+                ref_pt, coords = b.com, labels
             else:
                 pad_pts = np.column_stack([xy, geo.pad_z_retracted - e_op])
                 K = dm.stiffness_6dof(bw, pad_pts, kv, cfg["kh"], Fc)
@@ -379,8 +573,9 @@ def main():
                     ax, ay, az = dm.a_vec(pad_pts[i] - bw.com)
                     ct = cfg.get("c_tan", cfg["c_pad"])
                     Cm += cfg["c_pad"][i] * np.outer(az, az) + ct[i] * (np.outer(ax, ax) + np.outer(ay, ay))
-                _, f_und, _, mcls, _ = dm.modal(M, K, dm.DOF6)
+                _, f_und, Phi, mcls, _ = dm.modal(M, K, dm.DOF6)
                 fd, zd = dm.complex_modes(M, K, Cm)
+                ref_pt, coords = bw.com, list(dm.DOF6)
             lvl_out[lvl] = {
                 "contact_force_N": r(Fc), "static_penetration_or_compression_mm": r(Fb / kv * 1e3 + geo.rod_mass * g / kv * 1e3 * (not name.startswith("L2"))),
                 "static_attitude_deg (roll, pitch)": r(np.degrees(qb[1:]), 4),
@@ -390,6 +585,23 @@ def main():
                 "liftoff_threshold_single_leg (contact force 0)": thr,
                 "F_min_threshold_single_leg (cylinder force = F_min)": thr_min,
                 "f_undamped_Hz": r(f_und, 5), "mode_content": mcls, "f_damped_Hz": r(fd, 5), "zeta": r(zd, 3)}
+            # rev. 5: mass-normalised undamped mode shapes of the 6 rigid-body modes for modal projection (V7)
+            Ph = Phi[:, :6].copy()
+            for jm in range(6):
+                imax = int(np.argmax(np.abs(Ph[:6, jm])))
+                if Ph[imax, jm] < 0:
+                    Ph[:, jm] *= -1.0
+            lvl_out[lvl]["mode_shapes_rev5"] = {
+                "coordinates": coords,
+                "reference_point_m (rotations about it, translations of it; body axes, level body = world)": r(ref_pt),
+                "reference_point_meaning": ("CoM of superstructure + 4 rods at e_op (rods rigid with the body)"
+                                            if coords == list(dm.DOF6) else
+                                            "CoM of the superstructure alone; rod rows = absolute vertical rod displacement (up +)"),
+                "units": "translations m, rotations rad (small angles), per sqrt(kg)",
+                "Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)": r(Ph, 12),
+                "mass_matrix (same coordinates)": r(M, 12),
+                "projection": "eta = Phi^T M q (q = measured displacement from the static equilibrium); sign: largest body component of each column positive",
+            }
         tests[name] = {"k_vertical_N_m": r(kv), "k_horizontal_N_m": r(cfg["kh"]),
                        **({"c_pad_N_s_m": r(cfg["c_pad"]), "c_tan_N_s_m": r(cfg.get("c_tan", cfg["c_pad"]))} if "c_pad" in cfg else {"c_oil_N_s_m": r(c_o), "c_contact_N_s_m": r(cfg["c_c"]),
                           "c_tangential_N_s_m": r(2 * zt * np.sqrt(cfg["kh"] * W_tot / g / 4))}),
@@ -528,6 +740,10 @@ def main():
                        "tip_over_tilt_deg (same azimuths, rigid, CoM projection leaves the support polygon)": tip_ray}
       stab_all["swivel_pad_centres (default)" if swv else "rigid_pad_octagon_hull (comparison)"] = stab
     res["stability"] = stab_all
+
+    # ------------------------------------------------------------ rev. 5: V4 lift with a compliant crawler
+    res["lift_V4_compliant_crawler"] = lift_reference(p, geo, e_op, k_L1, kt_L1, tests)
+
     res["meta"]["runtime_s"] = round(time.perf_counter() - t0, 2)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)

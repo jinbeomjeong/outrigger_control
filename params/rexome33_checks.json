@@ -345,7 +345,12 @@
    "swivel_ball_height_above_pad_bottom_m": true,
    "swivel_tilt_range_deg": true,
    "F_min_fraction_of_mean_leg_load": true,
-   "oil_bulk_modulus_range_Pa": true
+   "oil_bulk_modulus_range_Pa": true,
+   "crawler_spheres_per_track": true,
+   "crawler_track_centre_y_m": true,
+   "crawler_x_range_m": true,
+   "crawler_sphere_radius_m": true,
+   "crawler_damping_ratio_heave": true
   },
   "dyn_model_full_precision_rel": {
    "kc": 0.0,
@@ -368,8 +373,14 @@
    "annulus_area": 0.0,
    "max_force_extend": 0.0,
    "max_force_retract": 0.0,
-   "locked_force_limit": 0.0
+   "locked_force_limit": 0.0,
+   "crawler.sphere_xy_m": 0.0,
+   "crawler.kn_per_sphere": 0.0,
+   "crawler.damping_total": 0.0,
+   "crawler.damping_per_sphere": 0.0,
+   "crawler.gn_per_sphere": 0.0
   },
+  "crawler_x_range_rounding_abs_m": 0.00018483270800229157,
   "reference_json_rel": {
    "levelled_extension_m": 0.0,
    "k_slab_N_m": 0.0,
@@ -402,13 +413,19 @@
    "hydraulic.max_force_extend_N": 0.0,
    "hydraulic.max_force_retract_N": 0.0,
    "hydraulic.pump_flow_L_min": 1.1803035477742526e-16,
-   "hydraulic.flow_4_legs_at_vmax_L_min (4 digits)": 0.0
+   "hydraulic.flow_4_legs_at_vmax_L_min (4 digits)": 0.0,
+   "crawler.damping_total_N_s_m": 0.0,
+   "crawler.damping_mass_kg": 0.0,
+   "crawler.gn_mass_kg (superstructure body)": 0.0,
+   "crawler.kn_total_N_m": 0.0,
+   "crawler.damping_ratio_heave": 0.0,
+   "settle_on_crawler_s (3 digits)": 0.0
   },
   "gn_m_moving_vs_exact_m_eff_rel": 1.0678365468359262e-07,
   "pump_flow_covers_4_legs_at_vmax": true,
   "line_references": {
-   "ranges_checked": 24,
-   "references_in_source": 24,
+   "ranges_checked": 29,
+   "references_in_source": 28,
    "missing_text": [],
    "unlisted_references": [],
    "old_style_references": []
@@ -583,6 +600,56 @@
     "max_abs_diff": 3.3333333333135373e-09,
     "half_unit_tol": 5e-09,
     "max_rel_diff": 3.322270173635332e-06
+   },
+   "crawler.spheres_per_track": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.5,
+    "max_rel_diff": 0.0
+   },
+   "crawler.track_centre_y_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.0005,
+    "max_rel_diff": 0.0
+   },
+   "crawler.x_range_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.0005,
+    "max_rel_diff": 0.0
+   },
+   "crawler.sphere_radius_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.005,
+    "max_rel_diff": 0.0
+   },
+   "crawler.kn_per_sphere_N_m": {
+    "max_abs_diff": 44.44444444403052,
+    "half_unit_tol": 50.0,
+    "max_rel_diff": 7.99993600043749e-06
+   },
+   "crawler.damping_ratio_heave": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.005,
+    "max_rel_diff": 0.0
+   },
+   "crawler.damping_total_N_s_m": {
+    "max_abs_diff": 0.24019254196900874,
+    "half_unit_tol": 0.5,
+    "max_rel_diff": 6.082656343784805e-07
+   },
+   "crawler.gn_per_sphere_1_s": {
+    "max_abs_diff": 1.5440481520023752e-06,
+    "half_unit_tol": 5e-06,
+    "max_rel_diff": 2.7136648306690367e-06
+   },
+   "settle_on_crawler_min_s": {
+    "max_abs_diff": 0.01884437924795712,
+    "half_unit_tol": 0.05,
+    "max_rel_diff": 0.0016245154524100968
+   },
+   "settle_on_pads_min_s": {
+    "max_abs_diff": 0.1609901420966544,
+    "half_unit_tol": 0.5,
+    "max_rel_diff": 0.00503094194052045
    }
   },
   "reference_json_assumptions_beta_Pa": 1000000000.0,

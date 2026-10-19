@@ -144,6 +144,44 @@ def main():
     secA["_beta_range_for_comparison"] = {
         f"beta_{b:.2e}": {"S_FL_kN_per_mm": thresholds(kv_of(e_op, b))[1][0, 0] * 1e-6,
                           "FLplus_F_min_mm": thresholds(kv_of(e_op, b))[2] * 1e3} for b in (0.69e9, 1.0e9, 1.6e9)}
+    # rev. 5 (V14 redefinition): at max pitch+ FL/FR sit at the stroke end, so an FL+ single-leg test is impossible.
+    # Single-leg sensitivity / F_min / lift-off for every leg and direction on the slope itself, L2b-NSC statics
+    # (static_slope_10dof: axial k_oil(e) + rod + frame + concrete, rigid NSC contact 1e13, lateral bushing kt_L1),
+    # with the stroke room of the tested leg. V14 uses RL+ in all three cases (room everywhere).
+    v14 = {"method": ("L2b-NSC linear statics on the sloped floor (place and settle at the levelled extension), "
+                      "then +/-1 mm of reference extension on one leg (oil-spring prestrain); thresholds by linear "
+                      "extrapolation (exact for the linear model up to the first event). Cylinder-force basis for "
+                      "F_min, pad normal contact force 0 for lift-off."),
+           "V14_test_leg": "RL+", "cases": {}}
+    hb_n = len(dm.LEG_NAMES)
+    for name in ("level", "max pitch+", "max roll+", "max diag 45", "max pitch-"):
+        ro, pi = cases[name]
+        ext = levelled_extension(ro, pi)
+        ko_s = dm.series(ko_eff(ext), kc)
+        base = dm.static_slope_10dof(b_top, geo, ext, ko_s, np.full(4, 1e13), kt_L1, slope_pitch_deg=pi, slope_roll_deg=ro)
+        tests_ = {}
+        for i, nm in enumerate(dm.LEG_NAMES):
+            for sgn, lab in ((1, "+"), (-1, "-")):
+                dl = np.zeros(hb_n); dl[i] = sgn * 1e-3
+                pert = dm.static_slope_10dof(b_top, geo, ext, ko_s, np.full(4, 1e13), kt_L1, slope_pitch_deg=pi,
+                                             slope_roll_deg=ro, delta=dl)
+                dF = pert["F_cyl"] - base["F_cyl"]; dN = pert["N"] - base["N"]
+                with np.errstate(divide="ignore", invalid="ignore"):
+                    t_min = np.where(dF < 0, (base["F_cyl"] - F_min) / -dF, np.inf)
+                    t_lift = np.where(dN < 0, base["N"] / -dN, np.inf)
+                jm, jl = int(np.argmin(t_min)), int(np.argmin(t_lift))
+                room = (geo.stroke - ext[i]) if sgn > 0 else ext[i]
+                tests_[nm + lab] = {
+                    "S_own_kN_per_mm": float(dF[i] * 1e-3 * sgn), "dF_cyl_per_mm_N": dF * sgn,
+                    "F_min_threshold_mm": float(t_min[jm]), "leg_at_F_min": dm.LEG_NAMES[jm],
+                    "liftoff_threshold_mm": float(t_lift[jl]), "liftoff_leg": dm.LEG_NAMES[jl],
+                    "stroke_room_mm": float(room * 1e3),
+                    "feasible (room >= liftoff + 1 mm)": bool(room * 1e3 >= t_lift[jl] + 1.0)}
+        v14["cases"][name] = {"ground_roll_pitch_deg": [ro, pi], "extension_m": ext,
+                              "F_cyl_place_and_settle_N": base["F_cyl"], "N_contact_normal_N": base["N"],
+                              "single_leg": tests_,
+                              "f_Hz_L2b_rigid_body_modes": secA[name]["f_Hz_L2b_rigid_body_modes"]}
+    secA["V14_rev5"] = v14
     res["A_extension_dependence"] = secA
 
     # ------------------------------------------------------------------ B: pressure FRF
@@ -206,7 +244,7 @@ def main():
     kv = dm.series(ko_op, kr, kf, kc)     # slipping: oil column in series
     A = dm.support_matrix(xy)
 
-    def friction_run(Fs, d_max=0.016, dd=2e-6, back=True):
+    def friction_run(Fs, d_max=0.016, dd=2e-6, back=True, stop_at_liftoff=False):
         F0, _, _ = dm.static_loads(kv, xy, W_b, b_top.com[:2])
         F = F0.copy(); f = np.zeros(4)               # f: friction force on the rod, outward +
         stick = np.ones(4, bool); sgn = np.zeros(4)  # sgn: sign of f while slipping
@@ -237,7 +275,28 @@ def main():
                     break
             F = F + dF; f = fn; stick = st; sgn = sg
             hist.append((d, F.copy(), (F - f).copy()))
+            if stop_at_liftoff and (F + geo.rod_mass * g).min() <= 0.0:
+                break   # first pad contact force reaches 0 (unilateral contact): the linear 4-leg model ends here
         D = np.array([h[0] for h in hist]); Ft = np.array([h[1] for h in hist]); P = np.array([h[2] for h in hist])
+        if stop_at_liftoff:
+            Fc = Ft + geo.rod_mass * g                  # pad contact force
+            j = int(np.argmin(Fc[-1])); lifted = bool(Fc[-1, j] <= 0.0)
+            if lifted:   # linear interpolation between the last two increments
+                d_lift = float(np.interp(0.0, [Fc[-1, j], Fc[-2, j]], [D[-1], D[-2]]))
+            P_lift = P[-1, j]
+
+            def first_u(arr, thr):
+                idx = np.where(arr.min(axis=1) <= thr)[0]
+                return float(D[idx[0]] * 1e3) if len(idx) else None
+
+            return {"F_s_N": Fs,
+                    "FLplus_true_min_load_at_F_min_mm": first_u(Ft, F_min),
+                    "FLplus_pressure_min_at_F_min_mm (null = pad lifts off first)": first_u(P, F_min),
+                    "FLplus_liftoff_mm (pad contact force 0)": d_lift * 1e3 if lifted else None,
+                    "liftoff_leg": dm.LEG_NAMES[j] if lifted else None,
+                    "pressure_reading_of_lifting_leg_at_liftoff_N (cylinder-force basis)": float(P_lift),
+                    "pressure_minus_F_min_at_liftoff_N": float(P_lift - F_min)}
+
         n_up = int(round(d_max / dd))
         up = slice(0, n_up)
 
@@ -265,6 +324,26 @@ def main():
             "k_s_N_m (stick)": k_s, "kv_N_m (slip)": kv, "rated_basis": rated, "runs": {}}
     for Fs in (0.0, 1e3, 2e3, 5e3, 1.2e4, 2.14e4):
         secC["runs"][f"F_s {Fs/1e3:g} kN"] = friction_run(Fs)
+    # rev. 5 (V15 redefinition): the runs above are bilateral and cross the lift-off threshold (14.08 mm at F_s 0) on
+    # the way to 16 mm, so they cannot be compared with a unilateral Chrono contact. V15 now uses
+    #   (a) up-sweep 0 -> lift-off, unilateral: stops at the first pad contact force 0
+    #   (b) round trip 0 -> 10 mm -> 0: below every F_min / lift-off threshold, so the linear model is exact there
+    v15 = {"note": ("rev. 5 V15 reference. (a) unilateral up-sweep, FL s_ref from 0 until the first pad contact force "
+                    "reaches 0 (contact force = cylinder-basis load + rod weight); (b) round trip 0 -> 10 mm -> 0, no "
+                    "pad reaches F_min or lift-off, so the bilateral model is valid. Same friction model and initial "
+                    "f = 0 (ASSUMPTION) as 'runs'."),
+           "a_upsweep_unilateral": {}, "b_roundtrip_10mm": {}}
+    for Fs in (0.0, 2e3, 5e3, 1.2e4):
+        lab = f"F_s {Fs/1e3:g} kN"
+        v15["a_upsweep_unilateral"][lab] = friction_run(Fs, d_max=0.02, back=False, stop_at_liftoff=True)
+        rt = friction_run(Fs, d_max=0.010)
+        v15["b_roundtrip_10mm"][lab] = {k: rt[k] for k in ("F_s_N", "residual_true_load_change_after_return_N",
+                                                          "residual_pressure_change_after_return_N",
+                                                          "RL_load_change_at_1mm_true_N", "RL_load_change_at_1mm_pressure_N")}
+        rt_min = friction_run(Fs, d_max=0.010, back=False)
+        v15["b_roundtrip_10mm"][lab]["F_min_reached_on_the_way (true, pressure)"] = [
+            rt_min["FLplus_true_min_load_at_F_min_mm"], rt_min["FLplus_pressure_min_at_F_min_mm"]]
+    secC["V15_rev5"] = v15
     # small-amplitude rocking if all legs stick (oil column bypassed)
     bw = dm.body_with_rods(p, geo, "top", e_op)
     Fc0, _, _ = dm.static_loads(k_s, xy, bw.mass * g, bw.com[:2])

@@ -280,6 +280,72 @@ def static_loads(k, xy, W, cg_xy, delta=None, max_iter=8):
     return F, q, active
 
 
+def static_unilateral(xy, k, delta, W, cg_xy, max_iter=50):
+    """Vertical statics with any number of unilateral springs (pads and crawler points), rigid body.
+
+    xy (n,2) spring points, k (n,) stiffness, delta (n,) prestrain [m]: compression c = delta - A q
+    (delta < 0 = initial gap). q = [uz, phi, theta] about the frame origin (up / rad). Weight W [N] at cg_xy.
+    Full active set (springs can be added and removed). Returns (F (n,), q (3,), active (n,)).
+    """
+    xy = np.asarray(xy, float); k = np.asarray(k, float); delta = np.asarray(delta, float)
+    A = support_matrix(xy)
+    w = np.array([W, W * cg_xy[1], -W * cg_xy[0]])
+    active = delta >= 0
+    if not active.any():
+        active = delta >= delta.max()
+    for _ in range(max_iter):
+        Ka = np.diag(k * active)
+        H = A.T @ Ka @ A
+        if np.linalg.matrix_rank(H) < 3:
+            # fewer than 3 independent springs: add the closest inactive ones
+            cand = np.where(active, -np.inf, delta)
+            active[int(np.argmax(cand))] = True
+            continue
+        q = np.linalg.solve(H, A.T @ Ka @ delta - w)
+        c = delta - A @ q
+        new = c > 0
+        if (new == active).all():
+            return k * c * active, q, active
+        active = new
+    raise RuntimeError("active set did not converge")
+
+
+def crawler_points(p: dict) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Crawler contact sphere layout from YAML contact.crawler (ASSUMPTION layout, docs/dynamics_model.md 4.2).
+
+    Returns (xy (n,2), k (n,), c (n,)) per sphere. Falls back to the documented default layout if the YAML has no
+    layout keys yet: 2 tracks x 9 spheres, track centre lines y = +/-1.066 m, x evenly from -1.840 to 1.844 m.
+    """
+    cr = p["contact"]["crawler"]
+    lay = cr.get("sphere_layout", {})
+    nx = int(lay.get("spheres_per_track", CRAWLER_DEFAULTS["spheres_per_track"]))
+    yt = float(lay.get("track_centre_y_m", CRAWLER_DEFAULTS["track_centre_y_m"]))
+    x0, x1 = lay.get("x_range_m", CRAWLER_DEFAULTS["x_range_m"])
+    xs = np.linspace(float(x0), float(x1), nx)
+    xy = np.array([[x, s * yt] for s in (1.0, -1.0) for x in xs])
+    n = len(xy)
+    k = np.full(n, float(cr["kn_total_N_m"]) / n)
+    c_tot = float(cr.get("damping_total_N_s_m", CRAWLER_DEFAULTS["damping_total_N_s_m"]))
+    return xy, k, np.full(n, c_tot / n)
+
+
+# crawler contact defaults (ASSUMPTIONS, rev. 5; mirrored in docs/dynamics_model.md section 10)
+CRAWLER_DEFAULTS = {
+    "spheres_per_track": 9,          # ASSUMPTION: 2 tracks x 9 spheres, ends included
+    "track_centre_y_m": 1.066,       # ASSUMPTION: crawler bbox |y| 1.366 minus half an assumed 0.6 m shoe width
+    "x_range_m": [-1.840, 1.844],    # crawler bbox x (parts_classified.csv), body frame
+    "sphere_radius_m": 0.05,         # ASSUMPTION: bottom of each sphere at crawler_bottom_z
+    "damping_ratio_heave": 0.10,     # ASSUMPTION: crawler-on-floor heave damping (rubber pads / track sag)
+    "damping_total_N_s_m": None,     # filled by crawler_damping_total()
+}
+
+
+def crawler_damping_total(kn_total: float, mass_total: float, zeta: float = None) -> float:
+    """Total crawler-floor dashpot [N s/m] giving zeta in heave of the whole machine on the crawler."""
+    zeta = CRAWLER_DEFAULTS["damping_ratio_heave"] if zeta is None else zeta
+    return 2 * zeta * math.sqrt(kn_total * mass_total)
+
+
 def twist_vector(xy: np.ndarray) -> np.ndarray:
     """Unit vector n with A^T n = 0 (load pattern that changes no resultant)."""
     A = support_matrix(xy)
@@ -428,7 +494,8 @@ def complex_modes(M, K, C):
     return wn[idx] / (2 * np.pi), zeta[idx]
 
 
-def static_slope_10dof(body: Body, geo: Geometry, ext, ko, kn, kt, slope_pitch_deg=0.0, slope_roll_deg=0.0):
+def static_slope_10dof(body: Body, geo: Geometry, ext, ko, kn, kt, slope_pitch_deg=0.0, slope_roll_deg=0.0,
+                       delta=None):
     """Linear statics, levelled body on a sloped rigid floor, swivel pads (force through the ball centre).
 
     "Place and settle" procedure: pads placed on the floor with zero spring force, then gravity applied.
@@ -438,6 +505,8 @@ def static_slope_10dof(body: Body, geo: Geometry, ext, ko, kn, kt, slope_pitch_d
     Floor z = sx x + sy y with sx = -tan(pitch), sy = tan(roll) (sign as in run_reference levelling).
     Returns dict: contact reaction vectors R (4,3) on the rods [N], cylinder force (oil) [N],
     normal / tangential components, friction utilisation |T|/N.
+    delta (4,), optional: extra reference extension of each leg after placing [m] (oil spring prestrain,
+    + = leg longer, i.e. s_ref advanced). None reproduces the plain place-and-settle solution.
     """
     ext = np.asarray(ext, float)
     sx = -math.tan(math.radians(slope_pitch_deg)); sy = math.tan(math.radians(slope_roll_deg))
@@ -463,9 +532,15 @@ def static_slope_10dof(body: Body, geo: Geometry, ext, ko, kn, kt, slope_pitch_d
         Kc = kn[i] * P_n + kt[i] * (np.eye(3) - P_n)  # contact stiffness tensor (world)
         K += G.T @ Kc @ G
         Bc.append((G, b, Kc))
-    q = np.linalg.solve(K, f)
+    if delta is None:
+        q = np.linalg.solve(K, f)
+        F_cyl = np.array([-ko[i] * (Bc[i][1] @ q) for i in range(4)])  # oil force (compression +)
+    else:
+        delta = np.asarray(delta, float)
+        # oil compression = delta - b q -> generalised force sum ko delta b
+        q = np.linalg.solve(K, f + sum(ko[i] * delta[i] * Bc[i][1] for i in range(4)))
+        F_cyl = np.array([ko[i] * (delta[i] - Bc[i][1] @ q) for i in range(4)])
     R = np.array([-(Kc @ (G @ q)) for G, _, Kc in Bc])              # floor -> rod
-    F_cyl = np.array([-ko[i] * (Bc[i][1] @ q) for i in range(4)])  # oil force (compression +)
     N = R @ nrm
     T = np.linalg.norm(R - np.outer(N, nrm), axis=1)
     return {"R": R, "F_cyl": F_cyl, "N": N, "T": T, "mu_used": T / N, "q": q, "normal": nrm}

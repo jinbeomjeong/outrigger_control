@@ -12,6 +12,7 @@
   - 실행: `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe`
   - 같은 환경에 MuJoCo(`mujoco-python`), STEP 처리(`pythonocc-core`, `trimesh`), 제어 설계(`control`)가 있다. 모두 conda로 설치했다. 패키지를 더할 때도 conda에 있으면 conda를 먼저 쓴다.
   - `pychrono.sensor`에 가속도·자이로 센서(`ChAccelerometerSensor`, `ChGyroscopeSensor`)가 있지만, IMU 모델은 엔진 독립으로 직접 구현한다.
+  - ML/DL 학습은 별도 환경 `pytorch_214_cuda_python_313`(Python 3.13, PyTorch 2.14.1+cu130, scikit-learn, LightGBM, ONNX; 정의 [environment-ml.yml](environment-ml.yml))에서 한다. 실행: `C:\ProgramData\miniforge3\envs\pytorch_214_cuda_python_313\python.exe`. GPU RTX 4070 SUPER(12 GB). 이 환경의 numpy BLAS는 **MKL + TBB 스레딩 계층**이다. torch를 먼저 import한 뒤 MKL 기본 계층이면 numpy 행렬곱에서 프로세스가 죽으므로(0xC06D007F), `MKL_THREADING_LAYER=TBB`를 conda 환경 변수와 site-packages의 `sitecustomize.py` 두 곳에 걸어 `python.exe` 직접 호출에서도 적용되게 했다(환경을 다시 만들면 `sitecustomize.py`도 다시 만든다 — environment-ml.yml 주석). 학습 데이터는 Chrono-dev가 만든 npz를 읽고, 시뮬레이션 안 추론이 필요하면 ONNX로 내보낸다.
   - 시각화는 `pychrono.irrlicht`를 쓴다. VSG 시각화 모듈은 `pychrono.vsg3d`라는 이름으로 있지만(2026-10-19 import 확인) 쓰지 않는다.
   - Chrono 9 이후로는 충돌 시스템을 지정해야 접촉이 생긴다: `sys.SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)`.
 - 지면 모델은 두 가지를 지원한다.
@@ -44,12 +45,16 @@
   - 유압 회로(사용자 제공 회로도, 해석은 [docs/hydraulic_circuit.md](docs/hydraulic_circuit.md)): **복동 실린더 + 실린더 직결 이중 파일럿 체크**(헤드·로드측 모두 잠김, 호스는 잠긴 체적 밖), 비례 방향 밸브 4섹션(압력 보상형으로 보임), 최고 압력 210 bar(다리당 최대 218 kN), 펌프 60.2 L/min(네 다리 동시 22.67 mm/s 신장에 56.5 L/min 필요 — 일치).
   - 압력 한계(사용자 설명, 2026-10-19): **이동 중 210 bar**(MCV 릴리프, 행정 끝에서만 도달) → 구동기 힘 포화 218 kN(신장)/18.6 kN(수축). **잠긴 정지 상태 최대 350 bar**(실린더 최대 부하 시험 압력, 외력 진동·굴착 뒤틀림으로 발생 가능) → 364 kN. 350 bar 초과 우려 시 제조사는 파일럿 체크를 카운터 밸런스 밸브로 교체할 계획(350 bar 이상 내부 부하 차단, 순간 충격은 제외).
   - 압력 센서는 ① 로크 밸브 블록에 있어 정지 중 갇힌 부하 압력을 계속 읽는다. 제어 판정: 모든 다리 실린더 힘 ≥ F_min, 그리고 잠긴 상태 압력 ≤ 350 bar.
+  - 접지 판정(2026-10-20): 압력 절대값은 실 마찰(±F_s) 때문에 부상을 놓칠 수 있다(F_s 12 kN에서 부상 순간 압력 판독 10.9 kN > F_min). 그래서 **압력·스트로크·자세(IMU)를 결합해 판정**한다. **물리 기반 판정기를 먼저** 만들고(증분 강성 Δp/Δs, 자세 반응과 기구학 J의 일치, 마찰 이력 띠), **ML/DL은 비교 후보**로 시뮬레이션 데이터(Chrono 접촉력 = 라벨, F_s·β·경사·오거·노이즈 무작위화)로 학습해 물리 기반과 비교한다. 제어기가 레벨링 중·후에 다리를 수 mm 움직여 보는 **확인 동작(탐침)을 허용**한다(자세 변화는 ±0.1° 안).
   - 로크 밸브 모델(2026-10-19): **파일럿 체크 기본**, 카운터 밸런스(350 bar에서 다리가 밀리는 릴리프 동작)는 L2b 비교 옵션.
   - 350 bar 판정용 외란은 **D2 수직 하향 외력**(오거 인발·걸림, 마스트 축에 하향 계단/램프 힘)만 범위에 넣는다. 크기·작용 시간은 미정. 레벨링 시나리오 자체에는 여전히 천공 반력·토크를 넣지 않는다. 외란 후보 D1~D5는 [docs/dynamics_model.md](docs/dynamics_model.md) 5.1절.
   - 유압유 유효 체적 탄성계수 β_eff = **1.0 GPa**(사용자 결정, 2026-10-19). 조사 권장 중앙값 1.3 GPa(0.9~1.6)보다 낮게 둔 가정이며, 감도 해석은 0.69~1.6 GPa로 한다. 근거는 [docs/hydraulic_fluid_survey.md](docs/hydraulic_fluid_survey.md). 강체 모터 + 콘크리트 접촉만(R1)은 하중 평가에 쓰지 않는다(하중 민감도 약 15배 과대). 상세는 [docs/dynamics_model.md](docs/dynamics_model.md).
   - 마스트를 눕힌 자세(운송 자세)는 고려하지 않는다. [docs/cad_mast_review.md](docs/cad_mast_review.md)는 참고 자료로만 남긴다.
 - 상부체 질량, 무게중심, 관성, 다리 부착 위치는 CAD를 검토한 뒤 확정한다. 확정 전에 쓰는 값은 가정치로 표시한다. CAD 검토 결과는 [docs/cad_review.md](docs/cad_review.md)(제원·다리). [docs/cad_mast_review.md](docs/cad_mast_review.md)(마스트 힌지·눕힌 자세)는 시나리오에서 빠져 참고용이다.
-- 제어 성능 목표는 roll·pitch 목표값에 대한 자세 정확도다. 정상상태 오차 허용치는 ±0.1°다.
+- 제어 성능 목표는 roll·pitch 목표값에 대한 자세 정확도다. 정상상태 오차 허용치는 **±0.2°**다(2026-10-20 ±0.1°에서 완화, 근거 [docs/imu_cabin_and_accuracy_review.md](docs/imu_cabin_and_accuracy_review.md)). 완료 판정 데드밴드는 0.03°를 유지하고, **IMU 현장 영점 교정을 운용 절차로 의무화**한다. 센서 정지 영점 오차 허용 0.13°(2.27 mg).
+- IMU 장착 위치(2026-10-20): **캐빈 바닥 아래 상부 프레임**, 기체 좌표 약 (0.20, 0.88, 0.30) m(가정). 캐빈 몸체에 달지 않는다(캐빈 방진 마운트 오차 회피). 로킹 회전 중심이 지면 아래라 **IMU를 높이 달수록 겉보기 기울기 증폭이 커진다** — 낮게 단다.
+- 자세 신호 필터: **2차 저역통과**(1차 τ 0.5 s × 2단). 1차 필터는 로킹 잔류 0.023°가 남아 부족하다.
+- 제어 구조(잠정, 2026-10-20): **C2 = 기구학 분해(heave·roll·pitch) + 압력 기반 비틀림 루프(n^T P → 0) + F_min 가드**, 레벨링 뒤 **결합 접지 판정(탐침)**. 다리 속도 u = A[ż, φ̇, θ̇]ᵀ + n·τ̇, n = (0.476, −0.476, −0.523, 0.523). 대안은 C8(2상). 비교 근거는 [docs/control_candidates_comparison.md](docs/control_candidates_comparison.md), 문헌은 [docs/leveling_control_survey.md](docs/leveling_control_survey.md).
 
 ## 도메인 용어
 
@@ -82,9 +87,10 @@
 - 기체 좌표 원점
 - 연약 지면 SCM 파라미터 (Bekker kc·kφ·n, 응집력, 내부마찰각, Janosi 전단 계수)
 - roll·pitch 목표값 범위
-- 제어기 구조 (후보 C1~C5는 [docs/dynamics_model.md](docs/dynamics_model.md))
+- 제어기 세부: 탐침을 매번 할지(감시 트리거 때만 할지), 비틀림 목표(n^T P = 0 또는 최소 하중 최대화), 실 마찰 설계 띠 F_band, 게인 — 근거는 [docs/control_candidates_comparison.md](docs/control_candidates_comparison.md) 8절
 - 유압 사양(체적 탄성계수, 배관, 응답 시정수), 접촉 강성·감쇠·마찰 실측값 — 지금은 가정치
-- 마스트 1차 굽힘 진동수(L1 로킹 1.8~3.9 Hz와 겹칠 수 있음), IMU 장착 위치
+- 마스트 1차 굽힘 진동수(L1 로킹 1.8~3.9 Hz와 겹칠 수 있음)
+- IMU 센서 모델 선정과 장착점 정확한 좌표(현재 가정 (0.20, 0.88, 0.30) m), 제어 주기(기본 20 ms 가정)
 
 ## 작업 규칙
 

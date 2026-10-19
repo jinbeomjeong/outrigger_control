@@ -1,0 +1,24 @@
+# Tool configuration only (pytest, ruff). The package is not installed:
+# `src/` is put on sys.path by pytest (`pythonpath`) and by scripts.
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = ["--strict-markers"]
+markers = [
+    "chrono: needs pychrono; engine convention checks (seconds to ~1 min)",
+    "sim: runs a Chrono simulation for a V check (minutes)",
+    "slow: long V check (tens of minutes); skip with -m \"not slow\"",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["outrigger_sim"]
