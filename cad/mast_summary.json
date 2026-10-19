@@ -1,0 +1,1904 @@
+{
+ "frames": "CAD root frame mm (Y up); body x=Z_cad, y=X_cad, z=Y_cad, origin = CAD origin",
+ "fold_angle_convention": "theta > 0 folds the mast top rearward: rotation of -theta about CAD +X (= body +y) through the hinge axis",
+ "joints_between_assemblies": [
+  {
+   "axis": "X",
+   "point_cad_mm": [
+    0.0,
+    45.0,
+    -2510.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "COUNTER WEIGHT:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 30.5,
+    "COUNTER WEIGHT:1": 69.0
+   },
+   "face_count": 36,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    -422.0,
+    422.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "COUNTER WEIGHT:1/솔리드10:1",
+    "COUNTER WEIGHT:1/솔리드11:1",
+    "COUNTER WEIGHT:1/솔리드77:1",
+    "COUNTER WEIGHT:1/솔리드78:1",
+    "COUNTER WEIGHT:1/솔리드79:1",
+    "COUNTER WEIGHT:1/솔리드80:1",
+    "COUNTER WEIGHT:1/솔리드81:1",
+    "COUNTER WEIGHT:1/솔리드82:1",
+    "COUNTER WEIGHT:1/솔리드84:1",
+    "COUNTER WEIGHT:1/솔리드85:1",
+    "COUNTER WEIGHT:1/솔리드8:1",
+    "COUNTER WEIGHT:1/솔리드9:1"
+   ]
+  },
+  {
+   "axis": "X",
+   "point_cad_mm": [
+    0.0,
+    405.0,
+    -2510.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "COUNTER WEIGHT:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 30.0,
+    "COUNTER WEIGHT:1": 69.0
+   },
+   "face_count": 18,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    -397.5,
+    397.5
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "COUNTER WEIGHT:1/솔리드10:1",
+    "COUNTER WEIGHT:1/솔리드11:1",
+    "COUNTER WEIGHT:1/솔리드76:1",
+    "COUNTER WEIGHT:1/솔리드83:1",
+    "COUNTER WEIGHT:1/솔리드8:1",
+    "COUNTER WEIGHT:1/솔리드9:1"
+   ]
+  },
+  {
+   "axis": "X",
+   "point_cad_mm": [
+    -4.1,
+    846.0,
+    1017.0
+   ],
+   "assemblies": [
+    "BACKSTAY CYL:1",
+    "BOOM:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BACKSTAY CYL:1": 110.0,
+    "BOOM:1": 110.0
+   },
+   "face_count": 15,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    -182.0,
+    168.0
+   ],
+   "parts": [
+    "BACKSTAY CYL:1/솔리드3:1",
+    "BOOM:1"
+   ]
+  },
+  {
+   "axis": "X",
+   "point_cad_mm": [
+    -0.3,
+    1371.0,
+    2033.0
+   ],
+   "assemblies": [
+    "BOOM:1",
+    "MAST ASSY:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BOOM:1": 150.0,
+    "MAST ASSY:1": 150.0
+   },
+   "face_count": 42,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    -422.0,
+    422.0
+   ],
+   "parts": [
+    "BOOM:1",
+    "MAST ASSY:1/BUSH-1:1",
+    "MAST ASSY:1/BUSH-1:2",
+    "MAST ASSY:1/MAST-2:1"
+   ]
+  },
+  {
+   "axis": "X",
+   "point_cad_mm": [
+    -623.5,
+    1469.6,
+    891.8
+   ],
+   "assemblies": [
+    "BOOM:1",
+    "Hose guide CYL:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BOOM:1": 65.0,
+    "Hose guide CYL:1": 55.0
+   },
+   "face_count": 26,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    -707.5,
+    -545.5
+   ],
+   "parts": [
+    "BOOM:1",
+    "Hose guide CYL:1/솔리드1:1"
+   ]
+  },
+  {
+   "axis": "X",
+   "point_cad_mm": [
+    -623.5,
+    1710.5,
+    1328.9
+   ],
+   "assemblies": [
+    "BOOM:1",
+    "Hose guide arm:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BOOM:1": 65.0,
+    "Hose guide arm:1": 65.0
+   },
+   "face_count": 30,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    -762.5,
+    -490.5
+   ],
+   "parts": [
+    "BOOM:1",
+    "Hose guide arm:1"
+   ]
+  },
+  {
+   "axis": "X",
+   "point_cad_mm": [
+    -623.1,
+    3083.0,
+    1185.9
+   ],
+   "assemblies": [
+    "Hose guide CYL:1",
+    "Hose guide arm:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "Hose guide CYL:1": 55.0,
+    "Hose guide arm:1": 65.0
+   },
+   "face_count": 26,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    -752.5,
+    -500.5
+   ],
+   "parts": [
+    "Hose guide CYL:1/솔리드2:1",
+    "Hose guide arm:1"
+   ]
+  },
+  {
+   "axis": "X",
+   "point_cad_mm": [
+    -0.9,
+    4821.0,
+    1978.0
+   ],
+   "assemblies": [
+    "BACKSTAY CYL:1",
+    "MAST ASSY:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BACKSTAY CYL:1": 110.0,
+    "MAST ASSY:1": 100.0
+   },
+   "face_count": 26,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    -174.0,
+    171.0
+   ],
+   "parts": [
+    "BACKSTAY CYL:1/솔리드2:1",
+    "MAST ASSY:1/KEY PLATE:1",
+    "MAST ASSY:1/KEY PLATE:2",
+    "MAST ASSY:1/MAST-3:1",
+    "MAST ASSY:1/PIN-1:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    -345.0,
+    422.2,
+    -2229.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "MAST BK:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 6.9,
+    "MAST BK:1": 9.0
+   },
+   "face_count": 2,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    436.7
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "MAST BK:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    -345.0,
+    422.2,
+    -2019.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "MAST BK:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 6.9,
+    "MAST BK:1": 9.0
+   },
+   "face_count": 2,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    436.7
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "MAST BK:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    -345.0,
+    424.9,
+    -915.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:14",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:12",
+    "CENTER DECK COVER_1:1/솔리드7:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    -345.0,
+    424.9,
+    -700.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:13",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:11",
+    "CENTER DECK COVER_1:1/솔리드7:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    -345.0,
+    424.9,
+    -540.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:12",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:13",
+    "CENTER DECK COVER_1:1/솔리드7:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    -345.0,
+    424.9,
+    -285.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:11",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:10",
+    "CENTER DECK COVER_1:1/솔리드7:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    -345.0,
+    424.9,
+    -30.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:10",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:14",
+    "CENTER DECK COVER_1:1/솔리드7:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    -345.0,
+    424.9,
+    225.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:9",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:9",
+    "CENTER DECK COVER_1:1/솔리드7:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    -345.0,
+    424.9,
+    480.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:8",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:8",
+    "CENTER DECK COVER_1:1/솔리드7:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    345.0,
+    422.2,
+    -2229.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "MAST BK:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 6.9,
+    "MAST BK:1": 9.0
+   },
+   "face_count": 2,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    436.7
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "MAST BK:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    345.0,
+    422.2,
+    -2019.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "MAST BK:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 6.9,
+    "MAST BK:1": 9.0
+   },
+   "face_count": 2,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    436.7
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "MAST BK:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    345.0,
+    424.9,
+    -915.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:7",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:5",
+    "CENTER DECK COVER_1:1/솔리드11:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    345.0,
+    424.9,
+    -700.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:6",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:4",
+    "CENTER DECK COVER_1:1/솔리드11:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    345.0,
+    424.9,
+    -540.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:5",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:6",
+    "CENTER DECK COVER_1:1/솔리드11:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    345.0,
+    424.9,
+    -285.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:4",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:3",
+    "CENTER DECK COVER_1:1/솔리드11:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    345.0,
+    424.9,
+    -30.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:3",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:7",
+    "CENTER DECK COVER_1:1/솔리드11:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    345.0,
+    424.9,
+    225.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:2",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:2",
+    "CENTER DECK COVER_1:1/솔리드11:1"
+   ]
+  },
+  {
+   "axis": "Y",
+   "point_cad_mm": [
+    345.0,
+    424.9,
+    480.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 5.1,
+    "CENTER DECK COVER_1:1": 10.3
+   },
+   "face_count": 5,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    405.0,
+    438.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "CENTER DECK COVER_1:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 12 x 25:1",
+    "CENTER DECK COVER_1:1/KS B 1324 번호 2 - 12:1",
+    "CENTER DECK COVER_1:1/솔리드11:1"
+   ]
+  },
+  {
+   "axis": "Z",
+   "point_cad_mm": [
+    -530.0,
+    459.0,
+    1793.0
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "BOOM CYL:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 100.0,
+    "BOOM CYL:1": 100.0
+   },
+   "face_count": 14,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    1677.0,
+    1912.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "BOOM CYL:1/솔리드2_1:1"
+   ]
+  },
+  {
+   "axis": "Z",
+   "point_cad_mm": [
+    -530.0,
+    889.0,
+    1793.0
+   ],
+   "assemblies": [
+    "BOOM CYL:1",
+    "BOOM:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BOOM CYL:1": 50.0,
+    "BOOM:1": 105.0
+   },
+   "face_count": 24,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    1553.0,
+    2033.0
+   ],
+   "parts": [
+    "BOOM CYL:1/솔리드3_1:1",
+    "BOOM:1"
+   ]
+  },
+  {
+   "axis": "Z",
+   "point_cad_mm": [
+    -100.0,
+    2256.0,
+    2203.0
+   ],
+   "assemblies": [
+    "MAST ASSY:1",
+    "윈치:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "MAST ASSY:1": 6.9,
+    "윈치:1": 6.9
+   },
+   "face_count": 3,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    2173.0,
+    2233.0
+   ],
+   "parts": [
+    "MAST ASSY:1/MAST-2:1",
+    "윈치:1"
+   ]
+  },
+  {
+   "axis": "Z",
+   "point_cad_mm": [
+    -100.0,
+    2576.0,
+    2203.0
+   ],
+   "assemblies": [
+    "MAST ASSY:1",
+    "윈치:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "MAST ASSY:1": 6.9,
+    "윈치:1": 6.9
+   },
+   "face_count": 3,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    2173.0,
+    2233.0
+   ],
+   "parts": [
+    "MAST ASSY:1/MAST-2:1",
+    "윈치:1"
+   ]
+  },
+  {
+   "axis": "Z",
+   "point_cad_mm": [
+    100.0,
+    2256.0,
+    2203.0
+   ],
+   "assemblies": [
+    "MAST ASSY:1",
+    "윈치:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "MAST ASSY:1": 6.9,
+    "윈치:1": 6.9
+   },
+   "face_count": 3,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    2173.0,
+    2233.0
+   ],
+   "parts": [
+    "MAST ASSY:1/MAST-2:1",
+    "윈치:1"
+   ]
+  },
+  {
+   "axis": "Z",
+   "point_cad_mm": [
+    100.0,
+    2576.0,
+    2203.0
+   ],
+   "assemblies": [
+    "MAST ASSY:1",
+    "윈치:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "MAST ASSY:1": 6.9,
+    "윈치:1": 6.9
+   },
+   "face_count": 3,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    2173.0,
+    2233.0
+   ],
+   "parts": [
+    "MAST ASSY:1/MAST-2:1",
+    "윈치:1"
+   ]
+  },
+  {
+   "axis": "Z",
+   "point_cad_mm": [
+    470.0,
+    569.0,
+    1587.8
+   ],
+   "assemblies": [
+    "BASE DECK:1",
+    "BOOM:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BASE DECK:1": 120.0,
+    "BOOM:1": 110.0
+   },
+   "face_count": 32,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    1154.0,
+    2031.0
+   ],
+   "parts": [
+    "BASE DECK:1",
+    "BOOM:1"
+   ]
+  }
+ ],
+ "hinge": {
+  "point_cad_mm": [
+   0.0,
+   1371.0,
+   2033.0
+  ],
+  "point_body_m": [
+   2.033,
+   0.0,
+   1.371
+  ],
+  "axis_cad": [
+   1.0,
+   -0.0,
+   0.0
+  ],
+  "axis_body": [
+   0.0,
+   1.0,
+   -0.0
+  ],
+  "evidence": {
+   "axis": "X",
+   "point_cad_mm": [
+    -0.3,
+    1371.0,
+    2033.0
+   ],
+   "assemblies": [
+    "BOOM:1",
+    "MAST ASSY:1"
+   ],
+   "max_radius_by_assembly_mm": {
+    "BOOM:1": 150.0,
+    "MAST ASSY:1": 150.0
+   },
+   "face_count": 42,
+   "axis_point_spread_mm": 0.0,
+   "axial_range_mm": [
+    -422.0,
+    422.0
+   ],
+   "parts": [
+    "BOOM:1",
+    "MAST ASSY:1/BUSH-1:1",
+    "MAST ASSY:1/BUSH-1:2",
+    "MAST ASSY:1/MAST-2:1"
+   ]
+  }
+ },
+ "backstay": {
+  "lower_pivot_cad_mm": [
+   0.0,
+   846.0,
+   1017.0
+  ],
+  "upper_pivot_cad_mm": [
+   0.0,
+   4821.0,
+   1978.0
+  ],
+  "barrel_solid": "솔리드3",
+  "rod_solid": "솔리드2",
+  "rod_solids_seen": [
+   "솔리드2:1",
+   "솔리드3:1"
+  ],
+  "bore_radius_mm": 100.0,
+  "rod_radius_mm": 60.0,
+  "axial_positions_from_lower_pivot_mm": {
+   "bore_floor": 205.0,
+   "piston_bottom": 1824.52,
+   "piston_top": 1979.52,
+   "gland_inner_face": 2030.0
+  },
+  "pin_to_pin_now_mm": 4089.52,
+  "pin_to_pin_min_mm": 2470.0,
+  "pin_to_pin_max_mm": 4140.0,
+  "stroke_mm": 1670.0,
+  "lower_pivot_body_m": [
+   1.017,
+   0.0,
+   0.846
+  ],
+  "upper_pivot_body_m": [
+   1.978,
+   0.0,
+   4.821
+  ],
+  "pin_to_pin_at_flat_mm": 2478.96,
+  "upper_pivot_at_flat_cad_mm": [
+   0.0,
+   1316.0,
+   -1417.0
+  ],
+  "theta_at_full_retraction_deg": 90.733,
+  "motion": "retracts while the mast folds rearward"
+ },
+ "mast_tilt_from_vertical_deg": 2e-05,
+ "theta_flat_deg": 90.0,
+ "rest_bracket": {
+  "part": "MAST BK:1",
+  "mesh_first_contact_theta_deg": 90.09,
+  "exact_first_touch_theta_deg": 90.126,
+  "rest_top_y_cad_mm": 1551.7,
+  "rotating_lowest_y_over_rest_cad_mm": 1575.0,
+  "gap_mm": 23.3
+ },
+ "first_contact_during_fold_theta_deg": {
+  "mesh": 89.85,
+  "exact_brep": 89.935
+ },
+ "contact_settings": {
+  "mesh_linear_deflection_mm": 3.0,
+  "contact_distance_mm": 3.0,
+  "sample_spacing_mm": 8.0,
+  "joint_exclusion_radius_mm": {
+   "hinge": 160.0,
+   "backstay_lower": 115.0,
+   "backstay_upper": 115.0
+  },
+  "sweep_step_deg": 0.5,
+  "sweep_max_deg": 93.0,
+  "method": "surface samples of the moving part vs KD-tree of the other part, exact closest point for the nearest; pairs touching at 0 deg excluded"
+ },
+ "contact_pairs": [
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드22:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 89.85,
+   "last_contact_theta_deg": 92.0,
+   "distance_at_flat_mm": 0.5,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST-3:1",
+   "moving_category": "rotating",
+   "other_part": "MAST BK:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.09,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": 9.3,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드22:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.39,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": Infinity,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드20:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.5,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드20:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.5,
+   "last_contact_theta_deg": 91.5,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.5,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.51,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.51,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.61,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드27:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.63,
+   "last_contact_theta_deg": 91.0,
+   "distance_at_flat_mm": Infinity,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드24:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.76,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": Infinity,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드25:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.76,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": Infinity,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드26:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.84,
+   "last_contact_theta_deg": 91.0,
+   "distance_at_flat_mm": Infinity,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/KS B 1324 번호 2 - 10:17",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.92,
+   "last_contact_theta_deg": 91.0,
+   "distance_at_flat_mm": Infinity,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드2:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.95,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드2:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 90.96,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드29:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드22:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 91.68,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드20:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드6:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 91.7,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드6:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 91.73,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/KS B 1002 C 일반 스레드 (전체 스레드) C  M 10 x 20:9",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.2,
+   "last_contact_theta_deg": 92.5,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/KS B 1324 번호 2 - 10:9",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.27,
+   "last_contact_theta_deg": 92.5,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드23:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.28,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드29:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.39,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드29:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.41,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST-4:1",
+   "moving_category": "rotating",
+   "other_part": "COUNTER WEIGHT:1/솔리드74:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.55,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST-3:1",
+   "moving_category": "rotating",
+   "other_part": "COUNTER WEIGHT:1/솔리드74:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.57,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": Infinity,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "BACKSTAY CYL:1/솔리드3:1",
+   "moving_category": "link_backstay_barrel",
+   "other_part": "CENTER DECK COVER_1:1/부품10:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.63,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": 113.6,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST-3:1",
+   "moving_category": "rotating",
+   "other_part": "COUNTER WEIGHT:1/솔리드65:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.7,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": Infinity,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST-4:1",
+   "moving_category": "rotating",
+   "other_part": "COUNTER WEIGHT:1/솔리드65:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.7,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드15:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.89,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드23:1",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.9,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "moving_category": "rotating",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/KS B 1324 번호 2 - 10:15",
+   "other_category": "fixed",
+   "status": "contact",
+   "first_contact_theta_deg": 92.94,
+   "last_contact_theta_deg": 93.0,
+   "distance_at_flat_mm": NaN,
+   "distance_at_0deg_mm": Infinity
+  }
+ ],
+ "clearance_at_flat_nearest": [
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드22:1",
+   "distance_mm": 0.5
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/27. GUID CATCHER:4",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "distance_mm": 7.5
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST-3:1",
+   "other_part": "MAST BK:1",
+   "distance_mm": 9.3
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/27. GUID CATCHER:4",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "distance_mm": 10.6
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST-2:1",
+   "other_part": "BOOM:1",
+   "distance_mm": 15.0
+  },
+  {
+   "moving_part": "BACKSTAY CYL:1/솔리드2:1",
+   "other_part": "MAST ASSY:1/MAST-3:1",
+   "distance_mm": 24.0
+  },
+  {
+   "moving_part": "BACKSTAY CYL:1/솔리드3:1",
+   "other_part": "BOOM:1",
+   "distance_mm": 25.5
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/27. GUID CATCHER:5",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "distance_mm": 39.6
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/27. GUID CATCHER:5",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "distance_mm": 43.4
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST-3:1",
+   "other_part": "BUMA CE 3D 20230425:1/부마씨이 소구경 3D_Shrinkwrap_11:1",
+   "distance_mm": 46.1
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST:1",
+   "other_part": "BOOM:1",
+   "distance_mm": 85.8
+  },
+  {
+   "moving_part": "BACKSTAY CYL:1/솔리드3:1",
+   "other_part": "CENTER DECK COVER_1:1/부품10:1",
+   "distance_mm": 113.6
+  }
+ ],
+ "exact_brep_checks": [
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드22:1",
+   "mesh_first_contact_theta_deg": 89.85,
+   "exact_distance_at_flat_mm": 0.0,
+   "exact_first_touch_theta_deg": 89.935
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST-3:1",
+   "other_part": "MAST BK:1",
+   "mesh_first_contact_theta_deg": 90.09,
+   "exact_distance_at_flat_mm": 9.31,
+   "exact_first_touch_theta_deg": 90.126
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드22:1",
+   "mesh_first_contact_theta_deg": 90.39,
+   "exact_distance_at_flat_mm": 15.44,
+   "exact_first_touch_theta_deg": 90.424
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드20:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "mesh_first_contact_theta_deg": 90.5,
+   "exact_distance_at_flat_mm": 22.8,
+   "exact_first_touch_theta_deg": 90.3
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드20:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "mesh_first_contact_theta_deg": 90.5,
+   "exact_distance_at_flat_mm": 22.8,
+   "exact_first_touch_theta_deg": 90.3
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "mesh_first_contact_theta_deg": 90.5,
+   "exact_distance_at_flat_mm": 35.24,
+   "exact_first_touch_theta_deg": 90.463
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "mesh_first_contact_theta_deg": 90.51,
+   "exact_distance_at_flat_mm": 37.8,
+   "exact_first_touch_theta_deg": 90.549
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "mesh_first_contact_theta_deg": 90.51,
+   "exact_distance_at_flat_mm": 37.8,
+   "exact_first_touch_theta_deg": 90.549
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "mesh_first_contact_theta_deg": 90.61,
+   "exact_distance_at_flat_mm": 42.24,
+   "exact_first_touch_theta_deg": null
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드27:1",
+   "mesh_first_contact_theta_deg": 90.63,
+   "exact_distance_at_flat_mm": 26.72,
+   "exact_first_touch_theta_deg": 90.708
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드24:1",
+   "mesh_first_contact_theta_deg": 90.76,
+   "exact_distance_at_flat_mm": 31.62,
+   "exact_first_touch_theta_deg": 90.837
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드25:1",
+   "mesh_first_contact_theta_deg": 90.76,
+   "exact_distance_at_flat_mm": 31.62,
+   "exact_first_touch_theta_deg": 90.838
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드26:1",
+   "mesh_first_contact_theta_deg": 90.84,
+   "exact_distance_at_flat_mm": 34.39,
+   "exact_first_touch_theta_deg": 90.912
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드24:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/KS B 1324 번호 2 - 10:17",
+   "mesh_first_contact_theta_deg": 90.92,
+   "exact_distance_at_flat_mm": 37.32,
+   "exact_first_touch_theta_deg": null
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드2:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "mesh_first_contact_theta_deg": 90.95,
+   "exact_distance_at_flat_mm": 51.6,
+   "exact_first_touch_theta_deg": 91.014
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드2:1",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "mesh_first_contact_theta_deg": 90.96,
+   "exact_distance_at_flat_mm": 51.6,
+   "exact_first_touch_theta_deg": 91.014
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/27. GUID CATCHER:4",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "mesh_first_contact_theta_deg": null,
+   "exact_distance_at_flat_mm": 7.54,
+   "exact_first_touch_theta_deg": null
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/27. GUID CATCHER:4",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "mesh_first_contact_theta_deg": null,
+   "exact_distance_at_flat_mm": 10.58,
+   "exact_first_touch_theta_deg": null
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST-2:1",
+   "other_part": "BOOM:1",
+   "note": "joint partners (pin contact); see mesh distance outside pin zone"
+  },
+  {
+   "moving_part": "BACKSTAY CYL:1/솔리드2:1",
+   "other_part": "MAST ASSY:1/MAST-3:1",
+   "note": "joint partners (pin contact); see mesh distance outside pin zone"
+  },
+  {
+   "moving_part": "BACKSTAY CYL:1/솔리드3:1",
+   "other_part": "BOOM:1",
+   "note": "joint partners (pin contact); see mesh distance outside pin zone"
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/27. GUID CATCHER:5",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드1:1",
+   "mesh_first_contact_theta_deg": null,
+   "exact_distance_at_flat_mm": 37.91,
+   "exact_first_touch_theta_deg": null
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/27. GUID CATCHER:5",
+   "other_part": "SIDE HOUSING_ROOF COVER:1/솔리드2:1",
+   "mesh_first_contact_theta_deg": null,
+   "exact_distance_at_flat_mm": 39.28,
+   "exact_first_touch_theta_deg": null
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST-3:1",
+   "other_part": "BUMA CE 3D 20230425:1/부마씨이 소구경 3D_Shrinkwrap_11:1",
+   "note": "BREP not cached"
+  },
+  {
+   "moving_part": "MAST ASSY:1/MAST:1",
+   "other_part": "BOOM:1",
+   "note": "joint partners (pin contact); see mesh distance outside pin zone"
+  },
+  {
+   "moving_part": "BACKSTAY CYL:1/솔리드3:1",
+   "other_part": "CENTER DECK COVER_1:1/부품10:1",
+   "mesh_first_contact_theta_deg": null,
+   "exact_distance_at_flat_mm": 92.76,
+   "exact_first_touch_theta_deg": null
+  }
+ ],
+ "category_mass_kg": {
+  "excluded_leg_rod_pad": {
+   "mass_step_kg": 427.1,
+   "mass_generic_as_steel_kg": 427.1
+  },
+  "fixed": {
+   "mass_step_kg": 24620.2,
+   "mass_generic_as_steel_kg": 28107.6
+  },
+  "link_backstay_barrel": {
+   "mass_step_kg": 330.9,
+   "mass_generic_as_steel_kg": 330.9
+  },
+  "link_backstay_rod": {
+   "mass_step_kg": 260.2,
+   "mass_generic_as_steel_kg": 260.2
+  },
+  "link_static": {
+   "mass_step_kg": 1394.5,
+   "mass_generic_as_steel_kg": 1394.5
+  },
+  "rotating": {
+   "mass_step_kg": 10493.9,
+   "mass_generic_as_steel_kg": 11825.6
+  },
+  "undetermined": {
+   "mass_step_kg": 217.1,
+   "mass_generic_as_steel_kg": 217.1
+  }
+ },
+ "mass_properties_superstructure": {
+  "upright": {
+   "theta_deg": 0.0,
+   "step": {
+    "mass_kg": 37316.9,
+    "cog_cad_m": [
+     -0.0015,
+     1.5378,
+     0.3538
+    ],
+    "cog_body_m": [
+     0.3538,
+     -0.0015,
+     1.5378
+    ],
+    "inertia_about_cog_body_kg_m2": [
+     [
+      293282.0,
+      -947.7,
+      -125768.8
+     ],
+     [
+      -947.7,
+      438255.2,
+      -119.4
+     ],
+     [
+      -125768.8,
+      -119.4,
+      182480.7
+     ]
+    ],
+    "principal_moments_kg_m2": [
+     100450.1,
+     375302.9,
+     438264.7
+    ],
+    "tensor_checks": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "leg_loads_kN": {
+     "FL": 110.8,
+     "FR": 108.76,
+     "RL": 74.12,
+     "RR": 72.26
+    },
+    "leg_loads_pct": {
+     "FL": 30.28,
+     "FR": 29.72,
+     "RL": 20.25,
+     "RR": 19.75
+    },
+    "cog_inside_leg_rectangle": true
+   },
+   "generic_as_steel": {
+    "mass_kg": 42136.0,
+    "cog_cad_m": [
+     0.0684,
+     1.6402,
+     0.3902
+    ],
+    "cog_body_m": [
+     0.3902,
+     0.0684,
+     1.6402
+    ],
+    "inertia_about_cog_body_kg_m2": [
+     [
+      328792.6,
+      1142.5,
+      -145987.1
+     ],
+     [
+      1142.5,
+      486324.8,
+      1491.5
+     ],
+     [
+      -145987.1,
+      1491.5,
+      200139.1
+     ]
+    ],
+    "principal_moments_kg_m2": [
+     104925.5,
+     423996.6,
+     486334.3
+    ],
+    "tensor_checks": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "leg_loads_kN": {
+     "FL": 132.6,
+     "FR": 118.42,
+     "RL": 87.55,
+     "RR": 74.64
+    },
+    "leg_loads_pct": {
+     "FL": 32.09,
+     "FR": 28.66,
+     "RL": 21.19,
+     "RR": 18.06
+    },
+    "cog_inside_leg_rectangle": true
+   }
+  },
+  "folded_flat": {
+   "theta_deg": 90.0,
+   "step": {
+    "mass_kg": 37316.9,
+    "cog_cad_m": [
+     -0.0015,
+     0.6933,
+     -0.9346
+    ],
+    "cog_body_m": [
+     -0.9346,
+     -0.0015,
+     0.6933
+    ],
+    "inertia_about_cog_body_kg_m2": [
+     [
+      65692.5,
+      -509.3,
+      25243.4
+     ],
+     [
+      -509.3,
+      199836.5,
+      197.8
+     ],
+     [
+      25243.4,
+      197.8,
+      171651.5
+     ]
+    ],
+    "principal_moments_kg_m2": [
+     59983.8,
+     177357.8,
+     199838.9
+    ],
+    "tensor_checks": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "leg_loads_kN": {
+     "FL": 62.95,
+     "FR": 59.4,
+     "RL": 123.42,
+     "RR": 120.19
+    },
+    "leg_loads_pct": {
+     "FL": 17.2,
+     "FR": 16.23,
+     "RL": 33.73,
+     "RR": 32.84
+    },
+    "cog_inside_leg_rectangle": true
+   },
+   "generic_as_steel": {
+    "mass_kg": 42136.0,
+    "cog_cad_m": [
+     0.0684,
+     0.782,
+     -0.9474
+    ],
+    "cog_body_m": [
+     -0.9474,
+     0.0684,
+     0.782
+    ],
+    "inertia_about_cog_body_kg_m2": [
+     [
+      74757.7,
+      -2040.6,
+      29794.9
+     ],
+     [
+      -2040.6,
+      215278.3,
+      -535.3
+     ],
+     [
+      29794.9,
+      -535.3,
+      183127.4
+     ]
+    ],
+    "principal_moments_kg_m2": [
+     67083.3,
+     190736.1,
+     215344.1
+    ],
+    "tensor_checks": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "leg_loads_kN": {
+     "FL": 76.5,
+     "FR": 60.55,
+     "RL": 145.34,
+     "RR": 130.82
+    },
+    "leg_loads_pct": {
+     "FL": 18.51,
+     "FR": 14.65,
+     "RL": 35.17,
+     "RR": 31.66
+    },
+    "cog_inside_leg_rectangle": true
+   }
+  }
+ },
+ "upright_reproduces_cad_summary_rel_diff": {
+  "step": 0.0,
+  "generic_as_steel": 0.0
+ },
+ "sensitivity": {
+  "step": {
+   "drive_and_tool_mass_kg": 5018.3,
+   "cog_shift_per_1m_drive_travel_along_mast_m": 0.1345,
+   "hose_guide_mass_kg": 217.1,
+   "cog_shift_if_hose_guide_moves_1m_m": 0.0058
+  },
+  "generic_as_steel": {
+   "drive_and_tool_mass_kg": 6350.0,
+   "cog_shift_per_1m_drive_travel_along_mast_m": 0.1507,
+   "hose_guide_mass_kg": 217.1,
+   "cog_shift_if_hose_guide_moves_1m_m": 0.0052
+  }
+ },
+ "mesh_volume_check": {
+  "watertight_parts": 997,
+  "parts_with_mesh": 1165,
+  "total_volume_relative_difference": 0.001396,
+  "per_part_relative_difference_median": 0.004493,
+  "per_part_relative_difference_p95": 0.009759
+ },
+ "leg_load_model": "rigid body on four equal vertical springs, rigid floor; F_i = a + b x_i + c y_i"
+}

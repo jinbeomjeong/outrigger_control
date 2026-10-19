@@ -1,0 +1,21 @@
+# Minimal environment for the dynamics reference scripts (docs/dynamics_model.md section 8):
+#   scripts/dynamics/dyn_model.py, run_reference.py, run_timedomain_check.py, run_actuator_L2_feasibility.py
+# Versions pinned to the conda env `dynamics-dev` as installed on 2026-10-19 (conda list).
+# On this PC use the existing `dynamics-dev`; elsewhere:
+#   conda env create -f environment-dynamics.yml
+#   conda run -n outrigger-dynamics python -I scripts/dynamics/run_reference.py   (from the project root)
+name: outrigger-dynamics
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12.15
+  - numpy=2.5.4
+  - scipy=1.18.1
+  - sympy=1.14.0
+  - pyyaml=6.0.3
+  # BLAS: MKL with the TBB threading layer, as in dynamics-dev (libblas 3.9.0 *_mkl, mkl 2024.2.2, tbb 2021.13.0)
+  - libblas=3.9.0=*_mkl
+  - mkl=2024.2.2
+  - tbb=2021.13.0
+variables:
+  MKL_THREADING_LAYER: TBB

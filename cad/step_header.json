@@ -1,0 +1,81 @@
+{
+  "file_description": "11,556x7,036x3,114",
+  "originating_system": "Autodesk Inventor 2020",
+  "time_stamp": "2023-05-10T13:36:51+09:00",
+  "schema": "AUTOMOTIVE_DESIGN { 1 0 10303 214 3 1 1 }",
+  "file_size_bytes": 630777519,
+  "units": {
+    "unit_entities": {
+      "3410220": {
+        "kind": "MASS",
+        "si_unit": "$,.GRAM."
+      },
+      "8238476": {
+        "kind": "LENGTH",
+        "si_unit": ".MILLI.,.METRE."
+      },
+      "8238477": {
+        "kind": "LENGTH",
+        "si_unit": ".CENTI.,.METRE."
+      },
+      "8238478": {
+        "kind": "PLANE_ANGLE",
+        "si_unit": "$,.RADIAN."
+      },
+      "8238479": {
+        "kind": "SOLID_ANGLE",
+        "si_unit": "$,.STERADIAN."
+      }
+    },
+    "geometric_context_count": 753,
+    "length_unit_used_by_geometric_contexts": {
+      ".MILLI.,.METRE.": 753
+    }
+  },
+  "density": {
+    "density_measure_count": 663,
+    "note": "Density measures use DERIVED_UNIT(GRAM^1, CENTI METRE^3) as written by Inventor (the exponent sign is +3, but the values, e.g. 7.85 for steel, are g/cm^3)."
+  },
+  "entity_counts_top": {
+    "CARTESIAN_POINT": 3418892,
+    "DIRECTION": 1002060,
+    "ORIENTED_EDGE": 975408,
+    "EDGE_CURVE": 487708,
+    "AXIS2_PLACEMENT_3D": 395318,
+    "VERTEX_POINT": 297078,
+    "EDGE_LOOP": 228730,
+    "LINE": 211424,
+    "VECTOR": 211424,
+    "FACE_OUTER_BOUND": 204071,
+    "ADVANCED_FACE": 204071,
+    "CIRCLE": 195799,
+    "STYLED_ITEM": 68292,
+    "CYLINDRICAL_SURFACE": 65951,
+    "PLANE": 64314,
+    "B_SPLINE_CURVE_WITH_KNOTS": 49096,
+    "FACE_BOUND": 24659,
+    "B_SPLINE_SURFACE_WITH_KNOTS": 24185,
+    "TOROIDAL_SURFACE": 21275,
+    "ELLIPSE": 21105,
+    "(complex)": 15659,
+    "CONICAL_SURFACE": 13733,
+    "SPHERICAL_SURFACE": 11192,
+    "CLOSED_SHELL": 4675,
+    "MANIFOLD_SOLID_BREP": 4658,
+    "PRODUCT_DEFINITION_SHAPE": 1948,
+    "DERIVED_UNIT_ELEMENT": 1326,
+    "PROPERTY_DEFINITION_REPRESENTATION": 1326,
+    "REPRESENTATION": 1326,
+    "PROPERTY_DEFINITION": 1326,
+    "ITEM_DEFINED_TRANSFORMATION": 1196,
+    "CONTEXT_DEPENDENT_SHAPE_REPRESENTATION": 1196,
+    "NEXT_ASSEMBLY_USAGE_OCCURRENCE": 1196,
+    "UNCERTAINTY_MEASURE_WITH_UNIT": 753,
+    "DATE_TIME_ROLE": 752,
+    "APPLIED_DATE_AND_TIME_ASSIGNMENT": 752,
+    "DATE_AND_TIME": 752,
+    "CALENDAR_DATE": 752,
+    "LOCAL_TIME": 752,
+    "COORDINATED_UNIVERSAL_TIME_OFFSET": 752
+  }
+}

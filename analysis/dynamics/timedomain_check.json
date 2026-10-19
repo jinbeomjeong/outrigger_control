@@ -1,0 +1,325 @@
+{
+ "meta": {
+  "script": "scripts/dynamics/run_timedomain_check.py",
+  "model": "nonlinear 6-DoF rigid body (superstructure + rods, top level), 4 unilateral penalty pads",
+  "integrator": "solve_ivp DOP853 rtol 1e-10 atol 1e-12",
+  "quaternion_order": "wxyz (scalar first)",
+  "runtime_s": 6.6
+ },
+ "L1_rigid_motor_lumped_contact": {
+  "kv_N_m": [
+   20813595.390379533,
+   20813595.390379533,
+   21247882.943617858,
+   21247882.943617858
+  ],
+  "kh_N_m": [
+   8510485.27945943,
+   8510485.27945943,
+   8403601.996732794,
+   8403601.996732794
+  ],
+  "settle_time_s": 8.0,
+  "T1_static": {
+   "F_nonlinear_N": [
+    119360.33,
+    117369.36,
+    73705.85,
+    71855.12
+   ],
+   "F_linear_N": [
+    119292.49,
+    117318.02,
+    73757.77,
+    71922.38
+   ],
+   "max_rel_diff": 0.0009351564799446614,
+   "sum_F_minus_W_rel": 3.706166068065667e-12,
+   "penetration_mm": [
+    5.73473,
+    5.63907,
+    3.46886,
+    3.38175
+   ],
+   "attitude_deg (roll, pitch, yaw)": [
+    -0.00207,
+    0.026703,
+    -0.0
+   ],
+   "attitude_linear_deg (roll, pitch)": [
+    -0.002053,
+    0.026636
+   ]
+  },
+  "T2_T3_free_vibration": {
+   "mode1 ['sway y', 'roll', 'yaw']": {
+    "f_linear_Hz": 1.7845100268313245,
+    "f_nonlinear_Hz": 1.784442163543483,
+    "rel_err": 3.802908743638502e-05,
+    "energy_drift_rel_to_Ekin0": 2.9554179340828467e-08
+   },
+   "mode2 ['surge x', 'pitch']": {
+    "f_linear_Hz": 2.9841776357519896,
+    "f_nonlinear_Hz": 2.984198609211964,
+    "rel_err": 7.028221015822001e-06,
+    "energy_drift_rel_to_Ekin0": 7.010959466794971e-08
+   },
+   "mode3 ['yaw', 'sway y', 'roll']": {
+    "f_linear_Hz": 5.832480934921975,
+    "f_nonlinear_Hz": 5.832413968586185,
+    "rel_err": 1.1481621035149564e-05,
+    "energy_drift_rel_to_Ekin0": 9.07464626284601e-08
+   },
+   "mode4 ['pitch', 'surge x', 'heave z']": {
+    "f_linear_Hz": 6.45898545423739,
+    "f_nonlinear_Hz": 6.458159405739184,
+    "rel_err": 0.0001278913699464066,
+    "energy_drift_rel_to_Ekin0": 7.506315506938609e-08
+   },
+   "mode5 ['heave z', 'pitch', 'surge x']": {
+    "f_linear_Hz": 7.614752082487937,
+    "f_nonlinear_Hz": 7.615665713959044,
+    "rel_err": 0.00011998177500857212,
+    "energy_drift_rel_to_Ekin0": 1.021816637471527e-07
+   },
+   "mode6 ['yaw', 'roll', 'sway y']": {
+    "f_linear_Hz": 8.04212824231603,
+    "f_nonlinear_Hz": 8.042532815051128,
+    "rel_err": 5.030667541078326e-05,
+    "energy_drift_rel_to_Ekin0": 3.4386852068330745e-08
+   }
+  },
+  "T4_FL_plus_5.0mm": {
+   "F_after_nonlinear_N": [
+    142887.3,
+    93712.3,
+    47332.4,
+    98358.7
+   ],
+   "F_after_static_active_set_N": [
+    143145.5,
+    93465.0,
+    47561.8,
+    98118.3
+   ],
+   "legs_in_contact (static)": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "max_rel_err_vs_static (vs W/4)": 0.0027017574452991677,
+   "droll_dpitch_deg_nonlinear": [
+    0.059144,
+    -0.029151
+   ],
+   "droll_dpitch_deg_static": [
+    0.058602,
+    -0.029082
+   ],
+   "dF_nonlinear_N": [
+    23526.9,
+    -23657.0,
+    -26373.5,
+    26503.6
+   ],
+   "dF_linear_N": [
+    23853.0,
+    -23853.0,
+    -26195.9,
+    26195.9
+   ],
+   "droll_dpitch_deg_linear": [
+    0.058602,
+    -0.029082
+   ]
+  },
+  "T4_FL_plus_15.0mm": {
+   "F_after_nonlinear_N": [
+    184861.1,
+    51514.3,
+    0.0,
+    145912.1
+   ],
+   "F_after_static_active_set_N": [
+    186453.4,
+    50157.1,
+    -0.0,
+    145680.1
+   ],
+   "legs_in_contact (static)": [
+    true,
+    true,
+    false,
+    true
+   ],
+   "max_rel_err_vs_static (vs W/4)": 0.016660661257839764,
+   "droll_dpitch_deg_nonlinear": [
+    0.188033,
+    -0.081693
+   ],
+   "droll_dpitch_deg_static": [
+    0.18495,
+    -0.082217
+   ]
+  }
+ },
+ "R1_rigid_motor_concrete": {
+  "kv_N_m": [
+   323661911.9514711,
+   323661911.9514711,
+   323661911.9514711,
+   323661911.9514711
+  ],
+  "kh_N_m": [
+   323661911.9514711,
+   323661911.9514711,
+   323661911.9514711,
+   323661911.9514711
+  ],
+  "settle_time_s": 4.0,
+  "T1_static": {
+   "F_nonlinear_N": [
+    119306.07,
+    117311.85,
+    73744.3,
+    71928.45
+   ],
+   "F_linear_N": [
+    119301.83,
+    117308.69,
+    73747.51,
+    71932.64
+   ],
+   "max_rel_diff": 5.8279724965425605e-05,
+   "sum_F_minus_W_rel": 4.59673610759223e-13,
+   "penetration_mm": [
+    0.36861,
+    0.36245,
+    0.22784,
+    0.22223
+   ],
+   "attitude_deg (roll, pitch, yaw)": [
+    -0.000133,
+    0.001659,
+    -0.0
+   ],
+   "attitude_linear_deg (roll, pitch)": [
+    -0.000133,
+    0.001659
+   ]
+  },
+  "T2_T3_free_vibration": {
+   "mode1 ['roll', 'sway y']": {
+    "f_linear_Hz": 7.271617883288461,
+    "f_nonlinear_Hz": 7.271617907211473,
+    "rel_err": 3.2899159994082744e-09,
+    "energy_drift_rel_to_Ekin0": 3.013033496416909e-08
+   },
+   "mode2 ['pitch', 'surge x']": {
+    "f_linear_Hz": 12.580932894479623,
+    "f_nonlinear_Hz": 12.580932920252824,
+    "rel_err": 2.0485921575829803e-09,
+    "energy_drift_rel_to_Ekin0": 9.161498312415901e-08
+   },
+   "mode3 ['heave z', 'surge x']": {
+    "f_linear_Hz": 29.00410165649363,
+    "f_nonlinear_Hz": 29.00410171482219,
+    "rel_err": 2.0110452118380987e-09,
+    "energy_drift_rel_to_Ekin0": 9.842132615486382e-08
+   },
+   "mode4 ['sway y', 'yaw', 'roll']": {
+    "f_linear_Hz": 36.07368897817666,
+    "f_nonlinear_Hz": 36.0736890644736,
+    "rel_err": 2.3922403908212815e-09,
+    "energy_drift_rel_to_Ekin0": 9.248208726794724e-08
+   },
+   "mode5 ['surge x', 'pitch']": {
+    "f_linear_Hz": 38.348261956833404,
+    "f_nonlinear_Hz": 38.34826203326289,
+    "rel_err": 1.993036524719259e-09,
+    "energy_drift_rel_to_Ekin0": 1.0238375978084406e-07
+   },
+   "mode6 ['yaw', 'roll', 'sway y']": {
+    "f_linear_Hz": 48.12984225965877,
+    "f_nonlinear_Hz": 48.12984230312062,
+    "rel_err": 9.030124271644998e-10,
+    "energy_drift_rel_to_Ekin0": 4.163231102968917e-08
+   }
+  },
+  "T4_FL_plus_0.5mm": {
+   "F_after_nonlinear_N": [
+    155951.3,
+    80653.6,
+    33446.0,
+    112239.7
+   ],
+   "F_after_static_active_set_N": [
+    155979.9,
+    80630.6,
+    33466.7,
+    112213.4
+   ],
+   "legs_in_contact (static)": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "max_rel_err_vs_static (vs W/4)": 0.0002993254690766523,
+   "droll_dpitch_deg_nonlinear": [
+    0.005919,
+    -0.002908
+   ],
+   "droll_dpitch_deg_static": [
+    0.005916,
+    -0.002908
+   ],
+   "dF_nonlinear_N": [
+    36645.3,
+    -36658.2,
+    -40298.3,
+    40311.3
+   ],
+   "dF_linear_N": [
+    36678.1,
+    -36678.1,
+    -40280.8,
+    40280.8
+   ],
+   "droll_dpitch_deg_linear": [
+    0.005916,
+    -0.002908
+   ]
+  },
+  "T4_FL_plus_1.0mm": {
+   "F_after_nonlinear_N": [
+    186350.3,
+    50243.8,
+    0.0,
+    145696.6
+   ],
+   "F_after_static_active_set_N": [
+    186453.4,
+    50157.1,
+    -0.0,
+    145680.1
+   ],
+   "legs_in_contact (static)": [
+    true,
+    true,
+    false,
+    true
+   ],
+   "max_rel_err_vs_static (vs W/4)": 0.0010791465902019314,
+   "droll_dpitch_deg_nonlinear": [
+    0.012674,
+    -0.005352
+   ],
+   "droll_dpitch_deg_static": [
+    0.012661,
+    -0.005354
+   ]
+  }
+ }
+}

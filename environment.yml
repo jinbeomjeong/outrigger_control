@@ -1,0 +1,27 @@
+# 재현: conda env create -f environment.yml
+# 2026-10-19 설치·검증한 버전으로 고정한다.
+name: Chrono-dev
+channels:
+  - projectchrono
+  - conda-forge
+dependencies:
+  - python=3.12
+  # 물리 엔진
+  - pychrono=10.0.0          # 제어 성능 검토 (강체 접촉, SCMTerrain)
+  - mujoco-python=3.16.0     # 제어기 설계·튜닝 (자체 토양 모델)
+  # CAD 검토
+  - pythonocc-core=8.0.1.2   # STEP 읽기, 부피·무게중심·관성, 메시 추출
+  - trimesh=5.1.1            # 메시 정리·단순화, OBJ/STL 내보내기
+  - fast-simplification=0.2.0  # 렌더용 메시 단순화 (scripts/cad/analyze_mast.py)
+  - rtree=1.4.1              # trimesh.ray 공간 색인 (scripts/cad/analyze_auger_levels.py)
+  # 제어 설계·해석
+  - control=0.10.2           # python-control (전달함수, LQR, 주파수 응답)
+  - numpy=2.5.4
+  - scipy=1.18.1             # 적분, 최적화(토양 파라미터 보정), 회전 변환
+  # 데이터·시각화
+  - pandas=3.0.6
+  - matplotlib=3.11.2
+  - pyyaml=6.0.3             # 공통 파라미터 파일
+  # 개발
+  - pytest=9.1.1
+  - ipykernel=7.4.0

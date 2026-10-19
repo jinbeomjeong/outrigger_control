@@ -1,0 +1,1140 @@
+{
+  "source_step": {
+    "file_description": "11,556x7,036x3,114",
+    "originating_system": "Autodesk Inventor 2020",
+    "time_stamp": "2023-05-10T13:36:51+09:00",
+    "schema": "AUTOMOTIVE_DESIGN { 1 0 10303 214 3 1 1 }",
+    "file_size_bytes": 630777519,
+    "units": {
+      "unit_entities": {
+        "3410220": {
+          "kind": "MASS",
+          "si_unit": "$,.GRAM."
+        },
+        "8238476": {
+          "kind": "LENGTH",
+          "si_unit": ".MILLI.,.METRE."
+        },
+        "8238477": {
+          "kind": "LENGTH",
+          "si_unit": ".CENTI.,.METRE."
+        },
+        "8238478": {
+          "kind": "PLANE_ANGLE",
+          "si_unit": "$,.RADIAN."
+        },
+        "8238479": {
+          "kind": "SOLID_ANGLE",
+          "si_unit": "$,.STERADIAN."
+        }
+      },
+      "geometric_context_count": 753,
+      "length_unit_used_by_geometric_contexts": {
+        ".MILLI.,.METRE.": 753
+      }
+    },
+    "density": {
+      "density_measure_count": 663,
+      "note": "Density measures use DERIVED_UNIT(GRAM^1, CENTI METRE^3) as written by Inventor (the exponent sign is +3, but the values, e.g. 7.85 for steel, are g/cm^3)."
+    },
+    "entity_counts_top": {
+      "CARTESIAN_POINT": 3418892,
+      "DIRECTION": 1002060,
+      "ORIENTED_EDGE": 975408,
+      "EDGE_CURVE": 487708,
+      "AXIS2_PLACEMENT_3D": 395318,
+      "VERTEX_POINT": 297078,
+      "EDGE_LOOP": 228730,
+      "LINE": 211424,
+      "VECTOR": 211424,
+      "FACE_OUTER_BOUND": 204071,
+      "ADVANCED_FACE": 204071,
+      "CIRCLE": 195799,
+      "STYLED_ITEM": 68292,
+      "CYLINDRICAL_SURFACE": 65951,
+      "PLANE": 64314,
+      "B_SPLINE_CURVE_WITH_KNOTS": 49096,
+      "FACE_BOUND": 24659,
+      "B_SPLINE_SURFACE_WITH_KNOTS": 24185,
+      "TOROIDAL_SURFACE": 21275,
+      "ELLIPSE": 21105,
+      "(complex)": 15659,
+      "CONICAL_SURFACE": 13733,
+      "SPHERICAL_SURFACE": 11192,
+      "CLOSED_SHELL": 4675,
+      "MANIFOLD_SOLID_BREP": 4658,
+      "PRODUCT_DEFINITION_SHAPE": 1948,
+      "DERIVED_UNIT_ELEMENT": 1326,
+      "PROPERTY_DEFINITION_REPRESENTATION": 1326,
+      "REPRESENTATION": 1326,
+      "PROPERTY_DEFINITION": 1326,
+      "ITEM_DEFINED_TRANSFORMATION": 1196,
+      "CONTEXT_DEPENDENT_SHAPE_REPRESENTATION": 1196,
+      "NEXT_ASSEMBLY_USAGE_OCCURRENCE": 1196,
+      "UNCERTAINTY_MEASURE_WITH_UNIT": 753,
+      "DATE_TIME_ROLE": 752,
+      "APPLIED_DATE_AND_TIME_ASSIGNMENT": 752,
+      "DATE_AND_TIME": 752,
+      "CALENDAR_DATE": 752,
+      "LOCAL_TIME": 752,
+      "COORDINATED_UNIVERSAL_TIME_OFFSET": 752
+    }
+  },
+  "length_unit": "mm (all 753 geometric contexts use SI_UNIT(.MILLI.,.METRE.))",
+  "extent": {
+    "bbox_min_cad_mm": [
+      -1536.5,
+      -1050.9,
+      -3001.0
+    ],
+    "bbox_max_cad_mm": [
+      1536.5,
+      10437.5,
+      4033.2
+    ],
+    "size_cad_mm": {
+      "X": 3073.1,
+      "Y": 11488.5,
+      "Z": 7034.2
+    }
+  },
+  "axes": {
+    "cad_up": "+Y",
+    "cad_forward": "+Z (FRONT JACK CYL side)",
+    "cad_left": "+X",
+    "cad_to_body_matrix": [
+      [
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ]
+  },
+  "user_provided": "FRONT JACK CYL = hydraulic outrigger cylinder",
+  "legs": {
+    "FL": {
+      "axis_cad_mm": {
+        "X": 1323.8,
+        "Z": 2293.8
+      },
+      "axis_direction_cad": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pad_bottom_y_cad_mm": -699.8,
+      "pad_footprint_cad_mm": {
+        "x": [
+          1111.0,
+          1536.5
+        ],
+        "z": [
+          2081.0,
+          2506.5
+        ]
+      },
+      "barrel_y_cad_mm": [
+        -475.5,
+        484.5
+      ],
+      "bracket_bolt_holes_y_cad_mm": [
+        -113.5,
+        207.5
+      ],
+      "bore_y_cad_mm": [
+        -350.5,
+        349.5
+      ],
+      "piston_y_cad_mm": [
+        329.5,
+        349.5
+      ],
+      "stroke_estimate_mm": 680.0,
+      "remaining_extension_mm": 680.0,
+      "jack_instance": "FRONT JACK CYL:1",
+      "pad_center_body_m": [
+        2.2938,
+        1.3238,
+        -0.6998
+      ]
+    },
+    "FR": {
+      "axis_cad_mm": {
+        "X": -1323.8,
+        "Z": 2293.8
+      },
+      "axis_direction_cad": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pad_bottom_y_cad_mm": -699.8,
+      "pad_footprint_cad_mm": {
+        "x": [
+          -1536.5,
+          -1111.0
+        ],
+        "z": [
+          2081.0,
+          2506.5
+        ]
+      },
+      "barrel_y_cad_mm": [
+        -475.5,
+        484.5
+      ],
+      "bracket_bolt_holes_y_cad_mm": [
+        -113.5,
+        207.5
+      ],
+      "bore_y_cad_mm": [
+        -350.5,
+        349.5
+      ],
+      "piston_y_cad_mm": [
+        329.5,
+        349.5
+      ],
+      "stroke_estimate_mm": 680.0,
+      "remaining_extension_mm": 680.0,
+      "jack_instance": "FRONT JACK CYL:2",
+      "pad_center_body_m": [
+        2.2938,
+        -1.3238,
+        -0.6998
+      ]
+    },
+    "RL": {
+      "axis_cad_mm": {
+        "X": 1167.9,
+        "Z": -2556.0
+      },
+      "axis_direction_cad": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pad_bottom_y_cad_mm": -712.0,
+      "pad_footprint_cad_mm": {
+        "x": [
+          995.2,
+          1340.5
+        ],
+        "z": [
+          -2728.7,
+          -2383.3
+        ]
+      },
+      "barrel_y_cad_mm": [
+        -485.7,
+        474.3
+      ],
+      "bracket_bolt_holes_y_cad_mm": [
+        -93.7,
+        212.3
+      ],
+      "bore_y_cad_mm": [
+        -360.7,
+        339.3
+      ],
+      "piston_y_cad_mm": [
+        317.3,
+        337.3
+      ],
+      "stroke_estimate_mm": 680.0,
+      "remaining_extension_mm": 678.0,
+      "jack_instance": "REAR JACK CYL:1",
+      "pad_center_body_m": [
+        -2.556,
+        1.1679,
+        -0.712
+      ]
+    },
+    "RR": {
+      "axis_cad_mm": {
+        "X": -1242.9,
+        "Z": -2556.0
+      },
+      "axis_direction_cad": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pad_bottom_y_cad_mm": -712.0,
+      "pad_footprint_cad_mm": {
+        "x": [
+          -1415.5,
+          -1070.2
+        ],
+        "z": [
+          -2728.7,
+          -2383.3
+        ]
+      },
+      "barrel_y_cad_mm": [
+        -485.7,
+        474.3
+      ],
+      "bracket_bolt_holes_y_cad_mm": [
+        -93.7,
+        212.3
+      ],
+      "bore_y_cad_mm": [
+        -360.7,
+        339.3
+      ],
+      "piston_y_cad_mm": [
+        317.3,
+        337.3
+      ],
+      "stroke_estimate_mm": 680.0,
+      "remaining_extension_mm": 678.0,
+      "jack_instance": "REAR JACK CYL:2",
+      "pad_center_body_m": [
+        -2.556,
+        -1.2429,
+        -0.712
+      ]
+    }
+  },
+  "leg_spacing": {
+    "front_track_mm": 2647.6,
+    "rear_track_mm": 2410.8,
+    "left_wheelbase_mm": 4849.8,
+    "right_wheelbase_mm": 4849.8,
+    "front_pair_center_x_cad_mm": 0.0,
+    "rear_pair_center_x_cad_mm": -37.5,
+    "leg_rectangle_center_cad_mm": {
+      "X": -18.8,
+      "Z": -131.1
+    }
+  },
+  "geometric_low_part_check": {
+    "ground_contact_assembly": "REX33-REX33 - 5J286105:1",
+    "ground_y_cad_mm": -1050.9,
+    "lowest_other_assemblies_min_y_mm": {
+      "REAR JACK CYL:2": -712.0,
+      "REAR JACK CYL:1": -712.0,
+      "FRONT JACK CYL:1": -699.8,
+      "FRONT JACK CYL:2": -699.8,
+      "LOWER GUIDE_ASSY:1": -654.7,
+      "MAST ASSY:1": -649.0
+    }
+  },
+  "mass_properties": {
+    "step": {
+      "total_assembly": {
+        "mass_kg": 37744.0,
+        "cog_cad_m": [
+          -0.0017,
+          1.5169,
+          0.3483
+        ],
+        "cog_body_m": [
+          0.3483,
+          -0.0017,
+          1.5169
+        ],
+        "inertia_about_cog_body_kg_m2": [
+          [
+            295464.1,
+            -970.7,
+            -126154.1
+          ],
+          [
+            -970.7,
+            442363.3,
+            -132.9
+          ],
+          [
+            -126154.1,
+            -132.9,
+            185778.6
+          ]
+        ],
+        "principal_moments_kg_m2": [
+          103060.7,
+          378172.2,
+          442373.0
+        ]
+      },
+      "superstructure": {
+        "mass_kg": 37316.9,
+        "cog_cad_m": [
+          -0.0015,
+          1.5378,
+          0.3538
+        ],
+        "cog_body_m": [
+          0.3538,
+          -0.0015,
+          1.5378
+        ],
+        "inertia_about_cog_body_kg_m2": [
+          [
+            293282.0,
+            -947.7,
+            -125768.8
+          ],
+          [
+            -947.7,
+            438255.2,
+            -119.4
+          ],
+          [
+            -125768.8,
+            -119.4,
+            182480.7
+          ]
+        ],
+        "principal_moments_kg_m2": [
+          100450.1,
+          375302.9,
+          438264.7
+        ]
+      },
+      "superstructure_without_crawler": {
+        "mass_kg": 26045.5,
+        "cog_cad_m": [
+          -0.0022,
+          2.4391,
+          0.5212
+        ],
+        "cog_body_m": [
+          0.5212,
+          -0.0022,
+          2.4391
+        ],
+        "inertia_about_cog_body_kg_m2": [
+          [
+            211764.5,
+            -957.4,
+            -112716.0
+          ],
+          [
+            -957.4,
+            353567.3,
+            -171.6
+          ],
+          [
+            -112716.0,
+            -171.6,
+            158339.6
+          ]
+        ],
+        "principal_moments_kg_m2": [
+          69212.1,
+          300882.2,
+          353577.1
+        ]
+      },
+      "leg_rod_pad_each_FL": {
+        "mass_kg": 106.8,
+        "cog_cad_m": [
+          1.3238,
+          -0.3068,
+          2.2938
+        ],
+        "cog_body_m": [
+          2.2938,
+          1.3238,
+          -0.3068
+        ],
+        "inertia_about_cog_body_kg_m2": [
+          [
+            12.7,
+            -0.0,
+            0.0
+          ],
+          [
+            -0.0,
+            12.7,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.6
+          ]
+        ],
+        "principal_moments_kg_m2": [
+          0.6,
+          12.7,
+          12.7
+        ]
+      },
+      "leg_barrel_each_FL": {
+        "mass_kg": 127.1,
+        "cog_cad_m": [
+          1.2993,
+          0.0543,
+          2.2693
+        ],
+        "cog_body_m": [
+          2.2693,
+          1.2993,
+          0.0543
+        ],
+        "inertia_about_cog_body_kg_m2": [
+          [
+            8.5,
+            -0.1,
+            -0.0
+          ],
+          [
+            -0.1,
+            8.5,
+            -0.0
+          ],
+          [
+            -0.0,
+            -0.0,
+            0.9
+          ]
+        ],
+        "principal_moments_kg_m2": [
+          0.9,
+          8.4,
+          8.5
+        ]
+      }
+    },
+    "generic_as_steel": {
+      "total_assembly": {
+        "mass_kg": 42563.1,
+        "cog_cad_m": [
+          0.0675,
+          1.6206,
+          0.385
+        ],
+        "cog_body_m": [
+          0.385,
+          0.0675,
+          1.6206
+        ],
+        "inertia_about_cog_body_kg_m2": [
+          [
+            331144.2,
+            1103.9,
+            -146424.0
+          ],
+          [
+            1103.9,
+            490615.1,
+            1419.5
+          ],
+          [
+            -146424.0,
+            1419.5,
+            203455.7
+          ]
+        ],
+        "principal_moments_kg_m2": [
+          107554.0,
+          427037.2,
+          490623.8
+        ]
+      },
+      "superstructure": {
+        "mass_kg": 42136.0,
+        "cog_cad_m": [
+          0.0684,
+          1.6402,
+          0.3902
+        ],
+        "cog_body_m": [
+          0.3902,
+          0.0684,
+          1.6402
+        ],
+        "inertia_about_cog_body_kg_m2": [
+          [
+            328792.6,
+            1142.5,
+            -145987.1
+          ],
+          [
+            1142.5,
+            486324.8,
+            1491.5
+          ],
+          [
+            -145987.1,
+            1491.5,
+            200139.1
+          ]
+        ],
+        "principal_moments_kg_m2": [
+          104925.5,
+          423996.6,
+          486334.3
+        ]
+      },
+      "superstructure_without_crawler": {
+        "mass_kg": 30864.6,
+        "cog_cad_m": [
+          0.0933,
+          2.4381,
+          0.5448
+        ],
+        "cog_body_m": [
+          0.5448,
+          0.0933,
+          2.4381
+        ],
+        "inertia_about_cog_body_kg_m2": [
+          [
+            243785.7,
+            1587.8,
+            -131713.8
+          ],
+          [
+            1587.8,
+            397879.2,
+            3789.6
+          ],
+          [
+            -131713.8,
+            3789.6,
+            175585.8
+          ]
+        ],
+        "principal_moments_kg_m2": [
+          73580.9,
+          345720.4,
+          397949.5
+        ]
+      },
+      "leg_rod_pad_each_FL": {
+        "mass_kg": 106.8,
+        "cog_cad_m": [
+          1.3238,
+          -0.3068,
+          2.2938
+        ],
+        "cog_body_m": [
+          2.2938,
+          1.3238,
+          -0.3068
+        ],
+        "inertia_about_cog_body_kg_m2": [
+          [
+            12.7,
+            -0.0,
+            0.0
+          ],
+          [
+            -0.0,
+            12.7,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.6
+          ]
+        ],
+        "principal_moments_kg_m2": [
+          0.6,
+          12.7,
+          12.7
+        ]
+      },
+      "leg_barrel_each_FL": {
+        "mass_kg": 127.1,
+        "cog_cad_m": [
+          1.2993,
+          0.0543,
+          2.2693
+        ],
+        "cog_body_m": [
+          2.2693,
+          1.2993,
+          0.0543
+        ],
+        "inertia_about_cog_body_kg_m2": [
+          [
+            8.5,
+            -0.1,
+            -0.0
+          ],
+          [
+            -0.1,
+            8.5,
+            -0.0
+          ],
+          [
+            -0.0,
+            -0.0,
+            0.9
+          ]
+        ],
+        "principal_moments_kg_m2": [
+          0.9,
+          8.4,
+          8.5
+        ]
+      }
+    }
+  },
+  "density_review": {
+    "density_source_counts": {
+      "xcaf": 1051,
+      "step_text": 99,
+      "step_text_parent": 49,
+      "assumed": 15
+    },
+    "placeholder_density_parts": [
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / AUGER MOTOR GUARD_Assy:1 / AUGER MOTOR GUARD:1 / 부품6:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 7.596,
+        "mass_generic_as_steel_kg": 59.628,
+        "bbox_fill_ratio": 0.03
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / AUGER MOTOR GUARD_Assy:1 / 부품1:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.037,
+        "mass_generic_as_steel_kg": 0.29,
+        "bbox_fill_ratio": 0.925
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / AUGER MOTOR GUARD_Assy:1 / 부품1:2",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.037,
+        "mass_generic_as_steel_kg": 0.29,
+        "bbox_fill_ratio": 0.925
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / CIRCULATION PUMP PART:1 / CIRCULATION GEAR-1:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.017,
+        "mass_generic_as_steel_kg": 0.136,
+        "bbox_fill_ratio": 0.402
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / CIRCULATION PUMP PART:1 / CIRCULATION GEAR-2:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.043,
+        "mass_generic_as_steel_kg": 0.334,
+        "bbox_fill_ratio": 0.232
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / CIRCULATION PUMP PART:1 / CIRCULATION GEAR-3:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.041,
+        "mass_generic_as_steel_kg": 0.32,
+        "bbox_fill_ratio": 0.199
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / CIRCULATION PUMP PART:1 / CIRCULATION SHAFT:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.119,
+        "mass_generic_as_steel_kg": 0.931,
+        "bbox_fill_ratio": 0.183
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / CIRCULATION PUMP PART:1 / HOUSING ADAPTER:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 1.235,
+        "mass_generic_as_steel_kg": 9.698,
+        "bbox_fill_ratio": 0.26
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / CIRCULATION PUMP PART:1 / HOUSING:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 1.395,
+        "mass_generic_as_steel_kg": 10.954,
+        "bbox_fill_ratio": 0.465
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / CIRCULATION PUMP PART:1 / PUMP ADAPTER:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.807,
+        "mass_generic_as_steel_kg": 6.335,
+        "bbox_fill_ratio": 0.417
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / CIRCULATION PUMP PART:1 / TOP-2RA-4C:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.55,
+        "mass_generic_as_steel_kg": 4.316,
+        "bbox_fill_ratio": 0.305
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / ELEVATION ENCODER:1 / 1. HOUSING:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.537,
+        "mass_generic_as_steel_kg": 4.218,
+        "bbox_fill_ratio": 0.404
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / ELEVATION ENCODER:1 / 2. SHAFT:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.069,
+        "mass_generic_as_steel_kg": 0.538,
+        "bbox_fill_ratio": 0.341
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / ELEVATION ENCODER:1 / 3. ENCODER BRACKET:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.194,
+        "mass_generic_as_steel_kg": 1.52,
+        "bbox_fill_ratio": 0.21
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / ELEVATION ENCODER:1 / 4. COVER-1:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.075,
+        "mass_generic_as_steel_kg": 0.585,
+        "bbox_fill_ratio": 0.573
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / ELEVATION ENCODER:1 / 5. COVER-2:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.054,
+        "mass_generic_as_steel_kg": 0.425,
+        "bbox_fill_ratio": 0.176
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / ELEVATION ENCODER:1 / 6. ADAPTER:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.073,
+        "mass_generic_as_steel_kg": 0.572,
+        "bbox_fill_ratio": 0.542
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / ELEVATION ENCODER:1 / 7. GEAR:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.119,
+        "mass_generic_as_steel_kg": 0.935,
+        "bbox_fill_ratio": 0.553
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / ELEVATION ENCODER:1 / P2. COUPLE RING:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.055,
+        "mass_generic_as_steel_kg": 0.429,
+        "bbox_fill_ratio": 0.619
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / ELEVATION ENCODER:1 / P3. ENCODER:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.093,
+        "mass_generic_as_steel_kg": 0.73,
+        "bbox_fill_ratio": 0.451
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1 / 부품2:2",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.422,
+        "mass_generic_as_steel_kg": 3.311,
+        "bbox_fill_ratio": 0.188
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / AUGER TOOL:1 / JOINT PIN:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.341,
+        "mass_generic_as_steel_kg": 2.676,
+        "bbox_fill_ratio": 0.569
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / AUGER TOOL:1 / JOINT PIN:2",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.341,
+        "mass_generic_as_steel_kg": 2.676,
+        "bbox_fill_ratio": 0.569
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / AUGER TOOL:1 / SHACKLE:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.158,
+        "mass_generic_as_steel_kg": 1.241,
+        "bbox_fill_ratio": 0.229
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / AUGER TOOL:1 / TOOL CAP:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 39.444,
+        "mass_generic_as_steel_kg": 309.632,
+        "bbox_fill_ratio": 0.177
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / AUGER TOOL:1 / TOOL ROD:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 140.563,
+        "mass_generic_as_steel_kg": 1103.418,
+        "bbox_fill_ratio": 0.354
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / CABIN-2 (FRONT glass-1) :1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 4.968,
+        "mass_generic_as_steel_kg": 12.42,
+        "bbox_fill_ratio": 0.014
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / CABIN-2 (FRONT glass-12) :1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 1.283,
+        "mass_generic_as_steel_kg": 3.206,
+        "bbox_fill_ratio": 0.212
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / CABIN-2 (REAR glass-1) :1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 1.094,
+        "mass_generic_as_steel_kg": 2.735,
+        "bbox_fill_ratio": 0.054
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / CABIN-2 (TOP glass-1) :1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 2.947,
+        "mass_generic_as_steel_kg": 7.367,
+        "bbox_fill_ratio": 0.178
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / CABIN-2 (side glass-1) :1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 5.221,
+        "mass_generic_as_steel_kg": 13.053,
+        "bbox_fill_ratio": 0.566
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / CABIN-2 (side glass-2) :1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 1.628,
+        "mass_generic_as_steel_kg": 4.069,
+        "bbox_fill_ratio": 0.665
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / SLIDE WINDOW:1 / CABIN(slide window-1):1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.782,
+        "mass_generic_as_steel_kg": 1.955,
+        "bbox_fill_ratio": 0.095
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / SLIDE WINDOW:1 / CABIN(slide window-2):1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.337,
+        "mass_generic_as_steel_kg": 0.844,
+        "bbox_fill_ratio": 0.071
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / SLIDE WINDOW:1 / CABIN(slide window-3):1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.609,
+        "mass_generic_as_steel_kg": 1.523,
+        "bbox_fill_ratio": 0.792
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / SLIDE WINDOW:1 / CABIN(slide window-4):1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.31,
+        "mass_generic_as_steel_kg": 0.774,
+        "bbox_fill_ratio": 0.354
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / SLIDE WINDOW:1 / CABIN(slide window-5):1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.565,
+        "mass_generic_as_steel_kg": 1.413,
+        "bbox_fill_ratio": 0.997
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / 부마 씨이 도어 조리품:1 / CABIN-2 (DOOR glass-1) :1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 5.411,
+        "mass_generic_as_steel_kg": 13.527,
+        "bbox_fill_ratio": 0.785
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / 부마 씨이 도어 조리품:1 / 부마 씨이 도어 부품-3:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.21,
+        "mass_generic_as_steel_kg": 1.652,
+        "bbox_fill_ratio": 0.389
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / 부마씨이 소구경 3D_Shrinkwrap_11:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 501.061,
+        "mass_generic_as_steel_kg": 3933.328,
+        "bbox_fill_ratio": 0.139
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / 부품1:1",
+        "material_resolved": "일반",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 0.372,
+        "mass_generic_as_steel_kg": 2.923,
+        "bbox_fill_ratio": 1.0
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / LOGO:1",
+        "material_resolved": "SS400",
+        "density_step_g_cm3": 1.0,
+        "mass_step_kg": 1.953,
+        "mass_generic_as_steel_kg": 15.328,
+        "bbox_fill_ratio": 0.432
+      }
+    ],
+    "glass_parts_count": 12,
+    "parts_without_solid": 56,
+    "heaviest_parts_step": [
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / REX33-REX33 - 5J286105:1 / =>[0:1:1:746]",
+        "material_resolved": "강철",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 11271.387,
+        "mass_generic_as_steel_kg": 11271.387,
+        "bbox_fill_ratio": 0.138
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BASE DECK:1",
+        "material_resolved": "강, 연강",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 3918.624,
+        "mass_generic_as_steel_kg": 3918.624,
+        "bbox_fill_ratio": 0.046
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / BOOM:1",
+        "material_resolved": "강, 연강",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 1275.855,
+        "mass_generic_as_steel_kg": 1275.855,
+        "bbox_fill_ratio": 0.07
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / MAST ASSY:1 / MAST-3:1",
+        "material_resolved": "강, 연강",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 1053.922,
+        "mass_generic_as_steel_kg": 1053.922,
+        "bbox_fill_ratio": 0.071
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / MAST ASSY:1 / MAST-2:1",
+        "material_resolved": "강, 연강",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 1033.568,
+        "mass_generic_as_steel_kg": 1033.568,
+        "bbox_fill_ratio": 0.124
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / MAST ASSY:1 / MAST-4:1",
+        "material_resolved": "강, 연강",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 931.409,
+        "mass_generic_as_steel_kg": 931.409,
+        "bbox_fill_ratio": 0.098
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / COUNTER WEIGHT:1 / 솔리드33:1",
+        "material_resolved": "강, 연강",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 785.04,
+        "mass_generic_as_steel_kg": 785.04,
+        "bbox_fill_ratio": 0.694
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / COUNTER WEIGHT:1 / 솔리드34:1",
+        "material_resolved": "강, 연강",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 785.04,
+        "mass_generic_as_steel_kg": 785.04,
+        "bbox_fill_ratio": 0.694
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / COUNTER WEIGHT:1 / 솔리드35:1",
+        "material_resolved": "강, 연강",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 785.04,
+        "mass_generic_as_steel_kg": 785.04,
+        "bbox_fill_ratio": 0.694
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / COUNTER WEIGHT:1 / 솔리드32:1",
+        "material_resolved": "강, 연강",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 766.43,
+        "mass_generic_as_steel_kg": 766.43,
+        "bbox_fill_ratio": 0.677
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / COUNTER WEIGHT:1 / 솔리드1:1",
+        "material_resolved": "강, 연강",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 742.139,
+        "mass_generic_as_steel_kg": 742.139,
+        "bbox_fill_ratio": 0.836
+      },
+      {
+        "instance_path": "REXOME33_Assy_r3(미니어쳐) / COUNTER WEIGHT:1 / 솔리드2:1",
+        "material_resolved": "강, 연강",
+        "density_step_g_cm3": 7.85,
+        "mass_step_kg": 742.139,
+        "mass_generic_as_steel_kg": 742.139,
+        "bbox_fill_ratio": 0.836
+      }
+    ]
+  },
+  "mass_cases": {
+    "step": "densities from STEP material properties (Inventor 'Generic' = 1.0 kept)",
+    "generic_as_steel": "Generic 1.0 g/cm^3 replaced by steel 7.85, glass by 2.5"
+  }
+}

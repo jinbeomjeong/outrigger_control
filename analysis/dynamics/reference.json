@@ -1,0 +1,6246 @@
+{
+ "meta": {
+  "script": "scripts/dynamics/run_reference.py",
+  "params": "params/rexome33.yaml",
+  "frame": "body: x forward, y left, z up; level body = world axes; origin = CAD origin",
+  "gravity_m_s2": [
+   0.0,
+   0.0,
+   -9.80665
+  ],
+  "angles": "roll phi about +x, pitch theta about +y (small angles); reported in deg where *_deg",
+  "leg_order": [
+   "FL",
+   "FR",
+   "RL",
+   "RR"
+  ],
+  "assumptions": {
+   "bore_diameter_m": 0.115,
+   "rod_diameter_m": 0.11,
+   "barrel_outer_diameter_m": 0.16,
+   "oil_bulk_modulus_eff_Pa": 1000000000.0,
+   "oil_bulk_modulus_range_Pa": [
+    690000000.0,
+    1600000000.0
+   ],
+   "oil_dead_length_m": 0.05,
+   "steel_E_Pa": 210000000000.0,
+   "frame_bracket_stiffness_N_m": 1000000000.0,
+   "concrete_E_Pa": 30000000000.0,
+   "concrete_nu": 0.15,
+   "slab_thickness_m": 0.2,
+   "subgrade_modulus_N_m3": 80000000.0,
+   "crawler_clearance_m": 0.05,
+   "modal_damping_ratio_body": 0.05,
+   "swivel_ball_height_above_pad_bottom_m": 0.06,
+   "swivel_tilt_range_deg": 10.0,
+   "F_min_fraction_of_mean_leg_load": 0.1,
+   "F_min_basis": "cylinder force (pressure x bore area) = superstructure weight share; contact force = cylinder force + rod weight"
+  },
+  "runtime_s": 1.28
+ },
+ "operating_point": {
+  "touch_extension_m": [
+   0.3511,
+   0.3511,
+   0.3409,
+   0.3409
+  ],
+  "levelled_extension_m": [
+   0.4011,
+   0.4011,
+   0.3909,
+   0.3909
+  ],
+  "remaining_stroke_m": [
+   0.2789,
+   0.2789,
+   0.2891,
+   0.2891
+  ],
+  "time_to_touch_s": [
+   15.4897,
+   15.4897,
+   15.0397,
+   15.0397
+  ]
+ },
+ "stiffness": {
+  "piston_area_m2": 0.0103869,
+  "k_oil_N_m": [
+   23025700.0,
+   23025700.0,
+   23558400.0,
+   23558400.0
+  ],
+  "k_oil_at_e0_N_m": 207738000.0,
+  "k_oil_at_stroke_N_m": 14228600.0,
+  "k_rod_N_m": 1900660000.0,
+  "k_frame_N_m": 1000000000.0,
+  "k_axial_leg_N_m (oil+rod+frame)": [
+   22244000.0,
+   22244000.0,
+   22740800.0,
+   22740800.0
+  ],
+  "concrete_westergaard": {
+   "D_Nm": 20460400.0,
+   "l_m": 0.711141,
+   "k_slab_N_m": 323662000.0,
+   "punch_radius_m": 0.184637,
+   "k_halfspace_N_m": 11333200000.0
+  },
+  "k_vertical_physical_N_m (leg+concrete)": [
+   20813600.0,
+   20813600.0,
+   21247900.0,
+   21247900.0
+  ],
+  "k_lateral_leg_rigid_pad_N_m": [
+   22932200.0,
+   22932200.0,
+   22352000.0,
+   22352000.0
+  ],
+  "k_lateral_leg_swivel_pad_N_m": [
+   8740310.0,
+   8740310.0,
+   8627610.0,
+   8627610.0
+  ]
+ },
+ "statics": {
+  "top": {
+   "equal_k_superstructure_only_N": [
+    118255.0,
+    116262.0,
+    72700.3,
+    70885.4
+   ],
+   "yaml_N": [
+    118255.0,
+    116262.0,
+    72700.3,
+    70885.4
+   ],
+   "max_rel_diff_vs_yaml": 3.63017e-07
+  },
+  "middle": {
+   "equal_k_superstructure_only_N": [
+    118255.0,
+    116262.0,
+    72700.3,
+    70885.4
+   ],
+   "yaml_N": [
+    118255.0,
+    116262.0,
+    72700.3,
+    70885.4
+   ],
+   "max_rel_diff_vs_yaml": 3.63017e-07
+  },
+  "bottom": {
+   "equal_k_superstructure_only_N": [
+    118255.0,
+    116262.0,
+    72700.3,
+    70885.4
+   ],
+   "yaml_N": [
+    118255.0,
+    116262.0,
+    72700.3,
+    70885.4
+   ],
+   "max_rel_diff_vs_yaml": 3.63017e-07
+  },
+  "contact_force_incl_rods_N": [
+   119302.0,
+   117309.0,
+   73747.5,
+   71932.6
+  ],
+  "total_weight_incl_rods_N": 382291.0,
+  "stiffness_variation": {
+   "equal": {
+    "k_rel": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "F_N": [
+     118255.0,
+     116262.0,
+     72700.3,
+     70885.4
+    ],
+    "change_vs_equal_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "front_2x_stiffer": {
+    "k_rel": [
+     1.0,
+     1.0,
+     0.5,
+     0.5
+    ],
+    "F_N": [
+     118547.0,
+     115969.0,
+     72379.6,
+     71206.2
+    ],
+    "change_vs_equal_N": [
+     292.061,
+     -292.061,
+     -320.749,
+     320.749
+    ]
+   },
+   "rear_2x_stiffer": {
+    "k_rel": [
+     0.5,
+     0.5,
+     1.0,
+     1.0
+    ],
+    "F_N": [
+     117944.0,
+     116572.0,
+     73041.7,
+     70544.1
+    ],
+    "change_vs_equal_N": [
+     -310.836,
+     310.836,
+     341.367,
+     -341.367
+    ]
+   },
+   "FL_half": {
+    "k_rel": [
+     0.5,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "F_N": [
+     96405.0,
+     138111.0,
+     96696.2,
+     46889.6
+    ],
+    "change_vs_equal_N": [
+     -21849.7,
+     21849.7,
+     23995.8,
+     -23995.8
+    ]
+   },
+   "RL_half": {
+    "k_rel": [
+     1.0,
+     1.0,
+     0.5,
+     1.0
+    ],
+    "F_N": [
+     132466.0,
+     102051.0,
+     57093.5,
+     86492.3
+    ],
+    "change_vs_equal_N": [
+     14211.0,
+     -14211.0,
+     -15606.8,
+     15606.8
+    ]
+   },
+   "FL_and_RR_half (diagonal)": {
+    "k_rel": [
+     0.5,
+     1.0,
+     1.0,
+     0.5
+    ],
+    "F_N": [
+     88624.2,
+     145892.0,
+     105241.0,
+     38344.6
+    ],
+    "change_vs_equal_N": [
+     -29630.4,
+     29630.4,
+     32540.9,
+     -32540.9
+    ]
+   },
+   "oil_column_by_extension (roll 2deg slope, physical model)": {
+    "extension_m": [
+     0.489422,
+     0.4011,
+     0.479222,
+     0.3909
+    ],
+    "k_N_m": [
+     17683900.0,
+     20813600.0,
+     17996400.0,
+     21247900.0
+    ],
+    "k_rel": [
+     0.832265,
+     0.979561,
+     0.846973,
+     1.0
+    ],
+    "F_N": [
+     116816.0,
+     117700.0,
+     74280.5,
+     69305.3
+    ],
+    "change_vs_equal_N": [
+     -1438.82,
+     1438.82,
+     1580.15,
+     -1580.15
+    ]
+   }
+  },
+  "extension_error_sensitivity": {
+   "R_chrono_rigid_motor (k=k_concrete_slab)": {
+    "k_leg_N_m": [
+     323662000.0,
+     323662000.0,
+     323662000.0,
+     323662000.0
+    ],
+    "dF_per_mm_N (rows=load leg, cols=extended leg)": [
+     [
+      73356.2,
+      -73356.2,
+      -80561.6,
+      80561.6
+     ],
+     [
+      -73356.2,
+      73356.2,
+      80561.6,
+      -80561.6
+     ],
+     [
+      -80561.6,
+      80561.6,
+      88474.7,
+      -88474.7
+     ],
+     [
+      80561.6,
+      -80561.6,
+      -88474.7,
+      88474.7
+     ]
+    ],
+    "dq_per_mm (rows=uz_mm, roll_deg, pitch_deg; cols=leg)": [
+     [
+      0.267178,
+      0.259854,
+      0.239819,
+      0.233149
+     ],
+     [
+      0.0118312,
+      -0.0118312,
+      0.010773,
+      -0.010773
+     ],
+     [
+      -0.00581554,
+      -0.00599851,
+      0.00599032,
+      0.00582373
+     ]
+    ],
+    "smallest_extension_error_to_unload_a_leg": {
+     "FL": {
+      "delta_mm": -0.8799,
+      "unloaded_leg": "RR"
+     },
+     "FR": {
+      "delta_mm": 0.8799,
+      "unloaded_leg": "RR"
+     },
+     "RL": {
+      "delta_mm": 0.8012,
+      "unloaded_leg": "RR"
+     },
+     "RR": {
+      "delta_mm": -0.8012,
+      "unloaded_leg": "RR"
+     }
+    },
+    "twist_stiffness_N_per_m (load change along twist per twist extension)": 323662000.0
+   },
+   "H_physical (oil+rod+frame+concrete)": {
+    "k_leg_N_m": [
+     20813600.0,
+     20813600.0,
+     21247900.0,
+     21247900.0
+    ],
+    "dF_per_mm_N (rows=load leg, cols=extended leg)": [
+     [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     [
+      -4770.6,
+      4770.6,
+      5239.19,
+      -5239.19
+     ],
+     [
+      -5239.19,
+      5239.19,
+      5753.8,
+      -5753.8
+     ],
+     [
+      5239.19,
+      -5239.19,
+      -5753.8,
+      5753.8
+     ]
+    ],
+    "dq_per_mm (rows=uz_mm, roll_deg, pitch_deg; cols=leg)": [
+     [
+      0.267144,
+      0.259888,
+      0.239857,
+      0.233111
+     ],
+     [
+      0.0117203,
+      -0.0117203,
+      0.0108947,
+      -0.0108947
+     ],
+     [
+      -0.0058164,
+      -0.00599765,
+      0.00599127,
+      0.00582278
+     ]
+    ],
+    "smallest_extension_error_to_unload_a_leg": {
+     "FL": {
+      "delta_mm": -13.53,
+      "unloaded_leg": "RR"
+     },
+     "FR": {
+      "delta_mm": 13.53,
+      "unloaded_leg": "RR"
+     },
+     "RL": {
+      "delta_mm": 12.32,
+      "unloaded_leg": "RR"
+     },
+     "RR": {
+      "delta_mm": -12.32,
+      "unloaded_leg": "RR"
+     }
+    },
+    "twist_stiffness_N_per_m (load change along twist per twist extension)": 21048800.0
+   },
+   "R_rigid_halfspace (k=k_concrete_halfspace)": {
+    "k_leg_N_m": [
+     11333200000.0,
+     11333200000.0,
+     11333200000.0,
+     11333200000.0
+    ],
+    "dF_per_mm_N (rows=load leg, cols=extended leg)": [
+     [
+      2568620.0,
+      -2568620.0,
+      -2820920.0,
+      2820920.0
+     ],
+     [
+      -2568620.0,
+      2568620.0,
+      2820920.0,
+      -2820920.0
+     ],
+     [
+      -2820920.0,
+      2820920.0,
+      3098000.0,
+      -3098000.0
+     ],
+     [
+      2820920.0,
+      -2820920.0,
+      -3098000.0,
+      3098000.0
+     ]
+    ],
+    "dq_per_mm (rows=uz_mm, roll_deg, pitch_deg; cols=leg)": [
+     [
+      0.267178,
+      0.259854,
+      0.239819,
+      0.233149
+     ],
+     [
+      0.0118312,
+      -0.0118312,
+      0.010773,
+      -0.010773
+     ],
+     [
+      -0.00581554,
+      -0.00599851,
+      0.00599032,
+      0.00582373
+     ]
+    ],
+    "smallest_extension_error_to_unload_a_leg": {
+     "FL": {
+      "delta_mm": -0.02513,
+      "unloaded_leg": "RR"
+     },
+     "FR": {
+      "delta_mm": 0.02513,
+      "unloaded_leg": "RR"
+     },
+     "RL": {
+      "delta_mm": 0.02288,
+      "unloaded_leg": "RR"
+     },
+     "RR": {
+      "delta_mm": -0.02288,
+      "unloaded_leg": "RR"
+     }
+    },
+    "twist_stiffness_N_per_m (load change along twist per twist extension)": 11333200000.0
+   }
+  },
+  "twist_vector": [
+   0.476072,
+   -0.476072,
+   -0.522834,
+   0.522834
+  ]
+ },
+ "kinematics": {
+  "A (pad dz = A [uz, phi, theta])": [
+   [
+    1.0,
+    1.3238,
+    -2.2938
+   ],
+   [
+    1.0,
+    -1.3238,
+    -2.2938
+   ],
+   [
+    1.0,
+    1.1679,
+    2.556
+   ],
+   [
+    1.0,
+    -1.2429,
+    2.556
+   ]
+  ],
+  "J=pinv(A) (rows uz, phi, theta per m extension)": [
+   [
+    0.267178,
+    0.259854,
+    0.239819,
+    0.233149
+   ],
+   [
+    0.206493,
+    -0.206493,
+    0.188024,
+    -0.188024
+   ],
+   [
+    -0.1015,
+    -0.104694,
+    0.104551,
+    0.101643
+   ]
+  ],
+  "roll_deg_per_mm_extension": [
+   0.0118312,
+   -0.0118312,
+   0.010773,
+   -0.010773
+  ],
+  "pitch_deg_per_mm_extension": [
+   -0.00581554,
+   -0.00599851,
+   0.00599032,
+   0.00582373
+  ],
+  "note": "extension e pushes the pad down so the body point rises by e: A q = e (rigid floor, all pads in contact)",
+  "extension_diff_for_0.1deg_mm": {
+   "roll_front_pair": 4.62094,
+   "roll_rear_pair": 4.20764,
+   "pitch": 8.46451
+  },
+  "time_for_0.1deg_at_vmax_s": {
+   "roll_front_pair": 0.203865,
+   "roll_rear_pair": 0.185631,
+   "pitch": 0.373434
+  },
+  "levelling_examples (crawler clearance 50 mm, crawler box corners)": {
+   "ground roll 0 deg, pitch 0 deg": {
+    "extension_m": [
+     0.4011,
+     0.4011,
+     0.3909,
+     0.3909
+    ],
+    "feasible": true
+   },
+   "ground roll 1 deg, pitch 0 deg": {
+    "extension_m": [
+     0.4018,
+     0.4481,
+     0.3944,
+     0.4364
+    ],
+    "feasible": true
+   },
+   "ground roll 0 deg, pitch 1 deg": {
+    "extension_m": [
+     0.4733,
+     0.4733,
+     0.3784,
+     0.3784
+    ],
+    "feasible": true
+   },
+   "ground roll 2 deg, pitch 0 deg": {
+    "extension_m": [
+     0.4026,
+     0.495,
+     0.3978,
+     0.482
+    ],
+    "feasible": true
+   },
+   "ground roll 0 deg, pitch 2 deg": {
+    "extension_m": [
+     0.5455,
+     0.5455,
+     0.3659,
+     0.3659
+    ],
+    "feasible": true
+   },
+   "ground roll 1 deg, pitch 1 deg": {
+    "extension_m": [
+     0.474,
+     0.5202,
+     0.3819,
+     0.4239
+    ],
+    "feasible": true
+   },
+   "ground roll -2 deg, pitch 1.5 deg": {
+    "extension_m": [
+     0.6033,
+     0.5108,
+     0.4606,
+     0.3764
+    ],
+    "feasible": true
+   }
+  },
+  "max_levellable_ground_slope_deg": {
+   "clearance_0mm": {
+    "pitch(+/-)": [
+     4.549,
+     4.407
+    ],
+    "roll(+/-)": [
+     6.971,
+     6.971
+    ],
+    "diagonal_45deg": 3.903
+   },
+   "clearance_50mm": {
+    "pitch(+/-)": [
+     3.86,
+     3.759
+    ],
+    "roll(+/-)": [
+     5.92,
+     5.92
+    ],
+    "diagonal_45deg": 3.31
+   }
+  },
+  "note_slope": "crawler treated as a rigid box x[-1.840,1.844] y[-1.366,1.366] at z=-1.0509 (bbox of the crawler assembly in cad/parts_classified.csv); the crawler hangs from the body, so clearance is checked at its corners"
+ },
+ "modal": {
+  "top": {
+   "cg_height_above_floor_m": 3.24417,
+   "R1_chrono_baseline (kv=kh=k_slab, rigid motors)": {
+    "f_Hz": [
+     7.2716,
+     12.581,
+     29.004,
+     36.074,
+     38.348,
+     48.13
+    ],
+    "omega_rad_s": [
+     45.689,
+     79.048,
+     182.24,
+     226.66,
+     240.95,
+     302.41
+    ],
+    "mode_content": [
+     {
+      "roll": 0.529,
+      "sway y": 0.459
+     },
+     {
+      "pitch": 0.52,
+      "surge x": 0.465
+     },
+     {
+      "heave z": 0.969,
+      "surge x": 0.031
+     },
+     {
+      "sway y": 0.43,
+      "yaw": 0.429,
+      "roll": 0.141
+     },
+     {
+      "surge x": 0.504,
+      "pitch": 0.479
+     },
+     {
+      "yaw": 0.559,
+      "roll": 0.33,
+      "sway y": 0.111
+     }
+    ],
+    "orthogonality_err": 1.55e-15,
+    "geometric_stiffness_roll_Nm_rad": -1240210.0
+   },
+   "R2 (kv=k_slab, kh=leg bending rigid pad)": {
+    "f_Hz": [
+     5.5198,
+     7.1405,
+     9.6384,
+     16.599,
+     17.618,
+     29.425
+    ],
+    "omega_rad_s": [
+     34.682,
+     44.865,
+     60.56,
+     104.29,
+     110.7,
+     184.88
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.682,
+      "roll": 0.208,
+      "yaw": 0.11
+     },
+     {
+      "surge x": 0.97,
+      "pitch": 0.029
+     },
+     {
+      "yaw": 0.651,
+      "sway y": 0.271,
+      "roll": 0.078
+     },
+     {
+      "roll": 0.712,
+      "yaw": 0.238,
+      "sway y": 0.047
+     },
+     {
+      "pitch": 0.923,
+      "heave z": 0.043,
+      "surge x": 0.03
+     },
+     {
+      "heave z": 0.956,
+      "pitch": 0.044
+     }
+    ],
+    "orthogonality_err": 8.88e-16,
+    "geometric_stiffness_roll_Nm_rad": -1240210.0
+   },
+   "R3_rigid_halfspace (kv=kh=k_halfspace)": {
+    "f_Hz": [
+     43.041,
+     74.452,
+     171.63,
+     213.46,
+     226.92,
+     284.81
+    ],
+    "omega_rad_s": [
+     270.43,
+     467.79,
+     1078.4,
+     1341.2,
+     1425.8,
+     1789.5
+    ],
+    "mode_content": [
+     {
+      "roll": 0.529,
+      "sway y": 0.459
+     },
+     {
+      "pitch": 0.52,
+      "surge x": 0.465
+     },
+     {
+      "heave z": 0.969,
+      "surge x": 0.031
+     },
+     {
+      "sway y": 0.43,
+      "yaw": 0.429,
+      "roll": 0.141
+     },
+     {
+      "surge x": 0.504,
+      "pitch": 0.479
+     },
+     {
+      "yaw": 0.559,
+      "roll": 0.33,
+      "sway y": 0.111
+     }
+    ],
+    "orthogonality_err": 7.77e-16,
+    "geometric_stiffness_roll_Nm_rad": -1240210.0
+   },
+   "H1_physical_nominal (rigid pad)": {
+    "f_Hz": [
+     1.8466,
+     3.2063,
+     7.4348,
+     9.2542,
+     9.8928,
+     12.541,
+     286.45,
+     286.45,
+     286.65,
+     286.66
+    ],
+    "mode_content": [
+     {
+      "roll": 0.526,
+      "sway y": 0.462
+     },
+     {
+      "pitch": 0.517,
+      "surge x": 0.466
+     },
+     {
+      "heave z": 0.967,
+      "surge x": 0.033
+     },
+     {
+      "yaw": 0.433,
+      "sway y": 0.427,
+      "roll": 0.139
+     },
+     {
+      "surge x": 0.5,
+      "pitch": 0.482
+     },
+     {
+      "yaw": 0.555,
+      "roll": 0.334,
+      "sway y": 0.111
+     },
+     {
+      "rod FL": 0.5,
+      "rod FR": 0.5
+     },
+     {
+      "rod FR": 0.5,
+      "rod FL": 0.5
+     },
+     {
+      "rod RL": 0.503,
+      "rod RR": 0.497
+     },
+     {
+      "rod RR": 0.503,
+      "rod RL": 0.497
+     }
+    ],
+    "orthogonality_err": 1.11e-15
+   },
+   "H2_swivel_pad": {
+    "f_Hz": [
+     1.7854,
+     2.9885,
+     5.8811,
+     6.5084,
+     7.6637,
+     8.1574,
+     286.45,
+     286.45,
+     286.65,
+     286.66
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.498,
+      "roll": 0.473,
+      "yaw": 0.029
+     },
+     {
+      "surge x": 0.619,
+      "pitch": 0.37
+     },
+     {
+      "yaw": 0.469,
+      "sway y": 0.399,
+      "roll": 0.132
+     },
+     {
+      "pitch": 0.474,
+      "surge x": 0.346,
+      "heave z": 0.179
+     },
+     {
+      "heave z": 0.808,
+      "pitch": 0.155,
+      "surge x": 0.034
+     },
+     {
+      "yaw": 0.501,
+      "roll": 0.395,
+      "sway y": 0.102
+     },
+     {
+      "rod FL": 0.5,
+      "rod FR": 0.5
+     },
+     {
+      "rod FR": 0.5,
+      "rod FL": 0.5
+     },
+     {
+      "rod RL": 0.503,
+      "rod RR": 0.497
+     },
+     {
+      "rod RR": 0.503,
+      "rod RL": 0.497
+     }
+    ],
+    "orthogonality_err": 8.88e-16
+   },
+   "H3_beta_0.69GPa": {
+    "f_Hz": [
+     1.5647,
+     2.7362,
+     6.2938,
+     9.2485,
+     9.7376,
+     12.467,
+     283.65,
+     283.65,
+     283.79,
+     283.8
+    ],
+    "mode_content": [
+     {
+      "roll": 0.537,
+      "sway y": 0.454
+     },
+     {
+      "pitch": 0.546,
+      "surge x": 0.437
+     },
+     {
+      "heave z": 0.978
+     },
+     {
+      "sway y": 0.433,
+      "yaw": 0.425,
+      "roll": 0.141
+     },
+     {
+      "surge x": 0.543,
+      "pitch": 0.451
+     },
+     {
+      "yaw": 0.566,
+      "roll": 0.322,
+      "sway y": 0.112
+     },
+     {
+      "rod FL": 0.5,
+      "rod FR": 0.5
+     },
+     {
+      "rod FR": 0.5,
+      "rod FL": 0.5
+     },
+     {
+      "rod RL": 0.503,
+      "rod RR": 0.497
+     },
+     {
+      "rod RR": 0.503,
+      "rod RL": 0.497
+     }
+    ],
+    "orthogonality_err": 8.88e-16
+   },
+   "H4_beta_1.6GPa": {
+    "f_Hz": [
+     2.2482,
+     3.8551,
+     8.9955,
+     9.2644,
+     10.285,
+     12.673,
+     291.64,
+     291.64,
+     291.95,
+     291.96
+    ],
+    "mode_content": [
+     {
+      "roll": 0.508,
+      "sway y": 0.474
+     },
+     {
+      "surge x": 0.52,
+      "pitch": 0.466
+     },
+     {
+      "heave z": 0.841,
+      "surge x": 0.117,
+      "pitch": 0.04
+     },
+     {
+      "yaw": 0.446,
+      "sway y": 0.416,
+      "roll": 0.136
+     },
+     {
+      "pitch": 0.493,
+      "surge x": 0.363,
+      "heave z": 0.143
+     },
+     {
+      "yaw": 0.535,
+      "roll": 0.356,
+      "sway y": 0.108
+     },
+     {
+      "rod FL": 0.5,
+      "rod FR": 0.5
+     },
+     {
+      "rod FR": 0.5,
+      "rod FL": 0.5
+     },
+     {
+      "rod RL": 0.503,
+      "rod RR": 0.497
+     },
+     {
+      "rod RR": 0.503,
+      "rod RL": 0.497
+     }
+    ],
+    "orthogonality_err": 8.88e-16
+   },
+   "H5_kc_1e8": {
+    "f_Hz": [
+     1.7243,
+     2.9955,
+     6.9458,
+     8.6492,
+     9.2396,
+     11.706,
+     170.29,
+     170.31,
+     170.64,
+     170.66
+    ],
+    "mode_content": [
+     {
+      "roll": 0.526,
+      "sway y": 0.462
+     },
+     {
+      "pitch": 0.517,
+      "surge x": 0.467
+     },
+     {
+      "heave z": 0.967,
+      "surge x": 0.033
+     },
+     {
+      "yaw": 0.432,
+      "sway y": 0.427,
+      "roll": 0.14
+     },
+     {
+      "surge x": 0.501,
+      "pitch": 0.482
+     },
+     {
+      "yaw": 0.556,
+      "roll": 0.334,
+      "sway y": 0.111
+     },
+     {
+      "rod FL": 0.5,
+      "rod FR": 0.5
+     },
+     {
+      "rod FR": 0.5,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.503,
+      "rod RR": 0.497
+     },
+     {
+      "rod RR": 0.503,
+      "rod RL": 0.496
+     }
+    ],
+    "orthogonality_err": 1.22e-15
+   },
+   "H6_kc_halfspace": {
+    "f_Hz": [
+     1.9083,
+     3.3127,
+     7.6814,
+     9.5597,
+     10.223,
+     12.963,
+     1641.2,
+     1641.2,
+     1641.3,
+     1641.3
+    ],
+    "mode_content": [
+     {
+      "roll": 0.526,
+      "sway y": 0.462
+     },
+     {
+      "pitch": 0.517,
+      "surge x": 0.466
+     },
+     {
+      "heave z": 0.967,
+      "surge x": 0.033
+     },
+     {
+      "yaw": 0.434,
+      "sway y": 0.427,
+      "roll": 0.139
+     },
+     {
+      "surge x": 0.5,
+      "pitch": 0.482
+     },
+     {
+      "yaw": 0.554,
+      "roll": 0.334,
+      "sway y": 0.111
+     },
+     {
+      "rod FL": 0.5,
+      "rod FR": 0.5
+     },
+     {
+      "rod FR": 0.5,
+      "rod FL": 0.5
+     },
+     {
+      "rod RL": 0.503,
+      "rod RR": 0.497
+     },
+     {
+      "rod RR": 0.503,
+      "rod RL": 0.497
+     }
+    ],
+    "orthogonality_err": 1.33e-15
+   },
+   "R1_damped (c_pad vertical=tangential)": {
+    "c_pad_N_s_m": 177604.0,
+    "f_Hz": [
+     7.2716,
+     12.581,
+     29.004,
+     36.074,
+     38.348,
+     48.13
+    ],
+    "zeta": [
+     0.01254,
+     0.02169,
+     0.05,
+     0.06219,
+     0.06611,
+     0.08297
+    ],
+    "heave_mode_index": 2
+   }
+  },
+  "middle": {
+   "cg_height_above_floor_m": 2.55417,
+   "R1_chrono_baseline (kv=kh=k_slab, rigid motors)": {
+    "f_Hz": [
+     9.6695,
+     15.573,
+     29.004,
+     36.893,
+     39.928,
+     48.09
+    ],
+    "omega_rad_s": [
+     60.755,
+     97.846,
+     182.24,
+     231.81,
+     250.87,
+     302.16
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.542,
+      "roll": 0.441
+     },
+     {
+      "surge x": 0.53,
+      "pitch": 0.443,
+      "heave z": 0.027
+     },
+     {
+      "heave z": 0.951,
+      "surge x": 0.049
+     },
+     {
+      "yaw": 0.646,
+      "sway y": 0.281,
+      "roll": 0.072
+     },
+     {
+      "pitch": 0.557,
+      "surge x": 0.421,
+      "heave z": 0.021
+     },
+     {
+      "roll": 0.487,
+      "yaw": 0.336,
+      "sway y": 0.176
+     }
+    ],
+    "orthogonality_err": 8.88e-16,
+    "geometric_stiffness_roll_Nm_rad": -976437.0
+   },
+   "R2 (kv=k_slab, kh=leg bending rigid pad)": {
+    "f_Hz": [
+     6.2104,
+     7.3533,
+     9.7674,
+     19.784,
+     21.629,
+     29.993
+    ],
+    "omega_rad_s": [
+     39.021,
+     46.202,
+     61.371,
+     124.31,
+     135.9,
+     188.45
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.793,
+      "yaw": 0.111,
+      "roll": 0.095
+     },
+     {
+      "surge x": 0.989
+     },
+     {
+      "yaw": 0.797,
+      "sway y": 0.177,
+      "roll": 0.025
+     },
+     {
+      "roll": 0.879,
+      "yaw": 0.091,
+      "sway y": 0.029
+     },
+     {
+      "pitch": 0.854,
+      "heave z": 0.134
+     },
+     {
+      "heave z": 0.865,
+      "pitch": 0.134
+     }
+    ],
+    "orthogonality_err": 7.77e-16,
+    "geometric_stiffness_roll_Nm_rad": -976437.0
+   },
+   "R3_rigid_halfspace (kv=kh=k_halfspace)": {
+    "f_Hz": [
+     57.23,
+     92.154,
+     171.63,
+     218.31,
+     236.27,
+     284.57
+    ],
+    "omega_rad_s": [
+     359.59,
+     579.02,
+     1078.4,
+     1371.7,
+     1484.5,
+     1788.0
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.542,
+      "roll": 0.441
+     },
+     {
+      "surge x": 0.53,
+      "pitch": 0.443,
+      "heave z": 0.027
+     },
+     {
+      "heave z": 0.951,
+      "surge x": 0.049
+     },
+     {
+      "yaw": 0.646,
+      "sway y": 0.281,
+      "roll": 0.072
+     },
+     {
+      "pitch": 0.557,
+      "surge x": 0.421,
+      "heave z": 0.021
+     },
+     {
+      "roll": 0.487,
+      "yaw": 0.336,
+      "sway y": 0.176
+     }
+    ],
+    "orthogonality_err": 1.33e-15,
+    "geometric_stiffness_roll_Nm_rad": -976437.0
+   },
+   "H1_physical_nominal (rigid pad)": {
+    "f_Hz": [
+     2.4597,
+     3.972,
+     7.4352,
+     9.4666,
+     10.306,
+     12.519,
+     286.45,
+     286.45,
+     286.66,
+     286.66
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.545,
+      "roll": 0.438
+     },
+     {
+      "surge x": 0.53,
+      "pitch": 0.44,
+      "heave z": 0.03
+     },
+     {
+      "heave z": 0.948,
+      "surge x": 0.052
+     },
+     {
+      "yaw": 0.643,
+      "sway y": 0.282,
+      "roll": 0.075
+     },
+     {
+      "pitch": 0.559,
+      "surge x": 0.417,
+      "heave z": 0.023
+     },
+     {
+      "roll": 0.487,
+      "yaw": 0.341,
+      "sway y": 0.172
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.501,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.505,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.505,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 2e-15
+   },
+   "H2_swivel_pad": {
+    "f_Hz": [
+     2.3108,
+     3.5168,
+     6.0096,
+     6.8156,
+     8.0249,
+     8.3912,
+     286.45,
+     286.45,
+     286.66,
+     286.66
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.606,
+      "roll": 0.354,
+      "yaw": 0.039
+     },
+     {
+      "surge x": 0.748,
+      "pitch": 0.238
+     },
+     {
+      "yaw": 0.684,
+      "sway y": 0.254,
+      "roll": 0.062
+     },
+     {
+      "heave z": 0.471,
+      "pitch": 0.348,
+      "surge x": 0.181
+     },
+     {
+      "heave z": 0.512,
+      "pitch": 0.411,
+      "surge x": 0.07
+     },
+     {
+      "roll": 0.58,
+      "yaw": 0.275,
+      "sway y": 0.138
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.501,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.505,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.505,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 2e-15
+   },
+   "H3_beta_0.69GPa": {
+    "f_Hz": [
+     2.0968,
+     3.4204,
+     6.3111,
+     9.4624,
+     10.027,
+     12.372,
+     283.65,
+     283.65,
+     283.79,
+     283.8
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.532,
+      "roll": 0.456
+     },
+     {
+      "pitch": 0.485,
+      "surge x": 0.481,
+      "heave z": 0.034
+     },
+     {
+      "heave z": 0.959,
+      "surge x": 0.036
+     },
+     {
+      "yaw": 0.633,
+      "sway y": 0.289,
+      "roll": 0.077
+     },
+     {
+      "pitch": 0.509,
+      "surge x": 0.482
+     },
+     {
+      "roll": 0.466,
+      "yaw": 0.355,
+      "sway y": 0.179
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.501,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.505,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.505,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 1.89e-15
+   },
+   "H4_beta_1.6GPa": {
+    "f_Hz": [
+     2.9639,
+     4.6941,
+     8.9734,
+     9.4733,
+     10.927,
+     12.782,
+     291.64,
+     291.64,
+     291.95,
+     291.96
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.568,
+      "roll": 0.408,
+      "yaw": 0.025
+     },
+     {
+      "surge x": 0.614,
+      "pitch": 0.363,
+      "heave z": 0.023
+     },
+     {
+      "heave z": 0.864,
+      "surge x": 0.102,
+      "pitch": 0.033
+     },
+     {
+      "yaw": 0.658,
+      "sway y": 0.271,
+      "roll": 0.07
+     },
+     {
+      "pitch": 0.604,
+      "surge x": 0.284,
+      "heave z": 0.112
+     },
+     {
+      "roll": 0.522,
+      "yaw": 0.317,
+      "sway y": 0.161
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.501,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.505,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.505,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 8.88e-16
+   },
+   "H5_kc_1e8": {
+    "f_Hz": [
+     2.2971,
+     3.7111,
+     6.9462,
+     8.848,
+     9.6248,
+     11.685,
+     170.29,
+     170.31,
+     170.64,
+     170.66
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.545,
+      "roll": 0.438
+     },
+     {
+      "surge x": 0.53,
+      "pitch": 0.44,
+      "heave z": 0.029
+     },
+     {
+      "heave z": 0.948,
+      "surge x": 0.052
+     },
+     {
+      "yaw": 0.643,
+      "sway y": 0.282,
+      "roll": 0.075
+     },
+     {
+      "pitch": 0.559,
+      "surge x": 0.418,
+      "heave z": 0.022
+     },
+     {
+      "roll": 0.487,
+      "yaw": 0.34,
+      "sway y": 0.172
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.5,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.505,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.504,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 2e-15
+   },
+   "H6_kc_halfspace": {
+    "f_Hz": [
+     2.5418,
+     4.1038,
+     7.6819,
+     9.7789,
+     10.65,
+     12.941,
+     1641.2,
+     1641.2,
+     1641.3,
+     1641.3
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.545,
+      "roll": 0.438
+     },
+     {
+      "surge x": 0.53,
+      "pitch": 0.44,
+      "heave z": 0.03
+     },
+     {
+      "heave z": 0.947,
+      "surge x": 0.053
+     },
+     {
+      "yaw": 0.643,
+      "sway y": 0.282,
+      "roll": 0.075
+     },
+     {
+      "pitch": 0.559,
+      "surge x": 0.417,
+      "heave z": 0.023
+     },
+     {
+      "roll": 0.487,
+      "yaw": 0.341,
+      "sway y": 0.172
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.501,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.505,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.505,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 1.78e-15
+   },
+   "R1_damped (c_pad vertical=tangential)": {
+    "c_pad_N_s_m": 177604.0,
+    "f_Hz": [
+     9.6695,
+     15.573,
+     29.004,
+     36.893,
+     39.928,
+     48.09
+    ],
+    "zeta": [
+     0.01668,
+     0.02685,
+     0.05,
+     0.0636,
+     0.06883,
+     0.0829
+    ],
+    "heave_mode_index": 2
+   }
+  },
+  "bottom": {
+   "cg_height_above_floor_m": 1.86418,
+   "R1_chrono_baseline (kv=kh=k_slab, rigid motors)": {
+    "f_Hz": [
+     12.253,
+     18.21,
+     29.004,
+     36.76,
+     38.138,
+     40.287
+    ],
+    "omega_rad_s": [
+     76.988,
+     114.42,
+     182.24,
+     230.97,
+     239.63,
+     253.13
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.53,
+      "roll": 0.459
+     },
+     {
+      "surge x": 0.498,
+      "pitch": 0.454,
+      "heave z": 0.048
+     },
+     {
+      "heave z": 0.913,
+      "surge x": 0.087
+     },
+     {
+      "yaw": 0.99
+     },
+     {
+      "pitch": 0.542,
+      "surge x": 0.412,
+      "heave z": 0.039
+     },
+     {
+      "roll": 0.534,
+      "sway y": 0.46
+     }
+    ],
+    "orthogonality_err": 1.22e-15,
+    "geometric_stiffness_roll_Nm_rad": -712659.0
+   },
+   "R2 (kv=k_slab, kh=leg bending rigid pad)": {
+    "f_Hz": [
+     6.7444,
+     7.5005,
+     9.7927,
+     19.225,
+     23.264,
+     30.528
+    ],
+    "omega_rad_s": [
+     42.376,
+     47.127,
+     61.529,
+     120.79,
+     146.17,
+     191.81
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.866,
+      "yaw": 0.096,
+      "roll": 0.038
+     },
+     {
+      "surge x": 0.995
+     },
+     {
+      "yaw": 0.886,
+      "sway y": 0.109
+     },
+     {
+      "roll": 0.967,
+      "sway y": 0.024
+     },
+     {
+      "pitch": 0.764,
+      "heave z": 0.232
+     },
+     {
+      "heave z": 0.768,
+      "pitch": 0.231
+     }
+    ],
+    "orthogonality_err": 6.66e-16,
+    "geometric_stiffness_roll_Nm_rad": -712659.0
+   },
+   "R3_rigid_halfspace (kv=kh=k_halfspace)": {
+    "f_Hz": [
+     72.517,
+     107.76,
+     171.63,
+     217.52,
+     225.68,
+     238.4
+    ],
+    "omega_rad_s": [
+     455.64,
+     677.09,
+     1078.4,
+     1366.7,
+     1418.0,
+     1497.9
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.53,
+      "roll": 0.459
+     },
+     {
+      "surge x": 0.498,
+      "pitch": 0.454,
+      "heave z": 0.048
+     },
+     {
+      "heave z": 0.913,
+      "surge x": 0.087
+     },
+     {
+      "yaw": 0.99
+     },
+     {
+      "pitch": 0.542,
+      "surge x": 0.412,
+      "heave z": 0.039
+     },
+     {
+      "roll": 0.534,
+      "sway y": 0.46
+     }
+    ],
+    "orthogonality_err": 1.11e-15,
+    "geometric_stiffness_roll_Nm_rad": -712659.0
+   },
+   "H1_physical_nominal (rigid pad)": {
+    "f_Hz": [
+     3.1217,
+     4.6478,
+     7.4362,
+     9.474,
+     9.8365,
+     10.393,
+     286.45,
+     286.45,
+     286.66,
+     286.66
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.531,
+      "roll": 0.458
+     },
+     {
+      "surge x": 0.495,
+      "pitch": 0.452,
+      "heave z": 0.052
+     },
+     {
+      "heave z": 0.906,
+      "surge x": 0.094
+     },
+     {
+      "yaw": 0.977
+     },
+     {
+      "pitch": 0.544,
+      "surge x": 0.408,
+      "heave z": 0.041
+     },
+     {
+      "roll": 0.54,
+      "sway y": 0.451
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.501,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.505,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.505,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 1.44e-15
+   },
+   "H2_swivel_pad": {
+    "f_Hz": [
+     2.8616,
+     3.9412,
+     6.0249,
+     6.7139,
+     7.1255,
+     8.1216,
+     286.45,
+     286.45,
+     286.66,
+     286.66
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.655,
+      "roll": 0.317,
+      "yaw": 0.028
+     },
+     {
+      "surge x": 0.807,
+      "pitch": 0.178
+     },
+     {
+      "yaw": 0.939,
+      "sway y": 0.045
+     },
+     {
+      "heave z": 0.476,
+      "pitch": 0.377,
+      "surge x": 0.146
+     },
+     {
+      "roll": 0.698,
+      "sway y": 0.299
+     },
+     {
+      "heave z": 0.509,
+      "pitch": 0.443,
+      "surge x": 0.047
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.501,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.505,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.505,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 8.88e-16
+   },
+   "H3_beta_0.69GPa": {
+    "f_Hz": [
+     2.6726,
+     4.0237,
+     6.344,
+     9.4369,
+     9.4929,
+     10.246,
+     283.65,
+     283.65,
+     283.79,
+     283.8
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.504,
+      "roll": 0.489
+     },
+     {
+      "pitch": 0.516,
+      "surge x": 0.42,
+      "heave z": 0.064
+     },
+     {
+      "heave z": 0.924,
+      "surge x": 0.064
+     },
+     {
+      "yaw": 0.6,
+      "surge x": 0.205,
+      "pitch": 0.189
+     },
+     {
+      "yaw": 0.398,
+      "surge x": 0.31,
+      "pitch": 0.283
+     },
+     {
+      "roll": 0.506,
+      "sway y": 0.488
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.501,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.505,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.505,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 1.78e-15
+   },
+   "H4_beta_1.6GPa": {
+    "f_Hz": [
+     3.7316,
+     5.4214,
+     8.8639,
+     9.4961,
+     10.662,
+     10.712,
+     291.64,
+     291.64,
+     291.95,
+     291.96
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.578,
+      "roll": 0.406
+     },
+     {
+      "surge x": 0.626,
+      "pitch": 0.34,
+      "heave z": 0.034
+     },
+     {
+      "heave z": 0.779,
+      "surge x": 0.156,
+      "pitch": 0.065
+     },
+     {
+      "yaw": 0.962,
+      "sway y": 0.024
+     },
+     {
+      "roll": 0.414,
+      "sway y": 0.276,
+      "pitch": 0.183
+     },
+     {
+      "pitch": 0.41,
+      "roll": 0.19,
+      "surge x": 0.149
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.501,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.505,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.504,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 2e-15
+   },
+   "H5_kc_1e8": {
+    "f_Hz": [
+     2.9157,
+     4.3428,
+     6.9471,
+     8.8503,
+     9.1862,
+     9.7062,
+     170.29,
+     170.31,
+     170.64,
+     170.67
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.531,
+      "roll": 0.458
+     },
+     {
+      "surge x": 0.496,
+      "pitch": 0.452,
+      "heave z": 0.052
+     },
+     {
+      "heave z": 0.907,
+      "surge x": 0.093
+     },
+     {
+      "yaw": 0.979
+     },
+     {
+      "pitch": 0.544,
+      "surge x": 0.409,
+      "heave z": 0.041
+     },
+     {
+      "roll": 0.539,
+      "sway y": 0.452
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.501,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.504,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.504,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 1.11e-15
+   },
+   "H6_kc_halfspace": {
+    "f_Hz": [
+     3.2258,
+     4.8018,
+     7.683,
+     9.7892,
+     10.165,
+     10.74,
+     1641.2,
+     1641.2,
+     1641.3,
+     1641.3
+    ],
+    "mode_content": [
+     {
+      "sway y": 0.531,
+      "roll": 0.458
+     },
+     {
+      "surge x": 0.495,
+      "pitch": 0.452,
+      "heave z": 0.053
+     },
+     {
+      "heave z": 0.906,
+      "surge x": 0.094
+     },
+     {
+      "yaw": 0.977
+     },
+     {
+      "pitch": 0.544,
+      "surge x": 0.408,
+      "heave z": 0.042
+     },
+     {
+      "roll": 0.54,
+      "sway y": 0.45
+     },
+     {
+      "rod FL": 0.501,
+      "rod FR": 0.499
+     },
+     {
+      "rod FR": 0.501,
+      "rod FL": 0.499
+     },
+     {
+      "rod RL": 0.505,
+      "rod RR": 0.495
+     },
+     {
+      "rod RR": 0.505,
+      "rod RL": 0.495
+     }
+    ],
+    "orthogonality_err": 1.11e-15
+   },
+   "R1_damped (c_pad vertical=tangential)": {
+    "c_pad_N_s_m": 177604.0,
+    "f_Hz": [
+     12.253,
+     18.21,
+     29.004,
+     36.76,
+     38.138,
+     40.287
+    ],
+    "zeta": [
+     0.02113,
+     0.0314,
+     0.05,
+     0.06337,
+     0.06575,
+     0.06945
+    ],
+    "heave_mode_index": 2
+   }
+  },
+  "sympy_hessian_check": {
+   "level": "top",
+   "case": "R1_chrono_baseline (kv=kh=k_slab, rigid motors)",
+   "max_abs_gradient_at_q0 (N, Nm)": 9.8e-10,
+   "max_rel_diff_hessian": 8.8e-17
+  }
+ },
+ "time_step": {
+  "rule": "dt <= T_min / 50 (accuracy, >= 50 steps per period of the highest retained mode); stability of explicit contact needs dt < 2/omega_max",
+  "R1_fmax_Hz": 48.13,
+  "R1_dt_s": 0.0002,
+  "R1_stability_limit_s": 0.00661354,
+  "R3_fmax_Hz": 284.81,
+  "R3_dt_s": 5e-05,
+  "H_rod_local_mode_Hz (slab)": 286.551,
+  "H_dt_s": 5e-05,
+  "H_rod_local_mode_Hz (halfspace)": 1641.25,
+  "H_halfspace_dt_s": 1e-05,
+  "L1_numerical_damping_bound_s (omega1 dt/2 <= 0.1 zeta1, top)": 0.0002301,
+  "L2b_NSC_rod_on_axial_spring_Hz (contact open)": 70.63,
+  "L2b_NSC_dt_s": 0.0002
+ },
+ "chrono_test_references": {
+  "R1_rigid_motor_concrete (informational, excluded from load evaluation)": {
+   "k_vertical_N_m": [
+    323662000.0,
+    323662000.0,
+    323662000.0,
+    323662000.0
+   ],
+   "k_horizontal_N_m": [
+    323662000.0,
+    323662000.0,
+    323662000.0,
+    323662000.0
+   ],
+   "c_pad_N_s_m": [
+    177604.0,
+    177604.0,
+    177604.0,
+    177604.0
+   ],
+   "c_tan_N_s_m": [
+    177604.0,
+    177604.0,
+    177604.0,
+    177604.0
+   ],
+   "levels": {
+    "top": {
+     "contact_force_N": [
+      119302.0,
+      117309.0,
+      73747.5,
+      71932.6
+     ],
+     "static_penetration_or_compression_mm": [
+      0.3686,
+      0.362442,
+      0.227854,
+      0.222246
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.0001333,
+      0.001659
+     ],
+     "dF_per_mm_FL_N": [
+      73356.2,
+      -73356.2,
+      -80561.6,
+      80561.6
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0118312,
+      -0.00581554
+     ],
+     "cylinder_force_N": [
+      118255.0,
+      116261.0,
+      72700.3,
+      70885.4
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 0.9154,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 0.8929,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 0.8929,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 0.9154,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 0.813,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 0.8335,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 0.8335,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 0.813,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 0.7851,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 0.7626,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 0.7626,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 0.7851,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 0.6944,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 0.7149,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 0.7149,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 0.6944,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      7.2716,
+      12.581,
+      29.004,
+      36.074,
+      38.348,
+      48.13
+     ],
+     "mode_content": [
+      {
+       "roll": 0.529,
+       "sway y": 0.459
+      },
+      {
+       "pitch": 0.52,
+       "surge x": 0.465
+      },
+      {
+       "heave z": 0.969,
+       "surge x": 0.031
+      },
+      {
+       "sway y": 0.43,
+       "yaw": 0.429,
+       "roll": 0.141
+      },
+      {
+       "surge x": 0.504,
+       "pitch": 0.479
+      },
+      {
+       "yaw": 0.559,
+       "roll": 0.33,
+       "sway y": 0.111
+      }
+     ],
+     "f_damped_Hz": [
+      7.2716,
+      12.581,
+      29.004,
+      36.074,
+      38.348,
+      48.13
+     ],
+     "zeta": [
+      0.0125,
+      0.0217,
+      0.05,
+      0.0622,
+      0.0661,
+      0.083
+     ]
+    },
+    "middle": {
+     "contact_force_N": [
+      119302.0,
+      117309.0,
+      73747.5,
+      71932.6
+     ],
+     "static_penetration_or_compression_mm": [
+      0.3686,
+      0.362442,
+      0.227854,
+      0.222246
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.0001333,
+      0.001659
+     ],
+     "dF_per_mm_FL_N": [
+      73356.2,
+      -73356.2,
+      -80561.6,
+      80561.6
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0118312,
+      -0.00581554
+     ],
+     "cylinder_force_N": [
+      118255.0,
+      116261.0,
+      72700.3,
+      70885.4
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 0.9154,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 0.8929,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 0.8929,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 0.9154,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 0.813,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 0.8335,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 0.8335,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 0.813,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 0.7851,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 0.7626,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 0.7626,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 0.7851,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 0.6944,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 0.7149,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 0.7149,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 0.6944,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      9.6695,
+      15.573,
+      29.004,
+      36.893,
+      39.928,
+      48.09
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.542,
+       "roll": 0.441
+      },
+      {
+       "surge x": 0.53,
+       "pitch": 0.443,
+       "heave z": 0.027
+      },
+      {
+       "heave z": 0.951,
+       "surge x": 0.049
+      },
+      {
+       "yaw": 0.646,
+       "sway y": 0.281,
+       "roll": 0.072
+      },
+      {
+       "pitch": 0.557,
+       "surge x": 0.421,
+       "heave z": 0.021
+      },
+      {
+       "roll": 0.487,
+       "yaw": 0.336,
+       "sway y": 0.176
+      }
+     ],
+     "f_damped_Hz": [
+      9.6695,
+      15.573,
+      29.004,
+      36.893,
+      39.928,
+      48.09
+     ],
+     "zeta": [
+      0.0167,
+      0.0268,
+      0.05,
+      0.0636,
+      0.0688,
+      0.0829
+     ]
+    },
+    "bottom": {
+     "contact_force_N": [
+      119302.0,
+      117309.0,
+      73747.5,
+      71932.6
+     ],
+     "static_penetration_or_compression_mm": [
+      0.3686,
+      0.362442,
+      0.227854,
+      0.222246
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.0001333,
+      0.001659
+     ],
+     "dF_per_mm_FL_N": [
+      73356.2,
+      -73356.2,
+      -80561.6,
+      80561.6
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0118312,
+      -0.00581554
+     ],
+     "cylinder_force_N": [
+      118255.0,
+      116261.0,
+      72700.3,
+      70885.4
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 0.9154,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 0.8929,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 0.8929,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 0.9154,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 0.813,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 0.8335,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 0.8335,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 0.813,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 0.7851,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 0.7626,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 0.7626,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 0.7851,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 0.6944,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 0.7149,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 0.7149,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 0.6944,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      12.253,
+      18.21,
+      29.004,
+      36.76,
+      38.138,
+      40.287
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.53,
+       "roll": 0.459
+      },
+      {
+       "surge x": 0.498,
+       "pitch": 0.454,
+       "heave z": 0.048
+      },
+      {
+       "heave z": 0.913,
+       "surge x": 0.087
+      },
+      {
+       "yaw": 0.99
+      },
+      {
+       "pitch": 0.542,
+       "surge x": 0.412,
+       "heave z": 0.039
+      },
+      {
+       "roll": 0.534,
+       "sway y": 0.46
+      }
+     ],
+     "f_damped_Hz": [
+      12.253,
+      18.21,
+      29.004,
+      36.76,
+      38.138,
+      40.287
+     ],
+     "zeta": [
+      0.0211,
+      0.0314,
+      0.05,
+      0.0634,
+      0.0657,
+      0.0695
+     ]
+    }
+   }
+  },
+  "L1_rigid_motor_lumped_contact": {
+   "k_vertical_N_m": [
+    20813600.0,
+    20813600.0,
+    21247900.0,
+    21247900.0
+   ],
+   "k_horizontal_N_m": [
+    8510490.0,
+    8510490.0,
+    8403600.0,
+    8403600.0
+   ],
+   "c_pad_N_s_m": [
+    45038.1,
+    45038.1,
+    45505.5,
+    45505.5
+   ],
+   "c_tan_N_s_m": [
+    28799.4,
+    28799.4,
+    28618.0,
+    28618.0
+   ],
+   "levels": {
+    "top": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.73147,
+      5.63661,
+      3.4713,
+      3.38492
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02664
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      1.7845,
+      2.9842,
+      5.8325,
+      6.459,
+      7.6148,
+      8.0421
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.495,
+       "roll": 0.476,
+       "yaw": 0.029
+      },
+      {
+       "surge x": 0.618,
+       "pitch": 0.371
+      },
+      {
+       "yaw": 0.471,
+       "sway y": 0.4,
+       "roll": 0.129
+      },
+      {
+       "pitch": 0.478,
+       "surge x": 0.349,
+       "heave z": 0.173
+      },
+      {
+       "heave z": 0.815,
+       "pitch": 0.15,
+       "surge x": 0.033
+      },
+      {
+       "yaw": 0.499,
+       "roll": 0.394,
+       "sway y": 0.105
+      }
+     ],
+     "f_damped_Hz": [
+      1.7845,
+      2.9844,
+      5.8325,
+      6.4603,
+      7.6129,
+      8.0418
+     ],
+     "zeta": [
+      0.0129,
+      0.0231,
+      0.0622,
+      0.0605,
+      0.054,
+      0.0823
+     ]
+    },
+    "middle": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.73147,
+      5.63661,
+      3.4713,
+      3.38492
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02664
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      2.3086,
+      3.5085,
+      5.957,
+      6.7707,
+      7.9632,
+      8.2799
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.604,
+       "roll": 0.357,
+       "yaw": 0.039
+      },
+      {
+       "surge x": 0.748,
+       "pitch": 0.239
+      },
+      {
+       "yaw": 0.686,
+       "sway y": 0.254,
+       "roll": 0.06
+      },
+      {
+       "heave z": 0.46,
+       "pitch": 0.356,
+       "surge x": 0.183
+      },
+      {
+       "heave z": 0.522,
+       "pitch": 0.401,
+       "surge x": 0.068
+      },
+      {
+       "roll": 0.578,
+       "yaw": 0.272,
+       "sway y": 0.141
+      }
+     ],
+     "f_damped_Hz": [
+      2.3086,
+      3.509,
+      5.957,
+      6.7727,
+      7.9604,
+      8.2791
+     ],
+     "zeta": [
+      0.0175,
+      0.0295,
+      0.0636,
+      0.0561,
+      0.06,
+      0.0816
+     ]
+    },
+    "bottom": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.73147,
+      5.63661,
+      3.4713,
+      3.38492
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02664
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      2.857,
+      3.9283,
+      5.9707,
+      6.6747,
+      7.0655,
+      8.0627
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.653,
+       "roll": 0.318,
+       "yaw": 0.029
+      },
+      {
+       "surge x": 0.807,
+       "pitch": 0.178
+      },
+      {
+       "yaw": 0.939,
+       "sway y": 0.046
+      },
+      {
+       "heave z": 0.47,
+       "pitch": 0.383,
+       "surge x": 0.146
+      },
+      {
+       "roll": 0.696,
+       "sway y": 0.3
+      },
+      {
+       "heave z": 0.515,
+       "pitch": 0.438,
+       "surge x": 0.046
+      }
+     ],
+     "f_damped_Hz": [
+      2.8572,
+      3.9289,
+      5.9707,
+      6.675,
+      7.065,
+      8.0608
+     ],
+     "zeta": [
+      0.0227,
+      0.0353,
+      0.0635,
+      0.0531,
+      0.0675,
+      0.0586
+     ]
+    }
+   }
+  },
+  "L2_force_motor_oil_spring": {
+   "k_vertical_N_m": [
+    20813600.0,
+    20813600.0,
+    21247900.0,
+    21247900.0
+   ],
+   "k_horizontal_N_m": [
+    323662000.0,
+    323662000.0,
+    323662000.0,
+    323662000.0
+   ],
+   "c_oil_N_s_m": [
+    46560.0,
+    46560.0,
+    47077.0,
+    47077.0
+   ],
+   "c_contact_N_s_m": [
+    68754.1,
+    68754.1,
+    68319.9,
+    68319.9
+   ],
+   "c_tangential_N_s_m": [
+    177604.0,
+    177604.0,
+    177604.0,
+    177604.0
+   ],
+   "levels": {
+    "top": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.68116,
+      5.58629,
+      3.42201,
+      3.33564
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02662
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      1.8853,
+      3.3291,
+      7.492,
+      36.291,
+      36.983,
+      47.895,
+      286.45,
+      286.45,
+      286.65,
+      286.66
+     ],
+     "mode_content": [
+      {
+       "roll": 0.561,
+       "sway y": 0.438
+      },
+      {
+       "pitch": 0.607,
+       "surge x": 0.373
+      },
+      {
+       "heave z": 0.98
+      },
+      {
+       "sway y": 0.447,
+       "yaw": 0.397,
+       "roll": 0.148
+      },
+      {
+       "surge x": 0.613,
+       "pitch": 0.378
+      },
+      {
+       "yaw": 0.6,
+       "roll": 0.289,
+       "sway y": 0.111
+      },
+      {
+       "rod FL": 0.5,
+       "rod FR": 0.5
+      },
+      {
+       "rod FR": 0.5,
+       "rod FL": 0.5
+      },
+      {
+       "rod RL": 0.503,
+       "rod RR": 0.497
+      },
+      {
+       "rod RR": 0.503,
+       "rod RL": 0.497
+      }
+     ],
+     "f_damped_Hz": [
+      1.8854,
+      3.3293,
+      7.4938,
+      36.291,
+      36.984,
+      47.896,
+      286.41,
+      286.44,
+      286.61,
+      286.65
+     ],
+     "zeta": [
+      0.0117,
+      0.0205,
+      0.0461,
+      0.0626,
+      0.0646,
+      0.0831,
+      0.3,
+      0.3,
+      0.3,
+      0.3
+     ]
+    },
+    "middle": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.68116,
+      5.58629,
+      3.42201,
+      3.33564
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02662
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      2.5576,
+      4.2333,
+      7.5461,
+      37.117,
+      37.311,
+      46.9,
+      286.45,
+      286.45,
+      286.66,
+      286.66
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.501,
+       "roll": 0.498
+      },
+      {
+       "pitch": 0.581,
+       "surge x": 0.375,
+       "heave z": 0.044
+      },
+      {
+       "heave z": 0.956,
+       "pitch": 0.026
+      },
+      {
+       "yaw": 0.456,
+       "sway y": 0.226,
+       "surge x": 0.156
+      },
+      {
+       "surge x": 0.451,
+       "pitch": 0.292,
+       "yaw": 0.154
+      },
+      {
+       "roll": 0.417,
+       "yaw": 0.39,
+       "sway y": 0.193
+      },
+      {
+       "rod FL": 0.501,
+       "rod FR": 0.499
+      },
+      {
+       "rod FR": 0.501,
+       "rod FL": 0.499
+      },
+      {
+       "rod RL": 0.505,
+       "rod RR": 0.495
+      },
+      {
+       "rod RR": 0.505,
+       "rod RL": 0.495
+      }
+     ],
+     "f_damped_Hz": [
+      2.5576,
+      4.2337,
+      7.5479,
+      37.12,
+      37.309,
+      46.902,
+      286.41,
+      286.44,
+      286.6,
+      286.64
+     ],
+     "zeta": [
+      0.0158,
+      0.026,
+      0.0464,
+      0.0644,
+      0.0655,
+      0.082,
+      0.3,
+      0.3,
+      0.3,
+      0.3
+     ]
+    },
+    "bottom": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.68116,
+      5.58629,
+      3.42201,
+      3.33564
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02662
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      3.282,
+      5.0054,
+      7.6321,
+      34.793,
+      36.677,
+      39.066,
+      286.45,
+      286.45,
+      286.66,
+      286.66
+     ],
+     "mode_content": [
+      {
+       "roll": 0.557,
+       "sway y": 0.442
+      },
+      {
+       "pitch": 0.633,
+       "surge x": 0.276,
+       "heave z": 0.091
+      },
+      {
+       "heave z": 0.909,
+       "pitch": 0.062,
+       "surge x": 0.029
+      },
+      {
+       "surge x": 0.693,
+       "pitch": 0.304
+      },
+      {
+       "yaw": 0.899,
+       "roll": 0.067,
+       "sway y": 0.032
+      },
+      {
+       "sway y": 0.526,
+       "roll": 0.375,
+       "yaw": 0.098
+      },
+      {
+       "rod FL": 0.501,
+       "rod FR": 0.499
+      },
+      {
+       "rod FR": 0.501,
+       "rod FL": 0.499
+      },
+      {
+       "rod RL": 0.505,
+       "rod RR": 0.495
+      },
+      {
+       "rod RR": 0.505,
+       "rod RL": 0.495
+      }
+     ],
+     "f_damped_Hz": [
+      3.2822,
+      5.0059,
+      7.634,
+      34.794,
+      36.678,
+      39.067,
+      286.41,
+      286.44,
+      286.59,
+      286.64
+     ],
+     "zeta": [
+      0.0202,
+      0.0308,
+      0.0468,
+      0.0615,
+      0.0636,
+      0.0681,
+      0.3,
+      0.3,
+      0.3,
+      0.3
+     ]
+    }
+   }
+  },
+  "L2b_force_motor_oil_spring_lateral_bushing": {
+   "k_vertical_N_m": [
+    20813600.0,
+    20813600.0,
+    21247900.0,
+    21247900.0
+   ],
+   "k_horizontal_N_m": [
+    8510490.0,
+    8510490.0,
+    8403600.0,
+    8403600.0
+   ],
+   "c_oil_N_s_m": [
+    46560.0,
+    46560.0,
+    47077.0,
+    47077.0
+   ],
+   "c_contact_N_s_m": [
+    68754.1,
+    68754.1,
+    68319.9,
+    68319.9
+   ],
+   "c_tangential_N_s_m": [
+    28799.4,
+    28799.4,
+    28618.0,
+    28618.0
+   ],
+   "levels": {
+    "top": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.68116,
+      5.58629,
+      3.42201,
+      3.33564
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02662
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      1.7854,
+      2.9885,
+      5.8811,
+      6.5084,
+      7.6637,
+      8.1574,
+      286.45,
+      286.45,
+      286.65,
+      286.66
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.498,
+       "roll": 0.473,
+       "yaw": 0.029
+      },
+      {
+       "surge x": 0.619,
+       "pitch": 0.37
+      },
+      {
+       "yaw": 0.469,
+       "sway y": 0.399,
+       "roll": 0.132
+      },
+      {
+       "pitch": 0.474,
+       "surge x": 0.346,
+       "heave z": 0.179
+      },
+      {
+       "heave z": 0.808,
+       "pitch": 0.155,
+       "surge x": 0.034
+      },
+      {
+       "yaw": 0.501,
+       "roll": 0.395,
+       "sway y": 0.102
+      },
+      {
+       "rod FL": 0.5,
+       "rod FR": 0.5
+      },
+      {
+       "rod FR": 0.5,
+       "rod FL": 0.5
+      },
+      {
+       "rod RL": 0.503,
+       "rod RR": 0.497
+      },
+      {
+       "rod RR": 0.503,
+       "rod RL": 0.497
+      }
+     ],
+     "f_damped_Hz": [
+      1.7854,
+      2.9889,
+      5.8811,
+      6.5106,
+      7.6628,
+      8.1573,
+      286.41,
+      286.44,
+      286.61,
+      286.65
+     ],
+     "zeta": [
+      0.012,
+      0.0218,
+      0.0627,
+      0.0596,
+      0.0503,
+      0.083,
+      0.3,
+      0.3,
+      0.3,
+      0.3
+     ]
+    },
+    "middle": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.68116,
+      5.58629,
+      3.42201,
+      3.33564
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02662
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      2.3108,
+      3.5168,
+      6.0096,
+      6.8156,
+      8.0249,
+      8.3912,
+      286.45,
+      286.45,
+      286.66,
+      286.66
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.606,
+       "roll": 0.354,
+       "yaw": 0.039
+      },
+      {
+       "surge x": 0.748,
+       "pitch": 0.238
+      },
+      {
+       "yaw": 0.684,
+       "sway y": 0.254,
+       "roll": 0.062
+      },
+      {
+       "heave z": 0.471,
+       "pitch": 0.348,
+       "surge x": 0.181
+      },
+      {
+       "heave z": 0.512,
+       "pitch": 0.411,
+       "surge x": 0.07
+      },
+      {
+       "roll": 0.58,
+       "yaw": 0.275,
+       "sway y": 0.138
+      },
+      {
+       "rod FL": 0.501,
+       "rod FR": 0.499
+      },
+      {
+       "rod FR": 0.501,
+       "rod FL": 0.499
+      },
+      {
+       "rod RL": 0.505,
+       "rod RR": 0.495
+      },
+      {
+       "rod RR": 0.505,
+       "rod RL": 0.495
+      }
+     ],
+     "f_damped_Hz": [
+      2.3109,
+      3.5175,
+      6.0096,
+      6.8193,
+      8.0225,
+      8.3909,
+      286.41,
+      286.44,
+      286.6,
+      286.64
+     ],
+     "zeta": [
+      0.0164,
+      0.0283,
+      0.0641,
+      0.0538,
+      0.0568,
+      0.0817,
+      0.3,
+      0.3,
+      0.3,
+      0.3
+     ]
+    },
+    "bottom": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.68116,
+      5.58629,
+      3.42201,
+      3.33564
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02662
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      2.8616,
+      3.9412,
+      6.0249,
+      6.7139,
+      7.1255,
+      8.1216,
+      286.45,
+      286.45,
+      286.66,
+      286.66
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.655,
+       "roll": 0.317,
+       "yaw": 0.028
+      },
+      {
+       "surge x": 0.807,
+       "pitch": 0.178
+      },
+      {
+       "yaw": 0.939,
+       "sway y": 0.045
+      },
+      {
+       "heave z": 0.476,
+       "pitch": 0.377,
+       "surge x": 0.146
+      },
+      {
+       "roll": 0.698,
+       "sway y": 0.299
+      },
+      {
+       "heave z": 0.509,
+       "pitch": 0.443,
+       "surge x": 0.047
+      },
+      {
+       "rod FL": 0.501,
+       "rod FR": 0.499
+      },
+      {
+       "rod FR": 0.501,
+       "rod FL": 0.499
+      },
+      {
+       "rod RL": 0.505,
+       "rod RR": 0.495
+      },
+      {
+       "rod RR": 0.505,
+       "rod RL": 0.495
+      }
+     ],
+     "f_damped_Hz": [
+      2.8619,
+      3.9422,
+      6.025,
+      6.7153,
+      7.1253,
+      8.1211,
+      286.41,
+      286.44,
+      286.59,
+      286.64
+     ],
+     "zeta": [
+      0.0214,
+      0.0343,
+      0.0641,
+      0.0505,
+      0.0669,
+      0.0549,
+      0.3,
+      0.3,
+      0.3,
+      0.3
+     ]
+    }
+   }
+  },
+  "L2b_NSC_force_motor_axial_spring_lateral_bushing": {
+   "k_vertical_N_m": [
+    20813600.0,
+    20813600.0,
+    21247900.0,
+    21247900.0
+   ],
+   "k_horizontal_N_m": [
+    8510490.0,
+    8510490.0,
+    8403600.0,
+    8403600.0
+   ],
+   "c_oil_N_s_m": [
+    46560.0,
+    46560.0,
+    47077.0,
+    47077.0
+   ],
+   "c_contact_N_s_m": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "c_tangential_N_s_m": [
+    28799.4,
+    28799.4,
+    28618.0,
+    28618.0
+   ],
+   "levels": {
+    "top": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.68116,
+      5.58629,
+      3.42201,
+      3.33564
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02662
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      1.7854,
+      2.9885,
+      5.8811,
+      6.5084,
+      7.6639,
+      8.1574,
+      48704.0,
+      48704.0,
+      48704.0,
+      48704.0
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.498,
+       "roll": 0.473,
+       "yaw": 0.029
+      },
+      {
+       "surge x": 0.619,
+       "pitch": 0.37
+      },
+      {
+       "yaw": 0.469,
+       "sway y": 0.399,
+       "roll": 0.132
+      },
+      {
+       "pitch": 0.474,
+       "surge x": 0.346,
+       "heave z": 0.179
+      },
+      {
+       "heave z": 0.808,
+       "pitch": 0.155,
+       "surge x": 0.034
+      },
+      {
+       "yaw": 0.501,
+       "roll": 0.395,
+       "sway y": 0.102
+      },
+      {
+       "rod FL": 0.505,
+       "rod FR": 0.495
+      },
+      {
+       "rod FR": 0.505,
+       "rod FL": 0.495
+      },
+      {
+       "rod RL": 0.505,
+       "rod RR": 0.495
+      },
+      {
+       "rod RR": 0.505,
+       "rod RL": 0.495
+      }
+     ],
+     "f_damped_Hz": [
+      1.7854,
+      2.9887,
+      5.8811,
+      6.5097,
+      7.6621,
+      8.1572,
+      48704.0,
+      48704.0,
+      48704.0,
+      48704.0
+     ],
+     "zeta": [
+      0.0133,
+      0.0237,
+      0.0627,
+      0.0614,
+      0.0561,
+      0.0837,
+      0.000712,
+      0.000712,
+      0.00072,
+      0.00072
+     ]
+    },
+    "middle": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.68116,
+      5.58629,
+      3.42201,
+      3.33564
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02662
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      2.3108,
+      3.5168,
+      6.0096,
+      6.8157,
+      8.025,
+      8.3913,
+      48704.0,
+      48704.0,
+      48704.0,
+      48704.0
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.606,
+       "roll": 0.354,
+       "yaw": 0.039
+      },
+      {
+       "surge x": 0.748,
+       "pitch": 0.238
+      },
+      {
+       "yaw": 0.684,
+       "sway y": 0.254,
+       "roll": 0.062
+      },
+      {
+       "heave z": 0.471,
+       "pitch": 0.348,
+       "surge x": 0.181
+      },
+      {
+       "heave z": 0.512,
+       "pitch": 0.411,
+       "surge x": 0.07
+      },
+      {
+       "roll": 0.58,
+       "yaw": 0.275,
+       "sway y": 0.138
+      },
+      {
+       "rod FR": 0.504,
+       "rod FL": 0.496
+      },
+      {
+       "rod FL": 0.504,
+       "rod FR": 0.496
+      },
+      {
+       "rod RL": 0.505,
+       "rod RR": 0.495
+      },
+      {
+       "rod RR": 0.505,
+       "rod RL": 0.495
+      }
+     ],
+     "f_damped_Hz": [
+      2.3108,
+      3.5172,
+      6.0096,
+      6.8176,
+      8.0223,
+      8.3907,
+      48704.0,
+      48704.0,
+      48704.0,
+      48704.0
+     ],
+     "zeta": [
+      0.018,
+      0.03,
+      0.0642,
+      0.0573,
+      0.0621,
+      0.0831,
+      0.000712,
+      0.000712,
+      0.00072,
+      0.00072
+     ]
+    },
+    "bottom": {
+     "contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "static_penetration_or_compression_mm": [
+      5.68116,
+      5.58629,
+      3.42201,
+      3.33564
+     ],
+     "static_attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02662
+     ],
+     "dF_per_mm_FL_N": [
+      4770.6,
+      -4770.6,
+      -5239.19,
+      5239.19
+     ],
+     "droll_dpitch_per_mm_FL_deg": [
+      0.0117203,
+      -0.0058164
+     ],
+     "cylinder_force_N": [
+      118245.0,
+      116271.0,
+      72710.6,
+      70875.2
+     ],
+     "F_min_cylinder_N": 9452.55,
+     "liftoff_threshold_single_leg (contact force 0)": {
+      "FL+": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "FL-": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR+": {
+       "delta_mm": 13.73,
+       "unloaded_leg": "RR"
+      },
+      "FR-": {
+       "delta_mm": 14.08,
+       "unloaded_leg": "RL"
+      },
+      "RL+": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      },
+      "RL-": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR+": {
+       "delta_mm": 12.82,
+       "unloaded_leg": "RL"
+      },
+      "RR-": {
+       "delta_mm": 12.5,
+       "unloaded_leg": "RR"
+      }
+     },
+     "F_min_threshold_single_leg (cylinder force = F_min)": {
+      "FL+": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "FL-": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR+": {
+       "delta_mm": 11.72,
+       "leg_at_F_min": "RR"
+      },
+      "FR-": {
+       "delta_mm": 12.07,
+       "leg_at_F_min": "RL"
+      },
+      "RL+": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      },
+      "RL-": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR+": {
+       "delta_mm": 10.99,
+       "leg_at_F_min": "RL"
+      },
+      "RR-": {
+       "delta_mm": 10.68,
+       "leg_at_F_min": "RR"
+      }
+     },
+     "f_undamped_Hz": [
+      2.8616,
+      3.9412,
+      6.0249,
+      6.7139,
+      7.1256,
+      8.1218,
+      48704.0,
+      48704.0,
+      48704.0,
+      48704.0
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.655,
+       "roll": 0.317,
+       "yaw": 0.028
+      },
+      {
+       "surge x": 0.807,
+       "pitch": 0.178
+      },
+      {
+       "yaw": 0.939,
+       "sway y": 0.045
+      },
+      {
+       "heave z": 0.476,
+       "pitch": 0.377,
+       "surge x": 0.146
+      },
+      {
+       "roll": 0.698,
+       "sway y": 0.299
+      },
+      {
+       "heave z": 0.509,
+       "pitch": 0.443,
+       "surge x": 0.047
+      },
+      {
+       "rod FL": 0.5,
+       "rod FR": 0.5
+      },
+      {
+       "rod FR": 0.5,
+       "rod FL": 0.5
+      },
+      {
+       "rod RL": 0.504,
+       "rod RR": 0.496
+      },
+      {
+       "rod RR": 0.504,
+       "rod RL": 0.496
+      }
+     ],
+     "f_damped_Hz": [
+      2.8617,
+      3.9418,
+      6.025,
+      6.7143,
+      7.1251,
+      8.1202,
+      48704.0,
+      48704.0,
+      48704.0,
+      48704.0
+     ],
+     "zeta": [
+      0.0231,
+      0.0357,
+      0.0641,
+      0.0545,
+      0.0686,
+      0.0608,
+      0.000712,
+      0.000712,
+      0.00072,
+      0.00072
+     ]
+    }
+   }
+  }
+ },
+ "hydraulic_circuit": {
+  "annulus_area_m2": 0.000883573,
+  "head_area_m2": 0.0103869,
+  "rod_side_column_length_m (stroke - e_op + L0)": [
+   0.3289,
+   0.3289,
+   0.3391,
+   0.3391
+  ],
+  "k_rod_side_N_m": [
+   2686450.0,
+   2686450.0,
+   2605640.0,
+   2605640.0
+  ],
+  "k_rod_side_over_k_oil_head": [
+   0.1167,
+   0.1167,
+   0.1106,
+   0.1106
+  ],
+  "kv_with_rod_side_over_kv": [
+   1.104,
+   1.104,
+   1.099,
+   1.099
+  ],
+  "max_pressure_Pa": 21000000.0,
+  "max_head_force_N": 218125.0,
+  "max_rod_side_force_N": 18555.0,
+  "max_static_head_pressure_Pa": 11384100.0,
+  "flow_4_legs_at_vmax_L_min": 56.5,
+  "pump_flow_L_min": 60.2
+ },
+ "slope_V12": {
+  "procedure": "pads placed on the floor with zero spring force at the levelled extension, then gravity (linear statics)",
+  "contact_point": "sphere of radius = ball height (ASSUMPTION 0.06 m) centred at the ball; force through the ball centre",
+  "self_check_level_max_abs_diff_N": 1.16e-10,
+  "ground roll 0 deg, pitch 2 deg": {
+   "extension_m": [
+    0.5455,
+    0.5455,
+    0.3659,
+    0.3659
+   ],
+   "L2": {
+    "contact_vertical_N": [
+     118357.0,
+     116685.0,
+     74680.5,
+     72567.8
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      22839.6,
+      366.163
+     ],
+     [
+      22068.3,
+      366.163
+     ],
+     [
+      -22102.8,
+      -366.163
+     ],
+     [
+      -22805.1,
+      -366.163
+     ]
+    ],
+    "cylinder_force_N": [
+     117310.0,
+     115638.0,
+     73633.3,
+     71520.6
+    ],
+    "friction_utilisation_T_over_N": [
+     0.157,
+     0.1532,
+     0.3344,
+     0.3531
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     118106.0,
+     116410.0,
+     72863.7,
+     70722.1
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     -0.002242,
+     0.04693
+    ]
+   },
+   "L2b": {
+    "contact_vertical_N": [
+     119079.0,
+     117385.0,
+     73983.1,
+     71843.7
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      2126.28,
+      30.9142
+     ],
+     [
+      2075.14,
+      30.9142
+     ],
+     [
+      -2069.77,
+      -30.9142
+     ],
+     [
+      -2131.65,
+      -30.9142
+     ]
+    ],
+    "cylinder_force_N": [
+     118032.0,
+     116338.0,
+     72935.9,
+     70796.5
+    ],
+    "friction_utilisation_T_over_N": [
+     0.01706,
+     0.01723,
+     0.06296,
+     0.06466
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     118106.0,
+     116410.0,
+     72863.7,
+     70722.1
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     -0.002272,
+     0.04777
+    ]
+   },
+   "L1": {
+    "contact_vertical_N": [
+     119265.0,
+     117292.0,
+     73783.9,
+     71950.1
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      796.043,
+      18.3282
+     ],
+     [
+      747.291,
+      18.3282
+     ],
+     [
+      -748.702,
+      -18.3282
+     ],
+     [
+      -794.632,
+      -18.3282
+     ]
+    ],
+    "cylinder_force_N": [
+     118218.0,
+     116245.0,
+     72736.7,
+     70902.9
+    ],
+    "friction_utilisation_T_over_N": [
+     0.02824,
+     0.02854,
+     0.04508,
+     0.04598
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     118245.0,
+     116271.0,
+     72710.6,
+     70875.2
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     -0.002052,
+     0.0266
+    ]
+   },
+   "L2b_NSC": {
+    "contact_vertical_N": [
+     119104.0,
+     117411.0,
+     73957.4,
+     71818.4
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      1398.97,
+      28.0338
+     ],
+     [
+      1339.45,
+      28.0338
+     ],
+     [
+      -1331.69,
+      -28.0338
+     ],
+     [
+      -1406.72,
+      -28.0338
+     ]
+    ],
+    "cylinder_force_N": [
+     118057.0,
+     116363.0,
+     72910.2,
+     70771.2
+    ],
+    "friction_utilisation_T_over_N": [
+     0.02317,
+     0.0235,
+     0.05296,
+     0.05455
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     118106.0,
+     116410.0,
+     72863.7,
+     70722.1
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     -0.00227,
+     0.0478
+    ]
+   }
+  },
+  "ground roll 2 deg, pitch 0 deg": {
+   "extension_m": [
+    0.4026,
+    0.495,
+    0.3978,
+    0.482
+   ],
+   "L2": {
+    "contact_vertical_N": [
+     121087.0,
+     115318.0,
+     72070.2,
+     73815.2
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      -5968.31,
+      1238.53
+     ],
+     [
+      5801.61,
+      -7116.26
+     ],
+     [
+      -5275.26,
+      6742.63
+     ],
+     [
+      5441.97,
+      -864.905
+     ]
+    ],
+    "cylinder_force_N": [
+     120040.0,
+     114271.0,
+     71023.0,
+     72768.0
+    ],
+    "friction_utilisation_T_over_N": [
+     0.06689,
+     0.0569,
+     0.1484,
+     0.0773
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     120005.0,
+     114511.0,
+     70777.6,
+     72808.1
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     0.016,
+     0.0288
+    ]
+   },
+   "L2b": {
+    "contact_vertical_N": [
+     121063.0,
+     115532.0,
+     71850.9,
+     73844.8
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      -463.596,
+      345.034
+     ],
+     [
+      438.836,
+      -791.436
+     ],
+     [
+      -389.725,
+      704.782
+     ],
+     [
+      414.485,
+      -258.38
+     ]
+    ],
+    "cylinder_force_N": [
+     120016.0,
+     114484.0,
+     70803.7,
+     72797.6
+    ],
+    "friction_utilisation_T_over_N": [
+     0.03797,
+     0.02832,
+     0.04507,
+     0.03192
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     120005.0,
+     114511.0,
+     70777.6,
+     72808.1
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     0.01627,
+     0.02898
+    ]
+   },
+   "L1": {
+    "contact_vertical_N": [
+     119286.0,
+     117313.0,
+     73762.4,
+     71929.3
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      -338.157,
+      -200.012
+     ],
+     [
+      328.77,
+      -131.146
+     ],
+     [
+      -295.132,
+      133.571
+     ],
+     [
+      304.518,
+      197.586
+     ]
+    ],
+    "cylinder_force_N": [
+     118238.0,
+     116266.0,
+     72715.2,
+     70882.1
+    ],
+    "friction_utilisation_T_over_N": [
+     0.03336,
+     0.03392,
+     0.03695,
+     0.03791
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     118245.0,
+     116271.0,
+     72710.6,
+     70875.2
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     -0.00205,
+     0.02666
+    ]
+   },
+   "L2b_NSC": {
+    "contact_vertical_N": [
+     121046.0,
+     115547.0,
+     71836.5,
+     73860.6
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      -495.651,
+      -226.627
+     ],
+     [
+      481.893,
+      -258.765
+     ],
+     [
+      -432.588,
+      378.809
+     ],
+     [
+      446.346,
+      106.583
+     ]
+    ],
+    "cylinder_force_N": [
+     119999.0,
+     114500.0,
+     70789.3,
+     72813.4
+    ],
+    "friction_utilisation_T_over_N": [
+     0.0333,
+     0.03294,
+     0.04065,
+     0.03686
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     120005.0,
+     114511.0,
+     70777.6,
+     72808.1
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     0.0163,
+     0.02897
+    ]
+   }
+  },
+  "ground roll -2 deg, pitch 1.5 deg": {
+   "extension_m": [
+    0.6033,
+    0.5108,
+    0.4606,
+    0.3764
+   ],
+   "L2": {
+    "contact_vertical_N": [
+     116527.0,
+     118822.0,
+     75748.7,
+     71193.9
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      27946.4,
+      11156.7
+     ],
+     [
+      3973.82,
+      1059.04
+     ],
+     [
+      -5045.86,
+      -1510.61
+     ],
+     [
+      -26874.4,
+      -10705.2
+     ]
+    ],
+    "cylinder_force_N": [
+     115479.0,
+     117774.0,
+     74701.5,
+     70146.7
+    ],
+    "friction_utilisation_T_over_N": [
+     0.2201,
+     0.02699,
+     0.1081,
+     0.4511
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     116502.0,
+     118014.0,
+     74625.2,
+     68960.6
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     -0.01933,
+     0.04402
+    ]
+   },
+   "L2b": {
+    "contact_vertical_N": [
+     117453.0,
+     119046.0,
+     75671.2,
+     70120.8
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      2209.19,
+      1106.15
+     ],
+     [
+      533.934,
+      40.3302
+     ],
+     [
+      -27.7656,
+      50.748
+     ],
+     [
+      -2715.36,
+      -1197.23
+     ]
+    ],
+    "cylinder_force_N": [
+     116406.0,
+     117999.0,
+     74624.0,
+     69073.6
+    ],
+    "friction_utilisation_T_over_N": [
+     0.02653,
+     0.04082,
+     0.04334,
+     0.08331
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     116502.0,
+     118014.0,
+     74625.2,
+     68960.6
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     -0.02025,
+     0.04486
+    ]
+   },
+   "L1": {
+    "contact_vertical_N": [
+     119261.0,
+     117307.0,
+     73769.9,
+     71953.3
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      934.788,
+      213.22
+     ],
+     [
+      232.172,
+      144.996
+     ],
+     [
+      -266.825,
+      -147.39
+     ],
+     [
+      -900.135,
+      -210.826
+     ]
+    ],
+    "cylinder_force_N": [
+     118213.0,
+     116260.0,
+     72722.7,
+     70906.1
+    ],
+    "friction_utilisation_T_over_N": [
+     0.03786,
+     0.04148,
+     0.04745,
+     0.05415
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     118245.0,
+     116271.0,
+     72710.6,
+     70875.2
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     -0.002006,
+     0.02664
+    ]
+   },
+   "L2b_NSC": {
+    "contact_vertical_N": [
+     117492.0,
+     119041.0,
+     75683.3,
+     70073.5
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      1636.63,
+      456.418
+     ],
+     [
+      378.247,
+      229.439
+     ],
+     [
+      -350.036,
+      -118.624
+     ],
+     [
+      -1664.84,
+      -567.233
+     ]
+    ],
+    "cylinder_force_N": [
+     116445.0,
+     117994.0,
+     74636.1,
+     69026.3
+    ],
+    "friction_utilisation_T_over_N": [
+     0.03335,
+     0.04022,
+     0.04777,
+     0.06598
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     116502.0,
+     118014.0,
+     74625.2,
+     68960.6
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     -0.02036,
+     0.04481
+    ]
+   }
+  }
+ },
+ "L1_beta_sensitivity_top": {
+  "beta_6.9e+08": {
+   "k_L1_N_m": [
+    14802200.0,
+    14802200.0,
+    15120800.0,
+    15120800.0
+   ],
+   "contact_force_N": [
+    119292.0,
+    117318.0,
+    73758.1,
+    71922.1
+   ],
+   "penetration_mm": [
+    8.05907,
+    7.92572,
+    4.87793,
+    4.75651
+   ],
+   "static_pitch_deg": 0.03749,
+   "dF_per_mm_FL_N": [
+    3393.93,
+    -3393.93,
+    -3727.3,
+    3727.3
+   ],
+   "FL+_liftoff_mm": 19.79,
+   "FL+_F_min_mm": 16.97,
+   "f_Hz_top": [
+    1.527,
+    2.606,
+    5.824,
+    6.002,
+    6.673,
+    7.922
+   ]
+  },
+  "beta_1.0e+09": {
+   "k_L1_N_m": [
+    20813600.0,
+    20813600.0,
+    21247900.0,
+    21247900.0
+   ],
+   "contact_force_N": [
+    119292.0,
+    117318.0,
+    73757.8,
+    71922.4
+   ],
+   "penetration_mm": [
+    5.73147,
+    5.63661,
+    3.4713,
+    3.38492
+   ],
+   "static_pitch_deg": 0.02664,
+   "dF_per_mm_FL_N": [
+    4770.6,
+    -4770.6,
+    -5239.19,
+    5239.19
+   ],
+   "FL+_liftoff_mm": 14.08,
+   "FL+_F_min_mm": 12.07,
+   "f_Hz_top": [
+    1.785,
+    2.984,
+    5.832,
+    6.459,
+    7.615,
+    8.042
+   ]
+  },
+  "beta_1.6e+09": {
+   "k_L1_N_m": [
+    31486800.0,
+    31486800.0,
+    32107300.0,
+    32107300.0
+   ],
+   "contact_force_N": [
+    119293.0,
+    117318.0,
+    73757.2,
+    71922.9
+   ],
+   "penetration_mm": [
+    3.78867,
+    3.72593,
+    2.29721,
+    2.24008
+   ],
+   "static_pitch_deg": 0.01758,
+   "dF_per_mm_FL_N": [
+    7212.51,
+    -7212.51,
+    -7920.95,
+    7920.95
+   ],
+   "FL+_liftoff_mm": 9.312,
+   "FL+_F_min_mm": 7.986,
+   "f_Hz_top": [
+    2.135,
+    3.438,
+    5.845,
+    6.961,
+    8.258,
+    9.279
+   ]
+  }
+ },
+ "stability": {
+  "swivel_pad_centres (default)": {
+   "support_polygon_xy_m": [
+    [
+     2.2938,
+     1.3238
+    ],
+    [
+     -2.556,
+     1.1679
+    ],
+    [
+     -2.556,
+     -1.2429
+    ],
+    [
+     2.2938,
+     -1.3238
+    ]
+   ],
+   "top": {
+    "cg_xy_m": [
+     0.445679,
+     -0.00166586
+    ],
+    "cg_height_above_floor_m": 3.2442,
+    "edges": {
+     "left edge (tip left)": {
+      "margin_m": 1.2654,
+      "tip_angle_deg": 21.31
+     },
+     "rear edge (tip backward)": {
+      "margin_m": 3.0017,
+      "tip_angle_deg": 42.78
+     },
+     "right edge (tip right)": {
+      "margin_m": 1.2911,
+      "tip_angle_deg": 21.7
+     },
+     "front edge (tip forward)": {
+      "margin_m": 1.8481,
+      "tip_angle_deg": 29.67
+     }
+    },
+    "min_margin_m": 1.2654,
+    "min_tip_angle_deg": 21.31,
+    "first_leg_liftoff_tilt_deg (azimuth 0 = gravity tilted toward +x i.e. nose-down slope)": {
+     "azimuth_0deg": 29.63,
+     "azimuth_45deg": 15.7,
+     "azimuth_90deg": 16.96,
+     "azimuth_135deg": 23.39,
+     "azimuth_180deg": 42.1,
+     "azimuth_225deg": 23.96,
+     "azimuth_270deg": 17.37,
+     "azimuth_315deg": 15.93
+    },
+    "first_leg_F_min_tilt_deg (same azimuths)": {
+     "azimuth_0deg": 25.56,
+     "azimuth_45deg": 13.44,
+     "azimuth_90deg": 14.52,
+     "azimuth_135deg": 21.36,
+     "azimuth_180deg": 38.66,
+     "azimuth_225deg": 21.91,
+     "azimuth_270deg": 14.93,
+     "azimuth_315deg": 13.69
+    },
+    "tip_over_tilt_deg (same azimuths, rigid, CoM projection leaves the support polygon)": {
+     "azimuth_0deg": 29.67,
+     "azimuth_45deg": 29.69,
+     "azimuth_90deg": 21.32,
+     "azimuth_135deg": 28.13,
+     "azimuth_180deg": 42.78,
+     "azimuth_225deg": 28.97,
+     "azimuth_270deg": 21.7,
+     "azimuth_315deg": 29.79
+    }
+   },
+   "middle": {
+    "cg_xy_m": [
+     0.445679,
+     -0.00166586
+    ],
+    "cg_height_above_floor_m": 2.5542,
+    "edges": {
+     "left edge (tip left)": {
+      "margin_m": 1.2654,
+      "tip_angle_deg": 26.35
+     },
+     "rear edge (tip backward)": {
+      "margin_m": 3.0017,
+      "tip_angle_deg": 49.61
+     },
+     "right edge (tip right)": {
+      "margin_m": 1.2911,
+      "tip_angle_deg": 26.82
+     },
+     "front edge (tip forward)": {
+      "margin_m": 1.8481,
+      "tip_angle_deg": 35.89
+     }
+    },
+    "min_margin_m": 1.2654,
+    "min_tip_angle_deg": 26.35,
+    "first_leg_liftoff_tilt_deg (azimuth 0 = gravity tilted toward +x i.e. nose-down slope)": {
+     "azimuth_0deg": 35.84,
+     "azimuth_45deg": 19.65,
+     "azimuth_90deg": 21.17,
+     "azimuth_135deg": 28.79,
+     "azimuth_180deg": "> 45",
+     "azimuth_225deg": 29.44,
+     "azimuth_270deg": 21.67,
+     "azimuth_315deg": 19.92
+    },
+    "first_leg_F_min_tilt_deg (same azimuths)": {
+     "azimuth_0deg": 31.02,
+     "azimuth_45deg": 16.83,
+     "azimuth_90deg": 18.15,
+     "azimuth_135deg": 26.32,
+     "azimuth_180deg": "> 45",
+     "azimuth_225deg": 26.96,
+     "azimuth_270deg": 18.65,
+     "azimuth_315deg": 17.14
+    },
+    "tip_over_tilt_deg (same azimuths, rigid, CoM projection leaves the support polygon)": {
+     "azimuth_0deg": 35.89,
+     "azimuth_45deg": 35.92,
+     "azimuth_90deg": 26.37,
+     "azimuth_135deg": 34.18,
+     "azimuth_180deg": 49.61,
+     "azimuth_225deg": 35.12,
+     "azimuth_270deg": 26.82,
+     "azimuth_315deg": 36.02
+    }
+   },
+   "bottom": {
+    "cg_xy_m": [
+     0.445679,
+     -0.00166586
+    ],
+    "cg_height_above_floor_m": 1.8642,
+    "edges": {
+     "left edge (tip left)": {
+      "margin_m": 1.2654,
+      "tip_angle_deg": 34.17
+     },
+     "rear edge (tip backward)": {
+      "margin_m": 3.0017,
+      "tip_angle_deg": 58.16
+     },
+     "right edge (tip right)": {
+      "margin_m": 1.2911,
+      "tip_angle_deg": 34.71
+     },
+     "front edge (tip forward)": {
+      "margin_m": 1.8481,
+      "tip_angle_deg": 44.75
+     }
+    },
+    "min_margin_m": 1.2654,
+    "min_tip_angle_deg": 34.17,
+    "first_leg_liftoff_tilt_deg (azimuth 0 = gravity tilted toward +x i.e. nose-down slope)": {
+     "azimuth_0deg": 44.71,
+     "azimuth_45deg": 26.07,
+     "azimuth_90deg": 27.96,
+     "azimuth_135deg": 36.97,
+     "azimuth_180deg": "> 45",
+     "azimuth_225deg": 37.72,
+     "azimuth_270deg": 28.56,
+     "azimuth_315deg": 26.41
+    },
+    "first_leg_F_min_tilt_deg (same azimuths)": {
+     "azimuth_0deg": 38.9,
+     "azimuth_45deg": 22.39,
+     "azimuth_90deg": 24.03,
+     "azimuth_135deg": 33.89,
+     "azimuth_180deg": "> 45",
+     "azimuth_225deg": 34.63,
+     "azimuth_270deg": 24.66,
+     "azimuth_315deg": 22.78
+    },
+    "tip_over_tilt_deg (same azimuths, rigid, CoM projection leaves the support polygon)": {
+     "azimuth_0deg": 44.75,
+     "azimuth_45deg": 44.78,
+     "azimuth_90deg": 34.18,
+     "azimuth_135deg": 42.94,
+     "azimuth_180deg": 58.16,
+     "azimuth_225deg": 43.94,
+     "azimuth_270deg": 34.71,
+     "azimuth_315deg": 44.89
+    }
+   }
+  },
+  "rigid_pad_octagon_hull (comparison)": {
+   "support_polygon_xy_m": [
+    [
+     -2.681,
+     -1.4155
+    ],
+    [
+     2.2804,
+     -1.5365
+    ],
+    [
+     2.3228,
+     -1.535
+    ],
+    [
+     2.5065,
+     -1.3371
+    ],
+    [
+     2.5065,
+     1.3104
+    ],
+    [
+     2.505,
+     1.3528
+    ],
+    [
+     2.3071,
+     1.5365
+    ],
+    [
+     2.2647,
+     1.535
+    ],
+    [
+     -2.431,
+     1.3405
+    ],
+    [
+     -2.7005,
+     1.3246
+    ],
+    [
+     -2.7287,
+     1.2929
+    ],
+    [
+     -2.7287,
+     -1.1178
+    ],
+    [
+     -2.7128,
+     -1.3874
+    ]
+   ],
+   "top": {
+    "cg_xy_m": [
+     0.445679,
+     -0.00166586
+    ],
+    "cg_height_above_floor_m": 3.2442,
+    "edges": {
+     "right edge (tip right)": {
+      "margin_m": 1.4897,
+      "tip_angle_deg": 24.66
+     },
+     "front edge (tip forward)": {
+      "margin_m": 2.0609,
+      "tip_angle_deg": 32.43
+     },
+     "left edge (tip left)": {
+      "margin_m": 1.4601,
+      "tip_angle_deg": 24.23
+     },
+     "rear edge (tip backward)": {
+      "margin_m": 3.1743,
+      "tip_angle_deg": 44.38
+     }
+    },
+    "min_margin_m": 1.4601,
+    "min_tip_angle_deg": 24.23,
+    "first_leg_liftoff_tilt_deg (azimuth 0 = gravity tilted toward +x i.e. nose-down slope)": {
+     "azimuth_0deg": 29.63,
+     "azimuth_45deg": 15.7,
+     "azimuth_90deg": 16.96,
+     "azimuth_135deg": 23.39,
+     "azimuth_180deg": 42.1,
+     "azimuth_225deg": 23.96,
+     "azimuth_270deg": 17.37,
+     "azimuth_315deg": 15.93
+    },
+    "first_leg_F_min_tilt_deg (same azimuths)": {
+     "azimuth_0deg": 25.56,
+     "azimuth_45deg": 13.44,
+     "azimuth_90deg": 14.52,
+     "azimuth_135deg": 21.36,
+     "azimuth_180deg": 38.66,
+     "azimuth_225deg": 21.91,
+     "azimuth_270deg": 14.93,
+     "azimuth_315deg": 13.69
+    },
+    "tip_over_tilt_deg (same azimuths, rigid, CoM projection leaves the support polygon)": {
+     "azimuth_0deg": 32.43,
+     "azimuth_45deg": 33.61,
+     "azimuth_90deg": 24.25,
+     "azimuth_135deg": 31.45,
+     "azimuth_180deg": 44.38,
+     "azimuth_225deg": 32.38,
+     "azimuth_270deg": 24.67,
+     "azimuth_315deg": 33.66
+    }
+   },
+   "middle": {
+    "cg_xy_m": [
+     0.445679,
+     -0.00166586
+    ],
+    "cg_height_above_floor_m": 2.5542,
+    "edges": {
+     "right edge (tip right)": {
+      "margin_m": 1.4897,
+      "tip_angle_deg": 30.25
+     },
+     "front edge (tip forward)": {
+      "margin_m": 2.0609,
+      "tip_angle_deg": 38.9
+     },
+     "left edge (tip left)": {
+      "margin_m": 1.4601,
+      "tip_angle_deg": 29.75
+     },
+     "rear edge (tip backward)": {
+      "margin_m": 3.1743,
+      "tip_angle_deg": 51.18
+     }
+    },
+    "min_margin_m": 1.4601,
+    "min_tip_angle_deg": 29.75,
+    "first_leg_liftoff_tilt_deg (azimuth 0 = gravity tilted toward +x i.e. nose-down slope)": {
+     "azimuth_0deg": 35.84,
+     "azimuth_45deg": 19.65,
+     "azimuth_90deg": 21.17,
+     "azimuth_135deg": 28.79,
+     "azimuth_180deg": "> 45",
+     "azimuth_225deg": 29.44,
+     "azimuth_270deg": 21.67,
+     "azimuth_315deg": 19.92
+    },
+    "first_leg_F_min_tilt_deg (same azimuths)": {
+     "azimuth_0deg": 31.02,
+     "azimuth_45deg": 16.83,
+     "azimuth_90deg": 18.15,
+     "azimuth_135deg": 26.32,
+     "azimuth_180deg": "> 45",
+     "azimuth_225deg": 26.96,
+     "azimuth_270deg": 18.65,
+     "azimuth_315deg": 17.14
+    },
+    "tip_over_tilt_deg (same azimuths, rigid, CoM projection leaves the support polygon)": {
+     "azimuth_0deg": 38.9,
+     "azimuth_45deg": 40.17,
+     "azimuth_90deg": 29.77,
+     "azimuth_135deg": 37.84,
+     "azimuth_180deg": 51.18,
+     "azimuth_225deg": 38.85,
+     "azimuth_270deg": 30.26,
+     "azimuth_315deg": 40.22
+    }
+   },
+   "bottom": {
+    "cg_xy_m": [
+     0.445679,
+     -0.00166586
+    ],
+    "cg_height_above_floor_m": 1.8642,
+    "edges": {
+     "right edge (tip right)": {
+      "margin_m": 1.4897,
+      "tip_angle_deg": 38.63
+     },
+     "front edge (tip forward)": {
+      "margin_m": 2.0609,
+      "tip_angle_deg": 47.87
+     },
+     "left edge (tip left)": {
+      "margin_m": 1.4601,
+      "tip_angle_deg": 38.07
+     },
+     "rear edge (tip backward)": {
+      "margin_m": 3.1743,
+      "tip_angle_deg": 59.58
+     }
+    },
+    "min_margin_m": 1.4601,
+    "min_tip_angle_deg": 38.07,
+    "first_leg_liftoff_tilt_deg (azimuth 0 = gravity tilted toward +x i.e. nose-down slope)": {
+     "azimuth_0deg": 44.71,
+     "azimuth_45deg": 26.07,
+     "azimuth_90deg": 27.96,
+     "azimuth_135deg": 36.97,
+     "azimuth_180deg": "> 45",
+     "azimuth_225deg": 37.72,
+     "azimuth_270deg": 28.56,
+     "azimuth_315deg": 26.41
+    },
+    "first_leg_F_min_tilt_deg (same azimuths)": {
+     "azimuth_0deg": 38.9,
+     "azimuth_45deg": 22.39,
+     "azimuth_90deg": 24.03,
+     "azimuth_135deg": 33.89,
+     "azimuth_180deg": "> 45",
+     "azimuth_225deg": 34.63,
+     "azimuth_270deg": 24.66,
+     "azimuth_315deg": 22.78
+    },
+    "tip_over_tilt_deg (same azimuths, rigid, CoM projection leaves the support polygon)": {
+     "azimuth_0deg": 47.87,
+     "azimuth_45deg": 49.15,
+     "azimuth_90deg": 38.09,
+     "azimuth_135deg": 46.79,
+     "azimuth_180deg": 59.58,
+     "azimuth_225deg": 47.82,
+     "azimuth_270deg": 38.64,
+     "azimuth_315deg": 49.2
+    }
+   }
+  }
+ }
+}

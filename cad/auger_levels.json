@@ -1,0 +1,1568 @@
+{
+ "frames": "CAD root frame mm (Y up); body x=Z_cad, y=X_cad, z=Y_cad (m), origin = CAD origin",
+ "travel_convention": "travel = translation of drive + tool along CAD +Y (= body +z) from the CAD pose; inertia about the CoG in body axes (tensor notation, off-diagonal = -integral xy dm)",
+ "scenario": "mast upright (CAD pose); drive + auger tool translate together along the mast (user, 2026-10-19)",
+ "mass_cases": {
+  "step": "A: STEP densities as written (Inventor 'generic' = 1.0 g/cm^3 kept)",
+  "generic_as_steel": "B (comparison only): 'generic' 1.0 -> steel 7.85, glass/window -> 2.5 g/cm^3",
+  "tool_steel": "C (reference, provisional, CLAUDE.md 2026-10-19): STEP densities except the 5 AUGER TOOL rows -> steel 7.85 g/cm^3"
+ },
+ "mast_axis": {
+  "evidence": "least-squares line through 11 rack-bar centroids (CAD Y -506.5 ... 9848.5 mm)",
+  "axis_cad": [
+   0.0,
+   1.0,
+   4e-07
+  ],
+  "axis_body": [
+   4e-07,
+   0.0,
+   1.0
+  ],
+  "tilt_from_body_z_deg": 2.3e-05,
+  "rack_centroid_x_spread_mm": 0.0,
+  "rack_centroid_z_spread_mm": 0.003
+ },
+ "moving_set": {
+  "rows": 378,
+  "rows_with_volume": 331,
+  "by_group": {
+   "moving_drive": {
+    "rows": 373,
+    "mass_step_kg": 4837.4,
+    "mass_generic_as_steel_kg": 4930.3,
+    "mass_tool_steel_kg": 4837.4
+   },
+   "moving_tool": {
+    "rows": 5,
+    "mass_step_kg": 180.8,
+    "mass_generic_as_steel_kg": 1419.6,
+    "mass_tool_steel_kg": 1419.6
+   }
+  },
+  "mass_step_kg": 5018.3,
+  "mass_generic_as_steel_kg": 6350.0,
+  "mass_tool_steel_kg": 6257.1,
+  "y_extent_cad_mm": {
+   "drive": [
+    5257.8,
+    7130.4
+   ],
+   "tool": [
+    4331.3,
+    8798.9
+   ]
+  },
+  "heaviest_drive_sub_assemblies_step_kg": {
+   "1. AUGER FRAME ASSY:1": 1166.2,
+   "2. AUGER FRAME COVER ASSY:1": 473.1,
+   "4. 1st GEAR:1": 461.3,
+   "3.1st GEAR SHAFT:1": 328.5,
+   "30. DRIVE REDUCER PART:1": 203.1,
+   "30. DRIVE REDUCER PART:2": 203.1,
+   "DANFOSS 250 MOTOR:1": 137.8,
+   "DANFOSS 250 MOTOR:2": 137.8
+  },
+  "boundary_decisions": [
+   {
+    "part": "LOCKING CYL / LOCKING CYL_MIR",
+    "decision": "이동(구동부)",
+    "confidence": "높음"
+   },
+   {
+    "part": "GUID CATCHER ×6, CATCHER PAD (슬라이드 슈·패드)",
+    "decision": "이동(구동부)",
+    "confidence": "높음"
+   },
+   {
+    "part": "AUGER FRAME ASSY 솔리드24 (슬라이드판)",
+    "decision": "이동(구동부)",
+    "confidence": "높음"
+   },
+   {
+    "part": "AUGER TOOL (로드·캡·조인트 핀·섀클)",
+    "decision": "이동(공구, 사용자 전제)",
+    "confidence": "중간"
+   },
+   {
+    "part": "LOWER GUIDE_ASSY",
+    "decision": "고정(마스트 하단)",
+    "confidence": "중간"
+   },
+   {
+    "part": "Hose guide arm / Hose guide CYL",
+    "decision": "고정(붐)",
+    "confidence": "중간"
+   },
+   {
+    "part": "윈치",
+    "decision": "고정(마스트)",
+    "confidence": "높음"
+   },
+   {
+    "part": "와이어·호스",
+    "decision": "모델에 없음(질량 0)",
+    "confidence": "높음"
+   },
+   {
+    "part": "TOPSHEAVE, MAST ASSY(랙 포함)",
+    "decision": "고정",
+    "confidence": "높음"
+   }
+  ]
+ },
+ "travel_limit_candidates": {
+  "drive_up": {
+   "moving_part": "0. DRIVE AUGER ASSY:1/AUGER MOTOR GUARD_Assy:1/AUGER MOTOR GUARD:1/부품6:1",
+   "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드79:1",
+   "column_estimate_mm": 2989.8,
+   "contact_column_cad_x_z_mm": [
+    487.5,
+    3517.5
+   ],
+   "fixed_surface_y_cad_mm": 10064.9,
+   "method": "mesh ray cast along the mast axis (3 mm deflection, 2 mm samples on both parts)",
+   "travel_mm": 2995.98,
+   "distance_at_rest_mm": null,
+   "distance_at_contact_mm": 0.11,
+   "distance_5mm_before_mm": 2.75
+  },
+  "tool_up": {
+   "moving_part": "AUGER TOOL:1/TOOL ROD:1",
+   "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드45:1",
+   "column_estimate_mm": 4902.1,
+   "contact_column_cad_x_z_mm": [
+    97.5,
+    3292.5
+   ],
+   "fixed_surface_y_cad_mm": 10116.4,
+   "method": "mesh ray cast along the mast axis (3 mm deflection, 2 mm samples on both parts)",
+   "travel_mm": 4902.09,
+   "distance_at_rest_mm": null,
+   "distance_at_contact_mm": 0.0,
+   "distance_5mm_before_mm": 5.0
+  },
+  "drive_down": {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+   "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE BASE:1/솔리드15:1",
+   "column_estimate_mm": -5601.6,
+   "contact_column_cad_x_z_mm": [
+    -382.5,
+    2682.5
+   ],
+   "fixed_surface_y_cad_mm": -304.2,
+   "method": "BRepExtrema (cached BREP), bisection to 0.01 mm",
+   "travel_mm": -5601.61,
+   "distance_at_rest_mm": 5601.62,
+   "distance_5mm_before_mm": 5.01
+  },
+  "tool_down": {
+   "moving_part": "AUGER TOOL:1/TOOL CAP:1",
+   "fixed_part": "LOWER GUIDE_ASSY:1/ADAPTER:1",
+   "column_estimate_mm": -4677.0,
+   "contact_column_cad_x_z_mm": [
+    -222.5,
+    3372.5
+   ],
+   "fixed_surface_y_cad_mm": -345.7,
+   "method": "mesh ray cast along the mast axis (3 mm deflection, 2 mm samples on both parts)",
+   "travel_mm": -4676.98,
+   "distance_at_rest_mm": null,
+   "distance_at_contact_mm": 0.0,
+   "distance_5mm_before_mm": 5.0
+  }
+ },
+ "sliding_pairs_checked": [],
+ "column_hits_rejected_by_exact_check": [
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드28:1",
+   "fixed_part": "MAST ASSY:1/RACK GEAR:11 [MAST ASSY:1/RACK GEAR (merged rack family)]",
+   "column_estimate_mm": 9.2,
+   "contact_column_cad_x_z_mm": [
+    -47.5,
+    2727.5
+   ],
+   "fixed_surface_y_cad_mm": 6821.6,
+   "method": "BRepExtrema (cached BREP)",
+   "travel_mm": null,
+   "distance_at_rest_mm": 3.0,
+   "rejected": "no B-rep contact within column estimate + 200 mm (cell artifact)"
+  },
+  {
+   "moving_part": "AUGER TOOL:1/TOOL ROD:1",
+   "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드58:1",
+   "column_estimate_mm": 4893.1,
+   "contact_column_cad_x_z_mm": [
+    67.5,
+    3272.5
+   ],
+   "fixed_surface_y_cad_mm": 10107.4,
+   "method": "mesh ray cast",
+   "travel_mm": null,
+   "rejected": "no contact within column estimate + 200 mm (cell artifact)"
+  },
+  {
+   "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드28:1",
+   "fixed_part": "MAST ASSY:1/RACK GEAR:11 [MAST ASSY:1/RACK GEAR (merged rack family)]",
+   "column_estimate_mm": -3.7,
+   "contact_column_cad_x_z_mm": [
+    -47.5,
+    2727.5
+   ],
+   "fixed_surface_y_cad_mm": 6796.7,
+   "method": "BRepExtrema (cached BREP)",
+   "travel_mm": null,
+   "distance_at_rest_mm": 3.0,
+   "rejected": "no B-rep contact within column estimate + 200 mm (cell artifact)"
+  }
+ ],
+ "rolling_pairs_excluded": {
+  "moving": [
+   "0. DRIVE AUGER ASSY:1/21. ELEVATION GEAR:1/21. ELEVATION GEAR:1",
+   "0. DRIVE AUGER ASSY:1/21. ELEVATION GEAR:2/21. ELEVATION GEAR:1",
+   "0. DRIVE AUGER ASSY:1/21. ELEVATION GEAR:3/21. ELEVATION GEAR:1",
+   "0. DRIVE AUGER ASSY:1/21. ELEVATION GEAR:4/21. ELEVATION GEAR:1",
+   "0. DRIVE AUGER ASSY:1/ELEVATION ENCODER:1/7. GEAR:1"
+  ],
+  "fixed": "MAST ASSY:1/RACK GEAR (all bars)",
+  "reason": "rack and pinion roll on each other; covered by the engagement check"
+ },
+ "nearest_pairs": {
+  "drive_up": [
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드28:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "MAST ASSY:1/RACK GEAR-1:2",
+    "up_travel_estimate_mm": 9.2,
+    "contact_column_cad_x_z_mm": [
+     -47.5,
+     2727.5
+    ],
+    "fixed_surface_y_cad_mm": 6821.6,
+    "colocated_cells_excluded": 18
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/AUGER MOTOR GUARD_Assy:1/AUGER MOTOR GUARD:1/부품6:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드79:1",
+    "up_travel_estimate_mm": 2989.8,
+    "contact_column_cad_x_z_mm": [
+     487.5,
+     3517.5
+    ],
+    "fixed_surface_y_cad_mm": 10064.9,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/AUGER MOTOR GUARD_Assy:1/AUGER MOTOR GUARD:1/부품6:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/SHEAVE PIN-10:2",
+    "up_travel_estimate_mm": 2993.9,
+    "contact_column_cad_x_z_mm": [
+     477.5,
+     3512.5
+    ],
+    "fixed_surface_y_cad_mm": 10077.1,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/AUGER MOTOR GUARD_Assy:1/AUGER MOTOR GUARD:1/부품6:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/SPACE RING-1:4",
+    "up_travel_estimate_mm": 2995.3,
+    "contact_column_cad_x_z_mm": [
+     482.5,
+     3517.5
+    ],
+    "fixed_surface_y_cad_mm": 10071.4,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/AUGER MOTOR GUARD_Assy:1/AUGER MOTOR GUARD:1/부품6:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드85:1",
+    "up_travel_estimate_mm": 2995.6,
+    "contact_column_cad_x_z_mm": [
+     407.5,
+     3482.5
+    ],
+    "fixed_surface_y_cad_mm": 10126.0,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/AUGER MOTOR GUARD_Assy:1/AUGER MOTOR GUARD:1/부품6:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/KS B 1321 3.2 x  16:3",
+    "up_travel_estimate_mm": 2998.7,
+    "contact_column_cad_x_z_mm": [
+     482.5,
+     3517.5
+    ],
+    "fixed_surface_y_cad_mm": 10074.8,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/AUGER MOTOR GUARD_Assy:1/AUGER MOTOR GUARD:1/부품6:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/ROLLER-4:2",
+    "up_travel_estimate_mm": 3006.7,
+    "contact_column_cad_x_z_mm": [
+     502.5,
+     3522.5
+    ],
+    "fixed_surface_y_cad_mm": 10071.3,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/AUGER MOTOR GUARD_Assy:1/AUGER MOTOR GUARD:1/부품6:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드47:1",
+    "up_travel_estimate_mm": 3010.8,
+    "contact_column_cad_x_z_mm": [
+     427.5,
+     3482.5
+    ],
+    "fixed_surface_y_cad_mm": 10140.6,
+    "colocated_cells_excluded": 0
+   }
+  ],
+  "tool_up": [
+   {
+    "moving_part": "AUGER TOOL:1/TOOL ROD:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드58:1",
+    "up_travel_estimate_mm": 4893.1,
+    "contact_column_cad_x_z_mm": [
+     67.5,
+     3272.5
+    ],
+    "fixed_surface_y_cad_mm": 10107.4,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/TOOL ROD:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드45:1",
+    "up_travel_estimate_mm": 4902.1,
+    "contact_column_cad_x_z_mm": [
+     97.5,
+     3292.5
+    ],
+    "fixed_surface_y_cad_mm": 10116.4,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/JOINT PIN:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드58:1",
+    "up_travel_estimate_mm": 5083.6,
+    "contact_column_cad_x_z_mm": [
+     137.5,
+     3312.5
+    ],
+    "fixed_surface_y_cad_mm": 10107.4,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/JOINT PIN:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드45:1",
+    "up_travel_estimate_mm": 5092.6,
+    "contact_column_cad_x_z_mm": [
+     137.5,
+     3312.5
+    ],
+    "fixed_surface_y_cad_mm": 10116.4,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/TOOL ROD:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드51:1",
+    "up_travel_estimate_mm": 5117.1,
+    "contact_column_cad_x_z_mm": [
+     22.5,
+     3262.5
+    ],
+    "fixed_surface_y_cad_mm": 10331.4,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/JOINT PIN:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드51:1",
+    "up_travel_estimate_mm": 5308.0,
+    "contact_column_cad_x_z_mm": [
+     137.5,
+     3312.5
+    ],
+    "fixed_surface_y_cad_mm": 10331.8,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/TOOL CAP:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드58:1",
+    "up_travel_estimate_mm": 5354.4,
+    "contact_column_cad_x_z_mm": [
+     67.5,
+     3272.5
+    ],
+    "fixed_surface_y_cad_mm": 10107.4,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/TOOL CAP:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "TOPSHEAVE(조립) ASSY:1/TOPSHEAVE_FRAME_2(조립):1/솔리드45:1",
+    "up_travel_estimate_mm": 5362.1,
+    "contact_column_cad_x_z_mm": [
+     57.5,
+     3277.5
+    ],
+    "fixed_surface_y_cad_mm": 10116.4,
+    "colocated_cells_excluded": 0
+   }
+  ],
+  "drive_down": [
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드28:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "MAST ASSY:1/RACK GEAR-1:2",
+    "down_travel_estimate_mm": 3.7,
+    "contact_column_cad_x_z_mm": [
+     -47.5,
+     2727.5
+    ],
+    "fixed_surface_y_cad_mm": 6796.7,
+    "colocated_cells_excluded": 18
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE BASE:1/솔리드15:1",
+    "down_travel_estimate_mm": 5601.6,
+    "contact_column_cad_x_z_mm": [
+     -382.5,
+     2682.5
+    ],
+    "fixed_surface_y_cad_mm": -304.2,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE BASE:1/솔리드16:1",
+    "down_travel_estimate_mm": 5601.6,
+    "contact_column_cad_x_z_mm": [
+     362.5,
+     2672.5
+    ],
+    "fixed_surface_y_cad_mm": -304.2,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE BASE:1/솔리드28:1",
+    "down_travel_estimate_mm": 5601.6,
+    "contact_column_cad_x_z_mm": [
+     302.5,
+     2672.5
+    ],
+    "fixed_surface_y_cad_mm": -304.2,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드41:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE BASE:1/솔리드30:1",
+    "down_travel_estimate_mm": 5601.6,
+    "contact_column_cad_x_z_mm": [
+     -342.5,
+     2672.5
+    ],
+    "fixed_surface_y_cad_mm": -304.2,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/부품10:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "LOWER GUIDE_ASSY:1/ADAPTER:1",
+    "down_travel_estimate_mm": 5603.5,
+    "contact_column_cad_x_z_mm": [
+     -187.5,
+     3612.5
+    ],
+    "fixed_surface_y_cad_mm": -345.7,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드19:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE BASE:1/솔리드15:1",
+    "down_travel_estimate_mm": 5613.6,
+    "contact_column_cad_x_z_mm": [
+     -382.5,
+     2692.5
+    ],
+    "fixed_surface_y_cad_mm": -304.2,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "0. DRIVE AUGER ASSY:1/1. AUGER FRAME ASSY:1/솔리드19:1",
+    "moving_group": "moving_drive",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE BASE:1/솔리드30:1",
+    "down_travel_estimate_mm": 5613.6,
+    "contact_column_cad_x_z_mm": [
+     -362.5,
+     2657.5
+    ],
+    "fixed_surface_y_cad_mm": -304.2,
+    "colocated_cells_excluded": 0
+   }
+  ],
+  "tool_down": [
+   {
+    "moving_part": "AUGER TOOL:1/TOOL CAP:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "LOWER GUIDE_ASSY:1/ADAPTER:1",
+    "down_travel_estimate_mm": 4677.0,
+    "contact_column_cad_x_z_mm": [
+     -222.5,
+     3372.5
+    ],
+    "fixed_surface_y_cad_mm": -345.7,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/TOOL CAP:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE(R):1/솔리드1:1",
+    "down_travel_estimate_mm": 4717.0,
+    "contact_column_cad_x_z_mm": [
+     12.5,
+     3667.5
+    ],
+    "fixed_surface_y_cad_mm": -360.7,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/TOOL CAP:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE_L:1/솔리드2:1",
+    "down_travel_estimate_mm": 4717.0,
+    "contact_column_cad_x_z_mm": [
+     -257.5,
+     3372.5
+    ],
+    "fixed_surface_y_cad_mm": -360.7,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/TOOL CAP:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE(R):1/솔리드5:1",
+    "down_travel_estimate_mm": 4727.0,
+    "contact_column_cad_x_z_mm": [
+     12.5,
+     3652.5
+    ],
+    "fixed_surface_y_cad_mm": -370.7,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/TOOL CAP:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE_L:1/부품150:1",
+    "down_travel_estimate_mm": 4727.0,
+    "contact_column_cad_x_z_mm": [
+     -252.5,
+     3392.5
+    ],
+    "fixed_surface_y_cad_mm": -370.7,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/TOOL CAP:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE(R):1/솔리드10:1",
+    "down_travel_estimate_mm": 4737.0,
+    "contact_column_cad_x_z_mm": [
+     72.5,
+     3657.5
+    ],
+    "fixed_surface_y_cad_mm": -380.7,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/TOOL CAP:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE(R):1/솔리드11:1",
+    "down_travel_estimate_mm": 4737.0,
+    "contact_column_cad_x_z_mm": [
+     112.5,
+     3187.5
+    ],
+    "fixed_surface_y_cad_mm": -380.7,
+    "colocated_cells_excluded": 0
+   },
+   {
+    "moving_part": "AUGER TOOL:1/TOOL CAP:1",
+    "moving_group": "moving_tool",
+    "fixed_part": "LOWER GUIDE_ASSY:1/LOWER GUIDE(R):1/솔리드6:1",
+    "down_travel_estimate_mm": 4737.0,
+    "contact_column_cad_x_z_mm": [
+     167.5,
+     3222.5
+    ],
+    "fixed_surface_y_cad_mm": -380.7,
+    "colocated_cells_excluded": 0
+   }
+  ]
+ },
+ "engagement": {
+  "rack_gears": {
+   "0. DRIVE AUGER ASSY:1/21. ELEVATION GEAR:1/21. ELEVATION GEAR:1": [
+    6406.9,
+    6596.8
+   ],
+   "0. DRIVE AUGER ASSY:1/21. ELEVATION GEAR:2/21. ELEVATION GEAR:1": [
+    6407.3,
+    6597.9
+   ],
+   "0. DRIVE AUGER ASSY:1/21. ELEVATION GEAR:3/21. ELEVATION GEAR:1": [
+    5418.5,
+    5607.9
+   ],
+   "0. DRIVE AUGER ASSY:1/21. ELEVATION GEAR:4/21. ELEVATION GEAR:1": [
+    5416.9,
+    5606.7
+   ],
+   "0. DRIVE AUGER ASSY:1/ELEVATION ENCODER:1/7. GEAR:1": [
+    6637.9,
+    6827.0
+   ]
+  },
+  "rails": [
+   {
+    "side": "left_+X",
+    "shoe_footprint_x_mm": [
+     295.0,
+     475.0
+    ],
+    "shoe_footprint_z_mm": [
+     2523.0,
+     2640.5
+    ],
+    "rail_y_intervals_mm": [
+     [
+      -649.0,
+      9851.0
+     ]
+    ],
+    "rail_y_mm": [
+     -649.0,
+     9851.0
+    ],
+    "shoes_y_mm": [
+     5309.4,
+     6800.4
+    ],
+    "travel_mm": [
+     -5958.4,
+     3050.6
+    ]
+   },
+   {
+    "side": "right_-X",
+    "shoe_footprint_x_mm": [
+     -475.0,
+     -295.0
+    ],
+    "shoe_footprint_z_mm": [
+     2523.0,
+     2640.5
+    ],
+    "rail_y_intervals_mm": [
+     [
+      -649.0,
+      9851.0
+     ]
+    ],
+    "rail_y_mm": [
+     -649.0,
+     9851.0
+    ],
+    "shoes_y_mm": [
+     5309.4,
+     6800.4
+    ],
+    "travel_mm": [
+     -5958.4,
+     3050.6
+    ]
+   }
+  ],
+  "rack_y_mm": [
+   -506.5,
+   9848.5
+  ],
+  "rack_y_intervals_mm": [
+   [
+    -506.5,
+    9848.5
+   ]
+  ],
+  "pinions_y_mm": [
+   5416.9,
+   6827.0
+  ],
+  "rack_travel_mm": [
+   -5923.4,
+   3021.5
+  ],
+  "criterion": "all guide shoes inside the rail Y span; all rack gears (4 elevation pinions + encoder gear) inside the rack Y span"
+ },
+ "ground": {
+  "crawler_bottom_ground_y_cad_mm": -1050.9,
+  "tool_bottom_y_cad_mm": 4331.3,
+  "travel_until_tool_touches_crawler_ground_mm": -5382.2,
+  "lowest_pad_bottom_body_z_m": -0.712,
+  "travel_until_tool_reaches_pad_bottom_level_mm": -5043.3,
+  "note": "tool below ground = drilling; not a travel limit of the drive (user premise)"
+ },
+ "range": {
+  "upper_travel_mm": 2995.98,
+  "upper_source": "drive_up",
+  "upper_drive_only_travel_mm": 2995.98,
+  "lower_travel_mm": -5601.61,
+  "lower_source": "drive_down",
+  "lower_alternative_tool_contact_travel_mm": -4676.98,
+  "lower_alternative_tool_at_crawler_ground_mm": -5382.2,
+  "span_mm": 8597.59,
+  "current_cad_pose_percent_of_range": 65.15,
+  "default_rule": "upper = first contact of drive or tool (they move as one body); lower = drive mechanism limit (drive parts vs fixed parts); tool going below the lower guide or ground is treated as drilling (user, 2026-10-19)"
+ },
+ "levels": {
+  "top": {
+   "name": "top",
+   "travel_mm": 2995.98,
+   "travel_m": 2.99598,
+   "percent_of_range": 100.0,
+   "marks_body_z_m": {
+    "drive_bottom": 8.2538,
+    "drive_top": 10.1264,
+    "tool_bottom": 7.3273,
+    "tool_top": 11.7949
+   },
+   "mass": {
+    "step": {
+     "mass_kg": 37316.9,
+     "cog_cad_m": [
+      -0.0015,
+      1.9407,
+      0.3538
+     ],
+     "cog_body_m": [
+      0.3538,
+      -0.0015,
+      1.9407
+     ],
+     "inertia_about_cog_body_kg_m2": [
+      [
+       468700.4,
+       -947.7,
+       -167822.1
+      ],
+      [
+       -947.7,
+       613673.6,
+       -192.9
+      ],
+      [
+       -167822.1,
+       -192.9,
+       182480.7
+      ]
+     ],
+     "principal_moments_kg_m2": [
+      105034.5,
+      546137.0,
+      613683.3
+     ],
+     "tensor_checks": {
+      "symmetric": true,
+      "positive_definite": true,
+      "triangle_inequality": true
+     },
+     "leg_loads_kN": {
+      "FL": 110.8,
+      "FR": 108.76,
+      "RL": 74.12,
+      "RR": 72.26
+     },
+     "leg_loads_pct": {
+      "FL": 30.28,
+      "FR": 29.72,
+      "RL": 20.25,
+      "RR": 19.75
+     },
+     "cog_inside_leg_rectangle": true,
+     "moving_set_mass_kg": 5018.3,
+     "moving_set_cog_body_m": [
+      3.1509,
+      0.0034,
+      9.0711
+     ]
+    },
+    "generic_as_steel": {
+     "mass_kg": 42136.0,
+     "cog_cad_m": [
+      0.0684,
+      2.0917,
+      0.3902
+     ],
+     "cog_body_m": [
+      0.3902,
+      0.0684,
+      2.0917
+     ],
+     "inertia_about_cog_body_kg_m2": [
+      [
+       547141.2,
+       1142.5,
+       -199499.0
+      ],
+      [
+       1142.5,
+       704673.5,
+       2588.8
+      ],
+      [
+       -199499.0,
+       2588.8,
+       200139.1
+      ]
+     ],
+     "principal_moments_kg_m2": [
+      109235.9,
+      638030.9,
+      704686.9
+     ],
+     "tensor_checks": {
+      "symmetric": true,
+      "positive_definite": true,
+      "triangle_inequality": true
+     },
+     "leg_loads_kN": {
+      "FL": 132.6,
+      "FR": 118.42,
+      "RL": 87.55,
+      "RR": 74.64
+     },
+     "leg_loads_pct": {
+      "FL": 32.09,
+      "FR": 28.66,
+      "RL": 21.19,
+      "RR": 18.06
+     },
+     "cog_inside_leg_rectangle": true,
+     "moving_set_mass_kg": 6350.0,
+     "moving_set_cog_body_m": [
+      3.203,
+      0.0107,
+      9.1026
+     ]
+    },
+    "tool_steel": {
+     "mass_kg": 38555.7,
+     "cog_cad_m": [
+      -0.0015,
+      2.1749,
+      0.4521
+     ],
+     "cog_body_m": [
+      0.4521,
+      -0.0015,
+      2.1749
+     ],
+     "inertia_about_cog_body_kg_m2": [
+      [
+       534444.0,
+       -954.9,
+       -194546.7
+      ],
+      [
+       -954.9,
+       690635.0,
+       -208.9
+      ],
+      [
+       -194546.7,
+       -208.9,
+       193716.1
+      ]
+     ],
+     "principal_moments_kg_m2": [
+      105482.7,
+      622667.8,
+      690644.6
+     ],
+     "tensor_checks": {
+      "symmetric": true,
+      "positive_definite": true,
+      "triangle_inequality": true
+     },
+     "leg_loads_kN": {
+      "FL": 118.25,
+      "FR": 116.26,
+      "RL": 72.7,
+      "RR": 70.89
+     },
+     "leg_loads_pct": {
+      "FL": 31.28,
+      "FR": 30.75,
+      "RL": 19.23,
+      "RR": 18.75
+     },
+     "cog_inside_leg_rectangle": true,
+     "moving_set_mass_kg": 6257.1,
+     "moving_set_cog_body_m": [
+      3.2027,
+      0.0028,
+      9.102
+     ]
+    }
+   }
+  },
+  "middle": {
+   "name": "middle",
+   "travel_mm": -1302.81,
+   "travel_m": -1.30281,
+   "percent_of_range": 50.0,
+   "marks_body_z_m": {
+    "drive_bottom": 3.955,
+    "drive_top": 5.8276,
+    "tool_bottom": 3.0285,
+    "tool_top": 7.4961
+   },
+   "mass": {
+    "step": {
+     "mass_kg": 37316.9,
+     "cog_cad_m": [
+      -0.0015,
+      1.3626,
+      0.3538
+     ],
+     "cog_body_m": [
+      0.3538,
+      -0.0015,
+      1.3626
+     ],
+     "inertia_about_cog_body_kg_m2": [
+      [
+       241326.0,
+       -947.7,
+       -107481.7
+      ],
+      [
+       -947.7,
+       386299.2,
+       -87.4
+      ],
+      [
+       -107481.7,
+       -87.4,
+       182480.7
+      ]
+     ],
+     "principal_moments_kg_m2": [
+      100465.7,
+      323331.7,
+      386308.4
+     ],
+     "tensor_checks": {
+      "symmetric": true,
+      "positive_definite": true,
+      "triangle_inequality": true
+     },
+     "leg_loads_kN": {
+      "FL": 110.8,
+      "FR": 108.76,
+      "RL": 74.12,
+      "RR": 72.26
+     },
+     "leg_loads_pct": {
+      "FL": 30.28,
+      "FR": 29.72,
+      "RL": 20.25,
+      "RR": 19.75
+     },
+     "cog_inside_leg_rectangle": true,
+     "moving_set_mass_kg": 5018.3,
+     "moving_set_cog_body_m": [
+      3.1509,
+      0.0034,
+      4.7723
+     ]
+    },
+    "generic_as_steel": {
+     "mass_kg": 42136.0,
+     "cog_cad_m": [
+      0.0684,
+      1.4439,
+      0.3902
+     ],
+     "cog_body_m": [
+      0.3902,
+      0.0684,
+      1.4439
+     ],
+     "inertia_about_cog_body_kg_m2": [
+      [
+       264046.6,
+       1142.5,
+       -122717.3
+      ],
+      [
+       1142.5,
+       421578.8,
+       1014.3
+      ],
+      [
+       -122717.3,
+       1014.3,
+       200139.1
+      ]
+     ],
+     "principal_moments_kg_m2": [
+      105276.5,
+      358900.7,
+      421587.2
+     ],
+     "tensor_checks": {
+      "symmetric": true,
+      "positive_definite": true,
+      "triangle_inequality": true
+     },
+     "leg_loads_kN": {
+      "FL": 132.6,
+      "FR": 118.42,
+      "RL": 87.55,
+      "RR": 74.64
+     },
+     "leg_loads_pct": {
+      "FL": 32.09,
+      "FR": 28.66,
+      "RL": 21.19,
+      "RR": 18.06
+     },
+     "cog_inside_leg_rectangle": true,
+     "moving_set_mass_kg": 6350.0,
+     "moving_set_cog_body_m": [
+      3.203,
+      0.0107,
+      4.8038
+     ]
+    },
+    "tool_steel": {
+     "mass_kg": 38555.7,
+     "cog_cad_m": [
+      -0.0015,
+      1.4772,
+      0.4521
+     ],
+     "cog_body_m": [
+      0.4521,
+      -0.0015,
+      1.4772
+     ],
+     "inertia_about_cog_body_kg_m2": [
+      [
+       258656.9,
+       -954.9,
+       -120560.1
+      ],
+      [
+       -954.9,
+       414847.9,
+       -94.8
+      ],
+      [
+       -120560.1,
+       -94.8,
+       193716.1
+      ]
+     ],
+     "principal_moments_kg_m2": [
+      101328.9,
+      351035.0,
+      414856.9
+     ],
+     "tensor_checks": {
+      "symmetric": true,
+      "positive_definite": true,
+      "triangle_inequality": true
+     },
+     "leg_loads_kN": {
+      "FL": 118.25,
+      "FR": 116.26,
+      "RL": 72.7,
+      "RR": 70.89
+     },
+     "leg_loads_pct": {
+      "FL": 31.28,
+      "FR": 30.75,
+      "RL": 19.23,
+      "RR": 18.75
+     },
+     "cog_inside_leg_rectangle": true,
+     "moving_set_mass_kg": 6257.1,
+     "moving_set_cog_body_m": [
+      3.2027,
+      0.0028,
+      4.8032
+     ]
+    }
+   }
+  },
+  "bottom": {
+   "name": "bottom",
+   "travel_mm": -5601.61,
+   "travel_m": -5.60161,
+   "percent_of_range": 0.0,
+   "marks_body_z_m": {
+    "drive_bottom": -0.3438,
+    "drive_top": 1.5288,
+    "tool_bottom": -1.2703,
+    "tool_top": 3.1973
+   },
+   "mass": {
+    "step": {
+     "mass_kg": 37316.9,
+     "cog_cad_m": [
+      -0.0015,
+      0.7846,
+      0.3538
+     ],
+     "cog_body_m": [
+      0.3538,
+      -0.0015,
+      0.7846
+     ],
+     "inertia_about_cog_body_kg_m2": [
+      [
+       174481.3,
+       -947.7,
+       -47141.3
+      ],
+      [
+       -947.7,
+       319454.5,
+       18.1
+      ],
+      [
+       -47141.3,
+       18.1,
+       182480.7
+      ]
+     ],
+     "principal_moments_kg_m2": [
+      131167.8,
+      225787.1,
+      319461.6
+     ],
+     "tensor_checks": {
+      "symmetric": true,
+      "positive_definite": true,
+      "triangle_inequality": true
+     },
+     "leg_loads_kN": {
+      "FL": 110.8,
+      "FR": 108.76,
+      "RL": 74.12,
+      "RR": 72.26
+     },
+     "leg_loads_pct": {
+      "FL": 30.28,
+      "FR": 29.72,
+      "RL": 20.25,
+      "RR": 19.75
+     },
+     "cog_inside_leg_rectangle": true,
+     "moving_set_mass_kg": 5018.3,
+     "moving_set_cog_body_m": [
+      3.1509,
+      0.0034,
+      0.4735
+     ]
+    },
+    "generic_as_steel": {
+     "mass_kg": 42136.0,
+     "cog_cad_m": [
+      0.0684,
+      0.796,
+      0.3902
+     ],
+     "cog_body_m": [
+      0.3902,
+      0.0684,
+      0.796
+     ],
+     "inertia_about_cog_body_kg_m2": [
+      [
+       180274.5,
+       1142.5,
+       -45935.6
+      ],
+      [
+       1142.5,
+       337806.7,
+       -560.2
+      ],
+      [
+       -45935.6,
+       -560.2,
+       200139.1
+      ]
+     ],
+     "principal_moments_kg_m2": [
+      143208.2,
+      237190.6,
+      337821.4
+     ],
+     "tensor_checks": {
+      "symmetric": true,
+      "positive_definite": true,
+      "triangle_inequality": true
+     },
+     "leg_loads_kN": {
+      "FL": 132.6,
+      "FR": 118.42,
+      "RL": 87.55,
+      "RR": 74.64
+     },
+     "leg_loads_pct": {
+      "FL": 32.09,
+      "FR": 28.66,
+      "RL": 21.19,
+      "RR": 18.06
+     },
+     "cog_inside_leg_rectangle": true,
+     "moving_set_mass_kg": 6350.0,
+     "moving_set_cog_body_m": [
+      3.203,
+      0.0107,
+      0.505
+     ]
+    },
+    "tool_steel": {
+     "mass_kg": 38555.7,
+     "cog_cad_m": [
+      -0.0015,
+      0.7796,
+      0.4521
+     ],
+     "cog_body_m": [
+      0.4521,
+      -0.0015,
+      0.7796
+     ],
+     "inertia_about_cog_body_kg_m2": [
+      [
+       176596.4,
+       -954.9,
+       -46573.6
+      ],
+      [
+       -954.9,
+       332787.5,
+       19.3
+      ],
+      [
+       -46573.6,
+       19.3,
+       193716.1
+      ]
+     ],
+     "principal_moments_kg_m2": [
+      137800.0,
+      232506.0,
+      332794.0
+     ],
+     "tensor_checks": {
+      "symmetric": true,
+      "positive_definite": true,
+      "triangle_inequality": true
+     },
+     "leg_loads_kN": {
+      "FL": 118.25,
+      "FR": 116.26,
+      "RL": 72.7,
+      "RR": 70.89
+     },
+     "leg_loads_pct": {
+      "FL": 31.28,
+      "FR": 30.75,
+      "RL": 19.23,
+      "RR": 18.75
+     },
+     "cog_inside_leg_rectangle": true,
+     "moving_set_mass_kg": 6257.1,
+     "moving_set_cog_body_m": [
+      3.2027,
+      0.0028,
+      0.5044
+     ]
+    }
+   }
+  }
+ },
+ "current_cad_pose": {
+  "travel_mm": 0.0,
+  "mass": {
+   "step": {
+    "mass_kg": 37316.9,
+    "cog_cad_m": [
+     -0.0015,
+     1.5378,
+     0.3538
+    ],
+    "cog_body_m": [
+     0.3538,
+     -0.0015,
+     1.5378
+    ],
+    "inertia_about_cog_body_kg_m2": [
+     [
+      293282.0,
+      -947.7,
+      -125768.8
+     ],
+     [
+      -947.7,
+      438255.2,
+      -119.4
+     ],
+     [
+      -125768.8,
+      -119.4,
+      182480.7
+     ]
+    ],
+    "principal_moments_kg_m2": [
+     100450.1,
+     375302.9,
+     438264.7
+    ],
+    "tensor_checks": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "leg_loads_kN": {
+     "FL": 110.8,
+     "FR": 108.76,
+     "RL": 74.12,
+     "RR": 72.26
+    },
+    "leg_loads_pct": {
+     "FL": 30.28,
+     "FR": 29.72,
+     "RL": 20.25,
+     "RR": 19.75
+    },
+    "cog_inside_leg_rectangle": true,
+    "moving_set_mass_kg": 5018.3,
+    "moving_set_cog_body_m": [
+     3.1509,
+     0.0034,
+     6.0751
+    ]
+   },
+   "generic_as_steel": {
+    "mass_kg": 42136.0,
+    "cog_cad_m": [
+     0.0684,
+     1.6402,
+     0.3902
+    ],
+    "cog_body_m": [
+     0.3902,
+     0.0684,
+     1.6402
+    ],
+    "inertia_about_cog_body_kg_m2": [
+     [
+      328792.6,
+      1142.5,
+      -145987.1
+     ],
+     [
+      1142.5,
+      486324.8,
+      1491.5
+     ],
+     [
+      -145987.1,
+      1491.5,
+      200139.1
+     ]
+    ],
+    "principal_moments_kg_m2": [
+     104925.5,
+     423996.6,
+     486334.3
+    ],
+    "tensor_checks": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "leg_loads_kN": {
+     "FL": 132.6,
+     "FR": 118.42,
+     "RL": 87.55,
+     "RR": 74.64
+    },
+    "leg_loads_pct": {
+     "FL": 32.09,
+     "FR": 28.66,
+     "RL": 21.19,
+     "RR": 18.06
+    },
+    "cog_inside_leg_rectangle": true,
+    "moving_set_mass_kg": 6350.0,
+    "moving_set_cog_body_m": [
+     3.203,
+     0.0107,
+     6.1066
+    ]
+   },
+   "tool_steel": {
+    "mass_kg": 38555.7,
+    "cog_cad_m": [
+     -0.0015,
+     1.6886,
+     0.4521
+    ],
+    "cog_body_m": [
+     0.4521,
+     -0.0015,
+     1.6886
+    ],
+    "inertia_about_cog_body_kg_m2": [
+     [
+      321779.2,
+      -954.9,
+      -142982.9
+     ],
+     [
+      -954.9,
+      477970.2,
+      -129.4
+     ],
+     [
+      -142982.9,
+      -129.4,
+      193716.1
+     ]
+    ],
+    "principal_moments_kg_m2": [
+     101080.9,
+     414405.0,
+     477979.7
+    ],
+    "tensor_checks": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "leg_loads_kN": {
+     "FL": 118.25,
+     "FR": 116.26,
+     "RL": 72.7,
+     "RR": 70.89
+    },
+    "leg_loads_pct": {
+     "FL": 31.28,
+     "FR": 30.75,
+     "RL": 19.23,
+     "RR": 18.75
+    },
+    "cog_inside_leg_rectangle": true,
+    "moving_set_mass_kg": 6257.1,
+    "moving_set_cog_body_m": [
+     3.2027,
+     0.0028,
+     6.106
+    ]
+   }
+  }
+ },
+ "reproduces_cad_summary_superstructure": {
+  "step": {
+   "mass_rel_diff": 0.0,
+   "cog_max_abs_diff_m": 0.0,
+   "inertia_max_abs_diff_kg_m2": 0.0
+  },
+  "generic_as_steel": {
+   "mass_rel_diff": 0.0,
+   "cog_max_abs_diff_m": 0.0,
+   "inertia_max_abs_diff_kg_m2": 0.0
+  }
+ },
+ "sensitivity": {
+  "step": {
+   "moving_mass_kg": 5018.3,
+   "superstructure_mass_kg": 37316.9,
+   "cog_z_shift_per_1m_travel_m": 0.13448
+  },
+  "generic_as_steel": {
+   "moving_mass_kg": 6350.0,
+   "superstructure_mass_kg": 42136.0,
+   "cog_z_shift_per_1m_travel_m": 0.1507
+  },
+  "tool_steel": {
+   "moving_mass_kg": 6257.1,
+   "superstructure_mass_kg": 38555.7,
+   "cog_z_shift_per_1m_travel_m": 0.16229
+  }
+ },
+ "settings": {
+  "mesh_linear_deflection_mm": 3.0,
+  "sample_spacing_mm": 4.0,
+  "cell_mm": 5.0,
+  "colocated_tolerance_mm": 3.0,
+  "exact_touch_mm": 0.01,
+  "mesh_touch_mm": 0.5,
+  "fixed_parts_in_footprint": 212,
+  "fixed_points": 5528832,
+  "moving_parts_with_mesh": 331,
+  "gravity_m_s2": 9.80665,
+  "leg_load_model": "rigid body on four equal vertical springs, rigid floor; F_i = a + b x_i + c y_i"
+ },
+ "timings_s": {
+  "column_clearance_s": 4.2,
+  "refine_s": 103.1,
+  "render_s": 100.4,
+  "total_s": 209.1
+ },
+ "figures": [
+  "cad\\auger_levels\\level_1_top_side.png",
+  "cad\\auger_levels\\level_2_middle_side.png",
+  "cad\\auger_levels\\level_3_bottom_side.png",
+  "cad\\auger_levels\\levels_compare.png"
+ ],
+ "figure_axis_limits_body_m": {
+  "x": [
+   -3.3,
+   6.0
+  ],
+  "z": [
+   -1.5,
+   12.2
+  ]
+ }
+}

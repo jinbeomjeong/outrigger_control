@@ -1,0 +1,47 @@
+# CAD 원본 (대용량, git 제외)
+*.stp
+*.step
+*.STP
+*.STEP
+*.ipt
+*.iam
+
+# CAD 대용량 캐시 (scripts/cad/로 재생성)
+cad/mast/
+cad/meshes/
+cad/mast_faces.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# 시뮬레이션 산출물
+results/
+*.h5
+*.npz
+
+# Claude Code 런타임 파일
+.claude/scheduled_tasks.lock
+
+# OS / 편집기
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# 유압 회로도 (사용자 제공 자료, git 제외)
+docs/hydraulic/

@@ -1,0 +1,727 @@
+{
+  "meta": {
+    "script": "scripts/chrono/test_stick_friction.py",
+    "pychrono": "10.0.0",
+    "units": "SI, Z-up, g=(0,0,-9.80665)",
+    "slip": "displacement of the block along the downhill tangent from the start [m]",
+    "default_slip_velocity_threshold_m_s": 0.0001,
+    "default_tangential_model": 1,
+    "ground_mass_kg": 1000000000.0
+  },
+  "reference": {
+    "mass_kg": 9745.699625,
+    "kn_N_m": 20813595.4,
+    "kt_N_m": 8510485.28,
+    "cn_N_s_m": 45038.1004,
+    "ct_N_s_m": 28799.4155,
+    "mu": 0.5,
+    "dt_s": 0.0002,
+    "sphere_radius_m": 0.06,
+    "f_tangential_Hz": 4.703171150608202,
+    "zeta_tangential": 0.050000000033849516,
+    "f_normal_Hz": 7.3550761711071475,
+    "zeta_normal": 0.049999999985132146,
+    "slope_2deg_static_tangential_disp_m": 0.00039192100159023873,
+    "onestep_creep_estimate_m_s": 0.10935319711875942
+  },
+  "cases": [
+    {
+      "name": "SMC OneStep 2deg",
+      "method": "SMC",
+      "slope_deg": 2.0,
+      "dt_s": 0.0002,
+      "t_end_s": 10.0,
+      "tdm": "OneStep",
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 1.0586498019670612,
+      "disp_max_abs_m": 1.0586498019670612,
+      "v_end_m_s": 0.10936239769591675,
+      "v_mean_last2s_m_s": 0.10936192149551166,
+      "normal_disp_end_m": -1.0922218691977736e-08,
+      "contact_force_end_N": [
+        0.8469417294641062,
+        -0.00421730774140808,
+        95572.1314888944
+      ],
+      "wall_s": 0.4538601999520324
+    },
+    {
+      "name": "SMC MultiStep 2deg",
+      "method": "SMC",
+      "slope_deg": 2.0,
+      "dt_s": 0.0002,
+      "t_end_s": 10.0,
+      "tdm": "MultiStep",
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 1.0586498019670612,
+      "disp_max_abs_m": 1.0586498019670612,
+      "v_end_m_s": 0.10936239769591675,
+      "v_mean_last2s_m_s": 0.10936192149551166,
+      "normal_disp_end_m": -1.0922218691977736e-08,
+      "contact_force_end_N": [
+        0.8469417294641062,
+        -0.00421730774140808,
+        95572.1314888944
+      ],
+      "wall_s": 0.44975450000492856
+    },
+    {
+      "name": "SMC None 2deg",
+      "method": "SMC",
+      "slope_deg": 2.0,
+      "dt_s": 0.0002,
+      "t_end_s": 10.0,
+      "tdm": "None",
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 1.1189369874768733,
+      "disp_max_abs_m": 1.1189369874768733,
+      "v_end_m_s": 0.11580801751204213,
+      "v_mean_last2s_m_s": 0.11580971556186602,
+      "normal_disp_end_m": -9.504585743447258e-09,
+      "contact_force_end_N": [
+        -1.0029922043486295,
+        0.02092994825659517,
+        95571.78065179911
+      ],
+      "wall_s": 0.4593899000319652
+    },
+    {
+      "name": "SMC OneStep 2deg thr=1e-06",
+      "method": "SMC",
+      "slope_deg": 2.0,
+      "dt_s": 0.0002,
+      "t_end_s": 10.0,
+      "tdm": "OneStep",
+      "slip_thr": 1e-06,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 1.058650158296851,
+      "disp_max_abs_m": 1.058650158296851,
+      "v_end_m_s": 0.10936238753865492,
+      "v_mean_last2s_m_s": 0.10936114848482476,
+      "normal_disp_end_m": -9.368405086418452e-09,
+      "contact_force_end_N": [
+        0.9288343493153661,
+        -0.19326563378969594,
+        95571.968627816
+      ],
+      "wall_s": 0.4512742000515573
+    },
+    {
+      "name": "SMC OneStep 2deg thr=0.01",
+      "method": "SMC",
+      "slope_deg": 2.0,
+      "dt_s": 0.0002,
+      "t_end_s": 10.0,
+      "tdm": "OneStep",
+      "slip_thr": 0.01,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 1.0587459483885702,
+      "disp_max_abs_m": 1.0587459483885702,
+      "v_end_m_s": 0.10935099152830148,
+      "v_mean_last2s_m_s": 0.10935162577476977,
+      "normal_disp_end_m": 6.053958917506819e-09,
+      "contact_force_end_N": [
+        -2.1299705751544025,
+        0.011084429929350423,
+        95571.83197138792
+      ],
+      "wall_s": 0.45511620002798736
+    },
+    {
+      "name": "SMC OneStep 2deg gt raw",
+      "method": "SMC",
+      "slope_deg": 2.0,
+      "dt_s": 0.0002,
+      "t_end_s": 10.0,
+      "tdm": "OneStep",
+      "gt_mode": "raw",
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": -20.021549056955124,
+      "disp_max_abs_m": 20.021549056955124,
+      "v_end_m_s": -2.303946805407888,
+      "v_mean_last2s_m_s": -2.6461939547455207,
+      "normal_disp_end_m": 340.1343920422235,
+      "contact_force_end_N": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wall_s": 0.3990946999983862
+    },
+    {
+      "name": "SMC OneStep flat v0",
+      "method": "SMC",
+      "slope_deg": 0.0,
+      "dt_s": 0.0002,
+      "t_end_s": 3.0,
+      "tdm": "OneStep",
+      "v0_m_s": [
+        0.01,
+        0,
+        0
+      ],
+      "disp_end_m": 0.0030365279865754197,
+      "disp_max_abs_m": 0.003139610198718013,
+      "v_end_m_s": -9.256081989613895e-05,
+      "v_mean_last2s_m_s": 4.342423254208076e-06,
+      "normal_disp_end_m": -2.138643664245654e-08,
+      "contact_force_end_N": [
+        -0.6617020246518687,
+        0.11653408030807423,
+        95572.86686423859
+      ],
+      "wall_s": 0.14451069995993748
+    },
+    {
+      "name": "SMC MultiStep flat v0",
+      "method": "SMC",
+      "slope_deg": 0.0,
+      "dt_s": 0.0002,
+      "t_end_s": 3.0,
+      "tdm": "MultiStep",
+      "v0_m_s": [
+        0.01,
+        0,
+        0
+      ],
+      "disp_end_m": 0.0030365279865754197,
+      "disp_max_abs_m": 0.003139610198718013,
+      "v_end_m_s": -9.256081989613895e-05,
+      "v_mean_last2s_m_s": 4.342423254208076e-06,
+      "normal_disp_end_m": -2.138643664245654e-08,
+      "contact_force_end_N": [
+        -0.6617020246518687,
+        0.11653408030807423,
+        95572.86686423859
+      ],
+      "wall_s": 0.14485129999229684
+    },
+    {
+      "name": "SMC OneStep flat vz0 ground 1e+09 kg",
+      "method": "SMC",
+      "slope_deg": 0.0,
+      "dt_s": 0.0002,
+      "t_end_s": 2.0,
+      "tdm": "OneStep",
+      "ground_mass": 1000000000.0,
+      "v0_m_s": [
+        0,
+        0,
+        -0.01
+      ],
+      "disp_end_m": 0.0,
+      "disp_max_abs_m": 0.0,
+      "v_end_m_s": 0.0,
+      "v_mean_last2s_m_s": 0.0,
+      "normal_disp_end_m": 1.9798626343242587e-06,
+      "contact_force_end_N": [
+        0.0,
+        0.0,
+        95529.90572186817
+      ],
+      "wall_s": 0.08719140000175685,
+      "f_normal_Hz": 7.356667090668842,
+      "zeta_normal": 0.05019264113227481
+    },
+    {
+      "name": "SMC OneStep flat vz0 ground 1 kg",
+      "method": "SMC",
+      "slope_deg": 0.0,
+      "dt_s": 0.0002,
+      "t_end_s": 2.0,
+      "tdm": "OneStep",
+      "ground_mass": 1.0,
+      "v0_m_s": [
+        0,
+        0,
+        -0.01
+      ],
+      "disp_end_m": 0.0,
+      "disp_max_abs_m": 0.0,
+      "v_end_m_s": 0.0,
+      "v_mean_last2s_m_s": 0.0,
+      "normal_disp_end_m": 0.00020954371874384176,
+      "contact_force_end_N": [
+        0.0,
+        0.0,
+        91221.43528305455
+      ],
+      "wall_s": 0.09276989998761564,
+      "f_normal_Hz": 7.346032750566312,
+      "zeta_normal": 0.0010058216758004937
+    },
+    {
+      "name": "Bushing 2deg",
+      "method": "bushing",
+      "slope_deg": 2.0,
+      "dt_s": 0.0002,
+      "t_end_s": 10.0,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 0.00039228820477108813,
+      "disp_max_abs_m": 0.0007238029739162468,
+      "v_end_m_s": -4.3729146441890834e-06,
+      "v_mean_last2s_m_s": 1.5873499203994538e-07,
+      "normal_disp_end_m": 4.198987913504247e-08,
+      "contact_force_end_N": [
+        3338.4387846695126,
+        -0.18527708999767534,
+        95456.0773947641
+      ],
+      "wall_s": 1.6705668999929912,
+      "bushing_slip_along_slope_m": 0.0,
+      "bushing_yield_steps": 0,
+      "bushing_elastic_disp_m": 0.00039228820477108813
+    },
+    {
+      "name": "Bushing flat v0",
+      "method": "bushing",
+      "slope_deg": 0.0,
+      "dt_s": 0.0002,
+      "t_end_s": 3.0,
+      "v0_m_s": [
+        0.01,
+        0,
+        0
+      ],
+      "disp_end_m": 1.7978821097156647e-06,
+      "disp_max_abs_m": 0.00031219464385912646,
+      "v_end_m_s": 7.15196306447323e-05,
+      "v_mean_last2s_m_s": 3.410443199121473e-05,
+      "normal_disp_end_m": -2.13708261226353e-08,
+      "contact_force_end_N": [
+        1.303060521684821,
+        -0.34479630394934624,
+        95572.80472275407
+      ],
+      "wall_s": 0.5073725000256673,
+      "bushing_slip_along_slope_m": 0.0,
+      "bushing_yield_steps": 0,
+      "bushing_elastic_disp_m": 1.7978821097156647e-06,
+      "f_tangential_Hz": 4.702273281249344,
+      "zeta_tangential": 0.0531117410867003
+    },
+    {
+      "name": "Bushing flat v0 c=ct (factor 1)",
+      "method": "bushing",
+      "slope_deg": 0.0,
+      "dt_s": 0.0002,
+      "t_end_s": 3.0,
+      "bush_damp": 1.0,
+      "v0_m_s": [
+        0.01,
+        0,
+        0
+      ],
+      "disp_end_m": -3.7013361070289674e-08,
+      "disp_max_abs_m": 0.0002905959830077747,
+      "v_end_m_s": 3.3177303566359156e-07,
+      "v_mean_last2s_m_s": 7.249549363622264e-06,
+      "normal_disp_end_m": -2.1026694926873368e-08,
+      "contact_force_end_N": [
+        -0.027089988846723072,
+        0.0021549227335508994,
+        95572.80582709491
+      ],
+      "wall_s": 0.5055708000436425,
+      "bushing_slip_along_slope_m": 0.0,
+      "bushing_yield_steps": 0,
+      "bushing_elastic_disp_m": -3.7013361070289674e-08,
+      "f_tangential_Hz": 4.701325020527723,
+      "zeta_tangential": 0.10299890659939427
+    },
+    {
+      "name": "Bushing flat v0 c=0",
+      "method": "bushing",
+      "slope_deg": 0.0,
+      "dt_s": 0.0002,
+      "t_end_s": 3.0,
+      "bush_damp": 0.0,
+      "v0_m_s": [
+        0.01,
+        0,
+        0
+      ],
+      "disp_end_m": 0.00016363852416462004,
+      "disp_max_abs_m": 0.0003369247728629584,
+      "v_end_m_s": 0.0059822486718917375,
+      "v_mean_last2s_m_s": 0.0002307954047727027,
+      "normal_disp_end_m": -2.2146055468630355e-08,
+      "contact_force_end_N": [
+        -2.5550658744978683,
+        -6.798954802155115,
+        95573.11964161128
+      ],
+      "wall_s": 0.5052916000131518,
+      "bushing_slip_along_slope_m": 0.0,
+      "bushing_yield_steps": 0,
+      "bushing_elastic_disp_m": 0.00016363852416462004,
+      "f_tangential_Hz": 4.700743819566493,
+      "zeta_tangential": 0.0014012403696552717
+    },
+    {
+      "name": "Bushing 30deg (tan>mu, must slide)",
+      "method": "bushing",
+      "slope_deg": 30.0,
+      "dt_s": 0.0002,
+      "t_end_s": 2.0,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 1.2286857556885438,
+      "disp_max_abs_m": 1.2286857556885438,
+      "v_end_m_s": 1.0061863177116008,
+      "v_mean_last2s_m_s": 1.0061863177116008,
+      "normal_disp_end_m": -4.441292227319593e-07,
+      "contact_force_end_N": [
+        41383.356780876034,
+        0.06513472549480086,
+        71677.71301790666
+      ],
+      "wall_s": 0.38829799997620285,
+      "bushing_slip_along_slope_m": 1.22382314233419,
+      "bushing_yield_steps": 9750,
+      "bushing_elastic_disp_m": 0.004862613354353673,
+      "mu_effective": 0.5050134312484083
+    },
+    {
+      "name": "BushingPlastic 2deg",
+      "method": "bushing_plastic",
+      "slope_deg": 2.0,
+      "dt_s": 0.0002,
+      "t_end_s": 10.0,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 0.0003923092262181535,
+      "disp_max_abs_m": 0.0006725259474113999,
+      "v_end_m_s": 3.475443305091494e-06,
+      "v_mean_last2s_m_s": -1.452243710269648e-08,
+      "normal_disp_end_m": 9.928376559214668e-09,
+      "contact_force_end_N": [
+        3338.773553203852,
+        -0.17514176678135346,
+        95456.12662430512
+      ],
+      "wall_s": 1.2837039000005461,
+      "bushing_plastic_def_m": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "BushingPlastic 30deg (must slide)",
+      "method": "bushing_plastic",
+      "slope_deg": 30.0,
+      "dt_s": 0.0002,
+      "t_end_s": 2.0,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 0.39228824433521564,
+      "disp_max_abs_m": 0.39228824433521564,
+      "v_end_m_s": 0.20973441246362096,
+      "v_mean_last2s_m_s": 0.20973441246362096,
+      "normal_disp_end_m": -7.837172985580843e-08,
+      "contact_force_end_N": [
+        35831.99855878069,
+        0.29240372948751936,
+        74868.93820455045
+      ],
+      "wall_s": 0.26111000002129003,
+      "bushing_plastic_def_m": [
+        0.3874261999207135,
+        0.0,
+        0.0
+      ],
+      "mu_effective": 0.5542549488236636
+    },
+    {
+      "name": "BushingPlastic 30deg c=0 (must slide)",
+      "method": "bushing_plastic",
+      "slope_deg": 30.0,
+      "dt_s": 0.0002,
+      "t_end_s": 2.0,
+      "bush_damp": 0.0,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 17950.894059069164,
+      "disp_max_abs_m": 17950.894059069164,
+      "v_end_m_s": 9380.415211145606,
+      "v_mean_last2s_m_s": 9380.415211145606,
+      "normal_disp_end_m": -15.514119804265647,
+      "contact_force_end_N": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wall_s": 0.2494315000367351,
+      "bushing_plastic_def_m": [
+        17950.894059069164,
+        -1.808936940642247e-05,
+        0.0
+      ],
+      "mu_effective": -1056.2517929344565
+    },
+    {
+      "name": "NSC 2deg PSOR50",
+      "method": "NSC",
+      "slope_deg": 2.0,
+      "dt_s": 0.0002,
+      "t_end_s": 10.0,
+      "nsc_solver": "PSOR",
+      "nsc_iter": 50,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 1.998520632870321e-12,
+      "disp_max_abs_m": 1.998520632870321e-12,
+      "v_end_m_s": 3.011225515923366e-21,
+      "v_mean_last2s_m_s": 3.0112255159233663e-21,
+      "normal_disp_end_m": -6.332993505066591e-08,
+      "contact_force_end_N": [
+        0.0,
+        -2.7755575615628914e-17,
+        95572.66522750625
+      ],
+      "wall_s": 0.4340520999976434
+    },
+    {
+      "name": "NSC 2deg PSOR200",
+      "method": "NSC",
+      "slope_deg": 2.0,
+      "dt_s": 0.0002,
+      "t_end_s": 10.0,
+      "nsc_solver": "PSOR",
+      "nsc_iter": 200,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 1.998520632870321e-12,
+      "disp_max_abs_m": 1.998520632870321e-12,
+      "v_end_m_s": 3.011225515923366e-21,
+      "v_mean_last2s_m_s": 3.0112255159233663e-21,
+      "normal_disp_end_m": -6.332993505066591e-08,
+      "contact_force_end_N": [
+        0.0,
+        -2.7755575615628914e-17,
+        95572.66522750625
+      ],
+      "wall_s": 0.9787332999985665
+    },
+    {
+      "name": "NSC 2deg APGD100",
+      "method": "NSC",
+      "slope_deg": 2.0,
+      "dt_s": 0.0002,
+      "t_end_s": 10.0,
+      "nsc_solver": "APGD",
+      "nsc_iter": 100,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": -2.8082246760377244e-07,
+      "disp_max_abs_m": 2.8082246760377244e-07,
+      "v_end_m_s": -2.5582005764341424e-08,
+      "v_mean_last2s_m_s": -2.8070391565093228e-08,
+      "normal_disp_end_m": -1.0826577466302983e-07,
+      "contact_force_end_N": [
+        -253.1717660922077,
+        -0.012365184218416536,
+        88315.79157545726
+      ],
+      "wall_s": 10.067812099994626
+    },
+    {
+      "name": "NSC 30deg PSOR50 (must slide)",
+      "method": "NSC",
+      "slope_deg": 30.0,
+      "dt_s": 0.0002,
+      "t_end_s": 2.0,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 1.3138162010085686,
+      "disp_max_abs_m": 1.3138162010085686,
+      "v_end_m_s": 1.3144511112749822,
+      "v_mean_last2s_m_s": 1.3144511112749822,
+      "normal_disp_end_m": 0.00013124182166013298,
+      "contact_force_end_N": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "wall_s": 0.09194579999893904,
+      "mu_effective": 0.5000015173408303
+    },
+    {
+      "name": "NSC flat v0 PSOR50",
+      "method": "NSC",
+      "slope_deg": 0.0,
+      "dt_s": 0.0002,
+      "t_end_s": 3.0,
+      "v0_m_s": [
+        0.01,
+        0,
+        0
+      ],
+      "disp_end_m": 9.195253327065536e-06,
+      "disp_max_abs_m": 9.195253327065536e-06,
+      "v_end_m_s": 1.5362905367564388e-24,
+      "v_mean_last2s_m_s": 1.5362905367564388e-24,
+      "normal_disp_end_m": -2.502458563286014e-08,
+      "contact_force_end_N": [
+        2.220446049250313e-16,
+        -1.1102230246251565e-16,
+        95572.66522750622
+      ],
+      "wall_s": 0.13124159997096285
+    },
+    {
+      "name": "Bushing 2deg dt/2",
+      "method": "bushing",
+      "slope_deg": 2.0,
+      "dt_s": 0.0001,
+      "t_end_s": 10.0,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 0.0003923225643918198,
+      "disp_max_abs_m": 0.0007253482055745259,
+      "v_end_m_s": -9.005086334376476e-06,
+      "v_mean_last2s_m_s": 1.1187983064153158e-07,
+      "normal_disp_end_m": -7.606325378882103e-08,
+      "contact_force_end_N": [
+        3338.096562688838,
+        -0.14562587591953277,
+        95457.92369692944
+      ],
+      "wall_s": 3.285470800008625,
+      "bushing_slip_along_slope_m": 0.0,
+      "bushing_yield_steps": 0,
+      "bushing_elastic_disp_m": 0.0003923225643918198
+    },
+    {
+      "name": "Bushing flat v0 dt/2",
+      "method": "bushing",
+      "slope_deg": 0.0,
+      "dt_s": 0.0001,
+      "t_end_s": 3.0,
+      "v0_m_s": [
+        0.01,
+        0,
+        0
+      ],
+      "disp_end_m": 2.168893508719349e-06,
+      "disp_max_abs_m": 0.0003129136034062886,
+      "v_end_m_s": 7.814639742702431e-05,
+      "v_mean_last2s_m_s": 3.58109266560595e-05,
+      "normal_disp_end_m": -2.1007554758256664e-08,
+      "contact_force_end_N": [
+        -1.208109349926995,
+        -0.035712958940222174,
+        95572.49467662151
+      ],
+      "wall_s": 1.0089031999814324,
+      "bushing_slip_along_slope_m": 0.0,
+      "bushing_yield_steps": 0,
+      "bushing_elastic_disp_m": 2.168893508719349e-06,
+      "f_tangential_Hz": 4.702250730650393,
+      "zeta_tangential": 0.05161587956666331
+    },
+    {
+      "name": "SMC OneStep 2deg dt/2",
+      "method": "SMC",
+      "slope_deg": 2.0,
+      "dt_s": 0.0001,
+      "t_end_s": 10.0,
+      "tdm": "OneStep",
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 1.0879331224976498,
+      "disp_max_abs_m": 1.0879331224976498,
+      "v_end_m_s": 0.11250686715194948,
+      "v_mean_last2s_m_s": 0.1125057429480878,
+      "normal_disp_end_m": -1.1102388383643635e-09,
+      "contact_force_end_N": [
+        -0.19852206359792035,
+        -0.08516443161479395,
+        95571.82126407248
+      ],
+      "wall_s": 0.9006670999806374
+    },
+    {
+      "name": "NSC 2deg PSOR50 dt/2",
+      "method": "NSC",
+      "slope_deg": 2.0,
+      "dt_s": 0.0001,
+      "t_end_s": 10.0,
+      "v0_m_s": [
+        0,
+        0,
+        0
+      ],
+      "disp_end_m": 1.998520632870321e-12,
+      "disp_max_abs_m": 1.998520632870321e-12,
+      "v_end_m_s": 1.505612757961683e-21,
+      "v_mean_last2s_m_s": 1.5056127579616832e-21,
+      "normal_disp_end_m": -6.332993505066591e-08,
+      "contact_force_end_N": [
+        0.0,
+        -2.7755575615628914e-17,
+        95572.66522750625
+      ],
+      "wall_s": 0.8250030999770388
+    }
+  ]
+}
