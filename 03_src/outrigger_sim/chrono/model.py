@@ -23,7 +23,11 @@ Build (:class:`L1Model`):
   frame sits ``e`` below the body frame, so ``GetMotorPos() = e`` after the first Update;
 * ``GroundBushingCoulomb`` (L1 tangential model, R7, R15; tangential force at the ball
   centre by default, ``bushing_force_point``); with ``attach_bushings`` the bushings are
-  created now (t = 0) with zero tangential force (plan section 2 rule 1).
+  created now (t = 0) with zero tangential force (plan section 2 rule 1);
+* S2b: with ``actuator=True`` the motor functions are ramps (``ChFunctionRamp``) driven by
+  :class:`~outrigger_sim.chrono.actuators.L1SpeedActuator` (rate-limited speed reference
+  integrated in the actuator hook, plan rev. 8 + command ramp, user decision 2026-10-20).
+  Without it the legs stay locked at ``extensions_m`` (S1, S2a).
 
 Hook order after every step: see :meth:`L1Model.after_step`.
 """
@@ -39,6 +43,12 @@ import numpy as np
 import pychrono as ch
 from numpy.typing import NDArray
 
+from outrigger_sim.chrono.actuators import (
+    ACCEL_RAMP_S,
+    L1SpeedActuator,
+    make_motion_function,
+)
+from outrigger_sim.chrono.actuators import PART_PREFIX as ACTUATOR_PART
 from outrigger_sim.chrono.bodies import (
     BodyPose,
     make_leg_moving_parts,
@@ -51,12 +61,14 @@ from outrigger_sim.chrono.contact import (
     FAMILY_SUPERSTRUCTURE,
     ContactReport,
     CrawlerSphereLayout,
+    SphereContactReport,
     add_floor_patches,
     crawler_layout,
     crawler_material_values,
     floor_patches,
     pad_material_values,
     report_contacts,
+    report_sphere_contacts,
     set_family,
     shape_materials,
 )
@@ -66,7 +78,12 @@ from outrigger_sim.chrono.ground_bushing import (
     GroundBushingCoulomb,
 )
 from outrigger_sim.chrono.probes import ProbeState, chvec, read_probe, truth_state
-from outrigger_sim.chrono.snapshot import capture_snapshot, engine_info, restore_snapshot
+from outrigger_sim.chrono.snapshot import (
+    S_REF_KEY,
+    capture_snapshot,
+    engine_info,
+    restore_snapshot,
+)
 from outrigger_sim.chrono.system import ChronoModel, StepPurpose, make_system
 from outrigger_sim.engine import Snapshot
 from outrigger_sim.frames import roll_pitch_from_quat
@@ -107,6 +124,21 @@ def zero_pose(params: Params, extensions_m: Sequence[float]) -> BodyPose:
     return BodyPose((0.0, 0.0, float(heights.mean())))
 
 
+class _ActuatorPart:
+    """Snapshot part adapter: actuator state + whether the next step starts with a full
+    Update (``not IsUpdated()`` at capture time)."""
+
+    def __init__(self, actuator: L1SpeedActuator, system: ch.ChSystem) -> None:
+        self._actuator = actuator
+        self._system = system
+
+    def state_arrays(self) -> dict[str, NDArray[Any]]:
+        return self._actuator.state_arrays(next_step_full_update=not self._system.IsUpdated())
+
+    def restore_state(self, arrays: Any) -> None:  # pragma: no cover - capture only
+        self._actuator.restore_state(arrays)
+
+
 @dataclass(frozen=True)
 class StepResult:
     """What :meth:`L1Model.step` returns."""
@@ -134,6 +166,10 @@ class L1Model:
         bushing_force_point: Ground-bushing force point (``ground_bushing.FORCE_POINTS``);
             default ball centre (user decision 2026-10-20, ``dynamics_model.md`` 5.3 ruling
             4 option A). ``"contact_point"`` reproduces the model before that decision.
+        actuator: Drive the legs with :class:`L1SpeedActuator` (S2b); False = locked legs.
+        actuator_ramp_s: 0 -> v_max time of the command acceleration limit (default
+            :data:`~outrigger_sim.chrono.actuators.ACCEL_RAMP_S`; 0 = speed steps, only for
+            the inertial-spike comparison).
     """
 
     def __init__(
@@ -150,6 +186,8 @@ class L1Model:
         lock_sparsity_pattern: bool | None = None,
         floor_pose: BodyPose | None = None,
         bushing_force_point: str = DEFAULT_FORCE_POINT,
+        actuator: bool = False,
+        actuator_ramp_s: float = ACCEL_RAMP_S,
     ) -> None:
         self.params = params
         ext = (
@@ -198,9 +236,13 @@ class L1Model:
         # superstructure (+ crawler spheres)
         sup = make_superstructure(params, self.pose)
         com_body = np.asarray(params.superstructure.mass_properties.com_m, dtype=float)
+        self.crawler_centres_local_m: NDArray[np.float64] = np.zeros((0, 3))
         if self.crawler_layout is not None:
             sup.EnableCollision(True)
             material = crawler_material_values(params).make()
+            self.crawler_centres_local_m = (
+                self.crawler_layout.centres_body_m(self.floor_z_m) - com_body
+            )
             for centre in self.crawler_layout.centres_body_m(self.floor_z_m):
                 sup.AddCollisionShape(
                     ch.ChCollisionShapeSphere(material, self.crawler_layout.sphere_radius_m),
@@ -215,6 +257,7 @@ class L1Model:
         # legs, pad spheres, locked position motors
         legs = make_leg_moving_parts(params, ext, self.pose)
         motors = []
+        functions = []
         centres_local = []
         radii = []
         rot_link = ch.QuatFromAngleX(np.pi)  # link Z = body -z (R4)
@@ -241,13 +284,16 @@ class L1Model:
             motor = ch.ChLinkMotorLinearPosition()
             motor.SetName(f"motor_{leg.name}")
             motor.Initialize(body, sup, False, frame_leg, frame_body)
-            motor.SetMotionFunction(ch.ChFunctionConst(ext[i]))
+            function = make_motion_function(ext[i]) if actuator else ch.ChFunctionConst(ext[i])
+            motor.SetMotionFunction(function)
             self.system.Add(motor)
             motors.append(motor)
+            functions.append(function)
             centres_local.append(centre_local)
             radii.append(radius)
         self.legs: tuple[ch.ChBody, ...] = tuple(legs)
         self.motors: tuple[ch.ChLinkMotorLinearPosition, ...] = tuple(motors)
+        self.motor_functions: tuple[ch.ChFunction, ...] = tuple(functions)
         self.sphere_centres_local_m = tuple(np.asarray(c) for c in centres_local)
         self.sphere_centres_local_ch = tuple(chvec(c) for c in centres_local)
         self.sphere_radii_m = tuple(radii)
@@ -267,17 +313,54 @@ class L1Model:
 
         k_oil = params.get(K_OIL_KEY)
         self.k_oil_N_m = tuple(float(k_oil[name]) for name in LEG_ORDER)
-        self.s_ref_m = np.array(ext, dtype=float)  # locked L1 actuator: s_ref = extension
-        self.u_applied_m_s = np.zeros(len(LEG_ORDER))
+        self._locked_s_ref_m = np.array(ext, dtype=float)  # locked legs: s_ref = extension
         self.actuator_hooks: list[StepHook] = []
         self.load_hooks: list[StepHook] = []
         self.record_hooks: list[RecordHook] = []
+        self.actuator: L1SpeedActuator | None = None
+        if actuator:
+            self.actuator = L1SpeedActuator.from_params(
+                params, self.motors, self.motor_functions, ext, ramp_s=actuator_ramp_s
+            )
+            self.actuator_hooks.append(self.actuator.hook)
+
+    # --- actuator state views ------------------------------------------------------------
+
+    @property
+    def s_ref_m(self) -> NDArray[np.float64]:
+        """Motor target enforced during the step just taken (locked legs: the extensions).
+
+        With the actuator this is :attr:`L1SpeedActuator.acting_s_ref_m` (the hook-set value
+        acts one step later, ``chrono/actuators`` timing); Record ``s_ref``.
+        """
+        if self.actuator is None:
+            return self._locked_s_ref_m.copy()
+        return self.actuator.acting_s_ref_m
+
+    @property
+    def u_applied_m_s(self) -> NDArray[np.float64]:
+        """Applied (saturated, rate-limited) speed behind :attr:`s_ref_m`; 0 when locked."""
+        if self.actuator is None:
+            return np.zeros(len(LEG_ORDER))
+        return self.actuator.acting_u_m_s
+
+    def set_command(self, leg_speed_m_s: Sequence[float] | NDArray[np.float64]) -> None:
+        """Hold a leg speed command (m/s, LEG_ORDER); used by the next actuator hook.
+
+        Raises:
+            RuntimeError: The model was built without the actuator (legs locked).
+        """
+        if self.actuator is None:
+            raise RuntimeError("model built without the actuator (actuator=False)")
+        self.actuator.set_command(leg_speed_m_s)
 
     # --- geometry helpers --------------------------------------------------------------
 
     def leg_com_body_nominal_m(self, leg_index: int) -> NDArray[np.float64]:
-        """Leg COG in body coordinates at the motor's set extension (constraint check)."""
-        return leg_com_body_m(self.params, leg_index, float(self.s_ref_m[leg_index]))
+        """Leg COG in body coordinates at the motor target that acted during the last step
+        (constraint check, V13)."""
+        target = self._locked_s_ref_m if self.actuator is None else self.actuator.acting_s_ref_m
+        return leg_com_body_m(self.params, leg_index, float(target[leg_index]))
 
     @property
     def bodies(self) -> tuple[ch.ChBody, ...]:
@@ -291,8 +374,18 @@ class L1Model:
     # --- stepping ------------------------------------------------------------------------
 
     def step(self, *, capture: bool = False) -> StepResult:
-        """One ``DoStepDynamics(dt_s)`` followed by :meth:`after_step`."""
+        """One ``DoStepDynamics(dt_s)`` followed by :meth:`after_step`.
+
+        With the actuator, the actuator is told before the step whether it starts with a full
+        Update (``not IsUpdated()``) and after it that the end-of-step Update read the current
+        targets (``chrono/actuators`` timing).
+        """
+        act = self.actuator
+        if act is not None:
+            act.on_step_start(not self.system.IsUpdated())
         self.system.DoStepDynamics(self.dt_s)
+        if act is not None:
+            act.on_step_end()
         return self.after_step(self.dt_s, capture=capture)
 
     def after_step(self, dt_s: float, *, capture: bool = False) -> StepResult:
@@ -309,7 +402,7 @@ class L1Model:
            the record need the current contact state.
         3. **Actuators** (:attr:`actuator_hooks`): cylinder force, per-step saturation,
            ``s_ref`` integration and motor-function update for the next step. S1: none
-           (locked legs, ``s_ref`` = extension).
+           (locked legs, ``s_ref`` = extension). S2b: :meth:`L1SpeedActuator.hook`.
         4. **External loads** (:attr:`load_hooks`): empty the accumulator and add this step's
            value once (D2 etc.). S1: none.
         5. **Record** (:attr:`record_hooks`): the step-n copy of 1, i.e. the state at
@@ -330,6 +423,12 @@ class L1Model:
                 record(self, probe)
         return StepResult(events, probe)
 
+    def crawler_sphere_contacts(self) -> SphereContactReport:
+        """Per-sphere crawler contact forces (layout order) of the last step."""
+        return report_sphere_contacts(
+            self.system, self.superstructure, self.crawler_centres_local_m
+        )
+
     def probe(self) -> ProbeState:
         """Copy of the current state (between steps: anchors are those set for the next
         step if the hook already ran)."""
@@ -344,28 +443,54 @@ class L1Model:
     # --- snapshot (R16) ------------------------------------------------------------------
 
     def snapshot(self, held_command: Command | None = None) -> Snapshot:
-        """R16 snapshot: bodies, motors, ``s_ref``, ground-bushing state, time, Params.sha256."""
-        command = held_command or Command(
-            t_s=float(self.system.GetChTime()), leg_speed_m_s=np.zeros(len(LEG_ORDER))
-        )
+        """R16 snapshot: bodies, motors, ``s_ref``, ground-bushing state, time, Params.sha256.
+
+        With the actuator, ``actuator.s_ref_m`` is the integrated reference (post-hook) and
+        the ``l1_actuator.*`` part carries the limiter and lag state; the held command
+        defaults to the actuator's command.
+        """
+        t_now = float(self.system.GetChTime())
+        if held_command is None:
+            speeds = (
+                np.zeros(len(LEG_ORDER)) if self.actuator is None else self.actuator.command_m_s
+            )
+            held_command = Command(t_s=t_now, leg_speed_m_s=speeds)
+        parts: dict[str, Any] = {GROUND_BUSHING_PART: self.bushing}
+        s_ref = self._locked_s_ref_m
+        if self.actuator is not None:
+            parts[ACTUATOR_PART] = _ActuatorPart(self.actuator, self.system)
+            s_ref = self.actuator.s_ref_m
         return capture_snapshot(
             self.system,
             engine=engine_info(ChronoModel.L1.value),
             params_sha256=self.params.sha256,
-            held_command=command,
+            held_command=held_command,
             bodies=self.bodies,
             motors=self.motors,
-            s_ref_m=self.s_ref_m,
-            parts={GROUND_BUSHING_PART: self.bushing},
+            s_ref_m=s_ref,
+            parts=parts,
         )
 
     def restore(self, snapshot: Snapshot) -> float:
         """Restore a snapshot of the same model (built with ``attach_bushings=False`` or not;
         existing bushings are replaced). Returns the restored time [s].
 
+        Locked model: the snapshot ``s_ref`` must equal the locked extensions. Actuator
+        model: a snapshot with actuator state continues exactly (held command included); one
+        without it (S1 / S2a locked-leg states) starts the actuator at rest at the snapshot
+        ``s_ref`` with a zero command.
+
         Raises:
             SnapshotMismatchError / ValueError: see :func:`restore_snapshot`.
         """
+        parts: dict[str, Any] = {GROUND_BUSHING_PART: self.bushing}
+        act = self.actuator
+        has_actuator_state = any(k.startswith(f"{ACTUATOR_PART}.") for k in snapshot.payload)
+        if act is not None:
+            if has_actuator_state:
+                parts[ACTUATOR_PART] = act
+            elif S_REF_KEY in snapshot.payload:
+                act.reset_to(snapshot.payload[S_REF_KEY])  # targets before the restore Update
         restored = restore_snapshot(
             snapshot,
             self.system,
@@ -373,13 +498,18 @@ class L1Model:
             params_sha256=self.params.sha256,
             bodies=self.bodies,
             motors=self.motors,
-            parts={GROUND_BUSHING_PART: self.bushing},
+            parts=parts,
         )
-        if restored.s_ref_m is not None and not np.array_equal(restored.s_ref_m, self.s_ref_m):
-            raise ValueError(
-                f"snapshot s_ref {restored.s_ref_m} differs from the locked extensions "
-                f"{self.s_ref_m} of this S1 model"
-            )
+        if act is None:
+            if restored.s_ref_m is not None and not np.array_equal(
+                restored.s_ref_m, self._locked_s_ref_m
+            ):
+                raise ValueError(
+                    f"snapshot s_ref {restored.s_ref_m} differs from the locked extensions "
+                    f"{self._locked_s_ref_m} of this locked-leg model"
+                )
+        else:
+            act.set_command(restored.held_command.leg_speed_m_s)
         return restored.time_s
 
     # --- metadata and V0 inventory -----------------------------------------------------------
@@ -409,7 +539,25 @@ class L1Model:
                 "origin_m": list(self.floor_pose.origin_m),
                 "quat_wxyz": list(self.floor_pose.quat_wxyz),
             },
-            leg_lock="ChLinkMotorLinearPosition, ChFunctionConst(extension), guide PRISMATIC",
+            leg_lock="ChLinkMotorLinearPosition, ChFunctionConst(extension), guide PRISMATIC"
+            if self.actuator is None
+            else (
+                "ChLinkMotorLinearPosition, guide PRISMATIC, ChFunctionRamp s(t_n) + u (t - t_n) "
+                "from L1SpeedActuator (saturation, stroke-end braking, rate limit, s_ref "
+                "integration in the actuator hook)"
+            ),
+            actuator=None
+            if self.actuator is None
+            else {
+                "class": "L1SpeedActuator",
+                "max_speed_m_s": self.actuator.max_speed_m_s,
+                "ramp_s": self.actuator.ramp_s,
+                "ramp_source": "ASSUMPTION user decision 2026-10-20 (CLAUDE.md, not in YAML)",
+                "accel_limit_m_s2": None
+                if self.actuator.ramp_s == 0.0
+                else self.actuator.accel_limit_m_s2,
+                "stroke_range_m": self.actuator.stroke_range_m.tolist(),
+            },
             ground_bushing_force_point=self.bushing.force_point,
             input_lag_steps=1,
         )

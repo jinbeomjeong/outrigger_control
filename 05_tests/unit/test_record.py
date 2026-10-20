@@ -673,3 +673,46 @@ def test_module_has_no_engine_dependency() -> None:
     source = Path(record_module.__file__).read_text(encoding="utf-8")
     for forbidden in ("import pychrono", "from pychrono"):
         assert forbidden not in source
+
+
+# --- corrected stroke measurement (S6) ---------------------------------------------------
+
+
+def _measurements_with_corrected_stroke(t_s: float) -> Measurements:
+    plain = _measurements(t_s)
+    return Measurements(
+        t_s=t_s,
+        specific_force_m_s2=plain.specific_force_m_s2,
+        angular_rate_rad_s=plain.angular_rate_rad_s,
+        head_pressure_Pa=plain.head_pressure_Pa,
+        stroke_m=plain.stroke_m,
+        stroke_corrected_m=plain.stroke_m - 0.005,
+    )
+
+
+def test_corrected_stroke_is_recorded_and_round_trips(params: Params, tmp_path: Path) -> None:
+    recorder = Recorder(_run_meta(params))
+    for index in range(3):
+        t_s = 0.02 * index
+        recorder.append(_truth(t_s), _command(t_s), _measurements_with_corrected_stroke(t_s))
+    original = recorder.finish()
+    assert original.arrays["meas.stroke_corrected"].shape == (3, 4)
+    save_record(original, tmp_path / "run")
+    loaded = load_record(tmp_path / "run", params_sha256=params.sha256)
+    _assert_bit_identical(original.arrays, loaded.arrays)
+
+
+def test_records_without_corrected_stroke_have_no_such_field(params: Params) -> None:
+    assert "meas.stroke_corrected" not in _full_record(params, sample_count=2).arrays
+
+
+def test_corrected_stroke_without_the_measurement_group_is_rejected(params: Params) -> None:
+    recorder = Recorder(_run_meta(params))
+    recorder.append(_truth(0.0), _command(0.0), _measurements_with_corrected_stroke(0.0))
+    arrays = {
+        name: array
+        for name, array in recorder.finish().arrays.items()
+        if not name.startswith("meas.") or name == "meas.stroke_corrected"
+    }
+    with pytest.raises(RecordError, match="stroke_corrected"):
+        Record(arrays=arrays, bushing_events=_full_record(params).bushing_events, run_meta={})

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hopsanmodelfile hmfversion="0.4" hopsanguiversion="0.7.x" hopsancoreversion="2.24.4">
+  <requirements>
+    <componentlibrary>HopsanDefaultComponentLibrary</componentlibrary>
+  </requirements>
+  <system typename="Subsystem" name="leg_S3">
+    <simulationtime stop="3.0" timestep="5e-06" start="0" inherit_timestep="true"/>
+    <simulationlogsettings numsamples="30001" starttime="0"/>
+    <parameters/>
+    <aliases/>
+    <objects>
+      <component typename="SignalTime" name="Clock">
+        <parameters>
+        </parameters>
+      </component>
+      <component typename="HydraulicCylinderC" name="Cyl">
+        <parameters>
+          <parameter name="P1#Pressure" value="11410505.335866826" type="double"/>
+          <parameter name="P1#WaveVariable" value="11410505.335866826" type="double"/>
+          <parameter name="P2#Pressure" value="300000.0" type="double"/>
+          <parameter name="P2#WaveVariable" value="300000.0" type="double"/>
+          <parameter name="P3#Position" value="-0.4011" type="double"/>
+          <parameter name="P3#Force" value="118254.6" type="double"/>
+          <parameter name="P3#WaveVariable" value="118254.6" type="double"/>
+          <parameter name="A_1#Value" value="0.010386890710931254" type="double"/>
+          <parameter name="A_2#Value" value="0.0008835729338221301" type="double"/>
+          <parameter name="s_l#Value" value="0.68" type="double"/>
+          <parameter name="V_1#Value" value="0.0005193445355465628" type="double"/>
+          <parameter name="V_2#Value" value="4.4178646691106504e-05" type="double"/>
+          <parameter name="B_p#Value" value="34189.73902561372" type="double"/>
+          <parameter name="Beta_e#Value" value="1000000000.0" type="double"/>
+          <parameter name="c_leak#Value" value="0.0" type="double"/>
+          <parameter name="use_sl" value="true" type="bool"/>
+        </parameters>
+      </component>
+      <component typename="MechanicTranslationalMass" name="Rod">
+        <parameters>
+          <parameter name="m" value="106.783666" type="double"/>
+          <parameter name="B#Value" value="0.0" type="double"/>
+          <parameter name="k#Value" value="0.0" type="double"/>
+          <parameter name="x_min#Value" value="-1000.0" type="double"/>
+          <parameter name="x_max#Value" value="1000.0" type="double"/>
+        </parameters>
+      </component>
+      <component typename="MechanicTranslationalSpring" name="Kg">
+        <parameters>
+          <parameter name="k#Value" value="216648305.16451868" type="double"/>
+          <parameter name="P1#Force" value="118254.6" type="double"/>
+          <parameter name="P2#Force" value="118254.6" type="double"/>
+          <parameter name="P1#Position" value="0.4011" type="double"/>
+          <parameter name="P2#Position" value="0.0" type="double"/>
+          <parameter name="P1#WaveVariable" value="118254.6" type="double"/>
+          <parameter name="P2#WaveVariable" value="118254.6" type="double"/>
+        </parameters>
+      </component>
+      <component typename="MechanicTranslationalMass" name="Sup">
+        <parameters>
+          <parameter name="m" value="12058.613287921973" type="double"/>
+          <parameter name="B#Value" value="0.0" type="double"/>
+          <parameter name="k#Value" value="0.0" type="double"/>
+          <parameter name="x_min#Value" value="-1000.0" type="double"/>
+          <parameter name="x_max#Value" value="1000.0" type="double"/>
+        </parameters>
+      </component>
+      <component typename="MechanicForceTransformer" name="Load">
+        <parameters>
+          <parameter name="F#Value" value="118254.6" type="double"/>
+          <parameter name="P1#Force" value="118254.6" type="double"/>
+          <parameter name="P1#Position" value="0.0" type="double"/>
+        </parameters>
+      </component>
+      <component typename="Signal1DLookupTable" name="LU_F">
+        <parameters>
+          <parameter name="in#Value" value="0.0" type="double"/>
+          <parameter name="filename" value="LU_F.csv" type="string"/>
+          <parameter name="csvsep" value="," type="string"/>
+          <parameter name="inid" value="0" type="integer"/>
+          <parameter name="outid" value="1" type="integer"/>
+          <parameter name="reload" value="true" type="bool"/>
+        </parameters>
+      </component>
+      <component typename="HydraulicPlugQ" name="PlugA">
+        <parameters>
+        </parameters>
+      </component>
+      <component typename="HydraulicPlugQ" name="PlugB">
+        <parameters>
+        </parameters>
+      </component>
+    </objects>
+    <connections>
+      <connect startcomponent="Cyl" startport="P3" endcomponent="Rod" endport="P1"/>
+      <connect startcomponent="Rod" startport="P2" endcomponent="Kg" endport="P1"/>
+      <connect startcomponent="Kg" startport="P2" endcomponent="Sup" endport="P1"/>
+      <connect startcomponent="Sup" startport="P2" endcomponent="Load" endport="P1"/>
+      <connect startcomponent="Clock" startport="out" endcomponent="LU_F" endport="in"/>
+      <connect startcomponent="LU_F" startport="out" endcomponent="Load" endport="F"/>
+      <connect startcomponent="PlugA" startport="P1" endcomponent="Cyl" endport="P1"/>
+      <connect startcomponent="PlugB" startport="P1" endcomponent="Cyl" endport="P2"/>
+    </connections>
+  </system>
+</hopsanmodelfile>

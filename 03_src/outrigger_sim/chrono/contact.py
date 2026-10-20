@@ -44,6 +44,14 @@ from numpy.typing import NDArray
 
 from outrigger_sim.chrono.system import make_smc_material
 from outrigger_sim.params import LEG_ORDER, Params
+from outrigger_sim.scenarios.crawler_settle import (  # noqa: F401 - re-exported (S1 API)
+    CRAWLER_LAYOUT_KEY,
+    CRAWLER_SCHEME,
+    END_SHOE,
+    ROLLER,
+    CrawlerSphereLayout,
+    crawler_layout,
+)
 
 # --- collision families (R14) ------------------------------------------------------------
 
@@ -53,10 +61,6 @@ FAMILY_SUPERSTRUCTURE = 1
 FAMILY_ROD = 2
 """Leg moving parts (pad spheres)."""
 
-CRAWLER_LAYOUT_KEY = "contact.crawler.sphere_layout"
-CRAWLER_SCHEME = "rollers_plus_gapped_end_shoes"
-ROLLER = "roller"
-END_SHOE = "end_shoe"
 
 # Floor patch geometry: geometric convention, not a physical parameter. Pad patches are
 # squares around the pad centre (pads move < 1 mm sideways in S1-S3), crawler strips extend
@@ -98,76 +102,6 @@ def crawler_material_values(params: Params) -> SmcMaterialValues:
         kn_N_m=float(params.get("contact.crawler.kn_per_sphere_N_m")),
         gn_1_s=float(params.get("contact.crawler.gn_per_sphere_1_s")),
         source="contact.crawler.kn_per_sphere_N_m, .gn_per_sphere_1_s",
-    )
-
-
-# --- crawler sphere layout (R13, layout D) -------------------------------------------------
-
-
-@dataclass(frozen=True)
-class CrawlerSphereLayout:
-    """Crawler contact spheres of ``contact.crawler.sphere_layout`` (layout D).
-
-    Order: left track (y = +track_centre) rollers then end shoes, then the right track in the
-    same order (the order of ``04_scripts/00_cad/crawler_contact.py``).
-    """
-
-    scheme: str
-    track_centre_y_m: float
-    sphere_radius_m: float
-    xy_m: NDArray[np.float64]
-    """(n, 2) contact point x, y (body coordinates)."""
-    gap_m: NDArray[np.float64]
-    """(n,) sphere bottom above the crawler bottom plane (0 for rollers)."""
-    kind: tuple[str, ...]
-
-    @property
-    def n_points(self) -> int:
-        return int(self.gap_m.shape[0])
-
-    @property
-    def is_roller(self) -> NDArray[np.bool_]:
-        return np.array([k == ROLLER for k in self.kind])
-
-    @property
-    def x_extent_m(self) -> tuple[float, float]:
-        return float(self.xy_m[:, 0].min()), float(self.xy_m[:, 0].max())
-
-    def centres_body_m(self, crawler_bottom_z_m: float) -> NDArray[np.float64]:
-        """(n, 3) sphere centres in body coordinates (bottom + gap + radius)."""
-        z = crawler_bottom_z_m + self.gap_m + self.sphere_radius_m
-        return np.column_stack([self.xy_m, z])
-
-
-def crawler_layout(params: Params) -> CrawlerSphereLayout:
-    """Read ``contact.crawler.sphere_layout`` (only the layout-D scheme is supported)."""
-    node = params.get(CRAWLER_LAYOUT_KEY)
-    scheme = str(node["scheme"])
-    if scheme != CRAWLER_SCHEME:
-        raise ValueError(f"{CRAWLER_LAYOUT_KEY}.scheme = {scheme!r}; expected {CRAWLER_SCHEME!r}")
-    yc = float(node["track_centre_y_m"])
-    rollers = [float(x) for x in node["roller_x_m"]]
-    shoes = [float(x) for x in node["end_shoe_x_m"]]
-    gaps = [float(g) for g in node["end_shoe_gap_m"]]
-    radius = float(node["sphere_radius_m"])
-    if len(shoes) != len(gaps) or not rollers or yc <= 0.0 or radius <= 0.0:
-        raise ValueError(f"{CRAWLER_LAYOUT_KEY}: inconsistent layout")
-    if min(gaps) < 0.0:
-        raise ValueError(f"{CRAWLER_LAYOUT_KEY}.end_shoe_gap_m must be >= 0")
-    xy: list[tuple[float, float]] = []
-    gap: list[float] = []
-    kind: list[str] = []
-    for y in (yc, -yc):
-        for x in rollers:
-            xy.append((x, y))
-            gap.append(0.0)
-            kind.append(ROLLER)
-        for x, g in zip(shoes, gaps, strict=True):
-            xy.append((x, y))
-            gap.append(g)
-            kind.append(END_SHOE)
-    return CrawlerSphereLayout(
-        scheme, yc, radius, np.array(xy, dtype=float), np.array(gap, dtype=float), tuple(kind)
     )
 
 
@@ -356,3 +290,85 @@ def report_contacts(system: ch.ChSystem, body_names: Sequence[str]) -> ContactRe
     return ContactReport(
         tuple(body_names), reporter.force.copy(), reporter.count.copy(), int(reporter.other)
     )
+
+
+# --- per-sphere crawler contact forces (S2b) -------------------------------------------------
+
+
+class _SphereReporter(ch.ReportContactCallback):
+    """Contacts of one body, assigned to the nearest sphere by the contact point's x, y."""
+
+    def __init__(self, body_name: str, centres_xy: NDArray[np.float64]) -> None:
+        super().__init__()
+        self._name = body_name
+        self._xy = centres_xy
+        n = centres_xy.shape[0]
+        self.force = np.zeros((n, 3))
+        self.count = np.zeros(n, dtype=np.int64)
+        self.max_xy_miss = 0.0
+
+    def OnReportContact(  # noqa: N802 - Chrono callback name
+        self,
+        pA: Any,  # noqa: N803
+        pB: Any,  # noqa: N803
+        plane_coord: Any,
+        distance: float,
+        eff_radius: float,
+        react_forces: Any,
+        react_torques: Any,
+        contactobjA: Any,  # noqa: N803
+        contactobjB: Any,  # noqa: N803
+        constraint_offset: int = 0,
+    ) -> bool:
+        name_a = contactobjA.GetPhysicsItem().GetName()
+        name_b = contactobjB.GetPhysicsItem().GetName()
+        if self._name not in (name_a, name_b):
+            return True
+        x, y, z = plane_coord.GetAxisX(), plane_coord.GetAxisY(), plane_coord.GetAxisZ()
+        fx, fy, fz = react_forces.x, react_forces.y, react_forces.z
+        f_b = np.array(
+            [
+                x.x * fx + y.x * fy + z.x * fz,
+                x.y * fx + y.y * fy + z.y * fz,
+                x.z * fx + y.z * fy + z.z * fz,
+            ]
+        )
+        point = pB if name_b == self._name else pA
+        force = f_b if name_b == self._name else -f_b
+        d = np.hypot(self._xy[:, 0] - point.x, self._xy[:, 1] - point.y)
+        k = int(np.argmin(d))
+        self.max_xy_miss = max(self.max_xy_miss, float(d[k]))
+        self.force[k] += force
+        self.count[k] += 1
+        return True
+
+
+@dataclass(frozen=True)
+class SphereContactReport:
+    """Per-sphere contact force (world, on the body) and contact count of one body."""
+
+    force_world_N: NDArray[np.float64]
+    """(n, 3)."""
+    count: NDArray[np.int64]
+    max_xy_miss_m: float
+    """Largest horizontal distance between a contact point and its assigned sphere centre."""
+
+
+def report_sphere_contacts(
+    system: ch.ChSystem, body: ch.ChBody, centres_local_m: Sequence[Sequence[float]]
+) -> SphereContactReport:
+    """Contact force per collision sphere of ``body`` (``centres_local_m`` in the body's COG
+    frame, e.g. the crawler spheres of the superstructure). Contacts within the collision
+    envelope but without overlap are counted with zero force."""
+    centres = np.array(
+        [
+            [v.x, v.y, v.z]
+            for v in (
+                body.TransformPointLocalToParent(ch.ChVector3d(*map(float, c)))
+                for c in centres_local_m
+            )
+        ]
+    )
+    reporter = _SphereReporter(str(body.GetName()), centres[:, :2])
+    system.GetContactContainer().ReportAllContacts(reporter)
+    return SphereContactReport(reporter.force.copy(), reporter.count.copy(), reporter.max_xy_miss)

@@ -202,6 +202,160 @@ def run_free_vibration(
     )
 
 
+CommandFn = Callable[[float], "Sequence[float] | NDArray[np.float64] | None"]
+"""``command(t_n)`` -> leg speeds held from now on (None = keep the held command)."""
+
+COMMANDED_FIELDS = (
+    "t",
+    "origin",
+    "quat",
+    "omega",
+    "motor_pos",
+    "motor_vel",
+    "motor_force",
+    "s_ref",
+    "u_applied",
+    "u_cmd",
+    "pad_normal",
+    "pad_in_contact",
+    "crawler_force",
+    "motor_violation",
+    "n_contacts",
+)
+
+
+@dataclass
+class CommandedRun:
+    """Output of :func:`run_commanded` (sampled series + per-step contact transitions)."""
+
+    series: dict[str, NDArray[Any]]
+    events: list[BushingEvent]
+    raw_contact_transitions: list[tuple[float, int, int]]
+    """Every step at which ``N_raw > 0`` of a pad changed: ``(t, leg, 1 on / 0 off)``."""
+    first_positive_N_t_s: NDArray[np.float64]
+    """Per leg, first step time with ``N_raw > 0`` (NaN if never)."""
+    steps: int
+    wall_s: float
+    t_start_s: float
+    t_end_s: float
+    max_motor_speed_m_s: NDArray[np.float64]
+    """Per leg max ``|GetMotorPosDt()|`` over every step (not only the samples)."""
+    max_motor_violation_m: float
+    """Max over every step of ``|motor position - acting target|`` (axial constraint)."""
+    motor_pos_min_m: NDArray[np.float64]
+    motor_pos_max_m: NDArray[np.float64]
+    """Per leg extreme motor positions over every step."""
+    max_force_dev_N: NDArray[np.float64] | None
+    """Per leg max ``|GetMotorForce() - force_ref_N|`` over every step (None: not tracked)."""
+
+
+def run_commanded(
+    model: Any,
+    duration_s: float,
+    command: CommandFn,
+    *,
+    sample_s: float = 1.0e-3,
+    on_sample: SampleHook | None = None,
+    force_ref_N: Sequence[float] | None = None,
+) -> CommandedRun:
+    """Step an actuator model (``L1Model(actuator=True)``) for ``duration_s``.
+
+    Before each step (time ``t_n``) ``command(t_n)`` may set a new held command; the actuator
+    hook after the step integrates it (so a command set at ``t_n`` moves the motor target
+    from step ``n + 2`` on, ``chrono/actuators`` timing). Every step the pad normal forces of
+    the ground-bushing hook (``normal_force_raw_N``), the motor speeds and the axial motor
+    constraint violation are checked; samples (state copies, R9) every ``sample_s``.
+    With ``force_ref_N`` the largest motor-force deviation from it is tracked every step
+    (one-step inertial spikes are invisible in the samples).
+    """
+    dt = model.dt_s
+    n_steps = round(duration_s / dt)
+    every = max(1, round(sample_s / dt))
+    rows: dict[str, list[Any]] = {k: [] for k in COMMANDED_FIELDS}
+    events: list[BushingEvent] = []
+    n_legs = len(model.motors)
+    positive = model.bushing.normal_force_raw_N > 0.0
+    first_pos = np.full(n_legs, np.nan)
+    transitions: list[tuple[float, int, int]] = []
+    vmax = np.zeros(n_legs)
+    pmin = np.full(n_legs, np.inf)
+    pmax = np.full(n_legs, -np.inf)
+    viol_max = 0.0
+    f_ref = None if force_ref_N is None else [float(f) for f in force_ref_N]
+    f_dev = np.zeros(n_legs)
+    motors = model.motors
+    t_start = float(model.system.GetChTime())
+    t0 = time.perf_counter()
+    for k in range(1, n_steps + 1):
+        u = command(float(model.system.GetChTime()))
+        if u is not None:
+            model.set_command(u)
+        result = model.step(capture=(k % every == 0))
+        events.extend(result.events)
+        t_now = float(model.system.GetChTime())
+        n_raw = model.bushing.normal_force_raw_N
+        pos_now = n_raw > 0.0
+        changed = np.flatnonzero(pos_now != positive)
+        for leg in changed:
+            transitions.append((t_now, int(leg), int(pos_now[leg])))
+            if pos_now[leg] and np.isnan(first_pos[leg]):
+                first_pos[leg] = t_now
+        positive = pos_now
+        acting = model.actuator.acting_s_ref_m
+        for i, m in enumerate(motors):
+            v = abs(m.GetMotorPosDt())
+            if v > vmax[i]:
+                vmax[i] = v
+            pos = m.GetMotorPos()
+            if pos < pmin[i]:
+                pmin[i] = pos
+            if pos > pmax[i]:
+                pmax[i] = pos
+            dev = abs(pos - acting[i])
+            if dev > viol_max:
+                viol_max = dev
+            if f_ref is not None:
+                fd = abs(m.GetMotorForce() - f_ref[i])
+                if fd > f_dev[i]:
+                    f_dev[i] = fd
+        probe = result.probe
+        if probe is None:
+            continue
+        if on_sample is not None:
+            on_sample(probe)
+        rows["t"].append(probe.t_s)
+        rows["origin"].append(probe.body_pos_m)
+        rows["quat"].append(probe.body_quat_wxyz)
+        rows["omega"].append(probe.body_omega_rad_s)
+        rows["motor_pos"].append(probe.motor_pos_m)
+        rows["motor_vel"].append(np.array([m.GetMotorPosDt() for m in motors]))
+        rows["motor_force"].append(probe.motor_force_N)
+        rows["s_ref"].append(acting)
+        rows["u_applied"].append(model.actuator.acting_u_m_s)
+        rows["u_cmd"].append(model.actuator.command_m_s)
+        rows["pad_normal"].append(probe.pad_normal_force_N)
+        rows["pad_in_contact"].append(probe.bushing_in_contact)
+        rows["crawler_force"].append(probe.crawler_contact_world_N)
+        rows["motor_violation"].append(float(np.abs(probe.leg_offset_in_body_m).max()))
+        rows["n_contacts"].append(probe.n_contacts)
+    wall = time.perf_counter() - t0
+    return CommandedRun(
+        series={k: np.asarray(v) for k, v in rows.items()},
+        events=events,
+        raw_contact_transitions=transitions,
+        first_positive_N_t_s=first_pos,
+        steps=n_steps,
+        wall_s=wall,
+        t_start_s=t_start,
+        t_end_s=float(model.system.GetChTime()),
+        max_motor_speed_m_s=vmax,
+        max_motor_violation_m=viol_max,
+        motor_pos_min_m=pmin,
+        motor_pos_max_m=pmax,
+        max_force_dev_N=None if f_ref is None else f_dev,
+    )
+
+
 def run_gravity_ramp(
     model: Any,
     gravity_full_m_s2: Sequence[float],

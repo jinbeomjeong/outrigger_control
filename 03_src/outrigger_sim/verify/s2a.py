@@ -17,8 +17,10 @@ read from ``V7_ball_centre_bushing_rev13 / V7_diagnostic / thresholds`` (``dynam
 5. case 4 or none of 1-4: yaw initial velocity (2 s), corrected zeta3: >= the c_t-doubled
    minimum -> ``c_t`` doubled, <= the missing maximum -> bushing damping missing.
 
-The 1st / 2nd damped frequencies are also checked against the rev. 13 values within +-0.3 %
-(bushing moved to the ball centre; near the old 1.786 / 2.986 Hz it was not moved).
+The 1st / 2nd frequencies are also checked against the rev. 13 values within +-0.3 %
+(bushing moved to the ball centre; near the old 1.786 / 2.986 Hz it was not moved). Every
+frequency check compares the identified natural frequency ``f_d / sqrt(1 - zeta_fit^2)`` with
+the reference ``f_damped_Hz``, which is ``|lambda| / 2 pi`` (:func:`v7_frequency_checks`).
 
 V12 (per leg, means over the last 3 s): total floor -> rod reaction (SMC contact + bushing)
 in world axes vs ``slope_V12 / <case> / L1``: vertical +-1 % W/4; horizontal x, y +-10 % or
@@ -175,19 +177,56 @@ class ModeResult:
     zeta_ref: float
 
 
-def v7_mode_checks(run: str, result: ModeResult) -> list[CheckResult]:
-    """Frequency +-3 %, corrected zeta +-30 % (general V7 row), fit quality, cross-check."""
-    i = result.mode
+def v7_frequency_checks(
+    run: str, mode: int, f_natural_Hz: float, f_ref_Hz: float
+) -> list[CheckResult]:
+    """Frequency checks of one mode: +-3 % (general V7 row), +-0.3 % for modes 1-2.
+
+    The reference ``V7_ball_centre_bushing_rev13 / f_damped_Hz`` is ``|lambda| / 2 pi`` of the
+    damped eigenvalue, which equals the undamped natural frequency of that mode, so it is
+    compared with the identified ``f_n = f_d / sqrt(1 - zeta_fit^2)``
+    (:attr:`DampedFit.f_undamped_Hz`), not with the damped frequency ``f_d``.
+
+    Args:
+        run: Case name for the item text.
+        mode: 1-based mode number.
+        f_natural_Hz: Identified natural frequency ``f_d / sqrt(1 - zeta_fit^2)``.
+        f_ref_Hz: Reference ``|lambda| / 2 pi``.
+    """
+    note = "f_n = f_d / sqrt(1 - zeta_fit^2) vs V7_ball_centre_bushing_rev13 / f_damped_Hz "
+    note += "(|lambda| / 2 pi)"
     out = [
         check_rel(
             "V7",
-            f"{run}: mode {i} damped frequency",
-            result.fit.f_damped_Hz,
-            result.f_ref_Hz,
+            f"{run}: mode {mode} natural frequency",
+            f_natural_Hz,
+            f_ref_Hz,
             V7_FREQ_REL_TOL,
             "Hz",
-            note="V7_ball_centre_bushing_rev13 / f_damped_Hz",
-        ),
+            note=note,
+        )
+    ]
+    if mode in V7_FORCE_POINT_MODES:
+        out.append(
+            check_rel(
+                "V7",
+                f"{run}: mode {mode} natural frequency, bushing at the ball centre (+-0.3 %)",
+                f_natural_Hz,
+                f_ref_Hz,
+                V7_FORCE_POINT_FREQ_REL_TOL,
+                "Hz",
+                note="plan rev. 10 option A; near the contact-point values the bushing "
+                "was not moved; " + note,
+            )
+        )
+    return out
+
+
+def v7_mode_checks(run: str, result: ModeResult) -> list[CheckResult]:
+    """Frequency (:func:`v7_frequency_checks`), corrected zeta +-30 %, fit quality, cross-check."""
+    i = result.mode
+    out = [
+        *v7_frequency_checks(run, i, result.fit.f_undamped_Hz, result.f_ref_Hz),
         check_rel(
             "V7",
             f"{run}: mode {i} zeta (identified - r omega dt/2)",
@@ -205,19 +244,6 @@ def v7_mode_checks(run: str, result: ModeResult) -> list[CheckResult]:
             "-",
         ),
     ]
-    if i in V7_FORCE_POINT_MODES:
-        out.append(
-            check_rel(
-                "V7",
-                f"{run}: mode {i} frequency, bushing at the ball centre (+-0.3 %)",
-                result.fit.f_damped_Hz,
-                result.f_ref_Hz,
-                V7_FORCE_POINT_FREQ_REL_TOL,
-                "Hz",
-                note="plan rev. 10 option A; near the contact-point values the bushing "
-                "was not moved",
-            )
-        )
     if result.zeta_log_decrement is not None:
         out.append(
             check_rel(

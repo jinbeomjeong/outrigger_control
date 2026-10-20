@@ -1,6 +1,16 @@
-# Chrono 모델 단계별 구축 계획 (2026-10-19, 개정 11: 2026-10-20)
+# Chrono 모델 단계별 구축 계획 (2026-10-19, 개정 12: 2026-10-21)
 
 작성: cad-expert. **계획 문서다.** S0 공통 기반 일부(파라미터 로더, 좌표·신호 타입, SimEngine 프로토콜, Chrono 시스템 팩토리, 기준값 키 상수와 단위·엔진 규약 시험; 3.1절 "있음")만 만들어져 있고 물리 모델(바디·접촉·구동기)·실행기·시나리오 코드는 아직 없다.
+
+개정 12(2026-10-21, dynamics-expert 편집): **S2b 최종 판정 통과**와 cad 결정 필요 사항 ①~⑤ 판단(근거 `00_docs/01_dynamics/dynamics_model.md` 개정 15, 5.6절; 독립 확인 `04_scripts/01_dynamics/run_s2b_crawler_check.py` → `06_analysis/00_dynamics/s2b_crawler_check.json`).
+- ① 모터 함수 `ChFunctionRamp` **승인**. 조건: 구동기 훅을 매 스텝 부른다(램프는 훅이 멈추면 마지막 기울기로 계속 움직임).
+- ② V11 완전 신장 기준 = stroke/$v_{max}$ + 램프 = 30.1 s ±0.05 s(dyn 결정, 사용자 통보).
+- ③ 끝 쿠션 = 명령 램프 가정은 소프트 리밋 조건부 수용.
+- ④ 평지 S3 V4는 R8 그대로(미끄럼·접선 예하중 기록만). 경사 바닥 L1 들어 올림 전에는 크롤러 접선 모델이 필요하다(사용자 결정 Q12).
+- ⑤ 크롤러 정착 pitch 차 = P-δ 전부(독립 재현 6×10⁻⁷°). roll +0.31 % = 기울어진 자세의 관성 축 차(Chrono가 맞음).
+- **S3 V4 영향(cad 위임)**: 램프 때문에 접지·크롤러 이탈 시각이 정확히 +0.050 s 밀린다. `dynamics_model.md` V4 행에서 시각 원점을 "모터 출발 명령 + 램프/2"로 바꿨다. 정지는 계단 대신 $t_b=e_{op}/v_{max}$에 제동 시작 → $t_b$ + 0.1 s에 $e_{op}$에서 정지. 이 계획의 S3 lift 절차·V4 행·전환 창은 아직 계단 정지 문구다(cad가 갱신).
+- 램프 0.1 s를 YAML `actuator.command_ramp_s`로 옮기기를 권고(export_params 위임).
+- 고친 곳: S2b(만드는 것의 "구현 변경" 표시, V11 행, 체크리스트).
 
 개정 11(2026-10-20, dynamics-expert 편집): **S2a 최종 재판정(안 A) 통과**와 Δt 2×10⁻⁴ s 조건 ① 판정(근거 `00_docs/01_dynamics/dynamics_model.md` 개정 14, 5.5절).
 - **S2a 통과(최종, 안 A)**: V7 1·2·3차 1.79818 / 3.00439 / 5.81472 Hz(rev13 기준 −0.007 / −0.010 / −0.075 %; 3차 차는 기준 `f_damped_Hz` = $\lvert\lambda\rvert/2\pi$와 맞춤 $f_d$의 정의 차 $\zeta^2/2$), ζ 보정 0.0078316 / 0.0139917 / 0.0372015 → 진단 ① 정상, $c_t/2$ 재확인, 부싱 이동 확인(개정 12 Chrono 대비 +0.70 / +0.63 %). V12 Chrono − 기준 = P-δ만(rev13 기대 차와 ≤ 0.63 N), 독립 비선형(볼 중심)과 ≤ 0.66 N. hold 해제 74.1~75.8 ms, hold 중 최대 접선력 ≤ 3.2 N. V13 통과.
@@ -269,7 +279,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
 
 - **목표**: 다리를 모터로 움직이고, 크롤러 접촉을 넣고, 접지할 때 부싱을 만들고 부상할 때 없애는 이벤트 로직(R15)을 확인한다.
 - **만드는 것**:
-  - `chrono/actuators.L1SpeedActuator`(개정 8): **`ChLinkMotorLinearPosition` + `ChFunctionConst(s_ref)`, 훅 3단계에서 $s_{ref}\leftarrow\mathrm{clip}(s_{ref}+\mathrm{sat}(u)\Delta t,0,0.68)$**(1스텝 지연 규약, `dynamics_model.md` 4.6·5.2절 ④), 가이드 PRISMATIC, $|u|\le v_{max}$, 스트로크 끝 차단, **모터 계단 정지**. `ChLinkMotorLinearSpeed`는 내부 적분 상태가 R16 스냅숏에 담기지 않아 쓰지 않는다. 동등성: 단일 다리 시험에서 속도 ±22.67 mm/s 같음, 위치 1스텝 위상($u\Delta t$ = 2.3×10⁻⁶ m), 힘 차 $k\,u\Delta t$ ≈ 48 N. $s_{ref}$는 스냅숏에 넣고 기록에는 작용 시각 $t_n+\Delta t$로 남긴다. `ChFunctionSetpoint`는 검증 전이라 쓰지 않는다
+  - `chrono/actuators.L1SpeedActuator`(개정 8): **`ChLinkMotorLinearPosition` + `ChFunctionConst(s_ref)`, 훅 3단계에서 $s_{ref}\leftarrow\mathrm{clip}(s_{ref}+\mathrm{sat}(u)\Delta t,0,0.68)$**(1스텝 지연 규약, `dynamics_model.md` 4.6·5.2절 ④), 가이드 PRISMATIC, $|u|\le v_{max}$, 스트로크 끝 차단, ~~모터 계단 정지~~ → **명령 가속 제한 램프**(사용자 결정 2026-10-20, CLAUDE.md '구동기 명령 가속 제한'): 적용 속도의 변화율을 $a=v_{max}/0.1$ s = 0.2267 m/s²로 제한한다(출발·정지 모두 램프, 0.1 s는 가정). 스트로크 끝은 같은 가속도로 감속해 정확히 멈춘다(이산 제동 상한 $\sqrt{(a\Delta t/2)^2+2ad}-a\Delta t/2$, 끝 쿠션 = 명령 램프라는 구현 가정). 그래서 0 → 0.68 m(정지에서 정지)는 $0.68/v_{max}$ + 0.1 s = 30.1 s다. **구현 변경(S2b 이벤트 시험에서 발견, dyn 승인 2026-10-21, `dynamics_model.md` 5.6절 ①; 조건: 구동기 훅을 매 스텝 부름)**: 모터 함수를 `ChFunctionConst` 대신 **`ChFunctionRamp` $f(t)=s(t_n)+u_n(t-t_n)$**(훅이 $t_n$의 값은 바꾸지 않고 기울기만 바꿈)로 둔다. `ChFunctionConst` 값을 훅에서 바꾸면, 부싱 생성·소멸 직후 스텝(시스템 전체 Update로 시작)에서 목표가 한 스텝 앞서 뛰었다가 다음 스텝에 멈춘다. 그 결과 로드 속도 +$v_{max}$/−$v_{max}$ 1스텝씩, 모터 힘 −25/+47 kN, 패드 감쇠력 약 530 N > $N_{th}$가 생겨 부상 직후 부싱이 다시 생겼다(chatter). 램프 함수는 두 Update가 같은 목표를 본다(기울기 차 $a\Delta t$, 위치 ≤ $a\Delta t^2$ = 2.3×10⁻⁹ m). `ChLinkMotorLinearSpeed`는 내부 적분 상태가 R16 스냅숏에 담기지 않아 쓰지 않는다. 동등성: 단일 다리 시험에서 속도 ±22.67 mm/s 같음, 위치 1스텝 위상($u\Delta t$ = 2.3×10⁻⁶ m), 힘 차 $k\,u\Delta t$ ≈ 48 N. $s_{ref}$는 스냅숏에 넣고 기록에는 작용 시각 $t_n+\Delta t$로 남긴다. `ChFunctionSetpoint`는 검증 전이라 쓰지 않는다
   - 크롤러 구 배열(R13, D안): 구 24개 = 롤러 위치 12개(구 바닥 = 바닥) + 틈 있는 끝 슈 12개(구 바닥 = 바닥 + `end_shoe_gap_m`, 단방향 — 틈이 닫힌 뒤에만 접촉), 모두 상부체 바디·같은 재질
   - 접지 이벤트 부싱
   - `scenarios/stroke`(상부체 고정, 다리 공중)
@@ -285,7 +295,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
 |---|---|---|---|
 | V0 | 모터 +속도 1 s → 패드 −z로 $v$·1 s, 모터 반력 부호 | 부호 일치 | — |
 | V0(크롤러, 개정 5 추가) | 구 개수·위치·반지름, 구당 $k_n$·$g_n$, $k_t=g_t=\mu=0$, 크롤러 패치 재질 값 같음, 로드–상부체·로드–크롤러 쌍 꺼짐 | 상대차 ≤ 1×10⁻⁹, 설정 일치. SMC 재질 값은 float32(YAML)과 정확히 같음(사용자 결정 2026-10-20) | YAML `contact.crawler.*` |
-| V11 | **상부체 고정, 다리 공중**에서 큰 속도 명령과 끝을 넘는 명령 | 속도 ≤ $v_{max}(1+10^{-3})$, 위치 −1×10⁻⁴ ~ 0.6801 m, 0 → 0.68 m 시간 ±0.05 s | YAML `actuator.stroke_m`, `actuator.max_speed_m_s`, `actuator.full_stroke_time_s` |
+| V11 | **상부체 고정, 다리 공중**에서 큰 속도 명령과 끝을 넘는 명령 | 속도 ≤ $v_{max}(1+10^{-3})$, 위치 −1×10⁻⁴ ~ 0.6801 m, 0 → 0.68 m 정지-정지 시간 = stroke/$v_{max}$ + 램프(30.1 s) ±0.05 s(개정 12, `dynamics_model.md` 5.6절 ②) | YAML `actuator.stroke_m`, `actuator.max_speed_m_s`, `actuator.full_stroke_time_s` |
 | 이벤트 | 한 다리를 내려 접지 → 들어 올려 부상 → 재접지 | 생성·소멸 횟수가 사건 수와 같음, chatter 0 | R15 |
 | 크롤러 정착 | 다리 0 m, 크롤러 정착 자세(해석해)로 초기화. 초기화하지 못하면 ≥ 65.5 s(`simulation.settle_on_crawler_min_s`) | 정착 자세 $u_z$·pitch를 기준해(D: −3.191 mm, +0.1695°)와 비교(참고, 판정은 S3 V4). 활성 구 14개(롤러 6개/측 전부 + 앞 끝 슈 1개씩; 뒤 끝 슈 3개/끝과 나머지 앞 끝 슈 2개/끝은 0. 맨 뒤 롤러열은 9.59 kN으로 하중이 가장 작다, `06_analysis/00_dynamics/crawler_layout_check.json` D 배치 `settled_on_crawler (legs at 0)` 의 `rear_row_force_N`). 크롤러 위 모드(pitch / roll / heave, D: 1.327 / 3.046 / 8.730 Hz) 진동수 기록 | `reference.json / lift_V4_compliant_crawler / layouts`, `reference.json / lift_V4_compliant_crawler / crawler_on_floor_modes (layout D, legs at 0)` |
 | V13 | 모터 구속 위반 ≤ 1×10⁻⁶ m, 접촉점 수 | — | — |
@@ -294,15 +304,16 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
 - **위험**:
   - ① 크롤러 YAML 키(`contact.crawler.*` D안, `simulation.settle_on_crawler_min_s`)는 반영됐다(2026-10-20). 값을 코드에 적지 않고 YAML에서 읽는다.
   - ② L1 모터 반력과 실린더 힘의 관계(로드 관성 포함)를 정적에서 "접촉력 − 로드 무게"와 비교한다.
-  - ③ (개정 8) 강체 모터의 속도 계단은 1스텝 관성 반력 $m_{rod}\Delta v/\Delta t$를 만든다(107 kg, $\Delta v=v_{max}$: Δt 1×10⁻⁴ s 24 kN, 1×10⁻⁵ s 242 kN — 218 kN 포화 문턱을 넘을 수 있음). V11b 스텝별 포화·V17 압력을 이 스파이크로 판정하지 않는다. 권고: $u$ 가속 제한(밸브 램프, 예 0 → $v_{max}$ 0.1 s, **가정 — 사용자 확인 필요**) 또는 판정 힘에서 $m_{rod}\ddot s$ 제외. 속도 모터에도 같은 크기라 구동기 방식과는 무관
+  - ③ (개정 8) 강체 모터의 속도 계단은 1스텝 관성 반력 $m_{rod}\Delta v/\Delta t$를 만든다(107 kg, $\Delta v=v_{max}$: Δt 1×10⁻⁴ s 24 kN, 1×10⁻⁵ s 242 kN — 218 kN 포화 문턱을 넘을 수 있음). V11b 스텝별 포화·V17 압력을 이 스파이크로 판정하지 않는다. ~~권고: $u$ 가속 제한(밸브 램프, 예 0 → $v_{max}$ 0.1 s, 가정 — 사용자 확인 필요) 또는 판정 힘에서 $m_{rod}\ddot s$ 제외.~~ **결정됨(사용자 2026-10-20): 가속 제한 램프 0.1 s.** S2b 확인: 공중 다리에서 +$v_{max}$ 명령의 최대 $\lvert F_{motor}+m_{rod}g\rvert$ = 24.2 N(Δt 1×10⁻⁴·1×10⁻⁵ s 모두, $m_{rod}a$와 같음). 램프를 끄면 24.2 kN / 242.0 kN. V11 62 s 전 구간(스트로크 끝 제동 포함) 최대 24.21 N. 속도 모터에도 같은 크기라 구동기 방식과는 무관
 - **담당·작업량**: cad 중, dyn 판정 소.
 - **체크리스트**
-  - [ ] 모터 축·부호(R4)
-  - [ ] 구동기 = 위치 모터 + 훅 $s_{ref}$ 적분(개정 8), 스냅숏에 $s_{ref}$ 왕복 확인
-  - [ ] V11(공중 다리; 속도가 실제로 $v_{max}$에 닿는지도 확인 — `ChFunctionConst`는 속도를 구속 안정화 항으로만 주므로)
-  - [ ] 크롤러 구 배열·패치·재질(R13), 패밀리(R14)
-  - [ ] 접지·부상 이벤트(R15; $t_{lift}$ 1 ms, $N_{th}$ 100 N을 이벤트 시험으로 조정)
-  - [ ] 크롤러 위 정착 상태 저장(3단계, 해석해 초기화. 안 되면 ≥ 65.5 s)
+  - [x] 모터 축·부호(R4) (2026-10-20, cad: 공중 다리 +$v_{max}$ 1 s → 패드 구 중심 Δz = −모터 이동(차 0 m), 매달린 로드 반력 −$m_{rod}g$ = −1047.19 N(+ = 패드를 누름, S1과 같은 부호))
+  - [x] 구동기 = 위치 모터 + 훅 $s_{ref}$ 적분(개정 8) + 명령 램프 0.1 s, 스냅숏에 $s_{ref}$ 왕복 확인 (2026-10-20, cad: `chrono/actuators.L1SpeedActuator`, `L1Model(actuator=True)`. 모터 함수는 `ChFunctionRamp`(위 "구현 변경"). 스냅숏 부분 `l1_actuator.*`(기준·기울기·Chrono가 읽은 값·다음 스텝 전체 Update 여부)로 이동 중·부싱 생성 직후 저장 → 새 빌드 복원 → 0.05 s 진행 위치 차 ≤ 1×10⁻¹² m(`05_tests/chrono/test_actuators.py`). 축 방향 구속 위반 ≤ 2.3×10⁻¹⁴ m(이벤트), 3.9×10⁻¹⁶ m(V11))
+  - [x] V11(공중 다리; 속도가 실제로 $v_{max}$에 닿는지도 확인) (2026-10-20, cad 사전 판정 통과: ±1 m/s·±$v_{max}$·±2$v_{max}$·끝을 넘는 명령 62 s, 스텝마다 최대 속도 0.022666666704 m/s(= $v_{max}$, 1×10⁻³ 안에서 도달), 위치 0 ~ 0.68 m(초과 2×10⁻¹⁶ m), 0 ↔ 0.68 m 정지-정지 30.0991 s(기대 30.1 s ±0.05 안). **`actuator.full_stroke_time_s` 30.0 s 대비 +0.099 s**는 램프 결정의 결과라 기대값을 30.1 s로 판정했다 — **dyn 확인(2026-10-21): 30.1 s 기준 확정**, 차 −0.87 ms는 측정 정의(끝 1 μm 앞 통과 + 10 ms 보간))
+  - [x] 크롤러 구 배열·패치·재질(R13), 패밀리(R14) (2026-10-20, cad: S1 `v0_checks` 89항목 × 3단계 + 구 바닥 높이 − 바닥 = YAML `end_shoe_gap_m`(롤러 0) 차 ≤ 1×10⁻⁹ m 통과. 크롤러 구 배열 읽기는 엔진 독립 `scenarios/crawler_settle.py`로 옮기고 `chrono/contact`가 다시 내보낸다)
+  - [x] 접지·부상 이벤트(R15; $t_{lift}$ 1 ms, $N_{th}$ 100 N을 이벤트 시험으로 조정) (2026-10-20, cad 사전 판정: **값 유지**. 크롤러 위 상단, FL 하강 → 부상 → 재접지, $v_{max}$와 1 mm/s 두 경우 × Δt 1×10⁻⁴·1×10⁻⁵ s: 네 실행 모두 생성·소멸·생성 3건, chatter 0. 두 Δt 사건 시각 차 최대 0.30 ms($v_{max}$) / 0.67 ms(1 mm/s 재접지) ≤ 1 ms. 1 mm/s·1×10⁻⁴ s에서 부상 순간 $N$이 한 스텝 0 위로 튀었으나(Bullet 양자 잡음) $t_{lift}$가 흡수. 소멸 = 마지막 $N\le0$ 시작 + $(n_{lift}-1)\Delta t$. 크롤러에 접선 구속이 없어(R8) 한 다리만 짚으면 FL 패드가 미끄러진다($v_{max}$: 항복 4,871 스텝, 누적 1.6 mm) — 기록. `run_S2b.py event_*`)
+  - [x] 크롤러 위 정착 상태 저장(3단계, 해석해 초기화. 안 되면 ≥ 65.5 s) (2026-10-20, cad: 해석 정착 자세 = 강체 + 24 단방향 구의 정확한 기하(P-δ 포함) 뉴턴 해, `scenarios/crawler_settle.crawler_static_pose`. 상단 $u_z$ −3.1849 mm, pitch +0.17366°(선형·P-δ 없는 기준해 −3.1907 mm / +0.16947°와 차는 P-δ, 같은 함수의 `linear=True`가 기준해를 0.48 N 안에서 재현). Chrono 10 s 정착 + 5 s 정지 창에서 해석 자세와 $u_z$ ≤ 1.2×10⁻⁴ mm·각 ≤ 2×10⁻⁶° 차, 활성 구 14개, 드리프트 ≤ 2.0×10⁻⁵°, 크롤러 수직력 변동 ≤ 72 N(≤ 0.1 % W/4 = 95.6 N), 패드 접촉 0. 크롤러 위 모드(Chrono 맞춤) 상단 1.3272 / 3.0554 / 8.7476 Hz, ζ 0.00843 / 0.0191 / 0.0538(기준 1.327 / 3.046 / 8.73 Hz; roll +0.31 %는 yaw 관성 응축 차로 보임). 스냅숏 `07_results/states/S2b_crawler_{top,middle,bottom}`, 왕복 1 s 위치 차 ≤ 8.9×10⁻¹⁶ m. 요약 `06_analysis/01_chrono/verify_S2b_L1.json`·`.png`, 실행 `04_scripts/02_chrono/run_S2b.py all` 4병렬 약 3분. dyn 최종 판정 대기)
+  - [x] **dyn 최종 판정: 통과**(2026-10-21, `dynamics_model.md` 개정 15, 5.6절). V0 모터 부호·매달린 로드 −1047.1900 N(= −$m_{rod}g$), 크롤러 89항목 × 3. 램프 관성 반력 24.2043 N = $m_{rod}a$(램프 0이면 $m_{rod}v_{max}/\Delta t$). V11 최대 속도 = $v_{max}$(상대 2×10⁻¹⁰), 정지-정지 30.0991 s(기준 30.1 s). V13 축 위반 ≤ 1.5×10⁻¹¹ m, 크롤러 정지 창 드리프트 ≤ 2.0×10⁻⁵°·수직력 변동 ≤ 72 N. R16 왕복 ≤ 8.9×10⁻¹⁶ m. R15 4실행 사건 3건·chatter 0, 두 Δt 차 ≤ 0.67 ms, 소멸 지연 = $(n_{lift}-1)\Delta t$ → **$t_{lift}$ 1 ms·$N_{th}$ 100 N 유지**. 크롤러 정착: 독립 정확 정역학(`run_s2b_crawler_check.py`)과 $u_z$ ≤ 1.2×10⁻⁴ mm·각 ≤ 1.3×10⁻⁶°, 선형 기준과의 pitch 차 +2.47 / +1.92 / +1.37 %는 P-δ 전부(기하 강성 $\sum F_ih_i/k_\theta$ 예측과 같음). 크롤러 위 모드: 독립 6자유도(세계 축 관성)와 pitch·roll ≤ 0.02 %, heave ≤ 0.19 %. roll 기준 대비 +0.31 %는 기준이 몸체 축 관성을 쓴 탓(독립 몸체 축 변형이 3.046 Hz 재현)이고 Chrono가 맞다. 판단 ①~⑤는 머리말 개정 12
 
 ### S3 수치 감쇠 → 들어 올림 · 정착 → 다리 단독 신장, Δt 확정
 
@@ -340,7 +351,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
   - [ ] lift(크롤러 정착 상태, t = 0 모터 출발, 다리별 $e_{op}$ 계단 정지, 정지 기록), 다리별 접지 시각 ±0.05 s 판정(**동적 기준** D: 15.050 / 15.049 / 15.177 / 15.177 s; 준정적 15.051 / 15.049 / 15.148 / 15.148 s는 참고로 함께 기록)
   - [ ] V5, V6(FL+, FL−)
   - [ ] V9(매끄러운 시험으로 차수, V4는 차만)
-  - [ ] 병렬 실행기와 meta(`Params.sha256`·`Params.file_sha256`·reference sha256, dt, 솔버, pychrono 버전, 벽시계)
+  - [x] 병렬 실행기와 meta(`Params.sha256`·`Params.file_sha256`·reference sha256, dt, 솔버, pychrono 버전, 벽시계) — 2026-10-20 py: `outrigger_sim/batch.py` `run_cases`(사례마다 spawn 프로세스, 동시 수 상한 기본 4, `hostcpu` P코어 고정 + EcoQoS 해제, 실패 격리·재시도 없음, `case.json`·`case.log`·`batch.json`). 사례 meta는 작업이 `record.make_run_meta` 결과를 돌려주고 runner가 필수 키(`batch.REQUIRED_RUN_META_KEYS`)를 검사, 벽시계·배치를 더한다. 이름 `runner`는 3.1절대로 영차 유지 실행기(S6)에 남겼다. `run_verify.py --jobs N` 연결은 남음
   - [ ] **제어 ①**(py): 개루프 명령 재생으로 runner·Record 확인(3.5절) (2026-10-20 로드맵 동기화)
 
 ### S4 6개 모드 식별 · 에너지 수지 · β 감도
@@ -439,14 +450,20 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
   - ③ L1 스트로크와 실제 스트로크가 약 5.1 mm 다르다. 두 신호를 모두 낸다.
 - **담당·작업량**: cad 중, py 중, dyn 판정 소.
 - **체크리스트**
-  - [ ] `Measurements`·`Command` 타입 확정(py 검토)
-  - [ ] 압력·스트로크 가상 센서
+  - [x] `Measurements`·`Command` 타입 확정(py 검토) — 2026-10-20: 기존 필드 유지, `Measurements.stroke_corrected_m`(선택, 모터 − $F_{cyl}/k_{oil}(e)$, Record `meas.stroke_corrected`), `Command.stopped(t)`, `signals.DEFAULT_CONTROL_PERIOD_S` 0.02 추가
+  - [ ] 압력·스트로크 가상 센서 — 엔진 독립 부분 완료(2026-10-20 py, `sensors/hydraulic.py` `LegSensorModel`: 노이즈·분해능, 두 스트로크에 같은 노이즈, 축소 모델 가정값 `reduced_model_leg_sensor_config`), 진값 추출(cad)은 남음
   - [ ] 스텝별 힘 포화 + 양방향 스프링 단일 다리 V11b
-  - [ ] 350 bar 지표 기록
-  - [ ] py: IMU 오차 모델, Controller 프로토콜, 빈 제어기로 60 s 폐루프 연기 시험
-  - [ ] IMU 진값 장착점 기본값 (0.31, 0.88, 0.040) m(C1, 2026-10-20 결정)과 인자 변경 단위 시험
-  - [ ] py: 센서 등급 5종(이상·우수 영점 후·보통 영점 후·보통 + 반복성·보통 출하), 2차 필터(τ 0.5 s × 2)
+  - [ ] 350 bar 지표 기록 — 지표 함수 완료(2026-10-20 py, `sensors/hydraulic.locked_pressure_report`: 최대값·다리·시각, 첫 초과 시각·다리, 다리별 초과 샘플 수, 잠김 마스크 선택), 기록 경로 연결은 남음
+  - [ ] py: IMU 오차 모델, Controller 프로토콜, 빈 제어기로 60 s 폐루프 연기 시험 — 오차 모델(`sensors/imu.py`)·`control/protocol.Controller`·`control/hold.HoldController`·`sensors/suite.SensorSuite` 완료(2026-10-20), 엔진 없는 60 s 루프 단위 시험만 함. Chrono 60 s 연기 시험은 runner(S6) 뒤
+  - [ ] IMU 진값 장착점 기본값 (0.31, 0.88, 0.040) m(C1, 2026-10-20 결정)과 인자 변경 단위 시험 — 엔진 독립 강체 운동학(`sensors/imu.specific_force_at_point`, `angular_rate_in_body`, 기본 `IMU_MOUNT_C1_BODY_M`)과 단위 시험 완료(2026-10-20 py). `sensors/truth`(cad)가 이 함수를 쓰면 된다
+  - [x] py: 센서 등급 5종(이상·우수 영점 후·보통 영점 후·보통 + 반복성·보통 출하), 2차 필터(τ 0.5 s × 2) — 2026-10-20: `sensors/imu.IMU_GRADES`(축소 모델 `GRADES`와 같은 값, 자이로 오차 0), `sensors/attitude.CascadedLowPass`(축소 모델과 같은 이산화 $y_k=y_{k-1}+(T/\tau)(x_k-y_{k-1})$, 극 0.96), `AttitudeEstimator`
   - [ ] py: C2 제어기(대안 C8)와 물리 기반 결합 접지 판정 + 탐침
+  - 결정(사용자, 2026-10-20, py 센서·실행기):
+    - ① IMU 입력 = 제어 주기(20 ms) 시간 평균 진값(축소 모델과 같은 전제, 노이즈 σ = 밀도·√(1/2T)). 평균기 `sensors/averaging.ControlPeriodAverager`(스텝 끝 값 × 스텝 길이 가중) 완료, runner 연결은 cad
+    - ② 자세 필터 이산화는 오일러형 유지(극 0.96, 축소 모델 기대값과 맞추려고. 정확한 ZOH 대비 차단 부근 이득 차 약 2 %)
+    - ③ IMU 영점은 등급 잔차만 쓴다(교정 절차는 모델링하지 않음. `field_zero_offset`은 절차 검토용 도구로만 남김)
+    - ④ 병렬 실행기 이름 `batch.py` 유지, 사례별 `timeout_s` 추가(초과 시 프로세스 종료, `failed`, `runner.reason` = `timeout`)
+    - 350 bar 판정 마스크(잠김 샘플 한정 여부)는 S6에서 cad·dyn과 정한다(보류)
   - [ ] 제어기 검증 항목 1~8(L1), 9는 S7·S8
 
 ### S7 L2b-NSC

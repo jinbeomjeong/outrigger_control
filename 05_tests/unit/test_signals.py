@@ -250,3 +250,30 @@ def test_module_has_no_engine_dependency() -> None:
     source = Path(signals.__file__).read_text(encoding="utf-8")
     for forbidden in ("import pychrono", "from pychrono"):
         assert forbidden not in source
+
+
+# --- S6 additions: corrected stroke, stopped command, control period ---------------------
+
+
+def test_corrected_stroke_is_optional_frozen_and_checked() -> None:
+    assert Measurements(**_measurement_values()).stroke_corrected_m is None
+    measurements = Measurements(
+        **(_measurement_values() | {"stroke_corrected_m": [0.095, 0.095, 0.115, 0.115]})
+    )
+    assert measurements.stroke_corrected_m is not None
+    assert measurements.stroke_corrected_m.dtype == np.float64
+    assert not measurements.stroke_corrected_m.flags.writeable
+    for bad_value in ([0.1, 0.1, 0.1], [0.1, 0.1, 0.1, np.nan]):
+        with pytest.raises(InvalidSignalError, match="stroke_corrected_m"):
+            Measurements(**(_measurement_values() | {"stroke_corrected_m": bad_value}))
+
+
+def test_stopped_command_holds_every_leg() -> None:
+    command = Command.stopped(1.25)
+    assert command.t_s == 1.25
+    assert command.leg_speed_m_s.tolist() == [0.0] * LEG_COUNT
+    assert not command.leg_speed_m_s.flags.writeable
+
+
+def test_default_control_period_is_20_ms() -> None:
+    assert signals.DEFAULT_CONTROL_PERIOD_S == 0.02

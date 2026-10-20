@@ -1,0 +1,223 @@
+{
+ "generator": "04_scripts/03_control/export_c2_regression_traces.py",
+ "gainset": "it3_proposal",
+ "gains_and_options": {
+  "Kp_att_1_s": 0.4,
+  "Ki_att_1_s2": 0.02,
+  "Kz_1_s": 0.5,
+  "Ktw_1_s": 1.0,
+  "guard_gain_1_s": 1.0,
+  "guard_priority": true,
+  "delay_steps": 1,
+  "ramp_s": 0.1,
+  "clr_lpf_tau_s": 0.2
+ },
+ "reduced_model_assumptions": {
+  "Fs_band_N": 12000.0,
+  "rod_weight_N": 1047.2,
+  "P_touch_N": 14178.824999999999,
+  "clearance_target_m": 0.05,
+  "done_att_deg": 0.03,
+  "relevel_att_deg": 0.07,
+  "done_hold_s": 1.0,
+  "twist_deadband_N": 2000.0,
+  "probe_speed_frac": 0.25,
+  "probe_depth_m": 0.002,
+  "probe_hold_s": 0.4,
+  "imu_lpf_tau_s": 0.5,
+  "imu_lpf_order": 2,
+  "done_filter_tau_s": 1.0
+ },
+ "phase_codes": {
+  "TOUCH": 0,
+  "LEVEL": 1,
+  "DONE": 2,
+  "PROBE": 3,
+  "READY": 4,
+  "FAULT": 5
+ },
+ "context": {
+  "A": [
+   [
+    1.0,
+    1.3238,
+    -2.2938
+   ],
+   [
+    1.0,
+    -1.3238,
+    -2.2938
+   ],
+   [
+    1.0,
+    1.1679,
+    2.556
+   ],
+   [
+    1.0,
+    -1.2429,
+    2.556
+   ]
+  ],
+  "n": [
+   0.476072024082169,
+   -0.476072024082169,
+   -0.5228340347436333,
+   0.5228340347436332
+  ],
+  "k_nom_N_m": 21030739.15,
+  "S_nom_diag_N_m": [
+   4766502.875886451,
+   4766502.875886448,
+   5748866.6991135515,
+   5748866.6991135515
+  ],
+  "F_min_N": 9452.54751010675,
+  "v_max_m_s": 0.0226666667,
+  "stroke_max_m": 0.68,
+  "pad_xy_m": [
+   [
+    2.2938,
+    1.3238
+   ],
+   [
+    2.2938,
+    -1.3238
+   ],
+   [
+    -2.556,
+    1.1679
+   ],
+   [
+    -2.556,
+    -1.2429
+   ]
+  ],
+  "pad_z_retracted_m": [
+   -0.6998,
+   -0.6998,
+   -0.71,
+   -0.71
+  ],
+  "crawler_corners_xy_m": [
+   [
+    -1.84,
+    -1.366
+   ],
+   [
+    -1.84,
+    1.366
+   ],
+   [
+    1.844,
+    -1.366
+   ],
+   [
+    1.844,
+    1.366
+   ]
+  ],
+  "crawler_bottom_z_m": -1.0509,
+  "piston_area_m2": 0.010386890710931254
+ },
+ "cases": [
+  {
+   "t_touch_s": 15.3,
+   "t_done_s": 22.26,
+   "t_ready_s": 22.28,
+   "probe_rounds": 0,
+   "events": [],
+   "fails": [],
+   "name": "top_flat",
+   "kwargs": {
+    "level": "top"
+   },
+   "guard_active_s": 0.18
+  },
+  {
+   "t_touch_s": 15.32,
+   "t_done_s": 34.36,
+   "t_ready_s": 34.38,
+   "probe_rounds": 0,
+   "events": [],
+   "fails": [],
+   "name": "top_diag3",
+   "kwargs": {
+    "level": "top",
+    "roll": 2.1213,
+    "pitch": 2.1213
+   },
+   "guard_active_s": 0.48
+  },
+  {
+   "t_touch_s": 15.48,
+   "t_done_s": 35.14,
+   "t_ready_s": 35.16,
+   "probe_rounds": 0,
+   "events": [],
+   "fails": [],
+   "name": "bottom_pitch+3.7",
+   "kwargs": {
+    "level": "bottom",
+    "pitch": 3.7
+   },
+   "guard_active_s": 0.1
+  },
+  {
+   "t_touch_s": 15.32,
+   "t_done_s": 39.74,
+   "t_ready_s": 39.76,
+   "probe_rounds": 0,
+   "events": [],
+   "fails": [],
+   "name": "middle_roll+5.7",
+   "kwargs": {
+    "level": "middle",
+    "roll": 5.7
+   },
+   "guard_active_s": 0.8
+  },
+  {
+   "t_touch_s": 15.32,
+   "t_done_s": 34.28,
+   "t_ready_s": 34.3,
+   "probe_rounds": 0,
+   "events": [],
+   "fails": [],
+   "name": "top_softFL_diag3",
+   "kwargs": {
+    "level": "top",
+    "roll": 2.1213,
+    "pitch": 2.1213,
+    "soft_FL": true
+   },
+   "guard_active_s": 0.44
+  },
+  {
+   "t_touch_s": 15.34,
+   "t_done_s": 22.28,
+   "t_ready_s": 28.38,
+   "probe_rounds": 3,
+   "events": [
+    [
+     31.48,
+     "relevel_lowload"
+    ],
+    [
+     44.52,
+     "probe_reground_FR"
+    ]
+   ],
+   "fails": [],
+   "name": "top_settle_Fs12_combined",
+   "kwargs": {
+    "level": "top",
+    "Fs": 12000.0,
+    "contact": "combined",
+    "settle": true
+   },
+   "guard_active_s": 0.74
+  }
+ ],
+ "row_count": 14213
+}

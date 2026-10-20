@@ -23,6 +23,7 @@ Record contents (all SI, per-leg arrays in LEG_ORDER FL, FR, RL, RR):
   ``s_motor`` (user decision 2026-10-20 (1)); present when the engine provides it;
 * ``meas.*`` - the sensor outputs (:class:`Measurements`) on the same time axis as the
   truth (user decision 2026-10-20 (2)); the sensor settings and noise seed go to the meta;
+  ``meas.stroke_corrected`` is added only when the engine provides the corrected stroke;
 * ``bushing_events.t`` / ``.leg`` / ``.kind`` - the event table of plan 3.2.
 
 Optional groups (``stroke_true``, ``meas.*``, ``energy.*``) are all-or-nothing per Record:
@@ -107,7 +108,20 @@ MEASUREMENT_FIELDS: tuple[RecordField, ...] = tuple(
         ("meas.stroke", (LEG_COUNT,), "m", "Measurements.stroke_m"),
     )
 )
-SUPPLEMENTARY_FIELDS: tuple[RecordField, ...] = (STROKE_TRUE_FIELD, *MEASUREMENT_FIELDS)
+MEASURED_STROKE_CORRECTED_FIELD = RecordField(
+    "meas.stroke_corrected",
+    (LEG_COUNT,),
+    "m",
+    "Measurements.stroke_corrected_m",
+    is_optional=True,
+)
+"""Recorded when the engine provides the corrected stroke; not part of the
+all-or-nothing ``meas.*`` group because older engines do not produce it."""
+SUPPLEMENTARY_FIELDS: tuple[RecordField, ...] = (
+    STROKE_TRUE_FIELD,
+    *MEASUREMENT_FIELDS,
+    MEASURED_STROKE_CORRECTED_FIELD,
+)
 """Record arrays added by this module on top of :data:`signals.RECORD_FIELDS`."""
 
 ALL_FIELDS_BY_NAME: Mapping[str, RecordField] = MappingProxyType(
@@ -240,6 +254,10 @@ def _check_optional_groups(names: set[str]) -> None:
     if present and present != measurement_names:
         missing = sorted(measurement_names - present)
         raise RecordError(f"measurement fields are all-or-nothing; missing {missing}")
+    if MEASURED_STROKE_CORRECTED_FIELD.name in names and not present:
+        raise RecordError(
+            f"{MEASURED_STROKE_CORRECTED_FIELD.name} needs the other measurement fields"
+        )
 
 
 def _validate_sample_arrays(arrays: Mapping[str, NDArray[Any]]) -> int:
@@ -327,6 +345,8 @@ def _optional_columns(
         for field in MEASUREMENT_FIELDS:
             attribute = field.source.split(".")[1]
             columns[field.name] = getattr(measurements, attribute)
+        if measurements.stroke_corrected_m is not None:
+            columns[MEASURED_STROKE_CORRECTED_FIELD.name] = measurements.stroke_corrected_m
     if energy is not None:
         columns.update(_energy_columns(energy))
     return columns

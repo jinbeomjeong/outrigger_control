@@ -36,6 +36,10 @@ from outrigger_sim.params import LEG_ORDER
 
 LEG_COUNT = len(LEG_ORDER)
 
+# Control period (s): the controller runs and the sensors are sampled every 20 ms (CLAUDE.md
+# '미정 사항': control period 20 ms assumed). Shared by ``sensors`` and ``control``.
+DEFAULT_CONTROL_PERIOD_S = 0.02
+
 # Record names of the energy terms share this prefix (plan 3.2 'energy.*').
 ENERGY_FIELD_PREFIX = "energy."
 
@@ -117,6 +121,11 @@ class Command:
     def __post_init__(self) -> None:
         _freeze_fields(self, {"leg_speed_m_s": (LEG_COUNT,)})
 
+    @classmethod
+    def stopped(cls, t_s: float) -> Command:
+        """Zero speed on every leg (legs held by the lock valves), issued at ``t_s``."""
+        return cls(t_s=t_s, leg_speed_m_s=np.zeros(LEG_COUNT))
+
 
 @dataclass(frozen=True, eq=False)
 class Measurements:
@@ -130,6 +139,11 @@ class Measurements:
         head_pressure_Pa: Cylinder head-side pressure per leg (Pa), shape (4,). The sensor
             sits in the lock valve block and keeps reading the trapped pressure while locked.
         stroke_m: Measured leg extension per leg (m), shape (4,); 0 = fully retracted.
+            In L1 this is the motor position (plan 3.3).
+        stroke_corrected_m: Stroke corrected for the oil-column compression,
+            ``motor position - F_cyl / k_oil(e)`` (m), shape (4,), or ``None`` if the engine
+            does not provide it. L1 gives both strokes because they differ by about 5 mm
+            (plan S6 risk 3). Optional so that engines written before this field keep working.
     """
 
     t_s: float
@@ -137,6 +151,7 @@ class Measurements:
     angular_rate_rad_s: NDArray[np.float64]
     head_pressure_Pa: NDArray[np.float64]
     stroke_m: NDArray[np.float64]
+    stroke_corrected_m: NDArray[np.float64] | None = None
 
     def __post_init__(self) -> None:
         _freeze_fields(
@@ -148,6 +163,9 @@ class Measurements:
                 "stroke_m": (LEG_COUNT,),
             },
         )
+        if self.stroke_corrected_m is not None:
+            corrected = _frozen_array(self.stroke_corrected_m, (LEG_COUNT,), "stroke_corrected_m")
+            object.__setattr__(self, "stroke_corrected_m", corrected)
 
 
 @dataclass(frozen=True, eq=False)

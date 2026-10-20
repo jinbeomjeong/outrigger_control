@@ -596,6 +596,24 @@ def v12_vs_pdelta(results: dict) -> dict | None:
     return out
 
 
+def _v7_checks_with_natural_frequency(name: str, result: dict) -> list[dict]:
+    """Stored checks of a V7 case with the frequency rows rebuilt from the stored fit.
+
+    The frequency rule compares ``f_n = f_d / sqrt(1 - zeta_fit^2)`` with the reference
+    ``|lambda| / 2 pi`` (``verify.s2a.v7_frequency_checks``); results stored before that rule
+    compared ``f_d``, so the summary recomputes these rows instead of rerunning the case.
+    """
+    from outrigger_sim.verify.checks import summary_table
+    from outrigger_sim.verify.s2a import v7_frequency_checks
+
+    mode = next(m for m in result["modes"] if m["mode"] == result["judged_mode"])
+    frequency_rows = summary_table(
+        v7_frequency_checks(name, mode["mode"], mode["f_undamped_Hz"], mode["f_ref_Hz"])
+    )
+    other_rows = [c for c in result["checks"] if not (c["id"] == "V7" and "frequency" in c["item"])]
+    return frequency_rows + other_rows
+
+
 def summarize() -> None:
     import numpy as np
 
@@ -640,7 +658,8 @@ def summarize() -> None:
             diagnosis["yaw_used_for_verdict"] = d.needs_yaw
     table = []
     for name, r in results.items():
-        for c in r["checks"]:
+        checks = _v7_checks_with_natural_frequency(name, r) if name in V7_CASES else r["checks"]
+        for c in checks:
             table.append(
                 {
                     "case": name,
@@ -752,7 +771,8 @@ def summarize() -> None:
         ax.plot(t, env * 1e3, color="#d62728", lw=1, label="fit envelope")
         ax.plot(t, -env * 1e3, color="#d62728", lw=1)
         ax.set_title(
-            f"{name}: mode {m['mode']} f {m['f_damped_Hz']:.4f} Hz, "
+            f"{name}: mode {m['mode']} f_n {m['f_undamped_Hz']:.4f} Hz "
+            f"(ref {m['f_ref_Hz']:.4f}), "
             f"zeta {m['zeta_corrected']:.5f} (ref {m['zeta_ref']:.5f})",
             fontsize=8,
         )

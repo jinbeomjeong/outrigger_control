@@ -1,0 +1,429 @@
+{
+ "meta": {
+  "script": "04_scripts/04_hydraulic/l2_params.py",
+  "yaml": "02_params/rexome33.yaml",
+  "env": "conda hydraulics-dev",
+  "pressure_convention": "absolute inside, gauge in reports",
+  "date": "2026-10-20"
+ },
+ "scenario_constants_FL": {
+  "leg": "FL",
+  "A_A": 0.010386890710931254,
+  "A_B": 0.0008835729338221301,
+  "stroke": 0.68,
+  "s0": 0.4011,
+  "F0": 118254.6,
+  "M_eq": 12058.613287921973,
+  "m_r": 106.783666,
+  "g": 9.80665,
+  "k_rod": 1900663560.0,
+  "k_frame": 1000000000.0,
+  "k_concrete": 323661912.0,
+  "k_g": 216648305.16451868,
+  "v_max": 0.0226666667,
+  "q_max": 0.00023543618979400479,
+  "rod_valve_Ks": 2.8323378772411637e-08,
+  "p_rod0_g": 200000.0,
+  "p_relief_g": 21000000.0,
+  "p_locked_limit_g": 35000000.0,
+  "F_relief": 218124.70492955635,
+  "F_locked_limit": 363541.1748825939,
+  "c_h_locked": 34189.73902561372,
+  "c_h_moving": 113965.7965888646,
+  "c_h_placement_factor": 1.2238586293967282,
+  "c_ax_yaml_locked": 27936.0199,
+  "F_min_cyl": 9452.54751
+ },
+ "derived_units": {
+  "A_A": {
+   "si": 0.010386890710931254,
+   "si_unit": "m^2",
+   "practical": 103.86890710931254,
+   "practical_unit": "cm^2"
+  },
+  "A_B": {
+   "si": 0.0008835729338221301,
+   "si_unit": "m^2",
+   "practical": 8.8357293382213,
+   "practical_unit": "cm^2"
+  },
+  "area_ratio_phi": {
+   "si": 11.755555555555546,
+   "si_unit": "-",
+   "practical": null,
+   "practical_unit": null
+  },
+  "V_A_at_e_op": {
+   "si": 0.004685526399701089,
+   "si_unit": "m^3",
+   "practical": 4.6855263997010885,
+   "practical_unit": "L"
+  },
+  "V_B_at_e_op": {
+   "si": 0.0002906071379340986,
+   "si_unit": "m^3",
+   "practical": 0.2906071379340986,
+   "practical_unit": "L"
+  },
+  "k_oil_head_e_op": {
+   "si": 23025694.32704778,
+   "si_unit": "N/m",
+   "practical": 23.02569432704778,
+   "practical_unit": "kN/mm"
+  },
+  "k_oil_rod_side_e_op_if_pressurised": {
+   "si": 2686448.567412982,
+   "si_unit": "N/m",
+   "practical": 2.6864485674129823,
+   "practical_unit": "kN/mm"
+  },
+  "k_g_rod_frame_concrete": {
+   "si": 216648305.16451868,
+   "si_unit": "N/m",
+   "practical": 216.64830516451866,
+   "practical_unit": "kN/mm"
+  },
+  "k_axial_series": {
+   "si": 20813595.391129218,
+   "si_unit": "N/m",
+   "practical": 20.813595391129216,
+   "practical_unit": "kN/mm"
+  },
+  "M_eq_FL": {
+   "si": 12058.613287921973,
+   "si_unit": "kg",
+   "practical": 12.058613287921974,
+   "practical_unit": "t"
+  },
+  "f_heave_single_leg": {
+   "si": 6.612185084825275,
+   "si_unit": "Hz",
+   "practical": null,
+   "practical_unit": null
+  },
+  "q_max": {
+   "si": 0.00023543618979400479,
+   "si_unit": "m^3/s",
+   "practical": 14.126171387640285,
+   "practical_unit": "L/min"
+  },
+  "p_static_head_gauge": {
+   "si": 11384985.487095559,
+   "si_unit": "Pa",
+   "practical": 113.8498548709556,
+   "practical_unit": "bar(g)"
+  },
+  "F_relief_210bar": {
+   "si": 218124.70492955635,
+   "si_unit": "N",
+   "practical": 218.12470492955634,
+   "practical_unit": "kN"
+  },
+  "F_locked_350bar": {
+   "si": 363541.1748825939,
+   "si_unit": "N",
+   "practical": 363.5411748825939,
+   "practical_unit": "kN"
+  },
+  "rod_valve_Ks": {
+   "si": 2.8323378772411637e-08,
+   "si_unit": "m^3/s/sqrt(Pa)",
+   "practical": null,
+   "practical_unit": null
+  },
+  "rod_path_CdA": {
+   "si": 5.873260828422012e-07,
+   "si_unit": "m^2",
+   "practical": 0.5873260828422012,
+   "practical_unit": "mm^2"
+  },
+  "rod_path_Kv_water_equiv": {
+   "si": 0.029901762428072576,
+   "si_unit": "m^3/h/sqrt(bar)",
+   "practical": 0.034566437366851895,
+   "practical_unit": "Cv US gpm/sqrt(psi)"
+  }
+ },
+ "assumptions": {
+  "oil_grade": {
+   "value": "ISO VG 46 mineral (HM/HV)",
+   "sensitivity": null,
+   "basis": "typical mobile hydraulics; manufacturer Q-H1"
+  },
+  "oil_temperature_C": {
+   "value": 50.0,
+   "sensitivity": [
+    20.0,
+    80.0
+   ],
+   "basis": "operating range; beta and viscosity depend on it"
+  },
+  "oil_density_kg_m3": {
+   "value": 860.0,
+   "sensitivity": [
+    850.0,
+    875.0
+   ],
+   "basis": "VG46 at 40-50 C"
+  },
+  "oil_kinematic_viscosity_mm2_s": {
+   "value": 32.0,
+   "sensitivity": [
+    15.0,
+    100.0
+   ],
+   "basis": "VG46 at 50 C (46 at 40 C)"
+  },
+  "beta_liquid_lumped_Pa": {
+   "value": 1000000000.0,
+   "sensitivity": [
+    690000000.0,
+    1600000000.0
+   ],
+   "basis": "user decision 2026-10-19 (YAML actuator.oil_bulk_modulus_eff_Pa)"
+  },
+  "air_fraction_at_1bar": {
+   "value": 0.0,
+   "sensitivity": [
+    0.0,
+    0.005,
+    0.02
+   ],
+   "basis": "baseline constant beta; sensitivity for low-pressure chambers"
+  },
+  "air_polytropic_n": {
+   "value": 1.0,
+   "sensitivity": [
+    1.0,
+    1.4
+   ],
+   "basis": "isothermal slow / adiabatic fast"
+  },
+  "dead_length_head_m": {
+   "value": 0.05,
+   "sensitivity": [
+    0.0,
+    0.15
+   ],
+   "basis": "YAML actuator.oil_dead_length_m"
+  },
+  "dead_length_rod_m": {
+   "value": 0.05,
+   "sensitivity": [
+    0.0,
+    0.15
+   ],
+   "basis": "same as head (annulus port + block); dynamics_model.md 2.3 used 0.68 - e + L0"
+  },
+  "p_rod_locked_gauge_Pa": {
+   "value": 200000.0,
+   "sensitivity": [
+    0.0,
+    1000000.0
+   ],
+   "basis": "rod side trapped at tank/return back-pressure after extension"
+  },
+  "p_cav_abs_Pa": {
+   "value": 0.0,
+   "sensitivity": null,
+   "basis": "vapour pressure of mineral oil is < 1 kPa; Hopsan clamps at 0 Pa abs"
+  },
+  "valve_ramp_time_s": {
+   "value": 0.1,
+   "sensitivity": [
+    0.05,
+    0.3
+   ],
+   "basis": "user brief: command ramp 0.1 s (0 -> v_max)"
+  },
+  "compensator_dp_Pa": {
+   "value": 1000000.0,
+   "sensitivity": [
+    700000.0,
+    1500000.0
+   ],
+   "basis": "section compensator margin (not needed by Level 1)"
+  },
+  "rod_line_dp_at_vmax_Pa": {
+   "value": 500000.0,
+   "sensitivity": [
+    200000.0,
+    1000000.0
+   ],
+   "basis": "rod side -> tank pressure drop at A_B v_max (meter-out edge + POC + hose)"
+  },
+  "relief_override_Pa_at_qmax": {
+   "value": 1000000.0,
+   "sensitivity": [
+    500000.0,
+    2000000.0
+   ],
+   "basis": "210 bar relief: overpressure at full section flow"
+  },
+  "relief_tau_s": {
+   "value": 0.01,
+   "sensitivity": [
+    0.005,
+    0.03
+   ],
+   "basis": "relief spool time constant"
+  },
+  "poc_pilot_ratio": {
+   "value": 3.5,
+   "sensitivity": [
+    2.0,
+    6.0
+   ],
+   "basis": "dual POC typical 3:1-4:1; Hopsan default 3.5"
+  },
+  "poc_crack_Pa": {
+   "value": 300000.0,
+   "sensitivity": [
+    100000.0,
+    500000.0
+   ],
+   "basis": "POC check spring"
+  },
+  "poc_hysteresis_Pa": {
+   "value": 200000.0,
+   "sensitivity": [
+    0.0,
+    500000.0
+   ],
+   "basis": "pilot close/open difference"
+  },
+  "cb_setting_gauge_Pa": {
+   "value": 35000000.0,
+   "sensitivity": null,
+   "basis": "manufacturer: counterbalance limits the locked pressure to 350 bar"
+  },
+  "cb_pilot_ratio": {
+   "value": 4.0,
+   "sensitivity": [
+    3.0,
+    8.0
+   ],
+   "basis": "typical counterbalance 3:1-8:1"
+  },
+  "cb_override_Pa_at_20Lmin": {
+   "value": 2000000.0,
+   "sensitivity": [
+    1000000.0,
+    4000000.0
+   ],
+   "basis": "relief-function override"
+  },
+  "cb_hysteresis_Pa": {
+   "value": 500000.0,
+   "sensitivity": [
+    0.0,
+    1000000.0
+   ],
+   "basis": "Hopsan default p_h"
+  },
+  "cb_tau_s": {
+   "value": 0.01,
+   "sensitivity": [
+    0.005,
+    0.05
+   ],
+   "basis": "spool time constant"
+  },
+  "cb_neutral_vents_lines": {
+   "value": true,
+   "sensitivity": null,
+   "basis": "CB circuits need A,B -> T neutral; with A,B blocked the CB relieves into a closed hose (Q-H4)"
+  },
+  "seal_friction_Fs_N": {
+   "value": 0.0,
+   "sensitivity": [
+    0.0,
+    2000.0,
+    5000.0,
+    12000.0
+   ],
+   "basis": "V15 set (user decision); value unknown (Q-H5)"
+  },
+  "seal_friction_Fc_over_Fs": {
+   "value": 1.0,
+   "sensitivity": [
+    0.6,
+    1.0
+   ],
+   "basis": "1.0 = V15 Coulomb mode; Stribeck option 0.7"
+  },
+  "seal_friction_v_stribeck_m_s": {
+   "value": 0.005,
+   "sensitivity": [
+    0.001,
+    0.02
+   ],
+   "basis": "LuGre Stribeck velocity"
+  },
+  "seal_friction_sigma0_N_m": {
+   "value": 10000000000.0,
+   "sensitivity": [
+    200000000.0,
+    10000000000.0
+   ],
+   "basis": "merged (L2b-NSC) form: 1e10 = near-rigid stick (V15); a separate rod body (L2, airborne rod) needs 2e8 with sigma1 1.3e5 N s/m (spec 3.4)"
+  },
+  "leak_internal_m3_s_Pa": {
+   "value": 0.0,
+   "sensitivity": [
+    0.0,
+    2.6e-16
+   ],
+   "basis": "test limit 0.5 mL/min at 315 bar"
+  },
+  "leak_poc_seat_m3_s_Pa": {
+   "value": 0.0,
+   "sensitivity": [
+    0.0,
+    3.6e-16
+   ],
+   "basis": "5 drops/min (0.05 mL) at 115 bar"
+  },
+  "hose_volume_line_A_m3": {
+   "value": 0.0,
+   "sensitivity": [
+    0.0,
+    0.00035
+   ],
+   "basis": "3/8 in hose 5 m (length unknown, Q-H3); only joins while moving"
+  },
+  "hose_bulk_modulus_Pa": {
+   "value": 600000000.0,
+   "sensitivity": [
+    300000000.0,
+    1000000000.0
+   ],
+   "basis": "2-wire hose, with oil"
+  },
+  "end_stop_k_N_m": {
+   "value": 1000000000.0,
+   "sensitivity": null,
+   "basis": "penalty stiffness of the stroke end stops"
+  }
+ },
+ "relief_valve_law": {
+  "p_set_gauge_Pa": 21000000.0,
+  "pilot_ratio": 0.0,
+  "hysteresis_Pa": 0.0,
+  "tau_s": 0.01,
+  "k_cs": 1e-06,
+  "k_cf": 4.174391918188136e-10,
+  "q_nom_m3_s": 0.001,
+  "p_nom_Pa": 7000000.0
+ },
+ "counterbalance_law": {
+  "p_set_gauge_Pa": 35000000.0,
+  "pilot_ratio": 4.0,
+  "hysteresis_Pa": 500000.0,
+  "tau_s": 0.01,
+  "k_cs": 1e-06,
+  "k_cf": 3.832058021590287e-10,
+  "q_nom_m3_s": 0.001,
+  "p_nom_Pa": 7000000.0
+ }
+}

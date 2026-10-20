@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated": "2026-10-20T22:49:53",
+  "generated": "2026-10-20T23:31:55",
   "stage": "S2a (chrono_build_plan.md): ground bushing dynamics (V7 diagnosis from the S1 top state) and sloped-floor statics (V12, 3 cases), V13",
   "script": "04_scripts/02_chrono/run_S2a.py",
   "model": "outrigger_sim.chrono.model.L1Model (top, crawler spheres layout D present, not in contact), ground bushing GroundBushingCoulomb",
@@ -1413,10 +1413,22 @@
   {
    "case": "v7_roll",
    "id": "V7",
-   "item": "v7_roll: mode 1 damped frequency",
-   "value": 1.7981782889608118,
+   "item": "v7_roll: mode 1 natural frequency",
+   "value": 1.7982343376356107,
    "ref": 1.7983,
    "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "v7_roll",
+   "id": "V7",
+   "item": "v7_roll: mode 1 natural frequency, bushing at the ball centre (+-0.3 %)",
+   "value": 1.7982343376356107,
+   "ref": 1.7983,
+   "tol": 0.003,
    "tol_kind": "rel",
    "unit": "Hz",
    "passed": true,
@@ -1443,18 +1455,6 @@
    "tol": 0.05,
    "tol_kind": "max",
    "unit": "-",
-   "passed": true,
-   "ref_key": ""
-  },
-  {
-   "case": "v7_roll",
-   "id": "V7",
-   "item": "v7_roll: mode 1 frequency, bushing at the ball centre (+-0.3 %)",
-   "value": 1.7981782889608118,
-   "ref": 1.7983,
-   "tol": 0.003,
-   "tol_kind": "rel",
-   "unit": "Hz",
    "passed": true,
    "ref_key": ""
   },
@@ -1581,10 +1581,22 @@
   {
    "case": "v7_pitch",
    "id": "V7",
-   "item": "v7_pitch: mode 2 damped frequency",
-   "value": 3.004385897545981,
+   "item": "v7_pitch: mode 2 natural frequency",
+   "value": 3.004690114168307,
    "ref": 3.0047,
    "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "v7_pitch",
+   "id": "V7",
+   "item": "v7_pitch: mode 2 natural frequency, bushing at the ball centre (+-0.3 %)",
+   "value": 3.004690114168307,
+   "ref": 3.0047,
+   "tol": 0.003,
    "tol_kind": "rel",
    "unit": "Hz",
    "passed": true,
@@ -1611,18 +1623,6 @@
    "tol": 0.05,
    "tol_kind": "max",
    "unit": "-",
-   "passed": true,
-   "ref_key": ""
-  },
-  {
-   "case": "v7_pitch",
-   "id": "V7",
-   "item": "v7_pitch: mode 2 frequency, bushing at the ball centre (+-0.3 %)",
-   "value": 3.004385897545981,
-   "ref": 3.0047,
-   "tol": 0.003,
-   "tol_kind": "rel",
-   "unit": "Hz",
    "passed": true,
    "ref_key": ""
   },
@@ -1749,8 +1749,8 @@
   {
    "case": "v7_yaw",
    "id": "V7",
-   "item": "v7_yaw: mode 3 damped frequency",
-   "value": 5.814718755875848,
+   "item": "v7_yaw: mode 3 natural frequency",
+   "value": 5.819148505455043,
    "ref": 5.8191,
    "tol": 0.03,
    "tol_kind": "rel",
@@ -3201,16 +3201,16 @@
     0.14039271807996556
    ],
    "before_contact_point_chrono_minus_reference_N": [
-    148.40780889173038,
-    135.1879967563582,
-    -135.1685810135532,
-    -148.77393710621982
+    67.4026813468081,
+    50.94373079785146,
+    -51.802877126436215,
+    -66.87719617057883
    ],
    "sphere_lever_removed_N": [
-    81.00512754492229,
-    84.24426595850673,
-    -83.36570388711698,
-    -81.89674093564099
+    0.0,
+    0.0,
+    0.0,
+    0.0
    ],
    "sphere_lever_predicted_N": [
     81.35609883266443,
@@ -3239,16 +3239,16 @@
     0.6479027891909936
    ],
    "before_contact_point_chrono_minus_reference_N": [
-    -97.78776534336794,
-    216.5661413375201,
-    -205.025584626841,
-    86.20561035336868
+    67.84995046854601,
+    50.9229671422072,
+    -52.27457448266796,
+    -66.54226231695793
    ],
    "sphere_lever_removed_N": [
-    -165.63771581191395,
-    165.6431741953129,
-    -152.75101014417305,
-    152.74787267032661
+    0.0,
+    0.0,
+    0.0,
+    0.0
    ],
    "sphere_lever_predicted_N": [
     -165.05486478772946,
@@ -3277,16 +3277,16 @@
     0.02743761175952386
    ],
    "before_contact_point_chrono_minus_reference_N": [
-    294.54007667361293,
-    -51.16176893255033,
-    36.66083304985659,
-    -280.5532196033746
+    67.47811946377624,
+    51.98059301414469,
+    -52.624102649017004,
+    -67.40773488671402
    ],
    "sphere_lever_removed_N": [
-    227.0619572098367,
-    -103.14236194669502,
-    89.2849356988736,
-    -213.14548471666058
+    0.0,
+    0.0,
+    0.0,
+    0.0
    ],
    "sphere_lever_predicted_N": [
     225.85524639388314,

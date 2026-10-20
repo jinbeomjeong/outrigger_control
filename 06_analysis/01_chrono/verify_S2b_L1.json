@@ -1,0 +1,8731 @@
+{
+ "meta": {
+  "generated": "2026-10-20T23:51:00",
+  "stage": "S2b (chrono_build_plan.md): actuator (V0 motor sign, V11, command ramp), crawler contact layout D (V0, settle, snapshots), R15 events",
+  "script": "04_scripts/02_chrono/run_S2b.py",
+  "model": "outrigger_sim.chrono.model.L1Model(actuator=True), L1SpeedActuator (position motor + ChFunctionConst.SetConstant(s_ref), rate limit), crawler 24 spheres, ground bushing GroundBushingCoulomb (ball centre)",
+  "assumptions": {
+   "command_ramp_s": 0.1,
+   "ramp_source": "user decision 2026-10-20 (CLAUDE.md), not in the YAML",
+   "stroke_end": "braking with the same acceleration limit (target speed <= sqrt(2 a d)); assumption of this implementation",
+   "R15": {
+    "t_lift_s": 0.001,
+    "N_th_N": 100.0
+   },
+   "event_schedules": "scenarios/stroke.event_cases (test magnitudes)",
+   "mode_amplitudes": {
+    "pitch": 8.726646259971648e-05,
+    "roll": 8.726646259971648e-05,
+    "heave": 5e-05
+   }
+  },
+  "judgement": "automatic pre-check; final physical judgement by dynamics-expert",
+  "python": "3.12.15",
+  "host": "DESKTOP-KHVBBFL",
+  "raw_data": {
+   "air_short": {
+    "record": "07_results/S2b/air_short",
+    "result": "07_results/S2b/air_short/result.json"
+   },
+   "v11": {
+    "record": "07_results/S2b/v11",
+    "result": "07_results/S2b/v11/result.json"
+   },
+   "crawler_top": {
+    "record": "07_results/S2b/crawler_top",
+    "result": "07_results/S2b/crawler_top/result.json"
+   },
+   "crawler_middle": {
+    "record": "07_results/S2b/crawler_middle",
+    "result": "07_results/S2b/crawler_middle/result.json"
+   },
+   "crawler_bottom": {
+    "record": "07_results/S2b/crawler_bottom",
+    "result": "07_results/S2b/crawler_bottom/result.json"
+   },
+   "event_fast_FL_dt1e-04": {
+    "record": "07_results/S2b/event_fast_FL_dt1e-04",
+    "result": "07_results/S2b/event_fast_FL_dt1e-04/result.json"
+   },
+   "event_fast_FL_dt1e-05": {
+    "record": "07_results/S2b/event_fast_FL_dt1e-05",
+    "result": "07_results/S2b/event_fast_FL_dt1e-05/result.json"
+   },
+   "event_slow_FL_dt1e-04": {
+    "record": "07_results/S2b/event_slow_FL_dt1e-04",
+    "result": "07_results/S2b/event_slow_FL_dt1e-04/result.json"
+   },
+   "event_slow_FL_dt1e-05": {
+    "record": "07_results/S2b/event_slow_FL_dt1e-05",
+    "result": "07_results/S2b/event_slow_FL_dt1e-05/result.json"
+   }
+  },
+  "figure": "06_analysis/01_chrono/verify_S2b_L1.png"
+ },
+ "passed_by_id": {
+  "V0": true,
+  "ramp": true,
+  "V11": true,
+  "V13": true,
+  "S2b": true,
+  "R16": true,
+  "R15": true
+ },
+ "all_passed": true,
+ "v0_motor_sign_and_ramp": {
+  "pad_dz_m": [
+   -0.021534466698336918,
+   -0.021534466698336918,
+   -0.021534466698336918,
+   -0.021534466698336918
+  ],
+  "motor_ds_m": [
+   0.021534466698336918,
+   0.021534466698336918,
+   0.021534466698336918,
+   0.021534466698336918
+  ],
+  "acting_s_ref_m": [
+   0.022668933366671973,
+   0.022668933366671973,
+   0.022668933366671973,
+   0.022668933366671973
+  ],
+  "hanging_force_N": [
+   -1047.1900393644366,
+   -1047.1900393644366,
+   -1047.190036993363,
+   -1047.190036993363
+  ],
+  "rod_weight_N": [
+   1047.1900381788998,
+   1047.1900381788998,
+   1047.1900381788998,
+   1047.1900381788998
+  ],
+  "expected_ds_ramp_m": 0.021533333365,
+  "max_speed_m_s": [
+   0.022666666700589807,
+   0.022666666700589807,
+   0.022666666700589807,
+   0.022666666700589807
+  ],
+  "force_after_stop_N": [
+   -1047.1900381788998,
+   -1047.1900381788998,
+   -1047.1900358078262,
+   -1047.1900358078262
+  ]
+ },
+ "ramp_spikes": [
+  {
+   "name": "ramp0.1_dt1e-04",
+   "ramp_s": 0.1,
+   "dt_s": 0.0001,
+   "max_force_dev_N": [
+    24.2042988477981,
+    24.2042988477981,
+    24.2042988090127,
+    24.2042988090127
+   ],
+   "expected_N": 24.20429766226122,
+   "max_speed_m_s": [
+    0.022666666700552944,
+    0.022666666700552944,
+    0.022666666700552944,
+    0.022666666700552944
+   ],
+   "wall_s": 0.17626020000170683
+  },
+  {
+   "name": "ramp0.1_dt1e-05",
+   "ramp_s": 0.1,
+   "dt_s": 1e-05,
+   "max_force_dev_N": [
+    24.204416215945912,
+    24.204416215945912,
+    24.204415289761187,
+    24.204415289761187
+   ],
+   "expected_N": 24.20429766226122,
+   "max_speed_m_s": [
+    0.0226666667055728,
+    0.0226666667055728,
+    0.0226666667055728,
+    0.0226666667055728
+   ],
+   "wall_s": 1.7274066000027233
+  },
+  {
+   "name": "ramp0_dt1e-04",
+   "ramp_s": 0.0,
+   "dt_s": 0.0001,
+   "max_force_dev_N": [
+    24204.297663446756,
+    24204.297663446756,
+    24204.297662529818,
+    24204.297662529818
+   ],
+   "expected_N": 24204.29766226122,
+   "max_speed_m_s": [
+    0.022666666700555112,
+    0.022666666700555112,
+    0.022666666700555112,
+    0.022666666700555112
+   ],
+   "wall_s": 0.15946899999835296
+  },
+  {
+   "name": "ramp0_dt1e-05",
+   "ramp_s": 0.0,
+   "dt_s": 1e-05,
+   "max_force_dev_N": [
+    242042.97674116588,
+    242042.97674116588,
+    242042.97661381328,
+    242042.97661381328
+   ],
+   "expected_N": 242042.97662261222,
+   "max_speed_m_s": [
+    0.022666666705561958,
+    0.022666666705561958,
+    0.022666666705561958,
+    0.022666666705561958
+   ],
+   "wall_s": 1.6885669999974198
+  }
+ ],
+ "v11": {
+  "stroke_times_s": {
+   "FL 0->0.68": 30.09912637546917,
+   "FL 0.68->0": 30.099126376430753,
+   "FR 0->0.68": 30.09912637546917,
+   "FR 0.68->0": 30.099126376430753,
+   "RL 0->0.68": 30.09912637546917,
+   "RL 0.68->0": 30.099126376430753,
+   "RR 0->0.68": 30.09912637643081
+  },
+  "expected_full_stroke_time_s": 30.099999955882357,
+  "reference_full_stroke_time_s": 30.0,
+  "max_speed_m_s": [
+   0.022666666704440893,
+   0.022666666704440893,
+   0.022666666704440893,
+   0.02266666670388578
+  ],
+  "motor_pos_min_m": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "motor_pos_max_m": [
+   0.68,
+   0.68,
+   0.68,
+   0.6800000000000002
+  ],
+  "max_axial_violation_m": 3.894454203567932e-16,
+  "max_force_dev_from_rod_weight_N": [
+   24.209656388341273,
+   24.209656388341273,
+   24.209656387369137,
+   24.209656388341273
+  ],
+  "expected_ramp_force_N": 24.20429766226122,
+  "timing": {
+   "cpu_placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "wall_s": 41.577495599998656,
+   "steps": 620000,
+   "us_per_step": 67.06047677419139
+  }
+ },
+ "crawler": {
+  "top": {
+   "analytic_exact": {
+    "u_z_mm": -3.1848742252015647,
+    "roll_deg": 0.0002891334380505565,
+    "pitch_deg": 0.1736606011743164,
+    "active": 14
+   },
+   "analytic_linear_no_pdelta": {
+    "u_z_mm": -3.190747237030332,
+    "roll_deg": 0.0002864008408458036,
+    "pitch_deg": 0.16946784420715735
+   },
+   "chrono_window": {
+    "u_z_mm": -3.1847585555235605,
+    "roll_deg": 0.00028922765167666925,
+    "pitch_deg": 0.17365995870778209,
+    "active_min": 14,
+    "active_max": 14,
+    "roll_span_deg": 7.57503505709325e-06,
+    "pitch_span_deg": 1.219668311591704e-05
+   },
+   "modes_linear": {
+    "names": [
+     "pitch",
+     "roll",
+     "heave"
+    ],
+    "f_undamped_Hz": [
+     1.3269090274904287,
+     3.0553227363793525,
+     8.731062570804502
+    ],
+    "f_damped_Hz": [
+     1.3268618358441715,
+     3.054763539977294,
+     8.718250121233545
+    ],
+    "zeta": [
+     0.008433797995795567,
+     0.019131488611754174,
+     0.05415494822006662
+    ],
+    "f_undamped_plain_inertia_Hz": [
+     1.326909004298969,
+     2.44074168974043,
+     8.73106131093636
+    ],
+    "n_active": 14
+   },
+   "modes_chrono": [
+    {
+     "mode": "pitch",
+     "window_s": 20.0,
+     "f_damped_Hz": 1.3271280627476718,
+     "f_undamped_Hz": 1.327175242721652,
+     "zeta": 0.00843190783348547,
+     "residual_rms_rel": 0.0018837396800721667,
+     "linear_f_damped_Hz": 1.3268618358441715,
+     "linear_f_undamped_Hz": 1.3269090274904287,
+     "linear_zeta": 0.008433797995795567
+    },
+    {
+     "mode": "roll",
+     "window_s": 16.336744862169976,
+     "f_damped_Hz": 3.054881803708212,
+     "f_undamped_Hz": 3.0554408216036326,
+     "zeta": 0.019128065470974388,
+     "residual_rms_rel": 0.012132112166592502,
+     "linear_f_damped_Hz": 3.054763539977294,
+     "linear_f_undamped_Hz": 3.0553227363793525,
+     "linear_zeta": 0.019131488611754174
+    },
+    {
+     "mode": "heave",
+     "window_s": 2.019603601637699,
+     "f_damped_Hz": 8.734929504902626,
+     "f_undamped_Hz": 8.747592801804931,
+     "zeta": 0.05378818398015674,
+     "residual_rms_rel": 0.026127270286917373,
+     "linear_f_damped_Hz": 8.718250121233545,
+     "linear_f_undamped_Hz": 8.731062570804502,
+     "linear_zeta": 0.05415494822006662
+    }
+   ],
+   "reference": {
+    "key_pose": "reference.json / lift_V4_compliant_crawler / layouts / D rollers + gapped end shoes (YAML contact.crawler.sphere_layout) / settled_on_crawler (legs at 0) / q_about_origin (uz_mm, roll_deg, pitch_deg)",
+    "q_ref": [
+     -3.1907,
+     0.0002864,
+     0.16947
+    ],
+    "chrono_minus_ref": [
+     0.005941444476439628,
+     2.8276516766692302e-06,
+     0.004189958707782077
+    ],
+    "linear_analytic_minus_ref": [
+     -4.723703033171489e-05,
+     8.408458035749633e-10,
+     -2.1557928426563233e-06
+    ],
+    "sphere_force_ref_N": [
+     4757.1,
+     13556.0,
+     22356.0,
+     31155.0,
+     39955.0,
+     48754.0,
+     4844.2,
+     13644.0,
+     22443.0,
+     31242.0,
+     40042.0,
+     48841.0,
+     -0.0,
+     -0.0,
+     -0.0,
+     30307.0,
+     -0.0,
+     -0.0,
+     -0.0,
+     -0.0,
+     -0.0,
+     30394.0,
+     -0.0,
+     -0.0
+    ],
+    "sphere_force_chrono_ref_order_N": [
+     4130.664152381471,
+     13147.203124182159,
+     22165.204111524683,
+     31180.90279170133,
+     40198.81131619307,
+     49215.650825792014,
+     4218.396028859917,
+     13235.53203404638,
+     22252.329196562096,
+     31268.83003165467,
+     40287.46906037315,
+     49302.43673085221,
+     0.0,
+     0.0,
+     0.0,
+     30799.659234903298,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     30888.334979693325,
+     0.0,
+     0.0
+    ],
+    "sphere_force_chrono_minus_ref_max_abs_N": 626.4358476185298,
+    "sphere_force_chrono_minus_exact_max_abs_N": 1.1580776092669112,
+    "key_modes": "reference.json / lift_V4_compliant_crawler / crawler_on_floor_modes (layout D, legs at 0)",
+    "modes_ref": {
+     "f_Hz": [
+      1.327,
+      3.046,
+      8.73
+     ],
+     "zeta": [
+      0.008437,
+      0.01908,
+      0.05415
+     ]
+    },
+    "note": "reference = linear small-angle (no P-delta); the analytic start and Chrono use exact geometry (P-delta), so the pitch differs by the P-delta share"
+   },
+   "snapshot": {
+    "name": "S2b_crawler_top",
+    "path": "07_results/states/S2b_crawler_top.npz",
+    "t_s": 14.99999999997838,
+    "round_trip_max_pos_diff_m": 8.881784197001252e-16
+   }
+  },
+  "middle": {
+   "analytic_exact": {
+    "u_z_mm": -3.1871634891113705,
+    "roll_deg": 0.0002885303468229517,
+    "pitch_deg": 0.17272401690692024,
+    "active": 14
+   },
+   "analytic_linear_no_pdelta": {
+    "u_z_mm": -3.190747237030332,
+    "roll_deg": 0.0002864008408458036,
+    "pitch_deg": 0.16946784420715735
+   },
+   "chrono_window": {
+    "u_z_mm": -3.1872128011596463,
+    "roll_deg": 0.0002879962359119421,
+    "pitch_deg": 0.1727249065239294,
+    "active_min": 14,
+    "active_max": 14,
+    "roll_span_deg": 4.727720820877268e-06,
+    "pitch_span_deg": 5.530006012943733e-06
+   },
+   "modes_linear": {
+    "names": [
+     "pitch",
+     "roll",
+     "heave"
+    ],
+    "f_undamped_Hz": [
+     1.7117714561088613,
+     4.152787808932279,
+     8.747184020377185
+    ],
+    "f_damped_Hz": [
+     1.7116712294063492,
+     4.151389406711902,
+     8.734300332592532
+    ],
+    "zeta": [
+     0.010821253995660751,
+     0.025949238387551716,
+     0.054255151551903004
+    ],
+    "f_undamped_plain_inertia_Hz": [
+     1.7117714443346441,
+     3.5099864598553236,
+     8.747181370781059
+    ],
+    "n_active": 14
+   },
+   "modes_chrono": [
+    {
+     "mode": "pitch",
+     "window_s": 20.0,
+     "f_damped_Hz": 1.7115878039202999,
+     "f_undamped_Hz": 1.7116881254590175,
+     "zeta": 0.010826632808869238,
+     "residual_rms_rel": 0.0017504809648321027,
+     "linear_f_damped_Hz": 1.7116712294063492,
+     "linear_f_undamped_Hz": 1.7117714561088613,
+     "linear_zeta": 0.010821253995660751
+    },
+    {
+     "mode": "roll",
+     "window_s": 8.86149558195252,
+     "f_damped_Hz": 4.1515181697362795,
+     "f_undamped_Hz": 4.152916804508712,
+     "zeta": 0.025950992616192516,
+     "residual_rms_rel": 0.005943680445957124,
+     "linear_f_damped_Hz": 4.151389406711902,
+     "linear_f_undamped_Hz": 4.152787808932279,
+     "linear_zeta": 0.025949238387551716
+    },
+    {
+     "mode": "heave",
+     "window_s": 2.012158269821392,
+     "f_damped_Hz": 8.74319208944615,
+     "f_undamped_Hz": 8.756121230208393,
+     "zeta": 0.05432297794204893,
+     "residual_rms_rel": 0.025848012773206367,
+     "linear_f_damped_Hz": 8.734300332592532,
+     "linear_f_undamped_Hz": 8.747184020377185,
+     "linear_zeta": 0.054255151551903004
+    }
+   ],
+   "reference": null,
+   "snapshot": {
+    "name": "S2b_crawler_middle",
+    "path": "07_results/states/S2b_crawler_middle.npz",
+    "t_s": 14.99999999997838,
+    "round_trip_max_pos_diff_m": 2.220446049250313e-16
+   }
+  },
+  "bottom": {
+   "analytic_exact": {
+    "u_z_mm": -3.189428460834023,
+    "roll_deg": 0.00028792976511029476,
+    "pitch_deg": 0.17179747873941043,
+    "active": 14
+   },
+   "analytic_linear_no_pdelta": {
+    "u_z_mm": -3.190747237030332,
+    "roll_deg": 0.0002864008408458036,
+    "pitch_deg": 0.16946784420715735
+   },
+   "chrono_window": {
+    "u_z_mm": -3.189445027374979,
+    "roll_deg": 0.00028810855624358144,
+    "pitch_deg": 0.17179872501578217,
+    "active_min": 14,
+    "active_max": 14,
+    "roll_span_deg": 9.526876152872248e-06,
+    "pitch_span_deg": 2.0424468018392927e-05
+   },
+   "modes_linear": {
+    "names": [
+     "pitch",
+     "roll",
+     "heave"
+    ],
+    "f_undamped_Hz": [
+     1.914343422929747,
+     4.3913976946359075,
+     8.756951876514336
+    ],
+    "f_damped_Hz": [
+     1.9142047358386307,
+     4.38975097497556,
+     8.7440249359549
+    ],
+    "zeta": [
+     0.012036918605882336,
+     0.027383107461651388,
+     0.05431578402648233
+    ],
+    "f_undamped_plain_inertia_Hz": [
+     1.9143433351849624,
+     4.251994189366652,
+     8.756951142728107
+    ],
+    "n_active": 14
+   },
+   "modes_chrono": [
+    {
+     "mode": "pitch",
+     "window_s": 20.0,
+     "f_damped_Hz": 1.9141930262998987,
+     "f_undamped_Hz": 1.914331714708338,
+     "zeta": 0.012037009874207914,
+     "residual_rms_rel": 0.0025947714057379234,
+     "linear_f_damped_Hz": 1.9142047358386307,
+     "linear_f_undamped_Hz": 1.914343422929747,
+     "linear_zeta": 0.012036918605882336
+    },
+    {
+     "mode": "roll",
+     "window_s": 7.941195388608444,
+     "f_damped_Hz": 4.389857261644237,
+     "f_undamped_Hz": 4.391504961561075,
+     "zeta": 0.027390920538470264,
+     "residual_rms_rel": 0.0020969979390182848,
+     "linear_f_damped_Hz": 4.38975097497556,
+     "linear_f_undamped_Hz": 4.3913976946359075,
+     "linear_zeta": 0.027383107461651388
+    },
+    {
+     "mode": "heave",
+     "window_s": 2.007670169497036,
+     "f_damped_Hz": 8.74200568292416,
+     "f_undamped_Hz": 8.754682443351173,
+     "zeta": 0.05379496993625947,
+     "residual_rms_rel": 0.015427852671531258,
+     "linear_f_damped_Hz": 8.7440249359549,
+     "linear_f_undamped_Hz": 8.756951876514336,
+     "linear_zeta": 0.05431578402648233
+    }
+   ],
+   "reference": null,
+   "snapshot": {
+    "name": "S2b_crawler_bottom",
+    "path": "07_results/states/S2b_crawler_bottom.npz",
+    "t_s": 14.99999999997838,
+    "round_trip_max_pos_diff_m": 4.440892098500626e-16
+   }
+  }
+ },
+ "events": {
+  "event_fast_FL_dt1e-04": {
+   "dt_s": 0.0001,
+   "events": [
+    [
+     0.13850000000000107,
+     0,
+     1
+    ],
+    [
+     1.2092999999998832,
+     0,
+     2
+    ],
+    [
+     2.2546000000003334,
+     0,
+     1
+    ]
+   ],
+   "n_raw_transitions_leg": 3,
+   "first_positive_N_s": [
+    0.13850000000000107,
+    null,
+    null,
+    null
+   ],
+   "lift_timing": [
+    {
+     "t_remove_s": 1.2092999999998832,
+     "t_last_N_le_0_start_s": 1.2083999999998833,
+     "delay_s": 0.0008999999999999009
+    }
+   ],
+   "max_pad_force_N": 66398.04299610878,
+   "max_cylinder_force_N": 65319.37971085707,
+   "max_axial_violation_m": 2.061661353412235e-12,
+   "yield_steps": [
+    4871,
+    0,
+    0,
+    0
+   ],
+   "other_legs_max_N": 0.0,
+   "touch_extension_m": 0.3409739778564607,
+   "timing": {
+    "cpu_placement": {
+     "mode": "pcore",
+     "efficiency_classes": [
+      0,
+      1
+     ],
+     "affinity_ok": true,
+     "affinity_logical_processors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ],
+     "power_throttling_off_ok": true
+    },
+    "wall_s": 4.94887480000034,
+    "steps": 31000,
+    "us_per_step": 159.64112258065612
+   }
+  },
+  "event_fast_FL_dt1e-05": {
+   "dt_s": 1e-05,
+   "events": [
+    [
+     0.13833999999999758,
+     0,
+     1
+    ],
+    [
+     1.208999999999453,
+     0,
+     2
+    ],
+    [
+     2.2544200000063017,
+     0,
+     1
+    ]
+   ],
+   "n_raw_transitions_leg": 3,
+   "first_positive_N_s": [
+    0.13833999999999758,
+    null,
+    null,
+    null
+   ],
+   "lift_timing": [
+    {
+     "t_remove_s": 1.208999999999453,
+     "t_last_N_le_0_start_s": 1.2080099999994465,
+     "delay_s": 0.0009900000000064857
+    }
+   ],
+   "max_pad_force_N": 66420.92635380237,
+   "max_cylinder_force_N": 65342.23748097939,
+   "max_axial_violation_m": 2.317360008740806e-14,
+   "yield_steps": [
+    44099,
+    0,
+    0,
+    0
+   ],
+   "other_legs_max_N": 0.0,
+   "touch_extension_m": 0.3409739778564607,
+   "timing": {
+    "cpu_placement": {
+     "mode": "pcore",
+     "efficiency_classes": [
+      0,
+      1
+     ],
+     "affinity_ok": true,
+     "affinity_logical_processors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ],
+     "power_throttling_off_ok": true
+    },
+    "wall_s": 39.99339890000192,
+    "steps": 310000,
+    "us_per_step": 129.01096419355457
+   }
+  },
+  "event_slow_FL_dt1e-04": {
+   "dt_s": 0.0001,
+   "events": [
+    [
+     0.5058999999999606,
+     0,
+     1
+    ],
+    [
+     5.768799999999894,
+     0,
+     2
+    ],
+    [
+     9.044799999992259,
+     0,
+     1
+    ]
+   ],
+   "n_raw_transitions_leg": 5,
+   "first_positive_N_s": [
+    0.502399999999961,
+    null,
+    null,
+    null
+   ],
+   "lift_timing": [
+    {
+     "t_remove_s": 5.768799999999894,
+     "t_last_N_le_0_start_s": 5.767899999999896,
+     "delay_s": 0.0008999999999979025
+    }
+   ],
+   "max_pad_force_N": 15290.012125287203,
+   "max_cylinder_force_N": 14241.93263593781,
+   "max_axial_violation_m": 5.707066485210492e-15,
+   "yield_steps": [
+    341,
+    0,
+    0,
+    0
+   ],
+   "other_legs_max_N": 0.0,
+   "touch_extension_m": 0.34097397806687324,
+   "timing": {
+    "cpu_placement": {
+     "mode": "pcore",
+     "efficiency_classes": [
+      0,
+      1
+     ],
+     "affinity_ok": true,
+     "affinity_logical_processors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ],
+     "power_throttling_off_ok": true
+    },
+    "wall_s": 17.480955999999424,
+    "steps": 111000,
+    "us_per_step": 157.4860900900849
+   }
+  },
+  "event_slow_FL_dt1e-05": {
+   "dt_s": 1e-05,
+   "events": [
+    [
+     0.5057000000003333,
+     0,
+     1
+    ],
+    [
+     5.7688699999507715,
+     0,
+     2
+    ],
+    [
+     9.044129999826778,
+     0,
+     1
+    ]
+   ],
+   "n_raw_transitions_leg": 3,
+   "first_positive_N_s": [
+    0.5022400000003491,
+    null,
+    null,
+    null
+   ],
+   "lift_timing": [
+    {
+     "t_remove_s": 5.7688699999507715,
+     "t_last_N_le_0_start_s": 5.767879999950809,
+     "delay_s": 0.0009899999999625209
+    }
+   ],
+   "max_pad_force_N": 15290.032132171938,
+   "max_cylinder_force_N": 14241.94325548977,
+   "max_axial_violation_m": 2.8928201985546714e-15,
+   "yield_steps": [
+    3368,
+    0,
+    0,
+    0
+   ],
+   "other_legs_max_N": 0.0,
+   "touch_extension_m": 0.34097397806687324,
+   "timing": {
+    "cpu_placement": {
+     "mode": "pcore",
+     "efficiency_classes": [
+      0,
+      1
+     ],
+     "affinity_ok": true,
+     "affinity_logical_processors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ],
+     "power_throttling_off_ok": true
+    },
+    "wall_s": 135.76894299999913,
+    "steps": 1110000,
+    "us_per_step": 122.31436306306227
+   }
+  }
+ },
+ "event_dt_pairs": {
+  "fast_FL": {
+   "events_dt1e-4": [
+    [
+     0.13850000000000107,
+     0,
+     1
+    ],
+    [
+     1.2092999999998832,
+     0,
+     2
+    ],
+    [
+     2.2546000000003334,
+     0,
+     1
+    ]
+   ],
+   "events_dt1e-5": [
+    [
+     0.13833999999999758,
+     0,
+     1
+    ],
+    [
+     1.208999999999453,
+     0,
+     2
+    ],
+    [
+     2.2544200000063017,
+     0,
+     1
+    ]
+   ],
+   "time_diff_s": [
+    0.00016000000000349068,
+    0.0003000000004302894,
+    0.00017999999403173206
+   ],
+   "first_positive_N_s": [
+    0.13850000000000107,
+    0.13833999999999758
+   ],
+   "raw_transitions": [
+    3,
+    3
+   ],
+   "lift_timing": [
+    [
+     {
+      "t_remove_s": 1.2092999999998832,
+      "t_last_N_le_0_start_s": 1.2083999999998833,
+      "delay_s": 0.0008999999999999009
+     }
+    ],
+    [
+     {
+      "t_remove_s": 1.208999999999453,
+      "t_last_N_le_0_start_s": 1.2080099999994465,
+      "delay_s": 0.0009900000000064857
+     }
+    ]
+   ]
+  },
+  "slow_FL": {
+   "events_dt1e-4": [
+    [
+     0.5058999999999606,
+     0,
+     1
+    ],
+    [
+     5.768799999999894,
+     0,
+     2
+    ],
+    [
+     9.044799999992259,
+     0,
+     1
+    ]
+   ],
+   "events_dt1e-5": [
+    [
+     0.5057000000003333,
+     0,
+     1
+    ],
+    [
+     5.7688699999507715,
+     0,
+     2
+    ],
+    [
+     9.044129999826778,
+     0,
+     1
+    ]
+   ],
+   "time_diff_s": [
+    0.0001999999996272761,
+    -6.999995087753064e-05,
+    0.0006700001654813548
+   ],
+   "first_positive_N_s": [
+    0.502399999999961,
+    0.5022400000003491
+   ],
+   "raw_transitions": [
+    5,
+    3
+   ],
+   "lift_timing": [
+    [
+     {
+      "t_remove_s": 5.768799999999894,
+      "t_last_N_le_0_start_s": 5.767899999999896,
+      "delay_s": 0.0008999999999979025
+     }
+    ],
+    [
+     {
+      "t_remove_s": 5.7688699999507715,
+      "t_last_N_le_0_start_s": 5.767879999950809,
+      "delay_s": 0.0009899999999625209
+     }
+    ]
+   ]
+  }
+ },
+ "checks": [
+  {
+   "case": "air_short",
+   "id": "V0",
+   "item": "motor +speed moves the pad down (sign of dz)",
+   "value": [
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0
+   ],
+   "ref": [
+    -1.0,
+    -1.0,
+    -1.0,
+    -1.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "air_short",
+   "id": "V0",
+   "item": "pad dz = -motor travel (link Z = body -z, R4)",
+   "value": [
+    -0.021534466698336918,
+    -0.021534466698336918,
+    -0.021534466698336918,
+    -0.021534466698336918
+   ],
+   "ref": [
+    -0.021534466698336918,
+    -0.021534466698336918,
+    -0.021534466698336918,
+    -0.021534466698336918
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "air_short",
+   "id": "V0",
+   "item": "motor reaction of a hanging rod = -m_rod g (+ pushes the pad down)",
+   "value": [
+    -1047.1900393644366,
+    -1047.1900393644366,
+    -1047.190036993363,
+    -1047.190036993363
+   ],
+   "ref": [
+    -1047.1900381788998,
+    -1047.1900381788998,
+    -1047.1900381788998,
+    -1047.1900381788998
+   ],
+   "tol": 1.0,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "air_short",
+   "id": "ramp",
+   "item": "ramp0.1_dt1e-04: max |F_motor + m_rod g| (ramp 0.1 s, dt 0.0001 s)",
+   "value": [
+    24.2042988477981,
+    24.2042988477981,
+    24.2042988090127,
+    24.2042988090127
+   ],
+   "ref": [
+    24.20429766226122,
+    24.20429766226122,
+    24.20429766226122,
+    24.20429766226122
+   ],
+   "tol": 1.0,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "air_short",
+   "id": "ramp",
+   "item": "ramp0.1_dt1e-05: max |F_motor + m_rod g| (ramp 0.1 s, dt 1e-05 s)",
+   "value": [
+    24.204416215945912,
+    24.204416215945912,
+    24.204415289761187,
+    24.204415289761187
+   ],
+   "ref": [
+    24.20429766226122,
+    24.20429766226122,
+    24.20429766226122,
+    24.20429766226122
+   ],
+   "tol": 1.0,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "air_short",
+   "id": "ramp",
+   "item": "ramp0_dt1e-04: max |F_motor + m_rod g| (ramp 0.0 s, dt 0.0001 s)",
+   "value": [
+    24204.297663446756,
+    24204.297663446756,
+    24204.297662529818,
+    24204.297662529818
+   ],
+   "ref": [
+    24204.29766226122,
+    24204.29766226122,
+    24204.29766226122,
+    24204.29766226122
+   ],
+   "tol": 242.0429766226122,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "air_short",
+   "id": "ramp",
+   "item": "ramp0_dt1e-05: max |F_motor + m_rod g| (ramp 0.0 s, dt 1e-05 s)",
+   "value": [
+    242042.97674116588,
+    242042.97674116588,
+    242042.97661381328,
+    242042.97661381328
+   ],
+   "ref": [
+    242042.97662261222,
+    242042.97662261222,
+    242042.97662261222,
+    242042.97662261222
+   ],
+   "tol": 2420.4297662261224,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "v11",
+   "id": "V11",
+   "item": "speed <= v_max (1 + 1e-3), every step",
+   "value": [
+    0.022666666704440893,
+    0.022666666704440893,
+    0.022666666704440893,
+    0.02266666670388578
+   ],
+   "ref": null,
+   "tol": 0.0226893333667,
+   "tol_kind": "max",
+   "unit": "m/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "v11",
+   "id": "V11",
+   "item": "speed reaches v_max (ramp motion function, plan: ChFunctionConst)",
+   "value": [
+    0.022666666704440893,
+    0.022666666704440893,
+    0.022666666704440893,
+    0.02266666670388578
+   ],
+   "ref": [
+    0.0226666667,
+    0.0226666667,
+    0.0226666667,
+    0.0226666667
+   ],
+   "tol": 2.2666666700000003e-05,
+   "tol_kind": "abs",
+   "unit": "m/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "v11",
+   "id": "V11",
+   "item": "position within [-1e-4, 0.6801] m, every step",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "v11",
+   "id": "V11",
+   "item": "full stroke time (rest to rest) = stroke / v_max + ramp",
+   "value": [
+    30.09912637546917,
+    30.099126376430753,
+    30.09912637546917,
+    30.099126376430753,
+    30.09912637546917,
+    30.099126376430753,
+    30.09912637643081
+   ],
+   "ref": [
+    30.099999955882357,
+    30.099999955882357,
+    30.099999955882357,
+    30.099999955882357,
+    30.099999955882357,
+    30.099999955882357,
+    30.099999955882357
+   ],
+   "tol": 0.05,
+   "tol_kind": "abs",
+   "unit": "s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "v11",
+   "id": "V13",
+   "item": "axial motor constraint |s_motor - acting target|, every step",
+   "value": 3.894454203567932e-16,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "v11",
+   "id": "ramp",
+   "item": "no inertial spike: max |F_motor + m_rod g| <= m_rod a (1 %), whole V11 run",
+   "value": [
+    24.209656388341273,
+    24.209656388341273,
+    24.209656387369137,
+    24.209656388341273
+   ],
+   "ref": null,
+   "tol": 25.446340638883832,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "gravity vector (R1)",
+   "value": [
+    0.0,
+    0.0,
+    -9.80665
+   ],
+   "ref": [
+    0.0,
+    0.0,
+    -9.80665
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "m/s^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "floor mass 1e9 kg (R6)",
+   "value": 1000000000.0,
+   "ref": 1000000000.0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "floor fixed (R6)",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "superstructure mass (top)",
+   "value": 38555.6638,
+   "ref": 38555.6638,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "superstructure COM, body coords (top)",
+   "value": [
+    0.452068492,
+    -0.00147659077,
+    2.17485243
+   ],
+   "ref": [
+    0.452068492,
+    -0.00147659077,
+    2.17485243
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "superstructure inertia about COM, body axes (top)",
+   "value": [
+    [
+     534443.971,
+     -954.923385,
+     -194546.739
+    ],
+    [
+     -954.923385,
+     690634.996,
+     -208.890268
+    ],
+    [
+     -194546.739,
+     -208.890268,
+     193716.128
+    ]
+   ],
+   "ref": [
+    [
+     534443.971,
+     -954.923385,
+     -194546.739
+    ],
+    [
+     -954.923385,
+     690634.996,
+     -208.890268
+    ],
+    [
+     -194546.739,
+     -208.890268,
+     193716.128
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL moving part COM at e",
+   "value": [
+    2.29376465,
+    1.32376465,
+    -0.306778941
+   ],
+   "ref": [
+    2.29376465,
+    1.32376465,
+    -0.306778941
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL pad sphere centre = swivel centre at e",
+   "value": [
+    2.2938,
+    1.3238,
+    -0.6397999999999999
+   ],
+   "ref": [
+    2.2938,
+    1.3238,
+    -0.6397999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL pad sphere kn = float32(YAML)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813596.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813595.4
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL pad sphere gn = float32(YAML)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.06173706054688
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.061739
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL gn = cn / m_moving (R5)",
+   "value": 253.061739,
+   "ref": 253.0617388618218,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL pad patch material = pad sphere material",
+   "value": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL motor position = extension (R4)",
+   "value": 1.4405935239057462e-15,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FL motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR moving part COM at e",
+   "value": [
+    2.2937646500000004,
+    -1.3237646499999998,
+    -0.3067789410000001
+   ],
+   "ref": [
+    2.29376465,
+    -1.32376465,
+    -0.306778941
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR pad sphere centre = swivel centre at e",
+   "value": [
+    2.2938000000000005,
+    -1.3237999999999999,
+    -0.6397999999999999
+   ],
+   "ref": [
+    2.2938,
+    -1.3238,
+    -0.6397999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR pad sphere kn = float32(YAML)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813596.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813595.4
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR pad sphere gn = float32(YAML)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.06173706054688
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.061739
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR gn = cn / m_moving (R5)",
+   "value": 253.061739,
+   "ref": 253.0617388618218,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR pad patch material = pad sphere material",
+   "value": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR motor position = extension (R4)",
+   "value": 1.2185443363539041e-15,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "FR motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL moving part COM at e",
+   "value": [
+    -2.5560000000000005,
+    1.16786731,
+    -0.317022926
+   ],
+   "ref": [
+    -2.556,
+    1.16786731,
+    -0.317022926
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL pad sphere centre = swivel centre at e",
+   "value": [
+    -2.5560000000000005,
+    1.1679,
+    -0.6499999999999999
+   ],
+   "ref": [
+    -2.556,
+    1.1679,
+    -0.6499999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL pad sphere kn = float32(YAML)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.9
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL pad sphere gn = float32(YAML)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.68824768066406
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.688248
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL gn = cn / m_moving (R5)",
+   "value": 255.688248,
+   "ref": 255.6882482382652,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL pad patch material = pad sphere material",
+   "value": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL motor position = extension (R4)",
+   "value": 1.5569982351197209e-15,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RL motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR moving part COM at e",
+   "value": [
+    -2.5560000000000005,
+    -1.2428673099999998,
+    -0.317022926
+   ],
+   "ref": [
+    -2.556,
+    -1.24286731,
+    -0.317022926
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR pad sphere centre = swivel centre at e",
+   "value": [
+    -2.5560000000000005,
+    -1.2428999999999997,
+    -0.6499999999999999
+   ],
+   "ref": [
+    -2.556,
+    -1.2429,
+    -0.6499999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR pad sphere kn = float32(YAML)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.9
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR pad sphere gn = float32(YAML)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.68824768066406
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.688248
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR gn = cn / m_moving (R5)",
+   "value": 255.688248,
+   "ref": 255.6882482382652,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR pad patch material = pad sphere material",
+   "value": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR motor position = extension (R4)",
+   "value": 1.0573956868288807e-15,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "RR motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "crawler spheres 24 (12 roller + 12 end shoe)",
+   "value": [
+    24,
+    12
+   ],
+   "ref": [
+    24,
+    12
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "crawler sphere centres = YAML layout D",
+   "value": [
+    [
+     -0.8839999999999999,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     -0.527,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     -0.17000000000000004,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.187,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.544,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.901,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     -1.3122,
+     1.045,
+     -0.9794100000000001
+    ],
+    [
+     -1.1392,
+     1.045,
+     -0.9890399999999997
+    ],
+    [
+     -0.9662999999999999,
+     1.045,
+     -0.9986700000000002
+    ],
+    [
+     0.9505,
+     1.045,
+     -0.9985399999999998
+    ],
+    [
+     1.1236,
+     1.045,
+     -0.9920899999999997
+    ],
+    [
+     1.2968,
+     1.045,
+     -0.9856399999999996
+    ],
+    [
+     -0.8839999999999999,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     -0.527,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     -0.17000000000000004,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.187,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.544,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.901,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     -1.3122,
+     -1.045,
+     -0.9794100000000001
+    ],
+    [
+     -1.1392,
+     -1.045,
+     -0.9890399999999997
+    ],
+    [
+     -0.9662999999999999,
+     -1.045,
+     -0.9986700000000002
+    ],
+    [
+     0.9505,
+     -1.045,
+     -0.9985399999999998
+    ],
+    [
+     1.1236,
+     -1.045,
+     -0.9920899999999997
+    ],
+    [
+     1.2968,
+     -1.045,
+     -0.9856399999999996
+    ]
+   ],
+   "ref": [
+    [
+     -0.884,
+     1.045,
+     -1.0009
+    ],
+    [
+     -0.527,
+     1.045,
+     -1.0009
+    ],
+    [
+     -0.17,
+     1.045,
+     -1.0009
+    ],
+    [
+     0.187,
+     1.045,
+     -1.0009
+    ],
+    [
+     0.544,
+     1.045,
+     -1.0009
+    ],
+    [
+     0.901,
+     1.045,
+     -1.0009
+    ],
+    [
+     -1.3122,
+     1.045,
+     -0.9794099999999999
+    ],
+    [
+     -1.1392,
+     1.045,
+     -0.9890399999999999
+    ],
+    [
+     -0.9663,
+     1.045,
+     -0.99867
+    ],
+    [
+     0.9505,
+     1.045,
+     -0.99854
+    ],
+    [
+     1.1236,
+     1.045,
+     -0.9920899999999999
+    ],
+    [
+     1.2968,
+     1.045,
+     -0.9856399999999998
+    ],
+    [
+     -0.884,
+     -1.045,
+     -1.0009
+    ],
+    [
+     -0.527,
+     -1.045,
+     -1.0009
+    ],
+    [
+     -0.17,
+     -1.045,
+     -1.0009
+    ],
+    [
+     0.187,
+     -1.045,
+     -1.0009
+    ],
+    [
+     0.544,
+     -1.045,
+     -1.0009
+    ],
+    [
+     0.901,
+     -1.045,
+     -1.0009
+    ],
+    [
+     -1.3122,
+     -1.045,
+     -0.9794099999999999
+    ],
+    [
+     -1.1392,
+     -1.045,
+     -0.9890399999999999
+    ],
+    [
+     -0.9663,
+     -1.045,
+     -0.99867
+    ],
+    [
+     0.9505,
+     -1.045,
+     -0.99854
+    ],
+    [
+     1.1236,
+     -1.045,
+     -0.9920899999999999
+    ],
+    [
+     1.2968,
+     -1.045,
+     -0.9856399999999998
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "crawler sphere radius",
+   "value": [
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05
+   ],
+   "ref": [
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "crawler sphere kn = float32(YAML)",
+   "value": [
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5
+   ],
+   "ref": [
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "crawler sphere kn vs YAML (float32 rounding)",
+   "value": [
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5
+   ],
+   "ref": [
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "crawler sphere gn = float32(YAML)",
+   "value": [
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584
+   ],
+   "ref": [
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "crawler sphere gn vs YAML (float32 rounding)",
+   "value": [
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584
+   ],
+   "ref": [
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "crawler sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "crawler patches (2) material = crawler sphere material",
+   "value": [
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "rod - superstructure/crawler pairs disabled (R14)",
+   "value": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "ref": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "rod - floor pairs enabled",
+   "value": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "ref": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "superstructure (crawler) - floor enabled",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "collision system Bullet (R2)",
+   "value": "BULLET",
+   "ref": "BULLET",
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "crawler sphere bottom above the crawler plane = YAML end_shoe_gap_m (rollers 0)",
+   "value": [
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    0.021489999999999787,
+    0.011860000000000204,
+    0.002229999999999732,
+    0.0023600000000001398,
+    0.008810000000000207,
+    0.015260000000000273,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    0.021489999999999787,
+    0.011860000000000204,
+    0.002229999999999732,
+    0.0023600000000001398,
+    0.008810000000000207,
+    0.015260000000000273
+   ],
+   "ref": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.02149,
+    0.01186,
+    0.00223,
+    0.00236,
+    0.00881,
+    0.01526,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.02149,
+    0.01186,
+    0.00223,
+    0.00236,
+    0.00881,
+    0.01526
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "S2b",
+   "item": "top: settled pose = analytic exact pose (u_z)",
+   "value": -3.1847585555235605,
+   "ref": -3.1848742252015647,
+   "tol": 0.001,
+   "tol_kind": "abs",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "S2b",
+   "item": "top: settled pose = analytic exact pose (roll, pitch)",
+   "value": [
+    0.00028922765167666925,
+    0.17365995870778209
+   ],
+   "ref": [
+    0.0002891334380505565,
+    0.1736606011743164
+   ],
+   "tol": 0.0001,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V0",
+   "item": "top: active crawler spheres = 14 (min, max in the window)",
+   "value": [
+    14,
+    14
+   ],
+   "ref": [
+    14,
+    14
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V13",
+   "item": "top: no pad contact (legs at 0)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V13",
+   "item": "top: attitude drift in the still window (roll, pitch span)",
+   "value": [
+    7.57503505709325e-06,
+    1.219668311591704e-05
+   ],
+   "ref": null,
+   "tol": 0.0001,
+   "tol_kind": "max",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V13",
+   "item": "top: crawler vertical force variation (span)",
+   "value": 50.34760233166162,
+   "ref": null,
+   "tol": 95.57275,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V13",
+   "item": "top: motor constraint violation (leg COG offset)",
+   "value": 1.45399248197009e-11,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "V13",
+   "item": "top: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_top",
+   "id": "R16",
+   "item": "S2b_crawler_top: snapshot round trip (restore into a fresh build, continue), position diff",
+   "value": 8.881784197001252e-16,
+   "ref": null,
+   "tol": 1e-12,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "gravity vector (R1)",
+   "value": [
+    0.0,
+    0.0,
+    -9.80665
+   ],
+   "ref": [
+    0.0,
+    0.0,
+    -9.80665
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "m/s^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "floor mass 1e9 kg (R6)",
+   "value": 1000000000.0,
+   "ref": 1000000000.0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "floor fixed (R6)",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "superstructure mass (middle)",
+   "value": 38555.6638,
+   "ref": 38555.6638,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "superstructure COM, body coords (middle)",
+   "value": [
+    0.452068492,
+    -0.00147659077,
+    1.47721706
+   ],
+   "ref": [
+    0.452068492,
+    -0.00147659077,
+    1.47721706
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "superstructure inertia about COM, body axes (middle)",
+   "value": [
+    [
+     258657.066,
+     -954.923385,
+     -120560.233
+    ],
+    [
+     -954.923385,
+     414848.091,
+     -94.7946609
+    ],
+    [
+     -120560.233,
+     -94.7946609,
+     193716.128
+    ]
+   ],
+   "ref": [
+    [
+     258657.066,
+     -954.923385,
+     -120560.233
+    ],
+    [
+     -954.923385,
+     414848.091,
+     -94.7946609
+    ],
+    [
+     -120560.233,
+     -94.7946609,
+     193716.128
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL moving part COM at e",
+   "value": [
+    2.29376465,
+    1.3237646500000002,
+    -0.306778941
+   ],
+   "ref": [
+    2.29376465,
+    1.32376465,
+    -0.306778941
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL pad sphere centre = swivel centre at e",
+   "value": [
+    2.2938,
+    1.3238000000000003,
+    -0.6397999999999999
+   ],
+   "ref": [
+    2.2938,
+    1.3238,
+    -0.6397999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL pad sphere kn = float32(YAML)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813596.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813595.4
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL pad sphere gn = float32(YAML)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.06173706054688
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.061739
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL gn = cn / m_moving (R5)",
+   "value": 253.061739,
+   "ref": 253.0617388618218,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL pad patch material = pad sphere material",
+   "value": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL motor position = extension (R4)",
+   "value": 6.647953918888992e-16,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FL motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR moving part COM at e",
+   "value": [
+    2.29376465,
+    -1.3237646500000002,
+    -0.30677894099999997
+   ],
+   "ref": [
+    2.29376465,
+    -1.32376465,
+    -0.306778941
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR pad sphere centre = swivel centre at e",
+   "value": [
+    2.2938,
+    -1.3238000000000003,
+    -0.6397999999999999
+   ],
+   "ref": [
+    2.2938,
+    -1.3238,
+    -0.6397999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR pad sphere kn = float32(YAML)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813596.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813595.4
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR pad sphere gn = float32(YAML)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.06173706054688
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.061739
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR gn = cn / m_moving (R5)",
+   "value": 253.061739,
+   "ref": 253.0617388618218,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR pad patch material = pad sphere material",
+   "value": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR motor position = extension (R4)",
+   "value": 5.537680030371623e-16,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "FR motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL moving part COM at e",
+   "value": [
+    -2.556,
+    1.1678673100000003,
+    -0.317022926
+   ],
+   "ref": [
+    -2.556,
+    1.16786731,
+    -0.317022926
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL pad sphere centre = swivel centre at e",
+   "value": [
+    -2.556,
+    1.1679000000000002,
+    -0.6499999999999999
+   ],
+   "ref": [
+    -2.556,
+    1.1679,
+    -0.6499999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL pad sphere kn = float32(YAML)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.9
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL pad sphere gn = float32(YAML)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.68824768066406
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.688248
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL gn = cn / m_moving (R5)",
+   "value": 255.688248,
+   "ref": 255.6882482382652,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL pad patch material = pad sphere material",
+   "value": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL motor position = extension (R4)",
+   "value": 5.564499768186851e-16,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RL motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR moving part COM at e",
+   "value": [
+    -2.5559999999999996,
+    -1.2428673099999998,
+    -0.3170229259999999
+   ],
+   "ref": [
+    -2.556,
+    -1.24286731,
+    -0.317022926
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR pad sphere centre = swivel centre at e",
+   "value": [
+    -2.5559999999999996,
+    -1.2428999999999997,
+    -0.6499999999999999
+   ],
+   "ref": [
+    -2.556,
+    -1.2429,
+    -0.6499999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR pad sphere kn = float32(YAML)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.9
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR pad sphere gn = float32(YAML)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.68824768066406
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.688248
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR gn = cn / m_moving (R5)",
+   "value": 255.688248,
+   "ref": 255.6882482382652,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR pad patch material = pad sphere material",
+   "value": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR motor position = extension (R4)",
+   "value": 3.912526758649173e-16,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "RR motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "crawler spheres 24 (12 roller + 12 end shoe)",
+   "value": [
+    24,
+    12
+   ],
+   "ref": [
+    24,
+    12
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "crawler sphere centres = YAML layout D",
+   "value": [
+    [
+     -0.8839999999999999,
+     1.045,
+     -1.0008999999999997
+    ],
+    [
+     -0.527,
+     1.045,
+     -1.0008999999999997
+    ],
+    [
+     -0.17000000000000004,
+     1.045,
+     -1.0008999999999997
+    ],
+    [
+     0.187,
+     1.045,
+     -1.0008999999999997
+    ],
+    [
+     0.544,
+     1.045,
+     -1.0008999999999997
+    ],
+    [
+     0.901,
+     1.045,
+     -1.0008999999999997
+    ],
+    [
+     -1.3122,
+     1.045,
+     -0.9794099999999997
+    ],
+    [
+     -1.1392,
+     1.045,
+     -0.9890400000000001
+    ],
+    [
+     -0.9662999999999999,
+     1.045,
+     -0.9986699999999997
+    ],
+    [
+     0.9505,
+     1.045,
+     -0.9985400000000002
+    ],
+    [
+     1.1236,
+     1.045,
+     -0.9920900000000001
+    ],
+    [
+     1.2968,
+     1.045,
+     -0.9856400000000001
+    ],
+    [
+     -0.8839999999999999,
+     -1.045,
+     -1.0008999999999997
+    ],
+    [
+     -0.527,
+     -1.045,
+     -1.0008999999999997
+    ],
+    [
+     -0.17000000000000004,
+     -1.045,
+     -1.0008999999999997
+    ],
+    [
+     0.187,
+     -1.045,
+     -1.0008999999999997
+    ],
+    [
+     0.544,
+     -1.045,
+     -1.0008999999999997
+    ],
+    [
+     0.901,
+     -1.045,
+     -1.0008999999999997
+    ],
+    [
+     -1.3122,
+     -1.045,
+     -0.9794099999999997
+    ],
+    [
+     -1.1392,
+     -1.045,
+     -0.9890400000000001
+    ],
+    [
+     -0.9662999999999999,
+     -1.045,
+     -0.9986699999999997
+    ],
+    [
+     0.9505,
+     -1.045,
+     -0.9985400000000002
+    ],
+    [
+     1.1236,
+     -1.045,
+     -0.9920900000000001
+    ],
+    [
+     1.2968,
+     -1.045,
+     -0.9856400000000001
+    ]
+   ],
+   "ref": [
+    [
+     -0.884,
+     1.045,
+     -1.0009
+    ],
+    [
+     -0.527,
+     1.045,
+     -1.0009
+    ],
+    [
+     -0.17,
+     1.045,
+     -1.0009
+    ],
+    [
+     0.187,
+     1.045,
+     -1.0009
+    ],
+    [
+     0.544,
+     1.045,
+     -1.0009
+    ],
+    [
+     0.901,
+     1.045,
+     -1.0009
+    ],
+    [
+     -1.3122,
+     1.045,
+     -0.9794099999999999
+    ],
+    [
+     -1.1392,
+     1.045,
+     -0.9890399999999999
+    ],
+    [
+     -0.9663,
+     1.045,
+     -0.99867
+    ],
+    [
+     0.9505,
+     1.045,
+     -0.99854
+    ],
+    [
+     1.1236,
+     1.045,
+     -0.9920899999999999
+    ],
+    [
+     1.2968,
+     1.045,
+     -0.9856399999999998
+    ],
+    [
+     -0.884,
+     -1.045,
+     -1.0009
+    ],
+    [
+     -0.527,
+     -1.045,
+     -1.0009
+    ],
+    [
+     -0.17,
+     -1.045,
+     -1.0009
+    ],
+    [
+     0.187,
+     -1.045,
+     -1.0009
+    ],
+    [
+     0.544,
+     -1.045,
+     -1.0009
+    ],
+    [
+     0.901,
+     -1.045,
+     -1.0009
+    ],
+    [
+     -1.3122,
+     -1.045,
+     -0.9794099999999999
+    ],
+    [
+     -1.1392,
+     -1.045,
+     -0.9890399999999999
+    ],
+    [
+     -0.9663,
+     -1.045,
+     -0.99867
+    ],
+    [
+     0.9505,
+     -1.045,
+     -0.99854
+    ],
+    [
+     1.1236,
+     -1.045,
+     -0.9920899999999999
+    ],
+    [
+     1.2968,
+     -1.045,
+     -0.9856399999999998
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "crawler sphere radius",
+   "value": [
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05
+   ],
+   "ref": [
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "crawler sphere kn = float32(YAML)",
+   "value": [
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5
+   ],
+   "ref": [
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "crawler sphere kn vs YAML (float32 rounding)",
+   "value": [
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5
+   ],
+   "ref": [
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "crawler sphere gn = float32(YAML)",
+   "value": [
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584
+   ],
+   "ref": [
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "crawler sphere gn vs YAML (float32 rounding)",
+   "value": [
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584
+   ],
+   "ref": [
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "crawler sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "crawler patches (2) material = crawler sphere material",
+   "value": [
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "rod - superstructure/crawler pairs disabled (R14)",
+   "value": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "ref": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "rod - floor pairs enabled",
+   "value": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "ref": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "superstructure (crawler) - floor enabled",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "collision system Bullet (R2)",
+   "value": "BULLET",
+   "ref": "BULLET",
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "crawler sphere bottom above the crawler plane = YAML end_shoe_gap_m (rollers 0)",
+   "value": [
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    0.02149000000000023,
+    0.01185999999999976,
+    0.0022300000000001763,
+    0.0023599999999996957,
+    0.008809999999999762,
+    0.01525999999999983,
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    0.02149000000000023,
+    0.01185999999999976,
+    0.0022300000000001763,
+    0.0023599999999996957,
+    0.008809999999999762,
+    0.01525999999999983
+   ],
+   "ref": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.02149,
+    0.01186,
+    0.00223,
+    0.00236,
+    0.00881,
+    0.01526,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.02149,
+    0.01186,
+    0.00223,
+    0.00236,
+    0.00881,
+    0.01526
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "S2b",
+   "item": "middle: settled pose = analytic exact pose (u_z)",
+   "value": -3.1872128011596463,
+   "ref": -3.1871634891113705,
+   "tol": 0.001,
+   "tol_kind": "abs",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "S2b",
+   "item": "middle: settled pose = analytic exact pose (roll, pitch)",
+   "value": [
+    0.0002879962359119421,
+    0.1727249065239294
+   ],
+   "ref": [
+    0.0002885303468229517,
+    0.17272401690692024
+   ],
+   "tol": 0.0001,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V0",
+   "item": "middle: active crawler spheres = 14 (min, max in the window)",
+   "value": [
+    14,
+    14
+   ],
+   "ref": [
+    14,
+    14
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V13",
+   "item": "middle: no pad contact (legs at 0)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V13",
+   "item": "middle: attitude drift in the still window (roll, pitch span)",
+   "value": [
+    4.727720820877268e-06,
+    5.530006012943733e-06
+   ],
+   "ref": null,
+   "tol": 0.0001,
+   "tol_kind": "max",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V13",
+   "item": "middle: crawler vertical force variation (span)",
+   "value": 71.7217849190929,
+   "ref": null,
+   "tol": 95.57275,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V13",
+   "item": "middle: motor constraint violation (leg COG offset)",
+   "value": 4.454658864005978e-12,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "V13",
+   "item": "middle: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_middle",
+   "id": "R16",
+   "item": "S2b_crawler_middle: snapshot round trip (restore into a fresh build, continue), position diff",
+   "value": 2.220446049250313e-16,
+   "ref": null,
+   "tol": 1e-12,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "gravity vector (R1)",
+   "value": [
+    0.0,
+    0.0,
+    -9.80665
+   ],
+   "ref": [
+    0.0,
+    0.0,
+    -9.80665
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "m/s^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "floor mass 1e9 kg (R6)",
+   "value": 1000000000.0,
+   "ref": 1000000000.0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "floor fixed (R6)",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "superstructure mass (bottom)",
+   "value": 38555.6638,
+   "ref": 38555.6638,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "superstructure COM, body coords (bottom)",
+   "value": [
+    0.452068492,
+    -0.0014765907700000002,
+    0.779580072
+   ],
+   "ref": [
+    0.452068492,
+    -0.00147659077,
+    0.779580072
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "superstructure inertia about COM, body axes (bottom)",
+   "value": [
+    [
+     176596.432,
+     -954.923385,
+     -46573.5555
+    ],
+    [
+     -954.923385,
+     332787.457,
+     19.3012121
+    ],
+    [
+     -46573.5555,
+     19.3012121,
+     193716.128
+    ]
+   ],
+   "ref": [
+    [
+     176596.432,
+     -954.923385,
+     -46573.5555
+    ],
+    [
+     -954.923385,
+     332787.457,
+     19.3012121
+    ],
+    [
+     -46573.5555,
+     19.3012121,
+     193716.128
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL moving part COM at e",
+   "value": [
+    2.29376465,
+    1.3237646500000002,
+    -0.3067789410000001
+   ],
+   "ref": [
+    2.29376465,
+    1.32376465,
+    -0.306778941
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL pad sphere centre = swivel centre at e",
+   "value": [
+    2.2938,
+    1.3238000000000003,
+    -0.6397999999999999
+   ],
+   "ref": [
+    2.2938,
+    1.3238,
+    -0.6397999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL pad sphere kn = float32(YAML)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813596.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813595.4
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL pad sphere gn = float32(YAML)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.06173706054688
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.061739
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL gn = cn / m_moving (R5)",
+   "value": 253.061739,
+   "ref": 253.0617388618218,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL pad patch material = pad sphere material",
+   "value": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL motor position = extension (R4)",
+   "value": 1.6786539006799527e-16,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FL motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR moving part COM at e",
+   "value": [
+    2.2937646499999995,
+    -1.3237646499999998,
+    -0.306778941
+   ],
+   "ref": [
+    2.29376465,
+    -1.32376465,
+    -0.306778941
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR pad sphere centre = swivel centre at e",
+   "value": [
+    2.2937999999999996,
+    -1.3237999999999999,
+    -0.6397999999999999
+   ],
+   "ref": [
+    2.2938,
+    -1.3238,
+    -0.6397999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR pad sphere kn = float32(YAML)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813596.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    20813596.0
+   ],
+   "ref": [
+    20813595.4
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR pad sphere gn = float32(YAML)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.06173706054688
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    253.06173706054688
+   ],
+   "ref": [
+    253.061739
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR gn = cn / m_moving (R5)",
+   "value": 253.061739,
+   "ref": 253.0617388618218,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR pad patch material = pad sphere material",
+   "value": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    20813596.0,
+    253.06173706054688,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR motor position = extension (R4)",
+   "value": 1.6786315837653452e-16,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "FR motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL moving part COM at e",
+   "value": [
+    -2.556,
+    1.1678673099999999,
+    -0.31702292600000004
+   ],
+   "ref": [
+    -2.556,
+    1.16786731,
+    -0.317022926
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL pad sphere centre = swivel centre at e",
+   "value": [
+    -2.556,
+    1.1678999999999997,
+    -0.6499999999999999
+   ],
+   "ref": [
+    -2.556,
+    1.1679,
+    -0.6499999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL pad sphere kn = float32(YAML)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.9
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL pad sphere gn = float32(YAML)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.68824768066406
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.688248
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL gn = cn / m_moving (R5)",
+   "value": 255.688248,
+   "ref": 255.6882482382652,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL pad patch material = pad sphere material",
+   "value": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL motor position = extension (R4)",
+   "value": 1.6786539006799527e-16,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RL motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR moving part mass",
+   "value": 106.783666,
+   "ref": 106.783666,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR moving part COM at e",
+   "value": [
+    -2.556,
+    -1.2428673100000003,
+    -0.317022926
+   ],
+   "ref": [
+    -2.556,
+    -1.24286731,
+    -0.317022926
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR moving part inertia",
+   "value": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "ref": [
+    [
+     12.6921305,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     12.6921305,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.550973854
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR one pad sphere",
+   "value": [
+    "SPHERE"
+   ],
+   "ref": [
+    "SPHERE"
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR pad sphere radius = swivel height",
+   "value": 0.06,
+   "ref": 0.06,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR pad sphere centre = swivel centre at e",
+   "value": [
+    -2.556,
+    -1.2429000000000001,
+    -0.6499999999999999
+   ],
+   "ref": [
+    -2.556,
+    -1.2429,
+    -0.6499999999999999
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR pad sphere kn = float32(YAML)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR pad sphere kn vs YAML (float32 rounding)",
+   "value": [
+    21247882.0
+   ],
+   "ref": [
+    21247882.9
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR pad sphere gn = float32(YAML)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.68824768066406
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR pad sphere gn vs YAML (float32 rounding)",
+   "value": [
+    255.68824768066406
+   ],
+   "ref": [
+    255.688248
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR pad sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR gn = cn / m_moving (R5)",
+   "value": 255.688248,
+   "ref": 255.6882482382652,
+   "tol": 1e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR pad patch material = pad sphere material",
+   "value": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": [
+    21247882.0,
+    255.68824768066406,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR motor position = extension (R4)",
+   "value": 1.6786315837653452e-16,
+   "ref": 0.0,
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "RR motor link constraints (guide 5 + motor 1)",
+   "value": 6,
+   "ref": 6,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "crawler spheres 24 (12 roller + 12 end shoe)",
+   "value": [
+    24,
+    12
+   ],
+   "ref": [
+    24,
+    12
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "crawler sphere centres = YAML layout D",
+   "value": [
+    [
+     -0.8839999999999999,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     -0.527,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     -0.17000000000000004,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.187,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.544,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.901,
+     1.045,
+     -1.0009000000000001
+    ],
+    [
+     -1.3122,
+     1.045,
+     -0.97941
+    ],
+    [
+     -1.1392,
+     1.045,
+     -0.98904
+    ],
+    [
+     -0.9662999999999999,
+     1.045,
+     -0.9986700000000001
+    ],
+    [
+     0.9505,
+     1.045,
+     -0.9985400000000001
+    ],
+    [
+     1.1236,
+     1.045,
+     -0.99209
+    ],
+    [
+     1.2968,
+     1.045,
+     -0.98564
+    ],
+    [
+     -0.8839999999999999,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     -0.527,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     -0.17000000000000004,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.187,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.544,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     0.901,
+     -1.045,
+     -1.0009000000000001
+    ],
+    [
+     -1.3122,
+     -1.045,
+     -0.97941
+    ],
+    [
+     -1.1392,
+     -1.045,
+     -0.98904
+    ],
+    [
+     -0.9662999999999999,
+     -1.045,
+     -0.9986700000000001
+    ],
+    [
+     0.9505,
+     -1.045,
+     -0.9985400000000001
+    ],
+    [
+     1.1236,
+     -1.045,
+     -0.99209
+    ],
+    [
+     1.2968,
+     -1.045,
+     -0.98564
+    ]
+   ],
+   "ref": [
+    [
+     -0.884,
+     1.045,
+     -1.0009
+    ],
+    [
+     -0.527,
+     1.045,
+     -1.0009
+    ],
+    [
+     -0.17,
+     1.045,
+     -1.0009
+    ],
+    [
+     0.187,
+     1.045,
+     -1.0009
+    ],
+    [
+     0.544,
+     1.045,
+     -1.0009
+    ],
+    [
+     0.901,
+     1.045,
+     -1.0009
+    ],
+    [
+     -1.3122,
+     1.045,
+     -0.9794099999999999
+    ],
+    [
+     -1.1392,
+     1.045,
+     -0.9890399999999999
+    ],
+    [
+     -0.9663,
+     1.045,
+     -0.99867
+    ],
+    [
+     0.9505,
+     1.045,
+     -0.99854
+    ],
+    [
+     1.1236,
+     1.045,
+     -0.9920899999999999
+    ],
+    [
+     1.2968,
+     1.045,
+     -0.9856399999999998
+    ],
+    [
+     -0.884,
+     -1.045,
+     -1.0009
+    ],
+    [
+     -0.527,
+     -1.045,
+     -1.0009
+    ],
+    [
+     -0.17,
+     -1.045,
+     -1.0009
+    ],
+    [
+     0.187,
+     -1.045,
+     -1.0009
+    ],
+    [
+     0.544,
+     -1.045,
+     -1.0009
+    ],
+    [
+     0.901,
+     -1.045,
+     -1.0009
+    ],
+    [
+     -1.3122,
+     -1.045,
+     -0.9794099999999999
+    ],
+    [
+     -1.1392,
+     -1.045,
+     -0.9890399999999999
+    ],
+    [
+     -0.9663,
+     -1.045,
+     -0.99867
+    ],
+    [
+     0.9505,
+     -1.045,
+     -0.99854
+    ],
+    [
+     1.1236,
+     -1.045,
+     -0.9920899999999999
+    ],
+    [
+     1.2968,
+     -1.045,
+     -0.9856399999999998
+    ]
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "crawler sphere radius",
+   "value": [
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05
+   ],
+   "ref": [
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05,
+    0.05
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "crawler sphere kn = float32(YAML)",
+   "value": [
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5
+   ],
+   "ref": [
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "crawler sphere kn vs YAML (float32 rounding)",
+   "value": [
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5,
+    8333333.5
+   ],
+   "ref": [
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33,
+    8333333.33
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "N/m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "crawler sphere gn = float32(YAML)",
+   "value": [
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584
+   ],
+   "ref": [
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "crawler sphere gn vs YAML (float32 rounding)",
+   "value": [
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584,
+    0.42674365639686584
+   ],
+   "ref": [
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658,
+    0.426743658
+   ],
+   "tol": 5.960464477539063e-08,
+   "tol_kind": "rel",
+   "unit": "1/s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "crawler sphere kt, gt, mu, mu_s = 0 (R8)",
+   "value": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "crawler patches (2) material = crawler sphere material",
+   "value": [
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "ref": [
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     8333333.5,
+     0.42674365639686584,
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "rod - superstructure/crawler pairs disabled (R14)",
+   "value": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "ref": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "rod - floor pairs enabled",
+   "value": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "ref": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "superstructure (crawler) - floor enabled",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "collision system Bullet (R2)",
+   "value": "BULLET",
+   "ref": "BULLET",
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "crawler sphere bottom above the crawler plane = YAML end_shoe_gap_m (rollers 0)",
+   "value": [
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    0.02149000000000001,
+    0.011859999999999982,
+    0.0022299999999999542,
+    0.0023599999999999177,
+    0.008809999999999985,
+    0.015260000000000051,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    -2.220446049250313e-16,
+    0.02149000000000001,
+    0.011859999999999982,
+    0.0022299999999999542,
+    0.0023599999999999177,
+    0.008809999999999985,
+    0.015260000000000051
+   ],
+   "ref": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.02149,
+    0.01186,
+    0.00223,
+    0.00236,
+    0.00881,
+    0.01526,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.02149,
+    0.01186,
+    0.00223,
+    0.00236,
+    0.00881,
+    0.01526
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "S2b",
+   "item": "bottom: settled pose = analytic exact pose (u_z)",
+   "value": -3.189445027374979,
+   "ref": -3.189428460834023,
+   "tol": 0.001,
+   "tol_kind": "abs",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "S2b",
+   "item": "bottom: settled pose = analytic exact pose (roll, pitch)",
+   "value": [
+    0.00028810855624358144,
+    0.17179872501578217
+   ],
+   "ref": [
+    0.00028792976511029476,
+    0.17179747873941043
+   ],
+   "tol": 0.0001,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V0",
+   "item": "bottom: active crawler spheres = 14 (min, max in the window)",
+   "value": [
+    14,
+    14
+   ],
+   "ref": [
+    14,
+    14
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V13",
+   "item": "bottom: no pad contact (legs at 0)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V13",
+   "item": "bottom: attitude drift in the still window (roll, pitch span)",
+   "value": [
+    9.526876152872248e-06,
+    2.0424468018392927e-05
+   ],
+   "ref": null,
+   "tol": 0.0001,
+   "tol_kind": "max",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V13",
+   "item": "bottom: crawler vertical force variation (span)",
+   "value": 34.10834318399429,
+   "ref": null,
+   "tol": 95.57275,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V13",
+   "item": "bottom: motor constraint violation (leg COG offset)",
+   "value": 4.760636329592671e-12,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "V13",
+   "item": "bottom: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "crawler_bottom",
+   "id": "R16",
+   "item": "S2b_crawler_bottom: snapshot round trip (restore into a fresh build, continue), position diff",
+   "value": 4.440892098500626e-16,
+   "ref": null,
+   "tol": 1e-12,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "event_fast_FL_dt1e-04",
+   "id": "R15",
+   "item": "event_fast_FL_dt1e-04: events = touch create, lift remove, re-touch create (chatter 0)",
+   "value": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "event_fast_FL_dt1e-05",
+   "id": "R15",
+   "item": "event_fast_FL_dt1e-05: events = touch create, lift remove, re-touch create (chatter 0)",
+   "value": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "event_slow_FL_dt1e-04",
+   "id": "R15",
+   "item": "event_slow_FL_dt1e-04: events = touch create, lift remove, re-touch create (chatter 0)",
+   "value": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "event_slow_FL_dt1e-05",
+   "id": "R15",
+   "item": "event_slow_FL_dt1e-05: events = touch create, lift remove, re-touch create (chatter 0)",
+   "value": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "events dt pair",
+   "id": "R15",
+   "item": "fast_FL: same event sequence at dt 1e-4 / 1e-5 s",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "events dt pair",
+   "id": "R15",
+   "item": "fast_FL: |event time (dt 1e-4) - event time (dt 1e-5)|",
+   "value": [
+    0.00016000000000349068,
+    0.0003000000004302894,
+    0.00017999999403173206
+   ],
+   "ref": null,
+   "tol": 0.001,
+   "tol_kind": "max",
+   "unit": "s",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "events dt pair",
+   "id": "R15",
+   "item": "slow_FL: same event sequence at dt 1e-4 / 1e-5 s",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": ""
+  },
+  {
+   "case": "events dt pair",
+   "id": "R15",
+   "item": "slow_FL: |event time (dt 1e-4) - event time (dt 1e-5)|",
+   "value": [
+    0.0001999999996272761,
+    6.999995087753064e-05,
+    0.0006700001654813548
+   ],
+   "ref": null,
+   "tol": 0.001,
+   "tol_kind": "max",
+   "unit": "s",
+   "passed": true,
+   "ref_key": ""
+  }
+ ]
+}
