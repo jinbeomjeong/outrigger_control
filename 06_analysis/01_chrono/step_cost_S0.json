@@ -1,0 +1,1368 @@
+{
+ "meta": {
+  "generated": "2026-10-20T20:36:17",
+  "script": "04_scripts/02_chrono/solver_benchmark/step_cost_S0.py",
+  "purpose": "chrono_build_plan.md S0 checklist: full-scale step cost, crawler layout D",
+  "cpu": "Intel(R) Core(TM) i7-14700",
+  "logical_cpus": 28,
+  "os": "Windows-11-10.0.26300-SP0",
+  "python": "3.12.15",
+  "pychrono": "10.0.0 (py312h418371c_1198, https://conda.anaconda.org/projectchrono/win-64)",
+  "model": "L1 full scale, auger level top: superstructure + 4 leg moving parts on locked ChLinkMotorLinearPosition + 4 pad spheres + 24 crawler spheres (layout D) + floor patches (4 pad, 2 crawler strips) + GroundBushingCoulomb (Python after_step)",
+  "states": {
+   "pads": "legs at operating extension, crawler 50 mm up, bushings attached",
+   "crawler": "legs retracted, machine on the crawler spheres, no bushings"
+  },
+  "timing": "per case own process; warm-up, then reps instrumented windows of 1 s simulated time (perf_counter around DoStepDynamics and around after_step per step), then a plain 1 s window (wall only) used for the wall-clock-per-sim-second figure, then a 0.2 s profiling window (Chrono timers)",
+  "plan_reference_us_per_step": {
+   "plan_unit": 200.0,
+   "plan_basis_QR_hook_dt2e-4": 163.0,
+   "solver_benchmark_LU_lock_dt1e-4_18_spheres": 133.0
+  },
+  "counts_pads_LU": {
+   "bodies": 6,
+   "links": 4,
+   "other_items": 4,
+   "coords_vel": 30,
+   "constraints_bilateral": 24,
+   "constraints": 24,
+   "kkt_size": 54,
+   "matrix_nnz": null,
+   "contacts_range": [
+    4,
+    4
+   ],
+   "collision_shapes": {
+    "crawler_spheres": 24,
+    "pad_spheres": 4,
+    "floor_boxes": 6
+   }
+  },
+  "system_settings": {
+   "engine": "pychrono",
+   "model": "L1",
+   "system_class": "ChSystemSMC",
+   "dt_s": 0.0001,
+   "dt_purpose": "explicit",
+   "dt_source": "argument dt",
+   "gravity_m_s2": [
+    0.0,
+    0.0,
+    -9.80665
+   ],
+   "gravity_source": "meta.gravity_m_s2 (vector (0, 0, -g), R1)",
+   "collision_system": "BULLET",
+   "timestepper": "EULER_IMPLICIT_LINEARIZED",
+   "solver": {
+    "type": "SPARSE_LU",
+    "lock_sparsity_pattern": true,
+    "openmp_preload": null,
+    "source": "R11 convention (no YAML key); user decision 2026-10-20 (06_analysis/01_chrono/solver_benchmark.json)"
+   },
+   "contact": {
+    "contact_force_model": "Hooke",
+    "use_material_properties": false,
+    "tangential_displacement_model": "OneStep",
+    "slip_velocity_threshold_m_s": 0.0001,
+    "contact_stiff": false,
+    "source": "04_scripts/02_chrono/test_stick_friction.py (bushing cases); R5, R8"
+   },
+   "floor": {
+    "mass_kg": 1000000000.0,
+    "mass_source": "contact.rigid_floor.ground_body_mass_kg",
+    "fixed": true,
+    "top_z_m": -1.0509,
+    "top_z_source": "ground.crawler_bottom_z_m",
+    "plate": null
+   },
+   "params_sha256": "8d1cc183df504cf70ffe19db0df98cd717d7fd3926109afbfd85819d8150dc8c"
+  }
+ },
+ "cases": [
+  {
+   "case": "pads_dt1e-4_LU",
+   "state": "pads",
+   "dt_s": 0.0001,
+   "solver": "SPARSE_LU",
+   "lock_sparsity_pattern": true,
+   "cpu_placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "us_per_step_median": 181.10000019078143,
+   "us_per_step_p5": 176.59999866737053,
+   "us_per_step_p95": 235.79999842695543,
+   "us_per_step_mean": 190.24401800757914,
+   "chrono_step_us_median": 104.00000064691994,
+   "hook_us_median": 76.59999937459361,
+   "hook_us_mean": 80.99922600307764,
+   "hook_share_of_mean": 0.4257649036820212,
+   "window_wall_us_per_step": [
+    192.10234000001947,
+    190.50587999990967,
+    191.08108000000357,
+    189.360619999934,
+    189.94098999992275
+   ],
+   "plain_wall_us_per_step": 189.4636700000774,
+   "wall_s_per_sim_s": 1.894636700000774,
+   "ratio_to_plan_unit_200us": 0.947318350000387,
+   "ratio_to_plan_basis_163us": 1.1623538036814565,
+   "ratio_to_benchmark_LU_lock_133us": 1.424538872181033,
+   "chrono_timers_us_per_step": {
+    "Step": 108.34354999999994,
+    "Advance": 102.96764999999999,
+    "LSsetup": 46.51074999999995,
+    "LSsolve": 1.8965500000000015,
+    "Setup": 0.279050000000003,
+    "Update": 0.0,
+    "Jacobian": 0.5629999999999998,
+    "Collision": 3.8720500000000286
+   },
+   "direct_solver_us_per_step": {
+    "setup_assembly": 4.639899999999947,
+    "setup_solver_call": 41.79249999999986,
+    "solve_assembly": 0.21580000000000432,
+    "solve_solver_call": 1.5951500000000052,
+    "setup_calls": 67000,
+    "solve_calls": 67000
+   },
+   "counts": {
+    "bodies": 6,
+    "links": 4,
+    "other_items": 4,
+    "coords_vel": 30,
+    "constraints_bilateral": 24,
+    "constraints": 24,
+    "kkt_size": 54,
+    "matrix_nnz": null,
+    "contacts_range": [
+     4,
+     4
+    ],
+    "collision_shapes": {
+     "crawler_spheres": 24,
+     "pad_spheres": 4,
+     "floor_boxes": 6
+    }
+   },
+   "end_state": {
+    "t_s": 6.49999999999819,
+    "pad_fz_N": [
+     122480.32843963752,
+     119803.10981598696,
+     71504.30092906537,
+     69013.63106862854
+    ],
+    "crawler_fz_N": 0.0,
+    "sum_fz_over_weight": 1.0013359198877334,
+    "contacts": 4,
+    "bushings_in_contact": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "bushing_events": 0,
+    "sup_pos_m": [
+     0.4538728155058322,
+     -0.0013065249445290332,
+     2.219986267711703
+    ]
+   },
+   "run_stamp": {
+    "started": "2026-10-20T20:28:41",
+    "finished": "2026-10-20T20:28:55",
+    "foreign_processes_before": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796"
+    ],
+    "foreign_processes_after": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796"
+    ]
+   }
+  },
+  {
+   "case": "crawler_dt1e-4_LU",
+   "state": "crawler",
+   "dt_s": 0.0001,
+   "solver": "SPARSE_LU",
+   "lock_sparsity_pattern": true,
+   "cpu_placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "us_per_step_median": 68.29999983892776,
+   "us_per_step_p5": 64.69999971159268,
+   "us_per_step_p95": 83.99999933317304,
+   "us_per_step_mean": 71.81414799881168,
+   "chrono_step_us_median": 56.2999994144775,
+   "hook_us_median": 11.90000148199033,
+   "hook_us_mean": 13.097100001432409,
+   "hook_share_of_mean": 0.18237492703595298,
+   "window_wall_us_per_step": [
+    70.94495000001189,
+    72.45597000000998,
+    72.24579999983689,
+    71.5647999999419,
+    73.08822000013606
+   ],
+   "plain_wall_us_per_step": 70.74729000014486,
+   "wall_s_per_sim_s": 0.7074729000014485,
+   "ratio_to_plan_unit_200us": 0.3537364500007243,
+   "ratio_to_plan_basis_163us": 0.4340324539886188,
+   "ratio_to_benchmark_LU_lock_133us": 0.5319345112792846,
+   "chrono_timers_us_per_step": {
+    "Step": 57.0383,
+    "Advance": 47.609149999999985,
+    "LSsetup": 41.604150000000025,
+    "LSsolve": 1.6449000000000364,
+    "Setup": 0.16360000000000305,
+    "Update": 0.0,
+    "Jacobian": 0.11190000000000204,
+    "Collision": 7.619749999999991
+   },
+   "direct_solver_us_per_step": {
+    "setup_assembly": 3.253400000000029,
+    "setup_solver_call": 38.274999999999984,
+    "solve_assembly": 0.17710000000000375,
+    "solve_solver_call": 1.384000000000016,
+    "setup_calls": 67000,
+    "solve_calls": 67000
+   },
+   "counts": {
+    "bodies": 6,
+    "links": 4,
+    "other_items": 0,
+    "coords_vel": 30,
+    "constraints_bilateral": 24,
+    "constraints": 24,
+    "kkt_size": 54,
+    "matrix_nnz": null,
+    "contacts_range": [
+     10,
+     16
+    ],
+    "collision_shapes": {
+     "crawler_spheres": 24,
+     "pad_spheres": 4,
+     "floor_boxes": 6
+    }
+   },
+   "end_state": {
+    "t_s": 6.49999999999819,
+    "pad_fz_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "crawler_fz_N": 385228.9869314465,
+    "sum_fz_over_weight": 1.0076861055673707,
+    "contacts": 10,
+    "bushings_in_contact": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "bushing_events": 0,
+    "sup_pos_m": [
+     0.4522035058695078,
+     -0.0014828637609709493,
+     2.1698706485558885
+    ]
+   },
+   "run_stamp": {
+    "started": "2026-10-20T20:28:55",
+    "finished": "2026-10-20T20:29:01",
+    "foreign_processes_before": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796"
+    ],
+    "foreign_processes_after": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796"
+    ]
+   }
+  },
+  {
+   "case": "pads_dt1e-5_LU",
+   "state": "pads",
+   "dt_s": 1e-05,
+   "solver": "SPARSE_LU",
+   "lock_sparsity_pattern": true,
+   "cpu_placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "us_per_step_median": 181.8999990064185,
+   "us_per_step_p5": 176.199999259552,
+   "us_per_step_p95": 244.0999996906612,
+   "us_per_step_mean": 191.7040253351479,
+   "chrono_step_us_median": 104.50000081618782,
+   "hook_us_median": 76.70000013604295,
+   "hook_us_mean": 81.5824946694617,
+   "hook_share_of_mean": 0.4255648493913184,
+   "window_wall_us_per_step": [
+    190.55750499999704,
+    192.26201299999957,
+    193.37954399999944
+   ],
+   "plain_wall_us_per_step": 195.25824399999692,
+   "wall_s_per_sim_s": 19.52582439999969,
+   "ratio_to_plan_unit_200us": 0.9762912199999846,
+   "ratio_to_plan_basis_163us": 1.197903337423294,
+   "ratio_to_benchmark_LU_lock_133us": 1.4681070977443378,
+   "chrono_timers_us_per_step": {
+    "Step": 111.26473999999968,
+    "Advance": 105.4211100000011,
+    "LSsetup": 47.69263500000069,
+    "LSsolve": 1.986980000000108,
+    "Setup": 0.31612499999992844,
+    "Update": 0.0,
+    "Jacobian": 0.6203349999999906,
+    "Collision": 4.183344999999876
+   },
+   "direct_solver_us_per_step": {
+    "setup_assembly": 4.529519999999816,
+    "setup_solver_call": 43.07726499999967,
+    "solve_assembly": 0.2390749999999772,
+    "solve_solver_call": 1.6526700000001542,
+    "setup_calls": 440000,
+    "solve_calls": 440000
+   },
+   "counts": {
+    "bodies": 6,
+    "links": 4,
+    "other_items": 4,
+    "coords_vel": 30,
+    "constraints_bilateral": 24,
+    "constraints": 24,
+    "kkt_size": 54,
+    "matrix_nnz": null,
+    "contacts_range": [
+     4,
+     4
+    ],
+    "collision_shapes": {
+     "crawler_spheres": 24,
+     "pad_spheres": 4,
+     "floor_boxes": 6
+    }
+   },
+   "end_state": {
+    "t_s": 4.200000000010165,
+    "pad_fz_N": [
+     125914.05231642164,
+     122807.67969917637,
+     68788.51187076785,
+     65901.00733123715
+    ],
+    "crawler_fz_N": 0.0,
+    "sum_fz_over_weight": 1.0029312530392052,
+    "contacts": 4,
+    "bushings_in_contact": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "bushing_events": 0,
+    "sup_pos_m": [
+     0.45421381217803813,
+     -0.0012767871049900634,
+     2.219941123329112
+    ]
+   },
+   "run_stamp": {
+    "started": "2026-10-20T20:29:02",
+    "finished": "2026-10-20T20:30:27",
+    "foreign_processes_before": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796"
+    ],
+    "foreign_processes_after": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796",
+     "python.exe:30068"
+    ]
+   }
+  },
+  {
+   "case": "crawler_dt1e-5_LU",
+   "state": "crawler",
+   "dt_s": 1e-05,
+   "solver": "SPARSE_LU",
+   "lock_sparsity_pattern": true,
+   "cpu_placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "us_per_step_median": 69.60000064282212,
+   "us_per_step_p5": 65.6000011076685,
+   "us_per_step_p95": 90.30000001075678,
+   "us_per_step_mean": 73.771365333414,
+   "chrono_step_us_median": 57.29999975301325,
+   "hook_us_median": 12.200000128359534,
+   "hook_us_mean": 13.562847332335272,
+   "hook_share_of_mean": 0.1838497535058107,
+   "window_wall_us_per_step": [
+    73.82179099999121,
+    73.9986399999907,
+    74.2787860000135
+   ],
+   "plain_wall_us_per_step": 73.9701370000148,
+   "wall_s_per_sim_s": 7.397013700001478,
+   "ratio_to_plan_unit_200us": 0.369850685000074,
+   "ratio_to_plan_basis_163us": 0.45380452147248346,
+   "ratio_to_benchmark_LU_lock_133us": 0.5561664436091338,
+   "chrono_timers_us_per_step": {
+    "Step": 60.76987000000001,
+    "Advance": 48.92181500000093,
+    "LSsetup": 42.41102999999955,
+    "LSsolve": 1.7363500000001433,
+    "Setup": 0.18411999999997955,
+    "Update": 0.0,
+    "Jacobian": 0.12560499999997785,
+    "Collision": 9.659644999999085
+   },
+   "direct_solver_us_per_step": {
+    "setup_assembly": 3.5835799999997775,
+    "setup_solver_call": 38.74155500000038,
+    "solve_assembly": 0.19505999999990375,
+    "solve_solver_call": 1.4547749999996942,
+    "setup_calls": 440000,
+    "solve_calls": 440000
+   },
+   "counts": {
+    "bodies": 6,
+    "links": 4,
+    "other_items": 0,
+    "coords_vel": 30,
+    "constraints_bilateral": 24,
+    "constraints": 24,
+    "kkt_size": 54,
+    "matrix_nnz": null,
+    "contacts_range": [
+     12,
+     14
+    ],
+    "collision_shapes": {
+     "crawler_spheres": 24,
+     "pad_spheres": 4,
+     "floor_boxes": 6
+    }
+   },
+   "end_state": {
+    "t_s": 4.200000000010165,
+    "pad_fz_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "crawler_fz_N": 378686.2964124416,
+    "sum_fz_over_weight": 0.9905716657077299,
+    "contacts": 14,
+    "bushings_in_contact": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "bushing_events": 0,
+    "sup_pos_m": [
+     0.4521045058584277,
+     -0.0014790050279183153,
+     2.1708287958251025
+    ]
+   },
+   "run_stamp": {
+    "started": "2026-10-20T20:30:27",
+    "finished": "2026-10-20T20:31:01",
+    "foreign_processes_before": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796",
+     "python.exe:30068"
+    ],
+    "foreign_processes_after": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796",
+     "python.exe:30068"
+    ]
+   }
+  },
+  {
+   "case": "pads_dt1e-4_QR",
+   "state": "pads",
+   "dt_s": 0.0001,
+   "solver": "SPARSE_QR",
+   "lock_sparsity_pattern": true,
+   "cpu_placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "us_per_step_median": 199.69999993918464,
+   "us_per_step_p5": 192.99999985378236,
+   "us_per_step_p95": 276.3050010798902,
+   "us_per_step_mean": 210.7251360000737,
+   "chrono_step_us_median": 121.900000522146,
+   "hook_us_median": 77.20000030531082,
+   "hook_us_mean": 83.15433400450274,
+   "hook_share_of_mean": 0.3946104180209126,
+   "window_wall_us_per_step": [
+    209.71124000006967,
+    211.18386999987706,
+    211.54638000007253,
+    211.09970999987127,
+    211.87512000014976
+   ],
+   "plain_wall_us_per_step": 210.92781999996078,
+   "wall_s_per_sim_s": 2.1092781999996078,
+   "ratio_to_plan_unit_200us": 1.0546390999998039,
+   "ratio_to_plan_basis_163us": 1.2940357055212317,
+   "ratio_to_benchmark_LU_lock_133us": 1.5859234586463216,
+   "chrono_timers_us_per_step": {
+    "Step": 127.30690000000016,
+    "Advance": 121.40130000000042,
+    "LSsetup": 61.270899999999926,
+    "LSsolve": 4.401249999999983,
+    "Setup": 0.3083000000000012,
+    "Update": 0.0,
+    "Jacobian": 0.597099999999998,
+    "Collision": 4.24590000000001
+   },
+   "direct_solver_us_per_step": {
+    "setup_assembly": 4.54079999999997,
+    "setup_solver_call": 56.64274999999993,
+    "solve_assembly": 0.2590500000000002,
+    "solve_solver_call": 4.047649999999992,
+    "setup_calls": 67000,
+    "solve_calls": 67000
+   },
+   "counts": {
+    "bodies": 6,
+    "links": 4,
+    "other_items": 4,
+    "coords_vel": 30,
+    "constraints_bilateral": 24,
+    "constraints": 24,
+    "kkt_size": 54,
+    "matrix_nnz": null,
+    "contacts_range": [
+     4,
+     4
+    ],
+    "collision_shapes": {
+     "crawler_spheres": 24,
+     "pad_spheres": 4,
+     "floor_boxes": 6
+    }
+   },
+   "end_state": {
+    "t_s": 6.49999999999819,
+    "pad_fz_N": [
+     122480.33426531806,
+     119803.10941104233,
+     71504.30391049718,
+     69013.6283177559
+    ],
+    "crawler_fz_N": 0.0,
+    "sum_fz_over_weight": 1.0013359346704516,
+    "contacts": 4,
+    "bushings_in_contact": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "bushing_events": 0,
+    "sup_pos_m": [
+     0.4538728209195396,
+     -0.0013065209010472317,
+     2.219986268731395
+    ]
+   },
+   "run_stamp": {
+    "started": "2026-10-20T20:31:01",
+    "finished": "2026-10-20T20:31:16",
+    "foreign_processes_before": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796",
+     "python.exe:30068"
+    ],
+    "foreign_processes_after": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796",
+     "python.exe:30068"
+    ]
+   }
+  },
+  {
+   "case": "pads_dt1e-4_LU_repeat",
+   "state": "pads",
+   "dt_s": 0.0001,
+   "solver": "SPARSE_LU",
+   "lock_sparsity_pattern": true,
+   "cpu_placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "us_per_step_median": 184.29999909130856,
+   "us_per_step_p5": 176.8000001902692,
+   "us_per_step_p95": 258.6050009085734,
+   "us_per_step_mean": 194.90301399891905,
+   "chrono_step_us_median": 106.00000132399146,
+   "hook_us_median": 77.30000106676016,
+   "hook_us_mean": 82.80384800160391,
+   "hook_share_of_mean": 0.42484642131836475,
+   "window_wall_us_per_step": [
+    194.35862000009365,
+    196.52215000005526,
+    193.5650199999145,
+    196.33823000003758,
+    195.58435999988433
+   ],
+   "plain_wall_us_per_step": 194.23732000013842,
+   "wall_s_per_sim_s": 1.942373200001384,
+   "ratio_to_plan_unit_200us": 0.9711866000006921,
+   "ratio_to_plan_basis_163us": 1.1916400000008491,
+   "ratio_to_benchmark_LU_lock_133us": 1.4604309774446498,
+   "chrono_timers_us_per_step": {
+    "Step": 109.62275000000001,
+    "Advance": 104.06050000000027,
+    "LSsetup": 46.54350000000005,
+    "LSsolve": 1.954800000000004,
+    "Setup": 0.281300000000003,
+    "Update": 0.0,
+    "Jacobian": 0.5804499999999994,
+    "Collision": 4.042850000000024
+   },
+   "direct_solver_us_per_step": {
+    "setup_assembly": 4.4661999999999695,
+    "setup_solver_call": 41.999949999999984,
+    "solve_assembly": 0.23555000000000442,
+    "solve_solver_call": 1.6288500000000155,
+    "setup_calls": 67000,
+    "solve_calls": 67000
+   },
+   "counts": {
+    "bodies": 6,
+    "links": 4,
+    "other_items": 4,
+    "coords_vel": 30,
+    "constraints_bilateral": 24,
+    "constraints": 24,
+    "kkt_size": 54,
+    "matrix_nnz": null,
+    "contacts_range": [
+     4,
+     4
+    ],
+    "collision_shapes": {
+     "crawler_spheres": 24,
+     "pad_spheres": 4,
+     "floor_boxes": 6
+    }
+   },
+   "end_state": {
+    "t_s": 6.49999999999819,
+    "pad_fz_N": [
+     122480.32843963752,
+     119803.10981598696,
+     71504.30092906537,
+     69013.63106862854
+    ],
+    "crawler_fz_N": 0.0,
+    "sum_fz_over_weight": 1.0013359198877334,
+    "contacts": 4,
+    "bushings_in_contact": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "bushing_events": 0,
+    "sup_pos_m": [
+     0.4538728155058322,
+     -0.0013065249445290332,
+     2.219986267711703
+    ]
+   },
+   "run_stamp": {
+    "started": "2026-10-20T20:31:17",
+    "finished": "2026-10-20T20:31:31",
+    "foreign_processes_before": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796",
+     "python.exe:30068"
+    ],
+    "foreign_processes_after": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796",
+     "python.exe:30068"
+    ]
+   }
+  },
+  {
+   "case": "pads_dt1e-4_LU_ecore",
+   "state": "pads",
+   "dt_s": 0.0001,
+   "solver": "SPARSE_LU",
+   "lock_sparsity_pattern": true,
+   "cpu_placement": {
+    "mode": "ecore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27
+    ],
+    "power_throttling_off_ok": true
+   },
+   "us_per_step_median": 429.3000001780456,
+   "us_per_step_p5": 418.49999979604036,
+   "us_per_step_p95": 677.4999984372698,
+   "us_per_step_mean": 511.8279100046493,
+   "chrono_step_us_median": 193.50000002305023,
+   "hook_us_median": 233.90000023937318,
+   "hook_us_mean": 283.69174400220805,
+   "hook_share_of_mean": 0.554271735591033,
+   "window_wall_us_per_step": [
+    511.2603100000342,
+    502.9851499999495,
+    535.205169999972,
+    496.3226899999427,
+    518.2376499999009
+   ],
+   "plain_wall_us_per_step": 509.68068999991374,
+   "wall_s_per_sim_s": 5.096806899999137,
+   "ratio_to_plan_unit_200us": 2.5484034499995687,
+   "ratio_to_plan_basis_163us": 3.126875398772477,
+   "ratio_to_benchmark_LU_lock_133us": 3.8321856390970956,
+   "chrono_timers_us_per_step": {
+    "Step": 227.39005000000057,
+    "Advance": 212.92295000000016,
+    "LSsetup": 89.526,
+    "LSsolve": 4.190150000000021,
+    "Setup": 0.6834999999999856,
+    "Update": 0.0,
+    "Jacobian": 1.1514999999999889,
+    "Collision": 10.362149999999982
+   },
+   "direct_solver_us_per_step": {
+    "setup_assembly": 10.143949999999908,
+    "setup_solver_call": 79.21409999999992,
+    "solve_assembly": 0.4928999999999795,
+    "solve_solver_call": 3.553599999999981,
+    "setup_calls": 67000,
+    "solve_calls": 67000
+   },
+   "counts": {
+    "bodies": 6,
+    "links": 4,
+    "other_items": 4,
+    "coords_vel": 30,
+    "constraints_bilateral": 24,
+    "constraints": 24,
+    "kkt_size": 54,
+    "matrix_nnz": null,
+    "contacts_range": [
+     4,
+     4
+    ],
+    "collision_shapes": {
+     "crawler_spheres": 24,
+     "pad_spheres": 4,
+     "floor_boxes": 6
+    }
+   },
+   "end_state": {
+    "t_s": 6.49999999999819,
+    "pad_fz_N": [
+     122480.32843963752,
+     119803.10981598696,
+     71504.30092906537,
+     69013.63106862854
+    ],
+    "crawler_fz_N": 0.0,
+    "sum_fz_over_weight": 1.0013359198877334,
+    "contacts": 4,
+    "bushings_in_contact": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "bushing_events": 0,
+    "sup_pos_m": [
+     0.4538728155058322,
+     -0.0013065249445290332,
+     2.219986267711703
+    ]
+   },
+   "run_stamp": {
+    "started": "2026-10-20T20:31:31",
+    "finished": "2026-10-20T20:32:06",
+    "foreign_processes_before": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796",
+     "python.exe:30068"
+    ],
+    "foreign_processes_after": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796",
+     "python.exe:30068"
+    ]
+   }
+  },
+  {
+   "case": "pads_dt1e-4_LU_os",
+   "state": "pads",
+   "dt_s": 0.0001,
+   "solver": "SPARSE_LU",
+   "lock_sparsity_pattern": true,
+   "cpu_placement": {
+    "mode": "os",
+    "efficiency_classes": [
+     0,
+     1
+    ]
+   },
+   "us_per_step_median": 430.3999994590413,
+   "us_per_step_p5": 176.89499918560617,
+   "us_per_step_p95": 680.7000008848263,
+   "us_per_step_mean": 437.77159800065414,
+   "chrono_step_us_median": 194.4999985425966,
+   "hook_us_median": 233.79999947792385,
+   "hook_us_mean": 236.83656199653342,
+   "hook_share_of_mean": 0.5410048597903319,
+   "window_wall_us_per_step": [
+    202.27566000012303,
+    511.3072400001328,
+    501.70805999987346,
+    508.79602999993955,
+    469.6771099999751
+   ],
+   "plain_wall_us_per_step": 479.3269199999486,
+   "wall_s_per_sim_s": 4.793269199999486,
+   "ratio_to_plan_unit_200us": 2.396634599999743,
+   "ratio_to_plan_basis_163us": 2.94065595091993,
+   "ratio_to_benchmark_LU_lock_133us": 3.6039618045108917,
+   "chrono_timers_us_per_step": {
+    "Step": 233.76094999999975,
+    "Advance": 215.70470000000068,
+    "LSsetup": 93.63325000000013,
+    "LSsolve": 4.400249999999996,
+    "Setup": 0.9060999999999995,
+    "Update": 0.0,
+    "Jacobian": 1.5227000000000046,
+    "Collision": 13.33914999999998
+   },
+   "direct_solver_us_per_step": {
+    "setup_assembly": 10.00384999999999,
+    "setup_solver_call": 83.42024999999998,
+    "solve_assembly": 0.665899999999972,
+    "solve_solver_call": 3.564300000000008,
+    "setup_calls": 67000,
+    "solve_calls": 67000
+   },
+   "counts": {
+    "bodies": 6,
+    "links": 4,
+    "other_items": 4,
+    "coords_vel": 30,
+    "constraints_bilateral": 24,
+    "constraints": 24,
+    "kkt_size": 54,
+    "matrix_nnz": null,
+    "contacts_range": [
+     4,
+     4
+    ],
+    "collision_shapes": {
+     "crawler_spheres": 24,
+     "pad_spheres": 4,
+     "floor_boxes": 6
+    }
+   },
+   "end_state": {
+    "t_s": 6.49999999999819,
+    "pad_fz_N": [
+     122480.32843963752,
+     119803.10981598696,
+     71504.30092906537,
+     69013.63106862854
+    ],
+    "crawler_fz_N": 0.0,
+    "sum_fz_over_weight": 1.0013359198877334,
+    "contacts": 4,
+    "bushings_in_contact": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "bushing_events": 0,
+    "sup_pos_m": [
+     0.4538728155058322,
+     -0.0013065249445290332,
+     2.219986267711703
+    ]
+   },
+   "run_stamp": {
+    "started": "2026-10-20T20:32:07",
+    "finished": "2026-10-20T20:32:36",
+    "foreign_processes_before": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796",
+     "python.exe:30068"
+    ],
+    "foreign_processes_after": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796",
+     "python.exe:30068",
+     "python.exe:43512",
+     "python.exe:40684",
+     "python.exe:38812",
+     "python.exe:39348"
+    ]
+   }
+  },
+  {
+   "case": "pads_dt1e-4_LU_nobushing",
+   "state": "pads",
+   "dt_s": 0.0001,
+   "solver": "SPARSE_LU",
+   "lock_sparsity_pattern": true,
+   "cpu_placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "us_per_step_median": 49.39999962516595,
+   "us_per_step_p5": 47.3000000056345,
+   "us_per_step_p95": 59.100000726175494,
+   "us_per_step_mean": 51.54616600015288,
+   "chrono_step_us_median": 49.29999886371661,
+   "hook_us_median": 0.100000761449337,
+   "hook_us_mean": 0.11389599858375732,
+   "hook_share_of_mean": 0.0022095920496476794,
+   "window_wall_us_per_step": [
+    50.969700000132434,
+    52.5094500000705,
+    53.80734999998822,
+    50.790109999979904,
+    51.04215999999724
+   ],
+   "plain_wall_us_per_step": 50.851719999991474,
+   "wall_s_per_sim_s": 0.5085171999999146,
+   "ratio_to_plan_unit_200us": 0.25425859999995737,
+   "ratio_to_plan_basis_163us": 0.31197374233123604,
+   "ratio_to_benchmark_LU_lock_133us": 0.3823437593984321,
+   "chrono_timers_us_per_step": {
+    "Step": 50.78285000000006,
+    "Advance": 46.60929999999986,
+    "LSsetup": 40.72895000000001,
+    "LSsolve": 1.6552000000000415,
+    "Setup": 0.15145000000000267,
+    "Update": 0.0,
+    "Jacobian": 0.09795000000000184,
+    "Collision": 3.107399999999991
+   },
+   "direct_solver_us_per_step": {
+    "setup_assembly": 3.3061500000000152,
+    "setup_solver_call": 37.36019999999996,
+    "solve_assembly": 0.17870000000000377,
+    "solve_solver_call": 1.3998500000000231,
+    "setup_calls": 67000,
+    "solve_calls": 67000
+   },
+   "counts": {
+    "bodies": 6,
+    "links": 4,
+    "other_items": 0,
+    "coords_vel": 30,
+    "constraints_bilateral": 24,
+    "constraints": 24,
+    "kkt_size": 54,
+    "matrix_nnz": null,
+    "contacts_range": [
+     4,
+     4
+    ],
+    "collision_shapes": {
+     "crawler_spheres": 24,
+     "pad_spheres": 4,
+     "floor_boxes": 6
+    }
+   },
+   "end_state": {
+    "t_s": 6.49999999999819,
+    "pad_fz_N": [
+     118404.16446672575,
+     116283.94047144457,
+     74576.40409726532,
+     72605.0761349146
+    ],
+    "crawler_fz_N": 0.0,
+    "sum_fz_over_weight": 0.9988985464985678,
+    "contacts": 4,
+    "bushings_in_contact": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "bushing_events": 0,
+    "sup_pos_m": [
+     0.4520320925515153,
+     -0.0015655599868926767,
+     2.220040056496717
+    ]
+   },
+   "run_stamp": {
+    "started": "2026-10-20T20:33:10",
+    "finished": "2026-10-20T20:33:14",
+    "foreign_processes_before": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796"
+    ],
+    "foreign_processes_after": [
+     "python.exe:14576",
+     "python.exe:14604",
+     "python.exe:23156",
+     "python.exe:4136",
+     "python.exe:12888",
+     "python.exe:4464",
+     "python.exe:31932",
+     "python.exe:40424",
+     "python.exe:39796"
+    ]
+   }
+  }
+ ],
+ "derived": {
+  "cost_split_pads_dt1e-4_us_per_step": {
+   "total_plain": 189.4636700000774,
+   "chrono_step_median": 104.00000064691994,
+   "chrono_step_without_bushings_median": 49.29999886371661,
+   "chrono_bushing_loads_4": 54.700001783203334,
+   "python_hook_mean": 80.99922600307764,
+   "linear_solver_LSsetup_plus_LSsolve": 48.40729999999996,
+   "collision": 3.8720500000000286,
+   "loop_and_rest": 4.464443350079819
+  },
+  "ratio_dt1e-5_over_dt1e-4_us_per_step": {
+   "pads": 1.030584090342582,
+   "crawler": 1.045554352680694
+  },
+  "stage_impact_examples": {
+   "note": "simulated lengths from chrono_build_plan.md section 4 (lift: first touch about 15.0 s after motor start, crawler state before it, pad state after); P-core placement",
+   "V9_V4_reference_dt1e-5_wall_s": 456.5622973800166,
+   "V9_V4_reference_plan_wall_s": 654.0,
+   "V4_run_transition_window_only_wall_s": 98.92256134003199,
+   "V4_run_plan_wall_s": 121.2,
+   "S2b_crawler_settle_3x65.5s_wall_s": 139.01842485028462,
+   "S2b_crawler_settle_plan_wall_s": 393.0
+  },
+  "placement_factor_vs_pcore": {
+   "os_default": 2.5299146796837237,
+   "ecore": 2.690123599947713
+  }
+ }
+}

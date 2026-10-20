@@ -14,6 +14,7 @@
   - `pychrono.sensor`에 가속도·자이로 센서(`ChAccelerometerSensor`, `ChGyroscopeSensor`)가 있지만, IMU 모델은 엔진 독립으로 직접 구현한다.
   - ML/DL 학습은 별도 환경 `pytorch_214_cuda_python_313`(Python 3.13, PyTorch 2.14.1+cu130, scikit-learn, LightGBM, ONNX; 정의 [environment-ml.yml](environment-ml.yml))에서 한다. 실행: `C:\ProgramData\miniforge3\envs\pytorch_214_cuda_python_313\python.exe`. GPU RTX 4070 SUPER(12 GB). 이 환경의 numpy BLAS는 **MKL + TBB 스레딩 계층**이다. torch를 먼저 import한 뒤 MKL 기본 계층이면 numpy 행렬곱에서 프로세스가 죽으므로(0xC06D007F), `MKL_THREADING_LAYER=TBB`를 conda 환경 변수와 site-packages의 `sitecustomize.py` 두 곳에 걸어 `python.exe` 직접 호출에서도 적용되게 했다(환경을 다시 만들면 `sitecustomize.py`도 다시 만든다 — environment-ml.yml 주석). 학습 데이터는 Chrono-dev가 만든 npz를 읽고, 시뮬레이션 안 추론이 필요하면 ONNX로 내보낸다.
   - 시각화는 `pychrono.irrlicht`를 쓴다. VSG 시각화 모듈은 `pychrono.vsg3d`라는 이름으로 있지만(2026-10-19 import 확인) 쓰지 않는다.
+  - 계산 비용 측정·장시간 실행은 **P코어 고정 + EcoQoS 해제**로 한다(i7-14700, P 8 + E 12). Windows가 창 없는 하위 프로세스를 E코어로 보내 2.4~2.5배 느려진다. 구현 참고 `04_scripts/02_chrono/solver_benchmark/step_cost_S0.py`의 `place_process`, S6 runner에 넣는다(계획 6절 #24). 비용 측정은 다른 계산과 겹치지 않게 혼자 돌린다.
   - Chrono 9 이후로는 충돌 시스템을 지정해야 접촉이 생긴다: `sys.SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)`.
 - 지면 모델은 두 가지를 지원한다.
   - 강체 지면(예: 시멘트 바닥): Chrono 접촉(SMC/NSC)
@@ -52,6 +53,7 @@
   - 감쇠비(사용자 결정, 2026-10-20, 근거 [00_docs/01_dynamics/damping_survey.md](00_docs/01_dynamics/damping_survey.md)): **다리 축(잠긴 실린더) ζ 0.03**(감도 0.01~0.10), 이동 중(L2 밸브 구동) ζ 0.10, **크롤러 접지 콘크리트 0.05 / 토양 0.2**(감도 0.02~0.3), 구조·마스트 0.015. 다리 감쇠계수는 **상하(heave) 모드 약 7.4 Hz** 기준으로 맞춘다(로킹 1.8 Hz는 약 0.007로 더 작아짐, 보수적). 실 마찰 F_s는 점성 감쇠에 섞지 않고 따로 모델링한다. 모두 문헌 기반 추론값이다(실측 없음). Chrono SMC Hooke의 `gn`은 접촉 두 바디(패드·바닥)의 유효 질량 기준이라, 상부체 모드 ζ를 주려면 c를 직접 계산해 넣는다.
   - 마스트를 눕힌 자세(운송 자세)는 고려하지 않는다. [00_docs/00_cad/cad_mast_review.md](00_docs/00_cad/cad_mast_review.md)는 참고 자료로만 남긴다.
 - 상부체 질량, 무게중심, 관성, 다리 부착 위치는 CAD를 검토한 뒤 확정한다. 확정 전에 쓰는 값은 가정치로 표시한다. CAD 검토 결과는 [00_docs/00_cad/cad_review.md](00_docs/00_cad/cad_review.md)(제원·다리). [00_docs/00_cad/cad_mast_review.md](00_docs/00_cad/cad_mast_review.md)(마스트 힌지·눕힌 자세)는 시나리오에서 빠져 참고용이다.
+- **레벨링 목표는 데크(상부체) 수평**이다(사용자 결정 2026-10-20, Q-B5). 자세 = IMU(C1 프레임)가 보는 상부체 roll·pitch. 마스트 처짐에 따른 상부체 대비 마스트 경사(최대 0.13°, IMU로 안 보임)는 제어 대상이 아니며 기록만 한다(근거 `00_docs/01_dynamics/dynamics_model.md` 3.9절).
 - 제어 성능 목표는 roll·pitch 목표값에 대한 자세 정확도다. 정상상태 오차 허용치는 **±0.2°**다(2026-10-20 ±0.1°에서 완화, 근거 [00_docs/05_sensors/imu_cabin_and_accuracy_review.md](00_docs/05_sensors/imu_cabin_and_accuracy_review.md)). 완료 판정 데드밴드는 0.03°를 유지하고, **IMU 현장 영점 교정을 운용 절차로 의무화**한다. **장착 몫 0.02°**(사용자 결정 2026-10-20: IMU를 C1 프레임에 직접 달아 캐빈 방진 마운트 몫 0.02°를 빼고 0.03° → 0.02°. 핀 러그 무하중이 제조사 확인되면 0.01°까지 줄일 수 있다, 근거 `00_docs/05_sensors/imu_cabin_and_accuracy_review.md` 10절). 그래서 센서 정지 영점 오차 허용은 **0.14°(2.44 mg)**다(이전 0.13°, 2.27 mg).
 - IMU 장착 위치(2026-10-20): **캐빈 바닥 아래 상부 프레임**, 기체 좌표 **(0.31, 0.88, 0.040) m**(BASE DECK 좌측 폰툰 15 mm 가로판 윗면, 후보 C1; 사용자 결정 2026-10-20, 근거 `00_docs/00_cad/cad_origin_mass_imu.md` 4절, 그림 `01_cad/01_parts/imu_c1_*.png`). 박스 100×100×50 mm가 간섭 없이 들어가며, 판 후방 가장자리 여유가 20 mm라 설치 때 전방으로 조금 옮기는 편이 낫다. 이전 가정점 (0.20, 0.88, 0.30) m는 폰툰 안 빈 공간이라 붙일 면이 없었다. 캐빈 몸체에 달지 않는다(캐빈 방진 마운트 오차 회피). 로킹 회전 중심이 지면 아래라 **IMU를 높이 달수록 겉보기 기울기 증폭이 커진다** — 낮게 단다.
 - 시뮬레이션 시간 간격(사용자 결정, 2026-10-20) — **용도별 dt**:
@@ -96,7 +98,7 @@
 - roll·pitch 목표값 범위
 - 제어기 세부: 탐침을 매번 할지(감시 트리거 때만 할지), 비틀림 목표(n^T P = 0 또는 최소 하중 최대화), 실 마찰 설계 띠 F_band, 게인 — 근거는 [00_docs/04_control/control_candidates_comparison.md](00_docs/04_control/control_candidates_comparison.md) 8절
 - 유압 사양(체적 탄성계수, 배관, 응답 시정수), 접촉 강성·감쇠·마찰 실측값 — 지금은 가정치
-- 마스트 1차 굽힘 진동수(CAD 참고 추정: 상단 전후 2.4–2.7 Hz·좌우 ≤ 3.6 Hz로 L1 로킹 1.8~3.9 Hz와 겹칠 수 있음, dynamics-expert 검증 대기; 붐 실린더·백스테이 유압 강성 미정 — 질문 Q-B1~B4, `00_docs/00_cad/cad_mast_beam.md` 11절)
+- 마스트 유연성(C9 판정 2026-10-20, `00_docs/01_dynamics/dynamics_model.md` 3.9절): 1차 굽힘이 L1 로킹 대역과 겹쳐 결합 시 상단 로킹이 10~49 % 내려가지만, 정상상태 자세·하중 영향은 무시할 만하고 동적 하중·IMU 잔류는 강체가 보수적이다 → **S1~S6은 강체 마스트로 진행**, D2·V17과 정착 길이·완료 필터 확정 전에 방향별 1모드 등가 유연 마스트를 넣는다. 미정: 붐(측방 경사) 실린더 잠김·치수(Q-B3, 영향 최대), 백스테이 실린더 잠김(Q-B1), 전면판 닫힌 단면 여부(Q-B4), MAST↔MAST-2 체결(Q-B2) — `00_docs/00_cad/cad_mast_beam.md` 11절.
 - IMU 센서 모델 선정, 제어 주기(기본 20 ms 가정). 장착점 C1의 실기 확인(점검구 접근, 판 국부 강성)
 - 주행 시험(T): 주행 모터 사양, 트랙 장력, 스프로킷 맞물림(CAD 23이빨 vs 핀 반지름 불일치), 상부 롤러 유무
 
@@ -111,4 +113,5 @@
   - FreeCAD를 `Chrono-dev`에 conda로 설치하지 않는다. OpenCASCADE 버전이 부딪힐 수 있다.
   - 630 MB STEP을 열면 수 분 이상 걸리고 메모리를 많이 쓴다. 필요한 부품만 따로 내보내 확인하는 편이 낫다.
 - CAD 추출(부품 표·질량 특성)·형상 변환·Chrono 모델·시뮬레이션 스크립트는 cad-expert 에이전트에, 그 밖의 Python 코드(제어기, IMU 모델, 데이터 처리) 작성·수정은 python-expert 에이전트에 맡긴다.
-- 동역학 해석(운동방정식·선형화, 4점 지지 부정정 하중 분배, 고유진동수, 적분기·시간 간격 선택, 시뮬레이션 결과의 물리 타당성 판정, 제어 관점 상태공간·LQR)은 dynamics-expert 에이전트에 맡긴다. 기준 환경은 conda `dynamics-dev`다. Chrono 모델을 만들거나 바꿀 때는 dynamics-expert의 검증 기준(`00_docs/01_dynamics/dynamics_model.md`)으로 결과를 판정한다.
+- 동역학 해석(운동방정식·선형화, 4점 지지 부정정 하중 분배, 고유진동수, 적분기·시간 간격 선택, 시뮬레이션 결과의 물리 타당성 판정, 플랜트 상태공간 모델)은 dynamics-expert 에이전트에 맡긴다. 기준 환경은 conda `dynamics-dev`다. Chrono 모델을 만들거나 바꿀 때는 dynamics-expert의 검증 기준(`00_docs/01_dynamics/dynamics_model.md`)으로 결과를 판정한다.
+- 제어기 설계·해석(C2·C8 구조와 게인 튜닝, 루프 정형·여유·지연, 대역 분리, 안티와인드업·리밋 사이클, 강건성(오거 3단계·크롤러 강성·실 마찰 F_s), LQR 비교 기준·MPC·추정기 검토, 제어기 검증 항목 판정 기준)은 control-expert에 맡긴다(2026-10-20 추가). 주력은 고전제어, 현대제어는 다변수 결합 점검·비교 기준·제약 처리 보조. 기준 환경 dynamics-dev, 교차 검증은 Julia 1.13.2 프로젝트. 플랜트 모델(선형화 상태공간)은 dynamics-expert가 넘기고, 제어기 코드 구현은 python-expert가 한다.

@@ -177,6 +177,11 @@ class TruthState:
         bushing_anchor_m: Ground anchor of each pad's ground bushing, world frame (m),
             shape (4, 3); NaN rows for legs without an active bushing (lifted, or a model
             without ground bushings).
+        stroke_true_m: Actual stroke = rod displacement relative to the cylinder (m),
+            shape (4,), or ``None`` if the engine does not provide it. Kept apart from
+            ``s_motor_m`` because the two differ (about 5 mm in L1, where the oil and
+            contact compliance sit outside the motor; user decision 2026-10-20). Optional
+            only so that engines written before this field keep working.
     """
 
     t_s: float
@@ -193,6 +198,7 @@ class TruthState:
     is_pad_in_contact: NDArray[np.bool_]
     F_crawler_N: NDArray[np.float64]
     bushing_anchor_m: NDArray[np.float64]
+    stroke_true_m: NDArray[np.float64] | None = None
 
     def __post_init__(self) -> None:
         _freeze_fields(
@@ -217,6 +223,9 @@ class TruthState:
             self.bushing_anchor_m, (LEG_COUNT, 3), "bushing_anchor_m", allow_nan=True
         )
         object.__setattr__(self, "bushing_anchor_m", anchors)
+        if self.stroke_true_m is not None:
+            stroke_true = _frozen_array(self.stroke_true_m, (LEG_COUNT,), "stroke_true_m")
+            object.__setattr__(self, "stroke_true_m", stroke_true)
         if np.linalg.norm(self.body_quat_wxyz) == 0.0:
             raise InvalidSignalError("body_quat_wxyz", "zero quaternion")
 
