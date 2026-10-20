@@ -1,0 +1,288 @@
+{
+ "mesh": {
+  "mesher": "BRepMesh_IncrementalMesh (absolute deflection)",
+  "linear_deflection_mm": 5.0,
+  "angular_deflection_rad": 0.5
+ },
+ "groups": {
+  "left": {
+   "solid_count": 1548,
+   "brep_volume_mm3": 569595877.9547232,
+   "brep_bbox": {
+    "min_mm": [
+     690.599,
+     -1050.919,
+     -1839.969
+    ],
+    "max_mm": [
+     1366.0,
+     -90.875,
+     1844.185
+    ],
+    "centre_mm": [
+     1028.3,
+     -570.897,
+     2.108
+    ],
+    "half_extents_mm": [
+     337.7,
+     480.022,
+     1842.077
+    ],
+    "centre_body_m": [
+     0.002108,
+     1.0283,
+     -0.570897
+    ],
+    "half_extents_body_m": [
+     1.842077,
+     0.3377,
+     0.480022
+    ]
+   },
+   "fine_mesh": {
+    "faces": 2207748,
+    "volume_mm3": 567258448.8580495,
+    "volume_rel_to_brep": -0.004103662240441119,
+    "bbox_abs_diff_mm": 0.013201848626295032
+   },
+   "lowres_mesh": {
+    "method": "per-solid quadric decimation of the largest solids",
+    "volume_share": 0.95,
+    "target_reduction": 0.9,
+    "solids_kept": 303,
+    "kept_brep_volume_mm3": 541160518.2199825,
+    "solids_dropped": 1245,
+    "faces": 274005,
+    "watertight": false,
+    "volume_mm3": 492684836.9007284,
+    "volume_rel_to_brep": -0.13502738350242838,
+    "volume_rel_to_kept_brep": -0.08957726901198038,
+    "bbox_abs_diff_mm": 5.400110618603435
+   },
+   "convex_hull": {
+    "file": "track_left_hull.obj",
+    "faces": 2248,
+    "volume_mm3": 2096436164.2900333,
+    "volume_ratio_to_brep": 3.6805676540669725,
+    "bbox_abs_diff_mm": 0.013201848626295032
+   },
+   "box": {
+    "min_mm": [
+     690.599,
+     -1050.919,
+     -1839.969
+    ],
+    "max_mm": [
+     1366.0,
+     -90.875,
+     1844.185
+    ],
+    "centre_mm": [
+     1028.3,
+     -570.897,
+     2.108
+    ],
+    "half_extents_mm": [
+     337.7,
+     480.022,
+     1842.077
+    ],
+    "centre_body_m": [
+     0.002108,
+     1.0283,
+     -0.570897
+    ],
+    "half_extents_body_m": [
+     1.842077,
+     0.3377,
+     0.480022
+    ],
+    "volume_ratio_to_brep": 4.193950297659994
+   }
+  },
+  "right": {
+   "solid_count": 1548,
+   "brep_volume_mm3": 569595574.1295953,
+   "brep_bbox": {
+    "min_mm": [
+     -1366.001,
+     -1050.919,
+     -1839.969
+    ],
+    "max_mm": [
+     -690.6,
+     -90.875,
+     1844.185
+    ],
+    "centre_mm": [
+     -1028.3,
+     -570.897,
+     2.108
+    ],
+    "half_extents_mm": [
+     337.7,
+     480.022,
+     1842.077
+    ],
+    "centre_body_m": [
+     0.002108,
+     -1.0283,
+     -0.570897
+    ],
+    "half_extents_body_m": [
+     1.842077,
+     0.3377,
+     0.480022
+    ]
+   },
+   "fine_mesh": {
+    "faces": 2217036,
+    "volume_mm3": 567594120.983219,
+    "volume_rel_to_brep": -0.003513814427780093,
+    "bbox_abs_diff_mm": 0.013201848627204527
+   },
+   "lowres_mesh": {
+    "method": "per-solid quadric decimation of the largest solids",
+    "volume_share": 0.95,
+    "target_reduction": 0.9,
+    "solids_kept": 303,
+    "kept_brep_volume_mm3": 541160236.9960856,
+    "solids_dropped": 1245,
+    "faces": 276719,
+    "watertight": false,
+    "volume_mm3": 488466711.12670213,
+    "volume_rel_to_brep": -0.14243239710362388,
+    "volume_rel_to_kept_brep": -0.09737139255071448,
+    "bbox_abs_diff_mm": 5.400087182908237
+   },
+   "convex_hull": {
+    "file": "track_right_hull.obj",
+    "faces": 2248,
+    "volume_mm3": 2096436079.174897,
+    "volume_ratio_to_brep": 3.680569467869342,
+    "bbox_abs_diff_mm": 0.013201848627204527
+   },
+   "box": {
+    "min_mm": [
+     -1366.001,
+     -1050.919,
+     -1839.969
+    ],
+    "max_mm": [
+     -690.6,
+     -90.875,
+     1844.185
+    ],
+    "centre_mm": [
+     -1028.3,
+     -570.897,
+     2.108
+    ],
+    "half_extents_mm": [
+     337.7,
+     480.022,
+     1842.077
+    ],
+    "centre_body_m": [
+     0.002108,
+     -1.0283,
+     -0.570897
+    ],
+    "half_extents_body_m": [
+     1.842077,
+     0.3377,
+     0.480022
+    ],
+    "volume_ratio_to_brep": 4.193952534734149
+   }
+  },
+  "center": {
+   "solid_count": 118,
+   "brep_volume_mm3": 296590513.83863044,
+   "brep_bbox": {
+    "min_mm": [
+     -926.023,
+     -693.098,
+     -987.0
+    ],
+    "max_mm": [
+     926.022,
+     -15.0,
+     1013.0
+    ],
+    "centre_mm": [
+     -0.0,
+     -354.049,
+     13.0
+    ],
+    "half_extents_mm": [
+     926.022,
+     339.049,
+     1000.0
+    ],
+    "centre_body_m": [
+     0.013,
+     -0.0,
+     -0.354049
+    ],
+    "half_extents_body_m": [
+     1.0,
+     0.926022,
+     0.339049
+    ]
+   },
+   "fine_mesh": {
+    "faces": 56338,
+    "volume_mm3": 296129028.4092839,
+    "volume_rel_to_brep": -0.0015559682721263401,
+    "bbox_abs_diff_mm": 3.0189464382601727e-05
+   },
+   "lowres_mesh": {
+    "method": "per-solid quadric decimation of the largest solids",
+    "volume_share": 0.95,
+    "target_reduction": 0.9,
+    "solids_kept": 11,
+    "kept_brep_volume_mm3": 283751030.7261232,
+    "solids_dropped": 107,
+    "faces": 3686,
+    "watertight": false,
+    "volume_mm3": 144765903.2630534,
+    "volume_rel_to_brep": -0.5118997523237783,
+    "volume_rel_to_kept_brep": -0.4898136479272155,
+    "bbox_abs_diff_mm": 41.990468161262356
+   }
+  }
+ },
+ "lowres_file": "crawler_lowres.obj",
+ "provenance": {
+  "source_prototype_entry": "0:1:1:746",
+  "source_instance_path": "REXOME33_Assy_r3(미니어쳐) / REX33-REX33 - 5J286105:1 / =>[0:1:1:746]",
+  "source_file": "01_cad/06_brep/prototypes/0_1_1_746.bbrep",
+  "source_sha256": "d3142659588450bc626d856e87205506800483f2922135dd9658f10f3fdfbe6e",
+  "placement_world_from_prototype": [
+   [
+    1.0,
+    2.28762564447038e-12,
+    3.68649592787008e-16,
+    1346.29060581573
+   ],
+   [
+    -2.28762564447038e-12,
+    1.0,
+    -1.01260669503032e-28,
+    -689.77856907844
+   ],
+   [
+    -3.68649592787008e-16,
+    -7.420715927800904e-28,
+    1.0,
+    672.777826920854
+   ]
+  ],
+  "generator": "04_scripts/00_cad/derive_crawler_cache.py",
+  "generator_sha256": "3d579672d094709395cc963ff4570fb10a6c383af3b178039a002ffc720f3d90",
+  "created_at": "2026-10-20T16:48:07",
+  "note": "Crawler model is described as REXOME25 (another machine) in the STEP file"
+ }
+}

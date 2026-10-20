@@ -6,10 +6,12 @@
 *.ipt
 *.iam
 
-# CAD 대용량 캐시 (scripts/cad/로 재생성)
-cad/mast/
-cad/meshes/
-cad/mast_faces.csv
+# CAD 대용량 캐시 (04_scripts/00_cad/로 재생성)
+01_cad/04_mast/mast/
+01_cad/05_meshes/
+01_cad/04_mast/mast_faces.csv
+01_cad/06_brep/prototypes/
+01_cad/06_brep/**/*.log
 
 # Python
 __pycache__/
@@ -20,6 +22,7 @@ venv/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.hypothesis/
 .coverage
 htmlcov/
 build/
@@ -29,7 +32,7 @@ dist/
 .ipynb_checkpoints/
 
 # 시뮬레이션 산출물
-results/
+07_results/
 *.h5
 *.npz
 
@@ -44,4 +47,8 @@ desktop.ini
 .idea/
 
 # 유압 회로도 (사용자 제공 자료, git 제외)
-docs/hydraulic/
+00_docs/02_hydraulic/hydraulic/
+
+# 애니메이션·대형 메시 생성물 (2026-10-20 사용자 결정: git 제외, 생성 스크립트로 다시 만든다 — README "생성물" 절)
+*.gif
+*_lowres.obj

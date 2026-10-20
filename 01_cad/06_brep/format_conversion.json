@@ -1,0 +1,44 @@
+{
+ "direction": "ascii -> binary",
+ "created_at": "2026-10-20T16:02:15",
+ "tolerance": {
+  "volume_relative": 1e-06,
+  "centroid_abs_mm": 1e-06,
+  "inertia_relative_frobenius": 1e-06,
+  "bbox_abs_mm": 1e-06,
+  "vertex_abs_mm": 1e-09
+ },
+ "read_time_note": "warm OS file cache, single process, sequential reads",
+ "crawler": {
+  "count": 1,
+  "source_bytes": 694804348,
+  "target_bytes": 335435995,
+  "source_read_s": 9.274,
+  "target_read_s": 2.839
+ },
+ "other_prototypes": {
+  "count": 680,
+  "source_bytes": 77898835,
+  "target_bytes": 52250121,
+  "source_read_s": 1.734,
+  "target_read_s": 0.696
+ },
+ "all": {
+  "count": 681,
+  "source_bytes": 772703183,
+  "target_bytes": 387686116,
+  "source_read_s": 11.008,
+  "target_read_s": 3.535
+ },
+ "max_differences": {
+  "vertex_abs_mm": 0.0,
+  "volume_rel": 9.20152533821795e-16,
+  "centroid_abs_mm": 2.2737367544323206e-13,
+  "inertia_rel": 1.0451057805107582e-12
+ },
+ "same_topology_count": 681,
+ "failures": [],
+ "pass": true,
+ "total_s": 103.1,
+ "peak_memory_gb": 2.11
+}

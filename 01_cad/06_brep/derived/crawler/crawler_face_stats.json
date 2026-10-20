@@ -1,0 +1,82 @@
+{
+ "total_faces": 156614,
+ "total_solids": 3214,
+ "faces_by_type": {
+  "cylinder": 53140,
+  "plane": 36141,
+  "bspline_surface": 26090,
+  "torus": 19660,
+  "sphere": 11044,
+  "cone": 10539
+ },
+ "faces_by_side": {
+  "left": 77325,
+  "right": 77325,
+  "center": 1964
+ },
+ "faces_by_height_band (lowest point above ground)": {
+  "<= 1 mm": {
+   "faces": 1040,
+   "share": 0.00664
+  },
+  "<= 3 mm": {
+   "faces": 2096,
+   "share": 0.01338
+  },
+  "<= 10 mm": {
+   "faces": 4034,
+   "share": 0.02576
+  },
+  "<= 50 mm": {
+   "faces": 10950,
+   "share": 0.06992
+  },
+  "<= 100 mm": {
+   "faces": 31750,
+   "share": 0.20273
+  },
+  "<= 200 mm": {
+   "faces": 58486,
+   "share": 0.37344
+  },
+  "<= 400 mm": {
+   "faces": 72887,
+   "share": 0.46539
+  }
+ },
+ "faces_per_solid": {
+  "median": 19.0,
+  "max": 839
+ },
+ "recommendation": "C5 face index: for the crawler keep only faces whose lowest point is within 50 mm of the ground (contact candidates) plus the downward grouser tip planes; the rest (wheels, links, pins, frame) is not a mounting or ground surface",
+ "provenance": {
+  "source_prototype_entry": "0:1:1:746",
+  "source_instance_path": "REXOME33_Assy_r3(미니어쳐) / REX33-REX33 - 5J286105:1 / =>[0:1:1:746]",
+  "source_file": "01_cad/06_brep/prototypes/0_1_1_746.bbrep",
+  "source_sha256": "d3142659588450bc626d856e87205506800483f2922135dd9658f10f3fdfbe6e",
+  "placement_world_from_prototype": [
+   [
+    1.0,
+    2.28762564447038e-12,
+    3.68649592787008e-16,
+    1346.29060581573
+   ],
+   [
+    -2.28762564447038e-12,
+    1.0,
+    -1.01260669503032e-28,
+    -689.77856907844
+   ],
+   [
+    -3.68649592787008e-16,
+    -7.420715927800904e-28,
+    1.0,
+    672.777826920854
+   ]
+  ],
+  "generator": "04_scripts/00_cad/derive_crawler_cache.py",
+  "generator_sha256": "3d579672d094709395cc963ff4570fb10a6c383af3b178039a002ffc720f3d90",
+  "created_at": "2026-10-20T16:48:07",
+  "note": "Crawler model is described as REXOME25 (another machine) in the STEP file"
+ }
+}

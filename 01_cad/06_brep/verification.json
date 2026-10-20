@@ -1,0 +1,112 @@
+{
+ "tolerance": {
+  "volume_relative": 1e-06,
+  "centroid_abs_mm": 1e-06,
+  "inertia_relative_frobenius": 1e-06,
+  "bbox_abs_mm": 1e-06,
+  "vertex_abs_mm": 1e-09
+ },
+ "min_volume_mm3": 0.001,
+ "timing": {
+  "one_part_cold_including_index_s": 0.085,
+  "all_prototypes_cold_s": 3.43,
+  "compound_all_instances_warm_s": 0.011
+ },
+ "keys": {
+  "parts_rows": 1214,
+  "cache_rows": 1214,
+  "only_in_parts": 0,
+  "only_in_cache": 0,
+  "prototype_entry_mismatch": 0,
+  "product_name_mismatch": 0,
+  "is_mirrored_mismatch": 0
+ },
+ "prototype_properties_s": 29.1,
+ "instance_compare_s": 200.4,
+ "mass_properties_all": {
+  "instances": 1214,
+  "with_volume": 1165,
+  "volume_rel_max": 1.925529093344177e-13,
+  "centroid_abs_mm_max": 2.5920599000528455e-11,
+  "inertia_rel_max": 2.1190027175913392e-11,
+  "bbox_abs_mm_max": 1.0000013617172954e-07,
+  "zero_volume_abs_volume_max_mm3": 0.0,
+  "pass": true
+ },
+ "mass_properties_groups": {
+  "legs (JACK CYL)": {
+   "instances": 8,
+   "with_volume": 8,
+   "volume_rel_max": 6.846442392926026e-16,
+   "centroid_abs_mm_max": 4.547473508864641e-13,
+   "inertia_rel_max": 9.012102855126988e-15,
+   "bbox_abs_mm_max": 4.547473508864641e-13,
+   "zero_volume_abs_volume_max_mm3": null
+  },
+  "mast (MAST)": {
+   "instances": 28,
+   "with_volume": 28,
+   "volume_rel_max": 6.332171785345318e-15,
+   "centroid_abs_mm_max": 1.8189894035458565e-12,
+   "inertia_rel_max": 4.838007601660655e-15,
+   "bbox_abs_mm_max": 1.8189894035458565e-12,
+   "zero_volume_abs_volume_max_mm3": null
+  },
+  "auger (DRIVE AUGER ASSY / AUGER TOOL)": {
+   "instances": 378,
+   "with_volume": 331,
+   "volume_rel_max": 1.0497521538755817e-14,
+   "centroid_abs_mm_max": 1.8189894035458565e-12,
+   "inertia_rel_max": 7.056576671356261e-13,
+   "bbox_abs_mm_max": 9.999996564147295e-08,
+   "zero_volume_abs_volume_max_mm3": 0.0
+  }
+ },
+ "worst_volume_rel": [
+  {
+   "instance_path": "REXOME33_Assy_r3(미니어쳐) / BUMA CE 3D 20230425:1 / 부마 씨이 도어 조리품:1 / 부마 씨이 도어 부품-3:1",
+   "volume_rel": 1.925529093344177e-13
+  },
+  {
+   "instance_path": "REXOME33_Assy_r3(미니어쳐) / BATTERY BOX:2 / A89 THA-433-1K-1P:1",
+   "volume_rel": 1.0253168123578637e-13
+  },
+  {
+   "instance_path": "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_1:1 / A89 THA-433-1K-1P:1",
+   "volume_rel": 1.0253168123578637e-13
+  }
+ ],
+ "assembly_bbox_mm": {
+  "cache": [
+   -1536.5385,
+   -1050.9191,
+   -3001.0,
+   1536.5385,
+   10437.5392,
+   4033.1625
+  ],
+  "parts_csv": [
+   -1536.5385,
+   -1050.9191,
+   -3001.0,
+   1536.5385,
+   10437.5392,
+   4033.1625
+  ],
+  "abs_max_mm": 2.2737367544323206e-13
+ },
+ "legs_identity": {
+  "files": 8,
+  "same_topology_counts": 8,
+  "vertex_abs_mm_max": 4.547473508864641e-13,
+  "pass": true
+ },
+ "mast_identity": {
+  "files": 743,
+  "same_topology_counts": 743,
+  "vertex_abs_mm_max": 9.094947017729282e-13,
+  "pass": true
+ },
+ "pass": true,
+ "total_s": 242.6
+}

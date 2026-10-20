@@ -1,0 +1,43 @@
+{
+ "description": "Prototype B-rep cache of the STEP assembly (CAD root frame, mm, Y up)",
+ "generator": "04_scripts/00_cad/build_brep_cache.py",
+ "created_at": "2026-10-20T15:37:27",
+ "step": {
+  "path": "REXOME33_Assy_r3(미니어쳐).stp",
+  "size_bytes": 630777519,
+  "mtime": "2024-03-14T11:43:37",
+  "mtime_ns": 1710384217000000000
+ },
+ "reader": "STEPCAFControl_Reader (names and materials on, colors and layers off)",
+ "brep_format": "BinTools binary (.bbrep), BinTools_FormatVersion_VERSION_4, no triangulation",
+ "frame": "prototype files: prototype frame; instances.csv m00..m23: world <- prototype",
+ "prototype_count": 681,
+ "instance_count": 1214,
+ "mirrored_instance_count": 0,
+ "non_unit_scale_count": 0,
+ "prototype_bytes_total": 387686116,
+ "readback_max_vertex_error_mm": 4.831690603168681e-13,
+ "timings_s": {
+  "step_read_and_transfer_s": 124.99,
+  "traverse_s": 0.03,
+  "write_prototypes_s": 62.98,
+  "total_s": 188.01
+ },
+ "peak_memory_gb": 3.94,
+ "machine": "DESKTOP-KHVBBFL",
+ "environment": {
+  "python": "3.12.15",
+  "python_executable": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+  "pythonocc_core": "8.0.1.2",
+  "occt": "8.0.1",
+  "numpy": "2.5.4",
+  "trimesh": "5.1.1",
+  "pandas": "3.0.6"
+ },
+ "format_conversion": {
+  "script": "04_scripts/00_cad/convert_brep_cache.py",
+  "converted_at": "2026-10-20T16:02:15",
+  "direction": "ascii -> binary",
+  "report": "format_conversion.json"
+ }
+}

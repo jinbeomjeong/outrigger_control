@@ -1,0 +1,3728 @@
+{
+ "frames": {
+  "cad": "mm, Y up",
+  "body": "x = Z_cad, y = X_cad, z = Y_cad, m, origin = CAD origin (frames.BODY_ORIGIN_IN_CAD_MM = 0)"
+ },
+ "mesh_cache": {
+  "mesher": "BRepMesh_IncrementalMesh (absolute deflection)",
+  "linear_deflection_mm": 3.0,
+  "angular_deflection_rad": 0.5,
+  "frame": "CAD root frame, mm, Y up; instances already placed"
+ },
+ "origin": {
+  "crawler_contact": {
+   "lowest_y_cad_mm": -1050.919189,
+   "tolerances": {
+    "1mm": {
+     "sides": {
+      "left(+X)": {
+       "x_range_cad_mm": [
+        833.322144,
+        1256.676758
+       ],
+       "z_range_cad_mm": [
+        -826.081543,
+        812.567688
+       ],
+       "track_centre_x_cad_mm": 1044.999451,
+       "shoe_contact_width_mm": 423.354614,
+       "flat_length_mm": 1638.649231
+      },
+      "right(-X)": {
+       "x_range_cad_mm": [
+        -1256.677856,
+        -833.323181
+       ],
+       "z_range_cad_mm": [
+        -826.081543,
+        812.567688
+       ],
+       "track_centre_x_cad_mm": -1045.000519,
+       "shoe_contact_width_mm": 423.354675,
+       "flat_length_mm": 1638.649231
+      }
+     },
+     "patch_centre_cad_xz_mm": [
+      -0.000534,
+      -6.756927
+     ]
+    },
+    "3mm": {
+     "sides": {
+      "left(+X)": {
+       "x_range_cad_mm": [
+        833.019348,
+        1256.979614
+       ],
+       "z_range_cad_mm": [
+        -929.788086,
+        914.04071
+       ],
+       "track_centre_x_cad_mm": 1044.999481,
+       "shoe_contact_width_mm": 423.960266,
+       "flat_length_mm": 1843.828796
+      },
+      "right(-X)": {
+       "x_range_cad_mm": [
+        -1256.980591,
+        -833.020447
+       ],
+       "z_range_cad_mm": [
+        -929.788086,
+        914.04071
+       ],
+       "track_centre_x_cad_mm": -1045.000519,
+       "shoe_contact_width_mm": 423.960144,
+       "flat_length_mm": 1843.828796
+      }
+     },
+     "patch_centre_cad_xz_mm": [
+      -0.000519,
+      -7.873688
+     ]
+    }
+   },
+   "bbox_cad_mm": [
+    [
+     -1366.00061,
+     -1050.919189,
+     -1839.96875
+    ],
+    [
+     1365.999634,
+     -15.000005,
+     1844.184326
+    ]
+   ],
+   "bbox_centre_cad_xz_mm": [
+    -0.000488,
+    2.107788
+   ]
+  },
+  "swing_ring": {
+   "crawler_mounting_ring_bolt_circle": {
+    "section_y_cad_mm": -30.0,
+    "centre_cad_xz_mm": [
+     -0.003117,
+     0.08589
+    ],
+    "pitch_circle_radius_mm": 560.051531,
+    "pitch_circle_diameter_mm": 1120.103063,
+    "holes_on_circle": 48,
+    "holes_dropped": 0,
+    "hole_radius_mm": 10.973275,
+    "residual_max_mm": 0.297854,
+    "angular_spacing_deg_median": 7.501161
+   },
+   "deck_bolt_circle": {
+    "section_y_cad_mm": 12.0,
+    "centre_cad_xz_mm": [
+     0.004362,
+     0.001811
+    ],
+    "pitch_circle_radius_mm": 559.996312,
+    "pitch_circle_diameter_mm": 1119.992623,
+    "holes_on_circle": 48,
+    "holes_dropped": 1,
+    "hole_radius_mm": 8.61274,
+    "residual_max_mm": 0.165644,
+    "angular_spacing_deg_median": 7.500023
+   },
+   "deck_centre_hole": [
+    {
+     "centre_cad_xz_mm": [
+      -0.449614,
+      1.834341
+     ],
+     "radius_mm": 99.602015
+    }
+   ],
+   "deck_underside_y_cad_mm": 0.0,
+   "deck_underside_area_m2": 0.328497,
+   "crawler_ring_top_y_cad_mm": -15.000005,
+   "gap_deck_to_ring_mm": 15.000005,
+   "slewing_bearing_part_in_model": false,
+   "note": "no slewing-ring / turntable product in step_products.csv (bearings found are all inside DRIVE AUGER ASSY, outer diameter <= 460 mm)"
+  },
+  "pads_retracted_body_m": {
+   "FL": [
+    2.2938,
+    1.3238,
+    -0.6998
+   ],
+   "FR": [
+    2.2938,
+    -1.3238,
+    -0.6998
+   ],
+   "RL": [
+    -2.556,
+    1.1679,
+    -0.71
+   ],
+   "RR": [
+    -2.556,
+    -1.2429,
+    -0.71
+   ]
+  },
+  "pad_mean_body_m": [
+   -0.1311,
+   -0.01875,
+   -0.7049
+  ],
+  "com_body_m": {
+   "top": {
+    "A": [
+     0.3538,
+     -0.0015,
+     1.9407
+    ],
+    "B": [
+     0.3902,
+     0.0684,
+     2.0917
+    ],
+    "C": [
+     0.4521,
+     -0.0015,
+     2.1749
+    ]
+   },
+   "middle": {
+    "A": [
+     0.3538,
+     -0.0015,
+     1.3626
+    ],
+    "B": [
+     0.3902,
+     0.0684,
+     1.4439
+    ],
+    "C": [
+     0.4521,
+     -0.0015,
+     1.4772
+    ]
+   },
+   "bottom": {
+    "A": [
+     0.3538,
+     -0.0015,
+     0.7846
+    ],
+    "B": [
+     0.3902,
+     0.0684,
+     0.796
+    ],
+    "C": [
+     0.4521,
+     -0.0015,
+     0.7796
+    ]
+   }
+  },
+  "com_xy_by_case": {
+   "x_by_case_m": {
+    "A": 0.3538,
+    "B": 0.3902,
+    "C": 0.4521
+   },
+   "y_by_case_m": {
+    "A": -0.0015,
+    "B": 0.0684,
+    "C": -0.0015
+   },
+   "xy_same_for_all_levels": true
+  },
+  "candidates": {
+   "O0_cad_origin": {
+    "label": "CAD origin (current) = swing bolt-circle axis on the deck underside",
+    "cad_mm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "basis": "X, Z: crawler and deck bolt circles centred within 0.05 / 4.7 mm of X=Z=0; Y: deck underside plane (largest down face) Y = 0 mm",
+    "body_m_current_frame": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "offset_from_cad_origin_body_m": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "BODY_ORIGIN_IN_CAD_MM": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "in_new_frame": {
+     "ground_crawler_bottom_z_m": -1.050919,
+     "com_top_C_m": [
+      0.4521,
+      -0.0015,
+      2.1749
+     ],
+     "com_bottom_C_m": [
+      0.4521,
+      -0.0015,
+      0.7796
+     ],
+     "pad_FL_m": [
+      2.2938,
+      1.3238,
+      -0.6998
+     ],
+     "pad_RR_m": [
+      -2.556,
+      -1.2429,
+      -0.71
+     ],
+     "imu_assumed_m": [
+      0.2,
+      0.88,
+      0.3
+     ]
+    }
+   },
+   "O1_crawler_bottom_centre": {
+    "label": "crawler bottom centre (middle of the two track contact patches)",
+    "cad_mm": [
+     -0.000534,
+     -1050.919189,
+     -6.756927
+    ],
+    "basis": "crawler vertices within 1 mm of the lowest point (grouser tips), centre of both patches",
+    "body_m_current_frame": [
+     -0.006757,
+     -1e-06,
+     -1.050919
+    ],
+    "offset_from_cad_origin_body_m": [
+     -0.006757,
+     -1e-06,
+     -1.050919
+    ],
+    "BODY_ORIGIN_IN_CAD_MM": [
+     -0.000534,
+     -1050.919189,
+     -6.756927
+    ],
+    "in_new_frame": {
+     "ground_crawler_bottom_z_m": 0.0,
+     "com_top_C_m": [
+      0.458857,
+      -0.001499,
+      3.225819
+     ],
+     "com_bottom_C_m": [
+      0.458857,
+      -0.001499,
+      1.830519
+     ],
+     "pad_FL_m": [
+      2.300557,
+      1.323801,
+      0.351119
+     ],
+     "pad_RR_m": [
+      -2.549243,
+      -1.242899,
+      0.340919
+     ],
+     "imu_assumed_m": [
+      0.206757,
+      0.880001,
+      1.350919
+     ]
+    }
+   },
+   "O2_swing_axis_on_crawler_bottom": {
+    "label": "swing (slewing-ring bolt circle) axis x crawler bottom plane",
+    "cad_mm": [
+     -0.003117,
+     -1050.919189,
+     0.08589
+    ],
+    "basis": "crawler mounting-ring bolt circle centre (48 holes) at the grouser plane",
+    "body_m_current_frame": [
+     8.6e-05,
+     -3e-06,
+     -1.050919
+    ],
+    "offset_from_cad_origin_body_m": [
+     8.6e-05,
+     -3e-06,
+     -1.050919
+    ],
+    "BODY_ORIGIN_IN_CAD_MM": [
+     -0.003117,
+     -1050.919189,
+     0.08589
+    ],
+    "in_new_frame": {
+     "ground_crawler_bottom_z_m": 0.0,
+     "com_top_C_m": [
+      0.452014,
+      -0.001497,
+      3.225819
+     ],
+     "com_bottom_C_m": [
+      0.452014,
+      -0.001497,
+      1.830519
+     ],
+     "pad_FL_m": [
+      2.293714,
+      1.323803,
+      0.351119
+     ],
+     "pad_RR_m": [
+      -2.556086,
+      -1.242897,
+      0.340919
+     ],
+     "imu_assumed_m": [
+      0.199914,
+      0.880003,
+      1.350919
+     ]
+    }
+   },
+   "O3_pad_mean_on_crawler_bottom": {
+    "label": "mean of the four pad bottom centres, projected on the crawler bottom plane",
+    "cad_mm": [
+     -18.75,
+     -1050.919189,
+     -131.1
+    ],
+    "basis": "rexome33.yaml legs.*.pad_bottom_center_retracted_m (mean); z = crawler bottom (pad mean z itself = -0.7049 m, front/rear differ 10.2 mm)",
+    "body_m_current_frame": [
+     -0.1311,
+     -0.01875,
+     -1.050919
+    ],
+    "offset_from_cad_origin_body_m": [
+     -0.1311,
+     -0.01875,
+     -1.050919
+    ],
+    "BODY_ORIGIN_IN_CAD_MM": [
+     -18.75,
+     -1050.919189,
+     -131.1
+    ],
+    "in_new_frame": {
+     "ground_crawler_bottom_z_m": 0.0,
+     "com_top_C_m": [
+      0.5832,
+      0.01725,
+      3.225819
+     ],
+     "com_bottom_C_m": [
+      0.5832,
+      0.01725,
+      1.830519
+     ],
+     "pad_FL_m": [
+      2.4249,
+      1.34255,
+      0.351119
+     ],
+     "pad_RR_m": [
+      -2.4249,
+      -1.22415,
+      0.340919
+     ],
+     "imu_assumed_m": [
+      0.3311,
+      0.89875,
+      1.350919
+     ]
+    }
+   },
+   "O4_com_projection_case_C": {
+    "label": "superstructure CoM (case C, auger top) projected on the crawler bottom",
+    "cad_mm": [
+     -1.5,
+     -1050.919189,
+     452.1
+    ],
+    "basis": "auger_levels.json levels.top.mass.tool_steel.cog_body_m; reference only",
+    "body_m_current_frame": [
+     0.4521,
+     -0.0015,
+     -1.050919
+    ],
+    "offset_from_cad_origin_body_m": [
+     0.4521,
+     -0.0015,
+     -1.050919
+    ],
+    "BODY_ORIGIN_IN_CAD_MM": [
+     -1.5,
+     -1050.919189,
+     452.1
+    ],
+    "in_new_frame": {
+     "ground_crawler_bottom_z_m": 0.0,
+     "com_top_C_m": [
+      0.0,
+      0.0,
+      3.225819
+     ],
+     "com_bottom_C_m": [
+      0.0,
+      0.0,
+      1.830519
+     ],
+     "pad_FL_m": [
+      1.8417,
+      1.3253,
+      0.351119
+     ],
+     "pad_RR_m": [
+      -3.0081,
+      -1.2414,
+      0.340919
+     ],
+     "imu_assumed_m": [
+      -0.2521,
+      0.8815,
+      1.350919
+     ]
+    }
+   }
+  },
+  "yaml_track_centre_y_m_assumed": 1.066,
+  "yaml_crawler_x_range_m_assumed": [
+   -1.84,
+   1.844
+  ],
+  "impact_of_change": {
+   "keys_changed_by_z_shift": [
+    "ground.crawler_bottom_z_m",
+    "ground.lowest_pad_bottom_z_m",
+    "superstructure.auger_levels.top.com_m",
+    "superstructure.auger_levels.middle.com_m",
+    "superstructure.auger_levels.bottom.com_m",
+    "superstructure.auger_moving_set_at_cad_pose.com_m",
+    "superstructure.fixed_part.com_m",
+    "legs.FL.attachment_point_m",
+    "legs.FL.bracket_bolt_hole_z_range_m",
+    "legs.FL.barrel_z_range_m",
+    "legs.FL.bore_z_range_m",
+    "legs.FL.pad_bottom_center_retracted_m",
+    "legs.FL.moving_part.com_retracted_m",
+    "legs.FL.pad_body.com_m",
+    "legs.FL.rod_body.com_m",
+    "legs.FR.attachment_point_m",
+    "legs.FR.bracket_bolt_hole_z_range_m",
+    "legs.FR.barrel_z_range_m",
+    "legs.FR.bore_z_range_m",
+    "legs.FR.pad_bottom_center_retracted_m",
+    "legs.FR.moving_part.com_retracted_m",
+    "legs.FR.pad_body.com_m",
+    "legs.FR.rod_body.com_m",
+    "legs.RL.attachment_point_m",
+    "legs.RL.bracket_bolt_hole_z_range_m",
+    "legs.RL.barrel_z_range_m",
+    "legs.RL.bore_z_range_m",
+    "legs.RL.pad_bottom_center_retracted_m",
+    "legs.RL.moving_part.com_retracted_m",
+    "legs.RL.pad_body.com_m",
+    "legs.RL.rod_body.com_m",
+    "legs.RR.attachment_point_m",
+    "legs.RR.bracket_bolt_hole_z_range_m",
+    "legs.RR.barrel_z_range_m",
+    "legs.RR.bore_z_range_m",
+    "legs.RR.pad_bottom_center_retracted_m",
+    "legs.RR.moving_part.com_retracted_m",
+    "legs.RR.pad_body.com_m",
+    "legs.RR.rod_body.com_m"
+   ],
+   "keys_changed_by_xy_shift": [
+    "superstructure.auger_levels.top.com_m",
+    "superstructure.auger_levels.middle.com_m",
+    "superstructure.auger_levels.bottom.com_m",
+    "superstructure.auger_moving_set_at_cad_pose.com_m",
+    "superstructure.fixed_part.com_m",
+    "legs.FL.cylinder_axis_xy_m",
+    "legs.FL.attachment_point_m",
+    "legs.FL.pad_bottom_center_retracted_m",
+    "legs.FL.moving_part.com_retracted_m",
+    "legs.FL.pad_body.com_m",
+    "legs.FL.rod_body.com_m",
+    "legs.FR.cylinder_axis_xy_m",
+    "legs.FR.attachment_point_m",
+    "legs.FR.pad_bottom_center_retracted_m",
+    "legs.FR.moving_part.com_retracted_m",
+    "legs.FR.pad_body.com_m",
+    "legs.FR.rod_body.com_m",
+    "legs.RL.cylinder_axis_xy_m",
+    "legs.RL.attachment_point_m",
+    "legs.RL.pad_bottom_center_retracted_m",
+    "legs.RL.moving_part.com_retracted_m",
+    "legs.RL.pad_body.com_m",
+    "legs.RL.rod_body.com_m",
+    "legs.RR.cylinder_axis_xy_m",
+    "legs.RR.attachment_point_m",
+    "legs.RR.pad_bottom_center_retracted_m",
+    "legs.RR.moving_part.com_retracted_m",
+    "legs.RR.pad_body.com_m",
+    "legs.RR.rod_body.com_m",
+    "contact.crawler.sphere_layout.track_centre_y_m",
+    "contact.crawler.sphere_layout.x_range_m"
+   ],
+   "n_z": 39,
+   "n_xy": 31,
+   "n_z_or_xy": 45
+  }
+ },
+ "mass_audit": {
+  "placeholder_summary": {
+   "rows": 57,
+   "volume_m3": 0.749916,
+   "mass_A_kg": 933.174057,
+   "mass_B_kg": 5752.265059,
+   "mass_C_kg": 2171.970707,
+   "share_of_C_total_pct": 5.571613
+  },
+  "placeholder_breakdown": {
+   "generic_material": {
+    "rows": 41,
+    "volume_m3": 0.72121,
+    "mass_A_kg": 721.210255,
+    "mass_B_kg": 5526.926136,
+    "mass_C_kg": 1960.006905,
+    "share_of_C_total_pct": 5.027876
+   },
+   "density_1_any_material": {
+    "rows": 42,
+    "volume_m3": 0.723163,
+    "mass_A_kg": 723.162827,
+    "mass_B_kg": 5542.25383,
+    "mass_C_kg": 1961.959478,
+    "share_of_C_total_pct": 5.032885
+   },
+   "assumed_steel_unknown_material": {
+    "rows": 15,
+    "volume_m3": 0.026753,
+    "mass_A_kg": 210.01123,
+    "mass_B_kg": 210.01123,
+    "mass_C_kg": 210.01123,
+    "share_of_C_total_pct": 0.538728
+   },
+   "density_invalid": {
+    "rows": 0,
+    "volume_m3": 0.0,
+    "mass_A_kg": 0.0,
+    "mass_B_kg": 0.0,
+    "mass_C_kg": 0.0,
+    "share_of_C_total_pct": 0.0
+   },
+   "generic_overridden_in_C_tool": {
+    "rows": 5,
+    "volume_m3": 0.180846,
+    "mass_A_kg": 180.846226,
+    "mass_B_kg": 1419.642877,
+    "mass_C_kg": 1419.642877,
+    "share_of_C_total_pct": 3.641716
+   },
+   "generic_kept_in_C": {
+    "rows": 52,
+    "volume_m3": 0.56907,
+    "mass_A_kg": 752.327831,
+    "mass_B_kg": 4332.622183,
+    "mass_C_kg": 752.327831,
+    "share_of_C_total_pct": 1.929897
+   }
+  },
+  "placeholder_parts": [
+   {
+    "product": "TOOL ROD",
+    "top_assembly": "AUGER TOOL:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 7.85,
+    "source": "step_text",
+    "volume_m3": 0.140563,
+    "mass_A_kg": 140.562774,
+    "mass_B_kg": 1103.417772,
+    "mass_C_kg": 1103.417772,
+    "tool_override_in_C": true,
+    "centroid_body_m": [
+     3.413,
+     -0.0,
+     6.670774
+    ]
+   },
+   {
+    "product": "부마씨이 소구경 3D_Shrinkwrap_11",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "step_text",
+    "volume_m3": 0.501061,
+    "mass_A_kg": 501.06083,
+    "mass_B_kg": 3933.327516,
+    "mass_C_kg": 501.06083,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -0.367738,
+     0.830175,
+     0.981092
+    ]
+   },
+   {
+    "product": "TOOL CAP",
+    "top_assembly": "AUGER TOOL:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 7.85,
+    "source": "step_text",
+    "volume_m3": 0.039444,
+    "mass_A_kg": 39.443605,
+    "mass_B_kg": 309.632297,
+    "mass_C_kg": 309.632297,
+    "tool_override_in_C": true,
+    "centroid_body_m": [
+     3.411704,
+     0.001842,
+     4.676709
+    ]
+   },
+   {
+    "product": "부품10",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": 7.85,
+    "source": "assumed",
+    "volume_m3": 0.011338,
+    "mass_A_kg": 89.004399,
+    "mass_B_kg": 89.004399,
+    "mass_C_kg": 89.004399,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.413,
+     0.0,
+     5.402764
+    ]
+   },
+   {
+    "product": "부품1",
+    "top_assembly": "부품1:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": 7.85,
+    "source": "assumed",
+    "volume_m3": 0.005424,
+    "mass_A_kg": 42.58088,
+    "mass_B_kg": 42.58088,
+    "mass_C_kg": 42.58088,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     1.389392,
+     -1.077649,
+     0.150033
+    ]
+   },
+   {
+    "product": "부품1",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": 7.85,
+    "source": "assumed",
+    "volume_m3": 0.004253,
+    "mass_A_kg": 33.382912,
+    "mass_B_kg": 33.382912,
+    "mass_C_kg": 33.382912,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.414815,
+     -0.17195,
+     5.373678
+    ]
+   },
+   {
+    "product": "부품8",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": 7.85,
+    "source": "assumed",
+    "volume_m3": 0.001912,
+    "mass_A_kg": 15.007981,
+    "mass_B_kg": 15.007981,
+    "mass_C_kg": 15.007981,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.217898,
+     0.610079,
+     6.648642
+    ]
+   },
+   {
+    "product": "부품10",
+    "top_assembly": "CENTER DECK COVER_1:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": 7.85,
+    "source": "assumed",
+    "volume_m3": 0.001782,
+    "mass_A_kg": 13.989389,
+    "mass_B_kg": 13.989389,
+    "mass_C_kg": 13.989389,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -0.282031,
+     0.0,
+     0.811124
+    ]
+   },
+   {
+    "product": "솔리드17",
+    "top_assembly": "LOWER GUIDE_ASSY:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": 7.85,
+    "source": "assumed",
+    "volume_m3": 0.001733,
+    "mass_A_kg": 13.603285,
+    "mass_B_kg": 13.603285,
+    "mass_C_kg": 13.603285,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.954,
+     -0.0,
+     -0.488686
+    ]
+   },
+   {
+    "product": "부품6",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "step_text",
+    "volume_m3": 0.007596,
+    "mass_A_kg": 7.595923,
+    "mass_B_kg": 59.627992,
+    "mass_C_kg": 7.595923,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.41493,
+     0.680013,
+     6.307754
+    ]
+   },
+   {
+    "product": "CABIN-2 (DOOR glass-1) ",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.005411,
+    "mass_A_kg": 5.410725,
+    "mass_B_kg": 13.526812,
+    "mass_C_kg": 5.410725,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     0.506353,
+     1.302499,
+     1.093709
+    ]
+   },
+   {
+    "product": "CABIN-2 (side glass-1) ",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.005221,
+    "mass_A_kg": 5.221054,
+    "mass_B_kg": 13.052634,
+    "mass_C_kg": 5.221054,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     0.255453,
+     0.467501,
+     1.287959
+    ]
+   },
+   {
+    "product": "CABIN-2 (FRONT glass-1) ",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.004968,
+    "mass_A_kg": 4.967989,
+    "mass_B_kg": 12.419971,
+    "mass_C_kg": 4.967989,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     0.97618,
+     0.8825,
+     1.365774
+    ]
+   },
+   {
+    "product": "CABIN-2 (TOP glass-1) ",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.002947,
+    "mass_A_kg": 2.946685,
+    "mass_B_kg": 7.366712,
+    "mass_C_kg": 2.946685,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     0.283448,
+     0.8825,
+     1.916764
+    ]
+   },
+   {
+    "product": "JOINT PIN",
+    "top_assembly": "AUGER TOOL:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 7.85,
+    "source": "xcaf",
+    "volume_m3": 0.000341,
+    "mass_A_kg": 0.340851,
+    "mass_B_kg": 2.675678,
+    "mass_C_kg": 2.675678,
+    "tool_override_in_C": true,
+    "centroid_body_m": [
+     3.5174,
+     -0.004596,
+     4.914294
+    ]
+   },
+   {
+    "product": "JOINT PIN",
+    "top_assembly": "AUGER TOOL:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 7.85,
+    "source": "xcaf",
+    "volume_m3": 0.000341,
+    "mass_A_kg": 0.340851,
+    "mass_B_kg": 2.675678,
+    "mass_C_kg": 2.675678,
+    "tool_override_in_C": true,
+    "centroid_body_m": [
+     3.308227,
+     -0.00299,
+     5.004294
+    ]
+   },
+   {
+    "product": "부품2",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": 7.85,
+    "source": "assumed",
+    "volume_m3": 0.000311,
+    "mass_A_kg": 2.442383,
+    "mass_B_kg": 2.442383,
+    "mass_C_kg": 2.442383,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.724106,
+     -0.0,
+     6.831789
+    ]
+   },
+   {
+    "product": "LOGO",
+    "top_assembly": "LOGO:1",
+    "material": "SS400",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "step_text",
+    "volume_m3": 0.001953,
+    "mass_A_kg": 1.952572,
+    "mass_B_kg": 15.327694,
+    "mass_C_kg": 1.952572,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -2.996,
+     -0.028643,
+     0.923263
+    ]
+   },
+   {
+    "product": "CABIN-2 (side glass-2) ",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.001628,
+    "mass_A_kg": 1.627696,
+    "mass_B_kg": 4.06924,
+    "mass_C_kg": 1.627696,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -0.252873,
+     1.297498,
+     1.447195
+    ]
+   },
+   {
+    "product": "HOUSING",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.001395,
+    "mass_A_kg": 1.395471,
+    "mass_B_kg": 10.954446,
+    "mass_C_kg": 1.395471,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.051902,
+     0.49514,
+     5.619905
+    ]
+   },
+   {
+    "product": "CABIN-2 (FRONT glass-12) ",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.001283,
+    "mass_A_kg": 1.282594,
+    "mass_B_kg": 3.206485,
+    "mass_C_kg": 1.282594,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     1.117747,
+     0.8825,
+     0.535612
+    ]
+   },
+   {
+    "product": "SHACKLE",
+    "top_assembly": "AUGER TOOL:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 7.85,
+    "source": "xcaf",
+    "volume_m3": 0.000158,
+    "mass_A_kg": 0.158147,
+    "mass_B_kg": 1.241452,
+    "mass_C_kg": 1.241452,
+    "tool_override_in_C": true,
+    "centroid_body_m": [
+     3.414035,
+     0.000493,
+     8.719842
+    ]
+   },
+   {
+    "product": "HOUSING ADAPTER",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.001235,
+    "mass_A_kg": 1.235459,
+    "mass_B_kg": 9.698349,
+    "mass_C_kg": 1.235459,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.052,
+     0.495309,
+     5.679391
+    ]
+   },
+   {
+    "product": "CABIN-2 (REAR glass-1) ",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.001094,
+    "mass_A_kg": 1.093805,
+    "mass_B_kg": 2.734513,
+    "mass_C_kg": 1.093805,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -0.764007,
+     0.8825,
+     1.686344
+    ]
+   },
+   {
+    "product": "PUMP ADAPTER",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.000807,
+    "mass_A_kg": 0.80695,
+    "mass_B_kg": 6.334558,
+    "mass_C_kg": 0.80695,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.051662,
+     0.495309,
+     5.574227
+    ]
+   },
+   {
+    "product": "CABIN(slide window-1)",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.000782,
+    "mass_A_kg": 0.78189,
+    "mass_B_kg": 1.954726,
+    "mass_C_kg": 0.78189,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     0.443071,
+     0.466236,
+     1.412983
+    ]
+   },
+   {
+    "product": "CABIN(slide window-3)",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.000609,
+    "mass_A_kg": 0.60923,
+    "mass_B_kg": 1.523076,
+    "mass_C_kg": 0.60923,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     0.604286,
+     0.462227,
+     1.413019
+    ]
+   },
+   {
+    "product": "CABIN(slide window-5)",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.000565,
+    "mass_A_kg": 0.565283,
+    "mass_B_kg": 1.413208,
+    "mass_C_kg": 0.565283,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     0.256248,
+     0.470227,
+     1.4332
+    ]
+   },
+   {
+    "product": "TOP-2RA-4C",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.00055,
+    "mass_A_kg": 0.549783,
+    "mass_B_kg": 4.315796,
+    "mass_C_kg": 0.549783,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.052,
+     0.495309,
+     5.527452
+    ]
+   },
+   {
+    "product": "1. HOUSING",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.000537,
+    "mass_A_kg": 0.537274,
+    "mass_B_kg": 4.217599,
+    "mass_C_kg": 0.537274,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.764411,
+     -0.1305,
+     6.733432
+    ]
+   },
+   {
+    "product": "부품2",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.000422,
+    "mass_A_kg": 0.421792,
+    "mass_B_kg": 3.311068,
+    "mass_C_kg": 0.421792,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.750544,
+     0.615338,
+     6.661702
+    ]
+   },
+   {
+    "product": "부품1",
+    "top_assembly": "CABIN HOUSING_R1:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.000372,
+    "mass_A_kg": 0.372396,
+    "mass_B_kg": 2.923307,
+    "mass_C_kg": 0.372396,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -1.073,
+     1.295343,
+     0.6912
+    ]
+   },
+   {
+    "product": "CABIN(slide window-2)",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.000337,
+    "mass_A_kg": 0.337419,
+    "mass_B_kg": 0.843548,
+    "mass_C_kg": 0.337419,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     0.616131,
+     0.461901,
+     1.406096
+    ]
+   },
+   {
+    "product": "CABIN(slide window-4)",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.00031,
+    "mass_A_kg": 0.309717,
+    "mass_B_kg": 0.774292,
+    "mass_C_kg": 0.309717,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     0.256248,
+     0.470227,
+     1.4332
+    ]
+   },
+   {
+    "product": "부마 씨이 도어 부품-3",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.00021,
+    "mass_A_kg": 0.210397,
+    "mass_B_kg": 1.651616,
+    "mass_C_kg": 0.210397,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     0.920593,
+     1.334347,
+     0.881046
+    ]
+   },
+   {
+    "product": "3. ENCODER BRACKET",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.000194,
+    "mass_A_kg": 0.193639,
+    "mass_B_kg": 1.520069,
+    "mass_C_kg": 0.193639,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.826729,
+     -0.1305,
+     6.733432
+    ]
+   },
+   {
+    "product": "7. GEAR",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.000119,
+    "mass_A_kg": 0.119149,
+    "mass_B_kg": 0.935319,
+    "mass_C_kg": 0.119149,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.705,
+     -0.1305,
+     6.733432
+    ]
+   },
+   {
+    "product": "CIRCULATION SHAFT",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 0.000119,
+    "mass_A_kg": 0.118623,
+    "mass_B_kg": 0.931189,
+    "mass_C_kg": 0.118623,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.052,
+     0.495309,
+     5.714156
+    ]
+   },
+   {
+    "product": "P3. ENCODER",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 9.3e-05,
+    "mass_A_kg": 0.092974,
+    "mass_B_kg": 0.729848,
+    "mass_C_kg": 0.092974,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.890704,
+     -0.13049,
+     6.73313
+    ]
+   },
+   {
+    "product": "4. COVER-1",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 7.5e-05,
+    "mass_A_kg": 0.074503,
+    "mass_B_kg": 0.584848,
+    "mass_C_kg": 0.074503,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.863524,
+     -0.1305,
+     6.733432
+    ]
+   },
+   {
+    "product": "6. ADAPTER",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 7.3e-05,
+    "mass_A_kg": 0.072881,
+    "mass_B_kg": 0.572116,
+    "mass_C_kg": 0.072881,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.715027,
+     -0.1305,
+     6.733432
+    ]
+   },
+   {
+    "product": "2. SHAFT",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 6.9e-05,
+    "mass_A_kg": 0.06855,
+    "mass_B_kg": 0.53812,
+    "mass_C_kg": 0.06855,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.760533,
+     -0.1305,
+     6.733432
+    ]
+   },
+   {
+    "product": "P2. COUPLE RING",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 5.5e-05,
+    "mass_A_kg": 0.054633,
+    "mass_B_kg": 0.428871,
+    "mass_C_kg": 0.054633,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.827233,
+     -0.130469,
+     6.733421
+    ]
+   },
+   {
+    "product": "5. COVER-2",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 5.4e-05,
+    "mass_A_kg": 0.054156,
+    "mass_B_kg": 0.425127,
+    "mass_C_kg": 0.054156,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     2.891878,
+     -0.1305,
+     6.733432
+    ]
+   },
+   {
+    "product": "CIRCULATION GEAR-2",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 4.3e-05,
+    "mass_A_kg": 0.042592,
+    "mass_B_kg": 0.33435,
+    "mass_C_kg": 0.042592,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.052,
+     0.495309,
+     5.623544
+    ]
+   },
+   {
+    "product": "CIRCULATION GEAR-3",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 4.1e-05,
+    "mass_A_kg": 0.040716,
+    "mass_B_kg": 0.319621,
+    "mass_C_kg": 0.040716,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.07225,
+     0.530383,
+     5.602872
+    ]
+   },
+   {
+    "product": "부품1",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 3.7e-05,
+    "mass_A_kg": 0.036993,
+    "mass_B_kg": 0.290398,
+    "mass_C_kg": 0.036993,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.563279,
+     0.337408,
+     6.271432
+    ]
+   },
+   {
+    "product": "부품1",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 3.7e-05,
+    "mass_A_kg": 0.036993,
+    "mass_B_kg": 0.290398,
+    "mass_C_kg": 0.036993,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.052,
+     0.676206,
+     6.271432
+    ]
+   },
+   {
+    "product": "CIRCULATION GEAR-1",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "일반",
+    "density_step_g_cm3": 1.0,
+    "density_C_g_cm3": 1.0,
+    "source": "xcaf",
+    "volume_m3": 1.7e-05,
+    "mass_A_kg": 0.017264,
+    "mass_B_kg": 0.13552,
+    "mass_C_kg": 0.017264,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     3.052,
+     0.495309,
+     5.585737
+    ]
+   },
+   {
+    "product": "COMPOUND",
+    "top_assembly": "BATTERY BOX:2",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": NaN,
+    "source": "assumed",
+    "volume_m3": 0.0,
+    "mass_A_kg": 0.0,
+    "mass_B_kg": 0.0,
+    "mass_C_kg": 0.0,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     1.5435,
+     0.760025,
+     0.302343
+    ]
+   },
+   {
+    "product": "COMPOUND",
+    "top_assembly": "BATTERY BOX:2",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": NaN,
+    "source": "assumed",
+    "volume_m3": 0.0,
+    "mass_A_kg": 0.0,
+    "mass_B_kg": 0.0,
+    "mass_C_kg": 0.0,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     1.2535,
+     0.760025,
+     0.302315
+    ]
+   },
+   {
+    "product": "COMPOUND",
+    "top_assembly": "CABIN HOUSING_R1:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": NaN,
+    "source": "assumed",
+    "volume_m3": 0.0,
+    "mass_A_kg": 0.0,
+    "mass_B_kg": 0.0,
+    "mass_C_kg": 0.0,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -0.994025,
+     1.273343,
+     1.005525
+    ]
+   },
+   {
+    "product": "COMPOUND",
+    "top_assembly": "CABIN HOUSING_R1:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": NaN,
+    "source": "assumed",
+    "volume_m3": 0.0,
+    "mass_A_kg": 0.0,
+    "mass_B_kg": 0.0,
+    "mass_C_kg": 0.0,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -0.994025,
+     1.273343,
+     0.473958
+    ]
+   },
+   {
+    "product": "COMPOUND",
+    "top_assembly": "CABIN HOUSING_R1:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": NaN,
+    "source": "assumed",
+    "volume_m3": 0.0,
+    "mass_A_kg": 0.0,
+    "mass_B_kg": 0.0,
+    "mass_C_kg": 0.0,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -1.814025,
+     1.2781,
+     1.042868
+    ]
+   },
+   {
+    "product": "COMPOUND",
+    "top_assembly": "CABIN HOUSING_R1:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": NaN,
+    "source": "assumed",
+    "volume_m3": 0.0,
+    "mass_A_kg": 0.0,
+    "mass_B_kg": 0.0,
+    "mass_C_kg": 0.0,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -1.715,
+     0.4058,
+     0.825
+    ]
+   },
+   {
+    "product": "COMPOUND",
+    "top_assembly": "CABIN HOUSING_R1:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": NaN,
+    "source": "assumed",
+    "volume_m3": 0.0,
+    "mass_A_kg": 0.0,
+    "mass_B_kg": 0.0,
+    "mass_C_kg": 0.0,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -1.814025,
+     1.2781,
+     0.738984
+    ]
+   },
+   {
+    "product": "COMPOUND",
+    "top_assembly": "CABIN HOUSING_R1:1",
+    "material": "(assumed steel)",
+    "density_step_g_cm3": 7.85,
+    "density_C_g_cm3": NaN,
+    "source": "assumed",
+    "volume_m3": 0.0,
+    "mass_A_kg": 0.0,
+    "mass_B_kg": 0.0,
+    "mass_C_kg": 0.0,
+    "tool_override_in_C": false,
+    "centroid_body_m": [
+     -2.045,
+     0.4058,
+     0.825
+    ]
+   }
+  ],
+  "no_solid_rows": {
+   "rows": 56,
+   "by_top_assembly": {
+    "0. DRIVE AUGER ASSY:1": 47,
+    "CABIN HOUSING_R1:1": 6,
+    "BATTERY BOX:2": 2,
+    "REX33-REX33 - 5J286105:1": 1
+   },
+   "note": "mass 0 in all cases (gear placeholders, open shells)"
+  },
+  "density_histogram_C": [
+   {
+    "density_g_cm3": 0.93,
+    "rows": 7,
+    "volume_m3": 2.6e-05,
+    "mass_C_kg": 0.024346,
+    "mass_share_pct": 6.2e-05
+   },
+   {
+    "density_g_cm3": 1.0,
+    "rows": 37,
+    "volume_m3": 0.542317,
+    "mass_C_kg": 542.316601,
+    "mass_share_pct": 1.391169
+   },
+   {
+    "density_g_cm3": 7.85,
+    "rows": 1113,
+    "volume_m3": 4.896873,
+    "mass_C_kg": 38440.452254,
+    "mass_share_pct": 98.608755
+   },
+   {
+    "density_g_cm3": 7.86,
+    "rows": 1,
+    "volume_m3": 1e-06,
+    "mass_C_kg": 0.00525,
+    "mass_share_pct": 1.3e-05
+   },
+   {
+    "density_g_cm3": null,
+    "rows": 56,
+    "volume_m3": 0.0,
+    "mass_C_kg": 0.0,
+    "mass_share_pct": 0.0
+   }
+  ],
+  "top_contributors_C": [
+   {
+    "rank": 1,
+    "product": "COMPOUND",
+    "top_assembly": "REX33-REX33 - 5J286105:1",
+    "material": "강철",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 11271.387457,
+    "share_pct": 28.913746,
+    "centroid_body_m_cad_pose": [
+     -0.03315,
+     1.6e-05,
+     -0.544779
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.137709,
+    "equivalent_thickness_mm": 19.904383
+   },
+   {
+    "rank": 2,
+    "product": "BASE DECK",
+    "top_assembly": "BASE DECK:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 3918.624251,
+    "share_pct": 10.052188,
+    "centroid_body_m_cad_pose": [
+     0.228569,
+     0.009848,
+     0.194355
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.0461,
+    "equivalent_thickness_mm": 14.566492
+   },
+   {
+    "rank": 3,
+    "product": "BOOM",
+    "top_assembly": "BOOM:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 1275.855488,
+    "share_pct": 3.272868,
+    "centroid_body_m_cad_pose": [
+     1.62603,
+     -0.045661,
+     1.02312
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.069999,
+    "equivalent_thickness_mm": 22.89529
+   },
+   {
+    "rank": 4,
+    "product": "TOOL ROD",
+    "top_assembly": "AUGER TOOL:1",
+    "material": "일반",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 1103.417772,
+    "share_pct": 2.830525,
+    "centroid_body_m_cad_pose": [
+     3.413,
+     -0.0,
+     6.670774
+    ],
+    "motion": "moving_tool",
+    "bbox_fill_ratio": 0.354449,
+    "equivalent_thickness_mm": 65.053208
+   },
+   {
+    "rank": 5,
+    "product": "MAST-3",
+    "top_assembly": "MAST ASSY:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 1053.922008,
+    "share_pct": 2.703557,
+    "centroid_body_m_cad_pose": [
+     2.462429,
+     0.007869,
+     4.397103
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.071471,
+    "equivalent_thickness_mm": 14.284578
+   },
+   {
+    "rank": 6,
+    "product": "MAST-2",
+    "top_assembly": "MAST ASSY:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 1033.56787,
+    "share_pct": 2.651343,
+    "centroid_body_m_cad_pose": [
+     2.339642,
+     0.001046,
+     1.880902
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.124164,
+    "equivalent_thickness_mm": 18.356509
+   },
+   {
+    "rank": 7,
+    "product": "MAST-4",
+    "top_assembly": "MAST ASSY:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 931.409436,
+    "share_pct": 2.389283,
+    "centroid_body_m_cad_pose": [
+     2.49664,
+     0.008904,
+     7.351
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.097516,
+    "equivalent_thickness_mm": 13.652408
+   },
+   {
+    "rank": 8,
+    "product": "솔리드34",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 785.039866,
+    "share_pct": 2.013811,
+    "centroid_body_m_cad_pose": [
+     -2.701339,
+     -0.034145,
+     0.791
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.693613,
+    "equivalent_thickness_mm": 74.589727
+   },
+   {
+    "rank": 9,
+    "product": "솔리드33",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 785.039866,
+    "share_pct": 2.013811,
+    "centroid_body_m_cad_pose": [
+     -2.701339,
+     -0.034145,
+     0.691
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.693613,
+    "equivalent_thickness_mm": 74.589727
+   },
+   {
+    "rank": 10,
+    "product": "솔리드35",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 785.039866,
+    "share_pct": 2.013811,
+    "centroid_body_m_cad_pose": [
+     -2.701339,
+     -0.034145,
+     0.891
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.693613,
+    "equivalent_thickness_mm": 74.589727
+   },
+   {
+    "rank": 11,
+    "product": "솔리드32",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 766.430297,
+    "share_pct": 1.966073,
+    "centroid_body_m_cad_pose": [
+     -2.700859,
+     -0.034974,
+     0.591
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.67717,
+    "equivalent_thickness_mm": 71.763247
+   },
+   {
+    "rank": 12,
+    "product": "솔리드1",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 742.138607,
+    "share_pct": 1.903759,
+    "centroid_body_m_cad_pose": [
+     -2.697239,
+     -0.04122,
+     0.185
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.835675,
+    "equivalent_thickness_mm": 75.990482
+   },
+   {
+    "rank": 13,
+    "product": "솔리드2",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 742.138607,
+    "share_pct": 1.903759,
+    "centroid_body_m_cad_pose": [
+     -2.697239,
+     -0.04122,
+     0.285
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.835675,
+    "equivalent_thickness_mm": 75.990482
+   },
+   {
+    "rank": 14,
+    "product": "MAST",
+    "top_assembly": "MAST ASSY:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 598.688316,
+    "share_pct": 1.535776,
+    "centroid_body_m_cad_pose": [
+     2.487938,
+     -0.0,
+     0.367139
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.075426,
+    "equivalent_thickness_mm": 14.303217
+   },
+   {
+    "rank": 15,
+    "product": "솔리드4",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 594.370208,
+    "share_pct": 1.524699,
+    "centroid_body_m_cad_pose": [
+     -2.728624,
+     -0.051468,
+     0.485
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.669283,
+    "equivalent_thickness_mm": 73.520444
+   },
+   {
+    "rank": 16,
+    "product": "솔리드3",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 594.370208,
+    "share_pct": 1.524699,
+    "centroid_body_m_cad_pose": [
+     -2.728624,
+     -0.051468,
+     0.385
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.669283,
+    "equivalent_thickness_mm": 73.520444
+   },
+   {
+    "rank": 17,
+    "product": "부마씨이 소구경 3D_Shrinkwrap_11",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "일반",
+    "density_C_g_cm3": 1.0,
+    "mass_C_kg": 501.06083,
+    "share_pct": 1.285338,
+    "centroid_body_m_cad_pose": [
+     -0.367738,
+     0.830175,
+     0.981092
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.139329,
+    "equivalent_thickness_mm": 51.366326
+   },
+   {
+    "rank": 18,
+    "product": "4. 1st GEAR",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 461.328007,
+    "share_pct": 1.183414,
+    "centroid_body_m_cad_pose": [
+     3.413,
+     0.0,
+     6.092027
+    ],
+    "motion": "moving_drive",
+    "bbox_fill_ratio": 0.34245,
+    "equivalent_thickness_mm": 37.399064
+   },
+   {
+    "rank": 19,
+    "product": "솔리드35",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 401.869175,
+    "share_pct": 1.030888,
+    "centroid_body_m_cad_pose": [
+     3.260095,
+     0.0,
+     6.233579
+    ],
+    "motion": "moving_drive",
+    "bbox_fill_ratio": 0.558581,
+    "equivalent_thickness_mm": 40.475143
+   },
+   {
+    "rank": 20,
+    "product": "MAST-5",
+    "top_assembly": "MAST ASSY:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 387.932688,
+    "share_pct": 0.995138,
+    "centroid_body_m_cad_pose": [
+     2.472826,
+     0.006887,
+     9.351
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.121847,
+    "equivalent_thickness_mm": 14.8328
+   },
+   {
+    "rank": 21,
+    "product": "솔리드3",
+    "top_assembly": "BACKSTAY CYL:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 330.881889,
+    "share_pct": 0.848789,
+    "centroid_body_m_cad_pose": [
+     1.256264,
+     0.0,
+     1.835671
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.10395,
+    "equivalent_thickness_mm": 27.619832
+   },
+   {
+    "rank": 22,
+    "product": "3.1st GEAR SHAFT",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 328.45091,
+    "share_pct": 0.842553,
+    "centroid_body_m_cad_pose": [
+     3.413,
+     0.0,
+     6.004754
+    ],
+    "motion": "moving_drive",
+    "bbox_fill_ratio": 0.368318,
+    "equivalent_thickness_mm": 51.984926
+   },
+   {
+    "rank": 23,
+    "product": "TOOL CAP",
+    "top_assembly": "AUGER TOOL:1",
+    "material": "일반",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 309.632297,
+    "share_pct": 0.794279,
+    "centroid_body_m_cad_pose": [
+     3.411704,
+     0.001842,
+     4.676709
+    ],
+    "motion": "moving_tool",
+    "bbox_fill_ratio": 0.177459,
+    "equivalent_thickness_mm": 32.147355
+   },
+   {
+    "rank": 24,
+    "product": "솔리드31",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 277.55088,
+    "share_pct": 0.711983,
+    "centroid_body_m_cad_pose": [
+     -2.541,
+     -0.795,
+     0.916
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 1.0,
+    "equivalent_thickness_mm": 64.364669
+   },
+   {
+    "rank": 25,
+    "product": "윈치",
+    "top_assembly": "윈치:1",
+    "material": "SS400",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 262.42068,
+    "share_pct": 0.67317,
+    "centroid_body_m_cad_pose": [
+     2.004732,
+     0.0,
+     2.416
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.549654,
+    "equivalent_thickness_mm": 40.407341
+   },
+   {
+    "rank": 26,
+    "product": "솔리드2",
+    "top_assembly": "BACKSTAY CYL:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 260.201582,
+    "share_pct": 0.667478,
+    "centroid_body_m_cad_pose": [
+     1.723815,
+     0.0,
+     3.769611
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.095984,
+    "equivalent_thickness_mm": 58.846742
+   },
+   {
+    "rank": 27,
+    "product": "솔리드30",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 241.66068,
+    "share_pct": 0.619916,
+    "centroid_body_m_cad_pose": [
+     -2.541,
+     0.7575,
+     0.916
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 1.0,
+    "equivalent_thickness_mm": 63.321061
+   },
+   {
+    "rank": 28,
+    "product": "솔리드2",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 226.242604,
+    "share_pct": 0.580365,
+    "centroid_body_m_cad_pose": [
+     3.227217,
+     0.0,
+     5.763427
+    ],
+    "motion": "moving_drive",
+    "bbox_fill_ratio": 0.52653,
+    "equivalent_thickness_mm": 26.031847
+   },
+   {
+    "rank": 29,
+    "product": "부마 씨이 도어 부품-2",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "material": "강철",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 167.815763,
+    "share_pct": 0.430487,
+    "centroid_body_m_cad_pose": [
+     0.426301,
+     1.277612,
+     0.820457
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.204557,
+    "equivalent_thickness_mm": 25.366985
+   },
+   {
+    "rank": 30,
+    "product": "Hose guide arm",
+    "top_assembly": "Hose guide arm:1",
+    "material": "강, 연강",
+    "density_C_g_cm3": 7.85,
+    "mass_C_kg": 167.641611,
+    "share_pct": 0.43004,
+    "centroid_body_m_cad_pose": [
+     1.314718,
+     -0.621128,
+     2.826891
+    ],
+    "motion": "fixed",
+    "bbox_fill_ratio": 0.05514,
+    "equivalent_thickness_mm": 8.860207
+   }
+  ],
+  "top_contributors_share_pct": 80.307548,
+  "suspect_volume_density": [
+   {
+    "product": "COMPOUND",
+    "top_assembly": "REX33-REX33 - 5J286105:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 1.435846,
+    "mass_C_kg": 11271.387457,
+    "bbox_fill_ratio": 0.137709,
+    "equivalent_thickness_mm": 19.904383,
+    "solid_count": 3214,
+    "centroid_body_m": [
+     -0.03315,
+     1.6e-05,
+     -0.544779
+    ]
+   },
+   {
+    "product": "부마씨이 소구경 3D_Shrinkwrap_11",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "density_C_g_cm3": 1.0,
+    "volume_m3": 0.501061,
+    "mass_C_kg": 501.06083,
+    "bbox_fill_ratio": 0.139329,
+    "equivalent_thickness_mm": 51.366326,
+    "solid_count": 3,
+    "centroid_body_m": [
+     -0.367738,
+     0.830175,
+     0.981092
+    ]
+   },
+   {
+    "product": "솔리드34",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.100005,
+    "mass_C_kg": 785.039866,
+    "bbox_fill_ratio": 0.693613,
+    "equivalent_thickness_mm": 74.589727,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.701339,
+     -0.034145,
+     0.791
+    ]
+   },
+   {
+    "product": "솔리드35",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.100005,
+    "mass_C_kg": 785.039866,
+    "bbox_fill_ratio": 0.693613,
+    "equivalent_thickness_mm": 74.589727,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.701339,
+     -0.034145,
+     0.891
+    ]
+   },
+   {
+    "product": "솔리드33",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.100005,
+    "mass_C_kg": 785.039866,
+    "bbox_fill_ratio": 0.693613,
+    "equivalent_thickness_mm": 74.589727,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.701339,
+     -0.034145,
+     0.691
+    ]
+   },
+   {
+    "product": "솔리드32",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.097634,
+    "mass_C_kg": 766.430297,
+    "bbox_fill_ratio": 0.67717,
+    "equivalent_thickness_mm": 71.763247,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.700859,
+     -0.034974,
+     0.591
+    ]
+   },
+   {
+    "product": "솔리드2",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.09454,
+    "mass_C_kg": 742.138607,
+    "bbox_fill_ratio": 0.835675,
+    "equivalent_thickness_mm": 75.990482,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.697239,
+     -0.04122,
+     0.285
+    ]
+   },
+   {
+    "product": "솔리드1",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.09454,
+    "mass_C_kg": 742.138607,
+    "bbox_fill_ratio": 0.835675,
+    "equivalent_thickness_mm": 75.990482,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.697239,
+     -0.04122,
+     0.185
+    ]
+   },
+   {
+    "product": "솔리드4",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.075716,
+    "mass_C_kg": 594.370208,
+    "bbox_fill_ratio": 0.669283,
+    "equivalent_thickness_mm": 73.520444,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.728624,
+     -0.051468,
+     0.485
+    ]
+   },
+   {
+    "product": "솔리드3",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.075716,
+    "mass_C_kg": 594.370208,
+    "bbox_fill_ratio": 0.669283,
+    "equivalent_thickness_mm": 73.520444,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.728624,
+     -0.051468,
+     0.385
+    ]
+   },
+   {
+    "product": "솔리드31",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.035357,
+    "mass_C_kg": 277.55088,
+    "bbox_fill_ratio": 1.0,
+    "equivalent_thickness_mm": 64.364669,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.541,
+     -0.795,
+     0.916
+    ]
+   },
+   {
+    "product": "솔리드30",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.030785,
+    "mass_C_kg": 241.66068,
+    "bbox_fill_ratio": 1.0,
+    "equivalent_thickness_mm": 63.321061,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.541,
+     0.7575,
+     0.916
+    ]
+   },
+   {
+    "product": "부마 씨이 도어 부품-2",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.021378,
+    "mass_C_kg": 167.815763,
+    "bbox_fill_ratio": 0.204557,
+    "equivalent_thickness_mm": 25.366985,
+    "solid_count": 1,
+    "centroid_body_m": [
+     0.426301,
+     1.277612,
+     0.820457
+    ]
+   },
+   {
+    "product": "솔리드74",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.010323,
+    "mass_C_kg": 81.038651,
+    "bbox_fill_ratio": 0.697762,
+    "equivalent_thickness_mm": 9.67715,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.706173,
+     -0.03434,
+     1.292
+    ]
+   },
+   {
+    "product": "솔리드47",
+    "top_assembly": "COUNTER WEIGHT:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.009857,
+    "mass_C_kg": 77.376925,
+    "bbox_fill_ratio": 0.666234,
+    "equivalent_thickness_mm": 9.583325,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -2.702248,
+     -0.035965,
+     0.952
+    ]
+   },
+   {
+    "product": "솔리드3",
+    "top_assembly": "SIDE HOUSING_(ENGINE)_R1:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.009612,
+    "mass_C_kg": 75.450843,
+    "bbox_fill_ratio": 0.054923,
+    "equivalent_thickness_mm": 3.145053,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -0.77674,
+     -0.414994,
+     0.726637
+    ]
+   },
+   {
+    "product": "30-3. BASE COVER",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.007906,
+    "mass_C_kg": 62.061904,
+    "bbox_fill_ratio": 0.362766,
+    "equivalent_thickness_mm": 29.107776,
+    "solid_count": 1,
+    "centroid_body_m": [
+     3.247,
+     -0.477528,
+     6.316442
+    ]
+   },
+   {
+    "product": "30-3. BASE COVER",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.007906,
+    "mass_C_kg": 62.061904,
+    "bbox_fill_ratio": 0.362766,
+    "equivalent_thickness_mm": 29.107776,
+    "solid_count": 1,
+    "centroid_body_m": [
+     3.247,
+     0.477528,
+     6.316442
+    ]
+   },
+   {
+    "product": "30-1. TOP COVER",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.007214,
+    "mass_C_kg": 56.628419,
+    "bbox_fill_ratio": 0.301723,
+    "equivalent_thickness_mm": 26.263575,
+    "solid_count": 1,
+    "centroid_body_m": [
+     3.247,
+     0.477528,
+     6.515815
+    ]
+   },
+   {
+    "product": "30-1. TOP COVER",
+    "top_assembly": "0. DRIVE AUGER ASSY:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.007214,
+    "mass_C_kg": 56.628419,
+    "bbox_fill_ratio": 0.301723,
+    "equivalent_thickness_mm": 26.263575,
+    "solid_count": 1,
+    "centroid_body_m": [
+     3.247,
+     -0.477528,
+     6.515815
+    ]
+   },
+   {
+    "product": "솔리드1",
+    "top_assembly": "SIDE HOUSING_(ENGINE)_R1:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.006592,
+    "mass_C_kg": 51.744434,
+    "bbox_fill_ratio": 0.036928,
+    "equivalent_thickness_mm": 3.170805,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -0.822818,
+     -1.378563,
+     0.749793
+    ]
+   },
+   {
+    "product": "솔리드4",
+    "top_assembly": "SIDE HOUSING_(ENGINE)_R1:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.005768,
+    "mass_C_kg": 45.281824,
+    "bbox_fill_ratio": 0.696006,
+    "equivalent_thickness_mm": 3.16225,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -0.830139,
+     -0.911846,
+     1.2766
+    ]
+   },
+   {
+    "product": "부마 씨이 도어 부품-1",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.005416,
+    "mass_C_kg": 42.512469,
+    "bbox_fill_ratio": 0.784474,
+    "equivalent_thickness_mm": 4.95361,
+    "solid_count": 1,
+    "centroid_body_m": [
+     0.506369,
+     1.302501,
+     1.093666
+    ]
+   },
+   {
+    "product": "CABIN-2 (DOOR glass-1) ",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "density_C_g_cm3": 1.0,
+    "volume_m3": 0.005411,
+    "mass_C_kg": 5.410725,
+    "bbox_fill_ratio": 0.785336,
+    "equivalent_thickness_mm": 4.949353,
+    "solid_count": 1,
+    "centroid_body_m": [
+     0.506353,
+     1.302499,
+     1.093709
+    ]
+   },
+   {
+    "product": "솔리드5",
+    "top_assembly": "CABIN HOUSING_R1:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.005296,
+    "mass_C_kg": 41.571896,
+    "bbox_fill_ratio": 0.066614,
+    "equivalent_thickness_mm": 3.172527,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -1.599679,
+     0.410248,
+     0.765242
+    ]
+   },
+   {
+    "product": "CABIN-2 (side glass-1) ",
+    "top_assembly": "BUMA CE 3D 20230425:1",
+    "density_C_g_cm3": 1.0,
+    "volume_m3": 0.005221,
+    "mass_C_kg": 5.221054,
+    "bbox_fill_ratio": 0.566156,
+    "equivalent_thickness_mm": 4.916413,
+    "solid_count": 1,
+    "centroid_body_m": [
+     0.255453,
+     0.467501,
+     1.287959
+    ]
+   },
+   {
+    "product": "솔리드53",
+    "top_assembly": "SIDE HOUSING_(ENGINE)_R1:1",
+    "density_C_g_cm3": 7.85,
+    "volume_m3": 0.005003,
+    "mass_C_kg": 39.275315,
+    "bbox_fill_ratio": 0.978033,
+    "equivalent_thickness_mm": 5.891729,
+    "solid_count": 1,
+    "centroid_body_m": [
+     -1.582517,
+     -0.869925,
+     1.2812
+    ]
+   }
+  ],
+  "possibly_missing": {
+   "engine block": {
+    "keywords": [
+     "ENGINE",
+     "엔진"
+    ],
+    "matching_products": [
+     "(ENGINE)_Door_1",
+     "(ENGINE)_Door_2",
+     "ENGINE_COVER_1",
+     "ENGINE_COVER_2",
+     "ENGINE_COVER_3",
+     "ENGINE_COVER_4",
+     "SIDE HOUSING_(ENGINE)",
+     "SIDE HOUSING_(ENGINE)_R1"
+    ],
+    "n_matching_products": 8,
+    "mass_C_kg_of_matching_rows": 382.688278
+   },
+   "hydraulic / fuel tank": {
+    "keywords": [
+     "TANK",
+     "탱크",
+     "FUEL",
+     "연료"
+    ],
+    "matching_products": [],
+    "n_matching_products": 0,
+    "mass_C_kg_of_matching_rows": 0.0
+   },
+   "main pump / valve block": {
+    "keywords": [
+     "PUMP",
+     "펌프",
+     "VALVE",
+     "밸브",
+     "MCV"
+    ],
+    "matching_products": [
+     "CIRCULATION PUMP PART",
+     "PUMP ADAPTER"
+    ],
+    "n_matching_products": 2,
+    "mass_C_kg_of_matching_rows": 5.534749
+   },
+   "battery cells": {
+    "keywords": [
+     "BATTERY",
+     "배터리",
+     "BYHT"
+    ],
+    "matching_products": [
+     "BATTERY BOX",
+     "BYHT375-E-W_BD",
+     "BYHT375-E-W_PIN",
+     "BYHT375-E-W_W",
+     "byht375-e-w"
+    ],
+    "n_matching_products": 5,
+    "mass_C_kg_of_matching_rows": 55.946142
+   },
+   "radiator / oil cooler": {
+    "keywords": [
+     "RADIATOR",
+     "COOL",
+     "라디에이터"
+    ],
+    "matching_products": [
+     "COOLLER COVER_1",
+     "COOLLER COVER_2",
+     "COOLLER COVER_3"
+    ],
+    "n_matching_products": 3,
+    "mass_C_kg_of_matching_rows": 27.784096
+   },
+   "hoses / wire rope": {
+    "keywords": [
+     "HOSE",
+     "호스",
+     "WIRE",
+     "ROPE",
+     "와이어"
+    ],
+    "matching_products": [
+     "Hose guide CYL",
+     "Hose guide arm",
+     "Ring GB_T 895.1-1986 - 48"
+    ],
+    "n_matching_products": 3,
+    "mass_C_kg_of_matching_rows": 217.147878
+   },
+   "operator seat / controls": {
+    "keywords": [
+     "SEAT",
+     "시트",
+     "좌석",
+     "JOYSTICK",
+     "LEVER"
+    ],
+    "matching_products": [],
+    "n_matching_products": 0,
+    "mass_C_kg_of_matching_rows": 0.0
+   },
+   "counterweight": {
+    "keywords": [
+     "COUNTER"
+    ],
+    "matching_products": [
+     "COUNTER WEIGHT"
+    ],
+    "n_matching_products": 1,
+    "mass_C_kg_of_matching_rows": 7120.402342
+   },
+   "track shoes / rollers": {
+    "keywords": [
+     "SHOE",
+     "ROLLER",
+     "IDLER",
+     "SPROCKET",
+     "TRACK",
+     "5J286105"
+    ],
+    "matching_products": [
+     "REX33-REX33 - 5J286105",
+     "ROLLER-1",
+     "ROLLER-2",
+     "ROLLER-3",
+     "ROLLER-4"
+    ],
+    "n_matching_products": 5,
+    "mass_C_kg_of_matching_rows": 11274.04466
+   }
+  },
+  "cases_cad_pose": {
+   "A_whole_assembly_cad_pose": {
+    "mass_kg": 37744.0018,
+    "com_body_m": [
+     0.348297,
+     -0.001733,
+     1.516904
+    ]
+   },
+   "A_superstructure_cad_pose": {
+    "mass_kg": 37316.867134,
+    "com_body_m": [
+     0.353785,
+     -0.001538,
+     1.537848
+    ]
+   },
+   "B_whole_assembly_cad_pose": {
+    "mass_kg": 42563.092803,
+    "com_body_m": [
+     0.384987,
+     0.067493,
+     1.620593
+    ]
+   },
+   "B_superstructure_cad_pose": {
+    "mass_kg": 42135.958137,
+    "com_body_m": [
+     0.390219,
+     0.068367,
+     1.640193
+    ]
+   },
+   "C_whole_assembly_cad_pose": {
+    "mass_kg": 38982.79845,
+    "com_body_m": [
+     0.445679,
+     -0.001666,
+     1.666715
+    ]
+   },
+   "C_superstructure_cad_pose": {
+    "mass_kg": 38555.663785,
+    "com_body_m": [
+     0.452068,
+     -0.001477,
+     1.688645
+    ]
+   }
+  },
+  "cases_check_vs_auger_levels": {
+   "A": {
+    "mass_rel_diff": 1e-06,
+    "com_max_abs_diff_m": 4.8e-05,
+    "note": "auger_levels.json values are rounded to 0.1 kg / 0.1 mm"
+   },
+   "B": {
+    "mass_rel_diff": 1e-06,
+    "com_max_abs_diff_m": 3.3e-05,
+    "note": "auger_levels.json values are rounded to 0.1 kg / 0.1 mm"
+   },
+   "C": {
+    "mass_rel_diff": 1e-06,
+    "com_max_abs_diff_m": 4.5e-05,
+    "note": "auger_levels.json values are rounded to 0.1 kg / 0.1 mm"
+   }
+  },
+  "cases_by_auger_level": {
+   "top": {
+    "A": {
+     "mass_kg": 37316.9,
+     "com_body_m": [
+      0.3538,
+      -0.0015,
+      1.9407
+     ],
+     "leg_loads_kN": {
+      "FL": 110.8,
+      "FR": 108.76,
+      "RL": 74.12,
+      "RR": 72.26
+     }
+    },
+    "B": {
+     "mass_kg": 42136.0,
+     "com_body_m": [
+      0.3902,
+      0.0684,
+      2.0917
+     ],
+     "leg_loads_kN": {
+      "FL": 132.6,
+      "FR": 118.42,
+      "RL": 87.55,
+      "RR": 74.64
+     }
+    },
+    "C": {
+     "mass_kg": 38555.7,
+     "com_body_m": [
+      0.4521,
+      -0.0015,
+      2.1749
+     ],
+     "leg_loads_kN": {
+      "FL": 118.25,
+      "FR": 116.26,
+      "RL": 72.7,
+      "RR": 70.89
+     }
+    }
+   },
+   "middle": {
+    "A": {
+     "mass_kg": 37316.9,
+     "com_body_m": [
+      0.3538,
+      -0.0015,
+      1.3626
+     ],
+     "leg_loads_kN": {
+      "FL": 110.8,
+      "FR": 108.76,
+      "RL": 74.12,
+      "RR": 72.26
+     }
+    },
+    "B": {
+     "mass_kg": 42136.0,
+     "com_body_m": [
+      0.3902,
+      0.0684,
+      1.4439
+     ],
+     "leg_loads_kN": {
+      "FL": 132.6,
+      "FR": 118.42,
+      "RL": 87.55,
+      "RR": 74.64
+     }
+    },
+    "C": {
+     "mass_kg": 38555.7,
+     "com_body_m": [
+      0.4521,
+      -0.0015,
+      1.4772
+     ],
+     "leg_loads_kN": {
+      "FL": 118.25,
+      "FR": 116.26,
+      "RL": 72.7,
+      "RR": 70.89
+     }
+    }
+   },
+   "bottom": {
+    "A": {
+     "mass_kg": 37316.9,
+     "com_body_m": [
+      0.3538,
+      -0.0015,
+      0.7846
+     ],
+     "leg_loads_kN": {
+      "FL": 110.8,
+      "FR": 108.76,
+      "RL": 74.12,
+      "RR": 72.26
+     }
+    },
+    "B": {
+     "mass_kg": 42136.0,
+     "com_body_m": [
+      0.3902,
+      0.0684,
+      0.796
+     ],
+     "leg_loads_kN": {
+      "FL": 132.6,
+      "FR": 118.42,
+      "RL": 87.55,
+      "RR": 74.64
+     }
+    },
+    "C": {
+     "mass_kg": 38555.7,
+     "com_body_m": [
+      0.4521,
+      -0.0015,
+      0.7796
+     ],
+     "leg_loads_kN": {
+      "FL": 118.25,
+      "FR": 116.26,
+      "RL": 72.7,
+      "RR": 70.89
+     }
+    }
+   }
+  },
+  "superstructure_by_top_assembly_kg": {
+   "REX33-REX33 - 5J286105:1": {
+    "mass_A_kg": 11271.4,
+    "mass_C_kg": 11271.4,
+    "placeholder_C_kg": 0.0
+   },
+   "COUNTER WEIGHT:1": {
+    "mass_A_kg": 7120.4,
+    "mass_C_kg": 7120.4,
+    "placeholder_C_kg": 0.0
+   },
+   "0. DRIVE AUGER ASSY:1": {
+    "mass_A_kg": 4837.4,
+    "mass_C_kg": 4837.4,
+    "placeholder_C_kg": 153.4
+   },
+   "MAST ASSY:1": {
+    "mass_A_kg": 4329.5,
+    "mass_C_kg": 4329.5,
+    "placeholder_C_kg": 0.0
+   },
+   "BASE DECK:1": {
+    "mass_A_kg": 3918.6,
+    "mass_C_kg": 3918.6,
+    "placeholder_C_kg": 0.0
+   },
+   "AUGER TOOL:1": {
+    "mass_A_kg": 180.8,
+    "mass_C_kg": 1419.6,
+    "placeholder_C_kg": 1419.6
+   },
+   "BOOM:1": {
+    "mass_A_kg": 1275.9,
+    "mass_C_kg": 1275.9,
+    "placeholder_C_kg": 0.0
+   },
+   "BUMA CE 3D 20230425:1": {
+    "mass_A_kg": 736.8,
+    "mass_C_kg": 736.8,
+    "placeholder_C_kg": 526.4
+   },
+   "BACKSTAY CYL:1": {
+    "mass_A_kg": 591.1,
+    "mass_C_kg": 591.1,
+    "placeholder_C_kg": 0.0
+   },
+   "LOWER GUIDE_ASSY:1": {
+    "mass_A_kg": 515.9,
+    "mass_C_kg": 515.9,
+    "placeholder_C_kg": 13.6
+   },
+   "SIDE HOUSING_(ENGINE)_R1:1": {
+    "mass_A_kg": 382.7,
+    "mass_C_kg": 382.7,
+    "placeholder_C_kg": 0.0
+   },
+   "TOPSHEAVE(조립) ASSY:1": {
+    "mass_A_kg": 367.8,
+    "mass_C_kg": 367.8,
+    "placeholder_C_kg": 0.0
+   },
+   "윈치:1": {
+    "mass_A_kg": 262.4,
+    "mass_C_kg": 262.4,
+    "placeholder_C_kg": 0.0
+   },
+   "CABIN HOUSING_R1:1": {
+    "mass_A_kg": 185.9,
+    "mass_C_kg": 185.9,
+    "placeholder_C_kg": 0.4
+   },
+   "Hose guide arm:1": {
+    "mass_A_kg": 167.6,
+    "mass_C_kg": 167.6,
+    "placeholder_C_kg": 0.0
+   },
+   "MAST BK:1": {
+    "mass_A_kg": 134.9,
+    "mass_C_kg": 134.9,
+    "placeholder_C_kg": 0.0
+   },
+   "SIDE HOUSING_ROOF COVER:1": {
+    "mass_A_kg": 131.9,
+    "mass_C_kg": 131.9,
+    "placeholder_C_kg": 0.0
+   },
+   "FRONT JACK CYL:1": {
+    "mass_A_kg": 127.1,
+    "mass_C_kg": 127.1,
+    "placeholder_C_kg": 0.0
+   },
+   "FRONT JACK CYL:2": {
+    "mass_A_kg": 127.1,
+    "mass_C_kg": 127.1,
+    "placeholder_C_kg": 0.0
+   },
+   "REAR JACK CYL:2": {
+    "mass_A_kg": 125.5,
+    "mass_C_kg": 125.5,
+    "placeholder_C_kg": 0.0
+   },
+   "REAR JACK CYL:1": {
+    "mass_A_kg": 125.5,
+    "mass_C_kg": 125.5,
+    "placeholder_C_kg": 0.0
+   },
+   "BOOM CYL:1": {
+    "mass_A_kg": 118.7,
+    "mass_C_kg": 118.7,
+    "placeholder_C_kg": 0.0
+   },
+   "CENTER DECK COVER_1:1": {
+    "mass_A_kg": 77.4,
+    "mass_C_kg": 77.4,
+    "placeholder_C_kg": 14.0
+   },
+   "BATTERY BOX:2": {
+    "mass_A_kg": 55.3,
+    "mass_C_kg": 55.3,
+    "placeholder_C_kg": 0.0
+   },
+   "CENTER DECK COVER FRAME_2:1": {
+    "mass_A_kg": 55.2,
+    "mass_C_kg": 55.2,
+    "placeholder_C_kg": 0.0
+   },
+   "Hose guide CYL:1": {
+    "mass_A_kg": 49.5,
+    "mass_C_kg": 49.5,
+    "placeholder_C_kg": 0.0
+   },
+   "부품1:1": {
+    "mass_A_kg": 42.6,
+    "mass_C_kg": 42.6,
+    "placeholder_C_kg": 42.6
+   },
+   "LOGO:1": {
+    "mass_A_kg": 2.0,
+    "mass_C_kg": 2.0,
+    "placeholder_C_kg": 2.0
+   }
+  },
+  "total_C_kg": 38982.79845,
+  "sensitivity": {
+   "reference": {
+    "case": "C",
+    "level": "top",
+    "mass_kg": 38555.7,
+    "com_body_m": [
+     0.4521,
+     -0.0015,
+     2.1749
+    ],
+    "leg_loads_kN": {
+     "FL": 118.254135,
+     "FR": 116.264689,
+     "RL": 72.697471,
+     "RR": 70.88596
+    },
+    "model": "4 equal vertical springs, rigid level floor, pads at pad_bottom_center_retracted_m (ASSUMPTION)"
+   },
+   "per_tonne": {
+    "engine_bay": {
+     "point_body_m": [
+      -0.65765,
+      -0.8872,
+      1.1916
+     ],
+     "basis": "SIDE HOUSING_(ENGINE)_R1 bbox centre (bbox [-2.44, -1.4, 0.27] ... [1.13, -0.38, 2.11] m)",
+     "dF_kN_per_t": {
+      "FL": 0.168931,
+      "FR": 3.669672,
+      "RL": 1.390206,
+      "RR": 4.577842
+     },
+     "dCoM_mm_per_t": [
+      -28.055375,
+      -22.39121,
+      -24.858617
+     ],
+     "illustrative_range_t_ASSUMPTION": [
+      1.0,
+      2.0
+     ],
+     "dF_kN_at_range": {
+      "FL": [
+       0.168931,
+       0.337861
+      ],
+      "FR": [
+       3.669672,
+       7.339343
+      ],
+      "RL": [
+       1.390206,
+       2.780411
+      ],
+      "RR": [
+       4.577842,
+       9.155684
+      ]
+     },
+     "dCoM_z_mm_at_range": [
+      -24.858617,
+      -49.717234
+     ]
+    },
+    "rear_left_housing": {
+     "point_body_m": [
+      -1.6266,
+      0.84455,
+      0.8016
+     ],
+     "basis": "CABIN HOUSING_R1 bbox centre (cooler covers, behind the cabin)",
+     "dF_kN_per_t": {
+      "FL": 2.71126,
+      "FR": -0.831945,
+      "RL": 5.576819,
+      "RR": 2.350516
+     },
+     "dCoM_mm_per_t": [
+      -52.551213,
+      21.388826,
+      -34.718132
+     ],
+     "illustrative_range_t_ASSUMPTION": [
+      0.2,
+      0.5
+     ],
+     "dF_kN_at_range": {
+      "FL": [
+       0.542252,
+       1.35563
+      ],
+      "FR": [
+       -0.166389,
+       -0.415973
+      ],
+      "RL": [
+       1.115364,
+       2.78841
+      ],
+      "RR": [
+       0.470103,
+       1.175258
+      ]
+     },
+     "dCoM_z_mm_at_range": [
+      -6.943626,
+      -17.359066
+     ]
+    },
+    "cabin": {
+     "point_body_m": [
+      0.197599,
+      0.884877,
+      1.158872
+     ],
+     "basis": "BUMA CE cabin bbox centre",
+     "dF_kN_per_t": {
+      "FL": 4.60869,
+      "FR": 0.959288,
+      "RL": 3.780837,
+      "RR": 0.457835
+     },
+     "dCoM_mm_per_t": [
+      -6.433995,
+      22.408313,
+      -25.686014
+     ],
+     "illustrative_range_t_ASSUMPTION": [
+      0.2,
+      0.8
+     ],
+     "dF_kN_at_range": {
+      "FL": [
+       0.921738,
+       3.686952
+      ],
+      "FR": [
+       0.191858,
+       0.76743
+      ],
+      "RL": [
+       0.756167,
+       3.024669
+      ],
+      "RR": [
+       0.091567,
+       0.366268
+      ]
+     },
+     "dCoM_z_mm_at_range": [
+      -5.137203,
+      -20.548811
+     ]
+    },
+    "counterweight": {
+     "point_body_m": [
+      -2.690546,
+      -0.041055,
+      0.596623
+     ],
+     "basis": "COUNTER WEIGHT mass centroid",
+     "dF_kN_per_t": {
+      "FL": -0.141123,
+      "FR": -0.13094,
+      "RL": 5.03472,
+      "RR": 5.043992
+     },
+     "dCoM_mm_per_t": [
+      -79.448636,
+      -0.999972,
+      -39.900128
+     ],
+     "illustrative_range_t_ASSUMPTION": [
+      -0.6,
+      0.6
+     ],
+     "dF_kN_at_range": {
+      "FL": [
+       0.084674,
+       -0.084674
+      ],
+      "FR": [
+       0.078564,
+       -0.078564
+      ],
+      "RL": [
+       -3.020832,
+       3.020832
+      ],
+      "RR": [
+       -3.026395,
+       3.026395
+      ]
+     },
+     "dCoM_z_mm_at_range": [
+      23.940077,
+      -23.940077
+     ]
+    },
+    "crawler": {
+     "point_body_m": [
+      -0.03315,
+      1.6e-05,
+      -0.544779
+     ],
+     "basis": "crawler compound mass centroid",
+     "dF_kN_per_t": {
+      "FL": 2.58716,
+      "FR": 2.514227,
+      "RL": 2.385837,
+      "RR": 2.319426
+     },
+     "dCoM_mm_per_t": [
+      -12.267512,
+      0.038316,
+      -68.755681
+     ],
+     "illustrative_range_t_ASSUMPTION": [
+      -2.3,
+      2.3
+     ],
+     "dF_kN_at_range": {
+      "FL": [
+       -5.950469,
+       5.950469
+      ],
+      "FR": [
+       -5.782721,
+       5.782721
+      ],
+      "RL": [
+       -5.487424,
+       5.487424
+      ],
+      "RR": [
+       -5.33468,
+       5.33468
+      ]
+     },
+     "dCoM_z_mm_at_range": [
+      158.138067,
+      -158.138067
+     ]
+    },
+    "auger_tool_top": {
+     "point_body_m": [
+      3.2027,
+      0.0028,
+      9.102
+     ],
+     "basis": "drive + tool CoM at the top level (auger_levels.json moving_set_cog_body_m)",
+     "dF_kN_per_t": {
+      "FL": 5.813695,
+      "FR": 5.830818,
+      "RL": -0.926727,
+      "RR": -0.911135
+     },
+     "dCoM_mm_per_t": [
+      69.537387,
+      0.108707,
+      175.122675
+     ],
+     "illustrative_range_t_ASSUMPTION": [
+      0.0,
+      1.5
+     ],
+     "dF_kN_at_range": {
+      "FL": [
+       0.0,
+       8.720542
+      ],
+      "FR": [
+       0.0,
+       8.746226
+      ],
+      "RL": [
+       -0.0,
+       -1.39009
+      ],
+      "RR": [
+       -0.0,
+       -1.366703
+      ]
+     },
+     "dCoM_z_mm_at_range": [
+      0.0,
+      262.684013
+     ]
+    },
+    "superstructure_com": {
+     "point_body_m": [
+      0.4521,
+      -0.0015,
+      2.1749
+     ],
+     "basis": "uniform scaling of the total",
+     "dF_kN_per_t": {
+      "FL": 3.067099,
+      "FR": 3.015499,
+      "RL": 1.885518,
+      "RR": 1.838534
+     },
+     "dCoM_mm_per_t": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   }
+  }
+ },
+ "imu": {
+  "box_mm": [
+   100.0,
+   100.0,
+   50.0
+  ],
+  "clearance_mm": 10.0,
+  "grid_mm": 10.0,
+  "search_region_cad_mm": {
+   "x": [
+    250.0,
+    1450.0
+   ],
+   "y": [
+    -60.0,
+    800.0
+   ],
+   "z": [
+    -1150.0,
+    1400.0
+   ]
+  },
+  "triangles_in_region": 80812,
+  "assumed_point_body_m": [
+   0.2,
+   0.88,
+   0.3
+  ],
+  "candidates": [
+   {
+    "id": "C1",
+    "axis": 1,
+    "sign": 1,
+    "level": [
+     39.0,
+     41.0
+    ],
+    "label": "15 mm cross plate on the pontoon floor, top face",
+    "plane_level_cad_mm": 40.0,
+    "support_area_m2": 0.142695,
+    "feasible": 85,
+    "box_centre_on_face_cad_mm": [
+     880.0,
+     40.0,
+     310.0
+    ],
+    "box_centre_on_face_body_m": [
+     0.31,
+     0.88,
+     0.04
+    ],
+    "box_centroid_body_m": [
+     0.31,
+     0.88,
+     0.065
+    ],
+    "face_normal_body": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "offset_from_assumed_m": [
+     0.11,
+     0.0,
+     -0.26
+    ],
+    "free_distance_along_normal_mm": 266.753571,
+    "first_obstacle_along_normal": "BUMA CE 3D 20230425:1 / 부마씨이 소구경 3D_Shrinkwrap_11:1",
+    "under_cab_footprint": true,
+    "feasible_body_range_m": [
+     [
+      0.31,
+      0.82,
+      0.04
+     ],
+     [
+      0.35,
+      1.16,
+      0.04
+     ]
+    ],
+    "rocking_gain_estimate_top": [
+     {
+      "mode": "1 roll-sway",
+      "gain_at_assumed": 26.8,
+      "gain_estimate": 23.468789
+     },
+     {
+      "mode": "2 pitch-surge",
+      "gain_at_assumed": 130.5,
+      "gain_estimate": 121.180126
+     }
+    ]
+   },
+   {
+    "id": "C2",
+    "axis": 0,
+    "sign": -1,
+    "level": [
+     1280.0,
+     1300.0
+    ],
+    "label": "left pontoon C-channel web, inner face (inside the channel)",
+    "plane_level_cad_mm": 1296.0,
+    "support_area_m2": 0.64395,
+    "feasible": 1642,
+    "box_centre_on_face_cad_mm": [
+     1296.0,
+     120.0,
+     170.0
+    ],
+    "box_centre_on_face_body_m": [
+     0.17,
+     1.296,
+     0.12
+    ],
+    "box_centroid_body_m": [
+     0.17,
+     1.271,
+     0.12
+    ],
+    "face_normal_body": [
+     0.0,
+     -1.0,
+     0.0
+    ],
+    "offset_from_assumed_m": [
+     -0.03,
+     0.416,
+     -0.18
+    ],
+    "free_distance_along_normal_mm": 902.0,
+    "first_obstacle_along_normal": "BASE DECK:1",
+    "under_cab_footprint": true,
+    "feasible_body_range_m": [
+     [
+      -2.12,
+      1.296,
+      0.12
+     ],
+     [
+      0.97,
+      1.296,
+      0.18
+     ]
+    ],
+    "rocking_gain_estimate_top": [
+     {
+      "mode": "1 roll-sway",
+      "gain_at_assumed": 26.8,
+      "gain_estimate": 24.493777
+     },
+     {
+      "mode": "2 pitch-surge",
+      "gain_at_assumed": 130.5,
+      "gain_estimate": 124.047779
+     }
+    ]
+   },
+   {
+    "id": "C3",
+    "axis": 0,
+    "sign": 1,
+    "level": [
+     1300.0,
+     1310.0
+    ],
+    "label": "left pontoon C-channel web, outer face (machine left side)",
+    "plane_level_cad_mm": 1305.0,
+    "support_area_m2": 0.841564,
+    "feasible": 4819,
+    "box_centre_on_face_cad_mm": [
+     1305.0,
+     80.0,
+     200.0
+    ],
+    "box_centre_on_face_body_m": [
+     0.2,
+     1.305,
+     0.08
+    ],
+    "box_centroid_body_m": [
+     0.2,
+     1.33,
+     0.08
+    ],
+    "face_normal_body": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "offset_from_assumed_m": [
+     0.0,
+     0.425,
+     -0.22
+    ],
+    "free_distance_along_normal_mm": null,
+    "first_obstacle_along_normal": null,
+    "under_cab_footprint": true,
+    "feasible_body_range_m": [
+     [
+      -2.13,
+      1.305,
+      0.08
+     ],
+     [
+      1.08,
+      1.305,
+      0.22
+     ]
+    ],
+    "rocking_gain_estimate_top": [
+     {
+      "mode": "1 roll-sway",
+      "gain_at_assumed": 26.8,
+      "gain_estimate": 23.981283
+     },
+     {
+      "mode": "2 pitch-surge",
+      "gain_at_assumed": 130.5,
+      "gain_estimate": 122.613953
+     }
+    ]
+   },
+   {
+    "id": "C4",
+    "axis": 1,
+    "sign": 1,
+    "level": [
+     429.0,
+     431.0
+    ],
+    "label": "centre spine top plate beside the cabin (reference: higher)",
+    "plane_level_cad_mm": 430.0,
+    "support_area_m2": 0.849391,
+    "feasible": 2817,
+    "box_centre_on_face_cad_mm": [
+     350.0,
+     430.0,
+     620.0
+    ],
+    "box_centre_on_face_body_m": [
+     0.62,
+     0.35,
+     0.43
+    ],
+    "box_centroid_body_m": [
+     0.62,
+     0.35,
+     0.455
+    ],
+    "face_normal_body": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "offset_from_assumed_m": [
+     0.42,
+     -0.53,
+     0.13
+    ],
+    "free_distance_along_normal_mm": null,
+    "first_obstacle_along_normal": null,
+    "under_cab_footprint": false,
+    "feasible_body_range_m": [
+     [
+      0.62,
+      -0.29,
+      0.43
+     ],
+     [
+      1.98,
+      0.35,
+      0.43
+     ]
+    ],
+    "rocking_gain_estimate_top": [
+     {
+      "mode": "1 roll-sway",
+      "gain_at_assumed": 26.8,
+      "gain_estimate": 28.465605
+     },
+     {
+      "mode": "2 pitch-surge",
+      "gain_at_assumed": 130.5,
+      "gain_estimate": 135.159937
+     }
+    ]
+   }
+  ]
+ },
+ "timings_s": {
+  "load_s": 0.328946,
+  "origin_s": 0.681751,
+  "mass_audit_s": 0.664297,
+  "imu_s": 9.064858,
+  "render_s": 102.873111,
+  "total_s": 113.631018
+ }
+}

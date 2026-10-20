@@ -1,9 +1,9 @@
-# Minimal environment for the dynamics reference scripts (docs/dynamics_model.md section 8):
-#   scripts/dynamics/dyn_model.py, run_reference.py, run_timedomain_check.py, run_actuator_L2_feasibility.py
+# Minimal environment for the dynamics reference scripts (00_docs/01_dynamics/dynamics_model.md section 8):
+#   04_scripts/01_dynamics/dyn_model.py, run_reference.py, run_timedomain_check.py, run_actuator_L2_feasibility.py
 # Versions pinned to the conda env `dynamics-dev` as installed on 2026-10-19 (conda list).
 # On this PC use the existing `dynamics-dev`; elsewhere:
 #   conda env create -f environment-dynamics.yml
-#   conda run -n outrigger-dynamics python -I scripts/dynamics/run_reference.py   (from the project root)
+#   conda run -n outrigger-dynamics python -I 04_scripts/01_dynamics/run_reference.py   (from the project root)
 name: outrigger-dynamics
 channels:
   - conda-forge

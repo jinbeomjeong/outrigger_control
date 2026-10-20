@@ -1,0 +1,209 @@
+{
+ "provenance": {
+  "source_prototype_entry": "0:1:1:746",
+  "source_instance_path": "REXOME33_Assy_r3(미니어쳐) / REX33-REX33 - 5J286105:1 / =>[0:1:1:746]",
+  "source_file": "01_cad/06_brep/prototypes/0_1_1_746.bbrep",
+  "source_sha256": "d3142659588450bc626d856e87205506800483f2922135dd9658f10f3fdfbe6e",
+  "placement_world_from_prototype": [
+   [
+    1.0,
+    2.28762564447038e-12,
+    3.68649592787008e-16,
+    1346.29060581573
+   ],
+   [
+    -2.28762564447038e-12,
+    1.0,
+    -1.01260669503032e-28,
+    -689.77856907844
+   ],
+   [
+    -3.68649592787008e-16,
+    -7.420715927800904e-28,
+    1.0,
+    672.777826920854
+   ]
+  ],
+  "generator": "04_scripts/00_cad/derive_crawler_cache.py",
+  "generator_sha256": "3d579672d094709395cc963ff4570fb10a6c383af3b178039a002ffc720f3d90",
+  "created_at": "2026-10-20T16:48:07",
+  "note": "Crawler model is described as REXOME25 (another machine) in the STEP file"
+ },
+ "frames": "CAD world mm (Y up); *_body_m: body axes x=+Z_cad, y=+X_cad, z=+Y_cad, m",
+ "ground_y_mm": -1050.9191194248099,
+ "ground_z_body_m": -1.050919,
+ "track_centre_half_spacing_mm": 1044.999999998278,
+ "shoe_ground_width_mm": 421.9725909768845,
+ "track_overall_length_mm": 3684.153877550464,
+ "ground_shoe_solids": {
+  "count": 64,
+  "note": "solids wider than 400 mm in X whose lowest point is < 60 mm above ground"
+ },
+ "shoe_pitch": {
+  "grousers_on_ground_left": 10,
+  "pitch_mm_median": 173.20000000000002,
+  "pitch_mm_min_max": [
+   173.19999999999993,
+   173.3
+  ]
+ },
+ "ground_patches_by_band": {
+  "1mm": {
+   "left": {
+    "face_count": 40,
+    "tip_area_mm2": 84340.62725323428,
+    "x_range_mm": [
+     834.0132045107323,
+     1255.9857954876168
+    ],
+    "z_range_mm": [
+     -825.115576391586,
+     811.6017741830973
+    ],
+    "width_mm": 421.9725909768845,
+    "length_mm": 1636.7173505746832,
+    "centre_x_mm": 1044.9994999991745,
+    "centre_z_mm": -6.756901104244378
+   },
+   "right": {
+    "face_count": 40,
+    "tip_area_mm2": 84340.62725323561,
+    "x_range_mm": [
+     -1255.9867954858269,
+     -834.0142045089365
+    ],
+    "z_range_mm": [
+     -825.1155763915851,
+     811.601774183098
+    ],
+    "width_mm": 421.9725909768904,
+    "length_mm": 1636.7173505746832,
+    "centre_x_mm": -1045.0004999973817,
+    "centre_z_mm": -6.756901104243582
+   }
+  },
+  "3mm": {
+   "left": {
+    "face_count": 40,
+    "tip_area_mm2": 84340.62725323428,
+    "x_range_mm": [
+     834.0132045107323,
+     1255.9857954876168
+    ],
+    "z_range_mm": [
+     -825.115576391586,
+     811.6017741830973
+    ],
+    "width_mm": 421.9725909768845,
+    "length_mm": 1636.7173505746832,
+    "centre_x_mm": 1044.9994999991745,
+    "centre_z_mm": -6.756901104244378
+   },
+   "right": {
+    "face_count": 40,
+    "tip_area_mm2": 84340.62725323561,
+    "x_range_mm": [
+     -1255.9867954858269,
+     -834.0142045089365
+    ],
+    "z_range_mm": [
+     -825.1155763915851,
+     811.601774183098
+    ],
+    "width_mm": 421.9725909768904,
+    "length_mm": 1636.7173505746832,
+    "centre_x_mm": -1045.0004999973817,
+    "centre_z_mm": -6.756901104243582
+   }
+  },
+  "5mm": {
+   "left": {
+    "face_count": 58,
+    "tip_area_mm2": 426221.91871607944,
+    "x_range_mm": [
+     800.3846648063173,
+     1289.61433519205
+    ],
+    "z_range_mm": [
+     -1005.0093694003162,
+     989.3170765887425
+    ],
+    "width_mm": 489.2296703857327,
+    "length_mm": 1994.3264459890588,
+    "centre_x_mm": 1044.9994999991836,
+    "centre_z_mm": -7.846146405786897
+   },
+   "right": {
+    "face_count": 58,
+    "tip_area_mm2": 426221.91871607857,
+    "x_range_mm": [
+     -1289.6153351902576,
+     -800.385664804527
+    ],
+    "z_range_mm": [
+     -1005.0093694003153,
+     989.3170765887431
+    ],
+    "width_mm": 489.2296703857306,
+    "length_mm": 1994.3264459890584,
+    "centre_x_mm": -1045.0004999973924,
+    "centre_z_mm": -7.846146405786101
+   }
+  },
+  "10mm": {
+   "left": {
+    "face_count": 60,
+    "tip_area_mm2": 491224.55191851535,
+    "x_range_mm": [
+     800.3846648063173,
+     1289.6143351920632
+    ],
+    "z_range_mm": [
+     -1010.0364311537568,
+     994.4220905008503
+    ],
+    "width_mm": 489.22967038574586,
+    "length_mm": 2004.458521654607,
+    "centre_x_mm": 1044.9994999991902,
+    "centre_z_mm": -7.8071703264532175
+   },
+   "right": {
+    "face_count": 60,
+    "tip_area_mm2": 491224.55191851483,
+    "x_range_mm": [
+     -1289.6153351902744,
+     -800.385664804527
+    ],
+    "z_range_mm": [
+     -1010.0364311537558,
+     994.4220905008509
+    ],
+    "width_mm": 489.22967038574745,
+    "length_mm": 2004.4585216546066,
+    "centre_x_mm": -1045.0004999974008,
+    "centre_z_mm": -7.807170326452422
+   }
+  }
+ },
+ "flat_ground_length_1mm_body_x_m": [
+  -0.8251,
+  0.8116
+ ],
+ "comparison_with_previous_review": {
+  "track_centre_m": 1.045,
+  "shoe_ground_width_m": 0.423,
+  "flat_length_1mm_m": 1.64,
+  "flat_length_3mm_m": 1.84,
+  "flat_x_range_1mm_m": [
+   -0.826,
+   0.813
+  ],
+  "now_track_centre_m": 1.045,
+  "now_shoe_ground_width_m": 0.422,
+  "now_flat_length_1mm_m": 1.6367,
+  "now_flat_length_3mm_m": 1.6367,
+  "now_flat_length_5mm_m": 1.9943,
+  "now_flat_length_10mm_m": 2.0045
+ },
+ "wheel_stations_file": "crawler_wheels.csv"
+}

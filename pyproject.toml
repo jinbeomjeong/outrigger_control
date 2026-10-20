@@ -1,10 +1,10 @@
 # Tool configuration only (pytest, ruff). The package is not installed:
-# `src/` is put on sys.path by pytest (`pythonpath`) and by scripts.
+# `03_src/` is put on sys.path by pytest (`pythonpath`) and by scripts.
 
 [tool.pytest.ini_options]
 minversion = "8.0"
-pythonpath = ["src"]
-testpaths = ["tests"]
+pythonpath = ["03_src"]
+testpaths = ["05_tests"]
 addopts = ["--strict-markers"]
 markers = [
     "chrono: needs pychrono; engine convention checks (seconds to ~1 min)",
@@ -15,7 +15,7 @@ markers = [
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-src = ["src", "tests", "scripts"]
+src = ["03_src", "05_tests", "04_scripts"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP"]
