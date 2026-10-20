@@ -746,6 +746,7 @@ def main():
 
     # ------------------------------------------------------------ rev. 5: V4 lift with a compliant crawler
     res["lift_V4_compliant_crawler"] = add_dynamic_touch(lift_reference(p, geo, e_op, k_L1, kt_L1, tests), p, geo, e_op, k_L1, tests)
+    add_ball_centre_bushing(res, p, geo, e_op, k_L1, kt_L1)   # rev. 13 (plan A): new keys only, nothing else changes
 
     res["meta"]["runtime_s"] = round(time.perf_counter() - t0, 2)
 
@@ -960,6 +961,378 @@ def add_dynamic_touch(lift, p, geo, e_op, k_L1, tests):
         "layouts": sens,
     }
     return lift
+
+
+# ------------------------------------------------------------ rev. 13: L1 ground bushing at the ball centre (plan A)
+# User decision 2026-10-20 (dynamics_model.md 5.3 ruling 4, rev. 13): the L1 ground bushing (tangential spring k_t
+# and dashpot c_t) acts at the swivel ball centre (pad bottom + swivel_center_above_pad_bottom_m), not at the sphere
+# contact point. Keys are only added; the rev. 5 L1 values (springs at the pad bottom) stay as history. Defined
+# after main() so that the line numbers cited by 04_scripts/00_cad/export_params.py LINE_REFS do not move.
+V7_BALL_KEY = "V7_ball_centre_bushing_rev13"
+V12_EXACT_KEY = "extension_exact_m"
+BETA_BALL_KEY = "f_Hz_top_ball_centre_rev13"
+V12_SPHERE_KEY = "extension_sphere_touch_m"
+V12_PLAN_A_KEY = "L1_plan_A_expected_chrono_minus_reference_rev13"
+V7_DT_ZETA_NUM_S = (1e-4, 2e-4)   # general-run dt and the conditional 2e-4 s (dynamics_model.md 4.3)
+V7_NORMAL_BAND = 0.10             # diagnosis 1: identified zeta within +-10 % of the reference (rev. 7 supplement)
+V7_BUSHING_MISSING_ZETA3 = 0.005  # diagnosis 5: zeta_3 at or below this = bushing damping missing (rev. 7 value)
+V12_NEWTON_TOL = 1e-13            # max |residual| / W of the slope statics (/ (W x gravity scale) < this / scale)
+V12_NEWTON_MAX_ITER = 30
+V12_LINEAR_EPS = 1e-4             # gravity scales eps, 2 eps of the "linear" solve; Richardson 2 F(eps)/eps - F(2eps)/(2eps)
+
+
+def _l1_matrices(bw, xy, z_v, z_h, kv, kh, cn, ct, F0):
+    """L1 6-DoF stiffness / damping about the CoM of bw (q = [ux, uy, uz, phi, theta, psi], small angles).
+
+    Vertical spring kv + dashpot cn and the preload F0 (geometric term) at (x_i, y_i, z_v_i); tangential spring kh +
+    dashpot ct (x and y) at (x_i, y_i, z_h_i). z_v = z_h = pad bottom reproduces dm.stiffness_6dof (rev. 5).
+    Returns K, C_n, C_t, K_bushing (tangential spring part of K).
+    """
+    K = np.zeros((6, 6)); Kb = np.zeros((6, 6)); Cn = np.zeros((6, 6)); Ct = np.zeros((6, 6))
+    for i in range(4):
+        dv = np.array([xy[i, 0], xy[i, 1], z_v[i]]) - bw.com
+        dh = np.array([xy[i, 0], xy[i, 1], z_h[i]]) - bw.com
+        _, _, az = dm.a_vec(dv)
+        ax, ay, _ = dm.a_vec(dh)
+        Kh = kh[i] * (np.outer(ax, ax) + np.outer(ay, ay))
+        K += kv[i] * np.outer(az, az) + Kh
+        K[3:, 3:] -= F0[i] * dm._hz(dv)
+        Kb += Kh
+        Cn += cn[i] * np.outer(az, az)
+        Ct += ct[i] * (np.outer(ax, ax) + np.outer(ay, ay))
+    return K, Cn, Ct, Kb
+
+
+def _ball_heights(p):
+    hb = np.array([float(p["legs"][n]["pad"]["swivel_center_above_pad_bottom_m"]) for n in dm.LEG_NAMES])
+    if np.abs(hb - dm.ASSUMPTIONS["swivel_ball_height_above_pad_bottom_m"]).max() > 0:
+        raise RuntimeError(f"ball height YAML {hb} differs from dyn_model ASSUMPTIONS")
+    return hb
+
+
+def _v7_ball_centre(p, geo, e_op, k_L1, kt_L1, tests):
+    """V7 reference with the tangential spring / dashpot at the ball centre (rev. 13), all auger levels.
+
+    Normal (SMC) force: the pad sphere is centred at the ball, so the normal force passes through the ball centre and
+    the compression is the ball-centre drop -> vertical spring and its preload also at the ball centre. The variant
+    'tangential only at the ball' isolates the bushing move. The damping values are the rev. 7 L1 values (unchanged).
+    """
+    import run_v7_diagnostic as v7d
+
+    g, xy = geo.g, geo.pad_xy
+    hb = _ball_heights(p)
+    zt = dm.ASSUMPTIONS["modal_damping_ratio_body"]
+    W_tot = dm.body_with_rods(p, geo, "top", e_op).mass * g
+    cn = 2 * zt * np.sqrt(k_L1 * W_tot / g / 4)
+    ct = 2 * zt * np.sqrt(kt_L1 * W_tot / g / 4)
+    cfg = tests["L1_rigid_motor_lumped_contact"]
+    if r(cn) != cfg["c_pad_N_s_m"] or r(ct) != cfg["c_tan_N_s_m"]:
+        raise RuntimeError("L1 dashpots out of step with chrono_test_references")
+    m_moving = float(p["legs"]["FL"]["moving_part"]["mass_kg"])
+    m_eff_1kg = m_moving * 1.0 / (m_moving + 1.0)
+    cases = {   # same multipliers (s_n, s_t) as run_v7_diagnostic.py
+        "nominal": (1.0, 1.0),
+        "c_t x2 (bushing input = c_t, R7 violation)": (1.0, 2.0),
+        "c_n x2": (2.0, 1.0),
+        "c_t x0.5": (1.0, 0.5),
+        "c_t = 0 (bushing damping missing)": (1.0, 0.0),
+        "c_n x0.0093 (floor body 1 kg)": (m_eff_1kg / m_moving, 1.0),
+        "c_n -> 0 and c_t x2 (both errors)": (m_eff_1kg / m_moving, 2.0),
+        "c_n x106.8 (g_n entered as c_n, unit error)": (m_moving, 1.0),
+    }
+    z_pad = geo.pad_z_retracted - e_op
+    z_ball = z_pad + hb
+    variants = {"rev5": (z_pad, z_pad), "tangential_only_at_ball": (z_pad, z_ball), "ball": (z_ball, z_ball)}
+
+    def thresholds(z, zc):
+        lo1, hi1 = (1 - V7_NORMAL_BAND) * z[0], (1 + V7_NORMAL_BAND) * z[0]
+        lo2, hi2 = (1 - V7_NORMAL_BAND) * z[1], (1 + V7_NORMAL_BAND) * z[1]
+        t2 = 0.5 * lo1
+        t3 = 0.5 * (hi1 + zc["c_n x2"][0])
+        t4 = 0.5 * (hi2 + (1 - V7_NORMAL_BAND) * zc["c_t x2 (bushing input = c_t, R7 violation)"][1])
+        t5 = 0.5 * (z[2] + zc["c_t x2 (bushing input = c_t, R7 violation)"][2])
+        return {"1_normal_zeta1_band": [lo1, hi1], "1_normal_zeta2_band": [lo2, hi2],
+                "2_gn_or_floor_mass_error_zeta1_max": t2, "3_vertical_damping_excess_zeta1_min": t3,
+                "4_ct_x2_suspect_zeta2_min (with zeta1_max(2) < zeta1 < zeta1_min(3))": t4,
+                "5_ct_x2_confirmed_zeta3_min": t5, "5_bushing_damping_missing_zeta3_max": V7_BUSHING_MISSING_ZETA3}
+
+    out = {}
+    for lvl in dm.LEVELS:
+        bw = dm.body_with_rods(p, geo, lvl, e_op)
+        Fc, _, _ = dm.static_loads(k_L1, xy, bw.mass * g, bw.com[:2])
+        M = dm.mass_6dof(bw)
+        old = cfg["levels"][lvl]
+        var = {}
+        for vname, (zv, zh) in variants.items():
+            K, Cn, Ct, Kb = _l1_matrices(bw, xy, zv, zh, k_L1, kt_L1, cn, ct, Fc)
+            w2, f_und, Phi, cls, orth = dm.modal(M, K, dm.DOF6)
+            fd, zd = dm.complex_modes(M, K, Cn + Ct)
+            var[vname] = dict(K=K, Cn=Cn, Ct=Ct, Kb=Kb, w2=w2, f=f_und, Phi=Phi, cls=cls, orth=orth, fd=fd, zd=zd)
+        v5 = var["rev5"]
+        if (r(v5["f"], 5) != old["f_undamped_Hz"] or r(v5["fd"], 5) != old["f_damped_Hz"]
+                or r(v5["zd"], 3) != old["zeta"]):
+            raise RuntimeError(f"{lvl}: rev. 5 L1 modal values not reproduced")
+        vb = var["ball"]
+        Ph = vb["Phi"][:, :6].copy()
+        for jm in range(6):
+            imax = int(np.argmax(np.abs(Ph[:6, jm])))
+            if Ph[imax, jm] < 0:
+                Ph[:, jm] *= -1.0
+        om = np.sqrt(vb["w2"][:6])
+        share = np.array([vb["Phi"][:, j] @ vb["Kb"] @ vb["Phi"][:, j] / vb["w2"][j] for j in range(6)])
+        share5 = np.array([v5["Phi"][:, j] @ v5["Kb"] @ v5["Phi"][:, j] / v5["w2"][j] for j in range(6)])
+        # diagnosis cases (mode tracking by MAC, as run_v7_diagnostic.py)
+        zc, zc5 = {}, {}
+        for cname, (sn, st) in cases.items():
+            zc[cname] = v7d.tracked_modes(M, vb["K"], sn * vb["Cn"] + st * vb["Ct"])["zeta"]
+            zc5[cname] = v7d.tracked_modes(M, v5["K"], sn * v5["Cn"] + st * v5["Ct"])["zeta"]
+        nom = v7d.tracked_modes(M, vb["K"], vb["Cn"] + vb["Ct"])
+        if np.abs(nom["zeta"] - vb["zd"][:6]).max() > 1e-12:
+            raise RuntimeError(f"{lvl}: tracked and sorted complex modes differ")
+        split = v7d.first_order_split(nom["Phi"], {"normal c_n": vb["Cn"], "tangential c_t": vb["Ct"]},
+                                      nom["f_undamped_Hz"])
+        Kn0 = vb["K"] - vb["Kb"]
+        f_nobush = np.sqrt(np.clip(np.linalg.eigvals(np.linalg.solve(M, Kn0)).real, 0, None))
+        f_nobush = np.sort(f_nobush)[-3:] / (2 * np.pi)
+        thr, thr5 = thresholds(vb["zd"], zc), thresholds(v5["zd"], zc5)
+        sep = {
+            "2: floor-mass and unit errors below zeta1_max(2)": bool(
+                zc["c_n x0.0093 (floor body 1 kg)"][0] < thr["2_gn_or_floor_mass_error_zeta1_max"]
+                and zc["c_n -> 0 and c_t x2 (both errors)"][0] < thr["2_gn_or_floor_mass_error_zeta1_max"]),
+            "3: c_n x2 above zeta1_min(3) > band(1)": bool(
+                zc["c_n x2"][0] > thr["3_vertical_damping_excess_zeta1_min"] > thr["1_normal_zeta1_band"][1]),
+            "4: c_t x2 zeta1 between (2) and (3), its zeta2 x0.9 above zeta2_min(4) > band(1)": bool(
+                thr["2_gn_or_floor_mass_error_zeta1_max"] < zc["c_t x2 (bushing input = c_t, R7 violation)"][0]
+                < thr["3_vertical_damping_excess_zeta1_min"]
+                and (1 - V7_NORMAL_BAND) * zc["c_t x2 (bushing input = c_t, R7 violation)"][1]
+                > thr["4_ct_x2_suspect_zeta2_min (with zeta1_max(2) < zeta1 < zeta1_min(3))"]
+                > thr["1_normal_zeta2_band"][1]),
+            "5: c_t x2 zeta3 above, c_t = 0 zeta3 below, nominal x0.9 above the missing threshold": bool(
+                zc["c_t x2 (bushing input = c_t, R7 violation)"][2] > thr["5_ct_x2_confirmed_zeta3_min"]
+                and zc["c_t = 0 (bushing damping missing)"][2] < V7_BUSHING_MISSING_ZETA3
+                < (1 - V7_NORMAL_BAND) * vb["zd"][2]),
+        }
+        out[lvl] = {
+            "model": ("L1 6-DoF (superstructure + 4 rods rigid with the body), pad sphere centred at the ball: vertical "
+                      "spring k_n, dashpot c_n and preload (geometric term) at the ball centre, tangential spring k_t and "
+                      "dashpot c_t (ground bushing, plan A) at the ball centre. k, c = rev. 7 L1 values (unchanged)"),
+            "ball_centre_z_m (FL, FR, RL, RR) (pad bottom + swivel_center_above_pad_bottom_m)": r(z_ball),
+            "f_undamped_Hz": r(vb["f"], 5), "mode_content": vb["cls"], "f_damped_Hz": r(vb["fd"], 5),
+            "zeta": r(vb["zd"], 3), "zeta_4sig": r(vb["zd"], 4),
+            "orthogonality_err": r(vb["orth"], 3),
+            "change_vs_rev5 (springs at the pad bottom)": {
+                "f_undamped_rel": r(vb["f"] / v5["f"] - 1, 3), "zeta_rel": r(vb["zd"] / v5["zd"] - 1, 3),
+                "tangential_only_at_ball_f_undamped_rel": r(var["tangential_only_at_ball"]["f"] / v5["f"] - 1, 3),
+                "tangential_only_at_ball_zeta_rel": r(var["tangential_only_at_ball"]["zd"] / v5["zd"] - 1, 3),
+            },
+            "mode_shapes": {
+                "coordinates": list(dm.DOF6),
+                "reference_point_m (rotations about it, translations of it; body axes, level body = world)": r(bw.com),
+                "reference_point_meaning": "CoM of superstructure + 4 rods at e_op (rods rigid with the body)",
+                "units": "translations m, rotations rad (small angles), per sqrt(kg)",
+                "Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)": r(Ph, 12),
+                "mass_matrix (same coordinates)": r(M, 12),
+                "projection": "eta = Phi^T M q (q = measured displacement from the static equilibrium); sign: largest body component of each column positive",
+            },
+            "implicit_strain_energy_share r (bushing)": r(share, 4),
+            "implicit_strain_energy_share r (bushing), rev5": r(share5, 4),
+            "zeta_num_r_omega_dt_half": {f"{dt:g}": r(share * om * dt / 2, 3) for dt in V7_DT_ZETA_NUM_S},
+            "f_undamped_Hz_without_bushing (3 non-zero modes, position independent)": r(f_nobush, 4),
+            "V7_diagnostic": {
+                "usage": ("subtract zeta_num (r omega dt / 2 at the run dt, or the V8(a) measurement) from the identified "
+                          "zeta, then apply 1-5 (dynamics_model.md 5 V7 row); S2a judges the top level. Rules 2-4 "
+                          "were set for the top level; where separation_checks is false (middle, bottom) confirm "
+                          "with 5 (3rd mode)"),
+                "zeta_cases": {k: r(v, 4) for k, v in zc.items()},
+                "first_order_split_nominal": {k: r(v, 4) for k, v in split.items()},
+                "tangential_share_nominal": r(split["tangential c_t"] / (split["tangential c_t"] + split["normal c_n"]), 4),
+                "thresholds": {k: r(v, 4) for k, v in thr.items()},
+                "threshold_rules": {
+                    "1": "nominal zeta x (1 -+ 0.10)",
+                    "2": "0.5 x lower bound of the zeta1 band (rev. 7 value 0.0035 = 0.5 x 0.0070)",
+                    "3": "midpoint of the zeta1 band upper bound and zeta1 of c_n x2 (rev. 7: 0.0115)",
+                    "4": "midpoint of the zeta2 band upper bound and 0.9 x zeta2 of c_t x2 (rev. 7 printed 0.0165, "
+                         "set by hand inside the same gap; the rule gives the rev5 value below)",
+                    "5": "c_t x2: midpoint of nominal zeta3 and zeta3 of c_t x2 (rev. 7: 0.056); missing: fixed 0.005",
+                },
+                "thresholds_same_rules_on_rev5": {k: r(v, 4) for k, v in thr5.items()},
+                "separation_checks": sep,
+            },
+        }
+    return out
+
+
+def _levelled_extension_rev13(geo, slope_roll_deg, slope_pitch_deg, clearance):
+    """Copy of main().levelled_extension (nested there): level body, floor z = sx x + sy y - H, pad bottoms on it."""
+    sx = -math.tan(math.radians(slope_pitch_deg)); sy = math.tan(math.radians(slope_roll_deg))
+    (x0, x1), (y0, y1) = geo.crawler_xy_box
+    corners = np.array([[x0, y0], [x0, y1], [x1, y0], [x1, y1]])
+    H = np.max(sx * corners[:, 0] + sy * corners[:, 1]) + clearance - geo.crawler_bottom_z
+    zg_pad = sx * geo.pad_xy[:, 0] + sy * geo.pad_xy[:, 1]
+    return geo.pad_z_retracted + H - zg_pad
+
+
+def _rot_zyx(phi, theta, psi):
+    cr, sr, cp, sp, cy, sy = math.cos(phi), math.sin(phi), math.cos(theta), math.sin(theta), math.cos(psi), math.sin(psi)
+    Rx = np.array([[1, 0, 0], [0, cr, -sr], [0, sr, cr]])
+    Ry = np.array([[cp, 0, sp], [0, 1, 0], [-sp, 0, cp]])
+    Rz = np.array([[cy, -sy, 0], [sy, cy, 0], [0, 0, 1]])
+    return Rz @ Ry @ Rx
+
+
+def _slope_rigid_statics(p, geo, ext_pad, ext_sph, nrm, kn, kt, bushing_at_ball, gscale=1.0, s0=None):
+    """Nonlinear statics of the L1 Chrono pad model on a tilted rigid plane (top level), body start level at the
+    origin. Rigid body = superstructure + 4 rods at ext_sph (rigid motor). Sphere radius h_b centred at the ball;
+    the floor plane holds the pad bottoms at ext_pad, so the spheres touch it exactly with ext_sph. Normal force
+    k_n x penetration along n through the ball centre; bushing k_t in the plane between a body-fixed point (ball centre,
+    or the start contact point if bushing_at_ball is False) and its start position (stick). Gravity -g z (x gscale).
+
+    s0: start of the solve (default 0). Returns contact reactions R (4,3) floor -> pad [N], cylinder force [N],
+    attitude [rad], in-plane bushing disp [m], solution s, max residual.
+    """
+    g, xy = geo.g, geo.pad_xy
+    hb = _ball_heights(p)
+    bw = dm.body_with_rods(p, geo, "top", ext_sph)
+    W = bw.mass * g * gscale
+    p0 = np.array([xy[0, 0], xy[0, 1], geo.pad_z_retracted[0] - ext_pad[0]])
+    c_b = np.column_stack([xy, geo.pad_z_retracted - ext_sph + hb])
+    a_b = c_b if bushing_at_ball else c_b - hb[:, None] * nrm[None, :]
+    Pt = np.eye(3) - np.outer(nrm, nrm)
+
+    def forces(s):
+        R = _rot_zyx(*s[3:])
+        cw = s[:3] + c_b @ R.T
+        pa = s[:3] + a_b @ R.T
+        pen = hb - (cw - p0) @ nrm
+        Fn = kn * np.maximum(pen, 0.0)
+        Ft = -kt[:, None] * ((pa - a_b) @ Pt.T)
+        return R, cw, pa, Fn, Ft
+
+    def resid(s):
+        R, cw, pa, Fn, Ft = forces(s)
+        f = (Fn[:, None] * nrm[None, :] + Ft).sum(0) + np.array([0.0, 0.0, -W])
+        mo = np.cross(cw - s[:3], Fn[:, None] * nrm[None, :]).sum(0) + np.cross(pa - s[:3], Ft).sum(0)
+        mo += np.cross(R @ bw.com, np.array([0.0, 0.0, -W]))
+        return np.r_[f, mo] / (bw.mass * g * gscale)
+
+    # Newton with a central-difference Jacobian of fixed absolute step (positions are ~1 m, the solution ~1e-3 m or,
+    # at a small gravity scale, ~1e-7 m: a relative step as in fsolve would drown in round-off)
+    s = np.zeros(6) if s0 is None else np.asarray(s0, float).copy()
+    h = 1e-7
+    for _ in range(V12_NEWTON_MAX_ITER):
+        f0 = resid(s)
+        if np.abs(f0).max() < V12_NEWTON_TOL / gscale:   # round-off floor ~ 1e-14 / gscale
+            break
+        J = np.column_stack([(resid(s + h * e) - resid(s - h * e)) / (2 * h) for e in np.eye(6)])
+        s = s - np.linalg.solve(J, f0)
+    else:
+        raise RuntimeError(f"slope statics did not converge (residual {np.abs(resid(s)).max():.1e})")
+    R, cw, pa, Fn, Ft = forces(s)
+    Rf = Fn[:, None] * nrm[None, :] + Ft
+    axis = R @ np.array([0.0, 0.0, 1.0])
+    F_cyl = Rf @ axis - geo.rod_mass * g * gscale * axis[2]
+    d = np.linalg.norm((pa - a_b) @ Pt.T, axis=1)
+    return {"R": Rf, "F_cyl": F_cyl, "att": s[3:], "bush": d, "s": s, "resid": float(np.abs(resid(s)).max())}
+
+
+def _v12_plan_a(res, p, geo, e_op, k_L1, kt_L1):
+    """Adds to every slope_V12 case: the unrounded extensions and the expected Chrono - reference difference
+    after plan A (P-delta only). The reference itself (static_slope_10dof) already acts through the ball centre."""
+    A_ = dm.ASSUMPTIONS
+    hb = _ball_heights(p)
+    b = dm.body_from_params(p, "top")
+    eps = V12_LINEAR_EPS
+    for ro, pi in [(0, 2), (2, 0), (-2, 1.5)]:
+        key = f"ground roll {ro} deg, pitch {pi} deg"
+        ent = res["slope_V12"][key]
+        ext = _levelled_extension_rev13(geo, ro, pi, A_["crawler_clearance_m"])
+        if r(ext, 4) != ent["extension_m"]:
+            raise RuntimeError(f"{key}: levelled extension out of step with slope_V12")
+        sr = dm.static_slope_10dof(b, geo, ext, np.full(4, 1e14), k_L1, kt_L1, slope_pitch_deg=pi, slope_roll_deg=ro)
+        if r(sr["R"][:, 2]) != ent["L1"]["contact_vertical_N"] or r(sr["F_cyl"]) != ent["L1"]["cylinder_force_N"]:
+            raise RuntimeError(f"{key}: L1 slope reference not reproduced")
+        nrm = sr["normal"]
+        ext_sph = ext - hb * (1.0 / nrm[2] - 1.0)
+        ent[V12_EXACT_KEY] = [float(x) for x in ext]
+        ent[V12_SPHERE_KEY] = [float(x) for x in ext_sph]
+        res_v = {}
+        for nm, at_ball in (("ball", True), ("contact", False)):
+            nl = _slope_rigid_statics(p, geo, ext, ext_sph, nrm, k_L1, kt_L1, at_ball)
+            l1 = _slope_rigid_statics(p, geo, ext, ext_sph, nrm, k_L1, kt_L1, at_ball, gscale=eps, s0=nl["s"] * eps)
+            l2 = _slope_rigid_statics(p, geo, ext, ext_sph, nrm, k_L1, kt_L1, at_ball, gscale=2 * eps, s0=nl["s"] * 2 * eps)
+            li = {k: 2 * l1[k] / eps - l2[k] / (2 * eps) for k in ("R", "F_cyl", "att", "bush")}
+            li["resid"] = max(l1["resid"], l2["resid"])
+            res_v[nm] = (nl, li)   # linearisation about the unloaded start (quadratic term removed)
+        nlb, lib = res_v["ball"]
+        nlc, lic = res_v["contact"]
+        R_ref, F_ref = sr["R"], sr["F_cyl"]
+        att_ref = sr["q"][3:5]
+        T_ref = np.linalg.norm(R_ref - np.outer(R_ref @ nrm, nrm), axis=1)
+        ent[V12_PLAN_A_KEY] = {
+            "model": " ".join(_slope_rigid_statics.__doc__.split("\n\n")[0].split()),
+            "plan": ("plan A (user decision 2026-10-20): bushing at the ball centre -> the whole floor reaction passes "
+                     "through the swivel centre as in the reference static_slope_10dof; the remaining Chrono - reference "
+                     "difference is the geometric nonlinearity (P-delta) only"),
+            "extension_used": f"{V12_SPHERE_KEY} (spheres touch the plane at the level start pose)",
+            "reference_unchanged_check (linear ball model - reference)": {
+                "contact_vertical_N": r(lib["R"][:, 2] - R_ref[:, 2], 3),
+                "contact_horizontal_xy_N": r(lib["R"][:, :2] - R_ref[:, :2], 3),
+                "cylinder_force_N": r(lib["F_cyl"] - F_ref, 3),
+                "attitude_deg (roll, pitch)": r(np.degrees(lib["att"][:2] - att_ref), 3),
+            },
+            "expected_chrono_minus_reference": {
+                "contact_vertical_N": r(nlb["R"][:, 2] - R_ref[:, 2], 4),
+                "contact_horizontal_xy_N": r(nlb["R"][:, :2] - R_ref[:, :2], 4),
+                "cylinder_force_N": r(nlb["F_cyl"] - F_ref, 4),
+                "in_plane_force_N": r(np.linalg.norm(nlb["R"] - np.outer(nlb["R"] @ nrm, nrm), axis=1) - T_ref, 4),
+                "attitude_deg (roll, pitch)": r(np.degrees(nlb["att"][:2] - att_ref), 4),
+            },
+            "P_delta_nonlinear_minus_linear_vertical_N": r(nlb["R"][:, 2] - lib["R"][:, 2], 4),
+            "expected_bushing_in_plane_displacement_mm": r(nlb["bush"] * 1e3, 5),
+            "expected_attitude_deg (roll, pitch)": r(np.degrees(nlb["att"][:2]), 5),
+            "rev12_contact_point_bushing (S2a run before plan A)": {
+                "chrono_model_minus_reference_vertical_N": r(nlc["R"][:, 2] - R_ref[:, 2], 4),
+                "sphere_lever_part_vertical_N (contact - ball, nonlinear)": r(nlc["R"][:, 2] - nlb["R"][:, 2], 4),
+            },
+            "solver": (f"Newton (central-difference Jacobian, step 1e-7) on the 6 equilibrium equations / (W x gravity scale), max residual nonlinear "
+                       f"{max(nlb['resid'], nlc['resid']):.1e}, linear {max(lib['resid'], lic['resid']):.1e}; "
+                       f"linear = Richardson extrapolation of gravity x {eps:g} and x {2 * eps:g} to the tangent"),
+        }
+
+
+def add_ball_centre_bushing(res, p, geo, e_op, k_L1, kt_L1):
+    """rev. 13 keys (plan A): V7 L1 reference with the bushing at the ball centre (per level, under the L1 level
+    head), and per V12 case the unrounded extensions and the expected Chrono - reference difference."""
+    tests = res["chrono_test_references"]
+    v7 = _v7_ball_centre(p, geo, e_op, k_L1, kt_L1, tests)
+    for lvl in dm.LEVELS:
+        tests["L1_rigid_motor_lumped_contact"]["levels"][lvl][V7_BALL_KEY] = v7[lvl]
+    _v12_plan_a(res, p, geo, e_op, k_L1, kt_L1)
+    _beta_ball_centre(res, p, geo, e_op, kt_L1)
+
+
+def _beta_ball_centre(res, p, geo, e_op, kt_L1):
+    """L1 beta sensitivity: undamped frequencies (top) with both pad springs at the ball centre (rev. 13), next to
+    f_Hz_top (rev. 5, springs at the pad bottom). Same k_L1(beta) as main(); the rev. 5 values are reproduced first."""
+    A_ = dm.ASSUMPTIONS
+    g, xy = geo.g, geo.pad_xy
+    kc_nom = dm.k_concrete_westergaard()["k_slab_N_m"]
+    kr, kf = dm.k_rod(), A_["frame_bracket_stiffness_N_m"]
+    bw = dm.body_with_rods(p, geo, "top", e_op)
+    z_pad = geo.pad_z_retracted - e_op
+    z_ball = z_pad + _ball_heights(p)
+    zero = np.zeros(4)
+    for beta in (A_["oil_bulk_modulus_range_Pa"][0], A_["oil_bulk_modulus_eff_Pa"], A_["oil_bulk_modulus_range_Pa"][1]):
+        ent = res["L1_beta_sensitivity_top"][f"beta_{beta:.1e}"]
+        kL = dm.series(dm.series(dm.k_oil(e_op, beta=beta), kr, kf), kc_nom)
+        Fc, _, _ = dm.static_loads(kL, xy, bw.mass * g, bw.com[:2])
+        f = {}
+        for name, z in (("pad", z_pad), ("ball", z_ball)):
+            K = _l1_matrices(bw, xy, z, z, kL, kt_L1, zero, zero, Fc)[0]
+            f[name] = dm.modal(dm.mass_6dof(bw), K, dm.DOF6)[1]
+        if r(f["pad"], 4) != ent["f_Hz_top"]:
+            raise RuntimeError(f"beta {beta:.1e}: f_Hz_top not reproduced")
+        ent[BETA_BALL_KEY] = r(f["ball"], 4)
 
 
 if __name__ == "__main__":

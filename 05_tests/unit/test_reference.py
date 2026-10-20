@@ -50,6 +50,9 @@ PLAN_L1_HEAD = (
 PLAN_NAMED_ITEM_PATTERN = re.compile(r'name = "(.*)"')
 # Notations that are not one key: a path head ending in " /" and a generic "<항목>" slot.
 PLAN_GENERIC_SLOT = "<항목>"
+# Run summaries the plan cites with the same notation (e.g. `verify_S2a_L1.json / ...`) are
+# results, not reference values, so R12 does not ask for a constant.
+PLAN_RUN_SUMMARY_FILE_PATTERN = re.compile(r"verify_[A-Za-z0-9_]+\.json")
 
 
 def _concrete_keys() -> list[RefKey]:
@@ -71,6 +74,9 @@ def _plan_notations(plan_text: str) -> set[str]:
     for raw in PLAN_NOTATION_PATTERN.findall(plan_text):
         notation = raw.replace("\\|", "|").strip()
         if notation.endswith("/") or PLAN_GENERIC_SLOT in notation:
+            continue
+        file_name = notation.split(" / ", 1)[0]
+        if PLAN_RUN_SUMMARY_FILE_PATTERN.fullmatch(file_name):
             continue
         found.add(notation)
     for item in PLAN_L1_HEAD_ITEM_PATTERN.findall(plan_text):

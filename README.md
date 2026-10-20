@@ -81,6 +81,7 @@ GIF 애니메이션과 큰 메시(`*.gif`, `*_lowres.obj`)는 git에 올리지 �
 | `01_cad/06_brep/derived/crawler/crawler_lowres.obj` | `PY -I 04_scripts/00_cad/derive_crawler_cache.py` 뒤 `PY -I 04_scripts/00_cad/check_cache.py --write --cache 06_brep` (약 8분, 파생 파일 전부 다시 씀, `00_docs/00_cad/cad_review.md` 8.6절) |
 | `01_cad/07_faces/*.csv.gz`(면 색인, 6.1 MB) | `PY -I 04_scripts/00_cad/build_face_index.py`(약 4분, 검증 포함) 뒤 `PY -I 04_scripts/00_cad/check_cache.py --write --cache 07_faces` |
 | `01_cad/06_brep/derived/crawler/parts/*.bbrep`(크롤러 D안 접촉 부품 44개, 84.6 MB) | `PY -I 04_scripts/00_cad/derive_crawler_parts.py`(약 2분) 뒤 `check_cache.py --write --cache 06_brep` |
+| `06_analysis/01_chrono/S1_settle_levels.gif`, `06_analysis/01_chrono/S1_cross_top.gif`(S1 정착·무초기화 낙하 결과) | `PY -I -u 04_scripts/02_chrono/render_S1_gifs.py` (저장된 S1 Record에서 GIF만, 시뮬레이션 재실행 없음, 약 3분; `S1_auger_levels.png`·`S1_cross_top_frame.png`·`S1_gifs.json`도 다시 씀). Record가 없으면 먼저 `PY -I -u 04_scripts/02_chrono/run_S1.py all`(약 2.5분) |
 | `06_analysis/01_chrono/track_drive_smoke.gif`(궤도차량 API 연기 시험, 우리 크롤러 모델 아님) | `PY -I -u 04_scripts/02_chrono/track_drive/smoke_drive_gif.py` (약 1분) |
 
 STEP 원본·B-rep·메시 캐시처럼 더 큰 생성물은 `01_cad/cache_manifest.json`과 `04_scripts/00_cad/check_cache.py`로 관리한다.

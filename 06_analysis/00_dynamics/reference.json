@@ -48,7 +48,7 @@
    "F_min_fraction_of_mean_leg_load": 0.1,
    "F_min_basis": "cylinder force (pressure x bore area) = superstructure weight share; contact force = cylinder force + rod weight"
   },
-  "runtime_s": 28.69
+  "runtime_s": 28.37
  },
  "operating_point": {
   "touch_extension_m": [
@@ -3469,6 +3469,408 @@
        ]
       ],
       "projection": "eta = Phi^T M q (q = measured displacement from the static equilibrium); sign: largest body component of each column positive"
+     },
+     "V7_ball_centre_bushing_rev13": {
+      "model": "L1 6-DoF (superstructure + 4 rods rigid with the body), pad sphere centred at the ball: vertical spring k_n, dashpot c_n and preload (geometric term) at the ball centre, tangential spring k_t and dashpot c_t (ground bushing, plan A) at the ball centre. k, c = rev. 7 L1 values (unchanged)",
+      "ball_centre_z_m (FL, FR, RL, RR) (pad bottom + swivel_center_above_pad_bottom_m)": [
+       -1.0409,
+       -1.0409,
+       -1.0409,
+       -1.0409
+      ],
+      "f_undamped_Hz": [
+       1.7983,
+       3.0046,
+       5.8191,
+       6.4214,
+       7.6073,
+       7.9996
+      ],
+      "mode_content": [
+       {
+        "sway y": 0.487,
+        "roll": 0.483,
+        "yaw": 0.03
+       },
+       {
+        "surge x": 0.613,
+        "pitch": 0.376
+       },
+       {
+        "yaw": 0.453,
+        "sway y": 0.412,
+        "roll": 0.135
+       },
+       {
+        "pitch": 0.482,
+        "surge x": 0.356,
+        "heave z": 0.162
+       },
+       {
+        "heave z": 0.825,
+        "pitch": 0.142,
+        "surge x": 0.03
+       },
+       {
+        "yaw": 0.516,
+        "roll": 0.381,
+        "sway y": 0.1
+       }
+      ],
+      "f_damped_Hz": [
+       1.7983,
+       3.0047,
+       5.8191,
+       6.4218,
+       7.6068,
+       7.9995
+      ],
+      "zeta": [
+       0.00783,
+       0.014,
+       0.0372,
+       0.0362,
+       0.0323,
+       0.0491
+      ],
+      "zeta_4sig": [
+       0.00783,
+       0.01399,
+       0.0372,
+       0.03617,
+       0.03227,
+       0.04912
+      ],
+      "orthogonality_err": 1.33e-15,
+      "change_vs_rev5 (springs at the pad bottom)": {
+       "f_undamped_rel": [
+        0.00773,
+        0.00685,
+        -0.00229,
+        -0.00582,
+        -0.000975,
+        -0.00529
+       ],
+       "zeta_rel": [
+        0.00806,
+        0.00764,
+        -0.00262,
+        -0.00349,
+        -0.00478,
+        -0.00542
+       ],
+       "tangential_only_at_ball_f_undamped_rel": [
+        0.00765,
+        0.00683,
+        -0.00229,
+        -0.00582,
+        -0.000976,
+        -0.0053
+       ],
+       "tangential_only_at_ball_zeta_rel": [
+        0.00812,
+        0.00764,
+        -0.00262,
+        -0.00349,
+        -0.00478,
+        -0.00541
+       ]
+      },
+      "mode_shapes": {
+       "coordinates": [
+        "surge x",
+        "sway y",
+        "heave z",
+        "roll",
+        "pitch",
+        "yaw"
+       ],
+       "reference_point_m (rotations about it, translations of it; body axes, level body = world)": [
+        0.445679,
+        -0.00166586,
+        2.14327
+       ],
+       "reference_point_meaning": "CoM of superstructure + 4 rods at e_op (rods rigid with the body)",
+       "units": "translations m, rotations rad (small angles), per sqrt(kg)",
+       "Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)": [
+        [
+         -3.99109078018e-05,
+         0.00396672835959,
+         3.36657323215e-05,
+         0.00302299882664,
+         -0.000878180046345,
+         7.04112950108e-05
+        ],
+        [
+         0.0035339907966,
+         4.44504919407e-05,
+         0.00325196161135,
+         -5.65278758314e-05,
+         9.88624819916e-05,
+         0.00160407284172
+        ],
+        [
+         -1.05696192169e-05,
+         -0.000529380101098,
+         3.46799988386e-05,
+         0.00203625552682,
+         0.00460052654288,
+         -0.000244133648225
+        ],
+        [
+         -0.000921181137941,
+         -8.29508139568e-06,
+         0.000310579250096,
+         -1.53240608804e-05,
+         7.53922978137e-05,
+         0.00139488857416
+        ],
+        [
+         -9.92267934438e-06,
+         0.000734122784163,
+         -1.30108147154e-05,
+         -0.000831574682209,
+         0.000451066552509,
+         -2.92103322987e-05
+        ],
+        [
+         0.000144037497191,
+         -3.89058016044e-07,
+         -0.00136932894261,
+         1.28118360125e-06,
+         0.00014006229118,
+         0.00245015106153
+        ]
+       ],
+       "mass_matrix (same coordinates)": [
+        [
+         38982.798464,
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        [
+         0.0,
+         38982.798464,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        [
+         0.0,
+         0.0,
+         38982.798464,
+         0.0,
+         0.0,
+         0.0
+        ],
+        [
+         0.0,
+         0.0,
+         0.0,
+         538690.265315,
+         -978.599365582,
+         -195256.984712
+        ],
+        [
+         0.0,
+         0.0,
+         0.0,
+         -978.599365582,
+         696851.728976,
+         -229.926559289
+        ],
+        [
+         0.0,
+         0.0,
+         0.0,
+         -195256.984712,
+         -229.926559289,
+         197058.402003
+        ]
+       ],
+       "projection": "eta = Phi^T M q (q = measured displacement from the static equilibrium); sign: largest body component of each column positive"
+      },
+      "implicit_strain_energy_share r (bushing)": [
+       0.1128,
+       0.252,
+       0.9903,
+       0.6685,
+       0.08233,
+       0.8942
+      ],
+      "implicit_strain_energy_share r (bushing), rev5": [
+       0.1119,
+       0.2503,
+       0.9911,
+       0.6628,
+       0.08926,
+       0.8946
+      ],
+      "zeta_num_r_omega_dt_half": {
+       "0.0001": [
+        6.37e-05,
+        0.000238,
+        0.00181,
+        0.00135,
+        0.000197,
+        0.00225
+       ],
+       "0.0002": [
+        0.000127,
+        0.000476,
+        0.00362,
+        0.0027,
+        0.000394,
+        0.00449
+       ]
+      },
+      "f_undamped_Hz_without_bushing (3 non-zero modes, position independent)": [
+       3.129,
+       4.174,
+       7.503
+      ],
+      "V7_diagnostic": {
+       "usage": "subtract zeta_num (r omega dt / 2 at the run dt, or the V8(a) measurement) from the identified zeta, then apply 1-5 (dynamics_model.md 5 V7 row); S2a judges the top level. Rules 2-4 were set for the top level; where separation_checks is false (middle, bottom) confirm with 5 (3rd mode)",
+       "zeta_cases": {
+        "nominal": [
+         0.00783,
+         0.01399,
+         0.0372,
+         0.03617,
+         0.03227,
+         0.04912
+        ],
+        "c_t x2 (bushing input = c_t, R7 violation)": [
+         0.009123,
+         0.01882,
+         0.07417,
+         0.06386,
+         0.03599,
+         0.09487
+        ],
+        "c_n x2": [
+         0.01437,
+         0.02314,
+         0.03744,
+         0.04485,
+         0.06055,
+         0.05258
+        ],
+        "c_t x0.5": [
+         0.007183,
+         0.01157,
+         0.01872,
+         0.02243,
+         0.03027,
+         0.02629
+        ],
+        "c_t = 0 (bushing damping missing)": [
+         0.006536,
+         0.009148,
+         0.0002323,
+         0.008664,
+         0.02832,
+         0.00345
+        ],
+        "c_n x0.0093 (floor body 1 kg)": [
+         0.001354,
+         0.004924,
+         0.03697,
+         0.02765,
+         0.004127,
+         0.04574
+        ],
+        "c_n -> 0 and c_t x2 (both errors)": [
+         0.002645,
+         0.009732,
+         0.07394,
+         0.05579,
+         0.007388,
+         0.09153
+        ],
+        "c_n x106.8 (g_n entered as c_n, unit error)": [
+         0.8194,
+         1.0,
+         0.05412,
+         1.0,
+         1.0,
+         0.4237
+        ]
+       },
+       "first_order_split_nominal": {
+        "normal c_n": [
+         0.006536,
+         0.009148,
+         0.0002324,
+         0.008694,
+         0.02827,
+         0.003467
+        ],
+        "tangential c_t": [
+         0.001294,
+         0.004844,
+         0.03697,
+         0.02747,
+         0.004007,
+         0.04565
+        ]
+       },
+       "tangential_share_nominal": [
+        0.1653,
+        0.3462,
+        0.9938,
+        0.7596,
+        0.1242,
+        0.9294
+       ],
+       "thresholds": {
+        "1_normal_zeta1_band": [
+         0.007047,
+         0.008613
+        ],
+        "1_normal_zeta2_band": [
+         0.01259,
+         0.01539
+        ],
+        "2_gn_or_floor_mass_error_zeta1_max": 0.003524,
+        "3_vertical_damping_excess_zeta1_min": 0.01149,
+        "4_ct_x2_suspect_zeta2_min (with zeta1_max(2) < zeta1 < zeta1_min(3))": 0.01616,
+        "5_ct_x2_confirmed_zeta3_min": 0.05569,
+        "5_bushing_damping_missing_zeta3_max": 0.005
+       },
+       "threshold_rules": {
+        "1": "nominal zeta x (1 -+ 0.10)",
+        "2": "0.5 x lower bound of the zeta1 band (rev. 7 value 0.0035 = 0.5 x 0.0070)",
+        "3": "midpoint of the zeta1 band upper bound and zeta1 of c_n x2 (rev. 7: 0.0115)",
+        "4": "midpoint of the zeta2 band upper bound and 0.9 x zeta2 of c_t x2 (rev. 7 printed 0.0165, set by hand inside the same gap; the rule gives the rev5 value below)",
+        "5": "c_t x2: midpoint of nominal zeta3 and zeta3 of c_t x2 (rev. 7: 0.056); missing: fixed 0.005"
+       },
+       "thresholds_same_rules_on_rev5": {
+        "1_normal_zeta1_band": [
+         0.006991,
+         0.008544
+        ],
+        "1_normal_zeta2_band": [
+         0.0125,
+         0.01527
+        ],
+        "2_gn_or_floor_mass_error_zeta1_max": 0.003495,
+        "3_vertical_damping_excess_zeta1_min": 0.0114,
+        "4_ct_x2_suspect_zeta2_min (with zeta1_max(2) < zeta1 < zeta1_min(3))": 0.01603,
+        "5_ct_x2_confirmed_zeta3_min": 0.05585,
+        "5_bushing_damping_missing_zeta3_max": 0.005
+       },
+       "separation_checks": {
+        "2: floor-mass and unit errors below zeta1_max(2)": true,
+        "3: c_n x2 above zeta1_min(3) > band(1)": true,
+        "4: c_t x2 zeta1 between (2) and (3), its zeta2 x0.9 above zeta2_min(4) > band(1)": true,
+        "5: c_t x2 zeta3 above, c_t = 0 zeta3 below, nominal x0.9 above the missing threshold": true
+       }
+      }
      }
     },
     "middle": {
@@ -3745,6 +4147,408 @@
        ]
       ],
       "projection": "eta = Phi^T M q (q = measured displacement from the static equilibrium); sign: largest body component of each column positive"
+     },
+     "V7_ball_centre_bushing_rev13": {
+      "model": "L1 6-DoF (superstructure + 4 rods rigid with the body), pad sphere centred at the ball: vertical spring k_n, dashpot c_n and preload (geometric term) at the ball centre, tangential spring k_t and dashpot c_t (ground bushing, plan A) at the ball centre. k, c = rev. 7 L1 values (unchanged)",
+      "ball_centre_z_m (FL, FR, RL, RR) (pad bottom + swivel_center_above_pad_bottom_m)": [
+       -1.0409,
+       -1.0409,
+       -1.0409,
+       -1.0409
+      ],
+      "f_undamped_Hz": [
+       2.3326,
+       3.5358,
+       5.9487,
+       6.7385,
+       7.9391,
+       8.2072
+      ],
+      "mode_content": [
+       {
+        "sway y": 0.595,
+        "roll": 0.364,
+        "yaw": 0.041
+       },
+       {
+        "surge x": 0.746,
+        "pitch": 0.24
+       },
+       {
+        "yaw": 0.667,
+        "sway y": 0.266,
+        "roll": 0.067
+       },
+       {
+        "heave z": 0.437,
+        "pitch": 0.373,
+        "surge x": 0.19
+       },
+       {
+        "heave z": 0.542,
+        "pitch": 0.382,
+        "surge x": 0.063
+       },
+       {
+        "roll": 0.563,
+        "yaw": 0.288,
+        "sway y": 0.137
+       }
+      ],
+      "f_damped_Hz": [
+       2.3327,
+       3.536,
+       5.9487,
+       6.7391,
+       7.9383,
+       8.2067
+      ],
+      "zeta": [
+       0.0106,
+       0.0179,
+       0.0381,
+       0.0336,
+       0.0357,
+       0.0484
+      ],
+      "zeta_4sig": [
+       0.01065,
+       0.01788,
+       0.03809,
+       0.03363,
+       0.03566,
+       0.04842
+      ],
+      "orthogonality_err": 1.33e-15,
+      "change_vs_rev5 (springs at the pad bottom)": {
+       "f_undamped_rel": [
+        0.0104,
+        0.00778,
+        -0.00139,
+        -0.00475,
+        -0.00303,
+        -0.00879
+       ],
+       "zeta_rel": [
+        0.0118,
+        0.0104,
+        -0.00173,
+        -0.000205,
+        -0.00996,
+        -0.0104
+       ],
+       "tangential_only_at_ball_f_undamped_rel": [
+        0.0104,
+        0.00777,
+        -0.00139,
+        -0.00476,
+        -0.00303,
+        -0.00881
+       ],
+       "tangential_only_at_ball_zeta_rel": [
+        0.0119,
+        0.0104,
+        -0.00173,
+        -0.000188,
+        -0.00996,
+        -0.0104
+       ]
+      },
+      "mode_shapes": {
+       "coordinates": [
+        "surge x",
+        "sway y",
+        "heave z",
+        "roll",
+        "pitch",
+        "yaw"
+       ],
+       "reference_point_m (rotations about it, translations of it; body axes, level body = world)": [
+        0.445679,
+        -0.00166586,
+        1.45327
+       ],
+       "reference_point_meaning": "CoM of superstructure + 4 rods at e_op (rods rigid with the body)",
+       "units": "translations m, rotations rad (small angles), per sqrt(kg)",
+       "Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)": [
+        [
+         -4.59679609417e-05,
+         0.0043751343227,
+         1.31257401479e-05,
+         0.00220609300005,
+         -0.00127340397494,
+         0.000140891102085
+        ],
+        [
+         0.00390787398446,
+         5.22111311874e-05,
+         0.00261173008488,
+         -2.57978438153e-05,
+         0.000227669109733,
+         0.00187203154937
+        ],
+        [
+         -1.34042617108e-05,
+         -0.000590435258427,
+         3.77963481317e-05,
+         0.00334971211582,
+         0.00372944443962,
+         -0.000415681213704
+        ],
+        [
+         -0.00112800177299,
+         -9.51342973836e-06,
+         0.000240755229228,
+         -6.41881844704e-06,
+         0.000219821525703,
+         0.00199226645154
+        ],
+        [
+         -1.23282865848e-05,
+         0.000756423500201,
+         -1.5233295873e-05,
+         -0.000942520618323,
+         0.000954912074078,
+         -0.000103230130181
+        ],
+        [
+         0.000226347515193,
+         -2.16072758018e-06,
+         -0.00176762599846,
+         2.04550045503e-05,
+         0.000219280851548,
+         0.00196724326947
+        ]
+       ],
+       "mass_matrix (same coordinates)": [
+        [
+         38982.798464,
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        [
+         0.0,
+         38982.798464,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        [
+         0.0,
+         0.0,
+         38982.798464,
+         0.0,
+         0.0,
+         0.0
+        ],
+        [
+         0.0,
+         0.0,
+         0.0,
+         261409.761146,
+         -978.599365582,
+         -121098.602531
+        ],
+        [
+         0.0,
+         0.0,
+         0.0,
+         -978.599365582,
+         419571.224808,
+         -110.740146237
+        ],
+        [
+         0.0,
+         0.0,
+         0.0,
+         -121098.602531,
+         -110.740146237,
+         197058.402003
+        ]
+       ],
+       "projection": "eta = Phi^T M q (q = measured displacement from the static equilibrium); sign: largest body component of each column positive"
+      },
+      "implicit_strain_energy_share r (bushing)": [
+       0.2078,
+       0.4245,
+       0.9943,
+       0.392,
+       0.1919,
+       0.7895
+      ],
+      "implicit_strain_energy_share r (bushing), rev5": [
+       0.2047,
+       0.4188,
+       0.9953,
+       0.3824,
+       0.2049,
+       0.7939
+      ],
+      "zeta_num_r_omega_dt_half": {
+       "0.0001": [
+        0.000152,
+        0.000472,
+        0.00186,
+        0.00083,
+        0.000479,
+        0.00204
+       ],
+       "0.0002": [
+        0.000305,
+        0.000943,
+        0.00372,
+        0.00166,
+        0.000957,
+        0.00407
+       ]
+      },
+      "f_undamped_Hz_without_bushing (3 non-zero modes, position independent)": [
+       4.256,
+       5.281,
+       7.643
+      ],
+      "V7_diagnostic": {
+       "usage": "subtract zeta_num (r omega dt / 2 at the run dt, or the V8(a) measurement) from the identified zeta, then apply 1-5 (dynamics_model.md 5 V7 row); S2a judges the top level. Rules 2-4 were set for the top level; where separation_checks is false (middle, bottom) confirm with 5 (3rd mode)",
+       "zeta_cases": {
+        "nominal": [
+         0.01065,
+         0.01788,
+         0.03809,
+         0.03363,
+         0.03566,
+         0.04842
+        ],
+        "c_t x2 (bushing input = c_t, R7 violation)": [
+         0.01374,
+         0.02746,
+         0.07604,
+         0.05069,
+         0.04496,
+         0.09013
+        ],
+        "c_n x2": [
+         0.0182,
+         0.02616,
+         0.03823,
+         0.05034,
+         0.06162,
+         0.05546
+        ],
+        "c_t x0.5": [
+         0.009102,
+         0.01308,
+         0.01911,
+         0.02517,
+         0.03081,
+         0.02773
+        ],
+        "c_t = 0 (bushing damping missing)": [
+         0.007556,
+         0.00828,
+         0.0001383,
+         0.01669,
+         0.02603,
+         0.006988
+        ],
+        "c_n x0.0093 (floor body 1 kg)": [
+         0.003162,
+         0.009674,
+         0.03795,
+         0.01713,
+         0.009722,
+         0.04162
+        ],
+        "c_n -> 0 and c_t x2 (both errors)": [
+         0.006243,
+         0.01923,
+         0.07591,
+         0.03459,
+         0.01855,
+         0.08345
+        ],
+        "c_n x106.8 (g_n entered as c_n, unit error)": [
+         1.0,
+         1.0,
+         0.04258,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "first_order_split_nominal": {
+        "normal c_n": [
+         0.007556,
+         0.00828,
+         0.0001383,
+         0.01672,
+         0.02593,
+         0.007061
+        ],
+        "tangential c_t": [
+         0.003093,
+         0.009604,
+         0.03795,
+         0.0169,
+         0.009749,
+         0.04134
+        ]
+       },
+       "tangential_share_nominal": [
+        0.2905,
+        0.537,
+        0.9964,
+        0.5027,
+        0.2732,
+        0.8541
+       ],
+       "thresholds": {
+        "1_normal_zeta1_band": [
+         0.009584,
+         0.01171
+        ],
+        "1_normal_zeta2_band": [
+         0.01609,
+         0.01967
+        ],
+        "2_gn_or_floor_mass_error_zeta1_max": 0.004792,
+        "3_vertical_damping_excess_zeta1_min": 0.01496,
+        "4_ct_x2_suspect_zeta2_min (with zeta1_max(2) < zeta1 < zeta1_min(3))": 0.02219,
+        "5_ct_x2_confirmed_zeta3_min": 0.05707,
+        "5_bushing_damping_missing_zeta3_max": 0.005
+       },
+       "threshold_rules": {
+        "1": "nominal zeta x (1 -+ 0.10)",
+        "2": "0.5 x lower bound of the zeta1 band (rev. 7 value 0.0035 = 0.5 x 0.0070)",
+        "3": "midpoint of the zeta1 band upper bound and zeta1 of c_n x2 (rev. 7: 0.0115)",
+        "4": "midpoint of the zeta2 band upper bound and 0.9 x zeta2 of c_t x2 (rev. 7 printed 0.0165, set by hand inside the same gap; the rule gives the rev5 value below)",
+        "5": "c_t x2: midpoint of nominal zeta3 and zeta3 of c_t x2 (rev. 7: 0.056); missing: fixed 0.005"
+       },
+       "thresholds_same_rules_on_rev5": {
+        "1_normal_zeta1_band": [
+         0.009472,
+         0.01158
+        ],
+        "1_normal_zeta2_band": [
+         0.01593,
+         0.01947
+        ],
+        "2_gn_or_floor_mass_error_zeta1_max": 0.004736,
+        "3_vertical_damping_excess_zeta1_min": 0.0148,
+        "4_ct_x2_suspect_zeta2_min (with zeta1_max(2) < zeta1 < zeta1_min(3))": 0.02192,
+        "5_ct_x2_confirmed_zeta3_min": 0.05718,
+        "5_bushing_damping_missing_zeta3_max": 0.005
+       },
+       "separation_checks": {
+        "2: floor-mass and unit errors below zeta1_max(2)": false,
+        "3: c_n x2 above zeta1_min(3) > band(1)": true,
+        "4: c_t x2 zeta1 between (2) and (3), its zeta2 x0.9 above zeta2_min(4) > band(1)": true,
+        "5: c_t x2 zeta3 above, c_t = 0 zeta3 below, nominal x0.9 above the missing threshold": true
+       }
+      }
      }
     },
     "bottom": {
@@ -4019,6 +4823,406 @@
        ]
       ],
       "projection": "eta = Phi^T M q (q = measured displacement from the static equilibrium); sign: largest body component of each column positive"
+     },
+     "V7_ball_centre_bushing_rev13": {
+      "model": "L1 6-DoF (superstructure + 4 rods rigid with the body), pad sphere centred at the ball: vertical spring k_n, dashpot c_n and preload (geometric term) at the ball centre, tangential spring k_t and dashpot c_t (ground bushing, plan A) at the ball centre. k, c = rev. 7 L1 values (unchanged)",
+      "ball_centre_z_m (FL, FR, RL, RR) (pad bottom + swivel_center_above_pad_bottom_m)": [
+       -1.0409,
+       -1.0409,
+       -1.0409,
+       -1.0409
+      ],
+      "f_undamped_Hz": [
+       2.8931,
+       3.9588,
+       5.9755,
+       6.642,
+       6.9723,
+       8.04
+      ],
+      "mode_content": [
+       {
+        "sway y": 0.645,
+        "roll": 0.324,
+        "yaw": 0.03
+       },
+       {
+        "surge x": 0.809,
+        "pitch": 0.177
+       },
+       {
+        "yaw": 0.936,
+        "sway y": 0.049
+       },
+       {
+        "heave z": 0.451,
+        "pitch": 0.4,
+        "surge x": 0.149
+       },
+       {
+        "roll": 0.691,
+        "sway y": 0.304
+       },
+       {
+        "heave z": 0.534,
+        "pitch": 0.423,
+        "surge x": 0.042
+       }
+      ],
+      "f_damped_Hz": [
+       2.8931,
+       3.959,
+       5.9755,
+       6.6421,
+       6.9721,
+       8.0394
+      ],
+      "zeta": [
+       0.0138,
+       0.0214,
+       0.0382,
+       0.0317,
+       0.0399,
+       0.0349
+      ],
+      "zeta_4sig": [
+       0.0138,
+       0.02142,
+       0.03817,
+       0.03171,
+       0.03987,
+       0.03485
+      ],
+      "orthogonality_err": 1.55e-15,
+      "change_vs_rev5 (springs at the pad bottom)": {
+       "f_undamped_rel": [
+        0.0126,
+        0.00777,
+        0.00081,
+        -0.00489,
+        -0.0132,
+        -0.00281
+       ],
+       "zeta_rel": [
+        0.0152,
+        0.012,
+        0.001,
+        -0.00394,
+        -0.0156,
+        -0.00911
+       ],
+       "tangential_only_at_ball_f_undamped_rel": [
+        0.0126,
+        0.00776,
+        0.000809,
+        -0.0049,
+        -0.0132,
+        -0.00282
+       ],
+       "tangential_only_at_ball_zeta_rel": [
+        0.0153,
+        0.012,
+        0.001,
+        -0.00392,
+        -0.0156,
+        -0.00911
+       ]
+      },
+      "mode_shapes": {
+       "coordinates": [
+        "surge x",
+        "sway y",
+        "heave z",
+        "roll",
+        "pitch",
+        "yaw"
+       ],
+       "reference_point_m (rotations about it, translations of it; body axes, level body = world)": [
+        0.445679,
+        -0.00166586,
+        0.763282
+       ],
+       "reference_point_meaning": "CoM of superstructure + 4 rods at e_op (rods rigid with the body)",
+       "units": "translations m, rotations rad (small angles), per sqrt(kg)",
+       "Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)": [
+        [
+         -5.01927609322e-05,
+         0.00455457017971,
+         -1.24105222758e-05,
+         0.00195322320268,
+         -6.37797624816e-05,
+         -0.00104230916584
+        ],
+        [
+         0.00406915673366,
+         5.75925860279e-05,
+         -0.00113940356155,
+         2.72367588289e-05,
+         0.00279095997747,
+         -5.04643342143e-05
+        ],
+        [
+         -1.63392376047e-05,
+         -0.000611539966766,
+         -2.89350654515e-05,
+         0.00340233158145,
+         5.83463770177e-05,
+         0.00370107959406
+        ],
+        [
+         -0.00131413854869,
+         -1.0967568569e-05,
+         0.000305638744644,
+         2.71041989777e-05,
+         0.0020395962059,
+         -6.22942487282e-05
+        ],
+        [
+         -1.47354339613e-05,
+         0.00072449916767,
+         2.54472126102e-05,
+         -0.00108986336372,
+         4.78271225815e-05,
+         0.00112098149878
+        ],
+        [
+         0.000264939801281,
+         -5.80205462946e-06,
+         0.00224935647499,
+         3.82445225296e-05,
+         0.000531299954871,
+         -2.57368070529e-05
+        ]
+       ],
+       "mass_matrix (same coordinates)": [
+        [
+         38982.798464,
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        [
+         0.0,
+         38982.798464,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        [
+         0.0,
+         0.0,
+         38982.798464,
+         0.0,
+         0.0,
+         0.0
+        ],
+        [
+         0.0,
+         0.0,
+         0.0,
+         178266.739069,
+         -978.599365582,
+         -46940.0484513
+        ],
+        [
+         0.0,
+         0.0,
+         0.0,
+         -978.599365582,
+         336428.20273,
+         8.44654452141
+        ],
+        [
+         0.0,
+         0.0,
+         0.0,
+         -46940.0484513,
+         8.44654452141,
+         197058.402003
+        ]
+       ],
+       "projection": "eta = Phi^T M q (q = measured displacement from the static equilibrium); sign: largest body component of each column positive"
+      },
+      "implicit_strain_energy_share r (bushing)": [
+       0.2996,
+       0.5767,
+       0.9909,
+       0.2988,
+       0.7091,
+       0.1249
+      ],
+      "implicit_strain_energy_share r (bushing), rev5": [
+       0.294,
+       0.5669,
+       0.9905,
+       0.2968,
+       0.7151,
+       0.1366
+      ],
+      "zeta_num_r_omega_dt_half": {
+       "0.0001": [
+        0.000272,
+        0.000717,
+        0.00186,
+        0.000623,
+        0.00155,
+        0.000315
+       ],
+       "0.0002": [
+        0.000545,
+        0.00143,
+        0.00372,
+        0.00125,
+        0.00311,
+        0.000631
+       ]
+      },
+      "f_undamped_Hz_without_bushing (3 non-zero modes, position independent)": [
+       4.507,
+       5.792,
+       7.785
+      ],
+      "V7_diagnostic": {
+       "usage": "subtract zeta_num (r omega dt / 2 at the run dt, or the V8(a) measurement) from the identified zeta, then apply 1-5 (dynamics_model.md 5 V7 row); S2a judges the top level. Rules 2-4 were set for the top level; where separation_checks is false (middle, bottom) confirm with 5 (3rd mode)",
+       "zeta_cases": {
+        "nominal": [
+         0.0138,
+         0.02142,
+         0.03817,
+         0.03171,
+         0.03987,
+         0.03485
+        ],
+        "c_t x2 (bushing input = c_t, R7 violation)": [
+         0.01932,
+         0.03602,
+         0.07611,
+         0.0445,
+         0.0715,
+         0.04123
+        ],
+        "c_n x2": [
+         0.02207,
+         0.02824,
+         0.03839,
+         0.05072,
+         0.04815,
+         0.06329
+        ],
+        "c_t x0.5": [
+         0.01104,
+         0.01412,
+         0.01919,
+         0.02536,
+         0.02407,
+         0.03164
+        ],
+        "c_t = 0 (bushing damping missing)": [
+         0.008269,
+         0.006814,
+         0.0002211,
+         0.019,
+         0.008275,
+         0.02844
+        ],
+        "c_n x0.0093 (floor body 1 kg)": [
+         0.005607,
+         0.01467,
+         0.03795,
+         0.01291,
+         0.03168,
+         0.006659
+        ],
+        "c_n -> 0 and c_t x2 (both errors)": [
+         0.01111,
+         0.02927,
+         0.0759,
+         0.02587,
+         0.06332,
+         0.01287
+        ],
+        "c_n x106.8 (g_n entered as c_n, unit error)": [
+         1.0,
+         0.0575,
+         0.03944,
+         1.0,
+         1.0,
+         1.0
+        ]
+       },
+       "first_order_split_nominal": {
+        "normal c_n": [
+         0.008268,
+         0.006817,
+         0.0002216,
+         0.01901,
+         0.008275,
+         0.02843
+        ],
+        "tangential c_t": [
+         0.005534,
+         0.01461,
+         0.03795,
+         0.0127,
+         0.0316,
+         0.006426
+        ]
+       },
+       "tangential_share_nominal": [
+        0.401,
+        0.6818,
+        0.9942,
+        0.4005,
+        0.7925,
+        0.1844
+       ],
+       "thresholds": {
+        "1_normal_zeta1_band": [
+         0.01242,
+         0.01518
+        ],
+        "1_normal_zeta2_band": [
+         0.01928,
+         0.02357
+        ],
+        "2_gn_or_floor_mass_error_zeta1_max": 0.006211,
+        "3_vertical_damping_excess_zeta1_min": 0.01863,
+        "4_ct_x2_suspect_zeta2_min (with zeta1_max(2) < zeta1 < zeta1_min(3))": 0.02799,
+        "5_ct_x2_confirmed_zeta3_min": 0.05714,
+        "5_bushing_damping_missing_zeta3_max": 0.005
+       },
+       "threshold_rules": {
+        "1": "nominal zeta x (1 -+ 0.10)",
+        "2": "0.5 x lower bound of the zeta1 band (rev. 7 value 0.0035 = 0.5 x 0.0070)",
+        "3": "midpoint of the zeta1 band upper bound and zeta1 of c_n x2 (rev. 7: 0.0115)",
+        "4": "midpoint of the zeta2 band upper bound and 0.9 x zeta2 of c_t x2 (rev. 7 printed 0.0165, set by hand inside the same gap; the rule gives the rev5 value below)",
+        "5": "c_t x2: midpoint of nominal zeta3 and zeta3 of c_t x2 (rev. 7: 0.056); missing: fixed 0.005"
+       },
+       "thresholds_same_rules_on_rev5": {
+        "1_normal_zeta1_band": [
+         0.01224,
+         0.01495
+        ],
+        "1_normal_zeta2_band": [
+         0.01905,
+         0.02329
+        ],
+        "2_gn_or_floor_mass_error_zeta1_max": 0.006118,
+        "3_vertical_damping_excess_zeta1_min": 0.01839,
+        "4_ct_x2_suspect_zeta2_min (with zeta1_max(2) < zeta1 < zeta1_min(3))": 0.02757,
+        "5_ct_x2_confirmed_zeta3_min": 0.05708,
+        "5_bushing_damping_missing_zeta3_max": 0.005
+       },
+       "separation_checks": {
+        "2: floor-mass and unit errors below zeta1_max(2)": false,
+        "3: c_n x2 above zeta1_min(3) > band(1)": true,
+        "4: c_t x2 zeta1 between (2) and (3), its zeta2 x0.9 above zeta2_min(4) > band(1)": false,
+        "5: c_t x2 zeta3 above, c_t = 0 zeta3 below, nominal x0.9 above the missing threshold": true
+       }
+      }
      }
     }
    }
@@ -8078,6 +9282,132 @@
      -0.00227,
      0.0478
     ]
+   },
+   "extension_exact_m": [
+    0.5454554769249867,
+    0.5454554769249867,
+    0.3658967290439087,
+    0.3658967290439087
+   ],
+   "extension_sphere_touch_m": [
+    0.5454189042670574,
+    0.5454189042670574,
+    0.36586015638597935,
+    0.36586015638597935
+   ],
+   "L1_plan_A_expected_chrono_minus_reference_rev13": {
+    "model": "Nonlinear statics of the L1 Chrono pad model on a tilted rigid plane (top level), body start level at the origin. Rigid body = superstructure + 4 rods at ext_sph (rigid motor). Sphere radius h_b centred at the ball; the floor plane holds the pad bottoms at ext_pad, so the spheres touch it exactly with ext_sph. Normal force k_n x penetration along n through the ball centre; bushing k_t in the plane between a body-fixed point (ball centre, or the start contact point if bushing_at_ball is False) and its start position (stick). Gravity -g z (x gscale).",
+    "plan": "plan A (user decision 2026-10-20): bushing at the ball centre -> the whole floor reaction passes through the swivel centre as in the reference static_slope_10dof; the remaining Chrono - reference difference is the geometric nonlinearity (P-delta) only",
+    "extension_used": "extension_sphere_touch_m (spheres touch the plane at the level start pose)",
+    "reference_unchanged_check (linear ball model - reference)": {
+     "contact_vertical_N": [
+      -0.0073,
+      -0.00759,
+      0.0078,
+      0.00757
+     ],
+     "contact_horizontal_xy_N": [
+      [
+       -0.000307,
+       3.28e-06
+      ],
+      [
+       -0.000374,
+       3.28e-06
+      ],
+      [
+       0.000304,
+       8.13e-06
+      ],
+      [
+       0.00033,
+       8.13e-06
+      ]
+     ],
+     "cylinder_force_N": [
+      -0.00745,
+      -0.00764,
+      0.00771,
+      0.00741
+     ],
+     "attitude_deg (roll, pitch)": [
+      1.8e-10,
+      -1.39e-08
+     ]
+    },
+    "expected_chrono_minus_reference": {
+     "contact_vertical_N": [
+      67.62,
+      51.07,
+      -51.66,
+      -67.04
+     ],
+     "contact_horizontal_xy_N": [
+      [
+       4.659,
+       0.2215
+      ],
+      [
+       3.937,
+       0.2068
+      ],
+      [
+       -3.965,
+       -0.2075
+      ],
+      [
+       -4.631,
+       -0.2208
+      ]
+     ],
+     "cylinder_force_N": [
+      67.98,
+      51.41,
+      -52.02,
+      -67.42
+     ],
+     "in_plane_force_N": [
+      -2.294,
+      -2.151,
+      2.16,
+      2.29
+     ],
+     "attitude_deg (roll, pitch)": [
+      -1.72e-05,
+      6.664e-05
+     ]
+    },
+    "P_delta_nonlinear_minus_linear_vertical_N": [
+     67.63,
+     51.08,
+     -51.67,
+     -67.05
+    ],
+    "expected_bushing_in_plane_displacement_mm": [
+     0.39533,
+     0.39298,
+     0.39572,
+     0.39358
+    ],
+    "expected_attitude_deg (roll, pitch)": [
+     -0.0020694,
+     0.02667
+    ],
+    "rev12_contact_point_bushing (S2a run before plan A)": {
+     "chrono_model_minus_reference_vertical_N": [
+      149.0,
+      135.0,
+      -135.5,
+      -148.5
+     ],
+     "sphere_lever_part_vertical_N (contact - ball, nonlinear)": [
+      81.36,
+      83.92,
+      -83.82,
+      -81.45
+     ]
+    },
+    "solver": "Newton (central-difference Jacobian, step 1e-7) on the 6 equilibrium equations / (W x gravity scale), max residual nonlinear 1.8e-14, linear 4.9e-10; linear = Richardson extrapolation of gravity x 0.0001 and x 0.0002 to the tangent"
    }
   },
   "ground roll 2 deg, pitch 0 deg": {
@@ -8278,6 +9608,132 @@
      0.0163,
      0.02897
     ]
+   },
+   "extension_exact_m": [
+    0.4025736564725516,
+    0.49502988577890294,
+    0.3978178044363151,
+    0.4820047955270205
+   ],
+   "extension_sphere_touch_m": [
+    0.4025370838146223,
+    0.4949933131209736,
+    0.39778123177838576,
+    0.4819682228690912
+   ],
+   "L1_plan_A_expected_chrono_minus_reference_rev13": {
+    "model": "Nonlinear statics of the L1 Chrono pad model on a tilted rigid plane (top level), body start level at the origin. Rigid body = superstructure + 4 rods at ext_sph (rigid motor). Sphere radius h_b centred at the ball; the floor plane holds the pad bottoms at ext_pad, so the spheres touch it exactly with ext_sph. Normal force k_n x penetration along n through the ball centre; bushing k_t in the plane between a body-fixed point (ball centre, or the start contact point if bushing_at_ball is False) and its start position (stick). Gravity -g z (x gscale).",
+    "plan": "plan A (user decision 2026-10-20): bushing at the ball centre -> the whole floor reaction passes through the swivel centre as in the reference static_slope_10dof; the remaining Chrono - reference difference is the geometric nonlinearity (P-delta) only",
+    "extension_used": "extension_sphere_touch_m (spheres touch the plane at the level start pose)",
+    "reference_unchanged_check (linear ball model - reference)": {
+     "contact_vertical_N": [
+      -0.00737,
+      -0.0075,
+      0.0077,
+      0.00762
+     ],
+     "contact_horizontal_xy_N": [
+      [
+       9.85e-05,
+       5.55e-05
+      ],
+      [
+       -0.000183,
+       4.26e-05
+      ],
+      [
+       7.2e-05,
+       -3e-05
+      ],
+      [
+       -0.000203,
+       -4.17e-05
+      ]
+     ],
+     "cylinder_force_N": [
+      -0.00746,
+      -0.00754,
+      0.00769,
+      0.00764
+     ],
+     "attitude_deg (roll, pitch)": [
+      2.94e-10,
+      -1.39e-08
+     ]
+    },
+    "expected_chrono_minus_reference": {
+     "contact_vertical_N": [
+      67.75,
+      51.05,
+      -51.64,
+      -67.16
+     ],
+     "contact_horizontal_xy_N": [
+      [
+       1.469,
+       -0.6361
+      ],
+      [
+       2.977,
+       -0.0774
+      ],
+      [
+       -2.901,
+       0.09674
+      ],
+      [
+       -1.545,
+       0.6168
+      ]
+     ],
+     "cylinder_force_N": [
+      67.58,
+      51.19,
+      -51.78,
+      -67.02
+     ],
+     "in_plane_force_N": [
+      1.598,
+      1.945,
+      -1.379,
+      -1.889
+     ],
+     "attitude_deg (roll, pitch)": [
+      -1.715e-05,
+      6.671e-05
+     ]
+    },
+    "P_delta_nonlinear_minus_linear_vertical_N": [
+     67.76,
+     51.06,
+     -51.64,
+     -67.17
+    ],
+    "expected_bushing_in_plane_displacement_mm": [
+     0.46755,
+     0.4675,
+     0.32396,
+     0.32402
+    ],
+    "expected_attitude_deg (roll, pitch)": [
+     -0.0020676,
+     0.026729
+    ],
+    "rev12_contact_point_bushing (S2a run before plan A)": {
+     "chrono_model_minus_reference_vertical_N": [
+      -97.3,
+      216.1,
+      -205.1,
+      86.26
+     ],
+     "sphere_lever_part_vertical_N (contact - ball, nonlinear)": [
+      -165.1,
+      165.1,
+      -153.4,
+      153.4
+     ]
+    },
+    "solver": "Newton (central-difference Jacobian, step 1e-7) on the 6 equilibrium equations / (W x gravity scale), max residual nonlinear 2.9e-14, linear 3.1e-10; linear = Richardson extrapolation of gravity x 0.0001 and x 0.0002 to the tangent"
    }
   },
   "ground roll -2 deg, pitch 1.5 deg": {
@@ -8478,6 +9934,132 @@
      -0.02036,
      0.04481
     ]
+   },
+   "extension_exact_m": [
+    0.6032772483616079,
+    0.5108210190552567,
+    0.4606366179716017,
+    0.3764496268808963
+   ],
+   "extension_sphere_touch_m": [
+    0.6032201206791324,
+    0.5107638913727812,
+    0.4605794902891262,
+    0.37639249919842077
+   ],
+   "L1_plan_A_expected_chrono_minus_reference_rev13": {
+    "model": "Nonlinear statics of the L1 Chrono pad model on a tilted rigid plane (top level), body start level at the origin. Rigid body = superstructure + 4 rods at ext_sph (rigid motor). Sphere radius h_b centred at the ball; the floor plane holds the pad bottoms at ext_pad, so the spheres touch it exactly with ext_sph. Normal force k_n x penetration along n through the ball centre; bushing k_t in the plane between a body-fixed point (ball centre, or the start contact point if bushing_at_ball is False) and its start position (stick). Gravity -g z (x gscale).",
+    "plan": "plan A (user decision 2026-10-20): bushing at the ball centre -> the whole floor reaction passes through the swivel centre as in the reference static_slope_10dof; the remaining Chrono - reference difference is the geometric nonlinearity (P-delta) only",
+    "extension_used": "extension_sphere_touch_m (spheres touch the plane at the level start pose)",
+    "reference_unchanged_check (linear ball model - reference)": {
+     "contact_vertical_N": [
+      -0.00732,
+      -0.00752,
+      0.00769,
+      0.00757
+     ],
+     "contact_horizontal_xy_N": [
+      [
+       -0.000346,
+       -2.09e-05
+      ],
+      [
+       -6.77e-05,
+       -9.18e-06
+      ],
+      [
+       6.92e-05,
+       7.75e-05
+      ],
+      [
+       0.000415,
+       0.000105
+      ]
+     ],
+     "cylinder_force_N": [
+      -0.00745,
+      -0.00762,
+      0.00761,
+      0.00753
+     ],
+     "attitude_deg (roll, pitch)": [
+      2.34e-10,
+      -1.38e-08
+     ]
+    },
+    "expected_chrono_minus_reference": {
+     "contact_vertical_N": [
+      68.0,
+      52.1,
+      -52.66,
+      -67.44
+     ],
+     "contact_horizontal_xy_N": [
+      [
+       5.018,
+       0.9265
+      ],
+      [
+       2.618,
+       0.3471
+      ],
+      [
+       -2.733,
+       -0.3678
+      ],
+      [
+       -4.903,
+       -0.9057
+      ]
+     ],
+     "cylinder_force_N": [
+      68.43,
+      52.2,
+      -52.8,
+      -67.88
+     ],
+     "in_plane_force_N": [
+      -0.2987,
+      0.464,
+      -0.2933,
+      1.23
+     ],
+     "attitude_deg (roll, pitch)": [
+      -1.667e-05,
+      6.749e-05
+     ]
+    },
+    "P_delta_nonlinear_minus_linear_vertical_N": [
+     68.01,
+     52.11,
+     -52.67,
+     -67.45
+    ],
+    "expected_bushing_in_plane_displacement_mm": [
+     0.53021,
+     0.57127,
+     0.41608,
+     0.46319
+    ],
+    "expected_attitude_deg (roll, pitch)": [
+     -0.0020224,
+     0.02671
+    ],
+    "rev12_contact_point_bushing (S2a run before plan A)": {
+     "chrono_model_minus_reference_vertical_N": [
+      293.9,
+      -49.96,
+      37.85,
+      -281.7
+     ],
+     "sphere_lever_part_vertical_N (contact - ball, nonlinear)": [
+      225.9,
+      -102.1,
+      90.51,
+      -214.3
+     ]
+    },
+    "solver": "Newton (central-difference Jacobian, step 1e-7) on the 6 equilibrium equations / (W x gravity scale), max residual nonlinear 2.2e-14, linear 4.6e-10; linear = Richardson extrapolation of gravity x 0.0001 and x 0.0002 to the tangent"
    }
   }
  },
@@ -8517,6 +10099,14 @@
     6.002,
     6.673,
     7.922
+   ],
+   "f_Hz_top_ball_centre_rev13": [
+    1.539,
+    2.624,
+    5.81,
+    5.985,
+    6.646,
+    7.88
    ]
   },
   "beta_1.0e+09": {
@@ -8554,6 +10144,14 @@
     6.459,
     7.615,
     8.042
+   ],
+   "f_Hz_top_ball_centre_rev13": [
+    1.798,
+    3.005,
+    5.819,
+    6.421,
+    7.607,
+    8.0
    ]
   },
   "beta_1.6e+09": {
@@ -8591,6 +10189,14 @@
     6.961,
     8.258,
     9.279
+   ],
+   "f_Hz_top_ball_centre_rev13": [
+    2.151,
+    3.459,
+    5.833,
+    6.92,
+    8.214,
+    9.277
    ]
   }
  },

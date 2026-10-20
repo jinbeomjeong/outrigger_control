@@ -1,0 +1,164 @@
+{
+ "meta": {
+  "script": "04_scripts/02_chrono/render_S1_gifs.py",
+  "inputs": [
+   "07_results/S1/top",
+   "07_results/S1/middle",
+   "07_results/S1/bottom",
+   "07_results/S1/cross_top",
+   "06_analysis/00_dynamics/s1_pdelta_check.json"
+  ],
+  "view_oblique_toward_viewer_body": [
+   0.6006,
+   -0.6606,
+   0.4504
+  ],
+  "arrow_m_per_kN": 0.01,
+  "exaggeration_settle": 500.0,
+  "exaggeration_cross": 300.0,
+  "derivation": "penetration_i = r_i - (o_z + (R c_i)_z - z_floor); roll, pitch = roll_pitch_from_quat; pitch + = nose down"
+ },
+ "checks": {
+  "top": {
+   "penetration_vs_result_json_max_abs_mm": 1.2365442003670069e-10,
+   "attitude_vs_result_json_max_abs_deg": 0.0,
+   "params_sha256": "8d1cc183df504cf70ffe19db0df98cd717d7fd3926109afbfd85819d8150dc8c"
+  },
+  "middle": {
+   "penetration_vs_result_json_max_abs_mm": 6.94724278105241e-11,
+   "attitude_vs_result_json_max_abs_deg": 0.0,
+   "params_sha256": "7626f2dc64c936f9673caaeb2e92d65693efee0959e8719736d3151d80140f34"
+  },
+  "bottom": {
+   "penetration_vs_result_json_max_abs_mm": 1.8397106060774604e-10,
+   "attitude_vs_result_json_max_abs_deg": 0.0,
+   "params_sha256": "29dbf2cb3a775d2d2cc8695f3cc3e3673ce3528389f6adc4403bcfaae8ad502d"
+  },
+  "cross_top": {
+   "penetration_vs_result_json_max_abs_mm": 3.462357067718358e-09,
+   "attitude_vs_result_json_max_abs_deg": 0.0,
+   "params_sha256": "8d1cc183df504cf70ffe19db0df98cd717d7fd3926109afbfd85819d8150dc8c"
+  }
+ },
+ "settle_gif": {
+  "path": "06_analysis/01_chrono/S1_settle_levels.gif",
+  "frames": 91,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 1066941,
+  "loop_s": 19.16,
+  "resolution_px": [
+   1400,
+   900
+  ]
+ },
+ "auger_levels": [
+  {
+   "level": "top",
+   "com_world_m": [
+    0.4531,
+    -0.0014,
+    2.22
+   ],
+   "h_m": 3.1841660909522647,
+   "contact_mean_N": [
+    119359.02,
+    117368.4,
+    73706.9,
+    71856.34
+   ],
+   "roll_mean_deg": -0.002069361663766784,
+   "pitch_mean_deg": 0.026700918754854773,
+   "penetration_mean_mm": [
+    5.73461,
+    5.63899,
+    3.46888,
+    3.38181
+   ]
+  },
+  {
+   "level": "middle",
+   "com_world_m": [
+    0.4528,
+    -0.0014,
+    1.5224
+   ],
+   "h_m": 2.494174714228803,
+   "contact_mean_N": [
+    119344.47,
+    117357.63,
+    73718.01,
+    71870.57
+   ],
+   "roll_mean_deg": -0.002065440135481253,
+   "pitch_mean_deg": 0.026687528606506895,
+   "penetration_mean_mm": [
+    5.73393,
+    5.63848,
+    3.46934,
+    3.38243
+   ]
+  },
+  {
+   "level": "bottom",
+   "com_world_m": [
+    0.4524,
+    -0.0014,
+    0.8248
+   ],
+   "h_m": 1.8041817372337732,
+   "contact_mean_N": [
+    119330.31,
+    117346.39,
+    73728.71,
+    71885.27
+   ],
+   "roll_mean_deg": -0.0020624148301615778,
+   "pitch_mean_deg": 0.026672939066563008,
+   "penetration_mean_mm": [
+    5.73324,
+    5.63794,
+    3.4699,
+    3.38312
+   ]
+  }
+ ],
+ "auger_levels_png": "06_analysis/01_chrono/S1_auger_levels.png",
+ "cross_gif": {
+  "path": "06_analysis/01_chrono/S1_cross_top.gif",
+  "frames": 85,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 1250522,
+  "loop_s": 16.3,
+  "resolution_px": [
+   1400,
+   900
+  ]
+ },
+ "cross_events": [
+  {
+   "t_first_s": 0.1163000000000023,
+   "t_last_s": 0.11700000000000232,
+   "text": "RR·RL 패드 부상(부싱 제거)"
+  },
+  {
+   "t_first_s": 0.15199999999999958,
+   "t_last_s": 0.1526999999999995,
+   "text": "RL·RR 재접지(부싱 새 고정점)"
+  },
+  {
+   "t_first_s": 0.2598999999999877,
+   "t_last_s": 0.2598999999999877,
+   "text": "RR 패드 부상(부싱 제거)"
+  },
+  {
+   "t_first_s": 0.2726999999999863,
+   "t_last_s": 0.2726999999999863,
+   "text": "RR 재접지(부싱 새 고정점)"
+  }
+ ],
+ "cross_frame_png": {
+  "path": "06_analysis/01_chrono/S1_cross_top_frame.png",
+  "t_s": 0.12000000000000241
+ },
+ "total_s": 100.6
+}

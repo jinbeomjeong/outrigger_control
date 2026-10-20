@@ -46,6 +46,9 @@ class ReferenceFile(StrEnum):
     V7_DIAGNOSTIC = "v7_diagnostic.json"
     # Second baseline file next to reference.json (user decision 2026-10-20): lift loads.
     LEG_EXTENSION_LOADS = "leg_extension_loads.json"
+    # dynamics_model.md 4.3 rev. 8 review: numerical damping r_i omega_i dt / 2 per mode
+    # (subtracted from the identified zeta in the S2a V7 diagnosis, plan S2a V7 row).
+    NUMERICAL_DAMPING_REVIEW = "numerical_damping_review.json"
 
 
 DEFAULT_FILE_PATHS: Mapping[ReferenceFile, Path] = MappingProxyType(
@@ -58,6 +61,9 @@ DEFAULT_FILE_PATHS: Mapping[ReferenceFile, Path] = MappingProxyType(
         ReferenceFile.V7_DIAGNOSTIC: PROJECT_ROOT / "06_analysis/00_dynamics/v7_diagnostic.json",
         ReferenceFile.LEG_EXTENSION_LOADS: (
             PROJECT_ROOT / "06_analysis/00_dynamics/leg_extension_loads.json"
+        ),
+        ReferenceFile.NUMERICAL_DAMPING_REVIEW: (
+            PROJECT_ROOT / "06_analysis/00_dynamics/numerical_damping_review.json"
         ),
     }
 )
@@ -239,6 +245,12 @@ _LIFT_V4_LAYOUT_D_RIGID_LIMIT = (
 _TOUCH_DYN_S = ("dynamic_events_s", "touch_s (FL, FR, RL, RR)")
 _TOUCH_QUASI_STATIC_S = ("quasi_static_events_s", "touch_s (FL, FR, RL, RR)")
 _MODE_SHAPES = "mode_shapes_rev5"
+# Plan rev. 10, option A (user decision 2026-10-20): the L1 ground bushing acts at the pad
+# ball centre. The V7 / V8(a) / V10 / S4 reference values for that model sit under this
+# block (dynamics_model.md rev. 13, 5.4); the per-level keys directly under the L1 head are
+# the contact-point bushing history (rev. 5 springs at the pad bottom).
+_L1_BALL_CENTRE_REV13_HEAD = (*_L1_LEVEL_HEAD, "V7_ball_centre_bushing_rev13")
+_BALL_CENTRE_MODE_SHAPES = "mode_shapes"
 _V14_REV5 = ("A_extension_dependence", "V14_rev5")
 _V15_REV5 = ("C_seal_friction", "V15_rev5")
 
@@ -299,14 +311,76 @@ L1_STATIC_ATTITUDE_DEG = _ref(  # V3 (plan table: top), initial-condition rule (
 
 # --- S2a: bushing dynamics (V7 diagnostic) and slope statics (V12) ---------------------------
 
-L1_F_DAMPED_HZ = _ref(_ARRAY, *_L1_LEVEL_HEAD, "f_damped_Hz")  # V7 diagnostic (first 2), V10
+# History (contact-point bushing, plan rev. 9 and earlier); V7 and V10 judge with
+# L1_BALL_CENTRE_REV13_F_DAMPED_HZ.
+L1_F_DAMPED_HZ = _ref(_ARRAY, *_L1_LEVEL_HEAD, "f_damped_Hz")
 SLOPE_V12_EXTENSION_M = _ref(_ARRAY, "slope_V12", _CASE, "extension_m")  # V12 input
-SLOPE_V12_L1 = _ref(_MAPPING, "slope_V12", _CASE, "L1")  # V12
+SLOPE_V12_L1 = _ref(_MAPPING, "slope_V12", _CASE, "L1")  # V12 (unchanged by option A)
+
+# Ball-centre bushing (plan rev. 10, option A): the values V7 is judged against.
+L1_BALL_CENTRE_REV13_F_DAMPED_HZ = _ref(  # V7 (first 2), V10 (first 2)
+    _ARRAY, *_L1_BALL_CENTRE_REV13_HEAD, "f_damped_Hz"
+)
+L1_BALL_CENTRE_REV13_ZETA = _ref(_ARRAY, *_L1_BALL_CENTRE_REV13_HEAD, "zeta")  # V7, V8(a)
+L1_BALL_CENTRE_REV13_MODE_SHAPES = _ref(  # V7 projection block (sub-keys as mode_shapes_rev5)
+    _MAPPING, *_L1_BALL_CENTRE_REV13_HEAD, _BALL_CENTRE_MODE_SHAPES
+)
+L1_BALL_CENTRE_REV13_MODE_PHI = _ref(
+    _ARRAY,
+    *_L1_BALL_CENTRE_REV13_HEAD,
+    _BALL_CENTRE_MODE_SHAPES,
+    "Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)",
+)
+L1_BALL_CENTRE_REV13_MODE_MASS_MATRIX = _ref(
+    _ARRAY, *_L1_BALL_CENTRE_REV13_HEAD, _BALL_CENTRE_MODE_SHAPES, "mass_matrix (same coordinates)"
+)
+L1_BALL_CENTRE_REV13_MODE_REFERENCE_POINT_M = _ref(
+    _ARRAY,
+    *_L1_BALL_CENTRE_REV13_HEAD,
+    _BALL_CENTRE_MODE_SHAPES,
+    "reference_point_m (rotations about it, translations of it; body axes, level body = world)",
+)
+L1_BALL_CENTRE_REV13_MODE_COORDINATES = _ref(
+    ValueKind.TEXT_ARRAY, *_L1_BALL_CENTRE_REV13_HEAD, _BALL_CENTRE_MODE_SHAPES, "coordinates"
+)
+L1_BALL_CENTRE_REV13_MODE_PROJECTION = _ref(
+    _TEXT, *_L1_BALL_CENTRE_REV13_HEAD, _BALL_CENTRE_MODE_SHAPES, "projection"
+)
+# Numerical damping r_i omega_i dt / 2 per mode, keyed by dt in s ("0.0001", "0.0002");
+# subtracted from the identified zeta before the V7 diagnosis (V8(a) prediction).
+L1_BALL_CENTRE_REV13_ZETA_NUM_R_OMEGA_DT_HALF = _ref(
+    _MAPPING, *_L1_BALL_CENTRE_REV13_HEAD, "zeta_num_r_omega_dt_half"
+)
+L1_BALL_CENTRE_REV13_V7_DIAGNOSTIC_THRESHOLDS = _ref(  # V7 diagnosis items 1-5
+    _MAPPING, *_L1_BALL_CENTRE_REV13_HEAD, "V7_diagnostic", "thresholds"
+)
+# V12 diagnosis: expected Chrono - reference once the bushing acts at the ball centre
+# (P-delta only); sub-key expected_chrono_minus_reference.
+SLOPE_V12_L1_PLAN_A_EXPECTED_DIFF_REV13 = _ref(
+    _MAPPING, "slope_V12", _CASE, "L1_plan_A_expected_chrono_minus_reference_rev13"
+)
+SLOPE_V12_EXTENSION_EXACT_M = _ref(_ARRAY, "slope_V12", _CASE, "extension_exact_m")
+SLOPE_V12_EXTENSION_SPHERE_TOUCH_M = _ref(_ARRAY, "slope_V12", _CASE, "extension_sphere_touch_m")
 # The plan cites v7_diagnostic.json as a whole for the V7 diagnosis; these are the blocks
 # holding the predicted zeta per damping-input error and the numerical damping per mode.
 V7_DIAGNOSTIC_L1_CASES = RefKey(ReferenceFile.V7_DIAGNOSTIC, ("L1", _LEVEL, "cases"), _MAPPING)
 V7_DIAGNOSTIC_L1_ZETA_NUM = RefKey(
     ReferenceFile.V7_DIAGNOSTIC, ("L1", _LEVEL, "zeta_num_dt1e-4"), _ARRAY
+)
+# Plan S2a V7 row (rev. 8): the numerical damping subtracted before the diagnosis is
+# r_i omega_i dt / 2 (bushing strain-energy share r_i only, implicit), dt 1e-4 s:
+# 6.3e-5 / 2.3e-4 (modes 1, 2), 1.8e-3 (mode 3). zeta_num_dt1e-4 above is the old
+# omega_i dt / 2 (kept in the file, not used for the diagnosis). History since rev. 10:
+# the diagnosis subtracts L1_BALL_CENTRE_REV13_ZETA_NUM_R_OMEGA_DT_HALF.
+L1_ZETA_NUM_R_OMEGA_DT1E4 = RefKey(
+    ReferenceFile.NUMERICAL_DAMPING_REVIEW,
+    ("L1", _LEVEL, "per_dt", "0.0001", "zeta_num_estimate r omega dt / 2"),
+    _ARRAY,
+)
+L1_BUSHING_STRAIN_ENERGY_SHARE = RefKey(
+    ReferenceFile.NUMERICAL_DAMPING_REVIEW,
+    ("L1", _LEVEL, "implicit_strain_energy_share r (bushing)"),
+    _ARRAY,
 )
 
 # --- S2b: crawler settling ---------------------------------------------------------------------
@@ -331,7 +405,8 @@ LIFT_V4_CRAWLER_CONTACT_LAYOUT_D = _ref(
 L1_NUMERICAL_DAMPING_BOUND_S = _ref(  # V8(a)
     _NUMBER, "time_step", "L1_numerical_damping_bound_s (omega1 dt/2 <= 0.1 zeta1, top)"
 )
-L1_ZETA = _ref(_ARRAY, *_L1_LEVEL_HEAD, "zeta")  # V8(a) first mode, V7
+# History (contact-point bushing); V7 and V8(a) judge with L1_BALL_CENTRE_REV13_ZETA.
+L1_ZETA = _ref(_ARRAY, *_L1_LEVEL_HEAD, "zeta")
 LIFT_V4 = _ref(_MAPPING, *_LIFT_V4)  # V4 whole block
 LIFT_V4_PROCEDURE = _ref(_TEXT, *_LIFT_V4, "procedure")  # V4
 LIFT_V4_TIME_ORIGIN = _ref(_TEXT, *_LIFT_V4, "time_origin")  # V4
@@ -414,8 +489,13 @@ LEG_EXTENSION_KN_X3_DAMPED_MAX_PEAK_PAD_FORCE_N = _leg_extension(
 
 # --- S4: six-mode identification by modal projection (V7) and beta sensitivity --------------
 
-L1_F_UNDAMPED_HZ = _ref(_ARRAY, *_L1_LEVEL_HEAD, "f_undamped_Hz")  # V7
-L1_MODE_SHAPES = _ref(_MAPPING, *_L1_LEVEL_HEAD, _MODE_SHAPES)  # V7 projection block
+L1_BALL_CENTRE_REV13_F_UNDAMPED_HZ = _ref(  # V7 (plan rev. 10, option A)
+    _ARRAY, *_L1_BALL_CENTRE_REV13_HEAD, "f_undamped_Hz"
+)
+# History (contact-point bushing, rev. 5 springs at the pad bottom): the L1_MODE_* and
+# L1_F_UNDAMPED_HZ keys below. V7 projects on L1_BALL_CENTRE_REV13_MODE_* (S2a block above).
+L1_F_UNDAMPED_HZ = _ref(_ARRAY, *_L1_LEVEL_HEAD, "f_undamped_Hz")
+L1_MODE_SHAPES = _ref(_MAPPING, *_L1_LEVEL_HEAD, _MODE_SHAPES)
 L1_MODE_PHI = _ref(
     _ARRAY,
     *_L1_LEVEL_HEAD,
@@ -437,7 +517,10 @@ BETA_STATIC_PITCH_DEG = _ref(_NUMBER, "L1_beta_sensitivity_top", _BETA, "static_
 BETA_DF_PER_MM_FL_N = _ref(_ARRAY, "L1_beta_sensitivity_top", _BETA, "dF_per_mm_FL_N")
 BETA_FL_PLUS_F_MIN_MM = _ref(_NUMBER, "L1_beta_sensitivity_top", _BETA, "FL+_F_min_mm")
 BETA_FL_PLUS_LIFTOFF_MM = _ref(_NUMBER, "L1_beta_sensitivity_top", _BETA, "FL+_liftoff_mm")
-BETA_F_HZ_TOP = _ref(_ARRAY, "L1_beta_sensitivity_top", _BETA, "f_Hz_top")
+BETA_F_HZ_TOP = _ref(_ARRAY, "L1_beta_sensitivity_top", _BETA, "f_Hz_top")  # history
+BETA_F_HZ_TOP_BALL_CENTRE_REV13 = _ref(  # judged (plan rev. 10, option A)
+    _ARRAY, "L1_beta_sensitivity_top", _BETA, "f_Hz_top_ball_centre_rev13"
+)
 
 # --- S6: force saturation (V11b) and locked pressure (V17 path) ------------------------------
 
@@ -532,6 +615,26 @@ KEYS_BY_STAGE: Mapping[str, tuple[RefKey, ...]] = MappingProxyType(
             SLOPE_V12_L1,
             V7_DIAGNOSTIC_L1_CASES,
             V7_DIAGNOSTIC_L1_ZETA_NUM,
+            L1_ZETA_NUM_R_OMEGA_DT1E4,
+            L1_BUSHING_STRAIN_ENERGY_SHARE,
+            L1_ZETA,
+            L1_MODE_PHI,
+            L1_MODE_MASS_MATRIX,
+            L1_MODE_REFERENCE_POINT_M,
+            L1_MODE_COORDINATES,
+            TOTAL_WEIGHT_INCL_RODS_N,
+            L1_BALL_CENTRE_REV13_F_DAMPED_HZ,
+            L1_BALL_CENTRE_REV13_ZETA,
+            L1_BALL_CENTRE_REV13_MODE_SHAPES,
+            L1_BALL_CENTRE_REV13_MODE_PHI,
+            L1_BALL_CENTRE_REV13_MODE_MASS_MATRIX,
+            L1_BALL_CENTRE_REV13_MODE_REFERENCE_POINT_M,
+            L1_BALL_CENTRE_REV13_MODE_COORDINATES,
+            L1_BALL_CENTRE_REV13_ZETA_NUM_R_OMEGA_DT_HALF,
+            L1_BALL_CENTRE_REV13_V7_DIAGNOSTIC_THRESHOLDS,
+            SLOPE_V12_L1_PLAN_A_EXPECTED_DIFF_REV13,
+            SLOPE_V12_EXTENSION_EXACT_M,
+            SLOPE_V12_EXTENSION_SPHERE_TOUCH_M,
         ),
         "S2b": (
             LIFT_V4_LAYOUTS,
@@ -545,6 +648,8 @@ KEYS_BY_STAGE: Mapping[str, tuple[RefKey, ...]] = MappingProxyType(
         "S3": (
             L1_NUMERICAL_DAMPING_BOUND_S,
             L1_ZETA,
+            L1_BALL_CENTRE_REV13_ZETA,
+            L1_BALL_CENTRE_REV13_ZETA_NUM_R_OMEGA_DT_HALF,
             LIFT_V4,
             LIFT_V4_PROCEDURE,
             LIFT_V4_TIME_ORIGIN,
@@ -602,8 +707,17 @@ KEYS_BY_STAGE: Mapping[str, tuple[RefKey, ...]] = MappingProxyType(
             BETA_FL_PLUS_F_MIN_MM,
             BETA_FL_PLUS_LIFTOFF_MM,
             BETA_F_HZ_TOP,
+            L1_BALL_CENTRE_REV13_F_UNDAMPED_HZ,
+            L1_BALL_CENTRE_REV13_F_DAMPED_HZ,
+            L1_BALL_CENTRE_REV13_MODE_SHAPES,
+            L1_BALL_CENTRE_REV13_MODE_PHI,
+            L1_BALL_CENTRE_REV13_MODE_MASS_MATRIX,
+            L1_BALL_CENTRE_REV13_MODE_REFERENCE_POINT_M,
+            L1_BALL_CENTRE_REV13_MODE_COORDINATES,
+            L1_BALL_CENTRE_REV13_MODE_PROJECTION,
+            BETA_F_HZ_TOP_BALL_CENTRE_REV13,
         ),
-        "S5": (L1_CONTACT_FORCE_N, L1_F_DAMPED_HZ),
+        "S5": (L1_CONTACT_FORCE_N, L1_F_DAMPED_HZ, L1_BALL_CENTRE_REV13_F_DAMPED_HZ),
         "S6": (
             HYDRAULIC_MAX_HEAD_FORCE_N,
             HYDRAULIC_MAX_ROD_SIDE_FORCE_N,

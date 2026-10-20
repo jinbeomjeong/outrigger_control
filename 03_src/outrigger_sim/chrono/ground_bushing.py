@@ -10,10 +10,22 @@ so the SMC materials carry the normal force only (``kt = gt = mu = 0``, R8) and 
 force comes from one ``ChLoadBodyBodyBushingSpherical`` per pad:
 
 * body A = leg moving part (the body that carries the pad sphere), body B = fixed floor;
-* frame at the sphere contact point on the floor surface when the bushing is created, axes =
-  floor tangent plane (x, y) + floor normal (z); stiffness ``(kt, kt, 0)``, damping input
-  ``(ct/2, ct/2, 0)`` because Chrono's bushing damping acts at twice the input (R7, YAML
-  ``bushing_damping_input_per_pad_N_s_m`` already holds ``ct/2``);
+* frame B (floor anchor) at the projection of the pad sphere (ball) centre onto the floor
+  surface when the bushing is created, axes = floor tangent plane (x, y) + floor normal (z);
+  stiffness ``(kt, kt, 0)``, damping input ``(ct/2, ct/2, 0)`` because Chrono's bushing
+  damping acts at twice the input (R7, YAML ``bushing_damping_input_per_pad_N_s_m`` already
+  holds ``ct/2``);
+* frame A (where the bushing force acts on body A, "force point"): by default the **ball
+  centre** (:data:`FORCE_POINT_BALL_CENTRE`, user decision 2026-10-20, ``dynamics_model.md``
+  5.3 ruling 4, option A). A swivel pad cannot carry a moment, so the floor reaction passes
+  through the ball centre; the SMC normal force of the pad sphere already does, and with the
+  tangential force at the centre the resultant does too. The normal offset ``r`` between
+  frame A and frame B is not loaded (normal stiffness and damping 0), so the bushing reacts
+  to the in-plane motion of the ball centre only, and a rotation of the leg body about the
+  ball centre does not deform it. The former behaviour (frame A at the sphere contact point,
+  ``r`` below the centre, fixed in body A at creation, :data:`FORCE_POINT_CONTACT`) adds a
+  moment ``r n x T`` per leg (about 0.8-1.0 kN m in total on a 2 deg slope, up to 0.23 kN of
+  vertical load shift per leg); it is kept as an option for comparison;
 * after every step (:meth:`GroundBushingCoulomb.after_step`): normal force
   ``N = max(F_contact . n, 0)`` from the moving part's contact force; if ``kt |d| > mu N`` the
   floor anchor (frame B) is moved along the tangential displacement ``d`` so that the spring
@@ -55,6 +67,35 @@ reproduces the lag exactly (``chrono/snapshot.py``).
 Initial attach (analytic start ``ON_PADS``, plan section 2 rule 1): :meth:`attach` creates the
 bushings at t = 0 with zero tangential force; it is an initial condition, not an R15 event,
 and is not logged as one.
+
+Initial hold (opt-in, ``attach(hold_until_loaded=True)``; S2a V12 gravity ramp, plan S2a and
+``dynamics_model.md`` 5.2 ruling 2): when the pads start with zero normal force and gravity is
+ramped from 0, the SMC contact reports ``N = 0`` for the first tens of milliseconds (the
+penetration is below Bullet's single-precision resolution, about 1e-7 m; measured
+2026-10-20: 30 ms with a 3 s half-cosine ramp). The plain rules would then let the anchor
+follow the pad (``mu N = 0``, counted as yield steps), remove every bushing after ``t_lift``
+and re-create it at ``N > N_th`` about 74 ms later, so the zero-deformation start of the
+linear reference (``dyn_model.static_slope_10dof``: tangential spring engaged from the first
+load) would be lost. With the hold, a leg keeps its t = 0 bushing (no return mapping, no
+lift-off count) until its normal force first exceeds ``N_th``; from then on the normal rules
+apply. The release time per leg is kept (:attr:`GroundBushingCoulomb.hold_release_t_s`). The
+tangential force reached while held is tiny (pad drop of a few um times the slope); default
+off (S0 / S1 behaviour unchanged).
+
+Hold safety (``dynamics_model.md`` 5.3 ruling 1, conditions 2-3): a leg that is still held
+when the gravity ramp has ended carries a tangential restraint without a Coulomb limit;
+:meth:`GroundBushingCoulomb.assert_hold_released` raises :class:`HoldNotReleasedError` then
+(``chrono/runs.run_gravity_ramp(hold_deadline_s=...)`` calls it at the ramp end). The largest
+tangential bushing force while held is kept per leg
+(:attr:`GroundBushingCoulomb.hold_max_tangential_N`, judged ``<= mu N_th`` in
+``verify/s2a.hold_checks``).
+
+Snapshots: the force point is stored (``force_point_code``, index into
+:data:`FORCE_POINTS`). A snapshot without it was written before the option existed, i.e.
+with the contact point. Restoring a snapshot into an instance with a different force point
+raises :class:`ForcePointMismatchError` (no silent conversion: moving frame A changes the
+bushing deformation and force of the saved state); re-create the state with the current
+model, or build the model with the snapshot's force point.
 
 Frames: all world quantities are SI, Z-up (R3). Every Chrono vector read here is copied at
 once (R9). The floor surface is a plane given in floor-body coordinates (point + normal), so
@@ -107,6 +148,28 @@ STATE_KEYS = (
     "normal_force_raw_N",
     "structure_changed",
 )
+OPTIONAL_STATE_KEYS = ("hold", "hold_release_t_s", "hold_max_tangential_N")
+"""Hold state keys added after the first S1 snapshots were written; missing = no hold."""
+
+FORCE_POINT_CONTACT = "contact_point"
+"""Frame A at the sphere contact point (``r`` below the ball centre), fixed in body A at
+creation; behaviour before 2026-10-20 (comparison option)."""
+FORCE_POINT_BALL_CENTRE = "ball_centre"
+"""Frame A at the pad sphere (ball) centre: the reaction passes through the swivel centre."""
+FORCE_POINTS = (FORCE_POINT_CONTACT, FORCE_POINT_BALL_CENTRE)
+"""Allowed force points; the index is the snapshot code (``force_point_code``)."""
+DEFAULT_FORCE_POINT = FORCE_POINT_BALL_CENTRE
+"""User decision 2026-10-20 (``dynamics_model.md`` 5.3 ruling 4, option A)."""
+FORCE_POINT_STATE_KEY = "force_point_code"
+"""Snapshot key of the force point; missing = :data:`FORCE_POINT_CONTACT` (older files)."""
+
+
+class HoldNotReleasedError(RuntimeError):
+    """A leg is still in the initial hold after the deadline (end of the gravity ramp)."""
+
+
+class ForcePointMismatchError(ValueError):
+    """A snapshot was written with another bushing force point than the restoring model."""
 
 
 def lift_step_count(lift_time_s: float, dt_s: float) -> int:
@@ -257,6 +320,12 @@ class _LegState:
         # (the system Update at the end of the last step, i.e. before the last hook call).
         self.loaded_anchor_floor_local = np.full(3, np.nan)
         self.loaded_sliding = False
+        # initial hold (attach(hold_until_loaded=True)): no return mapping / lift-off count
+        # until the normal force first exceeds N_th
+        self.hold = False
+        self.hold_release_t_s = math.nan
+        # largest |bushing force| seen while held [N] (0 when never held)
+        self.hold_max_tangential_N = 0.0
 
     @property
     def anchor_floor_local(self) -> NDArray[np.float64]:
@@ -301,6 +370,8 @@ class GroundBushingCoulomb:
         surface_normal_floor_local: Outward floor normal, floor-body coordinates.
         lift_time_s: ``t_lift`` (R15), default :data:`LIFT_TIME_S`.
         touch_threshold_N: ``N_th`` (R15), default :data:`TOUCH_THRESHOLD_N`.
+        force_point: Where the bushing force acts on body A, one of :data:`FORCE_POINTS`;
+            default :data:`DEFAULT_FORCE_POINT` (ball centre, module docstring).
     """
 
     def __init__(
@@ -316,6 +387,7 @@ class GroundBushingCoulomb:
         surface_normal_floor_local: ArrayLike = (0.0, 0.0, 1.0),
         lift_time_s: float = LIFT_TIME_S,
         touch_threshold_N: float = TOUCH_THRESHOLD_N,
+        force_point: str = DEFAULT_FORCE_POINT,
     ) -> None:
         if not pads:
             raise ValueError("at least one pad is needed")
@@ -328,7 +400,10 @@ class GroundBushingCoulomb:
                 raise ValueError(f"pad {pad.name}: sphere radius must be > 0")
         if touch_threshold_N < 0.0:
             raise ValueError(f"touch threshold must be >= 0: {touch_threshold_N!r}")
+        if force_point not in FORCE_POINTS:
+            raise ValueError(f"force_point must be one of {FORCE_POINTS}, got {force_point!r}")
         lift_step_count(lift_time_s, dt_s)  # validates both
+        self._force_point = force_point
         self._system = system
         self._floor = floor
         self._pads = tuple(pads)
@@ -369,6 +444,7 @@ class GroundBushingCoulomb:
         surface_normal_floor_local: ArrayLike = (0.0, 0.0, 1.0),
         lift_time_s: float = LIFT_TIME_S,
         touch_threshold_N: float = TOUCH_THRESHOLD_N,
+        force_point: str = DEFAULT_FORCE_POINT,
     ) -> GroundBushingCoulomb:
         """Four legs in LEG_ORDER with the L1 values of ``02_params/rexome33.yaml``.
 
@@ -409,6 +485,7 @@ class GroundBushingCoulomb:
             surface_normal_floor_local=surface_normal_floor_local,
             lift_time_s=lift_time_s,
             touch_threshold_N=touch_threshold_N,
+            force_point=force_point,
         )
 
     # --- read-only views ---------------------------------------------------------------
@@ -426,6 +503,11 @@ class GroundBushingCoulomb:
         """Change the default step (transition windows); the lift rule stays time based."""
         lift_step_count(self._lift_time_s, value)
         self._dt_s = float(value)
+
+    @property
+    def force_point(self) -> str:
+        """Where the bushing force acts on body A (:data:`FORCE_POINTS`)."""
+        return self._force_point
 
     @property
     def lift_time_s(self) -> float:
@@ -466,6 +548,55 @@ class GroundBushingCoulomb:
     @property
     def yield_steps(self) -> NDArray[np.int64]:
         return np.array([leg.yield_steps for leg in self._legs], dtype=np.int64)
+
+    @property
+    def hold(self) -> NDArray[np.bool_]:
+        """Legs still in the initial hold (``attach(hold_until_loaded=True)``)."""
+        return np.array([leg.hold for leg in self._legs], dtype=bool)
+
+    @property
+    def hold_release_t_s(self) -> NDArray[np.float64]:
+        """Simulation time at which each leg left the initial hold (NaN: never held / held)."""
+        return np.array([leg.hold_release_t_s for leg in self._legs], dtype=float)
+
+    @property
+    def hold_max_tangential_N(self) -> NDArray[np.float64]:
+        """Largest bushing force magnitude per leg while it was held [N] (0: never held).
+
+        Read from ``GetForce()`` in each hook call during the hold, including the call that
+        releases it (the force Chrono evaluated at the end of that step).
+        """
+        return np.array([leg.hold_max_tangential_N for leg in self._legs], dtype=float)
+
+    def assert_hold_released(self, context: str = "") -> None:
+        """Raise :class:`HoldNotReleasedError` if any leg is still in the initial hold.
+
+        ``dynamics_model.md`` 5.3 ruling 1 condition 2: a hold that outlives the gravity ramp
+        is a tangential restraint without a Coulomb limit, so the run is invalid.
+        """
+        held = [name for name, h in zip(self.leg_names, self.hold, strict=True) if h]
+        if held:
+            raise HoldNotReleasedError(
+                f"initial hold not released{' ' + context if context else ''}: legs {held} "
+                f"(normal force never exceeded N_th = {self._touch_threshold_N} N; "
+                f"t = {float(self._system.GetChTime())} s)"
+            )
+
+    def tangential_displacement_m(self) -> NDArray[np.float64]:
+        """In-plane bushing deformation ``d`` (frame A point - anchor, normal part removed) per
+        leg, world frame [m], shape (n, 3); NaN rows without a bushing. Frame A is the force
+        point (:attr:`force_point`). Uses the current body state and the anchors set for the
+        next step."""
+        self._refresh_floor()
+        n = np.array(self._n_world)
+        out = np.full((len(self._legs), 3), np.nan)
+        for i, (pad, leg) in enumerate(zip(self._pads, self._legs, strict=True)):
+            if leg.bushing is None:
+                continue
+            p = _vec(pad.body.TransformPointLocalToParent(leg.frame_a_pos_local_ch))
+            d = p - np.array(self._anchor_world(leg))
+            out[i] = d - (d @ n) * n
+        return out
 
     @property
     def events(self) -> tuple[BushingEvent, ...]:
@@ -564,7 +695,9 @@ class GroundBushingCoulomb:
     def _create(self, index: int, point_world: NDArray[np.float64] | None) -> None:
         """Create the bushing of leg ``index``.
 
-        ``point_world`` None: frames A and B are taken from the leg state (restore).
+        ``point_world``: the contact point (ball centre projected onto the floor surface);
+        frame B is put there, frame A at the force point (:attr:`force_point`). None: frames
+        A and B are taken from the leg state (restore).
         """
         pad = self._pads[index]
         leg = self._legs[index]
@@ -591,8 +724,16 @@ class GroundBushingCoulomb:
             )
         else:
             frame_a = bushing.GetApplicationFrameA()
-            leg.frame_a_pos_local = _vec(frame_a.GetPos())
             leg.frame_a_quat_local = _quat(frame_a.GetRot())
+            if self._force_point == FORCE_POINT_BALL_CENTRE:
+                # same axes, origin moved up the normal by the ball height (not loaded:
+                # normal stiffness and damping are 0), zero in-plane deformation
+                leg.frame_a_pos_local = np.asarray(pad.sphere_centre_body_local_m, dtype=float)
+                bushing.SetApplicationFrameA(
+                    ch.ChFramed(_chvec(leg.frame_a_pos_local), _chquat(leg.frame_a_quat_local))
+                )
+            else:
+                leg.frame_a_pos_local = _vec(frame_a.GetPos())
             leg.anchor_floor_local = _vec(bushing.GetApplicationFrameB().GetPos())
         container = ch.ChLoadContainer()
         self._system.Add(container)  # structural change seen by the system -> re-analysis
@@ -614,18 +755,25 @@ class GroundBushingCoulomb:
         leg.sliding = False
         leg.damping_on = False
         leg.zero_time_s = 0.0
+        leg.hold = False
 
-    def attach(self, legs: Sequence[int] | None = None) -> None:
+    def attach(self, legs: Sequence[int] | None = None, *, hold_until_loaded: bool = False) -> None:
         """Create bushings now with zero tangential force (initial condition, not an event).
 
         Args:
             legs: Leg indices; None = every leg without a bushing.
+            hold_until_loaded: Keep each new bushing fixed (no return mapping, no lift-off
+                count) until its normal force first exceeds ``N_th`` (module docstring,
+                "Initial hold"; gravity-ramp starts).
         """
         indices = range(len(self._legs)) if legs is None else legs
         for i in indices:
             if not self._legs[i].in_contact:
                 self._legs[i].sliding = False
                 self._create(i, self._contact_point_world(i))
+                self._legs[i].hold = hold_until_loaded
+                self._legs[i].hold_release_t_s = math.nan
+                self._legs[i].hold_max_tangential_N = 0.0
 
     def detach_all(self) -> None:
         """Remove every bushing without logging events (used by restore)."""
@@ -663,6 +811,16 @@ class GroundBushingCoulomb:
                     self._create(i, self._contact_point_world(i))
                     new_events.append(BushingEvent(t_now, i, EVENT_CREATE))
                 continue
+            if leg.hold:
+                fb = leg.bushing.GetForce()  # k d + c v, frame-B axes (normal part 0)
+                t_mag = math.sqrt(fb.x * fb.x + fb.y * fb.y + fb.z * fb.z)
+                if t_mag > leg.hold_max_tangential_N:
+                    leg.hold_max_tangential_N = t_mag
+                if n_raw > self._touch_threshold_N:
+                    leg.hold = False
+                    leg.hold_release_t_s = t_now
+                else:
+                    continue
             self._return_mapping(i, leg, max(n_raw, 0.0), nx, ny, nz)
             if n_raw <= 0.0:
                 leg.zero_time_s += dt
@@ -753,6 +911,12 @@ class GroundBushingCoulomb:
             "loaded_sliding": np.array([leg.loaded_sliding for leg in self._legs], dtype=bool),
             "normal_force_raw_N": self.normal_force_raw_N,
             "structure_changed": np.array([self._structure_changed], dtype=bool),
+            "hold": self.hold,
+            "hold_release_t_s": self.hold_release_t_s,
+            "hold_max_tangential_N": self.hold_max_tangential_N,
+            FORCE_POINT_STATE_KEY: np.array(
+                [FORCE_POINTS.index(self._force_point)], dtype=np.int64
+            ),
         }
 
     def restore_state(self, arrays: Mapping[str, NDArray[Any]]) -> None:
@@ -769,10 +933,27 @@ class GroundBushingCoulomb:
 
         Raises:
             ValueError: Missing keys or a leg count that differs from this instance.
+            ForcePointMismatchError: The snapshot's force point (missing key = contact
+                point, files written before 2026-10-20) differs from :attr:`force_point`.
+                Checked before anything is changed.
         """
         missing = [key for key in STATE_KEYS if key not in arrays]
         if missing:
             raise ValueError(f"ground bushing state lacks {missing}")
+        if FORCE_POINT_STATE_KEY in arrays:
+            code = int(np.asarray(arrays[FORCE_POINT_STATE_KEY]).reshape(-1)[0])
+            if not 0 <= code < len(FORCE_POINTS):
+                raise ValueError(f"unknown ground bushing force point code {code}")
+            saved = FORCE_POINTS[code]
+        else:
+            saved = FORCE_POINT_CONTACT
+        if saved != self._force_point:
+            raise ForcePointMismatchError(
+                f"snapshot ground bushing force point is {saved!r} "
+                f"({'stored' if FORCE_POINT_STATE_KEY in arrays else 'no key: older file'}), "
+                f"this model uses {self._force_point!r}; re-create the state with this model "
+                f"or build it with force_point={saved!r}"
+            )
         count = len(self._legs)
         in_contact = np.asarray(arrays["in_contact"], dtype=bool)
         if in_contact.shape != (count,):
@@ -804,6 +985,16 @@ class GroundBushingCoulomb:
                     leg.sliding = leg.loaded_sliding
                     self._create(i, None)
                     leg.anchor_floor_local, leg.sliding = post_anchor, post_sliding
+        for i, leg in enumerate(self._legs):  # optional keys (absent in S1 snapshots)
+            leg.hold = bool(arrays["hold"][i]) if "hold" in arrays else False
+            leg.hold_release_t_s = (
+                float(arrays["hold_release_t_s"][i]) if "hold_release_t_s" in arrays else math.nan
+            )
+            leg.hold_max_tangential_N = (
+                float(arrays["hold_max_tangential_N"][i])
+                if "hold_max_tangential_N" in arrays
+                else 0.0
+            )
         self._structure_changed = structure_changed
         self._pending_post_hook = not structure_changed
         self._events = [

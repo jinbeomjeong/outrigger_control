@@ -21,8 +21,9 @@ Build (:class:`L1Model`):
 * motors: ``Initialize(leg, superstructure, False, frame_leg, frame_body)`` with both frames
   on the leg axis, rotated by pi about x so that the link Z axis is body -z (R4); the leg
   frame sits ``e`` below the body frame, so ``GetMotorPos() = e`` after the first Update;
-* ``GroundBushingCoulomb`` (L1 tangential model, R7, R15); with ``attach_bushings`` the
-  bushings are created now (t = 0) with zero tangential force (plan section 2 rule 1).
+* ``GroundBushingCoulomb`` (L1 tangential model, R7, R15; tangential force at the ball
+  centre by default, ``bushing_force_point``); with ``attach_bushings`` the bushings are
+  created now (t = 0) with zero tangential force (plan section 2 rule 1).
 
 Hook order after every step: see :meth:`L1Model.after_step`.
 """
@@ -59,7 +60,11 @@ from outrigger_sim.chrono.contact import (
     set_family,
     shape_materials,
 )
-from outrigger_sim.chrono.ground_bushing import BushingEvent, GroundBushingCoulomb
+from outrigger_sim.chrono.ground_bushing import (
+    DEFAULT_FORCE_POINT,
+    BushingEvent,
+    GroundBushingCoulomb,
+)
 from outrigger_sim.chrono.probes import ProbeState, chvec, read_probe, truth_state
 from outrigger_sim.chrono.snapshot import capture_snapshot, engine_info, restore_snapshot
 from outrigger_sim.chrono.system import ChronoModel, StepPurpose, make_system
@@ -122,6 +127,13 @@ class L1Model:
         dt_s: Time step; default from the YAML (``purpose``).
         purpose: ``"general"`` (``simulation.L1.dt_s``), ``"reference"``, ``"transition"``.
         solver, lock_sparsity_pattern: Passed to :func:`make_system`.
+        floor_pose: Pose of the fixed floor body (default: identity, level floor). A tilted
+            floor (S2a V12, ``scenarios/slope``) must keep the world point
+            ``(0, 0, ground.crawler_bottom_z_m)`` on its surface (probe convention); it is
+            set before the bushings are created.
+        bushing_force_point: Ground-bushing force point (``ground_bushing.FORCE_POINTS``);
+            default ball centre (user decision 2026-10-20, ``dynamics_model.md`` 5.3 ruling
+            4 option A). ``"contact_point"`` reproduces the model before that decision.
     """
 
     def __init__(
@@ -136,6 +148,8 @@ class L1Model:
         purpose: StepPurpose | str = StepPurpose.GENERAL,
         solver: str | None = None,
         lock_sparsity_pattern: bool | None = None,
+        floor_pose: BodyPose | None = None,
+        bushing_force_point: str = DEFAULT_FORCE_POINT,
     ) -> None:
         self.params = params
         ext = (
@@ -162,6 +176,17 @@ class L1Model:
         self.dt_s = bundle.dt_s
         self.floor_z_m = params.ground.crawler_bottom_z_m
         self.floor_point_world_m = (0.0, 0.0, self.floor_z_m)
+        self.floor_pose = floor_pose
+        if floor_pose is not None:
+            fp = floor_pose
+            self.floor.SetPos(chvec(fp.origin_m))
+            self.floor.SetRot(fp.chrono_quat())
+            on_plane = fp.rotation.T @ (np.asarray(self.floor_point_world_m) - fp.origin_m)
+            if abs(on_plane[2] - self.floor_z_m) > 1e-12:
+                raise ValueError(
+                    f"floor pose moves (0, 0, {self.floor_z_m}) off the floor surface "
+                    f"(local z {on_plane[2]!r})"
+                )
 
         # floor patches (R13) and crawler layout
         self.crawler_layout: CrawlerSphereLayout | None = (
@@ -229,7 +254,13 @@ class L1Model:
 
         # ground bushing (L1 tangential model)
         self.bushing = GroundBushingCoulomb.from_params(
-            params, self.system, self.floor, legs, centres_local, dt_s=self.dt_s
+            params,
+            self.system,
+            self.floor,
+            legs,
+            centres_local,
+            dt_s=self.dt_s,
+            force_point=bushing_force_point,
         )
         if attach_bushings:
             self.bushing.attach()
@@ -372,7 +403,14 @@ class L1Model:
                 "rod": FAMILY_ROD,
                 "disabled_pairs": ["rod-superstructure (incl. crawler)"],
             },
+            floor_pose=None
+            if self.floor_pose is None
+            else {
+                "origin_m": list(self.floor_pose.origin_m),
+                "quat_wxyz": list(self.floor_pose.quat_wxyz),
+            },
             leg_lock="ChLinkMotorLinearPosition, ChFunctionConst(extension), guide PRISMATIC",
+            ground_bushing_force_point=self.bushing.force_point,
             input_lag_steps=1,
         )
         return meta
