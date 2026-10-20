@@ -229,15 +229,26 @@ class BushingEvent:
 
 
 class _LegState:
-    """Mutable per-leg state (Python side) and the Chrono objects of the current bushing."""
+    """Mutable per-leg state (Python side) and the Chrono objects of the current bushing.
+
+    Arrays held here are never changed in place (always replaced), so they can be shared by
+    reference (``loaded_anchor_floor_local``). Setting :attr:`anchor_floor_local` drops the
+    cached world anchor; setting :attr:`frame_a_pos_local` rebuilds the cached Chrono vector.
+    """
 
     def __init__(self) -> None:
         self.container: ch.ChLoadContainer | None = None
         self.bushing: ch.ChLoadBodyBodyBushingSpherical | None = None
-        self.anchor_floor_local = np.full(3, np.nan)
-        self.frame_a_pos_local = np.full(3, np.nan)
+        self._anchor_floor_local: NDArray[np.float64] = np.full(3, np.nan)
+        # world anchor (x, y, z) computed by Chrono from the local anchor for the cached floor
+        # frame; None = recompute (anchor or floor frame changed)
+        self.anchor_world: tuple[float, float, float] | None = None
+        self._frame_a_pos_local: NDArray[np.float64] = np.full(3, np.nan)
+        self.frame_a_pos_local_ch: ch.ChVector3d | None = None
         self.frame_a_quat_local = np.full(4, np.nan)
         self.sliding = False
+        # damping flag currently set in the Chrono bushing (SetDamping only when it changes)
+        self.damping_on = False
         self.zero_time_s = 0.0
         self.slip_total = np.zeros(3)
         self.yield_steps = 0
@@ -246,6 +257,24 @@ class _LegState:
         # (the system Update at the end of the last step, i.e. before the last hook call).
         self.loaded_anchor_floor_local = np.full(3, np.nan)
         self.loaded_sliding = False
+
+    @property
+    def anchor_floor_local(self) -> NDArray[np.float64]:
+        return self._anchor_floor_local
+
+    @anchor_floor_local.setter
+    def anchor_floor_local(self, value: NDArray[np.float64]) -> None:
+        self._anchor_floor_local = value
+        self.anchor_world = None
+
+    @property
+    def frame_a_pos_local(self) -> NDArray[np.float64]:
+        return self._frame_a_pos_local
+
+    @frame_a_pos_local.setter
+    def frame_a_pos_local(self, value: NDArray[np.float64]) -> None:
+        self._frame_a_pos_local = value
+        self.frame_a_pos_local_ch = _chvec(value) if np.all(np.isfinite(value)) else None
 
     @property
     def in_contact(self) -> bool:
@@ -311,6 +340,12 @@ class GroundBushingCoulomb:
         self._surface_point_local = np.asarray(surface_point_floor_local_m, dtype=float).reshape(3)
         self._normal_local = _unit(surface_normal_floor_local, "surface_normal_floor_local")
         self._surface_quat_local = surface_rotation_wxyz(self._normal_local)
+        self._surface_quat_local_ch = _chquat(self._surface_quat_local)
+        self._normal_local_ch = _chvec(self._normal_local)
+        # floor frame cache (refreshed by _refresh_floor): key = floor position and quaternion
+        # as read from Chrono, normal = floor normal in world coordinates computed by Chrono
+        self._floor_key: tuple[float, ...] | None = None
+        self._n_world: tuple[float, float, float] = (math.nan, math.nan, math.nan)
         self._legs = [_LegState() for _ in self._pads]
         self._events: list[BushingEvent] = []
         # True when a bushing was created or removed since the last system Update; Chrono then
@@ -448,18 +483,46 @@ class GroundBushingCoulomb:
     def clear_events(self) -> None:
         self._events.clear()
 
+    def _refresh_floor(self) -> None:
+        """Re-read the floor frame; recompute the cached normal and anchors if it moved.
+
+        The floor is normally fixed, so the Chrono transforms of the normal and of every
+        anchor are done once and reused (values identical to a per-step transform, because
+        they come from the same Chrono call on the same frame). A floor rotated or moved
+        between steps (slope set-up) is detected here by comparing its pose.
+        """
+        floor = self._floor
+        p = floor.GetPos()
+        q = floor.GetRot()
+        key = (p.x, p.y, p.z, q.e0, q.e1, q.e2, q.e3)
+        if key != self._floor_key:
+            self._floor_key = key
+            n = floor.TransformDirectionLocalToParent(self._normal_local_ch)
+            self._n_world = (n.x, n.y, n.z)
+            for leg in self._legs:
+                leg.anchor_world = None
+
+    def _anchor_world(self, leg: _LegState) -> tuple[float, float, float]:
+        """World anchor of a leg in contact (cached; call after :meth:`_refresh_floor`)."""
+        anchor = leg.anchor_world
+        if anchor is None:
+            a = self._floor.TransformPointLocalToParent(_chvec(leg.anchor_floor_local))
+            anchor = (a.x, a.y, a.z)
+            leg.anchor_world = anchor
+        return anchor
+
     def normal_world(self) -> NDArray[np.float64]:
         """Floor normal in world coordinates."""
-        return _vec(self._floor.TransformDirectionLocalToParent(_chvec(self._normal_local)))
+        self._refresh_floor()
+        return np.array(self._n_world, dtype=float)
 
     def anchors_world_m(self) -> NDArray[np.float64]:
         """Floor anchor (frame B origin) per leg in world coordinates, NaN when lifted [m]."""
+        self._refresh_floor()
         out = np.full((len(self._legs), 3), np.nan)
         for i, leg in enumerate(self._legs):
             if leg.in_contact:
-                out[i] = _vec(
-                    self._floor.TransformPointLocalToParent(_chvec(leg.anchor_floor_local))
-                )
+                out[i] = self._anchor_world(leg)
         return out
 
     def tangential_force_world_N(self) -> NDArray[np.float64]:
@@ -491,6 +554,13 @@ class GroundBushingCoulomb:
         c = self._pads[index].damping_input_N_s_m if on else 0.0
         return ch.ChVector3d(c, c, 0.0)
 
+    def _set_damping(self, index: int, leg: _LegState, on: bool) -> None:
+        """``SetDamping`` on the bushing only when the on/off state changes."""
+        if on != leg.damping_on:
+            assert leg.bushing is not None
+            leg.bushing.SetDamping(self._damping_vector(index, on))
+            leg.damping_on = on
+
     def _create(self, index: int, point_world: NDArray[np.float64] | None) -> None:
         """Create the bushing of leg ``index``.
 
@@ -511,6 +581,7 @@ class GroundBushingCoulomb:
             ch.ChVector3d(k, k, 0.0),
             self._damping_vector(index, not leg.sliding),
         )
+        leg.damping_on = not leg.sliding
         if point_world is None:
             bushing.SetApplicationFrameA(
                 ch.ChFramed(_chvec(leg.frame_a_pos_local), _chquat(leg.frame_a_quat_local))
@@ -541,6 +612,7 @@ class GroundBushingCoulomb:
         leg.frame_a_pos_local = np.full(3, np.nan)
         leg.frame_a_quat_local = np.full(4, np.nan)
         leg.sliding = False
+        leg.damping_on = False
         leg.zero_time_s = 0.0
 
     def attach(self, legs: Sequence[int] | None = None) -> None:
@@ -570,14 +642,19 @@ class GroundBushingCoulomb:
         """
         dt = self._dt_s if dt_s is None else float(dt_s)
         t_now = float(self._system.GetChTime())
-        n = self.normal_world()
+        self._refresh_floor()
+        nx, ny, nz = self._n_world
         new_events: list[BushingEvent] = []
         self._structure_changed = False  # the step just taken ran a system Update at its end
         for leg in self._legs:
-            leg.loaded_anchor_floor_local = leg.anchor_floor_local.copy()
+            # arrays are replaced, never changed in place (_LegState), so no copy is needed
+            leg.loaded_anchor_floor_local = leg.anchor_floor_local
             leg.loaded_sliding = leg.sliding
         for i, (pad, leg) in enumerate(zip(self._pads, self._legs, strict=True)):
-            n_raw = float(_vec(pad.body.GetContactForce()) @ n)
+            f = pad.body.GetContactForce()
+            # plain float dot product: bit-identical to numpy's 3-vector dot (checked
+            # 2026-10-20 on 3e5 random pairs, OpenBLAS ddot uses no FMA on this path)
+            n_raw = f.x * nx + f.y * ny + f.z * nz
             leg.normal_force_raw_N = n_raw
             if leg.bushing is None:
                 if n_raw > self._touch_threshold_N:
@@ -586,7 +663,7 @@ class GroundBushingCoulomb:
                     self._create(i, self._contact_point_world(i))
                     new_events.append(BushingEvent(t_now, i, EVENT_CREATE))
                 continue
-            self._return_mapping(i, max(n_raw, 0.0))
+            self._return_mapping(i, leg, max(n_raw, 0.0), nx, ny, nz)
             if n_raw <= 0.0:
                 leg.zero_time_s += dt
                 if leg.zero_time_s >= self._lift_time_s * (1.0 - _STEP_COUNT_REL_GUARD):
@@ -594,44 +671,62 @@ class GroundBushingCoulomb:
                     new_events.append(BushingEvent(t_now, i, EVENT_REMOVE))
             else:
                 leg.zero_time_s = 0.0
-        self._events.extend(new_events)
+        if new_events:
+            self._events.extend(new_events)
         return new_events
 
-    def _return_mapping(self, index: int, normal_force_N: float) -> None:
-        """Circular Coulomb return mapping of the block test ``hook()`` (one leg)."""
+    def _return_mapping(
+        self, index: int, leg: _LegState, normal_force_N: float, nx: float, ny: float, nz: float
+    ) -> None:
+        """Circular Coulomb return mapping of the block test ``hook()`` (one leg).
+
+        Scalar float arithmetic in the same operation order as the former numpy version
+        (``d -= (d @ n) * n``, ``norm = sqrt(d @ d)``), so the results are bit-identical.
+        The slip speed is only evaluated when it is used (leg sliding and not yielding).
+        """
         pad = self._pads[index]
-        leg = self._legs[index]
         bushing = leg.bushing
         assert bushing is not None
-        n = self.normal_world()
-        local_a = _chvec(leg.frame_a_pos_local)
-        p_a = _vec(pad.body.TransformPointLocalToParent(local_a))
-        anchor = _vec(self._floor.TransformPointLocalToParent(_chvec(leg.anchor_floor_local)))
-        d = p_a - anchor
-        d -= (d @ n) * n
-        dn = float(np.linalg.norm(d))
-        v = _vec(pad.body.PointSpeedLocalToParent(local_a))
-        vt = float(np.linalg.norm(v - (v @ n) * n))
+        body = pad.body
+        local_a = leg.frame_a_pos_local_ch
+        p = body.TransformPointLocalToParent(local_a)
+        ax, ay, az = self._anchor_world(leg)
+        dx = p.x - ax
+        dy = p.y - ay
+        dz = p.z - az
+        dd = dx * nx + dy * ny + dz * nz
+        dx = dx - dd * nx
+        dy = dy - dd * ny
+        dz = dz - dd * nz
+        dn = math.sqrt(dx * dx + dy * dy + dz * dz)
         k = pad.stiffness_N_m
         limit = self._mu * normal_force_N
         if k * dn > limit:
             # Simple return mapping (spring = mu N now); the implicit step then overshoots by
             # about kt |v| dt while sliding (block test; a velocity predictor chattered).
-            move = d * (1.0 - limit / (k * dn))
-            anchor = anchor + move
-            leg.slip_total = leg.slip_total + move
+            s = 1.0 - limit / (k * dn)
+            mx, my, mz = dx * s, dy * s, dz * s
+            anchor = ch.ChVector3d(ax + mx, ay + my, az + mz)
+            leg.slip_total = leg.slip_total + np.array([mx, my, mz])
             leg.yield_steps += 1
-            leg.anchor_floor_local = _vec(self._floor.TransformPointParentToLocal(_chvec(anchor)))
+            leg.anchor_floor_local = _vec(self._floor.TransformPointParentToLocal(anchor))
             bushing.SetApplicationFrameB(
-                ch.ChFramed(_chvec(leg.anchor_floor_local), _chquat(self._surface_quat_local))
+                ch.ChFramed(_chvec(leg.anchor_floor_local), self._surface_quat_local_ch)
             )
-            bushing.SetDamping(self._damping_vector(index, False))  # no viscous term sliding
+            self._set_damping(index, leg, False)  # no viscous term while sliding
             leg.sliding = True
-        elif leg.sliding and vt > self._v_stick:
-            pass  # keep damping off until the slip velocity has died out
-        else:
-            leg.sliding = False
-            bushing.SetDamping(self._damping_vector(index, True))
+            return
+        if leg.sliding:
+            v = body.PointSpeedLocalToParent(local_a)
+            vx, vy, vz = v.x, v.y, v.z
+            vn = vx * nx + vy * ny + vz * nz
+            wx = vx - vn * nx
+            wy = vy - vn * ny
+            wz = vz - vn * nz
+            if math.sqrt(wx * wx + wy * wy + wz * wz) > self._v_stick:
+                return  # keep damping off until the slip velocity has died out
+        leg.sliding = False
+        self._set_damping(index, leg, True)
 
     # --- snapshot support (R16) -------------------------------------------------------
 
@@ -728,4 +823,5 @@ class GroundBushingCoulomb:
                     ch.ChFramed(_chvec(leg.anchor_floor_local), _chquat(self._surface_quat_local))
                 )
                 leg.bushing.SetDamping(self._damping_vector(i, not leg.sliding))
+                leg.damping_on = not leg.sliding
         self._pending_post_hook = False

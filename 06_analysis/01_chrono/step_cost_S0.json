@@ -1364,5 +1364,258 @@
    "os_default": 2.5299146796837237,
    "ecore": 2.690123599947713
   }
+ },
+ "hook_optimization": {
+  "generated": "2026-10-20T20:45:53",
+  "purpose": "S1 step 1: GroundBushingCoulomb.after_step optimisation (result-preserving): floor normal and anchor world points cached per floor pose, scalar float arithmetic instead of 3-vector numpy, slip speed only when used, SetDamping only on change",
+  "case": "pads_dt1e-4_LU (same model and protocol as the cases above), P-core pinned",
+  "before": "ground_bushing.py of commit 025e445",
+  "after": "current ground_bushing.py",
+  "runs": [
+   {
+    "run": "hookopt_before_0",
+    "variant": "before",
+    "plain_wall_us_per_step": 194.3239000000176,
+    "us_per_step_median": 181.10000019078143,
+    "us_per_step_p5": 177.399999301997,
+    "us_per_step_p95": 218.79999985685572,
+    "chrono_step_us_median": 104.29999929328915,
+    "hook_us_mean": 80.60580399971514,
+    "hook_us_median": 76.70000013604295,
+    "hook_share_of_mean": 0.42630876994100586,
+    "end_state": {
+     "t_s": 6.49999999999819,
+     "pad_fz_N": [
+      122480.32843963752,
+      119803.10981598696,
+      71504.30092906537,
+      69013.63106862854
+     ],
+     "crawler_fz_N": 0.0,
+     "sum_fz_over_weight": 1.0013359198877334,
+     "contacts": 4,
+     "bushings_in_contact": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "bushing_events": 0,
+     "sup_pos_m": [
+      0.4538728155058322,
+      -0.0013065249445290332,
+      2.219986267711703
+     ]
+    },
+    "foreign_processes_before_after": [
+     [
+      "python.exe:4136",
+      "python.exe:12888",
+      "python.exe:4464",
+      "python.exe:31932",
+      "python.exe:40424",
+      "python.exe:39796",
+      "python.exe:42804"
+     ],
+     [
+      "python.exe:4136",
+      "python.exe:12888",
+      "python.exe:4464",
+      "python.exe:31932",
+      "python.exe:40424",
+      "python.exe:39796",
+      "python.exe:42804"
+     ]
+    ]
+   },
+   {
+    "run": "hookopt_after_1",
+    "variant": "after",
+    "plain_wall_us_per_step": 115.31355999995867,
+    "us_per_step_median": 111.60000030940864,
+    "us_per_step_p5": 109.70000039378647,
+    "us_per_step_p95": 149.89999917816021,
+    "chrono_step_us_median": 101.99999996984843,
+    "hook_us_mean": 10.754353999654995,
+    "hook_us_median": 9.60000033956021,
+    "hook_share_of_mean": 0.09082572476358651,
+    "end_state": {
+     "t_s": 6.49999999999819,
+     "pad_fz_N": [
+      122480.32843963752,
+      119803.10981598696,
+      71504.30092906537,
+      69013.63106862854
+     ],
+     "crawler_fz_N": 0.0,
+     "sum_fz_over_weight": 1.0013359198877334,
+     "contacts": 4,
+     "bushings_in_contact": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "bushing_events": 0,
+     "sup_pos_m": [
+      0.4538728155058322,
+      -0.0013065249445290332,
+      2.219986267711703
+     ]
+    },
+    "foreign_processes_before_after": [
+     [
+      "python.exe:4136",
+      "python.exe:12888",
+      "python.exe:4464",
+      "python.exe:31932",
+      "python.exe:40424",
+      "python.exe:39796",
+      "python.exe:42804"
+     ],
+     [
+      "python.exe:4136",
+      "python.exe:12888",
+      "python.exe:4464",
+      "python.exe:31932",
+      "python.exe:40424",
+      "python.exe:39796",
+      "python.exe:42804"
+     ]
+    ]
+   },
+   {
+    "run": "hookopt_before_2",
+    "variant": "before",
+    "plain_wall_us_per_step": 190.78719999997702,
+    "us_per_step_median": 181.2999998946907,
+    "us_per_step_p5": 177.19999959808774,
+    "us_per_step_p95": 225.89999935007654,
+    "chrono_step_us_median": 103.79999912402127,
+    "hook_us_mean": 81.23154800159682,
+    "hook_us_median": 77.20000030531082,
+    "hook_share_of_mean": 0.4283582275892916,
+    "end_state": {
+     "t_s": 6.49999999999819,
+     "pad_fz_N": [
+      122480.32843963752,
+      119803.10981598696,
+      71504.30092906537,
+      69013.63106862854
+     ],
+     "crawler_fz_N": 0.0,
+     "sum_fz_over_weight": 1.0013359198877334,
+     "contacts": 4,
+     "bushings_in_contact": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "bushing_events": 0,
+     "sup_pos_m": [
+      0.4538728155058322,
+      -0.0013065249445290332,
+      2.219986267711703
+     ]
+    },
+    "foreign_processes_before_after": [
+     [
+      "python.exe:4136",
+      "python.exe:12888",
+      "python.exe:4464",
+      "python.exe:31932",
+      "python.exe:40424",
+      "python.exe:39796",
+      "python.exe:42804"
+     ],
+     [
+      "python.exe:4136",
+      "python.exe:12888",
+      "python.exe:4464",
+      "python.exe:31932",
+      "python.exe:40424",
+      "python.exe:39796",
+      "python.exe:42804"
+     ]
+    ]
+   },
+   {
+    "run": "hookopt_after_3",
+    "variant": "after",
+    "plain_wall_us_per_step": 116.63649999991321,
+    "us_per_step_median": 112.09999865968712,
+    "us_per_step_p5": 109.90000009769574,
+    "us_per_step_p95": 136.70000043930486,
+    "chrono_step_us_median": 102.59999908157624,
+    "hook_us_mean": 10.379095997777767,
+    "hook_us_median": 9.499999578110874,
+    "hook_share_of_mean": 0.08855532153428178,
+    "end_state": {
+     "t_s": 6.49999999999819,
+     "pad_fz_N": [
+      122480.32843963752,
+      119803.10981598696,
+      71504.30092906537,
+      69013.63106862854
+     ],
+     "crawler_fz_N": 0.0,
+     "sum_fz_over_weight": 1.0013359198877334,
+     "contacts": 4,
+     "bushings_in_contact": [
+      true,
+      true,
+      true,
+      true
+     ],
+     "bushing_events": 0,
+     "sup_pos_m": [
+      0.4538728155058322,
+      -0.0013065249445290332,
+      2.219986267711703
+     ]
+    },
+    "foreign_processes_before_after": [
+     [
+      "python.exe:4136",
+      "python.exe:12888",
+      "python.exe:4464",
+      "python.exe:31932",
+      "python.exe:40424",
+      "python.exe:39796",
+      "python.exe:42804"
+     ],
+     [
+      "python.exe:4136",
+      "python.exe:12888",
+      "python.exe:4464",
+      "python.exe:31932",
+      "python.exe:40424",
+      "python.exe:39796",
+      "python.exe:42804"
+     ]
+    ]
+   }
+  ],
+  "median_before": {
+   "plain_wall_us_per_step": 192.5555499999973,
+   "us_per_step_median": 181.20000004273606,
+   "chrono_step_us_median": 104.04999920865521,
+   "hook_us_mean": 80.91867600065598
+  },
+  "median_after": {
+   "plain_wall_us_per_step": 115.97502999993594,
+   "us_per_step_median": 111.84999948454788,
+   "chrono_step_us_median": 102.29999952571234,
+   "hook_us_mean": 10.566724998716381
+  },
+  "ratio_after_over_before": {
+   "plain_wall_us_per_step": 0.6022938835049811,
+   "us_per_step_median": 0.6172737276940841,
+   "chrono_step_us_median": 0.9831811658216976,
+   "hook_us_mean": 0.13058450188471596
+  },
+  "end_states_bit_identical": true,
+  "end_state_note": "end_state after warm-up 0.5 s + 5 x 1 s windows + 1 s plain window (6.5 s simulated): pad contact forces, superstructure position, contact count; compared as exact floats between all four runs"
  }
 }

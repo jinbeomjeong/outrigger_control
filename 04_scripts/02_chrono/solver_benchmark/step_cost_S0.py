@@ -5,6 +5,10 @@ Usage (Chrono-dev python, from any folder):
                                                each (~6 min on the 2026-10-20 PC) + summary
   python -I -u step_cost_S0.py case <cfg.json> one case (started by ``run``)
   python -I -u step_cost_S0.py summary         rebuild the summary from stored case results
+  python -I -u step_cost_S0.py hookopt         ground-bushing hook before/after (commit 025e445
+                                               vs current, pads dt 1e-4, alternating A B A B);
+                                               adds the key "hook_optimization" to the summary
+                                               and leaves every other key unchanged (~1 min)
 Per-case results: 07_results/step_cost_S0/<case>.json (git-ignored).
 Summary: 06_analysis/01_chrono/step_cost_S0.json.
 
@@ -173,8 +177,19 @@ def run_case(cfg: dict) -> dict:
     import pychrono as ch
     from crawler_contact import layout_from_params
 
-    from outrigger_sim.chrono.ground_bushing import GroundBushingCoulomb
     from outrigger_sim.chrono.system import make_smc_material, make_system
+
+    if cfg.get("bushing_module_path"):  # an older GroundBushingCoulomb (before/after cost)
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("ground_bushing_ref",
+                                                      cfg["bushing_module_path"])
+        module = importlib.util.module_from_spec(spec)
+        sys.modules["ground_bushing_ref"] = module  # dataclasses look the module up
+        spec.loader.exec_module(module)
+        GroundBushingCoulomb = module.GroundBushingCoulomb  # noqa: N806
+    else:
+        from outrigger_sim.chrono.ground_bushing import GroundBushingCoulomb
     from outrigger_sim.params import load_params
 
     P = load_params()  # auger level top (default)
@@ -689,6 +704,10 @@ def summarize() -> None:
         "cases": rows,
         "derived": derived,
     }
+    if SUMMARY.is_file():  # keep the section written by ``hookopt``
+        previous = json.loads(SUMMARY.read_text(encoding="utf-8"))
+        if "hook_optimization" in previous:
+            summary["hook_optimization"] = previous["hook_optimization"]
     SUMMARY.write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
     print(f"wrote {SUMMARY}")
     for row in rows:
@@ -699,6 +718,97 @@ def summarize() -> None:
             f"hook {row['hook_us_mean']:5.1f} ({row['hook_share_of_mean']*100:4.1f}%) "
             f"{row['wall_s_per_sim_s']:6.2f} s/s contacts {row['counts']['contacts_range']}"
         )
+
+
+HOOKOPT_BASE_COMMIT = "025e445"
+HOOKOPT_RUNS = ("before", "after", "before", "after")  # alternating to cancel slow drift
+
+
+def run_hookopt() -> None:
+    """Hook optimisation before/after on the pads dt 1e-4 LU case (P-core, own processes).
+
+    "before" = ``chrono/ground_bushing.py`` of commit :data:`HOOKOPT_BASE_COMMIT` (extracted
+    with ``git show`` into the results folder), "after" = the current module. The end states
+    of the two variants are compared bit for bit (same steps, deterministic). The result is
+    merged into the summary under ``hook_optimization``; no other key is touched.
+    """
+    RESULTS.mkdir(parents=True, exist_ok=True)
+    old_path = RESULTS / f"ground_bushing_{HOOKOPT_BASE_COMMIT}.py"
+    src = subprocess.run(
+        ["git", "-C", str(bcm.PROJECT_ROOT), "show",
+         f"{HOOKOPT_BASE_COMMIT}:03_src/outrigger_sim/chrono/ground_bushing.py"],
+        capture_output=True, check=True, timeout=60,
+    ).stdout
+    old_path.write_bytes(src)
+    runs = []
+    for k, variant in enumerate(HOOKOPT_RUNS):
+        name = f"hookopt_{variant}_{k}"
+        out = RESULTS / f"{name}.json"
+        cfg = {"name": name, "state": "pads", "dt": 1e-4, "solver": "SPARSE_LU", "lock": True,
+               "warmup_s": 0.5, "window_s": 1.0, "reps": 5, "cpu": "pcore", "bushing": True,
+               "out": str(out)}
+        if variant == "before":
+            cfg["bushing_module_path"] = str(old_path)
+        cfg_path = RESULTS / f"{name}.cfg.json"
+        cfg_path.write_text(json.dumps(cfg))
+        before = foreign_processes()
+        done = subprocess.run(
+            [PY, "-I", "-u", str(Path(__file__).resolve()), "case", str(cfg_path)],
+            stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=600, check=False,
+        )
+        after = foreign_processes()
+        if done.returncode != 0 or not out.is_file():
+            raise RuntimeError(f"{name}: rc={done.returncode} {done.stderr[-500:]}")
+        r = json.loads(out.read_text())
+        print(name, f"{r['plain_window']['wall_us_per_step']:.1f} us/step "
+              f"hook {r['pooled']['hook_us_mean']:.1f}", flush=True)
+        runs.append({
+            "run": name,
+            "variant": variant,
+            "plain_wall_us_per_step": r["plain_window"]["wall_us_per_step"],
+            "us_per_step_median": r["pooled"]["total_us_median"],
+            "us_per_step_p5": r["pooled"]["total_us_p5"],
+            "us_per_step_p95": r["pooled"]["total_us_p95"],
+            "chrono_step_us_median": r["pooled"]["step_us_median"],
+            "hook_us_mean": r["pooled"]["hook_us_mean"],
+            "hook_us_median": r["pooled"]["hook_us_median"],
+            "hook_share_of_mean": r["pooled"]["hook_share_of_mean"],
+            "end_state": r["plain_window"]["end"],
+            "foreign_processes_before_after": [before, after],
+        })
+
+    def agg(variant: str, key: str) -> float:
+        import statistics
+
+        return statistics.median(x[key] for x in runs if x["variant"] == variant)
+
+    keys = ("plain_wall_us_per_step", "us_per_step_median", "chrono_step_us_median",
+            "hook_us_mean")
+    before_v = {k: agg("before", k) for k in keys}
+    after_v = {k: agg("after", k) for k in keys}
+    ends = [x["end_state"] for x in runs]
+    identical = all(e == ends[0] for e in ends)
+    section = {
+        "generated": _dt.datetime.now().isoformat(timespec="seconds"),
+        "purpose": "S1 step 1: GroundBushingCoulomb.after_step optimisation (result-preserving): "
+        "floor normal and anchor world points cached per floor pose, scalar float arithmetic "
+        "instead of 3-vector numpy, slip speed only when used, SetDamping only on change",
+        "case": "pads_dt1e-4_LU (same model and protocol as the cases above), P-core pinned",
+        "before": f"ground_bushing.py of commit {HOOKOPT_BASE_COMMIT}",
+        "after": "current ground_bushing.py",
+        "runs": runs,
+        "median_before": before_v,
+        "median_after": after_v,
+        "ratio_after_over_before": {k: after_v[k] / before_v[k] for k in keys},
+        "end_states_bit_identical": identical,
+        "end_state_note": "end_state after warm-up 0.5 s + 5 x 1 s windows + 1 s plain window "
+        "(6.5 s simulated): pad contact forces, superstructure position, contact count; "
+        "compared as exact floats between all four runs",
+    }
+    summary = json.loads(SUMMARY.read_text(encoding="utf-8"))
+    summary["hook_optimization"] = section
+    SUMMARY.write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
+    print(json.dumps({"before": before_v, "after": after_v, "identical": identical}, indent=1))
 
 
 if __name__ == "__main__":
@@ -712,5 +822,7 @@ if __name__ == "__main__":
         run_all()
     elif mode == "summary":
         summarize()
+    elif mode == "hookopt":
+        run_hookopt()
     else:
         raise SystemExit(f"unknown mode {mode!r}")

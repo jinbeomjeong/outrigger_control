@@ -1,6 +1,15 @@
-# Chrono 모델 단계별 구축 계획 (2026-10-19, 개정 7: 2026-10-20)
+# Chrono 모델 단계별 구축 계획 (2026-10-19, 개정 8: 2026-10-20)
 
 작성: cad-expert. **계획 문서다.** S0 공통 기반 일부(파라미터 로더, 좌표·신호 타입, SimEngine 프로토콜, Chrono 시스템 팩토리, 기준값 키 상수와 단위·엔진 규약 시험; 3.1절 "있음")만 만들어져 있고 물리 모델(바디·접촉·구동기)·실행기·시나리오 코드는 아직 없다.
+
+개정 8(2026-10-20, dynamics-expert 편집): **S1 최종 판정(통과)** 과 결정 사항을 반영했다(근거 `00_docs/01_dynamics/dynamics_model.md` 개정 11, 5.2절).
+- **S1 통과(최종)**: V0~V3·V13·R16, 4사례(상단·중단·하단 해석 초기화, 상단 무초기화 53 s 교차). 선형 기준값과의 차(최대 67 N)는 P-δ 기하 비선형이다. 독립 6자유도 비선형 정역학(`04_scripts/01_dynamics/run_s1_pdelta_check.py` → `06_analysis/00_dynamics/s1_pdelta_check.json`)이 Chrono를 0.24 N 안에서 재현한다.
+- **V0 재질 항목(사용자 결정 2026-10-20)**: Chrono가 float32로 저장하는 SMC 재질 값($k_n$, $g_n$, $k_t$, $g_t$, μ)은 "float32로 반올림한 YAML 값과 정확히 같음"으로 판정한다. 나머지 V0 항목은 상대차 ≤ 1×10⁻⁹ 그대로다. 정적 하중 영향 ≤ 0.04 N. `verify/s1.py`가 이미 이 방식이다.
+- **해석 정적해 초기화 = 기본**(2절 규칙 1 확정). 낙하 초기화의 접선 예하중(±4~5 kN)은 S2a V12 수평력(±0.75~0.80 kN) 판정을 가리므로, V12는 부싱 변형 0 + 중력 램프로 시작한다.
+- **S2b 구동기**: `ChLinkMotorLinearSpeed` → **`ChLinkMotorLinearPosition` + 훅에서 $s_{ref}$ 적분**(R16 스냅숏 때문). 단일 다리 Chrono 시험에서 동역학적으로 같다(1스텝 위상 $u\Delta t$, 힘 차 $k\,u\Delta t$ ≈ 48 N). 관성 스파이크 $m_{rod}\Delta v/\Delta t$ 주의(V11b).
+- **R14 API 정정**: `SetFamilyMaskNoCollisionWithFamily` → `DisallowCollisionsWith` / `CollidesWith`(pychrono 10).
+- **3.1절 모듈 표**에 S0·S1 산출 모듈을 반영했고, **6절 #24**의 P코어 고정은 `hostcpu.py`로 구현됐다고 표시했다.
+- 고친 곳: 0절 S2b 행, R14, S1(만드는 것·V0 행·체크리스트), S2b(만드는 것·V0(크롤러) 행·위험·체크리스트), 3.1절 표·역할, 6절 #24.
 
 개정 7(2026-10-20, dynamics-expert 편집): 사용자 결정 두 가지를 반영했다.
 - **V4 판정 기준 시각 = 감쇠 3자유도 동적 접지 시각**(준정적 시각은 참고로 기록). 허용폭은 다리별 ±0.05 s 그대로. 동적 기준해: D FL 15.050 / FR 15.049 / RL 15.177 / RR 15.177 s, ×3 15.253 / 15.253 / 15.147 / 15.146 s, 강체 크롤러 극한(V4(NSC)) 15.382 / 15.382 / 15.040 / 15.040 s(`06_analysis/00_dynamics/reference.json`, `run_reference.py` `add_dynamic_touch`). 감쇠 가정(다리 ζ 0.03, 크롤러 0.05)과 적분기는 같은 키 아래 meta에 있다. 다리 ζ 0.01~0.10에서 ≤ 2.1 ms, 크롤러 ζ 0.02~0.3에서 ≤ 4.7 ms(롤러만 감도 포함) 움직인다. R12 경로: V4·V4(NSC)의 `… / quasi_static_events_s / touch_s (FL, FR, RL, RR)`를 `… / dynamic_events_s / touch_s (FL, FR, RL, RR)`로 바꿨고 감도 블록 `reference.json / lift_V4_compliant_crawler / dynamic_touch_damping_sensitivity`를 더했다. 준정적 키는 `reference.json`에 남아 있지만 백틱 경로에서는 뺐다(판정 기준이 아니므로).
@@ -79,7 +88,7 @@
 | **S0** | 공통 기반: 로더·타입·규약 단위 시험, 부싱 회귀(히스테리시스 포함), 정착 상태 저장, 비용 측정 | — | V0(규약 부분), 블록 회귀 | cad (+py: 타입 검토) | 중 | 약 30 s + 비용 측정 8 s / 약 1.5분 |
 | **S1** | 상부체 + 고정 다리(운용 신장) + 지면 부싱(t = 0)으로 수평 정적, 정착 상태 저장 | L1 | V0, V1, V2, V3, V13 | cad → dyn | 중 | 103~174 s / 3.5~6분 |
 | **S2a** | 지면 부싱 동특성 진단과 경사 정적 | L1(모터·크롤러 없음) | V7 진단(1·2차), V12, V13 | cad → dyn | 중 | 약 217 s / 7분 |
-| **S2b** | 속도 모터, 크롤러 접촉(D안 구 24개: 롤러 2×6 + 틈 있는 끝 슈 2×6), 접지 이벤트 부싱 생성·소멸, 크롤러 위 정착 상태 저장 | L1 | V0(모터 부호, 크롤러 배열·재질·충돌 필터), V11(공중 다리), V13, 이벤트 단위 시험 | cad → dyn | 중 | 약 281 s / 9.5분(크롤러 정착 해석해 초기화면 약 84 s / 3분) |
+| **S2b** | 구동기(위치 모터 + 훅 $s_{ref}$ 적분, 개정 8), 크롤러 접촉(D안 구 24개: 롤러 2×6 + 틈 있는 끝 슈 2×6), 접지 이벤트 부싱 생성·소멸, 크롤러 위 정착 상태 저장 | L1 | V0(모터 부호, 크롤러 배열·재질·충돌 필터), V11(공중 다리), V13, 이벤트 단위 시험 | cad → dyn | 중 | 약 281 s / 9.5분(크롤러 정착 해석해 초기화면 약 84 s / 3분) |
 | **S3** | 수치 감쇠 확인 → 들어 올림(모터 출발 → 계단 정지) → 다리 단독 신장, Δt 확정 | L1 | V8(a), V4, V5, V6, V9 | cad → dyn | 대 | 약 1,407 s / 47분, 약 12~13분(V4 기준해 1건 약 11분이 병목) |
 | **S4** | 6개 모드(모드 투영), 에너지 수지, β 감도 | L1 | V7(6모드), V8(b), β 감도 | cad → dyn | 중 | 약 531 s / 18분, 약 5분 |
 | **S5** | 오거 3단계 | L1 | V10, V0(오거 합성) | cad → dyn | 소 | 약 165 s / 5.5분 |
@@ -109,7 +118,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
 | R11 | 적분기는 `EULER_IMPLICIT_LINEARIZED`다. 솔버는 L1 **`SPARSE_LU` + 희소 패턴 고정(`LockSparsityPattern(True)`)**(사용자 결정 2026-10-20, 근거 4절 선형 솔버 벤치마크: 전체 규모 L1 잠금 켬 QR 147 / LU 133 / Pardiso 447 µs/스텝, 결과 동일). 옵션은 `SPARSE_QR`·`PARDISO_MKL`과 잠금 끔(`make_system(solver=..., lock_sparsity_pattern=False)`). Pardiso는 env 미활성 실행에서 `libomp.dll`을 미리 로드해야 한다(S0 체크리스트 메모). 잠금 상태에서 시스템을 통해 항목을 넣고 빼면(R15 부싱 생성·소멸) Chrono가 패턴을 다시 분석한다. 시스템이 모르는 구조 변경(이미 들어간 `ChLoadContainer`에 하중 추가, `SetFixed` 전환 등) 뒤에는 `force_sparsity_pattern_update()`를 부른다. L2b-NSC는 `PSOR` 50회. `SetContactStiff` 같은 실행 설정은 V8(a)와 본 실행에서 같게 둔다 | `dynamics_model.md` 4.2·4.3, 검토 #3 | V8(a), V9, V13 |
 | R12 | 기준값은 런타임에 `reference.json`(과 개정 5 이후 문서가 지정하는 파일)에서 읽는다. **키는 전체 문자열 상수로만 쓰고**(괄호·공백 포함) 키 존재 시험으로 막는다 | CLAUDE.md, 검토 #16 | `verify/reference.py` 시험 |
 | R13 | 크롤러 접촉 **D안**(사용자 결정 2026-10-20, `dynamics_model.md` 3.8절; 이전 2×9 bbox 균등 배열은 폐기): 트랙 2개(y = ±`contact.crawler.sphere_layout.track_centre_y_m`) × (롤러 위치 구 6개 + 틈 있는 끝 슈 구 6개(앞뒤 끝마다 3개)) = **구 24개**, `sphere_layout.scheme` = `rollers_plus_gapped_end_shoes`. 롤러 구는 `.roller_x_m`, 구 바닥 = `ground.crawler_bottom_z_m`. 끝 슈 구는 `.end_shoe_x_m`, 구 바닥 = 바닥 + `.end_shoe_gap_m`(같은 순서, 2~22 mm)이다. 끝 슈 구는 **단방향**이라 틈이 닫힌 뒤에만 접촉한다(Chrono에서는 구를 틈만큼 위에 두면 된다). 반지름 `.sphere_radius_m`. 재질은 24구 모두 같다: `contact.crawler.kn_per_sphere_N_m`(= `kn_total_N_m` / 롤러 12구, 바닥 접촉 합 = kn_total), `contact.crawler.gn_per_sphere_1_s`(= `damping_total_N_s_m` / 12 / 상부체 바디 질량. 크롤러 구가 상부체 바디에 붙어 있으므로 $m_{eff}$ = 상부체 질량), $k_t=g_t=\mu=0$(`contact.crawler.smc_material`). 감쇠 근거 키는 `contact.crawler.damping_ratio_heave`, `contact.crawler.damping_total_N_s_m`이다. 강성 감도는 `contact.crawler.kn_total_sensitivity_range_N_m`(×1, ×3; ×3이면 `kn_per_sphere`와 대시포트를 같은 heave ζ로 함께 바꾼다). 크롤러 밑에 **패드 패치와 별도인 바닥 패치**를 두고 크롤러 구와 같은 재질 값을 준다. 위치·틈은 CAD B-rep 캐시(`01_cad/06_brep/derived/crawler/`, 다른 기종 REXOME25 하부체 — 가정)에서 `export_params.py`가 읽는다. 값은 이 문서에 복사하지 않는다 | 검토 #9, `dynamics_model.md` 개정 5 4.2·10절, 3.8절(D안) | V0(구 24개 위치·틈·재질), S2b 크롤러 정착 |
-| R14 | 충돌 패밀리: 바닥, 상부체(크롤러 구 포함), 로드 구를 서로 다른 패밀리로 둔다. 로드–상부체 쌍과 로드–크롤러 쌍을 끈다(`contact.crawler.collision_filter`). 크롤러 구는 상부체 패밀리라 한 번에 꺼진다. API는 `GetCollisionModel().SetFamily` / `SetFamilyMaskNoCollisionWithFamily`(pychrono 10에서 S1에 확인) | 검토 #18, 개정 5 V0 추가 | V0, V13 "다리당 접촉점 1" |
+| R14 | 충돌 패밀리: 바닥, 상부체(크롤러 구 포함), 로드 구를 서로 다른 패밀리로 둔다. 로드–상부체 쌍과 로드–크롤러 쌍을 끈다(`contact.crawler.collision_filter`). 크롤러 구는 상부체 패밀리라 한 번에 꺼진다. API는 `GetCollisionModel().SetFamily(k)` / `DisallowCollisionsWith(k)` / `CollidesWith(k)`(pychrono 10, S1에서 확인. 옛 이름 `SetFamilyMaskNoCollisionWithFamily`는 없다; `chrono/contact.py` `set_family`) | 검토 #18, 개정 5 V0 추가 | V0, V13 "다리당 접촉점 1" |
 | R15 | 지면 부싱 복귀 사상은 $N\leftarrow\max(N,0)$으로 한다. 부상은 "$N\le0$이 $t_{lift}$ = 1 ms 연속"일 때($n_{lift}=\lceil t_{lift}/\Delta t\rceil$스텝, **시간 기준**, 사용자 결정 2026-10-20), 재접지는 "$N>N_{th}$"일 때 판정한다(히스테리시스). 부싱 생성·소멸 횟수와 시각을 기록한다. $n_{lift}$와 $N_{th}$는 가정(7절)이고 **S2b 이벤트 시험에서 조정**한다(chatter 0, Δt 1×10⁻⁴·1×10⁻⁵ s 사건 시각 차 ≤ 1 ms일 때 유지). **훅 입력 1스텝 지연 규약**(dynamics-expert 판정 2026-10-20, `dynamics_model.md` 4.6절): 훅에서 바꾼 부싱 고정점·감쇠·외력·모터 입력이 다음 스텝 Update에서 읽히는 1스텝(Δt) 지연을 모델 규약으로 둔다(즉시 반영 강제 안 함, S0 회귀 유지). 영향은 미끄럼 마찰 초과 $k_tv\Delta t$와 사건 시각 +Δt뿐이다. 기록 meta에 `input_lag_steps: 1` | 검토 #10 | S2b 이벤트 시험, V6, V8(b) |
 | R16 | 정착 상태 저장·재사용: `snapshot()`이 바디 위치·자세·속도, 모터 위치, $s_{ref}$, 부싱 고정점·상태, 시스템 시각, 사용한 파라미터 지문 `Params.sha256`(오거 level 포함, `meta.generated` 제외, 오버라이드 반영)을 담는다. `restore()`는 같은 `Params.sha256`일 때만 허용한다 | 검토 #2 | S0 왕복 시험(저장 → 복원 → 1 s 진행이 이어 돌린 결과와 같음) |
 
@@ -171,7 +180,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
 - **만드는 것**:
   - `chrono/bodies`: 상부체 `auger_levels.<level>`(관성 텐서 전체), 다리 이동부 4개, 바닥(다리별 패치 + 크롤러 패치)
   - `chrono/contact`: 로드 바디에 구 1개(r = 0.06 m), 재질(R5·R8), 충돌 패밀리(R14)
-  - 다리 고정: `ChLinkLockLock` 또는 속도 0 모터
+  - 다리 고정: `ChLinkMotorLinearPosition` + `ChFunctionConst(e_op)`(가이드 PRISMATIC; S2b에서 함수만 $s_{ref}$로 바꾼다)
   - `chrono/probes`, `scenarios/settle`(해석 정적해 초기화), `verify/checks`의 V0~V3·V13
 - **입력 키**:
   - `superstructure.auger_levels.<level>.*`
@@ -183,7 +192,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
 
 | V | 판정 | 허용 | 기준값 키 |
 |---|---|---|---|
-| V0 | 질량·무게중심·관성 = YAML. $g_n$, R8 재질, 바닥 1e9 kg, 부싱 입력 $c_t/2$, 패드 구와 패치 재질 값 같음 | 상대차 ≤ 1×10⁻⁹ | YAML |
+| V0 | 질량·무게중심·관성 = YAML. $g_n$, R8 재질, 바닥 1e9 kg, 부싱 입력 $c_t/2$, 패드 구와 패치 재질 값 같음 | 상대차 ≤ 1×10⁻⁹. **SMC 재질 값($k_n$, $g_n$, $k_t$, $g_t$, μ; Chrono float32 저장)은 float32로 반올림한 YAML 값과 정확히 같음**(사용자 결정 2026-10-20; 정적 하중 영향 ≤ 0.04 N) | YAML |
 | V1 | 접촉력, 실린더 힘, 합 | 합 ≤ 1×10⁻⁴, 다리별 ≤ 1 % W/4 | `reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / <level> / contact_force_N`, `reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / <level> / cylinder_force_N`, `reference.json / statics / total_weight_incl_rods_N` |
 | V2 | 침투 | ±5 % | `reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / static_penetration_or_compression_mm` |
 | V3 | roll, pitch | ±0.002° | `reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / static_attitude_deg (roll, pitch)` |
@@ -196,12 +205,14 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
   - ③ 해석 정적해 초기화가 V2·V3 기준값을 그대로 쓰므로 판정이 순환할 수 있다. 판정은 10 s 정착 뒤 값으로 한다. 초기값과 같게 머무는지가 곧 평형 확인이다. 초기화 없이 ≥ 53 s 정착한 사례 1건(top)으로 같은 값에 가는지 교차 확인한다.
 - **담당·작업량**: cad 중, dyn 판정 소.
 - **체크리스트**
-  - [ ] V0 질량 특성 자동 비교(3단계)
-  - [ ] 다리별·크롤러 바닥 패치, 재질, 충돌 패밀리(R14) API 확인
-  - [ ] 해석 정적해 초기화 + 부싱 t = 0
-  - [ ] 패드별 수직력: 프레임 확인, 콜백 교차
-  - [ ] 초기화 없는 53 s 정착 교차 1건
-  - [ ] 정착 상태 저장(3단계)
+  - [x] 선행: 지면 부싱 훅 최적화(결과 불변) (2026-10-20, cad: 훅 81 → 10.6 µs/스텝, 패드 접지 1×10⁻⁴ s 193 → 116 µs/스텝(P코어, 025e445 대비 교대 4회 중앙값). 블록 6경우 궤적·상태 비트 단위 동일, 전체 규모 6.5 s 끝 상태 비트 동일. `step_cost_S0.json`의 `hook_optimization` 항목)
+  - [x] V0 질량 특성 자동 비교(3단계) (2026-10-20, `verify/s1.py` `v0_checks` 91항목 × 3단계 통과. 질량·무게중심·관성 상대차 ≤ 1×10⁻⁹. **SMC 재질 kn·gn은 Chrono가 float32로 저장**(예: 20813595.4 → 20813596.0, 상대 2.9×10⁻⁸·4.2×10⁻⁸)이라 재질 항목만 float32(YAML)과 정확히 같은지로 판정했다. 정적 하중 영향 ≤ 0.04 N)
+  - [x] 다리별·크롤러 바닥 패치, 재질, 충돌 패밀리(R14) API 확인 (2026-10-20, `chrono/contact.py`. pychrono 10의 API는 `GetCollisionModel().SetFamily(k)`·`DisallowCollisionsWith(k)`·`CollidesWith(k)`이고 R14에 적힌 `SetFamilyMaskNoCollisionWithFamily`는 없다. 겹친 두 구 시험으로 끈 쌍 접촉 0 확인. 패치 6개(패드 4, 크롤러 띠 2) 비중첩 검사)
+  - [x] 해석 정적해 초기화 + 부싱 t = 0 (2026-10-20, `scenarios/settle.py` `analytic_static_pose`: V3 자세 + V2 침투 평균으로 원점 높이, 다리별 침투 잔차 ≤ 1.8×10⁻⁴ mm. `chrono/model.py` `L1Model`, `run_settle`)
+  - [x] 패드별 수직력: 프레임 확인, 콜백 교차 (2026-10-20: `GetContactForce()`는 세계 좌표(30° 기울인 바디 시험), `ReportContactCallback` 힘은 접촉면 좌표·B 바디 기준이며 세계 변환 합이 `GetContactForce()`와 0 N 차. 위치 모터 `GetMotorForce()` + = 패드를 누르는 방향 = 실린더 힘)
+  - [x] 초기화 없는 53 s 정착 교차 1건 (2026-10-20, top: V1~V3·V13 통과, 정적값 차 ≤ 2.2 N·자세 ≤ 2×10⁻⁶°. 단 영 자세 낙하 충격으로 후방 패드 부상·재접지 6건, 후방 미끄럼 약 3.9 mm, 부싱 잔류 접선 예하중 약 ±4.1~4.8 kN(합 0)이 남는다 → 해석 정적해 초기화 권장 근거)
+  - [x] 정착 상태 저장(3단계) (2026-10-20, `07_results/states/S1_L1_{top,middle,bottom}.npz`, 재빌드 복원 뒤 1 s 위치 차 ≤ 1.8×10⁻¹⁵ m. 요약 `06_analysis/01_chrono/verify_S1_L1.json`, 그림 `verify_S1_L1.png`, 실행 `04_scripts/02_chrono/run_S1.py all` 약 2.5분)
+  - [x] **dyn 최종 판정: 통과**(2026-10-20, `dynamics_model.md` 개정 11, 5.2절). 접촉력 − 선형 기준 최대 +66.5 N(≤ 956 N), 독립 비선형 정역학과 ≤ 0.24 N, 침투 ≤ 0.09 %, 자세 ≤ 6.1×10⁻⁵°, V13 드리프트 ≤ 2.5×10⁻⁵°·변동 ≤ 20.5 N. 67 N 차 = P-δ(무게중심 높이에 비례, 20.9 N/m). 결정: V0 재질 float32 판정(사용자 결정), 해석 초기화 기본, `stroke_true` 정의 유지. 재빌드 복원 1~4 ulp 차는 반올림이고 문제 아님
 
 ### S2a 지면 부싱 동특성 · 경사 정적
 
@@ -234,7 +245,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
 
 - **목표**: 다리를 모터로 움직이고, 크롤러 접촉을 넣고, 접지할 때 부싱을 만들고 부상할 때 없애는 이벤트 로직(R15)을 확인한다.
 - **만드는 것**:
-  - `chrono/actuators.L1SpeedActuator`: `ChLinkMotorLinearSpeed`, `SetAvoidPositionDrift(true)`, 가이드 PRISMATIC, $|u|\le v_{max}$, 스트로크 끝 차단, **모터 계단 정지**
+  - `chrono/actuators.L1SpeedActuator`(개정 8): **`ChLinkMotorLinearPosition` + `ChFunctionConst(s_ref)`, 훅 3단계에서 $s_{ref}\leftarrow\mathrm{clip}(s_{ref}+\mathrm{sat}(u)\Delta t,0,0.68)$**(1스텝 지연 규약, `dynamics_model.md` 4.6·5.2절 ④), 가이드 PRISMATIC, $|u|\le v_{max}$, 스트로크 끝 차단, **모터 계단 정지**. `ChLinkMotorLinearSpeed`는 내부 적분 상태가 R16 스냅숏에 담기지 않아 쓰지 않는다. 동등성: 단일 다리 시험에서 속도 ±22.67 mm/s 같음, 위치 1스텝 위상($u\Delta t$ = 2.3×10⁻⁶ m), 힘 차 $k\,u\Delta t$ ≈ 48 N. $s_{ref}$는 스냅숏에 넣고 기록에는 작용 시각 $t_n+\Delta t$로 남긴다. `ChFunctionSetpoint`는 검증 전이라 쓰지 않는다
   - 크롤러 구 배열(R13, D안): 구 24개 = 롤러 위치 12개(구 바닥 = 바닥) + 틈 있는 끝 슈 12개(구 바닥 = 바닥 + `end_shoe_gap_m`, 단방향 — 틈이 닫힌 뒤에만 접촉), 모두 상부체 바디·같은 재질
   - 접지 이벤트 부싱
   - `scenarios/stroke`(상부체 고정, 다리 공중)
@@ -249,7 +260,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
 | V | 판정 | 허용 | 기준값 키 |
 |---|---|---|---|
 | V0 | 모터 +속도 1 s → 패드 −z로 $v$·1 s, 모터 반력 부호 | 부호 일치 | — |
-| V0(크롤러, 개정 5 추가) | 구 개수·위치·반지름, 구당 $k_n$·$g_n$, $k_t=g_t=\mu=0$, 크롤러 패치 재질 값 같음, 로드–상부체·로드–크롤러 쌍 꺼짐 | 상대차 ≤ 1×10⁻⁹, 설정 일치 | YAML `contact.crawler.*` |
+| V0(크롤러, 개정 5 추가) | 구 개수·위치·반지름, 구당 $k_n$·$g_n$, $k_t=g_t=\mu=0$, 크롤러 패치 재질 값 같음, 로드–상부체·로드–크롤러 쌍 꺼짐 | 상대차 ≤ 1×10⁻⁹, 설정 일치. SMC 재질 값은 float32(YAML)과 정확히 같음(사용자 결정 2026-10-20) | YAML `contact.crawler.*` |
 | V11 | **상부체 고정, 다리 공중**에서 큰 속도 명령과 끝을 넘는 명령 | 속도 ≤ $v_{max}(1+10^{-3})$, 위치 −1×10⁻⁴ ~ 0.6801 m, 0 → 0.68 m 시간 ±0.05 s | YAML `actuator.stroke_m`, `actuator.max_speed_m_s`, `actuator.full_stroke_time_s` |
 | 이벤트 | 한 다리를 내려 접지 → 들어 올려 부상 → 재접지 | 생성·소멸 횟수가 사건 수와 같음, chatter 0 | R15 |
 | 크롤러 정착 | 다리 0 m, 크롤러 정착 자세(해석해)로 초기화. 초기화하지 못하면 ≥ 65.5 s(`simulation.settle_on_crawler_min_s`) | 정착 자세 $u_z$·pitch를 기준해(D: −3.191 mm, +0.1695°)와 비교(참고, 판정은 S3 V4). 활성 구 14개(롤러 6개/측 전부 + 앞 끝 슈 1개씩; 뒤 끝 슈 3개/끝과 나머지 앞 끝 슈 2개/끝은 0. 맨 뒤 롤러열은 9.59 kN으로 하중이 가장 작다, `06_analysis/00_dynamics/crawler_layout_check.json` D 배치 `settled_on_crawler (legs at 0)` 의 `rear_row_force_N`). 크롤러 위 모드(pitch / roll / heave, D: 1.327 / 3.046 / 8.730 Hz) 진동수 기록 | `reference.json / lift_V4_compliant_crawler / layouts`, `reference.json / lift_V4_compliant_crawler / crawler_on_floor_modes (layout D, legs at 0)` |
@@ -259,10 +270,12 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
 - **위험**:
   - ① 크롤러 YAML 키(`contact.crawler.*` D안, `simulation.settle_on_crawler_min_s`)는 반영됐다(2026-10-20). 값을 코드에 적지 않고 YAML에서 읽는다.
   - ② L1 모터 반력과 실린더 힘의 관계(로드 관성 포함)를 정적에서 "접촉력 − 로드 무게"와 비교한다.
+  - ③ (개정 8) 강체 모터의 속도 계단은 1스텝 관성 반력 $m_{rod}\Delta v/\Delta t$를 만든다(107 kg, $\Delta v=v_{max}$: Δt 1×10⁻⁴ s 24 kN, 1×10⁻⁵ s 242 kN — 218 kN 포화 문턱을 넘을 수 있음). V11b 스텝별 포화·V17 압력을 이 스파이크로 판정하지 않는다. 권고: $u$ 가속 제한(밸브 램프, 예 0 → $v_{max}$ 0.1 s, **가정 — 사용자 확인 필요**) 또는 판정 힘에서 $m_{rod}\ddot s$ 제외. 속도 모터에도 같은 크기라 구동기 방식과는 무관
 - **담당·작업량**: cad 중, dyn 판정 소.
 - **체크리스트**
   - [ ] 모터 축·부호(R4)
-  - [ ] V11(공중 다리)
+  - [ ] 구동기 = 위치 모터 + 훅 $s_{ref}$ 적분(개정 8), 스냅숏에 $s_{ref}$ 왕복 확인
+  - [ ] V11(공중 다리; 속도가 실제로 $v_{max}$에 닿는지도 확인 — `ChFunctionConst`는 속도를 구속 안정화 항으로만 주므로)
   - [ ] 크롤러 구 배열·패치·재질(R13), 패밀리(R14)
   - [ ] 접지·부상 이벤트(R15; $t_{lift}$ 1 ms, $N_{th}$ 100 N을 이벤트 시험으로 조정)
   - [ ] 크롤러 위 정착 상태 저장(3단계, 해석해 초기화. 안 되면 ≥ 65.5 s)
@@ -528,20 +541,35 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 |---|---|---|
 | `pyproject.toml` | **있음** | 도구 설정만 둔다. pytest(`minversion 8.0`, `pythonpath = ["03_src"]`, `testpaths = ["05_tests"]`, `--strict-markers`, 마커 `chrono`·`sim`·`slow`)와 ruff(줄 100, py312, isort first-party `outrigger_sim`) |
 | `03_src/outrigger_sim/__init__.py` | **있음**(docstring만) | 엔진 독립 핵심 + Chrono 백엔드 |
-| `03_src/outrigger_sim/chrono/__init__.py` | **있음** | `system`(**있음**, S0: `make_system`, `set_gravity`, `select_time_step`). 계획 모듈: `bodies`, `contact`, `ground_bushing`, `lateral_bushing`, `actuators`, `loads`, `scm`, `probes`, `model` |
+| `03_src/outrigger_sim/chrono/__init__.py` | **있음** | Chrono 백엔드 패키지. 계획 모듈: `lateral_bushing`(S7), `actuators`(S2b), `loads`(S8), `scm`(S9) |
+| `03_src/outrigger_sim/chrono/system.py` | **있음**(S0) | `make_system`(SPARSE_LU + 패턴 고정 기본), `set_gravity`, `select_time_step` |
+| `03_src/outrigger_sim/chrono/ground_bushing.py` | **있음**(S0) | `GroundBushingCoulomb`: 지면 고정 구면 부싱 + 원형 Coulomb 복귀 사상, R15 부상·재접지 |
+| `03_src/outrigger_sim/chrono/snapshot.py` | **있음**(S0) | R16 Chrono 쪽 스냅숏 채우기·복원(`ChLinkMotorLinearSpeed` 거부) |
+| `03_src/outrigger_sim/chrono/bodies.py` | **있음**(S1) | 상부체(오거 level, 관성 텐서 전체)와 다리 이동부 4개 |
+| `03_src/outrigger_sim/chrono/contact.py` | **있음**(S1) | 패드 구·바닥 패치(패드 4, 크롤러 띠 2)·SMC 재질(R5·R8)·충돌 패밀리(R14, `DisallowCollisionsWith`)·접촉 보고 콜백 |
+| `03_src/outrigger_sim/chrono/probes.py` | **있음**(S1) | 스텝마다 상태 1회 복사(R9), `TruthState`(`stroke_true_m` = 모터 − $F_{cyl}/k_{oil}$) |
+| `03_src/outrigger_sim/chrono/model.py` | **있음**(S1) | `L1Model`: 바디·접촉·위치 모터(상수 함수)·지면 부싱 조립, 훅 순서(4.6절), V0 인벤토리, `operating_extensions_m`, `zero_pose` |
+| `03_src/outrigger_sim/geometry.py` | **있음**(S1) | 엔진 독립 기하: 신장별 패드·볼 중심 위치, 패드가 막 닿는 원점 높이 |
+| `03_src/outrigger_sim/hostcpu.py` | **있음**(S1) | 하이브리드 CPU 배치: P코어 고정 + EcoQoS 해제(6절 #24) |
+| `03_src/outrigger_sim/scenarios/settle.py` | **있음**(S1) | 해석 정적해 초기화(`analytic_static_pose`, 2절 규칙 1), 정착·정지 창 |
+| `03_src/outrigger_sim/verify/checks.py` | **있음**(S1) | `CheckResult`, 비교 도우미(상대·절대·같음) |
+| `03_src/outrigger_sim/verify/s1.py` | **있음**(S1) | S1 V0(재질 float32 판정 포함)·V1~V3·V13 |
 | `03_src/outrigger_sim/control/__init__.py` | **있음**(docstring만) | Controller 프로토콜과 제어기(py) |
-| `03_src/outrigger_sim/scenarios/__init__.py` | **있음**(docstring만) | 계획 모듈: `settle`, `lift`, `leg_step`, `impulse`(초기 속도 가진), `slope`, `stroke`, `single_leg`, `disturbance_d2` |
+| `03_src/outrigger_sim/scenarios/__init__.py` | **있음**(docstring만) | `settle` 있음(S1). 계획 모듈: `lift`, `leg_step`, `impulse`(초기 속도 가진), `slope`, `stroke`, `single_leg`, `disturbance_d2` |
 | `03_src/outrigger_sim/sensors/__init__.py` | **있음**(docstring만) | 계획 모듈: `truth`(cad), `imu_model`(py) |
-| `03_src/outrigger_sim/verify/__init__.py` | **있음**(docstring만) | 계획 모듈: `metrics`, `checks` |
+| `03_src/outrigger_sim/verify/__init__.py` | **있음**(docstring만) | `checks`·`s1` 있음(S1). 계획 모듈: `metrics` |
 | `03_src/outrigger_sim/verify/reference.py` | **있음**(S0) | 기준값 전체 문자열 키 상수 `RefKey`·`References`(R12), 파일 SHA-256 지문. 키 존재는 `05_tests/unit/test_reference.py`가 이 계획 문서의 백틱 경로와 대조한다 |
 | `03_src/outrigger_sim/params.py` | **있음**(S0) | 파라미터 로더 `load_params()` |
 | `03_src/outrigger_sim/{frames, signals}.py` | **있음**(S0) | 좌표, 신호 타입·Record 스키마 |
 | `03_src/outrigger_sim/engine.py` | **있음**(S0) | SimEngine 프로토콜, 엔진 독립 `Snapshot`·호환 검사(R16), 엔진 상태 예외. pychrono를 import하지 않는다. Chrono 구현체는 아직 없다 |
-| `03_src/outrigger_sim/{runner, record}.py` | 계획(S0) | 실행기, 기록·스냅숏 저장 |
+| `03_src/outrigger_sim/record.py` | **있음**(S0) | Record(npz + meta.json, `stroke_true` 포함)·스냅숏 파일 저장 |
+| `03_src/outrigger_sim/runner.py` | 계획(S6) | 실행기(영차 유지) |
 | `05_tests/conftest.py` | **있음** | 세션 픽스처 `project_root`, `params_path` |
 | `05_tests/unit/` | **있음** | `test_params.py`, `test_frames.py`, `test_signals.py`, `test_engine.py`, `test_reference.py`(3.4절) |
 | `05_tests/chrono/` | **있음** | `test_system.py`(R1·R2·R6·R11 시스템 팩토리), `test_smc_damping.py`(SMC Hooke 감쇠 규약), 마커 `chrono` |
 | `05_tests/verify/` | **있음**(`.gitkeep`만) | 3.4절 V 시험 자리 |
+| `04_scripts/02_chrono/run_S1.py` | **있음**(S1) | S1 4사례(사례마다 별도 프로세스, P코어 고정) + 요약 `06_analysis/01_chrono/verify_S1_L1.json`·그림 |
+| `05_tests/chrono/test_model_S1.py`, `05_tests/unit/test_settle.py`, `05_tests/verify/test_S1_L1.py` | **있음**(S1) | S1 모델·해석 초기화·V 판정 시험 |
 | `04_scripts/02_chrono/run_verify.py` | 계획(S3) | 단계별 V 실행기 |
 | `04_scripts/02_chrono/test_stick_friction.py` | 있음 | S0 회귀 기준으로 그대로 둔다 |
 
@@ -746,7 +774,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 | 22 | 기준값 출처가 여러 파일(`reference.json`, `actuator_L2_feasibility.json`, YAML)로 나뉨 | 전부 | `verify/reference`가 파일별 sha256과 전체 문자열 키를 함께 관리. 기존 `C_seal_friction` 0 → 16 → 0 mm `runs`는 V15에 쓰지 않음(양방향 접촉) |
 | 22a | **실 마찰 $F_s$ 12 kN에서 압력 판정이 부상을 놓친다**(V15(a) 기준해: 압력이 $F_{min}$에 닿기 전에 RL이 뜨고, 부상 순간 RL 압력 판독은 약 10.94 kN으로 $F_{min}$ 9.453 kN보다 높다) | S8, 제어기 트랙 | 모델 오류가 아니라 판정 결과로 보고한다. 제어기(py)·dyn에 전달: 압력 기준 $F_{min}$ 판정만으로는 $F_s$가 수 kN을 넘으면 접지 유지를 보장하지 못한다 → $F_{min}$ 마진에 $F_s$ 크기를 더하거나 다른 판정(스트로크·자세 일관성)을 함께 써야 한다. S8 결과로 Chrono에서 재현되는지 확인 |
 | 23 | YAML·reference 판 불일치, 낡은 정착 상태 재사용 | 전부 | meta와 스냅숏에 sha256, 불일치 시 복원 거부 |
-| 24 | Python 훅 비용 | S3 이후 | 4다리 벡터화, 사례 병렬. Pardiso는 5바디에서 QR보다 3배 이상 느려 비용 절감 수단이 아니다(S0 비용 측정에서 전체 규모로 재확인). **S0 실측(2026-10-20)**: `GroundBushingCoulomb.after_step` 81 µs/스텝 = 패드 접지 스텝의 43 %, Chrono 부싱 하중 55 µs와 합치면 72 %(4절 S0 실측). 결과를 바꾸지 않는 훅 최적화(변환 재사용, `SetDamping`은 바뀔 때만) 후 S0 회귀로 확인. **하이브리드 CPU 배치**: OS 기본 배치는 E코어로 가 2.5배 느려지므로 runner가 P코어 고정 + EcoQoS 해제를 한다(S6) |
+| 24 | Python 훅 비용 | S3 이후 | 4다리 벡터화, 사례 병렬. Pardiso는 5바디에서 QR보다 3배 이상 느려 비용 절감 수단이 아니다(S0 비용 측정에서 전체 규모로 재확인). **S0 실측(2026-10-20)**: `GroundBushingCoulomb.after_step` 81 µs/스텝 = 패드 접지 스텝의 43 %, Chrono 부싱 하중 55 µs와 합치면 72 %(4절 S0 실측). 결과를 바꾸지 않는 훅 최적화(변환 재사용, `SetDamping`은 바뀔 때만) 후 S0 회귀로 확인. **하이브리드 CPU 배치**: OS 기본 배치는 E코어로 가 2.5배 느려지므로 P코어 고정 + EcoQoS 해제를 한다 — **구현됨(S1, `03_src/outrigger_sim/hostcpu.py`, `run_S1.py`가 사용, `result.json` `timing.cpu_placement` 기록)**. S6 runner도 이 모듈을 쓴다 |
 | 25 | 부싱 감쇠 2배·SMC 질량당 감쇠의 버전 의존 | 전부 | S0 회귀가 버전 변경을 잡음 |
 | 26 | SCM 비용·격자·침하 | S9 | 단일 패드 측정 먼저 |
 
