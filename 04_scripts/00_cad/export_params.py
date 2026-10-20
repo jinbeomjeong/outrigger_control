@@ -17,6 +17,12 @@ Reads only cached data (no STEP parsing):
     06_analysis/00_dynamics/reference.json
                                            1st L1 rocking mode (time-step rule) and check values
                                            (run_reference.py)
+    01_cad/06_brep/derived/crawler/{crawler_summary.json, crawler_wheels.csv, crawler_grouser_tips.csv}
+                                           crawler contact layout D: roller stations, raised end shoes
+                                           and their gaps (derive_crawler_cache.py)
+    06_analysis/00_dynamics/crawler_layout_check.json
+                                           layout D crawler-on-floor settle length and check values
+                                           (run_crawler_layout_check.py)
 
 Dynamics keys (00_docs/01_dynamics/dynamics_model.md section 10, rev. 4 incl. the table "개정 4에서 더할 키"): the L1 / L2b-NSC /
 L2 stiffness, damping, Chrono input conventions (SMC gn per mass, bushing damping input c/2), hydraulic limits and
@@ -54,7 +60,9 @@ Usage:
     python -I 04_scripts/00_cad/export_params.py
 """
 
+import csv
 import datetime
+import hashlib
 import json
 import re
 import sys
@@ -185,16 +193,36 @@ RIGID_FLOOR_FRICTION = 0.5                  # ASSUMPTION, 00_docs/01_dynamics/dy
 CRAWLER_KN_TOTAL_N_M = 1.0e8                # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 4.2
 CRAWLER_FRICTION = 0.5                      # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 4.2 (L2b-NSC crawler contact only)
 # ---- rev. 5 (00_docs/01_dynamics/dynamics_model.md 4.2 / 4.5 / 10 "개정 5"): compliant crawler sphere layout for L1 (SMC) ----
-CRAWLER_PRODUCT = "REX33-REX33 - 5J286105"  # crawler compound row of parts_classified.csv (bbox -> x_range_m)
-CRAWLER_SPHERES_PER_TRACK = 9               # ASSUMPTION: 2 tracks x 9 spheres, ends included, evenly spaced
-CRAWLER_TRACK_CENTRE_Y_M = 1.066            # ASSUMPTION: crawler bbox |y| 1.366 - half an assumed 0.6 m shoe width
-CRAWLER_SPHERE_RADIUS_M = 0.05              # ASSUMPTION: sphere bottom = ground.crawler_bottom_z_m (no static effect)
+# Layout D (user decision 2026-10-20, CLAUDE.md '크롤러 접촉 배치', 00_docs/01_dynamics/dynamics_model.md 3.8):
+# lower track roller stations (gap 0) + raised end shoes beyond the end rollers as gapped unilateral springs.
+# Positions and gaps are read from the crawler B-rep cache (derive_crawler_cache.py); the drawn undercarriage is
+# the REXOME25 model (another machine, per the STEP description) -> ASSUMPTION until the manufacturer confirms.
+CRAWLER_DIR = PROJECT_ROOT / "01_cad" / "06_brep" / "derived" / "crawler"
+CRAWLER_SUMMARY_JSON = CRAWLER_DIR / "crawler_summary.json"
+CRAWLER_WHEELS_CSV = CRAWLER_DIR / "crawler_wheels.csv"
+CRAWLER_GROUSER_CSV = CRAWLER_DIR / "crawler_grouser_tips.csv"
+CRAWLER_LAYOUT_JSON = PROJECT_ROOT / "06_analysis" / "00_dynamics" / "crawler_layout_check.json"
+CRAWLER_LAYOUT_KEY = "D_rollers_plus_gapped_end_shoes"   # layout D of crawler_layout_check.json
+CRAWLER_LAYOUT_SCHEME = "rollers_plus_gapped_end_shoes"
+CRAWLER_ROLLER_ROLE = "track roller"                     # crawler_wheels.csv role prefix (lower run rollers)
+CRAWLER_GROUSER_PAD_AREA_MM2 = 2108.515681               # 4 small downward grouser planes per shoe (dynamics 3.8)
+CRAWLER_GROUSER_PAD_AREA_TOL_MM2 = 1.0
+CRAWLER_FLAT_SHOE_TOL_MM = 1e-3                          # shoe lowest point <= this above the floor = flat (gap 0)
+CRAWLER_TRACK_CENTRE_DIGITS = 4                          # m, 0.1 mm
+CRAWLER_X_DIGITS = 4                                     # m, 0.1 mm (roller axes, shoe pad centres)
+CRAWLER_GAP_DIGITS = 5                                   # m, 0.01 mm
+CRAWLER_SYMMETRY_TOL_M = 1e-5                            # left / right track stations must agree
+CRAWLER_END_SHOES_PER_END = 3                            # dynamics 3.8: 3 raised shoes per track end
+CRAWLER_ROLLERS_PER_TRACK = 6
+CRAWLER_KN_TOTAL_SENSITIVITY_N_M = [1.0e8, 3.0e8]        # user decision 2026-10-20: x3 as sensitivity (layout F)
+CRAWLER_LAYOUT_JSON_REL_TOL = 5e-4                       # crawler_layout_check.json prints 4-6 significant digits
+CRAWLER_SPHERE_RADIUS_M = 0.05              # ASSUMPTION: sphere bottom = ground.crawler_bottom_z_m (+ gap) (no static effect)
 CRAWLER_DAMPING_RATIO_HEAVE = 0.05          # ASSUMPTION: heave of the machine on the crawler (8.1 Hz), concrete floor
 CRAWLER_DAMPING_RATIO_HEAVE_SOIL = 0.2      # ASSUMPTION: same on soil (SCM stage only)
 CRAWLER_DAMPING_RATIO_RANGE = [0.02, 0.3]   # sensitivity range (dyn_model.py CRAWLER_DEFAULTS damping_ratio_heave_range)
-CRAWLER_X_RANGE_TOL_M = 5e-4                # x_range_m = CAD bbox rounded to 1 mm (as dyn_model.CRAWLER_DEFAULTS)
-CRAWLER_SMC_MATERIAL = ("Hooke, kn = kn_per_sphere, gn = gn_per_sphere, kt = 0, gt = 0, mu = 0; same values on the "
-                        "crawler spheres and on a separate crawler floor patch (not the pad patches)")
+CRAWLER_SMC_MATERIAL = ("Hooke, kn = kn_per_sphere, gn = gn_per_sphere, kt = 0, gt = 0, mu = 0; same values on all "
+                        "crawler spheres (roller and gapped end-shoe spheres) and on a separate crawler floor patch "
+                        "(not the pad patches)")
 CRAWLER_COLLISION_FILTER = "disable rod-superstructure and rod-crawler pairs (collision families)"
 SETTLE_DECAY_FACTOR = 100.0                 # settle length = ln(100) x time constant (amplitude to 1 %)
 # Time step rules (00_docs/01_dynamics/dynamics_model.md 4.3; run_reference.py:482-487 dt_rec).
@@ -315,18 +343,20 @@ DOC10_EXPECTED = {
     "locked_pressure_limit_Pa": ([3.50e7], 0.005e7),
     "locked_force_limit_N (printed 3.635e5)": ([3.635e5], 0.0005e5),
     "pump_flow_m3_s": ([1.00333e-3], 0.000005e-3),
-    # ---- rev. 5 table "개정 5에서 더할 키" ----
-    "crawler.spheres_per_track": ([9], 0.5),
-    "crawler.track_centre_y_m": ([1.066], 0.0005),
-    "crawler.x_range_m": ([-1.840, 1.844], 0.0005),
+    # ---- rev. 5 table "개정 5에서 더할 키" (crawler layout replaced by section 3.8 layout D) ----
     "crawler.sphere_radius_m": ([0.05], 0.005),
-    "crawler.kn_per_sphere_N_m": ([5.5556e6], 0.00005e6),
     "crawler.damping_ratio_heave": ([0.05], 0.005),
     "crawler.damping_ratio_heave_soil": ([0.2], 0.05),
     "crawler.damping_total_N_s_m": ([1.97441e5], 0.000005e5),
-    "crawler.gn_per_sphere_1_s": ([0.28450], 0.000005),
-    "settle_on_crawler_min_s": ([23.2], 0.05),
     "settle_on_pads_min_s": ([53.0], 0.5),
+    # ---- section 3.8 table "YAML 생성(export_params.py)에 넣을 값(제안, D)" (user decision 2026-10-20) ----
+    "crawler.D.track_centre_y_m": ([1.045], 0.0005),
+    "crawler.D.roller_x_m": ([-0.884, -0.527, -0.170, 0.187, 0.544, 0.901], 0.0005),
+    "crawler.D.end_shoe_x_m": ([-1.3122, -1.1392, -0.9663, 0.9505, 1.1236, 1.2968], 0.00005),
+    "crawler.D.end_shoe_gap_m": ([0.02149, 0.01186, 0.00223, 0.00236, 0.00881, 0.01526], 0.000005),
+    "crawler.D.kn_per_sphere_N_m": ([8.33333e6], 0.000005e6),
+    "crawler.D.gn_per_sphere_1_s": ([0.426744], 0.0000005),
+    "crawler.D.settle_on_crawler_min_s": ([65.47], 0.005),
 }
 
 
@@ -722,43 +752,164 @@ def dynamics_derivation(pad_z: np.ndarray, attach_z: np.ndarray, barrel_bottom_z
     }
 
 
-def crawler_derivation(parts: pd.DataFrame, m_tot: float, m_body: float, l1_first_mode: tuple[float, float],
-                       reference: dict) -> dict:
-    """Rev. 5 crawler contact and settle lengths.
+def sha256_of(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
-    Source: 00_docs/01_dynamics/dynamics_model.md 4.2 / 4.5 / 10.
 
-    x_range_m: crawler compound bbox Z_cad (= body x) from parts_classified.csv, rounded to 1 mm.
-    kn_per_sphere = kn_total / n (dyn_model.py:317-334); damping_total = 2 zeta sqrt(kn_total m_tot), m_tot =
-    superstructure top + 4 moving parts (dyn_model.py:349-352, run_reference.py:68-72); gn = damping_total / n / m_body,
-    m_body = superstructure body mass (the crawler spheres sit on that body; 00_docs/01_dynamics/dynamics_model.md 4.1 convention).
-    Settle lengths = ln(100) x time constant: on the crawler the largest tau of the crawler-on-floor modes
-    (reference.json lift_V4_compliant_crawler, run_reference.py:174-191); on the pads tau_1 = 1 / (zeta_1 omega_1)
-    of the 1st L1 rocking mode (top), 00_docs/01_dynamics/dynamics_model.md 4.5 item 1.
+def read_csv_rows(path: Path) -> list[dict]:
+    with path.open(encoding="utf-8-sig", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def crawler_cad_layout() -> dict:
+    """Layout D stations from the crawler B-rep cache (01_cad/06_brep/derived/crawler), body frame, m.
+
+    Same reading rules as 00_docs/01_dynamics/dynamics_model.md 3.8 (run_crawler_layout_check.load_cad):
+      track centre  = crawler_summary.json track_centre_half_spacing_mm;
+      rollers       = crawler_wheels.csv rows with role "track roller ...", axis_x_body_m (per track);
+      shoe stations = crawler_grouser_tips.csv grouser pad planes (area 2108.5 mm^2), grouped per (side, centroid
+                      Z_cad to 0.1 mm); station x = that centroid Z_cad (= body x), lowest point above the floor =
+                      min(bbox_min_y_mm) - crawler_summary.json ground_y_mm. Stations with a lowest point above
+                      CRAWLER_FLAT_SHOE_TOL_MM are the raised end shoes (gapped springs).
+    Exact values are kept for the checks; the written values are rounded (x 0.1 mm, gap 0.01 mm, y 0.1 mm).
     """
-    rows = parts[parts["instance_path"].str.contains(CRAWLER_PRODUCT, regex=False) & (parts["solid_count"] > 0)]
-    if len(rows) != 1:
-        raise SystemExit(f"crawler bbox: expected one solid row '{CRAWLER_PRODUCT}', got {len(rows)}")
-    x_exact = np.array([rows["bbox_min_z_mm"].iloc[0], rows["bbox_max_z_mm"].iloc[0]]) * MM  # Z_cad = body x
-    x_range = np.round(x_exact, 3)
-    n = 2 * CRAWLER_SPHERES_PER_TRACK
-    damping_total = 2 * CRAWLER_DAMPING_RATIO_HEAVE * np.sqrt(CRAWLER_KN_TOTAL_N_M * m_tot)
-    modes = reference["lift_V4_compliant_crawler"]["crawler_on_floor_modes (default layout, legs at 0)"]
-    f1, zeta1 = l1_first_mode
-    xs = np.linspace(x_range[0], x_range[1], CRAWLER_SPHERES_PER_TRACK)
+    summary = json.loads(CRAWLER_SUMMARY_JSON.read_text(encoding="utf-8"))
+    ground_y_mm = float(summary["ground_y_mm"])
+    track_y_exact = float(summary["track_centre_half_spacing_mm"]) * MM
+    rollers = {"left": [], "right": []}
+    roller_y = {"left": [], "right": []}
+    for row in read_csv_rows(CRAWLER_WHEELS_CSV):
+        if row["role"].startswith(CRAWLER_ROLLER_ROLE):
+            rollers[row["side"]].append(float(row["axis_x_body_m"]))
+            roller_y[row["side"]].append(float(row["axis_y_body_m"]))
+    stations = {"left": {}, "right": {}}
+    pad_planes = 0
+    for row in read_csv_rows(CRAWLER_GROUSER_CSV):
+        if abs(float(row["area_mm2"]) - CRAWLER_GROUSER_PAD_AREA_MM2) >= CRAWLER_GROUSER_PAD_AREA_TOL_MM2:
+            continue
+        pad_planes += 1
+        key = round(float(row["centroid_z_mm"]), 1)
+        height = float(row["bbox_min_y_mm"]) - ground_y_mm
+        stations[row["side"]][key] = min(stations[row["side"]].get(key, np.inf), height)
+    side = {}
+    for name in ("left", "right"):
+        st = sorted(stations[name].items())
+        x = np.array([k for k, _ in st]) * MM
+        h = np.array([v for _, v in st]) * MM
+        raised = h > CRAWLER_FLAT_SHOE_TOL_MM * MM
+        side[name] = {"rollers_x": np.sort(np.array(rollers[name])), "roller_abs_y": np.abs(roller_y[name]),
+                      "station_x": x, "station_h": h, "raised": raised}
+    left, right = side["left"], side["right"]
+    end_x, end_gap = left["station_x"][left["raised"]], left["station_h"][left["raised"]]
+    flat_x = left["station_x"][~left["raised"]]
+    checks = {
+        "rollers_per_track (left, right)": [len(left["rollers_x"]), len(right["rollers_x"])],
+        "raised_shoes_per_track (left, right)": [int(left["raised"].sum()), int(right["raised"].sum())],
+        "raised_shoes_rear_front (left)": [int((end_x < 0).sum()), int((end_x > 0).sum())],
+        "flat_shoes_per_track (left, right)": [int((~left["raised"]).sum()), int((~right["raised"]).sum())],
+        "raised_shoes_outside_end_rollers": bool(np.all((end_x < left["rollers_x"].min())
+                                                        | (end_x > left["rollers_x"].max()))),
+        "flat_shoes_inside_raised": bool(flat_x.min() > end_x[end_x < 0].max() and flat_x.max() < end_x[end_x > 0].min()),
+        "left_right_roller_x_max_abs_m": float(np.max(np.abs(left["rollers_x"] - right["rollers_x"]))),
+        "left_right_station_x_max_abs_m": float(np.max(np.abs(left["station_x"] - right["station_x"]))),
+        "left_right_station_gap_max_abs_m": float(np.max(np.abs(left["station_h"] - right["station_h"]))),
+        "roller_abs_y_minus_track_centre_max_abs_m": float(np.max(np.abs(
+            np.concatenate([left["roller_abs_y"], right["roller_abs_y"]]) - track_y_exact))),
+        "grouser_pad_planes": pad_planes,
+        "end_shoe_gap_min_m": float(end_gap.min()),
+    }
     return {
-        "x_range_exact_m": x_exact, "x_range_m": x_range, "n_spheres": n,
-        "sphere_xy_m": np.array([[x, s * CRAWLER_TRACK_CENTRE_Y_M] for s in (1.0, -1.0) for x in xs]),
-        "kn_per_sphere": CRAWLER_KN_TOTAL_N_M / n,
-        "damping_total": damping_total, "damping_mass_kg": m_tot, "gn_mass_kg": m_body,
-        "gn_per_sphere": damping_total / n / m_body,
-        "settle_on_crawler": float(np.log(SETTLE_DECAY_FACTOR) * max(modes["tau_s"])),
-        "settle_on_crawler_reference_3_digits": modes["settle_length_s (ln(100) x max tau)"],
-        "settle_on_pads": float(np.log(SETTLE_DECAY_FACTOR) / (zeta1 * 2 * np.pi * f1)),
+        "track_centre_y_exact_m": track_y_exact,
+        "track_centre_y_m": round(track_y_exact, CRAWLER_TRACK_CENTRE_DIGITS),
+        "roller_x_exact_m": left["rollers_x"],
+        "roller_x_m": np.round(left["rollers_x"], CRAWLER_X_DIGITS),
+        "end_shoe_x_exact_m": end_x, "end_shoe_x_m": np.round(end_x, CRAWLER_X_DIGITS),
+        "end_shoe_gap_exact_m": end_gap, "end_shoe_gap_m": np.round(end_gap, CRAWLER_GAP_DIGITS),
+        "shoe_stations_left": list(zip(left["station_x"], left["station_h"])),
+        "cad_checks": checks,
+        "sources_sha256": {p.name: sha256_of(p) for p in (CRAWLER_SUMMARY_JSON, CRAWLER_WHEELS_CSV, CRAWLER_GROUSER_CSV)},
+        "source_brep_sha256": summary["provenance"]["source_sha256"],
+        "source_note": summary["provenance"].get("note", ""),
     }
 
 
-def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: float) -> dict:
+def crawler_derivation(m_tot: float, m_body: float, l1_first_mode: tuple[float, float], layout_check: dict) -> dict:
+    """Rev. 5 crawler contact (layout D, dynamics 3.8) and settle lengths.
+
+    Source: 00_docs/01_dynamics/dynamics_model.md 3.8 / 4.2 / 4.5 / 10.
+
+    Points: 2 tracks x (6 roller stations, gap 0) + 2 tracks x (6 raised end shoes, gap = CAD lowest point);
+    sphere bottom = floor + gap. kn_per_sphere = kn_total / (number of gap-0 points = 12), same value on the gapped
+    end-shoe spheres (end engagement upper bound, dynamics 3.8). damping_total = 2 zeta sqrt(kn_total m_tot), m_tot =
+    superstructure top + 4 moving parts (dyn_model.py:349-352, run_reference.py:68-72), split over the 12 gap-0
+    points; gn = damping_total / 12 / m_body for all 24 spheres (one Chrono material), m_body = superstructure body
+    mass (00_docs/01_dynamics/dynamics_model.md 4.1 convention).
+    Settle on the crawler = ln(100) x largest tau of the crawler-on-floor modes of layout D, taken as printed by
+    crawler_layout_check.json (settle_length_s, computed from the unrounded tau; ln(100) x the printed tau differs
+    by the tau rounding only, checked). Settle on the pads: tau_1 = 1 / (zeta_1 omega_1) of the 1st L1 rocking mode
+    (top), 00_docs/01_dynamics/dynamics_model.md 4.5 item 1 (unchanged).
+    """
+    cad = crawler_cad_layout()
+    yt = cad["track_centre_y_m"]
+    rx, ex, eg = cad["roller_x_m"], cad["end_shoe_x_m"], cad["end_shoe_gap_m"]
+    xy = np.array([[x, s * yt] for s in (1.0, -1.0) for x in rx] + [[x, s * yt] for s in (1.0, -1.0) for x in ex])
+    gap = np.concatenate([np.zeros(2 * len(rx)), np.tile(eg, 2)])
+    n_floor = int((gap <= 0).sum())
+    damping_total = 2 * CRAWLER_DAMPING_RATIO_HEAVE * np.sqrt(CRAWLER_KN_TOTAL_N_M * m_tot)
+    lay = layout_check["layouts"][CRAWLER_LAYOUT_KEY]
+    modes = lay["crawler_on_floor_modes (active springs, top)"]
+    f1, zeta1 = l1_first_mode
+    return {
+        **cad,
+        "n_spheres": len(xy), "n_floor_contact": n_floor, "sphere_xy_m": xy, "sphere_gap_m": gap,
+        "kn_per_sphere": CRAWLER_KN_TOTAL_N_M / n_floor,
+        "damping_total": damping_total, "damping_mass_kg": m_tot, "gn_mass_kg": m_body,
+        "damping_per_sphere": damping_total / n_floor,
+        "gn_per_sphere": damping_total / n_floor / m_body,
+        "settle_on_crawler": float(modes["settle_length_s (ln(100) x max tau)"]),
+        "settle_on_crawler_from_printed_tau": float(np.log(SETTLE_DECAY_FACTOR) * max(modes["tau_s"])),
+        "settle_on_crawler_tau_rounding_tol": float(np.log(SETTLE_DECAY_FACTOR) * 0.005 + 0.005),
+        "settle_on_pads": float(np.log(SETTLE_DECAY_FACTOR) / (zeta1 * 2 * np.pi * f1)),
+        "layout_check_sha256": sha256_of(CRAWLER_LAYOUT_JSON),
+    }
+
+
+def crawler_layout_json_checks(cr: dict, layout_check: dict) -> dict:
+    """Generated layout D vs crawler_layout_check.json (dynamics-expert, printed 4-6 significant digits)."""
+    lay = layout_check["layouts"][CRAWLER_LAYOUT_KEY]
+    meas = layout_check["cad_measurements"]
+    st = np.array(meas["shoe_stations (x_m, lowest point above floor mm), left"], float)
+    mine = np.array([[x, h / MM] for x, h in cr["shoe_stations_left"]])
+
+    def rel(a, b):
+        a, b = np.asarray(a, float), np.asarray(b, float)
+        return float(np.max(np.abs(a - b) / np.maximum(np.abs(b), 1e-12)))
+
+    floor = cr["sphere_gap_m"] <= 0
+    return {
+        "n_points_equal": int(lay["n_points"]) == cr["n_spheres"],
+        "rel": {
+            "track_centre_y_m": rel(cr["track_centre_y_exact_m"], meas["track_centre_y_m"]),
+            "roller_axes_x_m": rel(cr["roller_x_exact_m"], meas["roller_axes_x_m (left)"]),
+            "shoe_station_x_m": rel(mine[:, 0], st[:, 0]),
+            # flat stations print 4.2e-07 mm (float noise of the B-rep): compare the raised ones relatively
+            "end_shoe_gap_mm": rel(mine[mine[:, 1] > CRAWLER_FLAT_SHOE_TOL_MM, 1], st[st[:, 1] > CRAWLER_FLAT_SHOE_TOL_MM, 1]),
+            "x_floor_contact_range_m": rel([cr["sphere_xy_m"][floor, 0].min(), cr["sphere_xy_m"][floor, 0].max()],
+                                           lay["x_floor_contact_range_m"]),
+            "k_per_point_N_m": rel(cr["kn_per_sphere"], lay["k_per_point_N_m"]),
+            "c_per_point_N_s_m": rel(cr["damping_per_sphere"], lay["c_per_point_N_s_m"]),
+            "damping_total_N_s_m": rel(cr["damping_total"], lay["damping_total_N_s_m"]),
+            "gn_per_point_1_s": rel(cr["gn_per_sphere"], lay["gn_per_point_1_s (c / superstructure body mass)"]),
+        },
+        "flat_station_gap_max_abs_mm": float(np.max(np.abs(mine[mine[:, 1] <= CRAWLER_FLAT_SHOE_TOL_MM, 1]))),
+        "settle_on_crawler_s": cr["settle_on_crawler"],
+        "settle_from_printed_tau_s": cr["settle_on_crawler_from_printed_tau"],
+        "settle_abs_diff_s": abs(cr["settle_on_crawler"] - cr["settle_on_crawler_from_printed_tau"]),
+        "settle_tau_rounding_tol_s": cr["settle_on_crawler_tau_rounding_tol"],
+    }
+
+
+def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: float, layout_check: dict) -> dict:
     """Generated values vs (a) dyn_model.py at full precision, (b) reference.json (6 significant digits),
     (c) 00_docs/01_dynamics/dynamics_model.md section 10 as printed."""
     out = {}
@@ -817,28 +968,21 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
             "locked_force_limit": 350e5 * head_dm,
         }
         same_inputs["oil_bulk_modulus_range_Pa"] = list(a["oil_bulk_modulus_range_Pa"]) == OIL_BULK_MODULUS_SENSITIVITY_PA
-        # rev. 5 crawler: dyn_model.crawler_points on the YAML crawler block, crawler_damping_total, CRAWLER_DEFAULTS
+        # rev. 5 crawler: crawler_damping_total and the damping inputs of CRAWLER_DEFAULTS. dyn_model.crawler_points
+        # already reads layout D from this YAML (dynamics 3.8, user decision 2026-10-20), so it cannot check the
+        # positions written here: they are checked against the CAD cache and crawler_layout_check.json instead
+        # (crawler_layout_json_checks); CRAWLER_DEFAULTS holds only the scheme, radius and damping inputs.
         cr = derived["crawler"]
         cd = dm.CRAWLER_DEFAULTS
-        same_inputs["crawler_spheres_per_track"] = cd["spheres_per_track"] == CRAWLER_SPHERES_PER_TRACK
-        same_inputs["crawler_track_centre_y_m"] = cd["track_centre_y_m"] == CRAWLER_TRACK_CENTRE_Y_M
-        same_inputs["crawler_x_range_m"] = list(cd["x_range_m"]) == [float(v) for v in cr["x_range_m"]]
         same_inputs["crawler_sphere_radius_m"] = cd["sphere_radius_m"] == CRAWLER_SPHERE_RADIUS_M
         same_inputs["crawler_damping_ratio_heave"] = cd["damping_ratio_heave"] == CRAWLER_DAMPING_RATIO_HEAVE
         same_inputs["crawler_damping_ratio_heave_soil"] = cd["damping_ratio_heave_soil"] == CRAWLER_DAMPING_RATIO_HEAVE_SOIL
         same_inputs["crawler_damping_ratio_range"] = list(cd["damping_ratio_heave_range"]) == CRAWLER_DAMPING_RATIO_RANGE
-        crawler_block = {"kn_total_N_m": CRAWLER_KN_TOTAL_N_M, "damping_total_N_s_m": cr["damping_total"],
-                         "sphere_layout": {"spheres_per_track": CRAWLER_SPHERES_PER_TRACK,
-                                           "track_centre_y_m": CRAWLER_TRACK_CENTRE_Y_M,
-                                           "x_range_m": [float(v) for v in cr["x_range_m"]]}}
-        xy_dm, k_dm, c_dm = dm.crawler_points({"contact": {"crawler": crawler_block}})
         c_tot_dm = dm.crawler_damping_total(CRAWLER_KN_TOTAL_N_M, m_tot)
         full.update({
-            "crawler.sphere_xy_m": (cr["sphere_xy_m"], xy_dm),
-            "crawler.kn_per_sphere": (np.full(cr["n_spheres"], cr["kn_per_sphere"]), k_dm),
             "crawler.damping_total": (cr["damping_total"], c_tot_dm),
-            "crawler.damping_per_sphere": (np.full(cr["n_spheres"], cr["damping_total"] / cr["n_spheres"]), c_dm),
-            "crawler.gn_per_sphere": (cr["gn_per_sphere"], c_tot_dm / len(k_dm) / derived["crawler"]["gn_mass_kg"]),
+            "crawler.kn_floor_contact_sum": (cr["kn_per_sphere"] * cr["n_floor_contact"], CRAWLER_KN_TOTAL_N_M),
+            "crawler.gn_per_sphere": (cr["gn_per_sphere"], c_tot_dm / cr["n_floor_contact"] / cr["gn_mass_kg"]),
         })
         out["dyn_model_import"] = "ok"
         out["dyn_model_same_inputs"] = same_inputs
@@ -911,9 +1055,16 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
         "crawler.gn_mass_kg (superstructure body)": (r6(cr["gn_mass_kg"]), [lift["superstructure_body_mass_kg"]]),
         "crawler.kn_total_N_m": ([CRAWLER_KN_TOTAL_N_M], [lift["kn_total_N_m"]]),
         "crawler.damping_ratio_heave": ([CRAWLER_DAMPING_RATIO_HEAVE], [lift["damping_ratio_heave (ASSUMPTION)"]]),
-        "settle_on_crawler_s (3 digits)": ([sig(cr["settle_on_crawler"], 3)], [cr["settle_on_crawler_reference_3_digits"]]),
     })
-    out["crawler_x_range_rounding_abs_m"] = float(np.max(np.abs(cr["x_range_m"] - cr["x_range_exact_m"])))
+    # layout D (dynamics 3.8): CAD cache consistency and crawler_layout_check.json
+    out["crawler_cad_layout"] = cr["cad_checks"]
+    out["crawler_rounding_abs_m"] = {
+        "track_centre_y": abs(cr["track_centre_y_m"] - cr["track_centre_y_exact_m"]),
+        "roller_x": float(np.max(np.abs(cr["roller_x_m"] - cr["roller_x_exact_m"]))),
+        "end_shoe_x": float(np.max(np.abs(cr["end_shoe_x_m"] - cr["end_shoe_x_exact_m"]))),
+        "end_shoe_gap": float(np.max(np.abs(cr["end_shoe_gap_m"] - cr["end_shoe_gap_exact_m"]))),
+    }
+    out["crawler_layout_check_json"] = crawler_layout_json_checks(cr, layout_check)
     out["reference_json_rel"] = {k: relative_difference(g, ref) for k, (g, ref) in pairs.items()}
     # rev. 4 consistency: exact m_eff (floor 1e9 kg) vs the m_moving definition of gn; pump covers 4 legs at v_max
     out["gn_m_moving_vs_exact_m_eff_rel"] = relative_difference(derived["gn_l1"], derived["gn_l1_exact_m_eff"])
@@ -951,17 +1102,19 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
         "locked_force_limit_N (printed 3.635e5)": [derived["locked_force_limit"]],
         "pump_flow_m3_s": [derived["pump_flow_m3_s"]],
         # rev. 5
-        "crawler.spheres_per_track": [CRAWLER_SPHERES_PER_TRACK],
-        "crawler.track_centre_y_m": [CRAWLER_TRACK_CENTRE_Y_M],
-        "crawler.x_range_m": cr["x_range_m"],
         "crawler.sphere_radius_m": [CRAWLER_SPHERE_RADIUS_M],
-        "crawler.kn_per_sphere_N_m": [cr["kn_per_sphere"]],
         "crawler.damping_ratio_heave": [CRAWLER_DAMPING_RATIO_HEAVE],
         "crawler.damping_ratio_heave_soil": [CRAWLER_DAMPING_RATIO_HEAVE_SOIL],
         "crawler.damping_total_N_s_m": [cr["damping_total"]],
-        "crawler.gn_per_sphere_1_s": [cr["gn_per_sphere"]],
-        "settle_on_crawler_min_s": [cr["settle_on_crawler"]],
         "settle_on_pads_min_s": [cr["settle_on_pads"]],
+        # section 3.8, layout D
+        "crawler.D.track_centre_y_m": [cr["track_centre_y_m"]],
+        "crawler.D.roller_x_m": cr["roller_x_m"],
+        "crawler.D.end_shoe_x_m": cr["end_shoe_x_m"],
+        "crawler.D.end_shoe_gap_m": cr["end_shoe_gap_m"],
+        "crawler.D.kn_per_sphere_N_m": [cr["kn_per_sphere"]],
+        "crawler.D.gn_per_sphere_1_s": [cr["gn_per_sphere"]],
+        "crawler.D.settle_on_crawler_min_s": [cr["settle_on_crawler"]],
     }
     doc = {}
     for key, (expected, tol) in DOC10_EXPECTED.items():
@@ -1274,14 +1427,16 @@ def main() -> None:
         l2b_first_mode=l2b_first_mode,
     )
     f_min_cylinder = F_MIN_FRACTION * levels["top"]["mass_kg"] * GRAVITY_M_S2 / 4
-    derived["crawler"] = crawler_derivation(parts_raw, m_tot=derived["m_tot"], m_body=levels["top"]["mass_kg"],
-                                            l1_first_mode=l1_first_mode, reference=reference)
+    layout_check = json.loads(CRAWLER_LAYOUT_JSON.read_text(encoding="utf-8"))
+    derived["crawler"] = crawler_derivation(m_tot=derived["m_tot"], m_body=levels["top"]["mass_kg"],
+                                            l1_first_mode=l1_first_mode, layout_check=layout_check)
 
     def per_leg(values, digits=SIGNIFICANT_DIGITS):
         return {leg: sig(v, digits) for leg, v in zip(LEG_ORDER, np.broadcast_to(values, (4,)))}
 
     checks["dynamics"] = dynamics_checks(derived, reference, {"L1": derived["dt_l1"], "L2": derived["dt_l2"],
-                                                              "L2b_NSC": derived["dt_l2b"]}, f_min_cylinder)
+                                                              "L2b_NSC": derived["dt_l2b"]}, f_min_cylinder,
+                                         layout_check)
     checks["dynamics"]["reference_json_assumptions_beta_Pa"] = reference["meta"]["assumptions"]["oil_bulk_modulus_eff_Pa"]
     checks["dynamics"]["l1_dt_rule"] = {"f1_Hz": derived["f1_l1"], "zeta1": derived["zeta1_l1"],
                                         "dt_max_s": derived["dt_l1_max"], "dt_s": derived["dt_l1"]}
@@ -1464,10 +1619,13 @@ def main() -> None:
             "crawler": {
                 "kn_total_N_m": CRAWLER_KN_TOTAL_N_M,
                 "friction": CRAWLER_FRICTION,
+                "kn_total_sensitivity_range_N_m": list(CRAWLER_KN_TOTAL_SENSITIVITY_N_M),
                 "sphere_layout": {
-                    "spheres_per_track": CRAWLER_SPHERES_PER_TRACK,
-                    "track_centre_y_m": CRAWLER_TRACK_CENTRE_Y_M,
-                    "x_range_m": [float(v) for v in derived["crawler"]["x_range_m"]],
+                    "scheme": CRAWLER_LAYOUT_SCHEME,
+                    "track_centre_y_m": float(derived["crawler"]["track_centre_y_m"]),
+                    "roller_x_m": [float(v) for v in derived["crawler"]["roller_x_m"]],
+                    "end_shoe_x_m": [float(v) for v in derived["crawler"]["end_shoe_x_m"]],
+                    "end_shoe_gap_m": [float(v) for v in derived["crawler"]["end_shoe_gap_m"]],
                     "sphere_radius_m": CRAWLER_SPHERE_RADIUS_M,
                 },
                 "kn_per_sphere_N_m": sig(derived["crawler"]["kn_per_sphere"]),
@@ -1648,16 +1806,37 @@ def main() -> None:
         "contact.crawler": "[common] ASSUMPTION: crawler-floor contact before lift-off, 00_docs/01_dynamics/dynamics_model.md 4.2",
         "contact.crawler.friction": ("[L2b] ASSUMPTION: L2b-NSC crawler contact only (rigid NSC, no damping); "
                                      "not used by the L1 SMC crawler material (smc_material: mu = 0)"),
-        "contact.crawler.sphere_layout": ("[common] ASSUMPTION (rev. 5, 00_docs/01_dynamics/dynamics_model.md 4.2): 2 tracks x "
-                                          "spheres_per_track spheres at y = +/- track_centre_y_m, x evenly spaced over "
-                                          "x_range_m (ends included); sphere bottom = ground.crawler_bottom_z_m; spheres "
-                                          "on the superstructure body"),
-        "contact.crawler.sphere_layout.spheres_per_track": "ASSUMPTION",
-        "contact.crawler.sphere_layout.track_centre_y_m": "ASSUMPTION: crawler bbox |y| 1.366 - half of an assumed 0.6 m shoe",
-        "contact.crawler.sphere_layout.x_range_m": (f"CAD: parts_classified.csv '{CRAWLER_PRODUCT}' compound bbox Z_cad "
-                                                    "(= body x), rounded to 1 mm"),
+        "contact.crawler.kn_total_sensitivity_range_N_m": ("ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '크롤러 접촉 "
+                                                           "배치'): kn_total_N_m kept, x3 as sensitivity (weak basis; "
+                                                           "00_docs/01_dynamics/dynamics_model.md 3.8 layout F); scale "
+                                                           "kn_per_sphere_N_m and the dashpot (same heave zeta) together"),
+        "contact.crawler.sphere_layout": (
+            "[common] layout D, user decision 2026-10-20 (CLAUDE.md '크롤러 접촉 배치', 00_docs/01_dynamics/dynamics_model.md "
+            "3.8): 2 tracks at y = +/- track_centre_y_m; per track one sphere at each roller_x_m (sphere bottom = "
+            "ground.crawler_bottom_z_m) and one at each end_shoe_x_m (sphere bottom = floor + end_shoe_gap_m: "
+            "unilateral, contact only after the gap closes); 24 spheres on the superstructure body. CAD: B-rep cache "
+            "01_cad/06_brep/derived/crawler (derive_crawler_cache.py; crawler_summary.json sha256 "
+            f"{derived['crawler']['sources_sha256']['crawler_summary.json'][:16]}, crawler_wheels.csv "
+            f"{derived['crawler']['sources_sha256']['crawler_wheels.csv'][:16]}, crawler_grouser_tips.csv "
+            f"{derived['crawler']['sources_sha256']['crawler_grouser_tips.csv'][:16]}; prototype B-rep "
+            f"{derived['crawler']['source_brep_sha256'][:16]}). ASSUMPTION: the drawn undercarriage is the REXOME25 "
+            "model (another machine, per the STEP description), manufacturer confirmation pending; rigid level floor, "
+            "load enters the shoes under the rollers (pinned link chain)"),
+        "contact.crawler.sphere_layout.scheme": "roller stations (gap 0) + raised end shoes (gapped)",
+        "contact.crawler.sphere_layout.track_centre_y_m": ("CAD: crawler_summary.json track_centre_half_spacing_mm, "
+                                                           "rounded to 0.1 mm"),
+        "contact.crawler.sphere_layout.roller_x_m": ("CAD: crawler_wheels.csv 'track roller' axis_x_body_m (lower run, "
+                                                     "left = right), rounded to 0.1 mm"),
+        "contact.crawler.sphere_layout.end_shoe_x_m": ("CAD: crawler_grouser_tips.csv grouser pad centres (area 2108.5 mm^2) "
+                                                       "of the raised shoes beyond the end rollers, 3 per end, left = "
+                                                       "right, rounded to 0.1 mm"),
+        "contact.crawler.sphere_layout.end_shoe_gap_m": ("CAD: lowest grouser point above the floor per raised shoe "
+                                                         "(same order as end_shoe_x_m), rounded to 0.01 mm; ASSUMPTION: "
+                                                         "one CAD shoe phase (changes by a few mm with the track phase)"),
         "contact.crawler.sphere_layout.sphere_radius_m": "ASSUMPTION (no static effect)",
-        "contact.crawler.kn_per_sphere_N_m": "[L1] ASSUMPTION (derived): kn_total_N_m / (2 x spheres_per_track), dyn_model.py:317-334",
+        "contact.crawler.kn_per_sphere_N_m": ("[L1] ASSUMPTION (derived): kn_total_N_m / 12 roller spheres (floor "
+                                              "contact sum = kn_total); same value on the 12 gapped end-shoe spheres "
+                                              "(end engagement upper bound), 00_docs/01_dynamics/dynamics_model.md 3.8"),
         "contact.crawler.damping_ratio_heave": (f"[L1] ASSUMPTION: heave of the machine on the crawler (8.1 Hz), concrete "
                                                 f"(rigid) floor; {DAMPING_DECISION}"),
         "contact.crawler.damping_ratio_heave_soil": ("[SCM] ASSUMPTION: same on soil (wide-foundation radiation damping, "
@@ -1667,13 +1846,18 @@ def main() -> None:
         "contact.crawler.damping_ratio_heave_sensitivity_range": "ASSUMPTION: user decision 2026-10-20 (concrete and soil)",
         "contact.crawler.damping_total_N_s_m": ("[L1] ASSUMPTION (derived): 2 zeta sqrt(kn_total m), m = superstructure "
                                                 "top + 4 moving parts, dyn_model.py:349-352, run_reference.py:68-72"),
-        "contact.crawler.gn_per_sphere_1_s": ("[L1] ASSUMPTION (derived): damping_total / n_spheres / superstructure body "
-                                              "mass (m_eff of the crawler spheres; 00_docs/01_dynamics/dynamics_model.md 4.1 convention)"),
+        "contact.crawler.gn_per_sphere_1_s": ("[L1] ASSUMPTION (derived): damping_total / 12 roller spheres / superstructure "
+                                              "body mass (m_eff of the crawler spheres; 00_docs/01_dynamics/dynamics_model.md "
+                                              "4.1 convention); same value on all 24 spheres (one material, dynamics 3.8)"),
         "contact.crawler.smc_material": ("[L1] recommendation, "
                                          "00_docs/01_dynamics/dynamics_model.md 4.2"),
         "contact.crawler.collision_filter": "[common] recommendation, 00_docs/01_dynamics/dynamics_model.md 5 (V0)",
         "simulation.settle_on_crawler_min_s": ("[L1] ASSUMPTION (derived): ln(100) x largest crawler-on-floor time "
-                                               "constant (reference.json lift_V4_compliant_crawler, run_reference.py:174-191)"),
+                                               "constant, layout D, auger top (06_analysis/00_dynamics/crawler_layout_check.json "
+                                               f"{CRAWLER_LAYOUT_KEY} settle_length_s, sha256 "
+                                               f"{derived['crawler']['layout_check_sha256'][:16]}; "
+                                               "00_docs/01_dynamics/dynamics_model.md 3.8); not needed when initialised "
+                                               "at the analytic settled pose (3.8 item 5)"),
         "simulation.settle_on_pads_min_s": ("[L1] ASSUMPTION (derived): ln(100) / (zeta1 omega1), 1st L1 rocking mode "
                                             "(top); not needed when initialised at the analytic static solution "
                                             "(00_docs/01_dynamics/dynamics_model.md 4.5 item 1)"),
@@ -1879,8 +2063,31 @@ def evaluate_checks(checks: dict) -> list[str]:
             d["gn_m_moving_vs_exact_m_eff_rel"])
     require(d["pump_flow_covers_4_legs_at_vmax"], "dynamics.pump_flow_covers_4_legs_at_vmax",
             d["pump_flow_covers_4_legs_at_vmax"])
-    require(d["crawler_x_range_rounding_abs_m"] <= CRAWLER_X_RANGE_TOL_M, "dynamics.crawler_x_range_rounding_abs_m",
-            d["crawler_x_range_rounding_abs_m"])
+    c = d["crawler_cad_layout"]
+    require(c["rollers_per_track (left, right)"] == [CRAWLER_ROLLERS_PER_TRACK] * 2,
+            "dynamics.crawler_cad_layout.rollers_per_track", c["rollers_per_track (left, right)"])
+    require(c["raised_shoes_per_track (left, right)"] == [2 * CRAWLER_END_SHOES_PER_END] * 2,
+            "dynamics.crawler_cad_layout.raised_shoes_per_track", c["raised_shoes_per_track (left, right)"])
+    require(c["raised_shoes_rear_front (left)"] == [CRAWLER_END_SHOES_PER_END] * 2,
+            "dynamics.crawler_cad_layout.raised_shoes_rear_front", c["raised_shoes_rear_front (left)"])
+    for key in ("raised_shoes_outside_end_rollers", "flat_shoes_inside_raised"):
+        require(c[key], f"dynamics.crawler_cad_layout.{key}", c[key])
+    for key in ("left_right_roller_x_max_abs_m", "left_right_station_x_max_abs_m", "left_right_station_gap_max_abs_m",
+                "roller_abs_y_minus_track_centre_max_abs_m"):
+        require(c[key] <= CRAWLER_SYMMETRY_TOL_M, f"dynamics.crawler_cad_layout.{key}", c[key])
+    require(c["end_shoe_gap_min_m"] > 0.0, "dynamics.crawler_cad_layout.end_shoe_gap_min_m", c["end_shoe_gap_min_m"])
+    rounding_tol = {"track_centre_y": 0.5 * 10 ** -CRAWLER_TRACK_CENTRE_DIGITS, "roller_x": 0.5 * 10 ** -CRAWLER_X_DIGITS,
+                    "end_shoe_x": 0.5 * 10 ** -CRAWLER_X_DIGITS, "end_shoe_gap": 0.5 * 10 ** -CRAWLER_GAP_DIGITS}
+    for key, value in d["crawler_rounding_abs_m"].items():
+        require(value <= rounding_tol[key] + 1e-12, f"dynamics.crawler_rounding_abs_m.{key}", value)
+    j = d["crawler_layout_check_json"]
+    require(j["n_points_equal"], "dynamics.crawler_layout_check_json.n_points_equal", j["n_points_equal"])
+    for key, value in j["rel"].items():
+        require(value <= CRAWLER_LAYOUT_JSON_REL_TOL, f"dynamics.crawler_layout_check_json.rel.{key}", value)
+    require(j["flat_station_gap_max_abs_mm"] <= CRAWLER_FLAT_SHOE_TOL_MM,
+            "dynamics.crawler_layout_check_json.flat_station_gap_max_abs_mm", j["flat_station_gap_max_abs_mm"])
+    require(j["settle_abs_diff_s"] <= j["settle_tau_rounding_tol_s"], "dynamics.crawler_layout_check_json.settle_abs_diff_s",
+            j["settle_abs_diff_s"])
     refs = d["line_references"]
     for key in ("missing_text", "unlisted_references", "old_style_references"):
         require(not refs[key], f"dynamics.line_references.{key}", refs[key])

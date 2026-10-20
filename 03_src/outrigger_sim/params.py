@@ -73,6 +73,7 @@ TEXT_KEYS = frozenset(
         "name",
         "origin",
         "rod_side_chamber_model",
+        "scheme",
         "shape",
         "smc_material",
         "solver",
@@ -93,7 +94,7 @@ TEXT_SUBTREES = frozenset(
 )
 
 # Leaf keys that are counts and stay ``int`` (a float count would break ``range()``).
-COUNT_KEYS = frozenset({"spheres_per_track", "solver_max_iterations"})
+COUNT_KEYS = frozenset({"solver_max_iterations"})
 
 # Left out of the parameter fingerprint: the generation date changes on every export even
 # when no value changes, and must not invalidate saved snapshots (R16).

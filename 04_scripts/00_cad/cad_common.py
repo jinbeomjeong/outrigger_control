@@ -20,6 +20,7 @@ AUGER_DIR = CAD_DIR / "03_auger"
 MAST_DIR = CAD_DIR / "04_mast"
 MESH_DIR = CAD_DIR / "05_meshes"
 BREP_DIR = CAD_DIR / "06_brep"
+FACES_DIR = CAD_DIR / "07_faces"
 
 # Registry of every cache folder above (STEP hash, generators, file hashes).
 CACHE_MANIFEST_JSON = CAD_DIR / "cache_manifest.json"

@@ -50,13 +50,14 @@ from OCC.Core.TopoDS import TopoDS_Compound, TopoDS_Shape, topods
 from OCC.Core.TopTools import TopTools_FormatVersion_VERSION_3
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from cad_common import BREP_DIR
+from cad_common import BREP_DIR, PROJECT_ROOT
 
 PROTOTYPE_DIR = BREP_DIR / "prototypes"
 PROTOTYPES_CSV = BREP_DIR / "prototypes.csv"
 INSTANCES_CSV = BREP_DIR / "instances.csv"
 CACHE_INFO_JSON = BREP_DIR / "cache_info.json"
 DERIVED_DIR = BREP_DIR / "derived"
+CRAWLER_PARTS_CSV = DERIVED_DIR / "crawler" / "crawler_contact_parts.csv"
 CACHE_NAME = "06_brep"
 BINARY_SUFFIX = ".bbrep"  # BinTools binary (default)
 ASCII_SUFFIX = ".brep"  # BRepTools ASCII (legacy, legs/mast caches)
@@ -304,6 +305,26 @@ def load_compound(items: Iterable[Instance | str], placed: bool = True) -> TopoD
         path = item.instance_path if isinstance(item, Instance) else item
         builder.Add(compound, load_part(path, placed=placed))
     return compound
+
+
+def load_crawler_part(kind: str, side: str, index: int) -> TopoDS_Shape:
+    """One crawler contact part of layout D (``derive_crawler_parts.py``), CAD world, mm.
+
+    Args:
+        kind: ``roller``, ``end_shoe`` or ``flat_shoe``.
+        side: ``L`` (left, body +y) or ``R``.
+        index: 0-based ``order_index`` (ascending body x); for ``roller`` and
+            ``end_shoe`` it is the index into the YAML arrays
+            ``contact.crawler.sphere_layout.roller_x_m`` / ``end_shoe_x_m``.
+
+    Raises:
+        KeyError: If the index table has no such part.
+    """
+    with CRAWLER_PARTS_CSV.open(encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            if (row["kind"], row["side"], int(row["order_index"])) == (kind, side, index):
+                return read_brep(PROJECT_ROOT / row["file"])
+    raise KeyError(f"no crawler part {kind} {side} {index} in {CRAWLER_PARTS_CSV}")
 
 
 def clear_memory_cache() -> None:

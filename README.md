@@ -38,9 +38,10 @@ outrigger_control/
 │   ├── 01_parts/       부품 표·분류, 요약, 3면도
 │   ├── 02_legs/        다리 형상(brep)·면 정보
 │   ├── 03_auger/       오거 3단계 값·그림·하강 GIF
-│   ├── 04_mast/        마스트 힌지 검토(참고용, 대용량 캐시는 git 제외)
+│   ├── 04_mast/        마스트 힌지 검토(참고용, 대용량 캐시는 git 제외), 마스트 보 단면 특성(C9)
 │   ├── 05_meshes/      렌더용 메시 캐시 (git 제외)
-│   └── 06_brep/        전체 부품 B-rep 캐시(프로토타입 .bbrep는 git 제외)·배치 표·크롤러 파생 캐시, 목록은 01_cad/cache_manifest.json
+│   ├── 06_brep/        전체 부품 B-rep 캐시(프로토타입 .bbrep는 git 제외)·배치 표·크롤러 파생 캐시, 목록은 01_cad/cache_manifest.json
+│   └── 07_faces/       전체 면 색인(C5): 면 종류·면적·중심·법선·축·bbox, CAD/기체 좌표 (csv.gz는 git 제외)
 ├── 02_params/      시뮬레이션 공통 파라미터 (04_scripts/00_cad/export_params.py가 생성)
 ├── 03_src/outrigger_sim/  시뮬레이션 패키지 (엔진 독립 코어 + chrono/, sensors/, control/, scenarios/, verify/)
 ├── 04_scripts/     실행·분석 스크립트
@@ -78,6 +79,9 @@ GIF 애니메이션과 큰 메시(`*.gif`, `*_lowres.obj`)는 git에 올리지 �
 | `06_analysis/00_dynamics/leg_extension_loads.gif` | `C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I 04_scripts/01_dynamics/run_leg_extension_loads.py` |
 | `06_analysis/01_chrono/solver_benchmark_{L1,SCM,scale}.gif` | `PY -I -u 04_scripts/02_chrono/solver_benchmark/make_gifs.py all` (저장된 측정 결과 `07_results/solver_benchmark/`로 GIF만, 약 5분). 측정부터 다시: `PY -I -u 04_scripts/02_chrono/solver_benchmark/run_benchmark.py all --report` (약 50분) |
 | `01_cad/06_brep/derived/crawler/crawler_lowres.obj` | `PY -I 04_scripts/00_cad/derive_crawler_cache.py` 뒤 `PY -I 04_scripts/00_cad/check_cache.py --write --cache 06_brep` (약 8분, 파생 파일 전부 다시 씀, `00_docs/00_cad/cad_review.md` 8.6절) |
+| `01_cad/07_faces/*.csv.gz`(면 색인, 6.1 MB) | `PY -I 04_scripts/00_cad/build_face_index.py`(약 4분, 검증 포함) 뒤 `PY -I 04_scripts/00_cad/check_cache.py --write --cache 07_faces` |
+| `01_cad/06_brep/derived/crawler/parts/*.bbrep`(크롤러 D안 접촉 부품 44개, 84.6 MB) | `PY -I 04_scripts/00_cad/derive_crawler_parts.py`(약 2분) 뒤 `check_cache.py --write --cache 06_brep` |
+| `06_analysis/01_chrono/track_drive_smoke.gif`(궤도차량 API 연기 시험, 우리 크롤러 모델 아님) | `PY -I -u 04_scripts/02_chrono/track_drive/smoke_drive_gif.py` (약 1분) |
 
 STEP 원본·B-rep·메시 캐시처럼 더 큰 생성물은 `01_cad/cache_manifest.json`과 `04_scripts/00_cad/check_cache.py`로 관리한다.
 
@@ -92,4 +96,4 @@ STEP 원본·B-rep·메시 캐시처럼 더 큰 생성물은 `01_cad/cache_manif
 - `REXOME33_Assy_r3(미니어쳐).stp`: Autodesk Inventor 2020에서 내보낸 STEP AP214 조립품(약 630 MB, 2023-05-10). 헤더 기재 외곽 치수는 11,556 × 7,036 × 3,114이고, 부품으로 잰 값은 11,488.5 × 7,034.2 × 3,073.1 mm(높이 × 길이 × 폭)다. 크기 때문에 git에서 제외한다.
 - 길이 단위는 mm이고 실기 치수다. CAD는 Y가 위쪽이며, 기체 좌표와는 x = +Z_cad, y = +X_cad, z = +Y_cad로 대응한다(전방 = 마스트·FRONT JACK 쪽).
 - 부품명에 "OUTRIGGER"는 없다. 아우트리거의 유압 실린더는 `FRONT JACK CYL` ×2(사용자 제공)와 `REAR JACK CYL` ×2다. `LOCKING CYL`은 오거용 실린더라 다리가 아니다.
-- 상세 결과와 미확정 질문은 [00_docs/00_cad/cad_review.md](00_docs/00_cad/cad_review.md)(제원·다리)와 [00_docs/00_cad/cad_mast_review.md](00_docs/00_cad/cad_mast_review.md)(마스트 힌지·운송 자세, 참고용), [00_docs/00_cad/cad_auger_levels.md](00_docs/00_cad/cad_auger_levels.md)(오거 3단계 위치), 추출 스크립트는 `04_scripts/00_cad/`, 데이터는 `01_cad/`에 있다.
+- 상세 결과와 미확정 질문은 [00_docs/00_cad/cad_review.md](00_docs/00_cad/cad_review.md)(제원·다리)와 [00_docs/00_cad/cad_mast_review.md](00_docs/00_cad/cad_mast_review.md)(마스트 힌지·운송 자세, 참고용), [00_docs/00_cad/cad_auger_levels.md](00_docs/00_cad/cad_auger_levels.md)(오거 3단계 위치), [00_docs/00_cad/cad_mast_beam.md](00_docs/00_cad/cad_mast_beam.md)(마스트 보 단면·1차 굽힘 추정, C9), 추출 스크립트는 `04_scripts/00_cad/`, 데이터는 `01_cad/`에 있다.

@@ -55,10 +55,12 @@
 - 제어 성능 목표는 roll·pitch 목표값에 대한 자세 정확도다. 정상상태 오차 허용치는 **±0.2°**다(2026-10-20 ±0.1°에서 완화, 근거 [00_docs/05_sensors/imu_cabin_and_accuracy_review.md](00_docs/05_sensors/imu_cabin_and_accuracy_review.md)). 완료 판정 데드밴드는 0.03°를 유지하고, **IMU 현장 영점 교정을 운용 절차로 의무화**한다. **장착 몫 0.02°**(사용자 결정 2026-10-20: IMU를 C1 프레임에 직접 달아 캐빈 방진 마운트 몫 0.02°를 빼고 0.03° → 0.02°. 핀 러그 무하중이 제조사 확인되면 0.01°까지 줄일 수 있다, 근거 `00_docs/05_sensors/imu_cabin_and_accuracy_review.md` 10절). 그래서 센서 정지 영점 오차 허용은 **0.14°(2.44 mg)**다(이전 0.13°, 2.27 mg).
 - IMU 장착 위치(2026-10-20): **캐빈 바닥 아래 상부 프레임**, 기체 좌표 **(0.31, 0.88, 0.040) m**(BASE DECK 좌측 폰툰 15 mm 가로판 윗면, 후보 C1; 사용자 결정 2026-10-20, 근거 `00_docs/00_cad/cad_origin_mass_imu.md` 4절, 그림 `01_cad/01_parts/imu_c1_*.png`). 박스 100×100×50 mm가 간섭 없이 들어가며, 판 후방 가장자리 여유가 20 mm라 설치 때 전방으로 조금 옮기는 편이 낫다. 이전 가정점 (0.20, 0.88, 0.30) m는 폰툰 안 빈 공간이라 붙일 면이 없었다. 캐빈 몸체에 달지 않는다(캐빈 방진 마운트 오차 회피). 로킹 회전 중심이 지면 아래라 **IMU를 높이 달수록 겉보기 기울기 증폭이 커진다** — 낮게 단다.
 - 시뮬레이션 시간 간격(사용자 결정, 2026-10-20) — **용도별 dt**:
-  - 일반 실행(제어기 개발, 감도 해석, ML 데이터 생성): L1·L2b 약 **1×10⁻⁴ s**. 적분기 `EULER_IMPLICIT_LINEARIZED`의 수치 감쇠 ζ_num ≈ ωΔt/2를 1차 로킹 모드 물리 감쇠의 10 % 이하로 두는 규칙값이다(감쇠비 개정으로 0.2 ms에서 줄어듦, 값은 `02_params/rexome33.yaml` `simulation.*.dt_s`).
+  - 일반 실행(제어기 개발, 감도 해석, ML 데이터 생성): L1·L2b 약 **1×10⁻⁴ s**. 적분기 `EULER_IMPLICIT_LINEARIZED`의 수치 감쇠 ζ_num ≈ ωΔt/2를 1차 로킹 모드 물리 감쇠의 10 % 이하로 두는 규칙값이다(감쇠비 개정으로 0.2 ms에서 줄어듦, 값은 `02_params/rexome33.yaml` `simulation.*.dt_s`). **0.2 ms 복귀는 조건부 검토**(사용자 결정 2026-10-20): 재검토 결과 SMC 접촉은 명시 적분이라 수치 감쇠는 부싱 몫(r·ωΔt/2)에만 생기고, 상한은 3차 yaw-sway 0.205 ms다(`06_analysis/00_dynamics/numerical_damping_review.json`). S3 V8(a)에서 3차 수치 감쇠가 예측의 ±30 % 안에 들어 부싱 암시 가정이 확인되면 2×10⁻⁴ s로 바꿀지 다시 정한다. 다리 ζ 0.01 감도 실행은 그때도 예외(접선 모드 ζ 미판정 또는 5×10⁻⁵ s).
   - 기준해(V9 수렴 판정)와 접지 전환 해석(V4 들어 올림, 다리 부상·재접지, D2 외란 하중 피크): **1×10⁻⁵ s**. 한 실행 안에서 전환 구간만 작은 dt로 바꾸는 방식도 허용한다.
   - L2(유압 사양 확정 후)는 로드 국부 모드 규칙값(현재 5×10⁻⁵ s)을 따른다.
 - 선형 솔버(사용자 결정, 2026-10-20): L1(SMC) 기본은 **SPARSE_LU + 희소 패턴 고정**(`LockSparsityPattern(True)`). 근거는 `06_analysis/01_chrono/solver_benchmark.json`(전체 규모 L1에서 QR 147 / LU 133 / Pardiso 447 µs/step, 결과 동일, 미지수 180 이상에서 QR 급증). SPARSE_QR·PARDISO_MKL은 옵션으로 둔다. PARDISO_MKL은 env 미활성 실행에서 `Library\bin\libomp.dll`을 미리 로드해야 동작한다(`chrono/system.py`가 처리). L2b(NSC)는 PSOR 50회.
+- 크롤러 접촉 배치(사용자 결정, 2026-10-20, 근거 `00_docs/01_dynamics/dynamics_model.md` 3.8절, `06_analysis/00_dynamics/crawler_layout_check.json`): **D안 = 롤러 위치 6개/측 + 틈 있는 끝 슈 3개/끝**(CAD B-rep 실측: 트랙 중심 ±1.045 m, 평탄 접지 1.637 m, 끝 슈 틈 2~22 mm). 크롤러 총 강성은 **1×10⁸ N/m 유지, ×3을 감도로** 본다(근거 약함). 크롤러 하부체는 다른 기종(REXOME25) 모델이라 제조사 확인 대기. V4 판정은 접지 순서("첫 접지 = 후방 쌍")를 쓰지 않고 **다리별 접지 시각이 같은 배치 기준해와 ±0.05 s 안**으로 한다(순서는 크롤러 강성 가정에 따라 뒤집힘). 기준해 시각은 **감쇠 3자유도의 동적 접지 시각**이고, 준정적 시각은 참고로 기록한다(사용자 결정 2026-10-20; 준정적이면 후방이 29 ms 늦게 나와 허용의 60 %를 먼저 씀). 개루프 동시 신장의 F_min 여유가 크롤러 모델에 민감하므로 접지 단계(접지 전 감속, 다리별 접지 확인)는 제어기가 맡는다. 들어 올림 하중 판정(사용자 결정 2026-10-20, ②안): 동적 피크는 기록 + 상한(실린더 힘 < 218 kN)만 판정하고, 3자유도 기준 `06_analysis/00_dynamics/leg_extension_loads.json`(기준 파일로 등록, D안 동적 141.0 kN·준정적 119.3 kN)과의 ±15 %는 참고로 기록한다. 부품별 B-rep·질량 특성은 `01_cad/06_brep/derived/crawler/crawler_contact_parts.csv`(`order_index` = YAML 배열 인덱스, 로더 `04_scripts/00_cad/brep_cache.load_crawler_part`).
+- 주행 시험 트랙(선택, 사용자 결정 2026-10-20): 크롤러 **앞쪽 스프로킷 = 유압 주행 모터**(뒤쪽 Ø548 바퀴는 아이들러, 사용자 확정)를 돌려 실제 궤도 모델로 전진·후진한다. Chrono Vehicle 궤도 템플릿을 **JSON**으로 쓴다(pychrono 10은 추상 템플릿을 Python에서 상속할 수 없음). SinglePin 강체 슈(44개/측, 피치 173.2 mm), 접촉은 NSC(SMC는 정지 마찰 없음). 레벨링 모델과 빌더·시나리오·기록을 분리한다. 계획 `00_docs/03_chrono/track_drive_plan.md`.
 - 자세 신호 필터: **2차 저역통과**(1차 τ 0.5 s × 2단). 1차 필터는 로킹 잔류 0.023°가 남아 부족하다.
 - 제어 구조(잠정, 2026-10-20): **C2 = 기구학 분해(heave·roll·pitch) + 압력 기반 비틀림 루프(n^T P → 0) + F_min 가드**, 레벨링 뒤 **결합 접지 판정(탐침)**. 다리 속도 u = A[ż, φ̇, θ̇]ᵀ + n·τ̇, n = (0.476, −0.476, −0.523, 0.523). 대안은 C8(2상). 비교 근거는 [00_docs/04_control/control_candidates_comparison.md](00_docs/04_control/control_candidates_comparison.md), 문헌은 [00_docs/04_control/leveling_control_survey.md](00_docs/04_control/leveling_control_survey.md).
 
@@ -94,8 +96,9 @@
 - roll·pitch 목표값 범위
 - 제어기 세부: 탐침을 매번 할지(감시 트리거 때만 할지), 비틀림 목표(n^T P = 0 또는 최소 하중 최대화), 실 마찰 설계 띠 F_band, 게인 — 근거는 [00_docs/04_control/control_candidates_comparison.md](00_docs/04_control/control_candidates_comparison.md) 8절
 - 유압 사양(체적 탄성계수, 배관, 응답 시정수), 접촉 강성·감쇠·마찰 실측값 — 지금은 가정치
-- 마스트 1차 굽힘 진동수(L1 로킹 1.8~3.9 Hz와 겹칠 수 있음)
+- 마스트 1차 굽힘 진동수(CAD 참고 추정: 상단 전후 2.4–2.7 Hz·좌우 ≤ 3.6 Hz로 L1 로킹 1.8~3.9 Hz와 겹칠 수 있음, dynamics-expert 검증 대기; 붐 실린더·백스테이 유압 강성 미정 — 질문 Q-B1~B4, `00_docs/00_cad/cad_mast_beam.md` 11절)
 - IMU 센서 모델 선정, 제어 주기(기본 20 ms 가정). 장착점 C1의 실기 확인(점검구 접근, 판 국부 강성)
+- 주행 시험(T): 주행 모터 사양, 트랙 장력, 스프로킷 맞물림(CAD 23이빨 vs 핀 반지름 불일치), 상부 롤러 유무
 
 ## 작업 규칙
 

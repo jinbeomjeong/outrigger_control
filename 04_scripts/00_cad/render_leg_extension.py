@@ -9,12 +9,15 @@ Reads only cached data and the shared parameters (no STEP parsing, values not ha
     02_params/rexome33.yaml                via 03_src/outrigger_sim/params.load_params()
         actuator.{stroke_m, max_speed_m_s, extension_direction}
         legs.<leg>.{pad_bottom_center_retracted_m, retracted_offset_from_cad_m, axis_direction}
-        ground.crawler_bottom_z_m, contact.crawler.sphere_layout
+        ground.crawler_bottom_z_m, contact.crawler.sphere_layout (layout D, crawler_contact.py)
         superstructure.auger_levels.<level>.{com_m, auger_travel_m}
         contact.rigid_floor.L1.operating_extension_m (only for the reference comparison)
     01_cad/01_parts/parts_classified.csv   part rows (leg, group; auger moving set)
     01_cad/05_meshes/render_mesh.npz       decimated drawing meshes, same row order
-    06_analysis/00_dynamics/reference.json lift_V4_compliant_crawler (comparison only)
+    compliant V4 reference with the same crawler layout (comparison only):
+        06_analysis/00_dynamics/reference.json lift_V4_compliant_crawler, layout marked
+        '(YAML contact.crawler.sphere_layout)' with the YAML sphere count; otherwise
+        06_analysis/00_dynamics/crawler_layout_check.json layouts.<D>.V4_quasi_static
 
 Writes:
     01_cad/02_legs/leg_extension.gif
@@ -23,8 +26,10 @@ Writes:
 Kinematics (quasi-static, rigid). Body pose q = (uz, roll phi, pitch theta) about the body
 origin; x, y and yaw stay 0 (no horizontal motion). Small-angle contact heights
 z = p_z + uz + p_y phi - p_x theta for the 4 pad bottom centres (moved by e along
-actuator.extension_direction) and the crawler contact points (contact.crawler.sphere_layout
-bottoms). The pose minimises the superstructure CoM height subject to z >= ground for all
+actuator.extension_direction) and the crawler contact points (contact.crawler.sphere_layout,
+layout D: 12 roller points with the bottom on the floor + 12 end-shoe points raised by
+end_shoe_gap_m, unilateral, so an end shoe only touches once its gap has closed). The pose
+minimises the superstructure CoM height subject to z >= ground for all
 points (linear programme, rigid unilateral contacts, frictionless = potential-energy minimum).
 With all four pads touching and the crawler off, the pose is the least-squares solution of
 the pad contacts (exact here, residual reported). Leg rod weight is left out of the
@@ -63,6 +68,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from analyze_auger_levels import MOVING, classify
 from analyze_parts import CLASSIFIED_CSV, INK_PRIMARY, INK_SECONDARY, LEG_COLORS, LEG_ORDER
 from cad_common import LEGS_DIR, MM_PER_M, PROJECT_ROOT
+from crawler_contact import layout_from_params
 from render_auger_descent import load_render_meshes
 from render_layout_views import (
     LEG_DEPTH_BIAS_M,
@@ -84,7 +90,11 @@ from outrigger_sim.params import load_params  # noqa: E402
 GIF_PATH = LEGS_DIR / "leg_extension.gif"
 KINEMATICS_JSON = LEGS_DIR / "leg_extension_kinematics.json"
 REFERENCE_JSON = PROJECT_ROOT / "06_analysis" / "00_dynamics" / "reference.json"
-REFERENCE_LAYOUT = "default 2x9 (YAML contact.crawler.sphere_layout)"
+REFERENCE_YAML_MARK = "(YAML contact.crawler.sphere_layout)"
+LAYOUT_CHECK_JSON =PROJECT_ROOT / "06_analysis" / "00_dynamics" / "crawler_layout_check.json"
+# Layout key of crawler_layout_check.json that equals the YAML layout D (export_params.py
+# CRAWLER_LAYOUT_KEY).
+LAYOUT_CHECK_KEY = "D_rollers_plus_gapped_end_shoes"
 CONTACT_TOL_M = 1e-7
 EVENT_TOL_S = 1e-6
 EVENT_MERGE_S = 1e-3
@@ -106,10 +116,10 @@ class QuasiStaticLift:
         self.ground_z = params.ground.crawler_bottom_z_m
         self.extension_direction = np.array(params.actuator.extension_direction)
         self.pads = np.array([leg.pad_bottom_center_retracted_m for leg in params.legs])
-        layout = params.get("contact.crawler.sphere_layout")
-        xs = np.linspace(*layout["x_range_m"], int(layout["spheres_per_track"]))
-        y = layout["track_centre_y_m"]
-        self.crawler = np.array([(x, side * y, self.ground_z) for side in (1, -1) for x in xs])
+        self.layout = layout_from_params(params)
+        # Roller bottoms on the floor, end-shoe bottoms raised by their gap (unilateral).
+        self.crawler = self.layout.bottoms_m(self.ground_z)
+        self.end_shoe = ~self.layout.is_roller
         com = np.array(params.superstructure.mass_properties.com_m)
         self.cost = np.array([1.0, com[1], -com[0]])
 
@@ -134,6 +144,7 @@ class QuasiStaticLift:
         pad_gap, crawler_gap = gaps[:4], gaps[4:]
         pad_contact = pad_gap < CONTACT_TOL_M
         crawler_contact = bool((crawler_gap < CONTACT_TOL_M).any())
+        q_lp = q.copy()
         residual = 0.0
         if not crawler_contact and pad_contact.sum() >= 3:
             # Statically indeterminate 4-pad support: least squares on the touching pads.
@@ -143,11 +154,16 @@ class QuasiStaticLift:
             residual = float(np.abs(active @ q - target).max())
             gaps = points[:, 2] + rows @ q - self.ground_z
             pad_gap, crawler_gap = gaps[:4], gaps[4:]
+        # Crawler point contacts from the LP pose (the LP decides the support set).
+        crawler_lp_gap = self.crawler[:, 2] + self.rows(self.crawler) @ q_lp - self.ground_z
+        crawler_point_contact = crawler_lp_gap < CONTACT_TOL_M
         return {
             "q": q,
             "pad_gap_m": pad_gap,
             "pad_contact": pad_contact,
             "crawler_contact": crawler_contact,
+            "crawler_point_contact": crawler_point_contact,
+            "end_shoe_contact": bool(crawler_point_contact[self.end_shoe].any()),
             "crawler_clearance_m": float(crawler_gap.min()),
             "lstsq_residual_m": residual,
         }
@@ -174,7 +190,21 @@ def events(model: QuasiStaticLift, schedule, t_end: float) -> dict:
     touch = [first_time(lambda t, i=i: bool(model.solve(schedule(t))["pad_contact"][i]), t_end)
              for i in range(4)]
     crawler_off = first_time(lambda t: not model.solve(schedule(t))["crawler_contact"], t_end)
-    return {"touch_s": touch, "crawler_off_s": crawler_off}
+    end_shoe_on = first_time(lambda t: model.solve(schedule(t))["end_shoe_contact"], t_end)
+    # Crawler points that carry the body between the first pad touch and the crawler lift-off
+    # (the pivot line of the pitch / roll motion), sampled in the middle of that window.
+    pivot = None
+    t_first = min(touch)
+    if crawler_off is not None and crawler_off - t_first > 2 * EVENT_TOL_S:
+        state = model.solve(schedule(0.5 * (t_first + crawler_off)))
+        mask = state["crawler_point_contact"]
+        pivot = {
+            "t_s": round(0.5 * (t_first + crawler_off), 4),
+            "points_xy_m": model.layout.xy_m[mask].round(4).tolist(),
+            "kind": [k for k, m in zip(model.layout.kind, mask, strict=True) if m],
+        }
+    return {"touch_s": touch, "crawler_off_s": crawler_off, "end_shoe_first_contact_s": end_shoe_on,
+            "crawler_pivot_between_touch_and_lift_off": pivot}
 
 
 def pose_summary(state: dict) -> dict:
@@ -189,8 +219,68 @@ def pose_summary(state: dict) -> dict:
     }
 
 
+def load_v4_reference(layout) -> dict:
+    """Compliant V4 quasi-static events for the YAML crawler layout, normalised.
+
+    Prefers the reference.json lift_V4 layout marked as the YAML layout (key ending in
+    REFERENCE_YAML_MARK) when its sphere count and track centre equal the YAML layout;
+    falls back to the layout-D entry of crawler_layout_check.json (same CAD positions, gaps
+    and kn per point as the YAML).
+    """
+    reference = json.loads(REFERENCE_JSON.read_text(encoding="utf-8"))
+    layouts = reference["lift_V4_compliant_crawler"]["layouts"]
+    key = next((k for k, v in layouts.items()
+                if k.endswith(REFERENCE_YAML_MARK)
+                and v.get("n_spheres") == layout.n_points
+                and abs(v.get("track_centre_y_m", np.nan) - layout.track_centre_y_m) < 5e-4),
+               None)
+    if key is not None:
+        entry = layouts[key]
+        ev, end = entry["quasi_static_events_s"], entry["end_state (after the last stop)"]
+        return {
+            "source": f"06_analysis/00_dynamics/reference.json lift_V4_compliant_crawler."
+                      f"layouts['{key}']",
+            "first_touch_leg": ev["first_touch_leg"], "first_touch_s": ev["first_touch_s"],
+            "touch_s": ev["touch_s (FL, FR, RL, RR)"],
+            "crawler_fully_off_s": ev["crawler_fully_off_s"],
+            "leg_stop_s": ev.get("leg_stop_s (FL, FR, RL, RR)"),
+            "end_attitude_deg": end["attitude_deg (roll, pitch)"],
+            "end_crawler_min_clearance_mm": end["crawler_min_clearance_mm"],
+            "settled_on_crawler": entry["settled_on_crawler (legs at 0)"],
+            "layout_check (reference value, YAML value)": {
+                "n_points": [entry["n_spheres"], layout.n_points],
+                "track_centre_y_m": [entry["track_centre_y_m"], layout.track_centre_y_m]},
+        }
+    check = json.loads(LAYOUT_CHECK_JSON.read_text(encoding="utf-8"))
+    entry = check["layouts"][LAYOUT_CHECK_KEY]
+    v4 = entry["V4_quasi_static"]
+    same = {
+        "n_points": [entry["n_points"], layout.n_points],
+        "track_centre_y_m": [check["cad_measurements"]["track_centre_y_m"],
+                             layout.track_centre_y_m],
+        "roller_x_m": [check["cad_measurements"]["roller_axes_x_m (left)"],
+                       layout.xy_m[layout.is_roller & (layout.xy_m[:, 1] > 0), 0].tolist()],
+    }
+    mismatch = [k for k, (a, b) in same.items() if not np.allclose(a, b, atol=5e-4)]
+    if mismatch:
+        raise SystemExit(f"{LAYOUT_CHECK_JSON.name} layout {LAYOUT_CHECK_KEY} differs from the "
+                         f"YAML crawler layout in {mismatch}: {same}")
+    return {
+        "source": f"06_analysis/00_dynamics/crawler_layout_check.json layouts."
+                  f"{LAYOUT_CHECK_KEY}.V4_quasi_static (no matching YAML layout in reference.json)",
+        "first_touch_leg": v4["first_touch_leg"], "first_touch_s": v4["first_touch_s"],
+        "touch_s": v4["touch_s (FL, FR, RL, RR)"],
+        "crawler_fully_off_s": v4["crawler_fully_off_s"],
+        "leg_stop_s": None,
+        "end_attitude_deg": v4["end_attitude_deg (roll, pitch)"],
+        "end_crawler_min_clearance_mm": v4["end_crawler_min_clearance_mm"],
+        "settled_on_crawler": entry["settled_on_crawler (legs at 0)"],
+        "layout_check (reference value, YAML value)": same,
+    }
+
+
 def compare_with_reference(model, params, speed) -> dict:
-    """Same procedure as reference.json lift_V4 (each leg stops at its e_op) in this model."""
+    """Same procedure as the compliant V4 (each leg stops at its e_op) in this model."""
     e_op = np.array(params.contact.rigid_floor.L1.operating_extension_m)
     stop_s = e_op / speed
 
@@ -200,39 +290,40 @@ def compare_with_reference(model, params, speed) -> dict:
     t_end = float(stop_s.max())
     kin = events(model, schedule, t_end)
     end = pose_summary(model.solve(e_op))
-    reference = json.loads(REFERENCE_JSON.read_text(encoding="utf-8"))
-    ref_layout = reference["lift_V4_compliant_crawler"]["layouts"][REFERENCE_LAYOUT]
-    ref_events = ref_layout["quasi_static_events_s"]
-    ref_end = ref_layout["end_state (after the last stop)"]
+    ref = load_v4_reference(model.layout)
     first = min(range(4), key=lambda i: kin["touch_s"][i])
     tied = [LEG_ORDER[i] for i in range(4)
             if abs(kin["touch_s"][i] - kin["touch_s"][first]) < 1e-4]
     rows = [
-        ("first touch leg", ref_events["first_touch_leg"], "=".join(tied)),
-        ("first touch [s]", ref_events["first_touch_s"], round(kin["touch_s"][first], 4)),
+        ("first touch leg", ref["first_touch_leg"], "=".join(tied)),
+        ("first touch [s]", ref["first_touch_s"], round(kin["touch_s"][first], 4)),
     ]
     for i, leg in enumerate(LEG_ORDER):
-        rows.append((f"touch {leg} [s]", ref_events["touch_s (FL, FR, RL, RR)"][i],
-                     round(kin["touch_s"][i], 4)))
+        rows.append((f"touch {leg} [s]", ref["touch_s"][i], round(kin["touch_s"][i], 4)))
+    stops = [round(float(s), 3) for s in stop_s]
     rows += [
-        ("crawler fully off [s]", ref_events["crawler_fully_off_s"],
-         round(kin["crawler_off_s"], 4)),
-        ("leg stop FL/FR, RL/RR [s]", ref_events["leg_stop_s (FL, FR, RL, RR)"],
-         [round(float(s), 3) for s in stop_s]),
-        ("end roll [deg]", ref_end["attitude_deg (roll, pitch)"][0], end["roll_deg"]),
-        ("end pitch [deg]", ref_end["attitude_deg (roll, pitch)"][1], end["pitch_deg"]),
-        ("end crawler min clearance [mm]", ref_end["crawler_min_clearance_mm"],
+        ("crawler fully off [s]", ref["crawler_fully_off_s"], round(kin["crawler_off_s"], 4)),
+        ("leg stop FL/FR, RL/RR [s]", ref["leg_stop_s"] or "same procedure (YAML e_op / v)",
+         stops),
+        ("end roll [deg]", ref["end_attitude_deg"][0], end["roll_deg"]),
+        ("end pitch [deg]", ref["end_attitude_deg"][1], end["pitch_deg"]),
+        ("end crawler min clearance [mm]", ref["end_crawler_min_clearance_mm"],
          end["crawler_min_clearance_mm"]),
     ]
-    settled = ref_layout["settled_on_crawler (legs at 0)"]
     return {
-        "procedure": "reference.json lift_V4_compliant_crawler: t = 0 all legs at +v_max, "
+        "procedure": "compliant V4 (lift_V4_compliant_crawler): t = 0 all legs at +v_max, "
                      "each leg stops at contact.rigid_floor.L1.operating_extension_m",
-        "reference_layout": REFERENCE_LAYOUT,
+        "reference_source": ref["source"],
+        "crawler_layout": model.layout.summary(),
         "operating_extension_m": e_op.tolist(),
         "rows (quantity, reference V4 compliant, this rigid kinematic model)": rows,
-        "reference_settled_on_crawler": settled,
+        "reference_settled_on_crawler": ref["settled_on_crawler"],
         "end_state_kinematic": end,
+        "kinematic_events_reference_procedure": {
+            "end_shoe_first_contact_s": kin["end_shoe_first_contact_s"],
+            "crawler_pivot_between_touch_and_lift_off":
+                kin["crawler_pivot_between_touch_and_lift_off"],
+        },
     }
 
 
@@ -618,16 +709,19 @@ def main() -> None:
     kinematics = {
         "meta": {
             "script": "04_scripts/00_cad/render_leg_extension.py",
-            "params": str(params.source_path.relative_to(PROJECT_ROOT)),
+            "params": params.source_path.relative_to(PROJECT_ROOT).as_posix(),
             "params_sha256": params.sha256,
             "auger_level": params.level.value,
             "frame": "body: x forward, y left, z up, origin = CAD origin; pitch + = nose down",
             "model": "quasi-static rigid body, rigid level ground at ground.crawler_bottom_z_m, "
                      "unilateral rigid contacts at the 4 pad bottom centres and the crawler "
-                     "sphere-layout bottoms; pose = min CoM height (LP); 4 pads only -> least "
+                     "contact points of contact.crawler.sphere_layout (layout D: 12 roller "
+                     "points on the floor + 12 end-shoe points raised by end_shoe_gap_m); "
+                     "pose = min CoM height (LP); 4 pads only -> least "
                      "squares; x, y, yaw fixed; small angles; rod weight not in the potential; "
                      "pads keep the body orientation (swivel not modelled, tilt <= 0.13 deg)",
             "contact_tolerance_m": CONTACT_TOL_M,
+            "crawler_layout": model.layout.summary(),
         },
         "gif_schedule": {
             "description": "all legs e(t) = min(v t, stroke)",
@@ -636,6 +730,9 @@ def main() -> None:
             "t_end_s": t_end,
             "touch_s (FL, FR, RL, RR)": [round(v, 4) for v in touch],
             "crawler_off_s": round(gif_events["crawler_off_s"], 4),
+            "end_shoe_first_contact_s": gif_events["end_shoe_first_contact_s"],
+            "crawler_pivot_between_touch_and_lift_off":
+                gif_events["crawler_pivot_between_touch_and_lift_off"],
             "end_state": pose_summary(final_state),
         },
         "reference_comparison": comparison,

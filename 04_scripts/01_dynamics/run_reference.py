@@ -87,27 +87,26 @@ def lift_reference(p, geo, e_op, k_L1, kt_L1, tests):
         },
     }
     sph_r = dm.CRAWLER_DEFAULTS["sphere_radius_m"]
-
-    def layout(nx, yt):
-        (x0, x1), _ = geo.crawler_xy_box
-        xs = np.linspace(x0, x1, nx)
-        pts = np.array([[x, s * yt] for s in (1.0, -1.0) for x in xs])
-        return pts, np.full(len(pts), kn_tot / len(pts))
-
+    # layout D (YAML contact.crawler.sphere_layout, dynamics_model.md 3.8) + sensitivities: name -> (xy, k, gap, c each)
+    xy_d, k_d, _ = dm.crawler_points(p); gap_d = dm.crawler_gaps(p); n_rol = int((gap_d <= 0).sum())
+    s3 = dm.crawler_kn_scales(p)[-1]   # kn_total x3 (user decision 2026-10-20), dashpot x sqrt(3) (same heave zeta)
     layouts = {
-        "default 2x9 (YAML contact.crawler.sphere_layout)": (dm.CRAWLER_DEFAULTS["spheres_per_track"], dm.CRAWLER_DEFAULTS["track_centre_y_m"]),
-        "sensitivity 2x2 box corners": (2, geo.crawler_xy_box[1][1]),
-        "sensitivity 2x41 near-continuous": (41, dm.CRAWLER_DEFAULTS["track_centre_y_m"]),
+        V4_LAYOUT_D: (xy_d, k_d, gap_d, c_tot / n_rol),
+        V4_LAYOUT_D_K3: (xy_d, k_d * s3, gap_d, c_tot * math.sqrt(s3) / n_rol),
+        V4_LAYOUT_ROLLERS_ONLY: (xy_d[:n_rol], k_d[:n_rol], gap_d[:n_rol], c_tot / n_rol),
+        V4_LAYOUT_D_RIGID: (xy_d, k_d * RIGID_CRAWLER_SCALE, gap_d, c_tot * math.sqrt(RIGID_CRAWLER_SCALE) / n_rol),
     }
+    out["crawler_contact_assumptions"]["layout_D"] = {
+        "kn_per_sphere_N_m": r(k_d[0]), "c_per_sphere_N_s_m": r(c_tot / n_rol), "kn_total_sensitivity_scale": r(s3),
+        "n_spheres (rollers gap 0, end shoes gapped)": [n_rol, len(xy_d) - n_rol]}
     A_pad = dm.support_matrix(xy)
     t_stop = e_op / v
     t_end = float(t_stop.max())
     lay_out = {}
-    default_events = None
-    for name, (nx, yt) in layouts.items():
-        pts, kc = layout(nx, yt)
+    lay_events = {}
+    for name, (pts, kc, gap, c_each) in layouts.items():
         A_cr = dm.support_matrix(pts)
-        F_cr0, q0, _ = dm.static_unilateral(pts, kc, np.zeros(len(pts)), W, cg)
+        F_cr0, q0, act0 = dm.static_unilateral(pts, kc, -gap, W, cg)
         gap0 = touch + A_pad @ q0
         t_touch_kin = gap0 / v
 
@@ -115,7 +114,7 @@ def lift_reference(p, geo, e_op, k_L1, kt_L1, tests):
 
         def state(t):
             e = np.minimum(v * t, e_op)
-            delta = np.concatenate([e - touch, np.zeros(len(pts))])
+            delta = np.concatenate([e - touch, -gap])
             F, q, act = dm.static_unilateral(allxy, allk, delta, W, cg)
             return F, q, act
 
@@ -139,14 +138,16 @@ def lift_reference(p, geo, e_op, k_L1, kt_L1, tests):
                 fm = a[col] if col < 4 else a[4:].any()
                 lo, hi = (mid, hi) if fm == f_lo else (lo, mid)
             ev[lab] = 0.5 * (lo + hi)
-        F_end, q_end, act_end = state(t_end)
-        L1top = tests["L1_rigid_motor_lumped_contact"]["levels"]["top"]
+        F_end, q_end, act_end = state(t_end); L1top = tests["L1_rigid_motor_lumped_contact"]["levels"]["top"]
         first = min(("FL", "FR", "RL", "RR"), key=lambda n: ev.get(n, np.inf))
         ent = {
-            "n_spheres": len(pts), "track_centre_y_m": yt,
+            "n_spheres": len(pts), "n_floor_contact_spheres (gap 0)": int((gap <= 0).sum()),
+            "track_centre_y_m": r(float(np.abs(pts[:, 1]).max())), "kn_per_sphere_N_m": r(float(kc[0])),
+            "c_per_sphere_N_s_m": r(c_each),
             "settled_on_crawler (legs at 0)": {
                 "q_about_origin (uz_mm, roll_deg, pitch_deg)": r([q0[0] * 1e3, np.degrees(q0[1]), np.degrees(q0[2])], 5),
                 "crawler_sphere_forces_N": r(F_cr0, 5),
+                "end_shoe_spheres_in_contact": int((act0 & (gap > 0)).sum()),
                 "pad_gap_at_e0_mm": r(gap0 * 1e3, 5),
             },
             "pad_touch_time_kinematic_from_settled_pose_s": r(t_touch_kin, 5),
@@ -160,35 +161,34 @@ def lift_reference(p, geo, e_op, k_L1, kt_L1, tests):
             "end_state (after the last stop)": {
                 "pad_contact_force_N": r(F_end[:4]),
                 "attitude_deg (roll, pitch)": r(np.degrees(q_end[1:]), 4),
-                "crawler_min_clearance_mm": r(float((A_cr @ q_end).min()) * 1e3, 5),
+                "crawler_min_clearance_mm": r(float((A_cr @ q_end + gap).min()) * 1e3, 5),
                 "max_abs_diff_vs_V1_contact_force_N": r(float(np.abs(F_end[:4] - np.array(L1top["contact_force_N"])).max()), 3),
                 "crawler_active_at_end": bool(act_end[4:].any()),
             },
         }
         lay_out[name] = ent
-        if default_events is None:
-            default_events = (ev, pts, kc, q0, F_cr0)
+        lay_events[name] = (ev, pts, kc, q0, F_cr0, act0, c_each)
     out["layouts"] = lay_out
     out["rigid_crawler_reference_old (operating_point.time_to_touch_s)"] = r(touch / v, 5)
 
-    # crawler-on-floor modes (legs retracted, crawler tangential stiffness 0) -> settle length
-    ev, pts, kc, q0, F_cr0 = default_events
-    b0 = dm.body_with_rods(p, geo, "top", np.zeros(4))
-    pts3 = np.column_stack([pts, np.full(len(pts), geo.crawler_bottom_z)])
-    K = dm.stiffness_6dof(b0, pts3, kc, np.zeros(len(pts)), F_cr0) if len(pts) == 4 else _stiff_n(b0, pts3, kc, F_cr0)
-    M = dm.mass_6dof(b0)
-    C = np.zeros((6, 6))
-    for j in range(len(pts)):
-        _, _, az = dm.a_vec(pts3[j] - b0.com)
-        C += (c_tot / len(pts)) * np.outer(az, az)
-    fd, zd = dm.complex_modes(M, K, C)
-    keep = fd > 0.05
-    tau = 1.0 / (zd[keep] * 2 * np.pi * fd[keep])
-    out["crawler_on_floor_modes (default layout, legs at 0)"] = {
-        "f_Hz": r(fd[keep], 4), "zeta": r(zd[keep], 4), "tau_s": r(tau, 4),
-        "note": "surge, sway, yaw have zero stiffness (no crawler tangential force) and are omitted",
-        "settle_length_s (ln(100) x max tau)": r(float(np.log(100) * tau.max()), 3),
-    }
+    # crawler-on-floor modes (legs retracted, crawler tangential stiffness 0, active springs only) -> settle length
+    b0 = dm.body_with_rods(p, geo, "top", np.zeros(4)); M = dm.mass_6dof(b0); ev = lay_events[V4_LAYOUT_D][0]
+    for name, key in ((V4_LAYOUT_D, V4_MODES_D), (V4_LAYOUT_D_K3, V4_MODES_D_K3)):
+        _, pts, kc, _, F_cr0, act0, c_each = lay_events[name]
+        pts3 = np.column_stack([pts[act0], np.full(int(act0.sum()), geo.crawler_bottom_z)])
+        K = _stiff_n(b0, pts3, kc[act0], F_cr0[act0])
+        C = np.zeros((6, 6))
+        for j in range(len(pts3)):
+            _, _, az = dm.a_vec(pts3[j] - b0.com)
+            C += c_each * np.outer(az, az)
+        fd, zd = dm.complex_modes(M, K, C)
+        keep = fd > 0.05
+        tau = 1.0 / (zd[keep] * 2 * np.pi * fd[keep])
+        out[key] = {
+            "f_Hz": r(fd[keep], 4), "zeta": r(zd[keep], 4), "tau_s": r(tau, 4), "active_spheres": int(act0.sum()),
+            "note": "surge, sway, yaw have zero stiffness (no crawler tangential force) and are omitted; active springs only",
+            "settle_length_s (ln(100) x max tau)": r(float(np.log(100) * tau.max()), 4),
+        }
 
     # residual vibration after the step stops: linear 6-DoF L1 about the e_op equilibrium (top), crawler off
     cfg = tests["L1_rigid_motor_lumped_contact"]
@@ -745,7 +745,7 @@ def main():
     res["stability"] = stab_all
 
     # ------------------------------------------------------------ rev. 5: V4 lift with a compliant crawler
-    res["lift_V4_compliant_crawler"] = lift_reference(p, geo, e_op, k_L1, kt_L1, tests)
+    res["lift_V4_compliant_crawler"] = add_dynamic_touch(lift_reference(p, geo, e_op, k_L1, kt_L1, tests), p, geo, e_op, k_L1, tests)
 
     res["meta"]["runtime_s"] = round(time.perf_counter() - t0, 2)
 
@@ -754,6 +754,212 @@ def main():
         json.dump(res, f, indent=1, ensure_ascii=False)
     print(json.dumps(res, indent=1, ensure_ascii=False)[:200000])
     print("written", OUT)
+
+
+# reference.json lift_V4_compliant_crawler keys of the crawler layout D (dynamics_model.md 3.8, decided 2026-10-20).
+# Defined here (not at the top) to keep the line numbers cited by 04_scripts/00_cad/export_params.py LINE_REFS.
+V4_LAYOUT_D = "D rollers + gapped end shoes (YAML contact.crawler.sphere_layout)"
+V4_LAYOUT_D_K3 = "D kn_total x3 (sensitivity, YAML contact.crawler.kn_total_sensitivity_range_N_m)"
+V4_LAYOUT_ROLLERS_ONLY = "sensitivity D without the end shoes (rollers only)"
+V4_MODES_D = "crawler_on_floor_modes (layout D, legs at 0)"
+V4_MODES_D_K3 = "crawler_on_floor_modes (layout D kn_total x3, legs at 0)"
+V4_LAYOUT_D_RIGID = "D rigid crawler limit (kn_total x1e3, L2b-NSC V4)"
+RIGID_CRAWLER_SCALE = 1.0e3   # crawler kn_total x1e3 stands in for the rigid NSC crawler contact (L2b-NSC V4)
+
+# ------------------------------------------------------------ V4 dynamic touch times (user decision 2026-10-20)
+# V4 is judged against the touch times of the damped vertical 3-DoF model below; the quasi-static times
+# (quasi_static_events_s) stay in reference.json as a reference. Defined after main() so that the line numbers cited
+# by 04_scripts/00_cad/export_params.py LINE_REFS do not move.
+V4_DYN_KEY = "dynamic_events_s"
+V4_DYN_T_BEFORE_S = 0.3        # integration starts this long before the earliest kinematic pad touch (body at rest)
+V4_DYN_T_AFTER_S = 1.0         # ... and ends this long after the later of the last quasi-static touch / crawler off
+V4_DYN_SOLVER = {"method": "DOP853", "rtol": 1e-9, "atol": 1e-12, "max_step_s": 1e-3}
+V4_DYN_CHECK_MAX_STEP_S = 5e-4
+V4_DYN_CHECK_METHOD = "Radau"
+V4_DYN_TOL_S = 0.05            # V4 acceptance band per leg (chrono_build_plan.md V4), for the sensitivity margin only
+
+
+def dynamic_touch(p, geo, e_op, k_pad, c_pad, xy_cr, k_cr, gap_cr, c_cr, t_from, t_to,
+                  method="DOP853", max_step=1e-3, rtol=1e-9, atol=1e-12):
+    """Damped vertical 3-DoF (uz, roll, pitch about the body-frame origin) through the V4 lift.
+
+    Same model as run_leg_extension_loads.dynamic_check: M = m a a^T + blockdiag(0, I_xy), a = [1, cg_y, -cg_x],
+    I_xy = roll/pitch block of the inertia about the CoM of superstructure (top) + 4 rods at e = 0 (rod x,y fixed);
+    unilateral spring-dampers F = max(0, k c + c_d c_dot) for c > 0 (pads and crawler spheres), gravity on the CoM.
+    Legs e(t) = min(v t, e_op) (V4 schedule, t = 0 = motor start). Start at t_from in the static pose on the crawler
+    with zero velocity (exact: nothing moves the body before the first pad touch). Events: pad compression c_i = 0
+    (touch / loss) and max over crawler spheres c_j = 0 (crawler fully off / re-contact), located by solve_ivp.
+    """
+    from scipy.integrate import solve_ivp
+
+    g, v, touch, xy = geo.g, geo.v_max, geo.touch_extension, geo.pad_xy
+    b0 = dm.body_with_rods(p, geo, "top", np.zeros(4))
+    W, cg = b0.mass * g, b0.com[:2]
+    a = np.array([1.0, cg[1], -cg[0]])
+    M = b0.mass * np.outer(a, a)
+    M[1:, 1:] += b0.inertia[:2, :2]
+    xy_all = np.vstack([xy, xy_cr])
+    A = dm.support_matrix(xy_all)
+    k = np.concatenate([k_pad, k_cr])
+    cd = np.concatenate([c_pad, c_cr])
+    w = np.array([W, W * cg[1], -W * cg[0]])
+    n_cr = len(xy_cr)
+
+    def comp(t, y):
+        e = np.minimum(v * t, e_op)
+        ed = np.where(v * t < e_op, v, 0.0)
+        c = np.concatenate([e - touch, -gap_cr]) - A @ y[:3]
+        cdot = np.concatenate([ed, np.zeros(n_cr)]) - A @ y[3:]
+        return c, cdot
+
+    def rhs(t, y):
+        c, cdot = comp(t, y)
+        F = np.where(c > 0, np.maximum(k * c + cd * cdot, 0.0), 0.0)
+        return np.concatenate([y[3:], np.linalg.solve(M, A.T @ F - w)])
+
+    evs = [(lambda t, y, i=i: comp(t, y)[0][i]) for i in range(4)] + [lambda t, y: comp(t, y)[0][4:].max()]
+    _, q0, _ = dm.static_unilateral(xy_cr, k_cr, -gap_cr, W, cg)
+    y0 = np.concatenate([q0, np.zeros(3)])
+    c0, _ = comp(t_from, y0)
+    if (c0[:4] >= 0).any():
+        raise RuntimeError("a pad already touches at the start of the dynamic window")
+    t_wall = time.perf_counter()
+    sol = solve_ivp(rhs, (t_from, t_to), y0, method=method, rtol=rtol, atol=atol, max_step=max_step, events=evs)
+    t_wall = time.perf_counter() - t_wall
+    if sol.status != 0:
+        raise RuntimeError(f"dynamic V4 integration failed: {sol.message}")
+    touch_s, losses = [], []
+    for i in range(4):
+        te, ye = sol.t_events[i], sol.y_events[i]
+        up = [t for t, y in zip(te, ye, strict=True) if comp(t, y)[1][i] > 0]
+        down = [t for t, y in zip(te, ye, strict=True) if comp(t, y)[1][i] < 0]
+        touch_s.append(up[0] if up else float("nan"))
+        losses.append(len([t for t in down if up and t > up[0]]))
+    te, ye = sol.t_events[4], sol.y_events[4]
+    off = [t for t, y in zip(te, ye, strict=True) if comp(t, y)[1][4:][np.argmax(comp(t, y)[0][4:])] < 0]
+    on = [t for t, y in zip(te, ye, strict=True) if off and t > off[0]]
+    return {"touch_s": np.array(touch_s), "crawler_off_s": off[0] if off else float("nan"),
+            "pad_contact_losses": losses, "crawler_events_after_off": len(on),
+            "nfev": int(sol.nfev), "wall_s": t_wall}
+
+
+def add_dynamic_touch(lift, p, geo, e_op, k_L1, tests):
+    """Add dynamic_events_s (V4 basis, user decision 2026-10-20) to every lift_V4_compliant_crawler layout, plus the
+    leg / crawler damping sensitivity. Uses the same layouts and dashpots as lift_reference; nothing else changes."""
+    cfg = tests["L1_rigid_motor_lumped_contact"]
+    c_pad = np.array(cfg["c_pad_N_s_m"], float)
+    L1y = p["contact"]["rigid_floor"]["L1"]
+    c_yaml = np.array([float(L1y["cn_per_pad_N_s_m"][n]) for n in dm.LEG_NAMES])
+    if np.abs(c_pad - c_yaml).max() > 1e-5 * c_yaml.max():
+        raise RuntimeError(f"pad dashpots differ: reference {c_pad} vs YAML {c_yaml}")
+    zeta_leg = float(L1y["derivation"]["damping_ratio"])
+    zeta_cr = float(dm.CRAWLER_DEFAULTS["damping_ratio_heave"])
+    v = geo.v_max
+    t_stop = e_op / v
+    # same layouts as lift_reference (kept in step: the per-sphere stiffness/dashpot are checked against its output)
+    bw = dm.body_with_rods(p, geo, "top", e_op)
+    c_tot = dm.crawler_damping_total(float(p["contact"]["crawler"]["kn_total_N_m"]), bw.mass)
+    xy_d, k_d, _ = dm.crawler_points(p); gap_d = dm.crawler_gaps(p); n_rol = int((gap_d <= 0).sum())
+    s3 = dm.crawler_kn_scales(p)[-1]
+    layouts = {
+        V4_LAYOUT_D: (xy_d, k_d, gap_d, c_tot / n_rol),
+        V4_LAYOUT_D_K3: (xy_d, k_d * s3, gap_d, c_tot * math.sqrt(s3) / n_rol),
+        V4_LAYOUT_ROLLERS_ONLY: (xy_d[:n_rol], k_d[:n_rol], gap_d[:n_rol], c_tot / n_rol),
+        V4_LAYOUT_D_RIGID: (xy_d, k_d * RIGID_CRAWLER_SCALE, gap_d, c_tot * math.sqrt(RIGID_CRAWLER_SCALE) / n_rol),
+    }
+    sens = {}
+    for name, (pts, kc, gap, c_each) in layouts.items():
+        ent = lift["layouts"][name]
+        if abs(ent["kn_per_sphere_N_m"] - r(float(kc[0]))) > 0 or abs(ent["c_per_sphere_N_s_m"] - r(c_each)) > 0:
+            raise RuntimeError(f"layout {name!r} out of step with lift_reference")
+        qs = ent["quasi_static_events_s"]
+        t_kin = np.array(ent["pad_touch_time_kinematic_from_settled_pose_s"])
+        t_from = float(np.floor((t_kin.min() - V4_DYN_T_BEFORE_S) * 1e3) / 1e3)
+        t_to = float(np.ceil((max(max(qs["touch_s (FL, FR, RL, RR)"]), qs["crawler_fully_off_s"]) + V4_DYN_T_AFTER_S) * 1e3) / 1e3)
+        cc = np.full(len(pts), c_each)
+
+        def run(c_p=c_pad, c_c=cc, pts=pts, kc=kc, gap=gap, window=(t_from, t_to), **kw):
+            o = dict(method=V4_DYN_SOLVER["method"], max_step=V4_DYN_SOLVER["max_step_s"],
+                     rtol=V4_DYN_SOLVER["rtol"], atol=V4_DYN_SOLVER["atol"])
+            o.update(kw)
+            return dynamic_touch(p, geo, e_op, k_L1, c_p, pts, kc, gap, c_c, *window, **o)
+
+        d = run()
+        d_h = run(max_step=V4_DYN_CHECK_MAX_STEP_S)
+        d_r = run(method=V4_DYN_CHECK_METHOD)
+        conv_h = float(np.abs(d["touch_s"] - d_h["touch_s"]).max())
+        conv_r = float(np.abs(d["touch_s"] - d_r["touch_s"]).max())
+        first = dm.LEG_NAMES[int(np.argmin(d["touch_s"]))]
+        dyn = {
+            "first_touch_leg": first,
+            "first_touch_s": r(float(d["touch_s"].min()), 5),
+            "touch_s (FL, FR, RL, RR)": r(d["touch_s"], 5),
+            "crawler_fully_off_s": r(d["crawler_off_s"], 5),
+            "leg_stop_s (FL, FR, RL, RR)": r(t_stop, 5),
+            "minus_quasi_static_touch_s (FL, FR, RL, RR)": r(d["touch_s"] - np.array(qs["touch_s (FL, FR, RL, RR)"]), 3),
+            "pad_contact_losses_after_touch (FL, FR, RL, RR)": d["pad_contact_losses"],
+            "crawler_contact_events_after_fully_off": d["crawler_events_after_off"],
+            "meta": {
+                "basis": "V4 judgement basis (user decision 2026-10-20): per-leg touch time within +-0.05 s of touch_s; "
+                         "quasi_static_events_s kept as a reference only",
+                "model": " ".join(dynamic_touch.__doc__.split("\n\n")[1].split()),
+                "touch_definition": "first time the pad compression c_i = e_i - touch_extension_i - (A q)_i turns positive "
+                                    "(spring-damper force > 0 from that instant)",
+                "damping (ASSUMPTION)": {
+                    "leg_axial_zeta (heave basis, YAML contact.rigid_floor.L1.derivation.damping_ratio)": zeta_leg,
+                    "pad_dashpot_N_s_m (FL, FR, RL, RR) (YAML cn_per_pad_N_s_m)": r(c_pad),
+                    "crawler_heave_zeta (dyn_model.CRAWLER_DEFAULTS)": zeta_cr,
+                    "crawler_dashpot_per_sphere_N_s_m": r(c_each),
+                },
+                "integrator": {"method": V4_DYN_SOLVER["method"], "rtol": V4_DYN_SOLVER["rtol"],
+                               "atol": V4_DYN_SOLVER["atol"], "max_step_s": V4_DYN_SOLVER["max_step_s"],
+                               "events": "solve_ivp root finding on the pad and crawler compressions",
+                               "nfev": d["nfev"]},
+                "window_s": [t_from, t_to],
+                "initial_condition": "static pose on the crawler (legs in the air), body velocity 0",
+                "max_abs_touch_diff_vs_max_step_5e-4_s": r(conv_h, 3),
+                "max_abs_touch_diff_vs_Radau_s": r(conv_r, 3),
+            },
+        }
+        # insert right after the quasi-static block (other keys unchanged, order kept)
+        new = {}
+        for key, val in ent.items():
+            new[key] = val
+            if key == "quasi_static_events_s":
+                new[V4_DYN_KEY] = dyn
+        lift["layouts"][name] = new
+
+        # damping sensitivity (leg zeta range of the YAML, crawler zeta range of CRAWLER_DEFAULTS)
+        cases = {}
+        for z in dm.ASSUMPTIONS["leg_damping_ratio_range"]:
+            dz = run(c_p=c_pad * (float(z) / zeta_leg))
+            cases[f"leg_zeta_{float(z):g}"] = dz
+        for z in dm.CRAWLER_DEFAULTS["damping_ratio_heave_range"]:
+            dz = run(c_c=cc * (float(z) / zeta_cr))
+            cases[f"crawler_zeta_{float(z):g}"] = dz
+        if name == V4_LAYOUT_D_RIGID:
+            dz = run(c_c=cc * (1.0 / zeta_cr))
+            cases["crawler_zeta_1 (near-plastic, NSC-like no rebound)"] = dz
+        sens[name] = {
+            "nominal touch_s (FL, FR, RL, RR)": r(d["touch_s"], 5),
+            **{cn: {"touch_s (FL, FR, RL, RR)": r(dz["touch_s"], 5),
+                    "shift_vs_nominal_s (FL, FR, RL, RR)": r(dz["touch_s"] - d["touch_s"], 3),
+                    "max_abs_shift_s": r(float(np.abs(dz["touch_s"] - d["touch_s"]).max()), 3),
+                    "within_V4_band_0.05_s": bool(np.abs(dz["touch_s"] - d["touch_s"]).max() <= V4_DYN_TOL_S),
+                    "first_touch_leg": dm.LEG_NAMES[int(np.argmin(dz["touch_s"]))],
+                    "pad_contact_losses_after_touch (FL, FR, RL, RR)": dz["pad_contact_losses"]}
+               for cn, dz in cases.items()},
+        }
+    lift["V4_judgement_basis"] = (f"layouts/<layout>/{V4_DYN_KEY}/touch_s (FL, FR, RL, RR), tolerance +-{V4_DYN_TOL_S} s "
+                                  "per leg (user decision 2026-10-20); quasi_static_events_s = reference only")
+    lift["dynamic_touch_damping_sensitivity"] = {
+        "description": ("dynamic_events_s repeated with the pad dashpots scaled to the leg zeta (heave basis, crawler "
+                        "unchanged) and with the crawler dashpots scaled to the crawler zeta (pads unchanged); "
+                        "same integrator and window as dynamic_events_s"),
+        "nominal": {"leg_zeta": zeta_leg, "crawler_zeta": zeta_cr},
+        "layouts": sens,
+    }
+    return lift
 
 
 if __name__ == "__main__":

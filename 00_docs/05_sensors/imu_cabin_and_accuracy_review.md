@@ -160,7 +160,7 @@ $$\phi_m=\phi+\frac{a_y}{g},\qquad \theta_m=\theta-\frac{a_x}{g},\qquad \mathbf 
 |---|---|---|
 | 정적 자세 변화 | 운전실이 고무·점성 마운트 위에 있으면 운전자(80 kg) 이동, 문 여닫음, 마운트 크리프·온도로 캐빈이 데크에 대해 기운다. 현장 영점이 지울 수 없는 가변 오차다 | 캐빈 800 kg, 마운트 수직 10 Hz, 좌우 간격 0.8 m, 운전자 0.3 m 이동 → roll 약 0.03°. 이 값으로 예산에 **마운트 몫 0.02°**를 넣었다(3절) |
 | 마운트 진동 | 캐빈 마운트 모드(보통 5~15 Hz로 알려짐, 미확인)가 로킹 대역(1.8~3.9 Hz)에 가까우면 IMU 진동이 커진다 | 자료 없음 |
-| 대책 | IMU를 **캐빈 몸체가 아닌 캐빈 바닥 아래 상부 프레임(데크)**에 단다. 위치는 1.2절 제안점과 같고 로킹 증폭도 같다. 캐빈이 강결합 볼트 체결이면 몸체 장착도 된다. 실기 캐빈 마운트 형식을 제조사에 확인해야 한다 |
+| 대책 | IMU를 **캐빈 몸체가 아닌 캐빈 바닥 아래 상부 프레임(데크)**에 단다. 위치는 1.2절 제안점과 같고 로킹 증폭도 같다. 캐빈이 강결합 볼트 체결이면 몸체 장착도 된다. 실기 캐빈 마운트 형식을 제조사에 확인해야 한다 | 해당 없음(대책) |
 
 ## 3. ±0.2° 오차 예산
 
@@ -355,7 +355,7 @@ $$\phi_m=\phi+\frac{a_y}{g},\qquad \theta_m=\theta-\frac{a_x}{g},\qquad \mathbf 
 - 환경: dynamics-dev(numpy 2.5.4, numba 0.68.0, control 0.10.2, pandas)
 - 시간: 48 s(폐루프 360회, 20 프로세스, 실행당 1~3 s), 오류 0. 개정 2 재실행 55.8 s, 오류 0
 - 점검: 모드 직교성 1.8×10⁻¹², 모드식 대 비선형 시간 영역 증폭 차 0.3 %(1차) / 1.6 %(2차, 감쇠 위상. 개정 7 전 0.2 % / 1.3 %)
-- 개정 2 비교 기준(개정 7 전 결과)은 git HEAD의 `analysis/dynamics/imu_accuracy_review.json`이다. `sim_runs` 밖에서 바뀐 키는 `rocking_timedomain_check_top`, `sim_summary`, `sim_deadband_time_saving_cab`, `meta`(경로·시간)뿐이고 `cab`·`rocking`·`rocking_box`·`filters`·`budget`은 같다
+- 개정 2 비교 기준(개정 7 전 결과)은 커밋 16712d7의 `analysis/dynamics/imu_accuracy_review.json`이다(폴더 재편 전 경로. 현재 위치는 `06_analysis/00_dynamics/imu_accuracy_review.json`이지만 그 파일은 개정 7 이후 값이다). `sim_runs` 밖에서 바뀐 키는 `rocking_timedomain_check_top`, `sim_summary`, `sim_deadband_time_saving_cab`, `meta`(경로·시간)뿐이고 `cab`·`rocking`·`rocking_box`·`filters`·`budget`은 같다
 - **개정 3(C1)**: 같은 명령, 106.8 s(폐루프 696회, 오류 0, exit 0). JSON 키가 바뀌었다: `filters`가 점별(`C1`/`cab`/`C2`) 사전이 됐고, `rocking_box_C1`이 더해졌고, `sim_deadband_time_saving_cab` → `sim_deadband_time_saving_C1`, `sim_runs`의 `point`에 `C1`·`C2`, `filt`에 `F2`가 더해졌다. **재현성 확인**: 가정점(`cab`) 실행 중 개정 2와 겹치는 묶음(C2·C8 × 이상·우수·보통 영점 후 × F0 × 데드밴드 0.03°)의 요약값(통과 수, 정상 오차 최대, 시간 중앙값·최대, 완료 직전 잔류·리플)이 개정 2 JSON과 같았고, `rocking`의 가정점 값도 같았다. 개정 2 JSON 사본: 이 작업의 scratchpad(보고에 경로)
 - C2 회귀(`run_control_comparison.py --regress`, 기본값이 C1이 됨): 결과 `06_analysis/00_dynamics/control_comparison_c2_regress_c1.json`(4.6 s). 가정점 결과 `control_comparison_c2_regress_rev6.json`과 `control_comparison.json`은 SHA-256이 실행 전후 같다(덮어쓰지 않음)
 

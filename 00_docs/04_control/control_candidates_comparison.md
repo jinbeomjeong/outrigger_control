@@ -2,6 +2,8 @@
 
 dynamics-expert 작업이다. 후보 C1~C10을 정성적으로 비교하고, 프로젝트 축소 모델에서 대표 후보 7개(C1, C2, C3, C4, C6, C7, C8)를 같은 시나리오로 시뮬레이션했다. **결정은 사용자가 한다.** 이 문서는 비교 자료와 추천만 담는다.
 
+**크롤러 D안 재실행(2026-10-20)**: 3~7절과 10절의 수치는 옛 크롤러 **A 배치(2 × 9 단방향 점, 사전 정착 3 s)** 기록으로 남긴다. 현행 D안(롤러 위치 + 틈 있는 끝 슈) 재실행 결과와 산출물은 **8.1절**에 있다. C2 판정은 바뀌지 않았다.
+
 **개정 3(2026-10-20, IMU 장착점 C1)**: 사용자 결정으로 IMU 장착점이 **C1 (0.31, 0.88, 0.040) m**(BASE DECK 좌측 폰툰 15 mm 가로판 윗면, 방진 마운트 아래 구조체)가 됐다. 스크립트 기본값을 C1으로 바꾸고(상수 `IMU_POINT_C1_BODY_M`, 이전 가정점은 `IMU_POINT_CAB_ASSUMED_BODY_M`으로 비교용), C2 회귀(`--regress`)를 C1으로 다시 돌렸다(10.1절 끝). **C2 추천과 ±0.2° 판정은 바뀌지 않았다.** 본문 시뮬레이션 수치(`--legacy`, 옛 점 (0.45, 0, 0.30) m)는 그대로다. 전체 행렬(308회)을 새 기본값으로 돌리지는 않았다(약 90 s, 필요하면 인자 없이 실행). C1의 로킹 증폭·센서 등급별 폐루프는 [imu_cabin_and_accuracy_review.md](../05_sensors/imu_cabin_and_accuracy_review.md) 10절.
 
 **개정 2(2026-10-20, 감쇠 개정 7 재실행)**: [dynamics_model.md](../01_dynamics/dynamics_model.md) 개정 7의 감쇠(다리 축 ζ 0.05 → 0.03, 그래서 1차 로킹 ζ 0.0129 → 0.0078; 크롤러 heave ζ 0.10 → 0.05)로 `control_comparison.json`(`--legacy`, 308회)과 `control_comparison_c2_regress_rev6.json`(`--regress`)을 다시 돌렸고, 이 문서의 시뮬레이션 수치를 모두 그 값으로 바꿨다. 강성·기하·게인·시나리오·시드 12345는 같다. **C2 추천과 ±0.2° 판정은 바뀌지 않았다.** 판정이 바뀐 곳:
@@ -71,7 +73,7 @@ C5, C9, C10은 시뮬레이션하지 않았다.
 | 압력 센서 | $P=k_{oil}(s_{ref}-x)$ = (접촉력 − 로드 무게) − $f$(실린더 힘 기준) + 잡음 σ 0.3 kN(가정) | 2.1절 기준 |
 | 스트로크 센서 | 실제 로드 위치 $x$ + 잡음 σ 0.1 mm(가정) | |
 | 감쇠·접선 | 패드 수직 $c_n$(L1, 다리 축 ζ 0.03 heave 7.39 Hz 기준; 개정 7, 이전 0.05), 접선 부싱 $k_t$, $c_t$(L1, 같은 ζ) + 원형 Coulomb μ 0.5 | YAML L1, `dyn_model.ASSUMPTIONS` |
-| 크롤러 | 2 × 9 단방향 점, 합 1×10⁸ N/m, heave ζ 0.05(2026-10-20 감쇠 결정, 이전 0.1), 접선 부싱(점당 $k_t=k_n$, **가정**), μ 0.5 | `dm.crawler_points` |
+| 크롤러 | **D안**(사용자 결정 2026-10-20): 롤러 위치 6개/측 + 틈 있는 끝 슈 3개/끝, 단방향 점 24개(끝 슈 틈은 z 오프셋, `dm.crawler_gaps`), 합 1×10⁸ N/m, heave ζ 0.05(2026-10-20 감쇠 결정, 이전 0.1), 접선 부싱(점당 $k_t=k_n$, **가정**), μ 0.5. 3~7절 수치는 옛 A 배치(2 × 9 단방향 점) 기록이고 D안 결과는 8.1절 | `dm.crawler_points` |
 | 적분 | 반암시적(심플렉틱) 오일러, Δt 5×10⁻⁴ s. 최대 $\omega\Delta t$ ≈ 0.08 | Δt/2와 비교(2.3절) |
 | 제어 주기 | 20 ms, 영차 유지 | |
 
@@ -84,7 +86,7 @@ C5, C9, C10은 시뮬레이션하지 않았다.
 
 | 항목 | 값 | 상태 |
 |---|---|---|
-| 시작 | 다리 0 mm, 크롤러로 지면 위에 정착(3 s, 기록 안 함) | |
+| 시작 | 다리 0 mm, 크롤러 정착 자세(해석해)로 초기화한 뒤 크롤러 위 사전 정착 **65.5 s**(YAML `simulation.settle_on_crawler_min_s` 65.47, 기록 안 함). 3~7절의 A 배치 기록은 3 s였다(8.1절) | |
 | 접지 탐색(공통) | 네 다리가 $v_{max}$로 신장하다가 다리마다 접지 판정이 나면 멈춘다. 압력만: $P\ge1.5F_{min}$ = 14.2 kN. 결합: 공중 판독(처음 5 s 중앙값)을 뺀 하중 ≥ 14.2 kN | 가정 |
 | 목표 | roll = pitch = 0, 크롤러 최소 여유 50 mm(스트로크로 지면 평면 추정) | `dynamics_model.md` 1.3절 |
 | 완료 | 완료 판정 신호(제어용 저역 필터 출력 뒤에 1차 τ 1 s를 직렬로 하나 더 건 것. 이 문서의 실행은 제어 필터 1차 τ 0.5 s라 합쳐서 2차)로 본 자세 < 0.03°가 1 s 지속 + 후보별 조건 → 잠금 | 가정(데드밴드 0.03°는 6.2절 권고). 2026-10-20 이후 기본값은 제어 필터 2차(τ 0.5 s × 2) + 완료 1차 τ 1 s |
@@ -376,6 +378,14 @@ C3(산업 주류)는 이 축소 모델에서 3° 이상에서 실패했다. 원�
 | D7 | IMU 장착 위치 | ~~무게중심 높이 가까이(로킹 가속도 겉보기 기울기 감소)~~ **정정: 낮게 단다.** 로킹 모드는 sway·surge와 결합돼 순간 회전 중심이 IMU 아래 2.0~5.8 m(지면 아래)에 있어, IMU를 올릴수록 겉보기 기울기 증폭이 커진다(캐빈 바닥 +27 / +130배 → 지붕 +47 / +188배, 오거 상단 1·2차). 옛 제안의 근거식 $1-r\omega^2/g$(무게중심 둘레 순수 회전)는 부호가 반대다. 위치로는 해결되지 않으므로(어디서나 1차 25배, 2차 130배 이상) 필터로 거른다 | **결정**: 캐빈 바닥 아래 상부 프레임. 좌표는 **C1 (0.31, 0.88, 0.040) m**(2026-10-20 사용자 결정, BASE DECK 좌측 폰툰 15 mm 가로판 윗면, CAD 면 확인. 이전 가정 (0.20, 0.88, 0.30) m). 증폭 상단 +23.7 / +121배(가정점 +26.8 / +130.5). 캐빈 몸체에 달지 않는다(마운트 오차 회피) |
 | D8 | 레벨링 가능 경사 운용 한계 | pitch +3.7°, roll 5.7°, 대각 3.2°까지 C2·C8이 통과. 한계(3.86 / 5.92 / 3.31°)에 마진 0.1~0.2° | 미정 |
 
+### 8.1 크롤러 D안 재실행 (2026-10-20)
+
+크롤러 접촉 배치가 D안으로 정해져(CLAUDE.md "크롤러 접촉 배치", `dynamics_model.md` 개정 8 3.8절) 전체 행렬(308회)을 옛 가정(`--legacy`)과 현재 가정(IMU C1, 2차 필터, ±0.2°)으로 다시 돌렸다. 강성 합·감쇠·게인·시나리오·시드 12345는 같고, 바뀐 것은 크롤러 점 배치(끝 슈 틈 = z 오프셋), 크롤러 정착 자세 초기화, 사전 정착 시간이다. **C2는 기본 행렬 22/22 통과를 유지한다**(두 가정 모두, C8도 22/22). C2 기본 행렬(통과 실행)의 최소 실제 실린더 힘은 A 배치 45.3 kN(하단 pitch +3.7) → D 18.6 kN(옛 가정) / **18.0 kN**(현재 가정, 둘 다 상단 pitch +3.7)으로 줄었고 여전히 $F_{min}$ 9.45 kN 위다. 최대 압력은 139.1 bar(A, 상단 대각 3) → 165.2 / **170.1 bar**(상단 pitch +3.7)다. 판정이 바뀐 곳은 **옛 가정의 연약 패드(soft_FL) 대각 3° 하나**다(150 s 미완료, RL 최소 −1.05 kN으로 부상, $F_{min}$ 미달 11.3 s). 레벨링 뒤 하중 진동이 약 25 s마다 2배로 자라는 느린 루프 불안정으로, 1차 필터·옛 IMU 점의 특성이다. 현재 가정에서는 같은 경우가 통과한다(최소 38.3 kN, 167.1 bar). 사전 정착은 3 s → **65.5 s**(YAML `simulation.settle_on_crawler_min_s`, D안 크롤러 위 pitch 1.327 Hz·ζ 0.0084, τ 14.2 s × ln 100)로 바꿨다. D는 경사에서 크롤러 접선 예하중 과도로 pitch 약 0.15°가 남아 3 s로는 접지 순간 자세가 흔들렸고, 처음 3 s로 돌린 결과 C2 pitch +3.7°가 $F_{min}$ 미달로 바뀌었다가 65.5 s로 고치자 통과로 돌아왔다. 축소 모델 점검(V1·V3·V5·V7)과 Δt 5×10⁻⁴ / 2.5×10⁻⁴ s 비교는 각 JSON의 `plant_checks`·`dt_check`에 있다.
+
+- 산출물(`06_analysis/00_dynamics/`): `control_comparison_legacy_crawlerD.json`(옛 가정, 308회)과 그림 `control_comparison_legacy_crawlerD_matrix.png`·`control_comparison_legacy_crawlerD_timeseries.png`, `control_comparison_crawlerD.json`(현재 가정, 308회)과 그림 `control_comparison_crawlerD_matrix.png`·`control_comparison_crawlerD_timeseries.png`, `control_comparison_c2_regress_crawlerD.json`(C2 회귀 8회)
+- 명령과 실행 시간: `dynamics_model.md` 실행 기록(`run_control_comparison.py --legacy --out-stem control_comparison_legacy_crawlerD`, `--out-stem control_comparison_crawlerD`, `--regress --out-stem control_comparison_c2_regress_crawlerD`)
+- 옛 A 배치 결과(`control_comparison.json`, `control_comparison_c2_regress_rev6.json`, `control_comparison_c2_regress_c1.json`와 그림)는 덮어쓰지 않고 **A 배치 기록**으로 남긴다. 3~7절과 10절 표는 그 값이다
+
 ## 9. 가정 목록(이 비교에서 새로 둔 것)
 
 | 항목 | 값 |
@@ -398,7 +408,7 @@ C3(산업 주류)는 이 축소 모델에서 3° 이상에서 실패했다. 원�
 - 명령: `C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I 04_scripts\01_dynamics\run_control_comparison.py`
 - 환경: dynamics-dev(numpy 2.5.4, numba 0.68.0, proxsuite 0.6.7, matplotlib Agg)
 - 시간: 308회 + 점검 + Δt 비교 + 그림, 약 70 s(20 프로세스, 개정 2 재실행 85.6 s). 실행당 0.8~5 s
-- 개정 2(감쇠 개정 7) 재실행: 같은 명령에 `--legacy`. 바뀐 입력은 `dyn_model.py`의 감쇠 키뿐이다(`modal_damping_ratio_body` 0.05 → 0.03, `CRAWLER_DEFAULTS.damping_ratio_heave` 0.10 → 0.05). 비교 기준인 개정 7 전 결과는 git HEAD의 `analysis/dynamics/control_comparison.json`이다
+- 개정 2(감쇠 개정 7) 재실행: 같은 명령에 `--legacy`. 바뀐 입력은 `dyn_model.py`의 감쇠 키뿐이다(`modal_damping_ratio_body` 0.05 → 0.03, `CRAWLER_DEFAULTS.damping_ratio_heave` 0.10 → 0.05). 비교 기준인 개정 7 전 결과는 커밋 16712d7의 `analysis/dynamics/control_comparison.json`이다(폴더 재편 전 경로. 현재 위치는 `06_analysis/00_dynamics/control_comparison.json`이지만 그 파일은 개정 7 감쇠로 다시 돈 값이다)
 - 개발 중 고친 결함(결과에 반영됨):
   1. C1 계열이 크롤러 접지 중 오르막 다리를 수축시켜 패드를 띄웠다 → 공통 heave 가산으로 바꿨다.
   2. 적분기 와인드업(조건부 적분으로 바꿨다).

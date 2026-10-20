@@ -1,0 +1,111 @@
+{
+ "what": "Smoke test: Chrono example tracked vehicle (M113 single-pin JSON templates, edited copy) in the project Chrono system; NOT the REXOME33 crawler model",
+ "plan": "00_docs/03_chrono/track_drive_plan.md (section 10)",
+ "script": "04_scripts/02_chrono/track_drive/smoke_drive_gif.py",
+ "gif": "06_analysis/01_chrono/track_drive_smoke.gif",
+ "gif_frames": 126,
+ "pychrono_version": "10.0.0",
+ "vehicle_data": {
+  "source": "Chrono data vehicle/M113 (pychrono 10.0.0 install), copied and edited to 07_results/track_drive_smoke/vehicle_data (source not modified)",
+  "edits": "shoe pitch 0.154 -> 0.1732 m (cylinder offsets, guide pin, box lengths x k), sprocket teeth 10 -> 11 (assembly/addendum/arc-centre radius x s, arc radius x k), shoes 63/64 -> 58/59; shoe mass/inertia unchanged",
+  "pitch_scale_k": 1.1246753246753247,
+  "sprocket_profile_left": {
+   "Addendum Radius": 0.3213514189263324,
+   "Arc Radius": 0.10009610389610389,
+   "Arc Centers Radius": 0.37007840951209103,
+   "Assembly Radius": 0.302230701101541,
+   "scale": 1.2335946983736368
+  }
+ },
+ "scenario": {
+  "settle_s": [
+   0.0,
+   0.5
+  ],
+  "forward_torque_s": [
+   0.5,
+   1.5
+  ],
+  "reverse_torque_s": [
+   1.5,
+   2.5
+  ],
+  "torque_per_sprocket_n_m": 4000.0,
+  "drive": "ChSprocket.ApplyAxleTorque each step, driveline disconnected",
+  "ground": "RigidTerrain plane z = 0, NSC friction 0.8 (M113 example value)"
+ },
+ "model": {
+  "num_shoes_left": 58,
+  "num_shoes_right": 59,
+  "pitch_m": 0.1732,
+  "teeth": 11,
+  "assembly_radius_m": 0.302230701101541,
+  "addendum_radius_m": 0.3213514189263324,
+  "num_road_wheels_left": 5,
+  "system": "ChSystemNSC",
+  "gravity_m_s2": [
+   0.0,
+   0.0,
+   -9.80665
+  ],
+  "collision_system": "BULLET",
+  "solver": {
+   "type": "PSOR",
+   "max_iterations": 50,
+   "source": "contact.rigid_floor.L2b_NSC.solver, contact.rigid_floor.L2b_NSC.solver_max_iterations"
+  },
+  "dt_s": 0.0005,
+  "wall_s": 27.837410999999975,
+  "ms_per_step": 5.567482199999995,
+  "steps": 5000
+ },
+ "r_eff_m": 0.303221997578679,
+ "sign_probe": {
+  "applied_torque_n_m": 4000.0,
+  "dx_m": 0.013920963133730035,
+  "vx_m_s": 0.32585370955608267,
+  "axle_speed_rad_s": -2.9752914745083707,
+  "gear_omega_world_y_rad_s": 2.9686850592876017,
+  "forward_torque_sign": 1.0
+ },
+ "checkpoints": {
+  "end_settle": {
+   "t_s": 0.5000000000000003,
+   "chassis_dx_m": 0.012955900223908134,
+   "chassis_vx_m_s": -0.11604594484238474,
+   "chassis_z_m": 1.0630926655850006,
+   "sprocket_axle_speed_rad_s": -0.3240880548265708,
+   "sprocket_omega_world_y_rad_s": 0.32443560630132945,
+   "chain_speed_omega_y_r_eff_m_s": 0.09837601262833898,
+   "slip_ratio": 1.847733307371961
+  },
+  "end_forward": {
+   "t_s": 1.4999999999998903,
+   "chassis_dx_m": 0.5515750827355705,
+   "chassis_vx_m_s": 1.160091688832618,
+   "chassis_z_m": 1.054903008939458,
+   "sprocket_axle_speed_rad_s": -2.8972113386026175,
+   "sprocket_omega_world_y_rad_s": 2.8894512270293267,
+   "chain_speed_omega_y_r_eff_m_s": 0.8761451729659976,
+   "slip_ratio": -0.2447621326831083
+  },
+  "end": {
+   "t_s": 2.500000000000002,
+   "chassis_dx_m": 0.44453522864362216,
+   "chassis_vx_m_s": -0.9530875129422366,
+   "chassis_z_m": 1.0460262321703793,
+   "sprocket_axle_speed_rad_s": 3.150686432924992,
+   "sprocket_omega_world_y_rad_s": -3.149955133554458,
+   "chain_speed_omega_y_r_eff_m_s": -0.9551356878795974,
+   "slip_ratio": -0.002144381121291478
+  },
+  "forward_window_1.0_1.5_s_mean": {
+   "chassis_vx_m_s": 0.8879201546358536,
+   "chain_speed_omega_y_r_eff_m_s": 0.814187596215897,
+   "slip_ratio_of_means": -0.08303962696983178,
+   "frames": 24
+  }
+ },
+ "wall_total_s": 54.45266449999963,
+ "note": "API smoke test only; no physics verdict (no static-equilibrium, slip or energy judgement)."
+}

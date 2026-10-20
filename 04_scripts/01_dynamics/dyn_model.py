@@ -314,31 +314,31 @@ def static_unilateral(xy, k, delta, W, cg_xy, max_iter=50):
     raise RuntimeError("active set did not converge")
 
 
-def crawler_points(p: dict) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Crawler contact sphere layout from YAML contact.crawler (ASSUMPTION layout, 00_docs/01_dynamics/dynamics_model.md 4.2).
+def crawler_points(p: dict, kn_scale: float = 1.0) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Crawler contact spheres, layout D from YAML contact.crawler.sphere_layout (dynamics_model.md 3.8, decided 2026-10-20).
 
-    Returns (xy (n,2), k (n,), c (n,)) per sphere. Falls back to the documented default layout if the YAML has no
-    layout keys yet: 2 tracks x 9 spheres, track centre lines y = +/-1.066 m, x evenly from -1.840 to 1.844 m.
+    Returns (xy (n,2), k (n,), c (n,)): the 2 x len(roller_x_m) roller stations (gap 0) first, then the 2 x
+    len(end_shoe_x_m) raised end shoes (gaps: crawler_gaps); left track (+y) before right within each group. Same k and c
+    on every sphere; the floor-contact (roller) sum is kn_total x kn_scale and damping_total x sqrt(kn_scale) (same zeta).
     """
-    cr = p["contact"]["crawler"]
-    lay = cr.get("sphere_layout", {})
-    nx = int(lay.get("spheres_per_track", CRAWLER_DEFAULTS["spheres_per_track"]))
-    yt = float(lay.get("track_centre_y_m", CRAWLER_DEFAULTS["track_centre_y_m"]))
-    x0, x1 = lay.get("x_range_m", CRAWLER_DEFAULTS["x_range_m"])
-    xs = np.linspace(float(x0), float(x1), nx)
-    xy = np.array([[x, s * yt] for s in (1.0, -1.0) for x in xs])
-    n = len(xy)
-    k = np.full(n, float(cr["kn_total_N_m"]) / n)
-    c_tot = float(cr.get("damping_total_N_s_m", CRAWLER_DEFAULTS["damping_total_N_s_m"]))
-    return xy, k, np.full(n, c_tot / n)
+    cr = p["contact"]["crawler"]; lay = cr["sphere_layout"]
+    if lay["scheme"] != CRAWLER_DEFAULTS["scheme"]:
+        raise ValueError(f"unsupported crawler sphere_layout.scheme {lay['scheme']!r}")
+    yt = float(lay["track_centre_y_m"])
+    rx, sx = [float(x) for x in lay["roller_x_m"]], [float(x) for x in lay["end_shoe_x_m"]]
+    xy = np.array([[x, s * yt] for xs in (rx, sx) for s in (1.0, -1.0) for x in xs])
+    n = 2 * len(rx)   # floor-contact (gap 0) spheres: kn_total and the dashpot are split over these
+    k = np.full(len(xy), float(cr["kn_total_N_m"]) * kn_scale / n)
+    c_tot = float(cr["damping_total_N_s_m"]) * math.sqrt(kn_scale)
+    return xy, k, np.concatenate([np.full(n, c_tot / n), np.full(len(xy) - n, c_tot / n)])
 
 
-# crawler contact defaults (ASSUMPTIONS, rev. 5; mirrored in 00_docs/01_dynamics/dynamics_model.md section 10)
+# crawler contact defaults (ASSUMPTIONS, rev. 6 = layout D; mirrored in 00_docs/01_dynamics/dynamics_model.md section 10)
 CRAWLER_DEFAULTS = {
-    "spheres_per_track": 9,          # ASSUMPTION: 2 tracks x 9 spheres, ends included
-    "track_centre_y_m": 1.066,       # ASSUMPTION: crawler bbox |y| 1.366 minus half an assumed 0.6 m shoe width
-    "x_range_m": [-1.840, 1.844],    # crawler bbox x (parts_classified.csv), body frame
-    "sphere_radius_m": 0.05,         # ASSUMPTION: bottom of each sphere at crawler_bottom_z
+    "scheme": "rollers_plus_gapped_end_shoes",  # layout D; positions, gaps and stiffness come from the YAML only
+    "n_floor_contact_rule": "kn_total and damping_total split over the gap-0 (roller) spheres; end shoes same per sphere",
+    "end_shoe_model": "unilateral spring with an initial gap (YAML end_shoe_gap_m), upper bound of end engagement",
+    "sphere_radius_m": 0.05,         # ASSUMPTION: bottom of each sphere at crawler_bottom_z (+ gap for the end shoes)
     "damping_ratio_heave": 0.05,     # ASSUMPTION: crawler-on-floor heave zeta, concrete (user decision 2026-10-20)
     "damping_ratio_heave_soil": 0.2,  # ASSUMPTION: crawler heave zeta on soil (SCM stage only)
     "damping_ratio_heave_range": [0.02, 0.3],  # sensitivity range
@@ -350,6 +350,28 @@ def crawler_damping_total(kn_total: float, mass_total: float, zeta: float = None
     """Total crawler-floor dashpot [N s/m] giving zeta in heave of the whole machine on the crawler."""
     zeta = CRAWLER_DEFAULTS["damping_ratio_heave"] if zeta is None else zeta
     return 2 * zeta * math.sqrt(kn_total * mass_total)
+
+
+def crawler_gaps(p: dict) -> np.ndarray:
+    """Initial gap [m] of each crawler sphere above the floor, same order as crawler_points (rollers 0, end shoes > 0).
+
+    Also checks the derived YAML value kn_per_sphere_N_m against kn_total_N_m / n_roller (rel 1e-8).
+    """
+    cr = p["contact"]["crawler"]; lay = cr["sphere_layout"]
+    gaps = [float(g) for g in lay["end_shoe_gap_m"]]
+    if len(gaps) != len(lay["end_shoe_x_m"]) or min(gaps) <= 0.0:
+        raise ValueError("contact.crawler.sphere_layout: end_shoe_gap_m must match end_shoe_x_m and be > 0")
+    n = 2 * len(lay["roller_x_m"])
+    k_yaml, k_rule = float(cr["kn_per_sphere_N_m"]), float(cr["kn_total_N_m"]) / n
+    if abs(k_yaml - k_rule) > 1e-8 * k_rule:
+        raise ValueError(f"kn_per_sphere_N_m {k_yaml} != kn_total_N_m / {n} = {k_rule}")
+    return np.concatenate([np.zeros(n), gaps, gaps])   # left then right track (crawler_points order)
+
+
+def crawler_kn_scales(p: dict) -> list[float]:
+    """kn_total scale factors of YAML contact.crawler.kn_total_sensitivity_range_N_m (e.g. [1, 3])."""
+    cr = p["contact"]["crawler"]
+    return [float(k) / float(cr["kn_total_N_m"]) for k in cr["kn_total_sensitivity_range_N_m"]]
 
 
 def twist_vector(xy: np.ndarray) -> np.ndarray:

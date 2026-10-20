@@ -1,0 +1,127 @@
+{
+ "area": {
+  "criterion": "sum of face areas vs BRepGProp SurfaceProperties(prototype), rel <= 1e-9",
+  "prototypes": 681,
+  "max_relative_difference": 0.0,
+  "worst_prototype": "0:1:1:2",
+  "passed": true,
+  "explorer_vs_unique_faces_differ": [],
+  "normal_self_check": {
+   "method": "BRepLProp_SLProps normal at UV centre, orientation applied (planes: equal normal; cylinders: radial sign vs convex)",
+   "checked": 49274,
+   "failed": 0
+  }
+ },
+ "outward": {
+  "sampled": 3000,
+  "tested": 2836,
+  "passed": 2834,
+  "reversed": 0,
+  "ambiguous": 2,
+  "skipped_off_face": 164,
+  "failed_examples": [
+   {
+    "prototype_entry": "0:1:1:2",
+    "face_index": 1229,
+    "outcome": "ambiguous"
+   },
+   {
+    "prototype_entry": "0:1:1:515",
+    "face_index": 115,
+    "outcome": "ambiguous"
+   }
+  ],
+  "method": "BRepClass3d_SolidClassifier at the face UV centre +- 0.05 mm along the outward direction (plane normal; cylinder radial by 'convex'); expect OUT / IN"
+ },
+ "legs": {
+  "file": "01_cad/02_legs/leg_faces.csv",
+  "old_rows": 384,
+  "new_rows": 384,
+  "instances": 8,
+  "instances_with_count_mismatch": 0,
+  "kind_mismatch": 0,
+  "max_area_relative_difference": 3.899365254850982e-10,
+  "max_bbox_abs_difference_mm": 4.998314580006991e-07,
+  "max_bbox_centre_difference_mm": 5.884028771447872e-07,
+  "centroid_outside_old_bbox_planes": 0,
+  "planes": 280,
+  "plane_normal_max_angle_deg_ignoring_sign": 0.00030119338551215757,
+  "plane_normal_opposite_to_old": 40,
+  "cylinders": 80,
+  "cylinder_axis_max_angle_deg": 0.0,
+  "cylinder_radius_max_difference_mm": 2.842170943040401e-14
+ },
+ "mast": {
+  "file": "01_cad/04_mast/mast_faces.csv",
+  "old_rows": 49675,
+  "new_rows": 49675,
+  "instances": 696,
+  "instances_with_count_mismatch": 0,
+  "kind_mismatch": 0,
+  "max_area_relative_difference": 4.885415947933401e-10,
+  "max_bbox_abs_difference_mm": 5.195047378947493e-07,
+  "max_bbox_centre_difference_mm": 6.241109133250386e-07,
+  "centroid_outside_old_bbox_planes": 0,
+  "planes": 22849,
+  "plane_normal_max_angle_deg_ignoring_sign": 0.0006239689494193025,
+  "plane_normal_opposite_to_old": 7327,
+  "cylinders": 16427,
+  "cylinder_axis_max_angle_deg": 0.0006239689494193025,
+  "cylinder_radius_max_difference_mm": 4.819699483959994e-08,
+  "cylinder_axis_line_max_distance_mm": 6.701497500784207e-07,
+  "solid_index_mismatch": 0
+ },
+ "crawler_grouser_tips": {
+  "old_rows": 628,
+  "new_downward_planes_within_120mm": 628,
+  "max_centroid_distance_mm": 7.54983440115114e-07,
+  "max_area_relative_difference": 3.268378222691887e-09,
+  "max_plane_height_difference_mm": 5.751901710482343e-07,
+  "ground_level_tips_new": 80,
+  "ground_level_tips_old": 80,
+  "ground_level_tip_z_body_m": [
+   -1.050919119,
+   -1.050919119
+  ],
+  "ground_z_body_m": -1.05091911942481,
+  "ground_level_tip_x_body_m": [
+   -0.8251155764,
+   0.8116017742
+  ]
+ },
+ "query": {
+  "rows_loaded": 80676,
+  "load_seconds": 0.371,
+  "imu_c1": {
+   "query": "kind=plane, normal_body=(0,0,1), tol 1 deg, bbox overlap x 0.24..0.44, y 0.475..1.215, z 0.035..0.045 m",
+   "hits": 1,
+   "faces": [
+    {
+     "instance_path": "REXOME33_Assy_r3(미니어쳐) / BASE DECK:1",
+     "face_index": 2562,
+     "area_mm2": 142642.8429,
+     "centroid_x_body_m": 0.3399988411,
+     "centroid_y_body_m": 0.8546906423,
+     "centroid_z_body_m": 0.04,
+     "bbox_min_x_body_m": 0.24,
+     "bbox_max_x_body_m": 0.44,
+     "bbox_min_y_body_m": 0.475,
+     "bbox_max_y_body_m": 1.215,
+     "bbox_min_z_body_m": 0.04,
+     "bbox_max_z_body_m": 0.04
+    }
+   ],
+   "passed": true
+  },
+  "query_seconds": {
+   "imu_c1_plane_up_in_window": 0.0042,
+   "all_upward_planes_area_ge_1e4": 0.0029,
+   "holes_with_axis_along_body_y": 0.0038
+  },
+  "query_hits": {
+   "all_upward_planes_area_ge_1e4": 476,
+   "holes_with_axis_along_body_y": 2140
+  }
+ },
+ "generated_at": "2026-10-20T17:26:04"
+}

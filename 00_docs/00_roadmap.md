@@ -27,7 +27,7 @@ flowchart LR
 
 | 단계 | 진행 | 상태 | 예상 작업 시간 | 예상 계산 시간(벽시계) |
 |---|---|---|---|---|
-| **S0** | 6 / 11 | 🔶 진행 중 | 남은 3~3.5시간 | 약 2분 |
+| **S0** | 8 / 11 | 🔶 진행 중 | 남은 3~3.5시간 | 약 2분 |
 | S1 | 0 / 6 | ⬜ | 3.5~4.5시간 | 약 4~6분 |
 | S2a | 0 / 3 | ⬜ | 2~3시간 | 약 7분 |
 | S2b | 0 / 5 | ⬜ | 4~5시간 | 약 5분 |
@@ -38,7 +38,7 @@ flowchart LR
 | S7 | 0 / 8 | ⬜ | 8~11시간 | 30분~1시간 |
 | S8 | 0 / 6 | ⬜ | 15~20시간 | 1시간 + ML 데이터 수 시간 |
 | S9 | 0 / 5 | ⬜ | 7~10시간 + 파라미터 확보 | 수 시간(SCM 2 cm 격자 1 s당 약 31 s) |
-| **합계** | 6 / 65 | | **약 67~90시간** | 약 4~6시간 + ML·SCM 계산 |
+| **합계** | 8 / 65 | | **약 67~90시간** | 약 4~6시간 + ML·SCM 계산 |
 
 진행 수는 4절 체크리스트의 항목 수다(선택 항목 제외).
 
@@ -52,15 +52,16 @@ flowchart LR
 | 분야 | 결과 | 문서 |
 |---|---|---|
 | CAD | 다리 4개 기하, 질량 특성(경우 C 38,556 kg), 오거 3단계, 3면도·GIF | [00_cad/](00_cad/) |
-| 동역학 기준해 | 하중 분배·고유진동수·들어 올림 V4, 검증 기준 V0~V17(개정 7) | [01_dynamics/dynamics_model.md](01_dynamics/dynamics_model.md) |
+| 동역학 기준해 | 하중 분배·고유진동수·들어 올림 V4, 검증 기준 V0~V17(개정 9) | [01_dynamics/dynamics_model.md](01_dynamics/dynamics_model.md) |
 | 구동기 | L1 기본, L2b 병행(운용안 B) | [01_dynamics/actuator_L2_feasibility.md](01_dynamics/actuator_L2_feasibility.md) |
 | 감쇠비 | 다리 0.03, 크롤러 0.05/0.2 | [01_dynamics/damping_survey.md](01_dynamics/damping_survey.md) |
 | 유압 | 회로 해석, 210/350 bar, β 1.0 GPa | [02_hydraulic/](02_hydraulic/) |
 | Chrono 규약 | SMC 정지 마찰 없음 → 부싱 + Coulomb | [03_chrono/chrono_stick_friction_test.md](03_chrono/chrono_stick_friction_test.md) |
 | 제어 구조 | C2 잠정 채택(대안 C8) | [04_control/](04_control/) |
 | 센서 | IMU 캐빈 바닥 아래, ±0.2°, 2차 필터 | [05_sensors/](05_sensors/) |
-| 반력 시계열 | 0→680 mm 신장 시 다리 반력·동적 피크 ±19 kN | [01_dynamics/dynamics_model.md](01_dynamics/dynamics_model.md) 3.7절 |
+| 반력 시계열 | 0→680 mm 신장 시 다리 반력, D안 동적 피크 141.0 kN(준정적 119.3 kN), 기준 파일 등록 | [01_dynamics/dynamics_model.md](01_dynamics/dynamics_model.md) 3.7절 |
 | V7 진단값 | c_t 2배 오입력 판별(1·2차 의심 → 3차 확정) | [../06_analysis/00_dynamics/v7_diagnostic.json](../06_analysis/00_dynamics/v7_diagnostic.json) |
+| 주행 시험 연기 | Chrono 예제 궤도차량(M113 JSON 사본, 피치 0.1732 m·11이빨)을 `make_system`(NSC) 안에서 스프로킷 토크로 전진·후진. 부호 규약 실측(+T → +x, `GetAxleSpeed` 음수). 우리 크롤러 모델 아님 | [03_chrono/track_drive_plan.md](03_chrono/track_drive_plan.md) 10절 |
 
 ## 3. 단계별 로드맵
 
@@ -69,7 +70,7 @@ flowchart LR
 | **S0** 🔶 | 공통 기반(로더·좌표·타입·시스템·부싱·기록·스냅숏·비용) | — | V0 규약, 블록 회귀 | | |
 | S1 | 상부체 + 고정 다리 + 지면 부싱, 수평 정적 | L1 | V0~V3, V13 | | |
 | S2a | 부싱 동특성, 경사 정적 | L1 | V7 진단, V12, V13 | | |
-| S2b | 속도 모터, 크롤러 2×9 구, 접지 이벤트 | L1 | V0, V11, V13 | | |
+| S2b | 속도 모터, 크롤러 D안 24구(롤러 12 + 틈 있는 끝 슈 12), 접지 이벤트 | L1 | V0, V11, V13 | | |
 | S3 | 수치 감쇠 확인 → 들어 올림 → 다리 단독 신장, **Δt 확인** | L1 | V8(a), V4, V5, V6, V9 | **① 개루프 명령 재생**(runner·Record 확인) | |
 | S4 | 6개 모드, 에너지 수지, β 감도 | L1 | V7, V8(b) | | |
 | S5 | 오거 3단계 | L1 | V10 | | |
@@ -81,6 +82,7 @@ flowchart LR
 - 일반 실행 dt 1×10⁻⁴ s, 기준해·접지 전환 1×10⁻⁵ s(CLAUDE.md).
 - ML/DL 환경은 준비됨(`pytorch_214_cuda_python_313`). Chrono-dev가 만든 npz를 읽고, 시뮬레이션 안 추론이 필요하면 ONNX로 내보낸다.
 - 담당: Chrono 모델·시뮬레이션은 cad-expert, 판정은 dynamics-expert, 엔진 독립 Python(타입·센서·제어기)은 python-expert.
+- **선택 트랙 T(주행 시험, 사용자 결정 2026-10-20)**: 크롤러 앞쪽 스프로킷(유압 주행 모터)을 돌려 실제 궤도 모델로 전진·후진한다. Chrono Vehicle 궤도 템플릿(JSON, SinglePin 강체 슈 44개/측, NSC 접촉). 레벨링 S 단계와 모델·시나리오·기록을 분리한다. 원본 [03_chrono/track_drive_plan.md](03_chrono/track_drive_plan.md). T0 CAD 추출·JSON 생성기 → T1 한쪽 트랙 공회전 → T2 평지 정적 → T3 전진·후진·정지 + GIF → T4(선택) SCM. 작업 약 18~27시간. 선행: S0 `make_system`(주행용 선택지 추가 필요), S2b 크롤러 접촉, S7 NSC.
 
 ## 4. 단계별 체크리스트
 
@@ -93,10 +95,10 @@ flowchart LR
 - [x] `signals`(Command, Measurements, TruthState, Record 스키마) + 시험
 - [x] `make_system()`(중력 명시 R1, Bullet R2, 바닥 R6, 적분기·솔버 R11) + 시험. Pardiso MKL 크래시는 env 미활성 실행의 libomp 포워더 문제였고 미리 로드로 해결. L1 기본 솔버는 **SPARSE_LU + 희소 패턴 고정**(사용자 결정 2026-10-20, 전체 규모 L1 잠금 켬 QR 147 / LU 133 / Pardiso 447 µs/스텝, 결과 동일). QR·Pardiso·잠금 끔은 옵션. 잠금 상태 구조 변경(R15 부싱 생성·소멸) 시험 포함
 - [x] `engine`(SimEngine 프로토콜: reset·step·apply_command·measure·truth·snapshot·restore·close, `Snapshot` 지문 검사) + 시험
-- [ ] Chrono 10 SMC 감쇠 처리 확인(`gn = eff_mass × gn`, 단일 접촉 감쇠 시험) ⏱ 20~30분
+- [x] Chrono 10 SMC 감쇠 처리 확인: `c = gn·m₁m₂/(m₁+m₂)`, 재질 kn·gn 산술 평균 합성, YAML gn으로 heave ζ 0.02999 실측(설계 0.03) — gn 환산식 수정 불필요. **SMC 접촉은 명시 적분이라 접촉 모드에 ωΔt/2 수치 감쇠가 없음**(dt 규칙 재검토 대상) + 시험 22건
 - [ ] `GroundBushingCoulomb`(R15 히스테리시스, t_lift 1 ms) + 블록 회귀 3건·들었다 놓기 시험 ⏱ 1~1.5시간
 - [ ] `record`(npz + meta.json) + 스냅숏(R16) — 만들 때 결정: 실제 스트로크 필드, Measurements 저장 ⏱ 45분~1시간
-- [ ] `verify/reference`(R12 키 상수·존재 시험) ⏱ 20~30분
+- [x] `verify/reference`(R12 키 상수 68개, 자리표시를 펼치면 158경로 모두 파일에 존재, 계획 문서 경로를 실행 중에 대조) + 시험 177건
 - [ ] 전체 규모 스텝 비용 재측정(크롤러 포함, dt 1×10⁻⁴·1×10⁻⁵ s) ⏱ 30분(계산 약 2분)
 - 시작 전 결정: 기체 좌표 원점 ✅ CAD 원점 유지(2026-10-20)
 
@@ -119,16 +121,16 @@ flowchart LR
 - [ ] V11(공중 다리) ⏱ 30분
 - [ ] 크롤러 구 배열·패치·재질(R13), 패밀리(R14) ⏱ 1~1.5시간(CAD C7 반영 포함)
 - [ ] 접지·부상 이벤트(R15; t_lift 1 ms, N_th 100 N을 이벤트 시험으로 조정) ⏱ 1.5~2시간
-- [ ] 크롤러 위 정착 상태 저장(3단계, ≥ 23.2 s) ⏱ 20~30분
+- [ ] 크롤러 위 정착 상태 저장(3단계, 해석 정착 자세로 초기화, 못 하면 ≥ 65.5 s) ⏱ 20~30분
 
 ### S3 수치 감쇠 → 들어 올림 → 다리 단독 신장, Δt 확인
 - [ ] V8(a) Δt·2Δt, 60 s(수치 감쇠 실측) ⏱ 30분(계산 약 3분)
-- [ ] 들어 올림(V4): 크롤러 정착 상태에서 모터 출발, 다리별 운용 신장 정지, 첫 접지 = 후방 쌍 15.006 s, 정지 15 s 뒤 잔류 판정 ⏱ 1.5~2시간(계산 약 4분, 1×10⁻⁵ s 기준해 약 11분)
+- [ ] 들어 올림(V4): 크롤러 정착 상태에서 모터 출발, 다리별 운용 신장 정지, 다리별 접지 시각 ±0.05 s, 기준 = 감쇠 3자유도 동적 시각(D 15.050 / 15.049 / 15.177 / 15.177 s, `dynamic_events_s`), 준정적 시각(15.051 / 15.049 / 15.148 / 15.148 s)은 참고, 동적 피크 상한 판정, 정지 15 s 뒤 잔류 판정 ⏱ 1.5~2시간(계산 약 4분, 1×10⁻⁵ s 기준해 약 11분)
 - [ ] V5, V6(FL+, FL−) ⏱ 1시간(계산 약 12분)
 - [ ] V9(Δt, Δt/2, Δt/4 + 1×10⁻⁵ s 기준해) ⏱ 1~1.5시간(계산 약 28분)
 - [ ] 병렬 실행기와 meta(`Params.sha256`·`file_sha256`·reference sha256, dt, 솔버, 버전) ⏱ 1~1.5시간
 - [ ] **제어 ①** 개루프 명령 재생으로 runner·Record 확인 ⏱ 1시간
-- 시작 전 결정: 들어 올림 동적 피크(±19 kN)를 하중 판정에 넣을지
+- 결정됨(2026-10-20): 동적 피크는 ②안(기록 + 상한 218 kN, ±15 %는 참고), `leg_extension_loads.json` 기준 파일 등록
 
 ### S4 6개 모드 · 에너지 수지 · β 감도
 - [ ] 초기 속도 6종 + 모드 투영 + ERA/SSI 교차 ⏱ 2~3시간
@@ -160,7 +162,7 @@ flowchart LR
 - [ ] 힘 법칙, s_ref, 스텝별 포화 ⏱ 1.5~2시간
 - [ ] 횡 부싱 ⏱ 1시간
 - [ ] V0~V13(L2b-NSC 열) ⏱ 2~3시간(계산 30분~1시간)
-- [ ] V4(NSC, 첫 접지 15.04 s) ⏱ 30~45분
+- [ ] V4(NSC, 다리별 접지 ±0.05 s, 강체 극한 동적 기준 15.382 / 15.382 / 15.040 / 15.040 s) ⏱ 30~45분
 - [ ] V14 3경우, RL+ ⏱ 1~1.5시간(계산 약 10분)
 - [ ] L1 대 L2b-NSC 비교표 ⏱ 30분
 - [ ] **제어 ③ 준비** py: S6 제어기로 L2b-NSC 폐루프 연기 시험 ⏱ 1시간
@@ -191,16 +193,25 @@ flowchart LR
 | **C2 질량 감사**: 자리표시 재질 부품, 질량 상위 부품, 빠진 질량, 제조사 질문 목록 | 언제든(빠를수록) | 같은 문서 2·3.9절, `01_cad/01_parts/mass_audit_parts.csv` | ✅ 경우 C 유지 결정, 제조사 질문 Q1~Q8 대기 |
 | **C3 IMU 장착점 실제 좌표**: 상부 프레임 평평한 면 후보 | S6 전 | `00_cad/cad_origin_mass_imu.md` 4절, `01_cad/01_parts/imu_c1_*.png` | ✅ C1 (0.31, 0.88, 0.040) m 결정 |
 | **C4 전체 부품 B-rep 캐시**(프로토타입별 `.brep` + 인스턴스 배치 변환, git 제외, 생성 스크립트) | C5~C8 전 | `01_cad/06_brep/`(`prototypes/*.bbrep` 681개 바이너리 387.7 MB git 제외, `instances.csv` 1,214행), 생성 `04_scripts/00_cad/build_brep_cache.py`, 로더 `brep_cache.py`, 형식 변환 `convert_brep_cache.py`, 검증 `verify_brep_cache.py`, 크롤러 파생 캐시 `derived/crawler/`(`derive_crawler_cache.py`) → STEP 재파싱 없이 형상 질의. `00_cad/cad_review.md` 8절 | ✅ 2026-10-20 (parts.csv 부피·무게중심 전수 일치, 다리·마스트 B-rep 동일) |
-| **C5 전체 면 색인**(평면·원통 면 면적·법선·중심·소속 부품) ⏱ 1~1.5시간 | C3·C6 보강 | 캐시 → 장착면·접지면 탐색 | ⬜ |
-| **C6 캐시 목록(manifest)**: STEP 해시, 생성 스크립트·버전, 캐시 파일 해시 | C4와 함께 | `01_cad/cache_manifest.json`(00_step~06_brep 등록), 점검·갱신 `04_scripts/00_cad/check_cache.py` → 낡은 캐시 자동 감지. `00_cad/cad_review.md` 8.5절 | ✅ 2026-10-20 |
-| **C7 크롤러 실제 접지면 치수**(트랙 길이·폭·롤러 위치) ⏱ 1시간 + dynamics 판단 1시간 | S2b 전 | 크롤러 구 배열(R13), S9 SCM 활성 영역 | 🔶 파생 캐시 준비됨(`01_cad/06_brep/derived/crawler/crawler_summary.json`·`crawler_wheels.csv`, `cad_review.md` 8.6절), 구 배열 수정은 dynamics-expert 판단 대기 |
+| **C5 전체 면 색인**(평면·원통 면 면적·법선·중심·소속 부품) ⏱ 1~1.5시간 | C3·C6 보강 | `01_cad/07_faces/`(instance_faces.csv.gz 80,676면·prototype_faces.csv.gz, 크롤러는 지면 +50 mm·그라우저 끝만), `04_scripts/00_cad/build_face_index.py`, 질의 `face_index.py`, 검증 `cad_review.md` 9절 | ✅ 2026-10-20 |
+| **C6 캐시 목록(manifest)**: STEP 해시, 생성 스크립트·버전, 캐시 파일 해시 | C4와 함께 | `01_cad/cache_manifest.json`(00_step~07_faces 등록), 점검·갱신 `04_scripts/00_cad/check_cache.py` → 낡은 캐시 자동 감지. `00_cad/cad_review.md` 8.5절 | ✅ 2026-10-20 |
+| **C7 크롤러 실제 접지면 치수**(트랙 길이·폭·롤러 위치) ⏱ 1시간 + dynamics 판단 1시간 | S2b 전 | 크롤러 구 배열(R13), S9 SCM 활성 영역 | 🔶 파생 캐시 준비됨(`01_cad/06_brep/derived/crawler/crawler_summary.json`·`crawler_wheels.csv`, `cad_review.md` 8.6절); D안(롤러 + 틈 있는 끝 슈) 결정(2026-10-20), YAML 반영 완료; 접촉 부품(롤러 12·끝 슈 12·평탄 슈 20) B-rep·색인 완료(`cad_review.md` 8.6.1, YAML 배치와 일치); 기준해 재계산 완료(`reference.json`·`leg_extension_loads.json`, `dynamics_model.md` 개정 8·9), 부품 렌더 `01_cad/06_brep/derived/crawler/crawler_contact_parts_*.png` |
 | **C8 Chrono 시각화·충돌 형상**(패드·크롤러 단순 형상, 볼록 분해) ⏱ 1.5~2시간 | S1 전 | S1 바닥 패치·충돌 패밀리(R14) | 🔶 크롤러 파생 캐시 준비됨(트랙별 볼록 껍질·상자, `crawler_collision.json`, `cad_review.md` 8.6절). 패드 형상·Chrono 적용은 남음 |
-| **C9 마스트 1차 굽힘 진동수**(단면 추출 → 보 모델, 필요 시 FEM 교차) ⏱ 3~4시간(FEM 포함 시 +2시간) | S6 전 | 5절 "마스트 굽힘 진동수", 강체 가정 검증 | ⬜ |
+| **C9 마스트 1차 굽힘 진동수**(단면 추출 → 보 모델, 필요 시 FEM 교차) ⏱ 3~4시간(FEM 포함 시 +2시간) | S6 전 | 5절 "마스트 굽힘 진동수", 강체 가정 검증 | 🔶 CAD 추출 완료(`00_cad/cad_mast_beam.md`, `01_cad/04_mast/mast_beam_properties.*`). 참고 f1: 상단 전후 2.4–2.7 Hz·좌우 ≤ 3.6 Hz로 L1 로킹(1.8~3.9 Hz)과 겹칠 수 있음. dynamics-expert 판정 대기 |
 | **C10 다리 지지 구조 강성**(아우트리거 빔·브래킷 FEM) ⏱ 4~6시간 | L2 도입 시 | YAML `frame_stiffness_N_m` 가정 검증 | ⬜ |
 | C11 STEP 색·레이어 정보(선택) ⏱ 30분 | — | 그림 품질 | ⬜ |
 
 - 순서: C1~C3(진행 중) → C4 + C6 → C5 → C7·C8(S1·S2b 전) → C9(S6 전) → C10(L2).
 - 완료한 CAD 산출물(부품 표, 질량 특성, 다리·마스트 B-rep, 렌더 메시, 3면도, GIF)은 2절 사전 검토에 있다.
+
+### 주행 시험 트랙(T, 선택)
+[03_chrono/track_drive_plan.md](03_chrono/track_drive_plan.md)이 원본이다(체크 상태 포함). 판정은 dynamics-expert.
+
+- [ ] **T0** CAD 추출(스프로킷 23이빨, 슈 44개/측·피치 173.2 mm, 아이들러·롤러·핀), CAD → Chrono Vehicle JSON 생성기, 섀시 질량 정리(상부체 − 궤도 부품) ⏱ 3~4시간(계산 약 2분)
+- [ ] **T1** 한쪽 트랙 공회전: 둘레 보존, 체인 속도 = ω·r_eff ±1 %, 탈선 없음, 장력, 회전 부호 ⏱ 4~6시간(계산 2.5~12.5분)
+- [ ] **T2** 양쪽 트랙 + 상부체 평지 정적: 반력 합 ±1 %, D안 기준해 ±10 %, heave 8.73 Hz(D안) ±10 %, 표류 < 1 mm ⏱ 5~7시간(계산 4.5~22분)
+- [ ] **T3** 전진·후진·정지 + GIF: 미끄럼률 ≤ 3 %, 이동 거리 ±1 %, 정지 후 평형, 필요 토크, 에너지 수지 ⏱ 5~8시간(계산 10~49분)
+- [ ] T4(선택) SCM 연약 지면 주행 ⏱ 6~10시간 + SCM 파라미터
 
 ## 5. 결정이 필요한 것과 마감 단계
 
@@ -215,9 +226,13 @@ flowchart LR
 | V12 경사 정착 길이 | S2a | ✅ 정착 ≥ 53 s(τ₁ ln100, 사용자 결정 2026-10-20). S2a 비용 85 → 217 s |
 | 부싱 부상 판정 n_lift | S2b | ✅ 시간 기준 t_lift = 1 ms(Δt 1×10⁻⁴ s → 10스텝, 1×10⁻⁵ s → 100스텝). 값은 S2b 이벤트 시험으로 조정 |
 | Δt | S3에서 확인 | ✅ 용도별(1×10⁻⁴ / 1×10⁻⁵ s) |
+| 일반 실행 Δt 2×10⁻⁴ s 완화 | S3 V8(a) 뒤 | ⏳ **1×10⁻⁴ s 유지, 조건부 검토**(사용자 결정 2026-10-20). 근거: dynamics-expert 수치 감쇠 재검토(SMC 접촉은 명시, 수치 감쇠는 부싱 몫 r·ωΔt/2만 → 상한은 3차 yaw-sway 0.205 ms, `06_analysis/00_dynamics/numerical_damping_review.json`). 조건 ① V8(a)에서 3차 ζ_num이 예측의 ±30 % 안(부싱 암시 가정 확인), ② 다리 ζ 0.01 감도 실행은 접선 모드 ζ 미판정 또는 5×10⁻⁵ s. 둘 다 충족하면 2×10⁻⁴ s로 바꿀지 다시 결정 |
 | L1 선형 솔버 | S0 | ✅ SPARSE_LU + 희소 패턴 고정(사용자 결정 2026-10-20, 근거 계획 문서 4절 벤치마크). SPARSE_QR·PARDISO_MKL은 옵션 |
 | 감쇠비 | S1~S8 | ✅ 다리 0.03, 크롤러 0.05/0.2, 구조 0.015 |
-| 들어 올림 동적 피크(±19 kN)를 하중 판정에 넣을지 | S3 | ⏳ 넣으면 S3에서 Chrono L1 신장 시나리오와 비교 |
+| `leg_extension_loads.json`을 기준 파일(`verify/reference`)로 등록할지 | S3 | ✅ **등록**(사용자 결정 2026-10-20, D안 재계산 후). S3에서 Chrono L1 신장 시나리오와 비교. 허용 오차는 아래 동적 피크 판정과 함께 정함 |
+| 들어 올림 동적 피크(D안 141.0 kN, 준정적 119.3 kN)를 하중 판정에 넣을지 | S3 | ✅ **②안**(사용자 결정 2026-10-20): 기록 + 상한 판정(실린더 힘 < 218 kN, 포화 없음)만. 3자유도 기준 ±15 %는 참고 기록. F_min 동적 여유(+18 N, ×3이면 −5.8 kN)는 개루프 V4 판정에 쓰지 않음 |
+| V4 기준 시각 | S3 | ✅ **감쇠 3자유도 동적 접지 시각을 기준**, 준정적 시각은 참고 기록(사용자 결정 2026-10-20). 허용 ±0.05 s 유지. 준정적 기준이면 후방이 29 ms 어긋나 허용의 60 %를 먼저 씀. reference.json `dynamic_events_s` 추가 완료(감쇠 감도 최대 4.7 ms, 허용의 9 %), `verify/reference.py` 동적 상수 반영 완료 |
+| 크롤러 접촉 배치 | S2b·S0 비용 측정 | ✅ D안 + 총 강성 1×10⁸ 유지(×3 감도), V4는 다리별 접지 시각 ±0.05 s 판정(사용자 결정 2026-10-20). YAML·기준해·시험 상수 반영 완료(2026-10-20) |
 | MuJoCo 역할(Q8) | S4 끝 | ⏳ 인터페이스만 |
 | 센서 모델(노이즈·바이어스·지연), 제어 주기 | S6 | ⏳ 영점 허용 0.14°(장착 몫 0.02°, 2026-10-20 결정), 등급 감도, 20 ms |
 | IMU 정확한 장착 좌표 | S6 | ✅ C1 (0.31, 0.88, 0.040) m(BASE DECK 좌측 폰툰 15 mm 가로판 윗면, 후보 C1, 사용자 결정 2026-10-20). 정확도 재계산은 dynamics-expert |
@@ -229,6 +244,14 @@ flowchart LR
 | 마스트 굽힘 진동수 | S6·S8 | 자료가 오면 — 그때까지 강체 |
 | 실제 운용 중량 | 언제든 | 경우 C(38,556 kg) 유지(사용자 결정 2026-10-20, 질량 감사 `00_cad/cad_origin_mass_imu.md` 2·3.9절의 제조사 질문 Q1~Q8로 확인 예정). 바뀌면 YAML 재생성 → 기준해 재계산 → 저장 상태 폐기 → V 회귀 |
 | 유압 사양(L2 전환) | L2 도입 시 | L1 임시 기본 |
+| T: 스프로킷 위치 | T0 | ✅ 앞쪽 = 주행 모터, 뒤쪽 Ø548 = 아이들러(사용자 확정 2026-10-20) |
+| T U2: 스프로킷 맞물림 모델 | T1 | ⏳ (a) 23이빨 반피치 r_eff 317.0 mm(권장) / (b) 12이빨 등가 330.8 mm — CAD 핀 반지름과 불일치, 주행 속도 4.3 % 차 |
+| T U3: 주행 모터 사양·목표 속도 | T3 | ⏳ 미정이면 0.3 m/s, 가감속 0.15 m/s² |
+| T U4: 트랙 장력 | T1 | ⏳ 미정이면 상부 런 처짐 40 mm(약 80 kN), 감도 20/60 mm |
+| T U5: 주행 시 오거 위치 | T3 | ⏳ 미정이면 상단 |
+| T U6: 주행 판정 Δt | T1 | ⏳ 5×10⁻⁴ s vs 1×10⁻⁴ s — dynamics-expert의 수치 감쇠 재검토 결과로 판단 |
+| T U7: 상부 롤러 가정 추가 | T1 | ⏳ CAD에 없음 |
+| T U8: 실기 하부체 = REXOME25? | 언제든 | 제조사 확인 대기 |
 
 ## 6. 다음 할 일
 

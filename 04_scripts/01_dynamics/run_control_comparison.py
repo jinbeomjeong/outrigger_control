@@ -13,7 +13,8 @@ Reduced plant (L1 basis, read-only use of dyn_model.py and 02_params/rexome33.ya
     Pressure reading P = k_oil (s_ref - x) = (contact force - rod weight) - f (cylinder-force basis).
     Normal damping c_n (L1 value) on the total leg compression rate, ground-fixed tangential bushing k_t, c_t
     (L1 values) with circular Coulomb cap mu N (mu 0.5).
-  * Crawler: 2 x 9 unilateral contact points (dyn_model.crawler_points), k total 1e8 N/m, heave zeta 0.05 (concrete),
+  * Crawler: layout D (dyn_model.crawler_points / crawler_gaps: 2 x 6 rollers + 2 x 6 raised end shoes, gaps as
+    z offsets), k total 1e8 N/m on the rollers, heave zeta 0.05 (concrete); start at the analytic settled pose,
     tangential stick bushing per point (ASSUMPTION k_t = k_n per point) with mu 0.5.
   * Symplectic (semi-implicit) Euler, dt 5e-4 s (stability margin: max omega dt ~ 0.08).
 Sensors: IMU accelerometer tilt at an ASSUMED point, averaged over the 20 ms control period, bias + white noise,
@@ -66,6 +67,8 @@ T_CTRL = 0.02
 N_SUB = int(round(T_CTRL / DT))
 T_MAX = 150.0
 T_HOLD = 10.0           # run on this long after the controller declares "done"
+# pre-run settle on the crawler (layout D): YAML simulation.settle_on_crawler_min_s (65.47 s); was 3 s with layout A
+SETTLE_ON_CRAWLER_S = max(3.0, float(dm.load_params()["simulation"]["settle_on_crawler_min_s"]))
 DEG = math.pi / 180
 
 # ---------------------------------------------------------------------------- IMU mounting point (single source)
@@ -300,12 +303,15 @@ class Plant:
         self.Ibinv = np.linalg.inv(self.Ib)
         com = body.com
         self.pad_rel = np.column_stack([geo.pad_xy, geo.pad_z_retracted]) - com
+        # crawler layout D (YAML contact.crawler, 2026-10-20): roller spheres at the crawler bottom, raised end shoes
+        # placed higher by their gap (unilateral, engage only after the gap closes); same kn, c per sphere
         cxy, kcr, ccr = dm.crawler_points(p)
-        kn_tot = float(p["contact"]["crawler"]["kn_total_N_m"])
-        c_tot = dm.crawler_damping_total(kn_tot, self.m)
-        self.cr_rel = np.column_stack([cxy, np.full(len(cxy), geo.crawler_bottom_z)]) - com
+        cgap = dm.crawler_gaps(p)
+        self.cr_rel = np.column_stack([cxy, geo.crawler_bottom_z + cgap]) - com
         nc = len(cxy)
-        self.kcr = np.full(nc, kn_tot / nc); self.ccr = np.full(nc, c_tot / nc)
+        n_rol = int((cgap <= 0).sum())   # dashpot per level mass (crawler heave zeta 0.05 at every auger level)
+        c_tot = dm.crawler_damping_total(float(p["contact"]["crawler"]["kn_total_N_m"]), self.m)
+        self.kcr = kcr.copy(); self.ccr = np.full(nc, c_tot / n_rol)
         self.ktcr = self.kcr.copy(); self.ctcr = self.ccr.copy()
         self.imu_rel = np.array(CA["imu_point_body_m"]) - com
         kc = dm.k_concrete_westergaard()["k_slab_N_m"]
@@ -335,10 +341,17 @@ class Plant:
         phi = math.asin(-self.nrm[1]); th = math.atan2(self.nrm[0], self.nrm[2])
         qr = np.array([math.cos(phi / 2), math.sin(phi / 2), 0, 0]); qp = np.array([math.cos(th / 2), 0, math.sin(th / 2), 0])
         self.q = _qmul(qp, qr)
-        R = _R(self.q)
-        sink = self.m * self.g / kn_tot
         if init_ext is None:
-            O = self.nrm * (-geo.crawler_bottom_z - sink)        # body origin, crawler bottom just below the floor
+            # start at the analytic settled pose on the crawler (vertical statics in the floor frame, legs at 0):
+            # layout D has a 1.3 Hz, zeta 0.008 pitch mode on the crawler (settle ~65 s), so a uniform-sink start
+            # would leave a pitch oscillation through the whole lift (dynamics_model.md 3.8 item 5)
+            _, qs, _ = dm.static_unilateral(cxy, kcr, -cgap, self.m * self.g, com[:2])
+            qs_r = np.array([math.cos(qs[1] / 2), math.sin(qs[1] / 2), 0, 0])
+            qs_p = np.array([math.cos(qs[2] / 2), 0, math.sin(qs[2] / 2), 0])
+            self.q = _qmul(self.q, _qmul(qs_p, qs_r))     # R = R_floor R_settle (settle in floor axes)
+        R = _R(self.q)
+        if init_ext is None:
+            O = self.nrm * (-geo.crawler_bottom_z + qs[0])       # body origin at the settled height (qs[0] < 0)
             self.sref = np.zeros(4)
         else:  # start on the pads at extensions init_ext (flat floor tests)
             O = np.array([0, 0, -(geo.pad_z_retracted[0] - init_ext[0])])
@@ -943,8 +956,10 @@ def run_case(cand, level="top", roll=0.0, pitch=0.0, beta=1.0e9, Fs=0.0, imu="no
              contact="pressure", settle=False, dt=DT, keep_series=False, seed=None):
     plant = Plant(level, roll, pitch, beta=beta, Fs=Fs, soft_FL=soft_FL, dt=dt)
     nsub = int(round(T_CTRL / dt))
-    # settle on the crawler for 3 s (not recorded)
-    plant.step(np.zeros(4), int(round(3.0 / dt)))
+    # settle on the crawler (not recorded). Layout D: 1.3 Hz pitch mode with zeta 0.008 (tau 14 s); on a slope the
+    # tangential crawler bushings start unloaded, so the slope load excites it. Settle for the YAML length
+    # simulation.settle_on_crawler_min_s (ln(100) x max tau, 65.5 s) instead of the former 3 s.
+    plant.step(np.zeros(4), int(round(SETTLE_ON_CRAWLER_S / dt)))
     plant.t = 0.0
     rng = np.random.default_rng(CA["seed"] if seed is None else seed)
     sens = Sensors(CA["imu_" + imu], rng, plant.g)

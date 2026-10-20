@@ -2,11 +2,28 @@
  "meta": {
   "script": "04_scripts/00_cad/render_leg_extension.py",
   "params": "02_params\\rexome33.yaml",
-  "params_sha256": "6f4253299451cb68efd798be7838872d5794454fcab5ec1bd2a05dada50d2929",
+  "params_sha256": "8d1cc183df504cf70ffe19db0df98cd717d7fd3926109afbfd85819d8150dc8c",
   "auger_level": "top",
   "frame": "body: x forward, y left, z up, origin = CAD origin; pitch + = nose down",
-  "model": "quasi-static rigid body, rigid level ground at ground.crawler_bottom_z_m, unilateral rigid contacts at the 4 pad bottom centres and the crawler sphere-layout bottoms; pose = min CoM height (LP); 4 pads only -> least squares; x, y, yaw fixed; small angles; rod weight not in the potential; pads keep the body orientation (swivel not modelled, tilt <= 0.13 deg)",
-  "contact_tolerance_m": 1e-07
+  "model": "quasi-static rigid body, rigid level ground at ground.crawler_bottom_z_m, unilateral rigid contacts at the 4 pad bottom centres and the crawler contact points of contact.crawler.sphere_layout (layout D: 12 roller points on the floor + 12 end-shoe points raised by end_shoe_gap_m); pose = min CoM height (LP); 4 pads only -> least squares; x, y, yaw fixed; small angles; rod weight not in the potential; pads keep the body orientation (swivel not modelled, tilt <= 0.13 deg)",
+  "contact_tolerance_m": 1e-07,
+  "crawler_layout": {
+   "source": "02_params/rexome33.yaml contact.crawler.sphere_layout",
+   "scheme": "rollers_plus_gapped_end_shoes",
+   "n_points": 24,
+   "n_roller_points": 12,
+   "n_end_shoe_points": 12,
+   "track_centre_y_m": 1.045,
+   "x_extent_m": [
+    -1.3122,
+    1.2968
+   ],
+   "end_shoe_gap_range_m": [
+    0.00223,
+    0.02149
+   ],
+   "sphere_radius_m": 0.05
+  }
  },
  "gif_schedule": {
   "description": "all legs e(t) = min(v t, stroke)",
@@ -14,17 +31,35 @@
   "stroke_m": 0.68,
   "t_end_s": 29.999999955882355,
   "touch_s (FL, FR, RL, RR)": [
-   15.448,
-   15.448,
+   15.3605,
+   15.3605,
    15.0397,
    15.0397
   ],
-  "crawler_off_s": 15.448,
+  "crawler_off_s": 15.3605,
+  "end_shoe_first_contact_s": null,
+  "crawler_pivot_between_touch_and_lift_off": {
+   "t_s": 15.2001,
+   "points_xy_m": [
+    [
+     0.901,
+     1.045
+    ],
+    [
+     0.901,
+     -1.045
+    ]
+   ],
+   "kind": [
+    "roller",
+    "roller"
+   ]
+  },
   "end_state": {
    "uz_mm": 333.7243,
    "roll_deg": 0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 329.846,
+   "crawler_min_clearance_mm": 331.829,
    "pad_contact": [
     true,
     true,
@@ -35,8 +70,25 @@
   }
  },
  "reference_comparison": {
-  "procedure": "reference.json lift_V4_compliant_crawler: t = 0 all legs at +v_max, each leg stops at contact.rigid_floor.L1.operating_extension_m",
-  "reference_layout": "default 2x9 (YAML contact.crawler.sphere_layout)",
+  "procedure": "compliant V4 (lift_V4_compliant_crawler): t = 0 all legs at +v_max, each leg stops at contact.rigid_floor.L1.operating_extension_m",
+  "reference_source": "06_analysis/00_dynamics/reference.json lift_V4_compliant_crawler.layouts['D rollers + gapped end shoes (YAML contact.crawler.sphere_layout)']",
+  "crawler_layout": {
+   "source": "02_params/rexome33.yaml contact.crawler.sphere_layout",
+   "scheme": "rollers_plus_gapped_end_shoes",
+   "n_points": 24,
+   "n_roller_points": 12,
+   "n_end_shoe_points": 12,
+   "track_centre_y_m": 1.045,
+   "x_extent_m": [
+    -1.3122,
+    1.2968
+   ],
+   "end_shoe_gap_range_m": [
+    0.00223,
+    0.02149
+   ],
+   "sphere_radius_m": 0.05
+  },
   "operating_extension_m": [
    0.4011,
    0.4011,
@@ -46,38 +98,38 @@
   "rows (quantity, reference V4 compliant, this rigid kinematic model)": [
    [
     "first touch leg",
-    "RR",
+    "FR",
     "RL=RR"
    ],
    [
     "first touch [s]",
-    15.006,
+    15.049,
     15.0397
    ],
    [
     "touch FL [s]",
-    15.145,
-    15.448
+    15.051,
+    15.3605
    ],
    [
     "touch FR [s]",
-    15.145,
-    15.448
+    15.049,
+    15.3605
    ],
    [
     "touch RL [s]",
-    15.007,
+    15.148,
     15.0397
    ],
    [
     "touch RR [s]",
-    15.006,
+    15.148,
     15.0397
    ],
    [
     "crawler fully off [s]",
-    15.691,
-    15.448
+    15.584,
+    15.3605
    ],
    [
     "leg stop FL/FR, RL/RR [s]",
@@ -106,41 +158,48 @@
    ],
    [
     "end crawler min clearance [mm]",
-    44.487,
+    44.926,
     50.0
    ]
   ],
   "reference_settled_on_crawler": {
    "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
-    -3.8205,
-    0.0003211,
-    0.068741
+    -3.1907,
+    0.0002864,
+    0.16947
    ],
    "crawler_sphere_forces_N": [
-    8927.6,
-    11997.0,
-    15066.0,
-    18136.0,
-    21205.0,
-    24275.0,
-    27344.0,
-    30413.0,
-    33483.0,
-    8994.0,
-    12063.0,
-    15133.0,
-    18202.0,
-    21272.0,
-    24341.0,
-    27410.0,
-    30480.0,
-    33549.0
+    4757.1,
+    13556.0,
+    22356.0,
+    31155.0,
+    39955.0,
+    48754.0,
+    4844.2,
+    13644.0,
+    22443.0,
+    31242.0,
+    40042.0,
+    48841.0,
+    -0.0,
+    -0.0,
+    -0.0,
+    30307.0,
+    -0.0,
+    -0.0,
+    -0.0,
+    -0.0,
+    -0.0,
+    30394.0,
+    -0.0,
+    -0.0
    ],
+   "end_shoe_spheres_in_contact": 2,
    "pad_gap_at_e0_mm": [
-    344.53,
-    344.52,
-    340.15,
-    340.14
+    341.13,
+    341.12,
+    345.28,
+    345.26
    ]
   },
   "end_state_kinematic": {
@@ -155,6 +214,26 @@
     true
    ],
    "lstsq_residual_mm": 0.0
+  },
+  "kinematic_events_reference_procedure": {
+   "end_shoe_first_contact_s": null,
+   "crawler_pivot_between_touch_and_lift_off": {
+    "t_s": 15.2001,
+    "points_xy_m": [
+     [
+      0.901,
+      1.045
+     ],
+     [
+      0.901,
+      -1.045
+     ]
+    ],
+    "kind": [
+     "roller",
+     "roller"
+    ]
+   }
   }
  },
  "rod_mesh_check": {
@@ -1125,9 +1204,9 @@
    "t_s": 15.0397,
    "extension_mm": 340.9,
    "uz_mm": -0.0,
-   "roll_deg": -0.0,
+   "roll_deg": 0.0,
    "pitch_deg": -0.0,
-   "crawler_min_clearance_mm": 0.0,
+   "crawler_min_clearance_mm": -0.0,
    "pad_contact": [
     false,
     false,
@@ -1139,9 +1218,9 @@
   {
    "t_s": 15.12,
    "extension_mm": 342.72,
-   "uz_mm": 0.7627,
+   "uz_mm": 0.4743,
    "roll_deg": -0.0,
-   "pitch_deg": 0.0237,
+   "pitch_deg": 0.03016,
    "crawler_min_clearance_mm": 0.0,
    "pad_contact": [
     false,
@@ -1154,9 +1233,9 @@
   {
    "t_s": 15.36,
    "extension_mm": 348.16,
-   "uz_mm": 3.0426,
+   "uz_mm": 1.8922,
    "roll_deg": -0.0,
-   "pitch_deg": 0.09454,
+   "pitch_deg": 0.12033,
    "crawler_min_clearance_mm": 0.0,
    "pad_contact": [
     false,
@@ -1167,10 +1246,10 @@
    "lstsq_residual_mm": 0.0
   },
   {
-   "t_s": 15.448,
-   "extension_mm": 350.15,
-   "uz_mm": 3.8784,
-   "roll_deg": 0.0,
+   "t_s": 15.3605,
+   "extension_mm": 348.17,
+   "uz_mm": 1.8951,
+   "roll_deg": -0.0,
    "pitch_deg": 0.1205,
    "crawler_min_clearance_mm": 0.0,
    "pad_contact": [
@@ -1179,7 +1258,7 @@
     true,
     true
    ],
-   "lstsq_residual_mm": 2.6020852139652106e-15
+   "lstsq_residual_mm": 4.336808689942018e-15
   },
   {
    "t_s": 15.6,
@@ -1187,7 +1266,7 @@
    "uz_mm": 7.3243,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 3.446,
+   "crawler_min_clearance_mm": 5.429,
    "pad_contact": [
     true,
     true,
@@ -1202,7 +1281,7 @@
    "uz_mm": 12.7643,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 8.886,
+   "crawler_min_clearance_mm": 10.869,
    "pad_contact": [
     true,
     true,
@@ -1217,7 +1296,7 @@
    "uz_mm": 18.2043,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 14.326,
+   "crawler_min_clearance_mm": 16.309,
    "pad_contact": [
     true,
     true,
@@ -1232,7 +1311,7 @@
    "uz_mm": 23.6443,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 19.766,
+   "crawler_min_clearance_mm": 21.749,
    "pad_contact": [
     true,
     true,
@@ -1247,7 +1326,7 @@
    "uz_mm": 29.0843,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 25.206,
+   "crawler_min_clearance_mm": 27.189,
    "pad_contact": [
     true,
     true,
@@ -1262,7 +1341,7 @@
    "uz_mm": 34.5243,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 30.646,
+   "crawler_min_clearance_mm": 32.629,
    "pad_contact": [
     true,
     true,
@@ -1277,7 +1356,7 @@
    "uz_mm": 39.9643,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 36.086,
+   "crawler_min_clearance_mm": 38.069,
    "pad_contact": [
     true,
     true,
@@ -1292,7 +1371,7 @@
    "uz_mm": 45.4043,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 41.526,
+   "crawler_min_clearance_mm": 43.509,
    "pad_contact": [
     true,
     true,
@@ -1307,7 +1386,7 @@
    "uz_mm": 50.8443,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 46.966,
+   "crawler_min_clearance_mm": 48.949,
    "pad_contact": [
     true,
     true,
@@ -1322,7 +1401,7 @@
    "uz_mm": 56.2843,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 52.406,
+   "crawler_min_clearance_mm": 54.389,
    "pad_contact": [
     true,
     true,
@@ -1337,7 +1416,7 @@
    "uz_mm": 61.7243,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 57.846,
+   "crawler_min_clearance_mm": 59.829,
    "pad_contact": [
     true,
     true,
@@ -1352,7 +1431,7 @@
    "uz_mm": 67.1643,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 63.286,
+   "crawler_min_clearance_mm": 65.269,
    "pad_contact": [
     true,
     true,
@@ -1367,7 +1446,7 @@
    "uz_mm": 72.6043,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 68.726,
+   "crawler_min_clearance_mm": 70.709,
    "pad_contact": [
     true,
     true,
@@ -1382,7 +1461,7 @@
    "uz_mm": 78.0443,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 74.166,
+   "crawler_min_clearance_mm": 76.149,
    "pad_contact": [
     true,
     true,
@@ -1397,7 +1476,7 @@
    "uz_mm": 83.4843,
    "roll_deg": 0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 79.606,
+   "crawler_min_clearance_mm": 81.589,
    "pad_contact": [
     true,
     true,
@@ -1412,7 +1491,7 @@
    "uz_mm": 88.9243,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 85.046,
+   "crawler_min_clearance_mm": 87.029,
    "pad_contact": [
     true,
     true,
@@ -1427,7 +1506,7 @@
    "uz_mm": 94.3643,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 90.486,
+   "crawler_min_clearance_mm": 92.469,
    "pad_contact": [
     true,
     true,
@@ -1442,7 +1521,7 @@
    "uz_mm": 99.8043,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 95.926,
+   "crawler_min_clearance_mm": 97.909,
    "pad_contact": [
     true,
     true,
@@ -1457,7 +1536,7 @@
    "uz_mm": 105.2443,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 101.366,
+   "crawler_min_clearance_mm": 103.349,
    "pad_contact": [
     true,
     true,
@@ -1472,7 +1551,7 @@
    "uz_mm": 110.6843,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 106.806,
+   "crawler_min_clearance_mm": 108.789,
    "pad_contact": [
     true,
     true,
@@ -1487,7 +1566,7 @@
    "uz_mm": 116.1243,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 112.246,
+   "crawler_min_clearance_mm": 114.229,
    "pad_contact": [
     true,
     true,
@@ -1502,7 +1581,7 @@
    "uz_mm": 121.5643,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 117.686,
+   "crawler_min_clearance_mm": 119.669,
    "pad_contact": [
     true,
     true,
@@ -1517,7 +1596,7 @@
    "uz_mm": 127.0043,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 123.126,
+   "crawler_min_clearance_mm": 125.109,
    "pad_contact": [
     true,
     true,
@@ -1532,7 +1611,7 @@
    "uz_mm": 132.4443,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 128.566,
+   "crawler_min_clearance_mm": 130.549,
    "pad_contact": [
     true,
     true,
@@ -1547,7 +1626,7 @@
    "uz_mm": 137.8843,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 134.006,
+   "crawler_min_clearance_mm": 135.989,
    "pad_contact": [
     true,
     true,
@@ -1562,7 +1641,7 @@
    "uz_mm": 143.3243,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 139.446,
+   "crawler_min_clearance_mm": 141.429,
    "pad_contact": [
     true,
     true,
@@ -1577,7 +1656,7 @@
    "uz_mm": 148.7643,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 144.886,
+   "crawler_min_clearance_mm": 146.869,
    "pad_contact": [
     true,
     true,
@@ -1592,7 +1671,7 @@
    "uz_mm": 154.2043,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 150.326,
+   "crawler_min_clearance_mm": 152.309,
    "pad_contact": [
     true,
     true,
@@ -1607,7 +1686,7 @@
    "uz_mm": 159.6443,
    "roll_deg": 0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 155.766,
+   "crawler_min_clearance_mm": 157.749,
    "pad_contact": [
     true,
     true,
@@ -1622,7 +1701,7 @@
    "uz_mm": 165.0843,
    "roll_deg": 0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 161.206,
+   "crawler_min_clearance_mm": 163.189,
    "pad_contact": [
     true,
     true,
@@ -1637,7 +1716,7 @@
    "uz_mm": 170.5243,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 166.646,
+   "crawler_min_clearance_mm": 168.629,
    "pad_contact": [
     true,
     true,
@@ -1652,7 +1731,7 @@
    "uz_mm": 175.9643,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 172.086,
+   "crawler_min_clearance_mm": 174.069,
    "pad_contact": [
     true,
     true,
@@ -1667,7 +1746,7 @@
    "uz_mm": 181.4043,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 177.526,
+   "crawler_min_clearance_mm": 179.509,
    "pad_contact": [
     true,
     true,
@@ -1682,7 +1761,7 @@
    "uz_mm": 186.8443,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 182.966,
+   "crawler_min_clearance_mm": 184.949,
    "pad_contact": [
     true,
     true,
@@ -1697,7 +1776,7 @@
    "uz_mm": 192.2843,
    "roll_deg": 0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 188.406,
+   "crawler_min_clearance_mm": 190.389,
    "pad_contact": [
     true,
     true,
@@ -1712,7 +1791,7 @@
    "uz_mm": 197.7243,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 193.846,
+   "crawler_min_clearance_mm": 195.829,
    "pad_contact": [
     true,
     true,
@@ -1727,7 +1806,7 @@
    "uz_mm": 203.1643,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 199.286,
+   "crawler_min_clearance_mm": 201.269,
    "pad_contact": [
     true,
     true,
@@ -1742,7 +1821,7 @@
    "uz_mm": 208.6043,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 204.726,
+   "crawler_min_clearance_mm": 206.709,
    "pad_contact": [
     true,
     true,
@@ -1757,7 +1836,7 @@
    "uz_mm": 214.0443,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 210.166,
+   "crawler_min_clearance_mm": 212.149,
    "pad_contact": [
     true,
     true,
@@ -1772,7 +1851,7 @@
    "uz_mm": 219.4843,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 215.606,
+   "crawler_min_clearance_mm": 217.589,
    "pad_contact": [
     true,
     true,
@@ -1787,7 +1866,7 @@
    "uz_mm": 224.9243,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 221.046,
+   "crawler_min_clearance_mm": 223.029,
    "pad_contact": [
     true,
     true,
@@ -1802,7 +1881,7 @@
    "uz_mm": 230.3643,
    "roll_deg": 0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 226.486,
+   "crawler_min_clearance_mm": 228.469,
    "pad_contact": [
     true,
     true,
@@ -1817,7 +1896,7 @@
    "uz_mm": 235.8043,
    "roll_deg": 0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 231.926,
+   "crawler_min_clearance_mm": 233.909,
    "pad_contact": [
     true,
     true,
@@ -1832,7 +1911,7 @@
    "uz_mm": 241.2443,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 237.366,
+   "crawler_min_clearance_mm": 239.349,
    "pad_contact": [
     true,
     true,
@@ -1847,7 +1926,7 @@
    "uz_mm": 246.6843,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 242.806,
+   "crawler_min_clearance_mm": 244.789,
    "pad_contact": [
     true,
     true,
@@ -1862,7 +1941,7 @@
    "uz_mm": 252.1243,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 248.246,
+   "crawler_min_clearance_mm": 250.229,
    "pad_contact": [
     true,
     true,
@@ -1877,7 +1956,7 @@
    "uz_mm": 257.5643,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 253.686,
+   "crawler_min_clearance_mm": 255.669,
    "pad_contact": [
     true,
     true,
@@ -1892,7 +1971,7 @@
    "uz_mm": 263.0043,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 259.126,
+   "crawler_min_clearance_mm": 261.109,
    "pad_contact": [
     true,
     true,
@@ -1907,7 +1986,7 @@
    "uz_mm": 268.4443,
    "roll_deg": 0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 264.566,
+   "crawler_min_clearance_mm": 266.549,
    "pad_contact": [
     true,
     true,
@@ -1922,7 +2001,7 @@
    "uz_mm": 273.8843,
    "roll_deg": 0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 270.006,
+   "crawler_min_clearance_mm": 271.989,
    "pad_contact": [
     true,
     true,
@@ -1937,7 +2016,7 @@
    "uz_mm": 279.3243,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 275.446,
+   "crawler_min_clearance_mm": 277.429,
    "pad_contact": [
     true,
     true,
@@ -1952,7 +2031,7 @@
    "uz_mm": 284.7643,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 280.886,
+   "crawler_min_clearance_mm": 282.869,
    "pad_contact": [
     true,
     true,
@@ -1967,7 +2046,7 @@
    "uz_mm": 290.2043,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 286.326,
+   "crawler_min_clearance_mm": 288.309,
    "pad_contact": [
     true,
     true,
@@ -1982,7 +2061,7 @@
    "uz_mm": 295.6443,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 291.766,
+   "crawler_min_clearance_mm": 293.749,
    "pad_contact": [
     true,
     true,
@@ -1997,7 +2076,7 @@
    "uz_mm": 301.0843,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 297.206,
+   "crawler_min_clearance_mm": 299.189,
    "pad_contact": [
     true,
     true,
@@ -2012,7 +2091,7 @@
    "uz_mm": 306.5243,
    "roll_deg": 0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 302.646,
+   "crawler_min_clearance_mm": 304.629,
    "pad_contact": [
     true,
     true,
@@ -2027,7 +2106,7 @@
    "uz_mm": 311.9643,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 308.086,
+   "crawler_min_clearance_mm": 310.069,
    "pad_contact": [
     true,
     true,
@@ -2042,7 +2121,7 @@
    "uz_mm": 317.4043,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 313.526,
+   "crawler_min_clearance_mm": 315.509,
    "pad_contact": [
     true,
     true,
@@ -2057,7 +2136,7 @@
    "uz_mm": 322.8443,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 318.966,
+   "crawler_min_clearance_mm": 320.949,
    "pad_contact": [
     true,
     true,
@@ -2072,7 +2151,7 @@
    "uz_mm": 328.2843,
    "roll_deg": -0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 324.406,
+   "crawler_min_clearance_mm": 326.389,
    "pad_contact": [
     true,
     true,
@@ -2087,7 +2166,7 @@
    "uz_mm": 333.7243,
    "roll_deg": 0.0,
    "pitch_deg": 0.1205,
-   "crawler_min_clearance_mm": 329.846,
+   "crawler_min_clearance_mm": 331.829,
    "pad_contact": [
     true,
     true,

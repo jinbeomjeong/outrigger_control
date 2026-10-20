@@ -99,9 +99,15 @@ CACHE_RULES: dict[str, dict] = {
         "rules": [
             ("verification.json", "verify_brep_cache.py"),
             ("format_conversion.json", "convert_brep_cache.py"),
+            ("derived/crawler/parts/*", "derive_crawler_parts.py"),
+            ("derived/crawler/crawler_contact_part*", "derive_crawler_parts.py"),
             ("derived/crawler/*", "derive_crawler_cache.py"),
             ("*", "build_brep_cache.py"),
         ],
+    },
+    "07_faces": {
+        "description": "Face index of all parts: prototype faces + instance faces (world/body)",
+        "rules": [("*", "build_face_index.py")],
     },
 }
 

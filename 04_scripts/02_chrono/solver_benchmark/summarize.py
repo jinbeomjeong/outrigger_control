@@ -35,6 +35,30 @@ def load(phase: str) -> dict[str, dict]:
     return out
 
 
+def crawler_layout_note(results: dict[str, dict]) -> dict:
+    """Crawler layout the stored runs were measured with (bench_case.py extra) vs the YAML.
+
+    Runs written before layout D carry only n_crawler_spheres (18 = old 2 x 9 layout); runs
+    written after it also carry crawler_layout_scheme.
+    """
+    counts = sorted({r["extra"]["n_crawler_spheres"] for r in results.values()})
+    schemes = sorted(
+        {
+            r["extra"].get("crawler_layout_scheme", "2x9 bbox (pre layout D)")
+            for r in results.values()
+        }
+    )
+    return {
+        "n_crawler_spheres_in_stored_results": counts,
+        "layout_in_stored_results": schemes,
+        "current_yaml_layout": "D rollers_plus_gapped_end_shoes, 24 spheres "
+        "(contact.crawler.sphere_layout)",
+        "note": "measured with the crawler layout above; the YAML is now layout D (24 spheres, "
+        "bench_case.py builds it). Step cost with layout D is re-measured in the S0 "
+        "cost measurement (this benchmark was not re-run).",
+    }
+
+
 def row(r: dict) -> dict:
     t = r["chrono_timers_us_per_step"]
     d = r["direct_solver_us_per_step"]
@@ -134,12 +158,13 @@ def main() -> None:
         "model": (
             "superstructure (top auger) + 4 leg moving parts on ChLinkMotorLinearPosition "
             "(locked), SMC pad "
-            "spheres (YAML kn/gn), 2x9 crawler spheres (contact.crawler.*, 50 mm above floor in "
-            "the levelled "
+            "spheres (YAML kn/gn), crawler spheres (contact.crawler.*, layout at measurement: "
+            "crawler_layout_at_measurement; 50 mm above floor in the levelled "
             "state: no crawler contact), 4 ChLoadBodyBodyBushingSpherical ground bushings + "
             "Python circular "
             "Coulomb hook; start: pads touching, unloaded (drop transient, not settled)"
         ),
+        "crawler_layout_at_measurement": crawler_layout_note(l1),
         "results": l1_out,
     }
     # SCM
@@ -207,6 +232,7 @@ def main() -> None:
         },
         "scm_timer_unit": "SCMTerrain GetTimer* return milliseconds (checked: ray_testing ms x "
         "1e3 ~ Setup timer us)",
+        "crawler_layout_at_measurement": crawler_layout_note(scm),
         "results": scm_out,
     }
     # scaling

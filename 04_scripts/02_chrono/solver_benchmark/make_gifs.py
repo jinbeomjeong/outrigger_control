@@ -12,6 +12,12 @@ Displacements are tiny (mm) compared with the 11 m machine, so body poses are dr
 exaggeration factor s about their initial pose (position p0 + s (p - p0), rotation angle x s);
 s is printed on every frame. Machine geometry is a schematic (boxes from the CAD bbox extents),
 not the CAD mesh; leg, pad, crawler-sphere positions are the model's.
+
+Crawler layout: the scenes are rebuilt with bench_case.build_machine, which now uses the
+current YAML layout D (24 crawler spheres: 12 rollers + 12 gapped end shoes). The costs printed
+on the frames were measured with the old 2 x 9 layout (18 spheres); they are re-measured in the
+S0 cost measurement. Re-running this script therefore changes the scenes (sphere positions,
+SCM crawler strips) but not the printed costs.
 """
 
 from __future__ import annotations
@@ -35,9 +41,12 @@ sys.path.insert(0, str(HERE))  # python -I: the script folder is not on sys.path
 import bench_case as bc  # noqa: E402
 import bench_common as bcm  # noqa: E402  (puts 03_src and 04_scripts/00_cad on sys.path)
 import pychrono as ch  # noqa: E402
+from crawler_contact import layout_from_params  # noqa: E402
 
 RES = bcm.RESULTS_DIR
 FRAMES_DIR = RES / "gif_frames"
+# The stored costs (07_results/solver_benchmark/) were measured with the old crawler layout.
+MEASURED_LAYOUT_NOTE = "costs measured with crawler 2x9 (18 spheres); scene: YAML layout D (24)"
 SOLVER_LABEL = {"QR": "SPARSE_QR", "LU": "SPARSE_LU", "PARDISO": "PARDISO_MKL"}
 
 
@@ -164,11 +173,9 @@ def run_l1(t_end=3.0, frame_dt=0.04, s=50.0):
     legs0 = [body_pose(bd) for bd in legs]
     boxes = machine_geometry(P, lift)
     # crawler spheres in world coords at init
-    yc = float(P.get("contact.crawler.sphere_layout.track_centre_y_m"))
-    x0, x1 = (float(v) for v in P.get("contact.crawler.sphere_layout.x_range_m"))
-    rs = float(P.get("contact.crawler.sphere_layout.sphere_radius_m"))
+    layout = layout_from_params(P)
     zf = P.ground.crawler_bottom_z_m
-    spheres0 = np.array([[x, y, zf + lift + rs] for y in (yc, -yc) for x in np.linspace(x0, x1, 9)])
+    spheres0 = layout.sphere_centres_m(zf, lift)
     l1 = P.contact.rigid_floor.L1
     pads0, rods0 = [], []
     for i, leg in enumerate(P.legs):
@@ -179,7 +186,7 @@ def run_l1(t_end=3.0, frame_dt=0.04, s=50.0):
         pads0.append((poly, top))
         att = np.array(leg.attachment_point_m) + [0, 0, lift]
         rods0.append((att, pb + [0, 0, leg.pad.thickness_m]))
-    texts = cost_text("l1", "dt1e-04_")
+    texts = MEASURED_LAYOUT_NOTE + "\n" + cost_text("l1", "dt1e-04_")
     frames_dir = FRAMES_DIR / "l1"
     frames_dir.mkdir(parents=True, exist_ok=True)
     for f in frames_dir.glob("*.png"):
@@ -236,10 +243,14 @@ def run_l1(t_end=3.0, frame_dt=0.04, s=50.0):
             s=22,
             c="#1f77b4",
             depthshade=False,
-            label="crawler spheres (2x9)",
+            label=f"crawler spheres (layout D, {layout.n_points})",
         )
         for c_ in sph[sph[:, 1] > 0]:
-            av.add_patch(plt.Circle((c_[0], c_[2]), rs, fc="#1f77b4", ec="k", lw=0.5, zorder=4))
+            av.add_patch(
+                plt.Circle(
+                    (c_[0], c_[2]), layout.sphere_radius_m, fc="#1f77b4", ec="k", lw=0.5, zorder=4
+                )
+            )
         segs = []
         for i, bd in enumerate(legs):
             pl, ql = body_pose(bd)
@@ -314,8 +325,8 @@ def run_l1(t_end=3.0, frame_dt=0.04, s=50.0):
             0.965,
             "Case 1: full-scale L1 (top auger) - superstructure + 4 legs on locked position "
             "motors, "
-            "SMC pad spheres, 2x9 crawler spheres (50 mm above floor), ground bushings + Coulomb "
-            "hook",
+            f"SMC pad spheres, {layout.n_points} crawler spheres (layout D, 50 mm above floor), "
+            "ground bushings + Coulomb hook",
             fontsize=11.5,
             weight="bold",
         )
@@ -395,7 +406,7 @@ def run_scm(t_end=3.0, frame_dt=0.05, delta=0.02, s=5.0):
     pads_xy = [np.array(leg.pad_bottom_center_retracted_m[:2]) for leg in P.legs]
     half, nq = 0.36, 73  # query window per pad (0.72 m, 1 cm sampling for display)
     us = np.linspace(-half, half, nq)
-    texts = cost_text("scm", f"d{delta:g}_")
+    texts = MEASURED_LAYOUT_NOTE + "\n" + cost_text("scm", f"d{delta:g}_")
     frames_dir = FRAMES_DIR / "scm"
     frames_dir.mkdir(parents=True, exist_ok=True)
     for f in frames_dir.glob("*.png"):
@@ -409,14 +420,11 @@ def run_scm(t_end=3.0, frame_dt=0.05, delta=0.02, s=5.0):
         return h
 
     h_init = height_map(pads_xy[0])
-    yc = float(P.get("contact.crawler.sphere_layout.track_centre_y_m"))
+    layout = layout_from_params(P)
+    yc = layout.track_centre_y_m
     cx = np.arange(-2.2, 2.0001, 0.02)  # x < 2.0 m keeps the FL pad pit out of the strip
     cy = np.arange(yc - 0.30, yc + 0.3001, 0.02)
-    xs0, xs1 = (float(v) for v in P.get("contact.crawler.sphere_layout.x_range_m"))
-    rs = float(P.get("contact.crawler.sphere_layout.sphere_radius_m"))
-    spheres0 = np.array(
-        [[x, y, zf + lift + rs] for y in (yc, -yc) for x in np.linspace(xs0, xs1, 9)]
-    )
+    spheres0 = layout.sphere_centres_m(zf, lift)
 
     def strip_map():
         h = np.empty((len(cy), len(cx)))

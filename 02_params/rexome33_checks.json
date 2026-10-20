@@ -348,9 +348,6 @@
    "swivel_tilt_range_deg": true,
    "F_min_fraction_of_mean_leg_load": true,
    "oil_bulk_modulus_range_Pa": true,
-   "crawler_spheres_per_track": true,
-   "crawler_track_centre_y_m": true,
-   "crawler_x_range_m": true,
    "crawler_sphere_radius_m": true,
    "crawler_damping_ratio_heave": true,
    "crawler_damping_ratio_heave_soil": true,
@@ -379,13 +376,61 @@
    "max_force_extend": 0.0,
    "max_force_retract": 0.0,
    "locked_force_limit": 0.0,
-   "crawler.sphere_xy_m": 0.0,
-   "crawler.kn_per_sphere": 0.0,
    "crawler.damping_total": 0.0,
-   "crawler.damping_per_sphere": 0.0,
+   "crawler.kn_floor_contact_sum": 0.0,
    "crawler.gn_per_sphere": 0.0
   },
-  "crawler_x_range_rounding_abs_m": 0.00018483270800229157,
+  "crawler_cad_layout": {
+   "rollers_per_track (left, right)": [
+    6,
+    6
+   ],
+   "raised_shoes_per_track (left, right)": [
+    6,
+    6
+   ],
+   "raised_shoes_rear_front (left)": [
+    3,
+    3
+   ],
+   "flat_shoes_per_track (left, right)": [
+    10,
+    10
+   ],
+   "raised_shoes_outside_end_rollers": true,
+   "flat_shoes_inside_raised": true,
+   "left_right_roller_x_max_abs_m": 0.0,
+   "left_right_station_x_max_abs_m": 0.0,
+   "left_right_station_gap_max_abs_m": 0.0,
+   "roller_abs_y_minus_track_centre_max_abs_m": 9.999982781838668e-07,
+   "grouser_pad_planes": 128,
+   "end_shoe_gap_min_m": 0.0022305384248097653
+  },
+  "crawler_rounding_abs_m": {
+   "track_centre_y": 1.7217338665886928e-12,
+   "roller_x": 0.0,
+   "end_shoe_x": 1.1102230246251565e-16,
+   "end_shoe_gap": 4.874424809841148e-06
+  },
+  "crawler_layout_check_json": {
+   "n_points_equal": true,
+   "rel": {
+    "track_centre_y_m": 1.647592216831285e-12,
+    "roller_axes_x_m": 0.0,
+    "shoe_station_x_m": 1.8108351404748924e-16,
+    "end_shoe_gap_mm": 0.0002998312457333722,
+    "x_floor_contact_range_m": 0.0,
+    "k_per_point_N_m": 4.000001599628111e-07,
+    "c_per_point_N_s_m": 9.111780798748684e-07,
+    "damping_total_N_s_m": 1.9241379906680764e-06,
+    "gn_per_point_1_s": 8.013326162426207e-07
+   },
+   "flat_station_gap_max_abs_mm": 4.2480996853555553e-07,
+   "settle_on_crawler_s": 65.47,
+   "settle_from_printed_tau_s": 65.48552004475067,
+   "settle_abs_diff_s": 0.015520044750672923,
+   "settle_tau_rounding_tol_s": 0.02802585092994046
+  },
   "reference_json_rel": {
    "levelled_extension_m": 0.0,
    "k_slab_N_m": 0.0,
@@ -426,14 +471,13 @@
    "crawler.damping_mass_kg": 0.0,
    "crawler.gn_mass_kg (superstructure body)": 0.0,
    "crawler.kn_total_N_m": 0.0,
-   "crawler.damping_ratio_heave": 0.0,
-   "settle_on_crawler_s (3 digits)": 0.0
+   "crawler.damping_ratio_heave": 0.0
   },
   "gn_m_moving_vs_exact_m_eff_rel": 1.0678365452797192e-07,
   "pump_flow_covers_4_legs_at_vmax": true,
   "line_references": {
    "ranges_checked": 31,
-   "references_in_source": 30,
+   "references_in_source": 28,
    "missing_text": [],
    "unlisted_references": [],
    "old_style_references": []
@@ -619,30 +663,10 @@
     "half_unit_tol": 5e-09,
     "max_rel_diff": 3.322270173635332e-06
    },
-   "crawler.spheres_per_track": {
-    "max_abs_diff": 0.0,
-    "half_unit_tol": 0.5,
-    "max_rel_diff": 0.0
-   },
-   "crawler.track_centre_y_m": {
-    "max_abs_diff": 0.0,
-    "half_unit_tol": 0.0005,
-    "max_rel_diff": 0.0
-   },
-   "crawler.x_range_m": {
-    "max_abs_diff": 0.0,
-    "half_unit_tol": 0.0005,
-    "max_rel_diff": 0.0
-   },
    "crawler.sphere_radius_m": {
     "max_abs_diff": 0.0,
     "half_unit_tol": 0.005,
     "max_rel_diff": 0.0
-   },
-   "crawler.kn_per_sphere_N_m": {
-    "max_abs_diff": 44.44444444403052,
-    "half_unit_tol": 50.0,
-    "max_rel_diff": 7.99993600043749e-06
    },
    "crawler.damping_ratio_heave": {
     "max_abs_diff": 0.0,
@@ -659,20 +683,45 @@
     "half_unit_tol": 0.5,
     "max_rel_diff": 1.9241379906680764e-06
    },
-   "crawler.gn_per_sphere_1_s": {
-    "max_abs_diff": 4.227975923976057e-06,
-    "half_unit_tol": 5e-06,
-    "max_rel_diff": 1.4861075303958023e-05
-   },
-   "settle_on_crawler_min_s": {
-    "max_abs_diff": 0.03768875849591424,
-    "half_unit_tol": 0.05,
-    "max_rel_diff": 0.0016245154524100968
-   },
    "settle_on_pads_min_s": {
     "max_abs_diff": 0.1398678034809393,
     "half_unit_tol": 0.5,
     "max_rel_diff": 0.002639015160017723
+   },
+   "crawler.D.track_centre_y_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.0005,
+    "max_rel_diff": 0.0
+   },
+   "crawler.D.roller_x_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.0005,
+    "max_rel_diff": 0.0
+   },
+   "crawler.D.end_shoe_x_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 5e-05,
+    "max_rel_diff": 0.0
+   },
+   "crawler.D.end_shoe_gap_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 5e-06,
+    "max_rel_diff": 0.0
+   },
+   "crawler.D.kn_per_sphere_N_m": {
+    "max_abs_diff": 3.3333333330228925,
+    "half_unit_tol": 5.0,
+    "max_rel_diff": 4.000001599628111e-07
+   },
+   "crawler.D.gn_per_sphere_1_s": {
+    "max_abs_diff": 3.4196388598584093e-07,
+    "half_unit_tol": 5e-07,
+    "max_rel_diff": 8.013326162426207e-07
+   },
+   "crawler.D.settle_on_crawler_min_s": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.005,
+    "max_rel_diff": 0.0
    }
   },
   "reference_json_assumptions_beta_Pa": 1000000000.0,

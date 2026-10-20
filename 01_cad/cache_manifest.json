@@ -1,13 +1,13 @@
 {
  "schema": 1,
- "updated_at": "2026-10-20T16:49:18",
+ "updated_at": "2026-10-20T19:01:00",
  "updated_by": {
   "script": "04_scripts/00_cad/check_cache.py",
   "exists": true,
-  "sha256": "773af2dc1faa9445704b38079f7287001cb4e478694bf8f4bc595dca1442d1f1",
-  "git_blob": "8e1fd70d07aa03697f69d7373967698c38647ad8",
-  "git_last_commit": null,
-  "git_tracked": false
+  "sha256": "f6d3bb97650e9159dc2796859242de5662fe3a460ecaae31f9caf67b428a5347",
+  "git_blob": "5043803c8d3ac1301cd14a86b1b3553f0ba150d9",
+  "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+  "git_tracked": true
  },
  "environment": {
   "python": "3.12.15",
@@ -65,51 +65,51 @@
    "description": "Part table, classification, summary, mass audit, layout figures",
    "folder": "01_cad/01_parts",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-20T15:48:45",
+   "newest_file_mtime": "2026-10-20T18:03:48",
    "generators": [
     {
      "script": "04_scripts/00_cad/analyze_origin_mass_imu.py",
      "exists": true,
-     "sha256": "fecce6e6a47d4afdecf649261a6f591ef1e385746ee5c0d18161ff16ec95a709",
-     "git_blob": "93c616ed6aacb8569a4dcbab91bd6a15b39b0ef7",
-     "git_last_commit": null,
-     "git_tracked": false
+     "sha256": "fc975a60b361bebbb7042dd0f574d17afd6c63d523b9c9d145f1af2fa85e8ab4",
+     "git_blob": "a0c01fc14a34fb33c84dc351ebc61ad02a9d11e1",
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/analyze_parts.py",
      "exists": true,
      "sha256": "2346a1057863edbe5cb29314f1d5ad01ea62547544366a68ba362bb52a2ad51d",
      "git_blob": "408b9b69de4f07672d9544e83ef992aa5eb30747",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/extract_parts.py",
      "exists": true,
      "sha256": "dc0fa5674c7b9f2c5ffda05a832a7719b439a340842b16a295b370c9aacec78f",
      "git_blob": "c903261e643f4a7f16a5b3d3734554b43ac0d147",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/render_imu_c1.py",
      "exists": true,
      "sha256": "b2f7f87d2cedc36a4911bffe8822f42731af1fa3882cb9d7d9661283cdc9bc48",
      "git_blob": "64ded28ea7e0297f9960fad1580f9f33d1bff206",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/render_layout_views.py",
      "exists": true,
      "sha256": "fa049591f03a6016fb9c24ad8ea7ae9d104809b41dbc0c0d293b7eb974ac4c51",
      "git_blob": "00f7ffff5fcf6b2457e4a0e0c91311b64e8d3f84",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     }
    ],
    "file_count": 12,
-   "total_bytes": 4875891,
+   "total_bytes": 4876670,
    "git_ignored_file_count": 0,
    "files": [
     {
@@ -177,8 +177,8 @@
     },
     {
      "path": "origin_mass_imu.json",
-     "bytes": 82549,
-     "sha256": "956d445f6aa6a45eb9369dcb1743c6522da2dadb6ca5e3ba999a0916f15e337c",
+     "bytes": 83328,
+     "sha256": "b3edba504334c6041b624372797e817dd0be8854b8856df842befde5cde490c8",
      "generator": "analyze_origin_mass_imu.py",
      "git_ignored": false
     },
@@ -202,40 +202,40 @@
    "description": "Jack cylinder B-rep (world placed), face table, extension figures",
    "folder": "01_cad/02_legs",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-20T11:09:41",
+   "newest_file_mtime": "2026-10-20T18:09:41",
    "generators": [
     {
      "script": "04_scripts/00_cad/inspect_legs.py",
      "exists": true,
      "sha256": "94228bc1ef8523c561b908e821ab81f80be5af9922ae08d3dde4a9fae7019ad5",
      "git_blob": "c8addc48d3a228d6ef0601dbb75c4cd0aab8a945",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/render_leg_extension.py",
      "exists": true,
-     "sha256": "c4d6fe7f77e68e2312eb314ce323ad3cac45b7f1652051f0b099f447bea08877",
-     "git_blob": "bbdf4fa453bb11c200dda1461e57b27073994a6a",
-     "git_last_commit": null,
-     "git_tracked": false
+     "sha256": "20b872139737bee62d2c67c2b9ff13870e0823947a3b8c618150faacb1c6a28a",
+     "git_blob": "8e6502d3d044802fc3eb99dabb4462e6b6b1bcb1",
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     }
    ],
    "file_count": 11,
-   "total_bytes": 8389437,
+   "total_bytes": 8391351,
    "git_ignored_file_count": 1,
    "files": [
     {
      "path": "leg_extension.gif",
-     "bytes": 7925947,
-     "sha256": "ae422a3d0f68b3357f69f83c07c2d79f057480e8f3f62f288823496a2ae8187c",
+     "bytes": 7926150,
+     "sha256": "767e6004c7f693ca2979be2443bbe98f228118b6bdca9bd71ff136dbb72020fb",
      "generator": "render_leg_extension.py",
      "git_ignored": true
     },
     {
      "path": "leg_extension_kinematics.json",
-     "bytes": 38383,
-     "sha256": "bf755024a592cb933aa480235311ddd32ba4b1d9a2597d3fbd45621b5cc1cc71",
+     "bytes": 40094,
+     "sha256": "6db2c5d763aacb2730431ba7b388d487802171727f207c6c030fcf249e375228",
      "generator": "render_leg_extension.py",
      "git_ignored": false
     },
@@ -386,27 +386,27 @@
    "description": "Mast B-rep (world placed), faces, hinge review (reference only)",
    "folder": "01_cad/04_mast",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-19T20:17:48",
+   "newest_file_mtime": "2026-10-20T18:06:30",
    "generators": [
     {
      "script": "04_scripts/00_cad/analyze_mast.py",
      "exists": true,
      "sha256": "f2dbe952b8d809b9d9cfa65504a6bd10f30329f471ee34eb9639b608d04c33e1",
      "git_blob": "646bf41dc4ad0356f9a24b9902fdd6cd2cf96273",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/inspect_mast.py",
      "exists": true,
      "sha256": "cbb22aeeb5b51f214c06b751573f27437e9c62c1c4459aaac6510fe40f46f581",
      "git_blob": "5021c0866f8a554dcd922deb8f192d0a58e2ee66",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     }
    ],
-   "file_count": 769,
-   "total_bytes": 106173473,
+   "file_count": 773,
+   "total_bytes": 106827912,
    "git_ignored_file_count": 746,
    "files": [
     {
@@ -5618,6 +5618,20 @@
      "git_ignored": true
     },
     {
+     "path": "mast_beam_properties.csv",
+     "bytes": 101236,
+     "sha256": "8ca987a8964cc30676442fbf78d409c860fa7eb746c2c314d4b3c98466b65d59",
+     "generator": "analyze_mast.py",
+     "git_ignored": false
+    },
+    {
+     "path": "mast_beam_properties.json",
+     "bytes": 82542,
+     "sha256": "3a0726cd26fa1dcfce86df366d22c8b11c98de9a2f6b64fc3bb9b6f3d233098f",
+     "generator": "analyze_mast.py",
+     "git_ignored": false
+    },
+    {
      "path": "mast_faces.csv",
      "bytes": 14491506,
      "sha256": "6e25d1a8bf04f30daa60bb74615ceb6a8e59de7977946f094de84bff8dab4c8c",
@@ -5642,6 +5656,20 @@
      "path": "mast_poses.png",
      "bytes": 79862,
      "sha256": "711465a839ead81014af64f369deef09ccfd598beeb051fd8f39fa095ca98f51",
+     "generator": "analyze_mast.py",
+     "git_ignored": false
+    },
+    {
+     "path": "mast_sections.png",
+     "bytes": 269860,
+     "sha256": "fb15f195481121c19c032395d7bd9114888fe1e5c70a83ef043cf1a28fe4764a",
+     "generator": "analyze_mast.py",
+     "git_ignored": false
+    },
+    {
+     "path": "mast_sections_distribution.png",
+     "bytes": 200801,
+     "sha256": "ad9fa7608c5178572e52c655d65cb9292af01493219fbdd4589bcc666035253d",
      "generator": "analyze_mast.py",
      "git_ignored": false
     },
@@ -5855,29 +5883,37 @@
    "description": "Prototype B-rep cache + instance placements of all parts",
    "folder": "01_cad/06_brep",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-20T16:48:54",
+   "newest_file_mtime": "2026-10-20T18:37:59",
    "generators": [
     {
      "script": "04_scripts/00_cad/build_brep_cache.py",
      "exists": true,
      "sha256": "640315fd9f7bb1ed201f02a444be56f173392326a4a9b7857a30fa59e5f3e445",
      "git_blob": "e85a35a02ce8e8f034a83b6db3811df7d48a121b",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/convert_brep_cache.py",
      "exists": true,
      "sha256": "34d18baa0db57b5a98ed6148a20f20d93a18b85278058539f384cb6b23891b8c",
      "git_blob": "8e120cedd0e711c5dd3ddb02e030faffd85ce8d2",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/derive_crawler_cache.py",
      "exists": true,
      "sha256": "3d579672d094709395cc963ff4570fb10a6c383af3b178039a002ffc720f3d90",
      "git_blob": "dd526c191a5bedc0867526d415fadec8d8b90706",
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
+    },
+    {
+     "script": "04_scripts/00_cad/derive_crawler_parts.py",
+     "exists": true,
+     "sha256": "78b00278dbebf57a2e994e53f80c83163e5ae8cf05226d1be51963ccde126447",
+     "git_blob": "b7113e274fc2d4376f8640560840fcc0428e667c",
      "git_last_commit": null,
      "git_tracked": false
     },
@@ -5886,13 +5922,13 @@
      "exists": true,
      "sha256": "873512e7fc333f0c52124183bc6436082853b0bf2420385186e2edc3a2146d16",
      "git_blob": "60d3ab909870cb6215a5d36b01c62619e6a904e9",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     }
    ],
-   "file_count": 696,
-   "total_bytes": 410134791,
-   "git_ignored_file_count": 682,
+   "file_count": 745,
+   "total_bytes": 496356548,
+   "git_ignored_file_count": 726,
    "files": [
     {
      "path": "cache_info.json",
@@ -5906,6 +5942,41 @@
      "bytes": 6302,
      "sha256": "6894f1ce90e3538a795f63dd630a2c4d70ebdf524981d7ff3c8ba086b0b86e3f",
      "generator": "derive_crawler_cache.py",
+     "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/crawler_contact_part_solids.csv",
+     "bytes": 39829,
+     "sha256": "877a2980180e61c3c10201d6e803c4c44076b3a43674c953a9ef45478033865b",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/crawler_contact_parts.csv",
+     "bytes": 37024,
+     "sha256": "57f498813581290e8fdb62f8811d5662c322774d79cdacc33858cc30532bd394",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/crawler_contact_parts.json",
+     "bytes": 122192,
+     "sha256": "717784053543166a7e8324ea63d332aa941ec6762fda773f84264d06bfdf27b3",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/crawler_contact_parts_gap_detail.png",
+     "bytes": 445305,
+     "sha256": "a54dda0817a0ca19767881d8c8c9dfa8a069d018f1568ac839d200d43185809c",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/crawler_contact_parts_views.png",
+     "bytes": 963693,
+     "sha256": "db32d6b9b3d5a2f7d1021d3148bb318e647478d8469b4c3c62dc059b0427ba26",
+     "generator": "derive_crawler_parts.py",
      "git_ignored": false
     },
     {
@@ -5956,6 +6027,314 @@
      "sha256": "098174f03672e3960fa9581bdc89ac1146d621d41cc445e2b6fc887a46c39d57",
      "generator": "derive_crawler_cache.py",
      "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_L1.bbrep",
+     "bytes": 2593755,
+     "sha256": "f92598f53912e68d5612283701ee4d823fcf99a7dd455e9cbe2a277ea9d59e18",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_L2.bbrep",
+     "bytes": 2595723,
+     "sha256": "1c3502173a4e98b682405168ce6b6d8ec557b937f8fe61f1d730f38cec237c16",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_L3.bbrep",
+     "bytes": 2595079,
+     "sha256": "99b38fc6d5d71e409073f76245f64bc4b1d9634e11860e3b9a85768df0647081",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_L4.bbrep",
+     "bytes": 2593327,
+     "sha256": "ab338ff77112363890c8c1e72e89b78cd72c7f08a0d20df6f98b967153e47e8b",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_L5.bbrep",
+     "bytes": 2593181,
+     "sha256": "265ce6d1f70a64c5b6a9ac0e7b99b2c4f2fe1c8fa14588bc81abb120edebd493",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_L6.bbrep",
+     "bytes": 2592827,
+     "sha256": "c5b7b4b5eda852433ddb8e4a64f733aed08af176296e0fc9f6a49eeb72858bb9",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_R1.bbrep",
+     "bytes": 2589509,
+     "sha256": "573de4790ccf50988df4ec423defeeb1790b068690729e1be87370c56283beb2",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_R2.bbrep",
+     "bytes": 2589279,
+     "sha256": "b2a0a280d289ec4c17ea00687b4d0449dc8a7e7c7d6501f4acfe2293975ec994",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_R3.bbrep",
+     "bytes": 2586935,
+     "sha256": "a882ca9b49fb9c90f671cc55a54384c763dabfec3f1cb7df4b20dee9510f48f2",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_R4.bbrep",
+     "bytes": 2591315,
+     "sha256": "a4723023e8c2654bbf7e8a71b1e9ee06e499d6a3a8697f534cf1c43d87d1c031",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_R5.bbrep",
+     "bytes": 2591363,
+     "sha256": "dc3a57e0272e380735e944b27b105fb2452379317da9ef8c02f497ce7ef2f10f",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/end_shoe_R6.bbrep",
+     "bytes": 2591317,
+     "sha256": "32d9d528b89a2d44c2b0b6bafc64bab429323db406c9a9583f384b872331f3be",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_L01.bbrep",
+     "bytes": 2600309,
+     "sha256": "ef8e88e538059c2be8a589f784e6ba7975136b223b0474f0f75b14dd9fe2e0b5",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_L02.bbrep",
+     "bytes": 2590253,
+     "sha256": "f4083d0e9632566f7e012205a6d9f3da02cf8178041d8ac1b5b2d9f7b1e54380",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_L03.bbrep",
+     "bytes": 2592017,
+     "sha256": "f072e5e0846f8df77de651f4a93a290c36f0c84734207b039cc50666eae0ad86",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_L04.bbrep",
+     "bytes": 2597001,
+     "sha256": "509713dbfee21cb0a5ea3f14804814982c062905d07ea5afc14f1901d2ae8319",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_L05.bbrep",
+     "bytes": 2598309,
+     "sha256": "49b7a636f6775b19bd58e36fb6d5a74b3d9db1c88fc29982fa7d0b17e05a2066",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_L06.bbrep",
+     "bytes": 2595093,
+     "sha256": "ec7f189fc04ca1ec231aeee94c1a49196ff46a059217c24dd8f10634fc7e6cb9",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_L07.bbrep",
+     "bytes": 2597273,
+     "sha256": "cc55c8fe1fdc2008e3a49c070085c0199b2dcf873155713149d68e899936f6a1",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_L08.bbrep",
+     "bytes": 2590829,
+     "sha256": "bf214d467cb86556660251fba3312539ae3cfff058df7713157a83a6920d394e",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_L09.bbrep",
+     "bytes": 2596491,
+     "sha256": "d016a762ed0fe23f1f673b73f06938c522f40fc450ce23089fcce21f10dbcac6",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_L10.bbrep",
+     "bytes": 2594023,
+     "sha256": "c3b93259c3760ba2f101a6d529f0e2dc41111cc700a45b24eb78e123da5aa212",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_R01.bbrep",
+     "bytes": 2597677,
+     "sha256": "a567e69e16fb1e3054e42f2e8050c1c4611f953404e4387e4464e544de1959cf",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_R02.bbrep",
+     "bytes": 2595841,
+     "sha256": "57ab386f4fd079a6a283678e76c547b0ed3ccfc1c4cfd5130b998a49d028616c",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_R03.bbrep",
+     "bytes": 2592641,
+     "sha256": "0b502cd155f71d97d7dcd8066c97c6d10d3f9c236027136b981ccf88b6917902",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_R04.bbrep",
+     "bytes": 2600785,
+     "sha256": "622dc4cd22703d614db4be499b11d68d1d2aea9fbd2ca9bf8408012b764f33f6",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_R05.bbrep",
+     "bytes": 2598379,
+     "sha256": "8e972ed6e33476f02166d71545bb1ba6b49e6f9d46b14f0edfdefa7140b77b31",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_R06.bbrep",
+     "bytes": 2600239,
+     "sha256": "8b9e16099c63658688a52493e9a4200ad758dc397c93052bc4fd164a25bb7711",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_R07.bbrep",
+     "bytes": 2598463,
+     "sha256": "ce638e6347fa26cac882311f75cdc40a3a8c60b2c020dd1407b3273f36b5dca7",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_R08.bbrep",
+     "bytes": 2595991,
+     "sha256": "43aa3459843d4639179e1bffa777ce8ae3193ca33c646f596599c7075ebbe5b8",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_R09.bbrep",
+     "bytes": 2595335,
+     "sha256": "64c3d803b0d58cc8cdb345e38c7d282218d45fc00014b411ede8cfecea8877c3",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/flat_shoe_R10.bbrep",
+     "bytes": 2592867,
+     "sha256": "ffabfa36684cf70d4776f6cb0d390921310a442bb2424bf06ef8a49cbede3737",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_L1.bbrep",
+     "bytes": 132524,
+     "sha256": "a5f5866dfbb95cb1aebc341b272dfe4d20035e207a4a7b528336fa42c594560f",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_L2.bbrep",
+     "bytes": 132524,
+     "sha256": "6184d3782cb07cc9aeafcf94e7368768267a356d1b299ec06d07981c2a3b188b",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_L3.bbrep",
+     "bytes": 132524,
+     "sha256": "e94a69a85bf4a34fcdaf8f6061ee64ca64b27be85e99b5a7f876e5555b123dba",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_L4.bbrep",
+     "bytes": 132524,
+     "sha256": "abf878938504c66e748f0a39f4bc8a0c5264e44302ed4560604f18ed954a0f9d",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_L5.bbrep",
+     "bytes": 132524,
+     "sha256": "2510bb0bead9835cbb9f6ab88b43a27f80f8048d742a438e2eb74b3cdebe143b",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_L6.bbrep",
+     "bytes": 132524,
+     "sha256": "dd5816b51e8345a7cf8364ef632bb04ee7fd473bdd68096336b28c95449e0df6",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_R1.bbrep",
+     "bytes": 132524,
+     "sha256": "8cb95951fb912f2071f997a21bf1c80baa1a26eaf4f9454b46ee8f00dc749d6c",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_R2.bbrep",
+     "bytes": 132524,
+     "sha256": "4d5605e7a562220c8ba42274cd1f7d14ae0cb1b2de1703db51d14833ea804750",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_R3.bbrep",
+     "bytes": 132524,
+     "sha256": "c0883fb92da238fe97ca3db608c92f6bb80589317e1b4b32984fd93f6e5b7465",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_R4.bbrep",
+     "bytes": 132524,
+     "sha256": "cd062aaf62e0ab3acb31d937b5d8b1c454f7294485e9c1221e5f697bf0d9688f",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_R5.bbrep",
+     "bytes": 132524,
+     "sha256": "df6a482105d831a751f74d877bfe8a881e96e5c9d8b37155f8b3c13b1fe9e0c4",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/roller_R6.bbrep",
+     "bytes": 132524,
+     "sha256": "ab66311168a6a0e64cc7dd4e12aa4480961fd5fc6fc65b8155b719d19b2b4080",
+     "generator": "derive_crawler_parts.py",
+     "git_ignored": true
     },
     {
      "path": "derived/crawler/track_left_hull.obj",
@@ -10765,6 +11144,55 @@
      "sha256": "5e1c305ae09a6264241a7a48e123748d8c547a81883f1dd80057f6a9435dd0a6",
      "generator": "verify_brep_cache.py",
      "git_ignored": false
+    }
+   ]
+  },
+  "07_faces": {
+   "description": "Face index of all parts: prototype faces + instance faces (world/body)",
+   "folder": "01_cad/07_faces",
+   "derived_from_step": true,
+   "newest_file_mtime": "2026-10-20T17:26:04",
+   "generators": [
+    {
+     "script": "04_scripts/00_cad/build_face_index.py",
+     "exists": true,
+     "sha256": "91e75975e7a747590850e70852f875a8187d6506331b524b49a5808f12ed6822",
+     "git_blob": "e8cdd15c76916456e6eb1424aa60d1be0869becf",
+     "git_last_commit": null,
+     "git_tracked": false
+    }
+   ],
+   "file_count": 4,
+   "total_bytes": 6359892,
+   "git_ignored_file_count": 2,
+   "files": [
+    {
+     "path": "face_index_summary.json",
+     "bytes": 239341,
+     "sha256": "ebcb9ecae43f4f340f40e3bb8622e36cc115135dda147acb9e3fe15674063db8",
+     "generator": "build_face_index.py",
+     "git_ignored": false
+    },
+    {
+     "path": "face_index_verification.json",
+     "bytes": 3970,
+     "sha256": "b250f3ce96dcc927a9826370057c05b0f7b21d16fe22b65fabff4619c326cca3",
+     "generator": "build_face_index.py",
+     "git_ignored": false
+    },
+    {
+     "path": "instance_faces.csv.gz",
+     "bytes": 4417528,
+     "sha256": "97f537c388bf770dc5e52dc1fdd53fc22f9954e2fc60eaeb6e991d6087c500f3",
+     "generator": "build_face_index.py",
+     "git_ignored": true
+    },
+    {
+     "path": "prototype_faces.csv.gz",
+     "bytes": 1699053,
+     "sha256": "afa443a6455bbce21e7a13cb35e3a1c038965c62d529af50daeb2fe149e33e27",
+     "generator": "build_face_index.py",
+     "git_ignored": true
     }
    ]
   }

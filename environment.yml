@@ -23,8 +23,13 @@ dependencies:
   - matplotlib=3.11.2
   - pyyaml=6.0.3             # 공통 파라미터 파일
   - pydantic=2.14.1          # 데이터 검증(타입 변환·제약)
+  - pyarrow=25.0.0           # Parquet 입출력 (2026-10-20 추가: hdf5 2.2→2.1, aws-c-* 하향, h5py·netcdf4 빌드 교체를 함께 가져옴 — 복사 환경에서 검증 후 적용)
   # 개발
   - pytest=9.1.1
   - hypothesis=6.170.2       # 속성 기반 시험
+  - pytest-cov=7.1.0         # 시험 커버리지 (coverage 7.16)
+  - imageio=2.38.1           # 그림·애니메이션 입출력
+  - pefile=2024.8.26         # Windows DLL(PE) 진단
+  - tqdm=4.70.1              # 장시간 실행 진행 표시
   - ruff=0.17.1              # 린트·포맷 (설정은 pyproject.toml)
   - ipykernel=7.4.0

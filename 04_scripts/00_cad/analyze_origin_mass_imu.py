@@ -48,6 +48,7 @@ from shapely.geometry import Polygon, box
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from analyze_parts import CAD_TO_BODY, CLASSIFIED_CSV, INK_PRIMARY, LEG_COLORS, SURFACE
 from cad_common import AUGER_DIR, MESH_DIR, MM_PER_M, PARTS_DIR, PRODUCTS_CSV, PROJECT_ROOT
+from crawler_contact import layout_from_params
 from render_auger_descent import load_render_meshes
 from render_layout_views import (
     EdgeStyle,
@@ -417,10 +418,22 @@ def origin_candidates(parts, meshes: PartMeshes, params: dict, levels: dict) -> 
         "com_body_m": com,
         "com_xy_by_case": com_xy_spread,
         "candidates": cands,
-        "yaml_track_centre_y_m_assumed": params["contact"]["crawler"]["sphere_layout"][
-            "track_centre_y_m"],
-        "yaml_crawler_x_range_m_assumed": params["contact"]["crawler"]["sphere_layout"][
-            "x_range_m"],
+        # YAML crawler contact layout D (CAD-derived positions, crawler_contact.py).
+        "yaml_crawler_layout": crawler_layout_record(params),
+    }
+
+
+def crawler_layout_record(params: dict) -> dict:
+    """YAML contact.crawler.sphere_layout (layout D) as used by the contact models."""
+    layout = layout_from_params(params)
+    raw = params["contact"]["crawler"]["sphere_layout"]
+    return {
+        **layout.summary(),
+        "roller_x_m": raw["roller_x_m"],
+        "end_shoe_x_m": raw["end_shoe_x_m"],
+        "end_shoe_gap_m": raw["end_shoe_gap_m"],
+        "basis": "CAD B-rep cache 01_cad/06_brep/derived/crawler via export_params.py "
+                 "(REXOME25 undercarriage drawn in the STEP: ASSUMPTION)",
     }
 
 
@@ -440,7 +453,7 @@ def origin_change_impact(params: dict) -> dict:
                       "pad_bottom_center_retracted_m"):
             shifted_z.append(path)
             shifted_xy.append(path)
-        elif name in ("cylinder_axis_xy_m", "track_centre_y_m", "x_range_m"):
+        elif name in ("cylinder_axis_xy_m", "track_centre_y_m", "roller_x_m", "end_shoe_x_m"):
             shifted_xy.append(path)
 
     walk(params, "")

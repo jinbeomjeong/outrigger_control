@@ -499,11 +499,48 @@
     }
    }
   },
-  "yaml_track_centre_y_m_assumed": 1.066,
-  "yaml_crawler_x_range_m_assumed": [
-   -1.84,
-   1.844
-  ],
+  "yaml_crawler_layout": {
+   "source": "02_params/rexome33.yaml contact.crawler.sphere_layout",
+   "scheme": "rollers_plus_gapped_end_shoes",
+   "n_points": 24,
+   "n_roller_points": 12,
+   "n_end_shoe_points": 12,
+   "track_centre_y_m": 1.045,
+   "x_extent_m": [
+    -1.3122,
+    1.2968
+   ],
+   "end_shoe_gap_range_m": [
+    0.00223,
+    0.02149
+   ],
+   "sphere_radius_m": 0.05,
+   "roller_x_m": [
+    -0.884,
+    -0.527,
+    -0.17,
+    0.187,
+    0.544,
+    0.901
+   ],
+   "end_shoe_x_m": [
+    -1.3122,
+    -1.1392,
+    -0.9663,
+    0.9505,
+    1.1236,
+    1.2968
+   ],
+   "end_shoe_gap_m": [
+    0.02149,
+    0.01186,
+    0.00223,
+    0.00236,
+    0.00881,
+    0.01526
+   ],
+   "basis": "CAD B-rep cache 01_cad/06_brep/derived/crawler via export_params.py (REXOME25 undercarriage drawn in the STEP: ASSUMPTION)"
+  },
   "impact_of_change": {
    "keys_changed_by_z_shift": [
     "ground.crawler_bottom_z_m",
@@ -577,11 +614,12 @@
     "legs.RR.pad_body.com_m",
     "legs.RR.rod_body.com_m",
     "contact.crawler.sphere_layout.track_centre_y_m",
-    "contact.crawler.sphere_layout.x_range_m"
+    "contact.crawler.sphere_layout.roller_x_m",
+    "contact.crawler.sphere_layout.end_shoe_x_m"
    ],
    "n_z": 39,
-   "n_xy": 31,
-   "n_z_or_xy": 45
+   "n_xy": 32,
+   "n_z_or_xy": 46
   }
  },
  "mass_audit": {
@@ -3718,11 +3756,10 @@
   ]
  },
  "timings_s": {
-  "load_s": 0.328946,
-  "origin_s": 0.681751,
-  "mass_audit_s": 0.664297,
-  "imu_s": 9.064858,
-  "render_s": 102.873111,
-  "total_s": 113.631018
+  "load_s": 0.363083,
+  "origin_s": 0.780775,
+  "mass_audit_s": 0.7501,
+  "imu_s": 9.631716,
+  "total_s": 11.543733
  }
 }

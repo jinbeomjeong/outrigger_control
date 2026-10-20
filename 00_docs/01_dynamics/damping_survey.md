@@ -45,12 +45,12 @@ web-research-expert(정밀 모드) 조사 요약과 사용자 결정. 모델 반
 - 크롤러 접지를 넓은 기초로 보면 토양에서 ζ ≈ 0.2~0.3(Lysmer 추론, 트랙 치수 가정).
 - 아우트리거가 크롤러를 들어 올리므로 크롤러 ζ는 레벨링 초반 접지 전환에만 영향을 준다.
 
-### Chrono SMC 입력 (main 브랜치 소스 확인, 설치본 Chrono 10과 대조 필요)
+### Chrono SMC 입력 (main 브랜치 소스 해석, 설치본 pychrono 10.0.0 실측으로 확인 2026-10-20)
 - Hooke, `UseMaterialProperties(false)`: `gn = eff_mass * mat.gn`, eff_mass = 접촉하는 두 바디의 m1·m2/(m1+m2). 바닥 1e9 kg이면 eff_mass ≈ 패드 질량.
 - 따라서 상부체 상하 모드에 ζ를 주려면 $g_{n,input} = 2\zeta\sqrt{k\,m_{mode}}/m_{pad}$로 넣는다.
 - `UseMaterialProperties(true)`(반발계수 e 입력)는 패드 질량 기준 접촉 진동자의 ζ라 상부체 모드 감쇠로 쓰지 않는다. e↔ζ: e 0.9 → 0.034, 0.7 → 0.113, 0.5 → 0.215.
 - 시간 간격 관례: 접촉 지속시간 t_c = π/ω_d의 5~10 %(EDEM).
-- 로컬 확인 필요: 설치된 Chrono 10의 `ChContactSMC`가 위와 같은지(S0 회귀 시험에서 확인).
+- 로컬 확인(2026-10-20, pychrono 10.0.0): 위와 같다. 바닥 질량 1e9/1e3/1 kg에서 c = gn·m₁m₂/(m₁+m₂)(복원 c 상대차 ≤ 2e-3), 두 재질의 kn·gn은 산술 평균으로 합성, YAML gn으로 4패드 강체 heave ζ 0.02999(설계 0.03)·7.3938 Hz(설계 7.3933). SMC 접촉력은 명시 적분이라 접촉 모드에 ωΔt/2 수치 감쇠가 없다(V8(a)·dt 규칙 재검토 대상). 근거 `06_analysis/01_chrono/smc_damping.json`, 회귀 `05_tests/chrono/test_smc_damping.py`.
 
 ## 주요 출처
 Mäkinen, Virvalo, Vilenius 1999 (doi:10.5739/isfp.1999.709); Rydberg, Hydraulic Servo Systems (diva2:1045004); Gottvald 2010, Transport (VGTU); Yang et al. 2017 ITOEC (doi:10.1109/itoec.2017.8122502); Palfinger crane digital twin (Gunnerus, ASME); EN 1991-1-4 Table F.2; NRC RG 1.61 Rev.1 (ML091340748, ML101660039); Gazetas 1991 ASCE JGE; Lysmer & Richart 1966(2차 출처); Coneo et al. 2025 Sci. Rep.; Frimpong & Thiruvengadam GJRE; Chrono ChContactSMC.cpp (main, 2026-10 열람); Kühnlein et al. IFK 2012; Jaiswal, Sopanen, Mikkola 2021 Nonlinear Dyn.; Stutts, Equivalent Viscous Damping; Mironov et al. 2020 IOP MSE 862; Altair EDEM / Itasca PFC 문서.

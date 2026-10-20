@@ -11,6 +11,12 @@ after warm-up can be compared) -> `reps` timing windows of `steps` steps, wall c
 profiling window of the same length that reads the per-step Chrono timers (they are reset
 inside every DoStepDynamics) and the direct-solver timers (accumulated, reset before).
 Units: SI; times reported in microseconds per step.
+
+Crawler contact: the stored measurements in 07_results/solver_benchmark/ (and the summary
+06_analysis/01_chrono/solver_benchmark.json) were taken with the old 2 x 9 crawler layout
+(18 spheres, "n_crawler_spheres": 18 in every result). The builder now follows the current
+YAML layout D (24 spheres: 12 rollers + 12 gapped end shoes, crawler_contact.py); the step
+cost with layout D is measured again in the S0 cost measurement (not re-run here).
 """
 
 from __future__ import annotations
@@ -28,6 +34,7 @@ sys.path.insert(0, str(HERE))  # python -I: the script folder is not on sys.path
 import bench_common  # noqa: E402, F401  (side effect: 03_src and 04_scripts/00_cad on sys.path)
 import numpy as np  # noqa: E402
 import pychrono as ch  # noqa: E402
+from crawler_contact import layout_from_params  # noqa: E402
 
 from outrigger_sim.chrono.system import make_system  # noqa: E402
 from outrigger_sim.params import load_params  # noqa: E402
@@ -75,8 +82,10 @@ def inertia_body(mass: float, inertia, pos) -> ch.ChBody:
 def build_machine(cfg: dict, scm: bool):
     """Superstructure (top level) + 4 leg moving parts on locked position motors.
 
-    L1: pad spheres (SMC, YAML kn/gn), 2 x 9 crawler spheres on the superstructure
-    (YAML contact.crawler.*), ground bushings with Python circular Coulomb return mapping.
+    L1: pad spheres (SMC, YAML kn/gn), crawler spheres of the YAML layout D on the
+    superstructure (contact.crawler.*: 12 roller spheres with the bottom on the floor + 12
+    end-shoe spheres raised by end_shoe_gap_m, unilateral), ground bushings with Python
+    circular Coulomb return mapping.
     SCM: no floor plate; pad = cylinder of the pad bottom area; SCM terrain under the machine.
     Levelled state: pads at the operating extension, pad bottoms at the floor, crawler 50 mm up.
     """
@@ -91,22 +100,21 @@ def build_machine(cfg: dict, scm: bool):
 
     # crawler spheres (on the superstructure body)
     get = P.get
-    n_per = int(get("contact.crawler.sphere_layout.spheres_per_track"))
-    yc = float(get("contact.crawler.sphere_layout.track_centre_y_m"))
-    x0, x1 = (float(v) for v in get("contact.crawler.sphere_layout.x_range_m"))
-    rs = float(get("contact.crawler.sphere_layout.sphere_radius_m"))
+    layout = layout_from_params(P)
+    yc = layout.track_centre_y_m
+    x0, x1 = layout.x_extent_m
+    rs = layout.sphere_radius_m
     cmat = smc_material(
         float(get("contact.crawler.kn_per_sphere_N_m")),
         float(get("contact.crawler.gn_per_sphere_1_s")),
     )
     sup.EnableCollision(True)
     com_sup = np.array(mp.com_m) + [0, 0, lift]
-    for y in (yc, -yc):
-        for x in np.linspace(x0, x1, n_per):
-            centre = np.array([x, y, z_floor + lift + rs]) - com_sup
-            sup.AddCollisionShape(
-                ch.ChCollisionShapeSphere(cmat, rs), ch.ChFramed(ch.ChVector3d(*centre), ch.QUNIT)
-            )
+    for centre_world in layout.sphere_centres_m(z_floor, lift):
+        centre = centre_world - com_sup
+        sup.AddCollisionShape(
+            ch.ChCollisionShapeSphere(cmat, rs), ch.ChFramed(ch.ChVector3d(*centre), ch.QUNIT)
+        )
 
     l1 = P.contact.rigid_floor.L1
     legs, contact_pts = [], []
@@ -213,7 +221,11 @@ def build_machine(cfg: dict, scm: bool):
         leg = P.legs[i]
         return leg.moving_part.com_m[2] - leg.pad_bottom_center_retracted_m[2]
 
-    extra = {"total_mass_kg": total_mass, "n_crawler_spheres": 2 * n_per}
+    extra = {
+        "total_mass_kg": total_mass,
+        "n_crawler_spheres": layout.n_points,
+        "crawler_layout_scheme": layout.scheme,
+    }
 
     def scm_timers() -> dict:
         if terrain is None:

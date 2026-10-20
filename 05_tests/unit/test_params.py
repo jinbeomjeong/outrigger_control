@@ -24,7 +24,7 @@ from outrigger_sim.params import (
 
 GROUND_MASS_LINE = "ground_body_mass_kg: 1000000000.0"
 # Integer counts in the YAML; every other number must load as float.
-COUNT_KEY_NAMES = ("spheres_per_track", "solver_max_iterations")
+COUNT_KEY_NAMES = ("solver_max_iterations",)
 
 
 @pytest.fixture(scope="module")
@@ -162,6 +162,29 @@ def test_leg_geometry_equals_yaml(params: Params, yaml_tree: dict) -> None:
 
 def test_no_numeric_strings_remain(params: Params) -> None:
     assert params.numeric_string_paths() == []
+
+
+CRAWLER_LAYOUT_ARRAY_KEYS = (
+    "contact.crawler.sphere_layout.roller_x_m",
+    "contact.crawler.sphere_layout.end_shoe_x_m",
+    "contact.crawler.sphere_layout.end_shoe_gap_m",
+    "contact.crawler.kn_total_sensitivity_range_N_m",
+)
+
+
+def test_crawler_layout_scheme_loads_as_text(params: Params, yaml_tree: dict) -> None:
+    scheme_path = "contact.crawler.sphere_layout.scheme"
+    assert params.get(scheme_path) == _yaml_value(yaml_tree, scheme_path)
+    assert isinstance(params.get(scheme_path), str)
+
+
+@pytest.mark.parametrize("dotted_path", CRAWLER_LAYOUT_ARRAY_KEYS)
+def test_crawler_layout_arrays_load_as_floats(
+    params: Params, yaml_tree: dict, dotted_path: str
+) -> None:
+    loaded = list(params.get(dotted_path))
+    assert loaded == [float(value) for value in _yaml_value(yaml_tree, dotted_path)]
+    assert all(type(value) is float for value in loaded)
 
 
 # --- numeric coercion --------------------------------------------------------------------

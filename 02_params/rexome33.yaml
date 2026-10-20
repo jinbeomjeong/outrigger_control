@@ -559,19 +559,22 @@ contact:
   crawler:
     kn_total_N_m: 100000000.0
     friction: 0.5  # [L2b] ASSUMPTION: L2b-NSC crawler contact only (rigid NSC, no damping); not used by the L1 SMC crawler material (smc_material: mu = 0)
-    # [common] ASSUMPTION (rev. 5, 00_docs/01_dynamics/dynamics_model.md 4.2): 2 tracks x spheres_per_track spheres at y = +/- track_centre_y_m, x evenly spaced over x_range_m (ends included); sphere bottom = ground.crawler_bottom_z_m; spheres on the superstructure body
+    kn_total_sensitivity_range_N_m: [100000000.0, 300000000.0]  # ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '크롤러 접촉 배치'): kn_total_N_m kept, x3 as sensitivity (weak basis; 00_docs/01_dynamics/dynamics_model.md 3.8 layout F); scale kn_per_sphere_N_m and the dashpot (same heave zeta) together
+    # [common] layout D, user decision 2026-10-20 (CLAUDE.md '크롤러 접촉 배치', 00_docs/01_dynamics/dynamics_model.md 3.8): 2 tracks at y = +/- track_centre_y_m; per track one sphere at each roller_x_m (sphere bottom = ground.crawler_bottom_z_m) and one at each end_shoe_x_m (sphere bottom = floor + end_shoe_gap_m: unilateral, contact only after the gap closes); 24 spheres on the superstructure body. CAD: B-rep cache 01_cad/06_brep/derived/crawler (derive_crawler_cache.py; crawler_summary.json sha256 f635954937a230f7, crawler_wheels.csv 098174f03672e396, crawler_grouser_tips.csv dd2473d1fb80f9c9; prototype B-rep d3142659588450bc). ASSUMPTION: the drawn undercarriage is the REXOME25 model (another machine, per the STEP description), manufacturer confirmation pending; rigid level floor, load enters the shoes under the rollers (pinned link chain)
     sphere_layout:
-      spheres_per_track: 9  # ASSUMPTION
-      track_centre_y_m: 1.066  # ASSUMPTION: crawler bbox |y| 1.366 - half of an assumed 0.6 m shoe
-      x_range_m: [-1.84, 1.844]  # CAD: parts_classified.csv 'REX33-REX33 - 5J286105' compound bbox Z_cad (= body x), rounded to 1 mm
+      scheme: "rollers_plus_gapped_end_shoes"  # roller stations (gap 0) + raised end shoes (gapped)
+      track_centre_y_m: 1.045  # CAD: crawler_summary.json track_centre_half_spacing_mm, rounded to 0.1 mm
+      roller_x_m: [-0.884, -0.527, -0.17, 0.187, 0.544, 0.901]  # CAD: crawler_wheels.csv 'track roller' axis_x_body_m (lower run, left = right), rounded to 0.1 mm
+      end_shoe_x_m: [-1.3122, -1.1392, -0.9663, 0.9505, 1.1236, 1.2968]  # CAD: crawler_grouser_tips.csv grouser pad centres (area 2108.5 mm^2) of the raised shoes beyond the end rollers, 3 per end, left = right, rounded to 0.1 mm
+      end_shoe_gap_m: [0.02149, 0.01186, 0.00223, 0.00236, 0.00881, 0.01526]  # CAD: lowest grouser point above the floor per raised shoe (same order as end_shoe_x_m), rounded to 0.01 mm; ASSUMPTION: one CAD shoe phase (changes by a few mm with the track phase)
       sphere_radius_m: 0.05  # ASSUMPTION (no static effect)
-    kn_per_sphere_N_m: 5555555.56  # [L1] ASSUMPTION (derived): kn_total_N_m / (2 x spheres_per_track), dyn_model.py:317-334
+    kn_per_sphere_N_m: 8333333.33  # [L1] ASSUMPTION (derived): kn_total_N_m / 12 roller spheres (floor contact sum = kn_total); same value on the 12 gapped end-shoe spheres (end engagement upper bound), 00_docs/01_dynamics/dynamics_model.md 3.8
     damping_ratio_heave: 0.05  # [L1] ASSUMPTION: heave of the machine on the crawler (8.1 Hz), concrete (rigid) floor; user decision 2026-10-20, 00_docs/01_dynamics/damping_survey.md (literature-derived, not measured)
     damping_ratio_heave_soil: 0.2  # [SCM] ASSUMPTION: same on soil (wide-foundation radiation damping, Lysmer estimate); convert to a dashpot with the crawler-soil heave stiffness of the SCM model when it is known (damping_total_N_s_m is the concrete value)
     damping_ratio_heave_sensitivity_range: [0.02, 0.3]  # ASSUMPTION: user decision 2026-10-20 (concrete and soil)
     damping_total_N_s_m: 197440.62  # [L1] ASSUMPTION (derived): 2 zeta sqrt(kn_total m), m = superstructure top + 4 moving parts, dyn_model.py:349-352, run_reference.py:68-72
-    gn_per_sphere_1_s: 0.284495772  # [L1] ASSUMPTION (derived): damping_total / n_spheres / superstructure body mass (m_eff of the crawler spheres; 00_docs/01_dynamics/dynamics_model.md 4.1 convention)
-    smc_material: "Hooke, kn = kn_per_sphere, gn = gn_per_sphere, kt = 0, gt = 0, mu = 0; same values on the crawler spheres and on a separate crawler floor patch (not the pad patches)"  # [L1] recommendation, 00_docs/01_dynamics/dynamics_model.md 4.2
+    gn_per_sphere_1_s: 0.426743658  # [L1] ASSUMPTION (derived): damping_total / 12 roller spheres / superstructure body mass (m_eff of the crawler spheres; 00_docs/01_dynamics/dynamics_model.md 4.1 convention); same value on all 24 spheres (one material, dynamics 3.8)
+    smc_material: "Hooke, kn = kn_per_sphere, gn = gn_per_sphere, kt = 0, gt = 0, mu = 0; same values on all crawler spheres (roller and gapped end-shoe spheres) and on a separate crawler floor patch (not the pad patches)"  # [L1] recommendation, 00_docs/01_dynamics/dynamics_model.md 4.2
     collision_filter: "disable rod-superstructure and rod-crawler pairs (collision families)"  # [common] recommendation, 00_docs/01_dynamics/dynamics_model.md 5 (V0)
 # [common] CLAUDE.md 'F_min' (user decision 2026-10-19), 00_docs/01_dynamics/dynamics_model.md 3.2 / 6
 control:
@@ -584,7 +587,7 @@ sensors:
     location: "lock valve block on the cylinder (head chamber); reads the trapped load pressure while locked; p = F_cyl / head area"  # manufacturer description; head-side reading, rod-side pressure 0 assumed
 simulation:
   crawler_clearance_m: 0.05  # [common] ASSUMPTION: crawler lifted 50 mm in the levelled state, 00_docs/01_dynamics/dynamics_model.md 1.3
-  settle_on_crawler_min_s: 23.2376888  # [L1] ASSUMPTION (derived): ln(100) x largest crawler-on-floor time constant (reference.json lift_V4_compliant_crawler, run_reference.py:174-191)
+  settle_on_crawler_min_s: 65.47  # [L1] ASSUMPTION (derived): ln(100) x largest crawler-on-floor time constant, layout D, auger top (06_analysis/00_dynamics/crawler_layout_check.json D_rollers_plus_gapped_end_shoes settle_length_s, sha256 ab6fd0a6faac78cf; 00_docs/01_dynamics/dynamics_model.md 3.8); not needed when initialised at the analytic settled pose (3.8 item 5)
   settle_on_pads_min_s: 52.8601322  # [L1] ASSUMPTION (derived): ln(100) / (zeta1 omega1), 1st L1 rocking mode (top); not needed when initialised at the analytic static solution (00_docs/01_dynamics/dynamics_model.md 4.5 item 1)
   dt_reference_s: 1.0e-05  # [L1, L2b] ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '시뮬레이션 시간 간격'): time step for reference solutions (V9 convergence judgement)
   dt_transition_s: 1.0e-05  # [L1, L2b] ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '시뮬레이션 시간 간격'): time step for contact-transition analyses (V4 lift, leg lift-off / re-touch, D2 disturbance load peaks); may be used only inside the transition window of a run

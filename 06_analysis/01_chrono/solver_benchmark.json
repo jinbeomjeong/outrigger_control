@@ -12,7 +12,17 @@
   "setup_us": "GetTimerSetup (includes the SCM loader: ray casting, contact patches, forces)"
  },
  "full_scale_L1": {
-  "model": "superstructure (top auger) + 4 leg moving parts on ChLinkMotorLinearPosition (locked), SMC pad spheres (YAML kn/gn), 2x9 crawler spheres (contact.crawler.*, 50 mm above floor in the levelled state: no crawler contact), 4 ChLoadBodyBodyBushingSpherical ground bushings + Python circular Coulomb hook; start: pads touching, unloaded (drop transient, not settled)",
+  "model": "superstructure (top auger) + 4 leg moving parts on ChLinkMotorLinearPosition (locked), SMC pad spheres (YAML kn/gn), crawler spheres (contact.crawler.*, layout at measurement: crawler_layout_at_measurement; 50 mm above floor in the levelled state: no crawler contact), 4 ChLoadBodyBodyBushingSpherical ground bushings + Python circular Coulomb hook; start: pads touching, unloaded (drop transient, not settled)",
+  "crawler_layout_at_measurement": {
+   "n_crawler_spheres_in_stored_results": [
+    18
+   ],
+   "layout_in_stored_results": [
+    "2x9 bbox (pre layout D)"
+   ],
+   "current_yaml_layout": "D rollers_plus_gapped_end_shoes, 24 spheres (contact.crawler.sphere_layout)",
+   "note": "measured with the crawler layout above; the YAML is now layout D (24 spheres, bench_case.py builds it). Step cost with layout D is re-measured in the S0 cost measurement (this benchmark was not re-run)."
+  },
   "results": {
    "dt_1e-04_s": {
     "warmup_steps": 1000,
@@ -553,6 +563,16 @@
    "note": "Janosi, elastic K and damping R are Chrono-demo-order values, not soil data"
   },
   "scm_timer_unit": "SCMTerrain GetTimer* return milliseconds (checked: ray_testing ms x 1e3 ~ Setup timer us)",
+  "crawler_layout_at_measurement": {
+   "n_crawler_spheres_in_stored_results": [
+    18
+   ],
+   "layout_in_stored_results": [
+    "2x9 bbox (pre layout D)"
+   ],
+   "current_yaml_layout": "D rollers_plus_gapped_end_shoes, 24 spheres (contact.crawler.sphere_layout)",
+   "note": "measured with the crawler layout above; the YAML is now layout D (24 spheres, bench_case.py builds it). Step cost with layout D is re-measured in the S0 cost measurement (this benchmark was not re-run)."
+  },
   "results": {
    "delta_0.05_m": {
     "LU_lock1_thrdef": {

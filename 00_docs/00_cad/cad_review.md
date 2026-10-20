@@ -62,9 +62,9 @@
    - 재생성(캐시 `01_cad/05_meshes/render_mesh.npz`만 읽음, STEP 불필요, 약 85 s): `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts/00_cad/render_layout_views.py`
    - 부품 구분용 검은 윤곽선(2026-10-20): 부품별 실루엣·경계 모서리와 인접면 각도 35° 초과 모서리만, 폭 0.4 px. 가려진 선은 면과 같은 깊이 정렬로 지운다. 화면 크기 6 px 미만 부품은 윤곽선을 생략한다. 옵션은 `--no-edges`, `--edge-angle`, `--edge-width-px`, `--edge-min-part-px`.
    - 다리 신장 애니메이션: [`01_cad/02_legs/leg_extension.gif`](../../01_cad/02_legs/leg_extension.gif). 네 다리를 동시에 0 → 680 mm(22.67 mm/s, 30 s) 펴서 패드 접지 → 크롤러 들림까지 보여 준다. 측면·정면 2개 보기, 3배속, 오거 상단. 사건 시각·자세는 `01_cad/02_legs/leg_extension_kinematics.json`에 있다.
-     - 재생성(약 95 s): `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts/00_cad/render_leg_extension.py`
-     - 기구학 가정: 준정적 강체이고 지면은 강체 평지(z = `ground.crawler_bottom_z_m`)다. 접촉점은 패드 바닥 중심 4개와 크롤러 접촉점(`contact.crawler.sphere_layout` 2×9의 바닥점)이며 모두 단방향 강체 접촉이다. 자세 (z, roll, pitch)는 접촉 조건 아래에서 상부체 무게중심 높이를 최소로 하는 해(선형계획, 소각)다. 패드 4개만 닿은 부정정 구간은 최소제곱으로 푼다. x·y·yaw는 고정하고, 로드 무게와 스위블 기울기는 무시한다. 결과: 후방 쌍 15.040 s 접지 → 앞 크롤러 끝을 축으로 pitch → 전방 쌍 15.448 s 접지와 동시에 크롤러 들림 → 680 mm에서 크롤러 들림 329.8 mm, pitch +0.121°(앞 내림)다.
-     - `06_analysis/00_dynamics/reference.json`의 lift_V4(유연 크롤러·패드)와 비교하면 접지는 0.03~0.30 s 늦고, 크롤러 이탈은 0.24 s 이르다. 같은 정지 신장량에서 크롤러 들림은 50.0 mm(V4는 44.5 mm)다. 차이는 접촉 유연성(크롤러 침하 3.8 mm, 패드 압축 약 5.5 mm)에서 온다.
+     - 재생성(약 100 s): `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts/00_cad/render_leg_extension.py`
+     - 기구학 가정: 준정적 강체이고 지면은 강체 평지(z = `ground.crawler_bottom_z_m`)다. 접촉점은 패드 바닥 중심 4개와 크롤러 접촉점(`contact.crawler.sphere_layout` D안 24점: 롤러 위치 12점은 바닥에, 끝 슈 12점은 바닥 + `end_shoe_gap_m`(2.2~21.5 mm) 높이에 둔다. 점 생성은 `04_scripts/00_cad/crawler_contact.py`)이며 모두 단방향 강체 접촉이다. 끝 슈 점은 틈이 닫힌 뒤에만 닿는다. 자세 (z, roll, pitch)는 접촉 조건 아래에서 상부체 무게중심 높이를 최소로 하는 해(선형계획, 소각)다. 패드 4개만 닿은 부정정 구간은 최소제곱으로 푼다. x·y·yaw는 고정하고, 로드 무게와 스위블 기울기는 무시한다. 결과(D안, 2026-10-20 재실행): 후방 쌍 15.040 s 접지 → 앞 롤러 줄(x 0.901 m)을 축으로 pitch → 전방 쌍 15.361 s 접지와 동시에 크롤러 들림 → 680 mm에서 크롤러 최저점 들림 331.8 mm, pitch +0.121°(앞 내림)다. 끝 슈 점은 끝까지 닿지 않는다(앞 롤러 줄 축으로 앞 끝 슈 틈 2.36 mm를 닫으려면 pitch 약 2.7°, 뒤 롤러 줄 축으로 뒤 끝 슈 2.23 mm는 약 1.6°가 필요하다. 실제 최대 pitch는 0.121°). 이전 2×9 배열(x −1.840…+1.844, 모두 바닥)에서는 앞 크롤러 끝(x 1.844 m)이 축이라 전방 접지·크롤러 들림이 15.448 s, 최종 들림 329.8 mm였다. 축이 0.94 m 뒤로 와서 전방 접지가 0.088 s 일러졌다. 후방 접지와 최종 자세는 같다.
+     - 같은 D안의 유연 크롤러·패드 준정적 V4(`06_analysis/00_dynamics/reference.json` `lift_V4_compliant_crawler`의 D안 배치. 없으면 스크립트가 `crawler_layout_check.json`의 D안 값으로 대신 비교한다)와 비교하면 **접지 순서가 뒤집힌다**. 유연 모델은 크롤러 위 정착 자세가 pitch +0.169°(앞 내림, 앞 끝 슈 2점 접촉, $u_z$ −3.19 mm)라 전방 쌍이 먼저(FR 15.049 s, FL 15.051 s), 후방 쌍이 15.148 s에 닿는다. 강체 기구학은 정착 자세가 수평이라 후방이 먼저다. 강체 쪽이 후방 접지는 0.11 s 이르고 전방 접지는 0.31 s 늦으며, 크롤러 이탈(15.361 s 대 15.584 s)은 0.22 s 이르다. 같은 정지 신장량에서 크롤러 최저점 들림은 50.0 mm(유연 V4는 44.9 mm)다. 차이는 접촉 유연성(크롤러 침하, 패드 압축 약 5.5 mm)에서 온다. 그래서 V4 판정은 접지 순서가 아니라 다리별 접지 시각을 같은 배치 기준해와 비교한다(CLAUDE.md "크롤러 접촉 배치"). 비교 행은 `leg_extension_kinematics.json` `reference_comparison`에 있다.
 4. 다른 `*CYL` 후보는 다리가 아니다.
    - `LOCKING CYL`/`LOCKING CYL_MIR`: 오거 조립(DRIVE AUGER ASSY) 안의 작은 실린더(로드 R10, 몸체 R32.5)다. 높이 Y≈5.3~5.7 m로 지면과 멀다.
    - `BOOM CYL`, `BACKSTAY CYL`, `Hose guide CYL`, `TOP SHEAVE CYL`: 모두 마스트·붐 계통이다.
@@ -296,7 +296,7 @@ T = jacks[0].transform                                              # 4×4 numpy
 |---|---|---|
 | 키 조인(`instance_path`, `prototype_entry`, `product_name`, `is_mirrored`) | 불일치 0 | 양쪽 1,214행, 불일치 0 |
 | 부피(단위 밀도, 부피 > 10⁻³ mm³인 1,165개) | 상대차 ≤ 1×10⁻⁶ | 최대 1.9×10⁻¹³ |
-| 부피 0 부품 49개(면만 있는 형상) | 절대차 | 0 mm³ |
+| 부피 0 부품 49개(면도 없는 빈 형상, 16 프로토타입 — 9절에서 정정) | 절대차 | 0 mm³ |
 | 무게중심(전역 좌표) | 절대차 ≤ 1×10⁻⁶ mm | 최대 2.6×10⁻¹¹ mm |
 | 관성 텐서(단위 밀도, 무게중심 기준, 전역 축) | Frobenius 상대차 ≤ 1×10⁻⁶ | 최대 2.1×10⁻¹¹ |
 | 인스턴스 bbox(`AddOptimal`) | 절대차 ≤ 1×10⁻⁶ mm | 최대 1.0×10⁻⁷ mm |
@@ -362,3 +362,179 @@ T = jacks[0].transform                                              # 4×4 numpy
 - 접지 충돌은 볼록 껍질이나 상자보다 `crawler_summary.json`의 접지 패치(+1 mm 사각형: X 834…1256, Z −825…812)가 실제 접지면에 가깝다. 구 배열(R13)을 고칠지는 dynamics-expert가 판단한다.
 
 **C5 근거 (`crawler_face_stats.json`)**: 크롤러 면 156,614개는 조립 전체 면(인스턴스 포함 226,000개)의 69 %다. 최저점 기준 지면 +3 mm 안은 2,096개(1.3 %), +50 mm 안은 10,950개(7.0 %), +400 mm 안은 72,887개(46.5 %)다. 종류는 원통 53,140, 평면 36,141, B-스플라인 26,090, 원환 19,660, 구 11,044, 원뿔 10,539개다. 바퀴·링크·핀·프레임 면은 장착면이나 접지면 후보가 아니므로, C5 면 색인에서 크롤러는 **지면 +50 mm 안의 면과 아래를 향한 그라우저 끝 평면만** 넣는 것을 권고한다.
+
+#### 8.6.1 크롤러 접촉 부품 B-rep과 색인 (D안, 2026-10-20)
+
+크롤러 접촉 D안(CLAUDE.md "크롤러 접촉 배치", YAML `contact.crawler.sphere_layout`)의 접촉 위치마다 그 위치를 이루는 솔리드 묶음을 따로 저장하고 색인했다. 하부 롤러 6개/측, 틈 있는 끝 슈 3개/끝(6개/측), 참고로 평탄 접지 슈 10개/측이다. 양쪽 트랙을 합쳐 **44개 부품**이다. 입력은 캐시뿐이다(크롤러 프로토타입 `0_1_1_746.bbrep`, 8.6절 파생 표, 9절 면 색인, `parts_classified.csv`의 밀도, YAML은 대조용으로 읽기만 한다). STEP은 읽지 않는다. 다른 기종(REXOME25) 하부체의 **그려진 형상**이다.
+
+```powershell
+& C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts\00_cad\derive_crawler_parts.py   # 약 2분, 메모리 정점 1.1 GB
+& C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts\00_cad\check_cache.py --write --cache 06_brep
+```
+
+**구조** (`01_cad/06_brep/derived/crawler/`)
+
+| 파일 | 내용 | 크기 | git |
+|---|---|---|---|
+| `parts/<part_id>.bbrep` | 부품마다 솔리드 묶음 compound 1개. BinTools 바이너리, **CAD 전역 좌표(mm, Y-상방, 크롤러 배치 적용), 배치 = 항등**. 기체 좌표 변환은 색인 JSON `frames`에 있다 | 44개 84.6 MB(롤러 133 kB, 슈 2.6 MB씩) | **제외**(`.gitignore` `01_cad/06_brep/derived/crawler/parts/`) |
+| `crawler_contact_parts.csv` | 부품 44행 색인(아래 열) | 37 kB | 추적 |
+| `crawler_contact_parts.json` | 같은 행 + 출처(입력 sha256, 생성 스크립트 sha256, 시간·메모리), 좌표계, 밀도, 식별 규칙 정의, 슈 규칙 데이터, 검증 결과 | 122 kB | 추적 |
+| `crawler_contact_part_solids.csv` | 부품 ↔ 솔리드 번호(`crawler_solids.csv` 키), 솔리드 부피, 첫 면 번호·면 수 | 40 kB | 추적 |
+| `derive_parts.log` | 진행 로그 | — | 제외 |
+
+**부품 ID와 순번.** `<kind>_<side><n>`. `kind` = `roller` / `end_shoe` / `flat_shoe`, `side` = `L`(왼쪽, +X_cad = 기체 +y) / `R`. `n` = `order_index` + 1이고 `order_index`는 기체 x 오름차순(뒤 → 앞) 0부터다. **롤러·끝 슈의 `order_index`는 YAML `roller_x_m`·`end_shoe_x_m`(·`end_shoe_gap_m`) 배열 인덱스와 같다**(`yaml_key`, `yaml_index` 열). 예: `end_shoe_L1` = `end_shoe_x_m[0]` = −1.3122 m(뒤 끝 가장 바깥), `end_shoe_L4` = `end_shoe_x_m[3]` = +0.9505 m(앞 끝 가장 안쪽). 평탄 슈는 `flat_shoe_L01`…`L10`.
+
+**대상 식별 규칙**
+
+- **롤러**: `crawler_wheels.csv`의 `track roller` 축마다, 축 둘레 상자 안에 **완전히 들어가는** 솔리드 = 바퀴(Ø194) 1, 축(Ø70×352) 1, 양 끝 브래킷 2, 장착 볼트 4, 와셔 4 = **12개**(역할은 형상으로 추정). 상자: CAD X 중심 ±200 mm, Z 축 ±100 mm, Y 바퀴 바닥 −1 mm ~ 바퀴 꼭대기 +1 mm. 위쪽 한계를 −500 mm까지 올려도 같은 12개라 프레임 판(Z 방향으로 길다)은 들어오지 않는다.
+- **슈 단위(끝 슈·평탄 슈) 경계 정의**: 트랙 한 피치의 강체 묶음.
+  1. 접지 슈 = 그라우저 패드 평면 4개(각 2,108.5 mm², `export_params.py`와 같은 기준)를 가진 솔리드(600×72×130 mm).
+  2. 슈 판 = 접지 슈 바로 위의 같은 폭(600 mm) 솔리드 중 가장 큰 것(600×43×199 mm). 같은 부피의 솔리드가 측마다 44개(트랙 전체 피치 수)다.
+  3. 체인 솔리드 후보 = 슈 판 중심에서 350 mm 안, bbox 대각선 700 mm 미만, 롤러 묶음 아님, 그리고 솔리드 순서에서 체인 블록 구간 안(접지 슈가 26개 주기로 반복되는 구간 ± 1주기). 후보마다 **3D 무게중심이 가장 가까운 슈 판**에 붙인다.
+  4. 가운데 평탄 슈의 묶음(26개)을 템플릿으로 삼아, 템플릿 부피에 없는 후보를 빼고 다시 붙인다(측마다 1개 빠짐).
+  - 결과: 슈 단위 = 접지 슈 1, 슈 판 1, 그 판에 볼트로 붙은 링크 쌍 2, 판 가장 가까운 트랙 조인트(핀 1, 부싱 1, 씰 원판 2), 슈 볼트 4·너트 4, 측면 블록 2와 그 체결구 8 = **26개**(역할 이름은 형상 추정). 남은 후보가 측마다 정확히 1,144개 = 44 × 26이고, 32개 슈 모두 같은 부피 구성이다. 묶음은 CAD 솔리드 번호로도 연속 구간 하나다(예: `end_shoe_L1` = 469…494).
+  - 조인트는 이웃 두 슈 판까지의 거리가 트랙이 굽어도 변하지 않으므로(조인트가 두 판의 회전축 위에 있다) 직선부와 끝 바퀴 둘레에서 같은 규칙이 성립한다. 가장 가까운 판과 두 번째 판의 거리 차는 최소 16.1 mm다.
+  - 끝 슈 대 평탄 슈: 그라우저 패드 최저점이 바닥 위 1×10⁻³ mm보다 높으면 끝 슈다(`export_params.py`와 같은 기준). 끝마다 3개다.
+
+**색인 열** (`crawler_contact_parts.csv`, 71열)
+
+| 열 | 뜻 |
+|---|---|
+| `part_id`, `kind`, `side`, `end`(끝 슈: rear/front), `order_index`, `yaml_key`, `yaml_index` | 식별·YAML 대응 |
+| `solid_count`, `solids` | 솔리드 번호(`;` 구분, `crawler_solids.csv`의 `solid`) |
+| `file`, `file_bytes`, `sha256` | B-rep 파일 |
+| `density_g_cm3`, `volume_mm3`, `mass_kg`, `compound_volume_rel_diff` | 밀도 7.85(크롤러 XCAF 재질 없음 → `parts_classified.csv`의 부모 제품명 '강철', 질량 표와 같은 값). 부피·질량은 솔리드별 `VolumeProperties`를 `GProp_GProps.Add`로 합친 값. `compound_volume_rel_diff`는 compound 전체에 한 번 `VolumeProperties`를 건 값과의 상대차(최대 2.1×10⁻⁶, 원점에서 먼 B-스플라인 적분 차, 참고) |
+| `com_{x,y,z}_cad_mm`, `com_{x,y,z}_body_m` | 무게중심 |
+| `I{xx,yy,zz,xy,xz,yz}_body_kg_m2`, `I{1,2,3}_principal_kg_m2` | 관성(무게중심 기준, 기체 축, kg·m²), 주관성 모멘트 |
+| `bbox_{min,max}_{x,y,z}_cad_mm`, `..._body_m` | bbox(`AddOptimal`) |
+| `lowest_above_ground_mm` | 부품 전체 최저점 − 바닥(Y −1,050.92 mm) |
+| `face_count`, `face_ranges`, `indexed_face_count` | 면 번호 구간(포함 끝, `TopExp_Explorer(프로토타입, FACE)` 순 = 9절 `face_index`). `indexed_face_count` = 그중 9절 면 색인에 행이 있는 면 수(크롤러는 지면 +50 mm 띠만 색인됨) |
+| 롤러: `roller_wheel_solid`, `roller_axis_{x,y,z}_body_m`, `roller_axis_dir_body`, `roller_radius_mm`, `roller_width_mm`, `roller_bottom_above_ground_mm`, `roller_tread_face_indices` | 바퀴 솔리드의 가장 큰 볼록 원통 면(축 ∥ X_cad = 기체 y)에서 잰 축 위치·반지름·폭. 롤러 면은 지면 +163 mm 위라 9절 색인에 없으므로 B-rep 곡면에서 직접 계산했다 |
+| 슈: `ground_shoe_solid`, `shoe_plate_solid`, `grouser_lowest_above_ground_mm`, `gap_m`, `ground_face_area_mm2`, `ground_normal_{x,y,z}_body`, `ground_tilt_deg`, `ground_face_indices` | 그라우저 패드 평면 4개: 최저점 높이(= **틈**, YAML `end_shoe_gap_m` 기준), 면적 합, 면적 가중 바깥 법선(XDir × YDir, REVERSED면 반전), 수직에서 기운 각, 면 번호 |
+| `station_x_body_m`, `station_x_rounded`, `yaml_value`, `yaml_gap_m`, `gap_rounded_m` | 위치(롤러 = 트레드 원통 축, 슈 = 패드 평면 무게중심 Z_cad 평균)와 YAML 대조 |
+
+**예시 행(왼쪽, 오른쪽 같음)**
+
+| 부품 | 위치 x [m] | 틈 / 최저점 [mm] | 질량 [kg] | 기타 |
+|---|---|---|---|---|
+| `roller_L1` | −0.8840 | — / 163.2 | 52.84 | 축 (−0.884, 1.045, −0.7907) m, R 97.0 mm, 트레드(가장 큰 원통면) 폭 219.0 mm, 면 75679–75808 |
+| `end_shoe_L1` (뒤 3번째) | −1.3122 | 21.49 / 21.49 | 57.56 | 패드 면적 8,434 mm², 법선 기체 (−0.0556, 0, −0.9985), 3.19° |
+| `end_shoe_L3` (뒤 1번째) | −0.9663 | 2.23 / 2.23 | 57.56 | 같은 기울기 3.19° |
+| `end_shoe_L4` (앞 1번째) | +0.9505 | 2.36 / 2.36 | 57.56 | 법선 (+0.0372, 0, −0.9993), 2.13° |
+| `flat_shoe_L01` | −0.7863 | 0 / 0 | 57.56 | 법선 (0, 0, −1) |
+
+- 끝 슈 3개의 패드 법선이 끝마다 같다(뒤 3.19°, 앞 2.13°). 끝 롤러에서 아이들러·스프로킷으로 올라가는 트랙이 직선 경사라서 틈이 피치마다 같은 양씩 는다(뒤 9.63 mm, 앞 6.45 mm/피치).
+- 끝 슈의 부품 전체 최저점은 패드 최저점보다 최대 0.0015 mm 낮을 뿐이다. 틈은 패드 기준으로 써도 된다.
+- 롤러 바닥은 지면 위 163.2 mm다. D안의 롤러 구(바닥 높이)는 롤러 → 링크 → 슈 → 바닥 하중 경로를 롤러 축 위치에 모은 **모델 가정**이다. 뒤·앞 끝 롤러(x −0.884 / +0.901 m)는 평탄 슈 범위(−0.786 … +0.773 m) 밖, 첫 들린 슈(틈 2.2 / 2.4 mm) 근처에 있다.
+
+**로더** (`brep_cache.load_crawler_part`)
+
+```python
+import brep_cache
+shoe = brep_cache.load_crawler_part("end_shoe", "L", 0)   # YAML end_shoe_x_m[0], CAD 전역 mm
+roller = brep_cache.load_crawler_part("roller", "R", 5)   # YAML roller_x_m[5]
+```
+
+색인 CSV에서 행을 찾아 `read_brep`으로 읽는다(메모리 캐시 없음, 슈 1개 0.02 s).
+
+**검증** (`crawler_contact_parts.json` `verification`, 판정 통과)
+
+| 항목 | 기준 | 결과 |
+|---|---|---|
+| 롤러 x, 끝 슈 x ↔ YAML | 0.1 mm 반올림 같음 | 24행 불일치 0(반올림 전 최대 차 0.047 mm) |
+| 끝 슈 틈 ↔ YAML `end_shoe_gap_m` | 0.01 mm 반올림 같음 | 12행 불일치 0(반올림 전 최대 차 0.0049 mm) |
+| 롤러 축 \|y\| ↔ `track_centre_y_m` 1.045 | 0.1 mm 반올림 같음 | 차 0(반올림 전 0.0005 mm) |
+| 개수 | 측마다 롤러 6·끝 슈 6(끝마다 3)·평탄 슈 10 | 같음 |
+| 솔리드 집합 겹침 | 없음 | 976개 모두 다름 |
+| 부피 = 해당 솔리드 부피 합 | 상대차 ≤ 1×10⁻⁹ | 다시 읽은 파일에서 최대 6.2×10⁻¹³ |
+| 같은 구성 | 롤러 12개·슈 26개, 부피 구성 같음 | 44개 모두 같음 |
+| 다시 읽은 B-rep 꼭짓점 | 차 0 | 0 mm |
+| 좌우 대칭(X_cad 거울) | 부피 ≤ 1×10⁻⁵, 위치 ≤ 0.01 mm | 부피 2.9×10⁻⁷, 무게중심 ≤ 1.6×10⁻⁵ mm, 위치·최저점 ≤ 1×10⁻¹¹ mm. 오른쪽 솔리드 부피가 왼쪽과 수 mm³ 달라 부피 기준은 1×10⁻⁵로 두었다 |
+| 면 번호 체계 | 9절 `solid_index` = 면 번호 구간의 솔리드 | 크롤러 11,290행 모두 일치. 슈마다 패드 면 4개가 색인에 있다(`selection` = `ground_band`) |
+
+생성 2026-10-20: 크롤러 읽기 3 s, 부품 44개 쓰기·질량 특성 95 s, 검증 18 s, 합계 112 s, 메모리 정점 1.12 GB.
+
+## 9. 전체 면 색인 (C5, 2026-10-20)
+
+부착점·접촉면·구멍 축을 STEP이나 B-rep을 다시 열지 않고 표 질의로 찾으려고, 조립 전체의 면을 색인했다. **프로토타입마다 한 번**(681개) 면을 분석하고 `instances.csv`의 배치 행렬로 1,214개 인스턴스에 옮겼다. 입력은 B-rep 캐시(8절)뿐이고 STEP은 읽지 않는다.
+
+### 9.1 구조 (`01_cad/07_faces/`)
+
+| 파일 | 내용 | 크기 | git |
+|---|---|---|---|
+| `prototype_faces.csv.gz` | 프로토타입 면 58,747행, **프로토타입 좌표(mm)** | 1.7 MB | 제외 |
+| `instance_faces.csv.gz` | 인스턴스 면 80,676행, **CAD 전역(mm, Y-상방) + 기체(m)** | 4.4 MB | 제외 |
+| `face_index_summary.json` | 개수(종류·선택별), 크롤러 제외 개수, 시간·메모리, 출처(sha256), 프로토타입별 면적 합·위상 점검 | 0.24 MB | 추적 |
+| `face_index_verification.json` | 9.4절 검증 결과, 질의 시간 | 4 kB | 추적 |
+| `build.log` | 진행 로그 | — | 제외 |
+
+재생성: `& C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts\00_cad\build_face_index.py`(프로젝트 루트, 약 2.5분 + 검증 2분, 메모리 정점 1.5 GB) 뒤 `check_cache.py --write --cache 07_faces`. 검증만 다시: `--verify-only`. 크롤러 전체 면 포함: `--crawler-all`.
+
+**열** (인스턴스 표, `*_cad*` = CAD 전역, `*_body*` = 기체 축 x = +Z_cad, y = +X_cad, z = +Y_cad, 원점 = CAD 원점)
+
+| 열 | 뜻 |
+|---|---|
+| `instance_path`, `prototype_entry`, `product_name`, `top_assembly`, `parent_assembly` | 키·부품명·최상위 조립·바로 위 조립(경로의 끝에서 두 번째) |
+| `face_index` | `TopExp_Explorer(프로토타입, TopAbs_FACE)` 순번(0부터). 같은 캐시 파일이면 재현된다. 크롤러는 제외한 면이 있어도 원래 번호를 유지한다 |
+| `solid_index`, `solid_valid` | 면이 처음 속한 솔리드의 순번(고유 솔리드 탐색 순), 솔리드 밖 면은 −1. `solid_valid` = 그 솔리드가 `BRepCheck_Analyzer` 통과 |
+| `selection` | `all`(일반), 크롤러는 `ground_band`(지면 +50 mm 안) / `grouser_tip`(아래 향한 그라우저 끝 평면) |
+| `kind`, `reversed` | `GeomAbs` 종류(plane·cylinder·cone·sphere·torus·bspline 등), 면 방향이 REVERSED인지 |
+| `area_mm2` | 면적(mm²), `brepgprop.SurfaceProperties` |
+| `centroid_{x,y,z}_cad_mm`, `centroid_{x,y,z}_body_m` | 면 무게중심(면적 중심) |
+| `normal_{x,y,z}_cad`, `normal_{x,y,z}_body` | **평면만**: 바깥 법선 = 평면 XDir × YDir, REVERSED면 반전 |
+| `axis_*`, `axis_point_*`, `radius_mm`, `radius2_mm`, `cone_half_angle_rad` | 원통·원뿔·구·원환: 축 방향(부호 임의), 축 위 점(면 중심을 축에 투영, 구는 중심), 반지름(원뿔은 기준 반지름, 원환은 큰 반지름), 원환 작은 반지름, 원뿔 반각(rad) |
+| `convex` | 회전면의 바깥 법선이 축에서 멀어지는 쪽인가: True = 축·보스, False = 구멍·보어 |
+| `bbox_{min,max}_{x,y,z}_cad_mm`, `..._body_m`, `bbox_recomputed` | 면 bbox(`AddOptimal`). 축 정렬 배치(856개 인스턴스)는 프로토타입 bbox를 옮긴 값(정확), 비정렬 배치(358개)는 배치한 면에서 다시 계산(24,674행) |
+| `normal_uncertain` | 솔리드 밖 면(열린 셸) 또는 무효 솔리드의 면: 법선·내외부 판정을 믿을 수 없음 |
+
+### 9.2 규모
+
+- 인스턴스 면 80,676행 = 크롤러 밖 69,386 + 크롤러 11,290(`ground_band` 10,950 + `grouser_tip` 340). 크롤러 전체면 226,000행(8.6절 값과 같음)이다.
+- 종류별(인스턴스 면): 평면 40,254, 원통 25,026, 원뿔 7,407, 원환 4,278, B-스플라인 2,985, 구 726.
+- **크롤러 제외분**(`0:1:1:746`, 다른 기종 REXOME25 하부체): 156,614개 중 145,324개 제외(원통 48,534, 평면 32,457, B-스플라인 25,242, 원환 18,624, 구 10,568, 원뿔 9,899, 면적 합 1.333×10⁸ mm²). 개수는 `face_index_summary.json` `crawler`에 있다. 같은 크롤러 조립의 `SHELL`(`0:1:1:745`, 726면)은 별도 프로토타입이라 전부 넣었다.
+- **부피 0 부품 49개(16 프로토타입)는 면이 없다**(솔리드·셸·면 0, 빈 형상). 8.4절의 "면만 있는 형상"이라는 설명은 틀렸다. 그래서 색인 행이 없다(`instances_without_faces` 49).
+- `normal_uncertain` 4,622행: 솔리드 밖 면 744행(크롤러 조립의 `SHELL` 726, `COMPOUND` `0:1:1:30` 3면 × 6인스턴스) + 무효 솔리드 면 3,878행(`부마씨이 소구경 3D_Shrinkwrap_11` 2,414, `4. 1st GEAR` 1,258, `30-1. TOP COVER` 103 × 2).
+
+### 9.3 질의 (`04_scripts/00_cad/face_index.py`)
+
+```python
+import sys
+sys.path.insert(0, r"C:\workspace\outrigger_control\04_scripts\00_cad")
+import face_index
+
+# IMU C1 가로판 윗면: 위를 향한 평면, 기체 좌표 창(m)
+c1 = face_index.query(kind="plane", normal_body=(0, 0, 1), tol_deg=1,
+                      bbox=((0.24, 0.475, 0.035), (0.44, 1.215, 0.045)))
+# 다리 패드 바닥: 아래를 향한 큰 평면
+pads = face_index.query(kind="plane", normal_body=(0, 0, -1), tol_deg=1,
+                        instance="JACK CYL", area_min_mm2=5e4)
+# 오목 원통(구멍·보어): 축 기체 z, 반지름 범위
+bores = face_index.query(kind="cylinder", convex=False, axis_body=(0, 0, 1),
+                         radius_mm=(20, 80), top_assembly="FRONT JACK CYL:1")
+```
+
+- 조건: `kind`, `normal_body`(부호 있음)·`axis_body`(부호 무시)와 `tol_deg`, `convex`, `area_min_mm2`/`area_max_mm2`, `radius_mm`(값 또는 범위), `bbox`(기체 m) + `bbox_mode`(`overlap`/`inside`/`centroid`), `instance`·`product`·`top_assembly`(정규식), `include_uncertain`. 결과는 DataFrame 사본.
+- `face_index.load()`(인스턴스 표, `prototypes=True`면 프로토타입 표)는 처음 한 번 읽고 메모리에 둔다. 첫 호출 때 `check_cache.warn_if_stale(["07_faces"])`.
+- 속도: 새 프로세스에서 import + 읽기 0.9 s(읽기 0.4 s), 질의 한 번 3~15 ms.
+- 예시 결과: C1 질의 → `BASE DECK:1` 면 2562 하나(면적 0.1426 m², z 0.040 m, bbox x 0.240~0.440·y 0.475~1.215 m). 패드 질의 → 다리 4개 바닥면, 면적 0.1071 m², z 전방 −0.6998·후방 −0.7120 m(`cad_summary.json` −699.8·−712.0 mm와 같음). 보어 질의 → `FRONT JACK CYL:1`의 수직 오목 원통 2개(R 55.0·57.5 mm).
+
+### 9.4 검증 (`face_index_verification.json`, 판정 통과)
+
+| 항목 | 기준 | 결과 |
+|---|---|---|
+| 프로토타입별 면적 합 vs `SurfaceProperties(프로토타입)` | 상대차 ≤ 1×10⁻⁹ | 681개 모두 0(같은 면 집합). 탐색 면 수 = 고유 면 수(중복 면 0) |
+| 법선 자체 점검(UV 중심의 곡면 법선 + 방향) | 평면 법선·원통 `convex` 일치 | 49,274면, 실패 0 |
+| 바깥 방향 점검(`BRepClass3d_SolidClassifier`, 면 위 점 ±0.05 mm) | 바깥 OUT·안 IN | 유효 솔리드의 평면·원통 3,000개 표본(고정 시드, 크롤러 제외) 중 면 위 점이 있는 2,836개: 통과 2,834, **반전 0**, 모호 2(양쪽 OUT 또는 양쪽 IN — 얇은 판·겹친 솔리드, 2 mm에서는 정상). 무효 솔리드(`Shrinkwrap_11`)에서는 반전 1건이 있었다 → `normal_uncertain`으로 표시 |
+| `02_legs/leg_faces.csv` 대조(8 인스턴스) | 행 수·종류·면적·bbox | 384 = 384행, 종류 불일치 0, 면적 상대차 3.9×10⁻¹⁰, bbox 5.0×10⁻⁷ mm, 원통 축 0°, 반지름 2.8×10⁻¹⁴ mm |
+| `04_mast/mast_faces.csv` 대조(696 인스턴스) | 같음 + 축 위치 | 49,675 = 49,675행, 종류·솔리드 번호 불일치 0, 면적 4.9×10⁻¹⁰, bbox 5.2×10⁻⁷ mm, 원통 축 6×10⁻⁴°, 축선 거리 6.7×10⁻⁷ mm, 반지름 4.8×10⁻⁸ mm |
+| 기존 표 평면 법선 | 부호 무시 각도 | 최대 6×10⁻⁴°. **부호는 다리 40면·마스트 7,327면에서 반대**: 기존 표는 평면 축 방향(`Axis().Direction()`)을 그대로 적어 면 방향(REVERSED)을 반영하지 않았다. 바깥 방향이 필요하면 이 색인을 쓴다 |
+| 중심 | 기존 표에 무게중심 없음 | bbox 중심 차 최대 6.2×10⁻⁷ mm, 평면 무게중심이 기존 bbox 밖인 면 0 |
+| 크롤러 그라우저 끝(`crawler_grouser_tips.csv`) | 아래 향한 평면(지면 +120 mm 안) | 628 = 628개, 중심 거리 최대 7.5×10⁻⁷ mm, 면적 3.3×10⁻⁹, 높이 5.8×10⁻⁷ mm. 지면 높이 끝 평면 80개(기존 80) 모두 기체 z −1.050919 m = 지면, x −0.825~+0.812 m |
+| IMU C1 가로판 윗면 | 질의로 찾음 | 1개, z 0.040 m(9.3절) |
+
+생성 2026-10-20: 프로토타입 분석 130 s(솔리드 유효성 점검 46 s 포함, 크롤러 96 s), 인스턴스 변환 18 s, 쓰기 4 s, 합계 152 s, 메모리 정점 1.42 GB(검증 포함 1.52 GB). 검증 110 s.
+
+### 9.5 C7·C8에 쓰기
+
+- C7(크롤러 접지): `selection == "grouser_tip"`이거나 `ground_band`인 아래 향한 평면으로 접지 패치·슈 피치를 표 질의로 다시 뽑을 수 있다(파생 캐시와 같은 값).
+- C8(충돌 형상): 패드 바닥·크롤러 접지면은 법선·bbox가 있어 상자·평면 접촉 정의에 바로 쓴다. 핀 구멍(`convex=False` 원통)의 축선(`axis_*`, `axis_point_*`)은 관절 축 후보다. 부품별 면 집합은 `instance_path`로 묶어 프리미티브 근사 범위를 정할 수 있다.

@@ -1,0 +1,1664 @@
+{
+ "meta": {
+  "script": "04_scripts/01_dynamics/run_numerical_damping_review.py",
+  "params": "02_params/rexome33.yaml (read only)",
+  "frame": "body x fwd, y left, z up; q = [ux, uy, uz, phi, theta, psi] about the CoM of superstructure + 4 rods at e_op",
+  "gravity_m_s2": [
+   0.0,
+   0.0,
+   -9.80665
+  ],
+  "scheme": "(this script; ASSUMPTION for the bushing part, to be confirmed by V8(a)):\n  * explicit:  SMC normal contact (pad spheres, crawler spheres) stiffness K_E incl. the geometric preload term,\n               SMC damping C_E (gn); L2b-NSC Python axial force law (motor force set before the step)\n  * implicit:  ChLoadBodyBodyBushing* (ChLoad: Jacobians K_I, R_I enter the linearised implicit step), constraints\n  M (v' - v) = dt [ -K_E x - C_E v - K_I (x + dt v') - C_I v' ],  x' = x + dt v'\n  For a mode with implicit strain-energy share r = phi^T K_I phi / omega^2 the numerical damping is\n  zeta_num ~ r omega dt / 2 (backward Euler on the implicit part only); the explicit part is symplectic (no drift).\n  Stability of an explicit spring-dashpot mode: dt < (2 / omega) (sqrt(1 + zeta^2) - zeta).",
+  "assumption": "bushing loads (ChLoadBodyBodyBushing*) are treated implicitly by EULER_IMPLICIT_LINEARIZED (ChLoad Jacobians); not measured yet -> V8(a) confirms (zeta_num of mode 1 ~ r omega dt / 2)",
+  "runtime_s": 0.32
+ },
+ "check_single_sphere_vs_smc_damping_json": [
+  {
+   "case": "floor_1e9",
+   "dt_s": 0.0001,
+   "measured f_Hz / zeta": [
+    70.6892,
+    0.28857
+   ],
+   "map explicit (symplectic) f_Hz / zeta": [
+    70.7219,
+    0.28841
+   ],
+   "map implicit (backward Euler) f_Hz / zeta": [
+    69.7991,
+    0.30658
+   ],
+   "cad-expert f_discrete / zeta_discrete": [
+    70.7219,
+    0.28841
+   ]
+  },
+  {
+   "case": "floor_1",
+   "dt_s": 0.0001,
+   "measured f_Hz / zeta": [
+    70.275,
+    0.0026605
+   ],
+   "map explicit (symplectic) f_Hz / zeta": [
+    70.2752,
+    0.002659
+   ],
+   "map implicit (backward Euler) f_Hz / zeta": [
+    70.2327,
+    0.024718
+   ],
+   "cad-expert f_discrete / zeta_discrete": [
+    70.2752,
+    0.002659
+   ]
+  },
+  {
+   "case": "gn_x0",
+   "dt_s": 0.0001,
+   "measured f_Hz / zeta": [
+    70.273,
+    -6.2142e-06
+   ],
+   "map explicit (symplectic) f_Hz / zeta": [
+    70.2711,
+    4.9848e-15
+   ],
+   "map implicit (backward Euler) f_Hz / zeta": [
+    70.2369,
+    0.022062
+   ],
+   "cad-expert f_discrete / zeta_discrete": [
+    70.2711,
+    2.4654e-15
+   ]
+  },
+  {
+   "case": "floor_1e9",
+   "dt_s": 1e-05,
+   "measured f_Hz / zeta": [
+    70.3073,
+    0.28675
+   ],
+   "map explicit (symplectic) f_Hz / zeta": [
+    70.3099,
+    0.28678
+   ],
+   "map implicit (backward Euler) f_Hz / zeta": [
+    70.2207,
+    0.28862
+   ],
+   "cad-expert f_discrete / zeta_discrete": [
+    70.3099,
+    0.28678
+   ]
+  },
+  {
+   "case": "floor_1",
+   "dt_s": 1e-05,
+   "measured f_Hz / zeta": [
+    70.2663,
+    0.0026535
+   ],
+   "map explicit (symplectic) f_Hz / zeta": [
+    70.2658,
+    0.002659
+   ],
+   "map implicit (backward Euler) f_Hz / zeta": [
+    70.2647,
+    0.0048664
+   ],
+   "cad-expert f_discrete / zeta_discrete": [
+    70.2658,
+    0.002659
+   ]
+  },
+  {
+   "case": "gn_x0",
+   "dt_s": 1e-05,
+   "measured f_Hz / zeta": [
+    70.2668,
+    2.392e-06
+   ],
+   "map explicit (symplectic) f_Hz / zeta": [
+    70.2654,
+    -8.3047e-15
+   ],
+   "map implicit (backward Euler) f_Hz / zeta": [
+    70.2651,
+    0.0022074
+   ],
+   "cad-expert f_discrete / zeta_discrete": [
+    70.2654,
+    -8.3047e-15
+   ]
+  }
+ ],
+ "L1": {
+  "top": {
+   "f_undamped_Hz": [
+    1.78451,
+    2.98418,
+    5.83248,
+    6.45899,
+    7.61475,
+    8.04213
+   ],
+   "mode_content": [
+    {
+     "sway y": 0.495,
+     "roll": 0.476,
+     "yaw": 0.029
+    },
+    {
+     "surge x": 0.618,
+     "pitch": 0.371
+    },
+    {
+     "yaw": 0.471,
+     "sway y": 0.4,
+     "roll": 0.129
+    },
+    {
+     "pitch": 0.478,
+     "surge x": 0.349,
+     "heave z": 0.173
+    },
+    {
+     "heave z": 0.815,
+     "pitch": 0.15,
+     "surge x": 0.033
+    },
+    {
+     "yaw": 0.499,
+     "roll": 0.394,
+     "sway y": 0.105
+    }
+   ],
+   "zeta_physical": [
+    0.007768,
+    0.01389,
+    0.0373,
+    0.03629,
+    0.03242,
+    0.04939
+   ],
+   "implicit_strain_energy_share r (bushing)": [
+    0.1119,
+    0.2503,
+    0.9911,
+    0.6628,
+    0.08926,
+    0.8946
+   ],
+   "implicit_damping_share (bushing c_t)": [
+    0.164,
+    0.3442,
+    0.9943,
+    0.7549,
+    0.1341,
+    0.9297
+   ],
+   "mass_orthogonality_max": 2.22e-15,
+   "per_dt": {
+    "5e-05": {
+     "zeta_num_mixed (map, C = 0)": [
+      3.136e-05,
+      0.0001173,
+      0.000908,
+      0.0006725,
+      0.0001068,
+      0.00113
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      3.136e-05,
+      0.0001173,
+      0.000908,
+      0.0006725,
+      0.0001068,
+      0.00113
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.0002803,
+       0.0004688,
+       0.0009162,
+       0.001015,
+       0.001196,
+       0.001263
+      ],
+      [
+       0.0002803,
+       0.0004688,
+       0.0009162,
+       0.001015,
+       0.001196,
+       0.001263
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      -8.17e-13,
+      -1.31e-12,
+      -3.04e-13,
+      3.85e-13,
+      -2.42e-13,
+      1.19e-13
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.004037,
+      0.008451,
+      0.02434,
+      0.01853,
+      0.003293,
+      0.02288
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       1.78452,
+       2.98426,
+       5.83228,
+       6.45939,
+       7.61424,
+       8.04156
+      ],
+      [
+       0.007799,
+       0.014,
+       0.03821,
+       0.03697,
+       0.03253,
+       0.05052
+      ]
+     ],
+     "spectral_radius": 0.999995627672
+    },
+    "0.0001": {
+     "zeta_num_mixed (map, C = 0)": [
+      6.272e-05,
+      0.0002347,
+      0.001816,
+      0.001345,
+      0.0002135,
+      0.00226
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      6.272e-05,
+      0.0002347,
+      0.001816,
+      0.001345,
+      0.0002135,
+      0.00226
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.0005606,
+       0.0009375,
+       0.001832,
+       0.002029,
+       0.002392,
+       0.002526
+      ],
+      [
+       0.0005606,
+       0.0009375,
+       0.001832,
+       0.002029,
+       0.002392,
+       0.002527
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      -5.57e-14,
+      -5.53e-13,
+      1.77e-13,
+      -1.54e-14,
+      1.83e-13,
+      6.79e-15
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.008074,
+      0.0169,
+      0.04869,
+      0.03706,
+      0.006585,
+      0.04577
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       1.78452,
+       2.98428,
+       5.83207,
+       6.45933,
+       7.61436,
+       8.04108
+      ],
+      [
+       0.00783,
+       0.01412,
+       0.03911,
+       0.03764,
+       0.03263,
+       0.05164
+      ]
+     ],
+     "spectral_radius": 0.999991220171
+    },
+    "0.0002": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.0001254,
+      0.0004694,
+      0.003632,
+      0.00269,
+      0.0004268,
+      0.004521
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.0001254,
+      0.0004694,
+      0.003632,
+      0.00269,
+      0.0004271,
+      0.004521
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.001121,
+       0.001875,
+       0.003665,
+       0.004058,
+       0.004784,
+       0.005053
+      ],
+      [
+       0.001121,
+       0.001875,
+       0.003665,
+       0.004058,
+       0.004784,
+       0.005053
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      -7.69e-15,
+      4.92e-14,
+      1.83e-15,
+      2.65e-14,
+      2.48e-14,
+      -6.08e-14
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.01615,
+      0.0338,
+      0.09737,
+      0.07412,
+      0.01316,
+      0.09153
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       1.78453,
+       2.98431,
+       5.83163,
+       6.45919,
+       7.61459,
+       8.04007
+      ],
+      [
+       0.007893,
+       0.01435,
+       0.04093,
+       0.03899,
+       0.03284,
+       0.0539
+      ]
+     ],
+     "spectral_radius": 0.999982299648
+    },
+    "0.0005": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.0003136,
+      0.001173,
+      0.009079,
+      0.006726,
+      0.001064,
+      0.0113
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.0003136,
+      0.001173,
+      0.00908,
+      0.006725,
+      0.001068,
+      0.0113
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.002803,
+       0.004687,
+       0.009161,
+       0.01014,
+       0.01196,
+       0.01263
+      ],
+      [
+       0.002803,
+       0.004688,
+       0.009162,
+       0.01015,
+       0.01196,
+       0.01263
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      -5.12e-14,
+      7.53e-14,
+      2.22e-14,
+      -1.03e-13,
+      2.47e-14,
+      1.33e-14
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.04037,
+      0.08451,
+      0.2434,
+      0.1853,
+      0.03282,
+      0.2288
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      true,
+      false,
+      false,
+      true,
+      false
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       1.78455,
+       2.98442,
+       5.83012,
+       6.45873,
+       7.6152,
+       8.03659
+      ],
+      [
+       0.008081,
+       0.01506,
+       0.04636,
+       0.04304,
+       0.03346,
+       0.06065
+      ]
+     ],
+     "spectral_radius": 0.999954693842
+    },
+    "0.001": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.0006272,
+      0.002347,
+      0.01815,
+      0.01346,
+      0.002108,
+      0.02259
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.0006272,
+      0.002347,
+      0.01816,
+      0.01345,
+      0.002135,
+      0.0226
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.005606,
+       0.009374,
+       0.01832,
+       0.02028,
+       0.02391,
+       0.02525
+      ],
+      [
+       0.005606,
+       0.009375,
+       0.01832,
+       0.02029,
+       0.02392,
+       0.02527
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      7.63e-14,
+      1.82e-14,
+      -2.06e-14,
+      -3.57e-14,
+      3.55e-14,
+      -5.97e-15
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.08074,
+      0.169,
+      0.4867,
+      0.371,
+      0.06503,
+      0.4575
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      false,
+      false,
+      false,
+      true,
+      false
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       1.7846,
+       2.98465,
+       5.82695,
+       6.45772,
+       7.6159,
+       8.02927
+      ],
+      [
+       0.008395,
+       0.01623,
+       0.0554,
+       0.0498,
+       0.03444,
+       0.07189
+      ]
+     ],
+     "spectral_radius": 0.999905869612
+    }
+   },
+   "dt_max_rule_per_mode_s (zeta_num <= 0.1 zeta_phys, mixed)": [
+    0.001239,
+    0.0005917,
+    0.0002054,
+    0.0002699,
+    0.001518,
+    0.0002185
+   ],
+   "dt_max_rule_per_mode_s (old: all implicit)": [
+    0.0001386,
+    0.0001481,
+    0.0002036,
+    0.0001789,
+    0.0001355,
+    0.0001955
+   ],
+   "stability_limit_dt_s (mixed map, damped)": 0.04128
+  },
+  "middle": {
+   "f_undamped_Hz": [
+    2.30856,
+    3.50854,
+    5.95698,
+    6.77066,
+    7.96318,
+    8.27994
+   ],
+   "mode_content": [
+    {
+     "sway y": 0.604,
+     "roll": 0.357,
+     "yaw": 0.039
+    },
+    {
+     "surge x": 0.748,
+     "pitch": 0.239
+    },
+    {
+     "yaw": 0.686,
+     "sway y": 0.254,
+     "roll": 0.06
+    },
+    {
+     "heave z": 0.46,
+     "pitch": 0.356,
+     "surge x": 0.183
+    },
+    {
+     "heave z": 0.522,
+     "pitch": 0.401,
+     "surge x": 0.068
+    },
+    {
+     "roll": 0.578,
+     "yaw": 0.272,
+     "sway y": 0.141
+    }
+   ],
+   "zeta_physical": [
+    0.01052,
+    0.0177,
+    0.03816,
+    0.03363,
+    0.03602,
+    0.04893
+   ],
+   "implicit_strain_energy_share r (bushing)": [
+    0.2047,
+    0.4188,
+    0.9953,
+    0.3824,
+    0.2049,
+    0.7939
+   ],
+   "implicit_damping_share (bushing c_t)": [
+    0.2866,
+    0.5312,
+    0.997,
+    0.4926,
+    0.2897,
+    0.8574
+   ],
+   "mass_orthogonality_max": 8.88e-16,
+   "per_dt": {
+    "5e-05": {
+     "zeta_num_mixed (map, C = 0)": [
+      7.424e-05,
+      0.0002308,
+      0.0009313,
+      0.0004067,
+      0.0002562,
+      0.001033
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      7.424e-05,
+      0.0002308,
+      0.0009313,
+      0.0004067,
+      0.0002562,
+      0.001033
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.0003626,
+       0.0005511,
+       0.0009357,
+       0.001064,
+       0.001251,
+       0.001301
+      ],
+      [
+       0.0003626,
+       0.0005511,
+       0.0009357,
+       0.001064,
+       0.001251,
+       0.001301
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      1.3e-14,
+      -3.03e-13,
+      -3.05e-13,
+      -1.57e-13,
+      -2.58e-13,
+      1.26e-13
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.007054,
+      0.01304,
+      0.02441,
+      0.01209,
+      0.007113,
+      0.0211
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       2.30859,
+       3.50871,
+       5.95677,
+       6.77151,
+       7.96222,
+       8.27917
+      ],
+      [
+       0.0106,
+       0.01793,
+       0.03909,
+       0.03404,
+       0.03628,
+       0.04996
+      ]
+     ],
+     "spectral_radius": 0.999992313508
+    },
+    "0.0001": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.0001485,
+      0.0004616,
+      0.001863,
+      0.0008134,
+      0.0005124,
+      0.002065
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.0001485,
+      0.0004616,
+      0.001863,
+      0.0008134,
+      0.0005125,
+      0.002065
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.0007253,
+       0.001102,
+       0.001871,
+       0.002127,
+       0.002502,
+       0.002601
+      ],
+      [
+       0.0007253,
+       0.001102,
+       0.001871,
+       0.002127,
+       0.002502,
+       0.002601
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      -1.25e-13,
+      1.53e-13,
+      1.15e-13,
+      -9.85e-14,
+      -3e-13,
+      -3.14e-13
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.01411,
+      0.02608,
+      0.04882,
+      0.02418,
+      0.01423,
+      0.04221
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       2.3086,
+       3.50873,
+       5.95654,
+       6.77161,
+       7.96223,
+       8.27872
+      ],
+      [
+       0.01067,
+       0.01816,
+       0.04002,
+       0.03445,
+       0.03653,
+       0.051
+      ]
+     ],
+     "spectral_radius": 0.999984519308
+    },
+    "0.0002": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.000297,
+      0.0009232,
+      0.003725,
+      0.001627,
+      0.001025,
+      0.004131
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.000297,
+      0.0009232,
+      0.003725,
+      0.001627,
+      0.001025,
+      0.00413
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.001451,
+       0.002204,
+       0.003743,
+       0.004254,
+       0.005003,
+       0.005202
+      ],
+      [
+       0.001451,
+       0.002204,
+       0.003743,
+       0.004254,
+       0.005003,
+       0.005202
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      2.07e-13,
+      -4.5e-13,
+      8.44e-14,
+      1.07e-13,
+      -1.7e-14,
+      1.99e-15
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.02822,
+      0.05216,
+      0.09763,
+      0.04837,
+      0.02844,
+      0.08441
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       2.30861,
+       3.50877,
+       5.95607,
+       6.77184,
+       7.96221,
+       8.27777
+      ],
+      [
+       0.01082,
+       0.01862,
+       0.04188,
+       0.03527,
+       0.03703,
+       0.05306
+      ]
+     ],
+     "spectral_radius": 0.999968607772
+    },
+    "0.0005": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.0007424,
+      0.002308,
+      0.009312,
+      0.004069,
+      0.002557,
+      0.01033
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.0007424,
+      0.002308,
+      0.009313,
+      0.004067,
+      0.002562,
+      0.01033
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.003626,
+       0.005511,
+       0.009356,
+       0.01063,
+       0.01251,
+       0.013
+      ],
+      [
+       0.003626,
+       0.005511,
+       0.009357,
+       0.01064,
+       0.01251,
+       0.01301
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      2.05e-14,
+      -2.53e-13,
+      -1.04e-16,
+      6.16e-14,
+      -2.45e-14,
+      -5.31e-14
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.07054,
+      0.1304,
+      0.2441,
+      0.121,
+      0.07099,
+      0.2111
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      false,
+      false,
+      false,
+      true,
+      false
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       2.30866,
+       3.50891,
+       5.95445,
+       6.77258,
+       7.96188,
+       8.27443
+      ],
+      [
+       0.01127,
+       0.02001,
+       0.04745,
+       0.03773,
+       0.03853,
+       0.05924
+      ]
+     ],
+     "spectral_radius": 0.999918287746
+    },
+    "0.001": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.001485,
+      0.004617,
+      0.01862,
+      0.008148,
+      0.005084,
+      0.02066
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.001485,
+      0.004616,
+      0.01863,
+      0.008134,
+      0.005125,
+      0.02065
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.007252,
+       0.01102,
+       0.01871,
+       0.02126,
+       0.025,
+       0.02599
+      ],
+      [
+       0.007253,
+       0.01102,
+       0.01871,
+       0.02127,
+       0.02502,
+       0.02601
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      6.57e-14,
+      -4.22e-14,
+      -2.44e-15,
+      5.89e-15,
+      1.61e-14,
+      -6.08e-15
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.1411,
+      0.2608,
+      0.488,
+      0.2423,
+      0.1411,
+      0.4222
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       2.30876,
+       3.50922,
+       5.95105,
+       6.77407,
+       7.96048,
+       8.26738
+      ],
+      [
+       0.01201,
+       0.02232,
+       0.05672,
+       0.04185,
+       0.04097,
+       0.06954
+      ]
+     ],
+     "spectral_radius": 0.99982580064
+    }
+   },
+   "dt_max_rule_per_mode_s (zeta_num <= 0.1 zeta_phys, mixed)": [
+    0.0007088,
+    0.0003834,
+    0.0002048,
+    0.0004135,
+    0.0007029,
+    0.0002369
+   ],
+   "dt_max_rule_per_mode_s (old: all implicit)": [
+    0.0001451,
+    0.0001606,
+    0.0002039,
+    0.0001581,
+    0.000144,
+    0.0001881
+   ],
+   "stability_limit_dt_s (mixed map, damped)": 0.04072
+  },
+  "bottom": {
+   "f_undamped_Hz": [
+    2.857,
+    3.92827,
+    5.97067,
+    6.67466,
+    7.06546,
+    8.06266
+   ],
+   "mode_content": [
+    {
+     "sway y": 0.653,
+     "roll": 0.318,
+     "yaw": 0.029
+    },
+    {
+     "surge x": 0.807,
+     "pitch": 0.178
+    },
+    {
+     "yaw": 0.939,
+     "sway y": 0.046
+    },
+    {
+     "heave z": 0.47,
+     "pitch": 0.383,
+     "surge x": 0.146
+    },
+    {
+     "roll": 0.696,
+     "sway y": 0.3
+    },
+    {
+     "heave z": 0.515,
+     "pitch": 0.438,
+     "surge x": 0.046
+    }
+   ],
+   "zeta_physical": [
+    0.0136,
+    0.02117,
+    0.03813,
+    0.03183,
+    0.04051,
+    0.03518
+   ],
+   "implicit_strain_energy_share r (bushing)": [
+    0.294,
+    0.5669,
+    0.9905,
+    0.2968,
+    0.7151,
+    0.1366
+   ],
+   "implicit_damping_share (bushing c_t)": [
+    0.3945,
+    0.6731,
+    0.9939,
+    0.3983,
+    0.7972,
+    0.2004
+   ],
+   "mass_orthogonality_max": 1.55e-15,
+   "per_dt": {
+    "5e-05": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.000132,
+      0.0003498,
+      0.000929,
+      0.0003112,
+      0.0007936,
+      0.000173
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.000132,
+      0.0003498,
+      0.000929,
+      0.0003112,
+      0.0007936,
+      0.000173
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.0004488,
+       0.0006171,
+       0.0009379,
+       0.001048,
+       0.00111,
+       0.001266
+      ],
+      [
+       0.0004488,
+       0.0006171,
+       0.0009379,
+       0.001048,
+       0.00111,
+       0.001266
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      9.05e-14,
+      -2.37e-13,
+      -3.98e-13,
+      -5.96e-15,
+      6.19e-13,
+      1.67e-13
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.009707,
+      0.01652,
+      0.02436,
+      0.009776,
+      0.01959,
+      0.004919
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       2.85707,
+       3.92852,
+       5.97048,
+       6.67485,
+       7.06506,
+       8.06213
+      ],
+      [
+       0.01373,
+       0.02152,
+       0.03906,
+       0.03215,
+       0.0413,
+       0.03535
+      ]
+     ],
+     "spectral_radius": 0.99998767904
+    },
+    "0.0001": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.0002639,
+      0.0006996,
+      0.001858,
+      0.0006225,
+      0.001587,
+      0.000346
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.0002639,
+      0.0006996,
+      0.001858,
+      0.0006224,
+      0.001587,
+      0.000346
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.0008976,
+       0.001234,
+       0.001876,
+       0.002097,
+       0.00222,
+       0.002533
+      ],
+      [
+       0.0008976,
+       0.001234,
+       0.001876,
+       0.002097,
+       0.00222,
+       0.002533
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      4.8e-13,
+      -1.05e-15,
+      1.98e-13,
+      -2e-13,
+      -1.34e-13,
+      4.63e-13
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.01941,
+      0.03305,
+      0.04873,
+      0.01955,
+      0.03918,
+      0.009837
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       2.85708,
+       3.92853,
+       5.97026,
+       6.67492,
+       7.06483,
+       8.06225
+      ],
+      [
+       0.01386,
+       0.02187,
+       0.03998,
+       0.03246,
+       0.04209,
+       0.03552
+      ]
+     ],
+     "spectral_radius": 0.999975121161
+    },
+    "0.0002": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.0005278,
+      0.001399,
+      0.003716,
+      0.001245,
+      0.003175,
+      0.000692
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.0005278,
+      0.001399,
+      0.003716,
+      0.001245,
+      0.003175,
+      0.0006921
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.001795,
+       0.002468,
+       0.003751,
+       0.004194,
+       0.004439,
+       0.005066
+      ],
+      [
+       0.001795,
+       0.002468,
+       0.003751,
+       0.004194,
+       0.004439,
+       0.005066
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      -2.36e-13,
+      -2.8e-14,
+      -9.47e-14,
+      1.48e-14,
+      -1.47e-13,
+      -2.79e-13
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.03883,
+      0.0661,
+      0.09745,
+      0.03911,
+      0.07837,
+      0.01967
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       2.85711,
+       3.92857,
+       5.96979,
+       6.67504,
+       7.06434,
+       8.06248
+      ],
+      [
+       0.01412,
+       0.02257,
+       0.04184,
+       0.03308,
+       0.04368,
+       0.03587
+      ]
+     ],
+     "spectral_radius": 0.999949294592
+    },
+    "0.0005": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.00132,
+      0.003498,
+      0.009289,
+      0.003113,
+      0.007935,
+      0.001729
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.00132,
+      0.003498,
+      0.00929,
+      0.003112,
+      0.007936,
+      0.00173
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.004488,
+       0.00617,
+       0.009378,
+       0.01048,
+       0.0111,
+       0.01266
+      ],
+      [
+       0.004488,
+       0.006171,
+       0.009379,
+       0.01048,
+       0.0111,
+       0.01266
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      2.05e-14,
+      1.51e-13,
+      3.78e-15,
+      -3.23e-14,
+      -3.5e-14,
+      1.83e-14
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.09707,
+      0.1652,
+      0.2436,
+      0.09778,
+      0.1959,
+      0.04915
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      true,
+      false,
+      false,
+      true,
+      false,
+      true
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       2.8572,
+       3.92869,
+       5.96819,
+       6.67538,
+       7.0626,
+       8.06305
+      ],
+      [
+       0.01492,
+       0.02467,
+       0.0474,
+       0.03496,
+       0.04842,
+       0.0369
+      ]
+     ],
+     "spectral_radius": 0.999866127284
+    },
+    "0.001": {
+     "zeta_num_mixed (map, C = 0)": [
+      0.002639,
+      0.006998,
+      0.01857,
+      0.006229,
+      0.01586,
+      0.003449
+     ],
+     "zeta_num_estimate r omega dt / 2": [
+      0.002639,
+      0.006996,
+      0.01858,
+      0.006224,
+      0.01587,
+      0.00346
+     ],
+     "zeta_num_all_implicit (map) / omega dt / 2": [
+      [
+       0.008975,
+       0.01234,
+       0.01875,
+       0.02096,
+       0.02218,
+       0.02531
+      ],
+      [
+       0.008976,
+       0.01234,
+       0.01876,
+       0.02097,
+       0.0222,
+       0.02533
+      ]
+     ],
+     "zeta_num_all_explicit (map)": [
+      -1.04e-13,
+      -1.61e-14,
+      8.58e-15,
+      -2.34e-14,
+      -1.86e-14,
+      -1.82e-14
+     ],
+     "zeta_num_mixed / zeta_physical": [
+      0.1941,
+      0.3306,
+      0.4871,
+      0.1957,
+      0.3917,
+      0.09804
+     ],
+     "rule_ok (zeta_num <= 0.1 zeta_phys) per mode": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+     ],
+     "damped map f_Hz / zeta": [
+      [
+       2.85738,
+       3.92897,
+       5.96484,
+       6.67588,
+       7.05882,
+       8.06361
+      ],
+      [
+       0.01624,
+       0.02817,
+       0.05665,
+       0.03809,
+       0.05632,
+       0.03859
+      ]
+     ],
+     "spectral_radius": 0.999708547971
+    }
+   },
+   "dt_max_rule_per_mode_s (zeta_num <= 0.1 zeta_phys, mixed)": [
+    0.0005151,
+    0.0003026,
+    0.0002052,
+    0.0005114,
+    0.0002552,
+    0.001016
+   ],
+   "dt_max_rule_per_mode_s (old: all implicit)": [
+    0.0001515,
+    0.0001715,
+    0.0002033,
+    0.0001518,
+    0.0001825,
+    0.0001389
+   ],
+   "stability_limit_dt_s (mixed map, damped)": 0.04004
+  }
+ },
+ "L2b_NSC_note": "in contact the NSC constraint pins each rod vertically, so the 6-DoF body problem is the L1 one with the explicit Python axial force law in place of the SMC spring (same k, same bushing): the shares r and the dt bounds of L1 apply (L2b-NSC modes differ from L1 by < 0.3 %)",
+ "explicit_local_modes": {
+  "pad sphere on floor, free rod (SMC test configuration; not present in L1, where the rod is held by the motor)": {
+   "k_N_m": 21247900.0,
+   "m_kg": 106.784,
+   "c_N_s_m": 27303.3,
+   "f_Hz": 70.995,
+   "zeta": 0.2866,
+   "dt_stability_limit_s": 0.003379,
+   "omega_dt at 1e-4 / 2e-4": [
+    0.04461,
+    0.08921
+   ],
+   "dt_for_50_points_per_period_s": 0.0002817,
+   "note": "cad-expert single-sphere test; in L1 the contact acts on the body (modes <= 8.04 Hz)"
+  },
+  "L2b-NSC rod in the air on the explicit axial force law (locked damping)": {
+   "k_N_m": 21247900.0,
+   "m_kg": 106.784,
+   "c_N_s_m": 28246.2,
+   "f_Hz": 70.995,
+   "zeta": 0.2965,
+   "dt_stability_limit_s": 0.003347,
+   "omega_dt at 1e-4 / 2e-4": [
+    0.04461,
+    0.08921
+   ],
+   "dt_for_50_points_per_period_s": 0.0002817,
+   "note": "rod separated from the floor (contact open); dynamics_model.md 4.3 rod rule"
+  },
+  "L2b-NSC rod in the air on the explicit axial force law (moving damping)": {
+   "k_N_m": 21247900.0,
+   "m_kg": 106.784,
+   "c_N_s_m": 94154.1,
+   "f_Hz": 70.995,
+   "zeta": 0.9883,
+   "dt_stability_limit_s": 0.001873,
+   "omega_dt at 1e-4 / 2e-4": [
+    0.04461,
+    0.08921
+   ],
+   "dt_for_50_points_per_period_s": 0.0002817,
+   "note": "valve open (zeta 0.10 heave basis -> about 1 on the rod)"
+  },
+  "L2 rod between oil spring and SMC concrete contact (both explicit)": {
+   "k_N_m": 346403000.0,
+   "m_kg": 106.784,
+   "c_N_s_m": 115397.0,
+   "f_Hz": 286.65,
+   "zeta": 0.3,
+   "dt_stability_limit_s": 0.0008262,
+   "omega_dt at 1e-4 / 2e-4": [
+    0.1801,
+    0.3602
+   ],
+   "dt_for_50_points_per_period_s": 6.977e-05,
+   "note": "L2 rod local mode, total zeta 0.30 (dynamics_model.md 3.4)"
+  },
+  "crawler heave on layout D (kn_total x1, all roller spheres, body mass)": {
+   "k_N_m": 100000000.0,
+   "m_kg": 38982.8,
+   "c_N_s_m": 197441.0,
+   "f_Hz": 8.0609,
+   "zeta": 0.05,
+   "dt_stability_limit_s": 0.03756,
+   "omega_dt at 1e-4 / 2e-4": [
+    0.005065,
+    0.01013
+   ],
+   "dt_for_50_points_per_period_s": 0.002481,
+   "note": "explicit SMC crawler spheres act on the superstructure body"
+  },
+  "crawler heave on layout D (kn_total x3, all roller spheres, body mass)": {
+   "k_N_m": 300000000.0,
+   "m_kg": 38982.8,
+   "c_N_s_m": 341977.0,
+   "f_Hz": 13.962,
+   "zeta": 0.05,
+   "dt_stability_limit_s": 0.02169,
+   "omega_dt at 1e-4 / 2e-4": [
+    0.008773,
+    0.01755
+   ],
+   "dt_for_50_points_per_period_s": 0.001432,
+   "note": "explicit SMC crawler spheres act on the superstructure body"
+  }
+ }
+}

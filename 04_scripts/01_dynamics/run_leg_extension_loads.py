@@ -6,7 +6,9 @@ Model (same family as reference.json ``lift_V4_compliant_crawler``, dyn_model.st
   * rigid level floor at ground.crawler_bottom_z_m,
   * 4 unilateral pad springs, k = contact.rigid_floor.L1.kn_per_pad_N_m (oil column + rod + frame +
     concrete in series, L1 lumped), placed at the pad bottom centres,
-  * 2 x 9 unilateral crawler sphere springs (contact.crawler.*),
+  * crawler layout D (dyn_model.crawler_points / crawler_gaps, YAML contact.crawler.*): 2 x 6 roller
+    stations on the floor + 2 x 6 raised end shoes as unilateral springs with an initial gap; kn_total x3
+    sensitivity block (contact.crawler.kn_total_sensitivity_range_N_m, dashpot x sqrt(3), same heave zeta),
   * all legs e(t) = min(v t, stroke), v = actuator.max_speed_m_s, t = 0 at motor start,
   * quasi-static (rate effects neglected; checked by a damped 3-DoF time integration through the
     transition, section "quasi_static_check").
@@ -39,6 +41,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import dyn_model as dm  # noqa: E402
+from run_reference import V4_LAYOUT_D, V4_LAYOUT_D_K3  # noqa: E402  (reference.json layout keys)
 
 OUT_DIR = dm.PROJECT_ROOT / "06_analysis" / "00_dynamics"
 OUT_JSON = OUT_DIR / "leg_extension_loads.json"
@@ -83,7 +86,7 @@ def r(x, n=6):
 class LiftModel:
     """Quasi-static unilateral spring statics (pads + crawler spheres), all inputs from the YAML."""
 
-    def __init__(self, p: dict, k_pad: np.ndarray | None = None):
+    def __init__(self, p: dict, k_pad: np.ndarray | None = None, kn_scale: float = 1.0):
         self.p = p
         self.geo = geo = dm.geometry_from_params(p)
         self.g = geo.g
@@ -96,8 +99,9 @@ class LiftModel:
         self.c_pad = np.array([float(L1["cn_per_pad_N_s_m"][n]) for n in dm.LEG_NAMES])
         self.zeta_leg = float(L1["derivation"]["damping_ratio"])            # leg axial zeta behind cn (heave basis)
         self.zeta_crawler = float(p["contact"]["crawler"]["damping_ratio_heave"])
-        self.cr_xy, self.cr_k, self.cr_c = dm.crawler_points(p)   # YAML contact.crawler
-        self.cr_c = np.full(len(self.cr_xy), float(p["contact"]["crawler"]["damping_total_N_s_m"]) / len(self.cr_xy))
+        self.kn_scale = float(kn_scale)
+        self.cr_xy, self.cr_k, self.cr_c = dm.crawler_points(p, kn_scale)   # YAML contact.crawler, layout D
+        self.cr_gap = dm.crawler_gaps(p)                                      # initial gap per sphere [m]
         self.body = dm.body_from_params(p, LEVEL)                 # superstructure only
         self.bw = dm.body_with_rods(p, geo, LEVEL, np.zeros(4))   # + 4 moving parts (rod x,y fixed)
         self.W_super = self.body.mass * self.g
@@ -115,7 +119,7 @@ class LiftModel:
 
     def solve(self, e: np.ndarray) -> dict:
         e = np.broadcast_to(np.asarray(e, float), (4,))
-        delta = np.concatenate([e - self.touch, np.zeros(len(self.cr_xy))])
+        delta = np.concatenate([e - self.touch, -self.cr_gap])
         F, q, act = dm.static_unilateral(self.xy_all, self.k_all, delta, self.W_tot, self.cg)
         gap_all = -(delta - dm.support_matrix(self.xy_all) @ q)    # + = open gap
         F_pad = F[:4]
@@ -124,7 +128,7 @@ class LiftModel:
             "F_cr": F[4:], "F_cr_tot": float(F[4:].sum()),
             "pad_contact": act[:4].copy(), "crawler_contact": bool(act[4:].any()),
             "gap_all": gap_all, "active_all": act.copy(), "F_all": F,
-            "crawler_clearance": float((self.A_cr @ q).min()),
+            "crawler_clearance": float((self.A_cr @ q + self.cr_gap).min()),
         }
 
 
@@ -171,7 +175,7 @@ def energy_min_check(model: LiftModel, e: np.ndarray) -> np.ndarray:
     """Independent path: minimise the total potential (gravity + unilateral springs) with BFGS."""
     from scipy.optimize import minimize
 
-    delta = np.concatenate([np.broadcast_to(e, (4,)) - model.touch, np.zeros(len(model.cr_xy))])
+    delta = np.concatenate([np.broadcast_to(e, (4,)) - model.touch, -model.cr_gap])
     A = dm.support_matrix(model.xy_all)
     w = np.array([model.W_tot, model.W_tot * model.cg[1], -model.W_tot * model.cg[0]])
     scale = np.array([1e-3, 1e-3, 1e-3])  # mm / mrad variables
@@ -196,7 +200,7 @@ def dynamic_check(model: LiftModel, t0: float, t1: float, schedule):
 
     M = m a a^T + blockdiag(0, I_xy) with a = [1, cg_y, -cg_x] (CoM vertical velocity), I_xy = roll/pitch block of
     the inertia about the CoM (horizontal CoM motion from rotation neglected). Unilateral spring-dampers:
-    F = max(0, k c + c_d c_dot) for c > 0 (YAML cn_per_pad, crawler damping_total / n). Gravity on the
+    F = max(0, k c + c_d c_dot) for c > 0 (YAML cn_per_pad, crawler damping_total / n_roller). Gravity on the
     combined CoM. Integrator DOP853 (non-stiff: highest mode ~10 Hz), max_step 1 ms (contact switching).
     """
     from scipy.integrate import solve_ivp
@@ -214,7 +218,7 @@ def dynamic_check(model: LiftModel, t0: float, t1: float, schedule):
     def forces(t, q, qd):
         e = schedule(t)
         ed = np.full(4, v if model.v * t < model.stroke else 0.0)
-        delta = np.concatenate([e - model.touch, np.zeros(len(model.cr_xy))])
+        delta = np.concatenate([e - model.touch, -model.cr_gap])
         deltad = np.concatenate([ed, np.zeros(len(model.cr_xy))])
         c = delta - A @ q
         cdot = deltad - A @ qd
@@ -519,7 +523,7 @@ def render_gif(model, series, ev, rigid_ev, args, ref_lines, dyn_arrays=None):
             lines.append(f"  {n}: {p_bar[i]:6.1f}")
         lines += ["", f"로드·패드 무게 {model.W_rod[0] * kN:.3f} kN/다리",
                   "공중 다리: 실린더 힘 = -로드 무게", "(로드측이 매단 무게를 받음)",
-                  "", "가정: 다리 축 강성 kn(L1),", "크롤러 2×9 구 스프링, 준정적,",
+                  "", "가정: 다리 축 강성 kn(L1),", "크롤러 D안(롤러 2×6 + 끝 슈 틈), 준정적,",
                   "실 마찰·관성 무시"]
         txt_box.set_text("\n".join(lines))
         buf = io.BytesIO()
@@ -587,7 +591,7 @@ def main():
         return np.minimum(v * t, e_op)
 
     ref = json.loads(REF_JSON.read_text(encoding="utf-8"))
-    v4 = ref["lift_V4_compliant_crawler"]["layouts"]["default 2x9 (YAML contact.crawler.sphere_layout)"]
+    v4 = ref["lift_V4_compliant_crawler"]["layouts"][V4_LAYOUT_D]
     t_v4_end = float((e_op / v).max())
     ev_v4 = events(model, sched_v4, t_v4_end)
     s_v4 = model.solve(e_op)
@@ -692,6 +696,55 @@ def main():
         }
     model.c_pad = c_yaml
 
+    # ---------------- crawler kn_total x3 sensitivity (user decision 2026-10-20: kn_total kept, x3 as sensitivity;
+    # crawler dashpot x sqrt(3) so the crawler heave zeta stays; pads unchanged)
+    def dyn_summary(dz, mdl):
+        pl = dz["per_leg"]
+        fmin_after = [pl[n]["cyl_force_min_after_first_reaching_F_min_N"] for n in dm.LEG_NAMES]
+        peak = [pl[n]["peak_pad_force_N"] for n in dm.LEG_NAMES]
+        return {"first_touch_dyn_s (FL, FR, RL, RR)": [pl[n]["first_touch_dyn_s"] for n in dm.LEG_NAMES],
+                "peak_pad_force_N (FL, FR, RL, RR)": r(peak, 6),
+                "peak_at_s (FL, FR, RL, RR)": [pl[n]["peak_at_s"] for n in dm.LEG_NAMES],
+                "max_peak_pad_force_N": r(max(peak), 6),
+                "max_peak_cylinder_force_N": r(max(peak[i] - mdl.W_rod[i] for i in range(4)), 6),
+                "cyl_force_min_after_first_reaching_F_min_N (FL, FR, RL, RR)": r(fmin_after, 6),
+                "F_min_margin_N": r(min(fmin_after) - mdl.F_min_cyl, 4),
+                "contact_lost_samples_after_touch": sum(pl[n]["contact_lost_samples_after_touch"] for n in dm.LEG_NAMES),
+                "max_step_convergence_N": dz["solver"]["max_abs_force_diff_vs_max_step_5e-4_N"]}
+
+    s3 = dm.crawler_kn_scales(p)[-1]
+    m3 = LiftModel(p, kn_scale=s3)
+    ev3_v4 = events(m3, sched_v4, t_v4_end)
+    ev3 = events(m3, sched_full, 17.0)
+    st3 = [m3.solve(sched_full(t)) for t in tt]
+    F_pad3 = np.array([s["F_pad"] for s in st3]); F_cyl3 = np.array([s["F_cyl"] for s in st3])
+    d3 = dynamic_check(m3, 14.5, 20.0, sched_full)
+    d3.pop("_arrays")
+    v4_k3 = ref["lift_V4_compliant_crawler"]["layouts"][V4_LAYOUT_D_K3]
+    touch3 = [ev3_v4[f"touch_{n}"] for n in dm.LEG_NAMES]
+    s3_0 = m3.solve(np.zeros(4))
+    crawler_k3 = {
+        "description": ("crawler kn_total x %g (contact.crawler.kn_total_sensitivity_range_N_m), crawler dashpot x sqrt(%g) "
+                        "(same heave zeta), layout D, pads and everything else unchanged" % (s3, s3)),
+        "kn_total_N_m": r(float(p["contact"]["crawler"]["kn_total_N_m"]) * s3, 9),
+        "kn_per_sphere_N_m": r(float(m3.cr_k[0]), 9), "c_per_sphere_N_s_m": r(float(m3.cr_c[0]), 7),
+        "settled_q_about_origin (uz_mm, roll_deg, pitch_deg)": r([s3_0["q"][0] * 1e3, math.degrees(s3_0["q"][1]),
+                                                                   math.degrees(s3_0["q"][2])], 5),
+        "V4_reproduction: touch_s (FL, FR, RL, RR) this / reference.json": [r(touch3, 6),
+                                                                           v4_k3["quasi_static_events_s"]["touch_s (FL, FR, RL, RR)"]],
+        "V4_touch_max_abs_diff_s": r(float(np.max(np.abs(np.array(touch3) - v4_k3["quasi_static_events_s"]["touch_s (FL, FR, RL, RR)"]))), 3),
+        "V4_touch_minus_nominal_s (FL, FR, RL, RR)": r([touch3[i] - our_touch[i] for i in range(4)], 4),
+        "events_full_stroke_s": r(ev3, 7),
+        "quasi_static_max_pad_reaction_N": r(float(F_pad3.max()), 7),
+        "quasi_static_max_over_time_per_leg_N": r(F_pad3.max(0), 7),
+        "quasi_static_F_min_check": {n: {"after_touch_below_F_min_until_s": r(ev3[f"F_min_reached_{n}"], 6),
+                                         "duration_after_touch_s": r(ev3[f"F_min_reached_{n}"] - ev3[f"touch_{n}"], 4)}
+                                     for n in dm.LEG_NAMES},
+        "max_cylinder_force_vs_218kN": r(float(F_cyl3.max() / m3.F_ext_max), 4),
+        "dynamic (damped 3-DoF, 14.5-20 s)": dyn_summary(d3, m3),
+        "dynamic_nominal_kn_for_comparison": dyn_summary(dyn, model),
+    }
+
     # ---------------- stiffness sensitivity: oil column stiffness varying with the extension
     act_p = p["actuator"]
     beta, dead = float(act_p["oil_bulk_modulus_eff_Pa"]), float(act_p["oil_dead_length_m"])
@@ -775,7 +828,7 @@ def main():
             "model": __doc__.split("Model (")[1].split("Outputs")[0].strip(),
             "inputs_from_yaml": {
                 "kn_per_pad_N_m (contact.rigid_floor.L1)": r(model.k_pad, 9),
-                "crawler kn_total_N_m / n spheres": [p["contact"]["crawler"]["kn_total_N_m"], len(model.cr_xy)],
+                "crawler kn_total_N_m / n spheres / n floor-contact (roller) spheres": [p["contact"]["crawler"]["kn_total_N_m"], len(model.cr_xy), int((model.cr_gap <= 0).sum())],
                 "superstructure_mass_kg": r(model.body.mass, 9), "moving_part_mass_kg": r(model.geo.rod_mass, 9),
                 "combined_cg_xy_m": r(model.cg, 7), "touch_extension_m": r(model.touch, 7),
                 "head_area_m2": r(model.A_head, 7), "max_force_extend_N": model.F_ext_max,
@@ -791,6 +844,7 @@ def main():
             "quasi_static_check_leg_zeta_sensitivity": zeta_sens,
         },
         "stiffness_sensitivity_k_oil_of_extension": sens,
+        "crawler_kn_total_x3_sensitivity": crawler_k3,
         "rigid_kinematic_gif_comparison": cmp_rigid,
         "key_values": key,
         "series": {
@@ -819,7 +873,7 @@ def main():
 
     summary = {k: ({kk: vv for kk, vv in val.items() if kk != "series_2ms"} if isinstance(val, dict) else val)
                for k, val in out["validation"].items()}
-    print(json.dumps({"validation": summary, "sensitivity": sens, "rigid": cmp_rigid, "key": key,
+    print(json.dumps({"validation": summary, "sensitivity": sens, "crawler_x3": crawler_k3, "rigid": cmp_rigid, "key": key,
                       "gif": {k: v for k, v in out.get("gif", {}).items() if k != "frame_list"}},
                      ensure_ascii=False, indent=1))
 

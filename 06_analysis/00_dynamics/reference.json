@@ -48,7 +48,7 @@
    "F_min_fraction_of_mean_leg_load": 0.1,
    "F_min_basis": "cylinder force (pressure x bore area) = superstructure weight share; contact force = cylinder force + rod weight"
   },
-  "runtime_s": 6.94
+  "runtime_s": 28.69
  },
  "operating_point": {
   "touch_extension_m": [
@@ -9024,67 +9024,147 @@
    "mass_for_damping_kg (superstructure + 4 rods)": 38982.8,
    "gn_input_rule": "gn = (damping_total / n_spheres) / m_eff, m_eff = superstructure body mass (crawler spheres are on that body; rods are separate bodies)",
    "superstructure_body_mass_kg": 38555.7,
-   "tangential": "SMC kt = gt = mu = 0 (no crawler tangential force in L1; horizontal drift before pad touch not judged; no lift on a sloped floor with this model)"
+   "tangential": "SMC kt = gt = mu = 0 (no crawler tangential force in L1; horizontal drift before pad touch not judged; no lift on a sloped floor with this model)",
+   "layout_D": {
+    "kn_per_sphere_N_m": 8333330.0,
+    "c_per_sphere_N_s_m": 16453.4,
+    "kn_total_sensitivity_scale": 3.0,
+    "n_spheres (rollers gap 0, end shoes gapped)": [
+     12,
+     12
+    ]
+   }
   },
   "layouts": {
-   "default 2x9 (YAML contact.crawler.sphere_layout)": {
-    "n_spheres": 18,
-    "track_centre_y_m": 1.066,
+   "D rollers + gapped end shoes (YAML contact.crawler.sphere_layout)": {
+    "n_spheres": 24,
+    "n_floor_contact_spheres (gap 0)": 12,
+    "track_centre_y_m": 1.045,
+    "kn_per_sphere_N_m": 8333330.0,
+    "c_per_sphere_N_s_m": 16453.4,
     "settled_on_crawler (legs at 0)": {
      "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
-      -3.8205,
-      0.0003211,
-      0.068741
+      -3.1907,
+      0.0002864,
+      0.16947
      ],
      "crawler_sphere_forces_N": [
-      8927.6,
-      11997.0,
-      15066.0,
-      18136.0,
-      21205.0,
-      24275.0,
-      27344.0,
-      30413.0,
-      33483.0,
-      8994.0,
-      12063.0,
-      15133.0,
-      18202.0,
-      21272.0,
-      24341.0,
-      27410.0,
-      30480.0,
-      33549.0
+      4757.1,
+      13556.0,
+      22356.0,
+      31155.0,
+      39955.0,
+      48754.0,
+      4844.2,
+      13644.0,
+      22443.0,
+      31242.0,
+      40042.0,
+      48841.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      30307.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      30394.0,
+      -0.0,
+      -0.0
      ],
+     "end_shoe_spheres_in_contact": 2,
      "pad_gap_at_e0_mm": [
-      344.53,
-      344.52,
-      340.15,
-      340.14
+      341.13,
+      341.12,
+      345.28,
+      345.26
      ]
     },
     "pad_touch_time_kinematic_from_settled_pose_s": [
-     15.2,
-     15.199,
-     15.007,
-     15.006
+     15.05,
+     15.049,
+     15.233,
+     15.232
     ],
     "quasi_static_events_s": {
-     "first_touch_leg": "RR",
-     "first_touch_s": 15.006,
+     "first_touch_leg": "FR",
+     "first_touch_s": 15.049,
      "touch_s (FL, FR, RL, RR)": [
-      15.145,
-      15.145,
-      15.007,
-      15.006
+      15.051,
+      15.049,
+      15.148,
+      15.148
      ],
-     "crawler_fully_off_s": 15.691,
+     "crawler_fully_off_s": 15.584,
      "leg_stop_s (FL, FR, RL, RR)": [
       17.696,
       17.696,
       17.246,
       17.246
      ]
+    },
+    "dynamic_events_s": {
+     "first_touch_leg": "FR",
+     "first_touch_s": 15.049,
+     "touch_s (FL, FR, RL, RR)": [
+      15.05,
+      15.049,
+      15.177,
+      15.177
+     ],
+     "crawler_fully_off_s": 15.607,
+     "leg_stop_s (FL, FR, RL, RR)": [
+      17.696,
+      17.696,
+      17.246,
+      17.246
+     ],
+     "minus_quasi_static_touch_s (FL, FR, RL, RR)": [
+      -0.00109,
+      0.000328,
+      0.029,
+      0.0289
+     ],
+     "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "crawler_contact_events_after_fully_off": 0,
+     "meta": {
+      "basis": "V4 judgement basis (user decision 2026-10-20): per-leg touch time within +-0.05 s of touch_s; quasi_static_events_s kept as a reference only",
+      "model": "Same model as run_leg_extension_loads.dynamic_check: M = m a a^T + blockdiag(0, I_xy), a = [1, cg_y, -cg_x], I_xy = roll/pitch block of the inertia about the CoM of superstructure (top) + 4 rods at e = 0 (rod x,y fixed); unilateral spring-dampers F = max(0, k c + c_d c_dot) for c > 0 (pads and crawler spheres), gravity on the CoM. Legs e(t) = min(v t, e_op) (V4 schedule, t = 0 = motor start). Start at t_from in the static pose on the crawler with zero velocity (exact: nothing moves the body before the first pad touch). Events: pad compression c_i = 0 (touch / loss) and max over crawler spheres c_j = 0 (crawler fully off / re-contact), located by solve_ivp.",
+      "touch_definition": "first time the pad compression c_i = e_i - touch_extension_i - (A q)_i turns positive (spring-damper force > 0 from that instant)",
+      "damping (ASSUMPTION)": {
+       "leg_axial_zeta (heave basis, YAML contact.rigid_floor.L1.derivation.damping_ratio)": 0.03,
+       "pad_dashpot_N_s_m (FL, FR, RL, RR) (YAML cn_per_pad_N_s_m)": [
+        27022.9,
+        27022.9,
+        27303.3,
+        27303.3
+       ],
+       "crawler_heave_zeta (dyn_model.CRAWLER_DEFAULTS)": 0.05,
+       "crawler_dashpot_per_sphere_N_s_m": 16453.4
+      },
+      "integrator": {
+       "method": "DOP853",
+       "rtol": 1e-09,
+       "atol": 1e-12,
+       "max_step_s": 0.001,
+       "events": "solve_ivp root finding on the pad and crawler compressions",
+       "nfev": 25013
+      },
+      "window_s": [
+       14.748,
+       16.584
+      ],
+      "initial_condition": "static pose on the crawler (legs in the air), body velocity 0",
+      "max_abs_touch_diff_vs_max_step_5e-4_s": 3.85e-12,
+      "max_abs_touch_diff_vs_Radau_s": 4.46e-12
+     }
     },
     "end_state (after the last stop)": {
      "pad_contact_force_N": [
@@ -9097,55 +9177,140 @@
       -0.002053,
       0.02664
      ],
-     "crawler_min_clearance_mm": 44.487,
+     "crawler_min_clearance_mm": 44.926,
      "max_abs_diff_vs_V1_contact_force_N": 0.488,
      "crawler_active_at_end": false
     }
    },
-   "sensitivity 2x2 box corners": {
-    "n_spheres": 4,
-    "track_centre_y_m": 1.366,
+   "D kn_total x3 (sensitivity, YAML contact.crawler.kn_total_sensitivity_range_N_m)": {
+    "n_spheres": 24,
+    "n_floor_contact_spheres (gap 0)": 12,
+    "track_centre_y_m": 1.045,
+    "kn_per_sphere_N_m": 25000000.0,
+    "c_per_sphere_N_s_m": 28498.1,
     "settled_on_crawler (legs at 0)": {
      "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
-      -3.8219,
-      0.00019555,
-      0.028642
+      -1.2202,
+      0.00011138,
+      0.081583
      ],
      "crawler_sphere_forces_N": [
-      72436.0,
-      118480.0,
-      72669.0,
-      118710.0
+      -0.0,
+      11694.0,
+      24402.0,
+      37110.0,
+      49819.0,
+      62527.0,
+      -0.0,
+      11795.0,
+      24504.0,
+      37212.0,
+      49920.0,
+      62628.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      5288.9,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      5390.4,
+      -0.0,
+      -0.0
      ],
+     "end_shoe_spheres_in_contact": 2,
      "pad_gap_at_e0_mm": [
-      346.14,
-      346.13,
-      338.36,
-      338.35
+      346.62,
+      346.61,
+      343.32,
+      343.32
      ]
     },
     "pad_touch_time_kinematic_from_settled_pose_s": [
-     15.271,
-     15.27,
-     14.928,
-     14.927
+     15.292,
+     15.292,
+     15.147,
+     15.146
     ],
     "quasi_static_events_s": {
      "first_touch_leg": "RR",
-     "first_touch_s": 14.927,
+     "first_touch_s": 15.146,
      "touch_s (FL, FR, RL, RR)": [
-      15.228,
-      15.231,
-      14.928,
-      14.927
+      15.243,
+      15.243,
+      15.147,
+      15.146
      ],
-     "crawler_fully_off_s": 15.692,
+     "crawler_fully_off_s": 15.584,
      "leg_stop_s (FL, FR, RL, RR)": [
       17.696,
       17.696,
       17.246,
       17.246
      ]
+    },
+    "dynamic_events_s": {
+     "first_touch_leg": "RR",
+     "first_touch_s": 15.146,
+     "touch_s (FL, FR, RL, RR)": [
+      15.253,
+      15.253,
+      15.147,
+      15.146
+     ],
+     "crawler_fully_off_s": 15.589,
+     "leg_stop_s (FL, FR, RL, RR)": [
+      17.696,
+      17.696,
+      17.246,
+      17.246
+     ],
+     "minus_quasi_static_touch_s (FL, FR, RL, RR)": [
+      0.00997,
+      0.0102,
+      -0.000461,
+      0.000333
+     ],
+     "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "crawler_contact_events_after_fully_off": 0,
+     "meta": {
+      "basis": "V4 judgement basis (user decision 2026-10-20): per-leg touch time within +-0.05 s of touch_s; quasi_static_events_s kept as a reference only",
+      "model": "Same model as run_leg_extension_loads.dynamic_check: M = m a a^T + blockdiag(0, I_xy), a = [1, cg_y, -cg_x], I_xy = roll/pitch block of the inertia about the CoM of superstructure (top) + 4 rods at e = 0 (rod x,y fixed); unilateral spring-dampers F = max(0, k c + c_d c_dot) for c > 0 (pads and crawler spheres), gravity on the CoM. Legs e(t) = min(v t, e_op) (V4 schedule, t = 0 = motor start). Start at t_from in the static pose on the crawler with zero velocity (exact: nothing moves the body before the first pad touch). Events: pad compression c_i = 0 (touch / loss) and max over crawler spheres c_j = 0 (crawler fully off / re-contact), located by solve_ivp.",
+      "touch_definition": "first time the pad compression c_i = e_i - touch_extension_i - (A q)_i turns positive (spring-damper force > 0 from that instant)",
+      "damping (ASSUMPTION)": {
+       "leg_axial_zeta (heave basis, YAML contact.rigid_floor.L1.derivation.damping_ratio)": 0.03,
+       "pad_dashpot_N_s_m (FL, FR, RL, RR) (YAML cn_per_pad_N_s_m)": [
+        27022.9,
+        27022.9,
+        27303.3,
+        27303.3
+       ],
+       "crawler_heave_zeta (dyn_model.CRAWLER_DEFAULTS)": 0.05,
+       "crawler_dashpot_per_sphere_N_s_m": 28498.1
+      },
+      "integrator": {
+       "method": "DOP853",
+       "rtol": 1e-09,
+       "atol": 1e-12,
+       "max_step_s": 0.001,
+       "events": "solve_ivp root finding on the pad and crawler compressions",
+       "nfev": 24005
+      },
+      "window_s": [
+       14.846,
+       16.584
+      ],
+      "initial_condition": "static pose on the crawler (legs in the air), body velocity 0",
+      "max_abs_touch_diff_vs_max_step_5e-4_s": 1.18e-11,
+      "max_abs_touch_diff_vs_Radau_s": 9.77e-12
+     }
     },
     "end_state (after the last stop)": {
      "pad_contact_force_N": [
@@ -9158,133 +9323,128 @@
       -0.002053,
       0.02664
      ],
-     "crawler_min_clearance_mm": 44.476,
+     "crawler_min_clearance_mm": 44.926,
      "max_abs_diff_vs_V1_contact_force_N": 0.488,
      "crawler_active_at_end": false
     }
    },
-   "sensitivity 2x41 near-continuous": {
-    "n_spheres": 82,
-    "track_centre_y_m": 1.066,
+   "sensitivity D without the end shoes (rollers only)": {
+    "n_spheres": 12,
+    "n_floor_contact_spheres (gap 0)": 12,
+    "track_centre_y_m": 1.045,
+    "kn_per_sphere_N_m": 8333330.0,
+    "c_per_sphere_N_s_m": 16453.4,
     "settled_on_crawler (legs at 0)": {
      "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
-      -3.8201,
-      0.0003211,
-      0.081835
+      -3.7169,
+      0.00040096,
+      0.26674
      ],
      "crawler_sphere_forces_N": [
-      1446.4,
-      1606.8,
-      1767.2,
-      1927.6,
-      2088.1,
-      2248.5,
-      2408.9,
-      2569.3,
-      2729.7,
-      2890.2,
-      3050.6,
-      3211.0,
-      3371.4,
-      3531.9,
-      3692.3,
-      3852.7,
-      4013.1,
-      4173.5,
-      4334.0,
-      4494.4,
-      4654.8,
-      4815.2,
-      4975.6,
-      5136.1,
-      5296.5,
-      5456.9,
-      5617.3,
-      5777.7,
-      5938.2,
-      6098.6,
-      6259.0,
-      6419.4,
-      6579.8,
-      6740.3,
-      6900.7,
-      7061.1,
-      7221.5,
-      7381.9,
-      7542.4,
-      7702.8,
-      7863.2,
-      1461.0,
-      1621.4,
-      1781.8,
-      1942.2,
-      2102.6,
-      2263.1,
-      2423.5,
-      2583.9,
-      2744.3,
-      2904.7,
-      3065.2,
-      3225.6,
-      3386.0,
-      3546.4,
-      3706.8,
-      3867.3,
-      4027.7,
-      4188.1,
-      4348.5,
-      4508.9,
-      4669.4,
-      4829.8,
-      4990.2,
-      5150.6,
-      5311.0,
-      5471.5,
-      5631.9,
-      5792.3,
-      5952.7,
-      6113.2,
-      6273.6,
-      6434.0,
-      6594.4,
-      6754.8,
-      6915.3,
-      7075.7,
-      7236.1,
-      7396.5,
-      7556.9,
-      7717.4,
-      7877.8
+      -0.0,
+      10468.0,
+      24318.0,
+      38168.0,
+      52018.0,
+      65869.0,
+      -0.0,
+      10590.0,
+      24440.0,
+      38290.0,
+      52140.0,
+      65990.0
      ],
+     "end_shoe_spheres_in_contact": 0,
      "pad_gap_at_e0_mm": [
-      344.01,
-      344.0,
-      340.74,
-      340.72
+      336.71,
+      336.69,
+      349.09,
+      349.07
      ]
     },
     "pad_touch_time_kinematic_from_settled_pose_s": [
-     15.177,
-     15.176,
-     15.033,
-     15.032
+     14.855,
+     14.854,
+     15.401,
+     15.4
     ],
     "quasi_static_events_s": {
-     "first_touch_leg": "RR",
-     "first_touch_s": 15.032,
+     "first_touch_leg": "FR",
+     "first_touch_s": 14.854,
      "touch_s (FL, FR, RL, RR)": [
-      15.132,
-      15.132,
-      15.033,
-      15.032
+      14.857,
+      14.854,
+      15.145,
+      15.145
      ],
-     "crawler_fully_off_s": 15.691,
+     "crawler_fully_off_s": 15.584,
      "leg_stop_s (FL, FR, RL, RR)": [
       17.696,
       17.696,
       17.246,
       17.246
      ]
+    },
+    "dynamic_events_s": {
+     "first_touch_leg": "FR",
+     "first_touch_s": 14.854,
+     "touch_s (FL, FR, RL, RR)": [
+      14.855,
+      14.854,
+      15.111,
+      15.111
+     ],
+     "crawler_fully_off_s": 15.577,
+     "leg_stop_s (FL, FR, RL, RR)": [
+      17.696,
+      17.696,
+      17.246,
+      17.246
+     ],
+     "minus_quasi_static_touch_s (FL, FR, RL, RR)": [
+      -0.00199,
+      0.00019,
+      -0.0336,
+      -0.0337
+     ],
+     "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+      1,
+      1,
+      0,
+      0
+     ],
+     "crawler_contact_events_after_fully_off": 0,
+     "meta": {
+      "basis": "V4 judgement basis (user decision 2026-10-20): per-leg touch time within +-0.05 s of touch_s; quasi_static_events_s kept as a reference only",
+      "model": "Same model as run_leg_extension_loads.dynamic_check: M = m a a^T + blockdiag(0, I_xy), a = [1, cg_y, -cg_x], I_xy = roll/pitch block of the inertia about the CoM of superstructure (top) + 4 rods at e = 0 (rod x,y fixed); unilateral spring-dampers F = max(0, k c + c_d c_dot) for c > 0 (pads and crawler spheres), gravity on the CoM. Legs e(t) = min(v t, e_op) (V4 schedule, t = 0 = motor start). Start at t_from in the static pose on the crawler with zero velocity (exact: nothing moves the body before the first pad touch). Events: pad compression c_i = 0 (touch / loss) and max over crawler spheres c_j = 0 (crawler fully off / re-contact), located by solve_ivp.",
+      "touch_definition": "first time the pad compression c_i = e_i - touch_extension_i - (A q)_i turns positive (spring-damper force > 0 from that instant)",
+      "damping (ASSUMPTION)": {
+       "leg_axial_zeta (heave basis, YAML contact.rigid_floor.L1.derivation.damping_ratio)": 0.03,
+       "pad_dashpot_N_s_m (FL, FR, RL, RR) (YAML cn_per_pad_N_s_m)": [
+        27022.9,
+        27022.9,
+        27303.3,
+        27303.3
+       ],
+       "crawler_heave_zeta (dyn_model.CRAWLER_DEFAULTS)": 0.05,
+       "crawler_dashpot_per_sphere_N_s_m": 16453.4
+      },
+      "integrator": {
+       "method": "DOP853",
+       "rtol": 1e-09,
+       "atol": 1e-12,
+       "max_step_s": 0.001,
+       "events": "solve_ivp root finding on the pad and crawler compressions",
+       "nfev": 28757
+      },
+      "window_s": [
+       14.553,
+       16.584
+      ],
+      "initial_condition": "static pose on the crawler (legs in the air), body velocity 0",
+      "max_abs_touch_diff_vs_max_step_5e-4_s": 3.23e-11,
+      "max_abs_touch_diff_vs_Radau_s": 4.2e-12
+     }
     },
     "end_state (after the last stop)": {
      "pad_contact_force_N": [
@@ -9297,7 +9457,153 @@
       -0.002053,
       0.02664
      ],
-     "crawler_min_clearance_mm": 44.487,
+     "crawler_min_clearance_mm": 44.926,
+     "max_abs_diff_vs_V1_contact_force_N": 0.488,
+     "crawler_active_at_end": false
+    }
+   },
+   "D rigid crawler limit (kn_total x1e3, L2b-NSC V4)": {
+    "n_spheres": 24,
+    "n_floor_contact_spheres (gap 0)": 12,
+    "track_centre_y_m": 1.045,
+    "kn_per_sphere_N_m": 8333330000.0,
+    "c_per_sphere_N_s_m": 520302.0,
+    "settled_on_crawler (legs at 0)": {
+     "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
+      -0.0037169,
+      4.0096e-07,
+      0.00026674
+     ],
+     "crawler_sphere_forces_N": [
+      -0.0,
+      10468.0,
+      24318.0,
+      38168.0,
+      52018.0,
+      65869.0,
+      -0.0,
+      10590.0,
+      24440.0,
+      38290.0,
+      52140.0,
+      65990.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0
+     ],
+     "end_shoe_spheres_in_contact": 0,
+     "pad_gap_at_e0_mm": [
+      351.09,
+      351.09,
+      340.91,
+      340.91
+     ]
+    },
+    "pad_touch_time_kinematic_from_settled_pose_s": [
+     15.489,
+     15.489,
+     15.04,
+     15.04
+    ],
+    "quasi_static_events_s": {
+     "first_touch_leg": "RR",
+     "first_touch_s": 15.04,
+     "touch_s (FL, FR, RL, RR)": [
+      15.375,
+      15.375,
+      15.04,
+      15.04
+     ],
+     "crawler_fully_off_s": 15.584,
+     "leg_stop_s (FL, FR, RL, RR)": [
+      17.696,
+      17.696,
+      17.246,
+      17.246
+     ]
+    },
+    "dynamic_events_s": {
+     "first_touch_leg": "RR",
+     "first_touch_s": 15.04,
+     "touch_s (FL, FR, RL, RR)": [
+      15.382,
+      15.382,
+      15.04,
+      15.04
+     ],
+     "crawler_fully_off_s": 15.576,
+     "leg_stop_s (FL, FR, RL, RR)": [
+      17.696,
+      17.696,
+      17.246,
+      17.246
+     ],
+     "minus_quasi_static_touch_s (FL, FR, RL, RR)": [
+      0.00691,
+      0.00692,
+      6.72e-05,
+      6.65e-05
+     ],
+     "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "crawler_contact_events_after_fully_off": 0,
+     "meta": {
+      "basis": "V4 judgement basis (user decision 2026-10-20): per-leg touch time within +-0.05 s of touch_s; quasi_static_events_s kept as a reference only",
+      "model": "Same model as run_leg_extension_loads.dynamic_check: M = m a a^T + blockdiag(0, I_xy), a = [1, cg_y, -cg_x], I_xy = roll/pitch block of the inertia about the CoM of superstructure (top) + 4 rods at e = 0 (rod x,y fixed); unilateral spring-dampers F = max(0, k c + c_d c_dot) for c > 0 (pads and crawler spheres), gravity on the CoM. Legs e(t) = min(v t, e_op) (V4 schedule, t = 0 = motor start). Start at t_from in the static pose on the crawler with zero velocity (exact: nothing moves the body before the first pad touch). Events: pad compression c_i = 0 (touch / loss) and max over crawler spheres c_j = 0 (crawler fully off / re-contact), located by solve_ivp.",
+      "touch_definition": "first time the pad compression c_i = e_i - touch_extension_i - (A q)_i turns positive (spring-damper force > 0 from that instant)",
+      "damping (ASSUMPTION)": {
+       "leg_axial_zeta (heave basis, YAML contact.rigid_floor.L1.derivation.damping_ratio)": 0.03,
+       "pad_dashpot_N_s_m (FL, FR, RL, RR) (YAML cn_per_pad_N_s_m)": [
+        27022.9,
+        27022.9,
+        27303.3,
+        27303.3
+       ],
+       "crawler_heave_zeta (dyn_model.CRAWLER_DEFAULTS)": 0.05,
+       "crawler_dashpot_per_sphere_N_s_m": 520302.0
+      },
+      "integrator": {
+       "method": "DOP853",
+       "rtol": 1e-09,
+       "atol": 1e-12,
+       "max_step_s": 0.001,
+       "events": "solve_ivp root finding on the pad and crawler compressions",
+       "nfev": 25601
+      },
+      "window_s": [
+       14.739,
+       16.584
+      ],
+      "initial_condition": "static pose on the crawler (legs in the air), body velocity 0",
+      "max_abs_touch_diff_vs_max_step_5e-4_s": 8.43e-12,
+      "max_abs_touch_diff_vs_Radau_s": 2.38e-12
+     }
+    },
+    "end_state (after the last stop)": {
+     "pad_contact_force_N": [
+      119292.0,
+      117318.0,
+      73757.8,
+      71922.4
+     ],
+     "attitude_deg (roll, pitch)": [
+      -0.002053,
+      0.02664
+     ],
+     "crawler_min_clearance_mm": 44.926,
      "max_abs_diff_vs_V1_contact_force_N": 0.488,
      "crawler_active_at_end": false
     }
@@ -9309,24 +9615,45 @@
    15.04,
    15.04
   ],
-  "crawler_on_floor_modes (default layout, legs at 0)": {
+  "crawler_on_floor_modes (layout D, legs at 0)": {
    "f_Hz": [
-    2.245,
-    2.875,
-    8.109
+    1.327,
+    3.046,
+    8.73
    ],
    "zeta": [
-    0.01405,
-    0.01803,
-    0.0503
+    0.008437,
+    0.01908,
+    0.05415
    ],
    "tau_s": [
-    5.046,
-    3.071,
-    0.3902
+    14.22,
+    2.739,
+    0.3367
    ],
-   "note": "surge, sway, yaw have zero stiffness (no crawler tangential force) and are omitted",
-   "settle_length_s (ln(100) x max tau)": 23.2
+   "active_spheres": 14,
+   "note": "surge, sway, yaw have zero stiffness (no crawler tangential force) and are omitted; active springs only",
+   "settle_length_s (ln(100) x max tau)": 65.47
+  },
+  "crawler_on_floor_modes (layout D kn_total x3, legs at 0)": {
+   "f_Hz": [
+    1.776,
+    4.899,
+    13.97
+   ],
+   "zeta": [
+    0.006451,
+    0.01761,
+    0.05002
+   ],
+   "tau_s": [
+    13.89,
+    1.845,
+    0.2278
+   ],
+   "active_spheres": 12,
+   "note": "surge, sway, yaw have zero stiffness (no crawler tangential force) and are omitted; active springs only",
+   "settle_length_s (ln(100) x max tau)": 63.95
   },
   "residual_after_last_stop_linear_L1 (deg, max |dev| over one 1st-rocking period)": {
    "model": "linear 6-DoF L1 (top) with reference damping, motor = pad-spring base displacement; start quasi-static 0.05 s after crawler off",
@@ -9349,6 +9676,439 @@
     0.0003584
    ],
    "last_time_above_0.001deg_after_last_stop_s": 11.01
+  },
+  "V4_judgement_basis": "layouts/<layout>/dynamic_events_s/touch_s (FL, FR, RL, RR), tolerance +-0.05 s per leg (user decision 2026-10-20); quasi_static_events_s = reference only",
+  "dynamic_touch_damping_sensitivity": {
+   "description": "dynamic_events_s repeated with the pad dashpots scaled to the leg zeta (heave basis, crawler unchanged) and with the crawler dashpots scaled to the crawler zeta (pads unchanged); same integrator and window as dynamic_events_s",
+   "nominal": {
+    "leg_zeta": 0.03,
+    "crawler_zeta": 0.05
+   },
+   "layouts": {
+    "D rollers + gapped end shoes (YAML contact.crawler.sphere_layout)": {
+     "nominal touch_s (FL, FR, RL, RR)": [
+      15.05,
+      15.049,
+      15.177,
+      15.177
+     ],
+     "leg_zeta_0.01": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.05,
+       15.049,
+       15.177,
+       15.177
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       -8.38e-08,
+       0.0,
+       0.000235,
+       0.000235
+      ],
+      "max_abs_shift_s": 0.000235,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "FR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "leg_zeta_0.1": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.05,
+       15.049,
+       15.176,
+       15.176
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       2.93e-07,
+       0.0,
+       -0.00084,
+       -0.00084
+      ],
+      "max_abs_shift_s": 0.00084,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "FR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "crawler_zeta_0.02": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.05,
+       15.049,
+       15.177,
+       15.177
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       8.4e-11,
+       0.0,
+       -0.000176,
+       -0.000174
+      ],
+      "max_abs_shift_s": 0.000176,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "FR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "crawler_zeta_0.3": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.05,
+       15.049,
+       15.177,
+       15.177
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       -7.02e-10,
+       0.0,
+       0.000396,
+       0.000383
+      ],
+      "max_abs_shift_s": 0.000396,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "FR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     }
+    },
+    "D kn_total x3 (sensitivity, YAML contact.crawler.kn_total_sensitivity_range_N_m)": {
+     "nominal touch_s (FL, FR, RL, RR)": [
+      15.253,
+      15.253,
+      15.147,
+      15.146
+     ],
+     "leg_zeta_0.01": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.253,
+       15.253,
+       15.147,
+       15.146
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       0.000232,
+       0.000234,
+       -1.4e-08,
+       0.0
+      ],
+      "max_abs_shift_s": 0.000234,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "RR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "leg_zeta_0.1": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.252,
+       15.252,
+       15.147,
+       15.146
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       -0.000783,
+       -0.000787,
+       4.89e-08,
+       0.0
+      ],
+      "max_abs_shift_s": 0.000787,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "RR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "crawler_zeta_0.02": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.253,
+       15.253,
+       15.147,
+       15.146
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       5.42e-05,
+       5.87e-05,
+       6.03e-12,
+       0.0
+      ],
+      "max_abs_shift_s": 5.87e-05,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "RR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "crawler_zeta_0.3": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.253,
+       15.253,
+       15.147,
+       15.146
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       0.000144,
+       0.000122,
+       -4.94e-11,
+       0.0
+      ],
+      "max_abs_shift_s": 0.000144,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "RR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     }
+    },
+    "sensitivity D without the end shoes (rollers only)": {
+     "nominal touch_s (FL, FR, RL, RR)": [
+      14.855,
+      14.854,
+      15.111,
+      15.111
+     ],
+     "leg_zeta_0.01": {
+      "touch_s (FL, FR, RL, RR)": [
+       14.855,
+       14.854,
+       15.111,
+       15.111
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       -1.64e-07,
+       0.0,
+       -0.00036,
+       -0.000355
+      ],
+      "max_abs_shift_s": 0.00036,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "FR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       1,
+       1,
+       0,
+       0
+      ]
+     },
+     "leg_zeta_0.1": {
+      "touch_s (FL, FR, RL, RR)": [
+       14.855,
+       14.854,
+       15.113,
+       15.112
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       5.75e-07,
+       0.0,
+       0.00112,
+       0.00111
+      ],
+      "max_abs_shift_s": 0.00112,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "FR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       1,
+       1,
+       0,
+       0
+      ]
+     },
+     "crawler_zeta_0.02": {
+      "touch_s (FL, FR, RL, RR)": [
+       14.855,
+       14.854,
+       15.111,
+       15.11
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       1.74e-10,
+       -1.78e-15,
+       -0.000772,
+       -0.000769
+      ],
+      "max_abs_shift_s": 0.000772,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "FR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       1,
+       1,
+       0,
+       0
+      ]
+     },
+     "crawler_zeta_0.3": {
+      "touch_s (FL, FR, RL, RR)": [
+       14.855,
+       14.854,
+       15.116,
+       15.116
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       -1.44e-09,
+       0.0,
+       0.00466,
+       0.00464
+      ],
+      "max_abs_shift_s": 0.00466,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "FR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     }
+    },
+    "D rigid crawler limit (kn_total x1e3, L2b-NSC V4)": {
+     "nominal touch_s (FL, FR, RL, RR)": [
+      15.382,
+      15.382,
+      15.04,
+      15.04
+     ],
+     "leg_zeta_0.01": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.383,
+       15.383,
+       15.04,
+       15.04
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       0.000708,
+       0.000708,
+       -1.81e-13,
+       0.0
+      ],
+      "max_abs_shift_s": 0.000708,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "RR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "leg_zeta_0.1": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.38,
+       15.38,
+       15.04,
+       15.04
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       -0.00203,
+       -0.00203,
+       6.34e-13,
+       1.78e-15
+      ],
+      "max_abs_shift_s": 0.00203,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "RR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "crawler_zeta_0.02": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.382,
+       15.382,
+       15.04,
+       15.04
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       -4.49e-06,
+       -5.04e-06,
+       0.0,
+       0.0
+      ],
+      "max_abs_shift_s": 5.04e-06,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "RR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "crawler_zeta_0.3": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.382,
+       15.382,
+       15.04,
+       15.04
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       9.62e-06,
+       1.18e-05,
+       1.78e-15,
+       0.0
+      ],
+      "max_abs_shift_s": 1.18e-05,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "RR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     },
+     "crawler_zeta_1 (near-plastic, NSC-like no rebound)": {
+      "touch_s (FL, FR, RL, RR)": [
+       15.382,
+       15.382,
+       15.04,
+       15.04
+      ],
+      "shift_vs_nominal_s (FL, FR, RL, RR)": [
+       4.22e-05,
+       4.5e-05,
+       0.0,
+       1.78e-15
+      ],
+      "max_abs_shift_s": 4.5e-05,
+      "within_V4_band_0.05_s": true,
+      "first_touch_leg": "RR",
+      "pad_contact_losses_after_touch (FL, FR, RL, RR)": [
+       0,
+       0,
+       0,
+       0
+      ]
+     }
+    }
+   }
   }
  }
 }
