@@ -1,0 +1,334 @@
+{
+ "script": "04_scripts/00_cad/render_cad_tracks_summary.py",
+ "created_at": "2026-10-21T17:14:34",
+ "cpu": {
+  "mode": "pcore",
+  "efficiency_classes": [
+   0,
+   1
+  ],
+  "affinity_ok": true,
+  "affinity_logical_processors": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "power_throttling_off_ok": true
+ },
+ "meshes": {
+  "visual_names": [
+   "deck",
+   "mast",
+   "auger",
+   "crawler",
+   "barrel_FL",
+   "rod_FL",
+   "pad_FL_simple",
+   "barrel_FR",
+   "rod_FR",
+   "pad_FR_simple",
+   "barrel_RL",
+   "rod_RL",
+   "pad_RL_simple",
+   "barrel_RR",
+   "rod_RR",
+   "pad_RR_simple"
+  ],
+  "face_count_equals_index": {
+   "deck": true,
+   "mast": true,
+   "auger": true,
+   "crawler": true,
+   "barrel_FL": true,
+   "rod_FL": true,
+   "pad_FL_simple": true,
+   "barrel_FR": true,
+   "rod_FR": true,
+   "pad_FR_simple": true,
+   "barrel_RL": true,
+   "rod_RL": true,
+   "pad_RL_simple": true,
+   "barrel_RR": true,
+   "rod_RR": true,
+   "pad_RR_simple": true
+  },
+  "cluster_cell_m": 0.025,
+  "cluster_min_faces": 5000,
+  "faces_source": 1720881,
+  "faces_drawn": 271727,
+  "colour_lookup": {
+   "method": "nearest 3 mm tessellation vertex of any instance to each drawn face centroid (scipy cKDTree, body frame m); colour = style_index display colour of that instance",
+   "instances": 1214,
+   "distance_median_mm": 9.031788185773689,
+   "distance_p99_mm": 118.57728406991116,
+   "distance_max_mm": 581.4075172517928,
+   "colours_used": [
+    "#013ef1",
+    "#050505",
+    "#3087e3",
+    "#400040",
+    "#404040",
+    "#696969",
+    "#a8a7a0",
+    "#bfbfbf",
+    "#e0dfdb",
+    "#e5e5e5",
+    "#ff4d06",
+    "#ffffff"
+   ],
+   "tree_build_s": 0.7213106999988668
+  },
+  "build_s": 1.6575307000020985
+ },
+ "summary_png": {
+  "path": "01_cad/cad_tracks_2026-10-21.png",
+  "size_bytes": 794332,
+  "resolution_px": [
+   2000,
+   1400
+  ],
+  "views": {
+   "panel1_toward_viewer": [
+    0.6247,
+    -0.6247,
+    0.4685
+   ],
+   "panel2_toward_viewer": [
+    0.6438,
+    -0.7082,
+    0.2897
+   ]
+  },
+  "collision_candidates": {
+   "track_L_coacd": {
+    "pieces": 32,
+    "faces": 6608
+   },
+   "track_R_coacd": {
+    "pieces": 32,
+    "faces": 6386
+   },
+   "deck_coacd": {
+    "pieces": 32,
+    "faces": 4794
+   },
+   "mast_coacd": {
+    "pieces": 6,
+    "faces": 1378
+   },
+   "auger_coacd": {
+    "pieces": 16,
+    "faces": 4564
+   },
+   "moving_FL_coacd": {
+    "pieces": 11,
+    "faces": 6838
+   },
+   "moving_FR_coacd": {
+    "pieces": 11,
+    "faces": 6862
+   },
+   "moving_RL_coacd": {
+    "pieces": 13,
+    "faces": 6186
+   },
+   "moving_RR_coacd": {
+    "pieces": 11,
+    "faces": 5052
+   }
+  },
+  "crawler_contact_spheres": 24,
+  "ground_png_crop_x_fraction": [
+   0.1,
+   0.88
+  ]
+ },
+ "turntable_gif": {
+  "path": "01_cad/cad_tracks_turntable.gif",
+  "frames": 48,
+  "size_bytes": 3005011,
+  "resolution_px": [
+   640,
+   760
+  ],
+  "frame_ms": 90,
+  "elevation_deg": 22.0,
+  "render_s": 112.11557760000869
+ },
+ "inputs": [
+  {
+   "path": "01_cad/09_sim_shapes/sim_shapes.json",
+   "bytes": 128968,
+   "sha256": "80565b93817060026f9b16796dc414e47c883b7ace32b77be625c81cd374ee82"
+  },
+  {
+   "path": "01_cad/05_meshes/parts_mesh.npz",
+   "bytes": 43894484,
+   "sha256": "a6178a810c1dc30df796ff9a644e88a2cd8b4d585e932025ca9caa67744577e7"
+  },
+  {
+   "path": "01_cad/05_meshes/index.json",
+   "bytes": 121831,
+   "sha256": "df6ea24e2c5a6b8840d9498c5481ec2df5e265bf5286e3775cf637f3455d3ac2"
+  },
+  {
+   "path": "01_cad/08_style/instance_styles.csv",
+   "bytes": 327708,
+   "sha256": "08f684f8beba2babc0d718a5ddf68cfd38a32c5a26eee268027ff6366a795940"
+  },
+  {
+   "path": "01_cad/06_brep/derived/crawler/crawler_ground_sheet.png",
+   "bytes": 137162,
+   "sha256": "3b10a414396e50f8fd85935c1f40ba537923cc62fc5b3578d2033c937a74add5"
+  },
+  {
+   "path": "01_cad/06_brep/derived/crawler/crawler_ground_sheet.json",
+   "bytes": 40276,
+   "sha256": "6db9b52a9a963064bd32f3a349578031d4c6d61944bdf5d1b765ff19fa78e677"
+  },
+  {
+   "path": "02_params/rexome33.yaml",
+   "bytes": 45227,
+   "sha256": "865c5488b9ee6cbb625479872ce5eff05bfa3d93a667d1b1583bc5a07042383a"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/deck.npz",
+   "bytes": 1679356,
+   "sha256": "da4cd1ffa1b1636edd86d902df851b0a9fa6274c708da831c5955a827cc6ab9d"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/mast.npz",
+   "bytes": 851882,
+   "sha256": "43d4843f84ed4ba82f79efa49639f023ddff033331a7ce7b1fd58742cf4fcea5"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/auger.npz",
+   "bytes": 3030326,
+   "sha256": "cef1edce2e9df8ec6da689594119ef961d9a3d1662aea26d505f8a66351f711d"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/crawler.npz",
+   "bytes": 11168079,
+   "sha256": "209111a6789f4801ec71df4aac54464714611049fb5af186f5a9b922ede744c9"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/barrel_FL.npz",
+   "bytes": 8026,
+   "sha256": "09de12e290186e5e713f1e7341980a426d339b9bbed515970aaf71ac0e38f3d0"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/rod_FL.npz",
+   "bytes": 11615,
+   "sha256": "7d17fb022c2c5f1ac5210d201eed7b9d12dd298e6f1062debd54da7c73b02f57"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/pad_simple_FL.npz",
+   "bytes": 917,
+   "sha256": "4e2a7dc2c84c0c0b58bb7da9d2594ad1915a94ea3706d08ab2b07e18b7a69b46"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/barrel_FR.npz",
+   "bytes": 8044,
+   "sha256": "bec286b0a89691b86d59ae31d555aaba7daa94213a2d1ee5d70f252398d3832e"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/rod_FR.npz",
+   "bytes": 11598,
+   "sha256": "14aeeabcfe818c5c6ce17999f6292ed6d8fe63d600efde505a5a82844c59e3be"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/pad_simple_FR.npz",
+   "bytes": 921,
+   "sha256": "7f4b1740f10ec0605849702767ba720aac90ef5a5d935aced1eed77cb4581dbf"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/barrel_RL.npz",
+   "bytes": 3800,
+   "sha256": "2b67646e27293612c0c3032d53f26d827a853937be3759b094317e2d43a89e69"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/rod_RL.npz",
+   "bytes": 11628,
+   "sha256": "687603d75ad748e6858b8a35a2ecce0459ddf9173de76de4123e5259ae9af667"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/pad_simple_RL.npz",
+   "bytes": 925,
+   "sha256": "40b1cc17e2c6f4d0379218ba5de237e93b929a4e59ae4b35612f7525348ca093"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/barrel_RR.npz",
+   "bytes": 3795,
+   "sha256": "e48cc8f79b0bca529542d0744787e34389b519ea65e1c75839955ff12dd7e6d7"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/rod_RR.npz",
+   "bytes": 11627,
+   "sha256": "a5c042bbeaf9b10bef0fe31e013f137a388ba4cc8a5deceac578c41ff250d33e"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/work/pad_simple_RR.npz",
+   "bytes": 919,
+   "sha256": "02b43a1d4aa191fbde0655f7740b5dc020de31a81d07eef229bebbfd432df8cd"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/collision/track_L_coacd.obj",
+   "bytes": 208845,
+   "sha256": "593c673332639a3ef372731a1a5e4514ab077cfa2ac58c0a5f29f319daf1f898"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/collision/track_R_coacd.obj",
+   "bytes": 204961,
+   "sha256": "17faf0c44662798367f835f9ba1cf402d83cded077fb74150d8b2441d76de95b"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/collision/deck_coacd.obj",
+   "bytes": 150193,
+   "sha256": "4ca54932e926c8648636a3ffa410b2af7c354c8975e1edfd9134379e9b632dca"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/collision/mast_coacd.obj",
+   "bytes": 39869,
+   "sha256": "2d8c0874ae82833c0d8b73c51b8e996dd85ec631cb38a8041ccae4a2cce3a356"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/collision/auger_coacd.obj",
+   "bytes": 139534,
+   "sha256": "0cb5f1434b1f7a804d80ad0838818f52d539f383e57642eaee6d5ceb26a8507f"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/collision/moving_FL_coacd.obj",
+   "bytes": 212754,
+   "sha256": "262407aa050eba6dc17ed5a0045438666b1aa67cd1a905d0c41b8084f515dcb2"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/collision/moving_FR_coacd.obj",
+   "bytes": 217015,
+   "sha256": "22327e85cdd181c834af9b190933a8c8dce28c010d2647ee82d0674f743bb33a"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/collision/moving_RL_coacd.obj",
+   "bytes": 195164,
+   "sha256": "a0d2c9d479555a34d3e574f529e1fc12c34bf07eedeaf87f86d2d7dd866b6e08"
+  },
+  {
+   "path": "01_cad/09_sim_shapes/collision/moving_RR_coacd.obj",
+   "bytes": 160747,
+   "sha256": "af371d5926197dfae1dad33571466bded6bfbdb33f6a64a71294948c359a0191"
+  }
+ ],
+ "wall_s": 7.786115700000664
+}

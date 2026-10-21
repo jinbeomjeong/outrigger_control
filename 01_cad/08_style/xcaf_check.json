@@ -1,0 +1,194 @@
+{
+ "description": "Text-scan colours vs OCCT STEPCAFControl_Reader (colour and layer mode on)",
+ "created_at": "2026-10-21T12:23:51",
+ "occt_reader_s": 118.7,
+ "total_s": 124.2,
+ "peak_memory_gb": 3.98,
+ "xcaf_layers": 0,
+ "xcaf_colour_table_entries": 60,
+ "leaf_instances": 1214,
+ "instance_overrides": {
+  "cdorsi": 184,
+  "shuo_in_document": 165,
+  "classes": {
+   "depth 1: not read by OCCT": 10,
+   "depth 1: read: style on the located occurrence": 6,
+   "depth 2: not read by OCCT": 3,
+   "depth 2: read: style on the located occurrence": 132,
+   "depth 3: read: style on the located occurrence": 33
+  },
+  "examples": [
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / SIDE HOUSING_(ENGINE)_R1:1",
+    "depth": 1,
+    "cdorsi": "#15",
+    "text": "#e0dfdb",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": null,
+    "class": "not read by OCCT"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / SIDE HOUSING_(ENGINE)_R1:1 / ENGINE_COVER_3:1",
+    "depth": 2,
+    "cdorsi": "#16",
+    "text": "#ff4d06",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": null,
+    "class": "not read by OCCT"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / SIDE HOUSING_(ENGINE)_R1:1 / ENGINE_COVER_1:1",
+    "depth": 2,
+    "cdorsi": "#18",
+    "text": "#ff4d06",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": null,
+    "class": "not read by OCCT"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / SIDE HOUSING_(ENGINE)_R1:1 / SIDE HOUSING_(ENGINE):1",
+    "depth": 2,
+    "cdorsi": "#19",
+    "text": "#ff4d06",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": null,
+    "class": "not read by OCCT"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / CENTER DECK COVER_1:1",
+    "depth": 1,
+    "cdorsi": "#41",
+    "text": "#ff4d06",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": null,
+    "class": "not read by OCCT"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / BATTERY BOX:2",
+    "depth": 1,
+    "cdorsi": "#42",
+    "text": "#696969",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": null,
+    "class": "not read by OCCT"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / SIDE HOUSING_ROOF COVER:1",
+    "depth": 1,
+    "cdorsi": "#43",
+    "text": "#e0dfdb",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": null,
+    "class": "not read by OCCT"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / CENTER DECK COVER FRAME_2:1",
+    "depth": 1,
+    "cdorsi": "#74",
+    "text": "#ff4d06",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": null,
+    "class": "not read by OCCT"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / 0. DRIVE AUGER ASSY:1",
+    "depth": 1,
+    "cdorsi": "#76",
+    "text": "#ff4d06",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": null,
+    "class": "not read by OCCT"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / TOPSHEAVE(조립) ASSY:1",
+    "depth": 1,
+    "cdorsi": "#77",
+    "text": "#696969",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": null,
+    "class": "not read by OCCT"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / SIDE HOUSING_(ENGINE)_R1:1 / ENGINE_COVER_4:1 / 솔리드61:1",
+    "depth": 3,
+    "cdorsi": "#17",
+    "text": "#ff4d06",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": "#ff4d06",
+    "class": "read: style on the located occurrence"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / SIDE HOUSING_(ENGINE)_R1:1 / (ENGINE)_Door_1:1 / 솔리드45:1",
+    "depth": 3,
+    "cdorsi": "#20",
+    "text": "#ff4d06",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": "#ff4d06",
+    "class": "read: style on the located occurrence"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / SIDE HOUSING_(ENGINE)_R1:1 / (ENGINE)_Door_1:1 / 솔리드43:1",
+    "depth": 3,
+    "cdorsi": "#21",
+    "text": "#ff4d06",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": "#ff4d06",
+    "class": "read: style on the located occurrence"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / SIDE HOUSING_(ENGINE)_R1:1 / (ENGINE)_Door_1:1 / 솔리드47:1",
+    "depth": 3,
+    "cdorsi": "#22",
+    "text": "#ff4d06",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": "#ff4d06",
+    "class": "read: style on the located occurrence"
+   },
+   {
+    "path": "REXOME33_Assy_r3(미니어쳐) / SIDE HOUSING_(ENGINE)_R1:1 / (ENGINE)_Door_1:1 / 솔리드41:1",
+    "depth": 3,
+    "cdorsi": "#23",
+    "text": "#ff4d06",
+    "component_label": null,
+    "shuo": null,
+    "presentation_key": "#ff4d06",
+    "class": "read: style on the located occurrence"
+   }
+  ]
+ },
+ "instance_display_colour": {
+  "leaf_instances": 1214,
+  "classes_by_text_source": {
+   "assembly_override: OCCT = display (override rule)": 15,
+   "assembly_override: OCCT = part colour (override not visible in OCCT)": 990,
+   "instance_override: OCCT = display (override rule)": 161,
+   "instance_override: OCCT = part colour (override not visible in OCCT)": 10,
+   "none: OCCT = display (override rule)": 1,
+   "part: OCCT = display (override rule)": 37
+  },
+  "other_examples": [],
+  "method": "XCAFPrs::CollectStyleSettings(root) keys looked up per located face, solid, instance and parent occurrence (most specific wins, as XCAFPrs_AISObject dispatches styles); dominant colour by face count vs instance_styles.csv"
+ },
+ "face_sequence_check": {
+  "colour_space_used": "sRGB",
+  "prototypes_checked": 681,
+  "prototypes_equal": 681,
+  "mismatch_examples": [],
+  "errors": [],
+  "meaning": "per prototype, effective face colour (face, else solid, else part) in TopExp_Explorer(prototype, FACE) order (= face_index of 07_faces) equals the text face order of face_styles.csv"
+ }
+}

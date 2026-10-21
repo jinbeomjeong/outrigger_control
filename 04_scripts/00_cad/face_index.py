@@ -44,6 +44,9 @@ from cad_common import FACES_DIR
 INSTANCE_FACES = FACES_DIR / "instance_faces.csv.gz"
 PROTOTYPE_FACES = FACES_DIR / "prototype_faces.csv.gz"
 SUMMARY_JSON = FACES_DIR / "face_index_summary.json"
+# Upper (carrier) roller faces, written by derive_crawler_upper_rollers.py (not in
+# instance_faces.csv.gz, which keeps only crawler faces near the ground).
+CRAWLER_UPPER_ROLLER_FACES = FACES_DIR / "crawler_upper_roller_faces.csv.gz"
 CACHE_NAME = "07_faces"
 XYZ = ("x", "y", "z")
 BBOX_MODES = ("overlap", "inside", "centroid")
@@ -72,6 +75,23 @@ def load(prototypes: bool = False) -> pd.DataFrame:
     if not path.exists():
         raise FileNotFoundError(f"{path} (run build_face_index.py)")
     table = pd.read_csv(path, low_memory=False)
+    table["convex"] = _as_bool(table["convex"])
+    return table
+
+
+@functools.cache
+def load_crawler_upper_roller_faces() -> pd.DataFrame:
+    """Face table of the crawler upper rollers (same columns + ``part_id``, ``role``).
+
+    Use it as ``query(..., table=load_crawler_upper_roller_faces())``.
+
+    Raises:
+        FileNotFoundError: If the table was not built yet.
+    """
+    _warn_if_stale()
+    if not CRAWLER_UPPER_ROLLER_FACES.exists():
+        raise FileNotFoundError(f"{CRAWLER_UPPER_ROLLER_FACES} (run derive_crawler_upper_rollers.py)")
+    table = pd.read_csv(CRAWLER_UPPER_ROLLER_FACES, low_memory=False)
     table["convex"] = _as_bool(table["convex"])
     return table
 

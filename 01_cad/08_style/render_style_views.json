@@ -1,0 +1,90 @@
+{
+ "generator": "04_scripts/00_cad/render_style_views.py",
+ "created_at": "2026-10-21T12:10:39",
+ "render_mesh_cache_valid": true,
+ "instances": 1214,
+ "views_body_frame": {
+  "iso_front_right": {
+   "right": [
+    0.7071,
+    0.7071,
+    -0.0
+   ],
+   "up": [
+    -0.3313,
+    0.3313,
+    0.8835
+   ],
+   "toward_viewer": [
+    0.6247,
+    -0.6247,
+    0.4685
+   ]
+  },
+  "iso_rear_left": {
+   "right": [
+    -0.7071,
+    -0.7071,
+    0.0
+   ],
+   "up": [
+    0.3313,
+    -0.3313,
+    0.8835
+   ],
+   "toward_viewer": [
+    -0.6247,
+    0.6247,
+    0.4685
+   ]
+  }
+ },
+ "display_colour_counts": {
+  "#ff4d06": 721,
+  "#bfbfbf": 7,
+  "#e0dfdb": 150,
+  "#696969": 320,
+  "#3087e3": 3,
+  "#013ef1": 2,
+  "#e5e5e5": 2,
+  "#404040": 3,
+  "#400040": 2,
+  "#ffffff": 2,
+  "#050505": 1,
+  "#a8a7a0": 1
+ },
+ "part_colour_counts": {
+  "#e0dfdb": 717,
+  "#a8a7a0": 56,
+  "#b38d01": 7,
+  "#bfbfbf": 33,
+  "#bebcba": 336,
+  "#404040": 11,
+  "#b2b2b2": 4,
+  "#cbd2ef": 6,
+  "#ffffff": 9,
+  "#3087e3": 3,
+  "#013ef1": 2,
+  "#e5e5e5": 2,
+  "#400040": 2,
+  "#050505": 1,
+  "#ff4d06": 25
+ },
+ "style_iso": {
+  "STEP 표시색 (조립 외관 재정의 CDORSI 적용)": {
+   "polygons": 1676505,
+   "outline_segments": 462607
+  },
+  "부품 자체 색 (재정의 없음, OCCT XCAF가 붙이는 색)": {
+   "polygons": 1676505,
+   "outline_segments": 462607
+  }
+ },
+ "style_iso_rear": {
+  "STEP 표시색, 후방 좌측 위에서": {
+   "polygons": 1677924,
+   "outline_segments": 464026
+  }
+ },
+ "elapsed_s": 82.3
+}

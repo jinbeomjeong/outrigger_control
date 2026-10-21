@@ -1,0 +1,673 @@
+{
+ "provenance": {
+  "source_prototype_entry": "0:1:1:746",
+  "source_instance_path": "REXOME33_Assy_r3(미니어쳐) / REX33-REX33 - 5J286105:1 / =>[0:1:1:746]",
+  "source_file": "01_cad/06_brep/prototypes/0_1_1_746.bbrep",
+  "source_sha256": "d3142659588450bc626d856e87205506800483f2922135dd9658f10f3fdfbe6e",
+  "inputs_sha256": {
+   "crawler_solids.csv": "2afcf00b688d871fd460d1acefd63405304e8af3829ee83bbf2e62b2c0e29a45",
+   "crawler_summary.json": "f635954937a230f75029b03a4deeb72cd31eada9b20ee7b6899176759624f5b4",
+   "upper_run_check.json": "aaea1fd495ee2c6e84e74e303d60087cec20faf06fa9eacc03564cd97ea885c9"
+  },
+  "generator": "04_scripts/00_cad/derive_crawler_upper_rollers.py",
+  "generator_sha256": "9f39d8a112e2a6b752db5907b9fafe28d834baa460fe0a3f9c3a502a9c0d2897",
+  "created_at": "2026-10-21T14:52:59",
+  "run_time_s": 13.7,
+  "peak_memory_gb": 1.07,
+  "cpu": {
+   "mode": "one_pcore",
+   "affinity_ok": true,
+   "logical_processor": 15,
+   "power_throttling_off_ok": true
+  },
+  "note": "Crawler model is described as REXOME25 (another machine) in the STEP file"
+ },
+ "frames": {
+  "brep_files": "CAD world frame, mm, Y up, crawler placement applied; identity placement",
+  "body_from_cad_rotation": [
+   [
+    0.0,
+    0.0,
+    1.0
+   ],
+   [
+    1.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    1.0,
+    0.0
+   ]
+  ],
+  "inertia": "about the part (or solid) centroid, body axes, kg m^2",
+  "ground_y_cad_mm": -1050.9191194248099
+ },
+ "density": {
+  "g_cm3": 7.85,
+  "source": "강철 (step_text_parent, parts_classified.csv)"
+ },
+ "definitions": {
+  "part": "roller solid (wheel + shaft boss + bracket merged in the shrinkwrap) + solids < 100000 mm3 within 1.0 mm (BRepExtrema) of it",
+  "roles": "roller_body, bolt_long (Y length >= 70 mm), bolt_short, washer (<= 5 mm)",
+  "rotating_estimate": "see rotating_estimate column; the shrinkwrap does not separate the wheel from the shaft, so this is an estimate",
+  "face_table": "01_cad/07_faces/crawler_upper_roller_faces.csv.gz, columns of instance_faces.csv.gz + part_id, role; selection = upper_roller; face_index = TopExp face order of the crawler prototype"
+ },
+ "parts": [
+  {
+   "part_id": "upper_roller_L1",
+   "kind": "upper_roller",
+   "side": "L",
+   "order_index": 0,
+   "solid_count": 9,
+   "solids": "234;1553;1554;1555;1556;1557;1558;1559;1560",
+   "roller_solid": 234,
+   "fastener_solids": "1553;1554;1555;1556;1557;1558;1559;1560",
+   "file": "01_cad/06_brep/derived/crawler/parts/upper_roller_L1.bbrep",
+   "file_bytes": 113880,
+   "sha256": "901d7fa340bd9ff5f1ffe4270d7622c3b31366b0203411beecc38a4303bb438f",
+   "density_g_cm3": 7.85,
+   "volume_mm3": 2868228.838667864,
+   "mass_kg": 22.515596383542732,
+   "com_x_cad_mm": 1021.1925609846979,
+   "com_y_cad_mm": -337.8169043509745,
+   "com_z_cad_mm": -1.0947225436877235e-11,
+   "com_x_body_m": -1.0947225436877235e-14,
+   "com_y_body_m": 1.021192560984698,
+   "com_z_body_m": -0.3378169043509745,
+   "Ixx_body_kg_m2": 0.1178956520075919,
+   "Iyy_body_kg_m2": 0.050126095547723695,
+   "Izz_body_kg_m2": 0.11859019695633906,
+   "Ixy_body_kg_m2": 2.1225802905845797e-15,
+   "Ixz_body_kg_m2": 1.0086854430284913e-15,
+   "Iyz_body_kg_m2": -0.010432582771640789,
+   "I1_principal_kg_m2": 0.04857166725912922,
+   "I2_principal_kg_m2": 0.1178956520075919,
+   "I3_principal_kg_m2": 0.12014462524493354,
+   "compound_volume_rel_diff": 2.1804780203638074e-13,
+   "roller_body_volume_mm3": 2794789.593661619,
+   "roller_body_mass_kg": 21.939098310243708,
+   "fastener_mass_kg": 0.5764980732990186,
+   "bbox_min_x_cad_mm": 895.9995000006838,
+   "bbox_min_y_cad_mm": -436.71911932403674,
+   "bbox_min_z_cad_mm": -80.00000000001108,
+   "bbox_max_x_cad_mm": 1135.999500000929,
+   "bbox_max_y_cad_mm": -262.71911932422853,
+   "bbox_max_z_cad_mm": 79.99999999998909,
+   "bbox_min_x_body_m": -0.08000000000001109,
+   "bbox_min_y_body_m": 0.8959995000006838,
+   "bbox_min_z_body_m": -0.43671911932403673,
+   "bbox_max_x_body_m": 0.07999999999998908,
+   "bbox_max_y_body_m": 1.1359995000009289,
+   "bbox_max_z_body_m": -0.26271911932422853,
+   "face_count": 117,
+   "face_ranges": "7945-7969;77490-77581",
+   "roller_axis_x_cad_mm": 1044.9995,
+   "roller_axis_y_cad_mm": -332.71911932431976,
+   "roller_axis_z_cad_mm": -1.0913936421275139e-11,
+   "roller_axis_x_body_m": -1.0913936421275139e-14,
+   "roller_axis_y_body_m": 1.0449994999999999,
+   "roller_axis_z_body_m": -0.33271911932431975,
+   "roller_axis_dir_body": "0 1 0",
+   "axis_above_ground_mm": 718.2000001004901,
+   "tread_diameter_mm": 120.0,
+   "tread_width_mm": 35.0,
+   "tread_spans_x_cad_mm": "968.000..1003.000;1086.999..1121.999",
+   "tread_gap_mm": 83.99999999999989,
+   "tread_top_above_ground_mm": 778.2000001004901,
+   "tread_face_indices": "7964;7968",
+   "flange_diameter_mm": 140.0,
+   "flange_width_mm": 79.74886800000002,
+   "flange_face_indices": "7966",
+   "hub_diameter_mm": 80.0,
+   "end_cap_diameter_mm": 100.0,
+   "rotating_volume_est_mm3": 2185813.0793641163,
+   "rotating_mass_est_kg": 17.15863267300831,
+   "rotating_spin_inertia_est_kg_m2": 0.036822758337366805,
+   "rotating_estimate": "ESTIMATE: roller solid inside R75 cylinder about the axis over X_cad 968.0..1136.0 (D120/D140/D120/D100; inner shaft included, D80 boss excluded)"
+  },
+  {
+   "part_id": "upper_roller_R1",
+   "kind": "upper_roller",
+   "side": "R",
+   "order_index": 0,
+   "solid_count": 9,
+   "solids": "1900;3206;3207;3208;3209;3210;3211;3212;3213",
+   "roller_solid": 1900,
+   "fastener_solids": "3206;3207;3208;3209;3210;3211;3212;3213",
+   "file": "01_cad/06_brep/derived/crawler/parts/upper_roller_R1.bbrep",
+   "file_bytes": 113880,
+   "sha256": "ef0d39f68573a05fdc7f1eb34851379cddda2dafc5062fbff7c6348565c8011e",
+   "density_g_cm3": 7.85,
+   "volume_mm3": 2868228.8386678975,
+   "mass_kg": 22.515596383542995,
+   "com_x_cad_mm": -1021.1935609829075,
+   "com_y_cad_mm": -337.8169043509733,
+   "com_z_cad_mm": -1.00416439261413e-11,
+   "com_x_body_m": -1.00416439261413e-14,
+   "com_y_body_m": -1.0211935609829075,
+   "com_z_body_m": -0.3378169043509733,
+   "Ixx_body_kg_m2": 0.11789565200765323,
+   "Iyy_body_kg_m2": 0.05012609554772801,
+   "Izz_body_kg_m2": 0.11859019695640804,
+   "Ixy_body_kg_m2": -7.73531460476068e-15,
+   "Ixz_body_kg_m2": 4.031880345167137e-17,
+   "Iyz_body_kg_m2": 0.01043258277164462,
+   "I1_principal_kg_m2": 0.04857166725913381,
+   "I2_principal_kg_m2": 0.11789565200765323,
+   "I3_principal_kg_m2": 0.12014462524500225,
+   "compound_volume_rel_diff": 2.1960211427085596e-13,
+   "roller_body_volume_mm3": 2794789.5936616603,
+   "roller_body_mass_kg": 21.93909831024403,
+   "fastener_mass_kg": 0.5764980732989589,
+   "bbox_min_x_cad_mm": -1136.0004999991381,
+   "bbox_min_y_cad_mm": -436.7191193240366,
+   "bbox_min_z_cad_mm": -80.00000000001044,
+   "bbox_max_x_cad_mm": -896.0004999988926,
+   "bbox_max_y_cad_mm": -262.71911932422785,
+   "bbox_max_z_cad_mm": 79.99999999998977,
+   "bbox_min_x_body_m": -0.08000000000001045,
+   "bbox_min_y_body_m": -1.1360004999991382,
+   "bbox_min_z_body_m": -0.4367191193240366,
+   "bbox_max_x_body_m": 0.07999999999998977,
+   "bbox_max_y_body_m": -0.8960004999988925,
+   "bbox_max_z_body_m": -0.26271911932422787,
+   "face_count": 117,
+   "face_ranges": "87234-87258;156522-156613",
+   "roller_axis_x_cad_mm": -1045.0005,
+   "roller_axis_y_cad_mm": -332.7191193243186,
+   "roller_axis_z_cad_mm": -1.0118128557223827e-11,
+   "roller_axis_x_body_m": -1.0118128557223826e-14,
+   "roller_axis_y_body_m": -1.0450005,
+   "roller_axis_z_body_m": -0.33271911932431864,
+   "roller_axis_dir_body": "0 1 0",
+   "axis_above_ground_mm": 718.2000001004913,
+   "tread_diameter_mm": 120.0,
+   "tread_width_mm": 35.0,
+   "tread_spans_x_cad_mm": "-1122.001..-1087.001;-1003.000..-968.000",
+   "tread_gap_mm": 84.00000000000011,
+   "tread_top_above_ground_mm": 778.2000001004913,
+   "tread_face_indices": "87253;87257",
+   "flange_diameter_mm": 140.0,
+   "flange_width_mm": 79.7488679999999,
+   "flange_face_indices": "87255",
+   "hub_diameter_mm": 80.0,
+   "end_cap_diameter_mm": 100.0,
+   "rotating_volume_est_mm3": 2185813.079361131,
+   "rotating_mass_est_kg": 17.158632672984876,
+   "rotating_spin_inertia_est_kg_m2": 0.03682275833734741,
+   "rotating_estimate": "ESTIMATE: roller solid inside R75 cylinder about the axis over X_cad -1136.0..-968.0 (D120/D140/D120/D100; inner shaft included, D80 boss excluded)"
+  }
+ ],
+ "grouping": {
+  "upper_roller_L1": {
+   "members": [
+    {
+     "solid": 234,
+     "role": "roller_body"
+    },
+    {
+     "solid": 1553,
+     "role": "bolt_long",
+     "distance_to_roller_mm": 0.7499999999999939
+    },
+    {
+     "solid": 1554,
+     "role": "washer",
+     "distance_to_roller_mm": 0.0
+    },
+    {
+     "solid": 1555,
+     "role": "bolt_long",
+     "distance_to_roller_mm": 0.7499999999999355
+    },
+    {
+     "solid": 1556,
+     "role": "washer",
+     "distance_to_roller_mm": 0.0
+    },
+    {
+     "solid": 1557,
+     "role": "bolt_short",
+     "distance_to_roller_mm": 0.7499999999998819
+    },
+    {
+     "solid": 1558,
+     "role": "washer",
+     "distance_to_roller_mm": 0.0
+    },
+    {
+     "solid": 1559,
+     "role": "bolt_short",
+     "distance_to_roller_mm": 0.7499999999998863
+    },
+    {
+     "solid": 1560,
+     "role": "washer",
+     "distance_to_roller_mm": 0.0
+    }
+   ],
+   "neighbours_not_taken": [
+    {
+     "solid": 8,
+     "volume_mm3": 27620855.482497,
+     "distance_to_roller_mm": 9.177691364915518
+    },
+    {
+     "solid": 22,
+     "volume_mm3": 315681.799253,
+     "distance_to_roller_mm": 4.547479059976376e-12
+    },
+    {
+     "solid": 833,
+     "volume_mm3": 479650.240392,
+     "distance_to_roller_mm": 0.0
+    },
+    {
+     "solid": 834,
+     "volume_mm3": 479591.916311,
+     "distance_to_roller_mm": 0.0
+    },
+    {
+     "solid": 859,
+     "volume_mm3": 479650.220158,
+     "distance_to_roller_mm": 1.047924815924216
+    },
+    {
+     "solid": 860,
+     "volume_mm3": 479591.910984,
+     "distance_to_roller_mm": 1.0479248159242076
+    },
+    {
+     "solid": 1379,
+     "volume_mm3": 83250920.482177,
+     "distance_to_roller_mm": 19.04570960423619
+    }
+   ],
+   "seat_blocks": [
+    {
+     "seat_solid": 22,
+     "volume_mm3": 315681.799253,
+     "bbox_cad_mm": [
+      896.0,
+      -432.796,
+      -80.0,
+      966.0,
+      -389.719,
+      80.0
+     ],
+     "touches_frame": [
+      {
+       "frame_solid": 8,
+       "distance_mm": 0.0,
+       "contact_point_cad_mm": [
+        957.5,
+        -410.41,
+        62.0
+       ],
+       "frame_top_y_cad_mm": -380.105041
+      }
+     ],
+     "seat_hole_radii_mm": [
+      8.0
+     ],
+     "bracket_hole_radii_mm": [
+      8.75
+     ],
+     "decision": "excluded (frame)",
+     "reason": "touches the track frame solid below the frame top (welded seat); hole radius = bolt shank radius (tapped), bracket holes are clearance"
+    }
+   ],
+   "rotating": {
+    "x_span_cad_mm": [
+     967.9995,
+     1135.9995
+    ],
+    "volume_mm3": 2185813.0793641163,
+    "mass_kg": 17.15863267300831,
+    "spin_inertia_kg_m2": 0.036822758337366805,
+    "ideal_cylinders_volume_mm3": 2129275.535000691,
+    "valid": true
+   },
+   "bands": [
+    {
+     "diameter_mm": 80.0,
+     "spans_x_cad_mm": [
+      [
+       895.9995,
+       967.9995
+      ]
+     ],
+     "faces": [
+      7960
+     ]
+    },
+    {
+     "diameter_mm": 100.0,
+     "spans_x_cad_mm": [
+      [
+       1121.9995,
+       1135.9995
+      ]
+     ],
+     "faces": [
+      7961
+     ]
+    },
+    {
+     "diameter_mm": 120.0,
+     "spans_x_cad_mm": [
+      [
+       967.9995,
+       1002.9995
+      ],
+      [
+       1086.9995,
+       1121.9995
+      ]
+     ],
+     "faces": [
+      7964,
+      7968
+     ]
+    },
+    {
+     "diameter_mm": 140.0,
+     "spans_x_cad_mm": [
+      [
+       1005.125066,
+       1084.873934
+      ]
+     ],
+     "faces": [
+      7966
+     ]
+    }
+   ]
+  },
+  "upper_roller_R1": {
+   "members": [
+    {
+     "solid": 1900,
+     "role": "roller_body"
+    },
+    {
+     "solid": 3206,
+     "role": "bolt_long",
+     "distance_to_roller_mm": 0.7499999999992042
+    },
+    {
+     "solid": 3207,
+     "role": "washer",
+     "distance_to_roller_mm": 9.663381206337363e-13
+    },
+    {
+     "solid": 3208,
+     "role": "bolt_long",
+     "distance_to_roller_mm": 0.7499999999992042
+    },
+    {
+     "solid": 3209,
+     "role": "washer",
+     "distance_to_roller_mm": 9.663381206337363e-13
+    },
+    {
+     "solid": 3210,
+     "role": "bolt_short",
+     "distance_to_roller_mm": 0.7499999999936335
+    },
+    {
+     "solid": 3211,
+     "role": "washer",
+     "distance_to_roller_mm": 9.094947017729282e-13
+    },
+    {
+     "solid": 3212,
+     "role": "bolt_short",
+     "distance_to_roller_mm": 0.7499999999936335
+    },
+    {
+     "solid": 3213,
+     "role": "washer",
+     "distance_to_roller_mm": 9.094947017729282e-13
+    }
+   ],
+   "neighbours_not_taken": [
+    {
+     "solid": 1379,
+     "volume_mm3": 83250920.482177,
+     "distance_to_roller_mm": 19.04570960390913
+    },
+    {
+     "solid": 1674,
+     "volume_mm3": 27620855.482496,
+     "distance_to_roller_mm": 9.177691364916313
+    },
+    {
+     "solid": 1688,
+     "volume_mm3": 315681.799253,
+     "distance_to_roller_mm": 3.8670305142845895e-12
+    },
+    {
+     "solid": 2499,
+     "volume_mm3": 479650.216527,
+     "distance_to_roller_mm": 0.0
+    },
+    {
+     "solid": 2500,
+     "volume_mm3": 479591.909856,
+     "distance_to_roller_mm": 0.0
+    },
+    {
+     "solid": 2525,
+     "volume_mm3": 479650.112657,
+     "distance_to_roller_mm": 1.0479248159240415
+    },
+    {
+     "solid": 2526,
+     "volume_mm3": 479591.886789,
+     "distance_to_roller_mm": 1.0479248159232182
+    }
+   ],
+   "seat_blocks": [
+    {
+     "seat_solid": 1688,
+     "volume_mm3": 315681.799253,
+     "bbox_cad_mm": [
+      -966.0,
+      -432.796,
+      -80.0,
+      -896.0,
+      -389.719,
+      80.0
+     ],
+     "touches_frame": [
+      {
+       "frame_solid": 1674,
+       "distance_mm": 0.0,
+       "contact_point_cad_mm": [
+        -957.5,
+        -410.41,
+        62.0
+       ],
+       "frame_top_y_cad_mm": -380.105041
+      }
+     ],
+     "seat_hole_radii_mm": [
+      8.0
+     ],
+     "bracket_hole_radii_mm": [
+      8.75
+     ],
+     "decision": "excluded (frame)",
+     "reason": "touches the track frame solid below the frame top (welded seat); hole radius = bolt shank radius (tapped), bracket holes are clearance"
+    }
+   ],
+   "rotating": {
+    "x_span_cad_mm": [
+     -1136.0005,
+     -968.0005
+    ],
+    "volume_mm3": 2185813.079361131,
+    "mass_kg": 17.158632672984876,
+    "spin_inertia_kg_m2": 0.03682275833734741,
+    "ideal_cylinders_volume_mm3": 2129275.53500069,
+    "valid": true
+   },
+   "bands": [
+    {
+     "diameter_mm": 80.0,
+     "spans_x_cad_mm": [
+      [
+       -968.0005,
+       -896.0005
+      ]
+     ],
+     "faces": [
+      87249
+     ]
+    },
+    {
+     "diameter_mm": 100.0,
+     "spans_x_cad_mm": [
+      [
+       -1136.0005,
+       -1122.0005
+      ]
+     ],
+     "faces": [
+      87250
+     ]
+    },
+    {
+     "diameter_mm": 120.0,
+     "spans_x_cad_mm": [
+      [
+       -1122.0005,
+       -1087.0005
+      ],
+      [
+       -1003.0005,
+       -968.0005
+      ]
+     ],
+     "faces": [
+      87253,
+      87257
+     ]
+    },
+    {
+     "diameter_mm": 140.0,
+     "spans_x_cad_mm": [
+      [
+       -1084.874934,
+       -1005.126066
+      ]
+     ],
+     "faces": [
+      87255
+     ]
+    }
+   ]
+  }
+ },
+ "verification": {
+  "symmetry": {
+   "values": {
+    "volume_rel": 1.176836406102666e-14,
+    "Ixx_rel_to_I_max": 5.104343552423555e-13,
+    "Iyy_rel_to_I_max": 3.592330492880122e-14,
+    "Izz_rel_to_I_max": 5.741953337655011e-13,
+    "Ixy_rel_to_I_max": 4.671648276178537e-14,
+    "Ixz_rel_to_I_max": 8.060007991224357e-15,
+    "Iyz_rel_to_I_max": 3.189492788895574e-14,
+    "rotating_volume_est_rel": 1.3657963648938676e-12,
+    "roller_axis_z_body_m_abs_diff": 1.1102230246251565e-15,
+    "roller_axis_x_body_m_abs_diff": 7.958078640513129e-16,
+    "roller_axis_y_body_m_sum": 1.000000000139778e-06,
+    "member_volumes_match": true
+   },
+   "tolerance_rel": 1e-09,
+   "tolerance_axis_y_mirror_m": 1e-05,
+   "pass": true
+  },
+  "reload": {
+   "parts": {
+    "upper_roller_L1": {
+     "solids": 9,
+     "expected_solids": 9,
+     "volume_rel_diff_vs_cache": 7.4451556031363e-13
+    },
+    "upper_roller_R1": {
+     "solids": 9,
+     "expected_solids": 9,
+     "volume_rel_diff_vs_cache": 7.328582185550658e-13
+    }
+   },
+   "pass": true
+  },
+  "upper_run_check_match": {
+   "abs_diff": {
+    "upper_roller_L1": {
+     "axis_y_mm": 0.000881,
+     "axis_z_mm": 0.0,
+     "flange_diameter_mm": 0.0,
+     "flange_width_mm": 0.008868,
+     "tread_diameter_mm": 0.0,
+     "tread_width_mm": 0.0,
+     "roller_volume_mm3_rel": 0.0
+    },
+    "upper_roller_R1": {
+     "axis_y_mm": 0.000881,
+     "axis_z_mm": 0.0,
+     "flange_diameter_mm": 0.0,
+     "flange_width_mm": 0.008868,
+     "tread_diameter_mm": 0.0,
+     "tread_width_mm": 0.0,
+     "roller_volume_mm3_rel": 0.0
+    }
+   },
+   "tolerance": "0.01 mm (json rounding), volume 1e-7 rel",
+   "pass": true
+  },
+  "face_table": {
+   "parts": {
+    "upper_roller_L1": {
+     "rows": 117,
+     "face_count": 117,
+     "area_rel_diff": 2.220446049250313e-16
+    },
+    "upper_roller_R1": {
+     "rows": 117,
+     "face_count": 117,
+     "area_rel_diff": 2.220446049250313e-16
+    }
+   },
+   "normal_checks": {
+    "checked": 174,
+    "failed": 0
+   },
+   "pass": true
+  },
+  "face_index_query": {
+   "tread_faces_per_part": {
+    "upper_roller_L1": 2,
+    "upper_roller_R1": 2
+   },
+   "tread_faces_expected": {
+    "upper_roller_L1": 2,
+    "upper_roller_R1": 2
+   },
+   "flange_faces_per_part": {
+    "upper_roller_L1": 1,
+    "upper_roller_R1": 1
+   },
+   "tread_axis_z_body_m": [
+    -0.332719
+   ],
+   "pass": true
+  },
+  "pass": true
+ }
+}

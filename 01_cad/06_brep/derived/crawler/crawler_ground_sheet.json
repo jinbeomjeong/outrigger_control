@@ -1,0 +1,1484 @@
+{
+ "provenance": {
+  "generator": "04_scripts/00_cad/build_crawler_ground_sheet.py",
+  "generator_sha256": "be840435b47f28e13e6d7c04bf307f861089e77080bb5fcbc468dbd2899eca90",
+  "created_at": "2026-10-21T17:10:57",
+  "inputs": {
+   "summary": {
+    "path": "01_cad/06_brep/derived/crawler/crawler_summary.json",
+    "sha256": "f635954937a230f75029b03a4deeb72cd31eada9b20ee7b6899176759624f5b4"
+   },
+   "wheels": {
+    "path": "01_cad/06_brep/derived/crawler/crawler_wheels.csv",
+    "sha256": "098174f03672e3960fa9581bdc89ac1146d621d41cc445e2b6fc887a46c39d57"
+   },
+   "tips": {
+    "path": "01_cad/06_brep/derived/crawler/crawler_grouser_tips.csv",
+    "sha256": "dd2473d1fb80f9c93676bd5bdd21c6dff36dfc815f3219d575b88085a59dcc52"
+   },
+   "solids": {
+    "path": "01_cad/06_brep/derived/crawler/crawler_solids.csv",
+    "sha256": "2afcf00b688d871fd460d1acefd63405304e8af3829ee83bbf2e62b2c0e29a45"
+   },
+   "parts": {
+    "path": "01_cad/06_brep/derived/crawler/crawler_contact_parts.csv",
+    "sha256": "57f498813581290e8fdb62f8811d5662c322774d79cdacc33858cc30532bd394"
+   },
+   "yaml": {
+    "path": "02_params/rexome33.yaml",
+    "sha256": "865c5488b9ee6cbb625479872ce5eff05bfa3d93a667d1b1583bc5a07042383a"
+   },
+   "reference": {
+    "path": "06_analysis/00_dynamics/reference.json",
+    "sha256": "9e49c00f1f5c5f52a3b9a0bf03b1a8a8b3cb86b3e3782ae5a78aa6e064c00846"
+   },
+   "leg_loads": {
+    "path": "06_analysis/00_dynamics/leg_extension_loads.json",
+    "sha256": "155b65eba91720aa66a903cafd8154fb6fa530ec775e8c1981cbcf59cef33fc5"
+   },
+   "s2b_top": {
+    "path": "07_results/S2b/crawler_top/result.json",
+    "sha256": "d70c43158bbf90c33738d631d695840277bd5739f8a17ae90f18f7a4c250261d"
+   },
+   "s2b_middle": {
+    "path": "07_results/S2b/crawler_middle/result.json",
+    "sha256": "ae48c2022b61db4b9053766545fd50b7f0221757897780ce7a544c38da047a39"
+   },
+   "s2b_bottom": {
+    "path": "07_results/S2b/crawler_bottom/result.json",
+    "sha256": "8a67ca53883a676c415206a992bbd949066ee97e07ccfe831835bd941ea02f10"
+   }
+  },
+  "runtime_s": 0.21,
+  "note": "cache-only (no STEP, no B-rep); the drawn undercarriage is the REXOME25 model per the STEP description"
+ },
+ "frames": "body axes x = +Z_cad (forward), y = +X_cad (left), z = +Y_cad (up), CAD origin, m; heights in mm above the crawler floor Y_cad = -1050.9191 mm (z = -1.050919 m)",
+ "cross_check": [
+  {
+   "item": "track centre half spacing",
+   "cad": "+1045.0000 mm (left), -1045.0000 mm (right pad centre)",
+   "yaml": "sphere_layout.track_centre_y_m = 1.045",
+   "reference": "reference.json layouts D track_centre_y_m = 1.045; leg_extension_loads via dyn_model.crawler_points (YAML)",
+   "diff_mm": 0.0,
+   "verdict": "match"
+  },
+  {
+   "item": "ground width of the grouser pads",
+   "cad": "421.97 mm (block bottom 489.2, block 600.0)",
+   "yaml": "not used (no key)",
+   "reference": "not used",
+   "diff_mm": null,
+   "verdict": "not used by the models (SCM input only)"
+  },
+  {
+   "item": "flat ground length (+1 mm)",
+   "cad": "1636.7 mm, x [-0.82512, 0.8116] m",
+   "yaml": "not used (roller_x_m / end_shoe_x_m instead)",
+   "reference": "reference.json kinematics: crawler as rigid box x[-1.840,1.844] y[-1.366,1.366] at z=-1.0509 (bbox of the cr",
+   "diff_mm": null,
+   "verdict": "not used for contact; the box is the crawler bbox for clearance only (CAD bbox x -1840.0 ... 1844.2 mm, |y| max 1366.0 mm)"
+  },
+  {
+   "item": "track rollers",
+   "cad": "6/side, D 194.0 mm, x [-0.884, -0.527, -0.17, 0.187, 0.544, 0.901] m, spacing [357.0, 357.0, 357.0, 357.0, 357.0] mm",
+   "yaml": "roller_x_m = [-0.884, -0.527, -0.17, 0.187, 0.544, 0.901]",
+   "reference": "S2b/reference use the YAML list (24 spheres, labels L/R-roller-0..5)",
+   "diff_mm": 0.0,
+   "verdict": "match (0.1 mm rounding)"
+  },
+  {
+   "item": "end shoe stations",
+   "cad": "x [-1.31218, -1.13922, -0.96625, 0.95053, 1.12364, 1.29675] m",
+   "yaml": "end_shoe_x_m = [-1.3122, -1.1392, -0.9663, 0.9505, 1.1236, 1.2968]",
+   "reference": "via YAML",
+   "diff_mm": 0.047,
+   "verdict": "match (0.1 mm rounding)"
+  },
+  {
+   "item": "end shoe gaps",
+   "cad": "[21.493, 11.862, 2.231, 2.365, 8.815, 15.265] mm",
+   "yaml": "end_shoe_gap_m = [0.02149, 0.01186, 0.00223, 0.00236, 0.00881, 0.01526]",
+   "reference": "via YAML",
+   "diff_mm": 0.0049,
+   "verdict": "match (0.01 mm rounding)"
+  },
+  {
+   "item": "crawler floor height",
+   "cad": "Y_cad -1050.9191 mm = z -1.0509191 m",
+   "yaml": "ground.crawler_bottom_z_m = -1.0509",
+   "reference": "reference / S2b / leg_extension_loads floor at ground.crawler_bottom_z_m",
+   "diff_mm": 0.0191,
+   "verdict": "match (0.1 mm rounding; shifts every contact height equally, no static effect)"
+  },
+  {
+   "item": "mass case / level of the loads",
+   "cad": "case C (auger_levels.json), three levels",
+   "yaml": "superstructure.auger_levels.*",
+   "reference": "leg_extension_loads: level top, case C; S2b: top/middle/bottom",
+   "diff_mm": null,
+   "verdict": "consistent"
+  }
+ ],
+ "shoe_geometry": {
+  "pitch_mm": 173.20000000000002,
+  "ground_shoe_block_mm (x length, y width, height)": [
+   130.0,
+   600.0,
+   72.0
+  ],
+  "block_bottom_plane_mm (x, y)": [
+   88.1,
+   489.2
+  ],
+  "block_bottom_height_above_pads_mm": 4.0,
+  "pad_per_shoe": {
+   "count": 4,
+   "area_each_mm2": 2108.5,
+   "width_y_mm": 64.16,
+   "flat_shoe_pad_lowest_max_mm": 0.0
+  },
+  "gap_between_blocks_x_mm": 43.2,
+  "shoe_plate_underside_in_gap_height_mm": 47.0,
+  "grouser_height_mm": {
+   "block_bottom_to_plate_underside": 43.0,
+   "pad_tip_to_plate_underside": 47.0,
+   "pad_protrusion_below_block": 4.0,
+   "note": "no bar grousers: each ground shoe is a 600 x 130 x 72 mm block with 4 pads; the block below the plate acts as the grouser (shape-based reading, ASSUMPTION)"
+  },
+  "area_per_shoe_mm2": {
+   "pads": 8434.1,
+   "pads_plus_block_bottom": 40935.4
+  }
+ },
+ "rectangles_body_m": {
+  "left": {
+   "pad_tips_flat_1mm": {
+    "x_m": [
+     -0.82512,
+     0.8116
+    ],
+    "y_m": [
+     0.83401,
+     1.25599
+    ],
+    "length_mm": 1636.7173,
+    "width_mm": 421.97,
+    "note": "outer envelope of the 4 x 10 grouser pads at height 0 (rigid floor contact)",
+    "length_m": 1.63672,
+    "width_m": 0.42198,
+    "centre_m": [
+     -0.00676,
+     1.045
+    ]
+   },
+   "block_bottom_flat": {
+    "x_m": [
+     -0.83037,
+     0.81686
+    ],
+    "y_m": [
+     0.80038,
+     1.28961
+    ],
+    "height_mm": 4.0,
+    "note": "envelope of the flat shoe block bottom planes (+4 mm), 10 shoes",
+    "length_m": 1.64723,
+    "width_m": 0.48923,
+    "centre_m": [
+     -0.00676,
+     1.04499
+    ]
+   },
+   "block_outline_flat": {
+    "x_m": [
+     -0.8513,
+     0.83779
+    ],
+    "y_m": [
+     0.745,
+     1.345
+    ],
+    "note": "bbox of the 10 flat ground-shoe solids (600 mm wide blocks)",
+    "length_m": 1.68909,
+    "width_m": 0.6,
+    "centre_m": [
+     -0.00675,
+     1.045
+    ]
+   },
+   "block_outline_all_contact_shoes": {
+    "x_m": [
+     -1.37516,
+     1.36042
+    ],
+    "y_m": [
+     0.745,
+     1.345
+    ],
+    "note": "bbox of 10 flat + 6 end shoe blocks (end shoes are raised 2.2 ... 21.5 mm)",
+    "length_m": 2.73558,
+    "width_m": 0.6,
+    "centre_m": [
+     -0.00737,
+     1.045
+    ]
+   }
+  },
+  "right": {
+   "pad_tips_flat_1mm": {
+    "x_m": [
+     -0.82512,
+     0.8116
+    ],
+    "y_m": [
+     -1.25599,
+     -0.83401
+    ],
+    "length_mm": 1636.7173,
+    "width_mm": 421.97,
+    "note": "outer envelope of the 4 x 10 grouser pads at height 0 (rigid floor contact)",
+    "length_m": 1.63672,
+    "width_m": 0.42198,
+    "centre_m": [
+     -0.00676,
+     -1.045
+    ]
+   },
+   "block_bottom_flat": {
+    "x_m": [
+     -0.83037,
+     0.81686
+    ],
+    "y_m": [
+     -1.28962,
+     -0.80039
+    ],
+    "height_mm": 4.0,
+    "note": "envelope of the flat shoe block bottom planes (+4 mm), 10 shoes",
+    "length_m": 1.64723,
+    "width_m": 0.48923,
+    "centre_m": [
+     -0.00676,
+     -1.045
+    ]
+   },
+   "block_outline_flat": {
+    "x_m": [
+     -0.8513,
+     0.83779
+    ],
+    "y_m": [
+     -1.345,
+     -0.745
+    ],
+    "note": "bbox of the 10 flat ground-shoe solids (600 mm wide blocks)",
+    "length_m": 1.68909,
+    "width_m": 0.6,
+    "centre_m": [
+     -0.00675,
+     -1.045
+    ]
+   },
+   "block_outline_all_contact_shoes": {
+    "x_m": [
+     -1.37516,
+     1.36042
+    ],
+    "y_m": [
+     -1.345,
+     -0.745
+    ],
+    "note": "bbox of 10 flat + 6 end shoe blocks (end shoes are raised 2.2 ... 21.5 mm)",
+    "length_m": 2.73558,
+    "width_m": 0.6,
+    "centre_m": [
+     -0.00737,
+     -1.045
+    ]
+   }
+  }
+ },
+ "bands": {
+  "definitions": {
+   "centroid": "face counted if its centroid height <= band (crawler_summary.json definition)",
+   "lowest_point": "face counted (whole face) if its lowest point <= band",
+   "surface_part": "only the part of each (tilted) face lower than the band; area pro rata to the length along x"
+  },
+  "per_band": {
+   "centroid": {
+    "1mm": {
+     "left": {
+      "x_body_m": [
+       -0.82512,
+       0.8116
+      ],
+      "y_body_m": [
+       0.83401,
+       1.25599
+      ],
+      "length_mm": 1636.7173,
+      "width_mm": 421.97,
+      "area_mm2": 84340.627,
+      "face_count": 40
+     },
+     "right": {
+      "x_body_m": [
+       -0.82512,
+       0.8116
+      ],
+      "y_body_m": [
+       -1.25599,
+       -0.83401
+      ],
+      "length_mm": 1636.7173,
+      "width_mm": 421.97,
+      "area_mm2": 84340.627,
+      "face_count": 40
+     }
+    },
+    "3mm": {
+     "left": {
+      "x_body_m": [
+       -0.82512,
+       0.8116
+      ],
+      "y_body_m": [
+       0.83401,
+       1.25599
+      ],
+      "length_mm": 1636.7173,
+      "width_mm": 421.97,
+      "area_mm2": 84340.627,
+      "face_count": 40
+     },
+     "right": {
+      "x_body_m": [
+       -0.82512,
+       0.8116
+      ],
+      "y_body_m": [
+       -1.25599,
+       -0.83401
+      ],
+      "length_mm": 1636.7173,
+      "width_mm": 421.97,
+      "area_mm2": 84340.627,
+      "face_count": 40
+     }
+    },
+    "5mm": {
+     "left": {
+      "x_body_m": [
+       -1.00501,
+       0.98932
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 1994.3264,
+      "width_mm": 489.23,
+      "area_mm2": 426221.919,
+      "face_count": 58
+     },
+     "right": {
+      "x_body_m": [
+       -1.00501,
+       0.98932
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 1994.3264,
+      "width_mm": 489.23,
+      "area_mm2": 426221.919,
+      "face_count": 58
+     }
+    },
+    "10mm": {
+     "left": {
+      "x_body_m": [
+       -1.01004,
+       0.99442
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 2004.4585,
+      "width_mm": 489.23,
+      "area_mm2": 491224.552,
+      "face_count": 60
+     },
+     "right": {
+      "x_body_m": [
+       -1.01004,
+       0.99442
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 2004.4585,
+      "width_mm": 489.23,
+      "area_mm2": 491224.552,
+      "face_count": 60
+     }
+    },
+    "15mm": {
+     "left": {
+      "x_body_m": [
+       -1.17797,
+       1.16753
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 2345.5074,
+      "width_mm": 489.23,
+      "area_mm2": 540593.994,
+      "face_count": 69
+     },
+     "right": {
+      "x_body_m": [
+       -1.17797,
+       1.16753
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 2345.5074,
+      "width_mm": 489.23,
+      "area_mm2": 540593.994,
+      "face_count": 69
+     }
+    },
+    "22mm": {
+     "left": {
+      "x_body_m": [
+       -1.183,
+       1.34065
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 2523.6463,
+      "width_mm": 489.23,
+      "area_mm2": 614030.69,
+      "face_count": 75
+     },
+     "right": {
+      "x_body_m": [
+       -1.183,
+       1.34065
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 2523.6463,
+      "width_mm": 489.23,
+      "area_mm2": 614030.69,
+      "face_count": 75
+     }
+    }
+   },
+   "lowest_point": {
+    "1mm": {
+     "left": {
+      "x_body_m": [
+       -0.82512,
+       0.8116
+      ],
+      "y_body_m": [
+       0.83401,
+       1.25599
+      ],
+      "length_mm": 1636.7173,
+      "width_mm": 421.97,
+      "area_mm2": 84340.627,
+      "face_count": 40
+     },
+     "right": {
+      "x_body_m": [
+       -0.82512,
+       0.8116
+      ],
+      "y_body_m": [
+       -1.25599,
+       -0.83401
+      ],
+      "length_mm": 1636.7173,
+      "width_mm": 421.97,
+      "area_mm2": 84340.627,
+      "face_count": 40
+     }
+    },
+    "3mm": {
+     "left": {
+      "x_body_m": [
+       -1.00501,
+       0.98932
+      ],
+      "y_body_m": [
+       0.83401,
+       1.25599
+      ],
+      "length_mm": 1994.3264,
+      "width_mm": 421.97,
+      "area_mm2": 101208.753,
+      "face_count": 48
+     },
+     "right": {
+      "x_body_m": [
+       -1.00501,
+       0.98932
+      ],
+      "y_body_m": [
+       -1.25599,
+       -0.83401
+      ],
+      "length_mm": 1994.3264,
+      "width_mm": 421.97,
+      "area_mm2": 101208.753,
+      "face_count": 48
+     }
+    },
+    "5mm": {
+     "left": {
+      "x_body_m": [
+       -1.00501,
+       0.98932
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 1994.3264,
+      "width_mm": 489.23,
+      "area_mm2": 426221.919,
+      "face_count": 58
+     },
+     "right": {
+      "x_body_m": [
+       -1.00501,
+       0.98932
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 1994.3264,
+      "width_mm": 489.23,
+      "area_mm2": 426221.919,
+      "face_count": 58
+     }
+    },
+    "10mm": {
+     "left": {
+      "x_body_m": [
+       -1.01004,
+       1.16243
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 2172.4654,
+      "width_mm": 489.23,
+      "area_mm2": 499658.615,
+      "face_count": 64
+     },
+     "right": {
+      "x_body_m": [
+       -1.01004,
+       1.16243
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 2172.4654,
+      "width_mm": 489.23,
+      "area_mm2": 499658.615,
+      "face_count": 64
+     }
+    },
+    "15mm": {
+     "left": {
+      "x_body_m": [
+       -1.17797,
+       1.16753
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 2345.5074,
+      "width_mm": 489.23,
+      "area_mm2": 540593.994,
+      "face_count": 69
+     },
+     "right": {
+      "x_body_m": [
+       -1.17797,
+       1.16753
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 2345.5074,
+      "width_mm": 489.23,
+      "area_mm2": 540593.994,
+      "face_count": 69
+     }
+    },
+    "22mm": {
+     "left": {
+      "x_body_m": [
+       -1.35094,
+       1.34065
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 2691.5833,
+      "width_mm": 489.23,
+      "area_mm2": 622464.753,
+      "face_count": 79
+     },
+     "right": {
+      "x_body_m": [
+       -1.35094,
+       1.34065
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 2691.5833,
+      "width_mm": 489.23,
+      "area_mm2": 622464.753,
+      "face_count": 79
+     }
+    }
+   },
+   "surface_part": {
+    "1mm": {
+     "left": {
+      "x_body_m": [
+       -0.82512,
+       0.8116
+      ],
+      "y_body_m": [
+       0.83401,
+       1.25599
+      ],
+      "length_mm": 1636.7173,
+      "width_mm": 421.97,
+      "area_mm2": 84340.627,
+      "face_count": 40
+     },
+     "right": {
+      "x_body_m": [
+       -0.82512,
+       0.8116
+      ],
+      "y_body_m": [
+       -1.25599,
+       -0.83401
+      ],
+      "length_mm": 1636.7173,
+      "width_mm": 421.97,
+      "area_mm2": 84340.627,
+      "face_count": 40
+     }
+    },
+    "3mm": {
+     "left": {
+      "x_body_m": [
+       -0.94132,
+       0.92879
+      ],
+      "y_body_m": [
+       0.83401,
+       1.25599
+      ],
+      "length_mm": 1870.106,
+      "width_mm": 421.97,
+      "area_mm2": 87697.524,
+      "face_count": 48
+     },
+     "right": {
+      "x_body_m": [
+       -0.94132,
+       0.92879
+      ],
+      "y_body_m": [
+       -1.25599,
+       -0.83401
+      ],
+      "length_mm": 1870.106,
+      "width_mm": 421.97,
+      "area_mm2": 87697.524,
+      "face_count": 48
+     }
+    },
+    "5mm": {
+     "left": {
+      "x_body_m": [
+       -0.97723,
+       0.98247
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 1959.7023,
+      "width_mm": 489.23,
+      "area_mm2": 422454.978,
+      "face_count": 58
+     },
+     "right": {
+      "x_body_m": [
+       -0.97723,
+       0.98247
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 1959.7023,
+      "width_mm": 489.23,
+      "area_mm2": 422454.978,
+      "face_count": 58
+     }
+    },
+    "10mm": {
+     "left": {
+      "x_body_m": [
+       -1.00501,
+       1.11667
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 2121.675,
+      "width_mm": 489.23,
+      "area_mm2": 489160.307,
+      "face_count": 64
+     },
+     "right": {
+      "x_body_m": [
+       -1.00501,
+       1.11667
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 2121.675,
+      "width_mm": 489.23,
+      "area_mm2": 489160.307,
+      "face_count": 64
+     }
+    },
+    "15mm": {
+     "left": {
+      "x_body_m": [
+       -1.15682,
+       1.16243
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 2319.2454,
+      "width_mm": 489.23,
+      "area_mm2": 529398.308,
+      "face_count": 69
+     },
+     "right": {
+      "x_body_m": [
+       -1.15682,
+       1.16243
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 2319.2454,
+      "width_mm": 489.23,
+      "area_mm2": 529398.308,
+      "face_count": 69
+     }
+    },
+    "22mm": {
+     "left": {
+      "x_body_m": [
+       -1.28252,
+       1.33554
+      ],
+      "y_body_m": [
+       0.80038,
+       1.28961
+      ],
+      "length_mm": 2618.065,
+      "width_mm": 489.23,
+      "area_mm2": 611575.351,
+      "face_count": 79
+     },
+     "right": {
+      "x_body_m": [
+       -1.28252,
+       1.33554
+      ],
+      "y_body_m": [
+       -1.28962,
+       -0.80039
+      ],
+      "length_mm": 2618.065,
+      "width_mm": 489.23,
+      "area_mm2": 611575.351,
+      "face_count": 79
+     }
+    }
+   }
+  },
+  "summary_reproduction_max_abs_diff (mm or mm^2)": 0.000284
+ },
+ "sinkage_engagement_left_track": [
+  {
+   "sinkage_mm": 0.0,
+   "engaged_shoes_per_track": 10,
+   "engaged_end_shoes": [],
+   "contact_length_surface_part_mm": 1636.7173,
+   "contact_area_surface_part_mm2_per_track": 84340.627,
+   "note": "rigid track pressed vertically into a soil surface (no tilt); faces = pads + block bottoms only"
+  },
+  {
+   "sinkage_mm": 2.5,
+   "engaged_shoes_per_track": 12,
+   "engaged_end_shoes": [
+    "end_shoe_L3",
+    "end_shoe_L4"
+   ],
+   "contact_length_surface_part_mm": 1847.707,
+   "contact_area_surface_part_mm2_per_track": 85261.457,
+   "note": "rigid track pressed vertically into a soil surface (no tilt); faces = pads + block bottoms only"
+  },
+  {
+   "sinkage_mm": 5.0,
+   "engaged_shoes_per_track": 12,
+   "engaged_end_shoes": [
+    "end_shoe_L3",
+    "end_shoe_L4"
+   ],
+   "contact_length_surface_part_mm": 1959.7023,
+   "contact_area_surface_part_mm2_per_track": 422454.982,
+   "note": "rigid track pressed vertically into a soil surface (no tilt); faces = pads + block bottoms only"
+  },
+  {
+   "sinkage_mm": 10.0,
+   "engaged_shoes_per_track": 13,
+   "engaged_end_shoes": [
+    "end_shoe_L3",
+    "end_shoe_L4",
+    "end_shoe_L5"
+   ],
+   "contact_length_surface_part_mm": 2121.6751,
+   "contact_area_surface_part_mm2_per_track": 489160.317,
+   "note": "rigid track pressed vertically into a soil surface (no tilt); faces = pads + block bottoms only"
+  },
+  {
+   "sinkage_mm": 15.0,
+   "engaged_shoes_per_track": 14,
+   "engaged_end_shoes": [
+    "end_shoe_L2",
+    "end_shoe_L3",
+    "end_shoe_L4",
+    "end_shoe_L5"
+   ],
+   "contact_length_surface_part_mm": 2319.2454,
+   "contact_area_surface_part_mm2_per_track": 529398.32,
+   "note": "rigid track pressed vertically into a soil surface (no tilt); faces = pads + block bottoms only"
+  },
+  {
+   "sinkage_mm": 22.0,
+   "engaged_shoes_per_track": 16,
+   "engaged_end_shoes": [
+    "end_shoe_L1",
+    "end_shoe_L2",
+    "end_shoe_L3",
+    "end_shoe_L4",
+    "end_shoe_L5",
+    "end_shoe_L6"
+   ],
+   "contact_length_surface_part_mm": 2618.065,
+   "contact_area_surface_part_mm2_per_track": 611575.363,
+   "note": "rigid track pressed vertically into a soil surface (no tilt); faces = pads + block bottoms only"
+  },
+  {
+   "sinkage_mm": 47.0,
+   "note": "shoe plate underside in the 43 mm gaps between blocks starts to bear; above this the whole 600 mm x length outline bears (estimate)"
+  }
+ ],
+ "end_shoes_left": [
+  {
+   "part_id": "end_shoe_L1",
+   "station_x_body_m": -1.31218,
+   "gap_mm": 21.4935,
+   "tilt_deg": 3.18722
+  },
+  {
+   "part_id": "end_shoe_L2",
+   "station_x_body_m": -1.13922,
+   "gap_mm": 11.86202,
+   "tilt_deg": 3.18722
+  },
+  {
+   "part_id": "end_shoe_L3",
+   "station_x_body_m": -0.96625,
+   "gap_mm": 2.23054,
+   "tilt_deg": 3.18722
+  },
+  {
+   "part_id": "end_shoe_L4",
+   "station_x_body_m": 0.95053,
+   "gap_mm": 2.36487,
+   "tilt_deg": 2.13376
+  },
+  {
+   "part_id": "end_shoe_L5",
+   "station_x_body_m": 1.12364,
+   "gap_mm": 8.81472,
+   "tilt_deg": 2.13376
+  },
+  {
+   "part_id": "end_shoe_L6",
+   "station_x_body_m": 1.29675,
+   "gap_mm": 15.26458,
+   "tilt_deg": 2.13376
+  }
+ ],
+ "rollers": {
+  "count_per_track": 6,
+  "diameter_mm": 194.0,
+  "x_m": [
+   -0.884,
+   -0.527,
+   -0.17,
+   0.187,
+   0.544,
+   0.901
+  ],
+  "spacing_mm": [
+   357.0,
+   357.0,
+   357.0,
+   357.0,
+   357.0
+  ],
+  "spacing_over_pitch": 2.061,
+  "roller_bottom_above_floor_mm": 163.2,
+  "roller_to_shoe_left": [
+   {
+    "roller": "roller_L1",
+    "roller_x_m": -0.884,
+    "shoe_under_roller": "end_shoe_L3",
+    "shoe_kind": "end_shoe",
+    "shoe_gap_mm": 2.23,
+    "shoe_station_x_m": -0.9663,
+    "offset_from_shoe_centre_mm": 82.3,
+    "distance_to_nearest_joint_mm": 7.7,
+    "nearest_joint_x_m": -0.8763,
+    "shoes_loaded": [
+     "end_shoe_L3",
+     "flat_shoe_L01"
+    ]
+   },
+   {
+    "roller": "roller_L2",
+    "roller_x_m": -0.527,
+    "shoe_under_roller": "flat_shoe_L02",
+    "shoe_kind": "flat_shoe",
+    "shoe_gap_mm": 0.0,
+    "shoe_station_x_m": -0.6131,
+    "offset_from_shoe_centre_mm": 86.1,
+    "distance_to_nearest_joint_mm": 0.5,
+    "nearest_joint_x_m": -0.5265,
+    "shoes_loaded": [
+     "flat_shoe_L02",
+     "flat_shoe_L03"
+    ]
+   },
+   {
+    "roller": "roller_L3",
+    "roller_x_m": -0.17,
+    "shoe_under_roller": "flat_shoe_L05",
+    "shoe_kind": "flat_shoe",
+    "shoe_gap_mm": 0.0,
+    "shoe_station_x_m": -0.0934,
+    "offset_from_shoe_centre_mm": -76.6,
+    "distance_to_nearest_joint_mm": 10.0,
+    "nearest_joint_x_m": -0.18,
+    "shoes_loaded": [
+     "flat_shoe_L05",
+     "flat_shoe_L04"
+    ]
+   },
+   {
+    "roller": "roller_L4",
+    "roller_x_m": 0.187,
+    "shoe_under_roller": "flat_shoe_L07",
+    "shoe_kind": "flat_shoe",
+    "shoe_gap_mm": 0.0,
+    "shoe_station_x_m": 0.2531,
+    "offset_from_shoe_centre_mm": -66.1,
+    "distance_to_nearest_joint_mm": 20.5,
+    "nearest_joint_x_m": 0.1665,
+    "shoes_loaded": [
+     "flat_shoe_L07"
+    ]
+   },
+   {
+    "roller": "roller_L5",
+    "roller_x_m": 0.544,
+    "shoe_under_roller": "flat_shoe_L09",
+    "shoe_kind": "flat_shoe",
+    "shoe_gap_mm": 0.0,
+    "shoe_station_x_m": 0.5996,
+    "offset_from_shoe_centre_mm": -55.6,
+    "distance_to_nearest_joint_mm": 31.1,
+    "nearest_joint_x_m": 0.5129,
+    "shoes_loaded": [
+     "flat_shoe_L09"
+    ]
+   },
+   {
+    "roller": "roller_L6",
+    "roller_x_m": 0.901,
+    "shoe_under_roller": "end_shoe_L4",
+    "shoe_kind": "end_shoe",
+    "shoe_gap_mm": 2.36,
+    "shoe_station_x_m": 0.9505,
+    "offset_from_shoe_centre_mm": -49.5,
+    "distance_to_nearest_joint_mm": 39.3,
+    "nearest_joint_x_m": 0.8617,
+    "shoes_loaded": [
+     "end_shoe_L4"
+    ]
+   }
+  ],
+  "flat_shoes_without_roller_above": [
+   "flat_shoe_L06",
+   "flat_shoe_L08",
+   "flat_shoe_L10"
+  ],
+  "joint_share_threshold_mm (ASSUMPTION)": 15.0,
+  "end_roller_lever_sensitivity": {
+   "sum_x2_rollers_m2 (about x = 0)": 2.23079,
+   "sum_x2_end_rollers_at_nearest_joint_m2": 2.14796,
+   "ratio": 0.9629,
+   "note": "end rollers sit over the first raised shoes in this CAD track phase; if their load reaches the floor at the nearest joint instead of the roller axis, the roller-row pitch stiffness changes by this ratio (equal sphere stiffness, end shoes ignored; changes with the track phase by up to half a pitch)"
+  }
+ },
+ "loads_case_C": {
+  "top": {
+   "source": "07_results/S2b/crawler_top/result.json analytic_exact (exact geometry, mass case C)",
+   "weight_N": 382290.66,
+   "sum_sphere_forces_N": 382290.66,
+   "equilibrium_rel_diff": 4.248060198801698e-14,
+   "chrono_window_crawler_fz_mean_N": 382290.68,
+   "chrono_vs_weight_rel_diff": 4.071838222095252e-08,
+   "pose_uz_mm_roll_deg_pitch_deg": [
+    -3.1849,
+    0.000289,
+    0.17366
+   ],
+   "active_spheres": 14,
+   "tracks": {
+    "left": {
+     "station_forces_N": {
+      "L-roller-0": 4130.4,
+      "L-roller-1": 13147.5,
+      "L-roller-2": 22164.5,
+      "L-roller-3": 31181.6,
+      "L-roller-4": 40198.6,
+      "L-roller-5": 49215.7,
+      "L-end_shoe-3": 30799.4
+     },
+     "total_N": 190837.7,
+     "share_of_weight": 0.4992,
+     "x_centre_of_pressure_m": 0.4557,
+     "eccentricity_vs_flat_centre_m": 0.4625,
+     "kern_limit_L_over_6_m": 0.2728,
+     "mean_pressure_kPa": {
+      "A1_pad_tips_flat (rigid floor, 40 pads)": 2262.7,
+      "A2_block_bottoms_flat (soil, sinkage > 4 mm, 10 shoes)": 466.2,
+      "A3_rect_pad_width_x_flat_length (0.422 x 1.637)": 276.3,
+      "A4_rect_block_bottom (0.489 x flat block-bottom length)": 236.8,
+      "A5_rect_block_outline (0.600 x flat block length)": 188.3,
+      "A6_reference_only (0.600 x (roller span + roller diameter))": 160.7
+     },
+     "winkler_rigid_track_estimate (ASSUMPTION)": {
+      "p_max_kPa": 730.7,
+      "contact_length_m": 1.068,
+      "note": "e > L/6: triangular pressure on a linear Winkler soil, block-bottom width, flat length only; end shoes ignored (they shorten the lever when the soil yields)"
+     },
+     "roller_station_pressure_kPa": {
+      "front_roller_on_one_shoe_pads (rigid floor)": 5835.0,
+      "front_roller_on_one_shoe_block (soil)": 1202.3,
+      "front_roller_tributary_357mm_x_block_width (soil)": 281.8,
+      "rear_roller_tributary_357mm_x_block_width (soil)": 23.6
+     }
+    },
+    "right": {
+     "station_forces_N": {
+      "R-roller-0": 4218.3,
+      "R-roller-1": 13235.4,
+      "R-roller-2": 22252.4,
+      "R-roller-3": 31269.5,
+      "R-roller-4": 40286.5,
+      "R-roller-5": 49303.6,
+      "R-end_shoe-3": 30887.3
+     },
+     "total_N": 191452.9,
+     "share_of_weight": 0.5008,
+     "x_centre_of_pressure_m": 0.4547,
+     "eccentricity_vs_flat_centre_m": 0.4615,
+     "kern_limit_L_over_6_m": 0.2728,
+     "mean_pressure_kPa": {
+      "A1_pad_tips_flat (rigid floor, 40 pads)": 2270.0,
+      "A2_block_bottoms_flat (soil, sinkage > 4 mm, 10 shoes)": 467.7,
+      "A3_rect_pad_width_x_flat_length (0.422 x 1.637)": 277.2,
+      "A4_rect_block_bottom (0.489 x flat block-bottom length)": 237.6,
+      "A5_rect_block_outline (0.600 x flat block length)": 188.9,
+      "A6_reference_only (0.600 x (roller span + roller diameter))": 161.2
+     },
+     "winkler_rigid_track_estimate (ASSUMPTION)": {
+      "p_max_kPa": 731.0,
+      "contact_length_m": 1.071,
+      "note": "e > L/6: triangular pressure on a linear Winkler soil, block-bottom width, flat length only; end shoes ignored (they shorten the lever when the soil yields)"
+     },
+     "roller_station_pressure_kPa": {
+      "front_roller_on_one_shoe_pads (rigid floor)": 5846.0,
+      "front_roller_on_one_shoe_block (soil)": 1204.4,
+      "front_roller_tributary_357mm_x_block_width (soil)": 282.3,
+      "rear_roller_tributary_357mm_x_block_width (soil)": 24.2
+     }
+    }
+   }
+  },
+  "middle": {
+   "source": "07_results/S2b/crawler_middle/result.json analytic_exact (exact geometry, mass case C)",
+   "weight_N": 382290.66,
+   "sum_sphere_forces_N": 382290.66,
+   "equilibrium_rel_diff": 2.0555129994201764e-14,
+   "chrono_window_crawler_fz_mean_N": 382290.63,
+   "chrono_vs_weight_rel_diff": 8.300988843253951e-08,
+   "pose_uz_mm_roll_deg_pitch_deg": [
+    -3.1872,
+    0.000289,
+    0.17272
+   ],
+   "active_spheres": 14,
+   "tracks": {
+    "left": {
+     "station_forces_N": {
+      "L-roller-0": 4270.4,
+      "L-roller-1": 13238.8,
+      "L-roller-2": 22207.3,
+      "L-roller-3": 31175.7,
+      "L-roller-4": 40144.1,
+      "L-roller-5": 49112.6,
+      "L-end_shoe-3": 30689.5
+     },
+     "total_N": 190838.4,
+     "share_of_weight": 0.4992,
+     "x_centre_of_pressure_m": 0.4536,
+     "eccentricity_vs_flat_centre_m": 0.4603,
+     "kern_limit_L_over_6_m": 0.2728,
+     "mean_pressure_kPa": {
+      "A1_pad_tips_flat (rigid floor, 40 pads)": 2262.7,
+      "A2_block_bottoms_flat (soil, sinkage > 4 mm, 10 shoes)": 466.2,
+      "A3_rect_pad_width_x_flat_length (0.422 x 1.637)": 276.3,
+      "A4_rect_block_bottom (0.489 x flat block-bottom length)": 236.8,
+      "A5_rect_block_outline (0.600 x flat block length)": 188.3,
+      "A6_reference_only (0.600 x (roller span + roller diameter))": 160.7
+     },
+     "winkler_rigid_track_estimate (ASSUMPTION)": {
+      "p_max_kPa": 726.4,
+      "contact_length_m": 1.074,
+      "note": "e > L/6: triangular pressure on a linear Winkler soil, block-bottom width, flat length only; end shoes ignored (they shorten the lever when the soil yields)"
+     },
+     "roller_station_pressure_kPa": {
+      "front_roller_on_one_shoe_pads (rigid floor)": 5823.0,
+      "front_roller_on_one_shoe_block (soil)": 1199.8,
+      "front_roller_tributary_357mm_x_block_width (soil)": 281.2,
+      "rear_roller_tributary_357mm_x_block_width (soil)": 24.5
+     }
+    },
+    "right": {
+     "station_forces_N": {
+      "R-roller-0": 4358.1,
+      "R-roller-1": 13326.5,
+      "R-roller-2": 22295.0,
+      "R-roller-3": 31263.4,
+      "R-roller-4": 40231.8,
+      "R-roller-5": 49200.3,
+      "R-end_shoe-3": 30777.2
+     },
+     "total_N": 191452.3,
+     "share_of_weight": 0.5008,
+     "x_centre_of_pressure_m": 0.4526,
+     "eccentricity_vs_flat_centre_m": 0.4594,
+     "kern_limit_L_over_6_m": 0.2728,
+     "mean_pressure_kPa": {
+      "A1_pad_tips_flat (rigid floor, 40 pads)": 2270.0,
+      "A2_block_bottoms_flat (soil, sinkage > 4 mm, 10 shoes)": 467.7,
+      "A3_rect_pad_width_x_flat_length (0.422 x 1.637)": 277.2,
+      "A4_rect_block_bottom (0.489 x flat block-bottom length)": 237.6,
+      "A5_rect_block_outline (0.600 x flat block length)": 188.9,
+      "A6_reference_only (0.600 x (roller span + roller diameter))": 161.2
+     },
+     "winkler_rigid_track_estimate (ASSUMPTION)": {
+      "p_max_kPa": 726.7,
+      "contact_length_m": 1.077,
+      "note": "e > L/6: triangular pressure on a linear Winkler soil, block-bottom width, flat length only; end shoes ignored (they shorten the lever when the soil yields)"
+     },
+     "roller_station_pressure_kPa": {
+      "front_roller_on_one_shoe_pads (rigid floor)": 5834.0,
+      "front_roller_on_one_shoe_block (soil)": 1201.9,
+      "front_roller_tributary_357mm_x_block_width (soil)": 281.7,
+      "rear_roller_tributary_357mm_x_block_width (soil)": 25.0
+     }
+    }
+   }
+  },
+  "bottom": {
+   "source": "07_results/S2b/crawler_bottom/result.json analytic_exact (exact geometry, mass case C)",
+   "weight_N": 382290.66,
+   "sum_sphere_forces_N": 382290.66,
+   "equilibrium_rel_diff": 2.0555129994201764e-14,
+   "chrono_window_crawler_fz_mean_N": 382290.68,
+   "chrono_vs_weight_rel_diff": 4.4333842002338884e-08,
+   "pose_uz_mm_roll_deg_pitch_deg": [
+    -3.1894,
+    0.000288,
+    0.1718
+   ],
+   "active_spheres": 14,
+   "tracks": {
+    "left": {
+     "station_forces_N": {
+      "L-roller-0": 4408.9,
+      "L-roller-1": 13329.2,
+      "L-roller-2": 22249.5,
+      "L-roller-3": 31169.9,
+      "L-roller-4": 40090.2,
+      "L-roller-5": 49010.5,
+      "L-end_shoe-3": 30580.8
+     },
+     "total_N": 190839.0,
+     "share_of_weight": 0.4992,
+     "x_centre_of_pressure_m": 0.4515,
+     "eccentricity_vs_flat_centre_m": 0.4582,
+     "kern_limit_L_over_6_m": 0.2728,
+     "mean_pressure_kPa": {
+      "A1_pad_tips_flat (rigid floor, 40 pads)": 2262.7,
+      "A2_block_bottoms_flat (soil, sinkage > 4 mm, 10 shoes)": 466.2,
+      "A3_rect_pad_width_x_flat_length (0.422 x 1.637)": 276.3,
+      "A4_rect_block_bottom (0.489 x flat block-bottom length)": 236.8,
+      "A5_rect_block_outline (0.600 x flat block length)": 188.3,
+      "A6_reference_only (0.600 x (roller span + roller diameter))": 160.7
+     },
+     "winkler_rigid_track_estimate (ASSUMPTION)": {
+      "p_max_kPa": 722.1,
+      "contact_length_m": 1.08,
+      "note": "e > L/6: triangular pressure on a linear Winkler soil, block-bottom width, flat length only; end shoes ignored (they shorten the lever when the soil yields)"
+     },
+     "roller_station_pressure_kPa": {
+      "front_roller_on_one_shoe_pads (rigid floor)": 5811.0,
+      "front_roller_on_one_shoe_block (soil)": 1197.3,
+      "front_roller_tributary_357mm_x_block_width (soil)": 280.6,
+      "rear_roller_tributary_357mm_x_block_width (soil)": 25.2
+     }
+    },
+    "right": {
+     "station_forces_N": {
+      "R-roller-0": 4496.4,
+      "R-roller-1": 13416.7,
+      "R-roller-2": 22337.1,
+      "R-roller-3": 31257.4,
+      "R-roller-4": 40177.7,
+      "R-roller-5": 49098.0,
+      "R-end_shoe-3": 30668.3
+     },
+     "total_N": 191451.7,
+     "share_of_weight": 0.5008,
+     "x_centre_of_pressure_m": 0.4505,
+     "eccentricity_vs_flat_centre_m": 0.4572,
+     "kern_limit_L_over_6_m": 0.2728,
+     "mean_pressure_kPa": {
+      "A1_pad_tips_flat (rigid floor, 40 pads)": 2270.0,
+      "A2_block_bottoms_flat (soil, sinkage > 4 mm, 10 shoes)": 467.7,
+      "A3_rect_pad_width_x_flat_length (0.422 x 1.637)": 277.2,
+      "A4_rect_block_bottom (0.489 x flat block-bottom length)": 237.6,
+      "A5_rect_block_outline (0.600 x flat block length)": 188.9,
+      "A6_reference_only (0.600 x (roller span + roller diameter))": 161.2
+     },
+     "winkler_rigid_track_estimate (ASSUMPTION)": {
+      "p_max_kPa": 722.5,
+      "contact_length_m": 1.083,
+      "note": "e > L/6: triangular pressure on a linear Winkler soil, block-bottom width, flat length only; end shoes ignored (they shorten the lever when the soil yields)"
+     },
+     "roller_station_pressure_kPa": {
+      "front_roller_on_one_shoe_pads (rigid floor)": 5821.0,
+      "front_roller_on_one_shoe_block (soil)": 1199.4,
+      "front_roller_tributary_357mm_x_block_width (soil)": 281.1,
+      "rear_roller_tributary_357mm_x_block_width (soil)": 25.7
+     }
+    }
+   }
+  },
+  "reference_json_top_linear": {
+   "source": "reference.json lift_V4_compliant_crawler / layouts / D ... / settled_on_crawler (legs at 0) (linear, no P-delta)",
+   "left_track_total_N": 190840.1,
+   "max_abs_diff_vs_S2b_exact_left_N": 626.7,
+   "note": "difference is the small-angle linearisation (P-delta), not a dimension difference"
+  }
+ },
+ "area_definitions_m2_per_track": {
+  "A1_pad_tips_flat (rigid floor, 40 pads)": 0.08434,
+  "A2_block_bottoms_flat (soil, sinkage > 4 mm, 10 shoes)": 0.40935,
+  "A3_rect_pad_width_x_flat_length (0.422 x 1.637)": 0.69066,
+  "A4_rect_block_bottom (0.489 x flat block-bottom length)": 0.80587,
+  "A5_rect_block_outline (0.600 x flat block length)": 1.01345,
+  "A6_reference_only (0.600 x (roller span + roller diameter))": 1.1874
+ },
+ "scm_active_domain": {
+  "meta": {
+   "grid_m": 0.02,
+   "margin_m (ASSUMPTION)": 0.1,
+   "z_size_m (ASSUMPTION)": 0.4,
+   "api": "pychrono.vehicle.SCMTerrain.AddActiveDomain(body, centre, size): OOBB in the frame of the body that carries the crawler contact shapes (superstructure body); centre z at the floor",
+   "cells_across_features": {
+    "pad_width_64mm": 3.2,
+    "block_bottom_flat_length_88mm": 4.4,
+    "gap_between_blocks_mm": 2.2,
+    "block_width_600mm": 30.0
+   },
+   "note": "the 4 mm pad step and 64 mm pads are near/below the 2 cm grid: on SCM model each shoe as a flat block bottom (489 x 88 mm, or the 600 x 130 mm outline); the r = 0.05 m spheres of layout D are a rigid-floor model and would act as point punches on SCM (proposal for dynamics-expert)"
+  },
+  "variants": {
+   "full (10 flat + 6 end shoes per track)": {
+    "boxes": {
+     "left": {
+      "centre_body_m": [
+       -0.0074,
+       1.045,
+       -1.0509
+      ],
+      "size_m": [
+       2.9356,
+       0.8,
+       0.4
+      ],
+      "x_m": [
+       -1.4752,
+       1.4604
+      ],
+      "y_m": [
+       0.645,
+       1.445
+      ],
+      "grid_nodes": 6068
+     },
+     "right": {
+      "centre_body_m": [
+       -0.0074,
+       -1.045,
+       -1.0509
+      ],
+      "size_m": [
+       2.9356,
+       0.8,
+       0.4
+      ],
+      "x_m": [
+       -1.4752,
+       1.4604
+      ],
+      "y_m": [
+       -1.445,
+       -0.645
+      ],
+      "grid_nodes": 6068
+     }
+    },
+    "grid_nodes_both_tracks": 12136
+   },
+   "reduced (10 flat + first end shoe at each end)": {
+    "boxes": {
+     "left": {
+      "centre_body_m": [
+       -0.0075,
+       1.045,
+       -1.0509
+      ],
+      "size_m": [
+       2.2434,
+       0.8,
+       0.4
+      ],
+      "x_m": [
+       -1.1292,
+       1.1142
+      ],
+      "y_m": [
+       0.645,
+       1.445
+      ],
+      "grid_nodes": 4674
+     },
+     "right": {
+      "centre_body_m": [
+       -0.0075,
+       -1.045,
+       -1.0509
+      ],
+      "size_m": [
+       2.2434,
+       0.8,
+       0.4
+      ],
+      "x_m": [
+       -1.1292,
+       1.1142
+      ],
+      "y_m": [
+       -1.445,
+       -0.645
+      ],
+      "grid_nodes": 4674
+     }
+    },
+    "grid_nodes_both_tracks": 9348
+   }
+  }
+ },
+ "uncertainties": {
+  "U_len_1mm_vs_3mm": "1,636.7 mm (+1 mm, all definitions) vs 1.84 m (earlier render-mesh vertex selection at +3 mm): the earlier value includes the inner edge of the first raised end shoe pads (lowest point 2.23 / 2.37 mm). See bands.per_band.*.3mm: centroid / lowest_point / surface_part.",
+  "U_block_bottom_plus4mm": "+4.0 mm plane 489 x 88 mm per shoe = ground-shoe block bottom; pads protrude 4 mm.",
+  "U7_upper_roller": "one carrier roller per track in the drawn model (body x 0.000 m, z -0.3327 m, tread dia 120 mm; see derived/crawler/upper_run_check.json and crawler_upper_rollers.csv). It supports the upper run only and carries no ground load, so it is not part of this sheet.",
+  "U8_REXOME25_undercarriage": "all values are the drawn REXOME25 undercarriage; manufacturer confirmation pending."
+ }
+}

@@ -101,15 +101,44 @@ CACHE_RULES: dict[str, dict] = {
         "rules": [
             ("verification.json", "verify_brep_cache.py"),
             ("format_conversion.json", "convert_brep_cache.py"),
+            ("derived/crawler/parts/upper_roller_*", "derive_crawler_upper_rollers.py"),
             ("derived/crawler/parts/*", "derive_crawler_parts.py"),
+            ("derived/crawler/crawler_upper_roller*", "derive_crawler_upper_rollers.py"),
+            ("derived/crawler/upper_run_check*", "check_upper_run.py"),
             ("derived/crawler/crawler_contact_part*", "derive_crawler_parts.py"),
+            ("derived/crawler/crawler_ground_sheet*", "build_crawler_ground_sheet.py"),
             ("derived/crawler/*", "derive_crawler_cache.py"),
             ("*", "build_brep_cache.py"),
         ],
     },
     "07_faces": {
         "description": "Face index of all parts: prototype faces + instance faces (world/body)",
-        "rules": [("*", "build_face_index.py")],
+        "rules": [
+            ("crawler_upper_roller_faces*", "derive_crawler_upper_rollers.py"),
+            ("*", "build_face_index.py"),
+        ],
+    },
+    "08_style": {
+        "description": "STEP colours (C11): instance / prototype / face colours, palette, "
+        "XCAF cross-check, colour renders",
+        "rules": [
+            ("*.png", "render_style_views.py"),
+            ("render_style_views.json", "render_style_views.py"),
+            ("*", "build_style_index.py"),
+        ],
+    },
+    "09_sim_shapes": {
+        "description": "Chrono visual / collision shapes (C8): simplified meshes, pads, convex "
+        "hulls and decompositions, upper rollers, index, verification, Irrlicht snapshots",
+        "rules": [
+            ("sim_shapes_verification.json", "verify_sim_shapes.py"),
+            ("sim_shapes_irrlicht_*.png", "render_sim_shapes.py"),
+            ("sim_shapes_upper_roller.png", "render_sim_shapes.py"),
+            ("sim_shapes_render.json", "render_sim_shapes.py"),
+            ("upper_roller_overlap_check.*", "check_upper_roller_overlap.py"),
+            ("work/upper_roller_check/*", "check_upper_roller_overlap.py"),
+            ("*", "build_sim_shapes.py"),
+        ],
     },
 }
 

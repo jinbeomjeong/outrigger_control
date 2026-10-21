@@ -1,0 +1,149 @@
+{
+ "description": "STEP colour / layer index (C11): presentation entities of the STEP file resolved to prototypes and leaf instances",
+ "generator": "04_scripts/00_cad/build_style_index.py",
+ "created_at": "2026-10-21T12:24:35",
+ "step": {
+  "path": "REXOME33_Assy_r3(미니어쳐).stp",
+  "size_bytes": 630777519,
+  "mtime": "2024-03-14T11:43:37",
+  "mtime_ns": 1710384217000000000
+ },
+ "method": "one text pass over the DATA section (no CAD kernel); STYLED_ITEM targets resolved to faces / solids / products, CDORSI style contexts resolved to NAUO chains; keys joined to 06_brep/instances.csv by instance_path",
+ "entity_counts": {
+  "APPLIED_GROUP_ASSIGNMENT": 2,
+  "COLOUR_RGB": 151,
+  "CONTEXT_DEPENDENT_OVER_RIDING_STYLED_ITEM": 184,
+  "CURVE_STYLE": 0,
+  "DRAUGHTING_MODEL": 0,
+  "DRAUGHTING_PRE_DEFINED_COLOUR": 0,
+  "FILL_AREA_STYLE": 151,
+  "FILL_AREA_STYLE_COLOUR": 151,
+  "GROUP": 2,
+  "INVISIBILITY": 0,
+  "MECHANICAL_DESIGN_GEOMETRIC_PRESENTATION_REPRESENTATION": 1,
+  "OVER_RIDING_STYLED_ITEM": 0,
+  "PRESENTATION_LAYER_ASSIGNMENT": 0,
+  "PRESENTATION_STYLE_ASSIGNMENT": 152,
+  "PRESENTATION_STYLE_BY_CONTEXT": 0,
+  "STYLED_ITEM": 68292,
+  "SURFACE_SIDE_STYLE": 151,
+  "SURFACE_STYLE_FILL_AREA": 151,
+  "SURFACE_STYLE_RENDERING": 0,
+  "SURFACE_STYLE_RENDERING_WITH_PROPERTIES": 149,
+  "SURFACE_STYLE_TRANSPARENT": 149,
+  "SURFACE_STYLE_USAGE": 151
+ },
+ "data_lines": 11862132,
+ "styled_item_targets": {
+  "MANIFOLD_SOLID_BREP": 4658,
+  "ADVANCED_FACE": 63625,
+  "POLYLINE": 2,
+  "BREP_WITH_VOIDS": 6,
+  "MAPPED_ITEM": 1
+ },
+ "levels": {
+  "layer": "none: 0 PRESENTATION_LAYER_ASSIGNMENT",
+  "solid": "4664 of 4668 solids / shell models styled",
+  "face": "63625 of 204071 faces styled",
+  "instance_override": "184 CDORSI (colour of an assembly occurrence)",
+  "curve": "2 POLYLINE styled",
+  "mapped_item": "1 MAPPED_ITEM styled (NULL_STYLE, the overridden style of all CDORSI)"
+ },
+ "colours": {
+  "colour_rgb_entities": 151,
+  "distinct_rgb": 60,
+  "presentation_style_assignments": 150,
+  "transparencies": [
+   "0",
+   "0.34",
+   "0.6"
+  ]
+ },
+ "groups": [
+  {
+   "name": "복합1",
+   "items": {
+    "SHELL_BASED_SURFACE_MODEL": 3
+   }
+  },
+  {
+   "name": "복합1",
+   "items": {
+    "SHELL_BASED_SURFACE_MODEL": 1
+   }
+  }
+ ],
+ "override_chain_depths": {
+  "1": 16,
+  "2": 135,
+  "3": 33
+ },
+ "override_problems": [],
+ "instances": {
+  "leaf_occurrences_text": 1205,
+  "instances_csv_rows": 1214,
+  "duplicate_paths_text": {},
+  "unmatched_text_paths": [
+   "REXOME33_Assy_r3(미니어쳐) / BATTERY BOX:2 / byht375-e-w:1 / BYHT375-E-W_BD_3",
+   "REXOME33_Assy_r3(미니어쳐) / BATTERY BOX:2 / byht375-e-w:2 / BYHT375-E-W_BD_3",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_1:1 / byht375-e-w:1 / BYHT375-E-W_BD_3",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_1:1 / byht375-e-w:2 / BYHT375-E-W_BD_3",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_2:1 / byht375-e-w:1 / BYHT375-E-W_BD_3",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_2:1 / byht375-e-w:2 / BYHT375-E-W_BD_3",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / 부품8:1",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / 부품8:2",
+   "REXOME33_Assy_r3(미니어쳐) / REX33-REX33 - 5J286105:1"
+  ],
+  "unmatched_text_path_count": 9,
+  "ambiguous_prototype_entries": {},
+  "xcaf_split_sub_components": {
+   "REXOME33_Assy_r3(미니어쳐) / BATTERY BOX:2 / byht375-e-w:1 / BYHT375-E-W_BD_3 / =>[0:1:1:30]": "representation group with 3 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / BATTERY BOX:2 / byht375-e-w:1 / BYHT375-E-W_BD_3 / =>[0:1:1:31]": "representation group with 50 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / BATTERY BOX:2 / byht375-e-w:2 / BYHT375-E-W_BD_3 / =>[0:1:1:30]": "representation group with 3 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / BATTERY BOX:2 / byht375-e-w:2 / BYHT375-E-W_BD_3 / =>[0:1:1:31]": "representation group with 50 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_1:1 / byht375-e-w:1 / BYHT375-E-W_BD_3 / =>[0:1:1:30]": "representation group with 3 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_1:1 / byht375-e-w:1 / BYHT375-E-W_BD_3 / =>[0:1:1:31]": "representation group with 50 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_1:1 / byht375-e-w:2 / BYHT375-E-W_BD_3 / =>[0:1:1:30]": "representation group with 3 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_1:1 / byht375-e-w:2 / BYHT375-E-W_BD_3 / =>[0:1:1:31]": "representation group with 50 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_2:1 / byht375-e-w:1 / BYHT375-E-W_BD_3 / =>[0:1:1:30]": "representation group with 3 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_2:1 / byht375-e-w:1 / BYHT375-E-W_BD_3 / =>[0:1:1:31]": "representation group with 50 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_2:1 / byht375-e-w:2 / BYHT375-E-W_BD_3 / =>[0:1:1:30]": "representation group with 3 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / DOOR_2:1 / byht375-e-w:2 / BYHT375-E-W_BD_3 / =>[0:1:1:31]": "representation group with 50 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / 부품8:1 / =>[0:1:1:44]": "representation group with 7 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / 부품8:1 / =>[0:1:1:45]": "no faces: no colour of its own",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / 부품8:2 / =>[0:1:1:44]": "representation group with 7 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / CABIN HOUSING_R1:1 / 부품8:2 / =>[0:1:1:45]": "no faces: no colour of its own",
+   "REXOME33_Assy_r3(미니어쳐) / REX33-REX33 - 5J286105:1 / =>[0:1:1:745]": "representation group with 726 faces of the parent product",
+   "REXOME33_Assy_r3(미니어쳐) / REX33-REX33 - 5J286105:1 / =>[0:1:1:746]": "representation group with 156614 faces of the parent product"
+  },
+  "colour_source_counts": {
+   "assembly_override": 1005,
+   "part": 37,
+   "instance_override": 171,
+   "none": 1
+  },
+  "instances_with_multi_colour_parts": 35
+ },
+ "prototypes": {
+  "count": 681,
+  "with_face_styles": 125,
+  "with_faces_differing_from_solid": 77,
+  "faces_differing_from_solid": 62325,
+  "multi_colour": 35,
+  "face_rows": 204071,
+  "face_rows_with_own_style": 63625
+ },
+ "face_index_check_vs_07_faces": {
+  "available": true,
+  "rows_compared": 58747,
+  "rows_equal": 58747,
+  "examples": []
+ },
+ "colour_note": "r g b = COLOUR_RGB values as written by Inventor (0..1 display values, not linearised); rgb_hex = round(255 * value). Face order: solid by solid in representation item order, shell by shell, face list order.",
+ "timings_s": {
+  "text_scan_s": 13.54,
+  "resolve_s": 2.47,
+  "total_s": 17.09
+ },
+ "peak_memory_gb": 0.48
+}

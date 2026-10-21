@@ -1,0 +1,114 @@
+{
+ "level": "top",
+ "window_px": [
+  1600,
+  1000
+ ],
+ "attach_s": 1.8690265000041109,
+ "visuals": {
+  "superstructure": [
+   "deck",
+   "mast",
+   "auger",
+   "crawler",
+   "barrel_FL",
+   "barrel_FR",
+   "barrel_RL",
+   "barrel_RR"
+  ],
+  "leg_FL": [
+   "rod_FL",
+   "pad_FL_simple"
+  ],
+  "leg_FR": [
+   "rod_FR",
+   "pad_FR_simple"
+  ],
+  "leg_RL": [
+   "rod_RL",
+   "pad_RL_simple"
+  ],
+  "leg_RR": [
+   "rod_RR",
+   "pad_RR_simple"
+  ]
+ },
+ "overview": {
+  "file": "01_cad/09_sim_shapes/sim_shapes_irrlicht_overview.png",
+  "eye_m": [
+   10.5,
+   9.0,
+   5.0
+  ],
+  "target_m": [
+   0.5,
+   0.0,
+   4.2
+  ],
+  "render_s": 0.21778880000056233
+ },
+ "collision_counts": {
+  "track_L_coacd": 32,
+  "track_R_coacd": 32,
+  "crawler_spheres": 24
+ },
+ "collision": {
+  "file": "01_cad/09_sim_shapes/sim_shapes_irrlicht_collision.png",
+  "eye_m": [
+   4.6,
+   4.2,
+   0.6
+  ],
+  "target_m": [
+   1.6,
+   1.1,
+   -0.6
+  ],
+  "render_s": 0.15550759999314323
+ },
+ "upper_roller": {
+  "file": "01_cad/09_sim_shapes/sim_shapes_upper_roller.png",
+  "eye_m": [
+   0.3999999999999891,
+   1.7949995,
+   -0.2527191192999999
+  ],
+  "target_m": [
+   -1.091393642e-14,
+   0.9949995,
+   -0.28271911929999993
+  ],
+  "render_s": 0.2104486000025645,
+  "visuals": {
+   "superstructure": [
+    "crawler_no_upper_rollers",
+    "deck",
+    "barrel_FL",
+    "barrel_RL",
+    "upper_roller_L",
+    "upper_roller_R"
+   ],
+   "leg_FL": [
+    "rod_FL",
+    "pad_FL_simple"
+   ],
+   "leg_FR": [
+    "rod_FR",
+    "pad_FR_simple"
+   ],
+   "leg_RL": [
+    "rod_RL",
+    "pad_RL_simple"
+   ],
+   "leg_RR": [
+    "rod_RR",
+    "pad_RR_simple"
+   ]
+  },
+  "axis_world_m": [
+   -1.091393642e-14,
+   1.0449995,
+   -0.28271911929999993
+  ]
+ }
+}

@@ -1,0 +1,1455 @@
+{
+ "generated_at": "2026-10-21T15:12:17",
+ "index": {
+  "path": "01_cad/09_sim_shapes/sim_shapes.json",
+  "bytes": 128968,
+  "sha256": "80565b93817060026f9b16796dc414e47c883b7ace32b77be625c81cd374ee82"
+ },
+ "script": {
+  "path": "04_scripts/00_cad/verify_sim_shapes.py",
+  "bytes": 20019,
+  "sha256": "700543ad79866121c23ba815797ed0be50760f333e673fcf2fb83d4c679a02e5"
+ },
+ "tolerances": {
+  "pad_area_rel": 1e-06,
+  "pad_tilt_deg": 0.01,
+  "pad_angle_yaml_deg": 0.0001,
+  "pad_angle_claude_deg": 0.05,
+  "pad_bottom_yaml_m": 0.0001,
+  "exact_mass_rel": 1e-06,
+  "mesh_volume_accept": 0.01,
+  "mesh_volume_match": 0.001,
+  "convex_rel": 0.0001,
+  "piece_bbox_margin_m": 0.05,
+  "obj_roundtrip_rel": 1e-05,
+  "obj_roundtrip_com_m": 1e-06
+ },
+ "files": {
+  "items": {
+   "deck": {
+    "file": "01_cad/09_sim_shapes/visual/deck_lowres.obj",
+    "bytes": 7652157,
+    "faces": 221095,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "mast": {
+    "file": "01_cad/09_sim_shapes/visual/mast_lowres.obj",
+    "bytes": 3390918,
+    "faces": 97943,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "auger": {
+    "file": "01_cad/09_sim_shapes/visual/auger_lowres.obj",
+    "bytes": 11308467,
+    "faces": 318585,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "crawler": {
+    "file": "01_cad/09_sim_shapes/visual/crawler_lowres.obj",
+    "bytes": 40815793,
+    "faces": 1077350,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "barrel_FL": {
+    "file": "01_cad/09_sim_shapes/visual/barrel_FL.obj",
+    "bytes": 18577,
+    "faces": 688,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "rod_FL": {
+    "file": "01_cad/09_sim_shapes/visual/rod_FL.obj",
+    "bytes": 25931,
+    "faces": 914,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_FL_simple": {
+    "file": "01_cad/09_sim_shapes/visual/pad_FL_simple.obj",
+    "bytes": 1289,
+    "faces": 44,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_FL_cad": {
+    "file": "01_cad/09_sim_shapes/visual/pad_FL_cad.obj",
+    "bytes": 3671,
+    "faces": 146,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "barrel_FR": {
+    "file": "01_cad/09_sim_shapes/visual/barrel_FR.obj",
+    "bytes": 18899,
+    "faces": 688,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "rod_FR": {
+    "file": "01_cad/09_sim_shapes/visual/rod_FR.obj",
+    "bytes": 26389,
+    "faces": 914,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_FR_simple": {
+    "file": "01_cad/09_sim_shapes/visual/pad_FR_simple.obj",
+    "bytes": 1314,
+    "faces": 44,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_FR_cad": {
+    "file": "01_cad/09_sim_shapes/visual/pad_FR_cad.obj",
+    "bytes": 3700,
+    "faces": 146,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "barrel_RL": {
+    "file": "01_cad/09_sim_shapes/visual/barrel_RL.obj",
+    "bytes": 9165,
+    "faces": 350,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "rod_RL": {
+    "file": "01_cad/09_sim_shapes/visual/rod_RL.obj",
+    "bytes": 26396,
+    "faces": 914,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_RL_simple": {
+    "file": "01_cad/09_sim_shapes/visual/pad_RL_simple.obj",
+    "bytes": 1317,
+    "faces": 44,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_RL_cad": {
+    "file": "01_cad/09_sim_shapes/visual/pad_RL_cad.obj",
+    "bytes": 3733,
+    "faces": 146,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "barrel_RR": {
+    "file": "01_cad/09_sim_shapes/visual/barrel_RR.obj",
+    "bytes": 9325,
+    "faces": 350,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "rod_RR": {
+    "file": "01_cad/09_sim_shapes/visual/rod_RR.obj",
+    "bytes": 26847,
+    "faces": 914,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_RR_simple": {
+    "file": "01_cad/09_sim_shapes/visual/pad_RR_simple.obj",
+    "bytes": 1339,
+    "faces": 44,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_RR_cad": {
+    "file": "01_cad/09_sim_shapes/visual/pad_RR_cad.obj",
+    "bytes": 3795,
+    "faces": 146,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "crawler_no_upper_rollers": {
+    "file": "01_cad/09_sim_shapes/visual/crawler_no_upper_rollers_lowres.obj",
+    "bytes": 40726095,
+    "faces": 1075024,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "upper_roller_L": {
+    "file": "01_cad/09_sim_shapes/visual/upper_roller_L.obj",
+    "bytes": 243174,
+    "faces": 7557,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "upper_roller_R": {
+    "file": "01_cad/09_sim_shapes/visual/upper_roller_R.obj",
+    "bytes": 242887,
+    "faces": 7366,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_FL_hull": {
+    "file": "01_cad/09_sim_shapes/collision/pad_FL_hull.obj",
+    "bytes": 1308,
+    "faces": 44,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_FR_hull": {
+    "file": "01_cad/09_sim_shapes/collision/pad_FR_hull.obj",
+    "bytes": 1333,
+    "faces": 44,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_RL_hull": {
+    "file": "01_cad/09_sim_shapes/collision/pad_RL_hull.obj",
+    "bytes": 1336,
+    "faces": 44,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_RR_hull": {
+    "file": "01_cad/09_sim_shapes/collision/pad_RR_hull.obj",
+    "bytes": 1358,
+    "faces": 44,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "track_L_hull": {
+    "file": "01_cad/09_sim_shapes/collision/track_L_hull.obj",
+    "bytes": 53095,
+    "faces": 1834,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "track_R_hull": {
+    "file": "01_cad/09_sim_shapes/collision/track_R_hull.obj",
+    "bytes": 54892,
+    "faces": 1864,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "deck_hull": {
+    "file": "01_cad/09_sim_shapes/collision/deck_hull.obj",
+    "bytes": 7850,
+    "faces": 286,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "mast_hull": {
+    "file": "01_cad/09_sim_shapes/collision/mast_hull.obj",
+    "bytes": 9946,
+    "faces": 358,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "auger_hull": {
+    "file": "01_cad/09_sim_shapes/collision/auger_hull.obj",
+    "bytes": 10916,
+    "faces": 396,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "rod_FL_hull": {
+    "file": "01_cad/09_sim_shapes/collision/rod_FL_hull.obj",
+    "bytes": 8392,
+    "faces": 306,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "rod_FR_hull": {
+    "file": "01_cad/09_sim_shapes/collision/rod_FR_hull.obj",
+    "bytes": 8591,
+    "faces": 308,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "rod_RL_hull": {
+    "file": "01_cad/09_sim_shapes/collision/rod_RL_hull.obj",
+    "bytes": 8608,
+    "faces": 308,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "rod_RR_hull": {
+    "file": "01_cad/09_sim_shapes/collision/rod_RR_hull.obj",
+    "bytes": 8817,
+    "faces": 310,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "pad_FL_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/pad_FL_coacd.obj",
+    "bytes": 190173,
+    "faces": 6108,
+    "pieces": 16,
+    "matches_index": true
+   },
+   "pad_FR_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/pad_FR_coacd.obj",
+    "bytes": 202666,
+    "faces": 6396,
+    "pieces": 17,
+    "matches_index": true
+   },
+   "pad_RL_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/pad_RL_coacd.obj",
+    "bytes": 282588,
+    "faces": 8820,
+    "pieces": 32,
+    "matches_index": true
+   },
+   "pad_RR_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/pad_RR_coacd.obj",
+    "bytes": 280122,
+    "faces": 8614,
+    "pieces": 31,
+    "matches_index": true
+   },
+   "moving_FL_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/moving_FL_coacd.obj",
+    "bytes": 212754,
+    "faces": 6838,
+    "pieces": 11,
+    "matches_index": true
+   },
+   "moving_FR_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/moving_FR_coacd.obj",
+    "bytes": 217015,
+    "faces": 6862,
+    "pieces": 11,
+    "matches_index": true
+   },
+   "moving_RL_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/moving_RL_coacd.obj",
+    "bytes": 195164,
+    "faces": 6186,
+    "pieces": 13,
+    "matches_index": true
+   },
+   "pad_FL_vhacd": {
+    "file": "01_cad/09_sim_shapes/collision/pad_FL_vhacd.obj",
+    "bytes": 11727,
+    "faces": 378,
+    "pieces": 16,
+    "matches_index": true
+   },
+   "moving_RR_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/moving_RR_coacd.obj",
+    "bytes": 160747,
+    "faces": 5052,
+    "pieces": 11,
+    "matches_index": true
+   },
+   "track_R_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/track_R_coacd.obj",
+    "bytes": 204961,
+    "faces": 6386,
+    "pieces": 32,
+    "matches_index": true
+   },
+   "track_L_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/track_L_coacd.obj",
+    "bytes": 208845,
+    "faces": 6608,
+    "pieces": 32,
+    "matches_index": true
+   },
+   "track_L_vhacd": {
+    "file": "01_cad/09_sim_shapes/collision/track_L_vhacd.obj",
+    "bytes": 38426,
+    "faces": 1248,
+    "pieces": 32,
+    "matches_index": true
+   },
+   "mast_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/mast_coacd.obj",
+    "bytes": 39869,
+    "faces": 1378,
+    "pieces": 6,
+    "matches_index": true
+   },
+   "auger_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/auger_coacd.obj",
+    "bytes": 139534,
+    "faces": 4564,
+    "pieces": 16,
+    "matches_index": true
+   },
+   "deck_coacd": {
+    "file": "01_cad/09_sim_shapes/collision/deck_coacd.obj",
+    "bytes": 150193,
+    "faces": 4794,
+    "pieces": 32,
+    "matches_index": true
+   },
+   "upper_roller_L_hull": {
+    "file": "01_cad/09_sim_shapes/collision/upper_roller_L_hull.obj",
+    "bytes": 20796,
+    "faces": 730,
+    "pieces": 1,
+    "matches_index": true
+   },
+   "upper_roller_R_hull": {
+    "file": "01_cad/09_sim_shapes/collision/upper_roller_R_hull.obj",
+    "bytes": 20560,
+    "faces": 710,
+    "pieces": 1,
+    "matches_index": true
+   }
+  },
+  "failures": []
+ },
+ "pads": {
+  "items": {
+   "FL": {
+    "brep_area_m2": 0.10710000000000001,
+    "area_rel_to_claude": 2.220446049250313e-16,
+    "obj_down_area_rel_to_brep": -5.713445381250182e-07,
+    "yaml_area_rel_to_brep": 1.7669108398621347e-09,
+    "tilt_deg": 0.0,
+    "side_angle_brep_deg": 47.12971075023024,
+    "side_angle_yaml_deg": 47.12971076900162,
+    "side_angle_claude_deg": 47.1,
+    "obj_bottom_centre_m": [
+     2.2937645,
+     1.3237645000000002,
+     -0.6997999999999999
+    ],
+    "obj_bottom_minus_yaml_m": [
+     -3.5500000000077137e-05,
+     -3.549999999985509e-05,
+     1.1102230246251565e-16
+    ],
+    "obj_convex": true,
+    "obj_volume_rel_to_brep_plate": -4.209846026226316e-07,
+    "obj_com_abs_m": 2.118331638817291e-07,
+    "obj_inertia_rel": 8.022931289368337e-07,
+    "inertia": {
+     "symmetric": true,
+     "positive": true,
+     "triangle": true,
+     "principal": [
+      2.3495731676784672e-05,
+      2.3495733396000865e-05,
+      4.671625486245626e-05
+     ]
+    },
+    "checks": {
+     "area_vs_claude": true,
+     "obj_area": true,
+     "yaml_area": true,
+     "normal": true,
+     "angle_yaml": true,
+     "angle_claude": true,
+     "bottom_vs_yaml": true,
+     "convex": true,
+     "volume": true,
+     "com": true,
+     "inertia_rel": true,
+     "inertia_valid": true
+    }
+   },
+   "FR": {
+    "brep_area_m2": 0.1070999999999999,
+    "area_rel_to_claude": -8.881784197001252e-16,
+    "obj_down_area_rel_to_brep": -5.713445370147952e-07,
+    "yaml_area_rel_to_brep": 1.76689529673979e-09,
+    "tilt_deg": 0.0,
+    "side_angle_brep_deg": 47.12971075023021,
+    "side_angle_yaml_deg": 47.12971076900162,
+    "side_angle_claude_deg": 47.1,
+    "obj_bottom_centre_m": [
+     2.2937645,
+     -1.3237645000000002,
+     -0.6997999999999999
+    ],
+    "obj_bottom_minus_yaml_m": [
+     -3.5500000000077137e-05,
+     3.549999999985509e-05,
+     1.1102230246251565e-16
+    ],
+    "obj_convex": true,
+    "obj_volume_rel_to_brep_plate": -4.7307699835297257e-07,
+    "obj_com_abs_m": 2.1649101496934064e-07,
+    "obj_inertia_rel": 9.182971756278303e-07,
+    "inertia": {
+     "symmetric": true,
+     "positive": true,
+     "triangle": true,
+     "principal": [
+      2.349572980522618e-05,
+      2.3495729805231728e-05,
+      4.671624942857028e-05
+     ]
+    },
+    "checks": {
+     "area_vs_claude": true,
+     "obj_area": true,
+     "yaml_area": true,
+     "normal": true,
+     "angle_yaml": true,
+     "angle_claude": true,
+     "bottom_vs_yaml": true,
+     "convex": true,
+     "volume": true,
+     "com": true,
+     "inertia_rel": true,
+     "inertia_valid": true
+    }
+   },
+   "RL": {
+    "brep_area_m2": 0.1071,
+    "area_rel_to_claude": 0.0,
+    "obj_down_area_rel_to_brep": 2.987768445983363e-07,
+    "yaml_area_rel_to_brep": -5.691062066048858e-10,
+    "tilt_deg": 0.0,
+    "side_angle_brep_deg": 3.3763608244942978,
+    "side_angle_yaml_deg": 3.376360750489401,
+    "side_angle_claude_deg": 3.4,
+    "obj_bottom_centre_m": [
+     -2.556,
+     1.1678672499999998,
+     -0.710044
+    ],
+    "obj_bottom_minus_yaml_m": [
+     0.0,
+     -3.2750000000136836e-05,
+     -4.4000000000044004e-05
+    ],
+    "obj_convex": true,
+    "obj_volume_rel_to_brep_plate": 9.332063988232164e-08,
+    "obj_com_abs_m": 1.0333650992603946e-07,
+    "obj_inertia_rel": 1.2481761075805998e-06,
+    "inertia": {
+     "symmetric": true,
+     "positive": true,
+     "triangle": true,
+     "principal": [
+      2.34957046587403e-05,
+      2.3495805093763478e-05,
+      4.671629953011472e-05
+     ]
+    },
+    "checks": {
+     "area_vs_claude": true,
+     "obj_area": true,
+     "yaml_area": true,
+     "normal": true,
+     "angle_yaml": true,
+     "angle_claude": true,
+     "bottom_vs_yaml": true,
+     "convex": true,
+     "volume": true,
+     "com": true,
+     "inertia_rel": true,
+     "inertia_valid": true
+    }
+   },
+   "RR": {
+    "brep_area_m2": 0.1071,
+    "area_rel_to_claude": 0.0,
+    "obj_down_area_rel_to_brep": 2.987768445983363e-07,
+    "yaml_area_rel_to_brep": -5.691227489279527e-10,
+    "tilt_deg": 0.0,
+    "side_angle_brep_deg": 3.3763608244942986,
+    "side_angle_yaml_deg": 3.376360750489387,
+    "side_angle_claude_deg": 3.4,
+    "obj_bottom_centre_m": [
+     -2.556,
+     -1.2428672500000002,
+     -0.710044
+    ],
+    "obj_bottom_minus_yaml_m": [
+     0.0,
+     3.274999999969275e-05,
+     -4.4000000000044004e-05
+    ],
+    "obj_convex": true,
+    "obj_volume_rel_to_brep_plate": 1.8210201191415365e-07,
+    "obj_com_abs_m": 9.117569940718743e-08,
+    "obj_inertia_rel": 1.2493089844768586e-06,
+    "inertia": {
+     "symmetric": true,
+     "positive": true,
+     "triangle": true,
+     "principal": [
+      2.3495709573393923e-05,
+      2.3495807656082893e-05,
+      4.671630695863087e-05
+     ]
+    },
+    "checks": {
+     "area_vs_claude": true,
+     "obj_area": true,
+     "yaml_area": true,
+     "normal": true,
+     "angle_yaml": true,
+     "angle_claude": true,
+     "bottom_vs_yaml": true,
+     "convex": true,
+     "volume": true,
+     "com": true,
+     "inertia_rel": true,
+     "inertia_valid": true
+    }
+   }
+  },
+  "failures": []
+ },
+ "legs": {
+  "items": {
+   "FL": {
+    "rod": {
+     "faces": 914,
+     "volume_rel_to_brep": -0.0017731607030776475,
+     "volume_verdict": "허용",
+     "com_abs_m": 0.00011650471747788989,
+     "inertia_rel": 0.0022179225128209305,
+     "com_in_bbox": true,
+     "bbox_abs_diff_m": 8.765308021962959e-05,
+     "inertia": {
+      "symmetric": true,
+      "positive": true,
+      "triangle": true,
+      "principal": [
+       2.031228679101149e-05,
+       0.0010717822268697297,
+       0.0010717831997141408
+      ]
+     }
+    },
+    "pad_cad": {
+     "faces": 146,
+     "volume_rel_to_brep": -5.614954649013626e-07,
+     "volume_verdict": "일치",
+     "com_abs_m": 1.267311040907015e-07,
+     "inertia_rel": 1.2161106657439155e-06,
+     "com_in_bbox": true,
+     "bbox_abs_diff_m": 5.180392119719102e-07,
+     "inertia": {
+      "symmetric": true,
+      "positive": true,
+      "triangle": true,
+      "principal": [
+       2.5236626440616154e-05,
+       2.5236708116395592e-05,
+       4.979405483132601e-05
+      ]
+     }
+    },
+    "yaml_moving_com_minus_brep_m": [
+     -3.0802205230884283e-09,
+     -3.0802196349100086e-09,
+     -3.2003183436657423e-10
+    ]
+   },
+   "FR": {
+    "rod": {
+     "faces": 914,
+     "volume_rel_to_brep": -0.0017538820785963916,
+     "volume_verdict": "허용",
+     "com_abs_m": 0.0001071147627551051,
+     "inertia_rel": 0.0021805853260020137,
+     "com_in_bbox": true,
+     "bbox_abs_diff_m": 8.765308021985163e-05,
+     "inertia": {
+      "symmetric": true,
+      "positive": true,
+      "triangle": true,
+      "principal": [
+       2.03137919149892e-05,
+       0.001071822014065757,
+       0.001071823596027233
+      ]
+     }
+    },
+    "pad_cad": {
+     "faces": 146,
+     "volume_rel_to_brep": -5.227604364943517e-07,
+     "volume_verdict": "일치",
+     "com_abs_m": 1.7749120297004442e-07,
+     "inertia_rel": 1.19044244002606e-06,
+     "com_in_bbox": true,
+     "bbox_abs_diff_m": 5.180392128600886e-07,
+     "inertia": {
+      "symmetric": true,
+      "positive": true,
+      "triangle": true,
+      "principal": [
+       2.5236627556528458e-05,
+       2.523670912254163e-05,
+       4.9794056933904814e-05
+      ]
+     }
+    },
+    "yaml_moving_com_minus_brep_m": [
+     -3.080218746731589e-09,
+     3.080220967177638e-09,
+     -3.200346099241358e-10
+    ]
+   },
+   "RL": {
+    "rod": {
+     "faces": 914,
+     "volume_rel_to_brep": -0.0017725566332658094,
+     "volume_verdict": "허용",
+     "com_abs_m": 0.00011628728958781787,
+     "inertia_rel": 0.002224938696865343,
+     "com_in_bbox": true,
+     "bbox_abs_diff_m": 0.00011068723081986143,
+     "inertia": {
+      "symmetric": true,
+      "positive": true,
+      "triangle": true,
+      "principal": [
+       2.0311973100114447e-05,
+       0.0010717748941361347,
+       0.0010717754495404902
+      ]
+     }
+    },
+    "pad_cad": {
+     "faces": 146,
+     "volume_rel_to_brep": 5.411826304868583e-07,
+     "volume_verdict": "일치",
+     "com_abs_m": 1.0680595477992592e-07,
+     "inertia_rel": 1.459716275834751e-06,
+     "com_in_bbox": true,
+     "bbox_abs_diff_m": 3.542223812047496e-07,
+     "inertia": {
+      "symmetric": true,
+      "positive": true,
+      "triangle": true,
+      "principal": [
+       2.523667319994952e-05,
+       2.5236756650396568e-05,
+       4.979414664186489e-05
+      ]
+     }
+    },
+    "yaml_moving_com_minus_brep_m": [
+     0.0,
+     -2.7691799964202346e-09,
+     -1.3991063863016961e-10
+    ]
+   },
+   "RR": {
+    "rod": {
+     "faces": 914,
+     "volume_rel_to_brep": -0.0017769547905063243,
+     "volume_verdict": "허용",
+     "com_abs_m": 0.00011866292226530198,
+     "inertia_rel": 0.002226610761681591,
+     "com_in_bbox": true,
+     "bbox_abs_diff_m": 0.00011068723082008347,
+     "inertia": {
+      "symmetric": true,
+      "positive": true,
+      "triangle": true,
+      "principal": [
+       2.0312031146280194e-05,
+       0.0010717727974204332,
+       0.0010717739700216047
+      ]
+     }
+    },
+    "pad_cad": {
+     "faces": 146,
+     "volume_rel_to_brep": 5.367521496157934e-07,
+     "volume_verdict": "일치",
+     "com_abs_m": 1.060962400072126e-07,
+     "inertia_rel": 1.4554424349153344e-06,
+     "com_in_bbox": true,
+     "bbox_abs_diff_m": 3.542223909747122e-07,
+     "inertia": {
+      "symmetric": true,
+      "positive": true,
+      "triangle": true,
+      "principal": [
+       2.5236672917483058e-05,
+       2.52367565519004e-05,
+       4.9794146262546784e-05
+      ]
+     }
+    },
+    "yaml_moving_com_minus_brep_m": [
+     -6.661338147750939e-15,
+     2.7691802184648395e-09,
+     -1.3990897329563268e-10
+    ]
+   }
+  },
+  "failures": []
+ },
+ "visual": {
+  "items": {
+   "deck": {
+    "faces_source": 498548,
+    "faces": 221095,
+    "face_ratio": 0.4434778597045821,
+    "source_volume_rel_to_brep": -0.02113574633496651,
+    "volume_rel_to_brep": -0.023360524211754607,
+    "volume_verdict": "불일치",
+    "bbox_abs_diff_mm": 4.662999900689524,
+    "bbox_abs_diff_xyz_mm": [
+     0.0002245892147811901,
+     4.662999900689524,
+     5.215117226953225e-08
+    ],
+    "dropped_small_components": {
+     "components": 682,
+     "faces": 71954
+    },
+    "component_methods": {
+     "quadric": 428,
+     "kept": 1810,
+     "dropped": 682,
+     "cluster": 11
+    },
+    "obj_mb": 7.652157
+   },
+   "mast": {
+    "faces_source": 238424,
+    "faces": 97943,
+    "face_ratio": 0.4107933765057209,
+    "source_volume_rel_to_brep": -0.00174561863011935,
+    "volume_rel_to_brep": -0.0017765351890645098,
+    "volume_verdict": "허용",
+    "bbox_abs_diff_mm": 5.19024402218804,
+    "bbox_abs_diff_xyz_mm": [
+     0.5188541535899871,
+     0.8971431599847923,
+     5.19024402218804
+    ],
+    "dropped_small_components": {
+     "components": 484,
+     "faces": 19828
+    },
+    "component_methods": {
+     "quadric": 306,
+     "kept": 394,
+     "dropped": 484
+    },
+    "obj_mb": 3.390918
+   },
+   "auger": {
+    "faces_source": 890844,
+    "faces": 318585,
+    "face_ratio": 0.35762153643062083,
+    "source_volume_rel_to_brep": -0.1021914510812808,
+    "volume_rel_to_brep": -0.15584609647517234,
+    "volume_verdict": "불일치",
+    "bbox_abs_diff_mm": 0.8696562070270586,
+    "bbox_abs_diff_xyz_mm": [
+     0.4130000000039935,
+     0.8696562070270586,
+     0.3366999700213924
+    ],
+    "dropped_small_components": {
+     "components": 1032,
+     "faces": 73661
+    },
+    "component_methods": {
+     "quadric": 378,
+     "kept": 125,
+     "dropped": 1032,
+     "cluster": 7
+    },
+    "obj_mb": 11.308467
+   },
+   "crawler": {
+    "faces_source": 4781830,
+    "faces": 1077350,
+    "face_ratio": 0.22530077397147116,
+    "source_volume_rel_to_brep": -0.0020514232713281233,
+    "volume_rel_to_brep": -0.011217416339521669,
+    "volume_verdict": "불일치",
+    "bbox_abs_diff_mm": 1.6213999004912605,
+    "bbox_abs_diff_xyz_mm": [
+     0.010955157537573257,
+     1.6213999004912605,
+     0.021880575189703322
+    ],
+    "dropped_small_components": {
+     "components": 5396,
+     "faces": 40550
+    },
+    "component_methods": {
+     "quadric": 3163,
+     "dropped": 5396,
+     "cluster": 2,
+     "kept": 379
+    },
+    "obj_mb": 40.815793
+   },
+   "barrel_FL": {
+    "faces_source": 1966,
+    "faces": 688,
+    "face_ratio": 0.34994913530010174,
+    "source_volume_rel_to_brep": -0.0032298903115411948,
+    "volume_rel_to_brep": -0.004316936838463459,
+    "volume_verdict": "허용",
+    "bbox_abs_diff_mm": 0.9069999999999911,
+    "bbox_abs_diff_xyz_mm": [
+     0.732592568787549,
+     0.38359256878894854,
+     0.9069999999999911
+    ],
+    "dropped_small_components": {
+     "components": 0,
+     "faces": 0
+    },
+    "component_methods": {
+     "quadric": 1
+    },
+    "obj_mb": 0.018577
+   },
+   "barrel_FR": {
+    "faces_source": 1966,
+    "faces": 688,
+    "face_ratio": 0.34994913530010174,
+    "source_volume_rel_to_brep": -0.0032300913108801454,
+    "volume_rel_to_brep": -0.004316711642313398,
+    "volume_verdict": "허용",
+    "bbox_abs_diff_mm": 0.9070000000029887,
+    "bbox_abs_diff_xyz_mm": [
+     0.38359256878939263,
+     0.732592568787771,
+     0.9070000000029887
+    ],
+    "dropped_small_components": {
+     "components": 0,
+     "faces": 0
+    },
+    "component_methods": {
+     "quadric": 1
+    },
+    "obj_mb": 0.018899
+   },
+   "barrel_RL": {
+    "faces_source": 1758,
+    "faces": 350,
+    "face_ratio": 0.19908987485779295,
+    "source_volume_rel_to_brep": -0.0033094841585433743,
+    "volume_rel_to_brep": -0.03486894250897021,
+    "volume_verdict": "불일치",
+    "bbox_abs_diff_mm": 5.251000000000616,
+    "bbox_abs_diff_xyz_mm": [
+     2.220446049250313e-12,
+     0.5780671201718324,
+     5.251000000000616
+    ],
+    "dropped_small_components": {
+     "components": 0,
+     "faces": 0
+    },
+    "component_methods": {
+     "quadric": 1
+    },
+    "obj_mb": 0.009165
+   },
+   "barrel_RR": {
+    "faces_source": 1758,
+    "faces": 350,
+    "face_ratio": 0.19908987485779295,
+    "source_volume_rel_to_brep": -0.003309464030583409,
+    "volume_rel_to_brep": -0.03486946404891089,
+    "volume_verdict": "불일치",
+    "bbox_abs_diff_mm": 5.2509999999992285,
+    "bbox_abs_diff_xyz_mm": [
+     5.329070518200751e-12,
+     0.5780671201711662,
+     5.2509999999992285
+    ],
+    "dropped_small_components": {
+     "components": 0,
+     "faces": 0
+    },
+    "component_methods": {
+     "quadric": 1
+    },
+    "obj_mb": 0.009325
+   }
+  }
+ },
+ "collision": {
+  "items": {
+   "pad_FL_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 44,
+    "max_convexity_defect_rel": 6.53110951986946e-08,
+    "sum_volume_m3": 0.0026620156301758358,
+    "volume_ratio_to_brep": 1.0000000000000044,
+    "bbox_excess_over_brep_m": 0.0
+   },
+   "pad_FR_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 44,
+    "max_convexity_defect_rel": 1.1740351102407232e-07,
+    "sum_volume_m3": 0.002662015491505002,
+    "volume_ratio_to_brep": 1.0000000000000049,
+    "bbox_excess_over_brep_m": 3.1086244689504383e-15
+   },
+   "pad_RL_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 44,
+    "max_convexity_defect_rel": 1.7841167554433213e-07,
+    "sum_volume_m3": 0.0026620169992650033,
+    "volume_ratio_to_brep": 1.000000000000034,
+    "bbox_excess_over_brep_m": 3.330084390462673e-07
+   },
+   "pad_RR_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 44,
+    "max_convexity_defect_rel": 8.96303294917189e-08,
+    "sum_volume_m3": 0.0026620172356025032,
+    "volume_ratio_to_brep": 1.0000000000000981,
+    "bbox_excess_over_brep_m": 3.330084390462673e-07
+   },
+   "track_L_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 1834,
+    "max_convexity_defect_rel": 3.12312340433607e-08,
+    "sum_volume_m3": 2.0926437885805362,
+    "volume_ratio_to_brep": 3.6739096989493336,
+    "bbox_excess_over_brep_m": 0.0008139999999998704
+   },
+   "track_R_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 1864,
+    "max_convexity_defect_rel": 4.778558615470274e-08,
+    "sum_volume_m3": 2.093322674979596,
+    "volume_ratio_to_brep": 3.6751040730840887,
+    "bbox_excess_over_brep_m": 0.0016209999999998725
+   },
+   "deck_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 286,
+    "max_convexity_defect_rel": 1.2065984877906999e-09,
+    "sum_volume_m3": 27.40937277103662,
+    "volume_ratio_to_brep": 13.067495342454679,
+    "bbox_excess_over_brep_m": 0.004662999900689524
+   },
+   "mast_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 358,
+    "max_convexity_defect_rel": 1.0023237795309115e-10,
+    "sum_volume_m3": 23.74898454909494,
+    "volume_ratio_to_brep": 24.279818521865533,
+    "bbox_excess_over_brep_m": 0.00024773148058265804
+   },
+   "auger_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 396,
+    "max_convexity_defect_rel": 6.283862319378386e-14,
+    "sum_volume_m3": 4.222751218608631,
+    "volume_ratio_to_brep": 5.220109752645736,
+    "bbox_excess_over_brep_m": 0.0008696562070270586
+   },
+   "rod_FL_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 306,
+    "max_convexity_defect_rel": 1.1102230246251565e-15,
+    "sum_volume_m3": 0.017058772924898064,
+    "volume_ratio_to_brep": 1.587008567625534,
+    "bbox_excess_over_brep_m": 8.765308021962959e-05
+   },
+   "rod_FR_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 308,
+    "max_convexity_defect_rel": 1.3322676295501878e-15,
+    "sum_volume_m3": 0.01705725711157919,
+    "volume_ratio_to_brep": 1.5868700539789349,
+    "bbox_excess_over_brep_m": 8.765308021985163e-05
+   },
+   "rod_RL_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 308,
+    "max_convexity_defect_rel": 2.220446049250313e-16,
+    "sum_volume_m3": 0.017056997224375165,
+    "volume_ratio_to_brep": 1.5868452322039162,
+    "bbox_excess_over_brep_m": 0.00011068723081986143
+   },
+   "rod_RR_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 310,
+    "max_convexity_defect_rel": 3.8472734997796465e-09,
+    "sum_volume_m3": 0.01705887588832915,
+    "volume_ratio_to_brep": 1.5870201894917328,
+    "bbox_excess_over_brep_m": 0.00011068723082008347
+   },
+   "pad_FL_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 16,
+    "faces": 6108,
+    "max_convexity_defect_rel": 3.2169703275686246e-06,
+    "sum_volume_m3": 0.003213501122988452,
+    "volume_ratio_to_brep": 1.125970747988025,
+    "bbox_excess_over_brep_m": 0.0011700000000000044
+   },
+   "pad_FR_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 17,
+    "faces": 6396,
+    "max_convexity_defect_rel": 6.740971630336823e-06,
+    "sum_volume_m3": 0.003213627498157059,
+    "volume_ratio_to_brep": 1.1260136029413639,
+    "bbox_excess_over_brep_m": 0.001170000000003002
+   },
+   "pad_RL_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 32,
+    "faces": 8820,
+    "max_convexity_defect_rel": 8.497801356921464e-06,
+    "sum_volume_m3": 0.003132322820521824,
+    "volume_ratio_to_brep": 1.0975090643552654,
+    "bbox_excess_over_brep_m": 0.0009500148198783309
+   },
+   "pad_RR_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 31,
+    "faces": 8614,
+    "max_convexity_defect_rel": 8.437561108354252e-06,
+    "sum_volume_m3": 0.0031262134278417643,
+    "volume_ratio_to_brep": 1.0953614801065168,
+    "bbox_excess_over_brep_m": 0.0009500148198758884
+   },
+   "moving_FL_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 11,
+    "faces": 6838,
+    "max_convexity_defect_rel": 4.099025245896115e-07,
+    "sum_volume_m3": 0.01651363494110296,
+    "volume_ratio_to_brep": 1.213964422016202,
+    "bbox_excess_over_brep_m": 0.002886000000000055
+   },
+   "moving_FR_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 11,
+    "faces": 6862,
+    "max_convexity_defect_rel": 9.215010954299885e-08,
+    "sum_volume_m3": 0.016505194068163333,
+    "volume_ratio_to_brep": 1.213346364654444,
+    "bbox_excess_over_brep_m": 0.002886000000003053
+   },
+   "moving_RL_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 13,
+    "faces": 6186,
+    "max_convexity_defect_rel": 5.105980867003979e-07,
+    "sum_volume_m3": 0.01651667595209484,
+    "volume_ratio_to_brep": 1.214189366330362,
+    "bbox_excess_over_brep_m": 0.0028860148198782687
+   },
+   "pad_FL_vhacd": {
+    "kind": "convex_decomposition",
+    "pieces": 16,
+    "faces": 378,
+    "max_convexity_defect_rel": 2.332185001674425e-06,
+    "sum_volume_m3": 0.003057474362001691,
+    "volume_ratio_to_brep": 1.0712917069392958,
+    "bbox_excess_over_brep_m": 0.0
+   },
+   "moving_RR_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 11,
+    "faces": 5052,
+    "max_convexity_defect_rel": 1.583367336133179e-07,
+    "sum_volume_m3": 0.016583439802023436,
+    "volume_ratio_to_brep": 1.219098707325734,
+    "bbox_excess_over_brep_m": 0.002886014819875826
+   },
+   "track_R_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 32,
+    "faces": 6386,
+    "max_convexity_defect_rel": 2.2745843097915497e-08,
+    "sum_volume_m3": 1.713360598636445,
+    "volume_ratio_to_brep": 3.0080293651803722,
+    "bbox_excess_over_brep_m": 0.016389999999999905
+   },
+   "track_L_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 32,
+    "faces": 6608,
+    "max_convexity_defect_rel": 2.0317212934273243e-07,
+    "sum_volume_m3": 1.7259448347210304,
+    "volume_ratio_to_brep": 3.0301229374632412,
+    "bbox_excess_over_brep_m": 0.016342999999999774
+   },
+   "track_L_vhacd": {
+    "kind": "convex_decomposition",
+    "pieces": 32,
+    "faces": 1248,
+    "max_convexity_defect_rel": 6.140822850220218e-09,
+    "sum_volume_m3": 1.5307082579169125,
+    "volume_ratio_to_brep": 2.6873588413229945,
+    "bbox_excess_over_brep_m": 0.0
+   },
+   "mast_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 6,
+    "faces": 1378,
+    "max_convexity_defect_rel": 2.220446049250313e-16,
+    "sum_volume_m3": 10.258231462292564,
+    "volume_ratio_to_brep": 10.487520837140236,
+    "bbox_excess_over_brep_m": 0.04505473148058259
+   },
+   "auger_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 16,
+    "faces": 4564,
+    "max_convexity_defect_rel": 2.05930477115146e-08,
+    "sum_volume_m3": 2.3559081798749846,
+    "volume_ratio_to_brep": 2.912342667016068,
+    "bbox_excess_over_brep_m": 0.02047799999998201
+   },
+   "deck_coacd": {
+    "kind": "convex_decomposition",
+    "pieces": 32,
+    "faces": 4794,
+    "max_convexity_defect_rel": 3.4311568031242246e-09,
+    "sum_volume_m3": 16.245602290857136,
+    "volume_ratio_to_brep": 7.745134787544347,
+    "bbox_excess_over_brep_m": 0.02429099999999984
+   },
+   "track_L_box": {
+    "kind": "box",
+    "primitive": true
+   },
+   "track_R_box": {
+    "kind": "box",
+    "primitive": true
+   },
+   "pad_FL_box": {
+    "kind": "box",
+    "primitive": true
+   },
+   "pad_FR_box": {
+    "kind": "box",
+    "primitive": true
+   },
+   "pad_RL_box": {
+    "kind": "box",
+    "primitive": true
+   },
+   "pad_RR_box": {
+    "kind": "box",
+    "primitive": true
+   },
+   "upper_roller_L_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 730,
+    "max_convexity_defect_rel": 2.114685764276203e-07,
+    "sum_volume_m3": 0.004129678214744153,
+    "volume_ratio_to_brep": 1.4398034374169713,
+    "bbox_excess_over_brep_m": 4.999999998478444e-07
+   },
+   "upper_roller_L_cylinders": {
+    "kind": "cylinder_set",
+    "primitive": true
+   },
+   "upper_roller_R_hull": {
+    "kind": "convex_hull",
+    "pieces": 1,
+    "faces": 710,
+    "max_convexity_defect_rel": 1.6216655962519866e-07,
+    "sum_volume_m3": 0.004129681371166504,
+    "volume_ratio_to_brep": 1.439803423832993,
+    "bbox_excess_over_brep_m": 4.999999999588667e-07
+   },
+   "upper_roller_R_cylinders": {
+    "kind": "cylinder_set",
+    "primitive": true
+   }
+  },
+  "failures": []
+ },
+ "upper_rollers": {
+  "items": {
+   "L": {
+    "faces": 7557,
+    "volume_rel_to_brep": -0.0031931097164575872,
+    "volume_verdict": "허용",
+    "bbox_abs_diff_mm": 0.08688069999995829,
+    "brep_volume_rel_to_csv": -1.1579837089215061e-10,
+    "roller_solid_mesh_vs_brep": {
+     "volume_rel": -0.001368814003654295,
+     "com_abs_m": 2.785167479095779e-05,
+     "inertia_frobenius_rel": 0.0015071269617763564
+    },
+    "roller_solid_watertight": true,
+    "skipped_faces_whole_part": 3,
+    "tread_count": 2,
+    "flange_count": 1,
+    "tread_diameter_mm": [
+     120.0,
+     120.0
+    ],
+    "tread_width_mm": [
+     35.00000000027444,
+     35.00000000027467
+    ],
+    "tread_span_diff_mm": 0.0005000009518880688,
+    "flange_diameter_mm": [
+     140.0
+    ],
+    "flange_width_diff_mm": 7.66920166483942e-07,
+    "cylinders_on_axis_m": 0.0,
+    "hull_bbox_abs_diff_mm": 0.08688069999995829,
+    "crawler_duplicate": {
+     "components_inside_bbox": 9,
+     "faces": 1008,
+     "volume_m3": 0.00280120184393186,
+     "volume_rel_to_roller_brep": -0.023368775124349872,
+     "bbox_margin_mm": 2.0,
+     "max_distance_mm": 5.0,
+     "in_bbox_not_duplicate": [
+      {
+       "faces": 94,
+       "max_distance_mm": 17.814262267575305,
+       "volume_m3": 0.00030286419657916545,
+       "bbox_body_m": [
+        [
+         -0.08000000762939453,
+         0.89599951171875,
+         -0.4327963256835938
+        ],
+        [
+         0.07999999237060547,
+         0.96599951171875,
+         -0.3897179534124622
+        ]
+       ]
+      }
+     ]
+    },
+    "checks": {
+     "volume": true,
+     "bbox": true,
+     "brep_vs_csv": true,
+     "roller_solid_mass": true,
+     "cylinder_counts": true,
+     "tread_diameter": true,
+     "tread_width": true,
+     "tread_spans": true,
+     "flange": true,
+     "on_axis": true,
+     "hull_bbox": true,
+     "duplicate_volume": true
+    }
+   },
+   "R": {
+    "faces": 7366,
+    "volume_rel_to_brep": -0.0038911842467524993,
+    "volume_verdict": "허용",
+    "bbox_abs_diff_mm": 0.08688069999995829,
+    "brep_volume_rel_to_csv": -1.1578671355039205e-10,
+    "roller_solid_mesh_vs_brep": {
+     "volume_rel": -0.0013688140036708374,
+     "com_abs_m": 2.785167479102041e-05,
+     "inertia_frobenius_rel": 0.0015071269622764151
+    },
+    "roller_solid_watertight": true,
+    "skipped_faces_whole_part": 4,
+    "tread_count": 2,
+    "flange_count": 1,
+    "tread_diameter_mm": [
+     120.0,
+     120.0
+    ],
+    "tread_width_mm": [
+     35.00000000027444,
+     35.00000000027421
+    ],
+    "tread_span_diff_mm": 0.0005000011133233784,
+    "flange_diameter_mm": [
+     140.0
+    ],
+    "flange_width_diff_mm": 7.66920166483942e-07,
+    "cylinders_on_axis_m": 0.0,
+    "hull_bbox_abs_diff_mm": 0.08688069999995829,
+    "crawler_duplicate": {
+     "components_inside_bbox": 9,
+     "faces": 1318,
+     "volume_m3": 0.0027993972144134648,
+     "volume_rel_to_roller_brep": -0.023997954182205627,
+     "bbox_margin_mm": 2.0,
+     "max_distance_mm": 5.0,
+     "in_bbox_not_duplicate": [
+      {
+       "faces": 166,
+       "max_distance_mm": 17.81432327452177,
+       "volume_m3": 0.0003187623849303304,
+       "bbox_body_m": [
+        [
+         -0.08000000762939453,
+         -0.9660004272460938,
+         -0.4327963256835938
+        ],
+        [
+         0.07999999237060547,
+         -0.8960004272460937,
+         -0.38971869206743354
+        ]
+       ]
+      }
+     ]
+    },
+    "checks": {
+     "volume": true,
+     "bbox": true,
+     "brep_vs_csv": true,
+     "roller_solid_mass": true,
+     "cylinder_counts": true,
+     "tread_diameter": true,
+     "tread_width": true,
+     "tread_spans": true,
+     "flange": true,
+     "on_axis": true,
+     "hull_bbox": true,
+     "duplicate_volume": true
+    }
+   },
+   "crawler_no_upper_rollers": {
+    "faces": 1075024,
+    "crawler_faces": 1077350,
+    "removed_faces": 2326,
+    "faces_consistent": true,
+    "volume_rel_to_brep": -0.011167455077682797
+   }
+  },
+  "failures": []
+ },
+ "failures": [],
+ "verdict": {
+  "pads_rods_collision": "통과",
+  "superstructure_visual_volume": {
+   "deck": "불일치",
+   "mast": "허용",
+   "auger": "불일치",
+   "crawler": "불일치",
+   "barrel_FL": "허용",
+   "barrel_FR": "허용",
+   "barrel_RL": "불일치",
+   "barrel_RR": "불일치"
+  },
+  "note": "superstructure visual meshes are display only; their volume is not used for mass"
+ },
+ "time_s": 10.014319199995953
+}

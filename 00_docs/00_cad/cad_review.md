@@ -310,7 +310,7 @@ T = jacks[0].transform                                              # 4×4 numpy
 
 ### 8.5 캐시 목록 (`01_cad/cache_manifest.json`, `check_cache.py`)
 
-- 기록: STEP(이름·크기·수정 시각·sha256), 캐시 폴더 `00_step`~`06_brep`마다 생성 스크립트(경로·sha256·git blob 해시·마지막 커밋, 지금은 커밋 전이라 null)와 파일 목록(경로·크기·sha256·생성 스크립트·git 제외 여부), 기록 시점의 Python·pythonocc-core 8.0.1.2·OCCT 8.0.1·numpy·trimesh·pandas 버전.
+- 기록: STEP(이름·크기·수정 시각·sha256), 캐시 폴더 `00_step`~`09_sim_shapes`(10개: `00_step`·`01_parts`·`02_legs`·`03_auger`·`04_mast`·`05_meshes`·`06_brep`·`07_faces`·`08_style`·`09_sim_shapes`, 2026-10-21 `cache_manifest.json` `caches` 기준)마다 생성 스크립트(경로·sha256·git blob 해시·마지막 커밋, 지금은 커밋 전이라 null)와 파일 목록(경로·크기·sha256·생성 스크립트·git 제외 여부), 기록 시점의 Python·pythonocc-core 8.0.1.2·OCCT 8.0.1·numpy·trimesh·pandas 버전.
 - `06_brep`의 생성 스크립트는 파일별로 기록된다: `build_brep_cache.py`(프로토타입·표), `convert_brep_cache.py`(`format_conversion.json`), `verify_brep_cache.py`(`verification.json`), `derive_crawler_cache.py`(`derived/crawler/*`).
 - 점검 `check_cache.py`(기본, 0.1 s): STEP 크기·수정 시각 변경, 등록 파일 누락·크기 변경은 **오류**, 등록 안 된 새 파일과 생성 스크립트 변경은 **경고**. `--full`(약 2 s)은 STEP과 모든 파일의 sha256을 다시 계산한다. `--strict`는 오류가 있으면 종료 코드 1, 함수 `check(strict=True)`는 `StaleCacheError`를 낸다.
 - 캐시를 다시 만들면 `check_cache.py --write [--cache 이름]`으로 목록을 갱신한다. `build_brep_cache.py`와 `convert_brep_cache.py`는 끝에서 `06_brep` 항목을 스스로 갱신한다. 다른 생성 스크립트(`derive_crawler_cache.py` 포함) 뒤에는 `--write`를 수동으로 실행한다.
@@ -338,15 +338,15 @@ T = jacks[0].transform                                              # 4×4 numpy
 | 트랙 중심 간격(반) | ±1,045.0 mm(좌우 대칭, ±0.001 mm) | 1.045 m | 일치 |
 | 슈 접지 폭(그라우저 끝 X 범위) | 421.97 mm (X 834.0…1256.0) | 0.423 m | 1 mm 차 |
 | 평탄 접지 길이 +1 mm | 1,636.7 mm (Z −825.1 … +811.6 = 기체 x −0.825 … +0.812 m), 그라우저 10개/측 | 1.64 m (x −0.826 … +0.813) | 일치 |
-| 평탄 접지 길이 +3 mm | 1,636.7 mm (+1 mm와 같음) | 1.84 m | **다름**. 다음 그라우저 끝은 +3.8 mm(+Z 끝)·+4.4 mm(−Z 끝)에 있다. 앞선 값은 렌더 메시(선형 편차 3 mm)로 잰 것이라 메시 오차가 섞인 것으로 보인다(추정) |
-| 평탄 접지 길이 +5 mm / +10 mm | 1,994.3 mm (Z −1005.0…989.3) / 2,004.5 mm | — | +4.0 mm 높이에 폭 489 mm(X 800…1290)의 큰 수평면도 있다(슈 판 하면으로 보임, 추정) |
+| 평탄 접지 길이 +3 mm | 1,636.7 mm (+1 mm와 같음) | 1.84 m | **다름**. 다음 그라우저 끝은 +3.8 mm(+Z 끝)·+4.4 mm(−Z 끝)에 있다. ~~앞선 값은 렌더 메시(선형 편차 3 mm)로 잰 것이라 메시 오차가 섞인 것으로 보인다(추정)~~ **정정(2026-10-21)**: 원인은 메시 오차가 아니라 **띠 정의**다. 첫 들린 끝 슈 패드가 기울어 가장 낮은 모서리는 +2.23 / +2.37 mm, 중심은 +4.39 / +3.81 mm에 있어, 모서리 정점을 넣은 이전 선택은 1,839.2 mm, 면 중심으로 나눈 이번 값은 1,636.7 mm가 된다([cad_crawler_ground.md](cad_crawler_ground.md) 3.1절) |
+| 평탄 접지 길이 +5 mm / +10 mm | 1,994.3 mm (Z −1005.0…989.3) / 2,004.5 mm | — | +4.0 mm 높이에 폭 489 mm(X 800…1290)의 큰 수평면도 있다. ~~슈 판 하면으로 보임(추정)~~ **정정(2026-10-21)**: **접지 슈 블록의 바닥면**(489.2 × 88.1 mm/슈, 아래로 패드 4개가 4.0 mm 돌출)이다. 슈 판 하면은 +47.0 mm에 있다([cad_crawler_ground.md](cad_crawler_ground.md) 3.2절) |
 | 슈 피치 | 173.2 mm (지면 그라우저 중심 간격, 173.2~173.3) | — | |
 | 트랙 전체 길이(측면 솔리드 Z 범위) | 3,684.2 mm | bbox 3.68 m | 일치 |
 | 하부 롤러 | 측마다 6개, Ø194 mm, 축 Y −790.7, Z −884 / −527 / −170 / +187 / +544 / +901 (간격 357 mm) | — | |
 | 끝 바퀴 −Z(후방) | Ø548 mm, 축 Y −583.2, Z −1405.0 | — | 아이들러로 보임(추정) |
 | 끝 바퀴 +Z(전방) | Ø525 mm(둥근 부분), 같은 축에 Ø658.8 mm 비원형 링(톱니로 보임), 축 Y −582.7, Z +1400.0 | — | 스프로킷으로 보임(추정, 이름이 아니라 형상으로 판단) |
 | 끝 바퀴 축 간 거리 | 2,805 mm | — | |
-| 상부 롤러(캐리어) | 찾지 못함 | — | 둥근 솔리드 반복 패턴이 상부 런에 없다 |
+| 상부 롤러(캐리어) | **측마다 1개**(2026-10-21 정정), 축 Z 0.0 · Y −332.72 (기체 x 0.000, z −0.3327 m), y ±1.045 m | 답면 Ø120×35 mm 2개 + 가운데 플랜지 Ø140, 링크 레일 하면이 답면에 닿음(간격 0.000 mm) | 롤러·축·받침대가 한 솔리드(234/1900)라 bbox 원형 조건으로는 빠졌다. 축 방향 원통면으로 찾음(`04_scripts/00_cad/check_upper_run.py`, `upper_run_check.json`·`.png`). 상부 런은 롤러 위 꼭짓점에서 만나는 직선 두 개(+2.23°/−1.87°, 처짐 없음). 롤러는 트랙 프레임 윗판(Y −380.1)의 구멍(Z ±75)에 들어앉아 브래킷이 받침판 22에 얹힌다. 프레임과 최소 거리 9.18 mm·간섭 없음, 상부 링크 레일과는 0.008 mm 접선 접촉(`01_cad/09_sim_shapes/upper_roller_overlap_check.png`). 이전 기록: 찾지 못함 |
 
 **C8 형상 (트랙 한쪽, 좌우 같음)**
 
@@ -453,6 +453,8 @@ roller = brep_cache.load_crawler_part("roller", "R", 5)   # YAML roller_x_m[5]
 | 면 번호 체계 | 9절 `solid_index` = 면 번호 구간의 솔리드 | 크롤러 11,290행 모두 일치. 슈마다 패드 면 4개가 색인에 있다(`selection` = `ground_band`) |
 
 생성 2026-10-20: 크롤러 읽기 3 s, 부품 44개 쓰기·질량 특성 95 s, 검증 18 s, 합계 112 s, 메모리 정점 1.12 GB.
+
+**상부 롤러(캐리어) 부품 (2026-10-21)**: `derive_crawler_upper_rollers.py`가 측마다 상부 롤러 1개를 같은 방식으로 저장·색인한다(`parts/upper_roller_{L,R}1.bbrep`, `crawler_upper_rollers.csv/.json`, `crawler_upper_roller_solids.csv`, 면 표 `01_cad/07_faces/crawler_upper_roller_faces.csv.gz`; 로더 `brep_cache.load_crawler_upper_roller(side)`, `face_index.load_crawler_upper_roller_faces()`). 부품은 롤러 솔리드(바퀴·축 보스·받침대가 한 솔리드, 좌 234/우 1900)와 받침대 볼트 4·와셔 4로 22.516 kg(STEP 밀도 7.85)이다. 프레임에 용접된 나사 받침판(좌 22)은 프레임에 남긴다. 축은 기체 (0.000, ±1.045, −0.3327) m(축 방향 y)이고, 답면은 Ø120 × 35 mm 2개(간격 84 mm), 플랜지는 Ø140 × 79.7 mm다. 회전부 질량 17.16 kg·축 둘레 관성 0.0368 kg·m²는 원통 절단 **추정**이다(축 포함, Ø80 보스 제외). 검증: 좌우 대칭 ≤ 6e-13, 재로드 부피 7e-13, `upper_run_check.json`과 일치, `check_cache.py --check` 0 오류. STEP 원본은 크롤러가 하위 제품 없는 shrinkwrap이라 읽지 않았다(더 얻을 정보 없음).
 
 ## 9. 전체 면 색인 (C5, 2026-10-20)
 

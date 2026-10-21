@@ -1,12 +1,12 @@
 {
  "schema": 1,
- "updated_at": "2026-10-21T11:01:14",
+ "updated_at": "2026-10-21T17:11:15",
  "updated_by": {
   "script": "04_scripts/00_cad/check_cache.py",
   "exists": true,
-  "sha256": "9a878025810493c1db7c70c3dcbab68af531f6bd63661d901392dc03664cb5b5",
-  "git_blob": "e0a62f112f390ca5e616882c0e09622c42f13585",
-  "git_last_commit": "7148180773b05da707a09cdf756e28783c630257",
+  "sha256": "3b4c6396581cd6539eef32e344f4864f56e524d334047c22e6d74281fdbde356",
+  "git_blob": "12c3050a0932db6835a2e296c67a57477db64bac",
+  "git_last_commit": "5eb1aff328a19bbd53d17108d9d68205fba39d12",
   "git_tracked": true
  },
  "environment": {
@@ -5905,7 +5905,7 @@
    "description": "Prototype B-rep cache + instance placements of all parts",
    "folder": "01_cad/06_brep",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-20T18:37:59",
+   "newest_file_mtime": "2026-10-21T17:10:57",
    "generators": [
     {
      "script": "04_scripts/00_cad/build_brep_cache.py",
@@ -5914,6 +5914,22 @@
      "git_blob": "e85a35a02ce8e8f034a83b6db3811df7d48a121b",
      "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
      "git_tracked": true
+    },
+    {
+     "script": "04_scripts/00_cad/build_crawler_ground_sheet.py",
+     "exists": true,
+     "sha256": "be840435b47f28e13e6d7c04bf307f861089e77080bb5fcbc468dbd2899eca90",
+     "git_blob": "c6b4b34850f14130e30248de2912cd35f530af2f",
+     "git_last_commit": null,
+     "git_tracked": false
+    },
+    {
+     "script": "04_scripts/00_cad/check_upper_run.py",
+     "exists": true,
+     "sha256": "f665a8d14de65d40323d4467628940abc98a5520f55ddc9069ff845cfed34a49",
+     "git_blob": "0d68482b2d147cf598bb713b0bb5192a59b5eda1",
+     "git_last_commit": null,
+     "git_tracked": false
     },
     {
      "script": "04_scripts/00_cad/convert_brep_cache.py",
@@ -5936,6 +5952,14 @@
      "exists": true,
      "sha256": "78b00278dbebf57a2e994e53f80c83163e5ae8cf05226d1be51963ccde126447",
      "git_blob": "b7113e274fc2d4376f8640560840fcc0428e667c",
+     "git_last_commit": "7148180773b05da707a09cdf756e28783c630257",
+     "git_tracked": true
+    },
+    {
+     "script": "04_scripts/00_cad/derive_crawler_upper_rollers.py",
+     "exists": true,
+     "sha256": "9f39d8a112e2a6b752db5907b9fafe28d834baa460fe0a3f9c3a502a9c0d2897",
+     "git_blob": "6f6eecef0d1d9cd8dadd8b0476e426aeccbdc85e",
      "git_last_commit": null,
      "git_tracked": false
     },
@@ -5948,9 +5972,9 @@
      "git_tracked": true
     }
    ],
-   "file_count": 745,
-   "total_bytes": 496356548,
-   "git_ignored_file_count": 726,
+   "file_count": 754,
+   "total_bytes": 497972777,
+   "git_ignored_file_count": 728,
    "files": [
     {
      "path": "cache_info.json",
@@ -6016,6 +6040,20 @@
      "git_ignored": false
     },
     {
+     "path": "derived/crawler/crawler_ground_sheet.json",
+     "bytes": 40276,
+     "sha256": "6db9b52a9a963064bd32f3a349578031d4c6d61944bdf5d1b765ff19fa78e677",
+     "generator": "build_crawler_ground_sheet.py",
+     "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/crawler_ground_sheet.png",
+     "bytes": 137162,
+     "sha256": "3b10a414396e50f8fd85935c1f40ba537923cc62fc5b3578d2033c937a74add5",
+     "generator": "build_crawler_ground_sheet.py",
+     "git_ignored": false
+    },
+    {
      "path": "derived/crawler/crawler_grouser_tips.csv",
      "bytes": 117892,
      "sha256": "dd2473d1fb80f9c93676bd5bdd21c6dff36dfc815f3219d575b88085a59dcc52",
@@ -6041,6 +6079,27 @@
      "bytes": 5375,
      "sha256": "f635954937a230f75029b03a4deeb72cd31eada9b20ee7b6899176759624f5b4",
      "generator": "derive_crawler_cache.py",
+     "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/crawler_upper_roller_solids.csv",
+     "bytes": 8074,
+     "sha256": "128866d914faf3144306993314d7aeae9f79c046cb122f6909c1dbd2fe0f0325",
+     "generator": "derive_crawler_upper_rollers.py",
+     "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/crawler_upper_rollers.csv",
+     "bytes": 3301,
+     "sha256": "24a13b7eebe5276c9286148ac4ede6c442d27e9bb9de9295967cf1c82352ed97",
+     "generator": "derive_crawler_upper_rollers.py",
+     "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/crawler_upper_rollers.json",
+     "bytes": 18384,
+     "sha256": "ebac5ffaabb55f458cca3e906c025e2b21c60440dac75638ce43de502336a1cf",
+     "generator": "derive_crawler_upper_rollers.py",
      "git_ignored": false
     },
     {
@@ -6359,6 +6418,20 @@
      "git_ignored": true
     },
     {
+     "path": "derived/crawler/parts/upper_roller_L1.bbrep",
+     "bytes": 113880,
+     "sha256": "901d7fa340bd9ff5f1ffe4270d7622c3b31366b0203411beecc38a4303bb438f",
+     "generator": "derive_crawler_upper_rollers.py",
+     "git_ignored": true
+    },
+    {
+     "path": "derived/crawler/parts/upper_roller_R1.bbrep",
+     "bytes": 113880,
+     "sha256": "ef0d39f68573a05fdc7f1eb34851379cddda2dafc5062fbff7c6348565c8011e",
+     "generator": "derive_crawler_upper_rollers.py",
+     "git_ignored": true
+    },
+    {
      "path": "derived/crawler/track_left_hull.obj",
      "bytes": 67536,
      "sha256": "2506958e610873ffe68fcf657eb7f42107848501529a663231de493220f588a6",
@@ -6370,6 +6443,20 @@
      "bytes": 68665,
      "sha256": "09993540daf1ab9a53fa31a95b876ae8d9019fb5825ab4ccc3457258ee8f4229",
      "generator": "derive_crawler_cache.py",
+     "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/upper_run_check.json",
+     "bytes": 872141,
+     "sha256": "aaea1fd495ee2c6e84e74e303d60087cec20faf06fa9eacc03564cd97ea885c9",
+     "generator": "check_upper_run.py",
+     "git_ignored": false
+    },
+    {
+     "path": "derived/crawler/upper_run_check.png",
+     "bytes": 309131,
+     "sha256": "7d68a8b4b9a43b195718fb8db2166dd1b4cc08468c26708f73a5032028f2f4b7",
+     "generator": "check_upper_run.py",
      "git_ignored": false
     },
     {
@@ -11173,21 +11260,36 @@
    "description": "Face index of all parts: prototype faces + instance faces (world/body)",
    "folder": "01_cad/07_faces",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-20T17:26:04",
+   "newest_file_mtime": "2026-10-21T14:52:59",
    "generators": [
     {
      "script": "04_scripts/00_cad/build_face_index.py",
      "exists": true,
      "sha256": "91e75975e7a747590850e70852f875a8187d6506331b524b49a5808f12ed6822",
      "git_blob": "e8cdd15c76916456e6eb1424aa60d1be0869becf",
+     "git_last_commit": "7148180773b05da707a09cdf756e28783c630257",
+     "git_tracked": true
+    },
+    {
+     "script": "04_scripts/00_cad/derive_crawler_upper_rollers.py",
+     "exists": true,
+     "sha256": "9f39d8a112e2a6b752db5907b9fafe28d834baa460fe0a3f9c3a502a9c0d2897",
+     "git_blob": "6f6eecef0d1d9cd8dadd8b0476e426aeccbdc85e",
      "git_last_commit": null,
      "git_tracked": false
     }
    ],
-   "file_count": 4,
-   "total_bytes": 6359892,
-   "git_ignored_file_count": 2,
+   "file_count": 5,
+   "total_bytes": 6372721,
+   "git_ignored_file_count": 3,
    "files": [
+    {
+     "path": "crawler_upper_roller_faces.csv.gz",
+     "bytes": 12829,
+     "sha256": "99c9daf5fdce32a3220bac6d5eac44543219b27eafe9c2696670187eea256fff",
+     "generator": "derive_crawler_upper_rollers.py",
+     "git_ignored": true
+    },
     {
      "path": "face_index_summary.json",
      "bytes": 239341,
@@ -11215,6 +11317,885 @@
      "sha256": "afa443a6455bbce21e7a13cb35e3a1c038965c62d529af50daeb2fe149e33e27",
      "generator": "build_face_index.py",
      "git_ignored": true
+    }
+   ]
+  },
+  "08_style": {
+   "description": "STEP colours (C11): instance / prototype / face colours, palette, XCAF cross-check, colour renders",
+   "folder": "01_cad/08_style",
+   "derived_from_step": true,
+   "newest_file_mtime": "2026-10-21T12:24:35",
+   "generators": [
+    {
+     "script": "04_scripts/00_cad/build_style_index.py",
+     "exists": true,
+     "sha256": "03cd85f14f0f0b55474068e6a5e7ba1f02ff17e157a626aed4f84f150e2c6486",
+     "git_blob": "34754faa12258d811ce838f919565f23681e1260",
+     "git_last_commit": null,
+     "git_tracked": false
+    },
+    {
+     "script": "04_scripts/00_cad/render_style_views.py",
+     "exists": true,
+     "sha256": "31db5e150accce7090de2140ff0ef5e15c4e43ed1e4daed2f9eced918ac68315",
+     "git_blob": "8f249f21f35f652ffc5401be9b0c7fc7a96e2b25",
+     "git_last_commit": null,
+     "git_tracked": false
+    }
+   ],
+   "file_count": 9,
+   "total_bytes": 3014094,
+   "git_ignored_file_count": 0,
+   "files": [
+    {
+     "path": "face_styles.csv.gz",
+     "bytes": 1117298,
+     "sha256": "e2a0d43cc74728a98342aacc887ffeeeb221fab6ac17719ad0132a7ebf2e929d",
+     "generator": "build_style_index.py",
+     "git_ignored": false
+    },
+    {
+     "path": "instance_styles.csv",
+     "bytes": 327708,
+     "sha256": "08f684f8beba2babc0d718a5ddf68cfd38a32c5a26eee268027ff6366a795940",
+     "generator": "build_style_index.py",
+     "git_ignored": false
+    },
+    {
+     "path": "palette.csv",
+     "bytes": 2957,
+     "sha256": "37c07a392fff5b6a252b880dc87f1189adb61e3ebfd05863007e0653b472f868",
+     "generator": "build_style_index.py",
+     "git_ignored": false
+    },
+    {
+     "path": "prototype_styles.csv",
+     "bytes": 63362,
+     "sha256": "6470f0000e13d74d1abaa5c19f299509b3a053cfa6b29529b8d3802941fcd8e9",
+     "generator": "build_style_index.py",
+     "git_ignored": false
+    },
+    {
+     "path": "render_style_views.json",
+     "bytes": 1585,
+     "sha256": "7164ec6d248cae9b8356f25ab5532bd0c4619b7fb4e74da830c6d09c2827d9b6",
+     "generator": "render_style_views.py",
+     "git_ignored": false
+    },
+    {
+     "path": "style_iso.png",
+     "bytes": 918651,
+     "sha256": "ad99ecb23865c847523a5704898649e9a461446f1ee4ea4f972ff86c0abfef7d",
+     "generator": "render_style_views.py",
+     "git_ignored": false
+    },
+    {
+     "path": "style_iso_rear.png",
+     "bytes": 569173,
+     "sha256": "6dc013dad7ab61b6a8e6d9d7fd40b4a3a1aaf66e85484a632b44eec5e557b138",
+     "generator": "render_style_views.py",
+     "git_ignored": false
+    },
+    {
+     "path": "style_summary.json",
+     "bytes": 7276,
+     "sha256": "75edc7b3ca6e30b596aad47b93bf872bf298c7d632c9c8756770491ddfc78ee3",
+     "generator": "build_style_index.py",
+     "git_ignored": false
+    },
+    {
+     "path": "xcaf_check.json",
+     "bytes": 6084,
+     "sha256": "af34f4e826ffda37a13529c6a2358ce0c6b11c1247d75d3e73ba63b0a62e4b87",
+     "generator": "build_style_index.py",
+     "git_ignored": false
+    }
+   ]
+  },
+  "09_sim_shapes": {
+   "description": "Chrono visual / collision shapes (C8): simplified meshes, pads, convex hulls and decompositions, upper rollers, index, verification, Irrlicht snapshots",
+   "folder": "01_cad/09_sim_shapes",
+   "derived_from_step": true,
+   "newest_file_mtime": "2026-10-21T16:08:53",
+   "generators": [
+    {
+     "script": "04_scripts/00_cad/build_sim_shapes.py",
+     "exists": true,
+     "sha256": "a26bcf86bf99d0916ada165a54c1726542ebd47497205d643478a3aeef850d74",
+     "git_blob": "8766d74f1fe4ab15142484dfd97b2cf9aee4c7bb",
+     "git_last_commit": null,
+     "git_tracked": false
+    },
+    {
+     "script": "04_scripts/00_cad/check_upper_roller_overlap.py",
+     "exists": true,
+     "sha256": "66c379b0643a105d5ab08b1dbf5dbed0f27a18418c72ab896cd92c0495e4ceca",
+     "git_blob": "99ec0a69d4077817c85be30dca5503b849fb4a14",
+     "git_last_commit": null,
+     "git_tracked": false
+    },
+    {
+     "script": "04_scripts/00_cad/render_sim_shapes.py",
+     "exists": true,
+     "sha256": "cc4da3e0a0f268f605e27c654b315caa91aa23a9f7579886a7dff95bb7923cb0",
+     "git_blob": "4f27e1965168caa2f7b06d1faa72f12c378b3889",
+     "git_last_commit": null,
+     "git_tracked": false
+    },
+    {
+     "script": "04_scripts/00_cad/verify_sim_shapes.py",
+     "exists": true,
+     "sha256": "700543ad79866121c23ba815797ed0be50760f333e673fcf2fb83d4c679a02e5",
+     "git_blob": "a8abd80ff9db0a963d81ea85c73678c18f834286",
+     "git_last_commit": null,
+     "git_tracked": false
+    }
+   ],
+   "file_count": 106,
+   "total_bytes": 137165416,
+   "git_ignored_file_count": 32,
+   "files": [
+    {
+     "path": "collision/auger_coacd.obj",
+     "bytes": 139534,
+     "sha256": "0cb5f1434b1f7a804d80ad0838818f52d539f383e57642eaee6d5ceb26a8507f",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/auger_hull.obj",
+     "bytes": 10916,
+     "sha256": "70e3d0a40676c093c5f1d34ce4a921633990c9b50af16be247e41d90d14d4577",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/deck_coacd.obj",
+     "bytes": 150193,
+     "sha256": "4ca54932e926c8648636a3ffa410b2af7c354c8975e1edfd9134379e9b632dca",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/deck_hull.obj",
+     "bytes": 7850,
+     "sha256": "6d22b94d65f4d1ff517e83d5d19e8153fa291b2abf7935c4d35d4c040ad98489",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/mast_coacd.obj",
+     "bytes": 39869,
+     "sha256": "2d8c0874ae82833c0d8b73c51b8e996dd85ec631cb38a8041ccae4a2cce3a356",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/mast_hull.obj",
+     "bytes": 9946,
+     "sha256": "90ab5bf3af1330dc243a51af6e678f9a3a8aa23adaab01dbecca068a8d828d19",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/moving_FL_coacd.obj",
+     "bytes": 212754,
+     "sha256": "262407aa050eba6dc17ed5a0045438666b1aa67cd1a905d0c41b8084f515dcb2",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/moving_FR_coacd.obj",
+     "bytes": 217015,
+     "sha256": "22327e85cdd181c834af9b190933a8c8dce28c010d2647ee82d0674f743bb33a",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/moving_RL_coacd.obj",
+     "bytes": 195164,
+     "sha256": "a0d2c9d479555a34d3e574f529e1fc12c34bf07eedeaf87f86d2d7dd866b6e08",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/moving_RR_coacd.obj",
+     "bytes": 160747,
+     "sha256": "af371d5926197dfae1dad33571466bded6bfbdb33f6a64a71294948c359a0191",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/pad_FL_coacd.obj",
+     "bytes": 190173,
+     "sha256": "12f44a0d5c53f1d6d9fd136f6fa0e9b04b6cfdb71a519f8158cef0ee16909e8d",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/pad_FL_hull.obj",
+     "bytes": 1308,
+     "sha256": "c13021c1b08d59a3b498e1c122780521746d82ca8427808adb6bfe75d9c1c2fa",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/pad_FL_vhacd.obj",
+     "bytes": 11727,
+     "sha256": "0798c34214b6ac260e35ec7112f5dda49c225928dd34234a3e063863d22fb42e",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/pad_FR_coacd.obj",
+     "bytes": 202666,
+     "sha256": "34795b1d56329e3c29bf90b7982e4eb7c08f4a7948c5defeb86f8e72e6efee55",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/pad_FR_hull.obj",
+     "bytes": 1333,
+     "sha256": "5f229a9ba09f5c798bdd72eed072c58eb55cd7f2fce65714512a97ce1650c19e",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/pad_RL_coacd.obj",
+     "bytes": 282588,
+     "sha256": "316439e901069205bc5b2f5ba1d794b864276b77deade4545f868e542549b679",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/pad_RL_hull.obj",
+     "bytes": 1336,
+     "sha256": "f1470de82373a1417fb5dff0c44410796cc589a6c7525467da3fb7acbf2e0e3e",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/pad_RR_coacd.obj",
+     "bytes": 280122,
+     "sha256": "1a55bb4f0cd876b6a0405b20933d66536e276cb98d445655d29b31da08a76b1d",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/pad_RR_hull.obj",
+     "bytes": 1358,
+     "sha256": "d0d2b09a2a4980d7fd5cc445fc115f6edf54f17be5cf689bb54e03020ed99b35",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/rod_FL_hull.obj",
+     "bytes": 8392,
+     "sha256": "f54f650ac3ec6c8d6a92df7f305fb58fe77c41810e32904b78ba9503bf90fcd6",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/rod_FR_hull.obj",
+     "bytes": 8591,
+     "sha256": "495d0fe0c4dbec816662dea6117acbcdbe6ca60178f9b0ae65fd09a576c6e19c",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/rod_RL_hull.obj",
+     "bytes": 8608,
+     "sha256": "4091962917f5d5e0f278094bdda88eee5e3e1d841012198250f9c09ba65102c9",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/rod_RR_hull.obj",
+     "bytes": 8817,
+     "sha256": "a4d06fd96b41a0ce9b61424dec2cff1e699bbc4559b4a80272a32389663a016e",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/track_L_coacd.obj",
+     "bytes": 208845,
+     "sha256": "593c673332639a3ef372731a1a5e4514ab077cfa2ac58c0a5f29f319daf1f898",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/track_L_hull.obj",
+     "bytes": 53095,
+     "sha256": "348aae809a1df5887880f811befbd773355cdf71af51ac25adab903d61bff96c",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/track_L_vhacd.obj",
+     "bytes": 38426,
+     "sha256": "c477f9c6fe0e001d57e81fd9bf4395fa26cbe1afeba5db4a91b0aa265358efaa",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/track_R_coacd.obj",
+     "bytes": 204961,
+     "sha256": "17faf0c44662798367f835f9ba1cf402d83cded077fb74150d8b2441d76de95b",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/track_R_hull.obj",
+     "bytes": 54892,
+     "sha256": "3aeabf764ee922f0ad10c81e70267a1613e1fc79a4eeb4c4274e8d9b72e57b48",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/upper_roller_L_hull.obj",
+     "bytes": 20796,
+     "sha256": "a5ca64c74c76a98eb6c0158e028f4cb2f6d56bc46c2b7b0184297dd6709879eb",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "collision/upper_roller_R_hull.obj",
+     "bytes": 20560,
+     "sha256": "3e4c2708048b0f6c6a0c841b4dcd7eb34de3d327cdfd362da7a884530795699f",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "sim_shapes.json",
+     "bytes": 128968,
+     "sha256": "80565b93817060026f9b16796dc414e47c883b7ace32b77be625c81cd374ee82",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "sim_shapes_irrlicht_collision.png",
+     "bytes": 130845,
+     "sha256": "a6a0d91c0d6d114d71396e5cd4caba52ef99a6f95dec892960bd6b9e0f2b6b8a",
+     "generator": "render_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "sim_shapes_irrlicht_overview.png",
+     "bytes": 91881,
+     "sha256": "5c765a3880c50a52cceb70eec81cd06cdff2004585d77916090d45ef463c336b",
+     "generator": "render_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "sim_shapes_render.json",
+     "bytes": 1819,
+     "sha256": "3958e2a8c58aed70a797213b8ca4442fdc387d31c53830a48dffdeca2c83c603",
+     "generator": "render_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "sim_shapes_upper_roller.png",
+     "bytes": 248411,
+     "sha256": "b839d04ff99addb11d88c1ed76a1bd60801ce1a5cd7c840f08d74ac10c6c873c",
+     "generator": "render_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "sim_shapes_verification.json",
+     "bytes": 39422,
+     "sha256": "11fa6b6e5a6d868d1868ae73d021bd9e5285ad047af4f1ee016e2ce18ed8d958",
+     "generator": "verify_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "upper_roller_overlap_check.json",
+     "bytes": 9155,
+     "sha256": "13d1af2647abb37835c8ee49f572edd9721a301a5619c32bff309aff80f2d70a",
+     "generator": "check_upper_roller_overlap.py",
+     "git_ignored": false
+    },
+    {
+     "path": "upper_roller_overlap_check.png",
+     "bytes": 560310,
+     "sha256": "b9aeba05277e63eab84287d8d05c2c64b17048f5e0c757115b77e8284b247d5d",
+     "generator": "check_upper_roller_overlap.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/auger_lowres.obj",
+     "bytes": 11308467,
+     "sha256": "1187f0cf696e0e1c0c376f85bd5ed3af9fb6dae3c60ae4cb7635f65fcf646214",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "visual/barrel_FL.obj",
+     "bytes": 18577,
+     "sha256": "f263be4493a4cf9451ffa816a6807312914001a7d708d97019af62d17a09c7b4",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/barrel_FR.obj",
+     "bytes": 18899,
+     "sha256": "6c2721750eba5888b32b123ad5f1627963407bc5930826eb26d804f3279a2959",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/barrel_RL.obj",
+     "bytes": 9165,
+     "sha256": "a2616fb835ce603dae844e1c6b771f5fad60042c83a432d5f338c43113650a62",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/barrel_RR.obj",
+     "bytes": 9325,
+     "sha256": "8e2bbbadf76df54b6ecbd35bf62fe813311d7742a54470b1905c7c818ea28f0c",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/crawler_lowres.obj",
+     "bytes": 40815793,
+     "sha256": "29040ea42add4b3561b5fde54b7666e2d2ca780d52eca2f0303ff49c2249655e",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "visual/crawler_no_upper_rollers_lowres.obj",
+     "bytes": 40726095,
+     "sha256": "7c6e700049c89c05e8f644b64bbbbce6bec610223ca9fad984a018da7e41a2ea",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "visual/deck_lowres.obj",
+     "bytes": 7652157,
+     "sha256": "b7a4462d704a731f7bff79578e57095a75d8a8c4c71bfc207de86f90a94d9617",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "visual/mast_lowres.obj",
+     "bytes": 3390918,
+     "sha256": "f8a4853196af897f39216eff0ad30b7436f391c6a03b832ab22ab81355287d31",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "visual/pad_FL_cad.obj",
+     "bytes": 3671,
+     "sha256": "18ba6c544d91fa8c598beab4589962a554dde1df9af587163daa68bd38c97ad4",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/pad_FL_simple.obj",
+     "bytes": 1289,
+     "sha256": "f67e212cbb2bbe021650be94154943a468ce45f7e115bcc62e4218ae1831083f",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/pad_FR_cad.obj",
+     "bytes": 3700,
+     "sha256": "b624b398fcd32c3ed58365ddfd438134f77dd1ff5dcea32ad50c7019c4756985",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/pad_FR_simple.obj",
+     "bytes": 1314,
+     "sha256": "1247c0487fbe1a1fe12993f4fb676608c6c15ea91b84f6cc16fbfc46672be203",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/pad_RL_cad.obj",
+     "bytes": 3733,
+     "sha256": "49b7f11a95fdb31ceacf23ae2920802da8cc1ed7d86f318f5be498b687ca7882",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/pad_RL_simple.obj",
+     "bytes": 1317,
+     "sha256": "83573ef45a578f4c167496e8ffb30911e4439ff811896f8f5a0c1578c782d8bb",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/pad_RR_cad.obj",
+     "bytes": 3795,
+     "sha256": "d71eb6a132e0b7622805991b77b46e8b433922845c12b1d6023eebacef3c5ac0",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/pad_RR_simple.obj",
+     "bytes": 1339,
+     "sha256": "b85be1cc495cc5b59fc41a3500a774b3e13e3ac32fe81909e1e57560409f3255",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/rod_FL.obj",
+     "bytes": 25931,
+     "sha256": "88f364e46430d256c865d962fa91c2d613ef7050c8a2c0c6b3cb4edbbe3e24a5",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/rod_FR.obj",
+     "bytes": 26389,
+     "sha256": "1e2534dbb768f9c7674017ddcfb10aeceec5d537ea98afe2f0b5bb7f10c99b31",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/rod_RL.obj",
+     "bytes": 26396,
+     "sha256": "0069176980920c8058a2e66f91010c7f982c5c15599a082efb97eb3482e82f77",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/rod_RR.obj",
+     "bytes": 26847,
+     "sha256": "ed24c85ac4b3a86365eaaa8f53f0c49f3cb450a0278fa1fcb48c6367d4d5892e",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/upper_roller_L.obj",
+     "bytes": 243174,
+     "sha256": "10a1cfb99ba42b35cf406f9226de4928fbd4f8cd1f0daef2ce18660042a91d97",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "visual/upper_roller_R.obj",
+     "bytes": 242887,
+     "sha256": "75743e3685a0b57a22159d3135c6e4090a123775ee5137fef571dbe0927966ea",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/auger.npz",
+     "bytes": 3030326,
+     "sha256": "cef1edce2e9df8ec6da689594119ef961d9a3d1662aea26d505f8a66351f711d",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/auger_coacd.json",
+     "bytes": 834,
+     "sha256": "1893460940a112a31f6296cb221bad8f5cf4bdc36f4253805256b7a0c716f5fc",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/barrel_FL.npz",
+     "bytes": 8026,
+     "sha256": "09de12e290186e5e713f1e7341980a426d339b9bbed515970aaf71ac0e38f3d0",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/barrel_FR.npz",
+     "bytes": 8044,
+     "sha256": "bec286b0a89691b86d59ae31d555aaba7daa94213a2d1ee5d70f252398d3832e",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/barrel_RL.npz",
+     "bytes": 3800,
+     "sha256": "2b67646e27293612c0c3032d53f26d827a853937be3759b094317e2d43a89e69",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/barrel_RR.npz",
+     "bytes": 3795,
+     "sha256": "e48cc8f79b0bca529542d0744787e34389b519ea65e1c75839955ff12dd7e6d7",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/crawler.npz",
+     "bytes": 11168079,
+     "sha256": "209111a6789f4801ec71df4aac54464714611049fb5af186f5a9b922ede744c9",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/deck.npz",
+     "bytes": 1679356,
+     "sha256": "da4cd1ffa1b1636edd86d902df851b0a9fa6274c708da831c5955a827cc6ab9d",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/deck_coacd.json",
+     "bytes": 834,
+     "sha256": "4c01519f60b4b791f204d23e766d04477f4679acb786dbb5ed3e0a2be3bcbaba",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/mast.npz",
+     "bytes": 851882,
+     "sha256": "43d4843f84ed4ba82f79efa49639f023ddff033331a7ce7b1fd58742cf4fcea5",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/mast_coacd.json",
+     "bytes": 831,
+     "sha256": "c4a357292a39bb4f4d333b40ef548fb92f597eccab6c27152dead03c3e9478da",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/moving_FL.npz",
+     "bytes": 12413,
+     "sha256": "31d74b6d10356522b0a8ebbd95a9f3a43fabd0cbbc845864dbf579713a35b9e3",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/moving_FL_coacd.json",
+     "bytes": 818,
+     "sha256": "10ac77e3ab07468d4e4490b62b3597f1df1866ef4c2abef10a7fe2cc013bafd2",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/moving_FR.npz",
+     "bytes": 12568,
+     "sha256": "ff36d59e51d65512c0e5b9a9c1b38bde347006c3d170e94521088f22d4c4aa27",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/moving_FR_coacd.json",
+     "bytes": 823,
+     "sha256": "b0bf025055a5d901ec2110b5887004b62855ffa0857be90c97b61e460b1bed3d",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/moving_RL.npz",
+     "bytes": 12382,
+     "sha256": "733c0091f7313d040e4b5e7785b8cec1e5838165566e15390f48123268602bf6",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/moving_RL_coacd.json",
+     "bytes": 823,
+     "sha256": "05ab8f520ab1b0ca6233e5072f53b4e73c7fde7515d793d1d2b23773e21b51f2",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/moving_RR.npz",
+     "bytes": 12566,
+     "sha256": "50d6277589e794c0c9fa5427f24ce2dc23add57298a3cc8ab57687fcd20388f4",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/moving_RR_coacd.json",
+     "bytes": 826,
+     "sha256": "cfb37209301e09c84d8561fc8c5c17a11890868f5d309368008b496bb1fb4800",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/pad_cad_FL.npz",
+     "bytes": 1840,
+     "sha256": "23f0ff704a31b1044e720bc76af091f3051dbe2e083fde36a5f9e689d59fcc2b",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/pad_cad_FR.npz",
+     "bytes": 1859,
+     "sha256": "4a9610ab7e9f58cb7d2e3d7d9b3910b3cb5d73dd2fdbd3794faece58e4108d69",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/pad_cad_RL.npz",
+     "bytes": 1824,
+     "sha256": "9ed9ab0ec34b738e9bb920e2b6097095e40b72973f6d26fe1000bdc0bb6bdcf7",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/pad_cad_RR.npz",
+     "bytes": 1808,
+     "sha256": "7d7b7e18aa648df791b3ff77791d825e229d7719c03bef3c582e5f17f30053c5",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/pad_FL_coacd.json",
+     "bytes": 821,
+     "sha256": "5a937590c6e74191168be8cec52e42d931bdadbf0424b59fd5bdb0713a29e637",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/pad_FL_vhacd.json",
+     "bytes": 762,
+     "sha256": "2474fce8eb93fb4060625c521a2c60df97817c4e0d09823283aa0d4ddd2c2560",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/pad_FR_coacd.json",
+     "bytes": 823,
+     "sha256": "3278b0223dcf4049e37f0647c2b5dfcabd9103099ac9968144c187c5480c4575",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/pad_RL_coacd.json",
+     "bytes": 824,
+     "sha256": "84696c852e543f4d4f931644b65c60f98a2b4b4153be230a24875a2d826b84a7",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/pad_RR_coacd.json",
+     "bytes": 824,
+     "sha256": "69137e9d0582345c283b8f86735a34387598a651e45f96412c63b01c78e0bb7c",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/pad_simple_FL.npz",
+     "bytes": 917,
+     "sha256": "4e2a7dc2c84c0c0b58bb7da9d2594ad1915a94ea3706d08ab2b07e18b7a69b46",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/pad_simple_FR.npz",
+     "bytes": 921,
+     "sha256": "7f4b1740f10ec0605849702767ba720aac90ef5a5d935aced1eed77cb4581dbf",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/pad_simple_RL.npz",
+     "bytes": 925,
+     "sha256": "40b1cc17e2c6f4d0379218ba5de237e93b929a4e59ae4b35612f7525348ca093",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/pad_simple_RR.npz",
+     "bytes": 919,
+     "sha256": "02b43a1d4aa191fbde0655f7740b5dc020de31a81d07eef229bebbfd432df8cd",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/rod_FL.npz",
+     "bytes": 11615,
+     "sha256": "7d17fb022c2c5f1ac5210d201eed7b9d12dd298e6f1062debd54da7c73b02f57",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/rod_FR.npz",
+     "bytes": 11598,
+     "sha256": "14aeeabcfe818c5c6ce17999f6292ed6d8fe63d600efde505a5a82844c59e3be",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/rod_RL.npz",
+     "bytes": 11628,
+     "sha256": "687603d75ad748e6858b8a35a2ecce0459ddf9173de76de4123e5259ae9af667",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/rod_RR.npz",
+     "bytes": 11627,
+     "sha256": "a5c042bbeaf9b10bef0fe31e013f137a388ba4cc8a5deceac578c41ff250d33e",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/state.json",
+     "bytes": 100848,
+     "sha256": "ececf7d042c63a70a6be79141aad2b84ea3b2a0cae750064750fad3f8c383b1b",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/track_C.npz",
+     "bytes": 156666,
+     "sha256": "60e5a21ba0daff089ae4537ea5aab4c55bd578f3fccaefbee037c6c80abcd0d7",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/track_L.npz",
+     "bytes": 5520623,
+     "sha256": "61eb6c6784a7fadf00f99d3c6f1c7f45c614d5e2dcd8834e35a87c7ac5168af8",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/track_L_coacd.json",
+     "bytes": 839,
+     "sha256": "4820b49c984e47750174ef457b1bce544dd4fb6b705ee95c82633916e317283b",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/track_L_vhacd.json",
+     "bytes": 768,
+     "sha256": "35f5d5d0cca375de6bc2aebb7232b44d98d4eb5e5a700afb28df2f7f588a2ae7",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/track_R.npz",
+     "bytes": 5493765,
+     "sha256": "24625ce646f25e72c64a7d50d0edf79f55d6c49d7318d956668612bdfefb543c",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": true
+    },
+    {
+     "path": "work/track_R_coacd.json",
+     "bytes": 844,
+     "sha256": "79cae981685e13698bcf72e5e4bc4eddf469032866ec9214f6bd879a8f57736e",
+     "generator": "build_sim_shapes.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/upper_roller_check/a_crawler.png",
+     "bytes": 247520,
+     "sha256": "60e0a911f1a2e24015f27f3cbc4ce085a989952fa4bfc9a752988e5034c858ae",
+     "generator": "check_upper_roller_overlap.py",
+     "git_ignored": false
+    },
+    {
+     "path": "work/upper_roller_check/b_no_rollers_plus_roller.png",
+     "bytes": 248411,
+     "sha256": "b839d04ff99addb11d88c1ed76a1bd60801ce1a5cd7c840f08d74ac10c6c873c",
+     "generator": "check_upper_roller_overlap.py",
+     "git_ignored": false
     }
    ]
   }

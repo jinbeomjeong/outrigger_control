@@ -58,6 +58,7 @@ INSTANCES_CSV = BREP_DIR / "instances.csv"
 CACHE_INFO_JSON = BREP_DIR / "cache_info.json"
 DERIVED_DIR = BREP_DIR / "derived"
 CRAWLER_PARTS_CSV = DERIVED_DIR / "crawler" / "crawler_contact_parts.csv"
+CRAWLER_UPPER_ROLLERS_CSV = DERIVED_DIR / "crawler" / "crawler_upper_rollers.csv"
 CACHE_NAME = "06_brep"
 BINARY_SUFFIX = ".bbrep"  # BinTools binary (default)
 ASCII_SUFFIX = ".brep"  # BRepTools ASCII (legacy, legs/mast caches)
@@ -325,6 +326,27 @@ def load_crawler_part(kind: str, side: str, index: int) -> TopoDS_Shape:
             if (row["kind"], row["side"], int(row["order_index"])) == (kind, side, index):
                 return read_brep(PROJECT_ROOT / row["file"])
     raise KeyError(f"no crawler part {kind} {side} {index} in {CRAWLER_PARTS_CSV}")
+
+
+def load_crawler_upper_roller(side: str, index: int = 0) -> TopoDS_Shape:
+    """Upper (carrier) roller part of one track (``derive_crawler_upper_rollers.py``), CAD world, mm.
+
+    The part is the roller solid (wheel, shaft boss and bracket, merged in the
+    CAD shrinkwrap) plus its bracket bolts and washers; the seat block on the
+    track frame is not included.
+
+    Args:
+        side: ``L`` (left, body +y) or ``R``.
+        index: 0-based ``order_index`` (ascending body x); the CAD has one per side.
+
+    Raises:
+        KeyError: If the index table has no such part.
+    """
+    with CRAWLER_UPPER_ROLLERS_CSV.open(encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            if (row["side"], int(row["order_index"])) == (side, index):
+                return read_brep(PROJECT_ROOT / row["file"])
+    raise KeyError(f"no upper roller {side} {index} in {CRAWLER_UPPER_ROLLERS_CSV}")
 
 
 def clear_memory_cache() -> None:
