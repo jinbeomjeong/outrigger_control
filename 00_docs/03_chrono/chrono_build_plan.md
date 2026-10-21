@@ -1,6 +1,11 @@
-# Chrono 모델 단계별 구축 계획 (2026-10-19, 개정 13: 2026-10-21)
+# Chrono 모델 단계별 구축 계획 (2026-10-19, 개정 14: 2026-10-21)
 
-작성: cad-expert. **계획 문서다.** S0 공통 기반 일부(파라미터 로더, 좌표·신호 타입, SimEngine 프로토콜, Chrono 시스템 팩토리, 기준값 키 상수와 단위·엔진 규약 시험; 3.1절 "있음")만 만들어져 있고 물리 모델(바디·접촉·구동기)·실행기·시나리오 코드는 아직 없다.
+작성: cad-expert. **계획 문서다.** S0~S4 코드가 만들어져 있다(3.1절 "있음"). 영차 유지 제어 실행기 `runner`(S6)와 S5 이후 시나리오는 아직 없다.
+
+개정 14(2026-10-21, 메인 세션 편집): **S4 최종 판정 통과** 반영(근거 `00_docs/01_dynamics/dynamics_model.md` 개정 19, 5.8절; 독립 확인 `04_scripts/01_dynamics/run_s4_check.py` → `06_analysis/00_dynamics/s4_check.json`).
+- V8(b) 판정 정의를 ①~⑤(주입·Δt 1차 비·Richardson·수치 소산 몫·D_slip 비)로 바꿈. 옛 "잔차 ≤ 1 %"는 기록.
+- MuJoCo 역할(Q8) = 인터페이스만(사용자 결정).
+- 고친 곳: S4 산출물·V8(b) 행·체크리스트, 3.1절 모듈 표(`verify/metrics.py` ERA, `verify/s4.py`, `verify/s4_energy.py`, `chrono/energy.py` S4 항, `chrono/sim_shapes.py`), 4절 결정 표 Q8.
 
 개정 13(2026-10-21, dynamics-expert 편집): **S3 최종 판정 통과**와 cad 결정 요청 (a)~(e) 판단(근거 `00_docs/01_dynamics/dynamics_model.md` 개정 17, 5.7절; 독립 확인 `04_scripts/01_dynamics/run_s3_lift_check.py` → `06_analysis/00_dynamics/s3_lift_check.json`).
 - (a) V8(a) 크롤러: **감쇠 0 모드 ζ ≥ −1 % 물리 ζ + 1 s 평균 60 s 추세 ≤ +1 % $E_{kin,0}$로 판정**하고, max(E−E0)/$E_{kin,0}$는 기록만 한다. 측정값은 ζ ≥ −6.0×10⁻⁵ 물리 ζ, 추세 +0.35 %다. 패드 V8(a)는 그대로다.
@@ -375,24 +380,28 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 - **입력 키**: S3 전부. β 감도는 다음 키를 쓴다.
   - 강성: `reference.json / L1_beta_sensitivity_top / beta_6.9e+08 / k_L1_N_m`, `reference.json / L1_beta_sensitivity_top / beta_1.0e+09 / k_L1_N_m`, `reference.json / L1_beta_sensitivity_top / beta_1.6e+09 / k_L1_N_m`
   - 판정 값: `penetration_mm`, `static_pitch_deg`, `dF_per_mm_FL_N`, `FL+_F_min_mm`, `FL+_liftoff_mm`, `f_Hz_top_ball_centre_rev13`(개정 10 안 A; `f_Hz_top`은 접촉점 부싱 이력, 1차가 0.7 % 낮음)
-- **산출물**: `06_analysis/01_chrono/14_S4/verify_S4_L1.json`, β 감도 표
+- **산출물**: `06_analysis/01_chrono/14_S4/verify_S4_L1_modes.json`·`verify_S4_L1_energy.json`·`verify_S4_L1_beta.csv`(β 감도 표) + PNG(`_modes`·`_beta`·`_energy`)
 - **통과 기준**
 
 | V | 판정 | 허용 | 기준값 키 |
 |---|---|---|---|
 | V7 | 6개 모드 진동수·ζ(모드 투영) | 진동수 ±3 %, ζ ±30 % | **(개정 10, 안 A)** L1 머리 + `V7_ball_centre_bushing_rev13 / f_undamped_Hz`, `f_damped_Hz`, `zeta`(같은 머리 아래). 모드 형상: L1 머리 + `V7_ball_centre_bushing_rev13 / mode_shapes` 아래(하위 키 이름은 이력 `mode_shapes_rev5`와 같음) `Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)`, `mass_matrix (same coordinates)`, `reference_point_m (rotations about it, translations of it; body axes, level body = world)`, `coordinates`, `projection` |
-| V8(b) | V12 + 큰 수평 초기 속도(항복 발생)에서 에너지 수지 | 잔차 ≤ 1 %, $D_{slip}/\sum\mu N|\Delta a|$ 1.00~1.05. 부싱 생성·소멸 횟수 기록 | — |
+| V8(b) | V12 + 큰 수평 초기 속도(항복 발생)에서 에너지 수지 | **(개정 19)** ① 주입 $\max_t R\le10^{-3}E_{ref}$ ② $R(2\Delta t)/R(\Delta t)$ 2 ± 20 % ③ Richardson $\lvert2R(\Delta t)-R(2\Delta t)\rvert\le$ 1 % $E_{ref}$ ④ $R\le0$, $\lvert R\rvert\le$ 10 % $(D_{visc}+D_{slip})$ ⑤ $D_{slip}/\sum\mu N|\Delta a|$ 1.00~1.05. $E_{ref}=\max(E_{kin,0}, D_{visc}+D_{slip})$. 옛 "잔차 ≤ 1 %"는 기록. 부싱 생성·소멸 횟수 기록 | — |
 | β 감도 | 개정 5 규칙: 바꾸는 것은 L1 패드 $k_n$(`k_L1_N_m`) 하나뿐이다. **$c_n$, $c_t$, $g_n$, 부싱 $k_t$는 기본값 그대로.** 판정은 정적값(침투, 정착 pitch, FL +1 mm ΔF, FL+ $F_{min}$·부상 문턱)과 **비감쇠 진동수**(`f_Hz_top`)만 한다. ζ는 판정하지 않는다. V6는 비용이 크면 1.6 GPa 한 값만 돌린다(0.69 GPa는 약 200 s) | V2·V3·V5·V6·V7 진동수와 같은 허용 | 위 β 키 |
 
 - **의존**: S3(Δt 확정).
 - **위험**: 5.8~8.0 Hz 네 모드가 가깝다. 모드 투영으로 분리하고, 투영 잔차(다른 모드 섞임)가 크면 ERA/SSI로 교차 확인한다. $\Phi$는 기준해 강성(Chrono 입력과 같은 $k_n$, $k_t$)에서 나온 값이므로, β 감도처럼 강성을 바꾼 실행에는 쓰지 않고 ERA/SSI를 쓴다.
 - **담당·작업량**: cad 중, dyn 판정 중.
 - **체크리스트**
-  - [ ] 초기 속도 6종 + 모드 투영($\Phi$, $M$, 기준점) + ERA/SSI 교차
-  - [ ] V8(b) 에너지 수지
-  - [ ] β 3값(감쇠 고정), V6는 비용에 따라 1.6 GPa만
-  - [ ] 다리 감쇠비 감도 양끝(ζ 0.01 / 0.10, `00_docs/01_dynamics/damping_survey.md`) (2026-10-20 로드맵 동기화)
-  - [ ] (선택) 로드측 챔버 +10 % $k_v$ 1건
+  - 결과(2026-10-21, `06_analysis/01_chrono/14_S4/verify_S4_L1_{modes,energy}.json`·`verify_S4_L1_beta.csv`, 독립 확인 `06_analysis/00_dynamics/s4_check.json`, 최종 판정 `dynamics_model.md` 개정 19 5.8절): 전 항목 통과. 재실행 `04_scripts/02_chrono/run_S4.py all --jobs 4`(49사례 10~15분), `run_S4_energy.py run --jobs 3`(5사례 약 4분)
+  - [x] 초기 속도 6종 + 모드 투영($\Phi$, $M$, 기준점) + ERA/SSI 교차 (2026-10-21 dyn 최종 통과, `dynamics_model.md` 5.8: f ≤ 0.03 %, ζ ≤ 0.6 %, ERA–투영 f ≤ 0.03 %·ζ ≤ 0.7 %(교차 허용 f 0.5 %·ζ 10 %, 가정), 투영 누설 ≤ 0.024 — 5.8~8.0 Hz 모드 분리됨)
+  - [x] V8(b) 에너지 수지 (2026-10-21 dyn 최종 통과, `dynamics_model.md` 5.8: 판정 정의 개정 19 — 주입 pitch2 +0.86 J(1.8×10⁻⁴ $E_{ref}$, 전 사례 ≤ 0.87 J), Δt 비 1.981, Richardson −1.08 J(0.022 %), 수치 소산/물리 소산 2.18~2.33 %, $D_{slip}$ 비 1.0034~1.0070. 옛 max\|R\|/E_ref 2.29 %는 기록. 고정점 1스텝 지연 항은 이산 모델 안의 소산 = 연속 기준 O(Δt), $D_{slip}$에 섞지 않음. 킥 0.5 m/s·(0.8, 0.6), 부상·재접지 16~17회 포함)
+  - [x] β 3값(감쇠 고정), V6는 비용에 따라 1.6 GPa만 (2026-10-21 dyn 최종 통과, `dynamics_model.md` 5.8: 세 β 모두 V2·V3·V5·V6·V7 진동수 허용 안, V6는 세 β 모두 실행. 차는 전부 P-δ(독립 정확 정역학 ΔF ≤ 1.4 N, 문턱 ≤ 0.001 mm). 1.6 GPa에서 5·6차 순서 바뀜(기준 모델도 같음), 0.69 GPa 4·5차 공칭 Φ MAC 0.80 = 물리)
+  - [x] 다리 감쇠비 감도 양끝(ζ 0.01 / 0.10, `00_docs/01_dynamics/damping_survey.md`) (2026-10-20 로드맵 동기화) (2026-10-21 dyn 최종 통과: 기준 = 공칭 ζ × 배율, 선형 복소 모드와 ≤ 0.12 %. ζ 0.10 투영 맞춤 섞임 모드는 ERA 값. ζ 0.01은 Δt 5×10⁻⁵ s)
+  - [x] (선택) 로드측 챔버 +10 % $k_v$ 1건 — 감도 기록(양방향 선형 상한, f +0.05~+4.6 %, β 범위 안이라 모델 불확도로 수용, 모델 변경 없음)
+  - [x] (선택) V8(b) Δt 5×10⁻⁵ s 3점 확인 (2026-10-21: R_end −28.39 J(dyn 기대 −28.7 ± 1.5), R(1e-4)/R(5e-5) 1.984, ④ 0.58 %, ⑤ 1.00171 — 기대와 일치. 진단 항(고정점 지연·부싱 암시·운동 −½ΔvᵀMΔv·접촉 +½Σk_nΔδ²)으로 잔차 99 % 이상 폐합, 나머지 +0.89 J(2e-4). 490 N 사건 = RL 재접지 직전 1스텝(t 56.9218 s), 기록)
+  - [x] 코드 반영(개정 19 → `verify/s4_energy.py`·`verify/s4.py`, 2026-10-21): 6사례 + Δt 쌍 2개 통과, 감쇠 감도 판정·β MAC 확인 통과. 진단 항은 읽기 전용(궤적 비트 동일). 시험 927 + 319 통과
+  - 결정됨(2026-10-21): MuJoCo 역할(Q8) = **인터페이스만**(사용자 결정, dyn 권고). 재결정 조건 = GPU 대량 ML 데이터(MuJoCo Warp)가 필요해질 때
 
 ### S5 오거 3단계
 
@@ -558,7 +567,8 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 - **목표**: 패드 침하로 자세가 흐트러지는 상황을 재현한다.
 - **만드는 것**:
   - 패드 바디 분리(`pad_body`, `rod_body`), `ChLinkLockSpherical`(볼 중심), 경사 범위 ±10° 제한(방식은 dyn과 협의)
-  - 팔각 패드 충돌 메시
+  - 팔각 패드 충돌 메시 — C8 `pad_<leg>_hull`을 별도 패드 바디에(오프셋 −`legs.<leg>.pad_body.com_m`, `sim_shapes.attach_leg`에 인자 추가) (dyn 판정 2026-10-21, `dynamics_model.md` 개정 20 3.11절)
+  - 크롤러 접촉 = **포락선 상자 3개/트랙**(평탄 + 앞 2.134°·뒤 3.187° 경사, 폭 0.489 m, 기준면 = 블록 바닥면 = 크롤러 바닥 + 4 mm; 치수 3.11절), 크롤러 구 24개 제거. 감도 = 슈별 상자 16개/트랙(`crawler_ground_sheet.json`), 토양마다 1건. SCM 토양 감쇠 `damping_R` = 2ζ√(K·m/A_c)(ζ 0.2, K 확정 뒤). 강체 지면 S1~S8은 D안 구 유지
   - `pychrono.vehicle.SCMTerrain`(설치본에 있음, 2026-10-19 확인)
   - $k_{ax}$에서 콘크리트를 뺀다
   - SCM 격자 수렴 시험
@@ -577,6 +587,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 - **담당·작업량**: cad 대, dyn 판정 중.
 - **체크리스트**
   - [ ] SCM 파라미터 확보
+  - [ ] S9 착수 전 점검 1~6(`dynamics_model.md` 3.11.4: Chrono SCM Bekker 폭 b = 2A/둘레·명시 적분 확인, 단일 패드 격자 2/1/0.5 cm, 크롤러 정착(C 형상) 대 독립 numpy 모델 ≤ 6 %, 비용 약 4 ms/스텝, Δt 1×10⁻⁴ 대 5×10⁻⁵ s, 활성 영역 높이 ≥ 최대 침하 + 0.1 m). SCM 파라미터가 정해지면 크롤러 위 정착 pitch가 D8 운용 한계(3.2°) 안인지 먼저 확인(예시 연약 토양 3.5~4.7°)
   - [ ] 패드/로드 분리 + 구면 조인트 + 경사 제한
   - [ ] 단일 패드 비용·격자 수렴
   - [ ] V16
@@ -594,7 +605,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 | `03_src/outrigger_sim/__init__.py` | **있음**(docstring만) | 엔진 독립 핵심 + Chrono 백엔드 |
 | `03_src/outrigger_sim/chrono/__init__.py` | **있음** | Chrono 백엔드 패키지. 계획 모듈: `lateral_bushing`(S7), `loads`(S8), `scm`(S9) |
 | `03_src/outrigger_sim/chrono/actuators.py` | **있음**(S2b, S3 보강) | `L1SpeedActuator`: 적분·속도 제한 기준 위치 모터(`ChFunctionRamp`), 명령 램프, 스트로크 끝 이산 제동, 소프트 리밋, 훅 누락 가드(`ActuatorHookMissedError`, 5.6절 판정 1 조건 1) |
-| `03_src/outrigger_sim/chrono/energy.py` | **있음**(S3) | `EnergyMeter`·`EnergyTerms`: 기계 에너지(운동 + 중력 + 접촉 스프링 $F^2/2k_n$ + 부싱 스프링), S3 V8(a)용. S4 `energy.*` 7항은 아직 없음 |
+| `03_src/outrigger_sim/chrono/energy.py` | **있음**(S3) | `EnergyMeter`·`EnergyTerms`: 기계 에너지(운동 + 중력 + 접촉 스프링 $F^2/2k_n$ + 부싱 스프링), S3 V8(a)용. **S4 `energy.*` 7항 있음**(2026-10-21, `EnergyBudget`·`EnergyBudgetTerms`, V8(b)) |
 | `03_src/outrigger_sim/chrono/runs.py` | **있음**(S2a·S2b·S3) | 실행 루프: `run_free_vibration`(V7), `run_gravity_ramp`(V12), `run_commanded`(명령 일정·접촉 전환 기록), `run_windowed`(`DtWindow` 구간별 Δt, 접지 전환 창), `set_rigid_velocity` |
 | `03_src/outrigger_sim/chrono/system.py` | **있음**(S0) | `make_system`(SPARSE_LU + 패턴 고정 기본), `set_gravity`, `select_time_step` |
 | `03_src/outrigger_sim/chrono/ground_bushing.py` | **있음**(S0) | `GroundBushingCoulomb`: 지면 고정 구면 부싱 + 원형 Coulomb 복귀 사상, R15 부상·재접지 |
@@ -617,7 +628,10 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 | `03_src/outrigger_sim/verify/s2a.py` | **있음**(S2a) | V7 진단(볼 중심 부싱 문턱, 수치 감쇠 차감), V12, V13 |
 | `03_src/outrigger_sim/verify/s2b.py` | **있음**(S2b) | V0(모터 부호, 크롤러 틈), V11(완전 신장 = stroke/$v_{max}$ + 램프), 명령 램프, R15 사건, 크롤러 정착(V13), 스냅숏 왕복 |
 | `03_src/outrigger_sim/verify/s3.py` | **있음**(S3) | V8(a)(크롤러는 모드 ζ + 에너지 추세, max(E−E0) 기록), V4(기하 접지 시각), V5, V6, V9 수렴 |
-| `03_src/outrigger_sim/verify/metrics.py` | **있음**(S2a, 일부) | 모드 투영 $\eta=\Phi^T M q$, 감쇠 정현 적합(단일·합), 대수 감쇠율. 3.1절 역할 중 정착값·문턱 교차·ERA/SSI·에너지 수지·수렴비·접지 시각 예측은 아직 없다(교차는 `scenarios/lift.crossing`, 에너지는 `chrono/energy`) |
+| `03_src/outrigger_sim/verify/metrics.py` | **있음**(S2a, S4 보강) | 모드 투영 $\eta=\Phi^T M q$, 감쇠 정현 적합(단일·합), 대수 감쇠율. S4: 다출력 ERA(`era_free_decay`, `select_era_mode`), `mass_mac`, `modal_amplitudes`, `projection_leakage`. 3.1절 역할 중 정착값·수렴비·접지 시각 예측은 아직 없다(교차는 `scenarios/lift.crossing`, 에너지 수지는 `chrono/energy`·`verify/s4_energy`) |
+| `03_src/outrigger_sim/verify/s4.py` | **있음**(S4) | V7 6모드(투영 판정, 맞춤 잔차 > 0.05·ERA 교차 실패 시 ERA 값 `judged_value`), β 감도 V2·V3·V5·V6·V7 진동수 + MAC(`beta_mac_checks`, `BETA_MAC_ABS_TOL` 0.05), 감쇠 감도(`damping_mode_checks`, 공칭 ζ × 배율), 로드측 감도 기록 |
+| `03_src/outrigger_sim/verify/s4_energy.py` | **있음**(S4) | V8(b) 개정 19 판정 ①④⑤(`v8b_checks`)·②③(`v8b_pair_checks`), $E_{ref}=\max(E_{kin,0}, D_{visc}+D_{slip})$, 옛 잔차·진단 항 기록 |
+| `03_src/outrigger_sim/chrono/sim_shapes.py` | **있음**(C8) | 시각화 메시·충돌 후보 로더, `attach_model_visuals`(동역학 영향 없음), `attach_superstructure`/`attach_leg`(충돌 형상 선택, 기본 경로 미연결 — **판정됨**(개정 20, `dynamics_model.md` 3.11절): S1~S8 시각화·간섭 전용, S9에서만 패드 hull·크롤러 포락선 상자 접촉), 상부 롤러 `attach_upper_rollers`·`attach_model_visuals(upper_rollers=True)`(C8 보강 2026-10-21) |
 | `03_src/outrigger_sim/control/__init__.py` | **있음** | Controller 프로토콜과 제어기(py). C8은 미구현 |
 | `03_src/outrigger_sim/control/protocol.py` | **있음**(S6 기반) | `Controller` 계약: 입력 `Measurements`만, 출력 `Command`(영차 유지), 주기 기본 20 ms |
 | `03_src/outrigger_sim/control/hold.py` | **있음**(S6 기반) | `HoldController`: 모든 다리 정지(폐루프 연기 시험용) |
@@ -806,13 +820,13 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 | 크롤러 YAML 키 반영(`contact.crawler.*` D안, `simulation.settle_on_*`) | S2b, S3 | **반영됨**(2026-10-20, D안 사용자 결정, `export_params.py`) | — |
 | 지면 경사 시험 범위 | S2a, S7 | S2a 전 | V12 3경우 |
 | Δt 확정 | S4 이후 | **용도별 결정됨**(2026-10-20 사용자 결정, YAML 반영): 일반 실행 L1·L2b-NSC 1×10⁻⁴ s(`simulation.L1.dt_s`, `simulation.L2b_NSC.dt_s`; 옛 로킹 수치 감쇠 규칙 상한 1.386×10⁻⁴ s. 개정 7: 모드별 규칙 상한은 2.05×10⁻⁴ s(3차)이고 2×10⁻⁴ s 복귀는 S3 V8(a) 뒤 사용자에게 다시 묻는다, S3 위험 ①-2), 기준해·접지 전환 해석 1×10⁻⁵ s(`simulation.dt_reference_s`, `simulation.dt_transition_s`). S3 V8(a)·V9로 확인(dyn). **갱신 2026-10-21: S3 V8(a)·V9 통과 → 사용자 결정으로 일반 실행 L1 2×10⁻⁴ s, YAML 반영**(`simulation.L1.dt_s` 0.0002; L2b-NSC 1×10⁻⁴ s·기준해·전환 1×10⁻⁵ s 그대로, `dynamics_model.md` 5.7절) | 규칙값으로 진행. V8(a) 실패 시 dyn과 협의(S3 위험 ①) |
-| MuJoCo 역할(Q8) | 병행 시 S1~S4 재사용 | **S4 끝 전** | 인터페이스만 |
+| MuJoCo 역할(Q8) | 병행 시 S1~S4 재사용 | **S4 끝 전** | ✅ 인터페이스만(사용자 결정 2026-10-21, dyn 권고: L1 규약을 MuJoCo soft constraint로 재현 불가, 교차 검증은 독립 numpy 모델로 닫힘. 재결정 = GPU 대량 ML 데이터 필요 시) |
 | 자세 정확도 목표 | S6 뒤 폐루프 | **결정됨**(2026-10-20): ±0.2°, 데드밴드 0.03°, IMU 현장 영점 교정 의무 | — |
 | IMU 장착 위치(Q4) | S6 | **결정됨**(2026-10-20): 캐빈 바닥 아래 상부 프레임. 좌표 (0.31, 0.88, 0.040) m(C1, BASE DECK 좌측 폰툰 15 mm 가로판 윗면, 후보 C1, 2026-10-20 사용자 결정). 실기 설치 때 확인 | — |
 | 자세 신호 필터 | S6 뒤 폐루프 | **결정됨**(2026-10-20): 2차 저역통과(1차 τ 0.5 s × 2단) | — |
 | 센서 모델 선정(노이즈·바이어스·지연 사양), 제어 주기 | S6 | **S6 전** | 가정치(영점 오차 허용 ≤ 2.44 mg = 0.14°(장착 몫 0.02°, 2026-10-20 결정; 이전 2.27 mg = 0.13°), ±0.2° 캐빈·데드밴드 0.03° 예산; 등급 4종으로 감도. 20 ms) |
 | 제어기 구조(D1) | S6 뒤 폐루프 | **잠정 결정**(2026-10-20): C2, 대안 C8. 접지 판정은 물리 기반 결합 판정 + 탐침, ML/DL은 비교 후보 | — |
-| 제어기 세부(탐침 빈도, 비틀림 목표, 게인), roll·pitch 목표 범위 | S6 뒤 폐루프 | **S6 끝 전** | `control_candidates_comparison.md` 7.1절 값 |
+| 제어기 세부(탐침 빈도, 비틀림 목표, 게인), roll·pitch 목표 범위 | S6 뒤 폐루프 | **S6 끝 전** | 제어기 세부는 `c2_design.md`(사용자 채택 2026-10-21). 목표 범위는 **잠정 축별 상한 pitch ±3°, roll ±4° + 마름모 검사 규칙 A**(사용자 결정 2026-10-21, `dynamics_model.md` 개정 21 3.12절) — 제어기 반영은 S6(control-expert → python-expert) |
 | D2 외력 크기·작용 시간·작용점(Q9) | S8 | **S7 시작 전**(늦어도 S8 전) | 정착 상태 지표만 |
 | 카운터 밸런스 교체(Q10), 실 마찰 크기 | S8 | 막지 않음 | 두 옵션 구현, 감도 0/2/5/12 kN |
 | 감쇠 ζ(Q6) | S1~S8 | **결정됨**(2026-10-20, [damping_survey.md](../01_dynamics/damping_survey.md), 문헌 추론값): 다리 축 0.03(잠김, heave 7.39 Hz 기준, 감도 0.01~0.10), 이동 중 0.10, 크롤러 콘크리트 0.05 / 토양 0.2(감도 0.02~0.3), 구조·마스트 0.015 | — |

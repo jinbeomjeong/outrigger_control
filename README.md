@@ -27,7 +27,7 @@
 ```
 outrigger_control/
 ├── 00_docs/        설계 문서, 좌표계·모델 정의, 결정 기록
-│   ├── 00_cad/         CAD 검토(제원·다리, 오거 3단계, 마스트 참고용)
+│   ├── 00_cad/         CAD 검토(제원·다리, 오거 3단계, 마스트 참고용, 크롤러 접지 C7, 시뮬레이션 형상 C8, STEP 색 C11)
 │   ├── 01_dynamics/    동역학 모델·검증 기준, 구동기 L2 검토
 │   ├── 02_hydraulic/   유압 회로 해석, 유압유 조사 (회로도 이미지는 git 제외)
 │   ├── 03_chrono/      Chrono 구축 계획·검토, 정지 마찰 시험
@@ -41,7 +41,9 @@ outrigger_control/
 │   ├── 04_mast/        마스트 힌지 검토(참고용, 대용량 캐시는 git 제외), 마스트 보 단면 특성(C9)
 │   ├── 05_meshes/      렌더용 메시 캐시 (git 제외)
 │   ├── 06_brep/        전체 부품 B-rep 캐시(프로토타입 .bbrep는 git 제외)·배치 표·크롤러 파생 캐시, 목록은 01_cad/cache_manifest.json
-│   └── 07_faces/       전체 면 색인(C5): 면 종류·면적·중심·법선·축·bbox, CAD/기체 좌표 (csv.gz는 git 제외)
+│   ├── 07_faces/       전체 면 색인(C5): 면 종류·면적·중심·법선·축·bbox, CAD/기체 좌표, 상부 롤러 면 표 (csv.gz는 git 제외)
+│   ├── 08_style/       STEP 색(C11): 인스턴스·프로토타입·면 색 표, 질의 04_scripts/00_cad/style_index.py
+│   └── 09_sim_shapes/  Chrono 시각화 메시·충돌 후보(C8, 상부 롤러 포함; *_lowres.obj는 git 제외)
 ├── 02_params/      시뮬레이션 공통 파라미터 (04_scripts/00_cad/export_params.py가 생성)
 ├── 03_src/outrigger_sim/  시뮬레이션 패키지 (엔진 독립 코어 + chrono/, sensors/, control/, scenarios/, verify/)
 ├── 04_scripts/     실행·분석 스크립트
@@ -79,8 +81,12 @@ GIF 애니메이션과 큰 메시(`*.gif`, `*_lowres.obj`)는 git에 올리지 �
 | `06_analysis/00_dynamics/leg_extension_loads.gif` | `C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I 04_scripts/01_dynamics/run_leg_extension_loads.py` |
 | `06_analysis/01_chrono/01_cost/solver_benchmark_{L1,SCM,scale}.gif` | `PY -I -u 04_scripts/02_chrono/solver_benchmark/make_gifs.py all` (저장된 측정 결과 `07_results/solver_benchmark/`로 GIF만, 약 5분). 측정부터 다시: `PY -I -u 04_scripts/02_chrono/solver_benchmark/run_benchmark.py all --report` (약 50분) |
 | `01_cad/06_brep/derived/crawler/crawler_lowres.obj` | `PY -I 04_scripts/00_cad/derive_crawler_cache.py` 뒤 `PY -I 04_scripts/00_cad/check_cache.py --write --cache 06_brep` (약 8분, 파생 파일 전부 다시 씀, `00_docs/00_cad/cad_review.md` 8.6절) |
-| `01_cad/07_faces/*.csv.gz`(면 색인, 6.1 MB) | `PY -I 04_scripts/00_cad/build_face_index.py`(약 4분, 검증 포함) 뒤 `PY -I 04_scripts/00_cad/check_cache.py --write --cache 07_faces` |
+| `01_cad/07_faces/*.csv.gz`(면 색인, 6.1 MB; 상부 롤러 면 표는 아래 행) | `PY -I 04_scripts/00_cad/build_face_index.py`(약 4분, 검증 포함) 뒤 `PY -I 04_scripts/00_cad/check_cache.py --write --cache 07_faces` |
 | `01_cad/06_brep/derived/crawler/parts/*.bbrep`(크롤러 D안 접촉 부품 44개, 84.6 MB) | `PY -I 04_scripts/00_cad/derive_crawler_parts.py`(약 2분) 뒤 `check_cache.py --write --cache 06_brep` |
+| `01_cad/06_brep/derived/crawler/parts/upper_roller_{L,R}1.bbrep`, `01_cad/07_faces/crawler_upper_roller_faces.csv.gz`(상부 롤러 2개) | `PY -I -X utf8 04_scripts/00_cad/derive_crawler_upper_rollers.py`(약 14 s) 뒤 `check_cache.py --write --cache 06_brep 07_faces` |
+| `01_cad/09_sim_shapes/visual/*_lowres.obj`(C8 시각 메시 63 MB, `crawler_no_upper_rollers_lowres.obj` 포함) | `PY -I 04_scripts/00_cad/build_sim_shapes.py`(약 12분, E코어; 상부 롤러만 `--stage upper_rollers index --cpu pcore` 4 s) 뒤 `check_cache.py --write --cache 09_sim_shapes` |
+| `06_analysis/01_chrono/14_S4/S4_modes.gif`, `S4_energy_v8b.gif`(S4 결과; `S4_summary.png`은 git 포함) | `PY -I -u 04_scripts/02_chrono/render_S4_gifs.py --jobs 4 [--only modes energy summary] [--mesh-cache <폴더>]`(저장된 S4 기록에서만, 모드 약 3분·에너지 약 2분) |
+| `01_cad/cad_tracks_turntable.gif`(C7·C8·C11 종합; `cad_tracks_2026-10-21.png`은 git 포함) | `PY -I 04_scripts/00_cad/render_cad_tracks_summary.py [--only summary turntable] [--mesh-cache <폴더>]`(약 2분) |
 | `06_analysis/01_chrono/11_S1/S1_settle_levels.gif`, `06_analysis/01_chrono/11_S1/S1_cross_top.gif`(S1 정착·무초기화 낙하 결과) | `PY -I -u 04_scripts/02_chrono/render_S1_gifs.py` (저장된 S1 Record에서 GIF만, 시뮬레이션 재실행 없음, 약 3분; `S1_auger_levels.png`·`S1_cross_top_frame.png`·`S1_gifs.json`도 다시 씀). Record가 없으면 먼저 `PY -I -u 04_scripts/02_chrono/run_S1.py all`(약 2.5분) |
 | `06_analysis/01_chrono/12_S2/S2a_v7_free_vibration.gif`, `S2a_v12_slope.gif`, `S2b_v11_stroke.gif`, `S2b_crawler_settle.gif`, `S2b_contact_events.gif`(S2a·S2b 결과; 대표 PNG `S2a_summary.png`·`S2b_summary.png` 등은 git 포함) | `PY -I -u 04_scripts/02_chrono/render_S2_gifs.py --before-dir 06_analysis/01_chrono/12_S2/history/before_planA` (저장된 S2a·S2b Record·result.json·verify JSON에서만, 시뮬레이션 재실행 없음, E코어 4프로세스 약 10분 + 처음 메시 캐시 약 2분; `--mesh-cache <폴더>`로 재사용; 부분만 `--only v7 dt v12 v12png v11 ramp crawler events summary`; PNG와 `S2_gifs.json`도 다시 씀). `before_planA/`는 부싱 작용점 안 A 전(접촉점) 실행 결과 보관본. Record가 없으면 먼저 `run_S2a.py all`, `run_S2b.py all` |
 | `06_analysis/01_chrono/13_S3/S3_lift_v4.gif`(S3 V4 들어 올림; 대표 PNG `S3_lift_v4_frame.png`·`S3_summary.png`·`S3_v5_v6.png`·`S3_v8a_energy.png`·`S3_v9_convergence.png`은 git 포함) | `PY -I -u 04_scripts/02_chrono/render_S3_gifs.py [--mesh-cache <폴더>] [--before 06_analysis/01_chrono/13_S3/history/before_yaml_dt2e-4/verify_S3_L1.json]` (저장된 S3 result.json·Record `v4_D_wdefault`에서만, 시뮬레이션 재실행 없음, 약 1.5분 + 처음 메시 캐시 약 2분; 부분 `--only lift v5v6 v8a v9 summary`; `S3_gifs.json`도 다시 씀). Record가 없으면 먼저 `run_S3.py run --only v4_D_wdefault`(약 1.5분). `before_yaml_dt2e-4/`는 YAML Δt 2×10⁻⁴ s 반영 전 S3 판정 요약 보관본(`S3_summary.png`의 전·후 비교 입력) |
