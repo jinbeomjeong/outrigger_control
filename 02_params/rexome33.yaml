@@ -6,7 +6,7 @@
 meta:
   name: "REXOME33 outrigger levelling - shared simulation parameters"
   generator: "04_scripts/00_cad/export_params.py"
-  generated: "2026-10-20"
+  generated: "2026-10-21"
   sources:
     step: "REXOME33_Assy_r3(미니어쳐).stp"
     parts: "01_cad/01_parts/parts_classified.csv"
@@ -126,8 +126,10 @@ superstructure:
 actuator:
   type: "hydraulic cylinder approximated by ChLinkMotorLinear (simplified)"
   stroke_m: 0.68  # CLAUDE.md; CAD estimate bore 700 - piston 20 (cad_summary.json legs.*.stroke_estimate_mm)
-  full_stroke_time_s: 30.0
+  full_stroke_time_s: 30.0  # CLAUDE.md '구동기': constant-speed time 0 -> stroke_m at max_speed_m_s; stop-to-stop (ramped start and stop) = + command_ramp_s
   max_speed_m_s: 0.0226666667  # stroke_m / full_stroke_time_s
+  command_ramp_s: 0.1  # [common] ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '구동기'): command acceleration limit 0 -> max_speed_m_s in this time (valve response size, no hydraulic data); start and stop ramped; stroke ends braked with the same limit (end cushion = command ramp, 00_docs/01_dynamics/dynamics_model.md 5.6 item 3, 5.7 key table)
+  command_accel_limit_m_s2: 0.226666667  # [common] derived: max_speed_m_s / command_ramp_s
   extension_direction: [0.0, 0.0, -1.0]  # body frame: extending pushes the pad down (-z)
   model_default: "L1"  # [common] user decision 2026-10-19 (CLAUDE.md '구동기 모델'): L1 temporary default
   bore_diameter_m: 0.115  # [common] CAD, 00_docs/00_cad/cad_review.md 3.1
@@ -591,9 +593,9 @@ simulation:
   settle_on_pads_min_s: 52.8601322  # [L1] ASSUMPTION (derived): ln(100) / (zeta1 omega1), 1st L1 rocking mode (top); not needed when initialised at the analytic static solution (00_docs/01_dynamics/dynamics_model.md 4.5 item 1)
   dt_reference_s: 1.0e-05  # [L1, L2b] ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '시뮬레이션 시간 간격'): time step for reference solutions (V9 convergence judgement)
   dt_transition_s: 1.0e-05  # [L1, L2b] ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '시뮬레이션 시간 간격'): time step for contact-transition analyses (V4 lift, leg lift-off / re-touch, D2 disturbance load peaks); may be used only inside the transition window of a run
-  # [L1] ASSUMPTION (rule, confirm by V9; user decision 2026-10-20: general runs = controller development, sensitivity, ML data): dt = largest of 1e-3, 5e-4, 2e-4, ... with omega1 dt / 2 <= 0.1 zeta1 (1st rocking mode, L1, top, 06_analysis/00_dynamics/reference.json), 00_docs/01_dynamics/dynamics_model.md 4.3
+  # [L1] ASSUMPTION (rule, confirmed S2a dt study + S3 V8(a)/V9, 00_docs/01_dynamics/dynamics_model.md 5.5/5.7; user decision 2026-10-21; general runs = controller development, sensitivity, ML data): mode-wise numerical damping r_i omega_i dt / 2 <= 0.1 zeta_i (modes 1-6, three auger levels; boundary ~0.2 ms = 0.1 c_t / k_t of the bushing-dominated modes); legs zeta 0.01 sensitivity: tangential modes not judged or 5e-5 s; transitions, references, D2 use dt_transition_s / dt_reference_s
   L1:
-    dt_s: 0.0001
+    dt_s: 0.0002
   # [L2b] ASSUMPTION (rule, confirm by V9; general runs): smaller of (a) dt <= T / 50 of the rod on the axial spring alone (contact open) sqrt(mean k_ax / m_rod) / 2 pi, run_reference.py:617-618, and (b) omega1 dt / 2 <= 0.1 zeta1 of the 1st L2b-NSC rocking mode (top), run_reference.py:619-620 (user decision 2026-10-20); PSOR 50 at 2e-4 s held a 2 deg slope (stick friction test), 00_docs/01_dynamics/dynamics_model.md 4.3
   L2b_NSC:
     dt_s: 0.0001

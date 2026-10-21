@@ -131,10 +131,12 @@ def sign_test_schedule(params: Params) -> Schedule:
     return Schedule([Segment(0.0, (v, v, v, v)), Segment(1.0, (0.0, 0.0, 0.0, 0.0))], 1.2)
 
 
-def expected_full_stroke_time_s(params: Params, ramp_s: float) -> float:
+def expected_full_stroke_time_s(params: Params, ramp_s: float | None = None) -> float:
     """0 -> hi from rest to rest with the acceleration ramp: ``stroke / v_max + ramp`` (the
-    ramp-up and the braking each cost ``ramp / 2``)."""
-    return params.actuator.stroke_m / params.actuator.max_speed_m_s + ramp_s
+    ramp-up and the braking each cost ``ramp / 2``); ``ramp_s`` None = YAML
+    ``actuator.command_ramp_s``."""
+    ramp = params.actuator.command_ramp_s if ramp_s is None else float(ramp_s)
+    return params.actuator.stroke_m / params.actuator.max_speed_m_s + ramp
 
 
 @dataclass(frozen=True)

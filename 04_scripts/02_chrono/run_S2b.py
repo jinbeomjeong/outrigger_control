@@ -126,7 +126,6 @@ def _append(recorder, model, probe):
 
 
 def _air_model(params, *, ramp_s=None, dt_s=None):
-    from outrigger_sim.chrono.actuators import ACCEL_RAMP_S
     from outrigger_sim.chrono.bodies import BodyPose
     from outrigger_sim.chrono.model import L1Model
     from outrigger_sim.scenarios.stroke import air_pose
@@ -137,7 +136,7 @@ def _air_model(params, *, ramp_s=None, dt_s=None):
         extensions_m=(0.0, 0.0, 0.0, 0.0),
         attach_bushings=False,
         actuator=True,
-        actuator_ramp_s=ACCEL_RAMP_S if ramp_s is None else ramp_s,
+        actuator_ramp_s=ramp_s,  # None = YAML actuator.command_ramp_s
         dt_s=dt_s,
     )
     model.superstructure.SetFixed(True)
@@ -159,7 +158,6 @@ def run_air_short() -> dict:
     placement = place_process("pcore")
     import numpy as np
 
-    from outrigger_sim.chrono.actuators import ACCEL_RAMP_S
     from outrigger_sim.chrono.runs import run_commanded
     from outrigger_sim.params import load_params
     from outrigger_sim.record import save_record
@@ -194,7 +192,7 @@ def run_air_short() -> dict:
 
     spikes = []
     m_rod = float(params.legs[0].moving_part.mass_kg)
-    for ramp in (ACCEL_RAMP_S, 0.0):
+    for ramp in (params.actuator.command_ramp_s, 0.0):
         for dt in (1.0e-4, 1.0e-5):
             mdl = _air_model(params, ramp_s=ramp, dt_s=dt)
             s = Schedule([Segment(0.0, (v, v, v, v)), Segment(0.15, (0.0, 0.0, 0.0, 0.0))], 0.3)
@@ -222,7 +220,7 @@ def run_air_short() -> dict:
             "acting_s_ref_m": model.actuator.acting_s_ref_m.tolist(),
             "hanging_force_N": hang.tolist(),
             "rod_weight_N": weight.tolist(),
-            "expected_ds_ramp_m": v * (1.0 - ACCEL_RAMP_S / 2.0),
+            "expected_ds_ramp_m": v * (1.0 - params.actuator.command_ramp_s / 2.0),
             "max_speed_m_s": np.maximum(run.max_motor_speed_m_s, run2.max_motor_speed_m_s).tolist(),
             "force_after_stop_N": model.probe().motor_force_N.tolist(),
         },
@@ -797,8 +795,8 @@ def run_all(names=CASES) -> None:
 
 def summarize() -> None:
 
-    from outrigger_sim.chrono.actuators import ACCEL_RAMP_S
     from outrigger_sim.chrono.ground_bushing import LIFT_TIME_S, TOUCH_THRESHOLD_N
+    from outrigger_sim.params import load_params
     from outrigger_sim.verify.checks import summary_table
     from outrigger_sim.verify.s2b import event_dt_checks
 
@@ -906,8 +904,9 @@ def summarize() -> None:
             "(position motor + ChFunctionConst.SetConstant(s_ref), rate limit), crawler 24 "
             "spheres, ground bushing GroundBushingCoulomb (ball centre)",
             "assumptions": {
-                "command_ramp_s": ACCEL_RAMP_S,
-                "ramp_source": "user decision 2026-10-20 (CLAUDE.md), not in the YAML",
+                "command_ramp_s": load_params(level="top").actuator.command_ramp_s,
+                "ramp_source": "YAML actuator.command_ramp_s (ASSUMPTION, user decision "
+                "2026-10-20; in the YAML since 2026-10-21)",
                 "stroke_end": "braking with the same acceleration limit (target speed <= "
                 "sqrt(2 a d)); assumption of this implementation",
                 "R15": {"t_lift_s": LIFT_TIME_S, "N_th_N": TOUCH_THRESHOLD_N},

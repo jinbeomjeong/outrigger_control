@@ -231,6 +231,12 @@ DT_POINTS_PER_PERIOD = 50
 DT_NUMERICAL_DAMPING_SHARE = 0.1  # L1, L2b-NSC: zeta_num = omega dt / 2 <= 10 % of the 1st rocking zeta
 DT_REFERENCE_S = 1.0e-5           # user decision 2026-10-20 (CLAUDE.md): reference solutions (V9 convergence)
 DT_TRANSITION_S = 1.0e-5          # user decision 2026-10-20 (CLAUDE.md): contact transitions (V4, lift-off, D2 peaks)
+# user decision 2026-10-21 (S3 V9 passed at 2e-4 s, 00_docs/01_dynamics/dynamics_model.md 5.7): L1 general runs.
+# Rule (5.7): mode-wise numerical damping r_i omega_i dt / 2 <= 0.1 zeta_i (modes 1-6, three auger levels); the
+# bushing-dominated (tangential) modes bound it at dt <= 0.1 c_t / k_t (checked below, dynamics_l1_dt_rule).
+L1_DT_S = 2.0e-4
+# user decision 2026-10-20 (CLAUDE.md '구동기' command acceleration limit; dynamics_model.md 5.6 item 3 / 5.7 key table)
+COMMAND_RAMP_S = 0.1
 # ---- rev. 4: Chrono 10 input conventions (00_docs/01_dynamics/dynamics_model.md 4.1, 00_docs/03_chrono/chrono_stick_friction_test.md) ----
 GROUND_BODY_MASS_KG = 1.0e9                 # implementation convention: fixed floor mass enters m_eff of SMC gn
 BUSHING_DAMPING_INPUT_FACTOR = 0.5          # measured (pychrono 10.0.0): ChLoadBodyBodyBushing* damping acts at 2x input
@@ -309,7 +315,8 @@ DOC10_EXPECTED = {
     "L1.kt_per_pad_N_m": ([8.510e6, 8.510e6, 8.404e6, 8.404e6], 0.0005e6),
     "L1.cn_per_pad_N_s_m": ([2.702e4, 2.702e4, 2.730e4, 2.730e4], 0.0005e4),
     "L1.ct_per_pad_N_s_m": ([1.728e4, 1.728e4, 1.717e4, 1.717e4], 0.0005e4),
-    "L1.dt_s": ([1.0e-4], 0.05e-4),
+    # section 10 still prints 1.0e-4 (rev. 7); 5.7 key table (rev. 17, user decision 2026-10-21) sets 0.0002
+    "L1.dt_s": ([2.0e-4], 0.05e-4),
     "L2.kn_per_pad_N_m": ([3.24e8] * 4, 0.005e8),
     "L2.kt_per_pad_N_m": ([3.24e8] * 4, 0.005e8),
     "L2.cn_per_pad_N_s_m": ([8.738e4, 8.738e4, 8.715e4, 8.715e4], 0.0005e4),
@@ -736,7 +743,12 @@ def dynamics_derivation(pad_z: np.ndarray, attach_z: np.ndarray, barrel_bottom_z
         "kn_l1": kn_l1, "kt_l1": kt_l1, "cn_l1": cn_l1, "ct_l1": ct_l1, "c_oil": c_oil, "c_contact_l2": c_contact_l2,
         "c_oil_moving": c_oil_moving, "f_heave_l1": f_heave_l1,
         "ct_l2": ct_l2, "c_bushing_l2b": c_bushing_l2b,
-        "f1_l1": f1, "zeta1_l1": zeta1, "dt_l1_max": dt_l1_max, "dt_l1": dt_ladder(dt_l1_max),
+        "f1_l1": f1, "zeta1_l1": zeta1, "dt_l1_max": dt_l1_max,
+        # rev. 17 (5.7): the first-mode ladder value is kept as a record; the written dt is the user decision,
+        # bounded by the bushing-dominated modes: zeta_i = c_t omega_i / (2 k_t) -> omega dt / 2 <= 0.1 zeta_i
+        # <=> dt <= 0.1 c_t / k_t (independent of omega)
+        "dt_l1_first_mode_ladder": dt_ladder(dt_l1_max), "dt_l1": L1_DT_S,
+        "dt_l1_bushing_bound_s": DT_NUMERICAL_DAMPING_SHARE * ct_l1 / kt_l1,
         "f_rod_local": f_rod_local, "dt_l2_max": dt_l2_max, "dt_l2": dt_ladder(dt_l2_max),
         "rod_mass": rod_mass, "gn_l1": gn_l1, "m_eff": m_eff, "gn_l1_exact_m_eff": cn_l1 / m_eff, "bushing_input_l1": bushing_input_l1,
         "k_axial_l2b": k_axial_l2b, "bushing_l2b": bushing_l2b, "bushing_damping_l2b": bushing_damping_l2b,
@@ -1439,7 +1451,14 @@ def main() -> None:
                                          layout_check)
     checks["dynamics"]["reference_json_assumptions_beta_Pa"] = reference["meta"]["assumptions"]["oil_bulk_modulus_eff_Pa"]
     checks["dynamics"]["l1_dt_rule"] = {"f1_Hz": derived["f1_l1"], "zeta1": derived["zeta1_l1"],
-                                        "dt_max_s": derived["dt_l1_max"], "dt_s": derived["dt_l1"]}
+                                        "dt_max_first_mode_s": derived["dt_l1_max"],
+                                        "dt_first_mode_ladder_s (record, rev. 7 rule)": derived["dt_l1_first_mode_ladder"],
+                                        "dt_bushing_bound_per_leg_s (0.1 c_t / k_t)":
+                                            [float(v) for v in derived["dt_l1_bushing_bound_s"]],
+                                        "dt_s": derived["dt_l1"],
+                                        "dt_within_bushing_bound": bool(derived["dt_l1"]
+                                                                        <= float(np.min(derived["dt_l1_bushing_bound_s"]))),
+                                        "source": "user decision 2026-10-21, dynamics_model.md 5.7 (S3 V8(a), V9)"}
     checks["dynamics"]["l2_dt_rule"] = {"f_rod_local_Hz": derived["f_rod_local"], "dt_max_s": derived["dt_l2_max"],
                                         "dt_s": derived["dt_l2"]}
     checks["dynamics"]["l2b_nsc_dt_rule"] = {"f_rod_on_axial_spring_Hz": derived["f_rod_axial_l2b"],
@@ -1527,6 +1546,8 @@ def main() -> None:
             "stroke_m": STROKE_M,
             "full_stroke_time_s": FULL_STROKE_TIME_S,
             "max_speed_m_s": sig(MAX_SPEED_M_S),
+            "command_ramp_s": COMMAND_RAMP_S,
+            "command_accel_limit_m_s2": sig(MAX_SPEED_M_S / COMMAND_RAMP_S),
             "extension_direction": [0.0, 0.0, -1.0],
             "model_default": ACTUATOR_MODEL_DEFAULT,
             "bore_diameter_m": BORE_DIAMETER_M,
@@ -1677,7 +1698,15 @@ def main() -> None:
         "superstructure.fixed_part": "check: fixed_part + moving set at a travel = auger_levels entry",
         "actuator": "CLAUDE.md '구동기' (680 mm, 0 -> full stroke in 30 s)",
         "actuator.stroke_m": "CLAUDE.md; CAD estimate bore 700 - piston 20 (cad_summary.json legs.*.stroke_estimate_mm)",
+        "actuator.full_stroke_time_s": ("CLAUDE.md '구동기': constant-speed time 0 -> stroke_m at max_speed_m_s; "
+                                        "stop-to-stop (ramped start and stop) = + command_ramp_s"),
         "actuator.max_speed_m_s": "stroke_m / full_stroke_time_s",
+        "actuator.command_ramp_s": ("[common] ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '구동기'): command "
+                                    "acceleration limit 0 -> max_speed_m_s in this time (valve response size, no "
+                                    "hydraulic data); start and stop ramped; stroke ends braked with the same limit "
+                                    "(end cushion = command ramp, 00_docs/01_dynamics/dynamics_model.md 5.6 item 3, "
+                                    "5.7 key table)"),
+        "actuator.command_accel_limit_m_s2": "[common] derived: max_speed_m_s / command_ramp_s",
         "actuator.extension_direction": "body frame: extending pushes the pad down (-z)",
         # ---- dynamics keys, 00_docs/01_dynamics/dynamics_model.md section 10 ----
         "meta.dynamics_stages": ("00_docs/01_dynamics/dynamics_model.md 10 (rev. 4): stage in which each dynamics key is needed "
@@ -1871,10 +1900,13 @@ def main() -> None:
         "simulation.dt_transition_s": ("[L1, L2b] ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '시뮬레이션 시간 간격'): "
                                        "time step for contact-transition analyses (V4 lift, leg lift-off / re-touch, D2 "
                                        "disturbance load peaks); may be used only inside the transition window of a run"),
-        "simulation.L1": ("[L1] ASSUMPTION (rule, confirm by V9; user decision 2026-10-20: general runs = controller "
-                          "development, sensitivity, ML data): dt = largest of 1e-3, 5e-4, 2e-4, ... with "
-                          "omega1 dt / 2 <= 0.1 zeta1 (1st rocking mode, L1, top, 06_analysis/00_dynamics/reference.json), "
-                          "00_docs/01_dynamics/dynamics_model.md 4.3"),
+        "simulation.L1": ("[L1] ASSUMPTION (rule, confirmed S2a dt study + S3 V8(a)/V9, "
+                          "00_docs/01_dynamics/dynamics_model.md 5.5/5.7; user decision 2026-10-21; general runs = "
+                          "controller development, sensitivity, ML data): mode-wise numerical damping "
+                          "r_i omega_i dt / 2 <= 0.1 zeta_i (modes 1-6, three auger levels; boundary ~0.2 ms = "
+                          "0.1 c_t / k_t of the bushing-dominated modes); legs zeta 0.01 sensitivity: tangential "
+                          "modes not judged or 5e-5 s; transitions, references, D2 use dt_transition_s / "
+                          "dt_reference_s"),
         "simulation.L2b_NSC": ("[L2b] ASSUMPTION (rule, confirm by V9; general runs): smaller of (a) dt <= T / 50 of the rod "
                                "on the axial spring alone (contact open) sqrt(mean k_ax / m_rod) / 2 pi, run_reference.py:617-618, "
                                "and (b) omega1 dt / 2 <= 0.1 zeta1 of the 1st L2b-NSC rocking mode (top), "
@@ -2093,6 +2125,8 @@ def evaluate_checks(checks: dict) -> list[str]:
         require(not refs[key], f"dynamics.line_references.{key}", refs[key])
     require(refs["references_in_source"] > 0, "dynamics.line_references.references_in_source",
             refs["references_in_source"])
+    require(d["l1_dt_rule"]["dt_within_bushing_bound"], "dynamics.l1_dt_rule.dt_within_bushing_bound",
+            d["l1_dt_rule"]["dt_bushing_bound_per_leg_s (0.1 c_t / k_t)"])
     require(d["reference_json_assumptions_beta_Pa"] == OIL_BULK_MODULUS_EFF_PA,
             "dynamics.reference_json_assumptions_beta_Pa", d["reference_json_assumptions_beta_Pa"])
     t = checks["totals"]

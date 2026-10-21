@@ -1,12 +1,12 @@
 {
  "meta": {
-  "generated": "2026-10-20T23:51:00",
+  "generated": "2026-10-21T08:19:57",
   "stage": "S2b (chrono_build_plan.md): actuator (V0 motor sign, V11, command ramp), crawler contact layout D (V0, settle, snapshots), R15 events",
   "script": "04_scripts/02_chrono/run_S2b.py",
   "model": "outrigger_sim.chrono.model.L1Model(actuator=True), L1SpeedActuator (position motor + ChFunctionConst.SetConstant(s_ref), rate limit), crawler 24 spheres, ground bushing GroundBushingCoulomb (ball centre)",
   "assumptions": {
    "command_ramp_s": 0.1,
-   "ramp_source": "user decision 2026-10-20 (CLAUDE.md), not in the YAML",
+   "ramp_source": "YAML actuator.command_ramp_s (ASSUMPTION, user decision 2026-10-20; in the YAML since 2026-10-21)",
    "stroke_end": "braking with the same acceleration limit (target speed <= sqrt(2 a d)); assumption of this implementation",
    "R15": {
     "t_lift_s": 0.001,
@@ -197,21 +197,21 @@
  ],
  "v11": {
   "stroke_times_s": {
-   "FL 0->0.68": 30.09912637546917,
-   "FL 0.68->0": 30.099126376430753,
-   "FR 0->0.68": 30.09912637546917,
-   "FR 0.68->0": 30.099126376430753,
-   "RL 0->0.68": 30.09912637546917,
-   "RL 0.68->0": 30.099126376430753,
-   "RR 0->0.68": 30.09912637643081
+   "FL 0->0.68": 30.09913494049213,
+   "FL 0.68->0": 30.099134940419937,
+   "FR 0->0.68": 30.09913494049213,
+   "FR 0.68->0": 30.099134940419937,
+   "RL 0->0.68": 30.09913494049213,
+   "RL 0.68->0": 30.099134940419937,
+   "RR 0->0.68": 30.0991349404199
   },
   "expected_full_stroke_time_s": 30.099999955882357,
   "reference_full_stroke_time_s": 30.0,
   "max_speed_m_s": [
-   0.022666666704440893,
-   0.022666666704440893,
-   0.022666666704440893,
-   0.02266666670388578
+   0.022666666701665335,
+   0.022666666701665335,
+   0.022666666701665335,
+   0.022666666701665335
   ],
   "motor_pos_min_m": [
    0.0,
@@ -223,14 +223,14 @@
    0.68,
    0.68,
    0.68,
-   0.6800000000000002
+   0.68
   ],
-  "max_axial_violation_m": 3.894454203567932e-16,
+  "max_axial_violation_m": 3.469446951953614e-16,
   "max_force_dev_from_rod_weight_N": [
-   24.209656388341273,
-   24.209656388341273,
-   24.209656387369137,
-   24.209656388341273
+   24.206968761963935,
+   24.206968761963935,
+   24.206968761963935,
+   24.20696905834825
   ],
   "expected_ramp_force_N": 24.20429766226122,
   "timing": {
@@ -261,9 +261,9 @@
     ],
     "power_throttling_off_ok": true
    },
-   "wall_s": 41.577495599998656,
-   "steps": 620000,
-   "us_per_step": 67.06047677419139
+   "wall_s": 21.781119500003115,
+   "steps": 310000,
+   "us_per_step": 70.26167580646167
   }
  },
  "crawler": {
@@ -280,13 +280,13 @@
     "pitch_deg": 0.16946784420715735
    },
    "chrono_window": {
-    "u_z_mm": -3.1847585555235605,
-    "roll_deg": 0.00028922765167666925,
-    "pitch_deg": 0.17365995870778209,
+    "u_z_mm": -3.1847578241123724,
+    "roll_deg": 0.00028930726671380505,
+    "pitch_deg": 0.17365952650839986,
     "active_min": 14,
     "active_max": 14,
-    "roll_span_deg": 7.57503505709325e-06,
-    "pitch_span_deg": 1.219668311591704e-05
+    "roll_span_deg": 9.49978132987455e-06,
+    "pitch_span_deg": 1.4737341490489442e-05
    },
    "modes_linear": {
     "names": [
@@ -320,10 +320,10 @@
     {
      "mode": "pitch",
      "window_s": 20.0,
-     "f_damped_Hz": 1.3271280627476718,
-     "f_undamped_Hz": 1.327175242721652,
-     "zeta": 0.00843190783348547,
-     "residual_rms_rel": 0.0018837396800721667,
+     "f_damped_Hz": 1.3271284750611985,
+     "f_undamped_Hz": 1.327175693915219,
+     "zeta": 0.008435379902741123,
+     "residual_rms_rel": 0.001912070629031704,
      "linear_f_damped_Hz": 1.3268618358441715,
      "linear_f_undamped_Hz": 1.3269090274904287,
      "linear_zeta": 0.008433797995795567
@@ -331,10 +331,10 @@
     {
      "mode": "roll",
      "window_s": 16.336744862169976,
-     "f_damped_Hz": 3.054881803708212,
-     "f_undamped_Hz": 3.0554408216036326,
-     "zeta": 0.019128065470974388,
-     "residual_rms_rel": 0.012132112166592502,
+     "f_damped_Hz": 3.0549080574746466,
+     "f_undamped_Hz": 3.055466455228945,
+     "zeta": 0.019117373544219687,
+     "residual_rms_rel": 0.012085848717954152,
      "linear_f_damped_Hz": 3.054763539977294,
      "linear_f_undamped_Hz": 3.0553227363793525,
      "linear_zeta": 0.019131488611754174
@@ -342,10 +342,10 @@
     {
      "mode": "heave",
      "window_s": 2.019603601637699,
-     "f_damped_Hz": 8.734929504902626,
-     "f_undamped_Hz": 8.747592801804931,
-     "zeta": 0.05378818398015674,
-     "residual_rms_rel": 0.026127270286917373,
+     "f_damped_Hz": 8.736492200680548,
+     "f_undamped_Hz": 8.749186069682365,
+     "zeta": 0.05384812614318954,
+     "residual_rms_rel": 0.02594025047825063,
      "linear_f_damped_Hz": 8.718250121233545,
      "linear_f_undamped_Hz": 8.731062570804502,
      "linear_zeta": 0.05415494822006662
@@ -359,9 +359,9 @@
      0.16947
     ],
     "chrono_minus_ref": [
-     0.005941444476439628,
-     2.8276516766692302e-06,
-     0.004189958707782077
+     0.0059421758876276876,
+     2.907266713805031e-06,
+     0.004189526508399849
     ],
     "linear_analytic_minus_ref": [
      -4.723703033171489e-05,
@@ -395,33 +395,33 @@
      -0.0
     ],
     "sphere_force_chrono_ref_order_N": [
-     4130.664152381471,
-     13147.203124182159,
-     22165.204111524683,
-     31180.90279170133,
-     40198.81131619307,
-     49215.650825792014,
-     4218.396028859917,
-     13235.53203404638,
-     22252.329196562096,
-     31268.83003165467,
-     40287.46906037315,
-     49302.43673085221,
+     4130.801527443474,
+     13147.023052489189,
+     22165.223947878785,
+     31180.85113315301,
+     40198.77352217047,
+     49215.55306975005,
+     4218.212471389169,
+     13235.651584113926,
+     22252.43655376762,
+     31268.99463191068,
+     40287.26869900548,
+     49302.47794870534,
      0.0,
      0.0,
      0.0,
-     30799.659234903298,
+     30799.65462417743,
      0.0,
      0.0,
      0.0,
      0.0,
      0.0,
-     30888.334979693325,
+     30888.215765829766,
      0.0,
      0.0
     ],
-    "sphere_force_chrono_minus_ref_max_abs_N": 626.4358476185298,
-    "sphere_force_chrono_minus_exact_max_abs_N": 1.1580776092669112,
+    "sphere_force_chrono_minus_ref_max_abs_N": 626.2984725565266,
+    "sphere_force_chrono_minus_exact_max_abs_N": 1.1168597561409115,
     "key_modes": "reference.json / lift_V4_compliant_crawler / crawler_on_floor_modes (layout D, legs at 0)",
     "modes_ref": {
      "f_Hz": [
@@ -440,8 +440,8 @@
    "snapshot": {
     "name": "S2b_crawler_top",
     "path": "07_results/states/S2b_crawler_top.npz",
-    "t_s": 14.99999999997838,
-    "round_trip_max_pos_diff_m": 8.881784197001252e-16
+    "t_s": 14.999999999991719,
+    "round_trip_max_pos_diff_m": 6.505213034913027e-19
    }
   },
   "middle": {
@@ -457,13 +457,13 @@
     "pitch_deg": 0.16946784420715735
    },
    "chrono_window": {
-    "u_z_mm": -3.1872128011596463,
-    "roll_deg": 0.0002879962359119421,
-    "pitch_deg": 0.1727249065239294,
+    "u_z_mm": -3.187207340307175,
+    "roll_deg": 0.0002880491979451932,
+    "pitch_deg": 0.17272538191344805,
     "active_min": 14,
     "active_max": 14,
-    "roll_span_deg": 4.727720820877268e-06,
-    "pitch_span_deg": 5.530006012943733e-06
+    "roll_span_deg": 4.3323202857692726e-06,
+    "pitch_span_deg": 7.069951703575494e-06
    },
    "modes_linear": {
     "names": [
@@ -497,10 +497,10 @@
     {
      "mode": "pitch",
      "window_s": 20.0,
-     "f_damped_Hz": 1.7115878039202999,
-     "f_undamped_Hz": 1.7116881254590175,
-     "zeta": 0.010826632808869238,
-     "residual_rms_rel": 0.0017504809648321027,
+     "f_damped_Hz": 1.711585545205894,
+     "f_undamped_Hz": 1.7116858824026875,
+     "zeta": 0.010827484749792003,
+     "residual_rms_rel": 0.0018214266177793842,
      "linear_f_damped_Hz": 1.7116712294063492,
      "linear_f_undamped_Hz": 1.7117714561088613,
      "linear_zeta": 0.010821253995660751
@@ -508,10 +508,10 @@
     {
      "mode": "roll",
      "window_s": 8.86149558195252,
-     "f_damped_Hz": 4.1515181697362795,
-     "f_undamped_Hz": 4.152916804508712,
-     "zeta": 0.025950992616192516,
-     "residual_rms_rel": 0.005943680445957124,
+     "f_damped_Hz": 4.151677132165098,
+     "f_undamped_Hz": 4.153075360052024,
+     "zeta": 0.025946722969244614,
+     "residual_rms_rel": 0.0059573202368207205,
      "linear_f_damped_Hz": 4.151389406711902,
      "linear_f_undamped_Hz": 4.152787808932279,
      "linear_zeta": 0.025949238387551716
@@ -519,10 +519,10 @@
     {
      "mode": "heave",
      "window_s": 2.012158269821392,
-     "f_damped_Hz": 8.74319208944615,
-     "f_undamped_Hz": 8.756121230208393,
-     "zeta": 0.05432297794204893,
-     "residual_rms_rel": 0.025848012773206367,
+     "f_damped_Hz": 8.744769626463373,
+     "f_undamped_Hz": 8.757734726614485,
+     "zeta": 0.05439340533050458,
+     "residual_rms_rel": 0.02625030435996346,
      "linear_f_damped_Hz": 8.734300332592532,
      "linear_f_undamped_Hz": 8.747184020377185,
      "linear_zeta": 0.054255151551903004
@@ -532,8 +532,8 @@
    "snapshot": {
     "name": "S2b_crawler_middle",
     "path": "07_results/states/S2b_crawler_middle.npz",
-    "t_s": 14.99999999997838,
-    "round_trip_max_pos_diff_m": 2.220446049250313e-16
+    "t_s": 14.999999999991719,
+    "round_trip_max_pos_diff_m": 4.440892098500626e-16
    }
   },
   "bottom": {
@@ -549,13 +549,13 @@
     "pitch_deg": 0.16946784420715735
    },
    "chrono_window": {
-    "u_z_mm": -3.189445027374979,
-    "roll_deg": 0.00028810855624358144,
-    "pitch_deg": 0.17179872501578217,
+    "u_z_mm": -3.189436629565584,
+    "roll_deg": 0.0002879988649178847,
+    "pitch_deg": 0.17179888863074158,
     "active_min": 14,
     "active_max": 14,
-    "roll_span_deg": 9.526876152872248e-06,
-    "pitch_span_deg": 2.0424468018392927e-05
+    "roll_span_deg": 1.656764024383884e-05,
+    "pitch_span_deg": 1.6541061310076932e-05
    },
    "modes_linear": {
     "names": [
@@ -589,10 +589,10 @@
     {
      "mode": "pitch",
      "window_s": 20.0,
-     "f_damped_Hz": 1.9141930262998987,
-     "f_undamped_Hz": 1.914331714708338,
-     "zeta": 0.012037009874207914,
-     "residual_rms_rel": 0.0025947714057379234,
+     "f_damped_Hz": 1.9141937743230883,
+     "f_undamped_Hz": 1.9143323718158258,
+     "zeta": 0.012033061938646276,
+     "residual_rms_rel": 0.0028179408123542786,
      "linear_f_damped_Hz": 1.9142047358386307,
      "linear_f_undamped_Hz": 1.914343422929747,
      "linear_zeta": 0.012036918605882336
@@ -600,10 +600,10 @@
     {
      "mode": "roll",
      "window_s": 7.941195388608444,
-     "f_damped_Hz": 4.389857261644237,
-     "f_undamped_Hz": 4.391504961561075,
-     "zeta": 0.027390920538470264,
-     "residual_rms_rel": 0.0020969979390182848,
+     "f_damped_Hz": 4.390063843554791,
+     "f_undamped_Hz": 4.391710088830288,
+     "zeta": 0.027378190062577523,
+     "residual_rms_rel": 0.0021302441610108022,
      "linear_f_damped_Hz": 4.38975097497556,
      "linear_f_undamped_Hz": 4.3913976946359075,
      "linear_zeta": 0.027383107461651388
@@ -611,10 +611,10 @@
     {
      "mode": "heave",
      "window_s": 2.007670169497036,
-     "f_damped_Hz": 8.74200568292416,
-     "f_undamped_Hz": 8.754682443351173,
-     "zeta": 0.05379496993625947,
-     "residual_rms_rel": 0.015427852671531258,
+     "f_damped_Hz": 8.744437584042819,
+     "f_undamped_Hz": 8.757158275900764,
+     "zeta": 0.05388042250877551,
+     "residual_rms_rel": 0.01562160274578705,
      "linear_f_damped_Hz": 8.7440249359549,
      "linear_f_undamped_Hz": 8.756951876514336,
      "linear_zeta": 0.05431578402648233
@@ -624,8 +624,8 @@
    "snapshot": {
     "name": "S2b_crawler_bottom",
     "path": "07_results/states/S2b_crawler_bottom.npz",
-    "t_s": 14.99999999997838,
-    "round_trip_max_pos_diff_m": 4.440892098500626e-16
+    "t_s": 14.999999999991719,
+    "round_trip_max_pos_diff_m": 3.2526065174565133e-18
    }
   }
  },
@@ -1231,10 +1231,10 @@
    "id": "V11",
    "item": "speed <= v_max (1 + 1e-3), every step",
    "value": [
-    0.022666666704440893,
-    0.022666666704440893,
-    0.022666666704440893,
-    0.02266666670388578
+    0.022666666701665335,
+    0.022666666701665335,
+    0.022666666701665335,
+    0.022666666701665335
    ],
    "ref": null,
    "tol": 0.0226893333667,
@@ -1248,10 +1248,10 @@
    "id": "V11",
    "item": "speed reaches v_max (ramp motion function, plan: ChFunctionConst)",
    "value": [
-    0.022666666704440893,
-    0.022666666704440893,
-    0.022666666704440893,
-    0.02266666670388578
+    0.022666666701665335,
+    0.022666666701665335,
+    0.022666666701665335,
+    0.022666666701665335
    ],
    "ref": [
     0.0226666667,
@@ -1282,13 +1282,13 @@
    "id": "V11",
    "item": "full stroke time (rest to rest) = stroke / v_max + ramp",
    "value": [
-    30.09912637546917,
-    30.099126376430753,
-    30.09912637546917,
-    30.099126376430753,
-    30.09912637546917,
-    30.099126376430753,
-    30.09912637643081
+    30.09913494049213,
+    30.099134940419937,
+    30.09913494049213,
+    30.099134940419937,
+    30.09913494049213,
+    30.099134940419937,
+    30.0991349404199
    ],
    "ref": [
     30.099999955882357,
@@ -1309,7 +1309,7 @@
    "case": "v11",
    "id": "V13",
    "item": "axial motor constraint |s_motor - acting target|, every step",
-   "value": 3.894454203567932e-16,
+   "value": 3.469446951953614e-16,
    "ref": null,
    "tol": 1e-06,
    "tol_kind": "max",
@@ -1322,10 +1322,10 @@
    "id": "ramp",
    "item": "no inertial spike: max |F_motor + m_rod g| <= m_rod a (1 %), whole V11 run",
    "value": [
-    24.209656388341273,
-    24.209656388341273,
-    24.209656387369137,
-    24.209656388341273
+    24.206968761963935,
+    24.206968761963935,
+    24.206968761963935,
+    24.20696905834825
    ],
    "ref": null,
    "tol": 25.446340638883832,
@@ -3610,7 +3610,7 @@
    "case": "crawler_top",
    "id": "S2b",
    "item": "top: settled pose = analytic exact pose (u_z)",
-   "value": -3.1847585555235605,
+   "value": -3.1847578241123724,
    "ref": -3.1848742252015647,
    "tol": 0.001,
    "tol_kind": "abs",
@@ -3623,8 +3623,8 @@
    "id": "S2b",
    "item": "top: settled pose = analytic exact pose (roll, pitch)",
    "value": [
-    0.00028922765167666925,
-    0.17365995870778209
+    0.00028930726671380505,
+    0.17365952650839986
    ],
    "ref": [
     0.0002891334380505565,
@@ -3671,8 +3671,8 @@
    "id": "V13",
    "item": "top: attitude drift in the still window (roll, pitch span)",
    "value": [
-    7.57503505709325e-06,
-    1.219668311591704e-05
+    9.49978132987455e-06,
+    1.4737341490489442e-05
    ],
    "ref": null,
    "tol": 0.0001,
@@ -3685,7 +3685,7 @@
    "case": "crawler_top",
    "id": "V13",
    "item": "top: crawler vertical force variation (span)",
-   "value": 50.34760233166162,
+   "value": 52.60883808840299,
    "ref": null,
    "tol": 95.57275,
    "tol_kind": "max",
@@ -3697,7 +3697,7 @@
    "case": "crawler_top",
    "id": "V13",
    "item": "top: motor constraint violation (leg COG offset)",
-   "value": 1.45399248197009e-11,
+   "value": 2.4011903576592886e-12,
    "ref": null,
    "tol": 1e-06,
    "tol_kind": "max",
@@ -3721,7 +3721,7 @@
    "case": "crawler_top",
    "id": "R16",
    "item": "S2b_crawler_top: snapshot round trip (restore into a fresh build, continue), position diff",
-   "value": 8.881784197001252e-16,
+   "value": 6.505213034913027e-19,
    "ref": null,
    "tol": 1e-12,
    "tol_kind": "max",
@@ -6005,7 +6005,7 @@
    "case": "crawler_middle",
    "id": "S2b",
    "item": "middle: settled pose = analytic exact pose (u_z)",
-   "value": -3.1872128011596463,
+   "value": -3.187207340307175,
    "ref": -3.1871634891113705,
    "tol": 0.001,
    "tol_kind": "abs",
@@ -6018,8 +6018,8 @@
    "id": "S2b",
    "item": "middle: settled pose = analytic exact pose (roll, pitch)",
    "value": [
-    0.0002879962359119421,
-    0.1727249065239294
+    0.0002880491979451932,
+    0.17272538191344805
    ],
    "ref": [
     0.0002885303468229517,
@@ -6066,8 +6066,8 @@
    "id": "V13",
    "item": "middle: attitude drift in the still window (roll, pitch span)",
    "value": [
-    4.727720820877268e-06,
-    5.530006012943733e-06
+    4.3323202857692726e-06,
+    7.069951703575494e-06
    ],
    "ref": null,
    "tol": 0.0001,
@@ -6080,7 +6080,7 @@
    "case": "crawler_middle",
    "id": "V13",
    "item": "middle: crawler vertical force variation (span)",
-   "value": 71.7217849190929,
+   "value": 79.09537948499201,
    "ref": null,
    "tol": 95.57275,
    "tol_kind": "max",
@@ -6092,7 +6092,7 @@
    "case": "crawler_middle",
    "id": "V13",
    "item": "middle: motor constraint violation (leg COG offset)",
-   "value": 4.454658864005978e-12,
+   "value": 2.3807622540061857e-12,
    "ref": null,
    "tol": 1e-06,
    "tol_kind": "max",
@@ -6116,7 +6116,7 @@
    "case": "crawler_middle",
    "id": "R16",
    "item": "S2b_crawler_middle: snapshot round trip (restore into a fresh build, continue), position diff",
-   "value": 2.220446049250313e-16,
+   "value": 4.440892098500626e-16,
    "ref": null,
    "tol": 1e-12,
    "tol_kind": "max",
@@ -8400,7 +8400,7 @@
    "case": "crawler_bottom",
    "id": "S2b",
    "item": "bottom: settled pose = analytic exact pose (u_z)",
-   "value": -3.189445027374979,
+   "value": -3.189436629565584,
    "ref": -3.189428460834023,
    "tol": 0.001,
    "tol_kind": "abs",
@@ -8413,8 +8413,8 @@
    "id": "S2b",
    "item": "bottom: settled pose = analytic exact pose (roll, pitch)",
    "value": [
-    0.00028810855624358144,
-    0.17179872501578217
+    0.0002879988649178847,
+    0.17179888863074158
    ],
    "ref": [
     0.00028792976511029476,
@@ -8461,8 +8461,8 @@
    "id": "V13",
    "item": "bottom: attitude drift in the still window (roll, pitch span)",
    "value": [
-    9.526876152872248e-06,
-    2.0424468018392927e-05
+    1.656764024383884e-05,
+    1.6541061310076932e-05
    ],
    "ref": null,
    "tol": 0.0001,
@@ -8475,7 +8475,7 @@
    "case": "crawler_bottom",
    "id": "V13",
    "item": "bottom: crawler vertical force variation (span)",
-   "value": 34.10834318399429,
+   "value": 35.909270306816325,
    "ref": null,
    "tol": 95.57275,
    "tol_kind": "max",
@@ -8487,7 +8487,7 @@
    "case": "crawler_bottom",
    "id": "V13",
    "item": "bottom: motor constraint violation (leg COG offset)",
-   "value": 4.760636329592671e-12,
+   "value": 2.965183654168868e-12,
    "ref": null,
    "tol": 1e-06,
    "tol_kind": "max",
@@ -8511,7 +8511,7 @@
    "case": "crawler_bottom",
    "id": "R16",
    "item": "S2b_crawler_bottom: snapshot round trip (restore into a fresh build, continue), position diff",
-   "value": 4.440892098500626e-16,
+   "value": 3.2526065174565133e-18,
    "ref": null,
    "tol": 1e-12,
    "tol_kind": "max",

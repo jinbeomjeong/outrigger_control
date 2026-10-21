@@ -176,8 +176,15 @@ class Actuator:
 
     stroke_m: float
     full_stroke_time_s: float
+    """Constant-speed time 0 -> stroke at max_speed_m_s; stop-to-stop adds
+    command_ramp_s."""
     max_speed_m_s: float
     extension_direction: Vector3
+    command_ramp_s: float
+    """Command acceleration limit 0 -> max_speed_m_s in this time [s] (ASSUMPTION, user
+    decision 2026-10-20; ramped start and stop, stroke-end braking with the same limit)."""
+    command_accel_limit_m_s2: float
+    """max_speed_m_s / command_ramp_s (derived key)."""
 
 
 @dataclass(frozen=True)
@@ -624,6 +631,8 @@ def _read_actuator(root: _Reader) -> Actuator:
         full_stroke_time_s=block.number("full_stroke_time_s"),
         max_speed_m_s=block.number("max_speed_m_s"),
         extension_direction=block.vector3("extension_direction"),
+        command_ramp_s=block.number("command_ramp_s"),
+        command_accel_limit_m_s2=block.number("command_accel_limit_m_s2"),
     )
 
 

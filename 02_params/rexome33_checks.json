@@ -728,8 +728,17 @@
   "l1_dt_rule": {
    "f1_Hz": 1.7845,
    "zeta1": 0.00777,
-   "dt_max_s": 0.00013859724380207642,
-   "dt_s": 0.0001
+   "dt_max_first_mode_s": 0.00013859724380207642,
+   "dt_first_mode_ladder_s (record, rev. 7 rule)": 0.0001,
+   "dt_bushing_bound_per_leg_s (0.1 c_t / k_t)": [
+    0.00020303952961977148,
+    0.00020303952961977148,
+    0.00020432665404294945,
+    0.00020432665404294945
+   ],
+   "dt_s": 0.0002,
+   "dt_within_bushing_bound": true,
+   "source": "user decision 2026-10-21, dynamics_model.md 5.7 (S3 V8(a), V9)"
   },
   "l2_dt_rule": {
    "f_rod_local_Hz": 286.55143983418526,

@@ -1,0 +1,25 @@
+{
+ "regress": {
+  "diag3": {
+   "max_abs_series_diff": 0.0,
+   "min_kN": [
+    22.75,
+    22.75
+   ],
+   "stored_c2_design_it3": 22.75
+  },
+  "pitch+3.7": {
+   "max_abs_series_diff": 0.0,
+   "min_kN": [
+    24.39,
+    24.39
+   ],
+   "stored_c2_design_it3": 24.39
+  }
+ },
+ "frozen_kernel": {
+  "max_abs_state_diff": 0.0,
+  "steps": 18000,
+  "scenario": "top, roll 2.12 / pitch 2.12 deg, crawler settle 1 s then legs 18-22 mm/s for 8 s"
+ }
+}

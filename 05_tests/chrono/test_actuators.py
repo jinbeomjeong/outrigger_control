@@ -14,7 +14,6 @@ pytest.importorskip("pychrono")
 import pychrono as ch  # noqa: E402
 
 from outrigger_sim.chrono.actuators import (  # noqa: E402
-    ACCEL_RAMP_S,
     L1SpeedActuator,
     make_motion_function,
 )
@@ -31,6 +30,8 @@ from outrigger_sim.scenarios.stroke import air_pose  # noqa: E402
 pytestmark = pytest.mark.chrono
 
 V_MAX = 0.0226666667
+ACCEL_RAMP_S = load_params(level="top").actuator.command_ramp_s
+"""YAML ``actuator.command_ramp_s`` (0.1 s, ASSUMPTION user decision 2026-10-20)."""
 
 
 @pytest.fixture(scope="module")
@@ -90,7 +91,12 @@ def test_no_ramp_is_a_speed_step() -> None:
 def test_rejects_constant_function() -> None:
     with pytest.raises(TypeError):
         L1SpeedActuator(
-            [object()], [ch.ChFunctionConst(0.0)], [0.0], [(0.0, 0.68)], max_speed_m_s=V_MAX
+            [object()],
+            [ch.ChFunctionConst(0.0)],
+            [0.0],
+            [(0.0, 0.68)],
+            max_speed_m_s=V_MAX,
+            ramp_s=ACCEL_RAMP_S,
         )
 
 

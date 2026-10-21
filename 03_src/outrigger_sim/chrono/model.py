@@ -43,12 +43,11 @@ import numpy as np
 import pychrono as ch
 from numpy.typing import NDArray
 
+from outrigger_sim.chrono.actuators import PART_PREFIX as ACTUATOR_PART
 from outrigger_sim.chrono.actuators import (
-    ACCEL_RAMP_S,
     L1SpeedActuator,
     make_motion_function,
 )
-from outrigger_sim.chrono.actuators import PART_PREFIX as ACTUATOR_PART
 from outrigger_sim.chrono.bodies import (
     BodyPose,
     make_leg_moving_parts,
@@ -167,9 +166,9 @@ class L1Model:
             default ball centre (user decision 2026-10-20, ``dynamics_model.md`` 5.3 ruling
             4 option A). ``"contact_point"`` reproduces the model before that decision.
         actuator: Drive the legs with :class:`L1SpeedActuator` (S2b); False = locked legs.
-        actuator_ramp_s: 0 -> v_max time of the command acceleration limit (default
-            :data:`~outrigger_sim.chrono.actuators.ACCEL_RAMP_S`; 0 = speed steps, only for
-            the inertial-spike comparison).
+        actuator_ramp_s: 0 -> v_max time of the command acceleration limit (None = YAML
+            ``actuator.command_ramp_s``; 0 = speed steps, only for the inertial-spike
+            comparison).
     """
 
     def __init__(
@@ -187,7 +186,7 @@ class L1Model:
         floor_pose: BodyPose | None = None,
         bushing_force_point: str = DEFAULT_FORCE_POINT,
         actuator: bool = False,
-        actuator_ramp_s: float = ACCEL_RAMP_S,
+        actuator_ramp_s: float | None = None,
     ) -> None:
         self.params = params
         ext = (
@@ -373,16 +372,40 @@ class L1Model:
 
     # --- stepping ------------------------------------------------------------------------
 
+    def set_dt(self, dt_s: float) -> None:
+        """Change the time step between two steps (S3 transition windows).
+
+        Updates the model, the ground bushing (lift-off step count) and the pending actuator
+        segment (:meth:`L1SpeedActuator.retime`; change ``dt`` while the applied speeds are
+        constant, ``chrono/actuators`` module docstring). The integrator, solver and sparsity
+        pattern do not depend on ``dt``.
+        """
+        dt = float(dt_s)
+        if not (dt > 0.0 and np.isfinite(dt)):
+            raise ValueError(f"dt must be positive: {dt_s!r}")
+        if dt == self.dt_s:
+            return
+        self.dt_s = dt
+        self.bushing.dt_s = dt
+        if self.actuator is not None:
+            self.actuator.retime(float(self.system.GetChTime()), dt)
+
     def step(self, *, capture: bool = False) -> StepResult:
         """One ``DoStepDynamics(dt_s)`` followed by :meth:`after_step`.
 
         With the actuator, the actuator is told before the step whether it starts with a full
-        Update (``not IsUpdated()``) and after it that the end-of-step Update read the current
-        targets (``chrono/actuators`` timing).
+        Update (``not IsUpdated()``), the step time and ``dt_s`` (hook guard: raises
+        :class:`~outrigger_sim.chrono.actuators.ActuatorHookMissedError` when a moving ramp
+        segment was not set by the hook for this step, ``dynamics_model.md`` 5.6 ruling 1
+        condition 1), and after it that the end-of-step Update read the current targets
+        (``chrono/actuators`` timing).
         """
         act = self.actuator
         if act is not None:
-            act.on_step_start(not self.system.IsUpdated())
+            # hook guard: a moving ramp segment must have been set by the hook for this step
+            act.on_step_start(
+                not self.system.IsUpdated(), float(self.system.GetChTime()), self.dt_s
+            )
         self.system.DoStepDynamics(self.dt_s)
         if act is not None:
             act.on_step_end()
@@ -510,6 +533,11 @@ class L1Model:
                 )
         else:
             act.set_command(restored.held_command.leg_speed_m_s)
+            # the snapshot was captured after the hook of its step (R16); a model built with
+            # another dt re-integrates the pending segment for its own step length
+            act.mark_hooked(restored.time_s, self.dt_s)
+            if has_actuator_state and act.is_moving_segment:
+                act.retime_if_needed(restored.time_s, self.dt_s)
         return restored.time_s
 
     # --- metadata and V0 inventory -----------------------------------------------------------
@@ -552,7 +580,11 @@ class L1Model:
                 "class": "L1SpeedActuator",
                 "max_speed_m_s": self.actuator.max_speed_m_s,
                 "ramp_s": self.actuator.ramp_s,
-                "ramp_source": "ASSUMPTION user decision 2026-10-20 (CLAUDE.md, not in YAML)",
+                "ramp_source": (
+                    "YAML actuator.command_ramp_s (ASSUMPTION, user decision 2026-10-20)"
+                    if self.actuator.ramp_s == self.params.actuator.command_ramp_s
+                    else "override (constructor actuator_ramp_s)"
+                ),
                 "accel_limit_m_s2": None
                 if self.actuator.ramp_s == 0.0
                 else self.actuator.accel_limit_m_s2,

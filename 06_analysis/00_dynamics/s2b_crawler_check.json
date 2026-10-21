@@ -12,7 +12,7 @@
   ],
   "euler": "ZYX (yaw 0), roll about x, pitch about y, deg",
   "u_z": "origin height relative to the zero pose (crawler bottom plane on the floor, level), mm",
-  "runtime_s": 13.073200999999244
+  "runtime_s": 4.475636199997098
  },
  "top": {
   "exact_pdelta": {
@@ -39,18 +39,18 @@
   "sum_F_h_N_m": 1203504.0283752112,
   "W_N": 382290.6605569856,
   "chrono_window": {
-   "u_z_mm": -3.1847585555235605,
-   "roll_deg": 0.00028922765167666925,
-   "pitch_deg": 0.17365995870778209,
+   "u_z_mm": -3.1847578241123724,
+   "roll_deg": 0.00028930726671380505,
+   "pitch_deg": 0.17365952650839986,
    "active_min": 14,
    "active_max": 14,
-   "roll_span_deg": 7.57503505709325e-06,
-   "pitch_span_deg": 1.219668311591704e-05
+   "roll_span_deg": 9.49978132987455e-06,
+   "pitch_span_deg": 1.4737341490489442e-05
   },
   "chrono_minus_exact": {
-   "u_z_mm": 0.00011566967778131598,
-   "roll_deg": 9.421362629229071e-08,
-   "pitch_deg": -6.424665310589273e-07
+   "u_z_mm": 0.00011640108896937562,
+   "roll_deg": 1.7382866342809155e-07,
+   "pitch_deg": -1.0746659132865322e-06
   },
   "exact_minus_linear": {
    "u_z_mm": 0.005873011828953605,
@@ -64,7 +64,7 @@
   "k_pitch_springs_heave_condensed_N_m_rad": 49848989.1405133,
   "pdelta_ratio_sum_Fh_over_k_pitch": 0.024142997664060927,
   "pdelta_amplification_predicted": 1.024740302735205,
-  "chrono_minus_exact_sphere_force_max_abs_N": 1.1580776092669112,
+  "chrono_minus_exact_sphere_force_max_abs_N": 1.1168597561409115,
   "reference_minus_linear_sphere_force_max_abs_N": 0.48270187692651234,
   "modes": {
    "world_inertia_geo_centre (Chrono model)": {
@@ -169,22 +169,22 @@
    },
    "chrono_fit": {
     "pitch": {
-     "f_d_Hz": 1.3271280627476718,
-     "f_n_Hz": 1.327175242721652,
-     "zeta": 0.00843190783348547,
-     "residual_rms_rel": 0.0018837396800721667
+     "f_d_Hz": 1.3271284750611985,
+     "f_n_Hz": 1.327175693915219,
+     "zeta": 0.008435379902741123,
+     "residual_rms_rel": 0.001912070629031704
     },
     "roll": {
-     "f_d_Hz": 3.054881803708212,
-     "f_n_Hz": 3.0554408216036326,
-     "zeta": 0.019128065470974388,
-     "residual_rms_rel": 0.012132112166592502
+     "f_d_Hz": 3.0549080574746466,
+     "f_n_Hz": 3.055466455228945,
+     "zeta": 0.019117373544219687,
+     "residual_rms_rel": 0.012085848717954152
     },
     "heave": {
-     "f_d_Hz": 8.734929504902626,
-     "f_n_Hz": 8.747592801804931,
-     "zeta": 0.05378818398015674,
-     "residual_rms_rel": 0.026127270286917373
+     "f_d_Hz": 8.736492200680548,
+     "f_n_Hz": 8.749186069682365,
+     "zeta": 0.05384812614318954,
+     "residual_rms_rel": 0.02594025047825063
     }
    }
   }
@@ -214,18 +214,18 @@
   "sum_F_h_N_m": 939726.0302816083,
   "W_N": 382290.6605569856,
   "chrono_window": {
-   "u_z_mm": -3.1872128011596463,
-   "roll_deg": 0.0002879962359119421,
-   "pitch_deg": 0.1727249065239294,
+   "u_z_mm": -3.187207340307175,
+   "roll_deg": 0.0002880491979451932,
+   "pitch_deg": 0.17272538191344805,
    "active_min": 14,
    "active_max": 14,
-   "roll_span_deg": 4.727720820877268e-06,
-   "pitch_span_deg": 5.530006012943733e-06
+   "roll_span_deg": 4.3323202857692726e-06,
+   "pitch_span_deg": 7.069951703575494e-06
   },
   "chrono_minus_exact": {
-   "u_z_mm": -4.9312048311378476e-05,
-   "roll_deg": -5.341109122684699e-07,
-   "pitch_deg": 8.896170099192968e-07
+   "u_z_mm": -4.3851195839827994e-05,
+   "roll_deg": -4.811488790173882e-07,
+   "pitch_deg": 1.3650065285586432e-06
   },
   "exact_minus_linear": {
    "u_z_mm": 0.0035837479189604164,
@@ -342,22 +342,22 @@
    },
    "chrono_fit": {
     "pitch": {
-     "f_d_Hz": 1.7115878039202999,
-     "f_n_Hz": 1.7116881254590175,
-     "zeta": 0.010826632808869238,
-     "residual_rms_rel": 0.0017504809648321027
+     "f_d_Hz": 1.711585545205894,
+     "f_n_Hz": 1.7116858824026875,
+     "zeta": 0.010827484749792003,
+     "residual_rms_rel": 0.0018214266177793842
     },
     "roll": {
-     "f_d_Hz": 4.1515181697362795,
-     "f_n_Hz": 4.152916804508712,
-     "zeta": 0.025950992616192516,
-     "residual_rms_rel": 0.005943680445957124
+     "f_d_Hz": 4.151677132165098,
+     "f_n_Hz": 4.153075360052024,
+     "zeta": 0.025946722969244614,
+     "residual_rms_rel": 0.0059573202368207205
     },
     "heave": {
-     "f_d_Hz": 8.74319208944615,
-     "f_n_Hz": 8.756121230208393,
-     "zeta": 0.05432297794204893,
-     "residual_rms_rel": 0.025848012773206367
+     "f_d_Hz": 8.744769626463373,
+     "f_n_Hz": 8.757734726614485,
+     "zeta": 0.05439340533050458,
+     "residual_rms_rel": 0.02625030435996346
     }
    }
   }
@@ -387,18 +387,18 @@
   "sum_F_h_N_m": 675947.4414513521,
   "W_N": 382290.6605569856,
   "chrono_window": {
-   "u_z_mm": -3.189445027374979,
-   "roll_deg": 0.00028810855624358144,
-   "pitch_deg": 0.17179872501578217,
+   "u_z_mm": -3.189436629565584,
+   "roll_deg": 0.0002879988649178847,
+   "pitch_deg": 0.17179888863074158,
    "active_min": 14,
    "active_max": 14,
-   "roll_span_deg": 9.526876152872248e-06,
-   "pitch_span_deg": 2.0424468018392927e-05
+   "roll_span_deg": 1.656764024383884e-05,
+   "pitch_span_deg": 1.6541061310076932e-05
   },
   "chrono_minus_exact": {
-   "u_z_mm": -1.6566541015894387e-05,
-   "roll_deg": 1.7879113330636484e-07,
-   "pitch_deg": 1.246276371713595e-06
+   "u_z_mm": -8.16873162090559e-06,
+   "roll_deg": 6.909980760960764e-08,
+   "pitch_deg": 1.4098913311277883e-06
   },
   "exact_minus_linear": {
    "u_z_mm": 0.001318776196332621,
@@ -515,22 +515,22 @@
    },
    "chrono_fit": {
     "pitch": {
-     "f_d_Hz": 1.9141930262998987,
-     "f_n_Hz": 1.914331714708338,
-     "zeta": 0.012037009874207914,
-     "residual_rms_rel": 0.0025947714057379234
+     "f_d_Hz": 1.9141937743230883,
+     "f_n_Hz": 1.9143323718158258,
+     "zeta": 0.012033061938646276,
+     "residual_rms_rel": 0.0028179408123542786
     },
     "roll": {
-     "f_d_Hz": 4.389857261644237,
-     "f_n_Hz": 4.391504961561075,
-     "zeta": 0.027390920538470264,
-     "residual_rms_rel": 0.0020969979390182848
+     "f_d_Hz": 4.390063843554791,
+     "f_n_Hz": 4.391710088830288,
+     "zeta": 0.027378190062577523,
+     "residual_rms_rel": 0.0021302441610108022
     },
     "heave": {
-     "f_d_Hz": 8.74200568292416,
-     "f_n_Hz": 8.754682443351173,
-     "zeta": 0.05379496993625947,
-     "residual_rms_rel": 0.015427852671531258
+     "f_d_Hz": 8.744437584042819,
+     "f_n_Hz": 8.757158275900764,
+     "zeta": 0.05388042250877551,
+     "residual_rms_rel": 0.01562160274578705
     }
    }
   }
@@ -557,7 +557,7 @@
  },
  "V4_ramp": {
   "model": "copy of run_reference.dynamic_touch (vertical damped 3-DoF, plain I_xy, pads L1 kn + YAML cn, crawler D), DOP853 rtol 1e-9 atol 1e-12 max_step 1 ms, window extended through the stops + 3 s",
-  "ramp_s (ASSUMPTION, chrono/actuators.ACCEL_RAMP_S)": 0.1,
+  "ramp_s (ASSUMPTION, YAML actuator.command_ramp_s)": 0.1,
   "ramp_schedule": "accelerate 0 -> v_max in ramp_s from t = 0, brake from t_b = e_op / v_max for ramp_s (rest exactly at e_op)",
   "reference_touch_s": [
    15.05,

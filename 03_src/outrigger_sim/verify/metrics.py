@@ -130,6 +130,96 @@ def log_decrement(t: ArrayLike, y: ArrayLike, f_damped_Hz: float) -> float | Non
     return float(sigma / math.hypot(sigma, wd))
 
 
+@dataclass(frozen=True)
+class DampedComponent:
+    """One component of :func:`fit_damped_sum`."""
+
+    f_damped_Hz: float
+    zeta: float
+    amplitude: float
+    phase_rad: float
+    sigma_1_s: float
+
+
+@dataclass(frozen=True)
+class DampedSumFit:
+    """Result of :func:`fit_damped_sum` (components in the order of the guesses)."""
+
+    components: tuple[DampedComponent, ...]
+    offset: float
+    residual_rms_rel: float
+    n_samples: int
+    window_s: tuple[float, float]
+    success: bool
+
+
+def fit_damped_sum(
+    t: ArrayLike,
+    y: ArrayLike,
+    f_guess_Hz: Sequence[float],
+    zeta_guess: Sequence[float],
+) -> DampedSumFit:
+    """Least-squares fit of a sum of decaying cosines + offset (S3 V8(a)).
+
+    Used when a modal coordinate carries leakage from close modes that do not decay (zero
+    physical damping): one component per guess, all frequencies and decay rates free. The
+    amplitudes enter linearly and are solved for inside the residual (variable projection),
+    so only ``2 n`` nonlinear parameters remain.
+    """
+    tt = np.asarray(t, dtype=float)
+    yy = np.asarray(y, dtype=float)
+    t_rel = tt - tt[0]
+    n = len(f_guess_Hz)
+    w0 = 2.0 * math.pi * np.asarray(f_guess_Hz, dtype=float)
+    s0 = np.asarray(zeta_guess, dtype=float) * w0
+
+    def basis(p: NDArray[np.float64]) -> NDArray[np.float64]:
+        sig, wd = p[:n], p[n:]
+        cols = [np.ones_like(t_rel)]
+        for k in range(n):
+            env = np.exp(-sig[k] * t_rel)
+            cols.append(env * np.cos(wd[k] * t_rel))
+            cols.append(env * np.sin(wd[k] * t_rel))
+        return np.column_stack(cols)
+
+    scale = float(np.std(yy)) or 1.0
+
+    def solve(p: NDArray[np.float64]) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
+        a = basis(p)
+        coef, *_ = np.linalg.lstsq(a, yy, rcond=None)
+        return coef, a @ coef - yy
+
+    def residual(p: NDArray[np.float64]) -> NDArray[np.float64]:
+        return solve(p)[1] / scale
+
+    p0 = np.concatenate([s0, w0])
+    sol = least_squares(residual, p0, method="lm", x_scale="jac", max_nfev=2000)
+    coef, res = solve(sol.x)
+    comps = []
+    for k in range(n):
+        sig, wd = float(sol.x[k]), abs(float(sol.x[n + k]))
+        a_c, a_s = float(coef[1 + 2 * k]), float(coef[2 + 2 * k])
+        wn = math.hypot(sig, wd)
+        comps.append(
+            DampedComponent(
+                f_damped_Hz=wd / (2.0 * math.pi),
+                zeta=sig / wn if wn > 0.0 else math.nan,
+                amplitude=math.hypot(a_c, a_s),
+                phase_rad=math.atan2(-a_s, a_c),
+                sigma_1_s=sig,
+            )
+        )
+    denom = float(np.sqrt(np.mean((yy - coef[0]) ** 2))) or 1.0
+    return DampedSumFit(
+        components=tuple(comps),
+        offset=float(coef[0]),
+        residual_rms_rel=float(np.sqrt(np.mean(res**2))) / denom,
+        n_samples=len(tt),
+        window_s=(float(tt[0]), float(tt[-1])),
+        success=bool(sol.success),
+    )
+
+
 def fit_damped_sine(t: ArrayLike, y: ArrayLike, f_guess_Hz: float) -> DampedFit:
     """Least-squares fit of one decaying cosine + offset to ``y(t)``.
 

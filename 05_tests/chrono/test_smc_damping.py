@@ -50,6 +50,9 @@ STATIC_REL_TOL = 1.0e-3
 HEAVE_F_DESIGN_REL_TOL = 1.0e-3  # identified heave vs derivation.damping_reference_mode_Hz
 WEIGHT_REL_TOL = 1.0e-2  # simulate-mode static equilibrium criterion
 DTS = ("simulation.L1.dt_s", "simulation.dt_reference_s")
+OMEGA_DT_MAX = 0.5
+"""Identification resolution of the single-contact test (ASSUMPTION of this test: >= 12.6
+steps per contact period; met by every case at dt 1e-4 s)."""
 
 
 @pytest.fixture(scope="module")
@@ -136,9 +139,13 @@ def test_composite_contact_dynamics(check: ModuleType, params: Params, dt: float
 def test_damping_uses_effective_mass(
     check: ModuleType, params: Params, dt: float, floor_mass: float
 ) -> None:
-    result = check.single_contact(params, dt=dt, floor_mass_kg=floor_mass)
     m_pad = params.leg("FL").moving_part.mass_kg
     m_eff = m_pad * floor_mass / (m_pad + floor_mass)
+    # a 1 kg floor makes the contact mode fast (omega ~ 4.6e3 rad/s): keep >= 12.6 steps per
+    # period so that the identification resolves it (YAML L1 dt 2e-4 s gives omega dt 0.92)
+    omega_eff = math.sqrt(params.contact.rigid_floor.L1.kn_per_pad_N_m[0] / m_eff)
+    dt = min(dt, OMEGA_DT_MAX / omega_eff)
+    result = check.single_contact(params, dt=dt, floor_mass_kg=floor_mass)
     assert result.extra["m_eff_kg"] == pytest.approx(m_eff, rel=1e-12)
     gn = result.extra["floor_gn_1_s"]
     assert result.c_identified_N_s_m == pytest.approx(gn * m_eff, rel=C_REL_TOL)

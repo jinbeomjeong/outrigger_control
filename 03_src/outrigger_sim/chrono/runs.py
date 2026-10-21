@@ -247,6 +247,16 @@ class CommandedRun:
     """Per leg extreme motor positions over every step."""
     max_force_dev_N: NDArray[np.float64] | None
     """Per leg max ``|GetMotorForce() - force_ref_N|`` over every step (None: not tracked)."""
+    max_pad_normal_N: NDArray[np.float64] | None = None
+    """Per leg max of the hook's raw pad normal force over every step (S3)."""
+    max_pad_normal_t_s: NDArray[np.float64] | None = None
+    """Time of :attr:`max_pad_normal_N` per leg."""
+    max_motor_force_N: NDArray[np.float64] | None = None
+    """Per leg max ``GetMotorForce()`` (cylinder force, + = pushing the pad down) over every
+    step (S3 V4 upper bound)."""
+    max_motor_force_t_s: NDArray[np.float64] | None = None
+    dt_segments: list[tuple[float, float, float]] | None = None
+    """``(t_start, t_end, dt)`` of each fixed-dt segment, absolute times (run_windowed)."""
 
 
 def run_commanded(
@@ -283,6 +293,10 @@ def run_commanded(
     viol_max = 0.0
     f_ref = None if force_ref_N is None else [float(f) for f in force_ref_N]
     f_dev = np.zeros(n_legs)
+    n_max = np.full(n_legs, -np.inf)
+    n_max_t = np.full(n_legs, np.nan)
+    fm_max = np.full(n_legs, -np.inf)
+    fm_max_t = np.full(n_legs, np.nan)
     motors = model.motors
     t_start = float(model.system.GetChTime())
     t0 = time.perf_counter()
@@ -301,8 +315,16 @@ def run_commanded(
             if pos_now[leg] and np.isnan(first_pos[leg]):
                 first_pos[leg] = t_now
         positive = pos_now
+        higher = n_raw > n_max
+        if np.any(higher):
+            n_max = np.where(higher, n_raw, n_max)
+            n_max_t = np.where(higher, t_now, n_max_t)
         acting = model.actuator.acting_s_ref_m
         for i, m in enumerate(motors):
+            fm = m.GetMotorForce()
+            if fm > fm_max[i]:
+                fm_max[i] = fm
+                fm_max_t[i] = t_now
             v = abs(m.GetMotorPosDt())
             if v > vmax[i]:
                 vmax[i] = v
@@ -315,7 +337,7 @@ def run_commanded(
             if dev > viol_max:
                 viol_max = dev
             if f_ref is not None:
-                fd = abs(m.GetMotorForce() - f_ref[i])
+                fd = abs(fm - f_ref[i])
                 if fd > f_dev[i]:
                     f_dev[i] = fd
         probe = result.probe
@@ -353,7 +375,138 @@ def run_commanded(
         motor_pos_min_m=pmin,
         motor_pos_max_m=pmax,
         max_force_dev_N=None if f_ref is None else f_dev,
+        max_pad_normal_N=n_max,
+        max_pad_normal_t_s=n_max_t,
+        max_motor_force_N=fm_max,
+        max_motor_force_t_s=fm_max_t,
+        dt_segments=[(t_start, float(model.system.GetChTime()), float(dt))],
     )
+
+
+@dataclass(frozen=True)
+class DtWindow:
+    """A time-step window of :func:`run_windowed`: ``dt_s`` from ``t0_s`` to ``t1_s`` (run
+    time, i.e. seconds after the run start)."""
+
+    t0_s: float
+    t1_s: float
+    dt_s: float
+    sample_s: float | None = None
+    """Sample period inside the window (None: the run's ``sample_s``)."""
+
+
+def _merge_max(a: NDArray | None, ta: NDArray | None, b: NDArray | None, tb: NDArray | None):
+    if a is None:
+        return b, tb
+    if b is None:
+        return a, ta
+    take_b = b > a
+    return np.where(take_b, b, a), np.where(take_b, tb, ta)
+
+
+def run_windowed(
+    model: Any,
+    duration_s: float,
+    command: CommandFn,
+    *,
+    windows: Sequence[DtWindow] = (),
+    base_dt_s: float | None = None,
+    sample_s: float = 1.0e-3,
+    on_sample: SampleHook | None = None,
+    force_ref_N: Sequence[float] | None = None,
+) -> CommandedRun:
+    """:func:`run_commanded` with time-step windows (S3: ``simulation.dt_transition_s``
+    inside the contact-transition window, the general ``dt`` elsewhere).
+
+    The run is cut at the window edges; each piece runs at its own ``dt`` through
+    :meth:`L1Model.set_dt` (target continuous across the change, ``chrono/actuators``
+    module docstring: change ``dt`` only while the applied speeds are constant). The same
+    ``command`` object is used for every piece, so a :class:`~outrigger_sim.scenarios.
+    stroke.Schedule` keeps its time origin (the first call = run start). Piece lengths are
+    rounded to their ``dt``; window edges should lie on the coarse grid.
+
+    Args:
+        windows: Non-overlapping windows in increasing order inside ``[0, duration_s]``.
+        base_dt_s: ``dt`` outside the windows (default: the model's current ``dt_s``).
+
+    Returns:
+        The merged :class:`CommandedRun` (series concatenated, maxima over all pieces,
+        :attr:`CommandedRun.dt_segments` lists the pieces).
+    """
+    base = float(model.dt_s if base_dt_s is None else base_dt_s)
+    pieces: list[tuple[float, float, float, float]] = []
+    t = 0.0
+    for w in sorted(windows, key=lambda w: w.t0_s):
+        if w.t0_s < t - 1e-12 or w.t1_s <= w.t0_s or w.t1_s > duration_s + 1e-12:
+            raise ValueError(f"window {w} overlaps, is empty or ends after {duration_s} s")
+        if w.t0_s > t:
+            pieces.append((t, w.t0_s, base, sample_s))
+        pieces.append((w.t0_s, w.t1_s, w.dt_s, sample_s if w.sample_s is None else w.sample_s))
+        t = w.t1_s
+    if duration_s > t + 1e-12:
+        pieces.append((t, duration_s, base, sample_s))
+
+    merged: CommandedRun | None = None
+    t_run0 = float(model.system.GetChTime())
+    for t0, t1, dt, smp in pieces:
+        model.set_dt(dt)
+        # cut by the remaining run time so that rounding errors do not accumulate
+        elapsed = float(model.system.GetChTime()) - t_run0
+        part = run_commanded(
+            model,
+            round((t1 - elapsed) / dt) * dt,
+            command,
+            sample_s=smp,
+            on_sample=on_sample,
+            force_ref_N=force_ref_N,
+        )
+        if merged is None:
+            merged = part
+            continue
+        series = {}
+        for k, a in merged.series.items():
+            b = part.series[k]
+            series[k] = np.concatenate([a, b]) if (a.size and b.size) else (a if a.size else b)
+        first = np.where(
+            np.isnan(merged.first_positive_N_t_s), part.first_positive_N_t_s,
+            merged.first_positive_N_t_s,
+        )
+        n_max, n_max_t = _merge_max(
+            merged.max_pad_normal_N, merged.max_pad_normal_t_s,
+            part.max_pad_normal_N, part.max_pad_normal_t_s,
+        )
+        f_max, f_max_t = _merge_max(
+            merged.max_motor_force_N, merged.max_motor_force_t_s,
+            part.max_motor_force_N, part.max_motor_force_t_s,
+        )
+        merged = CommandedRun(
+            series=series,
+            events=[*merged.events, *part.events],
+            raw_contact_transitions=[
+                *merged.raw_contact_transitions, *part.raw_contact_transitions
+            ],
+            first_positive_N_t_s=first,
+            steps=merged.steps + part.steps,
+            wall_s=merged.wall_s + part.wall_s,
+            t_start_s=merged.t_start_s,
+            t_end_s=part.t_end_s,
+            max_motor_speed_m_s=np.maximum(merged.max_motor_speed_m_s, part.max_motor_speed_m_s),
+            max_motor_violation_m=max(merged.max_motor_violation_m, part.max_motor_violation_m),
+            motor_pos_min_m=np.minimum(merged.motor_pos_min_m, part.motor_pos_min_m),
+            motor_pos_max_m=np.maximum(merged.motor_pos_max_m, part.motor_pos_max_m),
+            max_force_dev_N=None
+            if merged.max_force_dev_N is None
+            else np.maximum(merged.max_force_dev_N, part.max_force_dev_N),
+            max_pad_normal_N=n_max,
+            max_pad_normal_t_s=n_max_t,
+            max_motor_force_N=f_max,
+            max_motor_force_t_s=f_max_t,
+            dt_segments=[*(merged.dt_segments or []), *(part.dt_segments or [])],
+        )
+    if merged is None:
+        raise ValueError(f"empty run: duration {duration_s} s")
+    model.set_dt(base)
+    return merged
 
 
 def run_gravity_ramp(

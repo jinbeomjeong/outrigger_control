@@ -8,9 +8,9 @@ is the dynamics-expert's.
 
 V11 full-stroke time: the reference ``actuator.full_stroke_time_s`` (30.0 s) is
 ``stroke / v_max`` without acceleration limits. With the command ramp (user decision
-2026-10-20, ``chrono/actuators.ACCEL_RAMP_S``) a stroke from rest to rest takes ``ramp`` more
-(ramp-up and braking each cost ``ramp / 2``): the check uses ``stroke / v_max + ramp`` with
-the V11 tolerance and reports the difference to 30.0 s as a note (decision item).
+2026-10-20, YAML ``actuator.command_ramp_s`` since 2026-10-21) a stroke from rest to rest
+takes ``ramp`` more (ramp-up and braking each cost ``ramp / 2``): the check uses
+``stroke / v_max + ramp`` with the V11 tolerance and reports the difference to 30.0 s as a note (decision item).
 """
 
 from __future__ import annotations

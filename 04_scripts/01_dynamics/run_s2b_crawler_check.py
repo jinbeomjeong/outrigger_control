@@ -21,7 +21,8 @@ Part B - crawler modes: 6-DoF linearisation about the exact pose by central fini
     in series with the 1e9 kg floor).
 Part C - V4 with the command ramp: copy of run_reference.dynamic_touch (vertical damped 3-DoF,
     pads + crawler, unilateral) with a leg schedule e(t) argument; reproduces the step-start
-    reference first, then the 0.1 s acceleration ramp (start and stop), touch times, crawler
+    reference first, then the acceleration ramp YAML actuator.command_ramp_s (0.1 s, start and
+    stop), touch times, crawler
     off and the pad-force peaks through the stops.
 Inputs: 02_params/rexome33.yaml, 06_analysis/00_dynamics/reference.json,
     06_analysis/01_chrono/verify_S2b_L1.json (Chrono values, read only). Units SI.
@@ -294,7 +295,8 @@ xy_cr, k_cr, _ = dm.crawler_points(P)
 gap_cr = dm.crawler_gaps(P)
 n_rol = int((gap_cr <= 0).sum())
 c_cr = np.full(len(xy_cr), c_tot / n_rol)
-RAMP = 0.1  # ASSUMPTION mirrored from chrono/actuators.ACCEL_RAMP_S (user decision 2026-10-20)
+# ASSUMPTION, YAML actuator.command_ramp_s (user decision 2026-10-20)
+RAMP = float(P["actuator"]["command_ramp_s"])
 
 
 def sched_step(t):
@@ -376,7 +378,7 @@ rod_w = np.array([float(P["legs"][n]["moving_part"]["mass_kg"]) for n in LEGS]) 
 out["V4_ramp"] = {
     "model": "copy of run_reference.dynamic_touch (vertical damped 3-DoF, plain I_xy, pads L1 kn + YAML cn, crawler D), "
              "DOP853 rtol 1e-9 atol 1e-12 max_step 1 ms, window extended through the stops + 3 s",
-    "ramp_s (ASSUMPTION, chrono/actuators.ACCEL_RAMP_S)": RAMP,
+    "ramp_s (ASSUMPTION, YAML actuator.command_ramp_s)": RAMP,
     "ramp_schedule": "accelerate 0 -> v_max in ramp_s from t = 0, brake from t_b = e_op / v_max for ramp_s (rest exactly at e_op)",
     "reference_touch_s": refD["touch_s (FL, FR, RL, RR)"], "reference_crawler_off_s": refD["crawler_fully_off_s"],
     "step": st, "ramp": rp,
