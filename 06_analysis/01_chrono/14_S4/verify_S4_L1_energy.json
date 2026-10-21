@@ -1,0 +1,2772 @@
+{
+ "stage": "S4 V8(b) energy budget (cad pre-check with the dyn rev. 19 definitions; dyn final ruling 2026-10-21: pass, dynamics_model.md 5.8)",
+ "generated_utc": "2026-10-21T03:32:01+00:00",
+ "definitions": {
+  "residual": "R(t) = (E_mech(t) - E_mech(t0)) + D_visc + D_slip - W_motor, E_mech = kinetic + gravity + pad contact springs 1/2 kn delta^2 (geometric) + bushing springs 1/2 kt |d|^2 (after the return mapping)",
+  "E_ref": "max(E_kin(t0), D_visc,end + D_slip,end) (motor work excluded)",
+  "check_1": "max_t R <= 0.001 E_ref (every case)",
+  "check_4": "R_end <= 0 and |R_end| <= 0.1 (D_visc + D_slip) (every case)",
+  "check_5": "D_slip / sum mu N |delta a| in [1.0, 1.05] (every case)",
+  "check_2": "R_end(2 dt) / R_end(dt) in [1.6, 2.4] (dt pairs)",
+  "check_3": "|2 R_end(dt) - R_end(2 dt)| <= 0.01 E_ref (dt pairs)",
+  "recorded": "old max |R| / (E_kin0 + max |W_m|); shares bushing_lag (-sum kt (a_new - a_used).dp), bushing_implicit (-sum 1/2 kt |dp|^2), kinetic_implicit (-sum 1/2 dv^T M dv), contact_explicit (+sum 1/2 kn d_delta^2), remainder = R - shares; R(0.25 s) / R_end; bushing events",
+  "D_visc": "SMC pads c_n delta_dot_n (delta_n+1 - delta_n) (explicit, clip) + bushings c_t,actual |v_t|^2 dt (c_t,actual = 2 x Chrono input, while on)",
+  "D_slip": "sum 1/2 kt (|d_trial|^2 - |d|^2) per yielding return mapping",
+  "W_motor": "sum F_cyl,n+1 (s_n+1 - s_n)",
+  "kick": "0.5 m/s rigid translation along the floor-plane projection of [0.8, 0.6, 0.0] (ASSUMPTION)"
+ },
+ "judged_case": "v8b_pitch2_dt2e-04",
+ "all_passed": true,
+ "dt_sensitivity": {
+  "cases": [
+   "v8b_pitch2_dt5e-05",
+   "v8b_pitch2_dt1e-04",
+   "v8b_pitch2_dt2e-04"
+  ],
+  "E_ref_J_used_for_check_3": 4880.454235492907,
+  "residual_end_J": {
+   "dt_s": [
+    5e-05,
+    0.0001,
+    0.0002
+   ],
+   "values": [
+    -28.39477704113318,
+    -56.334118666225486,
+    -111.58358374341302
+   ],
+   "pairs": [
+    {
+     "dt_s": 5e-05,
+     "two_dt_s": 0.0001,
+     "value_dt": -28.39477704113318,
+     "value_2dt": -56.334118666225486,
+     "ratio_2dt_over_dt": 1.9839605919292438,
+     "richardson_dt0": -0.4554354160408778
+    },
+    {
+     "dt_s": 0.0001,
+     "two_dt_s": 0.0002,
+     "value_dt": -56.334118666225486,
+     "value_2dt": -111.58358374341302,
+     "ratio_2dt_over_dt": 1.980746062693118,
+     "richardson_dt0": -1.0846535890379556
+    }
+   ]
+  },
+  "shares": {
+   "bushing_lag": {
+    "dt_s": [
+     5e-05,
+     0.0001,
+     0.0002
+    ],
+    "values": [
+     -8.219581947995225,
+     -16.248250546289754,
+     -31.756336382066852
+    ],
+    "pairs": [
+     {
+      "dt_s": 5e-05,
+      "two_dt_s": 0.0001,
+      "value_dt": -8.219581947995225,
+      "value_2dt": -16.248250546289754,
+      "ratio_2dt_over_dt": 1.976773350407771,
+      "richardson_dt0": -0.19091334970069695
+     },
+     {
+      "dt_s": 0.0001,
+      "two_dt_s": 0.0002,
+      "value_dt": -16.248250546289754,
+      "value_2dt": -31.756336382066852,
+      "ratio_2dt_over_dt": 1.954446498199668,
+      "richardson_dt0": -0.740164710512655
+     }
+    ]
+   },
+   "bushing_implicit": {
+    "dt_s": [
+     5e-05,
+     0.0001,
+     0.0002
+    ],
+    "values": [
+     -12.298783039511573,
+     -24.406735944936948,
+     -48.387376224998796
+    ],
+    "pairs": [
+     {
+      "dt_s": 5e-05,
+      "two_dt_s": 0.0001,
+      "value_dt": -12.298783039511573,
+      "value_2dt": -24.406735944936948,
+      "ratio_2dt_over_dt": 1.9844838197833778,
+      "richardson_dt0": -0.1908301340861982
+     },
+     {
+      "dt_s": 0.0001,
+      "two_dt_s": 0.0002,
+      "value_dt": -24.406735944936948,
+      "value_2dt": -48.387376224998796,
+      "ratio_2dt_over_dt": 1.982541882460793,
+      "richardson_dt0": -0.4260956648750991
+     }
+    ]
+   },
+   "kinetic_implicit": {
+    "dt_s": [
+     5e-05,
+     0.0001,
+     0.0002
+    ],
+    "values": [
+     -34.227204082546876,
+     -68.23042844881483,
+     -137.33601637575657
+    ],
+    "pairs": [
+     {
+      "dt_s": 5e-05,
+      "two_dt_s": 0.0001,
+      "value_dt": -34.227204082546876,
+      "value_2dt": -68.23042844881483,
+      "ratio_2dt_over_dt": 1.9934560907826786,
+      "richardson_dt0": -0.22397971627891877
+     },
+     {
+      "dt_s": 0.0001,
+      "two_dt_s": 0.0002,
+      "value_dt": -68.23042844881483,
+      "value_2dt": -137.33601637575657,
+      "ratio_2dt_over_dt": 2.012826527665489,
+      "richardson_dt0": 0.8751594781269034
+     }
+    ]
+   },
+   "contact_explicit": {
+    "dt_s": [
+     5e-05,
+     0.0001,
+     0.0002
+    ],
+    "values": [
+     26.09902476149275,
+     52.05882421912542,
+     105.0098442530764
+    ],
+    "pairs": [
+     {
+      "dt_s": 5e-05,
+      "two_dt_s": 0.0001,
+      "value_dt": 26.09902476149275,
+      "value_2dt": 52.05882421912542,
+      "ratio_2dt_over_dt": 1.9946654978439846,
+      "richardson_dt0": 0.13922530386007992
+     },
+     {
+      "dt_s": 0.0001,
+      "two_dt_s": 0.0002,
+      "value_dt": 52.05882421912542,
+      "value_2dt": 105.0098442530764,
+      "ratio_2dt_over_dt": 2.0171382244645044,
+      "richardson_dt0": -0.8921958148255555
+     }
+    ]
+   }
+  },
+  "remainder_end_J": {
+   "dt_s": [
+    5e-05,
+    0.0001,
+    0.0002
+   ],
+   "values": [
+    0.2517672674277449,
+    0.49247205469063005,
+    0.8863009863328131
+   ],
+   "pairs": [
+    {
+     "dt_s": 5e-05,
+     "two_dt_s": 0.0001,
+     "value_dt": 0.2517672674277449,
+     "value_2dt": 0.49247205469063005,
+     "ratio_2dt_over_dt": 1.9560606893903132,
+     "richardson_dt0": 0.011062480164859778
+    },
+    {
+     "dt_s": 0.0001,
+     "two_dt_s": 0.0002,
+     "value_dt": 0.49247205469063005,
+     "value_2dt": 0.8863009863328131,
+     "ratio_2dt_over_dt": 1.7996980293421636,
+     "richardson_dt0": 0.09864312304844702
+    }
+   ]
+  },
+  "slip_ratio": {
+   "5e-05": 1.0017122230686717,
+   "0.0001": 1.0034208294099414,
+   "0.0002": 1.0068329860589817
+  },
+  "residual_early_over_end": {
+   "5e-05": 0.562743589287557,
+   "0.0001": 0.563005349940191,
+   "0.0002": 0.561033324269944
+  },
+  "checks": [
+   {
+    "id": "V8(b)-2",
+    "item": "v8b_pitch2: R_end(2 dt) / R_end(dt), dt 5e-05 s",
+    "value": 1.9839605919292438,
+    "ref": [
+     1.6,
+     2.4
+    ],
+    "tol": [
+     1.6,
+     2.4
+    ],
+    "tol_kind": "band",
+    "unit": "-",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "V8(b)-3",
+    "item": "v8b_pitch2: Richardson |2 R_end(dt) - R_end(2 dt)| / E_ref, dt 5e-05 s",
+    "value": 9.331824335709206e-05,
+    "ref": null,
+    "tol": 0.01,
+    "tol_kind": "max",
+    "unit": "-",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "2 R(dt) - R(2 dt) = -0.455 J"
+   },
+   {
+    "id": "V8(b)-2",
+    "item": "v8b_pitch2: R_end(2 dt) / R_end(dt), dt 1e-04 s",
+    "value": 1.980746062693118,
+    "ref": [
+     1.6,
+     2.4
+    ],
+    "tol": [
+     1.6,
+     2.4
+    ],
+    "tol_kind": "band",
+    "unit": "-",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "V8(b)-3",
+    "item": "v8b_pitch2: Richardson |2 R_end(dt) - R_end(2 dt)| / E_ref, dt 1e-04 s",
+    "value": 0.0002222443929808533,
+    "ref": null,
+    "tol": 0.01,
+    "tol_kind": "max",
+    "unit": "-",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "2 R(dt) - R(2 dt) = -1.085 J"
+   }
+  ],
+  "all_passed": true
+ },
+ "cases": {
+  "v8b_pitch2_dt1e-04": {
+   "dir": "07_results/S4_energy/batch_20261021_122704/v8b_pitch2_dt1e-04",
+   "judged": false,
+   "settings": {
+    "case": "v8b_pitch2_dt1e-04",
+    "floor": "ground roll 0 deg, pitch 2 deg",
+    "dt_s": 0.0001,
+    "window_s": 30.0,
+    "sample_s": 0.001,
+    "kick_velocity_m_s": [
+     0.3996686120442163,
+     0.30011699398992825,
+     -0.013956735474282826
+    ],
+    "kick_speed_m_s": 0.5,
+    "motor": null,
+    "budget": "chrono.energy.EnergyBudget (S4 seven terms), residual verify.s4_energy"
+   },
+   "budget": {
+    "t0_s": 56.000000000735476,
+    "t_end_s": 86.00000000173137,
+    "E_ref_J": 4872.849939543395,
+    "E_kin0_J": 4872.849939543395,
+    "dissipation_end_J": 4852.0641867397835,
+    "terms_initial_J": {
+     "kinetic": 4872.849939543395,
+     "gravity": 860954.0615615221,
+     "contact_spring": 921.4004238513631,
+     "bushing_spring": 2.63098954726601,
+     "dissipated_viscous": 0.0,
+     "dissipated_slip": 0.0,
+     "motor_work": 0.0
+    },
+    "terms_final_J": {
+     "kinetic": 3.636737607421834,
+     "gravity": 860854.0423763529,
+     "contact_spring": 921.2129037664674,
+     "bushing_spring": 63.652577911465244,
+     "dissipated_viscous": 1779.4360086602105,
+     "dissipated_slip": 3072.628178079573,
+     "motor_work": -1.3419746273408509e-05
+    },
+    "change_J": {
+     "kinetic": -4869.213201935972,
+     "gravity": -100.01918516913429,
+     "contact_spring": -0.18752008489570926,
+     "bushing_spring": 61.02158836419923,
+     "dissipated_viscous": 1779.4360086602105,
+     "dissipated_slip": 3072.628178079573,
+     "motor_work": -1.3419746273408509e-05
+    },
+    "residual_end_J": -56.334118666225486,
+    "residual_max_signed_J": 0.43563884709155704,
+    "residual_max_t_s": 56.00100000073551,
+    "residual_max_abs_J": 56.33549000287894,
+    "residual_early_J": -31.71641019325053,
+    "residual_early_over_end": 0.563005349940191,
+    "residual_creation_rel": 8.940124413771259e-05,
+    "residual_end_over_dissipation": -0.011610340774176301,
+    "old_E_ref_J": 4872.849953003374,
+    "old_residual_max_rel": 0.011561096800888902,
+    "diagnostics_end_J": {
+     "bushing_lag": -16.248250546289754,
+     "bushing_implicit": -24.406735944936948,
+     "kinetic_implicit": -68.23042844881483,
+     "contact_explicit": 52.05882421912542
+    },
+    "remainder_end_J": 0.49247205469063005,
+    "diagnostics_complete": true
+   },
+   "slip_ratio": 1.0034208294099414,
+   "slip_excess_J": 10.475103295962072,
+   "residual_remainder_max_abs_J": 0.8609474652264615,
+   "bushing": {
+    "yield_steps_window": [
+     1728,
+     2416,
+     2859,
+     2288
+    ],
+    "yield_steps_total_window": 9291,
+    "slip_window_m": [
+     0.009888618312026292,
+     0.011081236126261815,
+     0.022962953129630672,
+     0.01883919981545516
+    ],
+    "events_window": 34,
+    "created_window": 17,
+    "removed_window": 17,
+    "events_per_leg_window": [
+     2,
+     6,
+     14,
+     12
+    ],
+    "in_contact_end": [
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "bushing_events_window": [
+    [
+     56.05530000073731,
+     3,
+     2
+    ],
+    [
+     56.12060000073948,
+     2,
+     2
+    ],
+    [
+     56.19420000074192,
+     2,
+     1
+    ],
+    [
+     56.24140000074349,
+     3,
+     1
+    ],
+    [
+     56.286900000745,
+     1,
+     2
+    ],
+    [
+     56.34600000074696,
+     1,
+     1
+    ],
+    [
+     56.43130000074979,
+     2,
+     2
+    ],
+    [
+     56.61640000075594,
+     2,
+     1
+    ],
+    [
+     56.73810000075998,
+     1,
+     2
+    ],
+    [
+     56.77910000076134,
+     1,
+     1
+    ],
+    [
+     56.77950000076135,
+     3,
+     2
+    ],
+    [
+     56.91130000076573,
+     2,
+     2
+    ],
+    [
+     56.922100000766086,
+     2,
+     1
+    ],
+    [
+     56.951900000767075,
+     3,
+     1
+    ],
+    [
+     57.04400000077013,
+     0,
+     2
+    ],
+    [
+     57.10120000077203,
+     0,
+     1
+    ],
+    [
+     57.16890000077428,
+     2,
+     2
+    ],
+    [
+     57.238400000776586,
+     2,
+     1
+    ],
+    [
+     57.31810000077923,
+     3,
+     2
+    ],
+    [
+     57.33090000077966,
+     3,
+     1
+    ],
+    [
+     57.41930000078259,
+     1,
+     2
+    ],
+    [
+     57.4527000007837,
+     1,
+     1
+    ],
+    [
+     57.57640000078781,
+     2,
+     2
+    ],
+    [
+     57.677000000791146,
+     2,
+     1
+    ],
+    [
+     57.88860000079817,
+     3,
+     2
+    ],
+    [
+     58.0371000008031,
+     3,
+     1
+    ],
+    [
+     58.23520000080968,
+     2,
+     2
+    ],
+    [
+     58.36120000081386,
+     2,
+     1
+    ],
+    [
+     58.57460000082094,
+     3,
+     2
+    ],
+    [
+     58.6576000008237,
+     3,
+     1
+    ],
+    [
+     59.643400000856424,
+     3,
+     2
+    ],
+    [
+     59.729300000859276,
+     3,
+     1
+    ],
+    [
+     59.961800000866994,
+     2,
+     2
+    ],
+    [
+     60.03100000086929,
+     2,
+     1
+    ]
+   ],
+   "consistency": {
+    "pad_contact_force_model_max_dev_N": 8.85226988478098,
+    "pad_contact_force_model_max_dev_t_s": 58.6848000008246,
+    "pad_contact_force_model_max_dev_leg": 0,
+    "crawler_contact_max_N": 0.0,
+    "pad_contact_damping_N_s_m": [
+     27022.85712205351,
+     27022.85712205351,
+     27303.325524908112,
+     27303.325524908112
+    ],
+    "bushing_damping_actual_N_s_m": [
+     17279.64928,
+     17279.64928,
+     17170.79878,
+     17170.79878
+    ],
+    "steps": 300000
+   },
+   "start": {
+    "procedure": "S2a V12: bushings at t = 0 (initial hold), gravity half-cosine ramp, settle",
+    "slope_case": "ground roll 0 deg, pitch 2 deg",
+    "ramp_s": 3.0,
+    "settle_after_ramp_s": 53.0,
+    "settle_steps": 560000,
+    "settle_wall_s": 74.53498549999495,
+    "settle_events": 0,
+    "settle_yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hold_release_t_s": [
+     0.0742000000000011,
+     0.0742000000000011,
+     0.07450000000000111,
+     0.07450000000000111
+    ],
+    "normal_world": [
+     0.03489949670250097,
+     -0.0,
+     0.9993908270190957
+    ],
+    "extensions_m": [
+     0.5454793739405391,
+     0.5454793739405391,
+     0.36592062605946096,
+     0.36592062605946096
+    ],
+    "build_and_settle_wall_s": 74.54396129999077,
+    "pad_normal_before_kick_N": [
+     119288.14616254903,
+     117297.03388244589,
+     73661.05785288526,
+     71809.7479223827
+    ],
+    "bushing_tangential_before_kick_N": [
+     3364.3761301969903,
+     3344.4690862895613,
+     3325.385300174783,
+     3307.4865641061183
+    ]
+   },
+   "checks": [
+    {
+     "id": "V8(b)-1",
+     "item": "v8b_pitch2_dt1e-04: no energy creation, max_t R / E_ref",
+     "value": 8.940124413771259e-05,
+     "ref": null,
+     "tol": 0.001,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "E_ref = max(E_kin0, D_visc + D_slip) (dyn rev. 19)"
+    },
+    {
+     "id": "V8(b)-4",
+     "item": "v8b_pitch2_dt1e-04: end residual is a loss, R_end <= 0 and |R_end| / (D_visc + D_slip)",
+     "value": 0.011610340774176301,
+     "ref": null,
+     "tol": 0.1,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "R_end = -56.334 J"
+    },
+    {
+     "id": "V8(b)-5",
+     "item": "v8b_pitch2_dt1e-04: D_slip / sum mu N |delta a|",
+     "value": 1.0034208294099414,
+     "ref": [
+      1.0,
+      1.05
+     ],
+     "tol": [
+      1.0,
+      1.05
+     ],
+     "tol_kind": "band",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "all legs, every yielding return mapping of the window"
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_pitch2_dt1e-04: bushing yield occurred (scenario validity)",
+     "value": 9291,
+     "ref": "> 0",
+     "tol": 0,
+     "tol_kind": "min",
+     "unit": "steps",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_pitch2_dt1e-04: no crawler contact (budget covers the pads only)",
+     "value": 0.0,
+     "ref": null,
+     "tol": 0.0,
+     "tol_kind": "max",
+     "unit": "N",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    }
+   ],
+   "all_passed": true,
+   "timing": {
+    "run_wall_s": 72.67303270001139,
+    "us_per_step": 242.2434423333713,
+    "build_and_settle_wall_s": 74.54396129999077,
+    "wall_s": 148.27822970000852,
+    "batch_wall_s": 226.09803069999907,
+    "jobs": 2
+   },
+   "record": "07_results/S4_energy/batch_20261021_122704/v8b_pitch2_dt1e-04/record"
+  },
+  "v8b_flat_dt2e-04": {
+   "dir": "07_results/S4_energy/batch_20261021_122704/v8b_flat_dt2e-04",
+   "judged": false,
+   "settings": {
+    "case": "v8b_flat_dt2e-04",
+    "floor": "level",
+    "dt_s": 0.0002,
+    "window_s": 30.0,
+    "sample_s": 0.001,
+    "kick_velocity_m_s": [
+     0.4,
+     0.3,
+     0.0
+    ],
+    "kick_speed_m_s": 0.5,
+    "motor": null,
+    "budget": "chrono.energy.EnergyBudget (S4 seven terms), residual verify.s4_energy"
+   },
+   "budget": {
+    "t0_s": 14.999999999991719,
+    "t_end_s": 44.999999999921805,
+    "E_ref_J": 4872.828269927255,
+    "E_kin0_J": 4872.828269927255,
+    "dissipation_end_J": 4705.200756088848,
+    "terms_initial_J": {
+     "kinetic": 4872.828269927255,
+     "gravity": 836620.2761385728,
+     "contact_spring": 922.4921724708461,
+     "bushing_spring": 1.0170060688394278e-07,
+     "dissipated_viscous": 0.0,
+     "dissipated_slip": 0.0,
+     "motor_work": 0.0
+    },
+    "terms_final_J": {
+     "kinetic": 1.215771516579136,
+     "gravity": 836621.0056045104,
+     "contact_spring": 923.8627050696515,
+     "bushing_spring": 57.917059025631424,
+     "dissipated_viscous": 1724.581998430752,
+     "dissipated_slip": 2980.618757658096,
+     "motor_work": -5.6624138515586234e-05
+    },
+    "change_J": {
+     "kinetic": -4871.6124984106755,
+     "gravity": 0.7294659375911579,
+     "contact_spring": 1.3705325988054256,
+     "bushing_spring": 57.91705892393082,
+     "dissipated_viscous": 1724.581998430752,
+     "dissipated_slip": 2980.618757658096,
+     "motor_work": -5.6624138515586234e-05
+    },
+    "residual_end_J": -106.39462823760759,
+    "residual_max_signed_J": 0.8732579349415753,
+    "residual_max_t_s": 15.000999999991716,
+    "residual_max_abs_J": 106.40010738201156,
+    "residual_early_J": -60.69831316728535,
+    "residual_early_over_end": 0.5705016707397089,
+    "residual_creation_rel": 0.00017920966768537728,
+    "residual_end_over_dissipation": -0.022612133626801312,
+    "old_E_ref_J": 4872.828326807858,
+    "old_residual_max_rel": 0.02183539009504019,
+    "diagnostics_end_J": {
+     "bushing_lag": -30.8167135582611,
+     "bushing_implicit": -46.05624469639853,
+     "kinetic_implicit": -131.8951591395808,
+     "contact_explicit": 101.42552197545123
+    },
+    "remainder_end_J": 0.9479671811816246,
+    "diagnostics_complete": true
+   },
+   "slip_ratio": 1.0069534645078708,
+   "slip_excess_J": 20.582507010886275,
+   "residual_remainder_max_abs_J": 1.7234941268466857,
+   "bushing": {
+    "yield_steps_window": [
+     800,
+     1255,
+     1537,
+     1053
+    ],
+    "yield_steps_total_window": 4645,
+    "slip_window_m": [
+     0.005404611060346356,
+     0.009194928396450218,
+     0.019011835790276592,
+     0.01706462328185773
+    ],
+    "events_window": 32,
+    "created_window": 16,
+    "removed_window": 16,
+    "events_per_leg_window": [
+     2,
+     4,
+     14,
+     12
+    ],
+    "in_contact_end": [
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "bushing_events_window": [
+    [
+     15.053599999991594,
+     3,
+     2
+    ],
+    [
+     15.118399999991443,
+     2,
+     2
+    ],
+    [
+     15.191799999991272,
+     2,
+     1
+    ],
+    [
+     15.236999999991166,
+     3,
+     1
+    ],
+    [
+     15.28259999999106,
+     1,
+     2
+    ],
+    [
+     15.340799999990924,
+     1,
+     1
+    ],
+    [
+     15.426599999990724,
+     2,
+     2
+    ],
+    [
+     15.599599999990321,
+     2,
+     1
+    ],
+    [
+     15.748399999989974,
+     1,
+     2
+    ],
+    [
+     15.757999999989952,
+     1,
+     1
+    ],
+    [
+     15.760599999989946,
+     3,
+     2
+    ],
+    [
+     15.93479999998954,
+     3,
+     1
+    ],
+    [
+     16.026599999989326,
+     0,
+     2
+    ],
+    [
+     16.083199999989194,
+     0,
+     1
+    ],
+    [
+     16.156199999989024,
+     2,
+     2
+    ],
+    [
+     16.210399999988898,
+     2,
+     1
+    ],
+    [
+     16.297199999988695,
+     3,
+     2
+    ],
+    [
+     16.317799999988647,
+     3,
+     1
+    ],
+    [
+     16.554399999988096,
+     2,
+     2
+    ],
+    [
+     16.657999999987855,
+     2,
+     1
+    ],
+    [
+     16.863999999987374,
+     3,
+     2
+    ],
+    [
+     17.004199999987048,
+     3,
+     1
+    ],
+    [
+     17.20459999998658,
+     2,
+     2
+    ],
+    [
+     17.318399999986315,
+     2,
+     1
+    ],
+    [
+     17.542999999985792,
+     3,
+     2
+    ],
+    [
+     17.589599999985683,
+     3,
+     1
+    ],
+    [
+     18.30399999998402,
+     2,
+     2
+    ],
+    [
+     18.34659999998392,
+     2,
+     1
+    ],
+    [
+     18.589799999983352,
+     3,
+     2
+    ],
+    [
+     18.674399999983155,
+     3,
+     1
+    ],
+    [
+     18.9131999999826,
+     2,
+     2
+    ],
+    [
+     18.9553999999825,
+     2,
+     1
+    ]
+   ],
+   "consistency": {
+    "pad_contact_force_model_max_dev_N": 6.112669850117527,
+    "pad_contact_force_model_max_dev_t_s": 15.579799999990367,
+    "pad_contact_force_model_max_dev_leg": 1,
+    "crawler_contact_max_N": 0.0,
+    "pad_contact_damping_N_s_m": [
+     27022.85712205351,
+     27022.85712205351,
+     27303.325524908112,
+     27303.325524908112
+    ],
+    "bushing_damping_actual_N_s_m": [
+     17279.64928,
+     17279.64928,
+     17170.79878,
+     17170.79878
+    ],
+    "steps": 150000
+   },
+   "start": {
+    "procedure": "S1 snapshot S1_L1_top (level floor)",
+    "t_restored_s": 14.999999999991719,
+    "build_and_settle_wall_s": 0.02196430000185501,
+    "pad_normal_before_kick_N": [
+     119359.38549899444,
+     117367.0124456159,
+     73703.6528471907,
+     71854.61194665454
+    ],
+    "bushing_tangential_before_kick_N": [
+     0.9062314341908272,
+     0.6761176109032321,
+     0.6228156146842817,
+     0.286476751853101
+    ]
+   },
+   "checks": [
+    {
+     "id": "V8(b)-1",
+     "item": "v8b_flat_dt2e-04: no energy creation, max_t R / E_ref",
+     "value": 0.00017920966768537728,
+     "ref": null,
+     "tol": 0.001,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "E_ref = max(E_kin0, D_visc + D_slip) (dyn rev. 19)"
+    },
+    {
+     "id": "V8(b)-4",
+     "item": "v8b_flat_dt2e-04: end residual is a loss, R_end <= 0 and |R_end| / (D_visc + D_slip)",
+     "value": 0.022612133626801312,
+     "ref": null,
+     "tol": 0.1,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "R_end = -106.395 J"
+    },
+    {
+     "id": "V8(b)-5",
+     "item": "v8b_flat_dt2e-04: D_slip / sum mu N |delta a|",
+     "value": 1.0069534645078708,
+     "ref": [
+      1.0,
+      1.05
+     ],
+     "tol": [
+      1.0,
+      1.05
+     ],
+     "tol_kind": "band",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "all legs, every yielding return mapping of the window"
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_flat_dt2e-04: bushing yield occurred (scenario validity)",
+     "value": 4645,
+     "ref": "> 0",
+     "tol": 0,
+     "tol_kind": "min",
+     "unit": "steps",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_flat_dt2e-04: no crawler contact (budget covers the pads only)",
+     "value": 0.0,
+     "ref": null,
+     "tol": 0.0,
+     "tol_kind": "max",
+     "unit": "N",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    }
+   ],
+   "all_passed": true,
+   "timing": {
+    "run_wall_s": 38.959243399993284,
+    "us_per_step": 259.72828933328856,
+    "build_and_settle_wall_s": 0.02196430000185501,
+    "wall_s": 39.992433899999014,
+    "batch_wall_s": 226.09803069999907,
+    "jobs": 2
+   },
+   "record": "07_results/S4_energy/batch_20261021_122704/v8b_flat_dt2e-04/record"
+  },
+  "v8b_pitch2_dt2e-04": {
+   "dir": "07_results/S4_energy/batch_20261021_122704/v8b_pitch2_dt2e-04",
+   "judged": true,
+   "settings": {
+    "case": "v8b_pitch2_dt2e-04",
+    "floor": "ground roll 0 deg, pitch 2 deg",
+    "dt_s": 0.0002,
+    "window_s": 30.0,
+    "sample_s": 0.001,
+    "kick_velocity_m_s": [
+     0.3996686120442163,
+     0.30011699398992825,
+     -0.013956735474282826
+    ],
+    "kick_speed_m_s": 0.5,
+    "motor": null,
+    "budget": "chrono.energy.EnergyBudget (S4 seven terms), residual verify.s4_energy"
+   },
+   "budget": {
+    "t0_s": 55.99999999989617,
+    "t_end_s": 86.00000000060784,
+    "E_ref_J": 4872.859574419746,
+    "E_kin0_J": 4872.859574419746,
+    "dissipation_end_J": 4795.9287125198625,
+    "terms_initial_J": {
+     "kinetic": 4872.859574419746,
+     "gravity": 860954.0681738042,
+     "contact_spring": 921.3936649681442,
+     "bushing_spring": 2.63113656296901,
+     "dissipated_viscous": 0.0,
+     "dissipated_slip": 0.0,
+     "motor_work": 0.0
+    },
+    "terms_final_J": {
+     "kinetic": 3.6855314175472604,
+     "gravity": 860854.3875843585,
+     "contact_spring": 921.2199492134703,
+     "bushing_spring": 64.14713530799281,
+     "dissipated_viscous": 1768.9035776934643,
+     "dissipated_slip": 3027.0251348263982,
+     "motor_work": -5.319455370815965e-05
+    },
+    "change_J": {
+     "kinetic": -4869.174043002199,
+     "gravity": -99.68058944575023,
+     "contact_spring": -0.1737157546739354,
+     "bushing_spring": 61.5159987450238,
+     "dissipated_viscous": 1768.9035776934643,
+     "dissipated_slip": 3027.0251348263982,
+     "motor_work": -5.319455370815965e-05
+    },
+    "residual_end_J": -111.58358374341302,
+    "residual_max_signed_J": 0.8620660684801981,
+    "residual_max_t_s": 56.000999999896166,
+    "residual_max_abs_J": 111.58609343421276,
+    "residual_early_J": -62.60210892152068,
+    "residual_early_over_end": 0.561033324269944,
+    "residual_creation_rel": 0.00017691174049128057,
+    "residual_end_over_dissipation": -0.023266314082634708,
+    "old_E_ref_J": 4872.859627779958,
+    "old_residual_max_rel": 0.022899509109202604,
+    "diagnostics_end_J": {
+     "bushing_lag": -31.756336382066852,
+     "bushing_implicit": -48.387376224998796,
+     "kinetic_implicit": -137.33601637575657,
+     "contact_explicit": 105.0098442530764
+    },
+    "remainder_end_J": 0.8863009863328131,
+    "diagnostics_complete": true
+   },
+   "slip_ratio": 1.0068329860589817,
+   "slip_excess_J": 20.543248813706214,
+   "residual_remainder_max_abs_J": 1.7123976583432512,
+   "bushing": {
+    "yield_steps_window": [
+     857,
+     1205,
+     1416,
+     1177
+    ],
+    "yield_steps_total_window": 4655,
+    "slip_window_m": [
+     0.009728910007914095,
+     0.011084403947192624,
+     0.022623779017927895,
+     0.01859493681611134
+    ],
+    "events_window": 34,
+    "created_window": 17,
+    "removed_window": 17,
+    "events_per_leg_window": [
+     2,
+     6,
+     14,
+     12
+    ],
+    "in_contact_end": [
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "bushing_events_window": [
+    [
+     56.05499999989604,
+     3,
+     2
+    ],
+    [
+     56.11999999989589,
+     2,
+     2
+    ],
+    [
+     56.19359999989572,
+     2,
+     1
+    ],
+    [
+     56.24099999989561,
+     3,
+     1
+    ],
+    [
+     56.2863999998955,
+     1,
+     2
+    ],
+    [
+     56.34559999989536,
+     1,
+     1
+    ],
+    [
+     56.430799999895164,
+     2,
+     2
+    ],
+    [
+     56.61599999989473,
+     2,
+     1
+    ],
+    [
+     56.73759999989445,
+     1,
+     2
+    ],
+    [
+     56.778599999894354,
+     1,
+     1
+    ],
+    [
+     56.77919999989435,
+     3,
+     2
+    ],
+    [
+     56.91039999989405,
+     2,
+     2
+    ],
+    [
+     56.92199999989402,
+     2,
+     1
+    ],
+    [
+     56.95179999989395,
+     3,
+     1
+    ],
+    [
+     57.043599999893736,
+     0,
+     2
+    ],
+    [
+     57.1011999998936,
+     0,
+     1
+    ],
+    [
+     57.168199999893446,
+     2,
+     2
+    ],
+    [
+     57.23879999989328,
+     2,
+     1
+    ],
+    [
+     57.32099999989309,
+     3,
+     2
+    ],
+    [
+     57.327599999893074,
+     3,
+     1
+    ],
+    [
+     57.41879999989286,
+     1,
+     2
+    ],
+    [
+     57.45239999989278,
+     1,
+     1
+    ],
+    [
+     57.576199999892495,
+     2,
+     2
+    ],
+    [
+     57.67659999989226,
+     2,
+     1
+    ],
+    [
+     57.88819999989177,
+     3,
+     2
+    ],
+    [
+     58.03659999989142,
+     3,
+     1
+    ],
+    [
+     58.23459999989096,
+     2,
+     2
+    ],
+    [
+     58.360799999890666,
+     2,
+     1
+    ],
+    [
+     58.57399999989017,
+     3,
+     2
+    ],
+    [
+     58.657599999889975,
+     3,
+     1
+    ],
+    [
+     59.64259999988768,
+     3,
+     2
+    ],
+    [
+     59.72939999988748,
+     3,
+     1
+    ],
+    [
+     59.96079999988694,
+     2,
+     2
+    ],
+    [
+     60.03219999988677,
+     2,
+     1
+    ]
+   ],
+   "consistency": {
+    "pad_contact_force_model_max_dev_N": 490.4120372285117,
+    "pad_contact_force_model_max_dev_t_s": 56.92179999989402,
+    "pad_contact_force_model_max_dev_leg": 2,
+    "crawler_contact_max_N": 0.0,
+    "pad_contact_damping_N_s_m": [
+     27022.85712205351,
+     27022.85712205351,
+     27303.325524908112,
+     27303.325524908112
+    ],
+    "bushing_damping_actual_N_s_m": [
+     17279.64928,
+     17279.64928,
+     17170.79878,
+     17170.79878
+    ],
+    "steps": 150000
+   },
+   "start": {
+    "procedure": "S2a V12: bushings at t = 0 (initial hold), gravity half-cosine ramp, settle",
+    "slope_case": "ground roll 0 deg, pitch 2 deg",
+    "ramp_s": 3.0,
+    "settle_after_ramp_s": 53.0,
+    "settle_steps": 280000,
+    "settle_wall_s": 37.93350909999572,
+    "settle_events": 0,
+    "settle_yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hold_release_t_s": [
+     0.07440000000000008,
+     0.07440000000000008,
+     0.07460000000000008,
+     0.07460000000000008
+    ],
+    "normal_world": [
+     0.03489949670250097,
+     -0.0,
+     0.9993908270190957
+    ],
+    "extensions_m": [
+     0.5454793739405391,
+     0.5454793739405391,
+     0.36592062605946096,
+     0.36592062605946096
+    ],
+    "build_and_settle_wall_s": 37.94276180000452,
+    "pad_normal_before_kick_N": [
+     119285.67147574892,
+     117297.0428173996,
+     73661.02444603441,
+     71812.24971231242
+    ],
+    "bushing_tangential_before_kick_N": [
+     3364.5194936592134,
+     3344.5158776668713,
+     3325.520194975586,
+     3307.5346106903876
+    ]
+   },
+   "checks": [
+    {
+     "id": "V8(b)-1",
+     "item": "v8b_pitch2_dt2e-04: no energy creation, max_t R / E_ref",
+     "value": 0.00017691174049128057,
+     "ref": null,
+     "tol": 0.001,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "E_ref = max(E_kin0, D_visc + D_slip) (dyn rev. 19)"
+    },
+    {
+     "id": "V8(b)-4",
+     "item": "v8b_pitch2_dt2e-04: end residual is a loss, R_end <= 0 and |R_end| / (D_visc + D_slip)",
+     "value": 0.023266314082634708,
+     "ref": null,
+     "tol": 0.1,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "R_end = -111.584 J"
+    },
+    {
+     "id": "V8(b)-5",
+     "item": "v8b_pitch2_dt2e-04: D_slip / sum mu N |delta a|",
+     "value": 1.0068329860589817,
+     "ref": [
+      1.0,
+      1.05
+     ],
+     "tol": [
+      1.0,
+      1.05
+     ],
+     "tol_kind": "band",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "all legs, every yielding return mapping of the window"
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_pitch2_dt2e-04: bushing yield occurred (scenario validity)",
+     "value": 4655,
+     "ref": "> 0",
+     "tol": 0,
+     "tol_kind": "min",
+     "unit": "steps",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_pitch2_dt2e-04: no crawler contact (budget covers the pads only)",
+     "value": 0.0,
+     "ref": null,
+     "tol": 0.0,
+     "tol_kind": "max",
+     "unit": "N",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    }
+   ],
+   "all_passed": true,
+   "timing": {
+    "run_wall_s": 40.45059079999919,
+    "us_per_step": 269.67060533332796,
+    "build_and_settle_wall_s": 37.94276180000452,
+    "wall_s": 79.54250039999897,
+    "batch_wall_s": 226.09803069999907,
+    "jobs": 2
+   },
+   "record": "07_results/S4_energy/batch_20261021_122704/v8b_pitch2_dt2e-04/record"
+  },
+  "v8b_pitch2_motor_dt2e-04": {
+   "dir": "07_results/S4_energy/batch_20261021_122704/v8b_pitch2_motor_dt2e-04",
+   "judged": false,
+   "settings": {
+    "case": "v8b_pitch2_motor_dt2e-04",
+    "floor": "ground roll 0 deg, pitch 2 deg",
+    "dt_s": 0.0002,
+    "window_s": 30.0,
+    "sample_s": 0.001,
+    "kick_velocity_m_s": [
+     0.3996686120442163,
+     0.30011699398992825,
+     -0.013956735474282826
+    ],
+    "kick_speed_m_s": 0.5,
+    "motor": {
+     "extend_all_legs_m_s": 0.0226666667,
+     "for_s": 2.0
+    },
+    "budget": "chrono.energy.EnergyBudget (S4 seven terms), residual verify.s4_energy"
+   },
+   "budget": {
+    "t0_s": 55.99999999989617,
+    "t_end_s": 86.00000000060784,
+    "E_ref_J": 4872.859574419746,
+    "E_kin0_J": 4872.859574419746,
+    "dissipation_end_J": 4789.103027169843,
+    "terms_initial_J": {
+     "kinetic": 4872.859574419746,
+     "gravity": 860954.0681738042,
+     "contact_spring": 921.3936649681442,
+     "bushing_spring": 2.63113656296901,
+     "dissipated_viscous": 0.0,
+     "dissipated_slip": 0.0,
+     "motor_work": 0.0
+    },
+    "terms_final_J": {
+     "kinetic": 0.23391941672940114,
+     "gravity": 878008.4471317712,
+     "contact_spring": 923.7232198933025,
+     "bushing_spring": 69.56341173593944,
+     "dissipated_viscous": 1846.3724141824507,
+     "dissipated_slip": 2942.7306129873923,
+     "motor_work": 17144.7489537904
+    },
+    "change_J": {
+     "kinetic": -4872.625655003017,
+     "gravity": 17054.37895796704,
+     "contact_spring": 2.329554925158277,
+     "bushing_spring": 66.93227517297044,
+     "dissipated_viscous": 1846.3724141824507,
+     "dissipated_slip": 2942.7306129873923,
+     "motor_work": 17144.7489537904
+    },
+    "residual_end_J": -104.63079355852824,
+    "residual_max_signed_J": 0.8620726453305823,
+    "residual_max_t_s": 56.000999999896166,
+    "residual_max_abs_J": 104.6359589332169,
+    "residual_early_J": -61.627973480613946,
+    "residual_early_over_end": 0.5890041677466641,
+    "residual_creation_rel": 0.00017691309018139244,
+    "residual_end_over_dissipation": -0.021847680654379368,
+    "old_E_ref_J": 22017.608551263293,
+    "old_residual_max_rel": 0.004752376203328097,
+    "diagnostics_end_J": {
+     "bushing_lag": -31.041331782243173,
+     "bushing_implicit": -45.100319884262,
+     "kinetic_implicit": -135.0590347482657,
+     "contact_explicit": 105.56303527303544
+    },
+    "remainder_end_J": 1.0068575832071929,
+    "diagnostics_complete": true
+   },
+   "slip_ratio": 1.0069930065867223,
+   "slip_excess_J": 20.43562807781791,
+   "residual_remainder_max_abs_J": 1.712414218053317,
+   "bushing": {
+    "yield_steps_window": [
+     788,
+     824,
+     1516,
+     1021
+    ],
+    "yield_steps_total_window": 4149,
+    "slip_window_m": [
+     0.008912939233904578,
+     0.009644854574292355,
+     0.021298910295648885,
+     0.018616612890196702
+    ],
+    "events_window": 32,
+    "created_window": 16,
+    "removed_window": 16,
+    "events_per_leg_window": [
+     2,
+     4,
+     14,
+     12
+    ],
+    "in_contact_end": [
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "bushing_events_window": [
+    [
+     56.05619999989604,
+     3,
+     2
+    ],
+    [
+     56.11899999989589,
+     2,
+     2
+    ],
+    [
+     56.19639999989571,
+     2,
+     1
+    ],
+    [
+     56.24019999989561,
+     3,
+     1
+    ],
+    [
+     56.2871999998955,
+     1,
+     2
+    ],
+    [
+     56.34739999989536,
+     1,
+     1
+    ],
+    [
+     56.43159999989516,
+     2,
+     2
+    ],
+    [
+     56.623199999894716,
+     2,
+     1
+    ],
+    [
+     56.73659999989445,
+     1,
+     2
+    ],
+    [
+     56.773399999894366,
+     3,
+     2
+    ],
+    [
+     56.78539999989434,
+     1,
+     1
+    ],
+    [
+     56.91179999989404,
+     2,
+     2
+    ],
+    [
+     56.923799999894015,
+     2,
+     1
+    ],
+    [
+     56.95239999989395,
+     3,
+     1
+    ],
+    [
+     57.04479999989373,
+     0,
+     2
+    ],
+    [
+     57.09839999989361,
+     0,
+     1
+    ],
+    [
+     57.16979999989344,
+     2,
+     2
+    ],
+    [
+     57.232599999893296,
+     2,
+     1
+    ],
+    [
+     57.31099999989311,
+     3,
+     2
+    ],
+    [
+     57.34539999989303,
+     3,
+     1
+    ],
+    [
+     57.57819999989249,
+     2,
+     2
+    ],
+    [
+     57.67999999989225,
+     2,
+     1
+    ],
+    [
+     57.893399999891756,
+     3,
+     2
+    ],
+    [
+     58.043999999891405,
+     3,
+     1
+    ],
+    [
+     58.24259999989094,
+     2,
+     2
+    ],
+    [
+     58.36259999989066,
+     2,
+     1
+    ],
+    [
+     58.58199999989015,
+     3,
+     2
+    ],
+    [
+     58.64779999989,
+     3,
+     1
+    ],
+    [
+     59.652399999887656,
+     3,
+     2
+    ],
+    [
+     59.730599999887474,
+     3,
+     1
+    ],
+    [
+     59.9757999998869,
+     2,
+     2
+    ],
+    [
+     60.02499999988679,
+     2,
+     1
+    ]
+   ],
+   "consistency": {
+    "pad_contact_force_model_max_dev_N": 10.29431669130281,
+    "pad_contact_force_model_max_dev_t_s": 56.00479999989616,
+    "pad_contact_force_model_max_dev_leg": 3,
+    "crawler_contact_max_N": 0.0,
+    "pad_contact_damping_N_s_m": [
+     27022.85712205351,
+     27022.85712205351,
+     27303.325524908112,
+     27303.325524908112
+    ],
+    "bushing_damping_actual_N_s_m": [
+     17279.64928,
+     17279.64928,
+     17170.79878,
+     17170.79878
+    ],
+    "steps": 150000
+   },
+   "start": {
+    "procedure": "S2a V12: bushings at t = 0 (initial hold), gravity half-cosine ramp, settle",
+    "slope_case": "ground roll 0 deg, pitch 2 deg",
+    "ramp_s": 3.0,
+    "settle_after_ramp_s": 53.0,
+    "settle_steps": 280000,
+    "settle_wall_s": 46.337025300003006,
+    "settle_events": 0,
+    "settle_yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hold_release_t_s": [
+     0.07440000000000008,
+     0.07440000000000008,
+     0.07460000000000008,
+     0.07460000000000008
+    ],
+    "normal_world": [
+     0.03489949670250097,
+     -0.0,
+     0.9993908270190957
+    ],
+    "extensions_m": [
+     0.5454793739405391,
+     0.5454793739405391,
+     0.36592062605946096,
+     0.36592062605946096
+    ],
+    "build_and_settle_wall_s": 46.34710689999338,
+    "pad_normal_before_kick_N": [
+     119285.67147574892,
+     117297.0428173996,
+     73661.02444603441,
+     71812.24971231242
+    ],
+    "bushing_tangential_before_kick_N": [
+     3364.5194936592134,
+     3344.5158776668713,
+     3325.520194975586,
+     3307.5346106903876
+    ]
+   },
+   "checks": [
+    {
+     "id": "V8(b)-1",
+     "item": "v8b_pitch2_motor_dt2e-04: no energy creation, max_t R / E_ref",
+     "value": 0.00017691309018139244,
+     "ref": null,
+     "tol": 0.001,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "E_ref = max(E_kin0, D_visc + D_slip) (dyn rev. 19)"
+    },
+    {
+     "id": "V8(b)-4",
+     "item": "v8b_pitch2_motor_dt2e-04: end residual is a loss, R_end <= 0 and |R_end| / (D_visc + D_slip)",
+     "value": 0.021847680654379368,
+     "ref": null,
+     "tol": 0.1,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "R_end = -104.631 J"
+    },
+    {
+     "id": "V8(b)-5",
+     "item": "v8b_pitch2_motor_dt2e-04: D_slip / sum mu N |delta a|",
+     "value": 1.0069930065867223,
+     "ref": [
+      1.0,
+      1.05
+     ],
+     "tol": [
+      1.0,
+      1.05
+     ],
+     "tol_kind": "band",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "all legs, every yielding return mapping of the window"
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_pitch2_motor_dt2e-04: bushing yield occurred (scenario validity)",
+     "value": 4149,
+     "ref": "> 0",
+     "tol": 0,
+     "tol_kind": "min",
+     "unit": "steps",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_pitch2_motor_dt2e-04: no crawler contact (budget covers the pads only)",
+     "value": 0.0,
+     "ref": null,
+     "tol": 0.0,
+     "tol_kind": "max",
+     "unit": "N",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    }
+   ],
+   "all_passed": true,
+   "timing": {
+    "run_wall_s": 44.36558360001072,
+    "us_per_step": 295.77055733340484,
+    "build_and_settle_wall_s": 46.34710689999338,
+    "wall_s": 91.81243010000617,
+    "batch_wall_s": 226.09803069999907,
+    "jobs": 2
+   },
+   "record": "07_results/S4_energy/batch_20261021_122704/v8b_pitch2_motor_dt2e-04/record"
+  },
+  "v8b_rollm2_pitch1.5_dt2e-04": {
+   "dir": "07_results/S4_energy/batch_20261021_122704/v8b_rollm2_pitch1.5_dt2e-04",
+   "judged": false,
+   "settings": {
+    "case": "v8b_rollm2_pitch1.5_dt2e-04",
+    "floor": "ground roll -2 deg, pitch 1.5 deg",
+    "dt_s": 0.0002,
+    "window_s": 30.0,
+    "sample_s": 0.001,
+    "kick_velocity_m_s": [
+     0.39980288772685507,
+     0.2995323412411899,
+     -0.020929106904956984
+    ],
+    "kick_speed_m_s": 0.5,
+    "motor": null,
+    "budget": "chrono.energy.EnergyBudget (S4 seven terms), residual verify.s4_energy"
+   },
+   "budget": {
+    "t0_s": 55.99999999989617,
+    "t_end_s": 86.00000000060784,
+    "E_ref_J": 4914.544744580959,
+    "E_kin0_J": 4872.844366281798,
+    "dissipation_end_J": 4914.544744580959,
+    "terms_initial_J": {
+     "kinetic": 4872.844366281798,
+     "gravity": 872900.1988208165,
+     "contact_spring": 920.7371609600104,
+     "bushing_spring": 4.214548350598385,
+     "dissipated_viscous": 0.0,
+     "dissipated_slip": 0.0,
+     "motor_work": 0.0
+    },
+    "terms_final_J": {
+     "kinetic": 1.492616636607073,
+     "gravity": 872674.5801848286,
+     "contact_spring": 922.5733038261938,
+     "bushing_spring": 75.89783667086877,
+     "dissipated_viscous": 1780.9569490750396,
+     "dissipated_slip": 3133.5877955059186,
+     "motor_work": -6.039064159557141e-05
+    },
+    "change_J": {
+     "kinetic": -4871.351749645191,
+     "gravity": -225.61863598786294,
+     "contact_spring": 1.8361428661833088,
+     "bushing_spring": 71.68328832027038,
+     "dissipated_viscous": 1780.9569490750396,
+     "dissipated_slip": 3133.5877955059186,
+     "motor_work": -6.039064159557141e-05
+    },
+    "residual_end_J": -108.9061494749693,
+    "residual_max_signed_J": 0.8653452152038329,
+    "residual_max_t_s": 56.000999999896166,
+    "residual_max_abs_J": 108.9061494749693,
+    "residual_early_J": -63.012370385944095,
+    "residual_early_over_end": 0.5785933180974936,
+    "residual_creation_rel": 0.00017607840810850468,
+    "residual_end_over_dissipation": -0.022159967023406404,
+    "old_E_ref_J": 4872.844426777942,
+    "old_residual_max_rel": 0.022349605268843154,
+    "diagnostics_end_J": {
+     "bushing_lag": -32.65706997022852,
+     "bushing_implicit": -46.858259601983896,
+     "kinetic_implicit": -135.26708402200933,
+     "contact_explicit": 104.87798233971249
+    },
+    "remainder_end_J": 0.9982817795399654,
+    "diagnostics_complete": true
+   },
+   "slip_ratio": 1.0068293131370547,
+   "slip_excess_J": 21.255094601173823,
+   "residual_remainder_max_abs_J": 1.7157152639851658,
+   "bushing": {
+    "yield_steps_window": [
+     896,
+     1454,
+     1454,
+     1180
+    ],
+    "yield_steps_total_window": 4984,
+    "slip_window_m": [
+     0.009116850585460032,
+     0.01274669499517775,
+     0.025300045546267087,
+     0.02122152894802402
+    ],
+    "events_window": 32,
+    "created_window": 16,
+    "removed_window": 16,
+    "events_per_leg_window": [
+     2,
+     6,
+     12,
+     12
+    ],
+    "in_contact_end": [
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "bushing_events_window": [
+    [
+     56.05499999989604,
+     3,
+     2
+    ],
+    [
+     56.1165999998959,
+     2,
+     2
+    ],
+    [
+     56.194999999895714,
+     2,
+     1
+    ],
+    [
+     56.24059999989561,
+     3,
+     1
+    ],
+    [
+     56.28359999989551,
+     1,
+     2
+    ],
+    [
+     56.34979999989535,
+     1,
+     1
+    ],
+    [
+     56.43299999989516,
+     2,
+     2
+    ],
+    [
+     56.62459999989471,
+     2,
+     1
+    ],
+    [
+     56.73879999989445,
+     1,
+     2
+    ],
+    [
+     56.78039999989435,
+     1,
+     1
+    ],
+    [
+     56.782599999894344,
+     3,
+     2
+    ],
+    [
+     56.95519999989394,
+     3,
+     1
+    ],
+    [
+     57.04939999989372,
+     0,
+     2
+    ],
+    [
+     57.1005999998936,
+     0,
+     1
+    ],
+    [
+     57.16999999989344,
+     2,
+     2
+    ],
+    [
+     57.23919999989328,
+     2,
+     1
+    ],
+    [
+     57.314999999893104,
+     3,
+     2
+    ],
+    [
+     57.34379999989304,
+     3,
+     1
+    ],
+    [
+     57.43679999989282,
+     1,
+     2
+    ],
+    [
+     57.455799999892776,
+     1,
+     1
+    ],
+    [
+     57.580999999892484,
+     2,
+     2
+    ],
+    [
+     57.67659999989226,
+     2,
+     1
+    ],
+    [
+     57.893999999891754,
+     3,
+     2
+    ],
+    [
+     58.04099999989141,
+     3,
+     1
+    ],
+    [
+     58.24259999989094,
+     2,
+     2
+    ],
+    [
+     58.36019999989067,
+     2,
+     1
+    ],
+    [
+     58.57659999989016,
+     3,
+     2
+    ],
+    [
+     58.64699999989,
+     3,
+     1
+    ],
+    [
+     59.64979999988766,
+     3,
+     2
+    ],
+    [
+     59.725799999887485,
+     3,
+     1
+    ],
+    [
+     59.97199999988691,
+     2,
+     2
+    ],
+    [
+     60.021999999886795,
+     2,
+     1
+    ]
+   ],
+   "consistency": {
+    "pad_contact_force_model_max_dev_N": 7.916771709773457,
+    "pad_contact_force_model_max_dev_t_s": 69.53780000006135,
+    "pad_contact_force_model_max_dev_leg": 1,
+    "crawler_contact_max_N": 0.0,
+    "pad_contact_damping_N_s_m": [
+     27022.85712205351,
+     27022.85712205351,
+     27303.325524908112,
+     27303.325524908112
+    ],
+    "bushing_damping_actual_N_s_m": [
+     17279.64928,
+     17279.64928,
+     17170.79878,
+     17170.79878
+    ],
+    "steps": 150000
+   },
+   "start": {
+    "procedure": "S2a V12: bushings at t = 0 (initial hold), gravity half-cosine ramp, settle",
+    "slope_case": "ground roll -2 deg, pitch 1.5 deg",
+    "ramp_s": 3.0,
+    "settle_after_ramp_s": 53.0,
+    "settle_steps": 280000,
+    "settle_wall_s": 37.98340100000496,
+    "settle_events": 0,
+    "settle_yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hold_release_t_s": [
+     0.07460000000000008,
+     0.0750000000000001,
+     0.07560000000000011,
+     0.07460000000000008
+    ],
+    "normal_world": [
+     0.026161012935183622,
+     0.034887552075126144,
+     0.9990487776442201
+    ],
+    "extensions_m": [
+     0.6032561202942673,
+     0.510799890987916,
+     0.4606154899042611,
+     0.3764284988135556
+    ],
+    "build_and_settle_wall_s": 37.992492400007905,
+    "pad_normal_before_kick_N": [
+     119244.71377421574,
+     117255.25200749647,
+     73636.73543481453,
+     71784.82861044617
+    ],
+    "bushing_tangential_before_kick_N": [
+     4512.681023314756,
+     4862.152626822164,
+     3496.9056178650094,
+     3892.846649382597
+    ]
+   },
+   "checks": [
+    {
+     "id": "V8(b)-1",
+     "item": "v8b_rollm2_pitch1.5_dt2e-04: no energy creation, max_t R / E_ref",
+     "value": 0.00017607840810850468,
+     "ref": null,
+     "tol": 0.001,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "E_ref = max(E_kin0, D_visc + D_slip) (dyn rev. 19)"
+    },
+    {
+     "id": "V8(b)-4",
+     "item": "v8b_rollm2_pitch1.5_dt2e-04: end residual is a loss, R_end <= 0 and |R_end| / (D_visc + D_slip)",
+     "value": 0.022159967023406404,
+     "ref": null,
+     "tol": 0.1,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "R_end = -108.906 J"
+    },
+    {
+     "id": "V8(b)-5",
+     "item": "v8b_rollm2_pitch1.5_dt2e-04: D_slip / sum mu N |delta a|",
+     "value": 1.0068293131370547,
+     "ref": [
+      1.0,
+      1.05
+     ],
+     "tol": [
+      1.0,
+      1.05
+     ],
+     "tol_kind": "band",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "all legs, every yielding return mapping of the window"
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_rollm2_pitch1.5_dt2e-04: bushing yield occurred (scenario validity)",
+     "value": 4984,
+     "ref": "> 0",
+     "tol": 0,
+     "tol_kind": "min",
+     "unit": "steps",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_rollm2_pitch1.5_dt2e-04: no crawler contact (budget covers the pads only)",
+     "value": 0.0,
+     "ref": null,
+     "tol": 0.0,
+     "tol_kind": "max",
+     "unit": "N",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    }
+   ],
+   "all_passed": true,
+   "timing": {
+    "run_wall_s": 38.732324399999925,
+    "us_per_step": 258.21549599999946,
+    "build_and_settle_wall_s": 37.992492400007905,
+    "wall_s": 77.7752421000041,
+    "batch_wall_s": 226.09803069999907,
+    "jobs": 2
+   },
+   "record": "07_results/S4_energy/batch_20261021_122704/v8b_rollm2_pitch1.5_dt2e-04/record"
+  },
+  "v8b_pitch2_dt5e-05": {
+   "dir": "07_results/S4_energy/batch_20261021_122700/v8b_pitch2_dt5e-05",
+   "judged": false,
+   "settings": {
+    "case": "v8b_pitch2_dt5e-05",
+    "floor": "ground roll 0 deg, pitch 2 deg",
+    "dt_s": 5e-05,
+    "window_s": 30.0,
+    "sample_s": 0.001,
+    "kick_velocity_m_s": [
+     0.3996686120442163,
+     0.30011699398992825,
+     -0.013956735474282826
+    ],
+    "kick_speed_m_s": 0.5,
+    "motor": null,
+    "budget": "chrono.energy.EnergyBudget (S4 seven terms), residual verify.s4_energy"
+   },
+   "budget": {
+    "t0_s": 56.00000000129724,
+    "t_end_s": 86.00000000229313,
+    "E_ref_J": 4880.454235492907,
+    "E_kin0_J": 4872.840661531317,
+    "dissipation_end_J": 4880.454235492907,
+    "terms_initial_J": {
+     "kinetic": 4872.840661531317,
+     "gravity": 860954.0631790526,
+     "contact_spring": 921.3986758221155,
+     "bushing_spring": 2.631121452428135,
+     "dissipated_viscous": 0.0,
+     "dissipated_slip": 0.0,
+     "motor_work": 0.0
+    },
+    "terms_final_J": {
+     "kinetic": 3.702237265376829,
+     "gravity": 860853.8015687302,
+     "contact_spring": 921.2132474982061,
+     "bushing_spring": 63.36756845907921,
+     "dissipated_viscous": 1784.1721831138566,
+     "dissipated_slip": 3096.2820523790506,
+     "motor_work": -3.3714814538301365e-06
+    },
+    "change_J": {
+     "kinetic": -4869.138424265941,
+     "gravity": -100.26161032239906,
+     "contact_spring": -0.18542832390937747,
+     "bushing_spring": 60.736447006651076,
+     "dissipated_viscous": 1784.1721831138566,
+     "dissipated_slip": 3096.2820523790506,
+     "motor_work": -3.3714814538301365e-06
+    },
+    "residual_end_J": -28.39477704113318,
+    "residual_max_signed_J": 0.2145016458223498,
+    "residual_max_t_s": 56.00100000129727,
+    "residual_max_abs_J": 28.395575550777227,
+    "residual_early_J": -15.978978749147203,
+    "residual_early_over_end": 0.562743589287557,
+    "residual_creation_rel": 4.3951164271226064e-05,
+    "residual_end_over_dissipation": -0.005818060301566463,
+    "old_E_ref_J": 4872.840664912741,
+    "old_residual_max_rel": 0.005827314600134932,
+    "diagnostics_end_J": {
+     "bushing_lag": -8.219581947995225,
+     "bushing_implicit": -12.298783039511573,
+     "kinetic_implicit": -34.227204082546876,
+     "contact_explicit": 26.09902476149275
+    },
+    "remainder_end_J": 0.2517672674277449,
+    "diagnostics_complete": true
+   },
+   "slip_ratio": 1.0017122230686717,
+   "slip_excess_J": 5.292463678796594,
+   "residual_remainder_max_abs_J": 0.4271869665983316,
+   "bushing": {
+    "yield_steps_window": [
+     3465,
+     4813,
+     5740,
+     4530
+    ],
+    "yield_steps_total_window": 18548,
+    "slip_window_m": [
+     0.009974782606315069,
+     0.011082786231114621,
+     0.023128986168413215,
+     0.01894995326911886
+    ],
+    "events_window": 34,
+    "created_window": 17,
+    "removed_window": 17,
+    "events_per_leg_window": [
+     2,
+     6,
+     14,
+     12
+    ],
+    "in_contact_end": [
+     true,
+     true,
+     true,
+     true
+    ]
+   },
+   "bushing_events_window": [
+    [
+     56.05545000129908,
+     3,
+     2
+    ],
+    [
+     56.12085000130125,
+     2,
+     2
+    ],
+    [
+     56.19445000130369,
+     2,
+     1
+    ],
+    [
+     56.24160000130526,
+     3,
+     1
+    ],
+    [
+     56.28710000130677,
+     1,
+     2
+    ],
+    [
+     56.34615000130873,
+     1,
+     1
+    ],
+    [
+     56.431600001311566,
+     2,
+     2
+    ],
+    [
+     56.61660000131771,
+     2,
+     1
+    ],
+    [
+     56.738250001321745,
+     1,
+     2
+    ],
+    [
+     56.77935000132311,
+     1,
+     1
+    ],
+    [
+     56.77970000132312,
+     3,
+     2
+    ],
+    [
+     56.91185000132751,
+     2,
+     2
+    ],
+    [
+     56.92220000132785,
+     2,
+     1
+    ],
+    [
+     56.95195000132884,
+     3,
+     1
+    ],
+    [
+     57.0442000013319,
+     0,
+     2
+    ],
+    [
+     57.101200001333794,
+     0,
+     1
+    ],
+    [
+     57.16915000133605,
+     2,
+     2
+    ],
+    [
+     57.23825000133834,
+     2,
+     1
+    ],
+    [
+     57.31715000134096,
+     3,
+     2
+    ],
+    [
+     57.331950001341454,
+     3,
+     1
+    ],
+    [
+     57.419600001344364,
+     1,
+     2
+    ],
+    [
+     57.45285000134547,
+     1,
+     1
+    ],
+    [
+     57.57645000134957,
+     2,
+     2
+    ],
+    [
+     57.67725000135292,
+     2,
+     1
+    ],
+    [
+     57.88885000135994,
+     3,
+     2
+    ],
+    [
+     58.03740000136487,
+     3,
+     1
+    ],
+    [
+     58.23550000137145,
+     2,
+     2
+    ],
+    [
+     58.36140000137563,
+     2,
+     1
+    ],
+    [
+     58.57495000138272,
+     3,
+     2
+    ],
+    [
+     58.65765000138546,
+     3,
+     1
+    ],
+    [
+     59.64330000141818,
+     3,
+     2
+    ],
+    [
+     59.72975000142105,
+     3,
+     1
+    ],
+    [
+     59.96195000142876,
+     2,
+     2
+    ],
+    [
+     60.03155000143107,
+     2,
+     1
+    ]
+   ],
+   "consistency": {
+    "pad_contact_force_model_max_dev_N": 11.88508382542932,
+    "pad_contact_force_model_max_dev_t_s": 56.00035000129725,
+    "pad_contact_force_model_max_dev_leg": 1,
+    "crawler_contact_max_N": 0.0,
+    "pad_contact_damping_N_s_m": [
+     27022.85712205351,
+     27022.85712205351,
+     27303.325524908112,
+     27303.325524908112
+    ],
+    "bushing_damping_actual_N_s_m": [
+     17279.64928,
+     17279.64928,
+     17170.79878,
+     17170.79878
+    ],
+    "steps": 600000
+   },
+   "start": {
+    "procedure": "S2a V12: bushings at t = 0 (initial hold), gravity half-cosine ramp, settle",
+    "slope_case": "ground roll 0 deg, pitch 2 deg",
+    "ramp_s": 3.0,
+    "settle_after_ramp_s": 53.0,
+    "settle_steps": 1120000,
+    "settle_wall_s": 147.80307149999135,
+    "settle_events": 0,
+    "settle_yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hold_release_t_s": [
+     0.0741,
+     0.07415,
+     0.07439999999999997,
+     0.07444999999999996
+    ],
+    "normal_world": [
+     0.03489949670250097,
+     -0.0,
+     0.9993908270190957
+    ],
+    "extensions_m": [
+     0.5454793739405391,
+     0.5454793739405391,
+     0.36592062605946096,
+     0.36592062605946096
+    ],
+    "build_and_settle_wall_s": 147.81187419999333,
+    "pad_normal_before_kick_N": [
+     119288.15210303623,
+     117297.04092824439,
+     73661.07019317288,
+     71812.29422438862
+    ],
+    "bushing_tangential_before_kick_N": [
+     3364.5200658960316,
+     3344.498667584765,
+     3325.5207241755006,
+     3307.5191220361344
+    ]
+   },
+   "checks": [
+    {
+     "id": "V8(b)-1",
+     "item": "v8b_pitch2_dt5e-05: no energy creation, max_t R / E_ref",
+     "value": 4.3951164271226064e-05,
+     "ref": null,
+     "tol": 0.001,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "E_ref = max(E_kin0, D_visc + D_slip) (dyn rev. 19)"
+    },
+    {
+     "id": "V8(b)-4",
+     "item": "v8b_pitch2_dt5e-05: end residual is a loss, R_end <= 0 and |R_end| / (D_visc + D_slip)",
+     "value": 0.005818060301566463,
+     "ref": null,
+     "tol": 0.1,
+     "tol_kind": "max",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "R_end = -28.395 J"
+    },
+    {
+     "id": "V8(b)-5",
+     "item": "v8b_pitch2_dt5e-05: D_slip / sum mu N |delta a|",
+     "value": 1.0017122230686717,
+     "ref": [
+      1.0,
+      1.05
+     ],
+     "tol": [
+      1.0,
+      1.05
+     ],
+     "tol_kind": "band",
+     "unit": "-",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": "all legs, every yielding return mapping of the window"
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_pitch2_dt5e-05: bushing yield occurred (scenario validity)",
+     "value": 18548,
+     "ref": "> 0",
+     "tol": 0,
+     "tol_kind": "min",
+     "unit": "steps",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    },
+    {
+     "id": "V8(b)",
+     "item": "v8b_pitch2_dt5e-05: no crawler contact (budget covers the pads only)",
+     "value": 0.0,
+     "ref": null,
+     "tol": 0.0,
+     "tol_kind": "max",
+     "unit": "N",
+     "passed": true,
+     "ref_key": "",
+     "deviation": null,
+     "note": ""
+    }
+   ],
+   "all_passed": true,
+   "timing": {
+    "run_wall_s": 126.32362640000065,
+    "us_per_step": 210.53937733333441,
+    "build_and_settle_wall_s": 147.81187419999333,
+    "wall_s": 275.16554590000305,
+    "batch_wall_s": 275.20673170000373,
+    "jobs": 1
+   },
+   "record": "07_results/S4_energy/batch_20261021_122700/v8b_pitch2_dt5e-05/record"
+  }
+ }
+}

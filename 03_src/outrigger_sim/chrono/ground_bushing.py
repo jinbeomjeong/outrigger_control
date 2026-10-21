@@ -97,6 +97,13 @@ raises :class:`ForcePointMismatchError` (no silent conversion: moving frame A ch
 bushing deformation and force of the saved state); re-create the state with the current
 model, or build the model with the snapshot's force point.
 
+Energy diagnostics (S4 V8(b), added 2026-10-21): the return mapping also sums, per leg,
+``1/2 kt (|d_trial|^2 - |d|^2)`` and ``mu N |delta anchor|`` (:attr:`GroundBushingCoulomb.
+slip_dissipation_J`, :attr:`~GroundBushingCoulomb.slip_coulomb_work_J`), and
+:meth:`~GroundBushingCoulomb.anchor_bookkeeping` exposes the anchors before / after the last
+hook. These are read-only additions: no value used by the dynamics changes (trajectories
+bit-identical, checked 2026-10-21), and they are not stored in snapshots.
+
 Frames: all world quantities are SI, Z-up (R3). Every Chrono vector read here is copied at
 once (R9). The floor surface is a plane given in floor-body coordinates (point + normal), so
 a tilted floor body works as well as a level one.
@@ -326,6 +333,10 @@ class _LegState:
         self.hold_release_t_s = math.nan
         # largest |bushing force| seen while held [N] (0 when never held)
         self.hold_max_tangential_N = 0.0
+        # S4 energy diagnostics (read only by chrono/energy; never used by the dynamics):
+        # sum over return mappings of 1/2 kt (|d_trial|^2 - |d|^2) and of mu N |delta anchor|
+        self.slip_dissipation_J = 0.0
+        self.slip_coulomb_work_J = 0.0
 
     @property
     def anchor_floor_local(self) -> NDArray[np.float64]:
@@ -567,6 +578,41 @@ class GroundBushingCoulomb:
         releases it (the force Chrono evaluated at the end of that step).
         """
         return np.array([leg.hold_max_tangential_N for leg in self._legs], dtype=float)
+
+    # --- S4 energy bookkeeping views (read only; ``chrono/energy``) -----------------------
+
+    @property
+    def slip_dissipation_J(self) -> NDArray[np.float64]:
+        """Per leg ``sum 1/2 kt (|d_trial|^2 - |d|^2)`` over every yielding return mapping
+        since construction [J] (``dynamics_model.md`` 5 V8(b) ``D_slip``; a lifted pad maps
+        ``d`` to 0 with ``mu N = 0``, so the spring energy it held is counted here). Not part
+        of snapshots: a restored instance counts from 0."""
+        return np.array([leg.slip_dissipation_J for leg in self._legs], dtype=float)
+
+    @property
+    def slip_coulomb_work_J(self) -> NDArray[np.float64]:
+        """Per leg ``sum mu N |delta anchor|`` over the same return mappings [J]."""
+        return np.array([leg.slip_coulomb_work_J for leg in self._legs], dtype=float)
+
+    @property
+    def structure_changed(self) -> bool:
+        """True when the last :meth:`after_step` created or removed a bushing."""
+        return self._structure_changed
+
+    def anchor_bookkeeping(
+        self,
+    ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.bool_], NDArray[np.bool_]]:
+        """``(anchor, loaded_anchor, sliding, loaded_sliding)`` per leg (copies).
+
+        Anchors are floor-body coordinates [m], NaN rows without a bushing. ``loaded_*`` are
+        the values before the last :meth:`after_step` (what Chrono's end-of-step Update
+        read); the damping is on exactly when ``sliding`` is false. Read between steps.
+        """
+        anchor = np.array([leg.anchor_floor_local for leg in self._legs], dtype=float)
+        loaded = np.array([leg.loaded_anchor_floor_local for leg in self._legs], dtype=float)
+        sliding = np.array([leg.sliding for leg in self._legs], dtype=bool)
+        loaded_sliding = np.array([leg.loaded_sliding for leg in self._legs], dtype=bool)
+        return anchor, loaded, sliding, loaded_sliding
 
     def assert_hold_released(self, context: str = "") -> None:
         """Raise :class:`HoldNotReleasedError` if any leg is still in the initial hold.
@@ -864,6 +910,9 @@ class GroundBushingCoulomb:
             # about kt |v| dt while sliding (block test; a velocity predictor chattered).
             s = 1.0 - limit / (k * dn)
             mx, my, mz = dx * s, dy * s, dz * s
+            # energy diagnostics only (S4 V8(b)); |d| after the mapping = dn (1 - s) = limit / k
+            leg.slip_dissipation_J += 0.5 * k * dn * dn * s * (2.0 - s)
+            leg.slip_coulomb_work_J += limit * dn * s
             anchor = ch.ChVector3d(ax + mx, ay + my, az + mz)
             leg.slip_total = leg.slip_total + np.array([mx, my, mz])
             leg.yield_steps += 1

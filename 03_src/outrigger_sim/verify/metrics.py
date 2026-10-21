@@ -8,6 +8,16 @@ rotations about it, body axes = world axes for the level body), and the modal co
 is fitted with one exponentially decaying cosine plus an offset; the logarithmic decrement
 of the peaks is a cross-check. Engine independent (numpy / scipy only).
 
+S4 (plan S4 "6채널 ERA/SSI", risk #14): :func:`era_free_decay` is the multi-output
+Eigensystem Realization Algorithm (Juang & Pappa 1985) applied to one free decay of all six
+channels of ``q`` (the free response ``y_k = C A^k x_0`` takes the place of the Markov
+parameters). It needs no mode shapes, so it also identifies runs whose stiffness differs from
+the one ``Phi`` was computed with (beta sensitivity). :func:`select_era_mode` picks, for a
+reference mode, the ERA mode that contributes most to its modal coordinate;
+:func:`mass_mac` is the mass-weighted modal assurance criterion and
+:func:`projection_leakage` measures how much of a modal coordinate comes from other modes
+(the projection residual of risk #14).
+
 Units: SI; rotations in rad; frequencies in Hz.
 """
 
@@ -266,3 +276,217 @@ def fit_damped_sine(t: ArrayLike, y: ArrayLike, f_guess_Hz: float) -> DampedFit:
         n_cycles=float((tt[-1] - tt[0]) * wd / (2.0 * math.pi)),
         success=bool(best.success),
     )
+
+
+# --- S4: multi-output ERA ---------------------------------------------------------------------
+
+ERA_DEFAULT_BLOCK_ROWS = 40
+"""Block rows of the Hankel matrix (``r p`` rows for ``p`` channels)."""
+ERA_MIN_OSCILLATORY_HZ = 0.05
+"""Poles with a smaller damped frequency are treated as non-oscillatory (drift, offset)."""
+
+
+@dataclass(frozen=True)
+class EraMode:
+    """One complex-conjugate pole pair of :func:`era_free_decay`.
+
+    The contribution of the pair to channel ``j`` is ``2 Re(shape[j] exp(lambda t))`` with
+    ``t`` from the first sample of the identification window.
+    """
+
+    f_undamped_Hz: float
+    """``|lambda| / 2 pi``."""
+    f_damped_Hz: float
+    """``Im(lambda) / 2 pi``."""
+    zeta: float
+    """``-Re(lambda) / |lambda|``."""
+    eigenvalue: complex
+    """Continuous-time pole ``lambda`` [1/s] (positive imaginary part)."""
+    shape: NDArray[np.complex128]
+    """Complex output amplitude per channel at the window start (output units)."""
+    rms_per_channel: NDArray[np.float64]
+    """RMS of the pair contribution per channel over the window."""
+
+
+@dataclass(frozen=True)
+class EraResult:
+    """Output of :func:`era_free_decay`."""
+
+    modes: tuple[EraMode, ...]
+    """Oscillatory pole pairs, sorted by :attr:`EraMode.f_undamped_Hz`."""
+    real_poles: tuple[complex, ...]
+    """Remaining poles (real or below :data:`ERA_MIN_OSCILLATORY_HZ`), continuous time."""
+    order: int
+    singular_values: NDArray[np.float64]
+    """Leading singular values of the Hankel matrix (``2 order`` of them at most)."""
+    dt_s: float
+    """Sample period after decimation."""
+    n_block_rows: int
+    n_samples: int
+    residual_rms_rel: float
+    """RMS of (reconstruction - data) / RMS of the data, all channels together."""
+    window_s: tuple[float, float]
+
+
+def era_free_decay(
+    t: ArrayLike,
+    y: ArrayLike,
+    *,
+    order: int,
+    n_block_rows: int = ERA_DEFAULT_BLOCK_ROWS,
+    decimate: int = 1,
+    channel_scale: ArrayLike | None = None,
+) -> EraResult:
+    """Multi-output ERA on one free decay ``y`` (n samples, p channels).
+
+    Args:
+        t: Sample times, equally spaced [s].
+        y: Free response (n, p) about the equilibrium (no mean removal: a decaying response
+            has a non-zero window mean).
+        order: Model order (number of states, 2 per oscillatory mode); extra states take up
+            drift and noise and are returned as weak or real poles.
+        n_block_rows: Block rows ``r`` of the Hankel matrix; ``r p >= order`` is required.
+        decimate: Keep every ``decimate``-th sample (the caller keeps the Nyquist frequency
+            well above the modes of interest).
+        channel_scale: Optional per-channel weight applied before the SVD and removed from
+            the shapes afterwards (balances mixed units, e.g. m and rad).
+
+    Raises:
+        ValueError: Unequal sampling, too few samples or ``r p < order``.
+    """
+    tt = np.asarray(t, dtype=float)[::decimate]
+    yy = np.asarray(y, dtype=float)
+    if yy.ndim == 1:
+        yy = yy[:, None]
+    yy = yy[::decimate]
+    n, p = yy.shape
+    if len(tt) != n:
+        raise ValueError(f"t has {len(tt)} samples, y has {n}")
+    steps = np.diff(tt)
+    dt = float(np.median(steps))
+    if np.max(np.abs(steps - dt)) > 1e-6 * dt:
+        raise ValueError("ERA needs equally spaced samples")
+    r = int(n_block_rows)
+    if r * p < order:
+        raise ValueError(f"block rows x channels {r * p} < order {order}")
+    s = n - r - 1
+    if s < order:
+        raise ValueError(f"{n} samples are too few for {r} block rows and order {order}")
+    w = np.ones(p) if channel_scale is None else np.asarray(channel_scale, dtype=float)
+    yw = yy * w
+    h0 = np.vstack([yw[i : i + s].T for i in range(r)])
+    h1 = np.vstack([yw[i + 1 : i + 1 + s].T for i in range(r)])
+    u, sv, vt = np.linalg.svd(h0, full_matrices=False)
+    sq = np.sqrt(sv[:order])
+    a = (u[:, :order].T @ h1 @ vt[:order].T) / np.outer(sq, sq)
+    c = u[:p, :order] * sq
+    x0 = sq * vt[:order, 0]
+    z, psi = np.linalg.eig(a)
+    b = np.linalg.solve(psi, x0.astype(complex))
+    lam = np.log(z.astype(complex)) / dt
+    cm = (c @ psi) / w[:, None]  # back to the output units
+    k_idx = np.arange(n)
+    recon = np.zeros((n, p))
+    modes: list[EraMode] = []
+    real_poles: list[complex] = []
+    for k in range(order):
+        series = np.outer(z[k] ** k_idx, cm[:, k] * b[k])
+        recon += series.real
+        lk = complex(lam[k])
+        f_d = lk.imag / (2.0 * math.pi)
+        if f_d >= ERA_MIN_OSCILLATORY_HZ:
+            wn = abs(lk)
+            modes.append(
+                EraMode(
+                    f_undamped_Hz=wn / (2.0 * math.pi),
+                    f_damped_Hz=f_d,
+                    zeta=-lk.real / wn,
+                    eigenvalue=lk,
+                    shape=cm[:, k] * b[k],
+                    rms_per_channel=np.sqrt(np.mean((2.0 * series.real) ** 2, axis=0)),
+                )
+            )
+        elif f_d > -ERA_MIN_OSCILLATORY_HZ:
+            real_poles.append(lk)
+    modes.sort(key=lambda m: m.f_undamped_Hz)
+    denom = float(np.sqrt(np.mean(yy**2))) or 1.0
+    return EraResult(
+        modes=tuple(modes),
+        real_poles=tuple(real_poles),
+        order=order,
+        singular_values=sv[: min(len(sv), 2 * order)].copy(),
+        dt_s=dt,
+        n_block_rows=r,
+        n_samples=n,
+        residual_rms_rel=float(np.sqrt(np.mean((recon - yy) ** 2))) / denom,
+        window_s=(float(tt[0]), float(tt[-1])),
+    )
+
+
+def mass_mac(shape: ArrayLike, phi_column: ArrayLike, mass_matrix: ArrayLike) -> float:
+    """Mass-weighted MAC ``|phi^T M psi|^2 / ((phi^T M phi)(psi^H M psi))`` (0 ... 1)."""
+    psi = np.asarray(shape, dtype=complex)
+    phi = np.asarray(phi_column, dtype=float)
+    m = np.asarray(mass_matrix, dtype=float)
+    num = abs(phi @ m @ psi) ** 2
+    den = float(phi @ m @ phi) * float(np.real(np.conj(psi) @ m @ psi))
+    return float(num / den) if den > 0.0 else math.nan
+
+
+def modal_amplitudes(era: EraResult, phi: ArrayLike, mass_matrix: ArrayLike) -> NDArray[np.float64]:
+    """``|2 Phi^T M shape_k|`` per (reference mode i, ERA mode k): the start amplitude that ERA
+    mode ``k`` puts into the modal coordinate ``eta_i`` (shape (n_ref_modes, n_era_modes))."""
+    pm = np.asarray(phi, dtype=float).T @ np.asarray(mass_matrix, dtype=float)
+    if not era.modes:
+        return np.zeros((pm.shape[0], 0))
+    shapes = np.column_stack([m.shape for m in era.modes])
+    return 2.0 * np.abs(pm @ shapes)
+
+
+def select_era_mode(
+    era: EraResult,
+    mode_index: int,
+    phi: ArrayLike,
+    mass_matrix: ArrayLike,
+    f_ref_Hz: float,
+    *,
+    f_band_rel: float = 0.15,
+    exclusive: bool = True,
+) -> int | None:
+    """Index into ``era.modes`` of the mode that contributes most to ``eta_{mode_index}``
+    among the modes within ``f_ref_Hz (1 +- f_band_rel)``; None if there is none.
+
+    With ``exclusive`` only ERA modes whose largest modal coordinate is ``eta_{mode_index}``
+    qualify, so that a close, strongly excited neighbour leaking into ``eta_{mode_index}``
+    (non-proportional damping) is not taken for it.
+    """
+    amps = modal_amplitudes(era, phi, mass_matrix)
+    home = np.argmax(amps, axis=0) if amps.size else np.zeros(0, dtype=int)
+    best, best_amp = None, -1.0
+    for k, m in enumerate(era.modes):
+        if abs(m.f_undamped_Hz - f_ref_Hz) > f_band_rel * f_ref_Hz:
+            continue
+        if exclusive and home[k] != mode_index:
+            continue
+        if amps[mode_index, k] > best_amp:
+            best, best_amp = k, float(amps[mode_index, k])
+    return best
+
+
+def projection_leakage(
+    era: EraResult, mode_index: int, era_index: int, phi: ArrayLike, mass_matrix: ArrayLike
+) -> float:
+    """RMS over the window of the other ERA modes' part of ``eta_{mode_index}`` divided by the
+    RMS of the selected mode's part (0 = the modal coordinate holds one mode only)."""
+    pm = (np.asarray(phi, dtype=float).T @ np.asarray(mass_matrix, dtype=float))[mode_index]
+    j = np.arange(era.n_samples)
+    own = np.zeros(era.n_samples)
+    other = np.zeros(era.n_samples)
+    for k, m in enumerate(era.modes):
+        part = 2.0 * np.real((pm @ m.shape) * np.exp(m.eigenvalue * era.dt_s * j))
+        if k == era_index:
+            own += part
+        else:
+            other += part
+    rms_own = float(np.sqrt(np.mean(own**2)))
+    return float(np.sqrt(np.mean(other**2))) / rms_own if rms_own > 0.0 else math.inf
