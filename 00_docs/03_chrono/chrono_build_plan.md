@@ -412,14 +412,16 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 
 | V | 판정 | 허용 | 기준값 키 |
 |---|---|---|---|
-| V0(오거) | 합성 질량·무게중심·관성 = `auger_levels.<level>` | ≤ 1×10⁻⁹ | YAML |
-| V10 | 저장된 S1 상태(3단계)에서 V1, roll·pitch 초기 속도(창 ≥ 20 s)로 1·2차 | 하중 ≤ 0.1 % W/4, 진동수 ±3 %, 상단 < 중단 < 하단 | `reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / <level> / contact_force_N`, `reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / <level> / V7_ball_centre_bushing_rev13 / f_damped_Hz`(앞 2개, 개정 10 안 A: 1차 1.798 / 2.333 / 2.893 Hz, 2차 3.005 / 3.536 / 3.959 Hz) |
+| V0(오거) | 합성 질량·무게중심·관성 = `auger_levels.<level>` | **(개정 22)** 원소별 인쇄 자릿수 반올림 한계 이하(이동량 항 제외, 이동량 일치는 별도 행 ≤ 1×10⁻¹² m) — 1×10⁻⁹ 지표는 기록(YAML 9유효숫자라 도달 불가; 사용자 결정 U1 = (a), 2026-10-21) | YAML, `auger_levels.json` |
+| V10 | 저장된 S1 상태(3단계)에서 V1, roll·pitch 초기 속도(창 ≥ 20 s)로 1·2차 | 하중: **(개정 22, 사용자 결정 U2 = B)** Chrono − P-δ 비선형 해 ≤ 0.01 % W/4(9.56 N) 판정, 선형 기준 대비는 1 % W/4로 기록(이전: 선형 대비 ≤ 0.1 % W/4 — P-δ 몫이 W²에 비례해 운용 중량 증가 시 모델이 맞아도 실패). 진동수 ±3 %(f_damped_Hz = \|λ\|/2π 대비), 상단 < 중단 < 하단 | `reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / <level> / contact_force_N`, `reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / <level> / V7_ball_centre_bushing_rev13 / f_damped_Hz`(앞 2개, 개정 10 안 A: 1차 1.798 / 2.333 / 2.893 Hz, 2차 3.005 / 3.536 / 3.959 Hz) |
 
 - **의존**: S4(식별 도구).
 - **담당·작업량**: cad 소, dyn 판정 소.
 - **체크리스트**
-  - [ ] 오거 합성 단위 시험
-  - [ ] 3단계 V1·V7(1·2차), V10
+  - 결과(2026-10-21, `06_analysis/01_chrono/15_S5/verify_S5_L1.json`·`.png`·`_loads.png`, 독립 확인 `06_analysis/00_dynamics/s5_v0_check.json`, 최종 판정 `dynamics_model.md` 개정 22 5.9절): **통과**. 재실행 `04_scripts/02_chrono/run_S5.py run --jobs 6`(9사례, 배치 29.7 s) → `summary`
+  - [x] 오거 합성 단위 시험 (2026-10-21, 개정 22 규칙으로 통과: 잔차/한계 ≤ 0.55(상 0.458 / 중 0.551 / 하 0.414), 이동량 일치, 1×10⁻⁹ 지표는 기록)
+  - [x] 3단계 V1·V7(1·2차), V10 (2026-10-21 dyn 최종 통과: 하중 선형 대비 ≤ 66.6 N(전부 P-δ), P-δ 해 대비 ≤ 0.50 N, f ≤ 8×10⁻⁵ 상대, 순서 통과, 항복·사건 0, 투영 식별 MAC ≥ 0.9999)
+  - [x] 코드 반영(개정 22 → `verify/s5.py`·`run_S5.py`, 2026-10-21): 저장 기록(batch_20261021_173430)으로 재판정 `all_passed` True — V0 잔차/한계 ≤ 0.551, 이동량 일치, V10 Chrono − P-δ ≤ 0.50 N(허용 9.557 N), 선형 대비 ≤ 66.6 N(기록, 1 % W/4). meta에 코드 sha256, 다음 실행부터 V1 100 Hz 시계열 저장. 시험 36 + 803 통과
 
 ### S6 압력 센서 · 힘 포화 · 제어기 경계
 
@@ -791,7 +793,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 | S2b | V0 2 s, V11 35 s(공중 다리, 접촉 없음), 이벤트 시험 20 s(전환 3 s × 10 → 47 s), 크롤러 위 정착 3단계 × 65.5 s ≈ 197 s(개정 6 D안; 해석해 초기화면 0) | 약 281 s(초기화면 약 84 s) | 9.5분(3분) | 아니오 |
 | S3 | V8(a) 60 s(Δt) + 60 s(2Δt → 30 s) = 90 s. V4(저장된 크롤러 정착 상태에서 모터 출발 → 마지막 정지 17.7 s + 정착 15 s = 32.7 s, 전환 창 3.1 s × 10 → 60.6 s) × (기준 + 감속 램프 감도) = 121 s. V5 +1 / +5 mm 32 s. V6 FL+·FL− 2 × (150 s, 부상 창 2 s × 10 → 168 s) = 336 s. V9 매끄러운 시험(① V5 +1 mm 12 s + ② 자유 진동 5 s) × (2 + 4 + **10**) = 272 s. V9 V4 차 32.7 s × (1 + 2 + 4 + **10**) = 556 s | 약 1,407 s | 47분 / 약 12~13분 | 예. **V9 V4 기준해 1건(1×10⁻⁵ s 전 구간)이 약 654 s(11분)라 단일 실행 10분을 넘는다 → 메인 세션 권고** |
 | S4 | V7 초기 속도 6종(2 × 20 s + 4 × 2 s) 48 s. V8(b) 30 s. β 3값 × (정적 15 s + V5 32 s + 진동수 48 s) = 285 s. V6 1.6 GPa만(문턱 약 8 mm, 약 100 s, 부상 창 → 118 s). 로드측 감도(선택) 50 s | 약 531 s | 18분 / 약 5분 | 직렬은 예 |
-| S5 | 3단계 × (V1 15 s + roll·pitch 2 × 20 s) | 약 165 s | 5.5분 | 아니오 |
+| S5 | 3단계 × (V1 15 s + roll·pitch 2 × 20 s) | 약 165 s | 5.5분(실측 2026-10-21: 6 동시 실행, 배치 29.7 s, 사례 11.4~18.5 s — 동시 실행이라 단가 산정에 쓰지 않음(CLAUDE.md), 단독 단가는 S6 runner 측정 때 갱신) | 아니오 |
 | S6 | V11b 단일 다리 20 s, 센서 20 s, V17 경로 15 s, 폐루프 연기 60 s | 약 115 s | 4분 | 아니오 |
 | S7(NSC) | S1~S5의 top 시험 재실행(β 제외: S1 73 s + S2a 217 s + S2b 150 s(개정 6) + S3 1,407 s + S4 128 s + S5 55 s) 약 2,029 s, V14 3경우 × (V12 59 s + RL+ 민감도 32 s + RL+ 연속 신장 부상까지 최대 약 175 s(부상 창 → 193 s) + 로킹 40 s) = 972 s | 약 3,001 s | 30분(단가 2배면 60분) / 7.5~15분 | 직렬은 예 |
 | S8 | NSC: V15(a) 4 × 부상까지(약 13~14 mm, 0.1 mm/s, 부상 창 포함) ≈ 617 s, V15(b) 4 × 200 s = 800 s, 관성 확인(0.05 mm/s, 12 kN, 부상 창 포함) 278 s, D2 3단계 × 2 로크 밸브 × 30 s(피크 창 5 s × 10 → 75 s) = 450 s, ζ 감도(0.01, 0.10) 2 × 3 × 75 s = 450 s → 약 2,595 s(0.6 s/s). L1 V17 3 × 75 s = 225 s(2 s/s) | 약 2,820 s | 33.5~59.5분 / 8.5~15분 | 직렬은 예 |
