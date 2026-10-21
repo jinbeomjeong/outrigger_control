@@ -47,7 +47,7 @@ import dyn_model as dm  # noqa: E402
 T0 = time.perf_counter()
 P = dm.load_params(ROOT / "02_params" / "rexome33.yaml")
 REF = json.load(open(ROOT / "06_analysis/00_dynamics/reference.json", encoding="utf-8"))
-CHR = json.load(open(ROOT / "06_analysis/01_chrono/verify_S3_L1.json", encoding="utf-8"))
+CHR = json.load(open(ROOT / "06_analysis/01_chrono/13_S3/verify_S3_L1.json", encoding="utf-8"))
 IDX = json.load(open(ROOT / "07_results/S3/index.json", encoding="utf-8"))
 G = float(P["meta"]["gravity_m_s2"])
 geo = dm.geometry_from_params(P)
@@ -452,7 +452,7 @@ def part_d():
 
 out = {"meta": {"script": "04_scripts/01_dynamics/run_s3_lift_check.py", "doc": "dynamics_model.md 5.7 (rev. 17)",
                 "gravity_world_m_s2": [0, 0, -G], "time_origin": "equivalent start = start command + ramp/2",
-                "chrono_summary": "06_analysis/01_chrono/verify_S3_L1.json generated " + CHR["generated"],
+                "chrono_summary": "06_analysis/01_chrono/13_S3/verify_S3_L1.json generated " + CHR["generated"],
                 "chrono_params_sha256": CHR["params_sha256"], "body_mass_6dof_kg": MASS,
                 "crawler_dashpot_per_sphere_N_s_m": C_TOT / N_ROL, "pad_sphere_radius_m": R_PAD}}
 out["A_V8a_crawler_energy"] = part_a()

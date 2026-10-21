@@ -25,7 +25,7 @@ Part C - V4 with the command ramp: copy of run_reference.dynamic_touch (vertical
     stop), touch times, crawler
     off and the pad-force peaks through the stops.
 Inputs: 02_params/rexome33.yaml, 06_analysis/00_dynamics/reference.json,
-    06_analysis/01_chrono/verify_S2b_L1.json (Chrono values, read only). Units SI.
+    06_analysis/01_chrono/12_S2/verify_S2b_L1.json (Chrono values, read only). Units SI.
 """
 import json
 import math
@@ -44,7 +44,7 @@ import dyn_model as dm  # noqa: E402
 T0 = time.perf_counter()
 P = dm.load_params(ROOT / "02_params" / "rexome33.yaml")
 REF = json.load(open(ROOT / "06_analysis/00_dynamics/reference.json", encoding="utf-8"))
-CHR = json.load(open(ROOT / "06_analysis/01_chrono/verify_S2b_L1.json", encoding="utf-8"))
+CHR = json.load(open(ROOT / "06_analysis/01_chrono/12_S2/verify_S2b_L1.json", encoding="utf-8"))
 G = float(P["meta"]["gravity_m_s2"])
 LEGS = dm.LEG_NAMES
 ZF = float(P["ground"]["crawler_bottom_z_m"])

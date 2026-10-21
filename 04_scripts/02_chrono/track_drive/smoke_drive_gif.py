@@ -15,9 +15,10 @@ Scenario (vehicle frame of Chrono Vehicle: x forward, y left, z up; ground plane
   track_drive_plan.md 1.1) and the frames show it.
 
 Outputs:
-  * 06_analysis/01_chrono/track_drive_smoke.gif   (git-ignored, regenerate with this script)
-  * 06_analysis/01_chrono/track_drive_smoke.json  (summary, tracked)
-  * 07_results/track_drive_smoke/                  (edited JSON copy, frames; git-ignored)
+  * 06_analysis/01_chrono/20_track_drive/ (created when missing)
+      track_drive_smoke.gif    (git-ignored, regenerate with this script)
+      track_drive_smoke.json   (summary, tracked)
+  * 07_results/track_drive_smoke/   (edited JSON copy, frames; git-ignored)
 
 Usage (project root, Chrono-dev interpreter, about 2-4 min):
   C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe -I -u
@@ -54,7 +55,7 @@ import pychrono.vehicle as veh  # noqa: E402
 from outrigger_sim.chrono.system import make_system  # noqa: E402
 from outrigger_sim.params import load_params  # noqa: E402
 
-ANALYSIS_DIR = PROJECT_ROOT / "06_analysis" / "01_chrono"
+ANALYSIS_DIR = PROJECT_ROOT / "06_analysis" / "01_chrono" / "20_track_drive"
 GIF_PATH = ANALYSIS_DIR / "track_drive_smoke.gif"
 SUMMARY_PATH = ANALYSIS_DIR / "track_drive_smoke.json"
 WORK_DIR = PROJECT_ROOT / "07_results" / "track_drive_smoke"

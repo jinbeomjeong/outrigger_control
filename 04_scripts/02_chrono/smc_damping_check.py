@@ -47,7 +47,7 @@ amplitude.
 Run (repository root, about 15 s):
       C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe -I
       04_scripts/02_chrono/smc_damping_check.py
-Out:  06_analysis/01_chrono/smc_damping.json
+Out:  06_analysis/01_chrono/00_conventions/smc_damping.json
 Units SI, world Z-up, gravity set by make_system.
 """
 
@@ -74,7 +74,7 @@ from outrigger_sim.chrono.system import make_smc_material, make_system  # noqa: 
 from outrigger_sim.params import LEG_ORDER, Params, load_params  # noqa: E402
 
 PARAMS_PATH = ROOT / "02_params" / "rexome33.yaml"
-OUT_JSON = ROOT / "06_analysis" / "01_chrono" / "smc_damping.json"
+OUT_JSON = ROOT / "06_analysis" / "01_chrono" / "00_conventions" / "smc_damping.json"
 
 SYMPLECTIC = "symplectic_euler"
 BACKWARD = "backward_euler"

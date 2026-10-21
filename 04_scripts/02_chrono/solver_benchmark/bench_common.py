@@ -7,7 +7,7 @@ then puts ``04_scripts/00_cad`` (project path constants, ``cad_common``) and ``0
 
 Outputs:
   * per-run results, logs, GIF frames: ``07_results/solver_benchmark/`` (git-ignored)
-  * summary JSON / PNG and the three GIFs: ``06_analysis/01_chrono/solver_benchmark*``
+  * summary JSON / PNG and the three GIFs: ``06_analysis/01_chrono/01_cost/solver_benchmark*``
 """
 
 from __future__ import annotations
@@ -29,8 +29,9 @@ if str(SRC_DIR) not in sys.path:
 
 RESULTS_DIR = PROJECT_ROOT / "07_results" / "solver_benchmark"
 """Per-run JSON (``<phase>/<case>.json``), ``log.txt``, ``gif_frames/``, ``gif_<case>.json``."""
-ANALYSIS_DIR = PROJECT_ROOT / "06_analysis" / "01_chrono"
-"""Summary ``solver_benchmark.json`` / ``.png`` and ``solver_benchmark_{L1,SCM,scale}.gif``."""
+ANALYSIS_DIR = PROJECT_ROOT / "06_analysis" / "01_chrono" / "01_cost"
+"""Summary ``solver_benchmark.json`` / ``.png``, ``solver_benchmark_{L1,SCM,scale}.gif`` and
+``step_cost_S0.json`` (the step-cost folder of the Chrono analyses)."""
 
 SUMMARY_JSON = ANALYSIS_DIR / "solver_benchmark.json"
 SUMMARY_PNG = ANALYSIS_DIR / "solver_benchmark.png"

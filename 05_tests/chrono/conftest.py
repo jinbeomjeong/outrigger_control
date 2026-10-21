@@ -2,9 +2,10 @@
 
 The block reproduces ``04_scripts/02_chrono/test_stick_friction.py`` (``build``, bushing
 cases) with library code: ``make_system`` (R1, R2, R6, R11) + ``GroundBushingCoulomb``.
-Its values are the ``reference`` block of ``06_analysis/01_chrono/stick_friction.json`` (the
-baseline was computed with the ζ 0.05 contact values of that day; the current YAML has
-ζ 0.03), so the regression compares like with like.
+Its values are the ``reference`` block of
+``06_analysis/01_chrono/00_conventions/stick_friction.json`` (the baseline was computed with
+the ζ 0.05 contact values of that day; the current YAML has ζ 0.03), so the regression
+compares like with like.
 """
 
 from __future__ import annotations
@@ -30,7 +31,7 @@ from outrigger_sim.chrono.ground_bushing import (  # noqa: E402
 from outrigger_sim.chrono.system import make_smc_material, make_system  # noqa: E402
 from outrigger_sim.params import Params, load_params  # noqa: E402
 
-STICK_FRICTION_JSON = Path("06_analysis") / "01_chrono" / "stick_friction.json"
+STICK_FRICTION_JSON = Path("06_analysis") / "01_chrono" / "00_conventions" / "stick_friction.json"
 # Baseline script constants (not in the JSON reference block).
 BLOCK_SLIP_DAMPING_REENABLE_M_S = 1.0e-3  # V_STICK of the script = YAML value 0.001
 BLOCK_GROUND_BOX_M = (60.0, 4.0, 0.4)  # ground box of the script, top face at z_local = 0

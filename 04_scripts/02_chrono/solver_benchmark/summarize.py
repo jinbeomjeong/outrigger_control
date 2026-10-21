@@ -1,4 +1,6 @@
-"""Collect 07_results/solver_benchmark/ into 06_analysis/01_chrono/solver_benchmark.json + .png.
+"""Collect 07_results/solver_benchmark/ into 06_analysis/01_chrono/01_cost/solver_benchmark.*
+
+Writes ``solver_benchmark.json`` and ``solver_benchmark.png`` there.
 
 Usage: python -I summarize.py   (no simulation; reads the saved per-run results)
 """
@@ -279,6 +281,7 @@ def main() -> None:
         "failed_or_timeout_runs": timeouts,
         "results": scale_out,
     }
+    bcm.SUMMARY_JSON.parent.mkdir(parents=True, exist_ok=True)
     bcm.SUMMARY_JSON.write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
 
     # figure: N vs us/step (step and LS), both topologies

@@ -64,10 +64,12 @@ CACHE_RULES: dict[str, dict] = {
         ],
     },
     "02_legs": {
-        "description": "Jack cylinder B-rep (world placed), face table, extension figures",
+        "description": "Jack cylinder B-rep (world placed), face table, extension figures, "
+        "rod lateral check",
         "rules": [
             ("legs/*.brep", "inspect_legs.py"),
             ("leg_faces.csv", "inspect_legs.py"),
+            ("leg_rod_lateral_check.*", "leg_rod_lateral_check.py"),
             ("*", "render_leg_extension.py"),
         ],
     },

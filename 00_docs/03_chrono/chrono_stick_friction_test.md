@@ -3,7 +3,7 @@
 목적은 두 가지다. 첫째, Chrono 10 SMC 접촉이 2° 경사에서 블록을 붙잡는지(V12: 미끄럼 < 0.1 mm), 수평 바닥에서 접선 스프링 $k_t$가 진동수로 드러나는지 확인한다. 둘째, 대안 두 가지(L1용 지면 고정 접선 부싱, L2b용 NSC 접촉)를 확인한다. 배경은 [actuator_L2_feasibility.md](../01_dynamics/actuator_L2_feasibility.md) 4절과 [dynamics_model.md](../01_dynamics/dynamics_model.md) 4절이다.
 
 - 스크립트: `04_scripts/02_chrono/test_stick_friction.py` (재실행: `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts/02_chrono/test_stick_friction.py`, 약 1분)
-- 결과: `06_analysis/01_chrono/stick_friction.json`, 그림 `06_analysis/01_chrono/stick_friction.png`
+- 결과: `06_analysis/01_chrono/00_conventions/stick_friction.json`, 그림 `06_analysis/01_chrono/00_conventions/stick_friction.png`
 - 환경: pychrono 10.0.0 (conda `Chrono-dev`, Python 3.12)
 
 ## 1. 방법

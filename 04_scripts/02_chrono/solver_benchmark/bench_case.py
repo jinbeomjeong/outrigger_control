@@ -13,7 +13,7 @@ inside every DoStepDynamics) and the direct-solver timers (accumulated, reset be
 Units: SI; times reported in microseconds per step.
 
 Crawler contact: the stored measurements in 07_results/solver_benchmark/ (and the summary
-06_analysis/01_chrono/solver_benchmark.json) were taken with the old 2 x 9 crawler layout
+06_analysis/01_chrono/01_cost/solver_benchmark.json) were taken with the old 2 x 9 crawler layout
 (18 spheres, "n_crawler_spheres": 18 in every result). The builder now follows the current
 YAML layout D (24 spheres: 12 rollers + 12 gapped end shoes, crawler_contact.py); the step
 cost with layout D is measured again in the S0 cost measurement (not re-run here).

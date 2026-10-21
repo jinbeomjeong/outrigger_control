@@ -57,7 +57,9 @@ DEFAULT_FILE_PATHS: Mapping[ReferenceFile, Path] = MappingProxyType(
         ReferenceFile.ACTUATOR_L2_FEASIBILITY: (
             PROJECT_ROOT / "06_analysis/00_dynamics/actuator_L2_feasibility.json"
         ),
-        ReferenceFile.STICK_FRICTION: PROJECT_ROOT / "06_analysis/01_chrono/stick_friction.json",
+        ReferenceFile.STICK_FRICTION: (
+            PROJECT_ROOT / "06_analysis/01_chrono/00_conventions/stick_friction.json"
+        ),
         ReferenceFile.V7_DIAGNOSTIC: PROJECT_ROOT / "06_analysis/00_dynamics/v7_diagnostic.json",
         ReferenceFile.LEG_EXTENSION_LOADS: (
             PROJECT_ROOT / "06_analysis/00_dynamics/leg_extension_loads.json"

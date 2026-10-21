@@ -8,7 +8,7 @@ Reads only stored results (no simulation is run):
     01_cad/01_parts/parts_classified.csv          part rows (leg, group, auger moving set)
     01_cad/05_meshes/render_mesh.npz              decimated drawing meshes, same row order
 
-Writes (06_analysis/01_chrono/):
+Writes (06_analysis/01_chrono/11_S1/):
     S1_settle_levels.gif   analytic-start cases top -> middle -> bottom (15 s each, compressed),
                            ending with the auger-level comparison scene
     S1_cross_top.gif       no-init drop from the zero pose (58 s), non-linear time axis
@@ -99,7 +99,7 @@ from outrigger_sim.params import load_params  # noqa: E402
 from outrigger_sim.record import load_record  # noqa: E402
 
 RESULTS = ROOT / "07_results" / "S1"
-OUT_DIR = ROOT / "06_analysis" / "01_chrono"
+OUT_DIR = ROOT / "06_analysis" / "01_chrono" / "11_S1"
 PDELTA_JSON = ROOT / "06_analysis" / "00_dynamics" / "s1_pdelta_check.json"
 GIF_SETTLE = OUT_DIR / "S1_settle_levels.gif"
 GIF_CROSS = OUT_DIR / "S1_cross_top.gif"
@@ -1134,6 +1134,7 @@ def main() -> None:
                         help="optional folder for PNG copies of selected frames")
     args = parser.parse_args()
     started = time.perf_counter()
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
     pdelta = json.loads(PDELTA_JSON.read_text(encoding="utf-8"))
     bundle = load_meshes(args.mesh_cache)
     print(f"meshes loaded {time.perf_counter() - started:.1f} s", flush=True)

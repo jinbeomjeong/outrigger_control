@@ -32,7 +32,7 @@ Cases (L1, top, crawler layout D, actuator with the 0.1 s command ramp):
 
 Outputs: ``07_results/S3/<batch>/<case>/`` (case.json from the batch runner, result.json,
 Record for the main runs), ``07_results/S3/index.json`` (latest directory per case), summary
-``06_analysis/01_chrono/verify_S3_L1.json`` and ``verify_S3_L1.png``.
+``06_analysis/01_chrono/13_S3/verify_S3_L1.json`` and ``verify_S3_L1.png``.
 Units SI; angles in deg where named ``*_deg``; V4 times from the equivalent origin (``*_eq``).
 """
 
@@ -53,8 +53,9 @@ sys.path.insert(0, str(ROOT / "03_src"))
 RESULTS = ROOT / "07_results" / "S3"
 INDEX = RESULTS / "index.json"
 STATES = ROOT / "07_results" / "states"
-SUMMARY = ROOT / "06_analysis" / "01_chrono" / "verify_S3_L1.json"
-FIGURE = ROOT / "06_analysis" / "01_chrono" / "verify_S3_L1.png"
+ANALYSIS_DIR = ROOT / "06_analysis" / "01_chrono" / "13_S3"
+SUMMARY = ANALYSIS_DIR / "verify_S3_L1.json"
+FIGURE = ANALYSIS_DIR / "verify_S3_L1.png"
 LEVEL = "top"
 S1_SNAPSHOT = "S1_L1_top"
 CRAWLER_SNAPSHOT = "S2b_crawler_top"
@@ -1526,6 +1527,7 @@ def summarize():
             f"{V4_PREVIOUS_JUDGED_RUN} Record",
         },
     }
+    SUMMARY.parent.mkdir(parents=True, exist_ok=True)
     SUMMARY.write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), encoding="utf-8")
     print(f"summary -> {_rel(SUMMARY)}: {len(all_checks)} checks, {len(failed)} failed")
     for c in failed:
@@ -1639,6 +1641,7 @@ def _figure(res):
                      title="V9 smooth tests: first order (slope 1)")
         ax[1, 2].legend(fontsize=8)
     fig.tight_layout()
+    FIGURE.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(FIGURE, dpi=110)
     plt.close(fig)
     print(f"figure -> {_rel(FIGURE)}")

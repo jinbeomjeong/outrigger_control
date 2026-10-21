@@ -29,7 +29,7 @@ Cases (L1, crawler layout D, actuator = ``chrono/actuators.L1SpeedActuator`` wit
   events (``t_lift`` 1 ms, ``N_th`` 100 N), raw ``N > 0`` transitions, first-contact time.
 
 Outputs: ``07_results/S2b/<case>/record.npz`` + ``meta.json`` (Record), ``result.json``;
-summary ``06_analysis/01_chrono/verify_S2b_L1.json`` and ``verify_S2b_L1.png``. Units SI;
+summary ``06_analysis/01_chrono/12_S2/verify_S2b_L1.json`` and ``verify_S2b_L1.png``. Units SI;
 angles in deg where named ``*_deg``.
 """
 
@@ -52,8 +52,9 @@ sys.path.insert(0, str(ROOT / "03_src"))
 
 RESULTS = ROOT / "07_results" / "S2b"
 STATES = ROOT / "07_results" / "states"
-SUMMARY = ROOT / "06_analysis" / "01_chrono" / "verify_S2b_L1.json"
-FIGURE = ROOT / "06_analysis" / "01_chrono" / "verify_S2b_L1.png"
+ANALYSIS_DIR = ROOT / "06_analysis" / "01_chrono" / "12_S2"
+SUMMARY = ANALYSIS_DIR / "verify_S2b_L1.json"
+FIGURE = ANALYSIS_DIR / "verify_S2b_L1.png"
 LEVELS = ("top", "middle", "bottom")
 EVENT_DTS = (1.0e-4, 1.0e-5)
 EVENT_NAMES = ("fast_FL", "slow_FL")
@@ -968,6 +969,7 @@ def summarize() -> None:
         "event_dt_pairs": event_pairs,
         "checks": table,
     }
+    SUMMARY.parent.mkdir(parents=True, exist_ok=True)
     SUMMARY.write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), encoding="utf-8")
     _figure(results)
     print(f"summary: {_rel(SUMMARY)} all_passed={summary['all_passed']} {by_id}", flush=True)
@@ -1034,6 +1036,7 @@ def _figure(results) -> None:
         ax.set_ylabel("frequency [Hz]")
         ax.set_title("Crawler modes, legs at 0 (bars: Chrono fit, black: linear model)")
         ax.legend()
+    FIGURE.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(FIGURE, dpi=130)
     plt.close(fig)
 

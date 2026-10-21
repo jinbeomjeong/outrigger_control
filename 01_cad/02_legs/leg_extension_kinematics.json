@@ -1,8 +1,8 @@
 {
  "meta": {
   "script": "04_scripts/00_cad/render_leg_extension.py",
-  "params": "02_params\\rexome33.yaml",
-  "params_sha256": "8d1cc183df504cf70ffe19db0df98cd717d7fd3926109afbfd85819d8150dc8c",
+  "params": "02_params/rexome33.yaml",
+  "params_sha256": "7391487c9c01ffa0f4acaf6d6e29155c82ec968cb3eae67120d54d2a8a645a33",
   "auger_level": "top",
   "frame": "body: x forward, y left, z up, origin = CAD origin; pitch + = nose down",
   "model": "quasi-static rigid body, rigid level ground at ground.crawler_bottom_z_m, unilateral rigid contacts at the 4 pad bottom centres and the crawler contact points of contact.crawler.sphere_layout (layout D: 12 roller points on the floor + 12 end-shoe points raised by end_shoe_gap_m); pose = min CoM height (LP); 4 pads only -> least squares; x, y, yaw fixed; small angles; rod weight not in the potential; pads keep the body orientation (swivel not modelled, tilt <= 0.13 deg)",

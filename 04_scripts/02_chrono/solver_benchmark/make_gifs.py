@@ -4,7 +4,7 @@ Usage: python -I -u make_gifs.py <l1|scm|scale|all>
 No benchmark re-run: each case re-simulates its short scene (L1 3 s ~30 s, SCM 3 s ~2.5 min,
 scale 1 s ~1 min) and reads the measured costs from 07_results/solver_benchmark/.
 Uses the same builders as bench_case.py (same models, SPARSE_QR + lock, dt 1e-4 s) and writes
-06_analysis/01_chrono/solver_benchmark_<L1|SCM|scale>.gif. Frames go to
+06_analysis/01_chrono/01_cost/solver_benchmark_<L1|SCM|scale>.gif. Frames go to
 07_results/solver_benchmark/gif_frames/<case>/.
 Solver costs printed on the frames come from results/ (this benchmark's measurements).
 
@@ -139,6 +139,7 @@ def save_gif(frames: list[Path], out: Path, ms: int) -> None:
     imgs = [Image.open(f).convert("RGB") for f in frames]
     pal = imgs[len(imgs) // 2].quantize(colors=255, method=Image.Quantize.MEDIANCUT)
     q = [im.quantize(palette=pal, dither=Image.Dither.NONE) for im in imgs]
+    out.parent.mkdir(parents=True, exist_ok=True)
     q[0].save(out, save_all=True, append_images=q[1:], duration=ms, loop=0, optimize=False)
 
 

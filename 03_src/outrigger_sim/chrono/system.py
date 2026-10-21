@@ -12,9 +12,9 @@ Conventions of ``00_docs/03_chrono/chrono_build_plan.md`` section 1 applied here
   sparsity pattern (``SPARSE_QR`` and ``PARDISO_MKL`` as options, lock can be switched off),
   L2b-NSC ``contact.rigid_floor.L2b_NSC.solver`` with ``solver_max_iterations`` (PSOR, 50).
 
-L1 solver choice (user decision 2026-10-20, ``06_analysis/01_chrono/solver_benchmark.json``):
-on the full-scale L1 model with the pattern locked, SPARSE_QR 147, SPARSE_LU 133 and
-PARDISO_MKL 447 us/step with results equal to <= 1e-14 m. SPARSE_QR grows super-linearly
+L1 solver choice (user decision 2026-10-20,
+``06_analysis/01_chrono/01_cost/solver_benchmark.json``): on the full-scale L1 model with the
+pattern locked, SPARSE_QR 147, SPARSE_LU 133 and PARDISO_MKL 447 us/step with results equal to <= 1e-14 m. SPARSE_QR grows super-linearly
 (above about 180 unknowns it is the slowest); Pardiso has a fixed cost per factorisation and
 does not beat SPARSE_LU up to 4,500 unknowns. The lock cuts matrix assembly about 7x.
 
@@ -460,7 +460,7 @@ def _configure_l1_solver(
         "lock_sparsity_pattern": lock_sparsity_pattern,
         "openmp_preload": preloaded,
         "source": "R11 convention (no YAML key); user decision 2026-10-20 "
-        "(06_analysis/01_chrono/solver_benchmark.json)",
+        "(06_analysis/01_chrono/01_cost/solver_benchmark.json)",
     }
 
 

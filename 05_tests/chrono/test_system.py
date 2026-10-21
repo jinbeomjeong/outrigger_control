@@ -64,7 +64,7 @@ SOLVER_GAP_ABS_TOL_M = 1.0e-12
 SOLVER_FORCE_REL_TOL = 1.0e-9
 SOURCE_R11 = (
     "R11 convention (no YAML key); user decision 2026-10-20 "
-    "(06_analysis/01_chrono/solver_benchmark.json)"
+    "(06_analysis/01_chrono/01_cost/solver_benchmark.json)"
 )
 # Structural-change test (assumed test objects): two cubes on the floor, a change at
 # STRUCT_ADD_STEP undone at STRUCT_REMOVE_STEP. Locked vs unlocked SPARSE_LU was bit-identical

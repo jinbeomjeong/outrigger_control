@@ -10,7 +10,7 @@ Usage (Chrono-dev python, from any folder):
                                                adds the key "hook_optimization" to the summary
                                                and leaves every other key unchanged (~1 min)
 Per-case results: 07_results/step_cost_S0/<case>.json (git-ignored).
-Summary: 06_analysis/01_chrono/step_cost_S0.json.
+Summary: 06_analysis/01_chrono/01_cost/step_cost_S0.json.
 
 Model (full-scale L1, auger level top, current YAML):
   * ``outrigger_sim.chrono.system.make_system`` (SMC, Bullet, explicit gravity, EULER_IMPLICIT_
@@ -708,6 +708,7 @@ def summarize() -> None:
         previous = json.loads(SUMMARY.read_text(encoding="utf-8"))
         if "hook_optimization" in previous:
             summary["hook_optimization"] = previous["hook_optimization"]
+    SUMMARY.parent.mkdir(parents=True, exist_ok=True)
     SUMMARY.write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
     print(f"wrote {SUMMARY}")
     for row in rows:

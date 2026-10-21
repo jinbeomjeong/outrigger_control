@@ -2,9 +2,10 @@
 
 ``sim``: the touch phase of the V4 lift at dt 2e-4 s from the S2b crawler snapshot (15.4 s
 simulated, about 25 s wall) and V5 FL +1 mm at dt 2e-4 s (about 15 s). ``slow``: the judged V4
-run (windowed 1e-4 / 1e-5 s, about 2.5 min) and V8(a) on the pads at dt 2e-4 s (about 1.5 min),
+run ``verify.s3.V4_JUDGED_RUN`` (YAML ``simulation.L1.dt_s`` with the 1e-5 s transition window)
+and V8(a) on the pads at dt 2e-4 s (about 1.5 min),
 both through the job functions of ``04_scripts/02_chrono/run_S3.py`` (the judging run with every
-case is ``run_S3.py run``; summary ``06_analysis/01_chrono/verify_S3_L1.json``).
+case is ``run_S3.py run``; summary ``06_analysis/01_chrono/13_S3/verify_S3_L1.json``).
 """
 
 from __future__ import annotations
@@ -29,7 +30,7 @@ from outrigger_sim.verify.reference import (  # noqa: E402
     LIFT_V4_DYNAMIC_TOUCH_S_LAYOUT_D,
     load_references,
 )
-from outrigger_sim.verify.s3 import V4_TOUCH_TOL_S  # noqa: E402
+from outrigger_sim.verify.s3 import V4_JUDGED_RUN, V4_TOUCH_TOL_S  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 STATES = ROOT / "07_results" / "states"
@@ -83,8 +84,8 @@ def test_v5_plus_1mm_at_2e4(tmp_path) -> None:
 @pytest.mark.slow
 def test_v4_judged_run(tmp_path) -> None:
     m = _script()
-    out = m.job_v4(Case("v4_D_w1e-04", m.case_settings("v4_D_w1e-04") | {"record": False}),
-                   tmp_path)
+    settings = m.case_settings(V4_JUDGED_RUN) | {"record": False}
+    out = m.job_v4(Case(V4_JUDGED_RUN, settings), tmp_path)
     assert not _failed(out.summary["checks"])
 
 

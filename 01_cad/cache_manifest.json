@@ -1,12 +1,12 @@
 {
  "schema": 1,
- "updated_at": "2026-10-20T19:01:00",
+ "updated_at": "2026-10-21T11:01:14",
  "updated_by": {
   "script": "04_scripts/00_cad/check_cache.py",
   "exists": true,
-  "sha256": "f6d3bb97650e9159dc2796859242de5662fe3a460ecaae31f9caf67b428a5347",
-  "git_blob": "5043803c8d3ac1301cd14a86b1b3553f0ba150d9",
-  "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+  "sha256": "9a878025810493c1db7c70c3dcbab68af531f6bd63661d901392dc03664cb5b5",
+  "git_blob": "e0a62f112f390ca5e616882c0e09622c42f13585",
+  "git_last_commit": "7148180773b05da707a09cdf756e28783c630257",
   "git_tracked": true
  },
  "environment": {
@@ -199,10 +199,10 @@
    ]
   },
   "02_legs": {
-   "description": "Jack cylinder B-rep (world placed), face table, extension figures",
+   "description": "Jack cylinder B-rep (world placed), face table, extension figures, rod lateral check",
    "folder": "01_cad/02_legs",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-20T18:09:41",
+   "newest_file_mtime": "2026-10-21T10:58:51",
    "generators": [
     {
      "script": "04_scripts/00_cad/inspect_legs.py",
@@ -213,16 +213,24 @@
      "git_tracked": true
     },
     {
+     "script": "04_scripts/00_cad/leg_rod_lateral_check.py",
+     "exists": true,
+     "sha256": "1ade72fd23425c0d150ab71994daa5b1f234ca4b70cad8114fc13e35115e0062",
+     "git_blob": "17ae7a9d0f88768464c2d1c7a3a5ac0052fa41aa",
+     "git_last_commit": "4bee07965ca073e3e632f09c12cc162f7b442c39",
+     "git_tracked": true
+    },
+    {
      "script": "04_scripts/00_cad/render_leg_extension.py",
      "exists": true,
-     "sha256": "20b872139737bee62d2c67c2b9ff13870e0823947a3b8c618150faacb1c6a28a",
-     "git_blob": "8e6502d3d044802fc3eb99dabb4462e6b6b1bcb1",
-     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "sha256": "57758f86cc81ca7cc5e3d3f0d193b9da43310996a9d918b8ffe6c13a31f24f94",
+     "git_blob": "ecb823807c176d960c1e05481d1195faa15c1e1f",
+     "git_last_commit": "7148180773b05da707a09cdf756e28783c630257",
      "git_tracked": true
     }
    ],
-   "file_count": 11,
-   "total_bytes": 8391351,
+   "file_count": 13,
+   "total_bytes": 9185295,
    "git_ignored_file_count": 1,
    "files": [
     {
@@ -234,8 +242,8 @@
     },
     {
      "path": "leg_extension_kinematics.json",
-     "bytes": 40094,
-     "sha256": "6db2c5d763aacb2730431ba7b388d487802171727f207c6c030fcf249e375228",
+     "bytes": 40093,
+     "sha256": "762f421f9a05d58dffbd7c4537aed7fecb41aca0b79626d8c38fbd6385e0afc4",
      "generator": "render_leg_extension.py",
      "git_ignored": false
     },
@@ -244,6 +252,20 @@
      "bytes": 101471,
      "sha256": "ce1387595bd03fd8cb11397b22b9eab991b06802f8f69e00778eb2bed2090a22",
      "generator": "inspect_legs.py",
+     "git_ignored": false
+    },
+    {
+     "path": "leg_rod_lateral_check.json",
+     "bytes": 572527,
+     "sha256": "07e55e8c2552ce27dd98680a9ca5f275bf0be2c485347923bac409658de36594",
+     "generator": "leg_rod_lateral_check.py",
+     "git_ignored": false
+    },
+    {
+     "path": "leg_rod_lateral_check.png",
+     "bytes": 221418,
+     "sha256": "e23ab04a03594b9eb9a765fcaac7bbc86ac0141068c1ffc7ce8a2561f39f818a",
+     "generator": "leg_rod_lateral_check.py",
      "git_ignored": false
     },
     {

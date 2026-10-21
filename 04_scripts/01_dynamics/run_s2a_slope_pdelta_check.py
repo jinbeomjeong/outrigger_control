@@ -50,7 +50,8 @@ cmov_ret = np.array([legs[k]["moving_part"]["com_retracted_m"] for k in LEGS], f
 lv = P["superstructure"]["auger_levels"]["top"]
 ms, cs = lv["mass_kg"], np.array(lv["com_m"], float)
 REF = json.load(open(ROOT + "/06_analysis/00_dynamics/reference.json", encoding="utf-8"))["slope_V12"]
-_VER_ALL = json.load(open(ROOT + "/06_analysis/01_chrono/verify_S2a_L1.json", encoding="utf-8"))
+VERIFY_S2A_JSON = ROOT + "/06_analysis/01_chrono/12_S2/verify_S2a_L1.json"
+_VER_ALL = json.load(open(VERIFY_S2A_JSON, encoding="utf-8"))
 VER = _VER_ALL["v12"]
 VER_FP = _VER_ALL["meta"].get("ground_bushing_force_point", ["contact_point"])
 

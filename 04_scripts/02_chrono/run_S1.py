@@ -19,7 +19,7 @@ Cases:
 
 Outputs: ``07_results/S1/<case>/record.npz`` + ``meta.json`` (Record, git-ignored),
 ``07_results/S1/<case>/result.json``, ``07_results/states/S1_L1_<level>.npz`` + meta,
-summary ``06_analysis/01_chrono/verify_S1_L1.json`` and figure ``verify_S1_L1.png``.
+summary ``06_analysis/01_chrono/11_S1/verify_S1_L1.json`` and figure ``verify_S1_L1.png``.
 Sampling: every 10 ms before the still window, every 1 ms (10 steps) inside it.
 Units SI; angles in deg where named ``*_deg``.
 """
@@ -41,8 +41,9 @@ sys.path.insert(0, str(ROOT / "03_src"))
 
 RESULTS = ROOT / "07_results" / "S1"
 STATES = ROOT / "07_results" / "states"
-SUMMARY = ROOT / "06_analysis" / "01_chrono" / "verify_S1_L1.json"
-FIGURE = ROOT / "06_analysis" / "01_chrono" / "verify_S1_L1.png"
+ANALYSIS_DIR = ROOT / "06_analysis" / "01_chrono" / "11_S1"
+SUMMARY = ANALYSIS_DIR / "verify_S1_L1.json"
+FIGURE = ANALYSIS_DIR / "verify_S1_L1.png"
 CASES = ("top", "middle", "bottom", "cross_top")
 PY = sys.executable
 ROUNDTRIP_S = 1.0
@@ -365,6 +366,7 @@ def summarize() -> None:
             for name, r in results.items()
         },
     }
+    SUMMARY.parent.mkdir(parents=True, exist_ok=True)
     SUMMARY.write_text(json.dumps(summary, indent=1, ensure_ascii=False), encoding="utf-8")
     print(f"wrote {SUMMARY}")
 
@@ -398,6 +400,7 @@ def summarize() -> None:
         if j == 0:
             ax.legend(fontsize=8)
     fig.tight_layout()
+    FIGURE.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(FIGURE, dpi=110)
     print(f"wrote {FIGURE}")
 

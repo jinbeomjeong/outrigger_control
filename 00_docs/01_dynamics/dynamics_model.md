@@ -1236,7 +1236,7 @@ $$\delta_{rel}\approx L\left(\frac{1}{\cos\beta}-\frac{1}{\cos\theta_s}\right)\a
 
 ### 4.1 접촉 모델 (개정 4)
 
-**시험 결과**([chrono_stick_friction_test.md](../03_chrono/chrono_stick_friction_test.md), pychrono 10.0.0, `06_analysis/01_chrono/stick_friction.json`):
+**시험 결과**([chrono_stick_friction_test.md](../03_chrono/chrono_stick_friction_test.md), pychrono 10.0.0, `06_analysis/01_chrono/00_conventions/stick_friction.json`):
 - Chrono 10 SMC 접촉에는 **정지 마찰(stick)이 없다.** MultiStep은 OneStep과 비트 단위로 같다(헤더 `ChSystemSMC.h:94` "MultiStep falls back to OneStep"이 실행으로 확인됨).
 - OneStep 접선력은 $F_t=(k_t\Delta t+c_t)\,v_t$인 점성력이다(μN에서 잘림). 다리 하나 몫 블록(9,745.7 kg)이 2° 경사에서 **0.109 m/s**로 계속 미끄러진다(식 $mg\sin\alpha/(k_t\Delta t+c_t)$ = 0.10935 m/s와 4자리 일치). 수평에서는 접선 진동 없이 표류한다.
 - 따라서 SMC 접선 모델만으로는 V7(접선 모드)·V8·V12의 전제가 성립하지 않는다. **"MultiStep을 쓴다"는 개정 3 권고를 지운다.**
@@ -1277,7 +1277,7 @@ L1 부싱 배치:
 | $c_t$ [N·s/m] | 실제 1.73×10⁴ / 1.72×10⁴. **부싱 입력 8.64×10³ / 8.59×10³**($c_t/2$). SMC $g_t$ = 0 | 부싱 실제 1.73×10⁴ / 1.72×10⁴, 입력 $c_t/2$ | L2: 1.07×10⁵ | 다리 ζ 0.03을 그대로: $c_t=2(0.03)\sqrt{k_t m/4}$ |
 | 마찰 μ | 0.5(원형 Coulomb, Python). SMC 재질 μ = 0 | 0.5(NSC) | 0.5 | 강판-콘크리트 0.4~0.6 |
 | 바닥 바디 | 고정, 질량 1×10⁹ kg | 고정(질량 무관) | 고정, 1×10⁹ kg | 4.1절 |
-| 솔버 | `SPARSE_LU` + 희소 패턴 고정(2026-10-20 사용자 결정, `06_analysis/01_chrono/solver_benchmark.json`; 옵션 `SPARSE_QR`·`PARDISO_MKL`) | `PSOR` 50회 | 직접 해법 | 시험 |
+| 솔버 | `SPARSE_LU` + 희소 패턴 고정(2026-10-20 사용자 결정, `06_analysis/01_chrono/01_cost/solver_benchmark.json`; 옵션 `SPARSE_QR`·`PARDISO_MKL`) | `PSOR` 50회 | 직접 해법 | 시험 |
 | 크롤러-바닥(들어 올리기 전) | **(개정 8, D안)** 트랙 2개(중심선 y = ±1.045 m) × (롤러 위치 구 6개, x = `roller_x_m`, 구 바닥 = 크롤러 바닥 + 끝 슈 구 6개, x = `end_shoe_x_m`, 구 바닥 = 크롤러 바닥 + `end_shoe_gap_m`(2.2~21.5 mm, 단방향)) = 구 24개, 반지름 0.05 m. 바닥 접촉 롤러 12구의 합 1×10⁸ N/m → **구당 8.333×10⁶ N/m**(끝 슈 구도 같은 값). 감쇠: 크롤러 위 heave ζ 0.05(콘크리트) → 총 1.974×10⁵ N·s/m를 롤러 12구에 나눠 구당 1.645×10⁴, **입력 $g_n$ = 0.426744 s⁻¹**(구당 감쇠 / 상부체 바디 질량 38,555.66 kg. 크롤러 구는 상부체 바디에 붙어 있다. 24구 모두 같은 재질). SMC $k_t=g_t=\mu=0$. 크롤러 밑 바닥은 패드 패치와 따로 두고 같은 재질 값을 준다. 들어 올리기 전 구간의 수평 표류는 판정하지 않는다. 이 모델로 경사 바닥 위 들어 올림은 하지 않는다. 총 강성 ×3 감도(`kn_total_sensitivity_range_N_m`)는 구당 $k_n$ ×3, 대시포트 ×√3 | NSC, μ 0.5(강체, 감쇠 없음) | 같음 | 가정(3.8절). 크롤러 위 모드 1.327 / 3.046 / 8.730 Hz(pitch / roll / heave), ζ 0.0084 / 0.0191 / 0.054, 활성 구 14개(롤러 12구 전부 + 앞 끝 슈 1개씩 닿음; 뒤 끝 슈는 0, 맨 뒤 롤러열은 9.59 kN으로 가장 작음, crawler_layout_check.json rear_row_force_N). ×3: 1.776 / 4.899 / 13.97 Hz. 토양 ζ 0.2는 SCM 단계에서 크롤러-토양 강성으로 환산한다 |
 
 ### 4.3 시간 간격과 적분기 (개정 7: 용도별)
@@ -1307,7 +1307,7 @@ L1 부싱 배치:
 - 솔버는 직접 해법(`SparseQR`, 있으면 Pardiso MKL)을 쓴다.
 - L1으로 레벨링 60 s를 돌리면 6×10⁵ 스텝이다(개정 6의 2배). 접지 전환 구간(약 1 s)만 1×10⁻⁵ s로 바꾸면 +1×10⁵ 스텝이다.
 
-**개정 8 검토: 수치 감쇠 전제(결정됨 2026-10-20, 개정 9: 일반 실행 1×10⁻⁴ s 유지, 2×10⁻⁴ s는 조건부 검토)**. S0 ① 실측(`06_analysis/01_chrono/smc_damping.json`, [damping_survey.md](damping_survey.md) "Chrono SMC 입력")에서 **SMC 접촉력은 명시 적분**이었다. 패드 구 하나(106.78 kg, $k_n$ 2.08×10⁷)의 진동이 반암시(symplectic) 오일러 + 명시 감쇠의 이산해와 맞고($g_n$ = 0이면 ζ −6×10⁻⁶), 후진 오일러 이산해(ζ 0.022)와는 맞지 않는다. `SetContactStiff(True)`도 바꾸지 않는다. 위 규칙($\zeta_{num}\approx\omega\Delta t/2$를 모든 힘에 적용)은 이 점에서 틀렸다. `04_scripts/01_dynamics/run_numerical_damping_review.py` → `06_analysis/00_dynamics/numerical_damping_review.json`(1 s 미만)으로 모드별로 다시 냈다.
+**개정 8 검토: 수치 감쇠 전제(결정됨 2026-10-20, 개정 9: 일반 실행 1×10⁻⁴ s 유지, 2×10⁻⁴ s는 조건부 검토)**. S0 ① 실측(`06_analysis/01_chrono/00_conventions/smc_damping.json`, [damping_survey.md](damping_survey.md) "Chrono SMC 입력")에서 **SMC 접촉력은 명시 적분**이었다. 패드 구 하나(106.78 kg, $k_n$ 2.08×10⁷)의 진동이 반암시(symplectic) 오일러 + 명시 감쇠의 이산해와 맞고($g_n$ = 0이면 ζ −6×10⁻⁶), 후진 오일러 이산해(ζ 0.022)와는 맞지 않는다. `SetContactStiff(True)`도 바꾸지 않는다. 위 규칙($\zeta_{num}\approx\omega\Delta t/2$를 모든 힘에 적용)은 이 점에서 틀렸다. `04_scripts/01_dynamics/run_numerical_damping_review.py` → `06_analysis/00_dynamics/numerical_damping_review.json`(1 s 미만)으로 모드별로 다시 냈다.
 
 - 이산 모델: 명시 = SMC 수직 접촉(패드 구, 크롤러 구)과 그 기하 예하중 항, SMC 감쇠, L2b-NSC Python 축 힘 법칙. 암시 = 지면·횡 부싱(`ChLoadBodyBodyBushing*`, ChLoad 야코비안), 구속. **부싱의 암시 처리는 가정**이다(실측 없음, V8(a)로 확인). 모드 $i$의 수치 감쇠는 $\zeta_{num,i}\approx r_i\,\omega_i\Delta t/2$, $r_i=\phi_i^TK_{bushing}\phi_i/\omega_i^2$(부싱 변형 에너지 몫)다. 12×12 이산 사상 고유값으로 같은 값을 확인했다(4자리 일치).
 - 단일 구 실측 재현: Δt 1×10⁻⁴ s에서 명시 사상 70.722 Hz / ζ 0.28841, 실측 70.689 Hz / 0.28857.
@@ -1468,7 +1468,7 @@ L1 부싱 배치:
 
 ### 5.2 S1 최종 판정 (개정 11, 2026-10-20)
 
-입력: cad-expert S1 실행(`04_scripts/02_chrono/run_S1.py all`, pychrono 10.0.0, Δt 1×10⁻⁴ s, `EULER_IMPLICIT_LINEARIZED`, SPARSE_LU + 패턴 고정), 요약 `06_analysis/01_chrono/verify_S1_L1.json`, 사례 `07_results/S1/{top,middle,bottom,cross_top}/result.json`. 중력 $\mathbf g=(0,0,-9.80665)$ m/s² 세계 좌표, 접촉력은 세계 좌표(`GetContactForce()`, 콜백 교차 0 N), 자세는 ZYX roll·pitch. 독립 확인은 `04_scripts/01_dynamics/run_s1_pdelta_check.py` → `06_analysis/00_dynamics/s1_pdelta_check.json`(dynamics-dev, YAML만 입력).
+입력: cad-expert S1 실행(`04_scripts/02_chrono/run_S1.py all`, pychrono 10.0.0, Δt 1×10⁻⁴ s, `EULER_IMPLICIT_LINEARIZED`, SPARSE_LU + 패턴 고정), 요약 `06_analysis/01_chrono/11_S1/verify_S1_L1.json`, 사례 `07_results/S1/{top,middle,bottom,cross_top}/result.json`. 중력 $\mathbf g=(0,0,-9.80665)$ m/s² 세계 좌표, 접촉력은 세계 좌표(`GetContactForce()`, 콜백 교차 0 N), 자세는 ZYX roll·pitch. 독립 확인은 `04_scripts/01_dynamics/run_s1_pdelta_check.py` → `06_analysis/00_dynamics/s1_pdelta_check.json`(dynamics-dev, YAML만 입력).
 
 | V | 항목 | 상단 | 중단 | 하단 | 교차(상단, 무초기화 53 s) | 기준 | 판정 |
 |---|---|---|---|---|---|---|---|
@@ -1543,7 +1543,7 @@ $$\Delta F_{front}\approx\frac{W\,h\,\theta}{L_x},\qquad h=z_{cg}-z_{ball}$$
 
 ### 5.3 S2a 최종 판정 (개정 12, 2026-10-20)
 
-입력: cad-expert S2a 실행(`04_scripts/02_chrono/run_S2a.py all`, pychrono 10.0.0, 상단, L1, Δt 1×10⁻⁴ s, `EULER_IMPLICIT_LINEARIZED`, SPARSE_LU + 패턴 고정, P코어 고정), 요약 `06_analysis/01_chrono/verify_S2a_L1.json`·`.png`, 사례 `07_results/S2a/{v7_roll,v7_pitch,v7_yaw,v12_pitch2,v12_roll2,v12_rollm2_pitch1.5}/`. 중력 $\mathbf g=(0,0,-9.80665)$ m/s² 세계 좌표. 힘은 세계 좌표(바닥 → 패드 반력), 자세는 ZYX roll·pitch, 쿼터니언은 wxyz(Chrono). 모드 투영 $\eta=\Phi^TMq$(`mode_shapes_rev5`), 감쇠 정현 맞춤. ζ는 식별값에서 $\zeta_{num,i}=r_i\omega_i\Delta t/2$(6.27×10⁻⁵ / 2.347×10⁻⁴ / 1.816×10⁻³)를 뺀 값이다. 독립 확인은 `04_scripts/01_dynamics/run_s2a_slope_pdelta_check.py` → `06_analysis/00_dynamics/s2a_slope_pdelta_check.json`(dynamics-dev).
+입력: cad-expert S2a 실행(`04_scripts/02_chrono/run_S2a.py all`, pychrono 10.0.0, 상단, L1, Δt 1×10⁻⁴ s, `EULER_IMPLICIT_LINEARIZED`, SPARSE_LU + 패턴 고정, P코어 고정), 요약 `06_analysis/01_chrono/12_S2/verify_S2a_L1.json`·`.png`, 사례 `07_results/S2a/{v7_roll,v7_pitch,v7_yaw,v12_pitch2,v12_roll2,v12_rollm2_pitch1.5}/`. 중력 $\mathbf g=(0,0,-9.80665)$ m/s² 세계 좌표. 힘은 세계 좌표(바닥 → 패드 반력), 자세는 ZYX roll·pitch, 쿼터니언은 wxyz(Chrono). 모드 투영 $\eta=\Phi^TMq$(`mode_shapes_rev5`), 감쇠 정현 맞춤. ζ는 식별값에서 $\zeta_{num,i}=r_i\omega_i\Delta t/2$(6.27×10⁻⁵ / 2.347×10⁻⁴ / 1.816×10⁻³)를 뺀 값이다. 독립 확인은 `04_scripts/01_dynamics/run_s2a_slope_pdelta_check.py` → `06_analysis/00_dynamics/s2a_slope_pdelta_check.json`(dynamics-dev).
 
 **V7(고유진동수·감쇠, 진단)**
 
@@ -1713,7 +1713,7 @@ $$d_i=\big[x_i,\ y_i,\ z_{pad,i}-e_{op,i}+h_b\big]^T-c,\qquad K=\sum_i\big[k_{n,
 
 ### 5.5 S2a 최종 재판정: 안 A 재실행 (개정 14, 2026-10-20)
 
-입력: cad-expert 재실행(`ground_bushing` 기본 작용점 = 볼 중심, hold 안전 장치 포함, `04_scripts/02_chrono/run_S2a.py all` + `dt_study`), python-expert의 판정 코드 rev13 전환(`verify/reference.py` 상수, V7·dt_study 재실행, V12는 저장 결과로 재판정). 요약 `06_analysis/01_chrono/verify_S2a_L1.json`(생성 2026-10-20 22:49:53, `meta.ground_bushing_force_point` = `ball_centre`)·`.png`, 원자료 `07_results/S2a/{v7_roll,v7_pitch,v7_yaw,v7_yaw_dt5e-05,v7_yaw_dt2e-04,v12_pitch2,v12_roll2,v12_rollm2_pitch1.5}/`. pychrono 10.0.0, 상단, L1, `EULER_IMPLICIT_LINEARIZED`, SPARSE_LU + 패턴 고정, Δt 1×10⁻⁴ s(dt_study 제외). 중력 $\mathbf g=(0,0,-9.80665)$ m/s² 세계 좌표. 힘은 세계 좌표(바닥 → 패드 반력), 자세는 ZYX roll·pitch(°), 쿼터니언 wxyz(Chrono). 모드 투영은 `V7_ball_centre_bushing_rev13 / mode_shapes`. 독립 확인은 `run_s2a_slope_pdelta_check.py`(dynamics-dev, 볼 중심 변형 비교 키를 이번에 더함) → `06_analysis/00_dynamics/s2a_slope_pdelta_check.json`.
+입력: cad-expert 재실행(`ground_bushing` 기본 작용점 = 볼 중심, hold 안전 장치 포함, `04_scripts/02_chrono/run_S2a.py all` + `dt_study`), python-expert의 판정 코드 rev13 전환(`verify/reference.py` 상수, V7·dt_study 재실행, V12는 저장 결과로 재판정). 요약 `06_analysis/01_chrono/12_S2/verify_S2a_L1.json`(생성 2026-10-20 22:49:53, `meta.ground_bushing_force_point` = `ball_centre`)·`.png`, 원자료 `07_results/S2a/{v7_roll,v7_pitch,v7_yaw,v7_yaw_dt5e-05,v7_yaw_dt2e-04,v12_pitch2,v12_roll2,v12_rollm2_pitch1.5}/`. pychrono 10.0.0, 상단, L1, `EULER_IMPLICIT_LINEARIZED`, SPARSE_LU + 패턴 고정, Δt 1×10⁻⁴ s(dt_study 제외). 중력 $\mathbf g=(0,0,-9.80665)$ m/s² 세계 좌표. 힘은 세계 좌표(바닥 → 패드 반력), 자세는 ZYX roll·pitch(°), 쿼터니언 wxyz(Chrono). 모드 투영은 `V7_ball_centre_bushing_rev13 / mode_shapes`. 독립 확인은 `run_s2a_slope_pdelta_check.py`(dynamics-dev, 볼 중심 변형 비교 키를 이번에 더함) → `06_analysis/00_dynamics/s2a_slope_pdelta_check.json`.
 
 **V7(개정 13 기준, 판정 ±3 % / ζ ±30 %)**
 
@@ -1800,7 +1800,7 @@ $$\zeta_{fit}(\Delta t)=\zeta_{phys}+s\,\Delta t,\qquad s_{pred}=\tfrac12 r_3\om
 
 ### 5.6 S2b 최종 판정: 모터·크롤러·접지 이벤트 (개정 15, 2026-10-21)
 
-입력: cad-expert S2b 실행(`04_scripts/02_chrono/run_S2b.py all`, 4병렬 약 3분). 요약 `06_analysis/01_chrono/verify_S2b_L1.json`(생성 2026-10-20 23:51:00, 자동 사전 판정 전 항목 통과)·`.png`, 원자료 `07_results/S2b/{air_short,v11,crawler_top,crawler_middle,crawler_bottom,event_fast_FL_dt1e-04,event_fast_FL_dt1e-05,event_slow_FL_dt1e-04,event_slow_FL_dt1e-05}/`, 스냅숏 `07_results/states/S2b_crawler_{top,middle,bottom}`. 코드는 읽기만 했다(`chrono/actuators.py`, `scenarios/{crawler_settle,stroke}.py`, `verify/s2b.py`). pychrono 10.0.0, L1, `EULER_IMPLICIT_LINEARIZED`, SPARSE_LU + 패턴 고정, Δt 1×10⁻⁴ s(이벤트는 1×10⁻⁵ s도). 중력 $\mathbf g=(0,0,-9.80665)$ m/s²(세계). 자세는 ZYX roll·pitch(°), $u_z$는 영 자세(크롤러 바닥면이 수평으로 바닥에 닿은 자세) 대비 원점 높이. 모터 위치·힘은 다리 축(+ = 신장 = 패드 −z)이다.
+입력: cad-expert S2b 실행(`04_scripts/02_chrono/run_S2b.py all`, 4병렬 약 3분). 요약 `06_analysis/01_chrono/12_S2/verify_S2b_L1.json`(생성 2026-10-20 23:51:00, 자동 사전 판정 전 항목 통과)·`.png`, 원자료 `07_results/S2b/{air_short,v11,crawler_top,crawler_middle,crawler_bottom,event_fast_FL_dt1e-04,event_fast_FL_dt1e-05,event_slow_FL_dt1e-04,event_slow_FL_dt1e-05}/`, 스냅숏 `07_results/states/S2b_crawler_{top,middle,bottom}`. 코드는 읽기만 했다(`chrono/actuators.py`, `scenarios/{crawler_settle,stroke}.py`, `verify/s2b.py`). pychrono 10.0.0, L1, `EULER_IMPLICIT_LINEARIZED`, SPARSE_LU + 패턴 고정, Δt 1×10⁻⁴ s(이벤트는 1×10⁻⁵ s도). 중력 $\mathbf g=(0,0,-9.80665)$ m/s²(세계). 자세는 ZYX roll·pitch(°), $u_z$는 영 자세(크롤러 바닥면이 수평으로 바닥에 닿은 자세) 대비 원점 높이. 모터 위치·힘은 다리 축(+ = 신장 = 패드 −z)이다.
 
 독립 확인: `04_scripts/01_dynamics/run_s2b_crawler_check.py`(dynamics-dev, 입력은 YAML·`reference.json`·위 요약 JSON의 Chrono 값뿐, 프로젝트 `03_src`를 쓰지 않음) → `06_analysis/00_dynamics/s2b_crawler_check.json`.
 - A: 크롤러 정착 정역학. 강체(상부체 + 다리 4개 $e$ = 0) + 구 24개 단방향 수직 스프링 $k_n\max(\delta,0)$를 정확한 회전으로 푼다(`fsolve`, 잔차 ≤ 1×10⁻¹² W). 같은 모델의 선형(P-δ 없음)과 선형 + 기하 강성 변형도 푼다.
@@ -1909,7 +1909,7 @@ $$\theta_{exact}\approx\frac{\theta_{lin}}{1-\sum_iF_ih_i/k_\theta},\qquad k_\th
 
 ### 5.7 S3 최종 판정: 수치 감쇠 · 들어 올림 · 다리 단독 신장 · Δt (개정 17, 2026-10-21)
 
-입력: cad-expert S3 실행(`04_scripts/02_chrono/run_S3.py`, 사례 위치 `07_results/S3/index.json`). 요약 `06_analysis/01_chrono/verify_S3_L1.json`(생성 2026-10-21 03:08:26, `params_sha256` 8d1cc183…, 사전 판정 166항목 중 162 통과)·`.png`. 코드는 읽기만 했다(`chrono/{actuators,energy,runs,model}.py`, `scenarios/lift.py`, `verify/s3.py`). pychrono 10.0.0, 상단, L1, `EULER_IMPLICIT_LINEARIZED`, SPARSE_LU + 패턴 고정. 중력 $\mathbf g=(0,0,-9.80665)$ m/s²(세계). 자세는 ZYX roll·pitch(°)다. 시각은 **등가 원점(모터 출발 명령 + $T_r/2$ + 이산 램프 $\Delta t/2$, 실측)** 기준이다. 힘은 패드 접촉 수직력(세계 +z) 또는 실린더 힘(= 접촉력 − 로드 무게)이다.
+입력: cad-expert S3 실행(`04_scripts/02_chrono/run_S3.py`, 사례 위치 `07_results/S3/index.json`). 요약 `06_analysis/01_chrono/13_S3/verify_S3_L1.json`(생성 2026-10-21 03:08:26, `params_sha256` 8d1cc183…, 사전 판정 166항목 중 162 통과)·`.png`. 코드는 읽기만 했다(`chrono/{actuators,energy,runs,model}.py`, `scenarios/lift.py`, `verify/s3.py`). pychrono 10.0.0, 상단, L1, `EULER_IMPLICIT_LINEARIZED`, SPARSE_LU + 패턴 고정. 중력 $\mathbf g=(0,0,-9.80665)$ m/s²(세계). 자세는 ZYX roll·pitch(°)다. 시각은 **등가 원점(모터 출발 명령 + $T_r/2$ + 이산 램프 $\Delta t/2$, 실측)** 기준이다. 힘은 패드 접촉 수직력(세계 +z) 또는 실린더 힘(= 접촉력 − 로드 무게)이다.
 
 독립 확인: `04_scripts/01_dynamics/run_s3_lift_check.py`(dynamics-dev, `03_src` 미사용, 입력은 YAML·`reference.json`·위 요약 JSON과 V8(a) `energy.npz`) → `06_analysis/00_dynamics/s3_lift_check.json`(약 34 s).
 - A: V8(a) 크롤러 에너지 분해. 1 s 평균의 선형 추세, 모드 맞춤 ζ에서 예측한 에너지 변화율 $-2\zeta_i\omega_iE_i$, 스펙트럼(2$f_i$ 선 대 반암시 오일러 예측 $(\omega_i\Delta t/2)E_i$).
@@ -2246,7 +2246,7 @@ Set-Location C:\workspace\outrigger_control
 
 개정 4 재실행 확인(2026-10-19): `run_reference.py`를 다시 돌린 결과 개정 3의 `reference.json` 항목은 **모두 비트 단위로 같고**(차이 0건), 새 키 `L2b_NSC_...`, `slope_V12.*.L2b_NSC`, `time_step` 3개, `hydraulic_circuit`만 더해졌다. `run_timedomain_check.py` 결과도 차이 0건이다.
 
-난수는 쓰지 않는다. Chrono 10.0.0 헤더(`Chrono-dev`)는 읽기만 했다. 정지 마찰 시험 결과(`06_analysis/01_chrono/stick_friction.json`)는 cad-expert가 만든 것을 읽기만 했다.
+난수는 쓰지 않는다. Chrono 10.0.0 헤더(`Chrono-dev`)는 읽기만 했다. 정지 마찰 시험 결과(`06_analysis/01_chrono/00_conventions/stick_friction.json`)는 cad-expert가 만든 것을 읽기만 했다.
 
 ## 9. 가정
 

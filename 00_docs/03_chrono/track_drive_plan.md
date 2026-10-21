@@ -5,7 +5,7 @@
 - 사용자 결정(2026-10-20): 시험용으로 크롤러 하부체의 **스프로킷(유압 주행 모터 구동)** 을 돌려 궤도가 움직이고, 파일드라이버가 **전진·후진**하는 모션을 만든다. 방식은 **실제 궤도 모델**(Chrono Vehicle 궤도차량 계열: 슈 개별 바디 + 핀 연결, 스프로킷 이빨–슈 맞물림, 아이들러, 하부 롤러, 트랙 장력)이다. 접선력 근사나 위치 지정 이동은 쓰지 않는다.
 - **스프로킷(주행 모터)은 앞쪽**(기체 +x, CAD +Z 끝 바퀴)이고 뒤쪽 끝 바퀴(Ø548)는 아이들러(장력 장치)다 — **사용자 확정(2026-10-20)**. CAD 형상 근거는 2.2절.
 - 범위: 레벨링(마스트 수직 상태 자세 제어) 트랙과 **별개인 선택 트랙**이다. 레벨링 모델(L1/L2b)과 빌더·시나리오·기록을 분리한다(7절).
-- 입력(읽기만 함): `CLAUDE.md`, `00_docs/00_roadmap.md`, `00_docs/03_chrono/chrono_build_plan.md`(R1~R16, 4절 비용), `00_docs/00_cad/cad_review.md` 8.6·9절, `01_cad/06_brep/derived/crawler/*`, `01_cad/06_brep/prototypes/0_1_1_746.bbrep`(B-rep 캐시, 단면 조사만), `03_src/outrigger_sim/chrono/system.py`, `06_analysis/01_chrono/solver_benchmark.json`, `00_docs/01_dynamics/dynamics_model.md` 3.8절, `02_params/rexome33.yaml`(읽기만), `00_docs/00_cad/cad_origin_mass_imu.md` 2절(크롤러 질량).
+- 입력(읽기만 함): `CLAUDE.md`, `00_docs/00_roadmap.md`, `00_docs/03_chrono/chrono_build_plan.md`(R1~R16, 4절 비용), `00_docs/00_cad/cad_review.md` 8.6·9절, `01_cad/06_brep/derived/crawler/*`, `01_cad/06_brep/prototypes/0_1_1_746.bbrep`(B-rep 캐시, 단면 조사만), `03_src/outrigger_sim/chrono/system.py`, `06_analysis/01_chrono/01_cost/solver_benchmark.json`, `00_docs/01_dynamics/dynamics_model.md` 3.8절, `02_params/rexome33.yaml`(읽기만), `00_docs/00_cad/cad_origin_mass_imu.md` 2절(크롤러 질량).
 - 담당: **cad**(cad-expert) 모델·시뮬레이션, **dyn**(dynamics-expert) 판정, **py**(python-expert) 엔진 독립 기록·그림 도구(필요 시).
 
 ## 0. 요약
@@ -206,7 +206,7 @@ B-rep 캐시(`brep_cache.load_part("0:1:1:746")`, 3 s·약 1 GB)와 크롤러 �
 ### 6.1 결과물
 
 - `07_results/track_drive/<scenario>/<run_id>/`: npz(시각, 섀시 위치·자세·속도, 슈 88개 위치·자세, 스프로킷 각·각속도·토크, 아이들러 위치·장력, 롤러 하중 24개, 지면 접촉력 합·좌우·앞뒤, 슈 장력), `meta.json`(YAML·`track_geometry.json`·생성 JSON sha256, Δt, 솔버, pychrono 버전, 벽시계).
-- 요약: `06_analysis/01_chrono/track_drive_T<n>.json`.
+- 요약: `06_analysis/01_chrono/20_track_drive/track_drive_T<n>.json`.
 - 그림: 측면도 GIF(궤도 감김, 슈 번호 색 하나 강조해 순환이 보이게, 지면·롤러·스프로킷·아이들러, 상부체 외곽) + 아래 패널 시계열(주행 속도 vs $\omega r_{eff}$, 미끄럼률, pitch·roll [°], 앞/뒤 롤러 하중 [kN], 스프로킷 토크 [kN·m]). matplotlib Agg(이 env에 VTK 없음). Irrlicht 창(`ChTrackedVehicleVisualSystemIrrlicht`)은 사용자가 원할 때만 띄운다.
 
 ## 7. 기존 로드맵과의 관계
@@ -251,7 +251,7 @@ B-rep 캐시(`brep_cache.load_part("0:1:1:746")`, 3 s·약 1 GB)와 크롤러 �
 **우리 크롤러 모델이 아니다.** Chrono 예제 차량 템플릿(M113 단일 핀 JSON)의 사본을 고쳐, 프로젝트 `make_system`이 만든 시스템에 넣고 스프로킷 토크로 전진·후진시킨 API 연기 시험이다. 물리 판정(정적 평형·미끄럼률·에너지)은 하지 않았다.
 
 - 스크립트: `04_scripts/02_chrono/track_drive/smoke_drive_gif.py`(ruff check·format 통과)
-- 결과: GIF `06_analysis/01_chrono/track_drive_smoke.gif`(git 제외, 1100×740 px, 126프레임, 60 ms/프레임, 약 2.1 MB), 요약 `06_analysis/01_chrono/track_drive_smoke.json`(추적). 고친 JSON 사본과 프레임 PNG는 `07_results/track_drive_smoke/`(git 제외)에 실행 때 만든다. pychrono 설치 폴더의 원본 데이터는 고치지 않는다.
+- 결과: GIF `06_analysis/01_chrono/20_track_drive/track_drive_smoke.gif`(git 제외, 1100×740 px, 126프레임, 60 ms/프레임, 약 2.1 MB), 요약 `06_analysis/01_chrono/20_track_drive/track_drive_smoke.json`(추적). 고친 JSON 사본과 프레임 PNG는 `07_results/track_drive_smoke/`(git 제외)에 실행 때 만든다. pychrono 설치 폴더의 원본 데이터는 고치지 않는다.
 - 재생성(프로젝트 루트, 약 1분):
 
 ```powershell

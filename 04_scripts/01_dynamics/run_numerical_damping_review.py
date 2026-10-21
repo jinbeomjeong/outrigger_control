@@ -1,6 +1,6 @@
 """Numerical damping and stability of the Chrono L1 / L2b-NSC time stepping, by mode (S0 item 1 follow-up).
 
-Background (06_analysis/01_chrono/smc_damping.json, 05_tests/chrono/test_smc_damping.py, cad-expert 2026-10-20):
+Background (06_analysis/01_chrono/00_conventions/smc_damping.json, 05_tests/chrono/test_smc_damping.py, cad-expert 2026-10-20):
 Chrono 10 SMC contact forces are integrated explicitly by EULER_IMPLICIT_LINEARIZED (SetContactStiff(True) changes
 nothing): a single pad sphere on the floor behaves like semi-implicit (symplectic) Euler with explicit damping, no
 omega dt / 2 numerical damping (gn = 0 -> zeta -1e-5). The rule of 00_docs/01_dynamics/dynamics_model.md 4.3
@@ -39,7 +39,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import dyn_model as dm  # noqa: E402
 
 OUT = dm.PROJECT_ROOT / "06_analysis" / "00_dynamics" / "numerical_damping_review.json"
-SMC_JSON = dm.PROJECT_ROOT / "06_analysis" / "01_chrono" / "smc_damping.json"
+SMC_JSON = dm.PROJECT_ROOT / "06_analysis" / "01_chrono" / "00_conventions" / "smc_damping.json"
 DTS = (5e-5, 1e-4, 2e-4, 5e-4, 1e-3)
 SHARE = 0.1   # rule: zeta_num <= 10 % of the physical modal zeta (dynamics_model.md 4.3)
 

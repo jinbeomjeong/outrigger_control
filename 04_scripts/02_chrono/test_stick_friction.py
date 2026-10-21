@@ -15,7 +15,7 @@ Ground: fixed box, tilted about +y by the slope angle; downhill tangent t = (cos
 Units SI, Z-up, gravity (0, 0, -9.80665) set explicitly.
 
 Run:  C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe -I 04_scripts/02_chrono/test_stick_friction.py
-Out:  06_analysis/01_chrono/stick_friction.json, 06_analysis/01_chrono/stick_friction.png
+Out:  06_analysis/01_chrono/00_conventions/stick_friction.json, stick_friction.png
 """
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ GROUND_MASS = 1.0e9  # fixed ground; Hooke damping uses eff_mass = m1 m2/(m1+m2)
 V_STICK = 1.0e-3  # [m/s] ASSUMPTION: re-enable bushing damping when slip velocity drops below this
 BUSH_DAMP_FACTOR = 0.5  # measured here: ChLoadBodyBodyBushing* gives twice the input damping (zeta 0.10 for c = ct)
 
-OUT = ROOT / "06_analysis" / "01_chrono"
+OUT = ROOT / "06_analysis" / "01_chrono" / "00_conventions"
 
 
 def build(method, slope_deg, dt, tdm="OneStep", slip_thr=None, nsc_solver="PSOR", nsc_iter=50,

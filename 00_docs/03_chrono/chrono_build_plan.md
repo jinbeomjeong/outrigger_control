@@ -53,7 +53,7 @@
 - **일반 실행 Δt 1×10⁻⁴ s 유지, 2×10⁻⁴ s 완화는 조건부 검토**(`dynamics_model.md` 4.3절 개정 8 검토). V8(a) 판정을 모드별(1~6차 각각 ≤ 0.1 ζ, 1차는 상한만, 3차 $\zeta_{num}$ 예측 ±30 %, 2Δt/Δt 비는 3차)로 바꾸고, S2a V7 진단 ①~⑤에서 빼는 수치 감쇠를 $r_i\omega_i\Delta t/2$(1×10⁻⁴ s: 6.3×10⁻⁵ / 2.3×10⁻⁴, 3차 1.8×10⁻³)로 고쳤다. S3 체크리스트에 "V8(a) 통과 시 2×10⁻⁴ s 복귀를 사용자에게 다시 묻는다" 결정 대기 항목을 넣었다.
 - 고친 곳: S2a V7 진단 행, S3 V8(a)·V4 행·위험 ①-2·체크리스트, S7 표 행·V4(NSC) 행·체크리스트, 6절 Δt 확정 행.
 - 정리(2026-10-20, 무결성 점검, dynamics-expert): 머리말과 3.1절 표·3.4절 단위 시험 행을 실제 코드 상태(`engine.py`, `verify/reference.py`, 단위·Chrono 시험 파일)로 고쳤고, S2b 크롤러 정착 행의 "뒤 롤러열 0"을 "뒤 끝 슈 0, 맨 뒤 롤러열 9.59 kN"(`crawler_layout_check.json`)으로 바로잡았다. 절차·판정·기준값은 그대로다.
-- 보완(2026-10-20, cad-expert): S0 마지막 항목 **전체 규모 스텝 비용 실측**을 반영했다(`06_analysis/01_chrono/step_cost_S0.json`). L1 패드 접지 0.190~0.195 ms/스텝(계획 단가 0.2 ms의 0.95~0.98배), 크롤러 정착 0.071~0.074 ms(0.35~0.37배), P코어 고정 기준. OS 기본 배치는 E코어로 가 2.5배 느려진다. 고친 곳: S0 체크리스트·단계 표 S0 행, 4절(계획 단가 표, 실측 절, 1×10⁻⁵ s 표 V9 V4 행), 6절 #24, 7절 스텝 단가. 단계별 합계·벽시계 값은 바꾸지 않았다.
+- 보완(2026-10-20, cad-expert): S0 마지막 항목 **전체 규모 스텝 비용 실측**을 반영했다(`06_analysis/01_chrono/01_cost/step_cost_S0.json`). L1 패드 접지 0.190~0.195 ms/스텝(계획 단가 0.2 ms의 0.95~0.98배), 크롤러 정착 0.071~0.074 ms(0.35~0.37배), P코어 고정 기준. OS 기본 배치는 E코어로 가 2.5배 느려진다. 고친 곳: S0 체크리스트·단계 표 S0 행, 4절(계획 단가 표, 실측 절, 1×10⁻⁵ s 표 V9 V4 행), 6절 #24, 7절 스텝 단가. 단계별 합계·벽시계 값은 바꾸지 않았다.
 
 개정 6(2026-10-20, dynamics-expert 편집): [dynamics_model.md](../01_dynamics/dynamics_model.md) **개정 8**(크롤러 접촉 **D안** 사용자 결정, CLAUDE.md "크롤러 접촉 배치")을 반영했다. 절차는 그대로이고 크롤러 구간 수치와 V4 판정 문구만 바뀌었다.
 - **V4 판정**: "첫 접지 = 후방 쌍 15.006 s" → **다리별 접지 시각이 같은 배치 기준해와 각각 ±0.05 s**. L1 D 기준해 FL 15.051 / FR 15.049 / RL 15.148 / RR 15.148 s(×3 감도 실행이면 15.243 / 15.243 / 15.147 / 15.146 s). L2b-NSC(강체 크롤러 극한) 15.375 / 15.375 / 15.040 / 15.040 s. 접지 순서는 판정하지 않는다(크롤러 강성 가정에 따라 뒤집힘).
@@ -110,7 +110,7 @@
 - 3절을 실제 뼈대(`pyproject.toml`, 하위 패키지 5개, `05_tests/conftest.py`)에 맞췄다. 4절 실행 시간을 다시 계산했다.
 
 공통 사항:
-- 입력(읽기만 함): `CLAUDE.md`, `README.md`, `02_params/rexome33.yaml`, `00_docs/01_dynamics/dynamics_model.md`(개정 7), `00_docs/01_dynamics/damping_survey.md`, `00_docs/01_dynamics/actuator_L2_feasibility.md`, `06_analysis/00_dynamics/actuator_L2_feasibility.json`, `00_docs/03_chrono/chrono_stick_friction_test.md`, `04_scripts/02_chrono/test_stick_friction.py`, `00_docs/02_hydraulic/hydraulic_circuit.md`, `06_analysis/00_dynamics/reference.json`, `06_analysis/01_chrono/stick_friction.json`, `00_docs/03_chrono/chrono_build_plan_review.md`, `00_docs/05_sensors/imu_cabin_and_accuracy_review.md`(개정 3), `00_docs/04_control/control_candidates_comparison.md`(개정 3).
+- 입력(읽기만 함): `CLAUDE.md`, `README.md`, `02_params/rexome33.yaml`, `00_docs/01_dynamics/dynamics_model.md`(개정 7), `00_docs/01_dynamics/damping_survey.md`, `00_docs/01_dynamics/actuator_L2_feasibility.md`, `06_analysis/00_dynamics/actuator_L2_feasibility.json`, `00_docs/03_chrono/chrono_stick_friction_test.md`, `04_scripts/02_chrono/test_stick_friction.py`, `00_docs/02_hydraulic/hydraulic_circuit.md`, `06_analysis/00_dynamics/reference.json`, `06_analysis/01_chrono/00_conventions/stick_friction.json`, `00_docs/03_chrono/chrono_build_plan_review.md`, `00_docs/05_sensors/imu_cabin_and_accuracy_review.md`(개정 3), `00_docs/04_control/control_candidates_comparison.md`(개정 3).
 - 판정 기준은 `00_docs/01_dynamics/dynamics_model.md` 5절 V0~V17이다. 이 문서는 기준을 새로 만들지 않고 단계에 배치한다.
 - 담당(CLAUDE.md 작업 규칙):
   - **cad**(cad-expert): Chrono 모델·시뮬레이션 스크립트
@@ -205,11 +205,11 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
   - [x] `make_system()`(R1·R2·R11) (2026-10-20, `03_src/outrigger_sim/chrono/system.py`, `05_tests/chrono/test_system.py` 통과; R6 바닥 1×10⁹ kg·fixed, dt 용도별 YAML 선택, SMC·NSC 낙하 연기 시험 포함. Pardiso MKL 크래시(0xC06D007F)는 env 미활성 실행에서 llvm-openmp 포워더 `libiomp5md.dll` → `libomp.dll`을 찾지 못한 DLL 검색 경로 문제였고, Pardiso를 요청할 때만 `<env>\Library\bin\libomp.dll`을 절대 경로로 미리 로드해 해결했다(PATH 변경 없음). 낙하 시험에서 PARDISO_MKL·SPARSE_LU가 SPARSE_QR와 비트 단위로 일치. 시험 42건). **R11 기본 솔버 변경 반영(2026-10-20, 사용자 결정)**: L1 기본을 `SPARSE_LU` + 희소 패턴 고정으로 바꿨다(`L1_DEFAULT_SOLVER`, `L1_DEFAULT_LOCK_SPARSITY_PATTERN`, 인자 `lock_sparsity_pattern`, meta `solver.lock_sparsity_pattern`, 헬퍼 `force_sparsity_pattern_update()`). 기본 경로 낙하 시험은 이전 기준(QR, 잠금 끔)과 비트 단위로 같고, 실행 중 링크·부싱(새 컨테이너, 기존 컨테이너)을 넣고 빼도 잠금 켬 = 잠금 끔(차 0 m). 시험 53건
   - 잠금과 구조 변경(pychrono 10.0.0 확인): 잠금은 첫 Setup(또는 `ForceSparsityPatternUpdate()` 요청) 뒤 패턴 학습을 건너뛴다. 시스템을 통한 추가·제거는 `ChSystem::is_updated`를 지워 다음 스텝 Setup이 `analyze = true`로 불리고 패턴을 다시 만든다(그 스텝 행렬 조립 시간이 첫 스텝과 같음). 시스템이 모르는 변경(기존 컨테이너에 하중 추가, `SetFixed` 전환)도 Chrono가 원소를 삽입식으로 써서 결과가 같았다. 탐침 7사례(LU·Pardiso, 잠금 켬/끔/갱신) 모두 비트 단위 일치. 다만 `ForceSparsityPatternUpdate()`가 Chrono 문서의 처방이므로 그런 변경 뒤에는 헬퍼를 부른다. 처음부터 비활성인 링크를 `SetDisabled(False)`로 켜는 방식은 잠금과 무관하게 LU 분해 실패·QR/Pardiso NaN이 나서 이벤트 수단으로 쓰지 않는다(생성·제거로 한다)
   - [x] `engine`(SimEngine 프로토콜) (2026-10-20, `03_src/outrigger_sim/engine.py`, `05_tests/unit/test_engine.py` 25건 통과; `typing.Protocol` + `runtime_checkable`, `reset(start: AnalyticStart | Snapshot) -> TruthState`(시각 0, 명령 0), `restore`는 시각·유지 명령까지 그대로 이어감, `Snapshot`(엔진 이름·버전·모델, `params_sha256`, 시각, 유지 명령, 수치 배열 payload), 이름·모델·지문 불일치 시 `SnapshotMismatchError`, 수명 오류 `EngineNotReadyError`·`EngineClosedError`, `with`는 `contextlib.closing`. 오거 level은 `Params`(지문 포함)에 묶여 reset 인자가 아님)
-  - [x] Chrono 10 SMC 감쇠 처리 확인: Hooke `gn = eff_mass × gn` 규약을 단일 접촉 감쇠 시험으로 확인(감쇠비 결정 반영 전제, `00_docs/01_dynamics/damping_survey.md`) (2026-10-20, `05_tests/chrono/test_smc_damping.py` 22건 통과, 진단 `04_scripts/02_chrono/smc_damping_check.py` → `06_analysis/01_chrono/smc_damping.json`; 소스 해석과 같음: c = gn·m₁m₂/(m₁+m₂)(바닥 1e9/1e3/1 kg), 재질 합성은 kn·gn 산술 평균, YAML gn으로 4패드 강체 heave ζ 0.02999/0.02998(Δt 1e-4/1e-5 s, 설계 0.03)·7.3938 Hz(설계 7.3933). SMC 접촉력은 명시 적분이라 ωΔt/2 수치 감쇠가 없고 `SetContactStiff(True)`는 효과 없음)
+  - [x] Chrono 10 SMC 감쇠 처리 확인: Hooke `gn = eff_mass × gn` 규약을 단일 접촉 감쇠 시험으로 확인(감쇠비 결정 반영 전제, `00_docs/01_dynamics/damping_survey.md`) (2026-10-20, `05_tests/chrono/test_smc_damping.py` 22건 통과, 진단 `04_scripts/02_chrono/smc_damping_check.py` → `06_analysis/01_chrono/00_conventions/smc_damping.json`; 소스 해석과 같음: c = gn·m₁m₂/(m₁+m₂)(바닥 1e9/1e3/1 kg), 재질 합성은 kn·gn 산술 평균, YAML gn으로 4패드 강체 heave ζ 0.02999/0.02998(Δt 1e-4/1e-5 s, 설계 0.03)·7.3938 Hz(설계 7.3933). SMC 접촉력은 명시 적분이라 ωΔt/2 수치 감쇠가 없고 `SetContactStiff(True)`는 효과 없음)
   - [x] `GroundBushingCoulomb`(R15 포함), 블록 회귀 3건과 히스테리시스 시험 (2026-10-20, `03_src/outrigger_sim/chrono/ground_bushing.py`, `05_tests/chrono/test_ground_bushing.py` 18건 통과; 블록 회귀는 기준 파일 값(`stick_friction.json` `reference`)·Δt 2×10⁻⁴ s·기본 SPARSE_LU+잠금으로 2° 탄성 변위 상대차 1.8×10⁻¹⁴·미끄럼 0, 수평 v0 4.702273 Hz·ζ 0.053112(기준과 2×10⁻¹⁰ 이내), 30° 미끄럼 상대차 −7×10⁻¹⁰. 들었다 놓기: Δt 1×10⁻⁴·1×10⁻⁵ s 모두 소멸 1·생성 1·chatter 0, 소멸 = 첫 N≤0 스텝 + (n_lift−1)Δt(n_lift 10/100), 재생성 고정점 = 착지점, 잠금 켬/끔 궤적 차 ≤ 1×10⁻¹² m. t = 0 `attach()`는 초기 조건이라 이벤트로 세지 않음. Chrono 스냅숏 함수(R16 Chrono 쪽)는 `chrono/snapshot.py`, `05_tests/chrono/test_snapshot.py` 19건)
   - [x] `record`(npz + meta.json) + 스냅숏 저장·복원(R16). **결정됨(2026-10-20): ① 별도 저장 ② 저장** — ① 실제 스트로크(L1 모터 위치와 약 5 mm 차)를 진값 필드로 따로 둠, ② `Measurements`도 Record에 저장(V 항목의 IMU 겉보기 기울기에 필요)
   - [x] `verify/reference` 전체 문자열 키 상수와 존재 시험(R12) (2026-10-20, `03_src/outrigger_sim/verify/reference.py`, `05_tests/unit/test_reference.py` 177건 통과; 상수 68개(자리표시 `<level>`·`<case>`·`<beta>` 전개 158경로), 파일 4개(`reference.json`, `actuator_L2_feasibility.json`, `stick_friction.json`, `v7_diagnostic.json`)별 sha256, 이 문서의 기준값 표기 37개를 파싱해 상수에 모두 포함되는지 시험)
-  - [x] 전체 규모 스텝 비용 재측정(4절; 크롤러 D안 구 24개 포함, 용도별 dt 1×10⁻⁴·1×10⁻⁵ s). 부싱 회귀는 기준 파일과 같은 2×10⁻⁴ s로 한다 (2026-10-20, `04_scripts/02_chrono/solver_benchmark/step_cost_S0.py` → `06_analysis/01_chrono/step_cost_S0.json`; `make_system` 기본 SPARSE_LU+잠금, `GroundBushingCoulomb`, 패드·크롤러 바닥 패치 분리, P코어 고정. 패드 접지 190 / 195 µs/스텝(1×10⁻⁴ / 1×10⁻⁵ s, 시뮬레이션 1 s당 1.9 / 19.5 s), 크롤러 정착 71 / 74 µs(0.71 / 7.4 s). 계획 단가 0.2 ms 대비 0.95~0.98배(패드), 0.35~0.37배(크롤러). 패드 상태 비용의 72 %가 지면 부싱(Python 훅 81 µs + Chrono 부싱 하중 55 µs). OS 기본 배치는 E코어로 가 2.5배 느려짐 → 4절. NSC는 L2b 모델이 없어 재지 않았다(S7))
+  - [x] 전체 규모 스텝 비용 재측정(4절; 크롤러 D안 구 24개 포함, 용도별 dt 1×10⁻⁴·1×10⁻⁵ s). 부싱 회귀는 기준 파일과 같은 2×10⁻⁴ s로 한다 (2026-10-20, `04_scripts/02_chrono/solver_benchmark/step_cost_S0.py` → `06_analysis/01_chrono/01_cost/step_cost_S0.json`; `make_system` 기본 SPARSE_LU+잠금, `GroundBushingCoulomb`, 패드·크롤러 바닥 패치 분리, P코어 고정. 패드 접지 190 / 195 µs/스텝(1×10⁻⁴ / 1×10⁻⁵ s, 시뮬레이션 1 s당 1.9 / 19.5 s), 크롤러 정착 71 / 74 µs(0.71 / 7.4 s). 계획 단가 0.2 ms 대비 0.95~0.98배(패드), 0.35~0.37배(크롤러). 패드 상태 비용의 72 %가 지면 부싱(Python 훅 81 µs + Chrono 부싱 하중 55 µs). OS 기본 배치는 E코어로 가 2.5배 느려짐 → 4절. NSC는 L2b 모델이 없어 재지 않았다(S7))
 
 ### S1 상부체 + 고정 다리 + 지면 부싱, 정적
 
@@ -224,7 +224,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
   - `legs.<leg>`: `moving_part.*`, `pad_bottom_center_retracted_m`, `attachment_point_m`, `pad.swivel_center_above_pad_bottom_m`
   - `contact.rigid_floor.L1.*`, `contact.rigid_floor.L1.derivation.operating_extension_m`
   - `contact.rigid_floor.geometry`
-- **산출물**: `07_results/S1/`, `07_results/states/S1_L1_<level>.npz`, `06_analysis/01_chrono/verify_S1_L1.json`
+- **산출물**: `07_results/S1/`, `07_results/states/S1_L1_<level>.npz`, `06_analysis/01_chrono/11_S1/verify_S1_L1.json`
 - **통과 기준**(V1은 3단계 모두)
 
 | V | 판정 | 허용 | 기준값 키 |
@@ -248,7 +248,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
   - [x] 해석 정적해 초기화 + 부싱 t = 0 (2026-10-20, `scenarios/settle.py` `analytic_static_pose`: V3 자세 + V2 침투 평균으로 원점 높이, 다리별 침투 잔차 ≤ 1.8×10⁻⁴ mm. `chrono/model.py` `L1Model`, `run_settle`)
   - [x] 패드별 수직력: 프레임 확인, 콜백 교차 (2026-10-20: `GetContactForce()`는 세계 좌표(30° 기울인 바디 시험), `ReportContactCallback` 힘은 접촉면 좌표·B 바디 기준이며 세계 변환 합이 `GetContactForce()`와 0 N 차. 위치 모터 `GetMotorForce()` + = 패드를 누르는 방향 = 실린더 힘)
   - [x] 초기화 없는 53 s 정착 교차 1건 (2026-10-20, top: V1~V3·V13 통과, 정적값 차 ≤ 2.2 N·자세 ≤ 2×10⁻⁶°. 단 영 자세 낙하 충격으로 후방 패드 부상·재접지 6건, 후방 미끄럼 약 3.9 mm, 부싱 잔류 접선 예하중 약 ±4.1~4.8 kN(합 0)이 남는다 → 해석 정적해 초기화 권장 근거)
-  - [x] 정착 상태 저장(3단계) (2026-10-20, `07_results/states/S1_L1_{top,middle,bottom}.npz`, 재빌드 복원 뒤 1 s 위치 차 ≤ 1.8×10⁻¹⁵ m. 요약 `06_analysis/01_chrono/verify_S1_L1.json`, 그림 `verify_S1_L1.png`, 실행 `04_scripts/02_chrono/run_S1.py all` 약 2.5분)
+  - [x] 정착 상태 저장(3단계) (2026-10-20, `07_results/states/S1_L1_{top,middle,bottom}.npz`, 재빌드 복원 뒤 1 s 위치 차 ≤ 1.8×10⁻¹⁵ m. 요약 `06_analysis/01_chrono/11_S1/verify_S1_L1.json`, 그림 `verify_S1_L1.png`, 실행 `04_scripts/02_chrono/run_S1.py all` 약 2.5분)
   - [x] **dyn 최종 판정: 통과**(2026-10-20, `dynamics_model.md` 개정 11, 5.2절). 접촉력 − 선형 기준 최대 +66.5 N(≤ 956 N), 독립 비선형 정역학과 ≤ 0.24 N, 침투 ≤ 0.09 %, 자세 ≤ 6.1×10⁻⁵°, V13 드리프트 ≤ 2.5×10⁻⁵°·변동 ≤ 20.5 N. 67 N 차 = P-δ(무게중심 높이에 비례, 20.9 N/m). 결정: V0 재질 float32 판정(사용자 결정), 해석 초기화 기본, `stroke_true` 정의 유지. 재빌드 복원 1~4 ulp 차는 반올림이고 문제 아님
 
 ### S2a 지면 부싱 동특성 · 경사 정적
@@ -259,7 +259,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
   - `scenarios/slope`: 바닥 바디 회전, 레벨링 자세에서 구가 경사면에 닿은 위치에 놓고 t = 0에 부싱 생성, 중력 램프
   - `verify/metrics`: 다채널 식별(S4와 공용)
 - **입력 키**: S1 전부. V12 신장은 `reference.json / slope_V12 / <case> / extension_m`을 쓴다(0.1 mm 반올림 저장값; 개정 10부터 반올림 없는 `reference.json / slope_V12 / <case> / extension_exact_m`(기준해 신장, 패드 바닥이 경사면 위)과 `reference.json / slope_V12 / <case> / extension_sphere_touch_m`(구가 경사면에 정확히 닿는 신장 = 실행 시작)이 있다). `<case>`는 `ground roll 0 deg, pitch 2 deg`, `ground roll 2 deg, pitch 0 deg`, `ground roll -2 deg, pitch 1.5 deg`다.
-- **산출물**: `06_analysis/01_chrono/verify_S2a_L1.json`
+- **산출물**: `06_analysis/01_chrono/12_S2/verify_S2a_L1.json`
 - **통과 기준**
 
 | V | 판정 | 허용 | 기준값 키 |
@@ -276,7 +276,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
 - **체크리스트**
   - [x] 초기 속도 가진(roll, pitch, 그리고 진단 ⑤일 때 yaw 2 s) (2026-10-20, cad: `scenarios/impulse`·`verify/metrics`. S1 상단 스냅숏 복원 뒤 모드 기준점 둘레 강체 각속도(roll·pitch 0.02°, yaw 0.01° 상당, 가정), 투영 η = ΦᵀMq, 감쇠 정현 맞춤. 1차 1.7857 Hz·ζ 0.007774, 2차 2.9856 Hz·ζ 0.013894(수치 감쇠 rωΔt/2 뺀 값) → 진단 ① 정상. yaw는 2 s로 늘 돌림(판정에는 안 씀): 3차 5.8273 Hz·ζ 0.037296(기준 0.0373) → $c_t$ 입력 = $c_t/2$ 확인. 항복·사건 0)
   - [x] 경사 바닥 + t = 0 부싱 + 중력 램프 (2026-10-20, cad: `scenarios/slope`, `L1Model(floor_pose=...)`, `chrono/runs.run_gravity_ramp`. 바닥 바디를 (0, 0, z_floor) 둘레로 회전, 수평 자세·정확한 접면 신장(기준 신장과 ≤ 0.044 mm, 반올림 몫), 반코사인 램프 3 s. 시작 부싱 변형 ≤ 2.8×10⁻¹⁵ m. **초기 고정(hold)**: g = 0 출발이면 SMC 수직력이 처음 약 30 ms 동안 0이라 R15가 1 ms 뒤 부싱을 지우고 74 ms에 다시 만든다 → `attach(hold_until_loaded=True)`로 N > N_th까지 부싱 유지(기본 꺼짐, S0·S1 불변). 중력 변경도 1스텝 지연(실측))
-  - [x] V12 3경우, 정착 ≥ 53 s 뒤 마지막 3 s 평균, 항복 스텝 수 기록 (2026-10-20, cad 사전 판정 통과: 수직 최대 차 +295 N(≤ 956), 수평 최대 차 11 N(≤ 200), 미끄럼 0·항복 0·사건 0, 탄성 변위 기준 면내력/k_t와 ≤ 0.05 %, V13 통과. 요약 `06_analysis/01_chrono/verify_S2a_L1.json`·`.png`, 원자료 `07_results/S2a/<case>/`, 실행 `04_scripts/02_chrono/run_S2a.py all` 약 6분. dyn 최종 판정 대기)
+  - [x] V12 3경우, 정착 ≥ 53 s 뒤 마지막 3 s 평균, 항복 스텝 수 기록 (2026-10-20, cad 사전 판정 통과: 수직 최대 차 +295 N(≤ 956), 수평 최대 차 11 N(≤ 200), 미끄럼 0·항복 0·사건 0, 탄성 변위 기준 면내력/k_t와 ≤ 0.05 %, V13 통과. 요약 `06_analysis/01_chrono/12_S2/verify_S2a_L1.json`·`.png`, 원자료 `07_results/S2a/<case>/`, 실행 `04_scripts/02_chrono/run_S2a.py all` 약 6분. dyn 최종 판정 대기)
   - [x] **dyn 최종 판정: 통과**(2026-10-20, `dynamics_model.md` 개정 12, 5.3절). V7 진단 ①(정상), 3차 ζ 0.0373으로 R7($c_t/2$) 확정, 6개 모드 진동수 ±0.2 %·ζ ±3 %. V12 수직 차 최대 +295 / −281 N(≤ 956) = P-δ(≤ 68 N) + 구 지렛대(≤ 226 N), 독립 경사 바닥 비선형 정역학과 ≤ 1.2 N(`06_analysis/00_dynamics/s2a_slope_pdelta_check.json`). 수평 차 ≤ 11 N, 미끄럼·항복·사건 0, 탄성 변위(면내력/$k_t$) ≤ 0.07 %. V13 통과(접촉력 양자 $k_n\cdot2^{-23}$ m ≈ 2.5 N). 판단: ① hold 승인(조건부), ② 정확한 접면 신장 수용, ③ 탄성 변위 문구 정정, ④ 구 지렛대 — 부싱 작용점 볼 중심 이동(안 A) **사용자 결정 대기**, ⑤ 중력 1스텝 지연 규약 안, ⑥ 크롤러 구 접촉력 0으로 문제없음(이 단계의 "크롤러 없음" = 크롤러 접촉 없음)
   - [x] (위임, cad) hold 안전 장치 (2026-10-20, cad): `run_gravity_ramp(hold_deadline_s=램프 길이)`가 램프 끝에 hold가 남은 다리가 있으면 `HoldNotReleasedError`로 실행을 중단하고, `GroundBushingCoulomb.hold_max_tangential_N`(hold 중 최대 부싱 힘)을 기록한다. `verify/s2a.hold_checks`가 해제 시각 ≤ 램프 끝과 최대 접선력 ≤ μ$N_{th}$ = 50 N을 V12 항목으로 판정한다. 재실행 값: 해제 74.1~75.8 ms, 최대 접선력 0.37 N(pitch 2°) / 3.17 N(roll 2°) / 2.13 N(대각)
   - [x] **안 A(사용자 결정 2026-10-20)**: L1 지면 부싱 작용점을 볼 중심으로 옮기고 S1·S2a 재실행(약 6.5분, cad). dyn 몫 완료(2026-10-20, `dynamics_model.md` 개정 13, 5.4절): V7 기준값 키 `V7_ball_centre_bushing_rev13`(3단계, 수평·수직 스프링 볼 높이), 진단 문턱, V12 기대 차 `L1_plan_A_expected_chrono_minus_reference_rev13`, 신장 `extension_exact_m`·`extension_sphere_touch_m`. **cad 몫 완료(2026-10-20)**: `ground_bushing` 기본 작용점 = 볼 중심(`force_point`, 옛 동작은 `"contact_point"` 옵션), 스냅숏에 `force_point_code` 저장(키 없는 옛 스냅숏 = 접촉점, 다른 작용점 복원은 `ForcePointMismatchError`). S0 블록 회귀 영향 없음(정렬 링크로 회전 고정, 1 s 위치 차 ≤ 1.5×10⁻⁹ m). S1 4사례 재실행 통과(평균 수직력 차 ≤ 0.16 N, 스냅숏 재생성). S2a 재실행 통과: V7 1·2·3차 1.79818 / 3.00440 / 5.81462 Hz, ζ 보정 0.0078327 / 0.0139957 / 0.0372612(자동 판정은 옛 키 기준). V12 Chrono − 기준 수직 최대 +67.9 / −67.4 N, rev13 기대 차와 ≤ 0.63 N(수평 ≤ 0.11 N). ~~남은 것: `verify/reference.py` 상수(python), 재실행 dyn 판정~~ → **완료(2026-10-20)**: python 몫(rev13 상수를 `verify/reference.py`에 넣고 판정 코드를 rev13 키로 전환, V7·dt_study 재실행, V12 저장 결과 재판정, pytest 676 통과), dyn 재판정(아래 항목)
@@ -296,7 +296,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
   - `legs.<leg>.extension_range_m`
   - `contact.crawler.*`(R13의 키 전부: `sphere_layout.*`(`scheme`, `track_centre_y_m`, `roller_x_m`, `end_shoe_x_m`, `end_shoe_gap_m`, `sphere_radius_m`), `kn_per_sphere_N_m`, `kn_total_sensitivity_range_N_m`, `gn_per_sphere_1_s`, `damping_ratio_heave`, `damping_total_N_s_m`, `smc_material`, `collision_filter`), `simulation.settle_on_crawler_min_s`
   - `ground.crawler_bottom_z_m`
-- **산출물**: `06_analysis/01_chrono/verify_S2b_L1.json`, `07_results/states/S2b_crawler_<level>.npz`(크롤러 위 정착 상태)
+- **산출물**: `06_analysis/01_chrono/12_S2/verify_S2b_L1.json`, `07_results/states/S2b_crawler_<level>.npz`(크롤러 위 정착 상태)
 - **통과 기준**
 
 | V | 판정 | 허용 | 기준값 키 |
@@ -320,7 +320,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
   - [x] V11(공중 다리; 속도가 실제로 $v_{max}$에 닿는지도 확인) (2026-10-20, cad 사전 판정 통과: ±1 m/s·±$v_{max}$·±2$v_{max}$·끝을 넘는 명령 62 s, 스텝마다 최대 속도 0.022666666704 m/s(= $v_{max}$, 1×10⁻³ 안에서 도달), 위치 0 ~ 0.68 m(초과 2×10⁻¹⁶ m), 0 ↔ 0.68 m 정지-정지 30.0991 s(기대 30.1 s ±0.05 안). **`actuator.full_stroke_time_s` 30.0 s 대비 +0.099 s**는 램프 결정의 결과라 기대값을 30.1 s로 판정했다 — **dyn 확인(2026-10-21): 30.1 s 기준 확정**, 차 −0.87 ms는 측정 정의(끝 1 μm 앞 통과 + 10 ms 보간))
   - [x] 크롤러 구 배열·패치·재질(R13), 패밀리(R14) (2026-10-20, cad: S1 `v0_checks` 89항목 × 3단계 + 구 바닥 높이 − 바닥 = YAML `end_shoe_gap_m`(롤러 0) 차 ≤ 1×10⁻⁹ m 통과. 크롤러 구 배열 읽기는 엔진 독립 `scenarios/crawler_settle.py`로 옮기고 `chrono/contact`가 다시 내보낸다)
   - [x] 접지·부상 이벤트(R15; $t_{lift}$ 1 ms, $N_{th}$ 100 N을 이벤트 시험으로 조정) (2026-10-20, cad 사전 판정: **값 유지**. 크롤러 위 상단, FL 하강 → 부상 → 재접지, $v_{max}$와 1 mm/s 두 경우 × Δt 1×10⁻⁴·1×10⁻⁵ s: 네 실행 모두 생성·소멸·생성 3건, chatter 0. 두 Δt 사건 시각 차 최대 0.30 ms($v_{max}$) / 0.67 ms(1 mm/s 재접지) ≤ 1 ms. 1 mm/s·1×10⁻⁴ s에서 부상 순간 $N$이 한 스텝 0 위로 튀었으나(Bullet 양자 잡음) $t_{lift}$가 흡수. 소멸 = 마지막 $N\le0$ 시작 + $(n_{lift}-1)\Delta t$. 크롤러에 접선 구속이 없어(R8) 한 다리만 짚으면 FL 패드가 미끄러진다($v_{max}$: 항복 4,871 스텝, 누적 1.6 mm) — 기록. `run_S2b.py event_*`)
-  - [x] 크롤러 위 정착 상태 저장(3단계, 해석해 초기화. 안 되면 ≥ 65.5 s) (2026-10-20, cad: 해석 정착 자세 = 강체 + 24 단방향 구의 정확한 기하(P-δ 포함) 뉴턴 해, `scenarios/crawler_settle.crawler_static_pose`. 상단 $u_z$ −3.1849 mm, pitch +0.17366°(선형·P-δ 없는 기준해 −3.1907 mm / +0.16947°와 차는 P-δ, 같은 함수의 `linear=True`가 기준해를 0.48 N 안에서 재현). Chrono 10 s 정착 + 5 s 정지 창에서 해석 자세와 $u_z$ ≤ 1.2×10⁻⁴ mm·각 ≤ 2×10⁻⁶° 차, 활성 구 14개, 드리프트 ≤ 2.0×10⁻⁵°, 크롤러 수직력 변동 ≤ 72 N(≤ 0.1 % W/4 = 95.6 N), 패드 접촉 0. 크롤러 위 모드(Chrono 맞춤) 상단 1.3272 / 3.0554 / 8.7476 Hz, ζ 0.00843 / 0.0191 / 0.0538(기준 1.327 / 3.046 / 8.73 Hz; roll +0.31 %는 yaw 관성 응축 차로 보임). 스냅숏 `07_results/states/S2b_crawler_{top,middle,bottom}`, 왕복 1 s 위치 차 ≤ 8.9×10⁻¹⁶ m. 요약 `06_analysis/01_chrono/verify_S2b_L1.json`·`.png`, 실행 `04_scripts/02_chrono/run_S2b.py all` 4병렬 약 3분. dyn 최종 판정 대기)
+  - [x] 크롤러 위 정착 상태 저장(3단계, 해석해 초기화. 안 되면 ≥ 65.5 s) (2026-10-20, cad: 해석 정착 자세 = 강체 + 24 단방향 구의 정확한 기하(P-δ 포함) 뉴턴 해, `scenarios/crawler_settle.crawler_static_pose`. 상단 $u_z$ −3.1849 mm, pitch +0.17366°(선형·P-δ 없는 기준해 −3.1907 mm / +0.16947°와 차는 P-δ, 같은 함수의 `linear=True`가 기준해를 0.48 N 안에서 재현). Chrono 10 s 정착 + 5 s 정지 창에서 해석 자세와 $u_z$ ≤ 1.2×10⁻⁴ mm·각 ≤ 2×10⁻⁶° 차, 활성 구 14개, 드리프트 ≤ 2.0×10⁻⁵°, 크롤러 수직력 변동 ≤ 72 N(≤ 0.1 % W/4 = 95.6 N), 패드 접촉 0. 크롤러 위 모드(Chrono 맞춤) 상단 1.3272 / 3.0554 / 8.7476 Hz, ζ 0.00843 / 0.0191 / 0.0538(기준 1.327 / 3.046 / 8.73 Hz; roll +0.31 %는 yaw 관성 응축 차로 보임). 스냅숏 `07_results/states/S2b_crawler_{top,middle,bottom}`, 왕복 1 s 위치 차 ≤ 8.9×10⁻¹⁶ m. 요약 `06_analysis/01_chrono/12_S2/verify_S2b_L1.json`·`.png`, 실행 `04_scripts/02_chrono/run_S2b.py all` 4병렬 약 3분. dyn 최종 판정 대기)
   - [x] **dyn 최종 판정: 통과**(2026-10-21, `dynamics_model.md` 개정 15, 5.6절). V0 모터 부호·매달린 로드 −1047.1900 N(= −$m_{rod}g$), 크롤러 89항목 × 3. 램프 관성 반력 24.2043 N = $m_{rod}a$(램프 0이면 $m_{rod}v_{max}/\Delta t$). V11 최대 속도 = $v_{max}$(상대 2×10⁻¹⁰), 정지-정지 30.0991 s(기준 30.1 s). V13 축 위반 ≤ 1.5×10⁻¹¹ m, 크롤러 정지 창 드리프트 ≤ 2.0×10⁻⁵°·수직력 변동 ≤ 72 N. R16 왕복 ≤ 8.9×10⁻¹⁶ m. R15 4실행 사건 3건·chatter 0, 두 Δt 차 ≤ 0.67 ms, 소멸 지연 = $(n_{lift}-1)\Delta t$ → **$t_{lift}$ 1 ms·$N_{th}$ 100 N 유지**. 크롤러 정착: 독립 정확 정역학(`run_s2b_crawler_check.py`)과 $u_z$ ≤ 1.2×10⁻⁴ mm·각 ≤ 1.3×10⁻⁶°, 선형 기준과의 pitch 차 +2.47 / +1.92 / +1.37 %는 P-δ 전부(기하 강성 $\sum F_ih_i/k_\theta$ 예측과 같음). 크롤러 위 모드: 독립 6자유도(세계 축 관성)와 pitch·roll ≤ 0.02 %, heave ≤ 0.19 %. roll 기준 대비 +0.31 %는 기준이 몸체 축 관성을 쓴 탓(독립 몸체 축 변형이 3.046 Hz 재현)이고 Chrono가 맞다. 판단 ①~⑤는 머리말 개정 12
 
 ### S3 수치 감쇠 → 들어 올림 · 정착 → 다리 단독 신장, Δt 확정
@@ -332,7 +332,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
   - `verify/s3`(V8(a)·V4·V5·V6·V9 사전 판정), `verify/metrics.fit_damped_sum`(가까운 모드 동시 맞춤), `chrono/energy`(V8(a) 에너지, 접촉 변형 에너지는 구 중심 높이로 계산), `chrono/runs.run_windowed`(Δt 창)
   - `04_scripts/02_chrono/run_S3.py run --jobs N`(`batch.run_cases`, P코어, 동시 6개 이하; 옛 이름 `run_verify.py`)
 - **입력 키**: S2b 전부, `control.F_min_cylinder_N`, `simulation.crawler_clearance_m`, `simulation.settle_on_pads_min_s`, `contact.rigid_floor.L1.derivation.operating_extension_m`(계단 정지 신장)
-- **산출물**: `06_analysis/01_chrono/verify_S3_L1.json`, Δt 확정 요청(dyn 판정 뒤 YAML 재생성)
+- **산출물**: `06_analysis/01_chrono/13_S3/verify_S3_L1.json`, Δt 확정 요청(dyn 판정 뒤 YAML 재생성)
 
 L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top /`(아래 표의 키는 이 뒤에 붙는 전체 문자열이다).
 - **통과 기준**(실행 순서대로)
@@ -375,7 +375,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 - **입력 키**: S3 전부. β 감도는 다음 키를 쓴다.
   - 강성: `reference.json / L1_beta_sensitivity_top / beta_6.9e+08 / k_L1_N_m`, `reference.json / L1_beta_sensitivity_top / beta_1.0e+09 / k_L1_N_m`, `reference.json / L1_beta_sensitivity_top / beta_1.6e+09 / k_L1_N_m`
   - 판정 값: `penetration_mm`, `static_pitch_deg`, `dF_per_mm_FL_N`, `FL+_F_min_mm`, `FL+_liftoff_mm`, `f_Hz_top_ball_centre_rev13`(개정 10 안 A; `f_Hz_top`은 접촉점 부싱 이력, 1차가 0.7 % 낮음)
-- **산출물**: `06_analysis/01_chrono/verify_S4_L1.json`, β 감도 표
+- **산출물**: `06_analysis/01_chrono/14_S4/verify_S4_L1.json`, β 감도 표
 - **통과 기준**
 
 | V | 판정 | 허용 | 기준값 키 |
@@ -641,7 +641,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 | `05_tests/chrono/` | **있음** | `test_system.py`(R1·R2·R6·R11 시스템 팩토리), `test_smc_damping.py`(SMC Hooke 감쇠 규약), `test_ground_bushing*.py`, `test_snapshot.py`, `test_model_S1.py`, `test_actuators.py`, `test_actuator_guard.py`, 마커 `chrono` |
 | `05_tests/verify/` | **있음** | `test_S1_L1.py`, `test_S2a_L1.py`, `test_S2b_L1.py`, `test_S3_L1.py`(3.4절 V 시험) |
 | `05_tests/data/` | **있음** | C2 회귀 기준 궤적(`c2_reduced_model_traces.*`, `c2_reanchor_traces.*`) |
-| `04_scripts/02_chrono/run_S1.py` | **있음**(S1) | S1 4사례(사례마다 별도 프로세스, P코어 고정) + 요약 `06_analysis/01_chrono/verify_S1_L1.json`·그림 |
+| `04_scripts/02_chrono/run_S1.py` | **있음**(S1) | S1 4사례(사례마다 별도 프로세스, P코어 고정) + 요약 `06_analysis/01_chrono/11_S1/verify_S1_L1.json`·그림 |
 | `04_scripts/02_chrono/run_S2a.py`, `run_S2b.py` | **있음**(S2a·S2b) | 단계별 실행기 + 요약 `verify_S2a_L1.json`·`verify_S2b_L1.json`·그림 |
 | `04_scripts/02_chrono/run_S3.py` | **있음**(S3) | **S3 실행기**(V4·V5·V6·V8(a)·V9) + 요약 `verify_S3_L1.json`·그림. 그림 GIF는 `render_S3_gifs.py` |
 | `04_scripts/02_chrono/run_verify.py` | **미구현** | 통합 V 실행기(계획). 지금은 단계별 `run_S*.py`가 그 역할을 한다 |
@@ -686,7 +686,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 | 엔진 규약 | `05_tests/chrono/` | `chrono` | 수 초 ~ 1분 | V0 규약, 부싱 블록 회귀, 스냅숏 왕복 |
 | V 시험 | `05_tests/verify/test_S<n>_*.py` | `sim`, 긴 것은 `slow` | 수 분 ~ 수십 분 | `verify/checks`를 호출해 assert |
 
-- 판정 실행은 `04_scripts/02_chrono/run_verify.py --stage S<n> --model L1 --level top --jobs N`이 한다. 결과는 `07_results/verify/<stage>/<run_id>/`(npz, report.json, 그림), 정착 상태는 `07_results/states/`, 요약은 `06_analysis/01_chrono/verify_<stage>_<model>.json`(git 추적)에 둔다.
+- 판정 실행은 `04_scripts/02_chrono/run_verify.py --stage S<n> --model L1 --level top --jobs N`이 한다. 결과는 `07_results/verify/<stage>/<run_id>/`(npz, report.json, 그림), 정착 상태는 `07_results/states/`, 요약은 `06_analysis/01_chrono/1<n>_S<n>/verify_<stage>_<model>.json`(단계별 하위 폴더, 2026-10-21 재편)(git 추적)에 둔다.
 - pytest와 `run_verify.py`는 같은 `checks`를 쓴다. 자동 통과/실패는 사전 점검이고 최종 판정은 dyn이 한다.
 - 일상 회귀는 `pytest -m "not slow"`로 돌린다. `07_results/`는 `.gitignore`에 있다.
 
@@ -705,7 +705,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 
 | 구성 | µs/스텝 | 출처 |
 |---|---|---|
-| 단일 블록 SMC / SMC + 부싱 훅 / NSC PSOR 50 | 9 / 33 / 9 | `06_analysis/01_chrono/stick_friction.json` |
+| 단일 블록 SMC / SMC + 부싱 훅 / NSC PSOR 50 | 9 / 33 / 9 | `06_analysis/01_chrono/00_conventions/stick_friction.json` |
 | 전체 규모 L1(바디 5, 모터 4, 패드 구 4, 부싱 4, SPARSE_QR; 2026-10-20부터 기본은 SPARSE_LU + 잠금, 아래 벤치마크) | 146 / **163**(4다리 훅) | scratchpad 비용 측정(물리 미검증, 2 s) |
 | 전체 규모 NSC(바디 5, 힘 모터 4, PSOR 50) | 35 / **43**(힘 법칙 훅) | 같은 측정 |
 
@@ -726,7 +726,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 - 크롤러 구 배열과 SCM은 포함하지 않았다. 크롤러 D안은 S0 실측(아래)에 들어 있다. SCM은 S9에서 잰다.
 - 솔버 비교(2026-10-20, 5바디 L1: 상부체 + 다리 이동부 4 + 위치 모터 4 + 패드 구 4, Δt 1×10⁻⁴ s, 1 s): SPARSE_QR **91 µs/스텝**, SPARSE_LU 141 µs, PARDISO_MKL 300~415 µs(스레드 수·희소 패턴 잠금 변형, 결과 차 ≤ 1×10⁻⁹ N). 이 규모에서는 Pardiso로 비용을 줄일 수 없다. (이 5바디 측정은 아래 전체 규모 벤치마크로 대체됐고, L1 기본 솔버는 2026-10-20에 SPARSE_LU + 잠금으로 바뀌었다.)
 
-**선형 솔버 벤치마크(2026-10-20, 요약 `06_analysis/01_chrono/solver_benchmark.json`, 그림 `solver_benchmark.png`, 모습 `solver_benchmark_{L1,SCM,scale}.gif`)**. 이 PC, pychrono 10.0.0, 사례마다 별도 프로세스, 예열 뒤 3구간 벽시계 중앙값(µs/스텝). LS = Chrono `GetTimerLSsetup + GetTimerLSsolve`(행렬 조립 + 분해 + 풀이). "잠금" = `LockSparsityPattern(True)`. 결과 일치는 같은 예열 스텝 뒤 상태량 최대 차. 이 측정은 S0 정식 비용 측정(체크리스트 항목)이 아니다.
+**선형 솔버 벤치마크(2026-10-20, 요약 `06_analysis/01_chrono/01_cost/solver_benchmark.json`, 그림 `solver_benchmark.png`, 모습 `solver_benchmark_{L1,SCM,scale}.gif`)**. 이 PC, pychrono 10.0.0, 사례마다 별도 프로세스, 예열 뒤 3구간 벽시계 중앙값(µs/스텝). LS = Chrono `GetTimerLSsetup + GetTimerLSsolve`(행렬 조립 + 분해 + 풀이). "잠금" = `LockSparsityPattern(True)`. 결과 일치는 같은 예열 스텝 뒤 상태량 최대 차. 이 측정은 S0 정식 비용 측정(체크리스트 항목)이 아니다.
 
 재생성(스크립트 `04_scripts/02_chrono/solver_benchmark/`, 개별 결과 `07_results/solver_benchmark/`): GIF만 `python -I -u 04_scripts/02_chrono/solver_benchmark/make_gifs.py all`(저장된 결과 사용, 약 5분), 요약 JSON·PNG만 `python -I 04_scripts/02_chrono/solver_benchmark/summarize.py`, 전체 재측정 + 요약 + GIF `python -I -u 04_scripts/02_chrono/solver_benchmark/run_benchmark.py all --report`(약 50분, 그중 N = 500 SPARSE_QR 두 건이 약 27분). `python`은 `Chrono-dev` 인터프리터다.
 
@@ -748,7 +748,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 - 모델 규모별 권장: ① 지금 L1 전체 규모(KKT 약 54) → SPARSE_LU + 잠금(QR 잠금 켬과 차 약 9 %, 결과 동일). ② L2b-NSC는 PSOR(반복) 그대로, 직접 솔버 비교 대상이 아니다. ③ SCM 단계 → 솔버는 무관(LU + 잠금), 격자 크기와 활성 영역이 비용을 정한다(2 cm, 현재 영역이면 Δt 1×10⁻⁴ s에서 시뮬레이션 1 s당 약 31 s). ④ KKT 180 이상의 큰 모델 → SPARSE_LU. QR은 쓰지 않는다. Pardiso는 이 Chrono 빌드에서 KKT 4,500까지 이점이 없다.
 - **R11 기본 솔버 변경(반영됨, 사용자 결정 2026-10-20)**: L1 기본을 SPARSE_QR에서 **SPARSE_LU + `LockSparsityPattern(True)`**로 바꿨다. `make_system()`(`chrono/system.py`), R11, S0 체크리스트 메모를 함께 고쳤다. SPARSE_QR·PARDISO_MKL과 잠금 끔은 옵션으로 남겼다. 잠금 상태의 구조 변경 처리는 S0 체크리스트 `make_system()` 메모를 본다.
 
-**S0 전체 규모 스텝 비용 실측(2026-10-20, S0 체크리스트 항목)**. 요약 `06_analysis/01_chrono/step_cost_S0.json`, 사례별 결과 `07_results/step_cost_S0/`. 재생성: `python -I -u 04_scripts/02_chrono/solver_benchmark/step_cost_S0.py run`(9사례 약 4분, `python`은 `Chrono-dev`).
+**S0 전체 규모 스텝 비용 실측(2026-10-20, S0 체크리스트 항목)**. 요약 `06_analysis/01_chrono/01_cost/step_cost_S0.json`, 사례별 결과 `07_results/step_cost_S0/`. 재생성: `python -I -u 04_scripts/02_chrono/solver_benchmark/step_cost_S0.py run`(9사례 약 4분, `python`은 `Chrono-dev`).
 - 조건: Intel i7-14700(논리 28), pychrono 10.0.0(projectchrono py312h418371c_1198), 사례마다 별도 프로세스, **P코어 고정 + EcoQoS 해제**. 오거 top. 모델: 상부체 + 다리 이동부 4(위치 모터 4, 상수 0) + 패드 구 4 + 크롤러 D안 구 24 + 바닥 1×10⁹ kg(패드 패치 4, 크롤러 띠 패치 2 — 재질 합성이 섞이지 않게 분리) + `GroundBushingCoulomb`(스텝마다 `after_step`). 바디 6(바닥 포함), 링크 4, 기타 항목 4(부싱 컨테이너; 크롤러 상태 0), 속도 좌표 30, 구속 24, KKT 54. 접촉 수 패드 상태 4, 크롤러 상태 10~16.
 - 두 상태: **패드 접지**(운용 신장, 크롤러 50 mm 위, 정적 침투만큼 내려 시작, t = 0 부싱 부착) / **크롤러 정착**(다리 수축, 패드 공중, 부싱 없음, 정적 침투만큼 내려 시작). 예열(1×10⁻⁴ s 0.5 s, 1×10⁻⁵ s 0.2 s) 뒤 1 s 구간을 1×10⁻⁴ s 5회, 1×10⁻⁵ s 3회 쟀다(스텝마다 `DoStepDynamics`와 훅을 따로 계시). 벽시계는 계시 없는 1 s 구간 값이다. 모든 사례에서 R15 이벤트 0, 끝 시점 수직력 합/중량 0.99~1.01(물리 판정은 아님).
 

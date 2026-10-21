@@ -6,18 +6,20 @@ Reads (nothing is simulated; the inputs are not modified):
         v12_pitch2, v12_roll2, v12_rollm2_pitch1.5
     07_results/S2b/<case>/{record.npz, meta.json, result.json}
         air_short, v11, crawler_{top,middle,bottom}, event_{fast,slow}_FL_dt{1e-04,1e-05}
-    06_analysis/01_chrono/verify_S2a_L1.json, verify_S2b_L1.json   automatic pre-check summaries
+    06_analysis/01_chrono/12_S2/verify_S2a_L1.json, verify_S2b_L1.json
+                                                     automatic pre-check summaries
     06_analysis/00_dynamics/s2a_slope_pdelta_check.json             independent V12 statics
     06_analysis/00_dynamics/s2b_crawler_check.json                  independent crawler checks
     06_analysis/00_dynamics/reference.json   slope_V12 rev-12 model values (fallback below)
-    --before-dir (optional)   result.json backups of the rev-12 S2a run (contact-point bushing,
-                             before plan A): S2a_v12_<case>.json. Without it the rev-12 values
+    --before-dir (default 06_analysis/01_chrono/12_S2/history/before_planA/)
+                             result.json backups of the rev-12 S2a run (contact-point bushing,
+                             before plan A): S2a_v12_<case>.json. Without them the rev-12 values
                              are the independent model values of reference.json
                              (slope_V12 / <case> / L1_plan_A_expected_chrono_minus_reference_rev13
                              / rev12_contact_point_bushing ...), which agree within 1.2 N.
     02_params/rexome33.yaml, CAD drawing meshes (as render_S1_gifs.py)
 
-Writes (06_analysis/01_chrono/):
+Writes (06_analysis/01_chrono/12_S2/):
     S2a_v7_free_vibration.gif   V7 free vibration (roll, pitch, yaw excitation), 3D at
                                 exaggerated displacement + modal coordinate and envelopes
     S2a_dt_study.png            zeta3 against dt (3 runs), implicit-damping vs c_t-scale
@@ -121,7 +123,7 @@ from outrigger_sim.verify.metrics import fit_damped_sine  # noqa: E402
 
 RES_A = ROOT / "07_results" / "S2a"
 RES_B = ROOT / "07_results" / "S2b"
-OUT_DIR = ROOT / "06_analysis" / "01_chrono"
+OUT_DIR = ROOT / "06_analysis" / "01_chrono" / "12_S2"
 VERIFY_A = OUT_DIR / "verify_S2a_L1.json"
 VERIFY_B = OUT_DIR / "verify_S2b_L1.json"
 PDELTA_A = ROOT / "06_analysis" / "00_dynamics" / "s2a_slope_pdelta_check.json"
@@ -143,9 +145,7 @@ OUT = {
     "json": OUT_DIR / "S2_gifs.json",
 }
 ALL_PARTS = ("v7", "dt", "v12", "v12png", "v11", "ramp", "crawler", "events", "summary")
-DEFAULT_BEFORE_DIR = Path(
-    r"C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control"
-    r"\f171486e-e150-4003-82ca-680073c5e79e\scratchpad\before")
+DEFAULT_BEFORE_DIR = OUT_DIR / "history" / "before_planA"
 
 FRAME_W, FRAME_H, DPI = s1.FRAME_W, s1.FRAME_H, s1.DPI
 ACCENT = s1.ACCENT
@@ -2412,6 +2412,7 @@ def main() -> None:
     cpu = place_cpu(args.cpu)
     if args.frames_dir:
         args.frames_dir.mkdir(parents=True, exist_ok=True)
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
     summary = read_json(OUT["json"]) if OUT["json"].exists() else {}
     summary["meta"] = {
         "script": "04_scripts/02_chrono/render_S2_gifs.py", "cpu": cpu,

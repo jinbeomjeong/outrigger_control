@@ -40,7 +40,7 @@ S1 snapshot, so ``run_S1.py`` must have been re-run with the same force point (t
 refuses a snapshot of another force point).
 
 Outputs: ``07_results/S2a/<case>/record.npz`` + ``meta.json`` (Record),
-``07_results/S2a/<case>/result.json``; summary ``06_analysis/01_chrono/verify_S2a_L1.json``
+``07_results/S2a/<case>/result.json``; summary ``06_analysis/01_chrono/12_S2/verify_S2a_L1.json``
 and ``verify_S2a_L1.png``. Units SI; angles in deg where named ``*_deg``.
 """
 
@@ -62,8 +62,9 @@ sys.path.insert(0, str(ROOT / "03_src"))
 
 RESULTS = ROOT / "07_results" / "S2a"
 STATES = ROOT / "07_results" / "states"
-SUMMARY = ROOT / "06_analysis" / "01_chrono" / "verify_S2a_L1.json"
-FIGURE = ROOT / "06_analysis" / "01_chrono" / "verify_S2a_L1.png"
+ANALYSIS_DIR = ROOT / "06_analysis" / "01_chrono" / "12_S2"
+SUMMARY = ANALYSIS_DIR / "verify_S2a_L1.json"
+FIGURE = ANALYSIS_DIR / "verify_S2a_L1.png"
 LEVEL = "top"
 SNAPSHOT = "S1_L1_top"
 V7_CASES = {"v7_roll": "roll", "v7_pitch": "pitch", "v7_yaw": "yaw"}
@@ -747,6 +748,7 @@ def summarize() -> None:
         "v12_vs_pdelta_prediction": v12_vs_pdelta(results),
         "timing": {name: r["timing"] for name, r in results.items()},
     }
+    SUMMARY.parent.mkdir(parents=True, exist_ok=True)
     SUMMARY.write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), encoding="utf-8")
     print(f"wrote {SUMMARY}")
 
@@ -803,6 +805,7 @@ def summarize() -> None:
         ax.grid(alpha=0.3)
         ax.legend(fontsize=8, ncol=2)
     fig.tight_layout()
+    FIGURE.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(FIGURE, dpi=110)
     print(f"wrote {FIGURE}")
 

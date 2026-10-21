@@ -5,14 +5,15 @@ Reads (nothing is simulated; the inputs are not modified):
         v4_D_wdefault (Record; YAML dt 2e-4 s + 1e-5 s transition window), v4_D_w1e-04,
         v4_D_w2e-04, v4_D_u*, v4touch_dt*, v5, v5_default, v6_FLp, v6_FLm, v6_FLp_fast,
         v8a_pads_dt*, v8a_crawler_dt*, v9_step_dt*, v9_free_dt*
-    06_analysis/01_chrono/verify_S3_L1.json      automatic pre-check summary (rev. 17 rules)
+    06_analysis/01_chrono/13_S3/verify_S3_L1.json   automatic pre-check summary (rev. 17 rules)
     06_analysis/00_dynamics/s3_lift_check.json    independent checks (dynamics-expert)
     06_analysis/00_dynamics/reference.json        via outrigger_sim.verify.reference
     02_params/rexome33.yaml, CAD drawing meshes (as render_S2_gifs.py)
     --before: the verify_S3_L1.json written before the 2026-10-21 YAML regeneration (pre-check
-        counts before / after in the dashboard); default 06_analysis/01_chrono/before_yaml_dt2e-4/
+        counts before / after in the dashboard); default
+        06_analysis/01_chrono/13_S3/history/before_yaml_dt2e-4/
 
-Writes (06_analysis/01_chrono/):
+Writes (06_analysis/01_chrono/13_S3/):
     S3_lift_v4.gif        V4 lift from the crawler: settled on the crawler -> motors start
                           (ramp) -> per-leg touch -> crawler off -> ramped stop at e_op ->
                           15 s residual; 3D (true scale) + pad / cylinder / crawler forces,
@@ -104,8 +105,9 @@ from outrigger_sim.scenarios.crawler_settle import crawler_layout  # noqa: E402
 
 RES = ROOT / "07_results" / "S3"
 INDEX = RES / "index.json"
-OUT_DIR = ROOT / "06_analysis" / "01_chrono"
+OUT_DIR = ROOT / "06_analysis" / "01_chrono" / "13_S3"
 VERIFY = OUT_DIR / "verify_S3_L1.json"
+DEFAULT_BEFORE_VERIFY = OUT_DIR / "history" / "before_yaml_dt2e-4" / "verify_S3_L1.json"
 LIFT_CHECK = ROOT / "06_analysis" / "00_dynamics" / "s3_lift_check.json"
 OUT = {
     "lift": OUT_DIR / "S3_lift_v4.gif",
@@ -982,12 +984,13 @@ def main() -> None:
     parser.add_argument("--only", nargs="+", choices=ALL_PARTS, default=list(ALL_PARTS))
     parser.add_argument("--cluster-mm", type=float, default=12.0)
     parser.add_argument("--mesh-cache", type=Path, default=None)
-    parser.add_argument("--before", type=Path, default=OUT_DIR / "before_yaml_dt2e-4" / "verify_S3_L1.json",
+    parser.add_argument("--before", type=Path, default=DEFAULT_BEFORE_VERIFY,
                         help="verify_S3_L1.json written before the YAML regeneration")
     parser.add_argument("--cpu", choices=("ecore", "os"), default="ecore")
     args = parser.parse_args()
     started = time.perf_counter()
     cpu = s2.place_cpu(args.cpu)
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
     summary = read_json(OUT["json"]) if OUT["json"].exists() else {}
     params = load_params(level="top")
     global F_MAX_MOVING_KN
