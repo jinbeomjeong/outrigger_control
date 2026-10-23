@@ -1,0 +1,554 @@
+<?xml version="1.0" ?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+  <key id="data_node" for="node" yfiles.type="nodegraphics"/>
+  <key id="url_node" for="node" attr.name="url" attr.type="string"/>
+  <key id="description_node" for="node" attr.name="description" attr.type="string"/>
+  <key id="url_edge" for="edge" attr.name="url" attr.type="string"/>
+  <key id="description_edge" for="edge" attr.name="description" attr.type="string"/>
+  <key id="data_edge" for="edge" yfiles.type="edgegraphics"/>
+  <graph edgedefault="directed" id="G">
+    <node id="grp_u100" yfiles.foldertype="group">
+      <data key="data_node">
+        <y:ProxyAutoBoundsNode>
+          <y:Realizers active="0">
+            <y:GroupNode>
+              <y:Fill color="#F5F5F5" transparent="false"/>
+              <y:BorderStyle color="#9E9E9E" type="dashed" width="1.0"/>
+              <y:NodeLabel modelName="internal" modelPosition="t" fontFamily="Dialog" fontSize="12" underlinedText="false" fontStyle="plain" alignment="center">【 UNIT 100 】 유압 동력원 유닛 (Power Pack)</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+              <y:State closed="false"/>
+            </y:GroupNode>
+          </y:Realizers>
+        </y:ProxyAutoBoundsNode>
+      </data>
+      <graph edgedefault="directed" id="grp_u100">
+        <node id="t101">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="55" width="170"/>
+              <y:Fill color="#E1F5FE" transparent="false"/>
+              <y:BorderStyle color="#0277BD" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">T-101 오일 탱크 (250 L)\nISO VG 46 | Patm = 1.0 bar (abs)\n[LG-101 레벨계 | TI-101 온도계]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="flt101">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="40" width="160"/>
+              <y:Fill color="#CFD8DC" transparent="false"/>
+              <y:BorderStyle color="#37474F" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">FLT-101 흡입 스트레이너\n100 Mesh | 역류방지 체크 포함</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="m101">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="45" width="140"/>
+              <y:Fill color="#ECEFF1" transparent="false"/>
+              <y:BorderStyle color="#37474F" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">M-101 디젤/전동 엔진\n정격 2,000 rpm 직결 구동</y:NodeLabel>
+              <y:Shape type="ellipse"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="p101">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="55" width="180"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#0D47A1" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">P-101 메인 고정용량 펌프 (P6)\nVg = 30 cc/rev | Qnom = 60.2 L/min\n토출 배관: 1/2\" SAE 100R15</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="psv101">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="50" width="180"/>
+              <y:Fill color="#FFEBEE" transparent="false"/>
+              <y:BorderStyle color="#D32F2F" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">PSV-101 주 릴리프 밸브\n설정: 210.0 bar g (오버라이드 218.6 bar)\n리턴 배관: 3/4\" Low Pressure Hose</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="pi101">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="45" width="150"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#C62828" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">PI-101 / PT-101 압력계\nM 포트 게이지 (0 ~ 400 bar g)</y:NodeLabel>
+              <y:Shape type="ellipse"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+      </graph>
+    </node>
+    <node id="grp_u200" yfiles.foldertype="group">
+      <data key="data_node">
+        <y:ProxyAutoBoundsNode>
+          <y:Realizers active="0">
+            <y:GroupNode>
+              <y:Fill color="#E8EAF6" transparent="false"/>
+              <y:BorderStyle color="#9E9E9E" type="dashed" width="1.0"/>
+              <y:NodeLabel modelName="internal" modelPosition="t" fontFamily="Dialog" fontSize="12" underlinedText="false" fontStyle="plain" alignment="center">【 UNIT 200 】 4섹션 비례 방향 제어 밸브 뱅크 (MCV Bank)</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+              <y:State closed="false"/>
+            </y:GroupNode>
+          </y:Realizers>
+        </y:ProxyAutoBoundsNode>
+      </data>
+      <graph edgedefault="directed" id="grp_u200">
+        <node id="mcv200">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="55" width="230"/>
+              <y:Fill color="#E8EAF6" transparent="false"/>
+              <y:BorderStyle color="#3949AB" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">MCV-200 4섹션 비례 밸브 매니폴드\n4/3-way Proportional Spool | 불감대 12%\n스풀 시상수 τv = 30 ms | LS 압력보상기 내장</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="fv201">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="45" width="190"/>
+              <y:Fill color="#E8F5E9" transparent="false"/>
+              <y:BorderStyle color="#2E7D32" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">FV-201 (FL 전방좌): Qmax = 17.54 L/min\n[FY-201 비례 솔레노이드 조작기]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="fv202">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="45" width="190"/>
+              <y:Fill color="#E8F5E9" transparent="false"/>
+              <y:BorderStyle color="#2E7D32" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">FV-202 (FR 전방우): Qmax = 17.54 L/min\n[FY-202 비례 솔레노이드 조작기]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="fv203">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="45" width="190"/>
+              <y:Fill color="#FFF3E0" transparent="false"/>
+              <y:BorderStyle color="#E65100" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">FV-203 (RL 후방좌): Qmax = 12.56 L/min\n[FY-203 비례 솔레노이드 조작기]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="fv204">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="45" width="190"/>
+              <y:Fill color="#FFF3E0" transparent="false"/>
+              <y:BorderStyle color="#E65100" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">FV-204 (RR 후방우): Qmax = 12.56 L/min\n[FY-204 비례 솔레노이드 조작기]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+      </graph>
+    </node>
+    <node id="grp_u300" yfiles.foldertype="group">
+      <data key="data_node">
+        <y:ProxyAutoBoundsNode>
+          <y:Realizers active="0">
+            <y:GroupNode>
+              <y:Fill color="#FFFDE7" transparent="false"/>
+              <y:BorderStyle color="#9E9E9E" type="dashed" width="1.0"/>
+              <y:NodeLabel modelName="internal" modelPosition="t" fontFamily="Dialog" fontSize="12" underlinedText="false" fontStyle="plain" alignment="center">【 UNIT 300 】 실린더 직결 로크 밸브 및 계장 블록 (Lock Valve &amp; Sensors)</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+              <y:State closed="false"/>
+            </y:GroupNode>
+          </y:Realizers>
+        </y:ProxyAutoBoundsNode>
+      </data>
+      <graph edgedefault="directed" id="grp_u300">
+        <node id="lkv301">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="60" width="210"/>
+              <y:Fill color="#FFF8E1" transparent="false"/>
+              <y:BorderStyle color="#FF8F00" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">LKV-301 로크 블록 (FL)\n이중 PO 체크 (3.5:1) + CBV (350 bar)\n[PT-301A/B WIKA A-10 400bar 4~20mA]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="lkv302">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="60" width="210"/>
+              <y:Fill color="#FFF8E1" transparent="false"/>
+              <y:BorderStyle color="#FF8F00" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">LKV-302 로크 블록 (FR)\n이중 PO 체크 (3.5:1) + CBV (350 bar)\n[PT-302A/B WIKA A-10 400bar 4~20mA]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="lkv303">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="60" width="210"/>
+              <y:Fill color="#FFF8E1" transparent="false"/>
+              <y:BorderStyle color="#FF8F00" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">LKV-303 로크 블록 (RL)\n이중 PO 체크 (3.5:1) + CBV (350 bar)\n[PT-303A/B WIKA A-10 400bar 4~20mA]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="lkv304">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="60" width="210"/>
+              <y:Fill color="#FFF8E1" transparent="false"/>
+              <y:BorderStyle color="#FF8F00" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">LKV-304 로크 블록 (RR)\n이중 PO 체크 (3.5:1) + CBV (350 bar)\n[PT-304A/B WIKA A-10 400bar 4~20mA]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+      </graph>
+    </node>
+    <node id="grp_u400" yfiles.foldertype="group">
+      <data key="data_node">
+        <y:ProxyAutoBoundsNode>
+          <y:Realizers active="0">
+            <y:GroupNode>
+              <y:Fill color="#E0F2F1" transparent="false"/>
+              <y:BorderStyle color="#9E9E9E" type="dashed" width="1.0"/>
+              <y:NodeLabel modelName="internal" modelPosition="t" fontFamily="Dialog" fontSize="12" underlinedText="false" fontStyle="plain" alignment="center">【 UNIT 400 】 아우트리거 복동 실린더 및 접지 기구 (Cylinders &amp; Pads)</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+              <y:State closed="false"/>
+            </y:GroupNode>
+          </y:Realizers>
+        </y:ProxyAutoBoundsNode>
+      </data>
+      <graph edgedefault="directed" id="grp_u400">
+        <node id="cyl401">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="60" width="215"/>
+              <y:Fill color="#E0F2F1" transparent="false"/>
+              <y:BorderStyle color="#00897B" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">CYL-401 (FL 전방좌): ø130/ø110 mm\n행정 s = 700 mm | Fmax = 278.7 kN (210b)\n[ZT-401 스트로크 센서 0~700 mm]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="cyl402">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="60" width="215"/>
+              <y:Fill color="#E0F2F1" transparent="false"/>
+              <y:BorderStyle color="#00897B" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">CYL-402 (FR 전방우): ø130/ø110 mm\n행정 s = 700 mm | Fmax = 278.7 kN (210b)\n[ZT-402 스트로크 센서 0~700 mm]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="cyl403">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="60" width="215"/>
+              <y:Fill color="#E0F2F1" transparent="false"/>
+              <y:BorderStyle color="#00897B" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">CYL-403 (RL 후방좌): ø110/ø90 mm\n행정 s = 700 mm | Fmax = 199.6 kN (210b)\n[ZT-403 스트로크 센서 0~700 mm]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="cyl404">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="60" width="215"/>
+              <y:Fill color="#E0F2F1" transparent="false"/>
+              <y:BorderStyle color="#00897B" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">CYL-404 (RR 후방우): ø110/ø90 mm\n행정 s = 700 mm | Fmax = 199.6 kN (210b)\n[ZT-404 스트로크 센서 0~700 mm]</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="pad401">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="45" width="215"/>
+              <y:Fill color="#FFE0B2" transparent="false"/>
+              <y:BorderStyle color="#E65100" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">PAD-401~404 접지 패드\nø450 mm 팔각/원형 | 구면 볼조인트 10° 자유도\n지반 접촉 강성 kg = 2.17 x 10^8 N/m</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+      </graph>
+    </node>
+    <node id="grp_u500" yfiles.foldertype="group">
+      <data key="data_node">
+        <y:ProxyAutoBoundsNode>
+          <y:Realizers active="0">
+            <y:GroupNode>
+              <y:Fill color="#EDE7F6" transparent="false"/>
+              <y:BorderStyle color="#9E9E9E" type="dashed" width="1.0"/>
+              <y:NodeLabel modelName="internal" modelPosition="t" fontFamily="Dialog" fontSize="12" underlinedText="false" fontStyle="plain" alignment="center">【 UNIT 500 】 전자동 레벨링 마스터 제어기 (JC-500 Controller)</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+              <y:State closed="false"/>
+            </y:GroupNode>
+          </y:Realizers>
+        </y:ProxyAutoBoundsNode>
+      </data>
+      <graph edgedefault="directed" id="grp_u500">
+        <node id="at100">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="50" width="190"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#512DA8" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">AT-100 차체 2축 자세 센서 (IMU)\nRoll (φ) / Pitch (θ) 실시간 계측 (50 Hz)</y:NodeLabel>
+              <y:Shape type="ellipse"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="jc500">
+          <data key="data_node">
+            <y:ShapeNode>
+              <y:Geometry height="70" width="240"/>
+              <y:Fill color="#EDE7F6" transparent="false"/>
+              <y:BorderStyle color="#311B92" type="line" width="1.5"/>
+              <y:NodeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" modelName="internal" modelPosition="c">JC-500 / AIC-500 마스터 레벨링 제어기\nC2 자세 기구학 분해 + 영공간 비틀림(Twist) 보상 루프\n최소 접지력 가드 (Fmin = 9.45 kN) &amp; 결합 탐침 시퀀스\n주기: T = 20 ms (50 Hz) | 위상여유 PM = 60.25°</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+      </graph>
+    </node>
+    <edge id="1" source="t101" target="flt101">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#1565C0" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">작동유 흡입 (ISO VG 46)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="2" source="flt101" target="p101">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#1565C0" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">100 Mesh 흡입 흡출</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="3" source="m101" target="p101">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#37474F" type="dashed" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">구동축 커플링 (2000 rpm)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="4" source="p101" target="psv101">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#C62828" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">1/2\" 고압 공급선 (Line P, 210 bar)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="5" source="p101" target="pi101">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#C62828" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">M 포트 게이지 배관</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="6" source="p101" target="mcv200">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#C62828" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">1/2\" 고압 매니폴드 공급</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="7" source="psv101" target="t101">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#1565C0" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">주 릴리프 오버플로우 (3/4\" Line T)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="8" source="mcv200" target="t101">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#1565C0" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">MCV 리턴 (3/4\" Line T)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="9" source="fv201" target="lkv301">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#2E7D32" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">A 포트 배관 (3/8\" Hose, 210 bar)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="10" source="fv201" target="lkv301">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#1565C0" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">B 포트 배관 (3/8\" Hose, 리턴)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="11" source="fv202" target="lkv302">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#2E7D32" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">A 포트 배관 (3/8\" Hose)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="12" source="fv203" target="lkv303">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#2E7D32" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">A 포트 배관 (3/8\" Hose)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="13" source="fv204" target="lkv304">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#2E7D32" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">A 포트 배관 (3/8\" Hose)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="14" source="lkv301" target="cyl401">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#C62828" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">실린더 헤드 직결관 (C1)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="15" source="lkv302" target="cyl402">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#C62828" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">실린더 헤드 직결관 (C1)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="16" source="lkv303" target="cyl403">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#C62828" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">실린더 헤드 직결관 (C1)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="17" source="lkv304" target="cyl404">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#C62828" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">실린더 헤드 직결관 (C1)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="18" source="cyl401" target="pad401">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#004D40" type="line" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">구면 볼조인트 추력 전달</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="19" source="lkv301" target="jc500">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#6A1B9A" type="dotted" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">4~20mA 압력 신호</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="20" source="lkv302" target="jc500">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#6A1B9A" type="dotted" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">4~20mA 압력 신호</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="21" source="lkv303" target="jc500">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#6A1B9A" type="dotted" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">4~20mA 압력 신호</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="22" source="lkv304" target="jc500">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#6A1B9A" type="dotted" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">4~20mA 압력 신호</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="23" source="at100" target="jc500">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#512DA8" type="dotted" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">Roll/Pitch 자세 피드백 (CAN Bus)</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="24" source="jc500" target="mcv200">
+      <data key="data_edge">
+        <y:PolyLineEdge>
+          <y:Arrows source="none" target="standard"/>
+          <y:LineStyle color="#C2185B" type="dotted" width="1.5"/>
+          <y:EdgeLabel horizontalTextPosition="center" verticalTextPosition="center" alignment="center" fontStyle="plain" fontFamily="Dialog" iconTextGap="4" fontSize="12" textColor="#000000" visible="true" underlinedText="false" hasBackgroundColor="false" width="55.708984375" height="18.1328125" borderColor="" backgroundColor="" modelName="centered" modelPosition="center">4-Ch PWM 스풀 서보 구동 명령</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+  </graph>
+</graphml>

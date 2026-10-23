@@ -1,0 +1,66 @@
+{
+ "front": {
+  "k_ann_over_k_oil": 0.36743711760707004,
+  "r": 0.26870494655729554,
+  "kn_head_only_N_m": 25901845.37842452,
+  "kn_with_rod_N_m": 33928349.49188179,
+  "kn_ratio": 1.3098815546224791,
+  "leg_mode_freq_ratio_linear": 1.1445005699528852,
+  "leg_mode_freq_ratio_bilinear": 1.0673819219157679,
+  "twist_exchange_stiffness_ratio": 1.134154737935524,
+  "liftoff_travel_ratio": 0.7634278049576856,
+  "liftoff_travel_static_mm": {
+   "head_only": 4.605741080246393,
+   "with_rod": 3.5161508030959436
+  },
+  "numerical_damping_share_if_linear_stiff": 0.09384904673613659,
+  "symmetric_zone": {
+   "after_extension_2bar": {
+    "p_r0_bar": 2.0,
+    "symmetric_band_load_increase_kN": 4.087365208834412,
+    "unloading_side_band_kN": "to lift-off (always stiff)"
+   },
+   "after_retract_threshold": {
+    "p_r0_bar": 34.9,
+    "symmetric_band_load_increase_kN": 50.24691738274746,
+    "unloading_side_band_kN": "to lift-off (always stiff)"
+   }
+  },
+  "stroke_sensor_piston_shift_mm_per_10kN": {
+   "head_only": 0.3399048266485384,
+   "with_rod": 0.24857071836937608
+  }
+ },
+ "rear": {
+  "k_ann_over_k_oil": 0.4060324825986079,
+  "r": 0.2887788778877888,
+  "kn_head_only_N_m": 19501014.780498568,
+  "kn_with_rod_N_m": 26399872.557349194,
+  "kn_ratio": 1.353769168143477,
+  "leg_mode_freq_ratio_linear": 1.163515865015805,
+  "leg_mode_freq_ratio_bilinear": 1.0755787686422214,
+  "twist_exchange_stiffness_ratio": 1.150299006772406,
+  "liftoff_travel_ratio": 0.7386783681677235,
+  "liftoff_travel_static_mm": {
+   "head_only": 3.7868384873718868,
+   "with_rod": 2.7972556743665957
+  },
+  "numerical_damping_share_if_linear_stiff": 0.09540830093129601,
+  "symmetric_zone": {
+   "after_extension_2bar": {
+    "p_r0_bar": 2.0,
+    "symmetric_band_load_increase_kN": 3.169702565142857,
+    "unloading_side_band_kN": "to lift-off (always stiff)"
+   },
+   "after_retract_threshold": {
+    "p_r0_bar": 31.4,
+    "symmetric_band_load_increase_kN": 35.157776165142856,
+    "unloading_side_band_kN": "to lift-off (always stiff)"
+   }
+  },
+  "stroke_sensor_piston_shift_mm_per_10kN": {
+   "head_only": 0.46403712296983757,
+   "with_rod": 0.33003300330033003
+  }
+ }
+}
