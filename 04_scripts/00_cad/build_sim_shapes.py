@@ -36,6 +36,20 @@ below-normal priority unless ``--cpu os``; ``--cpu pcore`` pins to the P-cores (
 
 Usage (project root, Chrono-dev python):
     python -I 04_scripts/00_cad/build_sim_shapes.py [--stage NAME ...] [--workers 2] [--cpu ecore|pcore|os]
+
+Options for replaced leg shapes (REXOME35 cylinders, 00_docs/00_cad/cad_cylinder_vs_drawing.md; defaults keep the
+CAD sources and 01_cad/09_sim_shapes/):
+    --leg-source JSON   per-leg B-rep overrides {"RL": {"moving": path, "barrel": path}, ...} (paths absolute or
+                        relative to the project root). Same convention as 01_cad/02_legs/legs/*.brep: CAD frame mm,
+                        CAD pose (retracted - legs.<leg>.retracted_offset_from_cad_m). "moving" replaces the rod +
+                        piston + pad solid 10 (split at pad bottom + 25 mm as before; every piece above the plane
+                        except the largest goes to the pad, e.g. the socket housing of a ball-joint pad); "barrel"
+                        replaces the parts_mesh.npz tessellation of group barrel_<leg> by a B-rep tessellation.
+                        Cache: 01_cad/02_legs/rexome35/ (moving_<leg>.brep, barrel_<leg>.brep).
+    --out-dir DIR       write visual/, collision/, work/ and sim_shapes.json under DIR instead of 01_cad/09_sim_shapes
+                        (trial runs, e.g. in a scratch folder)
+    --groups NAME ...   stage ``meshes`` only for these groups (e.g. barrel_RL barrel_RR); results merge into the state
+    --hull-only KEY ... stage ``hulls`` only for these inputs (e.g. rod_RL rod_RR); results merge into the state
 """
 
 from __future__ import annotations
@@ -161,7 +175,45 @@ def sha256_file(path: Path) -> str:
 
 
 def rel(path: Path) -> str:
-    return path.resolve().relative_to(PROJECT_ROOT).as_posix()
+    try:
+        return path.resolve().relative_to(PROJECT_ROOT).as_posix()
+    except ValueError:  # --out-dir / --leg-source outside the project
+        return path.resolve().as_posix()
+
+
+# per-leg B-rep overrides (--leg-source); empty = CAD sources
+LEG_SOURCE: dict[str, dict[str, Path]] = {}
+
+
+def set_output_dir(out_dir: Path) -> None:
+    """Redirect every output path (--out-dir)."""
+    global OUT_DIR, VISUAL_DIR, COLLISION_DIR, WORK_DIR, INDEX_JSON, STATE_JSON
+    OUT_DIR = Path(out_dir).resolve()
+    VISUAL_DIR, COLLISION_DIR, WORK_DIR = OUT_DIR / "visual", OUT_DIR / "collision", OUT_DIR / "work"
+    INDEX_JSON = OUT_DIR / "sim_shapes.json"
+    STATE_JSON = WORK_DIR / "state.json"
+
+
+def load_leg_source(path: Path) -> dict[str, dict[str, Path]]:
+    raw = json.loads(Path(path).read_text(encoding="utf-8"))
+    out = {}
+    for leg_name, entry in raw.items():
+        if leg_name not in LEG_ORDER:
+            raise SystemExit(f"--leg-source: unknown leg {leg_name}")
+        out[leg_name] = {}
+        for kind, value in entry.items():
+            if kind not in ("moving", "barrel"):
+                raise SystemExit(f"--leg-source {leg_name}: unknown key {kind}")
+            p = Path(value)
+            p = p if p.is_absolute() else PROJECT_ROOT / p
+            if not p.exists():
+                raise SystemExit(f"--leg-source {leg_name}.{kind}: {p} missing")
+            out[leg_name][kind] = p
+    return out
+
+
+def moving_brep_path(leg_name: str) -> Path:
+    return LEG_SOURCE.get(leg_name, {}).get("moving", LEGS_DIR / "legs" / ROD_PAD_BREP[leg_name])
 
 
 def source_record(path: Path) -> dict:
@@ -378,13 +430,58 @@ def decimate_component(v: np.ndarray, f: np.ndarray) -> tuple[np.ndarray, np.nda
     return v, f, "kept"
 
 
-def stage_meshes(state: dict) -> None:
-    parts, meshes, mesh_info = load_parts_and_meshes()
-    state["mesh_source"] = mesh_info
-    crawler_collision = json.loads(CRAWLER_COLLISION_JSON.read_text(encoding="utf-8"))
+def barrel_from_brep(leg_name: str, path: Path) -> dict:
+    """Group record of barrel_<leg> from a B-rep override (--leg-source): tessellation at the leg deflections,
+    closed-mesh decimation within LEG_DECIMATE_VOL_TOL; same record keys as the parts-mesh path."""
+    started = time.perf_counter()
+    shape = read_ascii_brep(path)
+    p = volume_properties(shape)
+    v_mm, f, skipped = tessellate(shape, LEG_LINEAR_DEFLECTION_MM, LEG_ANGULAR_DEFLECTION_RAD)
+    v2, f2, reduction = decimate_closed(v_mm, f, LEG_DECIMATE_VOL_TOL)
+    brep_volume_m3 = p["volume_mm3"] * MM**3
+    brep_bbox_body = bbox_cad_to_body_m(np.array(p["bbox_mm"]))
+    body_v = cad_to_body_m(v2)
+    name = f"barrel_{leg_name}"
+    record = {
+        "parts": 1, "brep_volume_m3": brep_volume_m3, "brep_bbox_body_m": brep_bbox_body.tolist(),
+        "source_mesh": mesh_stats(cad_to_body_m(v_mm), f, brep_volume_m3, brep_bbox_body),
+        "visual_mesh": mesh_stats(body_v, f2, brep_volume_m3, brep_bbox_body),
+        "components": 1, "component_methods": {f"brep_override_decimate_{reduction:g}": 1},
+        "dropped_small_components": {"components": 0, "faces": 0},
+        "brep_override": {**source_record(path), "valid": p["valid"],
+                          "tessellation": {"linear_deflection_mm": LEG_LINEAR_DEFLECTION_MM,
+                                           "angular_deflection_rad": LEG_ANGULAR_DEFLECTION_RAD,
+                                           "faces": int(len(f)), "skipped_faces": skipped}},
+    }
+    header = [f"C8 visual mesh '{name}' (build_sim_shapes.py, B-rep override {rel(path)})",
+              "frame: machine body axes (x fwd, y left, z up), origin CAD origin, metres, CAD pose"]
+    record["obj"] = write_obj(VISUAL_DIR / f"{name}.obj", [(body_v, f2)], header)
+    np.savez_compressed(WORK_DIR / f"{name}.npz", vertices=body_v, faces=f2)
+    record["time_s"] = time.perf_counter() - started
+    log(f"meshes {name}: B-rep override {rel(path)}, {len(f)} -> {len(f2)} faces, "
+        f"vol {record['visual_mesh']['volume_rel_to_brep']:+.4f}")
+    return record
+
+
+def stage_meshes(state: dict, only_groups: list[str] | None = None) -> None:
+    names = [*SUPERSTRUCTURE_GROUPS, *[f"barrel_{leg}" for leg in LEG_ORDER]]
+    if only_groups:
+        unknown = sorted(set(only_groups) - set(names))
+        if unknown:
+            raise SystemExit(f"--groups: unknown {unknown}")
+        names = [n for n in names if n in only_groups]
     WORK_DIR.mkdir(parents=True, exist_ok=True)
     groups = {}
-    for name in (*SUPERSTRUCTURE_GROUPS, *[f"barrel_{leg}" for leg in LEG_ORDER]):
+    override = {n: LEG_SOURCE[n[7:]]["barrel"] for n in names
+                if n.startswith("barrel_") and "barrel" in LEG_SOURCE.get(n[7:], {})}
+    for name, path in override.items():
+        groups[name] = barrel_from_brep(name[7:], path)
+    names = [n for n in names if n not in override]
+    if names:
+        parts, meshes, mesh_info = load_parts_and_meshes()
+        state["mesh_source"] = mesh_info
+        crawler_collision = json.loads(CRAWLER_COLLISION_JSON.read_text(encoding="utf-8"))
+    for name in names:
         started = time.perf_counter()
         sub = parts[parts.sim_group == name]
         brep_volume_mm3 = float(sub.volume_mm3.sum())
@@ -468,7 +565,10 @@ def stage_meshes(state: dict) -> None:
         groups[name] = record
         log(f"meshes {name}: {record['source_mesh']['faces']} -> {record['visual_mesh']['faces']} faces, "
             f"vol {record['visual_mesh']['volume_rel_to_brep']:+.4f}, {record['time_s']:.0f} s")
-    state["groups"] = groups
+    if only_groups:
+        state.setdefault("groups", {}).update(groups)
+    else:
+        state["groups"] = groups
 
 
 # ============================================================================================
@@ -646,9 +746,13 @@ def polygon_area(xy: np.ndarray) -> float:
 def side_angle_deg(xy: np.ndarray) -> float:
     """Direction of the long (square) sides from the body x axis, folded to [0, 90) deg."""
     angles = []
+    edges = np.linalg.norm(np.roll(xy, -1, axis=0) - xy, axis=1)
+    # long sides: >= LONG_EDGE_MIN_M (CAD 330 pad: 270 vs 42 mm), or >= half the longest edge for smaller pads
+    # (REXOME35 rear 250 pad: 190 vs 42 mm); identical selection for the CAD pads
+    long_min = min(LONG_EDGE_MIN_M, 0.5 * float(edges.max()))
     for a, b in zip(xy, np.roll(xy, -1, axis=0), strict=True):
         d = b - a
-        if np.hypot(*d) >= LONG_EDGE_MIN_M:
+        if np.hypot(*d) >= long_min:
             angles.append(np.degrees(np.arctan2(d[1], d[0])) % 90.0)
     angles = np.array(angles)
     # circular mean on a 90 deg period
@@ -718,7 +822,7 @@ def stage_legs(state: dict) -> None:
         started = time.perf_counter()
         leg = params.legs[index]
         offset = float(leg.retracted_offset_from_cad_m)
-        path = LEGS_DIR / "legs" / ROD_PAD_BREP[leg_name]
+        path = moving_brep_path(leg_name)
         shape = read_ascii_brep(path)
         bottom = pad_bottom(shape)
         plate, rod, gussets = split_rod_pad(shape, bottom["y_cad_mm"])
@@ -850,7 +954,7 @@ def measure_side_height(state: dict) -> None:
 
     heights = {}
     for leg_name in LEG_ORDER:
-        shape = read_ascii_brep(LEGS_DIR / "legs" / ROD_PAD_BREP[leg_name])
+        shape = read_ascii_brep(moving_brep_path(leg_name))
         y0 = pad_bottom(shape)["y_cad_mm"]
         sides = []
         explorer = TopExp_Explorer(shape, TopAbs_FACE)
@@ -884,11 +988,13 @@ def load_work(key: str) -> tuple[np.ndarray, np.ndarray]:
     return data["vertices"], data["faces"]
 
 
-def stage_hulls(state: dict) -> None:
+def stage_hulls(state: dict, only: list[str] | None = None) -> None:
     import trimesh
 
+    if only and set(only) - set(HULL_TARGETS):
+        raise SystemExit(f"--hull-only: unknown {sorted(set(only) - set(HULL_TARGETS))}")
     hulls = {}
-    for key in HULL_TARGETS:
+    for key in (only or HULL_TARGETS):
         v, f = load_work(key)
         hull = trimesh.Trimesh(v[np.unique(f)], process=False).convex_hull
         ref_vol, ref_box = reference_of(state, key)
@@ -900,7 +1006,10 @@ def stage_hulls(state: dict) -> None:
                                   "frame: machine body axes, origin CAD origin, metres"])
         hulls[f"{key}_hull"] = {"input": key, **stats}
         log(f"hull {key}: {len(hull.faces)} faces, vol ratio {stats['volume_ratio_to_brep']:.3f}")
-    state["hulls"] = hulls
+    if only:
+        state.setdefault("hulls", {}).update(hulls)
+    else:
+        state["hulls"] = hulls
 
 
 def reference_of(state: dict, key: str) -> tuple[float | None, np.ndarray | None]:
@@ -997,8 +1106,9 @@ def stage_decompose(state: dict, workers: int, cpu: str, only: list[str] | None)
             log_path = WORK_DIR / f"{name}.log"
             handle = log_path.open("w", encoding="utf-8")
             proc = subprocess.Popen([sys.executable, "-I", str(Path(__file__).resolve()), "--decompose-one", name,
-                                     "--cpu", cpu], stdout=handle, stderr=subprocess.STDOUT, env=env,
-                                    cwd=str(PROJECT_ROOT))
+                                     "--cpu", cpu, *(["--out-dir", str(OUT_DIR)] if OUT_DIR != CAD_DIR / "09_sim_shapes"
+                                                     else [])],
+                                    stdout=handle, stderr=subprocess.STDOUT, env=env, cwd=str(PROJECT_ROOT))
             if cpu != "os":
                 try:
                     child = psutil.Process(proc.pid)
@@ -1373,7 +1483,8 @@ def stage_index(state: dict, started_s: float, cpu_info: dict) -> None:
         "provenance": {
             "script": source_record(Path(__file__)),
             "inputs": [source_record(p) for p in (CLASSIFIED_CSV, MESH_NPZ, MESH_INDEX_JSON, CRAWLER_COLLISION_JSON,
-                                                  PARAMS_YAML, *[LEGS_DIR / "legs" / b for b in ROD_PAD_BREP.values()],
+                                                  PARAMS_YAML, *[moving_brep_path(n) for n in LEG_ORDER],
+                                                  *[s["barrel"] for s in LEG_SOURCE.values() if "barrel" in s],
                                                   *([UPPER_ROLLERS_CSV] if state.get("upper_rollers") else []))],
             "params_level_for_check": str(params.level),
             "mesh_source": state.get("mesh_source"),
@@ -1416,8 +1527,18 @@ def main() -> None:
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--cpu", choices=("ecore", "pcore", "os"), default="ecore")
     parser.add_argument("--decompose-one", help=argparse.SUPPRESS)
+    parser.add_argument("--leg-source", type=Path, help="JSON per-leg B-rep overrides (see module docstring)")
+    parser.add_argument("--out-dir", type=Path, help="output folder instead of 01_cad/09_sim_shapes")
+    parser.add_argument("--groups", nargs="*", help="stage meshes only for these groups")
+    parser.add_argument("--hull-only", nargs="*", help="stage hulls only for these inputs")
     args = parser.parse_args()
+    if args.out_dir:
+        set_output_dir(args.out_dir)
+    if args.leg_source:
+        LEG_SOURCE.update(load_leg_source(args.leg_source))
     cpu_info = place_cpu(args.cpu)
+    cpu_info.update(leg_source={k: {kk: rel(vv) for kk, vv in v.items()} for k, v in LEG_SOURCE.items()},
+                    out_dir=rel(OUT_DIR))
     if args.decompose_one:
         decompose_one(args.decompose_one)
         return
@@ -1430,14 +1551,14 @@ def main() -> None:
         STATE_JSON.write_text(json.dumps(state, ensure_ascii=False, indent=1, default=_json_default), encoding="utf-8")
 
     if "meshes" in stages:
-        stage_meshes(state)
+        stage_meshes(state, args.groups)
         save()
     if "legs" in stages:
         measure_side_height(state)
         stage_legs(state)
         save()
     if "hulls" in stages:
-        stage_hulls(state)
+        stage_hulls(state, args.hull_only)
         save()
     if "decompose" in stages:
         stage_decompose(state, args.workers, args.cpu, args.only)

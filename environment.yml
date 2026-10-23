@@ -18,6 +18,7 @@ dependencies:
   - control=0.10.2           # python-control (전달함수, LQR, 주파수 응답)
   - numpy=2.5.4
   - scipy=1.18.1             # 적분, 최적화(토양 파라미터 보정), 회전 변환
+  - numba=0.68.0             # 축소 플랜트 폐루프 시험 (05_tests/unit/test_c2_closed_loop.py, llvmlite 0.50.0 동반; 2026-10-21 추가)
   # 데이터·시각화
   - pandas=3.0.6
   - matplotlib=3.11.2
@@ -28,6 +29,7 @@ dependencies:
   - pytest=9.1.1
   - hypothesis=6.170.2       # 속성 기반 시험
   - pytest-cov=7.1.0         # 시험 커버리지 (coverage 7.16)
+  - pytest-xdist=3.8.0       # 병렬 시험 (-n auto, execnet 2.1.2 함께; 2026-10-22 추가)
   - imageio=2.38.1           # 그림·애니메이션 입출력
   - pefile=2024.8.26         # Windows DLL(PE) 진단
   - tqdm=4.70.1              # 장시간 실행 진행 표시

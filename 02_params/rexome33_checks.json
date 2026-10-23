@@ -14,8 +14,8 @@
     "positive_definite": true,
     "triangle_inequality": true
    },
-   "leg_load_sum_rel_to_weight": 1.3330869258010614e-07,
-   "two_body_com_max_abs_m": 2.3179538288786716e-09
+   "leg_load_sum_rel_to_weight": 6.839547027791569e-08,
+   "two_body_com_max_abs_m": 2.076960825547758e-09
   },
   "middle": {
    "independent_mass_rel": 4.004915914311012e-10,
@@ -31,8 +31,8 @@
     "positive_definite": true,
     "triangle_inequality": true
    },
-   "leg_load_sum_rel_to_weight": 1.3330869258010614e-07,
-   "two_body_com_max_abs_m": 3.5149152477487178e-09
+   "leg_load_sum_rel_to_weight": 6.839547027791569e-08,
+   "two_body_com_max_abs_m": 4.295215294547461e-09
   },
   "bottom": {
    "independent_mass_rel": 4.004915914311012e-10,
@@ -48,12 +48,13 @@
     "positive_definite": true,
     "triangle_inequality": true
    },
-   "leg_load_sum_rel_to_weight": 1.3330869258010614e-07,
-   "two_body_com_max_abs_m": 3.147069271847158e-10
+   "leg_load_sum_rel_to_weight": 6.839547027791569e-08,
+   "two_body_com_max_abs_m": 2.5971180761530377e-10
   }
  },
  "legs": {
   "FL": {
+   "moving_part_source": "cad_solid10",
    "tensor": {
     "symmetric": true,
     "positive_definite": true,
@@ -115,12 +116,14 @@
      "triangle_inequality": true
     },
     "pad_com_inside_bbox": true,
+    "pad_com_below_ball_centre": true,
     "rod_com_inside_bbox": true,
     "pad_com_below_split_plane": true,
     "rod_com_above_split_plane": true
    }
   },
   "FR": {
+   "moving_part_source": "cad_solid10",
    "tensor": {
     "symmetric": true,
     "positive_definite": true,
@@ -182,12 +185,14 @@
      "triangle_inequality": true
     },
     "pad_com_inside_bbox": true,
+    "pad_com_below_ball_centre": true,
     "rod_com_inside_bbox": true,
     "pad_com_below_split_plane": true,
     "rod_com_above_split_plane": true
    }
   },
   "RL": {
+   "moving_part_source": "rexome35_synthesis",
    "tensor": {
     "symmetric": true,
     "positive_definite": true,
@@ -209,35 +214,32 @@
    "pad_side_height_brep_minus_doc_mm": 4.547473508864641e-13,
    "pad_top_face_area_m2": 0.07223630765286426,
    "pad_area_brep_vs_polygon_rel": 2.591557013597471e-16,
-   "rod_mass_vs_csv_rel": 1.330807901939057e-16,
+   "rod_mass_vs_csv_rel": 4.4674177721744635e-15,
    "split": {
     "split_plane_minus_pad_thickness_mm": 0.0,
     "whole_valid": true,
     "pad_valid": true,
     "rod_valid": true,
-    "whole_solids": 1,
+    "whole_solids": 2,
     "pad_solids": 1,
-    "rod_solids": 5,
+    "rod_solids": 2,
     "rod_piece_volumes_mm3": [
-     10748998.087603483,
-     48000.00000000095,
-     48000.000000000946,
-     48000.00000000008,
-     47999.99999999984
+     6033401.673522419,
+     1783178.110618473
     ],
-    "gusset_count": 4,
-    "gusset_mass_kg_in_pad_body": 1.507200000000014,
-    "plate_mass_kg": 20.8968314941246,
+    "gusset_count": 1,
+    "gusset_mass_kg_in_pad_body": 13.997948168355013,
+    "plate_mass_kg": 11.802842423320337,
     "gussets_touch_split_plane": true,
-    "rod_piece_starts_at_split_plane": true,
-    "volume_pad_plus_rod_minus_whole_rel": 2.738576957170407e-16,
-    "brep_whole_vs_moving_part_mass_rel": 1.330807901939057e-15,
-    "sum_mass_rel": 9.3156553135734e-16,
-    "sum_com_max_abs_m": 4.440892098500626e-16,
-    "sum_inertia_rel_to_max": 2.435257735147668e-14,
-    "written_sum_mass_rel": 4.68236404936333e-09,
-    "written_sum_com_max_abs_m": 3.2467389887713693e-10,
-    "written_sum_inertia_rel_to_max": 8.140524981572887e-10,
+    "rod_piece_starts_at_split_plane": false,
+    "volume_pad_plus_rod_minus_whole_rel": 5.995557457226664e-16,
+    "brep_whole_vs_moving_part_mass_rel": 0.0,
+    "sum_mass_rel": 4.661653327486397e-15,
+    "sum_com_max_abs_m": 4.163336342344337e-15,
+    "sum_inertia_rel_to_max": 1.9900333504639975e-14,
+    "written_sum_mass_rel": 0.0,
+    "written_sum_com_max_abs_m": 3.2676400474329625e-10,
+    "written_sum_inertia_rel_to_max": 9.260598951814259e-10,
     "pad_tensor": {
      "symmetric": true,
      "positive_definite": true,
@@ -249,12 +251,14 @@
      "triangle_inequality": true
     },
     "pad_com_inside_bbox": true,
+    "pad_com_below_ball_centre": true,
     "rod_com_inside_bbox": true,
-    "pad_com_below_split_plane": true,
+    "pad_com_below_split_plane": false,
     "rod_com_above_split_plane": true
    }
   },
   "RR": {
+   "moving_part_source": "rexome35_synthesis",
    "tensor": {
     "symmetric": true,
     "positive_definite": true,
@@ -276,35 +280,32 @@
    "pad_side_height_brep_minus_doc_mm": 1.3642420526593924e-12,
    "pad_top_face_area_m2": 0.07223630765286426,
    "pad_area_brep_vs_polygon_rel": 1.425356357478609e-15,
-   "rod_mass_vs_csv_rel": 1.330807901939057e-16,
+   "rod_mass_vs_csv_rel": 4.467417772174496e-15,
    "split": {
     "split_plane_minus_pad_thickness_mm": 0.0,
     "whole_valid": true,
     "pad_valid": true,
     "rod_valid": true,
-    "whole_solids": 1,
+    "whole_solids": 2,
     "pad_solids": 1,
-    "rod_solids": 5,
+    "rod_solids": 2,
     "rod_piece_volumes_mm3": [
-     10748998.087603481,
-     48000.00000000091,
-     48000.000000000706,
-     48000.00000000013,
-     47999.999999999825
+     6033401.673522419,
+     1783178.1106184868
     ],
-    "gusset_count": 4,
-    "gusset_mass_kg_in_pad_body": 1.5072000000000123,
-    "plate_mass_kg": 20.89683149412461,
+    "gusset_count": 1,
+    "gusset_mass_kg_in_pad_body": 13.99794816835512,
+    "plate_mass_kg": 11.802842423319683,
     "gussets_touch_split_plane": true,
-    "rod_piece_starts_at_split_plane": true,
-    "volume_pad_plus_rod_minus_whole_rel": 1.369288478585203e-16,
-    "brep_whole_vs_moving_part_mass_rel": 1.5969694823268684e-15,
-    "sum_mass_rel": 9.3156553135734e-16,
-    "sum_com_max_abs_m": 4.440892098500626e-16,
-    "sum_inertia_rel_to_max": 1.3016032722340988e-14,
-    "written_sum_mass_rel": 4.68236404936333e-09,
-    "written_sum_com_max_abs_m": 3.2467389887713693e-10,
-    "written_sum_inertia_rel_to_max": 8.140524981572887e-10,
+    "rod_piece_starts_at_split_plane": false,
+    "volume_pad_plus_rod_minus_whole_rel": 1.9985191524089025e-16,
+    "brep_whole_vs_moving_part_mass_rel": 0.0,
+    "sum_mass_rel": 4.467417772174496e-15,
+    "sum_com_max_abs_m": 3.9968028886505635e-15,
+    "sum_inertia_rel_to_max": 3.3428088302737804e-14,
+    "written_sum_mass_rel": 0.0,
+    "written_sum_com_max_abs_m": 3.2676400474329625e-10,
+    "written_sum_inertia_rel_to_max": 9.260598951814259e-10,
     "pad_tensor": {
      "symmetric": true,
      "positive_definite": true,
@@ -316,8 +317,9 @@
      "triangle_inequality": true
     },
     "pad_com_inside_bbox": true,
+    "pad_com_below_ball_centre": true,
     "rod_com_inside_bbox": true,
-    "pad_com_below_split_plane": true,
+    "pad_com_below_split_plane": false,
     "rod_com_above_split_plane": true
    }
   }
@@ -330,6 +332,55 @@
   "tool_steel_minus_step_kg": 1238.7966502709949,
   "total_c_minus_a_minus_tool_delta_kg": 0.0018002150338816136,
   "level_masses_equal": true
+ },
+ "barrel_replacement": {
+  "delta_mass_kg_per_leg": {
+   "FL": -15.860428686418317,
+   "FR": -15.86042868641826,
+   "RL": -61.55315391259632,
+   "RR": -61.55315391259635
+  },
+  "delta_mass_kg_total": -154.82716519802926,
+  "superstructure_top_mass_cad_kg": 38555.6638,
+  "superstructure_top_mass_kg": 38400.8366,
+  "superstructure_top_com_shift_m": [
+   0.00812201,
+   0.000114265,
+   0.00861826
+  ],
+  "undo_mass_rel": 0.0,
+  "undo_com_max_abs_m": 4.336808689942018e-19,
+  "undo_inertia_rel_to_max": 1.0697419788174169e-16,
+  "cad_barrel_vs_cache_json_mass_rel": {
+   "FL": 2.7755575615628914e-15,
+   "FR": 8.881784197001252e-16,
+   "RL": 2.220446049250313e-16,
+   "RR": 2.220446049250313e-16
+  },
+  "new_barrel_vs_cache_json_mass_rel": {
+   "FL": 8.881784197001252e-16,
+   "FR": 3.219646771412954e-15,
+   "RL": 6.661338147750939e-16,
+   "RR": 6.661338147750939e-16
+  },
+  "sources": {
+   "FL": {
+    "brep": "01_cad/02_legs/rexome35/barrel_FL.brep",
+    "sha256": "865d60fca29cabd5a8edee7e0c1c54b55a2476378d934a54c20652861e74d001"
+   },
+   "FR": {
+    "brep": "01_cad/02_legs/rexome35/barrel_FR.brep",
+    "sha256": "5a8596596235abe86d19845ff604724e4f8243095732d99049d0aff669430f50"
+   },
+   "RL": {
+    "brep": "01_cad/02_legs/rexome35/barrel_RL.brep",
+    "sha256": "65e773f57b07a81540facfbf5143488bbf84ad7978141bf7b139073fb3c6f8a8"
+   },
+   "RR": {
+    "brep": "01_cad/02_legs/rexome35/barrel_RR.brep",
+    "sha256": "6190e1c8ae306008b0f0ec73e15c325fa69cb8dc3a63dd0f9d886e260be3d076"
+   }
+  }
  },
  "dynamics": {
   "dyn_model_import": "ok",
@@ -356,26 +407,27 @@
   "dyn_model_full_precision_rel": {
    "kc": 0.0,
    "ko_eff": 0.0,
-   "kh_free": 2.1310983022464841e-16,
+   "kh_free": 1.27327001654369e-16,
    "kn_l1": 0.0,
-   "kt_l1": 2.1886474014902106e-16,
+   "kt_l1": 1.3020445661655535e-16,
    "cn_l1": 0.0,
-   "ct_l1": 2.105354540586617e-16,
+   "ct_l1": 0.0,
    "c_oil": 0.0,
    "c_oil_moving": 0.0,
    "ct_l2": 0.0,
-   "c_bushing_l2b": 2.105354540586617e-16,
+   "c_bushing_l2b": 0.0,
    "gn_l1": 0.0,
-   "bushing_input_l1": 2.105354540586617e-16,
+   "bushing_input_l1": 0.0,
    "k_axial_l2b": 0.0,
-   "bushing_l2b": 2.1886474014902106e-16,
-   "bushing_input_l2b": 2.105354540586617e-16,
+   "bushing_l2b": 1.3020445661655535e-16,
+   "bushing_input_l2b": 0.0,
    "f_rod_axial_l2b": 0.0,
    "head_area": 0.0,
    "annulus_area": 0.0,
    "max_force_extend": 0.0,
    "max_force_retract": 0.0,
    "locked_force_limit": 0.0,
+   "k_lock": 0.0,
    "crawler.damping_total": 0.0,
    "crawler.kn_floor_contact_sum": 0.0,
    "crawler.gn_per_sphere": 0.0
@@ -421,14 +473,14 @@
     "end_shoe_gap_mm": 0.0002998312457333722,
     "x_floor_contact_range_m": 0.0,
     "k_per_point_N_m": 4.000001599628111e-07,
-    "c_per_point_N_s_m": 9.111780798748684e-07,
-    "damping_total_N_s_m": 1.9241379906680764e-06,
-    "gn_per_point_1_s": 8.013326162426207e-07
+    "c_per_point_N_s_m": 2.798756494035638e-06,
+    "damping_total_N_s_m": 2.2805427702667327e-06,
+    "gn_per_point_1_s": 2.3475793510999876e-07
    },
    "flat_station_gap_max_abs_mm": 4.2480996853555553e-07,
-   "settle_on_crawler_s": 65.47,
-   "settle_from_printed_tau_s": 65.48552004475067,
-   "settle_abs_diff_s": 0.015520044750672923,
+   "settle_on_crawler_s": 65.41,
+   "settle_from_printed_tau_s": 65.3934166410309,
+   "settle_abs_diff_s": 0.01658335896910046,
    "settle_tau_rounding_tol_s": 0.02802585092994046
   },
   "reference_json_rel": {
@@ -473,7 +525,8 @@
    "crawler.kn_total_N_m": 0.0,
    "crawler.damping_ratio_heave": 0.0
   },
-  "gn_m_moving_vs_exact_m_eff_rel": 1.0678365452797192e-07,
+  "reference_json_status": "current",
+  "gn_m_moving_vs_exact_m_eff_rel": 8.293880015860703e-08,
   "pump_flow_covers_4_legs_at_vmax": true,
   "line_references": {
    "ranges_checked": 31,
@@ -483,26 +536,6 @@
    "old_style_references": []
   },
   "doc10_printed": {
-   "L1.kn_per_pad_N_m": {
-    "max_abs_diff": 3595.3903795331717,
-    "half_unit_tol": 5000.0,
-    "max_rel_diff": 0.0001691948413897963
-   },
-   "L1.kt_per_pad_N_m": {
-    "max_abs_diff": 485.2794594280422,
-    "half_unit_tol": 500.0,
-    "max_rel_diff": 5.7024613328794614e-05
-   },
-   "L1.cn_per_pad_N_s_m": {
-    "max_abs_diff": 3.3284549694799352,
-    "half_unit_tol": 5.0,
-    "max_rel_diff": 0.00012192142745347748
-   },
-   "L1.ct_per_pad_N_s_m": {
-    "max_abs_diff": 0.798779010608996,
-    "half_unit_tol": 5.0,
-    "max_rel_diff": 4.62256371880206e-05
-   },
    "L1.dt_s": {
     "max_abs_diff": 0.0,
     "half_unit_tol": 5e-06,
@@ -518,70 +551,15 @@
     "half_unit_tol": 500000.0,
     "max_rel_diff": 0.0010434816312620669
    },
-   "L2.cn_per_pad_N_s_m": {
-    "max_abs_diff": 1.849957559054019,
-    "half_unit_tol": 5.0,
-    "max_rel_diff": 2.1171407176173256e-05
-   },
-   "L2.ct_per_pad_N_s_m": {
-    "max_abs_diff": 37.70659529986733,
-    "half_unit_tol": 50.0,
-    "max_rel_diff": 0.00035372040619012507
-   },
-   "L2.oil_damping_N_s_m": {
-    "max_abs_diff": 3.980149248982343,
-    "half_unit_tol": 5.0,
-    "max_rel_diff": 0.00014089023890202985
-   },
-   "L2.oil_damping_moving_N_s_m": {
-    "max_abs_diff": 4.085479460190982,
-    "half_unit_tol": 5.0,
-    "max_rel_diff": 4.339330281668594e-05
-   },
-   "L2.lateral_bushing_N_m": {
-    "max_abs_diff": 389.54959748126566,
-    "half_unit_tol": 500.0,
-    "max_rel_diff": 4.457089216032788e-05
-   },
-   "L2.lateral_bushing_damping_N_s_m": {
-    "max_abs_diff": 0.798779010608996,
-    "half_unit_tol": 5.0,
-    "max_rel_diff": 4.62256371880206e-05
-   },
-   "L2.dt_s": {
-    "max_abs_diff": 0.0,
-    "half_unit_tol": 5e-07,
-    "max_rel_diff": 0.0
-   },
    "concrete.k_N_m": {
     "max_abs_diff": 338088.0485289097,
     "half_unit_tol": 500000.0,
     "max_rel_diff": 0.0010434816312620669
    },
-   "F_min_cylinder_N": {
-    "max_abs_diff": 0.0024898932497308124,
-    "half_unit_tol": 0.005,
-    "max_rel_diff": 2.634096883624855e-07
-   },
    "ground_body_mass_kg": {
     "max_abs_diff": 0.0,
     "half_unit_tol": 50000000.0,
     "max_rel_diff": 0.0
-   },
-   "L1.gn_per_pad_1_s": {
-    "max_abs_diff": 0.0017521834333535935,
-    "half_unit_tol": 0.005,
-    "max_rel_diff": 6.852764806420249e-06
-   },
-   "L1.bushing_stiffness_per_pad_N_m": {
-    "max_abs_diff": 485.2794594280422,
-    "half_unit_tol": 500.0,
-    "max_rel_diff": 5.7024613328794614e-05
-   },
-   "L1.bushing_damping_input_per_pad_N_s_m": {
-    "max_abs_diff": 0.004639887158191414,
-    "half_unit_tol": 0.05,
-    "max_rel_diff": 5.370351648751264e-07
    },
    "L1.slip_damping_reenable_speed_m_s": {
     "max_abs_diff": 0.0,
@@ -598,65 +576,15 @@
     "half_unit_tol": 0.05,
     "max_rel_diff": 0.0
    },
-   "L2b_NSC.axial_stiffness_operating_point_N_m": {
-    "max_abs_diff": 3595.3903795331717,
-    "half_unit_tol": 5000.0,
-    "max_rel_diff": 0.0001691948413897963
-   },
-   "L2b_NSC.oil_damping_N_s_m": {
-    "max_abs_diff": 3.980149248982343,
-    "half_unit_tol": 5.0,
-    "max_rel_diff": 0.00014089023890202985
-   },
-   "L2b_NSC.oil_damping_moving_N_s_m": {
-    "max_abs_diff": 4.085479460190982,
-    "half_unit_tol": 5.0,
-    "max_rel_diff": 4.339330281668594e-05
-   },
-   "L2b_NSC.lateral_bushing_N_m": {
-    "max_abs_diff": 485.2794594280422,
-    "half_unit_tol": 500.0,
-    "max_rel_diff": 5.7024613328794614e-05
-   },
-   "L2b_NSC.lateral_bushing_damping_input_N_s_m": {
-    "max_abs_diff": 0.004639887158191414,
-    "half_unit_tol": 0.05,
-    "max_rel_diff": 5.370351648751264e-07
-   },
-   "L2b_NSC.dt_s": {
-    "max_abs_diff": 0.0,
-    "half_unit_tol": 5e-06,
-    "max_rel_diff": 0.0
-   },
-   "annulus_area_m2": {
-    "max_abs_diff": 6.617786993314695e-11,
-    "half_unit_tol": 5e-10,
-    "max_rel_diff": 7.489802193270612e-08
-   },
    "relief_pressure_moving_Pa": {
     "max_abs_diff": 0.0,
     "half_unit_tol": 50000.0,
     "max_rel_diff": 0.0
    },
-   "max_force_extend_N": {
-    "max_abs_diff": 0.2950704436516389,
-    "half_unit_tol": 0.5,
-    "max_rel_diff": 1.352758480924419e-06
-   },
-   "max_force_retract_N": {
-    "max_abs_diff": 0.031610264730261406,
-    "half_unit_tol": 0.5,
-    "max_rel_diff": 1.703598206966392e-06
-   },
    "locked_pressure_limit_Pa": {
     "max_abs_diff": 0.0,
     "half_unit_tol": 50000.0,
     "max_rel_diff": 0.0
-   },
-   "locked_force_limit_N (printed 3.635e5)": {
-    "max_abs_diff": 41.174882593913935,
-    "half_unit_tol": 50.0,
-    "max_rel_diff": 0.00011327340466001082
    },
    "pump_flow_m3_s": {
     "max_abs_diff": 3.3333333333135373e-09,
@@ -677,16 +605,6 @@
     "max_abs_diff": 0.0,
     "half_unit_tol": 0.05,
     "max_rel_diff": 0.0
-   },
-   "crawler.damping_total_N_s_m": {
-    "max_abs_diff": 0.37990372901549563,
-    "half_unit_tol": 0.5,
-    "max_rel_diff": 1.9241379906680764e-06
-   },
-   "settle_on_pads_min_s": {
-    "max_abs_diff": 0.1398678034809393,
-    "half_unit_tol": 0.5,
-    "max_rel_diff": 0.002639015160017723
    },
    "crawler.D.track_centre_y_m": {
     "max_abs_diff": 0.0,
@@ -713,45 +631,90 @@
     "half_unit_tol": 5.0,
     "max_rel_diff": 4.000001599628111e-07
    },
-   "crawler.D.gn_per_sphere_1_s": {
-    "max_abs_diff": 3.4196388598584093e-07,
-    "half_unit_tol": 5e-07,
-    "max_rel_diff": 8.013326162426207e-07
+   "L1.kn_per_pad_N_m": {
+    "max_abs_diff": 4614.904674090445,
+    "half_unit_tol": 5000.0,
+    "max_rel_diff": 0.00017811287819723834
    },
-   "crawler.D.settle_on_crawler_min_s": {
-    "max_abs_diff": 0.0,
-    "half_unit_tol": 0.005,
-    "max_rel_diff": 0.0
+   "L1.kt_per_pad_N_m": {
+    "max_abs_diff": 388.60758735612035,
+    "half_unit_tol": 500.0,
+    "max_rel_diff": 5.432791658830146e-05
+   },
+   "L1.bushing_stiffness_per_pad_N_m": {
+    "max_abs_diff": 388.60758735612035,
+    "half_unit_tol": 500.0,
+    "max_rel_diff": 5.432791658830146e-05
+   },
+   "L2.lateral_bushing_N_m": {
+    "max_abs_diff": 415.3440726362169,
+    "half_unit_tol": 500.0,
+    "max_rel_diff": 5.678754069404114e-05
+   },
+   "L2b_NSC.axial_stiffness_operating_point_N_m": {
+    "max_abs_diff": 4614.904674090445,
+    "half_unit_tol": 5000.0,
+    "max_rel_diff": 0.00017811287819723834
+   },
+   "L2b_NSC.lateral_bushing_N_m": {
+    "max_abs_diff": 388.60758735612035,
+    "half_unit_tol": 500.0,
+    "max_rel_diff": 5.432791658830146e-05
+   },
+   "annulus_area_m2": {
+    "max_abs_diff": 2.653589793212563e-09,
+    "half_unit_tol": 5e-09,
+    "max_rel_diff": 7.038867753374916e-07
+   },
+   "legs.cylinder.head_area_m2": {
+    "max_abs_diff": 2.896141687754039e-08,
+    "half_unit_tol": 5e-08,
+    "max_rel_diff": 2.1819468460914013e-06
+   },
+   "max_force_extend_N": {
+    "max_abs_diff": 0.026680708397179842,
+    "half_unit_tol": 0.05,
+    "max_rel_diff": 9.571973516752963e-08
+   },
+   "max_force_retract_N": {
+    "max_abs_diff": 0.045725385658442974,
+    "half_unit_tol": 0.05,
+    "max_rel_diff": 5.775733617257832e-07
+   },
+   "legs.cylinder.locked_force_limit_N": {
+    "max_abs_diff": 0.022198819380719215,
+    "half_unit_tol": 0.05,
+    "max_rel_diff": 4.7784303486758984e-08
    }
   },
   "reference_json_assumptions_beta_Pa": 1000000000.0,
   "l1_dt_rule": {
-   "f1_Hz": 1.7845,
-   "zeta1": 0.00777,
-   "dt_max_first_mode_s": 0.00013859724380207642,
+   "f1_Hz": 1.8314,
+   "zeta1": 0.00895,
+   "dt_max_first_mode_s": 0.00015555714105847584,
    "dt_first_mode_ladder_s (record, rev. 7 rule)": 0.0001,
    "dt_bushing_bound_per_leg_s (0.1 c_t / k_t)": [
-    0.00020303952961977148,
-    0.00020303952961977148,
-    0.00020432665404294945,
-    0.00020432665404294945
+    0.0002208411946555484,
+    0.0002208411946555484,
+    0.0003067490120101442,
+    0.0003067490120101442
    ],
    "dt_s": 0.0002,
    "dt_within_bushing_bound": true,
    "source": "user decision 2026-10-21, dynamics_model.md 5.7 (S3 V8(a), V9)"
   },
   "l2_dt_rule": {
-   "f_rod_local_Hz": 286.55143983418526,
-   "dt_max_s": 6.979549644410484e-05,
+   "f_rod_local_Hz": 313.05983956683673,
+   "dt_max_s": 6.38855498925473e-05,
    "dt_s": 5e-05
   },
   "l2b_nsc_dt_rule": {
-   "f_rod_on_axial_spring_Hz": 70.63094012203194,
-   "dt_rod_max_s": 0.0002831620245383282,
-   "f1_Hz": 1.7854,
-   "zeta1": 0.00799,
-   "dt_rocking_max_s": 0.000142449646611879,
-   "dt_max_s": 0.000142449646611879,
+   "f_rod_on_axial_spring_Hz": 79.95133225888607,
+   "dt_rod_max_s": 0.0002501521792687467,
+   "f1_Hz": 1.8323,
+   "zeta1": 0.00826,
+   "dt_rocking_max_s": 0.00014349395076560122,
+   "dt_max_s": 0.00014349395076560122,
    "dt_s": 0.0001
   }
  },

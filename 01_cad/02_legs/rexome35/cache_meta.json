@@ -1,0 +1,108 @@
+{
+ "generated_at": "2026-10-22T02:54:18",
+ "generator": "scratchpad cad-run/cyl35/cyl35_synth.py + cyl35_run.py + cyl35_aggregate.py (cad-expert, 2026-10-22)",
+ "generator_scripts": {
+  "cyl35_synth.py": "9ab137ad7a57f42cb8732627d65687831ac71f5cdc52e2d3282d9a69438960f5",
+  "cyl35_run.py": "18604cc27596802223534b88e677f25a6919d885f3ed08a93167e4ddd7b2430c",
+  "cyl35_aggregate.py": "c4d1645a7afed74b6dcee2a3174433ebf8bc5c3afef65e05fe272e60b5d4ea69"
+ },
+ "inputs": [
+  {
+   "path": "02_params/rexome33.yaml",
+   "bytes": 45227,
+   "mtime": "2026-10-21T08:10:35",
+   "sha256": "865c5488b9ee6cbb625479872ce5eff05bfa3d93a667d1b1583bc5a07042383a"
+  },
+  {
+   "path": "01_cad/01_parts/parts_classified.csv",
+   "bytes": 825277,
+   "mtime": "2026-10-19T19:23:20",
+   "sha256": "634bc8818ec3929be84c33008f46d6130edf3054c6e568b19121e6593a5e2d05"
+  },
+  {
+   "path": "01_cad/02_legs/legs/FRONT_JACK_CYL_1___10_1.brep",
+   "bytes": 44215,
+   "mtime": "2026-10-19T19:10:47",
+   "sha256": "4fd2375116b3b56fafe6f422d17853555fc4b97d8823af0edd6a5e4ca4f0d249"
+  },
+  {
+   "path": "01_cad/02_legs/legs/FRONT_JACK_CYL_2___10_1.brep",
+   "bytes": 44216,
+   "mtime": "2026-10-19T19:10:47",
+   "sha256": "02ac33d11e486dec42605ce59403cfa1f29be4c034bd495641d6269d3caf98dd"
+  },
+  {
+   "path": "01_cad/02_legs/legs/FRONT_JACK_CYL_1___17_1.brep",
+   "bytes": 37318,
+   "mtime": "2026-10-19T19:10:47",
+   "sha256": "221be9b528fb790b475f605fc1a92fddc6eb156212da37a0f3ca4ac8f1f57511"
+  },
+  {
+   "path": "01_cad/02_legs/legs/FRONT_JACK_CYL_2___17_1.brep",
+   "bytes": 37319,
+   "mtime": "2026-10-19T19:10:47",
+   "sha256": "07c5a785ab7e09737557d9b1a91c1bd30a1f572d709b3ad213994303f3b1db37"
+  },
+  {
+   "path": "08_test_data/datasheets/cylinder_front_extract.md",
+   "bytes": 6632,
+   "mtime": "2026-10-22T02:08:54",
+   "sha256": "c571dfa0c6193d83031f45c2ae868374a62d78c98e4f27adaafb7e2494a8be51"
+  },
+  {
+   "path": "08_test_data/datasheets/cylinder_rear_extract.md",
+   "bytes": 6414,
+   "mtime": "2026-10-22T02:08:54",
+   "sha256": "dfa795232164264e43d90f3fdc3a6ab4e98e549581412147a04c02008c510daf"
+  }
+ ],
+ "files": {
+  "barrel_FL.brep": {
+   "bytes": 40190,
+   "sha256": "865d60fca29cabd5a8edee7e0c1c54b55a2476378d934a54c20652861e74d001"
+  },
+  "barrel_FR.brep": {
+   "bytes": 40053,
+   "sha256": "5a8596596235abe86d19845ff604724e4f8243095732d99049d0aff669430f50"
+  },
+  "barrel_RL.brep": {
+   "bytes": 17333,
+   "sha256": "65e773f57b07a81540facfbf5143488bbf84ad7978141bf7b139073fb3c6f8a8"
+  },
+  "barrel_RR.brep": {
+   "bytes": 17574,
+   "sha256": "6190e1c8ae306008b0f0ec73e15c325fa69cb8dc3a63dd0f9d886e260be3d076"
+  },
+  "moving_FL.brep": {
+   "bytes": 53804,
+   "sha256": "9b357535e05e64a4575c5fd82505440b773716d5af910901d22c30a64cccbdeb"
+  },
+  "moving_FR.brep": {
+   "bytes": 53104,
+   "sha256": "0b44f77fa6e3a5b7904a089f9c4ebfc2e1651d082b08ff6233134db714984ddb"
+  },
+  "moving_RL.brep": {
+   "bytes": 37824,
+   "sha256": "97461c3c8fbf2cf04af2acc7a92bf9fc0b4f7fae9c30922adb078e8fb766b4c1"
+  },
+  "moving_RR.brep": {
+   "bytes": 38072,
+   "sha256": "89f60d3c944b77f7a74898ad5f782799c691987da26561934f212d352c73a1fb"
+  },
+  "rexome35_cylinder_jobs.json": {
+   "bytes": 96827,
+   "sha256": "f803b72af562b1446217db6684db17622a8f3b53c3cfac79127208632d50fec2"
+  },
+  "rexome35_cylinder_mass_properties.csv": {
+   "bytes": 3662,
+   "sha256": "76d6ce2caa1a00b2d9571ddd9b2da64be86731d440e7a50831bf71737df35e6e"
+  },
+  "rexome35_cylinder_mass_properties.json": {
+   "bytes": 27700,
+   "sha256": "eda92a877dcf2ffaecaa40b5b626a66b2ab57ac496f2003c88f7fc4d25043324"
+  }
+ },
+ "brep_convention": "ASCII BREP, CAD frame (X_cad = y, Y_cad = z, Z_cad = x), mm, CAD pose = retracted - legs.<leg>.retracted_offset_from_cad_m (YAML now: front 0, rear 0.002 m)",
+ "tessellation_check": "BRepMesh linear 0.05 mm, angular 0.1 rad; trimesh volume / CoM / inertia vs B-rep",
+ "cpu": "children pinned to logical 16-27 (E-cores, mask 0x0FFF0000), below-normal priority"
+}

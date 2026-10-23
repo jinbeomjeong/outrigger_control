@@ -1,0 +1,1142 @@
+{
+ "schema": 1,
+ "generated_at": "2026-10-22T02:54:18",
+ "generated_by": "scratchpad cad-run/cyl35/cyl35_synth.py + cyl35_run.py + cyl35_aggregate.py (cad-expert, 2026-10-22)",
+ "purpose": "REXOME35 cylinder replacement (dynamics_model.md rev. 29 5.11.10, CLAUDE.md '실린더 치수 기준 교체'): rear moving part / barrel by drawing-chain synthesis, front bore D130 by CAD modification",
+ "frame": "machine body axes (x forward, y left, z up), origin = CAD origin, SI; moving parts retracted (pad bottom at YAML legs.<leg>.pad_bottom_center_retracted_m, geometry held: Q-C2); inertia about the CoM, body axes; BREP files in CAD frame mm at the CAD pose (01_cad/02_legs/legs convention)",
+ "density_kg_m3": 7850.0,
+ "density_status": "ASSUMPTION: steel (CAD material SS400 7.85); drawing has no material",
+ "assumptions": [
+  "front / rear dimensions marked R in cyl35_synth.DIMS are read off the drawing picture (+-3 mm): ball D100 / D90 centre 84 above the pad bottom, socket housing D170 h 25..83/84 + retainer to 115/116, neck R39 / R36, rib heights",
+  "pad corner chamfer 30 mm, pad thickness 25 / side height 20 (CAD values)",
+  "piston thickness 30 (picture), retracted piston bottom at the top of the 700 zone (mechanical stroke 700, Q-U4)",
+  "rod solid (no gun-drill), bellows / pad bolts / valve block / pipes / seals / oil not modelled",
+  "rear pad side direction = CAD (3.376 deg), ribs on the diagonals",
+  "barrel: cap end at the CAD cap end (CAD Y max of solid 17), cavity to the retracted piston top, cap solid; rear mounting plate main face 89 / step face 84 from the axis, normal towards the superstructure centre (CAD side)",
+  "geometry held (user Q-C2): the drawing pad portion 170 is not imposed on the leg pose; the synthesized barrel (anchored at the cap end) and the synthesized moving part (anchored at the pad bottom) are 54.3 (front) / 74.3 (rear) mm apart from a drawing-consistent assembly; only the moving-part mass properties relative to its pad bottom are used"
+ ],
+ "synthesis_calibration_front": {
+  "synth_front_with_cad_pad_kg": 105.48882056053016,
+  "cad_solid10_kg": 106.783666,
+  "rel": -0.012125875501126204,
+  "note": "same drawing-chain method applied to the front (CAD pad 330) vs CAD solid 10: indicates the method bias"
+ },
+ "legs": {
+  "FL": {
+   "basis": "CAD solid 10 with the piston D115 -> D130 x 20 (CAD position), drawing bore",
+   "moving_part": {
+    "mass_kg": 107.23682158713852,
+    "com_retracted_m": [
+     2.293764653080221,
+     1.32376465308022,
+     -0.30404793283117804
+    ],
+    "com_above_pad_bottom_m": 0.39575206716882194,
+    "inertia_kg_m2": [
+     [
+      12.881471232411817,
+      1.8398437499999997e-13,
+      0.0
+     ],
+     [
+      1.8398437499999997e-13,
+      12.881471232412094,
+      7.666015624999999e-15
+     ],
+     [
+      0.0,
+      7.666015624999999e-15,
+      0.5526802662045781
+     ]
+    ],
+    "principal_kg_m2": [
+     0.5526802662045781,
+     12.881471232411725,
+     12.881471232412187
+    ]
+   },
+   "yaml_now": {
+    "mass_kg": 106.783666,
+    "com_above_pad_bottom_m": 0.393021059,
+    "inertia_diag_kg_m2": [
+     12.6921305,
+     12.6921305,
+     0.550973854
+    ]
+   },
+   "barrel": {
+    "basis": "CAD solid 17 with the bore D115 -> D130 over the 700 mm bore",
+    "mass_kg": 111.26602299825873,
+    "com_m": [
+     2.2657689574809425,
+     1.2957689574809443,
+     0.062090602600555767
+    ],
+    "inertia_kg_m2": [
+     [
+      7.7446489513439785,
+      -0.04913322935417812,
+      -0.04700677001243368
+     ],
+     [
+      -0.04913322935417812,
+      7.744648951345205,
+      -0.04700677001242985
+     ],
+     [
+      -0.04700677001243368,
+      -0.04700677001242985,
+      0.8476891974009898
+     ]
+    ],
+    "cad_solid17_mass_kg": 127.1264516846773,
+    "delta_vs_cad_kg": -15.860428686418572
+   },
+   "brep": {
+    "moving": "01_cad/02_legs/rexome35/moving_FL.brep",
+    "barrel": "01_cad/02_legs/rexome35/barrel_FL.brep"
+   },
+   "moving_part_cad_original_kg": 106.78366648181223
+  },
+  "FR": {
+   "basis": "CAD solid 10 with the piston D115 -> D130 x 20 (CAD position), drawing bore",
+   "moving_part": {
+    "mass_kg": 107.23682158713792,
+    "com_retracted_m": [
+     2.2937646530802214,
+     -1.3237646530802203,
+     -0.30404793283117443
+    ],
+    "com_above_pad_bottom_m": 0.39575206716882555,
+    "inertia_kg_m2": [
+     [
+      12.88147123241185,
+      -1.2265624999999999e-13,
+      0.0
+     ],
+     [
+      -1.2265624999999999e-13,
+      12.881471232411114,
+      -3.8330078124999994e-14
+     ],
+     [
+      0.0,
+      -3.8330078124999994e-14,
+      0.5526802662038421
+     ]
+    ],
+    "principal_kg_m2": [
+     0.5526802662038421,
+     12.881471232411094,
+     12.881471232411869
+    ]
+   },
+   "yaml_now": {
+    "mass_kg": 106.783666,
+    "com_above_pad_bottom_m": 0.393021059,
+    "inertia_diag_kg_m2": [
+     12.6921305,
+     12.6921305,
+     0.550973854
+    ]
+   },
+   "barrel": {
+    "basis": "CAD solid 17 with the bore D115 -> D130 over the 700 mm bore",
+    "mass_kg": 111.26602299825905,
+    "com_m": [
+     2.2657689574809368,
+     -1.2957689574809423,
+     0.06209060260055882
+    ],
+    "inertia_kg_m2": [
+     [
+      7.744648951344499,
+      0.049133229355220694,
+      -0.047006770012498846
+     ],
+     [
+      0.049133229355220694,
+      7.744648951346677,
+      0.04700677001246818
+     ],
+     [
+      -0.047006770012498846,
+      0.04700677001246818,
+      0.8476891974025842
+     ]
+    ],
+    "cad_solid17_mass_kg": 127.12645168467706,
+    "delta_vs_cad_kg": -15.860428686418018
+   },
+   "brep": {
+    "moving": "01_cad/02_legs/rexome35/moving_FR.brep",
+    "barrel": "01_cad/02_legs/rexome35/barrel_FR.brep"
+   },
+   "moving_part_cad_original_kg": 106.78366648181188
+  },
+  "RL": {
+   "basis": "drawing-chain synthesis (DWG REXOME35-9206 REAR): pad 250 x 250 + ribs + socket housing | ball D90 + neck + rod D90 + piston D110 x 30",
+   "moving_part": {
+    "mass_kg": 73.16299372882632,
+    "com_retracted_m": [
+     -2.556,
+     1.1679,
+     -0.34306661775079855
+    ],
+    "com_above_pad_bottom_m": 0.3669333822492014,
+    "inertia_kg_m2": [
+     [
+      7.94437734773429,
+      9.199218749999998e-14,
+      7.666015624999999e-15
+     ],
+     [
+      9.199218749999998e-14,
+      7.944377347734228,
+      -3.8330078124999995e-15
+     ],
+     [
+      7.666015624999999e-15,
+      -3.8330078124999995e-15,
+      0.22880040890302342
+     ]
+    ],
+    "principal_kg_m2": [
+     0.22880040890302344,
+     7.944377347734161,
+     7.944377347734355
+    ]
+   },
+   "yaml_now": {
+    "mass_kg": 106.783666,
+    "com_above_pad_bottom_m": 0.392977074,
+    "inertia_diag_kg_m2": [
+     12.6921305,
+     12.6921305,
+     0.550973854
+    ]
+   },
+   "barrel": {
+    "basis": "drawing-chain synthesis: tube D137/D110, gland 105, cavity to the retracted piston top, solid cap 110, mounting plate 340 x 250 x 25 (step 135 x 5) with 10 x D22",
+    "mass_kg": 63.92758947584591,
+    "com_m": [
+     -2.556,
+     1.150947745336865,
+     0.053078703010489094
+    ],
+    "inertia_kg_m2": [
+     [
+      4.961577316888707,
+      -2.1464843749999996e-13,
+      0.0
+     ],
+     [
+      -2.1464843749999996e-13,
+      4.969382058325333,
+      -0.004460835436211404
+     ],
+     [
+      0.0,
+      -0.004460835436211404,
+      0.30576851849396675
+     ]
+    ],
+    "cad_solid17_mass_kg": 125.48074338844226,
+    "pieces_kg": {
+     "tube": 49.651033469235834,
+     "plate": 14.670232890137173
+    },
+    "delta_vs_cad_kg": -61.55315391259635
+   },
+   "brep": {
+    "moving": "01_cad/02_legs/rexome35/moving_RL.brep",
+    "barrel": "01_cad/02_legs/rexome35/barrel_RL.brep"
+   },
+   "pad_body_rod_body": {
+    "ball_joint": {
+     "pad_body": {
+      "mass_kg": 25.80079059167535,
+      "com_m": [
+       -2.5559999999999996,
+       1.1679000000000004,
+       -0.6681999455578379
+      ],
+      "com_above_pad_bottom_m": 0.04180005444216206,
+      "inertia_kg_m2": [
+       [
+        0.12012981083366049,
+        0.0,
+        -7.666015624999999e-15
+       ],
+       [
+        0.0,
+        0.12012981083366815,
+        -3.8330078124999995e-15
+       ],
+       [
+        -7.666015624999999e-15,
+        -3.8330078124999995e-15,
+        0.18061799130379957
+       ]
+      ]
+     },
+     "rod_body": {
+      "mass_kg": 47.36220313715097,
+      "com_m": [
+       -2.556,
+       1.1678999999999995,
+       -0.16594865554722324
+      ],
+      "com_above_pad_bottom_m": 0.5440513444527767,
+      "inertia_kg_m2": [
+       [
+        3.6110136947940754,
+        6.132812499999999e-14,
+        3.8330078124999995e-15
+       ],
+       [
+        6.132812499999999e-14,
+        3.611013694793976,
+        1.9165039062499998e-15
+       ],
+       [
+        3.8330078124999995e-15,
+        1.9165039062499998e-15,
+        0.04818241759928515
+       ]
+      ]
+     }
+    },
+    "plane_25mm": {
+     "pad_body": {
+      "mass_kg": 11.822231494124578,
+      "com_m": [
+       -2.556,
+       1.1678999999999997,
+       -0.69758256504194
+      ],
+      "com_above_pad_bottom_m": 0.012417434958059914,
+      "inertia_kg_m2": [
+       [
+        0.05893881141876505,
+        7.666015624999999e-15,
+        -3.8330078124999995e-15
+       ],
+       [
+        7.666015624999999e-15,
+        0.05893881141874589,
+        5.749511718749999e-15
+       ],
+       [
+        -3.8330078124999995e-15,
+        5.749511718749999e-15,
+        0.11665830174077527
+       ]
+      ]
+     },
+     "rod_body": {
+      "mass_kg": 61.34076223470175,
+      "com_m": [
+       -2.5559999999999996,
+       1.1678999999999997,
+       -0.27474060671757383
+      ],
+      "com_above_pad_bottom_m": 0.43525939328242613,
+      "inertia_kg_m2": [
+       [
+        6.113236176151302,
+        9.199218749999998e-14,
+        3.0664062499999996e-14
+       ],
+       [
+        9.199218749999998e-14,
+        6.11323617615121,
+        -3.8330078124999995e-15
+       ],
+       [
+        3.0664062499999996e-14,
+        -3.8330078124999995e-15,
+        0.11214210716229413
+       ]
+      ]
+     }
+    }
+   },
+   "pad": {
+    "polygon_xy_m": [
+     [
+      0.1021969141184087,
+      -0.11918804782642711
+     ],
+     [
+      0.1303780051102077,
+      -0.08747328611343397
+     ],
+     [
+      0.11918804782642711,
+      0.10219691411840826
+     ],
+     [
+      0.08747328611343397,
+      0.13037800511020747
+     ],
+     [
+      -0.1021969141184087,
+      0.11918804782642689
+     ],
+     [
+      -0.1303780051102077,
+      0.08747328611343397
+     ],
+     [
+      -0.11918804782642711,
+      -0.10219691411840848
+     ],
+     [
+      -0.08747328611343397,
+      -0.1303780051102077
+     ]
+    ],
+    "bottom_area_m2": 0.0607,
+    "side_angle_deg": 3.3763607504893822,
+    "swivel_center_above_pad_bottom_m_read": 0.084
+   },
+   "pieces_kg": {
+    "plate": 11.822231494124578,
+    "housing_ribs": 13.978559097550777,
+    "ball": 2.9963725331776048,
+    "neck_rod_piston": 44.365830603973365,
+    "rod_assembly": 47.36220313715097,
+    "pad_assembly": 25.80079059167535
+   }
+  },
+  "RR": {
+   "basis": "drawing-chain synthesis (DWG REXOME35-9206 REAR): pad 250 x 250 + ribs + socket housing | ball D90 + neck + rod D90 + piston D110 x 30",
+   "moving_part": {
+    "mass_kg": 73.1629937288258,
+    "com_retracted_m": [
+     -2.5559999999999996,
+     -1.2429,
+     -0.3430666177507961
+    ],
+    "com_above_pad_bottom_m": 0.36693338224920385,
+    "inertia_kg_m2": [
+     [
+      7.944377347734167,
+      0.0,
+      0.0
+     ],
+     [
+      0.0,
+      7.944377347734106,
+      -3.8330078124999995e-15
+     ],
+     [
+      0.0,
+      -3.8330078124999995e-15,
+      0.22880040890302342
+     ]
+    ],
+    "principal_kg_m2": [
+     0.22880040890302342,
+     7.944377347734106,
+     7.944377347734167
+    ]
+   },
+   "yaml_now": {
+    "mass_kg": 106.783666,
+    "com_above_pad_bottom_m": 0.392977074,
+    "inertia_diag_kg_m2": [
+     12.6921305,
+     12.6921305,
+     0.550973854
+    ]
+   },
+   "barrel": {
+    "basis": "drawing-chain synthesis: tube D137/D110, gland 105, cavity to the retracted piston top, solid cap 110, mounting plate 340 x 250 x 25 (step 135 x 5) with 10 x D22",
+    "mass_kg": 63.92758947584589,
+    "com_m": [
+     -2.5560000000000005,
+     -1.225947745336865,
+     0.05307870301048779
+    ],
+    "inertia_kg_m2": [
+     [
+      4.9615773168888,
+      9.199218749999998e-14,
+      -3.8330078124999995e-15
+     ],
+     [
+      9.199218749999998e-14,
+      4.969382058325087,
+      0.004460835436210445
+     ],
+     [
+      -3.8330078124999995e-15,
+      0.004460835436210445,
+      0.3057685184937828
+     ]
+    ],
+    "cad_solid17_mass_kg": 125.48074338844226,
+    "pieces_kg": {
+     "tube": 49.65103346923584,
+     "plate": 14.670232890137173
+    },
+    "delta_vs_cad_kg": -61.55315391259637
+   },
+   "brep": {
+    "moving": "01_cad/02_legs/rexome35/moving_RR.brep",
+    "barrel": "01_cad/02_legs/rexome35/barrel_RR.brep"
+   },
+   "pad_body_rod_body": {
+    "ball_joint": {
+     "pad_body": {
+      "mass_kg": 25.800790591674815,
+      "com_m": [
+       -2.556,
+       -1.2428999999999997,
+       -0.6681999455578379
+      ],
+      "com_above_pad_bottom_m": 0.04180005444216206,
+      "inertia_kg_m2": [
+       [
+        0.12012981083368347,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        0.12012981083357616,
+        -1.5332031249999998e-14
+       ],
+       [
+        0.0,
+        -1.5332031249999998e-14,
+        0.18061799130373826
+       ]
+      ]
+     },
+     "rod_body": {
+      "mass_kg": 47.36220313715096,
+      "com_m": [
+       -2.556,
+       -1.2429000000000001,
+       -0.16594865554722318
+      ],
+      "com_above_pad_bottom_m": 0.5440513444527768,
+      "inertia_kg_m2": [
+       [
+        3.611013694793991,
+        3.0664062499999996e-14,
+        0.0
+       ],
+       [
+        3.0664062499999996e-14,
+        3.611013694793976,
+        1.9165039062499998e-15
+       ],
+       [
+        0.0,
+        1.9165039062499998e-15,
+        0.04818241759916249
+       ]
+      ]
+     }
+    },
+    "plane_25mm": {
+     "pad_body": {
+      "mass_kg": 11.822231494124576,
+      "com_m": [
+       -2.5559999999999996,
+       -1.2429,
+       -0.6975825650419405
+      ],
+      "com_above_pad_bottom_m": 0.01241743495805947,
+      "inertia_kg_m2": [
+       [
+        0.05893881141874972,
+        0.0,
+        7.666015624999999e-15
+       ],
+       [
+        0.0,
+        0.05893881141879189,
+        0.0
+       ],
+       [
+        7.666015624999999e-15,
+        0.0,
+        0.11665830174077527
+       ]
+      ]
+     },
+     "rod_body": {
+      "mass_kg": 61.34076223470121,
+      "com_m": [
+       -2.5559999999999996,
+       -1.2429000000000001,
+       -0.27474060671757033
+      ],
+      "com_above_pad_bottom_m": 0.43525939328242963,
+      "inertia_kg_m2": [
+       [
+        6.1132361761511484,
+        6.132812499999999e-14,
+        0.0
+       ],
+       [
+        6.132812499999999e-14,
+        6.113236176151087,
+        0.0
+       ],
+       [
+        0.0,
+        0.0,
+        0.11214210716217148
+       ]
+      ]
+     }
+    }
+   },
+   "pad": {
+    "polygon_xy_m": [
+     [
+      0.1021969141184087,
+      -0.11918804782642711
+     ],
+     [
+      0.1303780051102077,
+      -0.08747328611343397
+     ],
+     [
+      0.11918804782642711,
+      0.10219691411840826
+     ],
+     [
+      0.08747328611343397,
+      0.1303780051102077
+     ],
+     [
+      -0.1021969141184087,
+      0.11918804782642711
+     ],
+     [
+      -0.1303780051102077,
+      0.08747328611343397
+     ],
+     [
+      -0.11918804782642711,
+      -0.10219691411840826
+     ],
+     [
+      -0.08747328611343397,
+      -0.1303780051102077
+     ]
+    ],
+    "bottom_area_m2": 0.0607,
+    "side_angle_deg": 3.376360750489375,
+    "swivel_center_above_pad_bottom_m_read": 0.084
+   },
+   "pieces_kg": {
+    "plate": 11.822231494124576,
+    "housing_ribs": 13.978559097550242,
+    "ball": 2.9963725331776048,
+    "neck_rod_piston": 44.36583060397335,
+    "rod_assembly": 47.36220313715096,
+    "pad_assembly": 25.800790591674815
+   }
+  }
+ },
+ "checks": {
+  "synth_moving_RL.valid": {
+   "ok": true,
+   "value": 2
+  },
+  "synth_moving_RL.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.22880040890302344,
+    7.944377347734161,
+    7.944377347734355
+   ]
+  },
+  "synth_moving_RL.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    -2.556,
+    1.1679,
+    -0.34306661775079855
+   ]
+  },
+  "synth_moving_RL.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.0003199030521021662
+  },
+  "synth_moving_RL.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": 2.220446049250313e-16
+  },
+  "synth_moving_RL.split_ball_joint_recombine<=1e-9": {
+   "ok": true,
+   "value": {
+    "mass_rel": 0.0,
+    "com_abs_m": 4.47545209131181e-16,
+    "inertia_frobenius_rel": 7.225759376312275e-15
+   }
+  },
+  "synth_moving_RL.split_plane_25mm_recombine<=1e-9": {
+   "ok": true,
+   "value": {
+    "mass_rel": 0.0,
+    "com_abs_m": 1.4054300946555646e-15,
+    "inertia_frobenius_rel": 6.8037910845894995e-15
+   }
+  },
+  "synth_moving_RR.valid": {
+   "ok": true,
+   "value": 2
+  },
+  "synth_moving_RR.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.22880040890302342,
+    7.944377347734106,
+    7.944377347734167
+   ]
+  },
+  "synth_moving_RR.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    -2.5559999999999996,
+    -1.2429,
+    -0.3430666177507961
+   ]
+  },
+  "synth_moving_RR.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.0003199030520951718
+  },
+  "synth_moving_RR.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": 2.220446049250313e-16
+  },
+  "synth_moving_RR.split_ball_joint_recombine<=1e-9": {
+   "ok": true,
+   "value": {
+    "mass_rel": -2.220446049250313e-16,
+    "com_abs_m": 4.440892098500626e-16,
+    "inertia_frobenius_rel": 1.2458378356820949e-14
+   }
+  },
+  "synth_moving_RR.split_plane_25mm_recombine<=1e-9": {
+   "ok": true,
+   "value": {
+    "mass_rel": -2.220446049250313e-16,
+    "com_abs_m": 1.4054300946555646e-15,
+    "inertia_frobenius_rel": 1.3065751205044519e-14
+   }
+  },
+  "synth_moving_FL.valid": {
+   "ok": true,
+   "value": 2
+  },
+  "synth_moving_FL.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.5448411446860071,
+    12.176809593695655,
+    12.176809593696083
+   ]
+  },
+  "synth_moving_FL.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    2.2938000000000036,
+    1.3238,
+    -0.3126000774025383
+   ]
+  },
+  "synth_moving_FL.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.00031833241161727255
+  },
+  "synth_moving_FL.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": 0.0
+  },
+  "synth_moving_FL.split_ball_joint_recombine<=1e-9": {
+   "ok": true,
+   "value": {
+    "mass_rel": 0.0,
+    "com_abs_m": 4.996003610813204e-16,
+    "inertia_frobenius_rel": 4.121866706198829e-15
+   }
+  },
+  "synth_moving_FL.split_plane_25mm_recombine<=1e-9": {
+   "ok": true,
+   "value": {
+    "mass_rel": -1.4432899320127035e-15,
+    "com_abs_m": 5.551115123125783e-17,
+    "inertia_frobenius_rel": 1.6603060865219215e-14
+   }
+  },
+  "synth_moving_FR.valid": {
+   "ok": true,
+   "value": 2
+  },
+  "synth_moving_FR.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.5448411446857611,
+    12.17680959369558,
+    12.176809593695909
+   ]
+  },
+  "synth_moving_FR.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    2.293800000000004,
+    -1.3238000000000003,
+    -0.3126000774025386
+   ]
+  },
+  "synth_moving_FR.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.00031833241161782766
+  },
+  "synth_moving_FR.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": 0.0
+  },
+  "synth_moving_FR.split_ball_joint_recombine<=1e-9": {
+   "ok": true,
+   "value": {
+    "mass_rel": -1.1102230246251565e-16,
+    "com_abs_m": 5.551115123125783e-17,
+    "inertia_frobenius_rel": 6.5096551176189246e-15
+   }
+  },
+  "synth_moving_FR.split_plane_25mm_recombine<=1e-9": {
+   "ok": true,
+   "value": {
+    "mass_rel": -1.6653345369377348e-15,
+    "com_abs_m": 6.377745716588144e-16,
+    "inertia_frobenius_rel": 1.4565151807298932e-14
+   }
+  },
+  "synth_barrel_RL.valid": {
+   "ok": true,
+   "value": 1
+  },
+  "synth_barrel_RL.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.305764251623564,
+    4.961577316888708,
+    4.969386325195735
+   ]
+  },
+  "synth_barrel_RL.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    -2.556,
+    1.150947745336865,
+    0.053078703010489094
+   ]
+  },
+  "synth_barrel_RL.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.00028674969518383
+  },
+  "synth_barrel_RL.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": 6.661338147750939e-16
+  },
+  "synth_barrel_RR.valid": {
+   "ok": true,
+   "value": 1
+  },
+  "synth_barrel_RR.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.30576425162338006,
+    4.9615773168888,
+    4.96938632519549
+   ]
+  },
+  "synth_barrel_RR.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    -2.5560000000000005,
+    -1.225947745336865,
+    0.05307870301048779
+   ]
+  },
+  "synth_barrel_RR.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.00028674969518116544
+  },
+  "synth_barrel_RR.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": 6.661338147750939e-16
+  },
+  "synth_barrel_FL.valid": {
+   "ok": true,
+   "value": 1
+  },
+  "synth_barrel_FL.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.48888519680517994,
+    6.994275587191129,
+    6.998942634108993
+   ]
+  },
+  "synth_barrel_FL.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    2.283000634108312,
+    1.313000634108311,
+    0.05526594764588702
+   ]
+  },
+  "synth_barrel_FL.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.0003127656561952019
+  },
+  "synth_barrel_FL.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": 2.220446049250313e-16
+  },
+  "synth_barrel_FR.valid": {
+   "ok": true,
+   "value": 1
+  },
+  "synth_barrel_FR.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.48888519680248255,
+    6.994275587190975,
+    6.998942634106264
+   ]
+  },
+  "synth_barrel_FR.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    2.283000634108319,
+    -1.3130006341083122,
+    0.05526594764588999
+   ]
+  },
+  "synth_barrel_FR.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.0003127656561952019
+  },
+  "synth_barrel_FR.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": 2.4424906541753444e-15
+  },
+  "cadmod_moving_FL.valid": {
+   "ok": true,
+   "value": 1
+  },
+  "cadmod_moving_FL.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.5526802662045781,
+    12.881471232411725,
+    12.881471232412187
+   ]
+  },
+  "cadmod_moving_FL.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    2.293764653080221,
+    1.32376465308022,
+    -0.30404793283117804
+   ]
+  },
+  "cadmod_moving_FL.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.0003209832437366389
+  },
+  "cadmod_moving_FL.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": -6.661338147750939e-16
+  },
+  "cadmod_moving_FL.ring_delta_vs_analytic<=1e-6": {
+   "ok": true,
+   "value": [
+    0.4531551053262888,
+    0.45315510532624265
+   ]
+  },
+  "cadmod_moving_FR.valid": {
+   "ok": true,
+   "value": 1
+  },
+  "cadmod_moving_FR.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.5526802662038421,
+    12.881471232411094,
+    12.881471232411869
+   ]
+  },
+  "cadmod_moving_FR.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    2.2937646530802214,
+    -1.3237646530802203,
+    -0.30404793283117443
+   ]
+  },
+  "cadmod_moving_FR.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.0003209832437267579
+  },
+  "cadmod_moving_FR.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": 4.440892098500626e-16
+  },
+  "cadmod_moving_FR.ring_delta_vs_analytic<=1e-6": {
+   "ok": true,
+   "value": [
+    0.4531551053260472,
+    0.45315510532624265
+   ]
+  },
+  "cadmod_barrel_FL.valid": {
+   "ok": true,
+   "value": 1
+  },
+  "cadmod_barrel_FL.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.8470439041192873,
+    7.696161015272115,
+    7.793782180698769
+   ]
+  },
+  "cadmod_barrel_FL.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    2.2657689574809425,
+    1.2957689574809443,
+    0.062090602600555767
+   ]
+  },
+  "cadmod_barrel_FL.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.00010864138844390858
+  },
+  "cadmod_barrel_FL.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": -8.881784197001252e-16
+  },
+  "cadmod_barrel_FL.ring_delta_vs_analytic<=1e-6": {
+   "ok": true,
+   "value": [
+    -15.860428686418572,
+    -15.860428686418498
+   ]
+  },
+  "cadmod_barrel_FR.valid": {
+   "ok": true,
+   "value": 1
+  },
+  "cadmod_barrel_FR.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.8470439041208792,
+    7.69616101527207,
+    7.793782180700807
+   ]
+  },
+  "cadmod_barrel_FR.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    2.2657689574809368,
+    -1.2957689574809423,
+    0.06209060260055882
+   ]
+  },
+  "cadmod_barrel_FR.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.00010864138843613702
+  },
+  "cadmod_barrel_FR.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": -3.1086244689504383e-15
+  },
+  "cadmod_barrel_FR.ring_delta_vs_analytic<=1e-6": {
+   "ok": true,
+   "value": [
+    -15.860428686418018,
+    -15.860428686418492
+   ]
+  },
+  "synth_moving_yamlpad_FL.valid": {
+   "ok": true,
+   "value": 2
+  },
+  "synth_moving_yamlpad_FL.tensor_pd_triangle": {
+   "ok": true,
+   "value": [
+    0.5448411746843931,
+    12.176809612722526,
+    12.176809641421
+   ]
+  },
+  "synth_moving_yamlpad_FL.com_inside_bbox": {
+   "ok": true,
+   "value": [
+    2.2937929979344243,
+    1.3237929979338408,
+    -0.31260007753407676
+   ]
+  },
+  "synth_moving_yamlpad_FL.mesh_volume_rel<=1e-3": {
+   "ok": true,
+   "value": -0.00031833241150636127
+  },
+  "synth_moving_yamlpad_FL.brep_read_back_rel<=1e-9": {
+   "ok": true,
+   "value": -1.1102230246251565e-16
+  },
+  "synth_moving_yamlpad_FL.split_ball_joint_recombine<=1e-9": {
+   "ok": true,
+   "value": {
+    "mass_rel": -1.1102230246251565e-16,
+    "com_abs_m": 2.2887833992611187e-16,
+    "inertia_frobenius_rel": 6.469738113929012e-15
+   }
+  },
+  "synth_moving_yamlpad_FL.split_plane_25mm_recombine<=1e-9": {
+   "ok": true,
+   "value": {
+    "mass_rel": -1.6653345369377348e-15,
+    "com_abs_m": 4.996003610813204e-16,
+    "inertia_frobenius_rel": 1.2222600430677399e-14
+   }
+  },
+  "mirror_mass_synth_moving_RL_synth_moving_RR<=1e-9": {
+   "ok": true,
+   "value": 7.105427357601002e-15
+  },
+  "mirror_mass_synth_barrel_RL_synth_barrel_RR<=1e-9": {
+   "ok": true,
+   "value": 4.440892098500626e-16
+  },
+  "mirror_mass_cadmod_moving_FL_cadmod_moving_FR<=1e-9": {
+   "ok": true,
+   "value": 5.551115123125783e-15
+  },
+  "mirror_mass_cadmod_barrel_FL_cadmod_barrel_FR<=1e-9": {
+   "ok": true,
+   "value": -2.7755575615628914e-15
+  }
+ },
+ "all_checks_ok": true,
+ "jobs_wall_s": 9.671000400005141
+}

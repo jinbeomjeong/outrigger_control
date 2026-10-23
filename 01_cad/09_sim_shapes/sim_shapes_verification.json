@@ -1,9 +1,9 @@
 {
- "generated_at": "2026-10-21T15:12:17",
+ "generated_at": "2026-10-22T04:03:34",
  "index": {
   "path": "01_cad/09_sim_shapes/sim_shapes.json",
-  "bytes": 128968,
-  "sha256": "80565b93817060026f9b16796dc414e47c883b7ace32b77be625c81cd374ee82"
+  "bytes": 129651,
+  "sha256": "1bca462922f8a56b2b59c74e12b0dd319857a3a1ae0a23bb238f668e8fcf7fd5"
  },
  "script": {
   "path": "04_scripts/00_cad/verify_sim_shapes.py",
@@ -112,15 +112,15 @@
    },
    "barrel_RL": {
     "file": "01_cad/09_sim_shapes/visual/barrel_RL.obj",
-    "bytes": 9165,
-    "faces": 350,
+    "bytes": 101454,
+    "faces": 3372,
     "pieces": 1,
     "matches_index": true
    },
    "rod_RL": {
     "file": "01_cad/09_sim_shapes/visual/rod_RL.obj",
-    "bytes": 26396,
-    "faces": 914,
+    "bytes": 19955,
+    "faces": 695,
     "pieces": 1,
     "matches_index": true
    },
@@ -133,36 +133,36 @@
    },
    "pad_RL_cad": {
     "file": "01_cad/09_sim_shapes/visual/pad_RL_cad.obj",
-    "bytes": 3733,
-    "faces": 146,
+    "bytes": 18909,
+    "faces": 697,
     "pieces": 1,
     "matches_index": true
    },
    "barrel_RR": {
     "file": "01_cad/09_sim_shapes/visual/barrel_RR.obj",
-    "bytes": 9325,
-    "faces": 350,
+    "bytes": 103112,
+    "faces": 3372,
     "pieces": 1,
     "matches_index": true
    },
    "rod_RR": {
     "file": "01_cad/09_sim_shapes/visual/rod_RR.obj",
-    "bytes": 26847,
-    "faces": 914,
+    "bytes": 20304,
+    "faces": 695,
     "pieces": 1,
     "matches_index": true
    },
    "pad_RR_simple": {
     "file": "01_cad/09_sim_shapes/visual/pad_RR_simple.obj",
-    "bytes": 1339,
+    "bytes": 1341,
     "faces": 44,
     "pieces": 1,
     "matches_index": true
    },
    "pad_RR_cad": {
     "file": "01_cad/09_sim_shapes/visual/pad_RR_cad.obj",
-    "bytes": 3795,
-    "faces": 146,
+    "bytes": 19227,
+    "faces": 697,
     "pieces": 1,
     "matches_index": true
    },
@@ -210,7 +210,7 @@
    },
    "pad_RR_hull": {
     "file": "01_cad/09_sim_shapes/collision/pad_RR_hull.obj",
-    "bytes": 1358,
+    "bytes": 1360,
     "faces": 44,
     "pieces": 1,
     "matches_index": true
@@ -266,15 +266,15 @@
    },
    "rod_RL_hull": {
     "file": "01_cad/09_sim_shapes/collision/rod_RL_hull.obj",
-    "bytes": 8608,
-    "faces": 308,
+    "bytes": 8457,
+    "faces": 304,
     "pieces": 1,
     "matches_index": true
    },
    "rod_RR_hull": {
     "file": "01_cad/09_sim_shapes/collision/rod_RR_hull.obj",
-    "bytes": 8817,
-    "faces": 310,
+    "bytes": 8611,
+    "faces": 304,
     "pieces": 1,
     "matches_index": true
    },
@@ -294,16 +294,16 @@
    },
    "pad_RL_coacd": {
     "file": "01_cad/09_sim_shapes/collision/pad_RL_coacd.obj",
-    "bytes": 282588,
-    "faces": 8820,
-    "pieces": 32,
+    "bytes": 815473,
+    "faces": 24512,
+    "pieces": 141,
     "matches_index": true
    },
    "pad_RR_coacd": {
     "file": "01_cad/09_sim_shapes/collision/pad_RR_coacd.obj",
-    "bytes": 280122,
-    "faces": 8614,
-    "pieces": 31,
+    "bytes": 850852,
+    "faces": 25164,
+    "pieces": 134,
     "matches_index": true
    },
    "moving_FL_coacd": {
@@ -322,9 +322,9 @@
    },
    "moving_RL_coacd": {
     "file": "01_cad/09_sim_shapes/collision/moving_RL_coacd.obj",
-    "bytes": 195164,
-    "faces": 6186,
-    "pieces": 13,
+    "bytes": 169278,
+    "faces": 5406,
+    "pieces": 12,
     "matches_index": true
    },
    "pad_FL_vhacd": {
@@ -336,9 +336,9 @@
    },
    "moving_RR_coacd": {
     "file": "01_cad/09_sim_shapes/collision/moving_RR_coacd.obj",
-    "bytes": 160747,
-    "faces": 5052,
-    "pieces": 11,
+    "bytes": 171823,
+    "faces": 5400,
+    "pieces": 12,
     "matches_index": true
    },
    "track_R_coacd": {
@@ -499,42 +499,42 @@
     }
    },
    "RL": {
-    "brep_area_m2": 0.1071,
-    "area_rel_to_claude": 0.0,
-    "obj_down_area_rel_to_brep": 2.987768445983363e-07,
-    "yaml_area_rel_to_brep": -5.691062066048858e-10,
+    "brep_area_m2": 0.0607,
+    "area_rel_to_claude": -0.4332399626517274,
+    "obj_down_area_rel_to_brep": -4.193410225727945e-07,
+    "yaml_area_rel_to_brep": 0.7644151555032741,
     "tilt_deg": 0.0,
-    "side_angle_brep_deg": 3.3763608244942978,
+    "side_angle_brep_deg": 3.376360750489144,
     "side_angle_yaml_deg": 3.376360750489401,
     "side_angle_claude_deg": 3.4,
     "obj_bottom_centre_m": [
      -2.556,
-     1.1678672499999998,
-     -0.710044
+     1.1679000000000002,
+     -0.71
     ],
     "obj_bottom_minus_yaml_m": [
      0.0,
-     -3.2750000000136836e-05,
-     -4.4000000000044004e-05
+     2.220446049250313e-16,
+     0.0
     ],
     "obj_convex": true,
-    "obj_volume_rel_to_brep_plate": 9.332063988232164e-08,
-    "obj_com_abs_m": 1.0333650992603946e-07,
-    "obj_inertia_rel": 1.2481761075805998e-06,
+    "obj_volume_rel_to_brep_plate": 3.506452728174736e-08,
+    "obj_com_abs_m": 4.988601586574903e-09,
+    "obj_inertia_rel": 6.780530666958702e-08,
     "inertia": {
      "symmetric": true,
      "positive": true,
      "triangle": true,
      "principal": [
-      2.34957046587403e-05,
-      2.3495805093763478e-05,
-      4.671629953011472e-05
+      7.508128323332588e-06,
+      7.508128420769594e-06,
+      1.4860929116483623e-05
      ]
     },
     "checks": {
-     "area_vs_claude": true,
+     "area_vs_claude": false,
      "obj_area": true,
-     "yaml_area": true,
+     "yaml_area": false,
      "normal": true,
      "angle_yaml": true,
      "angle_claude": true,
@@ -547,42 +547,42 @@
     }
    },
    "RR": {
-    "brep_area_m2": 0.1071,
-    "area_rel_to_claude": 0.0,
-    "obj_down_area_rel_to_brep": 2.987768445983363e-07,
-    "yaml_area_rel_to_brep": -5.691227489279527e-10,
+    "brep_area_m2": 0.0607,
+    "area_rel_to_claude": -0.4332399626517274,
+    "obj_down_area_rel_to_brep": -4.193410226838168e-07,
+    "yaml_area_rel_to_brep": 0.7644151555032448,
     "tilt_deg": 0.0,
-    "side_angle_brep_deg": 3.3763608244942986,
+    "side_angle_brep_deg": 3.376360750489144,
     "side_angle_yaml_deg": 3.376360750489387,
     "side_angle_claude_deg": 3.4,
     "obj_bottom_centre_m": [
      -2.556,
-     -1.2428672500000002,
-     -0.710044
+     -1.2429,
+     -0.71
     ],
     "obj_bottom_minus_yaml_m": [
      0.0,
-     3.274999999969275e-05,
-     -4.4000000000044004e-05
+     0.0,
+     0.0
     ],
     "obj_convex": true,
-    "obj_volume_rel_to_brep_plate": 1.8210201191415365e-07,
-    "obj_com_abs_m": 9.117569940718743e-08,
-    "obj_inertia_rel": 1.2493089844768586e-06,
+    "obj_volume_rel_to_brep_plate": 3.9950483143869064e-08,
+    "obj_com_abs_m": 5.001826286488237e-09,
+    "obj_inertia_rel": 5.939852611652693e-08,
     "inertia": {
      "symmetric": true,
      "positive": true,
      "triangle": true,
      "principal": [
-      2.3495709573393923e-05,
-      2.3495807656082893e-05,
-      4.671630695863087e-05
+      7.508128434511785e-06,
+      7.508128434517812e-06,
+      1.4860929239905729e-05
      ]
     },
     "checks": {
-     "area_vs_claude": true,
+     "area_vs_claude": false,
      "obj_area": true,
-     "yaml_area": true,
+     "yaml_area": false,
      "normal": true,
      "angle_yaml": true,
      "angle_claude": true,
@@ -595,7 +595,12 @@
     }
    }
   },
-  "failures": []
+  "failures": [
+   "pad RL: area_vs_claude",
+   "pad RL: yaml_area",
+   "pad RR: area_vs_claude",
+   "pad RR: yaml_area"
+  ]
  },
  "legs": {
   "items": {
@@ -691,92 +696,92 @@
    },
    "RL": {
     "rod": {
-     "faces": 914,
-     "volume_rel_to_brep": -0.0017725566332658094,
+     "faces": 695,
+     "volume_rel_to_brep": -0.002922338146628234,
      "volume_verdict": "허용",
-     "com_abs_m": 0.00011628728958781787,
-     "inertia_rel": 0.002224938696865343,
+     "com_abs_m": 0.00026987771611752603,
+     "inertia_rel": 0.0050832973051542826,
      "com_in_bbox": true,
-     "bbox_abs_diff_m": 0.00011068723081986143,
+     "bbox_abs_diff_m": 0.0004199999999996429,
      "inertia": {
       "symmetric": true,
       "positive": true,
       "triangle": true,
       "principal": [
-       2.0311973100114447e-05,
-       0.0010717748941361347,
-       0.0010717754495404902
+       6.1031933849066454e-06,
+       0.0004576630563335193,
+       0.00045766385305197815
       ]
      }
     },
     "pad_cad": {
-     "faces": 146,
-     "volume_rel_to_brep": 5.411826304868583e-07,
-     "volume_verdict": "일치",
-     "com_abs_m": 1.0680595477992592e-07,
-     "inertia_rel": 1.459716275834751e-06,
+     "faces": 697,
+     "volume_rel_to_brep": -0.001249354486319132,
+     "volume_verdict": "허용",
+     "com_abs_m": 2.3186972938128956e-05,
+     "inertia_rel": 0.00229322161872109,
      "com_in_bbox": true,
-     "bbox_abs_diff_m": 3.542223812047496e-07,
+     "bbox_abs_diff_m": 5.210207820738333e-09,
      "inertia": {
       "symmetric": true,
       "positive": true,
       "triangle": true,
       "principal": [
-       2.523667319994952e-05,
-       2.5236756650396568e-05,
-       4.979414664186489e-05
+       1.5268171832109505e-05,
+       1.5272357003136843e-05,
+       2.2953218763740652e-05
+      ]
+     }
+    },
+    "yaml_moving_com_minus_brep_m": [
+     -4.440892098500626e-16,
+     -4.440892098500626e-16,
+     -2.492003825516065e-10
+    ]
+   },
+   "RR": {
+    "rod": {
+     "faces": 695,
+     "volume_rel_to_brep": -0.0029224484816099405,
+     "volume_verdict": "허용",
+     "com_abs_m": 0.0002699282066452342,
+     "inertia_rel": 0.005083660190138084,
+     "com_in_bbox": true,
+     "bbox_abs_diff_m": 0.0004199999999996429,
+     "inertia": {
+      "symmetric": true,
+      "positive": true,
+      "triangle": true,
+      "principal": [
+       6.103192317250103e-06,
+       0.0004576628892270266,
+       0.000457663686300939
+      ]
+     }
+    },
+    "pad_cad": {
+     "faces": 697,
+     "volume_rel_to_brep": -0.0012493526867477511,
+     "volume_verdict": "허용",
+     "com_abs_m": 2.316330209887319e-05,
+     "inertia_rel": 0.0022932913254172147,
+     "com_in_bbox": true,
+     "bbox_abs_diff_m": 5.210207820738333e-09,
+     "inertia": {
+      "symmetric": true,
+      "positive": true,
+      "triangle": true,
+      "principal": [
+       1.5268177921781868e-05,
+       1.5272349182497325e-05,
+       2.2953216501395183e-05
       ]
      }
     },
     "yaml_moving_com_minus_brep_m": [
      0.0,
-     -2.7691799964202346e-09,
-     -1.3991063863016961e-10
-    ]
-   },
-   "RR": {
-    "rod": {
-     "faces": 914,
-     "volume_rel_to_brep": -0.0017769547905063243,
-     "volume_verdict": "허용",
-     "com_abs_m": 0.00011866292226530198,
-     "inertia_rel": 0.002226610761681591,
-     "com_in_bbox": true,
-     "bbox_abs_diff_m": 0.00011068723082008347,
-     "inertia": {
-      "symmetric": true,
-      "positive": true,
-      "triangle": true,
-      "principal": [
-       2.0312031146280194e-05,
-       0.0010717727974204332,
-       0.0010717739700216047
-      ]
-     }
-    },
-    "pad_cad": {
-     "faces": 146,
-     "volume_rel_to_brep": 5.367521496157934e-07,
-     "volume_verdict": "일치",
-     "com_abs_m": 1.060962400072126e-07,
-     "inertia_rel": 1.4554424349153344e-06,
-     "com_in_bbox": true,
-     "bbox_abs_diff_m": 3.542223909747122e-07,
-     "inertia": {
-      "symmetric": true,
-      "positive": true,
-      "triangle": true,
-      "principal": [
-       2.5236672917483058e-05,
-       2.52367565519004e-05,
-       4.9794146262546784e-05
-      ]
-     }
-    },
-    "yaml_moving_com_minus_brep_m": [
-     -6.661338147750939e-15,
-     2.7691802184648395e-09,
-     -1.3990897329563268e-10
+     2.220446049250313e-16,
+     -2.4920265850880696e-10
     ]
    }
   },
@@ -928,48 +933,48 @@
     "obj_mb": 0.018899
    },
    "barrel_RL": {
-    "faces_source": 1758,
-    "faces": 350,
-    "face_ratio": 0.19908987485779295,
-    "source_volume_rel_to_brep": -0.0033094841585433743,
-    "volume_rel_to_brep": -0.03486894250897021,
-    "volume_verdict": "불일치",
-    "bbox_abs_diff_mm": 5.251000000000616,
+    "faces_source": 3372,
+    "faces": 3372,
+    "face_ratio": 1.0,
+    "source_volume_rel_to_brep": -0.001096494735427389,
+    "volume_rel_to_brep": -0.001098054703154494,
+    "volume_verdict": "허용",
+    "bbox_abs_diff_mm": 0.021000000000048757,
     "bbox_abs_diff_xyz_mm": [
-     2.220446049250313e-12,
-     0.5780671201718324,
-     5.251000000000616
+     0.0,
+     0.021000000000048757,
+     6.106226635438361e-13
     ],
     "dropped_small_components": {
      "components": 0,
      "faces": 0
     },
     "component_methods": {
-     "quadric": 1
+     "brep_override_decimate_0": 1
     },
-    "obj_mb": 0.009165
+    "obj_mb": 0.101454
    },
    "barrel_RR": {
-    "faces_source": 1758,
-    "faces": 350,
-    "face_ratio": 0.19908987485779295,
-    "source_volume_rel_to_brep": -0.003309464030583409,
-    "volume_rel_to_brep": -0.03486946404891089,
-    "volume_verdict": "불일치",
-    "bbox_abs_diff_mm": 5.2509999999992285,
+    "faces_source": 3372,
+    "faces": 3372,
+    "face_ratio": 1.0,
+    "source_volume_rel_to_brep": -0.001096494735541964,
+    "volume_rel_to_brep": -0.0010980547034870058,
+    "volume_verdict": "허용",
+    "bbox_abs_diff_mm": 0.020999999999826713,
     "bbox_abs_diff_xyz_mm": [
-     5.329070518200751e-12,
-     0.5780671201711662,
-     5.2509999999992285
+     0.0,
+     0.020999999999826713,
+     7.771561172376096e-13
     ],
     "dropped_small_components": {
      "components": 0,
      "faces": 0
     },
     "component_methods": {
-     "quadric": 1
+     "brep_override_decimate_0": 1
     },
-    "obj_mb": 0.009325
+    "obj_mb": 0.103112
    }
   }
  },
@@ -997,19 +1002,19 @@
     "kind": "convex_hull",
     "pieces": 1,
     "faces": 44,
-    "max_convexity_defect_rel": 1.7841167554433213e-07,
-    "sum_volume_m3": 0.0026620169992650033,
-    "volume_ratio_to_brep": 1.000000000000034,
-    "bbox_excess_over_brep_m": 3.330084390462673e-07
+    "max_convexity_defect_rel": 5.7956398569203316e-09,
+    "sum_volume_m3": 0.00150601680365166,
+    "volume_ratio_to_brep": 1.0000000037273753,
+    "bbox_excess_over_brep_m": 0.0
    },
    "pad_RR_hull": {
     "kind": "convex_hull",
     "pieces": 1,
     "faces": 44,
-    "max_convexity_defect_rel": 8.96303294917189e-08,
-    "sum_volume_m3": 0.0026620172356025032,
-    "volume_ratio_to_brep": 1.0000000000000981,
-    "bbox_excess_over_brep_m": 3.330084390462673e-07
+    "max_convexity_defect_rel": 9.096865483115835e-10,
+    "sum_volume_m3": 0.0015060168110099933,
+    "volume_ratio_to_brep": 1.0000000037273735,
+    "bbox_excess_over_brep_m": 0.0
    },
    "track_L_hull": {
     "kind": "convex_hull",
@@ -1077,20 +1082,20 @@
    "rod_RL_hull": {
     "kind": "convex_hull",
     "pieces": 1,
-    "faces": 308,
-    "max_convexity_defect_rel": 2.220446049250313e-16,
-    "sum_volume_m3": 0.017056997224375165,
-    "volume_ratio_to_brep": 1.5868452322039162,
-    "bbox_excess_over_brep_m": 0.00011068723081986143
+    "faces": 304,
+    "max_convexity_defect_rel": 4.440892098500626e-16,
+    "sum_volume_m3": 0.0074713957416183445,
+    "volume_ratio_to_brep": 1.2383349225260145,
+    "bbox_excess_over_brep_m": 0.0004199999999996429
    },
    "rod_RR_hull": {
     "kind": "convex_hull",
     "pieces": 1,
-    "faces": 310,
-    "max_convexity_defect_rel": 3.8472734997796465e-09,
-    "sum_volume_m3": 0.01705887588832915,
-    "volume_ratio_to_brep": 1.5870201894917328,
-    "bbox_excess_over_brep_m": 0.00011068723082008347
+    "faces": 304,
+    "max_convexity_defect_rel": 4.440892098500626e-15,
+    "sum_volume_m3": 0.007471385746502514,
+    "volume_ratio_to_brep": 1.2383348309976692,
+    "bbox_excess_over_brep_m": 0.0004199999999996429
    },
    "pad_FL_coacd": {
     "kind": "convex_decomposition",
@@ -1112,21 +1117,21 @@
    },
    "pad_RL_coacd": {
     "kind": "convex_decomposition",
-    "pieces": 32,
-    "faces": 8820,
-    "max_convexity_defect_rel": 8.497801356921464e-06,
-    "sum_volume_m3": 0.003132322820521824,
-    "volume_ratio_to_brep": 1.0975090643552654,
-    "bbox_excess_over_brep_m": 0.0009500148198783309
+    "pieces": 141,
+    "faces": 24512,
+    "max_convexity_defect_rel": 1.1202492739559311e-05,
+    "sum_volume_m3": 0.0034726722894372897,
+    "volume_ratio_to_brep": 1.0565762193432098,
+    "bbox_excess_over_brep_m": 0.0007170000000000787
    },
    "pad_RR_coacd": {
     "kind": "convex_decomposition",
-    "pieces": 31,
-    "faces": 8614,
-    "max_convexity_defect_rel": 8.437561108354252e-06,
-    "sum_volume_m3": 0.0031262134278417643,
-    "volume_ratio_to_brep": 1.0953614801065168,
-    "bbox_excess_over_brep_m": 0.0009500148198758884
+    "pieces": 134,
+    "faces": 25164,
+    "max_convexity_defect_rel": 1.1878733012338216e-05,
+    "sum_volume_m3": 0.0034668675413717775,
+    "volume_ratio_to_brep": 1.0548200726071968,
+    "bbox_excess_over_brep_m": 0.0007170000000000787
    },
    "moving_FL_coacd": {
     "kind": "convex_decomposition",
@@ -1148,12 +1153,12 @@
    },
    "moving_RL_coacd": {
     "kind": "convex_decomposition",
-    "pieces": 13,
-    "faces": 6186,
-    "max_convexity_defect_rel": 5.105980867003979e-07,
-    "sum_volume_m3": 0.01651667595209484,
-    "volume_ratio_to_brep": 1.214189366330362,
-    "bbox_excess_over_brep_m": 0.0028860148198782687
+    "pieces": 12,
+    "faces": 5406,
+    "max_convexity_defect_rel": 5.708288890460267e-07,
+    "sum_volume_m3": 0.010742790931538994,
+    "volume_ratio_to_brep": 1.1526391502670084,
+    "bbox_excess_over_brep_m": 0.0027639999999999887
    },
    "pad_FL_vhacd": {
     "kind": "convex_decomposition",
@@ -1166,12 +1171,12 @@
    },
    "moving_RR_coacd": {
     "kind": "convex_decomposition",
-    "pieces": 11,
-    "faces": 5052,
-    "max_convexity_defect_rel": 1.583367336133179e-07,
-    "sum_volume_m3": 0.016583439802023436,
-    "volume_ratio_to_brep": 1.219098707325734,
-    "bbox_excess_over_brep_m": 0.002886014819875826
+    "pieces": 12,
+    "faces": 5400,
+    "max_convexity_defect_rel": 8.360862842060612e-07,
+    "sum_volume_m3": 0.01074282134281517,
+    "volume_ratio_to_brep": 1.1526422621668153,
+    "bbox_excess_over_brep_m": 0.0027639999999999887
    },
    "track_R_coacd": {
     "kind": "convex_decomposition",
@@ -1436,9 +1441,14 @@
   },
   "failures": []
  },
- "failures": [],
+ "failures": [
+  "pad RL: area_vs_claude",
+  "pad RL: yaml_area",
+  "pad RR: area_vs_claude",
+  "pad RR: yaml_area"
+ ],
  "verdict": {
-  "pads_rods_collision": "통과",
+  "pads_rods_collision": "실패",
   "superstructure_visual_volume": {
    "deck": "불일치",
    "mast": "허용",
@@ -1446,10 +1456,10 @@
    "crawler": "불일치",
    "barrel_FL": "허용",
    "barrel_FR": "허용",
-   "barrel_RL": "불일치",
-   "barrel_RR": "불일치"
+   "barrel_RL": "허용",
+   "barrel_RR": "허용"
   },
   "note": "superstructure visual meshes are display only; their volume is not used for mass"
  },
- "time_s": 10.014319199995953
+ "time_s": 26.222243100011838
 }

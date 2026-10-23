@@ -1,4 +1,13 @@
-"""Leg rod / cylinder check under the pad tangential (lateral) force on sloped ground (revision 2).
+"""Leg rod / cylinder check under the pad tangential (lateral) force on sloped ground (revision 3.3).
+
+Revision 3.3 (2026-10-22): --h4-set LABEL MODE_TOKEN FILE [FILE ...] (repeatable) for several H4 sets, e.g. the R6
+coupled-judgement runs 'O|R6|*' + sensitivity bundle 'S|R6|*' (worst governs); key 'h4_sets'. Variants: bound /
+nofloor, carry rule 'hold' (bracketing run above the angle not reduced), margins at --h4-check-deg angles.
+
+Revision 3.2 (2026-10-22): optional --h4-pairs <json> (control-expert adopted H4 runs, runs[].x.step_pairs) adds the
+key 'h4_adopted' with the re-anchoring criterion RA_A_H4 and the judgement pair ALR_H4 = AL and RA_A_H4 for the
+fore-aft slopes (dynamics_model.md 5.13.5 supplement 2). Without the option the output is the same as revision 3.1.
+Revision 3 / 3.1: REXOME35 per-leg cylinders, stroke 0.70 m, per-leg 350 bar lock; 'd8_boundary_scan' key.
 
 Revision 2 (2026-10-21): the lateral loads now come from the dynamics-expert reduced-model matrix
 (00_docs/01_dynamics/dynamics_model.md rev. 18, section 3.10; 06_analysis/00_dynamics/pad_tangential_check.json)
@@ -82,11 +91,50 @@ ASSUMPTIONS = {
 
 STEEL_DENSITY = 7850.0
 RANGES = {"V": (5.5, 3.5), "P": (4.4, 3.2)}  # (Phi, Theta) deg: D8 verification range, provisional limit
+# rev. 3 (REXOME35 cylinders, dynamics_model.md 5.12.1 / 5.12.7): cylinder section (bore, rod, barrel outer) [m] behind
+# the closed-loop matrix 06_analysis/00_dynamics/pad_tangential_check.json rev. 18 (REXOME33 CAD, common to all legs).
+# When that file's k_t (meta.kt_yaml_N_m) differs from the YAML k_t, its envelopes are rescaled per slope and leg by the
+# anchored-pad kinematics ratio raw(YAML) / raw(PTC basis), then capped at mu N (dynamics order R method, ASSUMPTION:
+# the dynamic factor simulated / anchored kinematics does not change with k_t). Rerun run_pad_tangential_check.py with
+# the new k_t to remove the rescale (dynamics order 6).
+PTC_CYLINDERS_M = (0.115, 0.110, 0.160)
+PTC_KT_REL_TOL = 1e-6
 
 
 def load_params() -> dict:
     with open(YAML_PATH, encoding="utf-8") as f:
         return yaml.safe_load(f)
+
+
+def cylinder_of(p: dict, leg: str) -> tuple[float, float, float]:
+    """(bore, rod, barrel outer) [m] of one leg: YAML legs.<leg>.cylinder (rev. 30) or the old common actuator keys."""
+    c = p["legs"][leg].get("cylinder")
+    if c:
+        return float(c["bore_diameter_m"]), float(c["rod_diameter_m"]), float(c["barrel_outer_diameter_m"])
+    a = p["actuator"]
+    return float(a["bore_diameter_m"]), float(a["rod_diameter_m"]), float(a["barrel_outer_diameter_m"])
+
+
+def per_leg_cylinders(p: dict) -> bool:
+    return all(p["legs"][leg].get("cylinder") for leg in LEG_NAMES)
+
+
+def static_cylinder_forces_kn(p: dict) -> np.ndarray:
+    """Static cylinder forces [N] (top level, level floor) of the L1 k_n distribution: dyn_model.static_loads with
+    YAML contact.rigid_floor.L1.kn_per_pad_N_m, superstructure top + 4 moving parts at e_op, minus the rod weights
+    (same as the dynamics order R input, dynamics_model.md 5.12.1)."""
+    sys.path.insert(0, str(PROJECT_ROOT / "04_scripts" / "01_dynamics"))
+    sys.dont_write_bytecode = True
+    import dyn_model as dm  # noqa: PLC0415
+
+    dm.set_cylinders_from_params(p)
+    geo = dm.geometry_from_params(p)
+    L1 = p["contact"]["rigid_floor"]["L1"]
+    kn = np.array([float(L1["kn_per_pad_N_m"][n]) for n in LEG_NAMES])
+    e_op = np.array([float(L1["derivation"]["operating_extension_m"][n]) for n in LEG_NAMES])
+    bw = dm.body_with_rods(p, geo, "top", e_op)
+    Fc, _, _ = dm.static_loads(kn, geo.pad_xy, bw.mass * geo.g, bw.com[:2])
+    return np.asarray(Fc, float) - geo.rod_mass * geo.g
 
 
 # ---------------------------------------------------------------------------
@@ -122,7 +170,10 @@ def leg_geometry(p: dict) -> dict:
         holes = sorted({round((float(r["bbox_min_y_mm"]) + float(r["bbox_max_y_mm"])) / 2000.0, 4)
                         for r in mine if r["surface_type"] == "cylinder" and abs(float(r["radius_mm"]) - 13.0) < 0.01})
         pad_bottom = float(p["legs"][leg]["pad_bottom_center_retracted_m"][2])
+        dims = cylinder_of(p, leg)
         out[leg] = {
+            "leg": leg, "dims": dims,  # rev. 3: per-leg section (bore, rod, barrel outer) [m]
+            "P_lock_N": ASSUMPTIONS["lock_pressure_Pa"] * math.pi / 4 * dims[0] ** 2,  # 350 bar x head area of this leg
             "rod_R55_z_m": rod, "piston_z_m": piston, "neck_R40_z_m": neck, "boss_R85_z_m": boss,
             "bore_z_m": bore, "gland_z_m": gland, "barrel_R80_z_m": barrel, "bolt_row_z_m": holes,
             "pad_bottom_z_m": pad_bottom,
@@ -314,8 +365,7 @@ def johnson(P_E: float, A: float, sy: float) -> float:
 # ---------------------------------------------------------------------------
 def leg_case(g: dict, p: dict, e: float, F: float, P: float, pad: str, sy_rod: float) -> dict:
     E = 2.1e11
-    D_rod = float(p["actuator"]["rod_diameter_m"]); D_bore = float(p["actuator"]["bore_diameter_m"])
-    D_bar = float(p["actuator"]["barrel_outer_diameter_m"])
+    D_bore, D_rod, D_bar = g["dims"] if "dims" in g else cylinder_of(p, "FL")  # rev. 3: per leg
     A_r, I_r, Z_r = sec_rod(D_rod)
     A_n, I_n, Z_n = sec_rod(0.080)
     A_b, I_b, Z_b = sec_tube(D_bar, D_bore)
@@ -487,7 +537,98 @@ def compare_with_report(env: dict, rep: dict) -> float:
 
 
 # ---------------------------------------------------------------------------
+def load_h4_pairs(paths, mode_token: str = "base", sensitivity: bool = False) -> dict:
+    """H4 re-anchoring runs of control-expert (runs[].x.step_pairs). Selects ids whose 2nd token is mode_token:
+      O|base|V:pitch-3.5|rigid|yaml|Fs0|0        (s6r17 part O, rigid mast, F_s 0 only)
+      O|R6|V:pitch-3.5|rigid|yaml|Fs0|0          (h4_fs_order_check_O3)
+      S|R6|seed12346|P:pitch-3.2|stiff|yaml|Fs0|top  (h4_fs_order_check_S, sensitivity set: all variants kept)
+    Returns {(direction, range, kt_mode): [run summary, ...]} with the per-step (tangential, axial) pairs [kN]."""
+    out = {}
+    for path in paths:
+        d = json.load(open(path, encoding="utf-8"))
+        for r in d["runs"]:
+            parts = r["id"].split("|")
+            if len(parts) < 6 or parts[1] != mode_token:
+                continue
+            js = next((j for j, s in enumerate(parts) if ":" in s), None)
+            if js is None or js + 2 >= len(parts):
+                continue
+            is_sens = parts[0] in ("S", "N")  # sensitivity bundles (N: nose-down bundle with series, rev. 3.4)
+            if not is_sens and (parts[js + 1] != "rigid" or float(r.get("Fs_kN", 0.0)) != 0.0):
+                continue
+            if is_sens and not sensitivity:
+                continue
+            rng, name = parts[js].split(":")
+            kt_mode = parts[js + 2]
+            if not name.startswith("pitch"):
+                continue
+            direction = "pitch" + name[5]
+            a_run = abs(float(name[5:]))
+            x = r["x"]
+            pairs = [[] for _ in range(4)]  # per leg: (Ft, Fl, tag)
+            series = [[] for _ in range(4)]  # rev. 3.4: 20 ms samples (Ft, Fl, tag) of the step series
+            for sp in x["step_pairs"]:
+                for i in range(4):
+                    for ft_key, fl_key, tag in (("Ft_at_Fl_max_kN", "Fl_max_kN", "Fl_max"),
+                                                ("Ft_max_kN", "Fl_at_Ft_max_kN", "Ft_max"),
+                                                ("Ft_max_kN", "Fl_max_Ft_held_kN", "Fl_max_Ft_held"),
+                                                ("Ft_at_Fl_max_Ft_held_kN", "Fl_max_Ft_held_kN",
+                                                 "Fl_max_Ft_held_exact")):
+                        if ft_key not in sp or fl_key not in sp:
+                            continue
+                        ft, fl = sp[ft_key][i], sp[fl_key][i]
+                        if ft is None or fl is None:
+                            continue
+                        pairs[i].append((float(ft), float(fl), f"k{sp['k']}:{tag}"))
+                ser = sp.get("series_20ms")
+                if ser:
+                    for t, fl_row, ft_row in zip(ser["t_s"], ser["Fl_kN"], ser["Ft_kN"]):
+                        for i in range(4):
+                            series[i].append((float(ft_row[i]), float(fl_row[i]), f"k{sp['k']}:series@{t:.3f}"))
+            # the allowable lateral force falls monotonically with the axial force, and every Ft of a run is carried
+            # by the same factor, so only the Pareto front (no sample with both larger Ft and larger Fl) can govern
+            for i in range(4):
+                front, best_fl = [], -1e9
+                for ft, fl, tag in sorted(series[i], key=lambda s: (-s[0], -s[1])):
+                    if fl > best_fl:
+                        front.append((ft, fl, tag))
+                        best_fl = fl
+                pairs[i].extend(front)
+            out.setdefault((direction, rng, kt_mode), []).append({
+                "id": r["id"], "source": str(path), "angle_deg": a_run, "Ft_start_kN": x["Ft_start_kN"],
+                "Fl_start_kN": x["Fl_start_kN"], "Ft_final_kN": x["Ft_final_kN"], "pairs": pairs,
+                "min_true_cyl_kN": r["min_true_cyl_force_kN"], "P_stop_spec_kN": x.get("P_stop_spec_kN"),
+                "P_stop_reading_kN": [s.get("P_stop_reading_kN") for s in x["steps"]]})
+    return out
+
+
 def main():
+    import argparse  # noqa: PLC0415
+
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--h4-pairs", type=Path, default=None,
+                    help="control-expert H4 run JSON, ids O|base|* (rev. 3.2 set 'A'); same as --h4-set A base FILE")
+    ap.add_argument("--h4-set", nargs="+", action="append", default=[], metavar="ARG",
+                    help="LABEL MODE_TOKEN FILE [FILE ...]: one H4 set; ids '<O|S>|MODE_TOKEN|...'; S|* ids "
+                         "(sensitivity bundle) are kept as extra runs and the worst governs (rev. 3.3)")
+    ap.add_argument("--h4-check-deg", type=float, nargs="*", default=[3.1, 3.2],
+                    help="fore-aft angles [deg] at which the margins of the judgement pairs are reported")
+    ap.add_argument("--out-dir", type=Path, default=None,
+                    help="write leg_rod_lateral_check.json / .png here instead of the project legs folder "
+                         "(sensitivity runs, e.g. modified H4 inputs); default unchanged")
+    args = ap.parse_args()
+    if args.out_dir is not None:
+        global OUT_JSON, OUT_PNG
+        args.out_dir.mkdir(parents=True, exist_ok=True)
+        OUT_JSON = args.out_dir / OUT_JSON.name
+        OUT_PNG = args.out_dir / OUT_PNG.name
+    h4_sets = []
+    if args.h4_pairs is not None:
+        h4_sets.append(("A", "base", [args.h4_pairs]))
+    for s in args.h4_set:
+        if len(s) < 3:
+            ap.error("--h4-set needs LABEL MODE_TOKEN FILE [FILE ...]")
+        h4_sets.append((s[0], s[1], [Path(x) for x in s[2:]]))
     t0 = time.time()
     p = load_params()
     geo = leg_geometry(p)
@@ -500,13 +641,25 @@ def main():
     kt_yaml = np.array([float(L1["kt_per_pad_N_m"][n]) for n in LEG_NAMES])
     k_lat_yaml = np.array([float(L1["derivation"]["k_lateral_leg_swivel_N_m"][n]) for n in LEG_NAMES])
     k_conc = 1.0 / (1.0 / kt_yaml - 1.0 / k_lat_yaml)  # concrete tangential k in series (derived, same as YAML)
-    W_rod = float(p["legs"]["FL"]["moving_part"]["mass_kg"]) * float(p["meta"]["gravity_m_s2"])
-    Ncyl = np.array([float(p["superstructure"]["auger_levels"]["top"]["static_leg_loads_N"][n]) for n in LEG_NAMES])
+    g0 = float(p["meta"]["gravity_m_s2"])
+    per_leg = per_leg_cylinders(p)
+    # rev. 3: rod weight per leg (REXOME35 rear moving part differs); the old script used the FL value for every leg
+    W_rod = np.array([float(p["legs"][n]["moving_part"]["mass_kg"]) * g0 for n in LEG_NAMES]) if per_leg \
+        else float(p["legs"]["FL"]["moving_part"]["mass_kg"]) * g0
+    if per_leg:
+        # rev. 3: static cylinder forces of the L1 k_n distribution (dyn_model.static_loads, superstructure top + rods
+        # at e_op), as dynamics order R; the YAML static_leg_loads_N are the equal-spring values
+        Ncyl, static_basis = static_cylinder_forces_kn(p), "L1 kn distribution (dyn_model.static_loads, top, e_op)"
+    else:
+        Ncyl = np.array([float(p["superstructure"]["auger_levels"]["top"]["static_leg_loads_N"][n]) for n in LEG_NAMES])
+        static_basis = "YAML superstructure.auger_levels.top.static_leg_loads_N (4 equal springs)"
     Npad = Ncyl + W_rod
     sy_list = ASSUMPTIONS["rod_yield_Pa"]
     SF_req = ASSUMPTIONS["required_yield_safety_factor"]
-    P_lock = ASSUMPTIONS["lock_pressure_Pa"] * math.pi / 4 * float(p["actuator"]["bore_diameter_m"]) ** 2
+    P_lock_leg = {leg: geo[leg]["P_lock_N"] for leg in LEG_NAMES}  # rev. 3: 350 bar x head area per leg
+    P_lock = max(P_lock_leg.values())
     P_dyn = ASSUMPTIONS["dynamic_peak_axial_N"]
+    stroke = float(p["actuator"]["stroke_m"])
 
     # --- checks against the YAML and the dynamics document ---
     table = {(0, 0): [0.4011, 0.4011, 0.3909, 0.3909], (0, 1): [0.4733, 0.4733, 0.3784, 0.3784],
@@ -548,16 +701,63 @@ def main():
     print(f"[{time.time() - t0:6.1f} s] checks", flush=True)
 
     # --- dynamics envelopes (mu 0.5) and stick demand (mu 5) ---
-    env = {m: envelope(ptc, ENV_GROUPS[m], m, mu) for m in ("ext", "yaml")}
-    env_stick = {m: envelope(ptc, ("stick",), m, 5.0) for m in ("ext", "yaml")}
-    rep_diff = {}
+    # rev. 3: rescale the closed-loop envelopes when pad_tangential_check.json was run with another k_t (see PTC_*)
+    kt_ptc = np.array(ptc["meta"]["kt_yaml_N_m"], float)
+    rescale = bool(np.max(np.abs(kt_ptc / kt_yaml - 1.0)) > PTC_KT_REL_TOL)
+    geo_ptc = {leg: dict(geo[leg], dims=PTC_CYLINDERS_M) for leg in LEG_NAMES}
+    scale_log, scale_cache = {}, {}
+
+    def raw_kin(mode: str, ph: float, th: float, g_: dict, kty: np.ndarray) -> np.ndarray:
+        e = levelling_extension(p, ph, th)
+        if mode == "yaml":
+            kt = kty
+        else:
+            kb = np.array([leg_case(g_[leg], p, float(e[i]), 1.0, 0.0, "swivel", 305e6)["k_lat_bending_N_m"]
+                           for i, leg in enumerate(LEG_NAMES)])
+            kt = 1.0 / (1.0 / kb + 1.0 / k_conc)
+        return np.linalg.norm(anchored_internal_force(p, ph, th, kt), axis=1)
+
+    def slope_to_angles(slope: str):
+        if ":" in slope:
+            _, ph, th = slope_angles(slope)
+            return ph, th
+        return (0.0, float(slope[5:])) if slope.startswith("pitch") else (float(slope[4:]), 0.0)  # 'pitch+3.7' runs
+
+    def scaled(env_m: dict, mode: str, mu_run: float) -> dict:
+        if not rescale:
+            return env_m
+        out_m = json.loads(json.dumps(env_m))
+        for slope, ent in out_m.items():
+            if (slope, mode) not in scale_cache:
+                ph, th = slope_to_angles(slope)
+                r_old = raw_kin(mode, ph, th, geo_ptc, kt_ptc)
+                r_new = raw_kin(mode, ph, th, geo, kt_yaml)
+                s = np.where(r_old > 1e-6, r_new / np.maximum(r_old, 1e-6), 1.0)
+                nz = math.cos(math.radians(ph)) * math.cos(math.radians(th))
+                scale_cache[(slope, mode)] = (s, mu * Npad * nz)
+                scale_log[f"{slope}|{mode}"] = s.round(4).tolist()
+            s, cap = scale_cache[(slope, mode)]
+            for key in ("ready", "dyn"):
+                for i in range(4):
+                    x = ent[key][i]
+                    if x is None:
+                        continue
+                    F = x["F_kN"] * float(s[i])
+                    x["F_kN"] = float(min(F, cap[i] / 1e3) if mu_run < 1.0 else F)
+        return out_m
+
+    env_raw = {m: envelope(ptc, ENV_GROUPS[m], m, mu) for m in ("ext", "yaml")}
+    env = {m: scaled(env_raw[m], m, mu) for m in ("ext", "yaml")}
+    env_stick = {m: scaled(envelope(ptc, ("stick",), m, 5.0), m, 5.0) for m in ("ext", "yaml")}
+    env_stick_raw = {m: envelope(ptc, ("stick",), m, 5.0) for m in ("ext", "yaml")}
+    rep_diff = {}  # envelope extraction vs the dynamics report (unscaled)
     for rk, rep in ptc["report"].items():
         if rk not in ("verification_5.5_3.5", "provisional_4.4_3.2"):
             continue
-        rep_diff[rk] = {"yaml": compare_with_report(env["yaml"], rep["kt_yaml_all"]),
-                        "ext": compare_with_report(env["ext"], rep["kt_ext"])}
+        rep_diff[rk] = {"yaml": compare_with_report(env_raw["yaml"], rep["kt_yaml_all"]),
+                        "ext": compare_with_report(env_raw["ext"], rep["kt_ext"])}
         if "stick_mu5" in rep:
-            rep_diff[rk]["stick_yaml_vs_report_stick_mu5"] = compare_with_report(env_stick["yaml"], rep["stick_mu5"])
+            rep_diff[rk]["stick_yaml_vs_report_stick_mu5"] = compare_with_report(env_stick_raw["yaml"], rep["stick_mu5"])
 
     def ext_of(level: str, slope: str, mode: str) -> list:
         k = ptc["kin"].get(f"{level}|{slope}") or ptc["kin"][f"top|{slope}"]
@@ -570,7 +770,7 @@ def main():
             c = leg_case(geo[leg], p, e, F, P, "swivel", sy)
             out[f"SF_rod_{mat}"] = c["SF_rod_yield"]
             out[f"SF_buckling_sway_{mat}"] = c["SF_buckling_sway"]
-            out[f"SF_rod_lock364kN_{mat}"] = leg_case(geo[leg], p, e, F, P_lock, "swivel", sy)["SF_rod_yield"]
+            out[f"SF_rod_lock364kN_{mat}"] = leg_case(geo[leg], p, e, F, P_lock_leg[leg], "swivel", sy)["SF_rod_yield"]
         out.update({"sigma_rod_MPa": c["sigma_rod_Pa"] / 1e6, "SF_barrel": c["SF_barrel_yield"],
                     "SF_neck_C45": sy_list["C45_normalised"] / c["sigma_neck_Pa"],
                     "R_gland_kN": c["R_gland_centre_N"] / 1e3, "R_piston_kN": c["R_piston_centre_N"] / 1e3,
@@ -611,7 +811,7 @@ def main():
     clip37 = {}
     for mode in ("yaml", "ext"):
         for m_mu in (0.5, 5.0):
-            e_ = envelope(ptc, ("clip",), mode, m_mu, gainset="R:BS_hold").get("pitch+3.7")
+            e_ = scaled(envelope(ptc, ("clip",), mode, m_mu, gainset="R:BS_hold"), mode, m_mu).get("pitch+3.7")
             if not e_:
                 continue
             ext37 = ptc["kin"]["top|pitch+3.7"][mode]["levelled_ext_m"]
@@ -733,7 +933,6 @@ def main():
         return allowable_lateral_guide(geo[leg], p, e, "swivel", p_allow, "piston")
 
     angles = np.round(np.arange(0.5, 7.001, 0.02), 4)
-    stroke = float(p["actuator"]["stroke_m"])
     scan_cache = {}
 
     def scan(direction, mode, capped=True):
@@ -769,8 +968,8 @@ def main():
                     # A with the dynamic peak axial force 141 kN on every leg (sensitivity)
                     row[f"A_Pdyn141_{mat}"] = first_fail(direction, mode, lambda i, leg, e, F, m=mat: F <= F_allow(leg, e, max(P_dyn, float(Npad[i])), m, SF_req), capped)
                     # L: the same lateral force sustained while the locked cylinder reaches 350 bar (364 kN), no yield
-                    row[f"L_{mat}"] = first_fail(direction, mode, lambda i, leg, e, F, m=mat: F <= F_allow(leg, e, P_lock, m, SF_lock), capped)
-                    row[f"AL_{mat}"] = first_fail(direction, mode, lambda i, leg, e, F, m=mat: F <= F_allow(leg, e, float(Npad[i]), m, SF_req) and F <= F_allow(leg, e, P_lock, m, SF_lock), capped)
+                    row[f"L_{mat}"] = first_fail(direction, mode, lambda i, leg, e, F, m=mat: F <= F_allow(leg, e, P_lock_leg[leg], m, SF_lock), capped)
+                    row[f"AL_{mat}"] = first_fail(direction, mode, lambda i, leg, e, F, m=mat: F <= F_allow(leg, e, float(Npad[i]), m, SF_req) and F <= F_allow(leg, e, P_lock_leg[leg], m, SF_lock), capped)
                     rf = ra_factor.get((direction, mode))
                     if rf is not None and direction.startswith("pitch"):
                         def peak_ok(i, leg, e, F, m, sf, rf=rf):
@@ -778,7 +977,7 @@ def main():
 
                         def sustained_ok(i, leg, e, m, rf=rf):
                             Fr = float(rf["residual_N"][i])
-                            return Fr <= F_allow(leg, e, float(Npad[i]), m, SF_req) and Fr <= F_allow(leg, e, P_lock, m, SF_lock)
+                            return Fr <= F_allow(leg, e, float(Npad[i]), m, SF_req) and Fr <= F_allow(leg, e, P_lock_leg[leg], m, SF_lock)
                         # RA_A: with re-anchoring, the levelling-end peak (x manoeuvre factor) still has to meet SF 1.5
                         row[f"RA_A_{mat}"] = first_fail(direction, mode, lambda i, leg, e, F, m=mat: peak_ok(i, leg, e, F, m, SF_req) and sustained_ok(i, leg, e, m), capped)
                         # RA_B (option): one-off peak SF >= 1.0, sustained residual SF >= 1.5 (static) and no yield at 364 kN
@@ -787,6 +986,154 @@ def main():
                     row[f"guide_{nm}"] = first_fail(direction, mode, lambda i, leg, e, F, pa=pa: F <= F_allow_piston(leg, e, pa), capped)
                 limits.append(row)
     print(f"[{time.time() - t0:6.1f} s] limits", flush=True)
+
+    # --- rev. 3.2: adopted H4 (control-expert s6r17 part O, P_stop 45 / 32.41 / 32.41 / 32.41 kN) ---
+    # Every (tangential, axial) pair of every re-anchoring step and the residual are checked at SF 1.5 (residual also
+    # at the 350 bar lock, SF 1.0). Pair tangential forces are carried to another slope a with the scaled kinematics
+    # ratio F_model(a) / F_start(run); above the run angle the ratio is floored at 1 (released pads keep their value).
+    # The V (3.5 deg) and P (3.2 deg) runs are both used and the worse governs. Axial forces are taken as they are
+    # (ASSUMPTION: the axial redistribution of the twist steps is set by P_stop, not by the slope).
+    h4 = None
+    h4_out = {}
+
+    @functools.lru_cache(maxsize=None)
+    def F_allow_q(leg: str, e: float, P_kN01: int, mat: str, sf: float) -> float:
+        return allowable_lateral(geo[leg], p, e, P_kN01 * 100.0, "swivel", sy_list[mat], sf)
+
+    for set_label, set_mode, set_files in h4_sets:
+        h4_runs = load_h4_pairs(set_files, set_mode, sensitivity=True)
+
+        def carry(F_run: float, F0: float, Fm: float, a: float, a_run: float, cmode: str = "ratio") -> float:
+            """'ratio': x F_model(a)/F_start, floored at 1 above the run angle; 'hold': floored at 1 everywhere
+            (no reduction below the run angle - conservative for angles under the run angle)."""
+            r = Fm / max(F0 * 1e3, 1e-6)
+            if cmode == "hold" or a >= a_run - 1e-9:
+                r = max(1.0, r)
+            return F_run * 1e3 * r
+
+        # simultaneous pairs only (Ft at Fl max, Fl max), (Ft max, Fl at Ft max) = primary; the bound variant adds the
+        # non-simultaneous (Ft max of the step, Fl max while the pad still holds) combination
+        # '*_nofloor' (sensitivity): the recorded axial force without the static floor max(Fl, N_static)
+        TAGS = {"simul": ("Fl_max", "Ft_max"), "bound": ("Fl_max", "Ft_max", "Fl_max_Ft_held"),
+                "simul_nofloor": ("Fl_max", "Ft_max"), "bound_nofloor": ("Fl_max", "Ft_max", "Fl_max_Ft_held"),
+                # rev. 3.4: exact simultaneous pairs incl. the held-axial-max instant and the 20 ms series front
+                "exact": ("Fl_max", "Ft_max", "Fl_max_Ft_held_exact", "series"),
+                "exact_nofloor": ("Fl_max", "Ft_max", "Fl_max_Ft_held_exact", "series")}
+
+        def h4_ok(direction, mode, mat, i, leg, e, Fm, a, runs, detail=None, variant="simul", cmode="ratio"):
+            floor = 0.0 if variant.endswith("_nofloor") else float(Npad[i])
+            if cmode == "hold":
+                # bracket: runs at or below a (ratio rule, floored at 1) and the runs of the nearest angle above a
+                # with their tangential forces not reduced (internal force grows with the slope)
+                above = [R["angle_deg"] for R in runs if R["angle_deg"] > a + 1e-9]
+                a_ref = min(above) if above else None
+                runs = [R for R in runs if R["angle_deg"] <= a + 1e-9 or (a_ref is not None
+                                                                            and abs(R["angle_deg"] - a_ref) < 1e-9)]
+            for R in runs:
+                F0 = R["Ft_start_kN"][i]
+                checks = [(carry(ft, F0, Fm, a, R["angle_deg"], cmode), max(fl * 1e3, floor), SF_req, tag)
+                          for ft, fl, tag in R["pairs"][i] if tag.split(":")[1].split("@")[0] in TAGS[variant]]
+                Fr = carry(R["Ft_final_kN"][i], F0, Fm, a, R["angle_deg"], cmode)
+                checks += [(Fr, float(Npad[i]), SF_req, "residual"), (Fr, P_lock_leg[leg], SF_lock, "residual_lock")]
+                for F, P, sf, tag in checks:
+                    Fa = F_allow_q(leg, e, int(round(P / 100.0)), mat, sf)
+                    if detail is not None:
+                        detail.append({"run": R["id"], "tag": tag, "F_kN": F / 1e3, "axial_kN": P / 1e3, "SF_req": sf,
+                                       "F_allow_kN": Fa / 1e3, "util": F / Fa if Fa > 0 else float("inf")})
+                    if F > Fa and detail is None:
+                        return False
+            return True
+
+        def h4_first_fail(direction, mode, mat, runs, variant="simul", cmode="ratio") -> dict:
+            """As first_fail (contiguous from 0.5 deg, stops at the stroke end) for the H4 criterion."""
+            best = 0.0
+            for a, F, e in scan(direction, mode, True):
+                if float(np.max(e)) > stroke:
+                    return {"deg": best, "by": "stroke"}
+                if all(h4_ok(direction, mode, mat, i, leg, round(float(e[i]), 5), float(F[i]), a, runs, None, variant,
+                             cmode) for i, leg in enumerate(LEG_NAMES)):
+                    best = a
+                else:
+                    return {"deg": best, "by": "criterion"}
+            return {"deg": best, "by": "scan_end"}
+
+        VARIANTS = {"H4": "simul", "H4bound": "bound", "H4nofloor": "simul_nofloor", "H4boundnofloor": "bound_nofloor",
+                    "H4exact": "exact", "H4exactnofloor": "exact_nofloor"}
+        h4_limits, h4_points, h4_margins = [], [], []
+        for direction in ("pitch+", "pitch-"):
+            for mode in ("ext", "yaml"):
+                runs = [R for k in ((direction, "V", mode), (direction, "P", mode)) for R in h4_runs.get(k, [])]
+                if not runs:
+                    continue
+                row = {"direction": direction, "kt_mode": mode, "runs": [R["id"] for R in runs]}
+                base = next(r for r in limits if r["direction"] == direction and r["kt_mode"] == mode
+                            and r["variant"] == "capped")
+                for mat in sy_list:
+                    al = base[f"AL_{mat}"]
+                    for key, variant in VARIANTS.items():
+                        for cmode in ("ratio", "hold"):
+                            sfx = key if cmode == "ratio" else key + "hold"
+                            ra = h4_first_fail(direction, mode, mat, runs, variant, cmode)
+                            row[f"RA_A_{sfx}_{mat}"] = ra
+                            row[f"ALR_{sfx}_{mat}"] = al if al["deg"] <= ra["deg"] else ra
+                    old = base.get(f"RA_A_{mat}")
+                    if old is not None:
+                        row[f"ALR_reanchor3_{mat}"] = al if al["deg"] <= old["deg"] else old
+                h4_limits.append(row)
+                # margins at the requested angles: A and L from the envelope model, RA from every pair (all runs)
+                for a in args.h4_check_deg:
+                    F_m, e_m = model_force(direction, mode, float(a))
+                    for mat in sy_list:
+                        ent = {"direction": direction, "kt_mode": mode, "angle_deg": float(a), "material": mat,
+                               "legs": {}}
+                        for i, leg in enumerate(LEG_NAMES):
+                            e_i = round(float(e_m[i]), 5)
+                            c = check(leg, e_i, float(F_m[i]), float(Npad[i]))
+                            L_ = {"SF_A": c[f"SF_rod_{mat}"], "SF_L": c[f"SF_rod_lock364kN_{mat}"],
+                                  "F_model_kN": float(F_m[i]) / 1e3, "extension_m": e_i}
+                            for variant in ("simul", "bound_nofloor", "simul_nofloor", "bound", "exact", "exact_nofloor"):
+                                for cmode in ("ratio", "hold"):
+                                    det = []
+                                    h4_ok(direction, mode, mat, i, leg, e_i, float(F_m[i]), float(a), runs, det,
+                                          variant, cmode)
+                                    w = max(det, key=lambda x: x["util"])
+                                    L_[f"RA_{variant}_{cmode}"] = {"SF_eff": w["SF_req"] / w["util"], "governing": w}
+                            ent["legs"][leg] = L_
+                        h4_margins.append(ent)
+                # utilisation of every pair at the run angles (governing pair per leg), primary variants only
+                for R in runs:
+                    a = R["angle_deg"]
+                    F_m, e_m = model_force(direction, mode, a)
+                    for i, leg in enumerate(LEG_NAMES):
+                        for mat in sy_list:
+                            for variant in TAGS:
+                                det = []
+                                h4_ok(direction, mode, mat, i, leg, round(float(e_m[i]), 5), float(F_m[i]), a, [R], det,
+                                      variant)
+                                w = max(det, key=lambda x: x["util"])
+                                h4_points.append({"direction": direction, "kt_mode": mode, "run": R["id"],
+                                                  "angle_deg": a, "leg": leg, "material": mat, "variant": variant,
+                                                  "extension_m": float(e_m[i]), "F_model_kN": float(F_m[i]) / 1e3,
+                                                  "governing": w, "SF_governing": w["SF_req"] / w["util"]})
+        h4_out[set_label] = {
+            "mode_token": set_mode,
+            "sources": [{"path": str(f), "mtime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(f.stat().st_mtime))}
+                        for f in set_files],
+            "note": "pairs = per step (Ft at Fl max, Fl max), (Ft max, Fl at Ft max) [variant simul = RA_A_H4]; bound "
+                    "adds (Ft max, Fl max while Ft held) [not simultaneous]; *nofloor: recorded axial without the "
+                    "static floor; carry 'ratio': Ft x F_model(a)/F_start, floored at 1 above the run angle; carry "
+                    "'hold' (suffix 'hold'): floored at 1 at every angle (no reduction below the run angle); all V/P "
+                    "runs of the set (S|* sensitivity runs included) are checked and the worst governs; axial "
+                    "unchanged (ASSUMPTION); SF 1.5 for every pair and the residual, residual also SF 1.0 at the "
+                    "350 bar lock",
+            "runs": {R["id"]: {kk: v for kk, v in R.items() if kk != "pairs"} | {
+                "pairs": [[list(t) for t in R["pairs"][i]] for i in range(4)]}
+                for lst in h4_runs.values() for R in lst},
+            "limits_deg": h4_limits, "margins_at_deg": h4_margins, "run_angle_check": h4_points}
+        print(f"[{time.time() - t0:6.1f} s] H4 set {set_label} ({sum(len(v) for v in h4_runs.values())} runs)",
+              flush=True)
+    if h4_out:
+        h4 = h4_out.get("A") or next(iter(h4_out.values()))
 
     # model curves for the figure (governing long leg per direction)
     gov = {"pitch+": 0, "pitch-": 2, "roll+": 1, "roll-": 0}
@@ -801,7 +1148,7 @@ def main():
                    for mat in sy_list}}
 
     # allowable lateral force vs. extension (front and rear geometry)
-    ee = np.linspace(0.0, 0.68, 35)
+    ee = np.linspace(0.0, stroke, 35)  # rev. 3: actuator.stroke_m (was 0.68)
     curves = {}
     for leg, P in (("FL", Npad[0]), ("RL", Npad[2])):
         cv = {"extension_m": ee.tolist(), "axial_N": float(P)}
@@ -814,26 +1161,49 @@ def main():
         curves[leg] = cv
     print(f"[{time.time() - t0:6.1f} s] curves", flush=True)
 
+    # rev. 3.1 (2026-10-22): 'd8_boundary_scan' compatibility list for run_pad_tangential_check.py figures() (rev. 1 key,
+    # dropped in rev. 2). Each entry = continuous CAD model (anchored-pad kinematics, per-leg calibrated to the
+    # provisional vertex, mu N cap), YAML k_t, at the axis vertices of both ranges. At the P vertices it equals the
+    # simulated envelope by construction; at the V vertices it is the model extrapolation (model_calibration_check).
+    # Diagonal vertices are not covered (the model is calibrated per axis direction only).
+    d8_scan = []
+    for rng in RANGES:
+        for direction, (sp, st) in DIRS.items():
+            Phi, Th = RANGES[rng]
+            a = Th if direction.startswith("pitch") else Phi
+            F, e = model_force(direction, "yaml", float(a), capped=True)
+            d8_scan.append({"range": rng, "direction": direction, "phi_deg": sp * a, "theta_deg": st * a,
+                            "kt_mode": "yaml", "F_design_kN": (np.asarray(F) / 1e3).round(3).tolist(),
+                            "extension_m": np.asarray(e).round(5).tolist()})
+
     out = {
-        "meta": {"script": "04_scripts/00_cad/leg_rod_lateral_check.py", "revision": 2, "date": time.strftime("%Y-%m-%d"),
+        "meta": {"script": "04_scripts/00_cad/leg_rod_lateral_check.py", "revision": 3, "date": time.strftime("%Y-%m-%d"),
+                 "d8_boundary_scan_note": "rev. 3.1 compatibility key for run_pad_tangential_check.py figures(): "
+                                          "CAD continuous model (anchored kinematics calibrated per leg at the P axis "
+                                          "vertex, mu N capped), YAML k_t, axis vertices of V and P only; phi = roll, "
+                                          "theta = pitch [deg]; F_design_kN per leg FL, FR, RL, RR",
                  "frame": "body (x fwd, y left, z up), origin CAD origin, m; pitch > 0 nose down, roll > 0 right low",
                  "units": "SI unless a key says kN / MPa / deg", "runtime_s": None,
                  "limit_criteria": {
                      "A": "rod yield SF >= 1.5 at the levelling-end / dynamic-max lateral force with the static axial force",
                      "A_Pdyn141": "as A with axial max(141 kN, static) on every leg (sensitivity)",
-                     "L": "the same lateral force sustained with the 350 bar lock axial 364 kN: SF >= 1.0 (no yield)",
+                     "L": "the same lateral force sustained with the 350 bar lock axial (350 bar x head area of the leg; key names *lock364kN* kept from rev. 2): SF >= 1.0 (no yield)",
                      "AL": "A and L together (no re-anchoring)",
                      "RA_A": "with re-anchoring (3.10.7): peak = levelling end x manoeuvre factor at the run max axial, "
                              "SF >= 1.5; residual after re-anchoring: SF >= 1.5 static and >= 1.0 at 364 kN",
                      "RA_B": "option (design-criterion decision): as RA_A but the one-off peak only SF >= 1.0",
                      "guide": "piston guide pressure (20 mm CAD width, centre model) <= 40 / 100 MPa (information only)",
-                     "by": "criterion = first failing angle; stroke = a leg reaches the 680 mm stroke first; "
+                     "by": f"criterion = first failing angle; stroke = a leg reaches the {stroke * 1e3:.0f} mm stroke first; "
                            "angles beyond the simulated vertices are extrapolated with the scaled kinematics"}},
         "assumptions": ASSUMPTIONS,
         "inputs": {"yaml": str(YAML_PATH.relative_to(PROJECT_ROOT)), "faces": str(FACES_CSV.relative_to(PROJECT_ROOT)),
                    "dynamics": str(PTC_JSON.relative_to(PROJECT_ROOT)), "mu_pad": mu,
                    "kt_yaml_N_m": kt_yaml.tolist(), "k_concrete_N_m": k_conc.tolist(),
                    "pad_force_static_N": Npad.tolist(), "rod_weight_N": W_rod, "P_lock_N": P_lock, "P_dyn_N": P_dyn,
+                   "stroke_m": stroke, "P_lock_per_leg_N": P_lock_leg, "cylinders_m": {leg: geo[leg]["dims"] for leg in LEG_NAMES},
+                   "static_cylinder_force_basis": static_basis, "cylinder_force_static_N": Ncyl.tolist(),
+                   "envelope_rescale": {"applied": rescale, "kt_ptc_N_m": kt_ptc.tolist(), "ptc_cylinders_m": PTC_CYLINDERS_M,
+                                        "scale_raw_new_over_ptc": scale_log},
                    "envelope_groups": ENV_GROUPS},
         "geometry": geo, "geometry_checks": chk, "levelling_extension_check": lev_check, "k_lat_check": klat_chk,
         "secant_kt_vs_dynamics": kt_sec_chk, "levelled_extension_vs_dynamics_kin_max_abs_m": lev_vs_kin,
@@ -841,7 +1211,11 @@ def main():
         "pitch3.7_clip_check": clip37,
         "boundary_points": points, "per_leg_max": per_leg_max, "boundary_min_SF": boundary_min,
         "reanchor": reanchor, "limits_deg": limits, "model_curves": curves_model, "allowable_curves": curves,
+        "d8_boundary_scan": d8_scan,
     }
+    if h4 is not None:
+        out["h4_adopted"] = h4  # rev. 3.2 (= set A, or the first set)
+        out["h4_sets"] = h4_out  # rev. 3.3
     out["meta"]["runtime_s"] = round(time.time() - t0, 2)
 
     def conv(o):
@@ -888,11 +1262,11 @@ def plot(out):
         for direction, ls in zip(dirs, ("-", "--")):
             for mode, c in (("ext", "#1f5fa8"), ("yaml", "#c0392b")):
                 mc = out["model_curves"][f"{direction}|{mode}"]
-                ok = np.array(mc["extension_m"]) <= 0.68  # stop the curves at the stroke end
+                ok = np.array(mc["extension_m"]) <= out["inputs"]["stroke_m"]  # stop the curves at the stroke end
                 axi.plot(np.array(mc["angle_deg"])[ok], np.array(mc["F_N"])[ok] / 1e3, ls, color=c, lw=1.5,
                          label=f"{direction} {mc['leg']}, {'secant' if mode == 'ext' else 'YAML'} k_t")
             mc = out["model_curves"][f"{direction}|ext"]
-            ok = np.array(mc["extension_m"]) <= 0.68
+            ok = np.array(mc["extension_m"]) <= out["inputs"]["stroke_m"]
             for mat, c in cols.items():
                 axi.plot(np.array(mc["angle_deg"])[ok], np.array(mc[f"F_allow_{mat}_N"])[ok] / 1e3, ls, color=c, lw=0.9,
                          alpha=0.6, label=f"allowable {mat} (SF 1.5), {direction} {mc['leg']}")

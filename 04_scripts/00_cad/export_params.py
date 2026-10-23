@@ -57,7 +57,15 @@ the CAD pose. The front legs are retracted in the CAD pose. All "_retracted"
 values in the YAML refer to this retracted state, not to the CAD pose.
 
 Usage:
-    python -I 04_scripts/00_cad/export_params.py
+    python -I 04_scripts/00_cad/export_params.py [--cylinders rexome35|cad] [--out-dir DIR]
+
+Rev. 30 (REXOME35 cylinders, user decision 2026-10-22, dynamics_model.md 5.12.7 '순서 2 명세'): default
+--cylinders rexome35 writes legs.<leg>.cylinder.*, stroke 0.70 m, v_max = pump / sum A_p, the L1-R keys
+(actuator.rod_side, mechanics "off"), sensors.stroke and the synthesized rear moving part
+(01_cad/02_legs/rexome35); geometry keys unchanged (Q-C2). --cylinders cad reproduces the REXOME33 CAD YAML
+(regression: identical except meta.generated). reference.json / crawler_layout_check.json are generated from this
+YAML: after a cylinder change they are 'stale' (recorded, not required) until dynamics reruns them; then rerun this
+script (two-pass rule; simulation.settle_on_pads_min_s and simulation.L2b_NSC.dt_s read reference.json).
 """
 
 import csv
@@ -167,9 +175,44 @@ ACTUATOR_MODEL_DEFAULT = "L1"               # CLAUDE.md '구동기 모델' (2026
 BORE_DIAMETER_M = 0.115                     # CAD, 00_docs/00_cad/cad_review.md 3.1
 ROD_DIAMETER_M = 0.110                      # CAD, 00_docs/00_cad/cad_review.md 3.1
 BARREL_OUTER_DIAMETER_M = 0.160             # CAD, 00_docs/00_cad/cad_review.md 3.1
+# ---- rev. 30: REXOME35 cylinders (user decision 2026-10-22, CLAUDE.md '실린더 치수 기준 교체'; dynamics_model.md
+# 5.11.10 / 5.12.7 '순서 2 명세'). Selected with --cylinders rexome35 (default); --cylinders cad reproduces the
+# REXOME33 CAD YAML (regression). Per leg (bore, rod, barrel outer) [m]:
+CYLINDER_SETS = {
+    "cad": {leg: (BORE_DIAMETER_M, ROD_DIAMETER_M, BARREL_OUTER_DIAMETER_M) for leg in ("FL", "FR", "RL", "RR")},
+    "rexome35": {"FL": (0.130, 0.110, 0.160), "FR": (0.130, 0.110, 0.160),
+                 "RL": (0.110, 0.090, 0.137), "RR": (0.110, 0.090, 0.137)},
+}
+CYLINDER_SOURCE_REX35 = ("drawing REXOME35-9206 Rev.0 (front / rear, 08_test_data/datasheets/cylinder_{front,rear}_extract.md), "
+                         "bore / rod from tolerance symbols H9 / f8 (estimate)")
+STROKE_REX35_M = 0.70                        # user decision Q-C1 / Q-U4 (mechanical stroke 700 mm)
+# Geometry held (user decision Q-C2): the retracted pad pose keeps the CAD definition (piston at the CAD bore top,
+# CAD stroke estimate 680 = bore 700 - piston 20), independent of the plant stroke.
+CAD_RETRACT_STROKE_M = 0.680
+MEASURABLE_STROKE_MAX_M = 0.6948             # ASSUMPTION: unit test (front type) reading at the extension end (Q-U4)
+STROKE_FAULT_MARGIN_M = 0.001                # FAULT threshold = measurable_max - 1 mm (dynamics_model.md 5.12.3)
+# Rear moving part (Q-C3 / Q-C4): drawing-chain synthesis (cad-expert 2026-10-22), cache 01_cad/02_legs/rexome35
+REX35_DIR = LEGS_DIR / "rexome35"
+REX35_MOVING_BREP = {"RL": "moving_RL.brep", "RR": "moving_RR.brep"}
+REX35_MASS_JSON = REX35_DIR / "rexome35_cylinder_mass_properties.json"
+SYNTH_BALL_CENTRE_ABOVE_PAD_BOTTOM_M = 0.084  # READ off the rear drawing (synthesis input, check only)
+# L1-R rod-side chamber (dynamics_model.md 5.12.4 / 5.12.8, hydraulics rod_side_pressure.md 14):
+# mechanics "off" until the engine-independent module and the Chrono hook exist (coordinator 2026-10-22).
+ROD_SIDE_MECHANICS = "off"
+ROD_SIDE_P_FLOOR_ABS_PA = 1.0e4              # ASSUMPTION (hydraulics): 0.1 bar absolute
+ROD_SIDE_P_R0_AFTER_EXTEND_GAUGE_PA = 2.0e5  # ASSUMPTION (hydraulics 12.2): 2 bar g after an extension
+# hydraulics rod_side_pressure.md 14.7 (5) (2026-10-22): p_r0 after a retraction per leg [Pa gauge] from the static
+# loads with the barrel replacement (118.099 / 116.106 / 72.097 / 70.282 kN), 04_scripts/04_hydraulic/rod_side_static_update.py
+ROD_SIDE_P_R0_AFTER_RETRACT_GAUGE_PA = {"FL": 3.4818e6, "FR": 3.4352e6, "RL": 3.1193e6, "RR": 3.0591e6}
+ROD_SIDE_RELEASE_TAU_S = 0.05                # ASSUMPTION (hydraulics 14.3, dynamics 5.12.8)
+ROD_SIDE_LOCK_EPS_M_S = 1.0e-6               # dynamics 5.12.8 Q-D5
+ROD_SIDE_PREDICTOR = True                    # dynamics 5.12.8 (predictor F_x(delta + d delta dt))
+HYD_L1R_SPEC_JSON = PROJECT_ROOT / "06_analysis" / "03_hydraulic" / "l1r_rod_spring_spec.json"
+CYLINDER_MODE = "rexome35"                   # set by main() from --cylinders
 OIL_BULK_MODULUS_EFF_PA = 1.0e9             # ASSUMPTION, 사용자 결정 (CLAUDE.md, 2026-10-19)
 OIL_BULK_MODULUS_SENSITIVITY_PA = [0.69e9, 1.6e9]  # 사용자 결정 (CLAUDE.md); = dyn_model ASSUMPTIONS oil_bulk_modulus_range_Pa
 OIL_DEAD_LENGTH_M = 0.05                    # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 2.3
+ROD_DEAD_LENGTH_M = 0.05                    # ASSUMPTION, user decision 2026-10-22 (hydraulics rod_side_pressure.md 16): rod-side dead length
 FRAME_STIFFNESS_N_M = 1.0e9                 # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 2.3
 STEEL_E_PA = 2.1e11                         # dyn_model.py ASSUMPTIONS steel_E_Pa
 ROD_LENGTH_FOR_K_ROD_M = 1.05               # dyn_model.py k_rod() default (piston top z 0.35 to pad bottom z -0.70)
@@ -249,6 +292,7 @@ L2B_NSC_FRICTION = 0.5                      # ASSUMPTION, 00_docs/01_dynamics/dy
 RELIEF_PRESSURE_MOVING_PA = 2.10e7          # circuit drawing: MCV relief 210 bar (reached only at the stroke ends)
 LOCKED_PRESSURE_LIMIT_PA = 3.50e7           # manufacturer: cylinder maximum load test pressure 350 bar (locked)
 PUMP_FLOW_L_MIN = 60.2                      # circuit drawing: P6, 60.2 L/min
+PUMP_VOLUMETRIC_EFFICIENCY = 0.95           # ASSUMPTION / user decision 2026-10-22: pump volumetric efficiency (REXOME35 speed rule)
 LOCK_VALVE = "pilot_check"                  # current circuit; option "counterbalance" (manufacturer plan)
 RIGID_FLOOR_MODEL = (
     "L1: SMC Hooke, UseMaterialProperties false, normal only (kt = gt = mu = 0) + ground-fixed tangential bushing "
@@ -365,6 +409,31 @@ DOC10_EXPECTED = {
     "crawler.D.gn_per_sphere_1_s": ([0.426744], 0.0000005),
     "crawler.D.settle_on_crawler_min_s": ([65.47], 0.005),
 }
+# rev. 30 (REXOME35 cylinders): values printed in dynamics_model.md 5.11.2 / 5.11.10 / 5.12.4 for the keys that do not
+# depend on the moving-part masses. The mass-dependent keys (c_n LOCK, c_t, g_n, bushing inputs, oil dashpots, crawler
+# dashpot, settle lengths) are printed there for the rear 71.5 kg estimate; this export uses the synthesized rear
+# moving part (cad 2026-10-22), so they are checked against dyn_model.py at full precision (check (a)) instead.
+DOC10_EXPECTED_REX35 = {
+    key: DOC10_EXPECTED[key] for key in (
+        "L1.dt_s", "L2.kn_per_pad_N_m", "L2.kt_per_pad_N_m", "concrete.k_N_m",  # F_min: superstructure barrel swap
+        "ground_body_mass_kg", "L1.slip_damping_reenable_speed_m_s", "L2b_NSC.solver_max_iterations",
+        "L2b_NSC.friction", "relief_pressure_moving_Pa", "locked_pressure_limit_Pa", "pump_flow_m3_s",
+        "crawler.sphere_radius_m", "crawler.damping_ratio_heave", "crawler.damping_ratio_heave_soil",
+        "crawler.D.track_centre_y_m", "crawler.D.roller_x_m", "crawler.D.end_shoe_x_m", "crawler.D.end_shoe_gap_m",
+        "crawler.D.kn_per_sphere_N_m")}  # settle_on_crawler: masses (crawler_layout_check.json regenerated)
+DOC10_EXPECTED_REX35.update({
+    "L1.kn_per_pad_N_m": ([2.591e7, 2.591e7, 1.950e7, 1.950e7], 0.0005e7),          # 5.11.10
+    "L1.kt_per_pad_N_m": ([7.153e6, 7.153e6, 3.707e6, 3.707e6], 0.0005e6),          # 5.11.10
+    "L1.bushing_stiffness_per_pad_N_m": ([7.153e6, 7.153e6, 3.707e6, 3.707e6], 0.0005e6),
+    "L2.lateral_bushing_N_m": ([7.314e6, 7.314e6, 3.750e6, 3.750e6], 0.0005e6),     # 5.11.2 k_lat
+    "L2b_NSC.axial_stiffness_operating_point_N_m": ([2.591e7, 2.591e7, 1.950e7, 1.950e7], 0.0005e7),
+    "L2b_NSC.lateral_bushing_N_m": ([7.153e6, 7.153e6, 3.707e6, 3.707e6], 0.0005e6),
+    "annulus_area_m2": ([3.76991e-3, 3.76991e-3, 3.14159e-3, 3.14159e-3], 0.000005e-3),  # 5.12.7 item 1
+    "legs.cylinder.head_area_m2": ([1.32732e-2, 1.32732e-2, 9.50332e-3, 9.50332e-3], 0.000005e-2),
+    "max_force_extend_N": ([278737.8, 278737.8, 199569.7, 199569.7], 0.05),
+    "max_force_retract_N": ([79168.1, 79168.1, 65973.4, 65973.4], 0.05),
+    "legs.cylinder.locked_force_limit_N": ([464563.0, 464563.0, 332616.1, 332616.1], 0.05),
+})
 
 
 # --------------------------------------------------------------------------
@@ -528,6 +597,61 @@ def pad_bottom_face(brep_file: str) -> dict:
     }
 
 
+def swap_bodies(base: dict, remove: list[dict], add: list[dict]) -> dict:
+    """Rigid-body composition in one frame (body SI): base - remove + add (mass, first moment, inertia about the
+    origin, then back to the new CoM). Each dict: mass_kg, com_m, inertia_kg_m2 (about its own CoM, same axes)."""
+    def origin_terms(b):
+        c = np.asarray(b["com_m"], float)
+        return (b["mass_kg"], b["mass_kg"] * c,
+                np.asarray(b["inertia_kg_m2"], float) + b["mass_kg"] * (c @ c * np.eye(3) - np.outer(c, c)))
+    m, s, I = origin_terms(base)
+    for sign, items in ((-1.0, remove), (1.0, add)):
+        for b in items:
+            mb, sb, Ib = origin_terms(b)
+            m, s, I = m + sign * mb, s + sign * sb, I + sign * Ib
+    c = s / m
+    Ic = I - m * (c @ c * np.eye(3) - np.outer(c, c))
+    return {"mass_kg": float(m), "com_m": c, "inertia_kg_m2": 0.5 * (Ic + Ic.T)}
+
+
+def barrel_replacement(table: pd.DataFrame) -> dict:
+    """Rev. 30 (user decision 2026-10-22): replace the CAD leg barrels (solid 17, parts group leg_barrel) in the
+    superstructure by the REXOME35 barrels of the cad-expert cache 01_cad/02_legs/rexome35/barrel_<leg>.brep
+    (rear: drawing-chain synthesis D137/D110, 945 mm, plate 340 x 250 x 25; front: CAD solid 17 with the bore
+    D115 -> D130). Same density as the CAD rows (SS400 7.85). ASSUMPTION: the CAD mounting bracket (45.8 mm plate)
+    belongs to the cylinder, not to a superstructure seat (unknown, Q-C2/Q-C3)."""
+    cache = json.loads(REX35_MASS_JSON.read_text(encoding="utf-8"))["legs"]
+    remove, add, delta, cad_rel, new_rel, sources = [], [], {}, {}, {}, {}
+    for leg in LEG_ORDER:
+        rows = table[(table["group"] == "leg_barrel") & (table["leg"] == leg)]
+        if len(rows) != 1:
+            raise SystemExit(f"{leg}: expected one barrel row, got {len(rows)}")
+        old = mass_properties_si(combine_mass_properties(rows, TOOL_STEEL))
+        density = float(rows[f"density_{TOOL_STEEL}_g_cm3"].iloc[0]) * 1e-6
+        path = REX35_DIR / f"barrel_{leg}.brep"
+        new = unit_to_mass_properties_si(_volume_properties(_read_shape(path)), density, np.zeros(3))
+        remove.append(old)
+        add.append(new)
+        delta[leg] = new["mass_kg"] - old["mass_kg"]
+        cad_rel[leg] = abs(old["mass_kg"] / cache[leg]["barrel"]["cad_solid17_mass_kg"] - 1.0)
+        new_rel[leg] = abs(new["mass_kg"] / cache[leg]["barrel"]["mass_kg"] - 1.0)
+        sources[leg] = {"brep": f"01_cad/02_legs/rexome35/barrel_{leg}.brep", "sha256": sha256_of(path)}
+    return {"remove": remove, "add": add, "delta_mass_kg": delta, "delta_total_kg": float(sum(delta.values())),
+            "cad_vs_cache_rel": cad_rel, "new_vs_cache_rel": new_rel, "sources": sources}
+
+
+def synth_cache_mass(leg: str) -> float:
+    """Moving-part mass of the synthesized leg as written by the cad-expert synthesis (cache JSON, cross-check)."""
+    return float(json.loads(REX35_MASS_JSON.read_text(encoding="utf-8"))["legs"][leg]["moving_part"]["mass_kg"])
+
+
+def _read_shape(path: Path):
+    shape = TopoDS_Shape()
+    if not breptools.Read(shape, str(path), BRep_Builder()):
+        raise SystemExit(f"cannot read {path}")
+    return shape
+
+
 def polygon_area(xy: np.ndarray) -> float:
     x, y = xy[:, 0], xy[:, 1]
     return 0.5 * float(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1)))
@@ -573,7 +697,8 @@ def split_rod_pad(brep_file: str, pad_bottom_y_mm: float, split_height_mm: float
     Returns unit-density volume properties (CAD frame, mm) of whole, pad and rod.
     """
     shape = TopoDS_Shape()
-    if not breptools.Read(shape, str(LEG_BREP_DIR / brep_file), BRep_Builder()):
+    path = brep_file if isinstance(brep_file, Path) else LEG_BREP_DIR / brep_file  # rev. 30: Path = override
+    if not breptools.Read(shape, str(path), BRep_Builder()):
         raise SystemExit(f"cannot read {brep_file}")
     whole = _volume_properties(shape)
     (x0, y0, z0), (x1, y1, z1) = whole["bbox_mm"]
@@ -628,9 +753,65 @@ def series(*ks):
     return 1.0 / sum(1.0 / np.asarray(k, float) for k in ks)
 
 
-def piston_area() -> float:
-    """dyn_model.py:174-175 piston_area() (head side, full bore area)."""
-    return np.pi / 4 * BORE_DIAMETER_M ** 2
+def cylinder_dims(key: str):
+    """Per-leg cylinder dimension (LEG_ORDER) of the selected set; a float when the four legs are equal (CAD set,
+    identical to the old common scalar), else a (4,) array (same rule as dyn_model.cylinder_value)."""
+    index = {"bore": 0, "rod": 1, "barrel": 2}[key]
+    values = np.array([CYLINDER_SETS[CYLINDER_MODE][leg][index] for leg in LEG_ORDER])
+    return float(values[0]) if np.all(values == values[0]) else values
+
+
+def configure(mode: str) -> None:
+    """Select the cylinder set and the stroke / speed rule (--cylinders)."""
+    global CYLINDER_MODE, STROKE_M, FULL_STROKE_TIME_S, MAX_SPEED_M_S
+    CYLINDER_MODE = mode
+    if mode == "cad":
+        return  # module constants (CLAUDE.md '구동기' 2026-10-19: 680 mm in 30 s)
+    STROKE_M = STROKE_REX35_M
+    # Q-C5 (user decision 2026-10-22, dynamics 5.11.10 (a)): common speed limit = pump flow / sum of the head areas
+    # user decision 2026-10-22: delivered flow = 60.2 L/min x volumetric efficiency 0.95
+    MAX_SPEED_M_S = (PUMP_FLOW_L_MIN / 60000.0 * PUMP_VOLUMETRIC_EFFICIENCY) / float(np.sum(np.broadcast_to(piston_area(), (4,))))
+    FULL_STROKE_TIME_S = STROKE_M / MAX_SPEED_M_S
+
+
+def piston_area():
+    """dyn_model.py:174-175 piston_area() (head side, full bore area); per leg if the legs differ (rev. 30)."""
+    return np.pi / 4 * cylinder_dims("bore") ** 2
+
+
+def annulus_area():
+    """Rod-side (annulus) area pi/4 (bore^2 - rod^2); per leg if the legs differ (dyn_model.annulus_area)."""
+    return np.pi / 4 * (cylinder_dims("bore") ** 2 - cylinder_dims("rod") ** 2)
+
+
+def leg_cylinder(leg: str) -> dict:
+    """YAML legs.<leg>.cylinder (rev. 30, dynamics_model.md 5.12.7 '순서 2 명세' item 1)."""
+    bore, rod, barrel = CYLINDER_SETS[CYLINDER_MODE][leg]
+    head = np.pi / 4 * bore ** 2
+    ann = np.pi / 4 * (bore ** 2 - rod ** 2)
+    return {"bore_diameter_m": bore, "rod_diameter_m": rod, "barrel_outer_diameter_m": barrel,
+            "head_area_m2": sig(head), "annulus_area_m2": sig(ann),
+            "max_force_extend_N": sig(RELIEF_PRESSURE_MOVING_PA * head),
+            "max_force_retract_N": sig(RELIEF_PRESSURE_MOVING_PA * ann),
+            "locked_force_limit_N": sig(LOCKED_PRESSURE_LIMIT_PA * head)}
+
+
+def rod_side_block(derived: dict, per_leg) -> dict:
+    """YAML actuator.rod_side (L1-R, dynamics_model.md 5.12.4 / 5.12.7 item 5 / 5.12.8). mechanics "off" until the
+    module and the Chrono hook exist; p_r0 after a retraction from the hydraulics spec (front / rear)."""
+    spec = json.loads(HYD_L1R_SPEC_JSON.read_text(encoding="utf-8"))["parameters"]
+    p_ret = [ROD_SIDE_P_R0_AFTER_RETRACT_GAUGE_PA[leg] for leg in LEG_ORDER]  # hydraulics 14.7 (5), per leg
+    return {
+        "mechanics": ROD_SIDE_MECHANICS,
+        "p_floor_Pa": ROD_SIDE_P_FLOOR_ABS_PA,
+        "p_r0_after_extend_Pa": per_leg(ROD_SIDE_P_R0_AFTER_EXTEND_GAUGE_PA),
+        "p_r0_after_retract_Pa": per_leg(np.array(p_ret)),
+        "column_length_m": per_leg(derived["rod_side_length"]),
+        "k_rod_side_N_m": per_leg(derived["k_rod_side"]),
+        "release_tau_s": ROD_SIDE_RELEASE_TAU_S,
+        "lock_eps_m_s": ROD_SIDE_LOCK_EPS_M_S,
+        "predictor": ROD_SIDE_PREDICTOR,
+    }
 
 
 def k_oil(ext):
@@ -638,9 +819,9 @@ def k_oil(ext):
     return OIL_BULK_MODULUS_EFF_PA * piston_area() / (OIL_DEAD_LENGTH_M + np.asarray(ext, float))
 
 
-def k_rod() -> float:
-    """dyn_model.py:185-188 k_rod(): E A / L, L = 1.05 m."""
-    return STEEL_E_PA * np.pi / 4 * ROD_DIAMETER_M ** 2 / ROD_LENGTH_FOR_K_ROD_M
+def k_rod():
+    """dyn_model.py:185-188 k_rod(): E A / L, L = 1.05 m; per leg if the rods differ (rev. 30)."""
+    return STEEL_E_PA * np.pi / 4 * cylinder_dims("rod") ** 2 / ROD_LENGTH_FOR_K_ROD_M
 
 
 def k_concrete_slab() -> float:
@@ -650,7 +831,8 @@ def k_concrete_slab() -> float:
     return 8 * SUBGRADE_MODULUS_N_M3 * radius ** 2
 
 
-def k_leg_lateral_swivel(ext: float, attach_z: float, barrel_bottom_z: float, pad_bottom_retracted_z: float) -> float:
+def k_leg_lateral_swivel(ext: float, attach_z: float, barrel_bottom_z: float, pad_bottom_retracted_z: float,
+                         leg_index: int = 0) -> float:
     """dyn_model.py:207-237 k_leg_lateral(ext, guided_tip=False, ...) via dyn_model.py:240-244 k_leg_lateral_legs().
 
     Fixed-free 2-segment Euler-Bernoulli beam with the leg's own geometry (YAML values): barrel D160/D115 from
@@ -658,8 +840,9 @@ def k_leg_lateral_swivel(ext: float, attach_z: float, barrel_bottom_z: float, pa
     (pad bottom - ext + swivel_center_above_pad_bottom_m; the ball transmits no moment).
     """
     e_mod = STEEL_E_PA
-    ei1 = e_mod * np.pi / 64 * (BARREL_OUTER_DIAMETER_M ** 4 - BORE_DIAMETER_M ** 4)
-    ei2 = e_mod * np.pi / 64 * ROD_DIAMETER_M ** 4
+    bore, rod, barrel = CYLINDER_SETS[CYLINDER_MODE][LEG_ORDER[leg_index]]  # per-leg section (rev. 30)
+    ei1 = e_mod * np.pi / 64 * (barrel ** 4 - bore ** 4)
+    ei2 = e_mod * np.pi / 64 * rod ** 4
     tip_z = pad_bottom_retracted_z - ext + SWIVEL_CENTER_ABOVE_PAD_BOTTOM_M
     length1 = attach_z - barrel_bottom_z
     length2 = barrel_bottom_z - tip_z
@@ -695,16 +878,25 @@ def dynamics_derivation(pad_z: np.ndarray, attach_z: np.ndarray, barrel_bottom_z
     ko = k_oil(e_op)
     kr = k_rod()
     ko_eff = series(ko, kr, FRAME_STIFFNESS_N_M)                      # oil + rod + frame (axial)
-    kh_free = np.array([k_leg_lateral_swivel(e_op[i], attach_z[i], barrel_bottom_z[i], pad_z[i]) for i in range(4)])
+    kh_free = np.array([k_leg_lateral_swivel(e_op[i], attach_z[i], barrel_bottom_z[i], pad_z[i], i) for i in range(4)])
     m_tot = superstructure_mass_top + rod_mass.sum()                  # body_with_rods(top).mass = W_tot / g
     kn_l1 = series(ko_eff, kc)
     kt_l1 = series(kh_free, kc)
     zeta = BODY_DAMPING_RATIO
-    cn_l1 = 2 * zeta * np.sqrt(kn_l1 * m_tot / 4)
+    cn_l1_head_only = 2 * zeta * np.sqrt(kn_l1 * m_tot / 4)
+    # rev. 30 L1-R (dynamics_model.md 5.12.4 / 5.12.8 Q-D3, user decision): rod-side column k_r at e_op (Q-D7),
+    # LOCK stiffness k1 = (k_oil + k_r) in series with the outer stiffness (rod, frame, concrete); the pad dashpot
+    # uses k1 in every state (one value). CAD mode keeps the head-only dashpot (old YAML).
+    rod_side_length = STROKE_M - e_op + ROD_DEAD_LENGTH_M  # rev. 30: own rod-side dead length (same value 0.05)
+    k_rod_side = OIL_BULK_MODULUS_EFF_PA * annulus_area() / rod_side_length
+    k_lock = series(ko + k_rod_side, kr, FRAME_STIFFNESS_N_M, kc)
+    cn_l1 = cn_l1_head_only if CYLINDER_MODE == "cad" else 2 * zeta * np.sqrt(k_lock * m_tot / 4)
     ct_l1 = 2 * zeta * np.sqrt(kt_l1 * m_tot / 4)
     c_oil = 2 * zeta * np.sqrt(ko_eff * m_tot / 4)
     c_oil_moving = 2 * LEG_DAMPING_RATIO_MOVING * np.sqrt(ko_eff * m_tot / 4)   # valve open (L2, L2b moving)
-    f_heave_l1 = np.sqrt(kn_l1.sum() / m_tot) / (2 * np.pi)          # uncoupled heave on the L1 pads (zeta basis)
+    # uncoupled heave on the L1 pads (zeta basis; LOCK stiffness when the dashpot is the LOCK value)
+    f_heave_l1 = np.sqrt((kn_l1 if CYLINDER_MODE == "cad" else k_lock).sum() / m_tot) / (2 * np.pi)
+    f_heave_l1_head_only = np.sqrt(kn_l1.sum() / m_tot) / (2 * np.pi)
     # L2 contact dashpot: total zeta 0.30 on the rod local mode, minus the oil dashpot acting in parallel
     c_contact_l2 = 2 * ROD_LOCAL_DAMPING_RATIO * np.sqrt((ko_eff + kc) * rod_mass.mean()) - c_oil
     ct_l2 = 2 * zeta * np.sqrt(np.full(4, kc) * m_tot / 4)            # L2 tangential, kt = concrete
@@ -735,13 +927,16 @@ def dynamics_derivation(pad_z: np.ndarray, attach_z: np.ndarray, barrel_bottom_z
     dt_l2b_max = min(dt_l2b_rod_max, dt_l2b_rock_max)
     # hydraulic circuit: head / annulus areas, force limits at 210 bar (moving) and 350 bar (locked)
     head_area = piston_area()
-    annulus_area = np.pi / 4 * (BORE_DIAMETER_M ** 2 - ROD_DIAMETER_M ** 2)
+    annulus = annulus_area()
     pump_flow_m3_s = PUMP_FLOW_L_MIN / 60000.0
     return {
         "pad_z": pad_z, "attach_z": attach_z, "barrel_bottom_z": barrel_bottom_z,
         "e_op": e_op, "kc": kc, "ko": ko, "kr": kr, "ko_eff": ko_eff, "kh_free": kh_free, "m_tot": m_tot,
         "kn_l1": kn_l1, "kt_l1": kt_l1, "cn_l1": cn_l1, "ct_l1": ct_l1, "c_oil": c_oil, "c_contact_l2": c_contact_l2,
         "c_oil_moving": c_oil_moving, "f_heave_l1": f_heave_l1,
+        "cn_l1_head_only": cn_l1_head_only, "gn_l1_head_only": cn_l1_head_only / rod_mass,
+        "f_heave_l1_head_only": f_heave_l1_head_only, "k_rod_side": k_rod_side,
+        "rod_side_length": rod_side_length, "k_lock": k_lock,
         "ct_l2": ct_l2, "c_bushing_l2b": c_bushing_l2b,
         "f1_l1": f1, "zeta1_l1": zeta1, "dt_l1_max": dt_l1_max,
         # rev. 17 (5.7): the first-mode ladder value is kept as a record; the written dt is the user decision,
@@ -756,11 +951,13 @@ def dynamics_derivation(pad_z: np.ndarray, attach_z: np.ndarray, barrel_bottom_z
         "f_rod_axial_l2b": f_rod_axial, "dt_l2b_max": dt_l2b_max, "dt_l2b": dt_ladder(dt_l2b_max),
         "dt_l2b_rod_max": dt_l2b_rod_max, "dt_l2b_rod": dt_ladder(dt_l2b_rod_max), "dt_l2b_rock_max": dt_l2b_rock_max,
         "f1_l2b": f1_nsc, "zeta1_l2b": zeta1_nsc,
-        "head_area": head_area, "annulus_area": annulus_area,
+        "head_area": head_area, "annulus_area": annulus,
         "max_force_extend": RELIEF_PRESSURE_MOVING_PA * head_area,
-        "max_force_retract": RELIEF_PRESSURE_MOVING_PA * annulus_area,
+        "max_force_retract": RELIEF_PRESSURE_MOVING_PA * annulus,
         "locked_force_limit": LOCKED_PRESSURE_LIMIT_PA * head_area,
-        "pump_flow_m3_s": pump_flow_m3_s, "flow_4_legs_at_vmax_m3_s": 4 * MAX_SPEED_M_S * head_area,
+        "pump_flow_m3_s": pump_flow_m3_s,
+        "flow_4_legs_at_vmax_m3_s": (4 * MAX_SPEED_M_S * head_area if np.ndim(head_area) == 0
+                                     else MAX_SPEED_M_S * float(np.sum(head_area))),
     }
 
 
@@ -931,12 +1128,18 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
         sys.dont_write_bytecode = True  # do not write __pycache__ into 04_scripts/01_dynamics (read-only for this script)
         import dyn_model as dm  # noqa: PLC0415
         a = dm.ASSUMPTIONS
+        # rev. 30: per-leg cylinders through dyn_model.set_cylinders_from_params (legs.<leg>.cylinder first)
+        dm.set_cylinders_from_params({"actuator": {}, "legs": {
+            leg: {"cylinder": dict(zip(("bore_diameter_m", "rod_diameter_m", "barrel_outer_diameter_m"),
+                                       CYLINDER_SETS[CYLINDER_MODE][leg]))} for leg in LEG_ORDER}})
         same_inputs = {
             "oil_bulk_modulus_eff_Pa": a["oil_bulk_modulus_eff_Pa"] == OIL_BULK_MODULUS_EFF_PA,
             "oil_dead_length_m": a["oil_dead_length_m"] == OIL_DEAD_LENGTH_M,
             "frame_bracket_stiffness_N_m": a["frame_bracket_stiffness_N_m"] == FRAME_STIFFNESS_N_M,
-            "bore_rod_barrel_diameters": (a["bore_diameter_m"], a["rod_diameter_m"], a["barrel_outer_diameter_m"])
-            == (BORE_DIAMETER_M, ROD_DIAMETER_M, BARREL_OUTER_DIAMETER_M),
+            "bore_rod_barrel_diameters": all(
+                (dm.cylinder_value("bore_diameter_m", i), dm.cylinder_value("rod_diameter_m", i),
+                 dm.cylinder_value("barrel_outer_diameter_m", i)) == CYLINDER_SETS[CYLINDER_MODE][leg]
+                for i, leg in enumerate(LEG_ORDER)),
             "steel_E_Pa": a["steel_E_Pa"] == STEEL_E_PA,
             "concrete": (a["concrete_E_Pa"], a["concrete_nu"], a["slab_thickness_m"], a["subgrade_modulus_N_m3"])
             == (CONCRETE_E_PA, CONCRETE_NU, SLAB_THICKNESS_M, SUBGRADE_MODULUS_N_M3),
@@ -960,7 +1163,12 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
         z = a["modal_damping_ratio_body"]
         cn_dm, ct_dm = 2 * z * np.sqrt(kn * m_tot / 4), 2 * z * np.sqrt(kt * m_tot / 4)
         head_dm = dm.piston_area()
-        annulus_dm = np.pi / 4 * (a["bore_diameter_m"] ** 2 - a["rod_diameter_m"] ** 2)  # run_reference.py:626-641
+        annulus_dm = dm.annulus_area()  # run_reference.py:626-641
+        k_lock_dm = dm.series(dm.k_oil(e_op) + a["oil_bulk_modulus_eff_Pa"] * annulus_dm
+                              / (STROKE_M - e_op + a["oil_dead_length_m"]),
+                              dm.k_rod(), a["frame_bracket_stiffness_N_m"], kc)
+        if CYLINDER_MODE != "cad":  # LOCK pad dashpot (dynamics 5.12.8 Q-D3)
+            cn_dm = 2 * z * np.sqrt(k_lock_dm * m_tot / 4)
         full = {
             "kc": kc, "ko_eff": ko_eff, "kh_free": kh, "kn_l1": kn, "kt_l1": kt,
             "cn_l1": cn_dm, "ct_l1": ct_dm,
@@ -977,7 +1185,7 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
             "f_rod_axial_l2b": np.sqrt(kn.mean() / derived["rod_mass"].mean()) / (2 * np.pi),
             "head_area": head_dm, "annulus_area": annulus_dm,
             "max_force_extend": 210e5 * head_dm, "max_force_retract": 210e5 * annulus_dm,
-            "locked_force_limit": 350e5 * head_dm,
+            "locked_force_limit": 350e5 * head_dm, "k_lock": k_lock_dm,
         }
         same_inputs["oil_bulk_modulus_range_Pa"] = list(a["oil_bulk_modulus_range_Pa"]) == OIL_BULK_MODULUS_SENSITIVITY_PA
         # rev. 5 crawler: crawler_damping_total and the damping inputs of CRAWLER_DEFAULTS. dyn_model.crawler_points
@@ -1078,9 +1286,24 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
     }
     out["crawler_layout_check_json"] = crawler_layout_json_checks(cr, layout_check)
     out["reference_json_rel"] = {k: relative_difference(g, ref) for k, (g, ref) in pairs.items()}
+    # rev. 30: reference.json is generated FROM this YAML (run_reference.py). After a cylinder change it is stale until
+    # dynamics reruns it; then this script is rerun and every pair above must pass again (two-pass rule).
+    head_now = np.atleast_1d(np.asarray(r6(derived["head_area"]), float))
+    head_ref = np.atleast_1d(np.asarray(hyd["head_area_m2"], float))
+    n_head = max(head_now.size, head_ref.size)
+    current = relative_difference(np.broadcast_to(head_now, (n_head,)), np.broadcast_to(head_ref, (n_head,))) <= REL_TOL
+    # also the speed rule (v_max enters reference.json through the flow at v_max; 4 printed digits)
+    current = current and relative_difference([sig(derived["flow_4_legs_at_vmax_m3_s"] * 60000.0, 4)],
+                                              [hyd["flow_4_legs_at_vmax_L_min"]]) <= REL_TOL
+    out["reference_json_status"] = ("current" if current else
+                                    "stale: reference.json head areas differ from the generated cylinders; rerun "
+                                    "04_scripts/01_dynamics/run_reference.py, then rerun this script (pairs required "
+                                    "only when current)")
     # rev. 4 consistency: exact m_eff (floor 1e9 kg) vs the m_moving definition of gn; pump covers 4 legs at v_max
     out["gn_m_moving_vs_exact_m_eff_rel"] = relative_difference(derived["gn_l1"], derived["gn_l1_exact_m_eff"])
-    out["pump_flow_covers_4_legs_at_vmax"] = bool(derived["pump_flow_m3_s"] >= derived["flow_4_legs_at_vmax_m3_s"])
+    # rev. 30: v_max = pump flow / sum A_p makes the two equal -> round-off tolerance 1e-12
+    out["pump_flow_covers_4_legs_at_vmax"] = bool(derived["pump_flow_m3_s"]
+                                                  >= derived["flow_4_legs_at_vmax_m3_s"] * (1 - 1e-12))
     out["line_references"] = check_line_references()
     # (c) document section 10 as printed
     generated = {
@@ -1128,8 +1351,10 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
         "crawler.D.gn_per_sphere_1_s": [cr["gn_per_sphere"]],
         "crawler.D.settle_on_crawler_min_s": [cr["settle_on_crawler"]],
     }
+    generated.update({"legs.cylinder.head_area_m2": derived["head_area"],
+                      "legs.cylinder.locked_force_limit_N": derived["locked_force_limit"]})
     doc = {}
-    for key, (expected, tol) in DOC10_EXPECTED.items():
+    for key, (expected, tol) in (DOC10_EXPECTED if CYLINDER_MODE == "cad" else DOC10_EXPECTED_REX35).items():
         diff = float(np.max(np.abs(np.asarray(generated[key], float) - np.asarray(expected, float))))
         doc[key] = {"max_abs_diff": diff, "half_unit_tol": tol,
                     "max_rel_diff": diff / float(np.max(np.abs(expected)))}
@@ -1200,6 +1425,18 @@ def emit(data: dict, comments: dict, indent: int = 0, path: str = "") -> list[st
 # Main
 # --------------------------------------------------------------------------
 def main() -> None:
+    import argparse  # noqa: PLC0415
+
+    global PARAMS_DIR, PARAMS_YAML, CHECKS_JSON
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--cylinders", choices=("rexome35", "cad"), default="rexome35",
+                        help="rexome35 (default, rev. 30) or cad (REXOME33 CAD cylinders, regression of the old YAML)")
+    parser.add_argument("--out-dir", type=Path, help="write the YAML and the checks JSON here (trial / regression)")
+    args = parser.parse_args()
+    configure(args.cylinders)
+    if args.out_dir:
+        PARAMS_DIR = args.out_dir.resolve()
+        PARAMS_YAML, CHECKS_JSON = PARAMS_DIR / PARAMS_YAML.name, PARAMS_DIR / CHECKS_JSON.name
     parts_raw = pd.read_csv(CLASSIFIED_CSV, encoding="utf-8-sig")
     summary = json.loads(SUMMARY_JSON.read_text(encoding="utf-8"))
     auger = json.loads(AUGER_JSON.read_text(encoding="utf-8"))
@@ -1213,11 +1450,20 @@ def main() -> None:
     # ---------------- superstructure per auger level ----------------
     is_superstructure = table["group"] != "leg_rod_pad"
     levels = {}
+    barrel_swap = barrel_replacement(table) if CYLINDER_MODE != "cad" else None  # rev. 30, user decision 2026-10-22
+    cad_levels = {}
     for name in LEVEL_NAMES:
         travel_mm = float(auger["levels"][name]["travel_mm"])
         posed = shifted(table, travel_mm)
         props = mass_properties_si(combine_mass_properties(posed[is_superstructure], TOOL_STEEL))
         pads_xy = np.array([summary["legs"][leg]["pad_center_body_m"][:2] for leg in LEG_ORDER])
+        props_cad = props
+        if barrel_swap:  # CAD barrels (solid 17) out, REXOME35 barrels in (barrels do not move with the auger)
+            props = swap_bodies(props, barrel_swap["remove"], barrel_swap["add"])
+        cad_levels[name] = {"mass_kg": sig(props_cad["mass_kg"]), "com_m": vec(props_cad["com_m"]),
+                            "inertia_kg_m2": mat(props_cad["inertia_kg_m2"]),
+                            "static_leg_loads_N": {leg: sig(v, 7) for leg, v in zip(
+                                LEG_ORDER, leg_loads(pads_xy, props_cad["mass_kg"], props_cad["com_m"][:2]))}}
         loads = leg_loads(pads_xy, props["mass_kg"], props["com_m"][:2])
         inertia = props["inertia_kg_m2"]
         levels[name] = {
@@ -1232,19 +1478,20 @@ def main() -> None:
         independent = independent_case_c(parts_raw, travel_mm, parts_raw["group"] != "leg_rod_pad")
         reference = auger["levels"][name]["mass"][TOOL_STEEL]
         written = levels[name]
+        wc = cad_levels[name]  # rev. 30: independent / auger_levels.json references are CAD (before the barrel swap)
         checks["levels"][name] = {
-            "independent_mass_rel": relative_difference(written["mass_kg"], independent["mass_kg"]),
-            "independent_com_max_abs_m": float(np.max(np.abs(np.array(written["com_m"]) - independent["com_m"]))),
-            "independent_inertia_rel_to_max": relative_difference(written["inertia_kg_m2"],
+            "independent_mass_rel": relative_difference(wc["mass_kg"], independent["mass_kg"]),
+            "independent_com_max_abs_m": float(np.max(np.abs(np.array(wc["com_m"]) - independent["com_m"]))),
+            "independent_inertia_rel_to_max": relative_difference(wc["inertia_kg_m2"],
                                                                   independent["inertia_kg_m2"]),
-            "auger_json_mass_abs_kg": abs(written["mass_kg"] - reference["mass_kg"]),
-            "auger_json_com_max_abs_m": float(np.max(np.abs(np.array(written["com_m"])
+            "auger_json_mass_abs_kg": abs(wc["mass_kg"] - reference["mass_kg"]),
+            "auger_json_com_max_abs_m": float(np.max(np.abs(np.array(wc["com_m"])
                                                             - np.array(reference["cog_body_m"])))),
-            "auger_json_inertia_max_abs_kg_m2": float(np.max(np.abs(np.array(written["inertia_kg_m2"])
+            "auger_json_inertia_max_abs_kg_m2": float(np.max(np.abs(np.array(wc["inertia_kg_m2"])
                                                                     - np.array(reference["inertia_about_cog_body_kg_m2"])))),
-            "auger_json_inertia_rel_to_max": relative_difference(written["inertia_kg_m2"],
+            "auger_json_inertia_rel_to_max": relative_difference(wc["inertia_kg_m2"],
                                                                  reference["inertia_about_cog_body_kg_m2"]),
-            "auger_json_leg_loads_max_abs_kN": max(abs(written["static_leg_loads_N"][leg] / 1000
+            "auger_json_leg_loads_max_abs_kN": max(abs(wc["static_leg_loads_N"][leg] / 1000
                                                        - reference["leg_loads_kN"][leg]) for leg in LEG_ORDER),
             "tensor": tensor_checks({"inertia_about_cog_body_kg_m2": written["inertia_kg_m2"]}),
             "leg_load_sum_rel_to_weight": abs(sum(written["static_leg_loads_N"].values())
@@ -1255,6 +1502,23 @@ def main() -> None:
     moving_rows = table["motion"].isin(MOVING)
     moving = mass_properties_si(combine_mass_properties(table[moving_rows], TOOL_STEEL))
     fixed = mass_properties_si(combine_mass_properties(table[is_superstructure & ~moving_rows], TOOL_STEEL))
+    if barrel_swap:  # rev. 30: the barrels belong to the fixed part
+        fixed_cad = fixed
+        fixed = swap_bodies(fixed, barrel_swap["remove"], barrel_swap["add"])
+        back = swap_bodies(fixed, barrel_swap["add"], barrel_swap["remove"])  # undo -> CAD fixed part
+        checks["barrel_replacement"] = {
+            "delta_mass_kg_per_leg": barrel_swap["delta_mass_kg"],
+            "delta_mass_kg_total": barrel_swap["delta_total_kg"],
+            "superstructure_top_mass_cad_kg": cad_levels["top"]["mass_kg"],
+            "superstructure_top_mass_kg": levels["top"]["mass_kg"],
+            "superstructure_top_com_shift_m": vec(np.array(levels["top"]["com_m"]) - np.array(cad_levels["top"]["com_m"]), 6),
+            "undo_mass_rel": relative_difference(back["mass_kg"], fixed_cad["mass_kg"]),
+            "undo_com_max_abs_m": float(np.max(np.abs(back["com_m"] - fixed_cad["com_m"]))),
+            "undo_inertia_rel_to_max": relative_difference(back["inertia_kg_m2"], fixed_cad["inertia_kg_m2"]),
+            "cad_barrel_vs_cache_json_mass_rel": barrel_swap["cad_vs_cache_rel"],
+            "new_barrel_vs_cache_json_mass_rel": barrel_swap["new_vs_cache_rel"],
+            "sources": barrel_swap["sources"],
+        }
 
     # ---------------- legs ----------------
     legs = {}
@@ -1270,9 +1534,18 @@ def main() -> None:
         rod = mass_properties_si(combine_mass_properties(rows, TOOL_STEEL))
         leg_masses.append(rod["mass_kg"])
         face = pad_bottom_face(ROD_PAD_BREP[leg])
+        # rev. 30: rear moving part from the REXOME35 drawing-chain synthesis (B-rep cache, CAD frame / CAD pose);
+        # the pad face (polygon, thickness) stays the CAD one (geometry held, Q-C2; rear 250 pad deferred to S9)
+        synth = CYLINDER_MODE != "cad" and leg in REX35_MOVING_BREP
+        moving_brep = REX35_DIR / REX35_MOVING_BREP[leg] if synth else ROD_PAD_BREP[leg]
+        density_kg_mm3 = float(rows[f"density_{TOOL_STEEL}_g_cm3"].iloc[0]) * 1e-6
+        if synth:
+            synth_whole = _volume_properties(_read_shape(moving_brep))
+            rod = unit_to_mass_properties_si(synth_whole, density_kg_mm3, np.zeros(3))
         # CLAUDE.md "다리 기하": retracted state = moving part raised until the piston reaches the bore top,
         # so that every leg extends 0 ... STROKE_M. Offset (CAD pose -> retracted) along body +z, in mm.
-        retract_offset_mm = STROKE_M / MM - geometry["remaining_extension_mm"]
+        # rev. 30: defined with the CAD stroke estimate (geometry held, Q-C2), not with the plant stroke.
+        retract_offset_mm = CAD_RETRACT_STROKE_M / MM - geometry["remaining_extension_mm"]
         piston_gap_mm = geometry["bore_y_cad_mm"][1] - geometry["piston_y_cad_mm"][1]  # bore top - piston top
         offset_m = np.array([0.0, 0.0, retract_offset_mm * MM])
         pad_bottom_cad = body_from_cad_mm([axis_x_cad, geometry["pad_bottom_y_cad_mm"], axis_z_cad])
@@ -1284,8 +1557,9 @@ def main() -> None:
             polygon = polygon[::-1]  # counter-clockwise seen from +z
         face_centroid_body = body_from_cad_mm(face["centroid_cad_mm"])
         # SCM bodies (00_docs/01_dynamics/dynamics_model.md 2.1 / 10): pad plate and rod+piston from the same BREP solid.
-        density_kg_mm3 = float(rows[f"density_{TOOL_STEEL}_g_cm3"].iloc[0]) * 1e-6
-        split = split_rod_pad(ROD_PAD_BREP[leg], face["y_cad_mm"], PAD_SPLIT_HEIGHT_MM)
+        # rev. 30 synthesized rear: the pad plate + socket housing (one piece above the plane) form the pad body,
+        # ball + rod + piston the rod body (ball-joint split; the plate split plane is the same 25 mm).
+        split = split_rod_pad(moving_brep, face["y_cad_mm"], PAD_SPLIT_HEIGHT_MM)
         # 00_docs/01_dynamics/dynamics_model.md 2.6 (rev. 3): the 4 gussets on the pad top face belong to the pad body; the rod
         # body is the largest solid above the plane (rod + piston + boss, incl. the rod between 25 and 60 mm).
         plate_body = unit_to_mass_properties_si(split["pad"], density_kg_mm3, offset_m)
@@ -1307,6 +1581,7 @@ def main() -> None:
             "bore_z_range_m": vec(np.array(geometry["bore_y_cad_mm"]) * MM),
             "retracted_offset_from_cad_m": sig(retract_offset_mm * MM),
             "extension_range_m": [0.0, STROKE_M],
+            **({} if CYLINDER_MODE == "cad" else {"cylinder": leg_cylinder(leg)}),
             "pad_bottom_center_retracted_m": vec(pad_bottom),
             "pad": {
                 "shape": "octagon",
@@ -1340,7 +1615,10 @@ def main() -> None:
         }
         bbox_low = body_from_cad_mm(rows[["bbox_min_x_mm", "bbox_min_y_mm", "bbox_min_z_mm"]].to_numpy()[0])
         bbox_high = body_from_cad_mm(rows[["bbox_max_x_mm", "bbox_max_y_mm", "bbox_max_z_mm"]].to_numpy()[0])
+        if synth:  # bbox of the synthesized B-rep (CAD pose), expected split topology of the ball-joint pad
+            bbox_low, bbox_high = (np.sort(np.array([body_from_cad_mm(c) for c in split["whole"]["bbox_mm"]]), axis=0))
         checks["legs"][leg] = {
+            "moving_part_source": "rexome35_synthesis" if synth else "cad_solid10",
             "tensor": tensor_checks({"inertia_about_cog_body_kg_m2": legs[leg]["moving_part"]["inertia_kg_m2"]}),
             "com_inside_part_bbox": bool(np.all(rod["com_m"] >= bbox_low - 1e-9) and np.all(rod["com_m"] <= bbox_high + 1e-9)),
             "pad_vertex_count": int(len(polygon)),
@@ -1357,7 +1635,8 @@ def main() -> None:
             "pad_top_face_area_m2": face["top_face_area_mm2"] * 1e-6,
             "pad_area_brep_vs_polygon_rel": abs(face["area_mm2"] * 1e-6 - polygon_area(polygon))
             / (face["area_mm2"] * 1e-6),
-            "rod_mass_vs_csv_rel": float(abs(rod["mass_kg"] - rows["mass_step_kg"].iloc[0]) / rod["mass_kg"]),
+            "rod_mass_vs_csv_rel": float(abs(rod["mass_kg"] - (synth_cache_mass(leg) if synth else rows["mass_step_kg"].iloc[0]))
+                                         / rod["mass_kg"]),
             "split": {
                 "split_plane_minus_pad_thickness_mm": PAD_SPLIT_HEIGHT_MM - face["thickness_mm"],
                 "whole_valid": split["whole"]["valid"], "pad_valid": split["pad"]["valid"],
@@ -1385,7 +1664,12 @@ def main() -> None:
                 "written_sum_inertia_rel_to_max": 0.0,
                 "pad_tensor": tensor_checks({"inertia_about_cog_body_kg_m2": legs[leg]["pad_body"]["inertia_kg_m2"]}),
                 "rod_tensor": tensor_checks({"inertia_about_cog_body_kg_m2": legs[leg]["rod_body"]["inertia_kg_m2"]}),
-                "pad_com_inside_bbox": _inside_cad_bbox(pad_body["com_m"] - offset_m, split["pad"]["bbox_mm"]),
+                "pad_com_inside_bbox": _inside_cad_bbox(pad_body["com_m"] - offset_m, split["pad"]["bbox_mm"] if not synth
+                                                        else np.array([np.minimum(split["pad"]["bbox_mm"][0], gussets[0]["bbox_mm"][0]),
+                                                                       np.maximum(split["pad"]["bbox_mm"][1], gussets[0]["bbox_mm"][1])])),
+                # rev. 30 synthesized ball-joint pad: the pad body (plate + socket housing) CoM lies below the ball centre
+                "pad_com_below_ball_centre": bool(pad_body["com_m"][2] - pad_bottom[2]
+                                                  < (SYNTH_BALL_CENTRE_ABOVE_PAD_BOTTOM_M if synth else np.inf)),
                 "rod_com_inside_bbox": _inside_cad_bbox(rod_body["com_m"] - offset_m, split["rod_pieces"][0]["bbox_mm"]),
                 "pad_com_below_split_plane": bool(pad_body["com_m"][2] - pad_bottom[2] < PAD_SPLIT_HEIGHT_MM * MM),
                 "rod_com_above_split_plane": bool(rod_body["com_m"][2] - pad_bottom[2] > PAD_SPLIT_HEIGHT_MM * MM),
@@ -1412,7 +1696,7 @@ def main() -> None:
     checks["totals"] = {
         "superstructure_plus_4_rods_minus_total_rel": abs(super_cad_pose["mass_kg"] + sum(leg_masses)
                                                          - total["mass_kg"]) / total["mass_kg"],
-        "moving_plus_fixed_minus_superstructure_rel": abs(moving["mass_kg"] + fixed["mass_kg"]
+        "moving_plus_fixed_minus_superstructure_rel": abs(moving["mass_kg"] + (fixed_cad if barrel_swap else fixed)["mass_kg"]
                                                          - super_cad_pose["mass_kg"]) / super_cad_pose["mass_kg"],
         "total_case_c_kg": total["mass_kg"],
         "total_case_a_kg_cad_summary": total_a,
@@ -1540,6 +1824,14 @@ def main() -> None:
                 "com_m": vec(fixed["com_m"]),
                 "inertia_kg_m2": mat(fixed["inertia_kg_m2"]),
             },
+            **({} if not barrel_swap else {"barrel_replacement": {
+                "applied": True,
+                "delta_mass_kg": {leg: sig(v) for leg, v in barrel_swap["delta_mass_kg"].items()},
+                "delta_mass_total_kg": sig(barrel_swap["delta_total_kg"]),
+                "cad_barrel_mass_kg": {leg: sig(b["mass_kg"]) for leg, b in zip(LEG_ORDER, barrel_swap["remove"])},
+                "rexome35_barrel_mass_kg": {leg: sig(b["mass_kg"]) for leg, b in zip(LEG_ORDER, barrel_swap["add"])},
+                "superstructure_mass_cad_kg": cad_levels["top"]["mass_kg"],
+            }}),
         },
         "actuator": {
             "type": "hydraulic cylinder approximated by ChLinkMotorLinear (simplified)",
@@ -1556,17 +1848,20 @@ def main() -> None:
             "oil_bulk_modulus_eff_Pa": OIL_BULK_MODULUS_EFF_PA,
             "oil_bulk_modulus_sensitivity_range_Pa": list(OIL_BULK_MODULUS_SENSITIVITY_PA),
             "oil_dead_length_m": OIL_DEAD_LENGTH_M,
+            **({} if CYLINDER_MODE == "cad" else {"rod_dead_length_m": ROD_DEAD_LENGTH_M}),
             "frame_stiffness_N_m": FRAME_STIFFNESS_N_M,
             "cylinder_type": CYLINDER_TYPE,
-            "annulus_area_m2": sig(derived["annulus_area"]),
+            "annulus_area_m2": sig(derived["annulus_area"] if CYLINDER_MODE == "cad" else np.pi / 4 * (BORE_DIAMETER_M ** 2 - ROD_DIAMETER_M ** 2)),
             "rod_side_chamber_model": ROD_SIDE_CHAMBER_MODEL,
             "relief_pressure_moving_Pa": RELIEF_PRESSURE_MOVING_PA,
-            "max_force_extend_N": sig(derived["max_force_extend"]),
-            "max_force_retract_N": sig(derived["max_force_retract"]),
+            "max_force_extend_N": sig(derived["max_force_extend"] if CYLINDER_MODE == "cad" else RELIEF_PRESSURE_MOVING_PA * np.pi / 4 * BORE_DIAMETER_M ** 2),
+            "max_force_retract_N": sig(derived["max_force_retract"] if CYLINDER_MODE == "cad" else RELIEF_PRESSURE_MOVING_PA * np.pi / 4 * (BORE_DIAMETER_M ** 2 - ROD_DIAMETER_M ** 2)),
             "locked_pressure_limit_Pa": LOCKED_PRESSURE_LIMIT_PA,
             "lock_valve": LOCK_VALVE,
             "pump_flow_m3_s": sig(derived["pump_flow_m3_s"]),
+            **({} if CYLINDER_MODE == "cad" else {"pump_volumetric_efficiency": PUMP_VOLUMETRIC_EFFICIENCY}),
             "flow_control": FLOW_CONTROL,
+            **({} if CYLINDER_MODE == "cad" else {"rod_side": rod_side_block(derived, per_leg)}),
             "L2b_NSC": {
                 "axial_stiffness": {
                     "formula": L2B_NSC_AXIAL_STIFFNESS_FORMULA,
@@ -1606,6 +1901,9 @@ def main() -> None:
                     "cn_per_pad_N_s_m": per_leg(derived["cn_l1"]),
                     "ct_per_pad_N_s_m": per_leg(derived["ct_l1"]),
                     "gn_per_pad_1_s": per_leg(derived["gn_l1"]),
+                    **({} if CYLINDER_MODE == "cad" else {
+                        "cn_per_pad_head_only_N_s_m": per_leg(derived["cn_l1_head_only"]),
+                        "gn_per_pad_head_only_1_s": per_leg(derived["gn_l1_head_only"])}),
                     "smc_material": L1_SMC_MATERIAL,
                     "tangential_model": L1_TANGENTIAL_MODEL,
                     "bushing_stiffness_per_pad_N_m": per_leg(derived["kt_l1"]),
@@ -1614,7 +1912,7 @@ def main() -> None:
                     "derivation": {
                         "operating_extension_m": per_leg(derived["e_op"]),
                         "k_oil_N_m": per_leg(derived["ko"]),
-                        "k_rod_N_m": sig(derived["kr"]),
+                        "k_rod_N_m": sig(derived["kr"]) if np.ndim(derived["kr"]) == 0 else per_leg(derived["kr"]),
                         "k_axial_leg_N_m": per_leg(derived["ko_eff"]),
                         "k_lateral_leg_swivel_N_m": per_leg(derived["kh_free"]),
                         "steel_E_Pa": STEEL_E_PA,
@@ -1623,6 +1921,11 @@ def main() -> None:
                         "damping_ratio_sensitivity_range": list(LEG_DAMPING_RATIO_RANGE),
                         "damping_reference_mode_Hz": sig(derived["f_heave_l1"]),
                         "damping_mass_kg": sig(derived["m_tot"]),
+                        **({} if CYLINDER_MODE == "cad" else {
+                            "damping_basis": "LOCK",
+                            "k_rod_side_N_m": per_leg(derived["k_rod_side"]),
+                            "k_lock_N_m": per_leg(derived["k_lock"]),
+                            "damping_reference_mode_head_only_Hz": sig(derived["f_heave_l1_head_only"])}),
                     },
                 },
                 "L2b_NSC": {
@@ -1669,6 +1972,9 @@ def main() -> None:
             "cylinder_pressure": {
                 "location": PRESSURE_SENSOR_LOCATION,
             },
+            **({} if CYLINDER_MODE == "cad" else {"stroke": {
+                "measurable_max_m": MEASURABLE_STROKE_MAX_M,
+                "fault_threshold_m": sig(MEASURABLE_STROKE_MAX_M - STROKE_FAULT_MARGIN_M)}}),
         },
         "simulation": {
             "crawler_clearance_m": CRAWLER_CLEARANCE_M,
@@ -1739,7 +2045,7 @@ def main() -> None:
                                          "while moving (retract pull)"),
         "actuator.locked_pressure_limit_Pa": ("[common] manufacturer: cylinder maximum load test pressure 350 bar (locked, "
                                               "judgement metric V17); force = 350 bar x head area = "
-                                              f"{derived['locked_force_limit']:.0f} N"),
+                                              f"{np.max(derived['locked_force_limit']):.0f} N"),
         "actuator.lock_valve": ("[common] manufacturer: current dual pilot-operated check; option \"counterbalance\" "
                                 "(relieves like a 350 bar relief, L2b model in 00_docs/01_dynamics/dynamics_model.md 4.4)"),
         "actuator.pump_flow_m3_s": ("[common] circuit drawing: 60.2 L/min; 4 legs at max_speed_m_s need 56.5 L/min "
@@ -1964,6 +2270,9 @@ def main() -> None:
             "pad_body + rod_body = moving_part (parallel-axis check in rexome33_checks.json); retracted state; "
             "the swivel centre (pad bottom + swivel_center_above_pad_bottom_m) is an ASSUMPTION")
 
+    if CYLINDER_MODE != "cad":
+        rex35_comments(comments, derived)
+
     header = [
         "# REXOME33 shared simulation parameters (Chrono and MuJoCo read this file).",
         "# GENERATED by 04_scripts/00_cad/export_params.py - do not edit by hand; rerun the script.",
@@ -2004,6 +2313,119 @@ def main() -> None:
     with PARAMS_YAML.open("w", encoding="utf-8", newline="\n") as handle:
         handle.write(text)
     print(f"wrote {PARAMS_YAML}")
+
+
+def rex35_comments(comments: dict, derived: dict) -> None:
+    """Comments of the REXOME35 cylinder export (rev. 30); the CAD mode keeps the old comments."""
+    sup = ("SUPERSEDED by legs.<leg>.cylinder (REXOME35, per leg); old REXOME33 CAD common value kept only until "
+           "03_src reads the per-leg keys (python-expert, dynamics_model.md 5.11.10 order 4) - do not use")
+    ap = np.broadcast_to(derived["head_area"], (4,))
+    comments.update({
+        "actuator": ("CLAUDE.md '실린더 치수 기준 교체' (user decision 2026-10-22): REXOME35 cylinders per leg "
+                     "(legs.<leg>.cylinder), stroke 0.70 m, common speed limit = pump flow / sum of head areas"),
+        "actuator.stroke_m": ("user decision Q-C1 / Q-U4 (2026-10-22): mechanical stroke 700 mm (drawing 'Stoke 700'); "
+                              "sensor-readable end sensors.stroke.measurable_max_m"),
+        "actuator.full_stroke_time_s": ("derived: stroke_m / max_speed_m_s (constant speed); stop-to-stop (ramped start "
+                                        "and stop) = + command_ramp_s"),
+        "actuator.max_speed_m_s": ("user decision Q-C5 / 2026-10-22 (volumetric efficiency): pump_flow_m3_s x "
+                                   "pump_volumetric_efficiency / sum(legs.<leg>.cylinder.head_area_m2) = "
+                                   f"{PUMP_FLOW_L_MIN} L/min x {PUMP_VOLUMETRIC_EFFICIENCY} / {float(np.sum(ap)):.6e} m^2 "
+                                   "(4 legs together at the delivered pump flow)"),
+        "actuator.pump_volumetric_efficiency": ("ASSUMPTION (user decision 2026-10-22): pump volumetric efficiency, "
+                                                "delivered flow = pump_flow_m3_s x this; basis of max_speed_m_s"),
+        "actuator.bore_diameter_m": sup, "actuator.rod_diameter_m": sup, "actuator.barrel_outer_diameter_m": sup,
+        "actuator.annulus_area_m2": sup, "actuator.max_force_extend_N": sup, "actuator.max_force_retract_N": sup,
+        "actuator.locked_pressure_limit_Pa": ("[common] manufacturer: cylinder maximum load test pressure 350 bar (locked, "
+                                              "judgement metric V17); force per leg = legs.<leg>.cylinder.locked_force_limit_N"),
+        "actuator.rod_side_chamber_model": ("[common] superseded by actuator.rod_side (L1-R, user decision 2026-10-22, "
+                                            "dynamics_model.md 5.12); text kept for old readers"),
+        "actuator.pump_flow_m3_s": ("[common] circuit drawing: 60.2 L/min; 4 legs at max_speed_m_s need sum(A_p) v_max = "
+                                    f"{derived['flow_4_legs_at_vmax_m3_s'] * 60000.0:.4f} L/min = 60.2 x "
+                                    f"pump_volumetric_efficiency (checked: <= pump flow)"),
+        "actuator.rod_side": ("[L1-R] rod-side chamber as a one-sided nonlinear parallel spring on locked legs "
+                              "(user decision 2026-10-22, dynamics_model.md 5.12.4 / 5.12.8, hydraulics rod_side_pressure.md "
+                              "13 (b) / 14, 06_analysis/03_hydraulic/l1r_rod_spring_spec.json); mechanics 'off' = "
+                              "Delta F_R = 0 (L1 bit-identical) until the module and the Chrono hook exist"),
+        "actuator.rod_side.p_floor_Pa": "ASSUMPTION (hydraulics): rod-side floor 0.1 bar ABSOLUTE",
+        "actuator.rod_side.p_r0_after_extend_Pa": "ASSUMPTION (hydraulics 12.2): GAUGE pressure locked after an extension",
+        "actuator.rod_side.p_r0_after_retract_Pa": ("ASSUMPTION (hydraulics rod_side_pressure.md 14.7 (5), 2026-10-22): "
+                                                    "GAUGE, per leg from the static cylinder forces with the barrel "
+                                                    "replacement (118.099 / 116.106 / 72.097 / 70.282 kN), "
+                                                    "04_scripts/04_hydraulic/rod_side_static_update.py; production runs "
+                                                    "use the virtual sensor value at locking"),
+        "actuator.rod_side.column_length_m": "derived: stroke_m - e_op + rod_dead_length_m (e_op fixed, dynamics Q-D7)",
+        "actuator.oil_dead_length_m": ("[common, L2b, L2] ASSUMPTION: head-side port/pipe volume as column length, "
+                                       "00_docs/01_dynamics/dynamics_model.md 2.3; sensitivity 0.05 ... 0.08 m (user decision "
+                                       "2026-10-22, hydraulics rod_side_pressure.md 16); head side only since rev. 30"),
+        "actuator.rod_dead_length_m": ("[L1-R, L2b] ASSUMPTION: rod-side dead length (column length = stroke - e + this), "
+                                       "sensitivity 0.02 ... 0.1 m (user decision 2026-10-22, hydraulics rod_side_pressure.md 16)"),
+        "actuator.rod_side.k_rod_side_N_m": "derived: oil_bulk_modulus_eff_Pa x annulus_area_m2 / column_length_m",
+        "actuator.rod_side.release_tau_s": "ASSUMPTION (hydraulics 14.3): exp(-t / tau) release on lock -> move",
+        "actuator.rod_side.lock_eps_m_s": "dynamics 5.12.8 Q-D5: |u_applied| <= this -> LOCK",
+        "actuator.rod_side.predictor": "dynamics 5.12.8: F_x(delta_n + d delta_n dt)",
+        "contact.rigid_floor.L1.cn_per_pad_N_s_m": (
+            "ASSUMPTION (derived, user decision dynamics_model.md 5.12.8 Q-D3): LOCK basis 2 zeta sqrt(k_lock m/4), "
+            "k_lock = derivation.k_lock_N_m = series(k_oil + k_rod_side, k_rod, k_frame, k_concrete), one value in every "
+            "L1-R state"),
+        "contact.rigid_floor.L1.gn_per_pad_1_s": ("ASSUMPTION (derived): SMC Hooke gn = cn_per_pad_N_s_m (LOCK) / "
+                                                  "legs.<leg>.moving_part.mass_kg (contact pair = moving part + 1e9 kg "
+                                                  "floor, m_eff relative difference ~1e-7, checked)"),
+        "contact.rigid_floor.L1.cn_per_pad_head_only_N_s_m": ("regression only (actuator.rod_side.mechanics 'off' vs the "
+                                                              "pre-L1-R head-only dashpot): 2 zeta sqrt(kn_per_pad m/4)"),
+        "contact.rigid_floor.L1.gn_per_pad_head_only_1_s": "regression only: cn_per_pad_head_only / moving_part.mass_kg",
+        "contact.rigid_floor.L1.derivation.damping_reference_mode_Hz": (
+            "derived: uncoupled heave on the L1 pads with the LOCK stiffness sqrt(sum(k_lock_N_m) / damping_mass_kg) / 2 pi"),
+        "contact.rigid_floor.L1.derivation.damping_basis": "dynamics 5.12.8 Q-D3: pad dashpot on the LOCK stiffness",
+        "sensors.stroke": ("user decision 2026-10-22 (CLAUDE.md, dynamics_model.md 5.12.3): software stroke-end limits "
+                           "from the sensor range, plant stroke actuator.stroke_m"),
+        "sensors.stroke.measurable_max_m": "ASSUMPTION: unit no-load test reading 694.8 mm (front type; rear assumed equal)",
+        "sensors.stroke.fault_threshold_m": "derived: measurable_max_m - 1 mm (end margin 10 mm measured from 0.6848 m)",
+        "legs": ("cad_summary.json legs.<leg> (axis_cad_mm, pad_bottom_y_cad_mm, bracket_bolt_holes_y_cad_mm, ...); "
+                 f"every leg extends 0 ... {STROKE_M} m from the retracted state; retracted = CAD pose + "
+                 "retracted_offset_from_cad_m along +z (geometry held, user decision Q-C2 2026-10-22)"),
+    })
+    swap_note = ("REXOME35 barrels replace the CAD barrels (solid 17) in the superstructure (user decision 2026-10-22, "
+                 "dynamics advised against): mass, CoM and inertia = case C - CAD barrels + REXOME35 barrels "
+                 "(see superstructure.barrel_replacement); ASSUMPTION: the CAD mounting bracket (45.8 mm plate) belongs to "
+                 "the cylinder, not to a superstructure seat (unknown)")
+    comments.update({
+        "superstructure.definition": "00_docs/00_cad/cad_review.md 3.2; " + swap_note,
+        "superstructure.auger_levels": ("auger_levels.json levels.<name>.mass.tool_steel, recomputed at full precision "
+                                        "(combine_mass_properties, case tool_steel), then the barrel replacement (barrels do "
+                                        "not move with the auger); checks compare the CAD values before the replacement"),
+        "superstructure.fixed_part": "check: fixed_part + moving set at a travel = auger_levels entry; barrels replaced",
+        "superstructure.barrel_replacement": (
+            "rev. 30: " + swap_note + "; rear barrel = drawing-chain synthesis (D137/D110, body 945, cap solid 110, plate "
+            "340 x 250 x 25 with 10 x D22), front barrel = CAD solid 17 with the bore D115 -> D130; cad-expert cache "
+            "01_cad/02_legs/rexome35 (barrel_<leg>.brep, rexome35_cylinder_mass_properties.json); SS400 7.85; "
+            "valve block, pipes and oil not modelled (ASSUMPTION)"),
+        "superstructure.barrel_replacement.delta_mass_kg": "REXOME35 barrel - CAD barrel per leg",
+    })
+    for leg in LEG_ORDER:
+        comments[f"legs.{leg}.cylinder"] = (f"[common] {CYLINDER_SOURCE_REX35}; areas pi/4 D^2, forces 210 bar (moving) "
+                                            "and 350 bar (locked) x area; user decision 2026-10-22")
+        comments[f"legs.{leg}.retracted_offset_from_cad_m"] = (
+            f"CLAUDE.md '다리 기하': {CAD_RETRACT_STROKE_M} (CAD stroke estimate, geometry held Q-C2) - cad_summary.json "
+            f"legs.{leg}.remaining_extension_mm (= bore top - piston top); the CAD pose is extension = this value")
+        comments[f"legs.{leg}.extension_range_m"] = "user decision Q-C1 / Q-U4: 0 = fully retracted ... actuator.stroke_m"
+        if leg in REX35_MOVING_BREP:
+            comments[f"legs.{leg}.moving_part"] = (
+                "ASSUMPTION (estimate, user decision Q-C3 / Q-C4 2026-10-22): REXOME35 rear drawing-chain synthesis "
+                f"(cad-expert 2026-10-22, B-rep 01_cad/02_legs/rexome35/{REX35_MOVING_BREP[leg]}, "
+                "rexome35_cylinder_mass_properties.json): pad 250 x 250 + 4 ribs + socket housing, ball D90, rod D90, "
+                "piston D110 x 30; steel 7.85 (ASSUMPTION); retracted state; replace with the manufacturer mass")
+            comments[f"legs.{leg}.pad_body"] = (
+                "[SCM, held until S9] ball-joint split of the synthesized rear leg: pad plate (below pad bottom + "
+                "split_plane_above_pad_bottom_m) + socket housing with 4 ribs; NOTE pad.polygon_xy_m stays the CAD 330 "
+                "pad (rear 250 x 250 deferred to S9); com_m / inertia about com_m in body axes")
+            comments[f"legs.{leg}.rod_body"] = (
+                "[SCM, held until S9] ball D90 + neck + rod D90 + piston of the synthesized rear leg; pad_body + rod_body "
+                "= moving_part (parallel-axis check in rexome33_checks.json); retracted state")
+        else:
+            comments[f"legs.{leg}.moving_part"] = (
+                f"rod + piston + pad (solid 10, SS400 7.85), parts_classified.csv group leg_rod_pad leg {leg}; retracted "
+                "state (CAD + offset in z); REXOME35 front: kept (piston D130 adds 0.45 kg, 01_cad/02_legs/rexome35, "
+                "within the estimate 103 ... 107 kg)")
 
 
 def evaluate_checks(checks: dict) -> list[str]:
@@ -2066,13 +2488,17 @@ def evaluate_checks(checks: dict) -> list[str]:
         require(abs(s["split_plane_minus_pad_thickness_mm"]) <= PAD_THICKNESS_TOL_MM,
                 f"{q}.split_plane_minus_pad_thickness_mm", s["split_plane_minus_pad_thickness_mm"])
         for key in ("whole_valid", "pad_valid", "rod_valid", "pad_com_inside_bbox", "rod_com_inside_bbox",
-                    "pad_com_below_split_plane", "rod_com_above_split_plane"):
+                    "pad_com_below_ball_centre" if c.get("moving_part_source") == "rexome35_synthesis"
+                    else "pad_com_below_split_plane", "rod_com_above_split_plane"):
             require(s[key], f"{q}.{key}", s[key])
-        require(s["gusset_count"] == 4, f"{q}.gusset_count", s["gusset_count"])
+        # rev. 30: the synthesized ball-joint leg has 2 solids (pad assembly, rod assembly); above the plane one pad
+        # piece (socket housing + 4 ribs) and the rod piece starting at the ball bottom (above the plane)
+        synth = c.get("moving_part_source") == "rexome35_synthesis"
+        require(s["gusset_count"] == (1 if synth else 4), f"{q}.gusset_count", s["gusset_count"])
         require(s["gussets_touch_split_plane"], f"{q}.gussets_touch_split_plane", s["gussets_touch_split_plane"])
-        require(s["rod_piece_starts_at_split_plane"], f"{q}.rod_piece_starts_at_split_plane",
+        require(s["rod_piece_starts_at_split_plane"] != synth, f"{q}.rod_piece_starts_at_split_plane",
                 s["rod_piece_starts_at_split_plane"])
-        require(s["whole_solids"] == 1 and s["pad_solids"] == 1, f"{q}.whole/pad_solids",
+        require(s["whole_solids"] == (2 if synth else 1) and s["pad_solids"] == 1, f"{q}.whole/pad_solids",
                 (s["whole_solids"], s["pad_solids"]))
         for key in ("volume_pad_plus_rod_minus_whole_rel", "brep_whole_vs_moving_part_mass_rel", "sum_mass_rel",
                     "sum_inertia_rel_to_max", "written_sum_mass_rel", "written_sum_inertia_rel_to_max"):
@@ -2087,8 +2513,9 @@ def evaluate_checks(checks: dict) -> list[str]:
         require(ok, f"dynamics.dyn_model_same_inputs.{key}", ok)
     for key, value in d.get("dyn_model_full_precision_rel", {}).items():
         require(value <= REL_TOL, f"dynamics.dyn_model_full_precision_rel.{key}", value)
-    for key, value in d["reference_json_rel"].items():
-        require(value <= REL_TOL, f"dynamics.reference_json_rel.{key}", value)
+    if d.get("reference_json_status", "current") == "current":  # rev. 30 two-pass rule (stale = recorded only)
+        for key, value in d["reference_json_rel"].items():
+            require(value <= REL_TOL, f"dynamics.reference_json_rel.{key}", value)
     for key, value in d["doc10_printed"].items():
         require(value["max_abs_diff"] <= value["half_unit_tol"], f"dynamics.doc10_printed.{key}", value)
     require(d["gn_m_moving_vs_exact_m_eff_rel"] <= REL_TOL, "dynamics.gn_m_moving_vs_exact_m_eff_rel",
@@ -2115,6 +2542,11 @@ def evaluate_checks(checks: dict) -> list[str]:
     j = d["crawler_layout_check_json"]
     require(j["n_points_equal"], "dynamics.crawler_layout_check_json.n_points_equal", j["n_points_equal"])
     for key, value in j["rel"].items():
+        # rev. 30 two-pass rule: the crawler dashpot depends on the moving-part masses (m_tot); crawler_layout_check.json
+        # is regenerated by dynamics after this YAML (recorded only while reference.json is stale)
+        if key in ("c_per_point_N_s_m", "damping_total_N_s_m", "gn_per_point_1_s") \
+                and d.get("reference_json_status", "current") != "current":
+            continue
         require(value <= CRAWLER_LAYOUT_JSON_REL_TOL, f"dynamics.crawler_layout_check_json.rel.{key}", value)
     require(j["flat_station_gap_max_abs_mm"] <= CRAWLER_FLAT_SHOE_TOL_MM,
             "dynamics.crawler_layout_check_json.flat_station_gap_max_abs_mm", j["flat_station_gap_max_abs_mm"])
@@ -2137,6 +2569,13 @@ def evaluate_checks(checks: dict) -> list[str]:
     require(abs(t["total_c_minus_a_minus_tool_delta_kg"]) <= JSON_MASS_TOL_KG,
             "totals.total_c_minus_a_minus_tool_delta_kg", t["total_c_minus_a_minus_tool_delta_kg"])
     require(t["level_masses_equal"], "totals.level_masses_equal", t["level_masses_equal"])
+    if "barrel_replacement" in checks:  # rev. 30
+        b = checks["barrel_replacement"]
+        require(b["undo_mass_rel"] <= REL_TOL and b["undo_inertia_rel_to_max"] <= REL_TOL,
+                "barrel_replacement.undo", (b["undo_mass_rel"], b["undo_inertia_rel_to_max"]))
+        require(b["undo_com_max_abs_m"] <= ABS_COM_TOL_M, "barrel_replacement.undo_com_max_abs_m", b["undo_com_max_abs_m"])
+        for key in ("cad_barrel_vs_cache_json_mass_rel", "new_barrel_vs_cache_json_mass_rel"):
+            require(max(b[key].values()) <= REL_TOL, f"barrel_replacement.{key}", b[key])
     require(checks["yaml_round_trip_equal"], "yaml_round_trip_equal", checks["yaml_round_trip_equal"])
     return failures
 
