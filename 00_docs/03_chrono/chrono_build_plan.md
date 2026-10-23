@@ -1,6 +1,6 @@
 # Chrono 모델 단계별 구축 계획 (2026-10-19, 개정 14: 2026-10-21)
 
-작성: cad-expert. **계획 문서다.** S0~S4 코드가 만들어져 있다(3.1절 "있음"). 영차 유지 제어 실행기 `runner`(S6)와 S5 이후 시나리오는 아직 없다.
+작성: cad-expert. **계획 문서다.** S0~S4 코드가 만들어져 있다(3.1절 "있음"). 영차 유지 제어 실행기 `runner`(S6)와 S5·S6 시나리오는 그 뒤 만들어졌다(2026-10-24 기준 S0~S6 완료, 로드맵 1절).
 
 개정 14(2026-10-21, 메인 세션 편집): **S4 최종 판정 통과** 반영(근거 `00_docs/01_dynamics/dynamics_model.md` 개정 19, 5.8절; 독립 확인 `04_scripts/01_dynamics/run_s4_check.py` → `06_analysis/00_dynamics/s4_check.json`).
 - V8(b) 판정 정의를 ①~⑤(주입·Δt 1차 비·Richardson·수치 소산 몫·D_slip 비)로 바꿈. 옛 "잔차 ≤ 1 %"는 기록.
@@ -472,20 +472,20 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 - **담당·작업량**: cad 중, py 중, dyn 판정 소.
 - **체크리스트**
   - [x] `Measurements`·`Command` 타입 확정(py 검토) — 2026-10-20: 기존 필드 유지, `Measurements.stroke_corrected_m`(선택, 모터 − $F_{cyl}/k_{oil}(e)$, Record `meas.stroke_corrected`), `Command.stopped(t)`, `signals.DEFAULT_CONTROL_PERIOD_S` 0.02 추가
-  - [ ] 압력·스트로크 가상 센서 — 엔진 독립 부분 완료(2026-10-20 py, `sensors/hydraulic.py` `LegSensorModel`: 노이즈·분해능, 두 스트로크에 같은 노이즈, 축소 모델 가정값 `reduced_model_leg_sensor_config`), 진값 추출(cad)은 남음
-  - [ ] 스텝별 힘 포화 + 양방향 스프링 단일 다리 V11b
-  - [ ] 350 bar 지표 기록 — 지표 함수 완료(2026-10-20 py, `sensors/hydraulic.locked_pressure_report`: 최대값·다리·시각, 첫 초과 시각·다리, 다리별 초과 샘플 수, 잠김 마스크 선택), 기록 경로 연결은 남음
-  - [ ] py: IMU 오차 모델, Controller 프로토콜, 빈 제어기로 60 s 폐루프 연기 시험 — 오차 모델(`sensors/imu.py`)·`control/protocol.Controller`·`control/hold.HoldController`·`sensors/suite.SensorSuite` 완료(2026-10-20), 엔진 없는 60 s 루프 단위 시험만 함. Chrono 60 s 연기 시험은 runner(S6) 뒤
-  - [ ] IMU 진값 장착점 기본값 (0.31, 0.88, 0.040) m(C1, 2026-10-20 결정)과 인자 변경 단위 시험 — 엔진 독립 강체 운동학(`sensors/imu.specific_force_at_point`, `angular_rate_in_body`, 기본 `IMU_MOUNT_C1_BODY_M`)과 단위 시험 완료(2026-10-20 py). `sensors/truth`(cad)가 이 함수를 쓰면 된다
+  - [x] 압력·스트로크 가상 센서 — 엔진 독립 부분 완료(2026-10-20 py, `sensors/hydraulic.py` `LegSensorModel`: 노이즈·분해능, 두 스트로크에 같은 노이즈, 축소 모델 가정값 `reduced_model_leg_sensor_config`), 진값 추출(cad)은 남음 **(2026-10-24 메인 세션 동기화: 완료. 근거는 로드맵 4절 S6)**
+  - [x] 스텝별 힘 포화 + 양방향 스프링 단일 다리 V11b **(2026-10-24: REXOME33으로 통과(dyn 5.10절), REXOME35 재판정도 통과(2026-10-24, `batch_20261024_004403`, `dynamics_model.md` 5.12.12 보완 8))**
+  - [x] 350 bar 지표 기록 — 지표 함수 완료(2026-10-20 py, `sensors/hydraulic.locked_pressure_report`: 최대값·다리·시각, 첫 초과 시각·다리, 다리별 초과 샘플 수, 잠김 마스크 선택), 기록 경로 연결은 남음 **(2026-10-24: REXOME33으로 통과(dyn 5.10절), REXOME35 재판정도 통과(2026-10-24, `batch_20261024_004403`, `dynamics_model.md` 5.12.12 보완 8))**
+  - [x] py: IMU 오차 모델, Controller 프로토콜, 빈 제어기로 60 s 폐루프 연기 시험 — 오차 모델(`sensors/imu.py`)·`control/protocol.Controller`·`control/hold.HoldController`·`sensors/suite.SensorSuite` 완료(2026-10-20), 엔진 없는 60 s 루프 단위 시험만 함. Chrono 60 s 연기 시험은 runner(S6) 뒤 **(2026-10-24 메인 세션 동기화: 완료. 근거는 로드맵 4절 S6)**
+  - [x] IMU 진값 장착점 기본값 (0.31, 0.88, 0.040) m(C1, 2026-10-20 결정)과 인자 변경 단위 시험 — 엔진 독립 강체 운동학(`sensors/imu.specific_force_at_point`, `angular_rate_in_body`, 기본 `IMU_MOUNT_C1_BODY_M`)과 단위 시험 완료(2026-10-20 py). `sensors/truth`(cad)가 이 함수를 쓰면 된다 **(2026-10-24 메인 세션 동기화: 완료. 근거는 로드맵 4절 S6)**
   - [x] py: 센서 등급 5종(이상·우수 영점 후·보통 영점 후·보통 + 반복성·보통 출하), 2차 필터(τ 0.5 s × 2) — 2026-10-20: `sensors/imu.IMU_GRADES`(축소 모델 `GRADES`와 같은 값, 자이로 오차 0), `sensors/attitude.CascadedLowPass`(축소 모델과 같은 이산화 $y_k=y_{k-1}+(T/\tau)(x_k-y_{k-1})$, 극 0.96), `AttitudeEstimator`
-  - [ ] py: C2 제어기(대안 C8)와 물리 기반 결합 접지 판정 + 탐침
+  - [x] py: C2 제어기(대안 C8)와 물리 기반 결합 접지 판정 + 탐침 **(2026-10-24 메인 세션 동기화: 완료. 근거는 로드맵 4절 S6)**
   - 결정(사용자, 2026-10-20, py 센서·실행기):
     - ① IMU 입력 = 제어 주기(20 ms) 시간 평균 진값(축소 모델과 같은 전제, 노이즈 σ = 밀도·√(1/2T)). 평균기 `sensors/averaging.ControlPeriodAverager`(스텝 끝 값 × 스텝 길이 가중) 완료, runner 연결은 cad
     - ② 자세 필터 이산화는 오일러형 유지(극 0.96, 축소 모델 기대값과 맞추려고. 정확한 ZOH 대비 차단 부근 이득 차 약 2 %)
     - ③ IMU 영점은 등급 잔차만 쓴다(교정 절차는 모델링하지 않음. `field_zero_offset`은 절차 검토용 도구로만 남김)
     - ④ 병렬 실행기 이름 `batch.py` 유지, 사례별 `timeout_s` 추가(초과 시 프로세스 종료, `failed`, `runner.reason` = `timeout`)
     - 350 bar 판정 마스크(잠김 샘플 한정 여부)는 S6에서 cad·dyn과 정한다(보류)
-  - [ ] 제어기 검증 항목 1~8(L1), 9는 S7·S8
+  - [x] 제어기 검증 항목 1~8(L1), 9는 S7·S8 **(2026-10-24: C2 R7 기준 완료, `s6_control_spec.md` 개정 29 125절. R8 묶음 C·U-R8-2는 S7 시작 전 관문)**
 
 ### S7 L2b-NSC
 
@@ -651,7 +651,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 | `03_src/outrigger_sim/{frames, signals}.py` | **있음**(S0) | 좌표, 신호 타입·Record 스키마 |
 | `03_src/outrigger_sim/engine.py` | **있음**(S0) | SimEngine 프로토콜, 엔진 독립 `Snapshot`·호환 검사(R16), 엔진 상태 예외. pychrono를 import하지 않는다. Chrono 구현체는 아직 없다 |
 | `03_src/outrigger_sim/record.py` | **있음**(S0, S3 meta) | Record(npz + meta.json, `stroke_true` 포함)·스냅숏 파일 저장, 실행 메타(S3 meta, 센서 구성 `SensorSetup`) |
-| `03_src/outrigger_sim/runner.py` | 계획(S6) | 실행기(영차 유지) |
+| `03_src/outrigger_sim/runner.py` | **있음**(S6) | 실행기(영차 유지) |
 | `05_tests/conftest.py` | **있음** | 세션 픽스처 `project_root`, `params_path` |
 | `05_tests/unit/` | **있음** | `test_params.py`, `test_frames.py`, `test_signals.py`, `test_engine.py`, `test_reference.py`(3.4절), `test_record.py`, `test_settle.py`, `test_slope.py`, `test_crawler_settle.py`, `test_lift.py`, `test_metrics.py`, `test_s3_checks.py`, `test_batch.py`, 센서(`test_imu.py`, `test_averaging.py`, `test_attitude.py`, `test_hydraulic_sensors.py`, `test_sensor_suite_and_control.py`), `test_c2.py` |
 | `05_tests/chrono/` | **있음** | `test_system.py`(R1·R2·R6·R11 시스템 팩토리), `test_smc_damping.py`(SMC Hooke 감쇠 규약), `test_ground_bushing*.py`, `test_snapshot.py`, `test_model_S1.py`, `test_actuators.py`, `test_actuator_guard.py`, 마커 `chrono` |
