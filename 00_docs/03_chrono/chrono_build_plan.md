@@ -500,17 +500,19 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
   - `actuator`: `oil_bulk_modulus_eff_Pa`, `oil_dead_length_m`, `frame_stiffness_N_m`, `bore_diameter_m`
   - `contact.rigid_floor.L1.derivation.k_rod_N_m`, `contact.rigid_floor.concrete.k_N_m`
 - **통과 기준**:
-  - V0~V13 전부를 L1과 같은 방법·허용으로 판정한다.
-  - 기준값 경로는 `reference.json / chrono_test_references / L2b_NSC_force_motor_axial_spring_lateral_bushing / levels / <level> / <항목>`이다.
-  - `f_undamped_Hz`, `f_damped_Hz`, `zeta`는 10개 값이다. **앞 6개(상부체 모드)만** 쓴다. 뒤 4개는 NSC 강체 접촉을 근사한 인공 모드다.
-  - V12는 `reference.json / slope_V12 / <case> / L2b_NSC`다. V2는 축 스프링 압축으로 판정한다(NSC 침투 ≈ 0).
-  - V7 모드 투영은 `reference.json / chrono_test_references / L2b_NSC_force_motor_axial_spring_lateral_bushing / levels / <level> / mode_shapes_rev5`를 쓴다(Φ 열은 앞 6개 모드).
+  - V0~V13 전부를 L1과 같은 방법·허용으로 판정한다. 아래 L2b 예외를 따른다(`dynamics_model.md` 개정 33 5.20).
+  - **기준값 경로(2026-10-24 개정 33)**: `reference.json / L2b_NSC_reference_rev33 / levels / <level> / <항목>`(REXOME35, 행정 0.70, 로드측 챔버를 힘 법칙에 넣은 L1-R 상태 기계, 잠김 감쇠 34,403.5 / 30,348.5 N·s/m, 이동 100,206 / 86,949 N·s/m). 옛 `chrono_test_references / L2b_NSC_force_motor_axial_spring_lateral_bushing`은 헤드만(FLOOR)·회귀 기록이다.
+  - V1~V3: 해석 정적해로 놓고 잠근다($\Delta c=0$). 접촉력 119,272 / 117,027 / 72,676.1 / 71,137.3 N, V2는 축 스프링 압축 4.5637 / 4.4770 / 3.6893 / 3.6104 mm(NSC 침투 ≈ 0). **V1·V13은 0.1 s 창 평균으로 판정한다**(PSOR 스텝 잡음 ±1.2 %는 기록, 법칙 출력 $F$의 스텝 표준편차를 따로 보고).
+  - V7: `levels / <level> / modes / LOCK`(앞 6개, 판정)과 `mode_shapes`(투영). FLOOR는 보고용이다. 양해 축·횡 힘은 반암시 오일러라 수치 감쇠가 없다. 그래서 ζ는 $r\omega\Delta t/2$ 보정 없이 ±30 %로 판정하고, V8(a)는 유계 진동과 $|\zeta_{num}|\le0.1\zeta$로 판정한다.
+  - V5·V6: `levels / <level> / single_leg_thresholds_mm / <leg±> / L1R_after_extend`(= L1-R 5.14 값; FL+ $F_{min}$ 9.953 mm, 부상 11.573 mm).
+  - V11b(L2b): 묶음은 **강체 양방향**으로 한다($k_{ax}$가 콘크리트를 이미 품는다). $s_{ref}$ 이동 ≤ 0.04 mm(L1과 같음), 정지 뒤 힘 변화 −1,555 / −1,411 N(전 / 후) ±10 % 또는 ±0.1 kN 중 큰 값, 압축 변화 $\Delta F/k_2$(−0.060 / −0.072 mm)는 기록만 한다.
+  - V12는 `reference.json / slope_V12 / <case> / L2b_NSC` 그대로다. 로드측 법칙은 중력 램프와 정착이 끝난 뒤 기준점을 잡아 켠다.
 
 | V | 판정 | 허용 | 기준값 |
 |---|---|---|---|
-| V4(NSC) | L1과 같은 lift 절차. 크롤러(D안 구 24개)가 NSC 강체라 가라앉지 않는다 | **다리별 접지 시각 ±0.05 s**: FL 15.382 / FR 15.382 / RL 15.040 / RR 15.040 s(강체 크롤러 극한(`kn_total` ×10³)의 감쇠 3자유도 동적 기준해, 사용자 결정 2026-10-20. 준정적 15.375 / 15.375 / 15.040 / 15.040 s는 참고. 크롤러 ζ를 0.02~1(거의 소성 충돌, NSC처럼 되튐 없음)로 바꿔도 0.05 ms 안이라 NSC 무반발 접촉과의 차는 판정에 영향이 없다. 후방이 닿은 뒤 상부체가 앞 롤러열을 축으로 숙여 전방이 강체 기구학 15.49 s보다 빨리 닿는다). 나머지는 L1 V4와 같음 | `reference.json / lift_V4_compliant_crawler / layouts / D rigid crawler limit (kn_total x1e3, L2b-NSC V4) / dynamic_events_s / touch_s (FL, FR, RL, RR)` |
-| V13(NSC) | PSOR 50회에서 정지 5 s 접촉력 변동 | ≤ 0.1 % W/4 | `dynamics_model.md` 5절 |
-| V14 | 최대 레벨링 경사 3경우(pitch +3.86°, roll 5.91°, 대각 3.31°)에서 V12 절차 + **RL 단독 신장(RL+)** 민감도·$F_{min}$ 문턱·부상 문턱 + 로킹. FL+는 pitch+에서 FL이 스트로크 끝이라 할 수 없다. RL+는 세 경우 모두 스트로크 여유가 있다 | 민감도·문턱 ±5 %, $F_{min}$ 도달 다리 일치, 진동수 ±3 %, 미끄럼 < 0.1 mm | `actuator_L2_feasibility.json / A_extension_dependence / V14_rev5`(하위 `method`, `V14_test_leg`, `cases`) |
+| V4(NSC) | L1과 같은 lift 절차. 크롤러(D안 구 24개)가 NSC 강체라 가라앉지 않는다 | **다리별 접지 시각 ±0.05 s**: FL 16.657 / FR 16.657 / RL 16.291 / RR 16.291 s(개정 33: REXOME35, $v_{max}$ 20.924 mm/s, L2b 다리 = $k_2(e(t))$·$c_{mov}$·로드 매달림 늘음; 강체 크롤러 극한(`kn_total` ×10³)의 감쇠 3자유도 동적 기준해, 사용자 결정 2026-10-20. 준정적 16.652 / 16.653 / 16.291 / 16.291 s는 참고. L1 기준 16.663 / 16.292 s와 차 −6 / −1.6 ms. 옛 REXOME33 값 15.382 / 15.040 s는 폐기. 크롤러 ζ를 0.02~1(거의 소성 충돌, NSC처럼 되튐 없음)로 바꿔도 0.05 ms 안이라 NSC 무반발 접촉과의 차는 판정에 영향이 없다. 후방이 닿은 뒤 상부체가 앞 롤러열을 축으로 숙여 전방이 강체 기구학 15.49 s보다 빨리 닿는다). 나머지는 L1 V4와 같음 | `reference.json / L2b_NSC_reference_rev33 / V4_NSC / L2b_dynamic / touch_s (FL, FR, RL, RR)`(L1 기준은 `lift_V4_compliant_crawler / layouts / D rigid crawler limit (kn_total x1e3, L2b-NSC V4) / dynamic_events_s`) |
+| V13(NSC) | PSOR 50회에서 정지 5 s 접촉력 변동(0.1 s 창 평균) | ≤ 0.1 % W/4 | `dynamics_model.md` 5절, 5.20.9 Q3 |
+| V14 | 최대 레벨링 경사 3경우(개정 33 보완 1, **센서 끝 0.6948 m 기준 × 0.999: pitch +4.0599°, roll +6.2252°, 대각 (2.4621°, 2.4621°) = 3.4820°**; 개정 33의 행정 0.70 사례 4.1315 / 6.3346 / 3.5435°는 피스톤 정지 여유 때문에 폐기, 옛 REXOME33 3.86 / 5.91 / 3.31°)에서 V12 절차 + **RL 단독 신장(RL+)**. 나머지 세 다리는 신장 뒤 잠김(로드측 법칙, $k_h$·$k_r$은 각 다리 $s_{lock}=s_{ref}=e_i$ — 로드 바디 $s$ 아님). 민감도는 **+1 mm 할선**(무릎을 지남), $F_{min}$ 문턱·부상 문턱 + 로킹(LOCK 앞 6개). FL+는 pitch+에서 FL이 행정 끝이라 할 수 없다. pitch−(3.9471°)는 RL이 끝이라 넣지 않는다. 기준값(RL+ $\Delta F_{RL}$ / $F_{min}$ / 부상, 모두 RR): 평지 7.102 kN / 8.848 / 10.323 mm, pitch+ 7.254 / 8.805 / 10.223, roll+ 6.997 / 9.394 / 10.818, 대각 6.569 / 9.847 / 11.435. **조건**: Chrono는 기준해와 같은 $L_{0r}$(0.05 m)과 기둥 규약을 쓰고 다리별 $s_{lock}$·$k_h$·$k_r$을 기록한다(진동수가 $L_{0r}$에 −12~+19 % 걸림, `dynamics_model.md` 5.20.8). 피스톤 위치 감시 $s_p=s+F/k_{out}$에서 정지 위반($>s_{max}$ + 0.2 mm) 0(5.20.11) | 민감도·문턱 ±5 %, $F_{min}$ 도달 다리 일치, 진동수 ±3 %, 미끄럼 < 0.1 mm, 정지 위반 0 | `reference.json / L2b_NSC_reference_rev33 / V14 / cases / <v14_case> / RL+ / L1R_after_extend`(경사·신장은 `… / <case> / ground_roll_pitch_deg`, `extension_m`; 헤드만 = `head_only`, 기록) |
 
 - **의존**: S6, S4의 식별·에너지 도구.
 - **위험**:
@@ -521,12 +523,13 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
   - ⑤ NSC 패드별 수직력 읽기는 V1로 교차 확인한다.
 - **담당·작업량**: cad 대, dyn 판정 중.
 - **체크리스트**
-  - [ ] 가이드 x·y 해제 API 확인
-  - [ ] 힘 법칙, $s_{ref}$, 스텝별 포화
-  - [ ] 횡 부싱
+  - [x] 가이드 x·y 해제 API 확인 — 2026-10-24 cad: `SetGuideConstraint(False, False, True, True, True)`가 pychrono 10.0.0에 노출됨(`ChLinkMotorLinear.cpp:41`, 힘 모터 구속 수 PRISMATIC 5 → 3). `ChLinkLockAlign` 대안은 쓰지 않는다. 시험 `05_tests/chrono/test_l2b_actuator.py`
+  - [x] 힘 법칙, $s_{ref}$, 스텝별 포화 — 2026-10-24 cad: `chrono/l2b_actuator.L2bForceActuator`(양해, 훅 값이 다음 스텝에 작용: Chrono 궤적 = 반암시 오일러 복제 ≤ 1×10⁻¹² m), $s_{ref}$·포화는 엔진 독립 `actuation.SpeedReference`(L1 리미터와 비트 동일). 법칙 C 판정 힘 = 힘 법칙 값(관성 항 없음). 포화 뒤 기어감 상한 $c_{move}v_{max}/k_{ax}$ ≈ 0.08 mm(FL) — L1 허용 0.04 mm보다 커서 dyn 판정 필요
+  - [x] 횡 부싱 — 2026-10-24 cad: **PSOR가 `ChLoadBodyBodyBushing*`(강성·감쇠 행렬)를 거부**해서 계획의 부싱 대신 다리당 축 2개의 FREE 가이드 `ChLinkMotorLinearForce`로 $F=-kd-c\dot d$를 양해로 넣는다(`chrono/lateral_bushing`, $c$ = 실제값 = 입력 × 2). 수치 감쇠 규칙(4.3절 부싱 암시 가정)이 L2b-NSC 횡 모드에는 맞지 않으므로 dyn 재판정 필요
+  - [x] 4다리 모델·실행기·연기 시험·단가 — 2026-10-24 cad: `chrono/l2b_model.L2bModel`(상부체, 다리 4, `L2bForceActuator` + 로드측 법칙 `hydraulics/l2b_rod_side`(L1-R 상태 기계, $k_h$·$k_r$은 잠금 순간 $s_{ref}$), 횡 부싱 4, NSC 패드·크롤러 D안 구 24, 스냅숏 R16 왕복 ≤ 1×10⁻⁹ m), `chrono/l2b_engine.L2bEngine`, `04_scripts/02_chrono/run_S7.py`(V0~V14 32사례, 본 실행은 `--approved` 필요). 감쇠는 개정 33 값(잠김 34,403.5 / 30,348.5, 이동 100,206 / 86,949 N·s/m)을 지금 YAML 키에서 유도한다(YAML 재생성은 L1 지문을 바꿔 보류, 사용자 결정 대기). 연기 시험(상단 평지 10 s, `06_analysis/01_chrono/17_S7/smoke_top.json`): NaN 0, 패드+크롤러 합 대 총중량 +6.7×10⁻⁶(0.1 s 창), 실린더 힘 대 기준 ≤ 35 N, 피스톤 정지 위반 0. 단가(P코어, 단독, `step_cost_S7.json`) 230 µs/스텝(기록 포함 300 µs). 위험 ⑤ 경로 `l2b_model.pad_force_crosscheck`(GetContactForce = ReportAllContacts 비트 동일, 0.1 s 창 평균이 로드 축 평형·V1 기준과 0.1 % W/4 안)
   - [ ] V0~V13(배열 앞 6개)
-  - [ ] V4(NSC, 다리별 동적 기준 15.382 / 15.382 / 15.040 / 15.040 s; 준정적 15.375 / 15.375 / 15.040 / 15.040 s 참고)
-  - [ ] V14 3경우, RL+(`V14_rev5`)
+  - [ ] V4(NSC, 다리별 동적 기준 16.657 / 16.657 / 16.291 / 16.291 s; 준정적 16.652 / 16.653 / 16.291 / 16.291 s 참고; 개정 33)
+  - [ ] V14 3경우(pitch +4.0599°, roll +6.2252°, 대각 3.4820°; 개정 33 보완 1, 센서 끝 기준), RL+(`L2b_NSC_reference_rev33 / V14`), 기둥 규약 $s_{lock}=s_{ref}$, 피스톤 정지 감시
   - [ ] L1 대 L2b-NSC 비교표
   - [ ] **제어 ③ 준비**(py): S6 제어기로 L2b-NSC 폐루프 연기 시험 (2026-10-20 로드맵 동기화)
 
