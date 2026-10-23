@@ -1,0 +1,5015 @@
+{
+ "meta": {
+  "generated": "2026-10-24T01:31:20",
+  "stage": "S6 branch A (Chrono infrastructure): V11b, V17 path, sensor truth, V13, 60 s closed-loop smoke, force-saturation regression",
+  "script": "04_scripts/02_chrono/run_S6.py",
+  "checks_module": "outrigger_sim.verify.s6",
+  "judgement": "cad-expert pre-check; physical judgement by dynamics-expert",
+  "dt_yaml_s": 0.0002,
+  "params_file_sha256": "84a46dc172b9442f80b921a788bbfc5c01cd1e85194ad671b1627b54e1a771b9",
+  "reference_sha256": {
+   "reference.json": "c1ed8c93397f880ac6eba8b35f1280a1c8b7de54ce6f64764f2ec19e4706080f",
+   "actuator_L2_feasibility.json": "458370df9d186780ae66558c1772f0d29f3e7d86cb9ef2a04a94d3f9284f3efc",
+   "stick_friction.json": "4fb6d7545d7e60a15375f119a8de9929d909e24aa6fe0a1b9e5895f11939bde8",
+   "v7_diagnostic.json": "fefa6eb59a6654260c2b6c5e37bbf2cc215e2fb4a81f5581a52abab910df6323",
+   "leg_extension_loads.json": "38e0c90bbb4790c1e17516e2f91e3c190a8bb571e7b7c749a2939869ee3f3c30",
+   "numerical_damping_review.json": "a192b3a0636a94fd33fb22b95727b20c69a15e470af581cf25052800d1dacb2b"
+  },
+  "code_sha256": {
+   "04_scripts/02_chrono/run_S6.py": "1578f93e79da8479d9e8a2a7d14aeddd576c9c2b6529ee7bdea23302d9112000",
+   "03_src/outrigger_sim/runner.py": "c73b9e583161fac1ed36f28a3b6ee793b3f5d663b359405f0c6cea818f98d8cd",
+   "03_src/outrigger_sim/chrono/actuators.py": "27fa6ff170db2bab6bb017f0f052867b98bbb96eedf991e41a85dc6fe06c03ee",
+   "03_src/outrigger_sim/chrono/model.py": "875cc006558b9274110dd558f3de76e76dbf00a85896fc101812d1b1bd2f4ff6",
+   "03_src/outrigger_sim/chrono/truth.py": "ece923d05638546cb6a4973a72f288a5014a6f6899362465a3fc1c4abba0f2a1",
+   "03_src/outrigger_sim/chrono/l1_engine.py": "cc9dbf2a1752ab5088a952d48330576f3a6a1f3c9f43959795f62bf82f0f7695",
+   "03_src/outrigger_sim/chrono/single_leg.py": "f56a0300df65d625a981de24e1062f7071616df16406bc38183733d5d301b8cc",
+   "03_src/outrigger_sim/verify/s6.py": "de4fcf1b5d9e2fa594e97dc1b457923069a680f0bb12a4371cbe4194c8a7dffe",
+   "03_src/outrigger_sim/chrono/ground_bushing.py": "4f0b58eab2dbb3890a35e9964c758d01f80e00dfda466fb09a84fe78514d891b",
+   "03_src/outrigger_sim/chrono/ground_settlement.py": "0977295d4c1b13ed140368e459ecc60924a957ccb63c2a6b510c57130146fe96",
+   "03_src/outrigger_sim/chrono/pad_record.py": "ea0ded3d55d3536b4b2cff5a13fbc59a7402dd891d851ec8e1e60fe6ee488b96",
+   "04_scripts/02_chrono/s6_stage2.py": "58fd7aa722d41bfb38f3843cfff875b68b8782c0a944f149c86db813f44c45f1"
+  },
+  "code_sha256_note": "sha256 of the listed files when this summary was written; the case results come from the batches in 'batches' (stage-1 code unchanged since batch_20261021_194136 except stage-2 files s6_stage2.py / run_S6.py stage-2 actions, which the stage-1 cases do not use)",
+  "batches": [
+   {
+    "batch": "07_results/S6/batch_20261021_185123",
+    "cases": [
+     "v17_top",
+     "v11b_FL_dt2e-4",
+     "truth_static"
+    ],
+    "jobs": 3,
+    "wall_s": 17.465780899990932,
+    "placement": "pcore (EcoQoS off), outrigger_sim.hostcpu.place_process",
+    "env_threads": {
+     "OPENBLAS_NUM_THREADS": "1",
+     "MKL_NUM_THREADS": "1"
+    },
+    "note": "wall times of concurrent cases are not unit costs",
+    "case_wall_s": {
+     "v17_top": 17.42467220000981,
+     "v11b_FL_dt2e-4": 1.8301121999975294,
+     "truth_static": 1.2721909999963827
+    },
+    "status": {
+     "v17_top": "failed",
+     "v11b_FL_dt2e-4": "ok",
+     "truth_static": "ok"
+    }
+   },
+   {
+    "batch": "07_results/S6/batch_20261021_185226",
+    "cases": [
+     "v17_top",
+     "v11b_FL_dt2e-4",
+     "truth_static"
+    ],
+    "jobs": 3,
+    "wall_s": 17.691077600000426,
+    "placement": "pcore (EcoQoS off), outrigger_sim.hostcpu.place_process",
+    "env_threads": {
+     "OPENBLAS_NUM_THREADS": "1",
+     "MKL_NUM_THREADS": "1"
+    },
+    "note": "wall times of concurrent cases are not unit costs",
+    "case_wall_s": {
+     "v17_top": 17.649807499998133,
+     "v11b_FL_dt2e-4": 1.7910035999957472,
+     "truth_static": 1.2541717999993125
+    },
+    "status": {
+     "v17_top": "ok",
+     "v11b_FL_dt2e-4": "ok",
+     "truth_static": "ok"
+    }
+   },
+   {
+    "batch": "07_results/S6/batch_20261021_185304",
+    "cases": [
+     "smoke60_top",
+     "regress_lift_on",
+     "regress_lift_off",
+     "v17_top",
+     "v17_middle",
+     "v17_bottom",
+     "v11b_FL_dt1e-5",
+     "v11b_FL_dt2e-4",
+     "v11b_RL_dt2e-4",
+     "truth_static"
+    ],
+    "jobs": 6,
+    "wall_s": 108.83121920000121,
+    "placement": "pcore (EcoQoS off), outrigger_sim.hostcpu.place_process",
+    "env_threads": {
+     "OPENBLAS_NUM_THREADS": "1",
+     "MKL_NUM_THREADS": "1"
+    },
+    "note": "wall times of concurrent cases are not unit costs",
+    "case_wall_s": {
+     "smoke60_top": 108.79085109999869,
+     "regress_lift_on": 33.9699241000053,
+     "regress_lift_off": 32.24259639999946,
+     "v17_top": 20.125196299995878,
+     "v17_middle": 20.120219600008568,
+     "v17_bottom": 19.797008199995616,
+     "v11b_FL_dt1e-5": 29.00060799998755,
+     "v11b_FL_dt2e-4": 2.370220500000869,
+     "v11b_RL_dt2e-4": 2.3589412000001175,
+     "truth_static": 1.49337490000471
+    },
+    "status": {
+     "smoke60_top": "ok",
+     "regress_lift_on": "ok",
+     "regress_lift_off": "ok",
+     "v17_top": "ok",
+     "v17_middle": "ok",
+     "v17_bottom": "ok",
+     "v11b_FL_dt1e-5": "ok",
+     "v11b_FL_dt2e-4": "ok",
+     "v11b_RL_dt2e-4": "ok",
+     "truth_static": "ok"
+    }
+   },
+   {
+    "batch": "07_results/S6/batch_20261021_190700",
+    "cases": [
+     "smoke60_top",
+     "regress_lift_on",
+     "regress_lift_off",
+     "v17_top",
+     "v17_middle",
+     "v17_bottom",
+     "v11b_FL_dt1e-5",
+     "v11b_FL_dt2e-4",
+     "v11b_RL_dt2e-4",
+     "truth_static"
+    ],
+    "jobs": 6,
+    "wall_s": 109.17792980000377,
+    "placement": "pcore (EcoQoS off), outrigger_sim.hostcpu.place_process",
+    "env_threads": {
+     "OPENBLAS_NUM_THREADS": "1",
+     "MKL_NUM_THREADS": "1"
+    },
+    "note": "wall times of concurrent cases are not unit costs",
+    "case_wall_s": {
+     "smoke60_top": 109.13691780000227,
+     "regress_lift_on": 34.467580600001384,
+     "regress_lift_off": 32.84334230000968,
+     "v17_top": 20.42511120000563,
+     "v17_middle": 20.231752199993934,
+     "v17_bottom": 20.13435199999367,
+     "v11b_FL_dt1e-5": 29.849851100007072,
+     "v11b_FL_dt2e-4": 2.3369803999958094,
+     "v11b_RL_dt2e-4": 2.3018595000030473,
+     "truth_static": 1.4975880999991205
+    },
+    "status": {
+     "smoke60_top": "ok",
+     "regress_lift_on": "ok",
+     "regress_lift_off": "ok",
+     "v17_top": "ok",
+     "v17_middle": "ok",
+     "v17_bottom": "ok",
+     "v11b_FL_dt1e-5": "ok",
+     "v11b_FL_dt2e-4": "ok",
+     "v11b_RL_dt2e-4": "ok",
+     "truth_static": "ok"
+    }
+   },
+   {
+    "batch": "07_results/S6/batch_20261021_191633",
+    "cases": [
+     "regress_lift_on",
+     "v17_top"
+    ],
+    "jobs": 3,
+    "wall_s": 29.26532269999734,
+    "placement": "pcore (EcoQoS off), outrigger_sim.hostcpu.place_process",
+    "env_threads": {
+     "OPENBLAS_NUM_THREADS": "1",
+     "MKL_NUM_THREADS": "1"
+    },
+    "note": "wall times of concurrent cases are not unit costs",
+    "case_wall_s": {
+     "regress_lift_on": 29.218216900000698,
+     "v17_top": 17.50121699999727
+    },
+    "status": {
+     "regress_lift_on": "ok",
+     "v17_top": "ok"
+    }
+   },
+   {
+    "batch": "07_results/S6/batch_20261021_192440",
+    "cases": [
+     "smoke60_top",
+     "regress_lift_on",
+     "regress_lift_off",
+     "v17_top",
+     "v17_middle",
+     "v17_bottom",
+     "v11b_FL_dt1e-5",
+     "v11b_FL_dt2e-4",
+     "v11b_RL_dt2e-4",
+     "truth_static"
+    ],
+    "jobs": 7,
+    "wall_s": 108.35826290000114,
+    "placement": "pcore (EcoQoS off), outrigger_sim.hostcpu.place_process",
+    "env_threads": {
+     "OPENBLAS_NUM_THREADS": "1",
+     "MKL_NUM_THREADS": "1"
+    },
+    "note": "wall times of concurrent cases are not unit costs",
+    "case_wall_s": {
+     "smoke60_top": 108.31678900000406,
+     "regress_lift_on": 35.0890056000062,
+     "regress_lift_off": 33.6627870999946,
+     "v17_top": 21.468800299990107,
+     "v17_middle": 21.35390189998725,
+     "v17_bottom": 21.285047500001383,
+     "v11b_FL_dt1e-5": 32.34423649999371,
+     "v11b_FL_dt2e-4": 2.418306699997629,
+     "v11b_RL_dt2e-4": 2.402204800004256,
+     "truth_static": 1.7060144999995828
+    },
+    "status": {
+     "smoke60_top": "ok",
+     "regress_lift_on": "ok",
+     "regress_lift_off": "ok",
+     "v17_top": "ok",
+     "v17_middle": "ok",
+     "v17_bottom": "ok",
+     "v11b_FL_dt1e-5": "ok",
+     "v11b_FL_dt2e-4": "ok",
+     "v11b_RL_dt2e-4": "ok",
+     "truth_static": "ok"
+    }
+   },
+   {
+    "batch": "07_results/S6/batch_20261021_193903",
+    "cases": [
+     "smoke60_top",
+     "regress_lift_on",
+     "regress_lift_off",
+     "v17_top",
+     "v17_middle",
+     "v17_bottom",
+     "v11b_FL_dt1e-5",
+     "v11b_RL_dt1e-5",
+     "v11b_FL_dt2e-4",
+     "v11b_RL_dt2e-4",
+     "truth_static"
+    ],
+    "jobs": 7,
+    "wall_s": 108.75710969998909,
+    "placement": "pcore (EcoQoS off), outrigger_sim.hostcpu.place_process",
+    "env_threads": {
+     "OPENBLAS_NUM_THREADS": "1",
+     "MKL_NUM_THREADS": "1"
+    },
+    "note": "wall times of concurrent cases are not unit costs",
+    "case_wall_s": {
+     "smoke60_top": 108.71412790000613,
+     "regress_lift_on": 34.973511999996845,
+     "regress_lift_off": 32.84171170000627,
+     "v17_top": 20.034009199996945,
+     "v17_middle": 19.998630799993407,
+     "v17_bottom": 20.05879989999812,
+     "v11b_FL_dt1e-5": 36.369798500003526,
+     "v11b_RL_dt1e-5": 33.396693000002415,
+     "v11b_FL_dt2e-4": 2.692493000009563,
+     "v11b_RL_dt2e-4": 2.691667299994151,
+     "truth_static": 1.5850479000073392
+    },
+    "status": {
+     "smoke60_top": "ok",
+     "regress_lift_on": "ok",
+     "regress_lift_off": "ok",
+     "v17_top": "ok",
+     "v17_middle": "ok",
+     "v17_bottom": "ok",
+     "v11b_FL_dt1e-5": "ok",
+     "v11b_RL_dt1e-5": "ok",
+     "v11b_FL_dt2e-4": "ok",
+     "v11b_RL_dt2e-4": "ok",
+     "truth_static": "ok"
+    }
+   },
+   {
+    "batch": "07_results/S6/batch_20261021_194136",
+    "cases": [
+     "smoke60_top",
+     "regress_lift_on",
+     "regress_lift_off",
+     "v17_top",
+     "v17_middle",
+     "v17_bottom",
+     "v11b_FL_dt1e-5",
+     "v11b_RL_dt1e-5",
+     "v11b_FL_dt2e-4",
+     "v11b_RL_dt2e-4",
+     "truth_static"
+    ],
+    "jobs": 7,
+    "wall_s": 109.35508280000067,
+    "placement": "pcore (EcoQoS off), outrigger_sim.hostcpu.place_process",
+    "env_threads": {
+     "OPENBLAS_NUM_THREADS": "1",
+     "MKL_NUM_THREADS": "1"
+    },
+    "note": "wall times of concurrent cases are not unit costs",
+    "case_wall_s": {
+     "smoke60_top": 109.31095810000261,
+     "regress_lift_on": 35.602264000001014,
+     "regress_lift_off": 33.274624600002426,
+     "v17_top": 20.499941800007946,
+     "v17_middle": 20.385241900003166,
+     "v17_bottom": 20.601893400002155,
+     "v11b_FL_dt1e-5": 36.546286000011605,
+     "v11b_RL_dt1e-5": 33.53367010000511,
+     "v11b_FL_dt2e-4": 2.7283651000034297,
+     "v11b_RL_dt2e-4": 2.7115302000020165,
+     "truth_static": 1.570226099996944
+    },
+    "status": {
+     "smoke60_top": "ok",
+     "regress_lift_on": "ok",
+     "regress_lift_off": "ok",
+     "v17_top": "ok",
+     "v17_middle": "ok",
+     "v17_bottom": "ok",
+     "v11b_FL_dt1e-5": "ok",
+     "v11b_RL_dt1e-5": "ok",
+     "v11b_FL_dt2e-4": "ok",
+     "v11b_RL_dt2e-4": "ok",
+     "truth_static": "ok"
+    }
+   },
+   {
+    "batch": "07_results/S6/batch_20261021_195723",
+    "cases": [
+     "regress_lift_on",
+     "v17_top"
+    ],
+    "jobs": 3,
+    "wall_s": 29.784662199992454,
+    "placement": "pcore (EcoQoS off), outrigger_sim.hostcpu.place_process",
+    "env_threads": {
+     "OPENBLAS_NUM_THREADS": "1",
+     "MKL_NUM_THREADS": "1"
+    },
+    "note": "wall times of concurrent cases are not unit costs",
+    "case_wall_s": {
+     "regress_lift_on": 29.699771599989617,
+     "v17_top": 17.703922999993665
+    },
+    "status": {
+     "regress_lift_on": "ok",
+     "v17_top": "ok"
+    }
+   },
+   {
+    "batch": "07_results/S6/batch_20261024_004403",
+    "cases": [
+     "smoke60_top",
+     "regress_lift_on",
+     "regress_lift_off",
+     "v17_top",
+     "v17_middle",
+     "v17_bottom",
+     "v11b_FL_dt1e-5",
+     "v11b_RL_dt1e-5",
+     "v11b_FL_dt2e-4",
+     "v11b_RL_dt2e-4",
+     "truth_static"
+    ],
+    "jobs": 7,
+    "wall_s": 115.46484169999894,
+    "placement": "pcore (EcoQoS off), outrigger_sim.hostcpu.place_process",
+    "env_threads": {
+     "OPENBLAS_NUM_THREADS": "1",
+     "MKL_NUM_THREADS": "1"
+    },
+    "note": "wall times of concurrent cases are not unit costs",
+    "case_wall_s": {
+     "smoke60_top": 115.37557780000498,
+     "regress_lift_on": 41.26538630000141,
+     "regress_lift_off": 38.940615600004094,
+     "v17_top": 24.21772250000504,
+     "v17_middle": 24.50232149999647,
+     "v17_bottom": 24.172383600001922,
+     "v11b_FL_dt1e-5": 40.43974129999697,
+     "v11b_RL_dt1e-5": 34.84985389999929,
+     "v11b_FL_dt2e-4": 2.835785399991437,
+     "v11b_RL_dt2e-4": 2.814721999995527,
+     "truth_static": 1.6943469999969238
+    },
+    "status": {
+     "smoke60_top": "ok",
+     "regress_lift_on": "ok",
+     "regress_lift_off": "ok",
+     "v17_top": "ok",
+     "v17_middle": "ok",
+     "v17_bottom": "ok",
+     "v11b_FL_dt1e-5": "ok",
+     "v11b_RL_dt1e-5": "ok",
+     "v11b_FL_dt2e-4": "ok",
+     "v11b_RL_dt2e-4": "ok",
+     "truth_static": "ok"
+    }
+   }
+  ]
+ },
+ "v11b_expected_ranges": {
+  "source": "dynamics_model.md 5.12.12 supplement 8 (REXOME35, per leg; replica law C lag 1 − v_max dt ± 1 um)",
+  "creep_from_first_saturation_mm": {
+   "FL": {
+    "dt_2e-4": {
+     "extend": [
+      0.021,
+      0.023
+     ],
+     "retract": [
+      0.0193,
+      0.0213
+     ]
+    },
+    "dt_1e-5": {
+     "extend": [
+      0.0266,
+      0.0286
+     ],
+     "retract": [
+      0.0265,
+      0.0285
+     ]
+    }
+   },
+   "RL": {
+    "dt_2e-4": {
+     "extend": [
+      0.0253,
+      0.0273
+     ],
+     "retract": [
+      0.0272,
+      0.0292
+     ]
+    },
+    "dt_1e-5": {
+     "extend": [
+      0.0312,
+      0.0332
+     ],
+     "retract": [
+      0.0313,
+      0.0333
+     ]
+    }
+   }
+  },
+  "judged_tolerance_mm": 0.04,
+  "peak_over_limit": {
+   "FL": {
+    "extend": "<= 1.001",
+    "retract": "<= 1.003"
+   },
+   "RL": {
+    "extend": "<= 1.001",
+    "retract": "<= 1.003"
+   }
+  },
+  "reading_inertia_kN": {
+   "FL": [
+    1.1,
+    1.16
+   ],
+   "RL": [
+    0.75,
+    0.8
+   ]
+  },
+  "settled_window_motion_um": {
+   "FL": "<= 2",
+   "RL": "<= 2"
+  },
+  "settled_mean_force_over_limit": {
+   "FL": "1.000 +- 0.002",
+   "RL": "1.000 +- 0.002"
+  }
+ },
+ "counts": {
+  "checks": 137,
+  "failed": 0
+ },
+ "checks": [
+  {
+   "id": "V17.top.not_exceeded",
+   "item": "no 350 bar exceedance in locked samples (top)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "locked mask: u_cmd = 0 and u_applied = 0 (user decision 2026-10-21)",
+   "case": "smoke60_top"
+  },
+  {
+   "id": "V17.top.all_samples.info",
+   "item": "350 bar exceedance over all samples, info only (top)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "info",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "all-sample max 8.90963e+06 Pa",
+   "case": "smoke60_top"
+  },
+  {
+   "id": "V17.top.mask_same",
+   "item": "locked-mask maximum = all-sample maximum (settled run, top)",
+   "value": 8909630.272592131,
+   "ref": 8909630.272592131,
+   "tol": 0.0,
+   "tol_kind": "abs",
+   "unit": "Pa",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0,
+   "note": "",
+   "case": "smoke60_top"
+  },
+  {
+   "id": "V17.top.pdelta",
+   "item": "settled max cylinder force per leg - P-delta static solution (top)",
+   "value": [
+    118259.5908370701,
+    115998.91338662579,
+    71945.32371203252,
+    70394.471617771
+   ],
+   "ref": [
+    118256.32847304661,
+    115993.93544918225,
+    71942.15837373544,
+    70391.13561487877
+   ],
+   "tol": 9.502825,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "06_analysis/00_dynamics/s1_pdelta_check.json / <level> / nonlinear_cyl_N",
+   "deviation": [
+    3.2623640234960476,
+    4.97793744354567,
+    3.1653382970835082,
+    3.3360028922325
+   ],
+   "note": "tol 0.01 % W/4 (dyn rev. 23, U3 = a)",
+   "case": "smoke60_top"
+  },
+  {
+   "id": "V17.top.linear.info",
+   "item": "settled max cylinder force per leg - linear static solution (top), info",
+   "value": [
+    118259.5908370701,
+    115998.91338662579,
+    71945.32371203252,
+    70394.471617771
+   ],
+   "ref": [
+    118224.79596976994,
+    115980.25927337873,
+    71958.6418558449,
+    70419.8608118456
+   ],
+   "tol": 950.2825,
+   "tol_kind": "info",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    34.794867300166516,
+    18.654113247059286,
+    -13.318143812372,
+    -25.389194074596162
+   ],
+   "note": "1 % W/4 recorded",
+   "case": "smoke60_top"
+  },
+  {
+   "id": "truth.smoke60_top.pressure",
+   "item": "head pressure x A_head vs cylinder force, max relative (smoke60_top)",
+   "value": 1.25458922856829e-16,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "smoke60_top"
+  },
+  {
+   "id": "truth.smoke60_top.stroke_corrected",
+   "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (smoke60_top)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x stroke",
+   "case": "smoke60_top"
+  },
+  {
+   "id": "truth.smoke60_top.stroke_motor",
+   "item": "meas.stroke vs s_motor, max |diff| (m) (smoke60_top)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "smoke60_top"
+  },
+  {
+   "id": "truth.smoke60_top.stroke_true_record",
+   "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (smoke60_top)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "smoke60_top"
+  },
+  {
+   "id": "V13.smoke60_top.step_monitor",
+   "item": "non-finite steps in the per-step monitor (smoke60_top)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "smoke60_top"
+  },
+  {
+   "id": "V13.smoke60_top.record",
+   "item": "Record float arrays with non-finite values (smoke60_top)",
+   "value": [],
+   "ref": [],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "smoke60_top"
+  },
+  {
+   "id": "V17.top.not_exceeded",
+   "item": "no 350 bar exceedance in locked samples (top)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "locked mask: u_cmd = 0 and u_applied = 0 (user decision 2026-10-21)",
+   "case": "v17_top"
+  },
+  {
+   "id": "V17.top.all_samples.info",
+   "item": "350 bar exceedance over all samples, info only (top)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "info",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "all-sample max 8.90963e+06 Pa",
+   "case": "v17_top"
+  },
+  {
+   "id": "V17.top.mask_same",
+   "item": "locked-mask maximum = all-sample maximum (settled run, top)",
+   "value": 8909630.272592131,
+   "ref": 8909630.272592131,
+   "tol": 0.0,
+   "tol_kind": "abs",
+   "unit": "Pa",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0,
+   "note": "",
+   "case": "v17_top"
+  },
+  {
+   "id": "V17.top.pdelta",
+   "item": "settled max cylinder force per leg - P-delta static solution (top)",
+   "value": [
+    118259.579025035,
+    115998.90891568184,
+    71945.3006712577,
+    70394.4540118017
+   ],
+   "ref": [
+    118256.32847304661,
+    115993.93544918225,
+    71942.15837373544,
+    70391.13561487877
+   ],
+   "tol": 9.502825,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "06_analysis/00_dynamics/s1_pdelta_check.json / <level> / nonlinear_cyl_N",
+   "deviation": [
+    3.2505519883852685,
+    4.973466499592178,
+    3.1422975222667446,
+    3.318396922928514
+   ],
+   "note": "tol 0.01 % W/4 (dyn rev. 23, U3 = a)",
+   "case": "v17_top"
+  },
+  {
+   "id": "V17.top.linear.info",
+   "item": "settled max cylinder force per leg - linear static solution (top), info",
+   "value": [
+    118259.579025035,
+    115998.90891568184,
+    71945.3006712577,
+    70394.4540118017
+   ],
+   "ref": [
+    118224.79596976994,
+    115980.25927337873,
+    71958.6418558449,
+    70419.8608118456
+   ],
+   "tol": 950.2825,
+   "tol_kind": "info",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    34.78305526505574,
+    18.649642303105793,
+    -13.341184587188764,
+    -25.406800043900148
+   ],
+   "note": "1 % W/4 recorded",
+   "case": "v17_top"
+  },
+  {
+   "id": "truth.v17_top.pressure",
+   "item": "head pressure x A_head vs cylinder force, max relative (v17_top)",
+   "value": 1.25458922856829e-16,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_top"
+  },
+  {
+   "id": "truth.v17_top.stroke_corrected",
+   "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (v17_top)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x stroke",
+   "case": "v17_top"
+  },
+  {
+   "id": "truth.v17_top.stroke_motor",
+   "item": "meas.stroke vs s_motor, max |diff| (m) (v17_top)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_top"
+  },
+  {
+   "id": "truth.v17_top.stroke_true_record",
+   "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (v17_top)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_top"
+  },
+  {
+   "id": "V13.v17_top.step_monitor",
+   "item": "non-finite steps in the per-step monitor (v17_top)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_top"
+  },
+  {
+   "id": "V13.v17_top.record",
+   "item": "Record float arrays with non-finite values (v17_top)",
+   "value": [],
+   "ref": [],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_top"
+  },
+  {
+   "id": "V17.middle.not_exceeded",
+   "item": "no 350 bar exceedance in locked samples (middle)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "locked mask: u_cmd = 0 and u_applied = 0 (user decision 2026-10-21)",
+   "case": "v17_middle"
+  },
+  {
+   "id": "V17.middle.all_samples.info",
+   "item": "350 bar exceedance over all samples, info only (middle)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "info",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "all-sample max 8.90916e+06 Pa",
+   "case": "v17_middle"
+  },
+  {
+   "id": "V17.middle.mask_same",
+   "item": "locked-mask maximum = all-sample maximum (settled run, middle)",
+   "value": 8909164.387715256,
+   "ref": 8909164.387715256,
+   "tol": 0.0,
+   "tol_kind": "abs",
+   "unit": "Pa",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0,
+   "note": "",
+   "case": "v17_middle"
+  },
+  {
+   "id": "V17.middle.pdelta",
+   "item": "settled max cylinder force per leg - P-delta static solution (middle)",
+   "value": [
+    118253.42180876712,
+    115995.91637268623,
+    71949.93409264938,
+    70401.51548781533
+   ],
+   "ref": [
+    118249.46358555932,
+    115990.97081666309,
+    71945.73619346524,
+    70397.3873220099
+   ],
+   "tol": 9.502825,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "06_analysis/00_dynamics/s1_pdelta_check.json / <level> / nonlinear_cyl_N",
+   "deviation": [
+    3.958223207795527,
+    4.945556023143581,
+    4.197899184131529,
+    4.128165805421304
+   ],
+   "note": "tol 0.01 % W/4 (dyn rev. 23, U3 = a)",
+   "case": "v17_middle"
+  },
+  {
+   "id": "V17.middle.linear.info",
+   "item": "settled max cylinder force per leg - linear static solution (middle), info",
+   "value": [
+    118253.42180876712,
+    115995.91637268623,
+    71949.93409264938,
+    70401.51548781533
+   ],
+   "ref": [
+    118224.7959719858,
+    115980.25927552328,
+    71958.64185712369,
+    70419.86081306795
+   ],
+   "tol": 950.2825,
+   "tol_kind": "info",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    28.62583678131341,
+    15.657097162955324,
+    -8.707764474311261,
+    -18.345325252623297
+   ],
+   "note": "1 % W/4 recorded",
+   "case": "v17_middle"
+  },
+  {
+   "id": "truth.v17_middle.pressure",
+   "item": "head pressure x A_head vs cylinder force, max relative (v17_middle)",
+   "value": 1.2546219489789526e-16,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_middle"
+  },
+  {
+   "id": "truth.v17_middle.stroke_corrected",
+   "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (v17_middle)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x stroke",
+   "case": "v17_middle"
+  },
+  {
+   "id": "truth.v17_middle.stroke_motor",
+   "item": "meas.stroke vs s_motor, max |diff| (m) (v17_middle)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_middle"
+  },
+  {
+   "id": "truth.v17_middle.stroke_true_record",
+   "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (v17_middle)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_middle"
+  },
+  {
+   "id": "V13.v17_middle.step_monitor",
+   "item": "non-finite steps in the per-step monitor (v17_middle)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_middle"
+  },
+  {
+   "id": "V13.v17_middle.record",
+   "item": "Record float arrays with non-finite values (v17_middle)",
+   "value": [],
+   "ref": [],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_middle"
+  },
+  {
+   "id": "V17.bottom.not_exceeded",
+   "item": "no 350 bar exceedance in locked samples (bottom)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "locked mask: u_cmd = 0 and u_applied = 0 (user decision 2026-10-21)",
+   "case": "v17_bottom"
+  },
+  {
+   "id": "V17.bottom.all_samples.info",
+   "item": "350 bar exceedance over all samples, info only (bottom)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "info",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "all-sample max 8.9087e+06 Pa",
+   "case": "v17_bottom"
+  },
+  {
+   "id": "V17.bottom.mask_same",
+   "item": "locked-mask maximum = all-sample maximum (settled run, bottom)",
+   "value": 8908699.262392001,
+   "ref": 8908699.262392001,
+   "tol": 0.0,
+   "tol_kind": "abs",
+   "unit": "Pa",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0,
+   "note": "",
+   "case": "v17_bottom"
+  },
+  {
+   "id": "V17.bottom.pdelta",
+   "item": "settled max cylinder force per leg - P-delta static solution (bottom)",
+   "value": [
+    118247.20686912026,
+    115992.8482395163,
+    71954.44963726086,
+    70408.29396625771
+   ],
+   "ref": [
+    118242.61054042385,
+    115988.00419106385,
+    71949.31383111968,
+    70403.6293619435
+   ],
+   "tol": 9.502825,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "06_analysis/00_dynamics/s1_pdelta_check.json / <level> / nonlinear_cyl_N",
+   "deviation": [
+    4.596328696410637,
+    4.8440484524471685,
+    5.135806141173816,
+    4.66460431421001
+   ],
+   "note": "tol 0.01 % W/4 (dyn rev. 23, U3 = a)",
+   "case": "v17_bottom"
+  },
+  {
+   "id": "V17.bottom.linear.info",
+   "item": "settled max cylinder force per leg - linear static solution (bottom), info",
+   "value": [
+    118247.20686912026,
+    115992.8482395163,
+    71954.44963726086,
+    70408.29396625771
+   ],
+   "ref": [
+    118224.79597419735,
+    115980.25927766379,
+    71958.6418584001,
+    70419.86081428811
+   ],
+   "tol": 950.2825,
+   "tol_kind": "info",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    22.41089492291212,
+    12.588961852510693,
+    -4.1922211392375175,
+    -11.566848030401161
+   ],
+   "note": "1 % W/4 recorded",
+   "case": "v17_bottom"
+  },
+  {
+   "id": "truth.v17_bottom.pressure",
+   "item": "head pressure x A_head vs cylinder force, max relative (v17_bottom)",
+   "value": 1.2546545940674682e-16,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_bottom"
+  },
+  {
+   "id": "truth.v17_bottom.stroke_corrected",
+   "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (v17_bottom)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x stroke",
+   "case": "v17_bottom"
+  },
+  {
+   "id": "truth.v17_bottom.stroke_motor",
+   "item": "meas.stroke vs s_motor, max |diff| (m) (v17_bottom)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_bottom"
+  },
+  {
+   "id": "truth.v17_bottom.stroke_true_record",
+   "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (v17_bottom)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_bottom"
+  },
+  {
+   "id": "V13.v17_bottom.step_monitor",
+   "item": "non-finite steps in the per-step monitor (v17_bottom)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_bottom"
+  },
+  {
+   "id": "V13.v17_bottom.record",
+   "item": "Record float arrays with non-finite values (v17_bottom)",
+   "value": [],
+   "ref": [],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v17_bottom"
+  },
+  {
+   "id": "V11b.reading_inertia",
+   "item": "|F_cyl + m_rod g - F_spring| over the run (rod inertia in the reading) [v11b_FL_dt1e-5]",
+   "value": 1118.981020784122,
+   "ref": null,
+   "tol": 1675.7802250032491,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "1.5 m_rod v_max / t_sat (dyn rev. 23)",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.extend.reached",
+   "item": "saturation reached (extend) [v11b_FL_dt1e-5]",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.extend.force",
+   "item": "|F_cyl| / limit after the first saturated step (extend) [v11b_FL_dt1e-5]",
+   "value": 1.0000839252295386,
+   "ref": null,
+   "tol": 1.01,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "limit 278737.808 N (YAML actuator.max_force_*_N)",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.extend.motion",
+   "item": "motion in the commanded direction from the first saturated step (extend) [v11b_FL_dt1e-5]",
+   "value": 2.7551509175660627e-05,
+   "ref": null,
+   "tol": 4e-05,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "user decision 2026-10-21 U2 = (b); creep / (c_n v_max / k_n) = 0.9914883771122754",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.extend.motion_settled.info",
+   "item": "motion in the settled window t_sat + 0.5 s .. reversal (extend) [v11b_FL_dt1e-5]",
+   "value": 0.0,
+   "ref": null,
+   "tol": null,
+   "tol_kind": "info",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.extend.settled_mean_force",
+   "item": "settled-window mean force / limit (extend) [v11b_FL_dt1e-5]",
+   "value": 1.0000000035349959,
+   "ref": [
+    0.99,
+    1.01
+   ],
+   "tol": [
+    0.99,
+    1.01
+   ],
+   "tol_kind": "band",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.retract.reached",
+   "item": "saturation reached (retract) [v11b_FL_dt1e-5]",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.retract.force",
+   "item": "|F_cyl| / limit after the first saturated step (retract) [v11b_FL_dt1e-5]",
+   "value": 1.0003003359952294,
+   "ref": null,
+   "tol": 1.01,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "limit 79168.1349 N (YAML actuator.max_force_*_N)",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.retract.motion",
+   "item": "motion in the commanded direction from the first saturated step (retract) [v11b_FL_dt1e-5]",
+   "value": 2.7525081782497907e-05,
+   "ref": null,
+   "tol": 4e-05,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "user decision 2026-10-21 U2 = (b); creep / (c_n v_max / k_n) = 0.9905373419805462",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.retract.motion_settled.info",
+   "item": "motion in the settled window t_sat + 0.5 s .. reversal (retract) [v11b_FL_dt1e-5]",
+   "value": 0.0,
+   "ref": null,
+   "tol": null,
+   "tol_kind": "info",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.retract.settled_mean_force",
+   "item": "settled-window mean force / limit (retract) [v11b_FL_dt1e-5]",
+   "value": 1.0000000097526902,
+   "ref": [
+    0.99,
+    1.01
+   ],
+   "tol": [
+    0.99,
+    1.01
+   ],
+   "tol_kind": "band",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.reverse_to_retract.steps",
+   "item": "steps from the reversed command to reversed motion [v11b_FL_dt1e-5]",
+   "value": 1.0,
+   "ref": null,
+   "tol": 2,
+   "tol_kind": "max",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.reverse_to_retract.full_speed",
+   "item": "time from the reversed command to |u| = v_max [v11b_FL_dt1e-5]",
+   "value": 0.10000000000065512,
+   "ref": null,
+   "tol": 0.10003000000000001,
+   "tol_kind": "max",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "acceleration limit actuator.command_ramp_s + hook lag",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.reverse_to_extend.steps",
+   "item": "steps from the reversed command to reversed motion [v11b_FL_dt1e-5]",
+   "value": 1.0,
+   "ref": null,
+   "tol": 2,
+   "tol_kind": "max",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.reverse_to_extend.full_speed",
+   "item": "time from the reversed command to |u| = v_max [v11b_FL_dt1e-5]",
+   "value": 0.09999999999621423,
+   "ref": null,
+   "tol": 0.10003000000000001,
+   "tol_kind": "max",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "acceleration limit actuator.command_ramp_s + hook lag",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V17.v11b_FL_dt1e-5.not_exceeded",
+   "item": "no 350 bar exceedance in locked samples (v11b_FL_dt1e-5)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "locked mask: u_cmd = 0 and u_applied = 0 (user decision 2026-10-21)",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V17.v11b_FL_dt1e-5.moving_relief",
+   "item": "moving samples: head pressure <= 210 bar relief x 1.01 (v11b_FL_dt1e-5)",
+   "value": 21001762.354474373,
+   "ref": null,
+   "tol": 21210000.0,
+   "tol_kind": "max",
+   "unit": "Pa",
+   "passed": true,
+   "ref_key": "YAML actuator.relief_pressure_moving_Pa",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt1e-5"
+  },
+  {
+   "id": "V11b.reading_inertia",
+   "item": "|F_cyl + m_rod g - F_spring| over the run (rod inertia in the reading) [v11b_RL_dt1e-5]",
+   "value": 766.3280110522173,
+   "ref": null,
+   "tol": 1148.1634096032749,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "1.5 m_rod v_max / t_sat (dyn rev. 23)",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.extend.reached",
+   "item": "saturation reached (extend) [v11b_RL_dt1e-5]",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.extend.force",
+   "item": "|F_cyl| / limit after the first saturated step (extend) [v11b_RL_dt1e-5]",
+   "value": 1.000086568437061,
+   "ref": null,
+   "tol": 1.01,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "limit 199569.673 N (YAML actuator.max_force_*_N)",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.extend.motion",
+   "item": "motion in the commanded direction from the first saturated step (extend) [v11b_RL_dt1e-5]",
+   "value": 3.222386387413678e-05,
+   "ref": null,
+   "tol": 4e-05,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "user decision 2026-10-21 U2 = (b); creep / (c_n v_max / k_n) = 0.9897544642442161",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.extend.motion_settled.info",
+   "item": "motion in the settled window t_sat + 0.5 s .. reversal (extend) [v11b_RL_dt1e-5]",
+   "value": 0.0,
+   "ref": null,
+   "tol": null,
+   "tol_kind": "info",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.extend.settled_mean_force",
+   "item": "settled-window mean force / limit (extend) [v11b_RL_dt1e-5]",
+   "value": 1.0000000029447944,
+   "ref": [
+    0.99,
+    1.01
+   ],
+   "tol": [
+    0.99,
+    1.01
+   ],
+   "tol_kind": "band",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.retract.reached",
+   "item": "saturation reached (retract) [v11b_RL_dt1e-5]",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.retract.force",
+   "item": "|F_cyl| / limit after the first saturated step (retract) [v11b_RL_dt1e-5]",
+   "value": 1.0002587720873717,
+   "ref": null,
+   "tol": 1.01,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "limit 65973.4457 N (YAML actuator.max_force_*_N)",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.retract.motion",
+   "item": "motion in the commanded direction from the first saturated step (retract) [v11b_RL_dt1e-5]",
+   "value": 3.230507108864522e-05,
+   "ref": null,
+   "tol": 4e-05,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "user decision 2026-10-21 U2 = (b); creep / (c_n v_max / k_n) = 0.9922487400207805",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.retract.motion_settled.info",
+   "item": "motion in the settled window t_sat + 0.5 s .. reversal (retract) [v11b_RL_dt1e-5]",
+   "value": 0.0,
+   "ref": null,
+   "tol": null,
+   "tol_kind": "info",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.retract.settled_mean_force",
+   "item": "settled-window mean force / limit (retract) [v11b_RL_dt1e-5]",
+   "value": 1.0000000001185658,
+   "ref": [
+    0.99,
+    1.01
+   ],
+   "tol": [
+    0.99,
+    1.01
+   ],
+   "tol_kind": "band",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.reverse_to_retract.steps",
+   "item": "steps from the reversed command to reversed motion [v11b_RL_dt1e-5]",
+   "value": 1.0,
+   "ref": null,
+   "tol": 2,
+   "tol_kind": "max",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.reverse_to_retract.full_speed",
+   "item": "time from the reversed command to |u| = v_max [v11b_RL_dt1e-5]",
+   "value": 0.10000000000065512,
+   "ref": null,
+   "tol": 0.10003000000000001,
+   "tol_kind": "max",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "acceleration limit actuator.command_ramp_s + hook lag",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.reverse_to_extend.steps",
+   "item": "steps from the reversed command to reversed motion [v11b_RL_dt1e-5]",
+   "value": 1.0,
+   "ref": null,
+   "tol": 2,
+   "tol_kind": "max",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.reverse_to_extend.full_speed",
+   "item": "time from the reversed command to |u| = v_max [v11b_RL_dt1e-5]",
+   "value": 0.09999999999621423,
+   "ref": null,
+   "tol": 0.10003000000000001,
+   "tol_kind": "max",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "acceleration limit actuator.command_ramp_s + hook lag",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V17.v11b_RL_dt1e-5.not_exceeded",
+   "item": "no 350 bar exceedance in locked samples (v11b_RL_dt1e-5)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "locked mask: u_cmd = 0 and u_applied = 0 (user decision 2026-10-21)",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V17.v11b_RL_dt1e-5.moving_relief",
+   "item": "moving samples: head pressure <= 210 bar relief x 1.01 (v11b_RL_dt1e-5)",
+   "value": 21001817.89718879,
+   "ref": null,
+   "tol": 21210000.0,
+   "tol_kind": "max",
+   "unit": "Pa",
+   "passed": true,
+   "ref_key": "YAML actuator.relief_pressure_moving_Pa",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt1e-5"
+  },
+  {
+   "id": "V11b.reading_inertia",
+   "item": "|F_cyl + m_rod g - F_spring| over the run (rod inertia in the reading) [v11b_FL_dt2e-4]",
+   "value": 1142.7705849082704,
+   "ref": null,
+   "tol": 1675.7802250032491,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "1.5 m_rod v_max / t_sat (dyn rev. 23)",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.extend.reached",
+   "item": "saturation reached (extend) [v11b_FL_dt2e-4]",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.extend.force",
+   "item": "|F_cyl| / limit after the first saturated step (extend) [v11b_FL_dt2e-4]",
+   "value": 1.0001483906614144,
+   "ref": null,
+   "tol": 1.01,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "limit 278737.808 N (YAML actuator.max_force_*_N)",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.extend.motion",
+   "item": "motion in the commanded direction from the first saturated step (extend) [v11b_FL_dt2e-4]",
+   "value": 2.202073500345847e-05,
+   "ref": null,
+   "tol": 4e-05,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "user decision 2026-10-21 U2 = (b); creep / (c_n v_max / k_n) = 0.7924539694793324",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.extend.motion_settled.info",
+   "item": "motion in the settled window t_sat + 0.5 s .. reversal (extend) [v11b_FL_dt2e-4]",
+   "value": 0.0,
+   "ref": null,
+   "tol": null,
+   "tol_kind": "info",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.extend.settled_mean_force",
+   "item": "settled-window mean force / limit (extend) [v11b_FL_dt2e-4]",
+   "value": 1.0000013199831594,
+   "ref": [
+    0.99,
+    1.01
+   ],
+   "tol": [
+    0.99,
+    1.01
+   ],
+   "tol_kind": "band",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.retract.reached",
+   "item": "saturation reached (retract) [v11b_FL_dt2e-4]",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.retract.force",
+   "item": "|F_cyl| / limit after the first saturated step (retract) [v11b_FL_dt2e-4]",
+   "value": 1.0010742240023032,
+   "ref": null,
+   "tol": 1.01,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "limit 79168.1349 N (YAML actuator.max_force_*_N)",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.retract.motion",
+   "item": "motion in the commanded direction from the first saturated step (retract) [v11b_FL_dt2e-4]",
+   "value": 2.032168171361981e-05,
+   "ref": null,
+   "tol": 4e-05,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "user decision 2026-10-21 U2 = (b); creep / (c_n v_max / k_n) = 0.7313106187384012",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.retract.motion_settled.info",
+   "item": "motion in the settled window t_sat + 0.5 s .. reversal (retract) [v11b_FL_dt2e-4]",
+   "value": 0.0,
+   "ref": null,
+   "tol": null,
+   "tol_kind": "info",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.retract.settled_mean_force",
+   "item": "settled-window mean force / limit (retract) [v11b_FL_dt2e-4]",
+   "value": 1.0000004409900454,
+   "ref": [
+    0.99,
+    1.01
+   ],
+   "tol": [
+    0.99,
+    1.01
+   ],
+   "tol_kind": "band",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.reverse_to_retract.steps",
+   "item": "steps from the reversed command to reversed motion [v11b_FL_dt2e-4]",
+   "value": 1.0,
+   "ref": null,
+   "tol": 2,
+   "tol_kind": "max",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.reverse_to_retract.full_speed",
+   "item": "time from the reversed command to |u| = v_max [v11b_FL_dt2e-4]",
+   "value": 0.09999999999998899,
+   "ref": null,
+   "tol": 0.10060000000000001,
+   "tol_kind": "max",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "acceleration limit actuator.command_ramp_s + hook lag",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.reverse_to_extend.steps",
+   "item": "steps from the reversed command to reversed motion [v11b_FL_dt2e-4]",
+   "value": 1.0,
+   "ref": null,
+   "tol": 2,
+   "tol_kind": "max",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.reverse_to_extend.full_speed",
+   "item": "time from the reversed command to |u| = v_max [v11b_FL_dt2e-4]",
+   "value": 0.10000000000021103,
+   "ref": null,
+   "tol": 0.10060000000000001,
+   "tol_kind": "max",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "acceleration limit actuator.command_ramp_s + hook lag",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V17.v11b_FL_dt2e-4.not_exceeded",
+   "item": "no 350 bar exceedance in locked samples (v11b_FL_dt2e-4)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "locked mask: u_cmd = 0 and u_applied = 0 (user decision 2026-10-21)",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V17.v11b_FL_dt2e-4.moving_relief",
+   "item": "moving samples: head pressure <= 210 bar relief x 1.01 (v11b_FL_dt2e-4)",
+   "value": 21003116.128538907,
+   "ref": null,
+   "tol": 21210000.0,
+   "tol_kind": "max",
+   "unit": "Pa",
+   "passed": true,
+   "ref_key": "YAML actuator.relief_pressure_moving_Pa",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_FL_dt2e-4"
+  },
+  {
+   "id": "V11b.reading_inertia",
+   "item": "|F_cyl + m_rod g - F_spring| over the run (rod inertia in the reading) [v11b_RL_dt2e-4]",
+   "value": 775.4019355730779,
+   "ref": null,
+   "tol": 1148.1634096032749,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "1.5 m_rod v_max / t_sat (dyn rev. 23)",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.extend.reached",
+   "item": "saturation reached (extend) [v11b_RL_dt2e-4]",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.extend.force",
+   "item": "|F_cyl| / limit after the first saturated step (extend) [v11b_RL_dt2e-4]",
+   "value": 1.0002064287891241,
+   "ref": null,
+   "tol": 1.01,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "limit 199569.673 N (YAML actuator.max_force_*_N)",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.extend.motion",
+   "item": "motion in the commanded direction from the first saturated step (extend) [v11b_RL_dt2e-4]",
+   "value": 2.626418336770797e-05,
+   "ref": null,
+   "tol": 4e-05,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "user decision 2026-10-21 U2 = (b); creep / (c_n v_max / k_n) = 0.8067031576179663",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.extend.motion_settled.info",
+   "item": "motion in the settled window t_sat + 0.5 s .. reversal (extend) [v11b_RL_dt2e-4]",
+   "value": 0.0,
+   "ref": null,
+   "tol": null,
+   "tol_kind": "info",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.extend.settled_mean_force",
+   "item": "settled-window mean force / limit (extend) [v11b_RL_dt2e-4]",
+   "value": 1.00000036889298,
+   "ref": [
+    0.99,
+    1.01
+   ],
+   "tol": [
+    0.99,
+    1.01
+   ],
+   "tol_kind": "band",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_head_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.retract.reached",
+   "item": "saturation reached (retract) [v11b_RL_dt2e-4]",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.retract.force",
+   "item": "|F_cyl| / limit after the first saturated step (retract) [v11b_RL_dt2e-4]",
+   "value": 1.000346855446535,
+   "ref": null,
+   "tol": 1.01,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "limit 65973.4457 N (YAML actuator.max_force_*_N)",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.retract.motion",
+   "item": "motion in the commanded direction from the first saturated step (retract) [v11b_RL_dt2e-4]",
+   "value": 2.82310677182096e-05,
+   "ref": null,
+   "tol": 4e-05,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "user decision 2026-10-21 U2 = (b); creep / (c_n v_max / k_n) = 0.8671159179922286",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.retract.motion_settled.info",
+   "item": "motion in the settled window t_sat + 0.5 s .. reversal (retract) [v11b_RL_dt2e-4]",
+   "value": 0.0,
+   "ref": null,
+   "tol": null,
+   "tol_kind": "info",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.retract.settled_mean_force",
+   "item": "settled-window mean force / limit (retract) [v11b_RL_dt2e-4]",
+   "value": 1.0000007361528898,
+   "ref": [
+    0.99,
+    1.01
+   ],
+   "tol": [
+    0.99,
+    1.01
+   ],
+   "tol_kind": "band",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / hydraulic_circuit / max_rod_side_force_N",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.reverse_to_retract.steps",
+   "item": "steps from the reversed command to reversed motion [v11b_RL_dt2e-4]",
+   "value": 1.0,
+   "ref": null,
+   "tol": 2,
+   "tol_kind": "max",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.reverse_to_retract.full_speed",
+   "item": "time from the reversed command to |u| = v_max [v11b_RL_dt2e-4]",
+   "value": 0.09999999999998899,
+   "ref": null,
+   "tol": 0.10060000000000001,
+   "tol_kind": "max",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "acceleration limit actuator.command_ramp_s + hook lag",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.reverse_to_extend.steps",
+   "item": "steps from the reversed command to reversed motion [v11b_RL_dt2e-4]",
+   "value": 1.0,
+   "ref": null,
+   "tol": 2,
+   "tol_kind": "max",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V11b.reverse_to_extend.full_speed",
+   "item": "time from the reversed command to |u| = v_max [v11b_RL_dt2e-4]",
+   "value": 0.10000000000021103,
+   "ref": null,
+   "tol": 0.10060000000000001,
+   "tol_kind": "max",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "acceleration limit actuator.command_ramp_s + hook lag",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V17.v11b_RL_dt2e-4.not_exceeded",
+   "item": "no 350 bar exceedance in locked samples (v11b_RL_dt2e-4)",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "YAML actuator.locked_pressure_limit_Pa",
+   "deviation": null,
+   "note": "locked mask: u_cmd = 0 and u_applied = 0 (user decision 2026-10-21)",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "V17.v11b_RL_dt2e-4.moving_relief",
+   "item": "moving samples: head pressure <= 210 bar relief x 1.01 (v11b_RL_dt2e-4)",
+   "value": 21004334.96457732,
+   "ref": null,
+   "tol": 21210000.0,
+   "tol_kind": "max",
+   "unit": "Pa",
+   "passed": true,
+   "ref_key": "YAML actuator.relief_pressure_moving_Pa",
+   "deviation": null,
+   "note": "",
+   "case": "v11b_RL_dt2e-4"
+  },
+  {
+   "id": "truth.C1_sensors_imu.imu_specific_force",
+   "item": "IMU specific force vs R^T (0,0,g), max |diff| / g (C1_sensors_imu)",
+   "value": 1.4491038953365323e-15,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "R from the recorded body quaternion (mounting-point rotation)",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.C1_sensors_imu.gyro_at_rest",
+   "item": "gyro truth max |omega| at rest (C1_sensors_imu)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 9.806649999999999e-06,
+   "tol_kind": "max",
+   "unit": "rad/s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x g in rad/s (no natural scale at rest)",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.C1_sensors_imu.pressure",
+   "item": "head pressure x A_head vs cylinder force, max relative (C1_sensors_imu)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.C1_sensors_imu.stroke_corrected",
+   "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (C1_sensors_imu)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x stroke",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.C1_sensors_imu.stroke_motor",
+   "item": "meas.stroke vs s_motor, max |diff| (m) (C1_sensors_imu)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.C1_sensors_imu.stroke_true_record",
+   "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (C1_sensors_imu)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.C1_chrono_point.imu_specific_force",
+   "item": "IMU specific force vs R^T (0,0,g), max |diff| / g (C1_chrono_point)",
+   "value": 1.0868279215023991e-15,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "R from the recorded body quaternion (mounting-point rotation)",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.C1_chrono_point.gyro_at_rest",
+   "item": "gyro truth max |omega| at rest (C1_chrono_point)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 9.806649999999999e-06,
+   "tol_kind": "max",
+   "unit": "rad/s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x g in rad/s (no natural scale at rest)",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.C1_chrono_point.pressure",
+   "item": "head pressure x A_head vs cylinder force, max relative (C1_chrono_point)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.C1_chrono_point.stroke_corrected",
+   "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (C1_chrono_point)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x stroke",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.C1_chrono_point.stroke_motor",
+   "item": "meas.stroke vs s_motor, max |diff| (m) (C1_chrono_point)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.C1_chrono_point.stroke_true_record",
+   "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (C1_chrono_point)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_sensors_imu.imu_specific_force",
+   "item": "IMU specific force vs R^T (0,0,g), max |diff| / g (far_sensors_imu)",
+   "value": 1.4491038953365323e-15,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "R from the recorded body quaternion (mounting-point rotation)",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_sensors_imu.gyro_at_rest",
+   "item": "gyro truth max |omega| at rest (far_sensors_imu)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 9.806649999999999e-06,
+   "tol_kind": "max",
+   "unit": "rad/s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x g in rad/s (no natural scale at rest)",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_sensors_imu.pressure",
+   "item": "head pressure x A_head vs cylinder force, max relative (far_sensors_imu)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_sensors_imu.stroke_corrected",
+   "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (far_sensors_imu)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x stroke",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_sensors_imu.stroke_motor",
+   "item": "meas.stroke vs s_motor, max |diff| (m) (far_sensors_imu)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_sensors_imu.stroke_true_record",
+   "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (far_sensors_imu)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_chrono_point.imu_specific_force",
+   "item": "IMU specific force vs R^T (0,0,g), max |diff| / g (far_chrono_point)",
+   "value": 1.0868279215023991e-15,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "R from the recorded body quaternion (mounting-point rotation)",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_chrono_point.gyro_at_rest",
+   "item": "gyro truth max |omega| at rest (far_chrono_point)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 9.806649999999999e-06,
+   "tol_kind": "max",
+   "unit": "rad/s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x g in rad/s (no natural scale at rest)",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_chrono_point.pressure",
+   "item": "head pressure x A_head vs cylinder force, max relative (far_chrono_point)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_chrono_point.stroke_corrected",
+   "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (far_chrono_point)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tolerance 1e-6 x stroke",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_chrono_point.stroke_motor",
+   "item": "meas.stroke vs s_motor, max |diff| (m) (far_chrono_point)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "truth.far_chrono_point.stroke_true_record",
+   "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (far_chrono_point)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 7e-07,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "",
+   "case": "truth_static"
+  },
+  {
+   "id": "S6.regression.bit_identical",
+   "item": "force saturation on/off, lift run never saturated: sampled states bit-identical",
+   "value": true,
+   "ref": true,
+   "passed": true,
+   "case": "regress_lift_*"
+  }
+ ],
+ "v11b": {
+  "v11b_FL_dt1e-5": {
+   "analysis": {
+    "command_changes": [
+     [
+      0.10000999999999392,
+      0.0,
+      0.0209243016
+     ],
+     [
+      3.0000100000111862,
+      0.0209243016,
+      -0.0209243016
+     ],
+     [
+      5.50001999996095,
+      -0.0209243016,
+      0.0209243016
+     ]
+    ],
+    "reading_inertia_max_N": 1118.981020784122,
+    "creep_reference_c_v_over_k_m": 2.7788030411314355e-05,
+    "phases": [
+     {
+      "direction": "extend",
+      "t_command_s": 0.10000999999999392,
+      "t_end_s": 3.000000000011186,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.10000000000006533
+      },
+      "saturated": true,
+      "t_first_saturation_s": 0.6648399999996091,
+      "force_at_first_saturation_N": 278738.51570662664,
+      "force_peak_N": 278761.2011345175,
+      "force_peak_over_limit": 1.0000839252295386,
+      "force_dip_N": 277617.2143044299,
+      "creep_from_first_m": 2.7551509175660627e-05,
+      "motion_settled_m": 0.0,
+      "t_settled_from_s": 1.1648499999991637,
+      "saturated_steps": 232042,
+      "settled_mean_force_over_limit": 1.0000000035349959,
+      "creep_over_reference": 0.9914883771122754
+     },
+     {
+      "direction": "retract",
+      "t_command_s": 3.0000100000111862,
+      "t_end_s": 5.50000999996095,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.10000000000065512
+      },
+      "saturated": true,
+      "t_first_saturation_s": 3.7089600000158307,
+      "force_at_first_saturation_N": -79169.5270152462,
+      "force_peak_N": -79191.91194058565,
+      "force_peak_over_limit": 1.0003003359952294,
+      "force_dip_N": -78047.54540175607,
+      "creep_from_first_m": 2.7525081782497907e-05,
+      "motion_settled_m": 0.0,
+      "t_settled_from_s": 4.208970000009826,
+      "saturated_steps": 177630,
+      "settled_mean_force_over_limit": 1.0000000097526902,
+      "creep_over_reference": 0.9905373419805462
+     },
+     {
+      "direction": "extend",
+      "t_command_s": 5.50001999996095,
+      "t_end_s": 5.9999999999420215,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.09999999999621423
+      },
+      "saturated": false
+     }
+    ]
+   },
+   "expected_creep_c_v_over_k_m": 2.7788030411314355e-05,
+   "expected_inertial_dip_m_v_over_dt_N": 223437.36333376655,
+   "mask_comparison_single_leg": {
+    "note": "leg index 0 repeated x4 (single leg)",
+    "all_samples_max_Pa": 21001762.354474373,
+    "locked_only_max_Pa": -78894.87944803743,
+    "moving_max_Pa": 21001762.354474373,
+    "locked_fraction": 0.016666666666666666
+   },
+   "model": {
+    "engine": "pychrono",
+    "model": "single leg (S6 V11b)",
+    "system_class": "ChSystemSMC",
+    "dt_s": 1e-05,
+    "dt_purpose": "explicit",
+    "dt_source": "argument dt",
+    "gravity_m_s2": [
+     0.0,
+     0.0,
+     -9.80665
+    ],
+    "gravity_source": "meta.gravity_m_s2 (vector (0, 0, -g), R1)",
+    "collision_system": "BULLET",
+    "timestepper": "EULER_IMPLICIT_LINEARIZED",
+    "solver": {
+     "type": "SPARSE_LU",
+     "lock_sparsity_pattern": true,
+     "openmp_preload": null,
+     "source": "R11 convention (no YAML key); user decision 2026-10-20 (06_analysis/01_chrono/01_cost/solver_benchmark.json)"
+    },
+    "contact": {
+     "contact_force_model": "Hooke",
+     "use_material_properties": false,
+     "tangential_displacement_model": "OneStep",
+     "slip_velocity_threshold_m_s": 0.0001,
+     "contact_stiff": false,
+     "source": "04_scripts/02_chrono/test_stick_friction.py (bushing cases); R5, R8"
+    },
+    "floor": {
+     "mass_kg": 1000000000.0,
+     "mass_source": "contact.rigid_floor.ground_body_mass_kg",
+     "fixed": true,
+     "top_z_m": -1.0509,
+     "top_z_source": "ground.crawler_bottom_z_m",
+     "plate": null
+    },
+    "params_sha256": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+    "leg": "FL",
+    "extension0_m": 0.4011,
+    "spring": {
+     "type": "ChLinkTSDA, two-way, pad bottom -> floor along the leg axis",
+     "k_N_m": 25905744.2,
+     "c_N_s_m": 34403.519,
+     "rest_length_m": 1.0,
+     "source": "contact.rigid_floor.L1.kn_per_pad_N_m / cn_per_pad_N_s_m"
+    },
+    "rod_mass_kg": 106.783666,
+    "force_limits_N": [
+     278737.808,
+     79168.1349
+    ],
+    "max_speed_m_s": 0.0209243016,
+    "ramp_s": 0.1,
+    "input_lag_steps": 1
+   },
+   "timing": {
+    "wall_s": 37.4956164000032,
+    "steps": 600000,
+    "us_per_step": 62.49269400000533
+   },
+   "_dir": "07_results/S6/batch_20261024_004403/v11b_FL_dt1e-5"
+  },
+  "v11b_RL_dt1e-5": {
+   "analysis": {
+    "command_changes": [
+     [
+      0.10000999999999392,
+      0.0,
+      0.0209243016
+     ],
+     [
+      3.0000100000111862,
+      0.0209243016,
+      -0.0209243016
+     ],
+     [
+      5.50001999996095,
+      -0.0209243016,
+      0.0209243016
+     ]
+    ],
+    "reading_inertia_max_N": 766.3280110522173,
+    "creep_reference_c_v_over_k_m": 3.255743220996044e-05,
+    "phases": [
+     {
+      "direction": "extend",
+      "t_command_s": 0.10000999999999392,
+      "t_end_s": 3.000000000011186,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.10000000000006533
+      },
+      "saturated": true,
+      "t_first_saturation_s": 0.6392199999997257,
+      "force_at_first_saturation_N": 199572.09854562182,
+      "force_peak_N": 199586.9494346764,
+      "force_peak_over_limit": 1.000086568437061,
+      "force_dip_N": 198801.25606065505,
+      "creep_from_first_m": 3.222386387413678e-05,
+      "motion_settled_m": 0.0,
+      "t_settled_from_s": 1.1392299999989959,
+      "saturated_steps": 234309,
+      "settled_mean_force_over_limit": 1.0000000029447944,
+      "creep_over_reference": 0.9897544642442161
+     },
+     {
+      "direction": "retract",
+      "t_command_s": 3.0000100000111862,
+      "t_end_s": 5.50000999996095,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.10000000000065512
+      },
+      "saturated": true,
+      "t_first_saturation_s": 3.699110000015766,
+      "force_at_first_saturation_N": -65974.2867504747,
+      "force_peak_N": -65990.51778625489,
+      "force_peak_over_limit": 1.0002587720873717,
+      "force_dip_N": -65205.08565982076,
+      "creep_from_first_m": 3.230507108864522e-05,
+      "motion_settled_m": 0.0,
+      "t_settled_from_s": 4.199120000010199,
+      "saturated_steps": 178317,
+      "settled_mean_force_over_limit": 1.0000000001185658,
+      "creep_over_reference": 0.9922487400207805
+     },
+     {
+      "direction": "extend",
+      "t_command_s": 5.50001999996095,
+      "t_end_s": 5.9999999999420215,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.09999999999621423
+      },
+      "saturated": false
+     }
+    ]
+   },
+   "expected_creep_c_v_over_k_m": 3.255743220996044e-05,
+   "expected_inertial_dip_m_v_over_dt_N": 153088.45461376998,
+   "mask_comparison_single_leg": {
+    "note": "leg index 0 repeated x4 (single leg)",
+    "all_samples_max_Pa": 21001817.89718879,
+    "locked_only_max_Pa": -75498.23401923793,
+    "moving_max_Pa": 21001817.89718879,
+    "locked_fraction": 0.016666666666666666
+   },
+   "model": {
+    "engine": "pychrono",
+    "model": "single leg (S6 V11b)",
+    "system_class": "ChSystemSMC",
+    "dt_s": 1e-05,
+    "dt_purpose": "explicit",
+    "dt_source": "argument dt",
+    "gravity_m_s2": [
+     0.0,
+     0.0,
+     -9.80665
+    ],
+    "gravity_source": "meta.gravity_m_s2 (vector (0, 0, -g), R1)",
+    "collision_system": "BULLET",
+    "timestepper": "EULER_IMPLICIT_LINEARIZED",
+    "solver": {
+     "type": "SPARSE_LU",
+     "lock_sparsity_pattern": true,
+     "openmp_preload": null,
+     "source": "R11 convention (no YAML key); user decision 2026-10-20 (06_analysis/01_chrono/01_cost/solver_benchmark.json)"
+    },
+    "contact": {
+     "contact_force_model": "Hooke",
+     "use_material_properties": false,
+     "tangential_displacement_model": "OneStep",
+     "slip_velocity_threshold_m_s": 0.0001,
+     "contact_stiff": false,
+     "source": "04_scripts/02_chrono/test_stick_friction.py (bushing cases); R5, R8"
+    },
+    "floor": {
+     "mass_kg": 1000000000.0,
+     "mass_source": "contact.rigid_floor.ground_body_mass_kg",
+     "fixed": true,
+     "top_z_m": -1.0509,
+     "top_z_source": "ground.crawler_bottom_z_m",
+     "plate": null
+    },
+    "params_sha256": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+    "leg": "RL",
+    "extension0_m": 0.3909,
+    "spring": {
+     "type": "ChLinkTSDA, two-way, pad bottom -> floor along the leg axis",
+     "k_N_m": 19504614.9,
+     "c_N_s_m": 30348.4527,
+     "rest_length_m": 1.0,
+     "source": "contact.rigid_floor.L1.kn_per_pad_N_m / cn_per_pad_N_s_m"
+    },
+    "rod_mass_kg": 73.1629937,
+    "force_limits_N": [
+     199569.673,
+     65973.4457
+    ],
+    "max_speed_m_s": 0.0209243016,
+    "ramp_s": 0.1,
+    "input_lag_steps": 1
+   },
+   "timing": {
+    "wall_s": 33.7576212999993,
+    "steps": 600000,
+    "us_per_step": 56.2627021666655
+   },
+   "_dir": "07_results/S6/batch_20261024_004403/v11b_RL_dt1e-5"
+  },
+  "v11b_FL_dt2e-4": {
+   "analysis": {
+    "command_changes": [
+     [
+      0.10020000000000082,
+      0.0,
+      0.0209243016
+     ],
+     [
+      3.0001999999997024,
+      0.0209243016,
+      -0.0209243016
+     ],
+     [
+      5.500200000002758,
+      -0.0209243016,
+      0.0209243016
+     ]
+    ],
+    "reading_inertia_max_N": 1142.7705849082704,
+    "creep_reference_c_v_over_k_m": 2.7788030411314355e-05,
+    "phases": [
+     {
+      "direction": "extend",
+      "t_command_s": 0.10020000000000082,
+      "t_end_s": 2.9999999999997025,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.10000000000000286
+      },
+      "saturated": true,
+      "t_first_saturation_s": 0.6651999999999594,
+      "force_at_first_saturation_N": 278779.17008769035,
+      "force_peak_N": 278779.17008769035,
+      "force_peak_over_limit": 1.0001483906614144,
+      "force_dip_N": 277610.36618926906,
+      "creep_from_first_m": 2.202073500345847e-05,
+      "motion_settled_m": 0.0,
+      "t_settled_from_s": 1.1653999999999043,
+      "saturated_steps": 11624,
+      "settled_mean_force_over_limit": 1.0000013199831594,
+      "creep_over_reference": 0.7924539694793324
+     },
+     {
+      "direction": "retract",
+      "t_command_s": 3.0001999999997024,
+      "t_end_s": 5.500000000002758,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.09999999999998899
+      },
+      "saturated": true,
+      "t_first_saturation_s": 3.7093999999996243,
+      "force_at_first_saturation_N": -79253.17921072716,
+      "force_peak_N": -79253.17921072716,
+      "force_peak_over_limit": 1.0010742240023032,
+      "force_dip_N": -78084.37531244439,
+      "creep_from_first_m": 2.032168171361981e-05,
+      "motion_settled_m": 0.0,
+      "t_settled_from_s": 4.209400000000034,
+      "saturated_steps": 8919,
+      "settled_mean_force_over_limit": 1.0000004409900454,
+      "creep_over_reference": 0.7313106187384012
+     },
+     {
+      "direction": "extend",
+      "t_command_s": 5.500200000002758,
+      "t_end_s": 6.000000000003813,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.10000000000021103
+      },
+      "saturated": false
+     }
+    ]
+   },
+   "expected_creep_c_v_over_k_m": 2.7788030411314355e-05,
+   "expected_inertial_dip_m_v_over_dt_N": 11171.868166688328,
+   "mask_comparison_single_leg": {
+    "note": "leg index 0 repeated x4 (single leg)",
+    "all_samples_max_Pa": 21003116.128538907,
+    "locked_only_max_Pa": -78894.8972122819,
+    "moving_max_Pa": 21003116.128538907,
+    "locked_fraction": 0.016666666666666666
+   },
+   "model": {
+    "engine": "pychrono",
+    "model": "single leg (S6 V11b)",
+    "system_class": "ChSystemSMC",
+    "dt_s": 0.0002,
+    "dt_purpose": "explicit",
+    "dt_source": "argument dt",
+    "gravity_m_s2": [
+     0.0,
+     0.0,
+     -9.80665
+    ],
+    "gravity_source": "meta.gravity_m_s2 (vector (0, 0, -g), R1)",
+    "collision_system": "BULLET",
+    "timestepper": "EULER_IMPLICIT_LINEARIZED",
+    "solver": {
+     "type": "SPARSE_LU",
+     "lock_sparsity_pattern": true,
+     "openmp_preload": null,
+     "source": "R11 convention (no YAML key); user decision 2026-10-20 (06_analysis/01_chrono/01_cost/solver_benchmark.json)"
+    },
+    "contact": {
+     "contact_force_model": "Hooke",
+     "use_material_properties": false,
+     "tangential_displacement_model": "OneStep",
+     "slip_velocity_threshold_m_s": 0.0001,
+     "contact_stiff": false,
+     "source": "04_scripts/02_chrono/test_stick_friction.py (bushing cases); R5, R8"
+    },
+    "floor": {
+     "mass_kg": 1000000000.0,
+     "mass_source": "contact.rigid_floor.ground_body_mass_kg",
+     "fixed": true,
+     "top_z_m": -1.0509,
+     "top_z_source": "ground.crawler_bottom_z_m",
+     "plate": null
+    },
+    "params_sha256": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+    "leg": "FL",
+    "extension0_m": 0.4011,
+    "spring": {
+     "type": "ChLinkTSDA, two-way, pad bottom -> floor along the leg axis",
+     "k_N_m": 25905744.2,
+     "c_N_s_m": 34403.519,
+     "rest_length_m": 1.0,
+     "source": "contact.rigid_floor.L1.kn_per_pad_N_m / cn_per_pad_N_s_m"
+    },
+    "rod_mass_kg": 106.783666,
+    "force_limits_N": [
+     278737.808,
+     79168.1349
+    ],
+    "max_speed_m_s": 0.0209243016,
+    "ramp_s": 0.1,
+    "input_lag_steps": 1
+   },
+   "timing": {
+    "wall_s": 2.1438568999874406,
+    "steps": 30000,
+    "us_per_step": 71.46189666624802
+   },
+   "_dir": "07_results/S6/batch_20261024_004403/v11b_FL_dt2e-4"
+  },
+  "v11b_RL_dt2e-4": {
+   "analysis": {
+    "command_changes": [
+     [
+      0.10020000000000082,
+      0.0,
+      0.0209243016
+     ],
+     [
+      3.0001999999997024,
+      0.0209243016,
+      -0.0209243016
+     ],
+     [
+      5.500200000002758,
+      -0.0209243016,
+      0.0209243016
+     ]
+    ],
+    "reading_inertia_max_N": 775.4019355730779,
+    "creep_reference_c_v_over_k_m": 3.255743220996044e-05,
+    "phases": [
+     {
+      "direction": "extend",
+      "t_command_s": 0.10020000000000082,
+      "t_end_s": 2.9999999999997025,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.10000000000000286
+      },
+      "saturated": true,
+      "t_first_saturation_s": 0.6395999999999622,
+      "force_at_first_saturation_N": 199610.86992594332,
+      "force_peak_N": 199610.86992594332,
+      "force_peak_over_limit": 1.0002064287891241,
+      "force_dip_N": 198778.18159148263,
+      "creep_from_first_m": 2.626418336770797e-05,
+      "motion_settled_m": 0.0,
+      "t_settled_from_s": 1.139799999999907,
+      "saturated_steps": 11742,
+      "settled_mean_force_over_limit": 1.00000036889298,
+      "creep_over_reference": 0.8067031576179663
+     },
+     {
+      "direction": "retract",
+      "t_command_s": 3.0001999999997024,
+      "t_end_s": 5.500000000002758,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.09999999999998899
+      },
+      "saturated": true,
+      "t_first_saturation_s": 3.6993999999996254,
+      "force_at_first_saturation_N": -65976.2542512992,
+      "force_peak_N": -65996.32894896771,
+      "force_peak_over_limit": 1.000346855446535,
+      "force_dip_N": -65179.46556190355,
+      "creep_from_first_m": 2.82310677182096e-05,
+      "motion_settled_m": 0.0,
+      "t_settled_from_s": 4.199400000000013,
+      "saturated_steps": 8937,
+      "settled_mean_force_over_limit": 1.0000007361528898,
+      "creep_over_reference": 0.8671159179922286
+     },
+     {
+      "direction": "extend",
+      "t_command_s": 5.500200000002758,
+      "t_end_s": 6.000000000003813,
+      "follow": {
+       "steps_to_first_motion": 1,
+       "time_to_full_speed_s": 0.10000000000021103
+      },
+      "saturated": false
+     }
+    ]
+   },
+   "expected_creep_c_v_over_k_m": 3.255743220996044e-05,
+   "expected_inertial_dip_m_v_over_dt_N": 7654.422730688499,
+   "mask_comparison_single_leg": {
+    "note": "leg index 0 repeated x4 (single leg)",
+    "all_samples_max_Pa": 21004334.96457732,
+    "locked_only_max_Pa": -75498.25107100321,
+    "moving_max_Pa": 21004334.96457732,
+    "locked_fraction": 0.016666666666666666
+   },
+   "model": {
+    "engine": "pychrono",
+    "model": "single leg (S6 V11b)",
+    "system_class": "ChSystemSMC",
+    "dt_s": 0.0002,
+    "dt_purpose": "explicit",
+    "dt_source": "argument dt",
+    "gravity_m_s2": [
+     0.0,
+     0.0,
+     -9.80665
+    ],
+    "gravity_source": "meta.gravity_m_s2 (vector (0, 0, -g), R1)",
+    "collision_system": "BULLET",
+    "timestepper": "EULER_IMPLICIT_LINEARIZED",
+    "solver": {
+     "type": "SPARSE_LU",
+     "lock_sparsity_pattern": true,
+     "openmp_preload": null,
+     "source": "R11 convention (no YAML key); user decision 2026-10-20 (06_analysis/01_chrono/01_cost/solver_benchmark.json)"
+    },
+    "contact": {
+     "contact_force_model": "Hooke",
+     "use_material_properties": false,
+     "tangential_displacement_model": "OneStep",
+     "slip_velocity_threshold_m_s": 0.0001,
+     "contact_stiff": false,
+     "source": "04_scripts/02_chrono/test_stick_friction.py (bushing cases); R5, R8"
+    },
+    "floor": {
+     "mass_kg": 1000000000.0,
+     "mass_source": "contact.rigid_floor.ground_body_mass_kg",
+     "fixed": true,
+     "top_z_m": -1.0509,
+     "top_z_source": "ground.crawler_bottom_z_m",
+     "plate": null
+    },
+    "params_sha256": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+    "leg": "RL",
+    "extension0_m": 0.3909,
+    "spring": {
+     "type": "ChLinkTSDA, two-way, pad bottom -> floor along the leg axis",
+     "k_N_m": 19504614.9,
+     "c_N_s_m": 30348.4527,
+     "rest_length_m": 1.0,
+     "source": "contact.rigid_floor.L1.kn_per_pad_N_m / cn_per_pad_N_s_m"
+    },
+    "rod_mass_kg": 73.1629937,
+    "force_limits_N": [
+     199569.673,
+     65973.4457
+    ],
+    "max_speed_m_s": 0.0209243016,
+    "ramp_s": 0.1,
+    "input_lag_steps": 1
+   },
+   "timing": {
+    "wall_s": 2.125684499987983,
+    "steps": 30000,
+    "us_per_step": 70.85614999959944
+   },
+   "_dir": "07_results/S6/batch_20261024_004403/v11b_RL_dt2e-4"
+  }
+ },
+ "v17": {
+  "smoke60_top": {
+   "v17": {
+    "true_pressure": {
+     "all_samples": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909630.272592131,
+      "max_leg": "FL",
+      "max_t_s": 22.219999999974892,
+      "max_per_leg_Pa": {
+       "FL": 8909630.272592131,
+       "FR": 8739311.375314694,
+       "RL": 7570546.030087798,
+       "RR": 7407354.857203477
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "locked_fraction_per_leg": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "locked_only": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909630.272592131,
+      "max_leg": "FL",
+      "max_t_s": 22.219999999974892,
+      "max_per_leg_Pa": {
+       "FL": 8909630.272592131,
+       "FR": 8739311.375314694,
+       "RL": 7570546.030087798,
+       "RR": 7407354.857203477
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "moving_max_Pa": null
+    },
+    "meas_pressure_ideal": {
+     "all_samples": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909630.272592131,
+      "max_leg": "FL",
+      "max_t_s": 22.219999999974892,
+      "max_per_leg_Pa": {
+       "FL": 8909630.272592131,
+       "FR": 8739311.375314694,
+       "RL": 7570546.030087798,
+       "RR": 7407354.857203477
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "locked_fraction_per_leg": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "locked_only": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909630.272592131,
+      "max_leg": "FL",
+      "max_t_s": 22.219999999974892,
+      "max_per_leg_Pa": {
+       "FL": 8909630.272592131,
+       "FR": 8739311.375314694,
+       "RL": 7570546.030087798,
+       "RR": 7407354.857203477
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "moving_max_Pa": null
+    },
+    "tol_Pa": [
+     7159.392036406514,
+     7159.392036406514,
+     9999.481465303585,
+     9999.481465303585
+    ],
+    "tol_basis": "0.1 % W/4 / A_head, W = statics total_weight_incl_rods_N (S1 V1 tolerance, proposal)",
+    "ref_max_static_head_pressure_Pa": [
+     8907030.0,
+     8737890.0,
+     7571950.0,
+     7410030.0
+    ],
+    "step_monitor_max_pressure_Pa": [
+     8909632.376347166,
+     8739313.801232979,
+     7570548.031493115,
+     7407357.435307294
+    ]
+   },
+   "imu_residual_settled": {
+    "max_abs_over_g": 0.00031423011758126003,
+    "mean_m_s2": [
+     7.620563757681464e-06,
+     -2.48517486203372e-05,
+     3.921796784375431e-06
+    ],
+    "rms_m_s2": [
+     0.0007404448072074103,
+     0.0007280862183050331,
+     0.0007259855215861684
+    ],
+    "max_abs_m_s2": [
+     0.0030815447825782633,
+     0.002584902161797433,
+     0.002904686932922118
+    ]
+   },
+   "attitude": {
+    "roll_mean_deg": -0.0018907065782025375,
+    "pitch_mean_deg": 0.010336387078603801,
+    "roll_span_deg": 6.820674735030915e-06,
+    "pitch_span_deg": 4.133096361901012e-06,
+    "drift_roll_deg": -2.3823936587473015e-06,
+    "drift_pitch_deg": -1.5421190850163635e-07
+   },
+   "cylinder_force": {
+    "min_N": [
+     118253.13579012982,
+     115989.48003860342,
+     71938.10320213238,
+     70387.27022941704
+    ],
+    "max_N": [
+     118259.56291344778,
+     115998.88118685687,
+     71945.30469204178,
+     70394.44711723116
+    ],
+    "mean_N": [
+     118256.54703431456,
+     115993.68925040466,
+     71941.90931928028,
+     70391.39141486275
+    ],
+    "f_min_N": 9414.58911,
+    "all_above_f_min": true
+   },
+   "monitor": {
+    "steps": 300000,
+    "nonfinite_steps": 0,
+    "first_nonfinite_t_s": null,
+    "cylinder_force_max_N": [
+     118259.5908370701,
+     115998.91338662579,
+     71945.32371203252,
+     70394.471617771
+    ],
+    "cylinder_force_max_t_s": [
+     57.1453999998935,
+     60.29339999988616,
+     72.85100000017134,
+     28.370999999960556
+    ],
+    "cylinder_force_min_N": [
+     118253.12473962187,
+     115989.46091329375,
+     71938.08842607957,
+     70387.2493265111
+    ],
+    "cylinder_force_min_t_s": [
+     41.58179999992977,
+     15.178399999991303,
+     70.19640000008322,
+     45.617399999920366
+    ],
+    "saturation_step_count": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "stroke_motor_minus_true_mm": [
+    4.0190317290175965,
+    3.9421269194331483,
+    3.337696223946539,
+    3.2657609944856567
+   ],
+   "_dir": "07_results/S6/batch_20261024_004403/smoke60_top"
+  },
+  "v17_top": {
+   "v17": {
+    "true_pressure": {
+     "all_samples": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909630.272592131,
+      "max_leg": "FL",
+      "max_t_s": 22.219999999974892,
+      "max_per_leg_Pa": {
+       "FL": 8909630.272592131,
+       "FR": 8739311.375314694,
+       "RL": 7570538.583646819,
+       "RR": 7407353.933674758
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "locked_fraction_per_leg": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "locked_only": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909630.272592131,
+      "max_leg": "FL",
+      "max_t_s": 22.219999999974892,
+      "max_per_leg_Pa": {
+       "FL": 8909630.272592131,
+       "FR": 8739311.375314694,
+       "RL": 7570538.583646819,
+       "RR": 7407353.933674758
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "moving_max_Pa": null
+    },
+    "meas_pressure_ideal": {
+     "all_samples": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909630.272592131,
+      "max_leg": "FL",
+      "max_t_s": 22.219999999974892,
+      "max_per_leg_Pa": {
+       "FL": 8909630.272592131,
+       "FR": 8739311.375314694,
+       "RL": 7570538.583646819,
+       "RR": 7407353.933674758
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "locked_fraction_per_leg": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "locked_only": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909630.272592131,
+      "max_leg": "FL",
+      "max_t_s": 22.219999999974892,
+      "max_per_leg_Pa": {
+       "FL": 8909630.272592131,
+       "FR": 8739311.375314694,
+       "RL": 7570538.583646819,
+       "RR": 7407353.933674758
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "moving_max_Pa": null
+    },
+    "tol_Pa": [
+     7159.392036406514,
+     7159.392036406514,
+     9999.481465303585,
+     9999.481465303585
+    ],
+    "tol_basis": "0.1 % W/4 / A_head, W = statics total_weight_incl_rods_N (S1 V1 tolerance, proposal)",
+    "ref_max_static_head_pressure_Pa": [
+     8907030.0,
+     8737890.0,
+     7571950.0,
+     7410030.0
+    ],
+    "step_monitor_max_pressure_Pa": [
+     8909631.486432955,
+     8739313.464393768,
+     7570545.60699513,
+     7407355.582694374
+    ]
+   },
+   "imu_residual_settled": {
+    "max_abs_over_g": 2.566235403992414e-05,
+    "mean_m_s2": [
+     -1.4024698573034772e-07,
+     -3.472001125531327e-08,
+     2.467102049372727e-07
+    ],
+    "rms_m_s2": [
+     4.7389845352621044e-05,
+     3.564903980762969e-05,
+     8.023956001130309e-05
+    ],
+    "max_abs_m_s2": [
+     0.0001480162247533925,
+     0.00010738814549133386,
+     0.00025166172424562205
+    ]
+   },
+   "attitude": {
+    "roll_mean_deg": -0.0018906825019951977,
+    "pitch_mean_deg": 0.010336410211816499,
+    "roll_span_deg": 6.820674735030915e-06,
+    "pitch_span_deg": 3.1296285754184305e-06,
+    "drift_roll_deg": -8.877742227132637e-07,
+    "drift_pitch_deg": 1.8469258331391125e-07
+   },
+   "cylinder_force": {
+    "min_N": [
+     118253.13875144212,
+     115989.48003860342,
+     71938.12651320998,
+     70387.34698018567
+    ],
+    "max_N": [
+     118259.56291344778,
+     115998.88118685687,
+     71945.23392614683,
+     70394.43834064426
+    ],
+    "mean_N": [
+     118256.56648415384,
+     115993.60837456264,
+     71941.85955707742,
+     70391.39189231441
+    ],
+    "f_min_N": 9414.58911,
+    "all_above_f_min": true
+   },
+   "monitor": {
+    "steps": 50000,
+    "nonfinite_steps": 0,
+    "first_nonfinite_t_s": null,
+    "cylinder_force_max_N": [
+     118259.579025035,
+     115998.90891568184,
+     71945.3006712577,
+     70394.4540118017
+    ],
+    "cylinder_force_max_t_s": [
+     18.451199999983675,
+     21.494799999976582,
+     17.486399999985924,
+     17.33779999998627
+    ],
+    "cylinder_force_min_N": [
+     118253.13875144212,
+     115989.46091329375,
+     71938.10767311956,
+     70387.25648706681
+    ],
+    "cylinder_force_min_t_s": [
+     21.91999999997559,
+     15.178399999991303,
+     15.056999999991586,
+     15.742599999989988
+    ],
+    "saturation_step_count": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "stroke_motor_minus_true_mm": [
+    4.019032390034038,
+    3.942124170810906,
+    3.337693915262786,
+    3.2657610166366933
+   ],
+   "_dir": "07_results/S6/batch_20261024_004403/v17_top"
+  },
+  "v17_middle": {
+   "v17": {
+    "true_pressure": {
+     "all_samples": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909164.387715256,
+      "max_leg": "FL",
+      "max_t_s": 23.659999999971536,
+      "max_per_leg_Pa": {
+       "FL": 8909164.387715256,
+       "FR": 8739080.4786161,
+       "RL": 7571023.778708242,
+       "RR": 7408095.867456818
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "locked_fraction_per_leg": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "locked_only": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909164.387715256,
+      "max_leg": "FL",
+      "max_t_s": 23.659999999971536,
+      "max_per_leg_Pa": {
+       "FL": 8909164.387715256,
+       "FR": 8739080.4786161,
+       "RL": 7571023.778708242,
+       "RR": 7408095.867456818
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "moving_max_Pa": null
+    },
+    "meas_pressure_ideal": {
+     "all_samples": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909164.387715256,
+      "max_leg": "FL",
+      "max_t_s": 23.659999999971536,
+      "max_per_leg_Pa": {
+       "FL": 8909164.387715256,
+       "FR": 8739080.4786161,
+       "RL": 7571023.778708242,
+       "RR": 7408095.867456818
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "locked_fraction_per_leg": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "locked_only": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8909164.387715256,
+      "max_leg": "FL",
+      "max_t_s": 23.659999999971536,
+      "max_per_leg_Pa": {
+       "FL": 8909164.387715256,
+       "FR": 8739080.4786161,
+       "RL": 7571023.778708242,
+       "RR": 7408095.867456818
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "moving_max_Pa": null
+    },
+    "tol_Pa": [
+     7159.392036406514,
+     7159.392036406514,
+     9999.481465303585,
+     9999.481465303585
+    ],
+    "tol_basis": "0.1 % W/4 / A_head, W = statics total_weight_incl_rods_N (S1 V1 tolerance, proposal)",
+    "ref_max_static_head_pressure_Pa": null,
+    "step_monitor_max_pressure_Pa": [
+     8909167.604112543,
+     8739088.007348193,
+     7571033.165287816,
+     7408098.636454871
+    ]
+   },
+   "imu_residual_settled": {
+    "max_abs_over_g": 3.603091618131827e-05,
+    "mean_m_s2": [
+     -3.869312321212637e-07,
+     7.420011139177174e-08,
+     4.376629550222333e-07
+    ],
+    "rms_m_s2": [
+     5.7993958696515835e-05,
+     4.3705776511919085e-05,
+     0.00013093642234159058
+    ],
+    "max_abs_m_s2": [
+     0.0001815571264593655,
+     0.00012175744460997959,
+     0.0003533425841695248
+    ]
+   },
+   "attitude": {
+    "roll_mean_deg": -0.0018872605547704104,
+    "pitch_mean_deg": 0.01033108712804755,
+    "roll_span_deg": 4.385067637260789e-06,
+    "pitch_span_deg": 3.299106686923195e-06,
+    "drift_roll_deg": -1.0187459232970705e-06,
+    "drift_pitch_deg": -1.2698413191947894e-06
+   },
+   "cylinder_force": {
+    "min_N": [
+     118246.94437943315,
+     115986.45504496091,
+     71940.49366831683,
+     70394.21017118472
+    ],
+    "max_N": [
+     118253.37911678937,
+     115995.81644210109,
+     71949.84488900081,
+     70401.4891731469
+    ],
+    "mean_N": [
+     118249.91452418007,
+     115990.57708895509,
+     71945.25957302388,
+     70397.87998589283
+    ],
+    "f_min_N": 9414.58911,
+    "all_above_f_min": true
+   },
+   "monitor": {
+    "steps": 50000,
+    "nonfinite_steps": 0,
+    "first_nonfinite_t_s": null,
+    "cylinder_force_max_N": [
+     118253.42180876712,
+     115995.91637268623,
+     71949.93409264938,
+     70401.51548781533
+    ],
+    "cylinder_force_max_t_s": [
+     17.151799999986704,
+     23.42199999997209,
+     23.55059999997179,
+     18.050999999984608
+    ],
+    "cylinder_force_min_N": [
+     118246.91191997626,
+     115986.36998862398,
+     71940.44692056174,
+     70394.12102154213
+    ],
+    "cylinder_force_min_t_s": [
+     16.2957999999887,
+     15.927399999989557,
+     23.485799999971942,
+     17.08399999998686
+    ],
+    "saturation_step_count": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "stroke_motor_minus_true_mm": [
+    4.018806318506789,
+    3.9420211504425486,
+    3.337851656702968,
+    3.2660620273499568
+   ],
+   "_dir": "07_results/S6/batch_20261024_004403/v17_middle"
+  },
+  "v17_bottom": {
+   "v17": {
+    "true_pressure": {
+     "all_samples": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8908699.262392001,
+      "max_leg": "FL",
+      "max_t_s": 20.819999999978155,
+      "max_per_leg_Pa": {
+       "FL": 8908699.262392001,
+       "FR": 8738853.851117838,
+       "RL": 7571505.092108035,
+       "RR": 7408806.563736165
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "locked_fraction_per_leg": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "locked_only": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8908699.262392001,
+      "max_leg": "FL",
+      "max_t_s": 20.819999999978155,
+      "max_per_leg_Pa": {
+       "FL": 8908699.262392001,
+       "FR": 8738853.851117838,
+       "RL": 7571505.092108035,
+       "RR": 7408806.563736165
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "moving_max_Pa": null
+    },
+    "meas_pressure_ideal": {
+     "all_samples": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8908699.262392001,
+      "max_leg": "FL",
+      "max_t_s": 20.819999999978155,
+      "max_per_leg_Pa": {
+       "FL": 8908699.262392001,
+       "FR": 8738853.851117838,
+       "RL": 7571505.092108035,
+       "RR": 7408806.563736165
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "locked_fraction_per_leg": {
+      "FL": 1.0,
+      "FR": 1.0,
+      "RL": 1.0,
+      "RR": 1.0
+     },
+     "locked_only": {
+      "limit_Pa": 35000000.0,
+      "max_pressure_Pa": 8908699.262392001,
+      "max_leg": "FL",
+      "max_t_s": 20.819999999978155,
+      "max_per_leg_Pa": {
+       "FL": 8908699.262392001,
+       "FR": 8738853.851117838,
+       "RL": 7571505.092108035,
+       "RR": 7408806.563736165
+      },
+      "exceed_sample_count_per_leg": {
+       "FL": 0,
+       "FR": 0,
+       "RL": 0,
+       "RR": 0
+      },
+      "is_exceeded": false,
+      "first_exceed_t_s": null,
+      "first_exceed_leg": null
+     },
+     "moving_max_Pa": null
+    },
+    "tol_Pa": [
+     7159.392036406514,
+     7159.392036406514,
+     9999.481465303585,
+     9999.481465303585
+    ],
+    "tol_basis": "0.1 % W/4 / A_head, W = statics total_weight_incl_rods_N (S1 V1 tolerance, proposal)",
+    "ref_max_static_head_pressure_Pa": null,
+    "step_monitor_max_pressure_Pa": [
+     8908699.37293482,
+     8738856.85536777,
+     7571508.319830262,
+     7408811.911397297
+    ]
+   },
+   "imu_residual_settled": {
+    "max_abs_over_g": 2.9011684070755395e-05,
+    "mean_m_s2": [
+     1.418542822006221e-07,
+     -6.600986951944726e-07,
+     -1.3545665152392415e-07
+    ],
+    "rms_m_s2": [
+     4.9666095105470024e-05,
+     6.387078129746535e-05,
+     0.00010221548543212287
+    ],
+    "max_abs_m_s2": [
+     0.00013084782941419283,
+     0.00017244841074399932,
+     0.0002845074315924734
+    ]
+   },
+   "attitude": {
+    "roll_mean_deg": -0.0018841867906971607,
+    "pitch_mean_deg": 0.010326191573443506,
+    "roll_span_deg": 9.257910763577981e-06,
+    "pitch_span_deg": 3.774408437606444e-06,
+    "drift_roll_deg": -8.612974439407926e-07,
+    "drift_pitch_deg": -9.588462832558348e-07
+   },
+   "cylinder_force": {
+    "min_N": [
+     118237.76252730099,
+     115983.34954686115,
+     71945.10638749841,
+     70399.0683099665
+    ],
+    "max_N": [
+     118247.20540186012,
+     115992.80836341895,
+     71954.41896319082,
+     70408.2431457346
+    ],
+    "mean_N": [
+     118242.68075326974,
+     115987.93369377378,
+     71949.2679519776,
+     70403.67404926551
+    ],
+    "f_min_N": 9414.58911,
+    "all_above_f_min": true
+   },
+   "monitor": {
+    "steps": 50000,
+    "nonfinite_steps": 0,
+    "first_nonfinite_t_s": null,
+    "cylinder_force_max_N": [
+     118247.20686912026,
+     115992.8482395163,
+     71954.44963726086,
+     70408.29396625771
+    ],
+    "cylinder_force_max_t_s": [
+     20.819799999978155,
+     16.285399999988723,
+     23.856999999971077,
+     21.694999999976115
+    ],
+    "cylinder_force_min_N": [
+     118237.65419554517,
+     115983.24611998684,
+     71942.83602603113,
+     70398.87770585042
+    ],
+    "cylinder_force_min_t_s": [
+     16.641599999987893,
+     15.382999999990826,
+     22.406199999974458,
+     17.80619999998518
+    ],
+    "saturation_step_count": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "stroke_motor_minus_true_mm": [
+    4.018560473726618,
+    3.9419313128024958,
+    3.3380376227334065,
+    3.2663308390012307
+   ],
+   "_dir": "07_results/S6/batch_20261024_004403/v17_bottom"
+  }
+ },
+ "runner": {
+  "v17_top": {
+   "n_steps": 50000,
+   "n_control": 500,
+   "steps_per_period": 100,
+   "wall_s": 21.62225000000035,
+   "us_per_step": 432.445000000007,
+   "commands_all_zero": true,
+   "meta": {
+    "runner": "outrigger_sim.runner.run_closed_loop",
+    "control_period_s": 0.02,
+    "steps_per_period": 100,
+    "zero_order_hold": "command applied at the control instant t_n drives step n+1 on",
+    "record_u_cmd": "command held during the step ending at the sample time",
+    "record_instants": "control instants only (no row at the start time)",
+    "controller": {
+     "controller": "hold",
+     "period_s": 0.02
+    },
+    "sensors": {
+     "model": "outrigger_sim.sensors.suite",
+     "imu_mount_point_body_m": [
+      0.31,
+      0.88,
+      0.04
+     ],
+     "imu": {
+      "grade": null,
+      "accel_bias_m_s2": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "accel_noise_density_m_s2_rtHz": 0.0,
+      "accel_resolution_m_s2": 0.0,
+      "gyro_bias_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "gyro_noise_density_rad_s_rtHz": 0.0,
+      "gyro_resolution_rad_s": 0.0,
+      "zero_offset_m_s2": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "delay_samples": 0,
+      "sample_period_s": 0.02
+     },
+     "legs": {
+      "pressure_noise_std_Pa": 0.0,
+      "pressure_resolution_Pa": 0.0,
+      "stroke_noise_std_m": 0.0,
+      "stroke_resolution_m": 0.0,
+      "rod_pressure_noise_std_Pa": 0.0,
+      "rod_pressure_resolution_Pa": 0.0
+     }
+    },
+    "sensor_seed": 20261021,
+    "placement": {
+     "mode": "pcore",
+     "efficiency_classes": [
+      0,
+      1
+     ],
+     "affinity_ok": true,
+     "affinity_logical_processors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ],
+     "power_throttling_off_ok": true
+    },
+    "start_t_s": 14.999999999991719,
+    "n_steps": 50000,
+    "command_delay_periods": 0,
+    "command_delay_note": "delay 0"
+   }
+  },
+  "smoke60_top": {
+   "n_steps": 300000,
+   "n_control": 3000,
+   "steps_per_period": 100,
+   "wall_s": 112.56941519999236,
+   "us_per_step": 375.2313839999745,
+   "commands_all_zero": true,
+   "meta": {
+    "runner": "outrigger_sim.runner.run_closed_loop",
+    "control_period_s": 0.02,
+    "steps_per_period": 100,
+    "zero_order_hold": "command applied at the control instant t_n drives step n+1 on",
+    "record_u_cmd": "command held during the step ending at the sample time",
+    "record_instants": "control instants only (no row at the start time)",
+    "controller": {
+     "controller": "hold",
+     "period_s": 0.02
+    },
+    "sensors": {
+     "model": "outrigger_sim.sensors.suite",
+     "imu_mount_point_body_m": [
+      0.31,
+      0.88,
+      0.04
+     ],
+     "imu": {
+      "grade": "ideal",
+      "accel_bias_m_s2": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "accel_noise_density_m_s2_rtHz": 0.00014709975,
+      "accel_resolution_m_s2": 0.0,
+      "gyro_bias_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "gyro_noise_density_rad_s_rtHz": 0.0,
+      "gyro_resolution_rad_s": 0.0,
+      "zero_offset_m_s2": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "delay_samples": 0,
+      "sample_period_s": 0.02
+     },
+     "legs": {
+      "pressure_noise_std_Pa": 0.0,
+      "pressure_resolution_Pa": 0.0,
+      "stroke_noise_std_m": 0.0,
+      "stroke_resolution_m": 0.0,
+      "rod_pressure_noise_std_Pa": 0.0,
+      "rod_pressure_resolution_Pa": 0.0
+     }
+    },
+    "sensor_seed": 20261021,
+    "placement": {
+     "mode": "pcore",
+     "efficiency_classes": [
+      0,
+      1
+     ],
+     "affinity_ok": true,
+     "affinity_logical_processors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ],
+     "power_throttling_off_ok": true
+    },
+    "start_t_s": 14.999999999991719,
+    "n_steps": 300000,
+    "command_delay_periods": 0,
+    "command_delay_note": "delay 0"
+   }
+  },
+  "v17_middle": {
+   "n_steps": 50000,
+   "n_control": 500,
+   "steps_per_period": 100,
+   "wall_s": 21.88903669999854,
+   "us_per_step": 437.78073399997083,
+   "commands_all_zero": true,
+   "meta": {
+    "runner": "outrigger_sim.runner.run_closed_loop",
+    "control_period_s": 0.02,
+    "steps_per_period": 100,
+    "zero_order_hold": "command applied at the control instant t_n drives step n+1 on",
+    "record_u_cmd": "command held during the step ending at the sample time",
+    "record_instants": "control instants only (no row at the start time)",
+    "controller": {
+     "controller": "hold",
+     "period_s": 0.02
+    },
+    "sensors": {
+     "model": "outrigger_sim.sensors.suite",
+     "imu_mount_point_body_m": [
+      0.31,
+      0.88,
+      0.04
+     ],
+     "imu": {
+      "grade": null,
+      "accel_bias_m_s2": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "accel_noise_density_m_s2_rtHz": 0.0,
+      "accel_resolution_m_s2": 0.0,
+      "gyro_bias_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "gyro_noise_density_rad_s_rtHz": 0.0,
+      "gyro_resolution_rad_s": 0.0,
+      "zero_offset_m_s2": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "delay_samples": 0,
+      "sample_period_s": 0.02
+     },
+     "legs": {
+      "pressure_noise_std_Pa": 0.0,
+      "pressure_resolution_Pa": 0.0,
+      "stroke_noise_std_m": 0.0,
+      "stroke_resolution_m": 0.0,
+      "rod_pressure_noise_std_Pa": 0.0,
+      "rod_pressure_resolution_Pa": 0.0
+     }
+    },
+    "sensor_seed": 20261021,
+    "placement": {
+     "mode": "pcore",
+     "efficiency_classes": [
+      0,
+      1
+     ],
+     "affinity_ok": true,
+     "affinity_logical_processors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ],
+     "power_throttling_off_ok": true
+    },
+    "start_t_s": 14.999999999991719,
+    "n_steps": 50000,
+    "command_delay_periods": 0,
+    "command_delay_note": "delay 0"
+   }
+  },
+  "v17_bottom": {
+   "n_steps": 50000,
+   "n_control": 500,
+   "steps_per_period": 100,
+   "wall_s": 21.538200900002266,
+   "us_per_step": 430.7640180000453,
+   "commands_all_zero": true,
+   "meta": {
+    "runner": "outrigger_sim.runner.run_closed_loop",
+    "control_period_s": 0.02,
+    "steps_per_period": 100,
+    "zero_order_hold": "command applied at the control instant t_n drives step n+1 on",
+    "record_u_cmd": "command held during the step ending at the sample time",
+    "record_instants": "control instants only (no row at the start time)",
+    "controller": {
+     "controller": "hold",
+     "period_s": 0.02
+    },
+    "sensors": {
+     "model": "outrigger_sim.sensors.suite",
+     "imu_mount_point_body_m": [
+      0.31,
+      0.88,
+      0.04
+     ],
+     "imu": {
+      "grade": null,
+      "accel_bias_m_s2": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "accel_noise_density_m_s2_rtHz": 0.0,
+      "accel_resolution_m_s2": 0.0,
+      "gyro_bias_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "gyro_noise_density_rad_s_rtHz": 0.0,
+      "gyro_resolution_rad_s": 0.0,
+      "zero_offset_m_s2": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "delay_samples": 0,
+      "sample_period_s": 0.02
+     },
+     "legs": {
+      "pressure_noise_std_Pa": 0.0,
+      "pressure_resolution_Pa": 0.0,
+      "stroke_noise_std_m": 0.0,
+      "stroke_resolution_m": 0.0,
+      "rod_pressure_noise_std_Pa": 0.0,
+      "rod_pressure_resolution_Pa": 0.0
+     }
+    },
+    "sensor_seed": 20261021,
+    "placement": {
+     "mode": "pcore",
+     "efficiency_classes": [
+      0,
+      1
+     ],
+     "affinity_ok": true,
+     "affinity_logical_processors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ],
+     "power_throttling_off_ok": true
+    },
+    "start_t_s": 14.999999999991719,
+    "n_steps": 50000,
+    "command_delay_periods": 0,
+    "command_delay_note": "delay 0"
+   }
+  }
+ },
+ "truth_static": {
+  "case": "truth_static",
+  "settings": {
+   "kind": "truth",
+   "level": "top",
+   "dt": 0.0002
+  },
+  "pose_deg": [
+   2.0,
+   -1.5,
+   10.0
+  ],
+  "quat_wxyz": [
+   0.9959377291075766,
+   0.01852516493124525,
+   -0.011516852554434973,
+   0.08736257843924246
+  ],
+  "expected_f_m_s2": [
+   0.25670817012340424,
+   0.3421298697873163,
+   9.797317606880528
+  ],
+  "variants": [
+   {
+    "point": "C1",
+    "point_body_m": [
+     0.31,
+     0.88,
+     0.04
+    ],
+    "method": "sensors_imu",
+    "f_mean_m_s2": [
+     0.2567081701234047,
+     0.3421298697873166,
+     9.797317606880522
+    ],
+    "F_cyl_mean_N": [
+     -1046.1934910290495,
+     -1046.1934910290495,
+     -716.8010863490991,
+     -716.8010863490991
+    ],
+    "n_samples": 10,
+    "monitor": {
+     "steps": 1000,
+     "nonfinite_steps": 0,
+     "first_nonfinite_t_s": null,
+     "cylinder_force_max_N": [
+      -1046.1934873242467,
+      -1046.1934886579756,
+      -716.8010863490991,
+      -716.8010847245545
+     ],
+     "cylinder_force_max_t_s": [
+      0.0004,
+      0.0004,
+      0.0004,
+      0.0004
+     ],
+     "cylinder_force_min_N": [
+      -1046.193494437468,
+      -1046.1934931037388,
+      -716.8010865521674,
+      -716.801088176712
+     ],
+     "cylinder_force_min_t_s": [
+      0.0002,
+      0.0002,
+      0.0002,
+      0.0002
+     ],
+     "saturation_step_count": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "point": "C1",
+    "point_body_m": [
+     0.31,
+     0.88,
+     0.04
+    ],
+    "method": "chrono_point",
+    "f_mean_m_s2": [
+     0.2567081701234047,
+     0.3421298697873166,
+     9.79731760688052
+    ],
+    "F_cyl_mean_N": [
+     -1046.1934910290495,
+     -1046.1934910290495,
+     -716.8010863490991,
+     -716.8010863490991
+    ],
+    "n_samples": 10,
+    "monitor": {
+     "steps": 1000,
+     "nonfinite_steps": 0,
+     "first_nonfinite_t_s": null,
+     "cylinder_force_max_N": [
+      -1046.1934873242467,
+      -1046.1934886579756,
+      -716.8010863490991,
+      -716.8010847245545
+     ],
+     "cylinder_force_max_t_s": [
+      0.0004,
+      0.0004,
+      0.0004,
+      0.0004
+     ],
+     "cylinder_force_min_N": [
+      -1046.193494437468,
+      -1046.1934931037388,
+      -716.8010865521674,
+      -716.801088176712
+     ],
+     "cylinder_force_min_t_s": [
+      0.0002,
+      0.0002,
+      0.0002,
+      0.0002
+     ],
+     "saturation_step_count": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "point": "far",
+    "point_body_m": [
+     2.0,
+     -1.0,
+     3.0
+    ],
+    "method": "sensors_imu",
+    "f_mean_m_s2": [
+     0.2567081701234047,
+     0.3421298697873166,
+     9.797317606880522
+    ],
+    "F_cyl_mean_N": [
+     -1046.1934910290495,
+     -1046.1934910290495,
+     -716.8010863490991,
+     -716.8010863490991
+    ],
+    "n_samples": 10,
+    "monitor": {
+     "steps": 1000,
+     "nonfinite_steps": 0,
+     "first_nonfinite_t_s": null,
+     "cylinder_force_max_N": [
+      -1046.1934873242467,
+      -1046.1934886579756,
+      -716.8010863490991,
+      -716.8010847245545
+     ],
+     "cylinder_force_max_t_s": [
+      0.0004,
+      0.0004,
+      0.0004,
+      0.0004
+     ],
+     "cylinder_force_min_N": [
+      -1046.193494437468,
+      -1046.1934931037388,
+      -716.8010865521674,
+      -716.801088176712
+     ],
+     "cylinder_force_min_t_s": [
+      0.0002,
+      0.0002,
+      0.0002,
+      0.0002
+     ],
+     "saturation_step_count": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   {
+    "point": "far",
+    "point_body_m": [
+     2.0,
+     -1.0,
+     3.0
+    ],
+    "method": "chrono_point",
+    "f_mean_m_s2": [
+     0.2567081701234047,
+     0.3421298697873166,
+     9.79731760688052
+    ],
+    "F_cyl_mean_N": [
+     -1046.1934910290495,
+     -1046.1934910290495,
+     -716.8010863490991,
+     -716.8010863490991
+    ],
+    "n_samples": 10,
+    "monitor": {
+     "steps": 1000,
+     "nonfinite_steps": 0,
+     "first_nonfinite_t_s": null,
+     "cylinder_force_max_N": [
+      -1046.1934873242467,
+      -1046.1934886579756,
+      -716.8010863490991,
+      -716.8010847245545
+     ],
+     "cylinder_force_max_t_s": [
+      0.0004,
+      0.0004,
+      0.0004,
+      0.0004
+     ],
+     "cylinder_force_min_N": [
+      -1046.193494437468,
+      -1046.1934931037388,
+      -716.8010865521674,
+      -716.801088176712
+     ],
+     "cylinder_force_min_t_s": [
+      0.0002,
+      0.0002,
+      0.0002,
+      0.0002
+     ],
+     "saturation_step_count": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   }
+  ],
+  "checks": [
+   {
+    "id": "truth.C1_sensors_imu.imu_specific_force",
+    "item": "IMU specific force vs R^T (0,0,g), max |diff| / g (C1_sensors_imu)",
+    "value": 1.4491038953365323e-15,
+    "ref": null,
+    "tol": 1e-06,
+    "tol_kind": "max",
+    "unit": "1",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "R from the recorded body quaternion (mounting-point rotation)"
+   },
+   {
+    "id": "truth.C1_sensors_imu.gyro_at_rest",
+    "item": "gyro truth max |omega| at rest (C1_sensors_imu)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 9.806649999999999e-06,
+    "tol_kind": "max",
+    "unit": "rad/s",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "tolerance 1e-6 x g in rad/s (no natural scale at rest)"
+   },
+   {
+    "id": "truth.C1_sensors_imu.pressure",
+    "item": "head pressure x A_head vs cylinder force, max relative (C1_sensors_imu)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 1e-06,
+    "tol_kind": "max",
+    "unit": "1",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "truth.C1_sensors_imu.stroke_corrected",
+    "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (C1_sensors_imu)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "tolerance 1e-6 x stroke"
+   },
+   {
+    "id": "truth.C1_sensors_imu.stroke_motor",
+    "item": "meas.stroke vs s_motor, max |diff| (m) (C1_sensors_imu)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "truth.C1_sensors_imu.stroke_true_record",
+    "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (C1_sensors_imu)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "truth.C1_chrono_point.imu_specific_force",
+    "item": "IMU specific force vs R^T (0,0,g), max |diff| / g (C1_chrono_point)",
+    "value": 1.0868279215023991e-15,
+    "ref": null,
+    "tol": 1e-06,
+    "tol_kind": "max",
+    "unit": "1",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "R from the recorded body quaternion (mounting-point rotation)"
+   },
+   {
+    "id": "truth.C1_chrono_point.gyro_at_rest",
+    "item": "gyro truth max |omega| at rest (C1_chrono_point)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 9.806649999999999e-06,
+    "tol_kind": "max",
+    "unit": "rad/s",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "tolerance 1e-6 x g in rad/s (no natural scale at rest)"
+   },
+   {
+    "id": "truth.C1_chrono_point.pressure",
+    "item": "head pressure x A_head vs cylinder force, max relative (C1_chrono_point)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 1e-06,
+    "tol_kind": "max",
+    "unit": "1",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "truth.C1_chrono_point.stroke_corrected",
+    "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (C1_chrono_point)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "tolerance 1e-6 x stroke"
+   },
+   {
+    "id": "truth.C1_chrono_point.stroke_motor",
+    "item": "meas.stroke vs s_motor, max |diff| (m) (C1_chrono_point)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "truth.C1_chrono_point.stroke_true_record",
+    "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (C1_chrono_point)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "truth.far_sensors_imu.imu_specific_force",
+    "item": "IMU specific force vs R^T (0,0,g), max |diff| / g (far_sensors_imu)",
+    "value": 1.4491038953365323e-15,
+    "ref": null,
+    "tol": 1e-06,
+    "tol_kind": "max",
+    "unit": "1",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "R from the recorded body quaternion (mounting-point rotation)"
+   },
+   {
+    "id": "truth.far_sensors_imu.gyro_at_rest",
+    "item": "gyro truth max |omega| at rest (far_sensors_imu)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 9.806649999999999e-06,
+    "tol_kind": "max",
+    "unit": "rad/s",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "tolerance 1e-6 x g in rad/s (no natural scale at rest)"
+   },
+   {
+    "id": "truth.far_sensors_imu.pressure",
+    "item": "head pressure x A_head vs cylinder force, max relative (far_sensors_imu)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 1e-06,
+    "tol_kind": "max",
+    "unit": "1",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "truth.far_sensors_imu.stroke_corrected",
+    "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (far_sensors_imu)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "tolerance 1e-6 x stroke"
+   },
+   {
+    "id": "truth.far_sensors_imu.stroke_motor",
+    "item": "meas.stroke vs s_motor, max |diff| (m) (far_sensors_imu)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "truth.far_sensors_imu.stroke_true_record",
+    "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (far_sensors_imu)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "truth.far_chrono_point.imu_specific_force",
+    "item": "IMU specific force vs R^T (0,0,g), max |diff| / g (far_chrono_point)",
+    "value": 1.0868279215023991e-15,
+    "ref": null,
+    "tol": 1e-06,
+    "tol_kind": "max",
+    "unit": "1",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "R from the recorded body quaternion (mounting-point rotation)"
+   },
+   {
+    "id": "truth.far_chrono_point.gyro_at_rest",
+    "item": "gyro truth max |omega| at rest (far_chrono_point)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 9.806649999999999e-06,
+    "tol_kind": "max",
+    "unit": "rad/s",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "tolerance 1e-6 x g in rad/s (no natural scale at rest)"
+   },
+   {
+    "id": "truth.far_chrono_point.pressure",
+    "item": "head pressure x A_head vs cylinder force, max relative (far_chrono_point)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 1e-06,
+    "tol_kind": "max",
+    "unit": "1",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "truth.far_chrono_point.stroke_corrected",
+    "item": "stroke_corrected vs s_motor - F_cyl / k_oil, max |diff| (m) (far_chrono_point)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": "tolerance 1e-6 x stroke"
+   },
+   {
+    "id": "truth.far_chrono_point.stroke_motor",
+    "item": "meas.stroke vs s_motor, max |diff| (m) (far_chrono_point)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   },
+   {
+    "id": "truth.far_chrono_point.stroke_true_record",
+    "item": "Record stroke_true = meas.stroke_corrected (ideal sensors) (far_chrono_point)",
+    "value": 0.0,
+    "ref": null,
+    "tol": 7e-07,
+    "tol_kind": "max",
+    "unit": "m",
+    "passed": true,
+    "ref_key": "",
+    "deviation": null,
+    "note": ""
+   }
+  ],
+  "all_passed": true,
+  "_dir": "07_results/S6/batch_20261024_004403/truth_static"
+ },
+ "regression": {
+  "available": true,
+  "scenario": "S3 V4 lift (top, layout D, S2b_crawler_top, general dt, no window)",
+  "samples": 35900,
+  "sample_s": 0.001,
+  "sha256_on": "7110d94c1d90442293cc9232b855ebbb43c75f28d38ce5f65c2ec884cfc5b7bd",
+  "sha256_off": "7110d94c1d90442293cc9232b855ebbb43c75f28d38ce5f65c2ec884cfc5b7bd",
+  "bit_identical": true,
+  "fields_equal": {
+   "t": true,
+   "origin": true,
+   "quat": true,
+   "vel": true,
+   "omega": true,
+   "Fcyl": true,
+   "s_motor": true,
+   "N": true,
+   "anchor": true,
+   "s_ref": true,
+   "u_applied": true
+  },
+  "saturation_steps_on": [
+   0,
+   0,
+   0,
+   0
+  ],
+  "max_motor_force_on_N": [
+   136216.5703067566,
+   133004.689597426,
+   85641.68977239772,
+   84627.47140119807
+  ],
+  "max_motor_force_off_N": [
+   136216.5703067566,
+   133004.689597426,
+   85641.68977239772,
+   84627.47140119807
+  ],
+  "dirs": [
+   "07_results/S6/batch_20261024_004403/regress_lift_on",
+   "07_results/S6/batch_20261024_004403/regress_lift_off"
+  ]
+ }
+}

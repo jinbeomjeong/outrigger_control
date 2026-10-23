@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created by plot_c2_block_diagram.py -->
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+  <key id="d0" for="graph" attr.name="Description" attr.type="string" />
+  <key id="d1" for="port" yfiles.type="portgraphics" />
+  <key id="d2" for="port" yfiles.type="portgeometry" />
+  <key id="d3" for="port" yfiles.type="portuserdata" />
+  <key id="d4" for="node" attr.name="url" attr.type="string" />
+  <key id="d5" for="node" attr.name="description" attr.type="string" />
+  <key id="d6" for="node" yfiles.type="nodegraphics" />
+  <key id="d7" for="graphml" yfiles.type="resources" />
+  <key id="d8" for="edge" attr.name="url" attr.type="string" />
+  <key id="d9" for="edge" attr.name="description" attr.type="string" />
+  <key id="d10" for="edge" yfiles.type="edgegraphics" />
+  <key id="d11" for="edge" attr.name="edge_class" attr.type="string" />
+  <key id="d12" for="edge" attr.name="signal_style" attr.type="string" />
+  <graph id="G" edgedefault="directed">
+    <data key="d0">C2 R5 단계 전이도 (명세 c2_r5_diagram_spec.json)</data>
+    <node id="START">
+      <data key="d5">start</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="488.54" y="24.00" width="91.00" height="39.15" />
+          <y:Fill color="#FFFFFF" transparent="false" />
+          <y:BorderStyle color="#37474F" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">실행 시작</y:NodeLabel>
+          <y:Shape type="ellipse" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="CHECK">
+      <data key="d5">C2Phase.CHECK</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="444.54" y="110.15" width="179.00" height="59.00" />
+          <y:Fill color="#E3F2FD" transparent="false" />
+          <y:BorderStyle color="#37474F" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">CHECK
+크롤러 위 정지, u = 0
+(φ_c, θ_c) 측정, B1′ 자이로 편향</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="IDLE">
+      <data key="d5">C2Phase.IDLE</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="103.54" y="117.65" width="191.00" height="44.00" />
+          <y:Fill color="#ECEFF1" transparent="false" />
+          <y:BorderStyle color="#37474F" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">IDLE
+목표 거부, 다리 정지 (FAULT 아님)</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="TOUCH">
+      <data key="d5">C2Phase.TOUCH</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="403.54" y="269.15" width="261.00" height="44.00" />
+          <y:Fill color="#E8F5E9" transparent="false" />
+          <y:BorderStyle color="#37474F" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">TOUCH
+접지까지 신장 (v_max, 하중 본 다리 0.25 v_max)</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="LEVEL">
+      <data key="d5">C2Phase.LEVEL</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="423.04" y="412.15" width="222.00" height="96.00" />
+          <y:Fill color="#FFF3E0" transparent="false" />
+          <y:BorderStyle color="#37474F" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">LEVEL
+자세 PI + heave + 비틀림 + F_min 가드
+(REANCHOR 뒤에는 트림)</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="DONE">
+      <data key="d5">C2Phase.DONE</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="475.54" y="568.15" width="117.00" height="44.00" />
+          <y:Fill color="#F1F8E9" transparent="false" />
+          <y:BorderStyle color="#37474F" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">DONE
+완료 (한 주기 경유)</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="PROBE">
+      <data key="d5">C2Phase.PROBE</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="443.54" y="659.15" width="181.00" height="59.00" />
+          <y:Fill color="#E0F2F1" transparent="false" />
+          <y:BorderStyle color="#37474F" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">PROBE
+다리별 ±2 mm 탐침 (결합 판정)
+F_band 갱신, Q2 재접지 신장</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="REANCHOR">
+      <data key="d5">C2Phase.REANCHOR</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="363.54" y="791.15" width="341.00" height="59.00" />
+          <y:Fill color="#EDE7F6" transparent="false" />
+          <y:BorderStyle color="#37474F" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">REANCHOR
+고착점 재설정 (WAIT→MOVE→HOLD→RETURN→HOLD2 × 4단)
+자세·heave·비틀림 루프 정지</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="READY">
+      <data key="d5">C2Phase.READY</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="485.04" y="906.15" width="98.00" height="44.00" />
+          <y:Fill color="#C8E6C9" transparent="false" />
+          <y:BorderStyle color="#37474F" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">READY
+다리 잠금, 감시</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="FAULT">
+      <data key="d5">C2Phase.FAULT</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="24.00" y="431.55" width="151.04" height="57.20" />
+          <y:Fill color="#FFCDD2" transparent="false" />
+          <y:BorderStyle color="#C62828" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">FAULT
+모든 다리 정지 (종단)</y:NodeLabel>
+          <y:Shape type="octagon" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="LEGEND">
+      <data key="d5">범례 (그림 주석, 명세 노드 아님)</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="24.00" y="1043.15" width="414.00" height="161.00" />
+          <y:Fill color="#FFFFFF" transparent="false" />
+          <y:BorderStyle color="#9E9E9E" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">범례
+━━━  H5a 주 경로 (굵은 검정)
+━━━  재레벨 (파랑)
+━━━  재접지·재탐침 (청록)
+━━━  중단·FAULT (빨강)
+━━━  목표 변경 (보라)
+━━━  자기 루프 = 단계 유지 (회색)
+TOUCH, LEVEL, DONE, PROBE, REANCHOR, CHECK: request_target() → REJ_BUSY (단계 그대로)
+DONE, PROBE, READY: 정지 게이트·GE1′ 판정 가능 단계 (그림자)
+LEVEL·DONE 두 번째 진입(REANCHOR completed 뒤 트림)도 같은 LEVEL·DONE 노드다.
+기본 COMBINED 접지 판정 + after_probe(H5a)만 그림. PRESSURE 모드는 생략.</y:NodeLabel>
+          <y:Shape type="rectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <edge id="e01" source="START" target="CHECK">
+      <data key="d11">main</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.00" sy="19.58" tx="0.00" ty="-29.50" />
+          <y:LineStyle color="#212121" type="line" width="2.6" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#212121" visible="true" xml:space="preserve">초기 단계 CHECK</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e02" source="CHECK" target="CHECK">
+      <data key="d11">self</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="89.50" sy="-12.00" tx="89.50" ty="12.00">
+            <y:Point x="739.54" y="127.65" />
+            <y:Point x="739.54" y="151.65" />
+          </y:Path>
+          <y:LineStyle color="#757575" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#757575" visible="true" xml:space="preserve">t &lt; check_time_s (2 s), 또는 B1′:
+T_b 창 미충족·조용하지 않음 (t &lt; check_max_s
+10 s까지 연장)</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e03" source="CHECK" target="TOUCH">
+      <data key="d11">main</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.00" sy="29.50" tx="0.00" ty="-22.00" />
+          <y:LineStyle color="#212121" type="line" width="2.6" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#212121" visible="true" xml:space="preserve">B1′ 결정 (ACCEPTED / SKIPPED_MOTION
+/ REJECTED_IMPLAUSIBLE) 후 A0–A4 수용
+(첫 레벨링은 기준 램프 없음)</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e04" source="CHECK" target="IDLE">
+      <data key="d11">abort</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-89.50" sy="-10.00" tx="95.50" ty="-10.00" />
+          <y:LineStyle color="#C62828" type="line" width="1.4" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#C62828" visible="true" xml:space="preserve">A0–A4 거부 (REJ_* 경고)</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e05" source="IDLE" target="CHECK">
+      <data key="d11">target</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="47.75" sy="22.00" tx="-89.50" ty="14.00">
+            <y:Point x="246.79" y="202.15" />
+            <y:Point x="422.54" y="202.15" />
+            <y:Point x="422.54" y="153.65" />
+          </y:Path>
+          <y:LineStyle color="#6A1B9A" type="line" width="1.4" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#6A1B9A" visible="true" xml:space="preserve">request_target() → PENDING_CHECK,
+CHECK 재시작</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e06" source="TOUCH" target="LEVEL">
+      <data key="d11">main</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.00" sy="22.00" tx="0.00" ty="-48.00" />
+          <y:LineStyle color="#212121" type="line" width="2.6" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#212121" visible="true" xml:space="preserve">네 다리 모두 접지 래치
+(P − P_free − W_rod ≥ 1.5 F_min,
+0.5 s 연속)
+θ_crawler 저장, 적분 0, GE1′ 기준
+'touch'</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e07" source="LEVEL" target="DONE">
+      <data key="d11">main</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.00" sy="48.00" tx="0.00" ty="-22.00" />
+          <y:LineStyle color="#212121" type="line" width="2.6" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#212121" visible="true" xml:space="preserve">1.0 s 연속: 기준 = 목표, 완료 편차 &lt; 0.03°,
+|c − 50 mm| &lt; 2 mm, |n^T P| &lt; 3 kN</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e08" source="LEVEL" target="FAULT">
+      <data key="d11">abort</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-111.00" sy="0.00" tx="75.52" ty="0.00" />
+          <y:LineStyle color="#C62828" type="line" width="1.4" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#C62828" visible="true" xml:space="preserve">스트로크 끝(s ≥ s_max − 1 mm)에서 신장 명령 &gt;
+2.0 s</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e09" source="DONE" target="PROBE">
+      <data key="d11">main</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.00" sy="22.00" tx="0.00" ty="-29.50" />
+          <y:LineStyle color="#212121" type="line" width="2.6" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#212121" visible="true" xml:space="preserve">기본 경로 (REANCHOR 완료 뒤 트림이 아닐 때)</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e10" source="DONE" target="READY">
+      <data key="d11">main</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-58.50" sy="0.00" tx="-49.00" ty="9.00">
+            <y:Point x="138.04" y="590.15" />
+            <y:Point x="138.04" y="937.15" />
+          </y:Path>
+          <y:LineStyle color="#212121" type="line" width="2.6" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#212121" visible="true" xml:space="preserve">H5a: REANCHOR
+completed 뒤 트림 → 탐침 생략</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e11" source="PROBE" target="LEVEL">
+      <data key="d11">reprobe</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="90.50" sy="-9.00" tx="111.00" ty="25.33">
+            <y:Point x="888.04" y="679.65" />
+            <y:Point x="888.04" y="485.48" />
+          </y:Path>
+          <y:LineStyle color="#00897B" type="line" width="1.4" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#00897B" visible="true" xml:space="preserve">라운드 끝, 재접지 대상 있음 (Q2 /
+비접지 최소 판독, 누적 라운드 &lt; 3)
+→ 대상 다리 F_min + 15
+kN까지 신장 완료 → LEVEL (다시
+DONE → PROBE)</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e12" source="PROBE" target="REANCHOR">
+      <data key="d11">main</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.00" sy="29.50" tx="0.00" ty="-29.50" />
+          <y:LineStyle color="#212121" type="line" width="2.6" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#212121" visible="true" xml:space="preserve">H5a 첫 결정: 재접지 없음, |θ_t − θ_anchor|
+≥ 2.5°,
+들림, 크롤러 영역 아님, 스트로크 여유 10 mm</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e13" source="PROBE" target="READY">
+      <data key="d11">main</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-90.50" sy="0.00" tx="-49.00" ty="-9.00">
+            <y:Point x="284.04" y="688.65" />
+            <y:Point x="284.04" y="919.15" />
+          </y:Path>
+          <y:LineStyle color="#212121" type="line" width="2.6" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#212121" visible="true" xml:space="preserve">재접지 없음 (또는
+probe_unresolved / 라운드
+3회) 그리고
+REANCHOR 이미 결정 또는
+reanchor_skipped:&lt;사유&gt;</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e14" source="REANCHOR" target="LEVEL">
+      <data key="d11">main</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="170.50" sy="-9.00" tx="111.00" ty="0.00">
+            <y:Point x="1187.04" y="811.65" />
+            <y:Point x="1187.04" y="460.15" />
+          </y:Path>
+          <y:LineStyle color="#212121" type="line" width="2.6" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#212121" visible="true" xml:space="preserve">completed (4단 끝) → 트림,
+θ_anchor = θ_t</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e15" source="REANCHOR" target="LEVEL">
+      <data key="d11">abort</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="170.50" sy="9.00" tx="111.00" ty="-12.67">
+            <y:Point x="1327.04" y="829.65" />
+            <y:Point x="1327.04" y="447.48" />
+          </y:Path>
+          <y:LineStyle color="#C62828" type="line" width="1.4" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#C62828" visible="true" xml:space="preserve">aborted:attitude_wait
+/ attitude (&gt; 0.07°) /
+other_low / stroke_cap
+(8 mm) / hold_low
+→ 명령 이동량 복귀 후 LEVEL
+(다음 DONE → PROBE)</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e16" source="DONE" target="LEVEL">
+      <data key="d11">relevel</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="58.50" sy="0.00" tx="111.00" ty="38.00">
+            <y:Point x="731.04" y="590.15" />
+            <y:Point x="731.04" y="498.15" />
+          </y:Path>
+          <y:LineStyle color="#1565C0" type="line" width="1.4" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#1565C0" visible="true" xml:space="preserve">재레벨: 완료 필터 편차 &gt; 0.07°</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e17" source="PROBE" target="LEVEL">
+      <data key="d11">relevel</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="90.50" sy="9.00" tx="111.00" ty="12.67">
+            <y:Point x="1045.04" y="697.65" />
+            <y:Point x="1045.04" y="472.82" />
+          </y:Path>
+          <y:LineStyle color="#1565C0" type="line" width="1.4" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#1565C0" visible="true" xml:space="preserve">재레벨: 완료 필터 편차 &gt; 0.07°
+(탐침 중단, 다시 탐침)</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e18" source="READY" target="LEVEL">
+      <data key="d11">relevel</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="49.00" sy="-9.00" tx="111.00" ty="-25.33">
+            <y:Point x="1480.04" y="919.15" />
+            <y:Point x="1480.04" y="434.82" />
+          </y:Path>
+          <y:LineStyle color="#1565C0" type="line" width="1.4" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#1565C0" visible="true" xml:space="preserve">재레벨: 편차 &gt; 0.07°, 또는
+(READY만) 들림 &amp; min L_i
+&lt; F_min + 7 kN
+적분 유지, 탐침 상태 초기화 (H5a:
+다시 탐침)</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e19" source="READY" target="LEVEL">
+      <data key="d11">target</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="49.00" sy="9.00" tx="111.00" ty="-38.00">
+            <y:Point x="1637.54" y="937.15" />
+            <y:Point x="1637.54" y="422.15" />
+          </y:Path>
+          <y:LineStyle color="#6A1B9A" type="line" width="1.4" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#6A1B9A" visible="true" xml:space="preserve">목표 변경 수용 (A0–A5) → 기준
+램프 0.4/0.25 °/s,
+REANCHOR 재무장 (U3)</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e20" source="READY" target="READY">
+      <data key="d11">self</data>
+      <data key="d12">solid</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-16.00" sy="22.00" tx="16.00" ty="22.00">
+            <y:Point x="518.04" y="987.65" />
+            <y:Point x="550.04" y="987.65" />
+          </y:Path>
+          <y:LineStyle color="#757575" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#757575" visible="true" xml:space="preserve">목표 거부 (REJ_*, A5
+REJ_TARGET_STROKE) → 유지
+350 bar 초과 잠금 압력 경고 (다리당 1회)</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+  </graph>
+  <data key="d7">
+    <y:Resources />
+  </data>
+</graphml>

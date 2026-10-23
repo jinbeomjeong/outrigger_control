@@ -1,0 +1,1876 @@
+{
+ "new_batch": "stage2_L1R_20261022_142037",
+ "cases": {
+  "G4_top_flat_settleRR_pressure@stage2_L1R_20261022_123223": {
+   "old_batch": "stage2_L1R_20261022_123223",
+   "record/record.npz": {
+    "F_contact_n": {
+     "status": "identical"
+    },
+    "F_contact_t": {
+     "status": "identical"
+    },
+    "F_crawler": {
+     "status": "identical"
+    },
+    "F_cyl": {
+     "status": "identical"
+    },
+    "body_omega": {
+     "status": "identical"
+    },
+    "body_pos": {
+     "status": "identical"
+    },
+    "body_quat_wxyz": {
+     "status": "identical"
+    },
+    "body_vel": {
+     "status": "identical"
+    },
+    "bushing_anchor": {
+     "status": "identical"
+    },
+    "bushing_events.kind": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "bushing_events.leg": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "bushing_events.t": {
+     "status": "identical"
+    },
+    "meas.angular_rate": {
+     "status": "identical"
+    },
+    "meas.head_pressure": {
+     "status": "identical"
+    },
+    "meas.rod_pressure": {
+     "status": "identical"
+    },
+    "meas.specific_force": {
+     "status": "identical"
+    },
+    "meas.stroke": {
+     "status": "identical"
+    },
+    "meas.stroke_corrected": {
+     "status": "identical"
+    },
+    "pad_in_contact": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "s_motor": {
+     "status": "identical"
+    },
+    "s_ref": {
+     "status": "identical"
+    },
+    "stroke_true": {
+     "status": "identical"
+    },
+    "t": {
+     "status": "identical"
+    },
+    "u_applied": {
+     "status": "identical"
+    },
+    "u_cmd": {
+     "status": "identical"
+    }
+   },
+   "pads.npz": {
+    "F_cyl": {
+     "status": "identical"
+    },
+    "F_cyl_min_interval": {
+     "status": "identical"
+    },
+    "L": {
+     "status": "identical"
+    },
+    "N": {
+     "status": "identical"
+    },
+    "R_world": {
+     "status": "identical"
+    },
+    "T": {
+     "status": "identical"
+    },
+    "a_world": {
+     "status": "identical"
+    },
+    "anchor_world": {
+     "status": "identical"
+    },
+    "ball_centre_world": {
+     "status": "identical"
+    },
+    "contact_point_world": {
+     "status": "identical"
+    },
+    "every_steps": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "head_pressure": {
+     "status": "identical"
+    },
+    "mu": {
+     "status": "identical"
+    },
+    "n_world": {
+     "status": "identical"
+    },
+    "s_motor": {
+     "status": "identical"
+    },
+    "sample_s": {
+     "status": "identical"
+    },
+    "sliding": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "slip_total": {
+     "status": "identical"
+    },
+    "stroke_true": {
+     "status": "identical"
+    },
+    "t": {
+     "status": "identical"
+    },
+    "utilisation": {
+     "status": "identical"
+    }
+   },
+   "record_first_diff_t_s": null,
+   "record_all_identical": true,
+   "pads_all_identical": true
+  },
+  "RE1bF_top_flat_dropRR30@stage2_L1R_20261022_123223": {
+   "old_batch": "stage2_L1R_20261022_123223",
+   "record/record.npz": {
+    "F_contact_n": {
+     "status": "identical"
+    },
+    "F_contact_t": {
+     "status": "identical"
+    },
+    "F_crawler": {
+     "status": "identical"
+    },
+    "F_cyl": {
+     "status": "identical"
+    },
+    "body_omega": {
+     "status": "identical"
+    },
+    "body_pos": {
+     "status": "identical"
+    },
+    "body_quat_wxyz": {
+     "status": "identical"
+    },
+    "body_vel": {
+     "status": "identical"
+    },
+    "bushing_anchor": {
+     "status": "identical"
+    },
+    "bushing_events.kind": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "bushing_events.leg": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "bushing_events.t": {
+     "status": "identical"
+    },
+    "meas.angular_rate": {
+     "status": "identical"
+    },
+    "meas.head_pressure": {
+     "status": "identical"
+    },
+    "meas.rod_pressure": {
+     "status": "identical"
+    },
+    "meas.specific_force": {
+     "status": "identical"
+    },
+    "meas.stroke": {
+     "status": "identical"
+    },
+    "meas.stroke_corrected": {
+     "status": "identical"
+    },
+    "pad_in_contact": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "s_motor": {
+     "status": "identical"
+    },
+    "s_ref": {
+     "status": "identical"
+    },
+    "stroke_true": {
+     "status": "identical"
+    },
+    "t": {
+     "status": "identical"
+    },
+    "u_applied": {
+     "status": "identical"
+    },
+    "u_cmd": {
+     "status": "identical"
+    }
+   },
+   "pads.npz": {
+    "F_cyl": {
+     "status": "identical"
+    },
+    "F_cyl_min_interval": {
+     "status": "identical"
+    },
+    "L": {
+     "status": "identical"
+    },
+    "N": {
+     "status": "identical"
+    },
+    "R_world": {
+     "status": "identical"
+    },
+    "T": {
+     "status": "identical"
+    },
+    "a_world": {
+     "status": "identical"
+    },
+    "anchor_world": {
+     "status": "identical"
+    },
+    "ball_centre_world": {
+     "status": "identical"
+    },
+    "contact_point_world": {
+     "status": "identical"
+    },
+    "every_steps": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "head_pressure": {
+     "status": "identical"
+    },
+    "mu": {
+     "status": "identical"
+    },
+    "n_world": {
+     "status": "identical"
+    },
+    "s_motor": {
+     "status": "identical"
+    },
+    "sample_s": {
+     "status": "identical"
+    },
+    "sliding": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "slip_total": {
+     "status": "identical"
+    },
+    "stroke_true": {
+     "status": "identical"
+    },
+    "t": {
+     "status": "identical"
+    },
+    "utilisation": {
+     "status": "identical"
+    }
+   },
+   "record_first_diff_t_s": null,
+   "record_all_identical": true,
+   "pads_all_identical": true
+  },
+  "PS2_RE1bF_conservative_nocal@stage2_L1R_20261022_123223": {
+   "old_batch": "stage2_L1R_20261022_123223",
+   "record/record.npz": {
+    "F_contact_n": {
+     "status": "differs",
+     "max_abs": 28698.25240502003,
+     "at": [
+      3061,
+      2
+     ],
+     "n_diff": 17516,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "F_contact_t": {
+     "status": "differs",
+     "max_abs": 4654.588636833055,
+     "at": [
+      2228,
+      1,
+      0
+     ],
+     "n_diff": 35032,
+     "first_diff_index": [
+      2153,
+      0,
+      0
+     ]
+    },
+    "F_crawler": {
+     "status": "identical"
+    },
+    "F_cyl": {
+     "status": "differs",
+     "max_abs": 28697.14103386557,
+     "at": [
+      3061,
+      2
+     ],
+     "n_diff": 17588,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "body_omega": {
+     "status": "differs",
+     "max_abs": 0.0031687861368310246,
+     "at": [
+      2226,
+      1
+     ],
+     "n_diff": 13191,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "body_pos": {
+     "status": "differs",
+     "max_abs": 0.0013408157761096717,
+     "at": [
+      3140,
+      2
+     ],
+     "n_diff": 13191,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "body_quat_wxyz": {
+     "status": "differs",
+     "max_abs": 0.00031085671604735333,
+     "at": [
+      3058,
+      1
+     ],
+     "n_diff": 17588,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "body_vel": {
+     "status": "differs",
+     "max_abs": 0.014521309528137322,
+     "at": [
+      2230,
+      0
+     ],
+     "n_diff": 13191,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "bushing_anchor": {
+     "status": "differs",
+     "max_abs": 0.0006889002612082695,
+     "at": [
+      2226,
+      3,
+      1
+     ],
+     "n_diff": 17426,
+     "first_diff_index": [
+      2170,
+      0,
+      0
+     ]
+    },
+    "bushing_events.kind": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "bushing_events.leg": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "bushing_events.t": {
+     "status": "identical"
+    },
+    "meas.angular_rate": {
+     "status": "differs",
+     "max_abs": 0.0032325984441111625,
+     "at": [
+      2227,
+      1
+     ],
+     "n_diff": 13191,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "meas.head_pressure": {
+     "status": "differs",
+     "max_abs": 2960000.0,
+     "at": [
+      3062,
+      3
+     ],
+     "n_diff": 17498,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "meas.rod_pressure": {
+     "status": "differs",
+     "max_abs": 3880000.0,
+     "at": [
+      3143,
+      0
+     ],
+     "n_diff": 16028,
+     "first_diff_index": [
+      2155,
+      1
+     ]
+    },
+    "meas.specific_force": {
+     "status": "differs",
+     "max_abs": 0.48893978728656506,
+     "at": [
+      2228,
+      2
+     ],
+     "n_diff": 13191,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "meas.stroke": {
+     "status": "differs",
+     "max_abs": 0.0042925294285016125,
+     "at": [
+      3059,
+      3
+     ],
+     "n_diff": 17588,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "meas.stroke_corrected": {
+     "status": "differs",
+     "max_abs": 0.0029767712183334516,
+     "at": [
+      3059,
+      3
+     ],
+     "n_diff": 17588,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "pad_in_contact": {
+     "status": "differs",
+     "n_diff": 4
+    },
+    "s_motor": {
+     "status": "differs",
+     "max_abs": 0.0042925294285016125,
+     "at": [
+      3059,
+      3
+     ],
+     "n_diff": 17588,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "s_ref": {
+     "status": "differs",
+     "max_abs": 0.004292529428500669,
+     "at": [
+      3059,
+      3
+     ],
+     "n_diff": 17588,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "stroke_true": {
+     "status": "differs",
+     "max_abs": 0.0029767712183334516,
+     "at": [
+      3059,
+      3
+     ],
+     "n_diff": 17588,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "t": {
+     "status": "differs",
+     "max_abs": 1.1368683772161603e-11,
+     "at": [
+      2326
+     ],
+     "n_diff": 4225,
+     "first_diff_index": [
+      2325
+     ]
+    },
+    "u_applied": {
+     "status": "differs",
+     "max_abs": 0.005892857142857143,
+     "at": [
+      3125,
+      3
+     ],
+     "n_diff": 2503,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    },
+    "u_cmd": {
+     "status": "differs",
+     "max_abs": 0.005892857142857143,
+     "at": [
+      3125,
+      3
+     ],
+     "n_diff": 2503,
+     "first_diff_index": [
+      2153,
+      0
+     ]
+    }
+   },
+   "pads.npz": {
+    "F_cyl": {
+     "status": "differs",
+     "max_abs": 28699.697129858418,
+     "at": [
+      61233,
+      2
+     ],
+     "n_diff": 351744,
+     "first_diff_index": [
+      43064,
+      0
+     ]
+    },
+    "F_cyl_min_interval": {
+     "status": "differs",
+     "max_abs": 28699.697129858418,
+     "at": [
+      61233,
+      2
+     ],
+     "n_diff": 351741,
+     "first_diff_index": [
+      43064,
+      3
+     ]
+    },
+    "L": {
+     "status": "differs",
+     "max_abs": 4645.357268860138,
+     "at": [
+      44579,
+      1
+     ],
+     "n_diff": 350307,
+     "first_diff_index": [
+      43064,
+      0
+     ]
+    },
+    "N": {
+     "status": "differs",
+     "max_abs": 28340.589038489088,
+     "at": [
+      61239,
+      3
+     ],
+     "n_diff": 350305,
+     "first_diff_index": [
+      43064,
+      0
+     ]
+    },
+    "R_world": {
+     "status": "differs",
+     "max_abs": 28340.589038489088,
+     "at": [
+      61239,
+      3,
+      2
+     ],
+     "n_diff": 1050919,
+     "first_diff_index": [
+      43064,
+      0,
+      0
+     ]
+    },
+    "T": {
+     "status": "differs",
+     "max_abs": 4494.112205643974,
+     "at": [
+      44581,
+      1
+     ],
+     "n_diff": 350307,
+     "first_diff_index": [
+      43064,
+      0
+     ]
+    },
+    "a_world": {
+     "status": "differs",
+     "max_abs": 0.0006217060927992875,
+     "at": [
+      61183,
+      1
+     ],
+     "n_diff": 263808,
+     "first_diff_index": [
+      43064,
+      0
+     ]
+    },
+    "anchor_world": {
+     "status": "differs",
+     "max_abs": 0.0006889002612082695,
+     "at": [
+      44534,
+      3,
+      1
+     ],
+     "n_diff": 348506,
+     "first_diff_index": [
+      43286,
+      0,
+      0
+     ]
+    },
+    "ball_centre_world": {
+     "status": "differs",
+     "max_abs": 0.0014528444840817833,
+     "at": [
+      61239,
+      3,
+      2
+     ],
+     "n_diff": 1055232,
+     "first_diff_index": [
+      43064,
+      0,
+      0
+     ]
+    },
+    "contact_point_world": {
+     "status": "differs",
+     "max_abs": 0.0014528444840817833,
+     "at": [
+      61239,
+      3,
+      2
+     ],
+     "n_diff": 1055232,
+     "first_diff_index": [
+      43064,
+      0,
+      0
+     ]
+    },
+    "every_steps": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "head_pressure": {
+     "status": "differs",
+     "max_abs": 3019966.0575654684,
+     "at": [
+      61233,
+      2
+     ],
+     "n_diff": 351744,
+     "first_diff_index": [
+      43064,
+      0
+     ]
+    },
+    "mu": {
+     "status": "identical"
+    },
+    "n_world": {
+     "status": "identical"
+    },
+    "s_motor": {
+     "status": "differs",
+     "max_abs": 0.0042925294285016125,
+     "at": [
+      61199,
+      3
+     ],
+     "n_diff": 351744,
+     "first_diff_index": [
+      43064,
+      0
+     ]
+    },
+    "sample_s": {
+     "status": "identical"
+    },
+    "sliding": {
+     "status": "differs",
+     "n_diff": 136
+    },
+    "slip_total": {
+     "status": "differs",
+     "max_abs": 0.00018823108944688292,
+     "at": [
+      44195,
+      3,
+      1
+     ],
+     "n_diff": 349122,
+     "first_diff_index": [
+      43286,
+      0,
+      0
+     ]
+    },
+    "stroke_true": {
+     "status": "differs",
+     "max_abs": 0.0029781675176052125,
+     "at": [
+      61200,
+      3
+     ],
+     "n_diff": 351744,
+     "first_diff_index": [
+      43064,
+      0
+     ]
+    },
+    "t": {
+     "status": "differs",
+     "max_abs": 1.1368683772161603e-11,
+     "at": [
+      46539
+     ],
+     "n_diff": 84500,
+     "first_diff_index": [
+      46500
+     ]
+    },
+    "utilisation": {
+     "status": "differs",
+     "max_abs": 2.4875239981140548e+35,
+     "at": [
+      44186,
+      3
+     ],
+     "n_diff": 350305,
+     "first_diff_index": [
+      43064,
+      0
+     ]
+    }
+   },
+   "record_first_diff_t_s": 111.5800000020425,
+   "record_all_identical": false,
+   "pads_all_identical": false
+  },
+  "PS4_RE1bF_FLp4_RRm4_nocal@stage2_L1R_20261022_123223": {
+   "old_batch": "stage2_L1R_20261022_123223",
+   "record/record.npz": {
+    "F_contact_n": {
+     "status": "differs",
+     "max_abs": 29841.31248775705,
+     "at": [
+      3047,
+      3
+     ],
+     "n_diff": 17512,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "F_contact_t": {
+     "status": "differs",
+     "max_abs": 5572.776866821022,
+     "at": [
+      2229,
+      1,
+      0
+     ],
+     "n_diff": 35024,
+     "first_diff_index": [
+      2154,
+      0,
+      0
+     ]
+    },
+    "F_crawler": {
+     "status": "identical"
+    },
+    "F_cyl": {
+     "status": "differs",
+     "max_abs": 29844.15479635979,
+     "at": [
+      3047,
+      3
+     ],
+     "n_diff": 17584,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "body_omega": {
+     "status": "differs",
+     "max_abs": 0.003846347555390937,
+     "at": [
+      2228,
+      1
+     ],
+     "n_diff": 13188,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "body_pos": {
+     "status": "differs",
+     "max_abs": 0.0009130377091062236,
+     "at": [
+      3044,
+      2
+     ],
+     "n_diff": 13188,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "body_quat_wxyz": {
+     "status": "differs",
+     "max_abs": 0.0003145107175792937,
+     "at": [
+      3036,
+      1
+     ],
+     "n_diff": 17584,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "body_vel": {
+     "status": "differs",
+     "max_abs": 0.016839580779682888,
+     "at": [
+      2232,
+      0
+     ],
+     "n_diff": 13188,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "bushing_anchor": {
+     "status": "differs",
+     "max_abs": 0.0009087503568754318,
+     "at": [
+      2228,
+      3,
+      1
+     ],
+     "n_diff": 17423,
+     "first_diff_index": [
+      2171,
+      0,
+      0
+     ]
+    },
+    "bushing_events.kind": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "bushing_events.leg": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "bushing_events.t": {
+     "status": "identical"
+    },
+    "meas.angular_rate": {
+     "status": "differs",
+     "max_abs": 0.0038355063591775894,
+     "at": [
+      2228,
+      1
+     ],
+     "n_diff": 13188,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "meas.head_pressure": {
+     "status": "differs",
+     "max_abs": 3785000.0,
+     "at": [
+      3066,
+      3
+     ],
+     "n_diff": 17473,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "meas.rod_pressure": {
+     "status": "differs",
+     "max_abs": 2962500.0,
+     "at": [
+      3116,
+      3
+     ],
+     "n_diff": 15876,
+     "first_diff_index": [
+      2156,
+      1
+     ]
+    },
+    "meas.specific_force": {
+     "status": "differs",
+     "max_abs": 0.5768369369171165,
+     "at": [
+      2230,
+      2
+     ],
+     "n_diff": 13188,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "meas.stroke": {
+     "status": "differs",
+     "max_abs": 0.004161580419671851,
+     "at": [
+      3049,
+      3
+     ],
+     "n_diff": 17584,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "meas.stroke_corrected": {
+     "status": "differs",
+     "max_abs": 0.00282218589480443,
+     "at": [
+      3038,
+      3
+     ],
+     "n_diff": 17584,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "pad_in_contact": {
+     "status": "differs",
+     "n_diff": 5
+    },
+    "s_motor": {
+     "status": "differs",
+     "max_abs": 0.004161580419671851,
+     "at": [
+      3049,
+      3
+     ],
+     "n_diff": 17584,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "s_ref": {
+     "status": "differs",
+     "max_abs": 0.004161580419670907,
+     "at": [
+      3040,
+      3
+     ],
+     "n_diff": 17584,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "stroke_true": {
+     "status": "differs",
+     "max_abs": 0.00282218589480443,
+     "at": [
+      3038,
+      3
+     ],
+     "n_diff": 17584,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "t": {
+     "status": "differs",
+     "max_abs": 1.7053025658242404e-11,
+     "at": [
+      2328
+     ],
+     "n_diff": 4224,
+     "first_diff_index": [
+      2326
+     ]
+    },
+    "u_applied": {
+     "status": "differs",
+     "max_abs": 0.007142857142857157,
+     "at": [
+      3016,
+      3
+     ],
+     "n_diff": 2146,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    },
+    "u_cmd": {
+     "status": "differs",
+     "max_abs": 0.007142857142857157,
+     "at": [
+      3016,
+      3
+     ],
+     "n_diff": 2146,
+     "first_diff_index": [
+      2154,
+      0
+     ]
+    }
+   },
+   "pads.npz": {
+    "F_cyl": {
+     "status": "differs",
+     "max_abs": 29844.578068416704,
+     "at": [
+      60956,
+      3
+     ],
+     "n_diff": 351664,
+     "first_diff_index": [
+      43084,
+      0
+     ]
+    },
+    "F_cyl_min_interval": {
+     "status": "differs",
+     "max_abs": 29844.578068416704,
+     "at": [
+      60956,
+      3
+     ],
+     "n_diff": 351661,
+     "first_diff_index": [
+      43084,
+      3
+     ]
+    },
+    "L": {
+     "status": "differs",
+     "max_abs": 4431.237186347875,
+     "at": [
+      44606,
+      1
+     ],
+     "n_diff": 350221,
+     "first_diff_index": [
+      43084,
+      0
+     ]
+    },
+    "N": {
+     "status": "differs",
+     "max_abs": 29571.497104385257,
+     "at": [
+      60956,
+      3
+     ],
+     "n_diff": 350218,
+     "first_diff_index": [
+      43084,
+      0
+     ]
+    },
+    "R_world": {
+     "status": "differs",
+     "max_abs": 29571.497104385257,
+     "at": [
+      60956,
+      3,
+      2
+     ],
+     "n_diff": 1050660,
+     "first_diff_index": [
+      43084,
+      0,
+      0
+     ]
+    },
+    "T": {
+     "status": "differs",
+     "max_abs": 4333.47474421165,
+     "at": [
+      44700,
+      0
+     ],
+     "n_diff": 350221,
+     "first_diff_index": [
+      43084,
+      0
+     ]
+    },
+    "a_world": {
+     "status": "differs",
+     "max_abs": 0.0006289981742000057,
+     "at": [
+      60743,
+      1
+     ],
+     "n_diff": 263748,
+     "first_diff_index": [
+      43084,
+      0
+     ]
+    },
+    "anchor_world": {
+     "status": "differs",
+     "max_abs": 0.0009087503568754318,
+     "at": [
+      44561,
+      3,
+      1
+     ],
+     "n_diff": 348432,
+     "first_diff_index": [
+      43307,
+      0,
+      0
+     ]
+    },
+    "ball_centre_world": {
+     "status": "differs",
+     "max_abs": 0.0015159291627311333,
+     "at": [
+      60958,
+      3,
+      2
+     ],
+     "n_diff": 1054992,
+     "first_diff_index": [
+      43084,
+      0,
+      0
+     ]
+    },
+    "contact_point_world": {
+     "status": "differs",
+     "max_abs": 0.0015159291627311333,
+     "at": [
+      60958,
+      3,
+      2
+     ],
+     "n_diff": 1054992,
+     "first_diff_index": [
+      43084,
+      0,
+      0
+     ]
+    },
+    "every_steps": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "head_pressure": {
+     "status": "differs",
+     "max_abs": 3140437.7670317898,
+     "at": [
+      60956,
+      3
+     ],
+     "n_diff": 351664,
+     "first_diff_index": [
+      43084,
+      0
+     ]
+    },
+    "mu": {
+     "status": "identical"
+    },
+    "n_world": {
+     "status": "identical"
+    },
+    "s_motor": {
+     "status": "differs",
+     "max_abs": 0.004161580419673738,
+     "at": [
+      60997,
+      3
+     ],
+     "n_diff": 351664,
+     "first_diff_index": [
+      43084,
+      0
+     ]
+    },
+    "sample_s": {
+     "status": "identical"
+    },
+    "sliding": {
+     "status": "differs",
+     "n_diff": 362
+    },
+    "slip_total": {
+     "status": "differs",
+     "max_abs": 0.0003713157019964124,
+     "at": [
+      44211,
+      3,
+      1
+     ],
+     "n_diff": 349056,
+     "first_diff_index": [
+      43307,
+      0,
+      0
+     ]
+    },
+    "stroke_true": {
+     "status": "differs",
+     "max_abs": 0.0028230034080852784,
+     "at": [
+      60780,
+      3
+     ],
+     "n_diff": 351664,
+     "first_diff_index": [
+      43084,
+      0
+     ]
+    },
+    "t": {
+     "status": "differs",
+     "max_abs": 1.7053025658242404e-11,
+     "at": [
+      46579
+     ],
+     "n_diff": 84480,
+     "first_diff_index": [
+      46520
+     ]
+    },
+    "utilisation": {
+     "status": "differs",
+     "max_abs": 1.0293587207773005e+35,
+     "at": [
+      44201,
+      3
+     ],
+     "n_diff": 350215,
+     "first_diff_index": [
+      43084,
+      0
+     ]
+    }
+   },
+   "record_first_diff_t_s": 111.60000000204316,
+   "record_all_identical": false,
+   "pads_all_identical": false
+  },
+  "G1_top_flat@stage2_L1R_20261022_102159": {
+   "old_batch": "stage2_L1R_20261022_102159",
+   "record/record.npz": {
+    "F_contact_n": {
+     "status": "differs",
+     "max_abs": 144.46250591756325,
+     "at": [
+      890,
+      3
+     ],
+     "n_diff": 7884,
+     "first_diff_index": [
+      827,
+      1
+     ]
+    },
+    "F_contact_t": {
+     "status": "differs",
+     "max_abs": 60.56727631267813,
+     "at": [
+      914,
+      0,
+      0
+     ],
+     "n_diff": 15768,
+     "first_diff_index": [
+      827,
+      1,
+      0
+     ]
+    },
+    "F_crawler": {
+     "status": "differs",
+     "max_abs": 250.23121339984937,
+     "at": [
+      836,
+      2
+     ],
+     "n_diff": 264,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "F_cyl": {
+     "status": "differs",
+     "max_abs": 585.1821187205578,
+     "at": [
+      827,
+      0
+     ],
+     "n_diff": 7892,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "body_omega": {
+     "status": "differs",
+     "max_abs": 3.636254921363558e-05,
+     "at": [
+      901,
+      1
+     ],
+     "n_diff": 5919,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "body_pos": {
+     "status": "differs",
+     "max_abs": 8.588719882685059e-06,
+     "at": [
+      922,
+      0
+     ],
+     "n_diff": 5919,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "body_quat_wxyz": {
+     "status": "differs",
+     "max_abs": 8.849732655521764e-07,
+     "at": [
+      898,
+      2
+     ],
+     "n_diff": 7892,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "body_vel": {
+     "status": "differs",
+     "max_abs": 0.0001237217224408666,
+     "at": [
+      894,
+      0
+     ],
+     "n_diff": 5919,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "bushing_anchor": {
+     "status": "differs",
+     "max_abs": 8.972291505759955e-06,
+     "at": [
+      836,
+      2,
+      0
+     ],
+     "n_diff": 15730,
+     "first_diff_index": [
+      829,
+      1,
+      0
+     ]
+    },
+    "bushing_events.kind": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "bushing_events.leg": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "bushing_events.t": {
+     "status": "identical"
+    },
+    "meas.angular_rate": {
+     "status": "differs",
+     "max_abs": 3.5925964909741645e-05,
+     "at": [
+      902,
+      1
+     ],
+     "n_diff": 5919,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "meas.head_pressure": {
+     "status": "differs",
+     "max_abs": 42500.0,
+     "at": [
+      827,
+      0
+     ],
+     "n_diff": 1253,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "meas.rod_pressure": {
+     "status": "differs",
+     "max_abs": 20000.0,
+     "at": [
+      890,
+      3
+     ],
+     "n_diff": 688,
+     "first_diff_index": [
+      834,
+      2
+     ]
+    },
+    "meas.specific_force": {
+     "status": "differs",
+     "max_abs": 0.007119500019845404,
+     "at": [
+      837,
+      2
+     ],
+     "n_diff": 5919,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "meas.stroke": {
+     "status": "differs",
+     "max_abs": 9.152187250283106e-07,
+     "at": [
+      962,
+      2
+     ],
+     "n_diff": 7892,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "meas.stroke_corrected": {
+     "status": "differs",
+     "max_abs": 4.557596036625089e-06,
+     "at": [
+      898,
+      3
+     ],
+     "n_diff": 7892,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "pad_in_contact": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "s_motor": {
+     "status": "differs",
+     "max_abs": 9.152187250283106e-07,
+     "at": [
+      962,
+      2
+     ],
+     "n_diff": 7892,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "s_ref": {
+     "status": "differs",
+     "max_abs": 9.15218724084621e-07,
+     "at": [
+      962,
+      2
+     ],
+     "n_diff": 7546,
+     "first_diff_index": [
+      897,
+      2
+     ]
+    },
+    "stroke_true": {
+     "status": "differs",
+     "max_abs": 4.557596036625089e-06,
+     "at": [
+      898,
+      3
+     ],
+     "n_diff": 7892,
+     "first_diff_index": [
+      827,
+      0
+     ]
+    },
+    "t": {
+     "status": "identical"
+    },
+    "u_applied": {
+     "status": "differs",
+     "max_abs": 4.935061824321019e-06,
+     "at": [
+      923,
+      2
+     ],
+     "n_diff": 1418,
+     "first_diff_index": [
+      897,
+      2
+     ]
+    },
+    "u_cmd": {
+     "status": "differs",
+     "max_abs": 4.935061824321019e-06,
+     "at": [
+      923,
+      2
+     ],
+     "n_diff": 1418,
+     "first_diff_index": [
+      897,
+      2
+     ]
+    }
+   },
+   "pads.npz": {
+    "F_cyl": {
+     "status": "differs",
+     "max_abs": 585.1821187205578,
+     "at": [
+      16559,
+      0
+     ],
+     "n_diff": 157780,
+     "first_diff_index": [
+      16555,
+      0
+     ]
+    },
+    "F_cyl_min_interval": {
+     "status": "differs",
+     "max_abs": 585.7021302725968,
+     "at": [
+      16560,
+      0
+     ],
+     "n_diff": 157778,
+     "first_diff_index": [
+      16555,
+      0
+     ]
+    },
+    "L": {
+     "status": "differs",
+     "max_abs": 61.3037977422473,
+     "at": [
+      18292,
+      0
+     ],
+     "n_diff": 157645,
+     "first_diff_index": [
+      16555,
+      0
+     ]
+    },
+    "N": {
+     "status": "differs",
+     "max_abs": 120.94496256983984,
+     "at": [
+      17830,
+      0
+     ],
+     "n_diff": 157639,
+     "first_diff_index": [
+      16556,
+      0
+     ]
+    },
+    "R_world": {
+     "status": "differs",
+     "max_abs": 120.94496256983984,
+     "at": [
+      17830,
+      0,
+      2
+     ],
+     "n_diff": 472929,
+     "first_diff_index": [
+      16555,
+      0,
+      0
+     ]
+    },
+    "T": {
+     "status": "differs",
+     "max_abs": 60.9798810783268,
+     "at": [
+      18292,
+      0
+     ],
+     "n_diff": 157645,
+     "first_diff_index": [
+      16555,
+      0
+     ]
+    },
+    "a_world": {
+     "status": "differs",
+     "max_abs": 1.7830291974790628e-06,
+     "at": [
+      17973,
+      0
+     ],
+     "n_diff": 118333,
+     "first_diff_index": [
+      16555,
+      0
+     ]
+    },
+    "anchor_world": {
+     "status": "differs",
+     "max_abs": 1.0657366979804905e-05,
+     "at": [
+      16769,
+      2,
+      1
+     ],
+     "n_diff": 314516,
+     "first_diff_index": [
+      16556,
+      0,
+      0
+     ]
+    },
+    "ball_centre_world": {
+     "status": "differs",
+     "max_abs": 9.498116865014339e-06,
+     "at": [
+      18460,
+      0,
+      0
+     ],
+     "n_diff": 473340,
+     "first_diff_index": [
+      16555,
+      0,
+      0
+     ]
+    },
+    "contact_point_world": {
+     "status": "differs",
+     "max_abs": 9.498116865014339e-06,
+     "at": [
+      18460,
+      0,
+      0
+     ],
+     "n_diff": 473340,
+     "first_diff_index": [
+      16555,
+      0,
+      0
+     ]
+    },
+    "every_steps": {
+     "status": "identical",
+     "n_diff": 0
+    },
+    "head_pressure": {
+     "status": "differs",
+     "max_abs": 45993.440126870744,
+     "at": [
+      16706,
+      3
+     ],
+     "n_diff": 157780,
+     "first_diff_index": [
+      16555,
+      0
+     ]
+    },
+    "mu": {
+     "status": "identical"
+    },
+    "n_world": {
+     "status": "identical"
+    },
+    "s_motor": {
+     "status": "differs",
+     "max_abs": 9.15402011025801e-07,
+     "at": [
+      19260,
+      2
+     ],
+     "n_diff": 157750,
+     "first_diff_index": [
+      16555,
+      0
+     ]
+    },
+    "sample_s": {
+     "status": "identical"
+    },
+    "sliding": {
+     "status": "differs",
+     "n_diff": 3
+    },
+    "slip_total": {
+     "status": "differs",
+     "max_abs": 1.0579625119875441e-05,
+     "at": [
+      16769,
+      2,
+      1
+     ],
+     "n_diff": 314860,
+     "first_diff_index": [
+      16555,
+      0,
+      0
+     ]
+    },
+    "stroke_true": {
+     "status": "differs",
+     "max_abs": 9.912648703591653e-06,
+     "at": [
+      16720,
+      3
+     ],
+     "n_diff": 157780,
+     "first_diff_index": [
+      16555,
+      0
+     ]
+    },
+    "t": {
+     "status": "identical"
+    },
+    "utilisation": {
+     "status": "differs",
+     "max_abs": 0.28044547235514417,
+     "at": [
+      16598,
+      1
+     ],
+     "n_diff": 157643,
+     "first_diff_index": [
+      16555,
+      0
+     ]
+    }
+   },
+   "record_first_diff_t_s": 85.06000000057664,
+   "record_all_identical": false,
+   "pads_all_identical": false
+  }
+ },
+ "note": "Spec 110.2 regression: rerun batch 142037 (C2 R7 + 110.1/110.2) vs B2 batch 123223 (same code otherwise, after M1) and vs bundle B 102159 for G1 (before M1). Fields: record/record.npz (20 ms) and pads.npz (1 ms) all arrays, exact equality.",
+ "generated_by": "04_scripts/02_chrono/s6_regression_compare.py"
+}

@@ -1,0 +1,403 @@
+{
+ "meta": {
+  "script": "04_scripts/02_chrono/render_S2_gifs.py",
+  "cpu": {
+   "mode": "ecore",
+   "efficiency_classes": [
+    0,
+    1
+   ],
+   "affinity_ok": true,
+   "affinity_logical_processors": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+   ],
+   "power_throttling_off_ok": true,
+   "priority": "below_normal"
+  },
+  "view_oblique_toward_viewer_body": [
+   0.6006,
+   -0.6606,
+   0.4504
+  ],
+  "arrow_normal_m_per_kN": 0.01,
+  "arrow_tangential_m_per_kN": 0.2,
+  "before_dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\f171486e-e150-4003-82ca-680073c5e79e\\scratchpad\\before",
+  "meshes": {
+   "faces_full": 1219809,
+   "faces_drawn": 325236,
+   "cluster_cell_mm": 12.0,
+   "parts": 1214
+  }
+ },
+ "dt_study": {
+  "png": "06_analysis/01_chrono/S2a_dt_study.png",
+  "slope_fit_per_s": 18.089700381838888,
+  "intercept": 0.03720264292205844,
+  "slope_envelope_per_s": 19.47949059331606,
+  "increment_ratio": 2.0007915907803295,
+  "slope_ratio": 0.9994309603225906
+ },
+ "v12_summary_png": "06_analysis/01_chrono/S2a_v12_summary.png",
+ "ramp_png": {
+  "png": "06_analysis/01_chrono/S2b_ramp_effect.png",
+  "values_N": {
+   "ramp0_dt1e-04": 24204.297663446756,
+   "ramp0_dt1e-05": 242042.97674116588,
+   "ramp0.1_dt1e-04": 24.2042988477981,
+   "ramp0.1_dt1e-05": 24.204416215945912
+  }
+ },
+ "last_run_s": 179.2,
+ "v12_gif": {
+  "path": "06_analysis/01_chrono/S2a_v12_slope.gif",
+  "frames": 63,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 860170,
+  "loop_s": 19.71,
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "merged_identical_frames": 0
+ },
+ "v12": {
+  "frame_times_s": {
+   "v12_pitch2": [
+    0.02,
+    0.045,
+    0.07,
+    0.0785,
+    0.12,
+    0.2,
+    0.35,
+    0.55,
+    0.8,
+    1.1,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.05,
+    5.0,
+    9.0,
+    16.0,
+    28.0,
+    45.0,
+    61.0
+   ],
+   "v12_roll2": [
+    0.02,
+    0.045,
+    0.07,
+    0.0798,
+    0.12,
+    0.2,
+    0.35,
+    0.55,
+    0.8,
+    1.1,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.05,
+    5.0,
+    9.0,
+    16.0,
+    28.0,
+    45.0,
+    61.0
+   ],
+   "v12_rollm2_pitch1.5": [
+    0.02,
+    0.045,
+    0.07,
+    0.0794,
+    0.12,
+    0.2,
+    0.35,
+    0.55,
+    0.8,
+    1.1,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.05,
+    5.0,
+    9.0,
+    16.0,
+    28.0,
+    45.0,
+    61.0
+   ]
+  },
+  "before_source": {
+   "v12_pitch2": "rev-12 Chrono 실행 결과 백업 (S2a_v12_pitch2.json, 창 평균)",
+   "v12_roll2": "rev-12 Chrono 실행 결과 백업 (S2a_v12_roll2.json, 창 평균)",
+   "v12_rollm2_pitch1.5": "rev-12 Chrono 실행 결과 백업 (S2a_v12_rollm2_pitch1.5.json, 창 평균)"
+  },
+  "before_minus_reference_vertical_N": {
+   "v12_pitch2": [
+    148.41,
+    135.19,
+    -135.17,
+    -148.77
+   ],
+   "v12_roll2": [
+    -97.79,
+    216.57,
+    -205.03,
+    86.21
+   ],
+   "v12_rollm2_pitch1.5": [
+    294.54,
+    -51.16,
+    36.66,
+    -280.55
+   ]
+  },
+  "after_minus_reference_vertical_N": {
+   "v12_pitch2": [
+    67.4,
+    50.94,
+    -51.8,
+    -66.88
+   ],
+   "v12_roll2": [
+    67.85,
+    50.92,
+    -52.27,
+    -66.54
+   ],
+   "v12_rollm2_pitch1.5": [
+    67.48,
+    51.98,
+    -52.62,
+    -67.41
+   ]
+  },
+  "checks": {
+   "v12_pitch2": {
+    "s_motor_spread_m": 4.551914400963142e-15,
+    "window_mean_normal_minus_verify_N": 3.4924596548080444e-10
+   },
+   "v12_roll2": {
+    "s_motor_spread_m": 5.384581669432009e-15,
+    "window_mean_normal_minus_verify_N": 2.6193447411060333e-10
+   },
+   "v12_rollm2_pitch1.5": {
+    "s_motor_spread_m": 5.10702591327572e-15,
+    "window_mean_normal_minus_verify_N": 3.7834979593753815e-10
+   }
+  },
+  "frame_png": "06_analysis/01_chrono/S2a_v12_slope_frame.png"
+ },
+ "crawler_gif": {
+  "path": "06_analysis/01_chrono/S2b_crawler_settle.gif",
+  "frames": 28,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 481498,
+  "loop_s": 19.73,
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "merged_identical_frames": 0
+ },
+ "crawler": {
+  "top": {
+   "sphere_force_window_mean_minus_result_max_abs_N": 2.0902379517392546,
+   "sum_spring_minus_F_crawler_z_max_abs_N": 36.083656038797926,
+   "active_spheres_window": 14
+  },
+  "middle": {
+   "sphere_force_window_mean_minus_result_max_abs_N": 0.8572602804633789,
+   "sum_spring_minus_F_crawler_z_max_abs_N": 23.354190400918014,
+   "active_spheres_window": 14
+  },
+  "bottom": {
+   "sphere_force_window_mean_minus_result_max_abs_N": 0.49864152790541993,
+   "sum_spring_minus_F_crawler_z_max_abs_N": 15.154247281956486,
+   "active_spheres_window": 14
+  }
+ },
+ "events_gif": {
+  "path": "06_analysis/01_chrono/S2b_contact_events.gif",
+  "frames": 74,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 736813,
+  "loop_s": 18.64,
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "merged_identical_frames": 0
+ },
+ "events": {
+  "fast_FL": {
+   "frames": 37,
+   "events": [
+    [
+     0.13850000000000107,
+     0,
+     1
+    ],
+    [
+     1.2092999999998832,
+     0,
+     2
+    ],
+    [
+     2.2546000000003334,
+     0,
+     1
+    ]
+   ],
+   "checks": {
+    "min_gap_mm": -3.189861319600862,
+    "slip_end_mm": 1.6181963370511092,
+    "slip_result_mm": 1.6198824870510098,
+    "slip_vector_minus_result_mm": 0.0019455570164142715
+   }
+  },
+  "slow_FL": {
+   "frames": 37,
+   "events": [
+    [
+     0.5058999999999606,
+     0,
+     1
+    ],
+    [
+     5.768799999999894,
+     0,
+     2
+    ],
+    [
+     9.044799999992259,
+     0,
+     1
+    ]
+   ],
+   "checks": {
+    "min_gap_mm": -0.7344260969670557,
+    "slip_end_mm": 0.019737482967499772,
+    "slip_result_mm": 0.020300522567646036,
+    "slip_vector_minus_result_mm": 0.0005204444562604767
+   }
+  }
+ },
+ "events_frame_png": "06_analysis/01_chrono/S2b_contact_events_frame.png",
+ "v11_gif": {
+  "path": "06_analysis/01_chrono/S2b_v11_stroke.gif",
+  "frames": 64,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 636043,
+  "loop_s": 15.4,
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "merged_identical_frames": 0
+ },
+ "v11": {
+  "body_fixed_max_dev_m": 0.0,
+  "rod_mass_kg": 106.783666,
+  "ramp_accel_m_s2": 0.226666667,
+  "stroke_times_s": {
+   "FL 0->0.68": 30.09912637546917,
+   "FL 0.68->0": 30.099126376430753,
+   "FR 0->0.68": 30.09912637546917,
+   "FR 0.68->0": 30.099126376430753,
+   "RL 0->0.68": 30.09912637546917,
+   "RL 0.68->0": 30.099126376430753,
+   "RR 0->0.68": 30.09912637643081
+  },
+  "inertial_reaction_max_abs_N": 24.209656388341273,
+  "screen_scale_px_per_m": 45.159532579207706
+ },
+ "events_view_toward_viewer_body": [
+  0.6006,
+  0.6606,
+  0.4504
+ ],
+ "v7_gif": {
+  "path": "06_analysis/01_chrono/S2a_v7_free_vibration.gif",
+  "frames": 109,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 5452346,
+  "loop_s": 20.5,
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "merged_identical_frames": 0
+ },
+ "v7": {
+  "mesh_render_s": 299.7,
+  "workers": 4,
+  "exaggeration": {
+   "v7_roll": 400.0,
+   "v7_pitch": 400.0,
+   "v7_yaw": 600.0
+  },
+  "limits_screen_m": [
+   [
+    -6.60426529308873,
+    7.196217351805485
+   ],
+   [
+    -6.89155270530219,
+    12.724847625654586
+   ]
+  ],
+  "checks": {
+   "v7_roll": {
+    "refit_minus_result_f_damped_Hz": 6.245134809290676e-08,
+    "refit_minus_result_zeta": 8.687605322632574e-10,
+    "equilibrium_back_extrapolation_dt_s": 0.0009999999999976694,
+    "s_motor_spread_m": 2.614020111479931e-13,
+    "slow_frames": 24,
+    "strobe_frames": 13,
+    "strobe_every_cycles": 3
+   },
+   "v7_pitch": {
+    "refit_minus_result_f_damped_Hz": 3.374248213727782e-06,
+    "refit_minus_result_zeta": 4.312332890603343e-08,
+    "equilibrium_back_extrapolation_dt_s": 0.0009999999999976694,
+    "s_motor_spread_m": 6.265543639472071e-13,
+    "slow_frames": 24,
+    "strobe_frames": 13,
+    "strobe_every_cycles": 5
+   },
+   "v7_yaw": {
+    "refit_minus_result_f_damped_Hz": 0.0,
+    "refit_minus_result_zeta": 0.0,
+    "equilibrium_back_extrapolation_dt_s": 0.0009999999999976694,
+    "s_motor_spread_m": 1.9706458687096529e-13,
+    "slow_frames": 24,
+    "strobe_frames": 11,
+    "strobe_every_cycles": 1
+   }
+  },
+  "mast_top_body_m": [
+   3.416,
+   0.004,
+   11.795
+  ]
+ },
+ "summary_a_png": "06_analysis/01_chrono/S2a_summary.png",
+ "summary_b_png": "06_analysis/01_chrono/S2b_summary.png"
+}

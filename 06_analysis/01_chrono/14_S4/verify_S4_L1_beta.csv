@@ -1,70 +1,70 @@
 beta,id,item,chrono,reference,tol,tol_kind,unit,passed
-beta_6.9e+08,beta V2,beta_6.9e+08: pad penetration,"[8.065435573566383, 7.93051092431876, 4.873143450551852, 4.750286393441009]","[8.05907, 7.92572, 4.87793, 4.75651]",0.05,rel,mm,True
-beta_6.9e+08,beta V3,beta_6.9e+08: static pitch,0.037620040630678746,0.03749,0.002,abs,deg,True
-beta_6.9e+08,beta V5,beta_6.9e+08: FL +1 mm contact force change,"[3330.493307980694, -3355.4326352155767, -3762.37332832026, 3787.2550474793097]","[3393.93, -3393.93, -3727.3, 3727.3]",186.365,abs,N,True
-beta_6.9e+08,beta V6,beta_6.9e+08: FL+ travel at F_min,16.793780332310302,16.97,0.05,rel,mm,True
-beta_6.9e+08,beta V6,beta_6.9e+08: FL+ travel at lift-off,19.585234192336337,19.79,0.05,rel,mm,True
-beta_6.9e+08,beta V7,beta_6.9e+08: mode 1 natural frequency (ERA),1.5389887361948416,1.539,0.03,rel,Hz,True
-beta_6.9e+08,beta V7,beta_6.9e+08: mode 2 natural frequency (ERA),2.6244808594530826,2.624,0.03,rel,Hz,True
-beta_6.9e+08,beta V7,beta_6.9e+08: mode 3 natural frequency (ERA),5.8102327337918735,5.81,0.03,rel,Hz,True
-beta_6.9e+08,beta V7,beta_6.9e+08: mode 4 natural frequency (ERA),5.985079847645925,5.985,0.03,rel,Hz,True
-beta_6.9e+08,beta V7,beta_6.9e+08: mode 5 natural frequency (ERA),6.646710343102558,6.646,0.03,rel,Hz,True
-beta_6.9e+08,beta V7,beta_6.9e+08: mode 6 natural frequency (ERA),7.879935055151584,7.88,0.03,rel,Hz,True
+beta_6.9e+08,beta V2,beta_6.9e+08: pad penetration,"[6.427724512911875, 6.305077666050007, 5.239089502180864, 5.127412127043601]","[6.42541, 6.30414, 5.24068, 5.13025]",0.05,rel,mm,True
+beta_6.9e+08,beta V3,beta_6.9e+08: static pitch,0.013957273919099438,0.01391,0.002,abs,deg,True
+beta_6.9e+08,beta V5,beta_6.9e+08: FL +1 mm contact force change,"[3469.4553077768505, -3494.965678505294, -3932.012300070026, 3957.2587140869146]","[3549.96, -3549.96, -3898.65, 3898.65]",194.9325,abs,N,True
+beta_6.9e+08,beta V6,beta_6.9e+08: FL+ travel at F_min,15.901978945186173,16.04,0.05,rel,mm,True
+beta_6.9e+08,beta V6,beta_6.9e+08: FL+ travel at lift-off,18.479771103315176,18.64,0.05,rel,mm,True
+beta_6.9e+08,beta V7,beta_6.9e+08: mode 1 natural frequency (ERA),1.5919306023926505,1.592,0.03,rel,Hz,True
+beta_6.9e+08,beta V7,beta_6.9e+08: mode 2 natural frequency (ERA),2.5639117859182283,2.564,0.03,rel,Hz,True
+beta_6.9e+08,beta V7,beta_6.9e+08: mode 3 natural frequency (ERA),4.020040676639782,4.019,0.03,rel,Hz,True
+beta_6.9e+08,beta V7,beta_6.9e+08: mode 4 natural frequency (ERA),5.395488707735995,5.396,0.03,rel,Hz,True
+beta_6.9e+08,beta V7,beta_6.9e+08: mode 5 natural frequency (ERA),6.537518422209394,6.536,0.03,rel,Hz,True
+beta_6.9e+08,beta V7,beta_6.9e+08: mode 6 natural frequency (ERA),7.221277738204787,7.217,0.03,rel,Hz,True
 beta_6.9e+08,beta MAC,beta_6.9e+08: mode 1 (frequency order) nominal label,0.0,0.0,0.0,abs,-,True
-beta_6.9e+08,beta MAC,beta_6.9e+08: mode 1 MAC vs nominal Phi,0.9994642161707569,0.999,0.05,abs,-,True
+beta_6.9e+08,beta MAC,beta_6.9e+08: mode 1 MAC vs nominal Phi,0.9989850760212033,0.999,0.05,abs,-,True
 beta_6.9e+08,beta MAC,beta_6.9e+08: mode 2 (frequency order) nominal label,1.0,1.0,0.0,abs,-,True
-beta_6.9e+08,beta MAC,beta_6.9e+08: mode 2 MAC vs nominal Phi,0.9942538241211881,0.994,0.05,abs,-,True
+beta_6.9e+08,beta MAC,beta_6.9e+08: mode 2 MAC vs nominal Phi,0.989214376985505,0.989,0.05,abs,-,True
 beta_6.9e+08,beta MAC,beta_6.9e+08: mode 3 (frequency order) nominal label,2.0,2.0,0.0,abs,-,True
-beta_6.9e+08,beta MAC,beta_6.9e+08: mode 3 MAC vs nominal Phi,0.9984566252825547,0.998,0.05,abs,-,True
+beta_6.9e+08,beta MAC,beta_6.9e+08: mode 3 MAC vs nominal Phi,0.9996359171519532,1.0,0.05,abs,-,True
 beta_6.9e+08,beta MAC,beta_6.9e+08: mode 4 (frequency order) nominal label,3.0,3.0,0.0,abs,-,True
-beta_6.9e+08,beta MAC,beta_6.9e+08: mode 4 MAC vs nominal Phi,0.7993041866928536,0.8,0.05,abs,-,True
-beta_6.9e+08,beta MAC,beta_6.9e+08: mode 5 (frequency order) nominal label,4.0,4.0,0.0,abs,-,True
-beta_6.9e+08,beta MAC,beta_6.9e+08: mode 5 MAC vs nominal Phi,0.8016358004252557,0.802,0.05,abs,-,True
-beta_6.9e+08,beta MAC,beta_6.9e+08: mode 6 (frequency order) nominal label,5.0,5.0,0.0,abs,-,True
-beta_6.9e+08,beta MAC,beta_6.9e+08: mode 6 MAC vs nominal Phi,0.9976758310376085,0.998,0.05,abs,-,True
-beta_1.0e+09,beta V2,beta_1.0e+09: pad penetration,"[5.734617522836032, 5.638975987462527, 3.468879616172855, 3.3817922111735474]","[5.73147, 5.63661, 3.4713, 3.38492]",0.05,rel,mm,True
-beta_1.0e+09,beta V3,beta_1.0e+09: static pitch,0.026701008496834332,0.02664,0.002,abs,deg,True
-beta_1.0e+09,beta V5,beta_1.0e+09: FL +1 mm contact force change,"[4707.976268174054, -4733.2474894634215, -5273.083300218757, 5298.623971381938]","[4770.6, -4770.6, -5239.19, 5239.19]",261.9595,abs,N,True
-beta_1.0e+09,beta V6,beta_1.0e+09: FL+ travel at F_min,11.984091801547292,12.07,0.05,rel,mm,True
-beta_1.0e+09,beta V6,beta_1.0e+09: FL+ travel at lift-off,13.975802198079652,14.08,0.05,rel,mm,True
-beta_1.0e+09,beta V7,beta_1.0e+09: mode 1 natural frequency (ERA),1.7982483180150148,1.798,0.03,rel,Hz,True
-beta_1.0e+09,beta V7,beta_1.0e+09: mode 2 natural frequency (ERA),3.004879224159532,3.005,0.03,rel,Hz,True
-beta_1.0e+09,beta V7,beta_1.0e+09: mode 3 natural frequency (ERA),5.818972161194289,5.819,0.03,rel,Hz,True
-beta_1.0e+09,beta V7,beta_1.0e+09: mode 4 natural frequency (ERA),6.4217155550733125,6.421,0.03,rel,Hz,True
-beta_1.0e+09,beta V7,beta_1.0e+09: mode 5 natural frequency (ERA),7.608222102900872,7.607,0.03,rel,Hz,True
-beta_1.0e+09,beta V7,beta_1.0e+09: mode 6 natural frequency (ERA),7.9998386365071905,8.0,0.03,rel,Hz,True
+beta_6.9e+08,beta MAC,beta_6.9e+08: mode 4 MAC vs nominal Phi,0.9878587861474494,0.988,0.05,abs,-,True
+beta_6.9e+08,beta MAC,beta_6.9e+08: mode 5 (frequency order) nominal label,5.0,5.0,0.0,abs,-,True
+beta_6.9e+08,beta MAC,beta_6.9e+08: mode 5 MAC vs nominal Phi,0.9940089270245036,0.994,0.05,abs,-,True
+beta_6.9e+08,beta MAC,beta_6.9e+08: mode 6 (frequency order) nominal label,4.0,4.0,0.0,abs,-,True
+beta_6.9e+08,beta MAC,beta_6.9e+08: mode 6 MAC vs nominal Phi,0.9947786476580378,0.995,0.05,abs,-,True
+beta_1.0e+09,beta V2,beta_1.0e+09: pad penetration,"[4.605288468051408, 4.517942198417528, 3.7252151600271866, 3.645681096410154]","[4.60407, 4.51743, 3.7261, 3.64721]",0.05,rel,mm,True
+beta_1.0e+09,beta V3,beta_1.0e+09: static pitch,0.010336467410392835,0.01031,0.002,abs,deg,True
+beta_1.0e+09,beta V5,beta_1.0e+09: FL +1 mm contact force change,"[4898.431038897674, -4923.31425923112, -5500.509958065013, 5525.212546393421]","[4978.2, -4978.2, -5467.18, 5467.18]",273.35900000000004,abs,N,True
+beta_1.0e+09,beta V6,beta_1.0e+09: FL+ travel at F_min,11.36893888827664,11.44,0.05,rel,mm,True
+beta_1.0e+09,beta V6,beta_1.0e+09: FL+ travel at lift-off,13.211036108344842,13.29,0.05,rel,mm,True
+beta_1.0e+09,beta V7,beta_1.0e+09: mode 1 natural frequency (ERA),1.845523846100745,1.845,0.03,rel,Hz,True
+beta_1.0e+09,beta V7,beta_1.0e+09: mode 2 natural frequency (ERA),2.853538512936108,2.853,0.03,rel,Hz,True
+beta_1.0e+09,beta V7,beta_1.0e+09: mode 3 natural frequency (ERA),4.025821462160292,4.026,0.03,rel,Hz,True
+beta_1.0e+09,beta V7,beta_1.0e+09: mode 4 natural frequency (ERA),5.7472182007391694,5.747,0.03,rel,Hz,True
+beta_1.0e+09,beta V7,beta_1.0e+09: mode 5 natural frequency (ERA),7.35078114725088,7.366,0.03,rel,Hz,True
+beta_1.0e+09,beta V7,beta_1.0e+09: mode 6 natural frequency (ERA),7.732318633782332,7.731,0.03,rel,Hz,True
 beta_1.0e+09,beta MAC,beta_1.0e+09: mode 1 (frequency order) nominal label,0.0,0.0,0.0,abs,-,True
-beta_1.0e+09,beta MAC,beta_1.0e+09: mode 1 MAC vs nominal Phi,0.999999282321973,1.0,0.05,abs,-,True
+beta_1.0e+09,beta MAC,beta_1.0e+09: mode 1 MAC vs nominal Phi,0.9999976036833089,1.0,0.05,abs,-,True
 beta_1.0e+09,beta MAC,beta_1.0e+09: mode 2 (frequency order) nominal label,1.0,1.0,0.0,abs,-,True
-beta_1.0e+09,beta MAC,beta_1.0e+09: mode 2 MAC vs nominal Phi,0.9999796394384334,1.0,0.05,abs,-,True
+beta_1.0e+09,beta MAC,beta_1.0e+09: mode 2 MAC vs nominal Phi,0.9999458069543703,1.0,0.05,abs,-,True
 beta_1.0e+09,beta MAC,beta_1.0e+09: mode 3 (frequency order) nominal label,2.0,2.0,0.0,abs,-,True
-beta_1.0e+09,beta MAC,beta_1.0e+09: mode 3 MAC vs nominal Phi,0.9999944673019813,1.0,0.05,abs,-,True
+beta_1.0e+09,beta MAC,beta_1.0e+09: mode 3 MAC vs nominal Phi,0.9999896745561692,1.0,0.05,abs,-,True
 beta_1.0e+09,beta MAC,beta_1.0e+09: mode 4 (frequency order) nominal label,3.0,3.0,0.0,abs,-,True
-beta_1.0e+09,beta MAC,beta_1.0e+09: mode 4 MAC vs nominal Phi,0.9992546994604353,1.0,0.05,abs,-,True
+beta_1.0e+09,beta MAC,beta_1.0e+09: mode 4 MAC vs nominal Phi,0.9997196130576597,1.0,0.05,abs,-,True
 beta_1.0e+09,beta MAC,beta_1.0e+09: mode 5 (frequency order) nominal label,4.0,4.0,0.0,abs,-,True
-beta_1.0e+09,beta MAC,beta_1.0e+09: mode 5 MAC vs nominal Phi,0.9987068716213545,1.0,0.05,abs,-,True
+beta_1.0e+09,beta MAC,beta_1.0e+09: mode 5 MAC vs nominal Phi,0.9996101595920475,1.0,0.05,abs,-,True
 beta_1.0e+09,beta MAC,beta_1.0e+09: mode 6 (frequency order) nominal label,5.0,5.0,0.0,abs,-,True
-beta_1.0e+09,beta MAC,beta_1.0e+09: mode 6 MAC vs nominal Phi,0.9995059316541495,1.0,0.05,abs,-,True
-beta_1.6e+09,beta V2,beta_1.6e+09: pad penetration,"[3.79008034166479, 3.7269907530028497, 2.296126675989671, 2.238679788111588]","[3.78867, 3.72593, 2.29721, 2.24008]",0.05,rel,mm,True
-beta_1.6e+09,beta V3,beta_1.6e+09: static pitch,0.017605755076656716,0.01758,0.002,abs,deg,True
-beta_1.6e+09,beta V5,beta_1.6e+09: FL +1 mm contact force change,"[7148.748842104207, -7173.984569343083, -7956.485062603213, 7981.52821261574]","[7212.51, -7212.51, -7920.95, 7920.95]",396.0475,abs,N,True
-beta_1.6e+09,beta V6,beta_1.6e+09: FL+ travel at F_min,7.947251744257697,7.986,0.05,rel,mm,True
-beta_1.6e+09,beta V6,beta_1.6e+09: FL+ travel at lift-off,9.26572720216704,9.312,0.05,rel,mm,True
-beta_1.6e+09,beta V7,beta_1.6e+09: mode 1 natural frequency (ERA),2.151298522703514,2.151,0.03,rel,Hz,True
-beta_1.6e+09,beta V7,beta_1.6e+09: mode 2 natural frequency (ERA),3.459728354653226,3.459,0.03,rel,Hz,True
-beta_1.6e+09,beta V7,beta_1.6e+09: mode 3 natural frequency (ERA),5.833084233998937,5.833,0.03,rel,Hz,True
-beta_1.6e+09,beta V7,beta_1.6e+09: mode 4 natural frequency (ERA),6.918751447740589,6.92,0.03,rel,Hz,True
-beta_1.6e+09,beta V7,beta_1.6e+09: mode 5 natural frequency (ERA),8.21481676085013,8.214,0.03,rel,Hz,True
-beta_1.6e+09,beta V7,beta_1.6e+09: mode 6 natural frequency (ERA),9.278200534464549,9.277,0.03,rel,Hz,True
+beta_1.0e+09,beta MAC,beta_1.0e+09: mode 6 MAC vs nominal Phi,0.9995483960423119,1.0,0.05,abs,-,True
+beta_1.6e+09,beta V2,beta_1.6e+09: pad penetration,"[3.0844057857587943, 3.0263664346364822, 2.46144765318938, 2.408599312168841]","[3.08384, 3.02611, 2.46191, 2.40935]",0.05,rel,mm,True
+beta_1.6e+09,beta V3,beta_1.6e+09: static pitch,0.007319283285349357,0.007307,0.002,abs,deg,True
+beta_1.6e+09,beta V5,beta_1.6e+09: FL +1 mm contact force change,"[7416.477153780623, -7441.267255127968, -8264.567859145856, 8290.12566439544]","[7495.15, -7495.15, -8231.36, 8231.36]",411.56800000000004,abs,N,True
+beta_1.6e+09,beta V6,beta_1.6e+09: FL+ travel at F_min,7.567574093931837,7.599,0.05,rel,mm,True
+beta_1.6e+09,beta V6,beta_1.6e+09: FL+ travel at lift-off,8.793345111843065,8.83,0.05,rel,mm,True
+beta_1.6e+09,beta V7,beta_1.6e+09: mode 1 natural frequency (ERA),2.1789401852156054,2.178,0.03,rel,Hz,True
+beta_1.6e+09,beta V7,beta_1.6e+09: mode 2 natural frequency (ERA),3.149650012303291,3.148,0.03,rel,Hz,True
+beta_1.6e+09,beta V7,beta_1.6e+09: mode 3 natural frequency (ERA),4.036440742805418,4.037,0.03,rel,Hz,True
+beta_1.6e+09,beta V7,beta_1.6e+09: mode 4 natural frequency (ERA),6.390084866282647,6.391,0.03,rel,Hz,True
+beta_1.6e+09,beta V7,beta_1.6e+09: mode 5 natural frequency (ERA),7.627241853387236,7.633,0.03,rel,Hz,True
+beta_1.6e+09,beta V7,beta_1.6e+09: mode 6 natural frequency (ERA),9.47525565735881,9.474,0.03,rel,Hz,True
 beta_1.6e+09,beta MAC,beta_1.6e+09: mode 1 (frequency order) nominal label,0.0,0.0,0.0,abs,-,True
-beta_1.6e+09,beta MAC,beta_1.6e+09: mode 1 MAC vs nominal Phi,0.9984700485029114,0.998,0.05,abs,-,True
+beta_1.6e+09,beta MAC,beta_1.6e+09: mode 1 MAC vs nominal Phi,0.99722371711902,0.997,0.05,abs,-,True
 beta_1.6e+09,beta MAC,beta_1.6e+09: mode 2 (frequency order) nominal label,1.0,1.0,0.0,abs,-,True
-beta_1.6e+09,beta MAC,beta_1.6e+09: mode 2 MAC vs nominal Phi,0.9854558972411532,0.985,0.05,abs,-,True
+beta_1.6e+09,beta MAC,beta_1.6e+09: mode 2 MAC vs nominal Phi,0.9821061442488729,0.982,0.05,abs,-,True
 beta_1.6e+09,beta MAC,beta_1.6e+09: mode 3 (frequency order) nominal label,2.0,2.0,0.0,abs,-,True
-beta_1.6e+09,beta MAC,beta_1.6e+09: mode 3 MAC vs nominal Phi,0.9991251963891008,0.999,0.05,abs,-,True
+beta_1.6e+09,beta MAC,beta_1.6e+09: mode 3 MAC vs nominal Phi,0.9988963957747187,0.999,0.05,abs,-,True
 beta_1.6e+09,beta MAC,beta_1.6e+09: mode 4 (frequency order) nominal label,3.0,3.0,0.0,abs,-,True
-beta_1.6e+09,beta MAC,beta_1.6e+09: mode 4 MAC vs nominal Phi,0.9636393788587576,0.964,0.05,abs,-,True
-beta_1.6e+09,beta MAC,beta_1.6e+09: mode 5 (frequency order) nominal label,5.0,5.0,0.0,abs,-,True
-beta_1.6e+09,beta MAC,beta_1.6e+09: mode 5 MAC vs nominal Phi,0.9919612715147407,0.992,0.05,abs,-,True
-beta_1.6e+09,beta MAC,beta_1.6e+09: mode 6 (frequency order) nominal label,4.0,4.0,0.0,abs,-,True
-beta_1.6e+09,beta MAC,beta_1.6e+09: mode 6 MAC vs nominal Phi,0.9709653423428015,0.971,0.05,abs,-,True
+beta_1.6e+09,beta MAC,beta_1.6e+09: mode 4 MAC vs nominal Phi,0.9816859001453369,0.982,0.05,abs,-,True
+beta_1.6e+09,beta MAC,beta_1.6e+09: mode 5 (frequency order) nominal label,4.0,4.0,0.0,abs,-,True
+beta_1.6e+09,beta MAC,beta_1.6e+09: mode 5 MAC vs nominal Phi,0.9964698568097358,0.997,0.05,abs,-,True
+beta_1.6e+09,beta MAC,beta_1.6e+09: mode 6 (frequency order) nominal label,5.0,5.0,0.0,abs,-,True
+beta_1.6e+09,beta MAC,beta_1.6e+09: mode 6 MAC vs nominal Phi,0.9985797418480176,0.999,0.05,abs,-,True

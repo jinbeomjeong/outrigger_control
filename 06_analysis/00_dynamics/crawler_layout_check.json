@@ -17,7 +17,7 @@
    "equal stiffness per point, vertical only (SMC kt = 0), rigid level floor, rigid body": true,
    "dashpot total": "2 zeta sqrt(kn_total m), m = superstructure top + 4 moving parts, split equally over the floor-contact points"
   },
-  "runtime_s": 121.8
+  "runtime_s": 479.7
  },
  "cad_measurements": {
   "track_centre_y_m": 1.045,
@@ -129,98 +129,98 @@
    ],
    "track_centre_y_m": 1.066,
    "k_per_point_N_m": 5555560.0,
-   "c_per_point_N_s_m": 10968.9,
-   "damping_total_N_s_m": 197441.0,
-   "gn_per_point_1_s (c / superstructure body mass)": 0.284496,
+   "c_per_point_N_s_m": 10937.6,
+   "damping_total_N_s_m": 196877.0,
+   "gn_per_point_1_s (c / superstructure body mass)": 0.284828,
    "pitch_stiffness_about_spring_centroid_N_m_rad": 141370000.0,
    "settled_on_crawler (legs at 0)": {
     "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
-     -3.8205,
-     0.0003211,
-     0.068741
+     -3.7987,
+     0.0002858,
+     0.070387
     ],
     "active_points": 18,
     "n_points": 18,
     "station_force_N (left track, rear -> front)": [
-     8927.6,
-     11997.0,
-     15066.0,
-     18136.0,
-     21205.0,
-     24275.0,
-     27344.0,
-     30413.0,
-     33483.0
+     8516.3,
+     11659.0,
+     14802.0,
+     17945.0,
+     21088.0,
+     24231.0,
+     27374.0,
+     30517.0,
+     33659.0
     ],
-    "rear_row_force_N": 17922.0,
-    "front_row_force_N": 67032.0,
+    "rear_row_force_N": 17092.0,
+    "front_row_force_N": 67378.0,
     "gapped_points_in_contact": 0,
     "gapped_points_force_N": 0.0,
-    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4437,
+    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4569,
     "kern_half_length_rear_side_m (rear row unloads beyond this)": 0.7675,
     "pad_gap_at_e0_mm": [
-     344.53,
-     344.52,
-     340.15,
-     340.14
+     344.49,
+     344.48,
+     340.25,
+     340.24
     ]
    },
    "crawler_on_floor_modes (active springs, top)": {
     "f_Hz": [
-     2.245,
-     2.875,
-     8.109
+     2.249,
+     2.88,
+     8.135
     ],
     "zeta": [
-     0.01405,
-     0.01803,
-     0.0503
+     0.01403,
+     0.01801,
+     0.05032
     ],
     "tau_s": [
-     5.046,
-     3.071,
-     0.3902
+     5.043,
+     3.068,
+     0.3888
     ],
     "mode_shapes_undamped (KE fraction)": [
      {
-      "pitch": 0.987
+      "pitch": 0.986
      },
      {
       "roll": 1.0
      },
      {
-      "heave z": 0.987
+      "heave z": 0.986
      }
     ],
-    "settle_length_s (ln(100) x max tau)": 23.24,
-    "mass_orthogonality_max": 6.66e-16
+    "settle_length_s (ln(100) x max tau)": 23.22,
+    "mass_orthogonality_max": 1.11e-15
    },
    "crawler_on_floor_modes_other_levels": {
     "middle": {
      "f_Hz": [
-      2.884,
-      3.913,
-      8.145
+      2.89,
+      3.92,
+      8.173
      ],
      "zeta": [
-      0.01801,
-      0.02448,
-      0.05052
+      0.018,
+      0.02445,
+      0.05055
      ],
-     "settle_length_s (ln(100) x max tau)": 14.11
+     "settle_length_s (ln(100) x max tau)": 14.09
     },
     "bottom": {
      "f_Hz": [
-      3.213,
-      4.143,
-      8.17
+      3.22,
+      4.148,
+      8.2
      ],
      "zeta": [
-      0.02003,
-      0.02585,
-      0.05068
+      0.02002,
+      0.02581,
+      0.05072
      ],
-     "settle_length_s (ln(100) x max tau)": 11.39
+     "settle_length_s (ln(100) x max tau)": 11.37
     }
    },
    "nonlinear_free_settle_from_zero_compression": {
@@ -230,65 +230,65 @@
      "atol": 1e-12,
      "max_step_s": 0.002,
      "status": 0,
-     "nfev": 609653
+     "nfev": 610253
     },
     "initial_deviation (uz_mm, roll_deg, pitch_deg)": [
-     3.821,
-     0.0003211,
-     0.06874
+     3.799,
+     0.0002858,
+     0.07039
     ],
-    "t_last_above_1pct_of_initial_uz_s": 2.274,
-    "t_last_above_1pct_of_initial_pitch_s": 23.79,
+    "t_last_above_1pct_of_initial_uz_s": 1.964,
+    "t_last_above_1pct_of_initial_pitch_s": 23.96,
     "end_minus_static (uz_mm, pitch_deg)": [
-     -1.31e-09,
-     2.11e-09
+     -5.86e-09,
+     9.15e-09
     ]
    },
    "V4_quasi_static": {
     "touch_s (FL, FR, RL, RR)": [
-     15.1448,
-     15.1453,
-     15.0071,
-     15.0061
+     16.4067,
+     16.4074,
+     16.2612,
+     16.2603
     ],
     "first_touch_leg": "RR",
-    "first_touch_s": 15.0061,
-    "front_minus_rear_touch_s": 0.1384,
+    "first_touch_s": 16.2603,
+    "front_minus_rear_touch_s": 0.1463,
     "touch_kinematic_from_settled_pose_s": [
-     15.2001,
-     15.1994,
-     15.0067,
-     15.0061
+     16.4636,
+     16.463,
+     16.2609,
+     16.2603
     ],
-    "crawler_fully_off_s": 15.6912,
-    "all_cyl_ge_F_min_s": 15.1842,
+    "crawler_fully_off_s": 16.9501,
+    "all_cyl_ge_F_min_s": 16.4464,
     "end_pad_force_N": [
-     119292.5,
-     117318.0,
-     73757.77,
-     71922.38
+     119272.0,
+     117027.5,
+     72676.13,
+     71137.35
     ],
     "end_attitude_deg (roll, pitch)": [
-     -0.0020529,
-     0.026636
+     -0.001875,
+     0.010312
     ],
-    "end_crawler_min_clearance_mm": 44.4869
+    "end_crawler_min_clearance_mm": 45.4853
    },
    "V4_residual_linear_L1_after_last_stop (deg, roll/pitch)": {
-    "start_s": 15.7412,
+    "start_s": 17.0001,
     "roll_pitch_at_0s": [
-     0.0003481,
-     0.01847
+     0.0001997,
+     0.01493
     ],
     "roll_pitch_at_10s": [
-     0.0001126,
-     0.001304
+     4.42e-05,
+     0.0006405
     ],
     "roll_pitch_at_15s": [
-     7.24e-05,
-     0.0003584
+     2.889e-05,
+     0.0001439
     ],
-    "last_time_above_0.001deg_after_last_stop_s": 11.01
+    "last_time_above_0.001deg_after_last_stop_s": 8.584
    },
    "full_stroke_damped_3dof": {
     "window_s": [
@@ -301,139 +301,139 @@
      "atol": 1e-12,
      "max_step_s": 0.001,
      "status": 0,
-     "nfev": 86150,
-     "wall_s": 1.96
+     "nfev": 85766,
+     "wall_s": 11.53
     },
     "per_leg": {
      "FL": {
-      "first_touch_dyn_s": 15.148,
-      "peak_pad_force_N": 131665.0,
-      "peak_at_s": 15.879,
+      "first_touch_dyn_s": 16.409,
+      "peak_pad_force_N": 130720.0,
+      "peak_at_s": 17.119,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 9625.16
+      "cyl_force_min_after_first_reaching_F_min_N": 9727.74
      },
      "FR": {
-      "first_touch_dyn_s": 15.149,
-      "peak_pad_force_N": 129334.0,
-      "peak_at_s": 15.88,
+      "first_touch_dyn_s": 16.409,
+      "peak_pad_force_N": 128127.0,
+      "peak_at_s": 17.12,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 9829.44
+      "cyl_force_min_after_first_reaching_F_min_N": 9941.63
      },
      "RL": {
-      "first_touch_dyn_s": 15.007,
-      "peak_pad_force_N": 85128.2,
-      "peak_at_s": 15.538,
+      "first_touch_dyn_s": 16.261,
+      "peak_pad_force_N": 82939.3,
+      "peak_at_s": 16.794,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 9577.63
+      "cyl_force_min_after_first_reaching_F_min_N": 9545.2
      },
      "RR": {
-      "first_touch_dyn_s": 15.007,
-      "peak_pad_force_N": 84024.3,
-      "peak_at_s": 15.539,
+      "first_touch_dyn_s": 16.261,
+      "peak_pad_force_N": 82050.7,
+      "peak_at_s": 16.794,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 9597.82
+      "cyl_force_min_after_first_reaching_F_min_N": 9419.09
      }
     },
-    "max_peak_pad_force_N": 131665.0,
-    "max_peak_cylinder_force_N": 130618.0,
-    "max_abs_diff_vs_quasi_static_N": 18554.0,
-    "max_abs_diff_at_s": 15.209,
-    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": 125.1,
+    "max_peak_pad_force_N": 130720.0,
+    "max_peak_cylinder_force_N": 129673.0,
+    "max_abs_diff_vs_quasi_static_N": 16881.0,
+    "max_abs_diff_at_s": 16.467,
+    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": 4.501,
     "contact_lost_samples_after_touch": 0,
     "quasi_static_events_full_stroke_s": {
      "touch (FL, FR, RL, RR)": [
-      15.1448,
-      15.1453,
-      15.0071,
-      15.0061
+      16.4067,
+      16.4074,
+      16.2612,
+      16.2603
      ],
-     "crawler_off": 15.6912
+     "crawler_off": 16.9501
     }
    },
    "slope_stability_on_crawler (legs retracted)": {
     "top": {
-     "com_height_above_floor_m": 3.1985,
+     "com_height_above_floor_m": 3.2111,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 5.796,
-     "front_row_unloads_at_nose_up_slope_deg": 20.75,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 5.538,
+     "front_row_unloads_at_nose_up_slope_deg": 20.88,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      18.41,
-      18.46
+      18.34,
+      18.39
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      23.61,
-      35.55,
-      18.41
+      23.33,
+      35.6,
+      18.34
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.41,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.34,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      23.61,
-      35.55
+      23.33,
+      35.6
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      16.61,
-      30.05
+      16.33,
+      30.13
      ]
     },
     "middle": {
-     "com_height_above_floor_m": 2.5085,
+     "com_height_above_floor_m": 2.5172,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 7.374,
-     "front_row_unloads_at_nose_up_slope_deg": 25.79,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 7.051,
+     "front_row_unloads_at_nose_up_slope_deg": 25.95,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      22.99,
-      23.06
+      22.92,
+      22.98
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      29.14,
-      42.34,
-      22.99
+      28.82,
+      42.41,
+      22.92
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.57,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.49,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      29.14,
-      42.34
+      28.82,
+      42.41
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      20.83,
-      36.42
+      20.5,
+      36.52
      ]
     },
     "bottom": {
-     "com_height_above_floor_m": 1.8185,
+     "com_height_above_floor_m": 1.8232,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 10.12,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 9.691,
      "front_row_unloads_at_nose_up_slope_deg": Infinity,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      30.34,
-      30.42
+      30.28,
+      30.35
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      37.56,
-      51.49,
-      30.34
+      37.22,
+      51.58,
+      30.28
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.6,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.53,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      37.56,
-      51.49
+      37.22,
+      51.58
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      27.69,
-      45.5
+      27.3,
+      45.63
      ]
     }
    },
-   "wall_s": 16.3
+   "wall_s": 84.5
   },
   "B_rollers_2x6": {
    "note": "lower track roller axes from crawler_wheels.csv, y = track centre +/-1.045 (crawler_summary.json)",
@@ -444,54 +444,54 @@
    ],
    "track_centre_y_m": 1.045,
    "k_per_point_N_m": 8333330.0,
-   "c_per_point_N_s_m": 16453.4,
-   "damping_total_N_s_m": 197441.0,
-   "gn_per_point_1_s (c / superstructure body mass)": 0.426744,
+   "c_per_point_N_s_m": 16406.5,
+   "damping_total_N_s_m": 196877.0,
+   "gn_per_point_1_s (c / superstructure body mass)": 0.427242,
    "pitch_stiffness_about_spring_centroid_N_m_rad": 37173000.0,
    "settled_on_crawler (legs at 0)": {
     "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
-     -3.7169,
-     0.00040096,
-     0.26674
+     -3.6515,
+     0.00035689,
+     0.27879
     ],
     "active_points": 10,
     "n_points": 12,
     "station_force_N (left track, rear -> front)": [
      -0.0,
-     10468.0,
-     24318.0,
-     38168.0,
-     52018.0,
-     65869.0
+     9006.0,
+     23482.0,
+     37957.0,
+     52433.0,
+     66908.0
     ],
     "rear_row_force_N": 0.0,
-    "front_row_force_N": 131860.0,
+    "front_row_force_N": 133920.0,
     "gapped_points_in_contact": 0,
     "gapped_points_force_N": 0.0,
-    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4372,
+    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4504,
     "kern_half_length_rear_side_m (rear row unloads beyond this)": 0.4165,
     "pad_gap_at_e0_mm": [
-     336.71,
-     336.69,
-     349.09,
-     349.07
+     336.3,
+     336.28,
+     349.69,
+     349.68
     ]
    },
    "crawler_on_floor_modes (active springs, top)": {
     "f_Hz": [
-     0.852,
-     2.569,
-     7.373
+     0.8537,
+     2.574,
+     7.395
     ],
     "zeta": [
-     0.005607,
-     0.01615,
-     0.04573
+     0.005602,
+     0.01614,
+     0.04574
     ],
     "tau_s": [
-     33.31,
-     3.835,
-     0.4721
+     33.28,
+     3.831,
+     0.4705
     ],
     "mode_shapes_undamped (KE fraction)": [
      {
@@ -504,35 +504,35 @@
       "heave z": 0.996
      }
     ],
-    "settle_length_s (ln(100) x max tau)": 153.4,
-    "mass_orthogonality_max": 4.44e-16
+    "settle_length_s (ln(100) x max tau)": 153.3,
+    "mass_orthogonality_max": 8.88e-16
    },
    "crawler_on_floor_modes_other_levels": {
     "middle": {
      "f_Hz": [
-      1.104,
-      3.498,
-      7.382
+      1.107,
+      3.504,
+      7.406
      ],
      "zeta": [
-      0.007171,
-      0.02193,
-      0.04579
+      0.007168,
+      0.0219,
+      0.0458
      ],
-     "settle_length_s (ln(100) x max tau)": 92.58
+     "settle_length_s (ln(100) x max tau)": 92.39
     },
     "bottom": {
      "f_Hz": [
-      1.24,
-      3.704,
-      7.388
+      1.243,
+      3.709,
+      7.412
      ],
      "zeta": [
-      0.007949,
-      0.02315,
-      0.04583
+      0.007947,
+      0.02312,
+      0.04585
      ],
-     "settle_length_s (ln(100) x max tau)": 74.38
+     "settle_length_s (ln(100) x max tau)": 74.21
     }
    },
    "nonlinear_free_settle_from_zero_compression": {
@@ -542,69 +542,69 @@
      "atol": 1e-12,
      "max_step_s": 0.002,
      "status": 0,
-     "nfev": 707837
+     "nfev": 703181
     },
     "initial_deviation (uz_mm, roll_deg, pitch_deg)": [
-     3.717,
-     0.000401,
-     0.2667
+     3.651,
+     0.0003569,
+     0.2788
     ],
-    "t_last_above_1pct_of_initial_uz_s": 79.98,
+    "t_last_above_1pct_of_initial_uz_s": 80.0,
     "t_last_above_1pct_of_initial_pitch_s": 80.0,
     "end_minus_static (uz_mm, pitch_deg)": [
-     0.0329,
-     0.0103
+     -0.069,
+     -0.0216
     ]
    },
    "V4_quasi_static": {
     "touch_s (FL, FR, RL, RR)": [
-     14.8569,
-     14.8542,
-     15.1453,
-     15.145
+     16.0741,
+     16.0712,
+     16.4053,
+     16.405
     ],
     "first_touch_leg": "FR",
-    "first_touch_s": 14.8542,
-    "front_minus_rear_touch_s": -0.2896,
+    "first_touch_s": 16.0712,
+    "front_minus_rear_touch_s": -0.3325,
     "touch_kinematic_from_settled_pose_s": [
-     14.855,
-     14.8542,
-     15.4011,
-     15.4003
+     16.072,
+     16.0712,
+     16.7123,
+     16.7116
     ],
-    "crawler_fully_off_s": 15.5843,
-    "all_cyl_ge_F_min_s": 15.1881,
+    "crawler_fully_off_s": 16.8472,
+    "all_cyl_ge_F_min_s": 16.4488,
     "end_pad_force_N": [
-     119292.5,
-     117318.0,
-     73757.77,
-     71922.38
+     119272.0,
+     117027.5,
+     72676.13,
+     71137.35
     ],
     "end_attitude_deg (roll, pitch)": [
-     -0.0020529,
-     0.026636
+     -0.001875,
+     0.010312
     ],
-    "end_crawler_min_clearance_mm": 44.926
+    "end_crawler_min_clearance_mm": 45.6557
    },
    "V4_residual_linear_L1_after_last_stop (deg, roll/pitch)": {
-    "start_s": 15.6343,
+    "start_s": 16.8972,
     "roll_pitch_at_0s": [
-     0.0003481,
-     0.01847
+     0.0001997,
+     0.01493
     ],
     "roll_pitch_at_10s": [
-     0.0001126,
-     0.001304
+     4.42e-05,
+     0.0006405
     ],
     "roll_pitch_at_15s": [
-     7.24e-05,
-     0.0003584
+     2.889e-05,
+     0.0001439
     ],
-    "last_time_above_0.001deg_after_last_stop_s": 11.01
+    "last_time_above_0.001deg_after_last_stop_s": 8.584
    },
    "full_stroke_damped_3dof": {
     "window_s": [
-     14.3,
+     14.5,
      20.0
     ],
     "solver": {
@@ -613,140 +613,140 @@
      "atol": 1e-12,
      "max_step_s": 0.001,
      "status": 0,
-     "nfev": 89834,
-     "wall_s": 2.12
+     "nfev": 86498,
+     "wall_s": 9.47
     },
     "per_leg": {
      "FL": {
-      "first_touch_dyn_s": 14.856,
-      "peak_pad_force_N": 140810.0,
-      "peak_at_s": 15.742,
-      "contact_lost_samples_after_touch": 49,
+      "first_touch_dyn_s": 16.073,
+      "peak_pad_force_N": 131926.0,
+      "peak_at_s": 16.96,
+      "contact_lost_samples_after_touch": 81,
       "cyl_force_min_after_first_reaching_F_min_N": -1047.19
      },
      "FR": {
-      "first_touch_dyn_s": 14.855,
-      "peak_pad_force_N": 138391.0,
-      "peak_at_s": 15.742,
-      "contact_lost_samples_after_touch": 48,
+      "first_touch_dyn_s": 16.072,
+      "peak_pad_force_N": 128859.0,
+      "peak_at_s": 16.96,
+      "contact_lost_samples_after_touch": 78,
       "cyl_force_min_after_first_reaching_F_min_N": -1047.19
      },
      "RL": {
-      "first_touch_dyn_s": 15.112,
-      "peak_pad_force_N": 91944.1,
-      "peak_at_s": 15.618,
+      "first_touch_dyn_s": 16.368,
+      "peak_pad_force_N": 85016.3,
+      "peak_at_s": 16.845,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 2362.48
+      "cyl_force_min_after_first_reaching_F_min_N": 7308.05
      },
      "RR": {
-      "first_touch_dyn_s": 15.112,
-      "peak_pad_force_N": 90727.7,
-      "peak_at_s": 15.618,
+      "first_touch_dyn_s": 16.367,
+      "peak_pad_force_N": 83789.3,
+      "peak_at_s": 16.844,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 1885.84
+      "cyl_force_min_after_first_reaching_F_min_N": 7185.95
      }
     },
-    "max_peak_pad_force_N": 140810.0,
-    "max_peak_cylinder_force_N": 139763.0,
-    "max_abs_diff_vs_quasi_static_N": 26688.0,
-    "max_abs_diff_at_s": 15.271,
-    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": -10500.0,
-    "contact_lost_samples_after_touch": 97,
+    "max_peak_pad_force_N": 131926.0,
+    "max_peak_cylinder_force_N": 130879.0,
+    "max_abs_diff_vs_quasi_static_N": 18402.0,
+    "max_abs_diff_at_s": 16.191,
+    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": -10460.0,
+    "contact_lost_samples_after_touch": 159,
     "max_step_convergence: max peak diff vs max_step 5e-4 [N]": 0.0,
     "quasi_static_events_full_stroke_s": {
      "touch (FL, FR, RL, RR)": [
-      14.8569,
-      14.8542,
-      15.1453,
-      15.145
+      16.0741,
+      16.0712,
+      16.4053,
+      16.405
      ],
-     "crawler_off": 15.5843
+     "crawler_off": 16.8472
     }
    },
    "slope_stability_on_crawler (legs retracted)": {
     "top": {
-     "com_height_above_floor_m": 3.1985,
+     "com_height_above_floor_m": 3.2111,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.3636,
-     "front_row_unloads_at_nose_up_slope_deg": 14.95,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.5989,
+     "front_row_unloads_at_nose_up_slope_deg": 15.11,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      18.07,
-      18.12
+      18.0,
+      18.05
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      8.102,
-      22.57,
-      18.07
+      7.839,
+      22.69,
+      18.0
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.41,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.34,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      8.102,
-      22.57
+      7.839,
+      22.69
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      16.61,
-      30.05
+      16.33,
+      30.13
      ]
     },
     "middle": {
-     "com_height_above_floor_m": 2.5085,
+     "com_height_above_floor_m": 2.5172,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.4636,
-     "front_row_unloads_at_nose_up_slope_deg": 18.8,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.764,
+     "front_row_unloads_at_nose_up_slope_deg": 19.01,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      22.58,
-      22.65
+      22.52,
+      22.57
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      10.29,
-      27.93,
-      22.58
+      9.961,
+      28.08,
+      22.52
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.57,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.49,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      10.29,
-      27.93
+      9.961,
+      28.08
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      20.83,
-      36.42
+      20.5,
+      36.52
      ]
     },
     "bottom": {
-     "com_height_above_floor_m": 1.8185,
+     "com_height_above_floor_m": 1.8232,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.6395,
-     "front_row_unloads_at_nose_up_slope_deg": 25.16,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -1.055,
+     "front_row_unloads_at_nose_up_slope_deg": 25.44,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      29.84,
-      29.92
+      29.78,
+      29.85
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      14.06,
-      36.17,
-      29.84
+      13.63,
+      36.37,
+      29.78
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.6,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.53,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      14.06,
-      36.17
+      13.63,
+      36.37
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      27.69,
-      45.5
+      27.3,
+      45.63
      ]
     }
    },
-   "wall_s": 23.2
+   "wall_s": 111.2
   },
   "C_flat_shoes_2x10": {
    "note": "grouser pad centres touching the floor (lowest point 0 mm), pitch 173.2 mm",
@@ -757,15 +757,15 @@
    ],
    "track_centre_y_m": 1.045,
    "k_per_point_N_m": 5000000.0,
-   "c_per_point_N_s_m": 9872.03,
-   "damping_total_N_s_m": 197441.0,
-   "gn_per_point_1_s (c / superstructure body mass)": 0.256046,
+   "c_per_point_N_s_m": 9843.87,
+   "damping_total_N_s_m": 196877.0,
+   "gn_per_point_1_s (c / superstructure body mass)": 0.256345,
    "pitch_stiffness_about_spring_centroid_N_m_rad": 24758000.0,
    "settled_on_crawler (legs at 0)": {
     "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
-     -3.2438,
-     0.00047733,
-     0.50199
+     -3.0739,
+     0.00042487,
+     0.53341
     ],
     "active_points": 14,
     "n_points": 20,
@@ -773,42 +773,42 @@
      -0.0,
      -0.0,
      -0.0,
-     4496.7,
-     12084.0,
-     19676.0,
-     27263.0,
-     34850.0,
-     42442.0,
-     50029.0
+     2920.7,
+     10983.0,
+     19050.0,
+     27112.0,
+     35174.0,
+     43241.0,
+     51304.0
     ],
     "rear_row_force_N": 0.0,
-    "front_row_force_N": 100150.0,
+    "front_row_force_N": 102680.0,
     "gapped_points_in_contact": 0,
     "gapped_points_force_N": 0.0,
-    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4524,
+    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4657,
     "kern_half_length_rear_side_m (rear row unloads beyond this)": 0.3176,
     "pad_gap_at_e0_mm": [
-     327.77,
-     327.75,
-     360.06,
-     360.04
+     326.68,
+     326.66,
+     361.63,
+     361.61
     ]
    },
    "crawler_on_floor_modes (active springs, top)": {
     "f_Hz": [
-     0.5107,
-     2.352,
-     6.751
+     0.5118,
+     2.356,
+     6.772
     ],
     "zeta": [
-     0.003707,
-     0.01482,
+     0.003703,
+     0.01481,
      0.04188
     ],
     "tau_s": [
-     84.07,
-     4.565,
-     0.5629
+     83.98,
+     4.561,
+     0.5612
     ],
     "mode_shapes_undamped (KE fraction)": [
      {
@@ -821,35 +821,35 @@
       "heave z": 0.998
      }
     ],
-    "settle_length_s (ln(100) x max tau)": 387.2,
-    "mass_orthogonality_max": 5.55e-16
+    "settle_length_s (ln(100) x max tau)": 386.7,
+    "mass_orthogonality_max": 4.44e-16
    },
    "crawler_on_floor_modes_other_levels": {
     "middle": {
      "f_Hz": [
-      0.6697,
-      3.202,
-      6.756
+      0.6716,
+      3.208,
+      6.777
      ],
      "zeta": [
-      0.004689,
-      0.02012,
-      0.04191
+      0.004687,
+      0.0201,
+      0.04192
      ],
-     "settle_length_s (ln(100) x max tau)": 233.4
+     "settle_length_s (ln(100) x max tau)": 232.8
     },
     "bottom": {
      "f_Hz": [
-      0.7606,
-      3.393,
-      6.759
+      0.7628,
+      3.397,
+      6.78
      ],
      "zeta": [
-      0.005144,
-      0.02124,
-      0.04192
+      0.005142,
+      0.0212,
+      0.04194
      ],
-     "settle_length_s (ln(100) x max tau)": 187.3
+     "settle_length_s (ln(100) x max tau)": 186.9
     }
    },
    "nonlinear_free_settle_from_zero_compression": {
@@ -859,383 +859,65 @@
      "atol": 1e-12,
      "max_step_s": 0.002,
      "status": 0,
-     "nfev": 799625
+     "nfev": 804233
     },
     "initial_deviation (uz_mm, roll_deg, pitch_deg)": [
-     3.244,
-     0.0004773,
-     0.502
+     3.074,
+     0.0004249,
+     0.5334
     ],
     "t_last_above_1pct_of_initial_uz_s": 80.0,
     "t_last_above_1pct_of_initial_pitch_s": 80.0,
     "end_minus_static (uz_mm, pitch_deg)": [
-     0.647,
-     0.134
+     1.05,
+     0.192
     ]
    },
    "V4_quasi_static": {
     "touch_s (FL, FR, RL, RR)": [
-     14.4655,
-     14.4595,
-     15.1577,
-     15.1573
+     15.6179,
+     15.6116,
+     16.417,
+     16.4167
     ],
     "first_touch_leg": "FR",
-    "first_touch_s": 14.4595,
-    "front_minus_rear_touch_s": -0.695,
+    "first_touch_s": 15.6116,
+    "front_minus_rear_touch_s": -0.8021,
     "touch_kinematic_from_settled_pose_s": [
-     14.4605,
-     14.4595,
-     15.885,
-     15.8841
+     15.6125,
+     15.6116,
+     17.2828,
+     17.2819
     ],
-    "crawler_fully_off_s": 15.5698,
-    "all_cyl_ge_F_min_s": 15.2002,
+    "crawler_fully_off_s": 16.8332,
+    "all_cyl_ge_F_min_s": 16.4601,
     "end_pad_force_N": [
-     119292.5,
-     117318.0,
-     73757.77,
-     71922.38
+     119272.0,
+     117027.5,
+     72676.13,
+     71137.35
     ],
     "end_attitude_deg (roll, pitch)": [
-     -0.0020529,
-     0.026636
+     -0.001875,
+     0.010312
     ],
-    "end_crawler_min_clearance_mm": 44.9856
+    "end_crawler_min_clearance_mm": 45.6788
    },
    "V4_residual_linear_L1_after_last_stop (deg, roll/pitch)": {
-    "start_s": 15.6198,
+    "start_s": 16.8832,
     "roll_pitch_at_0s": [
-     0.0003481,
-     0.01847
+     0.0001997,
+     0.01493
     ],
     "roll_pitch_at_10s": [
-     0.0001126,
-     0.001304
+     4.42e-05,
+     0.0006405
     ],
     "roll_pitch_at_15s": [
-     7.24e-05,
-     0.0003584
+     2.889e-05,
+     0.0001439
     ],
-    "last_time_above_0.001deg_after_last_stop_s": 11.01
-   },
-   "full_stroke_damped_3dof": {
-    "window_s": [
-     13.9,
-     20.0
-    ],
-    "solver": {
-     "method": "DOP853",
-     "rtol": 1e-09,
-     "atol": 1e-12,
-     "max_step_s": 0.001,
-     "status": 0,
-     "nfev": 98282,
-     "wall_s": 2.44
-    },
-    "per_leg": {
-     "FL": {
-      "first_touch_dyn_s": 14.461,
-      "peak_pad_force_N": 154849.0,
-      "peak_at_s": 15.585,
-      "contact_lost_samples_after_touch": 224,
-      "cyl_force_min_after_first_reaching_F_min_N": -1047.19
-     },
-     "FR": {
-      "first_touch_dyn_s": 14.46,
-      "peak_pad_force_N": 151953.0,
-      "peak_at_s": 15.585,
-      "contact_lost_samples_after_touch": 223,
-      "cyl_force_min_after_first_reaching_F_min_N": -1047.19
-     },
-     "RL": {
-      "first_touch_dyn_s": 15.168,
-      "peak_pad_force_N": 101383.0,
-      "peak_at_s": 15.468,
-      "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 5122.85
-     },
-     "RR": {
-      "first_touch_dyn_s": 15.168,
-      "peak_pad_force_N": 100852.0,
-      "peak_at_s": 15.468,
-      "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 4062.54
-     }
-    },
-    "max_peak_pad_force_N": 154849.0,
-    "max_peak_cylinder_force_N": 153802.0,
-    "max_abs_diff_vs_quasi_static_N": 40675.0,
-    "max_abs_diff_at_s": 15.23,
-    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": -10500.0,
-    "contact_lost_samples_after_touch": 447,
-    "quasi_static_events_full_stroke_s": {
-     "touch (FL, FR, RL, RR)": [
-      14.4655,
-      14.4595,
-      15.1577,
-      15.1573
-     ],
-     "crawler_off": 15.5698
-    }
-   },
-   "slope_stability_on_crawler (legs retracted)": {
-    "top": {
-     "com_height_above_floor_m": 3.1985,
-     "com_xy_m": [
-      0.44568,
-      -0.0016659
-     ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -2.407,
-     "front_row_unloads_at_nose_up_slope_deg": 13.54,
-     "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      18.07,
-      18.12
-     ],
-     "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      5.84,
-      21.07,
-      18.07
-     ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.41,
-     "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      5.84,
-      21.07
-     ],
-     "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      16.61,
-      30.05
-     ]
-    },
-    "middle": {
-     "com_height_above_floor_m": 2.5085,
-     "com_xy_m": [
-      0.44568,
-      -0.0016659
-     ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -3.068,
-     "front_row_unloads_at_nose_up_slope_deg": 17.07,
-     "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      22.58,
-      22.65
-     ],
-     "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      7.43,
-      26.16,
-      22.58
-     ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.57,
-     "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      7.43,
-      26.16
-     ],
-     "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      20.83,
-      36.42
-     ]
-    },
-    "bottom": {
-     "com_height_above_floor_m": 1.8185,
-     "com_xy_m": [
-      0.44568,
-      -0.0016659
-     ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -4.229,
-     "front_row_unloads_at_nose_up_slope_deg": 22.96,
-     "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      29.84,
-      29.92
-     ],
-     "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      10.2,
-      34.12,
-      29.84
-     ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.6,
-     "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      10.2,
-      34.12
-     ],
-     "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      27.69,
-      45.5
-     ]
-    }
-   },
-   "wall_s": 21.9
-  },
-  "D_rollers_plus_gapped_end_shoes": {
-   "note": "B + raised shoes beyond the end rollers (gap = CAD lowest point, k per point = B value): end engagement upper bound",
-   "n_points": 24,
-   "x_floor_contact_range_m": [
-    -0.884,
-    0.901
-   ],
-   "track_centre_y_m": 1.045,
-   "k_per_point_N_m": 8333330.0,
-   "c_per_point_N_s_m": 16453.4,
-   "damping_total_N_s_m": 197441.0,
-   "gn_per_point_1_s (c / superstructure body mass)": 0.426744,
-   "pitch_stiffness_about_spring_centroid_N_m_rad": 37173000.0,
-   "settled_on_crawler (legs at 0)": {
-    "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
-     -3.1913,
-     0.0002864,
-     0.16954
-    ],
-    "active_points": 14,
-    "n_points": 24,
-    "station_force_N (left track, rear -> front)": [
-     -0.0,
-     -0.0,
-     -0.0,
-     4751.7,
-     13555.0,
-     22358.0,
-     31162.0,
-     39965.0,
-     48768.0,
-     30281.0,
-     -0.0,
-     -0.0
-    ],
-    "rear_row_force_N": 9590.4,
-    "front_row_force_N": 97623.0,
-    "gapped_points_in_contact": 2,
-    "gapped_points_force_N": 60650.0,
-    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4372,
-    "kern_half_length_rear_side_m (rear row unloads beyond this)": 0.4165,
-    "pad_gap_at_e0_mm": [
-     341.13,
-     341.11,
-     345.28,
-     345.27
-    ]
-   },
-   "crawler_on_floor_modes (active springs, top)": {
-    "f_Hz": [
-     1.327,
-     3.046,
-     8.73
-    ],
-    "zeta": [
-     0.008437,
-     0.01908,
-     0.05415
-    ],
-    "tau_s": [
-     14.22,
-     2.739,
-     0.3367
-    ],
-    "mode_shapes_undamped (KE fraction)": [
-     {
-      "pitch": 0.995
-     },
-     {
-      "roll": 1.0
-     },
-     {
-      "heave z": 0.995
-     }
-    ],
-    "settle_length_s (ln(100) x max tau)": 65.47,
-    "mass_orthogonality_max": 5.55e-16
-   },
-   "crawler_on_floor_modes_other_levels": {
-    "middle": {
-     "f_Hz": [
-      1.712,
-      4.145,
-      8.745
-     ],
-     "zeta": [
-      0.01083,
-      0.0259,
-      0.05425
-     ],
-     "settle_length_s (ln(100) x max tau)": 39.55
-    },
-    "bottom": {
-     "f_Hz": [
-      1.914,
-      4.388,
-      8.755
-     ],
-     "zeta": [
-      0.01204,
-      0.02737,
-      0.05431
-     ],
-     "settle_length_s (ln(100) x max tau)": 31.79
-    }
-   },
-   "nonlinear_free_settle_from_zero_compression": {
-    "solver": {
-     "method": "DOP853",
-     "rtol": 1e-09,
-     "atol": 1e-12,
-     "max_step_s": 0.002,
-     "status": 0,
-     "nfev": 674453
-    },
-    "initial_deviation (uz_mm, roll_deg, pitch_deg)": [
-     3.191,
-     0.0002864,
-     0.1695
-    ],
-    "t_last_above_1pct_of_initial_uz_s": 40.86,
-    "t_last_above_1pct_of_initial_pitch_s": 70.27,
-    "end_minus_static (uz_mm, pitch_deg)": [
-     -0.00173,
-     -0.000733
-    ]
-   },
-   "V4_quasi_static": {
-    "touch_s (FL, FR, RL, RR)": [
-     15.0504,
-     15.0492,
-     15.1482,
-     15.1478
-    ],
-    "first_touch_leg": "FR",
-    "first_touch_s": 15.0492,
-    "front_minus_rear_touch_s": -0.09818,
-    "touch_kinematic_from_settled_pose_s": [
-     15.0498,
-     15.0492,
-     15.2329,
-     15.2323
-    ],
-    "crawler_fully_off_s": 15.5843,
-    "all_cyl_ge_F_min_s": 15.1905,
-    "end_pad_force_N": [
-     119292.5,
-     117318.0,
-     73757.77,
-     71922.38
-    ],
-    "end_attitude_deg (roll, pitch)": [
-     -0.0020529,
-     0.026636
-    ],
-    "end_crawler_min_clearance_mm": 44.926
-   },
-   "V4_residual_linear_L1_after_last_stop (deg, roll/pitch)": {
-    "start_s": 15.6343,
-    "roll_pitch_at_0s": [
-     0.0003481,
-     0.01847
-    ],
-    "roll_pitch_at_10s": [
-     0.0001126,
-     0.001304
-    ],
-    "roll_pitch_at_15s": [
-     7.24e-05,
-     0.0003584
-    ],
-    "last_time_above_0.001deg_after_last_stop_s": 11.01
+    "last_time_above_0.001deg_after_last_stop_s": 8.584
    },
    "full_stroke_damped_3dof": {
     "window_s": [
@@ -1248,140 +930,458 @@
      "atol": 1e-12,
      "max_step_s": 0.001,
      "status": 0,
-     "nfev": 85502,
-     "wall_s": 1.93
+     "nfev": 92381,
+     "wall_s": 7.4
     },
     "per_leg": {
      "FL": {
-      "first_touch_dyn_s": 15.05,
-      "peak_pad_force_N": 141022.0,
-      "peak_at_s": 15.594,
-      "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 9644.11
+      "first_touch_dyn_s": 15.613,
+      "peak_pad_force_N": 143381.0,
+      "peak_at_s": 16.994,
+      "contact_lost_samples_after_touch": 299,
+      "cyl_force_min_after_first_reaching_F_min_N": -1047.19
      },
      "FR": {
-      "first_touch_dyn_s": 15.05,
-      "peak_pad_force_N": 138214.0,
-      "peak_at_s": 15.593,
-      "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 9605.72
+      "first_touch_dyn_s": 15.612,
+      "peak_pad_force_N": 140758.0,
+      "peak_at_s": 16.994,
+      "contact_lost_samples_after_touch": 295,
+      "cyl_force_min_after_first_reaching_F_min_N": -1047.19
      },
      "RL": {
-      "first_touch_dyn_s": 15.177,
-      "peak_pad_force_N": 89152.3,
-      "peak_at_s": 15.712,
-      "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 9474.18
+      "first_touch_dyn_s": 16.383,
+      "peak_pad_force_N": 95130.9,
+      "peak_at_s": 16.879,
+      "contact_lost_samples_after_touch": 19,
+      "cyl_force_min_after_first_reaching_F_min_N": -717.484
      },
      "RR": {
-      "first_touch_dyn_s": 15.177,
-      "peak_pad_force_N": 87676.7,
-      "peak_at_s": 15.475,
-      "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 9514.34
+      "first_touch_dyn_s": 16.383,
+      "peak_pad_force_N": 93903.8,
+      "peak_at_s": 16.879,
+      "contact_lost_samples_after_touch": 23,
+      "cyl_force_min_after_first_reaching_F_min_N": -717.484
      }
     },
-    "max_peak_pad_force_N": 141022.0,
-    "max_peak_cylinder_force_N": 139975.0,
-    "max_abs_diff_vs_quasi_static_N": 23233.0,
-    "max_abs_diff_at_s": 15.241,
-    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": 21.63,
-    "contact_lost_samples_after_touch": 0,
-    "max_step_convergence: max peak diff vs max_step 5e-4 [N]": 0.0,
+    "max_peak_pad_force_N": 143381.0,
+    "max_peak_cylinder_force_N": 142334.0,
+    "max_abs_diff_vs_quasi_static_N": 33679.0,
+    "max_abs_diff_at_s": 16.446,
+    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": -10460.0,
+    "contact_lost_samples_after_touch": 636,
     "quasi_static_events_full_stroke_s": {
      "touch (FL, FR, RL, RR)": [
-      15.0504,
-      15.0492,
-      15.1482,
-      15.1478
+      15.6179,
+      15.6116,
+      16.417,
+      16.4167
      ],
-     "crawler_off": 15.5843
+     "crawler_off": 16.8332
     }
    },
    "slope_stability_on_crawler (legs retracted)": {
     "top": {
-     "com_height_above_floor_m": 3.1985,
+     "com_height_above_floor_m": 3.2111,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 1.315,
-     "front_row_unloads_at_nose_up_slope_deg": 16.65,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -2.634,
+     "front_row_unloads_at_nose_up_slope_deg": 13.71,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      18.07,
-      18.12
+      18.0,
+      18.05
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      8.102,
-      22.57,
-      18.07
+      5.583,
+      21.2,
+      18.0
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.41,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.34,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      14.9,
-      28.79
+      5.583,
+      21.2
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      16.61,
-      30.05
+      16.33,
+      30.13
      ]
     },
     "middle": {
-     "com_height_above_floor_m": 2.5085,
+     "com_height_above_floor_m": 2.5172,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 1.677,
-     "front_row_unloads_at_nose_up_slope_deg": 20.85,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -3.359,
+     "front_row_unloads_at_nose_up_slope_deg": 17.29,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      22.58,
-      22.65
+      22.52,
+      22.57
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      10.29,
-      27.93,
-      22.58
+      7.108,
+      26.32,
+      22.52
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.57,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.49,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      18.74,
-      35.02
+      7.108,
+      26.32
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      20.83,
-      36.42
+      20.5,
+      36.52
      ]
     },
     "bottom": {
-     "com_height_above_floor_m": 1.8185,
+     "com_height_above_floor_m": 1.8232,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 2.312,
-     "front_row_unloads_at_nose_up_slope_deg": 27.66,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -4.632,
+     "front_row_unloads_at_nose_up_slope_deg": 23.26,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      29.84,
-      29.92
+      29.78,
+      29.85
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      14.06,
-      36.17,
-      29.84
+      9.769,
+      34.33,
+      29.78
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.6,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.53,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      25.08,
-      44.03
+      9.769,
+      34.33
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      27.69,
-      45.5
+      27.3,
+      45.63
      ]
     }
    },
-   "wall_s": 22.8
+   "wall_s": 77.2
+  },
+  "D_rollers_plus_gapped_end_shoes": {
+   "note": "B + raised shoes beyond the end rollers (gap = CAD lowest point, k per point = B value): end engagement upper bound",
+   "n_points": 24,
+   "x_floor_contact_range_m": [
+    -0.884,
+    0.901
+   ],
+   "track_centre_y_m": 1.045,
+   "k_per_point_N_m": 8333330.0,
+   "c_per_point_N_s_m": 16406.5,
+   "damping_total_N_s_m": 196877.0,
+   "gn_per_point_1_s (c / superstructure body mass)": 0.427242,
+   "pitch_stiffness_about_spring_centroid_N_m_rad": 37173000.0,
+   "settled_on_crawler (legs at 0)": {
+    "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
+     -3.16,
+     0.00025492,
+     0.17457
+    ],
+    "active_points": 14,
+    "n_points": 24,
+    "station_force_N (left track, rear -> front)": [
+     -0.0,
+     -0.0,
+     -0.0,
+     3850.7,
+     12915.0,
+     21979.0,
+     31043.0,
+     40107.0,
+     49171.0,
+     30720.0,
+     -0.0,
+     -0.0
+    ],
+    "rear_row_force_N": 7778.9,
+    "front_row_force_N": 98419.0,
+    "gapped_points_in_contact": 2,
+    "gapped_points_force_N": 61518.0,
+    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4504,
+    "kern_half_length_rear_side_m (rear row unloads beyond this)": 0.4165,
+    "pad_gap_at_e0_mm": [
+     340.96,
+     340.95,
+     345.53,
+     345.52
+    ]
+   },
+   "crawler_on_floor_modes (active springs, top)": {
+    "f_Hz": [
+     1.329,
+     3.052,
+     8.757
+    ],
+    "zeta": [
+     0.008429,
+     0.01906,
+     0.05416
+    ],
+    "tau_s": [
+     14.2,
+     2.737,
+     0.3356
+    ],
+    "mode_shapes_undamped (KE fraction)": [
+     {
+      "pitch": 0.994
+     },
+     {
+      "roll": 1.0
+     },
+     {
+      "heave z": 0.994
+     }
+    ],
+    "settle_length_s (ln(100) x max tau)": 65.41,
+    "mass_orthogonality_max": 8.88e-16
+   },
+   "crawler_on_floor_modes_other_levels": {
+    "middle": {
+     "f_Hz": [
+      1.716,
+      4.153,
+      8.774
+     ],
+     "zeta": [
+      0.01082,
+      0.02588,
+      0.05427
+     ],
+     "settle_length_s (ln(100) x max tau)": 39.47
+    },
+    "bottom": {
+     "f_Hz": [
+      1.919,
+      4.393,
+      8.785
+     ],
+     "zeta": [
+      0.01204,
+      0.02732,
+      0.05433
+     ],
+     "settle_length_s (ln(100) x max tau)": 31.73
+    }
+   },
+   "nonlinear_free_settle_from_zero_compression": {
+    "solver": {
+     "method": "DOP853",
+     "rtol": 1e-09,
+     "atol": 1e-12,
+     "max_step_s": 0.002,
+     "status": 0,
+     "nfev": 680933
+    },
+    "initial_deviation (uz_mm, roll_deg, pitch_deg)": [
+     3.16,
+     0.0002549,
+     0.1746
+    ],
+    "t_last_above_1pct_of_initial_uz_s": 42.06,
+    "t_last_above_1pct_of_initial_pitch_s": 70.68,
+    "end_minus_static (uz_mm, pitch_deg)": [
+     0.00196,
+     0.000828
+    ]
+   },
+   "V4_quasi_static": {
+    "touch_s (FL, FR, RL, RR)": [
+     16.2955,
+     16.2942,
+     16.4102,
+     16.4099
+    ],
+    "first_touch_leg": "FR",
+    "first_touch_s": 16.2942,
+    "front_minus_rear_touch_s": -0.1152,
+    "touch_kinematic_from_settled_pose_s": [
+     16.2948,
+     16.2942,
+     16.5135,
+     16.5129
+    ],
+    "crawler_fully_off_s": 16.8472,
+    "all_cyl_ge_F_min_s": 16.4529,
+    "end_pad_force_N": [
+     119272.0,
+     117027.5,
+     72676.13,
+     71137.35
+    ],
+    "end_attitude_deg (roll, pitch)": [
+     -0.001875,
+     0.010312
+    ],
+    "end_crawler_min_clearance_mm": 45.6557
+   },
+   "V4_residual_linear_L1_after_last_stop (deg, roll/pitch)": {
+    "start_s": 16.8972,
+    "roll_pitch_at_0s": [
+     0.0001997,
+     0.01493
+    ],
+    "roll_pitch_at_10s": [
+     4.42e-05,
+     0.0006405
+    ],
+    "roll_pitch_at_15s": [
+     2.889e-05,
+     0.0001439
+    ],
+    "last_time_above_0.001deg_after_last_stop_s": 8.584
+   },
+   "full_stroke_damped_3dof": {
+    "window_s": [
+     14.5,
+     20.0
+    ],
+    "solver": {
+     "method": "DOP853",
+     "rtol": 1e-09,
+     "atol": 1e-12,
+     "max_step_s": 0.001,
+     "status": 0,
+     "nfev": 85682,
+     "wall_s": 6.91
+    },
+    "per_leg": {
+     "FL": {
+      "first_touch_dyn_s": 16.295,
+      "peak_pad_force_N": 139114.0,
+      "peak_at_s": 16.835,
+      "contact_lost_samples_after_touch": 0,
+      "cyl_force_min_after_first_reaching_F_min_N": 6412.09
+     },
+     "FR": {
+      "first_touch_dyn_s": 16.295,
+      "peak_pad_force_N": 136078.0,
+      "peak_at_s": 16.835,
+      "contact_lost_samples_after_touch": 0,
+      "cyl_force_min_after_first_reaching_F_min_N": 6256.68
+     },
+     "RL": {
+      "first_touch_dyn_s": 16.433,
+      "peak_pad_force_N": 89412.6,
+      "peak_at_s": 16.945,
+      "contact_lost_samples_after_touch": 0,
+      "cyl_force_min_after_first_reaching_F_min_N": 9997.04
+     },
+     "RR": {
+      "first_touch_dyn_s": 16.433,
+      "peak_pad_force_N": 88069.9,
+      "peak_at_s": 16.946,
+      "contact_lost_samples_after_touch": 0,
+      "cyl_force_min_after_first_reaching_F_min_N": 9994.67
+     }
+    },
+    "max_peak_pad_force_N": 139114.0,
+    "max_peak_cylinder_force_N": 138066.0,
+    "max_abs_diff_vs_quasi_static_N": 26019.0,
+    "max_abs_diff_at_s": 16.493,
+    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": -3158.0,
+    "contact_lost_samples_after_touch": 0,
+    "max_step_convergence: max peak diff vs max_step 5e-4 [N]": 0.0,
+    "quasi_static_events_full_stroke_s": {
+     "touch (FL, FR, RL, RR)": [
+      16.2955,
+      16.2942,
+      16.4102,
+      16.4099
+     ],
+     "crawler_off": 16.8472
+    }
+   },
+   "slope_stability_on_crawler (legs retracted)": {
+    "top": {
+     "com_height_above_floor_m": 3.2111,
+     "com_xy_m": [
+      0.45891,
+      -0.0014912
+     ],
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 1.069,
+     "front_row_unloads_at_nose_up_slope_deg": 16.8,
+     "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
+      18.0,
+      18.05
+     ],
+     "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
+      7.839,
+      22.69,
+      18.0
+     ],
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.34,
+     "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
+      14.62,
+      28.88
+     ],
+     "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
+      16.33,
+      30.13
+     ]
+    },
+    "middle": {
+     "com_height_above_floor_m": 2.5172,
+     "com_xy_m": [
+      0.45891,
+      -0.0014912
+     ],
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 1.364,
+     "front_row_unloads_at_nose_up_slope_deg": 21.04,
+     "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
+      22.52,
+      22.57
+     ],
+     "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
+      9.961,
+      28.08,
+      22.52
+     ],
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.49,
+     "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
+      18.41,
+      35.13
+     ],
+     "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
+      20.5,
+      36.52
+     ]
+    },
+    "bottom": {
+     "com_height_above_floor_m": 1.8232,
+     "com_xy_m": [
+      0.45891,
+      -0.0014912
+     ],
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": 1.882,
+     "front_row_unloads_at_nose_up_slope_deg": 27.91,
+     "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
+      29.78,
+      29.85
+     ],
+     "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
+      13.63,
+      36.37,
+      29.78
+     ],
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.53,
+     "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
+      24.68,
+      44.17
+     ],
+     "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
+      27.3,
+      45.63
+     ]
+    }
+   },
+   "wall_s": 78.4
   },
   "E_rollers_2x6_k_x3": {
    "note": "B with kn_total x 3 (stiffer track/slab), dashpot rescaled to the same heave zeta",
@@ -1392,54 +1392,54 @@
    ],
    "track_centre_y_m": 1.045,
    "k_per_point_N_m": 25000000.0,
-   "c_per_point_N_s_m": 28498.1,
-   "damping_total_N_s_m": 341977.0,
-   "gn_per_point_1_s (c / superstructure body mass)": 0.739142,
+   "c_per_point_N_s_m": 28416.8,
+   "damping_total_N_s_m": 341002.0,
+   "gn_per_point_1_s (c / superstructure body mass)": 0.740005,
    "pitch_stiffness_about_spring_centroid_N_m_rad": 111520000.0,
    "settled_on_crawler (legs at 0)": {
     "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
-     -1.239,
-     0.00013365,
-     0.088914
+     -1.2172,
+     0.00011896,
+     0.092929
     ],
     "active_points": 10,
     "n_points": 12,
     "station_force_N (left track, rear -> front)": [
      -0.0,
-     10468.0,
-     24318.0,
-     38168.0,
-     52018.0,
-     65869.0
+     9006.0,
+     23482.0,
+     37957.0,
+     52433.0,
+     66908.0
     ],
     "rear_row_force_N": 0.0,
-    "front_row_force_N": 131860.0,
+    "front_row_force_N": 133920.0,
     "gapped_points_in_contact": 0,
     "gapped_points_force_N": 0.0,
-    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4372,
+    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4504,
     "kern_half_length_rear_side_m (rear row unloads beyond this)": 0.4165,
     "pad_gap_at_e0_mm": [
-     346.3,
-     346.3,
-     343.63,
-     343.62
+     346.17,
+     346.16,
+     343.83,
+     343.83
     ]
    },
    "crawler_on_floor_modes (active springs, top)": {
     "f_Hz": [
-     1.505,
-     4.47,
-     12.77
+     1.508,
+     4.479,
+     12.81
     ],
     "zeta": [
-     0.005497,
-     0.01608,
-     0.04573
+     0.005491,
+     0.01606,
+     0.04574
     ],
     "tau_s": [
-     19.23,
-     2.214,
-     0.2725
+     19.22,
+     2.212,
+     0.2717
     ],
     "mode_shapes_undamped (KE fraction)": [
      {
@@ -1452,35 +1452,35 @@
       "heave z": 0.996
      }
     ],
-    "settle_length_s (ln(100) x max tau)": 88.58,
-    "mass_orthogonality_max": 6.66e-16
+    "settle_length_s (ln(100) x max tau)": 88.49,
+    "mass_orthogonality_max": 5.55e-16
    },
    "crawler_on_floor_modes_other_levels": {
     "middle": {
      "f_Hz": [
-      1.942,
-      6.08,
-      12.79
+      1.947,
+      6.091,
+      12.83
      ],
      "zeta": [
-      0.007061,
-      0.02185,
-      0.04579
+      0.007058,
+      0.02183,
+      0.0458
      ],
-     "settle_length_s (ln(100) x max tau)": 53.45
+     "settle_length_s (ln(100) x max tau)": 53.34
     },
     "bottom": {
      "f_Hz": [
-      2.171,
-      6.433,
-      12.8
+      2.177,
+      6.441,
+      12.84
      ],
      "zeta": [
-      0.007861,
-      0.0231,
-      0.04583
+      0.007859,
+      0.02306,
+      0.04584
      ],
-     "settle_length_s (ln(100) x max tau)": 42.94
+     "settle_length_s (ln(100) x max tau)": 42.84
     }
    },
    "nonlinear_free_settle_from_zero_compression": {
@@ -1490,65 +1490,65 @@
      "atol": 1e-12,
      "max_step_s": 0.002,
      "status": 0,
-     "nfev": 710153
+     "nfev": 707645
     },
     "initial_deviation (uz_mm, roll_deg, pitch_deg)": [
-     1.239,
-     0.0001337,
-     0.08891
+     1.217,
+     0.000119,
+     0.09293
     ],
-    "t_last_above_1pct_of_initial_uz_s": 56.94,
+    "t_last_above_1pct_of_initial_uz_s": 60.69,
     "t_last_above_1pct_of_initial_pitch_s": 80.0,
     "end_minus_static (uz_mm, pitch_deg)": [
-     -0.00348,
-     -0.00109
+     0.00388,
+     0.00121
     ]
    },
    "V4_quasi_static": {
     "touch_s (FL, FR, RL, RR)": [
-     15.234,
-     15.234,
-     15.1607,
-     15.1599
+     16.5023,
+     16.5023,
+     16.4326,
+     16.4319
     ],
     "first_touch_leg": "RR",
-    "first_touch_s": 15.1599,
-    "front_minus_rear_touch_s": 0.0737,
+    "first_touch_s": 16.4319,
+    "front_minus_rear_touch_s": 0.07008,
     "touch_kinematic_from_settled_pose_s": [
-     15.2781,
-     15.2779,
-     15.1602,
-     15.1599
+     16.5437,
+     16.5434,
+     16.4321,
+     16.4319
     ],
-    "crawler_fully_off_s": 15.5843,
-    "all_cyl_ge_F_min_s": 15.2611,
+    "crawler_fully_off_s": 16.8472,
+    "all_cyl_ge_F_min_s": 16.5291,
     "end_pad_force_N": [
-     119292.5,
-     117318.0,
-     73757.77,
-     71922.38
+     119272.0,
+     117027.5,
+     72676.13,
+     71137.35
     ],
     "end_attitude_deg (roll, pitch)": [
-     -0.0020529,
-     0.026636
+     -0.001875,
+     0.010312
     ],
-    "end_crawler_min_clearance_mm": 44.926
+    "end_crawler_min_clearance_mm": 45.6557
    },
    "V4_residual_linear_L1_after_last_stop (deg, roll/pitch)": {
-    "start_s": 15.6343,
+    "start_s": 16.8972,
     "roll_pitch_at_0s": [
-     0.0003481,
-     0.01847
+     0.0001997,
+     0.01493
     ],
     "roll_pitch_at_10s": [
-     0.0001126,
-     0.001304
+     4.42e-05,
+     0.0006405
     ],
     "roll_pitch_at_15s": [
-     7.24e-05,
-     0.0003584
+     2.889e-05,
+     0.0001439
     ],
-    "last_time_above_0.001deg_after_last_stop_s": 11.01
+    "last_time_above_0.001deg_after_last_stop_s": 8.584
    },
    "full_stroke_damped_3dof": {
     "window_s": [
@@ -1561,139 +1561,139 @@
      "atol": 1e-12,
      "max_step_s": 0.001,
      "status": 0,
-     "nfev": 85442,
-     "wall_s": 1.94
+     "nfev": 85334,
+     "wall_s": 6.88
     },
     "per_leg": {
      "FL": {
-      "first_touch_dyn_s": 15.253,
-      "peak_pad_force_N": 134306.0,
-      "peak_at_s": 15.782,
+      "first_touch_dyn_s": 16.522,
+      "peak_pad_force_N": 133259.0,
+      "peak_at_s": 17.036,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 9628.85
+      "cyl_force_min_after_first_reaching_F_min_N": 9556.41
      },
      "FR": {
-      "first_touch_dyn_s": 15.253,
-      "peak_pad_force_N": 131977.0,
-      "peak_at_s": 16.033,
+      "first_touch_dyn_s": 16.522,
+      "peak_pad_force_N": 130366.0,
+      "peak_at_s": 17.278,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 10247.6
+      "cyl_force_min_after_first_reaching_F_min_N": 10262.3
      },
      "RL": {
-      "first_touch_dyn_s": 15.161,
-      "peak_pad_force_N": 86960.4,
-      "peak_at_s": 15.904,
+      "first_touch_dyn_s": 16.433,
+      "peak_pad_force_N": 84947.4,
+      "peak_at_s": 17.157,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 6575.22
+      "cyl_force_min_after_first_reaching_F_min_N": 7832.93
      },
      "RR": {
-      "first_touch_dyn_s": 15.16,
-      "peak_pad_force_N": 85032.7,
-      "peak_at_s": 15.905,
+      "first_touch_dyn_s": 16.432,
+      "peak_pad_force_N": 83476.5,
+      "peak_at_s": 17.158,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 6298.62
+      "cyl_force_min_after_first_reaching_F_min_N": 7607.73
      }
     },
-    "max_peak_pad_force_N": 134306.0,
-    "max_peak_cylinder_force_N": 133259.0,
-    "max_abs_diff_vs_quasi_static_N": 19994.0,
-    "max_abs_diff_at_s": 15.435,
-    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": -3154.0,
+    "max_peak_pad_force_N": 133259.0,
+    "max_peak_cylinder_force_N": 132211.0,
+    "max_abs_diff_vs_quasi_static_N": 17618.0,
+    "max_abs_diff_at_s": 16.698,
+    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": -1807.0,
     "contact_lost_samples_after_touch": 0,
     "quasi_static_events_full_stroke_s": {
      "touch (FL, FR, RL, RR)": [
-      15.234,
-      15.234,
-      15.1607,
-      15.1599
+      16.5023,
+      16.5023,
+      16.4326,
+      16.4319
      ],
-     "crawler_off": 15.5843
+     "crawler_off": 16.8472
     }
    },
    "slope_stability_on_crawler (legs retracted)": {
     "top": {
-     "com_height_above_floor_m": 3.1985,
+     "com_height_above_floor_m": 3.2111,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.3636,
-     "front_row_unloads_at_nose_up_slope_deg": 14.95,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.5989,
+     "front_row_unloads_at_nose_up_slope_deg": 15.11,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      18.07,
-      18.12
+      18.0,
+      18.05
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      8.102,
-      22.57,
-      18.07
+      7.839,
+      22.69,
+      18.0
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.41,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.34,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      8.102,
-      22.57
+      7.839,
+      22.69
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      16.61,
-      30.05
+      16.33,
+      30.13
      ]
     },
     "middle": {
-     "com_height_above_floor_m": 2.5085,
+     "com_height_above_floor_m": 2.5172,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.4636,
-     "front_row_unloads_at_nose_up_slope_deg": 18.8,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.764,
+     "front_row_unloads_at_nose_up_slope_deg": 19.01,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      22.58,
-      22.65
+      22.52,
+      22.57
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      10.29,
-      27.93,
-      22.58
+      9.961,
+      28.08,
+      22.52
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.57,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.49,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      10.29,
-      27.93
+      9.961,
+      28.08
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      20.83,
-      36.42
+      20.5,
+      36.52
      ]
     },
     "bottom": {
-     "com_height_above_floor_m": 1.8185,
+     "com_height_above_floor_m": 1.8232,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.6395,
-     "front_row_unloads_at_nose_up_slope_deg": 25.16,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -1.055,
+     "front_row_unloads_at_nose_up_slope_deg": 25.44,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      29.84,
-      29.92
+      29.78,
+      29.85
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      14.06,
-      36.17,
-      29.84
+      13.63,
+      36.37,
+      29.78
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.6,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.53,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      14.06,
-      36.17
+      13.63,
+      36.37
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      27.69,
-      45.5
+      27.3,
+      45.63
      ]
     }
    },
-   "wall_s": 18.2
+   "wall_s": 63.1
   },
   "F_D_with_k_x3": {
    "note": "D with kn_total x 3 (stiffer track/slab), dashpot rescaled to the same heave zeta",
@@ -1704,15 +1704,15 @@
    ],
    "track_centre_y_m": 1.045,
    "k_per_point_N_m": 25000000.0,
-   "c_per_point_N_s_m": 28498.1,
-   "damping_total_N_s_m": 341977.0,
-   "gn_per_point_1_s (c / superstructure body mass)": 0.739142,
+   "c_per_point_N_s_m": 28416.8,
+   "damping_total_N_s_m": 341002.0,
+   "gn_per_point_1_s (c / superstructure body mass)": 0.740005,
    "pitch_stiffness_about_spring_centroid_N_m_rad": 111520000.0,
    "settled_on_crawler (legs at 0)": {
     "q_about_origin (uz_mm, roll_deg, pitch_deg)": [
-     -1.2204,
-     0.00011138,
-     0.081684
+     -1.1962,
+     9.9136e-05,
+     0.084771
     ],
     "active_points": 12,
     "n_points": 24,
@@ -1721,43 +1721,43 @@
      -0.0,
      -0.0,
      -0.0,
-     11677.0,
-     24401.0,
-     37125.0,
-     49849.0,
-     62573.0,
-     5215.3,
+     10368.0,
+     23573.0,
+     36778.0,
+     49983.0,
+     63187.0,
+     5896.5,
      -0.0,
      -0.0
     ],
     "rear_row_force_N": 0.0,
-    "front_row_force_N": 125250.0,
+    "front_row_force_N": 126470.0,
     "gapped_points_in_contact": 2,
-    "gapped_points_force_N": 10532.0,
-    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4372,
+    "gapped_points_force_N": 11883.0,
+    "eccentricity_of_resultant_from_floor_spring_centroid_m": 0.4504,
     "kern_half_length_rear_side_m (rear row unloads beyond this)": 0.4165,
     "pad_gap_at_e0_mm": [
-     346.61,
-     346.61,
-     343.33,
-     343.32
+     346.51,
+     346.51,
+     343.49,
+     343.48
     ]
    },
    "crawler_on_floor_modes (active springs, top)": {
     "f_Hz": [
-     1.776,
-     4.899,
-     13.97
+     1.78,
+     4.908,
+     14.01
     ],
     "zeta": [
-     0.006451,
-     0.01761,
-     0.05002
+     0.006446,
+     0.01759,
+     0.05003
     ],
     "tau_s": [
-     13.89,
-     1.845,
-     0.2278
+     13.87,
+     1.843,
+     0.2271
     ],
     "mode_shapes_undamped (KE fraction)": [
      {
@@ -1770,35 +1770,35 @@
       "heave z": 0.999
      }
     ],
-    "settle_length_s (ln(100) x max tau)": 63.95,
-    "mass_orthogonality_max": 8.88e-16
+    "settle_length_s (ln(100) x max tau)": 63.88,
+    "mass_orthogonality_max": 1.33e-15
    },
    "crawler_on_floor_modes_other_levels": {
     "middle": {
      "f_Hz": [
-      2.292,
-      6.662,
-      13.97
+      2.299,
+      6.674,
+      14.02
      ],
      "zeta": [
-      0.0083,
-      0.02393,
-      0.05004
+      0.008298,
+      0.0239,
+      0.05005
      ],
-     "settle_length_s (ln(100) x max tau)": 38.52
+     "settle_length_s (ln(100) x max tau)": 38.43
     },
     "bottom": {
      "f_Hz": [
-      2.563,
-      7.048,
-      13.98
+      2.57,
+      7.057,
+      14.02
      ],
      "zeta": [
-      0.009252,
-      0.02529,
-      0.05005
+      0.009251,
+      0.02525,
+      0.05006
      ],
-     "settle_length_s (ln(100) x max tau)": 30.91
+     "settle_length_s (ln(100) x max tau)": 30.83
     }
    },
    "nonlinear_free_settle_from_zero_compression": {
@@ -1808,65 +1808,65 @@
      "atol": 1e-12,
      "max_step_s": 0.002,
      "status": 0,
-     "nfev": 752837
+     "nfev": 739745
     },
     "initial_deviation (uz_mm, roll_deg, pitch_deg)": [
-     1.22,
-     0.0001114,
-     0.08168
+     1.196,
+     9.914e-05,
+     0.08477
     ],
-    "t_last_above_1pct_of_initial_uz_s": 43.94,
-    "t_last_above_1pct_of_initial_pitch_s": 57.91,
+    "t_last_above_1pct_of_initial_uz_s": 48.42,
+    "t_last_above_1pct_of_initial_pitch_s": 61.8,
     "end_minus_static (uz_mm, pitch_deg)": [
-     -0.000891,
-     -0.000164
+     0.000793,
+     0.000146
     ]
    },
    "V4_quasi_static": {
     "touch_s (FL, FR, RL, RR)": [
-     15.2428,
-     15.2428,
-     15.1471,
-     15.1465
+     16.512,
+     16.512,
+     16.416,
+     16.4155
     ],
     "first_touch_leg": "RR",
-    "first_touch_s": 15.1465,
-    "front_minus_rear_touch_s": 0.09596,
+    "first_touch_s": 16.4155,
+    "front_minus_rear_touch_s": 0.09621,
     "touch_kinematic_from_settled_pose_s": [
-     15.2917,
-     15.2915,
-     15.1467,
-     15.1465
+     16.5603,
+     16.5601,
+     16.4157,
+     16.4155
     ],
-    "crawler_fully_off_s": 15.5843,
-    "all_cyl_ge_F_min_s": 15.2679,
+    "crawler_fully_off_s": 16.8472,
+    "all_cyl_ge_F_min_s": 16.5364,
     "end_pad_force_N": [
-     119292.5,
-     117318.0,
-     73757.77,
-     71922.38
+     119272.0,
+     117027.5,
+     72676.13,
+     71137.35
     ],
     "end_attitude_deg (roll, pitch)": [
-     -0.0020529,
-     0.026636
+     -0.001875,
+     0.010312
     ],
-    "end_crawler_min_clearance_mm": 44.926
+    "end_crawler_min_clearance_mm": 45.6557
    },
    "V4_residual_linear_L1_after_last_stop (deg, roll/pitch)": {
-    "start_s": 15.6343,
+    "start_s": 16.8972,
     "roll_pitch_at_0s": [
-     0.0003481,
-     0.01847
+     0.0001997,
+     0.01493
     ],
     "roll_pitch_at_10s": [
-     0.0001126,
-     0.001304
+     4.42e-05,
+     0.0006405
     ],
     "roll_pitch_at_15s": [
-     7.24e-05,
-     0.0003584
+     2.889e-05,
+     0.0001439
     ],
-    "last_time_above_0.001deg_after_last_stop_s": 11.01
+    "last_time_above_0.001deg_after_last_stop_s": 8.584
    },
    "full_stroke_damped_3dof": {
     "window_s": [
@@ -1879,278 +1879,278 @@
      "atol": 1e-12,
      "max_step_s": 0.001,
      "status": 0,
-     "nfev": 85346,
-     "wall_s": 1.99
+     "nfev": 85610,
+     "wall_s": 7.1
     },
     "per_leg": {
      "FL": {
-      "first_touch_dyn_s": 15.253,
-      "peak_pad_force_N": 134323.0,
-      "peak_at_s": 15.776,
+      "first_touch_dyn_s": 16.523,
+      "peak_pad_force_N": 134147.0,
+      "peak_at_s": 17.032,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 10045.0
+      "cyl_force_min_after_first_reaching_F_min_N": 9583.53
      },
      "FR": {
-      "first_touch_dyn_s": 15.254,
-      "peak_pad_force_N": 131630.0,
-      "peak_at_s": 15.775,
+      "first_touch_dyn_s": 16.524,
+      "peak_pad_force_N": 131041.0,
+      "peak_at_s": 17.031,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 9800.51
+      "cyl_force_min_after_first_reaching_F_min_N": 10281.0
      },
      "RL": {
-      "first_touch_dyn_s": 15.147,
-      "peak_pad_force_N": 86452.5,
-      "peak_at_s": 15.899,
+      "first_touch_dyn_s": 16.416,
+      "peak_pad_force_N": 85446.7,
+      "peak_at_s": 17.152,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 3904.47
+      "cyl_force_min_after_first_reaching_F_min_N": 4857.7
      },
      "RR": {
-      "first_touch_dyn_s": 15.147,
-      "peak_pad_force_N": 84460.7,
-      "peak_at_s": 15.644,
+      "first_touch_dyn_s": 16.416,
+      "peak_pad_force_N": 83854.3,
+      "peak_at_s": 17.153,
       "contact_lost_samples_after_touch": 0,
-      "cyl_force_min_after_first_reaching_F_min_N": 3706.15
+      "cyl_force_min_after_first_reaching_F_min_N": 4689.5
      }
     },
-    "max_peak_pad_force_N": 134323.0,
-    "max_peak_cylinder_force_N": 133276.0,
-    "max_abs_diff_vs_quasi_static_N": 20377.0,
-    "max_abs_diff_at_s": 15.313,
-    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": -5746.0,
+    "max_peak_pad_force_N": 134147.0,
+    "max_peak_cylinder_force_N": 133100.0,
+    "max_abs_diff_vs_quasi_static_N": 18540.0,
+    "max_abs_diff_at_s": 16.581,
+    "F_min_margin_N (min cyl force after first reaching F_min - F_min)": -4725.0,
     "contact_lost_samples_after_touch": 0,
     "quasi_static_events_full_stroke_s": {
      "touch (FL, FR, RL, RR)": [
-      15.2428,
-      15.2428,
-      15.1471,
-      15.1465
+      16.512,
+      16.512,
+      16.416,
+      16.4155
      ],
-     "crawler_off": 15.5843
+     "crawler_off": 16.8472
     }
    },
    "slope_stability_on_crawler (legs retracted)": {
     "top": {
-     "com_height_above_floor_m": 3.1985,
+     "com_height_above_floor_m": 3.2111,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.1301,
-     "front_row_unloads_at_nose_up_slope_deg": 15.27,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.3788,
+     "front_row_unloads_at_nose_up_slope_deg": 15.42,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      18.07,
-      18.12
+      18.0,
+      18.05
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      8.102,
-      22.57,
-      18.07
+      7.839,
+      22.69,
+      18.0
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.41,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 21.34,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      14.9,
-      28.79
+      14.62,
+      28.88
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      16.61,
-      30.05
+      16.33,
+      30.13
      ]
     },
     "middle": {
-     "com_height_above_floor_m": 2.5085,
+     "com_height_above_floor_m": 2.5172,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.1659,
-     "front_row_unloads_at_nose_up_slope_deg": 19.14,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.4833,
+     "front_row_unloads_at_nose_up_slope_deg": 19.33,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      22.58,
-      22.65
+      22.52,
+      22.57
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      10.29,
-      27.93,
-      22.58
+      9.961,
+      28.08,
+      22.52
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.57,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 26.49,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      18.74,
-      35.02
+      18.41,
+      35.13
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      20.83,
-      36.42
+      20.5,
+      36.52
      ]
     },
     "bottom": {
-     "com_height_above_floor_m": 1.8185,
+     "com_height_above_floor_m": 1.8232,
      "com_xy_m": [
-      0.44568,
-      -0.0016659
+      0.45891,
+      -0.0014912
      ],
-     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.2289,
-     "front_row_unloads_at_nose_up_slope_deg": 25.43,
+     "rear_row_unloads_at_pitch_slope_deg (+ nose-down; - = already unloaded on level ground, nose-up slope that reloads it)": -0.6673,
+     "front_row_unloads_at_nose_up_slope_deg": 25.68,
      "one_track_fully_unloaded_roll_slope_deg (left track, right track)": [
-      29.84,
-      29.92
+      29.78,
+      29.85
      ],
      "model_tip_angle_deg (resultant reaches the outermost spring line): forward, backward, roll": [
-      14.06,
-      36.17,
-      29.84
+      13.63,
+      36.37,
+      29.78
      ],
-     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.6,
+     "physical_roll_tip_angle_deg (shoe outer edge |y| = 1.256 m)": 34.53,
      "tip_angle_incl_raised_points_deg (forward, backward; = model tip if no gapped points)": [
-      25.08,
-      44.03
+      24.68,
+      44.17
      ],
      "tip_angle_about_end_wheel_axes_deg (front x 1.400, rear x -1.405; track under the wheels 30-43 mm up)": [
-      27.69,
-      45.5
+      27.3,
+      45.63
      ]
     }
    },
-   "wall_s": 19.3
+   "wall_s": 64.8
   }
  },
- "validation_A_vs_reference": {
+ "validation_D_vs_reference": {
   "settled q (uz_mm, roll_deg, pitch_deg) this / reference.json": [
    [
-    -3.8205,
-    0.0003211,
-    0.068741
+    -3.16,
+    0.00025492,
+    0.17457
    ],
    [
-    -3.8205,
-    0.0003211,
-    0.068741
+    -3.1595,
+    0.00025492,
+    0.17449
    ]
   ],
   "modes f_Hz this / reference": [
    [
-    2.245,
-    2.875,
-    8.109
+    1.329,
+    3.052,
+    8.757
    ],
    [
-    2.245,
-    2.875,
-    8.109
+    1.329,
+    3.052,
+    8.757
    ]
   ],
   "modes zeta this / reference": [
    [
-    0.01405,
-    0.01803,
-    0.0503
+    0.008429,
+    0.01906,
+    0.05416
    ],
    [
-    0.01405,
-    0.01803,
-    0.0503
+    0.008429,
+    0.01906,
+    0.05416
    ]
   ],
   "settle_length_s this / reference": [
-   23.24,
-   23.2
+   65.41,
+   65.41
   ],
   "touch_s this / reference": [
    [
-    15.1448,
-    15.1453,
-    15.0071,
-    15.0061
+    16.2955,
+    16.2942,
+    16.4102,
+    16.4099
    ],
    [
-    15.145,
-    15.145,
-    15.007,
-    15.006
+    16.296,
+    16.294,
+    16.41,
+    16.41
    ]
   ],
   "crawler_off_s this / reference": [
-   15.6912,
-   15.691
+   16.8472,
+   16.847
   ],
   "residual 10 s / 15 s this / reference": [
    [
     [
-     0.0001126,
-     0.001304
+     4.42e-05,
+     0.0006405
     ],
     [
-     7.24e-05,
-     0.0003584
+     2.889e-05,
+     0.0001439
     ]
    ],
    [
     [
-     0.0001126,
-     0.001306
+     4.42e-05,
+     0.0006405
     ],
     [
-     7.24e-05,
-     0.0003584
+     2.889e-05,
+     0.0001439
     ]
    ]
   ],
   "full-stroke dynamic peak pad force N (FL) this / leg_extension_loads.json": [
-   131665.0,
-   131665.0
+   139114.0,
+   139120.0
   ],
   "full-stroke F_min margin N this / leg_extension_loads.json": [
-   125.1,
-   125.1
+   -3158.0,
+   -3145.0
   ]
  },
  "levelling_range_crawler_clearance": {
   "clearance_0mm": {
    "bbox_corners_at_floor (current, run_reference 3.3)": {
     "pitch(+/-)": [
-     4.549,
-     4.407
+     4.824,
+     4.666
     ],
     "roll(+/-)": [
-     6.971,
-     6.971
+     7.391,
+     7.391
     ],
-    "diagonal_45deg": 3.903
+    "diagonal_45deg": 4.139
    },
    "CAD_lower_envelope (solid bboxes, 10 mm grid)": {
     "pitch(+/-)": [
-     5.355,
-     5.028
+     5.649,
+     5.305
     ],
     "roll(+/-)": [
-     7.039,
-     7.013
+     7.462,
+     7.434
     ],
-    "diagonal_45deg": 4.475
+    "diagonal_45deg": 4.73
    }
   },
   "clearance_50mm": {
    "bbox_corners_at_floor (current, run_reference 3.3)": {
     "pitch(+/-)": [
-     3.86,
-     3.759
+     4.136,
+     4.018
     ],
     "roll(+/-)": [
-     5.92,
-     5.92
+     6.341,
+     6.341
     ],
-    "diagonal_45deg": 3.31
+    "diagonal_45deg": 3.547
    },
    "CAD_lower_envelope (solid bboxes, 10 mm grid)": {
     "pitch(+/-)": [
-     4.617,
-     4.335
+     4.912,
+     4.613
     ],
     "roll(+/-)": [
-     5.977,
-     5.955
+     6.402,
+     6.379
     ],
-    "diagonal_45deg": 3.802
+    "diagonal_45deg": 4.072
    }
   },
   "envelope_note": "lowest point per 10 mm (x, y) cell over the crawler solids' bboxes (conservative: each solid fills its bbox); the raised track ends and the idler/sprocket wraps replace the floor-level bbox corners",

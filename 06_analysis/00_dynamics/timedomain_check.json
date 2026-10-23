@@ -4,103 +4,103 @@
   "model": "nonlinear 6-DoF rigid body (superstructure + rods, top level), 4 unilateral penalty pads",
   "integrator": "solve_ivp DOP853 rtol 1e-10 atol 1e-12",
   "quaternion_order": "wxyz (scalar first)",
-  "runtime_s": 6.7
+  "runtime_s": 37.2
  },
  "L1_rigid_motor_lumped_contact": {
   "kv_N_m": [
-   20813595.390379533,
-   20813595.390379533,
-   21247882.943617858,
-   21247882.943617858
+   25905744.167367652,
+   25905744.167367652,
+   19504614.90467409,
+   19504614.90467409
   ],
   "kh_N_m": [
-   8510485.27945943,
-   8510485.27945943,
-   8403601.996732794,
-   8403601.996732794
+   7152770.333800248,
+   7152770.333800248,
+   3707388.607587355,
+   3707388.607587355
   ],
   "settle_time_s": 8.0,
   "T1_static": {
    "F_nonlinear_N": [
-    119360.33,
-    117369.36,
-    73705.85,
-    71855.12
+    119304.11,
+    117041.38,
+    72659.33,
+    71108.08
    ],
    "F_linear_N": [
-    119292.49,
-    117318.02,
-    73757.77,
-    71922.38
+    119271.99,
+    117027.45,
+    72676.13,
+    71137.35
    ],
-   "max_rel_diff": 0.0009351564799446614,
-   "sum_F_minus_W_rel": 3.706166068065667e-12,
+   "max_rel_diff": 0.0004114051334783276,
+   "sum_F_minus_W_rel": 2.6802790871693845e-12,
    "penetration_mm": [
-    5.73473,
-    5.63907,
-    3.46886,
-    3.38175
+    4.60532,
+    4.51797,
+    3.72524,
+    3.64571
    ],
    "attitude_deg (roll, pitch, yaw)": [
-    -0.00207,
-    0.026703,
+    -0.00189,
+    0.010337,
     -0.0
    ],
    "attitude_linear_deg (roll, pitch)": [
-    -0.002053,
-    0.026636
+    -0.001875,
+    0.010312
    ]
   },
   "T2_T3_free_vibration": {
    "mode1 ['sway y', 'roll', 'yaw']": {
-    "f_linear_Hz": 1.7845100268313245,
-    "f_nonlinear_Hz": 1.784442163543483,
-    "rel_err": 3.802908743638502e-05,
-    "energy_drift_rel_to_Ekin0": 2.9554179340828467e-08
+    "f_linear_Hz": 1.8313660472951803,
+    "f_nonlinear_Hz": 1.8313290426060098,
+    "rel_err": 2.0206058327391087e-05,
+    "energy_drift_rel_to_Ekin0": 5.7409256221575227e-08
    },
    "mode2 ['surge x', 'pitch']": {
-    "f_linear_Hz": 2.9841776357519896,
-    "f_nonlinear_Hz": 2.984198609211964,
-    "rel_err": 7.028221015822001e-06,
-    "energy_drift_rel_to_Ekin0": 7.010959466794971e-08
+    "f_linear_Hz": 2.8355693384616547,
+    "f_nonlinear_Hz": 2.8355533632253365,
+    "rel_err": 5.633872570688396e-06,
+    "energy_drift_rel_to_Ekin0": 4.099594476228031e-08
    },
    "mode3 ['yaw', 'sway y', 'roll']": {
-    "f_linear_Hz": 5.832480934921975,
-    "f_nonlinear_Hz": 5.832413968586185,
-    "rel_err": 1.1481621035149564e-05,
-    "energy_drift_rel_to_Ekin0": 9.07464626284601e-08
+    "f_linear_Hz": 4.031803775277163,
+    "f_nonlinear_Hz": 4.031760722731179,
+    "rel_err": 1.0678234453829804e-05,
+    "energy_drift_rel_to_Ekin0": 4.3520745620355077e-08
    },
-   "mode4 ['pitch', 'surge x', 'heave z']": {
-    "f_linear_Hz": 6.45898545423739,
-    "f_nonlinear_Hz": 6.458159405739184,
-    "rel_err": 0.0001278913699464066,
-    "energy_drift_rel_to_Ekin0": 7.506315506938609e-08
+   "mode4 ['pitch', 'surge x']": {
+    "f_linear_Hz": 5.7814972813832775,
+    "f_nonlinear_Hz": 5.781436438362538,
+    "rel_err": 1.0523748049791372e-05,
+    "energy_drift_rel_to_Ekin0": 7.087709930281916e-08
    },
-   "mode5 ['heave z', 'pitch', 'surge x']": {
-    "f_linear_Hz": 7.614752082487937,
-    "f_nonlinear_Hz": 7.615665713959044,
-    "rel_err": 0.00011998177500857212,
-    "energy_drift_rel_to_Ekin0": 1.021816637471527e-07
+   "mode5 ['roll', 'yaw', 'sway y']": {
+    "f_linear_Hz": 7.409751445088361,
+    "f_nonlinear_Hz": 7.4099684855714765,
+    "rel_err": 2.92911961654973e-05,
+    "energy_drift_rel_to_Ekin0": 3.1693212642435546e-08
    },
-   "mode6 ['yaw', 'roll', 'sway y']": {
-    "f_linear_Hz": 8.04212824231603,
-    "f_nonlinear_Hz": 8.042532815051128,
-    "rel_err": 5.030667541078326e-05,
-    "energy_drift_rel_to_Ekin0": 3.4386852068330745e-08
+   "mode6 ['heave z']": {
+    "f_linear_Hz": 7.731601608903526,
+    "f_nonlinear_Hz": 7.731738773776784,
+    "rel_err": 1.7740809756650042e-05,
+    "energy_drift_rel_to_Ekin0": 9.443086236442683e-08
    }
   },
   "T4_FL_plus_5.0mm": {
    "F_after_nonlinear_N": [
-    142887.3,
-    93712.3,
-    47332.4,
-    98358.7
+    143793.6,
+    92422.3,
+    45157.5,
+    98739.6
    ],
    "F_after_static_active_set_N": [
-    143145.5,
-    93465.0,
-    47561.8,
-    98118.3
+    144163.0,
+    92136.5,
+    45340.2,
+    98473.2
    ],
    "legs_in_contact (static)": [
     true,
@@ -108,44 +108,44 @@
     true,
     true
    ],
-   "max_rel_err_vs_static (vs W/4)": 0.0027017574452991677,
+   "max_rel_err_vs_static (vs W/4)": 0.0038869163266112305,
    "droll_dpitch_deg_nonlinear": [
-    0.059144,
-    -0.029151
+    0.06718,
+    -0.029084
    ],
    "droll_dpitch_deg_static": [
-    0.058602,
-    -0.029082
+    0.066617,
+    -0.02902
    ],
    "dF_nonlinear_N": [
-    23526.9,
-    -23657.0,
-    -26373.5,
-    26503.6
+    24489.5,
+    -24619.1,
+    -27501.8,
+    27631.5
    ],
    "dF_linear_N": [
-    23853.0,
-    -23853.0,
-    -26195.9,
-    26195.9
+    24891.0,
+    -24891.0,
+    -27335.9,
+    27335.9
    ],
    "droll_dpitch_deg_linear": [
-    0.058602,
-    -0.029082
+    0.066617,
+    -0.02902
    ]
   },
   "T4_FL_plus_15.0mm": {
    "F_after_nonlinear_N": [
-    184861.1,
-    51514.3,
+    183665.8,
+    52337.1,
     0.0,
-    145912.1
+    144110.0
    ],
    "F_after_static_active_set_N": [
-    186453.4,
-    50157.1,
+    185448.0,
+    50851.4,
     -0.0,
-    145680.1
+    143813.5
    ],
    "legs_in_contact (static)": [
     true,
@@ -153,14 +153,14 @@
     false,
     true
    ],
-   "max_rel_err_vs_static (vs W/4)": 0.016660661257839764,
+   "max_rel_err_vs_static (vs W/4)": 0.01875481937267999,
    "droll_dpitch_deg_nonlinear": [
-    0.188033,
-    -0.081693
+    0.216791,
+    -0.077342
    ],
    "droll_dpitch_deg_static": [
-    0.18495,
-    -0.082217
+    0.214048,
+    -0.07777
    ]
   }
  },
@@ -180,85 +180,85 @@
   "settle_time_s": 4.0,
   "T1_static": {
    "F_nonlinear_N": [
-    119306.07,
-    117311.85,
-    73744.3,
-    71928.45
+    119150.58,
+    117156.37,
+    72810.9,
+    70995.05
    ],
    "F_linear_N": [
-    119301.83,
-    117308.69,
-    73747.51,
-    71932.64
+    119146.29,
+    117153.15,
+    72814.17,
+    70999.3
    ],
-   "max_rel_diff": 5.8279724965425605e-05,
-   "sum_F_minus_W_rel": 4.59673610759223e-13,
+   "max_rel_diff": 5.982791337115776e-05,
+   "sum_F_minus_W_rel": 1.492123603118236e-12,
    "penetration_mm": [
-    0.36861,
-    0.36245,
-    0.22784,
-    0.22223
+    0.36813,
+    0.36197,
+    0.22496,
+    0.21935
    ],
    "attitude_deg (roll, pitch, yaw)": [
     -0.000133,
-    0.001659,
+    0.001687,
     -0.0
    ],
    "attitude_linear_deg (roll, pitch)": [
     -0.000133,
-    0.001659
+    0.001687
    ]
   },
   "T2_T3_free_vibration": {
    "mode1 ['roll', 'sway y']": {
-    "f_linear_Hz": 7.271617883288461,
-    "f_nonlinear_Hz": 7.271617907211473,
-    "rel_err": 3.2899159994082744e-09,
-    "energy_drift_rel_to_Ekin0": 3.013033496416909e-08
+    "f_linear_Hz": 7.273737308324578,
+    "f_nonlinear_Hz": 7.2737373323649495,
+    "rel_err": 3.305092066465972e-09,
+    "energy_drift_rel_to_Ekin0": 4.1437854378430296e-08
    },
    "mode2 ['pitch', 'surge x']": {
-    "f_linear_Hz": 12.580932894479623,
-    "f_nonlinear_Hz": 12.580932920252824,
-    "rel_err": 2.0485921575829803e-09,
-    "energy_drift_rel_to_Ekin0": 9.161498312415901e-08
+    "f_linear_Hz": 12.589745139560614,
+    "f_nonlinear_Hz": 12.589745164517296,
+    "rel_err": 1.9823024038704104e-09,
+    "energy_drift_rel_to_Ekin0": 1.0071431940497196e-07
    },
    "mode3 ['heave z', 'surge x']": {
-    "f_linear_Hz": 29.00410165649363,
-    "f_nonlinear_Hz": 29.00410171482219,
-    "rel_err": 2.0110452118380987e-09,
-    "energy_drift_rel_to_Ekin0": 9.842132615486382e-08
+    "f_linear_Hz": 29.087068355850228,
+    "f_nonlinear_Hz": 29.08706841440301,
+    "rel_err": 2.0130176565762602e-09,
+    "energy_drift_rel_to_Ekin0": 1.04686280416903e-07
    },
    "mode4 ['sway y', 'yaw', 'roll']": {
-    "f_linear_Hz": 36.07368897817666,
-    "f_nonlinear_Hz": 36.0736890644736,
-    "rel_err": 2.3922403908212815e-09,
-    "energy_drift_rel_to_Ekin0": 9.248208726794724e-08
+    "f_linear_Hz": 36.31044364345122,
+    "f_nonlinear_Hz": 36.310443731296864,
+    "rel_err": 2.419294094404495e-09,
+    "energy_drift_rel_to_Ekin0": 5.1831394728811575e-08
    },
    "mode5 ['surge x', 'pitch']": {
-    "f_linear_Hz": 38.348261956833404,
-    "f_nonlinear_Hz": 38.34826203326289,
-    "rel_err": 1.993036524719259e-09,
-    "energy_drift_rel_to_Ekin0": 1.0238375978084406e-07
+    "f_linear_Hz": 38.51586345196933,
+    "f_nonlinear_Hz": 38.51586352935205,
+    "rel_err": 2.0091130125787363e-09,
+    "energy_drift_rel_to_Ekin0": 9.350056232950087e-08
    },
    "mode6 ['yaw', 'roll', 'sway y']": {
-    "f_linear_Hz": 48.12984225965877,
-    "f_nonlinear_Hz": 48.12984230312062,
-    "rel_err": 9.030124271644998e-10,
-    "energy_drift_rel_to_Ekin0": 4.163231102968917e-08
+    "f_linear_Hz": 48.29011698082258,
+    "f_nonlinear_Hz": 48.29011702234341,
+    "rel_err": 8.598203993053655e-10,
+    "energy_drift_rel_to_Ekin0": 4.9671881447505136e-08
    }
   },
   "T4_FL_plus_0.5mm": {
    "F_after_nonlinear_N": [
-    155951.3,
-    80653.6,
-    33446.0,
-    112239.7
+    155795.9,
+    80498.1,
+    32512.6,
+    111306.3
    ],
    "F_after_static_active_set_N": [
-    155979.9,
-    80630.6,
-    33466.7,
-    112213.4
+    155824.4,
+    80475.0,
+    32533.4,
+    111280.1
    ],
    "legs_in_contact (static)": [
     true,
@@ -266,7 +266,7 @@
     true,
     true
    ],
-   "max_rel_err_vs_static (vs W/4)": 0.0002993254690766523,
+   "max_rel_err_vs_static (vs W/4)": 0.0002998931625921784,
    "droll_dpitch_deg_nonlinear": [
     0.005919,
     -0.002908
@@ -277,9 +277,9 @@
    ],
    "dF_nonlinear_N": [
     36645.3,
-    -36658.2,
+    -36658.3,
     -40298.3,
-    40311.3
+    40311.2
    ],
    "dF_linear_N": [
     36678.1,
@@ -294,16 +294,16 @@
   },
   "T4_FL_plus_1.0mm": {
    "F_after_nonlinear_N": [
-    186350.3,
-    50243.8,
+    185344.1,
+    50939.3,
     0.0,
-    145696.6
+    143829.5
    ],
    "F_after_static_active_set_N": [
-    186453.4,
-    50157.1,
+    185448.0,
+    50851.4,
     -0.0,
-    145680.1
+    143813.5
    ],
    "legs_in_contact (static)": [
     true,
@@ -311,14 +311,14 @@
     false,
     true
    ],
-   "max_rel_err_vs_static (vs W/4)": 0.0010791465902019314,
+   "max_rel_err_vs_static (vs W/4)": 0.0010934933939770008,
    "droll_dpitch_deg_nonlinear": [
-    0.012674,
-    -0.005352
+    0.012787,
+    -0.005289
    ],
    "droll_dpitch_deg_static": [
-    0.012661,
-    -0.005354
+    0.012775,
+    -0.005291
    ]
   }
  }

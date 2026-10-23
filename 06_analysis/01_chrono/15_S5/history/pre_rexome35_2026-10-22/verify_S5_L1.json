@@ -1,0 +1,4952 @@
+{
+ "meta": {
+  "generated": "2026-10-21T18:01:35",
+  "stage": "S5 auger three levels (chrono_build_plan.md S5): V0 (auger), V10",
+  "script": "04_scripts/02_chrono/run_S5.py",
+  "checks_module": "outrigger_sim.verify.s5",
+  "judgement": "cad-expert pre-check; physical judgement by dynamics-expert",
+  "dt_yaml_s": 0.0002,
+  "params_file_sha256": "865c5488b9ee6cbb625479872ce5eff05bfa3d93a667d1b1583bc5a07042383a",
+  "reference_sha256": {
+   "reference.json": "9e49c00f1f5c5f52a3b9a0bf03b1a8a8b3cb86b3e3782ae5a78aa6e064c00846",
+   "actuator_L2_feasibility.json": "6e60b44cd75d8fe9afabe63b6e657245cb60cd56ca9b64b12354a313b4f45d3f",
+   "stick_friction.json": "4fb6d7545d7e60a15375f119a8de9929d909e24aa6fe0a1b9e5895f11939bde8",
+   "v7_diagnostic.json": "f7bb90c4cbf12001bc61ee3a55863c5cec7b408ef232d2aaf4fd8b481368e24d",
+   "leg_extension_loads.json": "155b65eba91720aa66a903cafd8154fb6fa530ec775e8c1981cbcf59cef33fc5",
+   "numerical_damping_review.json": "ef4a9e16bb4e64178938641edb7e55c734bd5df7d731f039dad54e99e5d50fce"
+  },
+  "code_sha256": {
+   "04_scripts/02_chrono/run_S5.py": "0d474155e5f124980fe2be6ddf62efcecb84018dc0cdd7c9f7097999847b22d8",
+   "04_scripts/02_chrono/run_S4.py": "2938e8f33a0a86b04bb441ea1d798282af652fc51da05e28285487af67622162",
+   "03_src/outrigger_sim/verify/s5.py": "7c6d86b57835e264fc6bdb1ac41a494622ba9b54acd3a3b8c39bca572bc91b80",
+   "03_src/outrigger_sim/verify/s4.py": "1713dcff9b550ce60478b040d7fd8c05068ae512f6e37d0f06d77c4077db9b40",
+   "03_src/outrigger_sim/verify/metrics.py": "112f0eca69fe5fe33e582918b3c23fc2bcfebd2156b9768640671c02136f962d",
+   "03_src/outrigger_sim/verify/checks.py": "954166c6db5f6c57306d1cba7af7a055f9496afec87648767d4a6fceecbcdab5"
+  },
+  "era": {
+   "order": 24,
+   "order_check": 32,
+   "block_rows": 40,
+   "decimate": 5
+  },
+  "batches": [
+   {
+    "batch": "07_results/S5/batch_20261021_173430",
+    "cases": [
+     "bottom_pitch",
+     "bottom_roll",
+     "middle_pitch",
+     "middle_roll",
+     "top_pitch",
+     "top_roll",
+     "v1_bottom",
+     "v1_middle",
+     "v1_top"
+    ],
+    "jobs": 6,
+    "wall_s": 29.707070700009353,
+    "placement": "pcore (EcoQoS off), outrigger_sim.hostcpu.place_process",
+    "env_threads": {
+     "OPENBLAS_NUM_THREADS": "1",
+     "MKL_NUM_THREADS": "1"
+    },
+    "case_wall_s": {
+     "bottom_pitch": 18.193887399989762,
+     "bottom_roll": 18.203765199999907,
+     "middle_pitch": 17.898796599998605,
+     "middle_roll": 18.057552700003725,
+     "top_pitch": 18.224053600002662,
+     "top_roll": 18.519084500003373,
+     "v1_bottom": 11.49714259999746,
+     "v1_middle": 11.591476100002183,
+     "v1_top": 11.437487899995176
+    },
+    "status": {
+     "bottom_pitch": "ok",
+     "bottom_roll": "ok",
+     "middle_pitch": "ok",
+     "middle_roll": "ok",
+     "top_pitch": "ok",
+     "top_roll": "ok",
+     "v1_bottom": "ok",
+     "v1_middle": "ok",
+     "v1_top": "ok"
+    }
+   }
+  ],
+  "raw": {
+   "bottom_pitch": "07_results/S5/batch_20261021_173430/bottom_pitch",
+   "bottom_roll": "07_results/S5/batch_20261021_173430/bottom_roll",
+   "middle_pitch": "07_results/S5/batch_20261021_173430/middle_pitch",
+   "middle_roll": "07_results/S5/batch_20261021_173430/middle_roll",
+   "top_pitch": "07_results/S5/batch_20261021_173430/top_pitch",
+   "top_roll": "07_results/S5/batch_20261021_173430/top_roll",
+   "v1_bottom": "07_results/S5/batch_20261021_173430/v1_bottom",
+   "v1_middle": "07_results/S5/batch_20261021_173430/v1_middle",
+   "v1_top": "07_results/S5/batch_20261021_173430/v1_top"
+  }
+ },
+ "verdict_by_check": {
+  "V0(auger)": true,
+  "V0(auger) travel": true,
+  "V10": true,
+  "V13": true
+ },
+ "all_passed": true,
+ "V0_auger": {
+  "top": {
+   "travel_m": 2.99598,
+   "travel_mm_json": 2995.98,
+   "composed": {
+    "mass_kg": 38555.66381,
+    "com_m": [
+     0.4520684917963788,
+     -0.0014765907728531151,
+     2.1748524328279384
+    ],
+    "inertia_kg_m2": [
+     [
+      534443.9712698384,
+      -954.9233856599184,
+      -194546.7394662826
+     ],
+     [
+      -954.9233856599184,
+      690634.99567028,
+      -208.89026883985105
+     ],
+     [
+      -194546.7394662826,
+      -208.89026883985105,
+      193716.12805814878
+     ]
+    ]
+   },
+   "residuals": {
+    "mass_rel": 2.593651959870158e-10,
+    "com_max_abs_m": 2.827938327953916e-09,
+    "inertia_max_abs_kg_m2": 0.0004662825958803296,
+    "inertia_rel_to_max": 6.75150547801562e-10
+   },
+   "rounding_bound": {
+    "mass_kg": 0.0005549999999755528,
+    "com_m": [
+     8.997419962116838e-09,
+     2.120674276205103e-11,
+     2.4531575468079153e-08
+    ],
+    "inertia_kg_m2": [
+     [
+      0.007122142624109984,
+      1.5958696066154515e-06,
+      0.0013359187486348674
+     ],
+     [
+      1.5958696066154515e-06,
+      0.00299126908602193,
+      1.8327108234761907e-06
+     ],
+     [
+      0.0013359187486348674,
+      1.8327108234761907e-06,
+      0.0013741285419091582
+     ]
+    ]
+   },
+   "residual_over_bound_max": 0.45825617643616146,
+   "checks": [
+    {
+     "id": "V0(auger)",
+     "item": "top: fixed + moving set = level values, each element within its printed-digit rounding bound",
+     "value": [
+      38555.66381,
+      0.4520684917963788,
+      -0.0014765907728531151,
+      2.1748524328279384,
+      534443.9712698384,
+      690634.99567028,
+      193716.12805814878,
+      -954.9233856599184,
+      -194546.7394662826,
+      -208.89026883985105
+     ],
+     "ref": [
+      38555.6638,
+      0.452068492,
+      -0.00147659077,
+      2.17485243,
+      534443.971,
+      690634.996,
+      193716.128,
+      -954.923385,
+      -194546.739,
+      -208.890268
+     ],
+     "tol": [
+      0.0005549999999755528,
+      8.997419962116838e-09,
+      2.120674276205103e-11,
+      2.4531575468079153e-08,
+      0.007122142624109984,
+      0.00299126908602193,
+      0.0013741285419091582,
+      1.5958696066154515e-06,
+      0.0013359187486348674,
+      1.8327108234761907e-06
+     ],
+     "tol_kind": "abs",
+     "unit": "kg, m, kg m^2",
+     "passed": true,
+     "ref_key": "YAML superstructure.auger_levels.top",
+     "deviation": [
+      9.999996109399945e-06,
+      -2.0362117547634284e-10,
+      -2.853115096609904e-12,
+      2.827938327953916e-09,
+      0.00026983837597072124,
+      -0.00032972008921206,
+      5.8148783864453435e-05,
+      -6.599183279831777e-07,
+      -0.0004662825958803296,
+      -8.39851054479368e-07
+     ],
+     "note": "max |residual| / bound = 0.458 (Iyz); residual 1e-05, -2.04e-10, -2.85e-12, 2.83e-09, 0.00027, -0.00033, 5.81e-05, -6.6e-07, -0.000466, -8.4e-07; bound 0.000555, 9e-09, 2.12e-11, 2.45e-08, 0.00712, 0.00299, 0.00137, 1.6e-06, 0.00134, 1.83e-06 (order mass, com x, com y, com z, Ixx, Iyy, Izz, Ixy, Ixz, Iyz; kg, m, kg m^2)"
+    },
+    {
+     "id": "info",
+     "item": "top: V0(auger) plan 1e-9, mass relative",
+     "value": 38555.66381,
+     "ref": 38555.6638,
+     "tol": 1e-09,
+     "tol_kind": "rel",
+     "unit": "kg",
+     "passed": true,
+     "ref_key": "YAML superstructure.auger_levels.top.mass_kg",
+     "deviation": 2.593651651615435e-10,
+     "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+    },
+    {
+     "id": "info",
+     "item": "top: V0(auger) plan 1e-9, centre of mass",
+     "value": [
+      0.4520684917963788,
+      -0.0014765907728531151,
+      2.1748524328279384
+     ],
+     "ref": [
+      0.452068492,
+      -0.00147659077,
+      2.17485243
+     ],
+     "tol": 1e-09,
+     "tol_kind": "abs",
+     "unit": "m",
+     "passed": false,
+     "ref_key": "YAML superstructure.auger_levels.top.com_m",
+     "deviation": [
+      -2.0362117547634284e-10,
+      -2.853115096609904e-12,
+      2.827938327953916e-09
+     ],
+     "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+    },
+    {
+     "id": "info",
+     "item": "top: V0(auger) plan 1e-9, inertia about the CoM relative to max |I|",
+     "value": [
+      [
+       534443.9712698384,
+       -954.9233856599184,
+       -194546.7394662826
+      ],
+      [
+       -954.9233856599184,
+       690634.99567028,
+       -208.89026883985105
+      ],
+      [
+       -194546.7394662826,
+       -208.89026883985105,
+       193716.12805814878
+      ]
+     ],
+     "ref": [
+      [
+       534443.971,
+       -954.923385,
+       -194546.739
+      ],
+      [
+       -954.923385,
+       690634.996,
+       -208.890268
+      ],
+      [
+       -194546.739,
+       -208.890268,
+       193716.128
+      ]
+     ],
+     "tol": 0.0006906349960000001,
+     "tol_kind": "abs",
+     "unit": "kg m^2",
+     "passed": true,
+     "ref_key": "YAML superstructure.auger_levels.top.inertia_kg_m2",
+     "deviation": [
+      [
+       0.00026983837597072124,
+       -6.599183279831777e-07,
+       -0.0004662825958803296
+      ],
+      [
+       -6.599183279831777e-07,
+       -0.00032972008921206,
+       -8.39851054479368e-07
+      ],
+      [
+       -0.0004662825958803296,
+       -8.39851054479368e-07,
+       5.8148783864453435e-05
+      ]
+     ],
+     "note": "tol = 1e-9 x max |I| = 0.000691 kg m^2; 9 significant digits printed: not reachable, rev. 22 (recorded)"
+    },
+    {
+     "id": "V0(auger) travel",
+     "item": "top: YAML auger_travel_m = auger_levels.json travel_mm x 1e-3",
+     "value": 2.99598,
+     "ref": 2.99598,
+     "tol": 1e-12,
+     "tol_kind": "abs",
+     "unit": "m",
+     "passed": true,
+     "ref_key": "01_cad/03_auger/auger_levels.json levels.top.travel_mm x 1e-3",
+     "deviation": 0.0,
+     "note": "the level values are composed from this number (rev. 22)"
+    }
+   ]
+  },
+  "middle": {
+   "travel_m": -1.30281,
+   "travel_mm_json": -1302.81,
+   "composed": {
+    "mass_kg": 38555.66381,
+    "com_m": [
+     0.4520684917963788,
+     -0.0014765907728531151,
+     1.4772170641111497
+    ],
+    "inertia_kg_m2": [
+     [
+      258657.06655343476,
+      -954.9233856599184,
+      -120560.23353806716
+     ],
+     [
+      -954.9233856599184,
+      414848.09095387626,
+      -94.79466105200582
+     ],
+     [
+      -120560.23353806716,
+      -94.79466105200582,
+      193716.12805814878
+     ]
+    ]
+   },
+   "residuals": {
+    "mass_rel": 2.593651959870158e-10,
+    "com_max_abs_m": 4.111149642938017e-09,
+    "inertia_max_abs_kg_m2": 0.0005534347728826106,
+    "inertia_rel_to_max": 1.3340660952507807e-09
+   },
+   "rounding_bound": {
+    "mass_kg": 0.0005549999999755528,
+    "com_m": [
+     8.997419962116838e-09,
+     2.120674276205103e-11,
+     1.5017449425525625e-08
+    ],
+    "inertia_kg_m2": [
+     [
+      0.005996812969795429,
+      1.5958696066154515e-06,
+      0.0009765865014633164
+     ],
+     [
+      1.5958696066154515e-06,
+      0.0018659395626746118,
+      7.943666731887787e-07
+     ],
+     [
+      0.0009765865014633164,
+      7.943666731887787e-07,
+      0.001374128585564904
+     ]
+    ]
+   },
+   "residual_over_bound_max": 0.5509672351520254,
+   "checks": [
+    {
+     "id": "V0(auger)",
+     "item": "middle: fixed + moving set = level values, each element within its printed-digit rounding bound",
+     "value": [
+      38555.66381,
+      0.4520684917963788,
+      -0.0014765907728531151,
+      1.4772170641111497,
+      258657.06655343476,
+      414848.09095387626,
+      193716.12805814878,
+      -954.9233856599184,
+      -120560.23353806716,
+      -94.79466105200582
+     ],
+     "ref": [
+      38555.6638,
+      0.452068492,
+      -0.00147659077,
+      1.47721706,
+      258657.066,
+      414848.091,
+      193716.128,
+      -954.923385,
+      -120560.233,
+      -94.7946609
+     ],
+     "tol": [
+      0.0005549999999755528,
+      8.997419962116838e-09,
+      2.120674276205103e-11,
+      1.5017449425525625e-08,
+      0.005996812969795429,
+      0.0018659395626746118,
+      0.001374128585564904,
+      1.5958696066154515e-06,
+      0.0009765865014633164,
+      7.943666731887787e-07
+     ],
+     "tol_kind": "abs",
+     "unit": "kg, m, kg m^2",
+     "passed": true,
+     "ref_key": "YAML superstructure.auger_levels.middle",
+     "deviation": [
+      9.999996109399945e-06,
+      -2.0362117547634284e-10,
+      -2.853115096609904e-12,
+      4.111149642938017e-09,
+      0.0005534347728826106,
+      -4.6123750507831573e-05,
+      5.8148783864453435e-05,
+      -6.599183279831777e-07,
+      -0.0005380671645980328,
+      -1.520058248161149e-07
+     ],
+     "note": "max |residual| / bound = 0.551 (Ixz); residual 1e-05, -2.04e-10, -2.85e-12, 4.11e-09, 0.000553, -4.61e-05, 5.81e-05, -6.6e-07, -0.000538, -1.52e-07; bound 0.000555, 9e-09, 2.12e-11, 1.5e-08, 0.006, 0.00187, 0.00137, 1.6e-06, 0.000977, 7.94e-07 (order mass, com x, com y, com z, Ixx, Iyy, Izz, Ixy, Ixz, Iyz; kg, m, kg m^2)"
+    },
+    {
+     "id": "info",
+     "item": "middle: V0(auger) plan 1e-9, mass relative",
+     "value": 38555.66381,
+     "ref": 38555.6638,
+     "tol": 1e-09,
+     "tol_kind": "rel",
+     "unit": "kg",
+     "passed": true,
+     "ref_key": "YAML superstructure.auger_levels.middle.mass_kg",
+     "deviation": 2.593651651615435e-10,
+     "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+    },
+    {
+     "id": "info",
+     "item": "middle: V0(auger) plan 1e-9, centre of mass",
+     "value": [
+      0.4520684917963788,
+      -0.0014765907728531151,
+      1.4772170641111497
+     ],
+     "ref": [
+      0.452068492,
+      -0.00147659077,
+      1.47721706
+     ],
+     "tol": 1e-09,
+     "tol_kind": "abs",
+     "unit": "m",
+     "passed": false,
+     "ref_key": "YAML superstructure.auger_levels.middle.com_m",
+     "deviation": [
+      -2.0362117547634284e-10,
+      -2.853115096609904e-12,
+      4.111149642938017e-09
+     ],
+     "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+    },
+    {
+     "id": "info",
+     "item": "middle: V0(auger) plan 1e-9, inertia about the CoM relative to max |I|",
+     "value": [
+      [
+       258657.06655343476,
+       -954.9233856599184,
+       -120560.23353806716
+      ],
+      [
+       -954.9233856599184,
+       414848.09095387626,
+       -94.79466105200582
+      ],
+      [
+       -120560.23353806716,
+       -94.79466105200582,
+       193716.12805814878
+      ]
+     ],
+     "ref": [
+      [
+       258657.066,
+       -954.923385,
+       -120560.233
+      ],
+      [
+       -954.923385,
+       414848.091,
+       -94.7946609
+      ],
+      [
+       -120560.233,
+       -94.7946609,
+       193716.128
+      ]
+     ],
+     "tol": 0.00041484809100000007,
+     "tol_kind": "abs",
+     "unit": "kg m^2",
+     "passed": false,
+     "ref_key": "YAML superstructure.auger_levels.middle.inertia_kg_m2",
+     "deviation": [
+      [
+       0.0005534347728826106,
+       -6.599183279831777e-07,
+       -0.0005380671645980328
+      ],
+      [
+       -6.599183279831777e-07,
+       -4.6123750507831573e-05,
+       -1.520058248161149e-07
+      ],
+      [
+       -0.0005380671645980328,
+       -1.520058248161149e-07,
+       5.8148783864453435e-05
+      ]
+     ],
+     "note": "tol = 1e-9 x max |I| = 0.000415 kg m^2; 9 significant digits printed: not reachable, rev. 22 (recorded)"
+    },
+    {
+     "id": "V0(auger) travel",
+     "item": "middle: YAML auger_travel_m = auger_levels.json travel_mm x 1e-3",
+     "value": -1.30281,
+     "ref": -1.30281,
+     "tol": 1e-12,
+     "tol_kind": "abs",
+     "unit": "m",
+     "passed": true,
+     "ref_key": "01_cad/03_auger/auger_levels.json levels.middle.travel_mm x 1e-3",
+     "deviation": 0.0,
+     "note": "the level values are composed from this number (rev. 22)"
+    }
+   ]
+  },
+  "bottom": {
+   "travel_m": -5.60161,
+   "travel_mm_json": -5601.61,
+   "composed": {
+    "mass_kg": 38555.66381,
+    "com_m": [
+     0.4520684917963788,
+     -0.0014765907728531151,
+     0.7795800725298601
+    ],
+    "inertia_kg_m2": [
+     [
+      176596.4324571658,
+      -954.9233856599184,
+      -46573.55549977906
+     ],
+     [
+      -954.9233856599184,
+      332787.45685760723,
+      19.301212149148235
+     ],
+     [
+      -46573.55549977906,
+      19.301212149148235,
+      193716.12805814878
+     ]
+    ]
+   },
+   "residuals": {
+    "mass_rel": 2.593651959870158e-10,
+    "com_max_abs_m": 5.298600447289914e-10,
+    "inertia_max_abs_kg_m2": 0.0004571657918859273,
+    "inertia_rel_to_max": 1.3737470636879422e-09
+   },
+   "rounding_bound": {
+    "mass_kg": 0.0005549999999755528,
+    "com_m": [
+     8.997419962116838e-09,
+     2.120674276205103e-11,
+     2.45727717366978e-09
+    ],
+    "inertia_kg_m2": [
+     [
+      0.005525739665143192,
+      1.5958696066154515e-06,
+      0.0002221676453598775
+     ],
+     [
+      1.5958696066154515e-06,
+      0.0013948662725742906,
+      2.959335544102714e-07
+     ],
+     [
+      0.0002221676453598775,
+      2.959335544102714e-07,
+      0.0013741285710129887
+     ]
+    ]
+   },
+   "residual_over_bound_max": 0.4135164459850477,
+   "checks": [
+    {
+     "id": "V0(auger)",
+     "item": "bottom: fixed + moving set = level values, each element within its printed-digit rounding bound",
+     "value": [
+      38555.66381,
+      0.4520684917963788,
+      -0.0014765907728531151,
+      0.7795800725298601,
+      176596.4324571658,
+      332787.45685760723,
+      193716.12805814878,
+      -954.9233856599184,
+      -46573.55549977906,
+      19.301212149148235
+     ],
+     "ref": [
+      38555.6638,
+      0.452068492,
+      -0.00147659077,
+      0.779580072,
+      176596.432,
+      332787.457,
+      193716.128,
+      -954.923385,
+      -46573.5555,
+      19.3012121
+     ],
+     "tol": [
+      0.0005549999999755528,
+      8.997419962116838e-09,
+      2.120674276205103e-11,
+      2.45727717366978e-09,
+      0.005525739665143192,
+      0.0013948662725742906,
+      0.0013741285710129887,
+      1.5958696066154515e-06,
+      0.0002221676453598775,
+      2.959335544102714e-07
+     ],
+     "tol_kind": "abs",
+     "unit": "kg, m, kg m^2",
+     "passed": true,
+     "ref_key": "YAML superstructure.auger_levels.bottom",
+     "deviation": [
+      9.999996109399945e-06,
+      -2.0362117547634284e-10,
+      -2.853115096609904e-12,
+      5.298600447289914e-10,
+      0.0004571657918859273,
+      -0.00014239276060834527,
+      5.8148783864453435e-05,
+      -6.599183279831777e-07,
+      2.209417289122939e-07,
+      4.914823392709877e-08
+     ],
+     "note": "max |residual| / bound = 0.414 (Ixy); residual 1e-05, -2.04e-10, -2.85e-12, 5.3e-10, 0.000457, -0.000142, 5.81e-05, -6.6e-07, 2.21e-07, 4.91e-08; bound 0.000555, 9e-09, 2.12e-11, 2.46e-09, 0.00553, 0.00139, 0.00137, 1.6e-06, 0.000222, 2.96e-07 (order mass, com x, com y, com z, Ixx, Iyy, Izz, Ixy, Ixz, Iyz; kg, m, kg m^2)"
+    },
+    {
+     "id": "info",
+     "item": "bottom: V0(auger) plan 1e-9, mass relative",
+     "value": 38555.66381,
+     "ref": 38555.6638,
+     "tol": 1e-09,
+     "tol_kind": "rel",
+     "unit": "kg",
+     "passed": true,
+     "ref_key": "YAML superstructure.auger_levels.bottom.mass_kg",
+     "deviation": 2.593651651615435e-10,
+     "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+    },
+    {
+     "id": "info",
+     "item": "bottom: V0(auger) plan 1e-9, centre of mass",
+     "value": [
+      0.4520684917963788,
+      -0.0014765907728531151,
+      0.7795800725298601
+     ],
+     "ref": [
+      0.452068492,
+      -0.00147659077,
+      0.779580072
+     ],
+     "tol": 1e-09,
+     "tol_kind": "abs",
+     "unit": "m",
+     "passed": true,
+     "ref_key": "YAML superstructure.auger_levels.bottom.com_m",
+     "deviation": [
+      -2.0362117547634284e-10,
+      -2.853115096609904e-12,
+      5.298600447289914e-10
+     ],
+     "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+    },
+    {
+     "id": "info",
+     "item": "bottom: V0(auger) plan 1e-9, inertia about the CoM relative to max |I|",
+     "value": [
+      [
+       176596.4324571658,
+       -954.9233856599184,
+       -46573.55549977906
+      ],
+      [
+       -954.9233856599184,
+       332787.45685760723,
+       19.301212149148235
+      ],
+      [
+       -46573.55549977906,
+       19.301212149148235,
+       193716.12805814878
+      ]
+     ],
+     "ref": [
+      [
+       176596.432,
+       -954.923385,
+       -46573.5555
+      ],
+      [
+       -954.923385,
+       332787.457,
+       19.3012121
+      ],
+      [
+       -46573.5555,
+       19.3012121,
+       193716.128
+      ]
+     ],
+     "tol": 0.00033278745700000004,
+     "tol_kind": "abs",
+     "unit": "kg m^2",
+     "passed": false,
+     "ref_key": "YAML superstructure.auger_levels.bottom.inertia_kg_m2",
+     "deviation": [
+      [
+       0.0004571657918859273,
+       -6.599183279831777e-07,
+       2.209417289122939e-07
+      ],
+      [
+       -6.599183279831777e-07,
+       -0.00014239276060834527,
+       4.914823392709877e-08
+      ],
+      [
+       2.209417289122939e-07,
+       4.914823392709877e-08,
+       5.8148783864453435e-05
+      ]
+     ],
+     "note": "tol = 1e-9 x max |I| = 0.000333 kg m^2; 9 significant digits printed: not reachable, rev. 22 (recorded)"
+    },
+    {
+     "id": "V0(auger) travel",
+     "item": "bottom: YAML auger_travel_m = auger_levels.json travel_mm x 1e-3",
+     "value": -5.60161,
+     "ref": -5.60161,
+     "tol": 1e-12,
+     "tol_kind": "abs",
+     "unit": "m",
+     "passed": true,
+     "ref_key": "01_cad/03_auger/auger_levels.json levels.bottom.travel_mm x 1e-3",
+     "deviation": 0.0,
+     "note": "the level values are composed from this number (rev. 22)"
+    }
+   ]
+  },
+  "inputs": {
+   "fixed_part": "YAML superstructure.fixed_part",
+   "moving": "YAML superstructure.auger_moving_set_at_cad_pose",
+   "travel_source": "01_cad/03_auger/auger_levels.json",
+   "frame": "body axes (x fwd, y left, z up), inertia about the CoM",
+   "params_file_sha256": "865c5488b9ee6cbb625479872ce5eff05bfa3d93a667d1b1583bc5a07042383a"
+  }
+ },
+ "V10": {
+  "top": {
+   "V1": {
+    "rule": "dyn rev. 22 U2 = B: judged vs P-delta nonlinear solution (0.01 % W/4), linear reference recorded (1 % W/4)",
+    "contact_mean_N": [
+     119358.61335298,
+     117368.8476419142,
+     73707.30805191476,
+     71855.88843689409
+    ],
+    "pdelta_nonlinear_contact_N": [
+     119359.07110424788,
+     117368.41194145694,
+     73706.80719218298,
+     71856.37031910096
+    ],
+    "diff_vs_pdelta_N": [
+     -0.457751267880667,
+     0.4357004572520964,
+     0.500859731779201,
+     -0.4818822068627924
+    ],
+    "tol_N": 9.557275,
+    "reference_N": [
+     119292.0,
+     117318.0,
+     73757.8,
+     71922.4
+    ],
+    "diff_vs_linear_N": [
+     66.61335297999904,
+     50.847641914195265,
+     -50.49194808524044,
+     -66.51156310590159
+    ],
+    "linear_record_tol_N": 955.7275,
+    "cylinder_mean_N": [
+     118311.41043697477,
+     116321.64490489494,
+     72660.11007616151,
+     70808.69061290576
+    ],
+    "s1_rule_checks": [
+     {
+      "id": "V1",
+      "item": "sum of pad contact forces",
+      "value": 382290.65748370305,
+      "ref": 382291.0,
+      "tol": 0.0001,
+      "tol_kind": "rel",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+      "deviation": -8.959569985969708e-07,
+      "note": ""
+     },
+     {
+      "id": "V1",
+      "item": "pad contact force per leg",
+      "value": [
+       119358.61335298,
+       117368.8476419142,
+       73707.30805191476,
+       71855.88843689409
+      ],
+      "ref": [
+       119292.0,
+       117318.0,
+       73757.8,
+       71922.4
+      ],
+      "tol": 955.7275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / contact_force_N",
+      "deviation": [
+       66.61335297999904,
+       50.847641914195265,
+       -50.49194808524044,
+       -66.51156310590159
+      ],
+      "note": "tol = 1 % W/4"
+     },
+     {
+      "id": "V1",
+      "item": "cylinder force per leg (motor reaction)",
+      "value": [
+       118311.41043697477,
+       116321.64490489494,
+       72660.11007616151,
+       70808.69061290576
+      ],
+      "ref": [
+       118245.0,
+       116271.0,
+       72710.6,
+       70875.2
+      ],
+      "tol": 955.7275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / cylinder_force_N",
+      "deviation": [
+       66.41043697476562,
+       50.644904894943465,
+       -50.48992383849691,
+       -66.50938709423644
+      ],
+      "note": "tol = 1 % W/4"
+     },
+     {
+      "id": "V2",
+      "item": "pad penetration",
+      "value": [
+       5.734593136265879,
+       5.639005976838851,
+       3.4688699233216953,
+       3.3818320309118173
+      ],
+      "ref": [
+       5.73147,
+       5.63661,
+       3.4713,
+       3.38492
+      ],
+      "tol": 0.05,
+      "tol_kind": "rel",
+      "unit": "mm",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / static_penetration_or_compression_mm",
+      "deviation": [
+       0.0005449101654338263,
+       0.0004250740851062291,
+       -0.0007000480161047812,
+       -0.0009122723988108651
+      ],
+      "note": ""
+     },
+     {
+      "id": "V3",
+      "item": "attitude (roll, pitch)",
+      "value": [
+       -0.0020685682907830645,
+       0.02670087273127293
+      ],
+      "ref": [
+       -0.002053,
+       0.02664
+      ],
+      "tol": 0.002,
+      "tol_kind": "abs",
+      "unit": "deg",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / static_attitude_deg (roll, pitch)",
+      "deviation": [
+       -1.5568290783064386e-05,
+       6.087273127293111e-05
+      ],
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "attitude drift in the still window (roll, pitch span)",
+      "value": [
+       1.6913078437906688e-06,
+       2.6343653578633774e-06
+      ],
+      "ref": null,
+      "tol": 0.0001,
+      "tol_kind": "max",
+      "unit": "deg",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "contact force variation per leg (span)",
+      "value": [
+       5.116084549299558,
+       5.100644720805576,
+       5.200390077472548,
+       5.206652832595864
+      ],
+      "ref": null,
+      "tol": 95.57275,
+      "tol_kind": "max",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": "tol = 0.1 % W/4"
+     },
+     {
+      "id": "V13",
+      "item": "no NaN",
+      "value": false,
+      "ref": false,
+      "tol": 0,
+      "tol_kind": "equal",
+      "unit": "",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "motor constraint violation (leg COG offset from its locked position)",
+      "value": 5.395683899678261e-13,
+      "ref": null,
+      "tol": 1e-06,
+      "tol_kind": "max",
+      "unit": "m",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "one contact per leg (callback count min, max)",
+      "value": [
+       [
+        1,
+        1,
+        1,
+        1
+       ],
+       [
+        1,
+        1,
+        1,
+        1
+       ]
+      ],
+      "ref": [
+       [
+        1,
+        1,
+        1,
+        1
+       ],
+       [
+        1,
+        1,
+        1,
+        1
+       ]
+      ],
+      "tol": 0,
+      "tol_kind": "equal",
+      "unit": "",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     }
+    ],
+    "checks": [
+     {
+      "id": "V10",
+      "item": "top: V1 pad contact force per leg vs P-delta nonlinear solution",
+      "value": [
+       119358.61335298,
+       117368.8476419142,
+       73707.30805191476,
+       71855.88843689409
+      ],
+      "ref": [
+       119359.07110424788,
+       117368.41194145694,
+       73706.80719218298,
+       71856.37031910096
+      ],
+      "tol": 9.557275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "06_analysis/00_dynamics/s1_pdelta_check.json top.nonlinear_contact_N",
+      "deviation": [
+       -0.457751267880667,
+       0.4357004572520964,
+       0.500859731779201,
+       -0.4818822068627924
+      ],
+      "note": "tol = 0.01 % W/4 = 9.557 N (rev. 22, U2 = B)"
+     },
+     {
+      "id": "info",
+      "item": "top: V1 pad contact force per leg vs linear reference, recorded",
+      "value": [
+       119358.61335298,
+       117368.8476419142,
+       73707.30805191476,
+       71855.88843689409
+      ],
+      "ref": [
+       119292.0,
+       117318.0,
+       73757.8,
+       71922.4
+      ],
+      "tol": 955.7275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / contact_force_N",
+      "deviation": [
+       66.61335297999904,
+       50.847641914195265,
+       -50.49194808524044,
+       -66.51156310590159
+      ],
+      "note": "tol = 1 % W/4 = 955.7 N (S1 V1); the difference is the P-delta share"
+     },
+     {
+      "id": "V10",
+      "item": "top: V1 sum of pad contact forces",
+      "value": 382290.65748370305,
+      "ref": 382291.0,
+      "tol": 0.0001,
+      "tol_kind": "rel",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+      "deviation": -8.959569985969708e-07,
+      "note": ""
+     }
+    ],
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "events": [],
+    "us_per_step": 144.2926200000026
+   },
+   "modes": [
+    {
+     "mode": 1,
+     "run": "roll",
+     "f_Hz": 1.7982434882802008,
+     "zeta": 0.007832159155133883,
+     "source": "projection",
+     "reason": "fit and ERA cross-check ok",
+     "f_ref_Hz": 1.7983,
+     "f_rel": -3.142507912989867e-05,
+     "f_undamped_ref_Hz": 1.7983,
+     "f_rel_vs_undamped": -3.142507912989867e-05,
+     "zeta_ref": 0.00783,
+     "zeta_num": 0.000127,
+     "f_proj_Hz": 1.7982434882802008,
+     "zeta_proj": 0.007832159155133883,
+     "fit_residual_rms_rel": 0.00013164358177465352,
+     "f_era_Hz": 1.7982447404866482,
+     "zeta_era": 0.007831588363691097,
+     "era_mac_vs_phi": 0.9999992827629285,
+     "era_leakage": 0.00010227394242488218,
+     "era_order_spread": {
+      "f_rel": 3.605608878132216e-08,
+      "zeta_rel": 1.9086704697413026e-05
+     },
+     "n_cycles": 35.961932405807744
+    },
+    {
+     "mode": 2,
+     "run": "pitch",
+     "f_Hz": 3.0047409098824676,
+     "zeta": 0.013992605715128701,
+     "source": "projection",
+     "reason": "fit and ERA cross-check ok",
+     "f_ref_Hz": 3.0047,
+     "f_rel": 1.3615296857283354e-05,
+     "f_undamped_ref_Hz": 3.0046,
+     "f_rel_vs_undamped": 4.6898050478416664e-05,
+     "zeta_ref": 0.014,
+     "zeta_num": 0.000476,
+     "f_proj_Hz": 3.0047409098824676,
+     "zeta_proj": 0.013992605715128701,
+     "fit_residual_rms_rel": 0.0023245859193662907,
+     "f_era_Hz": 3.004858375604475,
+     "zeta_era": 0.013979154082873346,
+     "era_mac_vs_phi": 0.9999796721666833,
+     "era_leakage": 0.0021385315837261234,
+     "era_order_spread": {
+      "f_rel": 9.62745729915504e-07,
+      "zeta_rel": 0.0002351212467579522
+     },
+     "n_cycles": 60.085523300706015
+    }
+   ],
+   "mode_assignment": {
+    "mode 1": "roll",
+    "mode 2": "pitch"
+   },
+   "identification": "projection on the level mode shapes (reference.json .../levels/top/V7_ball_centre_bushing_rev13/mode_shapes, eta = Phi^T M q) + damped-cosine fit; 6-channel ERA cross-check; judged value per verify.s4.judged_value",
+   "runs": {
+    "roll": {
+     "dir": "07_results/S5/batch_20261021_173430/top_roll",
+     "us_per_step": 163.76434499994502,
+     "pre_excitation_residual": {
+      "body_vel_m_s": [
+       -1.12980423761243e-06,
+       -1.4517265209354558e-07,
+       -1.117608960903031e-06
+      ],
+      "body_omega_rad_s": [
+       1.3505048523476317e-07,
+       6.555246394685696e-08,
+       -1.9605780214107801e-07
+      ],
+      "omega_over_excitation": 6.260722667346112e-05
+     },
+     "pad_normal_min_N": [
+      114541.58300088716,
+      112849.44001500885,
+      69192.0138991208,
+      67730.09744164093
+     ],
+     "bushing_disp_max_mm": [
+      0.34578917780315466,
+      0.34566745949550065,
+      0.35991217439076334,
+      0.36049909845800054
+     ]
+    },
+    "pitch": {
+     "dir": "07_results/S5/batch_20261021_173430/top_pitch",
+     "us_per_step": 160.03421799992793,
+     "pre_excitation_residual": {
+      "body_vel_m_s": [
+       -1.12980423761243e-06,
+       -1.4517265209354558e-07,
+       -1.117608960903031e-06
+      ],
+      "body_omega_rad_s": [
+       1.3505048523476317e-07,
+       6.555246394685696e-08,
+       -1.9605780214107801e-07
+      ],
+      "omega_over_excitation": 3.747015533227448e-05
+     },
+     "pad_normal_min_N": [
+      107805.1062249578,
+      105795.54609615554,
+      63645.08311779745,
+      61834.02869749858
+     ],
+     "bushing_disp_max_mm": [
+      0.7495541836333912,
+      0.7436984174441872,
+      0.749261295479371,
+      0.7439317907745653
+     ]
+    }
+   }
+  },
+  "middle": {
+   "V1": {
+    "rule": "dyn rev. 22 U2 = B: judged vs P-delta nonlinear solution (0.01 % W/4), linear reference recorded (1 % W/4)",
+    "contact_mean_N": [
+     119344.46902327635,
+     117357.62031838119,
+     73717.97780972057,
+     71870.57139477236
+    ],
+    "pdelta_nonlinear_contact_N": [
+     119344.60636380098,
+     117357.48095739973,
+     73717.86263536802,
+     71870.71060042016
+    ],
+    "diff_vs_pdelta_N": [
+     -0.13734052462677937,
+     0.13936098145495635,
+     0.11517435255518649,
+     -0.13920564780710265
+    ],
+    "tol_N": 9.557275,
+    "reference_N": [
+     119292.0,
+     117318.0,
+     73757.8,
+     71922.4
+    ],
+    "diff_vs_linear_N": [
+     52.469023276353255,
+     39.620318381188554,
+     -39.82219027943211,
+     -51.828605227638036
+    ],
+    "linear_record_tol_N": 955.7275,
+    "cylinder_mean_N": [
+     118297.26611079044,
+     116310.41757716071,
+     72670.77999992247,
+     70823.37373524794
+    ],
+    "s1_rule_checks": [
+     {
+      "id": "V1",
+      "item": "sum of pad contact forces",
+      "value": 382290.6385461504,
+      "ref": 382291.0,
+      "tol": 0.0001,
+      "tol_kind": "rel",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+      "deviation": -9.454940074169995e-07,
+      "note": ""
+     },
+     {
+      "id": "V1",
+      "item": "pad contact force per leg",
+      "value": [
+       119344.46902327635,
+       117357.62031838119,
+       73717.97780972057,
+       71870.57139477236
+      ],
+      "ref": [
+       119292.0,
+       117318.0,
+       73757.8,
+       71922.4
+      ],
+      "tol": 955.7275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / contact_force_N",
+      "deviation": [
+       52.469023276353255,
+       39.620318381188554,
+       -39.82219027943211,
+       -51.828605227638036
+      ],
+      "note": "tol = 1 % W/4"
+     },
+     {
+      "id": "V1",
+      "item": "cylinder force per leg (motor reaction)",
+      "value": [
+       118297.26611079044,
+       116310.41757716071,
+       72670.77999992247,
+       70823.37373524794
+      ],
+      "ref": [
+       118245.0,
+       116271.0,
+       72710.6,
+       70875.2
+      ],
+      "tol": 955.7275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / cylinder_force_N",
+      "deviation": [
+       52.266110790442326,
+       39.41757716071152,
+       -39.82000007753959,
+       -51.826264752060524
+      ],
+      "note": "tol = 1 % W/4"
+     },
+     {
+      "id": "V2",
+      "item": "pad penetration",
+      "value": [
+       5.733925478693412,
+       5.638482994034906,
+       3.46934030608516,
+       3.3824341488050695
+      ],
+      "ref": [
+       5.73147,
+       5.63661,
+       3.4713,
+       3.38492
+      ],
+      "tol": 0.05,
+      "tol_kind": "rel",
+      "unit": "mm",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / static_penetration_or_compression_mm",
+      "deviation": [
+       0.0004284204040869687,
+       0.0003322908689630106,
+       -0.0005645417897731781,
+       -0.0007343899397712827
+      ],
+      "note": ""
+     },
+     {
+      "id": "V3",
+      "item": "attitude (roll, pitch)",
+      "value": [
+       -0.002065437434493656,
+       0.026687528507844196
+      ],
+      "ref": [
+       -0.002053,
+       0.02664
+      ],
+      "tol": 0.002,
+      "tol_kind": "abs",
+      "unit": "deg",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / static_attitude_deg (roll, pitch)",
+      "deviation": [
+       -1.2437434493656023e-05,
+       4.752850784419532e-05
+      ],
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "attitude drift in the still window (roll, pitch span)",
+      "value": [
+       3.724237709152797e-08,
+       2.7983376161416773e-08
+      ],
+      "ref": null,
+      "tol": 0.0001,
+      "tol_kind": "max",
+      "unit": "deg",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "contact force variation per leg (span)",
+      "value": [
+       0.012950330259627663,
+       2.4945206182601396,
+       5.082680443243589,
+       2.5478854360990226
+      ],
+      "ref": null,
+      "tol": 95.57275,
+      "tol_kind": "max",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": "tol = 0.1 % W/4"
+     },
+     {
+      "id": "V13",
+      "item": "no NaN",
+      "value": false,
+      "ref": false,
+      "tol": 0,
+      "tol_kind": "equal",
+      "unit": "",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "motor constraint violation (leg COG offset from its locked position)",
+      "value": 7.642775301519578e-13,
+      "ref": null,
+      "tol": 1e-06,
+      "tol_kind": "max",
+      "unit": "m",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "one contact per leg (callback count min, max)",
+      "value": [
+       [
+        1,
+        1,
+        1,
+        1
+       ],
+       [
+        1,
+        1,
+        1,
+        1
+       ]
+      ],
+      "ref": [
+       [
+        1,
+        1,
+        1,
+        1
+       ],
+       [
+        1,
+        1,
+        1,
+        1
+       ]
+      ],
+      "tol": 0,
+      "tol_kind": "equal",
+      "unit": "",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     }
+    ],
+    "checks": [
+     {
+      "id": "V10",
+      "item": "middle: V1 pad contact force per leg vs P-delta nonlinear solution",
+      "value": [
+       119344.46902327635,
+       117357.62031838119,
+       73717.97780972057,
+       71870.57139477236
+      ],
+      "ref": [
+       119344.60636380098,
+       117357.48095739973,
+       73717.86263536802,
+       71870.71060042016
+      ],
+      "tol": 9.557275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "06_analysis/00_dynamics/s1_pdelta_check.json middle.nonlinear_contact_N",
+      "deviation": [
+       -0.13734052462677937,
+       0.13936098145495635,
+       0.11517435255518649,
+       -0.13920564780710265
+      ],
+      "note": "tol = 0.01 % W/4 = 9.557 N (rev. 22, U2 = B)"
+     },
+     {
+      "id": "info",
+      "item": "middle: V1 pad contact force per leg vs linear reference, recorded",
+      "value": [
+       119344.46902327635,
+       117357.62031838119,
+       73717.97780972057,
+       71870.57139477236
+      ],
+      "ref": [
+       119292.0,
+       117318.0,
+       73757.8,
+       71922.4
+      ],
+      "tol": 955.7275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / contact_force_N",
+      "deviation": [
+       52.469023276353255,
+       39.620318381188554,
+       -39.82219027943211,
+       -51.828605227638036
+      ],
+      "note": "tol = 1 % W/4 = 955.7 N (S1 V1); the difference is the P-delta share"
+     },
+     {
+      "id": "V10",
+      "item": "middle: V1 sum of pad contact forces",
+      "value": 382290.6385461504,
+      "ref": 382291.0,
+      "tol": 0.0001,
+      "tol_kind": "rel",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+      "deviation": -9.454940074169995e-07,
+      "note": ""
+     }
+    ],
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "events": [],
+    "us_per_step": 146.20937333325855
+   },
+   "modes": [
+    {
+     "mode": 1,
+     "run": "roll",
+     "f_Hz": 2.332572766441434,
+     "zeta": 0.010649469728085108,
+     "source": "projection",
+     "reason": "fit and ERA cross-check ok",
+     "f_ref_Hz": 2.3327,
+     "f_rel": -5.454347261357739e-05,
+     "f_undamped_ref_Hz": 2.3326,
+     "f_rel_vs_undamped": -1.167519444633669e-05,
+     "zeta_ref": 0.0106,
+     "zeta_num": 0.000305,
+     "f_proj_Hz": 2.332572766441434,
+     "zeta_proj": 0.010649469728085108,
+     "fit_residual_rms_rel": 0.0006487173141317199,
+     "f_era_Hz": 2.332584229295136,
+     "zeta_era": 0.010650068172588734,
+     "era_mac_vs_phi": 0.9999968981028986,
+     "era_leakage": 0.0003866584482304429,
+     "era_order_spread": {
+      "f_rel": 2.6696543198312384e-08,
+      "zeta_rel": 9.557919172453744e-05
+     },
+     "n_cycles": 46.6463237151205
+    },
+    {
+     "mode": 2,
+     "run": "pitch",
+     "f_Hz": 3.536076311197134,
+     "zeta": 0.017895077868374448,
+     "source": "projection",
+     "reason": "fit and ERA cross-check ok",
+     "f_ref_Hz": 3.536,
+     "f_rel": 2.1581220908784005e-05,
+     "f_undamped_ref_Hz": 3.5358,
+     "f_rel_vs_undamped": 7.814672694550495e-05,
+     "zeta_ref": 0.0179,
+     "zeta_num": 0.000943,
+     "f_proj_Hz": 3.536076311197134,
+     "zeta_proj": 0.017895077868374448,
+     "fit_residual_rms_rel": 0.0047601150059227455,
+     "f_era_Hz": 3.5361064178476704,
+     "zeta_era": 0.017885095924071105,
+     "era_mac_vs_phi": 0.9999514425472807,
+     "era_leakage": 0.004764314015364325,
+     "era_order_spread": {
+      "f_rel": 9.886753112198221e-06,
+      "zeta_rel": 7.947914626327268e-06
+     },
+     "n_cycles": 70.70544107509085
+    }
+   ],
+   "mode_assignment": {
+    "mode 1": "roll",
+    "mode 2": "pitch"
+   },
+   "identification": "projection on the level mode shapes (reference.json .../levels/middle/V7_ball_centre_bushing_rev13/mode_shapes, eta = Phi^T M q) + damped-cosine fit; 6-channel ERA cross-check; judged value per verify.s4.judged_value",
+   "runs": {
+    "roll": {
+     "dir": "07_results/S5/batch_20261021_173430/middle_roll",
+     "us_per_step": 158.10582100006286,
+     "pre_excitation_residual": {
+      "body_vel_m_s": [
+       -2.335610290865774e-08,
+       6.557641678016775e-08,
+       9.981127968672733e-08
+      ],
+      "body_omega_rad_s": [
+       2.8098395499439416e-08,
+       2.8453427499351817e-08,
+       2.2317157412773854e-08
+      ],
+      "omega_over_excitation": 8.9509884265413e-06
+     },
+     "pad_normal_min_N": [
+      115684.9510762248,
+      113392.20949817276,
+      70298.03229842191,
+      68168.75778702092
+     ],
+     "bushing_disp_max_mm": [
+      0.4016103893211877,
+      0.40134228342883027,
+      0.31097383406368784,
+      0.31183216249246537
+     ]
+    },
+    "pitch": {
+     "dir": "07_results/S5/batch_20261021_173430/middle_pitch",
+     "us_per_step": 156.56865700002527,
+     "pre_excitation_residual": {
+      "body_vel_m_s": [
+       -2.335610290865774e-08,
+       6.557641678016775e-08,
+       9.981127968672733e-08
+      ],
+      "body_omega_rad_s": [
+       2.8098395499439416e-08,
+       2.8453427499351817e-08,
+       2.2317157412773854e-08
+      ],
+      "omega_over_excitation": 5.904969090099799e-06
+     },
+     "pad_normal_min_N": [
+      111765.92910555439,
+      109573.36370594769,
+      63524.2290861479,
+      61717.48004398195
+     ],
+     "bushing_disp_max_mm": [
+      0.6386044948577341,
+      0.634793807422324,
+      0.6382749932692059,
+      0.6348129558363488
+     ]
+    }
+   }
+  },
+  "bottom": {
+   "V1": {
+    "rule": "dyn rev. 22 U2 = B: judged vs P-delta nonlinear solution (0.01 % W/4), linear reference recorded (1 % W/4)",
+    "contact_mean_N": [
+     119330.10252518742,
+     117346.6029082119,
+     73728.96317383877,
+     71884.97674534196
+    ],
+    "pdelta_nonlinear_contact_N": [
+     119330.16187263494,
+     117346.55673650221,
+     73728.91084041321,
+     71885.03110743723
+    ],
+    "diff_vs_pdelta_N": [
+     -0.05934744751721155,
+     0.04617170969140716,
+     0.05233342555584386,
+     -0.054362095266697
+    ],
+    "tol_N": 9.557275,
+    "reference_N": [
+     119292.0,
+     117318.0,
+     73757.8,
+     71922.4
+    ],
+    "diff_vs_linear_N": [
+     38.10252518742345,
+     28.602908211905742,
+     -28.836826161234058,
+     -37.42325465803151
+    ],
+    "linear_record_tol_N": 955.7275,
+    "cylinder_mean_N": [
+     118282.89965218966,
+     116299.40022993255,
+     72681.76525330191,
+     70837.77899592856
+    ],
+    "s1_rule_checks": [
+     {
+      "id": "V1",
+      "item": "sum of pad contact forces",
+      "value": 382290.64535258006,
+      "ref": 382291.0,
+      "tol": 0.0001,
+      "tol_kind": "rel",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+      "deviation": -9.276896917251081e-07,
+      "note": ""
+     },
+     {
+      "id": "V1",
+      "item": "pad contact force per leg",
+      "value": [
+       119330.10252518742,
+       117346.6029082119,
+       73728.96317383877,
+       71884.97674534196
+      ],
+      "ref": [
+       119292.0,
+       117318.0,
+       73757.8,
+       71922.4
+      ],
+      "tol": 955.7275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / contact_force_N",
+      "deviation": [
+       38.10252518742345,
+       28.602908211905742,
+       -28.836826161234058,
+       -37.42325465803151
+      ],
+      "note": "tol = 1 % W/4"
+     },
+     {
+      "id": "V1",
+      "item": "cylinder force per leg (motor reaction)",
+      "value": [
+       118282.89965218966,
+       116299.40022993255,
+       72681.76525330191,
+       70837.77899592856
+      ],
+      "ref": [
+       118245.0,
+       116271.0,
+       72710.6,
+       70875.2
+      ],
+      "tol": 955.7275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / cylinder_force_N",
+      "deviation": [
+       37.89965218966245,
+       28.400229932551156,
+       -28.834746698092204,
+       -37.4210040714388
+      ],
+      "note": "tol = 1 % W/4"
+     },
+     {
+      "id": "V2",
+      "item": "pad penetration",
+      "value": [
+       5.733257042025086,
+       5.637887261736034,
+       3.469930814968556,
+       3.3830908594163813
+      ],
+      "ref": [
+       5.73147,
+       5.63661,
+       3.4713,
+       3.38492
+      ],
+      "tol": 0.05,
+      "tol_kind": "rel",
+      "unit": "mm",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / static_penetration_or_compression_mm",
+      "deviation": [
+       0.0003117947097491287,
+       0.00022660104850853757,
+       -0.0003944300496770369,
+       -0.000540379265571661
+      ],
+      "note": ""
+     },
+     {
+      "id": "V3",
+      "item": "attitude (roll, pitch)",
+      "value": [
+       -0.0020638640644039924,
+       0.026672705837601587
+      ],
+      "ref": [
+       -0.002053,
+       0.02664
+      ],
+      "tol": 0.002,
+      "tol_kind": "abs",
+      "unit": "deg",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / static_attitude_deg (roll, pitch)",
+      "deviation": [
+       -1.0864064403992308e-05,
+       3.270583760158624e-05
+      ],
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "attitude drift in the still window (roll, pitch span)",
+      "value": [
+       2.0451962067478957e-08,
+       1.947754985319461e-07
+      ],
+      "ref": null,
+      "tol": 0.0001,
+      "tol_kind": "max",
+      "unit": "deg",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "contact force variation per leg (span)",
+      "value": [
+       2.4907415343186585,
+       2.490438811830245,
+       2.5335410759726074,
+       0.007502609951188788
+      ],
+      "ref": null,
+      "tol": 95.57275,
+      "tol_kind": "max",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": "tol = 0.1 % W/4"
+     },
+     {
+      "id": "V13",
+      "item": "no NaN",
+      "value": false,
+      "ref": false,
+      "tol": 0,
+      "tol_kind": "equal",
+      "unit": "",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "motor constraint violation (leg COG offset from its locked position)",
+      "value": 9.041656312547275e-13,
+      "ref": null,
+      "tol": 1e-06,
+      "tol_kind": "max",
+      "unit": "m",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     },
+     {
+      "id": "V13",
+      "item": "one contact per leg (callback count min, max)",
+      "value": [
+       [
+        1,
+        1,
+        1,
+        1
+       ],
+       [
+        1,
+        1,
+        1,
+        1
+       ]
+      ],
+      "ref": [
+       [
+        1,
+        1,
+        1,
+        1
+       ],
+       [
+        1,
+        1,
+        1,
+        1
+       ]
+      ],
+      "tol": 0,
+      "tol_kind": "equal",
+      "unit": "",
+      "passed": true,
+      "ref_key": "",
+      "deviation": null,
+      "note": ""
+     }
+    ],
+    "checks": [
+     {
+      "id": "V10",
+      "item": "bottom: V1 pad contact force per leg vs P-delta nonlinear solution",
+      "value": [
+       119330.10252518742,
+       117346.6029082119,
+       73728.96317383877,
+       71884.97674534196
+      ],
+      "ref": [
+       119330.16187263494,
+       117346.55673650221,
+       73728.91084041321,
+       71885.03110743723
+      ],
+      "tol": 9.557275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "06_analysis/00_dynamics/s1_pdelta_check.json bottom.nonlinear_contact_N",
+      "deviation": [
+       -0.05934744751721155,
+       0.04617170969140716,
+       0.05233342555584386,
+       -0.054362095266697
+      ],
+      "note": "tol = 0.01 % W/4 = 9.557 N (rev. 22, U2 = B)"
+     },
+     {
+      "id": "info",
+      "item": "bottom: V1 pad contact force per leg vs linear reference, recorded",
+      "value": [
+       119330.10252518742,
+       117346.6029082119,
+       73728.96317383877,
+       71884.97674534196
+      ],
+      "ref": [
+       119292.0,
+       117318.0,
+       73757.8,
+       71922.4
+      ],
+      "tol": 955.7275,
+      "tol_kind": "abs",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / contact_force_N",
+      "deviation": [
+       38.10252518742345,
+       28.602908211905742,
+       -28.836826161234058,
+       -37.42325465803151
+      ],
+      "note": "tol = 1 % W/4 = 955.7 N (S1 V1); the difference is the P-delta share"
+     },
+     {
+      "id": "V10",
+      "item": "bottom: V1 sum of pad contact forces",
+      "value": 382290.64535258006,
+      "ref": 382291.0,
+      "tol": 0.0001,
+      "tol_kind": "rel",
+      "unit": "N",
+      "passed": true,
+      "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+      "deviation": -9.276896917251081e-07,
+      "note": ""
+     }
+    ],
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "events": [],
+    "us_per_step": 144.36908533331007
+   },
+   "modes": [
+    {
+     "mode": 1,
+     "run": "roll",
+     "f_Hz": 2.8931499677008317,
+     "zeta": 0.013805411096568928,
+     "source": "projection",
+     "reason": "fit and ERA cross-check ok",
+     "f_ref_Hz": 2.8931,
+     "f_rel": 1.727133553330873e-05,
+     "f_undamped_ref_Hz": 2.8931,
+     "f_rel_vs_undamped": 1.727133553330873e-05,
+     "zeta_ref": 0.0138,
+     "zeta_num": 0.000545,
+     "f_proj_Hz": 2.8931499677008317,
+     "zeta_proj": 0.013805411096568928,
+     "fit_residual_rms_rel": 0.002120115969916558,
+     "f_era_Hz": 2.8931213191207714,
+     "zeta_era": 0.013800801041098798,
+     "era_mac_vs_phi": 0.9999844385902865,
+     "era_leakage": 0.001954485956127902,
+     "era_order_spread": {
+      "f_rel": 9.061153538603151e-07,
+      "zeta_rel": 2.9344951978260703e-05
+     },
+     "n_cycles": 57.85414820696413
+    },
+    {
+     "mode": 2,
+     "run": "pitch",
+     "f_Hz": 3.9593009789004747,
+     "zeta": 0.021463041070659387,
+     "source": "projection",
+     "reason": "fit and ERA cross-check ok",
+     "f_ref_Hz": 3.959,
+     "f_rel": 7.60239708195165e-05,
+     "f_undamped_ref_Hz": 3.9588,
+     "f_rel_vs_undamped": 0.00012654817128288087,
+     "zeta_ref": 0.0214,
+     "zeta_num": 0.00143,
+     "f_proj_Hz": 3.9593009789004747,
+     "zeta_proj": 0.021463041070659387,
+     "fit_residual_rms_rel": 0.00958272975528309,
+     "f_era_Hz": 3.959293799527406,
+     "zeta_era": 0.021430562501433614,
+     "era_mac_vs_phi": 0.9999033195103804,
+     "era_leakage": 0.009680921903600561,
+     "era_order_spread": {
+      "f_rel": 9.915607230848167e-07,
+      "zeta_rel": 0.00046940934307304616
+     },
+     "n_cycles": 79.16130824187927
+    }
+   ],
+   "mode_assignment": {
+    "mode 1": "roll",
+    "mode 2": "pitch"
+   },
+   "identification": "projection on the level mode shapes (reference.json .../levels/bottom/V7_ball_centre_bushing_rev13/mode_shapes, eta = Phi^T M q) + damped-cosine fit; 6-channel ERA cross-check; judged value per verify.s4.judged_value",
+   "runs": {
+    "roll": {
+     "dir": "07_results/S5/batch_20261021_173430/bottom_roll",
+     "us_per_step": 159.43924599996535,
+     "pre_excitation_residual": {
+      "body_vel_m_s": [
+       1.5477041925538062e-08,
+       7.1550238801062496e-09,
+       -2.767317892889234e-08
+      ],
+      "body_omega_rad_s": [
+       -2.6530270062050467e-09,
+       2.097264951265396e-09,
+       6.213422931693174e-10
+      ],
+      "omega_over_excitation": 5.418957157150227e-07
+     },
+     "pad_normal_min_N": [
+      114736.45657816438,
+      112746.34112804147,
+      69525.60116242366,
+      67721.99414089018
+     ],
+     "bushing_disp_max_mm": [
+      0.4558530846137195,
+      0.4555195104869948,
+      0.3083663882683428,
+      0.30809302395927235
+     ]
+    },
+    "pitch": {
+     "dir": "07_results/S5/batch_20261021_173430/bottom_pitch",
+     "us_per_step": 158.76582199998666,
+     "pre_excitation_residual": {
+      "body_vel_m_s": [
+       1.5477041925538062e-08,
+       7.1550238801062496e-09,
+       -2.767317892889234e-08
+      ],
+      "body_omega_rad_s": [
+       -2.6530270062050467e-09,
+       2.097264951265396e-09,
+       6.213422931693174e-10
+      ],
+      "omega_over_excitation": 3.959986095314807e-07
+     },
+     "pad_normal_min_N": [
+      111307.28557232913,
+      109352.54856505536,
+      62692.01758216877,
+      60887.090225801076
+     ],
+     "bushing_disp_max_mm": [
+      0.5370779430833352,
+      0.5360956677017864,
+      0.5368438550882103,
+      0.535966551903099
+     ]
+    }
+   }
+  }
+ },
+ "V10_f_judged_Hz": {
+  "top": [
+   1.7982434882802008,
+   3.0047409098824676
+  ],
+  "middle": [
+   2.332572766441434,
+   3.536076311197134
+  ],
+  "bottom": [
+   2.8931499677008317,
+   3.9593009789004747
+  ]
+ },
+ "checks": [
+  {
+   "id": "V0(auger)",
+   "item": "top: fixed + moving set = level values, each element within its printed-digit rounding bound",
+   "value": [
+    38555.66381,
+    0.4520684917963788,
+    -0.0014765907728531151,
+    2.1748524328279384,
+    534443.9712698384,
+    690634.99567028,
+    193716.12805814878,
+    -954.9233856599184,
+    -194546.7394662826,
+    -208.89026883985105
+   ],
+   "ref": [
+    38555.6638,
+    0.452068492,
+    -0.00147659077,
+    2.17485243,
+    534443.971,
+    690634.996,
+    193716.128,
+    -954.923385,
+    -194546.739,
+    -208.890268
+   ],
+   "tol": [
+    0.0005549999999755528,
+    8.997419962116838e-09,
+    2.120674276205103e-11,
+    2.4531575468079153e-08,
+    0.007122142624109984,
+    0.00299126908602193,
+    0.0013741285419091582,
+    1.5958696066154515e-06,
+    0.0013359187486348674,
+    1.8327108234761907e-06
+   ],
+   "tol_kind": "abs",
+   "unit": "kg, m, kg m^2",
+   "passed": true,
+   "ref_key": "YAML superstructure.auger_levels.top",
+   "deviation": [
+    9.999996109399945e-06,
+    -2.0362117547634284e-10,
+    -2.853115096609904e-12,
+    2.827938327953916e-09,
+    0.00026983837597072124,
+    -0.00032972008921206,
+    5.8148783864453435e-05,
+    -6.599183279831777e-07,
+    -0.0004662825958803296,
+    -8.39851054479368e-07
+   ],
+   "note": "max |residual| / bound = 0.458 (Iyz); residual 1e-05, -2.04e-10, -2.85e-12, 2.83e-09, 0.00027, -0.00033, 5.81e-05, -6.6e-07, -0.000466, -8.4e-07; bound 0.000555, 9e-09, 2.12e-11, 2.45e-08, 0.00712, 0.00299, 0.00137, 1.6e-06, 0.00134, 1.83e-06 (order mass, com x, com y, com z, Ixx, Iyy, Izz, Ixy, Ixz, Iyz; kg, m, kg m^2)"
+  },
+  {
+   "id": "V0(auger) travel",
+   "item": "top: YAML auger_travel_m = auger_levels.json travel_mm x 1e-3",
+   "value": 2.99598,
+   "ref": 2.99598,
+   "tol": 1e-12,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "01_cad/03_auger/auger_levels.json levels.top.travel_mm x 1e-3",
+   "deviation": 0.0,
+   "note": "the level values are composed from this number (rev. 22)"
+  },
+  {
+   "id": "V0(auger)",
+   "item": "middle: fixed + moving set = level values, each element within its printed-digit rounding bound",
+   "value": [
+    38555.66381,
+    0.4520684917963788,
+    -0.0014765907728531151,
+    1.4772170641111497,
+    258657.06655343476,
+    414848.09095387626,
+    193716.12805814878,
+    -954.9233856599184,
+    -120560.23353806716,
+    -94.79466105200582
+   ],
+   "ref": [
+    38555.6638,
+    0.452068492,
+    -0.00147659077,
+    1.47721706,
+    258657.066,
+    414848.091,
+    193716.128,
+    -954.923385,
+    -120560.233,
+    -94.7946609
+   ],
+   "tol": [
+    0.0005549999999755528,
+    8.997419962116838e-09,
+    2.120674276205103e-11,
+    1.5017449425525625e-08,
+    0.005996812969795429,
+    0.0018659395626746118,
+    0.001374128585564904,
+    1.5958696066154515e-06,
+    0.0009765865014633164,
+    7.943666731887787e-07
+   ],
+   "tol_kind": "abs",
+   "unit": "kg, m, kg m^2",
+   "passed": true,
+   "ref_key": "YAML superstructure.auger_levels.middle",
+   "deviation": [
+    9.999996109399945e-06,
+    -2.0362117547634284e-10,
+    -2.853115096609904e-12,
+    4.111149642938017e-09,
+    0.0005534347728826106,
+    -4.6123750507831573e-05,
+    5.8148783864453435e-05,
+    -6.599183279831777e-07,
+    -0.0005380671645980328,
+    -1.520058248161149e-07
+   ],
+   "note": "max |residual| / bound = 0.551 (Ixz); residual 1e-05, -2.04e-10, -2.85e-12, 4.11e-09, 0.000553, -4.61e-05, 5.81e-05, -6.6e-07, -0.000538, -1.52e-07; bound 0.000555, 9e-09, 2.12e-11, 1.5e-08, 0.006, 0.00187, 0.00137, 1.6e-06, 0.000977, 7.94e-07 (order mass, com x, com y, com z, Ixx, Iyy, Izz, Ixy, Ixz, Iyz; kg, m, kg m^2)"
+  },
+  {
+   "id": "V0(auger) travel",
+   "item": "middle: YAML auger_travel_m = auger_levels.json travel_mm x 1e-3",
+   "value": -1.30281,
+   "ref": -1.30281,
+   "tol": 1e-12,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "01_cad/03_auger/auger_levels.json levels.middle.travel_mm x 1e-3",
+   "deviation": 0.0,
+   "note": "the level values are composed from this number (rev. 22)"
+  },
+  {
+   "id": "V0(auger)",
+   "item": "bottom: fixed + moving set = level values, each element within its printed-digit rounding bound",
+   "value": [
+    38555.66381,
+    0.4520684917963788,
+    -0.0014765907728531151,
+    0.7795800725298601,
+    176596.4324571658,
+    332787.45685760723,
+    193716.12805814878,
+    -954.9233856599184,
+    -46573.55549977906,
+    19.301212149148235
+   ],
+   "ref": [
+    38555.6638,
+    0.452068492,
+    -0.00147659077,
+    0.779580072,
+    176596.432,
+    332787.457,
+    193716.128,
+    -954.923385,
+    -46573.5555,
+    19.3012121
+   ],
+   "tol": [
+    0.0005549999999755528,
+    8.997419962116838e-09,
+    2.120674276205103e-11,
+    2.45727717366978e-09,
+    0.005525739665143192,
+    0.0013948662725742906,
+    0.0013741285710129887,
+    1.5958696066154515e-06,
+    0.0002221676453598775,
+    2.959335544102714e-07
+   ],
+   "tol_kind": "abs",
+   "unit": "kg, m, kg m^2",
+   "passed": true,
+   "ref_key": "YAML superstructure.auger_levels.bottom",
+   "deviation": [
+    9.999996109399945e-06,
+    -2.0362117547634284e-10,
+    -2.853115096609904e-12,
+    5.298600447289914e-10,
+    0.0004571657918859273,
+    -0.00014239276060834527,
+    5.8148783864453435e-05,
+    -6.599183279831777e-07,
+    2.209417289122939e-07,
+    4.914823392709877e-08
+   ],
+   "note": "max |residual| / bound = 0.414 (Ixy); residual 1e-05, -2.04e-10, -2.85e-12, 5.3e-10, 0.000457, -0.000142, 5.81e-05, -6.6e-07, 2.21e-07, 4.91e-08; bound 0.000555, 9e-09, 2.12e-11, 2.46e-09, 0.00553, 0.00139, 0.00137, 1.6e-06, 0.000222, 2.96e-07 (order mass, com x, com y, com z, Ixx, Iyy, Izz, Ixy, Ixz, Iyz; kg, m, kg m^2)"
+  },
+  {
+   "id": "V0(auger) travel",
+   "item": "bottom: YAML auger_travel_m = auger_levels.json travel_mm x 1e-3",
+   "value": -5.60161,
+   "ref": -5.60161,
+   "tol": 1e-12,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "01_cad/03_auger/auger_levels.json levels.bottom.travel_mm x 1e-3",
+   "deviation": 0.0,
+   "note": "the level values are composed from this number (rev. 22)"
+  },
+  {
+   "id": "V10",
+   "item": "top: V1 pad contact force per leg vs P-delta nonlinear solution",
+   "value": [
+    119358.61335298,
+    117368.8476419142,
+    73707.30805191476,
+    71855.88843689409
+   ],
+   "ref": [
+    119359.07110424788,
+    117368.41194145694,
+    73706.80719218298,
+    71856.37031910096
+   ],
+   "tol": 9.557275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "06_analysis/00_dynamics/s1_pdelta_check.json top.nonlinear_contact_N",
+   "deviation": [
+    -0.457751267880667,
+    0.4357004572520964,
+    0.500859731779201,
+    -0.4818822068627924
+   ],
+   "note": "tol = 0.01 % W/4 = 9.557 N (rev. 22, U2 = B)"
+  },
+  {
+   "id": "V10",
+   "item": "top: V1 sum of pad contact forces",
+   "value": 382290.65748370305,
+   "ref": 382291.0,
+   "tol": 0.0001,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+   "deviation": -8.959569985969708e-07,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_roll: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_roll: motor constraint violation",
+   "value": 2.177369395894857e-12,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_roll: one contact per leg (callback min, max)",
+   "value": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_roll: crawler contact force (must stay 0)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_roll: no bushing event (R15)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_roll: no yield step",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_pitch: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_pitch: motor constraint violation",
+   "value": 7.700950988009936e-12,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_pitch: one contact per leg (callback min, max)",
+   "value": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_pitch: crawler contact force (must stay 0)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_pitch: no bushing event (R15)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top_pitch: no yield step",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V10",
+   "item": "top: mode 1 (roll run, projection) natural frequency",
+   "value": 1.7982434882802008,
+   "ref": 1.7983,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / V7_ball_centre_bushing_rev13 / f_damped_Hz",
+   "deviation": -3.1425079129876586e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_damped_Hz (|lambda| / 2 pi); fit and ERA cross-check ok"
+  },
+  {
+   "id": "V10",
+   "item": "top: mode 2 (pitch run, projection) natural frequency",
+   "value": 3.0047409098824676,
+   "ref": 3.0047,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / V7_ball_centre_bushing_rev13 / f_damped_Hz",
+   "deviation": 1.361529685739353e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_damped_Hz (|lambda| / 2 pi); fit and ERA cross-check ok"
+  },
+  {
+   "id": "V13",
+   "item": "top: bushing yield steps (all runs)",
+   "value": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "top: bushing events (all runs)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V10",
+   "item": "middle: V1 pad contact force per leg vs P-delta nonlinear solution",
+   "value": [
+    119344.46902327635,
+    117357.62031838119,
+    73717.97780972057,
+    71870.57139477236
+   ],
+   "ref": [
+    119344.60636380098,
+    117357.48095739973,
+    73717.86263536802,
+    71870.71060042016
+   ],
+   "tol": 9.557275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "06_analysis/00_dynamics/s1_pdelta_check.json middle.nonlinear_contact_N",
+   "deviation": [
+    -0.13734052462677937,
+    0.13936098145495635,
+    0.11517435255518649,
+    -0.13920564780710265
+   ],
+   "note": "tol = 0.01 % W/4 = 9.557 N (rev. 22, U2 = B)"
+  },
+  {
+   "id": "V10",
+   "item": "middle: V1 sum of pad contact forces",
+   "value": 382290.6385461504,
+   "ref": 382291.0,
+   "tol": 0.0001,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+   "deviation": -9.454940074169995e-07,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_roll: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_roll: motor constraint violation",
+   "value": 8.034017895397483e-12,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_roll: one contact per leg (callback min, max)",
+   "value": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_roll: crawler contact force (must stay 0)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_roll: no bushing event (R15)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_roll: no yield step",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_pitch: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_pitch: motor constraint violation",
+   "value": 5.025757587873159e-12,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_pitch: one contact per leg (callback min, max)",
+   "value": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_pitch: crawler contact force (must stay 0)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_pitch: no bushing event (R15)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle_pitch: no yield step",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V10",
+   "item": "middle: mode 1 (roll run, projection) natural frequency",
+   "value": 2.332572766441434,
+   "ref": 2.3327,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / V7_ball_centre_bushing_rev13 / f_damped_Hz",
+   "deviation": -5.45434726136276e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_damped_Hz (|lambda| / 2 pi); fit and ERA cross-check ok"
+  },
+  {
+   "id": "V10",
+   "item": "middle: mode 2 (pitch run, projection) natural frequency",
+   "value": 3.536076311197134,
+   "ref": 3.536,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / V7_ball_centre_bushing_rev13 / f_damped_Hz",
+   "deviation": 2.1581220908881464e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_damped_Hz (|lambda| / 2 pi); fit and ERA cross-check ok"
+  },
+  {
+   "id": "V13",
+   "item": "middle: bushing yield steps (all runs)",
+   "value": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "middle: bushing events (all runs)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V10",
+   "item": "bottom: V1 pad contact force per leg vs P-delta nonlinear solution",
+   "value": [
+    119330.10252518742,
+    117346.6029082119,
+    73728.96317383877,
+    71884.97674534196
+   ],
+   "ref": [
+    119330.16187263494,
+    117346.55673650221,
+    73728.91084041321,
+    71885.03110743723
+   ],
+   "tol": 9.557275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "06_analysis/00_dynamics/s1_pdelta_check.json bottom.nonlinear_contact_N",
+   "deviation": [
+    -0.05934744751721155,
+    0.04617170969140716,
+    0.05233342555584386,
+    -0.054362095266697
+   ],
+   "note": "tol = 0.01 % W/4 = 9.557 N (rev. 22, U2 = B)"
+  },
+  {
+   "id": "V10",
+   "item": "bottom: V1 sum of pad contact forces",
+   "value": 382290.64535258006,
+   "ref": 382291.0,
+   "tol": 0.0001,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+   "deviation": -9.276896917251081e-07,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_roll: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_roll: motor constraint violation",
+   "value": 9.416467605660728e-12,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_roll: one contact per leg (callback min, max)",
+   "value": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_roll: crawler contact force (must stay 0)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_roll: no bushing event (R15)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_roll: no yield step",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_pitch: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_pitch: motor constraint violation",
+   "value": 5.730083074695358e-12,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_pitch: one contact per leg (callback min, max)",
+   "value": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_pitch: crawler contact force (must stay 0)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_pitch: no bushing event (R15)",
+   "value": 0,
+   "ref": 0,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom_pitch: no yield step",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V10",
+   "item": "bottom: mode 1 (roll run, projection) natural frequency",
+   "value": 2.8931499677008317,
+   "ref": 2.8931,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / V7_ball_centre_bushing_rev13 / f_damped_Hz",
+   "deviation": 1.7271335533391373e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_damped_Hz (|lambda| / 2 pi); fit and ERA cross-check ok"
+  },
+  {
+   "id": "V10",
+   "item": "bottom: mode 2 (pitch run, projection) natural frequency",
+   "value": 3.9593009789004747,
+   "ref": 3.959,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / V7_ball_centre_bushing_rev13 / f_damped_Hz",
+   "deviation": 7.602397081956216e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_damped_Hz (|lambda| / 2 pi); fit and ERA cross-check ok"
+  },
+  {
+   "id": "V13",
+   "item": "bottom: bushing yield steps (all runs)",
+   "value": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "steps",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V13",
+   "item": "bottom: bushing events (all runs)",
+   "value": 0.0,
+   "ref": null,
+   "tol": 0.0,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "V10",
+   "item": "mode 1 order top < middle < bottom",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "f 1.7982 / 2.3326 / 2.8931 Hz"
+  },
+  {
+   "id": "V10",
+   "item": "mode 2 order top < middle < bottom",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "f 3.0047 / 3.5361 / 3.9593 Hz"
+  }
+ ],
+ "checks_failed": [],
+ "info_checks": [
+  {
+   "id": "info",
+   "item": "top: V0(auger) plan 1e-9, mass relative",
+   "value": 38555.66381,
+   "ref": 38555.6638,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": "YAML superstructure.auger_levels.top.mass_kg",
+   "deviation": 2.593651651615435e-10,
+   "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "top: V0(auger) plan 1e-9, centre of mass",
+   "value": [
+    0.4520684917963788,
+    -0.0014765907728531151,
+    2.1748524328279384
+   ],
+   "ref": [
+    0.452068492,
+    -0.00147659077,
+    2.17485243
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": false,
+   "ref_key": "YAML superstructure.auger_levels.top.com_m",
+   "deviation": [
+    -2.0362117547634284e-10,
+    -2.853115096609904e-12,
+    2.827938327953916e-09
+   ],
+   "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "top: V0(auger) plan 1e-9, inertia about the CoM relative to max |I|",
+   "value": [
+    [
+     534443.9712698384,
+     -954.9233856599184,
+     -194546.7394662826
+    ],
+    [
+     -954.9233856599184,
+     690634.99567028,
+     -208.89026883985105
+    ],
+    [
+     -194546.7394662826,
+     -208.89026883985105,
+     193716.12805814878
+    ]
+   ],
+   "ref": [
+    [
+     534443.971,
+     -954.923385,
+     -194546.739
+    ],
+    [
+     -954.923385,
+     690634.996,
+     -208.890268
+    ],
+    [
+     -194546.739,
+     -208.890268,
+     193716.128
+    ]
+   ],
+   "tol": 0.0006906349960000001,
+   "tol_kind": "abs",
+   "unit": "kg m^2",
+   "passed": true,
+   "ref_key": "YAML superstructure.auger_levels.top.inertia_kg_m2",
+   "deviation": [
+    [
+     0.00026983837597072124,
+     -6.599183279831777e-07,
+     -0.0004662825958803296
+    ],
+    [
+     -6.599183279831777e-07,
+     -0.00032972008921206,
+     -8.39851054479368e-07
+    ],
+    [
+     -0.0004662825958803296,
+     -8.39851054479368e-07,
+     5.8148783864453435e-05
+    ]
+   ],
+   "note": "tol = 1e-9 x max |I| = 0.000691 kg m^2; 9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "middle: V0(auger) plan 1e-9, mass relative",
+   "value": 38555.66381,
+   "ref": 38555.6638,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": "YAML superstructure.auger_levels.middle.mass_kg",
+   "deviation": 2.593651651615435e-10,
+   "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "middle: V0(auger) plan 1e-9, centre of mass",
+   "value": [
+    0.4520684917963788,
+    -0.0014765907728531151,
+    1.4772170641111497
+   ],
+   "ref": [
+    0.452068492,
+    -0.00147659077,
+    1.47721706
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": false,
+   "ref_key": "YAML superstructure.auger_levels.middle.com_m",
+   "deviation": [
+    -2.0362117547634284e-10,
+    -2.853115096609904e-12,
+    4.111149642938017e-09
+   ],
+   "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "middle: V0(auger) plan 1e-9, inertia about the CoM relative to max |I|",
+   "value": [
+    [
+     258657.06655343476,
+     -954.9233856599184,
+     -120560.23353806716
+    ],
+    [
+     -954.9233856599184,
+     414848.09095387626,
+     -94.79466105200582
+    ],
+    [
+     -120560.23353806716,
+     -94.79466105200582,
+     193716.12805814878
+    ]
+   ],
+   "ref": [
+    [
+     258657.066,
+     -954.923385,
+     -120560.233
+    ],
+    [
+     -954.923385,
+     414848.091,
+     -94.7946609
+    ],
+    [
+     -120560.233,
+     -94.7946609,
+     193716.128
+    ]
+   ],
+   "tol": 0.00041484809100000007,
+   "tol_kind": "abs",
+   "unit": "kg m^2",
+   "passed": false,
+   "ref_key": "YAML superstructure.auger_levels.middle.inertia_kg_m2",
+   "deviation": [
+    [
+     0.0005534347728826106,
+     -6.599183279831777e-07,
+     -0.0005380671645980328
+    ],
+    [
+     -6.599183279831777e-07,
+     -4.6123750507831573e-05,
+     -1.520058248161149e-07
+    ],
+    [
+     -0.0005380671645980328,
+     -1.520058248161149e-07,
+     5.8148783864453435e-05
+    ]
+   ],
+   "note": "tol = 1e-9 x max |I| = 0.000415 kg m^2; 9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "bottom: V0(auger) plan 1e-9, mass relative",
+   "value": 38555.66381,
+   "ref": 38555.6638,
+   "tol": 1e-09,
+   "tol_kind": "rel",
+   "unit": "kg",
+   "passed": true,
+   "ref_key": "YAML superstructure.auger_levels.bottom.mass_kg",
+   "deviation": 2.593651651615435e-10,
+   "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "bottom: V0(auger) plan 1e-9, centre of mass",
+   "value": [
+    0.4520684917963788,
+    -0.0014765907728531151,
+    0.7795800725298601
+   ],
+   "ref": [
+    0.452068492,
+    -0.00147659077,
+    0.779580072
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "YAML superstructure.auger_levels.bottom.com_m",
+   "deviation": [
+    -2.0362117547634284e-10,
+    -2.853115096609904e-12,
+    5.298600447289914e-10
+   ],
+   "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "bottom: V0(auger) plan 1e-9, inertia about the CoM relative to max |I|",
+   "value": [
+    [
+     176596.4324571658,
+     -954.9233856599184,
+     -46573.55549977906
+    ],
+    [
+     -954.9233856599184,
+     332787.45685760723,
+     19.301212149148235
+    ],
+    [
+     -46573.55549977906,
+     19.301212149148235,
+     193716.12805814878
+    ]
+   ],
+   "ref": [
+    [
+     176596.432,
+     -954.923385,
+     -46573.5555
+    ],
+    [
+     -954.923385,
+     332787.457,
+     19.3012121
+    ],
+    [
+     -46573.5555,
+     19.3012121,
+     193716.128
+    ]
+   ],
+   "tol": 0.00033278745700000004,
+   "tol_kind": "abs",
+   "unit": "kg m^2",
+   "passed": false,
+   "ref_key": "YAML superstructure.auger_levels.bottom.inertia_kg_m2",
+   "deviation": [
+    [
+     0.0004571657918859273,
+     -6.599183279831777e-07,
+     2.209417289122939e-07
+    ],
+    [
+     -6.599183279831777e-07,
+     -0.00014239276060834527,
+     4.914823392709877e-08
+    ],
+    [
+     2.209417289122939e-07,
+     4.914823392709877e-08,
+     5.8148783864453435e-05
+    ]
+   ],
+   "note": "tol = 1e-9 x max |I| = 0.000333 kg m^2; 9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "top: V1 pad contact force per leg vs linear reference, recorded",
+   "value": [
+    119358.61335298,
+    117368.8476419142,
+    73707.30805191476,
+    71855.88843689409
+   ],
+   "ref": [
+    119292.0,
+    117318.0,
+    73757.8,
+    71922.4
+   ],
+   "tol": 955.7275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / contact_force_N",
+   "deviation": [
+    66.61335297999904,
+    50.847641914195265,
+    -50.49194808524044,
+    -66.51156310590159
+   ],
+   "note": "tol = 1 % W/4 = 955.7 N (S1 V1); the difference is the P-delta share"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: sum of pad contact forces",
+   "value": 382290.65748370305,
+   "ref": 382291.0,
+   "tol": 0.0001,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+   "deviation": -8.959569985969708e-07,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: pad contact force per leg",
+   "value": [
+    119358.61335298,
+    117368.8476419142,
+    73707.30805191476,
+    71855.88843689409
+   ],
+   "ref": [
+    119292.0,
+    117318.0,
+    73757.8,
+    71922.4
+   ],
+   "tol": 955.7275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / contact_force_N",
+   "deviation": [
+    66.61335297999904,
+    50.847641914195265,
+    -50.49194808524044,
+    -66.51156310590159
+   ],
+   "note": "tol = 1 % W/4"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: cylinder force per leg (motor reaction)",
+   "value": [
+    118311.41043697477,
+    116321.64490489494,
+    72660.11007616151,
+    70808.69061290576
+   ],
+   "ref": [
+    118245.0,
+    116271.0,
+    72710.6,
+    70875.2
+   ],
+   "tol": 955.7275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / cylinder_force_N",
+   "deviation": [
+    66.41043697476562,
+    50.644904894943465,
+    -50.48992383849691,
+    -66.50938709423644
+   ],
+   "note": "tol = 1 % W/4"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: pad penetration",
+   "value": [
+    5.734593136265879,
+    5.639005976838851,
+    3.4688699233216953,
+    3.3818320309118173
+   ],
+   "ref": [
+    5.73147,
+    5.63661,
+    3.4713,
+    3.38492
+   ],
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / static_penetration_or_compression_mm",
+   "deviation": [
+    0.0005449101654338263,
+    0.0004250740851062291,
+    -0.0007000480161047812,
+    -0.0009122723988108651
+   ],
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: attitude (roll, pitch)",
+   "value": [
+    -0.0020685682907830645,
+    0.02670087273127293
+   ],
+   "ref": [
+    -0.002053,
+    0.02664
+   ],
+   "tol": 0.002,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / static_attitude_deg (roll, pitch)",
+   "deviation": [
+    -1.5568290783064386e-05,
+    6.087273127293111e-05
+   ],
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: attitude drift in the still window (roll, pitch span)",
+   "value": [
+    1.6913078437906688e-06,
+    2.6343653578633774e-06
+   ],
+   "ref": null,
+   "tol": 0.0001,
+   "tol_kind": "max",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: contact force variation per leg (span)",
+   "value": [
+    5.116084549299558,
+    5.100644720805576,
+    5.200390077472548,
+    5.206652832595864
+   ],
+   "ref": null,
+   "tol": 95.57275,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tol = 0.1 % W/4"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: motor constraint violation (leg COG offset from its locked position)",
+   "value": 5.395683899678261e-13,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: one contact per leg (callback count min, max)",
+   "value": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "top: mode 1 (roll run, projection) zeta (- r omega dt/2), recorded",
+   "value": 0.007832159155133883,
+   "ref": 0.00783,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / V7_ball_centre_bushing_rev13 / zeta",
+   "deviation": 0.0002757541678011509,
+   "note": "zeta_num 0.000127 subtracted; not judged by V10"
+  },
+  {
+   "id": "info",
+   "item": "top: mode 2 (pitch run, projection) zeta (- r omega dt/2), recorded",
+   "value": 0.013992605715128701,
+   "ref": 0.014,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / V7_ball_centre_bushing_rev13 / zeta",
+   "deviation": -0.0005281632050928049,
+   "note": "zeta_num 0.000476 subtracted; not judged by V10"
+  },
+  {
+   "id": "info",
+   "item": "V10 top: mode 1 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.00013164358177465352,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V10 top: mode 1 (roll) ERA vs projection natural frequency",
+   "value": 1.7982447404866482,
+   "ref": 1.7982434882802008,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 6.963497744231718e-07,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V10 top: mode 1 (roll) ERA vs projection zeta",
+   "value": 0.007831588363691097,
+   "ref": 0.007832159155133883,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -7.287791673797195e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V10 top: mode 2 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.0023245859193662907,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V10 top: mode 2 (pitch) ERA vs projection natural frequency",
+   "value": 3.004858375604475,
+   "ref": 3.0047409098824676,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 3.9093461143757274e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V10 top: mode 2 (pitch) ERA vs projection zeta",
+   "value": 0.013979154082873346,
+   "ref": 0.013992605715128701,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0009613386190687342,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "middle: V1 pad contact force per leg vs linear reference, recorded",
+   "value": [
+    119344.46902327635,
+    117357.62031838119,
+    73717.97780972057,
+    71870.57139477236
+   ],
+   "ref": [
+    119292.0,
+    117318.0,
+    73757.8,
+    71922.4
+   ],
+   "tol": 955.7275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / contact_force_N",
+   "deviation": [
+    52.469023276353255,
+    39.620318381188554,
+    -39.82219027943211,
+    -51.828605227638036
+   ],
+   "note": "tol = 1 % W/4 = 955.7 N (S1 V1); the difference is the P-delta share"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: sum of pad contact forces",
+   "value": 382290.6385461504,
+   "ref": 382291.0,
+   "tol": 0.0001,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+   "deviation": -9.454940074169995e-07,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: pad contact force per leg",
+   "value": [
+    119344.46902327635,
+    117357.62031838119,
+    73717.97780972057,
+    71870.57139477236
+   ],
+   "ref": [
+    119292.0,
+    117318.0,
+    73757.8,
+    71922.4
+   ],
+   "tol": 955.7275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / contact_force_N",
+   "deviation": [
+    52.469023276353255,
+    39.620318381188554,
+    -39.82219027943211,
+    -51.828605227638036
+   ],
+   "note": "tol = 1 % W/4"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: cylinder force per leg (motor reaction)",
+   "value": [
+    118297.26611079044,
+    116310.41757716071,
+    72670.77999992247,
+    70823.37373524794
+   ],
+   "ref": [
+    118245.0,
+    116271.0,
+    72710.6,
+    70875.2
+   ],
+   "tol": 955.7275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / cylinder_force_N",
+   "deviation": [
+    52.266110790442326,
+    39.41757716071152,
+    -39.82000007753959,
+    -51.826264752060524
+   ],
+   "note": "tol = 1 % W/4"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: pad penetration",
+   "value": [
+    5.733925478693412,
+    5.638482994034906,
+    3.46934030608516,
+    3.3824341488050695
+   ],
+   "ref": [
+    5.73147,
+    5.63661,
+    3.4713,
+    3.38492
+   ],
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / static_penetration_or_compression_mm",
+   "deviation": [
+    0.0004284204040869687,
+    0.0003322908689630106,
+    -0.0005645417897731781,
+    -0.0007343899397712827
+   ],
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: attitude (roll, pitch)",
+   "value": [
+    -0.002065437434493656,
+    0.026687528507844196
+   ],
+   "ref": [
+    -0.002053,
+    0.02664
+   ],
+   "tol": 0.002,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / static_attitude_deg (roll, pitch)",
+   "deviation": [
+    -1.2437434493656023e-05,
+    4.752850784419532e-05
+   ],
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: attitude drift in the still window (roll, pitch span)",
+   "value": [
+    3.724237709152797e-08,
+    2.7983376161416773e-08
+   ],
+   "ref": null,
+   "tol": 0.0001,
+   "tol_kind": "max",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: contact force variation per leg (span)",
+   "value": [
+    0.012950330259627663,
+    2.4945206182601396,
+    5.082680443243589,
+    2.5478854360990226
+   ],
+   "ref": null,
+   "tol": 95.57275,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tol = 0.1 % W/4"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: motor constraint violation (leg COG offset from its locked position)",
+   "value": 7.642775301519578e-13,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: one contact per leg (callback count min, max)",
+   "value": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "middle: mode 1 (roll run, projection) zeta (- r omega dt/2), recorded",
+   "value": 0.010649469728085108,
+   "ref": 0.0106,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / V7_ball_centre_bushing_rev13 / zeta",
+   "deviation": 0.004666955479727145,
+   "note": "zeta_num 0.000305 subtracted; not judged by V10"
+  },
+  {
+   "id": "info",
+   "item": "middle: mode 2 (pitch run, projection) zeta (- r omega dt/2), recorded",
+   "value": 0.017895077868374448,
+   "ref": 0.0179,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / middle / V7_ball_centre_bushing_rev13 / zeta",
+   "deviation": -0.00027497942042188216,
+   "note": "zeta_num 0.000943 subtracted; not judged by V10"
+  },
+  {
+   "id": "info",
+   "item": "V10 middle: mode 1 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.0006487173141317199,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V10 middle: mode 1 (roll) ERA vs projection natural frequency",
+   "value": 2.332584229295136,
+   "ref": 2.332572766441434,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 4.914253422962344e-06,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V10 middle: mode 1 (roll) ERA vs projection zeta",
+   "value": 0.010650068172588734,
+   "ref": 0.010649469728085108,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 5.6194770153447436e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V10 middle: mode 2 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.0047601150059227455,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V10 middle: mode 2 (pitch) ERA vs projection natural frequency",
+   "value": 3.5361064178476704,
+   "ref": 3.536076311197134,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 8.514140501228666e-06,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V10 middle: mode 2 (pitch) ERA vs projection zeta",
+   "value": 0.017885095924071105,
+   "ref": 0.017895077868374448,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0005578039043341574,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "bottom: V1 pad contact force per leg vs linear reference, recorded",
+   "value": [
+    119330.10252518742,
+    117346.6029082119,
+    73728.96317383877,
+    71884.97674534196
+   ],
+   "ref": [
+    119292.0,
+    117318.0,
+    73757.8,
+    71922.4
+   ],
+   "tol": 955.7275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / contact_force_N",
+   "deviation": [
+    38.10252518742345,
+    28.602908211905742,
+    -28.836826161234058,
+    -37.42325465803151
+   ],
+   "note": "tol = 1 % W/4 = 955.7 N (S1 V1); the difference is the P-delta share"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: sum of pad contact forces",
+   "value": 382290.64535258006,
+   "ref": 382291.0,
+   "tol": 0.0001,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / statics / total_weight_incl_rods_N",
+   "deviation": -9.276896917251081e-07,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: pad contact force per leg",
+   "value": [
+    119330.10252518742,
+    117346.6029082119,
+    73728.96317383877,
+    71884.97674534196
+   ],
+   "ref": [
+    119292.0,
+    117318.0,
+    73757.8,
+    71922.4
+   ],
+   "tol": 955.7275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / contact_force_N",
+   "deviation": [
+    38.10252518742345,
+    28.602908211905742,
+    -28.836826161234058,
+    -37.42325465803151
+   ],
+   "note": "tol = 1 % W/4"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: cylinder force per leg (motor reaction)",
+   "value": [
+    118282.89965218966,
+    116299.40022993255,
+    72681.76525330191,
+    70837.77899592856
+   ],
+   "ref": [
+    118245.0,
+    116271.0,
+    72710.6,
+    70875.2
+   ],
+   "tol": 955.7275,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / cylinder_force_N",
+   "deviation": [
+    37.89965218966245,
+    28.400229932551156,
+    -28.834746698092204,
+    -37.4210040714388
+   ],
+   "note": "tol = 1 % W/4"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: pad penetration",
+   "value": [
+    5.733257042025086,
+    5.637887261736034,
+    3.469930814968556,
+    3.3830908594163813
+   ],
+   "ref": [
+    5.73147,
+    5.63661,
+    3.4713,
+    3.38492
+   ],
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / static_penetration_or_compression_mm",
+   "deviation": [
+    0.0003117947097491287,
+    0.00022660104850853757,
+    -0.0003944300496770369,
+    -0.000540379265571661
+   ],
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: attitude (roll, pitch)",
+   "value": [
+    -0.0020638640644039924,
+    0.026672705837601587
+   ],
+   "ref": [
+    -0.002053,
+    0.02664
+   ],
+   "tol": 0.002,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / static_attitude_deg (roll, pitch)",
+   "deviation": [
+    -1.0864064403992308e-05,
+    3.270583760158624e-05
+   ],
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: attitude drift in the still window (roll, pitch span)",
+   "value": [
+    2.0451962067478957e-08,
+    1.947754985319461e-07
+   ],
+   "ref": null,
+   "tol": 0.0001,
+   "tol_kind": "max",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: contact force variation per leg (span)",
+   "value": [
+    2.4907415343186585,
+    2.490438811830245,
+    2.5335410759726074,
+    0.007502609951188788
+   ],
+   "ref": null,
+   "tol": 95.57275,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "tol = 0.1 % W/4"
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: no NaN",
+   "value": false,
+   "ref": false,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: motor constraint violation (leg COG offset from its locked position)",
+   "value": 9.041656312547275e-13,
+   "ref": null,
+   "tol": 1e-06,
+   "tol_kind": "max",
+   "unit": "m",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "S1 rule: one contact per leg (callback count min, max)",
+   "value": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "ref": [
+    [
+     1,
+     1,
+     1,
+     1
+    ],
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "bottom: mode 1 (roll run, projection) zeta (- r omega dt/2), recorded",
+   "value": 0.013805411096568928,
+   "ref": 0.0138,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / V7_ball_centre_bushing_rev13 / zeta",
+   "deviation": 0.00039210844702380475,
+   "note": "zeta_num 0.000545 subtracted; not judged by V10"
+  },
+  {
+   "id": "info",
+   "item": "bottom: mode 2 (pitch run, projection) zeta (- r omega dt/2), recorded",
+   "value": 0.021463041070659387,
+   "ref": 0.0214,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / bottom / V7_ball_centre_bushing_rev13 / zeta",
+   "deviation": 0.002945844423335881,
+   "note": "zeta_num 0.00143 subtracted; not judged by V10"
+  },
+  {
+   "id": "info",
+   "item": "V10 bottom: mode 1 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.002120115969916558,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V10 bottom: mode 1 (roll) ERA vs projection natural frequency",
+   "value": 2.8931213191207714,
+   "ref": 2.8931499677008317,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -9.90221052488645e-06,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V10 bottom: mode 1 (roll) ERA vs projection zeta",
+   "value": 0.013800801041098798,
+   "ref": 0.013805411096568928,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0003339310534024115,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V10 bottom: mode 2 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.00958272975528309,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V10 bottom: mode 2 (pitch) ERA vs projection natural frequency",
+   "value": 3.959293799527406,
+   "ref": 3.9593009789004747,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -1.813293080569658e-06,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V10 bottom: mode 2 (pitch) ERA vs projection zeta",
+   "value": 0.021430562501433614,
+   "ref": 0.021463041070659387,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0015132324035000008,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  }
+ ],
+ "info_checks_failed": [
+  {
+   "id": "info",
+   "item": "top: V0(auger) plan 1e-9, centre of mass",
+   "value": [
+    0.4520684917963788,
+    -0.0014765907728531151,
+    2.1748524328279384
+   ],
+   "ref": [
+    0.452068492,
+    -0.00147659077,
+    2.17485243
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": false,
+   "ref_key": "YAML superstructure.auger_levels.top.com_m",
+   "deviation": [
+    -2.0362117547634284e-10,
+    -2.853115096609904e-12,
+    2.827938327953916e-09
+   ],
+   "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "middle: V0(auger) plan 1e-9, centre of mass",
+   "value": [
+    0.4520684917963788,
+    -0.0014765907728531151,
+    1.4772170641111497
+   ],
+   "ref": [
+    0.452068492,
+    -0.00147659077,
+    1.47721706
+   ],
+   "tol": 1e-09,
+   "tol_kind": "abs",
+   "unit": "m",
+   "passed": false,
+   "ref_key": "YAML superstructure.auger_levels.middle.com_m",
+   "deviation": [
+    -2.0362117547634284e-10,
+    -2.853115096609904e-12,
+    4.111149642938017e-09
+   ],
+   "note": "9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "middle: V0(auger) plan 1e-9, inertia about the CoM relative to max |I|",
+   "value": [
+    [
+     258657.06655343476,
+     -954.9233856599184,
+     -120560.23353806716
+    ],
+    [
+     -954.9233856599184,
+     414848.09095387626,
+     -94.79466105200582
+    ],
+    [
+     -120560.23353806716,
+     -94.79466105200582,
+     193716.12805814878
+    ]
+   ],
+   "ref": [
+    [
+     258657.066,
+     -954.923385,
+     -120560.233
+    ],
+    [
+     -954.923385,
+     414848.091,
+     -94.7946609
+    ],
+    [
+     -120560.233,
+     -94.7946609,
+     193716.128
+    ]
+   ],
+   "tol": 0.00041484809100000007,
+   "tol_kind": "abs",
+   "unit": "kg m^2",
+   "passed": false,
+   "ref_key": "YAML superstructure.auger_levels.middle.inertia_kg_m2",
+   "deviation": [
+    [
+     0.0005534347728826106,
+     -6.599183279831777e-07,
+     -0.0005380671645980328
+    ],
+    [
+     -6.599183279831777e-07,
+     -4.6123750507831573e-05,
+     -1.520058248161149e-07
+    ],
+    [
+     -0.0005380671645980328,
+     -1.520058248161149e-07,
+     5.8148783864453435e-05
+    ]
+   ],
+   "note": "tol = 1e-9 x max |I| = 0.000415 kg m^2; 9 significant digits printed: not reachable, rev. 22 (recorded)"
+  },
+  {
+   "id": "info",
+   "item": "bottom: V0(auger) plan 1e-9, inertia about the CoM relative to max |I|",
+   "value": [
+    [
+     176596.4324571658,
+     -954.9233856599184,
+     -46573.55549977906
+    ],
+    [
+     -954.9233856599184,
+     332787.45685760723,
+     19.301212149148235
+    ],
+    [
+     -46573.55549977906,
+     19.301212149148235,
+     193716.12805814878
+    ]
+   ],
+   "ref": [
+    [
+     176596.432,
+     -954.923385,
+     -46573.5555
+    ],
+    [
+     -954.923385,
+     332787.457,
+     19.3012121
+    ],
+    [
+     -46573.5555,
+     19.3012121,
+     193716.128
+    ]
+   ],
+   "tol": 0.00033278745700000004,
+   "tol_kind": "abs",
+   "unit": "kg m^2",
+   "passed": false,
+   "ref_key": "YAML superstructure.auger_levels.bottom.inertia_kg_m2",
+   "deviation": [
+    [
+     0.0004571657918859273,
+     -6.599183279831777e-07,
+     2.209417289122939e-07
+    ],
+    [
+     -6.599183279831777e-07,
+     -0.00014239276060834527,
+     4.914823392709877e-08
+    ],
+    [
+     2.209417289122939e-07,
+     4.914823392709877e-08,
+     5.8148783864453435e-05
+    ]
+   ],
+   "note": "tol = 1e-9 x max |I| = 0.000333 kg m^2; 9 significant digits printed: not reachable, rev. 22 (recorded)"
+  }
+ ]
+}

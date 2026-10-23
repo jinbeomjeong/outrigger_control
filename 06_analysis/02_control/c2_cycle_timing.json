@@ -1,0 +1,4729 @@
+{
+ "runs": {
+  "ecore27": {
+   "environment": {
+    "date": "2026-10-22T12:34:21",
+    "python": "3.12.15",
+    "executable": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+    "numpy": "2.5.4",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "machine": "DESKTOP-KHVBBFL",
+    "placement": {
+     "logical_cpus": [
+      27
+     ],
+     "affinity_mask_hex": "0x08000000",
+     "efficiency_classes": [
+      0
+     ],
+     "affinity_ok": true,
+     "ecoqos_off_ok": true,
+     "priority": "normal",
+     "priority_ok": true
+    },
+    "controller_revision": "R7 (03_src/outrigger_sim/control/c2.py, C2_REVISION)",
+    "timed_repetitions": 5
+   },
+   "cases": {
+    "nose_down_3p5_reanchor": {
+     "periods": 4099,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "reanchor",
+      "touch"
+     ]
+    },
+    "flat": {
+     "periods": 2166,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "touch"
+     ]
+    },
+    "flat_sink_relevel": {
+     "periods": 3185,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "touch"
+     ]
+    }
+   },
+   "import_cost": [
+    {
+     "numpy_ms": 197.8,
+     "c2_package_ms": 160.2
+    },
+    {
+     "numpy_ms": 198.8,
+     "c2_package_ms": 159.1
+    },
+    {
+     "numpy_ms": 193.4,
+     "c2_package_ms": 152.5
+    }
+   ],
+   "first_call": {
+    "load_params_ms": 102.3,
+    "construct_controller_ms": 1.75,
+    "first_update_ms": 0.602,
+    "second_update_ms": 0.412
+   },
+   "first_pass_phase_max_us": {
+    "check": 12870.5,
+    "done": 989.2,
+    "level": 5995.8,
+    "probe": 2270.2,
+    "ready": 1545.3,
+    "reanchor": 1897.2,
+    "touch": 2238.2
+   },
+   "measurement_build_us": 82.87,
+   "timing": {
+    "r7_gc_on": {
+     "segments": [
+      "update_ns"
+     ],
+     "per_phase": {
+      "all": {
+       "count": 47250,
+       "mean_us": 704.56,
+       "median_us": 767.1,
+       "p95_us": 954.9,
+       "p99_us": 1231.55,
+       "max_us": 30671.0
+      },
+      "check": {
+       "count": 3625,
+       "mean_us": 458.51,
+       "median_us": 473.5,
+       "p95_us": 581.56,
+       "p99_us": 992.6,
+       "max_us": 12043.1
+      },
+      "touch": {
+       "count": 13350,
+       "mean_us": 426.6,
+       "median_us": 395.3,
+       "p95_us": 503.75,
+       "p99_us": 617.12,
+       "max_us": 12416.0
+      },
+      "level": {
+       "count": 10580,
+       "mean_us": 928.15,
+       "median_us": 904.9,
+       "p95_us": 1010.0,
+       "p99_us": 1485.54,
+       "max_us": 8145.0
+      },
+      "done": {
+       "count": 25,
+       "mean_us": 890.75,
+       "median_us": 896.2,
+       "p95_us": 1000.22,
+       "p99_us": 1064.26,
+       "max_us": 1080.1
+      },
+      "reanchor": {
+       "count": 4320,
+       "mean_us": 816.61,
+       "median_us": 794.35,
+       "p95_us": 900.5,
+       "p99_us": 1328.17,
+       "max_us": 8515.8
+      },
+      "probe": {
+       "count": 10700,
+       "mean_us": 788.06,
+       "median_us": 764.1,
+       "p95_us": 852.61,
+       "p99_us": 1334.81,
+       "max_us": 9982.8
+      },
+      "ready": {
+       "count": 4650,
+       "mean_us": 888.47,
+       "median_us": 857.0,
+       "p95_us": 971.56,
+       "p99_us": 1427.91,
+       "max_us": 30671.0
+      }
+     },
+     "max_of_best_repetition_us": {
+      "all": 2292.5,
+      "check": 1083.0,
+      "done": 893.9,
+      "level": 986.9,
+      "probe": 2292.5,
+      "ready": 1126.1,
+      "reanchor": 877.8,
+      "touch": 1106.1
+     },
+     "tail_counts": {
+      "over_2ms": 65,
+      "over_5ms": 15,
+      "over_10ms": 4,
+      "over_50ms": 0
+     },
+     "periods_with_gc": 140,
+     "max_with_gc_us": 1598.5,
+     "max_without_gc_us": 30671.0,
+     "budget_ms": 20.0,
+     "worst_fraction_of_budget": 1.53355,
+     "p99_fraction_of_budget": 0.06158,
+     "headroom_factor_worst": 0.7,
+     "best_repetition_fraction_of_budget": 0.11462
+    },
+    "r7_gc_off": {
+     "segments": [
+      "update_ns"
+     ],
+     "per_phase": {
+      "all": {
+       "count": 47250,
+       "mean_us": 711.03,
+       "median_us": 780.5,
+       "p95_us": 961.7,
+       "p99_us": 1139.1,
+       "max_us": 30420.2
+      },
+      "check": {
+       "count": 3625,
+       "mean_us": 452.35,
+       "median_us": 470.8,
+       "p95_us": 562.68,
+       "p99_us": 916.42,
+       "max_us": 13696.9
+      },
+      "touch": {
+       "count": 13350,
+       "mean_us": 433.68,
+       "median_us": 401.8,
+       "p95_us": 518.3,
+       "p99_us": 586.16,
+       "max_us": 30420.2
+      },
+      "level": {
+       "count": 10580,
+       "mean_us": 934.84,
+       "median_us": 918.6,
+       "p95_us": 1029.41,
+       "p99_us": 1209.3,
+       "max_us": 8780.6
+      },
+      "done": {
+       "count": 25,
+       "mean_us": 897.1,
+       "median_us": 915.7,
+       "p95_us": 961.56,
+       "p99_us": 970.82,
+       "max_us": 973.0
+      },
+      "reanchor": {
+       "count": 4320,
+       "mean_us": 817.55,
+       "median_us": 788.6,
+       "p95_us": 892.1,
+       "p99_us": 1335.88,
+       "max_us": 9975.6
+      },
+      "probe": {
+       "count": 10700,
+       "mean_us": 802.82,
+       "median_us": 782.3,
+       "p95_us": 867.8,
+       "p99_us": 1245.0,
+       "max_us": 8828.9
+      },
+      "ready": {
+       "count": 4650,
+       "mean_us": 888.49,
+       "median_us": 868.7,
+       "p95_us": 1018.0,
+       "p99_us": 1186.35,
+       "max_us": 3770.5
+      }
+     },
+     "max_of_best_repetition_us": {
+      "all": 2328.7,
+      "check": 1132.3,
+      "done": 915.7,
+      "level": 981.2,
+      "probe": 2328.7,
+      "ready": 1128.6,
+      "reanchor": 853.6,
+      "touch": 1154.6
+     },
+     "tail_counts": {
+      "over_2ms": 58,
+      "over_5ms": 11,
+      "over_10ms": 2,
+      "over_50ms": 0
+     },
+     "periods_with_gc": 0,
+     "max_with_gc_us": null,
+     "max_without_gc_us": 30420.2,
+     "budget_ms": 20.0,
+     "worst_fraction_of_budget": 1.52101,
+     "p99_fraction_of_budget": 0.05695,
+     "headroom_factor_worst": 0.7,
+     "best_repetition_fraction_of_budget": 0.11643
+    },
+    "r8_emulated_gc_on": {
+     "all_in_one_period": {
+      "segments": [
+       "update_ns",
+       "imu_extra_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 1506.59,
+        "median_us": 1529.2,
+        "p95_us": 1885.75,
+        "p99_us": 2139.56,
+        "max_us": 43656.6
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 1229.88,
+        "median_us": 1226.0,
+        "p95_us": 1459.86,
+        "p99_us": 1670.69,
+        "max_us": 3851.6
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 1208.65,
+        "median_us": 1170.5,
+        "p95_us": 1338.91,
+        "p99_us": 1583.51,
+        "max_us": 35641.2
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 1753.99,
+        "median_us": 1690.6,
+        "p95_us": 2003.72,
+        "p99_us": 2357.08,
+        "max_us": 28187.4
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 1687.49,
+        "median_us": 1651.2,
+        "p95_us": 1860.02,
+        "p99_us": 2056.15,
+        "max_us": 2117.3
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 1645.61,
+        "median_us": 1585.8,
+        "p95_us": 1845.91,
+        "p99_us": 2026.93,
+        "max_us": 18132.8
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 1601.08,
+        "median_us": 1525.3,
+        "p95_us": 1796.0,
+        "p99_us": 2310.76,
+        "max_us": 42743.0
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 1667.2,
+        "median_us": 1606.6,
+        "p95_us": 1881.86,
+        "p99_us": 2156.61,
+        "max_us": 43656.6
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 3101.1,
+       "check": 1916.0,
+       "done": 1640.7,
+       "level": 1783.3,
+       "probe": 3101.1,
+       "ready": 1865.3,
+       "reanchor": 1618.3,
+       "touch": 1861.1
+      },
+      "tail_counts": {
+       "over_2ms": 945,
+       "over_5ms": 42,
+       "over_10ms": 28,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 2180.1,
+      "max_without_gc_us": 43656.6,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.43657,
+      "p99_fraction_of_budget": 0.0214,
+      "headroom_factor_worst": 2.3,
+      "best_repetition_fraction_of_budget": 0.03101
+     },
+     "critical_path_imu_outside": {
+      "segments": [
+       "update_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 817.47,
+        "median_us": 865.8,
+        "p95_us": 1124.5,
+        "p99_us": 1285.51,
+        "max_us": 42062.4
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 548.91,
+        "median_us": 564.9,
+        "p95_us": 712.56,
+        "p99_us": 770.48,
+        "max_us": 2208.0
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 524.31,
+        "median_us": 495.5,
+        "p95_us": 615.35,
+        "p99_us": 691.7,
+        "max_us": 34941.2
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 1056.69,
+        "median_us": 1013.7,
+        "p95_us": 1214.7,
+        "p99_us": 1386.05,
+        "max_us": 27462.6
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 1009.58,
+        "median_us": 990.4,
+        "p95_us": 1117.28,
+        "p99_us": 1358.8,
+        "max_us": 1434.3
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 944.49,
+        "median_us": 913.5,
+        "p95_us": 1068.31,
+        "p99_us": 1182.35,
+        "max_us": 17318.7
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 914.28,
+        "median_us": 862.6,
+        "p95_us": 1028.6,
+        "p99_us": 1399.45,
+        "max_us": 42062.4
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 982.38,
+        "median_us": 947.9,
+        "p95_us": 1117.37,
+        "p99_us": 1265.96,
+        "max_us": 31280.4
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 2431.2,
+       "check": 1194.5,
+       "done": 992.0,
+       "level": 1107.6,
+       "probe": 2431.2,
+       "ready": 1192.8,
+       "reanchor": 939.5,
+       "touch": 1203.1
+      },
+      "tail_counts": {
+       "over_2ms": 89,
+       "over_5ms": 25,
+       "over_10ms": 16,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 1396.5,
+      "max_without_gc_us": 42062.4,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.42062,
+      "p99_fraction_of_budget": 0.01286,
+      "headroom_factor_worst": 2.4,
+      "best_repetition_fraction_of_budget": 0.02431
+     },
+     "imu_extra_only": {
+      "segments": [
+       "imu_extra_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 689.12,
+        "median_us": 664.6,
+        "p95_us": 770.2,
+        "p99_us": 870.56,
+        "max_us": 32441.2
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 680.97,
+        "median_us": 663.5,
+        "p95_us": 763.36,
+        "p99_us": 819.23,
+        "max_us": 3127.7
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 684.34,
+        "median_us": 662.9,
+        "p95_us": 748.95,
+        "p99_us": 849.61,
+        "max_us": 32441.2
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 697.3,
+        "median_us": 669.6,
+        "p95_us": 783.2,
+        "p99_us": 895.79,
+        "max_us": 26081.3
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 677.91,
+        "median_us": 661.6,
+        "p95_us": 749.62,
+        "p99_us": 754.87,
+        "max_us": 756.0
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 701.12,
+        "median_us": 670.4,
+        "p95_us": 777.5,
+        "p99_us": 865.6,
+        "max_us": 1632.3
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 686.8,
+        "median_us": 662.7,
+        "p95_us": 764.91,
+        "p99_us": 877.5,
+        "max_us": 21084.5
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 684.82,
+        "median_us": 660.9,
+        "p95_us": 770.3,
+        "p99_us": 853.11,
+        "max_us": 29589.3
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 808.9,
+       "check": 724.8,
+       "done": 654.5,
+       "level": 751.6,
+       "probe": 704.2,
+       "ready": 808.9,
+       "reanchor": 683.5,
+       "touch": 728.9
+      },
+      "tail_counts": {
+       "over_2ms": 37,
+       "over_5ms": 15,
+       "over_10ms": 8,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 1011.7,
+      "max_without_gc_us": 32441.2,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.32441,
+      "p99_fraction_of_budget": 0.00871,
+      "headroom_factor_worst": 3.1,
+      "best_repetition_fraction_of_budget": 0.00809
+     },
+     "additions_only": {
+      "segments": [
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 84.22,
+        "median_us": 80.4,
+        "p95_us": 96.8,
+        "p99_us": 109.85,
+        "max_us": 12142.6
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 81.79,
+        "median_us": 79.1,
+        "p95_us": 91.38,
+        "p99_us": 102.48,
+        "max_us": 1881.0
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 80.55,
+        "median_us": 78.1,
+        "p95_us": 90.5,
+        "p99_us": 102.15,
+        "max_us": 1801.9
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 86.43,
+        "median_us": 82.0,
+        "p95_us": 100.5,
+        "p99_us": 114.64,
+        "max_us": 5335.4
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 85.18,
+        "median_us": 81.8,
+        "p95_us": 96.7,
+        "p99_us": 103.4,
+        "max_us": 105.2
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 86.08,
+        "median_us": 82.0,
+        "p95_us": 97.9,
+        "p99_us": 109.08,
+        "max_us": 936.2
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 86.71,
+        "median_us": 81.1,
+        "p95_us": 98.3,
+        "p99_us": 112.0,
+        "max_us": 12142.6
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 84.11,
+        "median_us": 80.7,
+        "p95_us": 96.9,
+        "p99_us": 111.16,
+        "max_us": 889.1
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 92.5,
+       "check": 92.5,
+       "done": 81.2,
+       "level": 91.3,
+       "probe": 84.5,
+       "ready": 82.3,
+       "reanchor": 85.5,
+       "touch": 82.3
+      },
+      "tail_counts": {
+       "over_2ms": 4,
+       "over_5ms": 3,
+       "over_10ms": 1,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 120.0,
+      "max_without_gc_us": 12142.6,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.12143,
+      "p99_fraction_of_budget": 0.0011,
+      "headroom_factor_worst": 8.2,
+      "best_repetition_fraction_of_budget": 0.00092
+     }
+    },
+    "r8_emulated_gc_off": {
+     "all_in_one_period": {
+      "segments": [
+       "update_ns",
+       "imu_extra_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 1504.12,
+        "median_us": 1511.1,
+        "p95_us": 1852.15,
+        "p99_us": 2652.09,
+        "max_us": 89497.5
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 1251.09,
+        "median_us": 1220.9,
+        "p95_us": 1475.9,
+        "p99_us": 2172.21,
+        "max_us": 42338.5
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 1212.66,
+        "median_us": 1134.0,
+        "p95_us": 1324.21,
+        "p99_us": 2163.03,
+        "max_us": 61488.5
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 1735.95,
+        "median_us": 1642.85,
+        "p95_us": 2008.4,
+        "p99_us": 2739.55,
+        "max_us": 57092.1
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 1668.48,
+        "median_us": 1636.8,
+        "p95_us": 2056.22,
+        "p99_us": 2204.0,
+        "max_us": 2227.4
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 1625.82,
+        "median_us": 1537.2,
+        "p95_us": 1777.47,
+        "p99_us": 2683.98,
+        "max_us": 33041.5
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 1607.85,
+        "median_us": 1504.7,
+        "p95_us": 1894.93,
+        "p99_us": 2999.64,
+        "max_us": 89497.5
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 1658.02,
+        "median_us": 1586.0,
+        "p95_us": 1861.62,
+        "p99_us": 2603.21,
+        "max_us": 27507.7
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 3032.7,
+       "check": 1832.8,
+       "done": 1635.6,
+       "level": 1733.9,
+       "probe": 3032.7,
+       "ready": 1880.5,
+       "reanchor": 1607.1,
+       "touch": 1870.0
+      },
+      "tail_counts": {
+       "over_2ms": 1539,
+       "over_5ms": 90,
+       "over_10ms": 54,
+       "over_50ms": 5
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 89497.5,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.89497,
+      "p99_fraction_of_budget": 0.02652,
+      "headroom_factor_worst": 1.1,
+      "best_repetition_fraction_of_budget": 0.03033
+     },
+     "critical_path_imu_outside": {
+      "segments": [
+       "update_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 813.18,
+        "median_us": 856.1,
+        "p95_us": 1079.55,
+        "p99_us": 1633.5,
+        "max_us": 60177.7
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 564.13,
+        "median_us": 564.7,
+        "p95_us": 714.98,
+        "p99_us": 1184.04,
+        "max_us": 41626.4
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 526.95,
+        "median_us": 480.4,
+        "p95_us": 594.65,
+        "p99_us": 1097.41,
+        "max_us": 60177.7
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 1040.53,
+        "median_us": 988.6,
+        "p95_us": 1204.91,
+        "p99_us": 1812.14,
+        "max_us": 52711.8
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 1013.81,
+        "median_us": 987.9,
+        "p95_us": 1401.62,
+        "p99_us": 1540.09,
+        "max_us": 1560.9
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 931.66,
+        "median_us": 877.4,
+        "p95_us": 1016.04,
+        "p99_us": 1677.98,
+        "max_us": 26412.3
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 911.49,
+        "median_us": 852.6,
+        "p95_us": 1053.01,
+        "p99_us": 1828.53,
+        "max_us": 43693.3
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 974.45,
+        "median_us": 934.5,
+        "p95_us": 1089.36,
+        "p99_us": 1651.3,
+        "max_us": 26776.4
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 2381.1,
+       "check": 1184.5,
+       "done": 980.0,
+       "level": 1071.3,
+       "probe": 2381.1,
+       "ready": 1226.1,
+       "reanchor": 956.1,
+       "touch": 1211.3
+      },
+      "tail_counts": {
+       "over_2ms": 233,
+       "over_5ms": 38,
+       "over_10ms": 19,
+       "over_50ms": 2
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 60177.7,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.60178,
+      "p99_fraction_of_budget": 0.01633,
+      "headroom_factor_worst": 1.7,
+      "best_repetition_fraction_of_budget": 0.02381
+     },
+     "imu_extra_only": {
+      "segments": [
+       "imu_extra_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 690.94,
+        "median_us": 650.6,
+        "p95_us": 745.65,
+        "p99_us": 1366.55,
+        "max_us": 88217.6
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 686.96,
+        "median_us": 651.6,
+        "p95_us": 737.92,
+        "p99_us": 1247.93,
+        "max_us": 21406.5
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 685.72,
+        "median_us": 645.7,
+        "p95_us": 729.0,
+        "p99_us": 1366.6,
+        "max_us": 26190.2
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 695.42,
+        "median_us": 652.8,
+        "p95_us": 764.0,
+        "p99_us": 1344.09,
+        "max_us": 51398.6
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 654.67,
+        "median_us": 649.1,
+        "p95_us": 699.38,
+        "p99_us": 723.86,
+        "max_us": 729.0
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 694.16,
+        "median_us": 657.8,
+        "p95_us": 735.9,
+        "p99_us": 1336.22,
+        "max_us": 32037.4
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 696.36,
+        "median_us": 651.0,
+        "p95_us": 750.3,
+        "p99_us": 1450.3,
+        "max_us": 88217.6
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 683.58,
+        "median_us": 648.0,
+        "p95_us": 737.82,
+        "p99_us": 1351.68,
+        "max_us": 21953.8
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 677.4,
+       "check": 662.3,
+       "done": 646.4,
+       "level": 677.4,
+       "probe": 666.9,
+       "ready": 661.4,
+       "reanchor": 670.9,
+       "touch": 656.6
+      },
+      "tail_counts": {
+       "over_2ms": 187,
+       "over_5ms": 41,
+       "over_10ms": 26,
+       "over_50ms": 2
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 88217.6,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.88218,
+      "p99_fraction_of_budget": 0.01367,
+      "headroom_factor_worst": 1.1,
+      "best_repetition_fraction_of_budget": 0.00677
+     },
+     "additions_only": {
+      "segments": [
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 84.13,
+        "median_us": 79.5,
+        "p95_us": 92.5,
+        "p99_us": 125.45,
+        "max_us": 19985.4
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 82.78,
+        "median_us": 77.7,
+        "p95_us": 92.7,
+        "p99_us": 127.45,
+        "max_us": 4035.9
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 81.6,
+        "median_us": 76.5,
+        "p95_us": 87.8,
+        "p99_us": 124.21,
+        "max_us": 19985.4
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 85.03,
+        "median_us": 80.0,
+        "p95_us": 95.7,
+        "p99_us": 125.7,
+        "max_us": 2469.7
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 82.23,
+        "median_us": 81.5,
+        "p95_us": 90.48,
+        "p99_us": 97.27,
+        "max_us": 98.9
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 83.49,
+        "median_us": 80.1,
+        "p95_us": 92.2,
+        "p99_us": 114.84,
+        "max_us": 1408.5
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 85.99,
+        "median_us": 80.0,
+        "p95_us": 93.9,
+        "p99_us": 128.34,
+        "max_us": 8720.4
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 86.74,
+        "median_us": 79.8,
+        "p95_us": 92.46,
+        "p99_us": 127.1,
+        "max_us": 16285.7
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 91.4,
+       "check": 91.4,
+       "done": 81.6,
+       "level": 83.2,
+       "probe": 83.1,
+       "ready": 81.4,
+       "reanchor": 81.9,
+       "touch": 81.5
+      },
+      "tail_counts": {
+       "over_2ms": 9,
+       "over_5ms": 4,
+       "over_10ms": 2,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 19985.4,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.19985,
+      "p99_fraction_of_budget": 0.00125,
+      "headroom_factor_worst": 5.0,
+      "best_repetition_fraction_of_budget": 0.00091
+     }
+    }
+   },
+   "allocation_per_period": {
+    "check": {
+     "median_bytes": 14960,
+     "max_bytes": 28904
+    },
+    "touch": {
+     "median_bytes": 4360,
+     "max_bytes": 21760
+    },
+    "level": {
+     "median_bytes": 4188,
+     "max_bytes": 4960
+    },
+    "done": {
+     "median_bytes": 6260,
+     "max_bytes": 8436
+    },
+    "probe": {
+     "median_bytes": 4172,
+     "max_bytes": 11592
+    },
+    "reanchor": {
+     "median_bytes": 4172,
+     "max_bytes": 4404
+    },
+    "ready": {
+     "median_bytes": 4416,
+     "max_bytes": 10854
+    }
+   },
+   "gc_collections_per_1000_periods": {
+    "gen0": 2.68,
+    "gen1": 0.24,
+    "gen2": 0.0
+   },
+   "profile": {
+    "by_own_time": [
+     {
+      "function": "~:0(<method 'reduce' of 'numpy.ufunc' objects>)",
+      "calls_per_period": 26.93,
+      "own_us_per_period": 62.1,
+      "cumulative_us_per_period": 62.1
+     },
+     {
+      "function": "two_pressure.py:459(_sensor_faults)",
+      "calls_per_period": 2.0,
+      "own_us_per_period": 55.59,
+      "cumulative_us_per_period": 91.03
+     },
+     {
+      "function": "_function_base_impl.py:5221(delete)",
+      "calls_per_period": 5.33,
+      "own_us_per_period": 52.1,
+      "cumulative_us_per_period": 65.64
+     },
+     {
+      "function": "~:0(<built-in method numpy.array>)",
+      "calls_per_period": 18.28,
+      "own_us_per_period": 48.17,
+      "cumulative_us_per_period": 48.17
+     },
+     {
+      "function": "_methods.py:115(_mean)",
+      "calls_per_period": 8.56,
+      "own_us_per_period": 45.53,
+      "cumulative_us_per_period": 116.41
+     },
+     {
+      "function": "_function_base_impl.py:4004(_median)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 43.25,
+      "cumulative_us_per_period": 242.02
+     },
+     {
+      "function": "_methods.py:73(_count_reduce_items)",
+      "calls_per_period": 8.56,
+      "own_us_per_period": 27.78,
+      "cumulative_us_per_period": 32.93
+     },
+     {
+      "function": "standstill.py:278(_are_rates_quiet)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 26.56,
+      "cumulative_us_per_period": 115.05
+     },
+     {
+      "function": "~:0(<method 'partition' of 'numpy.ndarray' objects>)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 25.54,
+      "cumulative_us_per_period": 25.54
+     },
+     {
+      "function": "attitude.py:83(update)",
+      "calls_per_period": 3.26,
+      "own_us_per_period": 23.0,
+      "cumulative_us_per_period": 34.49
+     },
+     {
+      "function": "_utils_impl.py:407(_median_nancheck)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 22.42,
+      "cumulative_us_per_period": 61.48
+     },
+     {
+      "function": "frames.py:229(_tilt_from_up_vector)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 21.41,
+      "cumulative_us_per_period": 50.92
+     },
+     {
+      "function": "c2.py:1832(update)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 20.9,
+      "cumulative_us_per_period": 1083.38
+     },
+     {
+      "function": "c2.py:1216(_heights_above_others)",
+      "calls_per_period": 1.32,
+      "own_us_per_period": 20.37,
+      "cumulative_us_per_period": 353.91
+     },
+     {
+      "function": "fromnumeric.py:3737(mean)",
+      "calls_per_period": 8.56,
+      "own_us_per_period": 16.66,
+      "cumulative_us_per_period": 133.06
+     }
+    ],
+    "by_cumulative_time": [
+     {
+      "function": "c2.py:1832(update)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 20.9,
+      "cumulative_us_per_period": 1083.38
+     },
+     {
+      "function": "c2.py:2348(_update_support_shadow)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 3.27,
+      "cumulative_us_per_period": 522.45
+     },
+     {
+      "function": "c2.py:1392(update)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 10.9,
+      "cumulative_us_per_period": 397.88
+     },
+     {
+      "function": "c2.py:1216(_heights_above_others)",
+      "calls_per_period": 1.32,
+      "own_us_per_period": 20.37,
+      "cumulative_us_per_period": 353.91
+     },
+     {
+      "function": "_function_base_impl.py:3915(median)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 7.73,
+      "cumulative_us_per_period": 268.63
+     },
+     {
+      "function": "_function_base_impl.py:3828(_ureduce)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 14.82,
+      "cumulative_us_per_period": 260.91
+     },
+     {
+      "function": "_function_base_impl.py:4004(_median)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 43.25,
+      "cumulative_us_per_period": 242.02
+     },
+     {
+      "function": "c2.py:2156(_read)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 6.81,
+      "cumulative_us_per_period": 239.09
+     },
+     {
+      "function": "two_pressure.py:329(read)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 16.16,
+      "cumulative_us_per_period": 205.21
+     },
+     {
+      "function": "fromnumeric.py:3737(mean)",
+      "calls_per_period": 8.56,
+      "own_us_per_period": 16.66,
+      "cumulative_us_per_period": 133.06
+     },
+     {
+      "function": "c2.py:2222(_update_attitude_filters)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 9.72,
+      "cumulative_us_per_period": 129.65
+     },
+     {
+      "function": "c2.py:2390(_update_standstill_gate)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 2.03,
+      "cumulative_us_per_period": 120.34
+     },
+     {
+      "function": "standstill.py:253(update)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 2.71,
+      "cumulative_us_per_period": 118.31
+     },
+     {
+      "function": "_methods.py:115(_mean)",
+      "calls_per_period": 8.56,
+      "own_us_per_period": 45.53,
+      "cumulative_us_per_period": 116.41
+     },
+     {
+      "function": "standstill.py:278(_are_rates_quiet)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 26.56,
+      "cumulative_us_per_period": 115.05
+     }
+    ]
+   }
+  },
+  "ecore27_high": {
+   "environment": {
+    "date": "2026-10-22T12:39:07",
+    "python": "3.12.15",
+    "executable": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+    "numpy": "2.5.4",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "machine": "DESKTOP-KHVBBFL",
+    "placement": {
+     "logical_cpus": [
+      27
+     ],
+     "affinity_mask_hex": "0x08000000",
+     "efficiency_classes": [
+      0
+     ],
+     "affinity_ok": true,
+     "ecoqos_off_ok": true,
+     "priority": "high",
+     "priority_ok": true
+    },
+    "controller_revision": "R7 (03_src/outrigger_sim/control/c2.py, C2_REVISION)",
+    "timed_repetitions": 5
+   },
+   "cases": {
+    "nose_down_3p5_reanchor": {
+     "periods": 4099,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "reanchor",
+      "touch"
+     ]
+    },
+    "flat": {
+     "periods": 2166,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "touch"
+     ]
+    },
+    "flat_sink_relevel": {
+     "periods": 3185,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "touch"
+     ]
+    }
+   },
+   "import_cost": [
+    {
+     "numpy_ms": 240.0,
+     "c2_package_ms": 155.9
+    },
+    {
+     "numpy_ms": 212.3,
+     "c2_package_ms": 190.2
+    },
+    {
+     "numpy_ms": 183.6,
+     "c2_package_ms": 150.7
+    }
+   ],
+   "first_call": {
+    "load_params_ms": 96.43,
+    "construct_controller_ms": 1.69,
+    "first_update_ms": 0.575,
+    "second_update_ms": 0.39
+   },
+   "first_pass_phase_max_us": {
+    "check": 13016.9,
+    "done": 943.8,
+    "level": 1418.8,
+    "probe": 2196.4,
+    "ready": 1281.9,
+    "reanchor": 1615.3,
+    "touch": 1239.6
+   },
+   "measurement_build_us": 78.74,
+   "timing": {
+    "r7_gc_on": {
+     "segments": [
+      "update_ns"
+     ],
+     "per_phase": {
+      "all": {
+       "count": 47250,
+       "mean_us": 690.91,
+       "median_us": 768.8,
+       "p95_us": 937.1,
+       "p99_us": 1015.4,
+       "max_us": 2915.5
+      },
+      "check": {
+       "count": 3625,
+       "mean_us": 441.45,
+       "median_us": 471.6,
+       "p95_us": 562.2,
+       "p99_us": 603.32,
+       "max_us": 1200.8
+      },
+      "touch": {
+       "count": 13350,
+       "mean_us": 420.16,
+       "median_us": 395.85,
+       "p95_us": 503.6,
+       "p99_us": 537.4,
+       "max_us": 1228.4
+      },
+      "level": {
+       "count": 10580,
+       "mean_us": 913.29,
+       "median_us": 902.4,
+       "p95_us": 991.7,
+       "p99_us": 1063.7,
+       "max_us": 1413.7
+      },
+      "done": {
+       "count": 25,
+       "mean_us": 869.83,
+       "median_us": 887.7,
+       "p95_us": 930.82,
+       "p99_us": 950.6,
+       "max_us": 956.7
+      },
+      "reanchor": {
+       "count": 4320,
+       "mean_us": 788.92,
+       "median_us": 782.0,
+       "p95_us": 839.8,
+       "p99_us": 884.52,
+       "max_us": 1233.7
+      },
+      "probe": {
+       "count": 10700,
+       "mean_us": 779.25,
+       "median_us": 767.7,
+       "p95_us": 829.4,
+       "p99_us": 992.9,
+       "max_us": 2519.1
+      },
+      "ready": {
+       "count": 4650,
+       "mean_us": 861.39,
+       "median_us": 850.0,
+       "p95_us": 925.06,
+       "p99_us": 1029.48,
+       "max_us": 2915.5
+      }
+     },
+     "max_of_best_repetition_us": {
+      "all": 2317.0,
+      "check": 1113.6,
+      "done": 883.1,
+      "level": 971.9,
+      "probe": 2317.0,
+      "ready": 1132.6,
+      "reanchor": 842.9,
+      "touch": 1106.0
+     },
+     "tail_counts": {
+      "over_2ms": 22,
+      "over_5ms": 0,
+      "over_10ms": 0,
+      "over_50ms": 0
+     },
+     "periods_with_gc": 140,
+     "max_with_gc_us": 1187.5,
+     "max_without_gc_us": 2915.5,
+     "budget_ms": 20.0,
+     "worst_fraction_of_budget": 0.14577,
+     "p99_fraction_of_budget": 0.05077,
+     "headroom_factor_worst": 6.9,
+     "best_repetition_fraction_of_budget": 0.11585
+    },
+    "r7_gc_off": {
+     "segments": [
+      "update_ns"
+     ],
+     "per_phase": {
+      "all": {
+       "count": 47250,
+       "mean_us": 683.78,
+       "median_us": 761.9,
+       "p95_us": 917.7,
+       "p99_us": 997.1,
+       "max_us": 2407.1
+      },
+      "check": {
+       "count": 3625,
+       "mean_us": 435.33,
+       "median_us": 465.0,
+       "p95_us": 558.94,
+       "p99_us": 611.65,
+       "max_us": 1432.9
+      },
+      "touch": {
+       "count": 13350,
+       "mean_us": 415.08,
+       "median_us": 393.2,
+       "p95_us": 497.1,
+       "p99_us": 538.06,
+       "max_us": 1245.8
+      },
+      "level": {
+       "count": 10580,
+       "mean_us": 904.26,
+       "median_us": 895.5,
+       "p95_us": 971.91,
+       "p99_us": 1030.69,
+       "max_us": 1907.9
+      },
+      "done": {
+       "count": 25,
+       "mean_us": 874.77,
+       "median_us": 896.2,
+       "p95_us": 939.74,
+       "p99_us": 943.36,
+       "max_us": 943.7
+      },
+      "reanchor": {
+       "count": 4320,
+       "mean_us": 790.27,
+       "median_us": 782.05,
+       "p95_us": 850.21,
+       "p99_us": 889.85,
+       "max_us": 1635.3
+      },
+      "probe": {
+       "count": 10700,
+       "mean_us": 768.18,
+       "median_us": 759.4,
+       "p95_us": 798.1,
+       "p99_us": 898.3,
+       "max_us": 2407.1
+      },
+      "ready": {
+       "count": 4650,
+       "mean_us": 853.06,
+       "median_us": 846.0,
+       "p95_us": 916.38,
+       "p99_us": 1004.07,
+       "max_us": 1511.9
+      }
+     },
+     "max_of_best_repetition_us": {
+      "all": 2241.5,
+      "check": 1071.1,
+      "done": 887.9,
+      "level": 964.8,
+      "probe": 2241.5,
+      "ready": 1126.3,
+      "reanchor": 860.5,
+      "touch": 1098.3
+     },
+     "tail_counts": {
+      "over_2ms": 20,
+      "over_5ms": 0,
+      "over_10ms": 0,
+      "over_50ms": 0
+     },
+     "periods_with_gc": 0,
+     "max_with_gc_us": null,
+     "max_without_gc_us": 2407.1,
+     "budget_ms": 20.0,
+     "worst_fraction_of_budget": 0.12035,
+     "p99_fraction_of_budget": 0.04985,
+     "headroom_factor_worst": 8.3,
+     "best_repetition_fraction_of_budget": 0.11207
+    },
+    "r8_emulated_gc_on": {
+     "all_in_one_period": {
+      "segments": [
+       "update_ns",
+       "imu_extra_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 1430.14,
+        "median_us": 1501.9,
+        "p95_us": 1687.9,
+        "p99_us": 1800.75,
+        "max_us": 4274.4
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 1179.54,
+        "median_us": 1205.0,
+        "p95_us": 1295.6,
+        "p99_us": 1375.44,
+        "max_us": 2152.7
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 1153.37,
+        "median_us": 1124.45,
+        "p95_us": 1259.5,
+        "p99_us": 1348.35,
+        "max_us": 3104.5
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 1653.96,
+        "median_us": 1636.5,
+        "p95_us": 1745.9,
+        "p99_us": 1867.84,
+        "max_us": 2779.9
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 1625.01,
+        "median_us": 1633.7,
+        "p95_us": 1690.4,
+        "p99_us": 1719.0,
+        "max_us": 1727.9
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 1531.32,
+        "median_us": 1518.7,
+        "p95_us": 1605.11,
+        "p99_us": 1689.38,
+        "max_us": 2411.5
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 1524.08,
+        "median_us": 1499.5,
+        "p95_us": 1607.11,
+        "p99_us": 1797.34,
+        "max_us": 4274.4
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 1599.64,
+        "median_us": 1582.6,
+        "p95_us": 1701.93,
+        "p99_us": 1863.36,
+        "max_us": 2373.6
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 3028.8,
+       "check": 1873.3,
+       "done": 1635.8,
+       "level": 1731.1,
+       "probe": 3028.8,
+       "ready": 1865.1,
+       "reanchor": 1592.1,
+       "touch": 1842.7
+      },
+      "tail_counts": {
+       "over_2ms": 75,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 2152.7,
+      "max_without_gc_us": 4274.4,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.04274,
+      "p99_fraction_of_budget": 0.01801,
+      "headroom_factor_worst": 23.4,
+      "best_repetition_fraction_of_budget": 0.03029
+     },
+     "critical_path_imu_outside": {
+      "segments": [
+       "update_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 774.27,
+        "median_us": 852.7,
+        "p95_us": 1014.1,
+        "p99_us": 1093.25,
+        "max_us": 3051.0
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 525.48,
+        "median_us": 554.1,
+        "p95_us": 641.0,
+        "p99_us": 682.84,
+        "max_us": 1384.4
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 500.72,
+        "median_us": 477.2,
+        "p95_us": 587.95,
+        "p99_us": 630.3,
+        "max_us": 1261.7
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 996.02,
+        "median_us": 985.9,
+        "p95_us": 1063.52,
+        "p99_us": 1140.62,
+        "max_us": 2097.2
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 963.83,
+        "median_us": 973.3,
+        "p95_us": 1024.18,
+        "p99_us": 1073.07,
+        "max_us": 1088.5
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 875.75,
+        "median_us": 866.7,
+        "p95_us": 939.3,
+        "p99_us": 994.73,
+        "max_us": 1177.1
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 865.64,
+        "median_us": 851.55,
+        "p95_us": 921.0,
+        "p99_us": 1039.35,
+        "max_us": 3051.0
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 943.45,
+        "median_us": 933.8,
+        "p95_us": 1015.79,
+        "p99_us": 1133.97,
+        "max_us": 1284.3
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 2373.1,
+       "check": 1185.0,
+       "done": 972.7,
+       "level": 1059.3,
+       "probe": 2373.1,
+       "ready": 1202.1,
+       "reanchor": 932.0,
+       "touch": 1187.7
+      },
+      "tail_counts": {
+       "over_2ms": 22,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 1384.4,
+      "max_without_gc_us": 3051.0,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.03051,
+      "p99_fraction_of_budget": 0.01093,
+      "headroom_factor_worst": 32.8,
+      "best_repetition_fraction_of_budget": 0.02373
+     },
+     "imu_extra_only": {
+      "segments": [
+       "imu_extra_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 655.87,
+        "median_us": 650.1,
+        "p95_us": 690.3,
+        "p99_us": 750.7,
+        "max_us": 3317.5
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 654.07,
+        "median_us": 649.9,
+        "p95_us": 688.3,
+        "p99_us": 740.84,
+        "max_us": 818.8
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 652.65,
+        "median_us": 647.8,
+        "p95_us": 687.75,
+        "p99_us": 746.1,
+        "max_us": 2531.5
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 657.94,
+        "median_us": 652.5,
+        "p95_us": 692.6,
+        "p99_us": 758.84,
+        "max_us": 1683.6
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 661.18,
+        "median_us": 657.6,
+        "p95_us": 675.08,
+        "p99_us": 765.78,
+        "max_us": 794.1
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 655.58,
+        "median_us": 650.4,
+        "p95_us": 682.3,
+        "p99_us": 723.95,
+        "max_us": 1555.6
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 658.43,
+        "median_us": 654.2,
+        "p95_us": 694.4,
+        "p99_us": 750.0,
+        "max_us": 3317.5
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 656.18,
+        "median_us": 648.9,
+        "p95_us": 693.02,
+        "p99_us": 755.2,
+        "max_us": 1445.2
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 809.5,
+       "check": 699.0,
+       "done": 645.2,
+       "level": 749.0,
+       "probe": 698.6,
+       "ready": 809.5,
+       "reanchor": 660.4,
+       "touch": 715.7
+      },
+      "tail_counts": {
+       "over_2ms": 2,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 846.2,
+      "max_without_gc_us": 3317.5,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.03317,
+      "p99_fraction_of_budget": 0.00751,
+      "headroom_factor_worst": 30.1,
+      "best_repetition_fraction_of_budget": 0.00809
+     },
+     "additions_only": {
+      "segments": [
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 80.12,
+        "median_us": 79.4,
+        "p95_us": 89.0,
+        "p99_us": 96.8,
+        "max_us": 356.6
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 78.54,
+        "median_us": 77.2,
+        "p95_us": 87.6,
+        "p99_us": 93.18,
+        "max_us": 188.6
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 77.68,
+        "median_us": 76.3,
+        "p95_us": 86.45,
+        "p99_us": 92.6,
+        "max_us": 356.6
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 81.48,
+        "median_us": 80.0,
+        "p95_us": 91.2,
+        "p99_us": 98.12,
+        "max_us": 292.5
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 81.84,
+        "median_us": 81.0,
+        "p95_us": 87.18,
+        "p99_us": 88.84,
+        "max_us": 89.2
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 80.72,
+        "median_us": 79.4,
+        "p95_us": 89.61,
+        "p99_us": 97.62,
+        "max_us": 313.8
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 81.55,
+        "median_us": 80.0,
+        "p95_us": 91.0,
+        "p99_us": 98.5,
+        "max_us": 284.4
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 81.41,
+        "median_us": 80.0,
+        "p95_us": 90.9,
+        "p99_us": 98.65,
+        "max_us": 193.0
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 92.2,
+       "check": 92.2,
+       "done": 81.1,
+       "level": 82.3,
+       "probe": 83.7,
+       "ready": 82.0,
+       "reanchor": 80.6,
+       "touch": 82.4
+      },
+      "tail_counts": {
+       "over_2ms": 0,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 112.3,
+      "max_without_gc_us": 356.6,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.00357,
+      "p99_fraction_of_budget": 0.00097,
+      "headroom_factor_worst": 280.4,
+      "best_repetition_fraction_of_budget": 0.00092
+     }
+    },
+    "r8_emulated_gc_off": {
+     "all_in_one_period": {
+      "segments": [
+       "update_ns",
+       "imu_extra_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 1434.25,
+        "median_us": 1503.2,
+        "p95_us": 1697.1,
+        "p99_us": 1802.4,
+        "max_us": 3215.0
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 1180.93,
+        "median_us": 1209.3,
+        "p95_us": 1311.2,
+        "p99_us": 1394.54,
+        "max_us": 2032.7
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 1156.11,
+        "median_us": 1136.9,
+        "p95_us": 1259.95,
+        "p99_us": 1327.7,
+        "max_us": 2790.5
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 1659.76,
+        "median_us": 1640.1,
+        "p95_us": 1760.2,
+        "p99_us": 1874.3,
+        "max_us": 2624.1
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 1619.01,
+        "median_us": 1626.4,
+        "p95_us": 1726.16,
+        "p99_us": 1747.36,
+        "max_us": 1752.3
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 1533.9,
+        "median_us": 1516.3,
+        "p95_us": 1619.64,
+        "p99_us": 1711.66,
+        "max_us": 2481.0
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 1526.34,
+        "median_us": 1501.95,
+        "p95_us": 1617.1,
+        "p99_us": 1778.9,
+        "max_us": 3215.0
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 1611.69,
+        "median_us": 1597.8,
+        "p95_us": 1719.37,
+        "p99_us": 1806.67,
+        "max_us": 2472.9
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 3031.2,
+       "check": 1864.5,
+       "done": 1625.9,
+       "level": 1722.7,
+       "probe": 3031.2,
+       "ready": 1863.2,
+       "reanchor": 1589.5,
+       "touch": 1849.9
+      },
+      "tail_counts": {
+       "over_2ms": 62,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 3215.0,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.03215,
+      "p99_fraction_of_budget": 0.01802,
+      "headroom_factor_worst": 31.1,
+      "best_repetition_fraction_of_budget": 0.03031
+     },
+     "critical_path_imu_outside": {
+      "segments": [
+       "update_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 776.81,
+        "median_us": 853.5,
+        "p95_us": 1022.35,
+        "p99_us": 1100.25,
+        "max_us": 2521.1
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 526.52,
+        "median_us": 557.8,
+        "p95_us": 644.98,
+        "p99_us": 692.36,
+        "max_us": 1259.9
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 502.03,
+        "median_us": 480.0,
+        "p95_us": 587.2,
+        "p99_us": 628.6,
+        "max_us": 1523.7
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 999.84,
+        "median_us": 989.1,
+        "p95_us": 1075.8,
+        "p99_us": 1144.52,
+        "max_us": 1877.7
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 962.72,
+        "median_us": 981.4,
+        "p95_us": 1026.14,
+        "p99_us": 1055.54,
+        "max_us": 1064.2
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 876.92,
+        "median_us": 865.9,
+        "p95_us": 941.62,
+        "p99_us": 990.43,
+        "max_us": 1563.9
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 867.07,
+        "median_us": 852.4,
+        "p95_us": 923.8,
+        "p99_us": 1041.82,
+        "max_us": 2521.1
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 951.68,
+        "median_us": 945.65,
+        "p95_us": 1026.35,
+        "p99_us": 1106.3,
+        "max_us": 1739.6
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 2377.6,
+       "check": 1180.5,
+       "done": 982.8,
+       "level": 1074.0,
+       "probe": 2377.6,
+       "ready": 1197.8,
+       "reanchor": 936.7,
+       "touch": 1198.9
+      },
+      "tail_counts": {
+       "over_2ms": 20,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 2521.1,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.02521,
+      "p99_fraction_of_budget": 0.011,
+      "headroom_factor_worst": 39.7,
+      "best_repetition_fraction_of_budget": 0.02378
+     },
+     "imu_extra_only": {
+      "segments": [
+       "imu_extra_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 657.44,
+        "median_us": 653.0,
+        "p95_us": 692.2,
+        "p99_us": 749.5,
+        "max_us": 2182.4
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 654.41,
+        "median_us": 650.2,
+        "p95_us": 686.78,
+        "p99_us": 747.38,
+        "max_us": 1452.5
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 654.08,
+        "median_us": 650.0,
+        "p95_us": 688.45,
+        "p99_us": 743.9,
+        "max_us": 2182.4
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 659.92,
+        "median_us": 655.8,
+        "p95_us": 695.5,
+        "p99_us": 754.0,
+        "max_us": 1617.6
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 656.29,
+        "median_us": 646.6,
+        "p95_us": 688.42,
+        "p99_us": 716.16,
+        "max_us": 724.9
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 656.98,
+        "median_us": 649.7,
+        "p95_us": 690.31,
+        "p99_us": 751.0,
+        "max_us": 1589.7
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 659.27,
+        "median_us": 655.9,
+        "p95_us": 692.7,
+        "p99_us": 754.31,
+        "max_us": 1165.1
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 660.01,
+        "median_us": 656.5,
+        "p95_us": 696.96,
+        "p99_us": 735.31,
+        "max_us": 1551.0
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 675.5,
+       "check": 664.1,
+       "done": 643.1,
+       "level": 670.7,
+       "probe": 675.5,
+       "ready": 665.5,
+       "reanchor": 656.9,
+       "touch": 665.3
+      },
+      "tail_counts": {
+       "over_2ms": 1,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 2182.4,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.02182,
+      "p99_fraction_of_budget": 0.00749,
+      "headroom_factor_worst": 45.8,
+      "best_repetition_fraction_of_budget": 0.00675
+     },
+     "additions_only": {
+      "segments": [
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 80.33,
+        "median_us": 79.4,
+        "p95_us": 88.9,
+        "p99_us": 96.0,
+        "max_us": 968.3
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 78.44,
+        "median_us": 77.0,
+        "p95_us": 87.6,
+        "p99_us": 93.88,
+        "max_us": 179.6
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 77.85,
+        "median_us": 76.5,
+        "p95_us": 86.0,
+        "p99_us": 92.2,
+        "max_us": 236.1
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 81.81,
+        "median_us": 80.2,
+        "p95_us": 90.8,
+        "p99_us": 97.1,
+        "max_us": 968.3
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 81.47,
+        "median_us": 80.8,
+        "p95_us": 84.84,
+        "p99_us": 86.12,
+        "max_us": 86.5
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 80.8,
+        "median_us": 79.4,
+        "p95_us": 90.4,
+        "p99_us": 96.5,
+        "max_us": 213.1
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 81.61,
+        "median_us": 80.1,
+        "p95_us": 90.4,
+        "p99_us": 96.2,
+        "max_us": 354.5
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 82.15,
+        "median_us": 80.6,
+        "p95_us": 91.6,
+        "p99_us": 98.7,
+        "max_us": 221.4
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 91.8,
+       "check": 91.8,
+       "done": 81.1,
+       "level": 82.6,
+       "probe": 83.2,
+       "ready": 82.8,
+       "reanchor": 80.9,
+       "touch": 81.1
+      },
+      "tail_counts": {
+       "over_2ms": 0,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 968.3,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.00968,
+      "p99_fraction_of_budget": 0.00096,
+      "headroom_factor_worst": 103.3,
+      "best_repetition_fraction_of_budget": 0.00092
+     }
+    }
+   },
+   "allocation_per_period": {
+    "check": {
+     "median_bytes": 15004,
+     "max_bytes": 28940
+    },
+    "touch": {
+     "median_bytes": 4404,
+     "max_bytes": 21804
+    },
+    "level": {
+     "median_bytes": 4132,
+     "max_bytes": 5268
+    },
+    "done": {
+     "median_bytes": 6238,
+     "max_bytes": 8348
+    },
+    "probe": {
+     "median_bytes": 4096,
+     "max_bytes": 11800
+    },
+    "reanchor": {
+     "median_bytes": 4084,
+     "max_bytes": 4196
+    },
+    "ready": {
+     "median_bytes": 4460,
+     "max_bytes": 10854
+    }
+   },
+   "gc_collections_per_1000_periods": {
+    "gen0": 2.68,
+    "gen1": 0.24,
+    "gen2": 0.0
+   }
+  },
+  "pcore2": {
+   "environment": {
+    "date": "2026-10-22T13:04:07",
+    "python": "3.12.15",
+    "executable": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+    "numpy": "2.5.4",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "machine": "DESKTOP-KHVBBFL",
+    "placement": {
+     "logical_cpus": [
+      2
+     ],
+     "affinity_mask_hex": "0x00000004",
+     "efficiency_classes": [
+      1
+     ],
+     "affinity_ok": true,
+     "ecoqos_off_ok": true,
+     "priority": "normal",
+     "priority_ok": true
+    },
+    "controller_revision": "R7 (03_src/outrigger_sim/control/c2.py, C2_REVISION)",
+    "timed_repetitions": 5
+   },
+   "cases": {
+    "nose_down_3p5_reanchor": {
+     "periods": 4099,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "reanchor",
+      "touch"
+     ]
+    },
+    "flat": {
+     "periods": 2166,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "touch"
+     ]
+    },
+    "flat_sink_relevel": {
+     "periods": 3185,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "touch"
+     ]
+    }
+   },
+   "import_cost": [
+    {
+     "numpy_ms": 92.3,
+     "c2_package_ms": 75.5
+    },
+    {
+     "numpy_ms": 96.8,
+     "c2_package_ms": 78.7
+    },
+    {
+     "numpy_ms": 93.1,
+     "c2_package_ms": 74.2
+    }
+   ],
+   "first_call": {
+    "load_params_ms": 48.61,
+    "construct_controller_ms": 0.96,
+    "first_update_ms": 0.275,
+    "second_update_ms": 0.149
+   },
+   "first_pass_phase_max_us": {
+    "check": 7042.5,
+    "done": 352.8,
+    "level": 500.1,
+    "probe": 1002.3,
+    "ready": 978.2,
+    "reanchor": 1189.5,
+    "touch": 1154.2
+   },
+   "measurement_build_us": 22.17,
+   "timing": {
+    "r7_gc_on": {
+     "segments": [
+      "update_ns"
+     ],
+     "per_phase": {
+      "all": {
+       "count": 47250,
+       "mean_us": 229.5,
+       "median_us": 243.7,
+       "p95_us": 312.35,
+       "p99_us": 413.8,
+       "max_us": 3671.6
+      },
+      "check": {
+       "count": 3625,
+       "mean_us": 156.97,
+       "median_us": 163.2,
+       "p95_us": 209.9,
+       "p99_us": 305.56,
+       "max_us": 992.6
+      },
+      "touch": {
+       "count": 13350,
+       "mean_us": 144.07,
+       "median_us": 130.8,
+       "p95_us": 177.5,
+       "p99_us": 228.8,
+       "max_us": 2488.2
+      },
+      "level": {
+       "count": 10580,
+       "mean_us": 301.4,
+       "median_us": 292.3,
+       "p95_us": 340.6,
+       "p99_us": 444.77,
+       "max_us": 1943.2
+      },
+      "done": {
+       "count": 25,
+       "mean_us": 312.98,
+       "median_us": 310.8,
+       "p95_us": 370.26,
+       "p99_us": 431.65,
+       "max_us": 448.4
+      },
+      "reanchor": {
+       "count": 4320,
+       "mean_us": 260.75,
+       "median_us": 251.3,
+       "p95_us": 292.81,
+       "p99_us": 429.57,
+       "max_us": 2328.2
+      },
+      "probe": {
+       "count": 10700,
+       "mean_us": 253.56,
+       "median_us": 242.4,
+       "p95_us": 286.91,
+       "p99_us": 447.21,
+       "max_us": 3671.6
+      },
+      "ready": {
+       "count": 4650,
+       "mean_us": 282.91,
+       "median_us": 274.3,
+       "p95_us": 324.6,
+       "p99_us": 434.41,
+       "max_us": 1741.8
+      }
+     },
+     "max_of_best_repetition_us": {
+      "all": 1002.8,
+      "check": 416.5,
+      "done": 310.5,
+      "level": 336.7,
+      "probe": 1002.8,
+      "ready": 447.8,
+      "reanchor": 286.0,
+      "touch": 414.7
+     },
+     "tail_counts": {
+      "over_2ms": 6,
+      "over_5ms": 0,
+      "over_10ms": 0,
+      "over_50ms": 0
+     },
+     "periods_with_gc": 140,
+     "max_with_gc_us": 827.8,
+     "max_without_gc_us": 3671.6,
+     "budget_ms": 20.0,
+     "worst_fraction_of_budget": 0.18358,
+     "p99_fraction_of_budget": 0.02069,
+     "headroom_factor_worst": 5.4,
+     "best_repetition_fraction_of_budget": 0.05014
+    },
+    "r7_gc_off": {
+     "segments": [
+      "update_ns"
+     ],
+     "per_phase": {
+      "all": {
+       "count": 47250,
+       "mean_us": 228.25,
+       "median_us": 243.5,
+       "p95_us": 309.5,
+       "p99_us": 402.8,
+       "max_us": 3032.3
+      },
+      "check": {
+       "count": 3625,
+       "mean_us": 159.43,
+       "median_us": 163.2,
+       "p95_us": 210.28,
+       "p99_us": 306.12,
+       "max_us": 3032.3
+      },
+      "touch": {
+       "count": 13350,
+       "mean_us": 142.31,
+       "median_us": 130.2,
+       "p95_us": 176.3,
+       "p99_us": 216.2,
+       "max_us": 1069.9
+      },
+      "level": {
+       "count": 10580,
+       "mean_us": 300.44,
+       "median_us": 291.8,
+       "p95_us": 337.5,
+       "p99_us": 447.2,
+       "max_us": 2628.8
+      },
+      "done": {
+       "count": 25,
+       "mean_us": 304.01,
+       "median_us": 311.7,
+       "p95_us": 355.34,
+       "p99_us": 375.53,
+       "max_us": 380.4
+      },
+      "reanchor": {
+       "count": 4320,
+       "mean_us": 259.56,
+       "median_us": 251.75,
+       "p95_us": 292.41,
+       "p99_us": 384.79,
+       "max_us": 1756.0
+      },
+      "probe": {
+       "count": 10700,
+       "mean_us": 251.28,
+       "median_us": 242.1,
+       "p95_us": 284.4,
+       "p99_us": 436.11,
+       "max_us": 1599.0
+      },
+      "ready": {
+       "count": 4650,
+       "mean_us": 281.87,
+       "median_us": 273.8,
+       "p95_us": 318.06,
+       "p99_us": 434.28,
+       "max_us": 2952.7
+      }
+     },
+     "max_of_best_repetition_us": {
+      "all": 996.4,
+      "check": 393.5,
+      "done": 311.7,
+      "level": 333.7,
+      "probe": 996.4,
+      "ready": 435.5,
+      "reanchor": 289.2,
+      "touch": 420.1
+     },
+     "tail_counts": {
+      "over_2ms": 5,
+      "over_5ms": 0,
+      "over_10ms": 0,
+      "over_50ms": 0
+     },
+     "periods_with_gc": 0,
+     "max_with_gc_us": null,
+     "max_without_gc_us": 3032.3,
+     "budget_ms": 20.0,
+     "worst_fraction_of_budget": 0.15161,
+     "p99_fraction_of_budget": 0.02014,
+     "headroom_factor_worst": 6.6,
+     "best_repetition_fraction_of_budget": 0.04982
+    },
+    "r8_emulated_gc_on": {
+     "all_in_one_period": {
+      "segments": [
+       "update_ns",
+       "imu_extra_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 452.17,
+        "median_us": 463.0,
+        "p95_us": 554.5,
+        "p99_us": 767.41,
+        "max_us": 4871.5
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 374.36,
+        "median_us": 373.9,
+        "p95_us": 442.52,
+        "p99_us": 657.85,
+        "max_us": 2340.7
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 358.52,
+        "median_us": 339.1,
+        "p95_us": 415.21,
+        "p99_us": 633.7,
+        "max_us": 4575.3
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 528.67,
+        "median_us": 512.7,
+        "p95_us": 597.61,
+        "p99_us": 825.45,
+        "max_us": 4028.2
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 548.95,
+        "median_us": 540.7,
+        "p95_us": 656.84,
+        "p99_us": 720.66,
+        "max_us": 739.0
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 480.97,
+        "median_us": 467.7,
+        "p95_us": 534.0,
+        "p99_us": 721.43,
+        "max_us": 2340.5
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 479.77,
+        "median_us": 462.5,
+        "p95_us": 551.7,
+        "p99_us": 782.4,
+        "max_us": 2582.3
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 516.8,
+        "median_us": 493.6,
+        "p95_us": 604.91,
+        "p99_us": 1010.65,
+        "max_us": 4871.5
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 1286.2,
+       "check": 627.8,
+       "done": 553.5,
+       "level": 555.1,
+       "probe": 1286.2,
+       "ready": 669.3,
+       "reanchor": 501.0,
+       "touch": 627.2
+      },
+      "tail_counts": {
+       "over_2ms": 37,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 1426.9,
+      "max_without_gc_us": 4871.5,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.04871,
+      "p99_fraction_of_budget": 0.00767,
+      "headroom_factor_worst": 20.5,
+      "best_repetition_fraction_of_budget": 0.01286
+     },
+     "critical_path_imu_outside": {
+      "segments": [
+       "update_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 269.5,
+        "median_us": 284.1,
+        "p95_us": 358.8,
+        "p99_us": 480.7,
+        "max_us": 4248.0
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 193.03,
+        "median_us": 196.5,
+        "p95_us": 250.38,
+        "p99_us": 421.46,
+        "max_us": 2112.5
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 178.46,
+        "median_us": 162.7,
+        "p95_us": 219.0,
+        "p99_us": 316.6,
+        "max_us": 4248.0
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 344.55,
+        "median_us": 332.8,
+        "p95_us": 394.5,
+        "p99_us": 519.1,
+        "max_us": 3618.9
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 364.17,
+        "median_us": 358.6,
+        "p95_us": 448.22,
+        "p99_us": 515.19,
+        "max_us": 535.3
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 298.6,
+        "median_us": 288.3,
+        "p95_us": 333.32,
+        "p99_us": 451.92,
+        "max_us": 2123.2
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 296.86,
+        "median_us": 284.0,
+        "p95_us": 344.1,
+        "p99_us": 497.62,
+        "max_us": 2390.1
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 329.21,
+        "median_us": 314.4,
+        "p95_us": 392.67,
+        "p99_us": 587.58,
+        "max_us": 3447.3
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 1092.4,
+       "check": 436.8,
+       "done": 361.3,
+       "level": 375.4,
+       "probe": 1092.4,
+       "ready": 483.4,
+       "reanchor": 321.2,
+       "touch": 446.0
+      },
+      "tail_counts": {
+       "over_2ms": 15,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 1110.2,
+      "max_without_gc_us": 4248.0,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.04248,
+      "p99_fraction_of_budget": 0.00481,
+      "headroom_factor_worst": 23.5,
+      "best_repetition_fraction_of_budget": 0.01092
+     },
+     "imu_extra_only": {
+      "segments": [
+       "imu_extra_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 182.67,
+        "median_us": 177.0,
+        "p95_us": 195.5,
+        "p99_us": 283.46,
+        "max_us": 4542.1
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 181.34,
+        "median_us": 175.6,
+        "p95_us": 194.24,
+        "p99_us": 294.44,
+        "max_us": 1708.2
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 180.06,
+        "median_us": 173.8,
+        "p95_us": 189.7,
+        "p99_us": 276.35,
+        "max_us": 2756.6
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 184.12,
+        "median_us": 178.6,
+        "p95_us": 195.3,
+        "p99_us": 278.68,
+        "max_us": 2762.9
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 184.78,
+        "median_us": 181.6,
+        "p95_us": 201.8,
+        "p99_us": 221.79,
+        "max_us": 227.5
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 182.37,
+        "median_us": 178.2,
+        "p95_us": 192.3,
+        "p99_us": 257.43,
+        "max_us": 829.6
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 182.91,
+        "median_us": 177.3,
+        "p95_us": 202.3,
+        "p99_us": 286.01,
+        "max_us": 2242.6
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 187.58,
+        "median_us": 177.9,
+        "p95_us": 196.9,
+        "p99_us": 319.71,
+        "max_us": 4542.1
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 252.0,
+       "check": 201.8,
+       "done": 179.3,
+       "level": 216.2,
+       "probe": 202.6,
+       "ready": 252.0,
+       "reanchor": 182.1,
+       "touch": 207.8
+      },
+      "tail_counts": {
+       "over_2ms": 6,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 967.7,
+      "max_without_gc_us": 4542.1,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.04542,
+      "p99_fraction_of_budget": 0.00283,
+      "headroom_factor_worst": 22.0,
+      "best_repetition_fraction_of_budget": 0.00252
+     },
+     "additions_only": {
+      "segments": [
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 29.63,
+        "median_us": 28.5,
+        "p95_us": 34.1,
+        "p99_us": 45.8,
+        "max_us": 4074.2
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 28.2,
+        "median_us": 26.7,
+        "p95_us": 32.6,
+        "p99_us": 47.85,
+        "max_us": 576.9
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 27.96,
+        "median_us": 26.2,
+        "p95_us": 31.55,
+        "p99_us": 44.35,
+        "max_us": 4074.2
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 30.81,
+        "median_us": 29.4,
+        "p95_us": 35.2,
+        "p99_us": 47.92,
+        "max_us": 2033.2
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 32.54,
+        "median_us": 31.7,
+        "p95_us": 39.48,
+        "p99_us": 42.96,
+        "max_us": 43.9
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 29.48,
+        "median_us": 28.7,
+        "p95_us": 33.8,
+        "p99_us": 41.9,
+        "max_us": 626.8
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 30.23,
+        "median_us": 29.0,
+        "p95_us": 35.2,
+        "p99_us": 46.1,
+        "max_us": 821.8
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 31.62,
+        "median_us": 29.3,
+        "p95_us": 35.26,
+        "p99_us": 47.1,
+        "max_us": 2852.1
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 37.2,
+       "check": 37.2,
+       "done": 31.0,
+       "level": 31.1,
+       "probe": 34.6,
+       "ready": 33.4,
+       "reanchor": 29.9,
+       "touch": 32.8
+      },
+      "tail_counts": {
+       "over_2ms": 3,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 177.9,
+      "max_without_gc_us": 4074.2,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.04074,
+      "p99_fraction_of_budget": 0.00046,
+      "headroom_factor_worst": 24.5,
+      "best_repetition_fraction_of_budget": 0.00037
+     }
+    },
+    "r8_emulated_gc_off": {
+     "all_in_one_period": {
+      "segments": [
+       "update_ns",
+       "imu_extra_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 449.82,
+        "median_us": 463.3,
+        "p95_us": 552.1,
+        "p99_us": 693.3,
+        "max_us": 8104.3
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 372.02,
+        "median_us": 373.6,
+        "p95_us": 439.18,
+        "p99_us": 627.51,
+        "max_us": 3645.7
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 356.33,
+        "median_us": 340.3,
+        "p95_us": 399.7,
+        "p99_us": 552.87,
+        "max_us": 3479.0
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 526.96,
+        "median_us": 513.3,
+        "p95_us": 591.7,
+        "p99_us": 781.1,
+        "max_us": 3145.5
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 524.16,
+        "median_us": 533.3,
+        "p95_us": 567.66,
+        "p99_us": 585.5,
+        "max_us": 589.7
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 484.58,
+        "median_us": 470.9,
+        "p95_us": 556.74,
+        "p99_us": 686.53,
+        "max_us": 2325.8
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 476.38,
+        "median_us": 462.2,
+        "p95_us": 533.0,
+        "p99_us": 716.5,
+        "max_us": 8104.3
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 509.56,
+        "median_us": 495.0,
+        "p95_us": 588.36,
+        "p99_us": 716.33,
+        "max_us": 2695.2
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 1261.9,
+       "check": 623.0,
+       "done": 531.4,
+       "level": 557.0,
+       "probe": 1261.9,
+       "ready": 657.4,
+       "reanchor": 503.7,
+       "touch": 640.8
+      },
+      "tail_counts": {
+       "over_2ms": 18,
+       "over_5ms": 1,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 8104.3,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.08104,
+      "p99_fraction_of_budget": 0.00693,
+      "headroom_factor_worst": 12.3,
+      "best_repetition_fraction_of_budget": 0.01262
+     },
+     "critical_path_imu_outside": {
+      "segments": [
+       "update_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 267.51,
+        "median_us": 283.9,
+        "p95_us": 358.1,
+        "p99_us": 462.35,
+        "max_us": 4208.0
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 192.12,
+        "median_us": 196.2,
+        "p95_us": 248.78,
+        "p99_us": 362.02,
+        "max_us": 3437.7
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 177.22,
+        "median_us": 163.4,
+        "p95_us": 213.1,
+        "p99_us": 300.0,
+        "max_us": 2115.2
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 342.28,
+        "median_us": 332.95,
+        "p95_us": 387.1,
+        "p99_us": 499.9,
+        "max_us": 2419.1
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 343.14,
+        "median_us": 352.1,
+        "p95_us": 386.54,
+        "p99_us": 392.79,
+        "max_us": 393.2
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 300.55,
+        "median_us": 290.6,
+        "p95_us": 351.41,
+        "p99_us": 453.25,
+        "max_us": 1258.5
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 293.5,
+        "median_us": 283.25,
+        "p95_us": 331.9,
+        "p99_us": 487.8,
+        "max_us": 4208.0
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 324.43,
+        "median_us": 314.9,
+        "p95_us": 381.25,
+        "p99_us": 462.85,
+        "max_us": 1071.2
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 1071.5,
+       "check": 437.7,
+       "done": 351.9,
+       "level": 376.7,
+       "probe": 1071.5,
+       "ready": 473.5,
+       "reanchor": 325.7,
+       "touch": 453.9
+      },
+      "tail_counts": {
+       "over_2ms": 5,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 4208.0,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.04208,
+      "p99_fraction_of_budget": 0.00462,
+      "headroom_factor_worst": 23.8,
+      "best_repetition_fraction_of_budget": 0.01071
+     },
+     "imu_extra_only": {
+      "segments": [
+       "imu_extra_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 182.31,
+        "median_us": 177.5,
+        "p95_us": 194.7,
+        "p99_us": 255.35,
+        "max_us": 5850.9
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 179.9,
+        "median_us": 175.4,
+        "p95_us": 189.48,
+        "p99_us": 272.84,
+        "max_us": 904.1
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 179.11,
+        "median_us": 174.4,
+        "p95_us": 188.4,
+        "p99_us": 250.46,
+        "max_us": 3241.9
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 184.67,
+        "median_us": 179.1,
+        "p95_us": 195.5,
+        "p99_us": 262.46,
+        "max_us": 2776.7
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 181.02,
+        "median_us": 179.6,
+        "p95_us": 187.66,
+        "p99_us": 195.73,
+        "max_us": 198.2
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 184.03,
+        "median_us": 179.0,
+        "p95_us": 202.4,
+        "p99_us": 255.19,
+        "max_us": 2010.1
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 182.87,
+        "median_us": 177.9,
+        "p95_us": 193.7,
+        "p99_us": 247.2,
+        "max_us": 5850.9
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 185.13,
+        "median_us": 179.0,
+        "p95_us": 206.8,
+        "p99_us": 252.97,
+        "max_us": 2342.9
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 190.5,
+       "check": 182.6,
+       "done": 179.6,
+       "level": 182.9,
+       "probe": 190.5,
+       "ready": 189.0,
+       "reanchor": 182.9,
+       "touch": 183.9
+      },
+      "tail_counts": {
+       "over_2ms": 7,
+       "over_5ms": 1,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 5850.9,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.05851,
+      "p99_fraction_of_budget": 0.00255,
+      "headroom_factor_worst": 17.1,
+      "best_repetition_fraction_of_budget": 0.0019
+     },
+     "additions_only": {
+      "segments": [
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 29.31,
+        "median_us": 28.5,
+        "p95_us": 33.7,
+        "p99_us": 43.6,
+        "max_us": 3157.1
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 27.93,
+        "median_us": 26.6,
+        "p95_us": 31.9,
+        "p99_us": 44.58,
+        "max_us": 692.9
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 27.38,
+        "median_us": 26.2,
+        "p95_us": 31.1,
+        "p99_us": 41.7,
+        "max_us": 836.9
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 30.6,
+        "median_us": 29.4,
+        "p95_us": 34.8,
+        "p99_us": 44.72,
+        "max_us": 1252.8
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 30.3,
+        "median_us": 30.3,
+        "p95_us": 32.44,
+        "p99_us": 33.51,
+        "max_us": 33.8
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 29.9,
+        "median_us": 28.8,
+        "p95_us": 34.6,
+        "p99_us": 42.46,
+        "max_us": 889.9
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 30.25,
+        "median_us": 28.9,
+        "p95_us": 34.1,
+        "p99_us": 43.5,
+        "max_us": 3157.1
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 30.28,
+        "median_us": 29.3,
+        "p95_us": 35.2,
+        "p99_us": 42.8,
+        "max_us": 459.6
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 38.1,
+       "check": 38.1,
+       "done": 29.9,
+       "level": 30.7,
+       "probe": 33.5,
+       "ready": 33.1,
+       "reanchor": 30.2,
+       "touch": 32.3
+      },
+      "tail_counts": {
+       "over_2ms": 1,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 3157.1,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.03157,
+      "p99_fraction_of_budget": 0.00044,
+      "headroom_factor_worst": 31.7,
+      "best_repetition_fraction_of_budget": 0.00038
+     }
+    }
+   },
+   "allocation_per_period": {
+    "check": {
+     "median_bytes": 15004,
+     "max_bytes": 28948
+    },
+    "touch": {
+     "median_bytes": 4404,
+     "max_bytes": 21804
+    },
+    "level": {
+     "median_bytes": 4144,
+     "max_bytes": 5224
+    },
+    "done": {
+     "median_bytes": 6326,
+     "max_bytes": 8524
+    },
+    "probe": {
+     "median_bytes": 4128,
+     "max_bytes": 11768
+    },
+    "reanchor": {
+     "median_bytes": 4128,
+     "max_bytes": 4240
+    },
+    "ready": {
+     "median_bytes": 4416,
+     "max_bytes": 10722
+    }
+   },
+   "gc_collections_per_1000_periods": {
+    "gen0": 2.68,
+    "gen1": 0.24,
+    "gen2": 0.0
+   },
+   "profile": {
+    "by_own_time": [
+     {
+      "function": "_function_base_impl.py:5221(delete)",
+      "calls_per_period": 5.33,
+      "own_us_per_period": 19.44,
+      "cumulative_us_per_period": 24.54
+     },
+     {
+      "function": "~:0(<built-in method numpy.array>)",
+      "calls_per_period": 18.28,
+      "own_us_per_period": 19.22,
+      "cumulative_us_per_period": 19.22
+     },
+     {
+      "function": "two_pressure.py:459(_sensor_faults)",
+      "calls_per_period": 2.0,
+      "own_us_per_period": 18.98,
+      "cumulative_us_per_period": 34.25
+     },
+     {
+      "function": "_methods.py:115(_mean)",
+      "calls_per_period": 8.56,
+      "own_us_per_period": 17.13,
+      "cumulative_us_per_period": 39.47
+     },
+     {
+      "function": "~:0(<method 'reduce' of 'numpy.ufunc' objects>)",
+      "calls_per_period": 26.93,
+      "own_us_per_period": 16.96,
+      "cumulative_us_per_period": 16.96
+     },
+     {
+      "function": "_function_base_impl.py:4004(_median)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 16.63,
+      "cumulative_us_per_period": 83.65
+     },
+     {
+      "function": "standstill.py:278(_are_rates_quiet)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 9.48,
+      "cumulative_us_per_period": 42.68
+     },
+     {
+      "function": "_methods.py:73(_count_reduce_items)",
+      "calls_per_period": 8.56,
+      "own_us_per_period": 8.29,
+      "cumulative_us_per_period": 10.42
+     },
+     {
+      "function": "c2.py:1832(update)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 7.94,
+      "cumulative_us_per_period": 407.74
+     },
+     {
+      "function": "attitude.py:83(update)",
+      "calls_per_period": 3.26,
+      "own_us_per_period": 7.84,
+      "cumulative_us_per_period": 10.57
+     },
+     {
+      "function": "c2.py:1216(_heights_above_others)",
+      "calls_per_period": 1.32,
+      "own_us_per_period": 7.53,
+      "cumulative_us_per_period": 126.41
+     },
+     {
+      "function": "frames.py:229(_tilt_from_up_vector)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 7.51,
+      "cumulative_us_per_period": 20.81
+     },
+     {
+      "function": "_utils_impl.py:407(_median_nancheck)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 7.39,
+      "cumulative_us_per_period": 19.68
+     },
+     {
+      "function": "~:0(<method 'partition' of 'numpy.ndarray' objects>)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 6.56,
+      "cumulative_us_per_period": 6.56
+     },
+     {
+      "function": "two_pressure.py:329(read)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 6.21,
+      "cumulative_us_per_period": 79.04
+     }
+    ],
+    "by_cumulative_time": [
+     {
+      "function": "c2.py:1832(update)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 7.94,
+      "cumulative_us_per_period": 407.74
+     },
+     {
+      "function": "c2.py:2348(_update_support_shadow)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 1.71,
+      "cumulative_us_per_period": 191.3
+     },
+     {
+      "function": "c2.py:1392(update)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 4.26,
+      "cumulative_us_per_period": 143.78
+     },
+     {
+      "function": "c2.py:1216(_heights_above_others)",
+      "calls_per_period": 1.32,
+      "own_us_per_period": 7.53,
+      "cumulative_us_per_period": 126.41
+     },
+     {
+      "function": "_function_base_impl.py:3915(median)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 3.3,
+      "cumulative_us_per_period": 94.85
+     },
+     {
+      "function": "c2.py:2156(_read)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 3.3,
+      "cumulative_us_per_period": 92.06
+     },
+     {
+      "function": "_function_base_impl.py:3828(_ureduce)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 6.11,
+      "cumulative_us_per_period": 91.55
+     },
+     {
+      "function": "_function_base_impl.py:4004(_median)",
+      "calls_per_period": 5.35,
+      "own_us_per_period": 16.63,
+      "cumulative_us_per_period": 83.65
+     },
+     {
+      "function": "two_pressure.py:329(read)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 6.21,
+      "cumulative_us_per_period": 79.04
+     },
+     {
+      "function": "c2.py:2222(_update_attitude_filters)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 3.76,
+      "cumulative_us_per_period": 50.04
+     },
+     {
+      "function": "fromnumeric.py:3737(mean)",
+      "calls_per_period": 8.56,
+      "own_us_per_period": 6.1,
+      "cumulative_us_per_period": 45.56
+     },
+     {
+      "function": "c2.py:2390(_update_standstill_gate)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 0.96,
+      "cumulative_us_per_period": 45.34
+     },
+     {
+      "function": "standstill.py:253(update)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 1.49,
+      "cumulative_us_per_period": 44.38
+     },
+     {
+      "function": "c2.py:2276(_phase_command)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 1.4,
+      "cumulative_us_per_period": 43.97
+     },
+     {
+      "function": "two_pressure.py:443(_diagnose_sensors)",
+      "calls_per_period": 1.0,
+      "own_us_per_period": 2.83,
+      "cumulative_us_per_period": 43.7
+     }
+    ]
+   }
+  },
+  "pcore2_high": {
+   "environment": {
+    "date": "2026-10-22T13:05:38",
+    "python": "3.12.15",
+    "executable": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+    "numpy": "2.5.4",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "machine": "DESKTOP-KHVBBFL",
+    "placement": {
+     "logical_cpus": [
+      2
+     ],
+     "affinity_mask_hex": "0x00000004",
+     "efficiency_classes": [
+      1
+     ],
+     "affinity_ok": true,
+     "ecoqos_off_ok": true,
+     "priority": "high",
+     "priority_ok": true
+    },
+    "controller_revision": "R7 (03_src/outrigger_sim/control/c2.py, C2_REVISION)",
+    "timed_repetitions": 5
+   },
+   "cases": {
+    "nose_down_3p5_reanchor": {
+     "periods": 4099,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "reanchor",
+      "touch"
+     ]
+    },
+    "flat": {
+     "periods": 2166,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "touch"
+     ]
+    },
+    "flat_sink_relevel": {
+     "periods": 3185,
+     "phases": [
+      "check",
+      "done",
+      "level",
+      "probe",
+      "ready",
+      "touch"
+     ]
+    }
+   },
+   "import_cost": [
+    {
+     "numpy_ms": 111.0,
+     "c2_package_ms": 75.6
+    },
+    {
+     "numpy_ms": 94.6,
+     "c2_package_ms": 75.5
+    },
+    {
+     "numpy_ms": 93.2,
+     "c2_package_ms": 81.5
+    }
+   ],
+   "first_call": {
+    "load_params_ms": 48.07,
+    "construct_controller_ms": 0.89,
+    "first_update_ms": 0.254,
+    "second_update_ms": 0.149
+   },
+   "first_pass_phase_max_us": {
+    "check": 7445.0,
+    "done": 349.1,
+    "level": 680.8,
+    "probe": 1083.5,
+    "ready": 554.9,
+    "reanchor": 365.5,
+    "touch": 486.8
+   },
+   "measurement_build_us": 21.24,
+   "timing": {
+    "r7_gc_on": {
+     "segments": [
+      "update_ns"
+     ],
+     "per_phase": {
+      "all": {
+       "count": 47250,
+       "mean_us": 222.26,
+       "median_us": 240.3,
+       "p95_us": 298.3,
+       "p99_us": 335.15,
+       "max_us": 1086.2
+      },
+      "check": {
+       "count": 3625,
+       "mean_us": 153.77,
+       "median_us": 161.7,
+       "p95_us": 206.78,
+       "p99_us": 226.8,
+       "max_us": 450.0
+      },
+      "touch": {
+       "count": 13350,
+       "mean_us": 140.4,
+       "median_us": 130.0,
+       "p95_us": 174.0,
+       "p99_us": 184.95,
+       "max_us": 429.7
+      },
+      "level": {
+       "count": 10580,
+       "mean_us": 291.14,
+       "median_us": 287.5,
+       "p95_us": 318.3,
+       "p99_us": 353.34,
+       "max_us": 687.3
+      },
+      "done": {
+       "count": 25,
+       "mean_us": 298.32,
+       "median_us": 310.6,
+       "p95_us": 319.24,
+       "p99_us": 322.16,
+       "max_us": 323.0
+      },
+      "reanchor": {
+       "count": 4320,
+       "mean_us": 250.65,
+       "median_us": 247.0,
+       "p95_us": 275.81,
+       "p99_us": 300.17,
+       "max_us": 419.7
+      },
+      "probe": {
+       "count": 10700,
+       "mean_us": 245.05,
+       "median_us": 239.5,
+       "p95_us": 261.5,
+       "p99_us": 341.12,
+       "max_us": 1086.2
+      },
+      "ready": {
+       "count": 4650,
+       "mean_us": 274.78,
+       "median_us": 271.6,
+       "p95_us": 296.4,
+       "p99_us": 377.52,
+       "max_us": 502.7
+      }
+     },
+     "max_of_best_repetition_us": {
+      "all": 1021.8,
+      "check": 419.6,
+      "done": 311.0,
+      "level": 334.0,
+      "probe": 1021.8,
+      "ready": 441.2,
+      "reanchor": 281.1,
+      "touch": 415.2
+     },
+     "tail_counts": {
+      "over_2ms": 0,
+      "over_5ms": 0,
+      "over_10ms": 0,
+      "over_50ms": 0
+     },
+     "periods_with_gc": 140,
+     "max_with_gc_us": 429.4,
+     "max_without_gc_us": 1086.2,
+     "budget_ms": 20.0,
+     "worst_fraction_of_budget": 0.05431,
+     "p99_fraction_of_budget": 0.01676,
+     "headroom_factor_worst": 18.4,
+     "best_repetition_fraction_of_budget": 0.05109
+    },
+    "r7_gc_off": {
+     "segments": [
+      "update_ns"
+     ],
+     "per_phase": {
+      "all": {
+       "count": 47250,
+       "mean_us": 222.74,
+       "median_us": 241.1,
+       "p95_us": 299.0,
+       "p99_us": 334.25,
+       "max_us": 1550.2
+      },
+      "check": {
+       "count": 3625,
+       "mean_us": 154.02,
+       "median_us": 162.8,
+       "p95_us": 206.8,
+       "p99_us": 229.2,
+       "max_us": 430.6
+      },
+      "touch": {
+       "count": 13350,
+       "mean_us": 140.71,
+       "median_us": 130.4,
+       "p95_us": 174.0,
+       "p99_us": 187.05,
+       "max_us": 573.7
+      },
+      "level": {
+       "count": 10580,
+       "mean_us": 291.37,
+       "median_us": 287.9,
+       "p95_us": 318.1,
+       "p99_us": 351.02,
+       "max_us": 1550.2
+      },
+      "done": {
+       "count": 25,
+       "mean_us": 300.33,
+       "median_us": 312.1,
+       "p95_us": 327.34,
+       "p99_us": 336.86,
+       "max_us": 339.5
+      },
+      "reanchor": {
+       "count": 4320,
+       "mean_us": 252.32,
+       "median_us": 248.0,
+       "p95_us": 279.5,
+       "p99_us": 308.77,
+       "max_us": 567.2
+      },
+      "probe": {
+       "count": 10700,
+       "mean_us": 245.61,
+       "median_us": 240.0,
+       "p95_us": 262.5,
+       "p99_us": 347.66,
+       "max_us": 1088.1
+      },
+      "ready": {
+       "count": 4650,
+       "mean_us": 275.13,
+       "median_us": 271.7,
+       "p95_us": 298.5,
+       "p99_us": 373.9,
+       "max_us": 566.6
+      }
+     },
+     "max_of_best_repetition_us": {
+      "all": 1009.9,
+      "check": 399.1,
+      "done": 313.4,
+      "level": 337.6,
+      "probe": 1009.9,
+      "ready": 440.8,
+      "reanchor": 295.6,
+      "touch": 420.5
+     },
+     "tail_counts": {
+      "over_2ms": 0,
+      "over_5ms": 0,
+      "over_10ms": 0,
+      "over_50ms": 0
+     },
+     "periods_with_gc": 0,
+     "max_with_gc_us": null,
+     "max_without_gc_us": 1550.2,
+     "budget_ms": 20.0,
+     "worst_fraction_of_budget": 0.07751,
+     "p99_fraction_of_budget": 0.01671,
+     "headroom_factor_worst": 12.9,
+     "best_repetition_fraction_of_budget": 0.05049
+    },
+    "r8_emulated_gc_on": {
+     "all_in_one_period": {
+      "segments": [
+       "update_ns",
+       "imu_extra_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 438.28,
+        "median_us": 460.2,
+        "p95_us": 523.2,
+        "p99_us": 566.2,
+        "max_us": 1351.5
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 365.42,
+        "median_us": 372.7,
+        "p95_us": 423.64,
+        "p99_us": 483.08,
+        "max_us": 1155.8
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 347.26,
+        "median_us": 337.8,
+        "p95_us": 383.3,
+        "p99_us": 411.75,
+        "max_us": 885.6
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 511.46,
+        "median_us": 507.6,
+        "p95_us": 544.4,
+        "p99_us": 580.2,
+        "max_us": 1083.2
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 527.58,
+        "median_us": 534.2,
+        "p95_us": 562.22,
+        "p99_us": 610.43,
+        "max_us": 625.6
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 471.67,
+        "median_us": 467.6,
+        "p95_us": 505.62,
+        "p99_us": 534.35,
+        "max_us": 653.5
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 466.14,
+        "median_us": 459.8,
+        "p95_us": 496.5,
+        "p99_us": 577.6,
+        "max_us": 1351.5
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 494.25,
+        "median_us": 489.9,
+        "p95_us": 526.67,
+        "p99_us": 604.8,
+        "max_us": 911.0
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 1263.1,
+       "check": 641.7,
+       "done": 546.5,
+       "level": 550.5,
+       "probe": 1263.1,
+       "ready": 668.0,
+       "reanchor": 502.0,
+       "touch": 632.2
+      },
+      "tail_counts": {
+       "over_2ms": 0,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 669.4,
+      "max_without_gc_us": 1351.5,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.01351,
+      "p99_fraction_of_budget": 0.00566,
+      "headroom_factor_worst": 74.0,
+      "best_repetition_fraction_of_budget": 0.01263
+     },
+     "critical_path_imu_outside": {
+      "segments": [
+       "update_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 259.44,
+        "median_us": 281.2,
+        "p95_us": 339.7,
+        "p99_us": 372.2,
+        "max_us": 1159.9
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 187.3,
+        "median_us": 195.3,
+        "p95_us": 241.08,
+        "p99_us": 273.22,
+        "max_us": 910.0
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 171.35,
+        "median_us": 161.2,
+        "p95_us": 205.7,
+        "p99_us": 219.65,
+        "max_us": 614.5
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 331.38,
+        "median_us": 328.2,
+        "p95_us": 359.2,
+        "p99_us": 387.86,
+        "max_us": 810.3
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 345.98,
+        "median_us": 357.0,
+        "p95_us": 378.44,
+        "p99_us": 420.63,
+        "max_us": 433.3
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 290.22,
+        "median_us": 286.9,
+        "p95_us": 318.5,
+        "p99_us": 336.42,
+        "max_us": 420.9
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 286.36,
+        "median_us": 281.0,
+        "p95_us": 305.9,
+        "p99_us": 372.72,
+        "max_us": 1159.9
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 313.94,
+        "median_us": 310.6,
+        "p95_us": 337.66,
+        "p99_us": 415.7,
+        "max_us": 720.3
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 1074.3,
+       "check": 446.7,
+       "done": 367.3,
+       "level": 370.9,
+       "probe": 1074.3,
+       "ready": 480.6,
+       "reanchor": 320.6,
+       "touch": 450.3
+      },
+      "tail_counts": {
+       "over_2ms": 0,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 468.4,
+      "max_without_gc_us": 1159.9,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.0116,
+      "p99_fraction_of_budget": 0.00372,
+      "headroom_factor_worst": 86.2,
+      "best_repetition_fraction_of_budget": 0.01074
+     },
+     "imu_extra_only": {
+      "segments": [
+       "imu_extra_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 178.83,
+        "median_us": 177.1,
+        "p95_us": 190.0,
+        "p99_us": 211.25,
+        "max_us": 741.8
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 178.12,
+        "median_us": 175.8,
+        "p95_us": 190.8,
+        "p99_us": 207.45,
+        "max_us": 423.7
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 175.91,
+        "median_us": 174.0,
+        "p95_us": 185.4,
+        "p99_us": 208.75,
+        "max_us": 659.6
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 180.08,
+        "median_us": 178.2,
+        "p95_us": 190.7,
+        "p99_us": 211.82,
+        "max_us": 741.8
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 181.59,
+        "median_us": 179.5,
+        "p95_us": 192.3,
+        "p99_us": 194.35,
+        "max_us": 195.0
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 181.45,
+        "median_us": 179.3,
+        "p95_us": 192.41,
+        "p99_us": 210.18,
+        "max_us": 296.1
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 179.78,
+        "median_us": 177.7,
+        "p95_us": 190.4,
+        "p99_us": 211.6,
+        "max_us": 390.3
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 180.31,
+        "median_us": 178.2,
+        "p95_us": 190.6,
+        "p99_us": 217.85,
+        "max_us": 469.9
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 259.6,
+       "check": 206.7,
+       "done": 177.5,
+       "level": 224.0,
+       "probe": 211.2,
+       "ready": 259.6,
+       "reanchor": 183.2,
+       "touch": 214.2
+      },
+      "tail_counts": {
+       "over_2ms": 0,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 272.9,
+      "max_without_gc_us": 741.8,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.00742,
+      "p99_fraction_of_budget": 0.00211,
+      "headroom_factor_worst": 134.8,
+      "best_repetition_fraction_of_budget": 0.0026
+     },
+     "additions_only": {
+      "segments": [
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 28.27,
+        "median_us": 28.2,
+        "p95_us": 31.2,
+        "p99_us": 35.9,
+        "max_us": 269.6
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 27.17,
+        "median_us": 26.6,
+        "p95_us": 29.9,
+        "p99_us": 37.38,
+        "max_us": 269.6
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 26.45,
+        "median_us": 26.0,
+        "p95_us": 28.55,
+        "p99_us": 33.25,
+        "max_us": 151.1
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 29.41,
+        "median_us": 29.1,
+        "p95_us": 31.5,
+        "p99_us": 36.34,
+        "max_us": 67.9
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 30.84,
+        "median_us": 30.7,
+        "p95_us": 33.64,
+        "p99_us": 35.07,
+        "max_us": 35.5
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 28.9,
+        "median_us": 28.5,
+        "p95_us": 31.3,
+        "p99_us": 36.6,
+        "max_us": 80.6
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 29.11,
+        "median_us": 28.7,
+        "p95_us": 32.1,
+        "p99_us": 36.4,
+        "max_us": 82.1
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 29.28,
+        "median_us": 28.9,
+        "p95_us": 31.7,
+        "p99_us": 36.15,
+        "max_us": 91.3
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 37.6,
+       "check": 37.6,
+       "done": 30.1,
+       "level": 30.5,
+       "probe": 33.7,
+       "ready": 33.7,
+       "reanchor": 30.1,
+       "touch": 32.4
+      },
+      "tail_counts": {
+       "over_2ms": 0,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 140,
+      "max_with_gc_us": 65.4,
+      "max_without_gc_us": 269.6,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.0027,
+      "p99_fraction_of_budget": 0.00036,
+      "headroom_factor_worst": 370.9,
+      "best_repetition_fraction_of_budget": 0.00038
+     }
+    },
+    "r8_emulated_gc_off": {
+     "all_in_one_period": {
+      "segments": [
+       "update_ns",
+       "imu_extra_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 444.37,
+        "median_us": 463.0,
+        "p95_us": 538.9,
+        "p99_us": 615.3,
+        "max_us": 1931.1
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 364.48,
+        "median_us": 371.7,
+        "p95_us": 417.98,
+        "p99_us": 494.05,
+        "max_us": 840.1
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 353.98,
+        "median_us": 341.9,
+        "p95_us": 397.85,
+        "p99_us": 468.55,
+        "max_us": 988.8
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 519.18,
+        "median_us": 511.6,
+        "p95_us": 576.11,
+        "p99_us": 633.86,
+        "max_us": 1148.5
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 523.08,
+        "median_us": 534.2,
+        "p95_us": 565.8,
+        "p99_us": 602.0,
+        "max_us": 613.3
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 474.49,
+        "median_us": 468.7,
+        "p95_us": 515.4,
+        "p99_us": 557.27,
+        "max_us": 918.4
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 472.94,
+        "median_us": 463.0,
+        "p95_us": 528.4,
+        "p99_us": 663.31,
+        "max_us": 1514.5
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 501.79,
+        "median_us": 493.3,
+        "p95_us": 569.25,
+        "p99_us": 632.46,
+        "max_us": 1931.1
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 1260.3,
+       "check": 624.0,
+       "done": 527.8,
+       "level": 550.4,
+       "probe": 1260.3,
+       "ready": 677.3,
+       "reanchor": 510.6,
+       "touch": 645.5
+      },
+      "tail_counts": {
+       "over_2ms": 0,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 1931.1,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.01931,
+      "p99_fraction_of_budget": 0.00615,
+      "headroom_factor_worst": 51.8,
+      "best_repetition_fraction_of_budget": 0.0126
+     },
+     "critical_path_imu_outside": {
+      "segments": [
+       "update_ns",
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 263.46,
+        "median_us": 283.1,
+        "p95_us": 350.0,
+        "p99_us": 408.7,
+        "max_us": 1700.8
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 186.89,
+        "median_us": 194.8,
+        "p95_us": 238.1,
+        "p99_us": 289.18,
+        "max_us": 612.1
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 175.03,
+        "median_us": 163.5,
+        "p95_us": 210.7,
+        "p99_us": 250.56,
+        "max_us": 749.2
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 336.92,
+        "median_us": 331.1,
+        "p95_us": 377.6,
+        "p99_us": 429.4,
+        "max_us": 955.5
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 341.72,
+        "median_us": 350.4,
+        "p95_us": 385.82,
+        "p99_us": 403.42,
+        "max_us": 408.7
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 291.67,
+        "median_us": 287.8,
+        "p95_us": 320.9,
+        "p99_us": 347.5,
+        "max_us": 562.5
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 291.05,
+        "median_us": 283.2,
+        "p95_us": 328.8,
+        "p99_us": 441.9,
+        "max_us": 1299.5
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 319.75,
+        "median_us": 313.3,
+        "p95_us": 366.4,
+        "p99_us": 436.14,
+        "max_us": 1700.8
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 1065.0,
+       "check": 437.5,
+       "done": 350.2,
+       "level": 367.0,
+       "probe": 1065.0,
+       "ready": 488.4,
+       "reanchor": 325.6,
+       "touch": 456.1
+      },
+      "tail_counts": {
+       "over_2ms": 0,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 1700.8,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.01701,
+      "p99_fraction_of_budget": 0.00409,
+      "headroom_factor_worst": 58.8,
+      "best_repetition_fraction_of_budget": 0.01065
+     },
+     "imu_extra_only": {
+      "segments": [
+       "imu_extra_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 180.91,
+        "median_us": 178.0,
+        "p95_us": 197.6,
+        "p99_us": 230.45,
+        "max_us": 699.9
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 177.59,
+        "median_us": 175.3,
+        "p95_us": 187.8,
+        "p99_us": 221.12,
+        "max_us": 488.9
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 178.95,
+        "median_us": 175.3,
+        "p95_us": 197.9,
+        "p99_us": 236.1,
+        "max_us": 533.0
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 182.26,
+        "median_us": 179.1,
+        "p95_us": 198.9,
+        "p99_us": 231.72,
+        "max_us": 522.9
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 181.36,
+        "median_us": 179.3,
+        "p95_us": 190.78,
+        "p99_us": 201.62,
+        "max_us": 204.6
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 182.82,
+        "median_us": 179.3,
+        "p95_us": 200.41,
+        "p99_us": 223.13,
+        "max_us": 402.4
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 181.89,
+        "median_us": 178.6,
+        "p95_us": 197.1,
+        "p99_us": 232.0,
+        "max_us": 699.9
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 182.04,
+        "median_us": 179.2,
+        "p95_us": 197.72,
+        "p99_us": 226.35,
+        "max_us": 334.9
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 188.6,
+       "check": 186.5,
+       "done": 179.8,
+       "level": 183.2,
+       "probe": 188.6,
+       "ready": 185.7,
+       "reanchor": 181.3,
+       "touch": 186.5
+      },
+      "tail_counts": {
+       "over_2ms": 0,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 699.9,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.007,
+      "p99_fraction_of_budget": 0.0023,
+      "headroom_factor_worst": 142.9,
+      "best_repetition_fraction_of_budget": 0.00189
+     },
+     "additions_only": {
+      "segments": [
+       "additions_ns"
+      ],
+      "per_phase": {
+       "all": {
+        "count": 47250,
+        "mean_us": 28.76,
+        "median_us": 28.4,
+        "p95_us": 33.0,
+        "p99_us": 39.4,
+        "max_us": 358.3
+       },
+       "check": {
+        "count": 3625,
+        "mean_us": 27.14,
+        "median_us": 26.4,
+        "p95_us": 30.9,
+        "p99_us": 37.88,
+        "max_us": 157.1
+       },
+       "touch": {
+        "count": 13350,
+        "mean_us": 27.02,
+        "median_us": 26.2,
+        "p95_us": 31.0,
+        "p99_us": 37.9,
+        "max_us": 220.4
+       },
+       "level": {
+        "count": 10580,
+        "mean_us": 29.99,
+        "median_us": 29.3,
+        "p95_us": 34.1,
+        "p99_us": 40.32,
+        "max_us": 358.3
+       },
+       "done": {
+        "count": 25,
+        "mean_us": 31.89,
+        "median_us": 30.5,
+        "p95_us": 32.86,
+        "p99_us": 55.02,
+        "max_us": 62.0
+       },
+       "reanchor": {
+        "count": 4320,
+        "mean_us": 28.89,
+        "median_us": 28.5,
+        "p95_us": 31.51,
+        "p99_us": 35.9,
+        "max_us": 93.6
+       },
+       "probe": {
+        "count": 10700,
+        "mean_us": 29.71,
+        "median_us": 29.0,
+        "p95_us": 33.9,
+        "p99_us": 41.3,
+        "max_us": 229.7
+       },
+       "ready": {
+        "count": 4650,
+        "mean_us": 29.87,
+        "median_us": 29.2,
+        "p95_us": 34.3,
+        "p99_us": 40.4,
+        "max_us": 127.7
+       }
+      },
+      "max_of_best_repetition_us": {
+       "all": 37.8,
+       "check": 37.8,
+       "done": 29.7,
+       "level": 31.3,
+       "probe": 34.8,
+       "ready": 34.0,
+       "reanchor": 29.8,
+       "touch": 33.8
+      },
+      "tail_counts": {
+       "over_2ms": 0,
+       "over_5ms": 0,
+       "over_10ms": 0,
+       "over_50ms": 0
+      },
+      "periods_with_gc": 0,
+      "max_with_gc_us": null,
+      "max_without_gc_us": 358.3,
+      "budget_ms": 100.0,
+      "worst_fraction_of_budget": 0.00358,
+      "p99_fraction_of_budget": 0.00039,
+      "headroom_factor_worst": 279.1,
+      "best_repetition_fraction_of_budget": 0.00038
+     }
+    }
+   },
+   "allocation_per_period": {
+    "check": {
+     "median_bytes": 14960,
+     "max_bytes": 28904
+    },
+    "touch": {
+     "median_bytes": 4360,
+     "max_bytes": 21760
+    },
+    "level": {
+     "median_bytes": 4144,
+     "max_bytes": 5224
+    },
+    "done": {
+     "median_bytes": 6282,
+     "max_bytes": 8480
+    },
+    "probe": {
+     "median_bytes": 4128,
+     "max_bytes": 11548
+    },
+    "reanchor": {
+     "median_bytes": 4084,
+     "max_bytes": 4260
+    },
+    "ready": {
+     "median_bytes": 4460,
+     "max_bytes": 10854
+    }
+   },
+   "gc_collections_per_1000_periods": {
+    "gen0": 2.68,
+    "gen1": 0.24,
+    "gen2": 0.0
+   }
+  }
+ },
+ "about": "Computation time of one C2 control period (R7 now, R8 estimate) on a single CPU core."
+}

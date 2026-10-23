@@ -1,0 +1,6330 @@
+{
+ "meta": {
+  "generated": "2026-10-22T14:01:20",
+  "script": "04_scripts/02_chrono/run_L1R_checks.py judge",
+  "definition": "dynamics_model.md rev. 32 5.14.6-5.14.8 (+ V9-2 redefinition), 5.14.12 V9-1 order rule",
+  "verify_module": "outrigger_sim.verify.l1r",
+  "reference_source": "06_analysis/00_dynamics/reference.json",
+  "reference_sha256": {
+   "reference.json": "c1ed8c93397f880ac6eba8b35f1280a1c8b7de54ce6f64764f2ec19e4706080f",
+   "actuator_L2_feasibility.json": "458370df9d186780ae66558c1772f0d29f3e7d86cb9ef2a04a94d3f9284f3efc",
+   "stick_friction.json": "4fb6d7545d7e60a15375f119a8de9929d909e24aa6fe0a1b9e5895f11939bde8",
+   "v7_diagnostic.json": "fefa6eb59a6654260c2b6c5e37bbf2cc215e2fb4a81f5581a52abab910df6323",
+   "leg_extension_loads.json": "38e0c90bbb4790c1e17516e2f91e3c190a8bb571e7b7c749a2939869ee3f3c30",
+   "numerical_damping_review.json": "a192b3a0636a94fd33fb22b95727b20c69a15e470af581cf25052800d1dacb2b"
+  },
+  "yaml_sha256": "84a46dc172b9442f80b921a788bbfc5c01cd1e85194ad671b1627b54e1a771b9",
+  "raw_summary": "06_analysis/01_chrono/14_S4/verify_L1R_V7_V5_raw.json",
+  "index": "07_results/L1R_checks/index.json",
+  "m1": "after_M1",
+  "judgement": "automatic pre-check; final judgement dynamics-expert. Ids: 'V7a gate', 'V7a', 'V5p3 gate', 'V9', 'V5' judged; 'V7b' record judgement (5.12.5); 'info' identification cross-check",
+  "decisions_of_this_module (definition left open)": [
+   "V7a gate (2) uses the per-leg maximum module elastic N increase (the side that approaches the knee); |dN| (both signs) is recorded in the case record",
+   "V7a modes: identification of run_S4.identify (projection fit + ERA, judged value of verify.s4.judged_value) on the LOCK Phi of the level; judged run per mode = the block judged_run_per_mode; zeta_num = LOCK r omega dt / 2 at the run dt",
+   "V7b first knee crossing = end time of the first module step with a LOCK <-> FLOOR change",
+   "V5 / V9-1: start value = module N of the first step and attitude of the first sample; end window = last 3 LOCK first-mode periods (12 s - 3 / f1); transient window [0.5, 3.6] s",
+   "V9-1 order: successive differences of the three coarse dt (verify.s3.order_ratio, as S3); the ratio of the errors against 1e-5 s is recorded; the judged value is read from the float32 series N_step (quantum 2**-7 N), the float64 whole-run minimum of result.json is recorded next to it",
+   "V9-1 order rule of 5.14.12 (rev. 32 suppl. 5): when the 2e-4 s transient error against 1e-5 s is <= 0.1 x 1 %, the successive ratio is recorded and the predictor-off two-dt ratio (e(2e-4) / e(1e-4) against the predictor-on 1e-5 s run, 2 +- 20 %) is judged with the V9-2 ratio confirming the order; the predictor-off ratio is judged whenever both predictor-off runs exist",
+   "V9-2: mode-1 amplitude error ratio judged (2 +- 20 %, as S3 V9-2); amplitude difference to 1e-5 s (1 % flag) and phase recorded"
+  ]
+ },
+ "case_table": {
+  "v5p3_l1r (V9-1)": {
+   "n_checks": 10,
+   "failed": [],
+   "ids": [
+    "V9"
+   ],
+   "passed": true
+  },
+  "v5p3_l1r_dt1e-04": {
+   "n_checks": 2,
+   "failed": [],
+   "ids": [
+    "V5p3 gate"
+   ],
+   "passed": true
+  },
+  "v5p3_l1r_dt1e-05": {
+   "n_checks": 5,
+   "failed": [],
+   "ids": [
+    "V5p3 gate",
+    "V5"
+   ],
+   "passed": true
+  },
+  "v5p3_l1r_dt2e-04": {
+   "n_checks": 5,
+   "failed": [],
+   "ids": [
+    "V5p3 gate",
+    "V5"
+   ],
+   "passed": true
+  },
+  "v5p3_l1r_dt5e-05": {
+   "n_checks": 2,
+   "failed": [],
+   "ids": [
+    "V5p3 gate"
+   ],
+   "passed": true
+  },
+  "v5p3_l1r_nopred_dt1e-04": {
+   "n_checks": 2,
+   "failed": [],
+   "ids": [
+    "V5p3 gate"
+   ],
+   "passed": true
+  },
+  "v5p3_l1r_nopred_dt2e-04": {
+   "n_checks": 2,
+   "failed": [],
+   "ids": [
+    "V5p3 gate"
+   ],
+   "passed": true
+  },
+  "v7a_bottom_heave": {
+   "n_checks": 5,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7a_bottom_pitch": {
+   "n_checks": 7,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7a_bottom_roll": {
+   "n_checks": 7,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7a_bottom_surge": {
+   "n_checks": 3,
+   "failed": [],
+   "ids": [
+    "V7a gate"
+   ],
+   "passed": true
+  },
+  "v7a_bottom_sway": {
+   "n_checks": 3,
+   "failed": [],
+   "ids": [
+    "V7a gate"
+   ],
+   "passed": true
+  },
+  "v7a_bottom_yaw": {
+   "n_checks": 5,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7a_middle_heave": {
+   "n_checks": 5,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7a_middle_pitch": {
+   "n_checks": 7,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7a_middle_roll": {
+   "n_checks": 7,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7a_middle_surge": {
+   "n_checks": 3,
+   "failed": [],
+   "ids": [
+    "V7a gate"
+   ],
+   "passed": true
+  },
+  "v7a_middle_sway": {
+   "n_checks": 3,
+   "failed": [],
+   "ids": [
+    "V7a gate"
+   ],
+   "passed": true
+  },
+  "v7a_middle_yaw": {
+   "n_checks": 5,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7a_top_heave": {
+   "n_checks": 5,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7a_top_pitch": {
+   "n_checks": 7,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7a_top_roll": {
+   "n_checks": 7,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7a_top_surge": {
+   "n_checks": 3,
+   "failed": [],
+   "ids": [
+    "V7a gate"
+   ],
+   "passed": true
+  },
+  "v7a_top_sway": {
+   "n_checks": 3,
+   "failed": [],
+   "ids": [
+    "V7a gate"
+   ],
+   "passed": true
+  },
+  "v7a_top_yaw": {
+   "n_checks": 5,
+   "failed": [],
+   "ids": [
+    "V7a gate",
+    "V7a"
+   ],
+   "passed": true
+  },
+  "v7b_heave_dt1e-05": {
+   "n_checks": 8,
+   "failed": [],
+   "ids": [
+    "V7b"
+   ],
+   "passed": true
+  },
+  "v7b_heave_dt2e-04": {
+   "n_checks": 8,
+   "failed": [],
+   "ids": [
+    "V7b"
+   ],
+   "passed": true
+  },
+  "v7b_pitch_dt1e-05": {
+   "n_checks": 8,
+   "failed": [],
+   "ids": [
+    "V7b"
+   ],
+   "passed": true
+  },
+  "v7b_pitch_dt2e-04": {
+   "n_checks": 8,
+   "failed": [],
+   "ids": [
+    "V7b"
+   ],
+   "passed": true
+  },
+  "v7b_roll_dt1e-05": {
+   "n_checks": 8,
+   "failed": [],
+   "ids": [
+    "V7b"
+   ],
+   "passed": true
+  },
+  "v7b_roll_dt2e-04": {
+   "n_checks": 8,
+   "failed": [],
+   "ids": [
+    "V7b"
+   ],
+   "passed": true
+  },
+  "v9free_l1r (V9-2)": {
+   "n_checks": 1,
+   "failed": [],
+   "ids": [
+    "V9"
+   ],
+   "passed": true
+  }
+ },
+ "checks": [
+  {
+   "case": "v7a_top_roll",
+   "id": "V7a gate",
+   "item": "v7a_top_roll: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_roll",
+   "id": "V7a gate",
+   "item": "v7a_top_roll: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1605.837315828161,
+    1492.5345329062693,
+    1150.6453119738726,
+    1047.4826157469506
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7854348775400393,
+    0.7300170861161883,
+    0.7259294173891119,
+    0.6608452118663591
+   ],
+   "note": "ratio to the knee 0.393, 0.365, 0.363, 0.330; measured / predicted 0.995, 0.986, 0.997, 0.983"
+  },
+  {
+   "case": "v7a_top_roll",
+   "id": "V7a gate",
+   "item": "v7a_top_roll: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_pitch",
+   "id": "V7a gate",
+   "item": "v7a_top_pitch: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_pitch",
+   "id": "V7a gate",
+   "item": "v7a_top_pitch: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1560.2664065227727,
+    1573.2015164876502,
+    1115.7261725383287,
+    1102.624184873348
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7631455825928691,
+    0.7694723047403059,
+    0.7038993180332218,
+    0.6956334187388832
+   ],
+   "note": "ratio to the knee 0.382, 0.385, 0.352, 0.348; measured / predicted 0.993, 0.993, 0.994, 1.000"
+  },
+  {
+   "case": "v7a_top_pitch",
+   "id": "V7a gate",
+   "item": "v7a_top_pitch: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_yaw",
+   "id": "V7a gate",
+   "item": "v7a_top_yaw: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_yaw",
+   "id": "V7a gate",
+   "item": "v7a_top_yaw: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1623.2691535534104,
+    1115.2429668407713,
+    1142.537051554129,
+    791.1428277557425
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7939610048096426,
+    0.5454791182481811,
+    0.7208140054534855,
+    0.4991232711313053
+   ],
+   "note": "ratio to the knee 0.397, 0.273, 0.360, 0.250; measured / predicted 0.995, 0.996, 0.996, 0.987"
+  },
+  {
+   "case": "v7a_top_yaw",
+   "id": "V7a gate",
+   "item": "v7a_top_yaw: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_surge",
+   "id": "V7a gate",
+   "item": "v7a_top_surge: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_surge",
+   "id": "V7a gate",
+   "item": "v7a_top_surge: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1470.8451583406859,
+    1494.327712540442,
+    1242.7233467799524,
+    1261.991376346181
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7194085449595435,
+    0.730894152436974,
+    0.7840204324617301,
+    0.796176419481965
+   ],
+   "note": "ratio to the knee 0.360, 0.365, 0.392, 0.398; measured / predicted 0.996, 0.998, 0.991, 0.997"
+  },
+  {
+   "case": "v7a_top_surge",
+   "id": "V7a gate",
+   "item": "v7a_top_surge: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_heave",
+   "id": "V7a gate",
+   "item": "v7a_top_heave: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_heave",
+   "id": "V7a gate",
+   "item": "v7a_top_heave: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1394.4211289656523,
+    1404.4770639918133,
+    1277.063764198363,
+    1285.147906585873
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.6820286076759593,
+    0.6869470897774604,
+    0.8056854224895276,
+    0.8107856186250235
+   ],
+   "note": "ratio to the knee 0.341, 0.343, 0.403, 0.405; measured / predicted 1.012, 1.013, 1.013, 1.014"
+  },
+  {
+   "case": "v7a_top_heave",
+   "id": "V7a gate",
+   "item": "v7a_top_heave: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_sway",
+   "id": "V7a gate",
+   "item": "v7a_top_sway: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_sway",
+   "id": "V7a gate",
+   "item": "v7a_top_sway: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1609.3750145646918,
+    1412.8662966409465,
+    1135.4017591290176,
+    1003.8819881148665
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7871652097141099,
+    0.691050367147764,
+    0.7163124282783466,
+    0.6333380575022896
+   ],
+   "note": "ratio to the knee 0.394, 0.346, 0.358, 0.317; measured / predicted 0.998, 0.991, 0.995, 0.996"
+  },
+  {
+   "case": "v7a_top_sway",
+   "id": "V7a gate",
+   "item": "v7a_top_sway: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_top_roll",
+   "id": "V7a",
+   "item": "top LOCK: mode 1 (roll, projection) natural frequency",
+   "value": 2.0747873897379505,
+   "ref": 2.0748,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": -6.077820536766791e-06,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_top_roll",
+   "id": "V7a",
+   "item": "top LOCK: mode 1 (roll, projection) zeta (- r omega dt/2)",
+   "value": 0.008567275773392126,
+   "ref": 0.008574,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": -0.0007842578269039475,
+   "note": "zeta_num 0.000264 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_top_pitch",
+   "id": "V7a",
+   "item": "top LOCK: mode 2 (pitch, projection) natural frequency",
+   "value": 3.0694130043269867,
+   "ref": 3.0694,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 4.236765161533083e-06,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_top_pitch",
+   "id": "V7a",
+   "item": "top LOCK: mode 2 (pitch, projection) zeta (- r omega dt/2)",
+   "value": 0.01806614505019563,
+   "ref": 0.01804,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": 0.001449282161620323,
+   "note": "zeta_num 0.00107 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_top_yaw",
+   "id": "V7a",
+   "item": "top LOCK: mode 3 (yaw, projection) natural frequency",
+   "value": 4.035708176208134,
+   "ref": 4.0331,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 0.0006466926701876486,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_top_yaw",
+   "id": "V7a",
+   "item": "top LOCK: mode 3 (yaw, projection) zeta (- r omega dt/2)",
+   "value": 0.03728554538759758,
+   "ref": 0.03727,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": 0.00041710189422014294,
+   "note": "zeta_num 0.0025 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_top_pitch",
+   "id": "V7a",
+   "item": "top LOCK: mode 4 (pitch, projection) natural frequency",
+   "value": 6.167341452261126,
+   "ref": 6.1676,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": -4.1920315661578e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_top_pitch",
+   "id": "V7a",
+   "item": "top LOCK: mode 4 (pitch, projection) zeta (- r omega dt/2)",
+   "value": 0.03328619438442809,
+   "ref": 0.03315,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": 0.004108427886216975,
+   "note": "zeta_num 0.00172 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_top_roll",
+   "id": "V7a",
+   "item": "top LOCK: mode 5 (roll, projection) natural frequency",
+   "value": 7.538476238967065,
+   "ref": 7.5396,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": -0.0001490478318392355,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_top_roll",
+   "id": "V7a",
+   "item": "top LOCK: mode 5 (roll, projection) zeta (- r omega dt/2)",
+   "value": 0.04846501622460788,
+   "ref": 0.04783,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": 0.013276525707879638,
+   "note": "zeta_num 0.00385 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_top_heave",
+   "id": "V7a",
+   "item": "top LOCK: mode 6 (heave, projection) natural frequency",
+   "value": 8.918636165606788,
+   "ref": 8.917,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 0.00018348834886040748,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_top_heave",
+   "id": "V7a",
+   "item": "top LOCK: mode 6 (heave, projection) zeta (- r omega dt/2)",
+   "value": 0.03046639076626237,
+   "ref": 0.03042,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": 0.0015250087528721186,
+   "note": "zeta_num 1.33e-05 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_roll",
+   "id": "V7a gate",
+   "item": "v7a_middle_roll: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_roll",
+   "id": "V7a gate",
+   "item": "v7a_middle_roll: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1145.1105583512253,
+    1592.1736088575708,
+    805.582113020515,
+    1149.413217437832
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.5600877263862546,
+    0.7787517895924573,
+    0.5082328567096711,
+    0.7251521025559405
+   ],
+   "note": "ratio to the knee 0.280, 0.389, 0.254, 0.363; measured / predicted 0.995, 0.990, 0.990, 0.989"
+  },
+  {
+   "case": "v7a_middle_roll",
+   "id": "V7a gate",
+   "item": "v7a_middle_roll: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_pitch",
+   "id": "V7a gate",
+   "item": "v7a_middle_pitch: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_pitch",
+   "id": "V7a gate",
+   "item": "v7a_middle_pitch: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1587.3213767278503,
+    1601.9970505925157,
+    1017.8574181056028,
+    1024.3325856231386
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7763785028896026,
+    0.7835565563518654,
+    0.6421550019119738,
+    0.6462401135746096
+   ],
+   "note": "ratio to the knee 0.388, 0.392, 0.321, 0.323; measured / predicted 0.991, 0.991, 1.011, 1.011"
+  },
+  {
+   "case": "v7a_middle_pitch",
+   "id": "V7a gate",
+   "item": "v7a_middle_pitch: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_yaw",
+   "id": "V7a gate",
+   "item": "v7a_middle_yaw: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_yaw",
+   "id": "V7a gate",
+   "item": "v7a_middle_yaw: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1602.215860053082,
+    1043.9648931348056,
+    1127.621310810413,
+    764.7188497116877
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7836635787632706,
+    0.5106161314806437,
+    0.7114038293763428,
+    0.48245267526043895
+   ],
+   "note": "ratio to the knee 0.392, 0.255, 0.356, 0.241; measured / predicted 0.998, 0.978, 0.996, 0.978"
+  },
+  {
+   "case": "v7a_middle_yaw",
+   "id": "V7a gate",
+   "item": "v7a_middle_yaw: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_surge",
+   "id": "V7a gate",
+   "item": "v7a_middle_surge: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_surge",
+   "id": "V7a gate",
+   "item": "v7a_middle_surge: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1580.189549153787,
+    1587.3216551001096,
+    986.820965552979,
+    999.6305696392374
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.772890237881648,
+    0.776378639044915,
+    0.6225744468226723,
+    0.6306558845468403
+   ],
+   "note": "ratio to the knee 0.386, 0.388, 0.311, 0.315; measured / predicted 1.008, 0.995, 0.992, 0.998"
+  },
+  {
+   "case": "v7a_middle_surge",
+   "id": "V7a gate",
+   "item": "v7a_middle_surge: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_heave",
+   "id": "V7a gate",
+   "item": "v7a_middle_heave: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_heave",
+   "id": "V7a gate",
+   "item": "v7a_middle_heave: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1474.8669820231298,
+    1481.4257173618971,
+    1271.068198807072,
+    1280.429718458996
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7213756686279077,
+    0.7245836271407945,
+    0.8019028865106932,
+    0.8078089658525018
+   ],
+   "note": "ratio to the knee 0.361, 0.362, 0.401, 0.404; measured / predicted 1.012, 1.013, 1.012, 1.013"
+  },
+  {
+   "case": "v7a_middle_heave",
+   "id": "V7a gate",
+   "item": "v7a_middle_heave: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_sway",
+   "id": "V7a gate",
+   "item": "v7a_middle_sway: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_sway",
+   "id": "V7a gate",
+   "item": "v7a_middle_sway: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1617.0555731557106,
+    1603.444743672313,
+    1146.5193950289831,
+    1135.1484029755375
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7909218658441642,
+    0.7842646409290753,
+    0.7233264219631265,
+    0.7161525886796677
+   ],
+   "note": "ratio to the knee 0.395, 0.392, 0.362, 0.358; measured / predicted 0.996, 0.992, 0.995, 0.991"
+  },
+  {
+   "case": "v7a_middle_sway",
+   "id": "V7a gate",
+   "item": "v7a_middle_sway: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_middle_roll",
+   "id": "V7a",
+   "item": "middle LOCK: mode 1 (roll, projection) natural frequency",
+   "value": 2.583028584655289,
+   "ref": 2.583,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 1.1066455783580295e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_roll",
+   "id": "V7a",
+   "item": "middle LOCK: mode 1 (roll, projection) zeta (- r omega dt/2)",
+   "value": 0.012412067300123555,
+   "ref": 0.01242,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / zeta",
+   "deviation": -0.0006387036937556697,
+   "note": "zeta_num 0.000592 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_pitch",
+   "id": "V7a",
+   "item": "middle LOCK: mode 2 (pitch, projection) natural frequency",
+   "value": 3.3485523129851646,
+   "ref": 3.3484,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 4.5488288485493485e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_pitch",
+   "id": "V7a",
+   "item": "middle LOCK: mode 2 (pitch, projection) zeta (- r omega dt/2)",
+   "value": 0.022452443252720656,
+   "ref": 0.02235,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / zeta",
+   "deviation": 0.004583590725756492,
+   "note": "zeta_num 0.00154 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_yaw",
+   "id": "V7a",
+   "item": "middle LOCK: mode 3 (yaw, projection) natural frequency",
+   "value": 4.136609330494249,
+   "ref": 4.1336,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 0.000728016860423953,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_yaw",
+   "id": "V7a",
+   "item": "middle LOCK: mode 3 (yaw, projection) zeta (- r omega dt/2)",
+   "value": 0.03777027575967057,
+   "ref": 0.03769,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / zeta",
+   "deviation": 0.002129895454246941,
+   "note": "zeta_num 0.00253 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_pitch",
+   "id": "V7a",
+   "item": "middle LOCK: mode 4 (pitch, projection) natural frequency",
+   "value": 7.243909301793675,
+   "ref": 7.2439,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 1.2840864278724398e-06,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_pitch",
+   "id": "V7a",
+   "item": "middle LOCK: mode 4 (pitch, projection) zeta (- r omega dt/2)",
+   "value": 0.03260646705526069,
+   "ref": 0.03259,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / zeta",
+   "deviation": 0.0005052793881770799,
+   "note": "zeta_num 0.00117 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_roll",
+   "id": "V7a",
+   "item": "middle LOCK: mode 5 (roll, projection) natural frequency",
+   "value": 8.034728211648236,
+   "ref": 8.0344,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 4.085079759986759e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_roll",
+   "id": "V7a",
+   "item": "middle LOCK: mode 5 (roll, projection) zeta (- r omega dt/2)",
+   "value": 0.04682236728034443,
+   "ref": 0.04646,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / zeta",
+   "deviation": 0.0077995540323811995,
+   "note": "zeta_num 0.00334 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_heave",
+   "id": "V7a",
+   "item": "middle LOCK: mode 6 (heave, projection) natural frequency",
+   "value": 8.978824943155995,
+   "ref": 8.9775,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 0.00014758486839279246,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_middle_heave",
+   "id": "V7a",
+   "item": "middle LOCK: mode 6 (heave, projection) zeta (- r omega dt/2)",
+   "value": 0.0313918814415025,
+   "ref": 0.03132,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / middle / LOCK / zeta",
+   "deviation": 0.0022950651820720655,
+   "note": "zeta_num 5.35e-05 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_roll",
+   "id": "V7a gate",
+   "item": "v7a_bottom_roll: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_roll",
+   "id": "V7a gate",
+   "item": "v7a_bottom_roll: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1267.8748450604326,
+    1603.9973328872584,
+    924.9072944513027,
+    1153.0213575767411
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.6201332562461764,
+    0.784534919143495,
+    0.5835137956180363,
+    0.7274284383143538
+   ],
+   "note": "ratio to the knee 0.310, 0.392, 0.292, 0.364; measured / predicted 0.994, 0.991, 0.993, 0.991"
+  },
+  {
+   "case": "v7a_bottom_roll",
+   "id": "V7a gate",
+   "item": "v7a_bottom_roll: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_pitch",
+   "id": "V7a gate",
+   "item": "v7a_bottom_pitch: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_pitch",
+   "id": "V7a gate",
+   "item": "v7a_bottom_pitch: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1580.681919749477,
+    1569.5801376812014,
+    1222.760168395078,
+    1235.4856082235347
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7731310624251545,
+    0.7677010436098456,
+    0.7714258837303694,
+    0.7794542231539618
+   ],
+   "note": "ratio to the knee 0.387, 0.384, 0.386, 0.390; measured / predicted 0.984, 0.985, 1.011, 1.012"
+  },
+  {
+   "case": "v7a_bottom_pitch",
+   "id": "V7a gate",
+   "item": "v7a_bottom_pitch: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_yaw",
+   "id": "V7a gate",
+   "item": "v7a_bottom_yaw: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_yaw",
+   "id": "V7a gate",
+   "item": "v7a_bottom_yaw: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1577.3848246401321,
+    1604.8406384489936,
+    1115.1412397990644,
+    1140.9199753144203
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7715184124587346,
+    0.7849473903160613,
+    0.7035302904291397,
+    0.7197938099159469
+   ],
+   "note": "ratio to the knee 0.386, 0.392, 0.352, 0.360; measured / predicted 0.993, 0.989, 0.995, 0.990"
+  },
+  {
+   "case": "v7a_bottom_yaw",
+   "id": "V7a gate",
+   "item": "v7a_bottom_yaw: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_surge",
+   "id": "V7a gate",
+   "item": "v7a_bottom_surge: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_surge",
+   "id": "V7a gate",
+   "item": "v7a_bottom_surge: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1601.7896044039953,
+    1626.5324133970425,
+    963.6378629827232,
+    994.4994778580585
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7834550918572551,
+    0.795557105529436,
+    0.6079484834897768,
+    0.62741873541972
+   ],
+   "note": "ratio to the knee 0.392, 0.398, 0.304, 0.314; measured / predicted 1.004, 0.995, 0.984, 1.026"
+  },
+  {
+   "case": "v7a_bottom_surge",
+   "id": "V7a gate",
+   "item": "v7a_bottom_surge: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_heave",
+   "id": "V7a gate",
+   "item": "v7a_bottom_heave: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_heave",
+   "id": "V7a gate",
+   "item": "v7a_bottom_heave: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1527.8662888226681,
+    1541.3689002344909,
+    1250.429019204952,
+    1267.3428898041166
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7472982845962222,
+    0.7539025787150485,
+    0.7888818560784271,
+    0.7995526302101911
+   ],
+   "note": "ratio to the knee 0.374, 0.377, 0.394, 0.400; measured / predicted 1.013, 1.014, 1.012, 1.013"
+  },
+  {
+   "case": "v7a_bottom_heave",
+   "id": "V7a gate",
+   "item": "v7a_bottom_heave: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_sway",
+   "id": "V7a gate",
+   "item": "v7a_bottom_sway: non-LOCK steps per leg (FLOOR / LIFT entries)",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_sway",
+   "id": "V7a gate",
+   "item": "v7a_bottom_sway: max module elastic dN per leg <= 0.5 knee",
+   "value": [
+    1622.578511553249,
+    1175.6740847429464,
+    1152.523663065891,
+    810.8774836305674
+   ],
+   "ref": [
+    2044.52,
+    2044.52,
+    1585.065,
+    1585.065
+   ],
+   "tol": 0.5,
+   "tol_kind": "max (per leg)",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.7936232032717944,
+    0.5750367248757393,
+    0.7271144483449518,
+    0.5115736475353171
+   ],
+   "note": "ratio to the knee 0.397, 0.288, 0.364, 0.256; measured / predicted 0.997, 0.985, 0.996, 0.985"
+  },
+  {
+   "case": "v7a_bottom_sway",
+   "id": "V7a gate",
+   "item": "v7a_bottom_sway: bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7a_bottom_roll",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 1 (roll, projection) natural frequency",
+   "value": 3.0311434566837874,
+   "ref": 3.0307,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 0.0001463215375284338,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_roll",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 1 (roll, projection) zeta (- r omega dt/2)",
+   "value": 0.017578004591922096,
+   "ref": 0.01752,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / zeta",
+   "deviation": 0.003310764379115015,
+   "note": "zeta_num 0.00104 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_pitch",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 2 (pitch, projection) natural frequency",
+   "value": 3.5383894331586623,
+   "ref": 3.5381,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 8.180468575287742e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_pitch",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 2 (pitch, projection) zeta (- r omega dt/2)",
+   "value": 0.02564656988466982,
+   "ref": 0.02545,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / zeta",
+   "deviation": 0.007723767570523404,
+   "note": "zeta_num 0.00189 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_yaw",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 3 (yaw, projection) natural frequency",
+   "value": 4.3066226586842165,
+   "ref": 4.3043,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 0.0005396135688072121,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_yaw",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 3 (yaw, projection) zeta (- r omega dt/2)",
+   "value": 0.037635282779602375,
+   "ref": 0.03756,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / zeta",
+   "deviation": 0.0020043338552282125,
+   "note": "zeta_num 0.00261 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_roll",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 4 (roll, projection) natural frequency",
+   "value": 6.95767495227963,
+   "ref": 6.9572,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 6.826773409272456e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_roll",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 4 (roll, projection) zeta (- r omega dt/2)",
+   "value": 0.0363430634056808,
+   "ref": 0.0362,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / zeta",
+   "deviation": 0.003952027781237577,
+   "note": "zeta_num 0.00213 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_pitch",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 5 (pitch, projection) natural frequency",
+   "value": 7.609809580595591,
+   "ref": 7.6099,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": -1.188181242962948e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_pitch",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 5 (pitch, projection) zeta (- r omega dt/2)",
+   "value": 0.029856927270860457,
+   "ref": 0.02991,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / zeta",
+   "deviation": -0.0017744142139599346,
+   "note": "zeta_num 0.000664 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_heave",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 6 (heave, projection) natural frequency",
+   "value": 9.035645888200825,
+   "ref": 9.0348,
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+   "deviation": 9.362555904113799e-05,
+   "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7a_bottom_heave",
+   "id": "V7a",
+   "item": "bottom LOCK: mode 6 (heave, projection) zeta (- r omega dt/2)",
+   "value": 0.03208876350767062,
+   "ref": 0.03195,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / bottom / LOCK / zeta",
+   "deviation": 0.0043431457799881345,
+   "note": "zeta_num 6.31e-05 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "case": "v7b_heave_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_heave_dt2e-04: max module elastic dN per leg",
+   "value": [
+    9468.59375,
+    9521.328125,
+    8313.4453125,
+    8355.5703125
+   ],
+   "ref": [
+    9337.4,
+    9385.6,
+    8198.5,
+    8237.1
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / heave / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": [
+    0.014050351275515708,
+    0.014461315739004393,
+    0.01402028572299811,
+    0.014382526920882304
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_heave_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_heave_dt2e-04: mean period of the first 10 eta up-crossings",
+   "value": 0.11310563430867937,
+   "ref": 0.113133,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / heave / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": -0.00024188955760589008,
+   "note": "dominant LOCK mode 6, LOCK Phi"
+  },
+  {
+   "case": "v7b_heave_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_heave_dt2e-04: first 3 positive eta peaks",
+   "value": [
+    0.07091068904122107,
+    0.05840821748743542,
+    0.04802996881048181
+   ],
+   "ref": [
+    0.0709521,
+    0.0584503,
+    0.0480717
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "sqrt(kg) m",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / heave / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": [
+    -0.0005836466965591837,
+    -0.0007199708566864481,
+    -0.0008681030526939768
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_heave_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_heave_dt2e-04: FLOOR dwell per leg (module FLOOR steps x dt)",
+   "value": [
+    0.1706,
+    0.1736,
+    0.21200000000000002,
+    0.2144
+   ],
+   "ref": [
+    0.1695,
+    0.173,
+    0.2135,
+    0.2165
+   ],
+   "tol": [
+    0.016950000000000003,
+    0.0173,
+    0.02135,
+    0.021650000000000003
+   ],
+   "tol_kind": "abs (max(10 %, 5 ms))",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.0010999999999999899,
+    0.0006000000000000172,
+    -0.0014999999999999736,
+    -0.0020999999999999908
+   ],
+   "note": "0 means the knee is not implemented"
+  },
+  {
+   "case": "v7b_heave_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_heave_dt2e-04: knee crossings (record)",
+   "value": 44.0,
+   "ref": 44.0,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / heave / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": 0.0,
+   "note": ""
+  },
+  {
+   "case": "v7b_heave_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_heave_dt2e-04: first knee crossing time (record)",
+   "value": 0.06059999999985877,
+   "ref": 0.0603593,
+   "tol": 0.001,
+   "tol_kind": "abs",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.00024069999985876916,
+   "note": "leg RL (replica RR); the module reports the crossing at the end of its step"
+  },
+  {
+   "case": "v7b_heave_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_heave_dt2e-04: lift-off (LIFT steps) + bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7b_heave_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_heave_dt2e-04: all four legs LOCK at the window end",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7b_heave_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_heave_dt1e-05: max module elastic dN per leg",
+   "value": [
+    9335.625,
+    9388.2265625,
+    8210.1953125,
+    8252.25
+   ],
+   "ref": [
+    9339.7,
+    9386.2,
+    8199.4,
+    8236.9
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / heave / replica / physical (judge the 1e-5 s run)",
+   "deviation": [
+    -0.0004363095174363981,
+    0.0002159087277065556,
+    0.0013165978608191287,
+    0.001863565176219253
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_heave_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_heave_dt1e-05: mean period of the first 10 eta up-crossings",
+   "value": 0.11312789068127546,
+   "ref": 0.113134,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / heave / replica / physical (judge the 1e-5 s run)",
+   "deviation": -5.400073120845207e-05,
+   "note": "dominant LOCK mode 6, LOCK Phi"
+  },
+  {
+   "case": "v7b_heave_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_heave_dt1e-05: first 3 positive eta peaks",
+   "value": [
+    0.0709428950566543,
+    0.0584395711015906,
+    0.04806395028920966
+   ],
+   "ref": [
+    0.0709536,
+    0.0584566,
+    0.0480797
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "sqrt(kg) m",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / heave / replica / physical (judge the 1e-5 s run)",
+   "deviation": [
+    -0.00015087244827193227,
+    -0.0002913083964752954,
+    -0.00032757506370351
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_heave_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_heave_dt1e-05: FLOOR dwell per leg (module FLOOR steps x dt)",
+   "value": [
+    0.1705,
+    0.17389000000000002,
+    0.2124,
+    0.21484000000000003
+   ],
+   "ref": [
+    0.1685,
+    0.1725,
+    0.213,
+    0.217
+   ],
+   "tol": [
+    0.01685,
+    0.017249999999999998,
+    0.0213,
+    0.0217
+   ],
+   "tol_kind": "abs (max(10 %, 5 ms))",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.0020000000000000018,
+    0.00139000000000003,
+    -0.0005999999999999894,
+    -0.0021599999999999675
+   ],
+   "note": "0 means the knee is not implemented"
+  },
+  {
+   "case": "v7b_heave_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_heave_dt1e-05: knee crossings (record)",
+   "value": 44.0,
+   "ref": 44.0,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / heave / replica / physical (judge the 1e-5 s run)",
+   "deviation": 0.0,
+   "note": ""
+  },
+  {
+   "case": "v7b_heave_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_heave_dt1e-05: first knee crossing time (record)",
+   "value": 0.060409999997713015,
+   "ref": 0.0603535,
+   "tol": 0.001,
+   "tol_kind": "abs",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 5.649999771301789e-05,
+   "note": "leg RR (replica RR); the module reports the crossing at the end of its step"
+  },
+  {
+   "case": "v7b_heave_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_heave_dt1e-05: lift-off (LIFT steps) + bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7b_heave_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_heave_dt1e-05: all four legs LOCK at the window end",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7b_roll_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_roll_dt2e-04: max module elastic dN per leg",
+   "value": [
+    11089.8828125,
+    10203.78125,
+    7857.5,
+    7118.78125
+   ],
+   "ref": [
+    11021.0,
+    10283.0,
+    7810.0,
+    7166.6
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / roll / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": [
+    0.0062501417747935755,
+    -0.00770385587863464,
+    0.006081946222791294,
+    -0.006672445790193448
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_roll_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_roll_dt2e-04: mean period of the first 10 eta up-crossings",
+   "value": 0.49265876133128295,
+   "ref": 0.492632,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / roll / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": 5.4323168781020696e-05,
+   "note": "dominant LOCK mode 1, LOCK Phi"
+  },
+  {
+   "case": "v7b_roll_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_roll_dt2e-04: first 3 positive eta peaks",
+   "value": [
+    0.28430089337967457,
+    0.26956060101373436,
+    0.25439073010520996
+   ],
+   "ref": [
+    0.284377,
+    0.26957,
+    0.254327
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "sqrt(kg) m",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / roll / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": [
+    -0.0002676257936662331,
+    -3.486658851362735e-05,
+    0.0002505833246565875
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_roll_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_roll_dt2e-04: FLOOR dwell per leg (module FLOOR steps x dt)",
+   "value": [
+    2.1932,
+    2.3334,
+    1.9116000000000002,
+    1.9814
+   ],
+   "ref": [
+    2.163,
+    2.296,
+    1.923,
+    2.0
+   ],
+   "tol": [
+    0.2163,
+    0.2296,
+    0.19230000000000003,
+    0.2
+   ],
+   "tol_kind": "abs (max(10 %, 5 ms))",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.030200000000000227,
+    0.03740000000000032,
+    -0.011399999999999855,
+    -0.01859999999999995
+   ],
+   "note": "0 means the knee is not implemented"
+  },
+  {
+   "case": "v7b_roll_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_roll_dt2e-04: knee crossings (record)",
+   "value": 134.0,
+   "ref": 132.0,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / roll / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": 0.015151515151515152,
+   "note": ""
+  },
+  {
+   "case": "v7b_roll_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_roll_dt2e-04: first knee crossing time (record)",
+   "value": 0.0123999999999711,
+   "ref": 0.0123393,
+   "tol": 0.001,
+   "tol_kind": "abs",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 6.069999997110158e-05,
+   "note": "leg FR (replica FR); the module reports the crossing at the end of its step"
+  },
+  {
+   "case": "v7b_roll_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_roll_dt2e-04: lift-off (LIFT steps) + bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7b_roll_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_roll_dt2e-04: all four legs LOCK at the window end",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7b_roll_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_roll_dt1e-05: max module elastic dN per leg",
+   "value": [
+    11100.515625,
+    10319.4765625,
+    7865.4140625,
+    7203.625
+   ],
+   "ref": [
+    11104.0,
+    10326.0,
+    7863.7,
+    7199.2
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / roll / replica / physical (judge the 1e-5 s run)",
+   "deviation": [
+    -0.00031379457853025934,
+    -0.0006317487410420298,
+    0.00021797150196474713,
+    0.0006146516279586873
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_roll_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_roll_dt1e-05: mean period of the first 10 eta up-crossings",
+   "value": 0.4928049451135961,
+   "ref": 0.4928,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / roll / replica / physical (judge the 1e-5 s run)",
+   "deviation": 1.003472726483551e-05,
+   "note": "dominant LOCK mode 1, LOCK Phi"
+  },
+  {
+   "case": "v7b_roll_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_roll_dt1e-05: first 3 positive eta peaks",
+   "value": [
+    0.28454500432183905,
+    0.2702891944010737,
+    0.25546835013922503
+   ],
+   "ref": [
+    0.284635,
+    0.270409,
+    0.255607
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "sqrt(kg) m",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / roll / replica / physical (judge the 1e-5 s run)",
+   "deviation": [
+    -0.0003161792406449705,
+    -0.0004430532967701733,
+    -0.0005424337391970566
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_roll_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_roll_dt1e-05: FLOOR dwell per leg (module FLOOR steps x dt)",
+   "value": [
+    2.24547,
+    2.38946,
+    1.9562100000000002,
+    2.0202
+   ],
+   "ref": [
+    2.218,
+    2.377,
+    1.974,
+    2.058
+   ],
+   "tol": [
+    0.2218,
+    0.2377,
+    0.19740000000000002,
+    0.20579999999999998
+   ],
+   "tol_kind": "abs (max(10 %, 5 ms))",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.027470000000000105,
+    0.01246000000000036,
+    -0.01778999999999975,
+    -0.037799999999999834
+   ],
+   "note": "0 means the knee is not implemented"
+  },
+  {
+   "case": "v7b_roll_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_roll_dt1e-05: knee crossings (record)",
+   "value": 136.0,
+   "ref": 136.0,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / roll / replica / physical (judge the 1e-5 s run)",
+   "deviation": 0.0,
+   "note": ""
+  },
+  {
+   "case": "v7b_roll_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_roll_dt1e-05: first knee crossing time (record)",
+   "value": 0.012289999999534729,
+   "ref": 0.0123245,
+   "tol": 0.001,
+   "tol_kind": "abs",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -3.450000046527173e-05,
+   "note": "leg FR (replica FR); the module reports the crossing at the end of its step"
+  },
+  {
+   "case": "v7b_roll_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_roll_dt1e-05: lift-off (LIFT steps) + bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7b_roll_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_roll_dt1e-05: all four legs LOCK at the window end",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7b_pitch_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_pitch_dt2e-04: max module elastic dN per leg",
+   "value": [
+    10806.6640625,
+    10903.59375,
+    7865.296875,
+    7773.5859375
+   ],
+   "ref": [
+    10863.0,
+    10956.0,
+    7777.7,
+    7678.9
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / pitch / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": [
+    -0.005186038617324864,
+    -0.0047833378970427165,
+    0.01126256798282271,
+    0.012330664222740284
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_pitch_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_pitch_dt2e-04: mean period of the first 10 eta up-crossings",
+   "value": 0.1628591234218365,
+   "ref": 0.162823,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / pitch / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": 0.00022185699708584896,
+   "note": "dominant LOCK mode 4, LOCK Phi"
+  },
+  {
+   "case": "v7b_pitch_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_pitch_dt2e-04: first 3 positive eta peaks",
+   "value": [
+    0.09612515565524526,
+    0.07809968315142901,
+    0.05935079365254999
+   ],
+   "ref": [
+    0.0960989,
+    0.0782644,
+    0.0593157
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "sqrt(kg) m",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / pitch / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": [
+    0.000273214940496339,
+    -0.002104620345533685,
+    0.0005916418848634196
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_pitch_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_pitch_dt2e-04: FLOOR dwell per leg (module FLOOR steps x dt)",
+   "value": [
+    0.2242,
+    0.2388,
+    0.1246,
+    0.1258
+   ],
+   "ref": [
+    0.223,
+    0.238,
+    0.126,
+    0.1275
+   ],
+   "tol": [
+    0.0223,
+    0.0238,
+    0.0126,
+    0.012750000000000001
+   ],
+   "tol_kind": "abs (max(10 %, 5 ms))",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.0012000000000000066,
+    0.0008000000000000229,
+    -0.0013999999999999985,
+    -0.001700000000000007
+   ],
+   "note": "0 means the knee is not implemented"
+  },
+  {
+   "case": "v7b_pitch_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_pitch_dt2e-04: knee crossings (record)",
+   "value": 26.0,
+   "ref": 26.0,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / pitch / replica / with_zeta_num_2e-4 (judge the 2e-4 s run)",
+   "deviation": 0.0,
+   "note": ""
+  },
+  {
+   "case": "v7b_pitch_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_pitch_dt2e-04: first knee crossing time (record)",
+   "value": 0.011199999999973898,
+   "ref": 0.0111108,
+   "tol": 0.001,
+   "tol_kind": "abs",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 8.919999997389697e-05,
+   "note": "leg FL (replica FR); the module reports the crossing at the end of its step"
+  },
+  {
+   "case": "v7b_pitch_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_pitch_dt2e-04: lift-off (LIFT steps) + bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7b_pitch_dt2e-04",
+   "id": "V7b",
+   "item": "v7b_pitch_dt2e-04: all four legs LOCK at the window end",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7b_pitch_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_pitch_dt1e-05: max module elastic dN per leg",
+   "value": [
+    10887.640625,
+    10984.828125,
+    7868.25,
+    7775.0078125
+   ],
+   "ref": [
+    10893.0,
+    10986.0,
+    7873.6,
+    7772.9
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / pitch / replica / physical (judge the 1e-5 s run)",
+   "deviation": [
+    -0.0004920017442394198,
+    -0.00010666985253959585,
+    -0.0006794858768543441,
+    0.0002711745294549478
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_pitch_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_pitch_dt1e-05: mean period of the first 10 eta up-crossings",
+   "value": 0.16287111338107643,
+   "ref": 0.162837,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / pitch / replica / physical (judge the 1e-5 s run)",
+   "deviation": 0.00020949404052164248,
+   "note": "dominant LOCK mode 4, LOCK Phi"
+  },
+  {
+   "case": "v7b_pitch_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_pitch_dt1e-05: first 3 positive eta peaks",
+   "value": [
+    0.09682206878932287,
+    0.0796850981727401,
+    0.06101880684272872
+   ],
+   "ref": [
+    0.0968902,
+    0.0798142,
+    0.0611046
+   ],
+   "tol": 0.03,
+   "tol_kind": "rel",
+   "unit": "sqrt(kg) m",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / pitch / replica / physical (judge the 1e-5 s run)",
+   "deviation": [
+    -0.0007031795855218338,
+    -0.0016175295531359825,
+    -0.0014040376219021154
+   ],
+   "note": ""
+  },
+  {
+   "case": "v7b_pitch_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_pitch_dt1e-05: FLOOR dwell per leg (module FLOOR steps x dt)",
+   "value": [
+    0.24333000000000002,
+    0.25478,
+    0.13143000000000002,
+    0.12832000000000002
+   ],
+   "ref": [
+    0.2395,
+    0.254,
+    0.134,
+    0.129
+   ],
+   "tol": [
+    0.02395,
+    0.025400000000000002,
+    0.013400000000000002,
+    0.012900000000000002
+   ],
+   "tol_kind": "abs (max(10 %, 5 ms))",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.003830000000000028,
+    0.0007800000000000029,
+    -0.002569999999999989,
+    -0.0006799999999999862
+   ],
+   "note": "0 means the knee is not implemented"
+  },
+  {
+   "case": "v7b_pitch_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_pitch_dt1e-05: knee crossings (record)",
+   "value": 32.0,
+   "ref": 32.0,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V7b_cases / pitch / replica / physical (judge the 1e-5 s run)",
+   "deviation": 0.0,
+   "note": ""
+  },
+  {
+   "case": "v7b_pitch_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_pitch_dt1e-05: first knee crossing time (record)",
+   "value": 0.011019999999582808,
+   "ref": 0.0111014,
+   "tol": 0.001,
+   "tol_kind": "abs",
+   "unit": "s",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -8.140000041719289e-05,
+   "note": "leg FL (replica FR); the module reports the crossing at the end of its step"
+  },
+  {
+   "case": "v7b_pitch_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_pitch_dt1e-05: lift-off (LIFT steps) + bushing yield steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v7b_pitch_dt1e-05",
+   "id": "V7b",
+   "item": "v7b_pitch_dt1e-05: all four legs LOCK at the window end",
+   "value": true,
+   "ref": true,
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r_dt2e-04",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_dt2e-04: FLOOR / LIFT steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r_dt2e-04",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_dt2e-04: RR max module elastic dN <= 0.8 knee",
+   "value": 2377.0078125,
+   "ref": null,
+   "tol": 2536.1040000000003,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "0.7498 knee"
+  },
+  {
+   "case": "v5p3_l1r_dt1e-04",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_dt1e-04: FLOOR / LIFT steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r_dt1e-04",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_dt1e-04: RR max module elastic dN <= 0.8 knee",
+   "value": 2378.8203125,
+   "ref": null,
+   "tol": 2536.1040000000003,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "0.7504 knee"
+  },
+  {
+   "case": "v5p3_l1r_dt5e-05",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_dt5e-05: FLOOR / LIFT steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r_dt5e-05",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_dt5e-05: RR max module elastic dN <= 0.8 knee",
+   "value": 2379.8046875,
+   "ref": null,
+   "tol": 2536.1040000000003,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "0.7507 knee"
+  },
+  {
+   "case": "v5p3_l1r_dt1e-05",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_dt1e-05: FLOOR / LIFT steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r_dt1e-05",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_dt1e-05: RR max module elastic dN <= 0.8 knee",
+   "value": 2380.515625,
+   "ref": null,
+   "tol": 2536.1040000000003,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "0.7509 knee"
+  },
+  {
+   "case": "v5p3_l1r_nopred_dt2e-04",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_nopred_dt2e-04: FLOOR / LIFT steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r_nopred_dt2e-04",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_nopred_dt2e-04: RR max module elastic dN <= 0.8 knee",
+   "value": 2379.0625,
+   "ref": null,
+   "tol": 2536.1040000000003,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "0.7505 knee"
+  },
+  {
+   "case": "v5p3_l1r_nopred_dt1e-04",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_nopred_dt1e-04: FLOOR / LIFT steps per leg",
+   "value": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "ref": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r_nopred_dt1e-04",
+   "id": "V5p3 gate",
+   "item": "v5p3_l1r_nopred_dt1e-04: RR max module elastic dN <= 0.8 knee",
+   "value": 2379.84375,
+   "ref": null,
+   "tol": 2536.1040000000003,
+   "tol_kind": "max",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": "0.7507 knee"
+  },
+  {
+   "case": "v5p3_l1r (V9-1)",
+   "id": "V9",
+   "item": "V9-1 L1-R FL +0.3 mm at 0.5 mm/s (predictor on): static contact force, dt 0.0002 vs 1e-05 s",
+   "value": [
+    1846.5936354598894,
+    -1852.9239410442601,
+    -2061.9116225795296,
+    2071.0580966891425
+   ],
+   "ref": [
+    1846.4762600346317,
+    -1852.8993104243464,
+    -2061.867891685628,
+    2071.122223132344
+   ],
+   "tol": 95.02825,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.1173754252577055,
+    -0.024630619913750706,
+    -0.043730893901738455,
+    -0.06412644320153049
+   ],
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r (V9-1)",
+   "id": "V9",
+   "item": "V9-1 L1-R FL +0.3 mm at 0.5 mm/s (predictor on): final attitude (3-period mean), dt 0.0002 vs 1e-05 s",
+   "value": [
+    0.0018311680141144175,
+    0.008695960389609752
+   ],
+   "ref": [
+    0.0018311873271221316,
+    0.008695947265375434
+   ],
+   "tol": 0.0001,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    -1.9313007714122712e-08,
+    1.3124234317374306e-08
+   ],
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r (V9-1)",
+   "id": "V9",
+   "item": "V9-1 L1-R FL +0.3 mm at 0.5 mm/s (predictor on): transient extreme load, dt 0.0002 vs 1e-05 s",
+   "value": -2374.3515625,
+   "ref": -2374.9765625,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0002631604917153788,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r (V9-1)",
+   "id": "V9",
+   "item": "V9-1 L1-R FL +0.3 mm at 0.5 mm/s (predictor on): static contact force, dt 0.0001 vs 1e-05 s",
+   "value": [
+    1846.4724612076418,
+    -1852.9013431448825,
+    -2061.917203168223,
+    2071.0590756829183
+   ],
+   "ref": [
+    1846.4762600346317,
+    -1852.8993104243464,
+    -2061.867891685628,
+    2071.122223132344
+   ],
+   "tol": 95.02825,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    -0.0037988269898505678,
+    -0.0020327205361354572,
+    -0.04931148259493057,
+    -0.0631474494257418
+   ],
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r (V9-1)",
+   "id": "V9",
+   "item": "V9-1 L1-R FL +0.3 mm at 0.5 mm/s (predictor on): final attitude (3-period mean), dt 0.0001 vs 1e-05 s",
+   "value": [
+    0.001831173755057069,
+    0.008695971392076784
+   ],
+   "ref": [
+    0.0018311873271221316,
+    0.008695947265375434
+   ],
+   "tol": 0.0001,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    -1.3572065062734603e-08,
+    2.4126701350310475e-08
+   ],
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r (V9-1)",
+   "id": "V9",
+   "item": "V9-1 L1-R FL +0.3 mm at 0.5 mm/s (predictor on): transient extreme load, dt 0.0001 vs 1e-05 s",
+   "value": -2374.78125,
+   "ref": -2374.9765625,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 8.223765366105587e-05,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r (V9-1)",
+   "id": "V9",
+   "item": "V9-1 L1-R FL +0.3 mm at 0.5 mm/s (predictor on): static contact force, dt 5e-05 vs 1e-05 s",
+   "value": [
+    1846.5091495240854,
+    -1852.9105798615915,
+    -2061.8801508792103,
+    2071.1052755852756
+   ],
+   "ref": [
+    1846.4762600346317,
+    -1852.8993104243464,
+    -2061.867891685628,
+    2071.122223132344
+   ],
+   "tol": 95.02825,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    0.03288948945373704,
+    -0.011269437245118752,
+    -0.0122591935823948,
+    -0.01694754706841195
+   ],
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r (V9-1)",
+   "id": "V9",
+   "item": "V9-1 L1-R FL +0.3 mm at 0.5 mm/s (predictor on): final attitude (3-period mean), dt 5e-05 vs 1e-05 s",
+   "value": [
+    0.0018311668258019183,
+    0.00869594668490962
+   ],
+   "ref": [
+    0.0018311873271221316,
+    0.008695947265375434
+   ],
+   "tol": 0.0001,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    -2.0501320213304683e-08,
+    -5.80465814303821e-10
+   ],
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r (V9-1)",
+   "id": "V9",
+   "item": "V9-1 L1-R FL +0.3 mm at 0.5 mm/s (predictor on): transient extreme load, dt 5e-05 vs 1e-05 s",
+   "value": -2374.953125,
+   "ref": -2374.9765625,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 9.868518439326704e-06,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r (V9-1)",
+   "id": "V9",
+   "item": "V9-1 L1-R FL +0.3 mm at 0.5 mm/s (predictor on): predictor-off error ratio vs reference, transient min elastic dN_RL (dt 0.0002/0.0001 s, 5.14.12)",
+   "value": 1.8620689655172413,
+   "ref": 2.0,
+   "tol": 0.2,
+   "tol_kind": "rel",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.06896551724137934,
+   "note": "errors -8.4375e-01, -4.5312e-01 N"
+  },
+  {
+   "case": "v5p3_l1r_dt1e-05",
+   "id": "V5",
+   "item": "dt 1e-05 s, FL +0.3 mm: L1-R module normal force change per leg (tol 5 % of max component)",
+   "value": [
+    1846.4762600346317,
+    -1852.8993104243464,
+    -2061.867891685628,
+    2071.122223132344
+   ],
+   "ref": [
+    1850.11,
+    -1857.52,
+    -2063.17,
+    2070.58
+   ],
+   "tol": 103.529,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / +0.3 mm at 0.5 mm/s / final end (mean over [10.55, 12] s)",
+   "deviation": [
+    -3.6337399653682496,
+    4.620689575653614,
+    1.3021083143721626,
+    0.5422231323441338
+   ],
+   "note": "SMC contact force converted to N = k2 delta + F_x (dynamics 5.17.5)"
+  },
+  {
+   "case": "v5p3_l1r_dt1e-05",
+   "id": "V5",
+   "item": "dt 1e-05 s, FL +0.3 mm: roll change (L1-R)",
+   "value": 0.0037204034677170133,
+   "ref": 0.0037211,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / +0.3 mm at 0.5 mm/s / final end (mean over [10.55, 12] s)",
+   "deviation": -0.00018718451075942622,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r_dt1e-05",
+   "id": "V5",
+   "item": "dt 1e-05 s, FL +0.3 mm: pitch change (L1-R)",
+   "value": -0.0016339649683768005,
+   "ref": -0.0016354,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / +0.3 mm at 0.5 mm/s / final end (mean over [10.55, 12] s)",
+   "deviation": 0.0008774805082545165,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r_dt2e-04",
+   "id": "V5",
+   "item": "dt 0.0002 s, FL +0.3 mm: L1-R module normal force change per leg (tol 5 % of max component)",
+   "value": [
+    1846.5936354598894,
+    -1852.9239410442601,
+    -2061.9116225795296,
+    2071.0580966891425
+   ],
+   "ref": [
+    1850.11,
+    -1857.52,
+    -2063.17,
+    2070.58
+   ],
+   "tol": 103.529,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / +0.3 mm at 0.5 mm/s / final end (mean over [10.55, 12] s)",
+   "deviation": [
+    -3.516364540110544,
+    4.5960589557398634,
+    1.2583774204704241,
+    0.4780966891426033
+   ],
+   "note": "SMC contact force converted to N = k2 delta + F_x (dynamics 5.17.5)"
+  },
+  {
+   "case": "v5p3_l1r_dt2e-04",
+   "id": "V5",
+   "item": "dt 0.0002 s, FL +0.3 mm: roll change (L1-R)",
+   "value": 0.003720384154997185,
+   "ref": 0.0037211,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / +0.3 mm at 0.5 mm/s / final end (mean over [10.55, 12] s)",
+   "deviation": -0.00019237456741694824,
+   "note": ""
+  },
+  {
+   "case": "v5p3_l1r_dt2e-04",
+   "id": "V5",
+   "item": "dt 0.0002 s, FL +0.3 mm: pitch change (L1-R)",
+   "value": -0.0016339517798384523,
+   "ref": -0.0016354,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / +0.3 mm at 0.5 mm/s / final end (mean over [10.55, 12] s)",
+   "deviation": 0.0008855449196206804,
+   "note": ""
+  },
+  {
+   "case": "v9free_l1r (V9-2)",
+   "id": "V9",
+   "item": "V9-2 L1-R mode-1 free vibration t = 5 s (V7a top roll 0.0046 deg): error ratio mode-1 amplitude at 5 s (LOCK Phi) (dt 0.0002/0.0001/5e-05 s)",
+   "value": 1.8512294295590805,
+   "ref": 2.0,
+   "tol": 0.2,
+   "tol_kind": "rel",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.07438528522045973,
+   "note": "differences -1.8380e-04, -9.9287e-05"
+  }
+ ],
+ "info": [
+  {
+   "id": "info",
+   "item": "V7a top: mode 1 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.0014861679908367684,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 1 (roll) ERA vs projection natural frequency",
+   "value": 2.074784217766337,
+   "ref": 2.0747873897379505,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -1.5288176653946103e-06,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 1 (roll) ERA vs projection zeta",
+   "value": 0.00857801962145938,
+   "ref": 0.008567275773392126,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0012540565229173445,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 2 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.013295316991109618,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 2 (pitch) ERA vs projection natural frequency",
+   "value": 3.069549439407019,
+   "ref": 3.0694130043269867,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 4.444989313592724e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 2 (pitch) ERA vs projection zeta",
+   "value": 0.01805582221712139,
+   "ref": 0.01806614505019563,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0005713910214691796,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 3 (yaw) damped-cosine fit residual (RMS rel.)",
+   "value": 0.00529232236326412,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 3 (yaw) ERA vs projection natural frequency",
+   "value": 4.036026855602037,
+   "ref": 4.035708176208134,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 7.896492511070972e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 3 (yaw) ERA vs projection zeta",
+   "value": 0.0372460080316242,
+   "ref": 0.03728554538759758,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0010603936609314924,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 4 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.01538565100389377,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 4 (pitch) ERA vs projection natural frequency",
+   "value": 6.167420494636391,
+   "ref": 6.167341452261126,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 1.2816280057994804e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 4 (pitch) ERA vs projection zeta",
+   "value": 0.033166850665637404,
+   "ref": 0.03328619438442809,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.003585381897743133,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 5 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.030805606115814788,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 5 (roll) ERA vs projection natural frequency",
+   "value": 7.544025388787854,
+   "ref": 7.538476238967065,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0007361102754565777,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 5 (roll) ERA vs projection zeta",
+   "value": 0.04758590776287479,
+   "ref": 0.04846501622460788,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.018139031619404052,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 6 (heave) damped-cosine fit residual (RMS rel.)",
+   "value": 0.0014094581270911698,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 6 (heave) ERA vs projection natural frequency",
+   "value": 8.916874642363997,
+   "ref": 8.918636165606788,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.00019751038276283285,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a top: mode 6 (heave) ERA vs projection zeta",
+   "value": 0.030648111087363098,
+   "ref": 0.03046639076626237,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.005964615976171393,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 1 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.0039045995379654716,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 1 (roll) ERA vs projection natural frequency",
+   "value": 2.5830910745867723,
+   "ref": 2.583028584655289,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 2.419250481949533e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 1 (roll) ERA vs projection zeta",
+   "value": 0.012389008984332294,
+   "ref": 0.012412067300123555,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0018577337065382392,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 2 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.020581547851720148,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 2 (pitch) ERA vs projection natural frequency",
+   "value": 3.348556609084816,
+   "ref": 3.3485523129851646,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 1.2829722368307688e-06,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 2 (pitch) ERA vs projection zeta",
+   "value": 0.02237745982482865,
+   "ref": 0.022452443252720656,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0033396556021991586,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 3 (yaw) damped-cosine fit residual (RMS rel.)",
+   "value": 0.0065409640720244695,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 3 (yaw) ERA vs projection natural frequency",
+   "value": 4.1366441043746915,
+   "ref": 4.136609330494249,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 8.406372868320113e-06,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 3 (yaw) ERA vs projection zeta",
+   "value": 0.03768199883478117,
+   "ref": 0.03777027575967057,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.002337206258463636,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 4 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.009379408462915054,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 4 (pitch) ERA vs projection natural frequency",
+   "value": 7.244929475089592,
+   "ref": 7.243909301793675,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0001408318703913289,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 4 (pitch) ERA vs projection zeta",
+   "value": 0.032715657204050515,
+   "ref": 0.03260646705526069,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0033487267603929567,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 5 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.02608584139401122,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 5 (roll) ERA vs projection natural frequency",
+   "value": 8.0343868511004,
+   "ref": 8.034728211648236,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -4.248563720436134e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 5 (roll) ERA vs projection zeta",
+   "value": 0.04648704244891527,
+   "ref": 0.04682236728034443,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0071616377151850165,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 6 (heave) damped-cosine fit residual (RMS rel.)",
+   "value": 0.004320236286316703,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 6 (heave) ERA vs projection natural frequency",
+   "value": 8.979457017589777,
+   "ref": 8.978824943155995,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 7.039611951262264e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a middle: mode 6 (heave) ERA vs projection zeta",
+   "value": 0.03127308295510706,
+   "ref": 0.0313918814415025,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0037843697459426662,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 1 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.012558109115173294,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 1 (roll) ERA vs projection natural frequency",
+   "value": 3.0310055463447125,
+   "ref": 3.0311434566837874,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -4.5497793504542e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 1 (roll) ERA vs projection zeta",
+   "value": 0.017559069123588022,
+   "ref": 0.017578004591922096,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0010772251329810101,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 2 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.02692163359421879,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 2 (pitch) ERA vs projection natural frequency",
+   "value": 3.538018996198598,
+   "ref": 3.5383894331586623,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.00010469083945168024,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 2 (pitch) ERA vs projection zeta",
+   "value": 0.025528446033992534,
+   "ref": 0.02564656988466982,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0046058342775848185,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 3 (yaw) damped-cosine fit residual (RMS rel.)",
+   "value": 0.004719763489982648,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 3 (yaw) ERA vs projection natural frequency",
+   "value": 4.3070027109411875,
+   "ref": 4.3066226586842165,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 8.824832986113888e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 3 (yaw) ERA vs projection zeta",
+   "value": 0.03758676890719482,
+   "ref": 0.037635282779602375,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0012890529530935149,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 4 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.014832971221723777,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 4 (roll) ERA vs projection natural frequency",
+   "value": 6.957554486082833,
+   "ref": 6.95767495227963,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -1.731414554772189e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 4 (roll) ERA vs projection zeta",
+   "value": 0.036105018092522964,
+   "ref": 0.0363430634056808,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0065499517886164265,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 5 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.007037937121305196,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 5 (pitch) ERA vs projection natural frequency",
+   "value": 7.610321769556461,
+   "ref": 7.609809580595591,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 6.730640963418154e-05,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 5 (pitch) ERA vs projection zeta",
+   "value": 0.029927983285246425,
+   "ref": 0.029856927270860457,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0023798836947068135,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 6 (heave) damped-cosine fit residual (RMS rel.)",
+   "value": 0.00693007321624943,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 6 (heave) ERA vs projection natural frequency",
+   "value": 9.036628537359643,
+   "ref": 9.035645888200825,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0001087525087831341,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7a bottom: mode 6 (heave) ERA vs projection zeta",
+   "value": 0.03196807430694459,
+   "ref": 0.03208876350767062,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0037611047461265754,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  }
+ ],
+ "records": {
+  "V7a": {
+   "top": {
+    "cases": {
+     "v7a_top_roll": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.3927178509112239,
+       0.3860762663404958,
+       0.36296473113801203,
+       0.34882718851978073
+      ],
+      "dN_max_N": [
+       1605.837315828161,
+       1492.5345329062693,
+       1150.6453119738726,
+       1047.4826157469506
+      ],
+      "dN_min_N": [
+       -1468.6791849304427,
+       -1578.6796393559634,
+       -1052.3860102218314,
+       -1105.827466764793
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_top_pitch": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.3815731917417782,
+       0.3847365561353172,
+       0.48522539144830584,
+       0.4834184347881784
+      ],
+      "dN_max_N": [
+       1560.2664065227727,
+       1573.2015164876502,
+       1115.7261725383287,
+       1102.624184873348
+      ],
+      "dN_min_N": [
+       -1307.2556613424385,
+       -1318.073508328729,
+       -1538.2274750776996,
+       -1532.499187914931
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_top_yaw": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.3969809190199399,
+       0.39110761891808893,
+       0.36040702501204636,
+       0.3600899297240017
+      ],
+      "dN_max_N": [
+       1623.2691535534104,
+       1115.2429668407713,
+       1142.537051554129,
+       791.1428277557425
+      ],
+      "dN_min_N": [
+       -1137.641965154573,
+       -1599.2530197089072,
+       -804.3708381815086,
+       -1141.5318183307973
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_top_surge": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.3597046499749818,
+       0.36544745974053927,
+       0.4329185691803149,
+       0.4283816834443738
+      ],
+      "dN_max_N": [
+       1470.8451583406859,
+       1494.327712540442,
+       1242.7233467799524,
+       1261.991376346181
+      ],
+      "dN_min_N": [
+       -1387.4743948232208,
+       -1358.9502656475524,
+       -1372.408058854504,
+       -1358.0255421657494
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_top_heave": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.4066620032752598,
+       0.4058313175377888,
+       0.4028427361540249,
+       0.40539283437945495
+      ],
+      "dN_max_N": [
+       1394.4211289656523,
+       1404.4770639918133,
+       1277.063764198363,
+       1285.147906585873
+      ],
+      "dN_min_N": [
+       -1662.85545277255,
+       -1659.458749129306,
+       -1232.30527649766,
+       -1230.2350235376362
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_top_sway": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.3935830179062163,
+       0.38856492050676816,
+       0.35815623628530235,
+       0.3567970485698836
+      ],
+      "dN_max_N": [
+       1609.3750145646918,
+       1412.8662966409465,
+       1135.4017591290176,
+       1003.8819881148665
+      ],
+      "dN_min_N": [
+       -1418.0094067014434,
+       -1588.8558351085085,
+       -1003.2528691913903,
+       -1131.0929576431663
+      ],
+      "l1r_state_defaulted": false
+     }
+    },
+    "judged_modes": [
+     {
+      "mode": 1,
+      "run": "roll",
+      "f_Hz": 2.0747873897379505,
+      "zeta": 0.008567275773392126,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 2.0748,
+      "zeta_ref": 0.008574,
+      "zeta_num": 0.000264,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 2,
+      "run": "pitch",
+      "f_Hz": 3.0694130043269867,
+      "zeta": 0.01806614505019563,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 3.0694,
+      "zeta_ref": 0.01804,
+      "zeta_num": 0.00107,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 3,
+      "run": "yaw",
+      "f_Hz": 4.035708176208134,
+      "zeta": 0.03728554538759758,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 4.0331,
+      "zeta_ref": 0.03727,
+      "zeta_num": 0.0025,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 4,
+      "run": "pitch",
+      "f_Hz": 6.167341452261126,
+      "zeta": 0.03328619438442809,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 6.1676,
+      "zeta_ref": 0.03315,
+      "zeta_num": 0.00172,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 5,
+      "run": "roll",
+      "f_Hz": 7.538476238967065,
+      "zeta": 0.04846501622460788,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 7.5396,
+      "zeta_ref": 0.04783,
+      "zeta_num": 0.00385,
+      "runner_up": "yaw",
+      "runner_up_amplitude_ratio": 0.944
+     },
+     {
+      "mode": 6,
+      "run": "heave",
+      "f_Hz": 8.918636165606788,
+      "zeta": 0.03046639076626237,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 8.917,
+      "zeta_ref": 0.03042,
+      "zeta_num": 1.33e-05,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     }
+    ],
+    "floor_distance_rel (record)": [
+     0.12430225953069818,
+     0.07585454059831287,
+     0.0025109738195880915,
+     0.07319704391409432,
+     0.023456866145385336,
+     0.1536349151595271
+    ]
+   },
+   "middle": {
+    "cases": {
+     "v7a_middle_roll": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.3946155514703391,
+       0.3893763034306165,
+       0.3541910393301582,
+       0.36257607369739425
+      ],
+      "dN_max_N": [
+       1145.1105583512253,
+       1592.1736088575708,
+       805.582113020515,
+       1149.413217437832
+      ],
+      "dN_min_N": [
+       -1613.597081178843,
+       -1064.7086346574797,
+       -1122.831570082868,
+       -763.7902867053344
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_middle_pitch": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.42515193476892615,
+       0.43517247765485173,
+       0.5273440458753729,
+       0.5251707235531629
+      ],
+      "dN_max_N": [
+       1587.3213767278503,
+       1601.9970505925157,
+       1017.8574181056028,
+       1024.3325856231386
+      ],
+      "dN_min_N": [
+       -1738.4614429019566,
+       -1779.4358005832764,
+       -1671.749076780441,
+       -1664.85936291315
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_middle_yaw": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.3918322005933861,
+       0.3867666613183395,
+       0.355701936682542,
+       0.3562038241740956
+      ],
+      "dN_max_N": [
+       1602.215860053082,
+       1043.9648931348056,
+       1127.621310810413,
+       764.7188497116877
+      ],
+      "dN_min_N": [
+       -1089.665888829375,
+       -1581.502689073488,
+       -747.6732480265637,
+       -1129.2123593056313
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_middle_surge": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.38644552449948016,
+       0.3881897269115822,
+       0.46391189858503773,
+       0.46369710870839237
+      ],
+      "dN_max_N": [
+       1580.189549153787,
+       1587.3216551001096,
+       986.820965552979,
+       999.6305696392374
+      ],
+      "dN_min_N": [
+       -1306.9951678295474,
+       -1276.8168270808383,
+       -1470.6609361249575,
+       -1469.9800243354111
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_middle_heave": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.42397153655314934,
+       0.4222572730868947,
+       0.4009514680476636,
+       0.40390450790116533
+      ],
+      "dN_max_N": [
+       1474.8669820231298,
+       1481.4257173618971,
+       1271.068198807072,
+       1280.429718458996
+      ],
+      "dN_min_N": [
+       -1733.6347524471348,
+       -1726.6250679194636,
+       -1250.7818809220335,
+       -1246.738580314719
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_middle_sway": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.40012401218454,
+       0.39269947958605217,
+       0.3662045614591784,
+       0.35880404301440794
+      ],
+      "dN_max_N": [
+       1617.0555731557106,
+       1603.444743672313,
+       1146.5193950289831,
+       1135.1484029755375
+      ],
+      "dN_min_N": [
+       -1636.1213737392973,
+       -1605.7621948235173,
+       -1160.9159946348373,
+       -1137.4553905481735
+      ],
+      "l1r_state_defaulted": false
+     }
+    },
+    "judged_modes": [
+     {
+      "mode": 1,
+      "run": "roll",
+      "f_Hz": 2.583028584655289,
+      "zeta": 0.012412067300123555,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 2.583,
+      "zeta_ref": 0.01242,
+      "zeta_num": 0.000592,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 2,
+      "run": "pitch",
+      "f_Hz": 3.3485523129851646,
+      "zeta": 0.022452443252720656,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 3.3484,
+      "zeta_ref": 0.02235,
+      "zeta_num": 0.00154,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 3,
+      "run": "yaw",
+      "f_Hz": 4.136609330494249,
+      "zeta": 0.03777027575967057,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 4.1336,
+      "zeta_ref": 0.03769,
+      "zeta_num": 0.00253,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 4,
+      "run": "pitch",
+      "f_Hz": 7.243909301793675,
+      "zeta": 0.03260646705526069,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 7.2439,
+      "zeta_ref": 0.03259,
+      "zeta_num": 0.00117,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 5,
+      "run": "roll",
+      "f_Hz": 8.034728211648236,
+      "zeta": 0.04682236728034443,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 8.0344,
+      "zeta_ref": 0.04646,
+      "zeta_num": 0.00334,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 6,
+      "run": "heave",
+      "f_Hz": 8.978824943155995,
+      "zeta": 0.0313918814415025,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 8.9775,
+      "zeta_ref": 0.03132,
+      "zeta_num": 5.35e-05,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     }
+    ],
+    "floor_distance_rel (record)": [
+     0.1009413454331638,
+     0.04629181133144744,
+     0.004202007742638125,
+     0.10284229063298156,
+     0.043755857006227306,
+     0.15404610916751227
+    ]
+   },
+   "bottom": {
+    "cases": {
+     "v7a_bottom_roll": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.3962733016717993,
+       0.39226787124071666,
+       0.3572419210125404,
+       0.36371424164697796
+      ],
+      "dN_max_N": [
+       1267.8748450604326,
+       1603.9973328872584,
+       924.9072944513027,
+       1153.0213575767411
+      ],
+      "dN_min_N": [
+       -1620.3756809487531,
+       -1226.2281255460257,
+       -1132.5032610326016,
+       -841.9796027591801
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_bottom_pitch": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.4164436793549539,
+       0.4199999678409621,
+       0.5219281174072312,
+       0.5194023869754849
+      ],
+      "dN_max_N": [
+       1580.681919749477,
+       1569.5801376812014,
+       1222.760168395078,
+       1235.4856082235347
+      ],
+      "dN_min_N": [
+       -1702.8530755535612,
+       -1717.3948661633622,
+       -1654.5798805273662,
+       -1646.5729872088705
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_bottom_yaw": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.4024377154955931,
+       0.39247410704343577,
+       0.3666564842187406,
+       0.35989692721173583
+      ],
+      "dN_max_N": [
+       1577.3848246401321,
+       1604.8406384489936,
+       1115.1412397990644,
+       1140.9199753144203
+      ],
+      "dN_min_N": [
+       -1645.5821891975793,
+       -1560.4501515854936,
+       -1162.3486484440218,
+       -1108.977510492041
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_bottom_surge": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.391727957030979,
+       0.3977789702173585,
+       0.47758015974101625,
+       0.47384593649130896
+      ],
+      "dN_max_N": [
+       1601.7896044039953,
+       1626.5324133970425,
+       963.6378629827232,
+       994.4994778580585
+      ],
+      "dN_min_N": [
+       -1386.0380223631364,
+       -1338.373403814534,
+       -1513.9910981840949,
+       -1502.153125765486
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_bottom_heave": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.4327707669615392,
+       0.4301538212322552,
+       0.39595617975825803,
+       0.39977633982474997
+      ],
+      "dN_max_N": [
+       1527.8662888226681,
+       1541.3689002344909,
+       1250.429019204952,
+       1267.3428898041166
+      ],
+      "dN_min_N": [
+       -1769.6151197963045,
+       -1758.9143352614774,
+       -1255.2324865213595,
+       -1249.0198595113034
+      ],
+      "l1r_state_defaulted": false
+     },
+     "v7a_bottom_sway": {
+      "gate_passed": true,
+      "abs_dN_max_over_knee": [
+       0.3968120180737612,
+       0.3943849898675148,
+       0.36355724665256944,
+       0.3596411434230453
+      ],
+      "dN_max_N": [
+       1622.578511553249,
+       1175.6740847429464,
+       1152.523663065891,
+       810.8774836305674
+      ],
+      "dN_min_N": [
+       -1148.876016434704,
+       -1612.6543065518345,
+       -836.684296070307,
+       -1140.1091075025179
+      ],
+      "l1r_state_defaulted": false
+     }
+    },
+    "judged_modes": [
+     {
+      "mode": 1,
+      "run": "roll",
+      "f_Hz": 3.0311434566837874,
+      "zeta": 0.017578004591922096,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 3.0307,
+      "zeta_ref": 0.01752,
+      "zeta_num": 0.00104,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 2,
+      "run": "pitch",
+      "f_Hz": 3.5383894331586623,
+      "zeta": 0.02564656988466982,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 3.5381,
+      "zeta_ref": 0.02545,
+      "zeta_num": 0.00189,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 3,
+      "run": "yaw",
+      "f_Hz": 4.3066226586842165,
+      "zeta": 0.037635282779602375,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 4.3043,
+      "zeta_ref": 0.03756,
+      "zeta_num": 0.00261,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 4,
+      "run": "roll",
+      "f_Hz": 6.95767495227963,
+      "zeta": 0.0363430634056808,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 6.9572,
+      "zeta_ref": 0.0362,
+      "zeta_num": 0.00213,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 5,
+      "run": "pitch",
+      "f_Hz": 7.609809580595591,
+      "zeta": 0.029856927270860457,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 7.6099,
+      "zeta_ref": 0.02991,
+      "zeta_num": 0.000664,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     },
+     {
+      "mode": 6,
+      "run": "heave",
+      "f_Hz": 9.035645888200825,
+      "zeta": 0.03208876350767062,
+      "source": "projection",
+      "reason": "fit and ERA cross-check ok",
+      "f_ref_Hz": 9.0348,
+      "zeta_ref": 0.03195,
+      "zeta_num": 6.31e-05,
+      "runner_up": null,
+      "runner_up_amplitude_ratio": null
+     }
+    ],
+    "floor_distance_rel (record)": [
+     0.0747592301116149,
+     0.02666166637419476,
+     0.005445021054844901,
+     0.06730812748770965,
+     0.12258948200206388,
+     0.15560121348009015
+    ]
+   }
+  },
+  "V7b": {
+   "v7b_heave_dt2e-04": {
+    "replica_variant": "with_zeta_num_2e-4 (judge the 2e-4 s run)",
+    "knee": {
+     "max_dN_N": [
+      9468.59375,
+      9521.328125,
+      8313.4453125,
+      8355.5703125
+     ],
+     "min_dN_N": [
+      -12473.5546875,
+      -12442.8984375,
+      -9256.59375,
+      -9237.453125
+     ],
+     "floor_dwell_s": [
+      0.1706,
+      0.1736,
+      0.21200000000000002,
+      0.2144
+     ],
+     "floor_or_lift_steps": [
+      853,
+      868,
+      1060,
+      1072
+     ],
+     "lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_knee_crossings": 44,
+     "first_knee_crossing_s": 0.06059999999985877,
+     "first_knee_crossing_leg": "RL",
+     "end_all_lock": true
+    },
+    "modal": {
+     "periods_s": [
+      0.11585559709730585,
+      0.11490157437241796,
+      0.11399744337176915,
+      0.11308971636671694,
+      0.1123043975641288,
+      0.11217277122152869,
+      0.11220701218573015,
+      0.11215805763086628,
+      0.11215946693942014,
+      0.11221030633690976
+     ],
+     "mean_period_s": 0.11310563430867937,
+     "positive_peaks": [
+      0.07091068904122107,
+      0.05840821748743542,
+      0.04802996881048181
+     ]
+    }
+   },
+   "v7b_heave_dt1e-05": {
+    "replica_variant": "physical (judge the 1e-5 s run)",
+    "knee": {
+     "max_dN_N": [
+      9335.625,
+      9388.2265625,
+      8210.1953125,
+      8252.25
+     ],
+     "min_dN_N": [
+      -12616.4140625,
+      -12585.8359375,
+      -9367.98046875,
+      -9348.7421875
+     ],
+     "floor_dwell_s": [
+      0.1705,
+      0.17389000000000002,
+      0.2124,
+      0.21484000000000003
+     ],
+     "floor_or_lift_steps": [
+      17050,
+      17389,
+      21240,
+      21484
+     ],
+     "lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_knee_crossings": 44,
+     "first_knee_crossing_s": 0.060409999997713015,
+     "first_knee_crossing_leg": "RR",
+     "end_all_lock": true
+    },
+    "modal": {
+     "periods_s": [
+      0.1158779919911498,
+      0.11492614580900334,
+      0.11402093983330958,
+      0.11311799816496426,
+      0.11232773085197045,
+      0.11219136845852573,
+      0.11222781385212499,
+      0.11217734910373933,
+      0.11217948458769644,
+      0.11223208416027086
+     ],
+     "mean_period_s": 0.11312789068127546,
+     "positive_peaks": [
+      0.0709428950566543,
+      0.0584395711015906,
+      0.04806395028920966
+     ]
+    }
+   },
+   "v7b_roll_dt2e-04": {
+    "replica_variant": "with_zeta_num_2e-4 (judge the 2e-4 s run)",
+    "knee": {
+     "max_dN_N": [
+      11089.8828125,
+      10203.78125,
+      7857.5,
+      7118.78125
+     ],
+     "min_dN_N": [
+      -11216.984375,
+      -12010.75,
+      -8073.27734375,
+      -8525.00390625
+     ],
+     "floor_dwell_s": [
+      2.1932,
+      2.3334,
+      1.9116000000000002,
+      1.9814
+     ],
+     "floor_or_lift_steps": [
+      10966,
+      11667,
+      9558,
+      9907
+     ],
+     "lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_knee_crossings": 134,
+     "first_knee_crossing_s": 0.0123999999999711,
+     "first_knee_crossing_leg": "FR",
+     "end_all_lock": true
+    },
+    "modal": {
+     "periods_s": [
+      0.49712622583879584,
+      0.49600119903933226,
+      0.4951790374430025,
+      0.4943009182899816,
+      0.4932754861353916,
+      0.4922477789586708,
+      0.4912030285454345,
+      0.4901520629917191,
+      0.4890782110379579,
+      0.4880236650325429
+     ],
+     "mean_period_s": 0.49265876133128295,
+     "positive_peaks": [
+      0.28430089337967457,
+      0.26956060101373436,
+      0.25439073010520996
+     ]
+    }
+   },
+   "v7b_roll_dt1e-05": {
+    "replica_variant": "physical (judge the 1e-5 s run)",
+    "knee": {
+     "max_dN_N": [
+      11100.515625,
+      10319.4765625,
+      7865.4140625,
+      7203.625
+     ],
+     "min_dN_N": [
+      -11334.8125,
+      -12055.5625,
+      -8153.78515625,
+      -8559.375
+     ],
+     "floor_dwell_s": [
+      2.24547,
+      2.38946,
+      1.9562100000000002,
+      2.0202
+     ],
+     "floor_or_lift_steps": [
+      224547,
+      238946,
+      195621,
+      202020
+     ],
+     "lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_knee_crossings": 136,
+     "first_knee_crossing_s": 0.012289999999534729,
+     "first_knee_crossing_leg": "FR",
+     "end_all_lock": true
+    },
+    "modal": {
+     "periods_s": [
+      0.4971489556683222,
+      0.4960476554308926,
+      0.4952523723697819,
+      0.4943949877811249,
+      0.4934107240374943,
+      0.49241248401308146,
+      0.49139755817527053,
+      0.49036175690697625,
+      0.4893215283606933,
+      0.48830142839232327
+     ],
+     "mean_period_s": 0.4928049451135961,
+     "positive_peaks": [
+      0.28454500432183905,
+      0.2702891944010737,
+      0.25546835013922503
+     ]
+    }
+   },
+   "v7b_pitch_dt2e-04": {
+    "replica_variant": "with_zeta_num_2e-4 (judge the 2e-4 s run)",
+    "knee": {
+     "max_dN_N": [
+      10806.6640625,
+      10903.59375,
+      7865.296875,
+      7773.5859375
+     ],
+     "min_dN_N": [
+      -10138.484375,
+      -10217.3671875,
+      -11337.875,
+      -11295.38671875
+     ],
+     "floor_dwell_s": [
+      0.2242,
+      0.2388,
+      0.1246,
+      0.1258
+     ],
+     "floor_or_lift_steps": [
+      1121,
+      1194,
+      623,
+      629
+     ],
+     "lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_knee_crossings": 26,
+     "first_knee_crossing_s": 0.011199999999973898,
+     "first_knee_crossing_leg": "FL",
+     "end_all_lock": true
+    },
+    "modal": {
+     "periods_s": [
+      0.16314511764050493,
+      0.1656134663261046,
+      0.1625381400536109,
+      0.16324745471096058,
+      0.16230793923575182,
+      0.16224565048441697,
+      0.16234407575609988,
+      0.16241249546997638,
+      0.16212085020166023,
+      0.1626160443392788
+     ],
+     "mean_period_s": 0.1628591234218365,
+     "positive_peaks": [
+      0.09612515565524526,
+      0.07809968315142901,
+      0.05935079365254999
+     ]
+    }
+   },
+   "v7b_pitch_dt1e-05": {
+    "replica_variant": "physical (judge the 1e-5 s run)",
+    "knee": {
+     "max_dN_N": [
+      10887.640625,
+      10984.828125,
+      7868.25,
+      7775.0078125
+     ],
+     "min_dN_N": [
+      -10215.390625,
+      -10298.890625,
+      -11442.9296875,
+      -11400.39453125
+     ],
+     "floor_dwell_s": [
+      0.24333000000000002,
+      0.25478,
+      0.13143000000000002,
+      0.12832000000000002
+     ],
+     "floor_or_lift_steps": [
+      24333,
+      25478,
+      13143,
+      12832
+     ],
+     "lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_knee_crossings": 32,
+     "first_knee_crossing_s": 0.011019999999582808,
+     "first_knee_crossing_leg": "FL",
+     "end_all_lock": true
+    },
+    "modal": {
+     "periods_s": [
+      0.1631649103106687,
+      0.16568395502313296,
+      0.16258976663032632,
+      0.16333933308993165,
+      0.16229498401701248,
+      0.16223785866997353,
+      0.16228210769037799,
+      0.16237797871421855,
+      0.16218535645087506,
+      0.16255488321424716
+     ],
+     "mean_period_s": 0.16287111338107643,
+     "positive_peaks": [
+      0.09682206878932287,
+      0.0796850981727401,
+      0.06101880684272872
+     ]
+    }
+   }
+  },
+  "V5_V9-1": {
+   "cases": {
+    "predictor on, dt 0.0002 s": {
+     "transient_min_dN_RL_N": -2374.3515625,
+     "transient_t_min_RL_s": 1.2521999999970816,
+     "end_dN_N": [
+      1846.5936354598894,
+      -1852.9239410442601,
+      -2061.9116225795296,
+      2071.0580966891425
+     ],
+     "end_attitude_deg": [
+      0.0018311680141144175,
+      0.008695960389609752
+     ],
+     "end_dattitude_deg": [
+      0.003720384154997185,
+      -0.0016339517798384523
+     ],
+     "end_window_s": [
+      10.554077501445922,
+      12.0
+     ],
+     "knee": {
+      "max_dN_N": [
+       2220.1484375,
+       5.9765625,
+       2.28125,
+       2377.0078125
+      ],
+      "min_dN_N": [
+       -4.7265625,
+       -2250.2265625,
+       -2374.3515625,
+       -57.7578125
+      ],
+      "floor_dwell_s": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "floor_or_lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "n_knee_crossings": 0,
+      "first_knee_crossing_s": null,
+      "first_knee_crossing_leg": null,
+      "end_all_lock": true
+     },
+     "FL_lock_t_s": 1.1025999999974303,
+     "FL_travel_mm": 0.3000000000005776,
+     "yield_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "transient_match (record)": {
+      "min_dN_RL_N": -2374.3515625,
+      "replica_min_dN_RL_N": -2376.92,
+      "relative_difference": -0.0010805738098043083,
+      "within_3_percent": true,
+      "t_min_RL_s": 1.2521999999970816,
+      "replica_t_min_RL_s": 1.25189,
+      "time_difference_s": 0.00030999999708170023,
+      "within_10_ms": true
+     }
+    },
+    "predictor on, dt 0.0001 s": {
+     "transient_min_dN_RL_N": -2374.78125,
+     "transient_t_min_RL_s": 1.2521999999970816,
+     "end_dN_N": [
+      1846.4724612076418,
+      -1852.9013431448825,
+      -2061.917203168223,
+      2071.0590756829183
+     ],
+     "end_attitude_deg": [
+      0.001831173755057069,
+      0.008695971392076784
+     ],
+     "end_dattitude_deg": [
+      0.003720389895815934,
+      -0.0016339408112952328
+     ],
+     "end_window_s": [
+      10.554077501445922,
+      12.0
+     ],
+     "knee": {
+      "max_dN_N": [
+       2221.4765625,
+       5.9921875,
+       2.203125,
+       2378.8203125
+      ],
+      "min_dN_N": [
+       -4.765625,
+       -2251.4296875,
+       -2374.78125,
+       -57.6171875
+      ],
+      "floor_dwell_s": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "floor_or_lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "n_knee_crossings": 0,
+      "first_knee_crossing_s": null,
+      "first_knee_crossing_leg": null,
+      "end_all_lock": true
+     },
+     "FL_lock_t_s": 1.1024999999974305,
+     "FL_travel_mm": 0.29999999999896776,
+     "yield_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "transient_match (record)": {
+      "min_dN_RL_N": -2374.78125,
+      "replica_min_dN_RL_N": -2376.92,
+      "relative_difference": -0.0008997988994160488,
+      "within_3_percent": true,
+      "t_min_RL_s": 1.2521999999970816,
+      "replica_t_min_RL_s": 1.25189,
+      "time_difference_s": 0.00030999999708170023,
+      "within_10_ms": true
+     }
+    },
+    "predictor on, dt 5e-05 s": {
+     "transient_min_dN_RL_N": -2374.953125,
+     "transient_t_min_RL_s": 1.2522500000060433,
+     "end_dN_N": [
+      1846.5091495240854,
+      -1852.9105798615915,
+      -2061.8801508792103,
+      2071.1052755852756
+     ],
+     "end_attitude_deg": [
+      0.0018311668258019183,
+      0.00869594668490962
+     ],
+     "end_dattitude_deg": [
+      0.003720382966474747,
+      -0.0016339655353604168
+     ],
+     "end_window_s": [
+      10.554077501445922,
+      12.0
+     ],
+     "knee": {
+      "max_dN_N": [
+       2222.015625,
+       5.9765625,
+       2.25,
+       2379.8046875
+      ],
+      "min_dN_N": [
+       -4.7421875,
+       -2251.96875,
+       -2374.953125,
+       -57.515625
+      ],
+      "floor_dwell_s": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "floor_or_lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "n_knee_crossings": 0,
+      "first_knee_crossing_s": null,
+      "first_knee_crossing_leg": null,
+      "end_all_lock": true
+     },
+     "FL_lock_t_s": 1.1024500000010704,
+     "FL_travel_mm": 0.30000000000091065,
+     "yield_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "transient_match (record)": {
+      "min_dN_RL_N": -2374.953125,
+      "replica_min_dN_RL_N": -2376.92,
+      "relative_difference": -0.0008274889352607451,
+      "within_3_percent": true,
+      "t_min_RL_s": 1.2522500000060433,
+      "replica_t_min_RL_s": 1.25189,
+      "time_difference_s": 0.00036000000604330396,
+      "within_10_ms": true
+     }
+    },
+    "predictor on, dt 1e-05 s": {
+     "transient_min_dN_RL_N": -2374.9765625,
+     "transient_t_min_RL_s": 1.2521499999525965,
+     "end_dN_N": [
+      1846.4762600346317,
+      -1852.8993104243464,
+      -2061.867891685628,
+      2071.122223132344
+     ],
+     "end_attitude_deg": [
+      0.0018311873271221316,
+      0.008695947265375434
+     ],
+     "end_dattitude_deg": [
+      0.0037204034677170133,
+      -0.0016339649683768005
+     ],
+     "end_window_s": [
+      10.554077501445922,
+      12.0
+     ],
+     "knee": {
+      "max_dN_N": [
+       2222.46875,
+       5.96875,
+       2.2734375,
+       2380.515625
+      ],
+      "min_dN_N": [
+       -4.734375,
+       -2252.453125,
+       -2374.9765625,
+       -57.4609375
+      ],
+      "floor_dwell_s": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "floor_or_lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "n_knee_crossings": 0,
+      "first_knee_crossing_s": null,
+      "first_knee_crossing_leg": null,
+      "end_all_lock": true
+     },
+     "FL_lock_t_s": 1.1023999999582657,
+     "FL_travel_mm": 0.30000000000041105,
+     "yield_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "transient_match (record)": {
+      "min_dN_RL_N": -2374.9765625,
+      "replica_min_dN_RL_N": -2376.92,
+      "relative_difference": -0.0008176284856032945,
+      "within_3_percent": true,
+      "t_min_RL_s": 1.2521499999525965,
+      "replica_t_min_RL_s": 1.25189,
+      "time_difference_s": 0.00025999995259651243,
+      "within_10_ms": true
+     }
+    },
+    "predictor off, dt 0.0002 s": {
+     "transient_min_dN_RL_N": -2375.8203125,
+     "transient_t_min_RL_s": 1.2523999999970812,
+     "end_dN_N": [
+      1846.478006137621,
+      -1852.8602632261411,
+      -2061.8512123962655,
+      2071.0288619467497
+     ],
+     "end_attitude_deg": [
+      0.0018310872167132321,
+      0.00869599706373722
+     ],
+     "end_dattitude_deg": [
+      0.003720303357773235,
+      -0.0016339151053156864
+     ],
+     "end_window_s": [
+      10.554077501445922,
+      12.0
+     ],
+     "knee": {
+      "max_dN_N": [
+       2222.9296875,
+       6.0078125,
+       2.2109375,
+       2379.0625
+      ],
+      "min_dN_N": [
+       -4.65625,
+       -2252.2734375,
+       -2375.8203125,
+       -58.4375
+      ],
+      "floor_dwell_s": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "floor_or_lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "n_knee_crossings": 0,
+      "first_knee_crossing_s": null,
+      "first_knee_crossing_leg": null,
+      "end_all_lock": true
+     },
+     "FL_lock_t_s": 1.1025999999974303,
+     "FL_travel_mm": 0.3000000000003,
+     "yield_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "transient_match (record)": {
+      "min_dN_RL_N": -2375.8203125,
+      "replica_min_dN_RL_N": -2376.92,
+      "relative_difference": -0.0004626522979318537,
+      "within_3_percent": true,
+      "t_min_RL_s": 1.2523999999970812,
+      "replica_t_min_RL_s": 1.25189,
+      "time_difference_s": 0.0005099999970812341,
+      "within_10_ms": true
+     }
+    },
+    "predictor off, dt 0.0001 s": {
+     "transient_min_dN_RL_N": -2375.4296875,
+     "transient_t_min_RL_s": 1.2521999999970816,
+     "end_dN_N": [
+      1846.4543741355462,
+      -1852.8664829702627,
+      -2061.880350968188,
+      2071.078594506397
+     ],
+     "end_attitude_deg": [
+      0.0018311579018828934,
+      0.008695975132939862
+     ],
+     "end_dattitude_deg": [
+      0.0037203740427746877,
+      -0.001633937070135762
+     ],
+     "end_window_s": [
+      10.554077501445922,
+      12.0
+     ],
+     "knee": {
+      "max_dN_N": [
+       2222.59375,
+       5.96875,
+       2.265625,
+       2379.84375
+      ],
+      "min_dN_N": [
+       -4.7578125,
+       -2252.28125,
+       -2375.4296875,
+       -57.6796875
+      ],
+      "floor_dwell_s": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "floor_or_lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "lift_steps": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "n_knee_crossings": 0,
+      "first_knee_crossing_s": null,
+      "first_knee_crossing_leg": null,
+      "end_all_lock": true
+     },
+     "FL_lock_t_s": 1.1024999999974305,
+     "FL_travel_mm": 0.2999999999997449,
+     "yield_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "transient_match (record)": {
+      "min_dN_RL_N": -2375.4296875,
+      "replica_min_dN_RL_N": -2376.92,
+      "relative_difference": -0.0006269931255574734,
+      "within_3_percent": true,
+      "t_min_RL_s": 1.2521999999970816,
+      "replica_t_min_RL_s": 1.25189,
+      "time_difference_s": 0.00030999999708170023,
+      "within_10_ms": true
+     }
+    }
+   },
+   "V9-1": {
+    "transient_min_dN_RL_N": {
+     "0.0002": -2374.3515625,
+     "0.0001": -2374.78125,
+     "5e-05": -2374.953125,
+     "1e-05": -2374.9765625
+    },
+    "transient_minus_ref_N": {
+     "0.0002": 0.625,
+     "0.0001": 0.1953125,
+     "5e-05": 0.0234375,
+     "1e-05": 0.0
+    },
+    "order_successive_differences (record, 5.14.12)": {
+     "dt_s": [
+      0.0002,
+      0.0001,
+      5e-05
+     ],
+     "d1": 0.4296875,
+     "d2": 0.171875,
+     "ratio": 2.5
+    },
+    "error_ratio_vs_ref (information)": [
+     3.2,
+     8.333333333333334
+    ],
+    "order_rule_5_14_12": {
+     "run_dt_s": 0.0002,
+     "run_dt_relative_error": 0.00026316049171537514,
+     "limit_relative_error": 0.001,
+     "applies": true,
+     "predictor_off_given": true,
+     "order_ratio_judged": false,
+     "order_confirmed_by": [
+      "predictor_off_order (judged here)",
+      "V9-2 amplitude error ratio (v9_free_checks)"
+     ]
+    },
+    "predictor_off_order (judged)": {
+     "dt_s": [
+      0.0002,
+      0.0001
+     ],
+     "error_N": [
+      -0.84375,
+      -0.453125
+     ],
+     "ratio": 1.8620689655172413
+    },
+    "order_float64_whole_run_min (information)": {
+     "dN_min_RL_N": {
+      "0.0002": -2374.3551938696473,
+      "0.0001": -2374.7813094515877,
+      "5e-05": -2374.9460918498953,
+      "1e-05": -2374.9752127820975
+     },
+     "order": {
+      "dt_s": [
+       0.0002,
+       0.0001,
+       5e-05
+      ],
+      "d1": 0.4261155819403939,
+      "d2": 0.16478239830757957,
+      "ratio": 2.5859289967670875
+     },
+     "same_extreme": {
+      "0.0002": true,
+      "0.0001": true,
+      "5e-05": true,
+      "1e-05": true
+     },
+     "float32_quantum_N": {
+      "0.0002": 0.0078125,
+      "0.0001": 0.0078125,
+      "5e-05": 0.0078125,
+      "1e-05": 0.0078125
+     }
+    }
+   },
+   "V9-1 predictor off (record)": {
+    "dt 0.0002 s": {
+     "transient_min_dN_RL_N": -2375.8203125,
+     "transient_minus_ref_rel": 0.00035526666381580085,
+     "transient_minus_predictor_on_N": -1.46875,
+     "end_dN_minus_ref_N": [
+      0.001746102989272913,
+      0.03904719820525315,
+      0.016679289362400596,
+      -0.09336118559440365
+     ],
+     "end_attitude_minus_ref_deg": [
+      -1.0011040889952756e-07,
+      4.9798361786632106e-08
+     ],
+     "within_V9_transient_1_percent": true,
+     "FLOOR_or_LIFT_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "RR_max_dN_N": 2379.0625
+    },
+    "dt 0.0001 s": {
+     "transient_min_dN_RL_N": -2375.4296875,
+     "transient_minus_ref_rel": 0.00019079135649358037,
+     "transient_minus_predictor_on_N": -0.6484375,
+     "end_dN_minus_ref_N": [
+      -0.021885899085418714,
+      0.032827454083644625,
+      -0.01245928256003026,
+      -0.04362862594689432
+     ],
+     "end_attitude_minus_ref_deg": [
+      -2.9425239238267675e-08,
+      2.7867564427949687e-08
+     ],
+     "within_V9_transient_1_percent": true,
+     "FLOOR_or_LIFT_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "RR_max_dN_N": 2379.84375
+    }
+   }
+  },
+  "V9-2": {
+   "fits": {
+    "0.0002": {
+     "amplitude_at_s": 0.021953400048748066,
+     "phase_at_s_rad_unwrapped": 66.75035666101148,
+     "f_damped_Hz": 2.0746788299390126,
+     "zeta": 0.008838038573943177,
+     "residual_rms_rel": 0.0007950184011873624
+    },
+    "0.0001": {
+     "amplitude_at_s": 0.022137203466302203,
+     "phase_at_s_rad_unwrapped": 66.74996947996677,
+     "f_damped_Hz": 2.0746747815288726,
+     "zeta": 0.008710831549885145,
+     "residual_rms_rel": 0.0007661786177911521
+    },
+    "5e-05": {
+     "amplitude_at_s": 0.022236490683013053,
+     "phase_at_s_rad_unwrapped": 66.74973851986486,
+     "f_damped_Hz": 2.0746692279713916,
+     "zeta": 0.008641131322374268,
+     "residual_rms_rel": 0.0007589844031839758
+    },
+    "1e-05": {
+     "amplitude_at_s": 0.02231386169393871,
+     "phase_at_s_rad_unwrapped": 66.7496097922739,
+     "f_damped_Hz": 2.0746711005335037,
+     "zeta": 0.008589611515264576,
+     "residual_rms_rel": 0.0007345917310014601
+    }
+   },
+   "knee": {
+    "0.0002": {
+     "max_dN_N": [
+      1605.8359375,
+      1492.53125,
+      1150.6484375,
+      1047.4765625
+     ],
+     "min_dN_N": [
+      -1468.6796875,
+      -1578.6796875,
+      -1052.3828125,
+      -1105.828125
+     ],
+     "floor_dwell_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "floor_or_lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_knee_crossings": 0,
+     "first_knee_crossing_s": null,
+     "first_knee_crossing_leg": null,
+     "end_all_lock": true
+    },
+    "0.0001": {
+     "max_dN_N": [
+      1608.375,
+      1503.078125,
+      1152.1953125,
+      1056.140625
+     ],
+     "min_dN_N": [
+      -1483.71875,
+      -1581.0234375,
+      -1060.078125,
+      -1107.7265625
+     ],
+     "floor_dwell_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "floor_or_lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_knee_crossings": 0,
+     "first_knee_crossing_s": null,
+     "first_knee_crossing_leg": null,
+     "end_all_lock": true
+    },
+    "5e-05": {
+     "max_dN_N": [
+      1610.5078125,
+      1508.78125,
+      1153.4765625,
+      1060.015625
+     ],
+     "min_dN_N": [
+      -1489.8671875,
+      -1582.2421875,
+      -1064.6015625,
+      -1108.7890625
+     ],
+     "floor_dwell_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "floor_or_lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_knee_crossings": 0,
+     "first_knee_crossing_s": null,
+     "first_knee_crossing_leg": null,
+     "end_all_lock": true
+    },
+    "1e-05": {
+     "max_dN_N": [
+      1611.296875,
+      1514.34375,
+      1154.8046875,
+      1063.6640625
+     ],
+     "min_dN_N": [
+      -1495.015625,
+      -1583.8359375,
+      -1068.4609375,
+      -1109.1953125
+     ],
+     "floor_dwell_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "floor_or_lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "lift_steps": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "n_knee_crossings": 0,
+     "first_knee_crossing_s": null,
+     "first_knee_crossing_leg": null,
+     "end_all_lock": true
+    }
+   },
+   "amplitude_at_5s": {
+    "0.0002": 0.021953400048748066,
+    "0.0001": 0.022137203466302203,
+    "5e-05": 0.022236490683013053,
+    "1e-05": 0.02231386169393871
+   },
+   "amplitude_rel_to_ref": {
+    "0.0002": -0.01615415790125463,
+    "0.0001": -0.007916972420981438,
+    "5e-05": -0.0034673967234758463,
+    "1e-05": 0.0
+   },
+   "amplitude_within_1_percent (record)": {
+    "0.0002": false,
+    "0.0001": true,
+    "5e-05": true,
+    "1e-05": true
+   },
+   "phase_at_5s_rad": {
+    "0.0002": 66.75035666101148,
+    "0.0001": 66.74996947996677,
+    "5e-05": 66.74973851986486,
+    "1e-05": 66.7496097922739
+   },
+   "phase_minus_ref_rad": {
+    "0.0002": 0.0007468687375791205,
+    "0.0001": 0.00035968769286398583,
+    "5e-05": 0.00012872759096183017,
+    "1e-05": 0.0
+   },
+   "order_amplitude (judged)": {
+    "dt_s": [
+     0.0002,
+     0.0001,
+     5e-05
+    ],
+    "d1": -0.00018380341755413684,
+    "d2": -9.928721671085064e-05,
+    "ratio": 1.8512294295590805
+   },
+   "order_phase (record)": {
+    "dt_s": [
+     0.0002,
+     0.0001,
+     5e-05
+    ],
+    "d1": 0.0003871810447151347,
+    "d2": 0.00023096010190215566,
+    "ratio": 1.676397964524456
+   }
+  }
+ }
+}

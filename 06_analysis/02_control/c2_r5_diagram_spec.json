@@ -1,0 +1,246 @@
+{
+  "schema": "c2_r5_diagram_spec/1",
+  "title": "C2 R5 levelling controller - diagram content spec (for rendering by graphml-expert)",
+  "created": "2026-10-22",
+  "author": "control-expert",
+  "source_of_truth": [
+    "03_src/outrigger_sim/control/c2.py (C2_REVISION = 'R5')",
+    "03_src/outrigger_sim/control/standstill.py",
+    "03_src/outrigger_sim/control/ground_contact.py",
+    "03_src/outrigger_sim/control/target.py",
+    "03_src/outrigger_sim/sensors/imu.py, sensors/attitude.py",
+    "00_docs/04_control/s6_control_spec.md (revisions 1-8)",
+    "CLAUDE.md"
+  ],
+  "rule": "Code wins over the spec where they differ; differences are listed in notes.",
+  "conventions": {
+    "control": "discrete, T_s = 20 ms (C2Config.period_s), per-leg arrays in LEG_ORDER FL, FR, RL, RR",
+    "units": "SI (m, rad, N, s); labels show deg / kN / mm for reading",
+    "feedback_sign": "attitude error e = phi_r - phi_f (reference minus filtered measurement), negative feedback; twist tau_dot = -K_tw db(n^T P)/k_nom",
+    "font": "Malgun Gothic",
+    "edge_style_values": {
+      "solid": "signal used by a command or a phase decision",
+      "dashed": "shadow / record only, or not implemented (R6)",
+      "dotted": "parameter or setting update (slow, event-driven)"
+    },
+    "label_language": "Korean, with symbols F_min, B1', GE1', G1', G2, Q1, Q2, H5a, n^T P kept as is"
+  },
+
+  "block_diagram": {
+    "id": "c2_r5_block_diagram",
+    "file_stem": "c2_r5_block_diagram",
+    "rankdir": "LR",
+    "groups": [
+      {"id": "G_PLANT", "label": "플랜트 (Chrono L1)", "order": 0},
+      {"id": "G_SENSOR", "label": "센서", "order": 1},
+      {"id": "G_EST", "label": "추정", "order": 2},
+      {"id": "G_DEC", "label": "판단", "order": 3},
+      {"id": "G_OUT", "label": "출력", "order": 4},
+      {"id": "G_OP", "label": "운전자 입력", "order": 3}
+    ],
+    "nodes": [
+      {"id": "PLANT", "group": "G_PLANT", "label": "유압 실린더 4개 + 상부체(크롤러 포함)\nL1: 위치 모터 s_ref = ∫u dt, ±22.67 mm/s\n210 bar 힘 포화(법칙 C), 패드 부싱 + Coulomb", "code": "engine side, outside c2.py"},
+
+      {"id": "S_P", "group": "G_SENSOR", "label": "실린더 헤드측 압력 ×4\np_i [Pa]", "code": "Measurements.head_pressure_Pa"},
+      {"id": "S_S", "group": "G_SENSOR", "label": "스트로크 센서 ×4\ns (피스톤 위치), s_rod (로드 위치)", "code": "Measurements.stroke_m, stroke_corrected_m"},
+      {"id": "S_ACC", "group": "G_SENSOR", "label": "IMU 가속도계\n제어 주기 평균 비력 f [m/s²]", "code": "Measurements.specific_force_m_s2 (sensors/imu.py ImuModel)"},
+      {"id": "S_GYRO", "group": "G_SENSOR", "label": "IMU 자이로\n각속도 ω_x, ω_y [rad/s]", "code": "Measurements.angular_rate_rad_s"},
+
+      {"id": "OP_TGT", "group": "G_OP", "label": "목표 자세 요청\n(φ_t, θ_t)", "code": "C2Controller.request_target()"},
+
+      {"id": "E_FORCE", "group": "G_EST", "label": "다리 힘 추정\nP_i = p_i·A_head\n저역 P̄ (τ 0.2 s)", "code": "_read(); _crawler_rule_force_filter"},
+      {"id": "E_BAND", "group": "G_EST", "label": "마찰 띠 / 하중 추정\n참힘 ∈ [P − F_band, P + F_band]\nL_i = P_i − F_band\nF_band: 13 kN 시작 → 첫 탐침 실측(≥ 1 kN) → 넓히기만", "code": "classify_load(), _load_estimate_N(), _update_seal_band() (SealBandRule.MEASURED_FIRST)"},
+      {"id": "E_ROD", "group": "G_EST", "label": "로드 스트로크\ns_rod (없으면 s − F/k_oil(e_op))", "code": "_rod_stroke_without_sensor() (RodStrokeFallback.OPERATING_OIL_COLUMN)"},
+      {"id": "E_CLR", "group": "G_EST", "label": "크롤러 클리어런스 추정\nc(s_rod) → 저역 τ 0.2 s\n느린 여유 c(s − P̄/k_oil)", "code": "clearance_estimate_m(), _clearance_filter, _update_crawler_zone()"},
+      {"id": "E_ATT", "group": "G_EST", "label": "자세 필터\n가속도 기울기 → 2차 저역 (τ 0.5 s × 2)\n완료 필터 τ 1.0 s", "code": "AttitudeEstimator, CascadedLowPass, _completion_filter"},
+      {"id": "E_BIAS", "group": "G_EST", "label": "B1′ 자이로 편향 추정 (CHECK)\n마지막 T_b 창 평균 (2 / 2.5 / 10 s)\n조용할 때만, 최대 10 s, > 60 °/h 폐기", "code": "_estimate_gyro_bias(), standstill.gyro_bias_window_s()"},
+      {"id": "E_RATE", "group": "G_EST", "label": "자이로 적분 자세\n∫(ω − b̂) dt", "code": "state.rate_attitude_rad"},
+      {"id": "E_GATE", "group": "G_EST", "label": "정지 게이트 is_geometry_valid\n편향 제거, 1.0 s RMS ≤ 0.02 °/s, 평균 ≤ 0.02 °/s\n0.5 s 연속 + 명령 0 1.0 s, DONE·PROBE·READY", "code": "StandstillGate, _update_standstill_gate()"},
+      {"id": "E_SETTLE", "group": "G_EST", "label": "크롤러 정착 맵 (바닥 경사 역산)\nφ̂_g = φ_c/(1+k_φ), θ̂_g = (θ_c − θ_0)/(1+k)\n운용 모드 = 항등, 검증 모드만 적용", "code": "target.CrawlerSettleMap, check_target(settle_map=)"},
+      {"id": "E_FLOOR", "group": "G_EST", "label": "바닥 평면 추정 (B, 그림자)\nTOUCH 래치 때 패드 바닥점 → (φ_g, θ_g)", "code": "FloorPlaneEstimator (X9), _record_floor_estimate()"},
+      {"id": "E_GE1", "group": "G_EST", "label": "GE1′ 바닥 기하 그림자\nG1′ d_i^Δ (패드 높이 변화)\nG2 Δr (RR 비평면 변화, 1.4 mm)\n→ shadow_* 사건만", "code": "SupportGeometryShadow, _update_support_shadow()"},
+      {"id": "E_GE2", "group": "G_EST", "label": "GE2 기하 트리거 (R6, 미구현)", "code": "not in code (spec U33-a)", "style": "dashed"},
+
+      {"id": "D_CHECK", "group": "G_DEC", "label": "CHECK 정지 측정\n(φ_c, θ_c) = 마지막 1 s 평균, u = 0", "code": "_check_step()"},
+      {"id": "D_TARGET", "group": "G_DEC", "label": "목표 자세 수용 A0–A4 (+READY A5 스트로크)\n축별 상한 pitch ±3°, roll ±4°\n절대 마름모 |φ_t|/4.4 + |θ_t|/3.2 ≤ 1\n상대 마름모 + D8 바닥 검사", "code": "target.check_target(), _is_stroke_feasible()"},
+      {"id": "D_REF", "group": "G_DEC", "label": "기준 램프 (φ_r, θ_r)\n0.4 / 0.25 °/s (READY 변경만)", "code": "_advance_reference(), ramp_reference()"},
+      {"id": "D_PHASE", "group": "G_DEC", "label": "단계 기계\nCHECK·IDLE·TOUCH·LEVEL·DONE·PROBE·REANCHOR·READY·FAULT", "code": "C2Phase, _phase_command()"},
+      {"id": "D_TOUCH", "group": "G_DEC", "label": "접지 래치 (TOUCH)\nP − P_free − W_rod ≥ 1.5 F_min, 0.5 s 연속\n하중 본 다리 0.25 v_max 접근", "code": "_touch(), _update_touch_latches(), _touchdown_load_N()"},
+      {"id": "D_PROBE", "group": "G_DEC", "label": "결합 접지 판정 (PROBE 탐침 ±2 mm 사다리꼴)\n띠 + 증분 강성 K1 + 자세 단서(∫ω vs J)\nQ1 자세 단서 기권 (리플 0.15 / 드리프트 0.25)\nQ2 재접지: L < F_min + 5 kN 중 최경량", "code": "ground_contact.ProbeRound, evaluate_probe(), _leg_to_reground()"},
+      {"id": "D_ATT", "group": "G_DEC", "label": "자세 PI\nKp 0.4 s⁻¹, Ki 0.02 s⁻²\n조건부 적분 (0.01°–0.2°, 두 축 큰 오차)", "code": "_attitude_rates(), _attitude_pi()"},
+      {"id": "D_HEAVE", "group": "G_DEC", "label": "heave P\nKz 0.5 s⁻¹, 목표 클리어런스 50 mm", "code": "_level() heave_rate"},
+      {"id": "D_TWIST", "group": "G_DEC", "label": "비틀림·하중 분배 루프\nn^T P → 0, Ktw 1.0 s⁻¹, 데드밴드 2 kN", "code": "twist_rate_command()"},
+      {"id": "D_GUARD", "group": "G_DEC", "label": "F_min 가드 (우선)\nmin L_i < F_min + 5 kN → 그 다리를 빼는 비틀림 제거\n+ Kg 1.0 보정 (F_min = 9.453 kN)", "code": "twist_rate_command() guard branch"},
+      {"id": "D_REANCHOR", "group": "G_DEC", "label": "REANCHOR 개루프\n비틀림 모드 0.1 v_max, RR·RL 번갈아 4단\nP_stop = max(계단, 20 kN, F_min + F_band + 10 kN)", "code": "_reanchor_step(), reanchor_stop_forces_N()"},
+      {"id": "D_MIX", "group": "G_DEC", "label": "기구학 합성\nu = A[ż, φ̇, θ̇]ᵀ + n·τ̇\nn = (0.476, −0.476, −0.523, 0.523)\n벡터 스케일 ≤ v_max", "code": "C2Geometry.leg_speeds(), scale_to_speed_limit()"},
+      {"id": "D_LIMIT", "group": "G_DEC", "label": "제한 논리\n크롤러 영역: 수축 금지 (래치 20/10 mm)\n스트로크 끝 클립, 2 s 밀면 FAULT", "code": "_lift_without_retracting(), _clip_at_stroke_ends(), _update_stroke_end_fault()"},
+      {"id": "D_MON", "group": "G_DEC", "label": "감시 (DONE·PROBE·READY)\n재레벨: 편차 > 0.07°, READY는 min L < F_min + 7 kN\n350 bar 잠금 압력 경고 (READY, 사건만)", "code": "_needs_relevel(), _report_locked_pressure()"},
+
+      {"id": "O_RAMP", "group": "G_OUT", "label": "출력 램프\n0 → v_max 0.1 s", "code": "_apply_output_ramp()"},
+      {"id": "O_CMD", "group": "G_OUT", "label": "다리 속도 명령 ×4\nu_i [m/s] (20 ms마다)", "code": "Command.leg_speed_m_s"}
+    ],
+    "edges": [
+      {"from": "PLANT", "to": "S_P", "label": "실린더 힘", "style": "solid", "feedback": true},
+      {"from": "PLANT", "to": "S_S", "label": "신장량", "style": "solid", "feedback": true},
+      {"from": "PLANT", "to": "S_ACC", "label": "자세·가속도 (C1점)", "style": "solid", "feedback": true},
+      {"from": "PLANT", "to": "S_GYRO", "label": "각속도", "style": "solid", "feedback": true},
+
+      {"from": "S_P", "to": "E_FORCE", "label": "p_i", "style": "solid"},
+      {"from": "S_S", "to": "E_ROD", "label": "s, s_rod", "style": "solid"},
+      {"from": "E_FORCE", "to": "E_ROD", "label": "F (보정)", "style": "solid"},
+      {"from": "S_ACC", "to": "E_ATT", "label": "f", "style": "solid"},
+      {"from": "S_GYRO", "to": "E_BIAS", "label": "ω (CHECK 중)", "style": "solid"},
+      {"from": "S_GYRO", "to": "E_RATE", "label": "ω", "style": "solid"},
+      {"from": "S_GYRO", "to": "E_GATE", "label": "ω", "style": "solid"},
+      {"from": "E_BIAS", "to": "E_RATE", "label": "b̂ 제거", "style": "solid"},
+      {"from": "E_BIAS", "to": "E_GATE", "label": "b̂ 제거", "style": "solid"},
+
+      {"from": "E_FORCE", "to": "E_BAND", "label": "P_i", "style": "solid"},
+      {"from": "E_FORCE", "to": "E_CLR", "label": "P̄", "style": "solid"},
+      {"from": "E_ROD", "to": "E_CLR", "label": "s_rod, s", "style": "solid"},
+
+      {"from": "E_ATT", "to": "D_CHECK", "label": "φ_f, θ_f", "style": "solid"},
+      {"from": "D_CHECK", "to": "E_SETTLE", "label": "(φ_c, θ_c)", "style": "solid"},
+      {"from": "E_SETTLE", "to": "D_TARGET", "label": "(φ̂_g, θ̂_g)", "style": "solid"},
+      {"from": "OP_TGT", "to": "D_TARGET", "label": "(φ_t, θ_t)", "style": "solid"},
+      {"from": "E_ROD", "to": "D_TARGET", "label": "A5 스트로크 예측 (READY)", "style": "solid"},
+      {"from": "D_TARGET", "to": "D_REF", "label": "수용 목표", "style": "solid"},
+      {"from": "D_TARGET", "to": "D_PHASE", "label": "수용 → TOUCH / 재레벨, 거부 → IDLE", "style": "solid"},
+
+      {"from": "E_FORCE", "to": "D_TOUCH", "label": "P_i (자유공중 기준 차감)", "style": "solid"},
+      {"from": "D_TOUCH", "to": "D_PHASE", "label": "네 다리 래치", "style": "solid"},
+      {"from": "D_TOUCH", "to": "E_FLOOR", "label": "래치 시 s_rod, 자세", "style": "dashed"},
+      {"from": "E_FLOOR", "to": "E_GE1", "label": "기준 법선 n_0", "style": "dashed"},
+      {"from": "E_ROD", "to": "E_GE1", "label": "s_rod", "style": "dashed"},
+      {"from": "E_ATT", "to": "E_GE1", "label": "φ_f, θ_f", "style": "dashed"},
+      {"from": "E_GATE", "to": "E_GE1", "label": "게이트 열림일 때만 판정", "style": "dashed"},
+      {"from": "E_GE1", "to": "E_GE2", "label": "R6 승격 후보 (판정 미연결)", "style": "dashed"},
+      {"from": "E_GE2", "to": "D_MON", "label": "R6: 재레벨 트리거 후보", "style": "dashed"},
+
+      {"from": "D_REF", "to": "D_ATT", "label": "φ_r, θ_r (+)", "style": "solid"},
+      {"from": "E_ATT", "to": "D_ATT", "label": "φ_f, θ_f (−)", "style": "solid", "feedback": true},
+      {"from": "E_CLR", "to": "D_HEAVE", "label": "c 저역 (−)", "style": "solid", "feedback": true},
+      {"from": "E_FORCE", "to": "D_TWIST", "label": "n^T P (−)", "style": "solid", "feedback": true},
+      {"from": "E_BAND", "to": "D_GUARD", "label": "L_i", "style": "solid"},
+      {"from": "D_GUARD", "to": "D_TWIST", "label": "가드 우선", "style": "solid"},
+
+      {"from": "D_ATT", "to": "D_MIX", "label": "φ̇, θ̇", "style": "solid"},
+      {"from": "D_HEAVE", "to": "D_MIX", "label": "ż", "style": "solid"},
+      {"from": "D_TWIST", "to": "D_MIX", "label": "τ̇", "style": "solid"},
+      {"from": "D_MIX", "to": "D_LIMIT", "label": "u (LEVEL)", "style": "solid"},
+      {"from": "E_CLR", "to": "D_LIMIT", "label": "크롤러 영역 래치", "style": "solid"},
+      {"from": "E_ROD", "to": "D_LIMIT", "label": "s (스트로크 끝)", "style": "solid"},
+      {"from": "D_LIMIT", "to": "D_PHASE", "label": "완료 → DONE / FAULT", "style": "solid"},
+
+      {"from": "E_BAND", "to": "D_PROBE", "label": "띠", "style": "solid"},
+      {"from": "E_RATE", "to": "D_PROBE", "label": "∫ω 자세 반응", "style": "solid"},
+      {"from": "E_ROD", "to": "D_PROBE", "label": "Δs", "style": "solid"},
+      {"from": "E_FORCE", "to": "D_PROBE", "label": "ΔP", "style": "solid"},
+      {"from": "D_PROBE", "to": "E_BAND", "label": "F_s 추정 → F_band 갱신", "style": "dotted", "feedback": true},
+      {"from": "D_PROBE", "to": "D_PHASE", "label": "재접지 / REANCHOR / READY", "style": "solid"},
+
+      {"from": "E_FORCE", "to": "D_REANCHOR", "label": "P 대상 다리 ≤ P_stop", "style": "solid"},
+      {"from": "E_BAND", "to": "D_REANCHOR", "label": "F_band (P_stop), 다른 다리 L", "style": "solid"},
+      {"from": "D_REANCHOR", "to": "D_PHASE", "label": "completed / aborted:*", "style": "solid"},
+
+      {"from": "E_ATT", "to": "D_MON", "label": "완료 필터 편차", "style": "solid"},
+      {"from": "E_BAND", "to": "D_MON", "label": "min L_i", "style": "solid"},
+      {"from": "D_MON", "to": "D_PHASE", "label": "재레벨 → LEVEL", "style": "solid"},
+
+      {"from": "D_PHASE", "to": "O_RAMP", "label": "단계별 u 선택\n(CHECK·IDLE·FAULT·READY = 0, TOUCH, LEVEL, PROBE, REANCHOR)", "style": "solid"},
+      {"from": "D_LIMIT", "to": "O_RAMP", "label": "u (LEVEL)", "style": "solid"},
+      {"from": "D_PROBE", "to": "O_RAMP", "label": "탐침·재접지 u", "style": "solid"},
+      {"from": "D_REANCHOR", "to": "O_RAMP", "label": "개루프 u (스트로크 끝 클립)", "style": "solid"},
+      {"from": "D_TOUCH", "to": "O_RAMP", "label": "신장 u", "style": "solid"},
+      {"from": "O_RAMP", "to": "O_CMD", "label": "", "style": "solid"},
+      {"from": "O_CMD", "to": "PLANT", "label": "u_i [m/s]", "style": "solid"},
+      {"from": "O_CMD", "to": "E_GATE", "label": "명령 0 지속 시간", "style": "dotted", "feedback": true}
+    ],
+    "layout_hints": [
+      "Place PLANT at the far left or bottom so that the four PLANT->S_* edges read as the outer feedback path; draw them in a distinct colour.",
+      "Feedback edges (feedback: true) should be visually distinct (colour or constraint=false).",
+      "All E_GE1/E_GE2/E_FLOOR edges and the E_GE2 node are dashed (shadow, no command depends on them).",
+      "D_PHASE is the selector; D_TOUCH, D_PROBE, D_REANCHOR, D_LIMIT feed O_RAMP depending on the phase. A cluster 'LEVEL 루프' around D_ATT, D_HEAVE, D_TWIST, D_GUARD, D_MIX, D_LIMIT helps."
+    ]
+  },
+
+  "phase_flow": {
+    "id": "c2_r5_phase_flow",
+    "file_stem": "c2_r5_phase_flow",
+    "rankdir": "TB",
+    "main_sequence_H5a": ["CHECK", "TOUCH", "LEVEL", "DONE", "PROBE", "REANCHOR", "LEVEL", "DONE", "READY"],
+    "nodes": [
+      {"id": "START", "kind": "start", "label": "실행 시작"},
+      {"id": "CHECK", "kind": "phase", "code": "C2Phase.CHECK", "label": "CHECK\n크롤러 위 정지, u = 0\n(φ_c, θ_c) 측정, B1′ 자이로 편향"},
+      {"id": "IDLE", "kind": "phase", "code": "C2Phase.IDLE", "label": "IDLE\n목표 거부, 다리 정지 (FAULT 아님)"},
+      {"id": "TOUCH", "kind": "phase", "code": "C2Phase.TOUCH", "label": "TOUCH\n접지까지 신장 (v_max, 하중 본 다리 0.25 v_max)"},
+      {"id": "LEVEL", "kind": "phase", "code": "C2Phase.LEVEL", "label": "LEVEL\n자세 PI + heave + 비틀림 + F_min 가드\n(REANCHOR 뒤에는 트림)"},
+      {"id": "DONE", "kind": "phase", "code": "C2Phase.DONE", "label": "DONE\n완료 (한 주기 경유)"},
+      {"id": "PROBE", "kind": "phase", "code": "C2Phase.PROBE", "label": "PROBE\n다리별 ±2 mm 탐침 (결합 판정)\nF_band 갱신, Q2 재접지 신장"},
+      {"id": "REANCHOR", "kind": "phase", "code": "C2Phase.REANCHOR", "label": "REANCHOR\n고착점 재설정 (WAIT→MOVE→HOLD→RETURN→HOLD2 × 4단)\n자세·heave·비틀림 루프 정지"},
+      {"id": "READY", "kind": "phase", "code": "C2Phase.READY", "label": "READY\n다리 잠금, 감시"},
+      {"id": "FAULT", "kind": "phase", "code": "C2Phase.FAULT", "label": "FAULT\n모든 다리 정지 (종단)"}
+    ],
+    "edges": [
+      {"id": "e01", "from": "START", "to": "CHECK", "label": "초기 단계 CHECK", "style": "solid", "class": "main"},
+      {"id": "e02", "from": "CHECK", "to": "CHECK", "label": "t < check_time_s (2 s), 또는 B1′: T_b 창 미충족·조용하지 않음 (t < check_max_s 10 s까지 연장)", "style": "solid", "class": "self"},
+      {"id": "e03", "from": "CHECK", "to": "TOUCH", "label": "B1′ 결정 (ACCEPTED / SKIPPED_MOTION / REJECTED_IMPLAUSIBLE) 후 A0–A4 수용\n(첫 레벨링은 기준 램프 없음)", "style": "solid", "class": "main"},
+      {"id": "e04", "from": "CHECK", "to": "IDLE", "label": "A0–A4 거부 (REJ_* 경고)", "style": "solid", "class": "abort"},
+      {"id": "e05", "from": "IDLE", "to": "CHECK", "label": "request_target() → PENDING_CHECK, CHECK 재시작", "style": "solid", "class": "target"},
+      {"id": "e06", "from": "TOUCH", "to": "LEVEL", "label": "네 다리 모두 접지 래치\n(P − P_free − W_rod ≥ 1.5 F_min, 0.5 s 연속)\nθ_crawler 저장, 적분 0, GE1′ 기준 'touch'", "style": "solid", "class": "main"},
+      {"id": "e07", "from": "LEVEL", "to": "DONE", "label": "1.0 s 연속: 기준 = 목표, 완료 편차 < 0.03°,\n|c − 50 mm| < 2 mm, |n^T P| < 3 kN", "style": "solid", "class": "main"},
+      {"id": "e08", "from": "LEVEL", "to": "FAULT", "label": "스트로크 끝(s ≥ s_max − 1 mm)에서 신장 명령 > 2.0 s", "style": "solid", "class": "abort"},
+      {"id": "e09", "from": "DONE", "to": "PROBE", "label": "기본 경로 (REANCHOR 완료 뒤 트림이 아닐 때)", "style": "solid", "class": "main"},
+      {"id": "e10", "from": "DONE", "to": "READY", "label": "H5a: REANCHOR completed 뒤 트림 → 탐침 생략", "style": "solid", "class": "main"},
+      {"id": "e11", "from": "PROBE", "to": "LEVEL", "label": "라운드 끝, 재접지 대상 있음 (Q2 / 비접지 최소 판독, 누적 라운드 < 3)\n→ 대상 다리 F_min + 15 kN까지 신장 완료 → LEVEL (다시 DONE → PROBE)", "style": "solid", "class": "reprobe"},
+      {"id": "e12", "from": "PROBE", "to": "REANCHOR", "label": "H5a 첫 결정: 재접지 없음, |θ_t − θ_anchor| ≥ 2.5°,\n들림, 크롤러 영역 아님, 스트로크 여유 10 mm", "style": "solid", "class": "main"},
+      {"id": "e13", "from": "PROBE", "to": "READY", "label": "재접지 없음 (또는 probe_unresolved / 라운드 3회) 그리고\nREANCHOR 이미 결정 또는 reanchor_skipped:<사유>", "style": "solid", "class": "main"},
+      {"id": "e14", "from": "REANCHOR", "to": "LEVEL", "label": "completed (4단 끝) → 트림, θ_anchor = θ_t", "style": "solid", "class": "main"},
+      {"id": "e15", "from": "REANCHOR", "to": "LEVEL", "label": "aborted:attitude_wait / attitude (> 0.07°) / other_low / stroke_cap (8 mm) / hold_low\n→ 명령 이동량 복귀 후 LEVEL (다음 DONE → PROBE)", "style": "solid", "class": "abort"},
+      {"id": "e16", "from": "DONE", "to": "LEVEL", "label": "재레벨: 완료 필터 편차 > 0.07°", "style": "solid", "class": "relevel"},
+      {"id": "e17", "from": "PROBE", "to": "LEVEL", "label": "재레벨: 완료 필터 편차 > 0.07° (탐침 중단, 다시 탐침)", "style": "solid", "class": "relevel"},
+      {"id": "e18", "from": "READY", "to": "LEVEL", "label": "재레벨: 편차 > 0.07°, 또는 (READY만) 들림 & min L_i < F_min + 7 kN\n적분 유지, 탐침 상태 초기화 (H5a: 다시 탐침)", "style": "solid", "class": "relevel"},
+      {"id": "e19", "from": "READY", "to": "LEVEL", "label": "목표 변경 수용 (A0–A5) → 기준 램프 0.4/0.25 °/s, REANCHOR 재무장 (U3)", "style": "solid", "class": "target"},
+      {"id": "e20", "from": "READY", "to": "READY", "label": "목표 거부 (REJ_*, A5 REJ_TARGET_STROKE) → 유지\n350 bar 초과 잠금 압력 경고 (다리당 1회)", "style": "solid", "class": "self"}
+    ],
+    "annotations": [
+      {"attach": ["TOUCH", "LEVEL", "DONE", "PROBE", "REANCHOR", "CHECK"], "label": "request_target() → REJ_BUSY (단계 그대로)"},
+      {"attach": ["DONE", "PROBE", "READY"], "label": "정지 게이트·GE1′ 판정 가능 단계 (그림자)"}
+    ],
+    "edge_class_styles_hint": {
+      "main": "H5a main path, bold",
+      "relevel": "re-level paths, one colour",
+      "reprobe": "re-ground / re-probe path",
+      "abort": "abort / fault",
+      "target": "target change",
+      "self": "self loop"
+    }
+  },
+
+  "notes": {
+    "code_vs_request_or_spec": [
+      "Order: the request wrote 'TOUCH -> CHECK -> LEVEL'; the code starts in CHECK and goes CHECK -> TOUCH -> LEVEL (the dataclass default phase TOUCH is replaced by CHECK in _new_run_state, c2.py:1431; _check_step -> TOUCH).",
+      "350 bar: not a saturation in the controller. c2.py only raises the event locked_pressure_over_limit:<leg> once per leg in READY (_report_locked_pressure). The 210 bar force saturation is on the plant / actuator side (law C).",
+      "Output: the controller outputs leg speeds only (Command.leg_speed_m_s). The position reference is the L1 engine hook integrating s_ref; there is no position command in c2.py.",
+      "Attitude filter: tilt from the accelerometer only, 2nd-order low-pass; not a complementary filter. The gyro is used only for B1' bias, the standstill gate and the rate-integrated attitude cue of the probe.",
+      "Probe attitude limit: code ProbeSettings.attitude_limit_rad = 0.08 deg (0.02 deg kept for filter lag); D4 / CLAUDE.md say +-0.1 deg.",
+      "Standstill gate RMS window: spec 38 / 42.1 GE1'-c say 0.5 s; code uses 1.0 s per spec revision 8 section 44.1 (R5-G). Code and rev 8 agree.",
+      "The re-level attitude test (> 0.07 deg) is checked in DONE, PROBE and READY (_hold_probe_or_relevel); the load test only in READY with is_lifted. REANCHOR has its own 0.07 deg abort (aborted:attitude), which also goes to LEVEL.",
+      "probe_round_count is never reset in a run: max_rounds = 3 limits re-grounding rounds per run (docstring 'per run'), so after three rounds a later re-level probe goes to READY even with a weak leg. Recorded as observed behaviour, not judged here.",
+      "Crawler settle map: identity in the operating mode (default SlopeLimitMode.OPERATING); fitted map only in the verification mode."
+    ],
+    "simplifications_in_diagram": [
+      "PRESSURE contact mode (option, ContactJudge.PRESSURE) is not drawn: there REANCHOR is decided at the first DONE and DONE goes straight to READY without a probe. The diagram shows the default COMBINED + ReanchorSettings.after_probe = True (H5a).",
+      "REANCHOR sub-stages (WAIT, MOVE, HOLD, RETURN, HOLD2, ABORT_RETURN) are folded into one phase node.",
+      "Probe internals (trapezoid profile 0.56 s + 0.36 s ramps, retract-first / skip near stroke end P6, free-air window 5 s for TOUCH) are reduced to labels.",
+      "Re-grounding runs inside PROBE (state.reground) and then sets LEVEL; drawn as a single PROBE -> LEVEL edge.",
+      "Kinematic matrix A, k_nom, J and the clearance map c(s) are not expanded.",
+      "IMU error model (bias, noise, quantisation, delay; sensors/imu.py) is treated as part of the sensor blocks.",
+      "Legacy switches (with_r41_behaviour, allow_legacy_relevel_margin, RECT probe, widen_only band) are omitted.",
+      "Events (reanchor_*, shadow_*, WARN_*) are mentioned only where they mark a transition."
+    ],
+    "assumptions_marked_in_code": [
+      "relevel_load_margin_N 7 kN, B1' target 4 deg/h, probe attitude_limit 0.08 deg, Q1 ratios 0.15 / 0.25, output ramp 0.1 s are ASSUMPTION values in the code."
+    ]
+  }
+}

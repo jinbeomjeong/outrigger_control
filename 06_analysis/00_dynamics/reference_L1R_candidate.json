@@ -1,0 +1,4704 @@
+{
+ "L1R_rod_side_reference_rev32": {
+  "meta": {
+   "model": "Model (form (i), per leg, pad normal along +z at the ball centre; compression delta > 0): * moving leg (EXT / RET): N = k2 delta (head-only pad stiffness k2 = k_h (+) k_out, the L1 SMC k_n); * locked leg, anchor (delta_lock, N_lock) taken when the leg stops: N = N_lock + k1 (delta - delta_lock) below the knee, N = N_lock + dF_knee + k2 (delta - delta_lock - dF_knee / k1) above (rod side on its floor), k1 = (k_h + k_r) (+) k_out, dF_knee = (p_r0 - p_floor_gauge) A_ann / r, r = k_r / (k_h + k_r); * one pad dashpot c_n (LOCK basis, YAML cn_per_pad_N_s_m) in every state, tangential bushing k_t, c_t (stick). The 6-DoF replica (V5 step, V7b) is the rev. 13 ball-centre L1 model (dynamics_model.md 5.4, run_reference _l1_matrices: linear kinematics, preload geometric term) plus the piecewise normal law above as a generalised force; it is integrated with DOP853 (rtol 1e-11). No P-delta, no rod inertia (rods rigid with the body at e_op), no bushing yield, no lift-off (flagged if reached). Units SI, body frame x forward, y left, z up, level body = world axes, gravity -z (YAML meta.gravity_m_s2), angles rad (deg only in *_deg keys), leg order FL FR RL RR. Deterministic (no random numbers).",
+   "definition": "dynamics_model.md 5.12.4 / 5.12.8 (rev. 30), rev. 32 section 5.14; rod_side_pressure.md 14",
+   "frame": "body x forward, y left, z up; level body = world axes; q about the CoM of superstructure + 4 rods at e_op",
+   "gravity_m_s2": [
+    0.0,
+    0.0,
+    -9.80665
+   ],
+   "pressure_convention": "gauge Pa except p_floor (absolute in the YAML, gauge here = abs - 101325 Pa)",
+   "lock_pressure_source": "RULE (p_r0 after an extension = YAML actuator.rod_side.p_r0_after_extend_Pa, 2 bar g), dynamics_model.md 5.12.10",
+   "assumptions": {
+    "V7a_design_peak_over_knee": 0.4,
+    "V7a_limit_peak_over_knee": 0.5,
+    "V7b_linear_peak_over_knee": 3.0,
+    "replica": "no P-delta, rods rigid with the body, no bushing yield, continuous time (no hook lag)"
+   },
+   "integrator": "scipy solve_ivp DOP853 rtol 1e-11, atol q 1e-14 m|rad, v 1e-12; output grid 0.0005 s",
+   "cross_check_reference_json": "statics, c_n, c_t and the FLOOR (head-only) ball-centre modes reproduce reference.json L1 / V7_ball_centre_bushing_rev13 (printed digits)",
+   "replica_vs_linear_LOCK (top roll V7a, 5 s, max rel)": 2.37e-09,
+   "replica_energy_drift_undamped (V7b heave kick, 1 s, max |E - E0| / E0, knee crossings)": [
+    7.16e-08,
+    67
+   ],
+   "runtime_s": 20.76,
+   "series_npz": "06_analysis/00_dynamics/reference_L1R_candidate.npz"
+  },
+  "leg_parameters": {
+   "e_op_m": [
+    0.4011,
+    0.4011,
+    0.3909,
+    0.3909
+   ],
+   "column_length_rod_side_m": [
+    0.3489,
+    0.3489,
+    0.3591,
+    0.3591
+   ],
+   "head_area_m2": [
+    0.0132732,
+    0.0132732,
+    0.00950332,
+    0.00950332
+   ],
+   "annulus_area_m2": [
+    0.00376991,
+    0.00376991,
+    0.00314159,
+    0.00314159
+   ],
+   "k_head_N_m": [
+    29424100.0,
+    29424100.0,
+    21554400.0,
+    21554400.0
+   ],
+   "k_rod_side_N_m": [
+    10805100.0,
+    10805100.0,
+    8748520.0,
+    8748520.0
+   ],
+   "k_out_N_m (rod, frame, concrete)": [
+    216648000.0,
+    216648000.0,
+    205103000.0,
+    205103000.0
+   ],
+   "r = k_r / (k_h + k_r)": [
+    0.268589,
+    0.268589,
+    0.288703,
+    0.288703
+   ],
+   "k2_head_only_N_m (FLOOR, moving, = YAML kn_per_pad)": [
+    25905700.0,
+    25905700.0,
+    19504600.0,
+    19504600.0
+   ],
+   "k1_lock_N_m (= YAML derivation.k_lock_N_m)": [
+    33929000.0,
+    33929000.0,
+    26402100.0,
+    26402100.0
+   ],
+   "k1 / k2": [
+    1.3097,
+    1.3097,
+    1.3536,
+    1.3536
+   ],
+   "k_r / k_h": [
+    0.36722,
+    0.36722,
+    0.40588,
+    0.40588
+   ],
+   "dk = k1 - k2 N_m": [
+    8023270.0,
+    8023270.0,
+    6897500.0,
+    6897500.0
+   ],
+   "k2_float32_N_m (Chrono SMC material)": [
+    25905744.0,
+    25905744.0,
+    19504614.0,
+    19504614.0
+   ],
+   "k1_from_float32_N_m (module)": [
+    33929016.7,
+    33929016.7,
+    26402109.3,
+    26402109.3
+   ],
+   "p_floor_gauge_Pa": -91325.0,
+   "p_r0_after_extend_Pa": [
+    200000.0,
+    200000.0,
+    200000.0,
+    200000.0
+   ],
+   "p_r0_after_retract_Pa": [
+    3481800.0,
+    3435200.0,
+    3119300.0,
+    3059100.0
+   ],
+   "knee_dF_after_extend_N": [
+    4089.04,
+    4089.04,
+    3170.13,
+    3170.13
+   ],
+   "knee_dF_after_retract_N": [
+    50152.4,
+    49498.3,
+    34937.3,
+    34282.2
+   ],
+   "knee_ddelta_after_extend_m": [
+    0.000120517,
+    0.000120517,
+    0.000120071,
+    0.000120071
+   ],
+   "knee_per_bar_N (A_ann / r x 1e5)": [
+    1403.6,
+    1403.6,
+    1088.18,
+    1088.18
+   ],
+   "c_n_N_s_m (LOCK basis, every state)": [
+    34403.5,
+    34403.5,
+    30348.5,
+    30348.5
+   ],
+   "c_n_head_only_N_s_m (regression)": [
+    30061.8,
+    30061.8,
+    26084.7,
+    26084.7
+   ],
+   "c_t_N_s_m": [
+    15796.3,
+    15796.3,
+    11372.4,
+    11372.4
+   ],
+   "k_t_N_m": [
+    7152770.0,
+    7152770.0,
+    3707390.0,
+    3707390.0
+   ],
+   "checks (max deviation)": {
+    "e_op vs YAML derivation.operating_extension_m (4 digits)": 5.55e-17,
+    "k_h vs YAML derivation.k_oil_N_m (rel)": 1.28e-09,
+    "k_h vs dyn_model.k_oil(e_op) (rel)": 0.0,
+    "k_r vs YAML actuator.rod_side.k_rod_side_N_m (rel)": 4.41e-10,
+    "L_r vs YAML actuator.rod_side.column_length_m (4 digits)": 0.0,
+    "k2 vs YAML kn_per_pad_N_m (rel)": 1.26e-09,
+    "k1 vs YAML derivation.k_lock_N_m (rel)": 1.28e-09,
+    "k1 from float32 k_n vs k1 (rel, Chrono / module)": 6.28e-08
+   }
+  },
+  "statics_V1_V3": {
+   "top": {
+    "contact_force_N": [
+     119272.0,
+     117027.0,
+     72676.1,
+     71137.3
+    ],
+    "cylinder_force_N": [
+     118225.0,
+     115980.0,
+     71958.6,
+     70419.9
+    ],
+    "penetration_mm (contact / k2)": [
+     4.60407,
+     4.51743,
+     3.7261,
+     3.64721
+    ],
+    "attitude_deg (roll, pitch)": [
+     -0.001875,
+     0.01031
+    ],
+    "F_min_cylinder_N": 9414.59,
+    "F_fl_cylinder_N after extend (knee)": [
+     122314.0,
+     120069.0,
+     75128.8,
+     73590.0
+    ],
+    "F_fl_cylinder_N after retract (knee)": [
+     168377.0,
+     165479.0,
+     106896.0,
+     104702.0
+    ],
+    "lift_deflection_from_lock_mm (-(F_cyl + m g) / k1)": [
+     -3.5153,
+     -3.4492,
+     -2.7527,
+     -2.6944
+    ],
+    "rod_pressure_at_lift_bar (after extend, linear)": [
+     86.976,
+     85.377,
+     68.787,
+     67.373
+    ]
+   },
+   "middle": {
+    "contact_force_N": [
+     119272.0,
+     117027.0,
+     72676.1,
+     71137.3
+    ],
+    "cylinder_force_N": [
+     118225.0,
+     115980.0,
+     71958.6,
+     70419.9
+    ],
+    "penetration_mm (contact / k2)": [
+     4.60407,
+     4.51743,
+     3.7261,
+     3.64721
+    ],
+    "attitude_deg (roll, pitch)": [
+     -0.001875,
+     0.01031
+    ],
+    "F_min_cylinder_N": 9414.59,
+    "F_fl_cylinder_N after extend (knee)": [
+     122314.0,
+     120069.0,
+     75128.8,
+     73590.0
+    ],
+    "F_fl_cylinder_N after retract (knee)": [
+     168377.0,
+     165479.0,
+     106896.0,
+     104702.0
+    ],
+    "lift_deflection_from_lock_mm (-(F_cyl + m g) / k1)": [
+     -3.5153,
+     -3.4492,
+     -2.7527,
+     -2.6944
+    ],
+    "rod_pressure_at_lift_bar (after extend, linear)": [
+     86.976,
+     85.377,
+     68.787,
+     67.373
+    ]
+   },
+   "bottom": {
+    "contact_force_N": [
+     119272.0,
+     117027.0,
+     72676.1,
+     71137.3
+    ],
+    "cylinder_force_N": [
+     118225.0,
+     115980.0,
+     71958.6,
+     70419.9
+    ],
+    "penetration_mm (contact / k2)": [
+     4.60407,
+     4.51743,
+     3.7261,
+     3.64721
+    ],
+    "attitude_deg (roll, pitch)": [
+     -0.001875,
+     0.01031
+    ],
+    "F_min_cylinder_N": 9414.59,
+    "F_fl_cylinder_N after extend (knee)": [
+     122314.0,
+     120069.0,
+     75128.8,
+     73590.0
+    ],
+    "F_fl_cylinder_N after retract (knee)": [
+     168377.0,
+     165479.0,
+     106896.0,
+     104702.0
+    ],
+    "lift_deflection_from_lock_mm (-(F_cyl + m g) / k1)": [
+     -3.5153,
+     -3.4492,
+     -2.7527,
+     -2.6944
+    ],
+    "rod_pressure_at_lift_bar (after extend, linear)": [
+     86.976,
+     85.377,
+     68.787,
+     67.373
+    ]
+   }
+  },
+  "modes_V7a": {
+   "top": {
+    "LOCK": {
+     "f_undamped_Hz": [
+      2.0748,
+      3.069,
+      4.0331,
+      6.1682,
+      7.5398,
+      8.9171
+     ],
+     "f_damped_Hz (|lambda| / 2 pi)": [
+      2.0748,
+      3.0694,
+      4.0331,
+      6.1676,
+      7.5396,
+      8.917
+     ],
+     "zeta": [
+      0.008574,
+      0.01804,
+      0.03727,
+      0.03315,
+      0.04783,
+      0.03042
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.554,
+       "roll": 0.406,
+       "yaw": 0.039
+      },
+      {
+       "surge x": 0.834,
+       "pitch": 0.165
+      },
+      {
+       "yaw": 0.57,
+       "sway y": 0.333,
+       "roll": 0.096
+      },
+      {
+       "pitch": 0.82,
+       "surge x": 0.166
+      },
+      {
+       "roll": 0.497,
+       "yaw": 0.39,
+       "sway y": 0.112
+      },
+      {
+       "heave z": 0.985
+      }
+     ],
+     "orthogonality_err": 8.88e-16,
+     "implicit_strain_energy_share r (bushing)": [
+      0.2023,
+      0.5533,
+      0.9848,
+      0.4446,
+      0.8126,
+      0.002366
+     ],
+     "zeta_num_r_omega_dt_half": {
+      "0.0001": [
+       0.000132,
+       0.000533,
+       0.00125,
+       0.000862,
+       0.00192,
+       6.63e-06
+      ],
+      "0.0002": [
+       0.000264,
+       0.00107,
+       0.0025,
+       0.00172,
+       0.00385,
+       1.33e-05
+      ]
+     },
+     "zeta_num_over_zeta (2e-4)": [
+      0.0308,
+      0.0591,
+      0.067,
+      0.052,
+      0.0805,
+      0.000436
+     ],
+     "V8a_limit_0.1_zeta": [
+      0.000857,
+      0.0018,
+      0.00373,
+      0.00331,
+      0.00478,
+      0.00304
+     ],
+     "mode_shapes": {
+      "coordinates": [
+       "surge x",
+       "sway y",
+       "heave z",
+       "roll",
+       "pitch",
+       "yaw"
+      ],
+      "reference_point_m (rotations about it, translations of it; body axes, level body = world)": [
+       0.458907,
+       -0.00149124,
+       2.15653
+      ],
+      "units": "translations m, rotations rad (small angles), per sqrt(kg)",
+      "Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)": [
+       [
+        -4.52863518437e-05,
+        0.00463763265938,
+        -2.93896092995e-05,
+        0.00206838723415,
+        1.62009855234e-05,
+        -0.000101332356676
+       ],
+       [
+        0.00378151108273,
+        6.21683814635e-05,
+        0.0029320701681,
+        -2.9201466417e-05,
+        0.00170216478413,
+        -1.90690832553e-05
+       ],
+       [
+        -1.03877229365e-05,
+        -0.000159409988833,
+        5.77280524412e-06,
+        0.000603521094766,
+        8.57720841651e-05,
+        0.00504005559673
+       ],
+       [
+        -0.000835013669724,
+        -6.17608807727e-06,
+        0.000223721529007,
+        -1.40141636057e-05,
+        0.0014693845739,
+        -2.55005630616e-05
+       ],
+       [
+        -9.17410114723e-06,
+        0.000487959210157,
+        -4.32784568372e-06,
+        -0.0010871459062,
+        -7.00381680046e-06,
+        0.000145718923805
+       ],
+       [
+        0.000196204872898,
+        -6.51659838684e-06,
+        -0.0016027599276,
+        -2.37715663246e-05,
+        0.0023243950438,
+        -3.46761717892e-05
+       ]
+      ],
+      "mass_matrix (same coordinates)": [
+       [
+        38760.7299194,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        38760.7299194,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        0.0,
+        38760.7299194,
+        0.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        0.0,
+        0.0,
+        537136.386435,
+        -957.937892934,
+        -194037.223664
+       ],
+       [
+        0.0,
+        0.0,
+        0.0,
+        -957.937892934,
+        693785.543238,
+        -213.969408016
+       ],
+       [
+        0.0,
+        0.0,
+        0.0,
+        -194037.223664,
+        -213.969408016,
+        194908.642832
+       ]
+      ],
+      "projection": "eta = Phi^T M q; sign: largest body component of each column positive"
+     }
+    },
+    "FLOOR": {
+     "f_undamped_Hz": [
+      1.8454,
+      2.8528,
+      4.0256,
+      5.7469,
+      7.3657,
+      7.7311
+     ],
+     "f_damped_Hz (|lambda| / 2 pi)": [
+      1.8454,
+      2.853,
+      4.0256,
+      5.7467,
+      7.3657,
+      7.7309
+     ],
+     "zeta": [
+      0.009018,
+      0.01713,
+      0.03733,
+      0.03672,
+      0.04909,
+      0.03511
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.523,
+       "roll": 0.445,
+       "yaw": 0.032
+      },
+      {
+       "surge x": 0.757,
+       "pitch": 0.241
+      },
+      {
+       "yaw": 0.552,
+       "sway y": 0.354,
+       "roll": 0.094
+      },
+      {
+       "pitch": 0.745,
+       "surge x": 0.242
+      },
+      {
+       "roll": 0.459,
+       "yaw": 0.415,
+       "sway y": 0.123
+      },
+      {
+       "heave z": 0.984
+      }
+     ],
+     "orthogonality_err": 8.88e-16,
+     "implicit_strain_energy_share r (bushing)": [
+      0.1533,
+      0.4344,
+      0.9887,
+      0.5626,
+      0.8562,
+      0.004853
+     ],
+     "zeta_num_r_omega_dt_half": {
+      "0.0001": [
+       8.89e-05,
+       0.000389,
+       0.00125,
+       0.00102,
+       0.00198,
+       1.18e-05
+      ],
+      "0.0002": [
+       0.000178,
+       0.000779,
+       0.0025,
+       0.00203,
+       0.00396,
+       2.36e-05
+      ]
+     },
+     "zeta_num_over_zeta (2e-4)": [
+      0.0197,
+      0.0455,
+      0.067,
+      0.0553,
+      0.0807,
+      0.000671
+     ],
+     "V8a_limit_0.1_zeta": [
+      0.000902,
+      0.00171,
+      0.00373,
+      0.00367,
+      0.00491,
+      0.00351
+     ]
+    },
+    "LOCK_over_FLOOR_f": [
+     1.124,
+     1.076,
+     1.002,
+     1.073,
+     1.024,
+     1.153
+    ]
+   },
+   "middle": {
+    "LOCK": {
+     "f_undamped_Hz": [
+      2.5828,
+      3.3481,
+      4.1336,
+      7.2443,
+      8.0348,
+      8.9779
+     ],
+     "f_damped_Hz (|lambda| / 2 pi)": [
+      2.583,
+      3.3484,
+      4.1336,
+      7.2439,
+      8.0344,
+      8.9775
+     ],
+     "zeta": [
+      0.01242,
+      0.02235,
+      0.03769,
+      0.03259,
+      0.04646,
+      0.03132
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.719,
+       "roll": 0.248,
+       "yaw": 0.033
+      },
+      {
+       "surge x": 0.929,
+       "pitch": 0.07
+      },
+      {
+       "yaw": 0.723,
+       "sway y": 0.184,
+       "roll": 0.093
+      },
+      {
+       "pitch": 0.87,
+       "surge x": 0.07,
+       "heave z": 0.06
+      },
+      {
+       "roll": 0.658,
+       "yaw": 0.244,
+       "sway y": 0.097
+      },
+      {
+       "heave z": 0.938,
+       "pitch": 0.059
+      }
+     ],
+     "orthogonality_err": 4.44e-16,
+     "implicit_strain_energy_share r (bushing)": [
+      0.3646,
+      0.7335,
+      0.9724,
+      0.2579,
+      0.6621,
+      0.009489
+     ],
+     "zeta_num_r_omega_dt_half": {
+      "0.0001": [
+       0.000296,
+       0.000772,
+       0.00126,
+       0.000587,
+       0.00167,
+       2.68e-05
+      ],
+      "0.0002": [
+       0.000592,
+       0.00154,
+       0.00253,
+       0.00117,
+       0.00334,
+       5.35e-05
+      ]
+     },
+     "zeta_num_over_zeta (2e-4)": [
+      0.0476,
+      0.069,
+      0.067,
+      0.036,
+      0.0719,
+      0.00171
+     ],
+     "V8a_limit_0.1_zeta": [
+      0.00124,
+      0.00224,
+      0.00377,
+      0.00326,
+      0.00465,
+      0.00313
+     ],
+     "mode_shapes": {
+      "coordinates": [
+       "surge x",
+       "sway y",
+       "heave z",
+       "roll",
+       "pitch",
+       "yaw"
+      ],
+      "reference_point_m (rotations about it, translations of it; body axes, level body = world)": [
+       0.458907,
+       -0.00149124,
+       1.46258
+      ],
+      "units": "translations m, rotations rad (small angles), per sqrt(kg)",
+      "Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)": [
+       [
+        -5.37930184951e-05,
+        0.0048944653978,
+        -5.01427836487e-05,
+        -0.00134067180508,
+        1.31865102311e-05,
+        -0.000201329243246
+       ],
+       [
+        0.00430597010813,
+        7.41049741803e-05,
+        0.00218077244241,
+        3.80065560734e-05,
+        0.00157907577171,
+        -4.17660032083e-05
+       ],
+       [
+        -1.18405652052e-05,
+        -0.000137836475623,
+        7.42183216341e-06,
+        -0.00124000319171,
+        0.000188485954583,
+        0.00492005881143
+       ],
+       [
+        -0.000927114715768,
+        -5.20367325371e-06,
+        0.000308773648742,
+        3.83511339775e-05,
+        0.00209908707832,
+        -7.35924917719e-05
+       ],
+       [
+        -1.04121438659e-05,
+        0.000411039993233,
+        -4.19796720169e-06,
+        0.00144462484674,
+        -9.925766789e-06,
+        0.000375965925257
+       ],
+       [
+        0.000216162420528,
+        -1.42519162687e-05,
+        -0.00183268238033,
+        3.62725256972e-05,
+        0.00193971094957,
+        -6.22824485828e-05
+       ]
+      ],
+      "mass_matrix (same coordinates)": [
+       [
+        38760.7299194,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        38760.7299194,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        0.0,
+        38760.7299194,
+        0.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        0.0,
+        0.0,
+        260462.879624,
+        -957.937892934,
+        -120234.654098
+       ],
+       [
+        0.0,
+        0.0,
+        0.0,
+        -957.937892934,
+        417112.036428,
+        -99.4796820924
+       ],
+       [
+        0.0,
+        0.0,
+        0.0,
+        -120234.654098,
+        -99.4796820924,
+        194908.642832
+       ]
+      ],
+      "projection": "eta = Phi^T M q; sign: largest body component of each column positive"
+     }
+    },
+    "FLOOR": {
+     "f_undamped_Hz": [
+      2.3461,
+      3.2002,
+      4.1194,
+      6.5683,
+      7.6935,
+      7.7855
+     ],
+     "f_damped_Hz (|lambda| / 2 pi)": [
+      2.3462,
+      3.2004,
+      4.1193,
+      6.5684,
+      7.6979,
+      7.7803
+     ],
+     "zeta": [
+      0.01237,
+      0.02132,
+      0.0379,
+      0.03685,
+      0.04831,
+      0.03675
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.669,
+       "roll": 0.3,
+       "yaw": 0.031
+      },
+      {
+       "surge x": 0.881,
+       "pitch": 0.117
+      },
+      {
+       "yaw": 0.693,
+       "sway y": 0.215,
+       "roll": 0.093
+      },
+      {
+       "pitch": 0.822,
+       "surge x": 0.115,
+       "heave z": 0.063
+      },
+      {
+       "roll": 0.556,
+       "yaw": 0.254,
+       "sway y": 0.107
+      },
+      {
+       "heave z": 0.858,
+       "pitch": 0.057,
+       "roll": 0.051
+      }
+     ],
+     "orthogonality_err": 3.24e-16,
+     "implicit_strain_energy_share r (bushing)": [
+      0.2848,
+      0.6361,
+      0.9787,
+      0.3499,
+      0.6782,
+      0.07237
+     ],
+     "zeta_num_r_omega_dt_half": {
+      "0.0001": [
+       0.00021,
+       0.00064,
+       0.00127,
+       0.000722,
+       0.00164,
+       0.000177
+      ],
+      "0.0002": [
+       0.00042,
+       0.00128,
+       0.00253,
+       0.00144,
+       0.00328,
+       0.000354
+      ]
+     },
+     "zeta_num_over_zeta (2e-4)": [
+      0.0339,
+      0.06,
+      0.0668,
+      0.0392,
+      0.0679,
+      0.00963
+     ],
+     "V8a_limit_0.1_zeta": [
+      0.00124,
+      0.00213,
+      0.00379,
+      0.00369,
+      0.00483,
+      0.00368
+     ]
+    },
+    "LOCK_over_FLOOR_f": [
+     1.101,
+     1.046,
+     1.003,
+     1.103,
+     1.044,
+     1.154
+    ]
+   },
+   "bottom": {
+    "LOCK": {
+     "f_undamped_Hz": [
+      3.0303,
+      3.5378,
+      4.3046,
+      6.9578,
+      7.6101,
+      9.0353
+     ],
+     "f_damped_Hz (|lambda| / 2 pi)": [
+      3.0307,
+      3.5381,
+      4.3043,
+      6.9572,
+      7.6099,
+      9.0348
+     ],
+     "zeta": [
+      0.01752,
+      0.02545,
+      0.03756,
+      0.0362,
+      0.02991,
+      0.03195
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.846,
+       "roll": 0.151
+      },
+      {
+       "surge x": 0.964,
+       "pitch": 0.035
+      },
+      {
+       "yaw": 0.906,
+       "roll": 0.06,
+       "sway y": 0.034
+      },
+      {
+       "roll": 0.788,
+       "sway y": 0.12,
+       "yaw": 0.091
+      },
+      {
+       "pitch": 0.85,
+       "heave z": 0.116,
+       "surge x": 0.034
+      },
+      {
+       "heave z": 0.884,
+       "pitch": 0.114
+      }
+     ],
+     "orthogonality_err": 1.22e-15,
+     "implicit_strain_energy_share r (bushing)": [
+      0.5485,
+      0.8502,
+      0.9641,
+      0.4873,
+      0.1389,
+      0.01111
+     ],
+     "zeta_num_r_omega_dt_half": {
+      "0.0001": [
+       0.000522,
+       0.000945,
+       0.0013,
+       0.00107,
+       0.000332,
+       3.15e-05
+      ],
+      "0.0002": [
+       0.00104,
+       0.00189,
+       0.00261,
+       0.00213,
+       0.000664,
+       6.31e-05
+      ]
+     },
+     "zeta_num_over_zeta (2e-4)": [
+      0.0596,
+      0.0743,
+      0.0694,
+      0.0588,
+      0.0222,
+      0.00197
+     ],
+     "V8a_limit_0.1_zeta": [
+      0.00175,
+      0.00255,
+      0.00376,
+      0.00362,
+      0.00299,
+      0.00319
+     ],
+     "mode_shapes": {
+      "coordinates": [
+       "surge x",
+       "sway y",
+       "heave z",
+       "roll",
+       "pitch",
+       "yaw"
+      ],
+      "reference_point_m (rotations about it, translations of it; body axes, level body = world)": [
+       0.458907,
+       -0.00149124,
+       0.768635
+      ],
+      "units": "translations m, rotations rad (small angles), per sqrt(kg)",
+      "Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)": [
+       [
+        -5.45070187788e-05,
+        0.00498648811358,
+        5.96141280603e-05,
+        -3.09449262455e-05,
+        0.000936623261423,
+        -0.000222482508278
+       ],
+       [
+        0.00467285024472,
+        6.71935060511e-05,
+        -0.000933689346144,
+        0.00175682473908,
+        2.76217113623e-05,
+        -1.70722079669e-05
+       ],
+       [
+        -1.21048674466e-05,
+        -0.000111311246184,
+        -8.3378691056e-06,
+        5.12482036184e-05,
+        0.00172828047209,
+        0.00477463315293
+       ],
+       [
+        -0.000916281019723,
+        -2.09439757322e-06,
+        -0.000366936649238,
+        0.00224108809983,
+        4.49320503003e-05,
+        -4.3331283847e-05
+       ],
+       [
+        -1.03495248052e-05,
+        0.000325632628177,
+        3.14485236712e-06,
+        4.74844666096e-05,
+        -0.00159412633394,
+        0.000584089153119
+       ],
+       [
+        4.57112317119e-05,
+        -2.31676597896e-05,
+        0.00211289792724,
+        0.00100175420381,
+        2.10310136701e-05,
+        -1.50993841136e-05
+       ]
+      ],
+      "mass_matrix (same coordinates)": [
+       [
+        38760.7299194,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        38760.7299194,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        0.0,
+        38760.7299194,
+        0.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        0.0,
+        0.0,
+        177714.194308,
+        -957.937892934,
+        -46431.913253
+       ],
+       [
+        0.0,
+        0.0,
+        0.0,
+        -957.937892934,
+        334363.351112,
+        15.010310046
+       ],
+       [
+        0.0,
+        0.0,
+        0.0,
+        -46431.913253,
+        15.010310046,
+        194908.642832
+       ]
+      ],
+      "projection": "eta = Phi^T M q; sign: largest body component of each column positive"
+     }
+    },
+    "FLOOR": {
+     "f_undamped_Hz": [
+      2.8201,
+      3.4463,
+      4.2835,
+      6.5191,
+      6.7787,
+      7.8196
+     ],
+     "f_damped_Hz (|lambda| / 2 pi)": [
+      2.8203,
+      3.4465,
+      4.2833,
+      6.5189,
+      6.7788,
+      7.819
+     ],
+     "zeta": [
+      0.0166,
+      0.02461,
+      0.03806,
+      0.03938,
+      0.0343,
+      0.03696
+     ],
+     "mode_content": [
+      {
+       "sway y": 0.778,
+       "roll": 0.217
+      },
+      {
+       "surge x": 0.933,
+       "pitch": 0.066
+      },
+      {
+       "yaw": 0.874,
+       "roll": 0.068,
+       "sway y": 0.058
+      },
+      {
+       "roll": 0.714,
+       "sway y": 0.163,
+       "yaw": 0.121
+      },
+      {
+       "pitch": 0.821,
+       "heave z": 0.116,
+       "surge x": 0.062
+      },
+      {
+       "heave z": 0.884,
+       "pitch": 0.112
+      }
+     ],
+     "orthogonality_err": 1.11e-15,
+     "implicit_strain_energy_share r (bushing)": [
+      0.4385,
+      0.7814,
+      0.967,
+      0.594,
+      0.2023,
+      0.01692
+     ],
+     "zeta_num_r_omega_dt_half": {
+      "0.0001": [
+       0.000389,
+       0.000846,
+       0.0013,
+       0.00122,
+       0.000431,
+       4.16e-05
+      ],
+      "0.0002": [
+       0.000777,
+       0.00169,
+       0.0026,
+       0.00243,
+       0.000861,
+       8.31e-05
+      ]
+     },
+     "zeta_num_over_zeta (2e-4)": [
+      0.0468,
+      0.0688,
+      0.0684,
+      0.0618,
+      0.0251,
+      0.00225
+     ],
+     "V8a_limit_0.1_zeta": [
+      0.00166,
+      0.00246,
+      0.00381,
+      0.00394,
+      0.00343,
+      0.0037
+     ]
+    },
+    "LOCK_over_FLOOR_f": [
+     1.075,
+     1.027,
+     1.005,
+     1.067,
+     1.123,
+     1.156
+    ]
+   }
+  },
+  "V7a_cases": {
+   "top": {
+    "runs": {
+     "roll": {
+      "amplitude (deg rotation | m translation)": 0.0046,
+      "S4_amplitude": 0.02,
+      "scale_vs_S4": 0.23,
+      "target_mode (0-based, sets the speed)": 0,
+      "f_target_Hz (LOCK f_damped)": 2.0748,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.00104663,
+       0.0,
+       0.0
+      ],
+      "window_s": 20.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1614.0,
+       1513.0,
+       1154.0,
+       1066.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1499.0,
+       -1586.0,
+       -1068.0,
+       -1114.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.395,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1614.0,
+       1586.0,
+       1154.0,
+       1114.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.0153,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.03907,
+       0.0001368,
+       0.01781,
+       5.06e-05,
+       0.007473,
+       0.0001328
+      ]
+     },
+     "pitch": {
+      "amplitude (deg rotation | m translation)": 0.0024,
+      "S4_amplitude": 0.02,
+      "scale_vs_S4": 0.12,
+      "target_mode (0-based, sets the speed)": 1,
+      "f_target_Hz (LOCK f_damped)": 3.0694,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.000807828,
+       0.0
+      ],
+      "window_s": 20.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1572.0,
+       1585.0,
+       1123.0,
+       1103.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1315.0,
+       -1336.0,
+       -1556.0,
+       -1550.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.388,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1573.0,
+       1586.0,
+       1557.0,
+       1551.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.0129,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.0003475,
+       0.01418,
+       9.162e-05,
+       0.01572,
+       0.0001153,
+       0.001458
+      ]
+     },
+     "yaw": {
+      "amplitude (deg rotation | m translation)": 0.0045,
+      "S4_amplitude": 0.01,
+      "scale_vs_S4": 0.45,
+      "target_mode (0-based, sets the speed)": 2,
+      "f_target_Hz (LOCK f_damped)": 4.0331,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.00199027
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1631.0,
+       1120.0,
+       1147.0,
+       801.8
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1153.0,
+       -1606.0,
+       -807.8,
+       -1147.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.399,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1631.0,
+       1607.0,
+       1148.0,
+       1148.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.0233,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.03058,
+       1.818e-05,
+       0.02794,
+       8.635e-05,
+       0.007055,
+       6.543e-05
+      ]
+     },
+     "surge": {
+      "amplitude (deg rotation | m translation)": 9.2e-05,
+      "S4_amplitude": 0.0005,
+      "scale_vs_S4": 0.184,
+      "target_mode (0-based, sets the speed)": 3,
+      "f_target_Hz (LOCK f_damped)": 6.1676,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.00356517,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1477.0,
+       1498.0,
+       1254.0,
+       1266.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1393.0,
+       -1374.0,
+       -1377.0,
+       -1364.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.399,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1478.0,
+       1499.0,
+       1378.0,
+       1365.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.0144,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.0004801,
+       0.03323,
+       0.0001603,
+       0.007375,
+       4.726e-05,
+       0.0002499
+      ]
+     },
+     "heave": {
+      "amplitude (deg rotation | m translation)": 6e-05,
+      "S4_amplitude": 0.0005,
+      "scale_vs_S4": 0.12,
+      "target_mode (0-based, sets the speed)": 4,
+      "f_target_Hz (LOCK f_damped)": 7.5396,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.00284236
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1378.0,
+       1386.0,
+       1261.0,
+       1268.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1683.0,
+       -1679.0,
+       -1250.0,
+       -1248.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.4,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1686.0,
+       1682.0,
+       1264.0,
+       1270.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.00165,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       8.779e-05,
+       0.0009108,
+       2.51e-05,
+       0.001716,
+       0.0001995,
+       0.009911
+      ]
+     },
+     "sway": {
+      "amplitude (deg rotation | m translation)": 6.2e-05,
+      "S4_amplitude": 0.00025,
+      "scale_vs_S4": 0.248,
+      "target_mode (0-based, sets the speed)": 5,
+      "f_target_Hz (LOCK f_damped)": 8.917,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.00347367,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1613.0,
+       1426.0,
+       1141.0,
+       1008.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1427.0,
+       -1597.0,
+       -1013.0,
+       -1134.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.395,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1614.0,
+       1597.0,
+       1141.0,
+       1134.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.0146,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.03906,
+       0.0004341,
+       0.01558,
+       0.0001014,
+       0.004838,
+       4.583e-05
+      ]
+     }
+    },
+    "judged_run_per_mode (S4 rule, largest predicted start amplitude)": {
+     "mode 1": {
+      "run": "roll",
+      "runner_up": "pitch",
+      "runner_up_ratio": 0.00889,
+      "f_ref_Hz": 2.0748,
+      "zeta_ref": 0.008574,
+      "zeta_num_2e-4": 0.000264
+     },
+     "mode 2": {
+      "run": "pitch",
+      "runner_up": "roll",
+      "runner_up_ratio": 0.00965,
+      "f_ref_Hz": 3.0694,
+      "zeta_ref": 0.01804,
+      "zeta_num_2e-4": 0.00107
+     },
+     "mode 3": {
+      "run": "yaw",
+      "runner_up": "roll",
+      "runner_up_ratio": 0.637,
+      "f_ref_Hz": 4.0331,
+      "zeta_ref": 0.03727,
+      "zeta_num_2e-4": 0.0025
+     },
+     "mode 4": {
+      "run": "pitch",
+      "runner_up": "surge",
+      "runner_up_ratio": 0.469,
+      "f_ref_Hz": 6.1676,
+      "zeta_ref": 0.03315,
+      "zeta_num_2e-4": 0.00172
+     },
+     "mode 5": {
+      "run": "roll",
+      "runner_up": "yaw",
+      "runner_up_ratio": 0.944,
+      "f_ref_Hz": 7.5396,
+      "zeta_ref": 0.04783,
+      "zeta_num_2e-4": 0.00385
+     },
+     "mode 6": {
+      "run": "heave",
+      "runner_up": "pitch",
+      "runner_up_ratio": 0.147,
+      "f_ref_Hz": 8.917,
+      "zeta_ref": 0.03042,
+      "zeta_num_2e-4": 1.33e-05
+     }
+    }
+   },
+   "middle": {
+    "runs": {
+     "roll": {
+      "amplitude (deg rotation | m translation)": 0.0055,
+      "S4_amplitude": 0.02,
+      "scale_vs_S4": 0.275,
+      "target_mode (0-based, sets the speed)": 0,
+      "f_target_Hz (LOCK f_damped)": 2.583,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.00155792,
+       0.0,
+       0.0
+      ],
+      "window_s": 20.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1151.0,
+       1609.0,
+       813.7,
+       1162.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1631.0,
+       -1076.0,
+       -1135.0,
+       -767.9
+      ],
+      "predicted_peak_over_knee (max leg)": 0.393,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1632.0,
+       1610.0,
+       1136.0,
+       1163.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.019,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.02568,
+       2.632e-06,
+       0.01804,
+       0.0001453,
+       0.009675,
+       0.0003325
+      ]
+     },
+     "pitch": {
+      "amplitude (deg rotation | m translation)": 0.0029,
+      "S4_amplitude": 0.02,
+      "scale_vs_S4": 0.145,
+      "target_mode (0-based, sets the speed)": 1,
+      "f_target_Hz (LOCK f_damped)": 3.3484,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.00106487,
+       0.0
+      ],
+      "window_s": 20.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1602.0,
+       1616.0,
+       1007.0,
+       1013.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1742.0,
+       -1787.0,
+       -1691.0,
+       -1684.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.395,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1744.0,
+       1788.0,
+       1694.0,
+       1687.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.0108,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.0002281,
+       0.008679,
+       7.644e-05,
+       0.0141,
+       0.0001338,
+       0.002962
+      ]
+     },
+     "yaw": {
+      "amplitude (deg rotation | m translation)": 0.0049,
+      "S4_amplitude": 0.01,
+      "scale_vs_S4": 0.49,
+      "target_mode (0-based, sets the speed)": 2,
+      "f_target_Hz (LOCK f_damped)": 4.1336,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.00222116
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1605.0,
+       1067.0,
+       1132.0,
+       782.3
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1115.0,
+       -1586.0,
+       -764.0,
+       -1130.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.393,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1606.0,
+       1587.0,
+       1132.0,
+       1131.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.027,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.02102,
+       0.0002316,
+       0.03372,
+       0.000113,
+       0.00553,
+       0.0001311
+      ]
+     },
+     "surge": {
+      "amplitude (deg rotation | m translation)": 0.0001,
+      "S4_amplitude": 0.0005,
+      "scale_vs_S4": 0.2,
+      "target_mode (0-based, sets the speed)": 3,
+      "f_target_Hz (LOCK f_damped)": 7.2439,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.00455147,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1567.0,
+       1596.0,
+       995.0,
+       1002.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1293.0,
+       -1280.0,
+       -1475.0,
+       -1458.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.39,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1567.0,
+       1597.0,
+       1476.0,
+       1458.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.0192,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.0005848,
+       0.04105,
+       0.0003406,
+       0.005196,
+       4.608e-05,
+       0.0006296
+      ]
+     },
+     "heave": {
+      "amplitude (deg rotation | m translation)": 5.8e-05,
+      "S4_amplitude": 0.0005,
+      "scale_vs_S4": 0.116,
+      "target_mode (0-based, sets the speed)": 4,
+      "f_target_Hz (LOCK f_damped)": 8.0344,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.00292795
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1458.0,
+       1463.0,
+       1256.0,
+       1264.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1755.0,
+       -1748.0,
+       -1268.0,
+       -1263.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.399,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1758.0,
+       1750.0,
+       1271.0,
+       1266.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.00235,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       8.28e-05,
+       0.0007436,
+       3.243e-05,
+       0.003092,
+       0.0004237,
+       0.009899
+      ]
+     },
+     "sway": {
+      "amplitude (deg rotation | m translation)": 5.9e-05,
+      "S4_amplitude": 0.00025,
+      "scale_vs_S4": 0.236,
+      "target_mode (0-based, sets the speed)": 5,
+      "f_target_Hz (LOCK f_damped)": 8.9775,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.00332802,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1624.0,
+       1617.0,
+       1152.0,
+       1145.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1649.0,
+       -1611.0,
+       -1170.0,
+       -1141.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.397,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1650.0,
+       1617.0,
+       1170.0,
+       1146.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.013,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.03423,
+       0.0004544,
+       0.01083,
+       0.0001077,
+       0.004035,
+       9.551e-05
+      ]
+     }
+    },
+    "judged_run_per_mode (S4 rule, largest predicted start amplitude)": {
+     "mode 1": {
+      "run": "roll",
+      "runner_up": "pitch",
+      "runner_up_ratio": 0.00888,
+      "f_ref_Hz": 2.583,
+      "zeta_ref": 0.01242,
+      "zeta_num_2e-4": 0.000592
+     },
+     "mode 2": {
+      "run": "pitch",
+      "runner_up": "roll",
+      "runner_up_ratio": 0.000303,
+      "f_ref_Hz": 3.3484,
+      "zeta_ref": 0.02235,
+      "zeta_num_2e-4": 0.00154
+     },
+     "mode 3": {
+      "run": "yaw",
+      "runner_up": "roll",
+      "runner_up_ratio": 0.535,
+      "f_ref_Hz": 4.1336,
+      "zeta_ref": 0.03769,
+      "zeta_num_2e-4": 0.00253
+     },
+     "mode 4": {
+      "run": "pitch",
+      "runner_up": "surge",
+      "runner_up_ratio": 0.369,
+      "f_ref_Hz": 7.2439,
+      "zeta_ref": 0.03259,
+      "zeta_num_2e-4": 0.00117
+     },
+     "mode 5": {
+      "run": "roll",
+      "runner_up": "yaw",
+      "runner_up_ratio": 0.572,
+      "f_ref_Hz": 8.0344,
+      "zeta_ref": 0.04646,
+      "zeta_num_2e-4": 0.00334
+     },
+     "mode 6": {
+      "run": "heave",
+      "runner_up": "pitch",
+      "runner_up_ratio": 0.299,
+      "f_ref_Hz": 8.9775,
+      "zeta_ref": 0.03132,
+      "zeta_num_2e-4": 5.35e-05
+     }
+    }
+   },
+   "bottom": {
+    "runs": {
+     "roll": {
+      "amplitude (deg rotation | m translation)": 0.0045,
+      "S4_amplitude": 0.02,
+      "scale_vs_S4": 0.225,
+      "target_mode (0-based, sets the speed)": 0,
+      "f_target_Hz (LOCK f_damped)": 3.0307,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.00149561,
+       0.0,
+       0.0
+      ],
+      "window_s": 20.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1276.0,
+       1618.0,
+       931.0,
+       1163.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1636.0,
+       -1235.0,
+       -1142.0,
+       -848.1
+      ],
+      "predicted_peak_over_knee (max leg)": 0.396,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1637.0,
+       1619.0,
+       1144.0,
+       1165.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.0149,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.01296,
+       2.635e-05,
+       0.009031,
+       0.01203,
+       0.000267,
+       0.0001991
+      ]
+     },
+     "pitch": {
+      "amplitude (deg rotation | m translation)": 0.0029,
+      "S4_amplitude": 0.02,
+      "scale_vs_S4": 0.145,
+      "target_mode (0-based, sets the speed)": 1,
+      "f_target_Hz (LOCK f_damped)": 3.5381,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.00112519,
+       0.0
+      ],
+      "window_s": 20.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1606.0,
+       1593.0,
+       1210.0,
+       1221.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1699.0,
+       -1716.0,
+       -1673.0,
+       -1667.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.393,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1701.0,
+       1718.0,
+       1676.0,
+       1670.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.00779,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.0001526,
+       0.005511,
+       5.969e-05,
+       0.0003538,
+       0.01254,
+       0.003872
+      ]
+     },
+     "yaw": {
+      "amplitude (deg rotation | m translation)": 0.0084,
+      "S4_amplitude": 0.01,
+      "scale_vs_S4": 0.84,
+      "target_mode (0-based, sets the speed)": 2,
+      "f_target_Hz (LOCK f_damped)": 4.3043,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.00396497
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1588.0,
+       1622.0,
+       1121.0,
+       1152.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1666.0,
+       -1570.0,
+       -1178.0,
+       -1118.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.397,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1667.0,
+       1623.0,
+       1179.0,
+       1153.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.0482,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.01072,
+       0.0007872,
+       0.06287,
+       0.008271,
+       0.0001649,
+       6.441e-05
+      ]
+     },
+     "surge": {
+      "amplitude (deg rotation | m translation)": 0.00014,
+      "S4_amplitude": 0.0005,
+      "scale_vs_S4": 0.28,
+      "target_mode (0-based, sets the speed)": 3,
+      "f_target_Hz (LOCK f_damped)": 6.9572,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.00611986,
+       0.0,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1596.0,
+       1634.0,
+       979.3,
+       969.3
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1351.0,
+       -1361.0,
+       -1520.0,
+       -1497.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.4,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1596.0,
+       1635.0,
+       1521.0,
+       1498.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.0272,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.0006791,
+       0.05321,
+       0.0005228,
+       0.0001679,
+       0.004647,
+       0.0009296
+      ]
+     },
+     "heave": {
+      "amplitude (deg rotation | m translation)": 6.2e-05,
+      "S4_amplitude": 0.0005,
+      "scale_vs_S4": 0.124,
+      "target_mode (0-based, sets the speed)": 4,
+      "f_target_Hz (LOCK f_damped)": 7.6099,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.0,
+       0.00296449
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1509.0,
+       1520.0,
+       1236.0,
+       1251.0
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1790.0,
+       -1781.0,
+       -1271.0,
+       -1266.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.395,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1793.0,
+       1784.0,
+       1274.0,
+       1269.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.00222,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       7.305e-05,
+       0.0005754,
+       3.542e-05,
+       0.0001347,
+       0.004153,
+       0.009664
+      ]
+     },
+     "sway": {
+      "amplitude (deg rotation | m translation)": 6e-05,
+      "S4_amplitude": 0.00025,
+      "scale_vs_S4": 0.24,
+      "target_mode (0-based, sets the speed)": 5,
+      "f_target_Hz (LOCK f_damped)": 9.0348,
+      "initial_velocity_point_m_s (of the reference point)": [
+       0.0,
+       0.00340606,
+       0.0
+      ],
+      "initial_angular_velocity_rad_s": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "window_s": 2.0,
+      "predicted_peak_elastic_dN_N (k1 ddelta, max over t)": [
+       1628.0,
+       1193.0,
+       1157.0,
+       823.4
+      ],
+      "predicted_min_elastic_dN_N": [
+       -1168.0,
+       -1619.0,
+       -850.3,
+       -1144.0
+      ],
+      "predicted_peak_over_knee (max leg)": 0.398,
+      "predicted_peak_total_dN_N (with dashpot, information)": [
+       1628.0,
+       1620.0,
+       1157.0,
+       1145.0
+      ],
+      "predicted_peak_bushing_force_over_muN": 0.0152,
+      "predicted_start_amplitude_eta (sqrt(kg) m)": [
+       0.0324,
+       0.0003991,
+       0.004558,
+       0.005305,
+       7.626e-05,
+       3.97e-05
+      ]
+     }
+    },
+    "judged_run_per_mode (S4 rule, largest predicted start amplitude)": {
+     "mode 1": {
+      "run": "roll",
+      "runner_up": "pitch",
+      "runner_up_ratio": 0.0118,
+      "f_ref_Hz": 3.0307,
+      "zeta_ref": 0.01752,
+      "zeta_num_2e-4": 0.00104
+     },
+     "mode 2": {
+      "run": "pitch",
+      "runner_up": "roll",
+      "runner_up_ratio": 0.00478,
+      "f_ref_Hz": 3.5381,
+      "zeta_ref": 0.02545,
+      "zeta_num_2e-4": 0.00189
+     },
+     "mode 3": {
+      "run": "yaw",
+      "runner_up": "roll",
+      "runner_up_ratio": 0.144,
+      "f_ref_Hz": 4.3043,
+      "zeta_ref": 0.03756,
+      "zeta_num_2e-4": 0.00261
+     },
+     "mode 4": {
+      "run": "roll",
+      "runner_up": "yaw",
+      "runner_up_ratio": 0.687,
+      "f_ref_Hz": 6.9572,
+      "zeta_ref": 0.0362,
+      "zeta_num_2e-4": 0.00213
+     },
+     "mode 5": {
+      "run": "pitch",
+      "runner_up": "surge",
+      "runner_up_ratio": 0.37,
+      "f_ref_Hz": 7.6099,
+      "zeta_ref": 0.02991,
+      "zeta_num_2e-4": 0.000664
+     },
+     "mode 6": {
+      "run": "heave",
+      "runner_up": "pitch",
+      "runner_up_ratio": 0.401,
+      "f_ref_Hz": 9.0348,
+      "zeta_ref": 0.03195,
+      "zeta_num_2e-4": 6.31e-05
+     }
+    }
+   }
+  },
+  "V7b_cases": {
+   "heave": {
+    "level": "top",
+    "amplitude (deg rotation | m translation)": 0.00045,
+    "linear_predicted_peak_over_knee": 3.0,
+    "target_mode (0-based, sets the speed)": 4,
+    "f_target_Hz (LOCK f_damped)": 7.5396,
+    "initial_velocity_point_m_s": [
+     0.0,
+     0.0,
+     0.0213177
+    ],
+    "initial_angular_velocity_rad_s": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "predicted_peak_bushing_force_over_muN": 0.0124,
+    "window_s": 2.0,
+    "initial_state": "static equilibrium, all four legs LOCK after an extension (p_r0 2 bar g)",
+    "replica": {
+     "physical (judge the 1e-5 s run)": {
+      "dominant_LOCK_mode (1-based)": 6,
+      "eta_peaks_first10 (t_s, sqrt(kg) m)": [
+       [
+        0.0275117,
+        0.0709536
+       ],
+       [
+        0.144238,
+        0.0584566
+       ],
+       [
+        0.260115,
+        0.0480797
+       ],
+       [
+        0.375058,
+        0.039654
+       ],
+       [
+        0.489091,
+        0.0327731
+       ],
+       [
+        0.602213,
+        0.0270551
+       ],
+       [
+        0.714564,
+        0.0223298
+       ],
+       [
+        0.826769,
+        0.0184727
+       ],
+       [
+        0.938983,
+        0.0152394
+       ],
+       [
+        1.05116,
+        0.0125765
+       ]
+      ],
+      "periods_first10_s (eta up-crossings)": [
+       0.115888,
+       0.114934,
+       0.114028,
+       0.113135,
+       0.112347,
+       0.112193,
+       0.112228,
+       0.11218,
+       0.112178,
+       0.112233
+      ],
+      "mean_period_first10_s": 0.113134,
+      "max_elastic_dN_N": [
+       9339.7,
+       9386.2,
+       8199.4,
+       8236.9
+      ],
+      "min_elastic_dN_N": [
+       -12623.0,
+       -12593.0,
+       -9376.5,
+       -9356.6
+      ],
+      "max_dN_over_knee": [
+       2.284,
+       2.295,
+       2.586,
+       2.598
+      ],
+      "FLOOR_dwell_s (dN > knee)": [
+       0.1685,
+       0.1725,
+       0.213,
+       0.217
+      ],
+      "knee_crossings (t_s, leg)": [
+       [
+        0.0603535,
+        "RR"
+       ],
+       [
+        0.0605184,
+        "RL"
+       ],
+       [
+        0.0645147,
+        "FR"
+       ],
+       [
+        0.0647235,
+        "FL"
+       ],
+       [
+        0.109345,
+        "RR"
+       ],
+       [
+        0.109406,
+        "RL"
+       ],
+       [
+        0.110343,
+        "FR"
+       ],
+       [
+        0.110431,
+        "FL"
+       ],
+       [
+        0.178971,
+        "RR"
+       ],
+       [
+        0.179306,
+        "RL"
+       ],
+       [
+        0.182501,
+        "FR"
+       ],
+       [
+        0.183011,
+        "FL"
+       ],
+       [
+        0.222066,
+        "FR"
+       ],
+       [
+        0.222226,
+        "FL"
+       ],
+       [
+        0.225507,
+        "RR"
+       ],
+       [
+        0.225667,
+        "RL"
+       ],
+       [
+        0.296995,
+        "FR"
+       ],
+       [
+        0.297455,
+        "FL"
+       ],
+       [
+        0.299467,
+        "RR"
+       ],
+       [
+        0.299864,
+        "RL"
+       ],
+       [
+        0.335771,
+        "FR"
+       ],
+       [
+        0.335779,
+        "FL"
+       ],
+       [
+        0.338306,
+        "RR"
+       ],
+       [
+        0.338379,
+        "RL"
+       ],
+       [
+        0.414223,
+        "RR"
+       ],
+       [
+        0.414508,
+        "RL"
+       ],
+       [
+        0.417147,
+        "FR"
+       ],
+       [
+        0.417569,
+        "FL"
+       ],
+       [
+        0.447751,
+        "RL"
+       ],
+       [
+        0.448089,
+        "RR"
+       ],
+       [
+        0.449052,
+        "FL"
+       ],
+       [
+        0.44944,
+        "FR"
+       ],
+       [
+        0.530024,
+        "RR"
+       ],
+       [
+        0.530296,
+        "RL"
+       ],
+       [
+        0.538025,
+        "FR"
+       ],
+       [
+        0.539099,
+        "FL"
+       ],
+       [
+        0.553498,
+        "FL"
+       ],
+       [
+        0.554927,
+        "FR"
+       ],
+       [
+        0.559901,
+        "RL"
+       ],
+       [
+        0.560474,
+        "RR"
+       ],
+       [
+        0.650828,
+        "RR"
+       ],
+       [
+        0.651261,
+        "RL"
+       ],
+       [
+        0.668235,
+        "RL"
+       ],
+       [
+        0.668841,
+        "RR"
+       ]
+      ],
+      "n_knee_crossings": 44,
+      "last_knee_crossing_s": 0.668841,
+      "lift_off": false
+     },
+     "with_zeta_num_2e-4 (judge the 2e-4 s run)": {
+      "dominant_LOCK_mode (1-based)": 6,
+      "eta_peaks_first10 (t_s, sqrt(kg) m)": [
+       [
+        0.0275115,
+        0.0709521
+       ],
+       [
+        0.144237,
+        0.0584503
+       ],
+       [
+        0.260113,
+        0.0480717
+       ],
+       [
+        0.375055,
+        0.0396431
+       ],
+       [
+        0.489086,
+        0.0327612
+       ],
+       [
+        0.602201,
+        0.0270432
+       ],
+       [
+        0.714552,
+        0.022319
+       ],
+       [
+        0.826756,
+        0.0184607
+       ],
+       [
+        0.938969,
+        0.0152292
+       ],
+       [
+        1.05115,
+        0.0125677
+       ]
+      ],
+      "periods_first10_s (eta up-crossings)": [
+       0.115887,
+       0.114933,
+       0.114026,
+       0.113128,
+       0.112345,
+       0.112194,
+       0.112226,
+       0.112181,
+       0.11218,
+       0.11223
+      ],
+      "mean_period_first10_s": 0.113133,
+      "max_elastic_dN_N": [
+       9337.4,
+       9385.6,
+       8198.5,
+       8237.1
+      ],
+      "min_elastic_dN_N": [
+       -12621.0,
+       -12591.0,
+       -9377.4,
+       -9358.2
+      ],
+      "max_dN_over_knee": [
+       2.284,
+       2.295,
+       2.586,
+       2.598
+      ],
+      "FLOOR_dwell_s (dN > knee)": [
+       0.1695,
+       0.173,
+       0.2135,
+       0.2165
+      ],
+      "knee_crossings (t_s, leg)": [
+       [
+        0.0603593,
+        "RR"
+       ],
+       [
+        0.0605236,
+        "RL"
+       ],
+       [
+        0.06451,
+        "FR"
+       ],
+       [
+        0.0647187,
+        "FL"
+       ],
+       [
+        0.109356,
+        "RR"
+       ],
+       [
+        0.109413,
+        "RL"
+       ],
+       [
+        0.110333,
+        "FR"
+       ],
+       [
+        0.110415,
+        "FL"
+       ],
+       [
+        0.178986,
+        "RR"
+       ],
+       [
+        0.179315,
+        "RL"
+       ],
+       [
+        0.182488,
+        "FR"
+       ],
+       [
+        0.182989,
+        "FL"
+       ],
+       [
+        0.222094,
+        "FR"
+       ],
+       [
+        0.222241,
+        "FL"
+       ],
+       [
+        0.225493,
+        "RR"
+       ],
+       [
+        0.225643,
+        "RL"
+       ],
+       [
+        0.297043,
+        "FR"
+       ],
+       [
+        0.297485,
+        "FL"
+       ],
+       [
+        0.299441,
+        "RR"
+       ],
+       [
+        0.299823,
+        "RL"
+       ],
+       [
+        0.335777,
+        "FR"
+       ],
+       [
+        0.335782,
+        "FL"
+       ],
+       [
+        0.338289,
+        "RR"
+       ],
+       [
+        0.338357,
+        "RL"
+       ],
+       [
+        0.414229,
+        "RR"
+       ],
+       [
+        0.414499,
+        "RL"
+       ],
+       [
+        0.41717,
+        "FR"
+       ],
+       [
+        0.417572,
+        "FL"
+       ],
+       [
+        0.447815,
+        "RL"
+       ],
+       [
+        0.448133,
+        "RR"
+       ],
+       [
+        0.448981,
+        "FL"
+       ],
+       [
+        0.449351,
+        "FR"
+       ],
+       [
+        0.530097,
+        "RR"
+       ],
+       [
+        0.530371,
+        "RL"
+       ],
+       [
+        0.537897,
+        "FR"
+       ],
+       [
+        0.538923,
+        "FL"
+       ],
+       [
+        0.55364,
+        "FL"
+       ],
+       [
+        0.554987,
+        "FR"
+       ],
+       [
+        0.559848,
+        "RL"
+       ],
+       [
+        0.560397,
+        "RR"
+       ],
+       [
+        0.650786,
+        "RR"
+       ],
+       [
+        0.651247,
+        "RL"
+       ],
+       [
+        0.668128,
+        "RL"
+       ],
+       [
+        0.668732,
+        "RR"
+       ]
+      ],
+      "n_knee_crossings": 44,
+      "last_knee_crossing_s": 0.668732,
+      "lift_off": false
+     }
+    },
+    "linear_LOCK_no_knee (information: the result a missing knee would give)": {
+     "max_elastic_dN_N": [
+      10336.0,
+      10398.0,
+      9457.4,
+      9509.8
+     ],
+     "max_dN_over_knee": [
+      2.528,
+      2.543,
+      2.983,
+      3.0
+     ],
+     "mean_period_first10_s": 0.112197,
+     "eta_peaks_first10": [
+      0.0709536,
+      0.0586194,
+      0.0483443,
+      0.0399628,
+      0.033039,
+      0.0272421,
+      0.0225048,
+      0.0186203,
+      0.0153563,
+      0.0126736
+     ],
+     "knee_effect_on_max_dN_rel (replica / linear - 1)": [
+      -0.09636,
+      -0.09732,
+      -0.133,
+      -0.1339
+     ],
+     "knee_effect_on_period_rel": 0.008351,
+     "knee_effect_on_eta_peak1..3_rel": [
+      1.157e-07,
+      -0.002777,
+      -0.005474
+     ]
+    }
+   },
+   "roll": {
+    "level": "top",
+    "amplitude (deg rotation | m translation)": 0.034,
+    "linear_predicted_peak_over_knee": 2.92,
+    "target_mode (0-based, sets the speed)": 0,
+    "f_target_Hz (LOCK f_damped)": 2.0748,
+    "initial_velocity_point_m_s": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "initial_angular_velocity_rad_s": [
+     0.00773594,
+     0.0,
+     0.0
+    ],
+    "predicted_peak_bushing_force_over_muN": 0.113,
+    "window_s": 10.0,
+    "initial_state": "static equilibrium, all four legs LOCK after an extension (p_r0 2 bar g)",
+    "replica": {
+     "physical (judge the 1e-5 s run)": {
+      "dominant_LOCK_mode (1-based)": 1,
+      "eta_peaks_first10 (t_s, sqrt(kg) m)": [
+       [
+        0.37206,
+        0.284635
+       ],
+       [
+        0.86874,
+        0.270409
+       ],
+       [
+        1.36496,
+        0.255607
+       ],
+       [
+        1.86005,
+        0.241449
+       ],
+       [
+        2.35414,
+        0.228082
+       ],
+       [
+        2.84729,
+        0.215271
+       ],
+       [
+        3.33944,
+        0.203049
+       ],
+       [
+        3.83058,
+        0.191467
+       ],
+       [
+        4.3207,
+        0.180505
+       ],
+       [
+        4.80981,
+        0.170184
+       ]
+      ],
+      "periods_first10_s (eta up-crossings)": [
+       0.497144,
+       0.496031,
+       0.49523,
+       0.494352,
+       0.493388,
+       0.492394,
+       0.49139,
+       0.490376,
+       0.489358,
+       0.488337
+      ],
+      "mean_period_first10_s": 0.4928,
+      "max_elastic_dN_N": [
+       11104.0,
+       10326.0,
+       7863.7,
+       7199.2
+      ],
+      "min_elastic_dN_N": [
+       -11339.0,
+       -12066.0,
+       -8154.0,
+       -8562.9
+      ],
+      "max_dN_over_knee": [
+       2.716,
+       2.525,
+       2.481,
+       2.271
+      ],
+      "FLOOR_dwell_s (dN > knee)": [
+       2.218,
+       2.377,
+       1.974,
+       2.058
+      ],
+      "knee_crossings (t_s, leg)": [
+       [
+        0.0123245,
+        "FR"
+       ],
+       [
+        0.0131615,
+        "RR"
+       ],
+       [
+        0.209227,
+        "RR"
+       ],
+       [
+        0.211666,
+        "FR"
+       ],
+       [
+        0.293544,
+        "RL"
+       ],
+       [
+        0.295099,
+        "FL"
+       ],
+       [
+        0.4581,
+        "RL"
+       ],
+       [
+        0.461665,
+        "FL"
+       ],
+       [
+        0.521775,
+        "FR"
+       ],
+       [
+        0.522949,
+        "RR"
+       ],
+       [
+        0.70648,
+        "RR"
+       ],
+       [
+        0.711199,
+        "FR"
+       ],
+       [
+        0.774476,
+        "FL"
+       ],
+       [
+        0.77741,
+        "RL"
+       ],
+       [
+        0.957069,
+        "RL"
+       ],
+       [
+        0.960321,
+        "FL"
+       ],
+       [
+        1.02564,
+        "FR"
+       ],
+       [
+        1.02792,
+        "RR"
+       ],
+       [
+        1.19641,
+        "RR"
+       ],
+       [
+        1.20265,
+        "FR"
+       ],
+       [
+        1.27755,
+        "FL"
+       ],
+       [
+        1.28098,
+        "RL"
+       ],
+       [
+        1.45379,
+        "RL"
+       ],
+       [
+        1.45737,
+        "FL"
+       ],
+       [
+        1.52176,
+        "FR"
+       ],
+       [
+        1.52601,
+        "RR"
+       ],
+       [
+        1.69331,
+        "RR"
+       ],
+       [
+        1.69733,
+        "FR"
+       ],
+       [
+        1.77566,
+        "FL"
+       ],
+       [
+        1.77899,
+        "RL"
+       ],
+       [
+        1.94365,
+        "RL"
+       ],
+       [
+        1.94796,
+        "FL"
+       ],
+       [
+        2.01913,
+        "FR"
+       ],
+       [
+        2.02236,
+        "RR"
+       ],
+       [
+        2.18479,
+        "RR"
+       ],
+       [
+        2.1903,
+        "FR"
+       ],
+       [
+        2.27041,
+        "FL"
+       ],
+       [
+        2.27467,
+        "RL"
+       ],
+       [
+        2.43354,
+        "RL"
+       ],
+       [
+        2.43754,
+        "FL"
+       ],
+       [
+        2.51556,
+        "FR"
+       ],
+       [
+        2.52091,
+        "RR"
+       ],
+       [
+        2.67476,
+        "RR"
+       ],
+       [
+        2.68017,
+        "FR"
+       ],
+       [
+        2.7664,
+        "FL"
+       ],
+       [
+        2.77109,
+        "RL"
+       ],
+       [
+        2.92196,
+        "RL"
+       ],
+       [
+        2.92691,
+        "FL"
+       ],
+       [
+        3.01246,
+        "FR"
+       ],
+       [
+        3.01829,
+        "RR"
+       ],
+       [
+        3.1632,
+        "RR"
+       ],
+       [
+        3.16979,
+        "FR"
+       ],
+       [
+        3.26227,
+        "FL"
+       ],
+       [
+        3.26864,
+        "RL"
+       ],
+       [
+        3.41018,
+        "RL"
+       ],
+       [
+        3.41466,
+        "FL"
+       ],
+       [
+        3.50817,
+        "FR"
+       ],
+       [
+        3.51668,
+        "RR"
+       ],
+       [
+        3.65136,
+        "RR"
+       ],
+       [
+        3.65799,
+        "FR"
+       ]
+      ],
+      "n_knee_crossings": 136,
+      "last_knee_crossing_s": 8.46522,
+      "lift_off": false
+     },
+     "with_zeta_num_2e-4 (judge the 2e-4 s run)": {
+      "dominant_LOCK_mode (1-based)": 1,
+      "eta_peaks_first10 (t_s, sqrt(kg) m)": [
+       [
+        0.372022,
+        0.284377
+       ],
+       [
+        0.868713,
+        0.26957
+       ],
+       [
+        1.36485,
+        0.254327
+       ],
+       [
+        1.85983,
+        0.239848
+       ],
+       [
+        2.3538,
+        0.226149
+       ],
+       [
+        2.84679,
+        0.213048
+       ],
+       [
+        3.33874,
+        0.200581
+       ],
+       [
+        3.82965,
+        0.188795
+       ],
+       [
+        4.31952,
+        0.177673
+       ],
+       [
+        4.80835,
+        0.167234
+       ]
+      ],
+      "periods_first10_s (eta up-crossings)": [
+       0.497117,
+       0.495982,
+       0.495144,
+       0.494233,
+       0.493236,
+       0.492209,
+       0.491171,
+       0.490126,
+       0.489077,
+       0.488026
+      ],
+      "mean_period_first10_s": 0.492632,
+      "max_elastic_dN_N": [
+       11021.0,
+       10283.0,
+       7810.0,
+       7166.6
+      ],
+      "min_elastic_dN_N": [
+       -11286.0,
+       -11951.0,
+       -8117.8,
+       -8475.0
+      ],
+      "max_dN_over_knee": [
+       2.695,
+       2.515,
+       2.464,
+       2.261
+      ],
+      "FLOOR_dwell_s (dN > knee)": [
+       2.163,
+       2.296,
+       1.923,
+       2.0
+      ],
+      "knee_crossings (t_s, leg)": [
+       [
+        0.0123393,
+        "FR"
+       ],
+       [
+        0.0131788,
+        "RR"
+       ],
+       [
+        0.209308,
+        "RR"
+       ],
+       [
+        0.211789,
+        "FR"
+       ],
+       [
+        0.292909,
+        "RL"
+       ],
+       [
+        0.294277,
+        "FL"
+       ],
+       [
+        0.458552,
+        "RL"
+       ],
+       [
+        0.46205,
+        "FL"
+       ],
+       [
+        0.521841,
+        "FR"
+       ],
+       [
+        0.523088,
+        "RR"
+       ],
+       [
+        0.705916,
+        "RR"
+       ],
+       [
+        0.710594,
+        "FR"
+       ],
+       [
+        0.774955,
+        "FL"
+       ],
+       [
+        0.777692,
+        "RL"
+       ],
+       [
+        0.956921,
+        "RL"
+       ],
+       [
+        0.960272,
+        "FL"
+       ],
+       [
+        1.02538,
+        "FR"
+       ],
+       [
+        1.02773,
+        "RR"
+       ],
+       [
+        1.19666,
+        "RR"
+       ],
+       [
+        1.20279,
+        "FR"
+       ],
+       [
+        1.27763,
+        "FL"
+       ],
+       [
+        1.28109,
+        "RL"
+       ],
+       [
+        1.45296,
+        "RL"
+       ],
+       [
+        1.45656,
+        "FL"
+       ],
+       [
+        1.52202,
+        "FR"
+       ],
+       [
+        1.52633,
+        "RR"
+       ],
+       [
+        1.69307,
+        "RR"
+       ],
+       [
+        1.6972,
+        "FR"
+       ],
+       [
+        1.77537,
+        "FL"
+       ],
+       [
+        1.77873,
+        "RL"
+       ],
+       [
+        1.94287,
+        "RL"
+       ],
+       [
+        1.94716,
+        "FL"
+       ],
+       [
+        2.01939,
+        "FR"
+       ],
+       [
+        2.02281,
+        "RR"
+       ],
+       [
+        2.18414,
+        "RR"
+       ],
+       [
+        2.18973,
+        "FR"
+       ],
+       [
+        2.2703,
+        "FL"
+       ],
+       [
+        2.27459,
+        "RL"
+       ],
+       [
+        2.43255,
+        "RL"
+       ],
+       [
+        2.43657,
+        "FL"
+       ],
+       [
+        2.51574,
+        "FR"
+       ],
+       [
+        2.52134,
+        "RR"
+       ],
+       [
+        2.67388,
+        "RR"
+       ],
+       [
+        2.67939,
+        "FR"
+       ],
+       [
+        2.76641,
+        "FL"
+       ],
+       [
+        2.77122,
+        "RL"
+       ],
+       [
+        2.92064,
+        "RL"
+       ],
+       [
+        2.9256,
+        "FL"
+       ],
+       [
+        3.01268,
+        "FR"
+       ],
+       [
+        3.01888,
+        "RR"
+       ],
+       [
+        3.16202,
+        "RR"
+       ],
+       [
+        3.16868,
+        "FR"
+       ],
+       [
+        3.26233,
+        "FL"
+       ],
+       [
+        3.26888,
+        "RL"
+       ],
+       [
+        3.40858,
+        "RL"
+       ],
+       [
+        3.41308,
+        "FL"
+       ],
+       [
+        3.50847,
+        "FR"
+       ],
+       [
+        3.51735,
+        "RR"
+       ],
+       [
+        3.64981,
+        "RR"
+       ],
+       [
+        3.65652,
+        "FR"
+       ]
+      ],
+      "n_knee_crossings": 132,
+      "last_knee_crossing_s": 8.21675,
+      "lift_off": false
+     }
+    },
+    "linear_LOCK_no_knee (information: the result a missing knee would give)": {
+     "max_elastic_dN_N": [
+      11930.0,
+      11182.0,
+      8529.0,
+      7881.8
+     ],
+     "max_dN_over_knee": [
+      2.918,
+      2.735,
+      2.69,
+      2.486
+     ],
+     "mean_period_first10_s": 0.482003,
+     "eta_peaks_first10": [
+      0.277014,
+      0.262635,
+      0.248989,
+      0.235959,
+      0.223611,
+      0.211891,
+      0.200777,
+      0.190243,
+      0.180261,
+      0.170803
+     ],
+     "knee_effect_on_max_dN_rel (replica / linear - 1)": [
+      -0.06925,
+      -0.07657,
+      -0.078,
+      -0.08661
+     ],
+     "knee_effect_on_period_rel": 0.0224,
+     "knee_effect_on_eta_peak1..3_rel": [
+      0.02751,
+      0.0296,
+      0.02658
+     ]
+    }
+   },
+   "pitch": {
+    "level": "top",
+    "amplitude (deg rotation | m translation)": 0.018,
+    "linear_predicted_peak_over_knee": 2.91,
+    "target_mode (0-based, sets the speed)": 1,
+    "f_target_Hz (LOCK f_damped)": 3.0694,
+    "initial_velocity_point_m_s": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "initial_angular_velocity_rad_s": [
+     0.0,
+     0.00605871,
+     0.0
+    ],
+    "predicted_peak_bushing_force_over_muN": 0.0968,
+    "window_s": 10.0,
+    "initial_state": "static equilibrium, all four legs LOCK after an extension (p_r0 2 bar g)",
+    "replica": {
+     "physical (judge the 1e-5 s run)": {
+      "dominant_LOCK_mode (1-based)": 4,
+      "eta_peaks_first10 (t_s, sqrt(kg) m)": [
+       [
+        0.123718,
+        0.0968902
+       ],
+       [
+        0.287665,
+        0.0798142
+       ],
+       [
+        0.452608,
+        0.0611046
+       ],
+       [
+        0.615147,
+        0.0489937
+       ],
+       [
+        0.778552,
+        0.0394658
+       ],
+       [
+        0.940549,
+        0.0313463
+       ],
+       [
+        1.10306,
+        0.0261444
+       ],
+       [
+        1.26492,
+        0.0205491
+       ],
+       [
+        1.42763,
+        0.0173322
+       ],
+       [
+        1.58924,
+        0.0134617
+       ]
+      ],
+      "periods_first10_s (eta up-crossings)": [
+       0.16315,
+       0.165722,
+       0.162577,
+       0.163354,
+       0.162281,
+       0.162218,
+       0.162179,
+       0.162347,
+       0.162025,
+       0.16252
+      ],
+      "mean_period_first10_s": 0.162837,
+      "max_elastic_dN_N": [
+       10893.0,
+       10986.0,
+       7873.6,
+       7772.9
+      ],
+      "min_elastic_dN_N": [
+       -10210.0,
+       -10304.0,
+       -11453.0,
+       -11409.0
+      ],
+      "max_dN_over_knee": [
+       2.664,
+       2.687,
+       2.484,
+       2.452
+      ],
+      "FLOOR_dwell_s (dN > knee)": [
+       0.2395,
+       0.254,
+       0.134,
+       0.129
+      ],
+      "knee_crossings (t_s, leg)": [
+       [
+        0.0111014,
+        "FR"
+       ],
+       [
+        0.0111083,
+        "FL"
+       ],
+       [
+        0.0912423,
+        "FL"
+       ],
+       [
+        0.0916442,
+        "FR"
+       ],
+       [
+        0.176188,
+        "FR"
+       ],
+       [
+        0.176758,
+        "FL"
+       ],
+       [
+        0.22014,
+        "FL"
+       ],
+       [
+        0.220937,
+        "FR"
+       ],
+       [
+        0.255712,
+        "RR"
+       ],
+       [
+        0.255788,
+        "RL"
+       ],
+       [
+        0.327911,
+        "RR"
+       ],
+       [
+        0.328279,
+        "RL"
+       ],
+       [
+        0.345824,
+        "FL"
+       ],
+       [
+        0.348173,
+        "FR"
+       ],
+       [
+        0.422549,
+        "FR"
+       ],
+       [
+        0.423872,
+        "FL"
+       ],
+       [
+        0.437177,
+        "RL"
+       ],
+       [
+        0.443609,
+        "RL"
+       ],
+       [
+        0.519964,
+        "FR"
+       ],
+       [
+        0.521021,
+        "FL"
+       ],
+       [
+        0.546333,
+        "FL"
+       ],
+       [
+        0.547585,
+        "FR"
+       ],
+       [
+        0.597005,
+        "RR"
+       ],
+       [
+        0.598243,
+        "RL"
+       ],
+       [
+        0.653348,
+        "RL"
+       ],
+       [
+        0.654291,
+        "RR"
+       ],
+       [
+        0.670334,
+        "FR"
+       ],
+       [
+        0.67461,
+        "FL"
+       ],
+       [
+        0.687913,
+        "FL"
+       ],
+       [
+        0.691901,
+        "FR"
+       ],
+       [
+        1.00984,
+        "FR"
+       ],
+       [
+        1.01498,
+        "FR"
+       ]
+      ],
+      "n_knee_crossings": 32,
+      "last_knee_crossing_s": 1.01498,
+      "lift_off": false
+     },
+     "with_zeta_num_2e-4 (judge the 2e-4 s run)": {
+      "dominant_LOCK_mode (1-based)": 4,
+      "eta_peaks_first10 (t_s, sqrt(kg) m)": [
+       [
+        0.123679,
+        0.0960989
+       ],
+       [
+        0.287601,
+        0.0782644
+       ],
+       [
+        0.452499,
+        0.0593157
+       ],
+       [
+        0.614953,
+        0.0470103
+       ],
+       [
+        0.778307,
+        0.0375113
+       ],
+       [
+        0.940301,
+        0.029445
+       ],
+       [
+        1.10284,
+        0.0243256
+       ],
+       [
+        1.26469,
+        0.0188782
+       ],
+       [
+        1.42743,
+        0.0157903
+       ],
+       [
+        1.58901,
+        0.0120922
+       ]
+      ],
+      "periods_first10_s (eta up-crossings)": [
+       0.163137,
+       0.165664,
+       0.162527,
+       0.163264,
+       0.16229,
+       0.162228,
+       0.162185,
+       0.162365,
+       0.162019,
+       0.162554
+      ],
+      "mean_period_first10_s": 0.162823,
+      "max_elastic_dN_N": [
+       10863.0,
+       10956.0,
+       7777.7,
+       7678.9
+      ],
+      "min_elastic_dN_N": [
+       -10078.0,
+       -10169.0,
+       -11432.0,
+       -11388.0
+      ],
+      "max_dN_over_knee": [
+       2.657,
+       2.679,
+       2.453,
+       2.422
+      ],
+      "FLOOR_dwell_s (dN > knee)": [
+       0.223,
+       0.238,
+       0.126,
+       0.1275
+      ],
+      "knee_crossings (t_s, leg)": [
+       [
+        0.0111108,
+        "FR"
+       ],
+       [
+        0.0111179,
+        "FL"
+       ],
+       [
+        0.0912462,
+        "FL"
+       ],
+       [
+        0.0916484,
+        "FR"
+       ],
+       [
+        0.176314,
+        "FR"
+       ],
+       [
+        0.176899,
+        "FL"
+       ],
+       [
+        0.219818,
+        "FL"
+       ],
+       [
+        0.220621,
+        "FR"
+       ],
+       [
+        0.255917,
+        "RR"
+       ],
+       [
+        0.255984,
+        "RL"
+       ],
+       [
+        0.327742,
+        "RR"
+       ],
+       [
+        0.328113,
+        "RL"
+       ],
+       [
+        0.347237,
+        "FL"
+       ],
+       [
+        0.349896,
+        "FR"
+       ],
+       [
+        0.422411,
+        "FR"
+       ],
+       [
+        0.423763,
+        "FL"
+       ],
+       [
+        0.520818,
+        "FR"
+       ],
+       [
+        0.521976,
+        "FL"
+       ],
+       [
+        0.545162,
+        "FL"
+       ],
+       [
+        0.546532,
+        "FR"
+       ],
+       [
+        0.598096,
+        "RR"
+       ],
+       [
+        0.599386,
+        "RL"
+       ],
+       [
+        0.652624,
+        "RL"
+       ],
+       [
+        0.653603,
+        "RR"
+       ],
+       [
+        0.672799,
+        "FR"
+       ],
+       [
+        0.687422,
+        "FR"
+       ]
+      ],
+      "n_knee_crossings": 26,
+      "last_knee_crossing_s": 0.687422,
+      "lift_off": false
+     }
+    },
+    "linear_LOCK_no_knee (information: the result a missing knee would give)": {
+     "max_elastic_dN_N": [
+      11789.0,
+      11889.0,
+      8424.3,
+      8273.6
+     ],
+     "max_dN_over_knee": [
+      2.883,
+      2.907,
+      2.657,
+      2.61
+     ],
+     "mean_period_first10_s": 0.162242,
+     "eta_peaks_first10": [
+      0.101517,
+      0.0814003,
+      0.0670481,
+      0.0535261,
+      0.0443201,
+      0.0351666,
+      0.0293218,
+      0.0230829,
+      0.0194176,
+      0.015135
+     ],
+     "knee_effect_on_max_dN_rel (replica / linear - 1)": [
+      -0.07602,
+      -0.07593,
+      -0.06537,
+      -0.06052
+     ],
+     "knee_effect_on_period_rel": 0.003669,
+     "knee_effect_on_eta_peak1..3_rel": [
+      -0.04557,
+      -0.01948,
+      -0.08865
+     ]
+    }
+   }
+  },
+  "V5_V6_quasi_static": {
+   "top": {
+    "head_only (all k2, = reference.json V5)": {
+     "FL +0.3 mm": {
+      "dF_N": [
+       1493.46,
+       -1493.46,
+       -1640.15,
+       1640.15
+      ],
+      "droll_deg": 0.003997,
+      "dpitch_deg": -0.0017412,
+      "legs_above_knee": [],
+      "max_increase_over_knee": 0.0
+     },
+     "FL +1 mm": {
+      "dF_N": [
+       4978.2,
+       -4978.2,
+       -5467.18,
+       5467.18
+      ],
+      "droll_deg": 0.013323,
+      "dpitch_deg": -0.005804,
+      "legs_above_knee": [],
+      "max_increase_over_knee": 0.0
+     },
+     "FL +5 mm": {
+      "dF_N": [
+       24891.0,
+       -24891.0,
+       -27335.9,
+       27335.9
+      ],
+      "droll_deg": 0.066617,
+      "dpitch_deg": -0.02902,
+      "legs_above_knee": [],
+      "max_increase_over_knee": 0.0
+     },
+     "V6 FL+ F_min": {
+      "leg": "RL",
+      "travel_mm": 11.44
+     },
+     "V6 FL+ lift": {
+      "leg": "RL",
+      "travel_mm": 13.293
+     },
+     "V6 FL- F_min": {
+      "leg": "RR",
+      "travel_mm": 11.158
+     },
+     "V6 FL- lift": {
+      "leg": "RR",
+      "travel_mm": 13.012
+     }
+    },
+    "L1R (FL moving, others LOCK)": {
+     "FL +0.3 mm": {
+      "dF_N": [
+       1881.6,
+       -1881.6,
+       -2066.42,
+       2066.42
+      ],
+      "droll_deg": 0.0037202,
+      "dpitch_deg": -0.0016419,
+      "legs_above_knee": [],
+      "max_increase_over_knee": 0.6518
+     },
+     "FL +1 mm": {
+      "dF_N": [
+       5960.55,
+       -5960.55,
+       -6546.02,
+       6546.02
+      ],
+      "droll_deg": 0.01286,
+      "dpitch_deg": -0.0057533,
+      "legs_above_knee": [
+       "RR"
+      ],
+      "max_increase_over_knee": 2.065
+     },
+     "FL +5 mm": {
+      "dF_N": [
+       28740.5,
+       -28740.5,
+       -31563.5,
+       31563.5
+      ],
+      "droll_deg": 0.065863,
+      "dpitch_deg": -0.029723,
+      "legs_above_knee": [
+       "RR"
+      ],
+      "max_increase_over_knee": 9.957
+     },
+     "V6 FL+ F_min": {
+      "leg": "RL",
+      "travel_mm": 9.9534
+     },
+     "V6 FL+ lift": {
+      "leg": "RL",
+      "travel_mm": 11.573
+     },
+     "V6 FL- F_min": {
+      "leg": "RR",
+      "travel_mm": 10.177
+     },
+     "V6 FL- lift": {
+      "leg": "RR",
+      "travel_mm": 11.881
+     }
+    },
+    "probe_S_ii (probed leg moving, others LOCK)": {
+     "FL": {
+      "head_only_kN_mm": 4.9782,
+      "small_signal_kN_mm": 6.272,
+      "secant_+2mm_kN_mm": 5.8278,
+      "secant_-2mm_kN_mm": 5.6408
+     },
+     "FR": {
+      "head_only_kN_mm": 4.9782,
+      "small_signal_kN_mm": 6.272,
+      "secant_+2mm_kN_mm": 5.8278,
+      "secant_-2mm_kN_mm": 5.6408
+     },
+     "RL": {
+      "head_only_kN_mm": 6.0042,
+      "small_signal_kN_mm": 7.2454,
+      "secant_+2mm_kN_mm": 6.9854,
+      "secant_-2mm_kN_mm": 6.5305
+     },
+     "RR": {
+      "head_only_kN_mm": 6.0042,
+      "small_signal_kN_mm": 7.2454,
+      "secant_+2mm_kN_mm": 6.9854,
+      "secant_-2mm_kN_mm": 6.5305
+     }
+    }
+   }
+  },
+  "V5_dynamic_replica": {
+   "S3 V5 sequence (0.5 mm/s, +1 then +5 mm)": {
+    "moves (t_start_s, leg, distance_m, speed_m_s)": [
+     [
+      3.0,
+      "FL",
+      0.001,
+      0.0005
+     ],
+     [
+      15.2,
+      "FL",
+      0.004,
+      0.0005
+     ]
+    ],
+    "move_end_s": [
+     5.00239,
+     23.20239
+    ],
+    "lock_release_log (t_s, leg, event, F_extra_N)": [
+     [
+      3.0,
+      "FL",
+      "release",
+      0.0
+     ],
+     [
+      5.00239,
+      "FL",
+      "lock",
+      0.0
+     ],
+     [
+      15.2,
+      "FL",
+      "release",
+      31.248
+     ],
+     [
+      23.20239,
+      "FL",
+      "lock",
+      9.7039e-69
+     ]
+    ],
+    "knee_crossings (t_s, leg)": [
+     [
+      3.8489,
+      "RR"
+     ]
+    ],
+    "n_knee_crossings": 1,
+    "lift_off": false,
+    "transient +1 mm move [3, 7.5] s": {
+     "min_dF_N": [
+      0.0,
+      -6100.79,
+      -6713.33,
+      -59.8203
+     ],
+     "max_dF_N": [
+      6074.22,
+      0.0,
+      0.0,
+      6755.25
+     ],
+     "t_min_RL_s": 5.60289,
+     "max_dF_over_knee (FR RL RR)": [
+      0.0,
+      0.0,
+      2.131
+     ]
+    },
+    "final +1 mm (mean over [13.75, 15.2] s)": {
+     "dF_N": [
+      5887.79,
+      -5912.97,
+      -6582.94,
+      6608.13
+     ],
+     "dattitude_deg (roll, pitch)": [
+      0.012969,
+      -0.0057762
+     ],
+     "quasi_static_dF_N": [
+      5960.55,
+      -5960.55,
+      -6546.02,
+      6546.02
+     ],
+     "minus_quasi_static_N (dynamic-lock path dependence)": [
+      -72.76,
+      47.58,
+      -36.92,
+      62.11
+     ],
+     "minus_quasi_static_rel_of_max": 0.01111
+    },
+    "final +5 mm (mean over [31.95, 33.4] s)": {
+     "dF_N": [
+      28349.7,
+      -28480.0,
+      -31728.4,
+      31858.7
+     ],
+     "dattitude_deg (roll, pitch)": [
+      0.066371,
+      -0.029819
+     ],
+     "quasi_static_dF_N": [
+      28740.5,
+      -28740.5,
+      -31563.5,
+      31563.5
+     ],
+     "minus_quasi_static_N (dynamic-lock path dependence)": [
+      -390.8,
+      260.5,
+      -164.9,
+      295.2
+     ],
+     "minus_quasi_static_rel_of_max": 0.01238
+    }
+   },
+   "+0.3 mm at v_max (run_S3 V9 step form)": {
+    "moves (t_start_s, leg, distance_m, speed_m_s)": [
+     [
+      0.5,
+      "FL",
+      0.0003,
+      0.0209243016
+     ]
+    ],
+    "move_end_s": [
+     0.5757295
+    ],
+    "lock_release_log (t_s, leg, event, F_extra_N)": [
+     [
+      0.5,
+      "FL",
+      "release",
+      0.0
+     ],
+     [
+      0.5757295,
+      "FL",
+      "lock",
+      0.0
+     ]
+    ],
+    "knee_crossings (t_s, leg)": [
+     [
+      0.636915,
+      "RR"
+     ],
+     [
+      0.666303,
+      "RR"
+     ],
+     [
+      0.728892,
+      "RR"
+     ],
+     [
+      0.804379,
+      "RR"
+     ],
+     [
+      1.24384,
+      "RR"
+     ],
+     [
+      1.34613,
+      "RR"
+     ],
+     [
+      1.66562,
+      "RR"
+     ],
+     [
+      1.78652,
+      "RR"
+     ],
+     [
+      2.22954,
+      "RR"
+     ],
+     [
+      2.27205,
+      "RR"
+     ],
+     [
+      2.65686,
+      "RR"
+     ],
+     [
+      2.73551,
+      "RR"
+     ],
+     [
+      3.64653,
+      "RR"
+     ],
+     [
+      3.68636,
+      "RR"
+     ]
+    ],
+    "n_knee_crossings": 14,
+    "lift_off": false,
+    "transient V9 [0.5, 3.014] s": {
+     "min_dF_N": [
+      -1142.46,
+      -4553.49,
+      -4485.93,
+      -670.723
+     ],
+     "max_dF_N": [
+      5055.99,
+      1409.96,
+      386.182,
+      4633.84
+     ],
+     "t_min_RL_s": 0.83623,
+     "max_dF_over_knee (FR RL RR)": [
+      0.3448,
+      0.1218,
+      1.462
+     ]
+    },
+    "final end (mean over [10.55, 12] s)": {
+     "dF_N": [
+      1743.34,
+      -1747.44,
+      -1935.39,
+      1939.59
+     ],
+     "dattitude_deg (roll, pitch)": [
+      0.0034881,
+      -0.0015345
+     ],
+     "quasi_static_dF_N": [
+      1881.6,
+      -1881.6,
+      -2066.42,
+      2066.42
+     ],
+     "minus_quasi_static_N (dynamic-lock path dependence)": [
+      -138.3,
+      134.2,
+      131.0,
+      -126.8
+     ],
+     "minus_quasi_static_rel_of_max": 0.06691
+    }
+   },
+   "+0.3 mm at 0.5 mm/s": {
+    "moves (t_start_s, leg, distance_m, speed_m_s)": [
+     [
+      0.5,
+      "FL",
+      0.0003,
+      0.0005
+     ]
+    ],
+    "move_end_s": [
+     1.10239
+    ],
+    "lock_release_log (t_s, leg, event, F_extra_N)": [
+     [
+      0.5,
+      "FL",
+      "release",
+      0.0
+     ],
+     [
+      1.10239,
+      "FL",
+      "lock",
+      0.0
+     ]
+    ],
+    "knee_crossings (t_s, leg)": [],
+    "n_knee_crossings": 0,
+    "lift_off": false,
+    "transient V9 [0.5, 3.6] s": {
+     "min_dF_N": [
+      0.0,
+      -2257.11,
+      -2376.92,
+      -59.8203
+     ],
+     "max_dF_N": [
+      2226.74,
+      0.0,
+      0.0,
+      2380.45
+     ],
+     "t_min_RL_s": 1.25189,
+     "max_dF_over_knee (FR RL RR)": [
+      0.0,
+      0.0,
+      0.7509
+     ]
+    },
+    "final end (mean over [10.55, 12] s)": {
+     "dF_N": [
+      1850.11,
+      -1857.52,
+      -2063.17,
+      2070.58
+     ],
+     "dattitude_deg (roll, pitch)": [
+      0.0037211,
+      -0.0016354
+     ],
+     "quasi_static_dF_N": [
+      1881.6,
+      -1881.6,
+      -2066.42,
+      2066.42
+     ],
+     "minus_quasi_static_N (dynamic-lock path dependence)": [
+      -31.49,
+      24.08,
+      3.252,
+      4.153
+     ],
+     "minus_quasi_static_rel_of_max": 0.01524
+    }
+   },
+   "+0.15 mm at v_max": {
+    "moves (t_start_s, leg, distance_m, speed_m_s)": [
+     [
+      0.5,
+      "FL",
+      0.00015,
+      0.0209243016
+     ]
+    ],
+    "move_end_s": [
+     0.5535488
+    ],
+    "lock_release_log (t_s, leg, event, F_extra_N)": [
+     [
+      0.5,
+      "FL",
+      "release",
+      0.0
+     ],
+     [
+      0.5535488,
+      "FL",
+      "lock",
+      0.0
+     ]
+    ],
+    "knee_crossings (t_s, leg)": [],
+    "n_knee_crossings": 0,
+    "lift_off": false,
+    "transient V9 [0.5, 3.007] s": {
+     "min_dF_N": [
+      -608.693,
+      -2345.17,
+      -2204.37,
+      -408.074
+     ],
+     "max_dF_N": [
+      2947.06,
+      871.423,
+      269.098,
+      2541.73
+     ],
+     "t_min_RL_s": 0.818049,
+     "max_dF_over_knee (FR RL RR)": [
+      0.2131,
+      0.08489,
+      0.8018
+     ]
+    },
+    "final end (mean over [10.55, 12] s)": {
+     "dF_N": [
+      830.761,
+      -832.513,
+      -922.494,
+      924.297
+     ],
+     "dattitude_deg (roll, pitch)": [
+      0.0016624,
+      -0.0007312
+     ],
+     "quasi_static_dF_N": [
+      940.802,
+      -940.802,
+      -1033.21,
+      1033.21
+     ],
+     "minus_quasi_static_N (dynamic-lock path dependence)": [
+      -110.0,
+      108.3,
+      110.7,
+      -108.9
+     ],
+     "minus_quasi_static_rel_of_max": 0.1072
+    }
+   },
+   "+0.12 mm at v_max": {
+    "moves (t_start_s, leg, distance_m, speed_m_s)": [
+     [
+      0.5,
+      "FL",
+      0.00012,
+      0.0209243016
+     ]
+    ],
+    "move_end_s": [
+     0.5478955
+    ],
+    "lock_release_log (t_s, leg, event, F_extra_N)": [
+     [
+      0.5,
+      "FL",
+      "release",
+      0.0
+     ],
+     [
+      0.5478955,
+      "FL",
+      "lock",
+      0.0
+     ]
+    ],
+    "knee_crossings (t_s, leg)": [],
+    "n_knee_crossings": 0,
+    "lift_off": false,
+    "transient V9 [0.5, 3.006] s": {
+     "min_dF_N": [
+      -495.781,
+      -1881.12,
+      -1756.63,
+      -338.825
+     ],
+     "max_dF_N": [
+      2452.9,
+      715.4,
+      227.566,
+      2032.11
+     ],
+     "t_min_RL_s": 0.814896,
+     "max_dF_over_knee (FR RL RR)": [
+      0.175,
+      0.07178,
+      0.641
+     ]
+    },
+    "final end (mean over [10.55, 12] s)": {
+     "dF_N": [
+      655.555,
+      -656.934,
+      -727.933,
+      729.353
+     ],
+     "dattitude_deg (roll, pitch)": [
+      0.0013118,
+      -0.00057699
+     ],
+     "quasi_static_dF_N": [
+      752.641,
+      -752.641,
+      -826.569,
+      826.569
+     ],
+     "minus_quasi_static_N (dynamic-lock path dependence)": [
+      -97.09,
+      95.71,
+      98.64,
+      -97.22
+     ],
+     "minus_quasi_static_rel_of_max": 0.1193
+    }
+   },
+   "note": "rods rigid with the body: the FL motor reaction m_rod a (about 22 N at the ramp) is not modelled; T1 = 0.481973 s (LOCK mode 1); dF = elastic pad normal force change from the static state"
+  }
+ }
+}

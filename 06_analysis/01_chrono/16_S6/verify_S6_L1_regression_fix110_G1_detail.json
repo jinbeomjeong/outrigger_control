@@ -1,0 +1,46 @@
+{
+ "generated_by": "04_scripts/03_control/s6_g1_regression_detail.py",
+ "old_batch": "stage2_L1R_20261022_102159",
+ "new_batch": "stage2_L1R_20261022_142037",
+ "case": "G1_top_flat",
+ "units": {
+  "t": "s (absolute)",
+  "force": "kN, cylinder net force, + = compression"
+ },
+ "whole_array_comparison": "06_analysis/01_chrono/16_S6/verify_S6_L1_regression_fix110.json",
+ "result": {
+  "identical": false,
+  "sample_dt_s": 0.0010000000000331966,
+  "first_diff": {
+   "index": 16555,
+   "t_s": 85.0560000005765,
+   "leg": "FL"
+  },
+  "max_abs_diff_kN": 0.5851821187205578,
+  "max_abs_diff_at": {
+   "index": 16559,
+   "t_s": 85.06000000057664,
+   "leg": "FL"
+  },
+  "tail_max_abs_diff_kN": 0.013736521006809199,
+  "tail_s": 5.0,
+  "first_contact_t_s": {
+   "FL": 84.8780000005706,
+   "FR": 84.87700000057056,
+   "RL": 85.03600000057584,
+   "RR": 85.03700000057587
+  },
+  "first_diff_leg_separation": {
+   "new_t_s": 85.06100000057667,
+   "old_t_s": 85.06100000057667,
+   "F_cyl_new_kN_range_pm2ms": [
+    -1.0700175495625772,
+    -1.04628679796509
+   ],
+   "F_cyl_old_kN_range_pm2ms": [
+    -1.652111426783117,
+    -1.046797618754331
+   ]
+  }
+ }
+}

@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created by plot_c2_block_diagram.py -->
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+  <key id="d0" for="graph" attr.name="Description" attr.type="string" />
+  <key id="d1" for="port" yfiles.type="portgraphics" />
+  <key id="d2" for="port" yfiles.type="portgeometry" />
+  <key id="d3" for="port" yfiles.type="portuserdata" />
+  <key id="d4" for="node" attr.name="url" attr.type="string" />
+  <key id="d5" for="node" attr.name="description" attr.type="string" />
+  <key id="d6" for="node" yfiles.type="nodegraphics" />
+  <key id="d7" for="graphml" yfiles.type="resources" />
+  <key id="d8" for="edge" attr.name="url" attr.type="string" />
+  <key id="d9" for="edge" attr.name="description" attr.type="string" />
+  <key id="d10" for="edge" yfiles.type="edgegraphics" />
+  <key id="d11" for="edge" attr.name="edge_count" attr.type="string" />
+  <key id="d12" for="edge" attr.name="feedback" attr.type="boolean" />
+  <key id="d13" for="edge" attr.name="members" attr.type="string" />
+  <key id="d14" for="edge" attr.name="signal_style" attr.type="string" />
+  <graph id="G" edgedefault="directed">
+    <data key="d0">C2 R5 레벨링 제어기 개요 블록도 (명세 c2_r5_diagram_spec.json 그룹 단위)</data>
+    <node id="G_SENSOR">
+      <data key="d5">그룹 노드: S_P, S_S, S_ACC, S_GYRO</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="394.83" y="50.00" width="142.00" height="89.00" />
+          <y:Fill color="#C8E6C9" transparent="false" />
+          <y:BorderStyle color="#2E7D32" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">센서
+· 실린더 헤드측 압력 ×4
+· 스트로크 센서 ×4
+· IMU 가속도계
+· IMU 자이로</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="G_EST">
+      <data key="d5">그룹 노드: E_FORCE, E_BAND, E_ROD, E_CLR, E_ATT, E_BIAS, E_RATE, E_GATE, E_SETTLE, E_FLOOR, E_GE1, E_GE2</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="372.83" y="199.00" width="186.00" height="209.00" />
+          <y:Fill color="#BBDEFB" transparent="false" />
+          <y:BorderStyle color="#1565C0" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">추정
+· 다리 힘 추정
+· 마찰 띠 / 하중 추정
+· 로드 스트로크
+· 크롤러 클리어런스 추정
+· 자세 필터
+· B1′ 자이로 편향 추정 (CHECK)
+· 자이로 적분 자세
+· 정지 게이트 is_geometry_valid
+· 크롤러 정착 맵 (바닥 경사 역산)
+· 바닥 평면 추정 (B, 그림자)
+· GE1′ 바닥 기하 그림자
+· GE2 기하 트리거 (R6, 미구현)</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="G_OP">
+      <data key="d5">그룹 노드: OP_TGT</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="1196.83" y="281.50" width="102.00" height="44.00" />
+          <y:Fill color="#FFF59D" transparent="false" />
+          <y:BorderStyle color="#F9A825" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">운전자 입력
+· 목표 자세 요청</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="G_DEC">
+      <data key="d5">그룹 노드: D_CHECK, D_TARGET, D_REF, D_PHASE, D_TOUCH, D_PROBE, D_REANCHOR, D_MON</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="639.83" y="481.00" width="262.00" height="149.00" />
+          <y:Fill color="#FFE0B2" transparent="false" />
+          <y:BorderStyle color="#E65100" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">판단
+· CHECK 정지 측정
+· 목표 자세 수용 A0–A4 (+READY A5 스트로크)
+· 기준 램프 (φ_r, θ_r)
+· 단계 기계
+· 접지 래치 (TOUCH)
+· 결합 접지 판정 (PROBE 탐침 ±2 mm 사다리꼴)
+· REANCHOR 개루프
+· 감시 (DONE·PROBE·READY)</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="G_LEVEL">
+      <data key="d5">그룹 노드: D_ATT, D_HEAVE, D_TWIST, D_GUARD, D_MIX, D_LIMIT</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="476.33" y="677.00" width="137.00" height="119.00" />
+          <y:Fill color="#FFE0B2" transparent="false" />
+          <y:BorderStyle color="#E65100" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">LEVEL 루프
+· 자세 PI
+· heave P
+· 비틀림·하중 분배 루프
+· F_min 가드 (우선)
+· 기구학 합성
+· 제한 논리</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="G_OUT">
+      <data key="d5">그룹 노드: O_RAMP, O_CMD</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="597.83" y="843.00" width="120.00" height="59.00" />
+          <y:Fill color="#E1BEE7" transparent="false" />
+          <y:BorderStyle color="#6A1B9A" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">출력
+· 출력 램프
+· 다리 속도 명령 ×4</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="G_PLANT">
+      <data key="d5">그룹 노드: PLANT</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="546.83" y="949.00" width="222.00" height="44.00" />
+          <y:Fill color="#CFD8DC" transparent="false" />
+          <y:BorderStyle color="#546E7A" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="11" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">플랜트 (Chrono L1)
+· 유압 실린더 4개 + 상부체(크롤러 포함)</y:NodeLabel>
+          <y:Shape type="roundrectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="LEGEND">
+      <data key="d5">범례 (그림 주석, 명세 노드 아님)</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry x="1328.83" y="871.00" width="421.00" height="122.00" />
+          <y:Fill color="#FFFFFF" transparent="false" />
+          <y:BorderStyle color="#9E9E9E" raised="false" type="line" width="1.0" />
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true" xml:space="preserve">범례
+━━━  실선: 명령·단계 판정에 쓰이는 신호
+╌╌╌  점선: 그림자·기록 전용 / 미구현 (R6, GE2)
+┈┈┈  점점선: 파라미터·설정 갱신 (느림, 사건 구동)
+━━━  빨간 선: 되먹임 (플랜트 → 센서, 측정 (−) 입력, F_band 갱신, 명령 0 지속)
+[N] = 묶인 상세 엣지 수, 라벨은 명세 라벨 나열(5개 넘으면 '외 N건'). 그룹 안 엣지는 상세판 참조.
+LEVEL 루프는 상세판에서 판단 그룹 안의 묶음이다.
+출력은 다리 속도 명령뿐 — 위치 기준 s_ref = ∫u dt는 L1 엔진 훅 (c2.py에 위치 명령 없음).</y:NodeLabel>
+          <y:Shape type="rectangle" />
+        </y:ShapeNode>
+      </data>
+    </node>
+    <edge id="b0" source="G_PLANT" target="G_SENSOR">
+      <data key="d14">solid</data>
+      <data key="d12">true</data>
+      <data key="d11">4</data>
+      <data key="d13">PLANT-&gt;S_P; PLANT-&gt;S_S; PLANT-&gt;S_ACC; PLANT-&gt;S_GYRO</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-111.00" sy="0.00" tx="0.00" ty="-44.50">
+            <y:Point x="127.00" y="971.00" />
+            <y:Point x="127.00" y="24.00" />
+            <y:Point x="465.83" y="24.00" />
+          </y:Path>
+          <y:LineStyle color="#C62828" type="line" width="1.8" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#C62828" visible="true" xml:space="preserve">[4] 실린더 힘, 신장량, 자세·가속도 (C1점), 각속도</y:EdgeLabel>
+          <y:BendStyle smoothed="false" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b1" source="G_SENSOR" target="G_EST">
+      <data key="d14">solid</data>
+      <data key="d12">false</data>
+      <data key="d11">6</data>
+      <data key="d13">S_P-&gt;E_FORCE; S_S-&gt;E_ROD; S_ACC-&gt;E_ATT; S_GYRO-&gt;E_BIAS; S_GYRO-&gt;E_RATE; S_GYRO-&gt;E_GATE</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.00" sy="44.90" tx="0.00" ty="-104.88">
+            <y:Point x="465.83" y="150.98" />
+            <y:Point x="465.83" y="163.29" />
+            <y:Point x="465.83" y="176.13" />
+          </y:Path>
+          <y:LineStyle color="#37474F" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#37474F" visible="true" xml:space="preserve">[6] p_i, s, s_rod, f, ω (CHECK 중),
+ω</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b2" source="G_EST" target="G_DEC">
+      <data key="d14">solid</data>
+      <data key="d12">false</data>
+      <data key="d11">12</data>
+      <data key="d13">E_ATT-&gt;D_CHECK; E_SETTLE-&gt;D_TARGET; E_ROD-&gt;D_TARGET; E_FORCE-&gt;D_TOUCH; E_BAND-&gt;D_PROBE; E_RATE-&gt;D_PROBE; E_ROD-&gt;D_PROBE; E_FORCE-&gt;D_PROBE; E_FORCE-&gt;D_REANCHOR; E_BAND-&gt;D_REANCHOR; E_ATT-&gt;D_MON; E_BAND-&gt;D_MON</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="93.34" sy="76.15" tx="-128.21" ty="-74.99">
+            <y:Point x="570.12" y="390.10" />
+            <y:Point x="580.82" y="400.86" />
+            <y:Point x="591.11" y="411.85" />
+            <y:Point x="600.83" y="423.01" />
+            <y:Point x="608.73" y="434.72" />
+            <y:Point x="613.31" y="444.99" />
+            <y:Point x="618.15" y="455.01" />
+            <y:Point x="626.83" y="466.01" />
+            <y:Point x="628.94" y="468.11" />
+            <y:Point x="631.09" y="470.19" />
+            <y:Point x="633.28" y="472.25" />
+          </y:Path>
+          <y:LineStyle color="#37474F" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#37474F" visible="true" xml:space="preserve">[12] φ_f, θ_f, (φ̂_g, θ̂_g), A5
+스트로크 예측 (READY), P_i (자유공중 기준 차감),
+띠 외 7건</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b3" source="G_DEC" target="G_EST">
+      <data key="d14">solid</data>
+      <data key="d12">false</data>
+      <data key="d11">1</data>
+      <data key="d13">D_CHECK-&gt;E_SETTLE</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="63.41" sy="-74.67" tx="93.19" ty="18.13">
+            <y:Point x="839.99" y="466.00" />
+            <y:Point x="842.41" y="451.16" />
+            <y:Point x="840.64" y="436.71" />
+            <y:Point x="833.83" y="423.01" />
+            <y:Point x="792.69" y="392.00" />
+            <y:Point x="725.75" y="364.65" />
+            <y:Point x="646.48" y="341.61" />
+          </y:Path>
+          <y:LineStyle color="#37474F" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#37474F" visible="true" xml:space="preserve">[1] (φ_c, θ_c)</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b4" source="G_OP" target="G_DEC">
+      <data key="d14">solid</data>
+      <data key="d12">false</data>
+      <data key="d11">1</data>
+      <data key="d13">OP_TGT-&gt;D_TARGET</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-5.85" sy="22.31" tx="131.41" ty="-4.80">
+            <y:Point x="1230.91" y="357.42" />
+            <y:Point x="1213.41" y="395.56" />
+            <y:Point x="1188.91" y="433.87" />
+            <y:Point x="1156.83" y="466.01" />
+            <y:Point x="1099.84" y="500.01" />
+            <y:Point x="1037.20" y="524.21" />
+            <y:Point x="972.99" y="540.24" />
+          </y:Path>
+          <y:LineStyle color="#37474F" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#37474F" visible="true" xml:space="preserve">[1] (φ_t, θ_t)</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b5" source="G_DEC" target="G_EST">
+      <data key="d14">dashed</data>
+      <data key="d12">false</data>
+      <data key="d11">1</data>
+      <data key="d13">D_TOUCH-&gt;E_FLOOR</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="130.25" sy="-74.77" tx="93.29" ty="12.70">
+            <y:Point x="911.06" y="466.96" />
+            <y:Point x="916.23" y="452.65" />
+            <y:Point x="915.51" y="437.95" />
+            <y:Point x="907.83" y="423.01" />
+            <y:Point x="853.98" y="386.39" />
+            <y:Point x="766.75" y="356.70" />
+            <y:Point x="665.23" y="333.81" />
+          </y:Path>
+          <y:LineStyle color="#78909C" type="dashed" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#78909C" visible="true" xml:space="preserve">[1] 래치 시 s_rod, 자세</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b6" source="G_EST" target="G_DEC">
+      <data key="d14">dashed</data>
+      <data key="d12">false</data>
+      <data key="d11">1</data>
+      <data key="d13">E_GE2-&gt;D_MON</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-0.52" sy="104.86" tx="-131.38" ty="-69.13">
+            <y:Point x="467.35" y="426.95" />
+            <y:Point x="470.49" y="443.44" />
+            <y:Point x="474.92" y="456.80" />
+            <y:Point x="480.83" y="466.01" />
+            <y:Point x="508.14" y="476.63" />
+            <y:Point x="548.76" y="478.65" />
+            <y:Point x="590.92" y="478.10" />
+            <y:Point x="622.83" y="481.01" />
+            <y:Point x="624.77" y="481.58" />
+            <y:Point x="626.71" y="482.17" />
+            <y:Point x="628.65" y="482.77" />
+          </y:Path>
+          <y:LineStyle color="#78909C" type="dashed" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#78909C" visible="true" xml:space="preserve">[1] R6: 재레벨 트리거 후보</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b7" source="G_DEC" target="G_LEVEL">
+      <data key="d14">solid</data>
+      <data key="d12">false</data>
+      <data key="d11">1</data>
+      <data key="d13">D_REF-&gt;D_ATT</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-131.16" sy="68.39" tx="-11.23" ty="-59.59">
+            <y:Point x="635.44" y="625.50" />
+            <y:Point x="631.22" y="627.06" />
+            <y:Point x="627.02" y="628.56" />
+            <y:Point x="622.83" y="630.00" />
+            <y:Point x="599.69" y="633.28" />
+            <y:Point x="579.71" y="631.53" />
+            <y:Point x="561.80" y="632.76" />
+            <y:Point x="544.83" y="645.00" />
+            <y:Point x="541.21" y="650.11" />
+            <y:Point x="538.36" y="655.61" />
+            <y:Point x="536.24" y="661.43" />
+          </y:Path>
+          <y:LineStyle color="#37474F" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#37474F" visible="true" xml:space="preserve">[1] φ_r, θ_r (+)</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b8" source="G_EST" target="G_LEVEL">
+      <data key="d14">solid</data>
+      <data key="d12">true</data>
+      <data key="d11">3</data>
+      <data key="d13">E_ATT-&gt;D_ATT; E_CLR-&gt;D_HEAVE; E_FORCE-&gt;D_TWIST</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-93.12" sy="62.44" tx="-68.86" ty="-7.05">
+            <y:Point x="345.13" y="390.08" />
+            <y:Point x="318.89" y="417.49" />
+            <y:Point x="295.84" y="447.90" />
+            <y:Point x="277.83" y="481.01" />
+            <y:Point x="261.50" y="522.23" />
+            <y:Point x="254.00" y="557.76" />
+            <y:Point x="258.42" y="592.17" />
+            <y:Point x="277.83" y="630.00" />
+            <y:Point x="316.27" y="669.88" />
+            <y:Point x="364.59" y="698.18" />
+            <y:Point x="416.80" y="716.89" />
+          </y:Path>
+          <y:LineStyle color="#C62828" type="line" width="1.8" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#C62828" visible="true" xml:space="preserve">[3] φ_f, θ_f (−), c 저역 (−), n^T P
+(−)</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b9" source="G_EST" target="G_LEVEL">
+      <data key="d14">solid</data>
+      <data key="d12">false</data>
+      <data key="d11">3</data>
+      <data key="d13">E_BAND-&gt;D_GUARD; E_CLR-&gt;D_LIMIT; E_ROD-&gt;D_LIMIT</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-21.92" sy="104.90" tx="-61.07" ty="-59.99">
+            <y:Point x="438.42" y="460.70" />
+            <y:Point x="437.28" y="517.20" />
+            <y:Point x="442.68" y="574.71" />
+            <y:Point x="456.83" y="630.00" />
+            <y:Point x="461.04" y="640.20" />
+            <y:Point x="466.10" y="650.15" />
+            <y:Point x="471.86" y="659.80" />
+          </y:Path>
+          <y:LineStyle color="#37474F" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#37474F" visible="true" xml:space="preserve">[3] L_i, 크롤러 영역 래치, s (스트로크 끝)</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b10" source="G_LEVEL" target="G_DEC">
+      <data key="d14">solid</data>
+      <data key="d12">false</data>
+      <data key="d11">1</data>
+      <data key="d13">D_LIMIT-&gt;D_PHASE</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="57.97" sy="-59.85" tx="-112.95" ty="74.76">
+            <y:Point x="611.62" y="668.48" />
+            <y:Point x="620.63" y="660.39" />
+            <y:Point x="629.73" y="652.52" />
+            <y:Point x="638.83" y="645.00" />
+            <y:Point x="641.64" y="642.74" />
+            <y:Point x="644.49" y="640.49" />
+            <y:Point x="647.38" y="638.24" />
+          </y:Path>
+          <y:LineStyle color="#37474F" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#37474F" visible="true" xml:space="preserve">[1] 완료 → DONE / FAULT</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b11" source="G_DEC" target="G_EST">
+      <data key="d14">dotted</data>
+      <data key="d12">true</data>
+      <data key="d11">1</data>
+      <data key="d13">D_PROBE-&gt;E_BAND</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="131.49" sy="-24.01" tx="93.48" ty="7.13">
+            <y:Point x="961.22" y="513.67" />
+            <y:Point x="1008.38" y="489.96" />
+            <y:Point x="1032.14" y="459.90" />
+            <y:Point x="1020.83" y="423.01" />
+            <y:Point x="946.97" y="378.18" />
+            <y:Point x="828.03" y="345.87" />
+            <y:Point x="692.45" y="324.23" />
+          </y:Path>
+          <y:LineStyle color="#C62828" type="dotted" width="1.8" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#C62828" visible="true" xml:space="preserve">[1] F_s 추정 → F_band 갱신</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b12" source="G_DEC" target="G_OUT">
+      <data key="d14">solid</data>
+      <data key="d12">false</data>
+      <data key="d11">4</data>
+      <data key="d13">D_PHASE-&gt;O_RAMP; D_PROBE-&gt;O_RAMP; D_REANCHOR-&gt;O_RAMP; D_TOUCH-&gt;O_RAMP</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-8.69" sy="74.74" tx="17.14" ty="-29.76">
+            <y:Point x="760.57" y="638.31" />
+            <y:Point x="758.84" y="646.34" />
+            <y:Point x="756.92" y="654.27" />
+            <y:Point x="754.83" y="662.00" />
+            <y:Point x="739.28" y="710.44" />
+            <y:Point x="724.03" y="747.04" />
+            <y:Point x="706.18" y="782.62" />
+            <y:Point x="682.83" y="828.00" />
+            <y:Point x="682.02" y="829.59" />
+            <y:Point x="681.20" y="831.20" />
+            <y:Point x="680.36" y="832.81" />
+          </y:Path>
+          <y:LineStyle color="#37474F" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#37474F" visible="true" xml:space="preserve">[4] 단계별 u 선택
+(CHECK·IDLE·FAULT·READY = 0,
+TOUCH, LEVEL, PROBE, REANCHOR),
+탐침·재접지 u, 개루프 u (스트로크 끝 클립), 신장 u</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b13" source="G_LEVEL" target="G_OUT">
+      <data key="d14">solid</data>
+      <data key="d12">false</data>
+      <data key="d11">1</data>
+      <data key="d13">D_LIMIT-&gt;O_RAMP</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="49.56" sy="59.78" tx="-24.42" ty="-29.96">
+            <y:Point x="602.83" y="806.28" />
+            <y:Point x="611.24" y="816.25" />
+            <y:Point x="619.45" y="825.99" />
+          </y:Path>
+          <y:LineStyle color="#37474F" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#37474F" visible="true" xml:space="preserve">[1] u (LEVEL)</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b14" source="G_OUT" target="G_PLANT">
+      <data key="d14">solid</data>
+      <data key="d12">false</data>
+      <data key="d11">1</data>
+      <data key="d13">O_CMD-&gt;PLANT</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.00" sy="29.96" tx="0.00" ty="-22.26">
+            <y:Point x="657.83" y="911.45" />
+            <y:Point x="657.83" y="920.81" />
+            <y:Point x="657.83" y="930.19" />
+          </y:Path>
+          <y:LineStyle color="#37474F" type="line" width="1.2" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#37474F" visible="true" xml:space="preserve">[1] u_i [m/s]</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="b15" source="G_OUT" target="G_EST">
+      <data key="d14">dotted</data>
+      <data key="d12">true</data>
+      <data key="d11">1</data>
+      <data key="d13">O_CMD-&gt;E_GATE</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="60.24" sy="-2.00" tx="93.18" ty="2.75">
+            <y:Point x="774.86" y="864.92" />
+            <y:Point x="840.03" y="852.42" />
+            <y:Point x="906.40" y="830.34" />
+            <y:Point x="966.83" y="796.00" />
+            <y:Point x="1138.52" y="644.99" />
+            <y:Point x="1200.79" y="542.18" />
+            <y:Point x="1193.57" y="473.03" />
+            <y:Point x="1156.83" y="423.01" />
+            <y:Point x="1058.09" y="368.58" />
+            <y:Point x="900.02" y="334.05" />
+            <y:Point x="723.26" y="314.88" />
+          </y:Path>
+          <y:LineStyle color="#C62828" type="dotted" width="1.8" />
+          <y:Arrows source="none" target="standard" />
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Malgun Gothic" fontSize="9" fontStyle="plain" hasLineColor="false" modelName="centered" modelPosition="center" textColor="#C62828" visible="true" xml:space="preserve">[1] 명령 0 지속 시간</y:EdgeLabel>
+          <y:BendStyle smoothed="true" />
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+  </graph>
+  <data key="d7">
+    <y:Resources />
+  </data>
+</graphml>

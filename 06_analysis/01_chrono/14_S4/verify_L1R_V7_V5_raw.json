@@ -1,0 +1,3881 @@
+{
+ "meta": {
+  "generated": "2026-10-22T12:32:16",
+  "script": "04_scripts/02_chrono/run_L1R_checks.py",
+  "definition": "dynamics_model.md rev. 32 5.14.6-5.14.8 (+ V9-2 redefinition)",
+  "reference_source": "06_analysis/00_dynamics/reference.json",
+  "yaml_sha256": "84a46dc172b9442f80b921a788bbfc5c01cd1e85194ad671b1627b54e1a771b9",
+  "judgement": "none here (raw records); dynamics-expert / verify L1-R functions",
+  "m1": "after_M1"
+ },
+ "cases": {
+  "v5p3_l1r_dt1e-04": {
+   "settings": {
+    "kind": "v5p3",
+    "group": "V5 +0.3 mm / V9-1 (L1-R)",
+    "level": "top",
+    "dt": 0.0001,
+    "predictor": true,
+    "hold_s": 0.5,
+    "speed_m_s": 0.0005,
+    "travel_m": 0.0003,
+    "end_s": 12.0,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0001,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119304.7963539482,
+     117038.0082446518,
+     72659.73480734057,
+     71105.1874290059
+    ],
+    "dN_max_N": [
+     2221.474813504916,
+     5.992318778924528,
+     2.205209238396492,
+     2378.816718107453
+    ],
+    "dN_min_N": [
+     -4.766657674481394,
+     -2251.4311541162606,
+     -2374.7813094515877,
+     -57.62011857345351
+    ],
+    "abs_dN_max_over_knee": [
+     0.5432759632710007,
+     0.5506019791694324,
+     0.7491116945655657,
+     0.7503846420173704
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     6023,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 2,
+    "first_state_change_per_leg": {
+     "0": [
+      0.5001999999988342,
+      "3->1"
+     ]
+    },
+    "last_state_change_s": 1.1024999999974305,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": null,
+   "FL_travel_mm": 0.29999999999896776,
+   "FL_lock_t_s": 1.1024999999974305,
+   "final_attitude_deg": [
+    0.0018547684600855885,
+    0.008696946654543162
+   ],
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "events": 0,
+   "timing": {
+    "wall_s": 63.04776819999097
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v5p3_l1r_dt1e-04"
+  },
+  "v5p3_l1r_dt1e-05": {
+   "settings": {
+    "kind": "v5p3",
+    "group": "V5 +0.3 mm / V9-1 (L1-R)",
+    "level": "top",
+    "dt": 1e-05,
+    "predictor": true,
+    "hold_s": 0.5,
+    "speed_m_s": 0.0005,
+    "travel_m": 0.0003,
+    "end_s": 12.0,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 1e-05,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119304.79423875229,
+     117038.01002514936,
+     72659.72766531029,
+     71105.1830473083
+    ],
+    "dN_max_N": [
+     2222.4689958357194,
+     5.969905684192781,
+     2.2752437586750602,
+     2380.5139853029395
+    ],
+    "dN_min_N": [
+     -4.729722592499456,
+     -2252.4590374165564,
+     -2374.9752127820975,
+     -57.46126800312777
+    ],
+    "abs_dN_max_over_knee": [
+     0.5435190969586531,
+     0.5508533546460769,
+     0.7491728603040368,
+     0.7509200356133537
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     60238,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 2,
+    "first_state_change_per_leg": {
+     "0": [
+      0.5000199999810704,
+      "3->1"
+     ]
+    },
+    "last_state_change_s": 1.1023999999582657,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": null,
+   "FL_travel_mm": 0.30000000000041105,
+   "FL_lock_t_s": 1.1023999999582657,
+   "final_attitude_deg": [
+    0.0018561339909314804,
+    0.008697180479275764
+   ],
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "events": 0,
+   "timing": {
+    "wall_s": 477.6757933
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_122402/v5p3_l1r_dt1e-05"
+  },
+  "v5p3_l1r_dt2e-04": {
+   "settings": {
+    "kind": "v5p3",
+    "group": "V5 +0.3 mm / V9-1 (L1-R)",
+    "level": "top",
+    "dt": 0.0002,
+    "predictor": true,
+    "hold_s": 0.5,
+    "speed_m_s": 0.0005,
+    "travel_m": 0.0003,
+    "end_s": 12.0,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119304.79867967867,
+     117038.00624124552,
+     72659.74275253768,
+     71105.19230675438
+    ],
+    "dN_max_N": [
+     2220.142733582994,
+     5.978693704048055,
+     2.2790375233016675,
+     2377.013146156838
+    ],
+    "dN_min_N": [
+     -4.727756979278638,
+     -2250.226291841318,
+     -2374.3551938696473,
+     -57.75667257349414
+    ],
+    "abs_dN_max_over_knee": [
+     0.5429501945526986,
+     0.5503073223454842,
+     0.7489772787503503,
+     0.7498157151714251
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     3011,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 2,
+    "first_state_change_per_leg": {
+     "0": [
+      0.5003999999988338,
+      "3->1"
+     ]
+    },
+    "last_state_change_s": 1.1025999999974303,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": null,
+   "FL_travel_mm": 0.3000000000005776,
+   "FL_lock_t_s": 1.1025999999974303,
+   "final_attitude_deg": [
+    0.001853481600318888,
+    0.00869685270637747
+   ],
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "events": 0,
+   "timing": {
+    "wall_s": 32.42753919999814
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v5p3_l1r_dt2e-04"
+  },
+  "v5p3_l1r_dt5e-05": {
+   "settings": {
+    "kind": "v5p3",
+    "group": "V5 +0.3 mm / V9-1 (L1-R)",
+    "level": "top",
+    "dt": 5e-05,
+    "predictor": true,
+    "hold_s": 0.5,
+    "speed_m_s": 0.0005,
+    "travel_m": 0.0003,
+    "end_s": 12.0,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 5e-05,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119304.7951814134,
+     117038.00923646313,
+     72659.7308385321,
+     71105.18499376638
+    ],
+    "dN_max_N": [
+     2222.015852028926,
+     5.973839965561638,
+     2.2496327197441133,
+     2379.8069388056174
+    ],
+    "dN_min_N": [
+     -4.740145862888312,
+     -2251.971932452361,
+     -2374.9460918498953,
+     -57.51100654504262
+    ],
+    "abs_dN_max_over_knee": [
+     0.5434082777242241,
+     0.5507342299920279,
+     0.7491636742662393,
+     0.7506970016869717
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     12047,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 2,
+    "first_state_change_per_leg": {
+     "0": [
+      0.5000999999988345,
+      "3->1"
+     ]
+    },
+    "last_state_change_s": 1.1024500000010704,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": null,
+   "FL_travel_mm": 0.30000000000091065,
+   "FL_lock_t_s": 1.1024500000010704,
+   "final_attitude_deg": [
+    0.0018555534591532432,
+    0.008697221650806606
+   ],
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "events": 0,
+   "timing": {
+    "wall_s": 123.41561960001127
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v5p3_l1r_dt5e-05"
+  },
+  "v5p3_l1r_nopred_dt1e-04": {
+   "settings": {
+    "kind": "v5p3",
+    "group": "V5 +0.3 mm / V9-1 (L1-R)",
+    "level": "top",
+    "dt": 0.0001,
+    "predictor": false,
+    "hold_s": 0.5,
+    "speed_m_s": 0.0005,
+    "travel_m": 0.0003,
+    "end_s": 12.0,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0001,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119304.7963539482,
+     117038.0082446518,
+     72659.73480734057,
+     71105.1874290059
+    ],
+    "dN_max_N": [
+     2222.5911002429348,
+     5.970253611842054,
+     2.264670110482257,
+     2379.8408804857318
+    ],
+    "dN_min_N": [
+     -4.7565151457092725,
+     -2252.278447008299,
+     -2375.431220457045,
+     -57.67617470695404
+    ],
+    "abs_dN_max_over_knee": [
+     0.5435489583773135,
+     0.55080919009944,
+     0.7493167054154816,
+     0.7507077084031673
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     6023,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 2,
+    "first_state_change_per_leg": {
+     "0": [
+      0.5001999999988342,
+      "3->1"
+     ]
+    },
+    "last_state_change_s": 1.1024999999974305,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": null,
+   "FL_travel_mm": 0.2999999999997449,
+   "FL_lock_t_s": 1.1024999999974305,
+   "final_attitude_deg": [
+    0.0018559747423686794,
+    0.008697020122262122
+   ],
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "events": 0,
+   "timing": {
+    "wall_s": 62.76579910001601
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v5p3_l1r_nopred_dt1e-04"
+  },
+  "v5p3_l1r_nopred_dt2e-04": {
+   "settings": {
+    "kind": "v5p3",
+    "group": "V5 +0.3 mm / V9-1 (L1-R)",
+    "level": "top",
+    "dt": 0.0002,
+    "predictor": false,
+    "hold_s": 0.5,
+    "speed_m_s": 0.0005,
+    "travel_m": 0.0003,
+    "end_s": 12.0,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119304.79867967867,
+     117038.00624124552,
+     72659.74275253768,
+     71105.19230675438
+    ],
+    "dN_max_N": [
+     2222.925783568615,
+     6.013056818541372,
+     2.210899140802212,
+     2379.0682695333235
+    ],
+    "dN_min_N": [
+     -4.65576574136503,
+     -2252.271903177316,
+     -2375.821408387914,
+     -58.434676827309886
+    ],
+    "abs_dN_max_over_knee": [
+     0.5436308073386631,
+     0.5508075897634563,
+     0.7494397880508925,
+     0.7504639925302593
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     3011,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 2,
+    "first_state_change_per_leg": {
+     "0": [
+      0.5003999999988338,
+      "3->1"
+     ]
+    },
+    "last_state_change_s": 1.1025999999974303,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": null,
+   "FL_travel_mm": 0.3000000000003,
+   "FL_lock_t_s": 1.1025999999974303,
+   "final_attitude_deg": [
+    0.0018557354553995692,
+    0.00869689774043854
+   ],
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "events": 0,
+   "timing": {
+    "wall_s": 32.61635870000464
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v5p3_l1r_nopred_dt2e-04"
+  },
+  "v7a_bottom_heave": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "bottom",
+    "exc": "heave",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.00296449
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "window_s": 2.0,
+    "amplitude": 6.2e-05,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_bottom",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119269.48278305471,
+     117012.86782490782,
+     72650.90186192511,
+     71103.56276469087
+    ],
+    "dN_max_N": [
+     1527.8662888226681,
+     1541.3689002344909,
+     1250.429019204952,
+     1267.3428898041166
+    ],
+    "dN_min_N": [
+     -1769.6151197963045,
+     -1758.9143352614774,
+     -1255.2324865213595,
+     -1249.0198595113034
+    ],
+    "abs_dN_max_over_knee": [
+     0.4327707669615392,
+     0.4301538212322552,
+     0.39595617975825803,
+     0.39977633982474997
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.4327707669615392,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 5.019071300019277,
+    "steps": 10000,
+    "us_per_step": 501.9071300019277
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_heave"
+  },
+  "v7a_bottom_pitch": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "bottom",
+    "exc": "pitch",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.00112519,
+     0.0
+    ],
+    "window_s": 20.0,
+    "amplitude": 0.0029,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_bottom",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119303.58935965407,
+     117046.97438573149,
+     72648.63986266586,
+     71101.30075424607
+    ],
+    "dN_max_N": [
+     1580.681919749477,
+     1569.5801376812014,
+     1222.760168395078,
+     1235.4856082235347
+    ],
+    "dN_min_N": [
+     -1702.8530755535612,
+     -1717.3948661633622,
+     -1654.5798805273662,
+     -1646.5729872088705
+    ],
+    "abs_dN_max_over_knee": [
+     0.4164436793549539,
+     0.4199999678409621,
+     0.5219281174072312,
+     0.5194023869754849
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.5219281174072312,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 49.914162200002465,
+    "steps": 100000,
+    "us_per_step": 499.14162200002465
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_pitch"
+  },
+  "v7a_bottom_roll": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "bottom",
+    "exc": "roll",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.00149561,
+     0.0,
+     0.0
+    ],
+    "window_s": 20.0,
+    "amplitude": 0.0045,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_bottom",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119276.14238688389,
+     117046.38757579004,
+     72657.31213696458,
+     71129.00504492808
+    ],
+    "dN_max_N": [
+     1267.8748450604326,
+     1603.9973328872584,
+     924.9072944513027,
+     1153.0213575767411
+    ],
+    "dN_min_N": [
+     -1620.3756809487531,
+     -1226.2281255460257,
+     -1132.5032610326016,
+     -841.9796027591801
+    ],
+    "abs_dN_max_over_knee": [
+     0.3962733016717993,
+     0.39226787124071666,
+     0.3572419210125404,
+     0.36371424164697796
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.3962733016717993,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 49.90477270001429,
+    "steps": 100000,
+    "us_per_step": 499.0477270001429
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_roll"
+  },
+  "v7a_bottom_surge": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "bottom",
+    "exc": "surge",
+    "dt": null,
+    "v": [
+     0.00611986,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "window_s": 2.0,
+    "amplitude": 0.00014,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_bottom",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119289.58969593383,
+     117032.97462233967,
+     72666.5402737424,
+     71119.20109470065
+    ],
+    "dN_max_N": [
+     1601.7896044039953,
+     1626.5324133970425,
+     963.6378629827232,
+     994.4994778580585
+    ],
+    "dN_min_N": [
+     -1386.0380223631364,
+     -1338.373403814534,
+     -1513.9910981840949,
+     -1502.153125765486
+    ],
+    "abs_dN_max_over_knee": [
+     0.391727957030979,
+     0.3977789702173585,
+     0.47758015974101625,
+     0.47384593649130896
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.47758015974101625,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 5.201557399996091,
+    "steps": 10000,
+    "us_per_step": 520.1557399996091
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_surge"
+  },
+  "v7a_bottom_sway": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "bottom",
+    "exc": "sway",
+    "dt": null,
+    "v": [
+     0.0,
+     0.00340606,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "window_s": 2.0,
+    "amplitude": 6e-05,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_bottom",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119289.5891496424,
+     117032.96996069308,
+     72666.54502126251,
+     71119.20292624895
+    ],
+    "dN_max_N": [
+     1622.578511553249,
+     1175.6740847429464,
+     1152.523663065891,
+     810.8774836305674
+    ],
+    "dN_min_N": [
+     -1148.876016434704,
+     -1612.6543065518345,
+     -836.684296070307,
+     -1140.1091075025179
+    ],
+    "abs_dN_max_over_knee": [
+     0.3968120180737612,
+     0.3943849898675148,
+     0.36355724665256944,
+     0.3596411434230453
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.3968120180737612,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 4.886106599995401,
+    "steps": 10000,
+    "us_per_step": 488.61065999954
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_sway"
+  },
+  "v7a_bottom_yaw": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "bottom",
+    "exc": "yaw",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.00396497
+    ],
+    "window_s": 2.0,
+    "amplitude": 0.0084,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_bottom",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119289.58912226098,
+     117032.97003562382,
+     72666.54495556207,
+     71119.20293304938
+    ],
+    "dN_max_N": [
+     1577.3848246401321,
+     1604.8406384489936,
+     1115.1412397990644,
+     1140.9199753144203
+    ],
+    "dN_min_N": [
+     -1645.5821891975793,
+     -1560.4501515854936,
+     -1162.3486484440218,
+     -1108.977510492041
+    ],
+    "abs_dN_max_over_knee": [
+     0.4024377154955931,
+     0.39247410704343577,
+     0.3666564842187406,
+     0.35989692721173583
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.4024377154955931,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 4.962681600009091,
+    "steps": 10000,
+    "us_per_step": 496.2681600009091
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_yaw"
+  },
+  "v7a_middle_heave": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "middle",
+    "exc": "heave",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.00292795
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "window_s": 2.0,
+    "amplitude": 5.8e-05,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_middle",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119277.44489855027,
+     117017.51553663168,
+     72647.26717286075,
+     71097.5796264385
+    ],
+    "dN_max_N": [
+     1474.8669820231298,
+     1481.4257173618971,
+     1271.068198807072,
+     1280.429718458996
+    ],
+    "dN_min_N": [
+     -1733.6347524471348,
+     -1726.6250679194636,
+     -1250.7818809220335,
+     -1246.738580314719
+    ],
+    "abs_dN_max_over_knee": [
+     0.42397153655314934,
+     0.4222572730868947,
+     0.4009514680476636,
+     0.40390450790116533
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.42397153655314934,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 4.780786599993007,
+    "steps": 10000,
+    "us_per_step": 478.0786599993007
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_heave"
+  },
+  "v7a_middle_pitch": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "middle",
+    "exc": "pitch",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.00106487,
+     0.0
+    ],
+    "window_s": 20.0,
+    "amplitude": 0.0029,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_middle",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119310.55266787618,
+     117050.62329910565,
+     72645.77076040862,
+     71096.0832091352
+    ],
+    "dN_max_N": [
+     1587.3213767278503,
+     1601.9970505925157,
+     1017.8574181056028,
+     1024.3325856231386
+    ],
+    "dN_min_N": [
+     -1738.4614429019566,
+     -1779.4358005832764,
+     -1671.749076780441,
+     -1664.85936291315
+    ],
+    "abs_dN_max_over_knee": [
+     0.42515193476892615,
+     0.43517247765485173,
+     0.5273440458753729,
+     0.5251707235531629
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.5273440458753729,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 50.03025900002103,
+    "steps": 100000,
+    "us_per_step": 500.30259000021033
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_pitch"
+  },
+  "v7a_middle_roll": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "middle",
+    "exc": "roll",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.00155792,
+     0.0,
+     0.0
+    ],
+    "window_s": 20.0,
+    "amplitude": 0.0055,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_middle",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119283.29733404487,
+     117051.34559874338,
+     72653.10111084626,
+     71123.23737009207
+    ],
+    "dN_max_N": [
+     1145.1105583512253,
+     1592.1736088575708,
+     805.582113020515,
+     1149.413217437832
+    ],
+    "dN_min_N": [
+     -1613.597081178843,
+     -1064.7086346574797,
+     -1122.831570082868,
+     -763.7902867053344
+    ],
+    "abs_dN_max_over_knee": [
+     0.3946155514703391,
+     0.3893763034306165,
+     0.3541910393301582,
+     0.36257607369739425
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.3946155514703391,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 50.68744340000558,
+    "steps": 100000,
+    "us_per_step": 506.87443400005577
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_roll"
+  },
+  "v7a_middle_surge": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "middle",
+    "exc": "surge",
+    "dt": null,
+    "v": [
+     0.00455147,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "window_s": 2.0,
+    "amplitude": 0.0001,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_middle",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119297.30330842639,
+     117037.37382953495,
+     72662.71368305624,
+     71113.02605375074
+    ],
+    "dN_max_N": [
+     1580.189549153787,
+     1587.3216551001096,
+     986.820965552979,
+     999.6305696392374
+    ],
+    "dN_min_N": [
+     -1306.9951678295474,
+     -1276.8168270808383,
+     -1470.6609361249575,
+     -1469.9800243354111
+    ],
+    "abs_dN_max_over_knee": [
+     0.38644552449948016,
+     0.3881897269115822,
+     0.46391189858503773,
+     0.46369710870839237
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.46391189858503773,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 4.807410799985519,
+    "steps": 10000,
+    "us_per_step": 480.74107999855187
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_surge"
+  },
+  "v7a_middle_sway": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "middle",
+    "exc": "sway",
+    "dt": null,
+    "v": [
+     0.0,
+     0.00332802,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "window_s": 2.0,
+    "amplitude": 5.9e-05,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_middle",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119297.3035984722,
+     117037.36924282664,
+     72662.71811027575,
+     71113.02702550392
+    ],
+    "dN_max_N": [
+     1617.0555731557106,
+     1603.444743672313,
+     1146.5193950289831,
+     1135.1484029755375
+    ],
+    "dN_min_N": [
+     -1636.1213737392973,
+     -1605.7621948235173,
+     -1160.9159946348373,
+     -1137.4553905481735
+    ],
+    "abs_dN_max_over_knee": [
+     0.40012401218454,
+     0.39269947958605217,
+     0.3662045614591784,
+     0.35880404301440794
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.40012401218454,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 4.960719700000482,
+    "steps": 10000,
+    "us_per_step": 496.0719700000482
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_sway"
+  },
+  "v7a_middle_yaw": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "middle",
+    "exc": "yaw",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.00222116
+    ],
+    "window_s": 2.0,
+    "amplitude": 0.0049,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_middle",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119297.30397809435,
+     117037.36888699984,
+     72662.71834828812,
+     71113.02674240641
+    ],
+    "dN_max_N": [
+     1602.215860053082,
+     1043.9648931348056,
+     1127.621310810413,
+     764.7188497116877
+    ],
+    "dN_min_N": [
+     -1089.665888829375,
+     -1581.502689073488,
+     -747.6732480265637,
+     -1129.2123593056313
+    ],
+    "abs_dN_max_over_knee": [
+     0.3918322005933861,
+     0.3867666613183395,
+     0.355701936682542,
+     0.3562038241740956
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.3918322005933861,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 4.795289600006072,
+    "steps": 10000,
+    "us_per_step": 479.5289600006072
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_yaw"
+  },
+  "v7a_top_heave": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "top",
+    "exc": "heave",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.00284236
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "window_s": 2.0,
+    "amplitude": 6e-05,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119285.523263106,
+     117018.73088402752,
+     72644.74464262588,
+     71090.19423889978
+    ],
+    "dN_max_N": [
+     1394.4211289656523,
+     1404.4770639918133,
+     1277.063764198363,
+     1285.147906585873
+    ],
+    "dN_min_N": [
+     -1662.85545277255,
+     -1659.458749129306,
+     -1232.30527649766,
+     -1230.2350235376362
+    ],
+    "abs_dN_max_over_knee": [
+     0.4066620032752598,
+     0.4058313175377888,
+     0.4028427361540249,
+     0.40539283437945495
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.4066620032752598,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 4.977056600007927,
+    "steps": 10000,
+    "us_per_step": 497.7056600007927
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_heave"
+  },
+  "v7a_top_pitch": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "top",
+    "exc": "pitch",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.000807828,
+     0.0
+    ],
+    "window_s": 20.0,
+    "amplitude": 0.0024,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119314.85234203082,
+     117048.05995689143,
+     72646.88501857637,
+     71092.3346105531
+    ],
+    "dN_max_N": [
+     1560.2664065227727,
+     1573.2015164876502,
+     1115.7261725383287,
+     1102.624184873348
+    ],
+    "dN_min_N": [
+     -1307.2556613424385,
+     -1318.073508328729,
+     -1538.2274750776996,
+     -1532.499187914931
+    ],
+    "abs_dN_max_over_knee": [
+     0.3815731917417782,
+     0.3847365561353172,
+     0.48522539144830584,
+     0.4834184347881784
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.48522539144830584,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 50.31850420002593,
+    "steps": 100000,
+    "us_per_step": 503.1850420002592
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_pitch"
+  },
+  "v7a_top_roll": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "top",
+    "exc": "roll",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.00104663,
+     0.0,
+     0.0
+    ],
+    "window_s": 20.0,
+    "amplitude": 0.0046,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119295.38967981726,
+     117047.39544531405,
+     72653.28237874123,
+     71112.0515739237
+    ],
+    "dN_max_N": [
+     1605.837315828161,
+     1492.5345329062693,
+     1150.6453119738726,
+     1047.4826157469506
+    ],
+    "dN_min_N": [
+     -1468.6791849304427,
+     -1578.6796393559634,
+     -1052.3860102218314,
+     -1105.827466764793
+    ],
+    "abs_dN_max_over_knee": [
+     0.3927178509112239,
+     0.3860762663404958,
+     0.36296473113801203,
+     0.34882718851978073
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.3927178509112239,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 50.43618530000094,
+    "steps": 100000,
+    "us_per_step": 504.36185300000943
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_roll"
+  },
+  "v7a_top_surge": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "top",
+    "exc": "surge",
+    "dt": null,
+    "v": [
+     0.00356517,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "window_s": 2.0,
+    "amplitude": 9.2e-05,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119304.7999732169,
+     117038.00752498985,
+     72659.74110746794,
+     71105.1906547435
+    ],
+    "dN_max_N": [
+     1470.8451583406859,
+     1494.327712540442,
+     1242.7233467799524,
+     1261.991376346181
+    ],
+    "dN_min_N": [
+     -1387.4743948232208,
+     -1358.9502656475524,
+     -1372.408058854504,
+     -1358.0255421657494
+    ],
+    "abs_dN_max_over_knee": [
+     0.3597046499749818,
+     0.36544745974053927,
+     0.4329185691803149,
+     0.4283816834443738
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.4329185691803149,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 5.062745100003667,
+    "steps": 10000,
+    "us_per_step": 506.2745100003667
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_surge"
+  },
+  "v7a_top_sway": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "top",
+    "exc": "sway",
+    "dt": null,
+    "v": [
+     0.0,
+     0.00347367,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "window_s": 2.0,
+    "amplitude": 6.2e-05,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119304.80042335123,
+     117038.00449302257,
+     72659.74395780673,
+     71105.19103780744
+    ],
+    "dN_max_N": [
+     1609.3750145646918,
+     1412.8662966409465,
+     1135.4017591290176,
+     1003.8819881148665
+    ],
+    "dN_min_N": [
+     -1418.0094067014434,
+     -1588.8558351085085,
+     -1003.2528691913903,
+     -1131.0929576431663
+    ],
+    "abs_dN_max_over_knee": [
+     0.3935830179062163,
+     0.38856492050676816,
+     0.35815623628530235,
+     0.3567970485698836
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.3935830179062163,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 4.960408400016604,
+    "steps": 10000,
+    "us_per_step": 496.04084000166034
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_sway"
+  },
+  "v7a_top_yaw": {
+   "settings": {
+    "kind": "free",
+    "group": "V7a",
+    "level": "top",
+    "exc": "yaw",
+    "dt": null,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.00199027
+    ],
+    "window_s": 2.0,
+    "amplitude": 0.0045,
+    "series": false,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119304.80092493357,
+     117038.00400610844,
+     72659.74428885612,
+     71105.19066845284
+    ],
+    "dN_max_N": [
+     1623.2691535534104,
+     1115.2429668407713,
+     1142.537051554129,
+     791.1428277557425
+    ],
+    "dN_min_N": [
+     -1137.641965154573,
+     -1599.2530197089072,
+     -804.3708381815086,
+     -1141.5318183307973
+    ],
+    "abs_dN_max_over_knee": [
+     0.3969809190199399,
+     0.39110761891808893,
+     0.36040702501204636,
+     0.3600899297240017
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.3969809190199399,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 4.98791599998367,
+    "steps": 10000,
+    "us_per_step": 498.791599998367
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_yaw"
+  },
+  "v7b_heave_dt1e-05": {
+   "settings": {
+    "kind": "free",
+    "group": "V7b",
+    "level": "top",
+    "exc": "heave",
+    "dt": 1e-05,
+    "v": [
+     0.0,
+     0.0,
+     0.0213177
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "window_s": 2.0,
+    "amplitude": 0.00045,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 1e-05,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119297.56158299341,
+     117030.77737050547,
+     72654.0995444176,
+     71099.55492720116
+    ],
+    "dN_max_N": [
+     9335.625018189065,
+     9388.234165195507,
+     8210.193947927473,
+     8252.247428757866
+    ],
+    "dN_min_N": [
+     -12616.410027718899,
+     -12585.833272746328,
+     -9367.977897951823,
+     -9348.741663835986
+    ],
+    "abs_dN_max_over_knee": [
+     3.085424272723014,
+     3.077946530499497,
+     2.9550770716685726,
+     2.9490091074824716
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     17050,
+     17389,
+     21240,
+     21484
+    ],
+    "FLOOR_steps": [
+     17050,
+     17389,
+     21240,
+     21484
+    ],
+    "FLOOR_or_LIFT_steps": [
+     17050,
+     17389,
+     21240,
+     21484
+    ],
+    "FLOOR_time_s": [
+     0.1705,
+     0.17389000000000002,
+     0.2124,
+     0.21484000000000003
+    ],
+    "n_state_changes": 44,
+    "first_state_change_per_leg": {
+     "3": [
+      0.060409999997713015,
+      "3->4"
+     ],
+     "2": [
+      0.060549999997707715,
+      "3->4"
+     ],
+     "1": [
+      0.06449999999755818,
+      "3->4"
+     ],
+     "0": [
+      0.06466999999755174,
+      "3->4"
+     ]
+    },
+    "last_state_change_s": 0.6684699999746933,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 77163,
+    "non_LOCK_steps_total": 77163,
+    "abs_dN_max_over_knee_max": 3.085424272723014,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 84.39669389999472,
+    "steps": 200000,
+    "us_per_step": 421.9834694999736
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7b_heave_dt1e-05"
+  },
+  "v7b_heave_dt2e-04": {
+   "settings": {
+    "kind": "free",
+    "group": "V7b",
+    "level": "top",
+    "exc": "heave",
+    "dt": 0.0002,
+    "v": [
+     0.0,
+     0.0,
+     0.0213177
+    ],
+    "w": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "window_s": 2.0,
+    "amplitude": 0.00045,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119160.23305534406,
+     116893.44106208801,
+     72547.25692817871,
+     70992.7067978302
+    ],
+    "dN_max_N": [
+     9468.595775138849,
+     9521.327179149317,
+     8313.445127578176,
+     8355.569603029857
+    ],
+    "dN_min_N": [
+     -12473.55623888725,
+     -12442.903395007088,
+     -9256.594527620466,
+     -9237.45682627742
+    ],
+    "abs_dN_max_over_knee": [
+     3.050488459243329,
+     3.042992108987745,
+     2.919941800490859,
+     2.913904917925664
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     853,
+     868,
+     1060,
+     1072
+    ],
+    "FLOOR_steps": [
+     853,
+     868,
+     1060,
+     1072
+    ],
+    "FLOOR_or_LIFT_steps": [
+     853,
+     868,
+     1060,
+     1072
+    ],
+    "FLOOR_time_s": [
+     0.1706,
+     0.1736,
+     0.21200000000000002,
+     0.2144
+    ],
+    "n_state_changes": 44,
+    "first_state_change_per_leg": {
+     "2": [
+      0.06059999999985877,
+      "3->4"
+     ],
+     "3": [
+      0.06059999999985877,
+      "3->4"
+     ],
+     "1": [
+      0.06459999999984944,
+      "3->4"
+     ],
+     "0": [
+      0.06479999999984898,
+      "3->4"
+     ]
+    },
+    "last_state_change_s": 0.6681999999984427,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 3853,
+    "non_LOCK_steps_total": 3853,
+    "abs_dN_max_over_knee_max": 3.050488459243329,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 4.908765299973311,
+    "steps": 10000,
+    "us_per_step": 490.8765299973311
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7b_heave_dt2e-04"
+  },
+  "v7b_pitch_dt1e-05": {
+   "settings": {
+    "kind": "free",
+    "group": "V7b",
+    "level": "top",
+    "exc": "pitch",
+    "dt": 1e-05,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.00605871,
+     0.0
+    ],
+    "window_s": 10.0,
+    "amplitude": 0.018,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 1e-05,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119308.56494290587,
+     117041.7807304104,
+     72654.90411288477,
+     71100.35949566247
+    ],
+    "dN_max_N": [
+     10887.6361362631,
+     10984.82951134842,
+     7868.25478657303,
+     7775.004408425113
+    ],
+    "dN_min_N": [
+     -10215.391655562256,
+     -10298.887700906984,
+     -11442.925864219636,
+     -11400.394290252792
+    ],
+    "abs_dN_max_over_knee": [
+     2.662641491010271,
+     2.686410756433419,
+     3.609607988245985,
+     3.5961916373087273
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     24333,
+     25478,
+     13143,
+     12832
+    ],
+    "FLOOR_steps": [
+     24333,
+     25478,
+     13143,
+     12832
+    ],
+    "FLOOR_or_LIFT_steps": [
+     24333,
+     25478,
+     13143,
+     12832
+    ],
+    "FLOOR_time_s": [
+     0.24333000000000002,
+     0.25478,
+     0.13143000000000002,
+     0.12832000000000002
+    ],
+    "n_state_changes": 32,
+    "first_state_change_per_leg": {
+     "0": [
+      0.011019999999582808,
+      "3->4"
+     ],
+     "1": [
+      0.011069999999580915,
+      "3->4"
+     ],
+     "3": [
+      0.2559499999903103,
+      "3->4"
+     ],
+     "2": [
+      0.25596999999030956,
+      "3->4"
+     ]
+    },
+    "last_state_change_s": 1.0149199999615774,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 75786,
+    "non_LOCK_steps_total": 75786,
+    "abs_dN_max_over_knee_max": 3.609607988245985,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 345.4811633,
+    "steps": 1000000,
+    "us_per_step": 345.4811633
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_122402/v7b_pitch_dt1e-05"
+  },
+  "v7b_pitch_dt2e-04": {
+   "settings": {
+    "kind": "free",
+    "group": "V7b",
+    "level": "top",
+    "exc": "pitch",
+    "dt": 0.0002,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.0,
+     0.00605871,
+     0.0
+    ],
+    "window_s": 10.0,
+    "amplitude": 0.018,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119380.20114008737,
+     117113.40910134629,
+     72563.30974265428,
+     71008.75958007695
+    ],
+    "dN_max_N": [
+     10806.667825652054,
+     10903.594033507135,
+     7865.297406049809,
+     7773.584351808429
+    ],
+    "dN_min_N": [
+     -10138.48129116153,
+     -10217.372702688532,
+     -11337.871803393376,
+     -11295.387220040728
+    ],
+    "abs_dN_max_over_knee": [
+     2.6428401695304022,
+     2.6665440974878813,
+     3.5764692629185877,
+     3.563067734911967
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     1121,
+     1194,
+     623,
+     629
+    ],
+    "FLOOR_steps": [
+     1121,
+     1194,
+     623,
+     629
+    ],
+    "FLOOR_or_LIFT_steps": [
+     1121,
+     1194,
+     623,
+     629
+    ],
+    "FLOOR_time_s": [
+     0.2242,
+     0.2388,
+     0.1246,
+     0.1258
+    ],
+    "n_state_changes": 26,
+    "first_state_change_per_leg": {
+     "0": [
+      0.011199999999973898,
+      "3->4"
+     ],
+     "1": [
+      0.011199999999973898,
+      "3->4"
+     ],
+     "2": [
+      0.25639999999940244,
+      "3->4"
+     ],
+     "3": [
+      0.25639999999940244,
+      "3->4"
+     ]
+    },
+    "last_state_change_s": 0.687799999998397,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 3567,
+    "non_LOCK_steps_total": 3567,
+    "abs_dN_max_over_knee_max": 3.5764692629185877,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 23.84404060000088,
+    "steps": 50000,
+    "us_per_step": 476.8808120000176
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7b_pitch_dt2e-04"
+  },
+  "v7b_roll_dt1e-05": {
+   "settings": {
+    "kind": "free",
+    "group": "V7b",
+    "level": "top",
+    "exc": "roll",
+    "dt": 1e-05,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.00773594,
+     0.0,
+     0.0
+    ],
+    "window_s": 10.0,
+    "amplitude": 0.034,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 1e-05,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119301.31603251661,
+     117041.48095435392,
+     72657.33948724366,
+     71107.71874332137
+    ],
+    "dN_max_N": [
+     11100.514400700937,
+     10319.477413720932,
+     7865.4101216277195,
+     7203.625379702018
+    ],
+    "dN_min_N": [
+     -11334.816831659424,
+     -12055.556465761358,
+     -8153.788539053618,
+     -8559.37459231948
+    ],
+    "abs_dN_max_over_knee": [
+     2.7720024081679733,
+     2.9482639244381197,
+     2.572067720640052,
+     2.7000076090183693
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     224547,
+     238946,
+     195621,
+     202020
+    ],
+    "FLOOR_steps": [
+     224547,
+     238946,
+     195621,
+     202020
+    ],
+    "FLOOR_or_LIFT_steps": [
+     224547,
+     238946,
+     195621,
+     202020
+    ],
+    "FLOOR_time_s": [
+     2.24547,
+     2.38946,
+     1.9562100000000002,
+     2.0202
+    ],
+    "n_state_changes": 136,
+    "first_state_change_per_leg": {
+     "1": [
+      0.012289999999534729,
+      "3->4"
+     ],
+     "3": [
+      0.013319999999495735,
+      "3->4"
+     ],
+     "2": [
+      0.29367999998888195,
+      "3->4"
+     ],
+     "0": [
+      0.29479999998883955,
+      "3->4"
+     ]
+    },
+    "last_state_change_s": 8.691009999670978,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 861134,
+    "non_LOCK_steps_total": 861134,
+    "abs_dN_max_over_knee_max": 2.9482639244381197,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 347.4665004,
+    "steps": 1000000,
+    "us_per_step": 347.4665004
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_122402/v7b_roll_dt1e-05"
+  },
+  "v7b_roll_dt2e-04": {
+   "settings": {
+    "kind": "free",
+    "group": "V7b",
+    "level": "top",
+    "exc": "roll",
+    "dt": 0.0002,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.00773594,
+     0.0,
+     0.0
+    ],
+    "window_s": 10.0,
+    "amplitude": 0.034,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119235.25407402818,
+     117107.40450719108,
+     72611.99228405167,
+     71155.89109283911
+    ],
+    "dN_max_N": [
+     11089.883882063164,
+     10203.780675514412,
+     7857.498115069393,
+     7118.782131685686
+    ],
+    "dN_min_N": [
+     -11216.977354869625,
+     -12010.75125792883,
+     -8073.275802920849,
+     -8525.004675492295
+    ],
+    "abs_dN_max_over_knee": [
+     2.7431840056926724,
+     2.9373065224919914,
+     2.546670421125152,
+     2.689165807908508
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     10966,
+     11667,
+     9558,
+     9907
+    ],
+    "FLOOR_steps": [
+     10966,
+     11667,
+     9558,
+     9907
+    ],
+    "FLOOR_or_LIFT_steps": [
+     10966,
+     11667,
+     9558,
+     9907
+    ],
+    "FLOOR_time_s": [
+     2.1932,
+     2.3334,
+     1.9116000000000002,
+     1.9814
+    ],
+    "n_state_changes": 134,
+    "first_state_change_per_leg": {
+     "1": [
+      0.0123999999999711,
+      "3->4"
+     ],
+     "3": [
+      0.01339999999996877,
+      "3->4"
+     ],
+     "2": [
+      0.2931999999993167,
+      "3->4"
+     ],
+     "0": [
+      0.2939999999993148,
+      "3->4"
+     ]
+    },
+    "last_state_change_s": 8.452199999980301,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 42098,
+    "non_LOCK_steps_total": 42098,
+    "abs_dN_max_over_knee_max": 2.9373065224919914,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 23.822930900001666,
+    "steps": 50000,
+    "us_per_step": 476.4586180000333
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v7b_roll_dt2e-04"
+  },
+  "v9free_l1r_dt1e-04": {
+   "settings": {
+    "kind": "free",
+    "group": "V9-2 (L1-R)",
+    "level": "top",
+    "exc": "roll",
+    "dt": 0.0001,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.00104663,
+     0.0,
+     0.0
+    ],
+    "window_s": 6.0,
+    "amplitude": 0.0046,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0001,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119300.09113001234,
+     117042.70359844936,
+     72656.50413418765,
+     71108.61762200568
+    ],
+    "dN_max_N": [
+     1608.374317038193,
+     1503.0790619659238,
+     1152.1978333625448,
+     1056.1430880362313
+    ],
+    "dN_min_N": [
+     -1483.7127579982916,
+     -1581.0249913247244,
+     -1060.0731623945612,
+     -1107.7285645105148
+    ],
+    "abs_dN_max_over_knee": [
+     0.39333829088552424,
+     0.3866498372593701,
+     0.3634544654658378,
+     0.34942687934106376
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.39333829088552424,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 26.820948200009298,
+    "steps": 60000,
+    "us_per_step": 447.0158033334883
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v9free_l1r_dt1e-04"
+  },
+  "v9free_l1r_dt1e-05": {
+   "settings": {
+    "kind": "free",
+    "group": "V9-2 (L1-R)",
+    "level": "top",
+    "exc": "roll",
+    "dt": 1e-05,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.00104663,
+     0.0,
+     0.0
+    ],
+    "window_s": 6.0,
+    "amplitude": 0.0046,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 1e-05,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119304.32365664277,
+     117038.47962272892,
+     72659.40455799788,
+     71105.52611299546
+    ],
+    "dN_max_N": [
+     1611.2959118134459,
+     1514.3389185609267,
+     1154.8097348149458,
+     1063.6642997635936
+    ],
+    "dN_min_N": [
+     -1495.0195903100102,
+     -1583.8363360842486,
+     -1068.460338420089,
+     -1109.1946918014437
+    ],
+    "abs_dN_max_over_knee": [
+     0.394052785691481,
+     0.3873373697144006,
+     0.36427837540451685,
+     0.3498893611262224
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.394052785691481,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 215.00626439999905,
+    "steps": 600000,
+    "us_per_step": 358.3437739999984
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v9free_l1r_dt1e-05"
+  },
+  "v9free_l1r_dt2e-04": {
+   "settings": {
+    "kind": "free",
+    "group": "V9-2 (L1-R)",
+    "level": "top",
+    "exc": "roll",
+    "dt": 0.0002,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.00104663,
+     0.0,
+     0.0
+    ],
+    "window_s": 6.0,
+    "amplitude": 0.0046,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 0.0002,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119295.38967981726,
+     117047.39544531405,
+     72653.28237874123,
+     71112.0515739237
+    ],
+    "dN_max_N": [
+     1605.837315828161,
+     1492.5345329062693,
+     1150.6453119738726,
+     1047.4826157469506
+    ],
+    "dN_min_N": [
+     -1468.6791849304427,
+     -1578.6796393559634,
+     -1052.3860102218314,
+     -1105.827466764793
+    ],
+    "abs_dN_max_over_knee": [
+     0.3927178509112239,
+     0.3860762663404958,
+     0.36296473113801203,
+     0.34882718851978073
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.3927178509112239,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 14.000380900019081,
+    "steps": 30000,
+    "us_per_step": 466.6793633339694
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v9free_l1r_dt2e-04"
+  },
+  "v9free_l1r_dt5e-05": {
+   "settings": {
+    "kind": "free",
+    "group": "V9-2 (L1-R)",
+    "level": "top",
+    "exc": "roll",
+    "dt": 5e-05,
+    "v": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "w": [
+     0.00104663,
+     0.0,
+     0.0
+    ],
+    "window_s": 6.0,
+    "amplitude": 0.0046,
+    "series": true,
+    "source": "06_analysis/00_dynamics/reference.json"
+   },
+   "dt_s": 5e-05,
+   "start": {
+    "snapshot": "07_results/states_L1R/S1_L1_top",
+    "l1r_state_defaulted": false
+   },
+   "module": {
+    "N_start_N": [
+     119302.44240037858,
+     117040.35708932218,
+     72658.11538864627,
+     71106.90022142677
+    ],
+    "dN_max_N": [
+     1610.5077061627526,
+     1508.7822096917516,
+     1153.4772537362442,
+     1060.0165757595241
+    ],
+    "dN_min_N": [
+     -1489.865772116551,
+     -1582.2360844445939,
+     -1064.602358282078,
+     -1108.7873433833302
+    ],
+    "abs_dN_max_over_knee": [
+     0.3938600249266356,
+     0.38694601787654753,
+     0.36385805158148943,
+     0.34976086530955197
+    ],
+    "knee_after_extend_N": [
+     4089.0357087209914,
+     4089.0357087209914,
+     3170.1298039790995,
+     3170.1298039790995
+    ],
+    "non_LOCK_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_or_LIFT_steps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "FLOOR_time_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "n_state_changes": 0,
+    "first_state_change_per_leg": {},
+    "last_state_change_s": null,
+    "lock_mode_value": 3,
+    "floor_mode_value": 4
+   },
+   "validity_inputs": {
+    "FLOOR_or_LIFT_steps_total": 0,
+    "non_LOCK_steps_total": 0,
+    "abs_dN_max_over_knee_max": 0.3938600249266356,
+    "yield_steps": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "FL_travel_mm": null,
+   "FL_lock_t_s": null,
+   "final_attitude_deg": null,
+   "yield_steps": null,
+   "events": [],
+   "timing": {
+    "wall_s": 51.38582130000577,
+    "steps": 120000,
+    "us_per_step": 428.21517750004807
+   },
+   "m1": "after_M1",
+   "dir": "07_results/L1R_checks/batch_20261022_121412/v9free_l1r_dt5e-05"
+  }
+ }
+}

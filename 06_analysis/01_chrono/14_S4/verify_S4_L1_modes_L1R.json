@@ -1,0 +1,3900 @@
+{
+ "meta": {
+  "generated": "2026-10-22T13:07:07",
+  "index_guard": {
+   "params_file_sha256": "84a46dc172b9442f80b921a788bbfc5c01cd1e85194ad671b1627b54e1a771b9",
+   "reference_json_sha256": "c1ed8c93397f880ac6eba8b35f1280a1c8b7de54ce6f64764f2ec19e4706080f",
+   "cases_kept": 6,
+   "cases_held": {},
+   "reference_sha_differs": {
+    "modes_pitch": "6efa517270afc0b7",
+    "modes_roll": "6efa517270afc0b7",
+    "modes_heave": "6efa517270afc0b7",
+    "modes_surge": "6efa517270afc0b7",
+    "modes_sway": "6efa517270afc0b7",
+    "modes_yaw": "6efa517270afc0b7"
+   },
+   "rule": "index entries of another params_file_sha256 are not used (missing / held, not substituted)"
+  },
+  "stage": "S4 branch A (chrono_build_plan.md S4): V7 six modes (projection + ERA), beta sensitivity, leg damping sensitivity, optional rod-side k_v",
+  "script": "04_scripts/02_chrono/run_S4.py",
+  "checks_module": "outrigger_sim.verify.s4",
+  "judgement": "dyn final ruling: pass (dynamics_model.md rev. 19, 5.8; independent check 06_analysis/00_dynamics/s4_check.json); this file applies that judgement specification to the stored runs",
+  "dt_yaml_s": 0.0002,
+  "era": {
+   "order": 24,
+   "order_check": 32,
+   "block_rows": 40,
+   "decimate": 5,
+   "sample_s": 0.005,
+   "channels": "q (surge, sway, heave, roll, pitch, yaw) of the reference point, weighted by sqrt(diag M) for the SVD",
+   "mode_selection": "largest start amplitude in eta_i within f_ref +-15 % (nominal Phi as the label, also for beta)"
+  },
+  "mode_assignment": {
+   "mode 1": "roll",
+   "mode 2": "pitch",
+   "mode 3": "roll",
+   "mode 4": "pitch",
+   "mode 5": "roll",
+   "mode 6": "heave"
+  },
+  "mode_assignment_runner_up": {
+   "mode 1": {
+    "runner_up": "pitch",
+    "amplitude_ratio": 0.018171385996112063,
+    "is_close": false
+   },
+   "mode 2": {
+    "runner_up": "roll",
+    "amplitude_ratio": 0.005862029698400597,
+    "is_close": false
+   },
+   "mode 3": {
+    "runner_up": "yaw",
+    "amplitude_ratio": 0.898640868739894,
+    "is_close": true
+   },
+   "mode 4": {
+    "runner_up": "surge",
+    "amplitude_ratio": 0.38845749915980143,
+    "is_close": false
+   },
+   "mode 5": {
+    "runner_up": "sway",
+    "amplitude_ratio": 0.6493247986348715,
+    "is_close": false
+   },
+   "mode 6": {
+    "runner_up": "pitch",
+    "amplitude_ratio": 0.1337319408703449,
+    "is_close": false
+   }
+  },
+  "mode_assignment_runner_up_rule": "information (dynamics_model.md 5.13.8 (1)): runner-up / judged predicted amplitude >= 0.8 -> the judged row records runner_up and runner_up_amplitude_ratio; zeta of that mode is read with the projection leakage",
+  "predicted_start_amplitude_sqrtkg_m": {
+   "roll": [
+    0.17605554206882232,
+    0.0008373125476518413,
+    0.0680280230088607,
+    0.00014753616984932013,
+    0.02789231616100896,
+    0.0014103535652998085
+   ],
+   "pitch": [
+    0.003199173211687316,
+    0.142836626685855,
+    0.0007993760164485257,
+    0.12460176025763554,
+    0.00015625391817461644,
+    0.012439163128649603
+   ],
+   "yaw": [
+    0.07684413856622804,
+    0.00013102748362930146,
+    0.06113276169534008,
+    9.620541351815249e-05,
+    0.016910511513873447,
+    0.0006850547093122033
+   ],
+   "surge": [
+    0.0026074578320043696,
+    0.1725616781285182,
+    0.00046063340260944145,
+    0.04840248818059024,
+    0.00012409516070661518,
+    0.0020003482712614112
+   ],
+   "heave": [
+    0.0008602497724242926,
+    0.008494170470277547,
+    0.000216959978119419,
+    0.01439726983135434,
+    0.004690421620573574,
+    0.09301564792744282
+   ],
+   "sway": [
+    0.14914251431479883,
+    0.0014657642384388145,
+    0.05620216632410132,
+    0.00032861144192330413,
+    0.018111172574707315,
+    0.0007396464963263749
+   ]
+  },
+  "v7_reference": {
+   "phi": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / V7_ball_centre_bushing_rev13 / mode_shapes / Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)",
+   "mass_matrix": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / V7_ball_centre_bushing_rev13 / mode_shapes / mass_matrix (same coordinates)",
+   "reference_point": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / V7_ball_centre_bushing_rev13 / mode_shapes / reference_point_m (rotations about it, translations of it; body axes, level body = world)",
+   "f_damped_Hz": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / V7_ball_centre_bushing_rev13 / f_damped_Hz",
+   "zeta": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / V7_ball_centre_bushing_rev13 / zeta",
+   "zeta_num": "reference.json / chrono_test_references / L1_rigid_motor_lumped_contact / levels / top / V7_ball_centre_bushing_rev13 / zeta_num_r_omega_dt_half"
+  },
+  "batches": [
+   {
+    "batch": "07_results/S4/A_modes_L1R/batch_20261022_111154",
+    "cases": [
+     "modes_pitch",
+     "modes_roll",
+     "modes_heave",
+     "modes_surge",
+     "modes_sway",
+     "modes_yaw"
+    ],
+    "jobs": 1,
+    "wall_s": 118.84620520001044,
+    "case_wall_s": {
+     "modes_pitch": 46.88752380001824,
+     "modes_roll": 46.43961000000127,
+     "modes_heave": 6.3942819999938365,
+     "modes_surge": 6.33202820000588,
+     "modes_sway": 6.365731300000334,
+     "modes_yaw": 6.316750300000422
+    }
+   }
+  ],
+  "raw": {
+   "modes_pitch": "07_results/S4/A_modes_L1R/batch_20261022_111154/modes_pitch",
+   "modes_roll": "07_results/S4/A_modes_L1R/batch_20261022_111154/modes_roll",
+   "modes_heave": "07_results/S4/A_modes_L1R/batch_20261022_111154/modes_heave",
+   "modes_surge": "07_results/S4/A_modes_L1R/batch_20261022_111154/modes_surge",
+   "modes_sway": "07_results/S4/A_modes_L1R/batch_20261022_111154/modes_sway",
+   "modes_yaw": "07_results/S4/A_modes_L1R/batch_20261022_111154/modes_yaw"
+  }
+ },
+ "verdict_by_check": {
+  "V7": true,
+  "health (V13, no yield / event)": true
+ },
+ "all_passed": true,
+ "v7": {
+  "judged": [
+   {
+    "run": "roll",
+    "mode": 1,
+    "fit_window_s": 20.0,
+    "f_ref_Hz": 1.8454,
+    "zeta_num": 0.000178,
+    "eta_max_abs": 0.1499990104131424,
+    "f_proj_Hz": 2.07405493611884,
+    "f_damped_proj_Hz": 2.073973065237514,
+    "zeta_fit": 0.008885161313329747,
+    "zeta_proj": 0.008707161313329747,
+    "fit_residual_rms_rel": 0.033251167946495616,
+    "n_cycles": 41.47738733158839,
+    "amplitude": 0.1511732753410454,
+    "sigma_1_s": 0.11578850346786461,
+    "fit_success": true,
+    "zeta_log_decrement": 0.00885777474282522,
+    "era": {
+     "f_Hz": 2.0725315713745833,
+     "f_damped_Hz": 2.0724545806655934,
+     "zeta_raw": 0.008619449836041787,
+     "zeta": 0.008441449836041788,
+     "mac_vs_phi": 0.9988191119826035,
+     "mac_vs_all_phi": [
+      0.9988191119826035,
+      1.0124515062897608e-06,
+      0.0003456536861624671,
+      1.0160030129030538e-06,
+      0.0008319661169421622,
+      1.239759970721167e-06
+     ],
+     "eta_start_amplitude": 0.1483582126408075,
+     "leakage": 0.01746935709126793,
+     "window_s": [
+      0.0009999999999976694,
+      19.9959999999534
+     ],
+     "residual_rms_rel": 0.05026326341263085,
+     "n_oscillatory_modes": 11
+    },
+    "era_order_check": {
+     "f_Hz": 2.072894640799209,
+     "f_damped_Hz": 2.072812444196733,
+     "zeta_raw": 0.008905309371755238,
+     "zeta": 0.008727309371755239,
+     "mac_vs_phi": 0.9988097345569134,
+     "mac_vs_all_phi": [
+      0.9988097345569134,
+      8.404770929362347e-07,
+      0.0003496186637325257,
+      8.459577910872947e-07,
+      0.0008377907709790771,
+      1.1695736900155838e-06
+     ],
+     "eta_start_amplitude": 0.15136584942736456,
+     "leakage": 0.02055671795117815,
+     "window_s": [
+      0.0009999999999976694,
+      19.9959999999534
+     ],
+     "residual_rms_rel": 0.040382789586386525,
+     "n_oscillatory_modes": 15
+    },
+    "era_order_spread": {
+     "f_rel": 0.0001751816134627493,
+     "zeta_rel": 0.033164475825144146
+    },
+    "zeta_ref": 0.00902,
+    "judged_value": {
+     "f_Hz": 2.07405493611884,
+     "zeta": 0.008621161313329748,
+     "source": "projection",
+     "reason": "fit and ERA cross-check ok"
+    }
+   },
+   {
+    "run": "pitch",
+    "mode": 2,
+    "fit_window_s": 20.0,
+    "f_ref_Hz": 2.853,
+    "zeta_num": 0.000779,
+    "eta_max_abs": 0.11664086088625762,
+    "f_proj_Hz": 3.066924473568582,
+    "f_damped_proj_Hz": 3.0663012026466157,
+    "zeta_fit": 0.020159503152165078,
+    "zeta_proj": 0.01938050315216508,
+    "fit_residual_rms_rel": 0.08241539802164313,
+    "n_cycles": 61.32295775158676,
+    "amplitude": 0.10959273771201729,
+    "sigma_1_s": 0.3884747302925994,
+    "fit_success": true,
+    "zeta_log_decrement": 0.0172463339031289,
+    "era": {
+     "f_Hz": 3.070141807481842,
+     "f_damped_Hz": 3.0695251250675457,
+     "zeta_raw": 0.02004217049689992,
+     "zeta": 0.01926317049689992,
+     "mac_vs_phi": 0.9909799943748632,
+     "mac_vs_all_phi": [
+      2.997626947707794e-08,
+      0.9909799943748632,
+      2.3004984196287556e-06,
+      0.008936099650479033,
+      1.4193075117258537e-07,
+      8.143356891790011e-05
+     ],
+     "eta_start_amplitude": 0.10674506631148266,
+     "leakage": 0.10353362444081395,
+     "window_s": [
+      0.0009999999999976694,
+      19.9959999999534
+     ],
+     "residual_rms_rel": 0.027558549301958186,
+     "n_oscillatory_modes": 11
+    },
+    "era_order_check": {
+     "f_Hz": 3.070146475374731,
+     "f_damped_Hz": 3.0696023808336443,
+     "zeta_raw": 0.01882579788584948,
+     "zeta": 0.01804679788584948,
+     "mac_vs_phi": 0.9910019662358912,
+     "mac_vs_all_phi": [
+      1.560335022569458e-07,
+      0.9910019662358912,
+      1.7631653107568697e-06,
+      0.008917785098829189,
+      1.1664459296424257e-07,
+      7.821282157458204e-05
+     ],
+     "eta_start_amplitude": 0.10191036811675262,
+     "leakage": 0.1146561263686112,
+     "window_s": [
+      0.0009999999999976694,
+      19.9959999999534
+     ],
+     "residual_rms_rel": 0.01883881270120164,
+     "n_oscillatory_modes": 15
+    },
+    "era_order_spread": {
+     "f_rel": 1.5204160530579713e-06,
+     "zeta_rel": 0.06069066278218649
+    },
+    "zeta_ref": 0.0171,
+    "judged_value": {
+     "f_Hz": 3.070141807481842,
+     "zeta": 0.01897217049689992,
+     "source": "ERA",
+     "reason": "fit residual 0.0824 > 0.05"
+    }
+   },
+   {
+    "run": "roll",
+    "mode": 3,
+    "fit_window_s": 2.0,
+    "f_ref_Hz": 4.0256,
+    "zeta_num": 0.0025,
+    "eta_max_abs": 0.06318812356153247,
+    "f_proj_Hz": 4.030797216870591,
+    "f_damped_proj_Hz": 4.027647645330516,
+    "zeta_fit": 0.03952395608349193,
+    "zeta_proj": 0.037023956083491925,
+    "fit_residual_rms_rel": 0.06919673338725549,
+    "n_cycles": 8.051267642996939,
+    "amplitude": 0.06864152805351734,
+    "sigma_1_s": 1.0009934287059377,
+    "fit_success": true,
+    "zeta_log_decrement": 0.038999204952019265,
+    "era": {
+     "f_Hz": 4.032411805323598,
+     "f_damped_Hz": 4.029193557334569,
+     "zeta_raw": 0.03994437617141705,
+     "zeta": 0.03744437617141705,
+     "mac_vs_phi": 0.9994948987659092,
+     "mac_vs_all_phi": [
+      0.000162476528853559,
+      4.6901129304011614e-05,
+      0.9994948987659092,
+      8.373446933050238e-05,
+      6.848171591247113e-05,
+      0.0001435073906549013
+     ],
+     "eta_start_amplitude": 0.06910640224615534,
+     "leakage": 0.11858372624257527,
+     "window_s": [
+      0.0009999999999976694,
+      19.9959999999534
+     ],
+     "residual_rms_rel": 0.05026326341263085,
+     "n_oscillatory_modes": 11
+    },
+    "era_order_check": {
+     "f_Hz": 4.0337124673060085,
+     "f_damped_Hz": 4.030562234946413,
+     "zeta_raw": 0.039513819653086146,
+     "zeta": 0.037013819653086144,
+     "mac_vs_phi": 0.9993391947012012,
+     "mac_vs_all_phi": [
+      0.00025078870385254027,
+      4.5731768550589895e-05,
+      0.9993391947012012,
+      8.475628299494439e-05,
+      8.969868363530003e-05,
+      0.00018982985972425007
+     ],
+     "eta_start_amplitude": 0.06843960239908668,
+     "leakage": 0.11938486416967753,
+     "window_s": [
+      0.0009999999999976694,
+      19.9959999999534
+     ],
+     "residual_rms_rel": 0.040382789586386525,
+     "n_oscillatory_modes": 15
+    },
+    "era_order_spread": {
+     "f_rel": 0.0003225518734701893,
+     "zeta_rel": 0.010778902053275696
+    },
+    "zeta_ref": 0.0373,
+    "runner_up": "yaw",
+    "runner_up_amplitude_ratio": 0.898640868739894,
+    "judged_value": {
+     "f_Hz": 4.032411805323598,
+     "zeta": 0.03744437617141705,
+     "source": "ERA",
+     "reason": "fit residual 0.0692 > 0.05"
+    }
+   },
+   {
+    "run": "pitch",
+    "mode": 4,
+    "fit_window_s": 2.0,
+    "f_ref_Hz": 5.7467,
+    "zeta_num": 0.00203,
+    "eta_max_abs": 0.10978589296912784,
+    "f_proj_Hz": 6.117073884261952,
+    "f_damped_proj_Hz": 6.112601823382711,
+    "zeta_fit": 0.03823117078418523,
+    "zeta_proj": 0.036201170784185235,
+    "fit_residual_rms_rel": 0.14399938179164812,
+    "n_cycles": 12.219091044913561,
+    "amplitude": 0.1209391532188594,
+    "sigma_1_s": 1.4694039143582658,
+    "fit_success": true,
+    "zeta_log_decrement": 0.03910636991622719,
+    "era": {
+     "f_Hz": 6.149639822319841,
+     "f_damped_Hz": 6.145972280256785,
+     "zeta_raw": 0.03453130156612556,
+     "zeta": 0.032501301566125566,
+     "mac_vs_phi": 0.9913938065329961,
+     "mac_vs_all_phi": [
+      7.113794126373784e-07,
+      0.008554877621833788,
+      1.442322827884761e-06,
+      0.9913938065329961,
+      9.458907006075347e-06,
+      3.970323621321287e-05
+     ],
+     "eta_start_amplitude": 0.1069890339823622,
+     "leakage": 0.23840721637631354,
+     "window_s": [
+      0.0009999999999976694,
+      19.9959999999534
+     ],
+     "residual_rms_rel": 0.027558549301958186,
+     "n_oscillatory_modes": 11
+    },
+    "era_order_check": {
+     "f_Hz": 6.159955158532382,
+     "f_damped_Hz": 6.156647931244956,
+     "zeta_raw": 0.03276422832060044,
+     "zeta": 0.03073422832060044,
+     "mac_vs_phi": 0.9909622246831657,
+     "mac_vs_all_phi": [
+      8.608332123114567e-07,
+      0.00900873086427623,
+      1.798860806197649e-06,
+      0.9909622246831657,
+      1.3074856723625214e-05,
+      1.3309902110256198e-05
+     ],
+     "eta_start_amplitude": 0.09676505890526961,
+     "leakage": 0.313339860660873,
+     "window_s": [
+      0.0009999999999976694,
+      19.9959999999534
+     ],
+     "residual_rms_rel": 0.01883881270120164,
+     "n_oscillatory_modes": 15
+    },
+    "era_order_spread": {
+     "f_rel": 0.0016773886781307201,
+     "zeta_rel": 0.05117308544368859
+    },
+    "zeta_ref": 0.0367,
+    "judged_value": {
+     "f_Hz": 6.149639822319841,
+     "zeta": 0.032811301566125564,
+     "source": "ERA",
+     "reason": "fit residual 0.144 > 0.05"
+    }
+   },
+   {
+    "run": "roll",
+    "mode": 5,
+    "fit_window_s": 2.0,
+    "f_ref_Hz": 7.3657,
+    "zeta_num": 0.00396,
+    "eta_max_abs": 0.026849906282853796,
+    "f_proj_Hz": 7.4841485600692055,
+    "f_damped_proj_Hz": 7.473563734311205,
+    "zeta_fit": 0.05316576223791013,
+    "zeta_proj": 0.04920576223791013,
+    "fit_residual_rms_rel": 0.3781853046759777,
+    "n_cycles": 14.939653904853282,
+    "amplitude": 0.02888612707597348,
+    "sigma_1_s": 2.5000823421996445,
+    "fit_success": true,
+    "zeta_log_decrement": 0.025991715786053016,
+    "era": {
+     "f_Hz": 7.408103347966596,
+     "f_damped_Hz": 7.3978758415113175,
+     "zeta_raw": 0.05252867135717416,
+     "zeta": 0.04856867135717416,
+     "mac_vs_phi": 0.9986144818219399,
+     "mac_vs_all_phi": [
+      0.00014055465383486105,
+      2.078385390161347e-05,
+      1.2188115211195696e-05,
+      2.2862605478070964e-06,
+      0.9986144818219399,
+      0.0012097052944992765
+     ],
+     "eta_start_amplitude": 0.020908954559613276,
+     "leakage": 1.0487496879491458,
+     "window_s": [
+      0.0009999999999976694,
+      19.9959999999534
+     ],
+     "residual_rms_rel": 0.05026326341263085,
+     "n_oscillatory_modes": 11
+    },
+    "era_order_check": {
+     "f_Hz": 7.491092912587491,
+     "f_damped_Hz": 7.4800597033173535,
+     "zeta_raw": 0.05425419986329949,
+     "zeta": 0.05029419986329949,
+     "mac_vs_phi": 0.9951661691890777,
+     "mac_vs_all_phi": [
+      0.0005360548922272205,
+      1.8338674710690225e-05,
+      8.19841658808913e-05,
+      0.0002093042600433223,
+      0.9951661691890777,
+      0.003988148817932958
+     ],
+     "eta_start_amplitude": 0.02884053952490579,
+     "leakage": 0.7018750331560542,
+     "window_s": [
+      0.0009999999999976694,
+      19.9959999999534
+     ],
+     "residual_rms_rel": 0.040382789586386525,
+     "n_oscillatory_modes": 15
+    },
+    "era_order_spread": {
+     "f_rel": 0.011202538723177335,
+     "zeta_rel": 0.032849269961397365
+    },
+    "zeta_ref": 0.0491,
+    "judged_value": {
+     "f_Hz": 7.408103347966596,
+     "zeta": 0.04867867135717416,
+     "source": "ERA",
+     "reason": "fit residual 0.378 > 0.05"
+    }
+   },
+   {
+    "run": "heave",
+    "mode": 6,
+    "fit_window_s": 2.0,
+    "f_ref_Hz": 7.7309,
+    "zeta_num": 2.36e-05,
+    "eta_max_abs": 0.07691656323172057,
+    "f_proj_Hz": 8.761643547015838,
+    "f_damped_proj_Hz": 8.756991960994656,
+    "zeta_fit": 0.032581050732874046,
+    "zeta_proj": 0.03255745073287405,
+    "fit_residual_rms_rel": 0.15634492947065529,
+    "n_cycles": 17.50522692998752,
+    "amplitude": 0.08425252592293697,
+    "sigma_1_s": 1.7936204013711103,
+    "fit_success": true,
+    "zeta_log_decrement": 0.031186553237383372,
+    "era": {
+     "f_Hz": 8.666878060937957,
+     "f_damped_Hz": 8.650095987133703,
+     "zeta_raw": 0.06220082287030894,
+     "zeta": 0.06217722287030894,
+     "mac_vs_phi": 0.9988717230537674,
+     "mac_vs_all_phi": [
+      6.579901175499392e-08,
+      5.184704740260384e-05,
+      1.73948857482965e-09,
+      0.00016437694043233993,
+      0.0009119854199014387,
+      0.9988717230537674
+     ],
+     "eta_start_amplitude": 0.08577625401592784,
+     "leakage": 0.7596759058903961,
+     "window_s": [
+      0.0009999999999976694,
+      1.9959999999953482
+     ],
+     "residual_rms_rel": 0.02427967169066843,
+     "n_oscillatory_modes": 11
+    },
+    "era_order_check": {
+     "f_Hz": 8.733238536641885,
+     "f_damped_Hz": 8.718044338914881,
+     "zeta_raw": 0.05896268386028472,
+     "zeta": 0.05893908386028472,
+     "mac_vs_phi": 0.998871456457247,
+     "mac_vs_all_phi": [
+      9.87438169548562e-08,
+      6.616524416520985e-05,
+      1.312935458835983e-08,
+      0.00013399576343645287,
+      0.000928270661986137,
+      0.998871456457247
+     ],
+     "eta_start_amplitude": 0.09575741449522032,
+     "leakage": 0.6869308159763747,
+     "window_s": [
+      0.0009999999999976694,
+      1.9959999999953482
+     ],
+     "residual_rms_rel": 0.020560023381423296,
+     "n_oscillatory_modes": 15
+    },
+    "era_order_spread": {
+     "f_rel": 0.007656791204091906,
+     "zeta_rel": 0.052059423985046926
+    },
+    "zeta_ref": 0.0351,
+    "judged_value": {
+     "f_Hz": 8.666878060937957,
+     "zeta": 0.06218752287030894,
+     "source": "ERA",
+     "reason": "fit residual 0.156 > 0.05"
+    }
+   }
+  ],
+  "checks": [
+   {
+    "id": "V7",
+    "item": "L1-R LOCK: mode 1 (roll, projection) natural frequency",
+    "value": 2.07405493611884,
+    "ref": 2.0748,
+    "tol": 0.03,
+    "tol_kind": "rel",
+    "unit": "Hz",
+    "passed": true,
+    "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+    "deviation": -0.0003591015428764869,
+    "note": "f_n = |lambda| / 2 pi vs f_n; fit and ERA cross-check ok"
+   },
+   {
+    "id": "V7",
+    "item": "L1-R LOCK: mode 2 (pitch, ERA) natural frequency",
+    "value": 3.070141807481842,
+    "ref": 3.0694,
+    "tol": 0.03,
+    "tol_kind": "rel",
+    "unit": "Hz",
+    "passed": true,
+    "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+    "deviation": 0.000241678335128018,
+    "note": "f_n = |lambda| / 2 pi vs f_n; fit residual 0.0824 > 0.05"
+   },
+   {
+    "id": "V7",
+    "item": "L1-R LOCK: mode 3 (roll, ERA) natural frequency",
+    "value": 4.032411805323598,
+    "ref": 4.0331,
+    "tol": 0.03,
+    "tol_kind": "rel",
+    "unit": "Hz",
+    "passed": true,
+    "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+    "deviation": -0.00017063665081509357,
+    "note": "f_n = |lambda| / 2 pi vs f_n; fit residual 0.0692 > 0.05"
+   },
+   {
+    "id": "V7",
+    "item": "L1-R LOCK: mode 4 (pitch, ERA) natural frequency",
+    "value": 6.149639822319841,
+    "ref": 6.1676,
+    "tol": 0.03,
+    "tol_kind": "rel",
+    "unit": "Hz",
+    "passed": true,
+    "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+    "deviation": -0.002912020507192264,
+    "note": "f_n = |lambda| / 2 pi vs f_n; fit residual 0.144 > 0.05"
+   },
+   {
+    "id": "V7",
+    "item": "L1-R LOCK: mode 5 (roll, ERA) natural frequency",
+    "value": 7.408103347966596,
+    "ref": 7.5396,
+    "tol": 0.03,
+    "tol_kind": "rel",
+    "unit": "Hz",
+    "passed": true,
+    "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+    "deviation": -0.017440799516340977,
+    "note": "f_n = |lambda| / 2 pi vs f_n; fit residual 0.378 > 0.05"
+   },
+   {
+    "id": "V7",
+    "item": "L1-R LOCK: mode 6 (heave, ERA) natural frequency",
+    "value": 8.666878060937957,
+    "ref": 8.917,
+    "tol": 0.03,
+    "tol_kind": "rel",
+    "unit": "Hz",
+    "passed": true,
+    "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / f_damped_Hz (|lambda| / 2 pi)",
+    "deviation": -0.028050009987893056,
+    "note": "f_n = |lambda| / 2 pi vs f_n; fit residual 0.156 > 0.05"
+   }
+  ],
+  "cross_runs_f_proj": [
+   {
+    "runs": [
+     "roll",
+     "yaw",
+     "sway"
+    ],
+    "min": 2.070899811866675,
+    "max": 2.0746688418538586
+   },
+   {
+    "runs": [
+     "pitch",
+     "surge"
+    ],
+    "min": 3.0578270143697464,
+    "max": 3.066924473568582
+   },
+   {
+    "runs": [
+     "roll",
+     "yaw",
+     "sway"
+    ],
+    "min": 4.030797216870591,
+    "max": 4.038049659913354
+   },
+   {
+    "runs": [
+     "pitch",
+     "surge"
+    ],
+    "min": 2.9896748966548854,
+    "max": 6.117073884261952
+   },
+   {
+    "runs": [
+     "roll",
+     "yaw",
+     "sway"
+    ],
+    "min": 7.4841485600692055,
+    "max": 7.560926342456262
+   },
+   {
+    "runs": [
+     "pitch",
+     "heave"
+    ],
+    "min": 8.761643547015838,
+    "max": 8.832515198398553
+   }
+  ],
+  "cross_runs_zeta_proj": [
+   {
+    "runs": [
+     "roll",
+     "yaw",
+     "sway"
+    ],
+    "min": 0.008707161313329747,
+    "max": 0.008819105559615244
+   },
+   {
+    "runs": [
+     "pitch",
+     "surge"
+    ],
+    "min": 0.01874303202883851,
+    "max": 0.01938050315216508
+   },
+   {
+    "runs": [
+     "roll",
+     "yaw",
+     "sway"
+    ],
+    "min": 0.037023956083491925,
+    "max": 0.03758389775842063
+   },
+   {
+    "runs": [
+     "pitch",
+     "surge"
+    ],
+    "min": 0.01671621043039872,
+    "max": 0.036201170784185235
+   },
+   {
+    "runs": [
+     "roll",
+     "yaw",
+     "sway"
+    ],
+    "min": 0.04837054575338916,
+    "max": 0.051096551116952084
+   },
+   {
+    "runs": [
+     "pitch",
+     "heave"
+    ],
+    "min": 0.016283389673990754,
+    "max": 0.03255745073287405
+   }
+  ],
+  "all_runs": {
+   "roll": [
+    {
+     "mode": 1,
+     "fit_window_s": 20.0,
+     "f_ref_Hz": 1.8454,
+     "zeta_num": 0.000178,
+     "eta_max_abs": 0.1499990104131424,
+     "f_proj_Hz": 2.07405493611884,
+     "f_damped_proj_Hz": 2.073973065237514,
+     "zeta_fit": 0.008885161313329747,
+     "zeta_proj": 0.008707161313329747,
+     "fit_residual_rms_rel": 0.033251167946495616,
+     "n_cycles": 41.47738733158839,
+     "amplitude": 0.1511732753410454,
+     "sigma_1_s": 0.11578850346786461,
+     "fit_success": true,
+     "zeta_log_decrement": 0.00885777474282522,
+     "era": {
+      "f_Hz": 2.0725315713745833,
+      "f_damped_Hz": 2.0724545806655934,
+      "zeta_raw": 0.008619449836041787,
+      "zeta": 0.008441449836041788,
+      "mac_vs_phi": 0.9988191119826035,
+      "mac_vs_all_phi": [
+       0.9988191119826035,
+       1.0124515062897608e-06,
+       0.0003456536861624671,
+       1.0160030129030538e-06,
+       0.0008319661169421622,
+       1.239759970721167e-06
+      ],
+      "eta_start_amplitude": 0.1483582126408075,
+      "leakage": 0.01746935709126793,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.05026326341263085,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 2.072894640799209,
+      "f_damped_Hz": 2.072812444196733,
+      "zeta_raw": 0.008905309371755238,
+      "zeta": 0.008727309371755239,
+      "mac_vs_phi": 0.9988097345569134,
+      "mac_vs_all_phi": [
+       0.9988097345569134,
+       8.404770929362347e-07,
+       0.0003496186637325257,
+       8.459577910872947e-07,
+       0.0008377907709790771,
+       1.1695736900155838e-06
+      ],
+      "eta_start_amplitude": 0.15136584942736456,
+      "leakage": 0.02055671795117815,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.040382789586386525,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0001751816134627493,
+      "zeta_rel": 0.033164475825144146
+     },
+     "zeta_ref": 0.00902
+    },
+    {
+     "mode": 2,
+     "fit_window_s": 20.0,
+     "f_ref_Hz": 2.853,
+     "zeta_num": 0.000779,
+     "eta_max_abs": 0.001246788323056455,
+     "f_proj_Hz": 3.0449238635548643,
+     "f_damped_proj_Hz": 3.0444446575669897,
+     "zeta_fit": 0.017740702336742808,
+     "zeta_proj": 0.01696170233674281,
+     "fit_residual_rms_rel": 0.48357824477950706,
+     "n_cycles": 60.885848706540344,
+     "amplitude": 0.0009070325173143092,
+     "sigma_1_s": 0.33941193940914133,
+     "fit_success": true,
+     "zeta_log_decrement": 0.016078482442129078,
+     "era": {
+      "f_Hz": 3.0688603976205484,
+      "f_damped_Hz": 3.0682219120033487,
+      "zeta_raw": 0.020397615476757065,
+      "zeta": 0.019618615476757067,
+      "mac_vs_phi": 0.9176048588174541,
+      "mac_vs_all_phi": [
+       0.06927157909374278,
+       0.9176048588174541,
+       0.001716893886617434,
+       0.006280905137541315,
+       0.005003258066380197,
+       0.00012250499816948192
+      ],
+      "eta_start_amplitude": 0.0008222867279693764,
+      "leakage": 0.4964868643514386,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.05026326341263085,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 2.9877579237687137,
+      "f_damped_Hz": 2.98759868609478,
+      "zeta_raw": 0.010324271581649981,
+      "zeta": 0.009545271581649981,
+      "mac_vs_phi": 0.9358762202341139,
+      "mac_vs_all_phi": [
+       0.03953050704132736,
+       0.9358762202341139,
+       0.01103440225774927,
+       0.012549479675611134,
+       0.000923742299592482,
+       8.564849131070428e-05
+      ],
+      "eta_start_amplitude": 0.0004442733801903778,
+      "leakage": 0.7498395948976699,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.040382789586386525,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.02642755399193708,
+      "zeta_rel": 0.4938490926346556
+     },
+     "zeta_ref": 0.0171
+    },
+    {
+     "mode": 3,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 4.0256,
+     "zeta_num": 0.0025,
+     "eta_max_abs": 0.06318812356153247,
+     "f_proj_Hz": 4.030797216870591,
+     "f_damped_proj_Hz": 4.027647645330516,
+     "zeta_fit": 0.03952395608349193,
+     "zeta_proj": 0.037023956083491925,
+     "fit_residual_rms_rel": 0.06919673338725549,
+     "n_cycles": 8.051267642996939,
+     "amplitude": 0.06864152805351734,
+     "sigma_1_s": 1.0009934287059377,
+     "fit_success": true,
+     "zeta_log_decrement": 0.038999204952019265,
+     "era": {
+      "f_Hz": 4.032411805323598,
+      "f_damped_Hz": 4.029193557334569,
+      "zeta_raw": 0.03994437617141705,
+      "zeta": 0.03744437617141705,
+      "mac_vs_phi": 0.9994948987659092,
+      "mac_vs_all_phi": [
+       0.000162476528853559,
+       4.6901129304011614e-05,
+       0.9994948987659092,
+       8.373446933050238e-05,
+       6.848171591247113e-05,
+       0.0001435073906549013
+      ],
+      "eta_start_amplitude": 0.06910640224615534,
+      "leakage": 0.11858372624257527,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.05026326341263085,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 4.0337124673060085,
+      "f_damped_Hz": 4.030562234946413,
+      "zeta_raw": 0.039513819653086146,
+      "zeta": 0.037013819653086144,
+      "mac_vs_phi": 0.9993391947012012,
+      "mac_vs_all_phi": [
+       0.00025078870385254027,
+       4.5731768550589895e-05,
+       0.9993391947012012,
+       8.475628299494439e-05,
+       8.969868363530003e-05,
+       0.00018982985972425007
+      ],
+      "eta_start_amplitude": 0.06843960239908668,
+      "leakage": 0.11938486416967753,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.040382789586386525,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0003225518734701893,
+      "zeta_rel": 0.010778902053275696
+     },
+     "zeta_ref": 0.0373
+    },
+    {
+     "mode": 4,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 5.7467,
+     "zeta_num": 0.00203,
+     "eta_max_abs": 0.0007667681523436477,
+     "f_proj_Hz": 5.765380986205889,
+     "f_damped_proj_Hz": 5.765380968555092,
+     "zeta_fit": -7.824978491193226e-05,
+     "zeta_proj": -0.0021082497849119323,
+     "fit_residual_rms_rel": 0.8555934029932278,
+     "n_cycles": 11.524996556114768,
+     "amplitude": 0.00023082139894868865,
+     "sigma_1_s": -0.002834595101739747,
+     "fit_success": true,
+     "zeta_log_decrement": -0.013235474353037015,
+     "era": {
+      "f_Hz": 6.2359165293875325,
+      "f_damped_Hz": 6.235120704632658,
+      "zeta_raw": 0.015975693384510443,
+      "zeta": 0.013945693384510443,
+      "mac_vs_phi": 0.47936944269328857,
+      "mac_vs_all_phi": [
+       0.0431046880300381,
+       0.007561671022879883,
+       0.012090421756777558,
+       0.47936944269328857,
+       0.43011361562043243,
+       0.02776016087745763
+      ],
+      "eta_start_amplitude": 0.00017297008654309048,
+      "leakage": 3.509765339397028,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.05026326341263085,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 5.798466571314918,
+      "f_damped_Hz": 5.7929812983850795,
+      "zeta_raw": 0.04348653516972075,
+      "zeta": 0.041456535169720754,
+      "mac_vs_phi": 0.6406008788542745,
+      "mac_vs_all_phi": [
+       0.0018527460657569877,
+       0.0010139307143689766,
+       0.00041065473376823144,
+       0.6406008788542745,
+       0.022785213539550885,
+       0.3333365760920108
+      ],
+      "eta_start_amplitude": 0.0007710972621651831,
+      "leakage": 1.3452301049604776,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.040382789586386525,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.07015006631520426,
+      "zeta_rel": 1.7220436774208498
+     },
+     "zeta_ref": 0.0367
+    },
+    {
+     "mode": 5,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.3657,
+     "zeta_num": 0.00396,
+     "eta_max_abs": 0.026849906282853796,
+     "f_proj_Hz": 7.4841485600692055,
+     "f_damped_proj_Hz": 7.473563734311205,
+     "zeta_fit": 0.05316576223791013,
+     "zeta_proj": 0.04920576223791013,
+     "fit_residual_rms_rel": 0.3781853046759777,
+     "n_cycles": 14.939653904853282,
+     "amplitude": 0.02888612707597348,
+     "sigma_1_s": 2.5000823421996445,
+     "fit_success": true,
+     "zeta_log_decrement": 0.025991715786053016,
+     "era": {
+      "f_Hz": 7.408103347966596,
+      "f_damped_Hz": 7.3978758415113175,
+      "zeta_raw": 0.05252867135717416,
+      "zeta": 0.04856867135717416,
+      "mac_vs_phi": 0.9986144818219399,
+      "mac_vs_all_phi": [
+       0.00014055465383486105,
+       2.078385390161347e-05,
+       1.2188115211195696e-05,
+       2.2862605478070964e-06,
+       0.9986144818219399,
+       0.0012097052944992765
+      ],
+      "eta_start_amplitude": 0.020908954559613276,
+      "leakage": 1.0487496879491458,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.05026326341263085,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 7.491092912587491,
+      "f_damped_Hz": 7.4800597033173535,
+      "zeta_raw": 0.05425419986329949,
+      "zeta": 0.05029419986329949,
+      "mac_vs_phi": 0.9951661691890777,
+      "mac_vs_all_phi": [
+       0.0005360548922272205,
+       1.8338674710690225e-05,
+       8.19841658808913e-05,
+       0.0002093042600433223,
+       0.9951661691890777,
+       0.003988148817932958
+      ],
+      "eta_start_amplitude": 0.02884053952490579,
+      "leakage": 0.7018750331560542,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.040382789586386525,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.011202538723177335,
+      "zeta_rel": 0.032849269961397365
+     },
+     "zeta_ref": 0.0491
+    },
+    {
+     "mode": 6,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.7309,
+     "zeta_num": 2.36e-05,
+     "eta_max_abs": 0.0038344268232802284,
+     "f_proj_Hz": 8.550251549385708,
+     "f_damped_proj_Hz": 8.550082399113743,
+     "zeta_fit": 0.006290131925082436,
+     "zeta_proj": 0.006266531925082436,
+     "fit_residual_rms_rel": 0.5421028279859341,
+     "n_cycles": 17.091614715788534,
+     "amplitude": 0.002299249195428538,
+     "sigma_1_s": 0.3379235931567831,
+     "fit_success": true,
+     "zeta_log_decrement": 0.011660094873460192,
+     "era": {
+      "f_Hz": 8.589708100090332,
+      "f_damped_Hz": 8.58953806447529,
+      "zeta_raw": 0.006292070702921417,
+      "zeta": 0.006268470702921416,
+      "mac_vs_phi": 0.998636426571595,
+      "mac_vs_all_phi": [
+       4.069139393895797e-05,
+       0.00019045478076261735,
+       1.2665695332479886e-05,
+       0.0007790221801096329,
+       0.000340739378280008,
+       0.998636426571595
+      ],
+      "eta_start_amplitude": 0.0018839247496882613,
+      "leakage": 0.4447191323842758,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.05026326341263085,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 8.265966257730948,
+      "f_damped_Hz": 8.263188090796751,
+      "zeta_raw": 0.025924528022365022,
+      "zeta": 0.025900928022365023,
+      "mac_vs_phi": 0.982038816948997,
+      "mac_vs_all_phi": [
+       9.561356001242458e-05,
+       0.0005676176498684736,
+       1.6699353583952265e-05,
+       0.004082827383033385,
+       0.013198425104564981,
+       0.982038816948997
+      ],
+      "eta_start_amplitude": 0.0038860438095822277,
+      "leakage": 1.1395463109023005,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.040382789586386525,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.03768950453112363,
+      "zeta_rel": 3.120190195944275
+     },
+     "zeta_ref": 0.0351
+    }
+   ],
+   "pitch": [
+    {
+     "mode": 1,
+     "fit_window_s": 20.0,
+     "f_ref_Hz": 1.8454,
+     "zeta_num": 0.000178,
+     "eta_max_abs": 0.002767232028061423,
+     "f_proj_Hz": 2.07381734018139,
+     "f_damped_proj_Hz": 2.073723616492314,
+     "zeta_fit": 0.00950713207977776,
+     "zeta_proj": 0.009329132079777761,
+     "fit_residual_rms_rel": 0.09200482650496158,
+     "n_cycles": 41.47239860613313,
+     "amplitude": 0.002726984144439796,
+     "sigma_1_s": 0.123879629368809,
+     "fit_success": true,
+     "zeta_log_decrement": 0.009117421659806045,
+     "era": {
+      "f_Hz": 2.0677963920540177,
+      "f_damped_Hz": 2.067691856566442,
+      "zeta_raw": 0.010055125533441879,
+      "zeta": 0.00987712553344188,
+      "mac_vs_phi": 0.9955657422086325,
+      "mac_vs_all_phi": [
+       0.9955657422086325,
+       0.003092058477303498,
+       0.0003849265987690766,
+       7.006520156141373e-05,
+       0.0008118124064421142,
+       7.539510748771502e-05
+      ],
+      "eta_start_amplitude": 0.002774095529954383,
+      "leakage": 0.03257840267381628,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.027558549301958186,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 2.070186447445018,
+      "f_damped_Hz": 2.0700640447122702,
+      "zeta_raw": 0.010874252286305106,
+      "zeta": 0.010696252286305106,
+      "mac_vs_phi": 0.9975825890717829,
+      "mac_vs_all_phi": [
+       0.9975825890717829,
+       0.0012109169205826178,
+       0.00035596564116035574,
+       3.481578379253712e-05,
+       0.0008054600456484758,
+       1.0252537224755597e-05
+      ],
+      "eta_start_amplitude": 0.002894746726029578,
+      "leakage": 0.04743024886132918,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.01883881270120164,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0011558465815031393,
+      "zeta_rel": 0.08146360283011189
+     },
+     "zeta_ref": 0.00902
+    },
+    {
+     "mode": 2,
+     "fit_window_s": 20.0,
+     "f_ref_Hz": 2.853,
+     "zeta_num": 0.000779,
+     "eta_max_abs": 0.11664086088625762,
+     "f_proj_Hz": 3.066924473568582,
+     "f_damped_proj_Hz": 3.0663012026466157,
+     "zeta_fit": 0.020159503152165078,
+     "zeta_proj": 0.01938050315216508,
+     "fit_residual_rms_rel": 0.08241539802164313,
+     "n_cycles": 61.32295775158676,
+     "amplitude": 0.10959273771201729,
+     "sigma_1_s": 0.3884747302925994,
+     "fit_success": true,
+     "zeta_log_decrement": 0.0172463339031289,
+     "era": {
+      "f_Hz": 3.070141807481842,
+      "f_damped_Hz": 3.0695251250675457,
+      "zeta_raw": 0.02004217049689992,
+      "zeta": 0.01926317049689992,
+      "mac_vs_phi": 0.9909799943748632,
+      "mac_vs_all_phi": [
+       2.997626947707794e-08,
+       0.9909799943748632,
+       2.3004984196287556e-06,
+       0.008936099650479033,
+       1.4193075117258537e-07,
+       8.143356891790011e-05
+      ],
+      "eta_start_amplitude": 0.10674506631148266,
+      "leakage": 0.10353362444081395,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.027558549301958186,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 3.070146475374731,
+      "f_damped_Hz": 3.0696023808336443,
+      "zeta_raw": 0.01882579788584948,
+      "zeta": 0.01804679788584948,
+      "mac_vs_phi": 0.9910019662358912,
+      "mac_vs_all_phi": [
+       1.560335022569458e-07,
+       0.9910019662358912,
+       1.7631653107568697e-06,
+       0.008917785098829189,
+       1.1664459296424257e-07,
+       7.821282157458204e-05
+      ],
+      "eta_start_amplitude": 0.10191036811675262,
+      "leakage": 0.1146561263686112,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.01883881270120164,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 1.5204160530579713e-06,
+      "zeta_rel": 0.06069066278218649
+     },
+     "zeta_ref": 0.0171
+    },
+    {
+     "mode": 3,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 4.0256,
+     "zeta_num": 0.0025,
+     "eta_max_abs": 0.0007465816732189668,
+     "f_proj_Hz": 4.004864874265633,
+     "f_damped_proj_Hz": 4.004050364942074,
+     "zeta_fit": 0.020167265291987684,
+     "zeta_proj": 0.017667265291987685,
+     "fit_residual_rms_rel": 0.45953253688547313,
+     "n_cycles": 8.004096679500552,
+     "amplitude": 0.0006125938219690924,
+     "sigma_1_s": 0.5074751107871234,
+     "fit_success": true,
+     "zeta_log_decrement": 0.013419778274360831,
+     "era": {
+      "f_Hz": 4.071995734269767,
+      "f_damped_Hz": 4.069748647290327,
+      "zeta_raw": 0.03321707283919681,
+      "zeta": 0.03071707283919681,
+      "mac_vs_phi": 0.4819444070592662,
+      "mac_vs_all_phi": [
+       0.00028703826285222196,
+       0.28583299740367835,
+       0.4819444070592662,
+       0.2077804810796568,
+       0.0014982894332126874,
+       0.022656786760572156
+      ],
+      "eta_start_amplitude": 0.0006838784830908594,
+      "leakage": 0.4694570142317914,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.027558549301958186,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 4.01285770242413,
+      "f_damped_Hz": 4.011435708625444,
+      "zeta_raw": 0.02661941406168776,
+      "zeta": 0.02411941406168776,
+      "mac_vs_phi": 0.9433310239648257,
+      "mac_vs_all_phi": [
+       0.0008206485321526909,
+       0.037736170837331426,
+       0.9433310239648257,
+       0.005476510140898964,
+       0.0004773672422237839,
+       0.012158279282470943
+      ],
+      "eta_start_amplitude": 0.0006343049656356809,
+      "leakage": 0.4839658906676518,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.01883881270120164,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.01452310751407071,
+      "zeta_rel": 0.19862252190155905
+     },
+     "zeta_ref": 0.0373
+    },
+    {
+     "mode": 4,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 5.7467,
+     "zeta_num": 0.00203,
+     "eta_max_abs": 0.10978589296912784,
+     "f_proj_Hz": 6.117073884261952,
+     "f_damped_proj_Hz": 6.112601823382711,
+     "zeta_fit": 0.03823117078418523,
+     "zeta_proj": 0.036201170784185235,
+     "fit_residual_rms_rel": 0.14399938179164812,
+     "n_cycles": 12.219091044913561,
+     "amplitude": 0.1209391532188594,
+     "sigma_1_s": 1.4694039143582658,
+     "fit_success": true,
+     "zeta_log_decrement": 0.03910636991622719,
+     "era": {
+      "f_Hz": 6.149639822319841,
+      "f_damped_Hz": 6.145972280256785,
+      "zeta_raw": 0.03453130156612556,
+      "zeta": 0.032501301566125566,
+      "mac_vs_phi": 0.9913938065329961,
+      "mac_vs_all_phi": [
+       7.113794126373784e-07,
+       0.008554877621833788,
+       1.442322827884761e-06,
+       0.9913938065329961,
+       9.458907006075347e-06,
+       3.970323621321287e-05
+      ],
+      "eta_start_amplitude": 0.1069890339823622,
+      "leakage": 0.23840721637631354,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.027558549301958186,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 6.159955158532382,
+      "f_damped_Hz": 6.156647931244956,
+      "zeta_raw": 0.03276422832060044,
+      "zeta": 0.03073422832060044,
+      "mac_vs_phi": 0.9909622246831657,
+      "mac_vs_all_phi": [
+       8.608332123114567e-07,
+       0.00900873086427623,
+       1.798860806197649e-06,
+       0.9909622246831657,
+       1.3074856723625214e-05,
+       1.3309902110256198e-05
+      ],
+      "eta_start_amplitude": 0.09676505890526961,
+      "leakage": 0.313339860660873,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.01883881270120164,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0016773886781307201,
+      "zeta_rel": 0.05117308544368859
+     },
+     "zeta_ref": 0.0367
+    },
+    {
+     "mode": 5,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.3657,
+     "zeta_num": 0.00396,
+     "eta_max_abs": 0.001364025931872391,
+     "f_proj_Hz": 8.81340067207035,
+     "f_damped_proj_Hz": 8.81262562152293,
+     "zeta_fit": 0.013261684942122303,
+     "zeta_proj": 0.009301684942122303,
+     "fit_residual_rms_rel": 0.7106567160192174,
+     "n_cycles": 17.61643861738328,
+     "amplitude": 0.0006784164890857834,
+     "sigma_1_s": 0.7343821103577013,
+     "fit_success": true,
+     "zeta_log_decrement": 0.019394397005113383,
+     "era": {
+      "f_Hz": 7.394636493391373,
+      "f_damped_Hz": 7.3927070524681815,
+      "zeta_raw": 0.022842518978516402,
+      "zeta": 0.0188825189785164,
+      "mac_vs_phi": 0.5623087632854271,
+      "mac_vs_all_phi": [
+       0.0016772377970300856,
+       0.005794632516061686,
+       0.0027108483540213175,
+       0.07981912918039537,
+       0.5623087632854271,
+       0.3476893888669789
+      ],
+      "eta_start_amplitude": 0.0005556366404005253,
+      "leakage": 1.611145676396334,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.027558549301958186,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 6.992229543070167,
+      "f_damped_Hz": 6.989703320580596,
+      "zeta_raw": 0.026878419496684534,
+      "zeta": 0.022918419496684536,
+      "mac_vs_phi": 0.4959176323659387,
+      "mac_vs_all_phi": [
+       0.0014145602742596094,
+       0.038761950735484926,
+       0.0074913995547103065,
+       0.30496335962623705,
+       0.4959176323659387,
+       0.15145109744357255
+      ],
+      "eta_start_amplitude": 0.00046444744644824187,
+      "leakage": 2.222801325468154,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.01883881270120164,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.05441876022990988,
+      "zeta_rel": 0.17668368895584297
+     },
+     "zeta_ref": 0.0491
+    },
+    {
+     "mode": 6,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.7309,
+     "zeta_num": 2.36e-05,
+     "eta_max_abs": 0.02234071706334533,
+     "f_proj_Hz": 8.832515198398553,
+     "f_damped_proj_Hz": 8.83134075831656,
+     "zeta_fit": 0.016306989673990753,
+     "zeta_proj": 0.016283389673990754,
+     "fit_residual_rms_rel": 0.31419317089159987,
+     "n_cycles": 17.653850175833657,
+     "amplitude": 0.02246420810799069,
+     "sigma_1_s": 0.9049780756887226,
+     "fit_success": true,
+     "zeta_log_decrement": 0.023458981577853057,
+     "era": {
+      "f_Hz": 8.796115429783866,
+      "f_damped_Hz": 8.74939146693426,
+      "zeta_raw": 0.10293471701755845,
+      "zeta": 0.10291111701755845,
+      "mac_vs_phi": 0.9938049182808092,
+      "mac_vs_all_phi": [
+       2.0838883436471035e-07,
+       0.001014254343775902,
+       8.529889185516102e-06,
+       0.003435283778371557,
+       0.001736805319065603,
+       0.9938049182808092
+      ],
+      "eta_start_amplitude": 0.03662777198387937,
+      "leakage": 1.992180949596137,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.027558549301958186,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 8.85916001138263,
+      "f_damped_Hz": 8.857270453463276,
+      "zeta_raw": 0.02065264454702572,
+      "zeta": 0.020629044547025722,
+      "mac_vs_phi": 0.9986039898362835,
+      "mac_vs_all_phi": [
+       1.5196151094716073e-07,
+       5.6264925305130466e-05,
+       8.009134495716728e-07,
+       5.4458029419942623e-05,
+       0.001284334334033411,
+       0.9986039898362835
+      ],
+      "eta_start_amplitude": 0.028975627111977386,
+      "leakage": 0.3058081986837051,
+      "window_s": [
+       0.0009999999999976694,
+       19.9959999999534
+      ],
+      "residual_rms_rel": 0.01883881270120164,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.007167320859079895,
+      "zeta_rel": 0.7993617202687522
+     },
+     "zeta_ref": 0.0351
+    }
+   ],
+   "yaw": [
+    {
+     "mode": 1,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 1.8454,
+     "zeta_num": 0.000178,
+     "eta_max_abs": 0.06754419071163052,
+     "f_proj_Hz": 2.0746688418538586,
+     "f_damped_proj_Hz": 2.074586449951272,
+     "zeta_fit": 0.008912069394458407,
+     "zeta_proj": 0.008734069394458407,
+     "fit_residual_rms_rel": 0.00959364405948903,
+     "n_cycles": 4.147098313442927,
+     "amplitude": 0.06792465258244401,
+     "sigma_1_s": 0.11617353712002797,
+     "fit_success": true,
+     "zeta_log_decrement": 0.008351721245300123,
+     "era": {
+      "f_Hz": 2.0751369381425495,
+      "f_damped_Hz": 2.075055155863671,
+      "zeta_raw": 0.008878036830414493,
+      "zeta": 0.008700036830414494,
+      "mac_vs_phi": 0.9987813609770255,
+      "mac_vs_all_phi": [
+       0.9987813609770255,
+       4.009490267349119e-07,
+       0.0003612324464073524,
+       9.532498594240699e-07,
+       0.0008546099233977994,
+       1.4424544841049453e-06
+      ],
+      "eta_start_amplitude": 0.06792928256458625,
+      "leakage": 0.009888279317378573,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.0024871771793048675,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 2.075082743320288,
+      "f_damped_Hz": 2.0750015774077184,
+      "zeta_raw": 0.008844634274653401,
+      "zeta": 0.008666634274653402,
+      "mac_vs_phi": 0.998781241829478,
+      "mac_vs_all_phi": [
+       0.998781241829478,
+       3.2933170018066845e-07,
+       0.000359349563264533,
+       9.174547927349127e-07,
+       0.0008567130560790748,
+       1.448764886138722e-06
+      ],
+      "eta_start_amplitude": 0.06787236359909204,
+      "leakage": 0.009905567682137366,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.0022065291425398294,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 2.611626310788928e-05,
+      "zeta_rel": 0.003762380850534486
+     },
+     "zeta_ref": 0.00902
+    },
+    {
+     "mode": 2,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 2.853,
+     "zeta_num": 0.000779,
+     "eta_max_abs": 0.00020207600276467137,
+     "f_proj_Hz": 3.3042932488936905,
+     "f_damped_proj_Hz": 3.3029356167616024,
+     "zeta_fit": -0.028663033170748753,
+     "zeta_proj": -0.02944203317074875,
+     "fit_residual_rms_rel": 0.6884481533166197,
+     "n_cycles": 6.602568297891056,
+     "amplitude": 4.6289228261112564e-05,
+     "sigma_1_s": -0.5950871845949219,
+     "fit_success": true,
+     "zeta_log_decrement": -0.0015811001079919338,
+     "era": {
+      "f_Hz": 3.245103598281234,
+      "f_damped_Hz": 3.2450054065854856,
+      "zeta_raw": -0.007779197716437725,
+      "zeta": -0.008558197716437725,
+      "mac_vs_phi": 0.815659702084203,
+      "mac_vs_all_phi": [
+       0.0023325408713889997,
+       0.815659702084203,
+       0.17934821382571098,
+       0.0012486936283018185,
+       0.0013704413346970414,
+       4.040825558893154e-05
+      ],
+      "eta_start_amplitude": 4.8115924433274066e-05,
+      "leakage": 1.443519501388658,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.0024871771793048675,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 3.2509948678509493,
+      "f_damped_Hz": 3.2509551953366556,
+      "zeta_raw": -0.004940266684756405,
+      "zeta": -0.005719266684756405,
+      "mac_vs_phi": 0.7916232742504672,
+      "mac_vs_all_phi": [
+       0.0017048231132775586,
+       0.7916232742504672,
+       0.20532516348139784,
+       0.0009079086091098918,
+       0.00039503685310760304,
+       4.3793692541131564e-05
+      ],
+      "eta_start_amplitude": 2.416388929938954e-05,
+      "leakage": 3.956054907956522,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.0022065291425398294,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0018154334341853318,
+      "zeta_rel": 0.36493879384021266
+     },
+     "zeta_ref": 0.0171
+    },
+    {
+     "mode": 3,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 4.0256,
+     "zeta_num": 0.0025,
+     "eta_max_abs": 0.05740339756956211,
+     "f_proj_Hz": 4.033643891821405,
+     "f_damped_proj_Hz": 4.030476497432661,
+     "zeta_fit": 0.0396216008686376,
+     "zeta_proj": 0.0371216008686376,
+     "fit_residual_rms_rel": 0.037516340418946775,
+     "n_cycles": 8.05692251834911,
+     "amplitude": 0.0618886182188297,
+     "sigma_1_s": 1.004175083872115,
+     "fit_success": true,
+     "zeta_log_decrement": 0.039002479322811805,
+     "era": {
+      "f_Hz": 4.033945044545561,
+      "f_damped_Hz": 4.030746152151506,
+      "zeta_raw": 0.03981655758100011,
+      "zeta": 0.03731655758100011,
+      "mac_vs_phi": 0.9995293201841942,
+      "mac_vs_all_phi": [
+       0.0003552083089942164,
+       6.056908596182456e-06,
+       0.9995293201841942,
+       2.161283718564623e-06,
+       0.0001069953371568175,
+       2.5797729210533157e-07
+      ],
+      "eta_start_amplitude": 0.06198792612031856,
+      "leakage": 0.03742968214281118,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.0024871771793048675,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 4.0346031919158065,
+      "f_damped_Hz": 4.031395553071651,
+      "zeta_raw": 0.039867681432777885,
+      "zeta": 0.03736768143277788,
+      "mac_vs_phi": 0.9995305632700826,
+      "mac_vs_all_phi": [
+       0.0003574228864116351,
+       6.038990860509832e-06,
+       0.9995305632700826,
+       2.1731440947536455e-06,
+       0.00010354878308958236,
+       2.5292541308998763e-07
+      ],
+      "eta_start_amplitude": 0.06210379836689408,
+      "leakage": 0.03787143507951262,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.0022065291425398294,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.00016315228962660022,
+      "zeta_rel": 0.0012839847260468495
+     },
+     "zeta_ref": 0.0373
+    },
+    {
+     "mode": 4,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 5.7467,
+     "zeta_num": 0.00203,
+     "eta_max_abs": 0.00024966708425049424,
+     "f_proj_Hz": 4.095149032227612,
+     "f_damped_proj_Hz": 4.092518847253819,
+     "zeta_fit": 0.03583468107823874,
+     "zeta_proj": 0.033804681078238745,
+     "fit_residual_rms_rel": 0.8655784233151514,
+     "n_cycles": 8.180945175641318,
+     "amplitude": 0.00010346749930833547,
+     "sigma_1_s": 0.9220471365002005,
+     "fit_success": true,
+     "zeta_log_decrement": 0.025777795185459657,
+     "era": {
+      "f_Hz": 6.0443617199387365,
+      "f_damped_Hz": 6.036338064840162,
+      "zeta_raw": 0.05150883478185849,
+      "zeta": 0.049478834781858494,
+      "mac_vs_phi": 0.757297468329609,
+      "mac_vs_all_phi": [
+       0.0020633797851945883,
+       0.015053534364144649,
+       0.031094101163006087,
+       0.757297468329609,
+       0.19404065173714127,
+       0.0004508646212184801
+      ],
+      "eta_start_amplitude": 0.00017039401533137485,
+      "leakage": 1.2500367223791813,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.0024871771793048675,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 5.614856832314225,
+      "f_damped_Hz": 5.577681445646113,
+      "zeta_raw": 0.11488236150063114,
+      "zeta": 0.11285236150063113,
+      "mac_vs_phi": 0.7144205285808548,
+      "mac_vs_all_phi": [
+       0.003376586614040569,
+       0.06665982069971632,
+       0.10276450057125937,
+       0.7144205285808548,
+       0.1118006963504694,
+       0.0009778671839794281
+      ],
+      "eta_start_amplitude": 0.00029215216420272477,
+      "leakage": 1.5504091749464408,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.0022065291425398294,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0710587664215544,
+      "zeta_rel": 1.2303428525836684
+     },
+     "zeta_ref": 0.0367
+    },
+    {
+     "mode": 5,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.3657,
+     "zeta_num": 0.00396,
+     "eta_max_abs": 0.015485115346186714,
+     "f_proj_Hz": 7.560926342456262,
+     "f_damped_proj_Hz": 7.550566499483414,
+     "zeta_fit": 0.052330545753389156,
+     "zeta_proj": 0.04837054575338916,
+     "fit_residual_rms_rel": 0.33970732606911536,
+     "n_cycles": 15.093582432432168,
+     "amplitude": 0.015639746285165776,
+     "sigma_1_s": 2.4860516061600184,
+     "fit_success": true,
+     "zeta_log_decrement": 0.03493503378924603,
+     "era": {
+      "f_Hz": 7.569226915458107,
+      "f_damped_Hz": 7.558772646263942,
+      "zeta_raw": 0.052539515799950226,
+      "zeta": 0.04857951579995023,
+      "mac_vs_phi": 0.9979963373676805,
+      "mac_vs_all_phi": [
+       0.0008666662397343879,
+       1.2460907574077746e-06,
+       6.833466348565596e-05,
+       0.00010918092067025315,
+       0.9979963373676805,
+       0.000958234717516482
+      ],
+      "eta_start_amplitude": 0.016314041034970143,
+      "leakage": 0.35111625618874337,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.0024871771793048675,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 7.55181026994601,
+      "f_damped_Hz": 7.541795183637708,
+      "zeta_raw": 0.05148405843118493,
+      "zeta": 0.04752405843118493,
+      "mac_vs_phi": 0.9979854624049395,
+      "mac_vs_all_phi": [
+       0.0009016528132755188,
+       7.328404194644569e-07,
+       9.715165957631017e-05,
+       3.1861329203034826e-05,
+       0.9979854624049395,
+       0.0009831389524264
+      ],
+      "eta_start_amplitude": 0.015322365160586172,
+      "leakage": 0.3672351198204883,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.0022065291425398294,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0023009807615264055,
+      "zeta_rel": 0.020088829382898465
+     },
+     "zeta_ref": 0.0491
+    },
+    {
+     "mode": 6,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.7309,
+     "zeta_num": 2.36e-05,
+     "eta_max_abs": 0.0006329060646611518,
+     "f_proj_Hz": 7.495048652785314,
+     "f_damped_proj_Hz": 7.478267752645263,
+     "zeta_fit": 0.06687936964300245,
+     "zeta_proj": 0.06685576964300245,
+     "fit_residual_rms_rel": 0.4678009028812041,
+     "n_cycles": 14.949057237503041,
+     "amplitude": 0.0005775765136467538,
+     "sigma_1_s": 3.149535412497298,
+     "fit_success": true,
+     "zeta_log_decrement": 0.021286045365711482,
+     "era": null,
+     "era_order_check": null,
+     "zeta_ref": 0.0351
+    }
+   ],
+   "surge": [
+    {
+     "mode": 1,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 1.8454,
+     "zeta_num": 0.000178,
+     "eta_max_abs": 0.0024583999022271684,
+     "f_proj_Hz": 2.0426941718190705,
+     "f_damped_proj_Hz": 2.042521510826078,
+     "zeta_fit": 0.013001733578648256,
+     "zeta_proj": 0.012823733578648256,
+     "fit_residual_rms_rel": 0.049142088616817924,
+     "n_cycles": 4.083000500131814,
+     "amplitude": 0.002430586441390601,
+     "sigma_1_s": 0.16687238793025927,
+     "fit_success": true,
+     "zeta_log_decrement": 0.01189727780764034,
+     "era": {
+      "f_Hz": 2.0496715443000184,
+      "f_damped_Hz": 2.0495195743366987,
+      "zeta_raw": 0.012177094911535555,
+      "zeta": 0.011999094911535555,
+      "mac_vs_phi": 0.9927936902405056,
+      "mac_vs_all_phi": [
+       0.9927936902405056,
+       0.004253126478475861,
+       0.00035523777873022305,
+       0.00011891911729928937,
+       0.0007795124171403212,
+       0.0016995139680369563
+      ],
+      "eta_start_amplitude": 0.002402591337373402,
+      "leakage": 0.03547635578971773,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.012025075736458491,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 2.0432355894412004,
+      "f_damped_Hz": 2.043146757239516,
+      "zeta_raw": 0.009324730056179046,
+      "zeta": 0.009146730056179046,
+      "mac_vs_phi": 0.9651246115699248,
+      "mac_vs_all_phi": [
+       0.9651246115699248,
+       0.02729855197200213,
+       0.0002998534383914376,
+       0.0014282097867826798,
+       0.0007031735215323246,
+       0.005145599711556002
+      ],
+      "eta_start_amplitude": 0.0022472483361540025,
+      "leakage": 0.03263542345054302,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.014765402722558088,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0031399932719541335,
+      "zeta_rel": 0.23424017600901004
+     },
+     "zeta_ref": 0.00902
+    },
+    {
+     "mode": 2,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 2.853,
+     "zeta_num": 0.000779,
+     "eta_max_abs": 0.1622500782308533,
+     "f_proj_Hz": 3.0578270143697464,
+     "f_damped_proj_Hz": 3.057244275021696,
+     "zeta_fit": 0.01952203202883851,
+     "zeta_proj": 0.01874303202883851,
+     "fit_residual_rms_rel": 0.022235775952801705,
+     "n_cycles": 6.111431305754127,
+     "amplitude": 0.16846261066302115,
+     "sigma_1_s": 0.3750747275169845,
+     "fit_success": true,
+     "zeta_log_decrement": 0.019032176762205765,
+     "era": {
+      "f_Hz": 3.0634989867659175,
+      "f_damped_Hz": 3.0628886725748337,
+      "zeta_raw": 0.019960031862852484,
+      "zeta": 0.019181031862852485,
+      "mac_vs_phi": 0.9913344117507199,
+      "mac_vs_all_phi": [
+       1.5521051654109313e-07,
+       0.9913344117507199,
+       8.943280678191244e-06,
+       0.008595145059902087,
+       5.754464365925218e-07,
+       6.0769251452672066e-05
+      ],
+      "eta_start_amplitude": 0.17150867246174342,
+      "leakage": 0.03360324522919332,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.012025075736458491,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 3.0599606113629565,
+      "f_damped_Hz": 3.059422187905438,
+      "zeta_raw": 0.018758580046099593,
+      "zeta": 0.017979580046099595,
+      "mac_vs_phi": 0.9916378232428368,
+      "mac_vs_all_phi": [
+       1.7381373240308607e-07,
+       0.9916378232428368,
+       8.14659229802132e-06,
+       0.008296938257814308,
+       5.324550499147199e-07,
+       5.6385637980250866e-05
+      ],
+      "eta_start_amplitude": 0.1658734002778444,
+      "leakage": 0.02224903603960832,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.014765402722558088,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.001155011122329852,
+      "zeta_rel": 0.06019288070320705
+     },
+     "zeta_ref": 0.0171
+    },
+    {
+     "mode": 3,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 4.0256,
+     "zeta_num": 0.0025,
+     "eta_max_abs": 0.0007859105641631615,
+     "f_proj_Hz": 3.958704209929813,
+     "f_damped_proj_Hz": 3.9572369361655517,
+     "zeta_fit": 0.027224116931086517,
+     "zeta_proj": 0.024724116931086518,
+     "fit_residual_rms_rel": 0.6285757913775181,
+     "n_cycles": 7.910516635376501,
+     "amplitude": 0.0006604387502156556,
+     "sigma_1_s": 0.6771528688523768,
+     "fit_success": true,
+     "zeta_log_decrement": 0.014588684950907434,
+     "era": null,
+     "era_order_check": null,
+     "zeta_ref": 0.0373
+    },
+    {
+     "mode": 4,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 5.7467,
+     "zeta_num": 0.00203,
+     "eta_max_abs": 0.04518847745134542,
+     "f_proj_Hz": 2.9896748966548854,
+     "f_damped_proj_Hz": 2.9891495341128014,
+     "zeta_fit": 0.01874621043039872,
+     "zeta_proj": 0.01671621043039872,
+     "fit_residual_rms_rel": 0.8028961196193729,
+     "n_cycles": 5.9753099186775644,
+     "amplitude": 0.014683578758742294,
+     "sigma_1_s": 0.3521415900906883,
+     "fit_success": true,
+     "zeta_log_decrement": 0.038097323332158026,
+     "era": {
+      "f_Hz": 6.201019956856099,
+      "f_damped_Hz": 6.196294315510213,
+      "zeta_raw": 0.03903292122656806,
+      "zeta": 0.037002921226568064,
+      "mac_vs_phi": 0.9880584461088188,
+      "mac_vs_all_phi": [
+       7.888050531424104e-07,
+       0.009332707261158667,
+       0.00015563768085324198,
+       0.9880584461088188,
+       0.00037830060582971065,
+       0.002074119538556108
+      ],
+      "eta_start_amplitude": 0.02823855316190069,
+      "leakage": 1.0151787177583385,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.012025075736458491,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 6.132912452887933,
+      "f_damped_Hz": 6.126999204104713,
+      "zeta_raw": 0.04390257370953404,
+      "zeta": 0.041872573709534046,
+      "mac_vs_phi": 0.9865420025064127,
+      "mac_vs_all_phi": [
+       2.5179985191207256e-06,
+       0.0072620147221967215,
+       1.1189692853617287e-05,
+       0.9865420025064127,
+       7.260399477463668e-05,
+       0.006109671085503375
+      ],
+      "eta_start_amplitude": 0.03826735276640316,
+      "leakage": 0.7174686798262938,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.014765402722558088,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.010983274435823032,
+      "zeta_rel": 0.12475757206845728
+     },
+     "zeta_ref": 0.0367
+    },
+    {
+     "mode": 5,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.3657,
+     "zeta_num": 0.00396,
+     "eta_max_abs": 0.000560327419987492,
+     "f_proj_Hz": 8.877642282573735,
+     "f_damped_proj_Hz": 8.8776307762951,
+     "zeta_fit": 0.0016100281883226063,
+     "zeta_proj": -0.002349971811677394,
+     "fit_residual_rms_rel": 0.7348618541569449,
+     "n_cycles": 17.746383921772544,
+     "amplitude": 0.00019281069904319737,
+     "sigma_1_s": 0.08980716554015855,
+     "fit_success": true,
+     "zeta_log_decrement": 0.004951602603173688,
+     "era": null,
+     "era_order_check": null,
+     "zeta_ref": 0.0491
+    },
+    {
+     "mode": 6,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.7309,
+     "zeta_num": 2.36e-05,
+     "eta_max_abs": 0.009561288697436408,
+     "f_proj_Hz": 8.8155731928244,
+     "f_damped_proj_Hz": 8.815099201218297,
+     "zeta_fit": 0.0103697719993793,
+     "zeta_proj": 0.0103461719993793,
+     "fit_residual_rms_rel": 0.49054066622483056,
+     "n_cycles": 17.621383303194307,
+     "amplitude": 0.007499943190578251,
+     "sigma_1_s": 0.5743804262532164,
+     "fit_success": true,
+     "zeta_log_decrement": 0.021038387350659903,
+     "era": {
+      "f_Hz": 8.753682744356471,
+      "f_damped_Hz": 8.75302170103291,
+      "zeta_raw": 0.012289277725292754,
+      "zeta": 0.012265677725292754,
+      "mac_vs_phi": 0.9981285096998556,
+      "mac_vs_all_phi": [
+       8.221938129830128e-06,
+       0.00026814286995616583,
+       1.551509538501806e-06,
+       0.00100095896927153,
+       0.0005926150132590732,
+       0.9981285096998556
+      ],
+      "eta_start_amplitude": 0.009807101747494502,
+      "leakage": 0.5101445952748794,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.012025075736458491,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 8.810870568433874,
+      "f_damped_Hz": 8.809165200534942,
+      "zeta_raw": 0.019674042862547293,
+      "zeta": 0.019650442862547295,
+      "mac_vs_phi": 0.997667209415366,
+      "mac_vs_all_phi": [
+       9.167149688775888e-07,
+       0.0001860750470319032,
+       5.872071402183973e-06,
+       0.000307883325194899,
+       0.0018320434260413832,
+       0.997667209415366
+      ],
+      "eta_start_amplitude": 0.014755305652789768,
+      "leakage": 0.5580396574367326,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.014765402722558088,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.006533001680266715,
+      "zeta_rel": 0.6009112416798783
+     },
+     "zeta_ref": 0.0351
+    }
+   ],
+   "heave": [
+    {
+     "mode": 1,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 1.8454,
+     "zeta_num": 0.000178,
+     "eta_max_abs": 0.0007674123652624395,
+     "f_proj_Hz": 2.074451466864054,
+     "f_damped_proj_Hz": 2.0744376325825824,
+     "zeta_fit": 0.003652085515402768,
+     "zeta_proj": 0.0034740855154027682,
+     "fit_residual_rms_rel": 0.0896814689686588,
+     "n_cycles": 4.1468008275229185,
+     "amplitude": 0.0006643818140364143,
+     "sigma_1_s": 0.04760187781391022,
+     "fit_success": true,
+     "zeta_log_decrement": 0.0036821293970915503,
+     "era": {
+      "f_Hz": 2.0396277291834295,
+      "f_damped_Hz": 2.0395264856069275,
+      "zeta_raw": 0.009963636932559278,
+      "zeta": 0.009785636932559278,
+      "mac_vs_phi": 0.9612521480534516,
+      "mac_vs_all_phi": [
+       0.9612521480534516,
+       0.03378666938107503,
+       0.0002650761925277872,
+       0.002622967454661186,
+       0.0007046294188564903,
+       0.001368509499638654
+      ],
+      "eta_start_amplitude": 0.000687446326659194,
+      "leakage": 0.09052292054609318,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.02427967169066843,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 2.076367578696387,
+      "f_damped_Hz": 2.076355225753901,
+      "zeta_raw": 0.0034494308415450774,
+      "zeta": 0.003271430841545077,
+      "mac_vs_phi": 0.9702754574783662,
+      "mac_vs_all_phi": [
+       0.9702754574783662,
+       0.02525170583967316,
+       0.00034363856236537156,
+       0.0018361808657477666,
+       0.0008167359149810227,
+       0.001476281339089439
+      ],
+      "eta_start_amplitude": 0.0006422998188290599,
+      "leakage": 0.20218880094467764,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.020560023381423296,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.018013017271375498,
+      "zeta_rel": 0.6537980192480728
+     },
+     "zeta_ref": 0.00902
+    },
+    {
+     "mode": 2,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 2.853,
+     "zeta_num": 0.000779,
+     "eta_max_abs": 0.008440002287384495,
+     "f_proj_Hz": 3.091910873700473,
+     "f_damped_proj_Hz": 3.0906179328151353,
+     "zeta_fit": 0.028916481125939805,
+     "zeta_proj": 0.028137481125939806,
+     "fit_residual_rms_rel": 0.22325417865466204,
+     "n_cycles": 6.178145247683057,
+     "amplitude": 0.006530762494936481,
+     "sigma_1_s": 0.5617618949530488,
+     "fit_success": true,
+     "zeta_log_decrement": 0.025354665809745148,
+     "era": {
+      "f_Hz": 3.0925588706166542,
+      "f_damped_Hz": 3.0917130414926715,
+      "zeta_raw": 0.023386629207400523,
+      "zeta": 0.022607629207400524,
+      "mac_vs_phi": 0.9887743224281494,
+      "mac_vs_all_phi": [
+       1.5452310938255572e-05,
+       0.9887743224281494,
+       1.1822087252413898e-05,
+       0.011119376079846276,
+       4.893909601723637e-07,
+       7.853770251862937e-05
+      ],
+      "eta_start_amplitude": 0.005613259929805747,
+      "leakage": 0.17248536642251172,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.02427967169066843,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 3.0752943187231483,
+      "f_damped_Hz": 3.074575657821373,
+      "zeta_raw": 0.021617640485848067,
+      "zeta": 0.02083864048584807,
+      "mac_vs_phi": 0.9904278546899847,
+      "mac_vs_all_phi": [
+       1.025039990694676e-06,
+       0.9904278546899847,
+       7.336108896209557e-06,
+       0.009404084636255028,
+       5.627192418898863e-07,
+       0.00015913680532363204
+      ],
+      "eta_start_amplitude": 0.005271489543473616,
+      "leakage": 0.2962432057374768,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.020560023381423296,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.005582610587478776,
+      "zeta_rel": 0.07564103000327527
+     },
+     "zeta_ref": 0.0171
+    },
+    {
+     "mode": 3,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 4.0256,
+     "zeta_num": 0.0025,
+     "eta_max_abs": 0.0001958257922887803,
+     "f_proj_Hz": 4.015734450732819,
+     "f_damped_proj_Hz": 4.0128393004974,
+     "zeta_fit": 0.03796555620098351,
+     "zeta_proj": 0.03546555620098351,
+     "fit_residual_rms_rel": 0.15832373641716635,
+     "n_cycles": 8.021665761675607,
+     "amplitude": 0.00019990846471696188,
+     "sigma_1_s": 0.9579318682517641,
+     "fit_success": true,
+     "zeta_log_decrement": 0.03782581751235549,
+     "era": {
+      "f_Hz": 4.022607388733422,
+      "f_damped_Hz": 4.017441454565192,
+      "zeta_raw": 0.050663609812633764,
+      "zeta": 0.04816360981263376,
+      "mac_vs_phi": 0.7420892646203069,
+      "mac_vs_all_phi": [
+       0.02203405894567908,
+       0.12289834261593623,
+       0.7420892646203069,
+       0.08005579923531261,
+       0.0001403053830180196,
+       0.03278222919960563
+      ],
+      "eta_start_amplitude": 0.0002307962785588171,
+      "leakage": 0.18553995413499552,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.02427967169066843,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 4.038316838957443,
+      "f_damped_Hz": 4.034806951646941,
+      "zeta_raw": 0.04168377112069062,
+      "zeta": 0.039183771120690616,
+      "mac_vs_phi": 0.6216669096984646,
+      "mac_vs_all_phi": [
+       0.0006225741898168653,
+       0.1815499127226732,
+       0.6216669096984646,
+       0.1603913911929599,
+       0.0002651681372423436,
+       0.03550404405825752
+      ],
+      "eta_start_amplitude": 0.00021270509496424357,
+      "leakage": 0.1848606262348734,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.020560023381423296,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.003905290451168719,
+      "zeta_rel": 0.17724435201425148
+     },
+     "zeta_ref": 0.0373
+    },
+    {
+     "mode": 4,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 5.7467,
+     "zeta_num": 0.00203,
+     "eta_max_abs": 0.013038215191932372,
+     "f_proj_Hz": 6.093491199686433,
+     "f_damped_proj_Hz": 6.08909969603053,
+     "zeta_fit": 0.03795860699060825,
+     "zeta_proj": 0.03592860699060825,
+     "fit_residual_rms_rel": 0.12462599790134513,
+     "n_cycles": 12.172110292336662,
+     "amplitude": 0.0135386246203925,
+     "sigma_1_s": 1.453303511384346,
+     "fit_success": true,
+     "zeta_log_decrement": 0.03725322647342862,
+     "era": {
+      "f_Hz": 6.118040152199443,
+      "f_damped_Hz": 6.112892386971113,
+      "zeta_raw": 0.04101349961497207,
+      "zeta": 0.03898349961497207,
+      "mac_vs_phi": 0.9924612925317754,
+      "mac_vs_all_phi": [
+       1.7680133504430685e-06,
+       0.007252603609430358,
+       2.6685868202893314e-06,
+       0.9924612925317754,
+       1.9397459345786487e-06,
+       0.0002797275129476515
+      ],
+      "eta_start_amplitude": 0.01547621033780889,
+      "leakage": 0.1724984667220929,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.02427967169066843,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 6.0982908013810455,
+      "f_damped_Hz": 6.093950285335741,
+      "zeta_raw": 0.03772283497239005,
+      "zeta": 0.03569283497239005,
+      "mac_vs_phi": 0.9930928998383161,
+      "mac_vs_all_phi": [
+       1.0828506429473252e-06,
+       0.006668444786467581,
+       1.241232217129579e-06,
+       0.9930928998383161,
+       5.97743406385717e-06,
+       0.00023035385854986736
+      ],
+      "eta_start_amplitude": 0.013544721589563,
+      "leakage": 0.1182729503099946,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.020560023381423296,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0032280518478287057,
+      "zeta_rel": 0.08023369557521876
+     },
+     "zeta_ref": 0.0367
+    },
+    {
+     "mode": 5,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.3657,
+     "zeta_num": 0.00396,
+     "eta_max_abs": 0.003897443872024918,
+     "f_proj_Hz": 8.689697272610942,
+     "f_damped_proj_Hz": 8.672387146111081,
+     "zeta_fit": 0.0630879485597197,
+     "zeta_proj": 0.05912794855971971,
+     "fit_residual_rms_rel": 0.3832611626342276,
+     "n_cycles": 17.336101905035648,
+     "amplitude": 0.0045029708448818045,
+     "sigma_1_s": 3.4445375298050207,
+     "fit_success": true,
+     "zeta_log_decrement": 0.03281794859824579,
+     "era": null,
+     "era_order_check": {
+      "f_Hz": 7.528990920979148,
+      "f_damped_Hz": 7.5197204957265456,
+      "zeta_raw": 0.04960925576474977,
+      "zeta": 0.04564925576474977,
+      "mac_vs_phi": 0.48409923597737686,
+      "mac_vs_all_phi": [
+       0.0003390994088913294,
+       0.02713923661903058,
+       7.367210258206511e-05,
+       0.3515920630017414,
+       0.48409923597737686,
+       0.1367566928905761
+      ],
+      "eta_start_amplitude": 0.001983055613100001,
+      "leakage": 1.5524756954635048,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.020560023381423296,
+      "n_oscillatory_modes": 15
+     },
+     "zeta_ref": 0.0491
+    },
+    {
+     "mode": 6,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.7309,
+     "zeta_num": 2.36e-05,
+     "eta_max_abs": 0.07691656323172057,
+     "f_proj_Hz": 8.761643547015838,
+     "f_damped_proj_Hz": 8.756991960994656,
+     "zeta_fit": 0.032581050732874046,
+     "zeta_proj": 0.03255745073287405,
+     "fit_residual_rms_rel": 0.15634492947065529,
+     "n_cycles": 17.50522692998752,
+     "amplitude": 0.08425252592293697,
+     "sigma_1_s": 1.7936204013711103,
+     "fit_success": true,
+     "zeta_log_decrement": 0.031186553237383372,
+     "era": {
+      "f_Hz": 8.666878060937957,
+      "f_damped_Hz": 8.650095987133703,
+      "zeta_raw": 0.06220082287030894,
+      "zeta": 0.06217722287030894,
+      "mac_vs_phi": 0.9988717230537674,
+      "mac_vs_all_phi": [
+       6.579901175499392e-08,
+       5.184704740260384e-05,
+       1.73948857482965e-09,
+       0.00016437694043233993,
+       0.0009119854199014387,
+       0.9988717230537674
+      ],
+      "eta_start_amplitude": 0.08577625401592784,
+      "leakage": 0.7596759058903961,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.02427967169066843,
+      "n_oscillatory_modes": 11
+     },
+     "era_order_check": {
+      "f_Hz": 8.733238536641885,
+      "f_damped_Hz": 8.718044338914881,
+      "zeta_raw": 0.05896268386028472,
+      "zeta": 0.05893908386028472,
+      "mac_vs_phi": 0.998871456457247,
+      "mac_vs_all_phi": [
+       9.87438169548562e-08,
+       6.616524416520985e-05,
+       1.312935458835983e-08,
+       0.00013399576343645287,
+       0.000928270661986137,
+       0.998871456457247
+      ],
+      "eta_start_amplitude": 0.09575741449522032,
+      "leakage": 0.6869308159763747,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.020560023381423296,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.007656791204091906,
+      "zeta_rel": 0.052059423985046926
+     },
+     "zeta_ref": 0.0351
+    }
+   ],
+   "sway": [
+    {
+     "mode": 1,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 1.8454,
+     "zeta_num": 0.000178,
+     "eta_max_abs": 0.13495437094722437,
+     "f_proj_Hz": 2.070899811866675,
+     "f_damped_proj_Hz": 2.0708159926662026,
+     "zeta_fit": 0.008997105559615243,
+     "zeta_proj": 0.008819105559615244,
+     "fit_residual_rms_rel": 0.007146024442945861,
+     "n_cycles": 4.139561169330092,
+     "amplitude": 0.1372813754040631,
+     "sigma_1_s": 0.11706896341883477,
+     "fit_success": true,
+     "zeta_log_decrement": 0.0082433770222946,
+     "era": {
+      "f_Hz": 2.0723387442985386,
+      "f_damped_Hz": 2.072252842511552,
+      "zeta_raw": 0.009105026688571329,
+      "zeta": 0.00892702668857133,
+      "mac_vs_phi": 0.9988324886162444,
+      "mac_vs_all_phi": [
+       0.9988324886162444,
+       3.3203950241243586e-06,
+       0.00034021076790240147,
+       1.0541496148195365e-06,
+       0.0008217412872249918,
+       1.1847841861716649e-06
+      ],
+      "eta_start_amplitude": 0.13804836392397996,
+      "leakage": 0.008325761007506533,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.007865266066594961,
+      "n_oscillatory_modes": 12
+     },
+     "era_order_check": {
+      "f_Hz": 2.0737159776618848,
+      "f_damped_Hz": 2.0736102678519344,
+      "zeta_raw": 0.010097002695471362,
+      "zeta": 0.009919002695471362,
+      "mac_vs_phi": 0.9988271260870828,
+      "mac_vs_all_phi": [
+       0.9988271260870828,
+       3.816338982042799e-06,
+       0.00033985810060540867,
+       1.387262662890621e-06,
+       0.0008268413131496631,
+       9.708977143743029e-07
+      ],
+      "eta_start_amplitude": 0.14161812777510155,
+      "leakage": 0.0196137599111191,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.00863897552659685,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0006645792668478201,
+      "zeta_rel": 0.1089481712497522
+     },
+     "zeta_ref": 0.00902
+    },
+    {
+     "mode": 2,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 2.853,
+     "zeta_num": 0.000779,
+     "eta_max_abs": 0.0017267525260203618,
+     "f_proj_Hz": 3.07098260449054,
+     "f_damped_proj_Hz": 3.0705254437280365,
+     "zeta_fit": 0.017254192159717782,
+     "zeta_proj": 0.016475192159717784,
+     "fit_residual_rms_rel": 0.24632494890550521,
+     "n_cycles": 6.137980361998039,
+     "amplitude": 0.0015677997088247104,
+     "sigma_1_s": 0.33292917547924183,
+     "fit_success": true,
+     "zeta_log_decrement": 0.015727842521431626,
+     "era": {
+      "f_Hz": 3.0567087844119936,
+      "f_damped_Hz": 3.055317937958458,
+      "zeta_raw": 0.030163251195285946,
+      "zeta": 0.029384251195285947,
+      "mac_vs_phi": 0.9820744066141981,
+      "mac_vs_all_phi": [
+       0.008328137924836575,
+       0.9820744066141981,
+       0.001500746351504926,
+       0.006454726728737021,
+       0.0009905670266248828,
+       0.0006514153538680829
+      ],
+      "eta_start_amplitude": 0.002085180711094182,
+      "leakage": 0.24044046710167344,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.007865266066594961,
+      "n_oscillatory_modes": 12
+     },
+     "era_order_check": {
+      "f_Hz": 3.0966386179803504,
+      "f_damped_Hz": 3.0960772502295915,
+      "zeta_raw": 0.01904029976621253,
+      "zeta": 0.018261299766212533,
+      "mac_vs_phi": 0.9672461790402594,
+      "mac_vs_all_phi": [
+       0.021280108457868294,
+       0.9672461790402594,
+       0.006810501983686813,
+       0.003643203548674846,
+       0.0010078520686065105,
+       1.2154900745396547e-05
+      ],
+      "eta_start_amplitude": 0.0017015540965937168,
+      "leakage": 0.255631194667144,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.00863897552659685,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.013063015283622414,
+      "zeta_rel": 0.3687583727980809
+     },
+     "zeta_ref": 0.0171
+    },
+    {
+     "mode": 3,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 4.0256,
+     "zeta_num": 0.0025,
+     "eta_max_abs": 0.05298538784907607,
+     "f_proj_Hz": 4.038049659913354,
+     "f_damped_proj_Hz": 4.034804350542266,
+     "zeta_fit": 0.04008389775842063,
+     "zeta_proj": 0.03758389775842063,
+     "fit_residual_rms_rel": 0.08160853531747546,
+     "n_cycles": 8.065573896715192,
+     "amplitude": 0.05492767990514658,
+     "sigma_1_s": 1.0170012100593975,
+     "fit_success": true,
+     "zeta_log_decrement": 0.04036462524473159,
+     "era": {
+      "f_Hz": 4.038006410292211,
+      "f_damped_Hz": 4.034734264855437,
+      "zeta_raw": 0.04024943570988123,
+      "zeta": 0.03774943570988123,
+      "mac_vs_phi": 0.9994399331493418,
+      "mac_vs_all_phi": [
+       0.0002776507937754691,
+       7.604891331112151e-06,
+       0.9994399331493418,
+       0.00010726164910114027,
+       0.0001420927155367766,
+       2.5456800866401894e-05
+      ],
+      "eta_start_amplitude": 0.05535764695983956,
+      "leakage": 0.0821524620673371,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.007865266066594961,
+      "n_oscillatory_modes": 12
+     },
+     "era_order_check": {
+      "f_Hz": 4.034469650797899,
+      "f_damped_Hz": 4.031320233570324,
+      "zeta_raw": 0.03950500296455219,
+      "zeta": 0.03700500296455219,
+      "mac_vs_phi": 0.9993791485923719,
+      "mac_vs_all_phi": [
+       0.00032386911156653857,
+       2.8863496473738515e-05,
+       0.9993791485923719,
+       8.622005450922043e-05,
+       0.00012888735484364294,
+       5.3011390186752426e-05
+      ],
+      "eta_start_amplitude": 0.05440505319727892,
+      "leakage": 0.0829606221312323,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.00863897552659685,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0008758677265340298,
+      "zeta_rel": 0.018495482786266226
+     },
+     "zeta_ref": 0.0373
+    },
+    {
+     "mode": 4,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 5.7467,
+     "zeta_num": 0.00203,
+     "eta_max_abs": 0.0006261028379005409,
+     "f_proj_Hz": 5.985804967993935,
+     "f_damped_proj_Hz": 5.985148286408626,
+     "zeta_fit": 0.01481218828927341,
+     "zeta_proj": 0.012782188289273409,
+     "fit_residual_rms_rel": 0.7185553141775607,
+     "n_cycles": 11.96431142450296,
+     "amplitude": 0.0004591126054454823,
+     "sigma_1_s": 0.5570852436395948,
+     "fit_success": true,
+     "zeta_log_decrement": 0.009143172259608937,
+     "era": {
+      "f_Hz": 6.235154167236238,
+      "f_damped_Hz": 6.230779679724932,
+      "zeta_raw": 0.037452326720416144,
+      "zeta": 0.03542232672041615,
+      "mac_vs_phi": 0.5353271451424702,
+      "mac_vs_all_phi": [
+       0.016800644349766664,
+       0.0012250352454435136,
+       0.012879010271512403,
+       0.5353271451424702,
+       0.4311095607489348,
+       0.002658604242272926
+      ],
+      "eta_start_amplitude": 0.0006492906356342889,
+      "leakage": 1.1261773087611218,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.007865266066594961,
+      "n_oscillatory_modes": 12
+     },
+     "era_order_check": {
+      "f_Hz": 6.002383780770427,
+      "f_damped_Hz": 6.00175960291343,
+      "zeta_raw": 0.014421020894287208,
+      "zeta": 0.012391020894287208,
+      "mac_vs_phi": 0.7690825931292475,
+      "mac_vs_all_phi": [
+       0.011381043845944216,
+       0.005600261120910692,
+       0.0030660986556041636,
+       0.7690825931292475,
+       0.14749679045058178,
+       0.06337321279787712
+      ],
+      "eta_start_amplitude": 0.0002767896124762212,
+      "leakage": 1.5946482466581966,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.00863897552659685,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.037331937626970846,
+      "zeta_rel": 0.6149499334996997
+     },
+     "zeta_ref": 0.0367
+    },
+    {
+     "mode": 5,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.3657,
+     "zeta_num": 0.00396,
+     "eta_max_abs": 0.016671584088351704,
+     "f_proj_Hz": 7.532910608465589,
+     "f_damped_proj_Hz": 7.5214849744422025,
+     "zeta_fit": 0.05505655111695208,
+     "zeta_proj": 0.051096551116952084,
+     "fit_residual_rms_rel": 0.5527922749237073,
+     "n_cycles": 15.035448463874921,
+     "amplitude": 0.01686608447654351,
+     "sigma_1_s": 2.60586363148614,
+     "fit_success": true,
+     "zeta_log_decrement": 0.01600769637592135,
+     "era": {
+      "f_Hz": 7.527805227326047,
+      "f_damped_Hz": 7.517621627425712,
+      "zeta_raw": 0.05199774946433996,
+      "zeta": 0.04803774946433996,
+      "mac_vs_phi": 0.9973312146995706,
+      "mac_vs_all_phi": [
+       0.0008284469318254124,
+       3.70334991631475e-06,
+       0.0001327786226295948,
+       8.639426407528768e-05,
+       0.9973312146995706,
+       0.001617462131833336
+      ],
+      "eta_start_amplitude": 0.016112879673332817,
+      "leakage": 0.6767775979271408,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.007865266066594961,
+      "n_oscillatory_modes": 12
+     },
+     "era_order_check": {
+      "f_Hz": 7.508604551146094,
+      "f_damped_Hz": 7.499243693824742,
+      "zeta_raw": 0.049918071105846167,
+      "zeta": 0.04595807110584617,
+      "mac_vs_phi": 0.9962238916323584,
+      "mac_vs_all_phi": [
+       0.0009371729858947208,
+       1.7520803657214095e-05,
+       7.066845204398203e-05,
+       0.0005117898310468132,
+       0.9962238916323584,
+       0.002238956294834795
+      ],
+      "eta_start_amplitude": 0.01531644825730021,
+      "leakage": 0.701527058847243,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.00863897552659685,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.0025506340294584318,
+      "zeta_rel": 0.039995545574910585
+     },
+     "zeta_ref": 0.0491
+    },
+    {
+     "mode": 6,
+     "fit_window_s": 2.0,
+     "f_ref_Hz": 7.7309,
+     "zeta_num": 2.36e-05,
+     "eta_max_abs": 0.002178970115015639,
+     "f_proj_Hz": 8.443750887975387,
+     "f_damped_proj_Hz": 8.442653265698059,
+     "zeta_fit": 0.01612351158790739,
+     "zeta_proj": 0.01609991158790739,
+     "fit_residual_rms_rel": 0.5465947343891604,
+     "n_cycles": 16.876863878091086,
+     "amplitude": 0.0014020014047295046,
+     "sigma_1_s": 0.8554111650121112,
+     "fit_success": true,
+     "zeta_log_decrement": 0.020647180195683845,
+     "era": {
+      "f_Hz": 8.540675308980095,
+      "f_damped_Hz": 8.537605580094764,
+      "zeta_raw": 0.02680895433196139,
+      "zeta": 0.02678535433196139,
+      "mac_vs_phi": 0.9804621762005528,
+      "mac_vs_all_phi": [
+       0.0010502115463659116,
+       0.0003545459109461165,
+       0.0009165647469570243,
+       0.0015256002355925398,
+       0.015690901359596734,
+       0.9804621762005528
+      ],
+      "eta_start_amplitude": 0.004668490493762199,
+      "leakage": 0.6887391147924616,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.007865266066594961,
+      "n_oscillatory_modes": 12
+     },
+     "era_order_check": {
+      "f_Hz": 8.465309443842537,
+      "f_damped_Hz": 8.461993592499956,
+      "zeta_raw": 0.027986498939312196,
+      "zeta": 0.027962898939312197,
+      "mac_vs_phi": 0.9810734938219073,
+      "mac_vs_all_phi": [
+       0.00017927141377425558,
+       0.0008965452723010752,
+       0.0001698629605029854,
+       0.01089389787402828,
+       0.0067869286575966015,
+       0.9810734938219073
+      ],
+      "eta_start_amplitude": 0.002205657225152796,
+      "leakage": 0.6070474045013179,
+      "window_s": [
+       0.0009999999999976694,
+       1.9959999999953482
+      ],
+      "residual_rms_rel": 0.00863897552659685,
+      "n_oscillatory_modes": 15
+     },
+     "era_order_spread": {
+      "f_rel": 0.00882434496231399,
+      "zeta_rel": 0.04392355601676523
+     },
+     "zeta_ref": 0.0351
+    }
+   ]
+  },
+  "l1r_lock_reference_rev32": {
+   "f_damped_Hz": [
+    2.0748,
+    3.0694,
+    4.0331,
+    6.1676,
+    7.5396,
+    8.917
+   ],
+   "zeta": [
+    0.008574,
+    0.01804,
+    0.03727,
+    0.03315,
+    0.04783,
+    0.03042
+   ],
+   "zeta_num_r_omega_dt_half": [
+    0.000264,
+    0.00107,
+    0.0025,
+    0.00172,
+    0.00385,
+    1.33e-05
+   ],
+   "dt_key": "0.0002",
+   "note": "identification kept (FLOOR mode shapes, ERA); reference f / zeta and the subtracted zeta_num are the LOCK values; zeta recorded only"
+  }
+ },
+ "beta": {
+  "beta_6.9e+08": {
+   "reference": {
+    "penetration_mm": [
+     6.42541,
+     6.30414,
+     5.24068,
+     5.13025
+    ],
+    "static_pitch_deg": 0.01391,
+    "dF_per_mm_FL_N": [
+     3549.96,
+     -3549.96,
+     -3898.65,
+     3898.65
+    ],
+    "FL+_F_min_mm": 16.04,
+    "FL+_liftoff_mm": 18.64,
+    "f_Hz_top_ball_centre_rev13": [
+     1.592,
+     2.564,
+     4.019,
+     5.396,
+     6.536,
+     7.217
+    ]
+   },
+   "chrono": {},
+   "checks": []
+  },
+  "beta_1.0e+09": {
+   "reference": {
+    "penetration_mm": [
+     4.60407,
+     4.51743,
+     3.7261,
+     3.64721
+    ],
+    "static_pitch_deg": 0.01031,
+    "dF_per_mm_FL_N": [
+     4978.2,
+     -4978.2,
+     -5467.18,
+     5467.18
+    ],
+    "FL+_F_min_mm": 11.44,
+    "FL+_liftoff_mm": 13.29,
+    "f_Hz_top_ball_centre_rev13": [
+     1.845,
+     2.853,
+     4.026,
+     5.747,
+     7.366,
+     7.731
+    ]
+   },
+   "chrono": {},
+   "checks": []
+  },
+  "beta_1.6e+09": {
+   "reference": {
+    "penetration_mm": [
+     3.08384,
+     3.02611,
+     2.46191,
+     2.40935
+    ],
+    "static_pitch_deg": 0.007307,
+    "dF_per_mm_FL_N": [
+     7495.15,
+     -7495.15,
+     -8231.36,
+     8231.36
+    ],
+    "FL+_F_min_mm": 7.599,
+    "FL+_liftoff_mm": 8.83,
+    "f_Hz_top_ball_centre_rev13": [
+     2.178,
+     3.148,
+     4.037,
+     6.391,
+     7.633,
+     9.474
+    ]
+   },
+   "chrono": {},
+   "checks": []
+  }
+ },
+ "damping": {},
+ "rodside": null,
+ "health_checks_failed": [],
+ "info_checks": [
+  {
+   "id": "info",
+   "item": "L1-R LOCK: mode 1 (roll, projection) zeta (- r omega dt/2)",
+   "value": 0.008621161313329748,
+   "ref": 0.008574,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": 0.005500503070882667,
+   "note": "L1-R: recorded, not judged: the S4 amplitudes cross the knee (1.7-3.3 x), so zeta depends on the amplitude; zeta is judged in V7a (dynamics_model.md 5.14.6, 5.17.5); zeta_num 0.000264 subtracted; fit and ERA cross-check ok"
+  },
+  {
+   "id": "info",
+   "item": "L1-R LOCK: mode 2 (pitch, ERA) zeta (- r omega dt/2)",
+   "value": 0.01897217049689992,
+   "ref": 0.01804,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": 0.051672422222833705,
+   "note": "L1-R: recorded, not judged: the S4 amplitudes cross the knee (1.7-3.3 x), so zeta depends on the amplitude; zeta is judged in V7a (dynamics_model.md 5.14.6, 5.17.5); zeta_num 0.00107 subtracted; fit residual 0.0824 > 0.05"
+  },
+  {
+   "id": "info",
+   "item": "L1-R LOCK: mode 3 (roll, ERA) zeta (- r omega dt/2)",
+   "value": 0.03744437617141705,
+   "ref": 0.03727,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": 0.004678727432708642,
+   "note": "L1-R: recorded, not judged: the S4 amplitudes cross the knee (1.7-3.3 x), so zeta depends on the amplitude; zeta is judged in V7a (dynamics_model.md 5.14.6, 5.17.5); zeta_num 0.0025 subtracted; fit residual 0.0692 > 0.05"
+  },
+  {
+   "id": "info",
+   "item": "L1-R LOCK: mode 4 (pitch, ERA) zeta (- r omega dt/2)",
+   "value": 0.032811301566125564,
+   "ref": 0.03315,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": -0.010217147326528953,
+   "note": "L1-R: recorded, not judged: the S4 amplitudes cross the knee (1.7-3.3 x), so zeta depends on the amplitude; zeta is judged in V7a (dynamics_model.md 5.14.6, 5.17.5); zeta_num 0.00172 subtracted; fit residual 0.144 > 0.05"
+  },
+  {
+   "id": "info",
+   "item": "L1-R LOCK: mode 5 (roll, ERA) zeta (- r omega dt/2)",
+   "value": 0.04867867135717416,
+   "ref": 0.04783,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": 0.017743494818610924,
+   "note": "L1-R: recorded, not judged: the S4 amplitudes cross the knee (1.7-3.3 x), so zeta depends on the amplitude; zeta is judged in V7a (dynamics_model.md 5.14.6, 5.17.5); zeta_num 0.00385 subtracted; fit residual 0.378 > 0.05"
+  },
+  {
+   "id": "info",
+   "item": "L1-R LOCK: mode 6 (heave, ERA) zeta (- r omega dt/2)",
+   "value": 0.06218752287030894,
+   "ref": 0.03042,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": 1.0442972672685387,
+   "note": "L1-R: recorded, not judged: the S4 amplitudes cross the knee (1.7-3.3 x), so zeta depends on the amplitude; zeta is judged in V7a (dynamics_model.md 5.14.6, 5.17.5); zeta_num 1.33e-05 subtracted; fit residual 0.156 > 0.05"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 1 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.033251167946495616,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 1 (roll) ERA vs projection natural frequency",
+   "value": 2.0725315713745833,
+   "ref": 2.07405493611884,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.0007344862075386476,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 1 (roll) ERA vs projection zeta",
+   "value": 0.008355449836041789,
+   "ref": 0.008621161313329748,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.030820845084655258,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 2 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.08241539802164313,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 2 (pitch) ERA vs projection natural frequency",
+   "value": 3.070141807481842,
+   "ref": 3.066924473568582,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0010490424335478866,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 2 (pitch) ERA vs projection zeta",
+   "value": 0.01897217049689992,
+   "ref": 0.01908950315216508,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.006146448879778822,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 3 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.06919673338725549,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 3 (roll) ERA vs projection natural frequency",
+   "value": 4.032411805323598,
+   "ref": 4.030797216870591,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0004005630564220596,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 3 (roll) ERA vs projection zeta",
+   "value": 0.03744437617141705,
+   "ref": 0.037023956083491925,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.011355352922768246,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 4 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.14399938179164812,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 4 (pitch) ERA vs projection natural frequency",
+   "value": 6.149639822319841,
+   "ref": 6.117073884261952,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": false,
+   "ref_key": "",
+   "deviation": 0.005323777131689542,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 4 (pitch) ERA vs projection zeta",
+   "value": 0.032811301566125564,
+   "ref": 0.03651117078418523,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": -0.10133526640187235,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 5 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.3781853046759777,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 5 (roll) ERA vs projection natural frequency",
+   "value": 7.408103347966596,
+   "ref": 7.4841485600692055,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": false,
+   "ref_key": "",
+   "deviation": -0.010160836799571313,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 5 (roll) ERA vs projection zeta",
+   "value": 0.04867867135717416,
+   "ref": 0.04931576223791013,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": true,
+   "ref_key": "",
+   "deviation": -0.012918605570010315,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 6 (heave) damped-cosine fit residual (RMS rel.)",
+   "value": 0.15634492947065529,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 6 (heave) ERA vs projection natural frequency",
+   "value": 8.666878060937957,
+   "ref": 8.761643547015838,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": false,
+   "ref_key": "",
+   "deviation": -0.01081594857966544,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 6 (heave) ERA vs projection zeta",
+   "value": 0.06218752287030894,
+   "ref": 0.032567750732874046,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": 0.9094816642506586,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  }
+ ],
+ "info_checks_failed": [
+  {
+   "id": "info",
+   "item": "L1-R LOCK: mode 6 (heave, ERA) zeta (- r omega dt/2)",
+   "value": 0.06218752287030894,
+   "ref": 0.03042,
+   "tol": 0.3,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / modes_V7a / top / LOCK / zeta",
+   "deviation": 1.0442972672685387,
+   "note": "L1-R: recorded, not judged: the S4 amplitudes cross the knee (1.7-3.3 x), so zeta depends on the amplitude; zeta is judged in V7a (dynamics_model.md 5.14.6, 5.17.5); zeta_num 1.33e-05 subtracted; fit residual 0.156 > 0.05"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 2 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.08241539802164313,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 3 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.06919673338725549,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 4 (pitch) damped-cosine fit residual (RMS rel.)",
+   "value": 0.14399938179164812,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 4 (pitch) ERA vs projection natural frequency",
+   "value": 6.149639822319841,
+   "ref": 6.117073884261952,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": false,
+   "ref_key": "",
+   "deviation": 0.005323777131689542,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 4 (pitch) ERA vs projection zeta",
+   "value": 0.032811301566125564,
+   "ref": 0.03651117078418523,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": -0.10133526640187235,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 5 (roll) damped-cosine fit residual (RMS rel.)",
+   "value": 0.3781853046759777,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 5 (roll) ERA vs projection natural frequency",
+   "value": 7.408103347966596,
+   "ref": 7.4841485600692055,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": false,
+   "ref_key": "",
+   "deviation": -0.010160836799571313,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 6 (heave) damped-cosine fit residual (RMS rel.)",
+   "value": 0.15634492947065529,
+   "ref": null,
+   "tol": 0.05,
+   "tol_kind": "max",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": null,
+   "note": ""
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 6 (heave) ERA vs projection natural frequency",
+   "value": 8.666878060937957,
+   "ref": 8.761643547015838,
+   "tol": 0.005,
+   "tol_kind": "rel",
+   "unit": "Hz",
+   "passed": false,
+   "ref_key": "",
+   "deviation": -0.01081594857966544,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  },
+  {
+   "id": "info",
+   "item": "V7: mode 6 (heave) ERA vs projection zeta",
+   "value": 0.06218752287030894,
+   "ref": 0.032567750732874046,
+   "tol": 0.1,
+   "tol_kind": "rel",
+   "unit": "-",
+   "passed": false,
+   "ref_key": "",
+   "deviation": 0.9094816642506586,
+   "note": "ASSUMPTION tolerance (dyn accepted)"
+  }
+ ],
+ "case_overview": {
+  "modes_pitch": {
+   "dt_s": 0.0002,
+   "wall_s": 44.226549699989846,
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "pre_excitation_residual": {
+    "body_vel_m_s": [
+     -7.205078361219691e-07,
+     -5.504654506387186e-07,
+     -1.1854783022711274e-06
+    ],
+    "body_omega_rad_s": [
+     -4.818112920356646e-07,
+     -4.91114121193078e-07,
+     -1.9613409671583668e-07
+    ],
+    "vel_over_excitation": 0.00010818014943886774,
+    "omega_over_excitation": 0.000114330668652657
+   },
+   "pad_normal_min_N": [
+    111338.29386995883,
+    109012.7589280753,
+    63929.89840373641,
+    62412.172797940606
+   ],
+   "bushing_disp_max_mm": [
+    0.8129710275102278,
+    0.807070522200218,
+    0.8125410974833912,
+    0.8071680682891135
+   ]
+  },
+  "modes_roll": {
+   "dt_s": 0.0002,
+   "wall_s": 43.681559499993455,
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "pre_excitation_residual": {
+    "body_vel_m_s": [
+     -7.205078361219691e-07,
+     -5.504654506387186e-07,
+     -1.1854783022711274e-06
+    ],
+    "body_omega_rad_s": [
+     -4.818112920356646e-07,
+     -4.91114121193078e-07,
+     -1.9613409671583668e-07
+    ],
+    "vel_over_excitation": 0.00017099854673503586,
+    "omega_over_excitation": 0.00017675593240816653
+   },
+   "pad_normal_min_N": [
+    114728.20935121641,
+    112306.76801473547,
+    69410.7120534183,
+    67890.11618441161
+   ],
+   "bushing_disp_max_mm": [
+    0.4617633822687704,
+    0.4626448607666765,
+    0.5584036635806638,
+    0.5622606166682023
+   ]
+  },
+  "modes_heave": {
+   "dt_s": 0.0002,
+   "wall_s": 4.396633700001985,
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "pre_excitation_residual": {
+    "body_vel_m_s": [
+     -7.205078361219691e-07,
+     -5.504654506387186e-07,
+     -1.1854783022711274e-06
+    ],
+    "body_omega_rad_s": [
+     -4.818112920356646e-07,
+     -4.91114121193078e-07,
+     -1.9613409671583668e-07
+    ],
+    "vel_over_excitation": 6.449784538061638e-05,
+    "omega_over_excitation": null
+   },
+   "pad_normal_min_N": [
+    108806.61664739414,
+    106570.44071406376,
+    65119.53687929213,
+    63583.85407659042
+   ],
+   "bushing_disp_max_mm": [
+    0.09932108268127056,
+    0.10435088986703497,
+    0.09912838340868448,
+    0.10370408116013319
+   ]
+  },
+  "modes_surge": {
+   "dt_s": 0.0002,
+   "wall_s": 4.327775399986422,
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "pre_excitation_residual": {
+    "body_vel_m_s": [
+     -7.205078361219691e-07,
+     -5.504654506387186e-07,
+     -1.1854783022711274e-06
+    ],
+    "body_omega_rad_s": [
+     -4.818112920356646e-07,
+     -4.91114121193078e-07,
+     -1.9613409671583668e-07
+    ],
+    "vel_over_excitation": 8.266862368315836e-05,
+    "omega_over_excitation": null
+   },
+   "pad_normal_min_N": [
+    113594.90670433911,
+    111432.16425380834,
+    67634.6527171742,
+    66129.32897837367
+   ],
+   "bushing_disp_max_mm": [
+    0.5952389156941281,
+    0.5941374089073953,
+    0.5952161507760616,
+    0.594213164880825
+   ]
+  },
+  "modes_sway": {
+   "dt_s": 0.0002,
+   "wall_s": 4.346455699997023,
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "pre_excitation_residual": {
+    "body_vel_m_s": [
+     -7.205078361219691e-07,
+     -5.504654506387186e-07,
+     -1.1854783022711274e-06
+    ],
+    "body_omega_rad_s": [
+     -4.818112920356646e-07,
+     -4.91114121193078e-07,
+     -1.9613409671583668e-07
+    ],
+    "vel_over_excitation": 0.00012290206307674555,
+    "omega_over_excitation": null
+   },
+   "pad_normal_min_N": [
+    115454.09899859827,
+    112847.78700178435,
+    69969.25340599117,
+    68233.33563953589
+   ],
+   "bushing_disp_max_mm": [
+    0.2950753320208942,
+    0.29246381504345975,
+    0.48813718705213105,
+    0.4884586473501934
+   ]
+  },
+  "modes_yaw": {
+   "dt_s": 0.0002,
+   "wall_s": 4.314458000008017,
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "pre_excitation_residual": {
+    "body_vel_m_s": [
+     -7.205078361219691e-07,
+     -5.504654506387186e-07,
+     -1.1854783022711274e-06
+    ],
+    "body_omega_rad_s": [
+     -4.818112920356646e-07,
+     -4.91114121193078e-07,
+     -1.9613409671583668e-07
+    ],
+    "vel_over_excitation": 0.0007360828576164275,
+    "omega_over_excitation": 0.00016205554335553977
+   },
+   "pad_normal_min_N": [
+    117366.46547883902,
+    114324.63941073681,
+    71357.11167238286,
+    69245.93933908496
+   ],
+   "bushing_disp_max_mm": [
+    0.23100635696276034,
+    0.2316700704865123,
+    0.4915016832182785,
+    0.49360913764498926
+   ]
+  }
+ }
+}

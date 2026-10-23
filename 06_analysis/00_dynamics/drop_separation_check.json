@@ -1,0 +1,324 @@
+{
+ "meta": {
+  "case": "RR ground drop 30 mm, Poly345 ramp T, from the static state, all legs LOCK (p_r0 2 bar)",
+  "k_h_plus_k_r_N_m": 30302878.581547655,
+  "m_rod_kg": 73.1629937,
+  "sqrt_k_m_N_s_m": 47085.55314269586,
+  "frame": "body z up; speeds here downward positive"
+ },
+ "top T=0.05": {
+  "fixed_corner": {
+   "t_sep_ms": 11.82601994042541,
+   "ground_drop_mm": 2.694380989402909,
+   "v_rel_m_s": 0.5869547023341191
+  },
+  "elastic_only": {
+   "t_sep_ms": 11.868253426150629,
+   "ground_drop_mm": 2.719231219791243,
+   "v_ground_m_s": 0.5898471787102159,
+   "v_corner_m_s": 0.009868610160756998,
+   "corner_drop_mm": 0.024850230388339046,
+   "v_rel_m_s": 0.5799785685494588,
+   "v_rel_over_fixed": 0.9881146981923502
+  },
+  "with_cn": {
+   "t_sep_ms": 11.88772793302378,
+   "ground_drop_mm": 2.73073118348837,
+   "v_ground_m_s": 0.5911802026925105,
+   "v_corner_m_s": 0.01337578868483636,
+   "corner_drop_mm": 0.036350194085485385,
+   "v_rel_m_s": 0.5778044140076741,
+   "v_rel_over_fixed": 0.9844105715653059
+  },
+  "tension_estimate_kN (closed form, v_rel elastic_only)": {
+   "zeta 0.0": -27.30861171106022,
+   "zeta 0.1": -23.556418556612027,
+   "zeta 0.3": -18.3390178889139
+  },
+  "tension_estimate_kN (fixed corner)": {
+   "zeta 0.0": -27.637086829108394,
+   "zeta 0.1": -23.839761314861484,
+   "zeta 0.3": -18.559604388501825
+  }
+ },
+ "top T=0.1": {
+  "fixed_corner": {
+   "t_sep_ms": 23.65203988085082,
+   "ground_drop_mm": 2.694380989402909,
+   "v_rel_m_s": 0.29347735116705953
+  },
+  "elastic_only": {
+   "t_sep_ms": 23.993627376596343,
+   "ground_drop_mm": 2.7956274378091983,
+   "v_ground_m_s": 0.2993190390469427,
+   "v_corner_m_s": 0.01960904047658332,
+   "corner_drop_mm": 0.1012464484062718,
+   "v_rel_m_s": 0.2797099985703594,
+   "v_rel_over_fixed": 0.953088875369932
+  },
+  "with_cn": {
+   "t_sep_ms": 24.07251083086093,
+   "ground_drop_mm": 2.819291865038749,
+   "v_ground_m_s": 0.3006653410409499,
+   "v_corner_m_s": 0.023039855886165188,
+   "corner_drop_mm": 0.1249108756358395,
+   "v_rel_m_s": 0.2776254851547847,
+   "v_rel_over_fixed": 0.9459860669000951
+  },
+  "tension_estimate_kN (closed form, v_rel elastic_only)": {
+   "zeta 0.0": -13.170300002228041,
+   "zeta 0.1": -11.360705650334474,
+   "zeta 0.3": -8.844476236974032
+  },
+  "tension_estimate_kN (fixed corner)": {
+   "zeta 0.0": -13.818543414554197,
+   "zeta 0.1": -11.919880657430742,
+   "zeta 0.3": -9.279802194250912
+  }
+ },
+ "top T=0.2": {
+  "fixed_corner": {
+   "t_sep_ms": 47.30407976170164,
+   "ground_drop_mm": 2.694380989402909,
+   "v_rel_m_s": 0.14673867558352977
+  },
+  "elastic_only": {
+   "t_sep_ms": 50.17169066806193,
+   "ground_drop_mm": 3.132692905867833,
+   "v_ground_m_s": 0.15892702763154087,
+   "v_corner_m_s": 0.03842439490209802,
+   "corner_drop_mm": 0.43831191646492645,
+   "v_rel_m_s": 0.12050263272944285,
+   "v_rel_over_fixed": 0.821205672262237
+  },
+  "with_cn": {
+   "t_sep_ms": 50.501807362929874,
+   "ground_drop_mm": 3.1853868047966554,
+   "v_ground_m_s": 0.16031651282597914,
+   "v_corner_m_s": 0.041570998175153466,
+   "corner_drop_mm": 0.4910058153937453,
+   "v_rel_m_s": 0.11874551465082567,
+   "v_rel_over_fixed": 0.8092312008311046
+  },
+  "tension_estimate_kN (closed form, v_rel elastic_only)": {
+   "zeta 0.0": -5.673933117216944,
+   "zeta 0.1": -4.8943368042855235,
+   "zeta 0.3": -3.810313099695201
+  },
+  "tension_estimate_kN (fixed corner)": {
+   "zeta 0.0": -6.909271707277099,
+   "zeta 0.1": -5.959940328715371,
+   "zeta 0.3": -4.639901097125456
+  }
+ },
+ "middle T=0.05": {
+  "fixed_corner": {
+   "t_sep_ms": 11.82601994042541,
+   "ground_drop_mm": 2.694380989402909,
+   "v_rel_m_s": 0.5869547023341191
+  },
+  "elastic_only": {
+   "t_sep_ms": 11.880555926264973,
+   "ground_drop_mm": 2.726492995289348,
+   "v_ground_m_s": 0.5906893361898522,
+   "v_corner_m_s": 0.012735150831177908,
+   "corner_drop_mm": 0.032112005886455235,
+   "v_rel_m_s": 0.5779541853586743,
+   "v_rel_over_fixed": 0.9846657383616609
+  },
+  "with_cn": {
+   "t_sep_ms": 11.905743929819378,
+   "ground_drop_mm": 2.741392989485236,
+   "v_ground_m_s": 0.592412967401216,
+   "v_corner_m_s": 0.01726382258933621,
+   "corner_drop_mm": 0.04701200008236482,
+   "v_rel_m_s": 0.5751491448118797,
+   "v_rel_over_fixed": 0.9798867655795368
+  },
+  "tension_estimate_kN (closed form, v_rel elastic_only)": {
+   "zeta 0.0": -27.213292508749355,
+   "zeta 0.1": -23.47419617746385,
+   "zeta 0.3": -18.275006558904476
+  },
+  "tension_estimate_kN (fixed corner)": {
+   "zeta 0.0": -27.637086829108394,
+   "zeta 0.1": -23.839761314861484,
+   "zeta 0.3": -18.559604388501825
+  }
+ },
+ "middle T=0.1": {
+  "fixed_corner": {
+   "t_sep_ms": 23.65203988085082,
+   "ground_drop_mm": 2.694380989402909,
+   "v_rel_m_s": 0.29347735116705953
+  },
+  "elastic_only": {
+   "t_sep_ms": 24.098094136035538,
+   "ground_drop_mm": 2.826989460715532,
+   "v_ground_m_s": 0.30110173951984964,
+   "v_corner_m_s": 0.025532456403883994,
+   "corner_drop_mm": 0.132608471312623,
+   "v_rel_m_s": 0.2755692831159656,
+   "v_rel_over_fixed": 0.9389797271241559
+  },
+  "with_cn": {
+   "t_sep_ms": 24.201687695099476,
+   "ground_drop_mm": 2.8582731464845406,
+   "v_ground_m_s": 0.3028676487715022,
+   "v_corner_m_s": 0.03000970331633932,
+   "corner_drop_mm": 0.1638921570816488,
+   "v_rel_m_s": 0.27285794545516284,
+   "v_rel_over_fixed": 0.9297410664574274
+  },
+  "tension_estimate_kN (closed form, v_rel elastic_only)": {
+   "zeta 0.0": -12.9753321246514,
+   "zeta 0.1": -11.192526287066823,
+   "zeta 0.3": -8.713546132123865
+  },
+  "tension_estimate_kN (fixed corner)": {
+   "zeta 0.0": -13.818543414554197,
+   "zeta 0.1": -11.919880657430742,
+   "zeta 0.3": -9.279802194250912
+  }
+ },
+ "middle T=0.2": {
+  "fixed_corner": {
+   "t_sep_ms": 47.30407976170164,
+   "ground_drop_mm": 2.694380989402909,
+   "v_rel_m_s": 0.14673867558352977
+  },
+  "elastic_only": {
+   "t_sep_ms": 51.251581629192586,
+   "ground_drop_mm": 3.306767585861556,
+   "v_ground_m_s": 0.1634601107954477,
+   "v_corner_m_s": 0.05204297697698396,
+   "corner_drop_mm": 0.6123865964586473,
+   "v_rel_m_s": 0.11141713381846374,
+   "v_rel_over_fixed": 0.7592894877604403
+  },
+  "with_cn": {
+   "t_sep_ms": 51.71686309105104,
+   "ground_drop_mm": 3.383274554504411,
+   "v_ground_m_s": 0.1654018680910963,
+   "v_corner_m_s": 0.056321449798599696,
+   "corner_drop_mm": 0.6888935651015031,
+   "v_rel_m_s": 0.10908041829249661,
+   "v_rel_over_fixed": 0.743365154814986
+  },
+  "tension_estimate_kN (closed form, v_rel elastic_only)": {
+   "zeta 0.0": -5.246137375416131,
+   "zeta 0.1": -4.525320039273085,
+   "zeta 0.3": -3.523028127295493
+  },
+  "tension_estimate_kN (fixed corner)": {
+   "zeta 0.0": -6.909271707277099,
+   "zeta 0.1": -5.959940328715371,
+   "zeta 0.3": -4.639901097125456
+  }
+ },
+ "bottom T=0.05": {
+  "fixed_corner": {
+   "t_sep_ms": 11.82601994042541,
+   "ground_drop_mm": 2.694380989402909,
+   "v_rel_m_s": 0.5869547023341191
+  },
+  "elastic_only": {
+   "t_sep_ms": 11.886909853187452,
+   "ground_drop_mm": 2.730247573786082,
+   "v_ground_m_s": 0.5911242149339061,
+   "v_corner_m_s": 0.014216810271840657,
+   "corner_drop_mm": 0.03586658438319482,
+   "v_rel_m_s": 0.5769074046620655,
+   "v_rel_over_fixed": 0.9828823286837998
+  },
+  "with_cn": {
+   "t_sep_ms": 11.915061610907866,
+   "ground_drop_mm": 2.746915874269597,
+   "v_ground_m_s": 0.593050378193105,
+   "v_corner_m_s": 0.019275681925900113,
+   "corner_drop_mm": 0.052534884866654336,
+   "v_rel_m_s": 0.5737746962672049,
+   "v_rel_over_fixed": 0.9775451052449162
+  },
+  "tension_estimate_kN (closed form, v_rel elastic_only)": {
+   "zeta 0.0": -27.16400426063043,
+   "zeta 0.1": -23.43168011641702,
+   "zeta 0.3": -18.241907180820746
+  },
+  "tension_estimate_kN (fixed corner)": {
+   "zeta 0.0": -27.637086829108394,
+   "zeta 0.1": -23.839761314861484,
+   "zeta 0.3": -18.559604388501825
+  }
+ },
+ "bottom T=0.1": {
+  "fixed_corner": {
+   "t_sep_ms": 23.65203988085082,
+   "ground_drop_mm": 2.694380989402909,
+   "v_rel_m_s": 0.29347735116705953
+  },
+  "elastic_only": {
+   "t_sep_ms": 24.15356939389018,
+   "ground_drop_mm": 2.8437193968399455,
+   "v_ground_m_s": 0.3020476374685792,
+   "v_corner_m_s": 0.028679698447782842,
+   "corner_drop_mm": 0.14933840743704385,
+   "v_rel_m_s": 0.27336793902079637,
+   "v_rel_over_fixed": 0.9314788276972827
+  },
+  "with_cn": {
+   "t_sep_ms": 24.270485931809663,
+   "ground_drop_mm": 2.8791502170762584,
+   "v_ground_m_s": 0.30403934829337553,
+   "v_corner_m_s": 0.03372201841589031,
+   "corner_drop_mm": 0.1847692276733418,
+   "v_rel_m_s": 0.27031732987748525,
+   "v_rel_over_fixed": 0.9210841272845255
+  },
+  "tension_estimate_kN (closed form, v_rel elastic_only)": {
+   "zeta 0.0": -12.871680620272949,
+   "zeta 0.1": -11.103116461075103,
+   "zeta 0.3": -8.64393926916351
+  },
+  "tension_estimate_kN (fixed corner)": {
+   "zeta 0.0": -13.818543414554197,
+   "zeta 0.1": -11.919880657430742,
+   "zeta 0.3": -9.279802194250912
+  }
+ },
+ "bottom T=0.2": {
+  "fixed_corner": {
+   "t_sep_ms": 47.30407976170164,
+   "ground_drop_mm": 2.694380989402909,
+   "v_rel_m_s": 0.14673867558352977
+  },
+  "elastic_only": {
+   "t_sep_ms": 51.909920800544164,
+   "ground_drop_mm": 3.4152842471718112,
+   "v_ground_m_s": 0.16620542470988484,
+   "v_corner_m_s": 0.06028903309996282,
+   "corner_drop_mm": 0.7209032577689023,
+   "v_rel_m_s": 0.10591639160992201,
+   "v_rel_over_fixed": 0.7218028320667921
+  },
+  "with_cn": {
+   "t_sep_ms": 52.46469458211954,
+   "ground_drop_mm": 3.508129675260217,
+   "v_ground_m_s": 0.1685073113800001,
+   "v_corner_m_s": 0.0653170226772542,
+   "corner_drop_mm": 0.8137486858573074,
+   "v_rel_m_s": 0.10319028870274591,
+   "v_rel_over_fixed": 0.7032248880017027
+  },
+  "tension_estimate_kN (closed form, v_rel elastic_only)": {
+   "zeta 0.0": -4.987131885831569,
+   "zeta 0.1": -4.301901808215843,
+   "zeta 0.3": -3.3490937524149698
+  },
+  "tension_estimate_kN (fixed corner)": {
+   "zeta 0.0": -6.909271707277099,
+   "zeta 0.1": -5.959940328715371,
+   "zeta 0.3": -4.639901097125456
+  }
+ }
+}

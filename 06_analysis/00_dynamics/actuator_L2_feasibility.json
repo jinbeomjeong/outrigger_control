@@ -11,8 +11,8 @@
   ],
   "force_basis": "cylinder force = pressure x bore area (compression +); contact = cylinder + rod weight",
   "level": "top unless stated",
-  "F_min_cylinder_N": 9452.5,
-  "runtime_s": 3.7377
+  "F_min_cylinder_N": 9414.6,
+  "runtime_s": 12.302
  },
  "A_extension_dependence": {
   "level": {
@@ -33,75 +33,75 @@
     1.0
    ],
    "kv_L2_N_m": [
-    20814000.0,
-    20814000.0,
-    21248000.0,
-    21248000.0
+    25906000.0,
+    25906000.0,
+    19505000.0,
+    19505000.0
    ],
    "F_cyl_place_and_settle_L1_N": [
-    118250.0,
-    116270.0,
-    72711.0,
-    70875.0
+    118220.0,
+    115980.0,
+    71959.0,
+    70420.0
    ],
    "F_cyl_place_and_settle_L2_N": [
-    118250.0,
-    116270.0,
-    72711.0,
-    70875.0
+    118220.0,
+    115980.0,
+    71959.0,
+    70420.0
    ],
    "F_diff_L2_minus_L1_N": [
-    1.4552e-11,
-    1.4552e-11,
-    1.4552e-11,
-    1.4552e-11
+    0.0,
+    0.0,
+    0.0,
+    0.0
    ],
    "S_diag_L1_kN_per_mm": [
-    4.7706,
-    4.7706,
-    5.7538,
-    5.7538
+    4.9782,
+    4.9782,
+    6.0042,
+    6.0042
    ],
    "S_diag_L2_kN_per_mm": [
-    4.7706,
-    4.7706,
-    5.7538,
-    5.7538
+    4.9782,
+    4.9782,
+    6.0042,
+    6.0042
    ],
-   "S_max_rel_diff": 9.7117e-16,
-   "FLplus_F_min_threshold_mm_L1": 12.074,
-   "FLplus_F_min_threshold_mm_L2": 12.074,
+   "S_max_rel_diff": 0.0,
+   "FLplus_F_min_threshold_mm_L1": 11.44,
+   "FLplus_F_min_threshold_mm_L2": 11.44,
    "f_Hz_L1_fixed_kn": [
-    1.7845,
-    2.9842,
-    5.8325,
-    6.459,
-    7.6148,
-    8.0421
+    1.8314,
+    2.8356,
+    4.0318,
+    5.7815,
+    7.4098,
+    7.7316
    ],
    "f_Hz_L1_kn_updated_to_extension": [
-    1.7845,
-    2.9842,
-    5.8325,
-    6.459,
-    7.6148,
-    8.0421
+    1.8314,
+    2.8356,
+    4.0318,
+    5.7815,
+    7.4098,
+    7.7316
    ],
    "f_Hz_L2b_rigid_body_modes": [
-    1.7854,
-    2.9885,
-    5.8811,
-    6.5084,
-    7.6637,
-    8.1574
+    1.8323,
+    2.8404,
+    4.0562,
+    5.8197,
+    7.5116,
+    7.7682
    ],
    "rocking1_2_rel_diff_L2b_vs_L1": [
-    0.0005015,
-    0.0014552
+    0.00051494,
+    0.0017044
    ],
    "rocking1_2_rel_diff_L2b_vs_L1u": [
-    0.0005015,
-    0.0014552
+    0.00051494,
+    0.0017044
    ]
   },
   "roll 2": {
@@ -116,81 +116,81 @@
     0.482
    ],
    "k_oil_eff_rel_to_L1": [
-    0.99685,
-    0.83253,
-    0.98508,
-    0.83371
+    0.99688,
+    0.83384,
+    0.98512,
+    0.83405
    ],
    "kv_L2_N_m": [
-    20752000.0,
-    17517000.0,
-    20951000.0,
-    17910000.0
+    25831000.0,
+    21892000.0,
+    19232000.0,
+    16432000.0
    ],
    "F_cyl_place_and_settle_L1_N": [
-    118250.0,
-    116270.0,
-    72711.0,
-    70875.0
+    118220.0,
+    115980.0,
+    71959.0,
+    70420.0
    ],
    "F_cyl_place_and_settle_L2_N": [
-    120010.0,
-    114510.0,
-    70778.0,
-    72808.0
+    118790.0,
+    115420.0,
+    71342.0,
+    71036.0
    ],
    "F_diff_L2_minus_L1_N": [
-    1760.1,
-    -1760.1,
-    -1932.9,
-    1932.9
+    561.22,
+    -561.22,
+    -616.35,
+    616.35
    ],
    "S_diag_L1_kN_per_mm": [
-    4.7706,
-    4.7706,
-    5.7538,
-    5.7538
+    4.9782,
+    4.9782,
+    6.0042,
+    6.0042
    ],
    "S_diag_L2_kN_per_mm": [
-    4.3443,
-    4.3443,
-    5.2397,
-    5.2397
+    4.5351,
+    4.5351,
+    5.4697,
+    5.4697
    ],
-   "S_max_rel_diff": 0.089351,
-   "FLplus_F_min_threshold_mm_L1": 12.074,
-   "FLplus_F_min_threshold_mm_L2": 12.854,
+   "S_max_rel_diff": 0.089014,
+   "FLplus_F_min_threshold_mm_L1": 11.44,
+   "FLplus_F_min_threshold_mm_L2": 12.434,
    "f_Hz_L1_fixed_kn": [
-    1.774,
-    2.968,
-    5.8425,
-    6.4886,
-    7.6206,
-    8.0764
+    1.8206,
+    2.8219,
+    4.0367,
+    5.8088,
+    7.4442,
+    7.7321
    ],
    "f_Hz_L1_kn_updated_to_extension": [
-    1.7006,
-    2.8717,
-    5.8403,
-    6.3911,
-    7.3266,
-    8.0458
+    1.7497,
+    2.7508,
+    4.0347,
+    5.7067,
+    7.3144,
+    7.4947
    ],
    "f_Hz_L2b_rigid_body_modes": [
-    1.6898,
-    2.8254,
-    5.4668,
-    6.1517,
-    7.2854,
-    7.6909
+    1.7345,
+    2.6737,
+    3.7754,
+    5.5172,
+    7.0509,
+    7.4672
    ],
    "rocking1_2_rel_diff_L2b_vs_L1": [
-    -0.047484,
-    -0.04806
+    -0.047263,
+    -0.052535
    ],
    "rocking1_2_rel_diff_L2b_vs_L1u": [
-    -0.0063751,
-    -0.016104
+    -0.0086771,
+    -0.028019
    ]
   },
   "pitch 2": {
@@ -205,81 +205,81 @@
     0.3659
    ],
    "k_oil_eff_rel_to_L1": [
-    0.76386,
-    0.76386,
-    1.0579,
-    1.0579
+    0.76555,
+    0.76555,
+    1.0578,
+    1.0578
    ],
    "kv_L2_N_m": [
-    16144000.0,
-    16144000.0,
-    22393000.0,
-    22393000.0
+    20211000.0,
+    20211000.0,
+    20560000.0,
+    20560000.0
    ],
    "F_cyl_place_and_settle_L1_N": [
-    118250.0,
-    116270.0,
-    72711.0,
-    70875.0
+    118220.0,
+    115980.0,
+    71959.0,
+    70420.0
    ],
    "F_cyl_place_and_settle_L2_N": [
-    118110.0,
-    116410.0,
-    72864.0,
-    70722.0
+    118090.0,
+    116110.0,
+    72105.0,
+    70273.0
    ],
    "F_diff_L2_minus_L1_N": [
-    -139.43,
-    139.43,
-    153.13,
-    -153.13
+    -133.42,
+    133.42,
+    146.53,
+    -146.53
    ],
    "S_diag_L1_kN_per_mm": [
-    4.7706,
-    4.7706,
-    5.7538,
-    5.7538
+    4.9782,
+    4.9782,
+    6.0042,
+    6.0042
    ],
    "S_diag_L2_kN_per_mm": [
-    4.3177,
-    4.3177,
-    5.2075,
-    5.2075
+    4.6236,
+    4.6236,
+    5.5765,
+    5.5765
    ],
-   "S_max_rel_diff": 0.094942,
-   "FLplus_F_min_threshold_mm_L1": 12.074,
-   "FLplus_F_min_threshold_mm_L2": 13.373,
+   "S_max_rel_diff": 0.071226,
+   "FLplus_F_min_threshold_mm_L1": 11.44,
+   "FLplus_F_min_threshold_mm_L2": 12.346,
    "f_Hz_L1_fixed_kn": [
-    1.7586,
-    2.9645,
-    5.8329,
-    6.4959,
-    7.6228,
-    8.157
+    1.8044,
+    2.8112,
+    4.0319,
+    5.8311,
+    7.5168,
+    7.7326
    ],
    "f_Hz_L1_kn_updated_to_extension": [
-    1.6795,
-    2.8162,
-    5.8304,
-    6.2053,
-    7.5937,
-    8.1169
+    1.7117,
+    2.7315,
+    4.0294,
+    5.6404,
+    7.4388,
+    7.4785
    ],
    "f_Hz_L2b_rigid_body_modes": [
-    1.6405,
-    2.7789,
-    5.948,
-    5.987,
-    6.9302,
-    7.5649
+    1.6601,
+    2.6144,
+    4.1241,
+    5.3267,
+    6.3642,
+    7.479
    ],
    "rocking1_2_rel_diff_L2b_vs_L1": [
-    -0.067172,
-    -0.062618
+    -0.079989,
+    -0.07001
    ],
    "rocking1_2_rel_diff_L2b_vs_L1u": [
-    -0.023229,
-    -0.013252
+    -0.030142,
+    -0.04285
    ]
   },
   "roll -2 pitch 1.5": {
@@ -294,451 +294,451 @@
     0.37645
    ],
    "k_oil_eff_rel_to_L1": [
-    0.69785,
-    0.80973,
-    0.86754,
-    1.0327
+    0.69983,
+    0.81118,
+    0.86783,
+    1.0326
    ],
    "kv_L2_N_m": [
-    14813000.0,
-    17062000.0,
-    18595000.0,
-    21895000.0
+    18576000.0,
+    21337000.0,
+    17063000.0,
+    20101000.0
    ],
    "F_cyl_place_and_settle_L1_N": [
-    118250.0,
-    116270.0,
-    72711.0,
-    70875.0
+    118220.0,
+    115980.0,
+    71959.0,
+    70420.0
    ],
    "F_cyl_place_and_settle_L2_N": [
-    116500.0,
-    118010.0,
-    74625.0,
-    68961.0
+    117600.0,
+    116610.0,
+    72645.0,
+    69734.0
    ],
    "F_diff_L2_minus_L1_N": [
-    -1743.3,
-    1743.3,
-    1914.6,
-    -1914.6
+    -624.74,
+    624.74,
+    686.1,
+    -686.1
    ],
    "S_diag_L1_kN_per_mm": [
-    4.7706,
-    4.7706,
-    5.7538,
-    5.7538
+    4.9782,
+    4.9782,
+    6.0042,
+    6.0042
    ],
    "S_diag_L2_kN_per_mm": [
-    4.064,
-    4.064,
-    4.9015,
-    4.9015
+    4.3217,
+    4.3217,
+    5.2124,
+    5.2124
    ],
-   "S_max_rel_diff": 0.14812,
-   "FLplus_F_min_threshold_mm_L1": 12.074,
-   "FLplus_F_min_threshold_mm_L2": 14.602,
+   "S_max_rel_diff": 0.13188,
+   "FLplus_F_min_threshold_mm_L1": 11.44,
+   "FLplus_F_min_threshold_mm_L2": 13.322,
    "f_Hz_L1_fixed_kn": [
-    1.7547,
-    2.9537,
-    5.8424,
-    6.5152,
-    7.6274,
-    8.1623
+    1.8005,
+    2.8039,
+    4.0365,
+    5.8457,
+    7.5247,
+    7.7327
    ],
    "f_Hz_L1_kn_updated_to_extension": [
-    1.6266,
-    2.7566,
-    5.8379,
-    6.1972,
-    7.328,
-    8.1116
+    1.6647,
+    2.6781,
+    4.0329,
+    5.6219,
+    7.1668,
+    7.4858
    ],
    "f_Hz_L2b_rigid_body_modes": [
-    1.5877,
-    2.6831,
-    5.5494,
-    5.7775,
-    6.7263,
-    7.2997
+    1.6132,
+    2.5157,
+    3.8319,
+    5.1792,
+    6.2486,
+    7.246
    ],
    "rocking1_2_rel_diff_L2b_vs_L1": [
-    -0.0952,
-    -0.091632
+    -0.10402,
+    -0.10281
    ],
    "rocking1_2_rel_diff_L2b_vs_L1u": [
-    -0.023923,
-    -0.026685
+    -0.030942,
+    -0.060655
    ]
   },
   "max pitch+": {
    "ground_roll_pitch_deg": [
     0.0,
-    3.8559
+    4.1315
    ],
    "extension_m": [
-    0.67972,
-    0.67972,
-    0.34264,
-    0.34264
+    0.6997,
+    0.6997,
+    0.33918,
+    0.33918
    ],
    "k_oil_eff_rel_to_L1": [
-    0.6263,
-    0.6263,
-    1.1181,
-    1.1181
+    0.61219,
+    0.61219,
+    1.1273,
+    1.1273
    ],
    "kv_L2_N_m": [
-    13357000.0,
-    13357000.0,
-    23575000.0,
-    23575000.0
+    16367000.0,
+    16367000.0,
+    21821000.0,
+    21821000.0
    ],
    "F_cyl_place_and_settle_L1_N": [
-    118250.0,
-    116270.0,
-    72711.0,
-    70875.0
+    118220.0,
+    115980.0,
+    71959.0,
+    70420.0
    ],
    "F_cyl_place_and_settle_L2_N": [
-    118000.0,
-    116520.0,
-    72982.0,
-    70604.0
+    117970.0,
+    116240.0,
+    72240.0,
+    70138.0
    ],
    "F_diff_L2_minus_L1_N": [
-    -247.28,
-    247.28,
-    271.57,
-    -271.57
+    -256.47,
+    256.47,
+    281.66,
+    -281.66
    ],
    "S_diag_L1_kN_per_mm": [
-    4.7706,
-    4.7706,
-    5.7538,
-    5.7538
+    4.9782,
+    4.9782,
+    6.0042,
+    6.0042
    ],
    "S_diag_L2_kN_per_mm": [
-    3.9673,
-    3.9673,
-    4.785,
-    4.785
+    4.2966,
+    4.2966,
+    5.1821,
+    5.1821
    ],
-   "S_max_rel_diff": 0.16838,
-   "FLplus_F_min_threshold_mm_L1": 12.074,
-   "FLplus_F_min_threshold_mm_L2": 14.581,
+   "S_max_rel_diff": 0.13691,
+   "FLplus_F_min_threshold_mm_L1": 11.44,
+   "FLplus_F_min_threshold_mm_L2": 13.314,
    "f_Hz_L1_fixed_kn": [
-    1.7356,
-    2.9473,
-    5.8331,
-    6.5305,
-    7.6308,
-    8.2649
+    1.7767,
+    2.786,
+    4.0319,
+    5.8851,
+    7.6309,
+    7.7347
    ],
    "f_Hz_L1_kn_updated_to_extension": [
-    1.6174,
-    2.6733,
-    5.8294,
-    6.0348,
-    7.6813,
-    8.2055
+    1.6279,
+    2.621,
+    4.0282,
+    5.4821,
+    7.4131,
+    7.5435
    ],
    "f_Hz_L2b_rigid_body_modes": [
-    1.5449,
-    2.6387,
-    5.6339,
-    5.8102,
-    6.4729,
-    7.5909
+    1.5261,
+    2.4549,
+    4.2402,
+    4.9419,
+    5.5258,
+    7.3998
    ],
    "rocking1_2_rel_diff_L2b_vs_L1": [
-    -0.10983,
-    -0.10471
+    -0.14105,
+    -0.11883
    ],
    "rocking1_2_rel_diff_L2b_vs_L1u": [
-    -0.044804,
-    -0.012958
+    -0.062569,
+    -0.063345
    ]
   },
   "max pitch-": {
    "ground_roll_pitch_deg": [
-    4.5991e-16,
-    -3.7554
+    4.9162e-16,
+    -4.0144
    ],
    "extension_m": [
-    0.37158,
-    0.37158,
-    0.67971,
-    0.67971
+    0.36953,
+    0.36953,
+    0.69969,
+    0.69969
    ],
    "k_oil_eff_rel_to_L1": [
-    1.0675,
-    1.0675,
-    0.61263,
-    0.61263
+    1.0718,
+    1.0718,
+    0.59723,
+    0.59723
    ],
    "kv_L2_N_m": [
-    22122000.0,
-    22122000.0,
-    13357000.0,
-    13357000.0
+    27607000.0,
+    27607000.0,
+    11938000.0,
+    11938000.0
    ],
    "F_cyl_place_and_settle_L1_N": [
-    118250.0,
-    116270.0,
-    72711.0,
-    70875.0
+    118220.0,
+    115980.0,
+    71959.0,
+    70420.0
    ],
    "F_cyl_place_and_settle_L2_N": [
-    118470.0,
-    116040.0,
-    72461.0,
-    71125.0
+    118440.0,
+    115760.0,
+    71718.0,
+    70661.0
    ],
    "F_diff_L2_minus_L1_N": [
-    227.52,
-    -227.52,
-    -249.87,
-    249.87
+    219.49,
+    -219.49,
+    -241.04,
+    241.04
    ],
    "S_diag_L1_kN_per_mm": [
-    4.7706,
-    4.7706,
-    5.7538,
-    5.7538
+    4.9782,
+    4.9782,
+    6.0042,
+    6.0042
    ],
    "S_diag_L2_kN_per_mm": [
-    3.69,
-    3.69,
-    4.4505,
-    4.4505
+    3.643,
+    3.643,
+    4.3938,
+    4.3938
    ],
-   "S_max_rel_diff": 0.22652,
-   "FLplus_F_min_threshold_mm_L1": 12.074,
-   "FLplus_F_min_threshold_mm_L2": 15.548,
+   "S_max_rel_diff": 0.26821,
+   "FLplus_F_min_threshold_mm_L1": 11.44,
+   "FLplus_F_min_threshold_mm_L2": 15.572,
    "f_Hz_L1_fixed_kn": [
-    1.7795,
-    2.9432,
-    5.8804,
-    6.5379,
-    7.632,
-    8.0044
+    1.8266,
+    2.8125,
+    4.0582,
+    5.8306,
+    7.3838,
+    7.7321
    ],
    "f_Hz_L1_kn_updated_to_extension": [
-    1.6656,
-    2.6998,
-    5.8776,
-    6.5475,
-    6.791,
-    7.9454
+    1.7383,
+    2.5651,
+    4.0557,
+    5.5086,
+    7.2437,
+    7.3281
    ],
    "f_Hz_L2b_rigid_body_modes": [
-    1.6711,
-    2.6447,
-    4.0888,
-    5.9215,
-    6.8277,
-    8.2851
+    1.7414,
+    2.5234,
+    2.8631,
+    5.2628,
+    7.2732,
+    7.6944
    ],
    "rocking1_2_rel_diff_L2b_vs_L1": [
-    -0.060933,
-    -0.10141
+    -0.046675,
+    -0.10278
    ],
    "rocking1_2_rel_diff_L2b_vs_L1u": [
-    0.0032718,
-    -0.020416
+    0.0017749,
+    -0.016268
    ]
   },
   "max roll+": {
    "ground_roll_pitch_deg": [
-    5.9138,
-    3.6212e-16
+    6.3346,
+    3.8788e-16
    ],
    "extension_m": [
-    0.40547,
-    0.67972,
-    0.41142,
-    0.66114
+    0.40578,
+    0.6997,
+    0.41289,
+    0.68052
    ],
    "k_oil_eff_rel_to_L1": [
-    0.99073,
-    0.6263,
-    0.95701,
-    0.62828
+    0.99016,
+    0.61219,
+    0.95417,
+    0.61255
    ],
    "kv_L2_N_m": [
-    20633000.0,
-    13357000.0,
-    20392000.0,
-    13683000.0
+    25671000.0,
+    16367000.0,
+    18662000.0,
+    12233000.0
    ],
    "F_cyl_place_and_settle_L1_N": [
-    118250.0,
-    116270.0,
-    72711.0,
-    70875.0
+    118220.0,
+    115980.0,
+    71959.0,
+    70420.0
    ],
    "F_cyl_place_and_settle_L2_N": [
-    122690.0,
-    111830.0,
-    67834.0,
-    75752.0
+    119720.0,
+    114490.0,
+    70318.0,
+    72061.0
    ],
    "F_diff_L2_minus_L1_N": [
-    4440.6,
-    -4440.6,
-    -4876.8,
-    4876.8
+    1494.3,
+    -1494.3,
+    -1641.0,
+    1641.0
    ],
    "S_diag_L1_kN_per_mm": [
-    4.7706,
-    4.7706,
-    5.7538,
-    5.7538
+    4.9782,
+    4.9782,
+    6.0042,
+    6.0042
    ],
    "S_diag_L2_kN_per_mm": [
-    3.6952,
-    3.6952,
-    4.4567,
-    4.4567
+    3.7983,
+    3.7983,
+    4.5812,
+    4.5812
    ],
-   "S_max_rel_diff": 0.22543,
-   "FLplus_F_min_threshold_mm_L1": 12.074,
-   "FLplus_F_min_threshold_mm_L2": 14.386,
+   "S_max_rel_diff": 0.237,
+   "FLplus_F_min_threshold_mm_L1": 11.44,
+   "FLplus_F_min_threshold_mm_L2": 14.6,
    "f_Hz_L1_fixed_kn": [
-    1.7558,
-    2.9373,
-    5.8607,
-    6.5465,
-    7.6333,
-    8.1476
+    1.7988,
+    2.7928,
+    4.047,
+    5.8693,
+    7.5213,
+    7.7334
    ],
    "f_Hz_L1_kn_updated_to_extension": [
-    1.5622,
-    2.7052,
-    5.8544,
-    6.269,
-    6.9802,
-    8.0904
+    1.5992,
+    2.6055,
+    4.0417,
+    5.6269,
+    6.8323,
+    7.5145
    ],
    "f_Hz_L2b_rigid_body_modes": [
-    1.544,
-    2.5936,
-    4.8525,
-    5.678,
-    6.6241,
-    7.2427
+    1.5721,
+    2.4024,
+    3.353,
+    5.0656,
+    6.3319,
+    7.0834
    ],
    "rocking1_2_rel_diff_L2b_vs_L1": [
-    -0.12063,
-    -0.11701
+    -0.12605,
+    -0.13981
    ],
    "rocking1_2_rel_diff_L2b_vs_L1u": [
-    -0.011669,
-    -0.041255
+    -0.016966,
+    -0.077973
    ]
   },
   "max diag 45": {
    "ground_roll_pitch_deg": [
-    2.3382,
-    2.3382
+    2.5057,
+    2.5057
    ],
    "extension_m": [
-    0.57161,
-    0.67972,
-    0.36975,
-    0.46819
+    0.58384,
+    0.6997,
+    0.36824,
+    0.47373
    ],
    "k_oil_eff_rel_to_L1": [
-    0.73251,
-    0.6263,
-    1.0485,
-    0.85527
+    0.72062,
+    0.61219,
+    1.0521,
+    0.84681
    ],
    "kv_L2_N_m": [
-    15513000.0,
-    13357000.0,
-    22209000.0,
-    18347000.0
+    19095000.0,
+    16367000.0,
+    20456000.0,
+    16671000.0
    ],
    "F_cyl_place_and_settle_L1_N": [
-    118250.0,
-    116270.0,
-    72711.0,
-    70875.0
+    118220.0,
+    115980.0,
+    71959.0,
+    70420.0
    ],
    "F_cyl_place_and_settle_L2_N": [
-    119930.0,
-    114590.0,
-    70865.0,
-    72721.0
+    118710.0,
+    115490.0,
+    71425.0,
+    70953.0
    ],
    "F_diff_L2_minus_L1_N": [
-    1680.8,
-    -1680.8,
-    -1845.9,
-    1845.9
+    485.81,
+    -485.81,
+    -533.53,
+    533.53
    ],
    "S_diag_L1_kN_per_mm": [
-    4.7706,
-    4.7706,
-    5.7538,
-    5.7538
+    4.9782,
+    4.9782,
+    6.0042,
+    6.0042
    ],
    "S_diag_L2_kN_per_mm": [
-    3.8554,
-    3.8554,
-    4.65,
-    4.65
+    4.0854,
+    4.0854,
+    4.9273,
+    4.9273
    ],
-   "S_max_rel_diff": 0.19184,
-   "FLplus_F_min_threshold_mm_L1": 12.074,
-   "FLplus_F_min_threshold_mm_L2": 14.504,
+   "S_max_rel_diff": 0.17935,
+   "FLplus_F_min_threshold_mm_L1": 11.44,
+   "FLplus_F_min_threshold_mm_L2": 13.821,
    "f_Hz_L1_fixed_kn": [
-    1.7425,
-    2.9426,
-    5.8441,
-    6.5364,
-    7.6318,
-    8.2174
+    1.7847,
+    2.7883,
+    4.0378,
+    5.8784,
+    7.5871,
+    7.734
    ],
    "f_Hz_L1_kn_updated_to_extension": [
-    1.5802,
-    2.6771,
-    5.8397,
-    6.0933,
-    7.3164,
-    8.1415
+    1.6009,
+    2.6075,
+    4.0332,
+    5.5455,
+    7.0555,
+    7.494
    ],
    "f_Hz_L2b_rigid_body_modes": [
-    1.526,
-    2.592,
-    5.4714,
-    5.5907,
-    6.3157,
-    7.1898
+    1.5256,
+    2.3942,
+    3.7948,
+    4.9319,
+    5.7451,
+    7.0789
    ],
    "rocking1_2_rel_diff_L2b_vs_L1": [
-    -0.12426,
-    -0.11916
+    -0.14519,
+    -0.14135
    ],
    "rocking1_2_rel_diff_L2b_vs_L1u": [
-    -0.034315,
-    -0.031771
+    -0.047072,
+    -0.081798
    ]
   },
   "_beta_range_for_comparison": {
    "beta_6.90e+08": {
-    "S_FL_kN_per_mm": 3.3939,
-    "FLplus_F_min_mm": 16.972
+    "S_FL_kN_per_mm": 3.55,
+    "FLplus_F_min_mm": 16.042
    },
    "beta_1.00e+09": {
-    "S_FL_kN_per_mm": 4.7706,
-    "FLplus_F_min_mm": 12.074
+    "S_FL_kN_per_mm": 4.9782,
+    "FLplus_F_min_mm": 11.44
    },
    "beta_1.60e+09": {
-    "S_FL_kN_per_mm": 7.2125,
-    "FLplus_F_min_mm": 7.9861
+    "S_FL_kN_per_mm": 7.4951,
+    "FLplus_F_min_mm": 7.5991
    }
   },
   "V14_rev5": {
@@ -757,762 +757,762 @@
       0.3909
      ],
      "F_cyl_place_and_settle_N": [
-      118250.0,
-      116270.0,
-      72711.0,
-      70875.0
+      118220.0,
+      115980.0,
+      71959.0,
+      70420.0
      ],
      "N_contact_normal_N": [
-      119290.0,
-      117320.0,
-      73758.0,
-      71922.0
+      119270.0,
+      117030.0,
+      72676.0,
+      71137.0
      ],
      "single_leg": {
       "FL+": {
-       "S_own_kN_per_mm": 4.7706,
+       "S_own_kN_per_mm": 4.9782,
        "dF_cyl_per_mm_N": [
-        4770.6,
-        -4770.6,
-        -5239.2,
-        5239.2
+        4978.2,
+        -4978.2,
+        -5467.2,
+        5467.2
        ],
-       "F_min_threshold_mm": 12.074,
+       "F_min_threshold_mm": 11.44,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 14.078,
+       "liftoff_threshold_mm": 13.293,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 278.9,
+       "stroke_room_mm": 298.9,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "FL-": {
-       "S_own_kN_per_mm": 4.7706,
+       "S_own_kN_per_mm": 4.9782,
        "dF_cyl_per_mm_N": [
-        4770.6,
-        -4770.6,
-        -5239.2,
-        5239.2
+        4978.2,
+        -4978.2,
+        -5467.2,
+        5467.2
        ],
-       "F_min_threshold_mm": 11.724,
+       "F_min_threshold_mm": 11.158,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 13.728,
+       "liftoff_threshold_mm": 13.012,
        "liftoff_leg": "RR",
        "stroke_room_mm": 401.1,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "FR+": {
-       "S_own_kN_per_mm": 4.7706,
+       "S_own_kN_per_mm": 4.9782,
        "dF_cyl_per_mm_N": [
-        -4770.6,
-        4770.6,
-        5239.2,
-        -5239.2
+        -4978.2,
+        4978.2,
+        5467.2,
+        -5467.2
        ],
-       "F_min_threshold_mm": 11.724,
+       "F_min_threshold_mm": 11.158,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 13.728,
+       "liftoff_threshold_mm": 13.012,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 278.9,
+       "stroke_room_mm": 298.9,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "FR-": {
-       "S_own_kN_per_mm": 4.7706,
+       "S_own_kN_per_mm": 4.9782,
        "dF_cyl_per_mm_N": [
-        -4770.6,
-        4770.6,
-        5239.2,
-        -5239.2
+        -4978.2,
+        4978.2,
+        5467.2,
+        -5467.2
        ],
-       "F_min_threshold_mm": 12.074,
+       "F_min_threshold_mm": 11.44,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 14.078,
+       "liftoff_threshold_mm": 13.293,
        "liftoff_leg": "RL",
        "stroke_room_mm": 401.1,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RL+": {
-       "S_own_kN_per_mm": 5.7538,
+       "S_own_kN_per_mm": 6.0042,
        "dF_cyl_per_mm_N": [
-        -5239.2,
-        5239.2,
-        5753.8,
-        -5753.8
+        -5467.2,
+        5467.2,
+        6004.2,
+        -6004.2
        ],
-       "F_min_threshold_mm": 10.675,
+       "F_min_threshold_mm": 10.16,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 12.5,
+       "liftoff_threshold_mm": 11.848,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 289.1,
+       "stroke_room_mm": 309.1,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RL-": {
-       "S_own_kN_per_mm": 5.7538,
+       "S_own_kN_per_mm": 6.0042,
        "dF_cyl_per_mm_N": [
-        -5239.2,
-        5239.2,
-        5753.8,
-        -5753.8
+        -5467.2,
+        5467.2,
+        6004.2,
+        -6004.2
        ],
-       "F_min_threshold_mm": 10.994,
+       "F_min_threshold_mm": 10.417,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 12.819,
+       "liftoff_threshold_mm": 12.104,
        "liftoff_leg": "RL",
        "stroke_room_mm": 390.9,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RR+": {
-       "S_own_kN_per_mm": 5.7538,
+       "S_own_kN_per_mm": 6.0042,
        "dF_cyl_per_mm_N": [
-        5239.2,
-        -5239.2,
-        -5753.8,
-        5753.8
+        5467.2,
+        -5467.2,
+        -6004.2,
+        6004.2
        ],
-       "F_min_threshold_mm": 10.994,
+       "F_min_threshold_mm": 10.417,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 12.819,
+       "liftoff_threshold_mm": 12.104,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 289.1,
+       "stroke_room_mm": 309.1,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RR-": {
-       "S_own_kN_per_mm": 5.7538,
+       "S_own_kN_per_mm": 6.0042,
        "dF_cyl_per_mm_N": [
-        5239.2,
-        -5239.2,
-        -5753.8,
-        5753.8
+        5467.2,
+        -5467.2,
+        -6004.2,
+        6004.2
        ],
-       "F_min_threshold_mm": 10.675,
+       "F_min_threshold_mm": 10.16,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 12.5,
+       "liftoff_threshold_mm": 11.848,
        "liftoff_leg": "RR",
        "stroke_room_mm": 390.9,
        "feasible (room >= liftoff + 1 mm)": true
       }
      },
      "f_Hz_L2b_rigid_body_modes": [
-      1.7854,
-      2.9885,
-      5.8811,
-      6.5084,
-      7.6637,
-      8.1574
+      1.8323,
+      2.8404,
+      4.0562,
+      5.8197,
+      7.5116,
+      7.7682
      ]
     },
     "max pitch+": {
      "ground_roll_pitch_deg": [
       0.0,
-      3.8559
+      4.1315
      ],
      "extension_m": [
-      0.67972,
-      0.67972,
-      0.34264,
-      0.34264
+      0.6997,
+      0.6997,
+      0.33918,
+      0.33918
      ],
      "F_cyl_place_and_settle_N": [
-      117790.0,
-      116310.0,
-      73186.0,
-      70818.0
+      117950.0,
+      116230.0,
+      72248.0,
+      70156.0
      ],
      "N_contact_normal_N": [
-      118780.0,
-      117300.0,
-      73862.0,
-      71489.0
+      118710.0,
+      116980.0,
+      72768.0,
+      70671.0
      ],
      "single_leg": {
       "FL+": {
-       "S_own_kN_per_mm": 3.9813,
+       "S_own_kN_per_mm": 4.3075,
        "dF_cyl_per_mm_N": [
-        3981.3,
-        -3962.3,
-        -4359.3,
-        4340.3
+        4307.5,
+        -4294.8,
+        -4719.4,
+        4706.8
        ],
-       "F_min_threshold_mm": 14.62,
+       "F_min_threshold_mm": 13.314,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 16.921,
+       "liftoff_threshold_mm": 15.389,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 0.27974,
+       "stroke_room_mm": 0.29994,
        "feasible (room >= liftoff + 1 mm)": false
       },
       "FL-": {
-       "S_own_kN_per_mm": 3.9813,
+       "S_own_kN_per_mm": 4.3075,
        "dF_cyl_per_mm_N": [
-        3981.3,
-        -3962.3,
-        -4359.3,
-        4340.3
+        4307.5,
+        -4294.8,
+        -4719.4,
+        4706.8
        ],
-       "F_min_threshold_mm": 14.139,
+       "F_min_threshold_mm": 12.905,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 16.377,
+       "liftoff_threshold_mm": 14.946,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 679.72,
+       "stroke_room_mm": 699.7,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "FR+": {
-       "S_own_kN_per_mm": 3.9814,
+       "S_own_kN_per_mm": 4.3075,
        "dF_cyl_per_mm_N": [
-        -3962.3,
-        3981.4,
-        4340.1,
-        -4359.3
+        -4294.8,
+        4307.5,
+        4706.7,
+        -4719.4
        ],
-       "F_min_threshold_mm": 14.077,
+       "F_min_threshold_mm": 12.871,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 16.377,
+       "liftoff_threshold_mm": 14.946,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 0.27974,
+       "stroke_room_mm": 0.29994,
        "feasible (room >= liftoff + 1 mm)": false
       },
       "FR-": {
-       "S_own_kN_per_mm": 3.9814,
+       "S_own_kN_per_mm": 4.3075,
        "dF_cyl_per_mm_N": [
-        -3962.3,
-        3981.4,
-        4340.1,
-        -4359.3
+        -4294.8,
+        4307.5,
+        4706.7,
+        -4719.4
        ],
-       "F_min_threshold_mm": 14.685,
+       "F_min_threshold_mm": 13.35,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 16.921,
+       "liftoff_threshold_mm": 15.389,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 679.72,
+       "stroke_room_mm": 699.7,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RL+": {
-       "S_own_kN_per_mm": 4.8063,
+       "S_own_kN_per_mm": 5.1952,
        "dF_cyl_per_mm_N": [
-        -4359.3,
-        4340.1,
-        4806.3,
-        -4787.1
+        -4719.4,
+        4706.7,
+        5195.2,
+        -5182.5
        ],
-       "F_min_threshold_mm": 12.819,
+       "F_min_threshold_mm": 11.72,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 14.898,
+       "liftoff_threshold_mm": 13.595,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 337.36,
+       "stroke_room_mm": 360.82,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RL-": {
-       "S_own_kN_per_mm": 4.8063,
+       "S_own_kN_per_mm": 5.1952,
        "dF_cyl_per_mm_N": [
-        -4359.3,
-        4340.1,
-        4806.3,
-        -4787.1
+        -4719.4,
+        4706.7,
+        5195.2,
+        -5182.5
        ],
-       "F_min_threshold_mm": 13.26,
+       "F_min_threshold_mm": 12.094,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 15.392,
+       "liftoff_threshold_mm": 13.998,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 342.64,
+       "stroke_room_mm": 339.18,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RR+": {
-       "S_own_kN_per_mm": 4.8061,
+       "S_own_kN_per_mm": 5.1951,
        "dF_cyl_per_mm_N": [
-        4340.3,
-        -4359.3,
-        -4787.1,
-        4806.1
+        4706.8,
+        -4719.4,
+        -5182.5,
+        5195.1
        ],
-       "F_min_threshold_mm": 13.313,
+       "F_min_threshold_mm": 12.124,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 15.392,
+       "liftoff_threshold_mm": 13.998,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 337.36,
+       "stroke_room_mm": 360.82,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RR-": {
-       "S_own_kN_per_mm": 4.8061,
+       "S_own_kN_per_mm": 5.1951,
        "dF_cyl_per_mm_N": [
-        4340.3,
-        -4359.3,
-        -4787.1,
-        4806.1
+        4706.8,
+        -4719.4,
+        -5182.5,
+        5195.1
        ],
-       "F_min_threshold_mm": 12.768,
+       "F_min_threshold_mm": 11.692,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 14.898,
+       "liftoff_threshold_mm": 13.595,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 342.64,
+       "stroke_room_mm": 339.18,
        "feasible (room >= liftoff + 1 mm)": true
       }
      },
      "f_Hz_L2b_rigid_body_modes": [
-      1.5449,
-      2.6387,
-      5.6339,
-      5.8102,
-      6.4729,
-      7.5909
+      1.5261,
+      2.4549,
+      4.2402,
+      4.9419,
+      5.5258,
+      7.3998
      ]
     },
     "max roll+": {
      "ground_roll_pitch_deg": [
-      5.9138,
-      3.6212e-16
+      6.3346,
+      3.8788e-16
      ],
      "extension_m": [
-      0.40547,
-      0.67972,
-      0.41142,
-      0.66114
+      0.40578,
+      0.6997,
+      0.41289,
+      0.68052
      ],
      "F_cyl_place_and_settle_N": [
-      122690.0,
-      111670.0,
-      68017.0,
-      75723.0
+      119810.0,
+      114420.0,
+      70352.0,
+      71999.0
      ],
      "N_contact_normal_N": [
-      123110.0,
-      112250.0,
-      68480.0,
-      76425.0
+      120040.0,
+      114820.0,
+      70591.0,
+      72344.0
      ],
      "single_leg": {
       "FL+": {
-       "S_own_kN_per_mm": 3.7263,
+       "S_own_kN_per_mm": 3.8273,
        "dF_cyl_per_mm_N": [
-        3726.3,
-        -3714.7,
-        -4042.9,
-        4031.3
+        3827.3,
+        -3818.8,
+        -4160.6,
+        4152.0
        ],
-       "F_min_threshold_mm": 14.486,
+       "F_min_threshold_mm": 14.646,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 16.781,
+       "liftoff_threshold_mm": 16.829,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 274.53,
+       "stroke_room_mm": 294.22,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "FL-": {
-       "S_own_kN_per_mm": 3.7263,
+       "S_own_kN_per_mm": 3.8273,
        "dF_cyl_per_mm_N": [
-        3726.3,
-        -3714.7,
-        -4042.9,
-        4031.3
+        3827.3,
+        -3818.8,
+        -4160.6,
+        4152.0
        ],
-       "F_min_threshold_mm": 16.439,
+       "F_min_threshold_mm": 15.073,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 18.728,
+       "liftoff_threshold_mm": 17.247,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 405.47,
+       "stroke_room_mm": 405.78,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "FR+": {
-       "S_own_kN_per_mm": 3.7225,
+       "S_own_kN_per_mm": 3.8244,
        "dF_cyl_per_mm_N": [
-        -3714.7,
-        3722.5,
-        4031.1,
-        -4038.9
+        -3818.8,
+        3824.4,
+        4151.9,
+        -4157.6
        ],
-       "F_min_threshold_mm": 16.408,
+       "F_min_threshold_mm": 15.053,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 18.737,
+       "liftoff_threshold_mm": 17.253,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 0.28089,
+       "stroke_room_mm": 0.30135,
        "feasible (room >= liftoff + 1 mm)": false
       },
       "FR-": {
-       "S_own_kN_per_mm": 3.7225,
+       "S_own_kN_per_mm": 3.8244,
        "dF_cyl_per_mm_N": [
-        -3714.7,
-        3722.5,
-        4031.1,
-        -4038.9
+        -3818.8,
+        3824.4,
+        4151.9,
+        -4157.6
        ],
-       "F_min_threshold_mm": 14.528,
+       "F_min_threshold_mm": 14.677,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 16.79,
+       "liftoff_threshold_mm": 16.835,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 679.72,
+       "stroke_room_mm": 699.7,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RL+": {
-       "S_own_kN_per_mm": 4.4843,
+       "S_own_kN_per_mm": 4.5973,
        "dF_cyl_per_mm_N": [
-        -4042.9,
-        4031.1,
-        4484.3,
-        -4472.6
+        -4160.6,
+        4151.9,
+        4597.3,
+        -4588.6
        ],
-       "F_min_threshold_mm": 14.817,
+       "F_min_threshold_mm": 13.639,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 17.051,
+       "liftoff_threshold_mm": 15.684,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 268.58,
+       "stroke_room_mm": 287.11,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RL-": {
-       "S_own_kN_per_mm": 4.4843,
+       "S_own_kN_per_mm": 4.5973,
        "dF_cyl_per_mm_N": [
-        -4042.9,
-        4031.1,
-        4484.3,
-        -4472.6
+        -4160.6,
+        4151.9,
+        4597.3,
+        -4588.6
        ],
-       "F_min_threshold_mm": 13.06,
+       "F_min_threshold_mm": 13.255,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 15.279,
+       "liftoff_threshold_mm": 15.304,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 411.42,
+       "stroke_room_mm": 412.89,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RR+": {
-       "S_own_kN_per_mm": 4.4802,
+       "S_own_kN_per_mm": 4.5941,
        "dF_cyl_per_mm_N": [
-        4031.3,
-        -4038.9,
-        -4472.6,
-        4480.2
+        4152.0,
+        -4157.6,
+        -4588.6,
+        4594.1
        ],
-       "F_min_threshold_mm": 13.094,
+       "F_min_threshold_mm": 13.28,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 15.286,
+       "liftoff_threshold_mm": 15.309,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 18.861,
+       "stroke_room_mm": 19.482,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RR-": {
-       "S_own_kN_per_mm": 4.4802,
+       "S_own_kN_per_mm": 4.5941,
        "dF_cyl_per_mm_N": [
-        4031.3,
-        -4038.9,
-        -4472.6,
-        4480.2
+        4152.0,
+        -4157.6,
+        -4588.6,
+        4594.1
        ],
-       "F_min_threshold_mm": 14.792,
+       "F_min_threshold_mm": 13.623,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 17.059,
+       "liftoff_threshold_mm": 15.69,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 661.14,
+       "stroke_room_mm": 680.52,
        "feasible (room >= liftoff + 1 mm)": true
       }
      },
      "f_Hz_L2b_rigid_body_modes": [
-      1.544,
-      2.5936,
-      4.8525,
-      5.678,
-      6.6241,
-      7.2427
+      1.5721,
+      2.4024,
+      3.353,
+      5.0656,
+      6.3319,
+      7.0834
      ]
     },
     "max diag 45": {
      "ground_roll_pitch_deg": [
-      2.3382,
-      2.3382
+      2.5057,
+      2.5057
      ],
      "extension_m": [
-      0.57161,
-      0.67972,
-      0.36975,
-      0.46819
+      0.58384,
+      0.6997,
+      0.36824,
+      0.47373
      ],
      "F_cyl_place_and_settle_N": [
-      119870.0,
-      114480.0,
-      70997.0,
-      72758.0
+      118710.0,
+      115490.0,
+      71429.0,
+      70950.0
      ],
      "N_contact_normal_N": [
-      120760.0,
-      115450.0,
-      71800.0,
-      73638.0
+      119530.0,
+      116320.0,
+      72005.0,
+      71534.0
      ],
      "single_leg": {
       "FL+": {
-       "S_own_kN_per_mm": 3.8625,
+       "S_own_kN_per_mm": 4.0913,
        "dF_cyl_per_mm_N": [
-        3862.5,
-        -3855.9,
-        -4233.1,
-        4226.6
+        4091.3,
+        -4087.3,
+        -4485.3,
+        4481.3
        ],
-       "F_min_threshold_mm": 14.539,
+       "F_min_threshold_mm": 13.826,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 16.931,
+       "liftoff_threshold_mm": 16.022,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 108.39,
+       "stroke_room_mm": 116.16,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "FL-": {
-       "S_own_kN_per_mm": 3.8625,
+       "S_own_kN_per_mm": 4.0913,
        "dF_cyl_per_mm_N": [
-        3862.5,
-        -3855.9,
-        -4233.1,
-        4226.6
+        4091.3,
+        -4087.3,
+        -4485.3,
+        4481.3
        ],
-       "F_min_threshold_mm": 14.978,
+       "F_min_threshold_mm": 13.732,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 17.365,
+       "liftoff_threshold_mm": 15.917,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 571.61,
+       "stroke_room_mm": 583.84,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "FR+": {
-       "S_own_kN_per_mm": 3.8662,
+       "S_own_kN_per_mm": 4.0947,
        "dF_cyl_per_mm_N": [
-        -3855.9,
-        3866.2,
-        4220.7,
-        -4231.0
+        -4087.3,
+        4094.7,
+        4476.9,
+        -4484.4
        ],
-       "F_min_threshold_mm": 14.962,
+       "F_min_threshold_mm": 13.722,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 17.37,
+       "liftoff_threshold_mm": 15.922,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 0.27921,
+       "stroke_room_mm": 0.29928,
        "feasible (room >= liftoff + 1 mm)": false
       },
       "FR-": {
-       "S_own_kN_per_mm": 3.8662,
+       "S_own_kN_per_mm": 4.0947,
        "dF_cyl_per_mm_N": [
-        -3855.9,
-        3866.2,
-        4220.7,
-        -4231.0
+        -4087.3,
+        4094.7,
+        4476.9,
+        -4484.4
        ],
-       "F_min_threshold_mm": 14.582,
+       "F_min_threshold_mm": 13.852,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 16.936,
+       "liftoff_threshold_mm": 16.026,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 679.72,
+       "stroke_room_mm": 699.7,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RL+": {
-       "S_own_kN_per_mm": 4.6665,
+       "S_own_kN_per_mm": 4.9375,
        "dF_cyl_per_mm_N": [
-        -4233.1,
-        4220.7,
-        4666.5,
-        -4654.0
+        -4485.3,
+        4476.9,
+        4937.5,
+        -4929.1
        ],
-       "F_min_threshold_mm": 13.602,
+       "F_min_threshold_mm": 12.484,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 15.803,
+       "liftoff_threshold_mm": 14.483,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 310.25,
+       "stroke_room_mm": 331.76,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RL-": {
-       "S_own_kN_per_mm": 4.6665,
+       "S_own_kN_per_mm": 4.9375,
        "dF_cyl_per_mm_N": [
-        -4233.1,
-        4220.7,
-        4666.5,
-        -4654.0
+        -4485.3,
+        4476.9,
+        4937.5,
+        -4929.1
        ],
-       "F_min_threshold_mm": 13.189,
+       "F_min_threshold_mm": 12.56,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 15.408,
+       "liftoff_threshold_mm": 14.578,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 369.75,
+       "stroke_room_mm": 368.24,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RR+": {
-       "S_own_kN_per_mm": 4.6585,
+       "S_own_kN_per_mm": 4.9322,
        "dF_cyl_per_mm_N": [
-        4226.6,
-        -4231.0,
-        -4654.0,
-        4658.5
+        4481.3,
+        -4484.4,
+        -4929.1,
+        4932.2
        ],
-       "F_min_threshold_mm": 13.224,
+       "F_min_threshold_mm": 12.581,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 15.412,
+       "liftoff_threshold_mm": 14.582,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 211.81,
+       "stroke_room_mm": 226.27,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RR-": {
-       "S_own_kN_per_mm": 4.6585,
+       "S_own_kN_per_mm": 4.9322,
        "dF_cyl_per_mm_N": [
-        4226.6,
-        -4231.0,
-        -4654.0,
-        4658.5
+        4481.3,
+        -4484.4,
+        -4929.1,
+        4932.2
        ],
-       "F_min_threshold_mm": 13.589,
+       "F_min_threshold_mm": 12.476,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 15.807,
+       "liftoff_threshold_mm": 14.487,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 468.19,
+       "stroke_room_mm": 473.73,
        "feasible (room >= liftoff + 1 mm)": true
       }
      },
      "f_Hz_L2b_rigid_body_modes": [
-      1.526,
-      2.592,
-      5.4714,
-      5.5907,
-      6.3157,
-      7.1898
+      1.5256,
+      2.3942,
+      3.7948,
+      4.9319,
+      5.7451,
+      7.0789
      ]
     },
     "max pitch-": {
      "ground_roll_pitch_deg": [
-      4.5991e-16,
-      -3.7554
+      4.9162e-16,
+      -4.0144
      ],
      "extension_m": [
-      0.37158,
-      0.37158,
-      0.67971,
-      0.67971
+      0.36953,
+      0.36953,
+      0.69969,
+      0.69969
      ],
      "F_cyl_place_and_settle_N": [
-      118370.0,
-      115960.0,
-      72551.0,
-      71221.0
+      118490.0,
+      115820.0,
+      71660.0,
+      70609.0
      ],
      "N_contact_normal_N": [
-      119260.0,
-      116840.0,
-      73350.0,
-      72017.0
+      119200.0,
+      116520.0,
+      72257.0,
+      71203.0
      ],
      "single_leg": {
       "FL+": {
-       "S_own_kN_per_mm": 3.7105,
+       "S_own_kN_per_mm": 3.6593,
        "dF_cyl_per_mm_N": [
-        3710.5,
-        -3692.5,
-        -4055.1,
-        4037.1
+        3659.3,
+        -3647.4,
+        -4002.7,
+        3990.8
        ],
-       "F_min_threshold_mm": 15.56,
+       "F_min_threshold_mm": 15.551,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 18.052,
+       "liftoff_threshold_mm": 18.014,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 308.42,
+       "stroke_room_mm": 330.47,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "FL-": {
-       "S_own_kN_per_mm": 3.7105,
+       "S_own_kN_per_mm": 3.6593,
        "dF_cyl_per_mm_N": [
-        3710.5,
-        -3692.5,
-        -4055.1,
-        4037.1
+        3659.3,
+        -3647.4,
+        -4002.7,
+        3990.8
        ],
-       "F_min_threshold_mm": 15.3,
+       "F_min_threshold_mm": 15.334,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 17.724,
+       "liftoff_threshold_mm": 17.751,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 371.58,
+       "stroke_room_mm": 369.53,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "FR+": {
-       "S_own_kN_per_mm": 3.7107,
+       "S_own_kN_per_mm": 3.6594,
        "dF_cyl_per_mm_N": [
-        -3692.5,
-        3710.7,
-        4036.9,
-        -4055.1
+        -3647.4,
+        3659.4,
+        3990.7,
+        -4002.7
        ],
-       "F_min_threshold_mm": 15.232,
+       "F_min_threshold_mm": 15.288,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 17.723,
+       "liftoff_threshold_mm": 17.751,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 308.42,
+       "stroke_room_mm": 330.47,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "FR-": {
-       "S_own_kN_per_mm": 3.7107,
+       "S_own_kN_per_mm": 3.6594,
        "dF_cyl_per_mm_N": [
-        -3692.5,
-        3710.7,
-        4036.9,
-        -4055.1
+        -3647.4,
+        3659.4,
+        3990.7,
+        -4002.7
        ],
-       "F_min_threshold_mm": 15.63,
+       "F_min_threshold_mm": 15.597,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 18.052,
+       "liftoff_threshold_mm": 18.014,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 371.58,
+       "stroke_room_mm": 369.53,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RL+": {
-       "S_own_kN_per_mm": 4.4631,
+       "S_own_kN_per_mm": 4.4014,
        "dF_cyl_per_mm_N": [
-        -4055.1,
-        4036.9,
-        4463.1,
-        -4444.9
+        -4002.7,
+        3990.7,
+        4401.4,
+        -4389.4
        ],
-       "F_min_threshold_mm": 13.897,
+       "F_min_threshold_mm": 13.941,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 16.152,
+       "liftoff_threshold_mm": 16.166,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 0.28993,
+       "stroke_room_mm": 0.31011,
        "feasible (room >= liftoff + 1 mm)": false
       },
       "RL-": {
-       "S_own_kN_per_mm": 4.4631,
+       "S_own_kN_per_mm": 4.4014,
        "dF_cyl_per_mm_N": [
-        -4055.1,
-        4036.9,
-        4463.1,
-        -4444.9
+        -4002.7,
+        3990.7,
+        4401.4,
+        -4389.4
        ],
-       "F_min_threshold_mm": 14.138,
+       "F_min_threshold_mm": 14.142,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 16.451,
+       "liftoff_threshold_mm": 16.406,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 679.71,
+       "stroke_room_mm": 699.69,
        "feasible (room >= liftoff + 1 mm)": true
       },
       "RR+": {
-       "S_own_kN_per_mm": 4.463,
+       "S_own_kN_per_mm": 4.4014,
        "dF_cyl_per_mm_N": [
-        4037.1,
-        -4055.1,
-        -4444.9,
-        4463.0
+        3990.8,
+        -4002.7,
+        -4389.4,
+        4401.4
        ],
-       "F_min_threshold_mm": 14.196,
+       "F_min_threshold_mm": 14.181,
        "leg_at_F_min": "RL",
-       "liftoff_threshold_mm": 16.451,
+       "liftoff_threshold_mm": 16.406,
        "liftoff_leg": "RL",
-       "stroke_room_mm": 0.28993,
+       "stroke_room_mm": 0.31011,
        "feasible (room >= liftoff + 1 mm)": false
       },
       "RR-": {
-       "S_own_kN_per_mm": 4.463,
+       "S_own_kN_per_mm": 4.4014,
        "dF_cyl_per_mm_N": [
-        4037.1,
-        -4055.1,
-        -4444.9,
-        4463.0
+        3990.8,
+        -4002.7,
+        -4389.4,
+        4401.4
        ],
-       "F_min_threshold_mm": 13.84,
+       "F_min_threshold_mm": 13.903,
        "leg_at_F_min": "RR",
-       "liftoff_threshold_mm": 16.152,
+       "liftoff_threshold_mm": 16.166,
        "liftoff_leg": "RR",
-       "stroke_room_mm": 679.71,
+       "stroke_room_mm": 699.69,
        "feasible (room >= liftoff + 1 mm)": true
       }
      },
      "f_Hz_L2b_rigid_body_modes": [
-      1.6711,
-      2.6447,
-      4.0888,
-      5.9215,
-      6.8277,
-      8.2851
+      1.7414,
+      2.5234,
+      2.8631,
+      5.2628,
+      7.2732,
+      7.6944
      ]
     }
    }
@@ -1524,22 +1524,22 @@
   "frf": {
    "0.0 Hz": {
     "L1_kN_per_mm_abs": [
-     4.7054,
-     4.7314,
-     5.2747,
-     5.3007
+     4.8979,
+     4.9239,
+     5.5004,
+     5.5263
     ],
     "L2b_kN_per_mm_abs": [
-     4.7054,
-     4.7314,
-     5.2747,
-     5.3007
+     4.8979,
+     4.9239,
+     5.5004,
+     5.5263
     ],
     "rel_diff_abs": [
-     3.9585e-16,
-     9.8419e-16,
-     -1.4125e-15,
-     -1.757e-16
+     9.5073e-16,
+     -5.6743e-16,
+     1.0159e-15,
+     -6.7411e-16
     ],
     "phase_diff_deg": [
      0.0,
@@ -1550,236 +1550,236 @@
    },
    "0.05 Hz": {
     "L1_kN_per_mm_abs": [
-     4.6999,
-     4.729,
-     5.2775,
-     5.3053
+     4.8913,
+     4.9202,
+     5.503,
+     5.5307
     ],
     "L2b_kN_per_mm_abs": [
-     4.6999,
-     4.729,
-     5.2775,
-     5.3053
+     4.8913,
+     4.9202,
+     5.503,
+     5.5307
     ],
     "rel_diff_abs": [
-     1.2229e-07,
-     6.7213e-08,
-     -8.1856e-08,
-     -1.2975e-07
+     9.8776e-08,
+     5.6279e-08,
+     -7.9645e-08,
+     -1.1647e-07
     ],
     "phase_diff_deg": [
-     -0.0019433,
-     -0.0019313,
-     -0.0019,
-     -0.00189
+     -0.0020047,
+     -0.0019929,
+     -0.0019587,
+     -0.0019488
     ]
    },
    "0.2 Hz": {
     "L1_kN_per_mm_abs": [
-     4.6166,
-     4.6914,
-     5.3197,
-     5.3754
+     4.7906,
+     4.8651,
+     5.5425,
+     5.598
     ],
     "L2b_kN_per_mm_abs": [
-     4.6166,
-     4.6914,
-     5.3197,
-     5.3754
+     4.7906,
+     4.8651,
+     5.5425,
+     5.598
     ],
     "rel_diff_abs": [
-     2.2092e-06,
-     1.2016e-06,
-     -1.4079e-06,
-     -2.2141e-06
+     1.8273e-06,
+     1.0414e-06,
+     -1.3487e-06,
+     -1.9729e-06
     ],
     "phase_diff_deg": [
-     -0.0079178,
-     -0.0077909,
-     -0.0075374,
-     -0.0074587
+     -0.0081796,
+     -0.0080535,
+     -0.0077746,
+     -0.0076969
     ]
    },
    "0.5 Hz": {
     "L1_kN_per_mm_abs": [
-     4.1189,
-     4.4555,
-     5.5805,
-     5.7968
+     4.1893,
+     4.525,
+     5.7851,
+     6.0009
     ],
     "L2b_kN_per_mm_abs": [
-     4.119,
-     4.4555,
-     5.5804,
-     5.7967
+     4.1894,
+     4.525,
+     5.7851,
+     6.0008
     ],
     "rel_diff_abs": [
-     2.5169e-05,
-     1.3164e-05,
-     -1.2718e-05,
-     -1.8992e-05
+     2.2834e-05,
+     1.2902e-05,
+     -1.1409e-05,
+     -1.6449e-05
     ],
     "phase_diff_deg": [
-     -0.022408,
-     -0.020679,
-     -0.017845,
-     -0.017157
+     -0.023421,
+     -0.02165,
+     -0.018488,
+     -0.017802
     ]
    },
    "1.0 Hz": {
     "L1_kN_per_mm_abs": [
-     1.725,
-     3.0866,
-     7.0055,
-     7.8705
+     1.3216,
+     2.6773,
+     7.0767,
+     7.9434
     ],
     "L2b_kN_per_mm_abs": [
-     1.7264,
-     3.0876,
-     7.0045,
-     7.8691
+     1.323,
+     2.6784,
+     7.0759,
+     7.9422
     ],
     "rel_diff_abs": [
-     0.00081056,
-     0.00031455,
-     -0.00014592,
-     -0.00017665
+     0.0010294,
+     0.00038449,
+     -0.0001192,
+     -0.00014785
     ],
     "phase_diff_deg": [
-     -0.13158,
-     -0.071552,
-     -0.023688,
-     -0.020589
+     -0.17944,
+     -0.086136,
+     -0.025898,
+     -0.022586
     ]
    },
    "1.78 Hz": {
     "L1_kN_per_mm_abs": [
-     304.57,
-     305.9,
-     287.95,
-     285.57
+     109.13,
+     104.63,
+     80.465,
+     83.207
     ],
     "L2b_kN_per_mm_abs": [
-     317.09,
-     318.12,
-     300.13,
-     297.88
+     107.85,
+     103.32,
+     79.614,
+     82.381
     ],
     "rel_diff_abs": [
-     0.04112,
-     0.039955,
-     0.042297,
-     0.043105
+     -0.011676,
+     -0.012517,
+     -0.010574,
+     -0.0099262
     ],
     "phase_diff_deg": [
-     4.6822,
-     4.7522,
-     4.6167,
-     4.5611
+     1.2461,
+     1.3022,
+     1.1835,
+     1.1329
     ]
    },
    "2.0 Hz": {
     "L1_kN_per_mm_abs": [
-     25.009,
-     33.453,
-     20.606,
-     14.443
+     42.234,
+     50.943,
+     26.424,
+     19.789
     ],
     "L2b_kN_per_mm_abs": [
-     25.145,
-     33.578,
-     20.721,
-     14.564
+     42.541,
+     51.242,
+     26.624,
+     19.992
     ],
     "rel_diff_abs": [
-     0.0054218,
-     0.0037437,
-     0.0055797,
-     0.0083576
+     0.0072673,
+     0.0058729,
+     0.007554,
+     0.010248
     ],
     "phase_diff_deg": [
-     -0.33359,
-     -0.23231,
-     -0.32427,
-     -0.50469
+     -0.41398,
+     -0.32925,
+     -0.40698,
+     -0.5831
     ]
    },
    "3.0 Hz": {
     "L1_kN_per_mm_abs": [
-     152.33,
-     141.97,
-     132.24,
-     135.36
+     42.972,
+     13.748,
+     27.309,
+     30.916
     ],
     "L2b_kN_per_mm_abs": [
-     164.51,
-     155.91,
-     144.01,
-     146.98
+     44.112,
+     14.757,
+     28.355,
+     32.008
     ],
     "rel_diff_abs": [
-     0.07992,
-     0.098134,
-     0.088962,
-     0.085863
+     0.026518,
+     0.073443,
+     0.038299,
+     0.035302
     ],
     "phase_diff_deg": [
-     4.7563,
-     4.2491,
-     4.5633,
-     4.6222
+     -0.034241,
+     -1.6211,
+     -0.13259,
+     -0.12638
     ]
    },
    "5.0 Hz": {
     "L1_kN_per_mm_abs": [
-     9.7952,
-     10.377,
-     9.1248,
-     8.405
+     4.8435,
+     20.807,
+     3.0961,
+     2.5326
     ],
     "L2b_kN_per_mm_abs": [
-     9.9854,
-     10.222,
-     9.1549,
-     8.4824
+     5.0836,
+     20.41,
+     3.2678,
+     2.6599
     ],
     "rel_diff_abs": [
-     0.019423,
-     -0.014956,
-     0.0032933,
-     0.0092052
+     0.049559,
+     -0.019109,
+     0.055436,
+     0.050274
     ],
     "phase_diff_deg": [
-     -0.69022,
-     0.037513,
-     -0.032913,
-     -0.086649
+     -5.752,
+     0.27536,
+     -4.5867,
+     -7.9404
     ]
    },
    "10.0 Hz": {
     "L1_kN_per_mm_abs": [
-     28.379,
-     5.1951,
-     6.226,
-     3.9934
+     38.738,
+     9.7497,
+     7.7469,
+     5.5811
     ],
     "L2b_kN_per_mm_abs": [
-     28.75,
-     5.367,
-     6.5742,
-     4.1538
+     39.284,
+     10.085,
+     8.0931,
+     5.7901
     ],
     "rel_diff_abs": [
-     0.013096,
-     0.033079,
-     0.055934,
-     0.040167
+     0.014074,
+     0.034421,
+     0.044685,
+     0.03745
     ],
     "phase_diff_deg": [
-     -0.4225,
-     -1.4888,
-     -1.0346,
-     -1.7604
+     -0.59439,
+     -1.4677,
+     -1.2742,
+     -1.6201
     ]
    }
   }
@@ -1789,144 +1789,149 @@
   "k_s_N_m (stick)": [
    216650000.0,
    216650000.0,
-   216650000.0,
-   216650000.0
+   205100000.0,
+   205100000.0
   ],
   "kv_N_m (slip)": [
-   20814000.0,
-   20814000.0,
-   21248000.0,
-   21248000.0
+   25906000.0,
+   25906000.0,
+   19505000.0,
+   19505000.0
   ],
   "rated_basis": {
-   "rated_pressure_20.6MPa_x_bore_area_N": 213970.0,
+   "rated_pressure_20.6MPa_x_bore_area_N": [
+    273430.0,
+    273430.0,
+    195770.0,
+    195770.0
+   ],
    "max_static_leg_load_N": 118250.0
   },
   "runs": {
    "F_s 0 kN": {
     "F_s_N": 0.0,
-    "FLplus_true_min_load_at_F_min_mm": 12.076,
-    "FLplus_pressure_min_at_F_min_mm": 12.076,
+    "FLplus_true_min_load_at_F_min_mm": 11.44,
+    "FLplus_pressure_min_at_F_min_mm": 11.44,
     "max_abs_pressure_minus_true_N": 0.0,
-    "RL_load_change_at_1mm_true_N": -5239.2,
-    "RL_load_change_at_1mm_pressure_N": -5239.2,
+    "RL_load_change_at_1mm_true_N": -5467.2,
+    "RL_load_change_at_1mm_pressure_N": -5467.2,
     "FL_pressure_minus_true_while_extending_N": 0.0,
     "residual_true_load_change_after_return_N": [
-     2.1857e-08,
-     -9.0775e-08,
-     -6.4741e-08,
-     2.9104e-11
+     2.1115e-08,
+     -8.1098e-08,
+     -6.2922e-08,
+     1.352e-07
     ],
     "residual_pressure_change_after_return_N": [
-     2.1857e-08,
-     -9.0775e-08,
-     -6.4741e-08,
-     2.9104e-11
+     2.1115e-08,
+     -8.1098e-08,
+     -6.2922e-08,
+     1.352e-07
     ]
    },
    "F_s 1 kN": {
     "F_s_N": 1000.0,
-    "FLplus_true_min_load_at_F_min_mm": 11.98,
-    "FLplus_pressure_min_at_F_min_mm": 12.172,
+    "FLplus_true_min_load_at_F_min_mm": 11.338,
+    "FLplus_pressure_min_at_F_min_mm": 11.52,
     "max_abs_pressure_minus_true_N": 1000.0,
-    "RL_load_change_at_1mm_true_N": -5732.9,
-    "RL_load_change_at_1mm_pressure_N": -4732.9,
+    "RL_load_change_at_1mm_true_N": -6033.2,
+    "RL_load_change_at_1mm_pressure_N": -5033.2,
     "FL_pressure_minus_true_while_extending_N": 1000.0,
     "residual_true_load_change_after_return_N": [
-     -442.5,
-     442.5,
-     485.97,
-     -485.97
+     -507.5,
+     507.5,
+     557.35,
+     -557.35
     ],
     "residual_pressure_change_after_return_N": [
-     -1442.5,
-     -557.5,
-     -514.03,
-     514.03
+     -1507.5,
+     -492.5,
+     -442.65,
+     442.65
     ]
    },
    "F_s 2 kN": {
     "F_s_N": 2000.0,
-    "FLplus_true_min_load_at_F_min_mm": 11.888,
-    "FLplus_pressure_min_at_F_min_mm": 12.27,
+    "FLplus_true_min_load_at_F_min_mm": 11.236,
+    "FLplus_pressure_min_at_F_min_mm": 11.602,
     "max_abs_pressure_minus_true_N": 2000.0,
-    "RL_load_change_at_1mm_true_N": -6218.9,
-    "RL_load_change_at_1mm_pressure_N": -4218.9,
+    "RL_load_change_at_1mm_true_N": -6590.6,
+    "RL_load_change_at_1mm_pressure_N": -4590.6,
     "FL_pressure_minus_true_while_extending_N": 2000.0,
     "residual_true_load_change_after_return_N": [
-     -892.05,
-     892.05,
-     979.67,
-     -979.67
+     -1013.0,
+     1013.0,
+     1112.5,
+     -1112.5
     ],
     "residual_pressure_change_after_return_N": [
-     -2892.1,
-     -1107.9,
-     -1020.3,
-     1020.3
+     -3013.0,
+     -987.02,
+     -887.52,
+     887.52
     ]
    },
    "F_s 5 kN": {
     "F_s_N": 5000.0,
-    "FLplus_true_min_load_at_F_min_mm": 11.608,
-    "FLplus_pressure_min_at_F_min_mm": 12.564,
+    "FLplus_true_min_load_at_F_min_mm": 10.93,
+    "FLplus_pressure_min_at_F_min_mm": 11.844,
     "max_abs_pressure_minus_true_N": 5000.0,
-    "RL_load_change_at_1mm_true_N": -7681.8,
-    "RL_load_change_at_1mm_pressure_N": -2681.8,
+    "RL_load_change_at_1mm_true_N": -8258.2,
+    "RL_load_change_at_1mm_pressure_N": -3258.2,
     "FL_pressure_minus_true_while_extending_N": 5000.0,
     "residual_true_load_change_after_return_N": [
-     -2217.1,
-     2217.1,
-     2434.8,
-     -2434.8
+     -2533.5,
+     2533.5,
+     2782.3,
+     -2782.3
     ],
     "residual_pressure_change_after_return_N": [
-     -7217.1,
-     -2782.9,
-     -2565.2,
-     2565.2
+     -7533.5,
+     -2466.5,
+     -2217.7,
+     2217.7
     ]
    },
    "F_s 12 kN": {
     "F_s_N": 12000.0,
-    "FLplus_true_min_load_at_F_min_mm": 10.958,
-    "FLplus_pressure_min_at_F_min_mm": 13.248,
+    "FLplus_true_min_load_at_F_min_mm": 10.218,
+    "FLplus_pressure_min_at_F_min_mm": 12.412,
     "max_abs_pressure_minus_true_N": 12000.0,
-    "RL_load_change_at_1mm_true_N": -8263.1,
-    "RL_load_change_at_1mm_pressure_N": -7.276e-10,
+    "RL_load_change_at_1mm_true_N": -11866.0,
+    "RL_load_change_at_1mm_pressure_N": -3.3469e-10,
     "FL_pressure_minus_true_while_extending_N": 12000.0,
     "residual_true_load_change_after_return_N": [
-     -5340.5,
-     5340.5,
-     5865.1,
-     -5865.1
+     -6079.9,
+     6079.9,
+     6677.1,
+     -6677.1
     ],
     "residual_pressure_change_after_return_N": [
-     -17341.0,
-     -6659.5,
-     -6134.9,
-     6134.9
+     -18080.0,
+     -5920.1,
+     -5322.9,
+     5322.9
     ]
    },
    "F_s 21.4 kN": {
     "F_s_N": 21400.0,
-    "FLplus_true_min_load_at_F_min_mm": 10.08,
-    "FLplus_pressure_min_at_F_min_mm": 14.166,
+    "FLplus_true_min_load_at_F_min_mm": 9.262,
+    "FLplus_pressure_min_at_F_min_mm": 13.176,
     "max_abs_pressure_minus_true_N": 21400.0,
-    "RL_load_change_at_1mm_true_N": -1239.5,
-    "RL_load_change_at_1mm_pressure_N": -1.1642e-10,
+    "RL_load_change_at_1mm_true_N": -5473.3,
+    "RL_load_change_at_1mm_pressure_N": -1.0186e-10,
     "FL_pressure_minus_true_while_extending_N": 21400.0,
     "residual_true_load_change_after_return_N": [
-     -9522.5,
-     9522.5,
-     10458.0,
-     -10458.0
+     -10860.0,
+     10860.0,
+     11927.0,
+     -11927.0
     ],
     "residual_pressure_change_after_return_N": [
-     -30923.0,
-     -11877.0,
-     -10942.0,
-     10942.0
+     -32260.0,
+     -10540.0,
+     -9473.0,
+     9473.0
     ]
    }
   },
@@ -1935,58 +1940,58 @@
    "a_upsweep_unilateral": {
     "F_s 0 kN": {
      "F_s_N": 0.0,
-     "FLplus_true_min_load_at_F_min_mm": 12.076,
-     "FLplus_pressure_min_at_F_min_mm (null = pad lifts off first)": 12.076,
-     "FLplus_liftoff_mm (pad contact force 0)": 14.078,
+     "FLplus_true_min_load_at_F_min_mm": 11.44,
+     "FLplus_pressure_min_at_F_min_mm (null = pad lifts off first)": 11.44,
+     "FLplus_liftoff_mm (pad contact force 0)": 13.293,
      "liftoff_leg": "RL",
-     "pressure_reading_of_lifting_leg_at_liftoff_N (cylinder-force basis)": -1057.2,
-     "pressure_minus_F_min_at_liftoff_N": -10510.0
+     "pressure_reading_of_lifting_leg_at_liftoff_N (cylinder-force basis)": -722.02,
+     "pressure_minus_F_min_at_liftoff_N": -10137.0
     },
     "F_s 2 kN": {
      "F_s_N": 2000.0,
-     "FLplus_true_min_load_at_F_min_mm": 11.888,
-     "FLplus_pressure_min_at_F_min_mm (null = pad lifts off first)": 12.27,
-     "FLplus_liftoff_mm (pad contact force 0)": 13.891,
+     "FLplus_true_min_load_at_F_min_mm": 11.236,
+     "FLplus_pressure_min_at_F_min_mm (null = pad lifts off first)": 11.602,
+     "FLplus_liftoff_mm (pad contact force 0)": 13.088,
      "liftoff_leg": "RL",
-     "pressure_reading_of_lifting_leg_at_liftoff_N (cylinder-force basis)": 948.11,
-     "pressure_minus_F_min_at_liftoff_N": -8504.4
+     "pressure_reading_of_lifting_leg_at_liftoff_N (cylinder-force basis)": 1280.8,
+     "pressure_minus_F_min_at_liftoff_N": -8133.8
     },
     "F_s 5 kN": {
      "F_s_N": 5000.0,
-     "FLplus_true_min_load_at_F_min_mm": 11.608,
-     "FLplus_pressure_min_at_F_min_mm (null = pad lifts off first)": 12.564,
-     "FLplus_liftoff_mm (pad contact force 0)": 13.612,
+     "FLplus_true_min_load_at_F_min_mm": 10.93,
+     "FLplus_pressure_min_at_F_min_mm (null = pad lifts off first)": 11.844,
+     "FLplus_liftoff_mm (pad contact force 0)": 12.783,
      "liftoff_leg": "RL",
-     "pressure_reading_of_lifting_leg_at_liftoff_N (cylinder-force basis)": 3952.2,
-     "pressure_minus_F_min_at_liftoff_N": -5500.4
+     "pressure_reading_of_lifting_leg_at_liftoff_N (cylinder-force basis)": 4275.2,
+     "pressure_minus_F_min_at_liftoff_N": -5139.4
     },
     "F_s 12 kN": {
      "F_s_N": 12000.0,
-     "FLplus_true_min_load_at_F_min_mm": 10.958,
+     "FLplus_true_min_load_at_F_min_mm": 10.218,
      "FLplus_pressure_min_at_F_min_mm (null = pad lifts off first)": null,
-     "FLplus_liftoff_mm (pad contact force 0)": 12.96,
+     "FLplus_liftoff_mm (pad contact force 0)": 12.07,
      "liftoff_leg": "RL",
-     "pressure_reading_of_lifting_leg_at_liftoff_N (cylinder-force basis)": 10943.0,
-     "pressure_minus_F_min_at_liftoff_N": 1490.6
+     "pressure_reading_of_lifting_leg_at_liftoff_N (cylinder-force basis)": 11273.0,
+     "pressure_minus_F_min_at_liftoff_N": 1858.5
     }
    },
    "b_roundtrip_10mm": {
     "F_s 0 kN": {
      "F_s_N": 0.0,
      "residual_true_load_change_after_return_N": [
-      -1.4552e-11,
-      2.4302e-09,
-      1.1933e-08,
-      0.0
+      0.0,
+      1.1132e-08,
+      1.5862e-09,
+      -2.4302e-09
      ],
      "residual_pressure_change_after_return_N": [
-      -1.4552e-11,
-      2.4302e-09,
-      1.1933e-08,
-      0.0
+      0.0,
+      1.1132e-08,
+      1.5862e-09,
+      -2.4302e-09
      ],
-     "RL_load_change_at_1mm_true_N": -5239.2,
-     "RL_load_change_at_1mm_pressure_N": -5239.2,
+     "RL_load_change_at_1mm_true_N": -5467.2,
+     "RL_load_change_at_1mm_pressure_N": -5467.2,
      "F_min_reached_on_the_way (true, pressure)": [
       null,
       null
@@ -1995,19 +2000,19 @@
     "F_s 2 kN": {
      "F_s_N": 2000.0,
      "residual_true_load_change_after_return_N": [
-      -892.05,
-      892.05,
-      979.67,
-      -979.67
+      -1013.0,
+      1013.0,
+      1112.5,
+      -1112.5
      ],
      "residual_pressure_change_after_return_N": [
-      -2892.1,
-      -1107.9,
-      -1020.3,
-      1020.3
+      -3013.0,
+      -987.02,
+      -887.52,
+      887.52
      ],
-     "RL_load_change_at_1mm_true_N": -6218.9,
-     "RL_load_change_at_1mm_pressure_N": -4218.9,
+     "RL_load_change_at_1mm_true_N": -6590.6,
+     "RL_load_change_at_1mm_pressure_N": -4590.6,
      "F_min_reached_on_the_way (true, pressure)": [
       null,
       null
@@ -2016,19 +2021,19 @@
     "F_s 5 kN": {
      "F_s_N": 5000.0,
      "residual_true_load_change_after_return_N": [
-      -2217.1,
-      2217.1,
-      2434.8,
-      -2434.8
+      -2533.5,
+      2533.5,
+      2782.3,
+      -2782.3
      ],
      "residual_pressure_change_after_return_N": [
-      -7217.1,
-      -2782.9,
-      -2565.2,
-      2565.2
+      -7533.5,
+      -2466.5,
+      -2217.7,
+      2217.7
      ],
-     "RL_load_change_at_1mm_true_N": -7681.8,
-     "RL_load_change_at_1mm_pressure_N": -2681.8,
+     "RL_load_change_at_1mm_true_N": -8258.2,
+     "RL_load_change_at_1mm_pressure_N": -3258.2,
      "F_min_reached_on_the_way (true, pressure)": [
       null,
       null
@@ -2037,19 +2042,19 @@
     "F_s 12 kN": {
      "F_s_N": 12000.0,
      "residual_true_load_change_after_return_N": [
-      -5340.5,
-      5340.5,
-      5865.1,
-      -5865.1
+      -6079.9,
+      6079.9,
+      6677.1,
+      -6677.1
      ],
      "residual_pressure_change_after_return_N": [
-      -17341.0,
-      -6659.5,
-      -6134.9,
-      6134.9
+      -18080.0,
+      -5920.1,
+      -5322.9,
+      5322.9
      ],
-     "RL_load_change_at_1mm_true_N": -8263.1,
-     "RL_load_change_at_1mm_pressure_N": -7.276e-10,
+     "RL_load_change_at_1mm_true_N": -11866.0,
+     "RL_load_change_at_1mm_pressure_N": -3.3469e-10,
      "F_min_reached_on_the_way (true, pressure)": [
       null,
       null
@@ -2058,20 +2063,20 @@
    }
   },
   "f_Hz_all_legs_stuck_small_amplitude": [
-   3.7841,
-   4.5141,
-   5.9366,
-   12.012,
-   13.939,
-   24.064
+   3.423,
+   3.676,
+   4.2005,
+   11.58,
+   13.629,
+   23.748
   ],
   "f_Hz_L1_reference": [
-   1.7845,
-   2.9842,
-   5.8325,
-   6.459,
-   7.6148,
-   8.0421
+   1.8314,
+   2.8356,
+   4.0318,
+   5.7815,
+   7.4098,
+   7.7316
   ]
  },
  "D_leakage": {
@@ -2079,203 +2084,236 @@
   "cases": {
    "check valve 1 drop/min": {
     "Q_mL_per_min": 0.05,
-    "sink_mm_per_min": 0.0048138,
-    "sink_mm_per_h": 0.28883,
+    "sink_mm_per_min": 0.003767,
+    "sink_mm_per_h": 0.22602,
     "FL leaks 60 s: dF_cyl_N": [
-     -22.965,
-     22.965,
-     25.22,
-     -25.22
+     -18.753,
+     18.753,
+     20.595,
+     -20.595
     ],
     "FL leaks 60 s: droll_dpitch_deg": [
-     -5.6419e-05,
-     2.7999e-05
+     -5.0189e-05,
+     2.1864e-05
     ],
     "FL leaks 10 min: dF_cyl_N": [
-     -229.65,
-     229.65,
-     252.2,
-     -252.2
+     -187.53,
+     187.53,
+     205.95,
+     -205.95
     ],
     "FL leaks 10 min: droll_dpitch_deg": [
-     -0.00056419,
-     0.00027999
+     -0.00050189,
+     0.00021864
     ],
     "FL leaks 1 h: dF_cyl_N": [
-     -1377.9,
-     1377.9,
-     1513.2,
-     -1513.2
+     -1125.2,
+     1125.2,
+     1235.7,
+     -1235.7
     ],
     "FL leaks 1 h: droll_dpitch_deg": [
-     -0.0033851,
-     0.0016799
+     -0.0030114,
+     0.0013118
     ]
    },
    "check valve 5 drops/min": {
     "Q_mL_per_min": 0.25,
-    "sink_mm_per_min": 0.024069,
-    "sink_mm_per_h": 1.4441,
+    "sink_mm_per_min": 0.018835,
+    "sink_mm_per_h": 1.1301,
     "FL leaks 60 s: dF_cyl_N": [
-     -114.82,
-     114.82,
-     126.1,
-     -126.1
+     -93.764,
+     93.764,
+     102.97,
+     -102.97
     ],
     "FL leaks 60 s: droll_dpitch_deg": [
-     -0.00028209,
-     0.00013999
+     -0.00025095,
+     0.00010932
     ],
     "FL leaks 10 min: dF_cyl_N": [
-     -1148.2,
-     1148.2,
-     1261.0,
-     -1261.0
+     -937.64,
+     937.64,
+     1029.7,
+     -1029.7
     ],
     "FL leaks 10 min: droll_dpitch_deg": [
-     -0.0028209,
-     0.0013999
+     -0.0025095,
+     0.0010932
     ],
     "FL leaks 1 h: dF_cyl_N": [
-     -6889.4,
-     6889.4,
-     7566.1,
-     -7566.1
+     -5625.8,
+     5625.8,
+     6178.4,
+     -6178.4
     ],
     "FL leaks 1 h: droll_dpitch_deg": [
-     -0.016926,
-     0.0083996
+     -0.015057,
+     0.0065591
     ]
    },
    "internal 0.5 mL/min (1.5x pressure test limit)": {
     "Q_mL_per_min": 0.5,
-    "sink_mm_per_min": 0.048138,
-    "sink_mm_per_h": 2.8883,
+    "sink_mm_per_min": 0.03767,
+    "sink_mm_per_h": 2.2602,
     "FL leaks 60 s: dF_cyl_N": [
-     -229.65,
-     229.65,
-     252.2,
-     -252.2
+     -187.53,
+     187.53,
+     205.95,
+     -205.95
     ],
     "FL leaks 60 s: droll_dpitch_deg": [
-     -0.00056419,
-     0.00027999
+     -0.00050189,
+     0.00021864
     ],
     "FL leaks 10 min: dF_cyl_N": [
-     -2296.5,
-     2296.5,
-     2522.0,
-     -2522.0
+     -1875.3,
+     1875.3,
+     2059.5,
+     -2059.5
     ],
     "FL leaks 10 min: droll_dpitch_deg": [
-     -0.0056419,
-     0.0027999
+     -0.0050189,
+     0.0021864
     ],
     "FL leaks 1 h: dF_cyl_N": [
-     -13779.0,
-     13779.0,
-     15132.0,
-     -15132.0
+     -11252.0,
+     11252.0,
+     12357.0,
+     -12357.0
     ],
     "FL leaks 1 h: droll_dpitch_deg": [
-     -0.033851,
-     0.016799
+     -0.030114,
+     0.013118
     ]
    }
   },
   "note": "linear, L1 stiffness, one leg leaking, others locked, no control"
  },
  "E_column_details": {
-  "K_tube_equivalent_Pa": 30547000000.0,
+  "K_tube_equivalent_Pa": [
+   20250000000.0,
+   20250000000.0,
+   21304000000.0,
+   21304000000.0
+  ],
   "beta_eff_with_tube": {
-   "oil 1.3 GPa": 1246900000.0,
-   "oil 1.58 GPa": 1502300000.0,
-   "oil 1.75 GPa": 1655200000.0
+   "oil 1.3 GPa": [
+    1221600000.0,
+    1221600000.0,
+    1225200000.0,
+    1225200000.0
+   ],
+   "oil 1.58 GPa": [
+    1465600000.0,
+    1465600000.0,
+    1470900000.0,
+    1470900000.0
+   ],
+   "oil 1.75 GPa": [
+    1610800000.0,
+    1610800000.0,
+    1617200000.0,
+    1617200000.0
+   ]
   },
-  "tube_share_of_column_compliance_at_oil_1.3GPa": 0.040821,
-  "annulus_area_m2": 0.00088357,
-  "annulus_area_over_bore_area": 0.085066,
+  "tube_share_of_column_compliance_at_oil_1.3GPa": [
+   0.060323,
+   0.060323,
+   0.057513,
+   0.057513
+  ],
+  "annulus_area_m2": [
+   0.0037699,
+   0.0037699,
+   0.0031416,
+   0.0031416
+  ],
+  "annulus_area_over_bore_area": [
+   0.28402,
+   0.28402,
+   0.33058,
+   0.33058
+  ],
   "k_annulus_locked_N_m (upper bound, rod side locked and pressurised)": [
-   2686400.0,
-   2686400.0,
-   2605600.0,
-   2605600.0
+   10805000.0,
+   10805000.0,
+   8748500.0,
+   8748500.0
   ],
   "k_annulus_over_k_cap": [
-   0.11667,
-   0.11667,
-   0.1106,
-   0.1106
+   0.36722,
+   0.36722,
+   0.40588,
+   0.40588
   ]
  },
  "F_onestep_and_nsc": {
   "L1_f_Hz_with_kt": [
-   1.7845,
-   2.9842,
-   5.8325,
-   6.459,
-   7.6148,
-   8.0421
+   1.8314,
+   2.8356,
+   4.0318,
+   5.7815,
+   7.4098,
+   7.7316
   ],
   "L1_f_Hz_kt_zero": [
    0.0,
    0.0,
-   2.6034e-08,
-   3.129,
-   4.1735,
-   7.5026
+   0.0,
+   3.2814,
+   4.3557,
+   7.7236
   ],
   "L1_kt_zero_mode_content": [
    {
-    "surge x": 1.0
+    "yaw": 1.0
    },
    {
     "sway y": 1.0
    },
    {
-    "yaw": 1.0
+    "surge x": 1.0
    },
    {
     "roll": 1.0
    },
    {
-    "pitch": 0.958,
-    "heave z": 0.042
+    "pitch": 0.992
    },
    {
-    "heave z": 0.958,
-    "pitch": 0.042
+    "heave z": 0.993
    }
   ],
   "L1_damped_with_kt (reference)": {
    "f_Hz": [
-    1.7845,
-    2.9842,
-    5.8325,
-    6.4594,
-    7.6141,
-    8.042
+    1.8314,
+    2.8358,
+    4.0318,
+    5.7811,
+    7.4098,
+    7.7313
    ],
    "zeta": [
-    0.0077677,
-    0.013885,
-    0.037301,
-    0.036293,
-    0.032423,
-    0.049388
+    0.0080265,
+    0.015983,
+    0.037372,
+    0.035528,
+    0.048744,
+    0.030465
    ]
   },
   "L1_damped_onestep_like (kt 0, c_t = kt dt + ct, dt 2e-4)": {
    "f_Hz": [
     0.0,
     0.0,
-    6.778e-19,
-    0.28195,
-    0.3099,
-    0.50904,
-    3.1045,
-    4.1671,
-    7.5023
+    2.2225e-18,
+    0.2399,
+    0.2414,
+    0.35687,
+    3.2626,
+    4.3518,
+    7.7235
    ],
    "zeta": [
     -0.0,
@@ -2284,56 +2322,56 @@
     1.0,
     1.0,
     1.0,
-    0.093765,
-    0.037836,
-    0.030915
+    0.082315,
+    0.033454,
+    0.030278
    ]
   },
   "creep_if_velocity_based_tangential": {
    "L1 (kt_L1, ct_L1, dt 2e-4)": {
-    "W_sin_alpha_N": 13342.0,
-    "sum_c_equiv_N_s_m": 75667.0,
-    "creep_m_s": 0.17632,
-    "time_to_0.1mm_s": 0.00056714
+    "W_sin_alpha_N": 13266.0,
+    "sum_c_equiv_N_s_m": 58681.0,
+    "creep_m_s": 0.22606,
+    "time_to_0.1mm_s": 0.00044235
    },
    "L2/L2b (contact kt = concrete, ct = 2 zeta sqrt(kc m/4), dt 5e-5)": {
-    "W_sin_alpha_N": 13342.0,
-    "sum_c_equiv_N_s_m": 490980.0,
-    "creep_m_s": 0.027174,
-    "time_to_0.1mm_s": 0.00368
+    "W_sin_alpha_N": 13266.0,
+    "sum_c_equiv_N_s_m": 489770.0,
+    "creep_m_s": 0.027086,
+    "time_to_0.1mm_s": 0.003692
    }
   },
   "rod_local_mode_Hz_slab_contact": [
-   286.45,
-   286.45,
-   286.65,
-   286.65
+   288.89,
+   288.89,
+   345.32,
+   345.32
   ],
   "rod_local_mode_Hz_rigid_NSC_contact": [
-   73.905,
-   73.905,
-   74.755,
-   74.755
+   83.545,
+   83.545,
+   86.386,
+   86.386
   ],
   "rod_local_mode_Hz_rigid_contact_full_stroke": [
-   221.99,
-   221.99,
-   221.99,
-   221.99
+   250.94,
+   250.94,
+   256.52,
+   256.52
   ],
   "L2b_NSC_equivalent_f_Hz (contact 1e12, concrete lumped into the axial spring)": [
-   1.7854,
-   2.9885,
-   5.8811,
-   6.5084,
-   7.6638,
-   8.1574
+   1.8323,
+   2.8404,
+   4.0562,
+   5.8198,
+   7.5116,
+   7.7683
   ],
   "L2b_NSC_rod_mode_Hz (oil+rod+frame+concrete series, rigid floor)": [
-   70.265,
-   70.265,
-   70.995,
-   70.995
+   78.391,
+   78.391,
+   82.176,
+   82.176
   ]
  }
 }

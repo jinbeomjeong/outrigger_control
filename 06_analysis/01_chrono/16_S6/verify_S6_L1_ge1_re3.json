@@ -1,0 +1,5368 @@
+{
+ "meta": {
+  "batch": "07_results/S6/stage2_20261022_011527",
+  "override_batches": [
+   "07_results/S6/stage2_20261022_013952"
+  ],
+  "cases_without_ge1_samples": [
+   "G5_top_flat_reject"
+  ],
+  "script": "04_scripts/02_chrono/s6_ge1_export.py",
+  "spec": "control spec rev. 7 37.3, 38, 42.1-42.2, U39 (pre-checks)",
+  "gate": "controller is_geometry_valid (no own stationary rule); gate state stationary_gate -> CSV gate_* columns",
+  "shadow_G2_threshold_mm": 1.4,
+  "shadow_G1_thresholds_mm": [
+   -5.0,
+   5.0
+  ],
+  "shadow_thresholds_source": "outrigger_sim.control.c2 constants",
+  "r5_keys": {
+   "is_geometry_valid": "stationary gate flag (spec 38, 42.1 GE1'-c)",
+   "heights_delta_above_others_m": "d^Delta_i (spec 37.3)",
+   "nonplanarity_m": "absolute r = [(I - P) h]_RR, sign fixed (spec 37.3)",
+   "nonplanarity_delta_m": "Delta r = r(t) - r(t_ref) (spec 37.3)",
+   "reference_t_s": "t_ref of the stored reference (spec 37.3)",
+   "stationary_gate": "gate state attribute (spec 38, R5 StandstillGateState)"
+  },
+  "csv": "<case dir>/ge1_timeseries.csv",
+  "true_path": "pad bottom = contact_point_world + (N / k_n) n, k_n = contact.rigid_floor.L1.kn_per_pad_N_m (dynamics-expert 2026-10-22); ball centre not used",
+  "check4_previous_summary": "06_analysis/01_chrono/16_S6/verify_S6_L1_closed_loop_re.json",
+  "check4_new_summary": "06_analysis/01_chrono/16_S6/verify_S6_L1_closed_loop_re3.json"
+ },
+ "tables": {
+  "G1_top_diag3": {
+   "group": "G1",
+   "floor": "diag3",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 937,
+    "grounded_dD_maxabs_mm": 1.9491826191990747,
+    "dr_maxabs_mm": 0.18655348553736628,
+    "sensor_minus_true_dD_maxabs_mm": 1.9359221609984711
+   },
+   "gate_before_event": {
+    "n": 937,
+    "grounded_dD_maxabs_mm": 1.9491826191990747,
+    "dr_maxabs_mm": 0.18655348553736628,
+    "sensor_minus_true_dD_maxabs_mm": 1.9359221609984711
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.9483805668016194,
+   "ge1_events": [],
+   "reference_source": "touch_only",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      0.03666178663557805,
+      -0.03678184312782791,
+      0.9986505942604786
+     ],
+     "heights_m": [
+      -1.048890566600977,
+      -1.0496163903881428,
+      -1.0491694123366433,
+      -1.0496894088988107
+     ],
+     "nonplanarity_m": 3.851848981434314e-05,
+     "t_s": 85.76000000059987,
+     "source": "touch",
+     "max_abs_height_change_m": null
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       0.03666178663557805,
+       -0.03678184312782791,
+       0.9986505942604786
+      ],
+      "heights_m": [
+       -1.048890566600977,
+       -1.0496163903881428,
+       -1.0491694123366433,
+       -1.0496894088988107
+      ],
+      "nonplanarity_m": 3.851848981434314e-05,
+      "t_s": 85.76000000059987,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     }
+    ],
+    "last": {
+     "t_s": 124.50000000188591,
+     "heights_delta_above_others_m": [
+      -0.0013850630691776278,
+      -0.0013205543000576192,
+      0.0015200650056923504,
+      0.0013205543000576192
+     ],
+     "nonplanarity_delta_m": -7.059399638703612e-05,
+     "nonplanarity_m": -3.207550657269298e-05,
+     "heights_above_others_m": [
+      -0.0005862207713438483,
+      -0.001247535789389742,
+      0.0013057280391459702,
+      0.0005862207713438483
+     ],
+     "reference_t_s": 85.76000000059987,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0019491826191990747,
+     0.0018385797613813537,
+     0.0018832482284905083,
+     0.0018249208413425588
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00018655348553736628,
+    "max_abs_nonplanarity_m": 0.00015901335462620292,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "touch_only"
+   }
+  },
+  "G1_top_flat": {
+   "group": "G1",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1537,
+    "grounded_dD_maxabs_mm": 1.4039409330619534,
+    "dr_maxabs_mm": 0.28809256801148875,
+    "sensor_minus_true_dD_maxabs_mm": 1.3807255104998362
+   },
+   "gate_before_event": {
+    "n": 1537,
+    "grounded_dD_maxabs_mm": 1.4039409330619534,
+    "dr_maxabs_mm": 0.28809256801148875,
+    "sensor_minus_true_dD_maxabs_mm": 1.3807255104998362
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.9678841309823678,
+   "ge1_events": [],
+   "reference_source": "touch_only",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -8.272610491771402e-05,
+      8.142203148870611e-05,
+      0.9999999932634223
+     ],
+     "heights_m": [
+      -1.048586363321734,
+      -1.0489288767071414,
+      -1.0493062468262198,
+      -1.0493637991161617
+     ],
+     "nonplanarity_m": 6.952163095830244e-05,
+     "t_s": 85.40000000058792,
+     "source": "touch",
+     "max_abs_height_change_m": null
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -8.272610491771402e-05,
+       8.142203148870611e-05,
+       0.9999999932634223
+      ],
+      "heights_m": [
+       -1.048586363321734,
+       -1.0489288767071414,
+       -1.0493062468262198,
+       -1.0493637991161617
+      ],
+      "nonplanarity_m": 6.952163095830244e-05,
+      "t_s": 85.40000000058792,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     }
+    ],
+    "last": {
+     "t_s": 124.50000000188591,
+     "heights_delta_above_others_m": [
+      -0.0007890453133305719,
+      -0.0007307344414446693,
+      0.0010487174714239877,
+      0.0007307344414446693
+     ],
+     "nonplanarity_delta_m": -0.00010143635141890428,
+     "nonplanarity_m": -3.191472046060184e-05,
+     "heights_above_others_m": [
+      -1.1609518902888638e-05,
+      -0.0002958120324243474,
+      0.0003871448388241827,
+      1.1609518902888638e-05
+     ],
+     "reference_t_s": 85.40000000058792,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0013943848901132316,
+     0.0013066133543964131,
+     0.0014039409330619534,
+     0.001255928707702525
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00028809256801148875,
+    "max_abs_nonplanarity_m": 0.0002185709370531863,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "touch_only"
+   }
+  },
+  "G1_top_roll3": {
+   "group": "G1",
+   "floor": "roll3",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1204,
+    "grounded_dD_maxabs_mm": 1.9827252510535853,
+    "dr_maxabs_mm": 0.2351236685659841,
+    "sensor_minus_true_dD_maxabs_mm": 1.9640597777730306
+   },
+   "gate_before_event": {
+    "n": 1204,
+    "grounded_dD_maxabs_mm": 1.9827252510535853,
+    "dr_maxabs_mm": 0.2351236685659841,
+    "sensor_minus_true_dD_maxabs_mm": 1.9640597777730306
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.9593625498007968,
+   "ge1_events": [],
+   "reference_source": "touch_only",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.00017436117806949155,
+      -0.05234715918484274,
+      0.9986289323484757
+     ],
+     "heights_m": [
+      -1.048804915289086,
+      -1.0489690627091774,
+      -1.049449396465595,
+      -1.0495439271573155
+     ],
+     "nonplanarity_m": 1.5016907936205026e-05,
+     "t_s": 85.42000000058859,
+     "source": "touch",
+     "max_abs_height_change_m": null
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00017436117806949155,
+       -0.05234715918484274,
+       0.9986289323484757
+      ],
+      "heights_m": [
+       -1.048804915289086,
+       -1.0489690627091774,
+       -1.049449396465595,
+       -1.0495439271573155
+      ],
+      "nonplanarity_m": 1.5016907936205026e-05,
+      "t_s": 85.42000000058859,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     }
+    ],
+    "last": {
+     "t_s": 124.50000000188591,
+     "heights_delta_above_others_m": [
+      -0.0015494245576388455,
+      -0.001336986580330768,
+      0.001336986580330768,
+      0.0013524467784196137
+     ],
+     "nonplanarity_delta_m": -4.86510977258936e-05,
+     "nonplanarity_m": -3.363418978968857e-05,
+     "heights_above_others_m": [
+      -0.0008258728874981358,
+      -0.0007775823302815787,
+      0.0008566528239131177,
+      0.0007775823302815787
+     ],
+     "reference_t_s": 85.42000000058859,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0019827252510535853,
+     0.0018420668468759338,
+     0.0017175555508099905,
+     0.0019428404510353214
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0002351236685659841,
+    "max_abs_nonplanarity_m": 0.00022010676062977907,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "touch_only"
+   }
+  },
+  "G2-R_bottom_fdown3.5": {
+   "group": "G2-R",
+   "floor": "fdown3.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 851,
+    "grounded_dD_maxabs_mm": 0.4831429352816219,
+    "dr_maxabs_mm": 0.19246979846798684,
+    "sensor_minus_true_dD_maxabs_mm": 0.48308521327844467
+   },
+   "gate_before_event": {
+    "n": 851,
+    "grounded_dD_maxabs_mm": 0.4831429352816219,
+    "dr_maxabs_mm": 0.19246979846798684,
+    "sensor_minus_true_dD_maxabs_mm": 0.48308521327844467
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.5917941585535466,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    161.8386108816583
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      0.061051716597506,
+      -5.857422714758946e-06,
+      0.9981346040821291
+     ],
+     "heights_m": [
+      -1.2106510040943446,
+      -1.2106442507498438,
+      -1.2106439190773766,
+      -1.2106513357668147
+     ],
+     "nonplanarity_m": -3.708344719077772e-06,
+     "t_s": 136.50000000228425,
+     "source": "ready",
+     "max_abs_height_change_m": 0.1618386108816583
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       0.06090077977172514,
+       -3.3119548270836317e-05,
+       0.9981438242689735
+      ],
+      "heights_m": [
+       -1.0492072126287095,
+       -1.0492142422148214,
+       -1.0487613106430325,
+       -1.0486504870065545
+      ],
+      "nonplanarity_m": 3.204395335004717e-05,
+      "t_s": 87.44000000065564,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       0.061051716597506,
+       -5.857422714758946e-06,
+       0.9981346040821291
+      ],
+      "heights_m": [
+       -1.2106510040943446,
+       -1.2106442507498438,
+       -1.2106439190773766,
+       -1.2106513357668147
+      ],
+      "nonplanarity_m": -3.708344719077772e-06,
+      "t_s": 136.50000000228425,
+      "source": "ready",
+      "max_abs_height_change_m": 0.1618386108816583
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      5.540913689805471e-05,
+      5.277276899695593e-06,
+      -0.0002232352785793701,
+      -5.277276899695593e-06
+     ],
+     "nonplanarity_delta_m": 7.205815650079828e-05,
+     "nonplanarity_m": 6.83498117817205e-05,
+     "heights_above_others_m": [
+      5.574080936820991e-05,
+      1.236229387058252e-05,
+      -0.00022290360611210147,
+      -1.236229387058252e-05
+     ],
+     "reference_t_s": 136.50000000228425,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0004434050067207984,
+     0.0004302405661036346,
+     0.0004831429352816219,
+     0.0003757884616164553
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00019246979846798684,
+    "max_abs_nonplanarity_m": 0.00018876145374890907,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G2-R_bottom_fup3.5": {
+   "group": "G2-R",
+   "floor": "fup3.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 898,
+    "grounded_dD_maxabs_mm": 0.6633910999547243,
+    "dr_maxabs_mm": 0.2620087307264596,
+    "sensor_minus_true_dD_maxabs_mm": 0.6633866165601798
+   },
+   "gate_before_event": {
+    "n": 898,
+    "grounded_dD_maxabs_mm": 0.6633910999547243,
+    "dr_maxabs_mm": 0.2620087307264596,
+    "sensor_minus_true_dD_maxabs_mm": 0.6633866165601798
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.6047138047138048,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    162.36544905957984
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.06102133183781273,
+      -8.11562738240173e-05,
+      0.9981364588443801
+     ],
+     "heights_m": [
+      -1.2106946481257794,
+      -1.2108888594610914,
+      -1.210898397630152,
+      -1.2106851099535694
+     ],
+     "nonplanarity_m": 0.00010664383835423674,
+     "t_s": 135.56000000225305,
+     "source": "ready",
+     "max_abs_height_change_m": 0.16236544905957984
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.06115394935658002,
+       -1.2617758646050267e-05,
+       0.9981283456143729
+      ],
+      "heights_m": [
+       -1.0487996627547629,
+       -1.0489096073997781,
+       -1.0490082510987107,
+       -1.0491189098471083
+      ],
+      "nonplanarity_m": -2.883215451832122e-06,
+      "t_s": 86.3000000006178,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       -0.06102133183781273,
+       -8.11562738240173e-05,
+       0.9981364588443801
+      ],
+      "heights_m": [
+       -1.2106946481257794,
+       -1.2108888594610914,
+       -1.210898397630152,
+       -1.2106851099535694
+      ],
+      "nonplanarity_m": 0.00010664383835423674,
+      "t_s": 135.56000000225305,
+      "source": "ready",
+      "max_abs_height_change_m": 0.16236544905957984
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      -0.00015961715078338656,
+      0.00035396507772267327,
+      -0.0001989743283448142,
+      0.00015961715078338656
+     ],
+     "nonplanarity_delta_m": -3.37135515910969e-05,
+     "nonplanarity_m": 7.293028676313984e-05,
+     "heights_above_others_m": [
+      -0.0001597537424107287,
+      0.0001597537424107287,
+      -0.0004028604243446754,
+      0.00016915532299344171
+     ],
+     "reference_t_s": 135.56000000225305,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0006417762932007243,
+     0.0006633910999547243,
+     0.00041792353558922635,
+     0.0004204258303752706
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0002620087307264596,
+    "max_abs_nonplanarity_m": 0.00019330557019037187,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G2-R_middle_fdown3.5": {
+   "group": "G2-R",
+   "floor": "fdown3.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 840,
+    "grounded_dD_maxabs_mm": 0.7357819253659414,
+    "dr_maxabs_mm": 0.23931753149480928,
+    "sensor_minus_true_dD_maxabs_mm": 0.7360053855480775
+   },
+   "gate_before_event": {
+    "n": 840,
+    "grounded_dD_maxabs_mm": 0.7357819253659414,
+    "dr_maxabs_mm": 0.23931753149480928,
+    "sensor_minus_true_dD_maxabs_mm": 0.7360053855480775
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.5886475122634899,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    162.40303552693592
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      0.06105002438033,
+      8.481285577195596e-05,
+      0.9981347040003873
+     ],
+     "heights_m": [
+      -1.2105802993655828,
+      -1.2107246246805887,
+      -1.2107317128337984,
+      -1.2105732112140184
+     ],
+     "nonplanarity_m": 7.92508098004241e-05,
+     "t_s": 136.72000000229156,
+     "source": "ready",
+     "max_abs_height_change_m": 0.1624030355269359
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       0.06078428022385554,
+       -0.00010331026055800863,
+       0.9981509207553023
+      ],
+      "heights_m": [
+       -1.049057868189246,
+       -1.048751593287272,
+       -1.0495618688247896,
+       -1.0492647071475112
+      ],
+      "nonplanarity_m": 4.996895415831926e-06,
+      "t_s": 87.68000000066361,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       0.06105002438033,
+       8.481285577195596e-05,
+       0.9981347040003873
+      ],
+      "heights_m": [
+       -1.2105802993655828,
+       -1.2107246246805887,
+       -1.2107317128337984,
+       -1.2105732112140184
+      ],
+      "nonplanarity_m": 7.92508098004241e-05,
+      "t_s": 136.72000000229156,
+      "source": "ready",
+      "max_abs_height_change_m": 0.1624030355269359
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      0.0001383048095553452,
+      -1.6873266103001328e-05,
+      1.6873266103001328e-05,
+      -0.00016631003649214549
+     ],
+     "nonplanarity_delta_m": -1.1036763368832414e-05,
+     "nonplanarity_m": 6.821404643159168e-05,
+     "heights_above_others_m": [
+      0.00028065342838012874,
+      -9.785112893290204e-06,
+      7.808416712107302e-06,
+      -7.808416712107302e-06
+     ],
+     "reference_t_s": 136.72000000229156,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0004367326809056049,
+     0.0004269350521011184,
+     0.0007357819253659414,
+     0.0006239168317179189
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00023931753149480928,
+    "max_abs_nonplanarity_m": 0.0001885531085439318,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G2-R_middle_fup3.5": {
+   "group": "G2-R",
+   "floor": "fup3.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 898,
+    "grounded_dD_maxabs_mm": 0.6549528172934416,
+    "dr_maxabs_mm": 0.2619440598152778,
+    "sensor_minus_true_dD_maxabs_mm": 0.654912012149067
+   },
+   "gate_before_event": {
+    "n": 898,
+    "grounded_dD_maxabs_mm": 0.6549528172934416,
+    "dr_maxabs_mm": 0.2619440598152778,
+    "sensor_minus_true_dD_maxabs_mm": 0.654912012149067
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.6047138047138048,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    163.00826502486277
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.06102262845661355,
+      -8.115120203116127e-05,
+      0.9981363795748197
+     ],
+     "heights_m": [
+      -1.2106942783425878,
+      -1.2108886750239751,
+      -1.2108982222958147,
+      -1.2106847310676139
+     ],
+     "nonplanarity_m": 0.00010674561416595951,
+     "t_s": 135.56000000225305,
+     "source": "ready",
+     "max_abs_height_change_m": 0.16300826502486276
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.06139217575480649,
+       3.3252285982969415e-05,
+       0.9981137208005791
+      ],
+      "heights_m": [
+       -1.0488073231639232,
+       -1.0488551382935516,
+       -1.048915295673047,
+       -1.048863962975499
+      ],
+      "nonplanarity_m": 2.5933575581449375e-05,
+      "t_s": 86.28000000061714,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       -0.06102262845661355,
+       -8.115120203116127e-05,
+       0.9981363795748197
+      ],
+      "heights_m": [
+       -1.2106942783425878,
+       -1.2108886750239751,
+       -1.2108982222958147,
+       -1.2106847310676139
+      ],
+      "nonplanarity_m": 0.00010674561416595951,
+      "t_s": 135.56000000225305,
+      "source": "ready",
+      "max_abs_height_change_m": 0.16300826502486276
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      -0.0001656164750574174,
+      0.00035362762683566196,
+      -0.00019854599124502492,
+      0.0001656164750574174
+     ],
+     "nonplanarity_delta_m": -3.3746646090015986e-05,
+     "nonplanarity_m": 7.299896807594353e-05,
+     "heights_above_others_m": [
+      -0.00015923094544834093,
+      0.00015923094544834093,
+      -0.000396104414862819,
+      0.00017516375003134854
+     ],
+     "reference_t_s": 135.56000000225305,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0006394538281240258,
+     0.0006549528172934416,
+     0.00040887289555535666,
+     0.0004198443348195635
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0002619440598152778,
+    "max_abs_nonplanarity_m": 0.0001934107313612543,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G2-R_top_fdown3.5": {
+   "group": "G2-R",
+   "floor": "fdown3.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 421,
+    "grounded_dD_maxabs_mm": 0.4977908472636461,
+    "dr_maxabs_mm": 0.15005162459602595,
+    "sensor_minus_true_dD_maxabs_mm": 0.4976700677405965
+   },
+   "gate_before_event": {
+    "n": 421,
+    "grounded_dD_maxabs_mm": 0.4977908472636461,
+    "dr_maxabs_mm": 0.15005162459602595,
+    "sensor_minus_true_dD_maxabs_mm": 0.4976700677405965
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.4176587301587302,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    161.62641753728212
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      0.06107082454184837,
+      -4.07618017302003e-06,
+      0.9981334351544204
+     ],
+     "heights_m": [
+      -1.210647741742084,
+      -1.2106493690721483,
+      -1.210649448994116,
+      -1.2106476618201163
+     ],
+     "nonplanarity_m": 8.935870000614798e-07,
+     "t_s": 145.10000000256974,
+     "source": "ready",
+     "max_abs_height_change_m": 0.16162641753728213
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       0.060979351838010024,
+       4.8033555081072583e-05,
+       0.9981390265600247
+      ],
+      "heights_m": [
+       -1.0493112326486214,
+       -1.0493093416446138,
+       -1.0497166271073675,
+       -1.0498282156122731
+      ],
+      "nonplanarity_m": -3.097400699175745e-05,
+      "t_s": 96.12000000094379,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       0.06107082454184837,
+       -4.07618017302003e-06,
+       0.9981334351544204
+      ],
+      "heights_m": [
+       -1.210647741742084,
+       -1.2106493690721483,
+       -1.210649448994116,
+       -1.2106476618201163
+      ],
+      "nonplanarity_m": 8.935870000614798e-07,
+      "t_s": 145.10000000256974,
+      "source": "ready",
+      "max_abs_height_change_m": 0.16162641753728213
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      0.00015484425721945527,
+      0.00010768723372489575,
+      -0.00031126782502766126,
+      -0.00010768723372489575
+     ],
+     "nonplanarity_delta_m": 6.738755672552887e-05,
+     "nonplanarity_m": 6.828114372559035e-05,
+     "heights_above_others_m": [
+      0.0001547643352517447,
+      0.00010597998169292744,
+      -0.0003113477469953718,
+      -0.00010597998169292744
+     ],
+     "reference_t_s": 145.10000000256974,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.00048198777766961243,
+     0.00048083578917546,
+     0.0004977908472636461,
+     0.000479085635277654
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00015005162459602595,
+    "max_abs_nonplanarity_m": 0.00014915803759596447,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G2-R_top_fup3.5": {
+   "group": "G2-R",
+   "floor": "fup3.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 882,
+    "grounded_dD_maxabs_mm": 0.4956235319950597,
+    "dr_maxabs_mm": 0.21469461089806963,
+    "sensor_minus_true_dD_maxabs_mm": 0.4957071311506578
+   },
+   "gate_before_event": {
+    "n": 882,
+    "grounded_dD_maxabs_mm": 0.4956235319950597,
+    "dr_maxabs_mm": 0.21469461089806963,
+    "sensor_minus_true_dD_maxabs_mm": 0.4957071311506578
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.6004084411164057,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    163.0468170164998
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.061025103457428405,
+      3.456473221713269e-05,
+      0.9981362309591258
+     ],
+     "heights_m": [
+      -1.2107263379911868,
+      -1.2106875228094223,
+      -1.2106856165054216,
+      -1.2107282442950558
+     ],
+     "nonplanarity_m": -2.1313894815855328e-05,
+     "t_s": 135.88000000226367,
+     "source": "ready",
+     "max_abs_height_change_m": 0.1630468170164998
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.061256194076751,
+       -5.390861256331513e-05,
+       0.9981220745886211
+      ],
+      "heights_m": [
+       -1.0483114835619638,
+       -1.048328696887005,
+       -1.0494733261063418,
+       -1.0494926028627338
+      ],
+      "nonplanarity_m": -9.848947966073496e-07,
+      "t_s": 86.66000000062975,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       -0.061025103457428405,
+       3.456473221713269e-05,
+       0.9981362309591258
+      ],
+      "heights_m": [
+       -1.2107263379911868,
+       -1.2106875228094223,
+       -1.2106856165054216,
+       -1.2107282442950558
+      ],
+      "nonplanarity_m": -2.1313894815855328e-05,
+      "t_s": 135.88000000226367,
+      "source": "ready",
+      "max_abs_height_change_m": 0.1630468170164998
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      0.0001845316025381738,
+      -7.800537302671273e-05,
+      -0.0001768530216696984,
+      7.800537302671273e-05
+     ],
+     "nonplanarity_delta_m": 9.427487774327226e-05,
+     "nonplanarity_m": 7.296098292741693e-05,
+     "heights_above_others_m": [
+      0.0001457164207736561,
+      -3.728388739321353e-05,
+      -0.00013422523203554526,
+      3.728388739321353e-05
+     ],
+     "reference_t_s": 135.88000000226367,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0004956235319950597,
+     0.0004224352858146485,
+     0.0004887423076680442,
+     0.0003650607458811628
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00021469461089806963,
+    "max_abs_nonplanarity_m": 0.0001933807160822143,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G2_bottom_flat": {
+   "group": "G2",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1448,
+    "grounded_dD_maxabs_mm": 0.8911805529439043,
+    "dr_maxabs_mm": 0.26679257914280496,
+    "sensor_minus_true_dD_maxabs_mm": 0.8912305189578973
+   },
+   "gate_before_event": {
+    "n": 1448,
+    "grounded_dD_maxabs_mm": 0.8911805529439043,
+    "dr_maxabs_mm": 0.26679257914280496,
+    "sensor_minus_true_dD_maxabs_mm": 0.8912305189578973
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.7189672293942403,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    51.781941380600216
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      2.486202743828e-05,
+      9.400885729237955e-05,
+      0.9999999952721073
+     ],
+     "heights_m": [
+      -1.1003900553459864,
+      -1.1001946660638806,
+      -1.1001850700455584,
+      -1.1003996513707386
+     ],
+     "nonplanarity_m": -0.00010729066301845558,
+     "t_s": 105.56000000125717,
+     "source": "ready",
+     "max_abs_height_change_m": 0.051781941380600216
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00022358501058891264,
+       -1.873947871656188e-05,
+       0.9999999748292872
+      ],
+      "heights_m": [
+       -1.0493273304397044,
+       -1.049271567309476,
+       -1.0483551753812457,
+       -1.0483337419739962
+      ],
+      "nonplanarity_m": -8.020876129111176e-06,
+      "t_s": 86.84000000063573,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       2.486202743828e-05,
+       9.400885729237955e-05,
+       0.9999999952721073
+      ],
+      "heights_m": [
+       -1.1003900553459864,
+       -1.1001946660638806,
+       -1.1001850700455584,
+       -1.1003996513707386
+      ],
+      "nonplanarity_m": -0.00010729066301845558,
+      "t_s": 105.56000000125717,
+      "source": "ready",
+      "max_abs_height_change_m": 0.051781941380600216
+     }
+    ],
+    "last": {
+     "t_s": 134.50000000221786,
+     "heights_delta_above_others_m": [
+      0.0003242436840900087,
+      0.00011382819920835452,
+      -0.00011382819920835452,
+      -0.00015157616377670102
+     ],
+     "nonplanarity_delta_m": 4.205520395422768e-05,
+     "nonplanarity_m": -6.52354590642279e-05,
+     "heights_above_others_m": [
+      0.00011925838366200203,
+      0.0001042321808861768,
+      -0.0001042321808861768,
+      -0.00035656147063467536
+     ],
+     "reference_t_s": 105.56000000125717,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0008911805529439043,
+     0.0006406563729715042,
+     0.00042627050613064377,
+     0.000523996103199531
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00026679257914280496,
+    "max_abs_nonplanarity_m": 0.0002185891898264236,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G2_bottom_roll5.5": {
+   "group": "G2",
+   "floor": "roll5.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1937,
+    "grounded_dD_maxabs_mm": 0.7873684395660607,
+    "dr_maxabs_mm": 0.1829324991040049,
+    "sensor_minus_true_dD_maxabs_mm": 0.7873434035330362
+   },
+   "gate_before_event": {
+    "n": 1937,
+    "grounded_dD_maxabs_mm": 0.7873684395660607,
+    "dr_maxabs_mm": 0.1829324991040049,
+    "sensor_minus_true_dD_maxabs_mm": 0.7873434035330362
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.7738713543747503,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    176.89515999440508
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      4.664868466100506e-05,
+      -0.09559382307152357,
+      0.9954204231451506
+     ],
+     "heights_m": [
+      -1.2255298143843656,
+      -1.2254892553287458,
+      -1.225487263379302,
+      -1.2255318063337903
+     ],
+     "nonplanarity_m": -2.2271477335911172e-05,
+     "t_s": 117.78000000166283,
+     "source": "ready",
+     "max_abs_height_change_m": 0.17689515999440508
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -4.6500795011276556e-05,
+       -0.09593416889655589,
+       0.9953876797890374
+      ],
+      "heights_m": [
+       -1.049528919157645,
+       -1.0492984161178196,
+       -1.0487147627325606,
+       -1.0483679934038515
+      ],
+      "nonplanarity_m": 3.741753711478113e-05,
+      "t_s": 87.240000000649,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       4.664868466100506e-05,
+       -0.09559382307152357,
+       0.9954204231451506
+      ],
+      "heights_m": [
+       -1.2255298143843656,
+       -1.2254892553287458,
+       -1.225487263379302,
+       -1.2255318063337903
+      ],
+      "nonplanarity_m": -2.2271477335911172e-05,
+      "t_s": 117.78000000166283,
+      "source": "ready",
+      "max_abs_height_change_m": 0.17689515999440508
+     }
+    ],
+    "last": {
+     "t_s": 156.50000000294818,
+     "heights_delta_above_others_m": [
+      0.0003043535179387824,
+      -6.209493451736492e-05,
+      2.7171804364733987e-05,
+      -2.7171804364733987e-05
+     ],
+     "nonplanarity_delta_m": 7.702065612685827e-05,
+     "nonplanarity_m": 5.4749178790947095e-05,
+     "heights_above_others_m": [
+      0.0002987175924715757,
+      -6.408688396120077e-05,
+      6.408688396120077e-05,
+      -7.171475885314749e-05
+     ],
+     "reference_t_s": 117.78000000166283,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0007873684395660607,
+     0.0005780249951183869,
+     0.0006108231278121323,
+     0.0007837870192857199
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0001829324991040049,
+    "max_abs_nonplanarity_m": 0.00019493683168392284,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G2_middle_flat": {
+   "group": "G2",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1431,
+    "grounded_dD_maxabs_mm": 0.7097319340467756,
+    "dr_maxabs_mm": 0.21116158144535158,
+    "sensor_minus_true_dD_maxabs_mm": 0.7098129915197315
+   },
+   "gate_before_event": {
+    "n": 1431,
+    "grounded_dD_maxabs_mm": 0.7097319340467756,
+    "dr_maxabs_mm": 0.21116158144535158,
+    "sensor_minus_true_dD_maxabs_mm": 0.7098129915197315
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.7165748622934401,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    52.12133625974591
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      1.830424650923728e-05,
+      4.332912515784196e-05,
+      0.9999999988937709
+     ],
+     "heights_m": [
+      -1.100298769474148,
+      -1.1004137610136715,
+      -1.100419408517324,
+      -1.1002931219727403
+     ],
+     "nonplanarity_m": 6.314327213796656e-05,
+     "t_s": 105.90000000126845,
+     "source": "ready",
+     "max_abs_height_change_m": 0.05212133625974591
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00023361936702158574,
+       3.147080305844212e-05,
+       0.9999999722157896
+      ],
+      "heights_m": [
+       -1.0490313582664914,
+       -1.048854662543836,
+       -1.049016635257612,
+       -1.0487977146562937
+      ],
+      "nonplanarity_m": 1.5862392982679552e-05,
+      "t_s": 87.18000000064701,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       1.830424650923728e-05,
+       4.332912515784196e-05,
+       0.9999999988937709
+      ],
+      "heights_m": [
+       -1.100298769474148,
+       -1.1004137610136715,
+       -1.100419408517324,
+       -1.1002931219727403
+      ],
+      "nonplanarity_m": 6.314327213796656e-05,
+      "t_s": 105.90000000126845,
+      "source": "ready",
+      "max_abs_height_change_m": 0.05212133625974591
+     }
+    ],
+    "last": {
+     "t_s": 134.50000000221786,
+     "heights_delta_above_others_m": [
+      -4.101278826640353e-05,
+      0.0002338241238608596,
+      4.101278826640353e-05,
+      -0.0002565210987981459
+     ],
+     "nonplanarity_delta_m": -0.0001283218157619448,
+     "nonplanarity_m": -6.517854362397824e-05,
+     "heights_above_others_m": [
+      7.962625490964825e-05,
+      0.00019845883924696217,
+      -7.962625490964825e-05,
+      -0.0002098608091241072
+     ],
+     "reference_t_s": 105.90000000126845,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.000530388935220838,
+     0.0005119113526637076,
+     0.00046333516337737635,
+     0.0007097319340467756
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00021116158144535158,
+    "max_abs_nonplanarity_m": 0.00015949000177001293,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G2_middle_roll5.5": {
+   "group": "G2",
+   "floor": "roll5.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1927,
+    "grounded_dD_maxabs_mm": 0.7000925564253357,
+    "dr_maxabs_mm": 0.2118460738065875,
+    "sensor_minus_true_dD_maxabs_mm": 0.7004369360041895
+   },
+   "gate_before_event": {
+    "n": 1927,
+    "grounded_dD_maxabs_mm": 0.7000925564253357,
+    "dr_maxabs_mm": 0.2118460738065875,
+    "sensor_minus_true_dD_maxabs_mm": 0.7004369360041895
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.7729643000401123,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    177.47374189868626
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      4.047486690559043e-05,
+      -0.09568166734929452,
+      0.9954119834998191
+     ],
+     "heights_m": [
+      -1.2255908094226058,
+      -1.2256208219921763,
+      -1.2256222959794318,
+      -1.2255893354353384
+     ],
+     "nonplanarity_m": 1.648027199940838e-05,
+     "t_s": 117.98000000166947,
+     "source": "ready",
+     "max_abs_height_change_m": 0.17747374189868625
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       6.088030928124955e-05,
+       -0.09541293884333386,
+       0.9954377767569735
+      ],
+      "heights_m": [
+       -1.0477430733085267,
+       -1.0494104738220693,
+       -1.0487324300441785,
+       -1.050288965463839
+      ],
+      "nonplanarity_m": -1.0460317656058038e-05,
+      "t_s": 87.42000000065498,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       4.047486690559043e-05,
+       -0.09568166734929452,
+       0.9954119834998191
+      ],
+      "heights_m": [
+       -1.2255908094226058,
+       -1.2256208219921763,
+       -1.2256222959794318,
+       -1.2255893354353384
+      ],
+      "nonplanarity_m": 1.648027199940838e-05,
+      "t_s": 117.98000000166947,
+      "source": "ready",
+      "max_abs_height_change_m": 0.17747374189868625
+     }
+    ],
+    "last": {
+     "t_s": 156.50000000294818,
+     "heights_delta_above_others_m": [
+      5.11361489288209e-05,
+      1.7675838879682715e-05,
+      -0.0001255588946509345,
+      -1.7675838879682715e-05
+     ],
+     "nonplanarity_delta_m": 3.7818912794584936e-05,
+     "nonplanarity_m": 5.4299184793993316e-05,
+     "heights_above_others_m": [
+      6.347287961960824e-05,
+      -1.3810717958140373e-05,
+      -0.00014084359986465955,
+      1.3810717958140373e-05
+     ],
+     "reference_t_s": 117.98000000166947,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0006286720552579617,
+     0.00043941260700375295,
+     0.0005713463094807469,
+     0.0007000925564253357
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0002118460738065875,
+    "max_abs_nonplanarity_m": 0.0001953658018071791,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G2_top_flat": {
+   "group": "G2",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1419,
+    "grounded_dD_maxabs_mm": 1.0418345019604924,
+    "dr_maxabs_mm": 0.1956145783502672,
+    "sensor_minus_true_dD_maxabs_mm": 1.0418024109790647
+   },
+   "gate_before_event": {
+    "n": 1419,
+    "grounded_dD_maxabs_mm": 1.0418345019604924,
+    "dr_maxabs_mm": 0.1956145783502672,
+    "sensor_minus_true_dD_maxabs_mm": 1.0418024109790647
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.7145015105740181,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    52.47846848909931
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      8.203644290005754e-05,
+      0.00012126566902928324,
+      0.9999999892823298
+     ],
+     "heights_m": [
+      -1.1004103697653504,
+      -1.1003444805127358,
+      -1.1003412445386511,
+      -1.1004136057401985
+     ],
+     "nonplanarity_m": -3.618060082344332e-05,
+     "t_s": 106.14000000127642,
+     "source": "ready",
+     "max_abs_height_change_m": 0.05247846848909932
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00018554222288626938,
+       0.00013781796022715052,
+       0.9999999732901463
+      ],
+      "heights_m": [
+       -1.0485238585204373,
+       -1.0490347416252759,
+       -1.0491705829569165,
+       -1.0493854629255714
+      ],
+      "nonplanarity_m": 6.842360005915316e-05,
+      "t_s": 87.40000000065432,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       8.203644290005754e-05,
+       0.00012126566902928324,
+       0.9999999892823298
+      ],
+      "heights_m": [
+       -1.1004103697653504,
+       -1.1003444805127358,
+       -1.1003412445386511,
+       -1.1004136057401985
+      ],
+      "nonplanarity_m": -3.618060082344332e-05,
+      "t_s": 106.14000000127642,
+      "source": "ready",
+      "max_abs_height_change_m": 0.05247846848909932
+     }
+    ],
+    "last": {
+     "t_s": 134.50000000221786,
+     "heights_delta_above_others_m": [
+      0.00047027286637590926,
+      0.000316860540398034,
+      -0.000316860540398034,
+      -0.0005628666582757624
+     ],
+     "nonplanarity_delta_m": -2.906175838585101e-05,
+     "nonplanarity_m": -6.524235920929433e-05,
+     "heights_above_others_m": [
+      0.00040114763967658007,
+      0.0003136245663133419,
+      -0.0003136245663133419,
+      -0.000631991885738481
+     ],
+     "reference_t_s": 106.14000000127642,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0010418345019604924,
+     0.0004945388316315302,
+     0.0005685987672172654,
+     0.0008940315325436377
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0001956145783502672,
+    "max_abs_nonplanarity_m": 0.00015943397752682387,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G2_top_roll5.5": {
+   "group": "G2",
+   "floor": "roll5.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1925,
+    "grounded_dD_maxabs_mm": 0.8053852911804604,
+    "dr_maxabs_mm": 0.18887041180465358,
+    "sensor_minus_true_dD_maxabs_mm": 0.8044833960403341
+   },
+   "gate_before_event": {
+    "n": 1925,
+    "grounded_dD_maxabs_mm": 0.8053852911804604,
+    "dr_maxabs_mm": 0.18887041180465358,
+    "sensor_minus_true_dD_maxabs_mm": 0.8044833960403341
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.7727820152549177,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    177.8827391815463
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      4.366605108759104e-05,
+      -0.09564041295855359,
+      0.9954159479847575
+     ],
+     "heights_m": [
+      -1.2257315398500872,
+      -1.2257128373941193,
+      -1.2257119188730117,
+      -1.22573245837119
+     ],
+     "nonplanarity_m": -1.0269749108893222e-05,
+     "t_s": 118.0200000016708,
+     "source": "ready",
+     "max_abs_height_change_m": 0.1778827391815463
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00026828277218753094,
+       -0.09620209035748638,
+       0.9953617864049253
+      ],
+      "heights_m": [
+       -1.049247906261406,
+       -1.049094913229692,
+       -1.0494585637060494,
+       -1.049201537577301
+      ],
+      "nonplanarity_m": 3.217850330661243e-05,
+      "t_s": 87.44000000065564,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       4.366605108759104e-05,
+       -0.09564041295855359,
+       0.9954159479847575
+      ],
+      "heights_m": [
+       -1.2257315398500872,
+       -1.2257128373941193,
+       -1.2257119188730117,
+       -1.22573245837119
+      ],
+      "nonplanarity_m": -1.0269749108893222e-05,
+      "t_s": 118.0200000016708,
+      "source": "ready",
+      "max_abs_height_change_m": 0.1778827391815463
+     }
+    ],
+    "last": {
+     "t_s": 156.50000000294818,
+     "heights_delta_above_others_m": [
+      0.00019498970240428015,
+      9.73224137723605e-06,
+      -6.383860305336775e-05,
+      -9.73224137723605e-06
+     ],
+     "nonplanarity_delta_m": 6.090208298920041e-05,
+     "nonplanarity_m": 5.063233388030719e-05,
+     "heights_above_others_m": [
+      0.0001959082235070131,
+      2.9353218447880636e-05,
+      -6.292008194574983e-05,
+      -2.9353218447880636e-05
+     ],
+     "reference_t_s": 118.0200000016708,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0007196361796699691,
+     0.0005066840566734232,
+     0.0005261245128458381,
+     0.0008053852911804604
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00018887041180465358,
+    "max_abs_nonplanarity_m": 0.0001991401609135468,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G3_top_fdown3.5_good_zeroed": {
+   "group": "G3",
+   "floor": "fdown3.5",
+   "grade": "good_zeroed",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 421,
+    "grounded_dD_maxabs_mm": 0.49635895714450484,
+    "dr_maxabs_mm": 0.14996909164505245,
+    "sensor_minus_true_dD_maxabs_mm": 0.49627024151943644
+   },
+   "gate_before_event": {
+    "n": 421,
+    "grounded_dD_maxabs_mm": 0.49635895714450484,
+    "dr_maxabs_mm": 0.14996909164505245,
+    "sensor_minus_true_dD_maxabs_mm": 0.49627024151943644
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.4176587301587302,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    161.27523337474003
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      0.06026954921783525,
+      -0.0008078669197076065,
+      0.9981818114893295
+     ],
+     "heights_m": [
+      -1.2103020878708735,
+      -1.2103029290077547,
+      -1.2103029703179449,
+      -1.2103020465606835
+     ],
+     "nonplanarity_m": 4.6187863106395e-07,
+     "t_s": 145.10000000256974,
+     "source": "ready",
+     "max_abs_height_change_m": 0.16127523337474003
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       0.060179264740644715,
+       -0.0007572467800241841,
+       0.9981872983927363
+      ],
+      "heights_m": [
+       -1.0493119752672493,
+       -1.049309240465446,
+       -1.0497166406234297,
+       -1.049827460799319
+      ],
+      "nonplanarity_m": -3.097400697332775e-05,
+      "t_s": 96.12000000094379,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       0.06026954921783525,
+       -0.0008078669197076065,
+       0.9981818114893295
+      ],
+      "heights_m": [
+       -1.2103020878708735,
+       -1.2103029290077547,
+       -1.2103029703179449,
+       -1.2103020465606835
+      ],
+      "nonplanarity_m": 4.6187863106395e-07,
+      "t_s": 145.10000000256974,
+      "source": "ready",
+      "max_abs_height_change_m": 0.16127523337474003
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      0.00015136122885417436,
+      0.00010650044751359111,
+      -0.00031233178479883605,
+      -0.00010650044751359111
+     ],
+     "nonplanarity_delta_m": 6.743126039793212e-05,
+     "nonplanarity_m": 6.789313902899607e-05,
+     "heights_above_others_m": [
+      0.00015131991866423888,
+      0.00010561800044239789,
+      -0.00031237309498899357,
+      -0.00010561800044239789
+     ],
+     "reference_t_s": 145.10000000256974,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0004812204964079747,
+     0.0004808509974294495,
+     0.0004963589571445048,
+     0.0004768251629267972
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00014996909164505245,
+    "max_abs_nonplanarity_m": 0.0001495072130139885,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G3_top_fdown3.5_normal_zeroed": {
+   "group": "G3",
+   "floor": "fdown3.5",
+   "grade": "normal_zeroed",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 396,
+    "grounded_dD_maxabs_mm": 0.6440272896217625,
+    "dr_maxabs_mm": 0.19361121878896936,
+    "sensor_minus_true_dD_maxabs_mm": 0.6442759072555759
+   },
+   "gate_before_event": {
+    "n": 396,
+    "grounded_dD_maxabs_mm": 0.6440272896217625,
+    "dr_maxabs_mm": 0.19361121878896936,
+    "sensor_minus_true_dD_maxabs_mm": 0.6442759072555759
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.3924677898909812,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    161.02792199518578
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      0.059793411777403715,
+      -0.0012545380242413918,
+      0.998209984944232
+     ],
+     "heights_m": [
+      -1.2102399789836311,
+      -1.2101271616169864,
+      -1.21012162089385,
+      -1.2102455197076165
+     ],
+     "nonplanarity_m": -6.19494068548887e-05,
+     "t_s": 145.08000000256908,
+     "source": "ready",
+     "max_abs_height_change_m": 0.16102792199518579
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       0.059740603711460664,
+       -0.0012627200201028844,
+       0.9982131364625197
+      ],
+      "heights_m": [
+       -1.0493482787463244,
+       -1.0493633709394299,
+       -1.0496581966915821,
+       -1.049785249415073
+      ],
+      "nonplanarity_m": -3.0974004258332855e-05,
+      "t_s": 96.12000000094379,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       0.059793411777403715,
+       -0.0012545380242413918,
+       0.998209984944232
+      ],
+      "heights_m": [
+       -1.2102399789836311,
+       -1.2101271616169864,
+       -1.21012162089385,
+       -1.2102455197076165
+      ],
+      "nonplanarity_m": -6.19494068548887e-05,
+      "t_s": 145.08000000256908,
+      "source": "ready",
+      "max_abs_height_change_m": 0.16102792199518579
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      9.346333475201973e-05,
+      -0.00019418665716619543,
+      -9.346333475201973e-05,
+      0.0002993785445932762
+     ],
+     "nonplanarity_delta_m": 0.00013017110186136494,
+     "nonplanarity_m": 6.822169500647624e-05,
+     "heights_above_others_m": [
+      -2.4894755029203353e-05,
+      -0.0001062640455506969,
+      2.4894755029203353e-05,
+      0.0002003744858558587
+     ],
+     "reference_t_s": 145.08000000256908,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0006440272896217625,
+     0.0005261763748467541,
+     0.0006128310594870623,
+     0.0005043302245519854
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00019361121878896936,
+    "max_abs_nonplanarity_m": 0.00014925069141785707,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G3_top_fdown3.5_normal_zeroed_repeatability": {
+   "group": "G3",
+   "floor": "fdown3.5",
+   "grade": "normal_zeroed_repeatability",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 401,
+    "grounded_dD_maxabs_mm": 0.6657165892800521,
+    "dr_maxabs_mm": 0.148000156559025,
+    "sensor_minus_true_dD_maxabs_mm": 0.6657167219124016
+   },
+   "gate_before_event": {
+    "n": 401,
+    "grounded_dD_maxabs_mm": 0.6657165892800521,
+    "dr_maxabs_mm": 0.148000156559025,
+    "sensor_minus_true_dD_maxabs_mm": 0.6657167219124016
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.39546351084812625,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    160.74268778790812
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      0.05893077330556881,
+      -0.0021895729514678068,
+      0.9982596704905482
+     ],
+     "heights_m": [
+      -1.2098983337776197,
+      -1.2098947131260456,
+      -1.2098945353074186,
+      -1.2098985115962473
+     ],
+     "nonplanarity_m": -1.9881444140446014e-06,
+     "t_s": 144.98000000256576,
+     "source": "ready",
+     "max_abs_height_change_m": 0.16074268778790812
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       0.058870612833939004,
+       -0.0021379948189216916,
+       0.9982633319534033
+      ],
+      "heights_m": [
+       -1.0493490522695226,
+       -1.0493632563991777,
+       -1.0496582199232403,
+       -1.0497844640111555
+      ],
+      "nonplanarity_m": -3.097400423934804e-05,
+      "t_s": 96.12000000094379,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       0.05893077330556881,
+       -0.0021895729514678068,
+       0.9982596704905482
+      ],
+      "heights_m": [
+       -1.2098983337776197,
+       -1.2098947131260456,
+       -1.2098945353074186,
+       -1.2098985115962473
+      ],
+      "nonplanarity_m": -1.9881444140446014e-06,
+      "t_s": 144.98000000256576,
+      "source": "ready",
+      "max_abs_height_change_m": 0.16074268778790812
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      -7.785559145845333e-05,
+      7.785559145845333e-05,
+      -8.910582518373289e-05,
+      0.0003136237570111611
+     ],
+     "nonplanarity_delta_m": 6.942729373421441e-05,
+     "nonplanarity_m": 6.743914932016981e-05,
+     "heights_above_others_m": [
+      -8.147624303256329e-05,
+      8.147624303256329e-05,
+      -8.892800655679878e-05,
+      0.00031344593838356083
+     ],
+     "reference_t_s": 144.98000000256576,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0005609010798008907,
+     0.0006135240481572879,
+     0.0006657165892800521,
+     0.0006102587962801831
+    ],
+    "max_abs_nonplanarity_delta_m": 0.000148000156559025,
+    "max_abs_nonplanarity_m": 0.0001499883009730696,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G3_top_fdown3.5_normal_zeroed_s12346": {
+   "group": "G3",
+   "floor": "fdown3.5",
+   "grade": "normal_zeroed",
+   "seed": 12346,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 406,
+    "grounded_dD_maxabs_mm": 0.5939482188763723,
+    "dr_maxabs_mm": 0.1765172171253604,
+    "sensor_minus_true_dD_maxabs_mm": 0.5937062626104606
+   },
+   "gate_before_event": {
+    "n": 406,
+    "grounded_dD_maxabs_mm": 0.5939482188763723,
+    "dr_maxabs_mm": 0.1765172171253604,
+    "sensor_minus_true_dD_maxabs_mm": 0.5937062626104606
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.3945578231292517,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    161.60409588772805
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      0.05976320291369974,
+      -0.0013101983174726433,
+      0.9982117225107432
+     ],
+     "heights_m": [
+      -1.210009027297699,
+      -1.2100327032865108,
+      -1.210033866069446,
+      -1.210007864514811
+     ],
+     "nonplanarity_m": 1.3000777323857182e-05,
+     "t_s": 144.6800000025558,
+     "source": "ready",
+     "max_abs_height_change_m": 0.16160409588772806
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       0.05946412136775994,
+       -0.0012206730091235212,
+       0.9982296971275525
+      ],
+      "heights_m": [
+       -1.0494005249849174,
+       -1.049257512184296,
+       -1.0499874638253188,
+       -1.0497767358946852
+      ],
+      "nonplanarity_m": 2.200678550956514e-05,
+      "t_s": 95.8400000009345,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       0.05976320291369974,
+       -0.0013101983174726433,
+       0.9982117225107432
+      ],
+      "heights_m": [
+       -1.210009027297699,
+       -1.2100327032865108,
+       -1.210033866069446,
+       -1.210007864514811
+      ],
+      "nonplanarity_m": 1.3000777323857182e-05,
+      "t_s": 144.6800000025558,
+      "source": "ready",
+      "max_abs_height_change_m": 0.16160409588772806
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      -4.624625394589188e-05,
+      5.785396011370736e-06,
+      -5.785396011370736e-06,
+      7.547611652203301e-05
+     ],
+     "nonplanarity_delta_m": 9.120805650242314e-06,
+     "nonplanarity_m": 2.2121582974099496e-05,
+     "heights_above_others_m": [
+      -2.2570265134191914e-05,
+      6.948178946641903e-06,
+      -6.948178946641903e-06,
+      0.00010147767115720185
+     ],
+     "reference_t_s": 144.6800000025558,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0005655379942723915,
+     0.0005939482188763723,
+     0.0005761489588409496,
+     0.0005568831065421165
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0001765172171253604,
+    "max_abs_nonplanarity_m": 0.0001635164398015032,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G3_top_fdown3.5_normal_zeroed_s12347": {
+   "group": "G3",
+   "floor": "fdown3.5",
+   "grade": "normal_zeroed",
+   "seed": 12347,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 371,
+    "grounded_dD_maxabs_mm": 1.0968691386048501,
+    "dr_maxabs_mm": 0.24389858375190032,
+    "sensor_minus_true_dD_maxabs_mm": 1.0969845433892456
+   },
+   "gate_before_event": {
+    "n": 371,
+    "grounded_dD_maxabs_mm": 1.0968691386048501,
+    "dr_maxabs_mm": 0.24389858375190032,
+    "sensor_minus_true_dD_maxabs_mm": 1.0969845433892456
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.3637254901960784,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    160.9798089278427
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      0.05969106967580439,
+      -0.0013398460332244074,
+      0.9982159991773152
+     ],
+     "heights_m": [
+      -1.2101711508466706,
+      -1.2099895525316087,
+      -1.2099806338180914,
+      -1.2101800695638434
+     ],
+     "nonplanarity_m": -9.971787316709335e-05,
+     "t_s": 144.86000000256178,
+     "source": "ready",
+     "max_abs_height_change_m": 0.1609798089278427
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       0.05955146007785265,
+       -0.0012612051778811608,
+       0.9982244401757028
+      ],
+      "heights_m": [
+       -1.049418900015754,
+       -1.0494736320186346,
+       -1.0497039068481897,
+       -1.0498869068975571
+      ],
+      "nonplanarity_m": -3.640089692014126e-05,
+      "t_s": 95.8400000009345,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       0.05969106967580439,
+       -0.0013398460332244074,
+       0.9982159991773152
+      ],
+      "heights_m": [
+       -1.2101711508466706,
+       -1.2099895525316087,
+       -1.2099806338180914,
+       -1.2101800695638434
+      ],
+      "nonplanarity_m": -9.971787316709335e-05,
+      "t_s": 144.86000000256178,
+      "source": "ready",
+      "max_abs_height_change_m": 0.1609798089278427
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      -0.000758870268081413,
+      -0.0006800661296237909,
+      0.0006800661296237909,
+      0.0009494957065085963
+     ],
+     "nonplanarity_delta_m": 5.403516259916419e-05,
+     "nonplanarity_m": -4.5682710567929163e-05,
+     "heights_above_others_m": [
+      -0.0009493872966606087,
+      -0.0006889848431410606,
+      0.0006889848431410606,
+      0.0007589786742738802
+     ],
+     "reference_t_s": 144.86000000256178,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.000758870268081413,
+     0.000782778410057583,
+     0.0006800661296237909,
+     0.0010968691386048501
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00024389858375190032,
+    "max_abs_nonplanarity_m": 0.00019078959293222786,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G3_top_flat_good_zeroed": {
+   "group": "G3",
+   "floor": "flat",
+   "grade": "good_zeroed",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1415,
+    "grounded_dD_maxabs_mm": 0.9163402725234082,
+    "dr_maxabs_mm": 0.2147310187978202,
+    "sensor_minus_true_dD_maxabs_mm": 0.9164217063855062
+   },
+   "gate_before_event": {
+    "n": 1415,
+    "grounded_dD_maxabs_mm": 0.9163402725234082,
+    "dr_maxabs_mm": 0.2147310187978202,
+    "sensor_minus_true_dD_maxabs_mm": 0.9164217063855062
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.7142857142857143,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    53.35747268166835
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.0007449873274908948,
+      -0.0007194546167340788,
+      0.9999994636893245
+     ],
+     "heights_m": [
+      -1.1014954299825814,
+      -1.1016169005317884,
+      -1.101622866235147,
+      -1.1014894642810868
+     ],
+     "nonplanarity_m": 6.67009765821236e-05,
+     "t_s": 106.22000000127908,
+     "source": "ready",
+     "max_abs_height_change_m": 0.05335747268166835
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.0009048284844522571,
+       -0.0008809480450495484,
+       0.99999920260766
+      ],
+      "heights_m": [
+       -1.048718122241796,
+       -1.0485728102369283,
+       -1.0494141410318978,
+       -1.049310748818864
+      ],
+      "nonplanarity_m": -7.906302745441796e-06,
+      "t_s": 87.94000000067224,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       -0.0007449873274908948,
+       -0.0007194546167340788,
+       0.9999994636893245
+      ],
+      "heights_m": [
+       -1.1014954299825814,
+       -1.1016169005317884,
+       -1.101622866235147,
+       -1.1014894642810868
+      ],
+      "nonplanarity_m": 6.67009765821236e-05,
+      "t_s": 106.22000000127908,
+      "source": "ready",
+      "max_abs_height_change_m": 0.05335747268166835
+     }
+    ],
+    "last": {
+     "t_s": 134.50000000221786,
+     "heights_delta_above_others_m": [
+      0.00015030324249942772,
+      0.0002853513443430433,
+      -0.00015030324249942772,
+      -0.0005099182876007191
+     ],
+     "nonplanarity_delta_m": -0.00013191709611631852,
+     "nonplanarity_m": -6.521611953419493e-05,
+     "heights_above_others_m": [
+      0.0002777394950650436,
+      0.0002913170477016891,
+      -0.0002777394950650436,
+      -0.0005039525861061378
+     ],
+     "reference_t_s": 106.22000000127908,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.000722077431096313,
+     0.00047648044787984567,
+     0.00046964466479160194,
+     0.0009163402725234082
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0002147310187978202,
+    "max_abs_nonplanarity_m": 0.00015949027924327952,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G3_top_flat_normal_as_shipped": {
+   "group": "G3",
+   "floor": "flat",
+   "grade": "normal_as_shipped",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 996,
+    "grounded_dD_maxabs_mm": 1.019060338050215,
+    "dr_maxabs_mm": 0.2482883658870838,
+    "sensor_minus_true_dD_maxabs_mm": 1.0192385676737192
+   },
+   "gate_before_event": {
+    "n": 996,
+    "grounded_dD_maxabs_mm": 1.019060338050215,
+    "dr_maxabs_mm": 0.2482883658870838,
+    "sensor_minus_true_dD_maxabs_mm": 1.0192385676737192
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.6364217252396166,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    60.87936248580306
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.0029797638137414686,
+      -0.0030377702736484745,
+      0.999990946438706
+     ],
+     "heights_m": [
+      -1.109359293416453,
+      -1.1091843112409885,
+      -1.1091757174641508,
+      -1.1093678871950345
+     ],
+     "nonplanarity_m": -9.608486737305855e-05,
+     "t_s": 114.60000000155726,
+     "source": "ready",
+     "max_abs_height_change_m": 0.06087936248580306
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.0032107743366068904,
+       -0.0030006070563139502,
+       0.9999903435961034
+      ],
+      "heights_m": [
+       -1.0489600081280486,
+       -1.0489632657148682,
+       -1.0489628051097546,
+       -1.04908556719238
+      ],
+      "nonplanarity_m": -3.2746846578335376e-05,
+      "t_s": 95.40000000091989,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       -0.0029797638137414686,
+       -0.0030377702736484745,
+       0.999990946438706
+      ],
+      "heights_m": [
+       -1.109359293416453,
+       -1.1091843112409885,
+       -1.1091757174641508,
+       -1.1093678871950345
+      ],
+      "nonplanarity_m": -9.608486737305855e-05,
+      "t_s": 114.60000000155726,
+      "source": "ready",
+      "max_abs_height_change_m": 0.06087936248580306
+     }
+    ],
+    "last": {
+     "t_s": 134.50000000221786,
+     "heights_delta_above_others_m": [
+      -0.0003454180682420649,
+      0.00028824734996257817,
+      -0.00028824734996257817,
+      0.00042757442854957084
+     ],
+     "nonplanarity_delta_m": 3.0902934173848706e-05,
+     "nonplanarity_m": -6.518193319920984e-05,
+     "heights_above_others_m": [
+      -0.0004761513682474128,
+      0.0002796535731248717,
+      -0.00023540469766580863,
+      0.00023540469766580863
+     ],
+     "reference_t_s": 114.60000000155726,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0007708062451945441,
+     0.000807865051680956,
+     0.000778802217286767,
+     0.001019060338050215
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0002482883658870838,
+    "max_abs_nonplanarity_m": 0.00015220349851402526,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G3_top_flat_normal_zeroed": {
+   "group": "G3",
+   "floor": "flat",
+   "grade": "normal_zeroed",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1030,
+    "grounded_dD_maxabs_mm": 1.0443586803352556,
+    "dr_maxabs_mm": 0.20822394012876,
+    "sensor_minus_true_dD_maxabs_mm": 1.044246799098314
+   },
+   "gate_before_event": {
+    "n": 1030,
+    "grounded_dD_maxabs_mm": 1.0443586803352556,
+    "dr_maxabs_mm": 0.20822394012876,
+    "sensor_minus_true_dD_maxabs_mm": 1.044246799098314
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.6453634085213033,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    54.90402487864987
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.0012272789519698639,
+      -0.0012734705199327332,
+      0.9999984360283815
+     ],
+     "heights_m": [
+      -1.103152787757831,
+      -1.1032623135796416,
+      -1.1032676926490388,
+      -1.1031474086897577
+     ],
+     "nonplanarity_m": 6.014197933912335e-05,
+     "t_s": 113.92000000153469,
+     "source": "ready",
+     "max_abs_height_change_m": 0.05490402487864987
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.0015004525545506287,
+       -0.0012894297722682948,
+       0.9999980430045821
+      ],
+      "heights_m": [
+       -1.0489595692326235,
+       -1.0489634052667458,
+       -1.048962717132018,
+       -1.0490860059259348
+      ],
+      "nonplanarity_m": -3.274684658433058e-05,
+      "t_s": 95.40000000091989,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       -0.0012272789519698639,
+       -0.0012734705199327332,
+       0.9999984360283815
+      ],
+      "heights_m": [
+       -1.103152787757831,
+       -1.1032623135796416,
+       -1.1032676926490388,
+       -1.1031474086897577
+      ],
+      "nonplanarity_m": 6.014197933912335e-05,
+      "t_s": 113.92000000153469,
+      "source": "ready",
+      "max_abs_height_change_m": 0.05490402487864987
+     }
+    ],
+    "last": {
+     "t_s": 134.50000000221786,
+     "heights_delta_above_others_m": [
+      -0.00014241265296943695,
+      0.00035989764884680753,
+      1.1799740590623387e-05,
+      -1.1799740590623387e-05
+     ],
+     "nonplanarity_delta_m": -0.00012531686724404079,
+     "nonplanarity_m": -6.517488790491743e-05,
+     "heights_above_others_m": [
+      -0.00013599198045222138,
+      0.0003534769776534219,
+      -0.00010848421869047442,
+      0.00010848421869047442
+     ],
+     "reference_t_s": 113.92000000153469,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0007642035255654989,
+     0.000903590807460164,
+     0.0007469410766307583,
+     0.0010443586803352556
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00020822394012876,
+    "max_abs_nonplanarity_m": 0.00015218269702332865,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G3_top_flat_normal_zeroed_repeatability": {
+   "group": "G3",
+   "floor": "flat",
+   "grade": "normal_zeroed_repeatability",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1013,
+    "grounded_dD_maxabs_mm": 0.8420862974560794,
+    "dr_maxabs_mm": 0.23299398312698338,
+    "sensor_minus_true_dD_maxabs_mm": 0.8418473643181379
+   },
+   "gate_before_event": {
+    "n": 1013,
+    "grounded_dD_maxabs_mm": 0.8420862974560794,
+    "dr_maxabs_mm": 0.23299398312698338,
+    "sensor_minus_true_dD_maxabs_mm": 0.8418473643181379
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.6415452818239392,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    58.07865929781575
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.0021137129841536633,
+      -0.0021400671041913763,
+      0.9999954761548725
+     ],
+     "heights_m": [
+      -1.1064145129263105,
+      -1.1062673481715188,
+      -1.1062601205709524,
+      -1.1064217405286365
+     ],
+     "nonplanarity_m": -8.080997985732141e-05,
+     "t_s": 114.26000000154598,
+     "source": "ready",
+     "max_abs_height_change_m": 0.05807865929781575
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.002373069914629819,
+       -0.002162482602918528,
+       0.9999948460908048
+      ],
+      "heights_m": [
+       -1.048959793287882,
+       -1.0489633341384017,
+       -1.0489627619319062,
+       -1.0490857819432813
+      ],
+      "nonplanarity_m": -3.274684658133298e-05,
+      "t_s": 95.40000000091989,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       -0.0021137129841536633,
+       -0.0021400671041913763,
+       0.9999954761548725
+      ],
+      "heights_m": [
+       -1.1064145129263105,
+       -1.1062673481715188,
+       -1.1062601205709524,
+       -1.1064217405286365
+      ],
+      "nonplanarity_m": -8.080997985732141e-05,
+      "t_s": 114.26000000154598,
+      "source": "ready",
+      "max_abs_height_change_m": 0.05807865929781575
+     }
+    ],
+    "last": {
+     "t_s": 134.50000000221786,
+     "heights_delta_above_others_m": [
+      -0.00019379410388387086,
+      0.0002171359431093478,
+      -0.00025482166061974176,
+      0.00019379410388387086
+     ],
+     "nonplanarity_delta_m": 1.5610302320556713e-05,
+     "nonplanarity_m": -6.51996775367647e-05,
+     "heights_above_others_m": [
+      -0.00018656650155790544,
+      0.00027093589927873474,
+      -9.320170293558583e-05,
+      9.320170293558583e-05
+     ],
+     "reference_t_s": 114.26000000154598,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0008420862974560794,
+     0.0007904844843482639,
+     0.0007219955814281587,
+     0.0008237527856957971
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00023299398312698338,
+    "max_abs_nonplanarity_m": 0.00015218400326966197,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G4_top_flat_settleRR_combined": {
+   "group": "G4",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": "settle_RR",
+   "t_event_s": 42.02000000122894,
+   "gate_open": {
+    "n": 2495,
+    "grounded_dD_maxabs_mm": 0.9873230994739135,
+    "dr_maxabs_mm": 0.3451293279989054,
+    "sensor_minus_true_dD_maxabs_mm": 0.8549408597287034
+   },
+   "gate_before_event": {
+    "n": 219,
+    "grounded_dD_maxabs_mm": 0.855065575021241,
+    "dr_maxabs_mm": 0.19567974226142315,
+    "sensor_minus_true_dD_maxabs_mm": 0.8549408597287034
+   },
+   "gate_after_event": {
+    "n": 2276,
+    "grounded_dD_maxabs_mm": 0.9873230994739135,
+    "dr_maxabs_mm": 0.3451293279989054,
+    "sensor_minus_true_dD_maxabs_mm": 0.7088131429153766
+   },
+   "gate_open_fraction_done_probe_ready": 0.6798365122615804,
+   "ge1_events": [
+    [
+     61.52000000204224,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    52.47846538439171,
+    13.37072729053257
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.0011324269482031598,
+      -0.0021691251700992516,
+      0.9999970062481205
+     ],
+     "heights_m": [
+      -1.107546337829382,
+      -1.101781522815968,
+      -1.1014984050965937,
+      -1.107829457346717
+     ],
+     "nonplanarity_m": -0.003165528331049494,
+     "t_s": 129.52000000205254,
+     "source": "ready",
+     "max_abs_height_change_m": 0.01337072729053257
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00018553524621196227,
+       0.00013783730579247118,
+       0.9999999732887744
+      ],
+      "heights_m": [
+       -1.0485238283173526,
+       -1.049034764240528,
+       -1.0491705646365832,
+       -1.0493854926951711
+      ],
+      "nonplanarity_m": 6.842360125070002e-05,
+      "t_s": 87.40000000065432,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       8.204084234171136e-05,
+       0.00012126298334474801,
+       0.9999999892822945
+      ],
+      "heights_m": [
+       -1.100410371536947,
+       -1.1003444822582191,
+       -1.100341246282852,
+       -1.100413607513078
+      ],
+      "nonplanarity_m": -3.618061516275084e-05,
+      "t_s": 106.14000000127642,
+      "source": "ready",
+      "max_abs_height_change_m": 0.052478465384391715
+     },
+     {
+      "normal": [
+       -0.0011324269482031598,
+       -0.0021691251700992516,
+       0.9999970062481205
+      ],
+      "heights_m": [
+       -1.107546337829382,
+       -1.101781522815968,
+       -1.1014984050965937,
+       -1.107829457346717
+      ],
+      "nonplanarity_m": -0.003165528331049494,
+      "t_s": 129.52000000205254,
+      "source": "ready",
+      "max_abs_height_change_m": 0.01337072729053257
+     }
+    ],
+    "last": {
+     "t_s": 174.50000000354572,
+     "heights_delta_above_others_m": [
+      -3.097061348578123e-05,
+      3.097061348578123e-05,
+      -0.00014270696804641325,
+      3.465243469236157e-05
+     ],
+     "nonplanarity_delta_m": 3.2307378250440166e-05,
+     "nonplanarity_m": -0.003133220952799054,
+     "heights_above_others_m": [
+      -0.005795785626899752,
+      0.005795785626899752,
+      0.005936196378227621,
+      -0.0060442527095423415
+     ],
+     "reference_t_s": 129.52000000205254,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.000855065575021241,
+     0.0005824492805284187,
+     0.0005757547208149472,
+     0.0009873230994739135
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0003451293279989054,
+    "max_abs_nonplanarity_m": 0.0033106018514744706,
+    "flags_t_s": {
+     "FLOOR_NONPLANAR": 130.02000000206914
+    },
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G4_top_flat_settleRR_pressure": {
+   "group": "G4",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": "settle_RR",
+   "t_event_s": 31.320000000873733,
+   "gate_open": {
+    "n": 3523,
+    "grounded_dD_maxabs_mm": 10.864083203422803,
+    "dr_maxabs_mm": 3.378960084312821,
+    "sensor_minus_true_dD_maxabs_mm": 2.145296877253511
+   },
+   "gate_before_event": {
+    "n": 200,
+    "grounded_dD_maxabs_mm": 1.7066098801310492,
+    "dr_maxabs_mm": 0.23061987946537688,
+    "sensor_minus_true_dD_maxabs_mm": 1.6847297002984263
+   },
+   "gate_after_event": {
+    "n": 3323,
+    "grounded_dD_maxabs_mm": 10.864083203422803,
+    "dr_maxabs_mm": 3.378960084312821,
+    "sensor_minus_true_dD_maxabs_mm": 2.145296877253511
+   },
+   "gate_open_fraction_done_probe_ready": 0.9599455040871935,
+   "ge1_events": [
+    [
+     40.56000000134645,
+     "shadow_G1S:RR"
+    ],
+    [
+     40.56000000134645,
+     "shadow_G2"
+    ],
+    [
+     40.56000000134645,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "reference_source": "touch_only",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.00023681292480820824,
+      3.2550451251428204e-05,
+      0.999999971430053
+     ],
+     "heights_m": [
+      -1.048802464123924,
+      -1.0490145565516138,
+      -1.0491315845171658,
+      -1.049074460427974
+     ],
+     "nonplanarity_m": 6.840639703320495e-05,
+     "t_s": 87.40000000065432,
+     "source": "touch",
+     "max_abs_height_change_m": null
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00023681292480820824,
+       3.2550451251428204e-05,
+       0.999999971430053
+      ],
+      "heights_m": [
+       -1.048802464123924,
+       -1.0490145565516138,
+       -1.0491315845171658,
+       -1.049074460427974
+      ],
+      "nonplanarity_m": 6.840639703320495e-05,
+      "t_s": 87.40000000065432,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     }
+    ],
+    "last": {
+     "t_s": 174.50000000354572,
+     "heights_delta_above_others_m": [
+      -0.0001788048304831591,
+      0.0001788048304831591,
+      0.0015788619410945781,
+      -0.010149699589233174
+     ],
+     "nonplanarity_delta_m": -0.0032016943973118828,
+     "nonplanarity_m": -0.003133288000278678,
+     "heights_above_others_m": [
+      3.3287597206665964e-05,
+      -3.3287597206665964e-05,
+      0.0012830291450594,
+      -0.010242891062800075
+     ],
+     "reference_t_s": 87.40000000065432,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0016979939077357287,
+     0.0015293172450099313,
+     0.002167244437071947,
+     0.010864083203422803
+    ],
+    "max_abs_nonplanarity_delta_m": 0.003378960084312821,
+    "max_abs_nonplanarity_m": 0.003310553687279616,
+    "flags_t_s": {
+     "G1S:RR": 109.06000000137335,
+     "G2": 109.06000000137335,
+     "FLOOR_NONPLANAR": 109.06000000137335
+    },
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "touch_only"
+   }
+  },
+  "G5_top_flat_change_p3": {
+   "group": "G5",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": "target_change",
+   "t_event_s": 39.02000000122894,
+   "gate_open": {
+    "n": 958,
+    "grounded_dD_maxabs_mm": 0.768750320785605,
+    "dr_maxabs_mm": 0.17611161499941907,
+    "sensor_minus_true_dD_maxabs_mm": 0.768836897723224
+   },
+   "gate_before_event": {
+    "n": 69,
+    "grounded_dD_maxabs_mm": 0.768750320785605,
+    "dr_maxabs_mm": 0.14678356088132505,
+    "sensor_minus_true_dD_maxabs_mm": 0.768836897723224
+   },
+   "gate_after_event": {
+    "n": 889,
+    "grounded_dD_maxabs_mm": 0.6097834216287623,
+    "dr_maxabs_mm": 0.17611161499941907,
+    "sensor_minus_true_dD_maxabs_mm": 0.6098046652802669
+   },
+   "gate_open_fraction_done_probe_ready": 0.45359848484848486,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    52.47846848909931,
+    94.56532998927258
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      1.9981396145418885e-05,
+      -1.9874417521728443e-05,
+      0.9999999996028757
+     ],
+     "heights_m": [
+      -1.1946398880978006,
+      -1.1946209178480525,
+      -1.1946199861705844,
+      -1.1946408197667187
+     ],
+     "nonplanarity_m": -1.0416798036094743e-05,
+     "t_s": 155.76000000292362,
+     "source": "ready",
+     "max_abs_height_change_m": 0.09456532998927258
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00018554222288626938,
+       0.00013781796022715052,
+       0.9999999732901463
+      ],
+      "heights_m": [
+       -1.0485238585204373,
+       -1.0490347416252759,
+       -1.0491705829569165,
+       -1.0493854629255714
+      ],
+      "nonplanarity_m": 6.842360005915316e-05,
+      "t_s": 87.40000000065432,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       8.203644290005754e-05,
+       0.00012126566902928324,
+       0.9999999892823298
+      ],
+      "heights_m": [
+       -1.1004103697653504,
+       -1.1003444805127358,
+       -1.1003412445386511,
+       -1.1004136057401985
+      ],
+      "nonplanarity_m": -3.618060082344332e-05,
+      "t_s": 106.14000000127642,
+      "source": "ready",
+      "max_abs_height_change_m": 0.05247846848909932
+     },
+     {
+      "normal": [
+       1.9981396145418885e-05,
+       -1.9874417521728443e-05,
+       0.9999999996028757
+      ],
+      "heights_m": [
+       -1.1946398880978006,
+       -1.1946209178480525,
+       -1.1946199861705844,
+       -1.1946408197667187
+      ],
+      "nonplanarity_m": -1.0416798036094743e-05,
+      "t_s": 155.76000000292362,
+      "source": "ready",
+      "max_abs_height_change_m": 0.09456532998927258
+     }
+    ],
+    "last": {
+     "t_s": 173.50000000351253,
+     "heights_delta_above_others_m": [
+      -0.00016809399295936167,
+      0.00017826257070518992,
+      -0.00030588344449888893,
+      0.00016809399295936167
+     ],
+     "nonplanarity_delta_m": 3.924415927986091e-05,
+     "nonplanarity_m": 2.882736124376617e-05,
+     "heights_above_others_m": [
+      -0.0001671623240413478,
+      0.00019723282045336354,
+      -0.000285049848364638,
+      0.0001671623240413478
+     ],
+     "reference_t_s": 155.76000000292362,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.000768750320785605,
+     0.0003830324017755071,
+     0.00043896878974480913,
+     0.0005100715236432407
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00017611161499941907,
+    "max_abs_nonplanarity_m": 0.00016569481696332433,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G5_top_flat_target_p3": {
+   "group": "G5",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1988,
+    "grounded_dD_maxabs_mm": 0.7424958789317149,
+    "dr_maxabs_mm": 0.305703958638881,
+    "sensor_minus_true_dD_maxabs_mm": 0.7424862318397007
+   },
+   "gate_before_event": {
+    "n": 1988,
+    "grounded_dD_maxabs_mm": 0.7424958789317149,
+    "dr_maxabs_mm": 0.305703958638881,
+    "sensor_minus_true_dD_maxabs_mm": 0.7424862318397007
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.7720388349514563,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    146.8363212289625
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -1.6435390995417874e-05,
+      1.8794081593342814e-05,
+      0.9999999996883302
+     ],
+     "heights_m": [
+      -1.1951399686875304,
+      -1.1949343364629041,
+      -1.194924236872804,
+      -1.1951500672677011
+     ],
+     "nonplanarity_m": -0.00011291519386663618,
+     "t_s": 133.7600000021933,
+     "source": "ready",
+     "max_abs_height_change_m": 0.1468363212289625
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00018554222288626938,
+       0.00013781796022715052,
+       0.9999999732901463
+      ],
+      "heights_m": [
+       -1.0485238585204373,
+       -1.0490347416252759,
+       -1.0491705829569165,
+       -1.0493854629255714
+      ],
+      "nonplanarity_m": 6.842360005915316e-05,
+      "t_s": 87.40000000065432,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       -1.6435390995417874e-05,
+       1.8794081593342814e-05,
+       0.9999999996883302
+      ],
+      "heights_m": [
+       -1.1951399686875304,
+       -1.1949343364629041,
+       -1.194924236872804,
+       -1.1951500672677011
+      ],
+      "nonplanarity_m": -0.00011291519386663618,
+      "t_s": 133.7600000021933,
+      "source": "ready",
+      "max_abs_height_change_m": 0.1468363212289625
+     }
+    ],
+    "last": {
+     "t_s": 173.50000000351253,
+     "heights_delta_above_others_m": [
+      0.00011486863376908296,
+      -0.00011486863376908296,
+      -0.00016062084607804117,
+      0.00036667638165677197
+     ],
+     "nonplanarity_delta_m": 0.0001413311624222091,
+     "nonplanarity_m": 2.8415968555572935e-05,
+     "heights_above_others_m": [
+      -9.07635908571347e-05,
+      3.5652622208726115e-05,
+      -3.5652622208726115e-05,
+      0.0001865981990685217
+     ],
+     "reference_t_s": 133.7600000021933,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0005020278259386668,
+     0.0006783370916163545,
+     0.0006175207701963892,
+     0.0007424958789317149
+    ],
+    "max_abs_nonplanarity_delta_m": 0.000305703958638881,
+    "max_abs_nonplanarity_m": 0.00019278876477224482,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "G6_top_fdown3.5_H4off": {
+   "group": "G6",
+   "floor": "fdown3.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 920,
+    "grounded_dD_maxabs_mm": 0.9578157271012966,
+    "dr_maxabs_mm": 0.18341398745047588,
+    "sensor_minus_true_dD_maxabs_mm": 0.9479766064981465
+   },
+   "gate_before_event": {
+    "n": 920,
+    "grounded_dD_maxabs_mm": 0.9578157271012966,
+    "dr_maxabs_mm": 0.18341398745047588,
+    "sensor_minus_true_dD_maxabs_mm": 0.9479766064981465
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.9474768280123584,
+   "ge1_events": [],
+   "reference_source": "touch_only",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      0.060979351838010024,
+      4.8033555081072583e-05,
+      0.9981390265600247
+     ],
+     "heights_m": [
+      -1.0493112326486214,
+      -1.0493093416446138,
+      -1.0497166271073675,
+      -1.0498282156122731
+     ],
+     "nonplanarity_m": -3.097400699175745e-05,
+     "t_s": 96.12000000094379,
+     "source": "touch",
+     "max_abs_height_change_m": null
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       0.060979351838010024,
+       4.8033555081072583e-05,
+       0.9981390265600247
+      ],
+      "heights_m": [
+       -1.0493112326486214,
+       -1.0493093416446138,
+       -1.0497166271073675,
+       -1.0498282156122731
+      ],
+      "nonplanarity_m": -3.097400699175745e-05,
+      "t_s": 96.12000000094379,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     }
+    ],
+    "last": {
+     "t_s": 134.50000000221786,
+     "heights_delta_above_others_m": [
+      -0.00048366559870682835,
+      -0.0003813394091414235,
+      0.0004106519119737584,
+      0.0003813394091414235
+     ],
+     "nonplanarity_delta_m": -3.3482401540663176e-05,
+     "nonplanarity_m": -6.445640853242063e-05,
+     "heights_above_others_m": [
+      -0.00010421719357300852,
+      0.00010421719357300852,
+      0.0001075836427930632,
+      -0.00013753455851794882
+     ],
+     "reference_t_s": 96.12000000094379,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0008676384018142524,
+     0.0009578157271012966,
+     0.0009123171549265674,
+     0.0009210361367939512
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00018341398745047588,
+    "max_abs_nonplanarity_m": 0.00015243998045871843,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "touch_only"
+   }
+  },
+  "G6_top_fdown3.5_H4on": {
+   "group": "G6",
+   "floor": "fdown3.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1002,
+    "grounded_dD_maxabs_mm": 1.2181470264662764,
+    "dr_maxabs_mm": 0.22096152568001903,
+    "sensor_minus_true_dD_maxabs_mm": 1.2082062385183612
+   },
+   "gate_before_event": {
+    "n": 1002,
+    "grounded_dD_maxabs_mm": 1.2181470264662764,
+    "dr_maxabs_mm": 0.22096152568001903,
+    "sensor_minus_true_dD_maxabs_mm": 1.2082062385183612
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.9506641366223909,
+   "ge1_events": [],
+   "reference_source": "touch_only",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      0.060979351838010024,
+      4.8033555081072583e-05,
+      0.9981390265600247
+     ],
+     "heights_m": [
+      -1.0493112326486214,
+      -1.0493093416446138,
+      -1.0497166271073675,
+      -1.0498282156122731
+     ],
+     "nonplanarity_m": -3.097400699175745e-05,
+     "t_s": 96.12000000094379,
+     "source": "touch",
+     "max_abs_height_change_m": null
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       0.060979351838010024,
+       4.8033555081072583e-05,
+       0.9981390265600247
+      ],
+      "heights_m": [
+       -1.0493112326486214,
+       -1.0493093416446138,
+       -1.0497166271073675,
+       -1.0498282156122731
+      ],
+      "nonplanarity_m": -3.097400699175745e-05,
+      "t_s": 96.12000000094379,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      -0.00045165381353751144,
+      -0.0006410825971332468,
+      0.00045165381353751144,
+      0.0006471577930216021
+     ],
+     "nonplanarity_delta_m": 0.00010059215926377929,
+     "nonplanarity_m": 6.961815227202184e-05,
+     "heights_above_others_m": [
+      -4.625935479141141e-05,
+      -0.00023379713437954308,
+      4.625935479141141e-05,
+      0.0001301748293698335
+     ],
+     "reference_t_s": 96.12000000094379,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0010337758554024301,
+     0.0011543195393113326,
+     0.0012181470264662764,
+     0.001097415532256063
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00022096152568001903,
+    "max_abs_nonplanarity_m": 0.00018998751868826158,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "touch_only"
+   }
+  },
+  "G6_top_fup3.5_H4off": {
+   "group": "G6",
+   "floor": "fup3.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1395,
+    "grounded_dD_maxabs_mm": 2.799018908033135,
+    "dr_maxabs_mm": 0.15959334998050245,
+    "sensor_minus_true_dD_maxabs_mm": 2.7699232752764757
+   },
+   "gate_before_event": {
+    "n": 1395,
+    "grounded_dD_maxabs_mm": 2.799018908033135,
+    "dr_maxabs_mm": 0.15959334998050245,
+    "sensor_minus_true_dD_maxabs_mm": 2.7699232752764757
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.9647302904564315,
+   "ge1_events": [],
+   "reference_source": "touch_only",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.061256194076751,
+      -5.390861256331513e-05,
+      0.9981220745886211
+     ],
+     "heights_m": [
+      -1.0483114835619638,
+      -1.048328696887005,
+      -1.0494733261063418,
+      -1.0494926028627338
+     ],
+     "nonplanarity_m": -9.848947966073496e-07,
+     "t_s": 86.66000000062975,
+     "source": "touch",
+     "max_abs_height_change_m": null
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.061256194076751,
+       -5.390861256331513e-05,
+       0.9981220745886211
+      ],
+      "heights_m": [
+       -1.0483114835619638,
+       -1.048328696887005,
+       -1.0494733261063418,
+       -1.0494926028627338
+      ],
+      "nonplanarity_m": -9.848947966073496e-07,
+      "t_s": 86.66000000062975,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     }
+    ],
+    "last": {
+     "t_s": 134.50000000221786,
+     "heights_delta_above_others_m": [
+      -0.002382860555604882,
+      -0.0019889617666668524,
+      0.0019889617666668524,
+      0.0021111862047260566
+     ],
+     "nonplanarity_delta_m": -6.463331725781174e-05,
+     "nonplanarity_m": -6.561821205441909e-05,
+     "heights_above_others_m": [
+      -0.001221018011226871,
+      -0.0008443325473299623,
+      0.0008443325473299623,
+      0.0009472802289971494
+     ],
+     "reference_t_s": 86.66000000062975,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.002799018908033135,
+     0.0027432469371222457,
+     0.002589939184924228,
+     0.0027520209528455464
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00015959334998050245,
+    "max_abs_nonplanarity_m": 0.0001586084551838951,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "touch_only"
+   }
+  },
+  "G6_top_fup3.5_H4on": {
+   "group": "G6",
+   "floor": "fup3.5",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": null,
+   "t_event_s": null,
+   "gate_open": {
+    "n": 1459,
+    "grounded_dD_maxabs_mm": 2.731448928650515,
+    "dr_maxabs_mm": 0.1934098783516469,
+    "sensor_minus_true_dD_maxabs_mm": 2.702580915757258
+   },
+   "gate_before_event": {
+    "n": 1459,
+    "grounded_dD_maxabs_mm": 2.731448928650515,
+    "dr_maxabs_mm": 0.1934098783516469,
+    "sensor_minus_true_dD_maxabs_mm": 2.702580915757258
+   },
+   "gate_after_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_open_fraction_done_probe_ready": 0.9655857048312376,
+   "ge1_events": [],
+   "reference_source": "touch_only",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.061256194076751,
+      -5.390861256331513e-05,
+      0.9981220745886211
+     ],
+     "heights_m": [
+      -1.0483114835619638,
+      -1.048328696887005,
+      -1.0494733261063418,
+      -1.0494926028627338
+     ],
+     "nonplanarity_m": -9.848947966073496e-07,
+     "t_s": 86.66000000062975,
+     "source": "touch",
+     "max_abs_height_change_m": null
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.061256194076751,
+       -5.390861256331513e-05,
+       0.9981220745886211
+      ],
+      "heights_m": [
+       -1.0483114835619638,
+       -1.048328696887005,
+       -1.0494733261063418,
+       -1.0494926028627338
+      ],
+      "nonplanarity_m": -9.848947966073496e-07,
+      "t_s": 86.66000000062975,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     }
+    ],
+    "last": {
+     "t_s": 153.5000000028486,
+     "heights_delta_above_others_m": [
+      -0.002082019788649969,
+      -0.0019779266776969173,
+      0.0019779266776969173,
+      0.002340041566711637
+     ],
+     "nonplanarity_delta_m": 7.307660214783684e-05,
+     "nonplanarity_m": 7.20917073512295e-05,
+     "heights_above_others_m": [
+      -0.000920177244271958,
+      -0.0008332974583600272,
+      0.0008332974583600272,
+      0.0011761355909827298
+     ],
+     "reference_t_s": 86.66000000062975,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.002731448928650515,
+     0.0025019949211262382,
+     0.002553825177728619,
+     0.002714757053358996
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0001934098783516469,
+    "max_abs_nonplanarity_m": 0.00019242498355503956,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "touch_only"
+   }
+  },
+  "RE1bF_top_flat_dropRR30": {
+   "group": "RE1b",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": "drop_RR_30",
+   "t_event_s": 42.02000000122894,
+   "gate_open": {
+    "n": 3206,
+    "grounded_dD_maxabs_mm": 0.9030108890712985,
+    "dr_maxabs_mm": 0.2528611410992365,
+    "sensor_minus_true_dD_maxabs_mm": 0.901622246617384
+   },
+   "gate_before_event": {
+    "n": 219,
+    "grounded_dD_maxabs_mm": 0.8551022185228074,
+    "dr_maxabs_mm": 0.19567974226142315,
+    "sensor_minus_true_dD_maxabs_mm": 0.8551092299655672
+   },
+   "gate_after_event": {
+    "n": 2987,
+    "grounded_dD_maxabs_mm": 0.9030108890712985,
+    "dr_maxabs_mm": 0.2528611410992365,
+    "sensor_minus_true_dD_maxabs_mm": 0.901622246617384
+   },
+   "gate_open_fraction_done_probe_ready": 0.6652832537870927,
+   "ge1_events": [
+    [
+     71.8000000039808,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    52.47846538439171,
+    36.0132369009396
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.003073034717158439,
+      -0.0057735819443046794,
+      0.9999786108758325
+     ],
+     "heights_m": [
+      -1.120281946021796,
+      -1.1054666219231823,
+      -1.1047390456446604,
+      -1.1210095314153206
+     ],
+     "nonplanarity_m": -0.008135258396172684,
+     "t_s": 139.8000000039911,
+     "source": "ready",
+     "max_abs_height_change_m": 0.036013236900939605
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00018553524621196227,
+       0.00013783730579247118,
+       0.9999999732887744
+      ],
+      "heights_m": [
+       -1.0485238283173526,
+       -1.049034764240528,
+       -1.0491705646365832,
+       -1.0493854926951711
+      ],
+      "nonplanarity_m": 6.842360125070002e-05,
+      "t_s": 87.40000000065432,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       8.204084234171136e-05,
+       0.00012126298334474801,
+       0.9999999892822945
+      ],
+      "heights_m": [
+       -1.100410371536947,
+       -1.1003444822582191,
+       -1.100341246282852,
+       -1.100413607513078
+      ],
+      "nonplanarity_m": -3.618061516275084e-05,
+      "t_s": 106.14000000127642,
+      "source": "ready",
+      "max_abs_height_change_m": 0.052478465384391715
+     },
+     {
+      "normal": [
+       -0.003073034717158439,
+       -0.0057735819443046794,
+       0.9999786108758325
+      ],
+      "heights_m": [
+       -1.120281946021796,
+       -1.1054666219231823,
+       -1.1047390456446604,
+       -1.1210095314153206
+      ],
+      "nonplanarity_m": -0.008135258396172684,
+      "t_s": 139.8000000039911,
+      "source": "ready",
+      "max_abs_height_change_m": 0.036013236900939605
+     }
+    ],
+    "last": {
+     "t_s": 199.50000000597294,
+     "heights_delta_above_others_m": [
+      -0.00039465110313940954,
+      0.00032882954736357384,
+      -0.00017131875618736636,
+      0.00017131875618736636
+     ],
+     "nonplanarity_delta_m": -9.060585943343469e-05,
+     "nonplanarity_m": -0.008225864255606119,
+     "heights_above_others_m": [
+      -0.015367485992929364,
+      0.015367485992929364,
+      0.015766232724087725,
+      -0.01570042028331442
+     ],
+     "reference_t_s": 139.8000000039911,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0009030108890712985,
+     0.0006692652582318548,
+     0.000603025449698924,
+     0.000759194991799772
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0002528611410992365,
+    "max_abs_nonplanarity_m": 0.00838811953727192,
+    "flags_t_s": {
+     "FLOOR_NONPLANAR": 140.3000000040077
+    },
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "RE1bF_top_flat_dropRR30_normal": {
+   "group": "RE1b",
+   "floor": "flat",
+   "grade": "normal_zeroed",
+   "seed": 12345,
+   "event": "drop_RR_30",
+   "t_event_s": 49.82000000148787,
+   "gate_open": {
+    "n": 2680,
+    "grounded_dD_maxabs_mm": 1.0442900132814348,
+    "dr_maxabs_mm": 0.21337259497344885,
+    "sensor_minus_true_dD_maxabs_mm": 1.0441954492776961
+   },
+   "gate_before_event": {
+    "n": 220,
+    "grounded_dD_maxabs_mm": 1.0442900132814348,
+    "dr_maxabs_mm": 0.20822096101480447,
+    "sensor_minus_true_dD_maxabs_mm": 1.0441954492776961
+   },
+   "gate_after_event": {
+    "n": 2460,
+    "grounded_dD_maxabs_mm": 0.8485894445460218,
+    "dr_maxabs_mm": 0.21337259497344885,
+    "sensor_minus_true_dD_maxabs_mm": 0.8477325523734702
+   },
+   "gate_open_fraction_done_probe_ready": 0.605102731993678,
+   "ge1_events": [
+    [
+     78.22000000419392,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    54.904143150693145,
+    37.06416746765484
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.004287000702761203,
+      -0.006849286653413375,
+      0.9999673539157736
+     ],
+     "heights_m": [
+      -1.1246911705241887,
+      -1.1098039510994056,
+      -1.1090728564789518,
+      -1.125422270510647
+     ],
+     "nonplanarity_m": -0.008174729090043797,
+     "t_s": 146.22000000420422,
+     "source": "ready",
+     "max_abs_height_change_m": 0.03706416746765484
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.0015004455095983874,
+       -0.0012894353261783628,
+       0.9999980430079913
+      ],
+      "heights_m": [
+       -1.0489595724017637,
+       -1.048963400285809,
+       -1.0489627172223077,
+       -1.049085998595488
+      ],
+      "nonplanarity_m": -3.274684669413164e-05,
+      "t_s": 95.40000000091989,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       -0.0012272604262267173,
+       -0.001273499881203056,
+       0.9999984360137264
+      ],
+      "heights_m": [
+       -1.1031527902023879,
+       -1.1032623689956105,
+       -1.1032677506665585,
+       -1.1031474085327648
+      ],
+      "nonplanarity_m": 6.017106659494953e-05,
+      "t_s": 113.92000000153469,
+      "source": "ready",
+      "max_abs_height_change_m": 0.05490414315069314
+     },
+     {
+      "normal": [
+       -0.004287000702761203,
+       -0.006849286653413375,
+       0.9999673539157736
+      ],
+      "heights_m": [
+       -1.1246911705241887,
+       -1.1098039510994056,
+       -1.1090728564789518,
+       -1.125422270510647
+      ],
+      "nonplanarity_m": -0.008174729090043797,
+      "t_s": 146.22000000420422,
+      "source": "ready",
+      "max_abs_height_change_m": 0.03706416746765484
+     }
+    ],
+    "last": {
+     "t_s": 199.50000000597294,
+     "heights_delta_above_others_m": [
+      0.00011296224160739499,
+      0.00015018752885742614,
+      -0.00011296224160739499,
+      -0.0002657956507368109
+     ],
+     "nonplanarity_delta_m": -5.104346375994773e-05,
+     "nonplanarity_m": -0.008225772553803745,
+     "heights_above_others_m": [
+      -0.014924444712033136,
+      0.014924444712033136,
+      0.015505351803629441,
+      -0.015921340349228208
+     ],
+     "reference_t_s": 146.22000000420422,
+     "is_geometry_valid": false
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0007685382865996182,
+     0.0007207064495724502,
+     0.0008485894445460218,
+     0.0010442900132814348
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00021337259497344885,
+    "max_abs_nonplanarity_m": 0.008388101685017246,
+    "flags_t_s": {
+     "FLOOR_NONPLANAR": 146.72000000422082
+    },
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "RE1bP_top_flat_dropRR30_probe": {
+   "group": "RE1b",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": "drop_RR_30_probe",
+   "t_event_s": 26.420000000873728,
+   "gate_open": {
+    "n": 3721,
+    "grounded_dD_maxabs_mm": 0.6181049689177875,
+    "dr_maxabs_mm": 0.20346528561915322,
+    "sensor_minus_true_dD_maxabs_mm": 0.6180812147871251
+   },
+   "gate_before_event": {
+    "n": 0,
+    "grounded_dD_maxabs_mm": null,
+    "dr_maxabs_mm": null,
+    "sensor_minus_true_dD_maxabs_mm": null
+   },
+   "gate_after_event": {
+    "n": 3721,
+    "grounded_dD_maxabs_mm": 0.6181049689177875,
+    "dr_maxabs_mm": 0.20346528561915322,
+    "sensor_minus_true_dD_maxabs_mm": 0.6180812147871251
+   },
+   "gate_open_fraction_done_probe_ready": 0.768801652892562,
+   "ge1_events": [
+    [
+     57.100000003208606,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    86.32618238177892
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.003037532849848884,
+      -0.005715061730239395,
+      0.9999790555124671
+     ],
+     "heights_m": [
+      -1.1203895194975475,
+      -1.1054841452177813,
+      -1.104752149138546,
+      -1.1211215248365978
+     ],
+     "nonplanarity_m": -0.008184704584157598,
+     "t_s": 125.10000000321891,
+     "source": "ready",
+     "max_abs_height_change_m": 0.08632618238177892
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00018553524621196227,
+       0.00013783730579247118,
+       0.9999999732887744
+      ],
+      "heights_m": [
+       -1.0485238283173526,
+       -1.049034764240528,
+       -1.0491705646365832,
+       -1.0493854926951711
+      ],
+      "nonplanarity_m": 6.842360125070002e-05,
+      "t_s": 87.40000000065432,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       -0.003037532849848884,
+       -0.005715061730239395,
+       0.9999790555124671
+      ],
+      "heights_m": [
+       -1.1203895194975475,
+       -1.1054841452177813,
+       -1.104752149138546,
+       -1.1211215248365978
+      ],
+      "nonplanarity_m": -0.008184704584157598,
+      "t_s": 125.10000000321891,
+      "source": "ready",
+      "max_abs_height_change_m": 0.08632618238177892
+     }
+    ],
+    "last": {
+     "t_s": 199.50000000568872,
+     "heights_delta_above_others_m": [
+      -7.714483479115408e-05,
+      0.0003077614628044234,
+      -0.00012987976350942176,
+      7.714483479115408e-05
+     ],
+     "nonplanarity_delta_m": -4.1100538587357516e-05,
+     "nonplanarity_m": -0.008225805122744956,
+     "heights_above_others_m": [
+      -0.01521313574257066,
+      0.01521313574257066,
+      0.015584635430283322,
+      -0.015867996246829774
+     ],
+     "reference_t_s": 125.10000000321891,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0006007491907742413,
+     0.0006181049689177875,
+     0.0005869246778100745,
+     0.000603749679947363
+    ],
+    "max_abs_nonplanarity_delta_m": 0.00020346528561915322,
+    "max_abs_nonplanarity_m": 0.008388169869776751,
+    "flags_t_s": {
+     "FLOOR_NONPLANAR": 125.60000000323551
+    },
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "RE1b_top_flat_settleRR30": {
+   "group": "RE1b",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": "settle_RR_30",
+   "t_event_s": 42.02000000122894,
+   "gate_open": {
+    "n": 3612,
+    "grounded_dD_maxabs_mm": 1.2763054355962034,
+    "dr_maxabs_mm": 0.4900511812622743,
+    "sensor_minus_true_dD_maxabs_mm": 0.8549408597287034
+   },
+   "gate_before_event": {
+    "n": 219,
+    "grounded_dD_maxabs_mm": 0.855065575021241,
+    "dr_maxabs_mm": 0.19567974226142315,
+    "sensor_minus_true_dD_maxabs_mm": 0.8549408597287034
+   },
+   "gate_after_event": {
+    "n": 3393,
+    "grounded_dD_maxabs_mm": 1.2763054355962034,
+    "dr_maxabs_mm": 0.4900511812622743,
+    "sensor_minus_true_dD_maxabs_mm": 0.7089622756966119
+   },
+   "gate_open_fraction_done_probe_ready": 0.7539135879774578,
+   "ge1_events": [
+    [
+     64.7000000021478,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    52.47846538439171,
+    36.23956196853983
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      -0.0030178423943023887,
+      -0.005598313862160278,
+      0.9999797755500778
+     ],
+     "heights_m": [
+      -1.1208582478954512,
+      -1.1058701515005223,
+      -1.1051341073007037,
+      -1.121594289102902
+     ],
+     "nonplanarity_m": -0.008230117010771199,
+     "t_s": 132.7000000021581,
+     "source": "ready",
+     "max_abs_height_change_m": 0.036239561968539835
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00018553524621196227,
+       0.00013783730579247118,
+       0.9999999732887744
+      ],
+      "heights_m": [
+       -1.0485238283173526,
+       -1.049034764240528,
+       -1.0491705646365832,
+       -1.0493854926951711
+      ],
+      "nonplanarity_m": 6.842360125070002e-05,
+      "t_s": 87.40000000065432,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       8.204084234171136e-05,
+       0.00012126298334474801,
+       0.9999999892822945
+      ],
+      "heights_m": [
+       -1.100410371536947,
+       -1.1003444822582191,
+       -1.100341246282852,
+       -1.100413607513078
+      ],
+      "nonplanarity_m": -3.618061516275084e-05,
+      "t_s": 106.14000000127642,
+      "source": "ready",
+      "max_abs_height_change_m": 0.052478465384391715
+     },
+     {
+      "normal": [
+       -0.0030178423943023887,
+       -0.005598313862160278,
+       0.9999797755500778
+      ],
+      "heights_m": [
+       -1.1208582478954512,
+       -1.1058701515005223,
+       -1.1051341073007037,
+       -1.121594289102902
+      ],
+      "nonplanarity_m": -0.008230117010771199,
+      "t_s": 132.7000000021581,
+      "source": "ready",
+      "max_abs_height_change_m": 0.036239561968539835
+     }
+    ],
+    "last": {
+     "t_s": 199.50000000437564,
+     "heights_delta_above_others_m": [
+      0.00025306228963484223,
+      0.0001687015430644756,
+      -0.0001687015430644756,
+      -0.0002297788841909565
+     ],
+     "nonplanarity_delta_m": 4.3021287082778414e-06,
+     "nonplanarity_m": -0.00822581488206292,
+     "heights_above_others_m": [
+      -0.014903735648358563,
+      0.014903735648358563,
+      0.015471078305112629,
+      -0.01595391648657074
+     ],
+     "reference_t_s": 132.7000000021581,
+     "is_geometry_valid": true
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.000855065575021241,
+     0.0006655188843605053,
+     0.0005096885561788334,
+     0.0012763054355962034
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0004900511812622743,
+    "max_abs_nonplanarity_m": 0.008388084767206927,
+    "flags_t_s": {
+     "FLOOR_NONPLANAR": 133.2000000021747
+    },
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  },
+  "RE1c_top_flat_retractRR25": {
+   "group": "RE1c",
+   "floor": "flat",
+   "grade": "ideal",
+   "seed": 12345,
+   "event": "retract_RR_25",
+   "t_event_s": 42.02000000122894,
+   "gate_open": {
+    "n": 231,
+    "grounded_dD_maxabs_mm": 0.8551379733403586,
+    "dr_maxabs_mm": 0.1956145783502672,
+    "sensor_minus_true_dD_maxabs_mm": 0.855004727125408
+   },
+   "gate_before_event": {
+    "n": 219,
+    "grounded_dD_maxabs_mm": 0.8551379733403586,
+    "dr_maxabs_mm": 0.1956145783502672,
+    "sensor_minus_true_dD_maxabs_mm": 0.855004727125408
+   },
+   "gate_after_event": {
+    "n": 12,
+    "grounded_dD_maxabs_mm": 0.7093927701256053,
+    "dr_maxabs_mm": 0.07532045208608062,
+    "sensor_minus_true_dD_maxabs_mm": 0.7095869512681041
+   },
+   "gate_open_fraction_done_probe_ready": 0.2655172413793103,
+   "ge1_events": [],
+   "reference_source": "ready",
+   "stationary_gate_settings": {
+    "rate_rms_limit_rad_s": 0.00034906585039886593,
+    "rms_window_s": 1.0,
+    "mean_rate_limit_rad_s": 0.00034906585039886593,
+    "mean_window_s": 1.0,
+    "hold_s": 0.5,
+    "zero_command_s": 1.0
+   },
+   "reference_updates_max_abs_height_change_mm": [
+    null,
+    52.47846848909931
+   ],
+   "controller_support_geometry_meta": {
+    "reference": {
+     "normal": [
+      8.203644290005754e-05,
+      0.00012126566902928324,
+      0.9999999892823298
+     ],
+     "heights_m": [
+      -1.1004103697653504,
+      -1.1003444805127358,
+      -1.1003412445386511,
+      -1.1004136057401985
+     ],
+     "nonplanarity_m": -3.618060082344332e-05,
+     "t_s": 106.14000000127642,
+     "source": "ready",
+     "max_abs_height_change_m": 0.05247846848909932
+    },
+    "reference_updates": [
+     {
+      "normal": [
+       -0.00018554222288626938,
+       0.00013781796022715052,
+       0.9999999732901463
+      ],
+      "heights_m": [
+       -1.0485238585204373,
+       -1.0490347416252759,
+       -1.0491705829569165,
+       -1.0493854629255714
+      ],
+      "nonplanarity_m": 6.842360005915316e-05,
+      "t_s": 87.40000000065432,
+      "source": "touch",
+      "max_abs_height_change_m": null
+     },
+     {
+      "normal": [
+       8.203644290005754e-05,
+       0.00012126566902928324,
+       0.9999999892823298
+      ],
+      "heights_m": [
+       -1.1004103697653504,
+       -1.1003444805127358,
+       -1.1003412445386511,
+       -1.1004136057401985
+      ],
+      "nonplanarity_m": -3.618060082344332e-05,
+      "t_s": 106.14000000127642,
+      "source": "ready",
+      "max_abs_height_change_m": 0.05247846848909932
+     }
+    ],
+    "last": {
+     "t_s": 164.50000000321376,
+     "heights_delta_above_others_m": [
+      0.00029615536907456885,
+      -0.00029615536907456885,
+      -0.0007045005159675988,
+      0.012270174934236211
+     ],
+     "nonplanarity_delta_m": 0.003539457324664319,
+     "nonplanarity_m": 0.0035032767238408757,
+     "heights_above_others_m": [
+      0.00023026611645993178,
+      -0.00023026611645993178,
+      -0.0006353752892682696,
+      0.012201049706773492
+     ],
+     "reference_t_s": 106.14000000127642,
+     "is_geometry_valid": false
+    },
+    "max_abs_heights_delta_above_others_m": [
+     0.0008551379733403586,
+     0.00047896963688409677,
+     0.0005004782533679641,
+     0.000709994937133418
+    ],
+    "max_abs_nonplanarity_delta_m": 0.0001956145783502672,
+    "max_abs_nonplanarity_m": 0.00015943397752682387,
+    "flags_t_s": {},
+    "settings": {
+     "pad_stiffness_N_m": 217000000.0,
+     "lift_threshold_m": 0.005,
+     "sink_threshold_m": -0.005,
+     "nonplanarity_threshold_m": 0.0014,
+     "hold_s": 0.5,
+     "residual_sign_leg": "RR"
+    },
+    "reference_source": "ready"
+   }
+  }
+ },
+ "promotion_checks": [
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G1_top_diag3",
+   "value": [
+    1.9491826191990747,
+    0.18655348553736628
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G1_top_flat",
+   "value": [
+    1.4039409330619534,
+    0.28809256801148875
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G1_top_roll3",
+   "value": [
+    1.9827252510535853,
+    0.2351236685659841
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2-R_bottom_fdown3.5",
+   "value": [
+    0.4831429352816219,
+    0.19246979846798684
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2-R_bottom_fup3.5",
+   "value": [
+    0.6633910999547243,
+    0.2620087307264596
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2-R_middle_fdown3.5",
+   "value": [
+    0.7357819253659414,
+    0.23931753149480928
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2-R_middle_fup3.5",
+   "value": [
+    0.6549528172934416,
+    0.2619440598152778
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2-R_top_fdown3.5",
+   "value": [
+    0.4977908472636461,
+    0.15005162459602595
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2-R_top_fup3.5",
+   "value": [
+    0.4956235319950597,
+    0.21469461089806963
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2_bottom_flat",
+   "value": [
+    0.8911805529439043,
+    0.26679257914280496
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2_bottom_roll5.5",
+   "value": [
+    0.7873684395660607,
+    0.1829324991040049
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2_middle_flat",
+   "value": [
+    0.7097319340467756,
+    0.21116158144535158
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2_middle_roll5.5",
+   "value": [
+    0.7000925564253357,
+    0.2118460738065875
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2_top_flat",
+   "value": [
+    1.0418345019604924,
+    0.1956145783502672
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G2_top_roll5.5",
+   "value": [
+    0.8053852911804604,
+    0.18887041180465358
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G3_top_fdown3.5_good_zeroed",
+   "value": [
+    0.49635895714450484,
+    0.14996909164505245
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G3_top_fdown3.5_normal_zeroed",
+   "value": [
+    0.6440272896217625,
+    0.19361121878896936
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G3_top_fdown3.5_normal_zeroed_repeatability",
+   "value": [
+    0.6657165892800521,
+    0.148000156559025
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G3_top_fdown3.5_normal_zeroed_s12346",
+   "value": [
+    0.5939482188763723,
+    0.1765172171253604
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G3_top_fdown3.5_normal_zeroed_s12347",
+   "value": [
+    1.0968691386048501,
+    0.24389858375190032
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G3_top_flat_good_zeroed",
+   "value": [
+    0.9163402725234082,
+    0.2147310187978202
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G3_top_flat_normal_as_shipped",
+   "value": [
+    1.019060338050215,
+    0.2482883658870838
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G3_top_flat_normal_zeroed",
+   "value": [
+    1.0443586803352556,
+    0.20822394012876
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G3_top_flat_normal_zeroed_repeatability",
+   "value": [
+    0.8420862974560794,
+    0.23299398312698338
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm (before the event)",
+   "case": "G4_top_flat_settleRR_combined",
+   "value": [
+    0.855065575021241,
+    0.19567974226142315
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm (before the event)",
+   "case": "G4_top_flat_settleRR_pressure",
+   "value": [
+    1.7066098801310492,
+    0.23061987946537688
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm (before the event)",
+   "case": "G5_top_flat_change_p3",
+   "value": [
+    0.768750320785605,
+    0.14678356088132505
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G5_top_flat_target_p3",
+   "value": [
+    0.7424958789317149,
+    0.305703958638881
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G6_top_fdown3.5_H4off",
+   "value": [
+    0.9578157271012966,
+    0.18341398745047588
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G6_top_fdown3.5_H4on",
+   "value": [
+    1.2181470264662764,
+    0.22096152568001903
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G6_top_fup3.5_H4off",
+   "value": [
+    2.799018908033135,
+    0.15959334998050245
+   ],
+   "passed": false
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm",
+   "case": "G6_top_fup3.5_H4on",
+   "value": [
+    2.731448928650515,
+    0.1934098783516469
+   ],
+   "passed": false
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm (before the event)",
+   "case": "RE1bF_top_flat_dropRR30",
+   "value": [
+    0.8551022185228074,
+    0.19567974226142315
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm (before the event)",
+   "case": "RE1bF_top_flat_dropRR30_normal",
+   "value": [
+    1.0442900132814348,
+    0.20822096101480447
+   ],
+   "passed": true
+  },
+  {
+   "check": "(1')",
+   "case": "RE1bP_top_flat_dropRR30_probe",
+   "value": "gate never open",
+   "passed": null
+  },
+  {
+   "check": "(1') gate |d^Delta| <= 2.5 mm, |Delta r| <= 0.8 mm (before the event)",
+   "case": "RE1b_top_flat_settleRR30",
+   "value": [
+    0.855065575021241,
+    0.19567974226142315
+   ],
+   "passed": true
+  },
+  {
+   "check": "(2') RE1b-F RR d^Delta < -5 mm (first crossing after the drop)",
+   "case": "RE1bF_top_flat_dropRR30",
+   "value": {
+    "gate_independent_s": 0.04000000074711352,
+    "in_gate_s": null
+   },
+   "passed": true
+  },
+  {
+   "check": "(2') RE1b-F other legs |d^Delta| < 5 mm in the gate (2.5 mm reported)",
+   "case": "RE1bF_top_flat_dropRR30",
+   "value": {
+    "gate_max_mm": 0.9030108890712985,
+    "gate_over_2p5mm": false,
+    "all_samples_max_mm": 16.361286611634497
+   },
+   "passed": true
+  },
+  {
+   "check": "(2') RE1b-F no GE1 flag after the re-READY",
+   "case": "RE1bF_top_flat_dropRR30",
+   "value": {
+    "re_ready_s": 61.100000003625595,
+    "flags": []
+   },
+   "passed": true
+  },
+  {
+   "check": "(2') RE1b-F RR d^Delta < -5 mm (first crossing after the drop)",
+   "case": "RE1bF_top_flat_dropRR30_normal",
+   "value": {
+    "gate_independent_s": 0.06000000075346179,
+    "in_gate_s": null
+   },
+   "passed": true
+  },
+  {
+   "check": "(2') RE1b-F other legs |d^Delta| < 5 mm in the gate (2.5 mm reported)",
+   "case": "RE1bF_top_flat_dropRR30_normal",
+   "value": {
+    "gate_max_mm": 0.8485894445460218,
+    "gate_over_2p5mm": false,
+    "all_samples_max_mm": 15.893841814638154
+   },
+   "passed": true
+  },
+  {
+   "check": "(2') RE1b-F no GE1 flag after the re-READY",
+   "case": "RE1bF_top_flat_dropRR30_normal",
+   "value": {
+    "re_ready_s": 68.90000000388453,
+    "flags": []
+   },
+   "passed": true
+  },
+  {
+   "check": "(3) RE1c RR d^Delta > +5 mm within 1 s after the retraction",
+   "case": "RE1c_top_flat_retractRR25",
+   "value": {
+    "first_after_end_s": -1.420000000047139,
+    "retract_s": [
+     42.06000000139625,
+     46.50000000154364
+    ]
+   },
+   "passed": true
+  },
+  {
+   "check": "(4) G4 judged rows unchanged",
+   "case": "G4_top_flat_settleRR_pressure",
+   "value": {
+    "old_failed": [],
+    "new_failed": []
+   },
+   "passed": true
+  },
+  {
+   "check": "(4) G4 judged rows unchanged",
+   "case": "G4_top_flat_settleRR_combined",
+   "value": {
+    "old_failed": [],
+    "new_failed": []
+   },
+   "passed": true
+  },
+  {
+   "check": "(5) L2b F_s 12 kN RE1b-F",
+   "case": null,
+   "value": "L2b not prepared (report item, U39)",
+   "passed": null
+  }
+ ]
+}

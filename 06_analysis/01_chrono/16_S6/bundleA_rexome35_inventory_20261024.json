@@ -1,0 +1,77 @@
+{
+ "meta": {
+  "generated": "2026-10-24T00:47:05",
+  "by": "cad-expert, inventory for dynamics_model.md 5.12.12 supplement 7 (bundle A, L1-R off)",
+  "params_file_sha256": "84a46dc172b9442f80b921a788bbfc5c01cd1e85194ad671b1627b54e1a771b9",
+  "reference_json_sha256": "c1ed8c93397f880ac6eba8b35f1280a1c8b7de54ce6f64764f2ec19e4706080f",
+  "reference_json_note": "c1ed8c93 = 6efa5172 (sha the S2b/S3/S4 runs recorded) + block L1R_rod_side_reference_rev32 + meta.runtime_s only; no L1-off key changed",
+  "judgement": "not judged here (dynamics-expert)"
+ },
+ "items": [
+  {
+   "item": "S2b V11 (69.0 s schedule, half period 34.5 s)",
+   "run": "07_results/S2b/v11",
+   "summary": "06_analysis/01_chrono/12_S2/verify_S2b_L1.json",
+   "pre_check_all_passed": true,
+   "new_run_this_session": false,
+   "dyn_check": "06_analysis/00_dynamics/s2b_crawler_check.json",
+   "dyn_check_newer_than_summary": true,
+   "dyn_judgement_recorded": false,
+   "notes": [
+    "inertial check in verify.s2b uses 9/8 m_rod a (1 %) = 25.39 / 17.39 N; measured 24.97 / 17.11 N; dynamics_model.md 5.12.12 V11 row says m_rod a (1 %) = 22.57 / 15.46 N and has no 9/8 ruling text -> dynamics to confirm"
+   ]
+  },
+  {
+   "item": "S3 V4 (v4_D_*, v4touch_*)",
+   "run": "07_results/S3/batch_20261022_052232, batch_20261022_053640",
+   "summary": "06_analysis/01_chrono/13_S3/verify_S3_L1.json",
+   "pre_check_all_passed": true,
+   "new_run_this_session": false,
+   "dyn_check": "06_analysis/00_dynamics/s3_lift_check.json",
+   "dyn_check_newer_than_summary": true,
+   "dyn_judgement_recorded": false,
+   "notes": [
+    "run_S3.py force_limit_N is per leg (refs hydraulic max_head_force_N) since the 05:22 rerun; the 04:49 batch v4_D_* failures (TypeError tuple) were the old code"
+   ]
+  },
+  {
+   "item": "S3 V9 (v9_free_*, v9_step_*)",
+   "run": "07_results/S3/batch_20261022_044954",
+   "summary": "06_analysis/01_chrono/13_S3/verify_S3_L1.json",
+   "pre_check_all_passed": true,
+   "new_run_this_session": false,
+   "dyn_check": "06_analysis/00_dynamics/s3_lift_check.json",
+   "dyn_check_newer_than_summary": true,
+   "dyn_judgement_recorded": false,
+   "notes": []
+  },
+  {
+   "item": "S4 beta 1.6 GPa + rodside (rod_chamber off path)",
+   "run": "07_results/S4/A_modes/batch_20261022_052234",
+   "summary": "06_analysis/01_chrono/14_S4/verify_S4_L1_modes.json + verify_S4_L1_beta.csv (09:38)",
+   "pre_check_all_passed": true,
+   "new_run_this_session": false,
+   "dyn_check": "06_analysis/00_dynamics/s4_check.json",
+   "dyn_check_newer_than_summary": false,
+   "dyn_judgement_recorded": false,
+   "notes": [
+    "s4_check.json (05:19) predates the beta 1.6 / rodside batch (05:22) and the CSV (09:38): rerun",
+    "04:38 batch failed these cases with 'pad stiffness must be below the head oil stiffness k_h'"
+   ]
+  },
+  {
+   "item": "S6 branch A (V11b FL/RL dt 1e-5 / 2e-4, V17 x3 levels, sensor truth, V13, 60 s smoke, saturation regression)",
+   "run": "07_results/S6/batch_20261024_004403",
+   "summary": "06_analysis/01_chrono/16_S6/verify_S6_L1_infra.json (old REXOME33 copy in history/pre_rexome35_2026-10-22/)",
+   "pre_check_all_passed": true,
+   "new_run_this_session": true,
+   "dyn_check": "06_analysis/00_dynamics/s6_check.json (2026-10-21, REXOME33)",
+   "dyn_check_newer_than_summary": false,
+   "dyn_judgement_recorded": false,
+   "notes": [
+    "summary v11b_expected_ranges block is the REXOME33 rev. 24 text (info only)",
+    "run_S6.py F_min info flag now reads YAML control.F_min_cylinder_N (was 9453.0)"
+   ]
+  }
+ ]
+}
