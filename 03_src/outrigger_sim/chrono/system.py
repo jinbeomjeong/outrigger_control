@@ -311,6 +311,13 @@ def floor_material_values(
     }
 
 
+def crawler_nsc_material_values(params: Params) -> dict[str, Any]:
+    """L2b-NSC crawler contact material: rigid NSC, ``mu = contact.crawler.friction``
+    (``dynamics_model.md`` 4.2 crawler row, L2b column: 'NSC, μ 0.5(강체, 감쇠 없음)')."""
+    key = "contact.crawler.friction"
+    return {"type": "NSC", "friction": float(params.get(key)), "restitution": 0.0, "source": key}
+
+
 def _material_from_values(values: Mapping[str, Any]) -> ch.ChContactMaterial:
     if values["type"] == "SMC":
         return make_smc_material(values["kn_N_m"], values["gn_1_s"])
@@ -574,7 +581,19 @@ def make_system(
         if lock_sparsity_pattern is not None:
             raise ValueError("lock_sparsity_pattern applies to the L1 direct solvers only")
         system = ch.ChSystemNSC()
-        contact_settings = {"source": "NSC complementarity contact, R11"}
+        # ChSystemNSC() sets the process-wide default collision envelope to 0.03 m (margin
+        # 0.01 m); ChSystemSMC() sets the envelope back to 0 (ChSystemNSC.cpp:32,
+        # ChSystemSMC.cpp:33). Collision models take the default at construction, so build
+        # each model's bodies right after its own make_system (as every builder here does).
+        contact_settings = {
+            "source": "NSC complementarity contact, R11",
+            "default_collision_envelope_m": float(
+                ch.ChCollisionModel.GetDefaultSuggestedEnvelope()
+            ),
+            "default_collision_margin_m": float(ch.ChCollisionModel.GetDefaultSuggestedMargin()),
+            "crawler_material": crawler_nsc_material_values(params),
+            "restitution": 0.0,
+        }
 
     # R2
     system.SetCollisionSystemType(getattr(ch.ChCollisionSystem, f"Type_{COLLISION_SYSTEM_NAME}"))

@@ -24,6 +24,7 @@ mapping keeps the YAML values unchanged (for example ``swivel_tilt_range_deg``).
 from __future__ import annotations
 
 import copy
+import dataclasses
 import hashlib
 import json
 import math
@@ -121,6 +122,14 @@ class AugerLevel(StrEnum):
     TOP = "top"
     MIDDLE = "middle"
     BOTTOM = "bottom"
+
+
+class ModelKind(StrEnum):
+    """Contact / actuator model family (CLAUDE.md '구동기 운용안 B'); same values as
+    ``outrigger_sim.chrono.system.ChronoModel`` (that module imports pychrono, this one not)."""
+
+    L1 = "L1"
+    L2B_NSC = "L2b_NSC"
 
 
 class ParamsError(ValueError):
@@ -278,6 +287,126 @@ class Simulation:
     L1: SimulationL1
 
 
+@dataclass(frozen=True)
+class ActuatorL2bNSC:
+    """L2b-NSC axial force law and lateral leg bushing (plan S7; ``dynamics_model.md`` 2.3,
+    4.2, 4.4). Per-leg values in LEG_ORDER.
+
+    Axial stiffness ``k_ax(s) = series(k_oil(s), k_rod, k_frame, k_concrete)`` with ``k_oil(s)
+    = beta A_p / (L_0 + s)`` (``actuator.L2b_NSC.axial_stiffness.formula``); the loader checks
+    that it reproduces ``axial_stiffness.operating_point_N_m`` at the L1 operating extension.
+    """
+
+    axial_operating_point_N_m: PerLeg
+    """``actuator.L2b_NSC.axial_stiffness.operating_point_N_m`` (check value of k_ax(e_op))."""
+    oil_damping_N_s_m: PerLeg
+    """Locked valve (``u = 0``): actual dashpot of the force law [N s/m]."""
+    oil_damping_moving_N_s_m: PerLeg
+    """Valve section driving the leg (``u != 0``) [N s/m]."""
+    lateral_bushing_N_m: PerLeg
+    """Lateral leg bushing stiffness (both lateral axes) [N/m]."""
+    lateral_bushing_damping_input_N_s_m: PerLeg
+    """Chrono input = actual / 2 (bushing damping acts at 2x, R5) [N s/m]."""
+    oil_bulk_modulus_eff_Pa: float
+    oil_dead_length_m: float
+    frame_stiffness_N_m: float
+    head_area_m2: PerLeg
+    """``legs.<leg>.cylinder.head_area_m2`` (REXOME35)."""
+    k_rod_N_m: PerLeg
+    """``contact.rigid_floor.L1.derivation.k_rod_N_m``."""
+    k_concrete_N_m: float
+    """``contact.rigid_floor.concrete.k_N_m`` (dropped from k_ax on SCM)."""
+    damping_lock_N_s_m: PerLeg = (math.nan,) * 4
+    """Locked dashpot of the force law in use (rev. 33, :data:`L2B_DAMPING_RULE`)."""
+    damping_moving_N_s_m: PerLeg = (math.nan,) * 4
+    """Moving dashpot of the force law in use (rev. 33)."""
+    damping_source: str = ""
+    """Where :attr:`damping_lock_N_s_m` / :attr:`damping_moving_N_s_m` come from."""
+
+
+L2B_DAMPING_RULE = (
+    "dynamics_model.md rev. 33 5.20.3 / 5.20.9 Q4: locked c = zeta 0.03 on k1(e_op) = "
+    "contact.rigid_floor.L1.cn_per_pad_N_s_m (LOCK basis); moving c = zeta 0.10 on k2(e_op) "
+    "with the concrete = actuator.L2.oil_damping_moving_N_s_m x sqrt(kn_per_pad_N_m / "
+    "derivation.k_axial_leg_N_m) (the YAML moving value is zeta 0.10 on the leg without the "
+    "concrete)"
+)
+"""Derivation used while the YAML has no rev. 33 L2b damping keys (see :func:`_read_l2b_nsc`)."""
+
+L2B_ROD_SIDE_MECHANICS_DEFAULT = "one_sided_parallel"
+"""dynamics_model.md rev. 33 5.20.2: the rod-side chamber is part of the L2b force law."""
+
+
+@dataclass(frozen=True)
+class L2bRodSide:
+    """Rod-side chamber of the L2b force law (``dynamics_model.md`` rev. 33 5.20.2).
+
+    Same state machine as L1-R (``actuator.rod_side``); ``k_h`` and ``k_r`` are evaluated at the
+    extension ``s_lock`` where the leg locks (column ``stroke_m - s_lock + L_0r``).
+    """
+
+    mechanics: str
+    annulus_area_m2: PerLeg
+    stroke_m: float
+    rod_dead_length_m: PerLeg
+    """``L_0r = actuator.rod_side.column_length_m - (stroke_m - e_op)``."""
+    p_r0_after_extend_Pa: PerLeg
+    p_r0_after_retract_Pa: PerLeg
+    p_floor_abs_Pa: float
+    release_tau_s: float
+    lock_eps_m_s: float
+    source: str
+
+
+@dataclass(frozen=True)
+class RigidFloorL2bNSC:
+    """``contact.rigid_floor.L2b_NSC`` plus the crawler NSC friction."""
+
+    solver: str
+    solver_max_iterations: int
+    friction: float
+    crawler_friction: float
+    """``contact.crawler.friction`` (rigid NSC crawler contact, no damping)."""
+
+
+@dataclass(frozen=True)
+class L2bNSC:
+    """Typed L2b-NSC blocks, present when :func:`load_params` was called with
+    ``model="L2b_NSC"``."""
+
+    actuator: ActuatorL2bNSC
+    rigid_floor: RigidFloorL2bNSC
+    dt_s: float
+    """``simulation.L2b_NSC.dt_s``."""
+    rod_side: L2bRodSide | None = None
+
+
+L2B_OPERATING_POINT_REL_TOL = 1.0e-6
+"""Relative tolerance of the k_ax(e_op) consistency check (YAML values have 9 digits)."""
+
+
+def axial_stiffness_N_m(
+    extension_m: float,
+    *,
+    bulk_modulus_Pa: float,
+    head_area_m2: float,
+    dead_length_m: float,
+    k_rod_N_m: float,
+    k_frame_N_m: float,
+    k_concrete_N_m: float | None,
+) -> float:
+    """``k_ax(s) = 1 / (1/k_oil(s) + 1/k_rod + 1/k_frame [+ 1/k_concrete])`` [N/m],
+    ``k_oil(s) = beta A_p / (L_0 + s)``; ``k_concrete_N_m=None`` drops the concrete (SCM).
+    Engine independent (no pychrono)."""
+    column = dead_length_m + extension_m
+    if column <= 0.0:
+        raise ValueError(f"oil column length {column} m <= 0 at extension {extension_m} m")
+    flex = column / (bulk_modulus_Pa * head_area_m2) + 1.0 / k_rod_N_m + 1.0 / k_frame_N_m
+    if k_concrete_N_m is not None:
+        flex += 1.0 / k_concrete_N_m
+    return 1.0 / flex
+
+
 @dataclass(frozen=True, eq=False)
 class Params:
     """Loaded, validated parameters. Compare two instances by :attr:`sha256`.
@@ -304,6 +433,10 @@ class Params:
     """Fingerprint of the loaded parameters, see :func:`parameters_sha256`."""
     file_sha256: str
     """SHA-256 of the YAML file bytes as read (before overrides)."""
+    model: ModelKind = ModelKind.L1
+    """Model family selected at load time (``load_params(model=...)``)."""
+    l2b: L2bNSC | None = None
+    """Typed L2b-NSC blocks (``model="L2b_NSC"`` only; None for L1)."""
 
     def get(self, dotted_path: str) -> Any:
         """Return the raw value at ``dotted_path`` (for example ``"contact.crawler.friction"``).
@@ -478,7 +611,9 @@ def _without_excluded_paths(tree: dict[str, Any]) -> dict[str, Any]:
     return trimmed
 
 
-def parameters_sha256(coerced_tree: dict[str, Any], level: AugerLevel) -> str:
+def parameters_sha256(
+    coerced_tree: dict[str, Any], level: AugerLevel, model: ModelKind = ModelKind.L1
+) -> str:
     """Fingerprint of loaded parameters, stable against key order and float spelling.
 
     Canonical form: ``{"level": <level>, "params": <tree>}`` as UTF-8 JSON with sorted keys,
@@ -486,8 +621,15 @@ def parameters_sha256(coerced_tree: dict[str, Any], level: AugerLevel) -> str:
     ``1000000000.0`` are the same float and JSON writes Python's shortest round-trip repr.
     The level is included because the same file gives a different superstructure per level.
     Paths in :data:`HASH_EXCLUDED_PATHS` are dropped. YAML comments never enter the hash.
+    A model other than L1 adds ``"model": <model>`` to the payload (S7), so L1 fingerprints
+    (and the saved L1 snapshots, R16) are unchanged and an L2b snapshot never matches L1.
     """
-    payload = {"level": level.value, "params": _without_excluded_paths(coerced_tree)}
+    payload: dict[str, Any] = {
+        "level": level.value,
+        "params": _without_excluded_paths(coerced_tree),
+    }
+    if model is not ModelKind.L1:
+        payload["model"] = model.value
     canonical = json.dumps(
         payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False
     )
@@ -719,6 +861,158 @@ def _read_simulation(root: _Reader) -> Simulation:
     )
 
 
+def _read_l2b_nsc(root: _Reader, operating_extension_m: PerLeg) -> L2bNSC:
+    """Typed L2b-NSC blocks; checks k_ax(e_op) against the YAML operating point."""
+    act = root.child("actuator")
+    blk = act.child("L2b_NSC")
+    derivation = root.child("contact").child("rigid_floor").child("L1").child("derivation")
+    legs = root.child("legs")
+    head_area = tuple(
+        legs.child(name).child("cylinder").number("head_area_m2") for name in LEG_ORDER
+    )
+    actuator = ActuatorL2bNSC(
+        axial_operating_point_N_m=blk.child("axial_stiffness").per_leg("operating_point_N_m"),
+        oil_damping_N_s_m=blk.per_leg("oil_damping_N_s_m"),
+        oil_damping_moving_N_s_m=blk.per_leg("oil_damping_moving_N_s_m"),
+        lateral_bushing_N_m=blk.per_leg("lateral_bushing_N_m"),
+        lateral_bushing_damping_input_N_s_m=blk.per_leg("lateral_bushing_damping_input_N_s_m"),
+        oil_bulk_modulus_eff_Pa=act.number("oil_bulk_modulus_eff_Pa"),
+        oil_dead_length_m=act.number("oil_dead_length_m"),
+        frame_stiffness_N_m=act.number("frame_stiffness_N_m"),
+        head_area_m2=(head_area[0], head_area[1], head_area[2], head_area[3]),
+        k_rod_N_m=derivation.per_leg("k_rod_N_m"),
+        k_concrete_N_m=root.child("contact").child("rigid_floor").child("concrete").number("k_N_m"),
+    )
+    for i, name in enumerate(LEG_ORDER):
+        k_op = axial_stiffness_N_m(
+            operating_extension_m[i],
+            bulk_modulus_Pa=actuator.oil_bulk_modulus_eff_Pa,
+            head_area_m2=actuator.head_area_m2[i],
+            dead_length_m=actuator.oil_dead_length_m,
+            k_rod_N_m=actuator.k_rod_N_m[i],
+            k_frame_N_m=actuator.frame_stiffness_N_m,
+            k_concrete_N_m=actuator.k_concrete_N_m,
+        )
+        ref = actuator.axial_operating_point_N_m[i]
+        if abs(k_op - ref) > L2B_OPERATING_POINT_REL_TOL * abs(ref):
+            raise ParamsError(
+                f"actuator.L2b_NSC.axial_stiffness.operating_point_N_m.{name}",
+                f"k_ax(e_op = {operating_extension_m[i]}) = {k_op} N/m from the formula "
+                f"differs from {ref} (rel. tol. {L2B_OPERATING_POINT_REL_TOL}); an input was "
+                "overridden without regenerating the derived key",
+            )
+    actuator = _with_rev33_damping(root, actuator)
+    floor = root.child("contact").child("rigid_floor").child("L2b_NSC")
+    iterations = floor._value("solver_max_iterations")
+    if not isinstance(iterations, int) or iterations <= 0:
+        raise ParamsError(
+            "contact.rigid_floor.L2b_NSC.solver_max_iterations",
+            f"expected a positive count, got {iterations!r}",
+        )
+    rigid_floor = RigidFloorL2bNSC(
+        solver=floor.text("solver"),
+        solver_max_iterations=iterations,
+        friction=floor.number("friction"),
+        crawler_friction=root.child("contact").child("crawler").number("friction"),
+    )
+    dt = root.child("simulation").child("L2b_NSC").number("dt_s")
+    return L2bNSC(
+        actuator=actuator,
+        rigid_floor=rigid_floor,
+        dt_s=dt,
+        rod_side=_read_l2b_rod_side(root, blk, operating_extension_m),
+    )
+
+
+L2B_DERIVED_KEY_REL_TOL = 1.0e-6
+"""A rev. 33 YAML damping key must agree with :data:`L2B_DAMPING_RULE` within this."""
+
+
+def _with_rev33_damping(root: _Reader, actuator: ActuatorL2bNSC) -> ActuatorL2bNSC:
+    """Locked / moving dashpots of rev. 33 (5.20.3, 5.20.9 Q4).
+
+    The YAML keys ``actuator.L2b_NSC.oil_damping_N_s_m`` / ``oil_damping_moving_N_s_m`` are the
+    pre-rev. 33 values (head only, concrete excluded) until ``export_params.py`` writes the new
+    ones. Regenerating the YAML changes every L1 fingerprint (``Params.sha256`` hashes the whole
+    file), so the rev. 33 values are derived here from keys that are already in the file
+    (:data:`L2B_DAMPING_RULE`). When the YAML carries the new values (marked by the new key
+    ``oil_damping_head_only_regression_N_s_m``), they are used and must equal the rule.
+    """
+    rigid = root.child("contact").child("rigid_floor").child("L1")
+    derivation = rigid.child("derivation")
+    cn = rigid.per_leg("cn_per_pad_N_s_m")
+    kn = rigid.per_leg("kn_per_pad_N_m")
+    k_leg = derivation.per_leg("k_axial_leg_N_m")
+    moving_l2 = root.child("actuator").child("L2").per_leg("oil_damping_moving_N_s_m")
+    lock = tuple(float(c) for c in cn)
+    moving = tuple(
+        float(moving_l2[i]) * math.sqrt(float(kn[i]) / float(k_leg[i])) for i in range(4)
+    )
+    blk = root.child("actuator").child("L2b_NSC")
+    source = "derived (" + L2B_DAMPING_RULE + ")"
+    if "oil_damping_head_only_regression_N_s_m" in blk.mapping:
+        for key, rule in (("oil_damping_N_s_m", lock), ("oil_damping_moving_N_s_m", moving)):
+            yaml_values = blk.per_leg(key)
+            for i, name in enumerate(LEG_ORDER):
+                if abs(yaml_values[i] - rule[i]) > L2B_DERIVED_KEY_REL_TOL * abs(rule[i]):
+                    raise ParamsError(
+                        f"actuator.L2b_NSC.{key}.{name}",
+                        f"{yaml_values[i]} differs from the rev. 33 rule value {rule[i]}",
+                    )
+        lock = tuple(float(v) for v in blk.per_leg("oil_damping_N_s_m"))
+        moving = tuple(float(v) for v in blk.per_leg("oil_damping_moving_N_s_m"))
+        source = "YAML actuator.L2b_NSC (rev. 33 keys)"
+    return dataclasses.replace(
+        actuator,
+        damping_lock_N_s_m=(lock[0], lock[1], lock[2], lock[3]),
+        damping_moving_N_s_m=(moving[0], moving[1], moving[2], moving[3]),
+        damping_source=source,
+    )
+
+
+def _read_l2b_rod_side(
+    root: _Reader, blk: _Reader, operating_extension_m: PerLeg
+) -> L2bRodSide:
+    """``actuator.rod_side`` values for the L2b law (5.20.2); mechanics from
+    ``actuator.L2b_NSC.rod_side.mechanics`` when present, else the rev. 33 decision."""
+    act = root.child("actuator")
+    rod = act.child("rod_side")
+    stroke = act.number("stroke_m")
+    column = rod.per_leg("column_length_m")
+    dead = tuple(column[i] - (stroke - operating_extension_m[i]) for i in range(4))
+    legs = root.child("legs")
+    annulus = tuple(
+        legs.child(name).child("cylinder").number("annulus_area_m2") for name in LEG_ORDER
+    )
+    mechanics = L2B_ROD_SIDE_MECHANICS_DEFAULT
+    source = "dynamics_model.md rev. 33 5.20.2 (YAML key actuator.L2b_NSC.rod_side absent)"
+    if "rod_side" in blk.mapping:
+        mechanics = blk.child("rod_side").text("mechanics")
+        source = "YAML actuator.L2b_NSC.rod_side.mechanics"
+    if mechanics not in ("off", "one_sided_parallel"):
+        raise ParamsError("actuator.L2b_NSC.rod_side.mechanics", f"unknown value {mechanics!r}")
+    return L2bRodSide(
+        mechanics=mechanics,
+        annulus_area_m2=(annulus[0], annulus[1], annulus[2], annulus[3]),
+        stroke_m=stroke,
+        rod_dead_length_m=(dead[0], dead[1], dead[2], dead[3]),
+        p_r0_after_extend_Pa=rod.per_leg("p_r0_after_extend_Pa"),
+        p_r0_after_retract_Pa=rod.per_leg("p_r0_after_retract_Pa"),
+        p_floor_abs_Pa=rod.number("p_floor_Pa"),
+        release_tau_s=rod.number("release_tau_s"),
+        lock_eps_m_s=rod.number("lock_eps_m_s"),
+        source=source,
+    )
+
+
+def _resolve_model(model: ModelKind | str) -> ModelKind:
+    try:
+        return ModelKind(model)
+    except ValueError:
+        valid = [member.value for member in ModelKind]
+        raise ParamsError("model", f"unknown model {model!r}, expected {valid}") from None
+
+
 def _read_ground(root: _Reader) -> Ground:
     block = root.child("ground")
     return Ground(
@@ -735,6 +1029,7 @@ def load_params(
     *,
     level: AugerLevel | str | None = None,
     overrides: Mapping[str, Any] | None = None,
+    model: ModelKind | str = ModelKind.L1,
 ) -> Params:
     """Load, coerce and validate the simulation parameters.
 
@@ -745,13 +1040,18 @@ def load_params(
         overrides: Dotted path -> replacement value, applied in memory before coercion,
             for example ``{"actuator.oil_bulk_modulus_eff_Pa": 1.6e9}``. Derived values
             (such as ``contact.rigid_floor.L1.kn_per_pad_N_m``) are not recomputed.
+        model: ``"L1"`` (default; fingerprint and fields as before S7) or ``"L2b_NSC"``
+            (adds :attr:`Params.l2b`, the typed ``actuator.L2b_NSC``,
+            ``contact.rigid_floor.L2b_NSC`` and ``simulation.L2b_NSC`` blocks, and ``model``
+            to the fingerprint).
 
     Returns:
         Frozen :class:`Params`.
 
     Raises:
         ParamsError: Missing key, non-numeric value where a number belongs, wrong leg
-            order, unknown level, or an override of a key that does not exist.
+            order, unknown level or model, an override of a key that does not exist, or
+            (L2b_NSC) an axial operating point that the stiffness formula does not reproduce.
         OSError: The file cannot be read.
     """
     source_path = Path(path) if path is not None else DEFAULT_PARAMS_PATH
@@ -766,6 +1066,13 @@ def load_params(
 
     root = _Reader(coerced, ())
     selected_level = _resolve_level(root, level)
+    selected_model = _resolve_model(model)
+    contact = _read_contact(root)
+    l2b = (
+        _read_l2b_nsc(root, contact.rigid_floor.L1.operating_extension_m)
+        if selected_model is ModelKind.L2B_NSC
+        else None
+    )
     return Params(
         source_path=source_path,
         level=selected_level,
@@ -775,10 +1082,12 @@ def load_params(
         superstructure=_read_superstructure(root, selected_level),
         actuator=_read_actuator(root),
         legs=_read_legs(root),
-        contact=_read_contact(root),
+        contact=contact,
         control=Control(F_min_cylinder_N=root.child("control").number("F_min_cylinder_N")),
         simulation=_read_simulation(root),
         raw=_freeze(coerced),
-        sha256=parameters_sha256(coerced, selected_level),
+        sha256=parameters_sha256(coerced, selected_level, selected_model),
         file_sha256=hashlib.sha256(file_bytes).hexdigest(),
+        model=selected_model,
+        l2b=l2b,
     )

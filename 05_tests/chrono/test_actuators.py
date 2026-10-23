@@ -30,6 +30,8 @@ from outrigger_sim.scenarios.stroke import air_pose  # noqa: E402
 pytestmark = pytest.mark.chrono
 
 V_MAX = 0.0226666667
+"""Speed limit of the standalone actuator tests only (explicit constructor argument, independent
+of the YAML); the model tests use ``params.actuator.max_speed_m_s``."""
 ACCEL_RAMP_S = load_params(level="top").actuator.command_ramp_s
 """YAML ``actuator.command_ramp_s`` (0.1 s, ASSUMPTION user decision 2026-10-20)."""
 
@@ -115,30 +117,39 @@ def _air_model(params, ramp_s=ACCEL_RAMP_S, dt_s=1.0e-4):
     return model
 
 
+def _moving_masses_kg(params) -> np.ndarray:
+    """Per-leg moving-part mass (REXOME35 per-leg YAML, 2026-10-22: front and rear differ)."""
+    return np.array([leg.moving_part.mass_kg for leg in params.legs], dtype=float)
+
+
 def test_motor_sign_speed_and_inertial_reaction(params) -> None:
     model = _air_model(params)
-    weight = params.legs[0].moving_part.mass_kg * params.meta.gravity_m_s2
-    model.set_command([V_MAX, V_MAX, V_MAX, V_MAX])
+    v_max = params.actuator.max_speed_m_s  # the model's limit (YAML, 20.924 mm/s since 2026-10-22)
+    masses = _moving_masses_kg(params)
+    weight = masses * params.meta.gravity_m_s2
+    model.set_command([v_max] * 4)
     p0 = model.step(capture=True).probe
     assert np.allclose(p0.motor_force_N, -weight, atol=1.0)  # hanging rod pulls: F < 0
-    run = run_commanded(model, 0.5, lambda _t: None, sample_s=0.5, force_ref_N=[-weight] * 4)
+    run = run_commanded(model, 0.5, lambda _t: None, sample_s=0.5, force_ref_N=list(-weight))
     p1 = model.probe()
     dz = p1.pad_sphere_centre_world_m[:, 2] - p0.pad_sphere_centre_world_m[:, 2]
     ds = p1.motor_pos_m - p0.motor_pos_m
     assert np.all(dz < 0.0)
     assert np.allclose(dz, -ds, atol=1e-12)
-    assert np.allclose(run.max_motor_speed_m_s, V_MAX, rtol=1e-6)
-    m_a = params.legs[0].moving_part.mass_kg * V_MAX / ACCEL_RAMP_S
+    assert np.allclose(run.max_motor_speed_m_s, v_max, rtol=1e-6)
+    m_a = masses * v_max / ACCEL_RAMP_S
     assert np.allclose(run.max_force_dev_N, m_a, rtol=0.01)
     assert run.max_motor_violation_m < 1e-9
 
 
 def test_speed_step_without_ramp_gives_one_step_spike(params) -> None:
     model = _air_model(params, ramp_s=0.0)
-    weight = params.legs[0].moving_part.mass_kg * params.meta.gravity_m_s2
-    model.set_command([V_MAX] * 4)
-    run = run_commanded(model, 0.05, lambda _t: None, sample_s=0.05, force_ref_N=[-weight] * 4)
-    expected = params.legs[0].moving_part.mass_kg * V_MAX / model.dt_s
+    v_max = params.actuator.max_speed_m_s
+    masses = _moving_masses_kg(params)
+    weight = masses * params.meta.gravity_m_s2
+    model.set_command([v_max] * 4)
+    run = run_commanded(model, 0.05, lambda _t: None, sample_s=0.05, force_ref_N=list(-weight))
+    expected = masses * v_max / model.dt_s
     assert np.allclose(run.max_force_dev_N, expected, rtol=0.01)
 
 

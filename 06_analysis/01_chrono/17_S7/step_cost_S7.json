@@ -1,0 +1,60 @@
+{
+ "placement": {
+  "mode": "pcore",
+  "efficiency_classes": [
+   0,
+   1
+  ],
+  "affinity_ok": true,
+  "affinity_logical_processors": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "power_throttling_off_ok": true
+ },
+ "rows": [
+  {
+   "case": "pads_static_1e-4",
+   "dt_s": 0.0001,
+   "steps": 20000,
+   "wall_s": 4.5947222000104375,
+   "us_per_step": 229.73611000052188,
+   "us_per_step_with_capture": 299.79044999345206,
+   "n_contacts": 24
+  },
+  {
+   "case": "pads_static_1e-5",
+   "dt_s": 1e-05,
+   "steps": 50000,
+   "wall_s": 11.41308410000056,
+   "us_per_step": 228.2616820000112,
+   "us_per_step_with_capture": 299.94514999270905,
+   "n_contacts": 24
+  },
+  {
+   "case": "crawler_legs0_1e-4",
+   "dt_s": 0.0001,
+   "steps": 20000,
+   "wall_s": 4.590589399973396,
+   "us_per_step": 229.5294699986698,
+   "us_per_step_with_capture": 296.58505000406876,
+   "n_contacts": 24
+  }
+ ],
+ "date": "2026-10-24T03:09:12",
+ "note": "single process, run alone (no other Chrono job); hook + force law + lateral bushing + rod-side law included"
+}

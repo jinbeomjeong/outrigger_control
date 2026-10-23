@@ -1392,5 +1392,46 @@ def l1r_cli(argv=None):
         print("written", a.l1r_out)
 
 
+def cli(argv=None):
+    """Options of the reference blocks; no option = main() unchanged (dynamics_model.md rev. 33, 5.20).
+
+    --l1r-out PATH / --with-l1r   L1-R block (rev. 32), as l1r_cli
+    --l2b-out PATH                write only the L2b-NSC block (l2b_reference.build_block) to PATH; reference.json is
+                                  read (cross-checks) and not written
+    --with-l2b                    run main() and the L1-R block (implies --with-l1r, so reference.json keeps it), then
+                                  add the L2b-NSC block under l2b_reference.L2B_KEY
+    """
+    import argparse
+
+    ap = argparse.ArgumentParser(description=cli.__doc__.split("\n")[0])
+    ap.add_argument("--l1r-out", type=Path, default=None)
+    ap.add_argument("--with-l1r", action="store_true")
+    ap.add_argument("--l2b-out", type=Path, default=None)
+    ap.add_argument("--with-l2b", action="store_true")
+    a = ap.parse_args(argv)
+    l1r_args = (["--with-l1r"] if (a.with_l1r or a.with_l2b) else []) + \
+        (["--l1r-out", str(a.l1r_out)] if a.l1r_out is not None else [])
+    if a.l2b_out is None and not a.with_l2b:
+        l1r_cli(l1r_args)
+        return
+    import l2b_reference as l2b
+
+    if a.with_l2b or l1r_args:
+        l1r_cli(l1r_args)
+    with open(OUT, encoding="utf-8") as f:
+        res = json.load(f)
+    block = l2b.build_block(ref_res=res)
+    if a.with_l2b:
+        res[l2b.L2B_KEY] = block
+        with open(OUT, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(res, f, indent=1, ensure_ascii=False)
+        print("added", l2b.L2B_KEY, "to", OUT)
+    if a.l2b_out is not None:
+        a.l2b_out.parent.mkdir(parents=True, exist_ok=True)
+        with open(a.l2b_out, "w", encoding="utf-8", newline="\n") as f:
+            json.dump({l2b.L2B_KEY: block}, f, indent=1, ensure_ascii=False)
+        print("written", a.l2b_out)
+
+
 if __name__ == "__main__":
-    l1r_cli()
+    cli()

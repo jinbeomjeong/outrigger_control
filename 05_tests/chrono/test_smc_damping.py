@@ -8,9 +8,11 @@ are imported here so both use the same code:
     1 kg; the fixed floor's mass counts).
 (b) ``c`` is linear in the input ``gn`` (scale 1, 0.1, 0).
 (c) Two SMC materials combine by the arithmetic mean of ``kn`` and of ``gn``.
-(d) The YAML ``contact.rigid_floor.L1.gn_per_pad_1_s`` gives the design leg damping ratio on
-    the uncoupled heave mode of a rigid 4-pad assembly (``derivation.damping_ratio`` 0.03 at
-    ``derivation.damping_reference_mode_Hz`` 7.39 Hz).
+(d) The YAML ``contact.rigid_floor.L1.gn_per_pad_1_s`` reproduces the YAML pad dashpot ``cn``,
+    which since L1-R is on the LOCK stiffness (dynamics_model.md 5.12.8 Q-D3: ``derivation.
+    damping_ratio`` 0.03 at ``damping_reference_mode_Hz`` 8.88 Hz, LOCK heave); the heave of the
+    rigid 4-pad assembly on the SMC pads alone (no rod-side spring, FLOOR) then has zeta about
+    0.035 (2026-10-24 update; before: head-only cn, zeta 0.03 at 7.39 Hz).
 (e) The SMC contact force is integrated explicitly (semi-implicit Euler): no ``omega dt / 2``
     numerical damping; ``SetContactStiff(True)`` changes nothing.
 
@@ -192,21 +194,51 @@ def test_static_penetration(check: ModuleType, params: Params) -> None:
 # --- (d) heave of the rigid 4-pad assembly -------------------------------------------------
 
 
+def _yaml_per_leg(params: Params, key: str) -> list[float]:
+    block = params.get(key)
+    return [float(block[name]) for name in ("FL", "FR", "RL", "RR")]
+
+
+HEAVE_FLOOR_ZETA_DOC = 0.035
+"""dynamics_model.md 5.12.8 Q-D3: with the LOCK-basis dashpot the heave of the pads alone
+(no rod-side spring, state FLOOR) has zeta about 0.035."""
+
+
 def _check_heave(check: ModuleType, params: Params, dt: float) -> None:
+    """Heave of the rigid 4-pad assembly on the SMC pads alone.
+
+    Since L1-R (dynamics_model.md 5.12.8 Q-D3, YAML ``derivation.damping_basis: "LOCK"``) the pad
+    dashpot is ``cn_i = 2 zeta sqrt(k_lock_i m / 4)`` on the LOCK stiffness (head + rod-side
+    oil); ``damping_ratio`` 0.03 and ``damping_reference_mode_Hz`` refer to that LOCK heave. This
+    test has no rod-side spring (the SMC ``kn`` = head side only), so it sees the FLOOR heave:
+    ``zeta = sum(cn) / (2 sqrt(sum(kn) m))`` (about 0.035, Q-D3) and ``f = sqrt(sum(kn) / m) / 2 pi``.
+    """
     result = check.heave(params, dt=dt)
     design = result.extra["design"]
     _assert_matches_prediction(result)
     # the YAML gn reproduces the YAML cn on each pad (gn per moving-part mass, floor 1e9 kg)
     c_per_pad = result.extra["c_per_pad_N_s_m"]
     assert c_per_pad == pytest.approx(result.extra["cn_per_pad_yaml_N_s_m"], rel=1e-6)
-    assert result.mass_kg == pytest.approx(design["damping_mass_kg"], rel=1e-9)
-    assert result.zeta_expected == pytest.approx(design["damping_ratio"], rel=1e-4)
-    assert result.zeta_measured_minus_numerical == pytest.approx(
-        design["damping_ratio"], rel=ZETA_REL_TOL
+    m = design["damping_mass_kg"]
+    assert result.mass_kg == pytest.approx(m, rel=1e-9)
+    # YAML cn on the LOCK basis with the design zeta (Q-D3)
+    assert params.get("contact.rigid_floor.L1.derivation.damping_basis") == "LOCK"
+    zeta_d = design["damping_ratio"]
+    k_lock = _yaml_per_leg(params, "contact.rigid_floor.L1.derivation.k_lock_N_m")
+    kn = _yaml_per_leg(params, "contact.rigid_floor.L1.kn_per_pad_N_m")
+    cn = _yaml_per_leg(params, "contact.rigid_floor.L1.cn_per_pad_N_s_m")
+    for c_i, k_i in zip(cn, k_lock, strict=True):
+        assert c_i == pytest.approx(2.0 * zeta_d * math.sqrt(k_i * m / 4.0), rel=1e-6)
+    assert design["damping_reference_mode_Hz"] == pytest.approx(
+        math.sqrt(sum(k_lock) / m) / (2.0 * math.pi), rel=1e-6
     )
-    assert result.f_measured_Hz == pytest.approx(
-        design["damping_reference_mode_Hz"], rel=HEAVE_F_DESIGN_REL_TOL
-    )
+    # FLOOR heave seen by this test
+    zeta_floor = sum(cn) / (2.0 * math.sqrt(sum(kn) * m))
+    f_floor = math.sqrt(sum(kn) / m) / (2.0 * math.pi)
+    assert zeta_floor == pytest.approx(HEAVE_FLOOR_ZETA_DOC, abs=1.0e-3)
+    assert result.zeta_expected == pytest.approx(zeta_floor, rel=1e-4)
+    assert result.zeta_measured_minus_numerical == pytest.approx(zeta_floor, rel=ZETA_REL_TOL)
+    assert result.f_measured_Hz == pytest.approx(f_floor, rel=HEAVE_F_DESIGN_REL_TOL)
     # placed at static equilibrium: first-step contact force = weight - c v0
     weight = result.extra["weight_N"]
     assert result.extra["contact_force_sum_first_step_N"] == pytest.approx(

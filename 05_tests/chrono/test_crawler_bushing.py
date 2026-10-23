@@ -29,7 +29,16 @@ def params():
 
 def test_values_and_scale(params) -> None:
     v = crawler_bushing_values(params)
-    assert v.kt_over_kn_pad == pytest.approx(0.402, abs=0.005)
+    # rule: mean over the legs of the YAML pad kt / kn (Q12). With the REXOME35 per-leg YAML
+    # (2026-10-22) the mean is 0.2331 (front 0.2761, rear 0.1901) and the nominal crawler kt is
+    # 1.942e6 N/m per sphere, the value the S6 fdown32 batches used (dynamics_model.md 5.19.7,
+    # "보유 크롤러 kt = 공칭 1.942x10^6 N/m"); 0.402 was the pre-REXOME35 common-leg value.
+    kn = params.get("contact.rigid_floor.L1.kn_per_pad_N_m")
+    kt = params.get("contact.rigid_floor.L1.kt_per_pad_N_m")
+    ratio = float(np.mean([float(kt[k]) / float(kn[k]) for k in kn]))
+    assert v.kt_over_kn_pad == pytest.approx(ratio, rel=1e-12)
+    assert v.kt_over_kn_pad == pytest.approx(0.2331, abs=0.0005)
+    assert v.kt_N_m == pytest.approx(1.942e6, rel=1e-3)
     assert v.kt_N_m == pytest.approx(v.kt_over_kn_pad * 8333333.33, rel=1e-6)
     assert v.damping_input_N_s_m == pytest.approx(0.5 * v.ct_N_s_m)
     v3 = crawler_bushing_values(params, 3.0)
@@ -53,14 +62,20 @@ def test_slope_pose_balance(params) -> None:
 
 
 def test_stage2_snapshot_restores_and_holds(params) -> None:
-    states = ROOT / "07_results" / "states"
+    # The current stage-2 snapshots are the bundle-B (L1-R on) ones in 07_results/states_L1R,
+    # built with the REXOME35 YAML (run_S6.py snaps2 with OUTRIGGER_ROD_SIDE_MECHANICS=
+    # one_sided_parallel; S6 verdicts are on bundle B). 07_results/states/S6_crawler_* are the
+    # pre-REXOME35 bundle-A states (copies in 07_results/history_pre_rexome35_2026-10-22/states).
+    states = ROOT / "07_results" / "states_L1R"
     name = "S6_crawler_top_fup3.5"
     if not (states / f"{name}.npz").exists():
-        pytest.skip("stage-2 snapshots not built (run_S6.py snaps2)")
+        pytest.skip("stage-2 snapshots not built (run_S6.py snaps2, L1-R on)")
     sys.path.insert(0, str(ROOT / "04_scripts" / "02_chrono"))
     import s6_stage2
 
-    model, _ = s6_stage2.build_crawler_model(params, "fup3.5", attach=False)
+    model, _ = s6_stage2.build_crawler_model(
+        params, "fup3.5", attach=False, rod_side_mechanics="one_sided_parallel"
+    )
     model.restore(load_snapshot(name, params_sha256=params.sha256, directory=states))
     cb = model.crawler_bushing
     n0 = int(cb.in_contact.sum())

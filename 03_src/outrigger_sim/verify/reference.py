@@ -78,6 +78,7 @@ class Placeholder(StrEnum):
     SLOPE_CASE = "<case>"
     BETA = "<beta>"
     LEG = "<leg>"
+    V14_CASE = "<v14_case>"
 
 
 # Plan S2a: the three V12 slope cases (keys of ``reference.json / slope_V12``).
@@ -90,12 +91,18 @@ SLOPE_V12_CASES: tuple[str, ...] = (
 # Plan S4: the three oil bulk moduli of the beta sensitivity (keys of L1_beta_sensitivity_top).
 L1_BETA_CASES: tuple[str, ...] = ("beta_6.9e+08", "beta_1.0e+09", "beta_1.6e+09")
 
+# Plan S7 V14 (dynamics_model.md rev. 33 supplement 1, 5.20.8): the judged cases of
+# ``reference.json / L2b_NSC_reference_rev33 / V14 / cases`` (``max pitch-`` is not judged: RL
+# is at its stroke end there).
+V14_CASES: tuple[str, ...] = ("level", "max pitch+", "max roll+", "max diag 45")
+
 PLACEHOLDER_VALUES: Mapping[Placeholder, tuple[str, ...]] = MappingProxyType(
     {
         Placeholder.LEVEL: tuple(level.value for level in AugerLevel),
         Placeholder.SLOPE_CASE: SLOPE_V12_CASES,
         Placeholder.BETA: L1_BETA_CASES,
         Placeholder.LEG: LEG_ORDER,
+        Placeholder.V14_CASE: V14_CASES,
     }
 )
 
@@ -162,6 +169,7 @@ class RefKey:
         case: str | None = None,
         beta: str | None = None,
         leg: str | None = None,
+        v14_case: str | None = None,
     ) -> RefKey:
         """Return the key with its placeholders filled in.
 
@@ -177,6 +185,7 @@ class RefKey:
             Placeholder.SLOPE_CASE: case,
             Placeholder.BETA: beta,
             Placeholder.LEG: leg,
+            Placeholder.V14_CASE: v14_case,
         }
         resolved_path: list[PathPart] = []
         for part in self.path:
@@ -671,6 +680,34 @@ V14_REV5_TEST_LEG = RefKey(
 )
 V14_REV5_CASES = RefKey(ReferenceFile.ACTUATOR_L2_FEASIBILITY, (*_V14_REV5, "cases"), _MAPPING)
 
+# S7 judgement basis since rev. 33 (dynamics_model.md 5.20, supplement 1; L1-R LOCK rod side in
+# the force law). The keys under _L2B_NSC_LEVEL_HEAD above stay as the head-only / FLOOR record.
+_L2B_REV33 = ("L2b_NSC_reference_rev33",)
+_L2B_REV33_LEVEL = (*_L2B_REV33, "levels", _LEVEL)
+_V14_CASE = Placeholder.V14_CASE.value
+L2B_REV33_LEG_PARAMETERS = _ref(_MAPPING, *_L2B_REV33, "leg_parameters")
+L2B_REV33_CONTACT_FORCE_N = _ref(_ARRAY, *_L2B_REV33_LEVEL, "contact_force_N (V1)")  # V1
+L2B_REV33_CYLINDER_FORCE_N = _ref(_ARRAY, *_L2B_REV33_LEVEL, "cylinder_force_N")  # V1
+L2B_REV33_AXIAL_COMPRESSION_MM = _ref(  # V2
+    _ARRAY, *_L2B_REV33_LEVEL, "axial_spring_compression_mm (V2, F / k2(e_op))"
+)
+L2B_REV33_STATIC_ATTITUDE_DEG = _ref(  # V3
+    _ARRAY, *_L2B_REV33_LEVEL, "static_attitude_deg (roll, pitch) (V3)"
+)
+L2B_REV33_MODES_LOCK = _ref(_MAPPING, *_L2B_REV33_LEVEL, "modes", "LOCK")  # V7 (first 6)
+L2B_REV33_MODE_SHAPES_LOCK = _ref(_MAPPING, *_L2B_REV33_LEVEL, "modes", "LOCK", "mode_shapes")
+L2B_REV33_SINGLE_LEG_THRESHOLDS_MM = _ref(  # V6
+    _MAPPING, *_L2B_REV33_LEVEL, "single_leg_thresholds_mm (V5 / V6 / V14 level)"
+)
+L2B_REV33_DF_CYL_PER_MM_FL_N = _ref(_MAPPING, *_L2B_REV33_LEVEL, "dF_cyl_per_mm_FL_N")  # V5
+L2B_REV33_V4_TOUCH_S = _ref(  # V4(NSC)
+    _ARRAY, *_L2B_REV33, "V4_NSC", "L2b_dynamic", "touch_s (FL, FR, RL, RR)"
+)
+L2B_REV33_V14_CASE = _ref(_MAPPING, *_L2B_REV33, "V14", "cases", _V14_CASE)  # slope, extensions
+L2B_REV33_V14_RL_L1R = _ref(  # V14
+    _MAPPING, *_L2B_REV33, "V14", "cases", _V14_CASE, "RL+", "L1R_after_extend"
+)
+
 # --- S8: seal friction (V15) -------------------------------------------------------------------
 
 V15_REV5_UPSWEEP_UNILATERAL = RefKey(
@@ -859,6 +896,18 @@ KEYS_BY_STAGE: Mapping[str, tuple[RefKey, ...]] = MappingProxyType(
             V14_REV5_METHOD,
             V14_REV5_TEST_LEG,
             V14_REV5_CASES,
+            L2B_REV33_LEG_PARAMETERS,
+            L2B_REV33_CONTACT_FORCE_N,
+            L2B_REV33_CYLINDER_FORCE_N,
+            L2B_REV33_AXIAL_COMPRESSION_MM,
+            L2B_REV33_STATIC_ATTITUDE_DEG,
+            L2B_REV33_MODES_LOCK,
+            L2B_REV33_MODE_SHAPES_LOCK,
+            L2B_REV33_SINGLE_LEG_THRESHOLDS_MM,
+            L2B_REV33_DF_CYL_PER_MM_FL_N,
+            L2B_REV33_V4_TOUCH_S,
+            L2B_REV33_V14_CASE,
+            L2B_REV33_V14_RL_L1R,
         ),
         "S8": (V15_REV5_UPSWEEP_UNILATERAL, V15_REV5_ROUNDTRIP_10MM),
     }
