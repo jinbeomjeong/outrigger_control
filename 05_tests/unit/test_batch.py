@@ -33,7 +33,9 @@ from outrigger_sim.record import make_run_meta
 JOB_SLEEP_S = 0.3
 MAX_WORKERS = 3
 HANG_S = 60.0
-TIMEOUT_S = 3.0
+TIMEOUT_S = 10.0 if os.environ.get("PYTEST_XDIST_WORKER") else 3.0
+"""Under pytest-xdist (-n 16) the spawned 'quick' child alone can take > 3 s to start (CPU
+load of the other workers), so the timeout gets more room there; still << HANG_S / 2."""
 
 
 # --- jobs (run inside case processes) ----------------------------------------------------

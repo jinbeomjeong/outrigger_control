@@ -32,8 +32,13 @@ from outrigger_sim.verify.s5 import (
 ROOT = Path(__file__).resolve().parents[2]
 PDELTA_CHECK = ROOT / "06_analysis" / "00_dynamics" / "s1_pdelta_check.json"
 """dynamics-expert P-delta nonlinear statics per level (V10 V1 judged reference, rev. 22)."""
-PLAN_F1 = {"top": 1.798, "middle": 2.333, "bottom": 2.893}
-PLAN_F2 = {"top": 3.005, "middle": 3.536, "bottom": 3.959}
+# Planned damped frequencies (Hz) of modes 1 and 2 per level, REXOME35 YAML
+# (sha 84a46dc1...), dynamics_model.md rev. 31 section 5.13. Kept as literals on
+# purpose: reading them from reference.json would compare the reference with itself.
+PLAN_F1 = {"top": 1.8454, "middle": 2.3462, "bottom": 2.8203}
+PLAN_F2 = {"top": 2.8530, "middle": 3.2004, "bottom": 3.4465}
+# 0.01 % of W/4 with W = 380,112.9 N (s1_pdelta_check.json W_N, rev. 31 5.13)
+PDELTA_TOL_N = 9.5028
 
 
 @pytest.fixture(scope="module")
@@ -99,7 +104,7 @@ def test_load_checks_judge_pdelta_record_linear(refs, pdelta_check) -> None:
     linear = np.asarray(refs.get(L1_CONTACT_FORCE_N, level="top"))
     weight_N = float(pdelta.sum())
     pdelta_tol_N = 1e-4 * weight_N / 4
-    assert pdelta_tol_N == pytest.approx(9.557, abs=1e-3)
+    assert pdelta_tol_N == pytest.approx(PDELTA_TOL_N, abs=1e-3)
     ok = _load_rows(pdelta, linear, [0.9 * pdelta_tol_N, 0, -0.9 * pdelta_tol_N, 0], weight_N)
     assert [c.id for c in ok] == ["V10", "info", "V10"]
     assert all(c.passed for c in ok)

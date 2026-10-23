@@ -44,6 +44,12 @@ STATES = ROOT / "07_results" / "states"
 ANALYSIS_DIR = ROOT / "06_analysis" / "01_chrono" / "11_S1"
 SUMMARY = ANALYSIS_DIR / "verify_S1_L1.json"
 FIGURE = ANALYSIS_DIR / "verify_S1_L1.png"
+# bundle B: output roots and the snapshot folder tagged by l1r_variant (no change without it)
+sys.path.insert(0, str(HERE))
+import l1r_variant as _l1rv  # noqa: E402
+
+RESULTS, STATES = _l1rv.tagged(RESULTS), _l1rv.tagged(STATES)
+SUMMARY, FIGURE = _l1rv.tagged(SUMMARY), _l1rv.tagged(FIGURE)
 CASES = ("top", "middle", "bottom", "cross_top")
 PY = sys.executable
 ROUNDTRIP_S = 1.0
@@ -99,7 +105,7 @@ def run_case(name: str) -> dict:
         pose = BodyPose(sp.origin_m, sp.quat_wxyz)
         start = {"kind": "analytic static start (plan section 2 rule 1)", **sp.__dict__}
         settle_s = SETTLE_S
-    model = L1Model(params, pose=pose)
+    model = L1Model(params, pose=pose, rod_side_mechanics=_l1rv.mechanics())
     build_s = time.perf_counter() - t_build
     inventory = model.v0_inventory()
     checks = v0_checks(params, inventory)
@@ -165,7 +171,7 @@ def run_case(name: str) -> dict:
         )
         # round trip: continue this model vs. restore the file into a fresh build (R16)
         loaded = load_snapshot(snap_name, params_sha256=params.sha256, directory=STATES)
-        fresh = L1Model(params, pose=pose)
+        fresh = L1Model(params, pose=pose, rod_side_mechanics=_l1rv.mechanics())
         t_restored = fresh.restore(loaded)
         n_rt = round(ROUNDTRIP_S / dt)
         for _ in range(n_rt):

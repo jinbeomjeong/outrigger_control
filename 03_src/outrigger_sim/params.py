@@ -7,7 +7,7 @@ The loader:
   as ``"1e9"`` - which PyYAML (YAML 1.1) returns as ``str`` because the exponent has no dot
   and no sign - becomes ``1e9``; a string that is not a number raises :class:`ParamsError`
   with the key path. Only keys listed in :data:`TEXT_KEYS` / :data:`TEXT_SUBTREES` may hold
-  text.
+  text, and only keys listed in :data:`FLAG_KEYS` may hold ``true`` / ``false``.
 * fails on the first missing key with its dotted path.
 * checks the leg order against :data:`LEG_ORDER` (FL, FR, RL, RR = indices 0-3).
 * selects one auger level (``top``, ``middle``, ``bottom``).
@@ -54,6 +54,7 @@ TEXT_KEYS = frozenset(
         "case",
         "collision_filter",
         "cylinder_type",
+        "damping_basis",
         "damping_input_convention",
         "default_auger_level",
         "definition",
@@ -68,6 +69,7 @@ TEXT_KEYS = frozenset(
         "leg_order",
         "location",
         "lock_valve",
+        "mechanics",
         "model",
         "model_default",
         "name",
@@ -95,6 +97,11 @@ TEXT_SUBTREES = frozenset(
 
 # Leaf keys that are counts and stay ``int`` (a float count would break ``range()``).
 COUNT_KEYS = frozenset({"solver_max_iterations"})
+
+# Leaf keys that are switches and stay ``bool`` (YAML ``true`` / ``false`` only; a number or a
+# string there is an error, as a bool is an error where a number belongs). Same rule as
+# TEXT_KEYS: a new switch key of export_params.py fails loading with its path and is added here.
+FLAG_KEYS = frozenset({"applied", "predictor"})
 
 # Left out of the parameter fingerprint: the generation date changes on every export even
 # when no value changes, and must not invalidate saved snapshots (R16).
@@ -389,7 +396,15 @@ def _coerce_leaf(value: Any, path: KeyPath) -> Any:
         return value
     if _leaf_key(path) in COUNT_KEYS:
         return _parse_count(value, path)
+    if _leaf_key(path) in FLAG_KEYS:
+        return _parse_flag(value, path)
     return _parse_float(value, path)
+
+
+def _parse_flag(value: Any, path: KeyPath) -> bool:
+    if not isinstance(value, bool):
+        raise ParamsError(_format_path(path), f"expected true or false, got {value!r}")
+    return value
 
 
 def _coerce_tree(node: Any, path: KeyPath = ()) -> Any:

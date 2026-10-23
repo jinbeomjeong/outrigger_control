@@ -136,10 +136,10 @@ class Ctx:
         self.hb = float(p["legs"]["FL"]["pad"]["swivel_center_above_pad_bottom_m"])
         self.swivel_max = float(p["legs"]["FL"]["pad"]["swivel_tilt_range_deg"])
         self.stroke = float(p["actuator"]["stroke_m"])
-        self.F_up = float(p["actuator"]["max_force_extend_N"])
+        self.F_up = dm.leg_cylinder_array(p, "max_force_extend_N")  # per leg (4,) (rev. 30)
         self.F_min = float(p["control"]["F_min_cylinder_N"])
         self.mu = float(p["contact"]["rigid_floor"]["friction"])
-        ASSUMPTIONS["force_upper_N"] = self.F_up
+        ASSUMPTIONS["force_upper_N"] = dm.scalar_if_equal(self.F_up).tolist() if np.ndim(dm.scalar_if_equal(self.F_up)) else dm.scalar_if_equal(self.F_up)
         ASSUMPTIONS["friction_mu"] = self.mu
         self.kc = float(p["contact"]["rigid_floor"]["concrete"]["k_N_m"])
         self.k_frame = float(p["actuator"]["frame_stiffness_N_m"])
@@ -359,7 +359,7 @@ def evaluate(level, roll_g, pitch_g, roll_t, pitch_t, clr=0.05, kt_mode="ext", c
         for i in range(4):
             if abs(dF[i]) < 1e-12:
                 continue
-            t1 = (Flo - Fcyl[i]) / dF[i]; t2 = (c.F_up - Fcyl[i]) / dF[i]
+            t1 = (Flo - Fcyl[i]) / dF[i]; t2 = (c.F_up[i] - Fcyl[i]) / dF[i]
             lo_t = max(lo_t, min(t1, t2)); hi_t = min(hi_t, max(t1, t2))
         dtw = c.tw @ dF
         out_tw[name] = sorted([float(lo_t * dtw), float(hi_t * dtw)]) if lo_t <= hi_t else None
@@ -437,7 +437,7 @@ def feasible(pt, clr_mm=50, margin=0.0, guard=False, rod=False):
     Flo = c.F_min + (ASSUMPTIONS["F_guard_margin_N"] if guard else 0.0)
     if min(pt["F_cyl_min_N"], pt["F_cyl_min_yaml_N"]) < Flo:
         viol.append("F_min")
-    if pt["F_cyl_max_N"] > c.F_up:
+    if bool(np.any(np.asarray(pt["F_cyl_N"], float) > c.F_up)):   # per leg (rev. 30); = max > F_up for a common limit
         viol.append("F_up")
     if pt["N_min_N"] <= 0:
         viol.append("liftoff")
@@ -578,8 +578,9 @@ def stage_checks():
     out["C4_twist_interval_resolve"] = {
         "interval_kN": [lo / 1e3, hi / 1e3],
         "F_cyl_at_lo_kN": (r1["F_cyl_N"] / 1e3).round(4).tolist(), "F_cyl_at_hi_kN": (r2["F_cyl_N"] / 1e3).round(4).tolist(),
-        "bound_error_N": float(min(abs(np.min(r1["F_cyl_N"]) - c.F_min), abs(np.max(r1["F_cyl_N"]) - c.F_up)) +
-                               min(abs(np.min(r2["F_cyl_N"]) - c.F_min), abs(np.max(r2["F_cyl_N"]) - c.F_up)))}
+        # per leg (rev. 30): distance of the closest leg to its own upper limit; = |max F - F_up| for a common limit
+        "bound_error_N": float(min(abs(np.min(r1["F_cyl_N"]) - c.F_min), float(np.min(np.abs(r1["F_cyl_N"] - c.F_up))) if np.ptp(c.F_up) > 0 else abs(np.max(r1["F_cyl_N"]) - c.F_up[0])) +
+                               min(abs(np.min(r2["F_cyl_N"]) - c.F_min), float(np.min(np.abs(r2["F_cyl_N"] - c.F_up))) if np.ptp(c.F_up) > 0 else abs(np.max(r2["F_cyl_N"]) - c.F_up[0])))}
     # C5: rod margin interpolation vs direct leg_case (leg_rod_lateral_check.md 5.1: secant FL e 0.654, 26.6 kN, 119 kN -> 1.48)
     e = np.array([0.654, 0.660, 0.347, 0.3472]); F = np.array([26.6e3, 54.4e3, 36.9e3, 36.3e3]); P = np.array([119e3, 120e3, 74e3, 72e3])
     interp = c.rod_SF(e, F, P, 305e6)
@@ -654,7 +655,7 @@ def stage_main():
                     "conventions": "body x fwd, y left, z up; target R = Ry(theta) Rx(phi) (ZYX, yaw free); roll > 0 "
                                    "left up, pitch > 0 nose down; floor slope (phi_g, theta_g) = plane z = -tan(theta_g) x "
                                    "+ tan(phi_g) y (attitude on the crawler); forces kN, strokes m (motor coordinate)",
-                    "F_min_N": ctx().F_min, "F_up_N": ctx().F_up, "stroke_m": ctx().stroke,
+                    "F_min_N": ctx().F_min, "F_up_N": ASSUMPTIONS["force_upper_N"], "stroke_m": ctx().stroke,
                     "swivel_max_deg": ctx().swivel_max}}
     out["checks"] = stage_checks()
     print(f"checks done {time.time()-t0:.1f} s", flush=True)
@@ -856,7 +857,7 @@ def figure(d):
         code[s50 > smax] = 2
         code[fmn < Fmin + 5000] = 3
         code[be > bmax] = 4
-        code[fmx > Fup] = 5
+        code[fmx > float(np.min(Fup))] = 5   # map holds the max over legs: lowest per-leg limit (rear) is the safe side (rev. 30)
         ax.pcolormesh(R, P, code, cmap=cmap, vmin=-0.5, vmax=5.5, shading="nearest")
         ax.contour(R, P, s50 - smax, [0], colors="#08519c", linewidths=1.6)
         ax.contour(R, P, s20 - smax, [0], colors="#08519c", linewidths=1.0, linestyles="--")

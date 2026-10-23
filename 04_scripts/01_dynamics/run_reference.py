@@ -516,7 +516,7 @@ def main():
                                         c_pad=np.full(4, 2 * zt * math.sqrt(kc_nom * W_tot / g / 4))),
         # L1 (TEMPORARY DEFAULT, user decision 2026-10-19): rigid motor; contact kn = series(oil, rod, frame, concrete),
         # contact kt = series(swivel-leg lateral bending, concrete kt); one contact sphere per pad at the ball
-        "L1_rigid_motor_lumped_contact": dict(kv=k_L1, kh=kt_L1, c_pad=2 * zt * np.sqrt(k_L1 * W_tot / g / 4),
+        "L1_rigid_motor_lumped_contact": dict(kv=k_L1, kh=kt_L1, c_pad=2 * zt * np.sqrt(l1_damping_stiffness(p, geo, e_op, k_L1) * W_tot / g / 4),
                                               c_tan=2 * zt * np.sqrt(kt_L1 * W_tot / g / 4)),
         # L2 (default, CLAUDE.md 2026-10-19): rigid prismatic guide -> lateral stiffness = contact kt only
         "L2_force_motor_oil_spring": dict(kv=kv_H, kh=np.full(4, kc_nom), c_o=c_o, c_c=c_c),
@@ -624,7 +624,7 @@ def main():
     # Rod-side (annulus) oil column acts in parallel with the head-side column while its pressure stays above ~0
     # (one-sided: it stiffens when the leg unloads / piston moves down, cavitates toward 0 when the leg loads).
     A_head = dm.piston_area()
-    A_ann = math.pi / 4 * (A_["bore_diameter_m"] ** 2 - A_["rod_diameter_m"] ** 2)
+    A_ann = math.pi / 4 * (dm.cylinder_value("bore_diameter_m") ** 2 - dm.cylinder_value("rod_diameter_m") ** 2)  # per leg (rev. 30)
     beta = A_["oil_bulk_modulus_eff_Pa"]
     L0 = A_["oil_dead_length_m"]
     L_rod_side = geo.stroke - e_op + L0
@@ -636,8 +636,8 @@ def main():
         "k_rod_side_N_m": r(k_rod_side), "k_rod_side_over_k_oil_head": r(k_rod_side / ko, 4),
         "kv_with_rod_side_over_kv": r(dm.series(dm.series(ko + k_rod_side, kr, kf), kc_nom) / kv_H, 4),
         "max_pressure_Pa": p_max, "max_head_force_N": r(p_max * A_head), "max_rod_side_force_N": r(p_max * A_ann),
-        "max_static_head_pressure_Pa": r(float(tests["L1_rigid_motor_lumped_contact"]["levels"]["top"]["cylinder_force_N"][0]) / A_head),
-        "flow_4_legs_at_vmax_L_min": r(4 * geo.v_max * A_head * 6e4, 4), "pump_flow_L_min": 60.2,
+        "max_static_head_pressure_Pa": r(float(tests["L1_rigid_motor_lumped_contact"]["levels"]["top"]["cylinder_force_N"][0]) / A_head if np.ndim(A_head) == 0 else np.asarray(tests["L1_rigid_motor_lumped_contact"]["levels"]["top"]["cylinder_force_N"], float) / A_head),
+        "flow_4_legs_at_vmax_L_min": r((4 * geo.v_max * A_head if np.ndim(A_head) == 0 else geo.v_max * float(np.sum(A_head))) * 6e4, 4), "pump_flow_L_min": 60.2,
     }
 
     # ------------------------------------------------------------ V12: sloped floor, levelled body, swivel pads
@@ -1023,7 +1023,7 @@ def _v7_ball_centre(p, geo, e_op, k_L1, kt_L1, tests):
     hb = _ball_heights(p)
     zt = dm.ASSUMPTIONS["modal_damping_ratio_body"]
     W_tot = dm.body_with_rods(p, geo, "top", e_op).mass * g
-    cn = 2 * zt * np.sqrt(k_L1 * W_tot / g / 4)
+    cn = 2 * zt * np.sqrt(l1_damping_stiffness(p, geo, e_op, k_L1) * W_tot / g / 4)  # LOCK basis if the YAML says so (rev. 30)
     ct = 2 * zt * np.sqrt(kt_L1 * W_tot / g / 4)
     cfg = tests["L1_rigid_motor_lumped_contact"]
     if r(cn) != cfg["c_pad_N_s_m"] or r(ct) != cfg["c_tan_N_s_m"]:
@@ -1335,5 +1335,62 @@ def _beta_ball_centre(res, p, geo, e_op, kt_L1):
         ent[BETA_BALL_KEY] = r(f["ball"], 4)
 
 
+def l1_damping_stiffness(p, geo, e_op, k_L1):
+    """Stiffness on which the L1 pad dashpot c = 2 zeta sqrt(k m/4) is set (rev. 30, dynamics_model.md 5.12.8 Q-D3).
+
+    YAML contact.rigid_floor.L1.derivation.damping_basis 'LOCK' (L1-R): k_lock = series(k_oil + k_rod_side, k_rod,
+    k_frame, k_concrete), k_rod_side = beta A_ann / (stroke - e_op + L0) computed here and checked against the YAML
+    derivation.k_rod_side_N_m (rel 1e-6). Any other value or no key (YAML before L1-R): k_L1 itself (bit-identical).
+    """
+    d = p["contact"]["rigid_floor"]["L1"]["derivation"]
+    if d.get("damping_basis", "HEAD") != "LOCK":
+        return k_L1
+    A_ = dm.ASSUMPTIONS
+    beta = float(p["actuator"].get("oil_bulk_modulus_eff_Pa", A_["oil_bulk_modulus_eff_Pa"]))
+    L0 = float(p["actuator"].get("oil_dead_length_m", A_["oil_dead_length_m"]))
+    k_rs = beta * np.broadcast_to(dm.annulus_area(), (4,)) / (geo.stroke - np.asarray(e_op, float) + L0)
+    k_rs_yaml = np.array([float(d["k_rod_side_N_m"][n]) for n in dm.LEG_NAMES])
+    if np.max(np.abs(k_rs / k_rs_yaml - 1.0)) > 1e-6:
+        raise RuntimeError(f"rod-side stiffness {k_rs} differs from the YAML derivation {k_rs_yaml}")
+    kc = dm.k_concrete_westergaard()["k_slab_N_m"]
+    return dm.series(dm.series(dm.k_oil(e_op) + k_rs, dm.k_rod(), A_["frame_bracket_stiffness_N_m"]), kc)
+
+
+def l1r_cli(argv=None):
+    """Options of the L1-R reference block (dynamics_model.md rev. 32, 5.14); no option = main() unchanged.
+
+    --l1r-out PATH  write only the L1-R block (l1r_reference.build_block) to PATH, series to PATH .npz;
+                    reference.json is read for the cross-checks and not written
+    --with-l1r      run main() (writes reference.json as before), then add the block under l1r_reference.L1R_KEY
+    """
+    import argparse
+
+    ap = argparse.ArgumentParser(description=l1r_cli.__doc__.split("\n")[0])
+    ap.add_argument("--l1r-out", type=Path, default=None)
+    ap.add_argument("--with-l1r", action="store_true")
+    a = ap.parse_args(argv)
+    if a.l1r_out is None and not a.with_l1r:
+        main()
+        return
+    import l1r_reference as l1r
+
+    if a.with_l1r:
+        main()
+    with open(OUT, encoding="utf-8") as f:
+        res = json.load(f)
+    out_path = a.l1r_out if a.l1r_out is not None else OUT.with_name(OUT.stem + "_L1R_series.json")
+    block = l1r.build_block(ref_res=res, npz_out=out_path.with_suffix(".npz"))
+    if a.with_l1r:
+        res[l1r.L1R_KEY] = block
+        with open(OUT, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(res, f, indent=1, ensure_ascii=False)
+        print("added", l1r.L1R_KEY, "to", OUT)
+    if a.l1r_out is not None:
+        a.l1r_out.parent.mkdir(parents=True, exist_ok=True)
+        with open(a.l1r_out, "w", encoding="utf-8", newline="\n") as f:
+            json.dump({l1r.L1R_KEY: block}, f, indent=1, ensure_ascii=False)
+        print("written", a.l1r_out)
+
+
 if __name__ == "__main__":
-    main()
+    l1r_cli()

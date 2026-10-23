@@ -57,6 +57,8 @@ IMU_MOUNT_C1_BODY_M: Vector3 = (0.31, 0.88, 0.040)
 
 MICRO_G_PER_G = 1e6
 MILLI_G_PER_G = 1e3
+SECONDS_PER_HOUR = 3600.0
+SQRT_SECONDS_PER_HOUR = 60.0
 
 # Noise draws per sample: accelerometer xyz then gyro xyz (see module docstring).
 _AXIS_COUNT = 3
@@ -128,23 +130,43 @@ class ImuGrade:
             on x and y (the reduced model's convention).
         noise_density_ug_rtHz: Accelerometer white-noise density (micro-g per root hertz).
         basis: Where the numbers come from.
+        gyro_arw_deg_rt_h: Gyro angle random walk (deg per root hour), ASSUMPTION.
+        gyro_bias_deg_h: Constant gyro bias, the same sign on every axis (deg per hour),
+            ASSUMPTION.
     """
 
     name: ImuGradeName
     zero_error_deg: float
     noise_density_ug_rtHz: float
     basis: str
+    gyro_arw_deg_rt_h: float = 0.0
+    gyro_bias_deg_h: float = 0.0
 
     @property
     def zero_error_mg(self) -> float:
         """Zero error as an accelerometer bias in milli-g (``sin(angle) x 1000``)."""
         return math.sin(math.radians(self.zero_error_deg)) * MILLI_G_PER_G
 
+    @property
+    def gyro_noise_density_rad_s_rtHz(self) -> float:
+        """ARW as a rate noise density: deg / sqrt(h) -> rad / s / sqrt(Hz) (= rad / sqrt(s))."""
+        return math.radians(self.gyro_arw_deg_rt_h) / SQRT_SECONDS_PER_HOUR
+
+    @property
+    def gyro_bias_rad_s(self) -> float:
+        """Gyro bias in rad/s."""
+        return math.radians(self.gyro_bias_deg_h) / SECONDS_PER_HOUR
+
 
 _GRADE_SOURCE = (
     "00_docs/05_sensors/imu_cabin_and_accuracy_review.md 4.1; same values as "
     "04_scripts/01_dynamics/run_imu_accuracy_review.py GRADES"
 )
+# Gyro errors per grade: 00_docs/04_control/s6_control_spec.md 10.3 (ASSUMPTION, approved by
+# the user 2026-10-21, U9; replace once a sensor is selected). Requirement U8 (a): ARW <= 0.15
+# deg/sqrt(h), bias instability <= 10 deg/h.
+_GOOD_GYRO = {"gyro_arw_deg_rt_h": 0.15, "gyro_bias_deg_h": 5.0}
+_NORMAL_GYRO = {"gyro_arw_deg_rt_h": 0.30, "gyro_bias_deg_h": 20.0}
 
 IMU_GRADES: MappingProxyType[ImuGradeName, ImuGrade] = MappingProxyType(
     {
@@ -156,12 +178,14 @@ IMU_GRADES: MappingProxyType[ImuGradeName, ImuGrade] = MappingProxyType(
             0.046,
             15.0,
             f"excellent class after field zero (ifm JN2101 B 0.046 deg); {_GRADE_SOURCE}",
+            **_GOOD_GYRO,
         ),
         ImuGradeName.NORMAL_ZEROED: ImuGrade(
             ImuGradeName.NORMAL_ZEROED,
             0.072,
             82.0,
             f"normal class after field zero (SICK TMM88D-MJI B 0.072 deg); {_GRADE_SOURCE}",
+            **_NORMAL_GYRO,
         ),
         ImuGradeName.NORMAL_ZEROED_REPEATABILITY: ImuGrade(
             ImuGradeName.NORMAL_ZEROED_REPEATABILITY,
@@ -169,6 +193,7 @@ IMU_GRADES: MappingProxyType[ImuGradeName, ImuGrade] = MappingProxyType(
             82.0,
             f"normal after field zero + power-on repeatability 0.05 deg (linear sum); "
             f"{_GRADE_SOURCE}",
+            **_NORMAL_GYRO,
         ),
         ImuGradeName.NORMAL_AS_SHIPPED: ImuGrade(
             ImuGradeName.NORMAL_AS_SHIPPED,
@@ -176,11 +201,12 @@ IMU_GRADES: MappingProxyType[ImuGradeName, ImuGrade] = MappingProxyType(
             82.0,
             f"normal class as shipped, no field zero (TMM88D-MJI A 0.17 deg); reference only, "
             f"the field zero is mandatory; {_GRADE_SOURCE}",
+            **_NORMAL_GYRO,
         ),
     }
 )
-"""Grade name -> values. Gyro errors are not graded (no source values; the controller C2
-uses the accelerometer tilt only)."""
+"""Grade name -> values. The gyro errors (ASSUMPTION, s6_control_spec 10.3) matter for the
+probe attitude cue of C2 (rate-integrated attitude); the tilt itself is the accelerometer's."""
 
 
 # --- error configuration -------------------------------------------------------------------
@@ -282,15 +308,19 @@ def imu_config_for_grade(
 
     The zero error becomes an accelerometer bias of ``sin(angle) g`` on x and y with the same
     (positive) sign and none on z, exactly as in the reduced model. A positive y bias reads as
-    positive roll, a positive x bias as negative (nose-up) pitch. Gyro errors are zero.
+    positive roll, a positive x bias as negative (nose-up) pitch. The gyro gets the grade's
+    bias with the same (positive) sign on every axis and its ARW as white rate noise.
     Quantisation is off (no source value).
     """
     grade = IMU_GRADES[ImuGradeName(grade_name)]
     bias_m_s2 = grade.zero_error_mg / MILLI_G_PER_G * gravity_m_s2
     noise_density = grade.noise_density_ug_rtHz / MICRO_G_PER_G * gravity_m_s2
+    gyro_bias = grade.gyro_bias_rad_s
     return ImuErrorConfig(
         accel_bias_m_s2=(bias_m_s2, bias_m_s2, 0.0),
         accel_noise_density_m_s2_rtHz=noise_density,
+        gyro_bias_rad_s=(gyro_bias, gyro_bias, gyro_bias),
+        gyro_noise_density_rad_s_rtHz=grade.gyro_noise_density_rad_s_rtHz,
         delay_samples=delay_samples,
         sample_period_s=sample_period_s,
         grade=grade.name.value,

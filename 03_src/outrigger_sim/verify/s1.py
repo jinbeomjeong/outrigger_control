@@ -57,6 +57,21 @@ def _f32(value: float) -> float:
     return float(np.float32(value))
 
 
+def _pad_dashpot(params: Params, leg_index: int, head_only: bool) -> tuple[float, float]:
+    """YAML pad dashpot ``(gn, cn)`` the model uses (``chrono/contact.pad_material_values``):
+    ``gn_per_pad_1_s`` / ``cn_per_pad_N_s_m`` (LOCK basis with the REXOME35 YAML,
+    dynamics_model.md 5.12.8 Q-D3), or the head-only regression keys when the model was built
+    with ``head_only_dashpot``."""
+    l1 = params.contact.rigid_floor.L1
+    if not head_only:
+        return float(l1.gn_per_pad_1_s[leg_index]), float(l1.cn_per_pad_N_s_m[leg_index])
+    name = params.legs[leg_index].name
+    return (
+        float(params.get("contact.rigid_floor.L1.gn_per_pad_head_only_1_s")[name]),
+        float(params.get("contact.rigid_floor.L1.cn_per_pad_head_only_N_s_m")[name]),
+    )
+
+
 def _material_checks(
     prefix: str, entries: Sequence[Mapping[str, Any]], kn: float, gn: float
 ) -> list[CheckResult]:
@@ -212,17 +227,16 @@ def v0_checks(params: Params, inventory: Mapping[str, Any]) -> list[CheckResult]
             )
         )
         l1 = params.contact.rigid_floor.L1
+        gn_yaml, cn_yaml = _pad_dashpot(params, i, bool(inventory.get("head_only_dashpot")))
         out.extend(
-            _material_checks(
-                f"{leg.name} pad sphere", spheres, l1.kn_per_pad_N_m[i], l1.gn_per_pad_1_s[i]
-            )
+            _material_checks(f"{leg.name} pad sphere", spheres, l1.kn_per_pad_N_m[i], gn_yaml)
         )
         out.append(
             check_rel(
                 "V0",
                 f"{leg.name} gn = cn / m_moving (R5)",
-                l1.gn_per_pad_1_s[i],
-                l1.cn_per_pad_N_s_m[i] / mp.mass_kg,
+                gn_yaml,
+                cn_yaml / mp.mass_kg,
                 1e-8,
                 "1/s",
                 note="YAML consistency (9 significant digits)",

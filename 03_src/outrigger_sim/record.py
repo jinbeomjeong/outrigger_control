@@ -117,10 +117,20 @@ MEASURED_STROKE_CORRECTED_FIELD = RecordField(
 )
 """Recorded when the engine provides the corrected stroke; not part of the
 all-or-nothing ``meas.*`` group because older engines do not produce it."""
+MEASURED_ROD_PRESSURE_FIELD = RecordField(
+    "meas.rod_pressure",
+    (LEG_COUNT,),
+    "Pa",
+    "Measurements.rod_pressure_Pa",
+    is_optional=True,
+)
+"""Recorded when the measurements carry a rod-side pressure (C2 R6-P, spec 51.1 P-1); NaN
+marks a dropped-out reading."""
 SUPPLEMENTARY_FIELDS: tuple[RecordField, ...] = (
     STROKE_TRUE_FIELD,
     *MEASUREMENT_FIELDS,
     MEASURED_STROKE_CORRECTED_FIELD,
+    MEASURED_ROD_PRESSURE_FIELD,
 )
 """Record arrays added by this module on top of :data:`signals.RECORD_FIELDS`."""
 
@@ -254,10 +264,9 @@ def _check_optional_groups(names: set[str]) -> None:
     if present and present != measurement_names:
         missing = sorted(measurement_names - present)
         raise RecordError(f"measurement fields are all-or-nothing; missing {missing}")
-    if MEASURED_STROKE_CORRECTED_FIELD.name in names and not present:
-        raise RecordError(
-            f"{MEASURED_STROKE_CORRECTED_FIELD.name} needs the other measurement fields"
-        )
+    for field in (MEASURED_STROKE_CORRECTED_FIELD, MEASURED_ROD_PRESSURE_FIELD):
+        if field.name in names and not present:
+            raise RecordError(f"{field.name} needs the other measurement fields")
 
 
 def _validate_sample_arrays(arrays: Mapping[str, NDArray[Any]]) -> int:
@@ -347,6 +356,8 @@ def _optional_columns(
             columns[field.name] = getattr(measurements, attribute)
         if measurements.stroke_corrected_m is not None:
             columns[MEASURED_STROKE_CORRECTED_FIELD.name] = measurements.stroke_corrected_m
+        if measurements.rod_pressure_Pa is not None:
+            columns[MEASURED_ROD_PRESSURE_FIELD.name] = measurements.rod_pressure_Pa
     if energy is not None:
         columns.update(_energy_columns(energy))
     return columns

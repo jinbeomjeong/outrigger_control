@@ -70,6 +70,30 @@ F_MIN = float(P["control"]["F_min_cylinder_N"])
 TOUCH = np.asarray(geo.touch_extension, float)
 X3 = dm.crawler_kn_scales(P)[-1]
 
+# Lift event windows follow v_max (rev. 31: 22.667 -> 20.924 mm/s moved the touches from about 15.0 s to
+# 16.3 s and broke the fixed windows). They are anchored on the geometric first touch min(TOUCH) / v_max
+# (equivalent time origin) with the offsets the fixed windows had at 22.667 mm/s (anchor 15.04 s):
+# Part C 14.0 .. 16.5 s, Part D 14.7 .. 16.4 s. Both must hold every touch and the crawler lift-off.
+T_FIRST_TOUCH_GEOMETRIC_S = float(TOUCH.min() / V)
+QUASI_STATIC_WINDOW_OFFSET_S = (-1.0, 1.5)
+DYNAMIC_WINDOW_OFFSET_S = (-0.35, 1.35)
+QUASI_STATIC_GRID_STEP_S = 2e-3
+BUSHING_AT_T1_NOTE = ("instantaneous value at the window end t1, not judged; depends on t1 through the phase of "
+                      "the about 3 Hz pitch-surge mode after crawler lift-off (zeta 0.014, tau about 3.8 s)")
+
+
+def lift_window(offset_s):
+    """(start, end) s of a lift event window, offset from the geometric first touch."""
+    return T_FIRST_TOUCH_GEOMETRIC_S + offset_s[0], T_FIRST_TOUCH_GEOMETRIC_S + offset_s[1]
+
+
+def first_index(indices, event, window):
+    """First index of a found event; a clear error instead of an IndexError when the window misses it."""
+    if len(indices) == 0:
+        raise RuntimeError(f"Part C: no {event} in the window {window[0]:.3f} .. {window[1]:.3f} s "
+                           f"(v_max {V * 1e3:.3f} mm/s)")
+    return int(indices[0])
+
 
 def crawler_centres():
     """(24,3) crawler sphere centres, body coordinates (rollers then end shoes, left track first)."""
@@ -257,11 +281,12 @@ def part_c():
                                              delta, W, cg)
             return np.concatenate([act[:4], [act[4:].any()]])
 
-        tg = np.arange(14.0, 16.5, 2e-3)
+        window = lift_window(QUASI_STATIC_WINDOW_OFFSET_S)
+        tg = np.arange(*window, QUASI_STATIC_GRID_STEP_S)
         fl = np.array([lin_flags(t) for t in tg])
         lin = {}
         for col, lab in enumerate(list(LEGS) + ["crawler_off"]):
-            k = np.where(fl[1:, col] != fl[:-1, col])[0][0]
+            k = first_index(np.where(fl[1:, col] != fl[:-1, col])[0], f"linear {lab} flag change", window)
             lo, hi, f0 = tg[k], tg[k + 1], fl[k, col]
             for _ in range(45):
                 mid = 0.5 * (lo + hi)
@@ -275,14 +300,14 @@ def part_c():
         ex = {}
         for i, lab in enumerate(LEGS):
             pp = np.array([r[1][i] for r in rows])
-            k = np.where((pp[1:] > 0) & (pp[:-1] <= 0))[0][0]
+            k = first_index(np.where((pp[1:] > 0) & (pp[:-1] <= 0))[0], f"exact {lab} touch", window)
             ex[lab] = brentq(lambda t: exact_lift_state(np.minimum(V * t, E_OP), sc, rows[k][0])[1][i],
                              tg[k], tg[k + 1], xtol=1e-12)
         pcm = np.array([r[2].max() for r in rows])
-        k = np.where((pcm[1:] <= 0) & (pcm[:-1] > 0))[0][0]
+        k = first_index(np.where((pcm[1:] <= 0) & (pcm[:-1] > 0))[0], "exact crawler lift-off", window)
         ex["crawler_off"] = brentq(lambda t: exact_lift_state(np.minimum(V * t, E_OP), sc, rows[k][0])[2].max(),
                                    tg[k], tg[k + 1], xtol=1e-12)
-        out[name] = {"linear_reference_convention_s": lin, "exact_pdelta_s": ex,
+        out[name] = {"window_s": list(window), "linear_reference_convention_s": lin, "exact_pdelta_s": ex,
                      "exact_minus_linear_ms": {k2: (ex[k2] - lin[k2]) * 1e3 for k2 in lin}}
     return out
 
@@ -368,7 +393,8 @@ def settle_on_crawler(scale):
     return np.concatenate([[0.0, 0.0, s[0]], q, np.zeros(6)]), math.degrees(s[2])
 
 
-def run6(scale, bushing, t0=14.7, t1=16.4):
+def run6(scale, bushing):
+    t0, t1 = lift_window(DYNAMIC_WINDOW_OFFSET_S)
     m = Lift6(scale, bushing)
     y, pitch0 = settle_on_crawler(scale)
     t = t0
@@ -428,7 +454,10 @@ def run6(scale, bushing, t0=14.7, t1=16.4):
             "crawler_recontacts": int(len(np.where((Fc_pen[1:] > 0) & (Fc_pen[:-1] <= 0))[0])),
             "peak_pad_N": Fp_all.max(axis=0).tolist(), "peak_pad_t_s": tt[Fp_all.argmax(axis=0)].tolist(),
             "peak_cylinder_N": (Fp_all.max(axis=0) - ROD_W).tolist(),
-            "bushing_force_at_t1_N": Ft_all[-1].tolist(), "bushing_force_max_N": Ft_all.max(axis=0).tolist(),
+            # instantaneous value at the window end t1, not a judged quantity: after the crawler lift-off it
+            # follows the phase of the about 3 Hz pitch-surge mode (zeta 0.014, tau about 3.8 s), so it moves with t1
+            "bushing_force_at_t1_N": Ft_all[-1].tolist(), "bushing_force_at_t1_note": BUSHING_AT_T1_NOTE,
+            "bushing_force_max_N": Ft_all.max(axis=0).tolist(),
             "friction_use (|Ft| / mu N), no return mapping": fric, "window_s": [t0, t1]}
 
 

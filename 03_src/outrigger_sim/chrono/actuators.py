@@ -11,8 +11,8 @@ Model (per leg, applied in the actuator hook after every step, plan hook order s
 * stroke ends ``legs.<leg>.extension_range_m`` (0 ... 0.68 m): the target speed towards an
   end ``d`` away is limited to the discrete braking speed ``sqrt((a dt / 2)^2 + 2 a d) - a dt
   / 2``, so the leg brakes with the same acceleration limit and stops exactly at the end (last
-  speed step ``a dt``); a command beyond the end is cut there (ASSUMPTION: end cushion = the
-  command ramp);
+  speed change ``<= 9/8 a dt``: fractional final step + end clip); a command beyond the end is
+  cut there (ASSUMPTION: end cushion = the command ramp);
 * **acceleration limit** (user decision 2026-10-20, replaces the plan's "motor step stop"):
   the applied speed moves towards the target by at most ``a dt`` per step, ``a = v_max /
   ramp_s`` with ``ramp_s`` = YAML ``actuator.command_ramp_s`` = 0.1 s (ASSUMPTION, valve
@@ -76,6 +76,39 @@ defined over time); only the integrated end value ``s_ref`` is recomputed for th
 length. Change ``dt`` while the applied speed is constant (no ramp or braking in progress):
 otherwise one speed change may exceed ``a dt_new`` by up to ``a (dt_old - dt_new)``.
 
+**Force saturation (210 bar, S6, law C)** (plan S6 'cad: 힘 포화'; CLAUDE.md '구동기' and
+'압력 한계'; ``dynamics_model.md`` rev. 23 5.10, user decision 2026-10-21 U1 = (a) law C; YAML
+``legs.<leg>.cylinder.max_force_extend_N`` = 210 bar x head area, ``.max_force_retract_N`` = 210
+bar x annulus area, per leg (REXOME35; :func:`leg_force_limits_N`; without the per-leg keys the
+common ``actuator.max_force_*_N``, 218.1 / 18.6 kN)), judged **every physics step** in the
+actuator hook:
+
+* judged force ``F_dec = F_cyl - m_rod (u_act,n - u_act,n-1) / dt``: the cylinder force of the
+  step just taken (``GetMotorForce()``, + = pushes the pad down = extend, R4) minus the rod
+  inertia of the rigid motor's own speed change (``u_act,n`` = applied speed of that step =
+  Record ``u_applied``, ``u_act,n-1`` the one before; ``m_rod`` = ``legs.<leg>.moving_part.
+  mass_kg``), so the reading's inertial pulse does not trigger or release the limit;
+* saturated when ``F_dec >= F_ext`` and the new speed ``u > 0``, or ``F_dec <= -F_ret`` and
+  ``u < 0``. Then, if the leg is moving in that direction, it **decelerates** with
+  ``a_sat = v_max / t_sat``: ``u_new = sign(u) max(|u| - a_sat dt, 0)``, ``t_sat`` =
+  :data:`SATURATION_STOP_S` = 2 ms (ASSUMPTION, YAML ``actuator.saturation_stop_s`` at the next
+  regeneration); from rest a start in the saturated direction stays 0. Otherwise the command
+  ramp applies unchanged. A rigid one-step cut (S6 stage 1) put ``m_rod v / dt`` (12 kN at
+  2e-4 s, 242 kN at 1e-5 s) into the reading; with ``t_sat`` the inertia is ``m_rod v / t_sat``
+  (1.2 kN) at any dt. :meth:`L1SpeedActuator.check_saturation_stop` warns when ``t_sat`` is
+  outside ``10 dt <= t_sat <= 2 c_n / k_n``;
+* the command is kept, so the leg resumes with the acceleration limit as soon as ``F_dec``
+  drops below the limit (pressure-compensated valve: the leg creeps until the static force
+  equals the limit, about ``c_n v / k_n`` = 0.03 mm on the L1 pad); a command towards the
+  other direction is followed at once.
+
+State: ``u_act,n-1`` is snapshot key ``prev_applied_u_m_s`` (R16 optional key; absent = the
+current applied speed). Diagnostics :attr:`L1SpeedActuator.saturated`,
+:attr:`~L1SpeedActuator.saturation_step_count`, :attr:`~L1SpeedActuator.saturation_start_count`
+are not R16 state. Runs that never reach the limits are bit-identical to the model without the
+rule. ``from_params`` enables it by default; ``force_saturation=False`` or the constructor
+without limits reproduces the S2b-S5 actuator.
+
 Units SI; per-leg arrays in LEG_ORDER.
 """
 
@@ -107,8 +140,13 @@ STATE_KEYS = (
     "ramp_s",
 )
 
-OPTIONAL_STATE_KEYS = ("soft_lo_m", "soft_hi_m")
+OPTIONAL_STATE_KEYS = ("soft_lo_m", "soft_hi_m", "prev_applied_u_m_s")
 """Snapshot keys added in S3 (soft travel limits); absent = the stroke range."""
+
+SATURATION_STOP_S = 2.0e-3
+"""ASSUMPTION (dyn rev. 23 law C, user decision 2026-10-21): stop time of the saturation
+deceleration, ``a_sat = v_max / t_sat``; YAML ``actuator.saturation_stop_s`` at the next
+regeneration."""
 
 HOOK_TIME_REL_TOL = 1.0e-12
 """Relative tolerance of the hook-time and hook-dt match in the guard (same float path)."""
@@ -128,6 +166,22 @@ def _vector(value: ArrayLike, n: int, name: str) -> NDArray[np.float64]:
     return out
 
 
+def leg_force_limits_N(params: Params) -> tuple[list[float], list[float]]:
+    """Per-leg (LEG_ORDER) force saturation limits ``(extend, retract)`` [N]:
+    ``legs.<leg>.cylinder.max_force_{extend,retract}_N`` (REXOME35, 210 bar x head / annulus
+    area) when every leg has both keys, else the common ``actuator.max_force_*_N``."""
+    from outrigger_sim.params import LEG_ORDER, ParamsError
+
+    try:
+        ext = [float(params.get(f"legs.{leg}.cylinder.max_force_extend_N")) for leg in LEG_ORDER]
+        ret = [float(params.get(f"legs.{leg}.cylinder.max_force_retract_N")) for leg in LEG_ORDER]
+    except ParamsError:
+        n = len(LEG_ORDER)
+        ext = [float(params.get("actuator.max_force_extend_N"))] * n
+        ret = [float(params.get("actuator.max_force_retract_N"))] * n
+    return ext, ret
+
+
 def make_motion_function(s_m: float) -> ch.ChFunctionRamp:
     """Motion function of an actuated leg: ``ChFunctionRamp(s, 0)`` (holds ``s``)."""
     return ch.ChFunctionRamp(float(s_m), 0.0)
@@ -145,6 +199,14 @@ class L1SpeedActuator:
         ramp_s: 0 -> v_max time of the acceleration limit (YAML ``actuator.command_ramp_s``
             via :meth:`from_params`); 0 = no limit (speed steps, only for the inertial-spike
             comparison).
+        max_force_extend_N, max_force_retract_N: Force saturation limits (module docstring,
+            both positive); None (default) = no force saturation (S2b-S5 behaviour).
+            :meth:`from_params` takes the YAML values.
+        rod_mass_kg: Moving-part mass per leg for the judged force ``F_dec`` (None = 0, no
+            inertia correction).
+        saturation_stop_s: ``t_sat`` of the saturation deceleration (> 0).
+        saturation_stop_max_s: Upper bound ``2 c_n / k_n`` per leg for the warning of
+            :meth:`check_saturation_stop` (None = no upper check).
     """
 
     def __init__(
@@ -156,6 +218,11 @@ class L1SpeedActuator:
         *,
         max_speed_m_s: float,
         ramp_s: float,
+        max_force_extend_N: float | None = None,
+        max_force_retract_N: float | None = None,
+        rod_mass_kg: ArrayLike | None = None,
+        saturation_stop_s: float = SATURATION_STOP_S,
+        saturation_stop_max_s: ArrayLike | None = None,
     ) -> None:
         n = len(motors)
         if n == 0 or len(functions) != n or len(ranges_m) != n:
@@ -185,6 +252,36 @@ class L1SpeedActuator:
         self._soft_hi = self._hi.copy()
         self._hook_t: float | None = None
         self._hook_dt: float | None = None
+        if (max_force_extend_N is None) != (max_force_retract_N is None):
+            raise ValueError("give both force limits or none")
+        self._f_ext: float | NDArray[np.float64] | None = None
+        self._f_ret: float | NDArray[np.float64] | None = None
+        if max_force_extend_N is not None and max_force_retract_N is not None:
+            # one value or one per leg (REXOME35: legs.<leg>.cylinder.*); kept a scalar when
+            # every leg has the same value (bit-identical to the common-limit actuator)
+            limits = []
+            for value, name in ((max_force_extend_N, "extend"), (max_force_retract_N, "retract")):
+                arr = np.array(value, dtype=float).reshape(-1)
+                if arr.size not in (1, n):
+                    raise ValueError(f"{name} force limit: expected 1 or {n} values, got {arr}")
+                if not (np.all(arr > 0.0) and np.all(np.isfinite(arr))):
+                    raise ValueError(f"force limits must be positive: {arr.tolist()!r}")
+                limits.append(float(arr[0]) if bool(np.all(arr == arr[0])) else arr)
+            self._f_ext, self._f_ret = limits
+        self._saturated = np.zeros(n, dtype=bool)
+        self._saturation_steps = np.zeros(n, dtype=np.int64)
+        self._saturation_starts = np.zeros(n, dtype=np.int64)
+        self._last_force = np.full(n, np.nan)
+        self._last_judged = np.full(n, np.nan)
+        self._m_rod = np.zeros(n) if rod_mass_kg is None else _vector(rod_mass_kg, n, "rod_mass_kg")
+        if not (saturation_stop_s > 0.0 and math.isfinite(saturation_stop_s)):
+            raise ValueError(f"saturation_stop_s must be positive: {saturation_stop_s!r}")
+        self._t_sat = float(saturation_stop_s)
+        self._t_sat_max = (
+            None if saturation_stop_max_s is None
+            else _vector(saturation_stop_max_s, n, "saturation_stop_max_s")
+        )
+        self._t_sat_checked_dt: float | None = None
         self.reset_to(s0)
         # a fresh system is "not updated" (its first step runs a full Update)
         self._next_full_update = True
@@ -198,9 +295,16 @@ class L1SpeedActuator:
         s_init_m: ArrayLike,
         *,
         ramp_s: float | None = None,
+        force_saturation: bool = True,
     ) -> L1SpeedActuator:
         """YAML keys ``actuator.max_speed_m_s``, ``actuator.command_ramp_s`` (used when
-        ``ramp_s`` is None), ``legs.<leg>.extension_range_m``."""
+        ``ramp_s`` is None), ``legs.<leg>.extension_range_m`` and, with ``force_saturation``
+        (default, S6), ``actuator.max_force_extend_N`` / ``actuator.max_force_retract_N``."""
+        f_ext = f_ret = None
+        if force_saturation:
+            f_ext, f_ret = leg_force_limits_N(params)
+        kn = params.get("contact.rigid_floor.L1.kn_per_pad_N_m")
+        cn = params.get("contact.rigid_floor.L1.cn_per_pad_N_s_m")
         return cls(
             motors,
             functions,
@@ -208,6 +312,12 @@ class L1SpeedActuator:
             [leg.extension_range_m for leg in params.legs],
             max_speed_m_s=params.actuator.max_speed_m_s,
             ramp_s=params.actuator.command_ramp_s if ramp_s is None else ramp_s,
+            max_force_extend_N=f_ext,
+            max_force_retract_N=f_ret,
+            rod_mass_kg=[leg.moving_part.mass_kg for leg in params.legs],
+            saturation_stop_max_s=[
+                2.0 * float(cn[leg.name]) / float(kn[leg.name]) for leg in params.legs
+            ],
         )
 
     # --- read-only views --------------------------------------------------------------
@@ -238,6 +348,69 @@ class L1SpeedActuator:
     def soft_limits_m(self) -> NDArray[np.float64]:
         """(n, 2) soft travel limits ``lo, hi`` per leg (default: the stroke range)."""
         return np.column_stack([self._soft_lo, self._soft_hi])
+
+    @property
+    def force_limits_N(self) -> tuple[float | list[float], float | list[float]] | None:
+        """``(max_force_extend_N, max_force_retract_N)`` (a float, or a per-leg list when the
+        legs differ) or None without force saturation."""
+        if self._f_ext is None or self._f_ret is None:
+            return None
+
+        def plain(v: float | NDArray[np.float64]) -> float | list[float]:
+            return v if isinstance(v, float) else [float(x) for x in v]
+
+        return (plain(self._f_ext), plain(self._f_ret))
+
+    @property
+    def saturated(self) -> NDArray[np.bool_]:
+        """Legs whose speed the last hook cut by the force saturation (diagnostic)."""
+        return self._saturated.copy()
+
+    @property
+    def saturation_step_count(self) -> NDArray[np.int64]:
+        """Hooks per leg in which the force saturation cut the speed (diagnostic, not R16)."""
+        return self._saturation_steps.copy()
+
+    @property
+    def saturation_start_count(self) -> NDArray[np.int64]:
+        """Per leg: hooks in which the saturation began (not saturated in the hook before)."""
+        return self._saturation_starts.copy()
+
+    @property
+    def saturation_stop_s(self) -> float:
+        return self._t_sat
+
+    @property
+    def last_judged_force_N(self) -> NDArray[np.float64]:
+        """``F_dec`` of the last hook (module docstring); NaN before the first hook."""
+        return self._last_judged.copy()
+
+    def check_saturation_stop(self, dt_s: float) -> bool:
+        """Warn (``RuntimeWarning``) when ``t_sat`` is outside ``10 dt <= t_sat <= 2 c_n /
+        k_n``; returns whether it is inside."""
+        import warnings
+
+        ok = self._t_sat >= 10.0 * float(dt_s) * (1.0 - 1e-9)
+        if self._t_sat_max is not None:
+            ok = ok and bool(np.all(self._t_sat <= self._t_sat_max * (1.0 + 1e-9)))
+        if not ok:
+            warnings.warn(
+                f"saturation stop time {self._t_sat} s outside 10 dt = {10.0 * dt_s} s .. "
+                f"2 c_n / k_n = {None if self._t_sat_max is None else self._t_sat_max.tolist()} s",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+        return ok
+
+    @property
+    def last_cylinder_force_N(self) -> NDArray[np.float64]:
+        """Cylinder forces the last hook judged (NaN before the first hook or without
+        saturation)."""
+        return self._last_force.copy()
+
+    def reset_saturation_counters(self) -> None:
+        """Zero :attr:`saturation_step_count` (start of a scenario window)."""
+        self._saturation_steps[:] = 0
 
     @property
     def is_moving_segment(self) -> bool:
@@ -413,6 +586,7 @@ class L1SpeedActuator:
         self._loaded_start = self._ramp_start.copy()
         self._loaded_slope = self._ramp_slope.copy()
         self._acting_s = self._s_ref.copy()
+        self._prev_acting_u = self._acting_u
         self._acting_u = self._u.copy()
 
     def hook(self, model: Any, dt_s: float) -> None:
@@ -420,11 +594,24 @@ class L1SpeedActuator:
 
         ``dt_s`` must be the length of the **next** step (``L1Model`` passes its ``dt_s``,
         which ``L1Model.set_dt`` changes only between steps, together with :meth:`retime`).
+        With force limits, the cylinder forces of the step just taken are read from the
+        motors (module docstring, force saturation).
         """
-        self.advance(dt_s, float(model.system.GetChTime()))
+        forces = None
+        if self._f_ext is not None:
+            forces = np.array([m.GetMotorForce() for m in self._motors], dtype=float)
+        self.advance(dt_s, float(model.system.GetChTime()), cylinder_force_N=forces)
 
-    def advance(self, dt_s: float, t_s: float) -> None:
-        """One integration step of length ``dt_s`` starting at simulation time ``t_s``."""
+    def advance(
+        self, dt_s: float, t_s: float, *, cylinder_force_N: ArrayLike | None = None
+    ) -> None:
+        """One integration step of length ``dt_s`` starting at simulation time ``t_s``.
+
+        Args:
+            cylinder_force_N: Cylinder force per leg of the step just taken (+ = extend);
+                judged against the force limits when the actuator has them (module
+                docstring). None = no force saturation in this step.
+        """
         dt = float(dt_s)
         a = self.accel_limit_m_s2
         s = self._s_ref
@@ -446,6 +633,29 @@ class L1SpeedActuator:
             target = np.where((s >= hi) & (target > 0.0), 0.0, target)
             target = np.where((s <= lo) & (target < 0.0), 0.0, target)
             u_new = target
+        if cylinder_force_N is not None and self._f_ext is not None and self._f_ret is not None:
+            f = _vector(cylinder_force_N, self.n_legs, "cylinder_force_N")
+            if self._t_sat_checked_dt != dt:
+                self.check_saturation_stop(dt)
+                self._t_sat_checked_dt = dt
+            # judged force without the rod inertia of the motor's own speed change (law C)
+            f_dec = f - self._m_rod * (self._acting_u - self._prev_acting_u) / dt
+            cut = ((f_dec >= self._f_ext) & (u_new > 0.0)) | (
+                (f_dec <= -self._f_ret) & (u_new < 0.0)
+            )
+            self._last_force = f
+            self._last_judged = f_dec
+            if np.any(cut):
+                # decelerate in the saturated direction with a_sat = v_max / t_sat; from rest
+                # (or moving the other way) the start is suppressed; legs that are not cut
+                # keep their values bit for bit (module docstring)
+                step_sat = self._v_max / self._t_sat * dt
+                same_dir = np.sign(u) == np.sign(u_new)
+                decel = np.sign(u) * np.maximum(np.abs(u) - step_sat, 0.0)
+                u_new = np.where(cut, np.where(same_dir & (u != 0.0), decel, 0.0), u_new)
+                self._saturation_steps += cut
+                self._saturation_starts += cut & ~self._saturated
+            self._saturated = cut
         s_new = s + u_new * dt
         clipped = (s_new > hi) | (s_new < lo)
         if np.any(clipped):
@@ -488,6 +698,7 @@ class L1SpeedActuator:
             "ramp_s": np.array([self._ramp_s]),
             "soft_lo_m": self._soft_lo.copy(),
             "soft_hi_m": self._soft_hi.copy(),
+            "prev_applied_u_m_s": self._prev_acting_u.copy(),
         }
 
     def restore_state(self, arrays: Mapping[str, NDArray[Any]]) -> None:
@@ -514,6 +725,11 @@ class L1SpeedActuator:
         self._loaded_slope = _vector(arrays["loaded_ramp_slope_m_s"], n, "loaded_ramp_slope_m_s")
         self._acting_s = _vector(arrays["acting_s_ref_m"], n, "acting_s_ref_m")
         self._acting_u = _vector(arrays["acting_u_m_s"], n, "acting_u_m_s")
+        self._prev_acting_u = (
+            _vector(arrays["prev_applied_u_m_s"], n, "prev_applied_u_m_s")
+            if "prev_applied_u_m_s" in arrays
+            else self._acting_u.copy()
+        )
         self._soft_lo = (
             _vector(arrays["soft_lo_m"], n, "soft_lo_m")
             if "soft_lo_m" in arrays
@@ -556,6 +772,7 @@ class L1SpeedActuator:
         self._loaded_slope = zero.copy()
         self._acting_s = s.copy()
         self._acting_u = zero.copy()
+        self._prev_acting_u = zero.copy()
         self._next_full_update = False
         self._pending_post_restore = None
         self._hook_t = None

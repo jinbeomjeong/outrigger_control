@@ -429,6 +429,11 @@ def summarize():
     )
 
     index = json.loads(INDEX.read_text(encoding="utf-8"))
+    # never substitute results of another params revision (index_guard, 2026-10-22)
+    sys.path.insert(0, str(HERE))
+    from index_guard import guard, last_guard
+
+    index = guard(index, lambda c: index[c]["dir"])
     res, budgets, series = {}, {}, {}
     for cid, entry in index.items():
         if not (ROOT / entry["dir"] / "budget.npz").exists():
@@ -507,6 +512,7 @@ def summarize():
         }
     every = [c for r in res.values() for c in r["checks"]]
     doc = {
+        "index_guard": last_guard(),
         "stage": "S4 V8(b) energy budget (cad pre-check with the dyn rev. 19 definitions; "
                  "dyn final ruling 2026-10-21: pass, dynamics_model.md 5.8)",
         "generated_utc": _dt.datetime.now(_dt.UTC).isoformat(timespec="seconds"),

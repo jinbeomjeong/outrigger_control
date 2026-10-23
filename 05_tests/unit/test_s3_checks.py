@@ -9,9 +9,11 @@ import pytest
 
 from outrigger_sim.verify.metrics import fit_damped_sum
 from outrigger_sim.verify.s3 import (
+    l1r_module_normal_change,
     order_ratio,
     touch_geometric_checks,
     v4_judged_run_comparison,
+    v5_l1r_checks,
     v8a_checks,
     v8a_crawler_checks,
     v8a_crawler_modal_checks,
@@ -137,3 +139,41 @@ def test_fit_damped_sum_separates_close_modes() -> None:
     assert main.f_damped_Hz == pytest.approx(6.42, rel=1e-5)
     assert main.zeta == pytest.approx(1.3e-3, rel=1e-3)
     assert fit.components[2].zeta == pytest.approx(2.25e-3, rel=1e-2)
+
+
+# --- L1-R V5 (dynamics_model.md 5.17.5) ---------------------------------------------------------
+
+L1R_K1_OVER_K2 = [1.3097, 1.3097, 1.3536, 1.3536]
+L1R_KNEE_N = [4089.04, 4089.04, 3170.13, 3170.13]
+
+
+def test_l1r_module_normal_change_reproduces_the_dynamics_conversion() -> None:
+    """Bundle-B S3 v5 +1 mm: FL moving as is, FR / RL x k1/k2, RR above the knee + 828 N."""
+    contact = [5877.532, -4518.0797, -4862.1122, 5770.5149]
+    module = l1r_module_normal_change(contact, moving_leg=0, k1_over_k2=L1R_K1_OVER_K2,
+                                      knee_dF_N=L1R_KNEE_N)
+    assert module == pytest.approx([5877.5, -5917.3, -6581.4, 6598.6], abs=0.2)
+    assert module[3] - contact[3] == pytest.approx(3170.13 * (1 - 1 / 1.3536))
+
+
+def test_l1r_module_normal_change_is_continuous_at_the_knee() -> None:
+    at_knee = 3170.13 / 1.3536
+    below = l1r_module_normal_change([0.0, 0.0, 0.0, at_knee - 1e-6], moving_leg=0,
+                                     k1_over_k2=L1R_K1_OVER_K2, knee_dF_N=L1R_KNEE_N)
+    above = l1r_module_normal_change([0.0, 0.0, 0.0, at_knee + 1e-6], moving_leg=0,
+                                     k1_over_k2=L1R_K1_OVER_K2, knee_dF_N=L1R_KNEE_N)
+    assert below[3] == pytest.approx(3170.13, abs=1e-3)
+    assert above[3] == pytest.approx(3170.13, abs=1e-3)
+
+
+def test_v5_l1r_checks_use_the_largest_replica_component() -> None:
+    replica = [5887.79, -5912.97, -6582.94, 6608.13]
+    ok = v5_l1r_checks(1.0, dN_N=[5877.5, -5917.3, -6581.4, 6598.6], dN_ref_N=replica,
+                       key_dN="k", dattitude_deg=[0.012957, -0.005772],
+                       dattitude_ref_deg=[0.012969, -0.0057762], key_att="a")
+    assert [c.passed for c in ok] == [True, True, True]
+    assert ok[0].tol == pytest.approx(0.05 * 6608.13)
+    head_only = v5_l1r_checks(1.0, dN_N=[5877.5, -4518.1, -4862.1, 5770.5], dN_ref_N=replica,
+                              key_dN="k", dattitude_deg=[0.012957, -0.005772],
+                              dattitude_ref_deg=[0.012969, -0.0057762], key_att="a")
+    assert head_only[0].passed is False

@@ -63,7 +63,7 @@ OUT_JSON = OUT_DIR / "pad_tangential_check.json"
 CAD_JSON = ROOT / "01_cad" / "02_legs" / "leg_rod_lateral_check.json"
 LEGS = dm.LEG_NAMES
 DEG = math.pi / 180
-F_MIN = 9452.55
+F_MIN = float(dm.load_params()["control"]["F_min_cylinder_N"])  # YAML (rev. 30; was the literal 9452.55)
 R1 = "R:BS_hold"          # C2 revision R1 final option set (c2_design.md 16.5)
 IT3 = "R:it3"             # original proposal (dynamics_model.md 3.9.7 basis of the 36 kN value)
 MASTS = ("rigid", "stiff", "upper", "lower")
@@ -640,7 +640,7 @@ def cases_for(stage):
         def ra(cid, tg, mast="rigid", km="yaml", lv="top", mu=None, Fs=0.0, **spec):
             sp = dict(base); sp.update(spec)
             th = 55.0 if sp["speed_frac"] >= 0.2 else 2.0 + len(sp["steps"]) * (
-                2 * 0.004 / (sp["speed_frac"] * 0.022667) + sp["hold_s"] + sp["hold2_s"]) + 15.0
+                2 * 0.004 / (sp["speed_frac"] * round(float(dm.load_params()["actuator"]["max_speed_m_s"]), 6)) + sp["hold_s"] + sp["hold2_s"]) + 15.0
             c = mk(cid, stage, lv, tg, mast, kt_mode=km, mu=mu, t_hold=th, Fs=Fs, rcfg_extra={"reanchor": sp})
             return c
         if stage == "reanchor3":      # descending stop-threshold staircase (limits the load picked up by the other pads)
@@ -979,13 +979,13 @@ def figures(d):
         r = run_one(case)
         s = r["_series"]; t = s["t"]; H = s["H"]; S = s["S"]
         Fm = np.hypot(H[:, 17:21], H[:, 21:25])
-        Wr = float(geo_ctx()["geo"].rod_mass[0] * geo_ctx()["geo"].g)
+        Wr = geo_ctx()["geo"].rod_mass * geo_ctx()["geo"].g   # per leg (4,): front / rear moving parts differ
         log = r["reanchor"]["log"]; t0 = log[0]["t"]; t1 = log[-1]["t"]
         w = (t >= t0 - 2) & (t <= t1 + 2); ws = (S["t"] >= t0 - 2) & (S["t"] <= t1 + 2)
         att0 = np.array(r["reanchor"]["att0_deg"])
         for i in range(4):
             ax[0, jc].plot(t[w], Fm[w, i] / 1e3, color=cols[i], lw=0.8, label=LEGS[i])
-            ax[1, jc].plot(t[w], (H[w, 13 + i] - Wr) / 1e3, color=cols[i], lw=0.8)
+            ax[1, jc].plot(t[w], (H[w, 13 + i] - Wr[i]) / 1e3, color=cols[i], lw=0.8)
             ax[3, jc].plot(S["t"][ws], (np.asarray(S["x"])[ws, i] - np.asarray(S["x"])[ws][0, i]) * 1e3, color=cols[i], lw=0.8)
         ax[1, jc].axhline(F_MIN / 1e3, color="k", ls="--", lw=0.7)
         ax[2, jc].plot(S["t"][ws], np.degrees(np.asarray(S["phi"])[ws]) - att0[0], "k", lw=0.8, label="roll - roll0")

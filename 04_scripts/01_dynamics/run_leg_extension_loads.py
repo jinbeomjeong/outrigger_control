@@ -113,8 +113,9 @@ class LiftModel:
         self.A_pad = dm.support_matrix(geo.pad_xy)
         self.A_cr = dm.support_matrix(self.cr_xy)
         act = p["actuator"]
-        self.A_head = math.pi / 4 * float(act["bore_diameter_m"]) ** 2
-        self.F_ext_max = float(act["max_force_extend_N"])
+        # per leg (rev. 30): scalar while all legs share the cylinder (pre-REXOME35 YAML), else (4,)
+        self.A_head = dm.scalar_if_equal(math.pi / 4 * dm.leg_cylinder_array(p, "bore_diameter_m") ** 2)
+        self.F_ext_max = dm.scalar_if_equal(dm.leg_cylinder_array(p, "max_force_extend_N"))
         self.F_min_cyl = float(p["control"]["F_min_cylinder_N"])
 
     def solve(self, e: np.ndarray) -> dict:
@@ -365,7 +366,7 @@ def render_gif(model, series, ev, rigid_ev, args, ref_lines, dyn_arrays=None):
     ax_txt = fig.add_axes([0.785, 0.065, 0.20, 0.29]); ax_txt.axis("off")
 
     Fmin = model.F_min_cyl * kN
-    Fmax = model.F_ext_max * kN
+    Fmax = float(np.min(model.F_ext_max)) * kN   # per leg (rev. 30): lowest limit (rear) drawn
     mean_cyl = ref_lines["mean_cyl_N"] * kN
     mean_pad = ref_lines["mean_pad_N"] * kN
     ymax = 1.06 * max(Fcr.max(), Fmax, Fp.max())
@@ -378,7 +379,8 @@ def render_gif(model, series, ev, rigid_ev, args, ref_lines, dyn_arrays=None):
         ax.axhline(mean_cyl, color=INK_SECONDARY, lw=0.9, ls=":", zorder=1)
         if labels and xr is not None:
             x = xr[0] + 0.01 * (xr[1] - xr[0])
-            ax.text(x, Fmax + 4, "이동 중 신장 힘 한계 218.1 kN (210 bar × 헤드 면적)", fontsize=7.5,
+            ax.text(x, Fmax + 4, f"이동 중 신장 힘 한계 {Fmax:.1f} kN (210 bar × 헤드 면적"
+                    + (")" if np.ndim(model.F_ext_max) == 0 else ", 후방)"), fontsize=7.5,
                     color=ALERT, va="bottom")
             ax.text(x, Fmin + 4, f"F_min {Fmin:.2f} kN (실린더 힘 기준)", fontsize=7.5, color=ALERT, va="bottom")
             ax.text(x, mean_cyl + 4, f"정적 평균 {mean_cyl:.1f} kN (실린더) / {mean_pad:.1f} kN (패드)",
@@ -740,7 +742,7 @@ def main():
         "quasi_static_F_min_check": {n: {"after_touch_below_F_min_until_s": r(ev3[f"F_min_reached_{n}"], 6),
                                          "duration_after_touch_s": r(ev3[f"F_min_reached_{n}"] - ev3[f"touch_{n}"], 4)}
                                      for n in dm.LEG_NAMES},
-        "max_cylinder_force_vs_218kN": r(float(F_cyl3.max() / m3.F_ext_max), 4),
+        "max_cylinder_force_over_extend_limit (per leg, 210 bar x A_p)": r(float(np.max(F_cyl3 / m3.F_ext_max)), 4),  # rev. 30: was max_cylinder_force_vs_218kN
         "dynamic (damped 3-DoF, 14.5-20 s)": dyn_summary(d3, m3),
         "dynamic_nominal_kn_for_comparison": dyn_summary(dyn, model),
     }
@@ -797,7 +799,7 @@ def main():
                     "below_after_crawler_off": bool(((F_cyl[:, i] < model.F_min_cyl) & after).any()),
                     "samples_below_after_touch": int(m_.sum())}
     key = {
-        "end_state (e = stroke, t = 30 s)": {
+        "end_state (e = stroke, t = stroke / v_max)": {  # rev. 30: was "t = 30 s"
             "pad_reaction_N": r(s_end["F_pad"], 7), "cylinder_force_N": r(s_end["F_cyl"], 7),
             "head_pressure_bar": r(s_end["F_cyl"] / model.A_head / 1e5, 5),
             "crawler_total_N": r(s_end["F_cr_tot"], 4),
@@ -811,7 +813,7 @@ def main():
         "events_s": r(ev, 7),
         "F_min_cylinder_N": model.F_min_cyl, "F_min_pad_basis_N (F_min + rod weight)": r(model.F_min_cyl + model.W_rod, 7),
         "F_min_check": below,
-        "max_cylinder_force_vs_218kN": r(float(F_cyl.max() / model.F_ext_max), 4),
+        "max_cylinder_force_over_extend_limit (per leg, 210 bar x A_p)": r(float(np.max(F_cyl / model.F_ext_max)), 4),  # rev. 30: was max_cylinder_force_vs_218kN
         "mean_static_leg_load_N": {"cylinder (superstructure / 4)": r(model.W_super / 4, 7), "pad (incl. rod)": r(model.W_tot / 4, 7)},
         "active_set_switch_after_17s": switch_after_17,
     }
@@ -831,7 +833,8 @@ def main():
                 "crawler kn_total_N_m / n spheres / n floor-contact (roller) spheres": [p["contact"]["crawler"]["kn_total_N_m"], len(model.cr_xy), int((model.cr_gap <= 0).sum())],
                 "superstructure_mass_kg": r(model.body.mass, 9), "moving_part_mass_kg": r(model.geo.rod_mass, 9),
                 "combined_cg_xy_m": r(model.cg, 7), "touch_extension_m": r(model.touch, 7),
-                "head_area_m2": r(model.A_head, 7), "max_force_extend_N": model.F_ext_max,
+                "head_area_m2": r(model.A_head, 7),
+                "max_force_extend_N": model.F_ext_max if np.ndim(model.F_ext_max) == 0 else r(model.F_ext_max, 9),
             },
             "cylinder_force_definition": "F_cyl = F_pad - m_rod g (oil column force, + compression). Leg in the air: F_cyl = -m_rod g; head pressure sensor p = max(F_cyl,0)/A_head (rod side carries the hanging rod; seal friction neglected)",
         },

@@ -216,7 +216,8 @@ def _context_meta(ctx) -> dict:
         "pad_z_retracted_m": ctx.zp.tolist(),
         "crawler_corners_xy_m": ctx.corners.tolist(),
         "crawler_bottom_z_m": ctx.zcb,
-        "piston_area_m2": rcc.dm.piston_area(),
+        # per leg (4,) in LEG_NAMES order; piston_area() is per leg once the bores differ (rev. 30)
+        "piston_area_m2": np.broadcast_to(np.asarray(rcc.dm.piston_area(), float), (4,)).tolist(),
     }
 
 

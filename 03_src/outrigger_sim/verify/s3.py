@@ -4,7 +4,10 @@
 V8, V9, V13), 5.5 (V8(a) reduced role), 5.6 (V4 time origin = start command + ramp / 2, ramped
 stops), 5.7 rev. 17 (crawler V8(a) judged on modal zeta + energy trend, max(E - E0) recorded;
 V9 V4 judged on the geometric touch time, R15 touch recorded). Automatic pass / fail is a
-pre-check; the physical judgement is the dynamics-expert's.
+pre-check; the physical judgement is the dynamics-expert's. L1-R runs (locked rod-side chamber)
+judge V5 on the module normal force against the ``L1R_rod_side_reference_rev32`` block
+(:func:`v5_l1r_checks`, dynamics_model.md 5.14.8 / 5.17.5); V6 keeps :func:`v6_checks` with the
+L1-R thresholds of that block.
 
 Tolerances (named constants below) come from those tables; ASSUMPTION marks a choice of this
 module where the documents leave it open.
@@ -482,6 +485,87 @@ def v5_checks(
     return out
 
 
+# --- V5, L1-R (locked rod-side chamber) --------------------------------------------------------
+
+
+def l1r_module_normal_change(
+    dF_contact_N: Sequence[float],
+    *,
+    moving_leg: int,
+    k1_over_k2: Sequence[float],
+    knee_dF_N: Sequence[float],
+) -> list[float]:
+    """Total module normal force change of an L1-R run from the SMC contact force change.
+
+    dynamics_model.md 5.17.5 / 5.14.2: the SMC contact carries the head-only stiffness ``k2``
+    (``k2 delta``); the rod-side chamber adds ``F_x`` so that ``N = k2 delta + F_x``. The legs
+    locked at the start (all but ``moving_leg``) follow ``k1`` up to the knee and ``k2`` above
+    it, so per locked leg ``dN = (k1 / k2) dF`` while ``dN <= dF_knee`` and
+    ``dN = dF + dF_knee (1 - k2 / k1)`` above (unloading never reaches the knee). The moving
+    leg is ``k2`` throughout (``dN = dF``).
+
+    Args:
+        dF_contact_N: SMC contact force change per leg from the locked start (N, LEG_ORDER).
+        moving_leg: Index of the commanded leg.
+        k1_over_k2: ``k1 / k2`` per leg (``L1R_K1_OVER_K2``).
+        knee_dF_N: Knee load increase per leg after an extension (``L1R_KNEE_DF_AFTER_EXTEND_N``).
+    """
+    out = []
+    for leg, (contact_change, ratio, knee) in enumerate(
+        zip(dF_contact_N, k1_over_k2, knee_dF_N, strict=True)
+    ):
+        locked_change = float(ratio) * float(contact_change)
+        if leg == moving_leg:
+            out.append(float(contact_change))
+        elif locked_change <= float(knee):
+            out.append(locked_change)
+        else:
+            out.append(float(contact_change) + float(knee) * (1.0 - 1.0 / float(ratio)))
+    return out
+
+
+def v5_l1r_checks(
+    delta_mm: float,
+    *,
+    dN_N: Sequence[float],
+    dN_ref_N: Sequence[float],
+    key_dN: str,
+    dattitude_deg: Sequence[float],
+    dattitude_ref_deg: Sequence[float],
+    key_att: str,
+) -> list[CheckResult]:
+    """V5 of an L1-R run (dynamics_model.md 5.14.8, 5.17.5): module normal force change
+    (:func:`l1r_module_normal_change`) against the dynamic replica, tolerance 5 % of its
+    largest component; attitude 5 % per component."""
+    ref_f = np.asarray(dN_ref_N, dtype=float)
+    out = [
+        check_abs(
+            "V5",
+            f"FL +{delta_mm:g} mm: L1-R module normal force change per leg (tol 5 % of max "
+            "component)",
+            dN_N,
+            ref_f,
+            V5_REL_TOL * float(np.max(np.abs(ref_f))),
+            "N",
+            ref_key=key_dN,
+            note="SMC contact force converted to N = k2 delta + F_x (dynamics 5.17.5)",
+        )
+    ]
+    for j, label in enumerate(("roll", "pitch")):
+        out.append(
+            check_rel(
+                "V5",
+                f"FL +{delta_mm:g} mm: {label} change (L1-R)",
+                float(dattitude_deg[j]),
+                float(dattitude_ref_deg[j]),
+                V5_REL_TOL,
+                "deg",
+                ref_key=key_att,
+            )
+        )
+    return out
+
+
 # --- V6 ----------------------------------------------------------------------------------------
 
 
@@ -708,10 +792,12 @@ def v9_v4_checks(
 
 __all__ = [
     "LEG_ORDER",
+    "l1r_module_normal_change",
     "order_ratio",
     "v4_checks",
     "v4_record_items",
     "v5_checks",
+    "v5_l1r_checks",
     "v6_checks",
     "touch_geometric_checks",
     "v8a_checks",

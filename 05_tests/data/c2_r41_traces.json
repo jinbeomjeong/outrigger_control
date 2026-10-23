@@ -1,0 +1,230 @@
+{
+ "generator": "04_scripts/03_control/export_c2_r4_traces.py",
+ "revision": "R4.1",
+ "controller_revision": "R4.1",
+ "plant": "run_control_comparison.Plant (top, layout D crawler), ideal sensors, no delay",
+ "config": "C2Config R4.1 settings; slopes in the verification mode with the top settle map",
+ "cases": [
+  {
+   "name": "top_flat",
+   "case": {
+    "roll_deg": 0.0,
+    "pitch_deg": 0.0,
+    "is_verification": false,
+    "target_change_deg": null
+   },
+   "target_change_t_s": null,
+   "events": [
+    [
+     18.559999999999693,
+     "floor_estimate_touch"
+    ],
+    [
+     20.799999999999645,
+     "shadow_G1S:FL"
+    ],
+    [
+     20.799999999999645,
+     "shadow_G1L:RR"
+    ],
+    [
+     20.819999999999645,
+     "shadow_G1S:FR"
+    ],
+    [
+     20.819999999999645,
+     "shadow_G1L:RL"
+    ],
+    [
+     26.039999999999534,
+     "reanchor_skipped:theta_below_min"
+    ]
+   ],
+   "probe_rounds": 1,
+   "reanchor_outcomes": [
+    "skipped:theta_below_min"
+   ],
+   "final_phase": "ready",
+   "final_true_attitude_deg": [
+    7.639385231426414e-06,
+    -0.02329734448800293
+   ],
+   "rows": 2086
+  },
+  {
+   "name": "top_pitch+3.5",
+   "case": {
+    "roll_deg": 0.0,
+    "pitch_deg": 3.5,
+    "is_verification": true,
+    "target_change_deg": null
+   },
+   "target_change_t_s": null,
+   "events": [
+    [
+     18.2599999999997,
+     "floor_estimate_touch"
+    ],
+    [
+     18.999999999999684,
+     "shadow_G1S:FL"
+    ],
+    [
+     18.999999999999684,
+     "shadow_G1S:FR"
+    ],
+    [
+     18.999999999999684,
+     "shadow_G1L:RL"
+    ],
+    [
+     18.999999999999684,
+     "shadow_G1L:RR"
+    ],
+    [
+     37.34000000000024,
+     "reanchor_started"
+    ],
+    [
+     53.700000000002795,
+     "reanchor_completed"
+    ]
+   ],
+   "probe_rounds": 1,
+   "reanchor_outcomes": [
+    "completed"
+   ],
+   "final_phase": "ready",
+   "final_true_attitude_deg": [
+    -0.00011206878332661263,
+    -0.010037844510343055
+   ],
+   "rows": 3521
+  },
+  {
+   "name": "top_roll+5.5",
+   "case": {
+    "roll_deg": 5.5,
+    "pitch_deg": 0.0,
+    "is_verification": true,
+    "target_change_deg": null
+   },
+   "target_change_t_s": null,
+   "events": [
+    [
+     18.879999999999686,
+     "floor_estimate_touch"
+    ],
+    [
+     19.739999999999668,
+     "shadow_G1L:FL"
+    ],
+    [
+     19.759999999999668,
+     "shadow_G1S:FR"
+    ],
+    [
+     19.759999999999668,
+     "shadow_G1L:RL"
+    ],
+    [
+     19.759999999999668,
+     "shadow_G1S:RR"
+    ],
+    [
+     38.220000000000375,
+     "reanchor_skipped:theta_below_min"
+    ]
+   ],
+   "probe_rounds": 1,
+   "reanchor_outcomes": [
+    "skipped:theta_below_min"
+   ],
+   "final_phase": "ready",
+   "final_true_attitude_deg": [
+    -0.0114577139940458,
+    0.000274583448774651
+   ],
+   "rows": 2695
+  },
+  {
+   "name": "top_flat_change_pitch-3",
+   "case": {
+    "roll_deg": 0.0,
+    "pitch_deg": 0.0,
+    "is_verification": false,
+    "target_change_deg": [
+     0.0,
+     -3.0
+    ]
+   },
+   "target_change_t_s": 38.74000000000046,
+   "events": [
+    [
+     18.559999999999693,
+     "floor_estimate_touch"
+    ],
+    [
+     20.799999999999645,
+     "shadow_G1S:FL"
+    ],
+    [
+     20.799999999999645,
+     "shadow_G1L:RR"
+    ],
+    [
+     20.819999999999645,
+     "shadow_G1S:FR"
+    ],
+    [
+     20.819999999999645,
+     "shadow_G1L:RL"
+    ],
+    [
+     26.039999999999534,
+     "reanchor_skipped:theta_below_min"
+    ],
+    [
+     38.720000000000454,
+     "target_changed"
+    ],
+    [
+     40.42000000000072,
+     "shadow_G1S:FR"
+    ],
+    [
+     40.42000000000072,
+     "shadow_G1L:RL"
+    ],
+    [
+     40.48000000000073,
+     "shadow_G1S:FL"
+    ],
+    [
+     40.48000000000073,
+     "shadow_G1L:RR"
+    ],
+    [
+     57.74000000000343,
+     "reanchor_started"
+    ],
+    [
+     75.22000000000217,
+     "reanchor_completed"
+    ]
+   ],
+   "probe_rounds": 2,
+   "reanchor_outcomes": [
+    "skipped:theta_below_min",
+    "completed"
+   ],
+   "final_phase": "ready",
+   "final_true_attitude_deg": [
+    7.822088874325494e-05,
+    -3.0244885008667226
+   ],
+   "rows": 4777
+  }
+ ],
+ "row_count": 13079
+}

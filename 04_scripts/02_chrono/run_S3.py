@@ -56,6 +56,16 @@ STATES = ROOT / "07_results" / "states"
 ANALYSIS_DIR = ROOT / "06_analysis" / "01_chrono" / "13_S3"
 SUMMARY = ANALYSIS_DIR / "verify_S3_L1.json"
 FIGURE = ANALYSIS_DIR / "verify_S3_L1.png"
+
+# bundle B: output roots tagged by l1r_variant (no change without the override)
+sys.path.insert(0, str(HERE))
+import l1r_variant as _l1rv  # noqa: E402
+
+RESULTS = _l1rv.tagged(RESULTS)
+SUMMARY = _l1rv.tagged(SUMMARY)
+FIGURE = _l1rv.tagged(FIGURE)
+INDEX = RESULTS / "index.json"
+STATES = _l1rv.tagged(STATES)
 LEVEL = "top"
 S1_SNAPSHOT = "S1_L1_top"
 CRAWLER_SNAPSHOT = "S2b_crawler_top"
@@ -105,6 +115,13 @@ def _plain(value):
         return None
     return value
 
+
+
+def _l1r():
+    """Bundle-B L1-R override (``l1r_variant``; None = YAML)."""
+    import l1r_variant
+
+    return l1r_variant.mechanics()
 
 def _rel(path: Path) -> str:
     p = Path(path).resolve()
@@ -213,6 +230,7 @@ def _crawler_model(params, pose, dt_s):
         attach_bushings=False,
         actuator=True,
         dt_s=dt_s,
+        rod_side_mechanics=_l1r(),
     )
 
 
@@ -223,7 +241,7 @@ def _pads_model_from_s1(params, refs, dt_s, *, actuator=True):
     from outrigger_sim.scenarios.settle import analytic_static_pose
 
     sp = analytic_static_pose(params, refs, operating_extensions_m(params))
-    model = L1Model(params, pose=BodyPose(sp.origin_m, sp.quat_wxyz), dt_s=dt_s, actuator=actuator)
+    model = L1Model(params, pose=BodyPose(sp.origin_m, sp.quat_wxyz), dt_s=dt_s, actuator=actuator, rod_side_mechanics=_l1r())
     snap = load_snapshot(S1_SNAPSHOT, params_sha256=params.sha256, directory=STATES)
     t0 = model.restore(snap)
     return model, t0
@@ -305,7 +323,7 @@ def job_v8a(case, case_dir):
     modal = modal_reference(refs, LEVEL)
     if where == "pads":
         sp = analytic_static_pose(params, refs, operating_extensions_m(params))
-        model = L1Model(params, pose=BodyPose(sp.origin_m, sp.quat_wxyz), dt_s=dt)
+        model = L1Model(params, pose=BodyPose(sp.origin_m, sp.quat_wxyz), dt_s=dt, rod_side_mechanics=_l1r())
         p0 = model.probe()
         rot0 = quat_to_matrix(p0.body_quat_wxyz)
         point = p0.body_pos_m + rot0 @ modal.reference_point_body_m
@@ -321,6 +339,7 @@ def job_v8a(case, case_dir):
             extensions_m=(0.0, 0.0, 0.0, 0.0),
             attach_bushings=False,
             dt_s=dt,
+            rod_side_mechanics=_l1r(),
         )
         modes = crawler_linear_modes(params, pose)
         p0 = model.probe()
@@ -636,7 +655,8 @@ def job_v4(case, case_dir):
         touch_ref_s=touch_ref,
         key_touch=touch_key.notation(),
         max_cylinder_force_N=run.max_motor_force_N,
-        force_limit_N=float(refs.get(HYDRAULIC_MAX_HEAD_FORCE_N)),
+        # per leg (FL, FR, RL, RR) since the REXOME35 cylinders: 278.7 / 199.6 kN (element-wise check_max)
+        force_limit_N=[float(x) for x in refs.get(HYDRAULIC_MAX_HEAD_FORCE_N)],
         key_force_limit=HYDRAULIC_MAX_HEAD_FORCE_N.notation(),
         contact_force_mean_N=n_mean,
         contact_force_ref_N=[float(x) for x in refs.get(L1_CONTACT_FORCE_N, level=LEVEL)],
@@ -796,6 +816,8 @@ def job_v5(case, case_dir):
             dattitude_per_mm_ref_deg=refs.get(L1_DROLL_DPITCH_PER_MM_FL_DEG, level=LEVEL),
             key_att=L1_DROLL_DPITCH_PER_MM_FL_DEG.resolve(level=LEVEL).notation(),
         )
+    if _l1rv.is_on():  # dynamics_model.md 5.17.5: judged on the L1-R block
+        checks = _l1r_v5_checks(refs, out)[0]
     rec = save_record(recorder.finish(), case_dir / "record", overwrite=True)
     summary = {
         "case": case.case_id, "dt_s": dt, "baseline": {"contact_force_N": base_n.tolist(),
@@ -879,6 +901,9 @@ def job_v6(case, case_dir):
         key_f_min=L1_F_MIN_THRESHOLD_SINGLE_LEG.resolve(level=LEVEL).notation(),
         key_liftoff=L1_LIFTOFF_THRESHOLD_SINGLE_LEG.resolve(level=LEVEL).notation(),
     )
+    if _l1rv.is_on():  # dynamics_model.md 5.17.5: judged on the L1-R block
+        checks = _l1r_v6_checks(refs, direction, f_leg,
+                                None if f_leg is None else fmin_hits[f_leg], lift_leg, lift_mm_sim)
     for e in run.events:
         recorder.add_bushing_event(e.t_s, e.leg, e.kind)
     rec = save_record(recorder.finish(), case_dir / "record", overwrite=True)
@@ -1029,7 +1054,8 @@ def job_v9_free(case, case_dir):
                       run_meta=_run_meta(params, model, f"S3_{case.case_id}", dict(case.settings)))
 
 
-V4TOUCH_END_S = 15.40
+V4TOUCH_END_S = 15.40  # rev. 30: no longer used directly; end = max(reference touch) + V4TOUCH_MARGIN_S
+V4TOUCH_MARGIN_S = 0.25  # after the latest reference touch (was 15.40 - 15.177 = 0.223 s at 22.67 mm/s)
 """Touch-time diagnosis runs end here (command time; every reference touch + ramp/2 is
 before 15.25 s)."""
 
@@ -1078,7 +1104,9 @@ def job_v4touch(case, case_dir):
     geo = np.full(4, np.nan)
     r15 = np.full(4, np.nan)
     t_eq = None
-    n = round(V4TOUCH_END_S / dt)
+    # end after the latest reference touch (the touch time moves with v_max; 15.40 s was the 22.67 mm/s value)
+    t_end = float(np.max(refs.get(LIFT_V4_DYNAMIC_TOUCH_S_LAYOUT_D))) + V4TOUCH_MARGIN_S
+    n = round(t_end / dt)
     t_w = time.perf_counter()
     for _ in range(n):
         model.step()
@@ -1326,6 +1354,14 @@ def run_batch(ids, jobs):
     return report
 
 
+
+def _index_guard() -> dict:
+    """Guard record of the last _load_results() (index_guard.py): held cases of another params revision."""
+    from index_guard import last_guard
+
+    return last_guard()
+
+
 def _load_results():
     index = json.loads(INDEX.read_text(encoding="utf-8"))
     out = {}
@@ -1334,7 +1370,11 @@ def _load_results():
         if p.exists():
             out[cid] = json.loads(p.read_text(encoding="utf-8"))
             out[cid]["_dir"] = rel
-    return out
+    # never substitute results of another params revision (index_guard, 2026-10-22)
+    sys.path.insert(0, str(HERE))
+    from index_guard import guard
+
+    return guard(out, lambda c: out[c]["_dir"])
 
 
 def _case_params_sha(rel_dir):
@@ -1343,6 +1383,96 @@ def _case_params_sha(rel_dir):
         return None
     doc = json.loads(p.read_text(encoding="utf-8"))
     return ((doc.get("run_meta") or {}).get("params_sha256") or "")[:16] or None
+
+
+# --- L1-R judgement branch (dynamics_model.md 5.14.8, 5.17.5) ---------------------------------
+
+L1R_V5_STEPS = ("+1 mm", "+5 mm")
+"""Step labels of the V5 results (``job_v5``) judged against the L1-R dynamic replica."""
+
+
+def _l1r_v5_checks(refs, results):
+    """V5 of an L1-R run: SMC contact force change -> module normal force, against the replica.
+
+    Args:
+        refs: Loaded references with the ``L1R_rod_side_reference_rev32`` block.
+        results: ``job_v5`` results ``{"+1 mm": {"dF_N", "dattitude_deg"}, "+5 mm": ...}``.
+
+    Returns:
+        ``(checks, module_normal_change_N by step)``.
+    """
+    from outrigger_sim.verify.reference import (
+        L1R_K1_OVER_K2,
+        L1R_KNEE_DF_AFTER_EXTEND_N,
+        L1R_V5_S3_FINAL_1MM,
+        L1R_V5_S3_FINAL_5MM,
+    )
+    from outrigger_sim.verify.s3 import l1r_module_normal_change, v5_l1r_checks
+
+    reference_keys = dict(zip(L1R_V5_STEPS, (L1R_V5_S3_FINAL_1MM, L1R_V5_S3_FINAL_5MM),
+                              strict=True))
+    k1_over_k2 = refs.get(L1R_K1_OVER_K2)
+    knee_N = refs.get(L1R_KNEE_DF_AFTER_EXTEND_N)
+    checks, converted = [], {}
+    for label in L1R_V5_STEPS:
+        step = results[label]
+        key = reference_keys[label]
+        replica = refs.get(key)
+        module_change = l1r_module_normal_change(step["dF_N"], moving_leg=0,
+                                                 k1_over_k2=k1_over_k2, knee_dF_N=knee_N)
+        converted[label] = module_change
+        checks += v5_l1r_checks(
+            float(label.split()[0]),
+            dN_N=module_change,
+            dN_ref_N=replica["dF_N"],
+            key_dN=f"{key.notation()} / dF_N",
+            dattitude_deg=step["dattitude_deg"],
+            dattitude_ref_deg=replica["dattitude_deg (roll, pitch)"],
+            key_att=f"{key.notation()} / dattitude_deg (roll, pitch)",
+        )
+    return checks, converted
+
+
+def _l1r_v6_checks(refs, direction, f_min_leg, f_min_delta_mm, liftoff_leg, liftoff_delta_mm):
+    """V6 of an L1-R run against the L1-R quasi-static thresholds (dynamics_model.md 5.14.8)."""
+    from outrigger_sim.verify.reference import (
+        L1R_V6_FL_MINUS_F_MIN,
+        L1R_V6_FL_MINUS_LIFTOFF,
+        L1R_V6_FL_PLUS_F_MIN,
+        L1R_V6_FL_PLUS_LIFTOFF,
+    )
+    from outrigger_sim.verify.s3 import v6_checks
+
+    f_min_key, liftoff_key = {
+        "FL+": (L1R_V6_FL_PLUS_F_MIN, L1R_V6_FL_PLUS_LIFTOFF),
+        "FL-": (L1R_V6_FL_MINUS_F_MIN, L1R_V6_FL_MINUS_LIFTOFF),
+    }[direction]
+    f_min_ref = refs.get(f_min_key)
+    liftoff_ref = refs.get(liftoff_key)
+    return v6_checks(
+        direction,
+        f_min_leg=f_min_leg, f_min_delta_mm=f_min_delta_mm,
+        liftoff_leg=liftoff_leg, liftoff_delta_mm=liftoff_delta_mm,
+        ref_f_min={"leg_at_F_min": f_min_ref["leg"], "delta_mm": f_min_ref["travel_mm"]},
+        ref_liftoff={"unloaded_leg": liftoff_ref["leg"], "delta_mm": liftoff_ref["travel_mm"]},
+        key_f_min=f_min_key.notation(), key_liftoff=liftoff_key.notation(),
+    )
+
+
+def _l1r_rejudge(cid, r, refs):
+    """L1-R V5 / V6 checks of a stored result (None for the other cases)."""
+    from outrigger_sim.verify.checks import summary_table
+
+    if cid.startswith("v5") and r.get("results"):
+        checks, converted = _l1r_v5_checks(refs, r["results"])
+        return summary_table(checks), {"module_normal_change_N": converted}
+    if cid.startswith("v6_") and r.get("direction"):
+        f_leg = r.get("F_min_leg")
+        f_mm = None if f_leg is None else r["F_min_crossings_travel_mm"][f_leg]
+        checks = _l1r_v6_checks(refs, r["direction"], f_leg, f_mm, r.get("liftoff_leg"),
+                                r.get("liftoff_travel_mm"))
+        return summary_table(checks), {}
+    return None
 
 
 def summarize():
@@ -1455,6 +1585,7 @@ def summarize():
     all_checks = []
     per_case = {}
     rejudged = {}
+    l1r_rejudged = {}
     for cid, r in sorted(res.items()):
         case_checks = r.get("checks", [])
         if cid.startswith("v8a_crawler") and r.get("modes"):
@@ -1470,6 +1601,13 @@ def summarize():
             rejudged[cid] = {"recorded_only": recorded,
                              "previous_checks_failed": [c["item"] for c in r.get("checks", [])
                                                         if not c["passed"]]}
+        l1r = _l1r_rejudge(cid, r, refs) if _l1rv.is_on() else None
+        if l1r is not None:
+            # dynamics_model.md 5.17.5: L1-R runs are judged on the L1-R block
+            case_checks, detail = l1r
+            r["all_passed"] = all(c["passed"] for c in case_checks)
+            l1r_rejudged[cid] = {**detail, "previous_checks_failed": [
+                c["item"] for c in r.get("checks", []) if not c["passed"]]}
         per_case[cid] = {"all_passed": r.get("all_passed"), "dir": r["_dir"],
                          "params_sha256": _case_params_sha(r["_dir"])}
         for c in case_checks:
@@ -1495,6 +1633,7 @@ def summarize():
         "generated": _dt.datetime.now().isoformat(timespec="seconds"),
         "params_sha256": params.sha256,
         "reference_sha256": refs.sha256_by_file(),
+        "index_guard": _index_guard(),
         "per_case": per_case,
         "v4_judged": v4_judged,
         "v8a_crawler_rejudged_rev17": rejudged,
@@ -1527,6 +1666,13 @@ def summarize():
             f"{V4_PREVIOUS_JUDGED_RUN} Record",
         },
     }
+    if _l1rv.is_on():
+        summary["l1r_rejudged_rev32"] = l1r_rejudged
+        summary["notes"]["l1r"] = (
+            "L1-R run (l1r_variant): V5 judged on the module normal force N = k2 delta + F_x "
+            "(locked legs x k1/k2 below the knee, + dF_knee (1 - k2/k1) above) against "
+            "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica; V6 against its "
+            "V5_V6_quasi_static L1R thresholds (dynamics_model.md 5.14.8, 5.17.5)")
     SUMMARY.parent.mkdir(parents=True, exist_ok=True)
     SUMMARY.write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), encoding="utf-8")
     print(f"summary -> {_rel(SUMMARY)}: {len(all_checks)} checks, {len(failed)} failed")

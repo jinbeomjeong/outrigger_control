@@ -6,11 +6,19 @@ V0 crawler addendum), 4.5 item 1, 4.6 ruling 3. Engine independent: the inputs a
 the run script collected. Automatic pass / fail is a pre-check; the final physical judgement
 is the dynamics-expert's.
 
-V11 full-stroke time: the reference ``actuator.full_stroke_time_s`` (30.0 s) is
-``stroke / v_max`` without acceleration limits. With the command ramp (user decision
-2026-10-20, YAML ``actuator.command_ramp_s`` since 2026-10-21) a stroke from rest to rest
-takes ``ramp`` more (ramp-up and braking each cost ``ramp / 2``): the check uses
-``stroke / v_max + ramp`` with the V11 tolerance and reports the difference to 30.0 s as a note (decision item).
+V11 full-stroke time: the reference ``actuator.full_stroke_time_s`` is ``stroke / v_max``
+without acceleration limits (33.454 s on the 0.70 m YAML). With the command ramp (user
+decision 2026-10-20, YAML ``actuator.command_ramp_s`` since 2026-10-21) a stroke from rest
+to rest takes ``ramp`` more (ramp-up and braking each cost ``ramp / 2``): the check uses
+``stroke / v_max + ramp`` with the V11 tolerance and reports the difference to the reference
+as a note.
+
+V11 criteria (``dynamics_model.md`` 5.12.12; values for the 0.70 m YAML, v_max 20.924 mm/s,
+ramp 0.1 s): speed <= v_max (1 + 1e-3) = 20.945 mm/s and v_max reached; position in
+[-1e-4, 0.7001] m; rest-to-rest full stroke 33.554 +- 0.05 s; inertial reaction of the
+hanging rod per leg over the whole run <= 9/8 m_rod a (1 + 1 %) = 25.388 N (FL, FR) /
+17.395 N (RL, RR), m_rod a = 22.34 / 15.31 N (9/8: stroke-end braking last step, see
+:data:`STROKE_END_LAST_STEP_FACTOR`).
 """
 
 from __future__ import annotations
@@ -21,6 +29,7 @@ from typing import Any
 import numpy as np
 from numpy.typing import ArrayLike
 
+from outrigger_sim.params import LEG_ORDER
 from outrigger_sim.verify.checks import (
     CheckResult,
     check_abs,
@@ -30,7 +39,8 @@ from outrigger_sim.verify.checks import (
 
 V11_SPEED_REL_TOL = 1.0e-3
 V11_POS_MIN_M = -1.0e-4
-V11_POS_MAX_M = 0.6801
+V11_POS_END_MARGIN_M = 1.0e-4
+"""V11 position band ``[-1e-4, stroke + 1e-4]`` m (0.7001 m for the 0.70 m stroke)."""
 V11_TIME_TOL_S = 0.05
 V13_MOTOR_VIOLATION_M = 1.0e-6
 V13_DRIFT_DEG = 1.0e-4
@@ -39,6 +49,12 @@ SIGN_POS_TOL_M = 1.0e-9
 SPIKE_REL_TOL = 0.01
 """Inertial reaction ``m_rod a`` / ``m_rod dv / dt`` within this relative band."""
 SPIKE_ABS_TOL_N = 1.0
+STROKE_END_LAST_STEP_FACTOR = 9.0 / 8.0
+"""Bound of the last speed change at a stroke end in units of ``a dt``: the discrete braking
+cap leaves a fractional final step r and the end clip adds ``r (1 - r) / 2`` (max 1/8 at
+r = 1/2), so ``|dv| <= (1 + 1/8) a dt`` (dynamics_model.md 5.12.12 supplement 8 Q1 (discrete
+braking cap, max 1 + r(1-r)/2 = 9/8)). Only the whole V11 run
+(stroke ends included) uses it; the air_short ramp check stays at ``m_rod a``."""
 EVENT_TIME_DIFF_MAX_S = 1.0e-3
 """R15 tuning rule: event times of the dt 1e-4 s and 1e-5 s runs within 1 ms."""
 SNAPSHOT_POS_TOL_M = 1.0e-12
@@ -84,6 +100,17 @@ def motor_sign_checks(
     ]
 
 
+def v11_position_max_m(stroke_m: float) -> float:
+    """Upper end of the V11 position band for the YAML stroke."""
+    return float(stroke_m) + V11_POS_END_MARGIN_M
+
+
+def v11_stroke_time_key(leg: str, stroke_m: float, *, is_extending: bool) -> str:
+    """``"<leg> 0->0.70"`` / ``"<leg> 0.70->0"`` (stroke printed with 2 decimals)."""
+    end = f"{stroke_m:.2f}"
+    return f"{leg} 0->{end}" if is_extending else f"{leg} {end}->0"
+
+
 def v11_checks(
     *,
     v_max: float,
@@ -95,8 +122,9 @@ def v11_checks(
     expected_time_s: float,
     reference_time_s: float,
     motor_violation_max_m: float,
+    stroke_m: float,
     rod_force_dev_N: ArrayLike | None = None,
-    ramp_force_N: float | None = None,
+    ramp_force_N: ArrayLike | None = None,
 ) -> list[CheckResult]:
     """V11 (legs in the air, superstructure fixed).
 
@@ -104,12 +132,16 @@ def v11_checks(
         max_speed_per_leg: Per-step max ``|ds/dt|`` per leg over the whole run.
         commanded_at_least_vmax: Legs that got ``|u| >= v_max`` (must reach v_max).
         pos_min / pos_max: Per-step extremes of the motor position.
-        stroke_times_s: ``"<leg> 0->0.68"`` / ``"<leg> 0.68->0"`` -> measured time.
+        stroke_times_s: :func:`v11_stroke_time_key` -> measured time.
+        stroke_m: YAML ``actuator.stroke_m`` (upper end of the position band).
         expected_time_s: ``stroke / v_max + ramp``.
         reference_time_s: ``actuator.full_stroke_time_s`` (no ramp).
         rod_force_dev_N: Per-step max ``|F_motor + m_rod g|`` per leg (whole run, stroke
-            ends included); judged against ``ramp_force_N`` = ``m_rod v_max / ramp``.
+            ends included); judged per leg against ``9/8 ramp_force_N (1 + 1 %)``.
+        ramp_force_N: ``m_rod v_max / ramp`` per leg in :data:`LEG_ORDER` (front and rear
+            moving parts differ), or one value for every leg.
     """
+    pos_max_limit = v11_position_max_m(stroke_m)
     vmax_meas = np.asarray(max_speed_per_leg, dtype=float)
     reach = [float(v) for v, c in zip(vmax_meas, commanded_at_least_vmax, strict=True) if c]
     times = np.array(list(stroke_times_s.values()), dtype=float)
@@ -131,8 +163,8 @@ def v11_checks(
         ),
         check_equal(
             "V11",
-            "position within [-1e-4, 0.6801] m, every step",
-            bool(np.min(pos_min) >= V11_POS_MIN_M and np.max(pos_max) <= V11_POS_MAX_M),
+            f"position within [{V11_POS_MIN_M:g}, {pos_max_limit:.4f}] m, every step",
+            bool(np.min(pos_min) >= V11_POS_MIN_M and np.max(pos_max) <= pos_max_limit),
             True,
             note=f"min {float(np.min(pos_min))!r}, max {float(np.max(pos_max))!r}",
         ),
@@ -159,40 +191,66 @@ def v11_checks(
     ] + (
         []
         if rod_force_dev_N is None or ramp_force_N is None
-        else [
-            check_max(
-                "ramp",
-                "no inertial spike: max |F_motor + m_rod g| <= m_rod a (1 %), whole V11 run",
-                rod_force_dev_N,
-                ramp_force_N * (1.0 + SPIKE_REL_TOL) + SPIKE_ABS_TOL_N,
-                "N",
-                note=f"m_rod a = {ramp_force_N:.3f} N (ramp start / stop and stroke-end braking)",
-            )
-        ]
+        else _inertial_reaction_checks(rod_force_dev_N, ramp_force_N)
     )
+
+
+def _inertial_reaction_checks(
+    rod_force_dev_N: ArrayLike, ramp_force_N: ArrayLike
+) -> list[CheckResult]:
+    """One check per leg: ``max |F_motor + m_rod g| <= 9/8 m_rod a (1 + 1 %)`` (V11 ruling).
+
+    The whole V11 run includes the stroke-end braking, whose last step may change the speed
+    by up to 9/8 ``a dt`` (:data:`STROKE_END_LAST_STEP_FACTOR`).
+    """
+    deviation_N = np.asarray(rod_force_dev_N, dtype=float)
+    expected_N = np.broadcast_to(np.asarray(ramp_force_N, dtype=float), deviation_N.shape)
+    return [
+        check_max(
+            "ramp",
+            f"{leg}: no inertial spike: max |F_motor + m_rod g| <= 9/8 m_rod a (1 %), "
+            "whole V11 run",
+            leg_deviation_N,
+            STROKE_END_LAST_STEP_FACTOR * leg_expected_N * (1.0 + SPIKE_REL_TOL),
+            "N",
+            note=(
+                f"m_rod a = {leg_expected_N:.3f} N (ramp start / stop); "
+                "stroke-end braking last step <= 9/8 a dt (discrete cap + end clip)"
+            ),
+        )
+        for leg, leg_deviation_N, leg_expected_N in zip(
+            LEG_ORDER, deviation_N, expected_N, strict=True
+        )
+    ]
 
 
 def ramp_spike_checks(cases: Sequence[Mapping[str, Any]]) -> list[CheckResult]:
     """Inertial reaction of a +v_max command step on a hanging rod (``chrono/actuators``).
 
     Each case: ``name``, ``ramp_s``, ``dt_s``, ``max_force_dev_N`` (per leg), ``expected_N``
-    (``m_rod a`` with the ramp, ``m_rod v_max / dt`` without).
+    (``m_rod a`` with the ramp, ``m_rod v_max / dt`` without; per leg in :data:`LEG_ORDER`
+    because the front and rear moving parts differ, or one value for every leg). One check
+    per case and leg, tolerance ``max(1 % expected, 1 N)`` of that leg.
     """
     out = []
     for c in cases:
-        dev = np.asarray(c["max_force_dev_N"], dtype=float)
-        exp = float(c["expected_N"])
-        out.append(
-            check_abs(
-                "ramp",
-                f"{c['name']}: max |F_motor + m_rod g| (ramp {c['ramp_s']} s, dt {c['dt_s']} s)",
-                dev,
-                [exp] * len(dev),
-                max(SPIKE_REL_TOL * exp, SPIKE_ABS_TOL_N),
-                "N",
-                note="with ramp: m_rod v_max / ramp; without: m_rod v_max / dt (one step)",
+        deviation_N = np.asarray(c["max_force_dev_N"], dtype=float)
+        expected_N = np.broadcast_to(np.asarray(c["expected_N"], dtype=float), deviation_N.shape)
+        for leg, leg_deviation_N, leg_expected_N in zip(
+            LEG_ORDER, deviation_N, expected_N, strict=True
+        ):
+            out.append(
+                check_abs(
+                    "ramp",
+                    f"{c['name']} {leg}: max |F_motor + m_rod g| "
+                    f"(ramp {c['ramp_s']} s, dt {c['dt_s']} s)",
+                    leg_deviation_N,
+                    leg_expected_N,
+                    max(SPIKE_REL_TOL * float(leg_expected_N), SPIKE_ABS_TOL_N),
+                    "N",
+                    note="with ramp: m_rod v_max / ramp; without: m_rod v_max / dt (one step)",
+                )
             )
-        )
     return out
 
 

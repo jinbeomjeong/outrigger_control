@@ -12,16 +12,27 @@ Model (independent of the project code; inputs read from the YAML only):
 - Gravity -9.80665 z (world). Rotation R = Rz(yaw) Ry(pitch) Rx(roll).
 Outputs per level: contact force, cylinder force, penetration, roll/pitch, compared with
 the linear 3-DoF solution (same kn) and the Chrono S1 values.
+
+The Chrono S1 values are the still-window means of ``07_results/S1/<level>/result.json``
+(``contact_force_mean_N``, ``roll_mean_deg``, ``pitch_mean_deg``). They are marked stale
+(``<level>.chrono_source.stale``) when the record's ``params_file_sha256`` (``meta.json``)
+is not the sha256 of the current YAML file or the files cannot be read; unreadable values give
+null Chrono comparisons. The output carries ``params_file_sha256`` of the YAML it solved.
 """
+import hashlib
 import json
 import sys
+from pathlib import Path
 
 import numpy as np
 import yaml
 from scipy.optimize import fsolve
 
 ROOT = sys.argv[1] if len(sys.argv) > 1 else "."
-P = yaml.safe_load(open(ROOT + "/02_params/rexome33.yaml", encoding="utf-8"))
+PARAMS_PATH = Path(ROOT) / "02_params" / "rexome33.yaml"
+PARAMS_FILE_SHA256 = hashlib.sha256(PARAMS_PATH.read_bytes()).hexdigest()
+S1_RESULTS = Path(ROOT) / "07_results" / "S1"
+P = yaml.safe_load(PARAMS_PATH.read_text(encoding="utf-8"))
 G = P["meta"]["gravity_m_s2"] if "gravity_m_s2" in P["meta"] else 9.80665
 LEGS = ["FL", "FR", "RL", "RR"]
 L1 = P["contact"]["rigid_floor"]["L1"]
@@ -38,13 +49,33 @@ mmov = np.array([legs[k]["moving_part"]["mass_kg"] for k in LEGS])
 cmov = np.array([legs[k]["moving_part"]["com_retracted_m"] for k in LEGS], float)
 cmov[:, 2] -= eop
 
-CHRONO = {
-    "top": [119359.01678, 117368.39868, 73706.90090, 71856.34004],
-    "middle": [119344.46904, 117357.62828, 73718.00618, 71870.56532],
-    "bottom": [119330.30561, 117346.38573, 73728.70504, 71885.27108],
-}
-CHRONO_ATT = {"top": (-0.0020694, 0.0267009), "middle": (-0.0020654, 0.0266875),
-              "bottom": (-0.0020624, 0.0266729)}
+def load_chrono_s1(level):
+    """Chrono S1 still-window means of one level and their source record.
+
+    Returns ``(contact_N, (roll_deg, pitch_deg))`` or ``None`` when the result cannot be read,
+    and the source description with the ``stale`` flag (module docstring).
+    """
+    result_path = S1_RESULTS / level / "result.json"
+    source = {"path": f"07_results/S1/{level}/result.json"}
+    try:
+        window = json.loads(result_path.read_text(encoding="utf-8"))["still_window"]
+        contact_N = [float(f) for f in window["contact_force_mean_N"]]
+        attitude_deg = (float(window["roll_mean_deg"]), float(window["pitch_mean_deg"]))
+    except (OSError, KeyError, TypeError, ValueError) as err:
+        source.update(stale=True, reason=f"result unreadable: {err!r}")
+        print(f"WARNING Chrono S1 {level}: {source['reason']}", flush=True)
+        return None, source
+    try:
+        meta = json.loads(result_path.with_name("meta.json").read_text(encoding="utf-8"))
+        record_sha256 = meta["run"]["params_file_sha256"]
+    except (OSError, KeyError, TypeError, ValueError):
+        record_sha256 = None
+    source["params_file_sha256"] = record_sha256
+    source["stale"] = record_sha256 != PARAMS_FILE_SHA256
+    if source["stale"]:
+        source["reason"] = "S1 record params_file_sha256 differs from the current YAML (or missing)"
+        print(f"WARNING Chrono S1 {level}: stale ({source['reason']})", flush=True)
+    return (contact_N, attitude_deg), source
 
 
 def rot(roll, pitch, yaw):
@@ -121,10 +152,12 @@ def solve(level, kt_scale=1.0, start=None):
                 Fcyl_lin=F_lin - mmov * G, z_cg_above_centres=c[2] - centre_b[:, 2].mean())
 
 
-out = {}
+out = {"params_file_sha256": PARAMS_FILE_SHA256}
 for lev in ["top", "middle", "bottom"]:
     a = solve(lev)
     b = solve(lev, kt_scale=0.0 + 1e-9)
+    chrono, chrono_source = load_chrono_s1(lev)
+    chrono_contact = None if chrono is None else np.array(chrono[0])
     xc = a["com"][0]
     th = np.radians(a["pitch_deg"])
     h = a["z_cg_above_centres"]
@@ -133,13 +166,14 @@ for lev in ["top", "middle", "bottom"]:
         "linear_contact_N": a["F_lin"].tolist(),
         "nonlinear_contact_N": a["Fn"].tolist(),
         "nonlinear_minus_linear_N": (a["Fn"] - a["F_lin"]).tolist(),
-        "chrono_minus_nonlinear_N": (np.array(CHRONO[lev]) - a["Fn"]).tolist(),
-        "chrono_minus_linear_N": (np.array(CHRONO[lev]) - a["F_lin"]).tolist(),
+        "chrono_minus_nonlinear_N": None if chrono is None else (chrono_contact - a["Fn"]).tolist(),
+        "chrono_minus_linear_N": None if chrono is None else (chrono_contact - a["F_lin"]).tolist(),
         "nonlinear_kt0_contact_N": b["Fn"].tolist(),
         "nonlinear_cyl_N": a["Fcyl"].tolist(),
         "nonlinear_pen_mm": a["pen_mm"].tolist(),
         "nonlinear_roll_pitch_deg": [a["roll_deg"], a["pitch_deg"]],
-        "chrono_roll_pitch_deg": CHRONO_ATT[lev],
+        "chrono_roll_pitch_deg": None if chrono is None else list(chrono[1]),
+        "chrono_source": chrono_source,
         "linear_roll_pitch_deg": np.degrees(a["q_lin"][1:]).tolist(),
         "tangential_N": a["Ft"].tolist(),
         "pdelta_shift_m": h * th,

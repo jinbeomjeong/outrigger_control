@@ -117,7 +117,8 @@ def build_plant(case: PlantCase) -> LinPlant:
     Ib = body.inertia.copy()
     com = body.com
     kc = dm.k_concrete_westergaard()["k_slab_N_m"]
-    ks = float(dm.series(dm.k_rod(), A_["frame_bracket_stiffness_N_m"], kc))
+    # per leg (4,): k_rod() is per leg once the legs carry different rod diameters (rev. 30, as Plant)
+    ks = np.broadcast_to(np.asarray(dm.series(dm.k_rod(), A_["frame_bracket_stiffness_N_m"], kc), float), (4,)).copy()
     ko = np.asarray(dm.k_oil(e_op, beta=case.beta), float)   # oil column at the operating extension (as Plant)
     kv = 1.0 / (1.0 / ko + 1.0 / ks)
     kv = kv * np.asarray(case.k_scale, float)

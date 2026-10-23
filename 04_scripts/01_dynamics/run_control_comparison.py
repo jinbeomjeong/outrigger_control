@@ -64,11 +64,18 @@ OUT_JSON = OUT_DIR / "control_comparison.json"
 
 DT = 5e-4
 T_CTRL = 0.02
+# pad friction decomposition of the plant (dynamics_model.md 3.15, rev. 26): 0 = original (default, all results before
+# rev. 26), 1 = Chrono L1 (normal along the floor normal, Coulomb cap on the whole floor-plane force). Plant.__init__
+# reads this at construction; FlexPlant can override it per run with run_mast_flex_c2_check.CONFIG['fric_mode'].
+PAD_FRICTION_MODE = 0
 N_SUB = int(round(T_CTRL / DT))
 T_MAX = 150.0
 T_HOLD = 10.0           # run on this long after the controller declares "done"
 # pre-run settle on the crawler (layout D): YAML simulation.settle_on_crawler_min_s (65.47 s); was 3 s with layout A
 SETTLE_ON_CRAWLER_S = max(3.0, float(dm.load_params()["simulation"]["settle_on_crawler_min_s"]))
+# grounding threshold for figures: YAML control.F_min_cylinder_N (net cylinder force)
+F_MIN_CYLINDER_N = float(dm.load_params()["control"]["F_min_cylinder_N"])
+F_MIN_MATCH_REL_TOL = 1e-9  # Ctx.F_min (0.1 W_nom / 4) vs the YAML value
 DEG = math.pi / 180
 
 # ---------------------------------------------------------------------------- IMU mounting point (single source)
@@ -94,8 +101,8 @@ CA = {
     "pressure_noise_N": 300.0,
     "stroke_noise_m": 1e-4,
     "crawler_kt_per_point_equals_kn": True,
-    "P_touch_N": 1.5 * 9452.55,                   # touchdown detection: pressure >= 1.5 F_min (pad preload)
-    "P_reground_N": 1.5 * 9452.55,                # C3/C7/C8 re-grounding / minimum-pressure switch
+    "P_touch_N": 1.5 * float(dm.load_params()["control"]["F_min_cylinder_N"]),     # touchdown detection: pressure >= 1.5 F_min (pad preload); YAML (rev. 30)
+    "P_reground_N": 1.5 * float(dm.load_params()["control"]["F_min_cylinder_N"]),  # C3/C7/C8 re-grounding / minimum-pressure switch; YAML (rev. 30)
     "clearance_target_m": 0.05,                   # crawler clearance after levelling (00_docs/01_dynamics/dynamics_model.md 1.3)
     "done_att_deg": 0.03, "relevel_att_deg": 0.07, "done_hold_s": 1.0,
     "Kp_att_1_s": 0.4, "Ki_att_1_s2": 0.02, "Kz_1_s": 0.5, "Ktw_1_s": 0.5, "twist_deadband_N": 2000.0,
@@ -144,10 +151,15 @@ def _cross(a, b):
 @nb.njit(cache=True)
 def physics(nsteps, dt, u_cmd, r, v, q, w, sref, x, f, panc, pflag, canc, cflag,
             m, Ib, Ibinv, pad_rel, cr_rel, imu_rel, nrm, g,
-            ko, ks, cn, kt, ct, Wr, Fs, kcr, ccr, ktcr, ctcr, mu, smax, Fext, Fret, goff, acc):
+            ko, ks, cn, kt, ct, Wr, Fs, kcr, ccr, ktcr, ctcr, mu, smax, Fext, Fret, goff, acc, fmode, tez):
     """Advance nsteps. acc[0:3] += specific force at the IMU (body axes); acc[3:7] += extend-saturation steps;
     acc[7:11] += stroke-limit steps; acc[11:15] = last contact force (pads); acc[15] = last crawler total normal force;
-    acc[16:20] = max pressure seen; acc[20:24] = min pressure seen."""
+    acc[16:20] = max pressure seen; acc[20:24] = min pressure seen.
+
+    fmode (pad friction decomposition, dynamics_model.md 3.15, rev. 26):
+      0  original (default): pad force = F_l e_z (leg axis) + T, |T| <= mu F_l (a . n)  [results before rev. 26]
+      1  Chrono L1: pad force = N n (floor normal, N = F_l) + T (floor plane), |T| <= mu N; the rod axial load is
+         N (a . n) + T . e_z (T . e_z of the previous step, tez (4,) state); acc[11+i] = that axial load."""
     gv = np.array([0.0, 0.0, -g])
     for _ in range(nsteps):
         R = _R(q)
@@ -160,10 +172,10 @@ def physics(nsteps, dt, u_cmd, r, v, q, w, sref, x, f, panc, pflag, canc, cflag,
             # --- actuator: force saturation per step (uses current pressure), stroke limits
             P = ko[i] * (sref[i] - x[i])
             ui = u_cmd[i]
-            if ui > 0 and P >= Fext:
+            if ui > 0 and P >= Fext[i]:   # per-leg limits (4,) (rev. 30)
                 ui = 0.0
                 acc[3 + i] += 1
-            if ui < 0 and P <= -Fret:
+            if ui < 0 and P <= -Fret[i]:
                 ui = 0.0
             s_new = sref[i] + ui * dt
             if s_new > smax:
@@ -176,19 +188,36 @@ def physics(nsteps, dt, u_cmd, r, v, q, w, sref, x, f, panc, pflag, canc, cflag,
             p0 = r + d0
             gax = (nrm[0] * p0[0] + nrm[1] * p0[1] + nrm[2] * p0[2] + goff[i]) / a_n   # goff: local floor sink [m]
             # --- rod position x with seal friction (massless rod, return mapping)
-            Fel = ks[i] * max(x[i] - gax, 0.0)
-            ftr = Fel - ko[i] * (sref[i] - x[i]) - Wr[i]
-            if abs(ftr) <= Fs[i] and Fs[i] > 0:
-                f[i] = ftr
-            else:
-                fs = Fs[i] * (1.0 if ftr > 0 else -1.0)
-                rhs = ko[i] * sref[i] + Wr[i] + fs
-                x1 = rhs / ko[i]
-                if x1 <= gax:
-                    x[i] = x1
+            if fmode == 0:
+                Fel = ks[i] * max(x[i] - gax, 0.0)
+                ftr = Fel - ko[i] * (sref[i] - x[i]) - Wr[i]
+                if abs(ftr) <= Fs[i] and Fs[i] > 0:
+                    f[i] = ftr
                 else:
-                    x[i] = (rhs + ks[i] * gax) / (ks[i] + ko[i])
-                f[i] = fs
+                    fs = Fs[i] * (1.0 if ftr > 0 else -1.0)
+                    rhs = ko[i] * sref[i] + Wr[i] + fs
+                    x1 = rhs / ko[i]
+                    if x1 <= gax:
+                        x[i] = x1
+                    else:
+                        x[i] = (rhs + ks[i] * gax) / (ks[i] + ko[i])
+                    f[i] = fs
+            else:
+                ksa = ks[i] * a_n
+                te = tez[i] if x[i] > gax else 0.0
+                Fel = ksa * max(x[i] - gax, 0.0) + te
+                ftr = Fel - ko[i] * (sref[i] - x[i]) - Wr[i]
+                if abs(ftr) <= Fs[i] and Fs[i] > 0:
+                    f[i] = ftr
+                else:
+                    fs = Fs[i] * (1.0 if ftr > 0 else -1.0)
+                    rhs = ko[i] * sref[i] + Wr[i] + fs
+                    x1 = rhs / ko[i]
+                    if x1 <= gax:
+                        x[i] = x1
+                    else:
+                        x[i] = (rhs - te + ksa * gax) / (ksa + ko[i])
+                    f[i] = fs
             c = x[i] - gax
             Pn = ko[i] * (sref[i] - x[i])
             if Pn > acc[16 + i]:
@@ -214,7 +243,7 @@ def physics(nsteps, dt, u_cmd, r, v, q, w, sref, x, f, panc, pflag, canc, cflag,
                 dt_ = dd - dn * nrm
                 vt = vp - vn * nrm
                 Ft = -kt[i] * dt_
-                Nn = Fl * a_n
+                Nn = Fl * a_n if fmode == 0 else Fl
                 fe = math.sqrt(Ft[0] ** 2 + Ft[1] ** 2 + Ft[2] ** 2)
                 if fe > mu * Nn:
                     sc = mu * Nn / fe if fe > 0 else 0.0
@@ -222,12 +251,18 @@ def physics(nsteps, dt, u_cmd, r, v, q, w, sref, x, f, panc, pflag, canc, cflag,
                     panc[i, :] = pp + Ft / kt[i]
                 else:
                     Ft = Ft - ct[i] * vt
-                Fi = Fv + Ft
-                acc[11 + i] = Fl
+                if fmode == 0:
+                    Fi = Fv + Ft
+                    acc[11 + i] = Fl
+                else:
+                    Fi = Fl * nrm + Ft
+                    tez[i] = Ft[0] * ez[0] + Ft[1] * ez[1] + Ft[2] * ez[2]
+                    acc[11 + i] = Fl * a_n + tez[i]
             else:
                 pflag[i] = 0
                 Fi = np.zeros(3)
                 acc[11 + i] = 0.0
+                tez[i] = 0.0
             F += Fi
             T += _cross(dp, Fi)
         Fc_tot = 0.0
@@ -315,11 +350,11 @@ class Plant:
         self.ktcr = self.kcr.copy(); self.ctcr = self.ccr.copy()
         self.imu_rel = np.array(CA["imu_point_body_m"]) - com
         kc = dm.k_concrete_westergaard()["k_slab_N_m"]
-        ks = float(dm.series(dm.k_rod(), A_["frame_bracket_stiffness_N_m"], kc))
+        ks = np.broadcast_to(np.asarray(dm.series(dm.k_rod(), A_["frame_bracket_stiffness_N_m"], kc), float), (4,)).copy()  # per leg (rev. 30)
         self.ko = np.asarray(dm.k_oil(self.e_op, beta=beta), float)
-        self.ks = np.full(4, ks)
+        self.ks = ks.copy()
         if soft_FL:   # ASSUMPTION scenario: FL ground/pad half as stiff (k_n,FL x 0.5)
-            kv = 1 / (1 / self.ko[0] + 1 / ks)
+            kv = 1 / (1 / self.ko[0] + 1 / ks[0])
             self.ks[0] = 1 / (2 / kv - 1 / self.ko[0])
         L1 = p["contact"]["rigid_floor"]["L1"]
         self.cn = np.array([L1["cn_per_pad_N_s_m"][nm] for nm in dm.LEG_NAMES], float)
@@ -331,8 +366,9 @@ class Plant:
         self.mu = float(p["contact"]["rigid_floor"]["friction"])
         self.g = geo.g
         self.Ap = dm.piston_area()
-        self.Fext = 210e5 * self.Ap
-        self.Fret = 210e5 * 8.84e-4
+        # per-leg (4,) arrays for the numba kernel (rev. 30); the old literal 8.84e-4 m^2 is kept for the common-bore YAML
+        self.Fext = np.broadcast_to(np.asarray(210e5 * self.Ap, float), (4,)).copy()
+        self.Fret = np.broadcast_to(np.asarray(210e5 * (8.84e-4 if np.ndim(self.Ap) == 0 else dm.annulus_area()), float), (4,)).copy()
         self.dt = dt
         # floor
         sx = -math.tan(math.radians(slope_pitch_deg)); sy = math.tan(math.radians(slope_roll_deg))
@@ -363,6 +399,9 @@ class Plant:
         self.canc = np.zeros((nc, 3)); self.cflag = np.zeros(nc, np.int64)
         self.acc = np.zeros(24)
         self.goff = np.zeros(4)
+        # pad friction decomposition (dynamics_model.md 3.15, rev. 26): 0 original (default), 1 Chrono L1
+        self.fmode = int(PAD_FRICTION_MODE)
+        self.tez = np.zeros(4)
         self.t = 0.0
 
     def step(self, u, nsteps):
@@ -372,7 +411,8 @@ class Plant:
         physics(nsteps, self.dt, np.asarray(u, float), self.r, self.v, self.q, self.w, self.sref, self.x, self.f,
                 self.panc, self.pflag, self.canc, self.cflag, self.m, self.Ib, self.Ibinv, self.pad_rel, self.cr_rel,
                 self.imu_rel, self.nrm, self.g, self.ko, self.ks, self.cn, self.kt, self.ct, self.Wr, self.Fs,
-                self.kcr, self.ccr, self.ktcr, self.ctcr, self.mu, self.geo.stroke, self.Fext, self.Fret, self.goff, a)
+                self.kcr, self.ccr, self.ktcr, self.ctcr, self.mu, self.geo.stroke, self.Fext, self.Fret, self.goff, a,
+                self.fmode, self.tez)
         self.t += nsteps * self.dt
         return a
 
@@ -434,6 +474,12 @@ class Ctx:
         self.vmax = geo.v_max
         self.smax = geo.stroke
         self.F_min = 0.1 * W_nom / 4
+        # The controllers derive F_min from the body weight; it must stay the YAML control.F_min_cylinder_N
+        # (read now, so a swapped params file is compared with itself). Difference today about 4e-6 N.
+        F_min_yaml = float(dm.load_params()["control"]["F_min_cylinder_N"])
+        if not math.isclose(self.F_min, F_min_yaml, rel_tol=F_MIN_MATCH_REL_TOL):
+            raise AssertionError(f"Ctx.F_min = 0.1 W_nom / 4 = {self.F_min!r} N differs from YAML "
+                                 f"control.F_min_cylinder_N = {F_min_yaml!r} N (rel. tol {F_MIN_MATCH_REL_TOL:g})")
         self.k_nom = k_nom                    # nominal L1 pad stiffness (beta 1.0 GPa) used by the controllers
         self.S_nom = dm.load_sensitivity(np.full(4, k_nom), geo.pad_xy)
         (x0, x1), (y0, y1) = geo.crawler_xy_box
@@ -1054,7 +1100,7 @@ def metrics(S, ctrl, plant, t_lift, sat_steps, stroke_steps, t_sink=None):
         out.update({"t_within_0p1deg_s": None, "t_within_target_s": None, "min_true_cyl_force_kN": None, "min_pressure_reading_kN": None,
                     "t_below_Fmin_true_s": None, "t_below_Fmin_pressure_s": None, "rocking_peak_deg": None,
                     "pad_liftoff_after_crawler_off": None})
-    out["max_pressure_bar"] = round(float(S["Pmax"].max()) / plant.Ap / 1e5, 1)
+    out["max_pressure_bar"] = round(float(np.max(np.asarray(S["Pmax"], float) / plant.Ap)) / 1e5, 1)  # per-leg area (rev. 30)
     out["max_true_cyl_force_kN"] = round(float(S["Ftrue"].max()) / 1e3, 1)
     if ctrl.t_ready_first is not None:
         fin = (t >= min(t[-1], t_stop) - 5.0) & pre
@@ -1272,7 +1318,9 @@ def figures(runs, stem="control_comparison"):
     ax[0].set_title(f"top auger, ground roll +3 deg, beta 1.0 GPa, F_s 0, IMU nominal, LPF order "
                     f"{CA['imu_lpf_order']} (grey = +/-{tg:g} deg)", fontsize=10)
     ax[0].legend(ncol=3, fontsize=8); ax[0].grid(alpha=0.3)
-    ax[1].axhline(9.4525, color="k", ls="--", lw=0.8); ax[1].text(1, 12, "F_min 9.45 kN", fontsize=8)
+    F_min_kN = F_MIN_CYLINDER_N / 1e3
+    ax[1].axhline(F_min_kN, color="k", ls="--", lw=0.8)
+    ax[1].text(1, 12, f"F_min {F_min_kN:.2f} kN", fontsize=8)
     ax[1].set_ylim(-5, 130); ax[1].set_ylabel("min true cylinder force [kN]"); ax[1].set_xlabel("time from leg start [s]")
     ax[1].set_xlim(10, 60); ax[1].grid(alpha=0.3)
     fig.tight_layout()

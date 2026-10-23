@@ -3,6 +3,8 @@ and the S2b command schedules (scenarios/stroke)."""
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -16,6 +18,8 @@ from outrigger_sim.scenarios.crawler_settle import (
     pad_touch_extension_m,
 )
 from outrigger_sim.scenarios.stroke import (
+    V11_END_HOLD_S,
+    V11_HALF_GRID_S,
     Schedule,
     Segment,
     event_cases,
@@ -98,10 +102,30 @@ def test_schedule_emits_each_segment_once() -> None:
     np.testing.assert_array_equal(sched.command_at(0.7), [0, 0, 0, 0])
 
 
+LEGACY_PARAMS_PATH = (
+    Path(__file__).resolve().parents[2]
+    / "02_params" / "history" / "rexome33_2026-10-22_before_rexome35.yaml"
+)
+
+
+def test_v11_schedule_keeps_the_0_68_m_times_on_the_old_yaml() -> None:
+    """The 0.68 m stroke YAML still gives the 31 s / 62 s schedule bit for bit."""
+    sched = v11_schedule(load_params(LEGACY_PARAMS_PATH, level="top"))
+    assert sched.segments[1].t0_s == 31.0
+    assert sched.end_s == 62.0
+
+
 def test_v11_and_event_schedules(params) -> None:
     sched = v11_schedule(params)
-    assert sched.end_s == 62.0
-    assert expected_full_stroke_time_s(params, 0.1) == pytest.approx(30.1, abs=1e-6)
+    half_s = sched.segments[1].t0_s
+    assert sched.end_s == 2.0 * half_s
+    # each half = ceil_0.1(full stroke + fixed end hold 0.9 s) (dynamics_model.md 5.12.12)
+    full_with_ramp_s = expected_full_stroke_time_s(params)
+    assert full_with_ramp_s + V11_END_HOLD_S <= half_s
+    assert half_s < full_with_ramp_s + V11_END_HOLD_S + V11_HALF_GRID_S
+    assert round(half_s / V11_HALF_GRID_S, 9).is_integer()
+    full_stroke_s = params.actuator.stroke_m / params.actuator.max_speed_m_s + 0.1
+    assert expected_full_stroke_time_s(params, 0.1) == pytest.approx(full_stroke_s, rel=1e-12)
     for case in event_cases(params):
         assert case.expected_events() == [(0, 1), (0, 2), (0, 1)]
         assert case.schedule().end_s > 0.0

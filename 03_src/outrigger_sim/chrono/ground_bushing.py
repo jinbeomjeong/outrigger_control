@@ -112,7 +112,7 @@ a tilted floor body works as well as a level one.
 from __future__ import annotations
 
 import math
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -337,6 +337,8 @@ class _LegState:
         # sum over return mappings of 1/2 kt (|d_trial|^2 - |d|^2) and of mu N |delta anchor|
         self.slip_dissipation_J = 0.0
         self.slip_coulomb_work_J = 0.0
+        # ground body B of this leg (the floor, or a separate pad patch body, S6 settlement)
+        self.floor: ch.ChBody | None = None
 
     @property
     def anchor_floor_local(self) -> NDArray[np.float64]:
@@ -383,6 +385,14 @@ class GroundBushingCoulomb:
         touch_threshold_N: ``N_th`` (R15), default :data:`TOUCH_THRESHOLD_N`.
         force_point: Where the bushing force acts on body A, one of :data:`FORCE_POINTS`;
             default :data:`DEFAULT_FORCE_POINT` (ball centre, module docstring).
+        normal_force_source: Optional callable returning the signed normal force per pad
+            [N] of the step just taken (S6 crawler spheres: several pads share one body, so
+            ``GetContactForce()`` of the body cannot be used). Default: the pad body's
+            ``GetContactForce()`` along the floor normal.
+        leg_floors: Optional ground body B per pad (S6 ground settlement: a separate pad patch
+            body that only translates along the floor normal). Default: ``floor`` for every
+            pad. Every body must have the floor's orientation; ``floor`` stays the reference of
+            the surface normal. Anchors are in the coordinates of the leg's own body.
     """
 
     def __init__(
@@ -399,6 +409,8 @@ class GroundBushingCoulomb:
         lift_time_s: float = LIFT_TIME_S,
         touch_threshold_N: float = TOUCH_THRESHOLD_N,
         force_point: str = DEFAULT_FORCE_POINT,
+        leg_floors: Sequence[ch.ChBody] | None = None,
+        normal_force_source: Callable[[], Sequence[float]] | None = None,
     ) -> None:
         if not pads:
             raise ValueError("at least one pad is needed")
@@ -433,6 +445,24 @@ class GroundBushingCoulomb:
         self._floor_key: tuple[float, ...] | None = None
         self._n_world: tuple[float, float, float] = (math.nan, math.nan, math.nan)
         self._legs = [_LegState() for _ in self._pads]
+        self._normal_source = normal_force_source
+        floors = (floor,) * len(self._pads) if leg_floors is None else tuple(leg_floors)
+        if len(floors) != len(self._pads):
+            raise ValueError("leg_floors: need one body per pad")
+        for leg, body in zip(self._legs, floors, strict=True):
+            leg.floor = body
+        # extra ground bodies (not the floor) and the legs on each, for the frame cache
+        self._extra_floors: list[tuple[ch.ChBody, list[_LegState]]] = []
+        for body in floors:
+            if body is floor or any(b is body for b, _ in self._extra_floors):
+                continue
+            q0, q1 = floor.GetRot(), body.GetRot()
+            if (q0.e0, q0.e1, q0.e2, q0.e3) != (q1.e0, q1.e1, q1.e2, q1.e3):
+                raise ValueError("leg_floors must have the floor's orientation")
+            self._extra_floors.append(
+                (body, [leg for leg in self._legs if leg.floor is body])
+            )
+        self._extra_keys: list[tuple[float, ...] | None] = [None] * len(self._extra_floors)
         self._events: list[BushingEvent] = []
         # True when a bushing was created or removed since the last system Update; Chrono then
         # runs a full Update at the start of the next step (see the module docstring).
@@ -456,8 +486,14 @@ class GroundBushingCoulomb:
         lift_time_s: float = LIFT_TIME_S,
         touch_threshold_N: float = TOUCH_THRESHOLD_N,
         force_point: str = DEFAULT_FORCE_POINT,
+        leg_floors: Sequence[ch.ChBody] | None = None,
+        normal_force_source: Callable[[], Sequence[float] | None] | None = None,
     ) -> GroundBushingCoulomb:
         """Four legs in LEG_ORDER with the L1 values of ``02_params/rexome33.yaml``.
+
+        ``normal_force_source`` is passed to the constructor (L1-R: the machine's total
+        normal force, ``chrono/rod_chamber_link``); a source returning None for a step falls
+        back to the contact force.
 
         Keys: ``contact.rigid_floor.friction``, ``contact.rigid_floor.L1.
         bushing_stiffness_per_pad_N_m``, ``.bushing_damping_input_per_pad_N_s_m`` (= ct/2),
@@ -497,6 +533,8 @@ class GroundBushingCoulomb:
             lift_time_s=lift_time_s,
             touch_threshold_N=touch_threshold_N,
             force_point=force_point,
+            leg_floors=leg_floors,
+            normal_force_source=normal_force_source,
         )
 
     # --- read-only views ---------------------------------------------------------------
@@ -678,12 +716,20 @@ class GroundBushingCoulomb:
             self._n_world = (n.x, n.y, n.z)
             for leg in self._legs:
                 leg.anchor_world = None
+        for j, (body, legs) in enumerate(self._extra_floors):
+            p = body.GetPos()
+            q = body.GetRot()
+            key = (p.x, p.y, p.z, q.e0, q.e1, q.e2, q.e3)
+            if key != self._extra_keys[j]:
+                self._extra_keys[j] = key
+                for leg in legs:
+                    leg.anchor_world = None
 
     def _anchor_world(self, leg: _LegState) -> tuple[float, float, float]:
         """World anchor of a leg in contact (cached; call after :meth:`_refresh_floor`)."""
         anchor = leg.anchor_world
         if anchor is None:
-            a = self._floor.TransformPointLocalToParent(_chvec(leg.anchor_floor_local))
+            a = leg.floor.TransformPointLocalToParent(_chvec(leg.anchor_floor_local))
             anchor = (a.x, a.y, a.z)
             leg.anchor_world = anchor
         return anchor
@@ -724,7 +770,8 @@ class GroundBushingCoulomb:
         pad = self._pads[index]
         centre = _vec(pad.body.TransformPointLocalToParent(_chvec(pad.sphere_centre_body_local_m)))
         n = self.normal_world()
-        p0 = _vec(self._floor.TransformPointLocalToParent(_chvec(self._surface_point_local)))
+        floor = self._legs[index].floor
+        p0 = _vec(floor.TransformPointLocalToParent(_chvec(self._surface_point_local)))
         return centre - ((centre - p0) @ n) * n
 
     def _damping_vector(self, index: int, on: bool) -> ch.ChVector3d:
@@ -747,7 +794,7 @@ class GroundBushingCoulomb:
         """
         pad = self._pads[index]
         leg = self._legs[index]
-        surface_rot_world = _quat_multiply(_quat(self._floor.GetRot()), self._surface_quat_local)
+        surface_rot_world = _quat_multiply(_quat(leg.floor.GetRot()), self._surface_quat_local)
         if point_world is None:
             frame_abs = ch.ChFramed(ch.ChVector3d(0.0, 0.0, 0.0), _chquat(surface_rot_world))
         else:
@@ -755,7 +802,7 @@ class GroundBushingCoulomb:
         k = pad.stiffness_N_m
         bushing = ch.ChLoadBodyBodyBushingSpherical(
             pad.body,
-            self._floor,
+            leg.floor,
             frame_abs,
             ch.ChVector3d(k, k, 0.0),
             self._damping_vector(index, not leg.sliding),
@@ -844,11 +891,15 @@ class GroundBushingCoulomb:
             # arrays are replaced, never changed in place (_LegState), so no copy is needed
             leg.loaded_anchor_floor_local = leg.anchor_floor_local
             leg.loaded_sliding = leg.sliding
+        source = None if self._normal_source is None else self._normal_source()
         for i, (pad, leg) in enumerate(zip(self._pads, self._legs, strict=True)):
-            f = pad.body.GetContactForce()
-            # plain float dot product: bit-identical to numpy's 3-vector dot (checked
-            # 2026-10-20 on 3e5 random pairs, OpenBLAS ddot uses no FMA on this path)
-            n_raw = f.x * nx + f.y * ny + f.z * nz
+            if source is None:
+                f = pad.body.GetContactForce()
+                # plain float dot product: bit-identical to numpy's 3-vector dot (checked
+                # 2026-10-20 on 3e5 random pairs, OpenBLAS ddot uses no FMA on this path)
+                n_raw = f.x * nx + f.y * ny + f.z * nz
+            else:
+                n_raw = float(source[i])
             leg.normal_force_raw_N = n_raw
             if leg.bushing is None:
                 if n_raw > self._touch_threshold_N:
@@ -916,7 +967,7 @@ class GroundBushingCoulomb:
             anchor = ch.ChVector3d(ax + mx, ay + my, az + mz)
             leg.slip_total = leg.slip_total + np.array([mx, my, mz])
             leg.yield_steps += 1
-            leg.anchor_floor_local = _vec(self._floor.TransformPointParentToLocal(anchor))
+            leg.anchor_floor_local = _vec(leg.floor.TransformPointParentToLocal(anchor))
             bushing.SetApplicationFrameB(
                 ch.ChFramed(_chvec(leg.anchor_floor_local), self._surface_quat_local_ch)
             )

@@ -76,7 +76,7 @@ G = None  # filled from YAML
 
 def load_params(path: Path = YAML_PATH) -> dict:
     with open(path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        return set_cylinders_from_params(yaml.safe_load(f))  # per-leg cylinder dimensions (rev. 30, end of file)
 
 
 @dataclass
@@ -171,8 +171,8 @@ def body_with_rods(p: dict, geo: Geometry, level: str, ext: np.ndarray) -> Body:
 # ---------------------------------------------------------------------------
 # Stiffness estimates
 # ---------------------------------------------------------------------------
-def piston_area() -> float:
-    return math.pi / 4 * ASSUMPTIONS["bore_diameter_m"] ** 2
+def piston_area(leg=None):  # scalar if all legs share the bore, else (4,) per leg (rev. 30); leg = index 0..3
+    return math.pi / 4 * cylinder_value("bore_diameter_m", leg) ** 2
 
 
 def k_oil(ext, beta=None, dead=None):
@@ -184,7 +184,7 @@ def k_oil(ext, beta=None, dead=None):
 
 def k_rod(rod_length: float = 1.05) -> float:
     """Axial steel rod stiffness, piston top (z 0.35) to pad bottom (z -0.70): ~1.05 m [N/m]."""
-    A = math.pi / 4 * ASSUMPTIONS["rod_diameter_m"] ** 2
+    A = math.pi / 4 * cylinder_value("rod_diameter_m") ** 2  # scalar or (4,) per leg (rev. 30)
     return ASSUMPTIONS["steel_E_Pa"] * A / rod_length
 
 
@@ -205,7 +205,7 @@ def k_concrete_westergaard() -> dict:
 
 
 def k_leg_lateral(ext: float, guided_tip: bool, attach_z: float = 0.047, barrel_bottom_z: float = -0.4755,
-                  pad_bottom_retracted_z: float = -0.6998) -> float:
+                  pad_bottom_retracted_z: float = -0.6998, dims=None) -> float:  # dims = (D_o, D_bore, D_rod) or None
     """Lateral stiffness of one leg at the load point [N/m] (Euler-Bernoulli, 2 segments, bracket clamped).
 
     segment 1: barrel D160/D115 from the bracket mid-height (attach_z) to the barrel bottom (barrel_bottom_z)
@@ -217,7 +217,7 @@ def k_leg_lateral(ext: float, guided_tip: bool, attach_z: float = 0.047, barrel_
     Bracket / frame flexibility and rod-in-gland clearance are ignored (upper bound).
     """
     E = ASSUMPTIONS["steel_E_Pa"]
-    Do, Di, Dr = ASSUMPTIONS["barrel_outer_diameter_m"], ASSUMPTIONS["bore_diameter_m"], ASSUMPTIONS["rod_diameter_m"]
+    Do, Di, Dr = dims if dims is not None else (ASSUMPTIONS["barrel_outer_diameter_m"], ASSUMPTIONS["bore_diameter_m"], ASSUMPTIONS["rod_diameter_m"])
     EI1 = E * math.pi / 64 * (Do**4 - Di**4)
     EI2 = E * math.pi / 64 * Dr**4
     tip_z = pad_bottom_retracted_z - ext + (0.0 if guided_tip else ASSUMPTIONS["swivel_ball_height_above_pad_bottom_m"])
@@ -240,8 +240,8 @@ def k_leg_lateral(ext: float, guided_tip: bool, attach_z: float = 0.047, barrel_
 def k_leg_lateral_legs(geo: "Geometry", ext, guided_tip: bool) -> np.ndarray:
     """Per-leg lateral stiffness [N/m] with each leg's own attachment, barrel and pad geometry."""
     ext = np.broadcast_to(np.asarray(ext, float), (4,))
-    return np.array([k_leg_lateral(ext[i], guided_tip, geo.attach_z[i], geo.barrel_bottom_z[i], geo.pad_z_retracted[i])
-                     for i in range(4)])
+    return np.array([k_leg_lateral(ext[i], guided_tip, geo.attach_z[i], geo.barrel_bottom_z[i], geo.pad_z_retracted[i],
+                                   cylinder_dims(i)) for i in range(4)])
 
 
 def series(*ks):
@@ -311,7 +311,7 @@ def static_unilateral(xy, k, delta, W, cg_xy, max_iter=50):
         if (new == active).all():
             return k * c * active, q, active
         active = new
-    raise RuntimeError("active set did not converge")
+    return _static_unilateral_cycle_fallback(A, k, delta, w, max_iter)  # rev. 30: only reached when cycling
 
 
 def crawler_points(p: dict, kn_scale: float = 1.0) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -601,3 +601,115 @@ def edge_margins(poly: np.ndarray, p: np.ndarray):
         nrm = np.array([t[1], -t[0]]) / np.linalg.norm(t)  # outward normal for CCW
         out.append((float(-(p - a) @ nrm), a, b, -nrm))     # inward normal returned
     return out
+
+
+# ---------------------------------------------------------------------------
+# Per-leg cylinder dimensions (rev. 30, dynamics_model.md 5.11 / 5.12; REXOME35 drawing DWG REXOME35-9206)
+# ---------------------------------------------------------------------------
+# Appended at the end of the file so that the line ranges cited by 04_scripts/00_cad/export_params.py LINE_REFS
+# keep their numbers. Source order per leg and key: YAML legs.<leg>.cylinder.<key> > YAML actuator.<key> (common
+# scalar, current YAML) > ASSUMPTIONS[<key>]. With the current YAML all four legs get the ASSUMPTIONS values and
+# every function returns the same scalar as before (bit-identical reference.json).
+CYLINDER_KEYS = ("bore_diameter_m", "rod_diameter_m", "barrel_outer_diameter_m")
+CYLINDERS = None  # {key: np.ndarray (4,)} set by set_cylinders_from_params(); None = ASSUMPTIONS for every leg
+
+
+def set_cylinders_from_params(p: dict) -> dict:
+    """Read the per-leg cylinder dimensions from the YAML dict p into CYLINDERS; returns p unchanged."""
+    global CYLINDERS
+    act = p.get("actuator", {}) if isinstance(p, dict) else {}
+    legs = p.get("legs", {}) if isinstance(p, dict) else {}
+    vals = {}
+    for key in CYLINDER_KEYS:
+        row = []
+        for n in LEG_NAMES:
+            cyl = (legs.get(n) or {}).get("cylinder") or {}
+            v = cyl.get(key, act.get(key, ASSUMPTIONS[key]))
+            row.append(float(v))
+        vals[key] = np.array(row)
+    CYLINDERS = vals
+    return p
+
+
+def cylinder_value(key: str, leg=None):
+    """Cylinder dimension [m]: for one leg (index 0..3) a float; for leg None a float when all four legs are equal
+    (identical to the old common scalar), else the (4,) per-leg array in LEG_NAMES order."""
+    if CYLINDERS is None:
+        return ASSUMPTIONS[key]
+    arr = CYLINDERS[key]
+    if leg is not None:
+        return float(arr[leg])
+    return float(arr[0]) if np.all(arr == arr[0]) else arr.copy()
+
+
+def cylinder_dims(leg: int):
+    """(barrel outer D, bore D, rod D) [m] of one leg, the order k_leg_lateral(dims=...) expects."""
+    return (cylinder_value("barrel_outer_diameter_m", leg), cylinder_value("bore_diameter_m", leg),
+            cylinder_value("rod_diameter_m", leg))
+
+
+UNILATERAL_CYCLE_TOL_REL = 1e-9  # complementarity violation accepted after a cycle, relative to max |delta| (rev. 30)
+
+
+def _static_unilateral_cycle_fallback(A, k, delta, w, max_iter):
+    """Fallback of static_unilateral() when the plain active-set iteration did not converge (rev. 30).
+
+    Reached only when the plain iteration cycles, so every case that converged before is bit-identical. Cycling
+    happens when a spring sits exactly at the contact limit (compression ~1e-18 m, e.g. a bisection on the touch
+    instant): the sign of c flips with round-off. The iteration is replayed with a history of active sets; once a
+    set repeats, every set in the cycle is solved and the one with the smallest complementarity violation
+    v = max(max over active of -c, max over inactive of +c) is returned, if v <= UNILATERAL_CYCLE_TOL_REL x
+    max(|delta|) (+1e-15 m). Otherwise RuntimeError as before. The borderline springs carry |k c| <= k v."""
+    active = delta >= 0
+    if not active.any():
+        active = delta >= delta.max()
+    seen, order = {}, []
+    for _ in range(2 * max_iter + 4):
+        Ka = np.diag(k * active)
+        H = A.T @ Ka @ A
+        if np.linalg.matrix_rank(H) < 3:
+            cand = np.where(active, -np.inf, delta)
+            active[int(np.argmax(cand))] = True
+            continue
+        key = active.tobytes()
+        if key in seen:
+            best = None
+            for act in order[seen[key]:]:
+                Ka = np.diag(k * act)
+                q = np.linalg.solve(A.T @ Ka @ A, A.T @ Ka @ delta - w)
+                c = delta - A @ q
+                v = max(float(np.max(-c[act], initial=0.0)), float(np.max(c[~act], initial=0.0)))
+                if best is None or v < best[0]:
+                    best = (v, k * c * act, q, act.copy())
+            tol = UNILATERAL_CYCLE_TOL_REL * float(np.max(np.abs(delta))) + 1e-15
+            if best[0] <= tol:
+                return best[1], best[2], best[3]
+            raise RuntimeError(f"active set cycles; smallest complementarity violation {best[0]:.3e} m > {tol:.3e} m")
+        seen[key] = len(order)
+        order.append(active.copy())
+        q = np.linalg.solve(H, A.T @ Ka @ delta - w)
+        c = delta - A @ q
+        new = c > 0
+        if (new == active).all():
+            return k * c * active, q, active
+        active = new
+    raise RuntimeError("active set did not converge")
+
+
+def leg_cylinder_array(p: dict, key: str) -> np.ndarray:
+    """(4,) per-leg value of YAML legs.<leg>.cylinder.<key> (REXOME35), falling back to the common actuator.<key>
+    (pre-REXOME35 YAML), in LEG_NAMES order. Example keys: max_force_extend_N, max_force_retract_N,
+    locked_force_limit_N, head_area_m2 (rev. 30)."""
+    act = p.get("actuator", {})
+    return np.array([float(((p["legs"][n].get("cylinder") or {}).get(key, act.get(key, np.nan)))) for n in LEG_NAMES])
+
+
+def scalar_if_equal(a):
+    """float when all entries are equal (old common-cylinder output format), else the array (rev. 30)."""
+    a = np.asarray(a, float)
+    return float(a.reshape(-1)[0]) if np.all(a == a.reshape(-1)[0]) else a
+
+
+def annulus_area(leg=None):
+    """Rod-side (annulus) area pi/4 (D_bore^2 - D_rod^2) [m^2]: scalar if all legs are equal, else (4,)."""
+    return math.pi / 4 * (cylinder_value("bore_diameter_m", leg) ** 2 - cylinder_value("rod_diameter_m", leg) ** 2)

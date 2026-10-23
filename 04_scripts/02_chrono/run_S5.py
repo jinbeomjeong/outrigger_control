@@ -309,6 +309,29 @@ def run_batch(ids, jobs):
 # --- summary ------------------------------------------------------------------------------------
 
 
+
+def _summary_reference_sha256(refs) -> dict:
+    """reference.json shas plus the judged P-delta solution ``s1_pdelta_check.json``.
+
+    V10 is judged against that file, which is built from one YAML revision
+    (``dynamics_model.md`` 5.10 ③ note): its sha256 goes into the summary meta.
+    """
+    import hashlib
+
+    shas = dict(refs.sha256_by_file())
+    shas[PDELTA_CHECK.name] = (
+        hashlib.sha256(PDELTA_CHECK.read_bytes()).hexdigest() if PDELTA_CHECK.exists() else None
+    )
+    return shas
+
+
+def _index_guard() -> dict:
+    """Guard record of the last _load_results() (index_guard.py): held cases of another params revision."""
+    from index_guard import last_guard
+
+    return last_guard()
+
+
 def _load_results():
     if not INDEX.exists():
         return {}
@@ -318,7 +341,11 @@ def _load_results():
         if p.exists():
             out[cid] = json.loads(p.read_text(encoding="utf-8"))
             out[cid]["_dir"] = rel
-    return out
+    # never substitute results of another params revision (index_guard, 2026-10-22)
+    sys.path.insert(0, str(HERE))
+    from index_guard import guard
+
+    return guard(out, lambda c: out[c]["_dir"])
 
 
 def v0_auger_section():
@@ -534,12 +561,13 @@ def summarize():
     summary = {
         "meta": {
             "generated": _dt.datetime.now().isoformat(timespec="seconds"),
+            "index_guard": _index_guard(),
             "stage": "S5 auger three levels (chrono_build_plan.md S5): V0 (auger), V10",
             "script": "04_scripts/02_chrono/run_S5.py", "checks_module": "outrigger_sim.verify.s5",
             "judgement": "cad-expert pre-check; physical judgement by dynamics-expert",
             "dt_yaml_s": float(params.simulation.L1.dt_s),
             "params_file_sha256": params.file_sha256,
-            "reference_sha256": refs.sha256_by_file(),
+            "reference_sha256": _summary_reference_sha256(refs),
             "code_sha256": code_sha256(),
             "era": {"order": _s4.ERA_ORDER, "order_check": _s4.ERA_ORDER_CHECK,
                     "block_rows": _s4.ERA_BLOCK_ROWS, "decimate": _s4.ERA_DECIMATE},

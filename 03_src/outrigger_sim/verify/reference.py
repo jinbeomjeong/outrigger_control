@@ -356,6 +356,9 @@ L1_BALL_CENTRE_REV13_ZETA_NUM_R_OMEGA_DT_HALF = _ref(
 L1_BALL_CENTRE_REV13_V7_DIAGNOSTIC_THRESHOLDS = _ref(  # V7 diagnosis items 1-5
     _MAPPING, *_L1_BALL_CENTRE_REV13_HEAD, "V7_diagnostic", "thresholds"
 )
+L1_BALL_CENTRE_REV13_V7_DIAGNOSTIC_ZETA_CASES = _ref(  # predicted zeta of the error cases
+    _MAPPING, *_L1_BALL_CENTRE_REV13_HEAD, "V7_diagnostic", "zeta_cases"
+)
 # V12 diagnosis: expected Chrono - reference once the bushing acts at the ball centre
 # (P-delta only); sub-key expected_chrono_minus_reference.
 SLOPE_V12_L1_PLAN_A_EXPECTED_DIFF_REV13 = _ref(
@@ -524,12 +527,90 @@ BETA_F_HZ_TOP_BALL_CENTRE_REV13 = _ref(  # judged (plan rev. 10, option A)
     _ARRAY, "L1_beta_sensitivity_top", _BETA, "f_Hz_top_ball_centre_rev13"
 )
 
+# --- L1-R: locked rod-side chamber reference block (dynamics_model.md 5.14, rev. 32) ---------
+# Read by the L1-R branches of S3 (V5 / V6) and S4 (V7); before this block is in reference.json
+# pass the candidate file instead: ``load_references({ReferenceFile.REFERENCE: candidate})``
+# (``06_analysis/00_dynamics/reference_L1R_candidate.json`` carries the same top key).
+
+_L1R = "L1R_rod_side_reference_rev32"
+_L1R_LEG_PARAMETERS = (_L1R, "leg_parameters")
+_L1R_LOCK_MODES = (_L1R, "modes_V7a", _LEVEL, "LOCK")
+_L1R_V5_S3_SEQUENCE = (
+    _L1R,
+    "V5_dynamic_replica",
+    "S3 V5 sequence (0.5 mm/s, +1 then +5 mm)",
+)
+_L1R_V6_QUASI_STATIC = (_L1R, "V5_V6_quasi_static", "top", "L1R (FL moving, others LOCK)")
+
+L1R_BLOCK = _ref(_MAPPING, _L1R)
+L1R_LEG_PARAMETERS = _ref(_MAPPING, *_L1R_LEG_PARAMETERS)
+L1R_K1_OVER_K2 = _ref(_ARRAY, *_L1R_LEG_PARAMETERS, "k1 / k2")
+L1R_KNEE_DF_AFTER_EXTEND_N = _ref(_ARRAY, *_L1R_LEG_PARAMETERS, "knee_dF_after_extend_N")
+L1R_LOCK_F_DAMPED_HZ = _ref(_ARRAY, *_L1R_LOCK_MODES, "f_damped_Hz (|lambda| / 2 pi)")
+L1R_LOCK_ZETA = _ref(_ARRAY, *_L1R_LOCK_MODES, "zeta")
+L1R_LOCK_ZETA_NUM_R_OMEGA_DT_HALF = _ref(_MAPPING, *_L1R_LOCK_MODES, "zeta_num_r_omega_dt_half")
+"""Per time step text (``"0.0001"``, ``"0.0002"``): ``r_i omega_i dt / 2`` of the LOCK modes."""
+L1R_LOCK_MODE_SHAPES = _ref(_MAPPING, *_L1R_LOCK_MODES, "mode_shapes")
+L1R_LOCK_MODE_PHI = _ref(
+    _ARRAY,
+    *_L1R_LOCK_MODES,
+    "mode_shapes",
+    "Phi (rows = coordinates, cols = modes in f_undamped_Hz order, first 6)",
+)
+"""LOCK Phi of the V7a / V7b / V9-2 projection ``eta = Phi^T M q`` (5.14.5)."""
+L1R_LOCK_MODE_MASS_MATRIX = _ref(
+    _ARRAY, *_L1R_LOCK_MODES, "mode_shapes", "mass_matrix (same coordinates)"
+)
+L1R_FLOOR_F_DAMPED_HZ = _ref(
+    _ARRAY, _L1R, "modes_V7a", _LEVEL, "FLOOR", "f_damped_Hz (|lambda| / 2 pi)"
+)
+"""FLOOR (head-only) modes: the V7a distance record (knee-state confusion diagnosis, 5.14.6)."""
+L1R_V7A_CASES = _ref(_MAPPING, _L1R, "V7a_cases")
+L1R_V7A_RUNS = _ref(_MAPPING, _L1R, "V7a_cases", _LEVEL, "runs")
+L1R_V7A_JUDGED_RUN_PER_MODE = _ref(
+    _MAPPING,
+    _L1R,
+    "V7a_cases",
+    _LEVEL,
+    "judged_run_per_mode (S4 rule, largest predicted start amplitude)",
+)
+"""``mode <i>`` (1-based) -> ``run``, ``runner_up``, ``runner_up_ratio`` (5.14.6 table)."""
+L1R_V7B_CASES = _ref(_MAPPING, _L1R, "V7b_cases")
+L1R_V5_DYNAMIC_REPLICA = _ref(_MAPPING, _L1R, "V5_dynamic_replica")
+L1R_V5_V6_QUASI_STATIC = _ref(_MAPPING, _L1R, "V5_V6_quasi_static")
+L1R_V5_S3_FINAL_1MM = _ref(
+    _MAPPING, *_L1R_V5_S3_SEQUENCE, "final +1 mm (mean over [13.75, 15.2] s)"
+)
+"""S3 V5 judged values after +1 mm: ``dF_N`` (elastic module normal force change, FL FR RL RR)
+and ``dattitude_deg (roll, pitch)`` of the dynamic replica (5.14.8)."""
+L1R_V5_S3_FINAL_5MM = _ref(
+    _MAPPING, *_L1R_V5_S3_SEQUENCE, "final +5 mm (mean over [31.95, 33.4] s)"
+)
+_L1R_V5_SMOOTH = (_L1R, "V5_dynamic_replica", "+0.3 mm at 0.5 mm/s")
+L1R_V5_SMOOTH_REPLICA = _ref(_MAPPING, *_L1R_V5_SMOOTH)
+"""V5 +0.3 mm at 0.5 mm/s (V9-1 smooth test, 5.14.8): moves, lock log, knee crossings."""
+L1R_V5_SMOOTH_TRANSIENT = _ref(_MAPPING, *_L1R_V5_SMOOTH, "transient V9 [0.5, 3.6] s")
+"""``min_dF_N`` / ``max_dF_N`` (elastic module N change), ``t_min_RL_s`` of the replica."""
+L1R_V5_SMOOTH_FINAL = _ref(_MAPPING, *_L1R_V5_SMOOTH, "final end (mean over [10.55, 12] s)")
+"""``dF_N`` and ``dattitude_deg (roll, pitch)``: the expected end values the V5 judgement uses."""
+L1R_V6_FL_PLUS_F_MIN = _ref(_MAPPING, *_L1R_V6_QUASI_STATIC, "V6 FL+ F_min")
+"""``leg`` and ``travel_mm``; likewise the three keys below (5.14.8)."""
+L1R_V6_FL_PLUS_LIFTOFF = _ref(_MAPPING, *_L1R_V6_QUASI_STATIC, "V6 FL+ lift")
+L1R_V6_FL_MINUS_F_MIN = _ref(_MAPPING, *_L1R_V6_QUASI_STATIC, "V6 FL- F_min")
+L1R_V6_FL_MINUS_LIFTOFF = _ref(_MAPPING, *_L1R_V6_QUASI_STATIC, "V6 FL- lift")
+
 # --- S6: force saturation (V11b) and locked pressure (V17 path) ------------------------------
 
-HYDRAULIC_MAX_HEAD_FORCE_N = _ref(_NUMBER, "hydraulic_circuit", "max_head_force_N")
-HYDRAULIC_MAX_ROD_SIDE_FORCE_N = _ref(_NUMBER, "hydraulic_circuit", "max_rod_side_force_N")
+# Per leg (FL, FR, RL, RR) since the REXOME35 cylinders (run_reference.py, 2026-10-22): front and
+# rear areas differ, so the saturation forces and the static head pressures are four values.
+HYDRAULIC_MAX_HEAD_FORCE_N = _ref(
+    ValueKind.NUMBER_ARRAY, "hydraulic_circuit", "max_head_force_N"
+)
+HYDRAULIC_MAX_ROD_SIDE_FORCE_N = _ref(
+    ValueKind.NUMBER_ARRAY, "hydraulic_circuit", "max_rod_side_force_N"
+)
 HYDRAULIC_MAX_STATIC_HEAD_PRESSURE_PA = _ref(
-    _NUMBER, "hydraulic_circuit", "max_static_head_pressure_Pa"
+    ValueKind.NUMBER_ARRAY, "hydraulic_circuit", "max_static_head_pressure_Pa"
 )
 
 # --- S7: L2b-NSC (V0-V13 like L1, V4 NSC, V12, V14) ------------------------------------------
@@ -634,6 +715,7 @@ KEYS_BY_STAGE: Mapping[str, tuple[RefKey, ...]] = MappingProxyType(
             L1_BALL_CENTRE_REV13_MODE_COORDINATES,
             L1_BALL_CENTRE_REV13_ZETA_NUM_R_OMEGA_DT_HALF,
             L1_BALL_CENTRE_REV13_V7_DIAGNOSTIC_THRESHOLDS,
+            L1_BALL_CENTRE_REV13_V7_DIAGNOSTIC_ZETA_CASES,
             SLOPE_V12_L1_PLAN_A_EXPECTED_DIFF_REV13,
             SLOPE_V12_EXTENSION_EXACT_M,
             SLOPE_V12_EXTENSION_SPHERE_TOUCH_M,
@@ -691,6 +773,21 @@ KEYS_BY_STAGE: Mapping[str, tuple[RefKey, ...]] = MappingProxyType(
             LEG_EXTENSION_KN_X3_DAMPED_FIRST_TOUCH_S,
             LEG_EXTENSION_KN_X3_DAMPED_PEAK_PAD_FORCE_N,
             LEG_EXTENSION_KN_X3_DAMPED_MAX_PEAK_PAD_FORCE_N,
+            L1R_BLOCK,
+            L1R_LEG_PARAMETERS,
+            L1R_K1_OVER_K2,
+            L1R_KNEE_DF_AFTER_EXTEND_N,
+            L1R_V5_DYNAMIC_REPLICA,
+            L1R_V5_V6_QUASI_STATIC,
+            L1R_V5_S3_FINAL_1MM,
+            L1R_V5_S3_FINAL_5MM,
+            L1R_V6_FL_PLUS_F_MIN,
+            L1R_V6_FL_PLUS_LIFTOFF,
+            L1R_V6_FL_MINUS_F_MIN,
+            L1R_V6_FL_MINUS_LIFTOFF,
+            L1R_V5_SMOOTH_REPLICA,
+            L1R_V5_SMOOTH_TRANSIENT,
+            L1R_V5_SMOOTH_FINAL,
         ),
         "S4": (
             L1_F_UNDAMPED_HZ,
@@ -718,6 +815,17 @@ KEYS_BY_STAGE: Mapping[str, tuple[RefKey, ...]] = MappingProxyType(
             L1_BALL_CENTRE_REV13_MODE_COORDINATES,
             L1_BALL_CENTRE_REV13_MODE_PROJECTION,
             BETA_F_HZ_TOP_BALL_CENTRE_REV13,
+            L1R_LOCK_F_DAMPED_HZ,
+            L1R_LOCK_ZETA,
+            L1R_LOCK_ZETA_NUM_R_OMEGA_DT_HALF,
+            L1R_LOCK_MODE_SHAPES,
+            L1R_V7A_CASES,
+            L1R_V7B_CASES,
+            L1R_LOCK_MODE_PHI,
+            L1R_LOCK_MODE_MASS_MATRIX,
+            L1R_FLOOR_F_DAMPED_HZ,
+            L1R_V7A_RUNS,
+            L1R_V7A_JUDGED_RUN_PER_MODE,
         ),
         "S5": (L1_CONTACT_FORCE_N, L1_F_DAMPED_HZ, L1_BALL_CENTRE_REV13_F_DAMPED_HZ),
         "S6": (

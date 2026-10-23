@@ -53,8 +53,11 @@ def test_geometry_at_operating_extension() -> None:
         assert com[2] == pytest.approx(leg.moving_part.com_m[2] - ext[i])
 
 
-def test_cross_settle_length_is_53_s() -> None:
-    assert cross_settle_s(load_params()) == 53.0
+def test_cross_settle_length_is_the_yaml_minimum_rounded_up() -> None:
+    params = load_params()
+    minimum_s = params.simulation.settle_on_pads_min_s
+    assert cross_settle_s(params) == float(math.ceil(minimum_s))
+    assert minimum_s <= cross_settle_s(params) < minimum_s + 1.0
 
 
 @pytest.mark.parametrize("level", [lv.value for lv in AugerLevel])

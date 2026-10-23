@@ -8,7 +8,8 @@ and piecewise-constant command schedules; the engine runs them.
   enough that the pads stay :data:`AIR_CLEARANCE_M` above the floor at full stroke; no
   contact, so the motor reaction is the rod weight plus the rod inertia force.
 * **V11 schedule** (:data:`V11_SEGMENTS`): commands beyond ``v_max`` and beyond the stroke
-  ends in both directions, long enough for a full stroke 0 -> 0.68 m and back.
+  ends in both directions, long enough for a full stroke 0 -> ``actuator.stroke_m`` and back
+  plus a fixed end hold (:func:`v11_half_s`).
 * **Event test** (:func:`event_schedule`): the machine settled on the crawler (analytic
   pose, ``scenarios/crawler_settle``), one leg starts ``start_gap_m`` above its touch
   extension and is driven down (touch, ground bushing created), held, up (lift-off, bushing
@@ -36,6 +37,14 @@ AIR_CLEARANCE_M = 0.5
 
 BIG_SPEED_M_S = 1.0
 """'Large' speed command of V11 (44 x v_max) [m/s]."""
+
+V11_END_HOLD_S = 0.9
+"""ASSUMPTION (dynamics V11 ruling, ``dynamics_model.md`` 5.12.12): each V11 half lasts the
+rest-to-rest full stroke time plus this fixed time pushed against the stroke end. Fixed, not
+a fraction of the stroke time: the hold covers the 0.1 s end braking ramp and a standstill
+check, neither of which depends on the speed [s]."""
+V11_HALF_GRID_S = 0.1
+"""The V11 half length is rounded up to this grid [s]."""
 
 
 @dataclass(frozen=True)
@@ -105,23 +114,45 @@ def air_pose(params: Params, clearance_m: float = AIR_CLEARANCE_M) -> tuple[floa
     return (0.0, 0.0, float(z))
 
 
+def v11_half_s(params: Params) -> float:
+    """Length of one V11 half: ``ceil_0.1(full stroke time + 0.9 s)``.
+
+    The full stroke time is :func:`expected_full_stroke_time_s` with the YAML ramp, the end
+    hold :data:`V11_END_HOLD_S`, the grid :data:`V11_HALF_GRID_S`. Old 0.68 m YAML:
+    30.1 + 0.9 -> 31.0 s; 0.70 m YAML (v_max 20.924 mm/s): 33.554 + 0.9 -> 34.5 s.
+    """
+    full_stroke_s = expected_full_stroke_time_s(params)
+    half_s = full_stroke_s + V11_END_HOLD_S
+    # count grid steps as an integer so that 31.0 comes out exactly (not 310 x 0.1)
+    steps = math.ceil(half_s / V11_HALF_GRID_S - 1e-6)
+    return steps / round(1.0 / V11_HALF_GRID_S)
+
+
 def v11_schedule(params: Params) -> Schedule:
     """V11: big and exact-``v_max`` commands, beyond both stroke ends (``dynamics_model.md`` 5
     V11; 'large speed, beyond the end').
 
     0 s: FL +1 m/s, FR +v_max, RL +2 v_max, RR -1 m/s (already at 0, must stay).
-    31 s: FL -1 m/s, FR -v_max, RL -2 v_max, RR +1 m/s. End 62 s.
+    ``T`` = :func:`v11_half_s`: FL -1 m/s, FR -v_max, RL -2 v_max, RR +1 m/s. End ``2 T``.
     Every leg makes one full stroke (0 -> hi or hi -> 0) per half and is pushed against the
-    end for about 0.9 s.
+    end for at least :data:`V11_END_HOLD_S` (0.70 m YAML: half 34.5 s, end 69.0 s).
+
+    V11 criteria (``dynamics_model.md`` 5.12.12, judged in ``verify/s2b.v11_checks``; values for
+    the 0.70 m YAML): speed <= v_max (1 + 1e-3) = 20.945 mm/s and v_max reached; position in
+    [-1e-4, stroke + 1e-4] = [-1e-4, 0.7001] m; rest-to-rest full stroke = stroke / v_max +
+    ramp = 33.554 +- 0.05 s; inertial reaction of the hanging rod |F_motor + m_rod g| <=
+    9/8 m_rod a (1 + 1 %) = 25.388 N (FL, FR) and 17.395 N (RL, RR), a = v_max / ramp,
+    m_rod a = 22.34 / 15.31 N (9/8: last speed change of the stroke-end braking).
     """
     v = params.actuator.max_speed_m_s
     big = BIG_SPEED_M_S
+    half_s = v11_half_s(params)
     return Schedule(
         [
             Segment(0.0, (big, v, 2.0 * v, -big)),
-            Segment(31.0, (-big, -v, -2.0 * v, big)),
+            Segment(half_s, (-big, -v, -2.0 * v, big)),
         ],
-        end_s=62.0,
+        end_s=2.0 * half_s,
     )
 
 

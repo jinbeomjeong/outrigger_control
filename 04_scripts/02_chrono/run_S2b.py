@@ -14,7 +14,8 @@ Cases (L1, crawler layout D, actuator = ``chrono/actuators.L1SpeedActuator`` wit
 * ``air_short`` (top): superstructure fixed, legs in the air (``scenarios/stroke.air_pose``).
   V0 motor sign: +v_max 1 s on every leg; then the inertial reaction of a +v_max command on a
   hanging rod with / without the ramp at dt 1e-4 and 1e-5 s (0.3 s each).
-* ``v11`` (top, air): V11 schedule (``scenarios/stroke.v11_schedule``, 62 s): +-1 m/s,
+* ``v11`` (top, air): V11 schedule (``scenarios/stroke.v11_schedule``, 69.0 s on the 0.70 m
+  YAML): +-1 m/s,
   +-v_max, +-2 v_max, commands beyond both ends; per-step speed, position, axial constraint
   and rod-force tracking; full-stroke times.
 * ``crawler_<level>`` (top, middle, bottom): legs at 0, body at the analytic exact settle
@@ -192,13 +193,14 @@ def run_air_short() -> dict:
     checks = motor_sign_checks(dz, ds, hang, weight)
 
     spikes = []
-    m_rod = float(params.legs[0].moving_part.mass_kg)
+    m_rod_per_leg_kg = np.array([leg.moving_part.mass_kg for leg in params.legs], dtype=float)
     for ramp in (params.actuator.command_ramp_s, 0.0):
         for dt in (1.0e-4, 1.0e-5):
             mdl = _air_model(params, ramp_s=ramp, dt_s=dt)
             s = Schedule([Segment(0.0, (v, v, v, v)), Segment(0.15, (0.0, 0.0, 0.0, 0.0))], 0.3)
             r = run_commanded(mdl, 0.3, s, sample_s=1.0e-2, force_ref_N=-weight)
-            expected = m_rod * (v / ramp if ramp > 0.0 else v / dt)
+            acceleration_m_s2 = v / ramp if ramp > 0.0 else v / dt
+            expected = (m_rod_per_leg_kg * acceleration_m_s2).tolist()
             spikes.append(
                 {
                     "name": f"ramp{ramp:g}_dt{dt:.0e}",
@@ -244,7 +246,7 @@ def run_v11() -> dict:
     from outrigger_sim.record import save_record
     from outrigger_sim.scenarios.stroke import expected_full_stroke_time_s, v11_schedule
     from outrigger_sim.verify.checks import all_passed, summary_table
-    from outrigger_sim.verify.s2b import v11_checks
+    from outrigger_sim.verify.s2b import v11_checks, v11_stroke_time_key
 
     params = load_params(level="top")
     weight = _rod_weight(params)
@@ -278,11 +280,14 @@ def run_v11() -> dict:
         return float(tt[k - 1] + (target - pp[k - 1]) * (tt[k] - tt[k - 1]) / (pp[k] - pp[k - 1]))
 
     times = {}
-    for leg in (0, 1, 2):
-        times[f"{LEG_ORDER[leg]} 0->0.68"] = crossing_interp(leg, 0.0, True)
-        times[f"{LEG_ORDER[leg]} 0.68->0"] = crossing_interp(leg, 31.0, False) - 31.0
-    times["RR 0->0.68"] = crossing_interp(3, 31.0, True) - 31.0
+    t_sw = sched.segments[1].t0_s  # direction switch of the V11 schedule (scenarios/stroke.v11_schedule)
+    for leg in (0, 1, 2):  # keys verify.s2b.v11_stroke_time_key (stroke from the YAML)
+        times[v11_stroke_time_key(LEG_ORDER[leg], hi, is_extending=True)] = crossing_interp(leg, 0.0, True)
+        times[v11_stroke_time_key(LEG_ORDER[leg], hi, is_extending=False)] = (
+            crossing_interp(leg, t_sw, False) - t_sw)
+    times[v11_stroke_time_key("RR", hi, is_extending=True)] = crossing_interp(3, t_sw, True) - t_sw
     ramp = model.actuator.ramp_s
+    ramp_force_per_leg_N = [float(leg.moving_part.mass_kg) * v / ramp for leg in params.legs]
     checks = v11_checks(
         v_max=v,
         max_speed_per_leg=run.max_motor_speed_m_s,
@@ -293,8 +298,9 @@ def run_v11() -> dict:
         expected_time_s=expected_full_stroke_time_s(params, ramp),
         reference_time_s=params.actuator.full_stroke_time_s,
         motor_violation_max_m=run.max_motor_violation_m,
+        stroke_m=hi,
         rod_force_dev_N=run.max_force_dev_N,
-        ramp_force_N=float(params.legs[0].moving_part.mass_kg) * v / ramp,
+        ramp_force_N=ramp_force_per_leg_N,
     )
     tt, pp, vv, ff = _thin(1500, t, pos, s["motor_vel"], s["motor_force"])
     return {
@@ -309,7 +315,7 @@ def run_v11() -> dict:
         "motor_pos_max_m": run.motor_pos_max_m.tolist(),
         "max_axial_violation_m": run.max_motor_violation_m,
         "max_force_dev_from_rod_weight_N": run.max_force_dev_N.tolist(),
-        "expected_ramp_force_N": float(params.legs[0].moving_part.mass_kg) * v / ramp,
+        "expected_ramp_force_N": ramp_force_per_leg_N,
         "leg_offset_max_m": float(s["motor_violation"].max()),
         "checks": summary_table(checks),
         "all_passed": all_passed(checks),

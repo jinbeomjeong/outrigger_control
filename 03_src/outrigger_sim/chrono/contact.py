@@ -85,14 +85,28 @@ class SmcMaterialValues:
         return make_smc_material(self.kn_N_m, self.gn_1_s)
 
 
-def pad_material_values(params: Params, leg_index: int) -> SmcMaterialValues:
-    """Pad sphere / pad patch material of one leg (R5, R8)."""
+def pad_material_values(
+    params: Params, leg_index: int, head_only_dashpot: bool = False
+) -> SmcMaterialValues:
+    """Pad sphere / pad patch material of one leg (R5, R8).
+
+    The dashpot is ``gn_per_pad_1_s``: with the REXOME35 YAML the LOCK-based value, one value
+    in every L1-R state and also with mechanics off (``dynamics_model.md`` 5.12.8 Q-D3), so
+    that damping overrides of that key (V8a zero damping, zeta sensitivity) keep acting.
+    ``head_only_dashpot`` (``L1Model(head_only_dashpot=True)``) takes the regression value
+    ``gn_per_pad_head_only_1_s`` instead (pre-L1-R head-only model); ``ParamsError`` without it.
+    """
     l1 = params.contact.rigid_floor.L1
     name = LEG_ORDER[leg_index]
+    gn = l1.gn_per_pad_1_s[leg_index]
+    gn_key = "gn_per_pad_1_s"
+    if head_only_dashpot:
+        gn = float(params.get("contact.rigid_floor.L1.gn_per_pad_head_only_1_s")[name])
+        gn_key = "gn_per_pad_head_only_1_s"
     return SmcMaterialValues(
         kn_N_m=l1.kn_per_pad_N_m[leg_index],
-        gn_1_s=l1.gn_per_pad_1_s[leg_index],
-        source=f"contact.rigid_floor.L1.kn_per_pad_N_m.{name}, .gn_per_pad_1_s.{name}",
+        gn_1_s=gn,
+        source=f"contact.rigid_floor.L1.kn_per_pad_N_m.{name}, .{gn_key}.{name}",
     )
 
 
@@ -126,7 +140,11 @@ class FloorPatch:
         )
 
 
-def floor_patches(params: Params, layout: CrawlerSphereLayout | None) -> tuple[FloorPatch, ...]:
+def floor_patches(
+    params: Params,
+    layout: CrawlerSphereLayout | None,
+    head_only_dashpot: bool = False,
+) -> tuple[FloorPatch, ...]:
     """Per-leg pad patches and (if ``layout``) the two crawler strips (R13, risk 1).
 
     Raises:
@@ -141,7 +159,7 @@ def floor_patches(params: Params, layout: CrawlerSphereLayout | None) -> tuple[F
                 f"pad_{leg.name}",
                 (cx - h, cx + h),
                 (cy - h, cy + h),
-                pad_material_values(params, i),
+                pad_material_values(params, i, head_only_dashpot),
             )
         )
     if layout is not None:

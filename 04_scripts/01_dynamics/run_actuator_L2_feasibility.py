@@ -240,7 +240,7 @@ def main():
 
     # ------------------------------------------------------------------ C: seal friction (quasi-static)
     ko_op = dm.k_oil(e_op)
-    k_s = np.full(4, float(dm.series(kr, kf, kc)))  # leg stiffness with the oil column locked by stick friction
+    k_s = np.broadcast_to(np.asarray(dm.series(kr, kf, kc), float), (4,)).copy()  # per leg (rev. 30); leg stiffness with the oil column locked by stick friction
     kv = dm.series(ko_op, kr, kf, kc)     # slipping: oil column in series
     A = dm.support_matrix(xy)
 
@@ -354,7 +354,7 @@ def main():
 
     # ------------------------------------------------------------------ D: leakage
     drop_mL = 0.05  # ASSUMPTION: 1 drop = 0.05 mL
-    Ap = dm.piston_area()
+    Ap = dm.piston_area(0)  # FL (the leaking leg) head area (rev. 30, per leg); = the common area for the old YAML
     S = dm.load_sensitivity(kv_L1, xy); Q = dm.attitude_sensitivity(kv_L1, xy)
     leak = {}
     for name, Qml_min in (("check valve 1 drop/min", 1 * drop_mL), ("check valve 5 drops/min", 5 * drop_mL),
@@ -371,7 +371,8 @@ def main():
 
     # ------------------------------------------------------------------ E: barrel expansion, annulus chamber
     E = A_["steel_E_Pa"]; nu = 0.3
-    Do, Di, Dr = A_["barrel_outer_diameter_m"], A_["bore_diameter_m"], A_["rod_diameter_m"]
+    _cd = [dm.cylinder_dims(i) for i in range(4)]  # per leg (rev. 30): scalars while all legs share the cylinder
+    Do, Di, Dr = _cd[0] if all(c == _cd[0] for c in _cd) else tuple(np.array(v) for v in zip(*_cd))
     c_tube = 2 / E * ((Do**2 + Di**2) / (Do**2 - Di**2) + nu)   # dV/V/dp of a thick-walled closed tube (Lame, radial only)
     K_tube = 1 / c_tube
     secE = {"K_tube_equivalent_Pa": K_tube,
@@ -381,7 +382,7 @@ def main():
     L_ann = geo.stroke - e_op + A_["oil_dead_length_m"]   # ASSUMPTION: rod-side column length incl. same dead length
     k_ann = A_["oil_bulk_modulus_eff_Pa"] * A_ann / L_ann
     secE["annulus_area_m2"] = A_ann
-    secE["annulus_area_over_bore_area"] = A_ann / Ap
+    secE["annulus_area_over_bore_area"] = A_ann / dm.piston_area()   # per leg (rev. 30)
     secE["k_annulus_locked_N_m (upper bound, rod side locked and pressurised)"] = k_ann
     secE["k_annulus_over_k_cap"] = k_ann / ko_op
     res["E_column_details"] = secE

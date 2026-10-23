@@ -71,6 +71,18 @@ SUMMARY = ANALYSIS_DIR / "verify_S4_L1_modes.json"
 BETA_TABLE = ANALYSIS_DIR / "verify_S4_L1_beta.csv"
 FIGURE = ANALYSIS_DIR / "verify_S4_L1_modes.png"
 BETA_FIGURE = ANALYSIS_DIR / "verify_S4_L1_beta.png"
+
+# bundle B: output roots tagged by l1r_variant (no change without the override)
+sys.path.insert(0, str(HERE))
+import l1r_variant as _l1rv  # noqa: E402
+
+RESULTS = _l1rv.tagged(RESULTS)
+SUMMARY = _l1rv.tagged(SUMMARY)
+BETA_TABLE = _l1rv.tagged(BETA_TABLE)
+FIGURE = _l1rv.tagged(FIGURE)
+BETA_FIGURE = _l1rv.tagged(BETA_FIGURE)
+INDEX = RESULTS / "index.json"
+STATES = _l1rv.tagged(STATES)
 S4_CHECK = ROOT / "06_analysis" / "00_dynamics" / "s4_check.json"
 """dyn independent check (expected beta MAC, ``E_beta_mode_shape_MAC``)."""
 LEVEL = "top"
@@ -118,6 +130,13 @@ def _plain(value):
         return None
     return value
 
+
+
+def _l1r():
+    """Bundle-B L1-R override (``l1r_variant``; None = YAML)."""
+    import l1r_variant
+
+    return l1r_variant.mechanics()
 
 def _rel(path: Path) -> str:
     p = Path(path).resolve()
@@ -209,6 +228,12 @@ def case_settings(case_id: str) -> dict:
 # --- parameters per variant --------------------------------------------------------------------
 
 
+# beta cases also override actuator.oil_bulk_modulus_eff_Pa (needed when actuator.rod_side.mechanics is on, so that
+# the L1-R head / rod-side columns use the case beta; off = only the pad k_n, plan rev. 5 rule). Default off: batch A
+# runs with L1-R off (coordinator 2026-10-22).
+BETA_OVERRIDES_OIL_BULK_MODULUS = False
+
+
 def variant_overrides(settings: dict) -> dict:
     """YAML overrides of a case (run time only, the YAML is not changed)."""
     from outrigger_sim.params import load_params
@@ -223,7 +248,10 @@ def variant_overrides(settings: dict) -> dict:
     l1 = "contact.rigid_floor.L1"
     if v == "beta":
         k = refs.get(BETA_K_L1_N_M, beta=settings["beta"])
-        return {f"{l1}.kn_per_pad_N_m.{leg}": float(x) for leg, x in zip(LEGS, k, strict=True)}
+        over = {f"{l1}.kn_per_pad_N_m.{leg}": float(x) for leg, x in zip(LEGS, k, strict=True)}
+        if BETA_OVERRIDES_OIL_BULK_MODULUS:  # L1-R on: k_h / k_r of the rod-chamber machine from the same beta
+            over["actuator.oil_bulk_modulus_eff_Pa"] = float(settings["beta"].removeprefix("beta_"))
+        return over
     if v == "rodside":
         ratio = refs.get(ROD_SIDE_KV_RATIO)
         return {f"{l1}.kn_per_pad_N_m.{leg}": float(base.get(f"{l1}.kn_per_pad_N_m.{leg}")) * r
@@ -279,7 +307,7 @@ def _settled_model(params, refs, settings, *, actuator):
     if start == "snapshot":
         sp = analytic_static_pose(params, refs, operating_extensions_m(params))
         model = L1Model(params, pose=BodyPose(sp.origin_m, sp.quat_wxyz), dt_s=dt,
-                        actuator=actuator)
+                        actuator=actuator, rod_side_mechanics=_l1r())
         t0 = model.restore(load_snapshot(S1_SNAPSHOT, params_sha256=params.sha256,
                                          directory=STATES))
         return model, t0, {"kind": f"snapshot {S1_SNAPSHOT}", "t_s": t0}, None
@@ -289,7 +317,7 @@ def _settled_model(params, refs, settings, *, actuator):
         sp = analytic_static_pose(params, refs, operating_extensions_m(params))
         pose = BodyPose(sp.origin_m, sp.quat_wxyz)
         info = {"kind": "nominal analytic static start (V2 / V3 reference)"}
-    model = L1Model(params, pose=pose, dt_s=dt, actuator=actuator)
+    model = L1Model(params, pose=pose, dt_s=dt, actuator=actuator, rod_side_mechanics=_l1r())
     run = run_settle(model, SETTLE_S, STILL_S, coarse_sample_s=COARSE_SAMPLE_S,
                      fine_sample_s=SAMPLE_S)
     t0 = float(model.system.GetChTime())
@@ -403,6 +431,10 @@ def identify(t, q, *, modal, f_ref, zeta_num, window_s, phi_valid, f_band_rel=0.
                 "f_Hz": m.f_undamped_Hz, "f_damped_Hz": m.f_damped_Hz, "zeta_raw": m.zeta,
                 "zeta": m.zeta - float(zeta_num[i]),
                 "mac_vs_phi": mass_mac(m.shape, phi[:, i], mm),
+                # MAC against every reference mode (1-based mode = index + 1), so a judge can
+                # check which reference mode the pole resembles most (dynamics 5.13.8 (1-b))
+                "mac_vs_all_phi": [mass_mac(m.shape, phi[:, j], mm)
+                                   for j in range(phi.shape[1])],
                 "eta_start_amplitude": float(modal_amplitudes(era, phi, mm)[i, k]),
                 "leakage": projection_leakage(era, i, k, phi, mm),
                 "window_s": list(era.window_s), "residual_rms_rel": era.residual_rms_rel,
@@ -706,6 +738,14 @@ def run_batch(ids, jobs):
 # --- summary -------------------------------------------------------------------------------------
 
 
+
+def _index_guard() -> dict:
+    """Guard record of the last _load_results() (index_guard.py): held cases of another params revision."""
+    from index_guard import last_guard
+
+    return last_guard()
+
+
 def _load_results():
     if not INDEX.exists():
         return {}
@@ -716,7 +756,11 @@ def _load_results():
         if p.exists():
             out[cid] = json.loads(p.read_text(encoding="utf-8"))
             out[cid]["_dir"] = rel
-    return out
+    # never substitute results of another params revision (index_guard, 2026-10-22)
+    sys.path.insert(0, str(HERE))
+    from index_guard import guard
+
+    return guard(out, lambda c: out[c]["_dir"])
 
 
 def _mode_matrix(res, prefix):
@@ -724,13 +768,18 @@ def _mode_matrix(res, prefix):
     return {e: res[f"{prefix}{e}"]["modes"] for e in _exc_names() if f"{prefix}{e}" in res}
 
 
-def _judged_rows(matrix, assignment):
+def _judged_rows(matrix, assignment, details=None):
+    """Judged-run row per mode; ``details`` (``verify.s4.ModeAssignment`` list) adds the close
+    runner-up and its amplitude ratio as information (dynamics_model.md 5.13.8 (1))."""
     out = []
     for i, exc in enumerate(assignment):
         if exc not in matrix:
             out.append(None)
             continue
-        out.append({"run": exc, **matrix[exc][i]})
+        row = {"run": exc, **matrix[exc][i]}
+        if details is not None and details[i].is_close:
+            row["runner_up"], row["runner_up_amplitude_ratio"] = details[i].close_runner_up()
+        out.append(row)
     return out
 
 
@@ -756,6 +805,47 @@ def _spread(matrix, key, sub=None, min_rel_amp=0.2):
     return out
 
 
+def _l1r_v7(refs, rows, res):
+    """V7 rows and checks of an L1-R run against the LOCK modes (dynamics_model.md 5.17.5).
+
+    ``res`` are the loaded results; the nominal mode runs (``modes_*``) give the time step of
+    the LOCK numerical damping.
+
+    Returns:
+        ``(LOCK-referenced rows, JSON checks (frequency id V7, zeta id info), reference
+        record)``.
+    """
+    from outrigger_sim.verify.checks import summary_table
+    from outrigger_sim.verify.reference import (
+        L1R_LOCK_F_DAMPED_HZ,
+        L1R_LOCK_ZETA,
+        L1R_LOCK_ZETA_NUM_R_OMEGA_DT_HALF,
+    )
+    from outrigger_sim.verify.s4 import v7_l1r_checks, with_lock_reference
+
+    dts = {r["dt_s"] for cid, r in res.items() if cid.startswith("modes_")}
+    if len(dts) != 1:
+        raise SystemExit(f"L1-R V7 needs one run time step, got {sorted(dts)}")
+    dt_text = f"{dts.pop():g}"
+    zeta_num_by_dt = refs.get(L1R_LOCK_ZETA_NUM_R_OMEGA_DT_HALF, level=LEVEL)
+    dt_key = next((k for k in zeta_num_by_dt if f"{float(k):g}" == dt_text), None)
+    if dt_key is None:
+        raise SystemExit(f"no LOCK zeta_num for dt {dt_text} s (have {list(zeta_num_by_dt)})")
+    f_lock = refs.get(L1R_LOCK_F_DAMPED_HZ, level=LEVEL)
+    zeta_lock = refs.get(L1R_LOCK_ZETA, level=LEVEL)
+    zeta_num_lock = zeta_num_by_dt[dt_key]
+    lock_rows = with_lock_reference(rows, f_lock, zeta_lock, zeta_num_lock)
+    checks = summary_table(v7_l1r_checks(
+        lock_rows,
+        ref_key_f=L1R_LOCK_F_DAMPED_HZ.resolve(level=LEVEL).notation(),
+        ref_key_zeta=L1R_LOCK_ZETA.resolve(level=LEVEL).notation()))
+    record = {"f_damped_Hz": list(f_lock), "zeta": list(zeta_lock),
+              "zeta_num_r_omega_dt_half": list(zeta_num_lock), "dt_key": dt_key,
+              "note": "identification kept (FLOOR mode shapes, ERA); reference f / zeta and "
+                      "the subtracted zeta_num are the LOCK values; zeta recorded only"}
+    return lock_rows, checks, record
+
+
 def summarize():
     import numpy as np
 
@@ -773,7 +863,7 @@ def summarize():
     )
     from outrigger_sim.verify.s4 import (
         ModeRow,
-        assign_modes,
+        assign_modes_with_runner_up,
         beta_frequency_checks,
         beta_static_checks,
         beta_v5_checks,
@@ -794,7 +884,9 @@ def summarize():
                        fit_residual_rms_rel=row.get("fit_residual_rms_rel"),
                        f_era_Hz=era.get("f_Hz"), zeta_era=era.get("zeta"),
                        leakage=era.get("leakage"), zeta_num=row["zeta_num"],
-                       f_ref_Hz=row["f_ref_Hz"], zeta_ref=row["zeta_ref"])
+                       f_ref_Hz=row["f_ref_Hz"], zeta_ref=row["zeta_ref"],
+                       runner_up=row.get("runner_up"),
+                       runner_up_amplitude_ratio=row.get("runner_up_amplitude_ratio"))
 
     def judged_dict(r):
         j = judged_value(r)
@@ -806,7 +898,9 @@ def summarize():
 
     refs = load_references()
     modal = modal_reference(refs, LEVEL)
-    assignment = assign_modes(modal.phi, modal.mass_matrix, modal.f_damped_Hz)
+    assignment_details = assign_modes_with_runner_up(
+        modal.phi, modal.mass_matrix, modal.f_damped_Hz)
+    assignment = [a.run for a in assignment_details]
     res = _load_results()
     checks = []
     health = []
@@ -815,10 +909,16 @@ def summarize():
             health.append({"case": cid, **c})
     # --- V7 nominal
     nominal = _mode_matrix(res, "modes_")
-    judged = _judged_rows(nominal, assignment)
+    judged = _judged_rows(nominal, assignment, assignment_details)
     v7_rows = [mode_row(row) for row in judged if row is not None]
-    v7_checks = summary_table(v7_six_mode_checks(
-        v7_rows, ref_key_f=modal.keys["f_damped_Hz"], ref_key_zeta=modal.keys["zeta"]))
+    l1r_lock = None
+    if _l1rv.is_on():  # dynamics_model.md 5.17.5: L1-R runs against the LOCK modes
+        v7_rows, v7_checks, l1r_lock = _l1r_v7(refs, v7_rows, res)
+        info += [c for c in v7_checks if c["id"] == "info"]
+        v7_checks = [c for c in v7_checks if c["id"] != "info"]
+    else:
+        v7_checks = summary_table(v7_six_mode_checks(
+            v7_rows, ref_key_f=modal.keys["f_damped_Hz"], ref_key_zeta=modal.keys["zeta"]))
     checks += v7_checks
     info += summary_table(mode_info_checks(v7_rows, "V7"))
     for row, r in zip([x for x in judged if x is not None], v7_rows, strict=True):
@@ -902,7 +1002,7 @@ def summarize():
         mat = _mode_matrix(res, f"zeta{z:.2f}_modes_")
         if not mat:
             continue
-        jr = _judged_rows(mat, assignment)
+        jr = _judged_rows(mat, assignment, assignment_details)
         d_rows = [mode_row(row) for row in jr if row is not None]
         dc = summary_table(damping_mode_checks(d_rows, z, ref_key_f=modal.keys["f_damped_Hz"]))
         checks += dc
@@ -925,6 +1025,8 @@ def summarize():
                 "f_era_Hz": (row.get("era") or {}).get("f_Hz"),
                 "zeta_era": (row.get("era") or {}).get("zeta"),
                 "leakage": (row.get("era") or {}).get("leakage"),
+                "runner_up": row.get("runner_up"),
+                "runner_up_amplitude_ratio": row.get("runner_up_amplitude_ratio"),
                 "judged_value": judged_dict(mode_row(row)),
             } for row in jr],
             "checks": dc,
@@ -963,6 +1065,7 @@ def summarize():
     summary = {
         "meta": {
             "generated": _dt.datetime.now().isoformat(timespec="seconds"),
+            "index_guard": _index_guard(),
             "stage": "S4 branch A (chrono_build_plan.md S4): V7 six modes (projection + ERA), "
             "beta sensitivity, leg damping sensitivity, optional rod-side k_v",
             "script": "04_scripts/02_chrono/run_S4.py", "checks_module": "outrigger_sim.verify.s4",
@@ -978,6 +1081,14 @@ def summarize():
                     "mode_selection": "largest start amplitude in eta_i within f_ref +-15 % "
                     "(nominal Phi as the label, also for beta)"},
             "mode_assignment": {f"mode {i + 1}": e for i, e in enumerate(assignment)},
+            "mode_assignment_runner_up": {
+                f"mode {i + 1}": {"runner_up": a.runner_up, "amplitude_ratio": a.runner_up_ratio,
+                                  "is_close": a.is_close}
+                for i, a in enumerate(assignment_details)},
+            "mode_assignment_runner_up_rule": "information (dynamics_model.md 5.13.8 (1)): "
+            "runner-up / judged predicted amplitude >= 0.8 -> the judged row records "
+            "runner_up and runner_up_amplitude_ratio; zeta of that mode is read with the "
+            "projection leakage",
             "predicted_start_amplitude_sqrtkg_m": pred,
             "v7_reference": modal.keys,
             "batches": batches,
@@ -988,7 +1099,8 @@ def summarize():
         "v7": {"judged": judged, "checks": v7_checks,
                "cross_runs_f_proj": _spread(nominal, "f_proj_Hz"),
                "cross_runs_zeta_proj": _spread(nominal, "zeta_proj"),
-               "all_runs": nominal},
+               "all_runs": nominal,
+               **({} if l1r_lock is None else {"l1r_lock_reference_rev32": l1r_lock})},
         "beta": beta_out,
         "damping": damping,
         "rodside": rodside,
@@ -1016,6 +1128,10 @@ def summarize():
             wr.writerow([json.dumps(_plain(x)) if isinstance(x, (list, tuple)) else x
                          for x in row])
     print(f"wrote {_rel(SUMMARY)}, {_rel(BETA_TABLE)}")
+    for i, a in enumerate(assignment_details):
+        if a.is_close:
+            print(f"mode {i + 1}: judged run {a.run}, runner-up {a.runner_up} "
+                  f"(amplitude ratio {a.runner_up_ratio:.3f}, information)")
     _figures(res, judged, beta_out, modal)
     print(json.dumps(by_id, indent=1))
 

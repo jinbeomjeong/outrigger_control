@@ -12,6 +12,7 @@ import pytest
 
 from outrigger_sim.frames import quat_from_euler_zyx, roll_pitch_from_specific_force
 from outrigger_sim.sensors import imu as imu_module
+from outrigger_sim.sensors.hydraulic import LegSensorConfig
 from outrigger_sim.sensors.imu import (
     IMU_GRADES,
     IMU_MOUNT_C1_BODY_M,
@@ -24,6 +25,8 @@ from outrigger_sim.sensors.imu import (
     imu_config_for_grade,
     specific_force_at_point,
 )
+from outrigger_sim.sensors.suite import SensorSuite
+from outrigger_sim.signals import Measurements
 
 G = STANDARD_GRAVITY_M_S2
 LEVEL = (1.0, 0.0, 0.0, 0.0)
@@ -101,8 +104,60 @@ def test_grade_bias_has_the_same_sign_on_x_and_y_and_none_on_z() -> None:
     bias_x, bias_y, bias_z = config.accel_bias_m_s2
     assert bias_x == bias_y == pytest.approx(math.sin(math.radians(0.072)) * G)
     assert bias_z == 0.0
-    assert config.gyro_bias_rad_s == ZERO
     assert config.grade == "normal_zeroed"
+
+
+# s6_control_spec.md 10.3 (ASSUMPTION, user decision U9): ARW deg/sqrt(h), bias deg/h.
+GYRO_GRADES = {
+    ImuGradeName.IDEAL: (0.0, 0.0),
+    ImuGradeName.GOOD_ZEROED: (0.15, 5.0),
+    ImuGradeName.NORMAL_ZEROED: (0.30, 20.0),
+    ImuGradeName.NORMAL_ZEROED_REPEATABILITY: (0.30, 20.0),
+    ImuGradeName.NORMAL_AS_SHIPPED: (0.30, 20.0),
+}
+
+
+def test_grade_gyro_errors_and_their_si_values() -> None:
+    for name, (arw_deg_rt_h, bias_deg_h) in GYRO_GRADES.items():
+        config = imu_config_for_grade(name)
+        bias_rad_s = math.radians(bias_deg_h) / 3600.0
+        assert config.gyro_bias_rad_s == pytest.approx((bias_rad_s,) * 3, abs=0.0)
+        density = math.radians(arw_deg_rt_h) / 60.0
+        assert config.gyro_noise_density_rad_s_rtHz == pytest.approx(density, rel=1e-12)
+    # spec table: 0.15 deg/sqrt(h) = 4.36e-5 rad/s/sqrt(Hz)
+    good = imu_config_for_grade("good_zeroed")
+    assert good.gyro_noise_density_rad_s_rtHz == pytest.approx(4.36e-5, rel=1e-3)
+
+
+def test_grade_gyro_errors_reach_the_delivered_rate() -> None:
+    """The error model applies the grade's gyro bias and ARW to the delivered angular rate."""
+    config = dataclasses.replace(imu_config_for_grade("normal_zeroed"))
+    model = ImuModel(config, seed=3)
+    sample_count = 20_000
+    rates = np.array(
+        [model.measure(0.02 * k, LEVEL_FORCE, ZERO).angular_rate_rad_s for k in range(sample_count)]
+    )
+    expected_std = config.gyro_noise_density_rad_s_rtHz * math.sqrt(1.0 / (2.0 * 0.02))
+    standard_error = expected_std / math.sqrt(sample_count)
+    np.testing.assert_allclose(rates.mean(axis=0), config.gyro_bias_rad_s, atol=5 * standard_error)
+    np.testing.assert_allclose(rates.std(axis=0), expected_std, rtol=0.03)
+
+
+def test_sensor_suite_delivers_the_grade_gyro_bias() -> None:
+    """The runner path (SensorSuite.apply) carries the gyro errors into Measurements."""
+    config = dataclasses.replace(
+        imu_config_for_grade("good_zeroed"), gyro_noise_density_rad_s_rtHz=0.0
+    )
+    suite = SensorSuite(config, LegSensorConfig(), seed=0)
+    ideal = Measurements(
+        t_s=0.02,
+        specific_force_m_s2=LEVEL_FORCE,
+        angular_rate_rad_s=ZERO,
+        head_pressure_Pa=np.zeros(4),
+        stroke_m=np.zeros(4),
+    )
+    delivered = suite.apply(ideal)
+    np.testing.assert_allclose(delivered.angular_rate_rad_s, config.gyro_bias_rad_s, rtol=1e-12)
 
 
 def test_grade_zero_error_reads_as_tilt_of_that_size() -> None:

@@ -99,7 +99,7 @@ def block(dt, m, kt, ct, muN, v0, ke=0.0, T=3.0, lag=True):
 
 def part_a():
     W = 382.29e3  # V1 total pad force [N]
-    m = 38556.0 / 4 + float(P["legs"]["FL"]["moving_part"]["mass_kg"])
+    m = round(float(P["superstructure"]["auger_levels"]["top"]["mass_kg"])) / 4 + float(P["legs"]["FL"]["moving_part"]["mass_kg"])  # YAML (rev. 30; was 38556.0)
     par = dict(m=m, kt=float(KT.mean()), ct=float(CT.mean()), muN=MU * W / 4, v0=0.5)
     out = {"params (ASSUMPTION: quarter machine per pad)": {k: r(v) for k, v in par.items()}}
     for ke in (0.0, float(KN.mean())):
@@ -115,9 +115,15 @@ def part_a():
 # ------------------------------------------------------------------ Part B
 def part_b():
     out = {}
-    kn = 119.29e3 / 5.73e-3
+    # rev. 30: per-leg pad stiffness from the YAML and the batch directory recorded in the energy JSON (new runs);
+    # the old literal 119.29e3 / 5.73e-3 and batch_20261021_114627 are kept when the JSON has no 'dir' (old runs)
+    kn = KN if any("dir" in CHR_E["cases"].get(c_, {}) for c_ in CHR_E["cases"]) else 119.29e3 / 5.73e-3
     for case, dt in (("v8b_pitch2_dt2e-04", 2e-4), ("v8b_pitch2_dt1e-04", 1e-4), ("v8b_flat_dt2e-04", 2e-4)):
-        z = np.load(BATCH / case / "record" / "record.npz")
+        cj = CHR_E["cases"].get(case, {})
+        bdir = Path(cj["dir"]) if "dir" in cj else BATCH / case
+        if not bdir.is_absolute():
+            bdir = ROOT / bdir
+        z = np.load(bdir / "record" / "record.npz")
         t, v, w, q, ke = z["t"], z["body_vel"], z["body_omega"], z["body_quat_wxyz"], z["energy.kinetic"]
         cols = [0.5 * (v ** 2).sum(1)] + [0.5 * w[:, i] ** 2 for i in range(3)] + \
                [w[:, i] * w[:, j] for i, j in ((0, 1), (0, 2), (1, 2))]
@@ -132,7 +138,8 @@ def part_b():
         inc = z["pad_in_contact"][:-1] & z["pad_in_contact"][1:]
         ddot = np.diff(F / kn, axis=0) / h[:, None]
         kterm = 0.5 * dt * np.sum(kn * ddot ** 2 * inc * h[:, None])
-        chrono_rem = CHR_E["cases"][case]["residual_decomposition_end_J"]["remainder"]
+        rd = cj.get("residual_decomposition_end_J")   # old schema; the new energy JSON has no end decomposition
+        chrono_rem = rd["remainder"] if rd else float("nan")
         out[case] = {"fitted_mass_kg": r(c[0], 1), "kinetic_fit_max_rel_err": r(np.max(np.abs(A @ c - ke)) / ke.max(), 4),
                      "minus_half_dvMdv_J": r(mterm, 3), "plus_half_kn_ddelta2_J": r(kterm, 3),
                      "estimate_remainder_J": r(mterm + kterm, 3), "chrono_remainder_J": r(chrono_rem, 3)}

@@ -34,6 +34,7 @@ Hook order after every step: see :meth:`L1Model.after_step`.
 
 from __future__ import annotations
 
+import dataclasses
 import time
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
@@ -71,12 +72,22 @@ from outrigger_sim.chrono.contact import (
     set_family,
     shape_materials,
 )
+from outrigger_sim.chrono.crawler_bushing import PART_PREFIX as CRAWLER_BUSHING_PART
+from outrigger_sim.chrono.crawler_bushing import make_crawler_bushing
 from outrigger_sim.chrono.ground_bushing import (
     DEFAULT_FORCE_POINT,
     BushingEvent,
     GroundBushingCoulomb,
 )
+from outrigger_sim.chrono.ground_settlement import PART_PREFIX as SETTLEMENT_PART
+from outrigger_sim.chrono.ground_settlement import GroundSettlement
 from outrigger_sim.chrono.probes import ProbeState, chvec, read_probe, truth_state
+from outrigger_sim.chrono.rod_chamber_link import PART_PREFIX as ROD_CHAMBER_PART
+from outrigger_sim.chrono.rod_chamber_link import (
+    L1RodChamber,
+    mechanics_from_params,
+)
+from outrigger_sim.hydraulics.rod_chamber import RodSideMechanics
 from outrigger_sim.chrono.snapshot import (
     S_REF_KEY,
     capture_snapshot,
@@ -169,6 +180,24 @@ class L1Model:
         actuator_ramp_s: 0 -> v_max time of the command acceleration limit (None = YAML
             ``actuator.command_ramp_s``; 0 = speed steps, only for the inertial-spike
             comparison).
+        settlement_legs: Legs whose pad patch sits on a separately driven patch body for a
+            prescribed ground settlement (S6 G4, ``chrono/ground_settlement``; default none =
+            the S1-S6 model unchanged).
+        crawler_bushings: Circular-Coulomb anchor bushings under the crawler spheres (Q12,
+            ``chrono/crawler_bushing``; default off = the S1-S6 model unchanged).
+        crawler_bushing_kt_scale: Sensitivity factor on the assumed crawler tangential
+            stiffness (0.3 / 1 / 3).
+        attach_crawler_bushings: Create crawler bushings now (zero tangential force, initial
+            hold until loaded): True = the roller spheres, a list = those sphere indices (the
+            loaded set of an analytic start); the others get theirs on touch (R15).
+        force_saturation: With the actuator, cut the leg speed every step at the 210 bar
+            force limits (S6, ``chrono/actuators`` force saturation; default on). Runs that
+            never reach the limits are bit-identical to ``False``.
+        rod_side_mechanics: L1-R mechanics override (``"off"`` / ``"one_sided_parallel"``;
+            None = YAML ``actuator.rod_side.mechanics``, off when absent). Not part of
+            ``Params.sha256``; snapshots carry the flag and refuse a mismatch.
+        head_only_dashpot: Pad dashpot ``gn_per_pad_head_only_1_s`` (regression of the
+            pre-L1-R head-only model) instead of ``gn_per_pad_1_s`` (LOCK basis, default).
     """
 
     def __init__(
@@ -187,8 +216,19 @@ class L1Model:
         bushing_force_point: str = DEFAULT_FORCE_POINT,
         actuator: bool = False,
         actuator_ramp_s: float | None = None,
+        force_saturation: bool = True,
+        settlement_legs: Sequence[str] = (),
+        crawler_bushings: bool = False,
+        crawler_bushing_kt_scale: float = 1.0,
+        attach_crawler_bushings: bool | Sequence[int] = True,
+        rod_side_mechanics: str | None = None,
+        head_only_dashpot: bool = False,
     ) -> None:
         self.params = params
+        self.head_only_dashpot = bool(head_only_dashpot)
+        self.last_probe: ProbeState | None = None
+        """State copy of the last step (step 1 of :meth:`after_step`; None when the step was
+        not captured). Read by hooks that need the step-n state after the bushing hook."""
         ext = (
             operating_extensions_m(params)
             if extensions_m is None
@@ -229,8 +269,35 @@ class L1Model:
         self.crawler_layout: CrawlerSphereLayout | None = (
             crawler_layout(params) if crawler else None
         )
-        self.patches = floor_patches(params, self.crawler_layout)
-        add_floor_patches(self.floor, self.patches, self.floor_z_m)
+        self.patches = floor_patches(params, self.crawler_layout, head_only_dashpot)
+        settle = tuple(settlement_legs)
+        unknown = [n for n in settle if n not in LEG_ORDER]
+        if unknown or len(set(settle)) != len(settle):
+            raise ValueError(f"settlement_legs must be distinct LEG_ORDER names, got {settle}")
+        moving_names = {f"pad_{n}" for n in settle}
+        self.floor_body_patches = tuple(p for p in self.patches if p.name not in moving_names)
+        """Patches on the fixed floor body (all of them without settlement legs)."""
+        add_floor_patches(self.floor, self.floor_body_patches, self.floor_z_m)
+        patch_bodies: dict[str, ch.ChBody] = {}
+        for name in settle:
+            body = ch.ChBody()
+            body.SetName(f"pad_patch_{name}")
+            mass = float(params.get("contact.rigid_floor.ground_body_mass_kg"))
+            body.SetMass(mass)
+            body.SetInertiaXX(ch.ChVector3d(mass, mass, mass))
+            fpos, frot = self.floor.GetPos(), self.floor.GetRot()
+            body.SetPos(ch.ChVector3d(fpos.x, fpos.y, fpos.z))
+            body.SetRot(ch.ChQuaterniond(frot.e0, frot.e1, frot.e2, frot.e3))
+            add_floor_patches(
+                body, [p for p in self.patches if p.name == f"pad_{name}"], self.floor_z_m
+            )
+            self.system.Add(body)
+            patch_bodies[name] = body
+        self.settlement: GroundSettlement | None = None
+        if settle:
+            self.settlement = GroundSettlement(
+                self.system, self.floor, settle, [patch_bodies[n] for n in settle]
+            )
 
         # superstructure (+ crawler spheres)
         sup = make_superstructure(params, self.pose)
@@ -269,7 +336,9 @@ class L1Model:
             )
             body.EnableCollision(True)
             body.AddCollisionShape(
-                ch.ChCollisionShapeSphere(pad_material_values(params, i).make(), radius),
+                ch.ChCollisionShapeSphere(
+                    pad_material_values(params, i, head_only_dashpot).make(), radius
+                ),
                 ch.ChFramed(chvec(centre_local), ch.QUNIT),
             )
             set_family(body, FAMILY_ROD, no_collision_with=(FAMILY_SUPERSTRUCTURE,))
@@ -297,7 +366,14 @@ class L1Model:
         self.sphere_centres_local_ch = tuple(chvec(c) for c in centres_local)
         self.sphere_radii_m = tuple(radii)
 
-        # ground bushing (L1 tangential model)
+        # ground bushing (L1 tangential model); with L1-R mechanics on, its normal force is the
+        # rod-chamber machine's total normal force (Q-D2, chrono/rod_chamber_link); off: the
+        # Chrono contact force, as before
+        self.rod_chamber: L1RodChamber | None = None
+        l1r_on = (
+            mechanics_from_params(params, rod_side_mechanics)
+            is RodSideMechanics.ONE_SIDED_PARALLEL
+        )
         self.bushing = GroundBushingCoulomb.from_params(
             params,
             self.system,
@@ -306,9 +382,33 @@ class L1Model:
             centres_local,
             dt_s=self.dt_s,
             force_point=bushing_force_point,
+            leg_floors=None
+            if not settle
+            else [patch_bodies.get(name, self.floor) for name in LEG_ORDER],
+            normal_force_source=self._bushing_normal_source if l1r_on else None,
         )
         if attach_bushings:
             self.bushing.attach()
+        self.crawler_bushing: GroundBushingCoulomb | None = None
+        self.crawler_bushing_values = None
+        if crawler_bushings:
+            if self.crawler_layout is None:
+                raise ValueError("crawler_bushings needs crawler=True")
+            self.crawler_bushing, self.crawler_normals, self.crawler_bushing_values = (
+                make_crawler_bushing(
+                    params, self.system, self.floor, sup, self.crawler_centres_local_m,
+                    self.crawler_layout.sphere_radius_m, dt_s=self.dt_s,
+                    kt_scale=crawler_bushing_kt_scale, normal_fn=self.bushing.normal_world,
+                )
+            )
+            if attach_crawler_bushings is True:
+                spheres = [int(i) for i in np.flatnonzero(self.crawler_layout.is_roller)]
+            elif attach_crawler_bushings is False:
+                spheres = []
+            else:
+                spheres = [int(i) for i in attach_crawler_bushings]
+            if spheres:
+                self.crawler_bushing.attach(spheres, hold_until_loaded=True)
 
         k_oil = params.get(K_OIL_KEY)
         self.k_oil_N_m = tuple(float(k_oil[name]) for name in LEG_ORDER)
@@ -319,9 +419,21 @@ class L1Model:
         self.actuator: L1SpeedActuator | None = None
         if actuator:
             self.actuator = L1SpeedActuator.from_params(
-                params, self.motors, self.motor_functions, ext, ramp_s=actuator_ramp_s
+                params,
+                self.motors,
+                self.motor_functions,
+                ext,
+                ramp_s=actuator_ramp_s,
+                force_saturation=force_saturation,
             )
             self.actuator_hooks.append(self.actuator.hook)
+        # L1-R rod-side chamber (dynamics_model.md 5.12, chrono/rod_chamber_link): stepped in
+        # after_step 2b every step (also with mechanics off: same-step sensor truth)
+        self.rod_chamber = L1RodChamber(self, rod_side_mechanics)
+
+    def _bushing_normal_source(self) -> list[float] | None:
+        """Ground-bushing normal force with L1-R mechanics on (None: the contact force)."""
+        return None if self.rod_chamber is None else self.rod_chamber.bushing_normal_force_N()
 
     # --- actuator state views ------------------------------------------------------------
 
@@ -387,6 +499,8 @@ class L1Model:
             return
         self.dt_s = dt
         self.bushing.dt_s = dt
+        if self.crawler_bushing is not None:
+            self.crawler_bushing.dt_s = dt
         if self.actuator is not None:
             self.actuator.retime(float(self.system.GetChTime()), dt)
 
@@ -422,12 +536,20 @@ class L1Model:
            Chrono values itself (nothing changes the Chrono state between 1 and 2).
         2. **Ground bushing R15** (:meth:`GroundBushingCoulomb.after_step`): lift-off /
            re-touch, return mapping, damping switch. First, because the actuator guards and
-           the record need the current contact state.
+           the record need the current contact state. With L1-R mechanics on its normal force
+           is the rod-chamber machine's total ``N`` of the previous machine step (Q-D2).
+        2b. **L1-R machine** (:meth:`L1RodChamber.step`, ``chrono/rod_chamber_link``): state
+           machine, extra pad force and same-step sensor truth from ``t``, ``dt``, the acting
+           applied speed, the pad deflection, ``GetMotorPos`` and ``GetMotorForce``. None of
+           these is changed by 3, so this equals a call after the actuator hook, and the
+           closed-loop callback at the head of 3 reads the output of this step.
         3. **Actuators** (:attr:`actuator_hooks`): cylinder force, per-step saturation,
            ``s_ref`` integration and motor-function update for the next step. S1: none
            (locked legs, ``s_ref`` = extension). S2b: :meth:`L1SpeedActuator.hook`.
-        4. **External loads** (:attr:`load_hooks`): empty the accumulator and add this step's
-           value once (D2 etc.). S1: none.
+        4. **External loads**: the L1-R extra pad force (:meth:`L1RodChamber.apply_force`,
+           own accumulator per leg, emptied and set once; nothing with mechanics off), then
+           :attr:`load_hooks`: empty the accumulator and add this step's value once (D2
+           etc.). S1: none.
         5. **Record** (:attr:`record_hooks`): the step-n copy of 1, i.e. the state at
            ``t_n`` together with the inputs that acted during step n.
 
@@ -435,10 +557,20 @@ class L1Model:
         ``input_lag_steps: 1``), except right after a bushing is created or removed, when
         Chrono's full Update at the next step start uses it at once (``ground_bushing``).
         """
+        rod = self.rod_chamber
+        if rod is not None:
+            rod.on_step_end()  # the step's end Update loaded the accumulator content
         probe = read_probe(self) if (capture or self.record_hooks) else None
+        self.last_probe = probe
         events = self.bushing.after_step(dt_s)
+        if self.crawler_bushing is not None:
+            self.crawler_bushing.after_step(dt_s)
+        if rod is not None:
+            rod.step(dt_s)
         for hook in self.actuator_hooks:
             hook(self, dt_s)
+        if rod is not None:
+            rod.apply_force()
         for hook in self.load_hooks:
             hook(self, dt_s)
         if probe is not None:
@@ -458,9 +590,25 @@ class L1Model:
         return read_probe(self)
 
     def truth(self, probe: ProbeState) -> TruthState:
-        """:class:`TruthState` of a probe copy (``stroke_true_m`` = motor - F_cyl / k_oil)."""
-        return truth_state(
+        """:class:`TruthState` of a probe copy (``stroke_true_m`` = motor - F_cyl / k_oil).
+
+        With L1-R mechanics on and the machine output of the probe's step available,
+        ``stroke_true_m`` and ``F_contact_n_N`` are the machine's ``stroke_true_m`` and total
+        ``normal_force_N`` of that step (Q-D2, Q-D4); mechanics off: unchanged.
+        """
+        state = truth_state(
             probe, s_ref_m=self.s_ref_m, u_applied_m_s=self.u_applied_m_s, k_oil_N_m=self.k_oil_N_m
+        )
+        rod = self.rod_chamber
+        if rod is None or not rod.enabled:
+            return state
+        out = rod.output_at(probe.t_s)
+        if out is None:
+            return state
+        return dataclasses.replace(
+            state,
+            stroke_true_m=np.array(out.stroke_true_m, dtype=float),
+            F_contact_n_N=np.array(out.normal_force_N, dtype=float),
         )
 
     # --- snapshot (R16) ------------------------------------------------------------------
@@ -479,10 +627,16 @@ class L1Model:
             )
             held_command = Command(t_s=t_now, leg_speed_m_s=speeds)
         parts: dict[str, Any] = {GROUND_BUSHING_PART: self.bushing}
+        if self.settlement is not None:
+            parts[SETTLEMENT_PART] = self.settlement
+        if self.crawler_bushing is not None:
+            parts[CRAWLER_BUSHING_PART] = self.crawler_bushing
         s_ref = self._locked_s_ref_m
         if self.actuator is not None:
             parts[ACTUATOR_PART] = _ActuatorPart(self.actuator, self.system)
             s_ref = self.actuator.s_ref_m
+        if self.rod_chamber is not None:
+            parts[ROD_CHAMBER_PART] = self.rod_chamber
         return capture_snapshot(
             self.system,
             engine=engine_info(ChronoModel.L1.value),
@@ -509,11 +663,27 @@ class L1Model:
         parts: dict[str, Any] = {GROUND_BUSHING_PART: self.bushing}
         act = self.actuator
         has_actuator_state = any(k.startswith(f"{ACTUATOR_PART}.") for k in snapshot.payload)
+        if self.settlement is not None and any(
+            k.startswith(f"{SETTLEMENT_PART}.") for k in snapshot.payload
+        ):
+            parts[SETTLEMENT_PART] = self.settlement
+        if self.crawler_bushing is not None and any(
+            k.startswith(f"{CRAWLER_BUSHING_PART}.") for k in snapshot.payload
+        ):
+            parts[CRAWLER_BUSHING_PART] = self.crawler_bushing
         if act is not None:
             if has_actuator_state:
                 parts[ACTUATOR_PART] = act
             elif S_REF_KEY in snapshot.payload:
                 act.reset_to(snapshot.payload[S_REF_KEY])  # targets before the restore Update
+        rod = self.rod_chamber
+        if rod is not None:
+            if any(k.startswith(f"{ROD_CHAMBER_PART}.") for k in snapshot.payload):
+                parts[ROD_CHAMBER_PART] = rod
+            else:
+                # older snapshot (Q-D6): module default "locked after an extension at the
+                # current force and deflection" on the next standstill step; meta flag
+                rod.restore_default()
         restored = restore_snapshot(
             snapshot,
             self.system,
@@ -523,6 +693,8 @@ class L1Model:
             motors=self.motors,
             parts=parts,
         )
+        if self.settlement is not None:
+            self.settlement.sync()
         if act is None:
             if restored.s_ref_m is not None and not np.array_equal(
                 restored.s_ref_m, self._locked_s_ref_m
@@ -589,8 +761,21 @@ class L1Model:
                 if self.actuator.ramp_s == 0.0
                 else self.actuator.accel_limit_m_s2,
                 "stroke_range_m": self.actuator.stroke_range_m.tolist(),
+                "force_saturation_N": None
+                if self.actuator.force_limits_N is None
+                else {
+                    "extend": self.actuator.force_limits_N[0],
+                    "retract": self.actuator.force_limits_N[1],
+                    "rule": "every step in the actuator hook: F_cyl >= extend and u > 0 -> u = 0; "
+                    "F_cyl <= -retract and u < 0 -> u = 0 (YAML actuator.max_force_*_N, 210 bar)",
+                },
             },
             ground_bushing_force_point=self.bushing.force_point,
+            ground_settlement=None if self.settlement is None else self.settlement.meta(),
+            crawler_bushings=None
+            if self.crawler_bushing_values is None
+            else self.crawler_bushing_values.meta(),
+            rod_chamber=None if self.rod_chamber is None else self.rod_chamber.meta(),
             input_lag_steps=1,
         )
         return meta
@@ -638,6 +823,10 @@ class L1Model:
         collision_type = self.system.GetCollisionSystem().GetType()
         return {
             "extensions_m": list(self.extensions_m),
+            "rod_side_mechanics": None
+            if self.rod_chamber is None
+            else str(self.rod_chamber.mechanics),
+            "head_only_dashpot": self.head_only_dashpot,
             "gravity_m_s2": [g.x, g.y, g.z],
             "collision_system_name": "BULLET"
             if collision_type == ch.ChCollisionSystem.Type_BULLET
@@ -649,7 +838,7 @@ class L1Model:
                 "patches": [p.name for p in self.patches],
                 "collision_named": [
                     {"name": patch.name, **shape}
-                    for patch, shape in zip(self.patches, floor_shapes, strict=True)
+                    for patch, shape in zip(self.floor_body_patches, floor_shapes, strict=True)
                 ],
             },
             "superstructure": body_entry(self.superstructure),

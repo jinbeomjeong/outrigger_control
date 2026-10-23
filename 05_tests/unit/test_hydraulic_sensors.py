@@ -173,3 +173,100 @@ def test_pressure_exactly_at_the_limit_is_not_an_exceedance() -> None:
 def test_report_rejects_bad_input(t_s, pressures, is_locked, message: str) -> None:
     with pytest.raises(ValueError, match=message):
         locked_pressure_report(t_s, pressures, LIMIT_PA, is_locked=is_locked)
+
+
+def test_rod_side_noise_has_its_own_stream() -> None:
+    """P-7 (spec 51.1): adding a rod-side pressure leaves the head / stroke noise of the same
+    seed bit for bit as before; the rod-side reading gets its own noise."""
+    from outrigger_sim.sensors.hydraulic import LegSensorConfig, LegSensorModel
+
+    config = LegSensorConfig(pressure_noise_std_Pa=3e4, stroke_noise_std_m=1e-4,
+                             rod_pressure_noise_std_Pa=3e4)
+    plain, with_rod = LegSensorModel(config, 7), LegSensorModel(config, 7)
+    head, stroke, rod = np.full(4, 1e7), np.full(4, 0.4), np.full(4, 2e5)
+    for _ in range(5):
+        a = plain.measure(head, stroke)
+        b = with_rod.measure(head, stroke, rod_pressure_Pa=rod)
+        np.testing.assert_array_equal(a.head_pressure_Pa, b.head_pressure_Pa)
+        np.testing.assert_array_equal(a.stroke_m, b.stroke_m)
+        assert a.rod_pressure_Pa is None and np.all(b.rod_pressure_Pa != rod)
+
+
+def test_reduced_model_config_keeps_the_scalar_noise_for_equal_areas() -> None:
+    """P-15 / P-16: equal per-leg areas give the R5 scalar setting, different ones per-leg."""
+    from outrigger_sim.sensors.hydraulic import reduced_model_leg_sensor_config
+
+    area = math.pi / 4 * 0.115**2
+    scalar = reduced_model_leg_sensor_config(area)
+    assert reduced_model_leg_sensor_config([area] * 4) == scalar
+    per_leg = reduced_model_leg_sensor_config([1.3273e-2, 1.3273e-2, 9.5033e-3, 9.5033e-3])
+    assert per_leg.pressure_noise_std_Pa == pytest.approx(
+        (300 / 1.3273e-2, 300 / 1.3273e-2, 300 / 9.5033e-3, 300 / 9.5033e-3))
+
+
+def test_measurements_accept_a_dropped_out_rod_reading() -> None:
+    from outrigger_sim.signals import Measurements
+
+    meas = Measurements(0.0, [0, 0, 9.8], [0, 0, 0], [1e7] * 4, [0.4] * 4,
+                        rod_pressure_Pa=[2e5, math.nan, 2e5, 2e5])
+    assert math.isnan(meas.rod_pressure_Pa[1]) and not meas.rod_pressure_Pa.flags.writeable
+
+
+def test_rod_fault_wrapper_and_two_sided_report() -> None:
+    """P-4 / P-7 fault injection (stuck / offset / dropout) and the rod-side locked report."""
+    from outrigger_sim.sensors.hydraulic import (
+        FaultyRodSensor,
+        RodSensorFault,
+        two_sided_locked_pressure_report,
+    )
+    from outrigger_sim.signals import Measurements
+
+    meas = Measurements(1.0, [0, 0, 9.8], [0, 0, 0], [1e7] * 4, [0.4] * 4,
+                        rod_pressure_Pa=[2e5] * 4)
+    stuck = FaultyRodSensor(3, RodSensorFault.STUCK, 30e5).apply(meas)
+    offset = FaultyRodSensor(3, RodSensorFault.OFFSET, 5e5).apply(meas)
+    dropout = FaultyRodSensor(3, RodSensorFault.DROPOUT).apply(meas)
+    later = FaultyRodSensor(3, RodSensorFault.STUCK, 30e5, t_start_s=5.0).apply(meas)
+    assert stuck.rod_pressure_Pa[3] == 30e5 and offset.rod_pressure_Pa[3] == 7e5
+    assert math.isnan(dropout.rod_pressure_Pa[3]) and later is meas
+    t = np.array([0.0, 0.02, 0.04])
+    rod = np.array([[2e5] * 4, [2e5, 2e5, 2e5, 351e5], [2e5, 2e5, 2e5, math.nan]])
+    reports = two_sided_locked_pressure_report(t, np.full((3, 4), 100e5), 350e5,
+                                               rod_pressure_Pa=rod)
+    assert not reports["head"].is_exceeded
+    assert reports["rod"].is_exceeded and reports["rod"].first_exceed_leg == 3
+    assert two_sided_locked_pressure_report(t, np.full((3, 4), 1e7), 350e5)["rod"] is None
+
+
+def test_per_leg_areas_from_the_cylinder_keys() -> None:
+    """P-15: ``legs.<leg>.cylinder.*`` (area or diameters) per leg, else the common values."""
+    from outrigger_sim.params import ParamsError
+    from outrigger_sim.sensors.hydraulic import (
+        leg_annulus_areas_from_params,
+        leg_head_areas_from_params,
+        pressure_spec_leg_sensor_config,
+    )
+
+    class _Stub:
+        def __init__(self, values):
+            self.values = values
+
+        def get(self, key):
+            if key not in self.values:
+                raise ParamsError(key, "missing key")
+            return self.values[key]
+
+    common = {"actuator.bore_diameter_m": 0.115, "actuator.annulus_area_m2": 8.836e-4}
+    np.testing.assert_allclose(leg_head_areas_from_params(_Stub(common)), math.pi / 4 * 0.115**2)
+    per_leg = dict(common)
+    for leg, bore, rod in (("FL", 0.13, 0.11), ("FR", 0.13, 0.11), ("RL", 0.11, 0.09)):
+        per_leg[f"legs.{leg}.cylinder.bore_diameter_m"] = bore
+        per_leg[f"legs.{leg}.cylinder.rod_diameter_m"] = rod
+    per_leg["legs.RR.cylinder.head_area_m2"] = 9.5033e-3
+    per_leg["legs.RR.cylinder.annulus_area_m2"] = 3.1416e-3
+    np.testing.assert_allclose(leg_head_areas_from_params(_Stub(per_leg)),
+                               [1.3273e-2, 1.3273e-2, 9.5033e-3, 9.5033e-3], rtol=1e-4)
+    np.testing.assert_allclose(leg_annulus_areas_from_params(_Stub(per_leg)),
+                               [3.7699e-3, 3.7699e-3, 3.1416e-3, 3.1416e-3], rtol=1e-4)
+    config = pressure_spec_leg_sensor_config()
+    assert config.pressure_noise_std_Pa == 0.3e5 and config.rod_pressure_noise_std_Pa == 0.3e5

@@ -58,8 +58,11 @@ OUT_DIR = ROOT / "06_analysis" / "00_dynamics"
 OUT_JSON = OUT_DIR / "mast_flex_c2_check.json"
 G = 9.80665
 DEG = 180.0 / math.pi
-NACC = 48
+NACC = 53       # 45:49 / 49:53 = floor-plane |T| / normal N per pad, written only with fric_mode 1 (rev. 26)
 ZETA_NOM = 0.015
+# grounding threshold: YAML control.F_min_cylinder_N (net cylinder force), in kN
+F_MIN_KN = float(dm.load_params()["control"]["F_min_cylinder_N"]) / 1e3
+D8_FORCE_MARGIN_KN = 5.0  # D8 slope criterion: min cylinder force >= F_min + 5 kN (figure line)
 # support cases of dynamics_model.md 3.9.1: stiff = rigid supports (beam still flexible, 3.9.3 "강체 지지"),
 # upper = oil-only backstay + assumed locked boom cylinder, lower = hoses / unlocked (ASSUMPTION, Q-B1 / Q-B3 open)
 SUPPORTS = {"stiff": (1.0e12, 1.0e12), "upper": (mbc.K_BS_NOM, mbc.K_CYL_NOM), "lower": (mbc.K_BS_LOW, mbc.K_CYL_LOW)}
@@ -83,11 +86,15 @@ def _skew(d):
 def physics_flex(nsteps, dt, u_cmd, r, v, q, w, al, ald, sref, x, f, panc, pflag, canc, cflag,
                  m, Ib, Ibinv, pad_rel, cr_rel, imu_rel, nrm, g,
                  ko, ks, cn, kt, ct, Wr, Fs, kcr, ccr, ktcr, ctcr, mu, mu_cr, smax, Fext, Fret, goff,
-                 flex, mr, dr, Ir, mm, dm0, Gm, Im, Ka, Ca, hgt, M0, acc):
+                 flex, mr, dr, Ir, mm, dm0, Gm, Im, Ka, Ca, hgt, M0, acc, fmode, tez):
     """run_control_comparison.physics + 2-DoF equivalent mast (flex = 1). flex = 0 reproduces physics exactly.
     Extra slots: acc[24:28] min pad contact force over the call, acc[28:32] / acc[32:36] pad tangential force along
     body x / y (last step), acc[36] crawler tangential force along body x (last step), acc[37:39] alpha (last),
-    acc[39:41] max |alpha| over the call, acc[41:45] pad slipping flag (last step)."""
+    acc[39:41] max |alpha| over the call, acc[41:45] pad slipping flag (last step).
+    fmode 0 (default) = original pad decomposition; fmode 1 = Chrono L1 decomposition (see
+    run_control_comparison.physics): acc[11+i] = rod axial load N (a . n) + T . e_z, acc[28:36] = body x / y of the whole
+    pad force N n + T (= rod lateral load L, perpendicular to the leg axis), acc[45:49] = |T| (floor plane),
+    acc[49:53] = N (dynamics_model.md 3.15, rev. 26)."""
     gv = np.array([0.0, 0.0, -g])
     E = np.zeros((3, 2)); E[0, 0] = 1.0; E[1, 1] = 1.0
     for _ in range(nsteps):
@@ -101,10 +108,10 @@ def physics_flex(nsteps, dt, u_cmd, r, v, q, w, al, ald, sref, x, f, panc, pflag
         for i in range(4):
             P = ko[i] * (sref[i] - x[i])
             ui = u_cmd[i]
-            if ui > 0 and P >= Fext:
+            if ui > 0 and P >= Fext[i]:   # per-leg limits (4,) (rev. 30)
                 ui = 0.0
                 acc[3 + i] += 1
-            if ui < 0 and P <= -Fret:
+            if ui < 0 and P <= -Fret[i]:
                 ui = 0.0
             s_new = sref[i] + ui * dt
             if s_new > smax:
@@ -115,19 +122,36 @@ def physics_flex(nsteps, dt, u_cmd, r, v, q, w, al, ald, sref, x, f, panc, pflag
             d0 = R @ pad_rel[i]
             p0 = r + d0
             gax = (nrm[0] * p0[0] + nrm[1] * p0[1] + nrm[2] * p0[2] + goff[i]) / a_n
-            Fel = ks[i] * max(x[i] - gax, 0.0)
-            ftr = Fel - ko[i] * (sref[i] - x[i]) - Wr[i]
-            if abs(ftr) <= Fs[i] and Fs[i] > 0:
-                f[i] = ftr
-            else:
-                fs = Fs[i] * (1.0 if ftr > 0 else -1.0)
-                rhs = ko[i] * sref[i] + Wr[i] + fs
-                x1 = rhs / ko[i]
-                if x1 <= gax:
-                    x[i] = x1
+            if fmode == 0:
+                Fel = ks[i] * max(x[i] - gax, 0.0)
+                ftr = Fel - ko[i] * (sref[i] - x[i]) - Wr[i]
+                if abs(ftr) <= Fs[i] and Fs[i] > 0:
+                    f[i] = ftr
                 else:
-                    x[i] = (rhs + ks[i] * gax) / (ks[i] + ko[i])
-                f[i] = fs
+                    fs = Fs[i] * (1.0 if ftr > 0 else -1.0)
+                    rhs = ko[i] * sref[i] + Wr[i] + fs
+                    x1 = rhs / ko[i]
+                    if x1 <= gax:
+                        x[i] = x1
+                    else:
+                        x[i] = (rhs + ks[i] * gax) / (ks[i] + ko[i])
+                    f[i] = fs
+            else:
+                ksa = ks[i] * a_n
+                te = tez[i] if x[i] > gax else 0.0
+                Fel = ksa * max(x[i] - gax, 0.0) + te
+                ftr = Fel - ko[i] * (sref[i] - x[i]) - Wr[i]
+                if abs(ftr) <= Fs[i] and Fs[i] > 0:
+                    f[i] = ftr
+                else:
+                    fs = Fs[i] * (1.0 if ftr > 0 else -1.0)
+                    rhs = ko[i] * sref[i] + Wr[i] + fs
+                    x1 = rhs / ko[i]
+                    if x1 <= gax:
+                        x[i] = x1
+                    else:
+                        x[i] = (rhs - te + ksa * gax) / (ksa + ko[i])
+                    f[i] = fs
             c = x[i] - gax
             Pn = ko[i] * (sref[i] - x[i])
             if Pn > acc[16 + i]:
@@ -153,7 +177,7 @@ def physics_flex(nsteps, dt, u_cmd, r, v, q, w, al, ald, sref, x, f, panc, pflag
                 dt_ = dd - dn * nrm
                 vt = vp - vn * nrm
                 Ft = -kt[i] * dt_
-                Nn = Fl * a_n
+                Nn = Fl * a_n if fmode == 0 else Fl
                 fe = math.sqrt(Ft[0] ** 2 + Ft[1] ** 2 + Ft[2] ** 2)
                 if fe > mu * Nn:
                     sc = mu * Nn / fe if fe > 0 else 0.0
@@ -162,15 +186,27 @@ def physics_flex(nsteps, dt, u_cmd, r, v, q, w, al, ald, sref, x, f, panc, pflag
                     acc[41 + i] = 1.0
                 else:
                     Ft = Ft - ct[i] * vt
-                Fi = Fv + Ft
-                acc[11 + i] = Fl
-                acc[28 + i] = Ft[0] * R[0, 0] + Ft[1] * R[1, 0] + Ft[2] * R[2, 0]
-                acc[32 + i] = Ft[0] * R[0, 1] + Ft[1] * R[1, 1] + Ft[2] * R[2, 1]
+                if fmode == 0:
+                    Fi = Fv + Ft
+                    acc[11 + i] = Fl
+                    acc[28 + i] = Ft[0] * R[0, 0] + Ft[1] * R[1, 0] + Ft[2] * R[2, 0]
+                    acc[32 + i] = Ft[0] * R[0, 1] + Ft[1] * R[1, 1] + Ft[2] * R[2, 1]
+                else:
+                    Fi = Fl * nrm + Ft
+                    tez[i] = Ft[0] * ez[0] + Ft[1] * ez[1] + Ft[2] * ez[2]
+                    acc[11 + i] = Fl * a_n + tez[i]
+                    acc[28 + i] = Fi[0] * R[0, 0] + Fi[1] * R[1, 0] + Fi[2] * R[2, 0]
+                    acc[32 + i] = Fi[0] * R[0, 1] + Fi[1] * R[1, 1] + Fi[2] * R[2, 1]
+                    acc[45 + i] = math.sqrt(Ft[0] ** 2 + Ft[1] ** 2 + Ft[2] ** 2)
+                    acc[49 + i] = Fl
             else:
                 pflag[i] = 0
                 Fi = np.zeros(3)
                 acc[11 + i] = 0.0
                 acc[28 + i] = 0.0; acc[32 + i] = 0.0
+                tez[i] = 0.0
+                if fmode != 0:
+                    acc[45 + i] = 0.0; acc[49 + i] = 0.0
             if acc[11 + i] < acc[24 + i]:
                 acc[24 + i] = acc[11 + i]
             F += Fi
@@ -357,7 +393,8 @@ def complex_modes(M, K, C, n=8):
 class FlexPlant(ORIG_PLANT):
     """run_control_comparison.Plant with the 2-DoF equivalent mast (CONFIG['mast_eq'] None = rigid, physics_flex
     with flex = 0, identical to the original kernel). Variant knobs (diagnostics): kt_scale (pad tangential k, c),
-    mu_pad, ktcr_scale (crawler tangential), mu_cr."""
+    mu_pad, ktcr_scale (crawler tangential), mu_cr, fric_mode (pad friction decomposition 0 original / 1 Chrono L1,
+    dynamics_model.md 3.15, rev. 26)."""
 
     def __init__(self, level="top", slope_roll_deg=0.0, slope_pitch_deg=0.0, beta=1.0e9, Fs=0.0, soft_FL=False,
                  dt=rcc.DT, init_ext=None):
@@ -397,6 +434,9 @@ class FlexPlant(ORIG_PLANT):
             self.M0 = mm * G * self.Gm[2]          # alpha = 0 is the equilibrium with the body level
         self.hist_t = []; self.hist = []
         self.record = bool(cfg.get("record", False))
+        self.fmode = int(cfg.get("fric_mode", getattr(self, "fmode", 0)))   # rev. 26 option, default 0
+        self.tez = np.zeros(4)
+        self.rec_hi = 45 if self.fmode == 0 else 53
         LAST["plant"] = self
 
     def step(self, u, nsteps):
@@ -409,13 +449,14 @@ class FlexPlant(ORIG_PLANT):
                      self.Ibinv, self.pad_rel, self.cr_rel, self.imu_rel, self.nrm, self.g, self.ko, self.ks, self.cn,
                      self.kt, self.ct, self.Wr, self.Fs, self.kcr, self.ccr, self.ktcr, self.ctcr, self.mu_pad,
                      self.mu_cr, self.geo.stroke, self.Fext, self.Fret, self.goff, self.flex, self.mr, self.dr,
-                     self.Ir, self.mm, self.dm0, self.Gm, self.Im, self.Ka, self.Ca, self.hgt, self.M0, a)
+                     self.Ir, self.mm, self.dm0, self.Gm, self.Im, self.Ka, self.Ca, self.hgt, self.M0, a,
+                     self.fmode, self.tez)
         self.t += nsteps * self.dt
         if nsteps > 1000:          # crawler settle before the run (run_case resets t afterwards)
             self.hist_t = []; self.hist = []
         else:
             self.hist_t.append(self.t)
-            self.hist.append(a[11:45].copy() if self.record else np.concatenate([a[24:28], a[39:41], a[15:16]]))
+            self.hist.append(a[11:self.rec_hi].copy() if self.record else np.concatenate([a[24:28], a[39:41], a[15:16]]))
         return a[:24]               # run_c2_timedomain copies a 24-slot array (original layout)
 
 
@@ -820,7 +861,7 @@ def series_case(level, tag, mast, eqs, gs=None, variant=None, seed=None):
 
 def summarise(runs):
     out = {}
-    F_min = 9.45255
+    F_min = F_MIN_KN
     for r in runs:
         if r.get("group") != "matrix":
             continue
@@ -856,7 +897,7 @@ def figures(series, runs, stem):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     paths = []
-    F_min = 9.45255
+    F_min = F_MIN_KN
     cols = {"rigid": "#7f7f7f", "stiff": "#2ca02c", "upper": "#1f77b4", "lower": "#d62728"}
     # 1. time series: top diag 3 / pitch +3.7, min true cyl force and attitude, rigid / upper / lower
     fig, ax = plt.subplots(3, 2, figsize=(12, 9), sharex="col")
@@ -1040,7 +1081,7 @@ def main():
                     "doc": "00_docs/01_dynamics/dynamics_model.md 3.9.7 (revision 16)",
                     "argv": sys.argv[1:], "affinity": cores, "dt_s": rcc.DT, "T_ctrl_s": rcc.T_CTRL,
                     "gainsets_used": {k: c2t.GAINSETS[k] for k in (c2t.PROPOSAL, "it3_proposal_d0", "it0_current")},
-                    "seed": rcc.CA["seed"], "F_min_kN": 9.45255,
+                    "seed": rcc.CA["seed"], "F_min_kN": F_MIN_KN,
                     "frame": "body x fwd, y left, z up; gravity -9.80665 z_hat; pitch > 0 nose down; roll > 0 left up",
                     "assumptions": {
                         "equivalent_mast": "rigid mast set (mast+attachments+auger+boom) on 2 rotational springs about "
@@ -1141,7 +1182,7 @@ def robust_figure(env):
                 for x_, y_, f_ in pts:
                     if f_:
                         a.plot(x_, max(-2.0, y_ if y_ is not None else -2.0), "x", color=cols[mast], ms=9, mew=2)
-            a.axhline(9.45255, color="k", ls=":", lw=0.8); a.axhline(14.45, color="k", ls="--", lw=0.6)
+            a.axhline(F_MIN_KN, color="k", ls=":", lw=0.8); a.axhline(F_MIN_KN + D8_FORCE_MARGIN_KN, color="k", ls="--", lw=0.6)
             a.set_title(f"top, {dn}, {'extra delay 1 step + beta' if k == 'delay1' else 'no extra delay'}", fontsize=8)
             a.grid(alpha=0.3)
             if j == 0:

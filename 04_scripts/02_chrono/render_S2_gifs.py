@@ -119,7 +119,57 @@ from outrigger_sim.geometry import extension_direction, pad_sphere_centre_body_m
 from outrigger_sim.params import load_params  # noqa: E402
 from outrigger_sim.record import load_record  # noqa: E402
 from outrigger_sim.scenarios.crawler_settle import crawler_layout  # noqa: E402
+from outrigger_sim.scenarios.stroke import (  # noqa: E402
+    expected_full_stroke_time_s,
+    v11_schedule,
+)
 from outrigger_sim.verify.metrics import fit_damped_sine  # noqa: E402
+
+
+def _stroke_time(times: dict, prefix: str) -> float:
+    """V11 stroke time by key prefix ("FL 0->"): the key carries the stroke (0.68 before, 0.7 since REXOME35)."""
+    hits = [v for k, v in times.items() if k.startswith(prefix)]
+    if len(hits) != 1:
+        raise KeyError(f"V11 stroke time {prefix!r}: keys {list(times)}")
+    return float(hits[0])
+
+
+@dataclass(frozen=True)
+class ActuatorCaptionValues:
+    """Actuator numbers quoted in the S2b captions, computed from the YAML instead of literals."""
+
+    stroke_mm: float
+    v_max_mm_s: float
+    ramp_s: float
+    rod_mass_front_kg: float
+    rod_mass_rear_kg: float
+    ramp_force_front_N: float
+    ramp_force_rear_N: float
+    full_stroke_time_s: float
+    v11_half_s: float
+    v11_end_s: float
+
+
+def actuator_caption_values(params) -> ActuatorCaptionValues:
+    """Caption values of ``params`` (front = FL, rear = RL; m_rod a with a = v_max / ramp)."""
+    actuator = params.actuator
+    acceleration_m_s2 = actuator.max_speed_m_s / actuator.command_ramp_s
+    front_kg = float(params.legs[LEG_ORDER.index("FL")].moving_part.mass_kg)
+    rear_kg = float(params.legs[LEG_ORDER.index("RL")].moving_part.mass_kg)
+    schedule = v11_schedule(params)
+    return ActuatorCaptionValues(
+        stroke_mm=actuator.stroke_m * 1e3,
+        v_max_mm_s=actuator.max_speed_m_s * 1e3,
+        ramp_s=actuator.command_ramp_s,
+        rod_mass_front_kg=front_kg,
+        rod_mass_rear_kg=rear_kg,
+        ramp_force_front_N=front_kg * acceleration_m_s2,
+        ramp_force_rear_N=rear_kg * acceleration_m_s2,
+        full_stroke_time_s=expected_full_stroke_time_s(params),
+        v11_half_s=schedule.segments[1].t0_s,
+        v11_end_s=schedule.end_s,
+    )
+
 
 RES_A = ROOT / "07_results" / "S2a"
 RES_B = ROOT / "07_results" / "S2b"
@@ -1418,6 +1468,7 @@ def render_v11(bank, summary):
     rod_w = verify["v0_motor_sign_and_ramp"]["rod_weight_N"][0]
     m_rod = rod_w / 9.80665
     a_ramp = params.actuator.max_speed_m_s / verify["meta"]["assumptions"]["command_ramp_s"]
+    caption = actuator_caption_values(params)
     fig = new_figure()
     scene = Scene(fig, V11_BOX, limits, background)
     header, status, note = header_texts(fig)
@@ -1429,21 +1480,22 @@ def render_v11(bank, summary):
     x0, w, gx = 640, 340, 55
     styles = {"FL": "-", "FR": (0, (5, 3)), "RL": (0, (1, 1.5)), "RR": "-"}
     ax = axes_box(fig, x0, 112, 2 * w + gx, 160)
-    s1.style_axes(ax, title="모터 위치 = 신장 s [mm] (0 ~ 680 mm, 끝 넘는 명령 포함)",
-                  xlabel="t [s]")
+    s1.style_axes(ax, title=f"모터 위치 = 신장 s [mm] (0 ~ {caption.stroke_mm:.0f} mm, "
+                  "끝 넘는 명령 포함)", xlabel="t [s]")
     for k, leg in enumerate(LEG_ORDER):
         ax.plot(t, s_mm[:, k], color=LEG_COLORS[leg], lw=1.4 if leg != "RL" else 1.8,
                 ls=styles[leg], label=leg)
         cursor.add_dot(ax, t, s_mm[:, k], LEG_COLORS[leg])
-    ax.axhline(680, color=LIN_COLOR, lw=0.8, ls=(0, (4, 2)))
+    ax.axhline(caption.stroke_mm, color=LIN_COLOR, lw=0.8, ls=(0, (4, 2)))
     ax.axhline(0, color=LIN_COLOR, lw=0.8, ls=(0, (4, 2)))
     ax.set_xlim(0, t[-1])
     ax.set_ylim(-40, 740)
     ax.legend(fontsize=7.4, ncol=4, loc="center right", frameon=True, framealpha=0.9)
     cursor.add_axes(ax)
     ax = axes_box(fig, x0, 320, 2 * w + gx, 150)
-    s1.style_axes(ax, title="적용 속도 u [mm/s] (v_max = 22.667 mm/s, 명령은 ±1000 / ±22.7 / ±45.3 "
-                  "mm/s)", xlabel="t [s]")
+    s1.style_axes(ax, title=f"적용 속도 u [mm/s] (v_max = {caption.v_max_mm_s:.3f} mm/s, "
+                  f"명령은 ±1000 / ±{caption.v_max_mm_s:.1f} / ±{2 * caption.v_max_mm_s:.1f} mm/s)",
+                  xlabel="t [s]")
     for k, leg in enumerate(LEG_ORDER):
         ax.plot(t, u_mm[:, k], color=LEG_COLORS[leg], lw=1.3, ls=styles[leg])
         cursor.add_dot(ax, t, u_mm[:, k], LEG_COLORS[leg])
@@ -1454,9 +1506,10 @@ def render_v11(bank, summary):
     ax.set_ylim(-28, 28)
     cursor.add_axes(ax)
     # ramp zooms
-    t_end_stroke = verify["v11"]["stroke_times_s"]["FL 0->0.68"]
-    zooms = ((0.0, 0.3, "출발 0~0.3 s: 램프 0.1 s"), (t_end_stroke - 0.2, t_end_stroke + 0.1,
-                                                   "끝 680 mm 도달: 같은 가속 한계로 제동"))
+    t_end_stroke = _stroke_time(verify["v11"]["stroke_times_s"], "FL 0->")
+    end_zoom_title = f"끝 {caption.stroke_mm:.0f} mm 도달: 같은 가속 한계로 제동"
+    zooms = ((0.0, 0.3, "출발 0~0.3 s: 램프 0.1 s"),
+             (t_end_stroke - 0.2, t_end_stroke + 0.1, end_zoom_title))
     for j, (za, zb, title) in enumerate(zooms):
         ax = axes_box(fig, x0 + j * (w + gx), 520, w, 135)
         s1.style_axes(ax, title=title + " [mm/s]", xlabel="t [s]")
@@ -1470,28 +1523,35 @@ def render_v11(bank, summary):
         ax.set_ylim(-2, 25)
         ax.legend(fontsize=7, loc="center right" if j else "lower right", frameon=False)
     ax = axes_box(fig, x0, 708, 2 * w + gx, 110)
-    s1.style_axes(ax, title="관성 반력 = 실린더 힘 + 로드 무게 [N] (램프 중 ±m_rod·a = ±24.2 N, "
+    s1.style_axes(ax, title="관성 반력 = 실린더 힘 + 로드 무게 [N] (램프 중 ±m_rod·a = 전방 "
+                  f"±{caption.ramp_force_front_N:.2f} N / 후방 ±{caption.ramp_force_rear_N:.2f} N, "
                   "그 밖 0)", xlabel="t [s]")
     dev = a["F_cyl"] + rod_w
     for k, leg in enumerate(LEG_ORDER):
         ax.plot(t, dev[:, k], color=LEG_COLORS[leg], lw=1.0, ls=styles[leg])
-    for v in (m_rod * a_ramp, -m_rod * a_ramp):
-        ax.axhline(v, color=ACCENT, lw=0.8, ls=(0, (4, 2)))
+    for force_N in (caption.ramp_force_front_N, caption.ramp_force_rear_N):
+        for v in (force_N, -force_N):
+            ax.axhline(v, color=ACCENT, lw=0.8, ls=(0, (4, 2)))
     ax.set_xlim(0, t[-1])
     ax.set_ylim(-32, 32)
     cursor.add_axes(ax)
     labels = [scene.label(LEG_COLORS[leg], size=8.2, ha="center", va="top", fontweight="bold")
               for leg in LEG_ORDER]
     header.set_text("S2b V11 공중 다리 신장·수축 · 상부체 고정(원점 z 0.839 m) · L1 위치 모터 + "
-                    "속도 한계 + 명령 램프 0.1 s · Δt 1e-4 s · 62 s")
+                    f"속도 한계 + 명령 램프 {caption.ramp_s:g} s · Δt 1e-4 s · "
+                    f"{caption.v11_end_s:g} s")
     note.set_text("3D: CAD 메시 실제 크기, 로드·패드를 기록된 모터 위치만큼 다리 축으로 옮겨 그림"
                   "(층 합성, 화면 이동 1 px 단위). 바닥과 접촉 없음.")
     pads_body = np.array([np.array(leg.pad_bottom_center_retracted_m) for leg in params.legs])
     stroke_t = verify["v11"]["stroke_times_s"]
-    times = list(np.arange(0.0, 62.001, 1.0))
-    banners = {31.0: "31 s: 명령 반전 (FL·FR·RL 수축, RR 신장 시작)",
-               round(t_end_stroke, 1): f"0 → 680 mm 정지-정지 {t_end_stroke:.5f} s "
-                                       "(= 680/v_max + 램프 0.1 s = 30.1 s)"}
+    times = list(np.arange(0.0, caption.v11_end_s + 1e-3, 1.0))
+    half_s = round(caption.v11_half_s, 1)
+    stroke_label = f"{caption.stroke_mm:.0f}"
+    stroke_banner = (f"0 → {stroke_label} mm 정지-정지 {t_end_stroke:.5f} s "
+                     f"(= {stroke_label}/v_max + 램프 {caption.ramp_s:g} s "
+                     f"= {caption.full_stroke_time_s:.3f} s)")
+    banners = {half_s: f"{half_s:g} s: 명령 반전 (FL·FR·RL 수축, RR 신장 시작)",
+               round(t_end_stroke, 1): stroke_banner}
     times = sorted(set([round(x, 1) for x in times] + list(banners)))
     frames, durations = [], []
     for j, t_frame in enumerate(times):
@@ -1530,21 +1590,26 @@ def render_ramp_png(summary):
     spikes = {s["name"]: s for s in verify["ramp_spikes"]}
     rod_w = verify["v0_motor_sign_and_ramp"]["rod_weight_N"][0]
     m_rod = rod_w / 9.80665
-    vmax = 0.0226666667
+    caption = actuator_caption_values(run.params)
+    vmax = run.params.actuator.max_speed_m_s
     W, H = 1400, 700
     fig = new_figure(W, H)
-    fig.text(8 / W, 1 - 10 / H, "S2b 명령 램프 효과 · 공중에 매달린 로드(106.78 kg)에 +v_max 명령을 줄 때의 "
-             "관성 반력 (최대 |실린더 힘 + 로드 무게|)", fontsize=13, fontweight="bold", va="top",
-             color=INK_PRIMARY)
+    fig.text(8 / W, 1 - 10 / H, "S2b 명령 램프 효과 · 공중에 매달린 로드(전방 "
+             f"{caption.rod_mass_front_kg:.2f} kg / 후방 {caption.rod_mass_rear_kg:.2f} kg)에 "
+             "+v_max 명령을 줄 때의 관성 반력 (최대 |실린더 힘 + 로드 무게|)",
+             fontsize=13, fontweight="bold", va="top", color=INK_PRIMARY)
     fig.text(8 / W, 1 - 38 / H, "램프 없음(계단 속도): 한 스텝에 0 → v_max → 반력 m·v_max/Δt, Δt를 줄이면 "
-             "10배로 커진다(물리량이 아니라 수치 충격). 램프 0.1 s: m·a = 24.2 N, Δt와 무관.",
+             f"10배로 커진다(물리량이 아니라 수치 충격). 램프 {caption.ramp_s:g} s: m·a = 전방 "
+             f"{caption.ramp_force_front_N:.2f} N / 후방 {caption.ramp_force_rear_N:.2f} N, "
+             "Δt와 무관.",
              fontsize=9, va="top", color=INK_SECONDARY)
     ax = axes_box(fig, 80, 90, 640, 520, W, H)
-    s1.style_axes(ax, title="최대 관성 반력 [N] (로그 축, 다리 4개 같음)", ylabel="N")
+    s1.style_axes(ax, title="최대 관성 반력 [N] (로그 축, 네 다리 중 최대 = 전방)", ylabel="N")
     names = [("ramp0_dt1e-04", "램프 없음\nΔt 1e-4 s"), ("ramp0_dt1e-05", "램프 없음\nΔt 1e-5 s"),
              ("ramp0.1_dt1e-04", "램프 0.1 s\nΔt 1e-4 s"), ("ramp0.1_dt1e-05", "램프 0.1 s\nΔt 1e-5 s")]
     values = [max(spikes[n]["max_force_dev_N"]) for n, _ in names]
-    expected = [spikes[n]["expected_N"] for n, _ in names]
+    # expected_N is per leg since the REXOME35 YAML (one value before); the bar is the max leg
+    expected = [float(np.max(spikes[n]["expected_N"])) for n, _ in names]
     colours = [BEFORE_COLOR, BEFORE_COLOR, LEG_COLORS["FL"], LEG_COLORS["FL"]]
     xs = np.arange(4)
     ax.bar(xs, values, 0.55, color=colours)
@@ -2120,7 +2185,7 @@ def render_events(bank, summary):
         run = case.run
         ec = case.run.result["event_case"]
         pieces = events_figure(case, limits, image, verify)
-        speed = "v_max 22.67 mm/s" if case.name == "fast_FL" else "1 mm/s"
+        speed = (f"v_max {run.params.actuator.max_speed_m_s * 1e3:.2f} mm/s" if case.name == "fast_FL" else "1 mm/s")
         pieces["header"].set_text(
             f"S2b 접지 사건 R15 [{n + 1}/2] · FL만 하강 → 접지 → 상승(부상) → 재하강(재접지) · "
             f"{speed} · 시작 간극 {ec['start_gap_m'] * 1e3:.1f} mm · 기체는 크롤러 위(상단) · L1")
@@ -2305,15 +2370,22 @@ def render_summary_b(summary):
     v11 = verify["v11"]
     spikes = {s["name"]: s for s in verify["ramp_spikes"]}
     pairs = verify["event_dt_pairs"]
+    run = load_run(RES_B, "v11")
+    caption = actuator_caption_values(run.params)
+    stroke_label = f"{caption.stroke_mm:.0f}"
     top = verify["crawler"]["top"]
     cells = [
         ["V0 모터 부호", f"패드 Δz {v0['pad_dz_m'][0] * 1e3:+.4f} mm = -모터 이동", "부호 일치", "통과"],
         ["V0 매달린 로드 반력", f"{v0['hanging_force_N'][0]:.4f} N", "-m_rod·g ±1 N", "통과"],
         ["램프 관성 반력", f"{max(spikes['ramp0.1_dt1e-04']['max_force_dev_N']):.4f} N",
-         "m_rod·a 24.2043 ±1 N", "통과"],
+         f"m_rod·a 전방 {caption.ramp_force_front_N:.4f} / "
+         f"후방 {caption.ramp_force_rear_N:.4f} ±1 N",
+         "통과"],
         ["V11 최대 속도", f"{max(v11['max_speed_m_s']) * 1e3:.7f} mm/s", "≤ v_max(1+1e-3)", "통과"],
-        ["V11 정지-정지 0↔680 mm", f"{v11['stroke_times_s']['FL 0->0.68']:.5f} s",
-         "680/v_max + 0.1 = 30.1 ±0.05 s", "통과"],
+        [f"V11 정지-정지 0↔{stroke_label} mm",
+         f"{_stroke_time(v11['stroke_times_s'], 'FL 0->'):.5f} s",
+         f"{stroke_label}/v_max + {caption.ramp_s:g} = {caption.full_stroke_time_s:.3f} ±0.05 s",
+         "통과"],
         ["V13 축 구속 위반", f"{v11['max_axial_violation_m']:.1e} m (V11)", "≤ 1e-6 m", "통과"],
         ["크롤러 정착 (상단)", f"pitch {top['chrono_window']['pitch_deg']:.6f}°",
          f"독립 정확 해 {top['analytic_exact']['pitch_deg']:.6f}°", "통과"],
@@ -2340,14 +2412,13 @@ def render_summary_b(summary):
         ax.text(x, v * 1.3, f"{v / 1e3:.1f} kN" if v > 1e3 else f"{v:.1f} N", ha="center",
                 fontsize=8, color=INK_PRIMARY)
     # V11 stroke
-    run = load_run(RES_B, "v11")
     ax = axes_box(fig, 60, 430, 400, 190, W, H)
-    s1.style_axes(ax, title="V11 공중 신장 s [mm] (62 s)", xlabel="t [s]")
+    s1.style_axes(ax, title=f"V11 공중 신장 s [mm] ({caption.v11_end_s:g} s)", xlabel="t [s]")
     for k, leg in enumerate(LEG_ORDER):
         ax.plot(run.t, run.a["s_motor"][:, k] * 1e3, color=LEG_COLORS[leg], lw=1.2,
                 ls="-" if leg in ("FL", "RR") else (0, (3, 2)), label=leg)
     ax.legend(fontsize=7.2, ncol=4, loc="upper right", frameon=False)
-    ax.set_xlim(0, 62)
+    ax.set_xlim(0, caption.v11_end_s)
     # crawler P-delta
     ax = axes_box(fig, 520, 430, 380, 190, W, H)
     s1.style_axes(ax, title="크롤러 정착 pitch [°]: 선형 / 정확(P-δ) / Chrono")
@@ -2374,7 +2445,8 @@ def render_summary_b(summary):
     ax.set_xlim(0, ev.t[-1])
     lines = [
         "판단(dynamics-expert, 5.6절): ① ChFunctionConst → ChFunctionRamp 승인(구동기 훅은 매 스텝 호출 조건). "
-        "② V11 기준을 680/v_max + T_r = 30.1 s로 바꿈.",
+        f"② V11 기준을 stroke/v_max + T_r로 바꿈(당시 680 mm: 30.1 s, 지금 {stroke_label} mm: "
+        f"{caption.full_stroke_time_s:.3f} s).",
         "③ 스트로크 끝 제동 = 명령 램프: 조건부 수용(소프트 리밋 > 1.13 mm, 하중 받은 다리의 끝 도달은 기록·판정 제외).",
         "④ 크롤러 접선 구속 없음(R8): 평지 S3 V4에는 문제없음, 경사 바닥 L1 들어 올림 전에 크롤러 접선 모델 필요(사용자 결정).",
         "⑤ 크롤러 pitch 차는 P-δ 전부, roll +0.31 %는 관성 축 차(Chrono가 맞음). V4 시각 원점 = 모터 출발 + T_r/2.",

@@ -564,7 +564,15 @@ def lp2_filter(t, x):
     from scipy.signal import lsim
     num, den = [1.0], np.polymul([TAU_FILTER, 1.0], [TAU_FILTER, 1.0])
     y0 = x[0]
-    _, y, _ = lsim((num, den), x - y0, t - t[0])
+    tt = t - t[0]
+    dts = np.diff(tt)
+    if dts.size and not np.allclose(dts, dts[0]):   # same test as scipy.signal.lsim (old cases keep the old path)
+        # rev. 30: segment boundaries at kink times off the output grid (e.g. stop times e_op / v at 20.924 mm/s)
+        # make the grid non-uniform; lsim needs equal steps -> filter on a uniform grid and interpolate back.
+        tu = np.arange(0.0, tt[-1] + 0.5 * dts.min(), dts.min())
+        _, yu, _ = lsim((num, den), np.interp(tu, tt, x - y0), tu)
+        return np.interp(tt, tu, yu) + y0
+    _, y, _ = lsim((num, den), x - y0, tt)
     return y + y0
 
 

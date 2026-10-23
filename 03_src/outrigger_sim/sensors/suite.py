@@ -56,7 +56,11 @@ class SensorSuite:
             ideal.t_s, ideal.specific_force_m_s2, ideal.angular_rate_rad_s
         )
         leg_reading = self.legs.measure(
-            ideal.head_pressure_Pa, ideal.stroke_m, ideal.stroke_corrected_m
+            ideal.head_pressure_Pa,
+            ideal.stroke_m,
+            ideal.stroke_corrected_m,
+            ideal.rod_pressure_Pa,
+            t_s=ideal.t_s,
         )
         return Measurements(
             t_s=ideal.t_s,
@@ -65,6 +69,8 @@ class SensorSuite:
             head_pressure_Pa=leg_reading.head_pressure_Pa,
             stroke_m=leg_reading.stroke_m,
             stroke_corrected_m=leg_reading.stroke_corrected_m,
+            rod_pressure_Pa=leg_reading.rod_pressure_Pa,
+            oil_temperature_C=ideal.oil_temperature_C,
         )
 
     def setup(self) -> SensorSetup:
@@ -75,4 +81,7 @@ class SensorSuite:
             "imu": self.imu.config.to_meta(),
             "legs": self.legs.config.to_meta(),
         }
+        error_meta = self.legs.error_meta()
+        if error_meta is not None:
+            config["pressure_error_terms"] = error_meta
         return SensorSetup(config=config, noise_seed=self.seed)

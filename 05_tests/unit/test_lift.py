@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import math
+
 import numpy as np
 import pytest
 
@@ -12,10 +14,15 @@ from outrigger_sim.scenarios.lift import (
     equivalent_origin_from_trajectory,
     lift_plan,
 )
+from outrigger_sim.verify.reference import (
+    L1_BALL_CENTRE_REV13_F_DAMPED_HZ,
+    LIFT_V4_DYNAMIC_TOUCH_S_LAYOUT_D,
+    LIFT_V4_LAYOUT_D,
+    load_references,
+)
 
 RAMP_S = 0.1
-TOUCH_D = (15.050, 15.049, 15.177, 15.177)  # dynamic_events_s / touch_s, layout D
-F1_HZ = 1.7983
+LEG_STOP_KEY = ("dynamic_events_s", "leg_stop_s (FL, FR, RL, RR)")
 
 
 @pytest.fixture(scope="module")
@@ -23,26 +30,36 @@ def params():
     return load_params(level="top")
 
 
-def test_lift_plan_stops_and_windows(params) -> None:
-    plan = lift_plan(params, ramp_s=RAMP_S, reference_touch_eq_s=TOUCH_D, first_rocking_Hz=F1_HZ)
+@pytest.fixture(scope="module")
+def refs():
+    return load_references()
+
+
+def test_lift_plan_stops_and_windows(params, refs) -> None:
+    """Expected values from the YAML and reference.json (V4, layout D; rocking: V7 top)."""
+    touch_d = refs.get(LIFT_V4_DYNAMIC_TOUCH_S_LAYOUT_D)
+    f1_hz = refs.get(L1_BALL_CENTRE_REV13_F_DAMPED_HZ, level="top")[0]
+    events = refs.get(LIFT_V4_LAYOUT_D)
+    reference_leg_stop_s = events[LEG_STOP_KEY[0]][LEG_STOP_KEY[1]]
+    plan = lift_plan(params, ramp_s=RAMP_S, reference_touch_eq_s=touch_d, first_rocking_Hz=f1_hz)
     v = params.actuator.max_speed_m_s
     e = params.contact.rigid_floor.L1.operating_extension_m
-    # braking from e_op / v_max after the start command (dynamics_model.md 5 V4 rev. 15)
+    # braking from e_op / v_max after the start command (dynamics_model.md 5 V4 rev. 15); the
+    # reference leg stop is the same instant (printed to 1 ms)
     assert plan.brake_start_s == pytest.approx([ei / v for ei in e], rel=1e-12)
-    assert plan.brake_start_s[0] == pytest.approx(17.696, abs=5e-4)
-    assert plan.brake_start_s[2] == pytest.approx(17.246, abs=5e-4)
+    assert plan.brake_start_s == pytest.approx(reference_leg_stop_s, abs=5e-4)
     assert plan.stop_s == pytest.approx([b + RAMP_S for b in plan.brake_start_s])
     assert plan.equivalent_origin_s == 0.05
     w0, w1 = plan.transition_window_s
-    # earliest touch 15.049 + 0.05 - 0.1 = 14.999 -> 14.99; last stop 17.796 + 0.3 -> 18.10
-    assert w0 == pytest.approx(14.99, abs=1e-9)
-    assert w1 == pytest.approx(18.10, abs=1e-9)
+    # earliest touch + 0.05 - 0.1 floored to 10 ms; last stop + 0.3 ceiled to 10 ms
+    assert w0 == pytest.approx(math.floor((min(touch_d) - 0.05) * 100 + 1e-7) / 100, abs=1e-9)
+    assert w1 == pytest.approx(math.ceil((plan.last_stop_s + 0.3) * 100 - 1e-7) / 100, abs=1e-9)
     assert plan.command_zero_s >= w1
     assert abs(plan.command_zero_s / 0.02 - round(plan.command_zero_s / 0.02)) < 1e-9
     r0, r1 = plan.residual_window_s
     assert r0 == pytest.approx(plan.last_stop_s + 15.0)
-    assert r1 - r0 == pytest.approx(1.0 / F1_HZ)
-    assert plan.end_s >= r0 + 3.0 / F1_HZ - 1e-9
+    assert r1 - r0 == pytest.approx(1.0 / f1_hz)
+    assert plan.end_s >= r0 + 3.0 / f1_hz - 1e-9
     sched = plan.schedule()
     assert sched.command_at(1.0).tolist() == [v] * 4
     assert sched.command_at(plan.command_zero_s + 0.01).tolist() == [0.0] * 4

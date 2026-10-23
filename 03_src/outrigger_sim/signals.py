@@ -144,6 +144,14 @@ class Measurements:
             ``motor position - F_cyl / k_oil(e)`` (m), shape (4,), or ``None`` if the engine
             does not provide it. L1 gives both strokes because they differ by about 5 mm
             (plan S6 risk 3). Optional so that engines written before this field keep working.
+        rod_pressure_Pa: Rod-side (annulus) pressure per leg (Pa), shape (4,), or ``None``
+            without a rod-side sensor (C2 R6-P, spec 51.1 P-1). The sensor sits on the chamber
+            side of the pilot check (U52). NaN marks a dropped-out reading (the controller's
+            D1 diagnosis sees it); infinity is rejected. With ``None`` the head reading of the
+            legacy engine is the net-force equivalent ``F_cyl / A_p`` (spec 47.1).
+        oil_temperature_C: Hydraulic oil temperature (deg C) when the machine has an oil
+            temperature signal (U73, manufacturer to confirm), else ``None``. Used only by
+            the C2 re-calibration warning (E-5).
     """
 
     t_s: float
@@ -152,6 +160,8 @@ class Measurements:
     head_pressure_Pa: NDArray[np.float64]
     stroke_m: NDArray[np.float64]
     stroke_corrected_m: NDArray[np.float64] | None = None
+    rod_pressure_Pa: NDArray[np.float64] | None = None
+    oil_temperature_C: float | None = None
 
     def __post_init__(self) -> None:
         _freeze_fields(
@@ -166,6 +176,11 @@ class Measurements:
         if self.stroke_corrected_m is not None:
             corrected = _frozen_array(self.stroke_corrected_m, (LEG_COUNT,), "stroke_corrected_m")
             object.__setattr__(self, "stroke_corrected_m", corrected)
+        if self.rod_pressure_Pa is not None:
+            rod = _frozen_array(
+                self.rod_pressure_Pa, (LEG_COUNT,), "rod_pressure_Pa", allow_nan=True
+            )
+            object.__setattr__(self, "rod_pressure_Pa", rod)
 
 
 @dataclass(frozen=True, eq=False)

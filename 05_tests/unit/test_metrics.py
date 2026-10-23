@@ -16,7 +16,10 @@ from outrigger_sim.verify.metrics import (
     rigid_displacement,
     rotation_vector,
 )
-from outrigger_sim.verify.reference import load_references
+from outrigger_sim.verify.reference import (
+    L1_BALL_CENTRE_REV13_V7_DIAGNOSTIC_ZETA_CASES,
+    load_references,
+)
 from outrigger_sim.verify.s2a import V7Thresholds, v7_diagnosis, v7_thresholds, v7_yaw_verdict
 
 
@@ -83,24 +86,38 @@ def test_modal_reference_numerical_damping_per_time_step() -> None:
     assert np.allclose(double, 2.0 * nominal, rtol=0.01)  # tabulated values are rounded
 
 
-# Predicted zeta1 / zeta2 of the error cases, V7_ball_centre_bushing_rev13 / V7_diagnostic /
-# zeta_cases (top).
-@pytest.mark.parametrize(
-    ("z1", "z2", "code"),
-    [
-        (0.00783, 0.01399, "1"),  # nominal
-        (0.001354, 0.004924, "2"),  # floor body 1 kg / g_n error
-        (0.01437, 0.02314, "3"),  # c_n x2
-        (0.009123, 0.01882, "4"),  # c_t x2 (R7 violation)
-        (0.0060, 0.0110, "none"),
-    ],
-)
-def test_v7_diagnosis_classes_of_the_plan_predictions(
-    v7_limits: V7Thresholds, z1: float, z2: float, code: str
+V7_PREDICTED_CASES = {
+    # zeta_cases name of V7_ball_centre_bushing_rev13 / V7_diagnostic (top) -> expected class
+    "nominal": "1",
+    "c_n x0.0093 (floor body 1 kg)": "2",
+    "c_n x2": "3",
+    "c_t x2 (bushing input = c_t, R7 violation)": "4",
+}
+
+
+@pytest.fixture(scope="module")
+def v7_zeta_cases() -> dict:
+    return load_references().get(L1_BALL_CENTRE_REV13_V7_DIAGNOSTIC_ZETA_CASES, level="top")
+
+
+@pytest.mark.parametrize(("case", "code"), V7_PREDICTED_CASES.items())
+def test_v7_diagnosis_classes_of_the_reference_predictions(
+    v7_limits: V7Thresholds, v7_zeta_cases: dict, case: str, code: str
 ) -> None:
+    """The predicted zeta1 / zeta2 of each error case (reference, top) fall in its class."""
+    z1, z2 = v7_zeta_cases[case][:2]
     d = v7_diagnosis(z1, z2, v7_limits)
     assert d.code == code
-    assert d.needs_yaw == (code in ("4", "none"))
+    assert d.needs_yaw == (code == "4")
+
+
+def test_v7_diagnosis_between_the_classes_is_none(v7_limits: V7Thresholds) -> None:
+    """zeta1 between the floor-mass limit and the normal band, zeta2 low: no class."""
+    low, _ = v7_limits.normal_zeta1_band
+    z1 = 0.5 * (v7_limits.gn_error_zeta1_max + low)
+    d = v7_diagnosis(z1, 0.5 * v7_limits.normal_zeta2_band[0], v7_limits)
+    assert d.code == "none"
+    assert d.needs_yaw
 
 
 def test_v7_thresholds_are_read_from_the_ball_centre_block(v7_limits: V7Thresholds) -> None:

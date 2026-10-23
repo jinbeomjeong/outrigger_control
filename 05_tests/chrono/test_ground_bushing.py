@@ -44,6 +44,8 @@ FREQ_REL_TOL = 1.0e-3  # +-0.1 %
 ZETA_REL_TOL = 2.0e-2  # +-2 %
 SLIDE_REL_TOL = 5.0e-3  # +-0.5 %
 RECORD_EVERY_S = 1.0e-3  # sampling of the baseline script (1e-3 / dt steps)
+FLOAT32_ULP_REL = 2.0**-23
+NORMAL_FORCE_ULP_MARGIN = 1.5  # dynamics 5.12.12: tolerance 1.5 k_n ulp (about 4.7 N)
 
 # Lift-and-drop profile (test assumption): vertical force as a fraction of the block weight,
 # ramps slow against the 7.4 Hz normal mode so that the block leaves and lands gently.
@@ -303,6 +305,9 @@ def test_four_legs_from_params(params: Params) -> None:
     others = np.delete(np.abs(force), 1, axis=0)
     # Bullet contact noise at |z| ~ 1 m gives ~0.01 N on the unpushed legs (2e-5 of the push)
     assert others.max() < 0.1
-    assert gb.normal_force_N == pytest.approx(
-        [p.moving_part.mass_kg * g for p in params.legs], rel=1e-3
-    )
+    for i, leg in enumerate(params.legs):
+        height_m = abs(bodies[i].GetPos().z)
+        # Bullet contact distance is float32: one ulp (2^-23 relative, |z| >= 1 m) times k_n
+        tolerance_N = NORMAL_FORCE_ULP_MARGIN * kn * FLOAT32_ULP_REL * max(1.0, height_m)
+        expected_N = leg.moving_part.mass_kg * g
+        assert gb.normal_force_N[i] == pytest.approx(expected_N, abs=tolerance_N), leg.name

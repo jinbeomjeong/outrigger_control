@@ -76,7 +76,9 @@ def test_gravity_ramp_is_c1_half_cosine() -> None:
 
 
 def test_settle_after_ramp_is_ceil_of_yaml(params) -> None:
-    assert settle_after_ramp_s(params) == 53.0
+    minimum_s = params.simulation.settle_on_pads_min_s
+    assert settle_after_ramp_s(params) == float(math.ceil(minimum_s))
+    assert minimum_s <= settle_after_ramp_s(params) < minimum_s + 1.0
 
 
 @pytest.mark.parametrize("case", SLOPE_V12_CASES)

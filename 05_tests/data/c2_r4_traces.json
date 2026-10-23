@@ -1,0 +1,149 @@
+{
+ "generator": "04_scripts/03_control/export_c2_r4_traces.py",
+ "revision": "R4",
+ "plant": "run_control_comparison.Plant (top, layout D crawler), ideal sensors, no delay",
+ "config": "C2Config R4 defaults; slopes in the verification mode with the top settle map",
+ "cases": [
+  {
+   "name": "top_flat",
+   "case": {
+    "roll_deg": 0.0,
+    "pitch_deg": 0.0,
+    "is_verification": false,
+    "target_change_deg": null
+   },
+   "target_change_t_s": null,
+   "events": [
+    [
+     18.559999999999693,
+     "floor_estimate_touch"
+    ],
+    [
+     26.039999999999534,
+     "reanchor_skipped:theta_below_min"
+    ]
+   ],
+   "probe_rounds": 1,
+   "reanchor_outcomes": [
+    "skipped:theta_below_min"
+   ],
+   "final_phase": "ready",
+   "final_true_attitude_deg": [
+    7.639385231426414e-06,
+    -0.02329734448800293
+   ],
+   "rows": 2086
+  },
+  {
+   "name": "top_pitch+3.5",
+   "case": {
+    "roll_deg": 0.0,
+    "pitch_deg": 3.5,
+    "is_verification": true,
+    "target_change_deg": null
+   },
+   "target_change_t_s": null,
+   "events": [
+    [
+     18.2599999999997,
+     "floor_estimate_touch"
+    ],
+    [
+     37.34000000000024,
+     "reanchor_started"
+    ],
+    [
+     53.700000000002795,
+     "reanchor_completed"
+    ]
+   ],
+   "probe_rounds": 1,
+   "reanchor_outcomes": [
+    "completed"
+   ],
+   "final_phase": "ready",
+   "final_true_attitude_deg": [
+    -0.00011206878332661263,
+    -0.010037844510343055
+   ],
+   "rows": 3521
+  },
+  {
+   "name": "top_roll+5.5",
+   "case": {
+    "roll_deg": 5.5,
+    "pitch_deg": 0.0,
+    "is_verification": true,
+    "target_change_deg": null
+   },
+   "target_change_t_s": null,
+   "events": [
+    [
+     18.879999999999686,
+     "floor_estimate_touch"
+    ],
+    [
+     38.220000000000375,
+     "reanchor_skipped:theta_below_min"
+    ]
+   ],
+   "probe_rounds": 1,
+   "reanchor_outcomes": [
+    "skipped:theta_below_min"
+   ],
+   "final_phase": "ready",
+   "final_true_attitude_deg": [
+    -0.0114577139940458,
+    0.000274583448774651
+   ],
+   "rows": 2695
+  },
+  {
+   "name": "top_flat_change_pitch-3",
+   "case": {
+    "roll_deg": 0.0,
+    "pitch_deg": 0.0,
+    "is_verification": false,
+    "target_change_deg": [
+     0.0,
+     -3.0
+    ]
+   },
+   "target_change_t_s": 38.74000000000046,
+   "events": [
+    [
+     18.559999999999693,
+     "floor_estimate_touch"
+    ],
+    [
+     26.039999999999534,
+     "reanchor_skipped:theta_below_min"
+    ],
+    [
+     38.720000000000454,
+     "target_changed"
+    ],
+    [
+     57.74000000000343,
+     "reanchor_started"
+    ],
+    [
+     75.22000000000217,
+     "reanchor_completed"
+    ]
+   ],
+   "probe_rounds": 2,
+   "reanchor_outcomes": [
+    "skipped:theta_below_min",
+    "completed"
+   ],
+   "final_phase": "ready",
+   "final_true_attitude_deg": [
+    7.822088874325494e-05,
+    -3.0244885008667226
+   ],
+   "rows": 4777
+  }
+ ],
+ "row_count": 13079
+}

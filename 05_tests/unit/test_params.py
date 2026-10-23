@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import math
 from collections.abc import Callable
 from pathlib import Path
@@ -85,6 +86,8 @@ def test_every_raw_leaf_equals_the_yaml_value(params: Params, yaml_tree: dict) -
         loaded = _raw_at(params, path)
         if isinstance(yaml_value, str):
             assert loaded == yaml_value, path
+        elif isinstance(yaml_value, bool):  # FLAG_KEYS (checked before int: bool is an int)
+            assert loaded is yaml_value, path
         elif isinstance(yaml_value, int) and path[-1] in COUNT_KEY_NAMES:
             assert type(loaded) is int and loaded == yaml_value, path
         else:
@@ -366,3 +369,24 @@ def test_fingerprint_ignores_insertion_order(tree: dict[str, float]) -> None:
     for level in AugerLevel:
         assert parameters_sha256(tree, level) == parameters_sha256(reversed_tree, level)
     assert parameters_sha256(tree, AugerLevel.TOP) != parameters_sha256(tree, AugerLevel.BOTTOM)
+
+
+# --- flag keys (rev. 30 YAML) -----------------------------------------------------------------
+
+
+def test_flag_keys_load_as_bool_and_reject_other_types(tmp_path: Path, yaml_tree: dict) -> None:
+    """FLAG_KEYS leaves stay ``bool``; a number or a string there is an error, and a bool
+    under any other key stays an error (the numeric rule)."""
+    from outrigger_sim.params import FLAG_KEYS, ParamsError
+
+    assert {"applied", "predictor"} <= FLAG_KEYS
+    tree = copy.deepcopy(yaml_tree)
+    tree.setdefault("meta", {})["flag_probe"] = {"applied": True}
+    loaded = load_params(_dump_tree(tmp_path, tree))
+    assert loaded.get("meta.flag_probe.applied") is True
+    tree["meta"]["flag_probe"] = {"applied": 1}
+    with pytest.raises(ParamsError, match="expected true or false"):
+        load_params(_dump_tree(tmp_path, tree))
+    tree["meta"]["flag_probe"] = {"not_a_flag": True}
+    with pytest.raises(ParamsError, match="expected a number"):
+        load_params(_dump_tree(tmp_path, tree))

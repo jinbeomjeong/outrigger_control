@@ -18,7 +18,9 @@ no step yields (bushing yield deformation mu N / k_t is about 4 mm at the lighte
 Judged run per mode (:func:`assign_modes`): every run is projected on all six modes; mode
 ``i`` is judged in the run with the largest predicted start amplitude ``|(Phi^T M qdot_0)_i| /
 omega_i`` among the runs whose window is long enough (modes 1-2 need >= 20 s, plan). The
-other runs give the spread of the identification (recorded).
+other runs give the spread of the identification (recorded). When the runner-up is within 20 %
+of the judged run (:func:`assign_modes_with_runner_up`, ``dynamics_model.md`` 5.13.8 (1);
+REXOME35 mode 3: roll 0.0680, yaw 0.0611) the judged row records it and the ratio (information).
 
 V7 (plan S4 table): natural frequency ``f_d / sqrt(1 - zeta^2)`` of the damped-cosine fit of
 ``eta_i`` within +-3 % of ``V7_ball_centre_bushing_rev13 / f_damped_Hz`` (``|lambda| / 2 pi``,
@@ -48,20 +50,24 @@ E_beta_mode_shape_MAC`` within +-0.05 (0.69 GPa modes 4 / 5 at 0.800 / 0.802, th
 
 Recorded only: bushing yield before lift-off in V6, the rod-side chamber +10 % k_v run (model
 uncertainty).
+
+L1-R runs (locked rod-side chamber, dynamics_model.md 5.17.5): the frequencies are judged
+against the LOCK modes of ``L1R_rod_side_reference_rev32`` (:func:`with_lock_reference`,
+:func:`v7_l1r_checks`); zeta is recorded there.
 """
 
 from __future__ import annotations
 
 import math
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
 from outrigger_sim.verify.checks import CheckResult, check_abs, check_max, check_rel
-from outrigger_sim.verify.reference import RefKey, ReferenceFile, ValueKind
+from outrigger_sim.verify.reference import ReferenceFile, RefKey, ValueKind
 from outrigger_sim.verify.s1 import V2_REL_TOL, V3_ABS_TOL_DEG
 from outrigger_sim.verify.s2a import FIT_RESIDUAL_REL_MAX, V7_FREQ_REL_TOL, V7_ZETA_REL_TOL
 from outrigger_sim.verify.s3 import V5_REL_TOL, V6_REL_TOL
@@ -73,6 +79,9 @@ SHORT_WINDOW_S = 2.0
 """Plan: modes 3-6 windows 1-2 s (tau about 0.3-0.4 s); also the fit window of modes 3-6 in
 the 20 s runs."""
 LONG_WINDOW_MODES = (0, 1)
+CLOSE_RUNNER_UP_RATIO = 0.8
+"""``dynamics_model.md`` 5.13.8 (1): the top two predicted amplitudes within 20 % -> the judged
+row records the runner-up and the ratio (information, not a check)."""
 ERA_FREQ_REL_TOL = 0.005
 """ASSUMPTION: ERA vs projection natural frequency (identification cross-check)."""
 ERA_ZETA_REL_TOL = 0.10
@@ -143,20 +152,68 @@ def predicted_modal_amplitudes(
     }
 
 
+@dataclass(frozen=True)
+class ModeAssignment:
+    """Judged run of one mode and the runner-up of the same window-eligible runs."""
+
+    run: str
+    """Run with the largest predicted start amplitude (the judged run)."""
+    runner_up: str | None
+    """Second-largest run; ``None`` when only one run is eligible."""
+    runner_up_ratio: float | None
+    """Predicted amplitude of the runner-up / that of the judged run (0-1)."""
+
+    @property
+    def is_close(self) -> bool:
+        """The top two are within 20 % (``dynamics_model.md`` 5.13.8 (1): record both)."""
+        return self.runner_up_ratio is not None and self.runner_up_ratio >= CLOSE_RUNNER_UP_RATIO
+
+    def close_runner_up(self) -> tuple[str | None, float | None]:
+        """``(runner_up, ratio)`` for the judged row when :attr:`is_close`, else ``(None,) * 2``."""
+        if not self.is_close:
+            return None, None
+        return self.runner_up, self.runner_up_ratio
+
+
+def _eligible_runs(mode_index: int) -> list[str]:
+    """Runs whose window is long enough for the mode (modes 1-2 need >= 20 s)."""
+    return [
+        name
+        for name, excitation in EXCITATIONS.items()
+        if mode_index not in LONG_WINDOW_MODES or excitation.window_s >= LONG_WINDOW_S
+    ]
+
+
+def assign_modes_with_runner_up(
+    phi: ArrayLike, mass_matrix: ArrayLike, f_Hz: Sequence[float]
+) -> list[ModeAssignment]:
+    """Judged run per mode (as :func:`assign_modes`) with the runner-up and its amplitude ratio.
+
+    The runner-up is information only (``dynamics_model.md`` 5.13.8 (1)): when the top two are
+    within 20 % the judged row records it, and the zeta of that mode is read with the projection
+    leakage. The judged run itself is unchanged.
+    """
+    amplitudes = predicted_modal_amplitudes(phi, mass_matrix, f_Hz)
+    assignments = []
+    for i in range(N_MODES):
+        # stable sort: on a tie the first run in EXCITATIONS order wins, as with max()
+        ranked = sorted(_eligible_runs(i), key=lambda name: amplitudes[name][i], reverse=True)
+        best = ranked[0]
+        if len(ranked) < 2:
+            assignments.append(ModeAssignment(best, None, None))
+            continue
+        runner_up = ranked[1]
+        best_amplitude = float(amplitudes[best][i])
+        ratio = float(amplitudes[runner_up][i]) / best_amplitude if best_amplitude > 0.0 else None
+        assignments.append(ModeAssignment(best, runner_up, ratio))
+    return assignments
+
+
 def assign_modes(
     phi: ArrayLike, mass_matrix: ArrayLike, f_Hz: Sequence[float]
 ) -> list[str]:
     """Judged run per mode (module docstring): largest predicted amplitude, window rule."""
-    amps = predicted_modal_amplitudes(phi, mass_matrix, f_Hz)
-    out = []
-    for i in range(N_MODES):
-        names = [
-            n
-            for n, exc in EXCITATIONS.items()
-            if i not in LONG_WINDOW_MODES or exc.window_s >= LONG_WINDOW_S
-        ]
-        out.append(max(names, key=lambda n: amps[n][i]))
-    return out
+    return [a.run for a in assign_modes_with_runner_up(phi, mass_matrix, f_Hz)]
 
 
 def fit_window_s(mode_index: int, run_window_s: float) -> float:
@@ -186,6 +243,10 @@ class ModeRow:
     zeta_num: float
     f_ref_Hz: float
     zeta_ref: float
+    runner_up: str | None = None
+    """Information (5.13.8 (1)): second run when the top two amplitudes are within 20 %."""
+    runner_up_amplitude_ratio: float | None = None
+    """Predicted amplitude runner-up / judged run, set together with ``runner_up``."""
 
 
 @dataclass(frozen=True)
@@ -265,6 +326,54 @@ def v7_six_mode_checks(rows: Sequence[ModeRow], *, ref_key_f: str, ref_key_zeta:
     """V7 frequency / zeta of every mode (judged value, :func:`judged_value`)."""
     return mode_checks(rows, check_id="V7", ref_key_f=ref_key_f, ref_key_zeta=ref_key_zeta,
                        label=label)
+
+
+L1R_ZETA_RECORD_NOTE = (
+    "L1-R: recorded, not judged: the S4 amplitudes cross the knee (1.7-3.3 x), so zeta depends "
+    "on the amplitude; zeta is judged in V7a (dynamics_model.md 5.14.6, 5.17.5)"
+)
+
+
+def with_lock_reference(
+    rows: Sequence[ModeRow],
+    f_lock_Hz: Sequence[float],
+    zeta_lock: Sequence[float],
+    zeta_num_lock: Sequence[float],
+) -> list[ModeRow]:
+    """The identified rows of an L1-R run re-referenced to the LOCK modes (dynamics 5.17.5).
+
+    The identification (projection on the FLOOR mode shapes, ERA) is kept; the reference
+    frequency and zeta become the LOCK values of ``L1R_rod_side_reference_rev32 / modes_V7a``,
+    and the numerical damping subtracted from the fitted zeta becomes the LOCK
+    ``r_i omega_i dt / 2``.
+    """
+    out = []
+    for r in rows:
+        i = r.mode - 1
+        shift = r.zeta_num - float(zeta_num_lock[i])
+        out.append(replace(
+            r,
+            f_ref_Hz=float(f_lock_Hz[i]),
+            zeta_ref=float(zeta_lock[i]),
+            zeta_num=float(zeta_num_lock[i]),
+            zeta_proj=None if r.zeta_proj is None else r.zeta_proj + shift,
+            zeta_era=None if r.zeta_era is None else r.zeta_era + shift,
+        ))
+    return out
+
+
+def v7_l1r_checks(rows: Sequence[ModeRow], *, ref_key_f: str,
+                  ref_key_zeta: str) -> list[CheckResult]:
+    """V7 of an L1-R run (rows from :func:`with_lock_reference`): natural frequency +-3 % of
+    LOCK judged (id ``V7``); zeta against LOCK +-30 % recorded (id ``info``,
+    :data:`L1R_ZETA_RECORD_NOTE`)."""
+    out: list[CheckResult] = []
+    for check in mode_checks(rows, check_id="V7", ref_key_f=ref_key_f,
+                             ref_key_zeta=ref_key_zeta, label="L1-R LOCK"):
+        if "zeta" in check.item:
+            check = replace(check, id="info", note=f"{L1R_ZETA_RECORD_NOTE}; {check.note}")
+        out.append(check)
+    return out
 
 
 def damping_mode_checks(rows: Sequence[ModeRow], leg_zeta: float, *,

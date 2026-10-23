@@ -133,6 +133,25 @@ DT_COLORS = {2.0e-4: "#c0392b", 1.0e-4: "#1f6fb2", 5.0e-5: "#2e8b57", 1.0e-5: "#
 ARROW_N_M_PER_N = 1.0 / 100e3
 LIFT_BOX = (8, 96, 560, 796)
 F_MAX_MOVING_KN = 218.125
+F_MAX_MOVING_LEG_KN = [F_MAX_MOVING_KN] * 4
+"""Per-leg moving saturation [kN] (LEG_ORDER); main() sets it (legs.<leg>.cylinder.*)."""
+
+
+def draw_moving_limits(ax, x_text=None) -> None:
+    """Moving saturation line(s): one line while every leg has the same limit (the figure of
+    the common-limit YAML, unchanged), else one line per leg in the leg colour."""
+    if all(v == F_MAX_MOVING_LEG_KN[0] for v in F_MAX_MOVING_LEG_KN):
+        ax.axhline(F_MAX_MOVING_KN, color=ACCENT, lw=1.0)
+        if x_text is not None:
+            ax.text(x_text, F_MAX_MOVING_KN - 4,
+                    f"이동 중 포화 {F_MAX_MOVING_KN:.1f} kN (210 bar)", color=ACCENT,
+                    fontsize=7.5, va="top")
+        return
+    for leg, value in zip(LEG_ORDER, F_MAX_MOVING_LEG_KN, strict=True):
+        ax.axhline(value, color=LEG_COLORS[leg], lw=1.0, ls="--")
+    if x_text is not None:
+        ax.text(x_text, min(F_MAX_MOVING_LEG_KN) - 4, "이동 중 포화 (210 bar, 다리별)",
+                color=ACCENT, fontsize=7.5, va="top")
 """Moving saturation [kN]; main() sets it from the YAML actuator.max_force_extend_N."""
 
 plt.rcParams["font.family"] = "Malgun Gothic"
@@ -385,9 +404,7 @@ def render_lift(bank, summary):
     for k in range(len(LEG_ORDER)):
         ax.axhline(peak_ref[k] / 1e3 - params.legs[k].moving_part.mass_kg * 9.80665 / 1e3,
                    color=REF_COLOR, lw=0.7, ls=(0, (6, 3)))
-    ax.axhline(F_MAX_MOVING_KN, color=ACCENT, lw=1.0)
-    ax.text(za + 0.03, F_MAX_MOVING_KN - 4, "이동 중 포화 218.1 kN (210 bar)", color=ACCENT,
-            fontsize=7.5, va="top")
+    draw_moving_limits(ax, za + 0.03)
     ax.set_xlim(za, zb)
     ax.set_ylim(-8, 232)
     zoom_cursor.add_axes(ax)
@@ -937,7 +954,7 @@ def render_summary(summary, before_path: Path | None):
     style(ax, title="V4 피크 실린더 힘 [kN] · 이동 중 상한 218 kN")
     ax.bar(xs, np.asarray(new["peak_cylinder_force_N"]) / 1e3,
            color=[LEG_COLORS[g] for g in LEG_ORDER])
-    ax.axhline(F_MAX_MOVING_KN, color=ACCENT, lw=1.0)
+    draw_moving_limits(ax)
     for x, v in zip(xs, new["peak_cylinder_force_N"], strict=True):
         ax.text(x, v / 1e3 + 3, f"{v / 1e3:.1f}", ha="center", fontsize=7.5)
     s2.leg_ticks(ax)
@@ -993,8 +1010,12 @@ def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     summary = read_json(OUT["json"]) if OUT["json"].exists() else {}
     params = load_params(level="top")
-    global F_MAX_MOVING_KN
-    F_MAX_MOVING_KN = float(params.get("actuator.max_force_extend_N")) / 1e3
+    global F_MAX_MOVING_KN, F_MAX_MOVING_LEG_KN
+    from outrigger_sim.chrono.actuators import leg_force_limits_N
+
+    # per leg (legs.<leg>.cylinder.max_force_extend_N, REXOME35); one line while equal
+    F_MAX_MOVING_LEG_KN = [f / 1e3 for f in leg_force_limits_N(params)[0]]
+    F_MAX_MOVING_KN = F_MAX_MOVING_LEG_KN[0]
     summary["meta"] = {"script": "04_scripts/02_chrono/render_S3_gifs.py", "cpu": cpu,
                        "params_sha256": params.sha256[:16],
                        "view_oblique_toward_viewer_body": VIEWS["oblique"][2].round(4).tolist(),
