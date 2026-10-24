@@ -33,6 +33,8 @@ dependencies:
   - onnx=1.23.2
   - onnxruntime=1.31.0=*cpu*   # 추론 전용 CPU 빌드 (CUDA 빌드는 약 1 GB)
   - skl2onnx=1.20.0
+  - optuna=5.0.0               # 하이퍼파라미터 탐색 (2026-10-24 추가)
+  - ffmpeg=9.0.2               # MP4 인코딩, Library\bin\ffmpeg.exe (GPL 빌드, 2026-10-24 추가)
   - pytest
   - ipykernel
   - pip

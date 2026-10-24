@@ -527,10 +527,10 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
   - [x] 힘 법칙, $s_{ref}$, 스텝별 포화 — 2026-10-24 cad: `chrono/l2b_actuator.L2bForceActuator`(양해, 훅 값이 다음 스텝에 작용: Chrono 궤적 = 반암시 오일러 복제 ≤ 1×10⁻¹² m), $s_{ref}$·포화는 엔진 독립 `actuation.SpeedReference`(L1 리미터와 비트 동일). 법칙 C 판정 힘 = 힘 법칙 값(관성 항 없음). 포화 뒤 기어감 상한 $c_{move}v_{max}/k_{ax}$ ≈ 0.08 mm(FL) — L1 허용 0.04 mm보다 커서 dyn 판정 필요
   - [x] 횡 부싱 — 2026-10-24 cad: **PSOR가 `ChLoadBodyBodyBushing*`(강성·감쇠 행렬)를 거부**해서 계획의 부싱 대신 다리당 축 2개의 FREE 가이드 `ChLinkMotorLinearForce`로 $F=-kd-c\dot d$를 양해로 넣는다(`chrono/lateral_bushing`, $c$ = 실제값 = 입력 × 2). 수치 감쇠 규칙(4.3절 부싱 암시 가정)이 L2b-NSC 횡 모드에는 맞지 않으므로 dyn 재판정 필요
   - [x] 4다리 모델·실행기·연기 시험·단가 — 2026-10-24 cad: `chrono/l2b_model.L2bModel`(상부체, 다리 4, `L2bForceActuator` + 로드측 법칙 `hydraulics/l2b_rod_side`(L1-R 상태 기계, $k_h$·$k_r$은 잠금 순간 $s_{ref}$), 횡 부싱 4, NSC 패드·크롤러 D안 구 24, 스냅숏 R16 왕복 ≤ 1×10⁻⁹ m), `chrono/l2b_engine.L2bEngine`, `04_scripts/02_chrono/run_S7.py`(V0~V14 32사례, 본 실행은 `--approved` 필요). 감쇠는 개정 33 값(잠김 34,403.5 / 30,348.5, 이동 100,206 / 86,949 N·s/m)을 지금 YAML 키에서 유도한다(YAML 재생성은 L1 지문을 바꿔 보류, 사용자 결정 대기). 연기 시험(상단 평지 10 s, `06_analysis/01_chrono/17_S7/smoke_top.json`): NaN 0, 패드+크롤러 합 대 총중량 +6.7×10⁻⁶(0.1 s 창), 실린더 힘 대 기준 ≤ 35 N, 피스톤 정지 위반 0. 단가(P코어, 단독, `step_cost_S7.json`) 230 µs/스텝(기록 포함 300 µs). 위험 ⑤ 경로 `l2b_model.pad_force_crosscheck`(GetContactForce = ReportAllContacts 비트 동일, 0.1 s 창 평균이 로드 축 평형·V1 기준과 0.1 % W/4 안)
-  - [ ] V0~V13(배열 앞 6개)
-  - [ ] V4(NSC, 다리별 동적 기준 16.657 / 16.657 / 16.291 / 16.291 s; 준정적 16.652 / 16.653 / 16.291 / 16.291 s 참고; 개정 33)
-  - [ ] V14 3경우(pitch +4.0599°, roll +6.2252°, 대각 3.4820°; 개정 33 보완 1, 센서 끝 기준), RL+(`L2b_NSC_reference_rev33 / V14`), 기둥 규약 $s_{lock}=s_{ref}$, 피스톤 정지 감시
-  - [ ] L1 대 L2b-NSC 비교표
+  - [x] V0~V13(배열 앞 6개) **(2026-10-24 통과: `07_results/S7/run_20261024_033206` + V9 감도 `run_20261024_040728`, 판정 `06_analysis/01_chrono/17_S7/verify_S7_L2b.json`, `dynamics_model.md` 5.22. V12는 기준해 정정 뒤, V9는 기록 규칙, V11b 규칙 정정 — 모두 사용자 결정 2026-10-24)**
+  - [x] V4(NSC, 다리별 동적 기준 16.657 / 16.657 / 16.291 / 16.291 s; 준정적 16.652 / 16.653 / 16.291 / 16.291 s 참고; 개정 33) **(2026-10-24 통과, 최대 +26 ms)**
+  - [x] V14 3경우 **(2026-10-24 통과, 문턱 차 ≤ +4.5 %)** (pitch +4.0599°, roll +6.2252°, 대각 3.4820°; 개정 33 보완 1, 센서 끝 기준), RL+(`L2b_NSC_reference_rev33 / V14`), 기둥 규약 $s_{lock}=s_{ref}$, 피스톤 정지 감시
+  - [x] L1 대 L2b-NSC 비교표 **(2026-10-24, `dynamics_model.md` 5.23, `06_analysis/01_chrono/17_S7/S7_L1_vs_L2b.json`)**
   - [ ] **제어 ③ 준비**(py): S6 제어기로 L2b-NSC 폐루프 연기 시험 (2026-10-20 로드맵 동기화)
 
 ### S8 실 마찰 · 카운터 밸런스 · D2 외란

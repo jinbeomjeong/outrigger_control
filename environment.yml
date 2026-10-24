@@ -14,6 +14,8 @@ dependencies:
   - trimesh=5.1.1            # 메시 정리·단순화, OBJ/STL 내보내기
   - fast-simplification=0.2.0  # 렌더용 메시 단순화 (04_scripts/00_cad/analyze_mast.py)
   - rtree=1.4.1              # trimesh.ray 공간 색인 (04_scripts/00_cad/analyze_auger_levels.py)
+  - shapely=2.2.0            # 2D 단면·다각형 계산 (04_scripts/00_cad, 2026-10-24 기록 보강)
+  - coacd=1.0.14             # 볼록 분해 충돌 형상 (2026-10-24 기록 보강)
   # 제어 설계·해석
   - control=0.10.2           # python-control (전달함수, LQR, 주파수 응답)
   - numpy=2.5.4
@@ -31,7 +33,14 @@ dependencies:
   - pytest-cov=7.1.0         # 시험 커버리지 (coverage 7.16)
   - pytest-xdist=3.8.0       # 병렬 시험 (-n auto, execnet 2.1.2 함께; 2026-10-22 추가)
   - imageio=2.38.1           # 그림·애니메이션 입출력
+  - ffmpeg=9.0.2             # MP4 인코딩, Library\bin\ffmpeg.exe (GPL 빌드, 2026-10-24 추가)
   - pefile=2024.8.26         # Windows DLL(PE) 진단
   - tqdm=4.70.1              # 장시간 실행 진행 표시
+  - psutil=7.2.2             # P코어 고정·프로세스 관리 (04_scripts 다수, 2026-10-24 기록 보강)
   - ruff=0.17.1              # 린트·포맷 (설정은 pyproject.toml)
   - ipykernel=7.4.0
+  - pip
+  # conda-forge에 없어 pip로 설치한 것 (2026-10-24 기록 보강)
+  - pip:
+      - vhacdx==0.1.0          # V-HACD 볼록 분해 충돌 형상
+      - manifold3d==3.5.4      # trimesh 불리언 연산 엔진 (직접 import 없음)
