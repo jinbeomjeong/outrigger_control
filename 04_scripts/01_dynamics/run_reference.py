@@ -22,6 +22,7 @@ import dyn_model as dm  # noqa: E402
 OUT = dm.PROJECT_ROOT / "06_analysis" / "00_dynamics" / "reference.json"
 DEG = 180.0 / math.pi
 KC_RIGID = 1e13  # N/m, stands in for the rigid NSC contact (L2b-NSC); rod-on-floor mode ~ 50 kHz, removed from the tables
+V12_L2B_OLD_KEY = "L2b_NSC_rev4_kt_in_floor_plane (superseded 2026-10-24, record)"
 
 
 def r(x, n=6):
@@ -656,16 +657,25 @@ def main():
             "L2": (ko_s, kc_nom, kc_nom),
             "L2b": (ko_s, kc_nom, dm.series(dm.k_leg_lateral_legs(geo, ext, False), kc_nom)),
             "L1": (np.full(4, 1e14), k_L1, kt_L1),
-            # rev. 4: NSC rigid contact (stick), axial force law incl. concrete, constant bushing = L1 kt (YAML value)
+            # rev. 35 (user decision 2026-10-24, dynamics_model.md 5.22.3): S7 Chrono topology (kt barrel-rod
+            # horizontal, NSC stick rigid), axial force law incl. concrete, constant bushing = L1 kt (YAML value)
             "L2b_NSC": (dm.series(ko_s, kc_nom), np.full(4, KC_RIGID), kt_L1),
+            # rev. 4 value kept as a record: kt in the floor plane, rods laterally rigid (superseded for V12)
+            V12_L2B_OLD_KEY: (dm.series(ko_s, kc_nom), np.full(4, KC_RIGID), kt_L1),
         }.items():
-            sr = dm.static_slope_10dof(b, geo, ext, ko_c, kn_c, kt_c, slope_pitch_deg=pi, slope_roll_deg=ro)
+            if name == "L2b_NSC":
+                sr = dm.static_slope_l2b_chrono_topology(b, geo, ext, ko_c, kt_c, slope_pitch_deg=pi,
+                                                         slope_roll_deg=ro, kc_rigid=KC_RIGID)
+            else:
+                sr = dm.static_slope_10dof(b, geo, ext, ko_c, kn_c, kt_c, slope_pitch_deg=pi, slope_roll_deg=ro)
             kv_s = dm.series(ko_c, kn_c)
             F_ideal, _, _ = dm.static_loads(kv_s, xy, b.mass * g, b.com[:2])
             entry[name] = {"contact_vertical_N": r(sr["R"][:, 2]), "contact_horizontal_xy_N": r(sr["R"][:, :2]),
                            "cylinder_force_N": r(sr["F_cyl"]), "friction_utilisation_T_over_N": r(sr["mu_used"], 4),
                            "cylinder_force_if_no_horizontal_reaction_N": r(F_ideal),
                            "attitude_change_deg (roll, pitch)": r(np.degrees(sr["q"][3:5]), 4)}
+        entry["L2b_NSC"]["model"] = ("rev. 35: dyn_model.static_slope_l2b_chrono_topology (S7 topology: kt barrel-rod "
+                                     "horizontal, NSC stick rigid, rod rotation = body, linear, no P-delta)")
         slope[f"ground roll {ro} deg, pitch {pi} deg"] = entry
     res["slope_V12"] = slope
 

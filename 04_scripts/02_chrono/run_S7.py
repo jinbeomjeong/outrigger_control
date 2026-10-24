@@ -7,8 +7,8 @@ reference.json / L2b_NSC_reference_rev33`` (``dynamics_model.md`` rev. 33 5.20).
     python -I -X utf8 -u run_S7.py list                       # case table + wall estimate
     python -I -X utf8 -u run_S7.py smoke [--level top] [--settle 10]
     python -I -X utf8 -u run_S7.py cost [--seconds 2]        # step cost, P-core pinned, alone
-    python -I -X utf8 -u run_S7.py check [--jobs 4]          # every case capped at 0.3 s (code path)
-    python -I -X utf8 -u run_S7.py run --approved [--jobs 4] [--only ID ...]
+    python -I -X utf8 -u run_S7.py check [--jobs 7]          # every case capped at 0.3 s (code path)
+    python -I -X utf8 -u run_S7.py run --approved [--jobs 7] [--only ID ...]
 
 ``run`` is the V0-V14 judgement batch: it runs only with ``--approved`` (the user is told before
 the S7 main run, coordinator instruction 2026-10-24). The judge (``verify/s7.py``, reference paths
@@ -26,6 +26,8 @@ Cases (id: kind, what it serves):
   1 ms; amplitude ~0.5 kN per leg, below 0.5 x the knee (5.20.4).
 * ``V8a_top_dt{1,2}e-4``: as V7 top with every dashpot 0 (axial and lateral), 60 s at dt and 2 dt.
 * ``V9_FLp1_dt*``: V5 +1 mm at dt 1e-4 / 5e-5 / 2.5e-5 and the reference 1e-5 s.
+* ``V9s_<psor100|rec005>_FLp1_dt*`` (``--only``, not in the default list): V9 (b) PSOR-noise
+  sensitivity, the V9 case with PSOR 100 iterations or recovery speed 0.05 m/s.
 * ``V11_air``: superstructure fixed in the air, legs hanging, V0 sign test then the V11 schedule.
 * ``V11b_FL`` / ``V11b_RL``: single leg, pad locked to the floor (``ChLinkLockLock``, 5.20.9 Q5),
   extend to the 210 bar stop, hold, retract to the pull stop, hold.
@@ -58,8 +60,17 @@ sys.path.insert(0, str(ROOT / "03_src"))
 
 RESULTS = ROOT / "07_results" / "S7"
 ANALYSIS_DIR = ROOT / "06_analysis" / "01_chrono" / "17_S7"
-MAX_JOBS = 4
-"""Coordinator 2026-10-24: control-expert runs R8 on the reduced plant; Chrono <= 4 P-core workers."""
+MAX_JOBS = 7
+"""Coordinator 2026-10-24 (R8 finished, user policy: use the machine): <= 7 P-core workers, one of
+the 8 P-cores left free (was 4 while control-expert ran R8 on the reduced plant)."""
+V9S_DTS = (1.0e-4, 5.0e-5, 2.5e-5, 1.0e-5)
+V9S_VARIANTS = {
+    "psor100": {"psor_max_iterations": 100},
+    "rec005": {"recovery_speed_m_s": 0.05},
+}
+"""V9 (b) PSOR-noise sensitivity (``dynamics_model.md`` 5.22.3 (b), 5.20.9 Q3; user approval
+2026-10-24): A = PSOR 100 iterations (YAML 50), B = PSOR 50 + ``SetMaxPenetrationRecoverySpeed``
+0.05 m/s (Chrono default 0.6 m/s, ``ChSystem.cpp:43``). Not in the default case list (``--only``)."""
 
 REF_BLOCK = "L2b_NSC_reference_rev33"
 V14_JUDGED = ("level", "max pitch+", "max roll+", "max diag 45")
@@ -133,6 +144,43 @@ def case_table() -> dict[str, dict[str, Any]]:
                 "extensions_ref_m": ext, "case_name": name, "arm_rod_side_after_settle": True,
                 "then": then, "V": ["V14"]}
     return cases
+
+
+def sensitivity_cases() -> dict[str, dict[str, Any]]:
+    """V9 (b) sensitivity cases: ``V9_FLp1_dt*`` with a solver override (``V9S_VARIANTS``).
+
+    Kept out of :func:`case_table` so the default batch and its ids stay as before; select them
+    with ``--only``."""
+    cases: dict[str, dict[str, Any]] = {}
+    for tag, override in V9S_VARIANTS.items():
+        for dt in V9S_DTS:
+            cases[f"V9s_{tag}_FLp1_dt{dt:.1e}"] = {
+                "kind": "leg_step", "level": "top", "leg": "FL", "delta_m": 1e-3,
+                "speed_m_s": STEP_SPEED_M_S, "settle_after_s": 10.0, "dt_s": dt,
+                "solver_override": dict(override), "V": ["V9s"]}
+    return cases
+
+
+def _apply_solver_override(model, override: dict[str, Any] | None) -> dict[str, Any] | None:
+    """Apply a V9 (b) solver override right after the model is built (None: untouched)."""
+    if not override:
+        return None
+    out: dict[str, Any] = {"requested": dict(override)}
+    system = model.system
+    if "psor_max_iterations" in override:
+        iterative = system.GetSolver().AsIterative()
+        if iterative is None:
+            raise RuntimeError("solver override: the NSC solver is not iterative")
+        iterative.SetMaxIterations(int(override["psor_max_iterations"]))
+        out["max_iterations_readback"] = int(iterative.GetMaxIterations())
+    if "recovery_speed_m_s" in override:
+        # ChSystem.h:123 (default 0.6 m/s, used by EULER_IMPLICIT_LINEARIZED); no Python getter.
+        system.SetMaxPenetrationRecoverySpeed(float(override["recovery_speed_m_s"]))
+        out["recovery_speed_set_m_s"] = float(override["recovery_speed_m_s"])
+    unknown = set(override) - {"psor_max_iterations", "recovery_speed_m_s"}
+    if unknown:
+        raise ValueError(f"solver override: unknown keys {sorted(unknown)}")
+    return out
 
 
 def _parse_slope(name: str) -> tuple[float, float]:
@@ -363,8 +411,9 @@ def _job_settle(s, case_dir):
             model, params)
 
 
-def _settled_model(params, **kw):
+def _settled_model(params, solver_override=None, **kw):
     model = _model(params, **kw)
+    model.solver_override_applied = _apply_solver_override(model, solver_override)
     _run(model, 1.0, None, every=1)
     return model
 
@@ -375,7 +424,7 @@ def _job_leg_step(s, case_dir):
     from outrigger_sim.params import LEG_ORDER
 
     params = _params(s["level"])
-    model = _settled_model(params, dt_s=s.get("dt_s"))
+    model = _settled_model(params, solver_override=s.get("solver_override"), dt_s=s.get("dt_s"))
     i = LEG_ORDER.index(s["leg"])
     ref = model.actuator.reference
     hi = ref.soft_limits_m[:, 1].copy()
@@ -393,8 +442,11 @@ def _job_leg_step(s, case_dir):
     t_move = abs(s["delta_m"]) / abs(s["speed_m_s"]) + 0.2
     r = _run(model, _cap(s, t_move + s["settle_after_s"]), series, every=every)
     info = series.save(case_dir / "series.npz")
-    return ({"run": r, "series": info, "leg": s["leg"], "delta_m": s["delta_m"],
-             "dt_s": model.dt_s}, model, params)
+    out = {"run": r, "series": info, "leg": s["leg"], "delta_m": s["delta_m"],
+           "dt_s": model.dt_s}
+    if model.solver_override_applied is not None:
+        out["solver_override"] = model.solver_override_applied
+    return out, model, params
 
 
 def _liftoff_stop(model, window: int):
@@ -639,8 +691,8 @@ def _job_lift(s, case_dir):
 # --- actions ------------------------------------------------------------------------------------
 
 
-def action_list(cost_us: float) -> None:
-    table = case_table()
+def action_list(cost_us: float, sensitivity: bool = False) -> None:
+    table = sensitivity_cases() if sensitivity else case_table()
     total = 0.0
     for cid, c in table.items():
         sim, steps = simulated_seconds(c)
@@ -745,9 +797,10 @@ def action_batch(ids: list[str] | None, jobs: int, cap_s: float | None, out: Pat
     from outrigger_sim.batch import Case, run_cases
 
     if jobs > MAX_JOBS:
-        raise SystemExit(f"--jobs {jobs} > {MAX_JOBS} (R8 runs on the other cores)")
+        raise SystemExit(f"--jobs {jobs} > {MAX_JOBS} (one P-core stays free)")
     table = case_table()
-    chosen = ids or list(table)
+    chosen = ids or list(table)  # default: the V0-V14 table only (sensitivity cases by --only)
+    table.update(sensitivity_cases())
     unknown = [c for c in chosen if c not in table]
     if unknown:
         raise SystemExit(f"unknown case ids {unknown}")
@@ -775,6 +828,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="step cost for 'list' (default: 06_analysis/01_chrono/17_S7/"
                          "step_cost_S7.json pads 1e-4 row, else 300)")
     ap.add_argument("--out", type=Path, default=None)
+    ap.add_argument("--sensitivity", action="store_true",
+                    help="'list': show the V9 (b) sensitivity cases instead of the V0-V14 table")
     args = ap.parse_args(argv)
     stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
     if args.action == "list":
@@ -783,7 +838,7 @@ def main(argv: list[str] | None = None) -> int:
             f = ANALYSIS_DIR / "step_cost_S7.json"
             cost = (json.loads(f.read_text(encoding="utf-8"))["rows"][0]["us_per_step"]
                     if f.exists() else 300.0)
-        action_list(cost)
+        action_list(cost, args.sensitivity)
     elif args.action == "smoke":
         print(json.dumps(action_smoke(args.level, args.settle, args.out or ANALYSIS_DIR),
                          indent=1, default=float))

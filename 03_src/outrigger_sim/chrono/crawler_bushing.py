@@ -20,10 +20,14 @@ Model (``L1Model(crawler_bushings=True)``; default off = the S1-S6 model unchang
 * friction ``mu`` = :data:`CRAWLER_MU` = 0.5 (Q12; = YAML ``contact.crawler.friction``, which
   the YAML labels as the L2b crawler value);
 * **tangential stiffness (ASSUMPTION)** ``kt_sphere = (kt / kn)_pad x kn_sphere``: the pad ratio
-  ``contact.rigid_floor.L1.kt_per_pad_N_m / kn_per_pad_N_m`` (mean of the four legs, 0.402) applied
-  to ``contact.crawler.kn_per_sphere_N_m`` (8.33e6 N/m) = 3.35e6 N/m per sphere, 4.0e7 N/m for
+  ``contact.rigid_floor.L1.kt_per_pad_N_m / kn_per_pad_N_m`` (mean of the four legs, 0.233 on
+  the current YAML, beta 1.0 GPa; 0.402 was the pre-REXOME35 YAML) applied to
+  ``contact.crawler.kn_per_sphere_N_m`` (8.33e6 N/m) = 1.94e6 N/m per sphere, 2.33e7 N/m for
   the 12 roller spheres (crawler total vertical 1e8 N/m). Basis: the same steel-on-concrete
-  contact as the pad and no crawler shear data; sensitivity x0.3 / x3 via ``kt_scale``;
+  contact as the pad and no crawler shear data; sensitivity x0.3 / x3 via ``kt_scale``. The
+  ratio follows ``kn_per_pad`` overrides (beta / frame sensitivity runs): a caller that wants
+  the crawler held at its nominal value passes ``kt_scale`` = ratio(nominal) / ratio(run)
+  (``04_scripts/02_chrono/run_S6C.py`` ``crawler_kt_scales``, spec rev. 34 176.3);
 * **tangential damping (ASSUMPTION)** ``ct = cn_sphere sqrt(kt / kn)``, ``cn_sphere =
   contact.crawler.damping_total_N_s_m / 12`` (heave zeta 0.05): the same damping ratio for the
   same mass on the tangential spring; Chrono input ``ct / 2``.

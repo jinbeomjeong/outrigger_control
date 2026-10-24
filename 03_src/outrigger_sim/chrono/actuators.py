@@ -109,6 +109,28 @@ are not R16 state. Runs that never reach the limits are bit-identical to the mod
 rule. ``from_params`` enables it by default; ``force_saturation=False`` or the constructor
 without limits reproduces the S2b-S5 actuator.
 
+**Valve lag and amplifier ramp (R8, ``s6_control_spec.md`` rev. 31 148 R-2 / R-3)**
+(:meth:`L1SpeedActuator.configure_valve`, default off = everything above unchanged): the 10 Hz
+valve command passes ``amplifier ramp -> spool first-order lag -> leg speed``:
+
+* amplifier ramp ``amp_ramp`` (ASSUMPTION, Q-M6 / U-R8-12 open): ``"none"``; ``"full_scale"``
+  = ``|du/dt| <= v_max / amp_ramp_s`` (0 -> 100 % in ``amp_ramp_s``); ``"per_step"`` = every
+  command change is ramped in ``amp_ramp_s`` whatever its size (rate ``|Delta u| /
+  amp_ramp_s``, set when the command changes). Advanced once per step; its value at the step
+  end is the lag input of that step (lead of at most ``dt / 2`` against the exact ramp);
+* spool lag ``du_a/dt = (u_r - u_a) / tau_v`` per leg, integrated **exactly** over each step
+  for the constant input ``u_r``: ``u_a <- u_r + (u_a - u_r) e^(-dt/tau)``; the leg moves with
+  the **step mean** ``u_r + (u_a - u_r) tau / dt (1 - e^(-dt/tau))`` (the ramp function slope
+  of the step, so ``s_ref`` is the exact integral). ``tau_v = 0`` = no lag;
+* the command acceleration limit (``command_ramp_s``) is **off** while the valve model is on
+  (they model the same thing twice); the stroke-end braking cap stays, with the deceleration
+  ``v_max / command_ramp_s`` as an end cushion (ASSUMPTION, as before) and no step limit;
+* force saturation (law C) acts on the resulting leg speed as before; the spool state keeps
+  following its command (pressure-compensated valve, the leg is blocked, not the spool);
+* state (``u_a``, ramp output / target / rate) survives ``dt`` changes (:meth:`retime`
+  re-integrates the pending step from its start state) and snapshots (optional keys
+  :data:`VALVE_STATE_KEYS`, written only with the valve model on; absent at a run start = 0).
+
 Units SI; per-leg arrays in LEG_ORDER.
 """
 
@@ -142,6 +164,12 @@ STATE_KEYS = (
 
 OPTIONAL_STATE_KEYS = ("soft_lo_m", "soft_hi_m", "prev_applied_u_m_s")
 """Snapshot keys added in S3 (soft travel limits); absent = the stroke range."""
+
+VALVE_STATE_KEYS = ("valve_u_m_s", "amp_u_m_s", "amp_target_m_s", "amp_rate_m_s2")
+"""Snapshot keys of the R8 valve model (written only when it is on; absent = zero state)."""
+
+AMP_RAMP_MODES = ("none", "full_scale", "per_step")
+"""``configure_valve(amp_ramp=...)`` choices (module docstring)."""
 
 SATURATION_STOP_S = 2.0e-3
 """ASSUMPTION (dyn rev. 23 law C, user decision 2026-10-21): stop time of the saturation
@@ -282,6 +310,12 @@ class L1SpeedActuator:
             else _vector(saturation_stop_max_s, n, "saturation_stop_max_s")
         )
         self._t_sat_checked_dt: float | None = None
+        # R8 valve model (configure_valve; off = the actuator above, bit for bit)
+        self._valve_on = False
+        self._valve_tau_s = 0.0
+        self._amp_mode = "none"
+        self._amp_ramp_s = 0.0
+        self._zero_valve_state()
         self.reset_to(s0)
         # a fresh system is "not updated" (its first step runs a full Update)
         self._next_full_update = True
@@ -319,6 +353,108 @@ class L1SpeedActuator:
                 2.0 * float(cn[leg.name]) / float(kn[leg.name]) for leg in params.legs
             ],
         )
+
+    # --- R8 valve model (module docstring) ------------------------------------------------
+
+    def configure_valve(
+        self, *, tau_s: float, amp_ramp: str = "none", amp_ramp_s: float = 0.1
+    ) -> None:
+        """Turn the valve model on (module docstring, R-2 / R-3); call before the run.
+
+        Args:
+            tau_s: Spool first-order lag ``tau_v`` [s] (>= 0; 0 = no lag).
+            amp_ramp: ``"none"`` / ``"full_scale"`` / ``"per_step"``.
+            amp_ramp_s: Amplifier ramp time [s] (> 0 when a ramp is used).
+
+        The command acceleration limit (``ramp_s``) is switched off with it; the valve state
+        starts at zero.
+        """
+        tau = float(tau_s)
+        if not (math.isfinite(tau) and tau >= 0.0):
+            raise ValueError(f"tau_s must be >= 0: {tau_s!r}")
+        if amp_ramp not in AMP_RAMP_MODES:
+            raise ValueError(f"amp_ramp must be one of {AMP_RAMP_MODES}: {amp_ramp!r}")
+        ramp = float(amp_ramp_s)
+        if amp_ramp != "none" and not (math.isfinite(ramp) and ramp > 0.0):
+            raise ValueError(f"amp_ramp_s must be > 0: {amp_ramp_s!r}")
+        self._valve_on = True
+        self._valve_tau_s = tau
+        self._amp_mode = amp_ramp
+        self._amp_ramp_s = ramp if amp_ramp != "none" else 0.0
+        self._zero_valve_state()
+
+    @property
+    def valve_on(self) -> bool:
+        return self._valve_on
+
+    @property
+    def command_ramp_active(self) -> bool:
+        """Whether the command acceleration limit acts (off with the valve model)."""
+        return not self._valve_on and self._ramp_s > 0.0
+
+    @property
+    def valve_state_m_s(self) -> NDArray[np.float64]:
+        """Spool state ``u_a`` per leg after the last hook (end of the next step)."""
+        return self._valve_u.copy()
+
+    @property
+    def amp_output_m_s(self) -> NDArray[np.float64]:
+        """Amplifier ramp output per leg after the last hook."""
+        return self._amp_u.copy()
+
+    def valve_meta(self) -> dict[str, Any]:
+        """JSON-ready valve settings (run meta)."""
+        return {
+            "valve_model_on": self._valve_on,
+            "tau_v_s": self._valve_tau_s if self._valve_on else None,
+            "amp_ramp": self._amp_mode if self._valve_on else None,
+            "amp_ramp_s": self._amp_ramp_s if self._valve_on else None,
+            "command_ramp_active": self.command_ramp_active,
+            "end_cushion_decel_m_s2": (self._v_max / self._ramp_s
+                                       if self._valve_on and self._ramp_s > 0.0 else None),
+            "integration": "exact exponential per step, leg speed = step mean (s6 spec 148 R-2)",
+        }
+
+    def _zero_valve_state(self) -> None:
+        n = self.n_legs
+        self._valve_u = np.zeros(n)
+        self._amp_u = np.zeros(n)
+        self._amp_target = np.zeros(n)
+        self._amp_rate = np.zeros(n)
+        self._valve_start: tuple[NDArray[np.float64], ...] | None = None
+
+    def _valve_step(
+        self, dt: float, start: tuple[NDArray[np.float64], ...]
+    ) -> tuple[NDArray[np.float64], tuple[NDArray[np.float64], ...]]:
+        """One step of amplifier ramp + spool lag from ``start`` = (u_a, amp_u, amp_target,
+        amp_rate): returns (step-mean speed, end state)."""
+        va, amp_u, amp_target, amp_rate = (a.copy() for a in start)
+        u_c = np.clip(self._u_cmd, -self._v_max, self._v_max)
+        if self._amp_mode == "none":
+            amp_u = u_c.copy()
+            amp_target = u_c.copy()
+        elif self._amp_mode == "full_scale":
+            step = self._v_max / self._amp_ramp_s * dt
+            amp_u = amp_u + np.clip(u_c - amp_u, -step, step)
+            amp_target = u_c.copy()
+        else:  # per_step: a changed command restarts a ramp of fixed duration
+            changed = u_c != amp_target
+            if np.any(changed):
+                amp_rate = np.where(changed, np.abs(u_c - amp_u) / self._amp_ramp_s, amp_rate)
+                amp_target = np.where(changed, u_c, amp_target)
+            step = amp_rate * dt
+            amp_u = amp_u + np.clip(amp_target - amp_u, -step, step)
+        tau = self._valve_tau_s
+        if tau > 0.0:
+            decay = math.exp(-dt / tau)
+            mean_factor = tau / dt * -math.expm1(-dt / tau)
+            gap = va - amp_u
+            u_mean = amp_u + gap * mean_factor
+            va = amp_u + gap * decay
+        else:
+            u_mean = amp_u.copy()
+            va = amp_u.copy()
+        return u_mean, (va, amp_u, amp_target, amp_rate)
 
     # --- read-only views --------------------------------------------------------------
 
@@ -537,6 +673,11 @@ class L1SpeedActuator:
         if not (dt > 0.0 and math.isfinite(dt)):
             raise ValueError(f"dt must be positive: {dt_s!r}")
         t = float(t_s)
+        if self._valve_on and self._valve_start is not None:
+            # the valve state of the pending step was integrated for the old dt: redo it from
+            # the step's start state (the ramp slope of that step is kept, docstring above)
+            _, end_state = self._valve_step(dt, self._valve_start)
+            self._valve_u, self._amp_u, self._amp_target, self._amp_rate = end_state
         s_now = self._ramp_start + self._ramp_slope * t
         u = self._ramp_slope
         s_new = s_now + u * dt
@@ -618,7 +759,22 @@ class L1SpeedActuator:
         u = self._u
         lo, hi = self._soft_lo, self._soft_hi
         target = np.clip(self._u_cmd, -self._v_max, self._v_max)
-        if math.isfinite(a):
+        if self._valve_on:
+            # R8 valve model: amplifier ramp + exact spool lag, step-mean speed; the
+            # acceleration limit is off, the stroke-end braking cap stays (module docstring)
+            start = (self._valve_u, self._amp_u, self._amp_target, self._amp_rate)
+            target, end_state = self._valve_step(dt, start)
+            self._valve_start = start
+            self._valve_u, self._amp_u, self._amp_target, self._amp_rate = end_state
+            if math.isfinite(a):
+                half = 0.5 * a * dt
+                up = np.sqrt(half * half + 2.0 * a * np.maximum(hi - s, 0.0)) - half
+                down = np.sqrt(half * half + 2.0 * a * np.maximum(s - lo, 0.0)) - half
+                u_new = np.minimum(np.maximum(target, -down), up)
+            else:
+                u_new = np.where((s >= hi) & (target > 0.0), 0.0, target)
+                u_new = np.where((s <= lo) & (u_new < 0.0), 0.0, u_new)
+        elif math.isfinite(a):
             # brake towards the stroke ends with the same acceleration limit; discrete-exact
             # cap: from speed w, stepping w, w - a dt, ... covers w^2 / (2 a) + w dt / 2, so
             # w <= -a dt / 2 + sqrt((a dt / 2)^2 + 2 a d) stops exactly at the end (the plain
@@ -685,7 +841,12 @@ class L1SpeedActuator:
                 passes ``not system.IsUpdated()``); None = the actuator's own flag.
         """
         full = self._next_full_update if next_step_full_update is None else next_step_full_update
-        return {
+        valve = {}
+        if self._valve_on:
+            valve = {"valve_u_m_s": self._valve_u.copy(), "amp_u_m_s": self._amp_u.copy(),
+                     "amp_target_m_s": self._amp_target.copy(),
+                     "amp_rate_m_s2": self._amp_rate.copy()}
+        return valve | {
             "s_ref_m": self._s_ref.copy(),
             "u_applied_m_s": self._u.copy(),
             "ramp_start_m": self._ramp_start.copy(),
@@ -742,6 +903,13 @@ class L1SpeedActuator:
         )
         self._hook_t = None  # the model marks the restored time (mark_hooked)
         self._hook_dt = None
+        if self._valve_on:
+            self._zero_valve_state()  # a snapshot without valve keys = a run start (u_a = 0)
+            if all(k in arrays for k in VALVE_STATE_KEYS):
+                self._valve_u = _vector(arrays["valve_u_m_s"], n, "valve_u_m_s")
+                self._amp_u = _vector(arrays["amp_u_m_s"], n, "amp_u_m_s")
+                self._amp_target = _vector(arrays["amp_target_m_s"], n, "amp_target_m_s")
+                self._amp_rate = _vector(arrays["amp_rate_m_s2"], n, "amp_rate_m_s2")
         full = bool(np.asarray(arrays["next_step_full_update"]).reshape(-1)[0])
         self._next_full_update = full
         if full:

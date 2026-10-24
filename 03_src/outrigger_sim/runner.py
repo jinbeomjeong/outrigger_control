@@ -49,6 +49,21 @@ Options (S6 control matrix, ``00_docs/04_control/s6_control_spec.md`` 4 and 6):
   ``capture_every_steps``. Every ``dt`` used must divide the control period. Without a
   schedule the loop is the fixed-step loop (bit-identical to the runs before this option).
 
+R8 options (``00_docs/04_control/s6_control_spec.md`` rev. 31 148):
+
+* IMU-rate samples (R-1): the control period must be an integer multiple of the IMU sample
+  period ``sensors.imu.config.sample_period_s``. Equal (R7, 20 ms) = the period average only,
+  bit-identical to the runs before. A multiple (R8: 100 ms / 10 ms) = the averager also closes
+  the 10 ms box averages (step-length weighted, dt windows included) and the sensor suite
+  applies the IMU errors per sample; ``Measurements.imu_specific_force_samples_m_s2`` holds
+  them (oldest first, the last ending at ``t_k``).
+* Double-delay guard (R-4): a controller whose ``meta()["timing"]["d"]`` is >= 1 delays its
+  output itself; ``command_delay_periods`` > 0 on top of it raises :class:`RunnerError`.
+* Output time offset (R-5) ``command_offset_s``: the command issued at ``t_k`` is applied from
+  ``t_k + offset`` (the step callback at the first step end at or after that time applies
+  it; the previous command acts until then). 0 (default) = applied at ``t_k`` as before.
+  Must be a multiple of ``dt`` and shorter than the control period.
+
 Before the first control instant the held command is zero speed (``Command.stopped``). There
 is no Record row at the start time (no averaged IMU value exists yet).
 
@@ -229,6 +244,19 @@ def steps_per_period(period_s: float, dt_s: float) -> int:
     return n
 
 
+def controller_output_delay_periods(controller: Controller) -> int:
+    """``d`` of a controller that buffers its own output (``meta()["timing"]["d"]``, C2 R8
+    P-8); 0 when the controller does not report one."""
+    try:
+        timing = controller.meta().get("timing")
+    except Exception:  # noqa: BLE001 - a meta that cannot be built reports no delay
+        return 0
+    if not isinstance(timing, Mapping):
+        return 0
+    value = timing.get("d")
+    return int(value) if isinstance(value, int | float) and not isinstance(value, bool) else 0
+
+
 def runner_meta(
     controller: Controller, sensors: SensorSuite, period_s: float, dt_s: float
 ) -> dict[str, Any]:
@@ -261,14 +289,15 @@ def run_closed_loop(
     capture_every_steps: int | None = None,
     dt_schedule: DtSchedule | None = None,
     capture_every_s: float | None = None,
+    command_offset_s: float = 0.0,
 ) -> ClosedLoopResult:
     """Run ``controller`` in closed loop for ``duration_s`` from the engine's current state.
 
     Args:
         engine: Closed-loop engine (module docstring).
         controller: Any :class:`~outrigger_sim.control.protocol.Controller`; reset here.
-        sensors: Sensor errors; reset here. Its IMU sample period must equal the control
-            period (noise ``sigma = density sqrt(1 / (2 T))``).
+        sensors: Sensor errors; reset here. The control period must be an integer multiple of
+            its IMU sample period (equal = R7 period average; module docstring R-1).
         duration_s: Simulated time; rounded to whole physics steps.
         recorder: Record target (rows appended at the control instants).
         run_meta: Without ``recorder``: run meta (``record.make_run_meta``) of a new recorder.
@@ -281,10 +310,12 @@ def run_closed_loop(
         capture_every_steps: Extra state-copy rate in steps for ``step_hook``.
         dt_schedule: Variable step size (module docstring); the engine needs ``set_dt``.
         capture_every_s: With ``dt_schedule``: extra state-copy rate in seconds.
+        command_offset_s: Output time offset (module docstring R-5); 0 = none.
 
     Raises:
-        RunnerError: Period not a multiple of ``dt``, sensor period mismatch, a controller
-            output that is not a :class:`Command` issued at the measurement time.
+        RunnerError: Period not a multiple of ``dt``, control period not a multiple of the
+            IMU sample period, double output delay (R-4), a controller output that is not a
+            :class:`Command` issued at the measurement time.
     """
     if not isinstance(controller, Controller):
         raise TypeError(f"{type(controller).__name__} does not follow the Controller protocol")
@@ -292,10 +323,20 @@ def run_closed_loop(
     period = float(controller.period_s)
     n_period = steps_per_period(period, dt)
     sample_period = float(sensors.imu.config.sample_period_s)
-    if abs(sample_period - period) > PERIOD_STEP_REL_TOL * period:
+    imu_ratio = period / sample_period
+    imu_per_period = round(imu_ratio)
+    if imu_per_period < 1 or abs(imu_ratio - imu_per_period) > PERIOD_STEP_REL_TOL * imu_ratio:
         raise RunnerError(
-            f"IMU sample period {sample_period!r} s differs from the control period {period!r} s"
+            f"control period {period!r} s is not an integer multiple of the IMU sample period "
+            f"{sample_period!r} s"
         )
+    if imu_per_period > 1:
+        steps_per_period(sample_period, dt)  # every step must divide the IMU sample period
+    offset = float(command_offset_s)
+    if not (math.isfinite(offset) and 0.0 <= offset < period):
+        raise ValueError(f"command_offset_s must be in [0, period): {command_offset_s!r}")
+    if offset > 0.0:
+        steps_per_period(offset, dt)
     if not (duration_s > 0.0 and math.isfinite(duration_s)):
         raise ValueError(f"duration_s must be positive: {duration_s!r}")
     n_steps = round(duration_s / dt)
@@ -315,17 +356,33 @@ def run_closed_loop(
     if recorder is None and run_meta is not None:
         recorder = Recorder(run_meta)
     controller.reset()
+    controller_delay = controller_output_delay_periods(controller)
+    if controller_delay >= 1 and delay > 0:
+        raise RunnerError(
+            f"the controller delays its output by d = {controller_delay} period(s) itself "
+            f"(meta timing.d); command_delay_periods = {delay} would count the delay twice "
+            "(s6_control_spec 148 R-4)"
+        )
     sensors.reset()
     t0 = float(engine.time_s)
-    averager = ControlPeriodAverager(period, t0)
+    averager = ControlPeriodAverager(
+        period, t0, sample_period_s=sample_period if imu_per_period > 1 else None
+    )
     held = Command.stopped(t0)
     engine.apply_command(held)
     cmd_t: list[float] = []
     cmd_u: list[NDArray[np.float64]] = []
-    state = {"held": held, "nonfinite": 0, "updates": 0}
+    state: dict[str, Any] = {"held": held, "nonfinite": 0, "updates": 0, "pending": None}
     queue: list[Command] = []
+    offset_tol = PERIOD_STEP_REL_TOL * period
 
     def on_step(eng: Any) -> None:
+        pending = state["pending"]
+        if pending is not None and float(eng.time_s) >= pending[0] - offset_tol:
+            # R-5: the command issued offset_s ago is applied now (drives the next step)
+            eng.apply_command(pending[1])
+            state["held"] = pending[1]
+            state["pending"] = None
         if step_hook is not None:
             step_hook(eng)
         sample = eng.imu_sample()
@@ -338,7 +395,10 @@ def run_closed_loop(
         if average is None:
             return
         ideal = eng.ideal_measurements(average)
-        delivered = sensors.apply(ideal)
+        if average.sample_t_s is None:
+            delivered = sensors.apply(ideal)
+        else:
+            delivered = sensors.apply(ideal, imu_samples=average)
         if type(delivered) is not Measurements:
             raise RunnerError(f"sensors returned {type(delivered).__name__}, not Measurements")
         command = controller.update(delivered)  # Measurements only (plan S6 risk 1)
@@ -356,8 +416,16 @@ def run_closed_loop(
             applied = Command(t_s=delivered.t_s, leg_speed_m_s=issued.leg_speed_m_s)
         else:
             applied = Command.stopped(delivered.t_s)
-        eng.apply_command(applied)
-        state["held"] = applied
+        if offset == 0.0:
+            eng.apply_command(applied)
+            state["held"] = applied
+        else:
+            if state["pending"] is not None:
+                raise RunnerError(f"output offset: command still pending at {delivered.t_s!r} s")
+            t_apply = delivered.t_s + offset
+            state["pending"] = (
+                t_apply, Command(t_s=t_apply, leg_speed_m_s=applied.leg_speed_m_s)
+            )
         state["updates"] += 1
         cmd_t.append(command.t_s)
         cmd_u.append(np.array(command.leg_speed_m_s, dtype=float))
@@ -393,6 +461,11 @@ def run_closed_loop(
     meta.update(placement=placement_info, start_t_s=t0, n_steps=n_steps,
                 command_delay_periods=delay,
                 command_delay_note="delay 0" if delay == 0 else f"ZOH + {delay} control period(s)")
+    if imu_per_period > 1 or offset > 0.0 or controller_delay > 0:
+        # R8 keys only when used, so R7 run metas stay as they were
+        meta.update(imu_samples_per_period=imu_per_period, imu_sample_period_s=sample_period,
+                    controller_output_delay_periods=controller_delay,
+                    command_offset_s=offset)
     if dt_schedule is not None:
         meta.update(dt_segments=dt_schedule.to_meta(), capture_every_s=capture_every_s)
     return ClosedLoopResult(

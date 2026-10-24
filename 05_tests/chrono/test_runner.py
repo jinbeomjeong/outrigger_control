@@ -165,7 +165,12 @@ def test_runner_refuses_bad_setups(params) -> None:
         run_closed_loop(engine, Late(), _suite(), 0.04, placement=None)
     with pytest.raises(RunnerError, match="not a multiple"):
         run_closed_loop(engine, HoldController(period_s=0.0201), _suite(), 0.04, placement=None)
-    graded = _suite(imu=imu_config_for_grade("ideal", sample_period_s=0.01))
+    # R8 (spec 148 R-1): the control period must be an integer multiple of the IMU sample
+    # period (10 ms in 20 ms is allowed now; 30 ms in 20 ms is not)
+    graded = _suite(imu=imu_config_for_grade("ideal", sample_period_s=0.03))
+    with pytest.raises(RunnerError, match="sample period"):
+        run_closed_loop(engine, HoldController(), graded, 0.04, placement=None)
+    graded = _suite(imu=imu_config_for_grade("ideal", sample_period_s=0.0075))
     with pytest.raises(RunnerError, match="sample period"):
         run_closed_loop(engine, HoldController(), graded, 0.04, placement=None)
 

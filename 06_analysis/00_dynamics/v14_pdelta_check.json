@@ -1,0 +1,144 @@
+{
+ "method": "dynamics_model.md rev. 35, 5.22.3 (V14 systematic difference, user item 4, 2026-10-24). Chrono S7 V14 shows the RL+ secant -1.8 to -1.9 % and the thresholds +1.4 to +2.9 % against the linear reference (L2b_NSC_reference_rev33 / V14, no P-delta), the same sign in all four slope cases and on the level floor. Hypothesis: P-delta.",
+ "KC_N_m": 100000000000.0,
+ "delta_m": 1e-05,
+ "gravity_scale_linear": 1e-06,
+ "cases": {
+  "level": {
+   "ground_roll_pitch_deg": [
+    0.0,
+    0.0
+   ],
+   "settled_cylinder_force_N": [
+    118256.9,
+    115994.2,
+    71941.9,
+    70390.5
+   ],
+   "dF_per_mm_small_signal_N (P-delta in)": [
+    -6629.6,
+    6653.79,
+    7205.39,
+    -7229.58
+   ],
+   "dF_per_mm_small_signal_N (linear limit)": [
+    -6595.58,
+    6595.58,
+    7243.43,
+    -7243.43
+   ],
+   "reference_dF_per_mm_small_signal_N (rev33, linear)": [
+    -6597.31,
+    6597.31,
+    7245.33,
+    -7245.33
+   ],
+   "linear_limit_vs_reference_RL_rel": -0.00026,
+   "P_delta_effect_RL_rel (P-delta / linear - 1)": -0.00525,
+   "P_delta_effect_RL_rel at KC x 10": -0.00501,
+   "max_gradient_residual (N or N m)": 3.759053989441951e-05
+  },
+  "max pitch+": {
+   "ground_roll_pitch_deg": [
+    0.0,
+    4.0599
+   ],
+   "settled_cylinder_force_N": [
+    118204.5,
+    116455.4,
+    72014.4,
+    69909.1
+   ],
+   "dF_per_mm_small_signal_N (P-delta in)": [
+    -8377.94,
+    8392.71,
+    9151.13,
+    -9165.92
+   ],
+   "dF_per_mm_small_signal_N (linear limit)": [
+    -8351.26,
+    8340.05,
+    9176.91,
+    -9165.7
+   ],
+   "reference_dF_per_mm_small_signal_N (rev33, linear)": [
+    -8353.92,
+    8342.77,
+    9179.81,
+    -9168.66
+   ],
+   "linear_limit_vs_reference_RL_rel": -0.00032,
+   "P_delta_effect_RL_rel (P-delta / linear - 1)": -0.00281,
+   "P_delta_effect_RL_rel at KC x 10": -0.00251,
+   "max_gradient_residual (N or N m)": 3.726463792448452e-05
+  },
+  "max roll+": {
+   "ground_roll_pitch_deg": [
+    6.2252,
+    3.8119e-16
+   ],
+   "settled_cylinder_force_N": [
+    118962.0,
+    115286.8,
+    69799.1,
+    72535.4
+   ],
+   "dF_per_mm_small_signal_N (P-delta in)": [
+    -7974.61,
+    7988.01,
+    8707.59,
+    -8721.05
+   ],
+   "dF_per_mm_small_signal_N (linear limit)": [
+    -7934.68,
+    7930.34,
+    8738.16,
+    -8733.82
+   ],
+   "reference_dF_per_mm_small_signal_N (rev33, linear)": [
+    -7937.4,
+    7933.07,
+    8740.85,
+    -8736.53
+   ],
+   "linear_limit_vs_reference_RL_rel": -0.00031,
+   "P_delta_effect_RL_rel (P-delta / linear - 1)": -0.0035,
+   "P_delta_effect_RL_rel at KC x 10": -0.00321,
+   "max_gradient_residual (N or N m)": 4.041002250232558e-05
+  },
+  "max diag 45": {
+   "ground_roll_pitch_deg": [
+    2.4621,
+    2.4621
+   ],
+   "settled_cylinder_force_N": [
+    118604.8,
+    115922.3,
+    70998.2,
+    71058.3
+   ],
+   "dF_per_mm_small_signal_N (P-delta in)": [
+    -7362.22,
+    7379.98,
+    8027.19,
+    -8044.99
+   ],
+   "dF_per_mm_small_signal_N (linear limit)": [
+    -7329.34,
+    7323.44,
+    8056.68,
+    -8050.79
+   ],
+   "reference_dF_per_mm_small_signal_N (rev33, linear)": [
+    -7331.46,
+    7325.58,
+    8058.98,
+    -8053.1
+   ],
+   "linear_limit_vs_reference_RL_rel": -0.00029,
+   "P_delta_effect_RL_rel (P-delta / linear - 1)": -0.00366,
+   "P_delta_effect_RL_rel at KC x 10": -0.0034,
+   "max_gradient_residual (N or N m)": 2.6392207793788924e-05
+  }
+ }
+}

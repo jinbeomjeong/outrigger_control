@@ -1,0 +1,677 @@
+{
+ "schema": 1,
+ "generated_at": "2026-10-24T11:37:06",
+ "generator": "cad-expert scratchpad cad-run/leg_support_calc.py (+ deck_near_legs.py, section_cuts.py, front_arm.py, cw_parts.py)",
+ "frame": "body axes x fwd, y left, z up, origin = CAD origin; SI unless *_mm",
+ "inputs": {
+  "yaml_sha256": "84a46dc172b9442f80b921a788bbfc5c01cd1e85194ad671b1627b54e1a771b9",
+  "leg_breps": "01_cad/02_legs/legs/*_{10,17}_1.brep (CAD pose)",
+  "brep_cache": "01_cad/06_brep (BASE DECK 0:1:1:2, COUNTER WEIGHT)",
+  "drawing": "08_test_data/datasheets/cylinder_{front,rear}_extract.md (DWG REXOME35-9206 Rev.0 p.1)"
+ },
+ "task1": {
+  "assumption": "user 2026-10-24: mounting position as in STEP -> the cylinder mounting plate (bolt holes, plate bottom) stays at the CAD height and the axis xy stays; drawing chain pad bottom -> plate bottom 520 / 525 mm is the retracted (closed) state",
+  "legs": {
+   "FL": {
+    "cad_mm": {
+     "pad_bottom_cad_pose": -699.8000000999999,
+     "retracted_offset_from_cad": 0.0,
+     "pad_bottom_retracted": -699.8000000999999,
+     "yaml_pad_bottom_retracted": -699.8,
+     "gland_end": -475.5000000999999,
+     "plate_bottom": -125.49999999999989,
+     "cap_end": 489.5000001000005,
+     "pad_to_plate_bottom_retracted": 574.3000001,
+     "pad_part_retracted": 224.3,
+     "closed_length_pad_to_cap": 1189.3000002000003
+    },
+    "drawing_mm": {
+     "pad_to_plate_bottom": 520.0,
+     "pad_part": 170.0,
+     "closed_length_pad_to_cap": 1135.0
+    },
+    "retracted_pad_bottom_z_m": {
+     "current": -0.6998000000999999,
+     "drawing_same_mount": -0.6454999999999999,
+     "delta_mm": 54.300000100000034
+    },
+    "crawler_standing_gap_to_ground_m": {
+     "current": 0.35109999990000007,
+     "new": 0.4054000000000001
+    },
+    "operating_extension_m": {
+     "current": 0.40109999990000006,
+     "new": 0.4554000000000001
+    },
+    "stroke_left_after_levelling_flat_m": {
+     "to_sensor_end_0.6948": {
+      "current": 0.2937000000999999,
+      "new": 0.2393999999999999
+     },
+     "to_soft_end_0.6848": {
+      "current": 0.2837000000999999,
+      "new": 0.22939999999999988
+     },
+     "to_mechanical_0.70": {
+      "current": 0.2989000000999999,
+      "new": 0.24459999999999987
+     }
+    },
+    "crawler_lift_at_sensor_end_m": {
+     "current": 0.3437000000999999,
+     "new": 0.2893999999999999
+    },
+    "check_yaml_matches_cad_rule_mm": 9.999996564147295e-08
+   },
+   "FR": {
+    "cad_mm": {
+     "pad_bottom_cad_pose": -699.800000099997,
+     "retracted_offset_from_cad": 0.0,
+     "pad_bottom_retracted": -699.800000099997,
+     "yaml_pad_bottom_retracted": -699.8,
+     "gland_end": -475.50000009999707,
+     "plate_bottom": -125.49999999999704,
+     "cap_end": 489.500000100003,
+     "pad_to_plate_bottom_retracted": 574.3000000999999,
+     "pad_part_retracted": 224.2999999999999,
+     "closed_length_pad_to_cap": 1189.3000001999999
+    },
+    "drawing_mm": {
+     "pad_to_plate_bottom": 520.0,
+     "pad_part": 170.0,
+     "closed_length_pad_to_cap": 1135.0
+    },
+    "retracted_pad_bottom_z_m": {
+     "current": -0.699800000099997,
+     "drawing_same_mount": -0.6454999999999971,
+     "delta_mm": 54.30000009999992
+    },
+    "crawler_standing_gap_to_ground_m": {
+     "current": 0.35109999990000296,
+     "new": 0.40540000000000287
+    },
+    "operating_extension_m": {
+     "current": 0.40109999990000295,
+     "new": 0.45540000000000286
+    },
+    "stroke_left_after_levelling_flat_m": {
+     "to_sensor_end_0.6948": {
+      "current": 0.293700000099997,
+      "new": 0.23939999999999712
+     },
+     "to_soft_end_0.6848": {
+      "current": 0.283700000099997,
+      "new": 0.2293999999999971
+     },
+     "to_mechanical_0.70": {
+      "current": 0.298900000099997,
+      "new": 0.2445999999999971
+     }
+    },
+    "crawler_lift_at_sensor_end_m": {
+     "current": 0.343700000099997,
+     "new": 0.2893999999999971
+    },
+    "check_yaml_matches_cad_rule_mm": 9.999700978369219e-08
+   },
+   "RL": {
+    "cad_mm": {
+     "pad_bottom_cad_pose": -712.0439852801217,
+     "retracted_offset_from_cad": 2.0,
+     "pad_bottom_retracted": -710.0439852801217,
+     "yaml_pad_bottom_retracted": -710.0,
+     "gland_end": -485.7000000999999,
+     "plate_bottom": -110.69999999999959,
+     "cap_end": 479.3000001000006,
+     "pad_to_plate_bottom_retracted": 599.3439852801221,
+     "pad_part_retracted": 224.34398518012176,
+     "closed_length_pad_to_cap": 1189.3439853801224
+    },
+    "drawing_mm": {
+     "pad_to_plate_bottom": 525.0,
+     "pad_part": 170.0,
+     "closed_length_pad_to_cap": 1115.0
+    },
+    "retracted_pad_bottom_z_m": {
+     "current": -0.7100439852801217,
+     "drawing_same_mount": -0.6356999999999996,
+     "delta_mm": 74.34398528012207
+    },
+    "crawler_standing_gap_to_ground_m": {
+     "current": 0.34085601471987825,
+     "new": 0.41520000000000035
+    },
+    "operating_extension_m": {
+     "current": 0.39085601471987824,
+     "new": 0.46520000000000034
+    },
+    "stroke_left_after_levelling_flat_m": {
+     "to_sensor_end_0.6948": {
+      "current": 0.30394398528012173,
+      "new": 0.22959999999999964
+     },
+     "to_soft_end_0.6848": {
+      "current": 0.2939439852801217,
+      "new": 0.21959999999999963
+     },
+     "to_mechanical_0.70": {
+      "current": 0.3091439852801217,
+      "new": 0.23479999999999962
+     }
+    },
+    "crawler_lift_at_sensor_end_m": {
+     "current": 0.3539439852801217,
+     "new": 0.2795999999999996
+    },
+    "check_yaml_matches_cad_rule_mm": 0.04398528012166025
+   },
+   "RR": {
+    "cad_mm": {
+     "pad_bottom_cad_pose": -712.043985280124,
+     "retracted_offset_from_cad": 2.0,
+     "pad_bottom_retracted": -710.043985280124,
+     "yaml_pad_bottom_retracted": -710.0,
+     "gland_end": -485.70000010000206,
+     "plate_bottom": -110.70000000000118,
+     "cap_end": 479.3000000999992,
+     "pad_to_plate_bottom_retracted": 599.3439852801229,
+     "pad_part_retracted": 224.343985180122,
+     "closed_length_pad_to_cap": 1189.3439853801233
+    },
+    "drawing_mm": {
+     "pad_to_plate_bottom": 525.0,
+     "pad_part": 170.0,
+     "closed_length_pad_to_cap": 1115.0
+    },
+    "retracted_pad_bottom_z_m": {
+     "current": -0.710043985280124,
+     "drawing_same_mount": -0.6357000000000012,
+     "delta_mm": 74.34398528012287
+    },
+    "crawler_standing_gap_to_ground_m": {
+     "current": 0.3408560147198759,
+     "new": 0.4151999999999988
+    },
+    "operating_extension_m": {
+     "current": 0.3908560147198759,
+     "new": 0.4651999999999988
+    },
+    "stroke_left_after_levelling_flat_m": {
+     "to_sensor_end_0.6948": {
+      "current": 0.30394398528012406,
+      "new": 0.2296000000000012
+     },
+     "to_soft_end_0.6848": {
+      "current": 0.29394398528012405,
+      "new": 0.21960000000000118
+     },
+     "to_mechanical_0.70": {
+      "current": 0.30914398528012405,
+      "new": 0.23480000000000117
+     }
+    },
+    "crawler_lift_at_sensor_end_m": {
+     "current": 0.35394398528012405,
+     "new": 0.2796000000000012
+    },
+    "check_yaml_matches_cad_rule_mm": 0.043985280124047677
+   }
+  },
+  "derived_L1_at_new_e_op": {
+   "FL": {
+    "current": {
+     "e_op": 0.40109999990000006,
+     "k_oil": 29424138.778413683,
+     "k_rod_side": 10805133.788820544,
+     "kn": 25905744.239884477,
+     "k_lock": 33929017.06973475
+    },
+    "new": {
+     "e_op": 0.4554000000000001,
+     "k_oil": 26262819.548872177,
+     "k_rod_side": 12796711.405295322,
+     "kn": 23423362.56035246,
+     "k_lock": 33093163.31554948
+    },
+    "check_current_vs_yaml_rel": {
+     "k_oil": 2.6649440432180427e-09,
+     "kn": 1.5395997809974915e-09,
+     "k_lock": 2.0553130308798018e-09
+    },
+    "rel_change": {
+     "k_oil": -0.10743965195884453,
+     "k_rod_side": 0.18431771928038043,
+     "kn": -0.09582360022338765,
+     "k_lock": -0.024635366019219784
+    }
+   },
+   "FR": {
+    "current": {
+     "e_op": 0.40109999990000295,
+     "k_oil": 29424138.778413493,
+     "k_rod_side": 10805133.788820634,
+     "kn": 25905744.239884328,
+     "k_lock": 33929017.069734685
+    },
+    "new": {
+     "e_op": 0.45540000000000286,
+     "k_oil": 26262819.54887203,
+     "k_rod_side": 12796711.405295443,
+     "kn": 23423362.560352344,
+     "k_lock": 33093163.315549463
+    },
+    "check_current_vs_yaml_rel": {
+     "k_oil": 2.6649376039245e-09,
+     "kn": 1.5395940078377635e-09,
+     "k_lock": 2.0553110324783574e-09
+    },
+    "rel_change": {
+     "k_oil": -0.10743965195884364,
+     "k_rod_side": 0.18431771928038176,
+     "kn": -0.09582360022338687,
+     "k_lock": -0.02463536601921834
+    }
+   },
+   "RL": {
+    "current": {
+     "e_op": 0.39085601471987824,
+     "k_oil": 21556511.56543355,
+     "k_rod_side": 8747446.090596924,
+     "kn": 19506375.85527705,
+     "k_lock": 26402930.105974082
+    },
+    "new": {
+     "e_op": 0.46520000000000034,
+     "k_oil": 18445880.78416148,
+     "k_rod_side": 11030873.06882024,
+     "kn": 16923841.416897886,
+     "k_lock": 25772775.89815763
+    },
+    "check_current_vs_yaml_rel": {
+     "k_oil": 9.977402872451968e-05,
+     "kn": 9.028403206534641e-05,
+     "k_lock": 3.102426067669306e-05
+    },
+    "rel_change": {
+     "k_oil": -0.14430121366483306,
+     "k_rod_side": 0.26103927415773254,
+     "kn": -0.13239437492334138,
+     "k_lock": -0.02386682861664169
+    }
+   },
+   "RR": {
+    "current": {
+     "e_op": 0.3908560147198759,
+     "k_oil": 21556511.565433666,
+     "k_rod_side": 8747446.090596868,
+     "kn": 19506375.855277143,
+     "k_lock": 26402930.105974127
+    },
+    "new": {
+     "e_op": 0.4651999999999988,
+     "k_oil": 18445880.784161534,
+     "k_rod_side": 11030873.068820179,
+     "kn": 16923841.416897934,
+     "k_lock": 25772775.898157623
+    },
+    "check_current_vs_yaml_rel": {
+     "k_oil": 9.977402872984875e-05,
+     "kn": 9.028403207000935e-05,
+     "k_lock": 3.102426067846942e-05
+    },
+    "rel_change": {
+     "k_oil": -0.14430121366483506,
+     "k_rod_side": 0.26103927415773365,
+     "kn": -0.13239437492334305,
+     "k_lock": -0.023866828616643576
+    }
+   }
+  }
+ },
+ "task2": {
+  "assumptions": {
+   "E_Pa": 210000000000.0,
+   "G_Pa": 81000000000.0,
+   "nu": 0.3,
+   "front": "swing arm on a vertical pin D100 (BASE DECK solids 114 knuckle, 181 pin, 115/116/118 flanges, 121/122 webs 15 mm, 117 end plate 25 mm); upper = fixed at web start u 2.077 m, welded composite box only; central/lower = root at the pin axis u 2.001 m + knuckle tilt spring (pin couple) + deck top plate local spring + bolted joint",
+   "rear": "cylinder plate bolted to the COUNTER WEIGHT side plate (solid 26 / 29, 30 mm); counterweight beam on 2 deck-lug pins per side at y +-0.32 m; both rear legs loaded; upper = fully composite section, central = two composite groups (z < / > 538 mm), lower = every solid on its own (non-composite)",
+   "pin_contact_beta": {
+    "central": 1.0,
+    "lower": 0.5
+   },
+   "deck_plate_radius_m": {
+    "central": 0.15,
+    "lower": 0.2
+   },
+   "bolts": {
+    "front": "12 x M24 (hole D26), As 353 mm2, grip 64 mm",
+    "rear": "10 x M20 (hole D22 drawing), As 245 mm2, grip 71 mm",
+    "plate_flex_factor": {
+     "central": 0.5,
+     "lower": 0.25
+    }
+   },
+   "lug_pins_vertical_N_m": {
+    "central": 7000000000.0,
+    "lower": 2000000000.0
+   }
+  },
+  "pin_rot_stiffness_Nm_rad": {
+   "central": 58661798.34833156,
+   "lower": 37976600.00910146,
+   "parts_central": {
+    "pin_bending_shear": 3.104693537118169e-10,
+    "supports": 2.523577928671053e-10,
+    "contact": 1.1904761904761905e-10
+   },
+   "parts_lower": {
+    "pin_bending_shear": 3.104693537118169e-10,
+    "supports": 5.047155857342106e-10,
+    "contact": 2.380952380952381e-10
+   }
+  },
+  "deck_plate_local_N_m": {
+   "central": 562522303.0396986,
+   "lower": 210945863.63988692
+  },
+  "bolt_group_rot_Nm_rad": {
+   "front": 568889835.9375,
+   "rear": 280438732.3943662,
+   "kb_front": 1158281250.0,
+   "kb_rear": 724647887.3239437
+  },
+  "front": {
+   "upper": {
+    "k_N_m": 739761670.1549369,
+    "parts_m_N": {
+     "beam_bending": 8.685130448563923e-10,
+     "beam_shear": 4.832736728719787e-10,
+     "root_rotation": 0.0,
+     "root_vertical": 0.0,
+     "bolted_joint": 0.0
+    },
+    "rotation_rad_per_N": 2.497647350060594e-09,
+    "u_root_m": 2.0770999999999997
+   },
+   "central": {
+    "k_N_m": 110530421.45294829,
+    "parts_m_N": {
+     "beam_bending": 1.3654201247697452e-09,
+     "beam_shear": 5.479383317358608e-10,
+     "root_rotation": 5.289334170979562e-09,
+     "root_vertical": 1.7777072919532356e-09,
+     "bolted_joint": 6.688305347317654e-11
+    },
+    "rotation_rad_per_N": 1.3425476054751026e-08,
+    "u_root_m": 2.001
+   },
+   "lower": {
+    "k_N_m": 66853765.78699126,
+    "parts_m_N": {
+     "beam_bending": 1.3654201247697452e-09,
+     "beam_shear": 5.479383317358608e-10,
+     "root_rotation": 8.170343170809934e-09,
+     "root_vertical": 4.740552778541964e-09,
+     "bolted_joint": 1.3376610694635307e-10
+    },
+    "rotation_rad_per_N": 1.9082477811085754e-08,
+    "u_root_m": 2.001
+   }
+  },
+  "rear": {
+   "RL": {
+    "upper": {
+     "k_N_m": 8663616436.904589,
+     "parts_m_N": {
+      "overhang": 7.482436872954571e-11,
+      "span": 4.0600870520460664e-11,
+      "lug_pins": 0.0,
+      "bolted_joint": 0.0
+     },
+     "rotation_rad_per_N": 9.822570960561985e-11,
+     "a_m": 0.8478999999999999
+    },
+    "central": {
+     "k_N_m": 1489077765.4956546,
+     "parts_m_N": {
+      "overhang": 3.264257698139384e-10,
+      "span": 1.4671037924725255e-10,
+      "lug_pins": 8.175746372767846e-11,
+      "bolted_joint": 1.166629863167118e-10
+     },
+     "rotation_rad_per_N": 1.2551171837019043e-09,
+     "a_m": 0.8478999999999999
+    },
+    "lower": {
+     "k_N_m": 234096401.34929863,
+     "parts_m_N": {
+      "overhang": 1.3005686079094497e-09,
+      "span": 2.4516987326174783e-09,
+      "lug_pins": 2.861511230468746e-10,
+      "bolted_joint": 2.333259726334236e-10
+     },
+     "rotation_rad_per_N": 6.22671610924858e-09,
+     "a_m": 0.8478999999999999
+    }
+   },
+   "RR": {
+    "upper": {
+     "k_N_m": 7560626820.537336,
+     "parts_m_N": {
+      "overhang": 8.673098774106912e-11,
+      "span": 4.553317814576535e-11,
+      "lug_pins": 0.0,
+      "bolted_joint": 0.0
+     },
+     "rotation_rad_per_N": 1.0847288976807462e-10,
+     "a_m": 0.9228999999999998
+    },
+    "central": {
+     "k_N_m": 1168407090.321398,
+     "parts_m_N": {
+      "overhang": 3.670187785285162e-10,
+      "span": 1.643038077722203e-10,
+      "lug_pins": 2.0788051060267858e-10,
+      "bolted_joint": 1.166629863167118e-10
+     },
+     "rotation_rad_per_N": 1.2895217482189065e-09,
+     "a_m": 0.9228999999999998
+    },
+    "lower": {
+     "k_N_m": 190014898.5797165,
+     "parts_m_N": {
+      "overhang": 1.5550302324126558e-09,
+      "span": 2.7468072319011334e-09,
+      "lug_pins": 7.275817871093751e-10,
+      "bolted_joint": 2.333259726334236e-10
+     },
+     "rotation_rad_per_N": 6.501050661413066e-09,
+     "a_m": 0.9228999999999998
+    }
+   }
+  },
+  "impact": {
+   "FL": {
+    "kn_yaml": 25905744.2,
+    "share_yaml": 0.0259057442,
+    "cases": {
+     "upper": {
+      "k_frame": 739761670.1549369,
+      "ratio_to_yaml": 0.7397616701549369,
+      "share_of_leg_compliance": 0.03470278415334495,
+      "kn_new": 25671789.56430474,
+      "kn_rel": -0.00903099458904022,
+      "k_lock_new": 33528824.411114573,
+      "k_lock_rel": -0.011794995088877047,
+      "tilt_rad_per_100kN": 0.00024976473500605936,
+      "pad_horizontal_mm_per_100kN": 0.2899518808685343,
+      "tangential_force_kN_per_100kN_if_stuck": 2.0739592106041473
+     },
+     "central": {
+      "k_frame": 110530421.45294829,
+      "ratio_to_yaml": 0.1105304214529483,
+      "share_of_leg_compliance": 0.19394476712984013,
+      "kn_new": 21436796.849455144,
+      "kn_rel": -0.172507970280385,
+      "k_lock_new": 26652039.94080518,
+      "k_lock_rel": -0.21447650720900102,
+      "tilt_rad_per_100kN": 0.0013425476054751025,
+      "pad_horizontal_mm_per_100kN": 1.5585635151960466,
+      "tangential_force_kN_per_100kN_if_stuck": 11.148046868914788
+     },
+     "lower": {
+      "k_frame": 66853765.78699126,
+      "ratio_to_yaml": 0.06685376578699126,
+      "share_of_leg_compliance": 0.28459214982534636,
+      "kn_new": 19026056.929240033,
+      "kn_rel": -0.26556609289610633,
+      "k_lock_new": 23024859.798100993,
+      "k_lock_rel": -0.3213814653663266,
+      "tilt_rad_per_100kN": 0.0019082477811085755,
+      "pad_horizontal_mm_per_100kN": 2.2152848490889454,
+      "tangential_force_kN_per_100kN_if_stuck": 15.845423741061936
+     }
+    },
+    "horizontal_lever_m": 1.1609,
+    "horizontal_direction": "arm radial (diagonal, outward)"
+   },
+   "FR": {
+    "kn_yaml": 25905744.2,
+    "share_yaml": 0.0259057442,
+    "cases": {
+     "upper": {
+      "k_frame": 739761670.1549369,
+      "ratio_to_yaml": 0.7397616701549369,
+      "share_of_leg_compliance": 0.03470278415334495,
+      "kn_new": 25671789.56430474,
+      "kn_rel": -0.00903099458904022,
+      "k_lock_new": 33528824.411114573,
+      "k_lock_rel": -0.011794995088877047,
+      "tilt_rad_per_100kN": 0.00024976473500605936,
+      "pad_horizontal_mm_per_100kN": 0.2899518808685343,
+      "tangential_force_kN_per_100kN_if_stuck": 2.0739592106041473
+     },
+     "central": {
+      "k_frame": 110530421.45294829,
+      "ratio_to_yaml": 0.1105304214529483,
+      "share_of_leg_compliance": 0.19394476712984013,
+      "kn_new": 21436796.849455144,
+      "kn_rel": -0.172507970280385,
+      "k_lock_new": 26652039.94080518,
+      "k_lock_rel": -0.21447650720900102,
+      "tilt_rad_per_100kN": 0.0013425476054751025,
+      "pad_horizontal_mm_per_100kN": 1.5585635151960466,
+      "tangential_force_kN_per_100kN_if_stuck": 11.148046868914788
+     },
+     "lower": {
+      "k_frame": 66853765.78699126,
+      "ratio_to_yaml": 0.06685376578699126,
+      "share_of_leg_compliance": 0.28459214982534636,
+      "kn_new": 19026056.929240033,
+      "kn_rel": -0.26556609289610633,
+      "k_lock_new": 23024859.798100993,
+      "k_lock_rel": -0.3213814653663266,
+      "tilt_rad_per_100kN": 0.0019082477811085755,
+      "pad_horizontal_mm_per_100kN": 2.2152848490889454,
+      "tangential_force_kN_per_100kN_if_stuck": 15.845423741061936
+     }
+    },
+    "horizontal_lever_m": 1.1609,
+    "horizontal_direction": "arm radial (diagonal, outward)"
+   },
+   "RL": {
+    "kn_yaml": 19504614.9,
+    "share_yaml": 0.0195046149,
+    "cases": {
+     "upper": {
+      "k_frame": 8663616436.904589,
+      "ratio_to_yaml": 8.663616436904588,
+      "share_of_leg_compliance": 0.0022908495327816315,
+      "kn_new": 19847041.66668214,
+      "kn_rel": 0.017556192133900694,
+      "k_lock_new": 27033467.939277787,
+      "k_lock_rel": 0.02391312343462948,
+      "tilt_rad_per_100kN": 9.822570960561985e-06,
+      "pad_horizontal_mm_per_100kN": 0.01601963097958054,
+      "tangential_force_kN_per_100kN_if_stuck": 0.05939099743010004
+     },
+     "central": {
+      "k_frame": 1489077765.4956546,
+      "ratio_to_yaml": 1.4890777654956546,
+      "share_of_leg_compliance": 0.0131829046727431,
+      "kn_new": 19630370.232830517,
+      "kn_rel": 0.006447465560087462,
+      "k_lock_new": 26633062.239280313,
+      "k_lock_rel": 0.008747453538102024,
+      "tilt_rad_per_100kN": 0.00012551171837019043,
+      "pad_horizontal_mm_per_100kN": 0.20469706148994354,
+      "tangential_force_kN_per_100kN_if_stuck": 0.7588915542682865
+     },
+     "lower": {
+      "k_frame": 234096401.34929863,
+      "ratio_to_yaml": 0.23409640134929863,
+      "share_of_leg_compliance": 0.07832076016170705,
+      "kn_new": 18334608.104797132,
+      "kn_rel": -0.059986152056909714,
+      "k_lock_new": 24302810.871822648,
+      "k_lock_rel": -0.0795125862540822,
+      "tilt_rad_per_100kN": 0.000622671610924858,
+      "pad_horizontal_mm_per_100kN": 1.0155151302573509,
+      "tangential_force_kN_per_100kN_if_stuck": 3.764909227198769
+     }
+    },
+    "horizontal_lever_m": 1.6309,
+    "horizontal_direction": "body y (outward)"
+   },
+   "RR": {
+    "kn_yaml": 19504614.9,
+    "share_yaml": 0.0195046149,
+    "cases": {
+     "upper": {
+      "k_frame": 7560626820.537336,
+      "ratio_to_yaml": 7.560626820537336,
+      "share_of_leg_compliance": 0.002624175404390907,
+      "kn_new": 19840410.9442323,
+      "kn_rel": 0.01721623553984153,
+      "k_lock_new": 27021167.5097677,
+      "k_lock_rel": 0.02344723532780013,
+      "tilt_rad_per_100kN": 1.0847288976807462e-05,
+      "pad_horizontal_mm_per_100kN": 0.01769084359227529,
+      "tangential_force_kN_per_100kN_if_stuck": 0.0655868320352929
+     },
+     "central": {
+      "k_frame": 1168407090.321398,
+      "ratio_to_yaml": 1.1684070903213981,
+      "share_of_leg_compliance": 0.016740400253697083,
+      "kn_new": 19559602.351237804,
+      "kn_rel": 0.0028192020975408294,
+      "k_lock_new": 26502966.439854607,
+      "k_lock_rel": 0.0038199763592619007,
+      "tilt_rad_per_100kN": 0.00012895217482189066,
+      "pad_horizontal_mm_per_100kN": 0.21030810191702146,
+      "tangential_force_kN_per_100kN_if_stuck": 0.7796938616378846
+     },
+     "lower": {
+      "k_frame": 190014898.5797165,
+      "ratio_to_yaml": 0.1900148985797165,
+      "share_of_leg_compliance": 0.09476846508552451,
+      "kn_new": 18007420.281781346,
+      "kn_rel": -0.07676104480374302,
+      "k_lock_new": 23731264.60980012,
+      "k_lock_rel": -0.10116033487624843,
+      "tilt_rad_per_100kN": 0.0006501050661413066,
+      "pad_horizontal_mm_per_100kN": 1.060256352369857,
+      "tangential_force_kN_per_100kN_if_stuck": 3.930782324456154
+     }
+    },
+    "horizontal_lever_m": 1.6309,
+    "horizontal_direction": "body y (outward)"
+   }
+  },
+  "yaml_frame_stiffness_N_m": 1000000000.0,
+  "thresholds": {
+   "keep": ">= 3e8",
+   "add_sensitivity": "about 1e8 or below"
+  }
+ }
+}

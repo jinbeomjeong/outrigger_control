@@ -1027,13 +1027,36 @@ def _event_item3_rows(rows: _Rows, m, cid: str) -> None:
              note="no re-READY before the run end: failed" if v is None else "")
 
 
+ROCKING_WINDOW_S = 1.0
+"""Item 5a: moving-mean window of the rocking amplitude in seconds (spec rev. 32 163.2 C-R4:
+``round(1.0 s x record rate)`` samples, 50 at the 50 Hz Record, 10 at the 10 Hz bundle-C
+Record)."""
 ROCKING_WINDOW_SAMPLES = 50
-"""Item 5a: moving-mean window of the rocking amplitude, 1 s at the 50 Hz Record."""
+"""Item 5a fallback window when no time vector is given (1 s at the 50 Hz Record)."""
 
 
-def _rocking_amp_deg(attitude_deg: NDArray[np.float64]) -> float | None:
-    """Largest deviation of roll / pitch from their 1 s moving mean (edges dropped)."""
-    win = ROCKING_WINDOW_SAMPLES
+def record_rate_hz(t_s: NDArray[np.float64] | None) -> float | None:
+    """Sample rate of a Record time vector (median spacing), None for fewer than 2 samples."""
+    if t_s is None or len(t_s) < 2:
+        return None
+    dt = float(np.median(np.diff(np.asarray(t_s, dtype=float))))
+    return 1.0 / dt if dt > 0.0 else None
+
+
+def rocking_window_samples(t_s: NDArray[np.float64] | None) -> int:
+    """C-R4: ``round(ROCKING_WINDOW_S x record rate)`` (at least 2), the legacy 50 samples when
+    the rate is unknown."""
+    rate = record_rate_hz(t_s)
+    if rate is None:
+        return ROCKING_WINDOW_SAMPLES
+    return max(2, int(round(ROCKING_WINDOW_S * rate)))
+
+
+def _rocking_amp_deg(attitude_deg: NDArray[np.float64],
+                     t_s: NDArray[np.float64] | None = None) -> float | None:
+    """Largest deviation of roll / pitch from their 1 s moving mean (edges dropped); the window
+    in samples follows the rate of ``t_s`` (:func:`rocking_window_samples`)."""
+    win = rocking_window_samples(t_s)
     if len(attitude_deg) <= 2 * win:
         return None
     kern = np.ones(win) / win
@@ -1124,11 +1147,11 @@ def _event_transient_metrics(
     m["max_pressure_transient_bar"] = (
         None if m["transient_pressure_peak"] is None else m["transient_pressure_peak"]["max_bar"]
     )
-    m["rocking_amp_transient_deg"] = _rocking_amp_deg(rp[in_window])
+    m["rocking_amp_transient_deg"] = _rocking_amp_deg(rp[in_window], t)
     re_ready = window["re_ready_s"]
     m["re_ready_s"] = re_ready
     if re_ready is not None:
-        m["rocking_amp_after_re_ready_deg"] = _rocking_amp_deg(rp[t >= re_ready])
+        m["rocking_amp_after_re_ready_deg"] = _rocking_amp_deg(rp[t >= re_ready], t)
 
 
 def _pressure_and_rocking_metrics(
@@ -1155,8 +1178,10 @@ def _pressure_and_rocking_metrics(
         np.max(np.asarray(mon["cylinder_force_max_N"], dtype=float) / area)
     ) / 1e5
     m["saturation_steps"] = int(sum(mon["saturation_step_count"]))
+    m["record_rate_hz"] = record_rate_hz(t)
+    m["rocking_window_samples"] = rocking_window_samples(t)
     if tm["liftoff"] is not None:
-        amplitude = _rocking_amp_deg(rp[t >= tm["liftoff"]])
+        amplitude = _rocking_amp_deg(rp[t >= tm["liftoff"]], t)
         if amplitude is not None:
             m["rocking_amp_deg"] = amplitude
     if window is not None:
@@ -1776,6 +1801,8 @@ def _items_3_to_5_rows(rows: _Rows, m, cid: str) -> None:
                 m["rocking_amp_deg"],
                 ROCKING_TOL_DEG,
                 m["rocking_amp_deg"] <= ROCKING_TOL_DEG,
+                note=f"1 s moving mean = {m.get('rocking_window_samples')} samples "
+                     f"(Record {m.get('record_rate_hz') or float('nan'):.0f} Hz, C-R4)",
             )
     residual = m.get("filter_residual_last5_deg")
     if residual is not None and "reject" not in cid and m["ready_window_ok"]:
@@ -2303,11 +2330,13 @@ def _is_info_case(m: Mapping[str, Any]) -> bool:
 
 
 def settle_checks(case: Mapping[str, Any], metrics: Mapping[str, Any]) -> dict[str, Any]:
-    """Item 6 (G4): after the settlement start (first READY + 5 s)."""
+    """Item 6 (G4): after the settlement start (first READY + 5 s + the bundle-C phase offset
+    ``settings.bundle_c.settle_offset_s``, spec rev. 32 163.2 C-R7; 0 when absent)."""
     tm = metrics["times_s"]
     if tm["ready"] is None:
         return {"status": "no READY before the settlement"}
-    t_start = tm["ready"] + 5.0
+    bundle = case["result"]["settings"].get("bundle_c") or {}
+    t_start = tm["ready"] + 5.0 + float(bundle.get("settle_offset_s") or 0.0)
     pads = case["pads"]
     tp = pads["t"] - tm["t0"]
     after = tp >= t_start

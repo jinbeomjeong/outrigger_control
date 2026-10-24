@@ -694,7 +694,9 @@ def build_block(p=None, ref_res=None):
         out["meta"]["cross_check_L1R_V6_max_abs_diff_mm"] = r(max(diffs), 3)
     out["time_step"] = time_step_block(lp, out["levels"])
     out["V4_NSC"] = v4_block(p, geo, lp, ref_res)
-    out["V12_rule"] = ("reference = reference.json slope_V12/<case>/L2b_NSC (head-only k2(e_i), place and settle); "
+    out["V12_rule"] = ("reference = reference.json slope_V12/<case>/L2b_NSC (rev. 35: S7 Chrono topology, "
+                       "dyn_model.static_slope_l2b_chrono_topology, axial ko = series(oil head, rod, frame, concrete) "
+                       "at the levelled extension, kt barrel-rod horizontal, place and settle); "
                        "the rod-side law is armed (anchor taken) only after the gravity ramp and settle, so the V12 "
                        "values do not change")
     import json

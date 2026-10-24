@@ -1,7 +1,7 @@
 """S3 V checks (chrono_build_plan.md S3, 3.4): V4 lift, V5, V8(a).
 
-``sim``: the touch phase of the V4 lift at dt 2e-4 s from the S2b crawler snapshot (15.4 s
-simulated, about 25 s wall) and V5 FL +1 mm at dt 2e-4 s (about 15 s). ``slow``: the judged V4
+``sim``: the touch phase of the V4 lift at dt 2e-4 s from the S2b crawler snapshot (17.0 s
+simulated, about 30 s wall) and V5 FL +1 mm at dt 2e-4 s (about 15 s). ``slow``: the judged V4
 run ``verify.s3.V4_JUDGED_RUN`` (YAML ``simulation.L1.dt_s`` with the 1e-5 s transition window)
 and V8(a) on the pads at dt 2e-4 s (about 1.5 min),
 both through the job functions of ``04_scripts/02_chrono/run_S3.py`` (the judging run with every
@@ -34,6 +34,10 @@ from outrigger_sim.verify.s3 import V4_JUDGED_RUN, V4_TOUCH_TOL_S  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 STATES = ROOT / "07_results" / "states"
+V4_TOUCH_RUN_S = 17.0
+"""Run length of the touch-phase check: the REXOME35 reference touch times are 16.29-16.43 s
+after the equivalent origin (about 0.05 s), so the latest accepted touch is about 16.53 s; the
+former 15.4 s (REXOME33) ended before any pad touched."""
 
 
 def _script():
@@ -62,7 +66,7 @@ def test_v4_touch_phase_at_2e4() -> None:
     model.restore(snap)
     t0 = float(model.system.GetChTime())
     model.actuator.set_soft_limits(hi_m=plan.e_op_m)
-    run = run_commanded(model, 15.4, plan.schedule(), sample_s=0.01)
+    run = run_commanded(model, V4_TOUCH_RUN_S, plan.schedule(), sample_s=0.01)
     t = run.series["t"] - t0
     t_eq = equivalent_origin_from_trajectory(t, run.series["s_ref"][:, 0],
                                              params.actuator.max_speed_m_s, 1.0, 14.0)

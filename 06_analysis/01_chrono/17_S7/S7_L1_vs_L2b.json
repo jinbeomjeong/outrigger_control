@@ -1,0 +1,1505 @@
+{
+ "meta": {
+  "purpose": "chrono_build_plan.md S7 checklist 'L1 vs L2b-NSC comparison table'; dynamics_model.md 5.23",
+  "script": "04_scripts/01_dynamics/s7_l1_vs_l2b_table.py",
+  "no_new_simulation": true,
+  "frame": "world z up, gravity -z 9.80665 m/s^2; pad/rod force from floor; legs FL, FR, RL, RR",
+  "models": {
+   "L1": "SMC, rigid position motor + Hooke pad (k_n = k2 head-only lumped with rod/frame/concrete) + ground bushing (k_t, Coulomb return map, 1-step lag) + L1-R rod-side one-sided spring (lock state machine, e_op fixed); dt 2e-4 s",
+   "L2b": "NSC (PSOR 50), force motor with explicit axial law k2(s)/k1(s_lock) + rod-side state machine, explicit 2-axis lateral spring k_t barrel-rod (horizontal), rigid NSC contact (stick native); dt 1e-4 s"
+  },
+  "F_min_N": 9414.58911,
+  "guard_F_min_plus_5kN_N": 14414.58911,
+  "W_over_4_N": 95028.25,
+  "inputs_sha256": {
+   "reference.json": "0f93425a99bcb3eea6cfb774c262b164a2fe569dc3804da8f38e4fb6293e7ee7",
+   "verify_S7_L2b.json": "24997a0b563c5f3fd1117f358bab2e10f6b27beb8a0b3faeb4af049367fd5d94",
+   "verify_S1_L1.json": "88d49f83eded8818a52373da0b4ff026ce04b1398a95945d90641718f4f8e004",
+   "verify_S2a_L1.json": "458e02fe614701cdab84bd587c826d798bc03c989f8f806a1d3f3b9cd1da4d77",
+   "verify_L1R_V7_V5.json": "5d5e6f555f43b074dda08c31d361cf6d5ad74ca4e4e6208d32d488c215beec2a",
+   "verify_S6_L1_infra.json": "cae065f8fcc7e9b9f590cd01f0758b8f3333d18530577cbc2c9203059471ff1c",
+   "step_cost_S0.json": "aef3a41eb60a26fb2a867cf44c2c2938fc0de51b3dd330270fed772c62c51f00",
+   "step_cost_S7.json": "fe3db7c0f3a6e630c1143e9ece7823711dd6f9cca61c77376b3789c65e70b63e"
+  },
+  "doc_values": "values tagged 'doc' are copied from dynamics_model.md judgements (sections named in 'source')"
+ },
+ "A_statics_V1_V3": {
+  "top": {
+   "reference_contact_N (L1 = L2b, same rigid-body statics)": [
+    119272.0,
+    117027.0,
+    72676.1,
+    71137.3
+   ],
+   "reference_cylinder_N": [
+    118225.0,
+    115980.0,
+    71958.6,
+    70419.9
+   ],
+   "L1_chrono_contact_N": [
+    119303.7,
+    117040.9,
+    72659.3,
+    71108.9
+   ],
+   "L2b_chrono_contact_N (0.1 s window)": [
+    119303.4,
+    117041.3,
+    72659.8,
+    71108.5
+   ],
+   "L1_chrono_cylinder_N": [
+    118256.5,
+    115993.7,
+    71941.8,
+    70391.4
+   ],
+   "L2b_chrono_cylinder_N": [
+    118256.2,
+    115994.1,
+    71942.3,
+    70391.0
+   ],
+   "L2b_minus_L1_cylinder_N": [
+    -0.3,
+    0.4,
+    0.5,
+    -0.5
+   ],
+   "L1_attitude_deg (roll, pitch)": [
+    -0.00189,
+    0.010336
+   ],
+   "L2b_attitude_deg (roll, pitch)": [
+    -0.001886,
+    0.010287
+   ],
+   "L1_cylinder_window_span_N": [
+    9.6,
+    9.6,
+    9.5,
+    7.3
+   ],
+   "L2b_cylinder_step_std_N": [
+    21.6,
+    21.6,
+    18.9,
+    18.9
+   ],
+   "L2b_contact_step_std_N": [
+    1212.0,
+    1212.0,
+    826.0,
+    826.0
+   ]
+  },
+  "middle": {
+   "reference_contact_N (L1 = L2b, same rigid-body statics)": [
+    119272.0,
+    117027.0,
+    72676.1,
+    71137.3
+   ],
+   "reference_cylinder_N": [
+    118225.0,
+    115980.0,
+    71958.6,
+    70419.9
+   ],
+   "L1_chrono_contact_N": [
+    119297.0,
+    117037.8,
+    72662.8,
+    71115.2
+   ],
+   "L2b_chrono_contact_N (0.1 s window)": [
+    119296.5,
+    117038.3,
+    72663.3,
+    71114.7
+   ],
+   "L1_chrono_cylinder_N": [
+    118249.8,
+    115990.6,
+    71945.4,
+    70397.8
+   ],
+   "L2b_chrono_cylinder_N": [
+    118249.4,
+    115991.1,
+    71945.8,
+    70397.2
+   ],
+   "L2b_minus_L1_cylinder_N": [
+    -0.5,
+    0.5,
+    0.5,
+    -0.5
+   ],
+   "L1_attitude_deg (roll, pitch)": [
+    -0.001887,
+    0.010331
+   ],
+   "L2b_attitude_deg (roll, pitch)": [
+    -0.001884,
+    0.010283
+   ],
+   "L1_cylinder_window_span_N": [
+    6.6,
+    6.5,
+    9.6,
+    7.4
+   ],
+   "L2b_cylinder_step_std_N": [
+    21.5,
+    21.5,
+    18.9,
+    18.9
+   ],
+   "L2b_contact_step_std_N": [
+    1212.0,
+    1212.0,
+    826.0,
+    826.0
+   ]
+  },
+  "bottom": {
+   "reference_contact_N (L1 = L2b, same rigid-body statics)": [
+    119272.0,
+    117027.0,
+    72676.1,
+    71137.3
+   ],
+   "reference_cylinder_N": [
+    118225.0,
+    115980.0,
+    71958.6,
+    70419.9
+   ],
+   "L1_chrono_contact_N": [
+    119289.8,
+    117035.2,
+    72666.8,
+    71121.1
+   ],
+   "L2b_chrono_contact_N (0.1 s window)": [
+    119289.7,
+    117035.3,
+    72666.9,
+    71121.0
+   ],
+   "L1_chrono_cylinder_N": [
+    118242.6,
+    115988.0,
+    71949.3,
+    70403.7
+   ],
+   "L2b_chrono_cylinder_N": [
+    118242.6,
+    115988.1,
+    71949.4,
+    70403.5
+   ],
+   "L2b_minus_L1_cylinder_N": [
+    -0.0,
+    0.2,
+    0.1,
+    -0.2
+   ],
+   "L1_attitude_deg (roll, pitch)": [
+    -0.001884,
+    0.010326
+   ],
+   "L2b_attitude_deg (roll, pitch)": [
+    -0.001881,
+    0.01028
+   ],
+   "L1_cylinder_window_span_N": [
+    9.5,
+    9.6,
+    9.4,
+    7.2
+   ],
+   "L2b_cylinder_step_std_N": [
+    21.5,
+    21.5,
+    18.8,
+    18.8
+   ],
+   "L2b_contact_step_std_N": [
+    1212.0,
+    1212.0,
+    826.0,
+    826.0
+   ]
+  }
+ },
+ "B_modes_LOCK": {
+  "top": {
+   "L1R_ref_f_damped_Hz": [
+    2.0748,
+    3.0694,
+    4.0331,
+    6.1676,
+    7.5396,
+    8.917
+   ],
+   "L1R_ref_zeta": [
+    0.008574,
+    0.01804,
+    0.03727,
+    0.03315,
+    0.04783,
+    0.03042
+   ],
+   "L2b_ref_f_damped_Hz": [
+    2.0608,
+    3.0597,
+    4.0637,
+    6.2383,
+    7.6873,
+    8.9593
+   ],
+   "L2b_ref_zeta": [
+    0.0085,
+    0.0179,
+    0.0376,
+    0.0338,
+    0.0488,
+    0.0306
+   ],
+   "L1_chrono_f_Hz (V7a, L1-R LOCK)": [
+    2.0748,
+    3.0694,
+    4.0357,
+    6.1673,
+    7.5385,
+    8.9186
+   ],
+   "L1_chrono_zeta (minus r omega dt/2)": [
+    0.00857,
+    0.01807,
+    0.03729,
+    0.03329,
+    0.04847,
+    0.03047
+   ],
+   "L2b_chrono_f_Hz": [
+    2.0576,
+    3.0562,
+    4.065,
+    6.2458,
+    7.6965,
+    8.9602
+   ],
+   "L2b_chrono_zeta (no correction)": [
+    0.00855,
+    0.01789,
+    0.03763,
+    0.03379,
+    0.04885,
+    0.03036
+   ],
+   "L2b_over_L1_ref_f_minus_1": [
+    -0.0067,
+    -0.0032,
+    0.0076,
+    0.0115,
+    0.0196,
+    0.0047
+   ],
+   "L2b_over_L1_chrono_f_minus_1": [
+    -0.0083,
+    -0.0043,
+    0.0073,
+    0.0127,
+    0.021,
+    0.0047
+   ],
+   "L2b_over_L1_chrono_zeta_minus_1": [
+    -0.002,
+    -0.01,
+    0.009,
+    0.015,
+    0.008,
+    -0.003
+   ]
+  },
+  "middle": {
+   "L1R_ref_f_damped_Hz": [
+    2.583,
+    3.3484,
+    4.1336,
+    7.2439,
+    8.0344,
+    8.9775
+   ],
+   "L1R_ref_zeta": [
+    0.01242,
+    0.02235,
+    0.03769,
+    0.03259,
+    0.04646,
+    0.03132
+   ],
+   "L2b_ref_f_damped_Hz": [
+    2.5623,
+    3.3429,
+    4.1658,
+    7.321,
+    8.2001,
+    9.0226
+   ],
+   "L2b_ref_zeta": [
+    0.0123,
+    0.0222,
+    0.038,
+    0.0332,
+    0.0476,
+    0.0315
+   ],
+   "L1_chrono_f_Hz (V7a, L1-R LOCK)": [
+    2.583,
+    3.3486,
+    4.1366,
+    7.2439,
+    8.0347,
+    8.9788
+   ],
+   "L1_chrono_zeta (minus r omega dt/2)": [
+    0.01241,
+    0.02245,
+    0.03777,
+    0.03261,
+    0.04682,
+    0.03139
+   ],
+   "L2b_chrono_f_Hz": [
+    2.5572,
+    3.3395,
+    4.1677,
+    7.3274,
+    8.2167,
+    9.0238
+   ],
+   "L2b_chrono_zeta (no correction)": [
+    0.01232,
+    0.02218,
+    0.03833,
+    0.03313,
+    0.04754,
+    0.03109
+   ],
+   "L2b_over_L1_ref_f_minus_1": [
+    -0.008,
+    -0.0016,
+    0.0078,
+    0.0106,
+    0.0206,
+    0.005
+   ],
+   "L2b_over_L1_chrono_f_minus_1": [
+    -0.01,
+    -0.0027,
+    0.0075,
+    0.0115,
+    0.0226,
+    0.005
+   ],
+   "L2b_over_L1_chrono_zeta_minus_1": [
+    -0.007,
+    -0.012,
+    0.015,
+    0.016,
+    0.015,
+    -0.01
+   ]
+  },
+  "bottom": {
+   "L1R_ref_f_damped_Hz": [
+    3.0307,
+    3.5381,
+    4.3043,
+    6.9572,
+    7.6099,
+    9.0348
+   ],
+   "L1R_ref_zeta": [
+    0.01752,
+    0.02545,
+    0.03756,
+    0.0362,
+    0.02991,
+    0.03195
+   ],
+   "L2b_ref_f_damped_Hz": [
+    3.0073,
+    3.5379,
+    4.3359,
+    7.073,
+    7.6754,
+    9.0815
+   ],
+   "L2b_ref_zeta": [
+    0.0172,
+    0.0253,
+    0.0379,
+    0.0372,
+    0.0304,
+    0.0322
+   ],
+   "L1_chrono_f_Hz (V7a, L1-R LOCK)": [
+    3.0311,
+    3.5384,
+    4.3066,
+    6.9577,
+    7.6098,
+    9.0356
+   ],
+   "L1_chrono_zeta (minus r omega dt/2)": [
+    0.01758,
+    0.02565,
+    0.03764,
+    0.03634,
+    0.02986,
+    0.03209
+   ],
+   "L2b_chrono_f_Hz": [
+    3.0007,
+    3.535,
+    4.3372,
+    7.0858,
+    7.6797,
+    9.0857
+   ],
+   "L2b_chrono_zeta (no correction)": [
+    0.01725,
+    0.0253,
+    0.03789,
+    0.03707,
+    0.03021,
+    0.03168
+   ],
+   "L2b_over_L1_ref_f_minus_1": [
+    -0.0077,
+    -0.0001,
+    0.0073,
+    0.0166,
+    0.0086,
+    0.0052
+   ],
+   "L2b_over_L1_chrono_f_minus_1": [
+    -0.01,
+    -0.0009,
+    0.0071,
+    0.0184,
+    0.0092,
+    0.0055
+   ],
+   "L2b_over_L1_chrono_zeta_minus_1": [
+    -0.019,
+    -0.013,
+    0.007,
+    0.02,
+    0.012,
+    -0.013
+   ]
+  }
+ },
+ "C_V4_touch": {
+  "L2b_ref_dynamic_touch_s (rigid crawler limit)": [
+   16.657,
+   16.657,
+   16.291,
+   16.291
+  ],
+  "L1_ref_rigid_crawler_touch_s (= lift_V4 D rigid dynamic_events_s)": [
+   16.663,
+   16.663,
+   16.292,
+   16.292
+  ],
+  "L2b_minus_L1_ref_s (rigid crawler)": [
+   -0.00601,
+   -0.00601,
+   -0.00158,
+   -0.00158
+  ],
+  "L2b_chrono_touch_s": [
+   16.6585,
+   16.6584,
+   16.3172,
+   16.3172
+  ],
+  "L2b_chrono_minus_ref_s": [
+   0.0015,
+   0.0014,
+   0.0262,
+   0.0262
+  ],
+  "L2b_crawler": "rigid NSC spheres (no crawler compliance)",
+  "L1_chrono_touch_s (crawler x1 compliant, D, doc)": [
+   16.287,
+   16.287,
+   16.441,
+   16.441
+  ],
+  "L1_ref_touch_s (crawler x1 compliant, doc)": [
+   16.295,
+   16.294,
+   16.432,
+   16.432
+  ],
+  "L1_chrono_touch_s (crawler x3, doc)": [
+   16.525,
+   16.525,
+   16.418,
+   16.418
+  ],
+  "source_L1": "dynamics_model.md 5.12.12 supplement 8 (S3 v4_D batches 20261022_052232 / 053640)",
+  "first_touch": {
+   "L1 crawler x1": "front pair",
+   "L1 crawler x3": "rear pair",
+   "rigid crawler (L1 ref, L2b)": "rear pair"
+  },
+  "note": "order depends on crawler stiffness (CLAUDE.md: V4 judged per leg vs same-layout reference, not by order)"
+ },
+ "D_V5_V6_V14": {
+  "V5_FL+1mm_dF_N": {
+   "L1R_ref_quasi_static": [
+    5960.55,
+    -5960.55,
+    -6546.02,
+    6546.02
+   ],
+   "L1R_dynamic_replica (doc 5.17.5)": [
+    5887.8,
+    -5913.0,
+    -6582.9,
+    6608.1
+   ],
+   "head_only_ref": [
+    4978.2,
+    -4978.2,
+    -5467.18,
+    5467.18
+   ],
+   "L1_chrono (L1-R, module normal force, doc 5.17.5)": [
+    5877.5,
+    -5917.0,
+    -6581.0,
+    6598.6
+   ],
+   "L2b_chrono (law output)": [
+    5840.9,
+    -5863.5,
+    -6527.5,
+    6555.2
+   ],
+   "L2b_minus_L1_chrono_rel": [
+    -0.0062,
+    0.009,
+    0.0081,
+    -0.0066
+   ]
+  },
+  "V6": {
+   "FL+": {
+    "head_only_ref_mm (F_min, lift)": [
+     11.44,
+     13.293
+    ],
+    "L1R_ref_mm (F_min, lift)": [
+     9.9534,
+     11.573
+    ],
+    "leg": "RL",
+    "L1_chrono_mm (doc 5.17.5)": [
+     9.9,
+     11.51
+    ],
+    "L2b_chrono_mm": [
+     10.031,
+     11.676
+    ],
+    "L2b_minus_L1_chrono_mm": [
+     0.131,
+     0.166
+    ],
+    "L2b_chrono_vs_L1R_ref_rel": [
+     0.0078,
+     0.0089
+    ]
+   },
+   "FL-": {
+    "head_only_ref_mm (F_min, lift)": [
+     11.158,
+     13.012
+    ],
+    "L1R_ref_mm (F_min, lift)": [
+     10.177,
+     11.881
+    ],
+    "leg": "RR",
+    "L1_chrono_mm (doc 5.17.5)": [
+     10.07,
+     11.76
+    ]
+   },
+   "RL+": {
+    "head_only_ref_mm (F_min, lift)": [
+     10.16,
+     11.848
+    ],
+    "L1R_ref_mm (F_min, lift)": [
+     8.8477,
+     10.323
+    ],
+    "leg": "RR",
+    "L2b_chrono_mm": [
+     8.993,
+     10.507
+    ],
+    "L2b_chrono_vs_L1R_ref_rel": [
+     0.0164,
+     0.0178
+    ]
+   },
+   "RL-": {
+    "head_only_ref_mm (F_min, lift)": [
+     10.417,
+     12.104
+    ],
+    "L1R_ref_mm (F_min, lift)": [
+     9.867,
+     11.478
+    ],
+    "leg": "RL",
+    "L2b_chrono_mm": [
+     9.935,
+     11.548
+    ],
+    "L2b_chrono_vs_L1R_ref_rel": [
+     0.0069,
+     0.0061
+    ]
+   }
+  },
+  "V14_RL+": {
+   "level": {
+    "ground_roll_pitch_deg": [
+     0.0,
+     0.0
+    ],
+    "head_only_ref (secant RL N, F_min mm, lift mm)": [
+     6004.18,
+     10.16,
+     11.848
+    ],
+    "L1R_ref (secant RL N, F_min mm, lift mm)": [
+     7102.13,
+     8.8477,
+     10.323
+    ],
+    "L2b_chrono (secant RL N, F_min mm, lift mm)": [
+     6966.463,
+     8.993,
+     10.508
+    ],
+    "L2b_chrono_vs_L1R_ref_rel": [
+     -0.0191,
+     0.0164,
+     0.0179
+    ],
+    "L1R_vs_head_only_rel (F_min)": -0.1292,
+    "F_min_leg": "RR",
+    "F_min_leg_settled_cylinder_N": 70419.9,
+    "mean_force_slope_N_per_mm (L1R ref)": 6895.0,
+    "force_equivalent_of_threshold_shift_N": 999.7,
+    "share_of_5kN_guard_margin": 0.2,
+    "L1_chrono": "not run (V14 is an S7 case; L1 basis = L1-R reference, same constitutive law as L1 Chrono S3/S6)"
+   },
+   "max pitch+": {
+    "ground_roll_pitch_deg": [
+     0.0,
+     4.0599
+    ],
+    "head_only_ref (secant RL N, F_min mm, lift mm)": [
+     5207.11,
+     11.693,
+     13.566
+    ],
+    "L1R_ref (secant RL N, F_min mm, lift mm)": [
+     7253.75,
+     8.8053,
+     10.223
+    ],
+    "L2b_chrono (secant RL N, F_min mm, lift mm)": [
+     7124.959,
+     8.931,
+     10.41
+    ],
+    "L2b_chrono_vs_L1R_ref_rel": [
+     -0.0178,
+     0.0142,
+     0.0183
+    ],
+    "L1R_vs_head_only_rel (F_min)": -0.247,
+    "F_min_leg": "RR",
+    "F_min_leg_settled_cylinder_N": 70159.3,
+    "mean_force_slope_N_per_mm (L1R ref)": 6898.7,
+    "force_equivalent_of_threshold_shift_N": 864.4,
+    "share_of_5kN_guard_margin": 0.173,
+    "L1_chrono": "not run (V14 is an S7 case; L1 basis = L1-R reference, same constitutive law as L1 Chrono S3/S6)"
+   },
+   "max roll+": {
+    "ground_roll_pitch_deg": [
+     6.2252,
+     3.8119e-16
+    ],
+    "head_only_ref (secant RL N, F_min mm, lift mm)": [
+     4615.68,
+     13.58,
+     15.622
+    ],
+    "L1R_ref (secant RL N, F_min mm, lift mm)": [
+     6996.9,
+     9.3941,
+     10.818
+    ],
+    "L2b_chrono (secant RL N, F_min mm, lift mm)": [
+     6874.321,
+     9.67,
+     11.301
+    ],
+    "L2b_chrono_vs_L1R_ref_rel": [
+     -0.0175,
+     0.0294,
+     0.0446
+    ],
+    "L1R_vs_head_only_rel (F_min)": -0.3082,
+    "F_min_leg": "RR",
+    "F_min_leg_settled_cylinder_N": 71980.6,
+    "mean_force_slope_N_per_mm (L1R ref)": 6660.1,
+    "force_equivalent_of_threshold_shift_N": 1837.3,
+    "share_of_5kN_guard_margin": 0.367,
+    "L1_chrono": "not run (V14 is an S7 case; L1 basis = L1-R reference, same constitutive law as L1 Chrono S3/S6)"
+   },
+   "max diag 45": {
+    "ground_roll_pitch_deg": [
+     2.4621,
+     2.4621
+    ],
+    "head_only_ref (secant RL N, F_min mm, lift mm)": [
+     4952.51,
+     12.444,
+     14.439
+    ],
+    "L1R_ref (secant RL N, F_min mm, lift mm)": [
+     6569.01,
+     9.847,
+     11.435
+    ],
+    "L2b_chrono (secant RL N, F_min mm, lift mm)": [
+     6441.743,
+     10.058,
+     11.72
+    ],
+    "L2b_chrono_vs_L1R_ref_rel": [
+     -0.0194,
+     0.0214,
+     0.0249
+    ],
+    "L1R_vs_head_only_rel (F_min)": -0.2087,
+    "F_min_leg": "RR",
+    "F_min_leg_settled_cylinder_N": 70942.2,
+    "mean_force_slope_N_per_mm (L1R ref)": 6248.4,
+    "force_equivalent_of_threshold_shift_N": 1319.7,
+    "share_of_5kN_guard_margin": 0.264,
+    "L1_chrono": "not run (V14 is an S7 case; L1 basis = L1-R reference, same constitutive law as L1 Chrono S3/S6)"
+   }
+  }
+ },
+ "E_V12_slope": {
+  "ground roll 0 deg, pitch 2 deg": {
+   "L1_ref_vertical_N": [
+    119280.0,
+    117037.0,
+    72666.8,
+    71129.6
+   ],
+   "L2b_ref_vertical_N (Chrono topology, rev 35)": [
+    119212.0,
+    117237.0,
+    72746.2,
+    70917.1
+   ],
+   "L1_chrono_vertical_N": [
+    119311.9,
+    117051.3,
+    72649.6,
+    71100.2
+   ],
+   "L2b_chrono_vertical_N": [
+    119517.1,
+    117540.2,
+    72905.7,
+    70659.3
+   ],
+   "L2b_minus_L1_chrono_vertical_N": [
+    205.3,
+    488.8,
+    256.0,
+    -440.9
+   ],
+   "L2b_minus_L1_ref_vertical_N": [
+    -68.0,
+    200.0,
+    79.4,
+    -212.5
+   ],
+   "L1_chrono_horizontal_xy_N": [
+    [
+     -216.8,
+     11.7
+    ],
+    [
+     -275.1,
+     11.3
+    ],
+    [
+     268.1,
+     -11.5
+    ],
+    [
+     224.0,
+     -11.5
+    ]
+   ],
+   "L2b_chrono_horizontal_xy_N": [
+    [
+     211.5,
+     4.9
+    ],
+    [
+     194.3,
+     4.7
+    ],
+    [
+     -183.4,
+     -4.7
+    ],
+    [
+     -204.4,
+     -4.8
+    ]
+   ],
+   "L1_ref_horizontal_xy_N": [
+    [
+     -215.421,
+     11.7854
+    ],
+    [
+     -274.882,
+     11.7854
+    ],
+    [
+     267.544,
+     -11.7854
+    ],
+    [
+     222.759,
+     -11.7854
+    ]
+   ],
+   "L2b_ref_horizontal_xy_N": [
+    [
+     207.742,
+     4.80449
+    ],
+    [
+     191.021,
+     4.80449
+    ],
+    [
+     -195.436,
+     -4.80449
+    ],
+    [
+     -203.327,
+     -4.80449
+    ]
+   ],
+   "L1_floor_plane_tangential_N (bushing load, not rod bending)": [
+    4380.6,
+    4359.9,
+    2267.6,
+    2257.6
+   ],
+   "L2b_lateral_spring_force_N (barrel-rod, rod bending)": [
+    [
+     -146.0,
+     0.5
+    ],
+    [
+     -129.2,
+     0.3
+    ],
+    [
+     225.8,
+     -7.4
+    ],
+    [
+     231.6,
+     -7.4
+    ]
+   ],
+   "ref_difference_twist_component_N (n^T dF, n unit)": -280.2,
+   "ref_difference_non_twist_residual_N": [
+    65.4,
+    66.6,
+    -67.1,
+    -66.0
+   ],
+   "ref_difference_twist_share_of_norm": 0.904,
+   "ref_cyl_diff_L2b_minus_L1_N": [
+    -67.0,
+    200.0,
+    79.4,
+    -212.5
+   ],
+   "ref_cyl_diff_axial_k_of_e_part_N": [
+    -134.0,
+    134.0,
+    146.6,
+    -146.6
+   ],
+   "ref_cyl_diff_horizontal_path_part_N": [
+    67.0,
+    66.0,
+    -67.2,
+    -65.9
+   ],
+   "ref_cyl_diff_axial_part_twist_N (n^T, n unit)": -280.9,
+   "ref_cyl_diff_horizontal_part_twist_N (n^T, n unit)": 1.2,
+   "extension_m": [
+    0.5455,
+    0.5455,
+    0.3659,
+    0.3659
+   ]
+  },
+  "ground roll 2 deg, pitch 0 deg": {
+   "L1_ref_vertical_N": [
+    119273.0,
+    117031.0,
+    72673.1,
+    71136.2
+   ],
+   "L2b_ref_vertical_N (Chrono topology, rev 35)": [
+    119650.0,
+    116649.0,
+    71935.9,
+    71878.8
+   ],
+   "L1_chrono_vertical_N": [
+    119304.0,
+    117045.1,
+    72657.0,
+    71106.7
+   ],
+   "L2b_chrono_vertical_N": [
+    119599.9,
+    116122.2,
+    71857.6,
+    71664.4
+   ],
+   "L2b_minus_L1_chrono_vertical_N": [
+    295.9,
+    -922.9,
+    -799.4,
+    557.7
+   ],
+   "L2b_minus_L1_ref_vertical_N": [
+    377.0,
+    -382.0,
+    -737.2,
+    742.6
+   ],
+   "L1_chrono_horizontal_xy_N": [
+    [
+     150.6,
+     18.8
+    ],
+    [
+     -147.4,
+     97.6
+    ],
+    [
+     68.8,
+     -85.2
+    ],
+    [
+     -72.0,
+     -31.1
+    ]
+   ],
+   "L2b_chrono_horizontal_xy_N": [
+    [
+     -47.8,
+     70.2
+    ],
+    [
+     43.3,
+     -83.8
+    ],
+    [
+     -19.2,
+     60.2
+    ],
+    [
+     23.8,
+     -16.0
+    ]
+   ],
+   "L1_ref_horizontal_xy_N": [
+    [
+     150.922,
+     19.2036
+    ],
+    [
+     -148.031,
+     97.4891
+    ],
+    [
+     69.1011,
+     -85.1813
+    ],
+    [
+     -71.9921,
+     -31.5114
+    ]
+   ],
+   "L2b_ref_horizontal_xy_N": [
+    [
+     -48.2154,
+     67.4163
+    ],
+    [
+     47.2918,
+     -104.696
+    ],
+    [
+     -22.0759,
+     59.2549
+    ],
+    [
+     22.9994,
+     -21.9749
+    ]
+   ],
+   "L1_floor_plane_tangential_N (bushing load, not rod bending)": [
+    4185.1,
+    4185.0,
+    2451.5,
+    2451.5
+   ],
+   "L2b_lateral_spring_force_N (barrel-rod, rod bending)": [
+    [
+     70.6,
+     101.4
+    ],
+    [
+     -21.1,
+     -75.6
+    ],
+    [
+     32.9,
+     78.9
+    ],
+    [
+     -10.1,
+     -6.0
+    ]
+   ],
+   "ref_difference_twist_component_N (n^T dF, n unit)": 1135.1,
+   "ref_difference_non_twist_residual_N": [
+    -163.3,
+    158.3,
+    -143.6,
+    149.0
+   ],
+   "ref_difference_twist_share_of_norm": 0.965,
+   "ref_cyl_diff_L2b_minus_L1_N": [
+    377.0,
+    -383.0,
+    -737.3,
+    742.5
+   ],
+   "ref_cyl_diff_axial_k_of_e_part_N": [
+    561.0,
+    -561.0,
+    -616.3,
+    616.3
+   ],
+   "ref_cyl_diff_horizontal_path_part_N": [
+    -184.0,
+    178.0,
+    -121.0,
+    126.2
+   ],
+   "ref_cyl_diff_axial_part_twist_N (n^T, n unit)": 1178.6,
+   "ref_cyl_diff_horizontal_part_twist_N (n^T, n unit)": -43.0,
+   "extension_m": [
+    0.4026,
+    0.495,
+    0.3978,
+    0.482
+   ]
+  },
+  "ground roll -2 deg, pitch 1.5 deg": {
+   "L1_ref_vertical_N": [
+    119281.0,
+    117032.0,
+    72670.0,
+    71130.3
+   ],
+   "L2b_ref_vertical_N (Chrono topology, rev 35)": [
+    118861.0,
+    117550.0,
+    73448.1,
+    70253.9
+   ],
+   "L1_chrono_vertical_N": [
+    119314.1,
+    117045.0,
+    72652.0,
+    71101.8
+   ],
+   "L2b_chrono_vertical_N": [
+    118998.2,
+    117675.8,
+    73474.5,
+    70171.6
+   ],
+   "L2b_minus_L1_chrono_vertical_N": [
+    -315.9,
+    630.9,
+    822.4,
+    -930.2
+   ],
+   "L2b_minus_L1_ref_vertical_N": [
+    -420.0,
+    518.0,
+    778.1,
+    -876.4
+   ],
+   "L1_chrono_horizontal_xy_N": [
+    [
+     -310.8,
+     -9.5
+    ],
+    [
+     -58.2,
+     -88.8
+    ],
+    [
+     131.2,
+     76.2
+    ],
+    [
+     237.8,
+     22.1
+    ]
+   ],
+   "L2b_chrono_horizontal_xy_N": [
+    [
+     297.2,
+     181.1
+    ],
+    [
+     -37.7,
+     -41.4
+    ],
+    [
+     -47.8,
+     -12.7
+    ],
+    [
+     -206.2,
+     -119.7
+    ]
+   ],
+   "L1_ref_horizontal_xy_N": [
+    [
+     -312.353,
+     -10.1902
+    ],
+    [
+     -58.3024,
+     -88.7077
+    ],
+    [
+     131.643,
+     76.333
+    ],
+    [
+     239.012,
+     22.5649
+    ]
+   ],
+   "L2b_ref_horizontal_xy_N": [
+    [
+     299.651,
+     176.887
+    ],
+    [
+     -37.0801,
+     -43.4434
+    ],
+    [
+     -51.8241,
+     -14.7287
+    ],
+    [
+     -210.747,
+     -118.715
+    ]
+   ],
+   "L1_floor_plane_tangential_N (bushing load, not rod bending)": [
+    5402.2,
+    5209.8,
+    3029.1,
+    2945.6
+   ],
+   "L2b_lateral_spring_force_N (barrel-rod, rod bending)": [
+    [
+     -247.8,
+     141.5
+    ],
+    [
+     90.7,
+     -86.2
+    ],
+    [
+     78.3,
+     -37.1
+    ],
+    [
+     236.7,
+     -145.0
+    ]
+   ],
+   "ref_difference_twist_component_N (n^T dF, n unit)": -1311.7,
+   "ref_difference_non_twist_residual_N": [
+    204.3,
+    -106.3,
+    92.2,
+    -190.5
+   ],
+   "ref_difference_twist_share_of_norm": 0.973,
+   "ref_cyl_diff_L2b_minus_L1_N": [
+    -419.0,
+    518.0,
+    778.1,
+    -876.4
+   ],
+   "ref_cyl_diff_axial_k_of_e_part_N": [
+    -625.0,
+    625.0,
+    686.1,
+    -686.1
+   ],
+   "ref_cyl_diff_horizontal_path_part_N": [
+    206.0,
+    -107.0,
+    92.0,
+    -190.3
+   ],
+   "ref_cyl_diff_axial_part_twist_N (n^T, n unit)": -1312.5,
+   "ref_cyl_diff_horizontal_part_twist_N (n^T, n unit)": 1.3,
+   "extension_m": [
+    0.6033,
+    0.5108,
+    0.4606,
+    0.3764
+   ]
+  }
+ },
+ "F_V11b_saturation": {
+  "L1": {
+   "v11b_FL_dt1e-5": {
+    "dt_s": 1e-05,
+    "per_phase (direction, F_first_sat N, peak/limit, creep_from_first mm, settled_mean/limit)": [
+     [
+      "extend",
+      278738.5,
+      1.00008,
+      0.0276,
+      1.0
+     ],
+     [
+      "retract",
+      -79169.5,
+      1.0003,
+      0.0275,
+      1.0
+     ]
+    ],
+    "reading_inertia_max_N": 1119.0,
+    "creep_c_v_over_k_mm": 0.0278
+   },
+   "v11b_RL_dt1e-5": {
+    "dt_s": 1e-05,
+    "per_phase (direction, F_first_sat N, peak/limit, creep_from_first mm, settled_mean/limit)": [
+     [
+      "extend",
+      199572.1,
+      1.00009,
+      0.0322,
+      1.0
+     ],
+     [
+      "retract",
+      -65974.3,
+      1.00026,
+      0.0323,
+      1.0
+     ]
+    ],
+    "reading_inertia_max_N": 766.3,
+    "creep_c_v_over_k_mm": 0.0326
+   },
+   "v11b_FL_dt2e-4": {
+    "dt_s": 0.0002,
+    "per_phase (direction, F_first_sat N, peak/limit, creep_from_first mm, settled_mean/limit)": [
+     [
+      "extend",
+      278779.2,
+      1.00015,
+      0.022,
+      1.000001
+     ],
+     [
+      "retract",
+      -79253.2,
+      1.00107,
+      0.0203,
+      1.0
+     ]
+    ],
+    "reading_inertia_max_N": 1142.8,
+    "creep_c_v_over_k_mm": 0.0278
+   },
+   "v11b_RL_dt2e-4": {
+    "dt_s": 0.0002,
+    "per_phase (direction, F_first_sat N, peak/limit, creep_from_first mm, settled_mean/limit)": [
+     [
+      "extend",
+      199610.9,
+      1.00021,
+      0.0263,
+      1.0
+     ],
+     [
+      "retract",
+      -65976.3,
+      1.00035,
+      0.0282,
+      1.000001
+     ]
+    ],
+    "reading_inertia_max_N": 775.4,
+    "creep_c_v_over_k_mm": 0.0326
+   }
+  },
+  "L2b": {
+   "FL_ext": {
+    "F_first_sat_N": 278746.7,
+    "peak_over_limit": 1.00014,
+    "s_ref_creep_after_mm": 0.082,
+    "settled_over_limit": 1.0
+   },
+   "FL_ret": {
+    "F_first_sat_N": -79189.0,
+    "peak_over_limit": 1.0004,
+    "s_ref_creep_after_mm": 0.0771,
+    "settled_over_limit": 1.0
+   },
+   "RL_ext": {
+    "F_first_sat_N": 199618.3,
+    "peak_over_limit": 1.00034,
+    "s_ref_creep_after_mm": 0.0948,
+    "settled_over_limit": 1.00005
+   },
+   "RL_ret": {
+    "F_first_sat_N": -66043.7,
+    "peak_over_limit": 1.00107,
+    "s_ref_creep_after_mm": 0.0885,
+    "settled_over_limit": 1.00017
+   }
+  },
+  "L2b_creep_prediction_mm (c_mov v_max / k2(e_op))": {
+   "front": 0.0809,
+   "rear": 0.0933
+  },
+  "physical_relief_piston_creep_mm (s6_check_rexome35 C, record)": 0.00184,
+  "note": "both models settle on the 210 bar limit (law C re-arms); creep = damping-force loss / k (L1 c_n LOCK 34.4 kN s/m, L2b c_mov 100.2 kN s/m); L1 reading has the rigid-motor inertia pulse m_rod v / t_sat, L2b law output has none"
+ },
+ "G_cost": {
+  "L1_pads_us_per_step (dt 1e-4, hook-optimised S0, before L1-R, P-core, alone)": 116.0,
+  "L1_crawler_us_per_step (S0)": 70.7,
+  "L2b_us_per_step (step_cost_S7, P-core, alone, incl. law + bushing + rod-side)": 229.5,
+  "L2b_us_per_step_with_capture": 299.8,
+  "recommended_dt_s": {
+   "L1": 0.0002,
+   "L2b": 0.0001,
+   "reference/transition": 1e-05
+  },
+  "wall_s_per_sim_s (general dt)": {
+   "L1": 0.58,
+   "L2b": 2.295
+  },
+  "wall_s_per_sim_s (1e-5 s)": {
+   "L1": 11.6,
+   "L2b": 22.95
+  },
+  "L2b_over_L1_general": 3.96,
+  "L2b_batch_check (V14_flat_RL, 4 workers)": "264.2 s / 1,061,290 steps = 249 us/step",
+  "note": "L1-R hook cost not measured separately (assumed small vs bushing hook); step cost nearly dt-independent (S0 ratio 1.03)"
+ },
+ "H_control_impact": {
+  "V14_threshold_shift_force_equivalent_N": {
+   "level": 999.7,
+   "max pitch+": 864.4,
+   "max roll+": 1837.3,
+   "max diag 45": 1319.7
+  },
+  "max_share_of_5kN_margin": 0.367,
+  "sign": "L2b reaches F_min later (less sensitive) than L1-R reference -> L1-R/L1 conservative",
+  "V12_vertical_L2b_minus_L1_chrono_max_abs_N": 930.2,
+  "flat_static_L2b_minus_L1_cylinder_max_abs_N": 0.5,
+  "V12_ref_axial_k_of_e_part_max_abs_per_leg_N": 686.1,
+  "V12_ref_horizontal_path_part_max_abs_per_leg_N": 206.0,
+  "V12_note": "the axial part is pure twist (n^T share ~1.0) = per-leg k(e_i) (L2b) vs fixed k(e_op) (L1 Chrono law); C2 twist loop (n^T P -> 0, pressure feedback) sets this component in closed loop; locked-state load paths (D2, H4 P_stop, probe S_ii) keep it",
+  "L1_fixed_k_vs_k_of_e_at_stroke_end": {
+   "front k2(0.6948)/k2(e_op)": 0.636,
+   "rear k2(0.6948)/k2(e_op)": 0.616,
+   "front k2(touch)/k2(e_op)": 1.108,
+   "rear k2(touch)/k2(e_op)": 1.115,
+   "source": "reference.json L2b_NSC_reference_rev33 leg_parameters k_of_s_table (dynamics_model.md 5.20.3)"
+  },
+  "D2_static_roll_4p4_first_event_kN (doc 5.21.2)": {
+   "L1-R fixed k": [
+    574.0,
+    574.0
+   ],
+   "L2b k(e_i)": [
+    418.4,
+    412.3
+   ],
+   "note": "roll +4.4 / -4.4; L1-R non-conservative by -28 %"
+  }
+ }
+}

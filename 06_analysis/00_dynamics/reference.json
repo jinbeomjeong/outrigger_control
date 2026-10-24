@@ -48,7 +48,7 @@
    "F_min_fraction_of_mean_leg_load": 0.1,
    "F_min_basis": "cylinder force (pressure x bore area) = superstructure weight share; contact force = cylinder force + rod weight"
   },
-  "runtime_s": 35.64
+  "runtime_s": 34.6
  },
  "operating_point": {
   "touch_extension_m": [
@@ -9261,6 +9261,55 @@
    },
    "L2b_NSC": {
     "contact_vertical_N": [
+     119212.0,
+     117237.0,
+     72746.2,
+     70917.1
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      207.742,
+      4.80449
+     ],
+     [
+      191.021,
+      4.80449
+     ],
+     [
+      -195.436,
+      -4.80449
+     ],
+     [
+      -203.327,
+      -4.80449
+     ]
+    ],
+    "cylinder_force_N": [
+     118165.0,
+     116190.0,
+     72028.7,
+     70199.6
+    ],
+    "friction_utilisation_T_over_N": [
+     0.03318,
+     0.03329,
+     0.03761,
+     0.03779
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     118091.0,
+     116114.0,
+     72105.2,
+     70273.3
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     -0.002114,
+     0.02761
+    ],
+    "model": "rev. 35: dyn_model.static_slope_l2b_chrono_topology (S7 topology: kt barrel-rod horizontal, NSC stick rigid, rod rotation = body, linear, no P-delta)"
+   },
+   "L2b_NSC_rev4_kt_in_floor_plane (superseded 2026-10-24, record)": {
+    "contact_vertical_N": [
      119139.0,
      117164.0,
      72819.9,
@@ -9587,6 +9636,55 @@
    },
    "L2b_NSC": {
     "contact_vertical_N": [
+     119650.0,
+     116649.0,
+     71935.9,
+     71878.8
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      -48.2154,
+      67.4163
+     ],
+     [
+      47.2918,
+      -104.696
+     ],
+     [
+      -22.0759,
+      59.2549
+     ],
+     [
+      22.9994,
+      -21.9749
+     ]
+    ],
+    "cylinder_force_N": [
+     118602.0,
+     115601.0,
+     71218.4,
+     71161.3
+    ],
+    "friction_utilisation_T_over_N": [
+     0.03549,
+     0.03402,
+     0.03575,
+     0.03462
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     118786.0,
+     115419.0,
+     71342.3,
+     71036.2
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     0.01491,
+     0.01097
+    ],
+    "model": "rev. 35: dyn_model.static_slope_l2b_chrono_topology (S7 topology: kt barrel-rod horizontal, NSC stick rigid, rod rotation = body, linear, no P-delta)"
+   },
+   "L2b_NSC_rev4_kt_in_floor_plane (superseded 2026-10-24, record)": {
+    "contact_vertical_N": [
      119836.0,
      116466.0,
      72059.1,
@@ -9912,6 +10010,55 @@
     ]
    },
    "L2b_NSC": {
+    "contact_vertical_N": [
+     118861.0,
+     117550.0,
+     73448.1,
+     70253.9
+    ],
+    "contact_horizontal_xy_N": [
+     [
+      299.651,
+      176.887
+     ],
+     [
+      -37.0801,
+      -43.4434
+     ],
+     [
+      -51.8241,
+      -14.7287
+     ],
+     [
+      -210.747,
+      -118.715
+     ]
+    ],
+    "cylinder_force_N": [
+     117814.0,
+     116503.0,
+     72730.6,
+     69536.4
+    ],
+    "friction_utilisation_T_over_N": [
+     0.04096,
+     0.04413,
+     0.04424,
+     0.04683
+    ],
+    "cylinder_force_if_no_horizontal_reaction_N": [
+     117600.0,
+     116605.0,
+     72644.7,
+     69733.8
+    ],
+    "attitude_change_deg (roll, pitch)": [
+     -0.01909,
+     0.02396
+    ],
+    "model": "rev. 35: dyn_model.static_slope_l2b_chrono_topology (S7 topology: kt barrel-rod horizontal, NSC stick rigid, rod rotation = body, linear, no P-delta)"
+   },
+   "L2b_NSC_rev4_kt_in_floor_plane (superseded 2026-10-24, record)": {
     "contact_vertical_N": [
      118643.0,
      117658.0,
@@ -11766,7 +11913,7 @@
     7.16e-08,
     67
    ],
-   "runtime_s": 6.9,
+   "runtime_s": 12.54,
    "series_npz": "06_analysis/00_dynamics/reference_L1R_series.npz"
   },
   "leg_parameters": {
@@ -16457,7 +16604,7 @@
    ],
    "assumptions": "beta 1.0 GPa, L0h 0.05 m, L0r 0.05 m, frame 1e9 N/m, Westergaard slab, p_r0 2 bar g after an extension (RULE), p_floor 0.1 bar abs, zeta 0.03 locked (on k1) / 0.10 moving (on k2), lateral bushing = L1 kt at the contact point, mu 0.5, rigid NSC contact (1e13 N/m)",
    "cross_check_L1R_V6_max_abs_diff_mm": 0.0,
-   "runtime_s": 9.16
+   "runtime_s": 17.21
   },
   "leg_parameters": {
    "head_area_m2": [
@@ -18950,9 +19097,9 @@
      17.847
     ]
    },
-   "wall_s": 9.04
+   "wall_s": 17.0
   },
-  "V12_rule": "reference = reference.json slope_V12/<case>/L2b_NSC (head-only k2(e_i), place and settle); the rod-side law is armed (anchor taken) only after the gravity ramp and settle, so the V12 values do not change",
+  "V12_rule": "reference = reference.json slope_V12/<case>/L2b_NSC (rev. 35: S7 Chrono topology, dyn_model.static_slope_l2b_chrono_topology, axial ko = series(oil head, rod, frame, concrete) at the levelled extension, kt barrel-rod horizontal, place and settle); the rod-side law is armed (anchor taken) only after the gravity ramp and settle, so the V12 values do not change",
   "V14": {
    "method": "L2b-NSC linear statics on the sloped floor (V12 rule: place and settle with the head-only k2(e_i), then lock with dc = 0), then the tested leg RL moves (head only, s_ref +) and the other three are LOCK after an extension (rod side armed, p_r0 2 bar, k_h, k_r at their own e_i); piecewise-linear exact up to the first lift-off. head_only = rev. 5 method (rod side off).",
    "V14_test_leg": "RL+",

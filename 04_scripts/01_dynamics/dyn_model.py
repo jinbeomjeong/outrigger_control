@@ -574,6 +574,55 @@ def static_slope_10dof(body: Body, geo: Geometry, ext, ko, kn, kt, slope_pitch_d
     return {"R": R, "F_cyl": F_cyl, "N": N, "T": T, "mu_used": T / N, "q": q, "normal": nrm}
 
 
+def static_slope_l2b_chrono_topology(body: Body, geo: Geometry, ext, ko, kt, slope_pitch_deg=0.0,
+                                     slope_roll_deg=0.0, kc_rigid=1e13):
+    """Linear statics of the S7 L2b-NSC Chrono topology on a sloped rigid floor ("place and settle").
+
+    dynamics_model.md rev. 35, 5.22.3 (user decision 2026-10-24: V12 L2b_NSC reference replaced).
+    DoF (18): body [ux,uy,uz,phi,theta,psi] about the superstructure CoM + rod ball-centre translation
+    (x, y, z) per leg. Axial spring ko between the body attachment point and the rod (z); lateral spring
+    kt between the barrel (body point at the ball centre) and the rod, horizontal x and y (levelled body);
+    NSC contact = rigid stick in all three directions (penalty kc_rigid) at the sphere contact point
+    ball - hb n, with the rod rotation = body rotation. No P-delta. Unlike static_slope_10dof (kt in the
+    floor plane between contact and floor, rods laterally rigid with the body), the whole horizontal
+    reaction N sin(alpha) + T passes through kt here. Same return keys as static_slope_10dof.
+    """
+    ext = np.asarray(ext, float)
+    ko = np.broadcast_to(np.asarray(ko, float), (4,))
+    kt = np.broadcast_to(np.asarray(kt, float), (4,))
+    sx = -math.tan(math.radians(slope_pitch_deg)); sy = math.tan(math.radians(slope_roll_deg))
+    nrm = np.array([-sx, -sy, 1.0]); nrm /= np.linalg.norm(nrm)
+    hb = ASSUMPTIONS["swivel_ball_height_above_pad_bottom_m"]
+    n = 6 + 12
+    K = np.zeros((n, n)); f = np.zeros(n)
+    f[2] = -body.mass * geo.g
+    axial, contact = [], []
+    for i in range(4):
+        r0 = 6 + 3 * i
+        f[r0 + 2] = -geo.rod_mass[i] * geo.g
+        d_att = np.array([*geo.pad_xy[i], geo.attach_z[i]]) - body.com
+        d_ball = np.array([*geo.pad_xy[i], geo.pad_z_retracted[i] - ext[i] + hb]) - body.com
+        _, _, az_att = a_vec(d_att)
+        ax_b, ay_b, _ = a_vec(d_ball)
+        b = np.zeros(n); b[:6] = az_att; b[r0 + 2] = -1.0
+        K += ko[i] * np.outer(b, b)
+        for a, k in ((ax_b, 0), (ay_b, 1)):          # lateral spring barrel (body) - rod
+            e = np.zeros(n); e[:6] = a; e[r0 + k] = -1.0
+            K += kt[i] * np.outer(e, e)
+        # contact point = rod ball + theta x (-hb n); d(theta x v)/dtheta = -skew(v)
+        v = -hb * nrm
+        G = np.zeros((3, n)); G[:, r0:r0 + 3] = np.eye(3)
+        G[:, 3:6] = -np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
+        K += kc_rigid * G.T @ G
+        axial.append(b); contact.append(G)
+    q = np.linalg.solve(K, f)
+    F_cyl = np.array([-ko[i] * (axial[i] @ q) for i in range(4)])        # compression +
+    R = np.array([-kc_rigid * (G @ q) for G in contact])                 # floor -> rod
+    N = R @ nrm
+    T = np.linalg.norm(R - np.outer(N, nrm), axis=1)
+    return {"R": R, "F_cyl": F_cyl, "N": N, "T": T, "mu_used": T / N, "q": q, "normal": nrm}
+
+
 # ---------------------------------------------------------------------------
 # Support polygon / tip-over
 # ---------------------------------------------------------------------------
