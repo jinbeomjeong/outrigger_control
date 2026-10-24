@@ -18,7 +18,10 @@ Rows (``passed`` True / False judged, None = report):
   :func:`check_attitude_metrics`; judged for an ideal IMU only) and an A1 usage report row
   (controller / truth crawler through the settle map / nominal floor). The s6 "run" row of a
   case that ended IDLE after ``REJ_SLOPE_D8`` is re-classified: truth usage ``<= 1 + eps_u`` =
-  false rejection (failed), above = correct rejection (``kind`` "info", U-R8-15);
+  false rejection (failed), above = correct rejection (``kind`` "info", U-R8-15). C-R16 (spec
+  rev. 37 191.3): on a rigid-crawler engine (L2b-NSC) the truth usage uses the identity map
+  (the physical map), and a false rejection caused by a non-identity controller map is labelled
+  "settle map mismatch";
 * R-5 (spec rev. 33 168 / 172.2 C-R8): in a regression group (:data:`REGRESSION_GROUPS`, rev. 32
   D / rev. 33 F) a case **without** a floor event judges "R-5 ``relevel_predicted`` outside a
   PROBE abort = 0" (:func:`relevel_metrics`); every floor-event case
@@ -54,6 +57,9 @@ Rows (``passed`` True / False judged, None = report):
   ``<= 0.2 deg``;
 * REANCHOR (a case with REANCHOR intervals): minimum true cylinder force inside them
   ``>= F_min + 5 kN + 2 kN`` (16.41 kN on the REXOME35 YAML);
+* C-R19 (spec rev. 37 194, U-S7-4): in a ``condition`` = sensitivity case the D8 minimum and
+  REANCHOR minimum rows are ``kind`` "report" (``passed`` None, ``passed_raw`` kept, note
+  "sensitivity (103.2)"), the rule of ``s6_control._report_sensitivity_rows``;
 * G4: item 6 (1) minimum after the settlement start ``>= F_min``;
 * C-5 (``L0r`` cases, spec rev. 31 154.3):
   C-5a guard / twist loop ringing: issued leg speed commands (``r8_series.issued_u``, 10 Hz)
@@ -639,6 +645,11 @@ def _target_limits(limits_rad: Mapping[str, Any]):
     return TargetLimits(**{k: v for k, v in limits_rad.items() if k in fields})
 
 
+IDENTITY_PHYSICAL_MAP_ENGINES = frozenset({"L2b_NSC"})
+"""Spec rev. 37 191.2 / U-S7-1: engines with a rigid crawler (no crawler compliance), whose
+physical crawler settle map is the identity."""
+
+
 def _settle_map(meta: Mapping[str, Any] | None):
     from outrigger_sim.control.target import CrawlerSettleMap
 
@@ -651,7 +662,13 @@ def _settle_map(meta: Mapping[str, Any] | None):
 def check_attitude_metrics(case: Mapping[str, Any]) -> dict[str, Any] | None:
     """C-R5 (spec rev. 32 158 / 163.2): CHECK attitude of the controller against the true body
     attitude over the same window, and the A1 floor usage from (a) the controller value, (b) the
-    true crawler attitude through the run's settle map, (c) the nominal floor of the case.
+    true crawler attitude through the run's settle map, (c) the nominal floor of the case,
+    (d) the true crawler attitude through the identity map.
+
+    C-R16 (spec rev. 37 191.3): ``usage_truth`` is the usage the A1 classification uses. For an
+    engine whose crawler is rigid (:data:`IDENTITY_PHYSICAL_MAP_ENGINES`, the L2b-NSC case
+    ``settings.s7c.engine``) the physical settle map is the identity, so ``usage_truth`` = (d)
+    whatever map the controller ran with; otherwise ``usage_truth`` = (b).
 
     Window: the controller's ``target.check_window`` (P-R8-9, :data:`CHECK_WINDOW_META_KEY`;
     absolute engine time) = ``(t_first_sample_s - T_imu, t_last_sample_s]`` with ``T_imu`` the
@@ -721,6 +738,9 @@ def check_attitude_metrics(case: Mapping[str, Any]) -> dict[str, Any] | None:
     smap = _settle_map(tgt.get("crawler_settle_map"))
     use_ctrl = lc.get("floor_usage")
     use_truth = floor_usage(smap.floor_from_crawler(truth), limits)
+    use_ident = floor_usage(truth, limits)
+    engine = (res["settings"].get("s7c") or {}).get("engine")
+    physical_identity = engine in IDENTITY_PHYSICAL_MAP_ENGINES
     nominal = acc.get("floor_true_deg")
     use_nom = None if nominal is None else floor_usage(
         (math.radians(nominal[0]), math.radians(nominal[1])), limits)
@@ -733,6 +753,13 @@ def check_attitude_metrics(case: Mapping[str, Any]) -> dict[str, Any] | None:
             "error_deg": err_deg, "error_maxabs_deg": max(abs(v) for v in err_deg),
             "usage_controller": use_ctrl, "usage_truth_crawler": use_truth,
             "usage_floor_nominal": use_nom, "usage_tolerance": limits.usage_tolerance,
+            "usage_truth_identity": use_ident,
+            "usage_truth": use_ident if physical_identity else use_truth,
+            "truth_map_basis": ("identity (rigid crawler of engine "
+                                f"{engine}, spec rev. 37 C-R16)") if physical_identity
+                               else "run settle map",
+            "settle_map_is_identity": smap.is_identity,
+            "engine": engine,
             "settle_map": tgt.get("crawler_settle_map"),
             "note": f"truth = mean of the {truth_src} instantaneous body attitude"
                     + ("" if truth_src != "Record 10 Hz" else
@@ -1068,8 +1095,37 @@ def judge(metrics: list[dict[str, Any]], probes: dict[str, dict[str, Any]],
         role = roles.get(row.get("case"))
         if role is not None:
             row["c11_role"] = role
+    report_sensitivity_force_rows(rows, by_id)
     mark_leak_screened(rows, metrics)
     return rows
+
+
+SENSITIVITY_REPORT_ITEMS_BC = frozenset({
+    "D8 min true cylinder force >= F_min + 5 kN",
+    "REANCHOR min >= F_min + 7 kN",
+})
+"""C-R19 (spec rev. 37 194): bundle-C rows a sensitivity case reports instead of judging (the
+same margins as ``s6_control.SENSITIVITY_REPORT_ITEMS``; lift-off stays judged)."""
+
+
+def report_sensitivity_force_rows(rows: list[dict[str, Any]],
+                                  by_id: Mapping[str, Mapping[str, Any]]) -> None:
+    """C-R19: :data:`SENSITIVITY_REPORT_ITEMS_BC` rows of a ``condition`` = sensitivity case
+    become ``kind`` "report" with ``passed`` None (``passed_raw`` keeps the value)."""
+    sens = str(s6.CaseCondition.SENSITIVITY)
+    for row in rows:
+        m = by_id.get(row.get("case"))
+        if m is None or m.get("condition") != sens:
+            continue
+        if row["item"] not in SENSITIVITY_REPORT_ITEMS_BC or row["passed"] is None:
+            continue
+        reasons = ", ".join(m.get("condition_reasons") or [])
+        row["passed_raw"] = row["passed"]
+        row["passed"] = None
+        row["kind"] = "report"
+        row["condition"] = sens
+        note = f"sensitivity (103.2) condition ({reasons}): reported (spec rev. 37 194, C-R19)"
+        row["note"] = f"{note}; {row['note']}" if row["note"] else note
 
 
 def mark_leak_screened(rows: list[dict[str, Any]], metrics: Sequence[Mapping[str, Any]]) -> None:
@@ -1089,24 +1145,37 @@ def _a1_reject_run_row(row: dict[str, Any], m: Mapping[str, Any]) -> None:
     """C-R5: the s6 "run" row of a case that ended IDLE after an A1 ``REJ_SLOPE_D8`` is
     re-classified with the true usage (truth crawler attitude through the settle map):
     ``<= 1 + eps_u`` = false rejection (failed), above = correct rejection (``kind`` "info",
-    the U-R8-15 function check of an out-of-diamond floor such as rp05)."""
+    the U-R8-15 function check of an out-of-diamond floor such as rp05).
+
+    C-R16 (spec rev. 37): the true usage is ``check_attitude.usage_truth`` (identity map on a
+    rigid-crawler engine). A false rejection whose run-map truth usage is above ``1 + eps_u``
+    with a non-identity controller map is labelled "settle map mismatch"."""
     ca = m.get("check_attitude") or {}
     if m.get("final_phase") != "idle" or ca.get("code") != REJ_SLOPE_D8:
         return
-    u_true, eps = ca.get("usage_truth_crawler"), ca.get("usage_tolerance")
+    u_map, eps = ca.get("usage_truth_crawler"), ca.get("usage_tolerance")
+    u_true = ca.get("usage_truth", u_map)
     u_nom = ca.get("usage_floor_nominal")
+    u_id = ca.get("usage_truth_identity")
+    nan = float("nan")
     detail = (f"A1 {REJ_SLOPE_D8}: usage controller {ca.get('usage_controller'):.4f}, truth "
-              f"crawler {u_true:.4f}, nominal floor "
-              f"{float('nan') if u_nom is None else u_nom:.4f}"
-              f", limit 1 + {eps:g}; CHECK error roll/pitch "
-              f"{ca['error_deg'][0]:+.4f}/{ca['error_deg'][1]:+.4f} deg (C-R5)")
+              f"crawler (run map) {u_map:.4f}, truth crawler (identity) "
+              f"{nan if u_id is None else u_id:.4f}, nominal floor "
+              f"{nan if u_nom is None else u_nom:.4f}"
+              f", limit 1 + {eps:g}; truth basis {ca.get('truth_map_basis', 'run settle map')}; "
+              f"CHECK error roll/pitch "
+              f"{ca['error_deg'][0]:+.4f}/{ca['error_deg'][1]:+.4f} deg (C-R5, C-R16)")
     row["value_raw"] = row["value"]
     row["value"] = {"final_phase": m.get("final_phase"), "usage_controller":
-                    ca.get("usage_controller"), "usage_truth_crawler": u_true,
+                    ca.get("usage_controller"), "usage_truth": u_true,
+                    "usage_truth_crawler": u_map, "usage_truth_identity": u_id,
                     "usage_floor_nominal": ca.get("usage_floor_nominal")}
     if u_true <= 1.0 + eps:
         row["passed"] = False
-        row["note"] = "false rejection (controller CHECK error): " + detail
+        mismatch = (u_map is not None and u_map > 1.0 + eps
+                    and not ca.get("settle_map_is_identity", True))
+        cause = "settle map mismatch" if mismatch else "controller CHECK error"
+        row["note"] = f"false rejection ({cause}): " + detail
     else:
         row["passed"] = None
         row["kind"] = "info"
@@ -1556,8 +1625,11 @@ def _json_default(o):
     return str(o)
 
 
-__all__ = ["CONSISTENCY_REF_PATH", "EXPECTED_SATURATION_WARNING", "PAD_DAMPING_OVERRIDE",
+__all__ = ["CONSISTENCY_REF_PATH", "EXPECTED_SATURATION_WARNING",
+           "IDENTITY_PHYSICAL_MAP_ENGINES", "PAD_DAMPING_OVERRIDE",
+           "SENSITIVITY_REPORT_ITEMS_BC", "report_sensitivity_force_rows",
            "SnapshotRetagRefused", "attitude_residual_metrics", "bundle_c_metrics",
+           "check_attitude_metrics",
            "c5a_verdict", "c5c_verdict", "classify_warning", "command_reversal_metrics",
            "diagnostic_replay", "floor_event_time_s", "guard_oscillation_metrics",
            "guard_restart_metrics", "judge", "judge_batch", "leg_zeta_effective",

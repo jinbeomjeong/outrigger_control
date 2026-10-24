@@ -21,6 +21,23 @@ Per step of length ``dt`` (called once after every physics step, hook order step
 * integration ``s_ref <- clip(s_ref + u dt, lo, hi)`` (the speed of a clipped step is
   ``(s_new - s) / dt``).
 
+R8 valve model (:meth:`SpeedReference.configure_valve`, default off = everything above bit for
+bit): the same ``amplifier ramp -> spool first-order lag -> leg speed`` path as
+``L1SpeedActuator.configure_valve`` (``s6_control_spec.md`` rev. 31 148 R-2 / R-3), so the L2b
+reference ``s_ref`` follows the identical speed sequence as the L1 motor target:
+
+* amplifier ramp ``"none"`` / ``"full_scale"`` / ``"per_step"`` (advanced once per step);
+* spool lag integrated exactly per step, ``u_a <- u_r + (u_a - u_r) e^(-dt/tau)``, the leg
+  speed of the step is the step mean ``u_r + (u_a - u_r) tau / dt (1 - e^(-dt/tau))``;
+* the command acceleration limit is off while the valve model is on; the stroke-end braking cap
+  stays with the deceleration ``v_max / ramp_s`` (end cushion, no step limit);
+* law C acts on the resulting speed; the spool keeps following its command.
+
+Why on ``s_ref`` for L2b (force law ``F = k(s_ref - s) + c(u - ds/dt)``): the valve is a
+pressure-compensated flow valve, so its output is the flow ``Q = A_p u`` and ``s_ref`` is the
+displaced oil volume over ``A_p``. Lagging the flow (``u``) is the valve dynamics; the load
+then follows through the oil-column spring. The same ``u`` drives the dashpot term.
+
 Units SI; arrays per leg in LEG_ORDER. No pychrono import.
 """
 
@@ -46,6 +63,11 @@ STATE_KEYS = (
     "soft_hi_m",
 )
 """Keys of :meth:`SpeedReference.state_arrays` (snapshot part, R16)."""
+
+VALVE_STATE_KEYS = ("valve_u_m_s", "amp_u_m_s", "amp_target_m_s", "amp_rate_m_s2")
+"""Optional snapshot keys of the valve model (written only when it is on; absent = zero)."""
+
+AMP_RAMP_MODES = ("none", "full_scale", "per_step")
 
 
 def _vector(value: ArrayLike, n: int, name: str) -> NDArray[np.float64]:
@@ -132,6 +154,102 @@ class SpeedReference:
         self._saturation_steps = np.zeros(n, dtype=np.int64)
         self._saturation_starts = np.zeros(n, dtype=np.int64)
         self._last_judged = np.full(n, np.nan)
+        self._valve_on = False
+        self._valve_tau_s = 0.0
+        self._amp_mode = "none"
+        self._amp_ramp_s = 0.0
+        self._zero_valve_state()
+
+    # --- R8 valve model (module docstring) ------------------------------------------------
+
+    def configure_valve(
+        self, *, tau_s: float, amp_ramp: str = "none", amp_ramp_s: float = 0.1
+    ) -> None:
+        """Turn the valve model on (same arguments and rules as
+        ``L1SpeedActuator.configure_valve``); call before the run. The valve state starts at 0."""
+        tau = float(tau_s)
+        if not (math.isfinite(tau) and tau >= 0.0):
+            raise ValueError(f"tau_s must be >= 0: {tau_s!r}")
+        if amp_ramp not in AMP_RAMP_MODES:
+            raise ValueError(f"amp_ramp must be one of {AMP_RAMP_MODES}: {amp_ramp!r}")
+        ramp = float(amp_ramp_s)
+        if amp_ramp != "none" and not (math.isfinite(ramp) and ramp > 0.0):
+            raise ValueError(f"amp_ramp_s must be > 0: {amp_ramp_s!r}")
+        self._valve_on = True
+        self._valve_tau_s = tau
+        self._amp_mode = amp_ramp
+        self._amp_ramp_s = ramp if amp_ramp != "none" else 0.0
+        self._zero_valve_state()
+
+    @property
+    def valve_on(self) -> bool:
+        return self._valve_on
+
+    @property
+    def command_ramp_active(self) -> bool:
+        return not self._valve_on and self._ramp_s > 0.0
+
+    @property
+    def valve_state_m_s(self) -> NDArray[np.float64]:
+        """Spool state ``u_a`` per leg after the last :meth:`advance`."""
+        return self._valve_u.copy()
+
+    @property
+    def amp_output_m_s(self) -> NDArray[np.float64]:
+        return self._amp_u.copy()
+
+    def valve_meta(self) -> dict[str, Any]:
+        return {
+            "valve_model_on": self._valve_on,
+            "tau_v_s": self._valve_tau_s if self._valve_on else None,
+            "amp_ramp": self._amp_mode if self._valve_on else None,
+            "amp_ramp_s": self._amp_ramp_s if self._valve_on else None,
+            "command_ramp_active": self.command_ramp_active,
+            "end_cushion_decel_m_s2": (self._v_max / self._ramp_s
+                                       if self._valve_on and self._ramp_s > 0.0 else None),
+            "integration": "exact exponential per step, leg speed = step mean (s6 spec 148 R-2)",
+            "acts_on": "speed reference u (valve flow / A_p) -> s_ref and the dashpot term",
+        }
+
+    def _zero_valve_state(self) -> None:
+        n = self._n
+        self._valve_u = np.zeros(n)
+        self._amp_u = np.zeros(n)
+        self._amp_target = np.zeros(n)
+        self._amp_rate = np.zeros(n)
+
+    def _valve_step(self, dt: float) -> NDArray[np.float64]:
+        """Amplifier ramp + spool lag over one step (state advanced); returns the step mean
+        speed. Same operations, same order as ``L1SpeedActuator._valve_step``."""
+        va, amp_u = self._valve_u.copy(), self._amp_u.copy()
+        amp_target, amp_rate = self._amp_target.copy(), self._amp_rate.copy()
+        u_c = np.clip(self._u_cmd, -self._v_max, self._v_max)
+        if self._amp_mode == "none":
+            amp_u = u_c.copy()
+            amp_target = u_c.copy()
+        elif self._amp_mode == "full_scale":
+            step = self._v_max / self._amp_ramp_s * dt
+            amp_u = amp_u + np.clip(u_c - amp_u, -step, step)
+            amp_target = u_c.copy()
+        else:
+            changed = u_c != amp_target
+            if np.any(changed):
+                amp_rate = np.where(changed, np.abs(u_c - amp_u) / self._amp_ramp_s, amp_rate)
+                amp_target = np.where(changed, u_c, amp_target)
+            step = amp_rate * dt
+            amp_u = amp_u + np.clip(amp_target - amp_u, -step, step)
+        tau = self._valve_tau_s
+        if tau > 0.0:
+            decay = math.exp(-dt / tau)
+            mean_factor = tau / dt * -math.expm1(-dt / tau)
+            gap = va - amp_u
+            u_mean = amp_u + gap * mean_factor
+            va = amp_u + gap * decay
+        else:
+            u_mean = amp_u.copy()
+            va = amp_u.copy()
+        self._valve_u, self._amp_u, self._amp_target, self._amp_rate = va, amp_u, amp_target, amp_rate
+        return u_mean
 
     # --- views ----------------------------------------------------------------------------
 
@@ -239,7 +357,18 @@ class SpeedReference:
         u = self._u
         lo, hi = self._soft_lo, self._soft_hi
         target = np.clip(self._u_cmd, -self._v_max, self._v_max)
-        if math.isfinite(a):
+        if self._valve_on:
+            # R8 valve model: step-mean spool speed, no acceleration limit, end braking cap
+            target = self._valve_step(dt)
+            if math.isfinite(a):
+                half = 0.5 * a * dt
+                up = np.sqrt(half * half + 2.0 * a * np.maximum(hi - s, 0.0)) - half
+                down = np.sqrt(half * half + 2.0 * a * np.maximum(s - lo, 0.0)) - half
+                u_new = np.minimum(np.maximum(target, -down), up)
+            else:
+                u_new = np.where((s >= hi) & (target > 0.0), 0.0, target)
+                u_new = np.where((s <= lo) & (u_new < 0.0), 0.0, u_new)
+        elif math.isfinite(a):
             step = a * dt
             half = 0.5 * step
             up = np.sqrt(half * half + 2.0 * a * np.maximum(hi - s, 0.0)) - half
@@ -277,7 +406,12 @@ class SpeedReference:
     # --- snapshot -------------------------------------------------------------------------
 
     def state_arrays(self) -> dict[str, NDArray[Any]]:
-        return {
+        valve = {}
+        if self._valve_on:
+            valve = {"valve_u_m_s": self._valve_u.copy(), "amp_u_m_s": self._amp_u.copy(),
+                     "amp_target_m_s": self._amp_target.copy(),
+                     "amp_rate_m_s2": self._amp_rate.copy()}
+        return valve | {
             "s_ref_m": self._s_ref.copy(),
             "u_applied_m_s": self._u.copy(),
             "prev_applied_u_m_s": self._u_prev.copy(),
@@ -297,6 +431,14 @@ class SpeedReference:
         self._u_cmd = _vector(arrays["u_cmd_m_s"], n, "u_cmd_m_s")
         self._soft_lo = _vector(arrays["soft_lo_m"], n, "soft_lo_m")
         self._soft_hi = _vector(arrays["soft_hi_m"], n, "soft_hi_m")
+        if self._valve_on:
+            self._zero_valve_state()
+            if all(k in arrays for k in VALVE_STATE_KEYS):
+                self._valve_u = _vector(arrays["valve_u_m_s"], n, "valve_u_m_s")
+                self._amp_u = _vector(arrays["amp_u_m_s"], n, "amp_u_m_s")
+                self._amp_target = _vector(arrays["amp_target_m_s"], n, "amp_target_m_s")
+                self._amp_rate = _vector(arrays["amp_rate_m_s2"], n, "amp_rate_m_s2")
 
 
-__all__ = ["SATURATION_STOP_S", "STATE_KEYS", "SpeedReference"]
+__all__ = ["AMP_RAMP_MODES", "SATURATION_STOP_S", "STATE_KEYS", "VALVE_STATE_KEYS",
+           "SpeedReference"]

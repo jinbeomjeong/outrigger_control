@@ -5,17 +5,33 @@ hook sits at the head of :attr:`L2bModel.actuator_hooks` (after the state copy a
 bushing hook, before the force-law hook), so a command applied inside the step callback drives
 the reference of step ``n + 1``; between steps it is used from step ``n + 2``.
 
-Measurements (ideal, plan S7 "제어 ③ 준비" is later work): IMU from
-:class:`outrigger_sim.chrono.truth.L1SensorTruth` (kinematics only, engine independent),
-cylinder forces = the force-law value that acted in the step (``L2bForceActuator.
-acting_force_N``), head pressure = ``(F + p_r A_ann) / A_p`` with the rod-side law pressure
-(0 when the law is off), strokes = ``s + F / k_out`` (``L2bForceActuator.stroke_true_m``). The
-two-pressure sensor path of the controller (R6-P) reads them through ``measure_l2b``; wiring it
-into the S6 runner is control ③ (python-expert / control-expert).
+Measurements (ideal; :meth:`L2bEngine.ideal_measurements`, the runner's closed-loop member,
+S7 control ③ preparation 2026-10-24). Same definitions as the L1-R sensor truth
+(``chrono/truth.L1SensorTruth`` with the rod-chamber machine):
+
+* IMU: :class:`outrigger_sim.chrono.truth.L1SensorTruth` (kinematics only, engine independent);
+* cylinder force ``F`` = the force-law value that acted in the step just taken
+  (``L2bForceActuator.acting_force_N``; the hook computed it from the state at ``t_{n-1}``);
+* head pressure ``p_h = (F + p_r A_ann) / A_p`` and rod pressure ``p_r`` = the rod-side law
+  pressure of the same hook call (two sensors, R6-P net force ``p_h A_p - p_r A_ann = F``);
+  with the rod-side law off: ``p_h = F / A_p`` and ``rod_pressure_Pa`` None (L1 mechanics-off
+  convention). ``p_r`` and ``F`` are one physics step (1e-4 s) older than the kinematics, the
+  same for every leg (negligible at 10 Hz);
+* ``stroke_m`` = ``s_ref`` (the oil-volume coordinate the stroke limiter clips; = the L1 motor
+  position, which is the L1 ``s_ref``);
+* ``stroke_corrected_m`` = the piston-to-head stroke ``s + F / k_out``
+  (``L2bForceActuator.stroke_true_m``; L1: ``s_motor - F / k_oil``, the same quantity of the
+  cylinder-internal sensor).
+
+Truth contact forces (:meth:`L2bEngine.truth`, Record ``F_contact_n``, ``F_crawler``): trailing
+mean over ``contact_window_s`` (default 20 ms) of every step, the 5.22.3 read-out rule. On the
+rigid NSC crawler single steps can carry zero crawler force (position jitter, the body leaves
+the floor for a step), which the S6 judge would read as the crawler lift-off.
 """
 
 from __future__ import annotations
 
+import dataclasses
 import math
 from collections.abc import Callable
 from typing import Any
@@ -33,6 +49,9 @@ from outrigger_sim.sensors.imu import IMU_MOUNT_C1_BODY_M
 from outrigger_sim.signals import LEG_COUNT, Command, Measurements, TruthState
 
 StepCallback = Callable[["L2bEngine"], None]
+
+CONTACT_WINDOW_S = 0.020
+"""Default trailing window of the truth contact forces (dynamics_model.md 5.22.3, >= 20 ms)."""
 
 
 class _TruthView:
@@ -53,12 +72,20 @@ class L2bEngine:
     """Closed-loop engine around an :class:`L2bModel` (module docstring)."""
 
     def __init__(self, model: L2bModel, *, imu_mount_point_body_m: ArrayLike = IMU_MOUNT_C1_BODY_M,
-                 imu_method: str = "sensors_imu") -> None:
+                 imu_method: str = "sensors_imu",
+                 contact_window_s: float | None = CONTACT_WINDOW_S) -> None:
         self.model = model
         self.sensor_truth = L1SensorTruth(_TruthView(model), imu_mount_point_body_m,
                                           imu_method=imu_method)
         self._callback: StepCallback | None = None
         self._closed = False
+        # 5.22.3: truth contact forces as a trailing window mean of every step (None = raw)
+        self.contact_window_s = None if contact_window_s is None else float(contact_window_s)
+        self._cwin = (0 if contact_window_s is None
+                      else max(1, round(float(contact_window_s) / float(model.dt_s))))
+        self._cbuf = np.zeros((max(self._cwin, 1), LEG_COUNT + 1, 3))
+        self._cn = 0
+        self._ci = 0
         self._held = Command(t_s=self.time_s, leg_speed_m_s=model.actuator.reference.command_m_s)
         self._reset_monitor()
         model.actuator_hooks.insert(0, self._pre_actuator_hook)
@@ -93,7 +120,11 @@ class L2bEngine:
         meta = self.model.meta()
         meta.update(engine="pychrono", model=ChronoModel.L2B_NSC.value,
                     params_sha256=self.model.params.sha256,
-                    closed_loop_hook="step callback at the head of L2bModel.actuator_hooks")
+                    sensor_truth=self.sensor_meta(),
+                    truth_contact=self.contact_window_meta(),
+                    closed_loop_hook="step callback at the head of L2bModel.actuator_hooks "
+                                     "(after the lateral-bushing hook, before the force-law "
+                                     "hook): command issued at t_n drives step n+1")
         return meta
 
     def reset(self, start: AnalyticStart | Snapshot = AnalyticStart.ON_PADS) -> TruthState:
@@ -138,25 +169,78 @@ class L2bEngine:
         }
 
     def measure(self) -> Measurements:
-        """Ideal measurements (instantaneous IMU; head-only pressure ``F / A_p`` and the
-        piston stroke ``s + F / k_out`` through the L1 sensor-truth formulas). The rod-side
-        pressures are in :meth:`measure_l2b` (two-pressure wiring is control ③)."""
+        """Ideal measurements with the instantaneous IMU (the runner averages
+        :meth:`imu_sample` over the period; module docstring for the leg readings)."""
         s = self.imu_sample()
         avg = PeriodAverage(s.t_s, s.specific_force_m_s2, s.angular_rate_rad_s, 1)
+        return self.ideal_measurements(avg)
+
+    def ideal_measurements(self, imu_average: PeriodAverage) -> Measurements:
+        """Ideal measurements at the period end ``imu_average.t_s`` (= now; module docstring)."""
+        t_now = self.time_s
+        if abs(t_now - imu_average.t_s) > 1e-9 * max(1.0, abs(t_now)):
+            raise ValueError(f"measurement at {imu_average.t_s!r} s but the model is at "
+                             f"{t_now!r} s")
         leg = self.measure_l2b()
-        return self.sensor_truth.ideal_measurements(
-            avg, cylinder_force_N=leg["cylinder_force_N"], s_motor_m=leg["stroke_m"]
+        act = self.model.actuator
+        rod_on = act.rod_side is not None
+        return Measurements(
+            t_s=imu_average.t_s,
+            specific_force_m_s2=imu_average.specific_force_m_s2,
+            angular_rate_rad_s=imu_average.angular_rate_rad_s,
+            head_pressure_Pa=leg["head_pressure_Pa"],
+            stroke_m=act.reference.s_ref_m,
+            stroke_corrected_m=leg["stroke_m"],
+            rod_pressure_Pa=leg["rod_pressure_Pa"] if rod_on else None,
         )
+
+    @property
+    def rod_chamber(self) -> None:
+        """No L1-R link (the rod side is inside the L2b force law)."""
+        return None
+
+    def sensor_meta(self) -> dict[str, Any]:
+        """Leg-reading definitions for the run meta (module docstring)."""
+        act = self.model.actuator
+        return {
+            **self.sensor_truth.meta(),
+            "pressure": ("p_h = (F + p_r A_ann) / A_p, p_r = rod-side law pressure of the same "
+                         "hook (two sensors)" if act.rod_side is not None
+                         else "p_h = F / A_p, no rod-side sensor"),
+            "cylinder_force": "force-law value that acted in the step (L2bForceActuator)",
+            "stroke_m": "s_ref (oil-volume coordinate, = L1 motor position)",
+            "stroke_corrected_m": "piston s + F / k_out (cylinder-internal sensor truth)",
+            "head_area_m2": act.head_area_m2.tolist(),
+            "k_oil_N_m": None,
+            "stroke_model": "piston s + F / k_out",
+        }
 
     def imu_sample(self) -> ImuTruthSample:
         return self.sensor_truth.imu()
 
     def truth(self) -> TruthState:
+        """Truth of the current state; with ``contact_window_s`` the pad and crawler contact
+        forces are the trailing mean over that window of every step (5.22.3: the single-step
+        NSC contact force is noise; a 1-step airborne jitter would read as a lift-off)."""
         self._check_open()
         probe = self.model.last_probe
         if probe is None or probe.t_s != self.time_s:
             probe = read_l2b_probe(self.model)
-        return self.model.truth(probe)
+        state = self.model.truth(probe)
+        if self._cwin == 0 or self._cn == 0:
+            return state
+        mean = self._cbuf[: self._cn].mean(axis=0)
+        n = np.asarray(probe.floor_normal_world, dtype=float)
+        pads = mean[:LEG_COUNT]
+        fn = pads @ n
+        return dataclasses.replace(
+            state, F_contact_n_N=fn, F_contact_t_N=(pads - np.outer(fn, n))[:, :2],
+            is_pad_in_contact=fn > 0.0, F_crawler_N=mean[LEG_COUNT].copy())
+
+    def contact_window_meta(self) -> dict[str, Any]:
+        return {"contact_window_s": self.contact_window_s, "contact_window_steps": self._cwin,
+                "rule": "TruthState pad / crawler contact forces = trailing mean of every step "
+                        "over the window (dynamics_model.md 5.22.3); raw when None"}
 
     def snapshot(self) -> Snapshot:
         self._check_open()
@@ -166,6 +250,15 @@ class L2bEngine:
         self._check_open()
         t = self.model.restore(snapshot)
         self._held = Command(t_s=t, leg_speed_m_s=self.model.actuator.reference.command_m_s)
+        self._clear_contact_window()
+
+    def _clear_contact_window(self) -> None:
+        """Drop the contact-force window so ``truth()`` after a restore (and so after
+        ``reset``) never averages steps from before the restored state; until the first
+        post-restore step it returns the raw probe forces."""
+        self._cbuf[:] = 0.0
+        self._cn = 0
+        self._ci = 0
 
     def close(self) -> None:
         if self._closed:
@@ -211,6 +304,15 @@ class L2bEngine:
         finite = bool(np.all(np.isfinite(forces))) and all(
             math.isfinite(c) for c in (pos.x, pos.y, pos.z))
         self._mon_steps += 1
+        if self._cwin:
+            row = self._cbuf[self._ci]
+            for i, leg in enumerate(model.legs):
+                c = leg.GetContactForce()
+                row[i, 0], row[i, 1], row[i, 2] = c.x, c.y, c.z
+            c = model.superstructure.GetContactForce()
+            row[LEG_COUNT, 0], row[LEG_COUNT, 1], row[LEG_COUNT, 2] = c.x, c.y, c.z
+            self._ci = (self._ci + 1) % self._cwin
+            self._cn = min(self._cn + 1, self._cwin)
         if not finite:
             self._mon_nonfinite += 1
             if self._mon_first_bad is None:
@@ -230,4 +332,4 @@ class L2bEngine:
             raise EngineClosedError("L2bEngine is closed")
 
 
-__all__ = ["L2bEngine", "StepCallback"]
+__all__ = ["CONTACT_WINDOW_S", "L2bEngine", "StepCallback"]

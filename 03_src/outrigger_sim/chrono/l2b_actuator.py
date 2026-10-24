@@ -294,6 +294,54 @@ class L2bForceActuator:
     def head_area_m2(self) -> NDArray[np.float64]:
         return self._area.copy()
 
+    # --- R8 valve model and law-C views (same names as L1SpeedActuator, run_S6C helpers) ----
+
+    def configure_valve(self, *, tau_s: float, amp_ramp: str = "none",
+                        amp_ramp_s: float = 0.1) -> None:
+        """Valve lag on the speed reference (``SpeedReference.configure_valve``): the spool
+        output is the flow / ``A_p`` that integrates into ``s_ref`` and drives the dashpot."""
+        self.reference.configure_valve(tau_s=tau_s, amp_ramp=amp_ramp, amp_ramp_s=amp_ramp_s)
+
+    @property
+    def valve_state_m_s(self) -> NDArray[np.float64]:
+        return self.reference.valve_state_m_s
+
+    @property
+    def amp_output_m_s(self) -> NDArray[np.float64]:
+        return self.reference.amp_output_m_s
+
+    def valve_meta(self) -> dict[str, Any]:
+        return self.reference.valve_meta()
+
+    @property
+    def saturated(self) -> NDArray[np.bool_]:
+        return self.reference.saturated
+
+    @property
+    def saturation_step_count(self) -> NDArray[np.int64]:
+        return self.reference.saturation_step_count
+
+    @property
+    def saturation_start_count(self) -> NDArray[np.int64]:
+        return self.reference.saturation_start_count
+
+    @property
+    def force_limits_N(self) -> tuple[Any, Any] | None:
+        return self.reference.force_limits_N
+
+    @property
+    def saturation_stop_s(self) -> float:
+        return self.reference.saturation_stop_s
+
+    @property
+    def last_judged_force_N(self) -> NDArray[np.float64]:
+        """Law C judged force of the last hook (= the acting force-law value, no inertia)."""
+        return self.reference.last_judged_force_N
+
+    @property
+    def last_cylinder_force_N(self) -> NDArray[np.float64]:
+        return self.acting_force_N
+
     # --- per-step -------------------------------------------------------------------------
 
     def set_command(self, leg_speed_m_s: ArrayLike) -> None:
@@ -451,6 +499,7 @@ class L2bForceActuator:
             "ramp_s": self.reference.ramp_s,
             "input_lag": "force from the state at t_n acts during step n+1 (explicit)",
             "rod_side": None if self.rod_side is None else self.rod_side.meta(),
+            "valve": self.reference.valve_meta(),
         }
 
 
