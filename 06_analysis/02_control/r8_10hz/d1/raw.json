@@ -1,0 +1,4941 @@
+{
+ "null": {
+  "C1_RE1b_top_flat_settleRR30": "floor event settle_RR_30 (30 mm RR settlement) is not in the harness",
+  "C1_RE1bF_top_flat_dropRR30": "floor event drop_RR_30 (sudden 30 mm drop, 1e-5 s window) is not in the harness",
+  "C1_RE1bP_top_flat_dropRR30_probe": "floor event drop_RR_30_probe is not in the harness",
+  "C1_PS7_flat_FLp10_cal": "WIKA pressure error model + CHECK zero calibration path is Chrono/SensorSuite only",
+  "C1_PS7_flat_FLm10_cal": "WIKA pressure error model + CHECK zero calibration path is Chrono/SensorSuite only",
+  "C1_G5_top_flat_change_p3": "target change event and target acceptance are not in the harness (target check off)",
+  "C4b_D8_top_roll5.5_b1.6": "amplifier per_step ramp (R-3) is not in the harness (only a full-scale rate limit)",
+  "C4b_D8_bottom_rp05_b1.6": "amplifier per_step ramp (R-3) is not in the harness (only a full-scale rate limit)",
+  "C4b_G4_pressure": "amplifier per_step ramp (R-3) is not in the harness (only a full-scale rate limit)",
+  "C5_L0r0.02_top_fdown3.2": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only",
+  "C5_L0r0.02_top_roll4.4": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only",
+  "C5_L0r0.02_G4_pressure": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only",
+  "C5_L0r0.1_top_fdown3.2": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only",
+  "C5_L0r0.1_top_roll4.4": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only",
+  "C5_L0r0.1_G4_pressure": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only",
+  "C6_G4_pressure": "sub-period output offset (+20 ms, R-5) is not in the harness (commands at period boundaries)",
+  "C6_D8_top_roll5.5_b1.6": "sub-period output offset (+20 ms, R-5) is not in the harness (commands at period boundaries)",
+  "C7_asym_RE1bF_top_flat_dropRR30": "floor event drop_RR_30 is not in the harness",
+  "C10_knom_RE1bP_top_flat_dropRR30_probe": "floor event drop_RR_30_probe is not in the harness"
+ },
+ "cases": {
+  "C1_D8_top_roll5.5_b0.69": {
+   "level": "top",
+   "floor": "roll5.5",
+   "beta": 0.69,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_D8_top_roll5.5_b1.6": {
+   "level": "top",
+   "floor": "roll5.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_D8_top_fdown3.5_b0.69": {
+   "level": "top",
+   "floor": "fdown3.5",
+   "beta": 0.69,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_D8_top_fdown3.5_b1.6": {
+   "level": "top",
+   "floor": "fdown3.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_D8_top_fup3.5_b0.69": {
+   "level": "top",
+   "floor": "fup3.5",
+   "beta": 0.69,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_D8_top_fup3.5_b1.6": {
+   "level": "top",
+   "floor": "fup3.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_D8_top_rp05_b0.69": {
+   "level": "top",
+   "floor": "rp05",
+   "beta": 0.69,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_D8_top_rp05_b1.6": {
+   "level": "top",
+   "floor": "rp05",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_D8_middle_rp05_b1.6": {
+   "level": "middle",
+   "floor": "rp05",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_D8_bottom_rp05_b1.6": {
+   "level": "bottom",
+   "floor": "rp05",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_H4V_top_fdown3.5": {
+   "level": "top",
+   "floor": "fdown3.5",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_H4P_top_fdown3.2": {
+   "level": "top",
+   "floor": "fdown3.2",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_G1_top_flat": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": false,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_G1_top_roll3": {
+   "level": "top",
+   "floor": "roll3",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": false,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_G3_top_flat_normal_zeroed": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_G3_top_fdown3.5_normal_zeroed": {
+   "level": "top",
+   "floor": "fdown3.5",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_G4_pressure": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C1_G4_combined": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C4_tv0.05_D8_top_roll5.5_b1.6": {
+   "level": "top",
+   "floor": "roll5.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.05,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C4_tv0.05_D8_top_fup3.5_b1.6": {
+   "level": "top",
+   "floor": "fup3.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.05,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C4_tv0.05_G4_pressure": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.05,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C4_tv0.15_D8_top_roll5.5_b1.6": {
+   "level": "top",
+   "floor": "roll5.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.15,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C4_tv0.15_D8_top_fup3.5_b1.6": {
+   "level": "top",
+   "floor": "fup3.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.15,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C4_tv0.15_G4_pressure": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.15,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C7_sym0.1_D8_top_rp05_b1.6": {
+   "level": "top",
+   "floor": "rp05",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.1",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C7_sym0.1_D8_top_roll5.5_b1.6": {
+   "level": "top",
+   "floor": "roll5.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.1",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C7_asym_G4_pressure": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "asym",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "C9_R5_G4_pressure": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": true,
+   "h142": false
+  },
+  "C9_R5_G4_combined": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": true,
+   "h142": false
+  },
+  "C10_knom_G4_combined": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "k_nom",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "rows": [
+  {
+   "case": "C1_D8_top_roll5.5_b0.69",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 22.3,
+    "t_ready_s": 55.9,
+    "min_true_cyl_force_kN": 53.59,
+    "ss_true_att_deg_maxabs": 0.0295,
+    "max_pressure_bar": 114.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.6080938822432513,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 11.363289800006896
+  },
+  {
+   "case": "C1_D8_top_roll5.5_b0.69",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 22.3,
+    "t_ready_s": 55.8,
+    "min_true_cyl_force_kN": 53.57,
+    "ss_true_att_deg_maxabs": 0.0296,
+    "max_pressure_bar": 114.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.631971141195274,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 10.940435099997558
+  },
+  {
+   "case": "C1_D8_top_roll5.5_b0.69",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 22.3,
+    "t_ready_s": 55.8,
+    "min_true_cyl_force_kN": 53.58,
+    "ss_true_att_deg_maxabs": 0.0269,
+    "max_pressure_bar": 114.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.53380747507571,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 10.788201200019103
+  },
+  {
+   "case": "C1_D8_top_roll5.5_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 55.8,
+    "min_true_cyl_force_kN": 49.45,
+    "ss_true_att_deg_maxabs": 0.0295,
+    "max_pressure_bar": 124.1
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.8121140205158695,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.448834299982991
+  },
+  {
+   "case": "C1_D8_top_roll5.5_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 55.6,
+    "min_true_cyl_force_kN": 51.45,
+    "ss_true_att_deg_maxabs": 0.0296,
+    "max_pressure_bar": 126.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.5614960875362278,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.690942699991865
+  },
+  {
+   "case": "C1_D8_top_roll5.5_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 55.7,
+    "min_true_cyl_force_kN": 49.44,
+    "ss_true_att_deg_maxabs": 0.0269,
+    "max_pressure_bar": 124.1
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.7326907336725474,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 15.06481700000586
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b0.69",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 21.7,
+    "t_crawler_liftoff_s": 22.7,
+    "t_ready_s": 79.4,
+    "min_true_cyl_force_kN": 22.0,
+    "ss_true_att_deg_maxabs": 0.0274,
+    "max_pressure_bar": 126.8
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.6317679730356918,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 13.622212199989008
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b0.69",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 21.7,
+    "t_crawler_liftoff_s": 22.7,
+    "t_ready_s": 79.7,
+    "min_true_cyl_force_kN": 20.35,
+    "ss_true_att_deg_maxabs": 0.0287,
+    "max_pressure_bar": 128.4
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.5024841371725283,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 13.515401300013764
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b0.69",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 21.7,
+    "t_crawler_liftoff_s": 22.7,
+    "t_ready_s": 79.6,
+    "min_true_cyl_force_kN": 20.34,
+    "ss_true_att_deg_maxabs": 0.028,
+    "max_pressure_bar": 128.4
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.5613850245115642,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 13.416894199996023
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 20.9,
+    "t_crawler_liftoff_s": 21.7,
+    "t_ready_s": 73.1,
+    "min_true_cyl_force_kN": 20.95,
+    "ss_true_att_deg_maxabs": 0.0273,
+    "max_pressure_bar": 128.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.626306098544489,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 12.644195200002287
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 21.4,
+    "t_crawler_liftoff_s": 22.3,
+    "t_ready_s": 74.3,
+    "min_true_cyl_force_kN": 15.38,
+    "ss_true_att_deg_maxabs": 0.0299,
+    "max_pressure_bar": 133.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.904864109696303,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 12.309939900005702
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 21.4,
+    "t_crawler_liftoff_s": 22.3,
+    "t_ready_s": 73.8,
+    "min_true_cyl_force_kN": 21.12,
+    "ss_true_att_deg_maxabs": 0.028,
+    "max_pressure_bar": 127.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.7594642942905065,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 11.80656050000107
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b0.69",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 20.4,
+    "t_ready_s": 55.0,
+    "min_true_cyl_force_kN": 61.51,
+    "ss_true_att_deg_maxabs": 0.0422,
+    "max_pressure_bar": 95.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.7038702472115388,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 10.442333999992115
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b0.69",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 20.4,
+    "t_ready_s": 54.7,
+    "min_true_cyl_force_kN": 61.49,
+    "ss_true_att_deg_maxabs": 0.0405,
+    "max_pressure_bar": 95.4
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.663071803767579,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 10.238604899990605
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b0.69",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 20.4,
+    "t_ready_s": 54.8,
+    "min_true_cyl_force_kN": 61.5,
+    "ss_true_att_deg_maxabs": 0.039,
+    "max_pressure_bar": 95.4
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.6692361536589718,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 10.441604599996936
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 18.9,
+    "t_crawler_liftoff_s": 19.9,
+    "t_ready_s": 54.8,
+    "min_true_cyl_force_kN": 52.05,
+    "ss_true_att_deg_maxabs": 0.0418,
+    "max_pressure_bar": 102.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.6836597527538184,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.266169900016394
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 18.9,
+    "t_crawler_liftoff_s": 19.9,
+    "t_ready_s": 54.5,
+    "min_true_cyl_force_kN": 52.0,
+    "ss_true_att_deg_maxabs": 0.0413,
+    "max_pressure_bar": 102.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.9520932418251782,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 9.828570499987109
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 18.9,
+    "t_crawler_liftoff_s": 19.9,
+    "t_ready_s": 54.6,
+    "min_true_cyl_force_kN": 52.02,
+    "ss_true_att_deg_maxabs": 0.0387,
+    "max_pressure_bar": 102.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.913726803946531,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.436828000005335
+  },
+  {
+   "case": "C1_D8_top_rp05_b0.69",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.9,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 54.6,
+    "min_true_cyl_force_kN": 42.31,
+    "ss_true_att_deg_maxabs": 0.0211,
+    "max_pressure_bar": 100.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.6418688465379652,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 9.845953499985626
+  },
+  {
+   "case": "C1_D8_top_rp05_b0.69",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.9,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 54.8,
+    "min_true_cyl_force_kN": 42.32,
+    "ss_true_att_deg_maxabs": 0.0211,
+    "max_pressure_bar": 100.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.5104626134552923,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 10.12159850000171
+  },
+  {
+   "case": "C1_D8_top_rp05_b0.69",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.9,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 55.4,
+    "min_true_cyl_force_kN": 42.32,
+    "ss_true_att_deg_maxabs": 0.0168,
+    "max_pressure_bar": 100.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.46898157935603746,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 10.248567599977832
+  },
+  {
+   "case": "C1_D8_top_rp05_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 54.1,
+    "min_true_cyl_force_kN": 51.24,
+    "ss_true_att_deg_maxabs": 0.0203,
+    "max_pressure_bar": 104.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.6505837122995701,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 27.056928799982416
+  },
+  {
+   "case": "C1_D8_top_rp05_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 54.0,
+    "min_true_cyl_force_kN": 51.23,
+    "ss_true_att_deg_maxabs": 0.0225,
+    "max_pressure_bar": 104.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.7870449567141273,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.419835000007879
+  },
+  {
+   "case": "C1_D8_top_rp05_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 54.2,
+    "min_true_cyl_force_kN": 51.24,
+    "ss_true_att_deg_maxabs": 0.0181,
+    "max_pressure_bar": 104.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.8452170063919096,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.245002100011334
+  },
+  {
+   "case": "C1_D8_middle_rp05_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 54.0,
+    "min_true_cyl_force_kN": 52.94,
+    "ss_true_att_deg_maxabs": 0.0203,
+    "max_pressure_bar": 102.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.8314381020730384,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.3668760000146
+  },
+  {
+   "case": "C1_D8_middle_rp05_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 53.9,
+    "min_true_cyl_force_kN": 52.89,
+    "ss_true_att_deg_maxabs": 0.0228,
+    "max_pressure_bar": 102.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.9068521018243807,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.736927200021455
+  },
+  {
+   "case": "C1_D8_middle_rp05_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 54.0,
+    "min_true_cyl_force_kN": 50.49,
+    "ss_true_att_deg_maxabs": 0.0174,
+    "max_pressure_bar": 102.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.7366204857072765,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 9.975827799993567
+  },
+  {
+   "case": "C1_D8_bottom_rp05_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 53.9,
+    "min_true_cyl_force_kN": 51.58,
+    "ss_true_att_deg_maxabs": 0.0202,
+    "max_pressure_bar": 102.1
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.8226055834827282,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.240819300001021
+  },
+  {
+   "case": "C1_D8_bottom_rp05_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 53.8,
+    "min_true_cyl_force_kN": 51.56,
+    "ss_true_att_deg_maxabs": 0.0228,
+    "max_pressure_bar": 102.1
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.8711864798810507,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.151312500005588
+  },
+  {
+   "case": "C1_D8_bottom_rp05_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 54.0,
+    "min_true_cyl_force_kN": 51.58,
+    "ss_true_att_deg_maxabs": 0.018,
+    "max_pressure_bar": 102.1
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.7421302758531407,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.435885100014275
+  },
+  {
+   "case": "C1_H4V_top_fdown3.5",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 20.9,
+    "t_crawler_liftoff_s": 21.8,
+    "t_ready_s": 75.8,
+    "min_true_cyl_force_kN": 19.86,
+    "ss_true_att_deg_maxabs": 0.0267,
+    "max_pressure_bar": 129.0
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.095629203741796,
+    "raw_ratio": 1.095629203741796,
+    "scale_in_use": 1.095629203741796,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 24876457.79118101
+   },
+   "wall": 12.847513799992157
+  },
+  {
+   "case": "C1_H4V_top_fdown3.5",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 20.9,
+    "t_crawler_liftoff_s": 21.8,
+    "t_ready_s": 76.0,
+    "min_true_cyl_force_kN": 19.42,
+    "ss_true_att_deg_maxabs": 0.0287,
+    "max_pressure_bar": 129.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.09219493977576,
+    "raw_ratio": 1.09219493977576,
+    "scale_in_use": 1.09219493977576,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 24798482.211210065
+   },
+   "wall": 12.955080099985935
+  },
+  {
+   "case": "C1_H4V_top_fdown3.5",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 21.7,
+    "t_crawler_liftoff_s": 22.6,
+    "t_ready_s": 76.8,
+    "min_true_cyl_force_kN": 18.13,
+    "ss_true_att_deg_maxabs": 0.0267,
+    "max_pressure_bar": 130.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.2336182727788125,
+    "raw_ratio": 1.2336182727788125,
+    "scale_in_use": 1.2336182727788125,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 28009524.37960381
+   },
+   "wall": 12.97631349999574
+  },
+  {
+   "case": "C1_H4P_top_fdown3.2",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 20.4,
+    "t_crawler_liftoff_s": 21.3,
+    "t_ready_s": 74.3,
+    "min_true_cyl_force_kN": 19.57,
+    "ss_true_att_deg_maxabs": 0.0259,
+    "max_pressure_bar": 129.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.206845272273976,
+    "raw_ratio": 1.206845272273976,
+    "scale_in_use": 1.206845272273976,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27401638.596049257
+   },
+   "wall": 12.571304000011878
+  },
+  {
+   "case": "C1_H4P_top_fdown3.2",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 20.4,
+    "t_crawler_liftoff_s": 21.3,
+    "t_ready_s": 74.6,
+    "min_true_cyl_force_kN": 19.62,
+    "ss_true_att_deg_maxabs": 0.0293,
+    "max_pressure_bar": 129.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0945712868339952,
+    "raw_ratio": 1.0945712868339952,
+    "scale_in_use": 1.0945712868339952,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 24852437.59784041
+   },
+   "wall": 12.536257900006603
+  },
+  {
+   "case": "C1_H4P_top_fdown3.2",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 20.4,
+    "t_crawler_liftoff_s": 21.3,
+    "t_ready_s": 74.4,
+    "min_true_cyl_force_kN": 19.57,
+    "ss_true_att_deg_maxabs": 0.0276,
+    "max_pressure_bar": 129.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.1098677808850292,
+    "raw_ratio": 1.1098677808850292,
+    "scale_in_use": 1.1098677808850292,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 25199747.241754644
+   },
+   "wall": 12.113781199994264
+  },
+  {
+   "case": "C1_G1_top_flat",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.0,
+    "min_true_cyl_force_kN": 67.24,
+    "ss_true_att_deg_maxabs": 0.0294,
+    "max_pressure_bar": 92.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 7.80262020000373
+  },
+  {
+   "case": "C1_G1_top_flat",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.1,
+    "min_true_cyl_force_kN": 67.27,
+    "ss_true_att_deg_maxabs": 0.029,
+    "max_pressure_bar": 92.4
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 7.582675800018478
+  },
+  {
+   "case": "C1_G1_top_flat",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.1,
+    "min_true_cyl_force_kN": 67.25,
+    "ss_true_att_deg_maxabs": 0.0286,
+    "max_pressure_bar": 92.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 7.501033400010783
+  },
+  {
+   "case": "C1_G1_top_roll3",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.3,
+    "t_ready_s": 38.2,
+    "min_true_cyl_force_kN": 62.21,
+    "ss_true_att_deg_maxabs": 0.0271,
+    "max_pressure_bar": 102.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 8.882655499997782
+  },
+  {
+   "case": "C1_G1_top_roll3",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.3,
+    "t_ready_s": 38.1,
+    "min_true_cyl_force_kN": 62.22,
+    "ss_true_att_deg_maxabs": 0.0327,
+    "max_pressure_bar": 102.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 8.811596800020197
+  },
+  {
+   "case": "C1_G1_top_roll3",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.3,
+    "t_ready_s": 38.1,
+    "min_true_cyl_force_kN": 62.2,
+    "ss_true_att_deg_maxabs": 0.0274,
+    "max_pressure_bar": 102.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 8.971944999997504
+  },
+  {
+   "case": "C1_G3_top_flat_normal_zeroed",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 37.9,
+    "min_true_cyl_force_kN": 58.33,
+    "ss_true_att_deg_maxabs": 0.0293,
+    "max_pressure_bar": 97.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.050067835911086,
+    "raw_ratio": 1.050067835911086,
+    "scale_in_use": 1.050067835911086,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 23841978.754041143
+   },
+   "wall": 8.73106469999766
+  },
+  {
+   "case": "C1_G3_top_flat_normal_zeroed",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 38.0,
+    "min_true_cyl_force_kN": 58.41,
+    "ss_true_att_deg_maxabs": 0.029,
+    "max_pressure_bar": 97.4
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.4654863118129384,
+    "raw_ratio": 1.4654863118129384,
+    "scale_in_use": 1.4654863118129384,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 33274129.837780047
+   },
+   "wall": 8.947847100003855
+  },
+  {
+   "case": "C1_G3_top_flat_normal_zeroed",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 38.0,
+    "min_true_cyl_force_kN": 58.41,
+    "ss_true_att_deg_maxabs": 0.0285,
+    "max_pressure_bar": 97.4
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.1700415911069055,
+    "raw_ratio": 1.1700415911069055,
+    "scale_in_use": 1.1700415911069055,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 26566004.40704997
+   },
+   "wall": 8.473446899995906
+  },
+  {
+   "case": "C1_G3_top_fdown3.5_normal_zeroed",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 20.9,
+    "t_crawler_liftoff_s": 21.8,
+    "t_ready_s": 75.8,
+    "min_true_cyl_force_kN": 19.86,
+    "ss_true_att_deg_maxabs": 0.0267,
+    "max_pressure_bar": 129.0
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.095629203741796,
+    "raw_ratio": 1.095629203741796,
+    "scale_in_use": 1.095629203741796,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 24876457.79118101
+   },
+   "wall": 29.67728539998643
+  },
+  {
+   "case": "C1_G3_top_fdown3.5_normal_zeroed",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 20.9,
+    "t_crawler_liftoff_s": 21.8,
+    "t_ready_s": 76.0,
+    "min_true_cyl_force_kN": 19.42,
+    "ss_true_att_deg_maxabs": 0.0287,
+    "max_pressure_bar": 129.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.09219493977576,
+    "raw_ratio": 1.09219493977576,
+    "scale_in_use": 1.09219493977576,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 24798482.211210065
+   },
+   "wall": 12.56884349999018
+  },
+  {
+   "case": "C1_G3_top_fdown3.5_normal_zeroed",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 21.7,
+    "t_crawler_liftoff_s": 22.6,
+    "t_ready_s": 76.8,
+    "min_true_cyl_force_kN": 18.13,
+    "ss_true_att_deg_maxabs": 0.0267,
+    "max_pressure_bar": 130.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.2336182727788125,
+    "raw_ratio": 1.2336182727788125,
+    "scale_in_use": 1.2336182727788125,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 28009524.37960381
+   },
+   "wall": 12.26551379999728
+  },
+  {
+   "case": "C1_G4_pressure",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.0,
+    "min_true_cyl_force_kN": 67.24,
+    "ss_true_att_deg_maxabs": 0.0295,
+    "max_pressure_bar": 149.3,
+    "min_true_after_sink_kN": 3.12,
+    "final_true_kN": [
+     116.94,
+     117.41,
+     73.11,
+     69.14
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 10.594830699992599
+  },
+  {
+   "case": "C1_G4_pressure",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.1,
+    "min_true_cyl_force_kN": 67.27,
+    "ss_true_att_deg_maxabs": 0.0291,
+    "max_pressure_bar": 149.2,
+    "min_true_after_sink_kN": 3.07,
+    "final_true_kN": [
+     116.93,
+     117.42,
+     73.11,
+     69.13
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 10.747100299980957
+  },
+  {
+   "case": "C1_G4_pressure",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.1,
+    "min_true_cyl_force_kN": 67.25,
+    "ss_true_att_deg_maxabs": 0.0287,
+    "max_pressure_bar": 149.2,
+    "min_true_after_sink_kN": 3.06,
+    "final_true_kN": [
+     117.05,
+     117.29,
+     72.99,
+     69.25
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 10.630108600016683
+  },
+  {
+   "case": "C1_G4_combined",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 37.9,
+    "min_true_cyl_force_kN": 58.33,
+    "ss_true_att_deg_maxabs": 0.0294,
+    "max_pressure_bar": 146.5,
+    "min_true_after_sink_kN": 8.13,
+    "final_true_kN": [
+     117.06,
+     117.28,
+     73.02,
+     69.22
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0331392858901536,
+    "raw_ratio": 1.0331392858901536,
+    "scale_in_use": 1.0331392858901536,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 23457612.986294717
+   },
+   "wall": 11.932366900000488
+  },
+  {
+   "case": "C1_G4_combined",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 38.0,
+    "min_true_cyl_force_kN": 58.41,
+    "ss_true_att_deg_maxabs": 0.029,
+    "max_pressure_bar": 144.6,
+    "min_true_after_sink_kN": 8.73,
+    "final_true_kN": [
+     117.01,
+     117.32,
+     73.15,
+     69.1
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0418009717419874,
+    "raw_ratio": 1.0418009717419874,
+    "scale_in_use": 1.0418009717419874,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 23654278.118766297
+   },
+   "wall": 12.04977450001752
+  },
+  {
+   "case": "C1_G4_combined",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 38.0,
+    "min_true_cyl_force_kN": 58.41,
+    "ss_true_att_deg_maxabs": 0.0285,
+    "max_pressure_bar": 146.8,
+    "min_true_after_sink_kN": 7.24,
+    "final_true_kN": [
+     116.94,
+     117.4,
+     73.15,
+     69.09
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.8691450568827075,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 12.163251499994658
+  },
+  {
+   "case": "C4_tv0.05_D8_top_roll5.5_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.5,
+    "t_crawler_liftoff_s": 21.7,
+    "t_ready_s": 56.2,
+    "min_true_cyl_force_kN": 47.38,
+    "ss_true_att_deg_maxabs": 0.0294,
+    "max_pressure_bar": 117.6
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.8838361898744702,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.396415999974124
+  },
+  {
+   "case": "C4_tv0.05_D8_top_roll5.5_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.5,
+    "t_crawler_liftoff_s": 21.7,
+    "t_ready_s": 56.1,
+    "min_true_cyl_force_kN": 47.37,
+    "ss_true_att_deg_maxabs": 0.0296,
+    "max_pressure_bar": 117.6
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.791461030948099,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.795261299994309
+  },
+  {
+   "case": "C4_tv0.05_D8_top_roll5.5_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.5,
+    "t_crawler_liftoff_s": 21.7,
+    "t_ready_s": 56.1,
+    "min_true_cyl_force_kN": 47.38,
+    "ss_true_att_deg_maxabs": 0.0269,
+    "max_pressure_bar": 117.6
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.7238426476363675,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.630567799991695
+  },
+  {
+   "case": "C4_tv0.05_D8_top_fup3.5_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.1,
+    "t_crawler_liftoff_s": 20.3,
+    "t_ready_s": 55.2,
+    "min_true_cyl_force_kN": 51.65,
+    "ss_true_att_deg_maxabs": 0.0417,
+    "max_pressure_bar": 103.1
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 2.2835750896885125,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.730212700000266
+  },
+  {
+   "case": "C4_tv0.05_D8_top_fup3.5_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.1,
+    "t_crawler_liftoff_s": 20.3,
+    "t_ready_s": 54.9,
+    "min_true_cyl_force_kN": 51.6,
+    "ss_true_att_deg_maxabs": 0.0398,
+    "max_pressure_bar": 103.1
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.8638764961071976,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.781790099979844
+  },
+  {
+   "case": "C4_tv0.05_D8_top_fup3.5_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.1,
+    "t_crawler_liftoff_s": 20.3,
+    "t_ready_s": 55.1,
+    "min_true_cyl_force_kN": 51.62,
+    "ss_true_att_deg_maxabs": 0.0381,
+    "max_pressure_bar": 103.1
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.577408397564935,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.697326699999394
+  },
+  {
+   "case": "C4_tv0.05_G4_pressure",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.9,
+    "t_crawler_liftoff_s": 20.7,
+    "t_ready_s": 28.1,
+    "min_true_cyl_force_kN": 61.25,
+    "ss_true_att_deg_maxabs": 0.0318,
+    "max_pressure_bar": 150.0,
+    "min_true_after_sink_kN": 2.48,
+    "final_true_kN": [
+     116.88,
+     117.43,
+     73.21,
+     69.06
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 10.621224100003019
+  },
+  {
+   "case": "C4_tv0.05_G4_pressure",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 27.2,
+    "min_true_cyl_force_kN": 63.16,
+    "ss_true_att_deg_maxabs": 0.0307,
+    "max_pressure_bar": 149.0,
+    "min_true_after_sink_kN": 4.03,
+    "final_true_kN": [
+     116.95,
+     117.37,
+     73.11,
+     69.15
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 11.092457799997646
+  },
+  {
+   "case": "C4_tv0.05_G4_pressure",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.9,
+    "t_crawler_liftoff_s": 20.7,
+    "t_ready_s": 28.2,
+    "min_true_cyl_force_kN": 63.05,
+    "ss_true_att_deg_maxabs": 0.0308,
+    "max_pressure_bar": 149.0,
+    "min_true_after_sink_kN": 3.99,
+    "final_true_kN": [
+     116.93,
+     117.38,
+     73.15,
+     69.13
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 11.166809699992882
+  },
+  {
+   "case": "C4_tv0.15_D8_top_roll5.5_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.6,
+    "t_ready_s": 55.5,
+    "min_true_cyl_force_kN": 37.52,
+    "ss_true_att_deg_maxabs": 0.0294,
+    "max_pressure_bar": 115.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.6846998865706464,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.172041999991052
+  },
+  {
+   "case": "C4_tv0.15_D8_top_roll5.5_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.6,
+    "t_ready_s": 55.4,
+    "min_true_cyl_force_kN": 37.52,
+    "ss_true_att_deg_maxabs": 0.0296,
+    "max_pressure_bar": 115.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.8043386217525017,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.616780700016534
+  },
+  {
+   "case": "C4_tv0.15_D8_top_roll5.5_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.6,
+    "t_ready_s": 55.4,
+    "min_true_cyl_force_kN": 37.5,
+    "ss_true_att_deg_maxabs": 0.0269,
+    "max_pressure_bar": 115.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.571014877370349,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.384446199983358
+  },
+  {
+   "case": "C4_tv0.15_D8_top_fup3.5_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.1,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 54.7,
+    "min_true_cyl_force_kN": 52.32,
+    "ss_true_att_deg_maxabs": 0.0427,
+    "max_pressure_bar": 102.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.5486787651949818,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.51658490000409
+  },
+  {
+   "case": "C4_tv0.15_D8_top_fup3.5_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.1,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 54.5,
+    "min_true_cyl_force_kN": 52.26,
+    "ss_true_att_deg_maxabs": 0.0419,
+    "max_pressure_bar": 102.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.9288030535942413,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.304243899998255
+  },
+  {
+   "case": "C4_tv0.15_D8_top_fup3.5_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.1,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 54.6,
+    "min_true_cyl_force_kN": 52.29,
+    "ss_true_att_deg_maxabs": 0.0392,
+    "max_pressure_bar": 102.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.8873184059018784,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.51741659999243
+  },
+  {
+   "case": "C4_tv0.15_G4_pressure",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 27.4,
+    "min_true_cyl_force_kN": 66.82,
+    "ss_true_att_deg_maxabs": 0.0309,
+    "max_pressure_bar": 149.5,
+    "min_true_after_sink_kN": 2.44,
+    "final_true_kN": [
+     116.91,
+     117.4,
+     73.12,
+     69.15
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 10.972936799982563
+  },
+  {
+   "case": "C4_tv0.15_G4_pressure",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 27.5,
+    "min_true_cyl_force_kN": 66.8,
+    "ss_true_att_deg_maxabs": 0.0314,
+    "max_pressure_bar": 149.3,
+    "min_true_after_sink_kN": 2.51,
+    "final_true_kN": [
+     116.86,
+     117.46,
+     73.17,
+     69.1
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 10.699295700003859
+  },
+  {
+   "case": "C4_tv0.15_G4_pressure",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 27.3,
+    "min_true_cyl_force_kN": 66.81,
+    "ss_true_att_deg_maxabs": 0.0304,
+    "max_pressure_bar": 149.4,
+    "min_true_after_sink_kN": 2.42,
+    "final_true_kN": [
+     117.0,
+     117.32,
+     73.03,
+     69.24
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 10.652931799995713
+  },
+  {
+   "case": "C7_sym0.1_D8_top_rp05_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.5,
+    "t_crawler_liftoff_s": 20.5,
+    "t_ready_s": 54.4,
+    "min_true_cyl_force_kN": 19.58,
+    "ss_true_att_deg_maxabs": 0.0211,
+    "max_pressure_bar": 123.6
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.7687091430136381,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.434712000016589
+  },
+  {
+   "case": "C7_sym0.1_D8_top_rp05_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.5,
+    "t_crawler_liftoff_s": 20.5,
+    "t_ready_s": 54.3,
+    "min_true_cyl_force_kN": 19.59,
+    "ss_true_att_deg_maxabs": 0.0221,
+    "max_pressure_bar": 123.6
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.863166824414274,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.13047919998644
+  },
+  {
+   "case": "C7_sym0.1_D8_top_rp05_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.5,
+    "t_crawler_liftoff_s": 20.5,
+    "t_ready_s": 54.5,
+    "min_true_cyl_force_kN": 19.59,
+    "ss_true_att_deg_maxabs": 0.0187,
+    "max_pressure_bar": 123.6
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 2.054240745240618,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.38081990001956
+  },
+  {
+   "case": "C7_sym0.1_D8_top_roll5.5_b1.6",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.6,
+    "t_crawler_liftoff_s": 20.7,
+    "t_ready_s": 56.3,
+    "min_true_cyl_force_kN": 47.04,
+    "ss_true_att_deg_maxabs": 0.0293,
+    "max_pressure_bar": 114.4
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.99624139632888,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 28.918414199986728
+  },
+  {
+   "case": "C7_sym0.1_D8_top_roll5.5_b1.6",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.6,
+    "t_crawler_liftoff_s": 20.7,
+    "t_ready_s": 56.3,
+    "min_true_cyl_force_kN": 47.03,
+    "ss_true_att_deg_maxabs": 0.0295,
+    "max_pressure_bar": 114.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.67049579100454,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 10.541199600003893
+  },
+  {
+   "case": "C7_sym0.1_D8_top_roll5.5_b1.6",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.6,
+    "t_crawler_liftoff_s": 20.7,
+    "t_ready_s": 56.3,
+    "min_true_cyl_force_kN": 46.97,
+    "ss_true_att_deg_maxabs": 0.0268,
+    "max_pressure_bar": 114.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.5,
+    "raw_ratio": 1.6881405095150317,
+    "scale_in_use": 1.5,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 34057769.324999996
+   },
+   "wall": 11.004882800014457
+  },
+  {
+   "case": "C7_asym_G4_pressure",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 27.8,
+    "min_true_cyl_force_kN": 67.31,
+    "ss_true_att_deg_maxabs": 0.0309,
+    "max_pressure_bar": 149.3,
+    "min_true_after_sink_kN": 3.0,
+    "final_true_kN": [
+     116.89,
+     117.42,
+     73.16,
+     69.12
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 11.235913400014397
+  },
+  {
+   "case": "C7_asym_G4_pressure",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 27.9,
+    "min_true_cyl_force_kN": 67.31,
+    "ss_true_att_deg_maxabs": 0.0317,
+    "max_pressure_bar": 149.3,
+    "min_true_after_sink_kN": 3.08,
+    "final_true_kN": [
+     116.93,
+     117.38,
+     73.12,
+     69.16
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 11.383030099997995
+  },
+  {
+   "case": "C7_asym_G4_pressure",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 27.7,
+    "min_true_cyl_force_kN": 67.31,
+    "ss_true_att_deg_maxabs": 0.0308,
+    "max_pressure_bar": 149.2,
+    "min_true_after_sink_kN": 3.08,
+    "final_true_kN": [
+     116.94,
+     117.36,
+     73.09,
+     69.19
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 11.392027199995937
+  },
+  {
+   "case": "C9_R5_G4_pressure",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.0,
+    "min_true_cyl_force_kN": 67.24,
+    "ss_true_att_deg_maxabs": 0.0295,
+    "max_pressure_bar": 146.9,
+    "min_true_after_sink_kN": 7.06,
+    "final_true_kN": [
+     116.95,
+     117.39,
+     73.1,
+     69.14
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 10.45413290002034
+  },
+  {
+   "case": "C9_R5_G4_pressure",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.1,
+    "min_true_cyl_force_kN": 67.27,
+    "ss_true_att_deg_maxabs": 0.0291,
+    "max_pressure_bar": 145.1,
+    "min_true_after_sink_kN": 8.91,
+    "final_true_kN": [
+     116.94,
+     117.4,
+     73.1,
+     69.14
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 10.885371600015787
+  },
+  {
+   "case": "C9_R5_G4_pressure",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.1,
+    "min_true_cyl_force_kN": 67.25,
+    "ss_true_att_deg_maxabs": 0.0287,
+    "max_pressure_bar": 146.8,
+    "min_true_after_sink_kN": 7.01,
+    "final_true_kN": [
+     116.91,
+     117.42,
+     73.14,
+     69.12
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 10.97237750000204
+  },
+  {
+   "case": "C9_R5_G4_combined",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 37.9,
+    "min_true_cyl_force_kN": 58.33,
+    "ss_true_att_deg_maxabs": 0.0294,
+    "max_pressure_bar": 144.6,
+    "min_true_after_sink_kN": 10.3,
+    "final_true_kN": [
+     116.96,
+     117.38,
+     73.06,
+     69.18
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.8640017640264599,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 11.681073499988997
+  },
+  {
+   "case": "C9_R5_G4_combined",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 38.0,
+    "min_true_cyl_force_kN": 58.41,
+    "ss_true_att_deg_maxabs": 0.029,
+    "max_pressure_bar": 144.6,
+    "min_true_after_sink_kN": 8.73,
+    "final_true_kN": [
+     117.01,
+     117.32,
+     73.15,
+     69.1
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0418009717419874,
+    "raw_ratio": 1.0418009717419874,
+    "scale_in_use": 1.0418009717419874,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 23654278.118766297
+   },
+   "wall": 12.21566950000124
+  },
+  {
+   "case": "C9_R5_G4_combined",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 38.0,
+    "min_true_cyl_force_kN": 58.41,
+    "ss_true_att_deg_maxabs": 0.0285,
+    "max_pressure_bar": 145.1,
+    "min_true_after_sink_kN": 9.21,
+    "final_true_kN": [
+     116.89,
+     117.46,
+     73.15,
+     69.08
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": 1.0,
+    "raw_ratio": 0.8222512301835501,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": 4,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 11.8637585999968
+  },
+  {
+   "case": "C10_knom_G4_combined",
+   "seed": 12345,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 37.9,
+    "min_true_cyl_force_kN": 58.33,
+    "ss_true_att_deg_maxabs": 0.0294,
+    "max_pressure_bar": 146.4,
+    "min_true_after_sink_kN": 8.55,
+    "final_true_kN": [
+     117.0,
+     117.34,
+     73.02,
+     69.22
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "k_nom",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 12.364565199997742
+  },
+  {
+   "case": "C10_knom_G4_combined",
+   "seed": 12346,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 38.0,
+    "min_true_cyl_force_kN": 58.41,
+    "ss_true_att_deg_maxabs": 0.029,
+    "max_pressure_bar": 142.2,
+    "min_true_after_sink_kN": 12.78,
+    "final_true_kN": [
+     116.92,
+     117.39,
+     73.06,
+     69.22
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "k_nom",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 12.31236290000379
+  },
+  {
+   "case": "C10_knom_G4_combined",
+   "seed": 12347,
+   "h142": false,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 38.0,
+    "min_true_cyl_force_kN": 58.41,
+    "ss_true_att_deg_maxabs": 0.0285,
+    "max_pressure_bar": 146.4,
+    "min_true_after_sink_kN": 8.52,
+    "final_true_kN": [
+     117.02,
+     117.33,
+     73.04,
+     69.2
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "k_nom",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.0,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 22705179.549999997
+   },
+   "wall": 12.190672900003847
+  },
+  {
+   "case": "C1_D8_top_roll5.5_b0.69",
+   "seed": 12345,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 22.3,
+    "t_ready_s": 44.0,
+    "min_true_cyl_force_kN": 53.59,
+    "ss_true_att_deg_maxabs": 0.0295,
+    "max_pressure_bar": 114.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.235690400004387
+  },
+  {
+   "case": "C1_D8_top_roll5.5_b0.69",
+   "seed": 12346,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 22.3,
+    "t_ready_s": 43.9,
+    "min_true_cyl_force_kN": 53.58,
+    "ss_true_att_deg_maxabs": 0.0296,
+    "max_pressure_bar": 114.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.566743399976986
+  },
+  {
+   "case": "C1_D8_top_roll5.5_b0.69",
+   "seed": 12347,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 22.3,
+    "t_ready_s": 43.9,
+    "min_true_cyl_force_kN": 53.59,
+    "ss_true_att_deg_maxabs": 0.0269,
+    "max_pressure_bar": 114.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.88510079999105
+  },
+  {
+   "case": "C1_D8_top_roll5.5_b1.6",
+   "seed": 12345,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 43.9,
+    "min_true_cyl_force_kN": 49.47,
+    "ss_true_att_deg_maxabs": 0.0295,
+    "max_pressure_bar": 124.1
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.942045000003418
+  },
+  {
+   "case": "C1_D8_top_roll5.5_b1.6",
+   "seed": 12346,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 43.7,
+    "min_true_cyl_force_kN": 52.8,
+    "ss_true_att_deg_maxabs": 0.0296,
+    "max_pressure_bar": 126.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.0361671000137
+  },
+  {
+   "case": "C1_D8_top_roll5.5_b1.6",
+   "seed": 12347,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 43.8,
+    "min_true_cyl_force_kN": 49.46,
+    "ss_true_att_deg_maxabs": 0.0269,
+    "max_pressure_bar": 124.1
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.668387900019297
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b0.69",
+   "seed": 12345,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 21.7,
+    "t_crawler_liftoff_s": 22.7,
+    "t_ready_s": 45.2,
+    "min_true_cyl_force_kN": 55.23,
+    "ss_true_att_deg_maxabs": 0.0271,
+    "max_pressure_bar": 100.6
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.169634600024438
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b0.69",
+   "seed": 12346,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 21.7,
+    "t_crawler_liftoff_s": 22.7,
+    "t_ready_s": 45.3,
+    "min_true_cyl_force_kN": 55.23,
+    "ss_true_att_deg_maxabs": 0.029,
+    "max_pressure_bar": 100.6
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.495508399995742
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b0.69",
+   "seed": 12347,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 21.7,
+    "t_crawler_liftoff_s": 22.7,
+    "t_ready_s": 45.2,
+    "min_true_cyl_force_kN": 55.2,
+    "ss_true_att_deg_maxabs": 0.027,
+    "max_pressure_bar": 102.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.330255799985025
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b1.6",
+   "seed": 12345,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 20.9,
+    "t_crawler_liftoff_s": 21.7,
+    "t_ready_s": 44.1,
+    "min_true_cyl_force_kN": 56.43,
+    "ss_true_att_deg_maxabs": 0.027,
+    "max_pressure_bar": 101.4
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.582754999981262
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b1.6",
+   "seed": 12346,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 21.4,
+    "t_crawler_liftoff_s": 22.3,
+    "t_ready_s": 44.9,
+    "min_true_cyl_force_kN": 55.96,
+    "ss_true_att_deg_maxabs": 0.0292,
+    "max_pressure_bar": 100.8
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.280144299991662
+  },
+  {
+   "case": "C1_D8_top_fdown3.5_b1.6",
+   "seed": 12347,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 20.9,
+    "t_crawler_liftoff_s": 21.8,
+    "t_ready_s": 44.3,
+    "min_true_cyl_force_kN": 55.18,
+    "ss_true_att_deg_maxabs": 0.0277,
+    "max_pressure_bar": 101.7
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.516987399983918
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b0.69",
+   "seed": 12345,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 20.4,
+    "t_ready_s": 43.1,
+    "min_true_cyl_force_kN": 70.48,
+    "ss_true_att_deg_maxabs": 0.0422,
+    "max_pressure_bar": 89.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.82661879999796
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b0.69",
+   "seed": 12346,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 20.4,
+    "t_ready_s": 42.8,
+    "min_true_cyl_force_kN": 70.47,
+    "ss_true_att_deg_maxabs": 0.0405,
+    "max_pressure_bar": 89.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 29.677877199981594
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b0.69",
+   "seed": 12347,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 20.4,
+    "t_ready_s": 42.9,
+    "min_true_cyl_force_kN": 70.46,
+    "ss_true_att_deg_maxabs": 0.039,
+    "max_pressure_bar": 89.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.514345300005516
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b1.6",
+   "seed": 12345,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 18.9,
+    "t_crawler_liftoff_s": 19.9,
+    "t_ready_s": 42.9,
+    "min_true_cyl_force_kN": 70.61,
+    "ss_true_att_deg_maxabs": 0.0418,
+    "max_pressure_bar": 89.3
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.286366499989526
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b1.6",
+   "seed": 12346,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 18.9,
+    "t_crawler_liftoff_s": 19.9,
+    "t_ready_s": 42.6,
+    "min_true_cyl_force_kN": 70.58,
+    "ss_true_att_deg_maxabs": 0.0413,
+    "max_pressure_bar": 89.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.530455200001597
+  },
+  {
+   "case": "C1_D8_top_fup3.5_b1.6",
+   "seed": 12347,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 18.9,
+    "t_crawler_liftoff_s": 19.9,
+    "t_ready_s": 42.7,
+    "min_true_cyl_force_kN": 70.6,
+    "ss_true_att_deg_maxabs": 0.0387,
+    "max_pressure_bar": 89.2
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.34172789999866
+  },
+  {
+   "case": "C1_D8_top_rp05_b0.69",
+   "seed": 12345,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.9,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 42.7,
+    "min_true_cyl_force_kN": 42.3,
+    "ss_true_att_deg_maxabs": 0.0211,
+    "max_pressure_bar": 100.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.474829000013415
+  },
+  {
+   "case": "C1_D8_top_rp05_b0.69",
+   "seed": 12346,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.9,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 42.9,
+    "min_true_cyl_force_kN": 42.3,
+    "ss_true_att_deg_maxabs": 0.0211,
+    "max_pressure_bar": 100.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.992720500013093
+  },
+  {
+   "case": "C1_D8_top_rp05_b0.69",
+   "seed": 12347,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.9,
+    "t_crawler_liftoff_s": 21.0,
+    "t_ready_s": 43.5,
+    "min_true_cyl_force_kN": 42.3,
+    "ss_true_att_deg_maxabs": 0.0168,
+    "max_pressure_bar": 100.5
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.805910800001584
+  },
+  {
+   "case": "C1_D8_top_rp05_b1.6",
+   "seed": 12345,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 42.2,
+    "min_true_cyl_force_kN": 51.26,
+    "ss_true_att_deg_maxabs": 0.0203,
+    "max_pressure_bar": 104.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.385385100002168
+  },
+  {
+   "case": "C1_D8_top_rp05_b1.6",
+   "seed": 12346,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 42.1,
+    "min_true_cyl_force_kN": 51.25,
+    "ss_true_att_deg_maxabs": 0.0225,
+    "max_pressure_bar": 104.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.820436999987578
+  },
+  {
+   "case": "C1_D8_top_rp05_b1.6",
+   "seed": 12347,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 20.2,
+    "t_ready_s": 42.3,
+    "min_true_cyl_force_kN": 51.26,
+    "ss_true_att_deg_maxabs": 0.0181,
+    "max_pressure_bar": 104.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.780085000005784
+  },
+  {
+   "case": "C1_D8_middle_rp05_b1.6",
+   "seed": 12345,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 42.1,
+    "min_true_cyl_force_kN": 54.03,
+    "ss_true_att_deg_maxabs": 0.0203,
+    "max_pressure_bar": 95.9
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.58321480001905
+  },
+  {
+   "case": "C1_D8_middle_rp05_b1.6",
+   "seed": 12346,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 42.0,
+    "min_true_cyl_force_kN": 54.02,
+    "ss_true_att_deg_maxabs": 0.0228,
+    "max_pressure_bar": 95.8
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.16255400000955
+  },
+  {
+   "case": "C1_D8_middle_rp05_b1.6",
+   "seed": 12347,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 42.1,
+    "min_true_cyl_force_kN": 50.51,
+    "ss_true_att_deg_maxabs": 0.0174,
+    "max_pressure_bar": 97.7
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.5110678000201
+  },
+  {
+   "case": "C1_D8_bottom_rp05_b1.6",
+   "seed": 12345,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 42.0,
+    "min_true_cyl_force_kN": 51.58,
+    "ss_true_att_deg_maxabs": 0.0202,
+    "max_pressure_bar": 93.7
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.497188000008464
+  },
+  {
+   "case": "C1_D8_bottom_rp05_b1.6",
+   "seed": 12346,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 41.9,
+    "min_true_cyl_force_kN": 51.57,
+    "ss_true_att_deg_maxabs": 0.0228,
+    "max_pressure_bar": 93.7
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 9.837595099990722
+  },
+  {
+   "case": "C1_D8_bottom_rp05_b1.6",
+   "seed": 12347,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.1,
+    "t_ready_s": 42.1,
+    "min_true_cyl_force_kN": 51.58,
+    "ss_true_att_deg_maxabs": 0.018,
+    "max_pressure_bar": 93.7
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 10.466658099991037
+  },
+  {
+   "case": "C1_G4_pressure",
+   "seed": 12345,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.0,
+    "min_true_cyl_force_kN": 67.24,
+    "ss_true_att_deg_maxabs": 0.0442,
+    "max_pressure_bar": 149.4,
+    "min_true_after_sink_kN": 2.97,
+    "final_true_kN": [
+     117.15,
+     117.2,
+     73.21,
+     69.03
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 12.159503100003349
+  },
+  {
+   "case": "C1_G4_pressure",
+   "seed": 12346,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.1,
+    "min_true_cyl_force_kN": 67.27,
+    "ss_true_att_deg_maxabs": 0.0461,
+    "max_pressure_bar": 149.6,
+    "min_true_after_sink_kN": 2.98,
+    "final_true_kN": [
+     117.07,
+     117.27,
+     73.26,
+     68.98
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 12.392483600007836
+  },
+  {
+   "case": "C1_G4_pressure",
+   "seed": 12347,
+   "h142": true,
+   "metrics": {
+    "t_touch_s": 19.0,
+    "t_crawler_liftoff_s": 19.7,
+    "t_ready_s": 26.1,
+    "min_true_cyl_force_kN": 67.25,
+    "ss_true_att_deg_maxabs": 0.0442,
+    "max_pressure_bar": 149.6,
+    "min_true_after_sink_kN": 3.0,
+    "final_true_kN": [
+     117.16,
+     117.17,
+     73.18,
+     69.07
+    ]
+   },
+   "fails": [],
+   "t_done_s": null,
+   "events": null,
+   "fault": false,
+   "phase": "ready",
+   "revision": "R8-D1 (C2)",
+   "twist_gain_stiffness": {
+    "reference": "measured_Sii",
+    "measured_scale": null,
+    "raw_ratio": null,
+    "scale_in_use": 1.2,
+    "grounded_leg_count": null,
+    "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+    "denominator_N_m": [
+     5146005.703874331,
+     5146005.703874331,
+     6206584.071125668,
+     6206584.071125669
+    ],
+    "stiffness_N_m": 27246215.459999997
+   },
+   "wall": 12.267976599978283
+  }
+ ]
+}

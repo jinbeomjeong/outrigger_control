@@ -75,6 +75,13 @@ class ZeroCalibrationSettings:
     """``|c_i|`` limit (front: 5 bar head + 5 bar rod side equivalent; rear 6 kN)."""
     max_hold_std_N: float = 500.0
     """A hold whose readings scatter more than this (1 sigma) is unsteady."""
+    max_hold_std_per_leg_N: tuple[float, ...] | None = None
+    """R8 R-3 (spec 99.3): per-leg limit instead of ``max_hold_std_N``, ``sigma_0
+    sqrt(chi2_{9, 0.999} / 9)`` = 0.73 kN front / 0.53 kN rear for a 10-sample hold;
+    ``None`` = ``max_hold_std_N`` on every leg."""
+    hold_std_ddof: int = 0
+    """Delta degrees of freedom of the hold scatter (R-3 derives its limit from the sample
+    variance, ``ddof = 1``; 0 = the population scatter of R6)."""
     air_seal_friction_record_N: float = 15e3
     """``F_s,air`` above this is recorded (info event), not acted on."""
     move_timeout_factor: float = 3.0
@@ -95,10 +102,23 @@ class ZeroCalibrationSettings:
             if len(values) != LEG_COUNT or min(values) < 0.0:
                 raise ValueError(f"{name}: expected {LEG_COUNT} values >= 0, got {values!r}")
             object.__setattr__(self, name, values)
+        if self.max_hold_std_per_leg_N is not None:
+            limits = tuple(float(value) for value in self.max_hold_std_per_leg_N)
+            if len(limits) != LEG_COUNT or min(limits) <= 0.0:
+                raise ValueError(f"max_hold_std_per_leg_N: expected {LEG_COUNT} values > 0")
+            object.__setattr__(self, "max_hold_std_per_leg_N", limits)
+        if self.hold_std_ddof not in (0, 1):
+            raise ValueError(f"hold_std_ddof must be 0 or 1, got {self.hold_std_ddof!r}")
 
     @property
     def is_enabled(self) -> bool:
         return self.mode is ZeroCalibrationMode.AIRBORNE_ROUNDTRIP
+
+    def max_hold_std_for_leg_N(self, leg: int) -> float:
+        """Unsteady-hold limit of ``leg`` (per-leg R-3 value or the common one)."""
+        if self.max_hold_std_per_leg_N is None:
+            return self.max_hold_std_N
+        return self.max_hold_std_per_leg_N[leg]
 
     def to_meta(self) -> dict[str, Any]:
         meta = asdict(self)
@@ -287,7 +307,9 @@ class ZeroCalibration:
             )
         extended = np.array([sample[leg] for sample in self._holds[_Stage.HOLD_EXTENDED]])
         retracted = np.array([sample[leg] for sample in self._holds[_Stage.HOLD_RETRACTED]])
-        is_unsteady = max(extended.std(), retracted.std()) > self.settings.max_hold_std_N
+        ddof = self.settings.hold_std_ddof
+        scatter_N = max(extended.std(ddof=ddof), retracted.std(ddof=ddof))
+        is_unsteady = scatter_N > self.settings.max_hold_std_for_leg_N(leg)
         if is_unsteady:
             return LegCalibration(
                 LegCalibrationStatus.SKIPPED, allowance_N=allowance, reason=SkipReason.UNSTEADY

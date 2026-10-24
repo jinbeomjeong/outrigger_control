@@ -152,6 +152,11 @@ class Measurements:
         oil_temperature_C: Hydraulic oil temperature (deg C) when the machine has an oil
             temperature signal (U73, manufacturer to confirm), else ``None``. Used only by
             the C2 re-calibration warning (E-5).
+        imu_specific_force_samples_m_s2: IMU-rate specific force samples of the control
+            period, shape (n, 3), oldest first, the last one ending at ``t_s``; each is the
+            mean over one IMU sample interval (10 ms at 100 Hz). ``None`` when the engine
+            delivers only the period mean ``specific_force_m_s2``. The C2 R8 preset filters
+            the attitude at the IMU rate on these samples (``s6_control_spec.md`` 139 P-3).
     """
 
     t_s: float
@@ -162,6 +167,7 @@ class Measurements:
     stroke_corrected_m: NDArray[np.float64] | None = None
     rod_pressure_Pa: NDArray[np.float64] | None = None
     oil_temperature_C: float | None = None
+    imu_specific_force_samples_m_s2: NDArray[np.float64] | None = None
 
     def __post_init__(self) -> None:
         _freeze_fields(
@@ -181,6 +187,16 @@ class Measurements:
                 self.rod_pressure_Pa, (LEG_COUNT,), "rod_pressure_Pa", allow_nan=True
             )
             object.__setattr__(self, "rod_pressure_Pa", rod)
+        if self.imu_specific_force_samples_m_s2 is not None:
+            self._freeze_imu_samples()
+
+    def _freeze_imu_samples(self) -> None:
+        name = "imu_specific_force_samples_m_s2"
+        sample_count = np.shape(self.imu_specific_force_samples_m_s2)[0]
+        if sample_count < 1:
+            raise InvalidSignalError(name, "needs at least one sample")
+        samples = _frozen_array(self.imu_specific_force_samples_m_s2, (sample_count, 3), name)
+        object.__setattr__(self, name, samples)
 
 
 @dataclass(frozen=True, eq=False)

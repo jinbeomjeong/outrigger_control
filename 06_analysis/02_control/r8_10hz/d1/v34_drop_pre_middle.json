@@ -1,0 +1,38 @@
+[
+ {
+  "variant": "tw0.25_s1",
+  "mode": "G",
+  "t_event_s": 42.699999999991185,
+  "t_ready_s": 39.59999999999841,
+  "lifts": {},
+  "RR_first_contact_s": 0.021,
+  "RR_firm_contact_s": 0.021,
+  "max_cyl_force_kN": [
+   118.2,
+   171.7,
+   130.6,
+   70.5
+  ],
+  "max_head_bar": [
+   89.1,
+   129.3,
+   137.5,
+   74.2
+  ],
+  "max_abs_att_deg": [
+   0.1097,
+   0.0797
+  ],
+  "min_cyl_force_kN_after_event": [
+   61.6,
+   116.01,
+   71.95,
+   11.76
+  ],
+  "t_reready_s": 0.6,
+  "pre_event_reapproach": [],
+  "events": [
+   "1.20 relevel_predicted:RR"
+  ]
+ }
+]

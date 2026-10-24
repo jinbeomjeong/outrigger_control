@@ -1,0 +1,631 @@
+[
+ {
+  "variant": "tw0.25_s1",
+  "mode": "F",
+  "t_event_s": 42.399999999991884,
+  "t_ready_s": 39.29999999999911,
+  "lifts": {
+   "FL": {
+    "sum_s": 0.277,
+    "episodes": [
+     [
+      0.263,
+      0.124,
+      1.14
+     ],
+     [
+      1.005,
+      0.153,
+      1.6
+     ]
+    ]
+   },
+   "RR": {
+    "sum_s": 1.25,
+    "episodes": [
+     [
+      0.008,
+      1.003,
+      23.59
+     ],
+     [
+      1.209,
+      0.247,
+      2.19
+     ]
+    ]
+   }
+  },
+  "RR_first_contact_s": 1.011,
+  "RR_firm_contact_s": 1.456,
+  "max_cyl_force_kN": [
+   165.0,
+   254.6,
+   167.3,
+   114.6
+  ],
+  "max_head_bar": [
+   124.3,
+   191.8,
+   176.0,
+   120.6
+  ],
+  "max_abs_att_deg": [
+   0.3785,
+   0.2081
+  ],
+  "t_reready_s": 35.1,
+  "events": [
+   "0.10 leg_reapproach_start:RR",
+   "0.10 relevel_predicted:RR",
+   "1.70 leg_reapproach_contact:RR"
+  ]
+ },
+ {
+  "variant": "tw0.3_s1",
+  "mode": "F",
+  "t_event_s": 42.399999999991884,
+  "t_ready_s": 39.29999999999911,
+  "lifts": {
+   "FL": {
+    "sum_s": 0.238,
+    "episodes": [
+     [
+      0.264,
+      0.119,
+      1.1
+     ],
+     [
+      0.995,
+      0.119,
+      1.29
+     ]
+    ]
+   },
+   "RR": {
+    "sum_s": 1.097,
+    "episodes": [
+     [
+      0.008,
+      0.953,
+      23.59
+     ],
+     [
+      1.191,
+      0.144,
+      0.73
+     ]
+    ]
+   }
+  },
+  "RR_first_contact_s": 0.961,
+  "RR_firm_contact_s": 1.335,
+  "max_cyl_force_kN": [
+   192.5,
+   254.0,
+   166.6,
+   138.2
+  ],
+  "max_head_bar": [
+   145.0,
+   191.4,
+   175.3,
+   145.4
+  ],
+  "max_abs_att_deg": [
+   0.3846,
+   0.2075
+  ],
+  "t_reready_s": 34.0,
+  "events": [
+   "0.10 leg_reapproach_start:RR",
+   "0.10 relevel_predicted:RR",
+   "1.60 leg_reapproach_contact:RR"
+  ]
+ },
+ {
+  "variant": "tw0.25_b0.5",
+  "mode": "F",
+  "t_event_s": 42.399999999991884,
+  "t_ready_s": 39.29999999999911,
+  "lifts": {
+   "FL": {
+    "sum_s": 0.313,
+    "episodes": [
+     [
+      0.262,
+      0.154,
+      1.51
+     ],
+     [
+      0.992,
+      0.159,
+      2.28
+     ]
+    ]
+   },
+   "RR": {
+    "sum_s": 1.158,
+    "episodes": [
+     [
+      0.008,
+      0.977,
+      23.59
+     ],
+     [
+      1.213,
+      0.181,
+      1.06
+     ]
+    ]
+   }
+  },
+  "RR_first_contact_s": 0.985,
+  "RR_firm_contact_s": 1.394,
+  "max_cyl_force_kN": [
+   207.1,
+   255.5,
+   167.8,
+   153.9
+  ],
+  "max_head_bar": [
+   156.0,
+   192.4,
+   176.6,
+   161.9
+  ],
+  "max_abs_att_deg": [
+   0.3531,
+   0.1919
+  ],
+  "t_reready_s": 37.7,
+  "events": [
+   "0.10 relevel_predicted:RR",
+   "0.20 leg_reapproach_start:RR",
+   "1.70 leg_reapproach_contact:RR"
+  ]
+ },
+ {
+  "variant": "tw0.25_b0.5_s1",
+  "mode": "F",
+  "t_event_s": 42.399999999991884,
+  "t_ready_s": 39.29999999999911,
+  "lifts": {
+   "FL": {
+    "sum_s": 0.232,
+    "episodes": [
+     [
+      0.263,
+      0.124,
+      1.14
+     ],
+     [
+      0.994,
+      0.108,
+      1.09
+     ]
+    ]
+   },
+   "RR": {
+    "sum_s": 1.003,
+    "episodes": [
+     [
+      0.008,
+      0.945,
+      23.59
+     ],
+     [
+      1.193,
+      0.058,
+      0.27
+     ]
+    ]
+   }
+  },
+  "RR_first_contact_s": 0.953,
+  "RR_firm_contact_s": 1.251,
+  "max_cyl_force_kN": [
+   205.6,
+   254.6,
+   166.6,
+   146.0
+  ],
+  "max_head_bar": [
+   154.9,
+   191.8,
+   175.3,
+   153.7
+  ],
+  "max_abs_att_deg": [
+   0.3372,
+   0.1911
+  ],
+  "t_reready_s": 36.8,
+  "events": [
+   "0.10 leg_reapproach_start:RR",
+   "0.10 relevel_predicted:RR",
+   "1.60 leg_reapproach_contact:RR"
+  ]
+ },
+ {
+  "variant": "tw0.3",
+  "mode": "F",
+  "t_event_s": 42.399999999991884,
+  "t_ready_s": 39.29999999999911,
+  "lifts": {
+   "FL": {
+    "sum_s": 0.324,
+    "episodes": [
+     [
+      0.262,
+      0.151,
+      1.51
+     ],
+     [
+      0.986,
+      0.173,
+      2.48
+     ]
+    ]
+   },
+   "RR": {
+    "sum_s": 1.195,
+    "episodes": [
+     [
+      0.008,
+      0.983,
+      23.59
+     ],
+     [
+      1.214,
+      0.212,
+      1.44
+     ]
+    ]
+   }
+  },
+  "RR_first_contact_s": 0.991,
+  "RR_firm_contact_s": 1.426,
+  "max_cyl_force_kN": [
+   196.3,
+   255.1,
+   167.8,
+   145.0
+  ],
+  "max_head_bar": [
+   147.9,
+   192.2,
+   176.6,
+   152.5
+  ],
+  "max_abs_att_deg": [
+   0.3913,
+   0.2119
+  ],
+  "t_reready_s": 34.6,
+  "events": [
+   "0.10 relevel_predicted:RR",
+   "0.20 leg_reapproach_start:RR",
+   "1.70 leg_reapproach_contact:RR"
+  ]
+ },
+ {
+  "variant": "tw0.25_s1",
+  "mode": "P",
+  "t_event_s": 27.500000000010626,
+  "t_ready_s": 62.19999999994574,
+  "lifts": {
+   "FL": {
+    "sum_s": 0.27,
+    "episodes": [
+     [
+      0.264,
+      0.121,
+      1.07
+     ],
+     [
+      1.006,
+      0.149,
+      1.51
+     ]
+    ]
+   },
+   "RR": {
+    "sum_s": 1.242,
+    "episodes": [
+     [
+      0.008,
+      1.0,
+      23.54
+     ],
+     [
+      1.208,
+      0.242,
+      2.1
+     ]
+    ]
+   }
+  },
+  "RR_first_contact_s": 1.008,
+  "RR_firm_contact_s": 1.45,
+  "max_cyl_force_kN": [
+   165.5,
+   254.6,
+   167.2,
+   115.2
+  ],
+  "max_head_bar": [
+   124.7,
+   191.8,
+   175.9,
+   121.2
+  ],
+  "max_abs_att_deg": [
+   0.3797,
+   0.2102
+  ],
+  "t_reready_s": 34.7,
+  "events": [
+   "0.10 leg_reapproach_start:RR",
+   "0.10 relevel_predicted:RR",
+   "0.10 probe_aborted_low_load:RR",
+   "1.70 leg_reapproach_contact:RR"
+  ]
+ },
+ {
+  "variant": "tw0.3_s1",
+  "mode": "P",
+  "t_event_s": 27.500000000010626,
+  "t_ready_s": 62.69999999994457,
+  "lifts": {
+   "FL": {
+    "sum_s": 0.223,
+    "episodes": [
+     [
+      0.265,
+      0.113,
+      1.01
+     ],
+     [
+      0.995,
+      0.11,
+      1.09
+     ]
+    ]
+   },
+   "RR": {
+    "sum_s": 1.079,
+    "episodes": [
+     [
+      0.008,
+      0.95,
+      23.54
+     ],
+     [
+      1.189,
+      0.129,
+      0.54
+     ]
+    ]
+   }
+  },
+  "RR_first_contact_s": 0.958,
+  "RR_firm_contact_s": 1.318,
+  "max_cyl_force_kN": [
+   192.7,
+   253.5,
+   165.6,
+   137.9
+  ],
+  "max_head_bar": [
+   145.2,
+   191.0,
+   174.2,
+   145.1
+  ],
+  "max_abs_att_deg": [
+   0.3872,
+   0.2109
+  ],
+  "t_reready_s": 35.2,
+  "events": [
+   "0.10 leg_reapproach_start:RR",
+   "0.10 relevel_predicted:RR",
+   "0.10 probe_aborted_low_load:RR",
+   "1.60 leg_reapproach_contact:RR",
+   "2.70 leg_reapproach_start:RL",
+   "3.00 leg_reapproach_contact:RL"
+  ]
+ },
+ {
+  "variant": "tw0.25_b0.5",
+  "mode": "P",
+  "t_event_s": 27.500000000010626,
+  "t_ready_s": 65.39999999994822,
+  "lifts": {
+   "FL": {
+    "sum_s": 0.31,
+    "episodes": [
+     [
+      0.263,
+      0.151,
+      1.44
+     ],
+     [
+      0.993,
+      0.159,
+      2.23
+     ]
+    ]
+   },
+   "RR": {
+    "sum_s": 1.167,
+    "episodes": [
+     [
+      0.008,
+      0.979,
+      23.54
+     ],
+     [
+      1.213,
+      0.188,
+      1.14
+     ]
+    ]
+   }
+  },
+  "RR_first_contact_s": 0.987,
+  "RR_firm_contact_s": 1.401,
+  "max_cyl_force_kN": [
+   203.3,
+   255.5,
+   167.9,
+   150.3
+  ],
+  "max_head_bar": [
+   153.2,
+   192.5,
+   176.6,
+   158.1
+  ],
+  "max_abs_att_deg": [
+   0.3575,
+   0.1964
+  ],
+  "t_reready_s": 37.9,
+  "events": [
+   "0.10 relevel_predicted:RR",
+   "0.10 probe_aborted_low_load:RR",
+   "0.20 leg_reapproach_start:RR",
+   "1.70 leg_reapproach_contact:RR"
+  ]
+ },
+ {
+  "variant": "tw0.25_b0.5_s1",
+  "mode": "P",
+  "t_event_s": 27.500000000010626,
+  "t_ready_s": 65.29999999994774,
+  "lifts": {
+   "FL": {
+    "sum_s": 0.229,
+    "episodes": [
+     [
+      0.264,
+      0.121,
+      1.07
+     ],
+     [
+      0.996,
+      0.108,
+      1.07
+     ]
+    ]
+   },
+   "RR": {
+    "sum_s": 1.019,
+    "episodes": [
+     [
+      0.008,
+      0.948,
+      23.54
+     ],
+     [
+      1.193,
+      0.071,
+      0.33
+     ]
+    ]
+   }
+  },
+  "RR_first_contact_s": 0.956,
+  "RR_firm_contact_s": 1.264,
+  "max_cyl_force_kN": [
+   201.1,
+   254.6,
+   165.8,
+   142.0
+  ],
+  "max_head_bar": [
+   151.5,
+   191.8,
+   174.4,
+   149.5
+  ],
+  "max_abs_att_deg": [
+   0.343,
+   0.1951
+  ],
+  "t_reready_s": 37.8,
+  "events": [
+   "0.10 leg_reapproach_start:RR",
+   "0.10 relevel_predicted:RR",
+   "0.10 probe_aborted_low_load:RR",
+   "1.60 leg_reapproach_contact:RR",
+   "2.70 leg_reapproach_start:RL",
+   "3.00 leg_reapproach_contact:RL"
+  ]
+ },
+ {
+  "variant": "tw0.3",
+  "mode": "P",
+  "t_event_s": 27.500000000010626,
+  "t_ready_s": 62.59999999994481,
+  "lifts": {
+   "FL": {
+    "sum_s": 0.318,
+    "episodes": [
+     [
+      0.263,
+      0.149,
+      1.43
+     ],
+     [
+      0.987,
+      0.169,
+      2.37
+     ]
+    ]
+   },
+   "RR": {
+    "sum_s": 1.186,
+    "episodes": [
+     [
+      0.008,
+      0.98,
+      23.54
+     ],
+     [
+      1.212,
+      0.206,
+      1.37
+     ]
+    ]
+   }
+  },
+  "RR_first_contact_s": 0.988,
+  "RR_firm_contact_s": 1.418,
+  "max_cyl_force_kN": [
+   197.5,
+   255.2,
+   167.9,
+   146.1
+  ],
+  "max_head_bar": [
+   148.8,
+   192.2,
+   176.7,
+   153.7
+  ],
+  "max_abs_att_deg": [
+   0.391,
+   0.2138
+  ],
+  "t_reready_s": 35.1,
+  "events": [
+   "0.10 relevel_predicted:RR",
+   "0.10 probe_aborted_low_load:RR",
+   "0.20 leg_reapproach_start:RR",
+   "1.70 leg_reapproach_contact:RR"
+  ]
+ }
+]

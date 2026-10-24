@@ -51,7 +51,7 @@ from __future__ import annotations
 
 import math
 from collections import deque
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field, replace
 from enum import Enum, StrEnum
 
@@ -730,6 +730,9 @@ class ProbeRound:
         retract_first_legs: Legs probed retract first whenever their stroke allows it (R6-P
             P-9: a rod-side fallback leg ends its probe extending, so its rod side stays at
             the return back pressure, spec 53.3).
+        start_load_bands: Friction-band verdicts of the round start already confirmed over
+            several samples by the caller (C2 R8 sample confirmation, spec 99.3); used instead
+            of classifying the start reading when ``load_band_limits_N`` is given.
     """
 
     def __init__(
@@ -746,6 +749,7 @@ class ProbeRound:
         previous_results: Iterable[ProbeResult] = (),
         retract_first_legs: Iterable[int] = (),
         correction_sensitivity_N_m: ArrayLike | None = None,
+        start_load_bands: Sequence[LoadBand] | None = None,
     ) -> None:
         self.settings = settings
         self._retract_first_legs = frozenset(int(leg) for leg in retract_first_legs)
@@ -765,7 +769,9 @@ class ProbeRound:
         self._start_motor_stroke = start.motor_stroke_m.copy()
         self._start_attitude = start.filtered_attitude_rad
         self._start_load_bands: list[LoadBand] | None = None
-        if load_band_limits_N is not None:
+        if load_band_limits_N is not None and start_load_bands is not None:
+            self._start_load_bands = list(start_load_bands)
+        elif load_band_limits_N is not None:
             seal_band_N, F_min_N = load_band_limits_N
             self._start_load_bands = classify_load(start.cylinder_force_N, seal_band_N, F_min_N)
         self._previous = {result.leg_index: result for result in previous_results}

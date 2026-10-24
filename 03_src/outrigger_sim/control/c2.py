@@ -149,6 +149,31 @@ the D8 / relative diamonds; :meth:`C2Config.with_interim_b` is the provisional 3
 preset. :meth:`C2Config.with_r6_behaviour` (and so every older preset) restores both REANCHOR
 directions and the symmetric diamonds.
 
+R8-D1 (``s6_control_spec.md`` revision 26 101 (3)-(9), revision 30 136 / 139; user decisions
+U-R8-6 = C2, U-R8-7, U-R8-8, U-R8-10 of 2026-10-24): :meth:`C2Config.with_10hz_d1` runs at
+10 Hz with the output one period late (``R8Settings.output_delay_periods``, buffer inside the
+controller), the attitude filter at 100 Hz on the IMU samples, the C2 gains, the twist loop on
+a low-passed ``n^T P``, gains divided by the probe-measured stiffness (revision 31 149), the
+increment limit (a FAULT stop skips it), R-1 / R-2, sample confirmation, R-3 and the stroke-end
+slowdown. Revision 32 163.1 (U-R8-13, U-R8-14): the CHECK attitude is the mean raw 10 ms tilt
+from ``check_quiet_after_motion_s`` after the last leg command (P-R8-9), R-5 is on with a
+4-period horizon (P-R8-10), and in PROBE a low load on a leg not being probed stops the probe
+and re-levels (P-R8-11, event ``probe_aborted_low_load:<leg>``). Revision 34 174.4 (U-R8-21,
+replacing P-R8-12 of revision 33): a grounded leg that lifts again is re-approached with the
+twist mode toward it (fastest leg 0.25 ``v_max``, one leg at a time) instead of the twist and
+guard terms, until it reads ``F_min + 5 kN`` on three samples (P-R8-13, events
+``leg_reapproach_start:<leg>``, ``leg_reapproach_contact:<leg>``,
+``WARN_LEG_REAPPROACH_NO_CONTACT:<leg>``); P-R8-12 stays as
+:meth:`LiftedReapproachSettings.leg_mode`. :attr:`C2Controller.command_components_m_s` gives
+the attitude / heave / twist / guard / re-approach parts of each LEVEL command (P-R8-14) and
+the phase command of the other periods; :attr:`C2Controller.raw_output_m_s` and
+:attr:`C2Controller.output_limit_flags` give the command before the limits and which limit
+changed which leg (P-R8-15, revision 35 188.2). The probe stiffness warning range is
+(0.8, 2.3) (P-R8-16).
+Only the start-IMU form exists
+(the late IMU read C1 is not implemented). ``C2Config()`` keeps every R8 setting off, so the
+R7 commands stay bit for bit.
+
 With a level target, ``check_time_s = 0``, the rectangular probe without stroke guard, the
 per-axis band, the 3 kN re-level margin (``allow_legacy_relevel_margin``) and the R4 probe
 judge (verdict re-ground rule, no attitude quality gate, full stiffness window) the run is the
@@ -238,6 +263,7 @@ from outrigger_sim.params import LEG_ORDER, Params, ParamsError
 from outrigger_sim.sensors.attitude import (
     ATTITUDE_FILTER_STAGE_COUNT,
     ATTITUDE_FILTER_TIME_CONSTANT_S,
+    AttitudeEstimate,
     AttitudeEstimator,
     CascadedLowPass,
 )
@@ -251,12 +277,15 @@ logger = logging.getLogger(__name__)
 
 C2_CONTROLLER_NAME = "C2"
 C2_REVISION = "R7"
+R8_REVISION = "R8-D1 (C2)"
+"""Meta revision of a config with R8 settings (:meth:`C2Config.with_10hz_d1`)."""
 DESIGN_SOURCE = (
     "00_docs/04_control/c2_design.md section 14, revision R1 section 16, revision R2 section 17; "
     "revision R3 00_docs/04_control/s6_control_spec.md section 2 (user decisions 2026-10-21); "
     "revision R5 s6_control_spec.md revision 7 section 42.1 (user decisions 2026-10-22); "
     "revision R6 s6_control_spec.md 51.1, 53.3-53.4, 57, 59.1 J-7, 61.3, 63-64 (U43-U65); "
-    "revision R7 s6_control_spec.md 82.5, 86.1-86.3 (user decisions C and provisional B)"
+    "revision R7 s6_control_spec.md 82.5, 86.1-86.3 (user decisions C and provisional B); "
+    "R8-D1 preset s6_control_spec.md rev. 26 101, rev. 30 136 / 139 (C2, 2026-10-24)"
 )
 
 # Crawler footprint box in body xy (m): parts_classified.csv row 'COMPOUND' bbox, CAD (X, Z)
@@ -333,6 +362,28 @@ GEOMETRY_GATE_PHASES = frozenset({C2Phase.DONE, C2Phase.PROBE, C2Phase.READY})
 out by the command-free time)."""
 REFERENCE_UPDATE_PHASES = frozenset({C2Phase.DONE, C2Phase.READY})
 """GE1'-b: phases whose entry arms a refresh of the shadow reference."""
+REAPPROACH_PHASES = frozenset({C2Phase.LEVEL, C2Phase.DONE, C2Phase.PROBE, C2Phase.READY})
+"""P-R8-12 / P-R8-13: phases in which a lifted leg is watched and re-approaches (spec 172.1;
+DONE is the one-period hand-over to PROBE / READY)."""
+COMMAND_COMPONENT_NAMES = ("attitude", "heave", "twist", "guard", "reapproach", "phase_path")
+"""P-R8-14 (spec rev. 34 179.1) / P-R8-15 (rev. 35 188.2): keys of
+:attr:`C2Controller.command_components_m_s`, read by the runner's ``r8_series.cmp_<name>_u``
+columns. ``phase_path`` is the command of a period that ran no LEVEL step."""
+
+
+class OutputLimit(StrEnum):
+    """P-R8-15 (spec rev. 35 188.2): the stages between the raw command and the computed
+    output, keys of :attr:`C2Controller.output_limit_flags`."""
+
+    SPEED_SCALE = "speed_scale"
+    """LEVEL: the whole vector scaled to ``v_max`` (design 6.1)."""
+    CRAWLER_RULE = "crawler_rule"
+    """LEVEL: the crawler-zone heave so that no leg retracts (R1)."""
+    STROKE_END = "stroke_end"
+    """Stroke-end clipping (LEVEL, REANCHOR), the stroke-end FAULT stop and the spec 99.3 end
+    slowdown."""
+    INCREMENT = "increment"
+    """The R8 increment limit, or the R7 output ramp."""
 
 
 class ContactJudge(StrEnum):
@@ -373,6 +424,9 @@ class C2Filters:
     """Low-pass on the stroke-based crawler clearance for the heave loop (proposal N1)."""
     crawler_rule_pressure_time_constant_s: float = 0.2
     """Low-pass on the cylinder force for the crawler-zone clearance estimate (R1, 16.2)."""
+    twist_load_time_constant_s: float | None = None
+    """R8 C2 (spec 136, 139 P-4): one stage on ``n^T P`` of the twist loop only; the F_min
+    guard keeps the raw per-leg reading. ``None`` = no filter (R7)."""
 
 
 class IntegratorBandMode(StrEnum):
@@ -468,6 +522,17 @@ class ReanchorDirection(StrEnum):
     """Never (``reanchor_skipped:direction_off``)."""
 
 
+class StopPredictor(StrEnum):
+    """How the REANCHOR MOVE judges the stop reading (R8 R-1, spec 99.3, 139 P-6)."""
+
+    OFF = "off"
+    """The reading itself (R2-R7)."""
+    READING_RATE = "reading_rate"
+    """``P_hat = P - r_hat (1 + d)`` with ``r_hat`` the mean unloading per period over the
+    last ``stop_predictor_intervals`` periods of the step and ``d`` the output delay: the
+    reading is one period old and the stop acts ``d`` periods late."""
+
+
 @dataclass(frozen=True)
 class ReanchorSettings:
     """Pad re-anchoring after the first levelling (design 17, revision R2, option set H4).
@@ -513,10 +578,17 @@ class ReanchorSettings:
     """H5a (spec 22.4, ``reanchor_after_probe``): with the combined judge the first DONE probes
     first and REANCHOR follows the probe, so its stop floor uses the measured ``F_band``;
     ``False`` = R2-R4.1 order (REANCHOR at the first DONE, probe after the trim)."""
+    stop_predictor: StopPredictor = StopPredictor.OFF
+    """R8 R-1: stop on the predicted reading (``reading_rate``) instead of the reading."""
+    stop_predictor_intervals: int = 3
+    """R-1: ``r_hat`` from up to this many period-to-period changes (4 readings)."""
 
     def __post_init__(self) -> None:
         if not 0.0 < self.speed_fraction <= 1.0:
             raise ValueError(f"speed_fraction must be in (0, 1], got {self.speed_fraction!r}")
+        if self.stop_predictor_intervals < 1:
+            raise ValueError("stop_predictor_intervals must be >= 1")
+        object.__setattr__(self, "stop_predictor", StopPredictor(self.stop_predictor))
         if not self.stair_N:
             raise ValueError("stair_N needs at least one step")
         unknown = [leg for leg in self.targets if leg not in LEG_ORDER]
@@ -540,7 +612,12 @@ class TargetSettings:
     check_time_s: float = 2.0
     """C1 standstill (ASSUMPTION); 0 skips it (TOUCH runs in the first period, as in R2)."""
     check_average_s: float = 1.0
-    """C1: ``(phi_c, theta_c)`` = mean filtered attitude over this window (ASSUMPTION)."""
+    """C1: ``(phi_c, theta_c)`` = mean filtered attitude over this window (ASSUMPTION); with
+    ``r8.check_attitude_from_raw_tilt`` the mean raw IMU-rate tilt."""
+    check_quiet_after_motion_s: float = 0.5
+    """P-R8-9 ``T_q`` (ASSUMPTION, spec 158.1: valve lag tail and the first half period of the
+    rocking): the raw-tilt CHECK window starts this long after the last nonzero leg command
+    (the zero-calibration round trip included). Unused on the filtered-attitude path."""
     roll_ramp_rate_rad_s: float = math.radians(0.4)
     """R1 (U4): reference ramp of a READY change (ASSUMPTION)."""
     pitch_ramp_rate_rad_s: float = math.radians(0.25)
@@ -577,6 +654,8 @@ class TargetSettings:
     def __post_init__(self) -> None:
         if self.check_time_s < 0.0 or self.check_average_s <= 0.0:
             raise ValueError("check_time_s must be >= 0 and check_average_s > 0")
+        if self.check_quiet_after_motion_s < 0.0:
+            raise ValueError("check_quiet_after_motion_s must be >= 0")
         if self.check_max_s < self.check_time_s:
             raise ValueError("check_max_s must be >= check_time_s")
         if self.gyro_noise_std_rad_s < 0.0 or not self.gyro_bias_target_std_rad_s > 0.0:
@@ -698,6 +777,353 @@ class LockTailSettings:
             raise ValueError("tail_m must be >= 0 and speed_fraction in (0, 1]")
 
 
+class TwistGainReference(StrEnum):
+    """Stiffness the twist and guard gains are divided by (R8, spec 135, 139 P-5, U-R8-8)."""
+
+    NOMINAL = "k_nom"
+    """``k_nom`` (R7)."""
+    MEASURED_SII = "measured_Sii"
+    """``k_nom`` times the median ratio of the probe-measured ``S_ii`` to the head-only nominal
+    ``S_ii`` (``C2Geometry.load_sensitivity_diag_N_m``) over the legs of the last probe round
+    the stiffness cue calls grounded (spec 144); ``pre_probe_stiffness_scale`` before a probe."""
+
+
+@dataclass(frozen=True)
+class IncrementLimit:
+    """Output change per leg and period, replacing the soft ramp at 10 Hz (spec 99.3, 99.4).
+
+    Symmetric 0.25 is fixed by Chrono bundle C (U-R8-27, 2026-10-24); a fraction of 0.1 or
+    less is not allowed.
+    """
+
+    fraction_per_period: float = 0.25
+    """``|u_k - u_(k-1)| <= fraction v_max`` per leg (R8 C2 default 0.25, spec 134)."""
+    guard_fraction_per_period: float = 0.25
+    """Limit of a leg whose change has the sign of the F_min guard term this period."""
+
+    def __post_init__(self) -> None:
+        for name in ("fraction_per_period", "guard_fraction_per_period"):
+            if not 0.0 < getattr(self, name) <= 2.0:
+                raise ValueError(f"{name} must be in (0, 2], got {getattr(self, name)!r}")
+
+
+@dataclass(frozen=True)
+class SampleConfirmation:
+    """Consecutive samples a load verdict needs at 10 Hz (spec 99.3 '표본 확인 규칙')."""
+
+    above_samples: int = 1
+    """(a) friction band ABOVE (grounded); a single sample after a fast lift-off can read
+    +23 kN on a leg in the air (hydraulics 18)."""
+    below_samples: int = 1
+    """(b) friction band BELOW (lifted)."""
+    relevel_samples: int = 1
+    """(c) READY P5 low-load re-level (and the PROBE abort of P-R8-11). The guard and the
+    REANCHOR holds stay at 1 (d)."""
+
+    def __post_init__(self) -> None:
+        if min(self.above_samples, self.below_samples, self.relevel_samples) < 1:
+            raise ValueError("sample counts must be >= 1")
+
+    @property
+    def is_active(self) -> bool:
+        return max(self.above_samples, self.below_samples) > 1
+
+
+@dataclass(frozen=True)
+class FastRelevelSettings:
+    """R-5 (spec 134, 139 P-9; on in the R8-D1 preset, U-R8-13): P5 on the predicted reading.
+
+    In READY (spec 147 / P-R8-8: the P5 re-level runs in READY, not DONE) and, with
+    ``R8Settings.probe_abort_on_low_load``, in PROBE on the legs not being probed (P-R8-11), a
+    leg whose lower load estimate falls faster than ``rate_threshold_N_s`` (mean over the last
+    ``rate_intervals`` periods, the latest period falling as well) and whose predicted estimate
+    ``L - r_hat h T`` is below the P5 threshold re-levels on that one sample. Only the falling
+    direction counts, so a single upward 102 Hz sample does not.
+    """
+
+    rate_threshold_N_s: float = 20e3
+    """ASSUMPTION (spec 139 P-9)."""
+    rate_intervals: int = 3
+    horizon_periods: int | None = None
+    """Prediction horizon ``h`` in periods (P-R8-10, spec 157.2); ``None`` = ``1 + d`` (the
+    revision-31 behaviour)."""
+
+    def __post_init__(self) -> None:
+        if not self.rate_threshold_N_s > 0.0 or self.rate_intervals < 1:
+            raise ValueError("rate_threshold_N_s must be > 0 and rate_intervals >= 1")
+        horizon = self.horizon_periods
+        if horizon is not None and (isinstance(horizon, bool) or not isinstance(horizon, int)
+                                    or horizon < 1):
+            raise ValueError(f"horizon_periods must be an int >= 1 or None, got {horizon!r}")
+
+
+class ReapproachMode(StrEnum):
+    """How a lifted leg is driven back to the floor (:class:`LiftedReapproachSettings`)."""
+
+    LEG = "leg"
+    """P-R8-12 (spec rev. 33 172.1): the lifted leg alone at ``speed_fraction v_max``, the
+    twist and guard terms held at zero."""
+    TWIST = "twist"
+    """P-R8-13 (spec rev. 34 174.4): the twist and guard terms replaced by the twist mode toward
+    the lifted leg, the fastest leg at ``twist_speed_fraction v_max``."""
+
+
+def _is_positive_int(value: object) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value >= 1
+
+
+@dataclass(frozen=True)
+class LiftedReapproachSettings:
+    """Re-approach of a leg that lifted again (P-R8-13, spec rev. 34 174.4 / 179.1, U-R8-21).
+
+    Once the machine is lifted, a touched leg whose lower load estimate stays below
+    ``load_fraction_of_F_min F_min`` for ``samples`` periods in a row (LEVEL, DONE, PROBE or
+    READY; never the leg being probed or re-grounded) starts a re-approach (event
+    ``leg_reapproach_start:<leg>``). READY, DONE and PROBE go back to LEVEL as the P5 re-level
+    does, and no DONE is declared while it is active. ``single_leg``: while one leg
+    re-approaches, no other leg starts (the diagonal leg lifting by the rocking would).
+
+    * ``mode`` ``twist`` (P-R8-13, the default): the twist and guard terms are replaced by
+      ``tau_dot = sign(n_j) twist_speed_fraction v_max / max|n|`` (``j`` = the lifted leg), so
+      the fastest leg moves at ``twist_speed_fraction v_max`` and the lifted corner closes about
+      3.8 times faster than by its own leg (spec 173.2); the attitude and heave terms stay. A
+      period in which a grounded leg this twist retracts (FR, RL for RR) reads below ``F_min +
+      protect_margin_N`` (lower estimate) has ``tau_dot = 0``.
+    * ``mode`` ``leg`` (P-R8-12, :meth:`leg_mode`): the lifted leg alone at
+      ``speed_fraction v_max`` with the twist and guard terms held at zero.
+
+    It ends after ``exit_samples`` samples in a row at or above ``F_min + exit_margin_N``
+    (``leg_reapproach_contact:<leg>``), or after ``max_travel_m`` of motor stroke
+    (``WARN_LEG_REAPPROACH_NO_CONTACT:<leg>``; the leg then stays on the guard path until it
+    reads ``F_min`` again).
+    """
+
+    enable: bool = False
+    mode: ReapproachMode = ReapproachMode.TWIST
+    load_fraction_of_F_min: float = 0.5
+    """ASSUMPTION (spec 172.5): 4.7 kN, below the 10.75 kN G4 minimum."""
+    samples: int | None = 1
+    """Consecutive low samples to start (spec 174.4: 1); ``None`` =
+    ``SampleConfirmation.relevel_samples`` (P-R8-12: 2)."""
+    single_leg: bool = True
+    exit_margin_N: float = 5000.0
+    """ASSUMPTION (spec 179.4): the exit level is ``F_min`` plus this (the guard margin)."""
+    exit_samples: int = 3
+    """ASSUMPTION (spec 179.4): consecutive samples at the exit level, so a contact in one
+    rocking half-period does not end it (P-R8-12 chattered on 1 sample, spec 173.1)."""
+    twist_speed_fraction: float = 0.25
+    """ASSUMPTION (spec 179.4): fastest leg of the twist re-approach; 0.3 leaves RL 15.5 kN,
+    0.35 lifts RL (spec 174.2)."""
+    protect_margin_N: float = 5000.0
+    """ASSUMPTION (spec 179.4): twist mode holds ``tau_dot`` at zero while a grounded leg it
+    retracts reads below ``F_min`` plus this. The protected legs are only those the twist
+    retracts, ``sign(n_i) != sign(n_j)`` (FR and RL when RR lifted; spec rev. 35 183 #1,
+    U-R8-25, the revised 174.4 wording): the diagonal leg is extended and gains load."""
+    speed_fraction: float = 0.25
+    """Leg mode: ASSUMPTION (spec 172.5), the R1 re-approach speed of TOUCH (5.23 mm/s)."""
+    max_travel_m: float = 0.04
+    """ASSUMPTION (spec 172.5): the R-2 touch window."""
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "mode", ReapproachMode(self.mode))
+        if not 0.0 < self.load_fraction_of_F_min < 1.0:
+            raise ValueError("load_fraction_of_F_min must be in (0, 1)")
+        if self.samples is not None and not _is_positive_int(self.samples):
+            raise ValueError(f"samples must be an int >= 1 or None, got {self.samples!r}")
+        if not _is_positive_int(self.exit_samples):
+            raise ValueError(f"exit_samples must be an int >= 1, got {self.exit_samples!r}")
+        if not self.exit_margin_N >= 0.0 or not self.protect_margin_N >= 0.0:
+            raise ValueError("exit_margin_N and protect_margin_N must be >= 0")
+        if not 0.0 < self.speed_fraction <= 1.0:
+            raise ValueError("speed_fraction must be in (0, 1]")
+        if not 0.0 < self.twist_speed_fraction <= 1.0:
+            raise ValueError("twist_speed_fraction must be in (0, 1]")
+        if not self.max_travel_m > 0.0:
+            raise ValueError("max_travel_m must be > 0")
+
+    @classmethod
+    def leg_mode(cls) -> LiftedReapproachSettings:
+        """P-R8-12 as revision 33 ran it (on): the lifted leg alone at 0.25 ``v_max``, start on
+        the P5 sample count, end on one sample at ``F_min``, several legs at once."""
+        return cls(
+            enable=True,
+            mode=ReapproachMode.LEG,
+            samples=None,
+            single_leg=False,
+            exit_margin_N=0.0,
+            exit_samples=1,
+        )
+
+
+@dataclass(frozen=True)
+class R8Settings:
+    """10 Hz / output delay changes of spec rev. 26 101 (3)-(9) and rev. 30 139 (C2 R8-D1).
+
+    Every default is the R7 behaviour, so ``R8Settings()`` changes nothing;
+    :meth:`C2Config.with_10hz_d1` sets the decided values. Only the start-IMU form (C2,
+    U-R8-6) exists: the attitude loop reads the IMU filter at ``t_k`` like everything else.
+    """
+
+    output_delay_periods: int = 0
+    """``d``: the command computed from the samples of ``t_k`` is output at ``t_(k+d)``
+    (output buffer of ``d``; U-R8-2 = 1). Run the runner with ``command_delay_periods = 0``
+    then, or the delay counts twice."""
+    imu_sample_period_s: float | None = None
+    """The attitude low-pass runs on ``Measurements.imu_specific_force_samples_m_s2`` at this
+    period (P-3: 0.01 s); ``None`` = once per control period on the period mean (R7)."""
+    increment_limit: IncrementLimit | None = None
+    """Replaces ``output_ramp_time_s`` (which must then be ``None``)."""
+    touch_window_m: float | None = None
+    """R-2: before a leg has seen its touch load, it extends at ``touch_window_speed_fraction``
+    once its motor stroke is within this distance of the level-floor touch extension."""
+    touch_window_speed_fraction: float = 0.5
+    confirmation: SampleConfirmation = field(default_factory=SampleConfirmation)
+    end_slowdown_window_m: float | None = None
+    """Spec 99.3: within this distance below ``soft end - 10 mm`` the leg speeds are scaled so
+    that no extending leg there exceeds ``end_slowdown_speed_fraction`` of ``v_max``."""
+    end_slowdown_speed_fraction: float = 0.25
+    twist_gain_reference: TwistGainReference = TwistGainReference.NOMINAL
+    pre_probe_stiffness_scale: float = 1.0
+    """Stiffness scale before the first probe (the R8-D1 preset: 1.2, spec 143 / 149 P-R8-1:
+    a locked leg is about 20 % stiffer than ``k_nom`` through its rod-side chamber)."""
+    measured_stiffness_scale_min: float | None = 1.0
+    """Lower bound of the measured scale (ASSUMPTION, spec 144.3): the gains never rise above
+    the ``k_nom`` design, the only stiffness the linear checks covered from below.
+    ``None`` = no bound."""
+    measured_stiffness_scale_max: float | None = 1.5
+    """Upper bound of the measured scale (ASSUMPTION, spec 144.3, U-R8-11): above 1.5 the
+    attitude channel limits the margin anyway and lower gains only slow the READY recovery.
+    ``None`` = no bound."""
+    stiffness_warning_range: tuple[float, float] = (0.8, 2.3)
+    """A raw median ratio outside this range gives ``WARN_PROBE_STIFFNESS_OUT_OF_RANGE``
+    (spec 144.3: stiffness outside the verified range). Upper 2.3: ASSUMPTION (spec rev. 35
+    188.2 P-R8-16), beta 1.6 GPa with L1-R reads 2.17; 1.5 before. Independent of the scale
+    bound ``measured_stiffness_scale_max`` (still 1.5)."""
+    fast_relevel: FastRelevelSettings | None = None
+    is_instant_sampling: bool = False
+    """Pressures are 10 Hz instantaneous samples: the meta marks the 345 bar warning as a
+    quasi-static watch (spec 99.3, 101 (9))."""
+    check_attitude_from_raw_tilt: bool = False
+    """P-R8-9 (spec 158.1): ``(phi_c, theta_c)`` = mean of the IMU-rate raw tilt over the last
+    ``target.check_average_s``, starting no earlier than ``target.check_quiet_after_motion_s``
+    after the last nonzero leg command; CHECK is extended until that window is full
+    (``target.check_max_s`` at most). ``False`` = mean of the filtered attitude (R7, rev. 31).
+    Acts only with ``imu_sample_period_s`` (no IMU-rate samples = the R7 path, spec 158.1)."""
+    probe_abort_on_low_load: bool = False
+    """P-R8-11 (spec 159.2, U-R8-14): in PROBE the READY P5 rule (and R-5 when on) watches the
+    legs not being probed; a hit stops the probe and re-levels (``probe_aborted_low_load``)."""
+    lifted_reapproach: LiftedReapproachSettings = field(
+        default_factory=LiftedReapproachSettings
+    )
+    """P-R8-13 (spec rev. 34 174.4, U-R8-21; P-R8-12 = :meth:`LiftedReapproachSettings.
+    leg_mode`); off by default."""
+
+    def __post_init__(self) -> None:
+        delay = self.output_delay_periods
+        if isinstance(delay, bool) or not isinstance(delay, int) or delay < 0:
+            raise ValueError(f"output_delay_periods must be an int >= 0, got {delay!r}")
+        if self.imu_sample_period_s is not None and not self.imu_sample_period_s > 0.0:
+            raise ValueError("imu_sample_period_s must be > 0 or None")
+        if not 0.0 < self.touch_window_speed_fraction <= 1.0:
+            raise ValueError("touch_window_speed_fraction must be in (0, 1]")
+        if not 0.0 < self.end_slowdown_speed_fraction <= 1.0:
+            raise ValueError("end_slowdown_speed_fraction must be in (0, 1]")
+        if not self.pre_probe_stiffness_scale > 0.0:
+            raise ValueError("pre_probe_stiffness_scale must be > 0")
+        scale_min = self.measured_stiffness_scale_min
+        if scale_min is not None and not scale_min > 0.0:
+            raise ValueError("measured_stiffness_scale_min must be > 0 or None")
+        scale_max = self.measured_stiffness_scale_max
+        if scale_max is not None:
+            if not scale_max > 0.0:
+                raise ValueError("measured_stiffness_scale_max must be > 0 or None")
+            if scale_min is not None and scale_max < scale_min:
+                raise ValueError("measured_stiffness_scale_max must be >= the minimum")
+        warning_low, warning_high = self.stiffness_warning_range
+        if not 0.0 < warning_low <= warning_high:
+            raise ValueError("stiffness_warning_range must be (low, high) with 0 < low <= high")
+        object.__setattr__(
+            self, "twist_gain_reference", TwistGainReference(self.twist_gain_reference)
+        )
+
+    @property
+    def is_active(self) -> bool:
+        """Anything differs from R7."""
+        return self != R8Settings()
+
+    @property
+    def uses_raw_check_attitude(self) -> bool:
+        """P-R8-9 is in force: switched on and IMU-rate samples to average."""
+        return self.check_attitude_from_raw_tilt and self.imu_sample_period_s is not None
+
+    def to_meta(self) -> dict[str, Any]:
+        meta = asdict(self)
+        meta["twist_gain_reference"] = str(self.twist_gain_reference)
+        return meta
+
+
+R8_PERIOD_S = 0.1
+"""Pressure, stroke and valve output period (user decision 2026-10-22, U-R8-10)."""
+R8_IMU_SAMPLE_PERIOD_S = 0.01
+"""IMU 100 Hz, its own path (Q-R4)."""
+R8_D1_C2_GAINS = {
+    "attitude_kp_1_s": 0.2,
+    "attitude_ki_1_s2": 0.01,
+    "twist_ktw_1_s": 0.5,
+    "guard_kg_1_s": 0.15,
+}
+"""Spec 136 C2 column (U-R8-7: guard 0.15)."""
+R8_D1_ATTITUDE_TIME_CONSTANT_S = 0.8
+R8_D1_TWIST_LOAD_TIME_CONSTANT_S = 0.2
+R8_ZERO_HOLD_S = 1.0
+"""R-3: 10 samples at 10 Hz."""
+R8_ZERO_HOLD_STD_N = (730.0, 730.0, 530.0, 530.0)
+"""R-3: ``1.76 sigma_0`` front / rear (spec 99.3)."""
+R8_D1_PRE_PROBE_STIFFNESS_SCALE = 1.2
+"""Spec 143 / 149 P-R8-1: the twist and guard gains before the first probe are 1 / 1.2."""
+R8_D1_MEASURED_STIFFNESS_SCALE_MAX = 1.5
+"""Spec 144.3 / 149 P-R8-3 (ASSUMPTION, U-R8-11 accepted 2026-10-24)."""
+R8_D1_STIFFNESS_WARNING_RANGE = (0.8, 2.3)
+"""Spec rev. 35 188.2 P-R8-16 (ASSUMPTION): raw probe ratio range without a warning; the
+upper end holds beta 1.6 GPa (raw 2.17) plus a margin. Was (0.8, 1.5)."""
+MIN_STIFFNESS_SCALE_LEGS = 3
+"""Spec 144.3: a probe round updates the measured scale only with at least this many legs the
+stiffness cue calls grounded (3 legs of the 4-point support are representative)."""
+STIFFNESS_SCALE_DENOMINATOR = "load_sensitivity_diag_N_m (head-only k_nom)"
+"""Meta: the nominal ``S_ii`` the probe-measured ``S_ii`` is divided by (spec 144.2)."""
+R8_D1_FAST_RELEVEL_HORIZON_PERIODS = 4
+"""P-R8-10 (ASSUMPTION, spec 157.2 / 163.4): ``1 + d + ceil(tau_v / T)`` plus one period of
+sample phase; to be confirmed by the harness (3 against 4) and the Chrono re-run."""
+R8_D1_SETTINGS = R8Settings(
+    output_delay_periods=1,
+    imu_sample_period_s=R8_IMU_SAMPLE_PERIOD_S,
+    increment_limit=IncrementLimit(),
+    touch_window_m=0.04,
+    touch_window_speed_fraction=0.5,
+    confirmation=SampleConfirmation(above_samples=3, below_samples=2, relevel_samples=2),
+    end_slowdown_window_m=0.015,
+    end_slowdown_speed_fraction=0.25,
+    twist_gain_reference=TwistGainReference.MEASURED_SII,
+    pre_probe_stiffness_scale=R8_D1_PRE_PROBE_STIFFNESS_SCALE,
+    measured_stiffness_scale_min=1.0,
+    measured_stiffness_scale_max=R8_D1_MEASURED_STIFFNESS_SCALE_MAX,
+    stiffness_warning_range=R8_D1_STIFFNESS_WARNING_RANGE,
+    fast_relevel=FastRelevelSettings(horizon_periods=R8_D1_FAST_RELEVEL_HORIZON_PERIODS),
+    is_instant_sampling=True,
+    check_attitude_from_raw_tilt=True,
+    probe_abort_on_low_load=True,
+    lifted_reapproach=LiftedReapproachSettings(enable=True),
+)
+"""The R8 part of :meth:`C2Config.with_10hz_d1` (spec 99.3, 136, 139, rev. 31 149, rev. 32
+163.1: P-R8-9 raw-tilt CHECK attitude, P-R8-10 R-5 on with horizon 4, P-R8-11 PROBE abort;
+rev. 34 174.4: P-R8-13 lifted-leg re-approach in the twist mode, replacing P-R8-12)."""
+QUASI_STATIC_PRESSURE_NOTE = (
+    "10 Hz instantaneous samples: the 345 bar warning sees about 43 % of a heave transient "
+    "and hardly any 102 Hz ringing; it is a quasi-static watch, not an overpressure "
+    "protection (spec 99.3, U-R8-4)"
+)
+
+
 R5_RELEVEL_LOAD_MARGIN_N = 7000.0
 R5_REANCHOR_FLOOR_MARGIN_N = 10e3
 PROBE_CORRECTION_SENSITIVITY_N_M = (5.83e6, 5.83e6, 6.98e6, 6.98e6)
@@ -754,6 +1180,8 @@ class C2Config:
     pressure_offset_allowance_N: tuple[float, ...] = (0.0,) * LEG_COUNT
     """E-6: lower-bound deduction per leg (guard, P5, Q2, REANCHOR stop, ABOVE); default 0.
     A leg whose calibration fails takes the larger of this and the failure allowance."""
+    r8: R8Settings = field(default_factory=R8Settings)
+    """10 Hz / output-delay behaviour (default R7; :meth:`with_10hz_d1`)."""
 
     def __post_init__(self) -> None:
         if not self.period_s > 0.0:
@@ -761,6 +1189,10 @@ class C2Config:
         if self.output_ramp_time_s is not None and not self.output_ramp_time_s > 0.0:
             raise ValueError(
                 f"output_ramp_time_s must be > 0 or None, got {self.output_ramp_time_s!r}"
+            )
+        if self.r8.increment_limit is not None and self.output_ramp_time_s is not None:
+            raise ValueError(
+                "r8.increment_limit replaces the soft ramp: set output_ramp_time_s to None"
             )
         object.__setattr__(self, "contact", ContactJudge(self.contact))
         object.__setattr__(self, "rod_stroke_fallback", RodStrokeFallback(self.rod_stroke_fallback))
@@ -789,10 +1221,54 @@ class C2Config:
 
         Only ``two_pressure`` is touched (:meth:`TwoPressureSettings.with_r8_period`: load
         baseline settle 0.5 s / mean 1.5 s, D4 2 samples = 0.2 s, D5 hold 0.5 s, E-5 hold
-        30 s). The R8 period, filters and limits are not in the code yet; set ``period_s``
-        and the rest with them.
+        30 s). The whole R8-D1 setting (period, gains, filters, limits) is
+        :meth:`with_10hz_d1`, which includes this.
         """
         return replace(self, two_pressure=self.two_pressure.with_r8_period())
+
+    def with_10hz_d1(self) -> C2Config:
+        """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
+
+        10 Hz pressures, strokes and valve output, output one period late (``d = 1``), the IMU
+        filter at 100 Hz on the IMU samples, A8 attitude gains (Kp 0.2, Ki 0.01, two stages of
+        0.8 s), twist gain 0.5 on ``n^T P`` low-passed 0.2 s (the guard keeps the raw reading),
+        guard gain 0.15, both divided by the probe-measured stiffness (1.2 ``k_nom`` before
+        the first probe, then the median measured / head-only nominal ``S_ii`` bounded to
+        [1.0, 1.5], rev. 31 149), and spec 101 (3)-(9):
+        increment limit 0.25 ``v_max`` per period instead of the soft ramp (a FAULT stop
+        skips it, rev. 31 P-R8-5), R-1 predicted
+        REANCHOR stop (horizon ``1 + d``), R-2 touch window 40 mm at 0.5 ``v_max``, sample
+        confirmation (ABOVE 3, BELOW 2, P5 2), R-3 zero-calibration hold 1.0 s with the
+        chi-square scatter limits, the stroke-end slowdown and the quasi-static 345 bar note;
+        the 10 Hz diagnosis constants of :meth:`with_r8_diagnostics`. Spec rev. 32 163.1:
+        the CHECK attitude is the mean raw 10 ms tilt after the quiet time (P-R8-9), R-5 is on
+        with a 4-period horizon (P-R8-10, U-R8-13) and a low load on a leg not being probed
+        stops the probe (P-R8-11, U-R8-14). Spec rev. 34 174.4 (U-R8-21, replacing P-R8-12 of
+        rev. 33): a leg that lifts again is re-approached in the twist mode, fastest leg 0.25
+        ``v_max``, one leg at a time, started on one low sample and ended on three samples at
+        ``F_min + 5 kN`` (P-R8-13, :class:`LiftedReapproachSettings`). The start-IMU form
+        only: the late IMU read (C1) is not implemented (U-R8-6 = C2).
+        """
+        config = self.with_r8_diagnostics()
+        return replace(
+            config,
+            period_s=R8_PERIOD_S,
+            output_ramp_time_s=None,
+            gains=replace(config.gains, **R8_D1_C2_GAINS),
+            filters=replace(
+                config.filters,
+                attitude_time_constant_s=R8_D1_ATTITUDE_TIME_CONSTANT_S,
+                twist_load_time_constant_s=R8_D1_TWIST_LOAD_TIME_CONSTANT_S,
+            ),
+            reanchor=replace(config.reanchor, stop_predictor=StopPredictor.READING_RATE),
+            zero_calibration=replace(
+                config.zero_calibration,
+                hold_s=R8_ZERO_HOLD_S,
+                max_hold_std_per_leg_N=R8_ZERO_HOLD_STD_N,
+                hold_std_ddof=1,
+            ),
+            r8=R8_D1_SETTINGS,
+        )
 
     def with_interim_b(self) -> C2Config:
         """Copy with the provisional nose-up limit B: 3.1 deg on the relative nose-up side.
@@ -882,6 +1358,15 @@ class C2Config:
 
 STROKE_MEASURABLE_MAX_KEY = "sensors.stroke.measurable_max_m"
 LEG_LOCKED_FORCE_LIMIT_KEY = "legs.{leg}.cylinder.locked_force_limit_N"
+
+
+def _bounded(value: float, lower: float | None, upper: float | None) -> float:
+    """``value`` clipped to the bounds that are given (``None`` = no bound on that side)."""
+    if lower is not None:
+        value = max(value, lower)
+    if upper is not None:
+        value = min(value, upper)
+    return value
 
 
 def _optional_float(params: Params, key: str, default: float) -> float:
@@ -1502,6 +1987,67 @@ def scale_to_speed_limit(leg_speeds_m_s: ArrayLike, max_speed_m_s: float) -> NDA
     return speeds.copy()
 
 
+@dataclass(frozen=True)
+class TwistRates:
+    """Twist channel of one LEVEL period (design 14.5 steps 4-5).
+
+    Attributes:
+        twist_m_s: Twist-loop term after the guard priority (the opposing part dropped).
+        guard_m_s: F_min guard term (0 when the guard does not act).
+        is_guard_active: The lowest load estimate is below ``F_min + margin``.
+    """
+
+    twist_m_s: float
+    guard_m_s: float
+    is_guard_active: bool
+
+    @property
+    def total_m_s(self) -> float:
+        """``tau_dot`` = twist + guard (the twist term alone when the guard is idle)."""
+        if not self.is_guard_active:
+            return self.twist_m_s
+        return self.twist_m_s + self.guard_m_s
+
+
+def twist_rates(
+    twist_load_N: float,
+    load_estimate_N: ArrayLike,
+    geometry: C2Geometry,
+    gains: C2Gains,
+    thresholds: C2Thresholds,
+    stiffness_N_m: float | None = None,
+) -> TwistRates:
+    """Twist loop and F_min guard terms of ``tau_dot`` (m/s), see :func:`twist_rate_command`.
+
+    Args:
+        twist_load_N: ``n^T P`` the twist loop acts on (raw or low-passed, R8 C2).
+        load_estimate_N: Lower load estimate per leg (the guard always uses this raw value).
+        geometry: Twist vector, ``k_nom``, F_min.
+        gains: ``K_tw``, ``K_g``.
+        thresholds: Dead band and guard margin.
+        stiffness_N_m: Stiffness the gains are divided by; ``None`` = ``k_nom`` (R8 P-5).
+    """
+    twist = geometry.twist_vector
+    stiffness = geometry.nominal_pad_stiffness_N_m if stiffness_N_m is None else stiffness_N_m
+    deadband = thresholds.twist_deadband_N
+    if abs(twist_load_N) < deadband:
+        twist_error = 0.0
+    else:
+        twist_error = twist_load_N - math.copysign(deadband, twist_load_N)
+    rate = -gains.twist_ktw_1_s * twist_error / stiffness
+
+    loads = np.asarray(load_estimate_N, dtype=float)
+    guard_level = geometry.F_min_N + thresholds.guard_margin_N
+    lowest_leg = int(np.argmin(loads))
+    if loads[lowest_leg] >= guard_level:
+        return TwistRates(rate, 0.0, False)
+    direction = math.copysign(1.0, twist[lowest_leg])
+    if rate * direction < 0:
+        rate = 0.0
+    guard = direction * gains.guard_kg_1_s * (guard_level - loads[lowest_leg]) / stiffness
+    return TwistRates(rate, guard, True)
+
+
 def twist_rate_command(
     cylinder_force_N: ArrayLike,
     load_estimate_N: ArrayLike,
@@ -1515,34 +2061,31 @@ def twist_rate_command(
     estimate ``L_i`` is below ``F_min + margin``, a twist term that would unload leg ``i`` is
     dropped (priority, N3) and ``sgn(n_i) K_g (F_min + margin - L_i) / k_nom`` is added.
     """
-    twist = geometry.twist_vector
-    k_nom = geometry.nominal_pad_stiffness_N_m
-    twist_load = float(twist @ np.asarray(cylinder_force_N, dtype=float))
-    deadband = thresholds.twist_deadband_N
-    twist_error = (
-        0.0 if abs(twist_load) < deadband else twist_load - math.copysign(deadband, twist_load)
-    )
-    rate = -gains.twist_ktw_1_s * twist_error / k_nom
-
-    loads = np.asarray(load_estimate_N, dtype=float)
-    guard_level = geometry.F_min_N + thresholds.guard_margin_N
-    lowest_leg = int(np.argmin(loads))
-    if loads[lowest_leg] >= guard_level:
-        return rate, False
-    direction = math.copysign(1.0, twist[lowest_leg])
-    if rate * direction < 0:
-        rate = 0.0
-    rate += direction * gains.guard_kg_1_s * (guard_level - loads[lowest_leg]) / k_nom
-    return rate, True
+    twist_load = float(geometry.twist_vector @ np.asarray(cylinder_force_N, dtype=float))
+    rates = twist_rates(twist_load, load_estimate_N, geometry, gains, thresholds)
+    return rates.total_m_s, rates.is_guard_active
 
 
 # --- run state -----------------------------------------------------------------------------
+
+
+def _no_output_limits() -> dict[str, NDArray[np.bool_]]:
+    return {limit.value: np.zeros(LEG_COUNT, dtype=bool) for limit in OutputLimit}
 
 
 @dataclass(frozen=True)
 class _Reground:
     leg: int
     target_stroke_m: float
+
+
+@dataclass(frozen=True)
+class _RawTilt:
+    """Unfiltered accelerometer tilt of one IMU-rate sample (P-R8-9)."""
+
+    t_s: float
+    roll_rad: float
+    pitch_rad: float
 
 
 @dataclass(frozen=True)
@@ -1557,7 +2100,10 @@ class C2Event:
             ``WARN_TARGET_PROJECTED``, ``target_changed``; ``locked_pressure_over_limit:<leg>``;
             B1' ``WARN_GYRO_BIAS_SKIPPED``, ``WARN_GYRO_BIAS_IMPLAUSIBLE``; GE1' shadow flags
             ``shadow_G1L:<leg>``, ``shadow_G1S:<leg>``, ``shadow_G2`` and
-            ``INFO_FLOOR_NONPLANAR`` (:func:`is_shadow_event`).
+            ``INFO_FLOOR_NONPLANAR`` (:func:`is_shadow_event`); R-5 ``relevel_predicted:<leg>``;
+            P-R8-11 ``probe_aborted_low_load:<leg>``; P-R8-12 / P-R8-13
+            ``leg_reapproach_start:<leg>``,
+            ``leg_reapproach_contact:<leg>`` and ``WARN_LEG_REAPPROACH_NO_CONTACT:<leg>``.
     """
 
     t_s: float
@@ -1588,7 +2134,41 @@ class _ReanchorRun:
     abort_outcome: str | None = None
     stop_readings_N: list[tuple[str, float]] = field(default_factory=list)
     """(target leg, its reading) at every MOVE -> HOLD."""
+    stop_predicted_readings_N: list[tuple[str, float]] = field(default_factory=list)
+    """R-1: (target leg, the predicted reading the stop was judged on) at every MOVE -> HOLD."""
+    stop_history_N: list[float] = field(default_factory=list)
+    """R-1: target readings of the current MOVE step, oldest first."""
     is_band_exceeded: bool = False
+
+
+@dataclass
+class _Reapproach:
+    """P-R8-12 / P-R8-13: one re-approach of a lifted leg (meta interval)."""
+
+    leg: int
+    start_s: float
+    start_motor_stroke_m: float
+    mode: ReapproachMode
+    end_s: float | None = None
+    travel_m: float = 0.0
+    outcome: str | None = None
+    """``contact``, ``no_contact`` or ``phase:<phase>`` (left the watched phases)."""
+    exit_samples_seen: int = 0
+    """Consecutive samples at the exit level (at the end: the count it ended with)."""
+    protected_periods: int = 0
+    """Twist mode: periods with ``tau_dot`` held at zero to protect another grounded leg."""
+
+    def to_meta(self) -> dict[str, Any]:
+        return {
+            "leg": LEG_ORDER[self.leg],
+            "mode": str(self.mode),
+            "start_s": self.start_s,
+            "end_s": self.end_s,
+            "travel_m": self.travel_m,
+            "outcome": self.outcome,
+            "exit_samples_seen": self.exit_samples_seen,
+            "protected_periods": self.protected_periods,
+        }
 
 
 @dataclass
@@ -1634,6 +2214,12 @@ class _RunState:
     check_start_s: float | None = None
     check_attitudes: deque[tuple[float, float]] = field(default_factory=deque)
     """Filtered (roll, pitch) of the last CHECK samples; the controller sets the length."""
+    period_raw_tilts: list[_RawTilt] = field(default_factory=list)
+    """IMU-rate raw tilts of the current period (P-R8-9; empty on the R7 path)."""
+    check_raw_tilts: list[_RawTilt] = field(default_factory=list)
+    """Raw tilts of every CHECK period (P-R8-9 window)."""
+    check_window: dict[str, Any] | None = None
+    """P-R8-9 meta: the raw-tilt window ``(phi_c, theta_c)`` was averaged over."""
     gyro_rate_rad_s: tuple[float, float] = (0.0, 0.0)
     """Gyro roll / pitch rate of the current sample (before the bias removal)."""
     check_gyro_rates: list[tuple[float, float]] = field(default_factory=list)
@@ -1708,6 +2294,48 @@ class _RunState:
     calibration_oil_temperature_C: float | None = None
     """E-5: oil temperature when the calibration ended (``None`` = no signal)."""
     oil_temperature_C: float | None = None
+    applied_output_m_s: NDArray[np.float64] = field(default_factory=lambda: np.zeros(LEG_COUNT))
+    """R8: the command output last period (acting now); ``previous_output_m_s`` with d = 0."""
+    output_queue: deque[NDArray[np.float64]] = field(default_factory=deque)
+    """R8: computed commands waiting for their output period (``d`` entries)."""
+    guard_m_s: NDArray[np.float64] | None = None
+    """R8: the F_min guard's share of the leg speeds this period (increment-limit direction)."""
+    twist_stiffness_scale: float | None = None
+    """R8 P-5: bounded median probe-measured / nominal ``S_ii``; ``None`` before an update."""
+    twist_stiffness_raw_ratio: float | None = None
+    """P-R8-7: unbounded median ratio of the last probe round (``None``: under 3 legs)."""
+    twist_stiffness_leg_count: int | None = None
+    """P-R8-7: legs with a stiffness ratio in the last probe round (``None`` before a round)."""
+    above_counts: NDArray[np.int64] = field(
+        default_factory=lambda: np.zeros(LEG_COUNT, dtype=np.int64)
+    )
+    below_counts: NDArray[np.int64] = field(
+        default_factory=lambda: np.zeros(LEG_COUNT, dtype=np.int64)
+    )
+    """R8 sample confirmation: consecutive raw ABOVE / BELOW samples per leg."""
+    relevel_low_count: int = 0
+    """R8 (c): consecutive READY samples below the P5 threshold."""
+    load_estimate_history: deque[NDArray[np.float64]] = field(default_factory=deque)
+    """R-5: lower load estimates of the last periods (the controller sets the length)."""
+    reapproach_low_counts: NDArray[np.int64] = field(
+        default_factory=lambda: np.zeros(LEG_COUNT, dtype=np.int64)
+    )
+    """P-R8-12: consecutive samples below the lift-off level per leg."""
+    is_reapproach_armed: NDArray[np.bool_] = field(
+        default_factory=lambda: np.ones(LEG_COUNT, dtype=bool)
+    )
+    """P-R8-12: off after a re-approach without contact, until the leg reads ``F_min``."""
+    active_reapproaches: dict[int, _Reapproach] = field(default_factory=dict)
+    reapproach_history: list[_Reapproach] = field(default_factory=list)
+    """Every re-approach of the run, the active ones included (meta)."""
+    command_components: dict[str, NDArray[np.float64]] | None = None
+    """P-R8-14 / P-R8-15: parts of this period's command; ``None`` before the first period."""
+    raw_output_m_s: NDArray[np.float64] = field(default_factory=lambda: np.zeros(LEG_COUNT))
+    """P-R8-15: this period's command before the :class:`OutputLimit` stages."""
+    output_limit_flags: dict[str, NDArray[np.bool_]] = field(
+        default_factory=lambda: _no_output_limits()
+    )
+    """P-R8-15: per :class:`OutputLimit`, the legs whose speed that stage changed."""
 
 
 @dataclass(frozen=True)
@@ -1744,11 +2372,19 @@ class C2Controller:
         self.config = config if config is not None else C2Config()
         filters = self.config.filters
         period_s = self.config.period_s
+        attitude_period_s = self.config.r8.imu_sample_period_s or period_s
         self._attitude = AttitudeEstimator(
             CascadedLowPass(
-                filters.attitude_time_constant_s, filters.attitude_stage_count, period_s
+                filters.attitude_time_constant_s, filters.attitude_stage_count, attitude_period_s
             )
         )
+        self._twist_load_filter: CascadedLowPass | None = None
+        if filters.twist_load_time_constant_s is not None:
+            self._twist_load_filter = CascadedLowPass(
+                filters.twist_load_time_constant_s, 1, period_s
+            )
+        # R-2: extension at which a pad meets a level floor at the crawler bottom.
+        self._touch_extension_m = geometry.operating_extension_m(0.0)
         self._completion_filter = CascadedLowPass(filters.completion_time_constant_s, 1, period_s)
         self._clearance_filter = CascadedLowPass(filters.clearance_time_constant_s, 1, period_s)
         self._crawler_rule_force_filter = CascadedLowPass(
@@ -1801,12 +2437,17 @@ class C2Controller:
             )
 
     def _new_run_state(self) -> _RunState:
+        r8 = self.config.r8
+        delay = r8.output_delay_periods
+        history_length = 1 if r8.fast_relevel is None else r8.fast_relevel.rate_intervals + 1
         return _RunState(
             seal_band_N=self.config.initial_seal_band_N,
             phase=C2Phase.CHECK,
             rate_attitude_recent=deque(maxlen=self._rate_attitude_window_size),
             check_attitudes=deque(maxlen=self._check_window_size),
             requested_target=self.config.target.target,
+            output_queue=deque(np.zeros(LEG_COUNT) for _ in range(delay)),
+            load_estimate_history=deque(maxlen=history_length),
         )
 
     @classmethod
@@ -1837,6 +2478,8 @@ class C2Controller:
         self._completion_filter.reset()
         self._clearance_filter.reset()
         self._crawler_rule_force_filter.reset()
+        if self._twist_load_filter is not None:
+            self._twist_load_filter.reset()
         self._floor_estimator.reset()
         self._support_shadow.reset()
         self._standstill_gate.reset()
@@ -1846,34 +2489,65 @@ class C2Controller:
 
     def update(self, measurements: Measurements) -> Command:
         """Leg speed command for the next period (design 14.3 order: read, filter, phase, ramp)."""
+        state = self._state
         reading = self._read(measurements)
         self._update_attitude_filters(measurements)
         self._watch_oil_temperature(measurements)
-        self._state.last_reading = reading
-        phase_before = self._state.phase
-        reanchor_stage_before = None if self._state.reanchor is None else self._state.reanchor.stage
+        state.last_reading = reading
+        state.guard_m_s = None
+        state.command_components = None
+        state.output_limit_flags = _no_output_limits()
+        phase_before = state.phase
+        reanchor_stage_before = None if state.reanchor is None else state.reanchor.stage
+        self._update_lifted_reapproach(reading)
         leg_speeds = self._phase_command(reading)
+        if state.command_components is None:
+            self._record_phase_path_command(leg_speeds)
         self._request_lock_tails(reading, phase_before, reanchor_stage_before)
         self._update_support_shadow(reading, phase_before)
-        self._state.rate_attitude_recent.append(self._state.rate_attitude_rad)
-        self._state.sample_count += 1
-        output = self._apply_output_ramp(leg_speeds)
-        if np.any(output != 0.0):
-            self._state.last_nonzero_command_t_s = measurements.t_s
+        state.rate_attitude_recent.append(state.rate_attitude_rad)
+        state.sample_count += 1
+        slowed_speeds = self._slow_near_stroke_end(reading, leg_speeds)
+        self._note_output_limit(OutputLimit.STROKE_END, leg_speeds, slowed_speeds)
+        output = self._apply_output_ramp(slowed_speeds)
         moving = output != 0.0
-        self._state.last_nonzero_output_m_s = np.where(
-            moving, output, self._state.last_nonzero_output_m_s
-        )
-        return Command(t_s=measurements.t_s, leg_speed_m_s=output)
+        state.last_nonzero_output_m_s = np.where(moving, output, state.last_nonzero_output_m_s)
+        applied = self._delay_output(output)
+        if np.any(applied != 0.0):
+            state.last_nonzero_command_t_s = measurements.t_s
+        state.applied_output_m_s = applied
+        return Command(t_s=measurements.t_s, leg_speed_m_s=applied)
+
+    def _delay_output(self, output: NDArray[np.float64]) -> NDArray[np.float64]:
+        """R8 output buffer: the command of ``d`` periods ago (zero speed before that)."""
+        if self.config.r8.output_delay_periods == 0:
+            return output
+        queue = self._state.output_queue
+        queue.append(output.copy())
+        return queue.popleft()
 
     def meta(self) -> dict[str, Any]:
         """Name, settings and current friction band (JSON-serialisable, new dict per call)."""
         geometry = self.geometry
+        r8 = self.config.r8
         return {
             "controller": C2_CONTROLLER_NAME,
             "design": DESIGN_SOURCE,
-            "revision": C2_REVISION,
+            "revision": R8_REVISION if r8.is_active else C2_REVISION,
             "period_s": self.config.period_s,
+            # P-8: output delay, attitude read time (start IMU only), gain normalisation.
+            "timing": {
+                "d": r8.output_delay_periods,
+                "late_imu": False,
+                "delta_s": None,
+                "imu_sample_period_s": r8.imu_sample_period_s,
+            },
+            "r8": r8.to_meta(),
+            "twist_gain_stiffness": self._twist_gain_stiffness_meta(),
+            "lifted_reapproach": [run.to_meta() for run in self._state.reapproach_history],
+            "locked_pressure_warning_note": (
+                QUASI_STATIC_PRESSURE_NOTE if r8.is_instant_sampling else None
+            ),
             "contact": str(self.config.contact),
             "initial_seal_band_N": self.config.initial_seal_band_N,
             "seal_band_N": self._state.seal_band_N,
@@ -1930,6 +2604,24 @@ class C2Controller:
             },
         }
 
+    def _twist_gain_stiffness_meta(self) -> dict[str, Any]:
+        """P-8 / P-R8-7: gain reference, raw and used scale, denominator, leg count."""
+        state = self._state
+        scale = self._twist_gain_scale()
+        stiffness = self._twist_gain_stiffness_N_m()
+        return {
+            "reference": str(self.config.r8.twist_gain_reference),
+            "measured_scale": state.twist_stiffness_scale,
+            "raw_ratio": state.twist_stiffness_raw_ratio,
+            "scale_in_use": 1.0 if scale is None else scale,
+            "grounded_leg_count": state.twist_stiffness_leg_count,
+            "denominator": STIFFNESS_SCALE_DENOMINATOR,
+            "denominator_N_m": self.geometry.load_sensitivity_diag_N_m.tolist(),
+            "stiffness_N_m": self.geometry.nominal_pad_stiffness_N_m
+            if stiffness is None
+            else stiffness,
+        }
+
     def _zero_calibration_meta(self) -> dict[str, Any]:
         """E-3 / E-6: settings, the round-trip result, offsets and allowances in use."""
         calibration = self._state.zero_calibration
@@ -1958,6 +2650,11 @@ class C2Controller:
             "acceptance": str(settings.acceptance),
             "check_time_s": settings.check_time_s,
             "check_average_s": settings.check_average_s,
+            "check_quiet_after_motion_s": settings.check_quiet_after_motion_s,
+            "check_attitude_source": (
+                "raw_tilt" if self.config.r8.uses_raw_check_attitude else "filtered"
+            ),
+            "check_window": None if state.check_window is None else dict(state.check_window),
             "ramp_rad_s": [settings.roll_ramp_rate_rad_s, settings.pitch_ramp_rate_rad_s],
             "crawler_attitude_rad": None if crawler is None else list(crawler),
             "crawler_settle_map": settings.settle_map.to_meta(),
@@ -2026,9 +2723,62 @@ class C2Controller:
                 if run is None
                 else [{"leg": leg, "reading_N": force} for leg, force in run.stop_readings_N]
             ),
+            "stop_predicted_readings_N": (
+                None
+                if run is None
+                else [
+                    {"leg": leg, "reading_N": force}
+                    for leg, force in run.stop_predicted_readings_N
+                ]
+            ),
         }
 
     # --- diagnostics ---
+
+    @property
+    def computed_output_m_s(self) -> NDArray[np.float64]:
+        """Leg speeds computed in the last period, before the output delay (P-R8-6, a copy).
+
+        With ``d = 0`` this is the returned command; with ``d = 1`` it is output next period.
+        """
+        return self._state.previous_output_m_s.copy()
+
+    @property
+    def command_components_m_s(self) -> dict[str, NDArray[np.float64]]:
+        """Parts of the command computed in the last period (P-R8-14, P-R8-15; copies).
+
+        Names :data:`COMMAND_COMPONENT_NAMES` -> 4 leg speeds (m/s): ``attitude`` ``A [0, phi,
+        theta]``, ``heave`` ``A [z, 0, 0]``, ``twist`` and ``guard`` (the twist-loop and F_min
+        guard shares of ``n tau_dot``), ``reapproach`` (twist mode: ``n tau_dot_lift``; leg
+        mode: the override minus the other parts on the lifted leg) and ``phase_path``. In a
+        LEVEL period ``phase_path`` is zero; in any other period (CHECK zero calibration, TOUCH,
+        PROBE, READY, REANCHOR, a lock tail, FAULT, ...) it holds that phase's command and the
+        other parts are zero. Their sum is :attr:`raw_output_m_s` (to rounding). Empty before
+        the first period.
+        """
+        components = self._state.command_components
+        if components is None:
+            return {}
+        return {name: speeds.copy() for name, speeds in components.items()}
+
+    @property
+    def raw_output_m_s(self) -> NDArray[np.float64]:
+        """Leg speeds of the last period before the :class:`OutputLimit` stages (P-R8-15, a copy).
+
+        LEVEL: the unscaled command (leg-mode re-approach: the lifted leg at its override
+        speed); other phases: the phase command before the REANCHOR stroke-end clip, the end
+        slowdown and the increment limit or ramp. Where no stage acted
+        (:attr:`output_limit_flags` all false) it equals :attr:`computed_output_m_s` to the
+        rounding of ``u_prev + (u - u_prev)`` (last bit; exact without limit or ramp).
+        """
+        return self._state.raw_output_m_s.copy()
+
+    @property
+    def output_limit_flags(self) -> dict[str, NDArray[np.bool_]]:
+        """Per :class:`OutputLimit` value, the legs that stage changed in the last period
+        (P-R8-15, copies; all false before the first period). The output delay is not a
+        stage: it is the gap between :attr:`computed_output_m_s` and the issued command."""
+        return {name: legs.copy() for name, legs in self._state.output_limit_flags.items()}
 
     @property
     def phase(self) -> C2Phase:
@@ -2129,7 +2879,40 @@ class C2Controller:
 
     @property
     def load_bands(self) -> list[LoadBand] | None:
-        """Friction-band verdict of the last readings (``None`` before the first update)."""
+        """Friction-band verdict of the last readings (``None`` before the first update).
+
+        With the R8 sample confirmation a leg is ABOVE / BELOW only after that many
+        consecutive raw verdicts, AMBIGUOUS until then.
+        """
+        raw_bands = self._raw_load_bands()
+        confirmation = self.config.r8.confirmation
+        if raw_bands is None or not confirmation.is_active:
+            return raw_bands
+        state = self._state
+        confirmed = []
+        for band, above, below in zip(
+            raw_bands, state.above_counts, state.below_counts, strict=True
+        ):
+            if band is LoadBand.ABOVE and above < confirmation.above_samples:
+                band = LoadBand.AMBIGUOUS
+            elif band is LoadBand.BELOW and below < confirmation.below_samples:
+                band = LoadBand.AMBIGUOUS
+            confirmed.append(band)
+        return confirmed
+
+    def _count_band_samples(self) -> None:
+        """R8: consecutive raw ABOVE / BELOW verdicts per leg, updated every period."""
+        raw_bands = self._raw_load_bands()
+        if raw_bands is None or not self.config.r8.confirmation.is_active:
+            return
+        state = self._state
+        is_above = np.array([band is LoadBand.ABOVE for band in raw_bands])
+        is_below = np.array([band is LoadBand.BELOW for band in raw_bands])
+        state.above_counts = np.where(is_above, state.above_counts + 1, 0)
+        state.below_counts = np.where(is_below, state.below_counts + 1, 0)
+
+    def _raw_load_bands(self) -> list[LoadBand] | None:
+        """Friction-band verdict of the last reading alone."""
         forces = self._state.last_forces
         if forces is None:
             return None
@@ -2174,7 +2957,7 @@ class C2Controller:
             measurements.t_s,
             np.asarray(measurements.head_pressure_Pa),
             measurements.rod_pressure_Pa,
-            state.previous_output_m_s,
+            state.applied_output_m_s,  # what the legs do now (d = 0: the last output)
             state.phase is C2Phase.READY,
             self._leg_seal_bands_N(),
         )
@@ -2189,6 +2972,9 @@ class C2Controller:
         force_lowpass = self._crawler_rule_force_filter.update(force)
         state.last_cylinder_force_N = force
         state.last_forces = forces
+        self._count_band_samples()
+        if self.config.r8.fast_relevel is not None:
+            state.load_estimate_history.append(self._load_estimate_N(forces.lower))
         return _Reading(
             measurements.t_s,
             force,
@@ -2234,8 +3020,29 @@ class C2Controller:
             oil_stiffness = geometry.oil_stiffness_N_m(geometry.operating_extension_m(clearance_m))
         return motor_stroke_m - cylinder_force_N / oil_stiffness
 
+    def _filtered_attitude(self, measurements: Measurements) -> AttitudeEstimate:
+        """Attitude low-pass on the period mean, or (R8 P-3) on every IMU-rate sample."""
+        if self.config.r8.imu_sample_period_s is None:
+            return self._attitude.update(measurements.t_s, measurements.specific_force_m_s2)
+        samples = measurements.imu_specific_force_samples_m_s2
+        if samples is None:
+            raise ValueError(
+                "r8.imu_sample_period_s is set: Measurements.imu_specific_force_samples_m_s2 "
+                "must carry the IMU-rate samples of the period (spec 139 P-3)"
+            )
+        sample_period_s = self.config.r8.imu_sample_period_s
+        raw_tilts = self._state.period_raw_tilts
+        raw_tilts.clear()
+        last_index = len(samples) - 1
+        for index, sample in enumerate(samples):
+            # The last sample of the period closes at t_s (runner box averages, P-3).
+            sample_t_s = measurements.t_s - (last_index - index) * sample_period_s
+            estimate = self._attitude.update(sample_t_s, sample)
+            raw_tilts.append(_RawTilt(sample_t_s, estimate.roll_raw_rad, estimate.pitch_raw_rad))
+        return estimate
+
     def _update_attitude_filters(self, measurements: Measurements) -> None:
-        estimate = self._attitude.update(measurements.t_s, measurements.specific_force_m_s2)
+        estimate = self._filtered_attitude(measurements)
         completion = self._completion_filter.update([estimate.roll_rad, estimate.pitch_rad])
         state = self._state
         state.roll_rad, state.pitch_rad = estimate.roll_rad, estimate.pitch_rad
@@ -2303,7 +3110,11 @@ class C2Controller:
             return tail_speeds  # U62: the phase waits for the tail and its settle
         self._advance_reference()
         if phase is C2Phase.REANCHOR:
-            return self._clip_at_stroke_ends(reading, self._reanchor_step(reading))
+            reanchor_speeds = self._reanchor_step(reading)
+            self._record_phase_path_command(reanchor_speeds)
+            clipped_speeds = self._clip_at_stroke_ends(reading, reanchor_speeds)
+            self._note_output_limit(OutputLimit.STROKE_END, reanchor_speeds, clipped_speeds)
+            return clipped_speeds
         is_reanchor_at_done = not self._is_reanchor_after_probe()
         if phase is C2Phase.DONE and is_reanchor_at_done and not self._is_reanchor_decided():
             # Decided before the re-level check, as the reduced model the design verified.
@@ -2341,7 +3152,9 @@ class C2Controller:
         state.touch_seen |= bears_touch_load
         max_speed = self.geometry.max_speed_m_s
         approach_speed = np.where(
-            state.touch_seen, thresholds.touch_approach_speed_fraction * max_speed, max_speed
+            state.touch_seen,
+            thresholds.touch_approach_speed_fraction * max_speed,
+            self._free_extension_speeds(reading),
         )
         leg_speeds = np.where(state.touched | is_waiting, 0.0, approach_speed)
         if state.touched.all():
@@ -2352,6 +3165,17 @@ class C2Controller:
             state.pitch_integral = 0.0
             self._record_floor_estimate(reading.t_s)
         return leg_speeds
+
+    def _free_extension_speeds(self, reading: _Reading) -> NDArray[np.float64] | float:
+        """Speed of a leg that has not seen its touch load: ``v_max``, or (R-2) the touch-window
+        speed once its motor stroke is within the window of the level-floor touch extension."""
+        r8 = self.config.r8
+        max_speed = self.geometry.max_speed_m_s
+        if r8.touch_window_m is None:
+            return max_speed
+        window_start_m = self._touch_extension_m - r8.touch_window_m
+        is_in_window = reading.motor_stroke_m >= window_start_m
+        return np.where(is_in_window, r8.touch_window_speed_fraction * max_speed, max_speed)
 
     def _record_floor_estimate(self, t_s: float) -> None:
         """X9: shadow floor estimate (B) at the end of TOUCH; meta and an event only."""
@@ -2561,10 +3385,82 @@ class C2Controller:
         thresholds = self.config.thresholds
         if self._completion_deviation_rad() > thresholds.relevel_attitude_rad:
             return True
-        if state.phase is not C2Phase.READY or not state.is_lifted:
+        if not self._is_low_load_watched():
+            state.relevel_low_count = 0
+            return self._relevels_for_reapproach(reading.t_s)
+        relevel_level_N = self.geometry.F_min_N + thresholds.relevel_load_margin_N
+        probed_leg = self._probed_leg()
+        predicted_leg = self._leg_falling_below(relevel_level_N, reading.t_s, probed_leg)
+        if predicted_leg is not None:
+            self._note_probe_abort(reading.t_s, predicted_leg)
+            return True
+        loads = self._load_estimate_N(reading.cylinder_force_lower_N)
+        if probed_leg is not None:
+            loads = loads.copy()  # the pressure judge returns the reading itself
+            loads[probed_leg] = math.inf  # the probe unloads its own leg on purpose
+        lowest_leg = int(np.argmin(loads))
+        is_low = float(loads[lowest_leg]) < relevel_level_N
+        state.relevel_low_count = state.relevel_low_count + 1 if is_low else 0
+        if state.relevel_low_count < self.config.r8.confirmation.relevel_samples:
+            return self._relevels_for_reapproach(reading.t_s)
+        self._note_probe_abort(reading.t_s, lowest_leg)
+        return True
+
+    def _is_low_load_watched(self) -> bool:
+        """P5 / R-5 watch: READY, and PROBE with P-R8-11, once the machine is lifted."""
+        state = self._state
+        if not state.is_lifted:
             return False
-        lowest_load = float(self._load_estimate_N(reading.cylinder_force_lower_N).min())
-        return lowest_load < self.geometry.F_min_N + thresholds.relevel_load_margin_N
+        if state.phase is C2Phase.READY:
+            return True
+        return state.phase is C2Phase.PROBE and self.config.r8.probe_abort_on_low_load
+
+    def _probed_leg(self) -> int | None:
+        """P-R8-11: the leg the probe (or its re-ground step) moves now; ``None`` outside PROBE
+        or before the round has started."""
+        state = self._state
+        if state.phase is not C2Phase.PROBE:
+            return None
+        if state.reground is not None:
+            return state.reground.leg
+        probe_round = state.probe_round
+        if probe_round is None or probe_round.is_finished:
+            return None
+        return probe_round.leg
+
+    def _note_probe_abort(self, t_s: float, leg: int) -> None:
+        """P-R8-11 event when the low-load re-level stops a probe (spec 163.1)."""
+        if self._state.phase is C2Phase.PROBE:
+            self._add_event(t_s, f"probe_aborted_low_load:{LEG_ORDER[leg]}", is_warning=True)
+
+    def _leg_falling_below(
+        self, relevel_level_N: float, t_s: float, excluded_leg: int | None
+    ) -> int | None:
+        """R-5: the leg falling fast whose predicted estimate is lowest below P5, or ``None``.
+
+        The prediction horizon is ``fast_relevel.horizon_periods`` (``None`` = ``1 + d``).
+        ``excluded_leg`` (the probed leg) is not watched.
+        """
+        settings = self.config.r8.fast_relevel
+        history = self._state.load_estimate_history
+        if settings is None or len(history) < settings.rate_intervals + 1:
+            return None
+        oldest, previous, latest = history[0], history[-2], history[-1]
+        drop_per_period = (oldest - latest) / settings.rate_intervals
+        horizon_periods = settings.horizon_periods
+        if horizon_periods is None:
+            horizon_periods = 1 + self.config.r8.output_delay_periods
+        predicted = latest - drop_per_period * horizon_periods
+        is_fast = drop_per_period / self.config.period_s > settings.rate_threshold_N_s
+        is_falling_now = previous > latest
+        triggered = is_fast & is_falling_now & (predicted < relevel_level_N)
+        if excluded_leg is not None:
+            triggered[excluded_leg] = False
+        if not triggered.any():
+            return None
+        leg = int(np.argmin(np.where(triggered, predicted, np.inf)))
+        self._add_event(t_s, f"relevel_predicted:{LEG_ORDER[leg]}", is_warning=True)
+        return leg
 
     def _start_relevel(self) -> None:
         """Back to LEVEL keeping the integrators; probe bookkeeping restarts.
@@ -2577,6 +3473,158 @@ class C2Controller:
         state.probe_round = None
         state.reground = None
         state.skips_probe_after_reanchor = False
+        state.relevel_low_count = 0
+
+    # --- lifted-leg re-approach (P-R8-12 leg mode, P-R8-13 twist mode) ---
+
+    def _update_lifted_reapproach(self, reading: _Reading) -> None:
+        """Re-approach bookkeeping of one period, before the phase command (spec 172.1, 174.4).
+
+        Ends the re-approaches that held the exit level long enough or reached their travel
+        limit, then starts one on a touched leg whose lower load estimate has stayed below the
+        lift-off level for the confirmation samples (with ``single_leg`` only while none is
+        active). Off, or outside the watched phases, nothing starts.
+        """
+        settings = self.config.r8.lifted_reapproach
+        if not settings.enable:
+            return
+        state = self._state
+        if state.phase not in REAPPROACH_PHASES or not state.is_lifted:
+            for leg in list(state.active_reapproaches):
+                self._end_reapproach(leg, reading, f"phase:{state.phase}")
+            state.reapproach_low_counts[:] = 0
+            return
+        loads = self._load_estimate_N(reading.cylinder_force_lower_N)
+        self._end_finished_reapproaches(reading, loads, settings)
+        self._start_reapproaches(reading, loads, settings)
+
+    def _end_finished_reapproaches(
+        self,
+        reading: _Reading,
+        loads_N: NDArray[np.float64],
+        settings: LiftedReapproachSettings,
+    ) -> None:
+        state = self._state
+        min_load_N = self.geometry.F_min_N
+        exit_level_N = min_load_N + settings.exit_margin_N
+        for leg, run in list(state.active_reapproaches.items()):
+            travel = float(reading.motor_stroke_m[leg]) - run.start_motor_stroke_m
+            if loads_N[leg] >= exit_level_N:
+                run.exit_samples_seen += 1
+            else:
+                run.exit_samples_seen = 0
+            if run.exit_samples_seen >= settings.exit_samples:
+                self._end_reapproach(leg, reading, "contact")
+                self._add_event(reading.t_s, f"leg_reapproach_contact:{LEG_ORDER[leg]}")
+            elif travel > settings.max_travel_m:
+                self._end_reapproach(leg, reading, "no_contact")
+                state.is_reapproach_armed[leg] = False
+                self._add_event(
+                    reading.t_s,
+                    f"WARN_LEG_REAPPROACH_NO_CONTACT:{LEG_ORDER[leg]}",
+                    is_warning=True,
+                )
+        # A leg left on the guard path after a failed re-approach is watched again once it
+        # bears F_min, so a deep sink does not restart the same 40 mm search every period.
+        state.is_reapproach_armed |= loads_N >= min_load_N
+
+    def _start_reapproaches(
+        self,
+        reading: _Reading,
+        loads_N: NDArray[np.float64],
+        settings: LiftedReapproachSettings,
+    ) -> None:
+        state = self._state
+        lift_off_level_N = settings.load_fraction_of_F_min * self.geometry.F_min_N
+        required_samples = settings.samples or self.config.r8.confirmation.relevel_samples
+        probed_leg = self._probed_leg()  # the probe unloads its own leg on purpose
+        for leg in range(LEG_COUNT):
+            is_another_leg_active = settings.single_leg and bool(state.active_reapproaches)
+            is_watched = (
+                state.touched[leg]
+                and state.is_reapproach_armed[leg]
+                and leg not in state.active_reapproaches
+                and leg != probed_leg
+                and not is_another_leg_active
+            )
+            if not is_watched or loads_N[leg] >= lift_off_level_N:
+                state.reapproach_low_counts[leg] = 0
+                continue
+            state.reapproach_low_counts[leg] += 1
+            if state.reapproach_low_counts[leg] < required_samples:
+                continue
+            state.reapproach_low_counts[leg] = 0
+            run = _Reapproach(
+                leg, reading.t_s, float(reading.motor_stroke_m[leg]), settings.mode
+            )
+            state.active_reapproaches[leg] = run
+            state.reapproach_history.append(run)
+            self._add_event(
+                reading.t_s, f"leg_reapproach_start:{LEG_ORDER[leg]}", is_warning=True
+            )
+
+    def _end_reapproach(self, leg: int, reading: _Reading, outcome: str) -> None:
+        run = self._state.active_reapproaches.pop(leg)
+        run.end_s = reading.t_s
+        run.travel_m = float(reading.motor_stroke_m[leg]) - run.start_motor_stroke_m
+        run.outcome = outcome
+
+    def _reapproaching_legs(self) -> NDArray[np.bool_]:
+        legs = np.zeros(LEG_COUNT, dtype=bool)
+        legs[list(self._state.active_reapproaches)] = True
+        return legs
+
+    def _relevels_for_reapproach(self, t_s: float) -> bool:
+        """DONE / PROBE / READY with an active re-approach go back to LEVEL (spec 172.1: the
+        transition of P5 and R-5); a probe stop is reported as P-R8-11 does."""
+        active_legs = sorted(self._state.active_reapproaches)
+        if not active_legs:
+            return False
+        self._note_probe_abort(t_s, active_legs[0])
+        return True
+
+    def _apply_reapproach_speeds(
+        self, leg_speeds: NDArray[np.float64], reapproaching: NDArray[np.bool_]
+    ) -> NDArray[np.float64]:
+        """Leg mode: the re-approaching legs extend at ``speed_fraction v_max``; the others keep
+        theirs. Twist mode: unchanged (the re-approach is in ``tau_dot``)."""
+        settings = self.config.r8.lifted_reapproach
+        if not reapproaching.any() or settings.mode is ReapproachMode.TWIST:
+            return leg_speeds
+        speed_fraction = settings.speed_fraction
+        speeds = leg_speeds.copy()
+        speeds[reapproaching] = speed_fraction * self.geometry.max_speed_m_s
+        # The override is part of the raw command (P-R8-15): the stages it replaces on the
+        # lifted legs did not limit them.
+        flags = self._state.output_limit_flags
+        for limit in (OutputLimit.SPEED_SCALE, OutputLimit.CRAWLER_RULE):
+            flags[limit.value] = flags[limit.value] & ~reapproaching
+        return speeds
+
+    def _reapproach_twist_rate(self, reading: _Reading) -> float:
+        """Twist mode ``tau_dot_lift = sign(n_j) f v_max / max|n|`` toward the lifted leg ``j``
+        (spec 174.4), or zero while a grounded leg this twist retracts reads below ``F_min +
+        protect_margin_N`` (lower estimate).
+
+        Only the retracted legs (``sign(n_i) != sign(n_j)``, FR and RL for RR) are protected:
+        the twist unloads them. The diagonal leg is extended, so its load rises; its rocking
+        lift-off (spec 173.1) zeroing ``tau_dot`` would delay the re-contact (reduced plant:
+        RR first contact 1.01 -> 1.72 s).
+        """
+        settings = self.config.r8.lifted_reapproach
+        state = self._state
+        lifted_leg = min(state.active_reapproaches)  # single_leg: the only one
+        twist = self.geometry.twist_vector
+        loads = self._load_estimate_N(reading.cylinder_force_lower_N)
+        is_protected = state.touched & (np.sign(twist) != np.sign(twist[lifted_leg]))
+        protect_level_N = self.geometry.F_min_N + settings.protect_margin_N
+        if np.any(loads[is_protected] < protect_level_N):
+            state.active_reapproaches[lifted_leg].protected_periods += 1
+            return 0.0
+        fastest_leg_speed = settings.twist_speed_fraction * self.geometry.max_speed_m_s
+        return math.copysign(1.0, twist[lifted_leg]) * fastest_leg_speed / float(
+            np.max(np.abs(twist))
+        )
 
     # --- zero calibration (E-3, E-5, E-6) ---
 
@@ -2692,6 +3740,8 @@ class C2Controller:
             state.zero_calibration = None
         state.check_start_s = None
         state.check_attitudes.clear()
+        state.check_raw_tilts.clear()
+        state.check_window = None
         state.check_gyro_rates.clear()
         state.check_gyro_times_s.clear()
         state.crawler_attitude_rad = None
@@ -2707,18 +3757,26 @@ class C2Controller:
         state.check_attitudes.append((state.roll_rad, state.pitch_rad))
         state.check_gyro_rates.append(state.gyro_rate_rad_s)
         state.check_gyro_times_s.append(reading.t_s)
+        uses_raw_tilt = self.config.r8.uses_raw_check_attitude
+        if uses_raw_tilt:
+            state.check_raw_tilts.extend(state.period_raw_tilts)
         settings = self.config.target
         if reading.t_s - state.check_start_s < settings.check_time_s - CHECK_TIME_SLACK_S:
             return False
         if self._is_zero_calibration_running():
             return False  # E-3: CHECK ends once the round trip is done as well
+        if uses_raw_tilt and not self._is_raw_check_window_ready(reading.t_s):
+            return False  # P-R8-9: CHECK goes on until the quiet window is full
         estimate = self._estimate_gyro_bias(reading.t_s)
         if estimate is None:
             return False  # B1': CHECK goes on (window shorter than T_b or still moving)
         self._accept_gyro_bias_estimate(estimate, reading.t_s)
-        # A1-A4 on the last check_average_s of the CHECK, extended or not (spec 34 B1).
-        roll, pitch = np.mean(np.array(state.check_attitudes), axis=0)
-        state.crawler_attitude_rad = (float(roll), float(pitch))
+        if uses_raw_tilt:
+            state.crawler_attitude_rad = self._raw_check_attitude_rad(reading.t_s)
+        else:
+            # A1-A4 on the last check_average_s of the CHECK, extended or not (spec 34 B1).
+            roll, pitch = np.mean(np.array(state.check_attitudes), axis=0)
+            state.crawler_attitude_rad = (float(roll), float(pitch))
         requested = state.requested_target or AttitudeTarget()
         check = self._record_check(
             check_target(
@@ -2739,6 +3797,72 @@ class C2Controller:
         state.phase = C2Phase.TOUCH
         state.touch_start_sample = state.sample_count
         return True
+
+    def _check_quiet_start_s(self) -> float | None:
+        """P-R8-9: last nonzero leg command + ``T_q``; ``-inf`` when no leg has moved, ``None``
+        while a nonzero command is still to be output (just computed or in the output buffer)."""
+        state = self._state
+        is_command_pending = bool(np.any(state.previous_output_m_s != 0.0)) or any(
+            np.any(queued != 0.0) for queued in state.output_queue
+        )
+        if is_command_pending:
+            return None
+        if state.last_nonzero_command_t_s is None:
+            return -math.inf
+        return state.last_nonzero_command_t_s + self.config.target.check_quiet_after_motion_s
+
+    def _raw_check_window_size(self) -> int:
+        sample_period_s = self.config.r8.imu_sample_period_s or self.config.period_s
+        return max(1, round(self.config.target.check_average_s / sample_period_s))
+
+    def _last_raw_check_tilts(self) -> list[_RawTilt]:
+        """The last ``check_average_s`` of CHECK raw tilts (fewer early in CHECK)."""
+        return self._state.check_raw_tilts[-self._raw_check_window_size() :]
+
+    def _quiet_raw_check_tilts(self, window: list[_RawTilt]) -> list[_RawTilt]:
+        quiet_start_s = self._check_quiet_start_s()
+        if quiet_start_s is None:
+            return []
+        return [tilt for tilt in window if tilt.t_s >= quiet_start_s - CHECK_TIME_SLACK_S]
+
+    def _is_raw_check_window_ready(self, t_s: float) -> bool:
+        """P-R8-9: a full ``check_average_s`` of raw tilts after the quiet start, or CHECK has
+        reached ``check_max_s`` (no further extension)."""
+        state = self._state
+        check_duration_s = t_s - (state.check_start_s or t_s)
+        if check_duration_s >= self.config.target.check_max_s - CHECK_TIME_SLACK_S:
+            return True
+        window = self._last_raw_check_tilts()
+        is_window_long_enough = len(window) == self._raw_check_window_size()
+        return is_window_long_enough and len(self._quiet_raw_check_tilts(window)) == len(window)
+
+    def _raw_check_attitude_rad(self, t_s: float) -> tuple[float, float]:
+        """P-R8-9 ``(phi_c, theta_c)``: mean raw tilt of the quiet window.
+
+        At ``check_max_s`` without a full quiet window it averages the quiet part of the last
+        ``check_average_s``, or that whole window when none of it is quiet; the meta records
+        which (``check_window``).
+        """
+        state = self._state
+        window = self._last_raw_check_tilts()
+        quiet = self._quiet_raw_check_tilts(window)
+        averaged = quiet or window
+        roll = float(np.mean([tilt.roll_rad for tilt in averaged]))
+        pitch = float(np.mean([tilt.pitch_rad for tilt in averaged]))
+        quiet_start_s = self._check_quiet_start_s()
+        state.check_window = {
+            "t_judged_s": t_s,
+            "t_first_sample_s": averaged[0].t_s,
+            "t_last_sample_s": averaged[-1].t_s,
+            "sample_count": len(averaged),
+            "quiet_start_s": (
+                quiet_start_s if quiet_start_s is not None and math.isfinite(quiet_start_s)
+                else None
+            ),
+            "last_nonzero_command_t_s": state.last_nonzero_command_t_s,
+            "is_quiet_window_full": len(quiet) == len(window),
+        }
+        return roll, pitch
 
     def _estimate_gyro_bias(self, t_s: float) -> GyroBiasEstimate | None:
         """B1' (spec 39): the CHECK bias decision, ``None`` while CHECK has to go on.
@@ -2882,22 +4006,145 @@ class C2Controller:
                 geometry.max_speed_m_s,
             )
         )
-        load_estimate = self._load_estimate_N(reading.cylinder_force_lower_N)
-        twist_rate, _ = twist_rate_command(
-            reading.cylinder_force_N, load_estimate, geometry, self.config.gains, thresholds
-        )
-        leg_speeds = geometry.leg_speeds(heave_rate, roll_rate, pitch_rate, twist_rate)
-        leg_speeds = scale_to_speed_limit(leg_speeds, geometry.max_speed_m_s)
+        reapproaching = self._reapproaching_legs()
+        twist_rate = self._twist_channel_rate(reading, is_held=bool(reapproaching.any()))
+        unscaled_speeds = geometry.leg_speeds(heave_rate, roll_rate, pitch_rate, twist_rate)
+        leg_speeds = scale_to_speed_limit(unscaled_speeds, geometry.max_speed_m_s)
+        self._note_output_limit(OutputLimit.SPEED_SCALE, unscaled_speeds, leg_speeds)
         is_complete = self._update_completion(reading, filtered_clearance)
+        if reapproaching.any():
+            # P-R8-12 / P-R8-13: no DONE while a leg is still in the air.
+            self._state.complete_since_s = None
+            is_complete = False
         if self._update_crawler_zone(reading):
-            leg_speeds = self._lift_without_retracting(leg_speeds)
+            lifted_speeds = self._lift_without_retracting(leg_speeds)
+            self._note_output_limit(OutputLimit.CRAWLER_RULE, leg_speeds, lifted_speeds)
+            leg_speeds = lifted_speeds
+        leg_speeds = self._apply_reapproach_speeds(leg_speeds, reapproaching)
+        self._record_command_components(
+            (heave_rate, roll_rate, pitch_rate, twist_rate), unscaled_speeds, reapproaching
+        )
         if self._update_stroke_end_fault(reading, leg_speeds):
             self._state.phase = C2Phase.FAULT
-            return self._zero_speeds()
-        leg_speeds = self._clip_at_stroke_ends(reading, leg_speeds)
+            stopped_speeds = self._zero_speeds()
+            self._note_output_limit(OutputLimit.STROKE_END, leg_speeds, stopped_speeds)
+            return stopped_speeds
+        clipped_speeds = self._clip_at_stroke_ends(reading, leg_speeds)
+        self._note_output_limit(OutputLimit.STROKE_END, leg_speeds, clipped_speeds)
+        leg_speeds = clipped_speeds
         if is_complete:
             self._state.phase = C2Phase.DONE
         return leg_speeds
+
+    def _record_command_components(
+        self,
+        rates: tuple[float, float, float, float],
+        unscaled_speeds: NDArray[np.float64],
+        reapproaching: NDArray[np.bool_],
+    ) -> None:
+        """P-R8-14: split this period's unscaled LEVEL command into its named parts.
+
+        ``rates`` = (heave, roll, pitch, ``tau_dot``) as passed to :meth:`C2Geometry.leg_speeds`.
+        While a leg re-approaches the whole ``tau_dot`` is the re-approach part (twist mode:
+        ``tau_dot_lift``; leg mode: zero); otherwise the guard part is ``_state.guard_m_s``.
+        P-R8-15: ``phase_path`` is zero, and the raw command is ``unscaled_speeds`` with the
+        leg-mode override on the lifted legs.
+        """
+        geometry = self.geometry
+        heave_rate, roll_rate, pitch_rate, twist_rate = rates
+        twist_mode_speeds = geometry.twist_vector * twist_rate
+        zeros = self._zero_speeds()
+        components = {
+            "attitude": geometry.leg_speeds(0.0, roll_rate, pitch_rate, 0.0),
+            "heave": geometry.leg_speeds(heave_rate, 0.0, 0.0, 0.0),
+            "twist": twist_mode_speeds,
+            "guard": zeros.copy(),
+            "reapproach": zeros.copy(),
+            "phase_path": zeros.copy(),
+        }
+        raw_speeds = unscaled_speeds.copy()
+        if reapproaching.any():
+            components["twist"] = zeros.copy()
+            settings = self.config.r8.lifted_reapproach
+            if settings.mode is ReapproachMode.TWIST:
+                components["reapproach"] = twist_mode_speeds
+            else:
+                override_speed = settings.speed_fraction * geometry.max_speed_m_s
+                components["reapproach"][reapproaching] = (
+                    override_speed - unscaled_speeds[reapproaching]
+                )
+                raw_speeds[reapproaching] = override_speed
+        elif self._state.guard_m_s is not None:
+            components["guard"] = self._state.guard_m_s.copy()
+            components["twist"] = twist_mode_speeds - components["guard"]
+        self._state.command_components = components
+        self._state.raw_output_m_s = raw_speeds
+
+    def _record_phase_path_command(self, leg_speeds: NDArray[np.float64]) -> None:
+        """P-R8-15: a period without a LEVEL step; its whole command is ``phase_path`` (TOUCH,
+        the CHECK zero calibration, PROBE, REANCHOR, a lock tail; zero in READY, FAULT, IDLE)
+        and the LEVEL parts are zero."""
+        components = {name: self._zero_speeds() for name in COMMAND_COMPONENT_NAMES}
+        components["phase_path"] = np.array(leg_speeds, dtype=float)
+        self._state.command_components = components
+        self._state.raw_output_m_s = np.array(leg_speeds, dtype=float)
+
+    def _note_output_limit(
+        self,
+        limit: OutputLimit,
+        before_m_s: NDArray[np.float64],
+        after_m_s: NDArray[np.float64],
+    ) -> None:
+        """P-R8-15: mark the legs whose speed the ``limit`` stage changed this period."""
+        flags = self._state.output_limit_flags
+        flags[limit.value] = flags[limit.value] | (after_m_s != before_m_s)
+
+    def _twist_channel_rate(self, reading: _Reading, *, is_held: bool) -> float:
+        """``tau_dot`` of this period (twist loop + F_min guard, design 14.5 steps 4-5).
+
+        ``is_held`` (a re-approach is active): the twist and guard terms are dropped. Twist
+        mode (P-R8-13, spec 174.4): ``tau_dot_lift`` toward the lifted leg instead. Leg mode
+        (P-R8-12): zero, the lifted leg moving alone. The twist low-pass still takes this
+        period's reading.
+        """
+        geometry = self.geometry
+        rates = twist_rates(
+            self._twist_loop_load_N(reading),
+            self._load_estimate_N(reading.cylinder_force_lower_N),
+            geometry,
+            self.config.gains,
+            self.config.thresholds,
+            self._twist_gain_stiffness_N_m(),
+        )
+        if is_held:
+            if self.config.r8.lifted_reapproach.mode is ReapproachMode.TWIST:
+                return self._reapproach_twist_rate(reading)
+            return 0.0
+        if rates.is_guard_active:
+            self._state.guard_m_s = geometry.twist_vector * rates.guard_m_s
+        return rates.total_m_s
+
+    def _twist_loop_load_N(self, reading: _Reading) -> float:
+        """``n^T P`` of the twist loop: raw, or (R8 C2) through its own low-pass."""
+        twist_load = float(self.geometry.twist_vector @ reading.cylinder_force_N)
+        if self._twist_load_filter is None:
+            return twist_load
+        return float(self._twist_load_filter.update(twist_load))
+
+    def _twist_gain_scale(self) -> float | None:
+        """Stiffness scale the twist / guard gains are divided by; ``None`` = ``k_nom`` (R7)."""
+        r8 = self.config.r8
+        if r8.twist_gain_reference is TwistGainReference.NOMINAL:
+            return None
+        scale = self._state.twist_stiffness_scale
+        return r8.pre_probe_stiffness_scale if scale is None else scale
+
+    def _twist_gain_stiffness_N_m(self) -> float | None:
+        """Stiffness of the twist / guard gains (P-5); ``None`` = ``k_nom`` unchanged."""
+        scale = self._twist_gain_scale()
+        if scale is None:
+            return None
+        return self.geometry.nominal_pad_stiffness_N_m * scale
 
     def _attitude_rates(self) -> tuple[float, float]:
         state = self._state
@@ -3134,6 +4381,8 @@ class C2Controller:
     def _enter_reanchor_stage(self, run: _ReanchorRun, stage: _ReanchorStage, t_s: float) -> None:
         run.stage = stage
         run.stage_start_s = t_s
+        if stage is _ReanchorStage.MOVE:
+            run.stop_history_N.clear()  # R-1: the unloading rate of the new step only
 
     def _reanchor_move(self, run: _ReanchorRun, reading: _Reading) -> NDArray[np.float64]:
         """Unload the target leg along the twist mode until its reading reaches ``P_stop,k``."""
@@ -3149,13 +4398,33 @@ class C2Controller:
         target_reading = float(
             reading.cylinder_force_N[target] - self._pressures.offset_allowance_N[target]
         )
-        if target_reading <= run.stop_force_N[run.step]:
+        judged_reading = self._predicted_stop_reading(run, target_reading)
+        if judged_reading <= run.stop_force_N[run.step]:
             run.stop_readings_N.append((LEG_ORDER[target], target_reading))
+            run.stop_predicted_readings_N.append((LEG_ORDER[target], judged_reading))
             self._enter_reanchor_stage(run, _ReanchorStage.HOLD, reading.t_s)
             return self._zero_speeds()
         leg_speeds = self.reanchor_direction(target) * self._reanchor_speed_m_s()
         run.commanded_m = run.commanded_m + leg_speeds * self.config.period_s
         return leg_speeds
+
+    def _predicted_stop_reading(self, run: _ReanchorRun, target_reading_N: float) -> float:
+        """R-1: ``P - r_hat (1 + d)``, ``r_hat`` = mean unloading per period of this step.
+
+        Never above the reading (``r_hat`` is clipped at 0), so the reading's own stop stays
+        in force when the prediction fails (spec 99.3). The reading itself with R-1 off.
+        """
+        settings = self.config.reanchor
+        if settings.stop_predictor is StopPredictor.OFF:
+            return target_reading_N
+        history = run.stop_history_N
+        history.append(target_reading_N)
+        del history[: -(settings.stop_predictor_intervals + 1)]
+        if len(history) < 2:
+            return target_reading_N
+        drop_per_period = (history[0] - history[-1]) / (len(history) - 1)
+        horizon_periods = 1 + self.config.r8.output_delay_periods
+        return target_reading_N - max(drop_per_period, 0.0) * horizon_periods
 
     def _reanchor_hold(self, run: _ReanchorRun, reading: _Reading) -> NDArray[np.float64]:
         """Keep the target unloaded; any leg below the guard aborts (17.2.5)."""
@@ -3270,6 +4539,9 @@ class C2Controller:
                 previous_results=state.probe_history[-1] if state.probe_history else (),
                 retract_first_legs=self._pressures.fallback_legs,
                 correction_sensitivity_N_m=self.config.probe_correction_sensitivity_N_m,
+                start_load_bands=(
+                    self.load_bands if self.config.r8.confirmation.is_active else None
+                ),
             )
             state.probe_round_count += 1
         probe_round = state.probe_round
@@ -3290,6 +4562,7 @@ class C2Controller:
         state.probe_history.append(results)
         state.probe_round = None
         self._update_seal_band(results)
+        self._update_twist_stiffness_scale(results, reading.t_s)
         self._note_band_beyond_reanchor(reading.t_s)
 
         weakest = self._leg_to_reground(results, reading)
@@ -3343,6 +4616,43 @@ class C2Controller:
         else:
             state.seal_band_N = max(state.seal_band_N, measured_band)
         state.is_seal_band_measured = True
+
+    def _update_twist_stiffness_scale(
+        self, results: tuple[ProbeResult, ...], t_s: float
+    ) -> None:
+        """P-5 / rev. 31 149 P-R8-2, P-R8-3: median measured / head-only nominal ``S_ii``.
+
+        The denominator is ``C2Geometry.load_sensitivity_diag_N_m`` (``k_nom``, the reference
+        of ``pre_probe_stiffness_scale``); the U63 C1 values stay for the probe midpoint and
+        friction corrections only. Under ``MIN_STIFFNESS_SCALE_LEGS`` legs the stiffness cue
+        calls grounded keep the previous scale. Every round replaces the scale (no filter).
+        """
+        r8 = self.config.r8
+        if r8.twist_gain_reference is not TwistGainReference.MEASURED_SII:
+            return
+        nominal = self.geometry.load_sensitivity_diag_N_m
+        ratios = [
+            result.incremental_stiffness_N_m / nominal[result.leg_index]
+            for result in results
+            if result.is_grounded_by_stiffness
+            and not result.is_skipped
+            and math.isfinite(result.incremental_stiffness_N_m)
+        ]
+        state = self._state
+        state.twist_stiffness_leg_count = len(ratios)
+        if len(ratios) < MIN_STIFFNESS_SCALE_LEGS:
+            state.twist_stiffness_raw_ratio = None
+            return
+        raw_ratio = float(np.median(ratios))
+        state.twist_stiffness_raw_ratio = raw_ratio
+        warning_low, warning_high = r8.stiffness_warning_range
+        if not warning_low <= raw_ratio <= warning_high:
+            self._add_event(
+                t_s, f"WARN_PROBE_STIFFNESS_OUT_OF_RANGE:{raw_ratio:.3f}", is_warning=True
+            )
+        state.twist_stiffness_scale = _bounded(
+            raw_ratio, r8.measured_stiffness_scale_min, r8.measured_stiffness_scale_max
+        )
 
     def _is_reanchor_after_probe(self) -> bool:
         """H5a: REANCHOR is decided after the probe (combined judge only; the pressure judge has
@@ -3476,8 +4786,27 @@ class C2Controller:
     def _tail_speeds(self) -> list[float]:
         settings = self.config.lock_tail
         speed = settings.speed_fraction * self.geometry.max_speed_m_s
+        if self.config.r8.increment_limit is not None:
+            return self._tail_speeds_within_increment_limit(speed)
         periods = max(1, math.ceil(settings.tail_m / (speed * self.config.period_s) - 1e-9))
         return [settings.tail_m / (periods * self.config.period_s)] * periods
+
+    def _tail_speeds_within_increment_limit(self, speed_m_s: float) -> list[float]:
+        """Spec 99.3 ``ready_heave``: rise by the increment limit to ``speed_m_s`` (e.g. 0.1 ->
+        0.2 -> 0.25 ``v_max`` with 0.1 per period), the last period closing ``tail_m``."""
+        limit = self.config.r8.increment_limit
+        assert limit is not None
+        tail_m = self.config.lock_tail.tail_m
+        period_s = self.config.period_s
+        step_m_s = limit.fraction_per_period * self.geometry.max_speed_m_s
+        speeds: list[float] = []
+        travel_m = 0.0
+        while travel_m < tail_m * (1.0 - 1e-9):
+            ramp_speed = step_m_s * (len(speeds) + 1)
+            speed = min(speed_m_s, ramp_speed, (tail_m - travel_m) / period_s)
+            speeds.append(speed)
+            travel_m += speed * period_s
+        return speeds
 
     def _lock_tail_step(self, t_s: float) -> NDArray[np.float64] | None:
         """Tail speeds of this period, zero while settling, ``None`` once done (or none)."""
@@ -3579,15 +4908,65 @@ class C2Controller:
 
     # --- output ---
 
+    def _slow_near_stroke_end(
+        self, reading: _Reading, leg_speeds: NDArray[np.float64]
+    ) -> NDArray[np.float64]:
+        """Spec 99.3 end approach: an extending leg within the window below the end-margin
+        stroke (``soft end - 10 mm``) moves at most ``end_slowdown_speed_fraction v_max``; the
+        whole vector is scaled, so the decomposition stays (design 6.1)."""
+        r8 = self.config.r8
+        if r8.end_slowdown_window_m is None:
+            return leg_speeds
+        window_start_m = (
+            self.geometry.stroke_soft_max_m - STROKE_END_MARGIN_M - r8.end_slowdown_window_m
+        )
+        speed_limit = r8.end_slowdown_speed_fraction * self.geometry.max_speed_m_s
+        is_too_fast = (reading.motor_stroke_m >= window_start_m) & (leg_speeds > speed_limit)
+        if not is_too_fast.any():
+            return leg_speeds
+        return leg_speeds * (speed_limit / float(leg_speeds[is_too_fast].max()))
+
     def _apply_output_ramp(self, leg_speeds: NDArray[np.float64]) -> NDArray[np.float64]:
-        """``u_out = u_prev + clip(u - u_prev, +-v_max T / ramp)`` (design 14.7)."""
+        """``u_out = u_prev + clip(u - u_prev, +-v_max T / ramp)`` (design 14.7), or the R8
+        increment limit (skipped by a FAULT stop).
+
+        P-R8-15: a leg whose change the clip cut is flagged :attr:`OutputLimit.INCREMENT`.
+        An unclipped leg is not flagged even where ``u_prev + (u - u_prev)`` rounds to the
+        last bit of ``u``.
+        """
         state = self._state
         ramp_time_s = self.config.output_ramp_time_s
-        if ramp_time_s is None:
+        requested_change = leg_speeds - state.previous_output_m_s
+        if self.config.r8.increment_limit is not None and state.phase is C2Phase.FAULT:
+            # Rev. 31 P-R8-5: a FAULT (head-side fault or stroke-end fault) stops in one
+            # period instead of 4 increments (0.4 s); the amplifier ramp and the valve lag
+            # smooth the step. The output delay d still applies.
+            output = self._zero_speeds()
+        elif self.config.r8.increment_limit is not None:
+            limited_change = self._limited_increment(leg_speeds)
+            self._note_output_limit(OutputLimit.INCREMENT, requested_change, limited_change)
+            output = state.previous_output_m_s + limited_change
+        elif ramp_time_s is None:
             output = leg_speeds.copy()
         else:
             max_step = self.geometry.max_speed_m_s * self.config.period_s / ramp_time_s
-            step = np.clip(leg_speeds - state.previous_output_m_s, -max_step, max_step)
+            step = np.clip(requested_change, -max_step, max_step)
+            self._note_output_limit(OutputLimit.INCREMENT, requested_change, step)
             output = state.previous_output_m_s + step
         state.previous_output_m_s = output
         return output
+
+    def _limited_increment(self, leg_speeds: NDArray[np.float64]) -> NDArray[np.float64]:
+        """R8 (spec 99.3 / 99.4): ``|du| <= f v_max`` per leg and period; a leg whose change has
+        the sign of this period's F_min guard term takes the guard fraction."""
+        limit = self.config.r8.increment_limit
+        assert limit is not None
+        max_speed = self.geometry.max_speed_m_s
+        change = leg_speeds - self._state.previous_output_m_s
+        max_change = np.full(LEG_COUNT, limit.fraction_per_period * max_speed)
+        guard = self._state.guard_m_s
+        if guard is not None:
+            is_guard_direction = np.sign(change) == np.sign(guard)
+            is_guard_direction &= guard != 0.0
+            max_change[is_guard_direction] = limit.guard_fraction_per_period * max_speed
+        return np.clip(change, -max_change, max_change)

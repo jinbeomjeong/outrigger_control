@@ -1,0 +1,1079 @@
+{
+ "_meta": {
+  "spec": "s6_control_spec.md rev. 31 146 (consistency flag only) / 142 C harness with c2.py",
+  "generator": "control-expert 2026-10-24, scratchpad ctrl-run/bundle_c_ref.py (harness r8d1_td2 + project C2Controller, C2Config().with_10hz_d1() with the Chrono case settings)",
+  "c2_py_sha256": "d4b106540f0b03e815cf1081b0fccb1a4c8ce7ccbbc880bffcb81d56c4d3f080",
+  "c2_revision_meta": "R8-D1 (C2)",
+  "value": "min_force_kN = median over noise seeds 12345-12347 of the minimum true cylinder force after the crawler lift-off, sampled every control period (10 Hz; Chrono uses the 1 ms interval minimum, so Chrono may read lower by short dips); G4 / C-9 / C-10 include the settlement (min of pre- and post-settlement). ready_s = harness first READY measured from the TOUCH start (no CHECK / zero calibration in the harness; Chrono ready_s is later by the CHECK length). ready_minus_touch_s is the comparable READY quantity.",
+  "departures": "no CHECK / zero calibration, target check off, IMU period mean (no 10 ms samples), head pressure only (no L1-R rod side), harness sensor noise (not WIKA), rigid mast, floor angles = Chrono floors, G4 settlement 11.5 mm in 2 s at READY + 5 s"
+ },
+ "C1_D8_top_roll5.5_b0.69": {
+  "min_force_kN": 53.58,
+  "ready_s": 55.8,
+  "seeds_min_force_kN": [
+   53.59,
+   53.57,
+   53.58
+  ],
+  "seeds_ready_s": [
+   55.9,
+   55.8,
+   55.8
+  ],
+  "ready_minus_touch_s": 36.4,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "roll5.5",
+   "beta": 0.69,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "h142_min_force_kN": 53.59,
+  "h142_ready_s": 43.9
+ },
+ "C1_D8_top_roll5.5_b1.6": {
+  "min_force_kN": 49.45,
+  "ready_s": 55.7,
+  "seeds_min_force_kN": [
+   49.45,
+   51.45,
+   49.44
+  ],
+  "seeds_ready_s": [
+   55.8,
+   55.6,
+   55.7
+  ],
+  "ready_minus_touch_s": 36.4,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "roll5.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "h142_min_force_kN": 49.47,
+  "h142_ready_s": 43.8
+ },
+ "C1_D8_top_fdown3.5_b0.69": {
+  "min_force_kN": 20.35,
+  "ready_s": 79.6,
+  "seeds_min_force_kN": [
+   22.0,
+   20.35,
+   20.34
+  ],
+  "seeds_ready_s": [
+   79.4,
+   79.7,
+   79.6
+  ],
+  "ready_minus_touch_s": 57.9,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "fdown3.5",
+   "beta": 0.69,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "h142_min_force_kN": 55.23,
+  "h142_ready_s": 45.2,
+  "note": "H4 REANCHOR runs; the minimum is inside REANCHOR (P_stop region)"
+ },
+ "C1_D8_top_fdown3.5_b1.6": {
+  "min_force_kN": 20.95,
+  "ready_s": 73.8,
+  "seeds_min_force_kN": [
+   20.95,
+   15.38,
+   21.12
+  ],
+  "seeds_ready_s": [
+   73.1,
+   74.3,
+   73.8
+  ],
+  "ready_minus_touch_s": 52.4,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "fdown3.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "h142_min_force_kN": 55.96,
+  "h142_ready_s": 44.3,
+  "note": "H4 REANCHOR runs; the minimum is inside REANCHOR (P_stop region)"
+ },
+ "C1_D8_top_fup3.5_b0.69": {
+  "min_force_kN": 61.5,
+  "ready_s": 54.8,
+  "seeds_min_force_kN": [
+   61.51,
+   61.49,
+   61.5
+  ],
+  "seeds_ready_s": [
+   55.0,
+   54.7,
+   54.8
+  ],
+  "ready_minus_touch_s": 35.8,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "fup3.5",
+   "beta": 0.69,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "h142_min_force_kN": 70.47,
+  "h142_ready_s": 42.9
+ },
+ "C1_D8_top_fup3.5_b1.6": {
+  "min_force_kN": 52.02,
+  "ready_s": 54.6,
+  "seeds_min_force_kN": [
+   52.05,
+   52.0,
+   52.02
+  ],
+  "seeds_ready_s": [
+   54.8,
+   54.5,
+   54.6
+  ],
+  "ready_minus_touch_s": 35.7,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "fup3.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "h142_min_force_kN": 70.6,
+  "h142_ready_s": 42.7
+ },
+ "C1_D8_top_rp05_b0.69": {
+  "min_force_kN": 42.32,
+  "ready_s": 54.8,
+  "seeds_min_force_kN": [
+   42.31,
+   42.32,
+   42.32
+  ],
+  "seeds_ready_s": [
+   54.6,
+   54.8,
+   55.4
+  ],
+  "ready_minus_touch_s": 34.9,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "rp05",
+   "beta": 0.69,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "h142_min_force_kN": 42.3,
+  "h142_ready_s": 42.9
+ },
+ "C1_D8_top_rp05_b1.6": {
+  "min_force_kN": 51.24,
+  "ready_s": 54.1,
+  "seeds_min_force_kN": [
+   51.24,
+   51.23,
+   51.24
+  ],
+  "seeds_ready_s": [
+   54.1,
+   54.0,
+   54.2
+  ],
+  "ready_minus_touch_s": 34.7,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "rp05",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "h142_min_force_kN": 51.26,
+  "h142_ready_s": 42.2
+ },
+ "C1_D8_middle_rp05_b1.6": {
+  "min_force_kN": 52.89,
+  "ready_s": 54.0,
+  "seeds_min_force_kN": [
+   52.94,
+   52.89,
+   50.49
+  ],
+  "seeds_ready_s": [
+   54.0,
+   53.9,
+   54.0
+  ],
+  "ready_minus_touch_s": 34.7,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "middle",
+   "floor": "rp05",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "h142_min_force_kN": 54.02,
+  "h142_ready_s": 42.1
+ },
+ "C1_D8_bottom_rp05_b1.6": {
+  "min_force_kN": 51.58,
+  "ready_s": 53.9,
+  "seeds_min_force_kN": [
+   51.58,
+   51.56,
+   51.58
+  ],
+  "seeds_ready_s": [
+   53.9,
+   53.8,
+   54.0
+  ],
+  "ready_minus_touch_s": 34.7,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "bottom",
+   "floor": "rp05",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "h142_min_force_kN": 51.58,
+  "h142_ready_s": 42.0
+ },
+ "C1_H4V_top_fdown3.5": {
+  "min_force_kN": 19.42,
+  "ready_s": 76.0,
+  "seeds_min_force_kN": [
+   19.86,
+   19.42,
+   18.13
+  ],
+  "seeds_ready_s": [
+   75.8,
+   76.0,
+   76.8
+  ],
+  "ready_minus_touch_s": 55.1,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "fdown3.5",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "note": "H4 REANCHOR runs; the minimum is inside REANCHOR (P_stop region)"
+ },
+ "C1_H4P_top_fdown3.2": {
+  "min_force_kN": 19.57,
+  "ready_s": 74.4,
+  "seeds_min_force_kN": [
+   19.57,
+   19.62,
+   19.57
+  ],
+  "seeds_ready_s": [
+   74.3,
+   74.6,
+   74.4
+  ],
+  "ready_minus_touch_s": 54.0,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "fdown3.2",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "note": "H4 REANCHOR runs; the minimum is inside REANCHOR (P_stop region)"
+ },
+ "C1_G1_top_flat": {
+  "min_force_kN": 67.25,
+  "ready_s": 26.1,
+  "seeds_min_force_kN": [
+   67.24,
+   67.27,
+   67.25
+  ],
+  "seeds_ready_s": [
+   26.0,
+   26.1,
+   26.1
+  ],
+  "ready_minus_touch_s": 7.1,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": false,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C1_G1_top_roll3": {
+  "min_force_kN": 62.21,
+  "ready_s": 38.1,
+  "seeds_min_force_kN": [
+   62.21,
+   62.22,
+   62.2
+  ],
+  "seeds_ready_s": [
+   38.2,
+   38.1,
+   38.1
+  ],
+  "ready_minus_touch_s": 18.8,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "roll3",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": false,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C1_G3_top_flat_normal_zeroed": {
+  "min_force_kN": 58.41,
+  "ready_s": 38.0,
+  "seeds_min_force_kN": [
+   58.33,
+   58.41,
+   58.41
+  ],
+  "seeds_ready_s": [
+   37.9,
+   38.0,
+   38.0
+  ],
+  "ready_minus_touch_s": 19.0,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "note": "sensor errors (normal grade + calibration) not reproduced; harness noise only"
+ },
+ "C1_G3_top_fdown3.5_normal_zeroed": {
+  "min_force_kN": 19.42,
+  "ready_s": 76.0,
+  "seeds_min_force_kN": [
+   19.86,
+   19.42,
+   18.13
+  ],
+  "seeds_ready_s": [
+   75.8,
+   76.0,
+   76.8
+  ],
+  "ready_minus_touch_s": 55.1,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "fdown3.5",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "note": "sensor errors (normal grade + calibration) not reproduced; harness noise only; H4 REANCHOR runs; the minimum is inside REANCHOR (P_stop region)"
+ },
+ "C1_G4_pressure": {
+  "min_force_kN": 3.07,
+  "ready_s": 26.1,
+  "seeds_min_force_kN": [
+   3.12,
+   3.07,
+   3.06
+  ],
+  "seeds_ready_s": [
+   26.0,
+   26.1,
+   26.1
+  ],
+  "ready_minus_touch_s": 7.1,
+  "fails": [],
+  "fault": false,
+  "min_before_settlement_kN": 67.25,
+  "min_after_settlement_kN": 3.07,
+  "harness_settings": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  },
+  "h142_min_force_kN": 2.98,
+  "h142_ready_s": 26.1
+ },
+ "C1_G4_combined": {
+  "min_force_kN": 8.13,
+  "ready_s": 38.0,
+  "seeds_min_force_kN": [
+   8.13,
+   8.73,
+   7.24
+  ],
+  "seeds_ready_s": [
+   37.9,
+   38.0,
+   38.0
+  ],
+  "ready_minus_touch_s": 19.0,
+  "fails": [],
+  "fault": false,
+  "min_before_settlement_kN": 58.41,
+  "min_after_settlement_kN": 8.13,
+  "harness_settings": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C1_RE1b_top_flat_settleRR30": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "floor event settle_RR_30 (30 mm RR settlement) is not in the harness"
+ },
+ "C1_RE1bF_top_flat_dropRR30": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "floor event drop_RR_30 (sudden 30 mm drop, 1e-5 s window) is not in the harness"
+ },
+ "C1_RE1bP_top_flat_dropRR30_probe": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "floor event drop_RR_30_probe is not in the harness"
+ },
+ "C1_PS7_flat_FLp10_cal": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "WIKA pressure error model + CHECK zero calibration path is Chrono/SensorSuite only"
+ },
+ "C1_PS7_flat_FLm10_cal": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "WIKA pressure error model + CHECK zero calibration path is Chrono/SensorSuite only"
+ },
+ "C1_G5_top_flat_change_p3": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "target change event and target acceptance are not in the harness (target check off)"
+ },
+ "C4_tv0.05_D8_top_roll5.5_b1.6": {
+  "min_force_kN": 47.38,
+  "ready_s": 56.1,
+  "seeds_min_force_kN": [
+   47.38,
+   47.37,
+   47.38
+  ],
+  "seeds_ready_s": [
+   56.2,
+   56.1,
+   56.1
+  ],
+  "ready_minus_touch_s": 36.6,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "roll5.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.05,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C4_tv0.05_D8_top_fup3.5_b1.6": {
+  "min_force_kN": 51.62,
+  "ready_s": 55.1,
+  "seeds_min_force_kN": [
+   51.65,
+   51.6,
+   51.62
+  ],
+  "seeds_ready_s": [
+   55.2,
+   54.9,
+   55.1
+  ],
+  "ready_minus_touch_s": 36.0,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "fup3.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.05,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C4_tv0.05_G4_pressure": {
+  "min_force_kN": 3.99,
+  "ready_s": 28.1,
+  "seeds_min_force_kN": [
+   2.48,
+   4.03,
+   3.99
+  ],
+  "seeds_ready_s": [
+   28.1,
+   27.2,
+   28.2
+  ],
+  "ready_minus_touch_s": 8.2,
+  "fails": [],
+  "fault": false,
+  "min_before_settlement_kN": 63.05,
+  "min_after_settlement_kN": 3.99,
+  "harness_settings": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.05,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C4_tv0.15_D8_top_roll5.5_b1.6": {
+  "min_force_kN": 37.52,
+  "ready_s": 55.4,
+  "seeds_min_force_kN": [
+   37.52,
+   37.52,
+   37.5
+  ],
+  "seeds_ready_s": [
+   55.5,
+   55.4,
+   55.4
+  ],
+  "ready_minus_touch_s": 36.1,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "roll5.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.15,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C4_tv0.15_D8_top_fup3.5_b1.6": {
+  "min_force_kN": 52.29,
+  "ready_s": 54.6,
+  "seeds_min_force_kN": [
+   52.32,
+   52.26,
+   52.29
+  ],
+  "seeds_ready_s": [
+   54.7,
+   54.5,
+   54.6
+  ],
+  "ready_minus_touch_s": 35.5,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "fup3.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.15,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C4_tv0.15_G4_pressure": {
+  "min_force_kN": 2.44,
+  "ready_s": 27.4,
+  "seeds_min_force_kN": [
+   2.44,
+   2.51,
+   2.42
+  ],
+  "seeds_ready_s": [
+   27.4,
+   27.5,
+   27.3
+  ],
+  "ready_minus_touch_s": 8.1,
+  "fails": [],
+  "fault": false,
+  "min_before_settlement_kN": 66.81,
+  "min_after_settlement_kN": 2.44,
+  "harness_settings": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.15,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C4b_D8_top_roll5.5_b1.6": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "amplifier per_step ramp (R-3) is not in the harness (only a full-scale rate limit)"
+ },
+ "C4b_D8_bottom_rp05_b1.6": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "amplifier per_step ramp (R-3) is not in the harness (only a full-scale rate limit)"
+ },
+ "C4b_G4_pressure": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "amplifier per_step ramp (R-3) is not in the harness (only a full-scale rate limit)"
+ },
+ "C5_L0r0.02_top_fdown3.2": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only"
+ },
+ "C5_L0r0.02_top_roll4.4": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only"
+ },
+ "C5_L0r0.02_G4_pressure": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only"
+ },
+ "C5_L0r0.1_top_fdown3.2": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only"
+ },
+ "C5_L0r0.1_top_roll4.4": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only"
+ },
+ "C5_L0r0.1_G4_pressure": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "L1-R rod-side parallel spring (L_0r) is not in the reduced plant; Chrono only"
+ },
+ "C6_G4_pressure": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "sub-period output offset (+20 ms, R-5) is not in the harness (commands at period boundaries)"
+ },
+ "C6_D8_top_roll5.5_b1.6": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "sub-period output offset (+20 ms, R-5) is not in the harness (commands at period boundaries)"
+ },
+ "C7_sym0.1_D8_top_rp05_b1.6": {
+  "min_force_kN": 19.59,
+  "ready_s": 54.4,
+  "seeds_min_force_kN": [
+   19.58,
+   19.59,
+   19.59
+  ],
+  "seeds_ready_s": [
+   54.4,
+   54.3,
+   54.5
+  ],
+  "ready_minus_touch_s": 34.9,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "rp05",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.1",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C7_sym0.1_D8_top_roll5.5_b1.6": {
+  "min_force_kN": 47.03,
+  "ready_s": 56.3,
+  "seeds_min_force_kN": [
+   47.04,
+   47.03,
+   46.97
+  ],
+  "seeds_ready_s": [
+   56.3,
+   56.3,
+   56.3
+  ],
+  "ready_minus_touch_s": 36.7,
+  "fails": [],
+  "fault": false,
+  "harness_settings": {
+   "level": "top",
+   "floor": "roll5.5",
+   "beta": 1.6,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": false,
+   "tau_v": 0.1,
+   "increment": "sym0.1",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C7_asym_G4_pressure": {
+  "min_force_kN": 3.08,
+  "ready_s": 27.8,
+  "seeds_min_force_kN": [
+   3.0,
+   3.08,
+   3.08
+  ],
+  "seeds_ready_s": [
+   27.8,
+   27.9,
+   27.7
+  ],
+  "ready_minus_touch_s": 8.6,
+  "fails": [],
+  "fault": false,
+  "min_before_settlement_kN": 67.31,
+  "min_after_settlement_kN": 3.08,
+  "harness_settings": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "asym",
+   "twist": "measured_Sii",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C7_asym_RE1bF_top_flat_dropRR30": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "floor event drop_RR_30 is not in the harness"
+ },
+ "C9_R5_G4_pressure": {
+  "min_force_kN": 7.06,
+  "ready_s": 26.1,
+  "seeds_min_force_kN": [
+   7.06,
+   8.91,
+   7.01
+  ],
+  "seeds_ready_s": [
+   26.0,
+   26.1,
+   26.1
+  ],
+  "ready_minus_touch_s": 7.1,
+  "fails": [],
+  "fault": false,
+  "min_before_settlement_kN": 67.25,
+  "min_after_settlement_kN": 7.06,
+  "harness_settings": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "pressure",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": true,
+   "h142": false
+  }
+ },
+ "C9_R5_G4_combined": {
+  "min_force_kN": 9.21,
+  "ready_s": 38.0,
+  "seeds_min_force_kN": [
+   10.3,
+   8.73,
+   9.21
+  ],
+  "seeds_ready_s": [
+   37.9,
+   38.0,
+   38.0
+  ],
+  "ready_minus_touch_s": 19.0,
+  "fails": [],
+  "fault": false,
+  "min_before_settlement_kN": 58.41,
+  "min_after_settlement_kN": 9.21,
+  "harness_settings": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "measured_Sii",
+   "fast": true,
+   "h142": false
+  }
+ },
+ "C10_knom_G4_combined": {
+  "min_force_kN": 8.55,
+  "ready_s": 38.0,
+  "seeds_min_force_kN": [
+   8.55,
+   12.78,
+   8.52
+  ],
+  "seeds_ready_s": [
+   37.9,
+   38.0,
+   38.0
+  ],
+  "ready_minus_touch_s": 19.0,
+  "fails": [],
+  "fault": false,
+  "min_before_settlement_kN": 58.41,
+  "min_after_settlement_kN": 8.55,
+  "harness_settings": {
+   "level": "top",
+   "floor": "flat",
+   "beta": 1.0,
+   "contact": "combined",
+   "h4": true,
+   "combined_verdict": null,
+   "settle": true,
+   "tau_v": 0.1,
+   "increment": "sym0.25",
+   "twist": "k_nom",
+   "fast": false,
+   "h142": false
+  }
+ },
+ "C10_knom_RE1bP_top_flat_dropRR30_probe": {
+  "min_force_kN": null,
+  "ready_s": null,
+  "reason": "floor event drop_RR_30_probe is not in the harness"
+ }
+}

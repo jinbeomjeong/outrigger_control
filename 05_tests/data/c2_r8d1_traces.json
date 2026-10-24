@@ -1,0 +1,173 @@
+{
+ "generator": "04_scripts/03_control/export_c2_r8d1_traces.py",
+ "spec": "s6_control_spec.md revision 30, 134 (C2 R8-D1 time responses), 139",
+ "harness": "r8d1_td2.py C2R8F on run_c2_r8_10hz_check / run_s6_slope_boundary_check",
+ "configuration": "C2_tv0.1",
+ "configuration_values": {
+  "T": 0.1,
+  "pred": true,
+  "touch_W": 0.04,
+  "touch_f": 0.5,
+  "ca_over": {
+   "Kp_att_1_s": 0.2,
+   "Ki_att_1_s2": 0.01,
+   "imu_lpf_tau_s": 0.8,
+   "ramp_s": 0.4,
+   "Ktw_1_s": 0.5,
+   "guard_gain_1_s": 0.15
+  },
+  "tau_v": 0.1,
+  "tau_tw": 0.2
+ },
+ "gainset": "R:BS_hold",
+ "control_period_s": 0.1,
+ "phase_codes": {
+  "TOUCH": 0,
+  "LEVEL": 1,
+  "DONE": 2,
+  "PROBE": 3,
+  "READY": 4,
+  "FAULT": 5
+ },
+ "cases": [
+  {
+   "id": "T|C2_tv0.1|roll+|rigid|12346|1.6e+09",
+   "group": "S",
+   "level": "top",
+   "mast": "rigid",
+   "seed": 12346,
+   "beta_Pa": 1600000000.0,
+   "rcfg": {
+    "pred": true,
+    "touch_W": 0.04,
+    "touch_f": 0.5,
+    "ca_over": {
+     "Kp_att_1_s": 0.2,
+     "Ki_att_1_s2": 0.01,
+     "imu_lpf_tau_s": 0.8,
+     "ramp_s": 0.4,
+     "Ktw_1_s": 0.5,
+     "guard_gain_1_s": 0.15
+    },
+    "tau_v": 0.1,
+    "tau_tw": 0.2,
+    "cfg": "C2_tv0.1"
+   },
+   "metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.6,
+    "t_ready_s": 43.9,
+    "min_true_cyl_force_kN": 38.85,
+    "ss_true_att_deg_maxabs": 0.019,
+    "max_pressure_bar": 114.4
+   },
+   "published_metrics": {
+    "t_touch_s": 19.3,
+    "t_crawler_liftoff_s": 20.6,
+    "t_ready_s": 43.9,
+    "min_true_cyl_force_kN": 38.85,
+    "ss_true_att_deg_maxabs": 0.019,
+    "max_pressure_bar": 114.4
+   },
+   "row_count": 539
+  },
+  {
+   "id": "T|C2_tv0.1|pitch+|upper|12345|1e+09",
+   "group": "S",
+   "level": "top",
+   "mast": "upper",
+   "seed": 12345,
+   "beta_Pa": 1000000000.0,
+   "rcfg": {
+    "pred": true,
+    "touch_W": 0.04,
+    "touch_f": 0.5,
+    "ca_over": {
+     "Kp_att_1_s": 0.2,
+     "Ki_att_1_s2": 0.01,
+     "imu_lpf_tau_s": 0.8,
+     "ramp_s": 0.4,
+     "Ktw_1_s": 0.5,
+     "guard_gain_1_s": 0.15
+    },
+    "tau_v": 0.1,
+    "tau_tw": 0.2,
+    "cfg": "C2_tv0.1"
+   },
+   "metrics": {
+    "t_touch_s": 19.9,
+    "t_crawler_liftoff_s": 20.9,
+    "t_ready_s": 43.3,
+    "min_true_cyl_force_kN": 51.99,
+    "ss_true_att_deg_maxabs": 0.0353,
+    "max_pressure_bar": 102.5
+   },
+   "published_metrics": {
+    "t_touch_s": 19.9,
+    "t_crawler_liftoff_s": 20.9,
+    "t_ready_s": 43.3,
+    "min_true_cyl_force_kN": 51.99,
+    "ss_true_att_deg_maxabs": 0.0353,
+    "max_pressure_bar": 102.5
+   },
+   "row_count": 533
+  },
+  {
+   "id": "G|C2_tv0.1|flat|rigid|12345|1.6e+09",
+   "group": "G",
+   "level": "top",
+   "mast": "rigid",
+   "seed": 12345,
+   "beta_Pa": 1600000000.0,
+   "rcfg": {
+    "pred": true,
+    "touch_W": 0.04,
+    "touch_f": 0.5,
+    "ca_over": {
+     "Kp_att_1_s": 0.2,
+     "Ki_att_1_s2": 0.01,
+     "imu_lpf_tau_s": 0.8,
+     "ramp_s": 0.4,
+     "Ktw_1_s": 0.5,
+     "guard_gain_1_s": 0.15
+    },
+    "tau_v": 0.1,
+    "tau_tw": 0.2,
+    "cfg": "C2_tv0.1",
+    "settle": true
+   },
+   "metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.0,
+    "t_ready_s": 27.0,
+    "min_true_cyl_force_kN": 66.84,
+    "ss_true_att_deg_maxabs": 0.0473,
+    "max_pressure_bar": 159.4,
+    "min_true_after_sink_kN": -0.72,
+    "final_true_kN": [
+     117.15,
+     117.13,
+     72.96,
+     69.33
+    ]
+   },
+   "published_metrics": {
+    "t_touch_s": 19.2,
+    "t_crawler_liftoff_s": 20.0,
+    "t_ready_s": 27.0,
+    "min_true_cyl_force_kN": 66.84,
+    "ss_true_att_deg_maxabs": 0.0473,
+    "max_pressure_bar": 159.4,
+    "min_true_after_sink_kN": null,
+    "final_true_kN": [
+     117.15,
+     117.13,
+     72.96,
+     69.33
+    ]
+   },
+   "row_count": 670
+  }
+ ],
+ "row_count": 1742
+}
