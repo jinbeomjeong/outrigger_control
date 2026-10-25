@@ -121,7 +121,9 @@ def test_machine_build_and_step(params_b) -> None:
     assert meta["scm"]["scm_shear"] == "off (tangential by anchor bushings)"
     assert meta["scm"]["soil"]["key"] == "G1" and meta["c2_soil"] is None
     row = model.s9_record()
-    for key in ("scm_crawler_normal_N", "scm_contact_patches", "pad_sinkage_geometric_m", "rut_clearance_m"):
+    # control spec 287 cad row: crawler patch force sum, pad sinkage, clearance above the rut
+    for key in ("scm_crawler_normal_N", "scm_crawler_force_world_N", "scm_contact_patches", "pad_sinkage_geometric_m",
+                "rut_clearance_m", "pad_tilt_max_deg", "body_omega_world_rad_s"):
         assert key in row
 
 

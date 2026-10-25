@@ -1,0 +1,491 @@
+{
+ "batch": "P2' (dynamics_model.md 5.35.4 / 5.35.5 #2; user decisions U-S9P-1, U-S9P-2 2026-10-26)",
+ "criteria": {
+  "P2'-a": "first-step SCM force <= 100 N, start rise (max z0 up to 5 s) <= 2 mm",
+  "P2'-b": "G1, S1: replica (a) f64 <= 1 %; J1, J2: replica f64-f32 range +- (0.005 deg, 0.05 mm)",
+  "P2'-c": "7-8 s pitch p-p <= 0.02 deg",
+  "P2'-d": "SCM normal sum / weight 1 +- 0.002 (last 1 s)"
+ },
+ "case_def": "machine settle, type B pads, top auger, M14s (pads 1 cm J1 / J2, 2 cm G1 / S1; crawler 4 cm), gravity Poly345 3 s + hold 5 s, settle dashpot c_z 2e6 N s/m, c_pitch 3.4e6, c_roll 2.2e6 N m s/rad (ASSUMPTION) full to 3 s, linear to 0 at 5 s; (b'), Δt 1e-4 s, mesh ray targets, 4 SCM threads",
+ "reference_source": "06_analysis/01_chrono/19_S9/s9_P1P2_dyn_judgement_rev50.json",
+ "values_only": "pass / fail decisions are dynamics-expert's; *_within flags compare with the 5.35.4 criteria",
+ "rows": {
+  "P2prime_G1_top_M14s_dashpot8s": {
+   "soil": "G1",
+   "level": "top",
+   "pad_grid_m": 0.02,
+   "crawler_grid_m": 0.04,
+   "t_end_s": 7.999999999994694,
+   "judge_window_s": [
+    6.999999999994694,
+    7.999999999994694
+   ],
+   "settle_dashpot": {
+    "type": "ground-fixed settle dashpot on the superstructure COG (dynamics 5.35.4 (a), U-S9P-1): heave along the SCM plane normal + roll / pitch about the plane x / y axes; in-plane translation and yaw free; ChLoadBodyForce + ChLoadBodyTorque set by a Python load hook (explicit, input lag as every hook value)",
+    "c_z_N_s_m": 2000000.0,
+    "c_pitch_N_m_s_rad": 3400000.0,
+    "c_roll_N_m_s_rad": 2200000.0,
+    "fade_s": [
+     3.0,
+     5.0
+    ],
+    "fade": "1 until fade[0], linear to 0 at fade[1], 0 after",
+    "axes_world": {
+     "normal": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "roll_axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "pitch_axis": [
+      0.0,
+      1.0,
+      0.0
+     ]
+    },
+    "values_basis": "ASSUMPTION (trial values of 5.35.4; c_pitch = c_z 1.3^2, c_roll = c_z 1.045^2)",
+    "force_abs_max_N": 3170.17989510405,
+    "torque_abs_max_Nm": 6048.504681094166,
+    "dissipated_energy_J": 18.023063607839163,
+    "zero_since_s": 5.000000000001686
+   },
+   "P2'-a_first_step_force_N": 0.0,
+   "P2'-a_start_rise_mm": 2.4099242601494097e-05,
+   "P2'-a_start_rise_t_s": 0.027999999999999886,
+   "P2'-a_within": true,
+   "pitch_mean_deg": 0.15121611349050923,
+   "z0_mean_mm": -1.264789577213453,
+   "roll_mean_deg": 0.00013417237854211405,
+   "P2'-c_pitch_pp_deg": 0.00017474283142709934,
+   "roll_pp_deg": 1.7399259161056196e-07,
+   "P2'-c_within": true,
+   "P2'-d_normal_over_weight": 1.0000015296022664,
+   "P2'-d_within": true,
+   "replica_f64": {
+    "pitch_deg": 0.15121983167642503,
+    "z0_mm": -1.2644973483160356,
+    "start_rise_max_mm": 0.0,
+    "pitch_pp_deg": 0.00015067289008319218
+   },
+   "replica_f32": {
+    "pitch_deg": 0.1512204091730812,
+    "z0_mm": -1.2644985204993535,
+    "start_rise_max_mm": 3.960809591418979e-05,
+    "pitch_pp_deg": 0.00014982301239319096
+   },
+   "us_per_step": 4765.271802499774,
+   "wall_s": 381.2217441999819,
+   "build_s": 1.193153699976392,
+   "threads": 4,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "P2'-b": {
+    "basis": "(a) replica f64 (5.35.4), <= 1 %",
+    "pitch_ref_deg": 0.15121983167642503,
+    "z0_ref_mm": -1.2644973483160356,
+    "pitch_rel_pct": -0.002458795168977882,
+    "z0_rel_pct": 0.023110281552317414,
+    "within": true
+   }
+  },
+  "P2prime_J1_top_M14s_dashpot8s": {
+   "soil": "J1",
+   "level": "top",
+   "pad_grid_m": 0.01,
+   "crawler_grid_m": 0.04,
+   "t_end_s": 7.999999999994694,
+   "judge_window_s": [
+    6.999999999994694,
+    7.999999999994694
+   ],
+   "settle_dashpot": {
+    "type": "ground-fixed settle dashpot on the superstructure COG (dynamics 5.35.4 (a), U-S9P-1): heave along the SCM plane normal + roll / pitch about the plane x / y axes; in-plane translation and yaw free; ChLoadBodyForce + ChLoadBodyTorque set by a Python load hook (explicit, input lag as every hook value)",
+    "c_z_N_s_m": 2000000.0,
+    "c_pitch_N_m_s_rad": 3400000.0,
+    "c_roll_N_m_s_rad": 2200000.0,
+    "fade_s": [
+     3.0,
+     5.0
+    ],
+    "fade": "1 until fade[0], linear to 0 at fade[1], 0 after",
+    "axes_world": {
+     "normal": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "roll_axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "pitch_axis": [
+      0.0,
+      1.0,
+      0.0
+     ]
+    },
+    "values_basis": "ASSUMPTION (trial values of 5.35.4; c_pitch = c_z 1.3^2, c_roll = c_z 1.045^2)",
+    "force_abs_max_N": 124593.67674896066,
+    "torque_abs_max_Nm": 8062.600152680069,
+    "dissipated_energy_J": 156.98133836924114,
+    "zero_since_s": 5.000000000001686
+   },
+   "P2'-a_first_step_force_N": 0.0,
+   "P2'-a_start_rise_mm": 1.905154337944026,
+   "P2'-a_start_rise_t_s": 0.2279999999999912,
+   "P2'-a_within": true,
+   "pitch_mean_deg": 0.06440035916989949,
+   "z0_mean_mm": 0.4542925617451199,
+   "roll_mean_deg": 2.9676755517885746e-05,
+   "P2'-c_pitch_pp_deg": 0.00047805840404391287,
+   "roll_pp_deg": 5.031979878058203e-06,
+   "P2'-c_within": true,
+   "P2'-d_normal_over_weight": 0.9999998345812018,
+   "P2'-d_within": true,
+   "replica_f64": {
+    "pitch_deg": 0.03925335002327742,
+    "z0_mm": 0.1469359735027802,
+    "start_rise_max_mm": 0.3067355752279788,
+    "pitch_pp_deg": 0.0007070119399114685
+   },
+   "replica_f32": {
+    "pitch_deg": 0.04323662588614925,
+    "z0_mm": 0.2415759853186725,
+    "start_rise_max_mm": 1.364583650126594,
+    "pitch_pp_deg": 0.0001430839869306158
+   },
+   "us_per_step": 8382.589812500373,
+   "wall_s": 670.6071850000299,
+   "build_s": 1.971701700007543,
+   "threads": 4,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "P2'-b": {
+    "basis": "replica f64-f32 range +- (0.005 deg, 0.05 mm) (5.35.4, U-S9P-2)",
+    "pitch_range_deg": [
+     0.03925335002327742,
+     0.04323662588614925
+    ],
+    "z0_range_mm": [
+     0.1469359735027802,
+     0.2415759853186725
+    ],
+    "pitch_outside_range_deg": 0.021163733283750236,
+    "z0_outside_range_mm": 0.2127165764264474,
+    "within": false
+   }
+  },
+  "P2prime_J2_top_M14s_dashpot8s": {
+   "soil": "J2",
+   "level": "top",
+   "pad_grid_m": 0.01,
+   "crawler_grid_m": 0.04,
+   "t_end_s": 7.999999999994694,
+   "judge_window_s": [
+    6.999999999994694,
+    7.999999999994694
+   ],
+   "settle_dashpot": {
+    "type": "ground-fixed settle dashpot on the superstructure COG (dynamics 5.35.4 (a), U-S9P-1): heave along the SCM plane normal + roll / pitch about the plane x / y axes; in-plane translation and yaw free; ChLoadBodyForce + ChLoadBodyTorque set by a Python load hook (explicit, input lag as every hook value)",
+    "c_z_N_s_m": 2000000.0,
+    "c_pitch_N_m_s_rad": 3400000.0,
+    "c_roll_N_m_s_rad": 2200000.0,
+    "fade_s": [
+     3.0,
+     5.0
+    ],
+    "fade": "1 until fade[0], linear to 0 at fade[1], 0 after",
+    "axes_world": {
+     "normal": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "roll_axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "pitch_axis": [
+      0.0,
+      1.0,
+      0.0
+     ]
+    },
+    "values_basis": "ASSUMPTION (trial values of 5.35.4; c_pitch = c_z 1.3^2, c_roll = c_z 1.045^2)",
+    "force_abs_max_N": 49002.904712188545,
+    "torque_abs_max_Nm": 5714.570536087986,
+    "dissipated_energy_J": 30.5514797978493,
+    "zero_since_s": 5.000000000001686
+   },
+   "P2'-a_first_step_force_N": 0.0,
+   "P2'-a_start_rise_mm": 0.7273209594047536,
+   "P2'-a_start_rise_t_s": 0.19499999999999484,
+   "P2'-a_within": true,
+   "pitch_mean_deg": 0.0854848755220163,
+   "z0_mean_mm": -0.045527771752789985,
+   "roll_mean_deg": 6.568607962810025e-05,
+   "P2'-c_pitch_pp_deg": 0.0015092171221630507,
+   "roll_pp_deg": 1.1817912964062028e-05,
+   "P2'-c_within": true,
+   "P2'-d_normal_over_weight": 1.0000024651359298,
+   "P2'-d_within": true,
+   "replica_f64": {
+    "pitch_deg": 0.07886010788923851,
+    "z0_mm": -0.08232438270593877,
+    "start_rise_max_mm": 0.27151448755224905,
+    "pitch_pp_deg": 0.002109965555838797
+   },
+   "replica_f32": {
+    "pitch_deg": 0.0798238442190843,
+    "z0_mm": -0.08357396652698279,
+    "start_rise_max_mm": 0.43351220675047486,
+    "pitch_pp_deg": 0.0026990168183169683
+   },
+   "us_per_step": 8377.875833749567,
+   "wall_s": 670.2300666999654,
+   "build_s": 1.9326381999999285,
+   "threads": 4,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "P2'-b": {
+    "basis": "replica f64-f32 range +- (0.005 deg, 0.05 mm) (5.35.4, U-S9P-2)",
+    "pitch_range_deg": [
+     0.07886010788923851,
+     0.0798238442190843
+    ],
+    "z0_range_mm": [
+     -0.08357396652698279,
+     -0.08232438270593877
+    ],
+    "pitch_outside_range_deg": 0.005661031302931996,
+    "z0_outside_range_mm": 0.03679661095314878,
+    "within": false
+   }
+  },
+  "P2prime_S1_top_M14s_dashpot8s": {
+   "soil": "S1",
+   "level": "top",
+   "pad_grid_m": 0.02,
+   "crawler_grid_m": 0.04,
+   "t_end_s": 7.999999999994694,
+   "judge_window_s": [
+    6.999999999994694,
+    7.999999999994694
+   ],
+   "settle_dashpot": {
+    "type": "ground-fixed settle dashpot on the superstructure COG (dynamics 5.35.4 (a), U-S9P-1): heave along the SCM plane normal + roll / pitch about the plane x / y axes; in-plane translation and yaw free; ChLoadBodyForce + ChLoadBodyTorque set by a Python load hook (explicit, input lag as every hook value)",
+    "c_z_N_s_m": 2000000.0,
+    "c_pitch_N_m_s_rad": 3400000.0,
+    "c_roll_N_m_s_rad": 2200000.0,
+    "fade_s": [
+     3.0,
+     5.0
+    ],
+    "fade": "1 until fade[0], linear to 0 at fade[1], 0 after",
+    "axes_world": {
+     "normal": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "roll_axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "pitch_axis": [
+      0.0,
+      1.0,
+      0.0
+     ]
+    },
+    "values_basis": "ASSUMPTION (trial values of 5.35.4; c_pitch = c_z 1.3^2, c_roll = c_z 1.045^2)",
+    "force_abs_max_N": 23485.302474717588,
+    "torque_abs_max_Nm": 30543.02772364233,
+    "dissipated_energy_J": 615.6866604657635,
+    "zero_since_s": 5.000000000001686
+   },
+   "P2'-a_first_step_force_N": 0.0,
+   "P2'-a_start_rise_mm": 2.4099242601494097e-05,
+   "P2'-a_start_rise_t_s": 0.027999999999999886,
+   "P2'-a_within": true,
+   "pitch_mean_deg": 0.781699831347158,
+   "z0_mean_mm": -12.38209123403942,
+   "roll_mean_deg": 0.0011919254773610363,
+   "P2'-c_pitch_pp_deg": 0.0002981293602867252,
+   "roll_pp_deg": 1.2740659925591837e-06,
+   "P2'-c_within": true,
+   "P2'-d_normal_over_weight": 1.0000010182110641,
+   "P2'-d_within": true,
+   "replica_f64": {
+    "pitch_deg": 0.7822886560101853,
+    "z0_mm": -12.377348644964508,
+    "start_rise_max_mm": 0.0,
+    "pitch_pp_deg": 0.00029780244651855803
+   },
+   "replica_f32": {
+    "pitch_deg": 0.7822908217625587,
+    "z0_mm": -12.377331053988474,
+    "start_rise_max_mm": 5.3211855810531006e-05,
+    "pitch_pp_deg": 0.0002980562564651734
+   },
+   "us_per_step": 4854.910321249918,
+   "wall_s": 388.3928256999934,
+   "build_s": 1.192761000012979,
+   "threads": 4,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "P2'-b": {
+    "basis": "(a) replica f64 (5.35.4), <= 1 %",
+    "pitch_ref_deg": 0.7822886560101853,
+    "z0_ref_mm": -12.377348644964508,
+    "pitch_rel_pct": -0.07526948761219997,
+    "z0_rel_pct": 0.038316680017260366,
+    "within": true
+   }
+  }
+ },
+ "cost": {
+  "folder": "C:/workspace/outrigger_control/.claude/worktrees/agent-ac4ca09081d79438a/07_results/S9/batch_P2prime_20261026_083209",
+  "parallel": 2,
+  "failed": false,
+  "wall_serial_s": 2127.8212310999515,
+  "est_serial_s": 1440,
+  "wall_over_est": 1.4776536327082996,
+  "per_case": [
+   {
+    "case": "P2prime_J2_top_M14s_dashpot8s",
+    "rc": 0,
+    "wall_s": 674.81286429998,
+    "est_s": 420
+   },
+   {
+    "case": "P2prime_J1_top_M14s_dashpot8s",
+    "rc": 0,
+    "wall_s": 676.8366081999848,
+    "est_s": 420
+   },
+   {
+    "case": "P2prime_G1_top_M14s_dashpot8s",
+    "rc": 0,
+    "wall_s": 384.09037759999046,
+    "est_s": 300
+   },
+   {
+    "case": "P2prime_S1_top_M14s_dashpot8s",
+    "rc": 0,
+    "wall_s": 392.0813809999963,
+    "est_s": 300
+   }
+  ],
+  "note": "P-cores shared with the main-tree YAML regression R3 (8 P-cores) and 2 S9 runs at a time: contended"
+ },
+ "source_batch": "07_results/S9/batch_P2prime_20261026_083209",
+ "generator": "04_scripts/02_chrono/s9_batch_summary.py"
+}
