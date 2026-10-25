@@ -1,0 +1,56 @@
+{
+ "generator": "05_tests/data/make_ground_bushing_l1_ref.py",
+ "code": "ground_bushing.py of commit 8616be9 (before adhesion_N); converted losslessly from the npz written by that code",
+ "layout": {
+  "pos": {
+   "start": 0,
+   "stop": 3,
+   "shape": [
+    3
+   ],
+   "dtype": "float64"
+  },
+  "quat": {
+   "start": 3,
+   "stop": 7,
+   "shape": [
+    4
+   ],
+   "dtype": "float64"
+  },
+  "slip": {
+   "start": 7,
+   "stop": 19,
+   "shape": [
+    4,
+    3
+   ],
+   "dtype": "float64"
+  },
+  "normal": {
+   "start": 19,
+   "stop": 23,
+   "shape": [
+    4
+   ],
+   "dtype": "float64"
+  },
+  "yield": {
+   "start": 23,
+   "stop": 27,
+   "shape": [
+    4
+   ],
+   "dtype": "int64"
+  },
+  "anchor": {
+   "start": 27,
+   "stop": 39,
+   "shape": [
+    4,
+    3
+   ],
+   "dtype": "float64"
+  }
+ }
+}

@@ -128,6 +128,8 @@ LIFT_TIME_S = 1.0e-3
 """t_lift: N <= 0 must last this long (consecutive steps) before the bushing is removed."""
 TOUCH_THRESHOLD_N = 100.0
 """N_th: a removed bushing is re-created when the normal force exceeds this value."""
+ADHESION_FULL_NORMAL_N = 1.0e4
+"""N_c of the S9 adhesion ramp (ASSUMPTION, ``dynamics_model.md`` 5.33.7 #4 / U-S9L-3)."""
 
 # Relative guard for ceil(t_lift / dt): 1e-3 / 1e-4 = 10.000000000000002 in binary floating
 # point and must give 10 steps, not 11.
@@ -279,6 +281,11 @@ class PadBushingSpec:
             (``contact.rigid_floor.L1.bushing_stiffness_per_pad_N_m``).
         damping_input_N_s_m: Chrono damping input ``ct / 2`` [N s/m] (R7;
             ``contact.rigid_floor.L1.bushing_damping_input_per_pad_N_s_m``). Acts as ``ct``.
+        adhesion_N: Adhesion term ``c A`` of the Mohr-Coulomb limit [N] (S9 SCM, soil cohesion
+            times the pad bottom area, ``dynamics_model.md`` 5.33.7 #4). The return-mapping
+            limit is ``mu N + adhesion_N min(1, N / N_c)``
+            (:attr:`GroundBushingCoulomb.adhesion_full_normal_N`). Default 0 = the L1 limit
+            ``mu N`` (bit-identical code path).
     """
 
     name: str
@@ -287,6 +294,7 @@ class PadBushingSpec:
     sphere_radius_m: float
     stiffness_N_m: float
     damping_input_N_s_m: float
+    adhesion_N: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -393,6 +401,16 @@ class GroundBushingCoulomb:
             body that only translates along the floor normal). Default: ``floor`` for every
             pad. Every body must have the floor's orientation; ``floor`` stays the reference of
             the surface normal. Anchors are in the coordinates of the leg's own body.
+        adhesion_full_normal_N: ``N_c`` of the adhesion ramp ``c A min(1, N / N_c)`` [N]
+            (S9 SCM, ``dynamics_model.md`` 5.33.7 #4, ASSUMPTION 10 kN: less adhesion while the
+            contact area of a freshly touching pad is small). Used only by pads with
+            ``PadBushingSpec.adhesion_N > 0``.
+
+    Adhesion (S9, added 2026-10-26): a pad with ``adhesion_N == 0`` (the default, every L1 /
+    crawler use) evaluates exactly ``limit = mu * N`` as before, so L1 runs are bit-identical
+    (``05_tests/chrono/test_ground_bushing_adhesion.py``). With ``adhesion_N > 0`` the limit is
+    ``mu N + adhesion_N min(1, N / N_c)`` (Mohr-Coulomb ``c A + N tan(phi)`` with ``mu =
+    tan(phi)``); everything else (R15, damping switch, one-step lag) is unchanged.
     """
 
     def __init__(
@@ -411,9 +429,16 @@ class GroundBushingCoulomb:
         force_point: str = DEFAULT_FORCE_POINT,
         leg_floors: Sequence[ch.ChBody] | None = None,
         normal_force_source: Callable[[], Sequence[float]] | None = None,
+        adhesion_full_normal_N: float = ADHESION_FULL_NORMAL_N,
     ) -> None:
         if not pads:
             raise ValueError("at least one pad is needed")
+        if not (adhesion_full_normal_N > 0.0 and math.isfinite(adhesion_full_normal_N)):
+            raise ValueError(f"adhesion_full_normal_N must be > 0: {adhesion_full_normal_N!r}")
+        for pad in pads:
+            if not (pad.adhesion_N >= 0.0 and math.isfinite(pad.adhesion_N)):
+                raise ValueError(f"pad {pad.name}: adhesion must be finite and >= 0")
+        self._n_c = float(adhesion_full_normal_N)
         if friction < 0.0 or not math.isfinite(friction):
             raise ValueError(f"friction must be a finite non-negative number: {friction!r}")
         for pad in pads:
@@ -488,6 +513,8 @@ class GroundBushingCoulomb:
         force_point: str = DEFAULT_FORCE_POINT,
         leg_floors: Sequence[ch.ChBody] | None = None,
         normal_force_source: Callable[[], Sequence[float] | None] | None = None,
+        adhesion_N: Sequence[float] | None = None,
+        adhesion_full_normal_N: float = ADHESION_FULL_NORMAL_N,
     ) -> GroundBushingCoulomb:
         """Four legs in LEG_ORDER with the L1 values of ``02_params/rexome33.yaml``.
 
@@ -506,6 +533,10 @@ class GroundBushingCoulomb:
         ):
             raise ValueError(f"need one moving part and one sphere centre per leg {LEG_ORDER}")
         l1 = params.contact.rigid_floor.L1
+        adhesion = (0.0,) * len(LEG_ORDER) if adhesion_N is None else tuple(
+            float(a) for a in adhesion_N)
+        if len(adhesion) != len(LEG_ORDER):
+            raise ValueError(f"adhesion_N: need one value per leg {LEG_ORDER}")
         pads = [
             PadBushingSpec(
                 name=leg.name,
@@ -516,6 +547,7 @@ class GroundBushingCoulomb:
                 sphere_radius_m=leg.pad.swivel_center_above_pad_bottom_m,
                 stiffness_N_m=l1.bushing_stiffness_per_pad_N_m[i],
                 damping_input_N_s_m=l1.bushing_damping_input_per_pad_N_s_m[i],
+                adhesion_N=adhesion[i],
             )
             for i, leg in enumerate(params.legs)
         ]
@@ -535,6 +567,7 @@ class GroundBushingCoulomb:
             force_point=force_point,
             leg_floors=leg_floors,
             normal_force_source=normal_force_source,
+            adhesion_full_normal_N=adhesion_full_normal_N,
         )
 
     # --- read-only views ---------------------------------------------------------------
@@ -552,6 +585,33 @@ class GroundBushingCoulomb:
         """Change the default step (transition windows); the lift rule stays time based."""
         lift_step_count(self._lift_time_s, value)
         self._dt_s = float(value)
+
+    @property
+    def adhesion_N(self) -> NDArray[np.float64]:
+        """Adhesion ``c A`` per pad [N] (0 = L1 limit ``mu N``)."""
+        return np.array([pad.adhesion_N for pad in self._pads], dtype=float)
+
+    @property
+    def adhesion_full_normal_N(self) -> float:
+        """``N_c`` of the adhesion ramp [N]."""
+        return self._n_c
+
+    @property
+    def friction(self) -> float:
+        """Coulomb coefficient ``mu`` of the return mapping."""
+        return self._mu
+
+    def tangential_limit_N(self, normal_force_N: ArrayLike) -> NDArray[np.float64]:
+        """Return-mapping limit per pad for the given normal forces [N] (same arithmetic as
+        :meth:`_return_mapping`; ``N`` clipped at 0)."""
+        n = np.maximum(np.asarray(normal_force_N, dtype=float).reshape(len(self._pads)), 0.0)
+        out = np.empty(len(self._pads))
+        for i, pad in enumerate(self._pads):
+            limit = self._mu * float(n[i])
+            if pad.adhesion_N != 0.0:
+                limit = limit + pad.adhesion_N * min(1.0, float(n[i]) / self._n_c)
+            out[i] = limit
+        return out
 
     @property
     def force_point(self) -> str:
@@ -956,6 +1016,8 @@ class GroundBushingCoulomb:
         dn = math.sqrt(dx * dx + dy * dy + dz * dz)
         k = pad.stiffness_N_m
         limit = self._mu * normal_force_N
+        if pad.adhesion_N != 0.0:  # S9 Mohr-Coulomb; the L1 path (0) stays bit-identical
+            limit = limit + pad.adhesion_N * min(1.0, normal_force_N / self._n_c)
         if k * dn > limit:
             # Simple return mapping (spring = mu N now); the implicit step then overshoots by
             # about kt |v| dt while sliding (block test; a velocity predictor chattered).
