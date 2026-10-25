@@ -7,7 +7,8 @@ Synthetic 10 Hz benches of ``test_c2_r8d1.py`` (no CHECK, pressure judge):
 * P-S9-2 the load-sum plateau window: pinned slope, flat load sum, a retracting period, seeded
   reading noise,
 * P-S9-3 soil mode: zone held, push floor, no DONE before the lift-off confirmation (LOC),
-* P-S9-4 the corner bias by hand, the dead zone (commands bit for bit),
+* P-S9-4 the corner bias by hand, the dead zone on the stroke-based ``c_min(t_P)`` (commands
+  bit for bit), the raw tilt without IMU-rate samples (user decisions 2026-10-26 (n-1), (n-2)),
 * P-S9-5 the 150 mm FAULT on a synthetic penetration,
 * P-S9-6 lifetime, P-S9-7 events and meta, P-S9-8 presets, P-S9-10 the re-approach time limit.
 
@@ -37,6 +38,7 @@ from test_c2_r8d1 import (  # same test folder
     measurements,
     operating_strokes,
     ready_bench,
+    up_in_body,
 )
 
 from outrigger_sim.control.c2 import (
@@ -60,6 +62,7 @@ from outrigger_sim.control.c2 import (
     _SoilState,
 )
 from outrigger_sim.control.target import AttitudeTarget
+from outrigger_sim.frames import roll_pitch_from_specific_force
 from outrigger_sim.params import load_params
 from outrigger_sim.sensors.imu import STANDARD_GRAVITY_M_S2
 
@@ -437,6 +440,57 @@ def test_confirmation_applies_the_bias_to_every_clearance_path(geometry) -> None
     assert float(by_corner["FL"]) == pytest.approx(expected[3] * 1e3, abs=0.05)
 
 
+@pytest.mark.parametrize(
+    ("corner_clearance_m", "is_applied"),
+    [
+        # c_min(t_P) 15 mm, max b_k 25 mm: the old max-b rule would apply it, the new one not
+        ((0.025, 0.015, 0.022, 0.018), False),
+        ((0.0200, 0.0300, 0.0300, 0.0300), False),  # c_min exactly at the dead zone
+        ((0.0201, 0.0300, 0.0300, 0.0300), True),
+    ],
+)
+def test_bias_applies_only_when_the_stroke_clearance_leaves_the_dead_zone(
+    geometry, corner_clearance_m, is_applied
+) -> None:
+    """User decision 2026-10-26 (n-1): the S-3 bias applies only when the stroke-based
+    ``c_min(t_P)`` exceeds the dead zone, whatever ``max b_k`` says."""
+    controller = C2Controller(geometry, soil_config())
+    controller._soil_state().settle_attitude_rad = (0.0, 0.0)
+    sample = replace(
+        hand_sample(),
+        corner_clearance_m=np.array(corner_clearance_m),
+        raw_attitude_rad=(0.0, 0.0),
+    )
+    controller._confirm_liftoff(sample.t_s, [sample], reference_weight_N(geometry))
+    soil = controller._soil_state()
+    np.testing.assert_array_equal(soil.corner_bias_raw_m, corner_clearance_m)
+    assert soil.clearance_at_plateau_start_m == min(corner_clearance_m)
+    assert soil.has_corner_bias is is_applied
+    expected = np.array(corner_clearance_m) if is_applied else np.zeros(4)
+    np.testing.assert_array_equal(soil.corner_bias_m, expected)
+    assert (event_names(controller, SOIL_EVENT_CLEARANCE_BIAS) != []) is is_applied
+
+
+def test_attitude_error_alone_does_not_switch_the_bias_on(geometry) -> None:
+    """Reduced closed-loop case 0 shape: the body pitched 0.4 deg since the settle and every
+    corner is 12 mm clear, but the attitude change reads 0 (the old filtered stand-in), so
+    the raw ``b_k`` keeps the pitch rise and exceeds 20 mm; ``c_min(t_P)`` gives no bias."""
+    pitch_change_rad = math.radians(0.4)
+    (x_min, x_max), _ = CRAWLER_XY_BOX_M
+    corners_x = np.array([x_min, x_min, x_max, x_max])  # RR, RL, FR, FL
+    corner_clearance_m = 0.012 + (x_max - corners_x) * pitch_change_rad
+    controller = C2Controller(geometry, soil_config())
+    controller._soil_state().settle_attitude_rad = (0.0, 0.0)
+    sample = replace(
+        hand_sample(), corner_clearance_m=corner_clearance_m, raw_attitude_rad=(0.0, 0.0)
+    )
+    controller._confirm_liftoff(sample.t_s, [sample], reference_weight_N(geometry))
+    soil = controller._soil_state()
+    assert float(soil.corner_bias_raw_m.max()) > controller.config.soil.corner_bias_deadzone_m
+    np.testing.assert_array_equal(soil.corner_bias_m, 0.0)
+    assert controller._active_corner_bias_m() is None
+
+
 def test_bias_inside_the_dead_zone_is_dropped(geometry) -> None:
     controller = C2Controller(geometry, soil_config())
     controller._soil_state().settle_attitude_rad = (0.0, 0.0)
@@ -502,22 +556,21 @@ def test_liftoff_survives_a_relevel_and_clears_at_a_new_touch(geometry) -> None:
 
 def test_settle_attitude_is_the_mean_tilt_of_the_first_touch_periods(geometry) -> None:
     """No CHECK: the first ``settle_tilt_samples`` TOUCH periods (legs still in the air here,
-    zero readings) give the settle attitude; bench_config has no IMU-rate samples, so the
-    filtered attitude stands in for the raw tilt."""
+    zero readings) give the settle attitude; bench_config has no IMU-rate samples, so the raw
+    tilt is that of the period-mean specific force (user decision 2026-10-26 (n-2)), not the
+    lagging filtered attitude."""
     controller = C2Controller(geometry, soil_config())
     bench = Bench(controller, geometry, operating_strokes(geometry))
     bench.tilt_rad = (math.radians(0.4), math.radians(-0.3))
+    raw_roll, raw_pitch = roll_pitch_from_specific_force(up_in_body(bench.tilt_rad))
+    raw_tilt = (float(raw_roll), float(raw_pitch))
     samples = controller.config.soil.settle_tilt_samples
-    filtered = []
     for _ in range(samples + 5):
         bench.step(np.zeros(4))
-        filtered.append((controller._state.roll_rad, controller._state.pitch_rad))
     assert controller.phase is C2Phase.TOUCH
     soil = controller._soil_state()
-    # period 1 is CHECK (-> TOUCH inside its phase step), so TOUCH samples start at period 2
-    assert soil.settle_tilts == filtered[1 : samples + 1]
-    roll, pitch = np.mean(filtered[1 : samples + 1], axis=0)
-    assert soil.settle_attitude_rad == (float(roll), float(pitch))
+    assert soil.settle_tilts == [raw_tilt] * samples
+    assert soil.settle_attitude_rad == pytest.approx(raw_tilt, abs=1e-15)
 
 
 def test_settle_attitude_with_check_is_the_check_attitude(geometry) -> None:
@@ -539,6 +592,25 @@ def test_period_raw_attitude_is_the_mean_of_the_imu_rate_tilts(geometry) -> None
     ]
     roll, pitch = controller._period_raw_attitude_rad()
     assert (roll, pitch) == (pytest.approx(0.011, abs=1e-15), pytest.approx(-0.022, abs=1e-15))
+
+
+def test_period_raw_attitude_without_imu_samples_is_the_raw_tilt_of_the_period_mean(
+    geometry,
+) -> None:
+    """User decision 2026-10-26 (n-2): with ``imu_sample_period_s`` None the S-3 raw tilt is
+    the tilt of the period-mean specific force; the filtered attitude lags behind it."""
+    controller = C2Controller(geometry, soil_config())
+    assert controller.config.r8.imu_sample_period_s is None
+    tilt_rad = (math.radians(-0.2), math.radians(0.5))
+    strokes = operating_strokes(geometry)
+    # a level first period starts the filter at 0, so the tilted second one lags behind
+    controller.update(measurements(PERIOD_S, geometry, np.zeros(4), strokes))
+    controller.update(measurements(2 * PERIOD_S, geometry, np.zeros(4), strokes, tilt_rad=tilt_rad))
+    assert controller._state.period_raw_tilts == []
+    raw_roll, raw_pitch = roll_pitch_from_specific_force(up_in_body(tilt_rad))
+    assert controller._period_raw_attitude_rad() == (float(raw_roll), float(raw_pitch))
+    filtered = (controller._state.roll_rad, controller._state.pitch_rad)
+    assert abs(filtered[1] - float(raw_pitch)) > math.radians(0.1)
 
 
 # --- events, meta, settings, presets, old pickles -----------------------------------------------

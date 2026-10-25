@@ -1334,7 +1334,8 @@ class SoilResponseSettings:
       (pure heave added, rescaled to ``v_max``) and DONE waits for the LOC.
     * S-3 corner bias: at the LOC ``b_k = c_k(t_P) - (rho_k - min rho)``, ``rho_k = y_k d_phi
       - x_k d_theta`` (raw-tilt attitude change since the crawler settle), clipped at zero and
-      dropped when its maximum is within ``corner_bias_deadzone_m``; every control use of the
+      dropped while the smallest unbiased corner clearance ``c_min(t_P)`` is within
+      ``corner_bias_deadzone_m`` (user decision 2026-10-26: no IMU); every control use of the
       crawler-corner clearance reads ``c_k - b_k`` afterwards.
     * S-4 limit: ``max_push_m`` of mean motor stroke in soil mode without the LOC ->
       ``WARN_CRAWLER_LIFTOFF_UNCONFIRMED`` and FAULT.
@@ -1357,7 +1358,7 @@ class SoilResponseSettings:
     push_speed_fraction: float = 0.25
     """S-2 smallest leg speed in soil mode, fraction of ``v_max``."""
     corner_bias_deadzone_m: float = 0.020
-    """S-3 no bias while the largest corner bias is at most this."""
+    """S-3 no bias while the smallest unbiased corner clearance at ``t_P`` is at most this."""
     max_push_m: float = 0.15
     """S-4 mean motor-stroke increase in soil mode without the LOC (observed <= 93.7 mm)."""
     weight_record_range: tuple[float, float] = (0.9, 1.15)
@@ -2527,7 +2528,8 @@ class _PlateauSample:
     corner_clearance_m: NDArray[np.float64]
     """Stroke-based crawler-corner clearance ``c_k`` (rigid floor, no bias)."""
     raw_attitude_rad: tuple[float, float]
-    """Mean raw tilt (roll, pitch) of the period (the filtered attitude without IMU samples)."""
+    """Mean raw tilt (roll, pitch) of the period (without IMU-rate samples: the raw tilt of the
+    period-mean specific force)."""
 
 
 @dataclass
@@ -2628,6 +2630,9 @@ class _RunState:
     """Filtered (roll, pitch) of the last CHECK samples; the controller sets the length."""
     period_raw_tilts: list[_RawTilt] = field(default_factory=list)
     """IMU-rate raw tilts of the current period (P-R8-9; empty on the R7 path)."""
+    period_mean_raw_tilt_rad: tuple[float, float] = (0.0, 0.0)
+    """R7 path (no IMU-rate samples): raw (roll, pitch) of the period-mean specific force,
+    the S-3 raw tilt there (user decision 2026-10-26 (n-2))."""
     check_raw_tilts: list[_RawTilt] = field(default_factory=list)
     """Raw tilts of every CHECK period (P-R8-9 window)."""
     check_window: dict[str, Any] | None = None
@@ -3493,7 +3498,9 @@ class C2Controller:
     def _filtered_attitude(self, measurements: Measurements) -> AttitudeEstimate:
         """Attitude low-pass on the period mean, or (R8 P-3) on every IMU-rate sample."""
         if self.config.r8.imu_sample_period_s is None:
-            return self._attitude.update(measurements.t_s, measurements.specific_force_m_s2)
+            estimate = self._attitude.update(measurements.t_s, measurements.specific_force_m_s2)
+            self._state.period_mean_raw_tilt_rad = (estimate.roll_raw_rad, estimate.pitch_raw_rad)
+            return estimate
         samples = measurements.imu_specific_force_samples_m_s2
         if samples is None:
             raise ValueError(
@@ -4933,11 +4940,12 @@ class C2Controller:
         return mass_kg * STANDARD_GRAVITY_M_S2
 
     def _period_raw_attitude_rad(self) -> tuple[float, float]:
-        """Mean raw tilt of this period; the filtered attitude without IMU-rate samples."""
+        """Mean raw tilt of this period; without IMU-rate samples the raw tilt of the
+        period-mean specific force (P-S9-4 asks for a raw tilt, not the filtered attitude)."""
         state = self._state
         tilts = state.period_raw_tilts
         if not tilts:
-            return state.roll_rad, state.pitch_rad
+            return state.period_mean_raw_tilt_rad
         roll = float(np.mean([tilt.roll_rad for tilt in tilts]))
         pitch = float(np.mean([tilt.pitch_rad for tilt in tilts]))
         return roll, pitch
@@ -5048,7 +5056,12 @@ class C2Controller:
         raw_bias_m = self._corner_bias_m(plateau_start)
         soil.corner_bias_raw_m = raw_bias_m
         bias_m = np.maximum(raw_bias_m, 0.0)  # never raise a corner's clearance estimate
-        if float(bias_m.max()) <= settings.corner_bias_deadzone_m:
+        # User decision 2026-10-26 (n-1): whether the bias applies is judged on the
+        # stroke-based c_min(t_P), not on max b_k. b_k carries the IMU attitude change, and an
+        # attitude error alone (filter lag 0.4 deg x 2.7 m crawler width = 19 mm) must not
+        # switch the bias on. c_min(t_P) > dead zone implies max b_k > dead zone (b_k = c_k at
+        # the lowest-rise corner), so this only drops biases the old rule would have applied.
+        if soil.clearance_at_plateau_start_m <= settings.corner_bias_deadzone_m:
             bias_m = np.zeros(LEG_COUNT)
         soil.corner_bias_m = bias_m
         self._add_event(t_s, SOIL_EVENT_LIFTOFF_CONFIRMED)
