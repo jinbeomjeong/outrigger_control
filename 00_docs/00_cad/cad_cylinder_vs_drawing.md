@@ -214,7 +214,7 @@ YAML은 생성물이라 손으로 고치지 않는다(CLAUDE.md '작업 규칙')
 | `legs.<leg>.extension_range_m` | [0, 0.68] | [0, 0.70] ✓ | 행정 | actuators, control |
 | `legs.<leg>.moving_part.{mass_kg, com_retracted_m, inertia_kg_m2}` | 106.784 kg (공통) | F 유지(106.8, 추정 103~107) / R 약 71.5(66~74.5) **가정** | 4.4절 | bodies, contact(gn), actuators(법칙 C 관성 보정), F_min 접촉력 기준 |
 | `legs.<leg>.pad_body`, `rod_body` (SCM) | 22.40 / 84.38 kg | R: 다시 계산(형상 합성 필요) | 4.4절 | bodies(SCM 분리 바디), S9 |
-| `legs.RL/RR.pad.polygon_xy_m`, `bottom_area_m2` | 330 정사각·모따기 30, 0.1071 | 250 정사각·모따기 30(가정), 0.0607 | SECTION A-A' 250 × 250 | sim_shapes(C8 hull), SCM 접촉, `dyn_model.support_polygon`, `k_concrete_westergaard` 상한 |
+| `legs.RL/RR.pad.polygon_xy_m`, `bottom_area_m2` | 330 정사각·모따기 30, 0.1071 | 250 정사각·모따기 30(가정), 0.0607 | SECTION A-A' 250 × 250 | sim_shapes(C8 hull), SCM 접촉, `dyn_model.support_polygon`, `k_concrete_westergaard` 상한. **상태(2026-10-25, U-PAD-1~6)**: 실험 변수 2타입으로 처리. YAML은 그대로(330) 두고 부속표 `02_params/pad_variants.json`(`export_pad_variants.py` 생성, 기본 `dwg_rear250` = 후방 250, 비교 `cad330`)과 실행 덮어쓰기 `outrigger_sim.pad_variants.apply_pad_variant`로 S9에서만 적용. YAML 키 이동(`pad_shapes`, 지문 제외)은 다음 재생성 묶음 |
 | `legs.<leg>.pad.thickness_m` | 0.025 | 그대로(그림 판독 약 26) | 도면 치수 없음 | sim_shapes |
 | `legs.<leg>.pad.swivel_center_above_pad_bottom_m` | 0.06 (가정) | 후보 0.085(그림 판독, 치수 없음) **가정** | 도면 볼 조인트 그림 | contact(L1 구 반지름 = 스위블 높이), 접선 모멘트 팔, `leg_rod_lateral_check` |
 | `legs.<leg>.pad_bottom_center_retracted_m` z | −0.6998 / −0.7100 | −0.6455 / −0.6357 **조건부** | 4.5절 | 기구학 전체, crawler 틈, 정적 하중, scenarios(settle·crawler_settle) |
@@ -236,7 +236,7 @@ YAML은 생성물이라 손으로 고치지 않는다(CLAUDE.md '작업 규칙')
    - 737-763행 면적·힘을 다리별로 계산한다. 다리별 출력 키를 만든다.
    - 점검표 346-350행(`annulus_area_m2`, `max_force_*` 기대값)을 바꾼다.
    - 펌프 점검식 763행을 다리별 면적 합으로 바꾼다.
-   - 후방 패드 다각형·면적은 BREP 대신 도면 치수로 합성하는 경로를 넣는다. 1293-1338행 `pad_body`/`rod_body` 분할은 BREP에서 하므로 후방은 합성 형상이 있어야 한다.
+   - 후방 패드 다각형·면적은 BREP 대신 도면 치수로 합성하는 경로를 넣는다. 1293-1338행 `pad_body`/`rod_body` 분할은 BREP에서 하므로 후방은 합성 형상이 있어야 한다. **상태(2026-10-25)**: 합성 B-rep(`01_cad/02_legs/rexome35/moving_R{L,R}.brep`)의 바닥면에서 다각형·면적을 뽑는 경로를 `04_scripts/00_cad/export_pad_variants.py`(부속표 `02_params/pad_variants.json`)로 만들었다. YAML에 넣는 일은 재생성 묶음 때 이 표를 `pad_shapes` 블록으로 옮겨 한다(`dynamics_model.md` 5.30.5 ③).
    - 출처 주석은 "drawing REXOME35-9206 Rev.0 front/rear, 08_test_data/datasheets/cylinder_*_extract.md"로 쓴다. 가정(모따기 30, 피스톤 두께 20, 밀도 7.85, 스위블 높이)은 `ASSUMPTION`으로 표시한다.
 3. **재생성**: `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts/00_cad/export_params.py` → `02_params/rexome33.yaml`, `02_params/rexome33_checks.json`.
 4. **C8 형상**: `04_scripts/00_cad/build_sim_shapes.py` 재실행. 후방 패드·로드·배럴 형상의 입력(합성 형상)이 필요하다. 검증은 `04_scripts/00_cad/verify_sim_shapes.py`.

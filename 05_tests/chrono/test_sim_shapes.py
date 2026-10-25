@@ -96,6 +96,39 @@ def test_pad_visual_lands_on_pad_bottom(
     assert down_face_area_m2 == pytest.approx(brep_area_m2, rel=1e-6)
 
 
+@pytest.mark.parametrize(("variant", "rear_area_m2"), [("cad330", 0.1071), ("dwg_rear250", 0.0607)])
+def test_pad_variant_shapes(index: sim_shapes.SimShapeIndex, variant: str, rear_area_m2: float) -> None:
+    """Pad type selects the rear pad visual / hull (U-PAD 2026-10-25); front pads are the index ones."""
+    params = load_params()
+    pose = BodyPose((0.0, 0.0, 1.0))
+    for leg_index, leg in enumerate(LEG_ORDER):
+        visual, hull = sim_shapes.pad_shape_entries(leg, variant, index)
+        area = rear_area_m2 if leg in ("RL", "RR") else 0.1071
+        for entry in (visual, hull):
+            vertices, faces = sim_shapes.read_obj_pieces(entry.file)[0]
+            a, b, c = (vertices[faces[:, k]] for k in range(3))
+            n = np.cross(b - a, c - a)
+            assert 0.5 * np.linalg.norm(n[n[:, 2] < 0], axis=1).sum() == pytest.approx(area, rel=1e-6)
+            assert entry.attach == sim_shapes.LEG and entry.leg == leg
+        if leg in ("FL", "FR") or variant == "dwg_rear250":
+            assert hull is index.collision(f"pad_{leg}_hull")
+        body = make_leg_moving_parts(params, [0.0] * 4, pose)[leg_index]
+        report = sim_shapes.attach_leg(body, params, leg_index, index, rod=False, pad_variant=variant)
+        assert report.visual[body.GetName()] == [visual.name]
+        material = ch.ChContactMaterialSMC()
+        added = sim_shapes.add_pad_hull(body, params, leg_index, material, pad_variant=variant, index=index)
+        assert added.name == hull.name
+        assert body.GetCollisionModel().GetNumShapes() == 1
+
+
+def test_attach_leg_default_unchanged(index: sim_shapes.SimShapeIndex) -> None:
+    """pad_variant None keeps the C8 index pad visual (bit-identical scene as before)."""
+    params = load_params()
+    body = make_leg_moving_parts(params, [0.0] * 4, BodyPose((0.0, 0.0, 1.0)))[2]
+    report = sim_shapes.attach_leg(body, params, 2, index)
+    assert report.visual[body.GetName()] == ["rod_RL", "pad_RL_simple"]
+
+
 def test_collision_is_opt_in(index: sim_shapes.SimShapeIndex) -> None:
     params = load_params()
     pose = BodyPose((0.0, 0.0, 1.0))

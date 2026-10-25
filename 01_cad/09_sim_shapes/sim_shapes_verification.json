@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-22T04:03:34",
+ "generated_at": "2026-10-25T20:14:36",
  "index": {
   "path": "01_cad/09_sim_shapes/sim_shapes.json",
   "bytes": 129651,
@@ -7,8 +7,15 @@
  },
  "script": {
   "path": "04_scripts/00_cad/verify_sim_shapes.py",
-  "bytes": 20019,
-  "sha256": "700543ad79866121c23ba815797ed0be50760f333e673fcf2fb83d4c679a02e5"
+  "bytes": 25371,
+  "sha256": "10edbf47ce8b8ec1a8885278c581ccce210172ac2b0c2c3cc9289b6a2037a9b5"
+ },
+ "pad_variants_table": {
+  "path": "02_params/pad_variants.json",
+  "bytes": 23585,
+  "sha256": "698bc5e045d366c025d2ff66033d97af4adae0d1ecf62c4eed1dcc495a88cb0e",
+  "default": "dwg_rear250",
+  "index_pad_variant": "dwg_rear250"
  },
  "tolerances": {
   "pad_area_rel": 1e-06,
@@ -404,9 +411,13 @@
   "items": {
    "FL": {
     "brep_area_m2": 0.10710000000000001,
-    "area_rel_to_claude": 2.220446049250313e-16,
+    "pad_variant": "dwg_rear250",
+    "table_area_m2": 0.1071,
+    "area_rel_to_table": 2.220446049250313e-16,
+    "table_polygon_area_rel_to_brep": 1.7669108398621347e-09,
+    "table_polygon_max_vertex_diff_m": 3.398903380968932e-10,
     "obj_down_area_rel_to_brep": -5.713445381250182e-07,
-    "yaml_area_rel_to_brep": 1.7669108398621347e-09,
+    "yaml_area_rel_to_brep_info": 1.7669108398621347e-09,
     "tilt_deg": 0.0,
     "side_angle_brep_deg": 47.12971075023024,
     "side_angle_yaml_deg": 47.12971076900162,
@@ -436,9 +447,10 @@
      ]
     },
     "checks": {
-     "area_vs_claude": true,
+     "area_vs_table": true,
      "obj_area": true,
-     "yaml_area": true,
+     "table_polygon_area": true,
+     "table_polygon_vertices": true,
      "normal": true,
      "angle_yaml": true,
      "angle_claude": true,
@@ -452,9 +464,13 @@
    },
    "FR": {
     "brep_area_m2": 0.1070999999999999,
-    "area_rel_to_claude": -8.881784197001252e-16,
+    "pad_variant": "dwg_rear250",
+    "table_area_m2": 0.1071,
+    "area_rel_to_table": -8.881784197001252e-16,
+    "table_polygon_area_rel_to_brep": 1.76689529673979e-09,
+    "table_polygon_max_vertex_diff_m": 3.398898940076833e-10,
     "obj_down_area_rel_to_brep": -5.713445370147952e-07,
-    "yaml_area_rel_to_brep": 1.76689529673979e-09,
+    "yaml_area_rel_to_brep_info": 1.76689529673979e-09,
     "tilt_deg": 0.0,
     "side_angle_brep_deg": 47.12971075023021,
     "side_angle_yaml_deg": 47.12971076900162,
@@ -484,9 +500,10 @@
      ]
     },
     "checks": {
-     "area_vs_claude": true,
+     "area_vs_table": true,
      "obj_area": true,
-     "yaml_area": true,
+     "table_polygon_area": true,
+     "table_polygon_vertices": true,
      "normal": true,
      "angle_yaml": true,
      "angle_claude": true,
@@ -500,9 +517,13 @@
    },
    "RL": {
     "brep_area_m2": 0.0607,
-    "area_rel_to_claude": -0.4332399626517274,
+    "pad_variant": "dwg_rear250",
+    "table_area_m2": 0.0607,
+    "area_rel_to_table": 0.0,
+    "table_polygon_area_rel_to_brep": 2.6710789136075164e-10,
+    "table_polygon_max_vertex_diff_m": 1.7357004722384772e-10,
     "obj_down_area_rel_to_brep": -4.193410225727945e-07,
-    "yaml_area_rel_to_brep": 0.7644151555032741,
+    "yaml_area_rel_to_brep_info": 0.7644151555032741,
     "tilt_deg": 0.0,
     "side_angle_brep_deg": 3.376360750489144,
     "side_angle_yaml_deg": 3.376360750489401,
@@ -532,9 +553,10 @@
      ]
     },
     "checks": {
-     "area_vs_claude": false,
+     "area_vs_table": true,
      "obj_area": true,
-     "yaml_area": false,
+     "table_polygon_area": true,
+     "table_polygon_vertices": true,
      "normal": true,
      "angle_yaml": true,
      "angle_claude": true,
@@ -548,9 +570,13 @@
    },
    "RR": {
     "brep_area_m2": 0.0607,
-    "area_rel_to_claude": -0.4332399626517274,
+    "pad_variant": "dwg_rear250",
+    "table_area_m2": 0.0607,
+    "area_rel_to_table": 0.0,
+    "table_polygon_area_rel_to_brep": 2.6710789136075164e-10,
+    "table_polygon_max_vertex_diff_m": 1.7357004722384772e-10,
     "obj_down_area_rel_to_brep": -4.193410226838168e-07,
-    "yaml_area_rel_to_brep": 0.7644151555032448,
+    "yaml_area_rel_to_brep_info": 0.7644151555032448,
     "tilt_deg": 0.0,
     "side_angle_brep_deg": 3.376360750489144,
     "side_angle_yaml_deg": 3.376360750489387,
@@ -580,9 +606,10 @@
      ]
     },
     "checks": {
-     "area_vs_claude": false,
+     "area_vs_table": true,
      "obj_area": true,
-     "yaml_area": false,
+     "table_polygon_area": true,
+     "table_polygon_vertices": true,
      "normal": true,
      "angle_yaml": true,
      "angle_claude": true,
@@ -595,12 +622,329 @@
     }
    }
   },
-  "failures": [
-   "pad RL: area_vs_claude",
-   "pad RL: yaml_area",
-   "pad RR: area_vs_claude",
-   "pad RR: yaml_area"
-  ]
+  "failures": []
+ },
+ "pad_variants": {
+  "items": {
+   "cad_polygons_equal_yaml": true,
+   "cad330": {
+    "FL": {
+     "hull": {
+      "file": "01_cad/09_sim_shapes/collision/pad_FL_hull.obj",
+      "sha256": "c13021c1b08d59a3b498e1c122780521746d82ca8427808adb6bfe75d9c1c2fa",
+      "down_area_rel_to_table": -5.713445380139959e-07,
+      "bottom_minus_yaml_m": [
+       -3.5500000000077137e-05,
+       -3.549999999985509e-05,
+       1.1102230246251565e-16
+      ],
+      "convex": true
+     },
+     "in_c8_index": true,
+     "table_area_m2": 0.1071,
+     "bekker_b_m": 0.171400364,
+     "table_polygon_area_rel": 1.7669057328362214e-09,
+     "bekker_b_rel": -1.7090772130856635e-09,
+     "visual_simple": {
+      "file": "01_cad/09_sim_shapes/visual/pad_FL_simple.obj",
+      "sha256": "f67e212cbb2bbe021650be94154943a468ce45f7e115bcc62e4218ae1831083f",
+      "down_area_rel_to_table": -5.713445380139959e-07,
+      "bottom_minus_yaml_m": [
+       -3.5500000000077137e-05,
+       -3.549999999985509e-05,
+       1.1102230246251565e-16
+      ],
+      "convex": true
+     },
+     "checks": {
+      "polygon_area": true,
+      "bekker_b": true,
+      "hull_area": true,
+      "hull_bottom": true,
+      "hull_convex": true,
+      "visual_simple_area": true,
+      "visual_simple_bottom": true,
+      "visual_simple_convex": true
+     }
+    },
+    "FR": {
+     "hull": {
+      "file": "01_cad/09_sim_shapes/collision/pad_FR_hull.obj",
+      "sha256": "5f229a9ba09f5c798bdd72eed072c58eb55cd7f2fce65714512a97ce1650c19e",
+      "down_area_rel_to_table": -5.713445380139959e-07,
+      "bottom_minus_yaml_m": [
+       -3.5500000000077137e-05,
+       3.549999999985509e-05,
+       1.1102230246251565e-16
+      ],
+      "convex": true
+     },
+     "in_c8_index": true,
+     "table_area_m2": 0.1071,
+     "bekker_b_m": 0.171400364,
+     "table_polygon_area_rel": 1.7669057328362214e-09,
+     "bekker_b_rel": -1.7090772130856635e-09,
+     "visual_simple": {
+      "file": "01_cad/09_sim_shapes/visual/pad_FR_simple.obj",
+      "sha256": "1247c0487fbe1a1fe12993f4fb676608c6c15ea91b84f6cc16fbfc46672be203",
+      "down_area_rel_to_table": -5.713445380139959e-07,
+      "bottom_minus_yaml_m": [
+       -3.5500000000077137e-05,
+       3.549999999985509e-05,
+       1.1102230246251565e-16
+      ],
+      "convex": true
+     },
+     "checks": {
+      "polygon_area": true,
+      "bekker_b": true,
+      "hull_area": true,
+      "hull_bottom": true,
+      "hull_convex": true,
+      "visual_simple_area": true,
+      "visual_simple_bottom": true,
+      "visual_simple_convex": true
+     }
+    },
+    "RL": {
+     "hull": {
+      "file": "01_cad/09_sim_shapes/pad_variants/collision/pad_RL_hull_cad330.obj",
+      "sha256": "094db318522723b5c474ecef8ca0ed0134fa2c1cb70ed7fa3061965f3ecfb463",
+      "down_area_rel_to_table": 2.987768445983363e-07,
+      "bottom_minus_yaml_m": [
+       0.0,
+       -3.2750000000136836e-05,
+       -4.4000000000044004e-05
+      ],
+      "convex": true
+     },
+     "in_c8_index": false,
+     "table_area_m2": 0.1071,
+     "bekker_b_m": 0.171400364,
+     "table_polygon_area_rel": -5.691240811955822e-10,
+     "bekker_b_rel": -2.7709744498949362e-09,
+     "visual_simple": {
+      "file": "01_cad/09_sim_shapes/pad_variants/visual/pad_RL_simple_cad330.obj",
+      "sha256": "23548bb1f12a3212de38274da0fd01ffe63c15c891fe00dcbedff8edb06ef158",
+      "down_area_rel_to_table": 2.987768445983363e-07,
+      "bottom_minus_yaml_m": [
+       0.0,
+       -3.2750000000136836e-05,
+       -4.4000000000044004e-05
+      ],
+      "convex": true
+     },
+     "checks": {
+      "polygon_area": true,
+      "bekker_b": true,
+      "hull_area": true,
+      "hull_bottom": true,
+      "hull_convex": true,
+      "visual_simple_area": true,
+      "visual_simple_bottom": true,
+      "visual_simple_convex": true
+     }
+    },
+    "RR": {
+     "hull": {
+      "file": "01_cad/09_sim_shapes/pad_variants/collision/pad_RR_hull_cad330.obj",
+      "sha256": "9898ee2ca6748feca105e6881959b2e75f2e720a4a31561c70000ac5e64ed919",
+      "down_area_rel_to_table": 2.987768445983363e-07,
+      "bottom_minus_yaml_m": [
+       0.0,
+       3.274999999969275e-05,
+       -4.4000000000044004e-05
+      ],
+      "convex": true
+     },
+     "in_c8_index": false,
+     "table_area_m2": 0.1071,
+     "bekker_b_m": 0.171400364,
+     "table_polygon_area_rel": -5.691240811955822e-10,
+     "bekker_b_rel": -2.7709744498949362e-09,
+     "visual_simple": {
+      "file": "01_cad/09_sim_shapes/pad_variants/visual/pad_RR_simple_cad330.obj",
+      "sha256": "b968e5b03e816e7b5a20d518ef913a9d8e31dee49e91474afcb511a7dfae2244",
+      "down_area_rel_to_table": 2.987768445983363e-07,
+      "bottom_minus_yaml_m": [
+       0.0,
+       3.274999999969275e-05,
+       -4.4000000000044004e-05
+      ],
+      "convex": true
+     },
+     "checks": {
+      "polygon_area": true,
+      "bekker_b": true,
+      "hull_area": true,
+      "hull_bottom": true,
+      "hull_convex": true,
+      "visual_simple_area": true,
+      "visual_simple_bottom": true,
+      "visual_simple_convex": true
+     }
+    }
+   },
+   "dwg_rear250": {
+    "FL": {
+     "hull": {
+      "file": "01_cad/09_sim_shapes/collision/pad_FL_hull.obj",
+      "sha256": "c13021c1b08d59a3b498e1c122780521746d82ca8427808adb6bfe75d9c1c2fa",
+      "down_area_rel_to_table": -5.713445380139959e-07,
+      "bottom_minus_yaml_m": [
+       -3.5500000000077137e-05,
+       -3.549999999985509e-05,
+       1.1102230246251565e-16
+      ],
+      "convex": true
+     },
+     "in_c8_index": true,
+     "table_area_m2": 0.1071,
+     "bekker_b_m": 0.171400364,
+     "table_polygon_area_rel": 1.7669057328362214e-09,
+     "bekker_b_rel": -1.7090772130856635e-09,
+     "visual_simple": {
+      "file": "01_cad/09_sim_shapes/visual/pad_FL_simple.obj",
+      "sha256": "f67e212cbb2bbe021650be94154943a468ce45f7e115bcc62e4218ae1831083f",
+      "down_area_rel_to_table": -5.713445380139959e-07,
+      "bottom_minus_yaml_m": [
+       -3.5500000000077137e-05,
+       -3.549999999985509e-05,
+       1.1102230246251565e-16
+      ],
+      "convex": true
+     },
+     "checks": {
+      "polygon_area": true,
+      "bekker_b": true,
+      "hull_area": true,
+      "hull_bottom": true,
+      "hull_convex": true,
+      "visual_simple_area": true,
+      "visual_simple_bottom": true,
+      "visual_simple_convex": true
+     }
+    },
+    "FR": {
+     "hull": {
+      "file": "01_cad/09_sim_shapes/collision/pad_FR_hull.obj",
+      "sha256": "5f229a9ba09f5c798bdd72eed072c58eb55cd7f2fce65714512a97ce1650c19e",
+      "down_area_rel_to_table": -5.713445380139959e-07,
+      "bottom_minus_yaml_m": [
+       -3.5500000000077137e-05,
+       3.549999999985509e-05,
+       1.1102230246251565e-16
+      ],
+      "convex": true
+     },
+     "in_c8_index": true,
+     "table_area_m2": 0.1071,
+     "bekker_b_m": 0.171400364,
+     "table_polygon_area_rel": 1.7669057328362214e-09,
+     "bekker_b_rel": -1.7090772130856635e-09,
+     "visual_simple": {
+      "file": "01_cad/09_sim_shapes/visual/pad_FR_simple.obj",
+      "sha256": "1247c0487fbe1a1fe12993f4fb676608c6c15ea91b84f6cc16fbfc46672be203",
+      "down_area_rel_to_table": -5.713445380139959e-07,
+      "bottom_minus_yaml_m": [
+       -3.5500000000077137e-05,
+       3.549999999985509e-05,
+       1.1102230246251565e-16
+      ],
+      "convex": true
+     },
+     "checks": {
+      "polygon_area": true,
+      "bekker_b": true,
+      "hull_area": true,
+      "hull_bottom": true,
+      "hull_convex": true,
+      "visual_simple_area": true,
+      "visual_simple_bottom": true,
+      "visual_simple_convex": true
+     }
+    },
+    "RL": {
+     "hull": {
+      "file": "01_cad/09_sim_shapes/collision/pad_RL_hull.obj",
+      "sha256": "c438d934d958296cd0362aab9f4670a4e35c60467df513c62a65042f21b33063",
+      "down_area_rel_to_table": -4.193410225727945e-07,
+      "bottom_minus_yaml_m": [
+       0.0,
+       2.220446049250313e-16,
+       0.0
+      ],
+      "convex": true
+     },
+     "in_c8_index": true,
+     "table_area_m2": 0.0607,
+     "bekker_b_m": 0.130578967,
+     "table_polygon_area_rel": 2.6709212619380196e-10,
+     "bekker_b_rel": 3.7021068433062965e-09,
+     "visual_simple": {
+      "file": "01_cad/09_sim_shapes/visual/pad_RL_simple.obj",
+      "sha256": "cc9faa38dfb613b264273777909e9096d63c38d9b7ddcb80f1450bc91b23fc94",
+      "down_area_rel_to_table": -4.193410225727945e-07,
+      "bottom_minus_yaml_m": [
+       0.0,
+       2.220446049250313e-16,
+       0.0
+      ],
+      "convex": true
+     },
+     "checks": {
+      "polygon_area": true,
+      "bekker_b": true,
+      "hull_area": true,
+      "hull_bottom": true,
+      "hull_convex": true,
+      "visual_simple_area": true,
+      "visual_simple_bottom": true,
+      "visual_simple_convex": true
+     }
+    },
+    "RR": {
+     "hull": {
+      "file": "01_cad/09_sim_shapes/collision/pad_RR_hull.obj",
+      "sha256": "e56be49191ed36f737cf7fde86deac9c90a43911aa7893830fd5b1df9031362f",
+      "down_area_rel_to_table": -4.193410226838168e-07,
+      "bottom_minus_yaml_m": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "convex": true
+     },
+     "in_c8_index": true,
+     "table_area_m2": 0.0607,
+     "bekker_b_m": 0.130578967,
+     "table_polygon_area_rel": 2.6709212619380196e-10,
+     "bekker_b_rel": 3.7021068433062965e-09,
+     "visual_simple": {
+      "file": "01_cad/09_sim_shapes/visual/pad_RR_simple.obj",
+      "sha256": "1482d72eecd37008b27a289451c2aaef2accb0270949b0179d64f690352c5999",
+      "down_area_rel_to_table": -4.193410226838168e-07,
+      "bottom_minus_yaml_m": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "convex": true
+     },
+     "checks": {
+      "polygon_area": true,
+      "bekker_b": true,
+      "hull_area": true,
+      "hull_bottom": true,
+      "hull_convex": true,
+      "visual_simple_area": true,
+      "visual_simple_bottom": true,
+      "visual_simple_convex": true
+     }
+    }
+   }
+  },
+  "failures": []
  },
  "legs": {
   "items": {
@@ -1441,14 +1785,9 @@
   },
   "failures": []
  },
- "failures": [
-  "pad RL: area_vs_claude",
-  "pad RL: yaml_area",
-  "pad RR: area_vs_claude",
-  "pad RR: yaml_area"
- ],
+ "failures": [],
  "verdict": {
-  "pads_rods_collision": "실패",
+  "pads_rods_collision": "통과",
   "superstructure_visual_volume": {
    "deck": "불일치",
    "mast": "허용",
@@ -1461,5 +1800,5 @@
   },
   "note": "superstructure visual meshes are display only; their volume is not used for mass"
  },
- "time_s": 26.222243100011838
+ "time_s": 10.630128499993589
 }

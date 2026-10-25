@@ -2,9 +2,15 @@
 
 Checks (results in 01_cad/09_sim_shapes/sim_shapes_verification.json):
     files       every OBJ of the index exists; vertex / face / piece counts as in the index
-    pads        bottom area (0.1071 m^2), outward normal (-z), side angle (47.1 / 3.4 deg, YAML),
-                bottom height (YAML, 0.1 mm rounding), simple plate vs B-rep plate (volume, COM,
-                inertia), down-facing area of the OBJ, inertia validity
+    pads        bottom area vs the pad-type table 02_params/pad_variants.json (the C8 index pads are
+                type dwg_rear250: front 330 = 0.1071 m^2, rear 250 = 0.0607 m^2; U-PAD 2026-10-25,
+                the YAML legs.<leg>.pad.bottom_area_m2 is recorded but not judged), outward normal
+                (-z), side angle (47.1 / 3.4 deg, YAML), bottom height (YAML, 0.1 mm rounding),
+                simple plate vs B-rep plate (volume, COM, inertia), down-facing area of the OBJ,
+                inertia validity
+    pad_variants every pad type of the table: hull / simple OBJ exist with the table SHA-256,
+                down-facing area = table area, table polygon area = table area, b = 2 A / perimeter,
+                bottom height (YAML), convex, CAD-type polygons = YAML polygons
     legs        rod / pad / moving-part meshes vs B-rep (volume, COM, inertia), COM inside bbox,
                 YAML moving-part COM inside the moving-part mesh bbox (attach offset sanity)
     visual      superstructure meshes vs B-rep: volume and bbox (recomputed from the OBJ)
@@ -42,11 +48,16 @@ from build_sim_shapes import (  # noqa: E402
 )
 
 sys.path.insert(0, str(PROJECT_ROOT / "03_src"))
+from outrigger_sim.pad_variants import (  # noqa: E402
+    DEFAULT_PAD_VARIANT,
+    check_table_against_params,
+    load_pad_variants,
+)
 from outrigger_sim.params import load_params  # noqa: E402
 
 VERIFICATION_JSON = OUT_DIR / "sim_shapes_verification.json"
 CLAUDE_PAD_ANGLE_DEG = {"FL": 47.1, "FR": 47.1, "RL": 3.4, "RR": 3.4}  # CLAUDE.md '다리 기하' (0.1 deg)
-CLAUDE_PAD_AREA_M2 = 0.1071
+INDEX_PAD_VARIANT = DEFAULT_PAD_VARIANT  # the C8 index pads (front CAD 330, rear 250 synthesis) = type B
 TOL = {
     "pad_area_rel": 1e-6, "pad_tilt_deg": 0.01, "pad_angle_yaml_deg": 1e-4, "pad_angle_claude_deg": 0.05,
     "pad_bottom_yaml_m": 1e-4, "exact_mass_rel": 1e-6, "mesh_volume_accept": 1e-2, "mesh_volume_match": 1e-3,
@@ -89,9 +100,13 @@ def check_files(index: dict) -> dict:
     return {"items": out, "failures": failures}
 
 
-def check_pads(index: dict, params) -> dict:
+def check_pads(index: dict, params, table) -> dict:
     out, failures = {}, []
+    variant = table.variant(INDEX_PAD_VARIANT)
     for i, leg in enumerate(LEG_ORDER):
+        shape = variant.leg(leg)
+        if not shape.hull_in_c8_index or shape.hull_name != f"pad_{leg}_hull":
+            failures.append(f"pad {leg}: table type {INDEX_PAD_VARIANT} does not use the C8 index hull")
         rec = index["legs"][leg]
         face = rec["pad_face"]
         v, f = read_obj(PROJECT_ROOT / index["visual"][f"pad_{leg}_simple"]["file"])[0]
@@ -103,11 +118,18 @@ def check_pads(index: dict, params) -> dict:
         brep = rec["pad_simple"]["brep_plate"]
         yaml_bottom = np.asarray(params.legs[i].pad_bottom_center_retracted_m)
         obj_bottom = v[np.isclose(v[:, 2], v[:, 2].min(), atol=1e-9)].mean(0)
+        table_poly = np.asarray(shape.polygon_xy_m) + yaml_bottom[:2]
         item = {
             "brep_area_m2": face["brep_area_m2"],
-            "area_rel_to_claude": face["brep_area_m2"] / CLAUDE_PAD_AREA_M2 - 1,
+            "pad_variant": INDEX_PAD_VARIANT,
+            "table_area_m2": shape.bottom_area_m2,
+            "area_rel_to_table": face["brep_area_m2"] / shape.bottom_area_m2 - 1,
+            "table_polygon_area_rel_to_brep": _shoelace(table_poly) / face["brep_area_m2"] - 1,
+            "table_polygon_max_vertex_diff_m": float(np.abs(
+                _nearest_diff(np.asarray(face["brep_polygon_xy_body_m"]), table_poly)).max()),
             "obj_down_area_rel_to_brep": down_area / face["brep_area_m2"] - 1,
-            "yaml_area_rel_to_brep": face["yaml_polygon_area_m2"] / face["brep_area_m2"] - 1,
+            # YAML still holds the CAD 330 rear polygon until the YAML bundle (5.30.5): recorded, not judged
+            "yaml_area_rel_to_brep_info": face["yaml_polygon_area_m2"] / face["brep_area_m2"] - 1,
             "tilt_deg": face["brep_tilt_from_vertical_deg"],
             "side_angle_brep_deg": face["brep_side_angle_deg"],
             "side_angle_yaml_deg": face["yaml_side_angle_deg"],
@@ -122,9 +144,10 @@ def check_pads(index: dict, params) -> dict:
             "inertia": inertia_ok(mesh.moment_inertia),
         }
         checks = {
-            "area_vs_claude": abs(item["area_rel_to_claude"]) <= TOL["pad_area_rel"],
+            "area_vs_table": abs(item["area_rel_to_table"]) <= TOL["pad_area_rel"],
             "obj_area": abs(item["obj_down_area_rel_to_brep"]) <= TOL["pad_area_rel"],
-            "yaml_area": abs(item["yaml_area_rel_to_brep"]) <= TOL["pad_area_rel"],
+            "table_polygon_area": abs(item["table_polygon_area_rel_to_brep"]) <= TOL["pad_area_rel"],
+            "table_polygon_vertices": item["table_polygon_max_vertex_diff_m"] <= TOL["pad_bottom_yaml_m"],
             "normal": item["tilt_deg"] <= TOL["pad_tilt_deg"],
             "angle_yaml": abs(item["side_angle_brep_deg"] - item["side_angle_yaml_deg"]) <= TOL["pad_angle_yaml_deg"],
             "angle_claude": abs(item["side_angle_brep_deg"] - item["side_angle_claude_deg"]) <= TOL["pad_angle_claude_deg"],
@@ -138,6 +161,67 @@ def check_pads(index: dict, params) -> dict:
         item["checks"] = checks
         failures += [f"pad {leg}: {k}" for k, ok in checks.items() if not ok]
         out[leg] = item
+    return {"items": out, "failures": failures}
+
+
+def _shoelace(xy: np.ndarray) -> float:
+    x, y = xy[:, 0], xy[:, 1]
+    return abs(0.5 * float(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1))))
+
+
+def _nearest_diff(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+    """Vertex differences after matching every vertex of ``a`` to the nearest of ``b`` (and back)."""
+    d = np.linalg.norm(a[:, None, :] - b[None, :, :], axis=2)
+    return np.concatenate([a - b[d.argmin(1)], b - a[d.argmin(0)]])
+
+
+def check_pad_variants(params, table) -> dict:
+    """Every pad type of 02_params/pad_variants.json: hull / simple OBJ vs the table."""
+    import hashlib
+
+    out, failures = {}, []
+    try:
+        check_table_against_params(table, params)
+        out["cad_polygons_equal_yaml"] = True
+    except ValueError as error:
+        out["cad_polygons_equal_yaml"] = False
+        failures.append(f"pad_variants: {error}")
+    for variant in table.variants.values():
+        vout = {}
+        for i, shape in enumerate(variant.legs):
+            yaml_bottom = np.asarray(params.legs[i].pad_bottom_center_retracted_m)
+            poly = np.asarray(shape.polygon_xy_m)
+            perimeter = float(np.linalg.norm(np.roll(poly, -1, axis=0) - poly, axis=1).sum())
+            item = {"hull": shape.hull_name, "in_c8_index": shape.hull_in_c8_index,
+                    "table_area_m2": shape.bottom_area_m2, "bekker_b_m": shape.bekker_b_m,
+                    "table_polygon_area_rel": _shoelace(poly) / shape.bottom_area_m2 - 1,
+                    "bekker_b_rel": shape.bekker_b_m / (2 * shape.bottom_area_m2 / perimeter) - 1}
+            checks = {"polygon_area": abs(item["table_polygon_area_rel"]) <= TOL["pad_area_rel"],
+                      "bekker_b": abs(item["bekker_b_rel"]) <= TOL["pad_area_rel"]}
+            for role, path in (("hull", shape.hull_file), ("visual_simple", shape.visual_simple_file)):
+                if not path.exists():
+                    failures.append(f"pad_variants {variant.name}.{shape.leg}: {role} {path} missing")
+                    continue
+                v, f = read_obj(path)[0]
+                mesh = trimesh.Trimesh(v, f, process=False)
+                a, b, c = (v[f[:, k]] for k in range(3))
+                n = np.cross(b - a, c - a)
+                down_area = 0.5 * float(np.linalg.norm(n[n[:, 2] < 0], axis=1).sum())
+                bottom = v[np.isclose(v[:, 2], v[:, 2].min(), atol=1e-9)].mean(0)
+                item[role] = {
+                    "file": rel(path),
+                    "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                    "down_area_rel_to_table": down_area / shape.bottom_area_m2 - 1,
+                    "bottom_minus_yaml_m": (bottom - yaml_bottom).tolist(),
+                    "convex": bool(abs(mesh.convex_hull.volume / mesh.volume - 1) <= TOL["convex_rel"]),
+                }
+                checks[f"{role}_area"] = abs(item[role]["down_area_rel_to_table"]) <= TOL["pad_area_rel"]
+                checks[f"{role}_bottom"] = float(np.abs(item[role]["bottom_minus_yaml_m"]).max()) <= TOL["pad_bottom_yaml_m"]
+                checks[f"{role}_convex"] = item[role]["convex"]
+            item["checks"] = checks
+            failures += [f"pad_variants {variant.name}.{shape.leg}: {k}" for k, ok in checks.items() if not ok]
+            vout[shape.leg] = item
+        out[variant.name] = vout
     return {"items": out, "failures": failures}
 
 
@@ -347,19 +431,24 @@ def main() -> None:
     started = time.perf_counter()
     index = json.loads(INDEX_JSON.read_text(encoding="utf-8"))
     params = load_params()
+    table = load_pad_variants()
     result = {
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "index": source_record(INDEX_JSON),
         "script": source_record(Path(__file__)),
+        "pad_variants_table": {**source_record(table.path), "default": table.default,
+                               "index_pad_variant": INDEX_PAD_VARIANT},
         "tolerances": TOL,
         "files": check_files(index),
-        "pads": check_pads(index, params),
+        "pads": check_pads(index, params, table),
+        "pad_variants": check_pad_variants(params, table),
         "legs": check_legs(index, params),
         "visual": check_visual(index),
         "collision": check_collision(index),
         "upper_rollers": check_upper_rollers(index),
     }
-    failures = [f for k in ("files", "pads", "legs", "collision", "upper_rollers") for f in result[k]["failures"]]
+    failures = [f for k in ("files", "pads", "pad_variants", "legs", "collision", "upper_rollers")
+                for f in result[k]["failures"]]
     visual_verdicts = {k: v.get("volume_verdict") for k, v in result["visual"]["items"].items()}
     result["failures"] = failures
     result["verdict"] = {

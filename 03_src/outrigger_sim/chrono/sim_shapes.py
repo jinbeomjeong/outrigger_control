@@ -328,24 +328,92 @@ def attach_leg(
     collision: Iterable[str] = (),
     material: ch.ChContactMaterial | None = None,
     report: AttachReport | None = None,
+    pad_variant: str | None = None,
 ) -> AttachReport:
     """Rod and pad visuals of one leg moving part (L1: rod + pad are one body).
 
     Args:
         pad: ``simple``, ``cad`` or None (see :data:`PAD_CHOICES`).
         collision: e.g. ``("pad_FL_hull",)``; empty = current pad sphere only (default).
+        pad_variant: None (default) = the C8 index pad visual as before. A pad type
+            (``outrigger_sim.pad_variants``, e.g. ``"cad330"``) draws that type's simple pad
+            (``pad="simple"`` only; the ``cad`` visual exists for the C8 index pads only).
     """
     if pad not in PAD_CHOICES:
         raise ValueError(f"pad must be one of {PAD_CHOICES}, got {pad!r}")
+    if pad_variant is not None and pad not in ("simple", None):
+        raise ValueError(f"pad_variant needs pad='simple' or None, got {pad!r}")
     index = load_index() if index is None else index
     report = AttachReport() if report is None else report
     leg = LEG_ORDER[leg_index]
-    names = ([f"rod_{leg}"] if rod else []) + ([f"pad_{leg}_{pad}"] if pad else [])
-    for name in names:
-        add_visual(body, index.visual(name), params)
-        report.add("visual", body, name)
+    if rod:
+        add_visual(body, index.visual(f"rod_{leg}"), params)
+        report.add("visual", body, f"rod_{leg}")
+    if pad:
+        entry = (index.visual(f"pad_{leg}_{pad}") if pad_variant is None
+                 else pad_shape_entries(leg, pad_variant, index)[0])
+        add_visual(body, entry, params)
+        report.add("visual", body, entry.name)
     _add_collisions(body, params, index, collision, material, LEG, leg, report)
     return report
+
+
+def pad_shape_entries(
+    leg: str, pad_variant: str | None = None, index: SimShapeIndex | None = None, table: Any = None
+) -> tuple[ShapeEntry, ShapeEntry]:
+    """(simple pad visual, convex pad hull) of ``leg`` for a pad type (U-PAD 2026-10-25).
+
+    ``pad_variant`` None = the default type (``dwg_rear250``). Shapes that are in the C8 index
+    (front pads; rear 250 pads) come from the index; the type A rear 330 pads come from
+    ``01_cad/09_sim_shapes/pad_variants/`` (``export_pad_variants.py``). Same frame and attach
+    rule as the index (leg moving part, retracted state).
+    """
+    from outrigger_sim.pad_variants import load_pad_variants
+
+    index = load_index() if index is None else index
+    table = load_pad_variants() if table is None else table
+    shape = table.variant(pad_variant).leg(leg)
+    if shape.hull_in_c8_index:
+        return index.visual(shape.visual_simple_name), index.collision(shape.hull_name)
+    base_visual = index.visual(f"pad_{leg}_simple").raw
+    base_hull = index.collision(f"pad_{leg}_hull").raw
+    visual = ShapeEntry(
+        name=shape.visual_simple_name, role="visual", kind="mesh", attach=LEG, leg=leg,
+        moves_with_auger=False, file=shape.visual_simple_file, pieces=1,
+        color=tuple(float(c) for c in base_visual["color"]) if base_visual.get("color") else None,
+        default=False, raw={"file": str(shape.visual_simple_file), "attach": LEG, "leg": leg},
+    )
+    hull = ShapeEntry(
+        name=shape.hull_name, role="collision", kind=base_hull["kind"], attach=LEG, leg=leg,
+        moves_with_auger=False, file=shape.hull_file, pieces=1, color=None, default=False,
+        raw={"file": str(shape.hull_file), "attach": LEG, "leg": leg, "kind": base_hull["kind"]},
+    )
+    return visual, hull
+
+
+def add_pad_hull(
+    body: ch.ChBody,
+    params: Params,
+    leg_index: int,
+    material: ch.ChContactMaterial,
+    *,
+    pad_variant: str | None = None,
+    offset_m: Sequence[float] | NDArray[np.float64] | None = None,
+    index: SimShapeIndex | None = None,
+    report: AttachReport | None = None,
+) -> ShapeEntry:
+    """Add the convex pad hull of a pad type to ``body`` (before ``ChSystem.Add``).
+
+    For the L1 leg moving part the default offset applies; for a separate SCM pad body (S9:
+    pad body + spherical joint) pass ``offset_m`` = OBJ frame origin in that body's COG frame
+    (e.g. ``-legs.<leg>.pad_body.com_m`` in the retracted state, body axes). Returns the entry.
+    """
+    leg = LEG_ORDER[leg_index]
+    _, hull = pad_shape_entries(leg, pad_variant, index)
+    add_collision(body, hull, params, material, offset_m=offset_m)
+    if report is not None:
+        report.add("collision", body, hull.name)
+    return hull
 
 
 def _add_collisions(

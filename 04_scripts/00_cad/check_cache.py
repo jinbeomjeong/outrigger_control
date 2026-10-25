@@ -139,7 +139,7 @@ CACHE_RULES: dict[str, dict] = {
         ],
     },
     "09_sim_shapes": {
-        "description": "Chrono visual / collision shapes (C8): simplified meshes, pads, convex "
+        "description": "Chrono visual / collision shapes (C8): simplified meshes, pads (+ pad-type A hulls), convex "
         "hulls and decompositions, upper rollers, index, verification, Irrlicht snapshots",
         "rules": [
             ("sim_shapes_verification.json", "verify_sim_shapes.py"),
@@ -148,6 +148,8 @@ CACHE_RULES: dict[str, dict] = {
             ("sim_shapes_render.json", "render_sim_shapes.py"),
             ("upper_roller_overlap_check.*", "check_upper_roller_overlap.py"),
             ("work/upper_roller_check/*", "check_upper_roller_overlap.py"),
+            # pad type A (cad330) rear hulls / simple visuals (U-PAD 2026-10-25)
+            ("pad_variants/*", "export_pad_variants.py"),
             ("*", "build_sim_shapes.py"),
         ],
     },

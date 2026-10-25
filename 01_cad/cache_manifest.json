@@ -1,12 +1,12 @@
 {
  "schema": 1,
- "updated_at": "2026-10-25T19:41:01",
+ "updated_at": "2026-10-25T20:14:57",
  "updated_by": {
   "script": "04_scripts/00_cad/check_cache.py",
   "exists": true,
-  "sha256": "7238fda27de2149e4ead0e9edcb73beb8850591f9c976a951f3be73f1c3717af",
-  "git_blob": "a4565a4b0828a5d081efc24f49f43cd203bce10e",
-  "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
+  "sha256": "a43c695ff4a26c4fc4806f5840fec89101b492ce59c1670298fb0f8cb64af8f6",
+  "git_blob": "774950d1c8bae57282e3f600ad6dd873b50387b6",
+  "git_last_commit": "7e634da08d3d46440d0eed144e8edd34b6ae88fb",
   "git_tracked": true
  },
  "environment": {
@@ -11607,10 +11607,10 @@
    ]
   },
   "09_sim_shapes": {
-   "description": "Chrono visual / collision shapes (C8): simplified meshes, pads, convex hulls and decompositions, upper rollers, index, verification, Irrlicht snapshots",
+   "description": "Chrono visual / collision shapes (C8): simplified meshes, pads (+ pad-type A hulls), convex hulls and decompositions, upper rollers, index, verification, Irrlicht snapshots",
    "folder": "01_cad/09_sim_shapes",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-22T04:04:00",
+   "newest_file_mtime": "2026-10-25T20:14:47",
    "generators": [
     {
      "script": "04_scripts/00_cad/build_sim_shapes.py",
@@ -11629,6 +11629,14 @@
      "git_tracked": true
     },
     {
+     "script": "04_scripts/00_cad/export_pad_variants.py",
+     "exists": true,
+     "sha256": "b5419ef3aa125489e901881ba098c73096ee5bf409e379f3b84d9be4a3338d0d",
+     "git_blob": "53464184eeb5a51cc2194a630d7b5e8a92177f69",
+     "git_last_commit": null,
+     "git_tracked": false
+    },
+    {
      "script": "04_scripts/00_cad/render_sim_shapes.py",
      "exists": true,
      "sha256": "cc4da3e0a0f268f605e27c654b315caa91aa23a9f7579886a7dff95bb7923cb0",
@@ -11639,14 +11647,14 @@
     {
      "script": "04_scripts/00_cad/verify_sim_shapes.py",
      "exists": true,
-     "sha256": "700543ad79866121c23ba815797ed0be50760f333e673fcf2fb83d4c679a02e5",
-     "git_blob": "a8abd80ff9db0a963d81ea85c73678c18f834286",
+     "sha256": "10edbf47ce8b8ec1a8885278c581ccce210172ac2b0c2c3cc9289b6a2037a9b5",
+     "git_blob": "4bdd22fc377fa18dd2095dbae1b7d776f52a8d5b",
      "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
      "git_tracked": true
     }
    ],
-   "file_count": 106,
-   "total_bytes": 138512306,
+   "file_count": 110,
+   "total_bytes": 138529047,
    "git_ignored_file_count": 50,
    "files": [
     {
@@ -11860,6 +11868,34 @@
      "git_ignored": false
     },
     {
+     "path": "pad_variants/collision/pad_RL_hull_cad330.obj",
+     "bytes": 1403,
+     "sha256": "094db318522723b5c474ecef8ca0ed0134fa2c1cb70ed7fa3061965f3ecfb463",
+     "generator": "export_pad_variants.py",
+     "git_ignored": false
+    },
+    {
+     "path": "pad_variants/collision/pad_RR_hull_cad330.obj",
+     "bytes": 1425,
+     "sha256": "9898ee2ca6748feca105e6881959b2e75f2e720a4a31561c70000ac5e64ed919",
+     "generator": "export_pad_variants.py",
+     "git_ignored": false
+    },
+    {
+     "path": "pad_variants/visual/pad_RL_simple_cad330.obj",
+     "bytes": 1390,
+     "sha256": "23548bb1f12a3212de38274da0fd01ffe63c15c891fe00dcbedff8edb06ef158",
+     "generator": "export_pad_variants.py",
+     "git_ignored": false
+    },
+    {
+     "path": "pad_variants/visual/pad_RR_simple_cad330.obj",
+     "bytes": 1412,
+     "sha256": "b968e5b03e816e7b5a20d518ef913a9d8e31dee49e91474afcb511a7dfae2244",
+     "generator": "export_pad_variants.py",
+     "git_ignored": false
+    },
+    {
      "path": "sim_shapes.json",
      "bytes": 129651,
      "sha256": "1bca462922f8a56b2b59c74e12b0dd319857a3a1ae0a23bb238f668e8fcf7fd5",
@@ -11896,8 +11932,8 @@
     },
     {
      "path": "sim_shapes_verification.json",
-     "bytes": 39542,
-     "sha256": "e69d419538ed4f8e0f6618cc9bcb9946ebae60db917bad79c5d1fda331a37774",
+     "bytes": 50653,
+     "sha256": "4815c4977dfeebdaeebace10f9b4d8c21fb452208a2b9a41e22a5e8b11cd234d",
      "generator": "verify_sim_shapes.py",
      "git_ignored": false
     },
