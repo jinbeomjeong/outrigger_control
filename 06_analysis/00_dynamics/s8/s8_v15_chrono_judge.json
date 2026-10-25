@@ -1,0 +1,1271 @@
+{
+ "source": "07_results\\S8\\v15_20261025_132215",
+ "cases": {
+  "V15a_L0": {
+   "t_liftoff_s": 120.15600000353427,
+   "lam_liftoff_mm": 11.665530424693927,
+   "identity_max_abs_G_minus_F_plus_f_N": 0.0,
+   "windows": {
+    "lam 9.0-10.0 mm": {
+     "n_blocks": 10000,
+     "dt_s": [
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      7.2,
+      2.2,
+      1.9,
+      1.8
+     ],
+     "mean_contact_N": [
+      172234.0,
+      63864.0,
+      13419.0,
+      130596.0
+     ],
+     "stuck_fraction_mean": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "lam 10.0-10.8 mm": {
+     "n_blocks": 8000,
+     "dt_s": [
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      5.7,
+      2.4,
+      2.3,
+      1.7
+     ],
+     "mean_contact_N": [
+      177201.0,
+      58874.0,
+      7858.0,
+      136180.0
+     ],
+     "stuck_fraction_mean": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "lam 10.8 mm - lift-off-0.1 mm": {
+     "n_blocks": 7656,
+     "dt_s": [
+      1e-05,
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      5.5,
+      2.9,
+      18.6,
+      2.1
+     ],
+     "mean_contact_N": [
+      181516.0,
+      54538.0,
+      3027.0,
+      141032.0
+     ],
+     "stuck_fraction_mean": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "last 0.1 mm before lift-off": {
+     "n_blocks": 999,
+     "dt_s": [
+      1e-05
+     ],
+     "hf_rod_force_std_1ms_N": [
+      4.6,
+      2.1,
+      61.3,
+      1.4
+     ],
+     "mean_contact_N": [
+      183888.0,
+      52155.0,
+      372.0,
+      143698.0
+     ],
+     "stuck_fraction_mean": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "RL_at_liftoff": {
+    "G_N": -700.0547567844391,
+    "G_ref_N": -717.484,
+    "diff_N": 17.429243215560973,
+    "true_part_N (F - F_ref)": 17.429243215560973,
+    "friction_part_N (-(f - f_ref))": -0.0,
+    "upper_bound_F_s_minus_mg_N": -700.0547567844391,
+    "G_minus_upper_bound_N": 0.0
+   },
+   "RL_blocks_with_zero_contact_min_last_0p2s": 200,
+   "RL_blocks_last_0p2s": 200,
+   "ledger": {
+    "R_end_J": -16.01211160909045,
+    "D_visc_end_J": -15.99404748442231,
+    "R_minus_Dvisc_end_J": -0.01806412466813967,
+    "max_abs_R_minus_Dvisc_J": 0.0791383449848242,
+    "Dvisc_rate_coarse_W": -0.0620126247579482,
+    "Dvisc_rate_fine_W": -3.616874398130962,
+    "Dvisc_in_fine_window_J": -8.904744771024916,
+    "fine_window_s": 2.4620000007814724
+   }
+  },
+  "V15a_L2": {
+   "t_liftoff_s": 118.88700000348362,
+   "lam_liftoff_mm": 11.538630424676954,
+   "identity_max_abs_G_minus_F_plus_f_N": 2.6193447411060333e-10,
+   "windows": {
+    "lam 9.0-10.0 mm": {
+     "n_blocks": 10000,
+     "dt_s": [
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      7.7,
+      3.4,
+      2.7,
+      3.1
+     ],
+     "mean_contact_N": [
+      172951.0,
+      63151.0,
+      12644.0,
+      131367.0
+     ],
+     "stuck_fraction_mean": [
+      0.5104,
+      0.939,
+      0.9218,
+      0.7229
+     ],
+     "edge_deficit_mean_N": [
+      7.5,
+      11.0,
+      8.5,
+      8.9
+     ],
+     "edge_deficit_p05_N": [
+      4.7,
+      7.5,
+      6.3,
+      5.7
+     ],
+     "piston_net_slip_um": [
+      795.439,
+      137.568,
+      204.041,
+      -287.937
+     ]
+    },
+    "lam 10.0-10.8 mm": {
+     "n_blocks": 8000,
+     "dt_s": [
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      6.4,
+      3.1,
+      3.0,
+      2.9
+     ],
+     "mean_contact_N": [
+      177917.0,
+      58161.0,
+      7086.0,
+      136949.0
+     ],
+     "stuck_fraction_mean": [
+      0.4796,
+      0.941,
+      0.9375,
+      0.722
+     ],
+     "edge_deficit_mean_N": [
+      6.0,
+      10.3,
+      10.1,
+      8.3
+     ],
+     "edge_deficit_p05_N": [
+      4.7,
+      6.9,
+      6.5,
+      5.6
+     ],
+     "piston_net_slip_um": [
+      635.709,
+      110.292,
+      163.278,
+      -230.008
+     ]
+    },
+    "lam 10.8 mm - lift-off-0.1 mm": {
+     "n_blocks": 6387,
+     "dt_s": [
+      1e-05,
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      5.8,
+      4.7,
+      24.3,
+      4.2
+     ],
+     "mean_contact_N": [
+      181872.0,
+      54187.0,
+      2657.0,
+      141397.0
+     ],
+     "stuck_fraction_mean": [
+      0.5675,
+      0.9449,
+      0.9483,
+      0.7762
+     ],
+     "edge_deficit_mean_N": [
+      6.6,
+      18.5,
+      44.9,
+      12.0
+     ],
+     "edge_deficit_p05_N": [
+      4.7,
+      8.4,
+      6.5,
+      5.8
+     ],
+     "piston_net_slip_um": [
+      511.313,
+      86.598,
+      136.397,
+      -181.574
+     ]
+    },
+    "last 0.1 mm before lift-off": {
+     "n_blocks": 999,
+     "dt_s": [
+      1e-05
+     ],
+     "hf_rod_force_std_1ms_N": [
+      6.5,
+      4.9,
+      161.1,
+      11.8
+     ],
+     "mean_contact_N": [
+      183827.0,
+      52222.0,
+      475.0,
+      143589.0
+     ],
+     "stuck_fraction_mean": [
+      0.9385,
+      0.9737,
+      0.9886,
+      0.9375
+     ],
+     "edge_deficit_mean_N": [
+      12.8,
+      16.6,
+      392.9,
+      19.8
+     ],
+     "edge_deficit_p05_N": [
+      10.3,
+      14.3,
+      231.9,
+      10.7
+     ],
+     "piston_net_slip_um": [
+      82.944,
+      11.935,
+      30.755,
+      -23.478
+     ]
+    }
+   },
+   "time_since_last_slip_at_liftoff_s": [
+    0.0,
+    0.006000000001904482,
+    0.01100000000349155,
+    0.02700000000857017
+   ],
+   "RL_at_liftoff": {
+    "G_N": 479.5742434978485,
+    "G_ref_N": 949.116,
+    "diff_N": -469.5417565021515,
+    "true_part_N (F - F_ref)": 17.24712978267678,
+    "friction_part_N (-(f - f_ref))": -486.7888863235712,
+    "upper_bound_F_s_minus_mg_N": 966.3631297826769,
+    "G_minus_upper_bound_N": -486.7888862848284
+   },
+   "RL_blocks_with_zero_contact_min_last_0p2s": 200,
+   "RL_blocks_last_0p2s": 200,
+   "ledger": {
+    "R_end_J": -15.152181995672278,
+    "D_visc_end_J": -15.302013927568668,
+    "R_minus_Dvisc_end_J": 0.1498319318963901,
+    "max_abs_R_minus_Dvisc_J": 0.1663669202032132,
+    "Dvisc_rate_coarse_W": -0.061986689758586,
+    "Dvisc_rate_fine_W": -3.4096044458432653,
+    "Dvisc_in_fine_window_J": -8.292158014922865,
+    "fine_window_s": 2.43200000077195
+   }
+  },
+  "V15a_L4": {
+   "t_liftoff_s": 117.74500000348209,
+   "lam_liftoff_mm": 11.42443042509278,
+   "identity_max_abs_G_minus_F_plus_f_N": 2.6193447411060333e-10,
+   "windows": {
+    "lam 9.0-10.0 mm": {
+     "n_blocks": 10000,
+     "dt_s": [
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      6.4,
+      3.5,
+      2.7,
+      3.1
+     ],
+     "mean_contact_N": [
+      173672.0,
+      62433.0,
+      11866.0,
+      132142.0
+     ],
+     "stuck_fraction_mean": [
+      0.4787,
+      0.9382,
+      0.9135,
+      0.7249
+     ],
+     "edge_deficit_mean_N": [
+      5.9,
+      11.7,
+      9.1,
+      8.9
+     ],
+     "edge_deficit_p05_N": [
+      4.7,
+      7.7,
+      6.3,
+      5.7
+     ],
+     "piston_net_slip_um": [
+      795.711,
+      138.027,
+      203.839,
+      -288.035
+     ]
+    },
+    "lam 10.0-10.8 mm": {
+     "n_blocks": 8000,
+     "dt_s": [
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      7.7,
+      2.8,
+      2.6,
+      3.0
+     ],
+     "mean_contact_N": [
+      178638.0,
+      57444.0,
+      6307.0,
+      137724.0
+     ],
+     "stuck_fraction_mean": [
+      0.5132,
+      0.9436,
+      0.9375,
+      0.7225
+     ],
+     "edge_deficit_mean_N": [
+      7.6,
+      9.6,
+      8.4,
+      8.6
+     ],
+     "edge_deficit_p05_N": [
+      4.7,
+      6.8,
+      6.4,
+      5.7
+     ],
+     "piston_net_slip_um": [
+      635.275,
+      110.047,
+      163.221,
+      -229.821
+     ]
+    },
+    "lam 10.8 mm - lift-off-0.1 mm": {
+     "n_blocks": 5245,
+     "dt_s": [
+      1e-05,
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      5.8,
+      7.7,
+      46.5,
+      8.2
+     ],
+     "mean_contact_N": [
+      182262.0,
+      53802.0,
+      2249.0,
+      141800.0
+     ],
+     "stuck_fraction_mean": [
+      0.5992,
+      0.9477,
+      0.953,
+      0.7886
+     ],
+     "edge_deficit_mean_N": [
+      7.4,
+      36.7,
+      91.0,
+      21.5
+     ],
+     "edge_deficit_p05_N": [
+      4.7,
+      8.3,
+      6.7,
+      5.8
+     ],
+     "piston_net_slip_um": [
+      417.696,
+      71.879,
+      110.842,
+      -147.456
+     ]
+    },
+    "last 0.1 mm before lift-off": {
+     "n_blocks": 999,
+     "dt_s": [
+      1e-05
+     ],
+     "hf_rod_force_std_1ms_N": [
+      3.9,
+      4.0,
+      191.3,
+      5.2
+     ],
+     "mean_contact_N": [
+      183899.0,
+      52158.0,
+      404.0,
+      143652.0
+     ],
+     "stuck_fraction_mean": [
+      0.9375,
+      0.9786,
+      0.9868,
+      0.8993
+     ],
+     "edge_deficit_mean_N": [
+      10.6,
+      24.8,
+      428.1,
+      16.3
+     ],
+     "edge_deficit_p05_N": [
+      10.2,
+      14.3,
+      226.5,
+      10.7
+     ],
+     "piston_net_slip_um": [
+      82.322,
+      10.683,
+      29.664,
+      -24.945
+     ]
+    }
+   },
+   "time_since_last_slip_at_liftoff_s": [
+    0.0,
+    0.0,
+    0.00800000000253931,
+    0.0
+   ],
+   "RL_at_liftoff": {
+    "G_N": 2179.8018344402312,
+    "G_ref_N": 2615.72,
+    "diff_N": -435.91816555976857,
+    "true_part_N (F - F_ref)": 23.95709625148777,
+    "friction_part_N (-(f - f_ref))": -459.8712616890666,
+    "upper_bound_F_s_minus_mg_N": 2639.673096251488,
+    "G_minus_upper_bound_N": -459.8712618112568
+   },
+   "RL_blocks_with_zero_contact_min_last_0p2s": 200,
+   "RL_blocks_last_0p2s": 200,
+   "ledger": {
+    "R_end_J": -15.739865769844561,
+    "D_visc_end_J": -15.850800228728087,
+    "R_minus_Dvisc_end_J": 0.11093445888352527,
+    "max_abs_R_minus_Dvisc_J": 0.15418527417494943,
+    "Dvisc_rate_coarse_W": -0.06204003058248775,
+    "Dvisc_rate_fine_W": -3.4810049893510753,
+    "Dvisc_in_fine_window_J": -8.911372775567344,
+    "fine_window_s": 2.560000000812579
+   }
+  },
+  "V15a_L8": {
+   "t_liftoff_s": 115.16800000338063,
+   "lam_liftoff_mm": 11.166730425072712,
+   "identity_max_abs_G_minus_F_plus_f_N": 2.6193447411060333e-10,
+   "windows": {
+    "lam 9.0-10.0 mm": {
+     "n_blocks": 10000,
+     "dt_s": [
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      6.1,
+      3.6,
+      2.5,
+      2.9
+     ],
+     "mean_contact_N": [
+      175116.0,
+      60996.0,
+      10307.0,
+      133694.0
+     ],
+     "stuck_fraction_mean": [
+      0.4762,
+      0.9381,
+      0.8964,
+      0.7208
+     ],
+     "edge_deficit_mean_N": [
+      5.8,
+      12.0,
+      8.7,
+      8.3
+     ],
+     "edge_deficit_p05_N": [
+      4.7,
+      7.7,
+      6.2,
+      5.7
+     ],
+     "piston_net_slip_um": [
+      794.482,
+      137.912,
+      203.596,
+      -287.4
+     ]
+    },
+    "lam 10.0-10.8 mm": {
+     "n_blocks": 8000,
+     "dt_s": [
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      7.6,
+      2.7,
+      2.5,
+      3.4
+     ],
+     "mean_contact_N": [
+      180079.0,
+      56010.0,
+      4751.0,
+      139273.0
+     ],
+     "stuck_fraction_mean": [
+      0.5092,
+      0.9383,
+      0.9375,
+      0.7375
+     ],
+     "edge_deficit_mean_N": [
+      7.4,
+      9.4,
+      8.4,
+      9.9
+     ],
+     "edge_deficit_p05_N": [
+      4.7,
+      7.0,
+      6.4,
+      5.7
+     ],
+     "piston_net_slip_um": [
+      635.428,
+      110.087,
+      162.946,
+      -230.01
+     ]
+    },
+    "lam 10.8 mm - lift-off-0.1 mm": {
+     "n_blocks": 2668,
+     "dt_s": [
+      1e-05,
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      5.2,
+      3.0,
+      14.8,
+      2.7
+     ],
+     "mean_contact_N": [
+      182996.0,
+      53079.0,
+      1484.0,
+      142554.0
+     ],
+     "stuck_fraction_mean": [
+      0.7168,
+      0.9499,
+      0.9604,
+      0.8309
+     ],
+     "edge_deficit_mean_N": [
+      8.2,
+      13.4,
+      96.0,
+      11.2
+     ],
+     "edge_deficit_p05_N": [
+      4.7,
+      7.8,
+      6.7,
+      5.8
+     ],
+     "piston_net_slip_um": [
+      214.757,
+      34.871,
+      60.582,
+      -74.489
+     ]
+    },
+    "last 0.1 mm before lift-off": {
+     "n_blocks": 999,
+     "dt_s": [
+      1e-05
+     ],
+     "hf_rod_force_std_1ms_N": [
+      3.9,
+      2.8,
+      156.0,
+      1.2
+     ],
+     "mean_contact_N": [
+      183933.0,
+      52138.0,
+      432.0,
+      143609.0
+     ],
+     "stuck_fraction_mean": [
+      0.9375,
+      0.967,
+      0.9872,
+      0.9345
+     ],
+     "edge_deficit_mean_N": [
+      10.6,
+      15.5,
+      400.8,
+      11.1
+     ],
+     "edge_deficit_p05_N": [
+      10.4,
+      14.4,
+      234.2,
+      10.7
+     ],
+     "piston_net_slip_um": [
+      81.655,
+      11.592,
+      28.462,
+      -24.603
+     ]
+    }
+   },
+   "time_since_last_slip_at_liftoff_s": [
+    0.0,
+    0.005000000001587068,
+    0.00800000000253931,
+    0.0
+   ],
+   "RL_at_liftoff": {
+    "G_N": 5520.428058338165,
+    "G_ref_N": 5948.92,
+    "diff_N": -428.49194166183497,
+    "true_part_N (F - F_ref)": 13.297136482238784,
+    "friction_part_N (-(f - f_ref))": -441.7850780308245,
+    "upper_bound_F_s_minus_mg_N": 5962.213136482239,
+    "G_minus_upper_bound_N": -441.78507814407385
+   },
+   "RL_blocks_with_zero_contact_min_last_0p2s": 200,
+   "RL_blocks_last_0p2s": 200,
+   "ledger": {
+    "R_end_J": -16.107525705412673,
+    "D_visc_end_J": -16.25577813537429,
+    "R_minus_Dvisc_end_J": 0.14825242996161592,
+    "max_abs_R_minus_Dvisc_J": 0.16241927556550806,
+    "Dvisc_rate_coarse_W": -0.06197232037120504,
+    "Dvisc_rate_fine_W": -3.7858312596960775,
+    "Dvisc_in_fine_window_J": -9.47972147728797,
+    "fine_window_s": 2.504000000794804
+   }
+  },
+  "V15a_L8_v005": {
+   "t_liftoff_s": 226.90300000779158,
+   "lam_liftoff_mm": 11.170121075316619,
+   "identity_max_abs_G_minus_F_plus_f_N": 2.6193447411060333e-10,
+   "windows": {
+    "lam 9.0-10.0 mm": {
+     "n_blocks": 20000,
+     "dt_s": [
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      6.1,
+      3.6,
+      2.7,
+      3.0
+     ],
+     "mean_contact_N": [
+      175115.0,
+      60998.0,
+      10308.0,
+      133692.0
+     ],
+     "stuck_fraction_mean": [
+      0.477,
+      0.939,
+      0.941,
+      0.8216
+     ],
+     "edge_deficit_mean_N": [
+      6.2,
+      13.4,
+      10.6,
+      9.5
+     ],
+     "edge_deficit_p05_N": [
+      5.1,
+      8.8,
+      7.5,
+      6.2
+     ],
+     "piston_net_slip_um": [
+      794.916,
+      137.626,
+      203.907,
+      -287.762
+     ]
+    },
+    "lam 10.0-10.8 mm": {
+     "n_blocks": 16000,
+     "dt_s": [
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      7.6,
+      2.9,
+      2.6,
+      3.4
+     ],
+     "mean_contact_N": [
+      180078.0,
+      56011.0,
+      4753.0,
+      139272.0
+     ],
+     "stuck_fraction_mean": [
+      0.5129,
+      0.9422,
+      0.9376,
+      0.837
+     ],
+     "edge_deficit_mean_N": [
+      8.0,
+      10.9,
+      10.2,
+      11.1
+     ],
+     "edge_deficit_p05_N": [
+      5.1,
+      8.4,
+      7.7,
+      6.5
+     ],
+     "piston_net_slip_um": [
+      635.363,
+      110.18,
+      162.966,
+      -229.852
+     ]
+    },
+    "lam 10.8 mm - lift-off-0.1 mm": {
+     "n_blocks": 5402,
+     "dt_s": [
+      1e-05,
+      0.0001
+     ],
+     "hf_rod_force_std_1ms_N": [
+      5.2,
+      3.1,
+      14.8,
+      2.6
+     ],
+     "mean_contact_N": [
+      183003.0,
+      53072.0,
+      1476.0,
+      142562.0
+     ],
+     "stuck_fraction_mean": [
+      0.7197,
+      0.9609,
+      0.9672,
+      0.8961
+     ],
+     "edge_deficit_mean_N": [
+      9.0,
+      17.8,
+      100.1,
+      12.1
+     ],
+     "edge_deficit_p05_N": [
+      5.1,
+      9.1,
+      8.3,
+      6.8
+     ],
+     "piston_net_slip_um": [
+      217.034,
+      35.51,
+      61.136,
+      -74.987
+     ]
+    },
+    "last 0.1 mm before lift-off": {
+     "n_blocks": 2000,
+     "dt_s": [
+      1e-05
+     ],
+     "hf_rod_force_std_1ms_N": [
+      3.9,
+      2.1,
+      169.8,
+      1.2
+     ],
+     "mean_contact_N": [
+      183944.0,
+      52125.0,
+      416.0,
+      143626.0
+     ],
+     "stuck_fraction_mean": [
+      0.9375,
+      0.9791,
+      0.9924,
+      0.9681
+     ],
+     "edge_deficit_mean_N": [
+      11.4,
+      15.5,
+      419.2,
+      11.4
+     ],
+     "edge_deficit_p05_N": [
+      11.2,
+      15.0,
+      236.9,
+      11.1
+     ],
+     "piston_net_slip_um": [
+      81.668,
+      11.845,
+      28.279,
+      -24.648
+     ]
+    }
+   },
+   "time_since_last_slip_at_liftoff_s": [
+    0.0,
+    0.004000000001269655,
+    0.00800000000253931,
+    0.0
+   ],
+   "RL_at_liftoff": {
+    "G_N": 5511.2073142051695,
+    "G_ref_N": 5948.92,
+    "diff_N": -437.7126857948306,
+    "true_part_N (F - F_ref)": 23.900587495803848,
+    "friction_part_N (-(f - f_ref))": -461.6092731714243,
+    "upper_bound_F_s_minus_mg_N": 5972.816587495804,
+    "G_minus_upper_bound_N": -461.6092732906345
+   },
+   "RL_blocks_with_zero_contact_min_last_0p2s": 200,
+   "RL_blocks_last_0p2s": 200,
+   "ledger": {
+    "R_end_J": -32.0601259005606,
+    "D_visc_end_J": -32.1982674357325,
+    "R_minus_Dvisc_end_J": 0.1381415351718971,
+    "max_abs_R_minus_Dvisc_J": 0.18055465897606382,
+    "Dvisc_rate_coarse_W": -0.0621052209844283,
+    "Dvisc_rate_fine_W": -3.7445608859626223,
+    "Dvisc_in_fine_window_J": -18.621701291802903,
+    "fine_window_s": 4.973000001578498
+   }
+  },
+  "V15b_L0": {
+   "hold before motion": {
+    "hf_rod_force_std_1ms_N": [
+     2.0,
+     2.0,
+     1.7,
+     1.7
+    ],
+    "stuck_fraction_mean": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "f_mean_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "outbound 50-100 s": {
+    "hf_rod_force_std_1ms_N": [
+     5.9,
+     2.2,
+     1.9,
+     1.8
+    ],
+    "stuck_fraction_mean": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "f_mean_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "return 150-200 s": {
+    "hf_rod_force_std_1ms_N": [
+     6.0,
+     2.2,
+     1.9,
+     2.0
+    ],
+    "stuck_fraction_mean": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "f_mean_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "final hold last 1 s": {
+    "hf_rod_force_std_1ms_N": [
+     2.0,
+     2.0,
+     1.7,
+     1.8
+    ],
+    "stuck_fraction_mean": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "f_mean_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "Dvisc_rate_W": -0.06108935205018468
+  },
+  "V15b_L4": {
+   "hold before motion": {
+    "hf_rod_force_std_1ms_N": [
+     2.9,
+     3.3,
+     2.6,
+     2.6
+    ],
+    "stuck_fraction_mean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "f_mean_N": [
+     -10.8,
+     -2.9,
+     3.7,
+     9.9
+    ],
+    "edge_deficit_mean_N": [
+     3989.2,
+     3997.1,
+     3329.5,
+     3323.3
+    ]
+   },
+   "outbound 50-100 s": {
+    "hf_rod_force_std_1ms_N": [
+     6.4,
+     3.2,
+     2.8,
+     3.2
+    ],
+    "stuck_fraction_mean": [
+     0.48,
+     0.9352,
+     0.8969,
+     0.7281
+    ],
+    "f_mean_N": [
+     -3994.0,
+     -3989.2,
+     -3324.2,
+     3323.8
+    ],
+    "edge_deficit_mean_N": [
+     6.0,
+     10.8,
+     9.0,
+     9.4
+    ]
+   },
+   "return 150-200 s": {
+    "hf_rod_force_std_1ms_N": [
+     6.9,
+     3.4,
+     3.1,
+     2.7
+    ],
+    "stuck_fraction_mean": [
+     0.6041,
+     0.8278,
+     0.7872,
+     0.912
+    ],
+    "f_mean_N": [
+     3992.8,
+     3989.3,
+     3323.4,
+     -3325.4
+    ],
+    "edge_deficit_mean_N": [
+     7.2,
+     10.7,
+     9.8,
+     7.8
+    ]
+   },
+   "final hold last 1 s": {
+    "hf_rod_force_std_1ms_N": [
+     3.1,
+     3.1,
+     2.4,
+     2.8
+    ],
+    "stuck_fraction_mean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "f_mean_N": [
+     3932.5,
+     3945.1,
+     3269.7,
+     -3248.8
+    ],
+    "edge_deficit_mean_N": [
+     67.5,
+     54.9,
+     63.5,
+     84.4
+    ]
+   },
+   "Dvisc_rate_W": -0.06107313301091696
+  },
+  "V15b_L8": {
+   "hold before motion": {
+    "hf_rod_force_std_1ms_N": [
+     2.9,
+     3.3,
+     2.6,
+     2.6
+    ],
+    "stuck_fraction_mean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "f_mean_N": [
+     -10.8,
+     -2.9,
+     3.7,
+     9.9
+    ],
+    "edge_deficit_mean_N": [
+     7989.2,
+     7997.1,
+     6662.7,
+     6656.5
+    ]
+   },
+   "outbound 50-100 s": {
+    "hf_rod_force_std_1ms_N": [
+     6.4,
+     3.3,
+     2.8,
+     3.2
+    ],
+    "stuck_fraction_mean": [
+     0.479,
+     0.9362,
+     0.8929,
+     0.73
+    ],
+    "f_mean_N": [
+     -7994.0,
+     -7988.9,
+     -6657.4,
+     6656.9
+    ],
+    "edge_deficit_mean_N": [
+     6.0,
+     11.1,
+     9.0,
+     9.5
+    ]
+   },
+   "return 150-200 s": {
+    "hf_rod_force_std_1ms_N": [
+     6.9,
+     3.5,
+     3.2,
+     2.7
+    ],
+    "stuck_fraction_mean": [
+     0.6049,
+     0.8291,
+     0.7851,
+     0.8986
+    ],
+    "f_mean_N": [
+     7992.7,
+     7989.0,
+     6656.7,
+     -6658.6
+    ],
+    "edge_deficit_mean_N": [
+     7.3,
+     11.0,
+     9.7,
+     7.8
+    ]
+   },
+   "final hold last 1 s": {
+    "hf_rod_force_std_1ms_N": [
+     3.1,
+     3.2,
+     2.8,
+     2.4
+    ],
+    "stuck_fraction_mean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "f_mean_N": [
+     7928.2,
+     7941.0,
+     6597.8,
+     -6578.9
+    ],
+    "edge_deficit_mean_N": [
+     71.8,
+     59.0,
+     68.6,
+     87.5
+    ]
+   },
+   "Dvisc_rate_W": -0.06108242495482038
+  }
+ },
+ "D_f": {
+  "V15a_L2": {
+   "chrono_J": 30.717910596201868,
+   "reduced_J": 30.774,
+   "rel": -0.0018226231168562146
+  },
+  "V15a_L4": {
+   "chrono_J": 60.0547315120467,
+   "reduced_J": 60.1279,
+   "rel": -0.0012168808149510824
+  },
+  "V15a_L8": {
+   "chrono_J": 114.39036268161155,
+   "reduced_J": 114.576,
+   "rel": -0.001620211199452326
+  },
+  "V15b_L2": {
+   "chrono_J": 52.79401136127635,
+   "reduced_J": 52.6174,
+   "rel": 0.0033565201107683684
+  },
+  "V15b_L4": {
+   "chrono_J": 103.40143847867702,
+   "reduced_J": 103.051,
+   "rel": 0.003400631519121733
+  },
+  "V15b_L8": {
+   "chrono_J": 198.00285021118538,
+   "reduced_J": 197.343,
+   "rel": 0.0033436717349253353
+  }
+ }
+}

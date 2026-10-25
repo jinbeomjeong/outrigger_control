@@ -15,7 +15,10 @@ lower reading minus the per-leg seal band. P5, R-5 and the re-approach are the a
 ``C2Controller._needs_relevel`` / ``_leg_falling_below`` / ``_update_lifted_reapproach`` with the
 controller's own settings classes (:class:`~outrigger_sim.control.c2.FastRelevelSettings`,
 :class:`~outrigger_sim.control.c2.LiftedReapproachSettings`); the GE2 and probe inputs are the
-controller's recorded events and probe results (not recomputed).
+controller's recorded events and probe results (not recomputed). The re-approach follows the
+re-trigger rule RT of P-S8-16 (spec rev. 52 228.3) when the settings turn it on: an
+other-diagonal start inside the opposite window waits for the strong confirmation (event
+``leg_reapproach_deferred``), so the replay gives the controller's start times.
 
 :attr:`WatchMode.CONTROLLER` gates P5 / R-5 / re-approach on the recorded phases (READY, PROBE
 with the low-load abort, the re-approach phases), so a replay of the controller's own judge
@@ -72,6 +75,8 @@ class ActionKind(StrEnum):
     REAPPROACH_START = "leg_reapproach_start"
     REAPPROACH_CONTACT = "leg_reapproach_contact"
     REAPPROACH_NO_CONTACT = "leg_reapproach_no_contact"
+    REAPPROACH_DEFERRED = "leg_reapproach_deferred"
+    """P-S8-16 RT 1: first sample of a deferred other-diagonal start (bookkeeping)."""
     GE2 = "support_changed"
 
 
@@ -81,6 +86,11 @@ ACTION_START_KINDS = frozenset(
 """Events that are a "재레벨·재접근 표시" (the re-approach ends are bookkeeping)."""
 
 LOW_LOAD_WATCH_PHASES = frozenset({C2Phase.READY.value})
+
+DIAGONAL_SIGNS = (1.0, -1.0, -1.0, 1.0)
+"""``sign(n_i)`` of the twist vector in leg order (FL, FR, RL, RR): FL / RR and FR / RL are the
+two diagonals. Only equal or unequal signs matter to rule RT (P-S8-16), so the overall sign
+of ``n`` does not."""
 
 
 @dataclass(frozen=True)
@@ -316,6 +326,14 @@ class _ReplayState:
     low_counts: NDArray[np.int64] = field(
         default_factory=lambda: np.zeros(LEG_COUNT, dtype=np.int64)
     )
+    strong_counts: NDArray[np.int64] = field(
+        default_factory=lambda: np.zeros(LEG_COUNT, dtype=np.int64)
+    )
+    """P-S8-16 RT 1: consecutive watched low samples below the strong level."""
+    last_end_s: float | None = None
+    """P-S8-16: end time of the last re-approach (any outcome)."""
+    last_sign: float = 0.0
+    """P-S8-16: diagonal sign of the leg of the last re-approach."""
 
 
 class _Replayer:
@@ -368,11 +386,20 @@ class _Replayer:
             return
         state = self.state
         if not self._is_reapproach_watched(row):
-            state.active.clear()
+            for leg in list(state.active):
+                self._end_reapproach(row, leg)
             state.low_counts[:] = 0
+            state.strong_counts[:] = 0
             return
         self._end_reapproaches(row, loads, rules)
         self._start_reapproaches(row, loads, rules)
+
+    def _end_reapproach(self, row: int, leg: int) -> None:
+        """``C2Controller._end_reapproach``: the P-S8-16 windows count from here."""
+        state = self.state
+        del state.active[leg]
+        state.last_end_s = float(self.inputs.t_s[row])
+        state.last_sign = DIAGONAL_SIGNS[leg]
 
     def _end_reapproaches(self, row, loads, rules: LiftedReapproachSettings) -> None:
         state = self.state
@@ -383,10 +410,10 @@ class _Replayer:
                 loads[leg] >= F_min + rules.exit_margin_N
             ) else 0
             if run.exit_samples_seen >= rules.exit_samples:
-                del state.active[leg]
+                self._end_reapproach(row, leg)
                 self._add(row, leg, ActionKind.REAPPROACH_CONTACT)
             elif travel > rules.max_travel_m:
-                del state.active[leg]
+                self._end_reapproach(row, leg)
                 state.armed[leg] = False
                 self._add(row, leg, ActionKind.REAPPROACH_NO_CONTACT)
         state.armed |= loads >= F_min
@@ -394,6 +421,7 @@ class _Replayer:
     def _start_reapproaches(self, row, loads, rules: LiftedReapproachSettings) -> None:
         state = self.state
         lift_off_level = rules.load_fraction_of_F_min * self.settings.F_min_N
+        required_samples = self.settings.reapproach_samples
         probed_leg = int(self.inputs.probed_leg[row])
         for leg in range(LEG_COUNT):
             is_another_leg_active = rules.single_leg and bool(state.active)
@@ -406,13 +434,30 @@ class _Replayer:
             )
             if not is_watched or loads[leg] >= lift_off_level:
                 state.low_counts[leg] = 0
+                state.strong_counts[leg] = 0
                 continue
             state.low_counts[leg] += 1
-            if state.low_counts[leg] < self.settings.reapproach_samples:
+            is_strong = loads[leg] < rules.opposite_strong_level_N
+            state.strong_counts[leg] = state.strong_counts[leg] + 1 if is_strong else 0
+            if state.low_counts[leg] < required_samples:
+                continue
+            if self._defers_reapproach(row, leg, rules):
+                # first sample of the deferred stretch (the low count keeps rising)
+                if state.low_counts[leg] == required_samples:
+                    self._add(row, leg, ActionKind.REAPPROACH_DEFERRED)
                 continue
             state.low_counts[leg] = 0
+            state.strong_counts[leg] = 0
             state.active[leg] = _ReapproachRun(float(self.inputs.motor_stroke_m[row, leg]))
             self._add(row, leg, ActionKind.REAPPROACH_START)
+
+    def _defers_reapproach(self, row: int, leg: int, rules: LiftedReapproachSettings) -> bool:
+        """``C2Controller._defers_reapproach`` (P-S8-16 RT 1)."""
+        state = self.state
+        needs_confirmation = rules.needs_strong_confirmation(
+            float(self.inputs.t_s[row]), state.last_end_s, state.last_sign, DIAGONAL_SIGNS[leg]
+        )
+        return needs_confirmation and state.strong_counts[leg] < rules.opposite_strong_samples
 
     def _step_low_load(self, row: int, loads: NDArray[np.float64]) -> None:
         """The load part of ``C2Controller._needs_relevel`` (R-5 first, then P5)."""

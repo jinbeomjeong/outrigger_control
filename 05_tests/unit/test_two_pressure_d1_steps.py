@@ -136,12 +136,19 @@ def test_rod_fall_into_the_extend_range_under_a_command_is_explained(command_per
                          [(4.6, False), (14.0, True), (-4.0, True)])
 def test_rod_fall_without_a_command_or_outside_the_range_is_a_fault(after_bar, is_commanded):
     """217.5: a locked rod reading that drops (lower bound optimistic) or a drop that ends
-    outside the D2 extend range (-1 .. 12 bar) is a sensor fault."""
+    outside the D2 extend range (-1 .. 12 bar) is a sensor fault. Since P-S8-21 a drop under
+    a command that ends above the range (14 bar) is held one period first: the reading stays
+    there, so it falls back one period late."""
     reapproach = _command(RR, 0.25)
     commands = (STILL, reapproach) if is_commanded else (STILL, STILL)
     monitor = _monitor()
-    names = _read_two(monitor, *_trapped_rod_drain(after_bar), commands=commands,
-                      locked=False)
+    before, after = _trapped_rod_drain(after_bar)
+    names = _read_two(monitor, before, after, commands=commands, locked=False)
+    if after_bar > 12.0:
+        assert monitor.fallback_legs == []
+        monitor.read(2 * PERIOD_S, *after, commands[1], False, 2e3,
+                     stroke_m=np.full(4, START_STROKE_M) + 2 * commands[1] * PERIOD_S)
+        names += [name for name, _ in monitor.pop_events()]
     assert monitor.fallback_legs == [RR]
     assert "INFO_ROD_PRESSURE_FAULT_REASON:RR:D1" in names
 

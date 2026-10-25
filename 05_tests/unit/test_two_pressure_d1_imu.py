@@ -429,6 +429,10 @@ def test_monitor_pickled_before_p_s8_14_runs_and_builds_m_eff() -> None:
 RESULTS = Path(__file__).resolve().parents[2] / "07_results" / "S8"
 ML_BATCH = RESULTS / "ml_pilot_20261025_002044"
 ML_OLD = ML_BATCH / "episodes" / "_replaced_20261025_015059"
+ML_D1P = ML_BATCH / "episodes" / "_replaced_20261025_075743"
+"""The D1' records of the seven head-step episodes: the C-S8-28 re-run with D1''
+(``run_S8C.py ml --resume ... --only ...``, 2026-10-25 07:57) moved them here and wrote the
+D1'' records to ``episodes/``, which no longer contain the D1' faults."""
 RECORDED_EVENT = re.compile(r"t_s=([-0-9.e+]+), name='([^']+)'")
 
 
@@ -585,11 +589,12 @@ OLD_EPISODES = ("ML00_ep5", "ML02_ep1", "ML02_ep5", "ML22_ep4")
 """217.2: the four episodes of the first ML run with D1 faults (``_replaced_*``)."""
 
 
-@pytest.mark.skipif(not ML_RUNS, reason="07_results/S8 ML pilot not present")
+@pytest.mark.skipif(not ML_D1P.is_dir(), reason="07_results/S8 D1' ML records not present")
 @pytest.mark.parametrize("episode", sorted(HEAD_STEP_EPISODES))
 def test_rerun_head_step_episodes_d1_prime_replay_matches_the_record(episode) -> None:
-    """Replay fidelity: the D1' monitor reproduces the recorded sensor faults."""
-    case = ML_BATCH / "episodes" / episode
+    """Replay fidelity: the D1' monitor reproduces the sensor faults its D1' run recorded
+    (records kept in :data:`ML_D1P`)."""
+    case = ML_D1P / episode
     replayed = replay(case, "explained")
     names = [name for name in _faults(replayed.names)
              if not name.startswith("INFO_HEAD_PRESSURE_FAULT_REASON")]

@@ -38,7 +38,17 @@ Definitions (spec 3, rev. 3):
   (``head_drift_bar``) makes the 72.1 (6) row a report, a constant ``head_offset_bar`` is
   judged; a case recorded by the pre-110.1 controller (no ``load_reference_settle_s`` in its
   ``two_pressure`` settings) has that row ``superseded`` by the offline replay
-  ``verify_S6_L1_diag_load_reference_rev29.json`` (``replay_passed`` from its values).
+  ``verify_S6_L1_diag_load_reference_rev29.json`` (``replay_passed`` from its values);
+* spec rev. 50 (2026-10-25, 220.6 ① ②, C-S8-33, U-S8-43): a ``result.json`` ``event`` with
+  ``spec.kind`` settle whose speed ``depth / ramp`` is above ``v_max`` (YAML
+  ``actuator.max_speed_m_s``, 20.924 mm/s) is a floor-event case too (:func:`fast_settle_event`):
+  event legs = settled leg + its diagonal, window = the U-S8-32 physical window
+  (``s8_control.settle_lift_split``, shared); item 3 is info + F_min before the event / after
+  the re-READY / re-READY <= 60 s (the other-leg lift is the U-S8-32 adjacent-leg row's), items
+  4 / 5a use the U58 split. Slower settlements (G4 5.75 mm/s, SS9 0.45 mm/s) keep the
+  event-free rules. Item 4 counts a sample as moving only when ``|u_applied| > 1e-6 m/s``
+  (:data:`MOVING_EPS_M_S`, the plant lock threshold; ASSUMPTION), so the valve-lag tail is
+  locked.
 
 Row kinds: ``passed`` True / False is judged, ``None`` is a report or not judged (``note``).
 Item 5b is a quality metric (U22): a failure reads ``spec shortfall``, not a functional failure
@@ -585,6 +595,11 @@ def case_metrics(
         m["t_within_0p2_after_level_s"] = None if held is None else held - tm["touch"]
     _force_metrics(case, tm, m)
     window = event_transient_window(case, tm, event_settings)
+    if window is None:  # spec rev. 50 220.6 ① (U-S8-43): fast settlement of result.event
+        fast = fast_settle_event(case, _v_max_m_s(params))
+        if fast is not None:
+            m["floor_event"] = fast
+            window = fast_settle_window(case, tm, fast, event_settings)
     if window is not None:
         m["event_window"] = window
     _pressure_and_rocking_metrics(
@@ -625,7 +640,10 @@ def case_metrics(
         m["target_T"] = _target_metrics(case, rec, t, tm, params, m)
     if s["group"] == "G4":
         m["item6"] = settle_checks(case, m)
-    if _is_floor_event_case(m):
+    if m.get("floor_event") is not None:
+        m["event3"] = fast_event_force_metrics(case, tm, window, m["floor_event"])
+        m["event_transient_settings"] = event_settings.to_meta()
+    elif _is_floor_event_case(m):
         m["event3"] = event_force_metrics(case, tm, window, event_settings, _pad_kn(params))
         m["event_transient_settings"] = event_settings.to_meta()
     if reduced is not None:
@@ -742,7 +760,101 @@ EVENT_CASE_NOTE = "event case: intended lift-off (spec 41.2/23)"
 
 
 def _is_floor_event_case(m: Mapping[str, Any]) -> bool:
-    return m.get("event") in FLOOR_EVENTS
+    """RR floor events of ``settings.event`` (:data:`FLOOR_EVENTS`) and, since spec rev. 50
+    (U-S8-43), the fast settlements of ``result.event`` (``m['floor_event']``)."""
+    return m.get("event") in FLOOR_EVENTS or m.get("floor_event") is not None
+
+
+MOVING_EPS_M_S = 1.0e-6
+"""Spec rev. 50 220.6 ② (U-S8-43): item 4 counts a sample as moving (extending / retracting)
+only when ``|u_applied|`` is above this (the plant lock threshold epsilon of 218.12;
+ASSUMPTION). The valve first-order lag leaves an exponential tail (1.75e-23 m/s seen) that is
+not a motion."""
+FAST_SETTLE_V_MAX_M_S = 20.924e-3
+"""``v_max`` used when the case parameters give none (YAML ``actuator.max_speed_m_s``,
+REXOME35, CLAUDE.md 2026-10-22)."""
+DIAGONAL_LEG = {"FL": "RR", "RR": "FL", "FR": "RL", "RL": "FR"}
+FAST_SETTLE_RULE = (
+    "spec rev. 50 220.6 ① (U-S8-43): result.event spec.kind settle with depth / ramp > v_max is a "
+    "floor-event case; event legs = settled + diagonal; window = event .. min(last re-contact of "
+    "the primary event leg + T_3, event + cap) (s8_control.settle_lift_split, the U-S8-32 "
+    "window); other-leg lift = the U-S8-32 adjacent-leg row")
+
+
+def _v_max_m_s(params) -> float:
+    try:
+        return float(params.actuator.max_speed_m_s)
+    except (AttributeError, TypeError, ValueError):
+        return FAST_SETTLE_V_MAX_M_S
+
+
+def fast_settle_event(case: Mapping[str, Any], v_max_m_s: float | None = None
+                      ) -> dict[str, Any] | None:
+    """Spec rev. 50 220.6 ① (U-S8-43): the fast settlement of a run without an RR floor event
+    in ``settings.event``: ``result.json`` ``event.spec`` with ``kind`` settle, a leg, and
+    ``depth_m / ramp_s > v_max`` (a zero ramp counts as infinitely fast) and an ``event_t_s``.
+    ``None`` otherwise (slower settlements keep the event-free rules)."""
+    res = case["result"]
+    if (res.get("settings") or {}).get("event") in FLOOR_EVENTS:
+        return None
+    ev = res.get("event")
+    spec = ev.get("spec") if isinstance(ev, Mapping) else None
+    if not isinstance(spec, Mapping) or spec.get("kind") != "settle":
+        return None
+    leg, depth, ramp = spec.get("leg"), spec.get("depth_m"), spec.get("ramp_s")
+    if leg not in LEGS or depth is None or res.get("event_t_s") is None:
+        return None
+    v_max = FAST_SETTLE_V_MAX_M_S if v_max_m_s is None else float(v_max_m_s)
+    speed = math.inf if not ramp or float(ramp) <= 0.0 else float(depth) / float(ramp)
+    if not speed > v_max:
+        return None
+    return {"name": ev.get("name"), "settle_leg": leg, "depth_m": float(depth),
+            "ramp_s": None if ramp is None else float(ramp),
+            "speed_mm_s": None if math.isinf(speed) else speed * 1e3,
+            "v_max_mm_s": v_max * 1e3, "t_event_s": float(res["event_t_s"]),
+            "event_legs": [leg, DIAGONAL_LEG[leg]],
+            "adjacent_legs": [x for x in LEGS if x not in (leg, DIAGONAL_LEG[leg])],
+            "source": "result.event (U-S8-43)", "rule": FAST_SETTLE_RULE}
+
+
+def fast_settle_window(case: Mapping[str, Any], tm: Mapping[str, Any], fast: Mapping[str, Any],
+                       settings: EventTransientSettings = EVENT_TRANSIENT) -> dict[str, Any]:
+    """Window of a fast settlement (keys as :func:`event_transient_window`): the U-S8-32
+    physical window of ``s8_control.settle_lift_split`` (pad ``airborne`` and ball centre of
+    the 1 ms record; the same function as the U-S8-32 rows); without them the window ends at
+    ``t_event + cap`` (note ``no_airborne_record``)."""
+    from outrigger_sim.verify.s8_control import settle_lift_split
+
+    t_ev = float(fast["t_event_s"])
+    phases = [(float(time_s), p) for time_s, p in case["result"]["phases"]]
+    level = case["result"]["settings"]["level"]
+    t3_s = float(settings.three_point_rocking_period_s.get(
+        level, settings.three_point_rocking_period_s["top"]))
+    window: dict[str, Any] = {"mode": "physical (U-S8-32 window, U-S8-43)", "start_s": t_ev,
+                              "re_ready_s": _re_ready_s(phases, t_ev), "notes": [],
+                              "event_legs": list(fast["event_legs"]),
+                              "three_point_rocking_period_s": t3_s}
+    if level != "top":
+        window["notes"].append("T3_from_top_level")
+    pads = case["pads"]
+    cap_end_s = t_ev + settings.transient_window_cap_s
+    if pads is None or "airborne" not in pads or "ball_centre_world" not in pads:
+        window["notes"].append("no_airborne_record")
+        end_s = cap_end_s
+    else:
+        sp = settle_lift_split(np.asarray(pads["t"], float) - tm["t0"], pads["airborne"],
+                               np.asarray(pads["ball_centre_world"], float)[:, :, 2], t_ev,
+                               fast["settle_leg"], fast["depth_m"], fast["ramp_s"] or 0.0,
+                               t3_s=t3_s, cap_s=settings.transient_window_cap_s)
+        end_s = t_ev + float(sp["window_end_rel_s"])
+        window.update(primary_event_leg=sp["primary"],
+                      event_legs_last_recontact_rel_s={
+                          leg: v["last_recontact_rel_s"] for leg, v in sp["event"].items()},
+                      event_legs_cum_lift_s={leg: v["cum_s"] for leg, v in sp["event"].items()})
+        if sp["window_capped"]:
+            window["notes"].append("transient_window_capped")
+    window.update(lift_end_s=end_s, pressure_end_s=end_s)
+    return window
 
 
 def _event_time_s(case: Mapping[str, Any], tm: Mapping[str, Any]) -> float | None:
@@ -961,6 +1073,99 @@ def event_force_metrics(
     return out
 
 
+def fast_event_force_metrics(case: Mapping[str, Any], tm: Mapping[str, Any],
+                             window: Mapping[str, Any], fast: Mapping[str, Any]
+                             ) -> dict[str, Any]:
+    """Item 3 of a fast settlement (spec rev. 50 220.6 ①, U-S8-43), 1 ms pad record
+    ``F_cyl_min_interval``: minimum before the event (crawler lift-off .. ``t_event``), per leg
+    in the window, window end .. re-READY (record against ``F_min + 5 kN``) and after the
+    re-READY; re-READY delay; event-leg lift after the re-READY (record). The other-leg lift is
+    the U-S8-32 adjacent-leg row's (``s8_control``)."""
+    pads = case["pads"]
+    t_ev = float(fast["t_event_s"])
+    out: dict[str, Any] = {"t_event_s": t_ev, "rule_source": "fast_settle",
+                           "floor_event": dict(fast), "fast_window": dict(window)}
+    if pads is None or tm["liftoff"] is None:
+        out["status"] = "no pad record or crawler lift-off"
+        return out
+    phases = [(float(t), p) for t, p in case["result"]["phases"]]
+    re_ready = _re_ready_s(phases, t_ev)
+    out["re_ready_s"] = re_ready
+    out["re_ready_after_event_s"] = None if re_ready is None else re_ready - t_ev
+    tp = pads["t"] - tm["t0"]
+    dt = np.diff(tp, append=tp[-1] + (tp[-1] - tp[-2] if len(tp) > 1 else 0.0))
+    fmin = np.asarray(pads["F_cyl_min_interval"], dtype=float)
+    lifted = np.asarray(pads["N"], dtype=float) <= 0.0
+    end_s = float(window["lift_end_s"])
+
+    def leg_min(sel: NDArray[np.bool_]) -> dict[str, Any] | None:
+        if not sel.any():
+            return None
+        f = fmin[sel]
+        k = np.unravel_index(int(np.argmin(f)), f.shape)
+        return {"min_kN": float(f[k]) / 1e3, "leg": LEGS[k[1]], "t_s": float(tp[sel][k[0]]),
+                "per_leg_kN": (f.min(axis=0) / 1e3).tolist()}
+
+    before = (tp >= tm["liftoff"]) & (tp < t_ev)
+    out["min_cyl_before_event_kN"] = float(fmin[before].min()) / 1e3 if before.any() else None
+    out["window_min"] = leg_min((tp >= t_ev) & (tp <= end_s))
+    if re_ready is not None:
+        out["window_end_to_re_ready_min"] = leg_min((tp > end_s) & (tp < re_ready))
+        tail = tp >= re_ready
+        out["min_cyl_after_re_ready_kN"] = float(fmin[tail].min()) / 1e3 if tail.any() else None
+        out["event_legs_lifted_after_re_ready_s"] = {
+            leg: float(np.sum(dt[tail] * lifted[tail, LEGS.index(leg)]))
+            for leg in fast["event_legs"]}
+    else:
+        out["window_end_to_re_ready_min"] = leg_min(tp > end_s)
+        out["min_cyl_after_re_ready_kN"] = None
+        out["event_legs_lifted_after_re_ready_s"] = None
+    return out
+
+
+def _fast_event_item3_rows(rows: _Rows, m, cid: str) -> None:
+    """Item-3 rows of a fast settlement (spec rev. 50 220.6 ①, U-S8-43)."""
+    e = m.get("event3")
+    if not e or "status" in e:
+        return
+    fe = e["floor_event"]
+    f_min = _f_min_N(m) / 1e3
+    tag = (f"U-S8-43: settle {fe['settle_leg']} {fe['depth_m'] * 1e3:.1f} mm / "
+           f"{fe['ramp_s']} s ({fe['speed_mm_s'] or float('inf'):.1f} mm/s > v_max "
+           f"{fe['v_max_mm_s']:.3f} mm/s), event legs {fe['event_legs']}")
+    w = e["fast_window"]
+    window_text = f"[{w['start_s']:.3f}, {w['lift_end_s']:.3f}] s"
+    v = e["min_cyl_before_event_kN"]
+    rows.add("3 F_min before the event", cid, v, f_min, None if v is None else v >= f_min,
+             note=f"crawler lift-off .. t_event; {tag}")
+    wm = e.get("window_min")
+    rows.add("3 F_min in the event transient per leg (report)", cid,
+             None if wm is None else wm["per_leg_kN"], f_min, None,
+             note=(f"{tag}; window {window_text}; event legs -> U-S8-32 event-leg row, adjacent "
+                   f"legs -> U-S8-32 adjacent-leg row (U57); minimum {wm}"), kind="info")
+    rows.add("3 lift-off other legs: U-S8-32 adjacent-leg row (U57) judges it", cid,
+             fe["adjacent_legs"], None, None,
+             note=f"{tag}; spec rev. 50 220.6 ①: no s6 other-leg row for a result.event "
+                  "settlement", kind="info")
+    wr = e.get("window_end_to_re_ready_min")
+    lim = (_f_min_N(m) + D8_MARGIN_N) / 1e3
+    v = None if wr is None else wr["min_kN"]
+    rows.add("3 F_min window end .. re-READY (record, F_min + 5 kN reference)", cid, v, lim, None,
+             note=f"{tag}; {wr}" + ("" if v is None or v >= lim
+                                     else f"; FLAG below F_min + 5 kN {lim:.2f} kN"),
+             kind="record")
+    v = e["min_cyl_after_re_ready_kN"]
+    rows.add("3 F_min after the re-READY", cid, v, f_min, None if v is None else v >= f_min,
+             note=(f"re-READY .. end; {tag}" if e["re_ready_s"] is not None
+                   else "no re-READY: not judged here (failed in the re-READY row)"))
+    rows.add("3 lift-off event legs after the re-READY (report)", cid,
+             e["event_legs_lifted_after_re_ready_s"], 0.0, None, note=tag, kind="info")
+    v = e["re_ready_after_event_s"]
+    rows.add("RE1b re-READY <= 60 s", cid, v, EVENT_READY_S,
+             False if v is None else v <= EVENT_READY_S,
+             note=("no re-READY before the run end: failed; " if v is None else "") + tag)
+
+
 def _within(value: float | None, limit: float) -> bool | None:
     return None if value is None else value <= limit
 
@@ -1083,9 +1288,10 @@ def _head_areas_m2(params) -> NDArray[np.float64]:
 
 
 def _motion_state(applied_m_s: float) -> str:
-    if applied_m_s > 0.0:
+    """Motion of one applied speed sample; ``|u| <= MOVING_EPS_M_S`` is locked (rev. 50 ②)."""
+    if applied_m_s > MOVING_EPS_M_S:
         return "extend"
-    if applied_m_s < 0.0:
+    if applied_m_s < -MOVING_EPS_M_S:
         return "retract"
     return "locked"
 
@@ -1125,8 +1331,8 @@ def _event_transient_metrics(
     start_s, end_s = window["start_s"], window["pressure_end_s"]
     in_window = (t >= start_s) & (t <= end_s)
     outside = ~in_window[:, None]
-    extending = applied > 0.0
-    retracting = applied < 0.0
+    extending = applied > MOVING_EPS_M_S  # spec rev. 50 220.6 ②
+    retracting = applied < -MOVING_EPS_M_S
     if settings.moving_pressure_samples is MovingPressureSamples.EXTEND_ONLY:
         judged = outside & extending
     else:
@@ -1171,9 +1377,10 @@ def _pressure_and_rocking_metrics(
     mon = case["result"]["monitor"]
     area = np.full(4, HEAD_AREA_M2) if head_area_m2 is None else np.asarray(head_area_m2)
     applied = np.asarray(rec["u_applied"])
-    moving = applied != 0.0
+    moving = np.abs(applied) > MOVING_EPS_M_S  # spec rev. 50 220.6 ② (was ``!= 0``)
     p_bar = np.asarray(rec["F_cyl"]) / area / 1e5
     m["max_moving_pressure_bar"] = float(p_bar[moving].max()) if moving.any() else None
+    m["moving_eps_m_s"] = MOVING_EPS_M_S
     m["max_pressure_any_step_bar"] = float(
         np.max(np.asarray(mon["cylinder_force_max_N"], dtype=float) / area)
     ) / 1e5
@@ -1783,7 +1990,10 @@ def _items_3_to_5_rows(rows: _Rows, m, cid: str) -> None:
         if _is_floor_event_case(m):
             rows.add("3 F_min (1 ms)", cid, v, _f_min_N(m) / 1e3, None,
                      note=f"{EVENT_CASE_NOTE}; {note}", kind="info")
-            _event_item3_rows(rows, m, cid)
+            if m.get("floor_event") is not None:
+                _fast_event_item3_rows(rows, m, cid)
+            else:
+                _event_item3_rows(rows, m, cid)
         else:
             f_min = _f_min_N(m) / 1e3
             rows.add("3 F_min (1 ms)", cid, v, f_min, v >= f_min, note=note)
@@ -1798,6 +2008,7 @@ def _items_3_to_5_rows(rows: _Rows, m, cid: str) -> None:
                 m["max_moving_pressure_bar"],
                 MOVING_PRESSURE_TOL_BAR,
                 m["max_moving_pressure_bar"] <= MOVING_PRESSURE_TOL_BAR,
+                note=f"moving = |u_applied| > {MOVING_EPS_M_S:g} m/s (spec rev. 50 220.6 ②)",
             )
         if m.get("rocking_amp_deg") is not None:
             rows.add(
@@ -2376,6 +2587,9 @@ __all__ = [
     "case_condition",
     "case_metrics",
     "diagnostic_false_alarm_metrics",
+    "fast_event_force_metrics",
+    "fast_settle_event",
+    "fast_settle_window",
     "judge",
     "load_case",
     "probe_metrics",

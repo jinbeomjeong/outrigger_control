@@ -270,11 +270,14 @@ def test_preset_values() -> None:
     assert r8.check_attitude_from_raw_tilt and r8.uses_raw_check_attitude
     assert r8.probe_abort_on_low_load
     # Rev. 34 174.4 / 179.1 P-R8-13 (U-R8-21): twist-mode re-approach replaces P-R8-12;
-    # rev. 43 213.8 P-S8-5 (U-S8-9): start level 1.4 F_min.
+    # rev. 43 213.8 P-S8-5 (U-S8-9): start level 1.4 F_min; rev. 52 228.3 P-S8-16 (U-S8-49):
+    # re-trigger rule RT.
     assert r8.lifted_reapproach == LiftedReapproachSettings(
         enable=True, mode=ReapproachMode.TWIST, load_fraction_of_F_min=1.4, samples=1,
         single_leg=True, exit_margin_N=5000.0, exit_samples=3, twist_speed_fraction=0.25,
         protect_margin_N=5000.0, speed_fraction=0.25, max_travel_m=0.04,
+        retrigger_window_s=2.0, retrigger_speed_factor=0.6, opposite_window_s=0.8,
+        opposite_strong_level_N=0.0, opposite_strong_samples=2,
     )
     # Rev. 43 213.8 P-S8-6 (U-S8-11): TOUCH free air from moving samples.
     assert r8.touch_free_air_min_travel_m == 0.5e-3

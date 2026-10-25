@@ -1,0 +1,5178 @@
+{
+ "spec": "s6_control_spec.md rev. 39 205, rev. 51 223.2; P-S8-2, P-S8-18",
+ "source": "07_results/S8/ml_main_20261025_090131/ml_dataset",
+ "reproduce": "04_scripts/05_ml/train_contact_ml.py --episodes 07_results/S8/ml_main_20261025_090131/ml_dataset --judged-episodes 07_results/S8/ml_main_20261025_090131/ml_dataset_mlj --ml-masks 07_results/S8/ml_main_20261025_090131/verify_S8ML.json --tags-dir 06_analysis/02_control/s8 --release-scan 06_analysis/03_hydraulic/s8/h_s8_4_release_scan.json --lgbm-preset regularized --out 07_results/S8/ml_main_20261025_090131/ml_train_B2",
+ "seeds": {
+  "split": 20261024,
+  "gru": 20261024,
+  "lightgbm": 20261024,
+  "synthetic": null
+ },
+ "settings": {
+  "gru": {
+   "hidden": 48,
+   "epochs": 30,
+   "batch_size": 512,
+   "learning_rate": 0.002,
+   "regression_weight": 0.1,
+   "patience": 5,
+   "seed": 20261024,
+   "device": null
+  },
+  "lightgbm": {
+   "num_leaves": 31,
+   "learning_rate": 0.05,
+   "rounds": 1000,
+   "early_stopping_rounds": 30,
+   "seed": 20261024,
+   "min_sum_hessian_in_leaf": 5.0,
+   "lambda_l2": 10.0,
+   "min_data_in_leaf": 100
+  }
+ },
+ "dataset": {
+  "episodes": 864,
+  "episodes_per_crawler_contact": {
+   "nsc_rigid": 864
+  },
+  "window_history": {
+   "base_runs": 96,
+   "branched": 768,
+   "branched_with_base_history": 768
+  },
+  "judged_episodes": [
+   "MLJ_FS24_Fs0",
+   "MLJ_FS24_Fs8",
+   "MLJ_K0V_fdown3.5_G4RF_Fs0",
+   "MLJ_K0V_fdown3.5_G4RF_Fs8",
+   "MLJ_SS9P_Fs0",
+   "MLJ_SS9P_Fs8"
+  ],
+  "train": {
+   "examples": 430144,
+   "classes": {
+    "GROUNDED": 429037,
+    "LIFTED": 815,
+    "UNDER_LOADED": 292
+   },
+   "weights": {
+    "0": 13076,
+    "0.5": 1031,
+    "1": 416037
+   }
+  },
+  "validation": {
+   "examples": 96896,
+   "classes": {
+    "GROUNDED": 96545,
+    "LIFTED": 286,
+    "UNDER_LOADED": 65
+   },
+   "weights": {
+    "0": 2916,
+    "0.5": 390,
+    "1": 93590
+   }
+  },
+  "test": {
+   "examples": 85888,
+   "classes": {
+    "GROUNDED": 85541,
+    "LIFTED": 257,
+    "UNDER_LOADED": 90
+   },
+   "weights": {
+    "0": 2616,
+    "0.5": 305,
+    "1": 82967
+   }
+  }
+ },
+ "shares": {
+  "train": {
+   "bases": [
+    "ML06",
+    "ML08",
+    "ML11",
+    "ML12",
+    "ML14",
+    "ML15",
+    "ML18",
+    "ML20",
+    "ML21",
+    "ML23",
+    "ML24",
+    "ML26",
+    "ML27",
+    "ML29",
+    "ML30",
+    "ML33",
+    "ML36",
+    "ML39",
+    "ML41",
+    "ML44",
+    "ML45",
+    "ML48",
+    "ML53",
+    "ML54",
+    "ML56",
+    "ML57",
+    "ML60",
+    "ML62",
+    "ML63",
+    "ML66",
+    "ML69",
+    "ML71",
+    "ML74",
+    "ML80",
+    "ML81",
+    "ML83",
+    "ML84",
+    "ML86",
+    "ML87",
+    "ML92"
+   ],
+   "episodes": 320,
+   "base_runs": 40
+  },
+  "validation": {
+   "bases": [
+    "ML02",
+    "ML03",
+    "ML09",
+    "ML32",
+    "ML65",
+    "ML72",
+    "ML78",
+    "ML89",
+    "ML90"
+   ],
+   "episodes": 72,
+   "base_runs": 9
+  },
+  "test": {
+   "bases": [
+    "ML00",
+    "ML17",
+    "ML38",
+    "ML42",
+    "ML47",
+    "ML51",
+    "ML68",
+    "ML93"
+   ],
+   "episodes": 64,
+   "base_runs": 8
+  },
+  "ood_level": {
+   "bases": [
+    "ML01",
+    "ML04",
+    "ML07",
+    "ML10",
+    "ML13",
+    "ML16",
+    "ML19",
+    "ML22",
+    "ML25",
+    "ML28",
+    "ML31",
+    "ML34",
+    "ML37",
+    "ML40",
+    "ML43",
+    "ML46",
+    "ML49",
+    "ML52",
+    "ML55",
+    "ML58",
+    "ML61",
+    "ML64",
+    "ML67",
+    "ML70",
+    "ML73",
+    "ML76",
+    "ML79",
+    "ML82",
+    "ML85",
+    "ML88",
+    "ML91",
+    "ML94"
+   ],
+   "episodes": 256,
+   "base_runs": 32
+  },
+  "ood_roll": {
+   "bases": [
+    "ML05",
+    "ML35",
+    "ML50",
+    "ML59",
+    "ML75",
+    "ML77",
+    "ML95"
+   ],
+   "episodes": 56,
+   "base_runs": 7
+  }
+ },
+ "ml_masks": {
+  "file": "07_results/S8/ml_main_20261025_090131/verify_S8ML.json",
+  "runs": 3
+ },
+ "tags": {
+  "runs": {
+   "ML00_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML00_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML00_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML00_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML00_ep5": {
+    "plant_rod_collapse_windows_s": [
+     [
+      60.89300000110483,
+      61.493000001104825
+     ]
+    ],
+    "reapproach_pingpong": true,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML00_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML01_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML01_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML01_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML01_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML01_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML01_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML01_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML01_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML02_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML02_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML03_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "validation"
+   },
+   "ML03_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML03_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "validation"
+   },
+   "ML03_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML04_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML04_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML04_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML04_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML05_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML05_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML05_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML05_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML05_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML05_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML06_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML06_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML06_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML06_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML06_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML06_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML06_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML07_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML07_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML07_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML07_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML08_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML08_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML08_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML08_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML08_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML09_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML09_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML09_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML09_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "validation"
+   },
+   "ML09_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "validation"
+   },
+   "ML09_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML10_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML10_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML10_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML10_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML10_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML11_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML11_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML11_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 3,
+    "share": "train"
+   },
+   "ML11_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML11_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML12_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML12_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML12_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML12_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML12_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML12_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML13_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML13_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML13_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML13_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML14_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML14_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML14_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML14_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML14_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML14_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML15_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML15_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML15_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML16_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML16_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML16_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML16_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML17_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML17_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML17_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML17_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML18_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML18_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML18_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML18_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML18_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML18_ep6": {
+    "plant_rod_collapse_windows_s": [
+     [
+      53.90300000087563,
+      54.50300000087562
+     ]
+    ],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML19_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML19_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML19_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML19_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML19_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML19_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML20_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML20_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML20_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML20_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML20_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML20_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML21_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML21_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": true,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML21_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML21_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 3,
+    "share": "train"
+   },
+   "ML21_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML22_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML22_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML22_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML22_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML22_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML22_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML23_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML23_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML23_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML23_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML24_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML24_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML24_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML24_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML24_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML24_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML24_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML25_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML25_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML25_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML25_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML26_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML26_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML26_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML26_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML26_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML26_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML26_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML27_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML27_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML27_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML27_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML27_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML27_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML28_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML28_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML28_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML28_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 3,
+    "share": "ood_level"
+   },
+   "ML28_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML28_ep6": {
+    "plant_rod_collapse_windows_s": [
+     [
+      65.90200000127366,
+      67.39
+     ]
+    ],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 3,
+    "share": "ood_level"
+   },
+   "ML28_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML29_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML29_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML29_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML29_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML29_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML29_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML29_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML29_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML30_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML30_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML30_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML31_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML31_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML31_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML31_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML31_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML31_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML32_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML32_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML32_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML32_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML32_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "validation"
+   },
+   "ML32_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML32_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML33_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML33_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML33_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML33_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML33_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML34_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML34_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 3,
+    "share": "ood_level"
+   },
+   "ML34_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML34_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML34_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML34_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML34_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 3,
+    "share": "ood_level"
+   },
+   "ML35_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML35_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML35_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML35_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML35_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML36_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML36_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML36_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML36_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML36_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML36_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML36_ep7": {
+    "plant_rod_collapse_windows_s": [
+     [
+      60.891000001104196,
+      61.49100000110419
+     ]
+    ],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML37_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML37_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML37_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML37_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML38_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML38_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML38_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML38_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML39_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML39_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML39_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML39_ep5": {
+    "plant_rod_collapse_windows_s": [
+     [
+      63.900000001206635,
+      64.50000000120663
+     ]
+    ],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML39_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML40_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML40_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML41_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML41_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML41_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML41_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML41_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML42_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML42_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML42_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML42_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML42_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML42_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML42_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML43_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML43_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML43_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML43_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML44_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML44_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML44_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML44_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML44_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML45_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML45_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML45_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML45_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML45_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML46_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML46_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML46_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML46_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML46_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML46_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML46_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML47_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML47_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML47_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML47_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML47_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML47_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML48_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML48_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML48_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML48_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 3,
+    "share": "train"
+   },
+   "ML49_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML49_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML49_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML49_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML50_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML50_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 4,
+    "share": "ood_roll"
+   },
+   "ML50_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML50_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML50_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 4,
+    "share": "ood_roll"
+   },
+   "ML50_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 4,
+    "share": "ood_roll"
+   },
+   "ML51_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML51_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML51_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML51_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML51_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML52_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML52_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML52_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML52_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML52_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML52_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML52_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML52_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML53_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML53_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML53_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML53_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML54_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML54_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML54_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML54_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML54_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML54_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML54_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML55_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML55_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML55_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML56_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML56_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML56_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML56_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML57_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML57_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML57_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML57_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML57_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML58_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML58_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML58_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML58_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML58_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML58_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML59_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML59_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML59_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML59_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML59_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML59_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML59_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML60_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML60_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML60_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML60_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML60_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML61_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML61_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML61_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML61_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML61_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML61_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML62_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML62_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML62_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML62_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML62_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML62_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML63_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML63_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML63_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML63_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML63_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML64_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML64_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML64_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML64_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML65_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML65_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML65_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML66_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML66_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML66_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML66_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML66_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML67_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML67_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML67_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML67_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML67_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML67_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML68_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML68_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML68_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML68_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML68_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML68_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML68_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML68_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML69_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML69_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML69_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML69_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML69_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML70_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML70_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML70_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML70_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML71_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML71_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML71_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML71_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML71_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML71_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML72_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML72_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML72_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "validation"
+   },
+   "ML72_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "validation"
+   },
+   "ML73_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML73_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML73_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML73_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML74_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML74_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML74_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML74_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML74_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML74_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML74_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML75_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML75_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML75_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML75_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML75_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML75_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML76_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML76_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML76_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML76_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML76_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML76_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML77_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML77_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML77_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML77_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML77_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML77_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML78_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": true,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML78_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": true,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML78_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML78_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": true,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML78_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML78_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML79_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML79_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML79_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML79_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML79_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML80_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML80_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML80_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML80_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML80_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML80_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML80_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML81_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML81_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML81_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML81_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML81_ep5": {
+    "plant_rod_collapse_windows_s": [
+     [
+      68.99200000140182,
+      69.91
+     ]
+    ],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML81_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML81_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML82_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML82_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML82_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML82_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML82_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML82_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML83_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML83_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML83_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML83_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML83_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML83_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML84_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML84_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML85_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML85_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML85_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML85_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML85_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML85_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML86_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML86_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML86_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML86_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML86_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML86_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML87_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML87_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML87_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML87_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML87_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML87_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML88_ep0": {
+    "plant_rod_collapse_windows_s": [
+     [
+      62.904000001174715,
+      63.66
+     ]
+    ],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 3,
+    "share": "ood_level"
+   },
+   "ML88_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML88_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML88_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML89_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML89_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML89_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML89_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "validation"
+   },
+   "ML89_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML89_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML90_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML90_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": true,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML90_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML90_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML90_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "validation"
+   },
+   "ML91_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML91_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML91_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML91_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML91_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML91_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML92_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML92_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML92_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "train"
+   },
+   "ML92_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "train"
+   },
+   "ML93_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML93_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML93_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML93_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "test"
+   },
+   "ML93_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "test"
+   },
+   "ML94_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_level"
+   },
+   "ML94_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 3,
+    "share": "ood_level"
+   },
+   "ML94_ep4": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_level"
+   },
+   "ML95_ep0": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML95_ep1": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML95_ep2": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML95_ep3": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML95_ep5": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   },
+   "ML95_ep6": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 1,
+    "share": "ood_roll"
+   },
+   "ML95_ep7": {
+    "plant_rod_collapse_windows_s": [],
+    "reapproach_pingpong": false,
+    "plant_release_rod_steps": 2,
+    "share": "ood_roll"
+   }
+  },
+  "per_share": {
+   "ood_level:pingpong": 0,
+   "ood_level:release_steps": 277,
+   "ood_level:rod_collapse": 2,
+   "ood_roll:pingpong": 0,
+   "ood_roll:release_steps": 80,
+   "ood_roll:rod_collapse": 0,
+   "test:pingpong": 1,
+   "test:release_steps": 69,
+   "test:rod_collapse": 1,
+   "train:pingpong": 1,
+   "train:release_steps": 374,
+   "train:rod_collapse": 4,
+   "validation:pingpong": 4,
+   "validation:release_steps": 78,
+   "validation:rod_collapse": 0
+  }
+ },
+ "release_step_effect": {
+  "individual_pressure_channels": [],
+  "uses_individual_pressures": false,
+  "train_examples_in_windows": 3504,
+  "train_weights_set_to_0_by_tag": 0
+ },
+ "lightgbm_preset": "regularized",
+ "gru_device": "cuda",
+ "onnx_difference_on_test": {
+  "gru": {
+   "probabilities_max_abs": 6.7920219916084434e-06,
+   "min_force_kN_max_abs": 0.0002593994140625
+  },
+  "lightgbm": {
+   "probabilities_max_abs": 1.7952074907179316e-06,
+   "min_force_kN_max_abs": 0.0006439774901139117
+  }
+ },
+ "models": {
+  "lightgbm": {
+   "verdict_rows": [
+    {
+     "item": "E1",
+     "kind": "required",
+     "value": {
+      "ML_upper": 0.2594100493293396,
+      "J_C_upper": 0.1599887789574411,
+      "ML_missed": 12,
+      "episodes": 71
+     },
+     "passed": false
+    },
+    {
+     "item": "E2",
+     "kind": "required",
+     "value": {
+      "ML_M4_max_N": 9622.59307615202,
+      "J_C_M4_max_N": -2297.7219316796163
+     },
+     "passed": false
+    },
+    {
+     "item": "E3",
+     "kind": "candidate advantage",
+     "value": {
+      "earlier_median_delay": false,
+      "fewer_false_flags": true,
+      "probe_saving": "not evaluated"
+     },
+     "passed": true
+    },
+    {
+     "item": "E4",
+     "kind": "required",
+     "value": 0.00020910187059410934,
+     "passed": "True"
+    },
+    {
+     "item": "E5",
+     "kind": "required",
+     "value": {
+      "p99_ms": 0.34611501556355506,
+      "bytes": 3246413
+     },
+     "passed": true
+    },
+    {
+     "item": "E6 OOD-1 middle auger",
+     "kind": "record",
+     "value": {
+      "ML_upper": 0.1695262882420406,
+      "J_C_upper": 0.11340989876686519,
+      "episodes": 146
+     },
+     "passed": false
+    },
+    {
+     "item": "E6 OOD-2 roll > 4.4 deg",
+     "kind": "record",
+     "value": {
+      "ML_upper": 0.26273884307504114,
+      "J_C_upper": 0.21529996114245392,
+      "episodes": 27
+     },
+     "passed": false
+    },
+    {
+     "item": "E7",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": null
+      },
+      "J_C": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": null
+      },
+      "ECE": {
+       "ML": 2.719523636388911e-06,
+       "J_C": null
+      },
+      "examples": 2592
+     },
+     "passed": null,
+     "note": "J_C deterministic, E4 applies to probability outputs only: J_C is a decision judge with 0/1 flags and no probability, so its ECE is undefined and recorded as None (spec rev. 44 214.5 question 3-1)"
+    },
+    {
+     "item": "tag plant_rod_collapse",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 2,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": -1470.3780060911067,
+       "M1_missed_upper_95": 0.776393202250021,
+       "M1p_late": 0,
+       "M3_median_delay_s": -0.05000000001587068
+      },
+      "J_C": {
+       "episodes": 2,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": -2645.5311371406624,
+       "M1_missed_upper_95": 0.776393202250021,
+       "M1p_late": 0,
+       "M3_median_delay_s": -0.10000000003174137
+      },
+      "ECE": {
+       "ML": 0.05436003690965102,
+       "J_C": null
+      },
+      "examples": 24
+     },
+     "passed": null
+    },
+    {
+     "item": "tag plant_release_rod_step",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 23,
+       "M1_missed": 2,
+       "M2_false_action_flags": 0,
+       "M4_max_N": 5572.079076160206,
+       "M1_missed_upper_95": 0.24924874982025966,
+       "M1p_late": 0,
+       "M3_median_delay_s": 0.0
+      },
+      "J_C": {
+       "episodes": 23,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": -2297.7219316796163,
+       "M1_missed_upper_95": 0.12212338890652304,
+       "M1p_late": 0,
+       "M3_median_delay_s": -0.3000000000952241
+      },
+      "ECE": {
+       "ML": 0.00924917392689773,
+       "J_C": null
+      },
+      "examples": 752
+     },
+     "passed": null
+    },
+    {
+     "item": "tag reapproach_pingpong",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 8,
+       "M1_missed": 2,
+       "M2_false_action_flags": 0,
+       "M4_max_N": 9622.59307615202,
+       "M1_missed_upper_95": 0.599689389190833,
+       "M1p_late": 0,
+       "M3_median_delay_s": -1.500000000476117
+      },
+      "J_C": {
+       "episodes": 8,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": -2692.095141259837,
+       "M1_missed_upper_95": 0.3123439780663678,
+       "M1p_late": 0,
+       "M3_median_delay_s": -1.9500000006189566
+      },
+      "ECE": {
+       "ML": 0.036419671437319306,
+       "J_C": null
+      },
+      "examples": 124
+     },
+     "passed": null
+    },
+    {
+     "item": "tag without_reapproach_pingpong",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 63,
+       "M1_missed": 10,
+       "M2_false_action_flags": 0,
+       "M4_max_N": 5572.079076160206,
+       "M1_missed_upper_95": 0.25435633603283037,
+       "M1p_late": 0,
+       "M3_median_delay_s": 0.0
+      },
+      "J_C": {
+       "episodes": 63,
+       "M1_missed": 6,
+       "M2_false_action_flags": 7,
+       "M4_max_N": -2297.7219316796163,
+       "M1_missed_upper_95": 0.17933954632529234,
+       "M1p_late": 0,
+       "M3_median_delay_s": -0.4000000000132786
+      },
+      "ECE": {
+       "ML": 0.00018852367820692653,
+       "J_C": null
+      },
+      "examples": 83172
+     },
+     "passed": null
+    }
+   ],
+   "judged_rows": [
+    {
+     "item": "E1",
+     "kind": "required",
+     "value": {
+      "ML_upper": 0.29673423894887463,
+      "J_C_upper": 0.385389682363882,
+      "ML_missed": 1,
+      "episodes": 14
+     },
+     "passed": true
+    },
+    {
+     "item": "E2",
+     "kind": "required",
+     "value": {
+      "ML_M4_max_N": 3348.7287740367246,
+      "J_C_M4_max_N": -1707.7254727665277
+     },
+     "passed": false
+    },
+    {
+     "item": "E3",
+     "kind": "candidate advantage",
+     "value": {
+      "earlier_median_delay": false,
+      "fewer_false_flags": true,
+      "probe_saving": "not evaluated"
+     },
+     "passed": true
+    },
+    {
+     "item": "E4",
+     "kind": "required",
+     "value": 0.0003120672380371516,
+     "passed": "True"
+    },
+    {
+     "item": "E5",
+     "kind": "required",
+     "value": {
+      "p99_ms": null,
+      "bytes": null
+     },
+     "passed": null
+    },
+    {
+     "item": "E7",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": null
+      },
+      "J_C": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": null
+      },
+      "ECE": {
+       "ML": 5.080742850408308e-06,
+       "J_C": null
+      },
+      "examples": 1944
+     },
+     "passed": null,
+     "note": "J_C deterministic, E4 applies to probability outputs only: J_C is a decision judge with 0/1 flags and no probability, so its ECE is undefined and recorded as None (spec rev. 44 214.5 question 3-1)"
+    }
+   ],
+   "sets": {
+    "test": {
+     "ML": {
+      "episodes": 71,
+      "M1_missed": 12,
+      "M1_missed_upper_95": 0.2594100493293396,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M3_median_delay_s": 0.0,
+      "M4_max_N": 9622.59307615202,
+      "M4_p5_p50_p95_N": [
+       -10518.791034382475,
+       -996.7114285974576,
+       3359.7789991141594
+      ]
+     },
+     "J_C": {
+      "episodes": 71,
+      "M1_missed": 6,
+      "M1_missed_upper_95": 0.1599887789574411,
+      "M1p_late": 0,
+      "M2_false_action_flags": 7,
+      "M3_median_delay_s": -0.4000000000132786,
+      "M4_max_N": -2297.7219316796163,
+      "M4_p5_p50_p95_N": [
+       -12004.896874606682,
+       -4939.982879409221,
+       -2660.700073342676
+      ]
+     },
+     "ECE_ML": 0.00020910187059410934,
+     "examples": 83296
+    },
+    "OOD-1 middle auger": {
+     "ML": {
+      "episodes": 146,
+      "M1_missed": 17,
+      "M1_missed_upper_95": 0.1695262882420406,
+      "M1p_late": 0,
+      "M2_false_action_flags": 4,
+      "M3_median_delay_s": 0.0,
+      "M4_max_N": 5816.976412492553,
+      "M4_p5_p50_p95_N": [
+       -10970.564101620374,
+       -661.6045558861115,
+       3381.2382376318533
+      ]
+     },
+     "J_C": {
+      "episodes": 146,
+      "M1_missed": 10,
+      "M1_missed_upper_95": 0.11340989876686519,
+      "M1p_late": 0,
+      "M2_false_action_flags": 59,
+      "M3_median_delay_s": -0.4000000000132786,
+      "M4_max_N": -884.589958202967,
+      "M4_p5_p50_p95_N": [
+       -16853.35769370045,
+       -6230.683416750631,
+       -1920.241117932449
+      ]
+     },
+     "ECE_ML": 7.454864496332993e-05,
+     "examples": 334084
+    },
+    "OOD-2 roll > 4.4 deg": {
+     "ML": {
+      "episodes": 27,
+      "M1_missed": 3,
+      "M1_missed_upper_95": 0.26273884307504114,
+      "M1p_late": 0,
+      "M2_false_action_flags": 2,
+      "M3_median_delay_s": 0.0,
+      "M4_max_N": 5684.058910033815,
+      "M4_p5_p50_p95_N": [
+       -8859.20777033709,
+       -230.33255194996673,
+       3473.8571178090624
+      ]
+     },
+     "J_C": {
+      "episodes": 27,
+      "M1_missed": 2,
+      "M1_missed_upper_95": 0.21529996114245392,
+      "M1p_late": 0,
+      "M2_false_action_flags": 17,
+      "M3_median_delay_s": -0.5000000000165983,
+      "M4_max_N": -2350.1949709142464,
+      "M4_p5_p50_p95_N": [
+       -21557.39809005762,
+       -5478.341376172972,
+       -2934.6500166029427
+      ]
+     },
+     "ECE_ML": 0.00016604438125291244,
+     "examples": 72912
+    },
+    "judged cases": {
+     "ML": {
+      "episodes": 14,
+      "M1_missed": 1,
+      "M1_missed_upper_95": 0.29673423894887463,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M3_median_delay_s": -0.5500000001745775,
+      "M4_max_N": 3348.7287740367246,
+      "M4_p5_p50_p95_N": [
+       -7166.677358077549,
+       2.811465216202123,
+       3259.126647298339
+      ]
+     },
+     "J_C": {
+      "episodes": 14,
+      "M1_missed": 2,
+      "M1_missed_upper_95": 0.385389682363882,
+      "M1p_late": 0,
+      "M2_false_action_flags": 8,
+      "M3_median_delay_s": -0.5000000001587068,
+      "M4_max_N": -1707.7254727665277,
+      "M4_p5_p50_p95_N": [
+       -6757.952056112344,
+       -2094.188949264485,
+       -1707.7254727665277
+      ]
+     },
+     "ECE_ML": 0.0003120672380371516,
+     "examples": 18184
+    }
+   },
+   "latency": {
+    "p50_ms": 0.28559999191202223,
+    "p99_ms": 0.34611501556355506,
+    "calls": 2000,
+    "model_bytes": 3246413
+   },
+   "latency_note": "onnxruntime CPU, 1 thread, 4 legs per call, features included",
+   "onnx": {
+    "files": [
+     "lgbm_classifier.onnx",
+     "lgbm_regressor.onnx"
+    ],
+    "exporter": "onnxmltools",
+    "fallback_reason": null,
+    "bytes": 3246413
+   }
+  },
+  "gru": {
+   "verdict_rows": [
+    {
+     "item": "E1",
+     "kind": "required",
+     "value": {
+      "ML_upper": 0.1599887789574411,
+      "J_C_upper": 0.1599887789574411,
+      "ML_missed": 6,
+      "episodes": 71
+     },
+     "passed": true
+    },
+    {
+     "item": "E2",
+     "kind": "required",
+     "value": {
+      "ML_M4_max_N": 12889.728368801701,
+      "J_C_M4_max_N": -2297.7219316796163
+     },
+     "passed": false
+    },
+    {
+     "item": "E3",
+     "kind": "candidate advantage",
+     "value": {
+      "earlier_median_delay": false,
+      "fewer_false_flags": true,
+      "probe_saving": "not evaluated"
+     },
+     "passed": true
+    },
+    {
+     "item": "E4",
+     "kind": "required",
+     "value": 0.0002470621460645963,
+     "passed": "True"
+    },
+    {
+     "item": "E5",
+     "kind": "required",
+     "value": {
+      "p99_ms": 0.09100499446503818,
+      "bytes": 75643
+     },
+     "passed": true
+    },
+    {
+     "item": "E6 OOD-1 middle auger",
+     "kind": "record",
+     "value": {
+      "ML_upper": 0.12162780405085234,
+      "J_C_upper": 0.11340989876686519,
+      "episodes": 146
+     },
+     "passed": false
+    },
+    {
+     "item": "E6 OOD-2 roll > 4.4 deg",
+     "kind": "record",
+     "value": {
+      "ML_upper": 0.21529996114245392,
+      "J_C_upper": 0.21529996114245392,
+      "episodes": 27
+     },
+     "passed": true
+    },
+    {
+     "item": "E7",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": null
+      },
+      "J_C": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": null
+      },
+      "ECE": {
+       "ML": 9.942091673910967e-08,
+       "J_C": null
+      },
+      "examples": 2592
+     },
+     "passed": null,
+     "note": "J_C deterministic, E4 applies to probability outputs only: J_C is a decision judge with 0/1 flags and no probability, so its ECE is undefined and recorded as None (spec rev. 44 214.5 question 3-1)"
+    },
+    {
+     "item": "tag plant_rod_collapse",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 2,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": 5701.9243837681115,
+       "M1_missed_upper_95": 0.776393202250021,
+       "M1p_late": 0,
+       "M3_median_delay_s": 0.0
+      },
+      "J_C": {
+       "episodes": 2,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": -2645.5311371406624,
+       "M1_missed_upper_95": 0.776393202250021,
+       "M1p_late": 0,
+       "M3_median_delay_s": -0.10000000003174137
+      },
+      "ECE": {
+       "ML": 0.03869270000652642,
+       "J_C": null
+      },
+      "examples": 24
+     },
+     "passed": null
+    },
+    {
+     "item": "tag plant_release_rod_step",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 23,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": 8498.088749156406,
+       "M1_missed_upper_95": 0.12212338890652304,
+       "M1p_late": 0,
+       "M3_median_delay_s": 0.0
+      },
+      "J_C": {
+       "episodes": 23,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": -2297.7219316796163,
+       "M1_missed_upper_95": 0.12212338890652304,
+       "M1p_late": 0,
+       "M3_median_delay_s": -0.3000000000952241
+      },
+      "ECE": {
+       "ML": 0.006068000545224362,
+       "J_C": null
+      },
+      "examples": 752
+     },
+     "passed": null
+    },
+    {
+     "item": "tag reapproach_pingpong",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 8,
+       "M1_missed": 1,
+       "M2_false_action_flags": 0,
+       "M4_max_N": 12889.728368801701,
+       "M1_missed_upper_95": 0.4706794086011316,
+       "M1p_late": 0,
+       "M3_median_delay_s": -1.4500000004602462
+      },
+      "J_C": {
+       "episodes": 8,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": -2692.095141259837,
+       "M1_missed_upper_95": 0.3123439780663678,
+       "M1p_late": 0,
+       "M3_median_delay_s": -1.9500000006189566
+      },
+      "ECE": {
+       "ML": 0.040712981477140385,
+       "J_C": null
+      },
+      "examples": 124
+     },
+     "passed": null
+    },
+    {
+     "item": "tag without_reapproach_pingpong",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 63,
+       "M1_missed": 5,
+       "M2_false_action_flags": 0,
+       "M4_max_N": 8498.088749156406,
+       "M1_missed_upper_95": 0.1596549162176729,
+       "M1p_late": 0,
+       "M3_median_delay_s": 0.0
+      },
+      "J_C": {
+       "episodes": 63,
+       "M1_missed": 6,
+       "M2_false_action_flags": 7,
+       "M4_max_N": -2297.7219316796163,
+       "M1_missed_upper_95": 0.17933954632529234,
+       "M1p_late": 0,
+       "M3_median_delay_s": -0.4000000000132786
+      },
+      "ECE": {
+       "ML": 0.00022761056001522538,
+       "J_C": null
+      },
+      "examples": 83172
+     },
+     "passed": null
+    }
+   ],
+   "judged_rows": [
+    {
+     "item": "E1",
+     "kind": "required",
+     "value": {
+      "ML_upper": 0.29673423894887463,
+      "J_C_upper": 0.385389682363882,
+      "ML_missed": 1,
+      "episodes": 14
+     },
+     "passed": true
+    },
+    {
+     "item": "E2",
+     "kind": "required",
+     "value": {
+      "ML_M4_max_N": 4443.735551176713,
+      "J_C_M4_max_N": -1707.7254727665277
+     },
+     "passed": false
+    },
+    {
+     "item": "E3",
+     "kind": "candidate advantage",
+     "value": {
+      "earlier_median_delay": false,
+      "fewer_false_flags": true,
+      "probe_saving": "not evaluated"
+     },
+     "passed": true
+    },
+    {
+     "item": "E4",
+     "kind": "required",
+     "value": 0.0003293066992244448,
+     "passed": "True"
+    },
+    {
+     "item": "E5",
+     "kind": "required",
+     "value": {
+      "p99_ms": null,
+      "bytes": null
+     },
+     "passed": null
+    },
+    {
+     "item": "E7",
+     "kind": "record",
+     "value": {
+      "ML": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": null
+      },
+      "J_C": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M2_false_action_flags": 0,
+       "M4_max_N": null
+      },
+      "ECE": {
+       "ML": 7.412208361075533e-08,
+       "J_C": null
+      },
+      "examples": 1944
+     },
+     "passed": null,
+     "note": "J_C deterministic, E4 applies to probability outputs only: J_C is a decision judge with 0/1 flags and no probability, so its ECE is undefined and recorded as None (spec rev. 44 214.5 question 3-1)"
+    }
+   ],
+   "sets": {
+    "test": {
+     "ML": {
+      "episodes": 71,
+      "M1_missed": 6,
+      "M1_missed_upper_95": 0.1599887789574411,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M3_median_delay_s": 0.0,
+      "M4_max_N": 12889.728368801701,
+      "M4_p5_p50_p95_N": [
+       -11220.670437031316,
+       -2937.898800811746,
+       4542.711417938958
+      ]
+     },
+     "J_C": {
+      "episodes": 71,
+      "M1_missed": 6,
+      "M1_missed_upper_95": 0.1599887789574411,
+      "M1p_late": 0,
+      "M2_false_action_flags": 7,
+      "M3_median_delay_s": -0.4000000000132786,
+      "M4_max_N": -2297.7219316796163,
+      "M4_p5_p50_p95_N": [
+       -12004.896874606682,
+       -4939.982879409221,
+       -2660.700073342676
+      ]
+     },
+     "ECE_ML": 0.0002470621460645963,
+     "examples": 83296
+    },
+    "OOD-1 middle auger": {
+     "ML": {
+      "episodes": 146,
+      "M1_missed": 11,
+      "M1_missed_upper_95": 0.12162780405085234,
+      "M1p_late": 0,
+      "M2_false_action_flags": 3,
+      "M3_median_delay_s": 0.0,
+      "M4_max_N": 8695.876716072507,
+      "M4_p5_p50_p95_N": [
+       -11614.702103943697,
+       -1949.719870787052,
+       4290.548318956604
+      ]
+     },
+     "J_C": {
+      "episodes": 146,
+      "M1_missed": 10,
+      "M1_missed_upper_95": 0.11340989876686519,
+      "M1p_late": 0,
+      "M2_false_action_flags": 59,
+      "M3_median_delay_s": -0.4000000000132786,
+      "M4_max_N": -884.589958202967,
+      "M4_p5_p50_p95_N": [
+       -16853.35769370045,
+       -6230.683416750631,
+       -1920.241117932449
+      ]
+     },
+     "ECE_ML": 8.040866162145895e-05,
+     "examples": 334084
+    },
+    "OOD-2 roll > 4.4 deg": {
+     "ML": {
+      "episodes": 27,
+      "M1_missed": 2,
+      "M1_missed_upper_95": 0.21529996114245392,
+      "M1p_late": 0,
+      "M2_false_action_flags": 2,
+      "M3_median_delay_s": 0.0,
+      "M4_max_N": 14791.224490222095,
+      "M4_p5_p50_p95_N": [
+       -10252.41723961152,
+       -1847.2096910037217,
+       4942.371008165515
+      ]
+     },
+     "J_C": {
+      "episodes": 27,
+      "M1_missed": 2,
+      "M1_missed_upper_95": 0.21529996114245392,
+      "M1p_late": 0,
+      "M2_false_action_flags": 17,
+      "M3_median_delay_s": -0.5000000000165983,
+      "M4_max_N": -2350.1949709142464,
+      "M4_p5_p50_p95_N": [
+       -21557.39809005762,
+       -5478.341376172972,
+       -2934.6500166029427
+      ]
+     },
+     "ECE_ML": 8.57485506503212e-05,
+     "examples": 72912
+    },
+    "judged cases": {
+     "ML": {
+      "episodes": 14,
+      "M1_missed": 1,
+      "M1_missed_upper_95": 0.29673423894887463,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M3_median_delay_s": -0.5000000001587068,
+      "M4_max_N": 4443.735551176713,
+      "M4_p5_p50_p95_N": [
+       -7407.841967134771,
+       -260.44993839026756,
+       3548.9919306023826
+      ]
+     },
+     "J_C": {
+      "episodes": 14,
+      "M1_missed": 2,
+      "M1_missed_upper_95": 0.385389682363882,
+      "M1p_late": 0,
+      "M2_false_action_flags": 8,
+      "M3_median_delay_s": -0.5000000001587068,
+      "M4_max_N": -1707.7254727665277,
+      "M4_p5_p50_p95_N": [
+       -6757.952056112344,
+       -2094.188949264485,
+       -1707.7254727665277
+      ]
+     },
+     "ECE_ML": 0.0003293066992244448,
+     "examples": 18184
+    }
+   },
+   "latency": {
+    "p50_ms": 0.07879995973780751,
+    "p99_ms": 0.09100499446503818,
+    "calls": 2000,
+    "model_bytes": 75643
+   },
+   "latency_note": "onnxruntime CPU, 1 thread, 4 legs per call",
+   "onnx": {
+    "files": [
+     "contact_gru.onnx"
+    ],
+    "exporter": "dynamo",
+    "fallback_reason": null,
+    "bytes": 75643
+   }
+  }
+ },
+ "wall_s": 264.3720836000284,
+ "train_report": "07_results\\S8\\ml_main_20261025_090131\\ml_train_B2\\report.json",
+ "figure": "06_analysis\\02_control\\s8\\s8_ml_main_report.png",
+ "compared_runs": [
+  {
+   "label": "A_rev51_tags_legacy_lgbm",
+   "train_report": "07_results\\S8\\ml_main_20261025_090131\\ml_train_A_rev51tags\\report.json",
+   "lightgbm_preset": null,
+   "release_step_effect": null,
+   "models": {
+    "lightgbm": {
+     "verdict_rows": [
+      {
+       "item": "E1",
+       "kind": "required",
+       "value": {
+        "ML_upper": 0.10559826975891923,
+        "J_C_upper": 0.1599887789574411,
+        "ML_missed": 3,
+        "episodes": 71
+       },
+       "passed": true
+      },
+      {
+       "item": "E2",
+       "kind": "required",
+       "value": {
+        "ML_M4_max_N": 9536.37562628287,
+        "J_C_M4_max_N": -2297.7219316796163
+       },
+       "passed": false
+      },
+      {
+       "item": "E3",
+       "kind": "candidate advantage",
+       "value": {
+        "earlier_median_delay": false,
+        "fewer_false_flags": false,
+        "probe_saving": "not evaluated"
+       },
+       "passed": false
+      },
+      {
+       "item": "E4",
+       "kind": "required",
+       "value": 0.002555945178175726,
+       "passed": "True"
+      },
+      {
+       "item": "E5",
+       "kind": "required",
+       "value": {
+        "p99_ms": 0.2355029887985438,
+        "bytes": 925290
+       },
+       "passed": true
+      },
+      {
+       "item": "E6 OOD-1 middle auger",
+       "kind": "record",
+       "value": {
+        "ML_upper": 0.07065435820453908,
+        "J_C_upper": 0.11340989876686519,
+        "episodes": 146
+       },
+       "passed": true
+      },
+      {
+       "item": "E6 OOD-2 roll > 4.4 deg",
+       "kind": "record",
+       "value": {
+        "ML_upper": 0.21529996114245392,
+        "J_C_upper": 0.21529996114245392,
+        "episodes": 27
+       },
+       "passed": true
+      },
+      {
+       "item": "E7",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 0,
+         "M1_missed": 0,
+         "M2_false_action_flags": 1,
+         "M4_max_N": null
+        },
+        "J_C": {
+         "episodes": 0,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": null
+        },
+        "ECE": {
+         "ML": 0.00489625412274452,
+         "J_C": null
+        },
+        "examples": 2592
+       },
+       "passed": null,
+       "note": "J_C deterministic, E4 applies to probability outputs only: J_C is a decision judge with 0/1 flags and no probability, so its ECE is undefined and recorded as None (spec rev. 44 214.5 question 3-1)"
+      },
+      {
+       "item": "tag plant_rod_collapse",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 2,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -461.2193562984612,
+         "M1_missed_upper_95": 0.776393202250021,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.05000000001587068
+        },
+        "J_C": {
+         "episodes": 2,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -2645.5311371406624,
+         "M1_missed_upper_95": 0.776393202250021,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.10000000003174137
+        },
+        "ECE": {
+         "ML": 0.042519571280274594,
+         "J_C": null
+        },
+        "examples": 24
+       },
+       "passed": null
+      },
+      {
+       "item": "tag reapproach_pingpong",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 8,
+         "M1_missed": 0,
+         "M2_false_action_flags": 3,
+         "M4_max_N": 9536.37562628287,
+         "M1_missed_upper_95": 0.3123439780663678,
+         "M1p_late": 0,
+         "M3_median_delay_s": -1.500000000476117
+        },
+        "J_C": {
+         "episodes": 8,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -2692.095141259837,
+         "M1_missed_upper_95": 0.3123439780663678,
+         "M1p_late": 0,
+         "M3_median_delay_s": -1.9500000006189566
+        },
+        "ECE": {
+         "ML": 0.11793440686200357,
+         "J_C": null
+        },
+        "examples": 124
+       },
+       "passed": null
+      },
+      {
+       "item": "tag without_reapproach_pingpong",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 63,
+         "M1_missed": 3,
+         "M2_false_action_flags": 4,
+         "M4_max_N": 6059.009155439255,
+         "M1_missed_upper_95": 0.11849877635383627,
+         "M1p_late": 0,
+         "M3_median_delay_s": 0.0
+        },
+        "J_C": {
+         "episodes": 63,
+         "M1_missed": 6,
+         "M2_false_action_flags": 7,
+         "M4_max_N": -2297.7219316796163,
+         "M1_missed_upper_95": 0.17933954632529234,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.4000000000132786
+        },
+        "ECE": {
+         "ML": 0.002502694472723118,
+         "J_C": null
+        },
+        "examples": 83172
+       },
+       "passed": null
+      }
+     ],
+     "test": {
+      "ML": {
+       "episodes": 71,
+       "M1_missed": 3,
+       "M1_missed_upper_95": 0.10559826975891923,
+       "M1p_late": 0,
+       "M2_false_action_flags": 7,
+       "M3_median_delay_s": -0.10000000000331966,
+       "M4_max_N": 9536.37562628287,
+       "M4_p5_p50_p95_N": [
+        -11064.44357659893,
+        -697.2573195379973,
+        4075.864181389174
+       ]
+      },
+      "J_C": {
+       "episodes": 71,
+       "M1_missed": 6,
+       "M1_missed_upper_95": 0.1599887789574411,
+       "M1p_late": 0,
+       "M2_false_action_flags": 7,
+       "M3_median_delay_s": -0.4000000000132786,
+       "M4_max_N": -2297.7219316796163,
+       "M4_p5_p50_p95_N": [
+        -12004.896874606682,
+        -4939.982879409221,
+        -2660.700073342676
+       ]
+      },
+      "ECE_ML": 0.002555945178175726,
+      "examples": 83296
+     }
+    },
+    "gru": {
+     "verdict_rows": [
+      {
+       "item": "E1",
+       "kind": "required",
+       "value": {
+        "ML_upper": 0.24339145139114268,
+        "J_C_upper": 0.1599887789574411,
+        "ML_missed": 11,
+        "episodes": 71
+       },
+       "passed": false
+      },
+      {
+       "item": "E2",
+       "kind": "required",
+       "value": {
+        "ML_M4_max_N": 15498.9633307383,
+        "J_C_M4_max_N": -2297.7219316796163
+       },
+       "passed": false
+      },
+      {
+       "item": "E3",
+       "kind": "candidate advantage",
+       "value": {
+        "earlier_median_delay": false,
+        "fewer_false_flags": true,
+        "probe_saving": "not evaluated"
+       },
+       "passed": true
+      },
+      {
+       "item": "E4",
+       "kind": "required",
+       "value": 0.000447416824406535,
+       "passed": "True"
+      },
+      {
+       "item": "E5",
+       "kind": "required",
+       "value": {
+        "p99_ms": 0.08280999027192591,
+        "bytes": 75643
+       },
+       "passed": true
+      },
+      {
+       "item": "E6 OOD-1 middle auger",
+       "kind": "record",
+       "value": {
+        "ML_upper": 0.15378738687300614,
+        "J_C_upper": 0.11340989876686519,
+        "episodes": 146
+       },
+       "passed": false
+      },
+      {
+       "item": "E6 OOD-2 roll > 4.4 deg",
+       "kind": "record",
+       "value": {
+        "ML_upper": 0.26273884307504114,
+        "J_C_upper": 0.21529996114245392,
+        "episodes": 27
+       },
+       "passed": false
+      },
+      {
+       "item": "E7",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 0,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": null
+        },
+        "J_C": {
+         "episodes": 0,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": null
+        },
+        "ECE": {
+         "ML": 3.478968264944309e-08,
+         "J_C": null
+        },
+        "examples": 2592
+       },
+       "passed": null,
+       "note": "J_C deterministic, E4 applies to probability outputs only: J_C is a decision judge with 0/1 flags and no probability, so its ECE is undefined and recorded as None (spec rev. 44 214.5 question 3-1)"
+      },
+      {
+       "item": "tag plant_rod_collapse",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 2,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": 4951.052725442916,
+         "M1_missed_upper_95": 0.776393202250021,
+         "M1p_late": 0,
+         "M3_median_delay_s": 0.0
+        },
+        "J_C": {
+         "episodes": 2,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -2645.5311371406624,
+         "M1_missed_upper_95": 0.776393202250021,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.10000000003174137
+        },
+        "ECE": {
+         "ML": 0.021029429758039963,
+         "J_C": null
+        },
+        "examples": 24
+       },
+       "passed": null
+      },
+      {
+       "item": "tag reapproach_pingpong",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 8,
+         "M1_missed": 1,
+         "M2_false_action_flags": 0,
+         "M4_max_N": 7248.172582668889,
+         "M1_missed_upper_95": 0.4706794086011316,
+         "M1p_late": 0,
+         "M3_median_delay_s": -1.4000000004443756
+        },
+        "J_C": {
+         "episodes": 8,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -2692.095141259837,
+         "M1_missed_upper_95": 0.3123439780663678,
+         "M1p_late": 0,
+         "M3_median_delay_s": -1.9500000006189566
+        },
+        "ECE": {
+         "ML": 0.0625291294306095,
+         "J_C": null
+        },
+        "examples": 124
+       },
+       "passed": null
+      },
+      {
+       "item": "tag without_reapproach_pingpong",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 63,
+         "M1_missed": 10,
+         "M2_false_action_flags": 1,
+         "M4_max_N": 15498.9633307383,
+         "M1_missed_upper_95": 0.25435633603283037,
+         "M1p_late": 0,
+         "M3_median_delay_s": 0.0
+        },
+        "J_C": {
+         "episodes": 63,
+         "M1_missed": 6,
+         "M2_false_action_flags": 7,
+         "M4_max_N": -2297.7219316796163,
+         "M1_missed_upper_95": 0.17933954632529234,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.4000000000132786
+        },
+        "ECE": {
+         "ML": 0.0003878429189082201,
+         "J_C": null
+        },
+        "examples": 83172
+       },
+       "passed": null
+      }
+     ],
+     "test": {
+      "ML": {
+       "episodes": 71,
+       "M1_missed": 11,
+       "M1_missed_upper_95": 0.24339145139114268,
+       "M1p_late": 0,
+       "M2_false_action_flags": 1,
+       "M3_median_delay_s": 0.0,
+       "M4_max_N": 15498.9633307383,
+       "M4_p5_p50_p95_N": [
+        -13412.857151379118,
+        -1615.4936568492585,
+        5615.968130341243
+       ]
+      },
+      "J_C": {
+       "episodes": 71,
+       "M1_missed": 6,
+       "M1_missed_upper_95": 0.1599887789574411,
+       "M1p_late": 0,
+       "M2_false_action_flags": 7,
+       "M3_median_delay_s": -0.4000000000132786,
+       "M4_max_N": -2297.7219316796163,
+       "M4_p5_p50_p95_N": [
+        -12004.896874606682,
+        -4939.982879409221,
+        -2660.700073342676
+       ]
+      },
+      "ECE_ML": 0.000447416824406535,
+      "examples": 83296
+     }
+    }
+   }
+  },
+  {
+   "label": "B1_h_s8_4_tags_legacy_lgbm",
+   "train_report": "07_results\\S8\\ml_main_20261025_090131\\ml_train_B1_legacy\\report.json",
+   "lightgbm_preset": "legacy",
+   "release_step_effect": {
+    "individual_pressure_channels": [],
+    "uses_individual_pressures": false,
+    "train_examples_in_windows": 3504,
+    "train_weights_set_to_0_by_tag": 0
+   },
+   "models": {
+    "lightgbm": {
+     "verdict_rows": [
+      {
+       "item": "E1",
+       "kind": "required",
+       "value": {
+        "ML_upper": 0.10559826975891923,
+        "J_C_upper": 0.1599887789574411,
+        "ML_missed": 3,
+        "episodes": 71
+       },
+       "passed": true
+      },
+      {
+       "item": "E2",
+       "kind": "required",
+       "value": {
+        "ML_M4_max_N": 11005.489906501696,
+        "J_C_M4_max_N": -2297.7219316796163
+       },
+       "passed": false
+      },
+      {
+       "item": "E3",
+       "kind": "candidate advantage",
+       "value": {
+        "earlier_median_delay": false,
+        "fewer_false_flags": false,
+        "probe_saving": "not evaluated"
+       },
+       "passed": false
+      },
+      {
+       "item": "E4",
+       "kind": "required",
+       "value": 0.002522679304975733,
+       "passed": "True"
+      },
+      {
+       "item": "E5",
+       "kind": "required",
+       "value": {
+        "p99_ms": 0.24340199073776603,
+        "bytes": 929978
+       },
+       "passed": true
+      },
+      {
+       "item": "E6 OOD-1 middle auger",
+       "kind": "record",
+       "value": {
+        "ML_upper": 0.07065435820453908,
+        "J_C_upper": 0.11340989876686519,
+        "episodes": 146
+       },
+       "passed": true
+      },
+      {
+       "item": "E6 OOD-2 roll > 4.4 deg",
+       "kind": "record",
+       "value": {
+        "ML_upper": 0.21529996114245392,
+        "J_C_upper": 0.21529996114245392,
+        "episodes": 27
+       },
+       "passed": true
+      },
+      {
+       "item": "E7",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 0,
+         "M1_missed": 0,
+         "M2_false_action_flags": 1,
+         "M4_max_N": null
+        },
+        "J_C": {
+         "episodes": 0,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": null
+        },
+        "ECE": {
+         "ML": 0.004899932727930504,
+         "J_C": null
+        },
+        "examples": 2592
+       },
+       "passed": null,
+       "note": "J_C deterministic, E4 applies to probability outputs only: J_C is a decision judge with 0/1 flags and no probability, so its ECE is undefined and recorded as None (spec rev. 44 214.5 question 3-1)"
+      },
+      {
+       "item": "tag plant_rod_collapse",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 2,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -325.49069069062716,
+         "M1_missed_upper_95": 0.776393202250021,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.05000000001587068
+        },
+        "J_C": {
+         "episodes": 2,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -2645.5311371406624,
+         "M1_missed_upper_95": 0.776393202250021,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.10000000003174137
+        },
+        "ECE": {
+         "ML": 0.042548885309693196,
+         "J_C": null
+        },
+        "examples": 24
+       },
+       "passed": null
+      },
+      {
+       "item": "tag plant_release_rod_step",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 23,
+         "M1_missed": 0,
+         "M2_false_action_flags": 1,
+         "M4_max_N": 5947.069528448987,
+         "M1_missed_upper_95": 0.12212338890652304,
+         "M1p_late": 0,
+         "M3_median_delay_s": 0.0
+        },
+        "J_C": {
+         "episodes": 23,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -2297.7219316796163,
+         "M1_missed_upper_95": 0.12212338890652304,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.3000000000952241
+        },
+        "ECE": {
+         "ML": 0.02773250289507726,
+         "J_C": null
+        },
+        "examples": 752
+       },
+       "passed": null
+      },
+      {
+       "item": "tag reapproach_pingpong",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 8,
+         "M1_missed": 0,
+         "M2_false_action_flags": 3,
+         "M4_max_N": 11005.489906501696,
+         "M1_missed_upper_95": 0.3123439780663678,
+         "M1p_late": 0,
+         "M3_median_delay_s": -1.500000000476117
+        },
+        "J_C": {
+         "episodes": 8,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -2692.095141259837,
+         "M1_missed_upper_95": 0.3123439780663678,
+         "M1p_late": 0,
+         "M3_median_delay_s": -1.9500000006189566
+        },
+        "ECE": {
+         "ML": 0.11576227710488286,
+         "J_C": null
+        },
+        "examples": 124
+       },
+       "passed": null
+      },
+      {
+       "item": "tag without_reapproach_pingpong",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 63,
+         "M1_missed": 3,
+         "M2_false_action_flags": 3,
+         "M4_max_N": 5947.069528448987,
+         "M1_missed_upper_95": 0.11849877635383627,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.05000000000165983
+        },
+        "J_C": {
+         "episodes": 63,
+         "M1_missed": 6,
+         "M2_false_action_flags": 7,
+         "M4_max_N": -2297.7219316796163,
+         "M1_missed_upper_95": 0.17933954632529234,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.4000000000132786
+        },
+        "ECE": {
+         "ML": 0.0024660524890027114,
+         "J_C": null
+        },
+        "examples": 83172
+       },
+       "passed": null
+      }
+     ],
+     "test": {
+      "ML": {
+       "episodes": 71,
+       "M1_missed": 3,
+       "M1_missed_upper_95": 0.10559826975891923,
+       "M1p_late": 0,
+       "M2_false_action_flags": 6,
+       "M3_median_delay_s": -0.10000000000331966,
+       "M4_max_N": 11005.489906501696,
+       "M4_p5_p50_p95_N": [
+        -10411.219212659316,
+        -840.5906345959165,
+        4159.343302223219
+       ]
+      },
+      "J_C": {
+       "episodes": 71,
+       "M1_missed": 6,
+       "M1_missed_upper_95": 0.1599887789574411,
+       "M1p_late": 0,
+       "M2_false_action_flags": 7,
+       "M3_median_delay_s": -0.4000000000132786,
+       "M4_max_N": -2297.7219316796163,
+       "M4_p5_p50_p95_N": [
+        -12004.896874606682,
+        -4939.982879409221,
+        -2660.700073342676
+       ]
+      },
+      "ECE_ML": 0.002522679304975733,
+      "examples": 83296
+     }
+    },
+    "gru": {
+     "verdict_rows": [
+      {
+       "item": "E1",
+       "kind": "required",
+       "value": {
+        "ML_upper": 0.1599887789574411,
+        "J_C_upper": 0.1599887789574411,
+        "ML_missed": 6,
+        "episodes": 71
+       },
+       "passed": true
+      },
+      {
+       "item": "E2",
+       "kind": "required",
+       "value": {
+        "ML_M4_max_N": 12889.728368801701,
+        "J_C_M4_max_N": -2297.7219316796163
+       },
+       "passed": false
+      },
+      {
+       "item": "E3",
+       "kind": "candidate advantage",
+       "value": {
+        "earlier_median_delay": false,
+        "fewer_false_flags": true,
+        "probe_saving": "not evaluated"
+       },
+       "passed": true
+      },
+      {
+       "item": "E4",
+       "kind": "required",
+       "value": 0.0002470621460645963,
+       "passed": "True"
+      },
+      {
+       "item": "E5",
+       "kind": "required",
+       "value": {
+        "p99_ms": 0.09710304031614214,
+        "bytes": 75643
+       },
+       "passed": true
+      },
+      {
+       "item": "E6 OOD-1 middle auger",
+       "kind": "record",
+       "value": {
+        "ML_upper": 0.12162780405085234,
+        "J_C_upper": 0.11340989876686519,
+        "episodes": 146
+       },
+       "passed": false
+      },
+      {
+       "item": "E6 OOD-2 roll > 4.4 deg",
+       "kind": "record",
+       "value": {
+        "ML_upper": 0.21529996114245392,
+        "J_C_upper": 0.21529996114245392,
+        "episodes": 27
+       },
+       "passed": true
+      },
+      {
+       "item": "E7",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 0,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": null
+        },
+        "J_C": {
+         "episodes": 0,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": null
+        },
+        "ECE": {
+         "ML": 9.942091673910967e-08,
+         "J_C": null
+        },
+        "examples": 2592
+       },
+       "passed": null,
+       "note": "J_C deterministic, E4 applies to probability outputs only: J_C is a decision judge with 0/1 flags and no probability, so its ECE is undefined and recorded as None (spec rev. 44 214.5 question 3-1)"
+      },
+      {
+       "item": "tag plant_rod_collapse",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 2,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": 5701.9243837681115,
+         "M1_missed_upper_95": 0.776393202250021,
+         "M1p_late": 0,
+         "M3_median_delay_s": 0.0
+        },
+        "J_C": {
+         "episodes": 2,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -2645.5311371406624,
+         "M1_missed_upper_95": 0.776393202250021,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.10000000003174137
+        },
+        "ECE": {
+         "ML": 0.03869270000652642,
+         "J_C": null
+        },
+        "examples": 24
+       },
+       "passed": null
+      },
+      {
+       "item": "tag plant_release_rod_step",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 23,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": 8498.088749156406,
+         "M1_missed_upper_95": 0.12212338890652304,
+         "M1p_late": 0,
+         "M3_median_delay_s": 0.0
+        },
+        "J_C": {
+         "episodes": 23,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -2297.7219316796163,
+         "M1_missed_upper_95": 0.12212338890652304,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.3000000000952241
+        },
+        "ECE": {
+         "ML": 0.006068000545224362,
+         "J_C": null
+        },
+        "examples": 752
+       },
+       "passed": null
+      },
+      {
+       "item": "tag reapproach_pingpong",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 8,
+         "M1_missed": 1,
+         "M2_false_action_flags": 0,
+         "M4_max_N": 12889.728368801701,
+         "M1_missed_upper_95": 0.4706794086011316,
+         "M1p_late": 0,
+         "M3_median_delay_s": -1.4500000004602462
+        },
+        "J_C": {
+         "episodes": 8,
+         "M1_missed": 0,
+         "M2_false_action_flags": 0,
+         "M4_max_N": -2692.095141259837,
+         "M1_missed_upper_95": 0.3123439780663678,
+         "M1p_late": 0,
+         "M3_median_delay_s": -1.9500000006189566
+        },
+        "ECE": {
+         "ML": 0.040712981477140385,
+         "J_C": null
+        },
+        "examples": 124
+       },
+       "passed": null
+      },
+      {
+       "item": "tag without_reapproach_pingpong",
+       "kind": "record",
+       "value": {
+        "ML": {
+         "episodes": 63,
+         "M1_missed": 5,
+         "M2_false_action_flags": 0,
+         "M4_max_N": 8498.088749156406,
+         "M1_missed_upper_95": 0.1596549162176729,
+         "M1p_late": 0,
+         "M3_median_delay_s": 0.0
+        },
+        "J_C": {
+         "episodes": 63,
+         "M1_missed": 6,
+         "M2_false_action_flags": 7,
+         "M4_max_N": -2297.7219316796163,
+         "M1_missed_upper_95": 0.17933954632529234,
+         "M1p_late": 0,
+         "M3_median_delay_s": -0.4000000000132786
+        },
+        "ECE": {
+         "ML": 0.00022761056001522538,
+         "J_C": null
+        },
+        "examples": 83172
+       },
+       "passed": null
+      }
+     ],
+     "test": {
+      "ML": {
+       "episodes": 71,
+       "M1_missed": 6,
+       "M1_missed_upper_95": 0.1599887789574411,
+       "M1p_late": 0,
+       "M2_false_action_flags": 0,
+       "M3_median_delay_s": 0.0,
+       "M4_max_N": 12889.728368801701,
+       "M4_p5_p50_p95_N": [
+        -11220.670437031316,
+        -2937.898800811746,
+        4542.711417938958
+       ]
+      },
+      "J_C": {
+       "episodes": 71,
+       "M1_missed": 6,
+       "M1_missed_upper_95": 0.1599887789574411,
+       "M1p_late": 0,
+       "M2_false_action_flags": 7,
+       "M3_median_delay_s": -0.4000000000132786,
+       "M4_max_N": -2297.7219316796163,
+       "M4_p5_p50_p95_N": [
+        -12004.896874606682,
+        -4939.982879409221,
+        -2660.700073342676
+       ]
+      },
+      "ECE_ML": 0.0002470621460645963,
+      "examples": 83296
+     }
+    }
+   }
+  }
+ ]
+}

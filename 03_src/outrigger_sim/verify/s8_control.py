@@ -137,6 +137,64 @@ masked any more (U-S8-34), its products stay record rows. Judged cases of the ma
 (group ``MLJ``: front fast settlement, C-S8-24 R45-4, C-S8-29 rod fault) get
 :func:`mlj_rows` in :func:`judge_batch`.
 
+C-S8-33 (spec rev. 50 220.6, U-S8-41..43): ① / ② in ``s6_control`` (fast ``result.event``
+settlement = floor-event case with the U-S8-32 window of :func:`settle_lift_split`; item 4
+moving threshold 1e-6 m/s); ③ a rod fallback warning of the injected leg within [fault time,
++ 2 periods] is expected and left out of the 5.24.2 FLAG (:func:`mark_expected_rod_fallback`);
+④ C-S8-29 record: ``guard_cap_s`` from ``r8_series`` ``cmp_guard_u`` (the former ``issued_u``
+count is ``push_cap_s``), ``h*`` / ``h_a`` / ``R_ub`` per lock window
+(:func:`lock_window_h_star`), the F1 calibrated record row without the faulty leg after the
+fault; ⑤ C-S8-24 record: round-start lower bounds of the requested probe against
+``F_min + 15 kN`` (:func:`requested_probe_round_lower`); ⑥ ``judge_revision``.
+
+C-S8-34 (spec rev. 51 225, U-S8-44 / 47), ML judge only: ① the un-injected FAULT entries are
+split by cause (:func:`classify_fault`: P-S8-17 ``FAULT_STROKE_END`` event, sensor fault events,
+else the 10 Hz stroke record); a stroke-end FAULT is a protective stop judged per run by U-S8-44
+(:func:`stroke_end_protective`), the other FAULTs keep the 0 gate; ② the U-S8-32 event-leg row
+records such a FAULT without failing on it (``settle_lift_split(fault_gate=False)``); ③ the ML-2
+rod fallback report gives the commands applied in the period (d = 1) and the plant lock state
+(:func:`rod_fallback_command_context`); ④ ML tags ``fault_tail``, ``plant_rod_collapse``
+(:func:`plant_rod_collapse`) and ``reapproach_pingpong`` (:func:`reapproach_pingpong`) per run in
+``ml_metrics`` and in ``ml_tags``, with record rows. H-S8-4 (hydraulics 12.6) addition: the
+collapse windows of an overlap / boundary release end at re-contact + 0.1 s, and the other F1
+release reading steps get ``plant_release_rod_step`` (:func:`plant_release_steps`,
+:func:`link_collapse_releases`).
+
+C-S8-37 (spec rev. 52 230 / 232, U-S8-49 / 51): ① the item-9 replay (:func:`replay_item9`)
+judges on the corrected reading (``lower_reading_N`` / ``net_force_N`` + 0.5 kN on the 10 Hz
+samples whose pad normal force, ``pads.N_raw`` interpolated at the sample time, is < 1.5 kN;
+:func:`reading_variants`) - this is the default the M1 / M1' / M4 rows and I1 / I3 use; the
+raw reading is kept as record rows (``replay.raw``) and the ``F_seal_limit,i - m_i g`` ceiling
+on lifted legs as sensitivity rows (``replay.upper_sensitivity``); ② the RT record of every
+event run (:func:`reapproach_rt_record`: re-approach runs after the event, ``is_retrigger``
+count, ``leg_reapproach_deferred`` starts) and the twist-mode actuator work per 0.5 s bin
+(:func:`twist_work_bins`, judged <= +20 J after event + 1.5 s for the runs of the C-S8-36 RT
+variant, record otherwise; :func:`rt_rows`), in the ML judge and in :func:`judge_batch`.
+
+C-S8-40 (spec rev. 54 248.3 / 249 / 251): ① the twist-work row becomes the recurrence ban
+(:func:`twist_work_bins`: power 0 in the forced window [start, ``done_s`` + 0.1 s],
+:func:`work_clusters` of judged bins > +20 J after event + 1.5 s, judged ``n_clusters`` <= 1 for
+RT-variant runs; records: rev. 52 unmasked bin max, masked bin max / largest cluster, and with a
+reference batch (``judge_ml_batch(ref_batch=...)`` or the C-S8-36 sub-plan ``rerun_from``) the
+FLAG row RT - reference > +20 J); ② the item-9 default reading adds ``delta_i = min(0.5 kN,
+2 F_s,i)`` only on L2b-NSC legs with ``F_s,i`` > 0 (:func:`reading_bias_delta_N`); the rev. 52
+all-apply +0.5 kN is a sensitivity variant (``replay.all_apply``) with a difference row.
+
+C-S8-41 (spec rev. 54 260.5 / 261 / 264, U-S8-56 (a) / U-S8-57 (a)): ① ML-0 gate row "no
+rod-pressure fallback without a sensor-fault injection" (:func:`rod_fallback_gate`; the ML-1
+record and ML-2 cause rows stay); ② record row over the RT-variant runs: true minimum of each
+deferred leg from the deferral to its next re-approach start + 0.3 s, FLAG below F_min
+(:func:`deferred_leg_minimum`, :func:`deferred_min_rows`), in the ML judge and in
+:func:`judge_batch`; ③ ``meta.summary`` (:func:`judge_summary`) with the ML-1 count.
+
+C-S8-42 (spec rev. 55 267 / 269.3, judge rev. 56): ① deferred-leg window end = min(next start,
+deferral + T_o) + 0.3 s, cut at the run end, overlapping windows of a leg merged
+(:func:`deferred_leg_minimum`, ``window_rule``); ② per deferred leg, event + 0 .. 4 s judged
+minimum / time below F_min / airborne time vs the same episode of the reference batch (768 /
+original MLJ; ML judge: ``ref_batch`` or ``rerun_from``, :func:`judge_batch`: ``deferred_ref``),
+FLAG text > 0.5 kN or > 0.1 s (:func:`attach_deferred_reference`); ③ record rows PROBE -> LEVEL
+returns and re-READY vs the reference (:func:`availability_rows`, = control ``c55_avail.py``).
+
 Sensitivity cases (``s8.condition`` = sensitivity, groups B / ML) report C1 / C2 (C-R19).
 
 Units SI internally; kN / s / deg in the rows.
@@ -146,6 +204,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import warnings
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -1385,6 +1444,39 @@ def rod_fault_injected(settings: Mapping[str, Any]) -> bool:
     return any(bool(_find_key(settings, k)) for k in ROD_FAULT_INJECTION_KEYS)
 
 
+ROD_FAULT_EXPECTED_PERIODS = 2
+"""Spec rev. 50 220.6 ③ (U-S8-43): a rod fallback warning of the injected leg within
+``[fault time, + 2 control periods]`` is expected (injection), not a FLAG (ASSUMPTION: 0-period
+detection delay seen, 10 Hz sample phase margin)."""
+
+
+def rod_fault_of(res: Mapping[str, Any]) -> tuple[str | None, float | None]:
+    """(injected rod-sensor fault leg, fault time relative to ``t0``) of a run: the
+    ``rod_fault`` of ``settings.s8.event_spec`` or ``result.event.spec`` and
+    ``result.rod_fault_t_s``; ``(None, None)`` without an injection."""
+    s8 = ((res.get("settings") or {}).get("s8") or {})
+    ev = res.get("event") if isinstance(res.get("event"), Mapping) else {}
+    leg = None
+    for spec in (s8.get("event_spec"), (ev or {}).get("spec")):
+        rf = spec.get("rod_fault") if isinstance(spec, Mapping) else None
+        if isinstance(rf, Mapping) and rf.get("leg") in LEGS:
+            leg = rf["leg"]
+            break
+    t_f = res.get("rod_fault_t_s")
+    return leg, None if t_f is None else float(t_f)
+
+
+def mark_expected_rod_fallback(events: list[dict[str, Any]], leg: str | None,
+                               t_fault_s: float | None, period_s: float) -> None:
+    """Spec rev. 50 220.6 ③: set ``expected_injected`` on each rod fallback event (in place):
+    True for the injected leg within ``[t_fault, t_fault + 2 T]`` (+-1e-6 s), else False."""
+    hi = None if t_fault_s is None else t_fault_s + ROD_FAULT_EXPECTED_PERIODS * period_s
+    for e in events:
+        e["expected_injected"] = bool(
+            leg is not None and hi is not None and e.get("leg") == leg
+            and t_fault_s - 1e-6 <= float(e["t_s"]) <= hi + 1e-6)
+
+
 def rod_fallback_events(events: Sequence[tuple[float, str]],
                         window: Mapping[str, Any] | None) -> list[dict[str, Any]]:
     """C-S8-22 ④: ``WARN_ROD_PRESSURE_FALLBACK:<leg>`` events (relative times) with the
@@ -1669,6 +1761,16 @@ def s8_case_metrics(case, m, params, pr: Mapping[str, Any] | None = None) -> dic
             "n_samples": int(okf.sum()),
             "rule": ("fallback (b): |F_hat_cal - F| <= F_s,leg + 1.3 kN + 0.025 |F|" if wika
                      else "fallback: |F_hat - F| <= F_s,leg + 0.1 kN (ideal sensor)")}
+    # spec rev. 50 220.6 ④: the calibrated-reading record leaves out the faulty leg after an
+    # injected rod-sensor fault (its raw two-sensor reading; the controller uses the fallback)
+    f_leg, f_t = rod_fault_of(case["result"])
+    fault_cut = np.zeros(excess_cal.shape, bool)
+    if f_leg is not None and f_t is not None:
+        fault_cut[tc >= f_t - 1e-9, LEGS.index(f_leg)] = True
+    cal_post = np.broadcast_to(post[:, None], excess_cal.shape) & ~fault_cut
+    cal_use = cal_post & np.isfinite(excess_cal)
+    n_fault_excl = int((np.broadcast_to(post[:, None], excess_cal.shape)
+                        & np.isfinite(excess_cal) & fault_cut).sum())
     out["F1"] = {"violations": int(np.sum(excess1[ok1] > NUMERIC_TOL_N)),
                  "max_excess_kN": float(excess1[ok1].max()) / 1e3 if ok1.any() else None,
                  "n_samples": int(ok1.sum()),
@@ -1678,13 +1780,15 @@ def s8_case_metrics(case, m, params, pr: Mapping[str, Any] | None = None) -> dic
                           else "|F_hat - F| <= F_s,leg + 0.1 kN (ideal sensor)")
                          + ", phases other than CHECK",
                  "calibrated": {
-                     "violations": int(np.sum(excess_cal[post[:, None]
-                                                         & np.isfinite(excess_cal)]
-                                              > NUMERIC_TOL_N)),
-                     "max_excess_kN": float(np.nanmax(excess_cal[post])) / 1e3
-                     if post.any() else None,
-                     "offset_kN_per_leg": [float(np.nanmedian(cal_off[post, j])) / 1e3
-                                           if post.any() else None for j in range(4)]},
+                     "violations": int(np.sum(excess_cal[cal_use] > NUMERIC_TOL_N)),
+                     "max_excess_kN": float(np.nanmax(np.where(cal_post, excess_cal, np.nan)))
+                     / 1e3 if cal_post.any() else None,
+                     "offset_kN_per_leg": [float(np.nanmedian(cal_off[cal_post[:, j], j])) / 1e3
+                                           if cal_post[:, j].any() else None for j in range(4)],
+                     "fault_leg_samples_excluded": n_fault_excl,
+                     "fault_exclusion": None if not fault_cut.any() else
+                     f"{f_leg} from {f_t:.2f} s (injected rod-sensor fault, spec rev. 50 "
+                     "220.6 ④)"},
                  "raw": {"by_phase": raw_by_phase, "violations": raw_viol,
                          "max_excess_kN": float(raw_excess.max()) / 1e3,
                          "share_kN": share / 1e3,
@@ -1740,9 +1844,14 @@ def s8_case_metrics(case, m, params, pr: Mapping[str, Any] | None = None) -> dic
     fw = forced_window(case["result"], float(tm["end"]), series)
     in_forced = forced_mask(tc, fw)
     out["forced_window"] = fw
+    fb_events = rod_fallback_events(_event_names(case), fw)
+    mark_expected_rod_fallback(fb_events, f_leg, f_t, _period(tc))  # rev. 50 220.6 ③
     out["rod_fallback"] = {
-        "events": rod_fallback_events(_event_names(case), fw),
-        "injected": rod_fault_injected(case["result"]["settings"])}
+        "events": fb_events,
+        "injected": rod_fault_injected(case["result"]["settings"]),
+        "fault_leg": f_leg, "fault_t_s": f_t,
+        "expected_window_s": None if f_t is None else
+        [f_t, f_t + ROD_FAULT_EXPECTED_PERIODS * _period(tc)]}
     # F2 (combined only): F_hat_cal - F_band,i - F <= sensor share after lift-off, outside the
     # forced window (C-S8-22 ③)
     if contact != "pressure":
@@ -1823,7 +1932,7 @@ def s8_case_metrics(case, m, params, pr: Mapping[str, Any] | None = None) -> dic
                               "the P-S8-1 replay rows below supersede them when present")
     try:
         item9["replay"] = replay_item9(Path(case["dir"]), params, lo,
-                                       float(t0), out["rigid"])
+                                       float(t0), out["rigid"], engine=case_engine(case))
     except Exception as exc:  # noqa: BLE001 - recorded, the fallback values stay
         item9["replay"] = {"status": f"replay failed: {exc!r}"}
     out["item9"] = item9
@@ -1903,7 +2012,7 @@ def _r44_values(case, m, pads, t0: float, v_max: float, events, ev_t) -> dict[st
 
 
 def replay_item9(case_dir: Path, params, liftoff_s: float | None, t0: float,
-                 transient_rules: bool) -> dict[str, Any]:
+                 transient_rules: bool, engine: str | None = None) -> dict[str, Any]:
     """203.2 / 203.3 with python-expert's P-S8-1 modules (``contact_episode.build_episode``,
     ``control.contact_replay.replay_both`` in :attr:`WatchMode.CONTINUOUS`,
     ``verify.contact_metrics.score_judge``). Two scores per judge: all watched samples (gate,
@@ -1926,37 +2035,158 @@ def replay_item9(case_dir: Path, params, liftoff_s: float | None, t0: float,
         score_judge,
     )
 
+    from outrigger_sim.contact_episode import Episode
+
     machine = MachineConstants.from_geometry(C2Geometry.from_params(params))
-    ep = build_episode(case_dir, machine)
-    reps = replay_both(ep, watch=WatchMode.CONTINUOUS)
-    t_rel = np.asarray(ep["t_s"], float) - t0
+    ep_raw = build_episode(case_dir, machine)
+    t_rel = np.asarray(ep_raw["t_s"], float) - t0
     early = np.zeros(t_rel.size, bool)
     if liftoff_s is not None and transient_rules:
         early = (t_rel >= liftoff_s) & (t_rel <= liftoff_s + LIFTOFF_WINDOW_S)
+    # C-S8-37 (spec rev. 52 232, U-S8-51): the default judgement reads + 0.5 kN where the pad
+    # normal force is below 1.5 kN; the raw reading is a record, the F_s - m g ceiling of a
+    # lifted leg a sensitivity
+    pads_p = Path(case_dir) / "pads.npz"
+    with np.load(pads_p, allow_pickle=False) as z:
+        pads = {k: np.asarray(z[k]) for k in ("t", "N_raw", "N", "F_seal_limit") if k in z.files}
+    # C-S8-40 (spec rev. 54 249): + delta_i only on L2b-NSC legs with F_s,i > 0
+    variants = reading_variants(np.asarray(ep_raw["t_s"], float), pads,
+                                np.asarray(ep_raw["lower_reading_N"], float),
+                                np.asarray(ep_raw["net_force_N"], float),
+                                np.asarray(machine.rod_weight_N, float), engine=engine)
+
+    def run(arrs) -> dict[str, Any]:
+        ep = ep_raw if arrs is None else Episode({**ep_raw.arrays, **arrs}, ep_raw.meta)
+        reps = replay_both(ep, watch=WatchMode.CONTINUOUS)
+        res: dict[str, Any] = {}
+        for judge in (Judge.PRESSURE, Judge.COMBINED):
+            rj = record_judgement(ep, reps[judge])
+            score = score_judge([rj], machine.F_min_N).to_dict()
+            # U-S8-17 (R42-3, spec rev. 44 214.5 question 3-2): episodes are built on the full
+            # watched samples; an episode counts when its t_on is outside the lift-off window
+            # (``scored``); the sample metrics (M2, M4) use the scored samples only
+            score_ex = score_ex_transient(rj, early, machine.F_min_N, dc_replace, score_judge)
+            classes = np.where(rj.watched[:, None], rj.classes, ContactClass.UNKNOWN)
+            dets = detect_episodes(rj.t_s, contact_episodes(classes), rj.decision_flags,
+                                   rj.action_flags)
+            eps = [{"leg": LEGS[d.episode.leg], "t_on_s": float(t_rel[d.episode.on_row]),
+                    "t_off_s": float(t_rel[d.episode.off_row]), "is_lift": d.episode.is_lift,
+                    "first_decision_s": None if d.first_decision_s is None
+                    else d.first_decision_s - t0,
+                    "action_delay_s": d.action_delay_s,
+                    "sampling_only": d.first_decision_s is None
+                    and d.action_delay_s is not None and d.action_delay_s <= TAU_D_S,
+                    "crawler_transient": bool(early[d.episode.on_row])} for d in dets]
+            res[judge.value] = {"score": score, "score_ex_transient": score_ex, "episodes": eps,
+                                "events": [{"t_s": e.t_s - t0, "leg": LEGS[e.leg],
+                                            "kind": str(e.kind)}
+                                           for e in reps[judge].events][:200]}
+        return res
+
     out: dict[str, Any] = {"status": "P-S8-1 replay (continuous watch)",
-                           "transient_window_rows": int(early.sum())}
-    for judge in (Judge.PRESSURE, Judge.COMBINED):
-        rj = record_judgement(ep, reps[judge])
-        score = score_judge([rj], machine.F_min_N).to_dict()
-        # U-S8-17 (R42-3, spec rev. 44 214.5 question 3-2): episodes are built on the full
-        # watched samples; an episode counts when its t_on is outside the lift-off window
-        # (``scored``); the sample metrics (M2, M4) use the scored samples only
-        score_ex = score_ex_transient(rj, early, machine.F_min_N, dc_replace, score_judge)
-        classes = np.where(rj.watched[:, None], rj.classes, ContactClass.UNKNOWN)
-        dets = detect_episodes(rj.t_s, contact_episodes(classes), rj.decision_flags,
-                               rj.action_flags)
-        eps = [{"leg": LEGS[d.episode.leg], "t_on_s": float(t_rel[d.episode.on_row]),
-                "t_off_s": float(t_rel[d.episode.off_row]), "is_lift": d.episode.is_lift,
-                "first_decision_s": None if d.first_decision_s is None
-                else d.first_decision_s - t0,
-                "action_delay_s": d.action_delay_s,
-                "sampling_only": d.first_decision_s is None and d.action_delay_s is not None
-                and d.action_delay_s <= TAU_D_S,
-                "crawler_transient": bool(early[d.episode.on_row])} for d in dets]
-        out[judge.value] = {"score": score, "score_ex_transient": score_ex, "episodes": eps,
-                            "events": [{"t_s": e.t_s - t0, "leg": LEGS[e.leg],
-                                        "kind": str(e.kind)} for e in reps[judge].events][:200]}
+                           "transient_window_rows": int(early.sum()),
+                           "reading": "corrected" if variants["corrected"] is not None
+                           else "raw (no pad normal record)",
+                           "reading_rule": READING_BIAS_RULE,
+                           "reading_stats": variants["stats"],
+                           "engine": engine, "reading_delta_N": variants["stats"]["delta_N"]}
+    corr, allp = variants["corrected"], variants.get("all_apply")
+    delta = np.asarray(list(variants["stats"]["delta_N"].values()), float)
+    raw = run(None)  # record rows
+    # default judgement (top-level J_P / J_C keys, read by every row): corrected reading; with
+    # every delta_i = 0 it equals the raw reading (same replay, not run twice)
+    out.update(raw if corr is None or not (delta > 0.0).any() else run(corr))
+    out["raw"] = raw
+    out["upper_sensitivity"] = None if variants["upper"] is None else run(variants["upper"])
+    # C-S8-40: rev. 52 all-apply (+0.5 kN regardless of engine / F_s) as sensitivity rows
+    same = corr is not None and allp is not None and all(
+        np.array_equal(corr[k], allp[k]) for k in allp)
+    out["all_apply"] = None if allp is None else (
+        {k: out[k] for k in ("J_P", "J_C") if k in out} if same else run(allp))
     return out
+
+
+READING_BIAS_ADD_N = 500.0
+"""Spec rev. 52 232 (U-S8-51, dynamics 5.29.2 / 5.29.9): the L2b-NSC + seal friction reading of
+a leg whose pad normal force is below :data:`READING_BIAS_BELOW_N` reads 0.43-0.49 kN low (NSC
+contact chatter ratchets the seal into the band, independent of F_s); the judgement adds this."""
+READING_BIAS_BELOW_N = 1500.0
+READING_BIAS_ENGINE = "L2b_NSC"
+"""C-S8-40 (spec rev. 54 249): the ratchet needs NSC contact chatter (L2b-NSC) and a seal
+element (F_s,i > 0); elsewhere the default correction is 0."""
+READING_BIAS_RULE = ("C-S8-40 / spec rev. 54 249 (C-S8-37 / rev. 52 232 corrected): default = "
+                     "corrected reading lower_reading + delta_i (and net_force + delta_i) on the "
+                     "10 Hz samples whose pad normal force (pads N_raw, 1 ms record, linear "
+                     "interpolation at the sample time) is < 1.5 kN, delta_i = min(0.5 kN, "
+                     "2 F_s,i), F_s,i = median of pads F_seal_limit[:, i], only for engine "
+                     "L2b_NSC (settings.s8.engine), else 0; 'raw' = the reading as recorded "
+                     "(record rows); 'upper_sensitivity' = lifted samples (N <= 0) read at least "
+                     "F_seal_limit,i - m_i g (sensitivity rows); 'all_apply' = + 0.5 kN where "
+                     "N < 1.5 kN regardless of engine / F_s (rev. 52 rule, sensitivity rows)")
+
+
+def reading_bias_delta_N(pads: Mapping[str, Any], engine: str | None) -> np.ndarray:
+    """C-S8-40 (spec rev. 54 249): per-leg reading correction ``delta_i = min(500, 2 F_s,i)`` N,
+    ``F_s,i`` = median of ``pads.F_seal_limit[:, i]``; zeros for another engine than
+    :data:`READING_BIAS_ENGINE` or without the seal record."""
+    if engine != READING_BIAS_ENGINE or "F_seal_limit" not in pads:
+        return np.zeros(len(LEGS))
+    fs = np.median(np.asarray(pads["F_seal_limit"], float), axis=0)
+    return np.where(fs > 0.0, np.minimum(READING_BIAS_ADD_N, 2.0 * fs), 0.0)
+
+
+def pad_normal_at(t_s: np.ndarray, pads: Mapping[str, Any]) -> tuple[np.ndarray | None, str]:
+    """Pad normal force [N] per leg at the times ``t_s`` (linear interpolation of the 1 ms
+    record ``N_raw``, else ``N``); (None, reason) without a pad normal record."""
+    key = "N_raw" if "N_raw" in pads else ("N" if "N" in pads else None)
+    if key is None or "t" not in pads:
+        return None, "no pad normal record"
+    tp = np.asarray(pads["t"], float)
+    n = np.asarray(pads[key], float)
+    t = np.asarray(t_s, float)
+    return np.column_stack([np.interp(t, tp, n[:, i]) for i in range(n.shape[1])]), key
+
+
+def reading_variants(t_s: np.ndarray, pads: Mapping[str, Any], lower_N: np.ndarray,
+                     net_N: np.ndarray, rod_weight_N: np.ndarray,
+                     engine: str | None = None) -> dict[str, Any]:
+    """C-S8-37 / C-S8-40 reading variants of one run (spec rev. 54 249): ``corrected`` (pad N <
+    1.5 kN: + ``delta_i``, :func:`reading_bias_delta_N` of ``engine``), ``all_apply`` (pad N <
+    1.5 kN: + 0.5 kN, the rev. 52 rule, sensitivity) and ``upper`` (pad N <= 0: at least
+    ``F_seal_limit,i - m_i g``), each as the replacement arrays ``lower_reading_N`` /
+    ``net_force_N`` of the episode; ``stats``: corrected sample counts per leg, ``delta_N`` per
+    leg and the engine. ``corrected`` / ``all_apply`` / ``upper`` None without a pad normal
+    record."""
+    n10, key = pad_normal_at(t_s, pads)
+    delta = reading_bias_delta_N(pads, engine)
+    if n10 is None:
+        return {"corrected": None, "upper": None, "all_apply": None,
+                "stats": {"source": key, "engine": engine,
+                          "delta_N": {LEGS[i]: float(delta[i]) for i in range(len(LEGS))}}}
+    low = n10 < READING_BIAS_BELOW_N
+    add = np.where(low, delta[None, :], 0.0)
+    corrected = {"lower_reading_N": lower_N + add, "net_force_N": net_N + add}
+    add_all = np.where(low, READING_BIAS_ADD_N, 0.0)
+    all_apply = {"lower_reading_N": lower_N + add_all, "net_force_N": net_N + add_all}
+    upper = None
+    if "F_seal_limit" in pads:
+        tp = np.asarray(pads["t"], float)
+        fs = np.asarray(pads["F_seal_limit"], float)
+        fs10 = np.column_stack([np.interp(np.asarray(t_s, float), tp, fs[:, i])
+                                for i in range(fs.shape[1])])
+        ceil = fs10 - np.asarray(rod_weight_N, float)[None, :]
+        lifted = ~(n10 > 0.0)
+        upper = {"lower_reading_N": np.where(lifted, np.maximum(lower_N, ceil), lower_N),
+                 "net_force_N": np.where(lifted, np.maximum(net_N, ceil), net_N)}
+    stats = {"source": key, "samples": int(low.shape[0]), "engine": engine,
+             "delta_N": {LEGS[i]: float(delta[i]) for i in range(low.shape[1])},
+             "corrected_per_leg": {LEGS[i]: int((low[:, i] & (delta[i] > 0.0)).sum())
+                                   for i in range(low.shape[1])},
+             "below_1p5kN_per_leg": {LEGS[i]: int(low[:, i].sum())
+                                     for i in range(low.shape[1])},
+             "lifted_per_leg": {LEGS[i]: int((~(n10[:, i] > 0.0)).sum())
+                                for i in range(n10.shape[1])}}
+    return {"corrected": corrected, "upper": upper, "all_apply": all_apply, "stats": stats}
 
 
 def score_ex_transient(rj, early: np.ndarray, f_min_N: float, replace_fn, score_fn
@@ -2166,8 +2396,12 @@ def case_rows(sm: Mapping[str, Any], m: Mapping[str, Any]) -> list[dict[str, Any
                          "(record; zero-calibration offset c_i per leg [kN])", cid,
                          cal["violations"], 0, None,
                          f"max excess {cal['max_excess_kN']} kN; c_i = F_hat - F_hat_cal "
-                         f"{cal['offset_kN_per_leg']}", kind="record",
-                         offset_kN=cal["offset_kN_per_leg"]))
+                         f"{cal['offset_kN_per_leg']}"
+                         + ("" if not cal.get("fault_exclusion") else
+                            f"; excluded {cal['fault_leg_samples_excluded']} leg samples: "
+                            f"{cal['fault_exclusion']}"), kind="record",
+                         offset_kN=cal["offset_kN_per_leg"],
+                         fault_leg_samples_excluded=cal.get("fault_leg_samples_excluded", 0)))
     nf = sm.get("F1_near_fmin")
     wika_split = sm.get("R45_2") is not None and _is_noisy(sm)
     if wika_split:
@@ -2305,17 +2539,39 @@ def case_rows(sm: Mapping[str, Any], m: Mapping[str, Any]) -> list[dict[str, Any
                              f"episodes {d['n']} (crawler_transient {d['transient']}), "
                              f"upper95 {d['M1_upper95']}; ex-transient {d['ex_transient']}; "
                              f"source {d['source']}", kind="record", judge=name))
+        # C-S8-37 (spec rev. 52 232): the rows above use the corrected reading; raw reading
+        # (record) and the F_s - m g ceiling (sensitivity) beside them
+        for variant, label, kind in (("raw", "raw reading (record)", "record"),
+                                     ("upper_sensitivity", "F_s - m g ceiling on lifted legs "
+                                      "(sensitivity)", "sensitivity"),
+                                     ("all_apply", "all-apply +0.5 kN reading (rev. 52 rule, "
+                                      "sensitivity)", "sensitivity")):
+            if not ((i9.get("replay") or {}).get(variant)):
+                continue
+            for name in ("J_P", "J_C"):
+                d = judge_score(sm, name, variant=variant)
+                rows.append(_row(f"item 9 {name} {label}: M1 missed / M1' late / M3 median / "
+                                 "M2 / M4 max", cid,
+                                 [d["M1_missed"], d["M1p_late"], d["M3_median_s"], d["M2"],
+                                  d["M4_max_kN"]], None, None,
+                                 f"episodes {d['n']}; ex-transient {d['ex_transient']}",
+                                 kind=kind, judge=name, reading=variant))
         rows.append(_row("item 9 M5 closed loop: min true / under F_min [s] / lifted [s]", cid,
                          [i9["M5"]["min_true_kN"], i9["M5"]["under_fmin_s"],
                           i9["M5"]["lifted_s"]], None, None, kind="record"))
     return rows
 
 
-def judge_score(sm: Mapping[str, Any], name: str) -> dict[str, Any]:
+def judge_score(sm: Mapping[str, Any], name: str, variant: str | None = None
+                ) -> dict[str, Any]:
     """M1 / M1' / M2 / M3 / M4 of judge ``name`` on one case: the P-S8-1 replay when it ran,
-    else this module's level-only fallback."""
+    else this module's level-only fallback. ``variant`` (C-S8-37): None = the default
+    judgement (corrected reading since rev. 52 232), ``raw`` / ``upper_sensitivity`` = the
+    replay of that reading variant."""
     i9 = sm["item9"]
     rep = i9.get("replay") or {}
+    if variant is not None:
+        rep = rep.get(variant) or {}
     if name in rep:
         s, sx = rep[name]["score"], rep[name]["score_ex_transient"]
         return {"source": "P-S8-1 replay", "n": s["episodes"], "M1_missed": s["M1_missed"],
@@ -2632,12 +2888,28 @@ def apply_rev46_rows(rows: list[dict[str, Any]], sms: Mapping[str, Mapping[str, 
             continue
         summary = "; ".join(f"{e['leg']} {e['t_s']:.2f} s {e['reason']}" for e in outside)
         if r["item"] == WARN_ITEM:
-            v = r.get("value") or 0
-            r["value"] = int(v) + len(outside)
-            r["passed"] = None
-            r["note"] = (f"{r.get('note') or ''}; FLAG: {ROD_FALLBACK_WARNING} x{len(outside)} "
-                         f"({summary}) (C-S8-22 ④)").lstrip("; ")
-            r["rod_fallback"] = outside
+            # spec rev. 50 220.6 ③ (U-S8-43): the injected leg's fallback within [fault time,
+            # + 2 periods] is expected (injection); everything else stays a FLAG
+            expected = [e for e in outside if e.get("expected_injected")]
+            flagged = [e for e in outside if not e.get("expected_injected")]
+            if expected:
+                r["note"] = (f"{r.get('note') or ''}; expected (injected rod fault "
+                             f"{fb.get('fault_leg')} at {fb.get('fault_t_s')} s, window "
+                             f"{fb.get('expected_window_s')} s): {ROD_FALLBACK_WARNING} "
+                             f"x{len(expected)} ("
+                             + "; ".join(f"{e['leg']} {e['t_s']:.2f} s {e['reason']}"
+                                         for e in expected)
+                             + ") not counted (spec rev. 50 220.6 ③)").lstrip("; ")
+                r["rod_fallback_expected"] = expected
+            if flagged:
+                fl_summary = "; ".join(f"{e['leg']} {e['t_s']:.2f} s {e['reason']}"
+                                       for e in flagged)
+                v = r.get("value") or 0
+                r["value"] = int(v) + len(flagged)
+                r["passed"] = None
+                r["note"] = (f"{r.get('note') or ''}; FLAG: {ROD_FALLBACK_WARNING} "
+                             f"x{len(flagged)} ({fl_summary}) (C-S8-22 ④)").lstrip("; ")
+                r["rod_fallback"] = flagged
         elif r["item"] == DIAG_ITEM:
             val = dict(r["value"]) if isinstance(r.get("value"), Mapping) else {}
             val[ROD_FALLBACK_WARNING] = len(outside)
@@ -3113,6 +3385,40 @@ def item9_summary(sms: Mapping[str, Mapping[str, Any]],
                      "missed (211.2: judgement level missed between 10 Hz samples, action level "
                      "within t_on + tau_d; still counted in the gate until U-S8-7)",
                      sampling_only=so, sampling_only_count=len(so)))
+    # C-S8-37 (spec rev. 52 232): I1 above = corrected reading; raw (record) and the
+    # F_s - m g ceiling (sensitivity) of both judges beside it
+    for variant, kind in (("raw", "record"), ("upper_sensitivity", "sensitivity"),
+                          ("all_apply", "sensitivity")):
+        vals = {}
+        for name in ("J_C", "J_P"):
+            sc = [(s, judge_score(s, name, variant=variant)) for s in sel
+                  if ((s.get("item9") or {}).get("replay") or {}).get(variant)]
+            vals[name] = {"cases": len(sc),
+                          "M1_missed_combined": sum(
+                              d["M1_missed"] for s, d in sc
+                              if (s["s8"].get("contact") or "combined") != "pressure"),
+                          "M1_missed_all": sum(d["M1_missed"] for _s, d in sc),
+                          "M1p_late_all": sum(d["M1p_late"] for _s, d in sc)}
+        rows.append(_row(f"I1 {variant} reading: J_C / J_P M1 missed, M1' late ({kind})", "*",
+                         vals, None, None, "default judgement (I1 row) = corrected reading "
+                         "(+delta_i = min(0.5 kN, 2 F_s,i) on L2b-NSC legs with F_s,i > 0 where "
+                         "pad N < 1.5 kN, spec rev. 54 249)", kind=kind, reading=variant))
+    # C-S8-40 (spec rev. 54 249): cases whose all-apply counts differ from the default
+    diff = {}
+    for s in sms.values():
+        if not ((s.get("item9") or {}).get("replay") or {}).get("all_apply"):
+            continue
+        for name in ("J_C", "J_P"):
+            a, b = judge_score(s, name), judge_score(s, name, variant="all_apply")
+            keys = ("M1_missed", "M1p_late", "M2", "n")
+            if any(a[k] != b[k] for k in keys):
+                diff.setdefault(s["case"], {})[name] = {k: [a[k], b[k]] for k in keys}
+    rows.append(_row("C-S8-40 all-apply +0.5 kN vs default reading: cases with other J_P / J_C "
+                     "M1 missed / M1' late / M2 flags / episodes [default, all-apply] "
+                     "(sensitivity, spec rev. 54 249)", "*", len(diff), None, None,
+                     "; ".join(f"{c}: {v}" for c, v in sorted(diff.items()))[:3000]
+                     or "no difference", kind="sensitivity", reading="all_apply",
+                     per_case=diff))
     act = sum(len((s.get("F8") or {}).get("events", [])) + (s.get("F8") or {}).get(
         "ready_exits", 0) for s in comb if s["s8"].get("event") in EVENT_FREE)
     rows.append(_row("I2 J_C: no actual control action in event-free windows", "*", act, 0,
@@ -3154,6 +3460,56 @@ def _load(d: Path):
     if case_engine(case) == "L2b_NSC":
         l2b_floor_point_metrics(case, m)
     return case, m, pr, params
+
+
+def _rt_of_case(case, d: Path, forced: Mapping[str, Any] | None = None, *,
+                f_min_N: float | None = None) -> dict[str, Any]:
+    """C-S8-37: ``rt`` (:func:`reapproach_rt_record`) of an S8C case with a floor / retract
+    event (``result.event_t_s`` relative to ``settings.start_t_s``) and its variant tag: ``rt``
+    when the run's ``settings.s8.lifted_reapproach`` has the RT window on (run_S8C rev. 52).
+    ``forced`` (C-S8-40): the case's :func:`forced_window` (RE1c), masked in the twist work.
+    ``f_min_N`` (C-S8-41): F_min of the deferred-leg minimum FLAG."""
+    res = case["result"]
+    s = res.get("settings") or {}
+    lr = (s.get("s8") or {}).get("lifted_reapproach") or {}
+    out: dict[str, Any] = {"reapproach_variant": "rt" if lr.get("retrigger_window_s")
+                           is not None else None, "rt": None}
+    ev = res.get("event_t_s")
+    if ev is None or not (Path(d) / "pads.npz").exists():
+        return out
+    with np.load(Path(d) / "pads.npz", allow_pickle=False) as z:
+        pads = {k: np.asarray(z[k]) for k in ("t", "F_cyl", "F_cyl_min_interval",
+                                              "F_cyl_mean_20ms", "airborne") if k in z.files}
+    out["rt"] = reapproach_rt_record(_event_names(case), float(ev),
+                                     float(s.get("start_t_s") or 0.0),
+                                     res.get("controller_meta"), pads,
+                                     _load_record(Path(d), ("u_applied",)), forced=forced,
+                                     f_min_N=f_min_N)
+    return out
+
+
+def ml_twist_work_of_dir(d: Path) -> dict[str, Any] | None:
+    """C-S8-40: the twist work (:func:`twist_work_bins`, forced window masked) of one ML episode
+    folder (``job_ml_episode``: ``result.event_t_s`` engine time), for the reference-batch FLAG
+    row; None without an event or the records."""
+    d = Path(d)
+    if not (d / "result.json").exists() or not (d / "pads.npz").exists():
+        return None
+    res = json.loads((d / "result.json").read_text(encoding="utf-8"))
+    s = res.get("settings") or {}
+    t0 = float(s.get("start_t_s") or 0.0)
+    t_ev = res.get("event_t_s") or res.get("branch_t_s")
+    if t_ev is None:
+        return None
+    with np.load(d / "pads.npz", allow_pickle=False) as z:
+        pads = {k: np.asarray(z[k]) for k in ("t", "F_cyl") if k in z.files}
+    series = load_series(d)
+    t_end = float(np.asarray(series["t"], float)[-1]) - t0 if series is not None \
+        else float(np.asarray(pads["t"], float)[-1]) - t0
+    fw = forced_window(res, t_end, series)
+    te = float(t_ev) - t0
+    return twist_work_bins(pads, _load_record(d, ("u_applied",)), float(t_ev),
+                           forced=forced_rel_to_event(fw, te))
 
 
 def case_engine(case) -> str | None:
@@ -3199,6 +3555,8 @@ def l2b_floor_point_metrics(case, m) -> None:
     e = m.get("event3")
     pads = case.get("pads")
     if not e or "status" in e or pads is None or "transient_window" not in e:
+        return
+    if m.get("floor_event") is not None:  # rev. 50 fast settlement: no s6 other-leg block
         return
     view = {**case, "pads": l2b_pads_view(pads)}
     kn = np.full(4, math.inf)
@@ -3254,10 +3612,140 @@ def _lookup_sm(cid: str, sms: Mapping[str, Any], ref_docs: Sequence[tuple[str, M
     return None, f"{cid} (not found in this batch or the reference batches)"
 
 
+JUDGE_REVISION_REV50 = (
+    "spec rev. 50 220.6 (C-S8-33, U-S8-41..43: ① s6 floor event also = result.event settle "
+    "faster than v_max (event legs settled + diagonal, U-S8-32 window), ② item 4 moving = "
+    "|u_applied| > 1e-6 m/s, ③ injected-leg rod fallback within [fault, +2 T] expected, ④ "
+    "C-S8-29 guard_cap_s from cmp_guard_u (push_cap_s = former issued_u count), h* / h_a / R_ub "
+    "per lock window, F1 calibrated record without the faulty leg after the fault, ⑤ C-S8-24 "
+    "round-start lower bounds vs 24.41 kN)")
+JUDGE_REVISION_REV51 = (
+    "spec rev. 51 225 (C-S8-34, U-S8-44 / 47: ① ML-0 FAULT split by cause, stroke-end FAULT = "
+    "U-S8-44 protective stop row, ② event-leg row does not repeat an ML-0 FAULT, ③ ML-2 rod "
+    "fallback with the applied commands and plant lock, ④ ML tags fault_tail / "
+    "plant_rod_collapse / reapproach_pingpong + H-S8-4 12.6 plant_release_rod_step and "
+    "collapse windows to re-contact + 0.1 s)")
+JUDGE_REVISION_REV52 = (
+    "spec rev. 52 232 / 230 (C-S8-37, U-S8-51: item 9 default = corrected reading + 0.5 kN "
+    "where pad N < 1.5 kN, raw reading record rows, F_s - m g ceiling sensitivity rows; "
+    "RT record rows (runs / re-triggers / deferred) and the twist-work row <= +20 J per 0.5 s "
+    "bin after event + 1.5 s, judged for RT-variant runs)")
+JUDGE_REVISION_REV54 = (
+    "spec rev. 54 248.3 / 249 / 251 (C-S8-40: twist-work row = recurrence ban, forced window "
+    "[start, done_s + 0.1 s] masked, clusters of 0.5 s bins > +20 J after event + 1.5 s <= 1, "
+    "judged for RT-variant runs, records: rev. 52 bin max / masked bin max / largest cluster, "
+    "reference-batch FLAG > +20 J; item 9 default reading + delta_i = min(0.5 kN, 2 F_s,i) on "
+    "L2b-NSC legs with F_s,i > 0 where pad N < 1.5 kN, all-apply +0.5 kN = sensitivity rows)")
+JUDGE_REVISION_REV55 = (
+    "spec rev. 54 260.5 / 261 / 264 for rev. 55 (C-S8-41, U-S8-56 (a) / U-S8-57 (a): ML-0 gate "
+    "row 'no rod-pressure fallback without a sensor-fault injection' = 0; RT record row 'true "
+    "minimum of the deferred leg, deferral .. next start + 0.3 s, < F_min = FLAG'; the summary "
+    "carries the ML-1 rod fallback run count)")
+JUDGE_REVISION_REV56 = (
+    "spec rev. 55 267 / 269.3 for rev. 56 (C-S8-42: deferred-leg window end = min(next start, "
+    "deferral + T_o) + 0.3 s cut at the run end, T_o from the controller meta (0.8 s default), "
+    "overlapping windows of a leg merged, window_rule 'spec rev. 55 267'; per deferred leg the "
+    "event + 0..4 s judged minimum / time below F_min / airborne time vs the reference batch "
+    "(768 / original MLJ), FLAG text > 0.5 kN or > 0.1 s; record rows PROBE -> LEVEL returns and "
+    "re-READY vs the reference (269.2 #2 / #3, criterion_met, control judges))")
 MLJ_GROUP = "MLJ"
 """``run_S8C.py`` judged cases of the main ML batch (U-S8-32 / 35, C-S8-24, C-S8-29)."""
 GUARD_CAP_M_S = 2.5e-3
 """Guard command cap (spec rev. 48 218.10; ASSUMPTION used only for the C-S8-29 record)."""
+FALLBACK_BAND_DEFAULT_N = 13000.0
+"""``F_band`` of the h* formula when the controller meta has no
+``two_pressure.settings.fallback_min_band_N`` (spec 218.10)."""
+LOCK_LOG_KEYS = ("two_pressure.fallback_lock_log", "two_pressure.fallback_lock_current")
+
+
+def bc_load_r8_series(case_dir: Path) -> dict[str, np.ndarray] | None:
+    """``r8_series.npz`` of a case (``s6_bundle_c.load_r8_series``)."""
+    from outrigger_sim.verify import s6_bundle_c as bc
+
+    return bc.load_r8_series(Path(case_dir))
+
+
+def h_star_Pa(f_min_N: float, f_band_N: float, start_Pa: float, ratio_bound: float,
+              anchor_head_Pa: float, a_p_m2: float, a_ann_m2: float,
+              guard_margin_N: float = D8_MARGIN_N) -> float:
+    """Spec 218.10 / 219.4: head pressure at which the fallback lower bound of a locked window
+    reaches ``F_min + 5 kN`` (the guard / re-approach stop):
+    ``h* = (F_min + 5 kN + F_band + M A_ann + R_ub h_a A_ann) / (A_p + R_ub A_ann)``
+    (``M`` = window start rod estimate, ``R_ub`` = rod-to-head ratio bound, ``h_a`` = anchor
+    head). Pa."""
+    return ((f_min_N + guard_margin_N + f_band_N + start_Pa * a_ann_m2
+             + ratio_bound * anchor_head_Pa * a_ann_m2) / (a_p_m2 + ratio_bound * a_ann_m2))
+
+
+def requested_probe_round_lower(probes: Sequence[Sequence[Mapping[str, Any]]],
+                                series: Mapping[str, np.ndarray], t0: float,
+                                accepted_t_s: float, f_min_N: float,
+                                margin_N: float = LOW_PROBE_MARGIN_N) -> dict[str, Any]:
+    """Spec rev. 50 220.6 ⑤ (C-S8-24 record, U-S8-41): per probe round that starts at or after
+    the accepted probe request, the lower bound ``F_hat_cal - F_band,i``
+    (:func:`lower_estimate_series`) of every leg at the round start (last 10 Hz row at or before
+    the first move start, the R45-4 rule of :func:`low_load_probe_records`) against the R45-4
+    threshold ``F_min + 15 kN``. Times relative to ``t0``; kN."""
+    lower, _nom, src = lower_estimate_series(series)
+    tc = np.asarray(series["t"], float) - t0
+    rounds = []
+    for i, rnd in enumerate(probes or []):
+        starts = [float(r["t_move_start_s"]) - t0 for r in rnd
+                  if isinstance(r, Mapping) and isinstance(r.get("t_move_start_s"), int | float)]
+        if not starts or tc.size == 0 or min(starts) < accepted_t_s - 1e-6:
+            continue
+        k0 = int(np.clip(np.searchsorted(tc, min(starts) + 1e-9, side="right") - 1, 0,
+                         tc.size - 1))
+        rounds.append({"round": i, "t_round_start_s": min(starts), "t_row_s": float(tc[k0]),
+                       "lower_kN": {LEGS[j]: float(lower[k0, j]) / 1e3 for j in range(4)}})
+    thr = (f_min_N + margin_N) / 1e3
+    mins = [min(r["lower_kN"].values()) for r in rounds]
+    return {"accepted_t_s": accepted_t_s, "threshold_kN": thr, "rounds": rounds,
+            "min_lower_kN": None if not mins else min(mins),
+            "below_threshold": bool(mins) and min(mins) < thr, "lower_source": src["lower"]}
+
+
+def lock_window_h_star(fallback_meta: Mapping[str, Any], leg: str, params,
+                       pads: Mapping[str, Any] | None, tp_rel_s: np.ndarray, f_min_N: float,
+                       t0: float) -> list[dict[str, Any]]:
+    """Spec rev. 50 220.6 ④ (C-S8-29 record): per P-S8-13 lock window of the faulty leg
+    (controller meta :data:`LOCK_LOG_KEYS`) ``h*`` (:func:`h_star_Pa`), ``h_a``, ``R_ub``, the
+    lower bound at ``h_a`` (``h_a A_p - M A_ann - F_band``) and the true head at the window start
+    (the end of the push that locked) minus ``h*``. Window times are taken as relative to ``t0``
+    (minus ``t0`` when beyond the pad record). Areas: :func:`cylinder_areas_m2`. bar / kN."""
+    wins = []
+    for key in LOCK_LOG_KEYS:
+        wins.extend(w for w in (fallback_meta.get(key) or []) if isinstance(w, Mapping))
+    wins = [w for w in wins if w.get("leg") == leg]
+    if not wins:
+        return []
+    a_p, a_a, _src = cylinder_areas_m2(params, pads)
+    j = LEGS.index(leg)
+    band = fallback_meta.get("two_pressure.settings.fallback_min_band_N")
+    band = FALLBACK_BAND_DEFAULT_N if band is None else float(band)
+    tp = np.asarray(tp_rel_s, float)
+    hp = None if pads is None else np.asarray(pads["head_pressure"], float)[:, j]
+    out = []
+    for w in sorted(wins, key=lambda x: float(x.get("t_start_s") or 0.0)):
+        t_s = float(w["t_start_s"])
+        if tp.size and t_s > tp[-1] + 1e-6:
+            t_s -= t0
+        r, ha, m0 = float(w["ratio_bound"]), float(w["anchor_head_Pa"]), float(w["start_Pa"])
+        hs = h_star_Pa(f_min_N, band, m0, r, ha, a_p[j], a_a[j])
+        rec = {"t_start_s": t_s, "window_end_s": None if w.get("window_end_s") is None
+               else float(w["window_end_s"]) - (float(w["t_start_s"]) - t_s),
+               "stroke_m": w.get("stroke_window_max_m"), "R_ub": r,
+               "h_a_bar": ha / 1e5, "M_bar": m0 / 1e5, "h_star_bar": hs / 1e5,
+               "h_star_below_h_a": bool(hs < ha),
+               "lower_at_h_a_kN": (ha * a_p[j] - m0 * a_a[j] - band) / 1e3,
+               "F_band_kN": band / 1e3, "source": w.get("source")}
+        if hp is not None and tp.size:
+            i = int(np.clip(np.searchsorted(tp, t_s), 0, tp.size - 1))
+            rec["head_at_start_bar"] = float(hp[i]) / 1e5
+            rec["head_at_start_minus_h_star_bar"] = rec["head_at_start_bar"] - hs / 1e5
+        out.append(rec)
+    return out
+
 
 
 def mlj_case_metrics(case: Mapping[str, Any], sm: Mapping[str, Any], params) -> dict[str, Any]:
@@ -3315,7 +3803,27 @@ def mlj_case_metrics(case: Mapping[str, Any], sm: Mapping[str, Any], params) -> 
             dt = float(np.median(np.diff(tc))) if tc.size > 1 else 0.1
             push = post & (u > 1e-4)
             rec["pushing_s"] = float(push.sum() * dt)
-            rec["guard_cap_s"] = float((post & (u >= 0.95 * GUARD_CAP_M_S)).sum() * dt)
+            # spec rev. 50 220.6 ④: the former ``issued_u`` count is the push-at-cap time
+            rec["push_cap_s"] = float((post & (u >= 0.95 * GUARD_CAP_M_S)).sum() * dt)
+            r8 = bc_load_r8_series(Path(case["dir"]))
+            if r8 is not None and "cmp_guard_u" in r8:
+                g = np.asarray(r8["cmp_guard_u"], float)
+                tg = np.asarray(r8["t"], float) - t0
+                gpost = tg >= fb[0]["t_s"] - 1e-9
+                dtg = float(np.median(np.diff(tg))) if tg.size > 1 else 0.1
+                cap = gpost[:, None] & (g >= 0.95 * GUARD_CAP_M_S)
+                rec["guard_cap_s"] = float(cap[:, j].sum() * dtg)
+                rec["guard_cap_s_per_leg"] = {LEGS[i]: float(cap[:, i].sum() * dtg)
+                                              for i in range(4)}
+                rec["guard_nonzero_s_per_leg"] = {
+                    LEGS[i]: float((gpost & (np.abs(g[:, i]) > 1e-9)).sum() * dtg)
+                    for i in range(4)}
+                rec["guard_cap_rule"] = ("r8_series cmp_guard_u >= 0.95 x 2.5 mm/s after the "
+                                         "fallback (spec rev. 50 220.6 ④); push_cap_s = the "
+                                         "former issued_u count")
+            else:
+                rec["guard_cap_s"] = None
+                rec["guard_cap_rule"] = "no r8_series cmp_guard_u: not measured"
             runs = _runs(push)
             if runs:
                 k_end = runs[-1][1]
@@ -3326,10 +3834,24 @@ def mlj_case_metrics(case: Mapping[str, Any], sm: Mapping[str, Any], params) -> 
         meta = res.get("controller_meta") or {}
         rec["controller_fallback_meta"] = {k: v for k, v in _flat_items(meta)
                                            if "fallback" in k or "h_star" in k}
+        rec["lock_windows"] = lock_window_h_star(rec["controller_fallback_meta"], leg, params,
+                                                 pads, tp, float(sm["F_min_N"]), t0)
+        if rec["lock_windows"] and rec.get("last_push_end_s") is not None:
+            near = min(rec["lock_windows"],
+                       key=lambda w: abs(w["t_start_s"] - rec["last_push_end_s"]))
+            rec["head_at_last_push_end_minus_h_star_bar"] = (
+                rec["head_at_last_push_end_bar"] - near["h_star_bar"])
+            rec["last_push_lock_window_t_s"] = near["t_start_s"]
         out["rod_fault"] = rec
     if ev.get("probe_after"):
         out["probe_request"] = res.get("probe_request")
         out["R45_4_count"] = len(sm.get("R45_4") or [])
+        # spec rev. 50 220.6 ⑤ (U-S8-41): round-start lower bounds of the requested probe
+        series8 = load_series(Path(case["dir"])) if case.get("dir") else None
+        acc = (res.get("probe_request") or {}).get("accepted_t_s")
+        out["requested_probe_rounds"] = None if series8 is None or acc is None else \
+            requested_probe_round_lower(case.get("probes") or [], series8, t0, float(acc),
+                                        float(sm["F_min_N"]))
     if case.get("dir") is not None:  # C-S8-32: D1'' ratios (FS24_Fs0 = the D1'' worst side)
         out["fs_mean_kN"] = run_fs_mean_kN(pads, s)
         out["d1pp"] = d1pp_step_ratios(Path(case["dir"]), params, settings=s, pads=pads)
@@ -3370,26 +3892,51 @@ def mlj_rows(sms: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
                          "FAULT entry time [s] or None"))
         if "probe_request" in mj:
             pr = mj.get("probe_request") or {}
+            rq = mj.get("requested_probe_rounds") or {}
+            rnds = rq.get("rounds") or []
+            lows = "; ".join(
+                f"r{r['round']} {r['t_round_start_s']:.2f} s "
+                + "/".join(f"{v:.1f}" for v in r["lower_kN"].values()) for r in rnds)
+            why = ("no round started after the accepted request" if not rnds else
+                   (f"round-start lower bound FL/FR/RL/RR {lows} kN; minimum "
+                    f"{rq['min_lower_kN']:.2f} kN "
+                    + ("< " if rq["below_threshold"] else ">= ")
+                    + f"R45-4 threshold F_min + 15 kN = {rq['threshold_kN']:.2f} kN"))
             rows.append(_row("C-S8-24 R45-4 dedicated case: probe requested after the re-READY "
-                             "and R45-4 low-load probes (record)", cid,
+                             "and R45-4 low-load probes (record; U-S8-41: dedicated search "
+                             "closed, record row kept)", cid,
                              {"accepted_t_s": pr.get("accepted_t_s"),
-                              "attempts": pr.get("attempts"), "R45_4": mj.get("R45_4_count")},
-                             None, None, "R45-4 rows of the run carry the F2 values",
-                             kind="record", probe_request=pr))
+                              "attempts": pr.get("attempts"), "R45_4": mj.get("R45_4_count"),
+                              "round_start_lower_min_kN": rq.get("min_lower_kN"),
+                              "threshold_kN": rq.get("threshold_kN")},
+                             None, None,
+                             f"R45-4 rows of the run carry the F2 values; {why} (spec rev. 50 "
+                             "220.4 / 220.6 ⑤: a closed-loop READY probe does not start at a "
+                             "low load)", kind="record", probe_request=pr,
+                             requested_probe_rounds=rq))
         if mj.get("rod_fault"):
             rf = mj["rod_fault"]
-            rows.append(_row("C-S8-29 rod-sensor fault + G4 (spec rev. 48 218.10, record): "
-                             "fallback, guard-cap time, stopped head vs h*, other legs' min "
-                             "true force, head max", cid,
-                             {k: rf.get(k) for k in ("pushing_s", "guard_cap_s",
+            lw = rf.get("lock_windows") or []
+            lw_txt = "; ".join(
+                f"{w['t_start_s']:.2f} s h* {w['h_star_bar']:.1f} / h_a {w['h_a_bar']:.1f} bar, "
+                f"R_ub {w['R_ub']:.2f}, head at start - h* "
+                + _fmt(w.get("head_at_start_minus_h_star_bar"), "+.1f") + " bar" for w in lw)
+            rows.append(_row("C-S8-29 rod-sensor fault + G4 (spec rev. 48 218.10 / rev. 50 220.6 "
+                             "④, record): fallback, guard-cap time (cmp_guard_u), push-at-cap "
+                             "time, stopped head vs h* per lock window, other legs' min true "
+                             "force, head max", cid,
+                             {k: rf.get(k) for k in ("pushing_s", "guard_cap_s", "push_cap_s",
                                                      "head_at_last_push_end_bar",
+                                                     "head_at_last_push_end_minus_h_star_bar",
                                                      "head_max_bar", "others_min_true_kN")},
                              None, None,
                              f"leg {rf['leg']} {rf.get('fault')} from {rf.get('fault_t_s')} s; "
                              f"fallback {[(e['t_s'], e['reason']) for e in rf['fallback_events']]}"
-                             f"; FAULT {mj.get('fault_t_s')}; h* = P-S8-13 meta "
-                             f"{str(rf.get('controller_fallback_meta'))[:400]}",
-                             kind="record", rod_fault=rf))
+                             f"; FAULT {mj.get('fault_t_s')}; guard cap per leg "
+                             f"{rf.get('guard_cap_s_per_leg')} s ({rf.get('guard_cap_rule')}); "
+                             f"lock windows {len(lw)}: {lw_txt or '-'}; "
+                             f"all h* < h_a: {all(w['h_star_below_h_a'] for w in lw) if lw else None}",
+                             kind="record", rod_fault=rf, lock_windows=lw))
             n_fb = len(rf["fallback_events"])
             rows.append(_row("C-S8-29 the injected rod fault is caught (fallback on the faulty "
                              "leg)", cid, n_fb, ">= 1", n_fb >= 1,
@@ -3402,11 +3949,15 @@ def mlj_rows(sms: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
 
 def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
                 root: Path | None = None, ref_batch: Path | None = None,
-                lookup_batches: Sequence[Path] = ()) -> Path:
+                lookup_batches: Sequence[Path] = (),
+                deferred_ref: Path | None = None) -> Path:
     """Judge a ``run_S8C.py`` batch; writes ``verify_S8C.json``. ``ref_batch``: an earlier batch
     whose ``verify_S8C.json`` metrics give the 213.6 TOUCH regression row (C-S8-19 ⑦);
     ``ref_batch`` and ``lookup_batches`` (their ``verify_S8C.json``) also give the C11 L1 twins
-    and the missing auger levels of the trend groups (C-S8-22 ② / ⑤)."""
+    and the missing auger levels of the trend groups (C-S8-22 ② / ⑤). ``deferred_ref``
+    (C-S8-42, spec rev. 55 269.3 #2): folder holding the reference run of each case
+    (``<deferred_ref>/<case id>``, e.g. the original MLJ batch for bundle D) for the per-leg
+    deferred-leg comparison; relative paths from the project root; None = no reference columns."""
     from outrigger_sim.verify import s6_bundle_c as bc
 
     root = root or bc.PROJECT_ROOT
@@ -3420,6 +3971,9 @@ def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
         sms[m["case"]]["probe_7c_split"] = probe_7c_split(pr)  # U-S8-16
         if sms[m["case"]]["s8"].get("group") == MLJ_GROUP:  # U-S8-32 / 35, C-S8-24 / 29
             sms[m["case"]]["mlj"] = mlj_case_metrics(case, sms[m["case"]], params)
+        sms[m["case"]].update(_rt_of_case(  # C-S8-37, C-S8-40 forced window masked
+            case, d, forced=sms[m["case"]].get("forced_window"),
+            f_min_N=float(params.control.F_min_cylinder_N)))  # C-S8-41
         dirs[m["case"]] = d
     d8_item = "D8 min true cylinder force >= F_min + 5 kN"
     rows = [r for r in bc.judge(metrics, probes, None) if r["item"] != d8_item]
@@ -3476,6 +4030,15 @@ def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
                               None if ref_batch is None else str(ref_batch)))
     rows.extend(cb_rerun_rows(sms, by_id, rows, ref_docs))  # U-S8-23, spec rev. 46 216.8
     rows.extend(mlj_rows(sms))  # C-S8-27 / 30: judged cases of the main ML batch
+    dref = None
+    if deferred_ref is not None:  # C-S8-42: deferred legs vs the reference run of the case
+        dref = Path(deferred_ref)
+        if not dref.is_absolute():
+            dref = Path(root) / dref
+        for cid, sm in sms.items():
+            attach_deferred_reference((sm.get("rt") or {}).get("deferred_min"), dref / cid,
+                                      ref_label=str(deferred_ref))
+    rows.extend(rt_rows(sms))  # C-S8-37: RT record + twist work (event cases)
     labels ={cid: crawler_label(sm) for cid, sm in sms.items()}
     rows.append(_row("S8-L5 crawler label of the batch (R41-5: one crawler contact per batch)",
                      "*", sorted(set(labels.values())), None, None,
@@ -3487,7 +4050,13 @@ def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
     doc = {"meta": {"batch": str(batch_dir), "module": __name__, "rows": len(rows),
                     "failed": n_fail, "hold": n_hold, "liftoff_window_s": LIFTOFF_WINDOW_S,
                     "sensor_share_N": SENSOR_SHARE_N,
-                    "judge_revision": "spec rev. 46 (C-S8-22: ① pressure-only F_min rows = M5 "
+                    "summary": judge_summary(rows),  # C-S8-41
+                    "judge_revision": JUDGE_REVISION_REV56 + " on "
+                                      + JUDGE_REVISION_REV55 + " on " + JUDGE_REVISION_REV54
+                                      + " on " + JUDGE_REVISION_REV52
+                                      + " on " + JUDGE_REVISION_REV50
+                                      + " on rev. 49 (C-S8-27 / 29 / 32) and "
+                                      "rev. 46 (C-S8-22: ① pressure-only F_min rows = M5 "
                                       "comparison, ② level trend grouped + reference levels, ③ "
                                       "forced window out of F2 / I1 (U-S8-24), ④ rod-pressure "
                                       "fallback = unexpected warning, ⑤ C11 twins from the "
@@ -3515,8 +4084,16 @@ def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
                                  "near_fmin_N": NEAR_FMIN_SHARE_N,
                                  "air_residual_flag_N": AIR_RESIDUAL_FLAG_N},
                     "ref_batch": None if ref_batch is None else str(ref_batch),
+                    "deferred_reference": None if dref is None else str(dref),  # C-S8-42
                     "replay_status": {c: (sm.get("item9") or {}).get("replay", {}).get("status")
-                                      for c, sm in sms.items()}},
+                                      for c, sm in sms.items()},
+                    # C-S8-40 (spec rev. 54 249): engine and per-leg delta_i of the default
+                    "reading_delta": {c: {"engine": rp.get("engine"),
+                                          "delta_N": rp.get("reading_delta_N")}
+                                      for c, sm in sms.items()
+                                      if (rp := (sm.get("item9") or {}).get("replay") or {})
+                                      and "reading_delta_N" in rp},
+                    "reading_rule": READING_BIAS_RULE, "twist_work_rule": RT_WORK_RULE},
            "rows": rows, "s8_metrics": sms, "metrics": metrics}
     out.write_text(json.dumps(doc, indent=1, default=bc._json_default, ensure_ascii=False),
                    encoding="utf-8")
@@ -3670,7 +4247,8 @@ def _runs(mask: np.ndarray) -> list[tuple[int, int]]:
 def settle_lift_split(t_s: np.ndarray, airborne: np.ndarray, ball_z_m: np.ndarray,
                       t_ev_s: float, settle_leg: str, depth_m: float, ramp_s: float, *,
                       t3_s: float, fault_t_s: float | None = None,
-                      cap_s: float = U57_CAP_S) -> dict[str, Any]:
+                      cap_s: float = U57_CAP_S, fault_gate: bool = True,
+                      fault_cause: str | None = None) -> dict[str, Any]:
     """U-S8-32 / C-S8-27 ① split of the pad lift after a settlement (1 ms pad record; times
     ``t_s`` and ``t_ev_s`` on the same clock).
 
@@ -3683,7 +4261,11 @@ def settle_lift_split(t_s: np.ndarray, airborne: np.ndarray, ball_z_m: np.ndarra
     * gap of a lift = rise of the pad ball centre (world z) since the lift start minus the
       ground-patch drop since then (settled leg, Poly345 profile; other legs on the fixed floor);
     * a last re-contact is ``None`` when the leg is still lifted at the record end.
-    Adjacent lift time is summed over both adjacent legs (the rev. 48 numbers)."""
+    Adjacent lift time is summed over both adjacent legs (the rev. 48 numbers).
+
+    ``fault_gate`` False (C-S8-34 ②, ML judge): the FAULT is judged in its own ML-0 row by cause
+    (``fault_cause``), so the event-leg row records it but does not fail on it (no duplicate
+    failure); the MLJ rows keep the default (FAULT 0 in the event-leg row)."""
     t = np.asarray(t_s, float)
     air = np.asarray(airborne, bool) & (t >= t_ev_s - 1e-9)[:, None]
     dt = float(np.median(np.diff(t))) if t.size > 1 else 0.0
@@ -3745,7 +4327,8 @@ def settle_lift_split(t_s: np.ndarray, airborne: np.ndarray, ball_z_m: np.ndarra
     rc_max = None if any(r is None for r in rcs) else max(rcs, default=0.0)
     fault_after = fault_t_s is not None and fault_t_s >= t_ev_s - 1e-9
     event_pass = bool(cum_max <= EVENT_LEG_CUM_S + 1e-9 and rc_max is not None
-                      and rc_max <= EVENT_LEG_RECONTACT_S + 1e-9 and fault_t_s is None)
+                      and rc_max <= EVENT_LEG_RECONTACT_S + 1e-9
+                      and (fault_t_s is None or not fault_gate))
     # U-S8-37: the former 2.5 s gate stays as a flag column (nominal damping expectation)
     nominal_ok = None if rc_max is None else bool(rc_max <= EVENT_LEG_RECONTACT_NOMINAL_S + 1e-9)
     return {"settle_leg": settle_leg, "depth_m": float(depth_m), "ramp_s": float(ramp_s),
@@ -3755,6 +4338,7 @@ def settle_lift_split(t_s: np.ndarray, airborne: np.ndarray, ball_z_m: np.ndarra
             "event": ev, "primary": primary,
             "event_cum_max_s": cum_max, "event_recontact_max_rel_s": rc_max,
             "fault_t_s": fault_t_s, "fault_after_event": bool(fault_after),
+            "fault_gate": bool(fault_gate), "fault_cause": fault_cause,
             "event_pass": event_pass,
             "event_recontact_gate_s": EVENT_LEG_RECONTACT_S,
             "event_recontact_nominal_s": EVENT_LEG_RECONTACT_NOMINAL_S,
@@ -3823,7 +4407,10 @@ def u_s8_32_rows(case_id: str, sp: Mapping[str, Any] | None, *, kind_event: str 
                                  f"re-contact {v['last_recontact_rel_s']}, gap "
                                  f"{v['gap_max_m'] * 1e3:.1f} mm" for leg, v in ev.items())
                      + ("" if sp["fault_t_s"] is None
-                        else f"; FAULT at {sp['fault_t_s']:.2f} s"),
+                        else f"; FAULT at {sp['fault_t_s']:.2f} s"
+                        + ("" if sp.get("fault_gate", True) else
+                           f" (cause {sp.get('fault_cause')}: judged in the ML-0 FAULT rows, "
+                           "not counted here, C-S8-34 ②)")),
                      kind=kind_event, split=sp, recontact_within_nominal=within))
     return rows
 
@@ -4209,6 +4796,31 @@ def ml_case_metrics(d: Path, params, machine) -> dict[str, Any]:
         k = np.flatnonzero(ph == "fault")
         out["fault_entry_s"] = None if k.size == 0 else float(np.asarray(series["t"], float)[k[0]]
                                                             - t0)
+    # C-S8-34 ① FAULT cause (P-S8-17 event, else the record) and U-S8-44 values
+    rec = _load_record(Path(d), ("meas.stroke", "u_applied"))
+    cm = res.get("controller_meta") or {}
+    soft = _find_key(cm.get("geometry") or {}, "stroke_soft_max_m")
+    soft = float(soft) if isinstance(soft, int | float) else STROKE_SOFT_MAX_DEFAULT_M
+    margin = _find_key(cm, "stroke_end_fault_margin_m")
+    if not isinstance(margin, int | float):
+        margin = _config_float(str(cm.get("config") or ""), "stroke_end_fault_margin_m",
+                               STROKE_END_FAULT_MARGIN_DEFAULT_M)
+    margin = float(margin or STROKE_END_FAULT_MARGIN_DEFAULT_M)
+    fc = classify_fault(out.get("fault_entry_s"), names,
+                        None if rec is None or "meas.stroke" not in rec
+                        else np.asarray(rec["t"], float) - t0,
+                        None if rec is None else rec.get("meas.stroke"),
+                        soft_max_m=soft, margin_m=margin)
+    floor = (s.get("ml_base") or {}).get("floor_deg")
+    if fc is not None:
+        fc["floor_deg"] = floor
+        fc["operating_index"] = operating_index(floor)
+        if fc["cause"] == "stroke_end" and pads is not None:
+            fc["protective"] = stroke_end_protective(
+                pads, t0, float(out["fault_entry_s"]), floor,
+                float(params.control.F_min_cylinder_N),
+                (cm.get("target") or {}).get("target_rad"))
+    out["fault_cause"] = fc
     # U-S8-30 (record kept) and U-S8-32 / C-S8-27 ①: lift after a settlement (1 ms pad record)
     ev_t = res.get("event_t_s")
     if ep.get("kind") == "settle" and pads is not None and ev_t is not None \
@@ -4230,7 +4842,10 @@ def ml_case_metrics(d: Path, params, machine) -> dict[str, Any]:
                                    np.asarray(pads["ball_centre_world"], float)[:, :, 2],
                                    float(ev_t) - t0, ep["leg"], float(ep["depth_m"]),
                                    float(ep["ramp_s"]), t3_s=t3,
-                                   fault_t_s=out.get("fault_entry_s"))
+                                   fault_t_s=out.get("fault_entry_s"),
+                                   # C-S8-34 ②: an un-injected FAULT is judged in ML-0 by cause
+                                   fault_gate=not (fc is not None and not out["fault_injected"]),
+                                   fault_cause=None if fc is None else fc["cause"])
             sp["T3_from_top_level"] = t3_top
             out["u_s8_32"] = sp
     # C-S8-32: D1'' actual head-step ratios (record)
@@ -4253,7 +4868,13 @@ def ml_case_metrics(d: Path, params, machine) -> dict[str, Any]:
                                                   rod_weight_N=_rod_weight_N(params),
                                                   f_sample_N=f_inst)
     out["ml_mask"] = ml_episode_mask(fw, out.get("fault_entry_s"), float(tc[-1]), t0)
-    phases = np.asarray(series["phase"]).astype(str)
+    mk = out["ml_mask"]
+    out["fault_tail"] = None if mk is None or "fault" not in mk["reasons"] else {
+        "start_s": float(out["fault_entry_s"]), "end_s": mk["end_s"],
+        "start_engine_s": float(out["fault_entry_s"]) + t0, "end_engine_s": mk["end_engine_s"],
+        "cause": None if out.get("fault_cause") is None else out["fault_cause"]["cause"],
+        "rule": ML_TAG_RULES["fault_tail"]}  # C-S8-34 ④
+    phases =np.asarray(series["phase"]).astype(str)
     fb = rod_fallback_events(_event_names(case), fw)
     for e in fb:
         k = int(np.clip(np.searchsorted(tc, e["t_s"] - 1e-9), 0, tc.size - 1))
@@ -4265,7 +4886,42 @@ def ml_case_metrics(d: Path, params, machine) -> dict[str, Any]:
             e["head_bar"] = float(_pad_at(pads, ta, "head_pressure")[0, j]) / 1e5
             e["rod_bar"] = float(_pad_at(pads, ta, "rod_pressure")[0, j]) / 1e5
             e["F_cyl_kN"] = float(_pad_at(pads, ta, "F_cyl")[0, j]) / 1e3
+            rod_fallback_command_context(e, tc, np.asarray(series["issued_u"], float), rec,
+                                         pads, t0)  # C-S8-34 ③
     out["rod_fallback"] = {"events": fb, "injected": rod_fault_injected(s)}
+    # C-S8-34 ④ (U-S8-47): the three ML tags of spec rev. 51 223.2
+    ev_rel = None
+    t_ev_abs = res.get("event_t_s") or res.get("branch_t_s")
+    if out["kind"] != "base" and t_ev_abs is not None:
+        ev_rel = float(t_ev_abs) - t0
+    out["reapproach"] = reapproach_pingpong(names, ev_rel, float(tc[-1]), t0)
+    out["reapproach_pingpong"] = None if out["reapproach"] is None \
+        else out["reapproach"]["window"]
+    # C-S8-37 (spec rev. 52 230): RT runs / deferred starts / twist work bins
+    # C-S8-40 (spec rev. 54 248.3): the forced window is masked in the twist work
+    out["rt"] = reapproach_rt_record(names, ev_rel, t0, cm, pads, rec, forced=fw,
+                                     f_min_N=float(params.control.F_min_cylinder_N))
+    out["reapproach_variant"] = s.get("reapproach_variant")
+    out["plant_rod_collapse"] = plant_rod_collapse(pads, rec, t0)
+    # H-S8-4 F1 (hydraulics 12.6): release reading steps, collapse windows to re-contact
+    r8p = Path(d) / "r8_series.npz"
+    out["plant_release_rod_step"] = []
+    if r8p.exists() and "airborne" in pads:
+        with np.load(r8p, allow_pickle=False) as z:
+            r8 = {k: np.asarray(z[k]) for k in ("t", "valve_u", "issued_u") if k in z.files}
+        meta_p = Path(d) / "record" / "meta.json"
+        rmeta = json.loads(meta_p.read_text(encoding="utf-8")) if meta_p.exists() else {}
+        tau = _find_key(s, "tau_v_s")
+        tau = float(tau) if isinstance(tau, int | float) else float(_find_key(rmeta, "tau_v_s")
+                                                                    or 0.1)
+        eps = _find_key(rmeta, "lock_eps_m_s")
+        eps = float(eps) if isinstance(eps, int | float) else LOCKED_U_M_S
+        vmax = _find_key(cm.get("geometry") or {}, "max_speed_m_s")
+        vmax = float(vmax) if isinstance(vmax, int | float) else 0.020924
+        rel = plant_release_steps(pads, r8, tau, eps, t0)
+        out["plant_release_rod_step"] = link_collapse_releases(out["plant_rod_collapse"], rel,
+                                                               pads, t0, vmax)
+        out["release_rule"] = {"tau_v_s": tau, "lock_eps_m_s": eps, "v_max_m_s": vmax}
     lower, f_cal, src = lower_estimate_series(series)
     f_true = _pad_at(pads, t_abs, "F_cyl")
     lifted = ~np.isin(phases, PRE_LIFT_PHASES)
@@ -4293,6 +4949,1069 @@ def ml_case_metrics(d: Path, params, machine) -> dict[str, Any]:
     return out
 
 
+# --- C-S8-34 (spec rev. 51 225, U-S8-44 / 46 / 47) -------------------------------------------
+
+STROKE_END_FAULT_EVENT = "FAULT_STROKE_END"
+"""P-S8-17 (spec rev. 51 225): ``FAULT_STROKE_END:<leg>`` of the controller's stroke-end FAULT
+(``c2._update_stroke_end_fault``); absent in the runs before P-S8-17."""
+STROKE_SOFT_MAX_DEFAULT_M = 0.6948
+"""Soft stroke end (CLAUDE.md: sensor range 0.6948 m) when ``controller_meta.geometry`` lacks
+``stroke_soft_max_m``."""
+STROKE_END_FAULT_MARGIN_DEFAULT_M = 1e-3
+STROKE_END_LOOKBACK_S = 2.0
+"""C-S8-34 ① record rule (runs without the P-S8-17 event): stroke-end FAULT when, over the
+2 s before the first ``fault`` phase sample, every 10 Hz ``meas.stroke`` sample of a leg is at or
+above ``stroke_soft_max_m - stroke_end_fault_margin_m`` (the controller's 2 s rule)."""
+OPERATING_DIAMOND_DEG = (4.4, 3.2)
+"""CLAUDE.md '경사 운용 한계': operating diamond ``|phi_g| / 4.4 + |theta_g| / 3.2 <= 1``
+(floor angles)."""
+STROKE_END_ATT_TOL_DEG = 0.2
+"""U-S8-44: after a stroke-end FAULT the true attitude error stays <= 0.2 deg (CLAUDE.md +-0.2)."""
+STROKE_END_RULE = (
+    "U-S8-44 (spec rev. 51 222.2 / 224): a stroke-end FAULT is a protective stop; it passes when "
+    "the floor is outside the operating diamond |phi_g|/4.4 + |theta_g|/3.2 > 1 and, from the "
+    "FAULT entry to the run end, every leg's 1 ms judged force >= F_min + 5 kN, no pad lift and "
+    "the true attitude error (pads body_quat_wxyz vs controller target) <= 0.2 deg; inside the "
+    "operating diamond it fails. Cause: P-S8-17 event FAULT_STROKE_END:<leg>, else the record "
+    "(every meas.stroke sample of a leg over the 2 s before the FAULT >= soft end - margin)")
+PINGPONG_AFTER_S = 1.5
+PINGPONG_MIN_STARTS = 3
+PINGPONG_TAIL_S = 1.0
+"""U-S8-47 / spec rev. 51 223.2 / 226 (ASSUMPTION): ``reapproach_pingpong`` = at least 3
+``leg_reapproach_start`` later than event + 1.5 s; tag window event + 1.5 s .. last re-approach
+end (``leg_reapproach_contact``, else its start) + 1 s, capped at the run end."""
+ROD_COLLAPSE_DROP_PA = 50e5
+ROD_COLLAPSE_BEFORE_SAMPLES = 5
+ROD_COLLAPSE_AFTER_SAMPLES = 10
+ROD_COLLAPSE_HALF_WINDOW_S = 0.3
+LOCKED_U_M_S = 1e-6
+"""U-S8-47 / spec rev. 51 222.4 / 223.2 / 226 (ASSUMPTION): ``plant_rod_collapse`` = pad
+lift-off (1 ms ``airborne`` onset) with the plant valve locked (record ``u_applied`` of the
+period, ``|u| <= 1e-6 m/s``) whose rod pressure falls by more than 50 bar from 5 samples before
+to 10 samples after the onset (1 ms pads); tag window lift-off +- 0.3 s."""
+ML_TAG_RULES = {
+    "fault_tail": "ml_mask with reason 'fault' (FAULT entry .. run end); excluded from training "
+                  "and E1..E4 (already masked)",
+    "plant_rod_collapse": "locked lift-off with a rod-pressure fall > 50 bar within 10 ms "
+                          "(rev. 51 222.4), window lift-off +- 0.3 s; training weight 0, kept in "
+                          "the test metrics and shown apart",
+    "reapproach_pingpong": ">= 3 re-approach starts later than event + 1.5 s (rev. 51 222.3), "
+                           "window event + 1.5 s .. last re-approach end + 1 s; training as is, "
+                           "E1 / E3 reported apart",
+    "plant_release_rod_step": "H-S8-4 F1 reading step: plant release (valve |u| > lock_eps) "
+                              "with a 1 ms rod-pressure change > 20 bar, not a "
+                              "plant_rod_collapse; window [t_b, t_b + 0.3 s]; weight 0 on that "
+                              "leg's head / rod pressure features only (net force, stroke, IMU "
+                              "and labels kept); none after the F1 fix"}
+"""C-S8-34 ④: the three ML tags of spec rev. 51 223.2 (times relative to ``start_t_s``; each
+window also carries the engine times)."""
+
+
+def operating_index(floor_deg: Sequence[float] | None) -> float | None:
+    """``|phi_g| / 4.4 + |theta_g| / 3.2`` of the floor (deg); None without a floor."""
+    if floor_deg is None or len(floor_deg) < 2:
+        return None
+    return (abs(float(floor_deg[0])) / OPERATING_DIAMOND_DEG[0]
+            + abs(float(floor_deg[1])) / OPERATING_DIAMOND_DEG[1])
+
+
+def _load_record(case_dir: Path, keys: Sequence[str]) -> dict[str, np.ndarray] | None:
+    p = Path(case_dir) / "record" / "record.npz"
+    if not p.exists():
+        return None
+    with np.load(p, allow_pickle=False) as z:
+        return {k: np.asarray(z[k]) for k in ("t", *keys) if k in z.files}
+
+
+def classify_fault(fault_entry_s: float | None, names: Sequence[tuple[float, str]],
+                   t_rec_rel_s: np.ndarray | None, meas_stroke_m: np.ndarray | None, *,
+                   soft_max_m: float, margin_m: float,
+                   lookback_s: float = STROKE_END_LOOKBACK_S) -> dict[str, Any] | None:
+    """C-S8-34 ①: cause of the first FAULT entry (relative times). ``stroke_end`` from the
+    P-S8-17 event ``FAULT_STROKE_END:<leg>`` at or before the entry, else ``sensor`` when a
+    head-pressure fault event / reason or a rod fault reason is recorded, else ``stroke_end``
+    from the record (every ``meas.stroke`` sample of a leg in ``[entry - lookback, entry)`` >=
+    ``soft_max - margin``), else ``unknown``. None without a FAULT."""
+    if fault_entry_s is None:
+        return None
+    tf = float(fault_entry_s)
+    out: dict[str, Any] = {"fault_t_s": tf, "threshold_m": soft_max_m - margin_m,
+                           "lookback_s": lookback_s}
+    se = named_events(names, STROKE_END_FAULT_EVENT)
+    se = [e for e in se if e["t_s"] <= tf + 1e-6]
+    if se:
+        out.update(cause="stroke_end", source="event",
+                   legs=sorted({e["leg"] for e in se if e["leg"]}))
+        return out
+    sensor = [e for p in (HEAD_FAULT_EVENT, HEAD_FAULT_REASON_INFO, ROD_FAULT_REASON_INFO)
+              for e in named_events(names, p) if e["t_s"] <= tf + 1e-6]
+    if sensor:
+        out.update(cause="sensor", source="event",
+                   legs=sorted({e["leg"] for e in sensor if e["leg"]}))
+        return out
+    if t_rec_rel_s is not None and meas_stroke_m is not None:
+        t = np.asarray(t_rec_rel_s, float)
+        s = np.asarray(meas_stroke_m, float)
+        sel = (t >= tf - lookback_s - 1e-9) & (t < tf - 1e-9)
+        if sel.any():
+            at = s[sel] >= soft_max_m - margin_m - 1e-12
+            legs = [LEGS[j] for j in range(s.shape[1]) if at[:, j].all()]
+            out["stroke_max_before_m"] = [float(x) for x in s[sel].max(axis=0)]
+            if legs:
+                out.update(cause="stroke_end", source="record", legs=legs)
+                return out
+    out.update(cause="unknown", source="none", legs=[])
+    return out
+
+
+def stroke_end_protective(pads: Mapping[str, Any], t0: float, fault_entry_s: float,
+                          floor_deg: Sequence[float] | None, f_min_N: float,
+                          target_rad: Sequence[float] | None) -> dict[str, Any]:
+    """U-S8-44 values of a stroke-end FAULT (1 ms pads from the FAULT entry to the run end):
+    operating-diamond index of the floor, minimum judged force per leg, lifted legs, maximum
+    true attitude error against the target; ``passed`` per :data:`STROKE_END_RULE`."""
+    from outrigger_sim.frames import roll_pitch_from_quat
+
+    tp = np.asarray(pads["t"], float) - t0
+    sel = tp >= float(fault_entry_s) - 1e-9
+    fmin = judged_force_min(pads)[sel]
+    air = (np.asarray(pads["airborne"], bool)[sel] if "airborne" in pads
+           else np.zeros(fmin.shape, bool))
+    tgt = np.zeros(2) if target_rad is None else np.asarray(target_rad, float)[:2]
+    att = None
+    if "body_quat_wxyz" in pads and sel.any():
+        r, p = roll_pitch_from_quat(np.asarray(pads["body_quat_wxyz"], float)[sel])
+        err = np.degrees(np.abs(np.column_stack([r, p]) - tgt))
+        att = [float(x) for x in err.max(axis=0)]
+    op = operating_index(floor_deg)
+    min_leg = [float(x) / 1e3 for x in fmin.min(axis=0)] if fmin.size else None
+    lifted = [LEGS[j] for j in range(air.shape[1]) if air[:, j].any()] if air.size else []
+    limit_kN = (f_min_N + D8_MARGIN_N) / 1e3
+    outside = op is not None and op > 1.0 + 1e-12
+    ok_force = min_leg is not None and min(min_leg) >= limit_kN - 1e-9
+    ok_att = att is not None and max(att) <= STROKE_END_ATT_TOL_DEG + 1e-12
+    return {"floor_deg": None if floor_deg is None else [float(x) for x in floor_deg],
+            "operating_index": op, "outside_operating": bool(outside),
+            "min_force_kN": min_leg, "limit_kN": limit_kN, "lifted_legs": lifted,
+            "att_err_max_deg": att, "att_tol_deg": STROKE_END_ATT_TOL_DEG,
+            "post_fault_s": None if not sel.any() else float(tp[sel][-1] - tp[sel][0]),
+            "passed": bool(outside and ok_force and not lifted and ok_att),
+            "rule": STROKE_END_RULE}
+
+
+def reapproach_pingpong(names: Sequence[tuple[float, str]], t_ev_s: float | None,
+                        t_end_s: float, t0: float) -> dict[str, Any] | None:
+    """C-S8-34 ④ (spec rev. 51 222.3 / 223.2): re-approach starts after the event (relative
+    times) and the ``reapproach_pingpong`` tag window (None in ``window`` when fewer than
+    :data:`PINGPONG_MIN_STARTS` start later than event + 1.5 s). None without an event time."""
+    if t_ev_s is None:
+        return None
+    te = float(t_ev_s)
+    starts = [(e["t_s"], e["leg"]) for e in named_events(names, "leg_reapproach_start")
+              if e["t_s"] >= te - 1e-6]
+    ends = [e["t_s"] for e in named_events(names, "leg_reapproach_contact")
+            if e["t_s"] >= te - 1e-6]
+    late = [(t, leg) for t, leg in starts if t - te > PINGPONG_AFTER_S + 1e-9]
+    out: dict[str, Any] = {"starts_rel_s": [[round(t - te, 3), leg] for t, leg in starts],
+                           "late_starts": len(late),
+                           "leg_changes": sum(1 for a, b in zip(starts, starts[1:],
+                                                                strict=False)
+                                              if a[1] != b[1]),
+                           "window": None}
+    if len(late) >= PINGPONG_MIN_STARTS:
+        last = max([t for t, _ in starts] + ends)
+        a = te + PINGPONG_AFTER_S
+        b = min(max(last + PINGPONG_TAIL_S, a + 1e-6), float(t_end_s))
+        out["window"] = {"start_s": a, "end_s": b, "start_engine_s": a + t0,
+                         "end_engine_s": b + t0, "late_starts": len(late),
+                         "rule": ML_TAG_RULES["reapproach_pingpong"]}
+    return out
+
+
+RT_WORK_AFTER_S = 1.5
+RT_WORK_BIN_S = 0.5
+RT_WORK_SPAN_S = 8.0
+RT_WORK_LIMIT_J = 20.0
+"""C-S8-36 / 37 (spec rev. 52 230 / 236, kept by rev. 54 248.3, ASSUMPTION): bin threshold of
+the actuator twist-mode work (768 recurrence plateau 15-20 J, rev. 54 248.2)."""
+RT_WORK_MAX_CLUSTERS = 1
+"""C-S8-40 (spec rev. 54 248.3, ASSUMPTION 254): at most one cluster of consecutive judged bins
+> :data:`RT_WORK_LIMIT_J` after event + 1.5 s (a single overshoot is allowed, a recurring energy
+injection fails)."""
+RT_WORK_FORCED_TAIL_S = 0.1
+"""C-S8-40 (spec rev. 54 248.3): the forced window is masked up to ``done_s`` + 0.1 s (one valve
+lag tau_v)."""
+RT_TWIST_N = np.array([0.5, -0.5, -0.5, 0.5])
+RT_WORK_RULE = ("C-S8-40 (spec rev. 54 248.3): W = sum over the 1 ms pad record of D/2 "
+                "(n . u_applied) dt per 0.5 s bin from the event, 8 s, D = (F_FL + F_RR) - "
+                "(F_FR + F_RL) - D0 (true rod forces pads F_cyl, D0 = median over event - 0.5 .. "
+                "0 s), n = (+,-,-,+)/2, u_applied from record.npz held between samples; power 0 "
+                "in the forced window [forced start, done_s + 0.1 s] (to the run end when "
+                "done_s is None); judged bins = bins starting >= event + 1.5 s with an unmasked "
+                "sample; cluster = consecutive judged bins > +20 J; judged: clusters <= 1 "
+                "(recurrence ban; ASSUMPTION 254). Records: the rev. 52 unmasked bin max "
+                "(raw_max_bin_after_J), the masked bin max and the largest cluster work")
+
+
+def forced_rel_to_event(fw: Mapping[str, Any] | None, t_ev_rel: float
+                        ) -> dict[str, Any] | None:
+    """C-S8-40: a :func:`forced_window` (times relative to the run start) as event-relative
+    ``{"start_s", "done_s"}`` for :func:`twist_work_bins` (``done_s`` None = never finished)."""
+    if not fw:
+        return None
+    done = fw.get("done_s")
+    return {"start_s": float(fw["start_s"]) - float(t_ev_rel),
+            "done_s": None if done is None else float(done) - float(t_ev_rel),
+            "others": fw.get("others")}
+
+
+def work_clusters(edges: Sequence[float], bins: Sequence[float], judged: Sequence[bool],
+                  limit_J: float = RT_WORK_LIMIT_J) -> list[list[float]]:
+    """C-S8-40: ``[[start_s, work_J], ...]`` of the runs of consecutive judged bins whose work
+    is > ``limit_J`` (an unjudged or non-exceeding bin ends a run)."""
+    out: list[list[float]] = []
+    cur: list[float] | None = None
+    for a, w, ok in zip(edges, bins, judged, strict=True):
+        if ok and w > limit_J:
+            if cur is None:
+                cur = [float(a), 0.0]
+                out.append(cur)
+            cur[1] += float(w)
+        else:
+            cur = None
+    return [[round(a, 3), round(w, 2)] for a, w in out]
+
+
+def twist_work_bins(pads: Mapping[str, Any], rec: Mapping[str, np.ndarray] | None,
+                    t_ev_abs: float, span_s: float = RT_WORK_SPAN_S,
+                    forced: Mapping[str, Any] | None = None) -> dict[str, Any] | None:
+    """Actuator twist-mode work per :data:`RT_WORK_BIN_S` bin after the event (engine time
+    ``t_ev_abs``; :data:`RT_WORK_RULE`). ``forced``: event-relative forced window
+    (:func:`forced_rel_to_event`), masked to ``done_s`` + :data:`RT_WORK_FORCED_TAIL_S`. None
+    without the pad force or the applied command."""
+    if rec is None or "u_applied" not in rec or "F_cyl" not in pads:
+        return None
+    tp = np.asarray(pads["t"], float)
+    m = (tp >= t_ev_abs - 0.5) & (tp <= t_ev_abs + span_s + 1e-9)
+    if m.sum() < 10:
+        return None
+    t = tp[m] - t_ev_abs
+    f = np.asarray(pads["F_cyl"], float)[m]
+    d = (f[:, 0] + f[:, 3]) - (f[:, 1] + f[:, 2])
+    pre = t < 0.0
+    d0 = float(np.median(d[pre])) if pre.any() else 0.0
+    tr = np.asarray(rec["t"], float) - t_ev_abs
+    utw = np.asarray(rec["u_applied"], float) @ RT_TWIST_N
+    j = np.clip(np.searchsorted(tr, t, side="right") - 1, 0, tr.size - 1)
+    dt = np.diff(t, append=t[-1] + float(np.median(np.diff(t))))
+    p_raw = 0.5 * (d - d0) * utw[j]
+    t_last = float(t[-1])
+    masked_s = None
+    hide = np.zeros(t.size, bool)
+    if forced:
+        a = float(forced["start_s"])
+        b = None if forced.get("done_s") is None \
+            else float(forced["done_s"]) + RT_WORK_FORCED_TAIL_S
+        hide = (t >= a - 1e-9) & ((t <= b + 1e-9) if b is not None else True)
+        masked_s = [round(a, 4), None if b is None else round(b, 4)]
+    p = np.where(hide, 0.0, p_raw)
+    # bins that start after the record end (short run) are left out
+    edges = np.arange(0.0, min(span_s, t_last) - 1e-9, RT_WORK_BIN_S)
+    sel = [(t >= a) & (t < a + RT_WORK_BIN_S) for a in edges]
+    bins = [float(np.sum((p * dt)[s])) for s in sel]
+    raw_bins = [float(np.sum((p_raw * dt)[s])) for s in sel]
+    late = [a >= RT_WORK_AFTER_S - 1e-9 for a in edges]
+    judged = [lt and bool((s & ~hide).any()) for lt, s in zip(late, sel, strict=True)]
+    jw = [w for w, ok in zip(bins, judged, strict=True) if ok]
+    raw_late = [w for w, lt in zip(raw_bins, late, strict=True) if lt]
+    clusters = work_clusters(edges, bins, judged)
+    passed = None if not jw else bool(len(clusters) <= RT_WORK_MAX_CLUSTERS)
+    return {"bins_J": [round(w, 2) for w in bins], "raw_bins_J": [round(w, 2) for w in raw_bins],
+            "bin_s": RT_WORK_BIN_S, "covered_s": t_last, "D0_kN": d0 / 1e3,
+            "masked_s": masked_s, "judged_bins": int(sum(judged)),
+            "max_bin_after_J": max(jw) if jw else None,
+            "raw_max_bin_after_J": max(raw_late) if raw_late else None,
+            "pos_sum_after_J": float(sum(w for w in jw if w > 0.0)),
+            "clusters": clusters, "n_clusters": len(clusters),
+            "max_cluster_J": max((w for _a, w in clusters), default=0.0) if jw else None,
+            "limit_J": RT_WORK_LIMIT_J, "max_clusters": RT_WORK_MAX_CLUSTERS,
+            "passed_rev52": None if not raw_late else bool(max(raw_late) <= RT_WORK_LIMIT_J),
+            "passed": passed,
+            "status": "judged" if jw else (
+                "not judgeable: the forced window covers every bin after event + 1.5 s"
+                if any(late) else "no bin after event + 1.5 s")}
+
+
+DEFERRED_TAIL_S = 0.3
+"""C-S8-41 / C-S8-42 (spec rev. 55 267): tail added to the deferred-leg window end (valve lag
+0.1 s and the load recovery of the first re-approach period)."""
+DEFERRED_T_O_DEFAULT_S = 0.8
+"""C-S8-42 (spec rev. 55 267): opposite-diagonal window ``T_o`` when the controller meta has no
+``r8.lifted_reapproach.opposite_window_s`` (R8 value)."""
+DEFERRED_WINDOW_RULE = "spec rev. 55 267"
+"""C-S8-42 (spec rev. 55 269.3 #1): ``window_rule`` string of :func:`deferred_leg_minimum`."""
+DEFERRED_MIN_RULE = (
+    "C-S8-41 / C-S8-42 (spec rev. 54 261, rev. 55 267, U-S8-57 (a)): per "
+    "leg_reapproach_deferred:<leg> after the event, window = deferral t_def .. min(t_next, t_def + "
+    "T_o) + 0.3 s, cut at the run end (t_next = the same leg's next leg_reapproach_start, T_o = "
+    "controller meta r8.lifted_reapproach.opposite_window_s, 0.8 s when missing); overlapping "
+    "windows of the same leg are merged (first deferral .. last end); value = minimum of the "
+    "S8-A2 judged true rod force (pads F_cyl_min_interval, 20 ms mean F_cyl_mean_20ms on airborne "
+    "samples) of that leg over the window; the raw 1 ms minimum and the lift are records too; "
+    "FLAG (record, not a gate) when the judged minimum < F_min")
+DEFERRED_REF_WINDOW_S = (0.0, 4.0)
+"""C-S8-42 (spec rev. 55 269.3 #2, 273): per-leg comparison window, event + 0 .. 4 s."""
+DEFERRED_REF_FLAG_KN = 0.5
+"""C-S8-42 (spec rev. 55 269.2 #4, ASSUMPTION): FLAG text when the leg minimum is deeper than
+the reference by more than this [kN]."""
+DEFERRED_REF_FLAG_S = 0.1
+"""C-S8-42 (spec rev. 55 269.2 #4, ASSUMPTION): FLAG text when the time below F_min or the
+airborne time exceeds the reference by more than this [s] (one control period)."""
+DEFERRED_REF_RULE = (
+    "C-S8-42 (spec rev. 55 269.3 #2): per deferred leg, over event + 0 .. 4 s (both ends "
+    "included): minimum of the S8-A2 judged force, time with the judged force < F_min and "
+    "airborne time (1 ms samples x the median pad period), in this run and in the same episode "
+    "of the reference batch (768 / original MLJ); FLAG text (record, not a judgement) when the "
+    "run is deeper by > 0.5 kN or longer by > 0.1 s (ASSUMPTION thresholds)")
+
+
+def deferred_t_o_s(controller_meta: Mapping[str, Any] | None) -> float:
+    """C-S8-42: ``T_o`` of the run (controller meta ``r8.lifted_reapproach.opposite_window_s``),
+    :data:`DEFERRED_T_O_DEFAULT_S` when missing or not a number."""
+    lr = ((controller_meta or {}).get("r8") or {}).get("lifted_reapproach")
+    v = lr.get("opposite_window_s") if isinstance(lr, Mapping) else None
+    return float(v) if isinstance(v, int | float) and not isinstance(v, bool) \
+        else DEFERRED_T_O_DEFAULT_S
+
+
+def leg_window_stats(tp: np.ndarray, judged: np.ndarray, air: np.ndarray | None, j: int,
+                     a: float, b: float, f_min_N: float | None) -> dict[str, Any] | None:
+    """C-S8-42: leg ``j`` over ``[a, b]`` (times of ``tp``, both ends included): judged-force
+    minimum [kN] and its time, time below F_min and airborne time [s] (sample count x the median
+    sample period). None when no sample lies in the window."""
+    sel = (tp >= a - 1e-9) & (tp <= b + 1e-9)
+    if not sel.any():
+        return None
+    dt = float(np.median(np.diff(tp))) if tp.size > 1 else 0.0
+    k = np.flatnonzero(sel)
+    kj = k[int(np.argmin(judged[k, j]))]
+    return {"min_kN": round(float(judged[kj, j]) / 1e3, 3), "min_t_s": round(float(tp[kj]), 3),
+            "below_F_min_s": None if f_min_N is None
+            else round(float(np.sum(judged[k, j] < float(f_min_N))) * dt, 3),
+            "air_s": None if air is None else round(float(np.sum(air[k, j])) * dt, 3)}
+
+
+def deferred_leg_minimum(names: Sequence[tuple[float, str]], t_ev_rel: float, t0: float,
+                         pads: Mapping[str, Any] | None, f_min_N: float | None, *,
+                         t_o_s: float | None = None) -> dict[str, Any] | None:
+    """C-S8-41 / C-S8-42 (spec rev. 54 261, rev. 55 267): true minimum of each deferred leg
+    (:data:`DEFERRED_MIN_RULE`). ``names``: relative event names (:func:`_event_names`),
+    ``t_ev_rel``: event time relative to the run start ``t0``; pad times are engine times;
+    ``t_o_s``: ``T_o`` (None = :data:`DEFERRED_T_O_DEFAULT_S`). Window times in the output are
+    relative to the event. Each window also carries ``leg_0_4s`` (:func:`leg_window_stats` of the
+    leg over event + 0 .. 4 s, C-S8-42 #2; the reference side is added by
+    :func:`attach_deferred_reference`). None without the pad force record."""
+    if pads is None or "t" not in pads or not ("F_cyl_min_interval" in pads or "F_cyl" in pads):
+        return None
+    t_o = DEFERRED_T_O_DEFAULT_S if t_o_s is None else float(t_o_s)
+    te = float(t_ev_rel)
+    tp = np.asarray(pads["t"], float) - float(t0)
+    raw = np.asarray(pads["F_cyl_min_interval"] if "F_cyl_min_interval" in pads
+                     else pads["F_cyl"], float)
+    judged = judged_force_min(pads) if "F_cyl_min_interval" in pads else raw
+    air = np.asarray(pads["airborne"], bool) if "airborne" in pads else None
+    starts = [e for e in named_events(names, "leg_reapproach_start") if e["leg"] in LEGS]
+    deferred = [e for e in named_events(names, "leg_reapproach_deferred")
+                if e["leg"] in LEGS and e["t_s"] >= te - 1e-6]
+    t_last = float(tp[-1])
+    raw_w = []
+    for e in deferred:
+        nxt = min((s["t_s"] for s in starts if s["leg"] == e["leg"]
+                   and s["t_s"] > e["t_s"] + 1e-6), default=None)
+        stop = e["t_s"] + t_o if nxt is None else min(nxt, e["t_s"] + t_o)
+        raw_w.append({"leg": e["leg"], "a": e["t_s"], "b": min(stop + DEFERRED_TAIL_S, t_last),
+                      "next": nxt})
+    # merge overlapping windows of the same leg (first deferral .. last end)
+    wins: list[dict[str, Any]] = []
+    for w in sorted(raw_w, key=lambda x: (LEGS.index(x["leg"]), x["a"])):
+        cur = wins[-1] if wins and wins[-1]["leg"] == w["leg"] else None
+        if cur is not None and w["a"] <= cur["b"] + 1e-9:
+            cur["deferred_s"].append(round(w["a"] - te, 3))
+            if w["b"] >= cur["b"]:
+                cur["b"], cur["next"] = w["b"], w["next"]
+            continue
+        wins.append({"leg": w["leg"], "deferred_s": [round(w["a"] - te, 3)], "a": w["a"],
+                     "b": w["b"], "next": w["next"]})
+    ra, rb = DEFERRED_REF_WINDOW_S
+    out_w = []
+    for w in sorted(wins, key=lambda x: x["a"]):  # first-deferral order (as rev. 55)
+        j = LEGS.index(w["leg"])
+        sel = (tp >= w["a"] - 1e-9) & (tp <= w["b"] + 1e-9)
+        if not sel.any():
+            continue
+        k = np.flatnonzero(sel)
+        kj = k[int(np.argmin(judged[k, j]))]
+        kr = k[int(np.argmin(raw[k, j]))]
+        mn = float(judged[kj, j])
+        ctx = leg_window_stats(tp - te, judged, air, j, ra, rb, f_min_N)
+        out_w.append({"leg": w["leg"], "deferred_s": w["deferred_s"],
+                      "next_start_s": None if w["next"] is None else round(w["next"] - te, 3),
+                      "window_s": [round(w["a"] - te, 3), round(w["b"] - te, 3)],
+                      "min_kN": round(mn / 1e3, 3), "min_t_s": round(float(tp[kj]) - te, 3),
+                      "raw_min_kN": round(float(raw[kr, j]) / 1e3, 3),
+                      "lift": None if air is None else bool(air[k, j].any()),
+                      "below_F_min": None if f_min_N is None else bool(mn < float(f_min_N)),
+                      "leg_0_4s": ctx})
+    worst = min(out_w, key=lambda x: x["min_kN"], default=None)
+    return {"windows": out_w, "n_windows": len(out_w),
+            "min_kN": None if worst is None else worst["min_kN"],
+            "worst": worst, "f_min_kN": None if f_min_N is None else float(f_min_N) / 1e3,
+            "flag": any(x["below_F_min"] for x in out_w),
+            "t_o_s": t_o, "window_rule": DEFERRED_WINDOW_RULE,
+            "rule": DEFERRED_MIN_RULE}
+
+
+def _pads_force_of_dir(d: Path) -> dict[str, np.ndarray] | None:
+    p = Path(d) / "pads.npz"
+    if not p.exists():
+        return None
+    with np.load(p, allow_pickle=False) as z:
+        return {k: np.asarray(z[k]) for k in ("t", "F_cyl", "F_cyl_min_interval",
+                                              "F_cyl_mean_20ms", "airborne") if k in z.files}
+
+
+def deferred_reference_stats(ref_dir: Path, legs: Sequence[str], *,
+                             event_engine_time: bool | None = None,
+                             f_min_N: float | None) -> dict[str, Any] | None:
+    """C-S8-42 (spec rev. 55 269.3 #2): :func:`leg_window_stats` over event + 0 .. 4 s of
+    ``legs`` in a reference run folder (``result.json`` + ``pads.npz``). ``event_engine_time``:
+    ``result.event_t_s`` is an engine time (ML episodes, ``job_ml_episode``) rather than relative
+    to ``settings.start_t_s`` (``run_S8C.py run`` cases, e.g. the original MLJ); None = from the
+    file (ML episode = ``episode`` and ``branch_t_s`` keys). Event-relative times. None without
+    the records or an event time."""
+    d = Path(ref_dir)
+    if not (d / "result.json").exists():
+        return None
+    pads = _pads_force_of_dir(d)
+    if pads is None or "t" not in pads or "F_cyl_min_interval" not in pads:
+        return None
+    res = json.loads((d / "result.json").read_text(encoding="utf-8"))
+    if event_engine_time is None:
+        event_engine_time = "episode" in res and "branch_t_s" in res
+    t0 = float((res.get("settings") or {}).get("start_t_s") or 0.0)
+    ev = res.get("event_t_s")
+    if ev is None and event_engine_time:
+        ev = res.get("branch_t_s")
+    if ev is None:
+        return None
+    te = float(ev) - t0 if event_engine_time else float(ev)
+    tp = np.asarray(pads["t"], float) - t0 - te
+    judged = judged_force_min(pads)
+    air = np.asarray(pads["airborne"], bool) if "airborne" in pads else None
+    ra, rb = DEFERRED_REF_WINDOW_S
+    return {leg: leg_window_stats(tp, judged, air, LEGS.index(leg), ra, rb, f_min_N)
+            for leg in legs if leg in LEGS}
+
+
+def deferred_ref_flags(run: Mapping[str, Any] | None, ref: Mapping[str, Any] | None
+                       ) -> list[str]:
+    """C-S8-42: FLAG reasons of one leg (run vs reference, :data:`DEFERRED_REF_FLAG_KN` /
+    :data:`DEFERRED_REF_FLAG_S`); empty when either side is missing or within the thresholds."""
+    if not run or not ref:
+        return []
+    out = []
+    if run["min_kN"] < ref["min_kN"] - DEFERRED_REF_FLAG_KN - 1e-9:
+        out.append(f"min {run['min_kN']:.2f} vs {ref['min_kN']:.2f} kN")
+    for k, lab in (("below_F_min_s", "below F_min"), ("air_s", "airborne")):
+        if run.get(k) is not None and ref.get(k) is not None \
+                and run[k] > ref[k] + DEFERRED_REF_FLAG_S + 1e-9:
+            out.append(f"{lab} {run[k]:.3f} vs {ref[k]:.3f} s")
+    return out
+
+
+def attach_deferred_reference(dm: dict[str, Any] | None, ref_dir: Path | None, *,
+                              event_engine_time: bool | None = None,
+                              f_min_N: float | None = None,
+                              ref_label: str | None = None) -> None:
+    """C-S8-42 (spec rev. 55 269.3 #2): add to each window of :func:`deferred_leg_minimum` the
+    reference columns ``ref_0_4s`` (:func:`deferred_reference_stats`, same episode in the
+    reference batch) and ``ref_flag`` (:func:`deferred_ref_flags`); ``dm["reference"]`` records
+    the folder (None = no reference: the columns stay None). In place."""
+    if not dm or not dm.get("windows"):
+        return
+    if f_min_N is None and dm.get("f_min_kN") is not None:
+        f_min_N = float(dm["f_min_kN"]) * 1e3
+    ref = None
+    if ref_dir is not None:
+        ref = deferred_reference_stats(ref_dir, sorted({w["leg"] for w in dm["windows"]}),
+                                       event_engine_time=event_engine_time, f_min_N=f_min_N)
+    dm["reference"] = None if ref is None else {"dir": str(ref_dir), "label": ref_label}
+    for w in dm["windows"]:
+        r = None if ref is None else ref.get(w["leg"])
+        w["ref_0_4s"] = r
+        w["ref_flag"] = deferred_ref_flags(w.get("leg_0_4s"), r)
+    dm["ref_flag"] = any(w["ref_flag"] for w in dm["windows"])
+    dm["ref_rule"] = DEFERRED_REF_RULE
+
+
+AVAIL_TOL_S = 0.1
+"""C-S8-42 (spec rev. 55 269.2 #3, 273): re-READY non-worsening tolerance, median of
+(new - reference) over the runs reaching it in both (one control period)."""
+AVAIL_RULE = (
+    "C-S8-42 (spec rev. 55 269.2 #2 / #3, 269.3 #3; = control c55_avail.py): after the event "
+    "(result.event_t_s, engine time): probe return = a 10 Hz r8_series phase change 'probe' -> "
+    "'level' (count per run, times rounded to 0.1 s), causes = controller events "
+    "probe_aborted_*; re-READY = the first 'ready' sample after a 'done' sample (None = not "
+    "reached in the record); rod fallback = WARN_ROD_PRESSURE_FALLBACK events after the event. "
+    "Criteria (record rows, control judges): probe-return runs <= the reference on the same ids; "
+    "median (re-READY - reference) <= +0.1 s over runs reaching it in both; a run reaching "
+    "re-READY only in the reference fails with a probe return or a rod fallback, else it is a "
+    "DONE-tail record (spec 257.2)")
+_AVAIL_EVENT = re.compile(r"t_s=([-0-9.e]+), name='([^']+)'")
+
+
+def availability_record(d: Path) -> dict[str, Any] | None:
+    """C-S8-42 (:data:`AVAIL_RULE`) of one ML episode folder (``result.json`` event engine time,
+    ``r8_series.npz`` phase, ``controller_events.json``); None without the records or an
+    event time."""
+    d = Path(d)
+    if not (d / "result.json").exists() or not (d / "r8_series.npz").exists():
+        return None
+    res = json.loads((d / "result.json").read_text(encoding="utf-8"))
+    if res.get("event_t_s") is None:
+        return None
+    te = float(res["event_t_s"])
+    with np.load(d / "r8_series.npz", allow_pickle=True) as z:
+        if "phase" not in z.files:
+            return None
+        t = np.asarray(z["t"], float) - te
+        ph = [str(x) for x in z["phase"]]
+    ret, rr, seen_done = [], None, False
+    for i in range(1, len(t)):
+        if t[i] < 0:
+            continue
+        if ph[i - 1] == "probe" and ph[i] == "level":
+            ret.append(round(float(t[i]), 1))
+        if ph[i] == "done":
+            seen_done = True
+        if rr is None and seen_done and ph[i] == "ready":
+            rr = round(float(t[i]), 1)
+    aborts, fb = [], []
+    ev_p = d / "controller_events.json"
+    for e in (json.loads(ev_p.read_text(encoding="utf-8")) if ev_p.exists() else []):
+        m = _AVAIL_EVENT.search(str(e))
+        if not m or float(m.group(1)) < te - 1e-6:
+            continue
+        if m.group(2).startswith("probe_aborted"):
+            aborts.append([round(float(m.group(1)) - te, 1), m.group(2)])
+        if m.group(2).startswith("WARN_ROD_PRESSURE_FALLBACK"):
+            fb.append([round(float(m.group(1)) - te, 1), m.group(2)])
+    return {"probe_returns_s": ret, "probe_aborts": aborts, "rod_fallback": fb,
+            "re_ready_s": rr, "t_end_s": round(float(t[-1]), 1)}
+
+
+def availability_compare(new: Mapping[str, Mapping[str, Any] | None],
+                         ref: Mapping[str, Mapping[str, Any] | None]) -> dict[str, Any]:
+    """C-S8-42: :data:`AVAIL_RULE` summary over the run ids present in both (= control
+    ``c55_avail.py`` ``summary``); ``missing_in_reference``: ids without a reference record."""
+    ids = [c for c in new if new[c] is not None and ref.get(c) is not None]
+    missing = sorted(c for c in new if new[c] is not None and ref.get(c) is None)
+    deltas, only_ref, only_new = [], [], []
+    for c in ids:
+        a, b = new[c]["re_ready_s"], ref[c]["re_ready_s"]
+        if a is not None and b is not None:
+            deltas.append((c, round(a - b, 1)))
+        elif b is not None:
+            only_ref.append(c)
+        elif a is not None:
+            only_new.append(c)
+    med = float(np.median([x for _, x in deltas])) if deltas else None
+    pr_new = sorted(c for c in ids if new[c]["probe_returns_s"])
+    pr_ref = sorted(c for c in ids if ref[c]["probe_returns_s"])
+    bad = [c for c in only_ref if new[c]["probe_returns_s"] or new[c]["rod_fallback"]]
+    return {"ids": len(ids), "missing_in_reference": missing,
+            "probe_return_runs_new": pr_new, "probe_return_runs_ref": pr_ref,
+            "probe_return_ok": len(pr_new) <= len(pr_ref),
+            "re_ready_both": len(deltas), "median_delta_s": med,
+            "later_runs": [c for c, x in deltas if x > AVAIL_TOL_S],
+            "worst": max(deltas, key=lambda z: z[1]) if deltas else None,
+            "reached_only_in_ref": only_ref, "reached_only_in_new": only_new,
+            "reached_only_in_ref_with_probe_return_or_fallback": bad,
+            "reached_only_in_ref_done_tail_record": [c for c in only_ref if c not in bad],
+            # as c55_avail.py: no run reaching re-READY in both = criterion not met (NaN median)
+            "re_ready_ok": med is not None and med <= AVAIL_TOL_S and not bad,
+            "passed": bool(len(pr_new) <= len(pr_ref) and med is not None
+                           and med <= AVAIL_TOL_S and not bad)}
+
+
+def availability_rows(new: Mapping[str, Mapping[str, Any] | None],
+                      ref: Mapping[str, Mapping[str, Any] | None] | None,
+                      ref_label: str | None) -> list[dict[str, Any]]:
+    """C-S8-42 (spec rev. 55 269.3 #3): two record rows (PROBE -> LEVEL returns, re-READY vs the
+    reference batch); ``criterion_met`` carries the 269.2 criterion, ``passed`` stays None (control
+    judges). No row without a reference or an episode."""
+    if ref is None or not new:
+        return []
+    s = availability_compare(new, ref)
+    per = {c: {"new": new[c], "ref": ref.get(c)} for c in sorted(new) if new[c] is not None}
+    return [_row("C-S8-42 PROBE -> LEVEL returns after the event: runs, this batch <= reference "
+                 f"(record, spec rev. 55 269.2 #2; reference {ref_label})", "*",
+                 {"runs_new": len(s["probe_return_runs_new"]),
+                  "runs_ref": len(s["probe_return_runs_ref"]), "ids": s["ids"]},
+                 len(s["probe_return_runs_ref"]), None,
+                 "; ".join(f"{c}: {per[c]['new']['probe_returns_s']} s ("
+                           + ", ".join(x[1] for x in per[c]["new"]["probe_aborts"]) + ")"
+                           for c in s["probe_return_runs_new"])[:3000] or "no probe return",
+                 kind="record", criterion_met=s["probe_return_ok"],
+                 runs_new=s["probe_return_runs_new"], runs_ref=s["probe_return_runs_ref"],
+                 missing_in_reference=s["missing_in_reference"], rule=AVAIL_RULE),
+            _row("C-S8-42 re-READY after the event vs reference: median (new - ref) <= +"
+                 f"{AVAIL_TOL_S:g} s over runs reaching it in both; reference-only runs with a "
+                 "probe return or a rod fallback = fail (record, spec rev. 55 269.2 #3; "
+                 f"reference {ref_label})", "*",
+                 {"both": s["re_ready_both"], "median_delta_s": s["median_delta_s"],
+                  "only_ref": len(s["reached_only_in_ref"]),
+                  "only_ref_with_probe_return_or_fallback":
+                      len(s["reached_only_in_ref_with_probe_return_or_fallback"]),
+                  "only_new": len(s["reached_only_in_new"])},
+                 AVAIL_TOL_S, None,
+                 f"later > {AVAIL_TOL_S:g} s: {s['later_runs']}; worst {s['worst']}; only in "
+                 f"reference with probe return / fallback: "
+                 f"{s['reached_only_in_ref_with_probe_return_or_fallback']}; DONE-tail record: "
+                 f"{s['reached_only_in_ref_done_tail_record']}",
+                 kind="record", criterion_met=s["re_ready_ok"], c55_summary=s,
+                 per_run=per, rule=AVAIL_RULE)]
+
+
+def reapproach_rt_record(names: Sequence[tuple[float, str]], t_ev_rel: float | None, t0: float,
+                         controller_meta: Mapping[str, Any] | None, pads: Mapping[str, Any] | None,
+                         rec: Mapping[str, np.ndarray] | None,
+                         forced: Mapping[str, Any] | None = None, *,
+                         f_min_N: float | None = None) -> dict[str, Any] | None:
+    """C-S8-37 (spec rev. 52 230 / 235): re-approach runs after the event (count, re-triggers
+    from the controller meta ``lifted_reapproach[].is_retrigger``), deferred starts
+    (``leg_reapproach_deferred:<leg>``) and the twist work bins (:func:`twist_work_bins`).
+    Times relative to the run start ``t0``; None without an event time. ``forced`` (C-S8-40):
+    the run's :func:`forced_window` (run-start relative), masked in the work bins. C-S8-41:
+    ``deferred_min`` = :func:`deferred_leg_minimum` (``f_min_N`` gives its FLAG)."""
+    if t_ev_rel is None:
+        return None
+    te = float(t_ev_rel)
+    runs = []
+    for r in (controller_meta or {}).get("lifted_reapproach") or []:
+        s = r.get("start_s")
+        if not isinstance(s, int | float) or s - t0 < te - 1e-6:
+            continue
+        runs.append({"start_s": round(float(s) - t0 - te, 3), "leg": r.get("leg"),
+                     "is_retrigger": r.get("is_retrigger"), "outcome": r.get("outcome"),
+                     "end_s": None if r.get("end_s") is None
+                     else round(float(r["end_s"]) - t0 - te, 3)})
+    deferred = [e for e in named_events(names, "leg_reapproach_deferred")
+                if e["t_s"] >= te - 1e-6]
+    has_flag = any(r["is_retrigger"] is not None for r in runs)
+    out = {"runs_after_event": len(runs),
+           "retriggers": sum(1 for r in runs if r["is_retrigger"]) if has_flag else None,
+           "starts_after_1.5_s": sum(1 for r in runs if r["start_s"] > RT_WORK_AFTER_S + 1e-9),
+           "deferred": len(deferred),
+           "deferred_rel_s": [[round(e["t_s"] - te, 3), e["leg"]] for e in deferred][:30],
+           "runs": runs[:30],
+           "is_retrigger_recorded": has_flag,
+           "work": None if pads is None else twist_work_bins(
+               pads, rec, te + t0, forced=forced_rel_to_event(forced, te)),
+           "deferred_min": deferred_leg_minimum(names, te, t0, pads, f_min_N,
+                                                t_o_s=deferred_t_o_s(controller_meta))
+           if deferred else None,
+           "rule": RT_WORK_RULE}
+    return out
+
+
+RT_WORK_REF_FLAG_J = 20.0
+"""C-S8-40 (spec rev. 54 248.3 record row 3): FLAG when the largest cluster work of an RT run
+exceeds that of the same episode in the reference (768) batch by more than this."""
+
+
+def deferred_min_rows(cms: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """C-S8-41 (spec rev. 54 261, U-S8-57 (a)): record row over the RT-variant runs with a
+    deferred re-approach start: the true minimum of the deferred leg
+    (:func:`deferred_leg_minimum`), FLAG when below F_min. No row without an RT-variant run."""
+    rt = {c: m for c, m in cms.items() if m.get("reapproach_variant") == "rt"}
+    if not rt:
+        return []
+    per = {c: (m.get("rt") or {}).get("deferred_min") for c, m in rt.items()}
+    per = {c: v for c, v in per.items() if v and v["windows"]}
+    flagged = {c: [x for x in v["windows"] if x["below_F_min"]] for c, v in per.items()}
+    flagged = {c: v for c, v in flagged.items() if v}
+    worst = min(((c, v["worst"]) for c, v in per.items()), key=lambda kv: kv[1]["min_kN"],
+                default=None)
+    fmin = next((v["f_min_kN"] for v in per.values() if v.get("f_min_kN") is not None), None)
+
+    # C-S8-42 #2: reference columns (attach_deferred_reference), FLAG text only
+    ref_flagged = {c: [x for x in v["windows"] if x.get("ref_flag")] for c, v in per.items()}
+    ref_flagged = {c: v for c, v in ref_flagged.items() if v}
+    compared = sum(1 for v in per.values() for x in v["windows"] if x.get("ref_0_4s"))
+    no_ref = sorted(c for c, v in per.items() if not v.get("reference"))
+
+    def txt(c: str, x: Mapping[str, Any]) -> str:
+        return (f"{c} {x['leg']} deferred {x['deferred_s']} s, next start {x['next_start_s']} s: "
+                f"{x['min_kN']:.2f} kN at {x['min_t_s']:+.2f} s (raw 1 ms {x['raw_min_kN']:.2f} "
+                f"kN{', lift' if x['lift'] else ''})")
+
+    note = "; ".join(txt(c, x) for c, v in sorted(flagged.items()) for x in v)[:3000] \
+        or "no deferred leg below F_min"
+    if ref_flagged:
+        note += " | reference FLAG (event + 0..4 s): " + "; ".join(
+            f"{c} {x['leg']}: " + ", ".join(x["ref_flag"])
+            for c, v in sorted(ref_flagged.items()) for x in v)[:2000]
+    return [_row("C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. "
+                 f"min(next start, deferral + T_o) + {DEFERRED_TAIL_S:g} s, spec rev. 55 267), "
+                 "< F_min = FLAG (record, U-S8-57 (a); C-S8-42 reference columns event + 0..4 s)",
+                 "*",
+                 {"rt_runs": len(rt), "runs_with_deferral": len(per),
+                  "windows": sum(v["n_windows"] for v in per.values()),
+                  "flagged_runs": len(flagged),
+                  "worst": None if worst is None else [worst[0], worst[1]["leg"],
+                                                       worst[1]["min_kN"]]},
+                 fmin, None, note,
+                 kind="record", flag=bool(flagged) or bool(ref_flagged), flagged=sorted(flagged),
+                 ref_flagged=sorted(ref_flagged), ref_compared_windows=compared,
+                 runs_without_reference=no_ref,
+                 ref_thresholds={"min_kN": DEFERRED_REF_FLAG_KN, "time_s": DEFERRED_REF_FLAG_S},
+                 window_rule=DEFERRED_WINDOW_RULE,
+                 per_run={c: v["windows"] for c, v in per.items()}, rule=DEFERRED_MIN_RULE,
+                 ref_rule=DEFERRED_REF_RULE)]
+
+
+def rt_rows(cms: Mapping[str, Mapping[str, Any]],
+            ref_work: Mapping[str, Mapping[str, Any] | None] | None = None,
+            ref_label: str | None = None) -> list[dict[str, Any]]:
+    """C-S8-37 / C-S8-40 rows over runs with an ``rt`` record (:func:`reapproach_rt_record`):
+    the RT record (runs, re-triggers, deferred starts per run); the twist-work recurrence row
+    (spec rev. 54 248.3: clusters <= :data:`RT_WORK_MAX_CLUSTERS`), judged for the runs of the
+    RT variant (``settings.reapproach_variant`` = ``rt``, C-S8-36 bundles A / C / D), record for
+    the others (the 768 before P-S8-16, F1-only runs); record rows (i) rev. 52 unmasked bin max,
+    (ii) masked bin max and largest cluster work; with ``ref_work`` (run id -> the work of the
+    same episode in the reference batch, ``--ref-batch``) the FLAG record row 3."""
+    rows: list[dict[str, Any]] = []
+    rec = {c: m["rt"] for c, m in cms.items() if m.get("rt") and m["rt"]["runs_after_event"]}
+    if not cms:
+        return rows
+    tot = {"runs_with_reapproach": len(rec),
+           "runs_after_event": sum(v["runs_after_event"] for v in rec.values()),
+           "retriggers": sum(v["retriggers"] or 0 for v in rec.values()),
+           "deferred": sum(v["deferred"] for v in rec.values()),
+           "starts_after_1.5_s": sum(v["starts_after_1.5_s"] for v in rec.values()),
+           "runs_with_deferred": sorted(c for c, v in rec.items() if v["deferred"])}
+    rows.append(_row("C-S8-37 re-approach record after the event: runs / re-triggers / deferred "
+                     "starts (P-S8-16 RT; record)", "*", tot, None, None,
+                     "; ".join(f"{c}: {v['runs_after_event']} runs, {v['retriggers']} re-trig, "
+                               f"{v['deferred']} deferred, {v['starts_after_1.5_s']} after 1.5 s"
+                               for c, v in sorted(rec.items()))[:3000] or "none",
+                     kind="record", per_run={c: {k: v[k] for k in (
+                         "runs_after_event", "retriggers", "deferred", "starts_after_1.5_s",
+                         "deferred_rel_s", "runs")} for c, v in rec.items()}))
+    judged, recorded = {}, {}
+    for c, m in cms.items():
+        w = (m.get("rt") or {}).get("work")
+        if not w:
+            continue
+        (judged if m.get("reapproach_variant") == "rt" else recorded)[c] = w
+    for label, sel, kind in (("judged (RT variant runs)", judged, "judged"),
+                             ("record (runs without the RT variant tag)", recorded, "record")):
+        if not sel:
+            continue
+        ok = {c: w for c, w in sel.items() if w.get("passed") is not None}
+        nj = sorted(c for c, w in sel.items() if w.get("passed") is None)
+        bad = {c: w["clusters"] for c, w in ok.items() if not w["passed"]}
+        worst = max(ok.items(), key=lambda kv: (kv[1]["n_clusters"], kv[1]["max_cluster_J"]),
+                    default=None)
+        rows.append(_row(
+            f"C-S8-36 twist-mode work recurrence: clusters of 0.5 s bins > "
+            f"+{RT_WORK_LIMIT_J:g} J after event + 1.5 s (forced window masked) <= "
+            f"{RT_WORK_MAX_CLUSTERS} (spec rev. 54 248.3, ASSUMPTION) - {label}", "*",
+            {"runs": len(ok), "failed": len(bad), "not_judgeable": nj,
+             "worst": None if worst is None else [worst[0], worst[1]["n_clusters"],
+                                                  worst[1]["max_cluster_J"]]},
+            RT_WORK_MAX_CLUSTERS, ((not bad) if ok else None) if kind == "judged" else None,
+            "; ".join(f"{c}: {len(v)} clusters " + ", ".join(f"{a:g} s {w:+.1f} J"
+                                                              for a, w in v)
+                      for c, v in sorted(bad.items()))[:3000] or "no recurrence",
+            kind=kind, over=bad, not_judgeable=nj, rule=RT_WORK_RULE))
+        raw = {c: w["raw_max_bin_after_J"] for c, w in sel.items()
+               if w.get("raw_max_bin_after_J") is not None}
+        over = {c: v for c, v in raw.items() if v > RT_WORK_LIMIT_J}
+        wr = max(raw.items(), key=lambda kv: kv[1], default=None)
+        rows.append(_row(f"C-S8-36 twist-mode actuator work, every 0.5 s bin after event + 1.5 s "
+                         f"<= +{RT_WORK_LIMIT_J:g} J (ASSUMPTION) (record, rev. 52) - {label}",
+                         "*",
+                         {"runs": len(raw), "over_limit": len(over),
+                          "worst": None if wr is None else [wr[0], round(wr[1], 2)]},
+                         RT_WORK_LIMIT_J, None,
+                         "; ".join(f"{c}: {v:.1f} J" for c, v in sorted(
+                             over.items(), key=lambda kv: -kv[1]))[:2000] or "none over",
+                         kind="record", over=over))
+        per = {c: {"max_bin_after_J": None if w["max_bin_after_J"] is None
+                   else round(w["max_bin_after_J"], 2), "max_cluster_J": w["max_cluster_J"],
+                   "n_clusters": w["n_clusters"], "masked_s": w.get("masked_s")}
+               for c, w in ok.items()}
+        wm = max(per.items(), key=lambda kv: kv[1]["max_cluster_J"] or 0.0, default=None)
+        rows.append(_row(f"C-S8-36 twist-mode work after event + 1.5 s, forced window masked: max "
+                         f"bin / largest cluster [J] (record, rev. 54) - {label}", "*",
+                         {"runs": len(per), "masked_runs": sum(
+                             1 for v in per.values() if v["masked_s"] is not None),
+                          "worst_cluster": None if wm is None
+                          else [wm[0], wm[1]["max_cluster_J"]]},
+                         None, None, kind="record", per_run=per))
+    if ref_work is not None and judged:
+        cmp_, flag, missing = {}, {}, []
+        for c, w in judged.items():
+            r = ref_work.get(c)
+            if w.get("max_cluster_J") is None:
+                continue
+            if not r or r.get("max_cluster_J") is None:
+                missing.append(c)
+                continue
+            dlt = float(w["max_cluster_J"]) - float(r["max_cluster_J"])
+            cmp_[c] = {"run_J": w["max_cluster_J"], "ref_J": r["max_cluster_J"],
+                       "diff_J": round(dlt, 2)}
+            if dlt > RT_WORK_REF_FLAG_J:
+                flag[c] = cmp_[c]
+        rows.append(_row(f"C-S8-36 twist-mode work: largest cluster RT - reference > "
+                         f"+{RT_WORK_REF_FLAG_J:g} J = FLAG (record, spec rev. 54 248.3 row 3; "
+                         f"reference {ref_label})", "*",
+                         {"compared": len(cmp_), "flagged": len(flag),
+                          "missing_in_reference": sorted(missing)},
+                         RT_WORK_REF_FLAG_J, None,
+                         "; ".join(f"{c}: {v['run_J']:.1f} vs {v['ref_J']:.1f} J"
+                                   for c, v in sorted(flag.items()))[:2000] or "no FLAG",
+                         kind="record", flag=bool(flag), flagged=flag, per_run=cmp_))
+    rows.extend(deferred_min_rows(cms))  # C-S8-41 (spec rev. 54 261, U-S8-57 (a))
+    return rows
+
+
+def plant_rod_collapse(pads: Mapping[str, Any], rec: Mapping[str, np.ndarray] | None,
+                       t0: float) -> list[dict[str, Any]]:
+    """C-S8-34 ④ (spec rev. 51 222.4): locked lift-offs with a rod-pressure collapse, one tag
+    window each (relative and engine times). Lift-off = 1 ms ``airborne`` onset; locked = the
+    record ``u_applied`` of the period holding the onset ``|u| <= 1e-6 m/s``; collapse = rod
+    pressure 5 samples before minus 10 samples after > 50 bar."""
+    if rec is None or "u_applied" not in rec or "airborne" not in pads \
+            or "rod_pressure" not in pads:
+        return []
+    tp = np.asarray(pads["t"], float)
+    air = np.asarray(pads["airborne"], bool)
+    rp = np.asarray(pads["rod_pressure"], float)
+    hp = np.asarray(pads["head_pressure"], float) if "head_pressure" in pads else None
+    tr = np.asarray(rec["t"], float)
+    ua = np.asarray(rec["u_applied"], float)
+    nb, na = ROD_COLLAPSE_BEFORE_SAMPLES, ROD_COLLAPSE_AFTER_SAMPLES
+    out = []
+    for j, leg in enumerate(LEGS):
+        on = np.flatnonzero(np.diff(air[:, j].astype(int)) == 1) + 1
+        for i in on:
+            if i < nb + 1 or i + na >= tp.size:
+                continue
+            k = int(np.searchsorted(tr, tp[i], side="right")) - 1
+            if k < 0 or abs(float(ua[k, j])) > LOCKED_U_M_S:
+                continue
+            drop = float(rp[i - nb, j] - rp[i + na, j])
+            if drop <= ROD_COLLAPSE_DROP_PA:
+                continue
+            t_rel = float(tp[i]) - t0
+            a, b = t_rel - ROD_COLLAPSE_HALF_WINDOW_S, t_rel + ROD_COLLAPSE_HALF_WINDOW_S
+            period = float(np.median(np.diff(tr))) if tr.size > 1 else 0.1
+            phase_s = float(tp[i] - tr[k])
+            out.append({"leg": leg, "liftoff_s": t_rel, "liftoff_engine_s": float(tp[i]),
+                        "rod_before_bar": float(rp[i - nb, j]) / 1e5,
+                        "rod_after_bar": float(rp[i + na, j]) / 1e5,
+                        "head_before_bar": None if hp is None else float(hp[i - nb, j]) / 1e5,
+                        "head_after_bar": None if hp is None else float(hp[i + na, j]) / 1e5,
+                        "u_applied_m_s": float(ua[k, j]),
+                        "from_10hz_boundary_ms": 1e3 * min(phase_s, phase_s - period,
+                                                            key=abs),
+                        "start_s": a, "end_s": b, "start_engine_s": a + t0,
+                        "end_engine_s": b + t0, "rule": ML_TAG_RULES["plant_rod_collapse"]})
+    return out
+
+
+RELEASE_STEP_PA = 20e5
+RELEASE_TAG_S = 0.3
+RELEASE_MATCH_S = 0.010
+OVERLAP_SPEED_FRACTION = 0.05
+COLLAPSE_RECONTACT_EXTRA_S = 0.1
+"""H-S8-4 (``02_hydraulic/s8_seal_friction_counterbalance.md`` 12.3 / 12.6, ASSUMPTION): a plant
+release (valve ``|u|`` crossing ``lock_eps`` upward, exact exponential valve between the 10 Hz
+rows, ``h_s8_4_scan.valve_events``) whose 1 ms rod pressure changes by more than 20 bar from the
+last sample at or before the release to two samples later is the F1 reading step
+(``plant_release_rod_step``, window ``[t_b, t_b + 0.3 s]`` on that leg's p_h / p_r features).
+A ``plant_rod_collapse`` lift-off is matched to a release of the same leg within 10 ms; when the
+new command is inside the spool overlap or at its boundary (``|u_new| < 5 % v_max``, 12.9) the
+window end is ``max(lift-off + 0.3 s, re-contact + 0.1 s)`` (ML28_ep6 RL, ML81_ep5 RR, ML88_ep0
+RR)."""
+
+
+def valve_release_events(t10: np.ndarray, valve: np.ndarray, issued: np.ndarray, tau_s: float,
+                         eps_m_s: float, t_end: float) -> list[tuple[float, str, float, float]]:
+    """Lock / release instants of one leg (``h_s8_4_scan.valve_events``, hydraulics 12.3): between
+    rows ``k`` and ``k + 1`` the valve relaxes from ``valve[k]`` towards ``issued[k]`` with
+    ``tau_s``; returns ``(time, 'lock' | 'release', u_target, row time)`` (engine times)."""
+    events = []
+    locked = abs(valve[0]) <= eps_m_s
+    for k in range(len(t10)):
+        t0 = float(t10[k])
+        t1 = float(t10[k + 1]) if k + 1 < len(t10) else float(t_end)
+        u0, ut = float(valve[k]), float(issued[k])
+        if locked and abs(u0) > eps_m_s:
+            events.append((t0, "release", ut, t0))
+            locked = False
+        elif not locked and abs(u0) <= eps_m_s:
+            events.append((t0, "lock", ut, t0))
+            locked = True
+        if locked and abs(ut) > eps_m_s:
+            frac = (abs(ut) - eps_m_s) / abs(ut - u0)
+            if 0.0 < frac < 1.0:
+                x = -tau_s * math.log(frac)
+                if t0 + x < t1:
+                    events.append((t0 + x, "release", ut, t0))
+                    locked = False
+        elif not locked and abs(ut) <= eps_m_s and abs(u0) > eps_m_s and abs(ut - u0) > 0:
+            frac = (math.copysign(eps_m_s, u0) - ut) / (u0 - ut)
+            if 0.0 < frac < 1.0:
+                x = -tau_s * math.log(frac)
+                if t0 + x < t1:
+                    events.append((t0 + x, "lock", ut, t0))
+                    locked = True
+    return events
+
+
+def plant_release_steps(pads: Mapping[str, Any], r8: Mapping[str, np.ndarray], tau_s: float,
+                        eps_m_s: float, t0: float) -> list[dict[str, Any]]:
+    """H-S8-4 F1 record: the plant releases with a 1 ms rod-pressure change > 20 bar
+    (:data:`RELEASE_STEP_PA`), one ``[t_b, t_b + 0.3 s]`` window each (relative and engine)."""
+    if "rod_pressure" not in pads or "valve_u" not in r8 or "issued_u" not in r8:
+        return []
+    t = np.asarray(pads["t"], float)
+    rod = np.asarray(pads["rod_pressure"], float)
+    head = np.asarray(pads["head_pressure"], float) if "head_pressure" in pads else None
+    air = np.asarray(pads["airborne"], bool) if "airborne" in pads else None
+    t10 = np.asarray(r8["t"], float)
+    valve = np.asarray(r8["valve_u"], float)
+    issued = np.asarray(r8["issued_u"], float)
+    out = []
+    for j, leg in enumerate(LEGS):
+        for te, kind, ut, tb in valve_release_events(t10, valve[:, j], issued[:, j], tau_s,
+                                                     eps_m_s, float(t[-1])):
+            if kind != "release" or te < t[0] + 0.01 or te > t[-1] - 0.02:
+                continue
+            ib = int(np.searchsorted(t, te, side="right")) - 1
+            ia = ib + 2
+            if ib < 1 or ia + 3 >= t.size:
+                continue
+            jump = float(rod[ia, j] - rod[ib, j])
+            if abs(jump) <= RELEASE_STEP_PA:
+                continue
+            a, b = tb - t0, tb - t0 + RELEASE_TAG_S
+            out.append({"leg": leg, "t_release_s": te - t0, "t_boundary_s": tb - t0,
+                        "t_x_ms": (te - tb) * 1e3, "u_new_m_s": ut,
+                        "rod_before_bar": float(rod[ib, j]) / 1e5,
+                        "rod_after_bar": float(rod[ia, j]) / 1e5, "rod_jump_bar": jump / 1e5,
+                        "head_before_bar": None if head is None else float(head[ib, j]) / 1e5,
+                        "head_after_bar": None if head is None else float(head[ia, j]) / 1e5,
+                        "airborne_before": None if air is None else bool(air[ib, j]),
+                        "features": ["head_pressure", "rod_pressure"],
+                        "start_s": a, "end_s": b, "start_engine_s": a + t0,
+                        "end_engine_s": b + t0})
+    return out
+
+
+def link_collapse_releases(collapse: list[dict[str, Any]], releases: list[dict[str, Any]],
+                           pads: Mapping[str, Any], t0: float, v_max_m_s: float
+                           ) -> list[dict[str, Any]]:
+    """Match each ``plant_rod_collapse`` lift-off to its release (same leg, within 10 ms; in
+    place) and extend the window end of an overlap / boundary command to re-contact + 0.1 s;
+    returns the releases not matched (the ``plant_release_rod_step`` tag)."""
+    t = np.asarray(pads["t"], float)
+    air = np.asarray(pads["airborne"], bool)
+    used = set()
+    for x in collapse:
+        cand = [(abs(r["t_release_s"] - x["liftoff_s"]), i) for i, r in enumerate(releases)
+                if r["leg"] == x["leg"]
+                and abs(r["t_release_s"] - x["liftoff_s"]) <= RELEASE_MATCH_S + 1e-9]
+        if not cand:
+            x["release"] = None
+            continue
+        i = min(cand)[1]
+        used.add(i)
+        r = releases[i]
+        x["release"] = {k: r[k] for k in ("t_release_s", "t_boundary_s", "t_x_ms", "u_new_m_s",
+                                          "rod_jump_bar")}
+        frac = abs(r["u_new_m_s"]) / v_max_m_s if v_max_m_s > 0 else math.inf
+        x["release"]["u_new_fraction_v_max"] = frac
+        j = LEGS.index(x["leg"])
+        k = int(np.searchsorted(t, x["liftoff_engine_s"] - 1e-9))
+        off = np.flatnonzero(~air[k:, j])
+        rc = None if off.size == 0 else float(t[k + off[0]]) - t0
+        x["recontact_s"] = rc
+        if frac < OVERLAP_SPEED_FRACTION and rc is not None:
+            end = max(x["end_s"], rc + COLLAPSE_RECONTACT_EXTRA_S)
+            if end > x["end_s"]:
+                x["end_s"], x["end_engine_s"] = end, end + t0
+                x["window_extended"] = "re-contact + 0.1 s (overlap / boundary command, H-S8-4)"
+    return [r for i, r in enumerate(releases) if i not in used]
+
+
+def rod_fallback_command_context(e: dict[str, Any], tc: np.ndarray, issued: np.ndarray,
+                                 rec: Mapping[str, np.ndarray] | None,
+                                 pads: Mapping[str, Any] | None, t0: float) -> None:
+    """C-S8-34 ③ (spec rev. 51 222.5): commands around a rod fallback at the 10 Hz sample
+    ``k`` (``e['t_s']`` relative), in place: issued this sample (out from the next boundary,
+    d = 1), the command applied from this boundary (issued at ``k - 1``) and over the past period
+    (issued at ``k - 2``), the plant ``u_applied`` at ``t_k-1`` / ``t_k`` and whether the plant
+    valve was locked over the past period (``|u_applied(t_k-1)| <= 1e-6 m/s``); the 1 ms
+    ``s_motor`` range over the past period is recorded beside it."""
+    j = LEGS.index(e["leg"]) if e.get("leg") in LEGS else None
+    if j is None:
+        return
+    k = int(np.clip(np.searchsorted(tc, e["t_s"] - 1e-9), 0, tc.size - 1))
+
+    def iss(i: int) -> float | None:
+        return None if i < 0 else float(issued[i, j]) * 1e3
+
+    e["issued_this_sample_mm_s"] = iss(k)
+    e["applied_this_period_issued_mm_s"] = iss(k - 1)
+    e["applied_past_period_issued_mm_s"] = iss(k - 2)
+    if rec is None or "u_applied" not in rec:
+        return
+    tr = np.asarray(rec["t"], float) - t0
+    kr = int(np.clip(np.searchsorted(tr, e["t_s"] - 1e-9), 0, tr.size - 1))
+    ua = np.asarray(rec["u_applied"], float)
+    e["plant_u_applied_now_mm_s"] = float(ua[kr, j]) * 1e3
+    e["plant_u_applied_past_mm_s"] = None if kr < 1 else float(ua[kr - 1, j]) * 1e3
+    e["plant_locked_past_period"] = None if kr < 1 else bool(abs(float(ua[kr - 1, j]))
+                                                             <= LOCKED_U_M_S)
+    if kr >= 1 and pads is not None and "s_motor" in pads:  # record value, not part of the rule
+        tp = np.asarray(pads["t"], float) - t0
+        sel = (tp > tr[kr - 1] + 1e-9) & (tp <= tr[kr] + 1e-9)
+        if sel.any():
+            e["plant_s_motor_ptp_past_um"] = float(
+                np.ptp(np.asarray(pads["s_motor"], float)[sel, j])) * 1e6
+
+
+def _rod_fallback_text(e: Mapping[str, Any]) -> str:
+    """ML-2 rod fallback cause text (C-S8-34 ③: the applied commands, not only the issued)."""
+    def f(v: Any, spec: str = "+.4g") -> str:
+        return "None" if v is None else format(v, spec)
+
+    return (f"{e['leg']} {e['t_s']:.2f} s reason {e['reason']}, phase {e.get('phase')}; "
+            f"applied this period (issued t_k-1) {f(e.get('applied_this_period_issued_mm_s'))} "
+            f"mm/s, plant u_applied t_k {f(e.get('plant_u_applied_now_mm_s'))} mm/s; past period "
+            f"(issued t_k-2) {f(e.get('applied_past_period_issued_mm_s'))} mm/s, plant "
+            f"u_applied t_k-1 {f(e.get('plant_u_applied_past_mm_s'))} mm/s, plant valve locked "
+            f"{e.get('plant_locked_past_period')} (s_motor range "
+            f"{f(e.get('plant_s_motor_ptp_past_um'), '.3g')} um); issued this sample (out at "
+            f"t_k+1) {f(e.get('issued_this_sample_mm_s'))} mm/s; head {e.get('head_bar')} bar, rod "
+            f"{e.get('rod_bar')} bar, F {e.get('F_cyl_kN')} kN")
+
+
 def _fault_reasons(m: Mapping[str, Any]) -> list[tuple[str | None, float, str | None]]:
     """C-S8-27 ②: ``(leg, t, reason)`` of the head-sensor fault reasons (P-S8-14 ③) of a run."""
     return [(e["leg"], round(e["t_s"], 2), e["detail"]) for e in m.get("head_fault_reasons")
@@ -4316,9 +6035,57 @@ def _meta_ok(meta: Mapping[str, Any] | None) -> tuple[bool, list[str]]:
     return not bad, bad
 
 
+ROD_FALLBACK_GATE_RULE = (
+    "C-S8-41 (spec rev. 54 260.5, U-S8-56 (a)): every base / episode run without a pressure-"
+    "sensor fault injection (settings keys SENSOR_FAULT_INJECTION_KEYS) has no "
+    "WARN_ROD_PRESSURE_FALLBACK, inside or outside a forced retract window; gate 0. The ML-1 "
+    "record row and the ML-2 cause reports stay")
+
+
+def rod_fallback_gate(cms: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
+    """C-S8-41: runs without a fault injection that have a rod fallback warning
+    (:data:`ROD_FALLBACK_GATE_RULE`): ``{"checked": n, "runs": {run: [(leg, t_s, reason,
+    in_forced_window), ...]}}`` (relative times)."""
+    checked, runs = 0, {}
+    for c, m in cms.items():
+        fb = m.get("rod_fallback") or {}
+        if m.get("fault_injected") or fb.get("injected"):
+            continue
+        checked += 1
+        ev = fb.get("events") or []
+        if ev:
+            runs[c] = [(e["leg"], round(float(e["t_s"]), 3), e.get("reason"),
+                        bool(e.get("in_forced_window"))) for e in ev]
+    return {"checked": checked, "runs": runs}
+
+
+def judge_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """C-S8-41 (spec rev. 54 256.2 / 260.5): one-glance summary of a verify file - failed judged
+    rows, the ML-0 rod fallback gate, the ML-1 rod fallback run count (record, it was missing in
+    the C-S8-36 summary), the C-S8-41 deferred-leg FLAG and the FLAG record rows."""
+    def first(prefix: str) -> Mapping[str, Any] | None:
+        return next((r for r in rows if str(r.get("item", "")).startswith(prefix)), None)
+
+    gate = first("ML-0 no rod-pressure fallback")
+    ml1 = first("ML-1 runs with a rod-pressure fallback warning")
+    dm = first("C-S8-41 RT deferral")
+    return {"rows": len(rows),
+            "failed": [[str(r["item"])[:110], r.get("case")] for r in rows
+                       if r.get("passed") is False],
+            "ml0_rod_fallback_gate": None if gate is None
+            else {"runs": gate["value"], "passed": gate["passed"]},
+            "ml1_rod_fallback_runs": None if ml1 is None else ml1["value"],
+            "deferred_leg_below_F_min": None if dm is None
+            else {"flagged_runs": dm["value"]["flagged_runs"], "runs": dm.get("flagged")},
+            "flag_rows": [str(r["item"])[:110] for r in rows if r.get("flag")]}
+
+
 def ml_rows(cms: Mapping[str, Mapping[str, Any]], n_bases_plan: int | None,
-            n_episodes_plan: int | None) -> list[dict[str, Any]]:
-    """ML-0 ... ML-3 rows (spec rev. 46 216.8) over the base / episode metrics ``cms``."""
+            n_episodes_plan: int | None, *,
+            ref_work: Mapping[str, Mapping[str, Any] | None] | None = None,
+            ref_label: str | None = None) -> list[dict[str, Any]]:
+    """ML-0 ... ML-3 rows (spec rev. 46 216.8) over the base / episode metrics ``cms``;
+    ``ref_work`` / ``ref_label``: reference-batch twist work for :func:`rt_rows` (C-S8-40)."""
     rows: list[dict[str, Any]] = []
     bases = {c: m for c, m in cms.items() if m["kind"] == "base"}
     eps = {c: m for c, m in cms.items() if m["kind"] != "base"}
@@ -4345,15 +6112,66 @@ def ml_rows(cms: Mapping[str, Mapping[str, Any]], n_bases_plan: int | None,
         contacts[k] = contacts.get(k, 0) + 1
     rows.append(_row("ML-0 runs per crawler contact (record)", "*", contacts, None, None,
                      f"episodes recorded {len(eps)} (plan {n_episodes_plan})", kind="record"))
-    # C-S8-26 ②: FAULT entry without a sensor-fault injection (gate)
+    # C-S8-26 ②: FAULT entry without a sensor-fault injection (gate), C-S8-34 ①: split by cause;
+    # the stroke-end FAULT is judged per run by U-S8-44 (protective stop)
     fault = {c: {"t_s": m.get("fault_entry_s"),
                  "head_faults": [(e["leg"], round(e["t_s"], 2)) for e in m.get("head_faults", [])],
-                 "reasons": _fault_reasons(m)}
+                 "reasons": _fault_reasons(m),
+                 "cause": (m.get("fault_cause") or {}).get("cause"),
+                 "cause_source": (m.get("fault_cause") or {}).get("source"),
+                 "cause_legs": (m.get("fault_cause") or {}).get("legs")}
              for c, m in cms.items()
              if m.get("fault_entry_s") is not None and not m.get("fault_injected")}
-    rows.append(_row("ML-0 no FAULT entry without a sensor-fault injection (C-S8-26 ②; reason "
-                     "from INFO_HEAD_PRESSURE_FAULT_REASON, C-S8-27 ②)", "*",
-                     len(fault), 0, not fault, str(fault)[:1500] or "none", fault=fault))
+    stroke = {c: v for c, v in fault.items() if v["cause"] == "stroke_end"}
+    other = {c: v for c, v in fault.items() if v["cause"] != "stroke_end"}
+    rows.append(_row("ML-0 no FAULT entry without a sensor-fault injection, stroke-end FAULT "
+                     "apart (C-S8-26 ②; reason from INFO_HEAD_PRESSURE_FAULT_REASON, C-S8-27 ②; "
+                     "cause split C-S8-34 ①)", "*",
+                     len(other), 0, not other,
+                     (str(other)[:1500] if other else "none")
+                     + f"; stroke-end FAULT judged by U-S8-44 below: {sorted(stroke)}",
+                     fault=other, stroke_end=sorted(stroke)))
+    for c in sorted(stroke):
+        fc = cms[c]["fault_cause"]
+        pr = fc.get("protective") or {}
+        att = pr.get("att_err_max_deg")
+        mn = pr.get("min_force_kN")
+        rows.append(_row("ML-0 stroke-end FAULT = protective stop (U-S8-44): floor outside the "
+                         "operating diamond, after the FAULT every leg >= F_min + 5 kN, lift 0, "
+                         f"attitude <= {STROKE_END_ATT_TOL_DEG:g} deg", c,
+                         [None if fc.get("operating_index") is None
+                          else round(fc["operating_index"], 4),
+                          None if mn is None else round(min(mn), 2), pr.get("lifted_legs"),
+                          None if att is None else round(max(att), 4)],
+                         ["> 1", pr.get("limit_kN"), [], STROKE_END_ATT_TOL_DEG],
+                         bool(pr.get("passed")),
+                         f"FAULT {fc['fault_t_s']:.2f} s, legs {fc.get('legs')} from the "
+                         f"{fc.get('source')} (stroke >= {fc['threshold_m']:.4f} m over the last "
+                         f"{fc['lookback_s']:g} s); floor {fc.get('floor_deg')} deg, operating "
+                         f"index {fc.get('operating_index')}; per-leg min after the FAULT {mn} kN; "
+                         f"attitude error max {att} deg over {pr.get('post_fault_s')} s",
+                         fault_cause=fc, rule=STROKE_END_RULE))
+    by_cause: dict[str, list[str]] = {}
+    for c, m in cms.items():
+        fc = m.get("fault_cause")
+        if fc is not None:
+            key = fc["cause"] + (" (injected)" if m.get("fault_injected") else "")
+            by_cause.setdefault(key, []).append(c)
+    rows.append(_row("ML-0 FAULT entries by cause (C-S8-34 ①, record)", "*",
+                     {k: len(v) for k, v in by_cause.items()}, None, None,
+                     "; ".join(f"{k}: {sorted(v)}" for k, v in by_cause.items()) or "none",
+                     kind="record", by_cause={k: sorted(v) for k, v in by_cause.items()}))
+    # C-S8-41 (spec rev. 54 260.5, U-S8-56 (a)): rod fallback without a fault injection = gate
+    gate = rod_fallback_gate(cms)
+    rows.append(_row("ML-0 no rod-pressure fallback without a sensor-fault injection (gate; "
+                     "C-S8-41, spec rev. 54 260.5 / U-S8-56 (a))", "*",
+                     len(gate["runs"]), 0, not gate["runs"],
+                     (f"{len(gate['runs'])} of {gate['checked']} un-injected runs: "
+                      + "; ".join(f"{c}: " + ", ".join(
+                          f"{e[0]} {e[1]:.2f} s {e[2]}" + (" (forced window)" if e[3] else "")
+                          for e in v) for c, v in sorted(gate["runs"].items())))[:3000]
+                     if gate["runs"] else f"none in {gate['checked']} un-injected runs",
+                     runs=gate["runs"], rule=ROD_FALLBACK_GATE_RULE))
     rules = {}
     for c, m in cms.items():
         rules.setdefault(str(m.get("step_rule")), []).append(c)
@@ -4501,13 +6319,50 @@ def ml_rows(cms: Mapping[str, Mapping[str, Any]], n_bases_plan: int | None,
                   if not e["in_forced_window"]]
         if not out_ev:
             continue
-        rows.append(_row("ML-2 rod-pressure fallback outside a forced retract (cause report)",
+        rows.append(_row("ML-2 rod-pressure fallback outside a forced retract (cause report; "
+                         "C-S8-34 ③ applied commands and plant lock)",
                          c, len(out_ev), 0, None,
-                         "; ".join(f"{e['leg']} {e['t_s']:.2f} s reason {e['reason']}, phase "
-                                   f"{e.get('phase')}, u {e.get('issued_u_mm_s')} mm/s, head "
-                                   f"{e.get('head_bar')} bar, rod {e.get('rod_bar')} bar, F "
-                                   f"{e.get('F_cyl_kN')} kN" for e in out_ev)
+                         "; ".join(_rod_fallback_text(e) for e in out_ev)
                          + f"; lock valve {m.get('lock_valve')}", kind="report", events=out_ev))
+    # C-S8-34 ④ (U-S8-47): ML tags, record rows
+    pp = {c: m["reapproach_pingpong"] for c, m in cms.items() if m.get("reapproach_pingpong")}
+    rows.append(_row("ML tag reapproach_pingpong: episodes with >= 3 re-approach starts later than "
+                     "event + 1.5 s (C-S8-34 ④, spec rev. 51 222.3 / 223.2; record)", "*",
+                     len(pp), None, None,
+                     "; ".join(f"{c}: {v['late_starts']} late starts, window "
+                               f"{v['start_s']:.2f}..{v['end_s']:.2f} s"
+                               for c, v in sorted(pp.items())) or "none",
+                     kind="record", episodes=sorted(pp)))
+    rows.extend(rt_rows(cms, ref_work, ref_label))
+    rc = {c: m["plant_rod_collapse"] for c, m in cms.items() if m.get("plant_rod_collapse")}
+    rows.append(_row("ML tag plant_rod_collapse: locked lift-offs with a rod-pressure fall > 50 "
+                     "bar within 10 ms (C-S8-34 ④, spec rev. 51 222.4 / 223.2; record)", "*",
+                     sum(len(v) for v in rc.values()), None, None,
+                     "; ".join(f"{c} {x['leg']} {x['liftoff_s']:.3f} s rod "
+                               f"{x['rod_before_bar']:.1f}->{x['rod_after_bar']:.1f} bar, "
+                               f"{x['from_10hz_boundary_ms']:+.0f} ms from the 10 Hz boundary, "
+                               f"window {x['start_s']:.3f}..{x['end_s']:.3f} s"
+                               + (" (to re-contact + 0.1 s)" if x.get("window_extended") else "")
+                               for c, v in sorted(rc.items()) for x in v) or "none",
+                     kind="record", runs=sorted(rc)))
+    rs_ = {c: m["plant_release_rod_step"] for c, m in cms.items()
+           if m.get("plant_release_rod_step")}
+    n_air = sum(1 for v in rs_.values() for x in v if x.get("airborne_before"))
+    rows.append(_row("ML tag plant_release_rod_step: plant releases with a 1 ms rod-pressure "
+                     "step > 20 bar outside plant_rod_collapse (H-S8-4 F1, hydraulics 12.6; "
+                     "record, 0 after the fix)", "*",
+                     sum(len(v) for v in rs_.values()), None, None,
+                     f"{len(rs_)} runs; airborne before the release {n_air}; first "
+                     + "; ".join(f"{c} {x['leg']} {x['t_release_s']:.4f} s rod "
+                                 f"{x['rod_before_bar']:.1f}->{x['rod_after_bar']:.1f} bar"
+                                 for c, v in sorted(rs_.items())[:10] for x in v[:1]),
+                     kind="record", runs=sorted(rs_)))
+    ft = {c: m["fault_tail"] for c, m in cms.items() if m.get("fault_tail")}
+    rows.append(_row("ML tag fault_tail: FAULT entry .. run end (C-S8-34 ④; record, = ml_masks "
+                     "reason fault)", "*", len(ft), None, None,
+                     "; ".join(f"{c}: {v['start_s']:.2f}..{v['end_s']:.2f} s ({v['cause']})"
+                               for c, v in sorted(ft.items())) or "none",
+                     kind="record", runs=sorted(ft)))
     # ML-3
     recs = {c: m["R45_4"] for c, m in cms.items() if m.get("R45_4")}
     n = sum(len(v) for v in recs.values())
@@ -4531,11 +6386,35 @@ def ml_rows(cms: Mapping[str, Mapping[str, Any]], n_bases_plan: int | None,
     return rows
 
 
-def judge_ml_batch(batch_dir: Path, out_path: Path | None = None) -> Path:
+def ref_episode_root(batch_dir: Path, plan: Mapping[str, Any], ref_batch: Path | None
+                     ) -> tuple[Path | None, str | None]:
+    """C-S8-40: the ``episodes/`` folder of the reference (768) batch for the twist-work FLAG
+    row: ``ref_batch`` (a batch folder or its ``episodes/``), else the C-S8-36 sub-plan
+    ``rerun_from`` (``ml_plan.json`` of ``A_rt`` / ``B_f1only``); relative paths from the project
+    root. (None, None) when neither exists."""
+    from outrigger_sim.verify import s6_bundle_c as bc
+
+    for p, src in ((ref_batch, "--ref-batch"), (plan.get("rerun_from"), "ml_plan rerun_from")):
+        if not p:
+            continue
+        p = Path(p)
+        if not p.is_absolute():
+            p = Path(bc.PROJECT_ROOT) / p
+        if p.resolve() == Path(batch_dir).resolve():
+            continue
+        ep = p if p.name == "episodes" else p / "episodes"
+        if ep.is_dir():
+            return ep, src
+    return None, None
+
+
+def judge_ml_batch(batch_dir: Path, out_path: Path | None = None, *,
+                   ref_batch: Path | None = None) -> Path:
     """C-S8-22 ⑦: ML pilot batch (``run_S8C.py ml``: ``bases/`` + ``episodes/``) ML-0 ... ML-3;
     writes :data:`ML_VERIFY_NAME` with the rows, the per-run metrics and ``ml_masks`` (episode
     id -> forced-window mask, for ``ml/evaluate.py``). Works on an incomplete batch (rows that
-    need the whole batch are records then)."""
+    need the whole batch are records then). ``ref_batch`` (C-S8-40): reference batch of the
+    twist-work FLAG row (default: the sub-plan ``rerun_from`` of a C-S8-36 bundle)."""
     from outrigger_sim.contact_episode import MachineConstants
     from outrigger_sim.control.c2 import C2Geometry
     from outrigger_sim.params import load_params
@@ -4573,14 +6452,43 @@ def judge_ml_batch(batch_dir: Path, out_path: Path | None = None) -> Path:
                  f"{len(bad)} excluded, {len(running)} still running / not finished; "
                  + str({c: v.get("error") for c, v in bad.items()})[:1500],
                  failed=bad, running=sorted(running))]
-    rows += ml_rows(cms, n_b, n_e)
+    ref_root, ref_src = ref_episode_root(batch_dir, plan, ref_batch)
+    ref_work = None
+    if ref_root is not None:
+        ref_work = {c: ml_twist_work_of_dir(ref_root / c) for c, m in cms.items()
+                    if m.get("reapproach_variant") == "rt" and (m.get("rt") or {}).get("work")}
+    ref_label = None if ref_root is None else f"{ref_root} ({ref_src})"
+    # C-S8-42 (spec rev. 55 269.3 #2): deferred legs vs the same episode of the reference
+    for c, m in cms.items():
+        attach_deferred_reference((m.get("rt") or {}).get("deferred_min"),
+                                  None if ref_root is None else ref_root / c,
+                                  event_engine_time=True, ref_label=ref_label)
+    rows += ml_rows(cms, n_b, n_e, ref_work=ref_work, ref_label=ref_label)
+    # C-S8-42 (spec rev. 55 269.3 #3): PROBE -> LEVEL returns and re-READY vs the reference
+    if ref_root is not None:
+        eps = sorted(c for c, m in cms.items() if m["kind"] != "base")
+        av_new = {c: availability_record(batch_dir / "episodes" / c) for c in eps}
+        av_ref = {c: availability_record(ref_root / c) if (ref_root / c).is_dir() else None
+                  for c in eps}
+        rows += availability_rows(av_new, av_ref, ref_label)
     out = out_path or batch_dir / ML_VERIFY_NAME
     doc = {"meta": {"batch": str(batch_dir), "module": __name__, "rows": len(rows),
                     "failed": sum(1 for r in rows if r["passed"] is False),
                     "bases_recorded": sum(1 for m in cms.values() if m["kind"] == "base"),
                     "episodes_recorded": sum(1 for m in cms.values() if m["kind"] != "base"),
                     "plan": {"bases": n_b, "episodes": n_e},
-                    "judge_revision": "spec rev. 49 219.11 (C-S8-27 update: U-S8-37 event-leg "
+                    "ref_twist_work": None if ref_root is None else {"episodes": str(ref_root),
+                                                                     "source": ref_src},
+                    "summary": judge_summary(rows),  # C-S8-41: incl. the ML-1 count
+                    "deferred_reference": None if ref_root is None
+                    else {"episodes": str(ref_root), "source": ref_src},  # C-S8-42
+                    "judge_revision": JUDGE_REVISION_REV56 + " on "
+                                      + JUDGE_REVISION_REV55 + " on " + JUDGE_REVISION_REV54
+                                      + " on " + JUDGE_REVISION_REV52
+                                      + " on " + JUDGE_REVISION_REV51
+                                      + " on " + JUDGE_REVISION_REV50
+                                      + " on spec rev. 49 219.11 (C-S8-27 "
+                                      "update: U-S8-37 event-leg "
                                       "re-contact gate 3.0 s + 2.5 s flag column, U-S8-39 "
                                       "forced retract 203.1 row; C-S8-32 D1'' step ratio row) "
                                       "on rev. 48 218.13 (C-S8-27 ① U-S8-32 adjacent / "
@@ -4593,9 +6501,21 @@ def judge_ml_batch(batch_dir: Path, out_path: Path | None = None) -> Path:
                                 "event_leg_recontact_s": EVENT_LEG_RECONTACT_S,
                                 "event_leg_recontact_nominal_s": EVENT_LEG_RECONTACT_NOMINAL_S},
                     "d1pp_step_ratio": {"flag": D1PP_RATIO_FLAG, "step_bar": D1PP_STEP_BAR,
-                                        "grades_kN": list(D1PP_FS_GRADES_KN)}},
+                                        "grades_kN": list(D1PP_FS_GRADES_KN)},
+                    "stroke_end_rule": STROKE_END_RULE, "ml_tag_rules": ML_TAG_RULES},
            "rows": rows,
            "ml_masks": {c: m["ml_mask"] for c, m in cms.items() if m.get("ml_mask")},
+           # C-S8-34 ④: run -> tag windows (also per run in ml_metrics under the same keys)
+           "ml_tags": {"fault_tail": {c: m["fault_tail"] for c, m in cms.items()
+                                      if m.get("fault_tail")},
+                       "plant_rod_collapse": {c: m["plant_rod_collapse"] for c, m in cms.items()
+                                              if m.get("plant_rod_collapse")},
+                       "reapproach_pingpong": {c: m["reapproach_pingpong"]
+                                               for c, m in cms.items()
+                                               if m.get("reapproach_pingpong")},
+                       "plant_release_rod_step": {c: m["plant_release_rod_step"]
+                                                  for c, m in cms.items()
+                                                  if m.get("plant_release_rod_step")}},
            "ml_metrics": cms}
     out.write_text(json.dumps(doc, indent=1, default=bc._json_default, ensure_ascii=False),
                    encoding="utf-8")
@@ -4620,4 +6540,11 @@ __all__ = ["LIFTOFF_WINDOW_S", "c1_metrics", "c1_row", "classify_windows",
            "pooled_side_std", "apply_rev46_rows", "trend_key", "level_trend_rows_s8",
            "wika_pooled_rows", "ml_probe_truth_rows", "ml_case_metrics", "ml_rows",
            "judge_ml_batch", "settle_lift_split", "u_s8_32_rows", "forced_event_record",
-           "ml_episode_mask", "mlj_case_metrics", "mlj_rows", "poly345"]
+           "ml_episode_mask", "mlj_case_metrics", "mlj_rows", "poly345", "operating_index",
+           "classify_fault", "stroke_end_protective", "reapproach_pingpong", "plant_rod_collapse",
+           "rod_fallback_command_context", "valve_release_events", "plant_release_steps",
+           "link_collapse_releases", "pad_normal_at", "reading_variants", "twist_work_bins",
+           "reapproach_rt_record", "rt_rows", "deferred_leg_minimum", "deferred_min_rows",
+           "rod_fallback_gate", "judge_summary", "deferred_t_o_s", "leg_window_stats",
+           "deferred_reference_stats", "deferred_ref_flags", "attach_deferred_reference",
+           "availability_record", "availability_compare", "availability_rows"]

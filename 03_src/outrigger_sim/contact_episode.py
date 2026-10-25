@@ -62,6 +62,8 @@ _EVENT_PATTERN = re.compile(r"C2Event\(t_s=([-+0-9.eE]+), name='([^']*)'")
 ZERO_CALIBRATED_EVENT = "INFO_PRESSURE_ZERO_CALIBRATED"
 LIFT_SHADOW_EVENT = "shadow_G1L"
 SUPPORT_CHANGED_EVENT = "WARN_SUPPORT_CHANGED"
+REAPPROACH_START_EVENT = "leg_reapproach_start"
+REAPPROACH_END_EVENTS = ("leg_reapproach_contact", "WARN_LEG_REAPPROACH_NO_CONTACT")
 PRE_LIFT_PHASES = frozenset({"idle", "check", "touch"})
 PROBE_PHASE = "probe"
 
@@ -122,7 +124,7 @@ META_KEYS = (
     "rod_weight_N", "zero_offset_N", "seal_friction_N", "initial_seal_state_N", "beta_Pa",
     "floor", "floor_roll_deg", "floor_pitch_deg", "level", "sensor_grade", "zero_calibration",
     "sensor_condition", "rod_dead_length_m", "event", "seed", "controller", "reconstructed",
-    "crawler_contact", "crawler_check_passed",
+    "crawler_contact", "crawler_check_passed", "event_t_s", "reapproach_windows_s",
 )
 """Meta keys; values may be ``None`` when unknown. ``seal_friction_N`` = per-leg Coulomb limit
 F_s (spec 205.3, hydraulics U-S8-H1: rear = 0.833 x front), ``initial_seal_state_N`` = f at the
@@ -137,7 +139,12 @@ Crawler model (spec rev. 45 215.8, P-S8-10): ``crawler_contact`` is the crawler 
 the run (``"nsc_rigid"``, ``"nsc_compliant"``, ``"l1r_flexible"``; str) and
 ``crawler_check_passed`` whether its S8-L4 check passed (bool), both from ``result.json
 settings.s8``. Records before S8 carry neither and stay ``None``; the ML exclusion rule
-(``ml.dataset.has_liftoff_transient``, R40-6) reads an absent model as rigid."""
+(``ml.dataset.has_liftoff_transient``, R40-6) reads an absent model as rigid.
+
+Event timing (spec rev. 51 223.2, P-S8-18; data source marks, never model inputs):
+``event_t_s`` is the engine time of the ML episode event (``result.json event_t_s``; ``None`` for
+base runs) and ``reapproach_windows_s`` the P-R8-13 leg re-approaches as ``[start_s, end_s,
+leg_index]`` (start event to the leg's contact / no-contact event, or the run end)."""
 
 UNRECORDED_CRAWLER = "unrecorded"
 """:func:`count_by_crawler_contact` key of episodes without ``crawler_contact``."""
@@ -381,6 +388,27 @@ def _event_marks(
             else:
                 trigger[row, leg] = True
     return {"ge2_lift_mark": lift, "ge2_trigger_mark": trigger}
+
+
+def reapproach_windows(
+    events: list[tuple[float, str]], run_end_s: float
+) -> list[list[float]]:
+    """``[start_s, end_s, leg_index]`` of every leg re-approach, in start order.
+
+    The end is the first contact or no-contact event of the same leg at or after the start
+    (the controller raises both in one update when the leg touches at once); a re-approach
+    still open at the run end ends there.
+    """
+    windows = []
+    for start_s, name in events:
+        prefix, _, leg_name = name.partition(":")
+        if prefix != REAPPROACH_START_EVENT or leg_name not in LEG_NAMES:
+            continue
+        ends = [time_s for time_s, other in events
+                if other.partition(":")[0] in REAPPROACH_END_EVENTS
+                and other.partition(":")[2] == leg_name and time_s >= start_s]
+        windows.append([start_s, min(ends, default=run_end_s), float(LEG_NAMES.index(leg_name))])
+    return sorted(windows)
 
 
 def _zero_calibration(result: Mapping[str, Any]) -> tuple[NDArray, NDArray]:
@@ -708,6 +736,8 @@ def build_episode(
         "controller": controller,
         "reconstructed": reconstructed,
         **_crawler_meta(settings),
+        "event_t_s": result.get("event_t_s"),
+        "reapproach_windows_s": reapproach_windows(events, float(t_s[-1])),
     }
     runner_meta = {k: v for k, v in (settings.get(RUNNER_META_KEY) or {}).items()
                    if k in META_KEYS}

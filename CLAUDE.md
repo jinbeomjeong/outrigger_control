@@ -65,7 +65,7 @@
 | 선형 솔버 | L1(SMC) SPARSE_LU + `LockSparsityPattern(True)`, L2b(NSC) PSOR 50회 | `06_analysis/01_chrono/01_cost/solver_benchmark.json` |
 | 크롤러 접촉 | D안(롤러 위치 6개/측 + 끝 슈 3개/끝), 총 강성 1×10⁸ N/m(×3 감도). L2b는 **강체**(NSC 유연 접촉 안 1은 PyChrono 10에서 크리프로 동작해 불가) | YAML `contact.crawler` |
 | 센서·주기 | 압력 헤드·로드 각 1개(WIKA A-10, 0~400 bar, ±4 bar; 실린더와 파일럿 체크 블록 사이 챔버 쪽 A·B 포트), 압력·행정 센서와 밸브 출력 **10 Hz 순간 표본**, IMU **100 Hz**. 압력 영점 교정은 CHECK 단계에서 의무. 센서 오차는 3등급 모델(오프셋·스팬·비직선·비반복·노이즈) | `c2.py` `R8_PERIOD_S`·IMU 표본 주기, `08_test_data/datasheets/WIKA_A-10_pressure_sensor_summary.md`. YAML `sensors` 블록의 "헤드측만, 로드측 0 가정" 주석은 R6-P 전 서술이다(재생성 때 갱신 대상) |
-| 제어기 | **R8 C2**: 10 Hz, 출력 지연 d = 1, 주기 시작 IMU. 프리셋 `C2Config.with_10hz_d1()`(`03_src/outrigger_sim/control/c2.py`). 가드 이득 0.15, 비틀림·가드 이득 S_ii 정규화, R-5 예측 4주기, 증분 제한 대칭 0.25 v_max/주기, 재접근 시작 1.4 F_min | `s6_control_spec.md`(개정 30~49). 게인·세부는 명세가 원본 |
+| 제어기 | **R8 C2**: 10 Hz, 출력 지연 d = 1, 주기 시작 IMU. 프리셋 `C2Config.with_10hz_d1()`(`03_src/outrigger_sim/control/c2.py`). 가드 이득 0.15, 비틀림·가드 이득 S_ii 정규화, R-5 예측 4주기, 증분 제한 대칭 0.25 v_max/주기, 재접근 시작 1.4 F_min, 재접근 재발동(직전 회차 끝 2.0 s 안) 속도 ×0.6·반대 대각(0.8 s 안)은 하한 < 0 N 2표본 연속일 때만 시작(아니면 보류) | `s6_control_spec.md`(개정 30~56). 게인·세부는 명세가 원본 |
 | 자세 필터 | 2차 저역통과, R8 C2 **τ 0.8 s × 2단**(IMU 10 ms 표본, 100 Hz 계산). 자세 PI Kp 0.2 s⁻¹·Ki 0.01 s⁻², 비틀림 Ktw 0.5 s⁻¹ | `c2.py` `R8_D1_*` 상수, `s6_control_spec.md` 136절. 0.5 s × 2·Kp 0.4는 R7(50 Hz) 값. 1차 필터는 쓰지 않는다 |
 | 정확도 | 정상상태 오차 **±0.2°**, 완료 데드밴드 0.03°, IMU 정지 영점 오차 허용 0.14°(장착 몫 0.02°). IMU 현장 영점 교정 의무 | `00_docs/05_sensors/imu_cabin_and_accuracy_review.md` |
 | IMU 위치 | 기체 좌표 (0.31, 0.88, 0.040) m, 캐빈 아래 상부 프레임 C1(캐빈 몸체에 달지 않음, 낮게 단다) | `00_docs/00_cad/cad_origin_mass_imu.md` 4절 |

@@ -28,6 +28,35 @@ Usage (Chrono-dev python, project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py ml --stage main
         --mlj-from 07_results/S8/mlj_<stamp> --approved     # 768, MLJ copied to judged/
     (``--skip-judged``: 768 without MLJ; ``--dry-run`` on ml / run / check prints the plan)
+    # C-S8-36 (spec rev. 52 230, U-S8-50): A 55 (RT + F1) + B 2 (F1 only) + C RE1bF / RE1bP
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py c36 --dry-run
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py c36 --approved [--workers p7e8]
+        -> 07_results/S8/c36_<stamp>/{A_rt/episodes, B_f1only/episodes, C_gate}
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py c36 --smoke ML78_ep0 --episode-s 6
+        --out <scratch dir>   # one shortened episode, single process
+    # C-S8-36 bundle D (spec rev. 54 250, U-S8-55): MLJ_FS24_Fs0 / Fs8, P-S8-16 + F1
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py c36 --bundle D
+        --batch 07_results/S8/c36_<stamp> [--dry-run | --approved] [--workers p7]
+        -> 07_results/S8/c36_<stamp>/D_fs24   (without --batch: c36d_<stamp>/D_fs24)
+    # C-S8-41 (U-S8-56 (a)): 17 rod-fallback episodes, RT + F1 + P-S8-21, + regression C / D
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py c36 --bundle E [--no-regression]
+        [--extra-ids ML.._ep..,...] [--dry-run | --approved] [--workers p7e8]
+        -> 07_results/S8/c37_<stamp>/{E_drain/episodes, C_gate, D_fs24}
+        (--extra-ids, C-S8-42 / spec rev. 55 269.1: bundle-A episodes outside the 17 whose
+        replayed controller output differs from the record)
+    # C-S8-40 judge (rev. 54): A / B with the 768 reference for the FLAG row
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py judge --batch <c36>/A_rt
+        [--ref-batch 07_results/S8/ml_main_20261025_090131]
+    # C-S8-42 judge (rev. 56): bundle D with the original MLJ as the deferred-leg reference
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py judge --batch <c37>/D_fs24
+        --lookup-batch 07_results/S8/p1r_20261024_222013
+        --deferred-ref 07_results/S8/mlj_20261025_080212
+
+Rev. 52 (C-S8-36): ``ml_episode`` jobs take ``variant`` (``rt`` = R8 preset with the P-S8-16
+rule RT, ``f1only`` = RT keys None, :func:`with_reapproach_variant`); episodes can read their
+``branch.pkl`` from another batch (``base_dir``, read only). ``settings_refreshed`` lists the
+changed nested setting fields (``replaced[].changed_fields``) and the re-approach settings
+(``lifted_reapproach``: pickled / in use / fresh); the whole repr stays cut at 4000 characters.
 
 Rev. 49 (219.11, C-S8-31): ``r8_series.npz`` also records ``imu_gyro_samples`` (periods x 10 x
 3, rad/s, body axes), the delivered gyro 10 ms partial means that C2 passes to the D1'' lever
@@ -106,6 +135,7 @@ import pickle
 import sys
 import time
 import warnings
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any
@@ -852,13 +882,55 @@ class RodFaultInjection:
                 "source": "sensors.hydraulic.FaultyRodSensor on the controller input"}
 
 
-def _controller(case: S8Case, params_ctrl, params_plant):
+REAPPROACH_VARIANTS = ("rt", "f1only")
+"""C-S8-36 (spec rev. 52 230, U-S8-50): ``rt`` = the code's R8 preset (P-S8-16 rule RT on) +
+the F1 plant reading fix; ``f1only`` = the same with the RT keys of
+``LiftedReapproachSettings`` at their "off" values (``retrigger_window_s`` and
+``opposite_window_s`` None; bundle B). The F1 fix is in the plant code
+(``hydraulics/l2b_rod_side.py``) and has no switch."""
+RT_KEYS = ("retrigger_window_s", "retrigger_speed_factor", "opposite_window_s",
+           "opposite_strong_level_N", "opposite_strong_samples")
+
+
+def with_reapproach_variant(config, variant: str | None):
+    """C-S8-36: the controller config of a re-approach variant (:data:`REAPPROACH_VARIANTS`;
+    None / ``rt`` = unchanged). ``rt`` checks that the preset has RT on."""
+    if variant is None:
+        return config
+    if variant not in REAPPROACH_VARIANTS:
+        raise ValueError(f"unknown re-approach variant {variant!r}; {REAPPROACH_VARIANTS}")
+    lr = config.r8.lifted_reapproach
+    if variant == "rt":
+        if lr.retrigger_window_s is None or lr.opposite_window_s is None:
+            raise RuntimeError(f"variant rt but the controller preset has RT off: {lr!r}")
+        return config
+    # every RT key at its class default ("off", P-S8-16 229 #1): the windows None make the rule
+    # inert; the factor / level / samples defaults make the settings equal to the pickled ones
+    cls = type(lr)
+    off = replace(lr, **{k: getattr(cls, k) for k in RT_KEYS})
+    return replace(config, r8=replace(config.r8, lifted_reapproach=off))
+
+
+def reapproach_settings_meta(controller) -> dict[str, Any] | None:
+    """The lifted re-approach settings of a controller (all fields, plain values)."""
+    import dataclasses
+
+    c2 = getattr(controller, "inner", controller)
+    lr = getattr(getattr(getattr(c2, "config", None), "r8", None), "lifted_reapproach", None)
+    if lr is None:
+        return None
+    return {f.name: (getattr(lr, f.name).value if hasattr(getattr(lr, f.name), "value")
+                     else getattr(lr, f.name)) for f in dataclasses.fields(lr)}
+
+
+def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = None):
     """C2 controller of an L2b S8 case.
 
     ``params_ctrl`` is the L1 YAML (C-R11: controller at beta 1.0) and has no
     ``l2b.counterbalance``; the CB law of the lock-valve diagnosis (P-S8-11, U-S8-23) therefore
     comes from the L2b plant params ``params_plant`` (from :func:`build_l2b`). Pilot-check cases
-    do not touch the config (bit-identical to the S7 / pre-P-S8-11 path)."""
+    do not touch the config (bit-identical to the S7 / pre-P-S8-11 path). ``variant``: C-S8-36
+    re-approach variant (:func:`with_reapproach_variant`; None = the preset)."""
     from outrigger_sim.control.c2 import C2Controller
 
     config, settle_meta = s7c.apply_settle_map(s6c.controller_config(params_ctrl, case.base),
@@ -870,6 +942,7 @@ def _controller(case: S8Case, params_ctrl, params_plant):
                                f"{getattr(l2b, 'lock_valve', None)!r} / no actuator.counterbalance")
         config = config.with_lock_valve("counterbalance", l2b.counterbalance)
     config = with_lock_window_tau(config, case.base.tau_v_s)
+    config = with_reapproach_variant(config, variant)
     return C2Controller.from_params(params_ctrl, config), config, settle_meta
 
 
@@ -1070,7 +1143,8 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
               "saturation_stop_s": model.actuator.saturation_stop_s}
     s8_meta = {**case.to_meta(), **crawler_meta(model), "plant": plant_meta,
                "ground_patches": None if patches is None else patches.meta(),
-               "controller_settle_map_meta": settle_meta}
+               "controller_settle_map_meta": settle_meta,
+               "lifted_reapproach": reapproach_settings_meta(c2)}  # C-S8-36
     settings = {**asdict(sc), "snapshot": None, "start_t_s": t0, **c2_meta,
                 "reanchor_expected": expect, "bundle_c": bundle,
                 "s7c": {"engine": "L2b_NSC", "case_id": case.case_id,
@@ -1480,6 +1554,35 @@ a setting, replaced by the current code's value after a branch restore."""
 REFRESH_STATE_ATTRS = ("_state",)
 """Run-state containers: only missing attributes are added (no scalar comparison)."""
 REFRESH_MAX_DEPTH = 4
+REFRESH_REPR_CHARS = 4000
+"""Length of the whole-setting repr kept in ``replaced`` (the changed fields are listed apart,
+:func:`dataclass_diff`)."""
+DIFF_REPR_CHARS = 600
+DIFF_MAX_FIELDS = 200
+
+
+def dataclass_diff(old, new, path: str, depth: int = 0) -> list[dict[str, Any]]:
+    """Leaf fields that differ between two instances of the same dataclass, recursing into
+    nested dataclasses (C-S8-36: e.g. ``c2.config.r8.lifted_reapproach.retrigger_window_s``).
+    A field missing on ``old`` (older pickle) reads its class default."""
+    import dataclasses
+
+    out: list[dict[str, Any]] = []
+    if type(old) is not type(new) or not dataclasses.is_dataclass(new) or depth > 8:
+        return [{"path": path, "old": repr(old)[:DIFF_REPR_CHARS],
+                 "new": repr(new)[:DIFF_REPR_CHARS]}]
+    for f in dataclasses.fields(new):
+        a, b = getattr(old, f.name, None), getattr(new, f.name)
+        p = f"{path}.{f.name}"
+        if dataclasses.is_dataclass(b) and not isinstance(b, type) and type(a) is type(b):
+            if repr(a) != repr(b):
+                out += dataclass_diff(a, b, p, depth + 1)
+        elif repr(a) != repr(b):
+            out.append({"path": p, "old": repr(a)[:DIFF_REPR_CHARS],
+                        "new": repr(b)[:DIFF_REPR_CHARS]})
+        if len(out) >= DIFF_MAX_FIELDS:
+            break
+    return out[:DIFF_MAX_FIELDS]
 
 
 def _is_setting_name(name: str) -> bool:
@@ -1531,8 +1634,12 @@ def refresh_restored_controller(restored, fresh) -> dict[str, Any]:
                 if repr(va) == repr(vb):
                     out["replaced_equal"].append(p)
                 else:
-                    out["replaced"].append({"path": p, "old": repr(va)[:4000],
-                                            "new": repr(vb)[:4000]})
+                    # C-S8-36: the whole repr is cut at REFRESH_REPR_CHARS, so the changed
+                    # nested fields are listed apart (full paths, e.g. ``config.r8.
+                    # lifted_reapproach.retrigger_window_s``)
+                    out["replaced"].append({"path": p, "old": repr(va)[:REFRESH_REPR_CHARS],
+                                            "new": repr(vb)[:REFRESH_REPR_CHARS],
+                                            "changed_fields": dataclass_diff(va, vb, p)})
                 da[name] = vb
                 continue
             if isinstance(vb, collections.deque) and isinstance(va, collections.deque):
@@ -1548,8 +1655,15 @@ def refresh_restored_controller(restored, fresh) -> dict[str, Any]:
             if depth < REFRESH_MAX_DEPTH and _is_project_object(vb) and _is_project_object(va):
                 walk(va, vb, p, depth + 1, in_state or name in REFRESH_STATE_ATTRS)
 
+    pickled_lr = reapproach_settings_meta(restored)
     walk(restored, fresh, "c2", 0, False)
     out["scalar_differs"] = out["scalar_differs"][:100]
+    # C-S8-36 (spec rev. 52 229): the P-S8-16 re-approach settings now in use, and those the
+    # branch was pickled with (old pickles lack the RT keys: class defaults = off)
+    out["lifted_reapproach"] = {"pickled": pickled_lr,
+                                "in_use": reapproach_settings_meta(restored),
+                                "fresh": reapproach_settings_meta(fresh),
+                                "rt_keys": list(RT_KEYS)}
     tp = getattr(getattr(restored, "_pressures", None), "settings", None)
     out["two_pressure_settings"] = None if tp is None else (
         tp.to_meta() if hasattr(tp, "to_meta") else repr(tp))
@@ -1610,9 +1724,11 @@ class FirstPeriodCompare:
 
 
 def job_ml_episode(base: MLBase, ep: dict[str, Any], base_dir: Path, case_dir: Path,
-                   episode_s: float | None = None):
+                   episode_s: float | None = None, variant: str | None = None):
     """One 30 s episode from the base's ``branch.pkl`` (``episode_s``: shorter run for the
-    resume smoke test only; None = :data:`ML_EPISODE_S`)."""
+    resume smoke test only; None = :data:`ML_EPISODE_S`). ``variant``: C-S8-36 re-approach
+    variant of the refreshed controller (:func:`with_reapproach_variant`; None = preset).
+    ``base_dir`` is only read (C-S8-36 writes the episodes to a new batch)."""
     episode_s = ML_EPISODE_S if episode_s is None else float(episode_s)
     import numpy as np
 
@@ -1631,9 +1747,10 @@ def job_ml_episode(base: MLBase, ep: dict[str, Any], base_dir: Path, case_dir: P
     c2, suite, held = restore_branch(blob, engine)
     # C-S8-25 ③: settings of the current code on the unpickled controller (+ 1-period compare)
     old_c2 = copy.deepcopy(c2)
-    fresh_c2, *_ = _controller(case, params_ctrl, params)
+    fresh_c2, *_ = _controller(case, params_ctrl, params, variant=variant)
     refresh = refresh_restored_controller(c2, fresh_c2)
     refresh["lock_window_tau_case_s"] = float(case.base.tau_v_s)  # spec rev. 48 218.12
+    refresh["reapproach_variant"] = variant  # C-S8-36 (None = preset)
     compare = FirstPeriodCompare(c2, old_c2)
     t_b = engine.time_s
     controller = compare
@@ -1706,7 +1823,8 @@ def job_ml_episode(base: MLBase, ep: dict[str, Any], base_dir: Path, case_dir: P
                 "ml_meta": ml_meta(base, model, event=ep["kind"],
                                    branch_seal_f_N=seal_f_branch,
                                    episode_id=ep["episode_id"]),
-                "settings_refreshed": refresh}
+                "settings_refreshed": refresh,
+                "reapproach_variant": variant, "branch_source": str(base_dir)}
     run_meta = make_run_meta(params, engine.meta(), scenario=f"S8ML_{ep['episode_id']}",
                              scenario_settings=s6c._plain(settings),
                              sensors=suite.setup(),
@@ -1767,7 +1885,7 @@ def job_case(case, case_dir):
         run_meta = None
     elif kind == "ml_episode":
         summary = job_ml_episode(MLBase(**_tuples(s["base"])), s["episode"], Path(s["base_dir"]),
-                                 d, episode_s=s.get("episode_s"))
+                                 d, episode_s=s.get("episode_s"), variant=s.get("variant"))
         run_meta = None
     else:
         c = case_table()[case.case_id]
@@ -1876,8 +1994,10 @@ def run_cases_mixed(cases, job, output_dir: Path, *, layout: str, timeout_s: flo
         for sentinel in {*ended, *B._terminate_timed_out(running)}:
             rc = running.pop(sentinel)
             busy[kind_of.pop(sentinel)] -= 1
-            outcomes[rc.case.case_id] = B._finish_case(rc)
-    ordered = [outcomes[c.case_id] for c in case_list]
+            # keyed by the job object: the same case id may run into two output directories
+            # (C-S8-36 bundles A and B both run ML78_ep0 / ML88_ep0)
+            outcomes[id(rc.case)] = B._finish_case(rc)
+    ordered = [outcomes[id(c)] for c in case_list]
     doc = B._batch_document(ordered, job, started_utc, time.perf_counter() - t0,
                             sum(pools.values()), B.Placement.PCORE)
     doc["placement"] = f"mixed {pools}"
@@ -2314,6 +2434,548 @@ def run_ml_resume(batch_dir: Path, layout: str, *, failed_only: bool = True,
     return show
 
 
+# --- C-S8-36 (spec rev. 52 230, U-S8-49 / 50) ------------------------------------------------
+
+C36_SOURCE = Path("07_results/S8/ml_main_20261025_090131")
+"""The 768 batch whose bases (``branch.pkl``) and plan the C-S8-36 episodes re-use (read only)."""
+C36_AFFECTED = Path("06_analysis/02_control/s8/s8_rev52_r51_affected.json")
+"""Spec rev. 52 230: the 55 episodes of the 768 with a re-approach start within 2.0 s of the
+previous end (``affected``)."""
+C36_F1ONLY = ("ML78_ep0", "ML88_ep0")
+"""Bundle B: F1 alone (RT off) - the ML78_ep0 ping-pong and the ML88_ep0 rod fallback."""
+C36_GATE = ("E_RE1bF_Fs0", "E_RE1bP_Fs0")
+"""Bundle C: control-3 gate cases RE1bF / RE1bP, top level, F_s 0 (U57 regression)."""
+C36_DIRS = {"A": "A_rt", "B": "B_f1only", "C": "C_gate"}
+C36_GATE_REF = Path("07_results/S8/p1r_20261024_222013")
+"""Measured walls of the bundle C cases (p1r batch)."""
+
+
+def _root_path(p: Path | str) -> Path:
+    p = Path(p)
+    return p if p.is_absolute() else ROOT / p
+
+
+def c36_affected_ids(path: Path | str = C36_AFFECTED) -> list[str]:
+    doc = json.loads(_root_path(path).read_text(encoding="utf-8"))
+    ids = list(doc["affected"])
+    if len(ids) != len(set(ids)):
+        raise SystemExit(f"{path}: duplicate affected ids")
+    return ids
+
+
+def _measured_wall_s(case_dir: Path) -> float | None:
+    try:
+        res = json.loads((case_dir / "result.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    w = res.get("wall_s")
+    return float(w) if isinstance(w, int | float) else None
+
+
+def c36_jobs(source: Path | str = C36_SOURCE, affected: Path | str = C36_AFFECTED,
+             *, episode_s: float | None = None, ids_a: Sequence[str] | None = None,
+             ids_b: Sequence[str] = C36_F1ONLY, gate: Sequence[str] = C36_GATE
+             ) -> dict[str, Any]:
+    """Jobs and plan of the three C-S8-36 bundles. A / B come from the source ML batch plan
+    (:func:`ml_resume_plan`: the plan must equal this code's seeded draws, every base needs its
+    ``branch.pkl``); C from :func:`case_table`. C-S8-41: ``ids_a`` replaces the ``affected``
+    list (bundle E of :func:`run_c37`), ``ids_b`` / ``gate`` may be empty."""
+    from outrigger_sim.batch import Case
+
+    src = _root_path(source)
+    ids_a = c36_affected_ids(affected) if ids_a is None else list(ids_a)
+    ids_b = list(ids_b)
+    rp = ml_resume_plan(src, failed_only=False, only=sorted(set(ids_a) | set(ids_b)))
+    problems = []
+    if not rp["plan_matches_code"]:
+        problems.append(f"ml_plan.json differs from the seeded draws: {rp['mismatch']}")
+    if rp["unknown_only_ids"]:
+        problems.append(f"ids not in the source plan: {rp['unknown_only_ids']}")
+    if rp["missing_branch"]:
+        problems.append(f"bases without branch.pkl: {rp['missing_branch']}")
+    by_id = {e["episode_id"]: e for e in rp["rerun"]}
+    jobs: dict[str, list[Any]] = {"A": [], "B": [], "C": []}
+    rows: list[dict[str, Any]] = []
+    sub_plans: dict[str, dict[str, Any]] = {}
+    for bundle, ids, variant in (("A", ids_a, "rt"), ("B", ids_b, "f1only")):
+        bases_used: dict[str, Any] = {}
+        eps_used: dict[str, list[Any]] = {}
+        for eid in ids:
+            e = by_id.get(eid)
+            if e is None:
+                continue
+            b = rp["bases"][e["base_id"]]
+            ep = next(x for x in rp["episodes"][e["base_id"]] if x["episode_id"] == eid)
+            settings = {"kind": "ml_episode", "base": b, "episode": ep,
+                        "base_dir": str(src / "bases" / e["base_id"]), "variant": variant}
+            if episode_s is not None:
+                settings["episode_s"] = float(episode_s)
+            jobs[bundle].append(Case(eid, settings))
+            bases_used[e["base_id"]] = b
+            eps_used.setdefault(e["base_id"], []).append(ep)
+            w = _measured_wall_s(src / "episodes" / eid)
+            rows.append({"bundle": bundle, "id": eid, "variant": variant, "kind": ep["kind"],
+                         "leg": ep.get("leg"), "wall_measured_s": w})
+        sub_plans[bundle] = {"stage": "c36", "ml_design": rp["design"],
+                             "bases": list(bases_used.values()), "episodes": eps_used,
+                             "variant": variant, "rerun_from": str(src),
+                             "rule": "C-S8-36 (spec rev. 52 230): episodes re-run from the "
+                                     "source batch branch.pkl (bases read only, not copied)"}
+    table = case_table()
+    for cid in gate:
+        c = table[cid]
+        jobs["C"].append(Case(cid, {"duration_s": None}))
+        rows.append({"bundle": "C", "id": cid, "variant": "rt", "kind": c.event,
+                     "wall_measured_s": _measured_wall_s(_root_path(C36_GATE_REF) / cid),
+                     "wall_estimate_s": c.wall_estimate_s("p")})
+    return {"source": str(src), "affected": str(_root_path(affected)), "jobs": jobs,
+            "rows": rows, "sub_plans": sub_plans, "problems": problems,
+            "counts": {k: len(v) for k, v in jobs.items()}}
+
+
+def c36_plan(info: dict[str, Any]) -> dict[str, Any]:
+    """Wall estimate: measured ``wall_s`` of the source runs (768 batch, p7e8 pool; bundle C:
+    p1r) else the step-cost model; makespan by :func:`simulate_makespan` (E-core x factor)."""
+    walls = []
+    missing = []
+    for r in info["rows"]:
+        w = r.get("wall_measured_s") or r.get("wall_estimate_s")
+        if w is None:
+            missing.append(r["id"])
+            w = 600.0  # ASSUMPTION: upper end of the 768 job walls (290-580 s)
+        walls.append(float(w))
+    out = {"counts": info["counts"], "total": len(walls),
+           "wall_s": {"min": min(walls), "max": max(walls), "sum": sum(walls)},
+           "missing_wall": missing,
+           "p7": simulate_makespan(walls, "p7"), "p7e8": simulate_makespan(walls, "p7e8"),
+           "basis": "measured result.json wall_s of the same episode in the source batch "
+                    "(p7e8 pool, F1 / RT change the trajectory after the event only) and of "
+                    "the p1r gate cases; E-core x" f"{E_CORE_FACTOR:g}"}
+    for k in ("p7", "p7e8"):
+        out[k]["makespan_min"] = out[k]["makespan_s"] / 60.0
+    return out
+
+
+def run_c36(layout: str, *, source: Path | str = C36_SOURCE, affected: Path | str = C36_AFFECTED,
+            dry_run: bool = False, approved: bool = False) -> dict[str, Any]:
+    """C-S8-36: bundles A (affected 55, RT + F1), B (F1 alone, 2) and C (gate RE1bF / RE1bP,
+    RT + F1) in one pool into a new batch ``07_results/S8/c36_<stamp>/`` with ``A_rt/episodes``,
+    ``B_f1only/episodes`` (each with an ``ml_plan.json`` for ``judge``) and ``C_gate/``. The
+    source batch is not changed."""
+    info = c36_jobs(source, affected)
+    doc = {"plan": c36_plan(info), "problems": info["problems"], "source": info["source"],
+           "affected": info["affected"],
+           "ids": {k: [c.case_id for c in v] for k, v in info["jobs"].items()},
+           "out": "07_results/S8/c36_<stamp>/{A_rt/episodes, B_f1only/episodes, C_gate}"}
+    print(json.dumps(s6c._plain(doc), indent=1), flush=True)
+    if info["problems"]:
+        raise SystemExit(f"C-S8-36 plan problems: {info['problems']}")
+    if dry_run:
+        return doc
+    if not approved:
+        raise SystemExit("C-S8-36 needs the user's confirmation: --approved (or --dry-run)")
+    batch_dir = _batch_dir("c36")
+    from outrigger_sim.chrono import s8_plant_adapter as plant
+
+    dirs = {k: batch_dir / v for k, v in C36_DIRS.items()}
+    for k in ("A", "B"):
+        dirs[k].mkdir(parents=True, exist_ok=True)
+        (dirs[k] / "ml_plan.json").write_text(
+            json.dumps(s6c._plain(info["sub_plans"][k]), indent=1), "utf-8")
+    dirs["C"].mkdir(parents=True, exist_ok=True)
+    table = case_table()
+    gate = [table[c] for c in C36_GATE]
+    (dirs["C"] / "batch_meta.json").write_text(json.dumps(s6c._plain(
+        {"mode": "run", "set": "c36_gate", "layout": layout,
+         "cases": list(C36_GATE), "plan": plan(gate, layout),
+         "plant_adapter": plant.adapter_meta(),
+         "crawler_mode": os.environ.get(CRAWLER_ENV, "yaml"),
+         "note": "C-S8-36 bundle C (RT + F1)"}), indent=1), "utf-8")
+    (batch_dir / "c36_meta.json").write_text(json.dumps(s6c._plain(
+        {**doc, "batch": str(batch_dir), "layout": layout,
+         "env": {k: os.environ.get(k) for k in ("OUTRIGGER_ROD_SIDE_MECHANICS",
+                                                 "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS")}}),
+        indent=1), "utf-8")
+    where: dict[int, Path] = {}
+    walls: dict[int, float] = {}
+    all_jobs = []
+    for k in ("A", "B", "C"):
+        out_dir = dirs[k] / "episodes" if k in ("A", "B") else dirs[k]
+        for j in info["jobs"][k]:
+            where[id(j)] = out_dir
+            r = next(x for x in info["rows"] if x["bundle"] == k and x["id"] == j.case_id)
+            walls[id(j)] = float(r.get("wall_measured_s") or r.get("wall_estimate_s") or 600.0)
+            all_jobs.append(j)
+    t0 = time.perf_counter()
+    outs = run_cases_mixed(all_jobs, job_case, batch_dir, layout=layout,
+                           timeout_s=CASE_TIMEOUT_S, wall_of=lambda j: walls[id(j)],
+                           dir_of=lambda j: where[id(j)])
+    status = {}
+    for j, o in zip(sorted(all_jobs, key=lambda j: -walls[id(j)]), outs):
+        status[f"{where[id(j)].relative_to(batch_dir)}/{o.case_id}"] = o.status
+        if o.status != "ok":
+            print(f"{o.case_id}: {o.status}\n{(o.error or '')[-2500:]}", flush=True)
+    print(json.dumps({"batch": str(batch_dir), "wall_s": time.perf_counter() - t0,
+                      "failed": {k: v for k, v in status.items() if v != "ok"}}, indent=1),
+          flush=True)
+    return {"batch": str(batch_dir), "status": status}
+
+
+C36_D_CASES = ("MLJ_FS24_Fs0", "MLJ_FS24_Fs8")
+"""C-S8-36 bundle D (spec rev. 54 250, U-S8-55 (a)): the U-S8-32 designated front fast
+settlement cases, P-S8-16 (RT, the R8 preset) + F1 (plant code); judged as bundle A."""
+C36_D_DIR = "D_fs24"
+C36_D_REF = Path("07_results/S8/mlj_20261025_080212")
+"""The MLJ batch that ran these cases before P-S8-16 / F1 (copied to the 768 ``judged/``); read
+only, its ``batch.json`` gives the measured walls."""
+
+
+def _batch_json_walls(batch: Path) -> dict[str, float]:
+    try:
+        doc = json.loads((_root_path(batch) / "batch.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return {c["case_id"]: float(c["wall_s"]) for c in doc.get("cases") or []
+            if isinstance(c.get("wall_s"), int | float)}
+
+
+def c36_bundle_d_plan(layout: str) -> dict[str, Any]:
+    """Bundle D plan: the two cases, their controller variant (R8 preset = RT on, checked on the
+    preset config without building a model), measured walls of :data:`C36_D_REF` (p7e8 pool of
+    six) and the makespan."""
+    from outrigger_sim.control.c2 import C2Config
+
+    table = case_table()
+    cases = [table[c] for c in C36_D_CASES]
+    lr = C2Config().with_10hz_d1().r8.lifted_reapproach
+    rt_on = lr.retrigger_window_s is not None and lr.opposite_window_s is not None
+    measured = _batch_json_walls(C36_D_REF)
+    rows = []
+    for c in cases:
+        w = measured.get(c.case_id)
+        rows.append({"case_id": c.case_id, "group": c.group, "engine": c.engine,
+                     "fs_kN": c.fs_kN, "event": c.event,
+                     "wall_measured_s": w, "wall_estimate_s": c.wall_estimate_s("p"),
+                     "expected_run_s": expected_run_s(c), "upper_s": end_rule(c)["upper_s"]})
+    walls = [r["wall_measured_s"] or r["wall_estimate_s"] for r in rows]
+    p_or = "p7" if layout == "p7" else "p7e8"
+    out = {"bundle": "D", "cases": rows, "layout": layout,
+           "variant": "rt (R8 preset C2Config.with_10hz_d1, with_reapproach_variant(None)); F1 = "
+                      "plant code (hydraulics/l2b_rod_side.py, no switch)",
+           "preset_rt_on": rt_on,
+           "preset_lifted_reapproach": {k: getattr(lr, k) for k in RT_KEYS},
+           "settings_refresh": "not applicable: run from the start (job_l2b_s8), no branch.pkl",
+           "reference_batch": str(_root_path(C36_D_REF)),
+           p_or: simulate_makespan(walls, p_or),
+           "basis": "measured batch.json wall_s of the MLJ batch (15 workers busy); 2 cases "
+                    "on 2 P-cores alone should be shorter (ASSUMPTION)"}
+    out[p_or]["makespan_min"] = out[p_or]["makespan_s"] / 60.0
+    return out
+
+
+def run_c36_bundle_d(layout: str, *, batch: Path | None = None, dry_run: bool = False,
+                     approved: bool = False) -> dict[str, Any]:
+    """C-S8-36 bundle D (U-S8-55): :data:`C36_D_CASES` through :func:`job_case` (as bundle C)
+    into ``<batch>/D_fs24`` (an existing ``c36_<stamp>`` batch, never its A / B / C folders) or a
+    new ``07_results/S8/c36d_<stamp>/D_fs24``. The reference MLJ batch is read only."""
+    from outrigger_sim.batch import Case
+
+    doc = c36_bundle_d_plan(layout)
+    if batch is not None:
+        bdir = _root_path(batch)
+        if not bdir.is_dir() or not (bdir / "c36_meta.json").exists():
+            raise SystemExit(f"--batch {bdir}: not a c36 batch (no c36_meta.json)")
+        d_dir = bdir / C36_D_DIR
+        if d_dir.exists() and any(d_dir.iterdir()):
+            raise SystemExit(f"{d_dir} exists and is not empty")
+        doc["out"] = str(d_dir)
+    else:
+        doc["out"] = f"07_results/S8/c36d_<stamp>/{C36_D_DIR}"
+    print(json.dumps(s6c._plain(doc), indent=1), flush=True)
+    if not doc["preset_rt_on"]:
+        raise SystemExit("bundle D: the R8 preset has RT off (P-S8-16 missing)")
+    if dry_run:
+        return doc
+    if not approved:
+        raise SystemExit("bundle D needs the user's confirmation (U-S8-55): --approved "
+                         "(or --dry-run)")
+    if batch is None:
+        d_dir = _batch_dir("c36d") / C36_D_DIR
+    d_dir.mkdir(parents=True, exist_ok=True)
+    from outrigger_sim.chrono import s8_plant_adapter as plant
+
+    table = case_table()
+    cases = [table[c] for c in C36_D_CASES]
+    (d_dir / "batch_meta.json").write_text(json.dumps(s6c._plain(
+        {"mode": "run", "set": "c36_bundle_D", "layout": layout, "cases": list(C36_D_CASES),
+         "plan": plan(cases, layout), "bundle_d": doc, "plant_adapter": plant.adapter_meta(),
+         "crawler_mode": os.environ.get(CRAWLER_ENV, "yaml"),
+         "env": {k: os.environ.get(k) for k in ("OUTRIGGER_ROD_SIDE_MECHANICS",
+                                                 "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS")},
+         "note": "C-S8-36 bundle D (U-S8-55, spec rev. 54 250): MLJ_FS24 Fs0 / Fs8, RT + F1"}),
+        indent=1), "utf-8")
+    walls = {r["case_id"]: float(r["wall_measured_s"] or r["wall_estimate_s"])
+             for r in doc["cases"]}
+    jobs = [Case(cid, {"duration_s": None}) for cid in C36_D_CASES]
+    t0 = time.perf_counter()
+    outs = run_cases_mixed(jobs, job_case, d_dir, layout=layout, timeout_s=CASE_TIMEOUT_S,
+                           wall_of=lambda j: walls[j.case_id])
+    status = {o.case_id: o.status for o in outs}
+    for o in outs:
+        if o.status != "ok":
+            print(f"{o.case_id}: {o.status}\n{(o.error or '')[-2500:]}", flush=True)
+    print(json.dumps({"bundle_d": str(d_dir), "wall_s": time.perf_counter() - t0,
+                      "status": status}, indent=1), flush=True)
+    return {"bundle_d": str(d_dir), "status": status}
+
+
+# --- C-S8-41 (spec rev. 54 260 / 262.1 / 264, U-S8-56 (a)) ---------------------------------------
+
+C37_IDS = ("ML00_ep5", "ML10_ep0", "ML21_ep1", "ML24_ep6", "ML25_ep7", "ML33_ep4", "ML34_ep7",
+           "ML39_ep5", "ML42_ep6", "ML51_ep4", "ML54_ep0", "ML59_ep7", "ML71_ep6", "ML81_ep5",
+           "ML87_ep1", "ML87_ep5", "ML89_ep0")
+"""Spec rev. 54 260.1: the 17 bundle-A episodes with the D1 rod fallback after F1 (bundle E =
+these, RT + F1 + P-S8-21, re-run from the 768 ``branch.pkl``)."""
+C36_BATCH = Path("07_results/S8/c36_20261025_155317")
+"""The C-S8-36 batch (read only): its ``A_rt/verify_S8ML.json`` gives the fallback list check,
+its ``A_rt/episodes/*/result.json`` and ``D_fs24/batch.json`` the measured walls."""
+C37_DIRS = {"E": "E_drain", "C": "C_gate", "D": "D_fs24"}
+
+
+def p_s8_21_status() -> dict[str, Any]:
+    """P-S8-21 (spec rev. 54 260.5) present in the controller code: ``StepReason.CHECK_DRAINING``
+    and the ``TwoPressureSettings.rod_drain_hold_ratio`` default (rho, None = hold off)."""
+    from outrigger_sim.control import two_pressure as tp
+
+    member = getattr(tp.StepReason, "CHECK_DRAINING", None)
+    f = getattr(tp.TwoPressureSettings, "__dataclass_fields__", {}).get("rod_drain_hold_ratio")
+    rho = None if f is None else f.default
+    return {"present": member is not None and isinstance(rho, int | float),
+            "step_reason": None if member is None else str(member),
+            "rod_drain_hold_ratio_default": rho, "module": tp.__file__}
+
+
+def c37_fallback_ids(batch: Path | str = C36_BATCH) -> list[str] | None:
+    """Runs of the C-S8-36 bundle A with a rod fallback warning (``ml_metrics`` of its
+    ``verify_S8ML.json``); None without the file."""
+    p = _root_path(batch) / "A_rt" / "verify_S8ML.json"
+    if not p.exists():
+        return None
+    doc = json.loads(p.read_text(encoding="utf-8"))
+    return sorted(c for c, m in (doc.get("ml_metrics") or {}).items()
+                  if (m.get("rod_fallback") or {}).get("events"))
+
+
+def c37_extra_problems(extra_ids: Sequence[str], affected: Path | str = C36_AFFECTED
+                       ) -> list[str]:
+    """C-S8-42 (spec rev. 55 268.3 #6 / 269.1): ``--extra-ids`` must be bundle-A episodes of
+    C-S8-36 (the ``affected`` 55), outside :data:`C37_IDS` and without duplicates."""
+    out = []
+    a = set(c36_affected_ids(affected))
+    bad = [c for c in extra_ids if c not in a]
+    if bad:
+        out.append(f"--extra-ids not in the C-S8-36 bundle A (affected 55): {bad}")
+    dup = sorted({c for c in extra_ids if c in C37_IDS})
+    if dup:
+        out.append(f"--extra-ids already in the 17 (C37_IDS): {dup}")
+    if len(set(extra_ids)) != len(extra_ids):
+        out.append(f"--extra-ids has duplicates: {list(extra_ids)}")
+    return out
+
+
+def c37_jobs(layout: str, *, source: Path | str = C36_SOURCE, regression: bool = True,
+             extra_ids: Sequence[str] = ()) -> dict[str, Any]:
+    """Jobs and plan of the C-S8-41 re-run: bundle E (:data:`C37_IDS`, RT + F1 + P-S8-21, from
+    the 768 ``branch.pkl``) and, with ``regression``, the C-S8-36 gate cases C (RE1bF / RE1bP)
+    and D (MLJ_FS24 Fs0 / Fs8) run from the start. ``extra_ids`` (C-S8-42, spec rev. 55 269.1):
+    bundle-A episodes outside the 17 whose replayed controller output differs from the record
+    (268.3 #6), added to bundle E. Walls: measured C-S8-36 runs (same RT + F1 trajectory up to
+    the first fallback), else the source / step-cost estimate."""
+    from outrigger_sim.batch import Case
+
+    extra = tuple(extra_ids)
+    info = c36_jobs(source, ids_a=C37_IDS + extra, ids_b=(),
+                    gate=C36_GATE if regression else ())
+    problems = list(info["problems"]) + c37_extra_problems(extra)
+    got = c37_fallback_ids()
+    if got is None:
+        problems.append(f"{C36_BATCH}/A_rt/verify_S8ML.json missing: fallback list not checked")
+    elif set(got) != set(C37_IDS):
+        problems.append(f"C-S8-36 A fallback runs {got} differ from spec 260.1 {list(C37_IDS)}")
+    jobs = {"E": info["jobs"]["A"], "C": info["jobs"]["C"], "D": []}
+    rows = []
+    for r in info["rows"]:
+        if r["bundle"] == "B":
+            continue
+        r = {**r, "bundle": "E" if r["bundle"] == "A" else r["bundle"]}
+        if r["bundle"] == "E":
+            # the 768 wall stays the P-core basis (as C-S8-36: its plan 37.6 min vs 28.0 min
+            # measured); the C-S8-36 wall (P / E pool unknown per case) is a record column
+            r["wall_c36_s"] = _measured_wall_s(_root_path(C36_BATCH) / "A_rt" / "episodes"
+                                               / r["id"])
+            r["variant"] = "rt + P-S8-21"
+        else:  # C: process walls of the C-S8-36 pool (its result.json has no wall_s)
+            w = _batch_json_walls(C36_BATCH).get(r["id"])
+            if w:
+                r["wall_p1r_s"], r["wall_measured_s"] = r["wall_measured_s"], w
+        rows.append(r)
+    if regression:
+        d_walls = _batch_json_walls(C36_BATCH / C36_D_DIR) or _batch_json_walls(C36_D_REF)
+        table = case_table()
+        for cid in C36_D_CASES:
+            c = table[cid]
+            jobs["D"].append(Case(cid, {"duration_s": None}))
+            rows.append({"bundle": "D", "id": cid, "variant": "rt + P-S8-21", "kind": c.event,
+                         "wall_measured_s": d_walls.get(cid),
+                         "wall_estimate_s": c.wall_estimate_s("p")})
+    walls = [float(r.get("wall_measured_s") or r.get("wall_estimate_s") or 600.0) for r in rows]
+    plan_ = {"counts": {k: len(v) for k, v in jobs.items()}, "total": len(walls),
+             "wall_s": {"min": min(walls), "max": max(walls), "sum": sum(walls)},
+             "basis": "E: measured result.json wall_s of the same episode in the 768 batch "
+                      "(C-S8-36 basis: plan 37.6 min, measured 28.0 min for 59 jobs on p7e8); "
+                      "C: C-S8-36 batch.json process walls (p7e8 pool); D: C-S8-36 D_fs24 "
+                      "batch.json "
+                      "(2 cases alone on p7); else the step-cost model; "
+                      f"E-core x{E_CORE_FACTOR:g}"}
+    for k in ("p7", "p7e8"):
+        plan_[k] = simulate_makespan(walls, k)
+        plan_[k]["makespan_min"] = plan_[k]["makespan_s"] / 60.0
+    return {"info": info, "jobs": jobs, "rows": rows, "plan": plan_, "problems": problems,
+            "fallback_ids_c36": got, "regression": regression, "layout": layout,
+            "extra_ids": list(extra), "p_s8_21": p_s8_21_status()}
+
+
+C37_D_DEFERRED_REF = Path("07_results/S8/mlj_20261025_080212")
+"""C-S8-42 (spec rev. 55 269.3 #2): reference runs of bundle D (the original MLJ_FS24 cases)
+for the per-leg deferred comparison (``judge --deferred-ref``)."""
+
+
+def run_c37(layout: str, *, source: Path | str = C36_SOURCE, regression: bool = True,
+            dry_run: bool = False, approved: bool = False,
+            extra_ids: Sequence[str] = ()) -> dict[str, Any]:
+    """C-S8-41 (U-S8-56 (a), spec rev. 54 262.1): bundle E (17 episodes, RT + F1 + P-S8-21)
+    + regression C / D into a new batch ``07_results/S8/c37_<stamp>/`` with
+    ``E_drain/{ml_plan.json, episodes/}``, ``C_gate/`` and ``D_fs24/``. The 768 source and the
+    C-S8-36 batch are read only. Refuses to run (not to plan) without P-S8-21. ``extra_ids``
+    (C-S8-42, spec rev. 55 269.1): further bundle-A episodes added to bundle E."""
+    p = c37_jobs(layout, source=source, regression=regression, extra_ids=extra_ids)
+    doc = {"plan": p["plan"], "rows": p["rows"], "problems": p["problems"],
+           "p_s8_21": p["p_s8_21"], "source": p["info"]["source"],
+           "fallback_ids_c36": p["fallback_ids_c36"], "regression": regression,
+           "extra_ids": p["extra_ids"],
+           "ids": {k: [c.case_id for c in v] for k, v in p["jobs"].items()},
+           "out": "07_results/S8/c37_<stamp>/{E_drain/episodes, C_gate, D_fs24}",
+           "judge": ["judge --batch <c37>/E_drain --ref-batch 07_results/S8/"
+                     "ml_main_20261025_090131",
+                     "judge --batch <c37>/C_gate --ref-batch 07_results/S8/p1r_20261024_222013 "
+                     "--lookup-batch 07_results/S8/p1r_20261024_222013 "
+                     "07_results/S8/rest_20261024_233615",
+                     "judge --batch <c37>/D_fs24 --lookup-batch 07_results/S8/"
+                     f"p1r_20261024_222013 --deferred-ref {C37_D_DEFERRED_REF.as_posix()}"]}
+    print(json.dumps(s6c._plain(doc), indent=1), flush=True)
+    if p["problems"]:
+        raise SystemExit(f"C-S8-41 plan problems: {p['problems']}")
+    if dry_run:
+        return doc
+    if not p["p_s8_21"]["present"]:
+        raise SystemExit("C-S8-41 re-run needs P-S8-21 in two_pressure.py (CHECK_DRAINING + "
+                         "rod_drain_hold_ratio); not run")
+    if not approved:
+        raise SystemExit("C-S8-41 re-run needs the user's confirmation: --approved (or --dry-run)")
+    from outrigger_sim.chrono import s8_plant_adapter as plant
+
+    batch_dir = _batch_dir("c37")
+    dirs = {k: batch_dir / v for k, v in C37_DIRS.items()}
+    env = {k: os.environ.get(k) for k in ("OUTRIGGER_ROD_SIDE_MECHANICS", "OPENBLAS_NUM_THREADS",
+                                          "MKL_NUM_THREADS")}
+    dirs["E"].mkdir(parents=True, exist_ok=True)
+    sub = {**p["info"]["sub_plans"]["A"], "stage": "c37", "variant": "rt + P-S8-21",
+           "rule": "C-S8-41 (spec rev. 54 262.1): the 17 rod-fallback episodes of C-S8-36 A "
+                   "re-run from the source batch branch.pkl (bases read only, not copied), "
+                   "RT + F1 + P-S8-21",
+           "extra_ids": p["extra_ids"]}  # C-S8-42 (spec rev. 55 269.1)
+    (dirs["E"] / "ml_plan.json").write_text(json.dumps(s6c._plain(sub), indent=1), "utf-8")
+    table = case_table()
+    for k, ids, note in (("C", C36_GATE, "C-S8-41 regression C (RT + F1 + P-S8-21)"),
+                         ("D", C36_D_CASES, "C-S8-41 regression D (RT + F1 + P-S8-21)")):
+        if not p["jobs"][k]:
+            continue
+        dirs[k].mkdir(parents=True, exist_ok=True)
+        cs = [table[c] for c in ids]
+        (dirs[k] / "batch_meta.json").write_text(json.dumps(s6c._plain(
+            {"mode": "run", "set": f"c37_{k}", "layout": layout, "cases": list(ids),
+             "plan": plan(cs, layout), "plant_adapter": plant.adapter_meta(),
+             "crawler_mode": os.environ.get(CRAWLER_ENV, "yaml"), "env": env,
+             "p_s8_21": p["p_s8_21"], "note": note}), indent=1), "utf-8")
+    (batch_dir / "c37_meta.json").write_text(json.dumps(s6c._plain(
+        {**doc, "batch": str(batch_dir), "layout": layout, "env": env}), indent=1), "utf-8")
+    where: dict[int, Path] = {}
+    walls: dict[int, float] = {}
+    all_jobs = []
+    for k in ("E", "C", "D"):
+        out_dir = dirs[k] / "episodes" if k == "E" else dirs[k]
+        for j in p["jobs"][k]:
+            r = next(x for x in p["rows"] if x["bundle"] == k and x["id"] == j.case_id)
+            where[id(j)] = out_dir
+            walls[id(j)] = float(r.get("wall_measured_s") or r.get("wall_estimate_s") or 600.0)
+            all_jobs.append(j)
+    t0 = time.perf_counter()
+    outs = run_cases_mixed(all_jobs, job_case, batch_dir, layout=layout,
+                           timeout_s=CASE_TIMEOUT_S, wall_of=lambda j: walls[id(j)],
+                           dir_of=lambda j: where[id(j)])
+    status = {}
+    for j, o in zip(sorted(all_jobs, key=lambda j: -walls[id(j)]), outs):
+        status[f"{where[id(j)].relative_to(batch_dir)}/{o.case_id}"] = o.status
+        if o.status != "ok":
+            print(f"{o.case_id}: {o.status}\n{(o.error or '')[-2500:]}", flush=True)
+    print(json.dumps({"batch": str(batch_dir), "wall_s": time.perf_counter() - t0,
+                      "failed": {k: v for k, v in status.items() if v != "ok"}}, indent=1),
+          flush=True)
+    return {"batch": str(batch_dir), "status": status}
+
+
+def smoke_c36(episode_id: str, out_dir: Path, *, episode_s: float, variant: str = "rt",
+              source: Path | str = C36_SOURCE) -> dict[str, Any]:
+    """C-S8-36 smoke (single process): one episode of the source batch, shortened, written to
+    ``out_dir/<id>``; returns the RT evidence (re-approach events, ``is_retrigger`` meta, the
+    refreshed settings and the first-period compare)."""
+    src = _root_path(source)
+    rp = ml_resume_plan(src, failed_only=False, only=[episode_id])
+    if not rp["rerun"] or not rp["plan_matches_code"]:
+        raise SystemExit(f"smoke: {episode_id} not runnable from {src}: {rp['mismatch']}")
+    e = rp["rerun"][0]
+    b = rp["bases"][e["base_id"]]
+    ep = next(x for x in rp["episodes"][e["base_id"]] if x["episode_id"] == episode_id)
+    case_dir = Path(out_dir) / episode_id
+    if case_dir.exists():
+        raise SystemExit(f"smoke: {case_dir} exists")
+    case_dir.mkdir(parents=True)
+    t0 = time.perf_counter()
+    summary = job_ml_episode(MLBase(**_tuples(b)), ep, src / "bases" / e["base_id"], case_dir,
+                             episode_s=episode_s, variant=variant)
+    (case_dir / "result.json").write_text(json.dumps(s6c._plain(summary), indent=1), "utf-8")
+    cm = summary["controller_meta"]
+    names = json.loads((case_dir / "controller_events.json").read_text(encoding="utf-8"))
+    t_ev = float(summary["event_t_s"])
+    reapp = [n for n in names if "reapproach" in n]
+    refresh = summary["settings"]["settings_refreshed"]
+    return {"case_dir": str(case_dir), "wall_s": time.perf_counter() - t0,
+            "episode": ep, "event_t_s": t_ev, "episode_s": episode_s, "variant": variant,
+            "reapproach_events": reapp,
+            "deferred_events": [n for n in reapp if "deferred" in n],
+            # C-S8-41: P-S8-21 evidence (D1 rod fallback vs the check_draining explanation)
+            "rod_pressure_events": [n for n in names if "ROD_PRESSURE" in n
+                                    or "check_draining" in n or ":rod:" in n],
+            "p_s8_21": p_s8_21_status(),
+            "lifted_reapproach_meta": cm.get("lifted_reapproach"),
+            "first_period_compare": summary["first_period_compare"],
+            "refresh_lifted_reapproach": refresh.get("lifted_reapproach"),
+            "refresh_changed_rt_fields": [f for r in refresh.get("replaced", [])
+                                          for f in r.get("changed_fields", [])
+                                          if "lifted_reapproach" in f["path"]],
+            "refresh_added": refresh.get("added")}
+
+
 def smoke_branch(seconds_before: float = 0.5, seconds_after: float = 1.0, *,
                  work_dir: Path | None = None, case_id: str = "smoke_E_G4_Fs0"
                  ) -> dict[str, Any]:
@@ -2399,7 +3061,15 @@ def build_snapshots(jobs: int) -> None:
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("action", choices=("list", "plan", "check", "run", "ml", "ml-plan", "judge",
-                                       "snaps", "smoke-branch"))
+                                       "snaps", "smoke-branch", "c36"))
+    ap.add_argument("--rerun-from", dest="rerun_from", default=str(C36_SOURCE),
+                    help="c36: source ML batch (bases / branch.pkl / plan, read only)")
+    ap.add_argument("--affected", default=str(C36_AFFECTED),
+                    help="c36: JSON with the 'affected' episode list (bundle A)")
+    ap.add_argument("--smoke", help="c36: run this one episode shortened (--episode-s) into "
+                                    "--out (single process, no batch)")
+    ap.add_argument("--variant", choices=REAPPROACH_VARIANTS, default="rt",
+                    help="c36 --smoke: re-approach variant")
     ap.add_argument("--set", dest="case_set", choices=SET_NAMES, default="p1")
     ap.add_argument("--only", nargs="*")
     ap.add_argument("--workers", choices=tuple(WORKER_LAYOUTS), default="p7e8")
@@ -2408,7 +3078,25 @@ def main(argv):
     ap.add_argument("--batch")
     ap.add_argument("--out")
     ap.add_argument("--ref-batch", dest="ref_batch",
-                    help="judge: earlier batch for the 213.6 TOUCH regression row (C-S8-19 ⑦)")
+                    help="judge: earlier batch for the 213.6 TOUCH regression row (C-S8-19 ⑦); "
+                         "ML batch: reference of the twist-work FLAG row (C-S8-40)")
+    ap.add_argument("--bundle", choices=("D", "E"),
+                    help="c36: C-S8-36 bundle D alone (U-S8-55: MLJ_FS24_Fs0 / Fs8, P-S8-16 + "
+                         "F1) into <--batch>/D_fs24 (an existing c36 batch) or a new "
+                         "07_results/S8/c36d_<stamp>/D_fs24; E = C-S8-41 re-run (U-S8-56 (a)): "
+                         "the 17 rod-fallback episodes, RT + F1 + P-S8-21, + regression C / D, "
+                         "into a new 07_results/S8/c37_<stamp>/")
+    ap.add_argument("--no-regression", dest="regression", action="store_false",
+                    help="c36 --bundle E: only the 17 episodes (no C / D regression cases)")
+    ap.add_argument("--extra-ids", dest="extra_ids", default="",
+                    help="c36 --bundle E (C-S8-42, spec rev. 55 269.1): comma-separated bundle-A "
+                         "episodes outside the 17 to add to bundle E (replayed controller output "
+                         "differs from the record, 268.3 #6)")
+    ap.add_argument("--deferred-ref", dest="deferred_ref",
+                    help="judge (run_S8C batch, C-S8-42): folder with the reference run of each "
+                         "case for the per-leg deferred comparison (bundle D: "
+                         "07_results/S8/mlj_20261025_080212); ML batches use --ref-batch / "
+                         "rerun_from")
     ap.add_argument("--lookup-batch", dest="lookup_batch", nargs="*", action="extend",
                     default=[],
                     help="judge: batches used only to look up twins (C11 L1, CB pilot-check, "
@@ -2445,6 +3133,29 @@ def main(argv):
     if args.action == "snaps":
         build_snapshots(P_WORKERS)
         return
+    if args.action == "c36":
+        if args.smoke:
+            if not args.out or args.episode_s is None:
+                raise SystemExit("c36 --smoke needs --out <dir> and --episode-s <s>")
+            print(json.dumps(s6c._plain(smoke_c36(args.smoke, Path(args.out),
+                                                  episode_s=args.episode_s,
+                                                  variant=args.variant,
+                                                  source=args.rerun_from)), indent=1))
+            return
+        if args.bundle == "D":
+            run_c36_bundle_d(args.workers, batch=None if not args.batch else Path(args.batch),
+                             dry_run=args.dry_run, approved=args.approved)
+            return
+        if args.bundle == "E":  # C-S8-41
+            run_c37(args.workers, source=args.rerun_from, regression=args.regression,
+                    dry_run=args.dry_run, approved=args.approved,
+                    extra_ids=[c.strip() for c in args.extra_ids.split(",") if c.strip()])
+            return
+        if args.extra_ids:
+            raise SystemExit("--extra-ids only with c36 --bundle E")
+        run_c36(args.workers, source=args.rerun_from, affected=args.affected,
+                dry_run=args.dry_run, approved=args.approved)
+        return
     mlj_from = None if not args.mlj_from else Path(args.mlj_from)
     if (mlj_from is not None or args.skip_judged) and args.action not in ("ml", "ml-plan"):
         raise SystemExit("--mlj-from / --skip-judged only with ml / ml-plan")
@@ -2461,7 +3172,14 @@ def main(argv):
         batch = Path(args.batch)
         out = None if not args.out else Path(args.out)
         if (batch / "ml_plan.json").exists():  # ML batch: ML-0 ... ML-3 (+ rev. 47 / 48 rows)
-            print("->", judge_ml_batch(batch, out))
+            # C-S8-40: --ref-batch = reference of the twist-work FLAG row (default: the
+            # C-S8-36 sub-plan rerun_from)
+            p = judge_ml_batch(batch, out, ref_batch=None if not args.ref_batch
+                               else Path(args.ref_batch))
+            print("->", p)
+            # C-S8-41: summary incl. the ML-0 rod fallback gate and the ML-1 count
+            print(json.dumps(json.loads(p.read_text(encoding="utf-8"))["meta"]["summary"],
+                             indent=1, ensure_ascii=False), flush=True)
             judged = batch / "judged"
             if judged.exists() and any((p / "result.json").exists() for p in judged.iterdir()
                                        if p.is_dir()):  # main stage: the MLJ cases
@@ -2469,9 +3187,13 @@ def main(argv):
                                         else out.with_name(out.stem + "_judged.json"),
                                         lookup_batches=[Path(b) for b in args.lookup_batch]))
             return
-        print("->", judge_batch(batch, out,
-                                ref_batch=None if not args.ref_batch else Path(args.ref_batch),
-                                lookup_batches=[Path(b) for b in args.lookup_batch]))
+        p = judge_batch(batch, out,
+                        ref_batch=None if not args.ref_batch else Path(args.ref_batch),
+                        lookup_batches=[Path(b) for b in args.lookup_batch],
+                        deferred_ref=None if not args.deferred_ref else Path(args.deferred_ref))
+        print("->", p)
+        print(json.dumps(json.loads(p.read_text(encoding="utf-8"))["meta"]["summary"],
+                         indent=1, ensure_ascii=False), flush=True)  # C-S8-41
         return
     if args.action == "ml" and args.resume:
         modes = sum(bool(x) for x in (args.failed_only, args.all_episodes, args.only))

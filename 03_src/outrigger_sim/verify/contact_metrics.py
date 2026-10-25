@@ -255,6 +255,14 @@ def _scored_samples(record: RecordJudgement) -> NDArray[np.bool_]:
     return record.watched & record.scored
 
 
+def scored_detections(record: RecordJudgement) -> list[EpisodeDetection]:
+    """Detection of every truth episode of ``record`` whose ``t_on`` sample is scored."""
+    scored = _scored_samples(record)
+    classes = np.where(record.watched[:, None], record.classes, ContactClass.UNKNOWN)
+    episodes = [episode for episode in contact_episodes(classes) if scored[episode.on_row]]
+    return detect_episodes(record.t_s, episodes, record.decision_flags, record.action_flags)
+
+
 def score_judge(records: list[RecordJudgement], F_min_N: float) -> JudgeScore:
     """M1-M4 summed over the records of one judge."""
     episode_count = missed = late = false_flags = 0
@@ -263,12 +271,7 @@ def score_judge(records: list[RecordJudgement], F_min_N: float) -> JudgeScore:
     errors: list[NDArray[np.float64]] = []
     for record in records:
         scored = _scored_samples(record)
-        classes = np.where(record.watched[:, None], record.classes, ContactClass.UNKNOWN)
-        episodes = [episode for episode in contact_episodes(classes) if scored[episode.on_row]]
-        detections = detect_episodes(
-            record.t_s, episodes, record.decision_flags, record.action_flags
-        )
-        for detection in detections:
+        for detection in scored_detections(record):
             episode_count += 1
             on_s = float(record.t_s[detection.episode.on_row])
             if detection.first_decision_s is None:

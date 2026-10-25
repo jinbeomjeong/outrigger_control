@@ -383,6 +383,12 @@ class L2bRodSide:
                 self._locked_force(i, float(c[i])) if was_locked
                 else self._moving_force(i, float(s[i]), float(c[i]), t_s)
             )
+            if was_locked:
+                # C-S8-35 / H-S8-4 F1 (hydraulics 12.3, 12.7): the locked fast path above does
+                # not step the machine, so its tracked pressure still holds the lock-instant
+                # p_r0; the release step must start the moving pressure lag from the locked-law
+                # rod pressure of the last call (continuity), not from p_r0
+                leg.tracked_rod_pressure_Pa = float(self._last_p_r[i])
             leg.step(
                 RodChamberLegInput(
                     time_s=float(t_s),

@@ -1,0 +1,2596 @@
+{
+ "conventions": "legs FL FR RL RR, compression +, F = rod axial force, f = seal friction,\nG = F - f (two-sensor net reading), head-only reading H = G + p_r A_ann, p_r gauge [Pa].",
+ "rod_side": {
+  "summary_top_keys": [
+   "batch",
+   "speed_pair_checks",
+   "n_checks",
+   "n_failed",
+   "date"
+  ],
+  "batch": "07_results\\S8\\v15_20261025_132215",
+  "n_checks": 143,
+  "n_failed": 0,
+  "date": "2026-10-25T14:44:57",
+  "cases": {
+   "V15a_L0": {
+    "n_judged": 7,
+    "n_failed": 0,
+    "n_records": 8,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(a)",
+      "true F_min threshold [mm]",
+      10.031807365797912,
+      10.0865,
+      true,
+      "rel -0.5422%"
+     ],
+     [
+      "V15(a)",
+      "true F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]",
+      10.031807365797912,
+      10.0865,
+      true,
+      "rel -0.5422%"
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]",
+      11.665530424693927,
+      11.7365,
+      true,
+      "rel -0.6047%"
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a) A-2(i)",
+      "RL true force at lift-off F + m g [N]",
+      17.429243215560973,
+      0.0,
+      true,
+      "F -700.1 N, -m g -717.5 N"
+     ],
+     [
+      "V15(a) A-3 record",
+      "stuck fraction at lift-off (FL FR RL RR)",
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "band-edge deficit at lift-off (FL FR RL RR) [N]",
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL deficit F + F_s - G at lift-off [N]",
+      0.0,
+      null,
+      null,
+      "5.29.2: NSC contact-chatter ratchet, about 0.45 kN expected"
+     ],
+     [
+      "V15(a) A-3 record",
+      "1 ms rod-force HF sigma, last 0.1 mm (FL FR RL RR) [N]",
+      [
+       4.58224974627147,
+       2.1035720679713337,
+       61.292218201666515,
+       1.4313549288249814
+      ],
+      null,
+      null,
+      "999 blocks"
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL blocks with N_min = 0, last 0.2 s",
+      200,
+      200,
+      null,
+      ""
+     ],
+     [
+      "V15 D_f",
+      "D_f (a) [J]",
+      0.0,
+      null,
+      null,
+      ""
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -52.660485529211336,
+      0.001,
+      null,
+      "raw max R +0.008076 J (rel 96.9) ABOVE 10x the limit; F_s 0: recorded only"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      NaN,
+      0.01,
+      null,
+      "R_mech end -0.0193 J (raw -0.01806 J), D_f 0 J, D_visc -15.99 J; F_s 0: recorded only"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": NaN,
+     "creation_rel_smooth": -52.660485529211336,
+     "creation_rel_raw": 96.8783407902991,
+     "D_visc_J": -15.99404748442231,
+     "E_ref_J": 8.336472525177511e-05,
+     "check_1": null,
+     "check_4": null,
+     "judged": false
+    }
+   },
+   "V15a_L2": {
+    "n_judged": 17,
+    "n_failed": 0,
+    "n_records": 5,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(a)",
+      "true F_min threshold [mm]",
+      9.90579603824604,
+      9.9593,
+      true,
+      "rel -0.5372%"
+     ],
+     [
+      "V15(a)",
+      "true F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]",
+      10.174309846801016,
+      10.2306,
+      true,
+      "rel -0.5502%"
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]",
+      11.538630424676954,
+      11.6094,
+      true,
+      "rel -0.6096%"
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a) A-2(i)",
+      "RL true force at lift-off F + m g [N]",
+      17.24712978267678,
+      0.0,
+      true,
+      "F -700.2 N, -m g -717.5 N"
+     ],
+     [
+      "V15(a) A-2(ii)",
+      "RL W1 mean G - (F + F_s) [N]",
+      -9.636863411152039,
+      0.0,
+      true,
+      "W1 [102.5587011938651, 116.56300000274595] s, 14004 blocks"
+     ],
+     [
+      "V15(a) A-2(iii)",
+      "RL net reading at lift-off in the band [N]",
+      479.5742434978485,
+      [
+       -2366.8368702173234,
+       1266.3631297826769
+      ],
+      true,
+      "deficit F + F_s - G +486.8 N (reference G 949.1 N)"
+     ],
+     [
+      "V15(a)",
+      "friction sign at lift-off (FL FR RL RR)",
+      [
+       -1.0,
+       -1.0,
+       -1.0,
+       1.0
+      ],
+      [
+       -1.0,
+       -1.0,
+       -1.0,
+       1.0
+      ],
+      true,
+      ""
+     ],
+     [
+      "V15(a) A-1",
+      "FL sliding in W1",
+      {
+       "deficit_mean_N": 6.547999056816152,
+       "piston_slip_um": 1112.4753906426865
+      },
+      {
+       "deficit_max_N": 50.0,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "FR sliding in W1",
+      {
+       "deficit_mean_N": 12.466564015788638,
+       "piston_slip_um": 193.05152993742692
+      },
+      {
+       "deficit_max_N": 50.0,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "RL sliding in W1",
+      {
+       "deficit_mean_N": 9.636863411151989,
+       "piston_slip_um": 284.94042048987643
+      },
+      {
+       "deficit_max_N": 50.0,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "RR sliding in W1",
+      {
+       "deficit_mean_N": 8.824366499376357,
+       "piston_slip_um": -402.8903946498019
+      },
+      {
+       "deficit_max_N": 50.0,
+       "slip_sign": -1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-3 record",
+      "stuck fraction at lift-off (FL FR RL RR)",
+      [
+       0.937500000001819,
+       0.9885000000002038,
+       1.0,
+       1.0
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "band-edge deficit at lift-off (FL FR RL RR) [N]",
+      [
+       9.933513599634125,
+       131.66993387192497,
+       486.78888632357143,
+       482.14457290470614
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL deficit F + F_s - G at lift-off [N]",
+      486.7888862848284,
+      null,
+      null,
+      "5.29.2: NSC contact-chatter ratchet, about 0.45 kN expected"
+     ],
+     [
+      "V15(a) A-3 record",
+      "1 ms rod-force HF sigma, last 0.1 mm (FL FR RL RR) [N]",
+      [
+       6.499062510004456,
+       4.855515801362488,
+       161.0523900194741,
+       11.815798536179365
+      ],
+      null,
+      null,
+      "999 blocks"
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL blocks with N_min = 0, last 0.2 s",
+      200,
+      200,
+      null,
+      ""
+     ],
+     [
+      "V15 D_f",
+      "D_f (a) [J]",
+      30.717910596201868,
+      30.774,
+      true,
+      "rel -0.1823%"
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -0.00014258338602541365,
+      0.001,
+      true,
+      "raw max R +0.008076 J (rel 0.000262)"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      0.004727560698312747,
+      0.01,
+      true,
+      "R_mech end +0.1455 J (raw +0.1498 J), D_f 30.79 J, D_visc -15.3 J"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": 0.004727560698312747,
+     "creation_rel_smooth": -0.00014258338602541365,
+     "creation_rel_raw": 0.00026231510079635336,
+     "D_visc_J": -15.302013927568668,
+     "E_ref_J": 30.786149531833306,
+     "check_1": true,
+     "check_4": true,
+     "judged": true
+    }
+   },
+   "V15a_L4": {
+    "n_judged": 17,
+    "n_failed": 0,
+    "n_records": 5,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(a)",
+      "true F_min threshold [mm]",
+      9.780374475293247,
+      9.83203,
+      true,
+      "rel -0.5254%"
+     ],
+     [
+      "V15(a)",
+      "true F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]",
+      10.319685109153005,
+      10.3747,
+      true,
+      "rel -0.5303%"
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]",
+      11.42443042509278,
+      11.4823,
+      true,
+      "rel -0.5040%"
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a) A-2(i)",
+      "RL true force at lift-off F + m g [N]",
+      23.95709625148777,
+      0.0,
+      true,
+      "F -693.5 N, -m g -717.5 N"
+     ],
+     [
+      "V15(a) A-2(ii)",
+      "RL W1 mean G - (F + F_s) [N]",
+      -9.610268430573218,
+      0.0,
+      true,
+      "W1 [101.30448556363483, 115.29300000270379] s, 13988 blocks"
+     ],
+     [
+      "V15(a) A-2(iii)",
+      "RL net reading at lift-off in the band [N]",
+      2179.8018344402312,
+      [
+       -4026.7269037485125,
+       2939.673096251488
+      ],
+      true,
+      "deficit F + F_s - G +459.9 N (reference G 2615.7 N)"
+     ],
+     [
+      "V15(a)",
+      "friction sign at lift-off (FL FR RL RR)",
+      [
+       -1.0,
+       -1.0,
+       -1.0,
+       1.0
+      ],
+      [
+       -1.0,
+       -1.0,
+       -1.0,
+       1.0
+      ],
+      true,
+      ""
+     ],
+     [
+      "V15(a) A-1",
+      "FL sliding in W1",
+      {
+       "deficit_mean_N": 6.865480527562213,
+       "piston_slip_um": 1111.3338586899447
+      },
+      {
+       "deficit_max_N": 80.0,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "FR sliding in W1",
+      {
+       "deficit_mean_N": 11.347632105977974,
+       "piston_slip_um": 192.67467947942097
+      },
+      {
+       "deficit_max_N": 80.0,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "RL sliding in W1",
+      {
+       "deficit_mean_N": 9.61026843057319,
+       "piston_slip_um": 284.9289515872155
+      },
+      {
+       "deficit_max_N": 66.664,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "RR sliding in W1",
+      {
+       "deficit_mean_N": 9.00299174006345,
+       "piston_slip_um": -402.23787754917197
+      },
+      {
+       "deficit_max_N": 66.664,
+       "slip_sign": -1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-3 record",
+      "stuck fraction at lift-off (FL FR RL RR)",
+      [
+       0.9445000000014261,
+       0.986000000002241,
+       0.9955000000001746,
+       0.8000000000029104
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "band-edge deficit at lift-off (FL FR RL RR) [N]",
+      [
+       11.506874099373817,
+       17.39642368555087,
+       459.87126168906707,
+       15.91744529306925
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL deficit F + F_s - G at lift-off [N]",
+      459.8712618112568,
+      null,
+      null,
+      "5.29.2: NSC contact-chatter ratchet, about 0.45 kN expected"
+     ],
+     [
+      "V15(a) A-3 record",
+      "1 ms rod-force HF sigma, last 0.1 mm (FL FR RL RR) [N]",
+      [
+       3.949117926646583,
+       4.00332551781116,
+       191.31861097501525,
+       5.156509014306855
+      ],
+      null,
+      null,
+      "999 blocks"
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL blocks with N_min = 0, last 0.2 s",
+      200,
+      200,
+      null,
+      ""
+     ],
+     [
+      "V15 D_f",
+      "D_f (a) [J]",
+      60.0547315120467,
+      60.1279,
+      true,
+      "rel -0.1217%"
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -7.300680326908207e-05,
+      0.001,
+      true,
+      "raw max R +0.008076 J (rel 0.000134)"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      0.0019236936372556662,
+      0.01,
+      true,
+      "R_mech end +0.1157 J (raw +0.1109 J), D_f 60.13 J, D_visc -15.85 J"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": 0.0019236936372556662,
+     "creation_rel_smooth": -7.300680326908207e-05,
+     "creation_rel_raw": 0.00013431289221126663,
+     "D_visc_J": -15.850800228728087,
+     "E_ref_J": 60.12581357321889,
+     "check_1": true,
+     "check_4": true,
+     "judged": true
+    }
+   },
+   "V15a_L8": {
+    "n_judged": 17,
+    "n_failed": 0,
+    "n_records": 5,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(a)",
+      "true F_min threshold [mm]",
+      9.528079225704609,
+      9.57735,
+      true,
+      "rel -0.5145%"
+     ],
+     [
+      "V15(a)",
+      "true F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]",
+      10.607480920706022,
+      10.6631,
+      true,
+      "rel -0.5216%"
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]",
+      11.166730425072712,
+      11.2279,
+      true,
+      "rel -0.5448%"
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a) A-2(i)",
+      "RL true force at lift-off F + m g [N]",
+      13.297136482238784,
+      0.0,
+      true,
+      "F -704.2 N, -m g -717.5 N"
+     ],
+     [
+      "V15(a) A-2(ii)",
+      "RL W1 mean G - (F + F_s) [N]",
+      -8.247459311741688,
+      0.0,
+      true,
+      "W1 [98.78153306633702, 112.7720000026201] s, 13990 blocks"
+     ],
+     [
+      "V15(a) A-2(iii)",
+      "RL net reading at lift-off in the band [N]",
+      5520.428058338165,
+      [
+       -7370.586863517762,
+       6262.213136482239
+      ],
+      true,
+      "deficit F + F_s - G +441.8 N (reference G 5948.9 N)"
+     ],
+     [
+      "V15(a)",
+      "friction sign at lift-off (FL FR RL RR)",
+      [
+       -1.0,
+       -1.0,
+       -1.0,
+       1.0
+      ],
+      [
+       -1.0,
+       -1.0,
+       -1.0,
+       1.0
+      ],
+      true,
+      ""
+     ],
+     [
+      "V15(a) A-1",
+      "FL sliding in W1",
+      {
+       "deficit_mean_N": 6.6138093157533095,
+       "piston_slip_um": 1111.1993814089672
+      },
+      {
+       "deficit_max_N": 160.0,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "FR sliding in W1",
+      {
+       "deficit_mean_N": 10.016939298622065,
+       "piston_slip_um": 192.57623863561113
+      },
+      {
+       "deficit_max_N": 160.0,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "RL sliding in W1",
+      {
+       "deficit_mean_N": 8.247459311741757,
+       "piston_slip_um": 284.9734533933446
+      },
+      {
+       "deficit_max_N": 133.328,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "RR sliding in W1",
+      {
+       "deficit_mean_N": 9.316089381475656,
+       "piston_slip_um": -402.21698629561155
+      },
+      {
+       "deficit_max_N": 133.328,
+       "slip_sign": -1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-3 record",
+      "stuck fraction at lift-off (FL FR RL RR)",
+      [
+       0.937500000001819,
+       0.9945000000006985,
+       0.9915000000000873,
+       0.8735000000007858
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "band-edge deficit at lift-off (FL FR RL RR) [N]",
+      [
+       11.068458831310636,
+       22.951187944412595,
+       441.7850780308254,
+       10.251962351799193
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL deficit F + F_s - G at lift-off [N]",
+      441.78507814407385,
+      null,
+      null,
+      "5.29.2: NSC contact-chatter ratchet, about 0.45 kN expected"
+     ],
+     [
+      "V15(a) A-3 record",
+      "1 ms rod-force HF sigma, last 0.1 mm (FL FR RL RR) [N]",
+      [
+       3.9031426297985043,
+       2.790440548757803,
+       155.9926380685287,
+       1.212112334465092
+      ],
+      null,
+      null,
+      "999 blocks"
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL blocks with N_min = 0, last 0.2 s",
+      200,
+      200,
+      null,
+      ""
+     ],
+     [
+      "V15 D_f",
+      "D_f (a) [J]",
+      114.39036268161155,
+      114.576,
+      true,
+      "rel -0.1620%"
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -3.832530573047483e-05,
+      0.001,
+      true,
+      "raw max R +0.008076 J (rel 7.05e-05)"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      0.0012158094009547063,
+      0.01,
+      true,
+      "R_mech end +0.1393 J (raw +0.1483 J), D_f 114.5 J, D_visc -16.26 J"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": 0.0012158094009547063,
+     "creation_rel_smooth": -3.832530573047483e-05,
+     "creation_rel_raw": 7.050825987502282e-05,
+     "D_visc_J": -16.25577813537429,
+     "E_ref_J": 114.5351187490478,
+     "check_1": true,
+     "check_4": true,
+     "judged": true
+    }
+   },
+   "V15a_L8_v005": {
+    "n_judged": 17,
+    "n_failed": 0,
+    "n_records": 5,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(a)",
+      "true F_min threshold [mm]",
+      9.528136466428684,
+      9.57735,
+      true,
+      "rel -0.5139%"
+     ],
+     [
+      "V15(a)",
+      "true F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]",
+      10.60657829507464,
+      10.6631,
+      true,
+      "rel -0.5301%"
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]",
+      11.170121075316619,
+      11.2279,
+      true,
+      "rel -0.5146%"
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a) A-2(i)",
+      "RL true force at lift-off F + m g [N]",
+      23.900587495803848,
+      0.0,
+      true,
+      "F -693.6 N, -m g -717.5 N"
+     ],
+     [
+      "V15(a) A-2(ii)",
+      "RL W1 mean G - (F + F_s) [N]",
+      -10.073825254358482,
+      0.0,
+      true,
+      "W1 [194.0633528305502, 222.03800000624736] s, 27974 blocks"
+     ],
+     [
+      "V15(a) A-2(iii)",
+      "RL net reading at lift-off in the band [N]",
+      5511.2073142051695,
+      [
+       -7359.983412504197,
+       6272.816587495804
+      ],
+      true,
+      "deficit F + F_s - G +461.6 N (reference G 5948.9 N)"
+     ],
+     [
+      "V15(a)",
+      "friction sign at lift-off (FL FR RL RR)",
+      [
+       -1.0,
+       -1.0,
+       -1.0,
+       1.0
+      ],
+      [
+       -1.0,
+       -1.0,
+       -1.0,
+       1.0
+      ],
+      true,
+      ""
+     ],
+     [
+      "V15(a) A-1",
+      "FL sliding in W1",
+      {
+       "deficit_mean_N": 7.159662840391569,
+       "piston_slip_um": 1110.83577800547
+      },
+      {
+       "deficit_max_N": 160.0,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "FR sliding in W1",
+      {
+       "deficit_mean_N": 11.494976768718475,
+       "piston_slip_um": 192.61365948453067
+      },
+      {
+       "deficit_max_N": 160.0,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "RL sliding in W1",
+      {
+       "deficit_mean_N": 10.07382525435865,
+       "piston_slip_um": 284.8656375870617
+      },
+      {
+       "deficit_max_N": 133.328,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "RR sliding in W1",
+      {
+       "deficit_mean_N": 10.487030037904278,
+       "piston_slip_um": -401.9789595472445
+      },
+      {
+       "deficit_max_N": 133.328,
+       "slip_sign": -1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-3 record",
+      "stuck fraction at lift-off (FL FR RL RR)",
+      [
+       0.9615000000012515,
+       0.9939999999973225,
+       0.9960000000006403,
+       0.8950000000011642
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "band-edge deficit at lift-off (FL FR RL RR) [N]",
+      [
+       12.055665051937467,
+       24.874763011932373,
+       461.60927317142523,
+       10.548286855221704
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL deficit F + F_s - G at lift-off [N]",
+      461.6092732906345,
+      null,
+      null,
+      "5.29.2: NSC contact-chatter ratchet, about 0.45 kN expected"
+     ],
+     [
+      "V15(a) A-3 record",
+      "1 ms rod-force HF sigma, last 0.1 mm (FL FR RL RR) [N]",
+      [
+       3.885869632482362,
+       2.0905257873628558,
+       169.79769805244825,
+       1.2229391599253414
+      ],
+      null,
+      null,
+      "2000 blocks"
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL blocks with N_min = 0, last 0.2 s",
+      200,
+      200,
+      null,
+      ""
+     ],
+     [
+      "V15 D_f",
+      "D_f (a) [J]",
+      114.420232677649,
+      114.576,
+      true,
+      "rel -0.1360%"
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -3.832521715493849e-05,
+      0.001,
+      true,
+      "raw max R +0.008076 J (rel 7.05e-05)"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      0.0013204637587503987,
+      0.01,
+      true,
+      "R_mech end +0.1512 J (raw +0.1381 J), D_f 114.5 J, D_visc -32.2 J"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": 0.0013204637587503987,
+     "creation_rel_smooth": -3.832521715493849e-05,
+     "creation_rel_raw": 7.050927473470378e-05,
+     "D_visc_J": -32.1982674357325,
+     "E_ref_J": 114.5323352640443,
+     "check_1": true,
+     "check_4": true,
+     "judged": true
+    }
+   },
+   "V15b_L0": {
+    "n_judged": 9,
+    "n_failed": 0,
+    "n_records": 7,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(b)",
+      "residual_true_N FL [N]",
+      -0.0852870194503339,
+      0.278715,
+      true,
+      "diff -0.4 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N FR [N]",
+      -0.2904637517494848,
+      -0.278715,
+      true,
+      "diff -0.0 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RL [N]",
+      -0.5309445479069836,
+      -0.306091,
+      true,
+      "diff -0.2 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RR [N]",
+      0.8956442077906104,
+      0.306091,
+      true,
+      "diff +0.6 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FL [N]",
+      -0.0852870194503339,
+      0.278715,
+      true,
+      "diff -0.4 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FR [N]",
+      -0.2904637517494848,
+      -0.278715,
+      true,
+      "diff -0.0 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RL [N]",
+      -0.5309445479069836,
+      -0.306091,
+      true,
+      "diff -0.2 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RR [N]",
+      0.8956442077906104,
+      0.306091,
+      true,
+      "diff +0.6 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FL [N]",
+      12370.106532412028,
+      0.278715,
+      null,
+      "diff +12369.8 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FR [N]",
+      -0.2139602078241296,
+      -0.203855,
+      null,
+      "diff -0.0 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RL [N]",
+      -0.3769950934656663,
+      -0.217722,
+      null,
+      "diff -0.2 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RR [N]",
+      0.6382122789655114,
+      0.217722,
+      null,
+      "diff +0.4 N"
+     ],
+     [
+      "V15(b)",
+      "min contact force along the path [N] (> 0, no lift-off)",
+      10319.044340872764,
+      10663.9,
+      true,
+      "leg RL (reference value recorded only)"
+     ],
+     [
+      "V15 D_f",
+      "D_f (b) [J]",
+      0.0,
+      null,
+      null,
+      ""
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -52.660485529211336,
+      0.001,
+      null,
+      "raw max R +0.008076 J (rel 96.9) ABOVE 10x the limit; F_s 0: recorded only"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      NaN,
+      0.01,
+      null,
+      "R_mech end -0.02644 J (raw -0.02474 J), D_f 0 J, D_visc -12.83 J; F_s 0: recorded only"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": NaN,
+     "creation_rel_smooth": -52.660485529211336,
+     "creation_rel_raw": 96.8783407902991,
+     "D_visc_J": -12.828763930902937,
+     "E_ref_J": 8.336472525177511e-05,
+     "check_1": null,
+     "check_4": null,
+     "judged": false
+    },
+    "rod_pressure": {
+     "p_r_before_bar_g": [
+      2.007799263081206,
+      2.0014935653895614,
+      1.9969620724598216,
+      1.991281440132026
+     ],
+     "p_r_after_bar_g": [
+      34.82075221820003,
+      2.0016964973427562,
+      1.9974521087937542,
+      1.990462008851373
+     ],
+     "FL_p_r_while_moving_bar_g_min_max": [
+      2.027452991919171,
+      47.8652554345634
+     ],
+     "FL_p_r_during_return_bar_g_mean": 41.40053554878293,
+     "FL_last_motion_t_s": 203.501000005632,
+     "FL_p_r_first_sample_after_last_motion_bar_g": 34.81749130652984,
+     "delta_G_N": [
+      -0.0852870194503339,
+      -0.2904637517494848,
+      -0.5309445479069836,
+      0.8956442077906104
+     ],
+     "delta_head_N": [
+      12370.106532412028,
+      -0.2139602078241296,
+      -0.3769950934656663,
+      0.6382122789655114
+     ],
+     "delta_pr_Aann_N": [
+      12370.19181943165,
+      0.0765035439128253,
+      0.15394945449157832,
+      -0.25743192884802596
+     ],
+     "head_minus_net_residual_N": [
+      12370.191819431479,
+      0.07650354392535519,
+      0.15394945444131736,
+      -0.257431928825099
+     ],
+     "identity_max_abs_H_minus_G_prA_N": 1.1641532182693481e-10
+    }
+   },
+   "V15b_L2": {
+    "n_judged": 12,
+    "n_failed": 0,
+    "n_records": 4,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(b)",
+      "residual_true_N FL [N]",
+      -615.1648773658817,
+      -642.859,
+      true,
+      "diff +27.7 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N FR [N]",
+      612.8163665411703,
+      642.859,
+      true,
+      "diff -30.0 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RL [N]",
+      663.4786360044818,
+      706.004,
+      true,
+      "diff -42.5 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RR [N]",
+      -661.1193157810776,
+      -706.004,
+      true,
+      "diff +44.9 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FL [N]",
+      -2559.892246947071,
+      -2642.86,
+      true,
+      "diff +83.0 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FR [N]",
+      -1333.5066429174185,
+      -1357.14,
+      true,
+      "diff +23.6 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RL [N]",
+      -933.060513947843,
+      -960.596,
+      true,
+      "diff +27.5 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RR [N]",
+      927.2213595568028,
+      960.596,
+      true,
+      "diff -33.4 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FL [N]",
+      9788.57582990211,
+      -2642.86,
+      null,
+      "diff +12431.4 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FR [N]",
+      -975.3420470991987,
+      -992.628,
+      null,
+      "diff +17.3 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RL [N]",
+      -663.6842737161787,
+      -683.27,
+      null,
+      "diff +19.6 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RR [N]",
+      659.5276017912402,
+      683.27,
+      null,
+      "diff -23.7 N"
+     ],
+     [
+      "V15(b)",
+      "min contact force along the path [N] (> 0, no lift-off)",
+      9548.091093039513,
+      9882.01,
+      true,
+      "leg RL (reference value recorded only)"
+     ],
+     [
+      "V15 D_f",
+      "D_f (b) [J]",
+      52.79401136127635,
+      52.6174,
+      true,
+      "rel +0.3357%"
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -8.314566993015424e-05,
+      0.001,
+      true,
+      "raw max R +0.008076 J (rel 0.000153)"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      0.0035715347688336715,
+      0.01,
+      true,
+      "R_mech end +0.1886 J (raw +0.1847 J), D_f 52.79 J, D_visc -12.82 J"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": 0.0035715347688336715,
+     "creation_rel_smooth": -8.314566993015424e-05,
+     "creation_rel_raw": 0.00015296568132153432,
+     "D_visc_J": -12.8249555189324,
+     "E_ref_J": 52.79401136127635,
+     "check_1": true,
+     "check_4": true,
+     "judged": true
+    },
+    "rod_pressure": {
+     "p_r_before_bar_g": [
+      2.0,
+      2.0,
+      2.0,
+      2.0
+     ],
+     "p_r_after_bar_g": [
+      34.75532893814562,
+      2.950061098834605,
+      2.857451204667408,
+      1.147904303361964
+     ],
+     "FL_p_r_while_moving_bar_g_min_max": [
+      2.0268298069430393,
+      48.285150383857385
+     ],
+     "FL_p_r_during_return_bar_g_mean": 40.78264424718023,
+     "FL_last_motion_t_s": 203.501000005632,
+     "FL_p_r_first_sample_after_last_motion_bar_g": 34.8167041480395,
+     "delta_G_N": [
+      -2559.892246947071,
+      -1333.5066429174185,
+      -933.060513947843,
+      927.2213595568028
+     ],
+     "delta_head_N": [
+      9788.57582990211,
+      -975.3420470991987,
+      -663.6842737161787,
+      659.5276017912402
+     ],
+     "delta_pr_Aann_N": [
+      12348.468076849269,
+      358.16459581796624,
+      269.37624023167746,
+      -267.6937577654684
+     ],
+     "head_minus_net_residual_N": [
+      12348.468076849182,
+      358.1645958182198,
+      269.37624023166427,
+      -267.6937577655626
+     ],
+     "identity_max_abs_H_minus_G_prA_N": 8.731149137020111e-11
+    }
+   },
+   "V15b_L4": {
+    "n_judged": 12,
+    "n_failed": 0,
+    "n_records": 4,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(b)",
+      "residual_true_N FL [N]",
+      -1268.4115914110735,
+      -1286.0,
+      true,
+      "diff +17.6 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N FR [N]",
+      1262.809206274571,
+      1286.0,
+      true,
+      "diff -23.2 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RL [N]",
+      1368.9956218242733,
+      1412.31,
+      true,
+      "diff -43.3 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RR [N]",
+      -1363.3757271760987,
+      -1412.31,
+      true,
+      "diff +48.9 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FL [N]",
+      -5211.783918046553,
+      -5286.0,
+      true,
+      "diff +74.2 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FR [N]",
+      -2685.1939091141976,
+      -2714.0,
+      true,
+      "diff +28.8 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RL [N]",
+      -1896.9550036503497,
+      -1920.89,
+      true,
+      "diff +23.9 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RR [N]",
+      1895.2887660230917,
+      1920.89,
+      true,
+      "diff -25.6 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FL [N]",
+      7136.664995491374,
+      -5286.0,
+      null,
+      "diff +12422.7 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FR [N]",
+      -1963.9800912356004,
+      -1985.05,
+      null,
+      "diff +21.1 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RL [N]",
+      -1349.3010358558386,
+      -1366.32,
+      null,
+      "diff +17.0 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RR [N]",
+      1348.111504858869,
+      1366.32,
+      null,
+      "diff -18.2 N"
+     ],
+     [
+      "V15(b)",
+      "min contact force along the path [N] (> 0, no lift-off)",
+      8770.015305876732,
+      9100.11,
+      true,
+      "leg RL (reference value recorded only)"
+     ],
+     [
+      "V15 D_f",
+      "D_f (b) [J]",
+      103.40143847867702,
+      103.051,
+      true,
+      "rel +0.3401%"
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -4.245195722145295e-05,
+      0.001,
+      true,
+      "raw max R +0.008076 J (rel 7.81e-05)"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      0.0018059030390824532,
+      0.01,
+      true,
+      "R_mech end +0.1867 J (raw +0.1891 J), D_f 103.4 J, D_visc -12.83 J"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": 0.0018059030390824532,
+     "creation_rel_smooth": -4.245195722145295e-05,
+     "creation_rel_raw": 7.810018928546907e-05,
+     "D_visc_J": -12.825357932656619,
+     "E_ref_J": 103.40143847867702,
+     "check_1": true,
+     "check_4": true,
+     "judged": true
+    },
+    "rod_pressure": {
+     "p_r_before_bar_g": [
+      2.0,
+      2.0,
+      2.0,
+      2.0
+     ],
+     "p_r_after_bar_g": [
+      34.75527810588369,
+      3.913079071211817,
+      3.743236723559113,
+      0.25828068077474914
+     ],
+     "FL_p_r_while_moving_bar_g_min_max": [
+      2.0268298069430393,
+      48.921128489067115
+     ],
+     "FL_p_r_during_return_bar_g_mean": 40.19681849072112,
+     "FL_last_motion_t_s": 203.501000005632,
+     "FL_p_r_first_sample_after_last_motion_bar_g": 34.817563288940185,
+     "delta_G_N": [
+      -5211.783918046553,
+      -2685.1939091141976,
+      -1896.9550036503497,
+      1895.2887660230917
+     ],
+     "delta_head_N": [
+      7136.664995491374,
+      -1963.9800912356004,
+      -1349.3010358558386,
+      1348.111504858869
+     ],
+     "delta_pr_Aann_N": [
+      12348.448913538014,
+      721.2138178785445,
+      547.6539677943391,
+      -547.1772611641052
+     ],
+     "head_minus_net_residual_N": [
+      12348.448913537926,
+      721.2138178785972,
+      547.6539677945111,
+      -547.1772611642227
+     ],
+     "identity_max_abs_H_minus_G_prA_N": 8.731149137020111e-11
+    }
+   },
+   "V15b_L8": {
+    "n_judged": 12,
+    "n_failed": 0,
+    "n_records": 4,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(b)",
+      "residual_true_N FL [N]",
+      -2623.164389997386,
+      -2628.51,
+      true,
+      "diff +5.3 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N FR [N]",
+      2611.194629441554,
+      2628.51,
+      true,
+      "diff -17.3 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RL [N]",
+      2831.8904255502566,
+      2886.7,
+      true,
+      "diff -54.8 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RR [N]",
+      -2819.902543560689,
+      -2886.7,
+      true,
+      "diff +66.8 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FL [N]",
+      -10562.240549673777,
+      -10628.5,
+      true,
+      "diff +66.3 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FR [N]",
+      -5332.680155506721,
+      -5371.49,
+      true,
+      "diff +38.8 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RL [N]",
+      -3762.232634814485,
+      -3779.7,
+      true,
+      "diff +17.5 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RR [N]",
+      3768.8407776298263,
+      3779.7,
+      true,
+      "diff -10.9 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FL [N]",
+      1783.1974603922135,
+      -10628.5,
+      null,
+      "diff +12411.7 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FR [N]",
+      -3900.3824169328,
+      -3928.77,
+      null,
+      "diff +28.4 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RL [N]",
+      -2676.067257420247,
+      -2688.49,
+      null,
+      "diff +12.4 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RR [N]",
+      2853.616298868583,
+      2864.48,
+      null,
+      "diff -10.9 N"
+     ],
+     [
+      "V15(b)",
+      "min contact force along the path [N] (> 0, no lift-off)",
+      7212.259814810753,
+      7536.3,
+      true,
+      "leg RL (reference value recorded only)"
+     ],
+     [
+      "V15 D_f",
+      "D_f (b) [J]",
+      198.00285021118538,
+      197.343,
+      true,
+      "rel +0.3344%"
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -2.2169344725349432e-05,
+      0.001,
+      true,
+      "raw max R +0.008076 J (rel 4.08e-05)"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      0.0008148077620833424,
+      0.01,
+      true,
+      "R_mech end +0.1613 J (raw +0.1648 J), D_f 198 J, D_visc -12.83 J"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": 0.0008148077620833424,
+     "creation_rel_smooth": -2.2169344725349432e-05,
+     "creation_rel_raw": 4.078563469647599e-05,
+     "D_visc_J": -12.827309240876392,
+     "E_ref_J": 198.00285021118538,
+     "check_1": true,
+     "check_4": true,
+     "judged": true
+    },
+    "rod_pressure": {
+     "p_r_before_bar_g": [
+      2.0,
+      2.0,
+      2.0,
+      2.0
+     ],
+     "p_r_after_bar_g": [
+      34.74729143636235,
+      5.7992877555648725,
+      5.457371780502154,
+      -0.91325
+     ],
+     "FL_p_r_while_moving_bar_g_min_max": [
+      2.0268298069430393,
+      50.19802451417726
+     ],
+     "FL_p_r_during_return_bar_g_mean": 39.13033700794052,
+     "FL_last_motion_t_s": 203.501000005632,
+     "FL_p_r_first_sample_after_last_motion_bar_g": 34.816665416939394,
+     "delta_G_N": [
+      -10562.240549673777,
+      -5332.680155506721,
+      -3762.232634814485,
+      3768.8407776298263
+     ],
+     "delta_head_N": [
+      1783.1974603922135,
+      -3900.3824169328,
+      -2676.067257420247,
+      2853.616298868583
+     ],
+     "delta_pr_Aann_N": [
+      12345.438010066071,
+      1432.2977385741121,
+      1086.1653773942978,
+      -915.22447876125
+     ],
+     "head_minus_net_residual_N": [
+      12345.438010065991,
+      1432.2977385739214,
+      1086.165377394238,
+      -915.2244787612435
+     ],
+     "identity_max_abs_H_minus_G_prA_N": 8.731149137020111e-11
+    }
+   },
+   "V15b_L8_v005": {
+    "n_judged": 12,
+    "n_failed": 0,
+    "n_records": 4,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(b)",
+      "residual_true_N FL [N]",
+      -2640.0825690125057,
+      -2628.51,
+      true,
+      "diff -11.6 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N FR [N]",
+      2628.056335385554,
+      2628.51,
+      true,
+      "diff -0.5 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RL [N]",
+      2850.2410376441694,
+      2886.7,
+      true,
+      "diff -36.5 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RR [N]",
+      -2838.1943925017404,
+      -2886.7,
+      true,
+      "diff +48.5 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FL [N]",
+      -10609.193531145385,
+      -10628.5,
+      true,
+      "diff +19.3 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FR [N]",
+      -5339.1070909245755,
+      -5371.49,
+      true,
+      "diff +32.4 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RL [N]",
+      -3772.1199437806354,
+      -3779.7,
+      true,
+      "diff +7.6 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RR [N]",
+      3788.3081801884255,
+      3779.7,
+      true,
+      "diff +8.6 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FL [N]",
+      1749.1287189775903,
+      -10628.5,
+      null,
+      "diff +12377.6 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FR [N]",
+      -3905.082132740252,
+      -3928.77,
+      null,
+      "diff +23.7 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RL [N]",
+      -2683.100522354318,
+      -2688.49,
+      null,
+      "diff +5.4 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RR [N]",
+      2873.0837014271383,
+      2864.48,
+      null,
+      "diff +8.6 N"
+     ],
+     [
+      "V15(b)",
+      "min contact force along the path [N] (> 0, no lift-off)",
+      7214.4418013572695,
+      7536.3,
+      true,
+      "leg RL (reference value recorded only)"
+     ],
+     [
+      "V15 D_f",
+      "D_f (b) [J]",
+      197.96548844406004,
+      197.284,
+      true,
+      "rel +0.3454%"
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -2.2172938600341293e-05,
+      0.001,
+      true,
+      "raw max R +0.008076 J (rel 4.08e-05)"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      0.0010693430413385265,
+      0.01,
+      true,
+      "R_mech end +0.2117 J (raw +0.2069 J), D_f 198 J, D_visc -25.3 J"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": 0.0010693430413385265,
+     "creation_rel_smooth": -2.2172938600341293e-05,
+     "creation_rel_raw": 4.079292788157697e-05,
+     "D_visc_J": -25.296749359852747,
+     "E_ref_J": 197.96548844406004,
+     "check_1": true,
+     "check_4": true,
+     "judged": true
+    },
+    "rod_pressure": {
+     "p_r_before_bar_g": [
+      2.0,
+      2.0,
+      2.0,
+      2.0
+     ],
+     "p_r_after_bar_g": [
+      34.78146794461838,
+      5.80386934788347,
+      5.466456484822025,
+      -0.91325
+     ],
+     "FL_p_r_while_moving_bar_g_min_max": [
+      2.0268298069430393,
+      50.31139334719861
+     ],
+     "FL_p_r_during_return_bar_g_mean": 39.13920212407868,
+     "FL_last_motion_t_s": 403.50099997034897,
+     "FL_p_r_first_sample_after_last_motion_bar_g": 34.81660333008611,
+     "delta_G_N": [
+      -10609.193531145385,
+      -5339.1070909245755,
+      -3772.1199437806354,
+      3788.3081801884255
+     ],
+     "delta_head_N": [
+      1749.1287189775903,
+      -3905.082132740252,
+      -2683.100522354318,
+      2873.0837014271383
+     ],
+     "delta_pr_Aann_N": [
+      12358.322250122843,
+      1434.0249581845203,
+      1089.0194214261712,
+      -915.22447876125
+     ],
+     "head_minus_net_residual_N": [
+      12358.322250122976,
+      1434.0249581843236,
+      1089.0194214263174,
+      -915.2244787612872
+     ],
+     "identity_max_abs_H_minus_G_prA_N": 1.1641532182693481e-10
+    }
+   }
+  },
+  "count_case_level": {
+   "judged": 132,
+   "failed": 0
+  }
+ },
+ "head_only": {
+  "summary_top_keys": [
+   "batch",
+   "speed_pair_checks",
+   "n_checks",
+   "n_failed",
+   "date"
+  ],
+  "batch": "07_results\\S8\\v15_20261025_142154",
+  "n_checks": 29,
+  "n_failed": 0,
+  "date": "2026-10-25T14:44:58",
+  "cases": {
+   "V15a_L4_head": {
+    "n_judged": 17,
+    "n_failed": 0,
+    "n_records": 5,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(a)",
+      "true F_min threshold [mm]",
+      11.183016717698152,
+      11.2521,
+      true,
+      "rel -0.6140%"
+     ],
+     [
+      "V15(a)",
+      "true F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]",
+      11.797819331706723,
+      11.8729,
+      true,
+      "rel -0.6324%"
+     ],
+     [
+      "V15(a)",
+      "net reading F_min threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]",
+      13.063530425245663,
+      13.14,
+      true,
+      "rel -0.5820%"
+     ],
+     [
+      "V15(a)",
+      "lift-off threshold [mm]: leg",
+      "RL",
+      "RL",
+      true,
+      ""
+     ],
+     [
+      "V15(a) A-2(i)",
+      "RL true force at lift-off F + m g [N]",
+      15.664130577087462,
+      0.0,
+      true,
+      "F -701.8 N, -m g -717.5 N"
+     ],
+     [
+      "V15(a) A-2(ii)",
+      "RL W1 mean G - (F + F_s) [N]",
+      -8.070372412639657,
+      0.0,
+      true,
+      "W1 [115.33090799553295, 131.31800000323577] s, 15987 blocks"
+     ],
+     [
+      "V15(a) A-2(iii)",
+      "RL net reading at lift-off in the band [N]",
+      2188.5540195465087,
+      [
+       -4035.019869422913,
+       2931.3801305770876
+      ],
+      true,
+      "deficit F + F_s - G +442.8 N (reference G 2615.7 N)"
+     ],
+     [
+      "V15(a)",
+      "friction sign at lift-off (FL FR RL RR)",
+      [
+       -1.0,
+       -1.0,
+       -1.0,
+       1.0
+      ],
+      [
+       -1.0,
+       -1.0,
+       -1.0,
+       1.0
+      ],
+      true,
+      ""
+     ],
+     [
+      "V15(a) A-1",
+      "FL sliding in W1",
+      {
+       "deficit_mean_N": 6.998154125425022,
+       "piston_slip_um": 1307.9673894990096
+      },
+      {
+       "deficit_max_N": 80.0,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "FR sliding in W1",
+      {
+       "deficit_mean_N": 9.549923149637403,
+       "piston_slip_um": 262.237131773535
+      },
+      {
+       "deficit_max_N": 80.0,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "RL sliding in W1",
+      {
+       "deficit_mean_N": 8.070372412639651,
+       "piston_slip_um": 400.48833768169254
+      },
+      {
+       "deficit_max_N": 66.664,
+       "slip_sign": 1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-1",
+      "RR sliding in W1",
+      {
+       "deficit_mean_N": 9.70444052214153,
+       "piston_slip_um": -402.50148665044173
+      },
+      {
+       "deficit_max_N": 66.664,
+       "slip_sign": -1.0,
+       "slip_min_um": 10.0
+      },
+      true,
+      "deficit ok, sign ok, length ok"
+     ],
+     [
+      "V15(a) A-3 record",
+      "stuck fraction at lift-off (FL FR RL RR)",
+      [
+       0.9680000000022119,
+       0.9864999999990687,
+       0.9915000000000873,
+       0.885500000002503
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "band-edge deficit at lift-off (FL FR RL RR) [N]",
+      [
+       10.431931358575639,
+       16.053414458036514,
+       442.8261109203104,
+       10.404226151109015
+      ],
+      null,
+      null,
+      ""
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL deficit F + F_s - G at lift-off [N]",
+      442.8261110305789,
+      null,
+      null,
+      "5.29.2: NSC contact-chatter ratchet, about 0.45 kN expected"
+     ],
+     [
+      "V15(a) A-3 record",
+      "1 ms rod-force HF sigma, last 0.1 mm (FL FR RL RR) [N]",
+      [
+       6.541440051908932,
+       4.285946278292746,
+       176.77694646642,
+       1.3143269254359127
+      ],
+      null,
+      null,
+      "999 blocks"
+     ],
+     [
+      "V15(a) A-3 record",
+      "RL blocks with N_min = 0, last 0.2 s",
+      200,
+      200,
+      null,
+      ""
+     ],
+     [
+      "V15 D_f",
+      "D_f (a) [J]",
+      72.00451996673462,
+      72.1722,
+      true,
+      "rel -0.2323%"
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -6.0900886837218105e-05,
+      0.001,
+      true,
+      "raw max R +0.008075 J (rel 0.000112)"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      0.0019421045906925455,
+      0.01,
+      true,
+      "R_mech end +0.14 J (raw +0.147 J), D_f 72.07 J, D_visc -17.77 J"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": 0.0019421045906925455,
+     "creation_rel_smooth": -6.0900886837218105e-05,
+     "creation_rel_raw": 0.00011204190259146539,
+     "D_visc_J": -17.76985727653489,
+     "E_ref_J": 72.07427983054492,
+     "check_1": true,
+     "check_4": true,
+     "judged": true
+    }
+   },
+   "V15b_L4_head": {
+    "n_judged": 12,
+    "n_failed": 0,
+    "n_records": 4,
+    "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)",
+    "rows": [
+     [
+      "V15(b)",
+      "residual_true_N FL [N]",
+      -1670.5010014246218,
+      -1690.68,
+      true,
+      "diff +20.2 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N FR [N]",
+      1662.9481360629288,
+      1690.68,
+      true,
+      "diff -27.7 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RL [N]",
+      1810.0796709442657,
+      1856.74,
+      true,
+      "diff -46.7 N"
+     ],
+     [
+      "V15(b)",
+      "residual_true_N RR [N]",
+      -1802.5626090427832,
+      -1856.74,
+      true,
+      "diff +54.2 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FL [N]",
+      -5568.984430081662,
+      -5690.68,
+      true,
+      "diff +121.7 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N FR [N]",
+      -2263.8014279158815,
+      -2309.32,
+      true,
+      "diff +45.5 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RL [N]",
+      -1474.001416099578,
+      -1476.46,
+      true,
+      "diff +2.5 N"
+     ],
+     [
+      "V15(b)",
+      "residual_net_N RR [N]",
+      1411.1603911713028,
+      1476.46,
+      true,
+      "diff -65.3 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FL [N]",
+      -5568.984430081662,
+      -5690.68,
+      null,
+      "diff +121.7 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N FR [N]",
+      -2263.8014279158815,
+      -2309.32,
+      null,
+      "diff +45.5 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RL [N]",
+      -1474.001416099578,
+      -1476.46,
+      null,
+      "diff +2.5 N"
+     ],
+     [
+      "V15(b) record",
+      "residual_head_N RR [N]",
+      1411.1603911713028,
+      1476.46,
+      null,
+      "diff -65.3 N"
+     ],
+     [
+      "V15(b)",
+      "min contact force along the path [N] (> 0, no lift-off)",
+      16520.290689516067,
+      16860.1,
+      true,
+      "leg RL (reference value recorded only)"
+     ],
+     [
+      "V15 D_f",
+      "D_f (b) [J]",
+      108.08884494795946,
+      107.762,
+      true,
+      "rel +0.3033%"
+     ],
+     [
+      "V8(b) (1)",
+      "creation: max 20 ms mean R / E_ref",
+      -4.0609070824536296e-05,
+      0.001,
+      true,
+      "raw max R +0.008075 J (rel 7.47e-05)"
+     ],
+     [
+      "V8(b) (4)",
+      "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+      0.0018430950242108285,
+      0.01,
+      true,
+      "R_mech end +0.1992 J (raw +0.2002 J), D_f 108.1 J, D_visc -12.71 J"
+     ]
+    ],
+    "ledger": {
+     "R_mech_end_over_D_f": 0.0018430950242108285,
+     "creation_rel_smooth": -4.0609070824536296e-05,
+     "creation_rel_raw": 7.471020200106581e-05,
+     "D_visc_J": -12.705752227926698,
+     "E_ref_J": 108.08884494795946,
+     "check_1": true,
+     "check_4": true,
+     "judged": true
+    },
+    "rod_pressure": {
+     "p_r_before_bar_g": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "p_r_after_bar_g": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "FL_p_r_while_moving_bar_g_min_max": [
+      0.0,
+      0.0
+     ],
+     "FL_p_r_during_return_bar_g_mean": 0.0,
+     "FL_last_motion_t_s": 203.501000005632,
+     "FL_p_r_first_sample_after_last_motion_bar_g": 0.0,
+     "delta_G_N": [
+      -5568.984430081662,
+      -2263.8014279158815,
+      -1474.001416099578,
+      1411.1603911713028
+     ],
+     "delta_head_N": [
+      -5568.984430081662,
+      -2263.8014279158815,
+      -1474.001416099578,
+      1411.1603911713028
+     ],
+     "delta_pr_Aann_N": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "head_minus_net_residual_N": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "identity_max_abs_H_minus_G_prA_N": 0.0
+    }
+   }
+  },
+  "count_case_level": {
+   "judged": 29,
+   "failed": 0
+  }
+ }
+}

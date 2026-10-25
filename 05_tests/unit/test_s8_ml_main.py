@@ -1,4 +1,5 @@
-"""C-S8-27 ... 30 (``s6_control_spec.md`` rev. 48 218.13 / 218.15, U-S8-32 ... 35): event-leg /
+"""C-S8-27 ... 30 (``s6_control_spec.md`` rev. 48 218.13 / 218.15, U-S8-32 ... 35; pilot rejudge
+expectations of rev. 49 / 50): event-leg /
 adjacent-leg split of a settlement, ML mask (FAULT tail, no forced-window mask), forced-retract
 record, main ML design (retract speed from a separate generator), the MLJ judged cases, the
 lock-window valve lag and the rod-sensor fault wrapper."""
@@ -139,22 +140,30 @@ def test_ml_rows_u_s8_32_and_fault_reason() -> None:
 
 
 @pytest.mark.skipif(not (PILOT / "ml_plan.json").exists(), reason="ML pilot batch not present")
-def test_pilot_rejudge_matches_rev48(tmp_path: Path) -> None:
-    """C-S8-27 test (spec rev. 48 218.15): adjacent U57 failures 0 (worst ML00_ep5 0.374 s /
-    1.57 mm), 37 event-leg rows; the three FAULT episodes are the only event-leg failures."""
+def test_pilot_rejudge_matches_rev50(tmp_path: Path) -> None:
+    """C-S8-27 / 28 / 33 test (spec rev. 49 219.3 / 219.9, rev. 50 220.6): after the C-S8-28
+    rerun of the head-step episodes the pilot has no FAULT episode, so with the U-S8-37 gate
+    (last re-contact <= event + 3.0 s) the event-leg failures are 0 and no ML mask is left;
+    adjacent U57 failures 0 (worst ML00_ep5 0.374 s / 1.57 mm), 37 rows each, the latest
+    event-leg re-contact is ML00_ep5 2.438 s (219.3 prediction, inside the 3.0 s gate and the
+    2.5 s flag column)."""
     out = s8.judge_ml_batch(PILOT, tmp_path / "v.json")
     import json
 
     doc = json.loads(out.read_text(encoding="utf-8"))
+    assert "spec rev. 50" in doc["meta"]["judge_revision"]  # rev. 51 (C-S8-34) builds on it
     adj = [r for r in doc["rows"] if r["item"].startswith("U-S8-32 adjacent")]
     ev = [r for r in doc["rows"] if r["item"].startswith("U-S8-32 event")]
     assert len(adj) == 37 and len(ev) == 37
     assert all(r["passed"] for r in adj)
     worst = max(adj, key=lambda r: r["value"][0])
     assert worst["case"] == "ML00_ep5" and worst["value"][:2] == [0.374, 1.57]
-    assert sorted(r["case"] for r in ev if r["passed"] is False) == [
-        "ML10_ep4", "ML11_ep4", "ML17_ep4"]
-    assert set(doc["ml_masks"]) == {"ML10_ep4", "ML11_ep4", "ML17_ep4"}
+    assert [r["case"] for r in ev if r["passed"] is False] == []
+    latest = max((r for r in ev if r["value"][1] is not None), key=lambda r: r["value"][1])
+    assert latest["case"] == "ML00_ep5" and latest["value"][1] == pytest.approx(2.438, abs=1e-3)
+    assert latest["value"][3] is True  # within the 2.5 s nominal-damping flag column
+    assert doc["ml_masks"] == {}
+    assert doc["meta"]["failed"] == 0
 
 
 # --- runner (run_S8C) ------------------------------------------------------------------------------

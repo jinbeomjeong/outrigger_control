@@ -4,6 +4,12 @@ Needs the ML environment ``pytorch_214_cuda_python_313`` (torch, lightgbm, onnx,
 Both models give, per leg and sample, class probabilities of {G, U, L} and the window minimum
 of the rod force [kN] (the load estimate scored by M4).
 
+Lower-quantile load estimate (spec rev. 52 233, U-S8-52, P-S8-19): with
+``lower_quantile`` set (0.05 = lower 5 %), the GRU gets a second regression output trained with
+the pinball loss and LightGBM a third booster with the ``quantile`` objective. The quantile then
+is the load estimate (:attr:`Prediction.load_estimate_kN`, E2 and the P5 confirmation); the
+point estimate stays as a record. No constant margin is subtracted anywhere.
+
 ONNX (E5):
 
 * GRU network: the torch default dynamo exporter (needs ``onnxscript``, opset 18); when it
@@ -45,6 +51,7 @@ GRU_INPUT_NAMES = ("sequences", "context")
 GRU_OUTPUT_NAME = "output"
 LIGHTGBM_INPUT_NAME = "features"
 LIGHTGBM_ONNX_FILES = ("lgbm_classifier.onnx", "lgbm_regressor.onnx")
+LIGHTGBM_QUANTILE_ONNX_FILE = "lgbm_quantile.onnx"
 THRESHOLD_PREFIX = "threshold="
 """Line of a LightGBM model string with a tree's split thresholds."""
 TREE_SIZES_PREFIX = "tree_sizes="
@@ -65,7 +72,14 @@ class Prediction:
     probabilities: NDArray[np.float64]
     """(N, 3) class probabilities."""
     min_force_kN: NDArray[np.float64]
-    """(N,) predicted window minimum of the rod force."""
+    """(N,) predicted window minimum of the rod force (point estimate)."""
+    lower_quantile_kN: NDArray[np.float64] | None = None
+    """(N,) lower quantile of the window minimum; ``None`` = model without a quantile output."""
+
+    @property
+    def load_estimate_kN(self) -> NDArray[np.float64]:
+        """The load estimate the judge uses: the lower quantile when present, else the point."""
+        return self.min_force_kN if self.lower_quantile_kN is None else self.lower_quantile_kN
 
 
 # --- LightGBM ------------------------------------------------------------------------------
@@ -73,30 +87,62 @@ class Prediction:
 
 @dataclass(frozen=True)
 class LightGbmSettings:
+    """Booster settings; the leaf regularisation keeps the rare U / L classes stable.
+
+    With the LightGBM defaults (``min_sum_hessian_in_leaf`` 1e-3, no L2) the multiclass leaf
+    values of a few U / L rows blew up after the second round on the main S8 batch (0.25 %
+    U / L): the validation loss doubled and early stopping kept one round only.
+    """
+
     num_leaves: int = 31
     learning_rate: float = 0.05
-    rounds: int = 400
+    rounds: int = 1000
     early_stopping_rounds: int = 30
     seed: int = TRAIN_SEED
+    min_sum_hessian_in_leaf: float = 5.0
+    lambda_l2: float = 10.0
+    min_data_in_leaf: int = 100
+    lower_quantile: float | None = None
+    """Quantile level of the third booster (``objective="quantile"``); ``None`` = none."""
+
+    @classmethod
+    def legacy(cls) -> LightGbmSettings:
+        """The settings before the regularisation (LightGBM defaults, 400 rounds)."""
+        return cls(rounds=400, min_sum_hessian_in_leaf=1e-3, lambda_l2=0.0, min_data_in_leaf=20)
 
 
 @dataclass
 class LightGbmModel:
     classifier: lightgbm.Booster
     regressor: lightgbm.Booster
+    quantile_regressor: lightgbm.Booster | None = None
 
     def predict(self, examples: Examples) -> Prediction:
         features = tabular_features(examples)
+        quantile = None
+        if self.quantile_regressor is not None:
+            quantile = np.asarray(self.quantile_regressor.predict(features), dtype=float)
         return Prediction(
             np.asarray(self.classifier.predict(features), dtype=float).reshape(-1, CLASS_COUNT),
             np.asarray(self.regressor.predict(features), dtype=float),
+            quantile,
         )
+
+    def boosters(self) -> list[lightgbm.Booster]:
+        """Classifier, regressor and (when trained) the quantile regressor."""
+        boosters = [self.classifier, self.regressor]
+        if self.quantile_regressor is not None:
+            boosters.append(self.quantile_regressor)
+        return boosters
 
     def save(self, folder: Path) -> list[Path]:
         folder.mkdir(parents=True, exist_ok=True)
-        paths = [folder / "lgbm_classifier.txt", folder / "lgbm_regressor.txt"]
-        self.classifier.save_model(str(paths[0]))
-        self.regressor.save_model(str(paths[1]))
+        names = ["lgbm_classifier.txt", "lgbm_regressor.txt", "lgbm_quantile.txt"]
+        paths = []
+        for name, booster in zip(names, self.boosters(), strict=False):
+            path = folder / name
+            booster.save_model(str(path))
+            paths.append(path)
         return paths
 
 
@@ -109,6 +155,9 @@ def train_lightgbm(
         "num_leaves": settings.num_leaves,
         "learning_rate": settings.learning_rate,
         "seed": settings.seed,
+        "min_sum_hessian_in_leaf": settings.min_sum_hessian_in_leaf,
+        "lambda_l2": settings.lambda_l2,
+        "min_data_in_leaf": settings.min_data_in_leaf,
         "deterministic": True,
         "num_threads": 4,
         "verbose": -1,
@@ -132,20 +181,33 @@ def train_lightgbm(
                                      weight=validation.weights)],
         callbacks=stop,
     )
-    return LightGbmModel(classifier, regressor)
+    quantile_regressor = None
+    if settings.lower_quantile is not None:
+        quantile_regressor = lightgbm.train(
+            {**common, "objective": "quantile", "alpha": settings.lower_quantile},
+            lightgbm.Dataset(x_train, train.target_min_kN, weight=train.weights),
+            settings.rounds,
+            valid_sets=[lightgbm.Dataset(x_valid, validation.target_min_kN,
+                                         weight=validation.weights)],
+            callbacks=stop,
+        )
+    return LightGbmModel(classifier, regressor, quantile_regressor)
 
 
 # --- GRU network ---------------------------------------------------------------------------
 
 
 class ContactGru(nn.Module):
-    """GRU over the window + probe context -> 3 class logits and the min force [kN]."""
+    """GRU over the window + probe context -> 3 class logits, the min force [kN] and, with
+    ``has_quantile``, its lower quantile [kN]."""
 
-    def __init__(self, channel_count: int, context_count: int, hidden: int = 48) -> None:
+    def __init__(self, channel_count: int, context_count: int, hidden: int = 48,
+                 has_quantile: bool = False) -> None:
         super().__init__()
+        output_count = CLASS_COUNT + 1 + int(has_quantile)
         self.gru = nn.GRU(channel_count, hidden, batch_first=True)
         self.head = nn.Sequential(
-            nn.Linear(hidden + context_count, hidden), nn.ReLU(), nn.Linear(hidden, CLASS_COUNT + 1)
+            nn.Linear(hidden + context_count, hidden), nn.ReLU(), nn.Linear(hidden, output_count)
         )
 
     def forward(self, sequences: torch.Tensor, context: torch.Tensor) -> torch.Tensor:
@@ -165,6 +227,10 @@ class GruSettings:
     seed: int = TRAIN_SEED
     device: str | None = None
     """``None`` = CUDA when available."""
+    lower_quantile: float | None = None
+    """Quantile level of the extra output (pinball loss); ``None`` = no quantile output."""
+    quantile_weight: float = 1.0
+    """Loss weight of the pinball term (kN) against the class cross-entropy (ASSUMPTION)."""
 
 
 @dataclass
@@ -183,24 +249,40 @@ class GruModel:
                     torch.from_numpy(examples.context[part]).to(self.device),
                 )
                 outputs.append(out.cpu().numpy())
-        raw = np.concatenate(outputs) if outputs else np.zeros((0, CLASS_COUNT + 1))
+        output_count = self.network.head[-1].out_features
+        raw = np.concatenate(outputs) if outputs else np.zeros((0, output_count))
         return _prediction_from_raw(raw)
 
 
 def _prediction_from_raw(raw: NDArray[np.floating]) -> Prediction:
-    """Network output (logits of the 3 classes, min force [kN]) -> :class:`Prediction`."""
+    """Network output (logits of the 3 classes, min force [kN], optional lower quantile [kN])
+    -> :class:`Prediction`."""
     logits = raw[:, :CLASS_COUNT]
     probabilities = np.exp(logits - logits.max(axis=1, keepdims=True))
     probabilities /= probabilities.sum(axis=1, keepdims=True)
-    return Prediction(probabilities.astype(float), raw[:, CLASS_COUNT].astype(float))
+    quantile = None
+    if raw.shape[1] > CLASS_COUNT + 1:
+        quantile = raw[:, CLASS_COUNT + 1].astype(float)
+    return Prediction(probabilities.astype(float), raw[:, CLASS_COUNT].astype(float), quantile)
 
 
-def _gru_loss(output, labels, targets, weights, regression_weight):
+def pinball_loss(predicted: torch.Tensor, targets: torch.Tensor, quantile: float
+                 ) -> torch.Tensor:
+    """Per-row quantile (pinball) loss: ``max(q (y - p), (q - 1)(y - p))``."""
+    residual = targets - predicted
+    return torch.maximum(quantile * residual, (quantile - 1.0) * residual)
+
+
+def _gru_loss(output, labels, targets, weights, settings: GruSettings):
     class_loss = nn.functional.cross_entropy(output[:, :CLASS_COUNT], labels, reduction="none")
     regression_loss = (output[:, CLASS_COUNT] - targets) ** 2
+    row_loss = class_loss + settings.regression_weight * regression_loss
+    if settings.lower_quantile is not None:
+        quantile_loss = pinball_loss(output[:, CLASS_COUNT + 1], targets, settings.lower_quantile)
+        row_loss = row_loss + settings.quantile_weight * quantile_loss
     # A batch of only weight-0 rows (lift-off transient) would divide 0 by 0.
     total_weight = torch.sum(weights).clamp_min(MIN_BATCH_WEIGHT)
-    return torch.sum(weights * (class_loss + regression_weight * regression_loss)) / total_weight
+    return torch.sum(weights * row_loss) / total_weight
 
 
 def _tensors(examples: Examples, device: str) -> list[torch.Tensor]:
@@ -217,9 +299,14 @@ def train_gru(
     """Weighted cross-entropy + weighted squared error; best validation epoch kept."""
     settings = settings or GruSettings()
     device = settings.device or ("cuda" if torch.cuda.is_available() else "cpu")
+    # cuDNN picks GRU kernels by timing unless told otherwise; fixed kernels keep a rerun with
+    # the same seed on the same GPU reproducible.
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
     torch.manual_seed(settings.seed)
     generator = torch.Generator().manual_seed(settings.seed)
-    network = ContactGru(train.sequences.shape[2], train.context.shape[1], settings.hidden)
+    network = ContactGru(train.sequences.shape[2], train.context.shape[1], settings.hidden,
+                         has_quantile=settings.lower_quantile is not None)
     network.to(device)
     optimizer = torch.optim.Adam(network.parameters(), lr=settings.learning_rate)
     train_tensors = _tensors(train, device)
@@ -232,15 +319,14 @@ def train_gru(
             batch = order[start:start + settings.batch_size]
             sequences, context, labels, targets, weights = (t[batch] for t in train_tensors)
             optimizer.zero_grad()
-            loss = _gru_loss(network(sequences, context), labels, targets, weights,
-                             settings.regression_weight)
+            loss = _gru_loss(network(sequences, context), labels, targets, weights, settings)
             loss.backward()
             optimizer.step()
         network.eval()
         with torch.no_grad():
             sequences, context, labels, targets, weights = valid_tensors
             valid_loss = float(_gru_loss(network(sequences, context), labels, targets, weights,
-                                         settings.regression_weight))
+                                         settings))
         if valid_loss < best_loss - 1e-6:
             best_loss, stale_epochs = valid_loss, 0
             best_state = {k: v.detach().clone() for k, v in network.state_dict().items()}
@@ -391,14 +477,20 @@ def export_lightgbm_onnx(model: LightGbmModel, folder: Path) -> OnnxExport:
         _booster_with_float32_thresholds(model.classifier), initial_types=input_types,
         zipmap=False, target_opset=LIGHTGBM_OPSET,
     )
-    regressor = onnxmltools.convert_lightgbm(
-        _booster_with_float32_thresholds(model.regressor), initial_types=input_types,
-        target_opset=LIGHTGBM_OPSET,
-    )
-    paths = (folder / LIGHTGBM_ONNX_FILES[0], folder / LIGHTGBM_ONNX_FILES[1])
-    for onnx_model, path in zip((classifier, regressor), paths, strict=True):
+    onnx_models = [classifier]
+    paths = [folder / LIGHTGBM_ONNX_FILES[0], folder / LIGHTGBM_ONNX_FILES[1]]
+    regressors = [model.regressor]
+    if model.quantile_regressor is not None:
+        regressors.append(model.quantile_regressor)
+        paths.append(folder / LIGHTGBM_QUANTILE_ONNX_FILE)
+    for regressor in regressors:
+        onnx_models.append(onnxmltools.convert_lightgbm(
+            _booster_with_float32_thresholds(regressor), initial_types=input_types,
+            target_opset=LIGHTGBM_OPSET,
+        ))
+    for onnx_model, path in zip(onnx_models, paths, strict=True):
         path.write_bytes(onnx_model.SerializeToString())
-    return OnnxExport(paths, "onnxmltools")
+    return OnnxExport(tuple(paths), "onnxmltools")
 
 
 # --- ONNX inference and latency --------------------------------------------------------------
@@ -428,16 +520,22 @@ class LightGbmOnnxModel:
     """The exported LightGBM pair run by onnxruntime on CPU (features computed in numpy)."""
 
     def __init__(self, export: OnnxExport, threads: int = 1) -> None:
-        classifier_path, regressor_path = export.paths
+        classifier_path, regressor_path, *quantile_paths = export.paths
         self._classifier = _cpu_session(classifier_path, threads)
         self._regressor = _cpu_session(regressor_path, threads)
+        self._quantile = (_cpu_session(quantile_paths[0], threads) if quantile_paths
+                          else None)
 
     def predict(self, examples: Examples) -> Prediction:
         feeds = {LIGHTGBM_INPUT_NAME: tabular_features(examples)}
         (probabilities,) = self._classifier.run(["probabilities"], feeds)
         (min_force_kN,) = self._regressor.run(None, feeds)
+        quantile = None
+        if self._quantile is not None:
+            (quantile_kN,) = self._quantile.run(None, feeds)
+            quantile = np.asarray(quantile_kN, dtype=float).ravel()
         return Prediction(np.asarray(probabilities, dtype=float),
-                          np.asarray(min_force_kN, dtype=float).ravel())
+                          np.asarray(min_force_kN, dtype=float).ravel(), quantile)
 
 
 @dataclass(frozen=True)
@@ -476,7 +574,7 @@ def lightgbm_onnx_latency(
 def lightgbm_latency(model: LightGbmModel, examples: Examples, calls: int = 500) -> LatencyResult:
     """Native LightGBM CPU predict of 4 legs (features included); reference to the ONNX path."""
     four = _first_legs(examples)
-    size = len(model.classifier.model_to_string()) + len(model.regressor.model_to_string())
+    size = sum(len(booster.model_to_string()) for booster in model.boosters())
     return _time_calls(lambda: model.predict(four), calls, size)
 
 

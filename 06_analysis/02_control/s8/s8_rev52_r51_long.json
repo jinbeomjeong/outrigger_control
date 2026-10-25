@@ -1,0 +1,8525 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s8/r51_reapp_closed_loop.py",
+  "spec": "rev. 52 (R51-1)",
+  "wall_s": 80.4,
+  "workers": 4,
+  "variants": {
+   "base": {},
+   "W0.8F0.6r2": {
+    "window_s": 0.8,
+    "opposite_only": true,
+    "retrigger_s": 2.0,
+    "retrigger_factor": 0.6
+   }
+  },
+  "offsets_s": [
+   0.0,
+   0.025,
+   0.05,
+   0.075
+  ],
+  "window_s": 8.0
+ },
+ "runs": [
+  {
+   "base": "ML78",
+   "variant": "base",
+   "t_ready_s": 48.000000000047166,
+   "t_crawler_liftoff_s": 20.89999999999664,
+   "D8_min_true_after_liftoff_kN": 46.68,
+   "pre_event_reapproach": [],
+   "twist_scale": 1.5,
+   "events": [
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.815,
+       "last_touch_s": 2.422,
+       "n": 4,
+       "max_gap_mm": 15.58,
+       "intervals": [
+        [
+         0.027,
+         0.288
+        ],
+        [
+         0.64,
+         0.96
+        ],
+        [
+         1.313,
+         1.426
+        ],
+        [
+         2.301,
+         2.422
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.191,
+       "last_touch_s": 3.111,
+       "n": 2,
+       "max_gap_mm": 0.92,
+       "intervals": [
+        [
+         1.581,
+         1.686
+        ],
+        [
+         3.025,
+         3.111
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.306,
+       "last_touch_s": 3.364,
+       "n": 3,
+       "max_gap_mm": 1.58,
+       "intervals": [
+        [
+         1.371,
+         1.377
+        ],
+        [
+         1.793,
+         1.926
+        ],
+        [
+         3.197,
+         3.364
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 1.304,
+       "last_touch_s": 4.066,
+       "n": 5,
+       "max_gap_mm": 20.62,
+       "intervals": [
+        [
+         0.111,
+         0.687
+        ],
+        [
+         0.964,
+         1.239
+        ],
+        [
+         2.062,
+         2.211
+        ],
+        [
+         2.485,
+         2.659
+        ],
+        [
+         3.936,
+         4.066
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.895,
+     "pair_last_touch_s": 4.066,
+     "adj_sum_s": 0.497,
+     "adj_max_gap_mm": 1.58,
+     "adj_last_touch_s": 3.364,
+     "starts": [
+      [
+       0.1,
+       "FL"
+      ],
+      [
+       0.5,
+       "RR"
+      ],
+      [
+       0.9,
+       "FL"
+      ],
+      [
+       1.2,
+       "RR"
+      ],
+      [
+       1.6,
+       "FR"
+      ],
+      [
+       1.9,
+       "RL"
+      ],
+      [
+       2.2,
+       "RR"
+      ],
+      [
+       2.9,
+       "RL"
+      ],
+      [
+       4.0,
+       "RR"
+      ]
+     ],
+     "n_starts": 9,
+     "n_late_starts": 5,
+     "sign_changes": 4,
+     "deferred": [],
+     "W_bins_J": [
+      -38.8,
+      -537.5,
+      -85.7,
+      63.0,
+      29.4,
+      57.1,
+      -52.0,
+      88.6,
+      -92.2,
+      38.0,
+      -15.6,
+      -11.4,
+      -6.5,
+      -3.7,
+      -2.1,
+      -1.2
+     ],
+     "W_after1.5_pos_J": 276.1,
+     "W_after1.5_max_bin_J": 88.6,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.621,
+     "t_back_ready_s": 25.0,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      208.1,
+      238.1,
+      303.6,
+      185.0,
+      232.8,
+      221.9,
+      60.8,
+      38.3,
+      26.5,
+      17.9,
+      9.9,
+      8.8,
+      6.5
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": false,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep0",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.824,
+       "last_touch_s": 2.886,
+       "n": 4,
+       "max_gap_mm": 15.58,
+       "intervals": [
+        [
+         0.027,
+         0.286
+        ],
+        [
+         0.637,
+         0.974
+        ],
+        [
+         1.322,
+         1.481
+        ],
+        [
+         2.817,
+         2.886
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.126,
+       "last_touch_s": 2.205,
+       "n": 1,
+       "max_gap_mm": 1.21,
+       "intervals": [
+        [
+         2.079,
+         2.205
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.373,
+       "last_touch_s": 3.803,
+       "n": 3,
+       "max_gap_mm": 1.56,
+       "intervals": [
+        [
+         1.829,
+         1.986
+        ],
+        [
+         2.297,
+         2.406
+        ],
+        [
+         3.696,
+         3.803
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 1.3,
+       "last_touch_s": 3.108,
+       "n": 5,
+       "max_gap_mm": 20.24,
+       "intervals": [
+        [
+         0.111,
+         0.686
+        ],
+        [
+         0.963,
+         1.272
+        ],
+        [
+         1.558,
+         1.704
+        ],
+        [
+         2.563,
+         2.724
+        ],
+        [
+         2.999,
+         3.108
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.889,
+     "pair_last_touch_s": 3.108,
+     "adj_sum_s": 0.499,
+     "adj_max_gap_mm": 1.56,
+     "adj_last_touch_s": 3.803,
+     "starts": [
+      [
+       0.08,
+       "FL"
+      ],
+      [
+       0.58,
+       "RR"
+      ],
+      [
+       1.98,
+       "RL"
+      ],
+      [
+       2.68,
+       "RR"
+      ],
+      [
+       3.38,
+       "RL"
+      ],
+      [
+       4.48,
+       "RR"
+      ]
+     ],
+     "n_starts": 6,
+     "n_late_starts": 4,
+     "sign_changes": 4,
+     "deferred": [],
+     "W_bins_J": [
+      -68.1,
+      -416.3,
+      -99.1,
+      42.3,
+      -21.0,
+      -5.9,
+      73.9,
+      -105.5,
+      92.0,
+      -78.7,
+      29.5,
+      -16.4,
+      -11.5,
+      -6.6,
+      -3.7,
+      -2.1
+     ],
+     "W_after1.5_pos_J": 237.7,
+     "W_after1.5_max_bin_J": 92.0,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6163,
+     "t_back_ready_s": 25.48,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      225.5,
+      231.2,
+      216.2,
+      323.2,
+      198.2,
+      207.5,
+      228.2,
+      49.2,
+      28.0,
+      22.9,
+      13.3,
+      12.2,
+      8.2
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": false,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep0",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.745,
+       "last_touch_s": 1.467,
+       "n": 3,
+       "max_gap_mm": 15.58,
+       "intervals": [
+        [
+         0.027,
+         0.285
+        ],
+        [
+         0.634,
+         0.965
+        ],
+        [
+         1.311,
+         1.467
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.203,
+       "last_touch_s": 2.225,
+       "n": 2,
+       "max_gap_mm": 2.23,
+       "intervals": [
+        [
+         1.61,
+         1.652
+        ],
+        [
+         2.064,
+         2.225
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.452,
+       "last_touch_s": 3.812,
+       "n": 3,
+       "max_gap_mm": 3.34,
+       "intervals": [
+        [
+         1.799,
+         2.012
+        ],
+        [
+         2.285,
+         2.451
+        ],
+        [
+         3.739,
+         3.812
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.999,
+       "last_touch_s": 3.136,
+       "n": 3,
+       "max_gap_mm": 19.85,
+       "intervals": [
+        [
+         0.111,
+         0.68
+        ],
+        [
+         0.958,
+         1.257
+        ],
+        [
+         3.005,
+         3.136
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.517,
+     "pair_last_touch_s": 3.136,
+     "adj_sum_s": 0.655,
+     "adj_max_gap_mm": 3.34,
+     "adj_last_touch_s": 3.812,
+     "starts": [
+      [
+       0.05,
+       "FL"
+      ],
+      [
+       0.55,
+       "RR"
+      ],
+      [
+       1.95,
+       "RL"
+      ],
+      [
+       2.35,
+       "RL"
+      ],
+      [
+       2.85,
+       "FL"
+      ],
+      [
+       3.15,
+       "RR"
+      ],
+      [
+       3.75,
+       "RL"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 5,
+     "sign_changes": 3,
+     "deferred": [],
+     "W_bins_J": [
+      -102.2,
+      -416.7,
+      -86.1,
+      124.4,
+      -102.8,
+      60.6,
+      -15.3,
+      -11.7,
+      -0.5,
+      -7.7,
+      -14.2,
+      -8.7,
+      -5.0,
+      -2.8,
+      -1.6,
+      -0.9
+     ],
+     "W_after1.5_pos_J": 185.0,
+     "W_after1.5_max_bin_J": 124.4,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6113,
+     "t_back_ready_s": 24.75,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      250.0,
+      259.4,
+      231.1,
+      284.5,
+      52.2,
+      227.2,
+      46.7,
+      40.0,
+      30.2,
+      22.1,
+      14.5,
+      9.4,
+      6.8
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML78_ep0",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.645,
+       "last_touch_s": 1.401,
+       "n": 3,
+       "max_gap_mm": 15.58,
+       "intervals": [
+        [
+         0.027,
+         0.283
+        ],
+        [
+         0.636,
+         0.931
+        ],
+        [
+         1.307,
+         1.401
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.028,
+       "last_touch_s": 1.599,
+       "n": 1,
+       "max_gap_mm": 0.07,
+       "intervals": [
+        [
+         1.571,
+         1.599
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.249,
+       "last_touch_s": 3.274,
+       "n": 2,
+       "max_gap_mm": 1.74,
+       "intervals": [
+        [
+         1.761,
+         1.904
+        ],
+        [
+         3.168,
+         3.274
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.809,
+       "last_touch_s": 1.2,
+       "n": 2,
+       "max_gap_mm": 19.44,
+       "intervals": [
+        [
+         0.111,
+         0.667
+        ],
+        [
+         0.947,
+         1.2
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.251,
+     "pair_last_touch_s": 1.401,
+     "adj_sum_s": 0.277,
+     "adj_max_gap_mm": 1.74,
+     "adj_last_touch_s": 3.274,
+     "starts": [
+      [
+       0.03,
+       "FL"
+      ],
+      [
+       0.53,
+       "RR"
+      ],
+      [
+       0.93,
+       "FL"
+      ],
+      [
+       1.33,
+       "FL"
+      ],
+      [
+       1.63,
+       "FR"
+      ],
+      [
+       2.53,
+       "RR"
+      ],
+      [
+       3.03,
+       "FR"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 3,
+     "sign_changes": 3,
+     "deferred": [],
+     "W_bins_J": [
+      -139.0,
+      -502.2,
+      -5.4,
+      7.6,
+      -19.1,
+      59.6,
+      -62.0,
+      5.6,
+      -1.7,
+      -1.7,
+      -1.0,
+      -0.6,
+      -0.4,
+      -0.2,
+      -0.1,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 72.8,
+     "W_after1.5_max_bin_J": 59.6,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6062,
+     "t_back_ready_s": 22.63,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      110.1,
+      149.6,
+      218.1,
+      157.8,
+      92.6,
+      53.2,
+      43.5,
+      33.6,
+      24.5,
+      17.5,
+      12.4,
+      7.6,
+      3.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep0",
+     "offset_s": 0.075
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.121,
+       "last_touch_s": 1.684,
+       "n": 1,
+       "max_gap_mm": 1.29,
+       "intervals": [
+        [
+         1.563,
+         1.684
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.775,
+       "last_touch_s": 2.39,
+       "n": 4,
+       "max_gap_mm": 17.32,
+       "intervals": [
+        [
+         0.018,
+         0.282
+        ],
+        [
+         0.629,
+         0.946
+        ],
+        [
+         1.309,
+         1.405
+        ],
+        [
+         2.292,
+         2.39
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.119,
+       "last_touch_s": 4.025,
+       "n": 5,
+       "max_gap_mm": 19.51,
+       "intervals": [
+        [
+         0.107,
+         0.669
+        ],
+        [
+         0.957,
+         1.215
+        ],
+        [
+         2.086,
+         2.128
+        ],
+        [
+         2.495,
+         2.625
+        ],
+        [
+         3.898,
+         4.025
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.229,
+       "last_touch_s": 3.25,
+       "n": 4,
+       "max_gap_mm": 2.51,
+       "intervals": [
+        [
+         1.369,
+         1.371
+        ],
+        [
+         1.754,
+         1.935
+        ],
+        [
+         2.804,
+         2.816
+        ],
+        [
+         3.216,
+         3.25
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.679,
+     "pair_last_touch_s": 4.025,
+     "adj_sum_s": 0.35,
+     "adj_max_gap_mm": 2.51,
+     "adj_last_touch_s": 3.25,
+     "starts": [
+      [
+       0.1,
+       "FR"
+      ],
+      [
+       0.5,
+       "RL"
+      ],
+      [
+       0.9,
+       "FR"
+      ],
+      [
+       1.2,
+       "RL"
+      ],
+      [
+       1.6,
+       "FL"
+      ],
+      [
+       1.9,
+       "RR"
+      ],
+      [
+       2.2,
+       "RL"
+      ],
+      [
+       2.9,
+       "RR"
+      ],
+      [
+       3.9,
+       "RL"
+      ]
+     ],
+     "n_starts": 9,
+     "n_late_starts": 5,
+     "sign_changes": 4,
+     "deferred": [],
+     "W_bins_J": [
+      -38.5,
+      -529.7,
+      -43.1,
+      63.1,
+      22.4,
+      75.0,
+      -88.1,
+      112.1,
+      -117.3,
+      11.4,
+      -9.8,
+      -6.7,
+      -3.8,
+      -2.2,
+      -1.2,
+      -0.6
+     ],
+     "W_after1.5_pos_J": 284.0,
+     "W_after1.5_max_bin_J": 112.1,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5965,
+     "t_back_ready_s": 24.1,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      233.7,
+      234.5,
+      293.0,
+      251.1,
+      178.9,
+      238.9,
+      40.0,
+      24.5,
+      18.0,
+      15.9,
+      13.4,
+      9.2,
+      4.8
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML78_ep1",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.125,
+       "last_touch_s": 1.675,
+       "n": 1,
+       "max_gap_mm": 1.46,
+       "intervals": [
+        [
+         1.55,
+         1.675
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.637,
+       "last_touch_s": 1.391,
+       "n": 3,
+       "max_gap_mm": 17.32,
+       "intervals": [
+        [
+         0.018,
+         0.28
+        ],
+        [
+         0.627,
+         0.936
+        ],
+        [
+         1.325,
+         1.391
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.96,
+       "last_touch_s": 3.542,
+       "n": 4,
+       "max_gap_mm": 19.12,
+       "intervals": [
+        [
+         0.107,
+         0.663
+        ],
+        [
+         0.951,
+         1.202
+        ],
+        [
+         2.067,
+         2.132
+        ],
+        [
+         3.454,
+         3.542
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.331,
+       "last_touch_s": 2.873,
+       "n": 3,
+       "max_gap_mm": 2.36,
+       "intervals": [
+        [
+         1.347,
+         1.378
+        ],
+        [
+         1.744,
+         1.921
+        ],
+        [
+         2.75,
+         2.873
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.388,
+     "pair_last_touch_s": 3.542,
+     "adj_sum_s": 0.456,
+     "adj_max_gap_mm": 2.36,
+     "adj_last_touch_s": 2.873,
+     "starts": [
+      [
+       0.08,
+       "FR"
+      ],
+      [
+       0.58,
+       "RL"
+      ],
+      [
+       0.88,
+       "FR"
+      ],
+      [
+       1.18,
+       "RL"
+      ],
+      [
+       1.58,
+       "FL"
+      ],
+      [
+       2.08,
+       "RL"
+      ],
+      [
+       2.78,
+       "RR"
+      ],
+      [
+       3.48,
+       "RL"
+      ],
+      [
+       4.18,
+       "RR"
+      ]
+     ],
+     "n_starts": 9,
+     "n_late_starts": 5,
+     "sign_changes": 5,
+     "deferred": [],
+     "W_bins_J": [
+      -68.6,
+      -516.9,
+      -19.2,
+      51.0,
+      -45.3,
+      46.0,
+      37.6,
+      -38.8,
+      -26.8,
+      20.5,
+      -5.9,
+      -5.9,
+      -3.5,
+      -2.0,
+      -1.2,
+      -0.7
+     ],
+     "W_after1.5_pos_J": 155.1,
+     "W_after1.5_max_bin_J": 51.0,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5918,
+     "t_back_ready_s": 24.88,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      235.4,
+      197.6,
+      77.9,
+      245.0,
+      234.4,
+      78.1,
+      119.2,
+      31.0,
+      25.1,
+      17.2,
+      12.3,
+      6.9,
+      4.3
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML78_ep1",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.126,
+       "last_touch_s": 1.666,
+       "n": 1,
+       "max_gap_mm": 1.63,
+       "intervals": [
+        [
+         1.54,
+         1.666
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.618,
+       "last_touch_s": 1.379,
+       "n": 3,
+       "max_gap_mm": 17.32,
+       "intervals": [
+        [
+         0.018,
+         0.279
+        ],
+        [
+         0.626,
+         0.926
+        ],
+        [
+         1.322,
+         1.379
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.973,
+       "last_touch_s": 3.533,
+       "n": 4,
+       "max_gap_mm": 18.73,
+       "intervals": [
+        [
+         0.107,
+         0.657
+        ],
+        [
+         0.945,
+         1.19
+        ],
+        [
+         2.048,
+         2.137
+        ],
+        [
+         3.444,
+         3.533
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.356,
+       "last_touch_s": 2.865,
+       "n": 3,
+       "max_gap_mm": 2.15,
+       "intervals": [
+        [
+         1.331,
+         1.383
+        ],
+        [
+         1.733,
+         1.907
+        ],
+        [
+         2.735,
+         2.865
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.388,
+     "pair_last_touch_s": 3.533,
+     "adj_sum_s": 0.482,
+     "adj_max_gap_mm": 2.15,
+     "adj_last_touch_s": 2.865,
+     "starts": [
+      [
+       0.05,
+       "FR"
+      ],
+      [
+       0.55,
+       "RL"
+      ],
+      [
+       1.55,
+       "FL"
+      ],
+      [
+       2.05,
+       "RL"
+      ],
+      [
+       2.75,
+       "RR"
+      ],
+      [
+       3.45,
+       "RL"
+      ],
+      [
+       4.15,
+       "RR"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 5,
+     "sign_changes": 5,
+     "deferred": [],
+     "W_bins_J": [
+      -101.9,
+      -502.0,
+      0.2,
+      40.1,
+      -41.9,
+      31.5,
+      44.4,
+      -30.7,
+      -39.4,
+      22.6,
+      -6.0,
+      -5.6,
+      -3.3,
+      -1.9,
+      -1.2,
+      -0.7
+     ],
+     "W_after1.5_pos_J": 138.6,
+     "W_after1.5_max_bin_J": 44.4,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5871,
+     "t_back_ready_s": 24.85,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      234.4,
+      210.5,
+      74.6,
+      239.8,
+      237.8,
+      90.2,
+      103.9,
+      30.6,
+      24.4,
+      16.7,
+      12.2,
+      7.0,
+      4.0
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML78_ep1",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.081,
+       "last_touch_s": 1.625,
+       "n": 1,
+       "max_gap_mm": 0.48,
+       "intervals": [
+        [
+         1.544,
+         1.625
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.645,
+       "last_touch_s": 1.38,
+       "n": 3,
+       "max_gap_mm": 17.32,
+       "intervals": [
+        [
+         0.018,
+         0.277
+        ],
+        [
+         0.624,
+         0.916
+        ],
+        [
+         1.286,
+         1.38
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.936,
+       "last_touch_s": 3.494,
+       "n": 4,
+       "max_gap_mm": 18.35,
+       "intervals": [
+        [
+         0.107,
+         0.651
+        ],
+        [
+         0.939,
+         1.186
+        ],
+        [
+         2.027,
+         2.111
+        ],
+        [
+         3.433,
+         3.494
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.281,
+       "last_touch_s": 2.847,
+       "n": 2,
+       "max_gap_mm": 1.7,
+       "intervals": [
+        [
+         1.743,
+         1.884
+        ],
+        [
+         2.707,
+         2.847
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.384,
+     "pair_last_touch_s": 3.494,
+     "adj_sum_s": 0.362,
+     "adj_max_gap_mm": 1.7,
+     "adj_last_touch_s": 2.847,
+     "starts": [
+      [
+       0.03,
+       "FR"
+      ],
+      [
+       0.53,
+       "RL"
+      ],
+      [
+       1.03,
+       "RL"
+      ],
+      [
+       1.63,
+       "FL"
+      ],
+      [
+       2.03,
+       "RL"
+      ],
+      [
+       2.73,
+       "RR"
+      ],
+      [
+       3.43,
+       "RL"
+      ],
+      [
+       4.13,
+       "RR"
+      ]
+     ],
+     "n_starts": 8,
+     "n_late_starts": 5,
+     "sign_changes": 5,
+     "deferred": [],
+     "W_bins_J": [
+      -137.2,
+      -485.8,
+      -60.6,
+      36.6,
+      -25.0,
+      11.9,
+      42.0,
+      -10.0,
+      -54.2,
+      68.8,
+      -19.2,
+      -17.1,
+      -10.0,
+      -5.7,
+      -3.3,
+      -1.9
+     ],
+     "W_after1.5_pos_J": 159.3,
+     "W_after1.5_max_bin_J": 68.8,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5821,
+     "t_back_ready_s": 25.53,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      187.3,
+      228.4,
+      78.7,
+      228.5,
+      238.9,
+      110.1,
+      146.3,
+      36.0,
+      28.9,
+      20.3,
+      15.8,
+      11.5,
+      7.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep1",
+     "offset_s": 0.075
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.151,
+       "last_touch_s": 2.278,
+       "n": 1,
+       "max_gap_mm": 1.7,
+       "intervals": [
+        [
+         2.127,
+         2.278
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.838,
+       "last_touch_s": 2.934,
+       "n": 4,
+       "max_gap_mm": 12.01,
+       "intervals": [
+        [
+         0.057,
+         0.318
+        ],
+        [
+         0.664,
+         1.019
+        ],
+        [
+         1.362,
+         1.533
+        ],
+        [
+         2.883,
+         2.934
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.033,
+       "last_touch_s": 3.19,
+       "n": 4,
+       "max_gap_mm": 20.13,
+       "intervals": [
+        [
+         0.136,
+         0.719
+        ],
+        [
+         1.007,
+         1.314
+        ],
+        [
+         1.619,
+         1.625
+        ],
+        [
+         3.053,
+         3.19
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.368,
+       "last_touch_s": 2.496,
+       "n": 2,
+       "max_gap_mm": 3.5,
+       "intervals": [
+        [
+         1.859,
+         2.074
+        ],
+        [
+         2.343,
+         2.496
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.622,
+     "pair_last_touch_s": 3.19,
+     "adj_sum_s": 0.519,
+     "adj_max_gap_mm": 3.5,
+     "adj_last_touch_s": 2.496,
+     "starts": [
+      [
+       0.1,
+       "FR"
+      ],
+      [
+       0.6,
+       "RL"
+      ],
+      [
+       2.0,
+       "RR"
+      ],
+      [
+       2.4,
+       "RR"
+      ],
+      [
+       2.9,
+       "FR"
+      ],
+      [
+       3.2,
+       "RL"
+      ],
+      [
+       3.8,
+       "RR"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 5,
+     "sign_changes": 3,
+     "deferred": [],
+     "W_bins_J": [
+      -100.2,
+      -338.6,
+      -142.0,
+      64.3,
+      -84.6,
+      80.6,
+      -69.1,
+      36.8,
+      -8.9,
+      -6.2,
+      -17.3,
+      -10.8,
+      -6.2,
+      -3.5,
+      -2.0,
+      -1.2
+     ],
+     "W_after1.5_pos_J": 181.7,
+     "W_after1.5_max_bin_J": 80.6,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6266,
+     "t_back_ready_s": 25.1,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      246.1,
+      258.1,
+      235.7,
+      270.6,
+      81.6,
+      238.8,
+      47.5,
+      39.3,
+      29.5,
+      19.8,
+      13.8,
+      7.3,
+      5.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML78_ep3",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.723,
+       "last_touch_s": 1.474,
+       "n": 3,
+       "max_gap_mm": 11.95,
+       "intervals": [
+        [
+         0.057,
+         0.316
+        ],
+        [
+         0.665,
+         0.987
+        ],
+        [
+         1.332,
+         1.474
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.248,
+       "last_touch_s": 4.107,
+       "n": 6,
+       "max_gap_mm": 19.74,
+       "intervals": [
+        [
+         0.136,
+         0.705
+        ],
+        [
+         0.995,
+         1.259
+        ],
+        [
+         1.557,
+         1.582
+        ],
+        [
+         1.614,
+         1.691
+        ],
+        [
+         2.515,
+         2.681
+        ],
+        [
+         3.96,
+         4.107
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.329,
+       "last_touch_s": 3.402,
+       "n": 2,
+       "max_gap_mm": 2.32,
+       "intervals": [
+        [
+         1.825,
+         1.971
+        ],
+        [
+         3.219,
+         3.402
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.751,
+     "pair_last_touch_s": 4.107,
+     "adj_sum_s": 0.329,
+     "adj_max_gap_mm": 2.32,
+     "adj_last_touch_s": 3.402,
+     "starts": [
+      [
+       0.08,
+       "FR"
+      ],
+      [
+       0.58,
+       "RL"
+      ],
+      [
+       0.98,
+       "FR"
+      ],
+      [
+       1.38,
+       "FR"
+      ],
+      [
+       1.88,
+       "RR"
+      ],
+      [
+       2.38,
+       "FR"
+      ],
+      [
+       2.68,
+       "RL"
+      ],
+      [
+       3.08,
+       "FL"
+      ],
+      [
+       3.38,
+       "RR"
+      ],
+      [
+       3.98,
+       "RL"
+      ]
+     ],
+     "n_starts": 10,
+     "n_late_starts": 6,
+     "sign_changes": 4,
+     "deferred": [],
+     "W_bins_J": [
+      -134.1,
+      -467.9,
+      -55.4,
+      21.0,
+      66.3,
+      -30.8,
+      43.9,
+      84.1,
+      -103.6,
+      29.9,
+      -12.4,
+      -9.0,
+      -5.1,
+      -2.9,
+      -1.6,
+      -0.9
+     ],
+     "W_after1.5_pos_J": 245.2,
+     "W_after1.5_max_bin_J": 84.1,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6217,
+     "t_back_ready_s": 24.58,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      155.5,
+      274.4,
+      263.3,
+      162.5,
+      261.4,
+      219.3,
+      46.0,
+      43.1,
+      31.5,
+      17.8,
+      11.0,
+      11.2,
+      6.9
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML78_ep3",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.12,
+       "last_touch_s": 3.134,
+       "n": 2,
+       "max_gap_mm": 0.37,
+       "intervals": [
+        [
+         1.647,
+         1.722
+        ],
+        [
+         3.089,
+         3.134
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.883,
+       "last_touch_s": 2.483,
+       "n": 4,
+       "max_gap_mm": 11.71,
+       "intervals": [
+        [
+         0.057,
+         0.319
+        ],
+        [
+         0.67,
+         1.014
+        ],
+        [
+         1.357,
+         1.496
+        ],
+        [
+         2.345,
+         2.483
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.326,
+       "last_touch_s": 4.111,
+       "n": 5,
+       "max_gap_mm": 20.99,
+       "intervals": [
+        [
+         0.136,
+         0.727
+        ],
+        [
+         1.012,
+         1.296
+        ],
+        [
+         2.12,
+         2.27
+        ],
+        [
+         2.542,
+         2.718
+        ],
+        [
+         3.986,
+         4.111
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.27,
+       "last_touch_s": 3.409,
+       "n": 2,
+       "max_gap_mm": 1.4,
+       "intervals": [
+        [
+         1.856,
+         1.977
+        ],
+        [
+         3.26,
+         3.409
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.967,
+     "pair_last_touch_s": 4.111,
+     "adj_sum_s": 0.39,
+     "adj_max_gap_mm": 1.4,
+     "adj_last_touch_s": 3.409,
+     "starts": [
+      [
+       0.15,
+       "FR"
+      ],
+      [
+       0.55,
+       "RL"
+      ],
+      [
+       0.95,
+       "FR"
+      ],
+      [
+       1.25,
+       "RL"
+      ],
+      [
+       1.65,
+       "FL"
+      ],
+      [
+       1.95,
+       "RR"
+      ],
+      [
+       2.25,
+       "RL"
+      ],
+      [
+       2.95,
+       "RR"
+      ],
+      [
+       4.05,
+       "RL"
+      ]
+     ],
+     "n_starts": 9,
+     "n_late_starts": 5,
+     "sign_changes": 4,
+     "deferred": [],
+     "W_bins_J": [
+      -44.7,
+      -471.9,
+      -160.0,
+      52.1,
+      79.6,
+      -36.5,
+      7.2,
+      90.3,
+      -118.1,
+      10.5,
+      -2.0,
+      -1.9,
+      -1.1,
+      -0.7,
+      -0.4,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 239.7,
+     "W_after1.5_max_bin_J": 90.3,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6355,
+     "t_back_ready_s": 23.05,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      206.8,
+      226.0,
+      322.4,
+      174.1,
+      243.3,
+      183.3,
+      44.9,
+      34.6,
+      26.8,
+      13.4,
+      7.6,
+      6.6,
+      2.8
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": false,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep3",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.082,
+       "last_touch_s": 1.718,
+       "n": 1,
+       "max_gap_mm": 0.45,
+       "intervals": [
+        [
+         1.636,
+         1.718
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.735,
+       "last_touch_s": 1.484,
+       "n": 3,
+       "max_gap_mm": 12.01,
+       "intervals": [
+        [
+         0.057,
+         0.319
+        ],
+        [
+         0.668,
+         1.006
+        ],
+        [
+         1.349,
+         1.484
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.081,
+       "last_touch_s": 4.016,
+       "n": 4,
+       "max_gap_mm": 20.59,
+       "intervals": [
+        [
+         0.136,
+         0.72
+        ],
+        [
+         1.007,
+         1.284
+        ],
+        [
+         2.103,
+         2.252
+        ],
+        [
+         3.945,
+         4.016
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.313,
+       "last_touch_s": 3.309,
+       "n": 3,
+       "max_gap_mm": 1.21,
+       "intervals": [
+        [
+         1.848,
+         1.962
+        ],
+        [
+         2.819,
+         2.959
+        ],
+        [
+         3.25,
+         3.309
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.581,
+     "pair_last_touch_s": 4.016,
+     "adj_sum_s": 0.395,
+     "adj_max_gap_mm": 1.21,
+     "adj_last_touch_s": 3.309,
+     "starts": [
+      [
+       0.13,
+       "FR"
+      ],
+      [
+       0.53,
+       "RL"
+      ],
+      [
+       1.63,
+       "FL"
+      ],
+      [
+       2.13,
+       "RL"
+      ],
+      [
+       2.63,
+       "RL"
+      ],
+      [
+       2.93,
+       "RR"
+      ],
+      [
+       3.63,
+       "RL"
+      ],
+      [
+       4.73,
+       "RR"
+      ]
+     ],
+     "n_starts": 8,
+     "n_late_starts": 6,
+     "sign_changes": 5,
+     "deferred": [],
+     "W_bins_J": [
+      -68.8,
+      -469.9,
+      -140.3,
+      55.5,
+      -57.5,
+      126.2,
+      -125.8,
+      103.8,
+      -36.0,
+      -37.6,
+      -17.6,
+      -1.7,
+      -3.3,
+      -2.1,
+      -1.2,
+      -0.7
+     ],
+     "W_after1.5_pos_J": 285.5,
+     "W_after1.5_max_bin_J": 126.2,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6314,
+     "t_back_ready_s": 24.23,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      208.0,
+      145.4,
+      259.7,
+      241.9,
+      235.0,
+      292.7,
+      55.5,
+      150.2,
+      23.0,
+      17.4,
+      11.4,
+      6.5,
+      5.0
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep3",
+     "offset_s": 0.075
+    }
+   ],
+   "wall_s": 55.8
+  },
+  {
+   "base": "ML78",
+   "variant": "W0.8F0.6r2",
+   "t_ready_s": 48.000000000047166,
+   "t_crawler_liftoff_s": 20.89999999999664,
+   "D8_min_true_after_liftoff_kN": 46.68,
+   "pre_event_reapproach": [],
+   "twist_scale": 1.5,
+   "events": [
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.795,
+       "last_touch_s": 1.532,
+       "n": 3,
+       "max_gap_mm": 15.58,
+       "intervals": [
+        [
+         0.027,
+         0.288
+        ],
+        [
+         0.64,
+         0.979
+        ],
+        [
+         1.337,
+         1.532
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.042,
+       "last_touch_s": 2.189,
+       "n": 1,
+       "max_gap_mm": 0.16,
+       "intervals": [
+        [
+         2.147,
+         2.189
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.133,
+       "last_touch_s": 2.481,
+       "n": 1,
+       "max_gap_mm": 1.23,
+       "intervals": [
+        [
+         2.348,
+         2.481
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 1.131,
+       "last_touch_s": 1.785,
+       "n": 3,
+       "max_gap_mm": 20.62,
+       "intervals": [
+        [
+         0.111,
+         0.689
+        ],
+        [
+         0.961,
+         1.312
+        ],
+        [
+         1.583,
+         1.785
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.682,
+     "pair_last_touch_s": 1.785,
+     "adj_sum_s": 0.175,
+     "adj_max_gap_mm": 1.23,
+     "adj_last_touch_s": 2.481,
+     "starts": [
+      [
+       0.1,
+       "FL"
+      ],
+      [
+       0.5,
+       "RR"
+      ],
+      [
+       0.9,
+       "FL"
+      ],
+      [
+       1.2,
+       "RR"
+      ],
+      [
+       2.9,
+       "RL"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.2,
+       "FR"
+      ],
+      [
+       2.4,
+       "RL"
+      ]
+     ],
+     "W_bins_J": [
+      -38.8,
+      -404.9,
+      -140.0,
+      -67.2,
+      41.5,
+      -10.6,
+      -15.8,
+      -0.6,
+      -2.8,
+      -1.8,
+      -1.1,
+      -0.7,
+      -0.4,
+      -0.2,
+      -0.1,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 41.5,
+     "W_after1.5_max_bin_J": 41.5,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.621,
+     "t_back_ready_s": 22.5,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      309.2,
+      154.6,
+      100.1,
+      160.6,
+      61.9,
+      47.8,
+      39.1,
+      29.5,
+      22.0,
+      15.1,
+      10.1,
+      6.0,
+      3.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep0",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.878,
+       "last_touch_s": 2.019,
+       "n": 4,
+       "max_gap_mm": 15.58,
+       "intervals": [
+        [
+         0.027,
+         0.286
+        ],
+        [
+         0.637,
+         0.987
+        ],
+        [
+         1.345,
+         1.559
+        ],
+        [
+         1.964,
+         2.019
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.246,
+       "last_touch_s": 3.406,
+       "n": 3,
+       "max_gap_mm": 0.55,
+       "intervals": [
+        [
+         2.398,
+         2.508
+        ],
+        [
+         2.857,
+         2.962
+        ],
+        [
+         3.375,
+         3.406
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 1.175,
+       "last_touch_s": 1.831,
+       "n": 3,
+       "max_gap_mm": 20.24,
+       "intervals": [
+        [
+         0.111,
+         0.686
+        ],
+        [
+         0.959,
+         1.327
+        ],
+        [
+         1.599,
+         1.831
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.801,
+     "pair_last_touch_s": 2.019,
+     "adj_sum_s": 0.246,
+     "adj_max_gap_mm": 0.55,
+     "adj_last_touch_s": 3.406,
+     "starts": [
+      [
+       0.08,
+       "FL"
+      ],
+      [
+       0.58,
+       "RR"
+      ],
+      [
+       1.68,
+       "RR"
+      ],
+      [
+       2.18,
+       "RR"
+      ],
+      [
+       3.38,
+       "RL"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 3,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.48,
+       "RL"
+      ],
+      [
+       2.68,
+       "FR"
+      ],
+      [
+       2.88,
+       "RL"
+      ],
+      [
+       2.98,
+       "RL"
+      ]
+     ],
+     "W_bins_J": [
+      -68.1,
+      -314.3,
+      -99.8,
+      -122.1,
+      -5.1,
+      50.5,
+      -29.4,
+      -45.4,
+      0.1,
+      -0.5,
+      -0.4,
+      -0.3,
+      -0.2,
+      -0.1,
+      -0.1,
+      -0.0
+     ],
+     "W_after1.5_pos_J": 50.6,
+     "W_after1.5_max_bin_J": 50.5,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6163,
+     "t_back_ready_s": 22.58,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      362.9,
+      184.8,
+      142.5,
+      90.9,
+      149.8,
+      53.6,
+      38.3,
+      27.7,
+      21.8,
+      14.2,
+      9.6,
+      5.5,
+      3.0
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": false,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep0",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.835,
+       "last_touch_s": 1.982,
+       "n": 4,
+       "max_gap_mm": 15.58,
+       "intervals": [
+        [
+         0.027,
+         0.285
+        ],
+        [
+         0.634,
+         0.98
+        ],
+        [
+         1.339,
+         1.539
+        ],
+        [
+         1.951,
+         1.982
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.101,
+       "last_touch_s": 2.467,
+       "n": 1,
+       "max_gap_mm": 0.53,
+       "intervals": [
+        [
+         2.366,
+         2.467
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 1.145,
+       "last_touch_s": 1.8,
+       "n": 3,
+       "max_gap_mm": 19.85,
+       "intervals": [
+        [
+         0.111,
+         0.681
+        ],
+        [
+         0.954,
+         1.317
+        ],
+        [
+         1.588,
+         1.8
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.733,
+     "pair_last_touch_s": 1.982,
+     "adj_sum_s": 0.101,
+     "adj_max_gap_mm": 0.53,
+     "adj_last_touch_s": 2.467,
+     "starts": [
+      [
+       0.05,
+       "FL"
+      ],
+      [
+       0.55,
+       "RR"
+      ],
+      [
+       1.65,
+       "RR"
+      ],
+      [
+       2.85,
+       "RL"
+      ]
+     ],
+     "n_starts": 4,
+     "n_late_starts": 2,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.35,
+       "RL"
+      ],
+      [
+       2.45,
+       "RL"
+      ]
+     ],
+     "W_bins_J": [
+      -102.2,
+      -305.0,
+      -144.7,
+      -100.0,
+      24.9,
+      -5.6,
+      -2.6,
+      -3.3,
+      -4.6,
+      -2.9,
+      -1.7,
+      -1.0,
+      -0.6,
+      -0.3,
+      -0.2,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 24.9,
+     "W_after1.5_max_bin_J": 24.9,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6113,
+     "t_back_ready_s": 22.95,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      322.8,
+      168.6,
+      96.2,
+      151.7,
+      58.0,
+      47.3,
+      38.7,
+      29.1,
+      21.6,
+      15.1,
+      10.2,
+      5.9,
+      3.2
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep0",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.788,
+       "last_touch_s": 1.935,
+       "n": 4,
+       "max_gap_mm": 15.58,
+       "intervals": [
+        [
+         0.027,
+         0.283
+        ],
+        [
+         0.636,
+         0.946
+        ],
+        [
+         1.298,
+         1.489
+        ],
+        [
+         1.904,
+         1.935
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.078,
+       "last_touch_s": 2.401,
+       "n": 1,
+       "max_gap_mm": 0.28,
+       "intervals": [
+        [
+         2.323,
+         2.401
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 1.084,
+       "last_touch_s": 1.749,
+       "n": 3,
+       "max_gap_mm": 19.44,
+       "intervals": [
+        [
+         0.111,
+         0.667
+        ],
+        [
+         0.945,
+         1.264
+        ],
+        [
+         1.54,
+         1.749
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.668,
+     "pair_last_touch_s": 1.935,
+     "adj_sum_s": 0.078,
+     "adj_max_gap_mm": 0.28,
+     "adj_last_touch_s": 2.401,
+     "starts": [
+      [
+       0.03,
+       "FL"
+      ],
+      [
+       0.53,
+       "RR"
+      ],
+      [
+       0.93,
+       "FL"
+      ],
+      [
+       1.23,
+       "RR"
+      ],
+      [
+       1.63,
+       "RR"
+      ],
+      [
+       2.13,
+       "RR"
+      ],
+      [
+       3.33,
+       "RL"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 3,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.13,
+       "FR"
+      ],
+      [
+       2.43,
+       "RL"
+      ],
+      [
+       2.83,
+       "RL"
+      ]
+     ],
+     "W_bins_J": [
+      -139.0,
+      -404.1,
+      -77.9,
+      -62.6,
+      25.9,
+      3.3,
+      -15.0,
+      3.0,
+      -2.5,
+      -4.0,
+      -2.5,
+      -1.5,
+      -0.9,
+      -0.5,
+      -0.3,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 32.2,
+     "W_after1.5_max_bin_J": 25.9,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6062,
+     "t_back_ready_s": 23.33,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      265.8,
+      103.2,
+      94.8,
+      86.7,
+      151.9,
+      51.8,
+      41.8,
+      32.4,
+      24.6,
+      16.8,
+      11.2,
+      7.2,
+      3.9
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep0",
+     "offset_s": 0.075
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.794,
+       "last_touch_s": 1.508,
+       "n": 3,
+       "max_gap_mm": 17.32,
+       "intervals": [
+        [
+         0.018,
+         0.282
+        ],
+        [
+         0.629,
+         0.966
+        ],
+        [
+         1.315,
+         1.508
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.081,
+       "last_touch_s": 1.753,
+       "n": 3,
+       "max_gap_mm": 19.51,
+       "intervals": [
+        [
+         0.107,
+         0.67
+        ],
+        [
+         0.955,
+         1.284
+        ],
+        [
+         1.564,
+         1.753
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.141,
+       "last_touch_s": 2.422,
+       "n": 2,
+       "max_gap_mm": 0.46,
+       "intervals": [
+        [
+         1.893,
+         1.943
+        ],
+        [
+         2.331,
+         2.422
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.648,
+     "pair_last_touch_s": 1.753,
+     "adj_sum_s": 0.141,
+     "adj_max_gap_mm": 0.46,
+     "adj_last_touch_s": 2.422,
+     "starts": [
+      [
+       0.1,
+       "FR"
+      ],
+      [
+       0.5,
+       "RL"
+      ],
+      [
+       0.9,
+       "FR"
+      ],
+      [
+       1.2,
+       "RL"
+      ],
+      [
+       1.5,
+       "FR"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "deferred": [
+      [
+       1.9,
+       "RR"
+      ],
+      [
+       2.4,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -38.5,
+      -410.7,
+      -125.5,
+      -37.0,
+      6.0,
+      -3.1,
+      -2.2,
+      -1.3,
+      -0.7,
+      -0.4,
+      -0.2,
+      -0.1,
+      -0.1,
+      -0.1,
+      -0.0,
+      -0.0
+     ],
+     "W_after1.5_pos_J": 6.0,
+     "W_after1.5_max_bin_J": 6.0,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5965,
+     "t_back_ready_s": 22.6,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      276.4,
+      120.2,
+      99.7,
+      83.7,
+      68.4,
+      56.3,
+      43.0,
+      28.0,
+      20.3,
+      13.7,
+      9.3,
+      5.3,
+      1.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep1",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.03,
+       "last_touch_s": 2.129,
+       "n": 1,
+       "max_gap_mm": 0.08,
+       "intervals": [
+        [
+         2.099,
+         2.129
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.765,
+       "last_touch_s": 1.477,
+       "n": 3,
+       "max_gap_mm": 17.32,
+       "intervals": [
+        [
+         0.018,
+         0.28
+        ],
+        [
+         0.627,
+         0.947
+        ],
+        [
+         1.294,
+         1.477
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.033,
+       "last_touch_s": 1.713,
+       "n": 3,
+       "max_gap_mm": 19.12,
+       "intervals": [
+        [
+         0.107,
+         0.663
+        ],
+        [
+         0.948,
+         1.254
+        ],
+        [
+         1.542,
+         1.713
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.207,
+       "last_touch_s": 2.409,
+       "n": 2,
+       "max_gap_mm": 0.86,
+       "intervals": [
+        [
+         1.842,
+         1.935
+        ],
+        [
+         2.295,
+         2.409
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.589,
+     "pair_last_touch_s": 1.713,
+     "adj_sum_s": 0.237,
+     "adj_max_gap_mm": 0.86,
+     "adj_last_touch_s": 2.409,
+     "starts": [
+      [
+       0.08,
+       "FR"
+      ],
+      [
+       0.58,
+       "RL"
+      ],
+      [
+       0.88,
+       "FR"
+      ],
+      [
+       1.18,
+       "RL"
+      ],
+      [
+       1.48,
+       "FR"
+      ],
+      [
+       2.78,
+       "RR"
+      ],
+      [
+       3.98,
+       "RL"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 2,
+     "sign_changes": 2,
+     "deferred": [
+      [
+       1.88,
+       "RR"
+      ],
+      [
+       2.38,
+       "RR"
+      ],
+      [
+       3.48,
+       "RL"
+      ],
+      [
+       3.58,
+       "RL"
+      ]
+     ],
+     "W_bins_J": [
+      -68.6,
+      -439.1,
+      -112.8,
+      -5.3,
+      5.3,
+      -15.0,
+      31.5,
+      -9.0,
+      -26.2,
+      2.8,
+      -2.4,
+      -1.6,
+      -1.0,
+      -0.6,
+      -0.3,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 39.6,
+     "W_after1.5_max_bin_J": 31.5,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5918,
+     "t_back_ready_s": 23.18,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      198.9,
+      135.7,
+      100.1,
+      176.3,
+      69.4,
+      133.9,
+      39.5,
+      25.2,
+      18.0,
+      12.1,
+      10.6,
+      6.8,
+      2.5
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep1",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.026,
+       "last_touch_s": 2.112,
+       "n": 1,
+       "max_gap_mm": 0.06,
+       "intervals": [
+        [
+         2.086,
+         2.112
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.755,
+       "last_touch_s": 1.466,
+       "n": 3,
+       "max_gap_mm": 17.32,
+       "intervals": [
+        [
+         0.018,
+         0.279
+        ],
+        [
+         0.626,
+         0.939
+        ],
+        [
+         1.285,
+         1.466
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.017,
+       "last_touch_s": 1.699,
+       "n": 3,
+       "max_gap_mm": 18.73,
+       "intervals": [
+        [
+         0.107,
+         0.657
+        ],
+        [
+         0.943,
+         1.243
+        ],
+        [
+         1.532,
+         1.699
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.195,
+       "last_touch_s": 2.397,
+       "n": 2,
+       "max_gap_mm": 0.84,
+       "intervals": [
+        [
+         1.831,
+         1.912
+        ],
+        [
+         2.283,
+         2.397
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.569,
+     "pair_last_touch_s": 1.699,
+     "adj_sum_s": 0.221,
+     "adj_max_gap_mm": 0.84,
+     "adj_last_touch_s": 2.397,
+     "starts": [
+      [
+       0.05,
+       "FR"
+      ],
+      [
+       0.55,
+       "RL"
+      ],
+      [
+       2.85,
+       "RR"
+      ]
+     ],
+     "n_starts": 3,
+     "n_late_starts": 1,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.35,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -101.9,
+      -421.4,
+      -109.3,
+      4.6,
+      11.1,
+      -9.6,
+      6.6,
+      -2.8,
+      -4.7,
+      -3.0,
+      -1.7,
+      -1.0,
+      -0.6,
+      -0.4,
+      -0.2,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 22.3,
+     "W_after1.5_max_bin_J": 11.1,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5871,
+     "t_back_ready_s": 22.55,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      176.4,
+      134.2,
+      100.6,
+      164.2,
+      67.2,
+      54.9,
+      44.5,
+      33.0,
+      24.2,
+      16.0,
+      11.3,
+      6.2,
+      2.0
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep1",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.023,
+       "last_touch_s": 2.1,
+       "n": 1,
+       "max_gap_mm": 0.04,
+       "intervals": [
+        [
+         2.077,
+         2.1
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.743,
+       "last_touch_s": 1.455,
+       "n": 3,
+       "max_gap_mm": 17.32,
+       "intervals": [
+        [
+         0.018,
+         0.277
+        ],
+        [
+         0.624,
+         0.93
+        ],
+        [
+         1.277,
+         1.455
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.0,
+       "last_touch_s": 1.685,
+       "n": 3,
+       "max_gap_mm": 18.35,
+       "intervals": [
+        [
+         0.107,
+         0.651
+        ],
+        [
+         0.938,
+         1.233
+        ],
+        [
+         1.524,
+         1.685
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.197,
+       "last_touch_s": 2.383,
+       "n": 2,
+       "max_gap_mm": 0.75,
+       "intervals": [
+        [
+         1.818,
+         1.905
+        ],
+        [
+         2.273,
+         2.383
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.546,
+     "pair_last_touch_s": 1.685,
+     "adj_sum_s": 0.22,
+     "adj_max_gap_mm": 0.75,
+     "adj_last_touch_s": 2.383,
+     "starts": [
+      [
+       0.03,
+       "FR"
+      ],
+      [
+       0.53,
+       "RL"
+      ],
+      [
+       0.93,
+       "FR"
+      ],
+      [
+       1.23,
+       "RL"
+      ],
+      [
+       2.83,
+       "RR"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       1.93,
+       "RR"
+      ],
+      [
+       2.13,
+       "FL"
+      ],
+      [
+       2.33,
+       "RR"
+      ],
+      [
+       3.53,
+       "RL"
+      ]
+     ],
+     "W_bins_J": [
+      -137.2,
+      -401.7,
+      -106.4,
+      9.6,
+      8.0,
+      -12.1,
+      8.6,
+      -3.3,
+      -4.7,
+      -3.0,
+      -1.7,
+      -1.0,
+      -0.6,
+      -0.3,
+      -0.2,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 26.2,
+     "W_after1.5_max_bin_J": 9.6,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5821,
+     "t_back_ready_s": 22.63,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      169.4,
+      132.5,
+      100.2,
+      163.4,
+      66.3,
+      54.9,
+      44.3,
+      33.1,
+      24.2,
+      15.9,
+      11.4,
+      6.2,
+      2.0
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep1",
+     "offset_s": 0.075
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.872,
+       "last_touch_s": 2.042,
+       "n": 4,
+       "max_gap_mm": 12.01,
+       "intervals": [
+        [
+         0.057,
+         0.318
+        ],
+        [
+         0.664,
+         1.032
+        ],
+        [
+         1.388,
+         1.601
+        ],
+        [
+         2.012,
+         2.042
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.161,
+       "last_touch_s": 1.856,
+       "n": 3,
+       "max_gap_mm": 20.13,
+       "intervals": [
+        [
+         0.136,
+         0.719
+        ],
+        [
+         1.003,
+         1.371
+        ],
+        [
+         1.646,
+         1.856
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.124,
+       "last_touch_s": 2.547,
+       "n": 1,
+       "max_gap_mm": 0.73,
+       "intervals": [
+        [
+         2.423,
+         2.547
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.767,
+     "pair_last_touch_s": 2.042,
+     "adj_sum_s": 0.124,
+     "adj_max_gap_mm": 0.73,
+     "adj_last_touch_s": 2.547,
+     "starts": [
+      [
+       0.1,
+       "FR"
+      ],
+      [
+       0.6,
+       "RL"
+      ],
+      [
+       1.6,
+       "FR"
+      ],
+      [
+       2.0,
+       "FR"
+      ],
+      [
+       3.4,
+       "RR"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 3,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.5,
+       "RR"
+      ],
+      [
+       2.9,
+       "RR"
+      ],
+      [
+       3.0,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -100.2,
+      -254.8,
+      -177.5,
+      -99.4,
+      10.5,
+      0.3,
+      -9.1,
+      -5.1,
+      -1.6,
+      -4.6,
+      -2.9,
+      -1.7,
+      -1.0,
+      -0.6,
+      -0.4,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 10.8,
+     "W_after1.5_max_bin_J": 10.5,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6266,
+     "t_back_ready_s": 23.0,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      336.0,
+      156.9,
+      131.6,
+      85.9,
+      145.4,
+      49.6,
+      37.3,
+      30.9,
+      21.9,
+      15.1,
+      10.8,
+      4.4,
+      2.5
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep3",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.018,
+       "last_touch_s": 2.181,
+       "n": 1,
+       "max_gap_mm": 0.03,
+       "intervals": [
+        [
+         2.163,
+         2.181
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.789,
+       "last_touch_s": 1.543,
+       "n": 3,
+       "max_gap_mm": 11.95,
+       "intervals": [
+        [
+         0.057,
+         0.316
+        ],
+        [
+         0.665,
+         1.002
+        ],
+        [
+         1.35,
+         1.543
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.088,
+       "last_touch_s": 1.79,
+       "n": 3,
+       "max_gap_mm": 19.74,
+       "intervals": [
+        [
+         0.136,
+         0.706
+        ],
+        [
+         0.992,
+         1.319
+        ],
+        [
+         1.599,
+         1.79
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.13,
+       "last_touch_s": 2.477,
+       "n": 2,
+       "max_gap_mm": 0.87,
+       "intervals": [
+        [
+         1.946,
+         1.957
+        ],
+        [
+         2.358,
+         2.477
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.646,
+     "pair_last_touch_s": 1.79,
+     "adj_sum_s": 0.148,
+     "adj_max_gap_mm": 0.87,
+     "adj_last_touch_s": 2.477,
+     "starts": [
+      [
+       0.08,
+       "FR"
+      ],
+      [
+       0.58,
+       "RL"
+      ],
+      [
+       0.98,
+       "FR"
+      ],
+      [
+       1.28,
+       "RL"
+      ],
+      [
+       1.68,
+       "RL"
+      ],
+      [
+       2.48,
+       "RR"
+      ]
+     ],
+     "n_starts": 6,
+     "n_late_starts": 2,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.18,
+       "FL"
+      ],
+      [
+       2.38,
+       "RR"
+      ],
+      [
+       3.08,
+       "RL"
+      ]
+     ],
+     "W_bins_J": [
+      -134.1,
+      -375.9,
+      -135.3,
+      -64.1,
+      25.4,
+      -9.8,
+      0.8,
+      -3.1,
+      -2.0,
+      -1.2,
+      -0.7,
+      -0.4,
+      -0.3,
+      -0.2,
+      -0.1,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 26.2,
+     "W_after1.5_max_bin_J": 25.4,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6217,
+     "t_back_ready_s": 22.88,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      272.6,
+      153.2,
+      175.5,
+      80.5,
+      61.2,
+      48.9,
+      41.7,
+      30.2,
+      22.1,
+      15.3,
+      10.4,
+      5.0,
+      1.7
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep3",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.019,
+       "last_touch_s": 2.232,
+       "n": 1,
+       "max_gap_mm": 0.03,
+       "intervals": [
+        [
+         2.213,
+         2.232
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.839,
+       "last_touch_s": 2.02,
+       "n": 4,
+       "max_gap_mm": 11.71,
+       "intervals": [
+        [
+         0.057,
+         0.319
+        ],
+        [
+         0.67,
+         1.032
+        ],
+        [
+         1.386,
+         1.592
+        ],
+        [
+         2.011,
+         2.02
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.152,
+       "last_touch_s": 1.843,
+       "n": 3,
+       "max_gap_mm": 20.99,
+       "intervals": [
+        [
+         0.136,
+         0.729
+        ],
+        [
+         1.009,
+         1.365
+        ],
+        [
+         1.64,
+         1.843
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.135,
+       "last_touch_s": 2.539,
+       "n": 1,
+       "max_gap_mm": 1.09,
+       "intervals": [
+        [
+         2.404,
+         2.539
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.726,
+     "pair_last_touch_s": 2.02,
+     "adj_sum_s": 0.154,
+     "adj_max_gap_mm": 1.09,
+     "adj_last_touch_s": 2.539,
+     "starts": [
+      [
+       0.15,
+       "FR"
+      ],
+      [
+       0.55,
+       "RL"
+      ],
+      [
+       0.95,
+       "FR"
+      ],
+      [
+       1.25,
+       "RL"
+      ],
+      [
+       2.95,
+       "RR"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.25,
+       "FL"
+      ],
+      [
+       2.45,
+       "RR"
+      ],
+      [
+       2.55,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -44.7,
+      -360.9,
+      -174.7,
+      -86.2,
+      25.7,
+      -8.0,
+      -12.5,
+      0.7,
+      -3.7,
+      -2.4,
+      -1.4,
+      -0.8,
+      -0.5,
+      -0.3,
+      -0.2,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 26.4,
+     "W_after1.5_max_bin_J": 25.7,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6355,
+     "t_back_ready_s": 22.75,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      318.8,
+      196.5,
+      119.8,
+      159.5,
+      63.4,
+      46.2,
+      38.7,
+      29.6,
+      21.0,
+      14.6,
+      10.2,
+      4.2,
+      2.0
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep3",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.887,
+       "last_touch_s": 2.051,
+       "n": 4,
+       "max_gap_mm": 12.01,
+       "intervals": [
+        [
+         0.057,
+         0.319
+        ],
+        [
+         0.668,
+         1.026
+        ],
+        [
+         1.378,
+         1.592
+        ],
+        [
+         1.998,
+         2.051
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.158,
+       "last_touch_s": 1.855,
+       "n": 3,
+       "max_gap_mm": 20.59,
+       "intervals": [
+        [
+         0.136,
+         0.722
+        ],
+        [
+         1.005,
+         1.357
+        ],
+        [
+         1.635,
+         1.855
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.094,
+       "last_touch_s": 2.521,
+       "n": 1,
+       "max_gap_mm": 0.37,
+       "intervals": [
+        [
+         2.427,
+         2.521
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.787,
+     "pair_last_touch_s": 2.051,
+     "adj_sum_s": 0.094,
+     "adj_max_gap_mm": 0.37,
+     "adj_last_touch_s": 2.521,
+     "starts": [
+      [
+       0.13,
+       "FR"
+      ],
+      [
+       0.53,
+       "RL"
+      ],
+      [
+       1.73,
+       "RL"
+      ],
+      [
+       2.53,
+       "RR"
+      ]
+     ],
+     "n_starts": 4,
+     "n_late_starts": 2,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.23,
+       "FL"
+      ],
+      [
+       2.43,
+       "RR"
+      ],
+      [
+       3.13,
+       "RL"
+      ],
+      [
+       3.23,
+       "RL"
+      ]
+     ],
+     "W_bins_J": [
+      -68.8,
+      -345.7,
+      -129.0,
+      -103.7,
+      -4.3,
+      0.4,
+      5.0,
+      -5.3,
+      -3.4,
+      -2.0,
+      -1.1,
+      -0.7,
+      -0.4,
+      -0.3,
+      -0.2,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 5.4,
+     "W_after1.5_max_bin_J": 5.0,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6314,
+     "t_back_ready_s": 22.83,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      342.2,
+      208.2,
+      174.2,
+      76.9,
+      58.1,
+      46.5,
+      39.3,
+      29.9,
+      22.0,
+      14.8,
+      10.2,
+      4.5,
+      1.8
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML78_ep3",
+     "offset_s": 0.075
+    }
+   ],
+   "wall_s": 57.2
+  },
+  {
+   "base": "ML00",
+   "variant": "base",
+   "t_ready_s": 50.30000000005815,
+   "t_crawler_liftoff_s": 20.999999999996408,
+   "D8_min_true_after_liftoff_kN": 49.0,
+   "pre_event_reapproach": [],
+   "twist_scale": 1.5,
+   "events": [
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.14,
+       "last_touch_s": 2.281,
+       "n": 2,
+       "max_gap_mm": 0.81,
+       "intervals": [
+        [
+         1.677,
+         1.77
+        ],
+        [
+         2.234,
+         2.281
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.628,
+       "last_touch_s": 1.512,
+       "n": 3,
+       "max_gap_mm": 9.35,
+       "intervals": [
+        [
+         0.106,
+         0.33
+        ],
+        [
+         0.706,
+         0.992
+        ],
+        [
+         1.394,
+         1.512
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.913,
+       "last_touch_s": 2.806,
+       "n": 3,
+       "max_gap_mm": 18.73,
+       "intervals": [
+        [
+         0.178,
+         0.722
+        ],
+        [
+         1.03,
+         1.281
+        ],
+        [
+         2.688,
+         2.806
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.395,
+       "last_touch_s": 3.583,
+       "n": 2,
+       "max_gap_mm": 4.8,
+       "intervals": [
+        [
+         1.862,
+         2.09
+        ],
+        [
+         3.416,
+         3.583
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.373,
+     "pair_last_touch_s": 2.806,
+     "adj_sum_s": 0.535,
+     "adj_max_gap_mm": 4.8,
+     "adj_last_touch_s": 3.583,
+     "starts": [
+      [
+       0.1,
+       "FR"
+      ],
+      [
+       0.6,
+       "RL"
+      ],
+      [
+       1.1,
+       "RL"
+      ],
+      [
+       1.5,
+       "FR"
+      ],
+      [
+       1.9,
+       "RR"
+      ],
+      [
+       2.7,
+       "RL"
+      ],
+      [
+       3.4,
+       "RR"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 3,
+     "sign_changes": 3,
+     "deferred": [],
+     "W_bins_J": [
+      -142.0,
+      -378.8,
+      -107.0,
+      112.4,
+      -109.7,
+      -16.4,
+      108.9,
+      -97.4,
+      14.5,
+      -7.3,
+      -5.5,
+      -3.5,
+      -2.2,
+      -1.4,
+      -0.9,
+      -0.6
+     ],
+     "W_after1.5_pos_J": 235.8,
+     "W_after1.5_max_bin_J": 112.4,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6157,
+     "t_back_ready_s": 28.2,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      245.4,
+      243.3,
+      107.9,
+      222.3,
+      205.3,
+      66.7,
+      72.2,
+      65.1,
+      57.6,
+      50.9,
+      45.0,
+      39.9,
+      35.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML00_ep5",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.209,
+       "last_touch_s": 3.33,
+       "n": 2,
+       "max_gap_mm": 1.78,
+       "intervals": [
+        [
+         1.691,
+         1.813
+        ],
+        [
+         3.243,
+         3.33
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.758,
+       "last_touch_s": 2.587,
+       "n": 4,
+       "max_gap_mm": 10.18,
+       "intervals": [
+        [
+         0.106,
+         0.333
+        ],
+        [
+         0.712,
+         1.02
+        ],
+        [
+         1.425,
+         1.522
+        ],
+        [
+         2.461,
+         2.587
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.14,
+       "last_touch_s": 4.3,
+       "n": 5,
+       "max_gap_mm": 19.76,
+       "intervals": [
+        [
+         0.177,
+         0.737
+        ],
+        [
+         1.048,
+         1.308
+        ],
+        [
+         2.229,
+         2.339
+        ],
+        [
+         2.673,
+         2.832
+        ],
+        [
+         4.249,
+         4.3
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.494,
+       "last_touch_s": 3.588,
+       "n": 4,
+       "max_gap_mm": 2.61,
+       "intervals": [
+        [
+         1.47,
+         1.521
+        ],
+        [
+         1.893,
+         2.077
+        ],
+        [
+         3.002,
+         3.105
+        ],
+        [
+         3.432,
+         3.588
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.717,
+     "pair_last_touch_s": 4.3,
+     "adj_sum_s": 0.703,
+     "adj_max_gap_mm": 2.61,
+     "adj_last_touch_s": 3.588,
+     "starts": [
+      [
+       0.18,
+       "FR"
+      ],
+      [
+       0.58,
+       "RL"
+      ],
+      [
+       0.98,
+       "FR"
+      ],
+      [
+       1.28,
+       "RL"
+      ],
+      [
+       1.78,
+       "FL"
+      ],
+      [
+       2.08,
+       "RR"
+      ],
+      [
+       2.38,
+       "RL"
+      ],
+      [
+       3.08,
+       "RR"
+      ],
+      [
+       3.48,
+       "RR"
+      ],
+      [
+       4.28,
+       "RL"
+      ]
+     ],
+     "n_starts": 10,
+     "n_late_starts": 6,
+     "sign_changes": 4,
+     "deferred": [],
+     "W_bins_J": [
+      -52.3,
+      -387.2,
+      -142.1,
+      36.2,
+      96.3,
+      -71.1,
+      48.9,
+      -32.8,
+      11.9,
+      -45.3,
+      -0.8,
+      -2.1,
+      -1.4,
+      -0.9,
+      -0.5,
+      -0.3
+     ],
+     "W_after1.5_pos_J": 193.3,
+     "W_after1.5_max_bin_J": 96.3,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6287,
+     "t_back_ready_s": 27.98,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      206.7,
+      222.6,
+      220.8,
+      219.8,
+      208.6,
+      58.9,
+      188.1,
+      60.9,
+      50.4,
+      45.1,
+      40.6,
+      36.5,
+      32.9
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": false,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML00_ep5",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.125,
+       "last_touch_s": 1.806,
+       "n": 1,
+       "max_gap_mm": 1.89,
+       "intervals": [
+        [
+         1.681,
+         1.806
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.745,
+       "last_touch_s": 2.58,
+       "n": 4,
+       "max_gap_mm": 9.93,
+       "intervals": [
+        [
+         0.106,
+         0.333
+        ],
+        [
+         0.709,
+         1.011
+        ],
+        [
+         1.425,
+         1.511
+        ],
+        [
+         2.45,
+         2.58
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.099,
+       "last_touch_s": 2.82,
+       "n": 4,
+       "max_gap_mm": 19.56,
+       "intervals": [
+        [
+         0.178,
+         0.732
+        ],
+        [
+         1.042,
+         1.296
+        ],
+        [
+         2.212,
+         2.35
+        ],
+        [
+         2.667,
+         2.82
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.245,
+       "last_touch_s": 2.065,
+       "n": 2,
+       "max_gap_mm": 2.33,
+       "intervals": [
+        [
+         1.457,
+         1.52
+        ],
+        [
+         1.883,
+         2.065
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.666,
+     "pair_last_touch_s": 2.82,
+     "adj_sum_s": 0.37,
+     "adj_max_gap_mm": 2.33,
+     "adj_last_touch_s": 2.065,
+     "starts": [
+      [
+       0.15,
+       "FR"
+      ],
+      [
+       0.55,
+       "RL"
+      ],
+      [
+       0.95,
+       "FR"
+      ],
+      [
+       1.25,
+       "RL"
+      ],
+      [
+       1.75,
+       "FL"
+      ],
+      [
+       2.05,
+       "RR"
+      ],
+      [
+       2.35,
+       "RL"
+      ],
+      [
+       2.75,
+       "RL"
+      ],
+      [
+       3.05,
+       "RR"
+      ],
+      [
+       3.45,
+       "RR"
+      ],
+      [
+       3.75,
+       "RL"
+      ]
+     ],
+     "n_starts": 11,
+     "n_late_starts": 7,
+     "sign_changes": 4,
+     "deferred": [],
+     "W_bins_J": [
+      -76.5,
+      -382.8,
+      -123.6,
+      37.2,
+      88.4,
+      -94.3,
+      11.6,
+      22.8,
+      -55.9,
+      -0.8,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "W_after1.5_pos_J": 160.0,
+     "W_after1.5_max_bin_J": 88.4,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6248,
+     "t_back_ready_s": 25.65,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      213.0,
+      217.8,
+      215.7,
+      207.8,
+      174.3,
+      154.6,
+      69.6,
+      59.1,
+      52.6,
+      47.0,
+      41.9,
+      37.4,
+      33.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML00_ep5",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.143,
+       "last_touch_s": 2.295,
+       "n": 2,
+       "max_gap_mm": 0.68,
+       "intervals": [
+        [
+         1.689,
+         1.775
+        ],
+        [
+         2.238,
+         2.295
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.649,
+       "last_touch_s": 1.525,
+       "n": 3,
+       "max_gap_mm": 9.65,
+       "intervals": [
+        [
+         0.106,
+         0.331
+        ],
+        [
+         0.708,
+         1.001
+        ],
+        [
+         1.394,
+         1.525
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.924,
+       "last_touch_s": 2.817,
+       "n": 3,
+       "max_gap_mm": 19.16,
+       "intervals": [
+        [
+         0.178,
+         0.726
+        ],
+        [
+         1.036,
+         1.292
+        ],
+        [
+         2.697,
+         2.817
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.396,
+       "last_touch_s": 3.595,
+       "n": 2,
+       "max_gap_mm": 4.69,
+       "intervals": [
+        [
+         1.874,
+         2.1
+        ],
+        [
+         3.425,
+         3.595
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.402,
+     "pair_last_touch_s": 2.817,
+     "adj_sum_s": 0.539,
+     "adj_max_gap_mm": 4.69,
+     "adj_last_touch_s": 3.595,
+     "starts": [
+      [
+       0.13,
+       "FR"
+      ],
+      [
+       0.63,
+       "RL"
+      ],
+      [
+       1.13,
+       "RL"
+      ],
+      [
+       1.53,
+       "FR"
+      ],
+      [
+       1.93,
+       "RR"
+      ],
+      [
+       2.73,
+       "RL"
+      ],
+      [
+       3.43,
+       "RR"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 4,
+     "sign_changes": 3,
+     "deferred": [],
+     "W_bins_J": [
+      -107.2,
+      -381.6,
+      -115.2,
+      103.5,
+      -113.6,
+      -10.4,
+      108.6,
+      -102.7,
+      18.8,
+      -7.1,
+      -5.6,
+      -3.6,
+      -2.2,
+      -1.4,
+      -0.9,
+      -0.6
+     ],
+     "W_after1.5_pos_J": 230.9,
+     "W_after1.5_max_bin_J": 108.6,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6204,
+     "t_back_ready_s": 28.63,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      240.7,
+      245.6,
+      107.5,
+      231.1,
+      205.6,
+      67.0,
+      72.7,
+      65.7,
+      58.1,
+      51.3,
+      45.5,
+      40.3,
+      35.7
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML00_ep5",
+     "offset_s": 0.075
+    }
+   ],
+   "wall_s": 24.2
+  },
+  {
+   "base": "ML00",
+   "variant": "W0.8F0.6r2",
+   "t_ready_s": 50.30000000005815,
+   "t_crawler_liftoff_s": 20.999999999996408,
+   "D8_min_true_after_liftoff_kN": 49.0,
+   "pre_event_reapproach": [],
+   "twist_scale": 1.5,
+   "events": [
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.726,
+       "last_touch_s": 2.038,
+       "n": 4,
+       "max_gap_mm": 9.59,
+       "intervals": [
+        [
+         0.106,
+         0.33
+        ],
+        [
+         0.706,
+         1.004
+        ],
+        [
+         1.385,
+         1.576
+        ],
+        [
+         2.025,
+         2.038
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.041,
+       "last_touch_s": 1.841,
+       "n": 3,
+       "max_gap_mm": 18.73,
+       "intervals": [
+        [
+         0.178,
+         0.722
+        ],
+        [
+         1.031,
+         1.33
+        ],
+        [
+         1.643,
+         1.841
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.103,
+       "last_touch_s": 2.567,
+       "n": 1,
+       "max_gap_mm": 0.52,
+       "intervals": [
+        [
+         2.464,
+         2.567
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.599,
+     "pair_last_touch_s": 2.038,
+     "adj_sum_s": 0.103,
+     "adj_max_gap_mm": 0.52,
+     "adj_last_touch_s": 2.567,
+     "starts": [
+      [
+       0.1,
+       "FR"
+      ],
+      [
+       0.6,
+       "RL"
+      ],
+      [
+       1.0,
+       "FR"
+      ],
+      [
+       1.3,
+       "RL"
+      ],
+      [
+       1.7,
+       "RL"
+      ],
+      [
+       3.0,
+       "RR"
+      ]
+     ],
+     "n_starts": 6,
+     "n_late_starts": 2,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.5,
+       "RR"
+      ],
+      [
+       3.8,
+       "RL"
+      ]
+     ],
+     "W_bins_J": [
+      -142.0,
+      -306.4,
+      -92.0,
+      -63.9,
+      2.2,
+      -3.0,
+      -10.4,
+      6.5,
+      -4.3,
+      -3.1,
+      -2.0,
+      -1.2,
+      -0.8,
+      -0.5,
+      -0.3,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 8.7,
+     "W_after1.5_max_bin_J": 6.5,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6157,
+     "t_back_ready_s": 27.7,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      239.9,
+      180.5,
+      120.1,
+      155.2,
+      79.6,
+      82.7,
+      74.0,
+      65.7,
+      58.3,
+      51.7,
+      46.0,
+      40.9,
+      36.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML00_ep5",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.052,
+       "last_touch_s": 2.33,
+       "n": 1,
+       "max_gap_mm": 0.17,
+       "intervals": [
+        [
+         2.278,
+         2.33
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.755,
+       "last_touch_s": 1.617,
+       "n": 3,
+       "max_gap_mm": 10.57,
+       "intervals": [
+        [
+         0.106,
+         0.333
+        ],
+        [
+         0.711,
+         1.039
+        ],
+        [
+         1.417,
+         1.617
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.081,
+       "last_touch_s": 1.876,
+       "n": 3,
+       "max_gap_mm": 19.76,
+       "intervals": [
+        [
+         0.177,
+         0.737
+        ],
+        [
+         1.048,
+         1.375
+        ],
+        [
+         1.682,
+         1.876
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.235,
+       "last_touch_s": 3.087,
+       "n": 3,
+       "max_gap_mm": 1.61,
+       "intervals": [
+        [
+         2.033,
+         2.087
+        ],
+        [
+         2.486,
+         2.636
+        ],
+        [
+         3.056,
+         3.087
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.654,
+     "pair_last_touch_s": 1.876,
+     "adj_sum_s": 0.287,
+     "adj_max_gap_mm": 1.61,
+     "adj_last_touch_s": 3.087,
+     "starts": [
+      [
+       0.18,
+       "FR"
+      ],
+      [
+       0.58,
+       "RL"
+      ],
+      [
+       0.98,
+       "FR"
+      ],
+      [
+       1.28,
+       "RL"
+      ],
+      [
+       3.08,
+       "RR"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.28,
+       "FL"
+      ],
+      [
+       2.48,
+       "RR"
+      ],
+      [
+       2.58,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -52.3,
+      -297.3,
+      -156.9,
+      -58.2,
+      21.4,
+      -9.0,
+      -39.0,
+      11.8,
+      -0.9,
+      -1.0,
+      -0.7,
+      -0.4,
+      -0.2,
+      -0.1,
+      -0.1,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 33.2,
+     "W_after1.5_max_bin_J": 21.4,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6287,
+     "t_back_ready_s": 27.68,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      253.6,
+      194.7,
+      145.3,
+      134.5,
+      73.6,
+      79.2,
+      71.3,
+      63.5,
+      56.5,
+      50.3,
+      44.8,
+      39.9,
+      35.6
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML00_ep5",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.748,
+       "last_touch_s": 1.608,
+       "n": 3,
+       "max_gap_mm": 10.41,
+       "intervals": [
+        [
+         0.106,
+         0.333
+        ],
+        [
+         0.708,
+         1.031
+        ],
+        [
+         1.41,
+         1.608
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.072,
+       "last_touch_s": 1.869,
+       "n": 3,
+       "max_gap_mm": 19.56,
+       "intervals": [
+        [
+         0.178,
+         0.732
+        ],
+        [
+         1.044,
+         1.367
+        ],
+        [
+         1.674,
+         1.869
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.117,
+       "last_touch_s": 2.604,
+       "n": 1,
+       "max_gap_mm": 0.72,
+       "intervals": [
+        [
+         2.487,
+         2.604
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.641,
+     "pair_last_touch_s": 1.869,
+     "adj_sum_s": 0.117,
+     "adj_max_gap_mm": 0.72,
+     "adj_last_touch_s": 2.604,
+     "starts": [
+      [
+       0.15,
+       "FR"
+      ],
+      [
+       0.55,
+       "RL"
+      ],
+      [
+       0.95,
+       "FR"
+      ],
+      [
+       1.25,
+       "RL"
+      ],
+      [
+       1.75,
+       "RL"
+      ],
+      [
+       3.05,
+       "RR"
+      ]
+     ],
+     "n_starts": 6,
+     "n_late_starts": 2,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.55,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -76.5,
+      -282.4,
+      -149.9,
+      -65.1,
+      3.0,
+      -4.3,
+      -20.2,
+      12.2,
+      -3.2,
+      -2.6,
+      -1.6,
+      -1.0,
+      -0.6,
+      -0.4,
+      -0.3,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 15.2,
+     "W_after1.5_max_bin_J": 12.2,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6248,
+     "t_back_ready_s": 27.65,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      245.5,
+      186.4,
+      125.0,
+      144.5,
+      77.6,
+      82.2,
+      73.7,
+      65.5,
+      58.1,
+      51.7,
+      45.9,
+      40.9,
+      36.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML00_ep5",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.776,
+       "last_touch_s": 2.077,
+       "n": 4,
+       "max_gap_mm": 9.81,
+       "intervals": [
+        [
+         0.106,
+         0.331
+        ],
+        [
+         0.708,
+         1.012
+        ],
+        [
+         1.393,
+         1.595
+        ],
+        [
+         2.032,
+         2.077
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.072,
+       "last_touch_s": 1.868,
+       "n": 3,
+       "max_gap_mm": 19.16,
+       "intervals": [
+        [
+         0.178,
+         0.726
+        ],
+        [
+         1.036,
+         1.347
+        ],
+        [
+         1.655,
+         1.868
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.061,
+       "last_touch_s": 2.56,
+       "n": 1,
+       "max_gap_mm": 0.17,
+       "intervals": [
+        [
+         2.499,
+         2.56
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.677,
+     "pair_last_touch_s": 2.077,
+     "adj_sum_s": 0.061,
+     "adj_max_gap_mm": 0.17,
+     "adj_last_touch_s": 2.56,
+     "starts": [
+      [
+       0.13,
+       "FR"
+      ],
+      [
+       0.63,
+       "RL"
+      ],
+      [
+       1.13,
+       "RL"
+      ],
+      [
+       1.73,
+       "RL"
+      ],
+      [
+       3.03,
+       "RR"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 2,
+     "sign_changes": 1,
+     "deferred": [
+      [
+       2.53,
+       "RR"
+      ],
+      [
+       3.83,
+       "RL"
+      ]
+     ],
+     "W_bins_J": [
+      -107.2,
+      -319.2,
+      -106.6,
+      -78.1,
+      -15.9,
+      -0.8,
+      0.5,
+      9.4,
+      -7.0,
+      -5.0,
+      -3.1,
+      -2.0,
+      -1.2,
+      -0.8,
+      -0.5,
+      -0.3
+     ],
+     "W_after1.5_pos_J": 9.9,
+     "W_after1.5_max_bin_J": 9.4,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6204,
+     "t_back_ready_s": 28.23,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      267.1,
+      181.8,
+      110.4,
+      146.6,
+      78.7,
+      82.6,
+      73.8,
+      65.3,
+      57.9,
+      51.3,
+      45.5,
+      40.4,
+      35.9
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML00_ep5",
+     "offset_s": 0.075
+    }
+   ],
+   "wall_s": 24.2
+  },
+  {
+   "base": "ML21",
+   "variant": "base",
+   "t_ready_s": 53.00000000007104,
+   "t_crawler_liftoff_s": 21.099999999996175,
+   "D8_min_true_after_liftoff_kN": 48.05,
+   "pre_event_reapproach": [],
+   "twist_scale": 1.5,
+   "events": [
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.025,
+       "last_touch_s": 1.698,
+       "n": 1,
+       "max_gap_mm": 0.03,
+       "intervals": [
+        [
+         1.673,
+         1.698
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.495,
+       "last_touch_s": 1.02,
+       "n": 2,
+       "max_gap_mm": 8.67,
+       "intervals": [
+        [
+         0.153,
+         0.357
+        ],
+        [
+         0.729,
+         1.02
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.892,
+       "last_touch_s": 2.708,
+       "n": 3,
+       "max_gap_mm": 18.55,
+       "intervals": [
+        [
+         0.215,
+         0.758
+        ],
+        [
+         1.044,
+         1.292
+        ],
+        [
+         2.607,
+         2.708
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.17,
+       "last_touch_s": 2.02,
+       "n": 1,
+       "max_gap_mm": 2.15,
+       "intervals": [
+        [
+         1.85,
+         2.02
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.216,
+     "pair_last_touch_s": 2.708,
+     "adj_sum_s": 0.195,
+     "adj_max_gap_mm": 2.15,
+     "adj_last_touch_s": 2.02,
+     "starts": [
+      [
+       0.2,
+       "FR"
+      ],
+      [
+       0.6,
+       "RL"
+      ],
+      [
+       1.0,
+       "FR"
+      ],
+      [
+       1.4,
+       "FR"
+      ],
+      [
+       1.7,
+       "FL"
+      ],
+      [
+       2.0,
+       "RR"
+      ],
+      [
+       2.6,
+       "RL"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 3,
+     "sign_changes": 2,
+     "deferred": [],
+     "W_bins_J": [
+      -60.7,
+      -401.8,
+      -138.5,
+      82.2,
+      3.9,
+      -81.3,
+      44.6,
+      -11.5,
+      -11.4,
+      -7.4,
+      -4.5,
+      -2.8,
+      -1.8,
+      -1.1,
+      -0.8,
+      -0.5
+     ],
+     "W_after1.5_pos_J": 130.7,
+     "W_after1.5_max_bin_J": 82.2,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5758,
+     "t_back_ready_s": 23.7,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      172.4,
+      262.3,
+      122.7,
+      125.4,
+      30.4,
+      16.6,
+      14.4,
+      11.0,
+      8.3,
+      6.3,
+      4.7,
+      3.6,
+      2.7
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML21_ep1",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.098,
+       "last_touch_s": 1.736,
+       "n": 1,
+       "max_gap_mm": 0.53,
+       "intervals": [
+        [
+         1.638,
+         1.736
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.488,
+       "last_touch_s": 1.011,
+       "n": 2,
+       "max_gap_mm": 8.45,
+       "intervals": [
+        [
+         0.153,
+         0.357
+        ],
+        [
+         0.727,
+         1.011
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.784,
+       "last_touch_s": 1.282,
+       "n": 2,
+       "max_gap_mm": 18.13,
+       "intervals": [
+        [
+         0.211,
+         0.752
+        ],
+        [
+         1.039,
+         1.282
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.156,
+       "last_touch_s": 1.996,
+       "n": 1,
+       "max_gap_mm": 1.78,
+       "intervals": [
+        [
+         1.84,
+         1.996
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.101,
+     "pair_last_touch_s": 1.282,
+     "adj_sum_s": 0.254,
+     "adj_max_gap_mm": 1.78,
+     "adj_last_touch_s": 1.996,
+     "starts": [
+      [
+       0.18,
+       "FR"
+      ],
+      [
+       0.58,
+       "RL"
+      ],
+      [
+       0.98,
+       "FR"
+      ],
+      [
+       1.28,
+       "RL"
+      ],
+      [
+       1.68,
+       "FL"
+      ],
+      [
+       1.98,
+       "RR"
+      ],
+      [
+       2.28,
+       "RL"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 3,
+     "sign_changes": 2,
+     "deferred": [],
+     "W_bins_J": [
+      -84.1,
+      -396.4,
+      -123.0,
+      60.5,
+      11.7,
+      -35.7,
+      0.7,
+      -1.4,
+      -1.1,
+      -0.8,
+      -0.5,
+      -0.3,
+      -0.2,
+      -0.2,
+      -0.1,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 72.9,
+     "W_after1.5_max_bin_J": 60.5,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5718,
+     "t_back_ready_s": 21.98,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      193.8,
+      216.1,
+      158.5,
+      41.9,
+      27.5,
+      12.2,
+      6.8,
+      3.7,
+      2.5,
+      1.5,
+      1.2,
+      1.1,
+      0.9
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML21_ep1",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.101,
+       "last_touch_s": 1.726,
+       "n": 1,
+       "max_gap_mm": 0.58,
+       "intervals": [
+        [
+         1.625,
+         1.726
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.478,
+       "last_touch_s": 1.001,
+       "n": 2,
+       "max_gap_mm": 8.12,
+       "intervals": [
+        [
+         0.153,
+         0.355
+        ],
+        [
+         0.725,
+         1.001
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.772,
+       "last_touch_s": 1.269,
+       "n": 2,
+       "max_gap_mm": 17.65,
+       "intervals": [
+        [
+         0.211,
+         0.746
+        ],
+        [
+         1.032,
+         1.269
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.162,
+       "last_touch_s": 1.98,
+       "n": 2,
+       "max_gap_mm": 1.58,
+       "intervals": [
+        [
+         1.428,
+         1.441
+        ],
+        [
+         1.831,
+         1.98
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.085,
+     "pair_last_touch_s": 1.269,
+     "adj_sum_s": 0.263,
+     "adj_max_gap_mm": 1.58,
+     "adj_last_touch_s": 1.98,
+     "starts": [
+      [
+       0.15,
+       "FR"
+      ],
+      [
+       0.65,
+       "RL"
+      ],
+      [
+       1.65,
+       "FL"
+      ],
+      [
+       2.15,
+       "RL"
+      ],
+      [
+       2.85,
+       "RR"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 3,
+     "sign_changes": 3,
+     "deferred": [],
+     "W_bins_J": [
+      -115.5,
+      -395.2,
+      -96.5,
+      47.7,
+      -50.3,
+      92.8,
+      -39.8,
+      2.2,
+      -13.7,
+      -8.7,
+      -4.9,
+      -2.8,
+      -1.5,
+      -0.8,
+      -0.4,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 142.7,
+     "W_after1.5_max_bin_J": 92.8,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5666,
+     "t_back_ready_s": 24.25,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      195.2,
+      124.3,
+      143.2,
+      221.6,
+      23.2,
+      24.5,
+      16.7,
+      15.0,
+      10.3,
+      8.5,
+      6.0,
+      4.6,
+      3.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML21_ep1",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.02,
+       "last_touch_s": 1.707,
+       "n": 1,
+       "max_gap_mm": 0.02,
+       "intervals": [
+        [
+         1.687,
+         1.707
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.502,
+       "last_touch_s": 1.029,
+       "n": 2,
+       "max_gap_mm": 8.9,
+       "intervals": [
+        [
+         0.153,
+         0.357
+        ],
+        [
+         0.731,
+         1.029
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.91,
+       "last_touch_s": 2.719,
+       "n": 3,
+       "max_gap_mm": 18.97,
+       "intervals": [
+        [
+         0.211,
+         0.765
+        ],
+        [
+         1.05,
+         1.303
+        ],
+        [
+         2.616,
+         2.719
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.17,
+       "last_touch_s": 2.031,
+       "n": 1,
+       "max_gap_mm": 2.14,
+       "intervals": [
+        [
+         1.861,
+         2.031
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.232,
+     "pair_last_touch_s": 2.719,
+     "adj_sum_s": 0.19,
+     "adj_max_gap_mm": 2.14,
+     "adj_last_touch_s": 2.031,
+     "starts": [
+      [
+       0.23,
+       "FR"
+      ],
+      [
+       0.63,
+       "RL"
+      ],
+      [
+       1.03,
+       "FR"
+      ],
+      [
+       1.43,
+       "FR"
+      ],
+      [
+       1.73,
+       "FL"
+      ],
+      [
+       2.03,
+       "RR"
+      ],
+      [
+       2.63,
+       "RL"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 3,
+     "sign_changes": 2,
+     "deferred": [],
+     "W_bins_J": [
+      -39.9,
+      -406.0,
+      -162.6,
+      81.4,
+      -5.7,
+      -71.6,
+      39.8,
+      -10.6,
+      -11.3,
+      -7.4,
+      -4.5,
+      -2.8,
+      -1.8,
+      -1.2,
+      -0.8,
+      -0.5
+     ],
+     "W_after1.5_pos_J": 121.2,
+     "W_after1.5_max_bin_J": 81.4,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5798,
+     "t_back_ready_s": 23.73,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      178.2,
+      264.4,
+      102.8,
+      140.9,
+      30.3,
+      16.5,
+      14.4,
+      11.0,
+      8.3,
+      6.3,
+      4.8,
+      3.6,
+      2.7
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": false
+     },
+     "event": "ML21_ep1",
+     "offset_s": 0.075
+    }
+   ],
+   "wall_s": 23.1
+  },
+  {
+   "base": "ML21",
+   "variant": "W0.8F0.6r2",
+   "t_ready_s": 53.00000000007104,
+   "t_crawler_liftoff_s": 21.099999999996175,
+   "D8_min_true_after_liftoff_kN": 48.05,
+   "pre_event_reapproach": [],
+   "twist_scale": 1.5,
+   "events": [
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.68,
+       "last_touch_s": 1.567,
+       "n": 3,
+       "max_gap_mm": 9.01,
+       "intervals": [
+        [
+         0.153,
+         0.357
+        ],
+        [
+         0.729,
+         1.037
+        ],
+        [
+         1.399,
+         1.567
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.005,
+       "last_touch_s": 1.797,
+       "n": 3,
+       "max_gap_mm": 18.55,
+       "intervals": [
+        [
+         0.215,
+         0.759
+        ],
+        [
+         1.044,
+         1.352
+        ],
+        [
+         1.644,
+         1.797
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.513,
+     "pair_last_touch_s": 1.797,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.2,
+       "FR"
+      ],
+      [
+       0.6,
+       "RL"
+      ],
+      [
+       1.0,
+       "FR"
+      ],
+      [
+       1.3,
+       "RL"
+      ],
+      [
+       1.7,
+       "RL"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "deferred": [
+      [
+       2.4,
+       "RR"
+      ],
+      [
+       2.5,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -60.7,
+      -316.2,
+      -174.7,
+      -79.0,
+      23.5,
+      -8.2,
+      -6.7,
+      -4.1,
+      -2.6,
+      -1.8,
+      -1.2,
+      -0.8,
+      -0.5,
+      -0.3,
+      -0.2,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 23.5,
+     "W_after1.5_max_bin_J": 23.5,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5758,
+     "t_back_ready_s": 22.0,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      211.2,
+      153.1,
+      66.7,
+      48.0,
+      28.5,
+      13.6,
+      7.3,
+      4.4,
+      3.7,
+      2.6,
+      2.1,
+      1.6,
+      1.2
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML21_ep1",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.676,
+       "last_touch_s": 1.56,
+       "n": 3,
+       "max_gap_mm": 8.88,
+       "intervals": [
+        [
+         0.153,
+         0.357
+        ],
+        [
+         0.726,
+         1.031
+        ],
+        [
+         1.393,
+         1.56
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.996,
+       "last_touch_s": 1.788,
+       "n": 3,
+       "max_gap_mm": 18.13,
+       "intervals": [
+        [
+         0.211,
+         0.753
+        ],
+        [
+         1.039,
+         1.344
+        ],
+        [
+         1.639,
+         1.788
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.005,
+       "last_touch_s": 1.97,
+       "n": 1,
+       "max_gap_mm": -0.0,
+       "intervals": [
+        [
+         1.965,
+         1.97
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.499,
+     "pair_last_touch_s": 1.788,
+     "adj_sum_s": 0.005,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 1.97,
+     "starts": [
+      [
+       0.18,
+       "FR"
+      ],
+      [
+       0.58,
+       "RL"
+      ],
+      [
+       0.98,
+       "FR"
+      ],
+      [
+       1.28,
+       "RL"
+      ],
+      [
+       1.68,
+       "RL"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "deferred": [
+      [
+       2.48,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -84.1,
+      -299.6,
+      -167.9,
+      -74.0,
+      21.2,
+      -7.9,
+      -6.3,
+      -3.8,
+      -2.5,
+      -1.7,
+      -1.1,
+      -0.7,
+      -0.5,
+      -0.3,
+      -0.2,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 21.2,
+     "W_after1.5_max_bin_J": 21.2,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5718,
+     "t_back_ready_s": 21.98,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      207.9,
+      141.1,
+      66.6,
+      47.7,
+      28.2,
+      13.3,
+      7.3,
+      4.1,
+      3.8,
+      2.4,
+      2.0,
+      1.5,
+      1.2
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML21_ep1",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.636,
+       "last_touch_s": 1.524,
+       "n": 3,
+       "max_gap_mm": 8.25,
+       "intervals": [
+        [
+         0.153,
+         0.355
+        ],
+        [
+         0.725,
+         1.011
+        ],
+        [
+         1.376,
+         1.524
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.851,
+       "last_touch_s": 1.719,
+       "n": 3,
+       "max_gap_mm": 17.65,
+       "intervals": [
+        [
+         0.211,
+         0.746
+        ],
+        [
+         1.031,
+         1.315
+        ],
+        [
+         1.687,
+         1.719
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.044,
+       "last_touch_s": 1.956,
+       "n": 1,
+       "max_gap_mm": 0.1,
+       "intervals": [
+        [
+         1.912,
+         1.956
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.322,
+     "pair_last_touch_s": 1.719,
+     "adj_sum_s": 0.044,
+     "adj_max_gap_mm": 0.1,
+     "adj_last_touch_s": 1.956,
+     "starts": [
+      [
+       0.15,
+       "FR"
+      ],
+      [
+       0.65,
+       "RL"
+      ],
+      [
+       1.65,
+       "RL"
+      ]
+     ],
+     "n_starts": 3,
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "deferred": [
+      [
+       2.45,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -115.5,
+      -336.3,
+      -149.3,
+      -38.3,
+      31.0,
+      -14.0,
+      -10.1,
+      -6.1,
+      -3.8,
+      -2.6,
+      -1.6,
+      -1.0,
+      -0.7,
+      -0.5,
+      -0.3,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 31.0,
+     "W_after1.5_max_bin_J": 31.0,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5666,
+     "t_back_ready_s": 22.45,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      188.2,
+      125.5,
+      67.5,
+      48.8,
+      27.9,
+      15.3,
+      9.7,
+      5.7,
+      4.5,
+      3.4,
+      2.6,
+      1.9,
+      1.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML21_ep1",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.687,
+       "last_touch_s": 1.576,
+       "n": 3,
+       "max_gap_mm": 9.16,
+       "intervals": [
+        [
+         0.153,
+         0.357
+        ],
+        [
+         0.731,
+         1.044
+        ],
+        [
+         1.406,
+         1.576
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.024,
+       "last_touch_s": 1.808,
+       "n": 3,
+       "max_gap_mm": 18.97,
+       "intervals": [
+        [
+         0.211,
+         0.765
+        ],
+        [
+         1.048,
+         1.36
+        ],
+        [
+         1.65,
+         1.808
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.531,
+     "pair_last_touch_s": 1.808,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.23,
+       "FR"
+      ],
+      [
+       0.63,
+       "RL"
+      ],
+      [
+       1.03,
+       "FR"
+      ],
+      [
+       1.33,
+       "RL"
+      ],
+      [
+       1.73,
+       "RL"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "deferred": [
+      [
+       2.03,
+       "RR"
+      ],
+      [
+       2.43,
+       "RR"
+      ],
+      [
+       2.53,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -39.9,
+      -332.0,
+      -181.8,
+      -84.5,
+      24.4,
+      -8.2,
+      -6.9,
+      -4.3,
+      -2.7,
+      -1.9,
+      -1.2,
+      -0.8,
+      -0.5,
+      -0.4,
+      -0.2,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 24.4,
+     "W_after1.5_max_bin_J": 24.4,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.5798,
+     "t_back_ready_s": 22.03,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      216.7,
+      161.0,
+      66.8,
+      48.0,
+      28.7,
+      13.8,
+      7.4,
+      4.3,
+      3.5,
+      2.8,
+      2.2,
+      1.6,
+      1.2
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML21_ep1",
+     "offset_s": 0.075
+    }
+   ],
+   "wall_s": 23.2
+  },
+  {
+   "base": "ML90",
+   "variant": "base",
+   "t_ready_s": 46.400000000039526,
+   "t_crawler_liftoff_s": 20.699999999997107,
+   "D8_min_true_after_liftoff_kN": 55.3,
+   "pre_event_reapproach": [],
+   "twist_scale": 1.3401918328770195,
+   "events": [
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.563,
+       "last_touch_s": 1.592,
+       "n": 3,
+       "max_gap_mm": 9.87,
+       "intervals": [
+        [
+         0.153,
+         0.357
+        ],
+        [
+         0.787,
+         1.092
+        ],
+        [
+         1.538,
+         1.592
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.85,
+       "last_touch_s": 1.415,
+       "n": 2,
+       "max_gap_mm": 21.79,
+       "intervals": [
+        [
+         0.238,
+         0.801
+        ],
+        [
+         1.128,
+         1.415
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.28,
+     "pair_last_touch_s": 1.592,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.2,
+       "FR"
+      ],
+      [
+       0.6,
+       "RL"
+      ],
+      [
+       1.2,
+       "RL"
+      ],
+      [
+       1.9,
+       "FL"
+      ],
+      [
+       2.4,
+       "RL"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 2,
+     "sign_changes": 2,
+     "deferred": [],
+     "W_bins_J": [
+      -79.0,
+      -337.2,
+      -240.2,
+      -49.1,
+      6.3,
+      -7.1,
+      0.0,
+      -7.0,
+      -5.0,
+      -3.2,
+      -2.2,
+      -1.5,
+      -1.0,
+      -0.7,
+      -0.5,
+      -0.3
+     ],
+     "W_after1.5_pos_J": 6.3,
+     "W_after1.5_max_bin_J": 6.3,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7059,
+     "t_back_ready_s": 24.8,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      246.3,
+      97.7,
+      153.8,
+      45.1,
+      41.7,
+      29.7,
+      15.1,
+      11.7,
+      6.9,
+      4.7,
+      3.8,
+      3.1,
+      2.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML90_ep1",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.506,
+       "last_touch_s": 1.086,
+       "n": 2,
+       "max_gap_mm": 9.67,
+       "intervals": [
+        [
+         0.153,
+         0.359
+        ],
+        [
+         0.786,
+         1.086
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.841,
+       "last_touch_s": 1.396,
+       "n": 2,
+       "max_gap_mm": 21.41,
+       "intervals": [
+        [
+         0.227,
+         0.797
+        ],
+        [
+         1.125,
+         1.396
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.204,
+     "pair_last_touch_s": 1.396,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.18,
+       "FR"
+      ],
+      [
+       0.58,
+       "RL"
+      ],
+      [
+       1.08,
+       "FR"
+      ],
+      [
+       1.38,
+       "RL"
+      ],
+      [
+       1.68,
+       "RR"
+      ],
+      [
+       2.38,
+       "RL"
+      ]
+     ],
+     "n_starts": 6,
+     "n_late_starts": 2,
+     "sign_changes": 2,
+     "deferred": [],
+     "W_bins_J": [
+      -105.1,
+      -331.9,
+      -207.3,
+      -74.0,
+      44.8,
+      26.1,
+      2.6,
+      -17.6,
+      -12.5,
+      -8.1,
+      -5.6,
+      -3.8,
+      -2.5,
+      -1.7,
+      -1.1,
+      -0.8
+     ],
+     "W_after1.5_pos_J": 73.5,
+     "W_after1.5_max_bin_J": 44.8,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7018,
+     "t_back_ready_s": 25.88,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      205.0,
+      87.1,
+      180.3,
+      43.2,
+      38.5,
+      34.0,
+      18.6,
+      13.7,
+      8.7,
+      7.0,
+      5.6,
+      4.4,
+      3.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML90_ep1",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.497,
+       "last_touch_s": 1.078,
+       "n": 2,
+       "max_gap_mm": 9.34,
+       "intervals": [
+        [
+         0.153,
+         0.357
+        ],
+        [
+         0.785,
+         1.078
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.831,
+       "last_touch_s": 1.385,
+       "n": 2,
+       "max_gap_mm": 20.93,
+       "intervals": [
+        [
+         0.227,
+         0.792
+        ],
+        [
+         1.119,
+         1.385
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.191,
+     "pair_last_touch_s": 1.385,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.15,
+       "FR"
+      ],
+      [
+       0.65,
+       "RL"
+      ],
+      [
+       1.05,
+       "FR"
+      ],
+      [
+       1.35,
+       "RL"
+      ],
+      [
+       1.65,
+       "RR"
+      ],
+      [
+       2.05,
+       "RR"
+      ],
+      [
+       2.45,
+       "RL"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 3,
+     "sign_changes": 2,
+     "deferred": [],
+     "W_bins_J": [
+      -137.2,
+      -329.6,
+      -196.9,
+      -14.6,
+      15.9,
+      -48.2,
+      1.2,
+      -0.2,
+      -0.2,
+      -0.1,
+      -0.1,
+      -0.1,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0
+     ],
+     "W_after1.5_pos_J": 17.1,
+     "W_after1.5_max_bin_J": 15.9,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6964,
+     "t_back_ready_s": 24.05,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      239.1,
+      134.8,
+      152.9,
+      48.5,
+      26.8,
+      22.6,
+      11.3,
+      9.4,
+      4.7,
+      3.5,
+      1.9,
+      1.6,
+      1.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML90_ep1",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.517,
+       "last_touch_s": 1.1,
+       "n": 2,
+       "max_gap_mm": 10.04,
+       "intervals": [
+        [
+         0.153,
+         0.359
+        ],
+        [
+         0.789,
+         1.1
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.862,
+       "last_touch_s": 1.416,
+       "n": 2,
+       "max_gap_mm": 22.2,
+       "intervals": [
+        [
+         0.227,
+         0.807
+        ],
+        [
+         1.134,
+         1.416
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.039,
+       "last_touch_s": 2.133,
+       "n": 1,
+       "max_gap_mm": 0.06,
+       "intervals": [
+        [
+         2.094,
+         2.133
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.229,
+     "pair_last_touch_s": 1.416,
+     "adj_sum_s": 0.039,
+     "adj_max_gap_mm": 0.06,
+     "adj_last_touch_s": 2.133,
+     "starts": [
+      [
+       0.23,
+       "FR"
+      ],
+      [
+       0.63,
+       "RL"
+      ],
+      [
+       1.03,
+       "FR"
+      ],
+      [
+       1.33,
+       "RL"
+      ],
+      [
+       2.13,
+       "RR"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 1,
+     "deferred": [],
+     "W_bins_J": [
+      -57.3,
+      -341.9,
+      -229.2,
+      -44.7,
+      -44.3,
+      29.1,
+      -6.8,
+      -5.9,
+      -4.2,
+      -3.1,
+      -2.0,
+      -1.4,
+      -1.0,
+      -0.7,
+      -0.5,
+      -0.3
+     ],
+     "W_after1.5_pos_J": 29.1,
+     "W_after1.5_max_bin_J": 29.1,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7091,
+     "t_back_ready_s": 24.53,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      228.3,
+      61.7,
+      99.1,
+      53.2,
+      29.5,
+      18.8,
+      7.9,
+      10.1,
+      4.9,
+      3.5,
+      2.5,
+      2.2,
+      2.3
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML90_ep1",
+     "offset_s": 0.075
+    }
+   ],
+   "wall_s": 21.9
+  },
+  {
+   "base": "ML90",
+   "variant": "W0.8F0.6r2",
+   "t_ready_s": 46.400000000039526,
+   "t_crawler_liftoff_s": 20.699999999997107,
+   "D8_min_true_after_liftoff_kN": 55.3,
+   "pre_event_reapproach": [],
+   "twist_scale": 1.3401918328770195,
+   "events": [
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.712,
+       "last_touch_s": 1.716,
+       "n": 3,
+       "max_gap_mm": 10.51,
+       "intervals": [
+        [
+         0.153,
+         0.357
+        ],
+        [
+         0.786,
+         1.11
+        ],
+        [
+         1.532,
+         1.716
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.077,
+       "last_touch_s": 1.979,
+       "n": 3,
+       "max_gap_mm": 21.79,
+       "intervals": [
+        [
+         0.238,
+         0.803
+        ],
+        [
+         1.13,
+         1.474
+        ],
+        [
+         1.811,
+         1.979
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.653,
+     "pair_last_touch_s": 1.979,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.2,
+       "FR"
+      ],
+      [
+       0.6,
+       "RL"
+      ],
+      [
+       1.1,
+       "FR"
+      ],
+      [
+       1.4,
+       "RL"
+      ],
+      [
+       1.7,
+       "FR"
+      ],
+      [
+       2.5,
+       "RL"
+      ]
+     ],
+     "n_starts": 6,
+     "n_late_starts": 2,
+     "sign_changes": 0,
+     "deferred": [
+      [
+       2.2,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -79.0,
+      -249.4,
+      -178.4,
+      -165.0,
+      -27.9,
+      16.1,
+      3.7,
+      -8.1,
+      -5.9,
+      -3.7,
+      -2.6,
+      -1.7,
+      -1.2,
+      -0.8,
+      -0.5,
+      -0.4
+     ],
+     "W_after1.5_pos_J": 19.8,
+     "W_after1.5_max_bin_J": 16.1,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7059,
+     "t_back_ready_s": 24.9,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      223.8,
+      107.1,
+      123.5,
+      60.8,
+      47.5,
+      34.4,
+      20.1,
+      12.8,
+      6.1,
+      4.8,
+      3.5,
+      2.5,
+      1.9
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML90_ep1",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.71,
+       "last_touch_s": 1.709,
+       "n": 3,
+       "max_gap_mm": 10.4,
+       "intervals": [
+        [
+         0.153,
+         0.359
+        ],
+        [
+         0.784,
+         1.106
+        ],
+        [
+         1.527,
+         1.709
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.077,
+       "last_touch_s": 1.97,
+       "n": 3,
+       "max_gap_mm": 21.41,
+       "intervals": [
+        [
+         0.227,
+         0.799
+        ],
+        [
+         1.127,
+         1.469
+        ],
+        [
+         1.807,
+         1.97
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.64,
+     "pair_last_touch_s": 1.97,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.18,
+       "FR"
+      ],
+      [
+       0.58,
+       "RL"
+      ],
+      [
+       1.08,
+       "FR"
+      ],
+      [
+       1.38,
+       "RL"
+      ],
+      [
+       1.88,
+       "RL"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "deferred": [],
+     "W_bins_J": [
+      -105.1,
+      -236.1,
+      -176.0,
+      -158.0,
+      -39.4,
+      1.1,
+      -0.4,
+      -0.5,
+      -0.3,
+      -0.2,
+      -0.2,
+      -0.1,
+      -0.1,
+      -0.1,
+      -0.0,
+      -0.0
+     ],
+     "W_after1.5_pos_J": 1.1,
+     "W_after1.5_max_bin_J": 1.1,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7018,
+     "t_back_ready_s": 23.68,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      218.1,
+      139.9,
+      71.8,
+      66.6,
+      41.8,
+      29.7,
+      15.7,
+      9.6,
+      4.0,
+      2.6,
+      2.1,
+      1.5,
+      1.2
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML90_ep1",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.677,
+       "last_touch_s": 1.678,
+       "n": 3,
+       "max_gap_mm": 9.74,
+       "intervals": [
+        [
+         0.153,
+         0.357
+        ],
+        [
+         0.784,
+         1.091
+        ],
+        [
+         1.512,
+         1.678
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.978,
+       "last_touch_s": 1.912,
+       "n": 3,
+       "max_gap_mm": 20.93,
+       "intervals": [
+        [
+         0.227,
+         0.792
+        ],
+        [
+         1.119,
+         1.444
+        ],
+        [
+         1.824,
+         1.912
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.517,
+     "pair_last_touch_s": 1.912,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.15,
+       "FR"
+      ],
+      [
+       0.65,
+       "RL"
+      ],
+      [
+       1.05,
+       "FR"
+      ],
+      [
+       1.35,
+       "RL"
+      ],
+      [
+       1.85,
+       "RL"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "deferred": [],
+     "W_bins_J": [
+      -137.2,
+      -269.1,
+      -169.6,
+      -132.4,
+      -21.1,
+      -0.3,
+      -1.8,
+      -1.4,
+      -1.0,
+      -0.6,
+      -0.4,
+      -0.3,
+      -0.2,
+      -0.1,
+      -0.1,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 0.0,
+     "W_after1.5_max_bin_J": -0.1,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.6964,
+     "t_back_ready_s": 23.75,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      190.3,
+      138.0,
+      67.9,
+      56.6,
+      40.6,
+      29.1,
+      14.4,
+      9.7,
+      4.6,
+      3.0,
+      2.5,
+      2.0,
+      1.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML90_ep1",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FR": {
+       "sum_s": 0.72,
+       "last_touch_s": 1.724,
+       "n": 3,
+       "max_gap_mm": 10.58,
+       "intervals": [
+        [
+         0.153,
+         0.359
+        ],
+        [
+         0.788,
+         1.116
+        ],
+        [
+         1.538,
+         1.724
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 1.103,
+       "last_touch_s": 1.989,
+       "n": 3,
+       "max_gap_mm": 22.2,
+       "intervals": [
+        [
+         0.227,
+         0.808
+        ],
+        [
+         1.134,
+         1.483
+        ],
+        [
+         1.816,
+         1.989
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.671,
+     "pair_last_touch_s": 1.989,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.23,
+       "FR"
+      ],
+      [
+       0.63,
+       "RL"
+      ],
+      [
+       1.03,
+       "FR"
+      ],
+      [
+       1.33,
+       "RL"
+      ],
+      [
+       1.73,
+       "FR"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "deferred": [
+      [
+       2.23,
+       "RR"
+      ]
+     ],
+     "W_bins_J": [
+      -57.3,
+      -263.4,
+      -181.7,
+      -172.2,
+      -32.5,
+      0.3,
+      0.1,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "W_after1.5_pos_J": 0.4,
+     "W_after1.5_max_bin_J": 0.3,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7091,
+     "t_back_ready_s": 23.63,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      227.1,
+      109.2,
+      75.7,
+      65.8,
+      41.5,
+      28.9,
+      15.7,
+      8.5,
+      3.6,
+      2.3,
+      1.8,
+      1.6,
+      1.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML90_ep1",
+     "offset_s": 0.075
+    }
+   ],
+   "wall_s": 21.9
+  },
+  {
+   "base": "ML24",
+   "variant": "base",
+   "t_ready_s": 52.50000000006865,
+   "t_crawler_liftoff_s": 21.999999999994078,
+   "D8_min_true_after_liftoff_kN": 57.32,
+   "pre_event_reapproach": [],
+   "twist_scale": 1.0491843751225893,
+   "events": [
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.454,
+       "last_touch_s": 1.129,
+       "n": 2,
+       "max_gap_mm": 9.58,
+       "intervals": [
+        [
+         0.182,
+         0.344
+        ],
+        [
+         0.837,
+         1.129
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.987,
+       "last_touch_s": 2.661,
+       "n": 3,
+       "max_gap_mm": 23.13,
+       "intervals": [
+        [
+         0.275,
+         0.826
+        ],
+        [
+         1.184,
+         1.468
+        ],
+        [
+         2.509,
+         2.661
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.372,
+     "pair_last_touch_s": 2.661,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.2,
+       "FL"
+      ],
+      [
+       0.6,
+       "RR"
+      ],
+      [
+       1.1,
+       "FL"
+      ],
+      [
+       1.4,
+       "RR"
+      ],
+      [
+       1.7,
+       "RL"
+      ],
+      [
+       2.0,
+       "FR"
+      ],
+      [
+       2.5,
+       "RR"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 3,
+     "sign_changes": 2,
+     "deferred": [],
+     "W_bins_J": [
+      -94.1,
+      -268.8,
+      -209.5,
+      -90.3,
+      96.8,
+      -106.0,
+      10.9,
+      -1.2,
+      -1.1,
+      -0.8,
+      -0.6,
+      -0.4,
+      -0.3,
+      -0.2,
+      -0.1,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 107.7,
+     "W_after1.5_max_bin_J": 96.8,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7658,
+     "t_back_ready_s": 25.7,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      202.0,
+      190.8,
+      73.8,
+      80.3,
+      53.2,
+      35.4,
+      24.3,
+      19.6,
+      12.2,
+      6.4,
+      4.1,
+      2.1,
+      0.8
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML24_ep7",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.458,
+       "last_touch_s": 1.125,
+       "n": 2,
+       "max_gap_mm": 9.38,
+       "intervals": [
+        [
+         0.182,
+         0.35
+        ],
+        [
+         0.835,
+         1.125
+        ]
+       ]
+      },
+      "FR": {
+       "sum_s": 0.026,
+       "last_touch_s": 1.981,
+       "n": 1,
+       "max_gap_mm": 0.04,
+       "intervals": [
+        [
+         1.955,
+         1.981
+        ]
+       ]
+      },
+      "RL": {
+       "sum_s": 0.168,
+       "last_touch_s": 2.348,
+       "n": 1,
+       "max_gap_mm": 1.67,
+       "intervals": [
+        [
+         2.18,
+         2.348
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.837,
+       "last_touch_s": 1.46,
+       "n": 2,
+       "max_gap_mm": 22.84,
+       "intervals": [
+        [
+         0.264,
+         0.823
+        ],
+        [
+         1.182,
+         1.46
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.209,
+     "pair_last_touch_s": 1.46,
+     "adj_sum_s": 0.194,
+     "adj_max_gap_mm": 1.67,
+     "adj_last_touch_s": 2.348,
+     "starts": [
+      [
+       0.18,
+       "FL"
+      ],
+      [
+       0.58,
+       "RR"
+      ],
+      [
+       1.08,
+       "FL"
+      ],
+      [
+       1.38,
+       "RR"
+      ],
+      [
+       1.68,
+       "FL"
+      ],
+      [
+       1.98,
+       "FR"
+      ],
+      [
+       2.28,
+       "RL"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 3,
+     "sign_changes": 1,
+     "deferred": [],
+     "W_bins_J": [
+      -122.9,
+      -262.2,
+      -201.5,
+      -28.3,
+      14.1,
+      -31.5,
+      -2.0,
+      -3.4,
+      -2.7,
+      -1.9,
+      -1.3,
+      -0.9,
+      -0.6,
+      -0.4,
+      -0.3,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 14.1,
+     "W_after1.5_max_bin_J": 14.1,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7613,
+     "t_back_ready_s": 25.58,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      219.6,
+      95.5,
+      162.2,
+      64.5,
+      61.6,
+      45.2,
+      30.4,
+      16.4,
+      10.2,
+      5.3,
+      4.1,
+      3.5,
+      2.7
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML24_ep7",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.47,
+       "last_touch_s": 1.143,
+       "n": 2,
+       "max_gap_mm": 10.01,
+       "intervals": [
+        [
+         0.182,
+         0.35
+        ],
+        [
+         0.841,
+         1.143
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.864,
+       "last_touch_s": 1.491,
+       "n": 2,
+       "max_gap_mm": 24.04,
+       "intervals": [
+        [
+         0.269,
+         0.836
+        ],
+        [
+         1.194,
+         1.491
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.253,
+     "pair_last_touch_s": 1.491,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.25,
+       "FL"
+      ],
+      [
+       0.65,
+       "RR"
+      ],
+      [
+       1.05,
+       "FL"
+      ],
+      [
+       1.45,
+       "RR"
+      ],
+      [
+       1.75,
+       "RL"
+      ],
+      [
+       2.25,
+       "RL"
+      ],
+      [
+       2.55,
+       "RR"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 3,
+     "sign_changes": 2,
+     "deferred": [],
+     "W_bins_J": [
+      -51.5,
+      -274.9,
+      -224.7,
+      -92.3,
+      -6.2,
+      -30.1,
+      -18.0,
+      -0.1,
+      0.0,
+      -0.0,
+      -0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "W_after1.5_pos_J": 0.0,
+     "W_after1.5_max_bin_J": 0.0,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7735,
+     "t_back_ready_s": 25.55,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      217.3,
+      159.9,
+      120.0,
+      88.6,
+      56.4,
+      37.6,
+      24.6,
+      16.0,
+      8.6,
+      6.3,
+      3.7,
+      2.0,
+      1.6
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML24_ep7",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.463,
+       "last_touch_s": 1.136,
+       "n": 2,
+       "max_gap_mm": 9.82,
+       "intervals": [
+        [
+         0.182,
+         0.347
+        ],
+        [
+         0.838,
+         1.136
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 0.999,
+       "last_touch_s": 2.67,
+       "n": 3,
+       "max_gap_mm": 23.57,
+       "intervals": [
+        [
+         0.275,
+         0.831
+        ],
+        [
+         1.189,
+         1.48
+        ],
+        [
+         2.518,
+         2.67
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.39,
+     "pair_last_touch_s": 2.67,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.23,
+       "FL"
+      ],
+      [
+       0.63,
+       "RR"
+      ],
+      [
+       1.13,
+       "FL"
+      ],
+      [
+       1.43,
+       "RR"
+      ],
+      [
+       1.73,
+       "RL"
+      ],
+      [
+       2.03,
+       "FR"
+      ],
+      [
+       2.53,
+       "RR"
+      ]
+     ],
+     "n_starts": 7,
+     "n_late_starts": 3,
+     "sign_changes": 2,
+     "deferred": [],
+     "W_bins_J": [
+      -70.8,
+      -271.5,
+      -216.4,
+      -90.5,
+      87.6,
+      -101.3,
+      9.8,
+      -1.2,
+      -1.2,
+      -0.9,
+      -0.6,
+      -0.4,
+      -0.3,
+      -0.2,
+      -0.1,
+      -0.1
+     ],
+     "W_after1.5_pos_J": 97.4,
+     "W_after1.5_max_bin_J": 87.6,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7701,
+     "t_back_ready_s": 25.63,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      210.3,
+      191.5,
+      67.7,
+      90.7,
+      56.3,
+      35.6,
+      24.7,
+      22.2,
+      12.8,
+      6.3,
+      4.1,
+      2.0,
+      0.7
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML24_ep7",
+     "offset_s": 0.075
+    }
+   ],
+   "wall_s": 21.3
+  },
+  {
+   "base": "ML24",
+   "variant": "W0.8F0.6r2",
+   "t_ready_s": 52.50000000006865,
+   "t_crawler_liftoff_s": 21.999999999994078,
+   "D8_min_true_after_liftoff_kN": 57.32,
+   "pre_event_reapproach": [],
+   "twist_scale": 1.0491843751225893,
+   "events": [
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.653,
+       "last_touch_s": 1.796,
+       "n": 3,
+       "max_gap_mm": 10.39,
+       "intervals": [
+        [
+         0.182,
+         0.344
+        ],
+        [
+         0.835,
+         1.148
+        ],
+        [
+         1.618,
+         1.796
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 1.059,
+       "last_touch_s": 2.069,
+       "n": 3,
+       "max_gap_mm": 23.13,
+       "intervals": [
+        [
+         0.275,
+         0.828
+        ],
+        [
+         1.187,
+         1.548
+        ],
+        [
+         1.924,
+         2.069
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.643,
+     "pair_last_touch_s": 2.069,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.2,
+       "FL"
+      ],
+      [
+       0.6,
+       "RR"
+      ],
+      [
+       1.1,
+       "FL"
+      ],
+      [
+       1.4,
+       "RR"
+      ],
+      [
+       1.8,
+       "FL"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "deferred": [
+      [
+       2.3,
+       "RL"
+      ]
+     ],
+     "W_bins_J": [
+      -94.1,
+      -183.6,
+      -160.6,
+      -190.6,
+      -25.9,
+      1.1,
+      0.3,
+      0.1,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "W_after1.5_pos_J": 1.5,
+     "W_after1.5_max_bin_J": 1.1,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7658,
+     "t_back_ready_s": 25.5,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      182.6,
+      64.4,
+      85.1,
+      66.7,
+      58.9,
+      36.6,
+      26.3,
+      21.5,
+      12.4,
+      5.5,
+      4.2,
+      2.7,
+      1.2
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML24_ep7",
+     "offset_s": 0.0
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.657,
+       "last_touch_s": 1.791,
+       "n": 3,
+       "max_gap_mm": 10.27,
+       "intervals": [
+        [
+         0.182,
+         0.35
+        ],
+        [
+         0.833,
+         1.145
+        ],
+        [
+         1.614,
+         1.791
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 1.056,
+       "last_touch_s": 2.059,
+       "n": 3,
+       "max_gap_mm": 22.84,
+       "intervals": [
+        [
+         0.264,
+         0.825
+        ],
+        [
+         1.185,
+         1.543
+        ],
+        [
+         1.922,
+         2.059
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.627,
+     "pair_last_touch_s": 2.059,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.18,
+       "FL"
+      ],
+      [
+       0.58,
+       "RR"
+      ],
+      [
+       1.08,
+       "FL"
+      ],
+      [
+       1.38,
+       "RR"
+      ],
+      [
+       1.78,
+       "FL"
+      ],
+      [
+       2.08,
+       "RR"
+      ]
+     ],
+     "n_starts": 6,
+     "n_late_starts": 2,
+     "sign_changes": 0,
+     "deferred": [],
+     "W_bins_J": [
+      -122.9,
+      -172.5,
+      -157.8,
+      -185.7,
+      -31.2,
+      15.1,
+      -5.1,
+      -3.5,
+      -2.2,
+      -1.6,
+      -1.1,
+      -0.7,
+      -0.5,
+      -0.4,
+      -0.2,
+      -0.2
+     ],
+     "W_after1.5_pos_J": 15.1,
+     "W_after1.5_max_bin_J": 15.1,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7613,
+     "t_back_ready_s": 25.58,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      183.3,
+      100.5,
+      83.1,
+      67.3,
+      53.6,
+      32.6,
+      27.6,
+      23.7,
+      14.0,
+      6.5,
+      4.0,
+      1.8,
+      0.4
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML24_ep7",
+     "offset_s": 0.025
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.672,
+       "last_touch_s": 1.812,
+       "n": 3,
+       "max_gap_mm": 10.65,
+       "intervals": [
+        [
+         0.182,
+         0.35
+        ],
+        [
+         0.839,
+         1.16
+        ],
+        [
+         1.629,
+         1.812
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 1.098,
+       "last_touch_s": 2.095,
+       "n": 3,
+       "max_gap_mm": 24.04,
+       "intervals": [
+        [
+         0.269,
+         0.836
+        ],
+        [
+         1.196,
+         1.561
+        ],
+        [
+         1.929,
+         2.095
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.689,
+     "pair_last_touch_s": 2.095,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.25,
+       "FL"
+      ],
+      [
+       0.65,
+       "RR"
+      ],
+      [
+       1.05,
+       "FL"
+      ],
+      [
+       1.45,
+       "RR"
+      ],
+      [
+       1.95,
+       "RR"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "deferred": [],
+     "W_bins_J": [
+      -51.5,
+      -204.1,
+      -167.3,
+      -198.5,
+      -57.8,
+      7.3,
+      -0.4,
+      -0.2,
+      -0.2,
+      -0.2,
+      -0.2,
+      -0.1,
+      -0.1,
+      -0.1,
+      -0.0,
+      -0.0
+     ],
+     "W_after1.5_pos_J": 7.3,
+     "W_after1.5_max_bin_J": 7.3,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7735,
+     "t_back_ready_s": 25.45,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      178.2,
+      83.9,
+      83.0,
+      67.5,
+      56.7,
+      35.5,
+      27.1,
+      22.1,
+      12.8,
+      5.7,
+      4.2,
+      2.4,
+      0.9
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML24_ep7",
+     "offset_s": 0.05
+    },
+    {
+     "lifts": {
+      "FL": {
+       "sum_s": 0.663,
+       "last_touch_s": 1.804,
+       "n": 3,
+       "max_gap_mm": 10.55,
+       "intervals": [
+        [
+         0.182,
+         0.347
+        ],
+        [
+         0.837,
+         1.154
+        ],
+        [
+         1.623,
+         1.804
+        ]
+       ]
+      },
+      "RR": {
+       "sum_s": 1.079,
+       "last_touch_s": 2.085,
+       "n": 3,
+       "max_gap_mm": 23.57,
+       "intervals": [
+        [
+         0.275,
+         0.832
+        ],
+        [
+         1.191,
+         1.554
+        ],
+        [
+         1.926,
+         2.085
+        ]
+       ]
+      }
+     },
+     "pair_union_s": 1.67,
+     "pair_last_touch_s": 2.085,
+     "adj_sum_s": 0.0,
+     "adj_max_gap_mm": 0.0,
+     "adj_last_touch_s": 0.0,
+     "starts": [
+      [
+       0.23,
+       "FL"
+      ],
+      [
+       0.63,
+       "RR"
+      ],
+      [
+       1.13,
+       "FL"
+      ],
+      [
+       1.43,
+       "RR"
+      ],
+      [
+       1.93,
+       "RR"
+      ]
+     ],
+     "n_starts": 5,
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "deferred": [],
+     "W_bins_J": [
+      -70.8,
+      -192.7,
+      -163.2,
+      -193.5,
+      -55.1,
+      6.4,
+      -0.3,
+      -0.2,
+      -0.2,
+      -0.2,
+      -0.1,
+      -0.1,
+      -0.1,
+      -0.1,
+      -0.0,
+      -0.0
+     ],
+     "W_after1.5_pos_J": 6.4,
+     "W_after1.5_max_bin_J": 6.4,
+     "min_true_kN": -1.05,
+     "min_true_after1.5_grounded_kN": null,
+     "max_att_change_deg": 0.7701,
+     "t_back_ready_s": 25.43,
+     "final_phase": "ready",
+     "D_ptp_kN_bins_from1.5": [
+      179.0,
+      86.4,
+      83.4,
+      66.2,
+      56.6,
+      35.5,
+      26.7,
+      22.0,
+      12.7,
+      5.7,
+      4.1,
+      2.4,
+      0.9
+     ],
+     "gate_U832": {
+      "pair_union_le_1.8": true,
+      "pair_last_touch_le_3.0": true,
+      "adj_gap_le_2mm": true
+     },
+     "event": "ML24_ep7",
+     "offset_s": 0.075
+    }
+   ],
+   "wall_s": 21.2
+  }
+ ]
+}

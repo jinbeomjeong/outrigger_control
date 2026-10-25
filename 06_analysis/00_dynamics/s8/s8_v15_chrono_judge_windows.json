@@ -1,0 +1,251 @@
+{
+ "V15a_L0": {
+  "W1_s": [
+   103.81881447008894,
+   117.80200000278708
+  ],
+  "W1_lam_mm": [
+   10.031825919021298,
+   11.430025918285402
+  ],
+  "at_liftoff": {
+   "G_RL_N": -700.0547567844391,
+   "F_RL_N": -700.0547567844391,
+   "F_RL_plus_mg_N": 17.429243215560973,
+   "upper_bound_ok (G <= F + F_s + 300)": true,
+   "lower_bound_ok (G >= F - F_s)": true,
+   "deficit_vs_upper_N": 0.0
+  },
+  "ledger_mech": {
+   "R_mech_at_fine_start_J": -0.020087786200995852,
+   "R_mech_end_J": -0.01806412467479015,
+   "R_mech_max_J": 0.03549064961558133,
+   "R_mech_min_J": -0.0791383449178367,
+   "R_mech_change_in_fine_window_J": 0.0020236615262057,
+   "D_f_J": 0.0,
+   "R_mech_end_over_D_f": null,
+   "D_visc_at_fine_start_J": -7.0880422968491015,
+   "D_visc_end_J": -15.99404748442231
+  }
+ },
+ "V15a_L2": {
+  "W1_s": [
+   102.5587011938651,
+   116.56300000274595
+  ],
+  "W1_lam_mm": [
+   9.905825919087619,
+   11.306125918350563
+  ],
+  "edge_deficit_mean_N": [
+   6.5,
+   12.5,
+   9.6,
+   8.8
+  ],
+  "edge_deficit_max_1ms_N": [
+   20.7,
+   34.8,
+   33.1,
+   33.9
+  ],
+  "edge_deficit_mean_over_F_s": [
+   0.0033,
+   0.0062,
+   0.0058,
+   0.0053
+  ],
+  "piston_slip_um": [
+   1112.48,
+   193.05,
+   284.94,
+   -402.89
+  ],
+  "slip_direction_ok": true,
+  "RL_G_minus_edge_track_mean_N": -9.636863411152037,
+  "at_liftoff": {
+   "G_RL_N": 479.5742434978485,
+   "F_RL_N": -700.2368702173233,
+   "F_RL_plus_mg_N": 17.24712978267678,
+   "upper_bound_ok (G <= F + F_s + 300)": true,
+   "lower_bound_ok (G >= F - F_s)": true,
+   "deficit_vs_upper_N": 486.7888862848284
+  },
+  "ledger_mech": {
+   "R_mech_at_fine_start_J": 0.08784786944614564,
+   "R_mech_end_J": 0.1498319318213127,
+   "R_mech_max_J": 0.16636692011245946,
+   "R_mech_min_J": -0.020282525366455022,
+   "R_mech_change_in_fine_window_J": 0.06198406237516707,
+   "D_f_J": 30.786149531833306,
+   "R_mech_end_over_D_f": 0.004866861692670739,
+   "D_visc_at_fine_start_J": -7.008270141175734,
+   "D_visc_end_J": -15.302013927568668
+  }
+ },
+ "V15a_L4": {
+  "W1_s": [
+   101.30448556363483,
+   115.29300000270379
+  ],
+  "W1_lam_mm": [
+   9.780425919153679,
+   11.179125918417409
+  ],
+  "edge_deficit_mean_N": [
+   6.9,
+   11.3,
+   9.6,
+   9.0
+  ],
+  "edge_deficit_max_1ms_N": [
+   24.5,
+   37.4,
+   33.9,
+   32.2
+  ],
+  "edge_deficit_mean_over_F_s": [
+   0.0017,
+   0.0028,
+   0.0029,
+   0.0027
+  ],
+  "piston_slip_um": [
+   1111.33,
+   192.67,
+   284.93,
+   -402.24
+  ],
+  "slip_direction_ok": true,
+  "RL_G_minus_edge_track_mean_N": -9.61026843057319,
+  "at_liftoff": {
+   "G_RL_N": 2179.8018344402312,
+   "F_RL_N": -693.5269037485123,
+   "F_RL_plus_mg_N": 23.95709625148777,
+   "upper_bound_ok (G <= F + F_s + 300)": true,
+   "lower_bound_ok (G >= F - F_s)": true,
+   "deficit_vs_upper_N": 459.8712618112568
+  },
+  "ledger_mech": {
+   "R_mech_at_fine_start_J": 0.10865002564397468,
+   "R_mech_end_J": 0.11093445877278345,
+   "R_mech_max_J": 0.1541852741453214,
+   "R_mech_min_J": -0.022089801906293793,
+   "R_mech_change_in_fine_window_J": 0.0022844331288087716,
+   "D_f_J": 60.12581357321889,
+   "R_mech_end_over_D_f": 0.0018450387974824117,
+   "D_visc_at_fine_start_J": -6.935521098006257,
+   "D_visc_end_J": -15.850800228728087
+  }
+ },
+ "V15a_L8": {
+  "W1_s": [
+   98.78153306633702,
+   112.7720000026201
+  ],
+  "W1_lam_mm": [
+   9.528125919286424,
+   10.927025918550104
+  ],
+  "edge_deficit_mean_N": [
+   6.6,
+   10.0,
+   8.2,
+   9.3
+  ],
+  "edge_deficit_max_1ms_N": [
+   24.1,
+   39.6,
+   27.4,
+   35.6
+  ],
+  "edge_deficit_mean_over_F_s": [
+   0.0008,
+   0.0013,
+   0.0012,
+   0.0014
+  ],
+  "piston_slip_um": [
+   1111.2,
+   192.58,
+   284.97,
+   -402.22
+  ],
+  "slip_direction_ok": true,
+  "RL_G_minus_edge_track_mean_N": -8.247459311741657,
+  "at_liftoff": {
+   "G_RL_N": 5520.428058338165,
+   "F_RL_N": -704.1868635177613,
+   "F_RL_plus_mg_N": 13.297136482238784,
+   "upper_bound_ok (G <= F + F_s + 300)": true,
+   "lower_bound_ok (G >= F - F_s)": true,
+   "deficit_vs_upper_N": 441.78507814407385
+  },
+  "ledger_mech": {
+   "R_mech_at_fine_start_J": 0.10161939646841293,
+   "R_mech_end_J": 0.1482524299876305,
+   "R_mech_max_J": 0.16241927540878703,
+   "R_mech_min_J": -0.02975679264967308,
+   "R_mech_change_in_fine_window_J": 0.04663303351921756,
+   "D_f_J": 114.5351187490478,
+   "R_mech_end_over_D_f": 0.0012943840422644432,
+   "D_visc_at_fine_start_J": -6.771716420669521,
+   "D_visc_end_J": -16.25577813537429
+  }
+ },
+ "V15a_L8_v005": {
+  "W1_s": [
+   194.0633528305502,
+   222.03800000624736
+  ],
+  "W1_lam_mm": [
+   9.52816882516727,
+   10.926818832195096
+  ],
+  "edge_deficit_mean_N": [
+   7.2,
+   11.5,
+   10.1,
+   10.5
+  ],
+  "edge_deficit_max_1ms_N": [
+   25.5,
+   40.4,
+   31.4,
+   47.8
+  ],
+  "edge_deficit_mean_over_F_s": [
+   0.0009,
+   0.0014,
+   0.0015,
+   0.0016
+  ],
+  "piston_slip_um": [
+   1110.84,
+   192.61,
+   284.87,
+   -401.98
+  ],
+  "slip_direction_ok": true,
+  "RL_G_minus_edge_track_mean_N": -10.073825254358391,
+  "at_liftoff": {
+   "G_RL_N": 5511.2073142051695,
+   "F_RL_N": -693.5834125041962,
+   "F_RL_plus_mg_N": 23.900587495803848,
+   "upper_bound_ok (G <= F + F_s + 300)": true,
+   "lower_bound_ok (G >= F - F_s)": true,
+   "deficit_vs_upper_N": 461.6092732906345
+  },
+  "ledger_mech": {
+   "R_mech_at_fine_start_J": 0.11546385679765359,
+   "R_mech_end_J": 0.13814153512418081,
+   "R_mech_max_J": 0.1805546588347655,
+   "R_mech_min_J": -0.022907756397579356,
+   "R_mech_change_in_fine_window_J": 0.02267767832652723,
+   "D_f_J": 114.5323352640443,
+   "R_mech_end_over_D_f": 0.0012061356716922566,
+   "D_visc_at_fine_start_J": -13.572220461590891,
+   "D_visc_end_J": -32.1982674357325
+  }
+ }
+}

@@ -164,7 +164,10 @@ twist mode toward it (fastest leg 0.25 ``v_max``, one leg at a time) instead of 
 guard terms, until it reads ``F_min + 5 kN`` on three samples (P-R8-13, events
 ``leg_reapproach_start:<leg>``, ``leg_reapproach_contact:<leg>``,
 ``WARN_LEG_REAPPROACH_NO_CONTACT:<leg>``); P-R8-12 stays as
-:meth:`LiftedReapproachSettings.leg_mode`. :attr:`C2Controller.command_components_m_s` gives
+:meth:`LiftedReapproachSettings.leg_mode`. Revision 52 228.3 (P-S8-16, U-S8-49): a
+re-approach within 2 s of the last one's end runs at 0.6 of the speed, and one on the other
+diagonal within 0.8 s waits for two samples below 0 N (event
+``leg_reapproach_deferred:<leg>``). :attr:`C2Controller.command_components_m_s` gives
 the attitude / heave / twist / guard / re-approach parts of each LEVEL command (P-R8-14) and
 the phase command of the other periods; :attr:`C2Controller.raw_output_m_s` and
 :attr:`C2Controller.output_limit_flags` give the command before the limits and which limit
@@ -374,6 +377,10 @@ REFERENCE_UPDATE_PHASES = frozenset({C2Phase.DONE, C2Phase.READY})
 REAPPROACH_PHASES = frozenset({C2Phase.LEVEL, C2Phase.DONE, C2Phase.PROBE, C2Phase.READY})
 """P-R8-12 / P-R8-13: phases in which a lifted leg is watched and re-approaches (spec 172.1;
 DONE is the one-period hand-over to PROBE / READY)."""
+NO_REAPPROACH_STRONG_COUNTS = (0,) * LEG_COUNT
+"""P-S8-16 RT 1: the other-diagonal confirmation counts of a run with nothing counted yet."""
+REAPPROACH_DEFERRED_EVENT = "leg_reapproach_deferred"
+"""P-S8-16 RT 1: event prefix of a deferred other-diagonal start (``:<leg>``, not a warning)."""
 COMMAND_COMPONENT_NAMES = ("attitude", "heave", "twist", "guard", "reapproach", "phase_path")
 """P-R8-14 (spec rev. 34 179.1) / P-R8-15 (rev. 35 188.2): keys of
 :attr:`C2Controller.command_components_m_s`, read by the runner's ``r8_series.cmp_<name>_u``
@@ -881,6 +888,19 @@ def _is_positive_int(value: object) -> bool:
     return isinstance(value, int) and not isinstance(value, bool) and value >= 1
 
 
+REAPPROACH_WINDOW_TOLERANCE_S = 1e-9
+"""Sample times are sums of 0.1 s steps; a start exactly one window after the end is outside
+(the rule RT harness ``r51_reapp_closed_loop.py`` compares the same way)."""
+
+
+def _is_inside_reapproach_window(
+    t_s: float, last_end_s: float | None, window_s: float | None
+) -> bool:
+    if window_s is None or last_end_s is None:
+        return False
+    return t_s - last_end_s < window_s - REAPPROACH_WINDOW_TOLERANCE_S
+
+
 @dataclass(frozen=True)
 class LiftedReapproachSettings:
     """Re-approach of a low-load or lifted leg (P-R8-13, spec rev. 34 174.4 / 179.1, U-R8-21;
@@ -907,6 +927,19 @@ class LiftedReapproachSettings:
     (``leg_reapproach_contact:<leg>``), or after ``max_travel_m`` of motor stroke
     (``WARN_LEG_REAPPROACH_NO_CONTACT:<leg>``; the leg then stays on the guard path until it
     reads ``F_min`` again).
+
+    Re-trigger rule RT (P-S8-16, spec rev. 52 228.3, U-S8-49), measured from the end of the
+    previous re-approach (any outcome) and its leg's twist sign:
+
+    * ``opposite_window_s``: a start on the other diagonal (twist sign differs) inside this
+      window also needs the lower load estimate below ``opposite_strong_level_N`` on
+      ``opposite_strong_samples`` samples in a row; otherwise it is deferred (event
+      ``leg_reapproach_deferred:<leg>`` once per deferred stretch) and the guard path acts.
+    * ``retrigger_window_s``: a re-approach started inside this window is a re-trigger and
+      runs at ``retrigger_speed_factor`` times the speed (twist and leg mode).
+
+    The class defaults turn both off (the P-R8-13 behaviour, bit-identical); every new key has
+    a class-level default so controllers unpickled from older code read "off".
     """
 
     enable: bool = False
@@ -937,6 +970,16 @@ class LiftedReapproachSettings:
     """Leg mode: ASSUMPTION (spec 172.5), the R1 re-approach speed of TOUCH (5.23 mm/s)."""
     max_travel_m: float = 0.04
     """ASSUMPTION (spec 172.5): the R-2 touch window."""
+    retrigger_window_s: float | None = None
+    """RT 2: a start within this time after the previous end is a re-trigger; ``None`` = off."""
+    retrigger_speed_factor: float = 1.0
+    """RT 2: speed factor of a re-trigger, in (0, 1]."""
+    opposite_window_s: float | None = None
+    """RT 1: window of the other-diagonal confirmation; ``None`` = off."""
+    opposite_strong_level_N: float = 0.0
+    """RT 1: the lower load estimate must be below this (0 N: lifted beyond the seal band)."""
+    opposite_strong_samples: int = 2
+    """RT 1: consecutive samples below ``opposite_strong_level_N``."""
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "mode", ReapproachMode(self.mode))
@@ -954,6 +997,29 @@ class LiftedReapproachSettings:
             raise ValueError("twist_speed_fraction must be in (0, 1]")
         if not self.max_travel_m > 0.0:
             raise ValueError("max_travel_m must be > 0")
+        for name in ("retrigger_window_s", "opposite_window_s"):
+            window_s = getattr(self, name)
+            if window_s is not None and not window_s > 0.0:
+                raise ValueError(f"{name} must be > 0 or None, got {window_s!r}")
+        if not 0.0 < self.retrigger_speed_factor <= 1.0:
+            raise ValueError("retrigger_speed_factor must be in (0, 1]")
+        if not _is_positive_int(self.opposite_strong_samples):
+            raise ValueError(
+                "opposite_strong_samples must be an int >= 1, "
+                f"got {self.opposite_strong_samples!r}"
+            )
+
+    def is_retrigger(self, t_s: float, last_end_s: float | None) -> bool:
+        """RT 2: a start at ``t_s`` falls inside the re-trigger window of the last end."""
+        return _is_inside_reapproach_window(t_s, last_end_s, self.retrigger_window_s)
+
+    def needs_strong_confirmation(
+        self, t_s: float, last_end_s: float | None, last_sign: float, leg_sign: float
+    ) -> bool:
+        """RT 1: a start at ``t_s`` on a leg of twist sign ``leg_sign`` is on the other
+        diagonal of the last re-approach (``last_sign``) inside the opposite window."""
+        is_inside = _is_inside_reapproach_window(t_s, last_end_s, self.opposite_window_s)
+        return is_inside and leg_sign != last_sign
 
     @classmethod
     def leg_mode(cls) -> LiftedReapproachSettings:
@@ -1137,6 +1203,19 @@ R8_D1_TOUCH_SEEN_SAMPLES = 2
 """P-S8-6 (ASSUMPTION, spec 213.9): the R8 sample-confirmation rule."""
 R8_D1_REAPPROACH_LOAD_FRACTION_OF_F_MIN = 1.4
 """P-S8-5 (U-S8-9, spec rev. 42 212.4 / rev. 43 213.3.2): re-approach start level."""
+R8_D1_REAPPROACH_RETRIGGER_WINDOW_S = 2.0
+"""P-S8-16 rule RT (spec rev. 52 228.3, U-S8-45 / U-S8-49, ASSUMPTION): covers the same-diagonal
+closing runs after an event (0.4..1.6 s); 1.5..3.0 s gave the same reduced result."""
+R8_D1_REAPPROACH_RETRIGGER_SPEED_FACTOR = 0.6
+"""P-S8-16 (spec rev. 52 228.3, ASSUMPTION): between 0.5 (pair time up) and 0.7 (adjacent
+gap up) on the reduced closed loop."""
+R8_D1_REAPPROACH_OPPOSITE_WINDOW_S = 0.8
+"""P-S8-16 (spec rev. 52 228.3, U-S8-45 candidate T_3, ASSUMPTION): 0.5..1.2 s gave the same
+reduced result."""
+R8_D1_REAPPROACH_OPPOSITE_STRONG_LEVEL_N = 0.0
+"""P-S8-16 (spec rev. 52 228.3, U-S8-45): lower bound below zero = surely lifted."""
+R8_D1_REAPPROACH_OPPOSITE_STRONG_SAMPLES = 2
+"""P-S8-16 (spec rev. 52 228.3): 2 and 3 gave the same result, 1 failed 3 of 28."""
 R8_D1_SETTINGS = R8Settings(
     output_delay_periods=1,
     imu_sample_period_s=R8_IMU_SAMPLE_PERIOD_S,
@@ -1159,13 +1238,20 @@ R8_D1_SETTINGS = R8Settings(
     check_attitude_from_raw_tilt=True,
     probe_abort_on_low_load=True,
     lifted_reapproach=LiftedReapproachSettings(
-        enable=True, load_fraction_of_F_min=R8_D1_REAPPROACH_LOAD_FRACTION_OF_F_MIN
+        enable=True,
+        load_fraction_of_F_min=R8_D1_REAPPROACH_LOAD_FRACTION_OF_F_MIN,
+        retrigger_window_s=R8_D1_REAPPROACH_RETRIGGER_WINDOW_S,
+        retrigger_speed_factor=R8_D1_REAPPROACH_RETRIGGER_SPEED_FACTOR,
+        opposite_window_s=R8_D1_REAPPROACH_OPPOSITE_WINDOW_S,
+        opposite_strong_level_N=R8_D1_REAPPROACH_OPPOSITE_STRONG_LEVEL_N,
+        opposite_strong_samples=R8_D1_REAPPROACH_OPPOSITE_STRONG_SAMPLES,
     ),
 )
 """The R8 part of :meth:`C2Config.with_10hz_d1` (spec 99.3, 136, 139, rev. 31 149, rev. 32
 163.1: P-R8-9 raw-tilt CHECK attitude, P-R8-10 R-5 on with horizon 4, P-R8-11 PROBE abort;
 rev. 34 174.4: P-R8-13 lifted-leg re-approach in the twist mode, replacing P-R8-12; rev. 43
-213.8: P-S8-5 re-approach start at 1.4 ``F_min``, P-S8-6 TOUCH free air from moving samples)."""
+213.8: P-S8-5 re-approach start at 1.4 ``F_min``, P-S8-6 TOUCH free air from moving samples;
+rev. 52 228.3: P-S8-16 re-trigger rule RT)."""
 QUASI_STATIC_PRESSURE_NOTE = (
     "10 Hz instantaneous samples: the 345 bar warning sees about 43 % of a heave transient "
     "and hardly any 102 Hz ringing; it is a quasi-static watch, not an overpressure "
@@ -2271,6 +2357,8 @@ class _Reapproach:
     """Consecutive samples at the exit level (at the end: the count it ended with)."""
     protected_periods: int = 0
     """Twist mode: periods with ``tau_dot`` held at zero to protect another grounded leg."""
+    is_retrigger: bool = False
+    """P-S8-16 RT 2: started inside the re-trigger window (runs at the reduced speed)."""
 
     def to_meta(self) -> dict[str, Any]:
         return {
@@ -2282,6 +2370,7 @@ class _Reapproach:
             "outcome": self.outcome,
             "exit_samples_seen": self.exit_samples_seen,
             "protected_periods": self.protected_periods,
+            "is_retrigger": self.is_retrigger,
         }
 
 
@@ -2456,6 +2545,14 @@ class _RunState:
     active_reapproaches: dict[int, _Reapproach] = field(default_factory=dict)
     reapproach_history: list[_Reapproach] = field(default_factory=list)
     """Every re-approach of the run, the active ones included (meta)."""
+    reapproach_last_end_s: float | None = None
+    """P-S8-16: end time of the last re-approach (any outcome); ``None`` before the first."""
+    reapproach_last_sign: float = 0.0
+    """P-S8-16: ``sign(n_j)`` of the leg of the last re-approach (its diagonal)."""
+    reapproach_strong_counts: tuple[int, ...] = NO_REAPPROACH_STRONG_COUNTS
+    """P-S8-16 RT 1: consecutive watched low samples below ``opposite_strong_level_N`` per
+    leg. A tuple, not an array, so that the class-level default also serves run states
+    unpickled from older code."""
     command_components: dict[str, NDArray[np.float64]] | None = None
     """P-R8-14 / P-R8-15: parts of this period's command; ``None`` before the first period."""
     raw_output_m_s: NDArray[np.float64] = field(default_factory=lambda: np.zeros(LEG_COUNT))
@@ -3727,6 +3824,7 @@ class C2Controller:
             for leg in list(state.active_reapproaches):
                 self._end_reapproach(leg, reading, f"phase:{state.phase}")
             state.reapproach_low_counts[:] = 0
+            state.reapproach_strong_counts = NO_REAPPROACH_STRONG_COUNTS
             return
         loads = self._load_estimate_N(reading.cylinder_force_lower_N)
         self._end_finished_reapproaches(reading, loads, settings)
@@ -3772,6 +3870,7 @@ class C2Controller:
         lift_off_level_N = settings.load_fraction_of_F_min * self.geometry.F_min_N
         required_samples = settings.samples or self.config.r8.confirmation.relevel_samples
         probed_leg = self._probed_leg()  # the probe unloads its own leg on purpose
+        strong_counts = list(state.reapproach_strong_counts)
         for leg in range(LEG_COUNT):
             is_another_leg_active = settings.single_leg and bool(state.active_reapproaches)
             is_watched = (
@@ -3783,25 +3882,68 @@ class C2Controller:
             )
             if not is_watched or loads_N[leg] >= lift_off_level_N:
                 state.reapproach_low_counts[leg] = 0
+                strong_counts[leg] = 0
                 continue
             state.reapproach_low_counts[leg] += 1
+            is_strong = loads_N[leg] < settings.opposite_strong_level_N
+            strong_counts[leg] = strong_counts[leg] + 1 if is_strong else 0
             if state.reapproach_low_counts[leg] < required_samples:
                 continue
+            if self._defers_reapproach(leg, reading.t_s, strong_counts[leg], settings):
+                # The low count keeps rising while a start is deferred, so it equals the
+                # requirement only on the first sample of a deferred stretch.
+                if state.reapproach_low_counts[leg] == required_samples:
+                    self._add_event(
+                        reading.t_s, f"{REAPPROACH_DEFERRED_EVENT}:{LEG_ORDER[leg]}"
+                    )
+                continue
             state.reapproach_low_counts[leg] = 0
-            run = _Reapproach(
-                leg, reading.t_s, float(reading.motor_stroke_m[leg]), settings.mode
-            )
-            state.active_reapproaches[leg] = run
-            state.reapproach_history.append(run)
-            self._add_event(
-                reading.t_s, f"leg_reapproach_start:{LEG_ORDER[leg]}", is_warning=True
-            )
+            strong_counts[leg] = 0
+            self._begin_reapproach(leg, reading, settings)
+        state.reapproach_strong_counts = tuple(strong_counts)
+
+    def _defers_reapproach(
+        self, leg: int, t_s: float, strong_count: int, settings: LiftedReapproachSettings
+    ) -> bool:
+        """P-S8-16 RT 1 (spec rev. 52 228.3): an other-diagonal start inside the opposite
+        window waits for ``opposite_strong_samples`` samples below the strong level."""
+        state = self._state
+        leg_sign = float(np.sign(self.geometry.twist_vector[leg]))
+        needs_confirmation = settings.needs_strong_confirmation(
+            t_s, state.reapproach_last_end_s, state.reapproach_last_sign, leg_sign
+        )
+        return needs_confirmation and strong_count < settings.opposite_strong_samples
+
+    def _begin_reapproach(
+        self, leg: int, reading: _Reading, settings: LiftedReapproachSettings
+    ) -> None:
+        state = self._state
+        run = _Reapproach(
+            leg,
+            reading.t_s,
+            float(reading.motor_stroke_m[leg]),
+            settings.mode,
+            is_retrigger=settings.is_retrigger(reading.t_s, state.reapproach_last_end_s),
+        )
+        state.active_reapproaches[leg] = run
+        state.reapproach_history.append(run)
+        self._add_event(reading.t_s, f"leg_reapproach_start:{LEG_ORDER[leg]}", is_warning=True)
 
     def _end_reapproach(self, leg: int, reading: _Reading, outcome: str) -> None:
-        run = self._state.active_reapproaches.pop(leg)
+        state = self._state
+        run = state.active_reapproaches.pop(leg)
         run.end_s = reading.t_s
         run.travel_m = float(reading.motor_stroke_m[leg]) - run.start_motor_stroke_m
         run.outcome = outcome
+        # P-S8-16: the re-trigger and other-diagonal windows count from here.
+        state.reapproach_last_end_s = reading.t_s
+        state.reapproach_last_sign = float(np.sign(self.geometry.twist_vector[leg]))
+
+    def _reapproach_speed_factor(self, leg: int) -> float:
+        """P-S8-16 RT 2: ``retrigger_speed_factor`` for a re-trigger run, else 1."""
+        if not self._state.active_reapproaches[leg].is_retrigger:
+            return 1.0
+        return self.config.r8.lifted_reapproach.retrigger_speed_factor
 
     def _reapproaching_legs(self) -> NDArray[np.bool_]:
         legs = np.zeros(LEG_COUNT, dtype=bool)
@@ -3825,9 +3967,8 @@ class C2Controller:
         settings = self.config.r8.lifted_reapproach
         if not reapproaching.any() or settings.mode is ReapproachMode.TWIST:
             return leg_speeds
-        speed_fraction = settings.speed_fraction
         speeds = leg_speeds.copy()
-        speeds[reapproaching] = speed_fraction * self.geometry.max_speed_m_s
+        speeds[reapproaching] = self._leg_mode_reapproach_speeds()
         # The override is part of the raw command (P-R8-15): the stages it replaces on the
         # lifted legs did not limit them.
         flags = self._state.output_limit_flags
@@ -3835,10 +3976,19 @@ class C2Controller:
             flags[limit.value] = flags[limit.value] & ~reapproaching
         return speeds
 
+    def _leg_mode_reapproach_speeds(self) -> NDArray[np.float64]:
+        """Leg mode: the speed of each re-approaching leg in leg order, ``speed_fraction
+        v_max`` times the P-S8-16 factor on a re-trigger run."""
+        speed_fraction = self.config.r8.lifted_reapproach.speed_fraction
+        legs = sorted(self._state.active_reapproaches)
+        fractions = [speed_fraction * self._reapproach_speed_factor(leg) for leg in legs]
+        return np.array(fractions) * self.geometry.max_speed_m_s
+
     def _reapproach_twist_rate(self, reading: _Reading) -> float:
         """Twist mode ``tau_dot_lift = sign(n_j) f v_max / max|n|`` toward the lifted leg ``j``
         (spec 174.4), or zero while a grounded leg this twist retracts reads below ``F_min +
-        protect_margin_N`` (lower estimate).
+        protect_margin_N`` (lower estimate). A re-trigger run (P-S8-16 RT 2) is slowed by
+        ``retrigger_speed_factor``.
 
         Only the retracted legs (``sign(n_i) != sign(n_j)``, FR and RL for RR) are protected:
         the twist unloads them. The diagonal leg is extended, so its load rises; its rocking
@@ -3856,9 +4006,11 @@ class C2Controller:
             state.active_reapproaches[lifted_leg].protected_periods += 1
             return 0.0
         fastest_leg_speed = settings.twist_speed_fraction * self.geometry.max_speed_m_s
-        return math.copysign(1.0, twist[lifted_leg]) * fastest_leg_speed / float(
+        twist_rate = math.copysign(1.0, twist[lifted_leg]) * fastest_leg_speed / float(
             np.max(np.abs(twist))
         )
+        # P-S8-16 RT 2: after the protection test; 1.0 (exact) on a first run.
+        return twist_rate * self._reapproach_speed_factor(lifted_leg)
 
     # --- zero calibration (E-3, E-5, E-6) ---
 
@@ -4303,7 +4455,7 @@ class C2Controller:
             if settings.mode is ReapproachMode.TWIST:
                 components["reapproach"] = twist_mode_speeds
             else:
-                override_speed = settings.speed_fraction * geometry.max_speed_m_s
+                override_speed = self._leg_mode_reapproach_speeds()
                 components["reapproach"][reapproaching] = (
                     override_speed - unscaled_speeds[reapproaching]
                 )

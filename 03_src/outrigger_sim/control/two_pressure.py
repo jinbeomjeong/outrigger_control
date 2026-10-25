@@ -52,6 +52,12 @@ commands and its phase.
   rod-side fall gains the reason ``lock_load_regain`` (a locked leg taking load back: head
   up, stroke still, ``-dp_r / dp_h <= 1.4 R_ub(s)``). ``step_rule = "explained"`` is D1' bit
   for bit. Every head fault names its reason in ``INFO_HEAD_PRESSURE_FAULT_REASON``.
+* D1' rod drain hold (P-S8-21, spec rev. 54 260.5): a rod-side fall under a positive command
+  that ends still above the D2 extend range (a lifted-off locked leg's 125-174 bar draining
+  with ``tau_d`` about 50-55 ms, sampled at 21-28 bar) is held one period, the reading still
+  used; the next reading in ``[p_lo, p_hi + 0.5 (p_k - p_hi)]`` (rev. 55 268.3, R-2; ``p_hi``
+  the D2 extend upper bound, with the CB its law bound) makes it
+  ``INFO_PRESSURE_STEP:<leg>:rod:check_draining``, any other the D1 fallback one period late.
 * Locked fallback estimate (P-S8-13, hydraulics H-S8-2, ``s8_seal_friction_counterbalance.md``
   10.4): on a command-free stretch ``p_r_hat`` is an upper bound over every lock-instant
   candidate of the valve-lag window, with the ratio bound ``R_ub(s)`` of the oil column
@@ -124,6 +130,11 @@ EXPLAINED_STEP_SUM_RATIO = 0.5
 """D1' head step (217.5, 217.12 ASSUMPTION): explained when the four-leg net-force sum changes
 by less than this fraction of the step's own force ``|dp_h| A_p`` (observed 0.007 / 0.079 for
 load redistribution, about 1 for a head sensor jump)."""
+ROD_DRAIN_HOLD_RATIO = 0.5
+"""D1' ``check_draining`` (P-S8-21, spec rev. 55 268.3, R-1 / R-2): a rod-side fall held one
+period is explained when the next reading is at most ``p_hi + rho (p_k - p_hi)``. Hydraulics
+H-S8-5: the plant drains with ``tau_d`` 0.050 s to 5.0 bar g, the reading ratio after a step is
+at most 0.34 (no failure over 9,396 steps)."""
 IMU_RESIDUAL_STEP_RATIO = 0.5
 """D1'' head step (218.4): explained when the IMU residual changes by less than this fraction
 of the step's own force ``|dp_h| A_p`` (ML pilot rerun: real steps 0.00-0.22, a sensor jump
@@ -272,6 +283,10 @@ class StepReason(StrEnum):
     LOCK_LOAD_REGAIN = "lock_load_regain"
     """D1'' rod side down, head up, stroke still, ratio within ``1.4 R_ub(s)`` (a locked leg
     taking load back, the lock law in reverse)."""
+    CHECK_DRAINING = "check_draining"
+    """P-S8-21: rod side down under a positive command but still above the D2 extend range
+    (the trapped lift-off pressure draining with ``tau_d`` about 50-55 ms), held one period
+    and confirmed by the next reading (:data:`ROD_DRAIN_HOLD_RATIO`)."""
 
 
 class LockedRatioRule(StrEnum):
@@ -400,6 +415,10 @@ class TwoPressureSettings:
     this field reads the class default; one pickled with ``explained`` keeps it (refresh it
     with :meth:`TwoPressureMonitor.refresh_settings`)."""
     explained_step_sum_ratio: float = EXPLAINED_STEP_SUM_RATIO
+    rod_drain_hold_ratio: float | None = ROD_DRAIN_HOLD_RATIO
+    """P-S8-21 ``rho`` of the ``check_draining`` hold (D1' and D1''); ``None`` = no hold (the
+    rod-side rule before P-S8-21, bit for bit). Class default, so settings pickled before it
+    read 0.5."""
     # D1'' (P-S8-14). Class defaults, so settings pickled before it read them.
     imu_residual_step_ratio: float = IMU_RESIDUAL_STEP_RATIO
     imu_mass_min_samples: int = IMU_MASS_MIN_SAMPLES
@@ -583,6 +602,10 @@ class TwoPressureSettings:
         if self.imu_lever_arm_m is not None:
             object.__setattr__(self, "imu_lever_arm_m",
                                tuple(float(value) for value in self.imu_lever_arm_m))
+        ratio = self.rod_drain_hold_ratio
+        if ratio is not None and not (math.isfinite(ratio) and ratio >= 0.0):
+            raise ValueError(f"rod_drain_hold_ratio: expected a finite ratio >= 0 or None, "
+                             f"got {ratio!r}")
         if self.imu_seal_band_factor != 0.0:
             raise ValueError("imu_seal_band_factor: the seal ambiguity band is not implemented "
                              "(U-S8-36, control rev. 49 219); only 0 is accepted")
@@ -863,6 +886,9 @@ class TwoPressureMonitor:
     _imu_lever_arm_m: tuple[float, float, float] = IMU_LEVER_ARM_WITHOUT_YAML_M
     _imu_slope_sums: tuple[float, float, int] = (0.0, 0.0, 0)
     """``slope``: (sum d(sum F) d f_z, sum d f_z^2, count) over lifted moving periods."""
+    _rod_drain_held_Pa: list[float | None] | None = None
+    """P-S8-21: per leg the rod-side reading of a ``check_draining`` fall held for the next
+    period (``None`` = no hold); the list itself ``None`` = a monitor pickled before it."""
     _BUFFER_SIZING_FIELDS = (
         "stuck_window_s",
         "rising_window_s",
@@ -977,6 +1003,7 @@ class TwoPressureMonitor:
         self._previous_imu_f_z_m_s2 = None
         self._was_locked_phase = False
         self._imu_slope_sums = (0.0, 0.0, 0)
+        self._rod_drain_held_Pa = [None] * LEG_COUNT
 
     def refresh_settings(self, settings: TwoPressureSettings) -> None:
         """Use ``settings`` from the next read on, keeping the run's state.
@@ -1255,12 +1282,13 @@ class TwoPressureMonitor:
             self._track_imu_slope(head, rod, commanded, imu_input,
                                   has_step=bool(head_steps or rod_steps))
         head_step_reasons = {leg: "D1_step" for leg in head_steps}
+        unconfirmed_drains = self._resolve_rod_drain_holds(head, rod)
         if step_rule is not StepRule.JUMP:
             head_step_reasons = self._unexplained_head_steps(head_steps, head, rod, imu_input)
             rod_steps = self._unexplained_rod_steps(rod_steps, head, rod, commanded)
         for leg in sorted(set(head_faults) | set(head_step_reasons)):
             self._head_fault(leg, head_faults.get(leg) or head_step_reasons[leg])
-        for leg in sorted(set(rod_faults) | set(rod_steps)):
+        for leg in sorted(set(rod_faults) | set(rod_steps) | set(unconfirmed_drains)):
             self._fall_back(leg, "D1")
         self._stuck_history.append((np.array(head), np.array(rod)))
         for name, legs in self._stuck_legs().items():
@@ -1452,18 +1480,67 @@ class TwoPressureMonitor:
             self._imu_mass_kg = float(np.median(self._imu_mass_ratios_kg))
 
     def _unexplained_rod_steps(self, legs: list[int], head, rod, commanded) -> list[int]:
-        """D1' rod side (217.5); see :meth:`_rod_step_reason`."""
+        """D1' rod side (217.5); see :meth:`_rod_step_reason`. A fall that only
+        :meth:`_is_rod_draining` explains is held for the next period (P-S8-21), not
+        returned."""
         command_before = self._previous_commanded_m_s
         if command_before is None:
             command_before = commanded
         unexplained = []
         for leg in legs:
             reason = self._rod_step_reason(leg, head, rod, commanded, command_before)
-            if reason is None:
-                unexplained.append(leg)
-            else:
+            if reason is not None:
                 self._log_explained_step(leg, "rod", reason)
+            elif self._is_rod_draining(leg, head, rod, commanded, command_before):
+                self._rod_drain_held_Pa[leg] = float(rod[leg])
+            else:
+                unexplained.append(leg)
         return unexplained
+
+    def _is_rod_draining(self, leg, head, rod, commanded, command_before) -> bool:
+        """P-S8-21 ① (260.5): the rod side fell, a positive command this or the last period
+        opened the check, and the new reading is still above the D2 extend range ``p_hi``
+        (the CB law bound with the counterbalance): the trapped lift-off pressure draining
+        to return, sampled before it settles. Off with ``rod_drain_hold_ratio = None``."""
+        if self.settings.rod_drain_hold_ratio is None:
+            return False
+        _, rod_previous = self._previous
+        is_falling = rod[leg] < rod_previous[leg]
+        is_check_opened = commanded[leg] > 0.0 or command_before[leg] > 0.0
+        _, high_Pa = self._extend_rod_range_Pa(head[leg])
+        return bool(is_falling and is_check_opened and rod[leg] > high_Pa)
+
+    def _resolve_rod_drain_holds(self, head, rod) -> list[int]:
+        """P-S8-21 ②: a leg held last period is ``INFO_PRESSURE_STEP:<leg>:rod:check_draining``
+        when :meth:`_is_drain_confirmed`, else a D1 fallback now
+        (one period later than without the hold). Every hold ends here.
+
+        Returns:
+            The held legs whose drain this reading does not confirm.
+        """
+        held = self._rod_drain_held_Pa
+        if held is None:  # a monitor pickled before P-S8-21
+            self._rod_drain_held_Pa = [None] * LEG_COUNT
+            return []
+        unconfirmed = []
+        for leg, held_Pa in enumerate(held):
+            if held_Pa is None:
+                continue
+            held[leg] = None
+            if self._is_drain_confirmed(leg, head, rod, held_Pa):
+                self._log_explained_step(leg, "rod", StepReason.CHECK_DRAINING)
+            else:
+                unconfirmed.append(leg)
+        return unconfirmed
+
+    def _is_drain_confirmed(self, leg, head, rod, held_Pa: float) -> bool:
+        """Excess form of spec rev. 55 268.3 #2 (R-2): ``p_k+1 <= p_hi + rho (p_k - p_hi)``,
+        ``p_hi`` the D2 extend upper bound of :meth:`_extend_rod_range_Pa` (R-4) at this
+        period's head reading. The lower bound ``p_lo`` is ours (ASSUMPTION: the spec names
+        only the upper one; a reading that drops below the extend range is no drain)."""
+        ratio = self.settings.rod_drain_hold_ratio or 0.0
+        low_Pa, high_Pa = self._extend_rod_range_Pa(head[leg])
+        return bool(low_Pa <= rod[leg] <= high_Pa + ratio * (held_Pa - high_Pa))
 
     def _rod_step_reason(self, leg, head, rod, commanded, command_before) -> StepReason | None:
         """Rise: the leg is locked (command zero this and the last period) and the head fell
