@@ -73,13 +73,39 @@ def find_runs(paths: list[str]) -> list[Path]:
     return out
 
 
-def analyse(run: Path) -> dict:
+LOAD_SOURCES = ("pressure", "controller")
+"""``pressure``: ``p_h A_h - p_r A_ann`` of the recorded readings (the M-4 judge);
+``controller``: the controller's calibrated reading ``s8_series.F_nominal_N`` (what the S-1
+window of a soil-on controller sums, zero offsets removed; S8 runs only)."""
+
+
+def _leg_loads_N(run: Path, rec, geo, load_source: str, t: np.ndarray) -> np.ndarray:
+    if load_source == "pressure":
+        p_h = np.asarray(rec["meas.head_pressure"], float)
+        p_r = np.asarray(rec["meas.rod_pressure"], float) if "meas.rod_pressure" in rec.files \
+            else np.zeros_like(p_h)
+        p_r = np.nan_to_num(p_r)
+        return p_h * geo.head_area_m2 - p_r * geo.annulus_area_m2
+    if load_source != "controller":
+        raise ValueError(f"load_source must be one of {LOAD_SOURCES}: {load_source!r}")
+    s8 = np.load(run / "s8_series.npz", allow_pickle=False)
+    if s8["t"].shape != t.shape or np.max(np.abs(s8["t"] - t)) > 1e-9:
+        raise ValueError(f"{run}: s8_series time base differs from r8_series")
+    return np.asarray(s8["F_nominal_N"], float)
+
+
+def analyse(run: Path, c2: C2Controller | None = None, *, load_source: str = "pressure") -> dict:
+    """Offline LOC judge of one run directory (module docstring).
+
+    ``c2``: controller whose geometry and settings are used (None = the R8 preset of the run's
+    auger level on the current YAML); ``load_source``: :data:`LOAD_SOURCES`."""
     r8 = np.load(run / "r8_series.npz", allow_pickle=False)
     rec = np.load(run / "record" / "record.npz", allow_pickle=False)
     res = json.loads((run / "result.json").read_text("utf-8"))
     settings = res.get("settings", {})
     level = settings.get("level") or "top"
-    c2 = controller(level)
+    if c2 is None:
+        c2 = controller(level)
     geo = c2.geometry
     cfg = c2.config
     soil = cfg.soil
@@ -91,12 +117,8 @@ def analyse(run: Path) -> dict:
     issued = np.asarray(r8["issued_u"], float)
     s_motor = np.asarray(rec["meas.stroke"], float)
     s_rod = np.asarray(rec["meas.stroke_corrected"], float)
-    p_h = np.asarray(rec["meas.head_pressure"], float)
-    p_r = np.asarray(rec["meas.rod_pressure"], float) if "meas.rod_pressure" in rec.files \
-        else np.zeros_like(p_h)
-    p_r = np.nan_to_num(p_r)
-    force = p_h * geo.head_area_m2 - p_r * geo.annulus_area_m2
-    lp = CascadedLowPass(cfg.filters.crawler_rule_pressure_time_constant_s, 1, cfg.period_s)
+    force = _leg_loads_N(run, rec, geo, load_source, t)
+    lp =CascadedLowPass(cfg.filters.crawler_rule_pressure_time_constant_s, 1, cfg.period_s)
     v_max = float(geo.max_speed_m_s)
     w_ref = float(c2._reference_weight_N())
     in_zone = True
@@ -188,7 +210,7 @@ def analyse(run: Path) -> dict:
         "window_breaks": reasons, "W_ref_N": w_ref,
         "loc_before_release": ok_release, "loc_before_done": ok_done, "bias_applied": bias,
         "unchanged": bool(loc is not None and ok_release and ok_done and not bias),
-        "reason": why,
+        "reason": why, "load_source": load_source,
     }
 
 

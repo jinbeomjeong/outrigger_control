@@ -182,7 +182,9 @@ records the weight estimate (S-5); ``LiftedReapproachSettings.max_duration_s`` e
 re-approach that runs too long (P-S9-10). ``C2Config()`` keeps both off; since U-S9-C1 /
 U-S9-C4 :meth:`C2Config.with_10hz_d1` turns both on (10 s limit); ``replace(config,
 soil=SoilResponseSettings())`` turns the soil response off again (revision-56 commands unless a
-re-approach lasts 10 s).
+re-approach lasts 10 s). :meth:`C2Controller.restore_liftoff_confirmation` sets an offline-judged
+LOC in a run state unpickled from revision-56 code (merge rule of 2026-10-26, event
+``INFO_SOIL_STATE_RESTORED``, meta ``soil.restored_from``).
 Only the start-IMU form exists
 (the late IMU read C1 is not implemented). ``C2Config()`` keeps every R8 setting off, so the
 R7 commands stay bit for bit.
@@ -1313,6 +1315,8 @@ SOIL_EVENT_LIFTOFF_CONFIRMED = "crawler_liftoff_confirmed"
 SOIL_EVENT_CLEARANCE_BIAS = "INFO_CLEARANCE_BIAS"
 SOIL_EVENT_LIFTOFF_UNCONFIRMED = "WARN_CRAWLER_LIFTOFF_UNCONFIRMED"
 SOIL_EVENT_WEIGHT_MISMATCH = "WARN_WEIGHT_MISMATCH"
+SOIL_EVENT_STATE_RESTORED = "INFO_SOIL_STATE_RESTORED"
+""":meth:`C2Controller.restore_liftoff_confirmation` (merge compatibility rule, 2026-10-26)."""
 
 
 @dataclass(frozen=True)
@@ -1390,6 +1394,28 @@ class SoilResponseSettings:
         meta = asdict(self)
         meta["weight_record_range"] = list(self.weight_record_range)
         return meta
+
+
+@dataclass(frozen=True)
+class RestoredLiftoff:
+    """S-1 lift-off confirmation handed to :meth:`C2Controller.restore_liftoff_confirmation`.
+
+    The values a soil-on run would have stored at its LOC, judged offline on the record of a
+    run made without the soil response (times on the run's clock).
+    """
+
+    plateau_start_s: float
+    """``t_P``: first sample of the confirming window."""
+    liftoff_s: float
+    """``t_L``: LOC time."""
+    weight_estimate_N: float
+    """``W_hat``: window-mean load sum at the LOC."""
+    clearance_at_plateau_start_m: float
+    """Smallest unbiased corner clearance at ``t_P`` (must be inside the S-3 dead zone)."""
+    clearance_at_liftoff_m: float
+    """Smallest unbiased corner clearance at ``t_L``."""
+    source: str
+    """Where the values come from; kept in the event and in meta ``soil.restored_from``."""
 
 
 @dataclass(frozen=True)
@@ -2565,6 +2591,9 @@ class _SoilState:
     push_m: float | None = None
     """Mean motor-stroke increase since the soil-mode start, updated every soil-mode period
     (so it ends at the LOC or the S-4 FAULT)."""
+    restored_from: str | None = None
+    """Source of a LOC set by :meth:`C2Controller.restore_liftoff_confirmation`; ``None`` when
+    the controller confirmed the lift-off itself (or not yet)."""
 
     @property
     def has_corner_bias(self) -> bool:
@@ -3419,6 +3448,49 @@ class C2Controller:
         state.probe_round = None
         state.reground = None
         return True
+
+    def restore_liftoff_confirmation(self, restored: RestoredLiftoff) -> None:
+        """Mark the S-1 lift-off as confirmed in a run state that has no soil state yet.
+
+        Merge compatibility rule (user decision 2026-10-26, control option (다)): a branch
+        pickled by the controller before the soil response is restored with the soil
+        response on. Its run state has no LOC, so DONE would be refused and the next
+        crawler-zone release would start the soil mode. The caller judges the LOC offline
+        from the base record and hands it over here. The S-3 bias stays zero, so the
+        restored state commands what a soil-on run from the start would have commanded.
+
+        Args:
+            restored: Lift-off values judged on the base record.
+
+        Raises:
+            ValueError: The soil response is off, the soil state has already confirmed the
+                lift-off or entered the soil mode, or ``c_min(t_P)`` is outside the S-3 dead
+                zone (that run would carry a corner bias).
+        """
+        settings = self.config.soil
+        if not settings.enable:
+            raise ValueError("restore_liftoff_confirmation needs the soil response on")
+        soil = self._soil_state()
+        if soil.is_liftoff_confirmed or soil.is_soil_mode:
+            raise ValueError(
+                "restore_liftoff_confirmation needs a soil state without LOC and soil mode, "
+                f"got loc={soil.is_liftoff_confirmed} soil_mode={soil.is_soil_mode}"
+            )
+        if restored.clearance_at_plateau_start_m > settings.corner_bias_deadzone_m:
+            raise ValueError(
+                f"c_min(t_P) {restored.clearance_at_plateau_start_m:.4f} m is above the S-3 dead "
+                f"zone {settings.corner_bias_deadzone_m:.4f} m: the corner bias is not restored"
+            )
+        soil.is_liftoff_confirmed = True
+        soil.plateau_start_s = float(restored.plateau_start_s)
+        soil.liftoff_s = float(restored.liftoff_s)
+        soil.weight_estimate_N = float(restored.weight_estimate_N)
+        soil.weight_ratio = soil.weight_estimate_N / self._reference_weight_N()
+        soil.clearance_at_plateau_start_m = float(restored.clearance_at_plateau_start_m)
+        soil.clearance_at_liftoff_m = float(restored.clearance_at_liftoff_m)
+        soil.corner_bias_m = np.zeros(LEG_COUNT)
+        soil.restored_from = restored.source
+        self._add_event(self._last_time_s(), f"{SOIL_EVENT_STATE_RESTORED}:{restored.source}")
 
     # --- input and filters ---
 
@@ -5122,6 +5194,7 @@ class C2Controller:
                 "settle_attitude_rad": None if settle is None else [float(a) for a in settle],
                 "soil_mode_t_s": soil.soil_mode_start_s,
                 "push_m": soil.push_m,
+                "restored_from": soil.restored_from,
             }
         )
         return meta
