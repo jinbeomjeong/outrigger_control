@@ -33,6 +33,107 @@ PHASE_RANGE_PCT = {("J1", "RL"): ((-28.1, 29.4), (-1.9, 3.2), (-0.6, 2.4)),
                    ("J2", "RL"): ((-19.5, 17.8), (-1.3, 2.0), (-0.4, 1.6)),
                    ("J2", "FL"): ((-6.4, 10.1), (-2.8, 4.1), (-0.5, 1.3))}
 GRID_INDEX = {0.02: 0, 0.01: 1, 0.005: 2}
+L4_LOADED_FRACTION = 0.01
+"""P1-L4 tilt judged while the SCM normal exceeds 1 % of the full load (5.35.2, U-S9P-3)."""
+DYN_REV50_JSON = OUT / "s9_P1P2_dyn_judgement_rev50.json"
+"""dynamics rev. 50 replica values (5.35.4 P2' comparison values, ``crawler_replica_variants``)."""
+
+
+def l5_split(case_dir: Path, r: dict[str, Any], window_s: float = 10.0, mean_s: float = 4.0) -> dict[str, Any]:
+    """P1-L5 split (dynamics 5.35.2, ``s9_p1p2_judge_rev50.l5_split`` ported): in-plane motion of the
+    track anchor point (body frame, ``meta.crawler_anchor.points_body_m``; x, z used, planar) from
+    ``mean_s`` window means at the start and the end of the last ``window_s`` of the settle, against
+    the origin end points; pitch change; rocking peak frequency and zeta from the 2 s p-p decay.
+    In-plane axis = world x rotated by the floor pitch (``args.floor_pitch``)."""
+    d = np.load(case_dir / "series.npz")
+    a = math.radians(float(r["args"].get("floor_pitch") or 0.0))
+    t = d["t_s"]
+    pos = d["body_pos_m"]
+    th = np.radians(d["roll_pitch_deg"][:, 1])
+    xtr, _, ztr = r["meta"]["crawler_anchor"]["points_body_m"][0]
+    px = pos[:, 0] + xtr * np.cos(th) + ztr * np.sin(th)
+    pz = pos[:, 2] - xtr * np.sin(th) + ztr * np.cos(th)
+    tin = px * math.cos(a) - pz * math.sin(a)
+    oin = pos[:, 0] * math.cos(a) - pos[:, 2] * math.sin(a)
+    t1 = float(t[-1])
+    t0 = t1 - window_s
+
+    def wm(x, lo, hi):
+        s = (t > lo + 1e-9) & (t <= hi + 1e-9)
+        return float(x[s].mean())
+
+    i0, i1 = int(np.argmin(abs(t - t0))), len(t) - 1
+    sel = t > t0
+    x = np.degrees(th[sel]) - np.degrees(th[sel]).mean()
+    f = np.fft.rfftfreq(len(x), float(np.median(np.diff(t))))
+    spec = np.abs(np.fft.rfft(x * np.hanning(len(x))))
+    pp2 = [float(np.ptp(np.degrees(th[(t > s0) & (t <= s0 + 2)]))) for s0 in np.arange(t0, t1 - 1.99, 2)]
+    fpk = float(f[1:][np.argmax(spec[1:])])
+    zeta = math.log(pp2[0] / pp2[-1]) / (2 * math.pi * fpk * 2 * (len(pp2) - 1)) if (fpk > 0 and len(pp2) > 1) else None
+    d_track = (wm(tin, t1 - mean_s, t1) - wm(tin, t0, t0 + mean_s)) * 1e3
+    return {"window_s": [t0, t1], "mean_window_s": mean_s, "track_point_body_xz_m": [xtr, ztr],
+            "origin_in_plane_endpoints_mm": float(oin[i1] - oin[i0]) * 1e3,
+            "track_point_in_plane_endpoints_mm": float(tin[i1] - tin[i0]) * 1e3,
+            "pitch_change_endpoints_deg": float(np.degrees(th[i1] - th[i0])),
+            "track_point_in_plane_4s_means_mm": d_track,
+            "pitch_change_4s_means_deg": float(np.degrees(wm(th, t1 - mean_s, t1) - wm(th, t0, t0 + mean_s))),
+            "rocking_peak_Hz": fpk, "pitch_pp_per_2s_deg": pp2, "rocking_zeta_from_pp_decay": zeta,
+            "criterion_mm": 0.1, "within_0p1mm": bool(abs(d_track) <= 0.1),
+            "basis": "dynamics 5.35.2 L5: track-point 4 s window means (rocking 0.5-0.7 Hz cancels), "
+                     "origin end points are mostly rigid rocking about the contact"}
+
+
+def v16_replica_mm(r: dict[str, Any], row_levels: list[dict[str, Any]], q32: bool) -> list[float]:
+    """1-DoF heave replica of a V16 load-step run (dynamics 5.35.2 V16a, ``s9_p1p2_judge_rev50.v16_replica``
+    ported): loaded mass N / g, the run's load-step schedule, Chrono SCM node law (Bekker value
+    replaces the elastic try, ``SCMTerrain.cpp:1394-1465``), area = Chrono contact nodes x h^2 and
+    b = contact hull 2A / P at the last level; ``q32`` rounds the hit height to float32 at the
+    machine pad height z = -1.0469 m. Returns the sinkage [mm] at the end of every level."""
+    sc = r["load_steps"]["schedule"]
+    soil = r["meta"]["scm"]["soil"]["chrono"]
+    n_h, b = row_levels[-1]["n_contact"], row_levels[-1]["b_hull_m"]
+    h = float(r["args"]["grid"])
+    area = n_h * h * h
+    m = float(r["meta"]["normal_load_N"]) / G
+    k_el, kphi, kc, n, r_d = soil["elastic_K"], soil["Kphi"], soil["Kc"], soil["n"], soil["damping_R"]
+    coef = kc / b + kphi
+    z0w = -1.0469
+
+    def poly(u):
+        u = min(max(u, 0.0), 1.0)
+        return 10 * u ** 3 - 15 * u ** 4 + 6 * u ** 5
+
+    def factor(t):
+        for row in sc:
+            if t < row["t_hold_start_s"]:
+                return row["from_factor"] + (row["factor"] - row["from_factor"]) * poly((t - row["t_ramp_start_s"]) / row["ramp_s"])
+            if t < row["t_hold_end_s"]:
+                return row["factor"]
+        return sc[-1]["factor"]
+
+    dt = 1e-4
+    z = v = sp = sy = 0.0
+    marks = {round(row["t_hold_end_s"] / dt): row["level"] for row in sc}
+    out = [math.nan] * len(sc)
+    for k in range(int(round(sc[-1]["t_hold_end_s"] / dt))):
+        zw = z0w + z
+        if q32:
+            zw = float(np.float32(zw))
+        s = z0w - zw
+        sig = k_el * (s - sp)
+        force = 0.0
+        if sig > 0:
+            if sig > sy:
+                sig = coef * max(s, 0.0) ** n
+                sy = sig
+                sp = s - sig / k_el
+            sig += -v * r_d
+            force = sig * area
+        v += dt * (force / m - G * factor(k * dt))
+        z += dt * v
+        if (k + 1) in marks:
+            out[marks[k + 1]] = -z * 1e3
+    return out
 
 
 def load(case_dir: Path) -> dict[str, Any]:
@@ -187,6 +288,22 @@ def summary_v16(folder: Path) -> dict[str, Any]:
                 ent["V16c_criterion_pct"] = 2.0
                 ent["V16c_within"] = abs(ent["V16c_diff_pct"]) <= 2.0
             levels.append(ent)
+        if n_exp < 1.0 and levels and levels[-1]["n_contact"]:
+            # 5.35.2 V16a (U-S9P-3): for n << 1 the static virgin reference is replaced by the 1-DoF replica
+            # with the same schedule (dynamic plastic excess of the runner's loaded mass N / g)
+            rep64 = v16_replica_mm(r, levels, False)
+            rep32 = v16_replica_mm(r, levels, True)
+            for ent, a64, a32 in zip(levels, rep64, rep32, strict=True):
+                zc = ent["node_sinkage_mm"]
+                ent["V16a_replica_f64_mm"], ent["V16a_replica_f32_mm"] = a64, a32
+                if zc is None or ent["factor"] < 0.5:
+                    ent["V16a_replica_note"] = "record only (25 % level: first-contact pre-compression, 5.35.1)"
+                    continue
+                lo, hi = min(a64, a32), max(a64, a32)
+                near = min(abs(zc - a64), abs(zc - a32))
+                ent["V16a_replica_rel_nearest"] = near / max(abs(a64), 1e-12)
+                ent["V16a_replica_in_range"] = bool(lo <= zc <= hi)
+                ent["V16a_replica_within"] = bool(ent["V16a_replica_in_range"] or ent["V16a_replica_rel_nearest"] <= 0.01)
         row.update(kind="V16a-c load steps", levels=levels)
         out_rows.append(row)
         if z100 is not None:
@@ -212,7 +329,9 @@ def summary_v16(folder: Path) -> dict[str, Any]:
         v16b.append(ent)
     return {"batch": "P1-V16a-c, V16b', V16d",
             "criteria": {"V16a": "n |z_node - z_ref| / z_ref <= 0.5 % (G1) / 1 % (J1); z_ref = (F / (N_h h^2 (Kc / b_hull + Kphi)))^(1/n), "
-                                 "N_h = Chrono contact nodes, b_hull = 2 A / P of the contact-node hull",
+                                 "N_h = Chrono contact nodes, b_hull = 2 A / P of the contact-node hull; "
+                                 "n < 1 (J1, J2) since 5.35.2 (U-S9P-3): node sinkage vs the 1-DoF replica with the "
+                                 "same schedule inside [f64, f32] or within 1 % of the nearer (levels >= 50 %)",
                          "V16b": "diff vs the finest grid within the 5.31.8 phase range of that grid",
                          "V16c": "recovery 100 -> 50 % = dF / (K N_h h^2) +-2 %",
                          "V16b'": "J2 B rear 2 cm outside the range (warning), 1 cm inside",
@@ -265,7 +384,11 @@ def summary_l(folder: Path) -> dict[str, Any]:
                  "Ft_over_F": float(ft[late].mean() / F),
                  "step_range_rel_max": float((z["Fx_step_max"][late] - z["Fx_step_min"][late]).max() / F),
                  "x_mean_mm": float(x[late].mean() * 1e3)}
-        l2.append({"last_5s": last5,"case": k, "force_N": F, "drift_mm": h["drift_mm"], "drift_window_means_mm": h["drift_window_means_mm"],
+        # 5.35.2 (U-S9P-3): judged on the last 5 s (hold start + 5 s on); slip sum = main indicator
+        last5["drift_criterion_mm"] = 0.01
+        last5["drift_within"] = bool(abs(last5["drift_window_means_mm"]) <= 0.01)
+        l2.append({"last_5s": last5, "case": k, "judged_window": "last_5s (5.35.2)",
+                   "slip_sum_main_indicator_mm": h["slip_total_x_mm"], "force_N": F, "drift_mm": h["drift_mm"], "drift_window_means_mm": h["drift_window_means_mm"],
                    "drift_velocity_m_s": h["drift_velocity_m_s"], "Ft_over_F": h["Ft_over_F"],
                    "Ft_step_range_rel": (h["Ft_step_range_N"][1] - h["Ft_step_range_N"][0]) / F,
                    "x_mean_mm": h["x_mean_mm"], "elastic_expected_mm": h["elastic_expected_mm"],
@@ -273,7 +396,9 @@ def summary_l(folder: Path) -> dict[str, Any]:
                    "slip_total_x_mm": h["slip_total_x_mm"], "tilt_deg_max": h["tilt_deg_max"],
                    "limit_N": r["limit_N"], "F_over_limit": F / r["limit_N"] if r["limit_N"] else None,
                    "window_s": h["window_s"],
-                   "criterion": "drift <= 0.01 mm, F_t = F +-0.5 %, step range <= 1 %, elastic F / k_t +-1 %"})
+                   "criterion": "last 5 s: drift (0.5 s window means) <= 0.01 mm with the slip sum as the main "
+                                "indicator (5.35.2); F_t = F +-0.5 %, step range <= 1 %, elastic F / k_t +-1 %; "
+                                "whole-hold drift_mm kept as a record (elastic approach tail, proportional to F)"})
     out["L2"] = l2
     l3 = []
     for k, r in cs.items():
@@ -286,19 +411,34 @@ def summary_l(folder: Path) -> dict[str, Any]:
     l4 = []
     for k, r in cs.items():
         if k.startswith("L4_"):
+            # 5.35.2 (U-S9P-3): tilt judged while loaded (SCM normal > 1 % of the full load); the air phase
+            # after the first-contact pre-compression rebound (F_z = 0) is excluded
+            z = np.load(folder / k / "series.npz")
+            n_full = float(r["meta"]["normal_load_N"])
+            loaded = z["Fz_scm"] > L4_LOADED_FRACTION * n_full
+            tilt_loaded = float(z["tilt_deg"][loaded].max()) if loaded.any() else None
+            t_air = z["t"][~loaded & (z["t"] > z["t"][np.argmax(loaded)])] if loaded.any() else np.array([])
             l4.append({"case": k, "k_sw_N_m_rad": r["meta"]["k_sw_N_m_rad"], "tilt_deg_max_all": r["tilt_deg_max_all"],
+                       "tilt_deg_max_loaded": tilt_loaded,
+                       "t_tilt_max_all_s": float(z["t"][int(np.argmax(z["tilt_deg"]))]),
+                       "loaded_rule": f"SCM normal > {L4_LOADED_FRACTION:g} x full load {n_full:.0f} N",
+                       "unloaded_after_first_load_s": [float(t_air[0]), float(t_air[-1])] if t_air.size else None,
                        "tilt_deg_end": r["tilt_deg_end"], "sinkage_end_mm": -r["z_bottom_end_mm"],
                        "Fz_end_N": r["Fz_scm_end_N"], "swivel": r.get("swivel"),
-                       "criterion": "tilt <= 0.5 deg (k_sw 0: instability record)"})
+                       "within_0p5deg_loaded": None if tilt_loaded is None else bool(tilt_loaded <= 0.5),
+                       "criterion": "tilt while loaded (> 1 % N) <= 0.5 deg (5.35.2); k_sw 0: instability record"})
     out["L4"] = l4
     l5 = []
     for k, r in cs.items():
         if k.startswith("L5_"):
             l5.append({"case": k, "settle_drift": r.get("settle_drift"), "settle_last_1s": r.get("settle_last_1s"),
+                       "track_point_split": l5_split(folder / k, r),
                        "track_utilisation": r["end"].get("track_utilisation"),
                        "equilibrium_rel_error": r["end"]["equilibrium_rel_error"],
                        "first_step_force_norm_max_N": r["first_step"]["force_norm_max_N"],
-                       "us_per_step": r["us_per_step"], "criterion": "10 s drift <= 0.1 mm, track utilisation recorded"})
+                       "us_per_step": r["us_per_step"],
+                       "criterion": "10 s drift <= 0.1 mm judged on the track-point 4 s window means "
+                                    "(track_point_split, 5.35.2); origin end points recorded; track utilisation recorded"})
     out["L5"] = l5
     l6 = []
     for k, r in cs.items():
@@ -354,9 +494,86 @@ def summary_p2(folder: Path) -> dict[str, Any]:
             "rows": rows, "P2-e": p2e, "cost": batch_cost(folder)}
 
 
+P2P_RANGE_MARGIN = (0.005, 0.05)
+"""P2'-b J1 / J2 margin around the replica f64-f32 range (deg, mm) (5.35.4, U-S9P-2)."""
+
+
+def p2prime_references() -> dict[str, dict[str, Any]]:
+    """5.35.4 P2' comparison values from the dynamics rev. 50 JSON (``*_dp2e6_zt_t8``, f64 and f32)."""
+    doc = json.loads(DYN_REV50_JSON.read_text("utf-8"))
+    out: dict[str, dict[str, Any]] = {}
+    for c in doc["crawler_replica_variants"]:
+        if not c["case"].endswith("_dp2e6_zt_t8"):
+            continue
+        key = "f32" if c["float32_hit"] else "f64"
+        out.setdefault(c["soil"], {})[key] = {k: c[k] for k in ("pitch_deg", "z0_mm", "start_rise_max_mm", "pitch_pp_deg")}
+    return out
+
+
+def summary_p2prime(folder: Path) -> dict[str, Any]:
+    """P2' (dynamics 5.35.4, 5.35.5 #2; U-S9P-1 / 2): dashpot settle 8 s, judged on 7-8 s.
+    z0 = body-origin z change from the first record [mm] (as the dynamics replica comparison)."""
+    refs = p2prime_references()
+    rows = {}
+    for k, r in cases(folder).items():
+        soil = r["args"]["soil"]
+        d = np.load(folder / k / "series.npz")
+        t = d["t_s"]
+        t_end = float(t[-1])
+        sel = t > t_end - 1.0 + 1e-9
+        z = (d["body_pos_m"][:, 2] - d["body_pos_m"][0, 2]) * 1e3
+        pitch = d["roll_pitch_deg"][:, 1]
+        roll = d["roll_pitch_deg"][:, 0]
+        s = r["settle_last_1s"]
+        early = t <= 5.0 + 1e-9
+        rise = float(z[early].max())
+        pm, zm = float(pitch[sel].mean()), float(z[sel].mean())
+        ref = refs.get(soil, {})
+        row: dict[str, Any] = {
+            "soil": soil, "level": r["args"]["level"], "pad_grid_m": r["args"]["grid"],
+            "crawler_grid_m": r["args"]["crawler_grid"], "t_end_s": t_end, "judge_window_s": [t_end - 1.0, t_end],
+            "settle_dashpot": r["gravity_schedule"].get("settle_dashpot"),
+            "P2'-a_first_step_force_N": r["first_step"]["force_norm_max_N"],
+            "P2'-a_start_rise_mm": rise, "P2'-a_start_rise_t_s": float(t[early][int(np.argmax(z[early]))]),
+            "P2'-a_within": bool(r["first_step"]["force_norm_max_N"] <= 100.0 and rise <= 2.0),
+            "pitch_mean_deg": pm, "z0_mean_mm": zm, "roll_mean_deg": float(roll[sel].mean()),
+            "P2'-c_pitch_pp_deg": float(np.ptp(pitch[sel])), "roll_pp_deg": float(np.ptp(roll[sel])),
+            "P2'-c_within": bool(np.ptp(pitch[sel]) <= 0.02),
+            "P2'-d_normal_over_weight": s["normal_over_weight"],
+            "P2'-d_within": bool(abs(s["normal_over_weight"] - 1.0) <= 0.002),
+            "replica_f64": ref.get("f64"), "replica_f32": ref.get("f32"),
+            "us_per_step": r["us_per_step"], "wall_s": r["wall_s"], "build_s": r["build_s"],
+            "threads": r.get("num_threads_chrono"), "placement": r.get("placement")}
+        if soil in ("G1", "S1") and ref:
+            p_ref, z_ref = ref["f64"]["pitch_deg"], ref["f64"]["z0_mm"]
+            row["P2'-b"] = {"basis": "(a) replica f64 (5.35.4), <= 1 %", "pitch_ref_deg": p_ref, "z0_ref_mm": z_ref,
+                            "pitch_rel_pct": (pm - p_ref) / p_ref * 100.0, "z0_rel_pct": (zm - z_ref) / z_ref * 100.0}
+            row["P2'-b"]["within"] = bool(abs(row["P2'-b"]["pitch_rel_pct"]) <= 1.0 and abs(row["P2'-b"]["z0_rel_pct"]) <= 1.0)
+        elif ref:
+            pr = sorted((ref["f64"]["pitch_deg"], ref["f32"]["pitch_deg"]))
+            zr = sorted((ref["f64"]["z0_mm"], ref["f32"]["z0_mm"]))
+            mp, mz = P2P_RANGE_MARGIN
+            row["P2'-b"] = {"basis": "replica f64-f32 range +- (0.005 deg, 0.05 mm) (5.35.4, U-S9P-2)",
+                            "pitch_range_deg": pr, "z0_range_mm": zr,
+                            "pitch_outside_range_deg": max(pr[0] - pm, pm - pr[1], 0.0),
+                            "z0_outside_range_mm": max(zr[0] - zm, zm - zr[1], 0.0)}
+            row["P2'-b"]["within"] = bool(pr[0] - mp <= pm <= pr[1] + mp and zr[0] - mz <= zm <= zr[1] + mz)
+        rows[k] = row
+    return {"batch": "P2' (dynamics_model.md 5.35.4 / 5.35.5 #2; user decisions U-S9P-1, U-S9P-2 2026-10-26)",
+            "criteria": {"P2'-a": "first-step SCM force <= 100 N, start rise (max z0 up to 5 s) <= 2 mm",
+                         "P2'-b": "G1, S1: replica (a) f64 <= 1 %; J1, J2: replica f64-f32 range +- (0.005 deg, 0.05 mm)",
+                         "P2'-c": "7-8 s pitch p-p <= 0.02 deg", "P2'-d": "SCM normal sum / weight 1 +- 0.002 (last 1 s)"},
+            "case_def": "machine settle, type B pads, top auger, M14s (pads 1 cm J1 / J2, 2 cm G1 / S1; crawler 4 cm), "
+                        "gravity Poly345 3 s + hold 5 s, settle dashpot c_z 2e6 N s/m, c_pitch 3.4e6, c_roll 2.2e6 N m s/rad "
+                        "(ASSUMPTION) full to 3 s, linear to 0 at 5 s; (b'), Δt 1e-4 s, mesh ray targets, 4 SCM threads",
+            "reference_source": DYN_REV50_JSON.relative_to(ROOT).as_posix(),
+            "values_only": "pass / fail decisions are dynamics-expert's; *_within flags compare with the 5.35.4 criteria",
+            "rows": rows, "cost": batch_cost(folder)}
+
+
 def main(argv) -> None:
     kind, folder = argv[0], Path(argv[1])
-    fn = {"V0p": summary_v0p, "V16": summary_v16, "L": summary_l, "P2": summary_p2}[kind]
+    fn = {"V0p": summary_v0p, "V16": summary_v16, "L": summary_l, "P2": summary_p2, "P2prime": summary_p2prime}[kind]
     res = fn(folder)
     res["source_batch"] = folder.as_posix()
     res["generator"] = "04_scripts/02_chrono/s9_batch_summary.py"

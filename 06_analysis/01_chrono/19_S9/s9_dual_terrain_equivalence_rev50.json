@@ -1,0 +1,176 @@
+{
+ "basis": "dynamics_model.md 5.34.12 E1-E4; case in the module docstring",
+ "case": {
+  "soil": "G1",
+  "pad_variant": "dwg_rear250",
+  "grid_m": 0.02,
+  "dt_s": 0.0001,
+  "steps": 15000,
+  "threads": 4,
+  "start_clearance_m": [
+   0.0029728527031611662,
+   0.0029728527031611662,
+   0.002974791515695241,
+   0.002974791515695241
+  ],
+  "lift_speed_m_s": 0.0209243016,
+  "gravity_ramp_s": 0.5
+ },
+ "cost_us_per_step": {
+  "single": 34289.700186667804,
+  "dual": 31059.354893331572
+ },
+ "E1": {
+  "single_rep_bit_identical": true,
+  "dual_rep_bit_identical": true,
+  "pass": true
+ },
+ "E2": {
+  "t_first_pad_force_s": 0.1681,
+  "bit_identical_before_first_pad_force": false,
+  "t_first_difference_s": 0.0303,
+  "t_first_crawler_force_s": 0.0303,
+  "crawler_force_max_rel_diff_before_first_pad_force": 5.6094947682481835e-14,
+  "pitch_max_abs_diff_before_first_pad_force_deg": 7.051650929845721e-16,
+  "pad_start_clearance_min_m": 0.0029728527031611662,
+  "ray_test_height_m": 0.1,
+  "pads_in_ray_window": true,
+  "max_rel_diff_before_first_pad_force": 5.6094947682481835e-14,
+  "kinematic_abs_diff_before_first_pad_force": {
+   "pitch_deg": 7.051650929845721e-16,
+   "roll_deg": 1.3150186506123013e-16,
+   "z0": 4.440892098500626e-16
+  },
+  "criterion": "force series relative diff <= 1e-12 before the first pad force (pads in the ray window, 5.35.2); kinematic abs diffs recorded (deg, m)",
+  "pass": true
+ },
+ "E3": {
+  "normal_sum_rel": 9.331943516346937e-07,
+  "pad_normal_rel": [
+   8.437531515192114e-07,
+   8.429755099496899e-07,
+   9.671833761927081e-07,
+   1.1938289731444683e-06
+  ],
+  "pad_normal_end_diff_N": [
+   0.10095045683556236,
+   0.09903839013713878,
+   0.06891830173844937,
+   0.08647339035815094
+  ],
+  "pad_normal_end_diff_over_node_force": [
+   0.00022591490631926884,
+   0.00022570669278902946,
+   0.00014677007733724344,
+   0.00018116354667467306
+  ],
+  "z0_rel": 5.328158439073719e-07,
+  "pitch_abs_deg": 4.2658962698220726e-08,
+  "impulse_single_N_s": 475896.5307317409,
+  "impulse_dual_N_s": 475896.51049918355,
+  "impulse_rel": 4.2514614023336105e-08,
+  "pad_pass": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "criterion": "normal sum, z0, impulse rel <= 1e-6, pitch <= 1e-5 deg; pads rel <= 1e-6 or end diff <= 0.01 sigma_bar h^2 (5.35.2)",
+  "pass": true
+ },
+ "E4": {
+  "bodies": [
+   {
+    "body": "pad_FL",
+    "max_diff_N": 9.178047110064654,
+    "t_max_s": 0.7804,
+    "end_diff_N": 3.259911619752529,
+    "node_force_N": 446.85168624020116,
+    "node_force_basis": "end pad normal / pad area x h^2 (mean node force)",
+    "max_over_node_force": 0.02053935879103089,
+    "end_over_max": 0.3551857580004909,
+    "pass_max": true,
+    "small_force_body": true,
+    "event_body": false,
+    "pass_decay": null,
+    "pass_end": true,
+    "criterion": "small-force body: end diff <= 0.01 sigma_bar h^2 (5.35.2)",
+    "pass": true
+   },
+   {
+    "body": "pad_FR",
+    "max_diff_N": 430.6443614860036,
+    "t_max_s": 1.1931,
+    "end_diff_N": 1.3541325824189698,
+    "node_force_N": 438.79243859955477,
+    "node_force_basis": "end pad normal / pad area x h^2 (mean node force)",
+    "max_over_node_force": 0.9814306802105423,
+    "end_over_max": 0.0031444335593907003,
+    "pass_max": true,
+    "small_force_body": false,
+    "event_body": true,
+    "pass_decay": true,
+    "criterion": "max <= sigma_bar h^2, end / max <= 1/100",
+    "pass": true
+   },
+   {
+    "body": "pad_RL",
+    "max_diff_N": 4.880964032839984,
+    "t_max_s": 1.4791,
+    "end_diff_N": 3.4896553240832873,
+    "node_force_N": 469.5664333547442,
+    "node_force_basis": "end pad normal / pad area x h^2 (mean node force)",
+    "max_over_node_force": 0.010394618708089283,
+    "end_over_max": 0.7149520669696136,
+    "pass_max": true,
+    "small_force_body": true,
+    "event_body": false,
+    "pass_decay": null,
+    "pass_end": true,
+    "criterion": "small-force body: end diff <= 0.01 sigma_bar h^2 (5.35.2)",
+    "pass": true
+   },
+   {
+    "body": "pad_RR",
+    "max_diff_N": 448.50375797097513,
+    "t_max_s": 1.2562,
+    "end_diff_N": 0.4190222335746512,
+    "node_force_N": 477.32224250078696,
+    "node_force_basis": "end pad normal / pad area x h^2 (mean node force)",
+    "max_over_node_force": 0.9396246770759602,
+    "end_over_max": 0.0009342669400816217,
+    "pass_max": true,
+    "small_force_body": false,
+    "event_body": true,
+    "pass_decay": true,
+    "criterion": "max <= sigma_bar h^2, end / max <= 1/100",
+    "pass": true
+   },
+   {
+    "body": "superstructure (crawler)",
+    "max_diff_N": 213.63545405885088,
+    "t_max_s": 0.4698,
+    "end_diff_N": 0.0,
+    "node_force_N": 280.0,
+    "node_force_basis": "max node pressure 700000 Pa x h^2 (dynamics 5.35.2 E4: G1 crawler end node, sinkage about 4.7 mm, sigma about 0.7 MPa (node force about 280 N at 2 cm); ASSUMPTION when not measured in the run)",
+    "mean_pressure_node_force_N": 27.328348322580098,
+    "spike_steps_over_mean_node_force": 21,
+    "spike_width_steps_max": 2,
+    "z0_abs_diff_at_spikes_m": 4.933629949022134e-09,
+    "crawler_normal_max_N": 177087.69713031905,
+    "crawler_normal_end_N": 0.0,
+    "max_over_node_force": 0.762983764495896,
+    "end_over_max": 0.0,
+    "pass_max": true,
+    "small_force_body": false,
+    "event_body": true,
+    "pass_decay": true,
+    "pass_spike": true,
+    "criterion": "max <= max node pressure h^2, spike width <= 2 steps, z0 diff <= 1 um at spikes (5.35.2)",
+    "pass": true
+   }
+  ],
+  "pass": true
+ },
+ "pass_all": true
+}

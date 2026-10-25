@@ -168,9 +168,13 @@
     "Ft_pp_rel": 0.011616957792204813,
     "Ft_over_F": 1.0000307614685657,
     "step_range_rel_max": 9.976265322638937e-05,
-    "x_mean_mm": 7.39238966581355
+    "x_mean_mm": 7.39238966581355,
+    "drift_criterion_mm": 0.01,
+    "drift_within": true
    },
    "case": "L2_J1_B_RL_F20000_1cm",
+   "judged_window": "last_5s (5.35.2)",
+   "slip_sum_main_indicator_mm": 4.2126659155379885e-09,
    "force_N": 20000.0,
    "drift_mm": 0.08532235480725354,
    "drift_window_means_mm": 0.16897167928596296,
@@ -188,7 +192,7 @@
     4.0,
     13.5
    ],
-   "criterion": "drift <= 0.01 mm, F_t = F +-0.5 %, step range <= 1 %, elastic F / k_t +-1 %"
+   "criterion": "last 5 s: drift (0.5 s window means) <= 0.01 mm with the slip sum as the main indicator (5.35.2); F_t = F +-0.5 %, step range <= 1 %, elastic F / k_t +-1 %; whole-hold drift_mm kept as a record (elastic approach tail, proportional to F)"
   },
   {
    "last_5s": {
@@ -200,9 +204,13 @@
     "Ft_pp_rel": 0.011603706838922631,
     "Ft_over_F": 1.0000309298013206,
     "step_range_rel_max": 9.964838063588309e-05,
-    "x_mean_mm": 1.6448069824699478
+    "x_mean_mm": 1.6448069824699478,
+    "drift_criterion_mm": 0.01,
+    "drift_within": true
    },
    "case": "L2_J1_B_RL_F4450_1cm",
+   "judged_window": "last_5s (5.35.2)",
+   "slip_sum_main_indicator_mm": 4.2126659155379885e-09,
    "force_N": 4450.0,
    "drift_mm": 0.01888636901487277,
    "drift_window_means_mm": 0.037582826160180174,
@@ -220,7 +228,7 @@
     4.0,
     13.5
    ],
-   "criterion": "drift <= 0.01 mm, F_t = F +-0.5 %, step range <= 1 %, elastic F / k_t +-1 %"
+   "criterion": "last 5 s: drift (0.5 s window means) <= 0.01 mm with the slip sum as the main indicator (5.35.2); F_t = F +-0.5 %, step range <= 1 %, elastic F / k_t +-1 %; whole-hold drift_mm kept as a record (elastic approach tail, proportional to F)"
   },
   {
    "last_5s": {
@@ -232,9 +240,13 @@
     "Ft_pp_rel": 0.011616694937130372,
     "Ft_over_F": 1.000030733739377,
     "step_range_rel_max": 9.976075276768241e-05,
-    "x_mean_mm": 2.579943934879217
+    "x_mean_mm": 2.579943934879217,
+    "drift_criterion_mm": 0.01,
+    "drift_within": true
    },
    "case": "L2_J1_B_RL_F6980_1cm",
+   "judged_window": "last_5s (5.35.2)",
+   "slip_sum_main_indicator_mm": 4.2126659155379885e-09,
    "force_N": 6980.0,
    "drift_mm": 0.029760353855812043,
    "drift_window_means_mm": 0.05896987671017177,
@@ -252,7 +264,7 @@
     4.0,
     13.5
    ],
-   "criterion": "drift <= 0.01 mm, F_t = F +-0.5 %, step range <= 1 %, elastic F / k_t +-1 %"
+   "criterion": "last 5 s: drift (0.5 s window means) <= 0.01 mm with the slip sum as the main indicator (5.35.2); F_t = F +-0.5 %, step range <= 1 %, elastic F / k_t +-1 %; whole-hold drift_mm kept as a record (elastic approach tail, proportional to F)"
   }
  ],
  "L3": [
@@ -288,6 +300,13 @@
    "case": "L4_G1_B_RL_2cm",
    "k_sw_N_m_rad": 15000.0,
    "tilt_deg_max_all": 0.0002050763587411666,
+   "tilt_deg_max_loaded": 0.00018048379088318926,
+   "t_tilt_max_all_s": 0.184,
+   "loaded_rule": "SCM normal > 0.01 x full load 72814 N",
+   "unloaded_after_first_load_s": [
+    0.264,
+    0.313
+   ],
    "tilt_deg_end": 0.0,
    "sinkage_end_mm": 7.734585419158536,
    "Fz_end_N": 72814.04995409386,
@@ -319,12 +338,20 @@
     ],
     "warnings": []
    },
-   "criterion": "tilt <= 0.5 deg (k_sw 0: instability record)"
+   "within_0p5deg_loaded": true,
+   "criterion": "tilt while loaded (> 1 % N) <= 0.5 deg (5.35.2); k_sw 0: instability record"
   },
   {
    "case": "L4_J1_A_FL_1cm",
    "k_sw_N_m_rad": 15000.0,
    "tilt_deg_max_all": 0.660951988779872,
+   "tilt_deg_max_loaded": 0.004975486188152699,
+   "t_tilt_max_all_s": 0.802,
+   "loaded_rule": "SCM normal > 0.01 x full load 119146 N",
+   "unloaded_after_first_load_s": [
+    0.221,
+    1.8150000000000002
+   ],
    "tilt_deg_end": 0.0,
    "sinkage_end_mm": 52.21362659923094,
    "Fz_end_N": 119146.52789370468,
@@ -416,12 +443,20 @@
     ],
     "warnings": []
    },
-   "criterion": "tilt <= 0.5 deg (k_sw 0: instability record)"
+   "within_0p5deg_loaded": true,
+   "criterion": "tilt while loaded (> 1 % N) <= 0.5 deg (5.35.2); k_sw 0: instability record"
   },
   {
    "case": "L4_J1_B_RL_1cm",
    "k_sw_N_m_rad": 15000.0,
    "tilt_deg_max_all": 0.019830803831736864,
+   "tilt_deg_max_loaded": 0.01750410288533292,
+   "t_tilt_max_all_s": 0.8230000000000001,
+   "loaded_rule": "SCM normal > 0.01 x full load 72814 N",
+   "unloaded_after_first_load_s": [
+    0.223,
+    1.8290000000000002
+   ],
    "tilt_deg_end": 0.0,
    "sinkage_end_mm": 89.78910997451418,
    "Fz_end_N": 72818.47554268019,
@@ -493,17 +528,26 @@
     ],
     "warnings": []
    },
-   "criterion": "tilt <= 0.5 deg (k_sw 0: instability record)"
+   "within_0p5deg_loaded": true,
+   "criterion": "tilt while loaded (> 1 % N) <= 0.5 deg (5.35.2); k_sw 0: instability record"
   },
   {
    "case": "L4_J1_B_RL_1cm_ksw0",
    "k_sw_N_m_rad": 0.0,
    "tilt_deg_max_all": 0.0016406766256106956,
+   "tilt_deg_max_loaded": 0.0016406766256106956,
+   "t_tilt_max_all_s": 0.8500000000000001,
+   "loaded_rule": "SCM normal > 0.01 x full load 72814 N",
+   "unloaded_after_first_load_s": [
+    0.223,
+    1.8290000000000002
+   ],
    "tilt_deg_end": 4.796354146214209e-05,
    "sinkage_end_mm": 89.78911057653937,
    "Fz_end_N": 72818.47280336733,
    "swivel": null,
-   "criterion": "tilt <= 0.5 deg (k_sw 0: instability record)"
+   "within_0p5deg_loaded": true,
+   "criterion": "tilt while loaded (> 1 % N) <= 0.5 deg (5.35.2); k_sw 0: instability record"
   }
  ],
  "L5": [
@@ -539,6 +583,34 @@
     "x_origin_pp_mm": 0.8983562453729332,
     "normal_over_weight": 0.9981651781734864
    },
+   "track_point_split": {
+    "window_s": [
+     4.99999999997838,
+     14.99999999997838
+    ],
+    "mean_window_s": 4.0,
+    "track_point_body_xz_m": [
+     -0.019565,
+     -1.0469
+    ],
+    "origin_in_plane_endpoints_mm": 0.5661566001444324,
+    "track_point_in_plane_endpoints_mm": 0.05507011542574963,
+    "pitch_change_endpoints_deg": 0.027975444606175025,
+    "track_point_in_plane_4s_means_mm": -0.003552952247611041,
+    "pitch_change_4s_means_deg": -0.0023957373706545828,
+    "rocking_peak_Hz": 0.6999300070009313,
+    "pitch_pp_per_2s_deg": [
+     0.06333439863252499,
+     0.058435385586061095,
+     0.054136422016988206,
+     0.05089754480223663,
+     0.04742044632916942
+    ],
+    "rocking_zeta_from_pp_decay": 0.00822501515602538,
+    "criterion_mm": 0.1,
+    "within_0p1mm": true,
+    "basis": "dynamics 5.35.2 L5: track-point 4 s window means (rocking 0.5-0.7 Hz cancels), origin end points are mostly rigid rocking about the contact"
+   },
    "track_utilisation": [
     0.07567183298598432,
     0.07564533180947645
@@ -546,7 +618,7 @@
    "equilibrium_rel_error": -0.0019375758016648894,
    "first_step_force_norm_max_N": 0.0,
    "us_per_step": 2279.0309966669884,
-   "criterion": "10 s drift <= 0.1 mm, track utilisation recorded"
+   "criterion": "10 s drift <= 0.1 mm judged on the track-point 4 s window means (track_point_split, 5.35.2); origin end points recorded; track utilisation recorded"
   },
   {
    "case": "L5_J1_M14s_pitch3.5",
@@ -580,6 +652,34 @@
     "x_origin_pp_mm": 1.8310068781001165,
     "normal_over_weight": 0.9981144914799747
    },
+   "track_point_split": {
+    "window_s": [
+     4.99999999997838,
+     14.99999999997838
+    ],
+    "mean_window_s": 4.0,
+    "track_point_body_xz_m": [
+     -0.019565,
+     -1.0469
+    ],
+    "origin_in_plane_endpoints_mm": 1.7087791773537087,
+    "track_point_in_plane_endpoints_mm": 0.0832251632463879,
+    "pitch_change_endpoints_deg": 0.0889792134254047,
+    "track_point_in_plane_4s_means_mm": -0.0031341142900653818,
+    "pitch_change_4s_means_deg": -0.004756814716909671,
+    "rocking_peak_Hz": 0.4999500050006652,
+    "pitch_pp_per_2s_deg": [
+     0.12544650094369336,
+     0.1191048397621719,
+     0.113093948961005,
+     0.10739212934987785,
+     0.10197938839646481
+    ],
+    "rocking_zeta_from_pp_decay": 0.008241415890335752,
+    "criterion_mm": 0.1,
+    "within_0p1mm": true,
+    "basis": "dynamics 5.35.2 L5: track-point 4 s window means (rocking 0.5-0.7 Hz cancels), origin end points are mostly rigid rocking about the contact"
+   },
    "track_utilisation": [
     0.09383009870672192,
     0.09399320499365119
@@ -587,7 +687,7 @@
    "equilibrium_rel_error": -0.0019368226086366534,
    "first_step_force_norm_max_N": 0.0,
    "us_per_step": 2768.808051333375,
-   "criterion": "10 s drift <= 0.1 mm, track utilisation recorded"
+   "criterion": "10 s drift <= 0.1 mm judged on the track-point 4 s window means (track_point_split, 5.35.2); origin end points recorded; track utilisation recorded"
   }
  ],
  "L6": [

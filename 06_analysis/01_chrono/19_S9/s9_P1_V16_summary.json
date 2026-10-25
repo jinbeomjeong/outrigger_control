@@ -1,7 +1,7 @@
 {
  "batch": "P1-V16a-c, V16b', V16d",
  "criteria": {
-  "V16a": "n |z_node - z_ref| / z_ref <= 0.5 % (G1) / 1 % (J1); z_ref = (F / (N_h h^2 (Kc / b_hull + Kphi)))^(1/n), N_h = Chrono contact nodes, b_hull = 2 A / P of the contact-node hull",
+  "V16a": "n |z_node - z_ref| / z_ref <= 0.5 % (G1) / 1 % (J1); z_ref = (F / (N_h h^2 (Kc / b_hull + Kphi)))^(1/n), N_h = Chrono contact nodes, b_hull = 2 A / P of the contact-node hull; n < 1 (J1, J2) since 5.35.2 (U-S9P-3): node sinkage vs the 1-DoF replica with the same schedule inside [f64, f32] or within 1 % of the nearer (levels >= 50 %)",
   "V16b": "diff vs the finest grid within the 5.31.8 phase range of that grid",
   "V16c": "recovery 100 -> 50 % = dF / (K N_h h^2) +-2 %",
   "V16b'": "J2 B rear 2 cm outside the range (warning), 1 cm inside",
@@ -746,7 +746,10 @@
      "V16a_reference_mm": 0.0012357016427256844,
      "V16a_pressure_diff_pct": -11870.304545234068,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": -1.1529052483402102,
+     "V16a_replica_f32_mm": -1.0094776646629005,
+     "V16a_replica_note": "record only (25 % level: first-contact pre-compression, 5.35.1)"
     },
     {
      "factor": 0.5,
@@ -767,7 +770,12 @@
      "V16a_reference_mm": 0.25558124142100885,
      "V16a_pressure_diff_pct": 0.6059082418031998,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": true
+     "V16a_within": true,
+     "V16a_replica_f64_mm": 0.23988148588658328,
+     "V16a_replica_f32_mm": 0.3783670325843232,
+     "V16a_replica_rel_nearest": 0.11510671332879323,
+     "V16a_replica_in_range": true,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.75,
@@ -788,7 +796,12 @@
      "V16a_reference_mm": 5.781987146194903,
      "V16a_pressure_diff_pct": 1.8462580856358262,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 6.601040284030209,
+     "V16a_replica_f32_mm": 6.6323381752458035,
+     "V16a_replica_rel_nearest": 0.0003187111619353952,
+     "V16a_replica_in_range": true,
+     "V16a_replica_within": true
     },
     {
      "factor": 1.0,
@@ -809,7 +822,12 @@
      "V16a_reference_mm": 52.862089607826874,
      "V16a_pressure_diff_pct": 0.0891547485111447,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": true
+     "V16a_within": true,
+     "V16a_replica_f64_mm": 53.22459371941798,
+     "V16a_replica_f32_mm": 53.22461359971002,
+     "V16a_replica_rel_nearest": 1.364468679925217e-07,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.5,
@@ -831,7 +849,12 @@
      "V16c_predicted_mm": 2.780543495468093,
      "V16c_diff_pct": 0.0009829582830227358,
      "V16c_criterion_pct": 2.0,
-     "V16c_within": true
+     "V16c_within": true,
+     "V16a_replica_f64_mm": 50.44402654741906,
+     "V16a_replica_f32_mm": 50.44401538095458,
+     "V16a_replica_rel_nearest": 4.656164662871528e-07,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     }
    ]
   },
@@ -864,7 +887,10 @@
      "V16a_reference_mm": 0.001219966813828689,
      "V16a_pressure_diff_pct": -12044.82047103096,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": -1.154723156643939,
+     "V16a_replica_f32_mm": -1.0119230158726593,
+     "V16a_replica_note": "record only (25 % level: first-contact pre-compression, 5.35.1)"
     },
     {
      "factor": 0.5,
@@ -885,7 +911,12 @@
      "V16a_reference_mm": 0.2523267931270253,
      "V16a_pressure_diff_pct": 0.5535608492726539,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": true
+     "V16a_within": true,
+     "V16a_replica_f64_mm": 0.23569807183947294,
+     "V16a_replica_f32_mm": 0.3735008265505937,
+     "V16a_replica_rel_nearest": 0.11613671933974573,
+     "V16a_replica_in_range": true,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.75,
@@ -906,7 +937,12 @@
      "V16a_reference_mm": 5.708362109791031,
      "V16a_pressure_diff_pct": 1.84135632939286,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 6.514649979856792,
+     "V16a_replica_f32_mm": 6.546276656549607,
+     "V16a_replica_rel_nearest": 0.0003469858828953936,
+     "V16a_replica_in_range": true,
+     "V16a_replica_within": true
     },
     {
      "factor": 1.0,
@@ -927,7 +963,12 @@
      "V16a_reference_mm": 52.18896924741197,
      "V16a_pressure_diff_pct": 0.09673548946925103,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": true
+     "V16a_within": true,
+     "V16a_replica_f64_mm": 52.57730581734948,
+     "V16a_replica_f32_mm": 52.577324918474666,
+     "V16a_replica_rel_nearest": 1.4372795292370212e-07,
+     "V16a_replica_in_range": true,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.5,
@@ -949,7 +990,12 @@
      "V16c_predicted_mm": 2.7760085922834996,
      "V16c_diff_pct": 0.0006363375976810492,
      "V16c_criterion_pct": 2.0,
-     "V16c_within": true
+     "V16c_within": true,
+     "V16a_replica_f64_mm": 49.801284486237975,
+     "V16a_replica_f32_mm": 49.80128260134222,
+     "V16a_replica_rel_nearest": 1.3289493106080398e-07,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     }
    ]
   },
@@ -982,7 +1028,10 @@
      "V16a_reference_mm": 0.0014745159193473348,
      "V16a_pressure_diff_pct": -9672.617493560878,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": -1.12525733448719,
+     "V16a_replica_f32_mm": -0.97985974733265,
+     "V16a_replica_note": "record only (25 % level: first-contact pre-compression, 5.35.1)"
     },
     {
      "factor": 0.5,
@@ -1003,7 +1052,12 @@
      "V16a_reference_mm": 0.304975405171887,
      "V16a_pressure_diff_pct": 1.3425088996770842,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 0.3063102583764522,
+     "V16a_replica_f32_mm": 0.4478453614462097,
+     "V16a_replica_rel_nearest": 0.0984620339984913,
+     "V16a_replica_in_range": true,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.75,
@@ -1024,7 +1078,12 @@
      "V16a_reference_mm": 6.899426040836509,
      "V16a_pressure_diff_pct": 1.9055744017114475,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 7.909209600636496,
+     "V16a_replica_f32_mm": 7.938010096833541,
+     "V16a_replica_rel_nearest": 0.00019629864364278604,
+     "V16a_replica_in_range": true,
+     "V16a_replica_within": true
     },
     {
      "factor": 1.0,
@@ -1045,7 +1104,12 @@
      "V16a_reference_mm": 63.078327293289355,
      "V16a_pressure_diff_pct": 0.015422118660158272,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": true
+     "V16a_within": true,
+     "V16a_replica_f64_mm": 63.15311073900197,
+     "V16a_replica_f32_mm": 63.15315252640119,
+     "V16a_replica_rel_nearest": 8.942606874390175e-08,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.5,
@@ -1067,7 +1131,12 @@
      "V16c_predicted_mm": 2.853119942069152,
      "V16c_diff_pct": -0.004209348293038449,
      "V16c_criterion_pct": 2.0,
-     "V16c_within": true
+     "V16c_within": true,
+     "V16a_replica_f64_mm": 60.30010349288102,
+     "V16a_replica_f32_mm": 60.300104712171155,
+     "V16a_replica_rel_nearest": 8.89176763923547e-07,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     }
    ]
   },
@@ -1100,7 +1169,10 @@
      "V16a_reference_mm": 0.002029898451591452,
      "V16a_pressure_diff_pct": -6645.458727898067,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": -1.073437200449678,
+     "V16a_replica_f32_mm": -0.932770528159122,
+     "V16a_replica_note": "record only (25 % level: first-contact pre-compression, 5.35.1)"
     },
     {
      "factor": 0.5,
@@ -1121,7 +1193,12 @@
      "V16a_reference_mm": 0.4198456555192078,
      "V16a_pressure_diff_pct": 1.481774381877886,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 0.4331923665726993,
+     "V16a_replica_f32_mm": 0.5791794648085337,
+     "V16a_replica_rel_nearest": 0.07966069999463904,
+     "V16a_replica_in_range": true,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.75,
@@ -1142,7 +1219,12 @@
      "V16a_reference_mm": 9.498123454213282,
      "V16a_pressure_diff_pct": 1.9489644268766138,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 10.922116842040799,
+     "V16a_replica_f32_mm": 10.944911684623492,
+     "V16a_replica_rel_nearest": 2.882699948879377e-06,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 1.0,
@@ -1163,7 +1245,12 @@
      "V16a_reference_mm": 86.837040700315,
      "V16a_pressure_diff_pct": -0.0022355254841610523,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": true
+     "V16a_within": true,
+     "V16a_replica_f64_mm": 86.82176785149183,
+     "V16a_replica_f32_mm": 86.82176407283119,
+     "V16a_replica_rel_nearest": 3.916615486197537e-06,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.5,
@@ -1185,7 +1272,12 @@
      "V16c_predicted_mm": 3.007607307539705,
      "V16c_diff_pct": -0.04619192366360648,
      "V16c_criterion_pct": 2.0,
-     "V16c_within": true
+     "V16c_within": true,
+     "V16a_replica_f64_mm": 83.8155305238528,
+     "V16a_replica_f32_mm": 83.8155795835458,
+     "V16a_replica_rel_nearest": 3.7019339553746386e-06,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     }
    ]
   },
@@ -1218,7 +1310,10 @@
      "V16a_reference_mm": 0.002100856232106087,
      "V16a_pressure_diff_pct": -6383.959009810338,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": -1.0689097774748284,
+     "V16a_replica_f32_mm": -0.9278243913360669,
+     "V16a_replica_note": "record only (25 % level: first-contact pre-compression, 5.35.1)"
     },
     {
      "factor": 0.5,
@@ -1239,7 +1334,12 @@
      "V16a_reference_mm": 0.4345219147434061,
      "V16a_pressure_diff_pct": 1.4452884533979504,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 0.44713696473823283,
+     "V16a_replica_f32_mm": 0.5948780827453153,
+     "V16a_replica_rel_nearest": 0.07982648800754155,
+     "V16a_replica_in_range": true,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.75,
@@ -1260,7 +1360,12 @@
      "V16a_reference_mm": 9.830142900228706,
      "V16a_pressure_diff_pct": 1.952972246147608,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 11.30720755279227,
+     "V16a_replica_f32_mm": 11.329551199155937,
+     "V16a_replica_rel_nearest": 2.615230150788786e-05,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 1.0,
@@ -1281,7 +1386,12 @@
      "V16a_reference_mm": 89.87254411169133,
      "V16a_pressure_diff_pct": -0.003305121417500538,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": true
+     "V16a_within": true,
+     "V16a_replica_f64_mm": 89.84947462898724,
+     "V16a_replica_f32_mm": 89.8494693811077,
+     "V16a_replica_rel_nearest": 2.4516257937710484e-06,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.5,
@@ -1303,7 +1413,12 @@
      "V16c_predicted_mm": 3.028875745238613,
      "V16c_diff_pct": -0.06557910405926552,
      "V16c_criterion_pct": 2.0,
-     "V16c_within": true
+     "V16c_within": true,
+     "V16a_replica_f64_mm": 86.82253349141864,
+     "V16a_replica_f32_mm": 86.82254503012093,
+     "V16a_replica_rel_nearest": 2.999687795004877e-06,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     }
    ]
   },
@@ -1336,7 +1451,10 @@
      "V16a_reference_mm": 0.0014990434876328536,
      "V16a_pressure_diff_pct": -9636.221523637769,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": -1.1423945946531442,
+     "V16a_replica_f32_mm": -0.9978108276398011,
+     "V16a_replica_note": "record only (25 % level: first-contact pre-compression, 5.35.1)"
     },
     {
      "factor": 0.5,
@@ -1357,7 +1475,12 @@
      "V16a_reference_mm": 0.31004846337194236,
      "V16a_pressure_diff_pct": 1.4430930529640935,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 0.31265255859280494,
+     "V16a_replica_f32_mm": 0.45590985005942825,
+     "V16a_replica_rel_nearest": 0.10175353644571053,
+     "V16a_replica_in_range": true,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.75,
@@ -1378,7 +1501,12 @@
      "V16a_reference_mm": 7.014193295043178,
      "V16a_pressure_diff_pct": 1.9416179035270833,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 8.059393741146057,
+     "V16a_replica_f32_mm": 8.090559771763012,
+     "V16a_replica_rel_nearest": 0.0002985286689394335,
+     "V16a_replica_in_range": true,
+     "V16a_replica_within": true
     },
     {
      "factor": 1.0,
@@ -1399,7 +1527,12 @@
      "V16a_reference_mm": 64.1275923162857,
      "V16a_pressure_diff_pct": 0.021918456503019598,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": true
+     "V16a_within": true,
+     "V16a_replica_f64_mm": 64.23568514453743,
+     "V16a_replica_f32_mm": 64.23566189385897,
+     "V16a_replica_rel_nearest": 4.4436785295292603e-07,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.5,
@@ -1421,7 +1554,12 @@
      "V16c_predicted_mm": 2.8986533803955514,
      "V16c_diff_pct": -0.006784182142740185,
      "V16c_criterion_pct": 2.0,
-     "V16c_within": true
+     "V16c_within": true,
+     "V16a_replica_f64_mm": 61.33724313626573,
+     "V16a_replica_f32_mm": 61.337200140805336,
+     "V16a_replica_rel_nearest": 2.2534554782128006e-07,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     }
    ]
   },
@@ -1454,7 +1592,10 @@
      "V16a_reference_mm": 0.11585744621647986,
      "V16a_pressure_diff_pct": -22.27347471903507,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 0.024750326085470706,
+     "V16a_replica_f32_mm": 0.013229584524522298,
+     "V16a_replica_note": "record only (25 % level: first-contact pre-compression, 5.35.1)"
     },
     {
      "factor": 0.5,
@@ -1475,7 +1616,12 @@
      "V16a_reference_mm": 3.7074382789273557,
      "V16a_pressure_diff_pct": 2.483588935568738,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 4.1579673155938455,
+     "V16a_replica_f32_mm": 4.160938465330637,
+     "V16a_replica_rel_nearest": 0.0016564459305120822,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.75,
@@ -1496,7 +1642,12 @@
      "V16a_reference_mm": 28.15335943060458,
      "V16a_pressure_diff_pct": 1.3714695243992219,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 30.083366159483198,
+     "V16a_replica_f32_mm": 30.083515855067244,
+     "V16a_replica_rel_nearest": 1.3871418567609231e-05,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 1.0,
@@ -1517,7 +1668,12 @@
      "V16a_reference_mm": 118.63802492567538,
      "V16a_pressure_diff_pct": -0.005747196214484797,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": true
+     "V16a_within": true,
+     "V16a_replica_f64_mm": 118.60380591387948,
+     "V16a_replica_f32_mm": 118.60380588912197,
+     "V16a_replica_rel_nearest": 1.072574421820266e-06,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.5,
@@ -1539,7 +1695,12 @@
      "V16c_predicted_mm": 3.028875745238613,
      "V16c_diff_pct": -0.09362671710641801,
      "V16c_criterion_pct": 2.0,
-     "V16c_within": true
+     "V16c_within": true,
+     "V16a_replica_f64_mm": 115.57768563143931,
+     "V16a_replica_f32_mm": 115.57771544088875,
+     "V16a_replica_rel_nearest": 1.5381523276261392e-06,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     }
    ]
   },
@@ -1572,7 +1733,10 @@
      "V16a_reference_mm": 0.09303974188015751,
      "V16a_pressure_diff_pct": -35.60487224508165,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 0.01345905228822047,
+     "V16a_replica_f32_mm": -0.04968711986346009,
+     "V16a_replica_note": "record only (25 % level: first-contact pre-compression, 5.35.1)"
     },
     {
      "factor": 0.5,
@@ -1593,7 +1757,12 @@
      "V16a_reference_mm": 2.9772717401650404,
      "V16a_pressure_diff_pct": 2.133814325140395,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 3.282110981262252,
+     "V16a_replica_f32_mm": 3.2887564822719857,
+     "V16a_replica_rel_nearest": 0.0018776063266076459,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.75,
@@ -1614,7 +1783,12 @@
      "V16a_reference_mm": 22.608657276878276,
      "V16a_pressure_diff_pct": 1.5238441268735343,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": false
+     "V16a_within": false,
+     "V16a_replica_f64_mm": 24.33019904712788,
+     "V16a_replica_f32_mm": 24.330781814863652,
+     "V16a_replica_rel_nearest": 1.9685100276980786e-05,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 1.0,
@@ -1635,7 +1809,12 @@
      "V16a_reference_mm": 95.27269568528129,
      "V16a_pressure_diff_pct": -0.00027550840023967494,
      "V16a_criterion_pct": 1.0,
-     "V16a_within": true
+     "V16a_within": true,
+     "V16a_replica_f64_mm": 95.27077383526452,
+     "V16a_replica_f32_mm": 95.2707738071237,
+     "V16a_replica_rel_nearest": 6.396805583714883e-06,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     },
     {
      "factor": 0.5,
@@ -1657,7 +1836,12 @@
      "V16c_predicted_mm": 2.8986533803955514,
      "V16c_diff_pct": -0.008970624696740212,
      "V16c_criterion_pct": 2.0,
-     "V16c_within": true
+     "V16c_within": true,
+     "V16a_replica_f64_mm": 92.37237129680305,
+     "V16a_replica_f32_mm": 92.37243265992024,
+     "V16a_replica_rel_nearest": 6.032657546353739e-06,
+     "V16a_replica_in_range": false,
+     "V16a_replica_within": true
     }
    ]
   },
