@@ -1,0 +1,1595 @@
+{
+ "stage": "S3",
+ "model": "L1",
+ "level": "top",
+ "generated": "2026-10-22T13:07:04",
+ "params_sha256": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+ "reference_sha256": {
+  "reference.json": "c1ed8c93397f880ac6eba8b35f1280a1c8b7de54ce6f64764f2ec19e4706080f",
+  "actuator_L2_feasibility.json": "458370df9d186780ae66558c1772f0d29f3e7d86cb9ef2a04a94d3f9284f3efc",
+  "stick_friction.json": "4fb6d7545d7e60a15375f119a8de9929d909e24aa6fe0a1b9e5895f11939bde8",
+  "v7_diagnostic.json": "fefa6eb59a6654260c2b6c5e37bbf2cc215e2fb4a81f5581a52abab910df6323",
+  "leg_extension_loads.json": "38e0c90bbb4790c1e17516e2f91e3c190a8bb571e7b7c749a2939869ee3f3c30",
+  "numerical_damping_review.json": "a192b3a0636a94fd33fb22b95727b20c69a15e470af581cf25052800d1dacb2b"
+ },
+ "index_guard": {
+  "params_file_sha256": "84a46dc172b9442f80b921a788bbfc5c01cd1e85194ad671b1627b54e1a771b9",
+  "reference_json_sha256": "c1ed8c93397f880ac6eba8b35f1280a1c8b7de54ce6f64764f2ec19e4706080f",
+  "cases_kept": 12,
+  "cases_held": {},
+  "reference_sha_differs": {
+   "v9_free_dt1e-05": "6efa517270afc0b7",
+   "v9_step_dt1e-05": "6efa517270afc0b7",
+   "v6_FLm": "6efa517270afc0b7",
+   "v6_FLp": "6efa517270afc0b7",
+   "v5": "6efa517270afc0b7",
+   "v6_FLp_fast": "6efa517270afc0b7",
+   "v9_free_dt1e-04": "6efa517270afc0b7",
+   "v9_free_dt2e-04": "6efa517270afc0b7",
+   "v9_free_dt5e-05": "6efa517270afc0b7",
+   "v9_step_dt1e-04": "6efa517270afc0b7",
+   "v9_step_dt2e-04": "6efa517270afc0b7",
+   "v9_step_dt5e-05": "6efa517270afc0b7"
+  },
+  "rule": "index entries of another params_file_sha256 are not used (missing / held, not substituted)"
+ },
+ "per_case": {
+  "v5": {
+   "all_passed": true,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v5",
+   "params_sha256": "de068f3b6548a33d"
+  },
+  "v6_FLm": {
+   "all_passed": true,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLm",
+   "params_sha256": "de068f3b6548a33d"
+  },
+  "v6_FLp": {
+   "all_passed": true,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp",
+   "params_sha256": "de068f3b6548a33d"
+  },
+  "v6_FLp_fast": {
+   "all_passed": true,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp_fast",
+   "params_sha256": "de068f3b6548a33d"
+  },
+  "v9_free_dt1e-04": {
+   "all_passed": null,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt1e-04",
+   "params_sha256": "de068f3b6548a33d"
+  },
+  "v9_free_dt1e-05": {
+   "all_passed": null,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt1e-05",
+   "params_sha256": "de068f3b6548a33d"
+  },
+  "v9_free_dt2e-04": {
+   "all_passed": null,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt2e-04",
+   "params_sha256": "de068f3b6548a33d"
+  },
+  "v9_free_dt5e-05": {
+   "all_passed": null,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt5e-05",
+   "params_sha256": "de068f3b6548a33d"
+  },
+  "v9_step_dt1e-04": {
+   "all_passed": null,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt1e-04",
+   "params_sha256": "de068f3b6548a33d"
+  },
+  "v9_step_dt1e-05": {
+   "all_passed": null,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt1e-05",
+   "params_sha256": "de068f3b6548a33d"
+  },
+  "v9_step_dt2e-04": {
+   "all_passed": null,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt2e-04",
+   "params_sha256": "de068f3b6548a33d"
+  },
+  "v9_step_dt5e-05": {
+   "all_passed": null,
+   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt5e-05",
+   "params_sha256": "de068f3b6548a33d"
+  }
+ },
+ "v4_judged": {
+  "case": "v4_D_wdefault",
+  "dir": null,
+  "all_passed": null,
+  "comparison_case": "v4_D_w1e-04",
+  "comparison": null
+ },
+ "v8a_crawler_rejudged_rev17": {},
+ "v9": {
+  "checks": [
+   {
+    "id": "V9",
+    "item": "V9-1 FL +1 mm step (v_max): static contact force, dt 0.0002 vs 1e-05 s",
+    "value": [
+     125718.59913554265,
+     112476.65663249677,
+     67968.94461879662,
+     76651.11586540636
+    ],
+    "ref": [
+     125727.48469151162,
+     112473.7449857891,
+     67972.00266834417,
+     76646.16596358338
+    ],
+    "tol": 95.02825,
+    "tol_kind": "abs",
+    "unit": "N",
+    "passed": true,
+    "ref_key": "",
+    "deviation": [
+     -8.885555968969129,
+     2.911646707667387,
+     -3.058049547544215,
+     4.94990182298352
+    ],
+    "note": ""
+   },
+   {
+    "id": "V9",
+    "item": "V9-1 FL +1 mm step (v_max): final attitude (3-period mean), dt 0.0002 vs 1e-05 s",
+    "value": [
+     0.010579224820620615,
+     0.004689637997754703
+    ],
+    "ref": [
+     0.010569434717053816,
+     0.004691470479697768
+    ],
+    "tol": 0.0001,
+    "tol_kind": "abs",
+    "unit": "deg",
+    "passed": true,
+    "ref_key": "",
+    "deviation": [
+     9.790103566798339e-06,
+     -1.8324819430655392e-06
+    ],
+    "note": ""
+   },
+   {
+    "id": "V9",
+    "item": "V9-1 FL +1 mm step (v_max): transient extreme load, dt 0.0002 vs 1e-05 s",
+    "value": -9916.321340494302,
+    "ref": -9948.466693230526,
+    "tol": 0.01,
+    "tol_kind": "rel",
+    "unit": "N",
+    "passed": true,
+    "ref_key": "",
+    "deviation": 0.003231186646892835,
+    "note": ""
+   },
+   {
+    "id": "V9",
+    "item": "V9-1 FL +1 mm step (v_max): static contact force, dt 0.0001 vs 1e-05 s",
+    "value": [
+     125723.8241630318,
+     112475.27986794745,
+     67970.69780022935,
+     76648.32063320478
+    ],
+    "ref": [
+     125727.48469151162,
+     112473.7449857891,
+     67972.00266834417,
+     76646.16596358338
+    ],
+    "tol": 95.02825,
+    "tol_kind": "abs",
+    "unit": "N",
+    "passed": true,
+    "ref_key": "",
+    "deviation": [
+     -3.660528479827917,
+     1.5348821583465906,
+     -1.3048681148211472,
+     2.154669621406356
+    ],
+    "note": ""
+   },
+   {
+    "id": "V9",
+    "item": "V9-1 FL +1 mm step (v_max): final attitude (3-period mean), dt 0.0001 vs 1e-05 s",
+    "value": [
+     0.01057370567697811,
+     0.004690794685785416
+    ],
+    "ref": [
+     0.010569434717053816,
+     0.004691470479697768
+    ],
+    "tol": 0.0001,
+    "tol_kind": "abs",
+    "unit": "deg",
+    "passed": true,
+    "ref_key": "",
+    "deviation": [
+     4.270959924293494e-06,
+     -6.757939123519865e-07
+    ],
+    "note": ""
+   },
+   {
+    "id": "V9",
+    "item": "V9-1 FL +1 mm step (v_max): transient extreme load, dt 0.0001 vs 1e-05 s",
+    "value": -9932.422733272157,
+    "ref": -9948.466693230526,
+    "tol": 0.01,
+    "tol_kind": "rel",
+    "unit": "N",
+    "passed": true,
+    "ref_key": "",
+    "deviation": 0.0016127068072999476,
+    "note": ""
+   },
+   {
+    "id": "V9",
+    "item": "V9-1 FL +1 mm step (v_max): static contact force, dt 5e-05 vs 1e-05 s",
+    "value": [
+     125725.30923945383,
+     112474.36335306725,
+     67971.3652499013,
+     76647.25569115696
+    ],
+    "ref": [
+     125727.48469151162,
+     112473.7449857891,
+     67972.00266834417,
+     76646.16596358338
+    ],
+    "tol": 95.02825,
+    "tol_kind": "abs",
+    "unit": "N",
+    "passed": true,
+    "ref_key": "",
+    "deviation": [
+     -2.1754520577960648,
+     0.6183672781480709,
+     -0.6374184428714216,
+     1.0897275735769654
+    ],
+    "note": ""
+   },
+   {
+    "id": "V9",
+    "item": "V9-1 FL +1 mm step (v_max): final attitude (3-period mean), dt 5e-05 vs 1e-05 s",
+    "value": [
+     0.0105716761396752,
+     0.004691018103905415
+    ],
+    "ref": [
+     0.010569434717053816,
+     0.004691470479697768
+    ],
+    "tol": 0.0001,
+    "tol_kind": "abs",
+    "unit": "deg",
+    "passed": true,
+    "ref_key": "",
+    "deviation": [
+     2.2414226213841176e-06,
+     -4.523757923535765e-07
+    ],
+    "note": ""
+   },
+   {
+    "id": "V9",
+    "item": "V9-1 FL +1 mm step (v_max): transient extreme load, dt 5e-05 vs 1e-05 s",
+    "value": -9943.054144433605,
+    "ref": -9948.466693230526,
+    "tol": 0.01,
+    "tol_kind": "rel",
+    "unit": "N",
+    "passed": true,
+    "ref_key": "",
+    "deviation": 0.0005440585935322393,
+    "note": ""
+   },
+   {
+    "id": "V9",
+    "item": "V9-1 FL +1 mm step (v_max): error ratio transient min dF_RL, elastic k_n delta (dt 0.0002/0.0001/5e-05 s)",
+    "value": 2.062669899397953,
+    "ref": 2.0,
+    "tol": 0.2,
+    "tol_kind": "rel",
+    "unit": "1",
+    "passed": true,
+    "ref_key": "",
+    "deviation": 0.031334949698976544,
+    "note": "differences 1.7858e+01, 8.6576e+00"
+   },
+   {
+    "id": "V9",
+    "item": "V9-2 mode-1 free vibration t = 5 s: error ratio mode-1 amplitude at 5 s (dt 0.0002/0.0001/5e-05 s)",
+    "value": 2.0441663091723097,
+    "ref": 2.0,
+    "tol": 0.2,
+    "tol_kind": "rel",
+    "unit": "1",
+    "passed": true,
+    "ref_key": "",
+    "deviation": 0.02208315458615484,
+    "note": "differences -7.2286e-04, -3.5362e-04"
+   }
+  ],
+  "detail": {
+   "step": {
+    "peak_dF_RL_N": {
+     "1e-05": -9948.466693230526,
+     "0.0001": -9932.422733272157,
+     "0.0002": -9916.321340494302,
+     "5e-05": -9943.054144433605
+    },
+    "order_raw_contact_force_recorded": {
+     "dt_s": [
+      0.0002,
+      0.0001,
+      5e-05
+     ],
+     "d1": 16.101392777854926,
+     "d2": 10.63141116144834,
+     "ratio": 1.5145113412828817
+    },
+    "peak_minus_ref_N": {
+     "1e-05": 0.0,
+     "0.0001": 16.04395995836967,
+     "0.0002": 32.145352736224595,
+     "5e-05": 5.412548796921328
+    },
+    "peak_elastic_dF_RL_N": {
+     "1e-05": -9943.4721224057,
+     "0.0001": -9928.077451668694,
+     "0.0002": -9910.219583249185,
+     "5e-05": -9936.735098936791
+    },
+    "order_elastic_judged": {
+     "dt_s": [
+      0.0002,
+      0.0001,
+      5e-05
+     ],
+     "d1": 17.857868419509032,
+     "d2": 8.657647268097207,
+     "ratio": 2.062669899397953
+    },
+    "noise_RL_std_N": {
+     "1e-05": 1.172098965724914,
+     "0.0001": 1.1782147356992319,
+     "0.0002": 1.1547882023639744,
+     "5e-05": 1.1658478276853135
+    }
+   },
+   "free": {
+    "amplitude_at_5s": {
+     "1e-05": 0.08568559238875628,
+     "0.0001": 0.08505019458501092,
+     "0.0002": 0.08432733671096013,
+     "5e-05": 0.08540381447924716
+    },
+    "phase_at_5s_rad": {
+     "1e-05": 66.58838571250665,
+     "0.0001": 66.59217219811107,
+     "0.0002": 66.59552899879905,
+     "5e-05": 66.5896230438377
+    },
+    "amplitude_rel_to_ref": {
+     "1e-05": 0.0,
+     "0.0001": -0.007415456741695303,
+     "0.0002": -0.015851622658261344,
+     "5e-05": -0.0032885097908956773
+    },
+    "order_amplitude": {
+     "dt_s": [
+      0.0002,
+      0.0001,
+      5e-05
+     ],
+     "d1": -0.0007228578740507974,
+     "d2": -0.0003536198942362401,
+     "ratio": 2.0441663091723097
+    },
+    "order_phase_recorded": {
+     "dt_s": [
+      0.0002,
+      0.0001,
+      5e-05
+     ],
+     "d1": 0.0033568006879818313,
+     "d2": 0.0025491542733675487,
+     "ratio": 1.3168291629314945
+    },
+    "phase_minus_ref_rad": {
+     "1e-05": 0.0,
+     "0.0001": 0.003786485604422296,
+     "0.0002": 0.007143286292404127,
+     "5e-05": 0.0012373313310547474
+    }
+   }
+  },
+  "all_passed": true
+ },
+ "n_checks": 29,
+ "n_failed": 0,
+ "failed": [],
+ "cases": {
+  "v9_free_dt1e-05": {
+   "case": "v9_free_dt1e-05",
+   "dt_s": 1e-05,
+   "excitation": {
+    "name": "roll",
+    "axis_world": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "mode_index": 0,
+    "amplitude_deg": 0.02,
+    "window_s": 20.0
+   },
+   "fit": {
+    "f_damped_Hz": 2.0716573509636644,
+    "zeta": 0.008776800653134244,
+    "amplitude": 0.15168610303300892,
+    "phase_rad": 1.5183671741078495,
+    "residual_rms_rel": 0.029897008902078404
+   },
+   "amplitude_at_5s": 0.08568559238875628,
+   "phase_at_5s_rad_unwrapped": 66.58838571250665,
+   "eta1_sample_at_5s": -0.0690403197459353,
+   "t_sample_5s": 4.999999999810711,
+   "events": 0,
+   "timing": {
+    "wall_s": 233.3411184999859
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt1e-05"
+  },
+  "v9_step_dt1e-05": {
+   "case": "v9_step_dt1e-05",
+   "dt_s": 1e-05,
+   "transient_min_dF_RL_N": -9948.466693230526,
+   "transient_min_dF_RL_t_s": 0.8769999999667988,
+   "transient_min_dF_elastic_RL_N": -9943.4721224057,
+   "transient_min_dF_elastic_RL_t_s": 0.8789999999667231,
+   "contact_force_noise_RL_std_N": 1.172098965724914,
+   "note": "elastic = k_n(float32) x delta(sphere-centre height, double); contact force minus elastic load in the hold window = Bullet distance noise (+ damping term)",
+   "transient_extremes_dF_N": {
+    "min": [
+     -297.87647115242726,
+     -11140.711549418571,
+     -9948.466693230526,
+     -792.4094015114388
+    ],
+    "max": [
+     13622.091776544883,
+     1746.377092650815,
+     0.17955116035591345,
+     12296.280319522135
+    ]
+   },
+   "final_contact_force_N": [
+    125727.48469151162,
+    112473.7449857891,
+    67972.00266834417,
+    76646.16596358338
+   ],
+   "final_attitude_deg": [
+    0.010569434717053816,
+    0.004691470479697768
+   ],
+   "final_travel_mm": 1.0000000000013332,
+   "events": 0,
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "timing": {
+    "wall_s": 543.6019351999857
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt1e-05"
+  },
+  "v6_FLm": {
+   "case": "v6_FLm",
+   "direction": "FL-",
+   "speed_m_s": 0.0001,
+   "dt_s": 0.0001,
+   "dt_segments": [
+    [
+     14.999999999991719,
+     142.60000000362362,
+     0.0001
+    ],
+    [
+     142.60000000362362,
+     152.2000000066708,
+     1e-05
+    ]
+   ],
+   "F_min_N": 9414.58911,
+   "F_min_crossings_travel_mm": {
+    "RR": 10.07165309498826
+   },
+   "F_min_leg": "RR",
+   "liftoff_leg": "RR",
+   "liftoff_travel_mm": 11.758590918112407,
+   "reference": {
+    "F_min": {
+     "delta_mm": 11.16,
+     "leg_at_F_min": "RR"
+    },
+    "liftoff": {
+     "delta_mm": 13.01,
+     "unloaded_leg": "RR"
+    }
+   },
+   "events": [
+    [
+     118.08710000331611,
+     "RR",
+     2
+    ]
+   ],
+   "yield_steps": [
+    0,
+    0,
+    0,
+    207
+   ],
+   "slip_total_mm": [
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     -0.0010613397811068946,
+     0.0013450614692653872,
+     0.0
+    ]
+   ],
+   "all_passed": true,
+   "record": "07_results/S3_L1R/batch_20261022_100939/v6_FLm/record",
+   "timing": {
+    "wall_s": 1077.1606504000083,
+    "steps": 2236000,
+    "us_per_step": 481.7355323792524
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLm"
+  },
+  "v6_FLp": {
+   "case": "v6_FLp",
+   "direction": "FL+",
+   "speed_m_s": 0.0001,
+   "dt_s": 0.0001,
+   "dt_segments": [
+    [
+     14.999999999991719,
+     145.40000000371657,
+     0.0001
+    ],
+    [
+     145.40000000371657,
+     155.00000000676374,
+     1e-05
+    ]
+   ],
+   "F_min_N": 9414.58911,
+   "F_min_crossings_travel_mm": {
+    "RL": 9.90016854651428
+   },
+   "F_min_leg": "RL",
+   "liftoff_leg": "RL",
+   "liftoff_travel_mm": 11.511870918243277,
+   "reference": {
+    "F_min": {
+     "delta_mm": 11.44,
+     "leg_at_F_min": "RL"
+    },
+    "liftoff": {
+     "delta_mm": 13.29,
+     "unloaded_leg": "RL"
+    }
+   },
+   "events": [
+    [
+     115.6199000032342,
+     "RL",
+     2
+    ]
+   ],
+   "yield_steps": [
+    0,
+    0,
+    851,
+    0
+   ],
+   "slip_total_mm": [
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     -0.0036639979482562665,
+     -0.009046527553712538,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "all_passed": true,
+   "record": "07_results/S3_L1R/batch_20261022_100939/v6_FLp/record",
+   "timing": {
+    "wall_s": 1066.8677798999997,
+    "steps": 2264000,
+    "us_per_step": 471.23135154593626
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp"
+  },
+  "v5": {
+   "case": "v5",
+   "dt_s": 0.0001,
+   "baseline": {
+    "contact_force_N": [
+     119295.70401054143,
+     117037.35722312848,
+     72664.35625523774,
+     71117.09071597476
+    ],
+    "attitude_deg": [
+     -0.001886745898997126,
+     0.010329747272282403
+    ]
+   },
+   "results": {
+    "+1 mm": {
+     "travel_mm": 0.9999999999997233,
+     "dF_N": [
+      5877.532002598964,
+      -4518.079657286289,
+      -4862.11215631575,
+      5770.514915655367
+     ],
+     "dattitude_deg": [
+      0.012957144010207228,
+      -0.005771955489906821
+     ],
+     "window_end_s": 15.199999999964575
+    },
+    "+5 mm": {
+     "travel_mm": 4.999999999999172,
+     "dF_N": [
+      28343.63971265359,
+      -21749.465384433177,
+      -23437.241673786295,
+      31019.6468888964
+     ],
+     "dattitude_deg": [
+      0.06635736678279816,
+      -0.02981489929694455
+     ],
+     "window_end_s": 33.400000000504804
+    }
+   },
+   "reference": {
+    "dF_per_mm_FL_N": [
+     4978.2,
+     -4978.2,
+     -5467.18,
+     5467.18
+    ],
+    "droll_dpitch_per_mm_FL_deg": [
+     0.0133235,
+     -0.005804
+    ]
+   },
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "all_passed": true,
+   "record": "07_results/S3_L1R/batch_20261022_100939/v5/record",
+   "timing": {
+    "wall_s": 211.21492410000064
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v5"
+  },
+  "v6_FLp_fast": {
+   "case": "v6_FLp_fast",
+   "direction": "FL+",
+   "speed_m_s": 0.0005,
+   "dt_s": 0.0001,
+   "dt_segments": [
+    [
+     14.999999999991719,
+     41.4800000002668,
+     0.0001
+    ],
+    [
+     41.4800000002668,
+     43.88000000102859,
+     1e-05
+    ]
+   ],
+   "F_min_N": 9414.58911,
+   "F_min_crossings_travel_mm": {
+    "RL": 9.899080174402402
+   },
+   "F_min_leg": "RL",
+   "liftoff_leg": "RL",
+   "liftoff_travel_mm": 11.509877504666477,
+   "reference": {
+    "F_min": {
+     "delta_mm": 11.44,
+     "leg_at_F_min": "RL"
+    },
+    "liftoff": {
+     "delta_mm": 13.29,
+     "unloaded_leg": "RL"
+    }
+   },
+   "events": [
+    [
+     23.52190000017688,
+     "RL",
+     2
+    ]
+   ],
+   "yield_steps": [
+    0,
+    0,
+    196,
+    0
+   ],
+   "slip_total_mm": [
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     -0.002692847340004352,
+     -0.007334099255524459,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "all_passed": true,
+   "record": "07_results/S3_L1R/batch_20261022_100939/v6_FLp_fast/record",
+   "timing": {
+    "wall_s": 280.6962506000127,
+    "steps": 504800,
+    "us_per_step": 556.0543791600886
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp_fast"
+  },
+  "v9_free_dt1e-04": {
+   "case": "v9_free_dt1e-04",
+   "dt_s": 0.0001,
+   "excitation": {
+    "name": "roll",
+    "axis_world": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "mode_index": 0,
+    "amplitude_deg": 0.02,
+    "window_s": 20.0
+   },
+   "fit": {
+    "f_damped_Hz": 2.0717572737416967,
+    "zeta": 0.008891423653208996,
+    "amplitude": 0.15169280971018745,
+    "phase_rad": 1.5190151208921325,
+    "residual_rms_rel": 0.029661575925200443
+   },
+   "amplitude_at_5s": 0.08505019458501092,
+   "phase_at_5s_rad_unwrapped": 66.59217219811107,
+   "eta1_sample_at_5s": -0.06833800278170771,
+   "t_sample_5s": 4.999999999988347,
+   "events": 0,
+   "timing": {
+    "wall_s": 25.082630499993684
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt1e-04"
+  },
+  "v9_free_dt2e-04": {
+   "case": "v9_free_dt2e-04",
+   "dt_s": 0.0002,
+   "excitation": {
+    "name": "roll",
+    "axis_world": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "mode_index": 0,
+    "amplitude_deg": 0.02,
+    "window_s": 20.0
+   },
+   "fit": {
+    "f_damped_Hz": 2.071830237899185,
+    "zeta": 0.009018736818603061,
+    "amplitude": 0.1516580488391853,
+    "phase_rad": 1.520080143416027,
+    "residual_rms_rel": 0.029217068589634743
+   },
+   "amplitude_at_5s": 0.08432733671096013,
+   "phase_at_5s_rad_unwrapped": 66.59552899879905,
+   "eta1_sample_at_5s": -0.06760843457862455,
+   "t_sample_5s": 4.999999999988347,
+   "events": 0,
+   "timing": {
+    "wall_s": 13.515787899988936
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt2e-04"
+  },
+  "v9_free_dt5e-05": {
+   "case": "v9_free_dt5e-05",
+   "dt_s": 5e-05,
+   "excitation": {
+    "name": "roll",
+    "axis_world": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "mode_index": 0,
+    "amplitude_deg": 0.02,
+    "window_s": 20.0
+   },
+   "fit": {
+    "f_damped_Hz": 2.071687128877118,
+    "zeta": 0.008827034709485164,
+    "amplitude": 0.15168359089257266,
+    "phase_rad": 1.518669191798049,
+    "residual_rms_rel": 0.029789960862779186
+   },
+   "amplitude_at_5s": 0.08540381447924716,
+   "phase_at_5s_rad_unwrapped": 66.5896230438377,
+   "eta1_sample_at_5s": -0.06874488820127897,
+   "t_sample_5s": 5.000000000130456,
+   "events": 0,
+   "timing": {
+    "wall_s": 50.59595799999079
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt5e-05"
+  },
+  "v9_step_dt1e-04": {
+   "case": "v9_step_dt1e-04",
+   "dt_s": 0.0001,
+   "transient_min_dF_RL_N": -9932.422733272157,
+   "transient_min_dF_RL_t_s": 0.8769999999979561,
+   "transient_min_dF_elastic_RL_N": -9928.077451668694,
+   "transient_min_dF_elastic_RL_t_s": 0.8789999999979514,
+   "contact_force_noise_RL_std_N": 1.1782147356992319,
+   "note": "elastic = k_n(float32) x delta(sphere-centre height, double); contact force minus elastic load in the hold window = Bullet distance noise (+ damping term)",
+   "transient_extremes_dF_N": {
+    "min": [
+     -283.26899507256167,
+     -11131.223326633,
+     -9932.422733272157,
+     -793.0132952598651
+    ],
+    "max": [
+     13588.361463377776,
+     1734.8070603111992,
+     0.18070885082124732,
+     12283.579328891006
+    ]
+   },
+   "final_contact_force_N": [
+    125723.8241630318,
+    112475.27986794745,
+    67970.69780022935,
+    76648.32063320478
+   ],
+   "final_attitude_deg": [
+    0.01057370567697811,
+    0.004690794685785416
+   ],
+   "final_travel_mm": 1.0000000000018328,
+   "events": 0,
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "timing": {
+    "wall_s": 61.47239379998064
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt1e-04"
+  },
+  "v9_step_dt2e-04": {
+   "case": "v9_step_dt2e-04",
+   "dt_s": 0.0002,
+   "transient_min_dF_RL_N": -9916.321340494302,
+   "transient_min_dF_RL_t_s": 0.8769999999979561,
+   "transient_min_dF_elastic_RL_N": -9910.219583249185,
+   "transient_min_dF_elastic_RL_t_s": 0.8789999999979514,
+   "contact_force_noise_RL_std_N": 1.1547882023639744,
+   "note": "elastic = k_n(float32) x delta(sphere-centre height, double); contact force minus elastic load in the hold window = Bullet distance noise (+ damping term)",
+   "transient_extremes_dF_N": {
+    "min": [
+     -270.76821454915626,
+     -11121.63453171277,
+     -9916.321340494302,
+     -795.8216421175603
+    ],
+    "max": [
+     13547.87112221327,
+     1720.4479089952656,
+     0.19229370329412632,
+     12268.707026018572
+    ]
+   },
+   "final_contact_force_N": [
+    125718.59913554265,
+    112476.65663249677,
+    67968.94461879662,
+    76651.11586540636
+   ],
+   "final_attitude_deg": [
+    0.010579224820620615,
+    0.004689637997754703
+   ],
+   "final_travel_mm": 1.000000000008494,
+   "events": 0,
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "timing": {
+    "wall_s": 31.740230499999598
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt2e-04"
+  },
+  "v9_step_dt5e-05": {
+   "case": "v9_step_dt5e-05",
+   "dt_s": 5e-05,
+   "transient_min_dF_RL_N": -9943.054144433605,
+   "transient_min_dF_RL_t_s": 0.8779999999979538,
+   "transient_min_dF_elastic_RL_N": -9936.735098936791,
+   "transient_min_dF_elastic_RL_t_s": 0.8789999999979514,
+   "contact_force_noise_RL_std_N": 1.1658478276853135,
+   "note": "elastic = k_n(float32) x delta(sphere-centre height, double); contact force minus elastic load in the hold window = Bullet distance noise (+ damping term)",
+   "transient_extremes_dF_N": {
+    "min": [
+     -291.4618583378324,
+     -11137.512177438417,
+     -9943.054144433605,
+     -795.082616147949
+    ],
+    "max": [
+     13609.038831387617,
+     1740.6620948797645,
+     0.17558553215349093,
+     12289.86041337
+    ]
+   },
+   "final_contact_force_N": [
+    125725.30923945383,
+    112474.36335306725,
+    67971.3652499013,
+    76647.25569115696
+   ],
+   "final_attitude_deg": [
+    0.0105716761396752,
+    0.004691018103905415
+   ],
+   "final_travel_mm": 1.0000000000011666,
+   "events": 0,
+   "yield_steps": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "timing": {
+    "wall_s": 118.84084640000947
+   },
+   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt5e-05"
+  }
+ },
+ "checks": [
+  {
+   "id": "V5",
+   "item": "FL +1 mm: L1-R module normal force change per leg (tol 5 % of max component)",
+   "value": [
+    5877.532002598964,
+    -5917.328927147853,
+    -6581.355014788999,
+    6598.64580218019
+   ],
+   "ref": [
+    5887.79,
+    -5912.97,
+    -6582.94,
+    6608.13
+   ],
+   "tol": 330.40650000000005,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / S3 V5 sequence (0.5 mm/s, +1 then +5 mm) / final +1 mm (mean over [13.75, 15.2] s) / dF_N",
+   "deviation": [
+    -10.257997401035936,
+    -4.358927147853137,
+    1.5849852110004576,
+    -9.484197819810106
+   ],
+   "note": "SMC contact force converted to N = k2 delta + F_x (dynamics 5.17.5)",
+   "case": "v5"
+  },
+  {
+   "id": "V5",
+   "item": "FL +1 mm: roll change (L1-R)",
+   "value": 0.012957144010207228,
+   "ref": 0.012969,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / S3 V5 sequence (0.5 mm/s, +1 then +5 mm) / final +1 mm (mean over [13.75, 15.2] s) / dattitude_deg (roll, pitch)",
+   "deviation": -0.0009141791805668827,
+   "note": "",
+   "case": "v5"
+  },
+  {
+   "id": "V5",
+   "item": "FL +1 mm: pitch change (L1-R)",
+   "value": -0.005771955489906821,
+   "ref": -0.0057762,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / S3 V5 sequence (0.5 mm/s, +1 then +5 mm) / final +1 mm (mean over [13.75, 15.2] s) / dattitude_deg (roll, pitch)",
+   "deviation": 0.0007348274113048549,
+   "note": "",
+   "case": "v5"
+  },
+  {
+   "id": "V5",
+   "item": "FL +5 mm: L1-R module normal force change per leg (tol 5 % of max component)",
+   "value": [
+    28343.63971265359,
+    -28485.274813992135,
+    -31724.650329637127,
+    31847.777775421222
+   ],
+   "ref": [
+    28349.7,
+    -28480.0,
+    -31728.4,
+    31858.7
+   ],
+   "tol": 1592.9350000000002,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / S3 V5 sequence (0.5 mm/s, +1 then +5 mm) / final +5 mm (mean over [31.95, 33.4] s) / dF_N",
+   "deviation": [
+    -6.060287346412224,
+    -5.274813992135023,
+    3.7496703628748946,
+    -10.922224578778696
+   ],
+   "note": "SMC contact force converted to N = k2 delta + F_x (dynamics 5.17.5)",
+   "case": "v5"
+  },
+  {
+   "id": "V5",
+   "item": "FL +5 mm: roll change (L1-R)",
+   "value": 0.06635736678279816,
+   "ref": 0.066371,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / S3 V5 sequence (0.5 mm/s, +1 then +5 mm) / final +5 mm (mean over [31.95, 33.4] s) / dattitude_deg (roll, pitch)",
+   "deviation": -0.00020540924804265197,
+   "note": "",
+   "case": "v5"
+  },
+  {
+   "id": "V5",
+   "item": "FL +5 mm: pitch change (L1-R)",
+   "value": -0.02981489929694455,
+   "ref": -0.029819,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica / S3 V5 sequence (0.5 mm/s, +1 then +5 mm) / final +5 mm (mean over [31.95, 33.4] s) / dattitude_deg (roll, pitch)",
+   "deviation": 0.00013751980466974515,
+   "note": "",
+   "case": "v5"
+  },
+  {
+   "id": "V6",
+   "item": "FL-: first leg at F_min",
+   "value": "RR",
+   "ref": "RR",
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL- F_min",
+   "deviation": null,
+   "note": "",
+   "case": "v6_FLm"
+  },
+  {
+   "id": "V6",
+   "item": "FL-: FL travel at F_min",
+   "value": 10.07165309498826,
+   "ref": 10.177,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL- F_min",
+   "deviation": -0.01035146949118004,
+   "note": "",
+   "case": "v6_FLm"
+  },
+  {
+   "id": "V6",
+   "item": "FL-: first unloaded leg",
+   "value": "RR",
+   "ref": "RR",
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL- lift",
+   "deviation": null,
+   "note": "",
+   "case": "v6_FLm"
+  },
+  {
+   "id": "V6",
+   "item": "FL-: FL travel at lift-off",
+   "value": 11.758590918112407,
+   "ref": 11.881,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL- lift",
+   "deviation": -0.0103029275218915,
+   "note": "",
+   "case": "v6_FLm"
+  },
+  {
+   "id": "V6",
+   "item": "FL+: first leg at F_min",
+   "value": "RL",
+   "ref": "RL",
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL+ F_min",
+   "deviation": null,
+   "note": "",
+   "case": "v6_FLp"
+  },
+  {
+   "id": "V6",
+   "item": "FL+: FL travel at F_min",
+   "value": 9.90016854651428,
+   "ref": 9.9534,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL+ F_min",
+   "deviation": -0.00534806734238756,
+   "note": "",
+   "case": "v6_FLp"
+  },
+  {
+   "id": "V6",
+   "item": "FL+: first unloaded leg",
+   "value": "RL",
+   "ref": "RL",
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL+ lift",
+   "deviation": null,
+   "note": "",
+   "case": "v6_FLp"
+  },
+  {
+   "id": "V6",
+   "item": "FL+: FL travel at lift-off",
+   "value": 11.511870918243277,
+   "ref": 11.573,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL+ lift",
+   "deviation": -0.005282042837356207,
+   "note": "",
+   "case": "v6_FLp"
+  },
+  {
+   "id": "V6",
+   "item": "FL+: first leg at F_min",
+   "value": "RL",
+   "ref": "RL",
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL+ F_min",
+   "deviation": null,
+   "note": "",
+   "case": "v6_FLp_fast"
+  },
+  {
+   "id": "V6",
+   "item": "FL+: FL travel at F_min",
+   "value": 9.899080174402402,
+   "ref": 9.9534,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL+ F_min",
+   "deviation": -0.005457414109510191,
+   "note": "",
+   "case": "v6_FLp_fast"
+  },
+  {
+   "id": "V6",
+   "item": "FL+: first unloaded leg",
+   "value": "RL",
+   "ref": "RL",
+   "tol": 0,
+   "tol_kind": "equal",
+   "unit": "",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL+ lift",
+   "deviation": null,
+   "note": "",
+   "case": "v6_FLp_fast"
+  },
+  {
+   "id": "V6",
+   "item": "FL+: FL travel at lift-off",
+   "value": 11.509877504666477,
+   "ref": 11.573,
+   "tol": 0.05,
+   "tol_kind": "rel",
+   "unit": "mm",
+   "passed": true,
+   "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL+ lift",
+   "deviation": -0.00545428975490568,
+   "note": "",
+   "case": "v6_FLp_fast"
+  },
+  {
+   "id": "V9",
+   "item": "V9-1 FL +1 mm step (v_max): static contact force, dt 0.0002 vs 1e-05 s",
+   "value": [
+    125718.59913554265,
+    112476.65663249677,
+    67968.94461879662,
+    76651.11586540636
+   ],
+   "ref": [
+    125727.48469151162,
+    112473.7449857891,
+    67972.00266834417,
+    76646.16596358338
+   ],
+   "tol": 95.02825,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    -8.885555968969129,
+    2.911646707667387,
+    -3.058049547544215,
+    4.94990182298352
+   ],
+   "note": "",
+   "case": "V9"
+  },
+  {
+   "id": "V9",
+   "item": "V9-1 FL +1 mm step (v_max): final attitude (3-period mean), dt 0.0002 vs 1e-05 s",
+   "value": [
+    0.010579224820620615,
+    0.004689637997754703
+   ],
+   "ref": [
+    0.010569434717053816,
+    0.004691470479697768
+   ],
+   "tol": 0.0001,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    9.790103566798339e-06,
+    -1.8324819430655392e-06
+   ],
+   "note": "",
+   "case": "V9"
+  },
+  {
+   "id": "V9",
+   "item": "V9-1 FL +1 mm step (v_max): transient extreme load, dt 0.0002 vs 1e-05 s",
+   "value": -9916.321340494302,
+   "ref": -9948.466693230526,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.003231186646892835,
+   "note": "",
+   "case": "V9"
+  },
+  {
+   "id": "V9",
+   "item": "V9-1 FL +1 mm step (v_max): static contact force, dt 0.0001 vs 1e-05 s",
+   "value": [
+    125723.8241630318,
+    112475.27986794745,
+    67970.69780022935,
+    76648.32063320478
+   ],
+   "ref": [
+    125727.48469151162,
+    112473.7449857891,
+    67972.00266834417,
+    76646.16596358338
+   ],
+   "tol": 95.02825,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    -3.660528479827917,
+    1.5348821583465906,
+    -1.3048681148211472,
+    2.154669621406356
+   ],
+   "note": "",
+   "case": "V9"
+  },
+  {
+   "id": "V9",
+   "item": "V9-1 FL +1 mm step (v_max): final attitude (3-period mean), dt 0.0001 vs 1e-05 s",
+   "value": [
+    0.01057370567697811,
+    0.004690794685785416
+   ],
+   "ref": [
+    0.010569434717053816,
+    0.004691470479697768
+   ],
+   "tol": 0.0001,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    4.270959924293494e-06,
+    -6.757939123519865e-07
+   ],
+   "note": "",
+   "case": "V9"
+  },
+  {
+   "id": "V9",
+   "item": "V9-1 FL +1 mm step (v_max): transient extreme load, dt 0.0001 vs 1e-05 s",
+   "value": -9932.422733272157,
+   "ref": -9948.466693230526,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0016127068072999476,
+   "note": "",
+   "case": "V9"
+  },
+  {
+   "id": "V9",
+   "item": "V9-1 FL +1 mm step (v_max): static contact force, dt 5e-05 vs 1e-05 s",
+   "value": [
+    125725.30923945383,
+    112474.36335306725,
+    67971.3652499013,
+    76647.25569115696
+   ],
+   "ref": [
+    125727.48469151162,
+    112473.7449857891,
+    67972.00266834417,
+    76646.16596358338
+   ],
+   "tol": 95.02825,
+   "tol_kind": "abs",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    -2.1754520577960648,
+    0.6183672781480709,
+    -0.6374184428714216,
+    1.0897275735769654
+   ],
+   "note": "",
+   "case": "V9"
+  },
+  {
+   "id": "V9",
+   "item": "V9-1 FL +1 mm step (v_max): final attitude (3-period mean), dt 5e-05 vs 1e-05 s",
+   "value": [
+    0.0105716761396752,
+    0.004691018103905415
+   ],
+   "ref": [
+    0.010569434717053816,
+    0.004691470479697768
+   ],
+   "tol": 0.0001,
+   "tol_kind": "abs",
+   "unit": "deg",
+   "passed": true,
+   "ref_key": "",
+   "deviation": [
+    2.2414226213841176e-06,
+    -4.523757923535765e-07
+   ],
+   "note": "",
+   "case": "V9"
+  },
+  {
+   "id": "V9",
+   "item": "V9-1 FL +1 mm step (v_max): transient extreme load, dt 5e-05 vs 1e-05 s",
+   "value": -9943.054144433605,
+   "ref": -9948.466693230526,
+   "tol": 0.01,
+   "tol_kind": "rel",
+   "unit": "N",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.0005440585935322393,
+   "note": "",
+   "case": "V9"
+  },
+  {
+   "id": "V9",
+   "item": "V9-1 FL +1 mm step (v_max): error ratio transient min dF_RL, elastic k_n delta (dt 0.0002/0.0001/5e-05 s)",
+   "value": 2.062669899397953,
+   "ref": 2.0,
+   "tol": 0.2,
+   "tol_kind": "rel",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.031334949698976544,
+   "note": "differences 1.7858e+01, 8.6576e+00",
+   "case": "V9"
+  },
+  {
+   "id": "V9",
+   "item": "V9-2 mode-1 free vibration t = 5 s: error ratio mode-1 amplitude at 5 s (dt 0.0002/0.0001/5e-05 s)",
+   "value": 2.0441663091723097,
+   "ref": 2.0,
+   "tol": 0.2,
+   "tol_kind": "rel",
+   "unit": "1",
+   "passed": true,
+   "ref_key": "",
+   "deviation": 0.02208315458615484,
+   "note": "differences -7.2286e-04, -3.5362e-04",
+   "case": "V9"
+  }
+ ],
+ "notes": {
+  "v4_time_origin": "touch / crawler-off times from the measured equivalent start (t - s_ref / v_max in the constant-speed phase) = start command + ramp/2 + dt/2 (discrete ramp); dynamics_model.md 5 V4 rev. 15",
+  "v9_v4_touch": "judged on the geometric touch time <= 1e-4 s for every dt; the R15 touch (first N > 0 step) is recorded with its structural bound 2 dt - dt_ref + geometric difference (dynamics_model.md 5.7 (b), rev. 17)",
+  "v8a_crawler": "judged on modal zeta >= -1 % physical zeta and the 1-s mean trend <= +1 % E_kin0; max(E - E0) recorded (dynamics_model.md 5.7 (a), rev. 17); re-judged here from the stored result.json values",
+  "yaml": "regenerated 2026-10-21 (simulation.L1.dt_s 2e-4 s, actuator.command_ramp_s 0.1 s; user decision 2026-10-21). Cases run before it keep their params_sha256 (per_case); their dt and ramp were explicit, so the judgements stand (dynamics_model.md 5.7 rerun list)",
+  "v4_judged": "judged V4 run v4_D_wdefault (YAML simulation.L1.dt_s + 1e-5 s transition window) since 2026-10-21; v4_D_w1e-04 (first S3 batch) is kept as a comparison record (v4_judged.comparison = judged - previous); every V4 run keeps its own checks; ctrl1_replay still replays the v4_D_w1e-04 Record",
+  "l1r": "L1-R run (l1r_variant): V5 judged on the module normal force N = k2 delta + F_x (locked legs x k1/k2 below the knee, + dF_knee (1 - k2/k1) above) against reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica; V6 against its V5_V6_quasi_static L1R thresholds (dynamics_model.md 5.14.8, 5.17.5)"
+ },
+ "l1r_rejudged_rev32": {
+  "v5": {
+   "module_normal_change_N": {
+    "+1 mm": [
+     5877.532002598964,
+     -5917.328927147853,
+     -6581.355014788999,
+     6598.64580218019
+    ],
+    "+5 mm": [
+     28343.63971265359,
+     -28485.274813992135,
+     -31724.650329637127,
+     31847.777775421222
+    ]
+   },
+   "previous_checks_failed": [
+    "FL +1 mm: contact force change per leg (tol 5 % of max component)",
+    "FL +5 mm: contact force change per leg (tol 5 % of max component)"
+   ]
+  },
+  "v6_FLm": {
+   "previous_checks_failed": [
+    "FL-: FL travel at F_min",
+    "FL-: FL travel at lift-off"
+   ]
+  },
+  "v6_FLp": {
+   "previous_checks_failed": [
+    "FL+: FL travel at F_min",
+    "FL+: FL travel at lift-off"
+   ]
+  },
+  "v6_FLp_fast": {
+   "previous_checks_failed": [
+    "FL+: FL travel at F_min",
+    "FL+: FL travel at lift-off"
+   ]
+  }
+ }
+}

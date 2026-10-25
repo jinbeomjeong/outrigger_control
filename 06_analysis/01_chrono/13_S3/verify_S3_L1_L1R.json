@@ -2,10 +2,10 @@
  "stage": "S3",
  "model": "L1",
  "level": "top",
- "generated": "2026-10-22T13:07:04",
- "params_sha256": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+ "generated": "2026-10-26T02:42:09",
+ "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
  "reference_sha256": {
-  "reference.json": "c1ed8c93397f880ac6eba8b35f1280a1c8b7de54ce6f64764f2ec19e4706080f",
+  "reference.json": "81c65a79573815d25bf008b107797c50a4f335652115d650b7828b1438ecd1bc",
   "actuator_L2_feasibility.json": "458370df9d186780ae66558c1772f0d29f3e7d86cb9ef2a04a94d3f9284f3efc",
   "stick_friction.json": "4fb6d7545d7e60a15375f119a8de9929d909e24aa6fe0a1b9e5895f11939bde8",
   "v7_diagnostic.json": "fefa6eb59a6654260c2b6c5e37bbf2cc215e2fb4a81f5581a52abab910df6323",
@@ -13,86 +13,73 @@
   "numerical_damping_review.json": "a192b3a0636a94fd33fb22b95727b20c69a15e470af581cf25052800d1dacb2b"
  },
  "index_guard": {
-  "params_file_sha256": "84a46dc172b9442f80b921a788bbfc5c01cd1e85194ad671b1627b54e1a771b9",
-  "reference_json_sha256": "c1ed8c93397f880ac6eba8b35f1280a1c8b7de54ce6f64764f2ec19e4706080f",
+  "params_file_sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce",
+  "reference_json_sha256": "81c65a79573815d25bf008b107797c50a4f335652115d650b7828b1438ecd1bc",
   "cases_kept": 12,
   "cases_held": {},
-  "reference_sha_differs": {
-   "v9_free_dt1e-05": "6efa517270afc0b7",
-   "v9_step_dt1e-05": "6efa517270afc0b7",
-   "v6_FLm": "6efa517270afc0b7",
-   "v6_FLp": "6efa517270afc0b7",
-   "v5": "6efa517270afc0b7",
-   "v6_FLp_fast": "6efa517270afc0b7",
-   "v9_free_dt1e-04": "6efa517270afc0b7",
-   "v9_free_dt2e-04": "6efa517270afc0b7",
-   "v9_free_dt5e-05": "6efa517270afc0b7",
-   "v9_step_dt1e-04": "6efa517270afc0b7",
-   "v9_step_dt2e-04": "6efa517270afc0b7",
-   "v9_step_dt5e-05": "6efa517270afc0b7"
-  },
+  "reference_sha_differs": {},
   "rule": "index entries of another params_file_sha256 are not used (missing / held, not substituted)"
  },
  "per_case": {
   "v5": {
    "all_passed": true,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v5",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v5",
+   "params_sha256": "61078f29621d336c"
   },
   "v6_FLm": {
    "all_passed": true,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLm",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLm",
+   "params_sha256": "61078f29621d336c"
   },
   "v6_FLp": {
    "all_passed": true,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLp",
+   "params_sha256": "61078f29621d336c"
   },
   "v6_FLp_fast": {
    "all_passed": true,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp_fast",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLp_fast",
+   "params_sha256": "61078f29621d336c"
   },
   "v9_free_dt1e-04": {
    "all_passed": null,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt1e-04",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt1e-04",
+   "params_sha256": "61078f29621d336c"
   },
   "v9_free_dt1e-05": {
    "all_passed": null,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt1e-05",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt1e-05",
+   "params_sha256": "61078f29621d336c"
   },
   "v9_free_dt2e-04": {
    "all_passed": null,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt2e-04",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt2e-04",
+   "params_sha256": "61078f29621d336c"
   },
   "v9_free_dt5e-05": {
    "all_passed": null,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt5e-05",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt5e-05",
+   "params_sha256": "61078f29621d336c"
   },
   "v9_step_dt1e-04": {
    "all_passed": null,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt1e-04",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt1e-04",
+   "params_sha256": "61078f29621d336c"
   },
   "v9_step_dt1e-05": {
    "all_passed": null,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt1e-05",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt1e-05",
+   "params_sha256": "61078f29621d336c"
   },
   "v9_step_dt2e-04": {
    "all_passed": null,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt2e-04",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt2e-04",
+   "params_sha256": "61078f29621d336c"
   },
   "v9_step_dt5e-05": {
    "all_passed": null,
-   "dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt5e-05",
-   "params_sha256": "de068f3b6548a33d"
+   "dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt5e-05",
+   "params_sha256": "61078f29621d336c"
   }
  },
  "v4_judged": {
@@ -448,9 +435,9 @@
    "t_sample_5s": 4.999999999810711,
    "events": 0,
    "timing": {
-    "wall_s": 233.3411184999859
+    "wall_s": 242.44035819999408
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt1e-05"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt1e-05"
   },
   "v9_step_dt1e-05": {
    "case": "v9_step_dt1e-05",
@@ -494,9 +481,9 @@
     0
    ],
    "timing": {
-    "wall_s": 543.6019351999857
+    "wall_s": 922.3894732999615
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt1e-05"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt1e-05"
   },
   "v6_FLm": {
    "case": "v6_FLm",
@@ -521,7 +508,7 @@
    },
    "F_min_leg": "RR",
    "liftoff_leg": "RR",
-   "liftoff_travel_mm": 11.758590918112407,
+   "liftoff_travel_mm": 11.758590918112338,
    "reference": {
     "F_min": {
      "delta_mm": 11.16,
@@ -562,19 +549,19 @@
      0.0
     ],
     [
-     -0.0010613397811068946,
-     0.0013450614692653872,
+     -0.0010613572231464822,
+     0.001345060730505892,
      0.0
     ]
    ],
    "all_passed": true,
-   "record": "07_results/S3_L1R/batch_20261022_100939/v6_FLm/record",
+   "record": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLm/record",
    "timing": {
-    "wall_s": 1077.1606504000083,
+    "wall_s": 1527.4337029999588,
     "steps": 2236000,
-    "us_per_step": 481.7355323792524
+    "us_per_step": 683.1098850625934
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLm"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLm"
   },
   "v6_FLp": {
    "case": "v6_FLp",
@@ -599,7 +586,7 @@
    },
    "F_min_leg": "RL",
    "liftoff_leg": "RL",
-   "liftoff_travel_mm": 11.511870918243277,
+   "liftoff_travel_mm": 11.511870918242728,
    "reference": {
     "F_min": {
      "delta_mm": 11.44,
@@ -635,8 +622,8 @@
      0.0
     ],
     [
-     -0.0036639979482562665,
-     -0.009046527553712538,
+     -0.0036640155537532044,
+     -0.009046526812468475,
      0.0
     ],
     [
@@ -646,13 +633,13 @@
     ]
    ],
    "all_passed": true,
-   "record": "07_results/S3_L1R/batch_20261022_100939/v6_FLp/record",
+   "record": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLp/record",
    "timing": {
-    "wall_s": 1066.8677798999997,
+    "wall_s": 1539.7413707000087,
     "steps": 2264000,
-    "us_per_step": 471.23135154593626
+    "us_per_step": 680.0977785777424
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLp"
   },
   "v5": {
    "case": "v5",
@@ -718,11 +705,11 @@
     0
    ],
    "all_passed": true,
-   "record": "07_results/S3_L1R/batch_20261022_100939/v5/record",
+   "record": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v5/record",
    "timing": {
-    "wall_s": 211.21492410000064
+    "wall_s": 181.80768880003598
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v5"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v5"
   },
   "v6_FLp_fast": {
    "case": "v6_FLp_fast",
@@ -747,7 +734,7 @@
    },
    "F_min_leg": "RL",
    "liftoff_leg": "RL",
-   "liftoff_travel_mm": 11.509877504666477,
+   "liftoff_travel_mm": 11.509877504666472,
    "reference": {
     "F_min": {
      "delta_mm": 11.44,
@@ -783,8 +770,8 @@
      0.0
     ],
     [
-     -0.002692847340004352,
-     -0.007334099255524459,
+     -0.0026929318093822747,
+     -0.007334095698939777,
      0.0
     ],
     [
@@ -794,13 +781,13 @@
     ]
    ],
    "all_passed": true,
-   "record": "07_results/S3_L1R/batch_20261022_100939/v6_FLp_fast/record",
+   "record": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLp_fast/record",
    "timing": {
-    "wall_s": 280.6962506000127,
+    "wall_s": 375.3581993000116,
     "steps": 504800,
-    "us_per_step": 556.0543791600886
+    "us_per_step": 743.5780493264889
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp_fast"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLp_fast"
   },
   "v9_free_dt1e-04": {
    "case": "v9_free_dt1e-04",
@@ -829,9 +816,9 @@
    "t_sample_5s": 4.999999999988347,
    "events": 0,
    "timing": {
-    "wall_s": 25.082630499993684
+    "wall_s": 44.95424799999455
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt1e-04"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt1e-04"
   },
   "v9_free_dt2e-04": {
    "case": "v9_free_dt2e-04",
@@ -860,9 +847,9 @@
    "t_sample_5s": 4.999999999988347,
    "events": 0,
    "timing": {
-    "wall_s": 13.515787899988936
+    "wall_s": 21.416576100047678
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt2e-04"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt2e-04"
   },
   "v9_free_dt5e-05": {
    "case": "v9_free_dt5e-05",
@@ -891,9 +878,9 @@
    "t_sample_5s": 5.000000000130456,
    "events": 0,
    "timing": {
-    "wall_s": 50.59595799999079
+    "wall_s": 80.11568069999339
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt5e-05"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt5e-05"
   },
   "v9_step_dt1e-04": {
    "case": "v9_step_dt1e-04",
@@ -937,9 +924,9 @@
     0
    ],
    "timing": {
-    "wall_s": 61.47239379998064
+    "wall_s": 86.71422789996723
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt1e-04"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt1e-04"
   },
   "v9_step_dt2e-04": {
    "case": "v9_step_dt2e-04",
@@ -983,9 +970,9 @@
     0
    ],
    "timing": {
-    "wall_s": 31.740230499999598
+    "wall_s": 40.14998349995585
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt2e-04"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt2e-04"
   },
   "v9_step_dt5e-05": {
    "case": "v9_step_dt5e-05",
@@ -1029,9 +1016,9 @@
     0
    ],
    "timing": {
-    "wall_s": 118.84084640000947
+    "wall_s": 157.69228710001335
    },
-   "_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt5e-05"
+   "_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt5e-05"
   }
  },
  "checks": [
@@ -1194,14 +1181,14 @@
   {
    "id": "V6",
    "item": "FL-: FL travel at lift-off",
-   "value": 11.758590918112407,
+   "value": 11.758590918112338,
    "ref": 11.881,
    "tol": 0.05,
    "tol_kind": "rel",
    "unit": "mm",
    "passed": true,
    "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL- lift",
-   "deviation": -0.0103029275218915,
+   "deviation": -0.01030292752189733,
    "note": "",
    "case": "v6_FLm"
   },
@@ -1250,14 +1237,14 @@
   {
    "id": "V6",
    "item": "FL+: FL travel at lift-off",
-   "value": 11.511870918243277,
+   "value": 11.511870918242728,
    "ref": 11.573,
    "tol": 0.05,
    "tol_kind": "rel",
    "unit": "mm",
    "passed": true,
    "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL+ lift",
-   "deviation": -0.005282042837356207,
+   "deviation": -0.005282042837403635,
    "note": "",
    "case": "v6_FLp"
   },
@@ -1306,14 +1293,14 @@
   {
    "id": "V6",
    "item": "FL+: FL travel at lift-off",
-   "value": 11.509877504666477,
+   "value": 11.509877504666472,
    "ref": 11.573,
    "tol": 0.05,
    "tol_kind": "rel",
    "unit": "mm",
    "passed": true,
    "ref_key": "reference.json / L1R_rod_side_reference_rev32 / V5_V6_quasi_static / top / L1R (FL moving, others LOCK) / V6 FL+ lift",
-   "deviation": -0.00545428975490568,
+   "deviation": -0.00545428975490614,
    "note": "",
    "case": "v6_FLp_fast"
   },
@@ -1550,7 +1537,9 @@
   "v8a_crawler": "judged on modal zeta >= -1 % physical zeta and the 1-s mean trend <= +1 % E_kin0; max(E - E0) recorded (dynamics_model.md 5.7 (a), rev. 17); re-judged here from the stored result.json values",
   "yaml": "regenerated 2026-10-21 (simulation.L1.dt_s 2e-4 s, actuator.command_ramp_s 0.1 s; user decision 2026-10-21). Cases run before it keep their params_sha256 (per_case); their dt and ramp were explicit, so the judgements stand (dynamics_model.md 5.7 rerun list)",
   "v4_judged": "judged V4 run v4_D_wdefault (YAML simulation.L1.dt_s + 1e-5 s transition window) since 2026-10-21; v4_D_w1e-04 (first S3 batch) is kept as a comparison record (v4_judged.comparison = judged - previous); every V4 run keeps its own checks; ctrl1_replay still replays the v4_D_w1e-04 Record",
-  "l1r": "L1-R run (l1r_variant): V5 judged on the module normal force N = k2 delta + F_x (locked legs x k1/k2 below the knee, + dF_knee (1 - k2/k1) above) against reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica; V6 against its V5_V6_quasi_static L1R thresholds (dynamics_model.md 5.14.8, 5.17.5)"
+  "l1r": "L1-R run (l1r_variant): V5 judged on the module normal force N = k2 delta + F_x (locked legs x k1/k2 below the knee, + dF_knee (1 - k2/k1) above) against reference.json / L1R_rod_side_reference_rev32 / V5_dynamic_replica; V6 against its V5_V6_quasi_static L1R thresholds (dynamics_model.md 5.14.8, 5.17.5)",
+  "l1r_rejudged_rev32_history": "옛 L1 기준 FAIL 이력 (old L1 criterion FAIL history): checks that failed in the pre-R2 case result.json (old batch 07_results/S3_L1R/batch_20261022_100939); the R2 case result.json passes them (control/dynamics rev 32 intent, dynamics decision 2026-10-26). Judgement of this summary is the L1-R block (checks), unchanged.",
+  "r2_install": "regenerated from the R2 batch 07_results/params_bundle_R2_20261026_011024 (YAML regen bundle regression R2) by run_S3.summarize (L1-R env one_sided_parallel); previous summary archived in 06_analysis/01_chrono/13_S3/history/pre_bundle_R2_2026-10-26; dynamics decision 2026-10-26: S3_L1R verdict flip matches rev 32 intent, physics results equal"
  },
  "l1r_rejudged_rev32": {
   "v5": {
@@ -1568,28 +1557,48 @@
      31847.777775421222
     ]
    },
-   "previous_checks_failed": [
-    "FL +1 mm: contact force change per leg (tol 5 % of max component)",
-    "FL +5 mm: contact force change per leg (tol 5 % of max component)"
-   ]
+   "previous_checks_failed": [],
+   "old_L1_fail_history": {
+    "label": "옛 L1 기준 FAIL 이력",
+    "old_dir": "07_results/S3_L1R/batch_20261022_100939/v5",
+    "previous_checks_failed": [
+     "FL +1 mm: contact force change per leg (tol 5 % of max component)",
+     "FL +5 mm: contact force change per leg (tol 5 % of max component)"
+    ]
+   }
   },
   "v6_FLm": {
-   "previous_checks_failed": [
-    "FL-: FL travel at F_min",
-    "FL-: FL travel at lift-off"
-   ]
+   "previous_checks_failed": [],
+   "old_L1_fail_history": {
+    "label": "옛 L1 기준 FAIL 이력",
+    "old_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLm",
+    "previous_checks_failed": [
+     "FL-: FL travel at F_min",
+     "FL-: FL travel at lift-off"
+    ]
+   }
   },
   "v6_FLp": {
-   "previous_checks_failed": [
-    "FL+: FL travel at F_min",
-    "FL+: FL travel at lift-off"
-   ]
+   "previous_checks_failed": [],
+   "old_L1_fail_history": {
+    "label": "옛 L1 기준 FAIL 이력",
+    "old_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp",
+    "previous_checks_failed": [
+     "FL+: FL travel at F_min",
+     "FL+: FL travel at lift-off"
+    ]
+   }
   },
   "v6_FLp_fast": {
-   "previous_checks_failed": [
-    "FL+: FL travel at F_min",
-    "FL+: FL travel at lift-off"
-   ]
+   "previous_checks_failed": [],
+   "old_L1_fail_history": {
+    "label": "옛 L1 기준 FAIL 이력",
+    "old_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp_fast",
+    "previous_checks_failed": [
+     "FL+: FL travel at F_min",
+     "FL+: FL travel at lift-off"
+    ]
+   }
   }
  }
 }

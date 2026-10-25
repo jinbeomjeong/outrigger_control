@@ -59,7 +59,7 @@
    "verdict": "36 of 37 bit identical; 1 accepted exception (RRpre, old-code artefact, not a bundle effect)",
    "batch": "07_results/params_bundle_R1_20261026_001438",
    "progress_log": "07_results/params_bundle_R1_20261026_001438/progress.log",
-   "coordinator": "scratchpad cad-run/r1_regress.py (archive / run [--cases --out] / worker / install [--results --except]); copy of the RRpre diagnostic in the batch folder",
+   "coordinator": "07_results/params_bundle_R1_20261026_001438/tools/r1_regress.py (archive / run [--cases --out] / worker / install [--results --except]); copy of the RRpre diagnostic in the batch folder",
    "runs": [
     {
      "results_file": "07_results/params_bundle_R1_20261026_001438/r1_results_run1.json",
@@ -123,7 +123,7 @@
      "n_array_diff_keys": 39,
      "n_meta_diffs": 6,
      "note": "PS-7a family 07_results/S6/stage2_L1R_20261022_120926/PS7* (flat_RRpre start-state cases) is not reproduced by the current code",
-     "reason_file": "C:\\workspace\\outrigger_control\\07_results\\params_bundle_R1_20261026_001438\\diag_rrpre_oldyaml\\exception_RRpre.json"
+     "reason_file": "07_results/params_bundle_R1_20261026_001438/diag_rrpre_oldyaml/exception_RRpre.json"
     }
    },
    "archive": {
@@ -1265,7 +1265,4210 @@
     ]
    }
   },
-  "R2": null,
+  "R2": {
+   "updated": "2026-10-26T02:45:42",
+   "scope": "102 index entries of 07_results/{S3 30, S3_L1R 12, L1R_checks 34, S4_energy 6, S5 9, S6 11}/index.json (S4_energy included: index_guard target; spec 7 table '96' to be fixed in step 8)",
+   "method": "each case re-run from the settings of its old case.json by calling the stage module job(case, case_dir) directly into the batch folder (no run_batch, no index update during the run); L1-R env per case from the old run_meta (S3_L1R one_sided_parallel set before import; others unset; L1R_checks passes the mechanics itself); P-core placement place_process('pcore'), 8 jobs, OPENBLAS/MKL threads 1; S3 ctrl1_replay after S3 v4_D_w1e-04 of this batch (module INDEX pointed at the new source Record, which load_record checks against the new fingerprint)",
+   "criterion": "every *.npz under the case directory (series / energy / modal / budget / record): same file and key set, shape/dtype, np.array_equal (equal_nan=True for float); result.json, case.json (settings, summary) and record/meta.json outside 'run': equal after removing timing / runner / versions / time stamps / wall_s / *_wall_s / every *sha256* key and mapping old case paths to the new ones. Information only: case.json run_meta and record meta 'run' (descriptive engine meta) and keys present only in the new documents (diagnostic fields of later code)",
+   "diagnosis_rule": "mismatch -> tools/r2_diag.py re-runs the case with the current code + OLD YAML (02_params/history/rexome33_2026-10-25_before_bundle.yaml) + archived old start snapshots; bit identical to the new R2 run -> 'bundle_unrelated' exception, continue; otherwise stop (user decision 2026-10-26 'auto diagnosis, then continue')",
+   "verdict": "98 of 102 bit identical; 4 accepted exceptions (bundle_unrelated, old-code artefacts; user decision 2026-10-26 to install)",
+   "batch": "07_results/params_bundle_R2_20261026_011024",
+   "progress_log": "07_results/params_bundle_R2_20261026_011024/progress.log",
+   "coordinator": "07_results/params_bundle_R2_20261026_011024/tools/r2_regress.py (plan / run / run2 / worker / compare / install / except-add)",
+   "diagnostic_tool": "07_results/params_bundle_R2_20261026_011024/tools/r2_diag.py",
+   "summarize_tool": "07_results/params_bundle_R2_20261026_011024/tools/r2_summarize.py (drive / one / diff) + tools/r2_summary_classify.py",
+   "runs": [
+    {
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results.json",
+     "finished": "2026-10-26T01:32:09",
+     "batch_wall_s": 1304.49582489999,
+     "jobs": 8,
+     "stop_reason": "mismatch: S3_L1R/v6_FLp_fast",
+     "n_cases_used": 8
+    },
+    {
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "finished": "2026-10-26T02:35:02",
+     "batch_wall_s": 2533.7843823999865,
+     "jobs": 8,
+     "stop_reason": null,
+     "n_cases_used": 94
+    }
+   ],
+   "by_folder": {
+    "S3": {
+     "n": 30,
+     "identical": 30,
+     "accepted_exceptions": 0,
+     "wall_s_sum": 6929.057448999782,
+     "wall_s_max": 1177.9805200999836,
+     "old_wall_s_sum": 4293.968077299971,
+     "added_keys": 0,
+     "run_meta_info_diffs": 168
+    },
+    "S3_L1R": {
+     "n": 12,
+     "identical": 8,
+     "accepted_exceptions": 4,
+     "wall_s_sum": 5257.998790200043,
+     "wall_s_max": 1542.2740291999653,
+     "old_wall_s_sum": 3727.1935627000057,
+     "added_keys": 0,
+     "run_meta_info_diffs": 32
+    },
+    "L1R_checks": {
+     "n": 34,
+     "identical": 34,
+     "accepted_exceptions": 0,
+     "wall_s_sum": 3781.312925799866,
+     "wall_s_max": 945.4089981999714,
+     "old_wall_s_sum": 2358.3676512999778,
+     "added_keys": 0,
+     "run_meta_info_diffs": 0
+    },
+    "S4_energy": {
+     "n": 6,
+     "identical": 6,
+     "accepted_exceptions": 0,
+     "wall_s_sum": 1247.5904594000312,
+     "wall_s_max": 504.0994916000054,
+     "old_wall_s_sum": 1114.3621876999823,
+     "added_keys": 0,
+     "run_meta_info_diffs": 72
+    },
+    "S5": {
+     "n": 9,
+     "identical": 9,
+     "accepted_exceptions": 0,
+     "wall_s_sum": 302.3852239000262,
+     "wall_s_max": 42.65777240000898,
+     "old_wall_s_sum": 251.75410710000142,
+     "added_keys": 142,
+     "run_meta_info_diffs": 54
+    },
+    "S6": {
+     "n": 11,
+     "identical": 11,
+     "accepted_exceptions": 0,
+     "wall_s_sum": 696.8660978999105,
+     "wall_s_max": 231.90902660001302,
+     "old_wall_s_sum": 348.62443090000306,
+     "added_keys": 0,
+     "run_meta_info_diffs": 0
+    }
+   },
+   "pilot": "before the batch, 16 short cases were run in a scratch folder to set the comparison rule (all identical after the rule; not part of this record)",
+   "n_cases": 102,
+   "n_identical": 98,
+   "n_accepted_exceptions": 4,
+   "exceptions_file": "07_results/params_bundle_R2_20261026_011024/r2_exceptions.json",
+   "accepted_exceptions": {
+    "S3_L1R/v5": {
+     "verdict": "bundle_unrelated",
+     "decision": "accepted exception: difference is an old-code artefact unrelated to the YAML regen bundle (current code + OLD YAML + archived old start snapshots reproduces the new R2 run bit for bit); user decision 2026-10-26 'auto diagnosis, then continue'",
+     "decided": "2026-10-26",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v5",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v5",
+     "first_diff": null,
+     "n_array_diff_keys": 0,
+     "n_json_diffs": 80,
+     "max_abs_diff_by_key": {},
+     "n_diff_by_key": {},
+     "verdict_change_old_to_new": {
+      "all_passed": [
+       false,
+       true
+      ],
+      "changed": [
+       {
+        "path": "/all_passed",
+        "old": false,
+        "new": true
+       },
+       {
+        "path": "/checks[0]/passed",
+        "old": false,
+        "new": true,
+        "check": "V5"
+       },
+       {
+        "path": "/checks[3]/passed",
+        "old": false,
+        "new": true,
+        "check": "V5"
+       }
+      ],
+      "scope": "case result.json (old L1 checks of the job)"
+     },
+     "diagnostic": {
+      "json": "07_results/params_bundle_R2_20261026_011024/diag_oldyaml/S3_L1R__v5/diag.json",
+      "case_dir": "07_results/params_bundle_R2_20261026_011024/diag_oldyaml/S3_L1R__v5/case",
+      "tool": "07_results/params_bundle_R2_20261026_011024/tools/r2_diag.py",
+      "params_yaml": "02_params/history/rexome33_2026-10-25_before_bundle.yaml",
+      "vs_new_R2_identical": true,
+      "vs_new_R2_npz_sha256": {
+       "record/record.npz": [
+        "1d4ae95c91fae9c97305064176b7c525bcdbd3968016ca1a42bcdae3b9b66710",
+        "1d4ae95c91fae9c97305064176b7c525bcdbd3968016ca1a42bcdae3b9b66710"
+       ]
+      }
+     }
+    },
+    "S3_L1R/v6_FLm": {
+     "verdict": "bundle_unrelated",
+     "decision": "accepted exception: difference is an old-code artefact unrelated to the YAML regen bundle (current code + OLD YAML + archived old start snapshots reproduces the new R2 run bit for bit); user decision 2026-10-26 'auto diagnosis, then continue'",
+     "decided": "2026-10-26",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLm",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLm",
+     "first_diff": {
+      "file": "record/record.npz",
+      "key": "F_contact_n",
+      "t_key": "t",
+      "t_s": 133.09000000330792
+     },
+     "n_array_diff_keys": 9,
+     "n_json_diffs": 80,
+     "max_abs_diff_by_key": {
+      "F_contact_n": 32.198323945645825,
+      "F_contact_t": 5.023225990501203,
+      "F_cyl": 37.004165368998656,
+      "body_omega": 7.213137100800395e-06,
+      "body_pos": 1.3550120929141027e-06,
+      "body_quat_wxyz": 3.973169128254801e-07,
+      "body_vel": 1.4026724353225991e-05,
+      "s_motor": 3.497202527569243e-15,
+      "stroke_true": 1.2576125239527336e-06
+     },
+     "n_diff_by_key": {
+      "F_contact_n": 31656,
+      "F_contact_t": 63312,
+      "F_cyl": 42208,
+      "body_omega": 31656,
+      "body_pos": 31656,
+      "body_quat_wxyz": 42208,
+      "body_vel": 31656,
+      "s_motor": 40987,
+      "stroke_true": 41904
+     },
+     "verdict_change_old_to_new": {
+      "all_passed": [
+       false,
+       true
+      ],
+      "changed": [
+       {
+        "path": "/all_passed",
+        "old": false,
+        "new": true
+       },
+       {
+        "path": "/checks[1]/passed",
+        "old": false,
+        "new": true,
+        "check": "V6"
+       },
+       {
+        "path": "/checks[3]/passed",
+        "old": false,
+        "new": true,
+        "check": "V6"
+       }
+      ],
+      "scope": "case result.json (old L1 checks of the job)"
+     },
+     "diagnostic": {
+      "json": "07_results/params_bundle_R2_20261026_011024/diag_oldyaml/S3_L1R__v6_FLm/diag.json",
+      "case_dir": "07_results/params_bundle_R2_20261026_011024/diag_oldyaml/S3_L1R__v6_FLm/case",
+      "tool": "07_results/params_bundle_R2_20261026_011024/tools/r2_diag.py",
+      "params_yaml": "02_params/history/rexome33_2026-10-25_before_bundle.yaml",
+      "vs_new_R2_identical": true,
+      "vs_new_R2_npz_sha256": {
+       "record/record.npz": [
+        "927b0dc9ae8225628ec653007f1a1f03a9ef389dbda46c79edb1022c9c6c9603",
+        "927b0dc9ae8225628ec653007f1a1f03a9ef389dbda46c79edb1022c9c6c9603"
+       ]
+      }
+     }
+    },
+    "S3_L1R/v6_FLp": {
+     "verdict": "bundle_unrelated",
+     "decision": "accepted exception: difference is an old-code artefact unrelated to the YAML regen bundle (current code + OLD YAML + archived old start snapshots reproduces the new R2 run bit for bit); user decision 2026-10-26 'auto diagnosis, then continue'",
+     "decided": "2026-10-26",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLp",
+     "first_diff": {
+      "file": "record/record.npz",
+      "key": "F_contact_n",
+      "t_key": "t",
+      "t_s": 130.62000000322593
+     },
+     "n_array_diff_keys": 9,
+     "n_json_diffs": 80,
+     "max_abs_diff_by_key": {
+      "F_contact_n": 32.45699169745785,
+      "F_contact_t": 5.148768613938373,
+      "F_cyl": 32.394681521524035,
+      "body_omega": 6.695597431060904e-06,
+      "body_pos": 1.1414092240692036e-06,
+      "body_quat_wxyz": 3.155801298775941e-07,
+      "body_vel": 1.5052961025214002e-05,
+      "s_motor": 3.497202527569243e-15,
+      "stroke_true": 9.433157200922082e-07
+     },
+     "n_diff_by_key": {
+      "F_contact_n": 33237,
+      "F_contact_t": 66474,
+      "F_cyl": 44316,
+      "body_omega": 33237,
+      "body_pos": 33237,
+      "body_quat_wxyz": 44316,
+      "body_vel": 33237,
+      "s_motor": 43107,
+      "stroke_true": 44022
+     },
+     "verdict_change_old_to_new": {
+      "all_passed": [
+       false,
+       true
+      ],
+      "changed": [
+       {
+        "path": "/all_passed",
+        "old": false,
+        "new": true
+       },
+       {
+        "path": "/checks[1]/passed",
+        "old": false,
+        "new": true,
+        "check": "V6"
+       },
+       {
+        "path": "/checks[3]/passed",
+        "old": false,
+        "new": true,
+        "check": "V6"
+       }
+      ],
+      "scope": "case result.json (old L1 checks of the job)"
+     },
+     "diagnostic": {
+      "json": "07_results/params_bundle_R2_20261026_011024/diag_oldyaml/S3_L1R__v6_FLp/diag.json",
+      "case_dir": "07_results/params_bundle_R2_20261026_011024/diag_oldyaml/S3_L1R__v6_FLp/case",
+      "tool": "07_results/params_bundle_R2_20261026_011024/tools/r2_diag.py",
+      "params_yaml": "02_params/history/rexome33_2026-10-25_before_bundle.yaml",
+      "vs_new_R2_identical": true,
+      "vs_new_R2_npz_sha256": {
+       "record/record.npz": [
+        "fd72c9c0c0766fb41a5c6f30001398bf9e602dda1f6904a82cde89d475766273",
+        "fd72c9c0c0766fb41a5c6f30001398bf9e602dda1f6904a82cde89d475766273"
+       ]
+      }
+     }
+    },
+    "S3_L1R/v6_FLp_fast": {
+     "verdict": "bundle_unrelated",
+     "verdict_tool": "bundle_related",
+     "decision": "accepted exception: difference is an old-code artefact unrelated to the YAML regen bundle (current code + OLD YAML + archived old start snapshots reproduces the new R2 run bit for bit); user decision 2026-10-26 'auto diagnosis, then continue'",
+     "decided": "2026-10-26",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp_fast",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLp_fast",
+     "first_diff": {
+      "file": "record/record.npz",
+      "key": "F_contact_n",
+      "t_key": "t",
+      "t_s": 38.52000000016854
+     },
+     "n_array_diff_keys": 10,
+     "n_json_diffs": 80,
+     "max_abs_diff_by_key": {
+      "F_contact_n": 59.91936168889515,
+      "F_contact_t": 7.994727931812399,
+      "F_cyl": 60.47196043465374,
+      "body_omega": 1.1224199489897284e-05,
+      "body_pos": 2.2410537136967335e-06,
+      "body_quat_wxyz": 7.30786292827074e-07,
+      "body_vel": 1.8497426267394235e-05,
+      "bushing_anchor": 1.176836406102666e-14,
+      "s_motor": 3.219646771412954e-15,
+      "stroke_true": 1.894744447117347e-06
+     },
+     "n_diff_by_key": {
+      "F_contact_n": 8092,
+      "F_contact_t": 16184,
+      "F_cyl": 10788,
+      "body_omega": 8091,
+      "body_pos": 8091,
+      "body_quat_wxyz": 10787,
+      "body_vel": 8091,
+      "bushing_anchor": 2,
+      "s_motor": 10528,
+      "stroke_true": 10725
+     },
+     "verdict_change_old_to_new": {
+      "all_passed": [
+       false,
+       true
+      ],
+      "changed": [
+       {
+        "path": "/all_passed",
+        "old": false,
+        "new": true
+       },
+       {
+        "path": "/checks[1]/passed",
+        "old": false,
+        "new": true,
+        "check": "V6"
+       },
+       {
+        "path": "/checks[3]/passed",
+        "old": false,
+        "new": true,
+        "check": "V6"
+       }
+      ],
+      "scope": "case result.json (old L1 checks of the job)"
+     },
+     "diagnostic": {
+      "json": "07_results/params_bundle_R2_20261026_011024/diag_v6flpfast_oldyaml/diag_compare_full.json",
+      "case_dir": "07_results/params_bundle_R2_20261026_011024/diag_v6flpfast_oldyaml/case",
+      "tool": "07_results/params_bundle_R2_20261026_011024/tools/r2_diag.py",
+      "params_yaml": null,
+      "vs_new_R2_identical": false,
+      "vs_new_R2_npz_sha256": {
+       "record/record.npz": [
+        "8ef850597899feffa600e0da3ce5e46218bc632e34741f507bee8c9fb499b28c",
+        "8ef850597899feffa600e0da3ce5e46218bc632e34741f507bee8c9fb499b28c"
+       ]
+      }
+     },
+     "note": "pre-diagnosed by the previous run (diag_v6flpfast_oldyaml/diag_v6flpfast_oldyaml.py, diag.json: record.npz vs new R2 identical). Full re-compare 2026-10-26 (diag_compare_full.json): all npz (19 keys, sha256 equal), result.json and record/meta.json identical to the new R2 run; the tool verdict reads bundle_related only because that diagnostic called run_S3.job directly and wrote no case.json/case.log (case.json = settings + summary(=result.json) + run_meta). Accepted as bundle_unrelated per user decision 2026-10-26 item 2."
+    }
+   },
+   "installed": {
+    "when": "2026-10-26T02:41:09",
+    "record": "07_results/params_bundle_R2_20261026_011024/install.json",
+    "indexes": [
+     {
+      "folder": "S3",
+      "index": "07_results/S3/index.json",
+      "history": "07_results/S3/history/index_before_params_bundle_R2_20261026_011024.json",
+      "old_sha256": "a1d591bbe3a4f6381a98c313db5f4f0ecd98d99faad5990a54b4852106ec77ac",
+      "new_sha256": "e0c509e696a446f53b45b73b54f1db1488af15ed0636cb3647444e167221776c",
+      "n": 30
+     },
+     {
+      "folder": "S3_L1R",
+      "index": "07_results/S3_L1R/index.json",
+      "history": "07_results/S3_L1R/history/index_before_params_bundle_R2_20261026_011024.json",
+      "old_sha256": "0d672eb8bbf90659a3a4b7fc062411aa0e331978cf469080a45a286411408ac2",
+      "new_sha256": "9ed9f879cb91952fa95a0a24b0e3204f16ae95e82e89cfe412f184fc92bc243b",
+      "n": 12
+     },
+     {
+      "folder": "L1R_checks",
+      "index": "07_results/L1R_checks/index.json",
+      "history": "07_results/L1R_checks/history/index_before_params_bundle_R2_20261026_011024.json",
+      "old_sha256": "014e12ae907f750f447b5370bc9370107b5ef94b3e7f0a81779300698a031e56",
+      "new_sha256": "e79152aa16f40a7b4a634a36bb05b98db6fb79640b24d09b2abd23aa4ec2a170",
+      "n": 34
+     },
+     {
+      "folder": "S4_energy",
+      "index": "07_results/S4_energy/index.json",
+      "history": "07_results/S4_energy/history/index_before_params_bundle_R2_20261026_011024.json",
+      "old_sha256": "da50f30afae742f5ee95f72b9b3328589c552b363afacfe78fbfd685008ba0ab",
+      "new_sha256": "2d51ae3a60b267cd1c7ec7c45973909b7a4752c02ca17af795e85b90a07c7d10",
+      "n": 6
+     },
+     {
+      "folder": "S5",
+      "index": "07_results/S5/index.json",
+      "history": "07_results/S5/history/index_before_params_bundle_R2_20261026_011024.json",
+      "old_sha256": "586864bcb0b755b9322a0ae5c3babe28c8063295dc4a9dfc6b62df918a6cf995",
+      "new_sha256": "e83b33bdf2da9951d5b98bcde096923abf3a6b4455def818bc839efc2577930e",
+      "n": 9
+     },
+     {
+      "folder": "S6",
+      "index": "07_results/S6/index.json",
+      "history": "07_results/S6/history/index_before_params_bundle_R2_20261026_011024.json",
+      "old_sha256": "e32cfecf7163b7789c2fd6fee6f39dd85681b085259b39cd03468fe507afcc2b",
+      "new_sha256": "52e4c9b98c9370fde6b7ca4e39c76bcb8fe2396699e330ccebf3ce1a594b9933",
+      "n": 11
+     }
+    ],
+    "history_rule": "old index.json -> 07_results/<folder>/history/index_before_params_bundle_R2_20261026_011024.json (sha256 checked)"
+   },
+   "summaries": {
+    "rule": "stage summaries re-run by the existing summarize() of each stage module with every output path redirected into the scratch folder; compared with the current 06_analysis files (diff classes path / fingerprint / timestamp / timing = metadata, verdict, value)",
+    "scratch": "07_results/params_bundle_R2_20261026_011024/summarize_scratch",
+    "compare_raw": "07_results/params_bundle_R2_20261026_011024/summarize_scratch/summary_compare.json",
+    "compare_classified": "07_results/params_bundle_R2_20261026_011024/summarize_scratch/summary_compare_classified.json",
+    "guard": "sha256 + mtime of every file under 06_analysis/01_chrono/{13_S3,14_S4,15_S5,16_S6,00_conventions} unchanged by the summarize run",
+    "files": {
+     "06_analysis/01_chrono/13_S3/verify_S3_L1.json": {
+      "n_diffs": 151,
+      "by_class": {
+       "path": 71,
+       "timing": 45,
+       "timestamp": 1,
+       "fingerprint": 34
+      },
+      "metadata_only": true,
+      "verdict_table_changed": false,
+      "non_metadata_diffs": []
+     },
+     "06_analysis/01_chrono/13_S3/verify_S3_L1_L1R.json": {
+      "n_diffs": 91,
+      "by_class": {
+       "path": 28,
+       "timing": 15,
+       "value": 31,
+       "timestamp": 1,
+       "fingerprint": 16
+      },
+      "metadata_only": false,
+      "verdict_table_changed": false,
+      "non_metadata_diffs": [
+       {
+        "path": "/cases/v6_FLm/liftoff_travel_mm",
+        "kind": "value",
+        "old": 11.758590918112407,
+        "new": 11.758590918112338
+       },
+       {
+        "path": "/cases/v6_FLm/slip_total_mm[3][0]",
+        "kind": "value",
+        "old": -0.0010613397811068946,
+        "new": -0.0010613572231464822
+       },
+       {
+        "path": "/cases/v6_FLm/slip_total_mm[3][1]",
+        "kind": "value",
+        "old": 0.0013450614692653872,
+        "new": 0.001345060730505892
+       },
+       {
+        "path": "/cases/v6_FLp/liftoff_travel_mm",
+        "kind": "value",
+        "old": 11.511870918243277,
+        "new": 11.511870918242728
+       },
+       {
+        "path": "/cases/v6_FLp/slip_total_mm[2][0]",
+        "kind": "value",
+        "old": -0.0036639979482562665,
+        "new": -0.0036640155537532044
+       },
+       {
+        "path": "/cases/v6_FLp/slip_total_mm[2][1]",
+        "kind": "value",
+        "old": -0.009046527553712538,
+        "new": -0.009046526812468475
+       },
+       {
+        "path": "/cases/v6_FLp_fast/liftoff_travel_mm",
+        "kind": "value",
+        "old": 11.509877504666477,
+        "new": 11.509877504666472
+       },
+       {
+        "path": "/cases/v6_FLp_fast/slip_total_mm[2][0]",
+        "kind": "value",
+        "old": -0.002692847340004352,
+        "new": -0.0026929318093822747
+       },
+       {
+        "path": "/cases/v6_FLp_fast/slip_total_mm[2][1]",
+        "kind": "value",
+        "old": -0.007334099255524459,
+        "new": -0.007334095698939777
+       },
+       {
+        "path": "/checks[9]/deviation",
+        "kind": "value",
+        "old": -0.0103029275218915,
+        "new": -0.01030292752189733
+       },
+       {
+        "path": "/checks[9]/value",
+        "kind": "value",
+        "old": 11.758590918112407,
+        "new": 11.758590918112338
+       },
+       {
+        "path": "/checks[13]/deviation",
+        "kind": "value",
+        "old": -0.005282042837356207,
+        "new": -0.005282042837403635
+       },
+       {
+        "path": "/checks[13]/value",
+        "kind": "value",
+        "old": 11.511870918243277,
+        "new": 11.511870918242728
+       },
+       {
+        "path": "/checks[17]/deviation",
+        "kind": "value",
+        "old": -0.00545428975490568,
+        "new": -0.00545428975490614
+       },
+       {
+        "path": "/checks[17]/value",
+        "kind": "value",
+        "old": 11.509877504666477,
+        "new": 11.509877504666472
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v5",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v6_FLm",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v6_FLp",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v6_FLp_fast",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v9_free_dt1e-04",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v9_free_dt1e-05",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v9_free_dt2e-04",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v9_free_dt5e-05",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v9_step_dt1e-04",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v9_step_dt1e-05",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v9_step_dt2e-04",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/index_guard/reference_sha_differs/v9_step_dt5e-05",
+        "kind": "only_old",
+        "old": null,
+        "new": null
+       },
+       {
+        "path": "/l1r_rejudged_rev32/v5/previous_checks_failed",
+        "kind": "length",
+        "old": 2,
+        "new": 0
+       },
+       {
+        "path": "/l1r_rejudged_rev32/v6_FLm/previous_checks_failed",
+        "kind": "length",
+        "old": 2,
+        "new": 0
+       },
+       {
+        "path": "/l1r_rejudged_rev32/v6_FLp/previous_checks_failed",
+        "kind": "length",
+        "old": 2,
+        "new": 0
+       },
+       {
+        "path": "/l1r_rejudged_rev32/v6_FLp_fast/previous_checks_failed",
+        "kind": "length",
+        "old": 2,
+        "new": 0
+       }
+      ]
+     },
+     "06_analysis/01_chrono/14_S4/verify_S4_L1_energy.json": {
+      "n_diffs": 62,
+      "by_class": {
+       "path": 12,
+       "timing": 47,
+       "timestamp": 1,
+       "fingerprint": 2
+      },
+      "metadata_only": true,
+      "verdict_table_changed": false,
+      "non_metadata_diffs": []
+     },
+     "06_analysis/01_chrono/15_S5/verify_S5_L1.json": {
+      "n_diffs": 32,
+      "by_class": {
+       "fingerprint": 7,
+       "timing": 9,
+       "path": 15,
+       "timestamp": 1
+      },
+      "metadata_only": true,
+      "verdict_table_changed": false,
+      "non_metadata_diffs": []
+     },
+     "06_analysis/01_chrono/16_S6/verify_S6_L1_infra.json": {
+      "n_diffs": 38,
+      "by_class": {
+       "fingerprint": 10,
+       "timestamp": 1,
+       "path": 11,
+       "timing": 16
+      },
+      "metadata_only": true,
+      "verdict_table_changed": false,
+      "non_metadata_diffs": []
+     },
+     "06_analysis/01_chrono/14_S4/verify_L1R_V7_V5_raw.json": {
+      "n_diffs": 98,
+      "by_class": {
+       "path": 34,
+       "timing": 62,
+       "timestamp": 1,
+       "fingerprint": 1
+      },
+      "metadata_only": true,
+      "verdict_table_changed": false,
+      "non_metadata_diffs": []
+     },
+     "06_analysis/01_chrono/14_S4/verify_L1R_V7_V5.json": {
+      "n_diffs": 4,
+      "by_class": {
+       "timestamp": 1,
+       "path": 1,
+       "fingerprint": 2
+      },
+      "metadata_only": true,
+      "verdict_table_changed": false,
+      "non_metadata_diffs": []
+     }
+    },
+    "overwritten": {
+     "06_analysis/01_chrono/13_S3/verify_S3_L1_L1R.json": {
+      "decision": "dynamics decision 2026-10-26: S3_L1R verdict flip matches rev 32 intent, physics results equal; regenerate from the R2 batch",
+      "record": "07_results/params_bundle_R2_20261026_011024/install_S3_L1R_summary.json",
+      "history": "06_analysis/01_chrono/13_S3/history/pre_bundle_R2_2026-10-26",
+      "old_sha256": {
+       "verify_S3_L1_L1R.json": "84cd6ec762dd31512f2cfac173d4dd5aaacb59c26a4e4ad5d94764c40831a71b",
+       "verify_S3_L1_L1R.png": "9a39ec612ab7b7c6c7410eb66bc6d1005e000811d013cc80240b47632185dabc"
+      },
+      "new_sha256": {
+       "verify_S3_L1_L1R.json": "5d1565b2f09738ff2f44d8c85a78a8fdbf8ad09e7671a6abb91fd86c6dee0289",
+       "verify_S3_L1_L1R.png": "fb00d0ebca89a558d758cf116a1b48fc3fab7cd5d05e33b010b6979933b1e6b4"
+      },
+      "run_meta": {
+       "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+       "index_guard_params_file_sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce",
+       "reference_json_sha256": "81c65a79573815d25bf008b107797c50a4f335652115d650b7828b1438ecd1bc",
+       "index_guard_reference_json_sha256": "81c65a79573815d25bf008b107797c50a4f335652115d650b7828b1438ecd1bc",
+       "per_case_params_sha256": [
+        "61078f29621d336c"
+       ],
+       "reference_sha_differs": {},
+       "cases_held": {}
+      },
+      "V5_V6_max_abs_diff_old_vs_new": {
+       "0 FL +1 mm: L1-R module normal force change per leg (tol 5 % of max component)": 0.0,
+       "1 FL +1 mm: roll change (L1-R)": 0.0,
+       "2 FL +1 mm: pitch change (L1-R)": 0.0,
+       "3 FL +5 mm: L1-R module normal force change per leg (tol 5 % of max component)": 0.0,
+       "4 FL +5 mm: roll change (L1-R)": 0.0,
+       "5 FL +5 mm: pitch change (L1-R)": 0.0,
+       "6 FL-: first leg at F_min": 0.0,
+       "7 FL-: FL travel at F_min": 0.0,
+       "8 FL-: first unloaded leg": 0.0,
+       "9 FL-: FL travel at lift-off": 6.927791673660977e-14,
+       "10 FL+: first leg at F_min": 0.0,
+       "11 FL+: FL travel at F_min": 0.0,
+       "12 FL+: first unloaded leg": 0.0,
+       "13 FL+: FL travel at lift-off": 5.488942633746774e-13,
+       "14 FL+: first leg at F_min": 0.0,
+       "15 FL+: FL travel at F_min": 0.0,
+       "16 FL+: first unloaded leg": 0.0,
+       "17 FL+: FL travel at lift-off": 5.329070518200751e-15
+      },
+      "tol_abs": 1e-12,
+      "checks_passed_changed": [],
+      "l1r_rejudged_rev32": "kept; per case old_L1_fail_history = old previous_checks_failed (옛 L1 기준 FAIL 이력)",
+      "excluded_dirs": [
+       "v6_FLm.killed_run1",
+       "v6_FLp.killed_run1",
+       "v9_free_dt1e-05.killed_run1"
+      ]
+     }
+    },
+    "not_overwritten": [
+     "06_analysis/01_chrono/13_S3/verify_S3_L1.json",
+     "06_analysis/01_chrono/14_S4/verify_S4_L1_energy.json",
+     "06_analysis/01_chrono/15_S5/verify_S5_L1.json",
+     "06_analysis/01_chrono/16_S6/verify_S6_L1_infra.json",
+     "06_analysis/01_chrono/14_S4/verify_L1R_V7_V5_raw.json",
+     "06_analysis/01_chrono/14_S4/verify_L1R_V7_V5.json"
+    ]
+   },
+   "cases": [
+    {
+     "case": "S3/v4_D_u5e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_052232/v4_D_u5e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4_D_u5e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "5419352211589c132aff6bf7931c8b80fe7371a4e53b1e465831106e45b3b8e5",
+       "new_sha256": "5419352211589c132aff6bf7931c8b80fe7371a4e53b1e465831106e45b3b8e5"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 198.41997300001094,
+     "old_wall_s": 176.30796089999785
+    },
+    {
+     "case": "S3/v4_D_w1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_052232/v4_D_w1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4_D_w1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "6fe6ecf7e7523bd986bce1988dae09f03b27e5d47c12525342791c92dde0bd16",
+       "new_sha256": "6fe6ecf7e7523bd986bce1988dae09f03b27e5d47c12525342791c92dde0bd16"
+      },
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "20467c5b9790df24f89182d92c9b5ee7e539e2bc003b6e368b4b831b3b4e1e10",
+       "new_sha256": "20467c5b9790df24f89182d92c9b5ee7e539e2bc003b6e368b4b831b3b4e1e10"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 232.8970139999874,
+     "old_wall_s": 168.1221544
+    },
+    {
+     "case": "S3/v6_FLm",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v6_FLm",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v6_FLm",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "ea8411f7cd07a29e31a118694af7e02600a48cda1e34a3fd2a406e9ee9450828",
+       "new_sha256": "ea8411f7cd07a29e31a118694af7e02600a48cda1e34a3fd2a406e9ee9450828"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 828.7230025000172,
+     "old_wall_s": 574.1840752999997
+    },
+    {
+     "case": "S3/v6_FLp",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v6_FLp",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v6_FLp",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "b5ef75c499e6c0ea7ee0ea95e2fba1b49141cc7cac8d5978ce8e0a9a502e0aee",
+       "new_sha256": "b5ef75c499e6c0ea7ee0ea95e2fba1b49141cc7cac8d5978ce8e0a9a502e0aee"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 849.0094714000006,
+     "old_wall_s": 542.1263803000038
+    },
+    {
+     "case": "S3/v8a_crawler_dt1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v8a_crawler_dt1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v8a_crawler_dt1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "energy.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "97c9ac970a7a3f0014627680464ea55aef208918374774ff5be1339f57c8e40e",
+       "new_sha256": "97c9ac970a7a3f0014627680464ea55aef208918374774ff5be1339f57c8e40e"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 191.34752459998708,
+     "old_wall_s": 86.87526270000672
+    },
+    {
+     "case": "S3/v8a_crawler_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v8a_crawler_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v8a_crawler_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "energy.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "763e76428f1292bec9458c08776758fa5502d48c14741fe2dd3c4471cf966fec",
+       "new_sha256": "763e76428f1292bec9458c08776758fa5502d48c14741fe2dd3c4471cf966fec"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 110.98083619994577,
+     "old_wall_s": 62.0050057000044
+    },
+    {
+     "case": "S3/v8a_pads_dt1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v8a_pads_dt1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v8a_pads_dt1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "energy.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "b07aec4c09438570e9146081cab460f91be0efd158df104c155db2f335177e91",
+       "new_sha256": "b07aec4c09438570e9146081cab460f91be0efd158df104c155db2f335177e91"
+      },
+      {
+       "file": "modal.npz",
+       "n_keys": 2,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "c1ef602f9c32559ea2fabf4d4c7b01cda1ae97e7f063c8ad2823c2c3ffc5fafe",
+       "new_sha256": "c1ef602f9c32559ea2fabf4d4c7b01cda1ae97e7f063c8ad2823c2c3ffc5fafe"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 276.90596810000716,
+     "old_wall_s": 155.14966280000226
+    },
+    {
+     "case": "S3/v8a_pads_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v8a_pads_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v8a_pads_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "energy.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "7de15a2b10fcacca384437ffe141226cdfd4ed08791726155772df7c5c34530c",
+       "new_sha256": "7de15a2b10fcacca384437ffe141226cdfd4ed08791726155772df7c5c34530c"
+      },
+      {
+       "file": "modal.npz",
+       "n_keys": 2,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "b44d2bd15311b5174293e4ecf10f074d35b5591438bf876928df9a2367db431c",
+       "new_sha256": "b44d2bd15311b5174293e4ecf10f074d35b5591438bf876928df9a2367db431c"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 143.21143149997806,
+     "old_wall_s": 75.11323770000308
+    },
+    {
+     "case": "S3/v9_free_dt1e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v9_free_dt1e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v9_free_dt1e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 154.56789040000876,
+     "old_wall_s": 126.14258119999431
+    },
+    {
+     "case": "S3/v9_step_dt1e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v9_step_dt1e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v9_step_dt1e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 4,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "d71dec8e4d172cd1d98f0b64a6863adb8d51b174329205597eb3621af3689926",
+       "new_sha256": "d71dec8e4d172cd1d98f0b64a6863adb8d51b174329205597eb3621af3689926"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 491.18988740001805,
+     "old_wall_s": 359.5364370000025
+    },
+    {
+     "case": "S3/v4_D_u1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_052232/v4_D_u1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4_D_u1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "d21f0f44c57a0c0c46d502a4a04f9fcd23751ca39450ad8183330e9e69e62ec1",
+       "new_sha256": "d21f0f44c57a0c0c46d502a4a04f9fcd23751ca39450ad8183330e9e69e62ec1"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 150.820912199968,
+     "old_wall_s": 97.74566570000025
+    },
+    {
+     "case": "S3/v4_D_u2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_052232/v4_D_u2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4_D_u2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "d5a1b0b3af99cc8638bc7174e64a64c3f374d6079cd71b44f4bd8508bb7fd71b",
+       "new_sha256": "d5a1b0b3af99cc8638bc7174e64a64c3f374d6079cd71b44f4bd8508bb7fd71b"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 76.6125545000541,
+     "old_wall_s": 54.366328799995244
+    },
+    {
+     "case": "S3/v4_D_w2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_052232/v4_D_w2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4_D_w2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "94c05a4bc5eac5a3a6339b49910c05c91e337cf2965069c1bdc7505db285e34c",
+       "new_sha256": "94c05a4bc5eac5a3a6339b49910c05c91e337cf2965069c1bdc7505db285e34c"
+      },
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "154233f5235a1871dfe3b603f29d70019bb5953a6f2fe7e29232a0a2237d27b5",
+       "new_sha256": "154233f5235a1871dfe3b603f29d70019bb5953a6f2fe7e29232a0a2237d27b5"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 200.96682009997312,
+     "old_wall_s": 128.44531670000288
+    },
+    {
+     "case": "S3/v4_Dx3_w1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_052232/v4_Dx3_w1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4_Dx3_w1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "9dbf471d6714ad4b60716ca5fd4f170758746bf2e73ac1b460fbc14baa95b48b",
+       "new_sha256": "9dbf471d6714ad4b60716ca5fd4f170758746bf2e73ac1b460fbc14baa95b48b"
+      },
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "f159181799e3550ef8578769c3a06cbc096ee95b4dbc61438bec5d13c6cd1eb2",
+       "new_sha256": "f159181799e3550ef8578769c3a06cbc096ee95b4dbc61438bec5d13c6cd1eb2"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 242.34317710000323,
+     "old_wall_s": 133.77522809999937
+    },
+    {
+     "case": "S3/v5",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v5",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v5",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "e2430b8913c41530260dd563dffc3a0579c95332294094f93825952d14e2bdd7",
+       "new_sha256": "e2430b8913c41530260dd563dffc3a0579c95332294094f93825952d14e2bdd7"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 135.25799199996982,
+     "old_wall_s": 78.73239979999198
+    },
+    {
+     "case": "S3/v6_FLp_fast",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v6_FLp_fast",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v6_FLp_fast",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "65175ced9c2df88ac814c729fabbed4533a63223632df07fd437d3607960417b",
+       "new_sha256": "65175ced9c2df88ac814c729fabbed4533a63223632df07fd437d3607960417b"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 217.3989071000251,
+     "old_wall_s": 103.82381539999915
+    },
+    {
+     "case": "S3/v9_free_dt1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v9_free_dt1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v9_free_dt1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 22.74407059996156,
+     "old_wall_s": 10.720425399995293
+    },
+    {
+     "case": "S3/v9_free_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v9_free_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v9_free_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 16.55973029998131,
+     "old_wall_s": 6.478109999996377
+    },
+    {
+     "case": "S3/v9_free_dt5e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v9_free_dt5e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v9_free_dt5e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 40.52029399998719,
+     "old_wall_s": 18.914240899990546
+    },
+    {
+     "case": "S3/v9_step_dt1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v9_step_dt1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v9_step_dt1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 4,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "badc1f6bb70c08c83553ff1ed14baad3f1e5f2b86fc59ac8e21fbb891825403d",
+       "new_sha256": "badc1f6bb70c08c83553ff1ed14baad3f1e5f2b86fc59ac8e21fbb891825403d"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 58.674245100002736,
+     "old_wall_s": 26.294787999999244
+    },
+    {
+     "case": "S3/v9_step_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v9_step_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v9_step_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 4,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "9909d5002b48947709b636a22cde1bc72479d45e5523d2eb8a485c9875cc055e",
+       "new_sha256": "9909d5002b48947709b636a22cde1bc72479d45e5523d2eb8a485c9875cc055e"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 30.793582000012975,
+     "old_wall_s": 14.403130799997598
+    },
+    {
+     "case": "S3/v9_step_dt5e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v9_step_dt5e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v9_step_dt5e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 4,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "5876c36cd1cee3cac88ed2027dd47c7622591b9f54057f43e0f6d8a957a8167d",
+       "new_sha256": "5876c36cd1cee3cac88ed2027dd47c7622591b9f54057f43e0f6d8a957a8167d"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 112.44260100001702,
+     "old_wall_s": 46.367140400005155
+    },
+    {
+     "case": "S3/v4_D_u1e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results.json",
+     "old_dir": "07_results/S3/batch_20261022_052232/v4_D_u1e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4_D_u1e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "baf437eb36e6a79af6747757973cf8a7a8572aa1bb9c07aff600e1769cf05037",
+       "new_sha256": "baf437eb36e6a79af6747757973cf8a7a8572aa1bb9c07aff600e1769cf05037"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 1177.9805200999836,
+     "old_wall_s": 632.8435529999988
+    },
+    {
+     "case": "S3/ctrl1_replay",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_053309/ctrl1_replay",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/ctrl1_replay",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "6fe6ecf7e7523bd986bce1988dae09f03b27e5d47c12525342791c92dde0bd16",
+       "new_sha256": "6fe6ecf7e7523bd986bce1988dae09f03b27e5d47c12525342791c92dde0bd16"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 246.65543210000033,
+     "old_wall_s": 137.80545960000018
+    },
+    {
+     "case": "S3/v4touch_dt1e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_053640/v4touch_dt1e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4touch_dt1e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 274.67126629996346,
+     "old_wall_s": 232.25708270000177
+    },
+    {
+     "case": "S3/v4touch_dt1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_053640/v4touch_dt1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4touch_dt1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 38.50655019999249,
+     "old_wall_s": 27.1110367999936
+    },
+    {
+     "case": "S3/v4touch_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_053640/v4touch_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4touch_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 24.640755000000354,
+     "old_wall_s": 14.369055100003607
+    },
+    {
+     "case": "S3/v4touch_dt5e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_053640/v4touch_dt5e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4touch_dt5e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 100.48599159996957,
+     "old_wall_s": 51.20709889999125
+    },
+    {
+     "case": "S3/v4_D_wdefault",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_052232/v4_D_wdefault",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v4_D_wdefault",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "94c05a4bc5eac5a3a6339b49910c05c91e337cf2965069c1bdc7505db285e34c",
+       "new_sha256": "94c05a4bc5eac5a3a6339b49910c05c91e337cf2965069c1bdc7505db285e34c"
+      },
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "154233f5235a1871dfe3b603f29d70019bb5953a6f2fe7e29232a0a2237d27b5",
+       "new_sha256": "154233f5235a1871dfe3b603f29d70019bb5953a6f2fe7e29232a0a2237d27b5"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 204.7945839999593,
+     "old_wall_s": 112.67380319999938
+    },
+    {
+     "case": "S3/v5_default",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3/batch_20261022_044954/v5_default",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3/v5_default",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "7c224897627fc2d9f9eb7165805aa7a47b4c8d2e822c381b2e77ce14426247d6",
+       "new_sha256": "7c224897627fc2d9f9eb7165805aa7a47b4c8d2e822c381b2e77ce14426247d6"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 78.93446459999541,
+     "old_wall_s": 40.07163999999466
+    },
+    {
+     "case": "S3_L1R/v9_free_dt1e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt1e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt1e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 244.45772870001383,
+     "old_wall_s": 234.90368789999047
+    },
+    {
+     "case": "S3_L1R/v9_step_dt1e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt1e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt1e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 4,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "6be31d2d749009b3ec51fc57372fa8b986ee86c5a01d1271c3134cdef85c9873",
+       "new_sha256": "6be31d2d749009b3ec51fc57372fa8b986ee86c5a01d1271c3134cdef85c9873"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 925.328887599986,
+     "old_wall_s": 544.2975492999831
+    },
+    {
+     "case": "S3_L1R/v6_FLm",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLm",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLm",
+     "status": "ok",
+     "identical": false,
+     "accepted_exception": true,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 9,
+       "bytes_only_diffs": [],
+       "old_sha256": "9f9c5dc638c3e3f17cb0924a9be847afaa95372c0585d0285efe5fa4aeceaab2",
+       "new_sha256": "927b0dc9ae8225628ec653007f1a1f03a9ef389dbda46c79edb1022c9c6c9603"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 80,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 1529.5771103000152,
+     "old_wall_s": 1078.500905199995
+    },
+    {
+     "case": "S3_L1R/v6_FLp",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLp",
+     "status": "ok",
+     "identical": false,
+     "accepted_exception": true,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 9,
+       "bytes_only_diffs": [],
+       "old_sha256": "1c7efad3db2ef13a2820864175db3e788aab050f000b79c1c363fbab4058d8eb",
+       "new_sha256": "fd72c9c0c0766fb41a5c6f30001398bf9e602dda1f6904a82cde89d475766273"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 80,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 1542.2740291999653,
+     "old_wall_s": 1068.0071675000072
+    },
+    {
+     "case": "S3_L1R/v5",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v5",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v5",
+     "status": "ok",
+     "identical": false,
+     "accepted_exception": true,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "1d4ae95c91fae9c97305064176b7c525bcdbd3968016ca1a42bcdae3b9b66710",
+       "new_sha256": "1d4ae95c91fae9c97305064176b7c525bcdbd3968016ca1a42bcdae3b9b66710"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 80,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 184.29176839999855,
+     "old_wall_s": 211.9498687000014
+    },
+    {
+     "case": "S3_L1R/v6_FLp_fast",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v6_FLp_fast",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v6_FLp_fast",
+     "status": "ok",
+     "identical": false,
+     "accepted_exception": true,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 19,
+       "n_array_diffs": 10,
+       "bytes_only_diffs": [],
+       "old_sha256": "47f03193c9f9d483d0d2a41f622451fbdc5152e991a1b7b997fb76990af9e3ea",
+       "new_sha256": "8ef850597899feffa600e0da3ce5e46218bc632e34741f507bee8c9fb499b28c"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 80,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 378.86654489999637,
+     "old_wall_s": 281.5226450000191
+    },
+    {
+     "case": "S3_L1R/v9_free_dt1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 50.53719709999859,
+     "old_wall_s": 26.71406170001137
+    },
+    {
+     "case": "S3_L1R/v9_free_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 26.398442599980626,
+     "old_wall_s": 15.1605031999934
+    },
+    {
+     "case": "S3_L1R/v9_free_dt5e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v9_free_dt5e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_free_dt5e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 84.7989971000352,
+     "old_wall_s": 52.29837790000602
+    },
+    {
+     "case": "S3_L1R/v9_step_dt1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 4,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "bbe574779da9a8e127c6fdb1fb0a767d7c8176fec71be4ae02d74e2e930c71c9",
+       "new_sha256": "bbe574779da9a8e127c6fdb1fb0a767d7c8176fec71be4ae02d74e2e930c71c9"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 88.7526147000026,
+     "old_wall_s": 62.070169899991015
+    },
+    {
+     "case": "S3_L1R/v9_step_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 4,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "7951967dd6281a21c129016bed662f058efe7f0c298b5e1a7d8f45204b4de42b",
+       "new_sha256": "7951967dd6281a21c129016bed662f058efe7f0c298b5e1a7d8f45204b4de42b"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 43.00734960002592,
+     "old_wall_s": 32.3341347000096
+    },
+    {
+     "case": "S3_L1R/v9_step_dt5e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S3_L1R/batch_20261022_100939/v9_step_dt5e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S3_L1R/v9_step_dt5e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 4,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "c9acf91fcaab6d534520dbe5b051147311dc6adc02d2c290b4e619739f208c50",
+       "new_sha256": "c9acf91fcaab6d534520dbe5b051147311dc6adc02d2c290b4e619739f208c50"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new"
+     ],
+     "wall_s": 159.7081200000248,
+     "old_wall_s": 119.43449169999803
+    },
+    {
+     "case": "L1R_checks/v5p3_l1r_dt1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v5p3_l1r_dt1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v5p3_l1r_dt1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "e6c147dd9ecaacf20d1da5a4ec1946e665c03b35473a4ef394c92f157c75fbe6",
+       "new_sha256": "e6c147dd9ecaacf20d1da5a4ec1946e665c03b35473a4ef394c92f157c75fbe6"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 94.70587770000566,
+     "old_wall_s": 64.1877753000008
+    },
+    {
+     "case": "L1R_checks/v5p3_l1r_dt1e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_122402/v5p3_l1r_dt1e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v5p3_l1r_dt1e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "5445b59c8508fa44835774cc0dd17a61a0f45c7e7eb8aa705df72464938fda8a",
+       "new_sha256": "5445b59c8508fa44835774cc0dd17a61a0f45c7e7eb8aa705df72464938fda8a"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 945.4089981999714,
+     "old_wall_s": 482.8454051
+    },
+    {
+     "case": "L1R_checks/v5p3_l1r_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v5p3_l1r_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v5p3_l1r_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "4fb325a14994ae1bad72c873e543ae09f6e7d5dde5c8288863eb28a5c3a7e896",
+       "new_sha256": "4fb325a14994ae1bad72c873e543ae09f6e7d5dde5c8288863eb28a5c3a7e896"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 57.10185369994724,
+     "old_wall_s": 33.483408000000054
+    },
+    {
+     "case": "L1R_checks/v5p3_l1r_dt5e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v5p3_l1r_dt5e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v5p3_l1r_dt5e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "8ba7b737bb59ba8813844ea6491ac1d524cf7c316265aa9d0b11dc604debe374",
+       "new_sha256": "8ba7b737bb59ba8813844ea6491ac1d524cf7c316265aa9d0b11dc604debe374"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 155.64179590001004,
+     "old_wall_s": 124.70560109999496
+    },
+    {
+     "case": "L1R_checks/v5p3_l1r_nopred_dt1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v5p3_l1r_nopred_dt1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v5p3_l1r_nopred_dt1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "08749c983f28d0aba9ae76a064409ee1f278b4548a46205d154d4b4acba7412f",
+       "new_sha256": "08749c983f28d0aba9ae76a064409ee1f278b4548a46205d154d4b4acba7412f"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 95.0122027999605,
+     "old_wall_s": 63.91708009998547
+    },
+    {
+     "case": "L1R_checks/v5p3_l1r_nopred_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v5p3_l1r_nopred_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v5p3_l1r_nopred_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "0f93e504f636e1cf57dfc6f62d7a856d96b6309dbcd6221ab2727683c17dc6ab",
+       "new_sha256": "0f93e504f636e1cf57dfc6f62d7a856d96b6309dbcd6221ab2727683c17dc6ab"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 60.800884899974335,
+     "old_wall_s": 33.64726850000443
+    },
+    {
+     "case": "L1R_checks/v7a_bottom_heave",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_heave",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_bottom_heave",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "e26b5dce253186475302232a3857ecdfa6115960cbb2f74e2142c3fb82aab9a5",
+       "new_sha256": "e26b5dce253186475302232a3857ecdfa6115960cbb2f74e2142c3fb82aab9a5"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.534467199991923,
+     "old_wall_s": 6.83861700000125
+    },
+    {
+     "case": "L1R_checks/v7a_bottom_pitch",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_pitch",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_bottom_pitch",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "b4c5c2624c7423deff131703647c6df7f58eb52665689d260b5f6daffdde0945",
+       "new_sha256": "b4c5c2624c7423deff131703647c6df7f58eb52665689d260b5f6daffdde0945"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 88.45693919999758,
+     "old_wall_s": 51.701242600014666
+    },
+    {
+     "case": "L1R_checks/v7a_bottom_roll",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_roll",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_bottom_roll",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "8fe5a7bdd14366e0cc53960e1b6d4abd9188fb9dcc8f24d51fd3b80b12cc04b3",
+       "new_sha256": "8fe5a7bdd14366e0cc53960e1b6d4abd9188fb9dcc8f24d51fd3b80b12cc04b3"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 86.48515859997133,
+     "old_wall_s": 51.669773300003726
+    },
+    {
+     "case": "L1R_checks/v7a_bottom_surge",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_surge",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_bottom_surge",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "f66fdcb26d3d3c88c6b4e1aef7387cd186a9bac4fbc2069f950479c153a90da3",
+       "new_sha256": "f66fdcb26d3d3c88c6b4e1aef7387cd186a9bac4fbc2069f950479c153a90da3"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.111299499985762,
+     "old_wall_s": 7.016571399988607
+    },
+    {
+     "case": "L1R_checks/v7a_bottom_sway",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_sway",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_bottom_sway",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "06cf3720dc3c152c8ec2b69dc555eb41f8c9dd8bb1f94aa623b797cf68660375",
+       "new_sha256": "06cf3720dc3c152c8ec2b69dc555eb41f8c9dd8bb1f94aa623b797cf68660375"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.529388599970844,
+     "old_wall_s": 6.5229172999970615
+    },
+    {
+     "case": "L1R_checks/v7a_bottom_yaw",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_bottom_yaw",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_bottom_yaw",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "1b7695458033280e449937fc023201d095574b7e25d6cf2febe72c3e2a441c5a",
+       "new_sha256": "1b7695458033280e449937fc023201d095574b7e25d6cf2febe72c3e2a441c5a"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.620281899988186,
+     "old_wall_s": 6.585916099982569
+    },
+    {
+     "case": "L1R_checks/v7a_middle_heave",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_heave",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_middle_heave",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "36811ca66066f7aa25722f0359bb6907292a45ba569e9fedc2741f278639dbb5",
+       "new_sha256": "36811ca66066f7aa25722f0359bb6907292a45ba569e9fedc2741f278639dbb5"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 10.397547699976712,
+     "old_wall_s": 6.399381499999436
+    },
+    {
+     "case": "L1R_checks/v7a_middle_pitch",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_pitch",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_middle_pitch",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "c909a61ddaf56c735f9ac54e60534dad5cd7dfb96a46798f212c8f4cc4f027b5",
+       "new_sha256": "c909a61ddaf56c735f9ac54e60534dad5cd7dfb96a46798f212c8f4cc4f027b5"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 86.48426349996589,
+     "old_wall_s": 51.74783249999746
+    },
+    {
+     "case": "L1R_checks/v7a_middle_roll",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_roll",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_middle_roll",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "4b090e7a2e0224a1a2653e8d6580c24ccdaca9c55471af34ed37e1d7756541e3",
+       "new_sha256": "4b090e7a2e0224a1a2653e8d6580c24ccdaca9c55471af34ed37e1d7756541e3"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 80.77193160000024,
+     "old_wall_s": 52.24358829998528
+    },
+    {
+     "case": "L1R_checks/v7a_middle_surge",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_surge",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_middle_surge",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "4cf653db896c3265f91b7f2c1b2fde432c404fe582a45a3b473f4b259df02e7e",
+       "new_sha256": "4cf653db896c3265f91b7f2c1b2fde432c404fe582a45a3b473f4b259df02e7e"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.281194099981803,
+     "old_wall_s": 6.4341826000018045
+    },
+    {
+     "case": "L1R_checks/v7a_middle_sway",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_sway",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_middle_sway",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "033f5dfa9103dd4e75df39dde3aefd24c93bc922fe33f7ac9c4bd1b6d5a11fc3",
+       "new_sha256": "033f5dfa9103dd4e75df39dde3aefd24c93bc922fe33f7ac9c4bd1b6d5a11fc3"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.570562100037932,
+     "old_wall_s": 6.6778335999988485
+    },
+    {
+     "case": "L1R_checks/v7a_middle_yaw",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_middle_yaw",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_middle_yaw",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "bdb99d88a111d706b4c02e3e8afd3a94dd9d5b4ac135fe448c5a610fa4e6e71e",
+       "new_sha256": "bdb99d88a111d706b4c02e3e8afd3a94dd9d5b4ac135fe448c5a610fa4e6e71e"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.329274300020188,
+     "old_wall_s": 6.425120900006732
+    },
+    {
+     "case": "L1R_checks/v7a_top_heave",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_heave",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_top_heave",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "403e8563d7b4b0e346ca0f07ca82eef108225b8b7c9170c06dfeca24c169101c",
+       "new_sha256": "403e8563d7b4b0e346ca0f07ca82eef108225b8b7c9170c06dfeca24c169101c"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.476789799984545,
+     "old_wall_s": 6.472594999999274
+    },
+    {
+     "case": "L1R_checks/v7a_top_pitch",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_pitch",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_top_pitch",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "b80724babd98ff7ce5acc76919abfa503e18c519ef9d88293f19bf43560b2b6d",
+       "new_sha256": "b80724babd98ff7ce5acc76919abfa503e18c519ef9d88293f19bf43560b2b6d"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 88.57540550001431,
+     "old_wall_s": 51.892458300018916
+    },
+    {
+     "case": "L1R_checks/v7a_top_roll",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_roll",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_top_roll",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "718d489598e94c823e5adf51584b80a4753ca5116008fe9994b5f6163b75c6cb",
+       "new_sha256": "718d489598e94c823e5adf51584b80a4753ca5116008fe9994b5f6163b75c6cb"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 80.74245160003193,
+     "old_wall_s": 52.001231400005054
+    },
+    {
+     "case": "L1R_checks/v7a_top_surge",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_surge",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_top_surge",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "cf4a6b12425194957bdf32f8f7dbf7745fbc6acd32507c4070e5f23d1be64bdd",
+       "new_sha256": "cf4a6b12425194957bdf32f8f7dbf7745fbc6acd32507c4070e5f23d1be64bdd"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.60283960000379,
+     "old_wall_s": 6.554412700003013
+    },
+    {
+     "case": "L1R_checks/v7a_top_sway",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_sway",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_top_sway",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "870c9b7b3766ed6f60ba9bb872e3e9a89dd4303b2721acdd4d6383370f4bca09",
+       "new_sha256": "870c9b7b3766ed6f60ba9bb872e3e9a89dd4303b2721acdd4d6383370f4bca09"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.52231169998413,
+     "old_wall_s": 6.448514099989552
+    },
+    {
+     "case": "L1R_checks/v7a_top_yaw",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7a_top_yaw",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7a_top_yaw",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 3,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "5e85dd148cd5486a0d4dd983243ab7b807f2407141b6294a3be970ff1a998d8b",
+       "new_sha256": "5e85dd148cd5486a0d4dd983243ab7b807f2407141b6294a3be970ff1a998d8b"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.563507999991998,
+     "old_wall_s": 6.488682700000936
+    },
+    {
+     "case": "L1R_checks/v7b_heave_dt1e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7b_heave_dt1e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7b_heave_dt1e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "93907a5b3234764a4c5e97ea86c136d08270cd7a9064b2fed55aa7be30c23d9a",
+       "new_sha256": "93907a5b3234764a4c5e97ea86c136d08270cd7a9064b2fed55aa7be30c23d9a"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 165.1148788999999,
+     "old_wall_s": 86.30738949999795
+    },
+    {
+     "case": "L1R_checks/v7b_heave_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7b_heave_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7b_heave_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "afe34aaaa5e8b5e4e3297a35d2aec350441a9e3343c1bc47efe786bd16c25108",
+       "new_sha256": "afe34aaaa5e8b5e4e3297a35d2aec350441a9e3343c1bc47efe786bd16c25108"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 12.301375599985477,
+     "old_wall_s": 6.43582559999777
+    },
+    {
+     "case": "L1R_checks/v7b_pitch_dt1e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_122402/v7b_pitch_dt1e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7b_pitch_dt1e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "f6a84385410e2118ad08782f03dee5e0b4ae6a9e4a5ed83b483e7f22a03ac368",
+       "new_sha256": "f6a84385410e2118ad08782f03dee5e0b4ae6a9e4a5ed83b483e7f22a03ac368"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 506.2624123999849,
+     "old_wall_s": 352.6992638
+    },
+    {
+     "case": "L1R_checks/v7b_pitch_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7b_pitch_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7b_pitch_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "591541a032f16018016c6df9f6e0f5ecf060f2158a56f4ccc9584b48340a44cc",
+       "new_sha256": "591541a032f16018016c6df9f6e0f5ecf060f2158a56f4ccc9584b48340a44cc"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 46.354203600028995,
+     "old_wall_s": 25.463875599991297
+    },
+    {
+     "case": "L1R_checks/v7b_roll_dt1e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_122402/v7b_roll_dt1e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7b_roll_dt1e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "d9ff1a1e6f7fa9c0acaf3a9d029f00e76cc857fdbdf12a5ae045aac9e4acaa1a",
+       "new_sha256": "d9ff1a1e6f7fa9c0acaf3a9d029f00e76cc857fdbdf12a5ae045aac9e4acaa1a"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 512.8211786000174,
+     "old_wall_s": 354.5706232
+    },
+    {
+     "case": "L1R_checks/v7b_roll_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v7b_roll_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v7b_roll_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "86fc9cdd56844bf185a6cd911f411652661690c23599c1132a0b1ae32b738bf0",
+       "new_sha256": "86fc9cdd56844bf185a6cd911f411652661690c23599c1132a0b1ae32b738bf0"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 46.393955400038976,
+     "old_wall_s": 25.53174730000319
+    },
+    {
+     "case": "L1R_checks/v9free_l1r_dt1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v9free_l1r_dt1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v9free_l1r_dt1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "38597d1febdd2e348c7f697e1065fe16117d6efb0c28fc6ff239c67f971e71a6",
+       "new_sha256": "38597d1febdd2e348c7f697e1065fe16117d6efb0c28fc6ff239c67f971e71a6"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 42.58470479998505,
+     "old_wall_s": 28.398072300013155
+    },
+    {
+     "case": "L1R_checks/v9free_l1r_dt1e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v9free_l1r_dt1e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v9free_l1r_dt1e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "1166252dfa2839a27810f61e1c314613460a249352bc2e2555d042769dbbf5d4",
+       "new_sha256": "1166252dfa2839a27810f61e1c314613460a249352bc2e2555d042769dbbf5d4"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 262.47953820001567,
+     "old_wall_s": 217.43387569999322
+    },
+    {
+     "case": "L1R_checks/v9free_l1r_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v9free_l1r_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v9free_l1r_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "a5bf413ee00f420102918cf0a64ef9f3529e34251fbce1fd82e76943f487fe2e",
+       "new_sha256": "a5bf413ee00f420102918cf0a64ef9f3529e34251fbce1fd82e76943f487fe2e"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 30.351189900015015,
+     "old_wall_s": 15.530169999983627
+    },
+    {
+     "case": "L1R_checks/v9free_l1r_dt5e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/L1R_checks/batch_20261022_121412/v9free_l1r_dt5e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/L1R_checks/v9free_l1r_dt5e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 6,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "bc8847731cddb00c9508465b766c6854bce9be1d73567f01e7dbd2f868140dce",
+       "new_sha256": "bc8847731cddb00c9508465b766c6854bce9be1d73567f01e7dbd2f868140dce"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 88.92226070002653,
+     "old_wall_s": 53.08939890001784
+    },
+    {
+     "case": "S4_energy/v8b_pitch2_dt1e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S4_energy/batch_20261022_044244/v8b_pitch2_dt1e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S4_energy/v8b_pitch2_dt1e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "budget.npz",
+       "n_keys": 2,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "93aafe7ccbcdc4a4f558755d2b0575d65cc411ac8594d36a2faf3f6d402154b6",
+       "new_sha256": "93aafe7ccbcdc4a4f558755d2b0575d65cc411ac8594d36a2faf3f6d402154b6"
+      },
+      {
+       "file": "record/record.npz",
+       "n_keys": 26,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "050ff1cb7068f2851553b6603e035a3d38feb4224c5d4bc2dec97239e69c38a4",
+       "new_sha256": "050ff1cb7068f2851553b6603e035a3d38feb4224c5d4bc2dec97239e69c38a4"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 182.04844800004503,
+     "old_wall_s": 227.6349581000104
+    },
+    {
+     "case": "S4_energy/v8b_flat_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S4_energy/batch_20261022_044244/v8b_flat_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S4_energy/v8b_flat_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "budget.npz",
+       "n_keys": 2,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "46a9f1f79a21969858f6279e47feec209761d595df4af5ae3bc25c1be41687d1",
+       "new_sha256": "46a9f1f79a21969858f6279e47feec209761d595df4af5ae3bc25c1be41687d1"
+      },
+      {
+       "file": "record/record.npz",
+       "n_keys": 26,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "583182d615d084aac2d21cb5234f549f6aebc1eb3c05d89b8aaaa294e1e761a0",
+       "new_sha256": "583182d615d084aac2d21cb5234f549f6aebc1eb3c05d89b8aaaa294e1e761a0"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 90.57636030000867,
+     "old_wall_s": 71.623291099997
+    },
+    {
+     "case": "S4_energy/v8b_pitch2_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S4_energy/batch_20261022_044244/v8b_pitch2_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S4_energy/v8b_pitch2_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "budget.npz",
+       "n_keys": 2,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "ee7db0653341514856241cebdb780c7e1f23267c8fdc0346a50dd6c1eefa165c",
+       "new_sha256": "ee7db0653341514856241cebdb780c7e1f23267c8fdc0346a50dd6c1eefa165c"
+      },
+      {
+       "file": "record/record.npz",
+       "n_keys": 26,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "4a5f8052de98fc2ee6054be4bda97e74f7fccb90c2e6597e233118f0b6af24a4",
+       "new_sha256": "4a5f8052de98fc2ee6054be4bda97e74f7fccb90c2e6597e233118f0b6af24a4"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 119.08235689997673,
+     "old_wall_s": 123.9182235999906
+    },
+    {
+     "case": "S4_energy/v8b_pitch2_motor_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S4_energy/batch_20261022_044244/v8b_pitch2_motor_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S4_energy/v8b_pitch2_motor_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "budget.npz",
+       "n_keys": 2,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "bfee86a9dcf80a081c22a05f1ef4a0675f4e7b196e9ae1d10c6d6cf970639025",
+       "new_sha256": "bfee86a9dcf80a081c22a05f1ef4a0675f4e7b196e9ae1d10c6d6cf970639025"
+      },
+      {
+       "file": "record/record.npz",
+       "n_keys": 26,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "0dc05e209ea38d432aed6f126ebec14316d1fa3fac4d90d1f1d617ba2c5f5a2b",
+       "new_sha256": "0dc05e209ea38d432aed6f126ebec14316d1fa3fac4d90d1f1d617ba2c5f5a2b"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 222.74716710002394,
+     "old_wall_s": 148.21264839998912
+    },
+    {
+     "case": "S4_energy/v8b_rollm2_pitch1.5_dt2e-04",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S4_energy/batch_20261022_044244/v8b_rollm2_pitch1.5_dt2e-04",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S4_energy/v8b_rollm2_pitch1.5_dt2e-04",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "budget.npz",
+       "n_keys": 2,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "fb4d586ab0e236bf3c57b457ab2887ad054132b56b5f8e2dc6e2cb2fc5f467d0",
+       "new_sha256": "fb4d586ab0e236bf3c57b457ab2887ad054132b56b5f8e2dc6e2cb2fc5f467d0"
+      },
+      {
+       "file": "record/record.npz",
+       "n_keys": 26,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "051370d6009fbcc8ce265aa676a8f40a3e3a81b985ac34f08d8c5cd0355cc555",
+       "new_sha256": "051370d6009fbcc8ce265aa676a8f40a3e3a81b985ac34f08d8c5cd0355cc555"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 129.03663549997145,
+     "old_wall_s": 119.06757849999121
+    },
+    {
+     "case": "S4_energy/v8b_pitch2_dt5e-05",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results.json",
+     "old_dir": "07_results/S4_energy/batch_20261022_044244/v8b_pitch2_dt5e-05",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S4_energy/v8b_pitch2_dt5e-05",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "budget.npz",
+       "n_keys": 2,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "2fea913d0c33d04c9488e285b15e84106274d4c189b464cf552218b2f6629697",
+       "new_sha256": "2fea913d0c33d04c9488e285b15e84106274d4c189b464cf552218b2f6629697"
+      },
+      {
+       "file": "record/record.npz",
+       "n_keys": 26,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "0db765213d626cdd74826fd02b66184603fd74f96a62ad075841b036ca5a5d27",
+       "new_sha256": "0db765213d626cdd74826fd02b66184603fd74f96a62ad075841b036ca5a5d27"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run/engine/rod_chamber/applied_extra_force: only in new",
+      "/run/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 504.0994916000054,
+     "old_wall_s": 423.90548800000397
+    },
+    {
+     "case": "S5/bottom_pitch",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S5/batch_20261022_045341/bottom_pitch",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S5/bottom_pitch",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 5,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "85f96b21f4a8d6ab00b6ddfe3cbdfeebb8898cc53295122cdd4064e3e4f45b14",
+       "new_sha256": "85f96b21f4a8d6ab00b6ddfe3cbdfeebb8898cc53295122cdd4064e3e4f45b14"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [
+      "/modes[0]/era/mac_vs_all_phi",
+      "/modes[0]/era_order_check/mac_vs_all_phi",
+      "/modes[1]/era/mac_vs_all_phi",
+      "/modes[1]/era_order_check/mac_vs_all_phi",
+      "/modes[2]/era/mac_vs_all_phi",
+      "/modes[2]/era_order_check/mac_vs_all_phi",
+      "/modes[3]/era/mac_vs_all_phi",
+      "/modes[3]/era_order_check/mac_vs_all_phi",
+      "/modes[4]/era/mac_vs_all_phi",
+      "/modes[4]/era_order_check/mac_vs_all_phi",
+      "/modes[5]/era/mac_vs_all_phi",
+      "/modes[5]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[0]/era/mac_vs_all_phi",
+      "/summary/modes[0]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[1]/era/mac_vs_all_phi",
+      "/summary/modes[1]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[2]/era/mac_vs_all_phi",
+      "/summary/modes[2]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[3]/era/mac_vs_all_phi",
+      "/summary/modes[3]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[4]/era/mac_vs_all_phi",
+      "/summary/modes[4]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[5]/era/mac_vs_all_phi",
+      "/summary/modes[5]/era_order_check/mac_vs_all_phi"
+     ],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 30.330289800011087,
+     "old_wall_s": 30.519152299995767
+    },
+    {
+     "case": "S5/bottom_roll",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S5/batch_20261022_045341/bottom_roll",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S5/bottom_roll",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 5,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "bd9a86f6c8b423ad968820ae1f879946e2de49d234c99c30e0a3c16732e4e6e7",
+       "new_sha256": "bd9a86f6c8b423ad968820ae1f879946e2de49d234c99c30e0a3c16732e4e6e7"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [
+      "/modes[0]/era/mac_vs_all_phi",
+      "/modes[0]/era_order_check/mac_vs_all_phi",
+      "/modes[1]/era/mac_vs_all_phi",
+      "/modes[1]/era_order_check/mac_vs_all_phi",
+      "/modes[2]/era/mac_vs_all_phi",
+      "/modes[2]/era_order_check/mac_vs_all_phi",
+      "/modes[3]/era/mac_vs_all_phi",
+      "/modes[3]/era_order_check/mac_vs_all_phi",
+      "/modes[4]/era/mac_vs_all_phi",
+      "/modes[4]/era_order_check/mac_vs_all_phi",
+      "/modes[5]/era/mac_vs_all_phi",
+      "/modes[5]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[0]/era/mac_vs_all_phi",
+      "/summary/modes[0]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[1]/era/mac_vs_all_phi",
+      "/summary/modes[1]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[2]/era/mac_vs_all_phi",
+      "/summary/modes[2]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[3]/era/mac_vs_all_phi",
+      "/summary/modes[3]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[4]/era/mac_vs_all_phi",
+      "/summary/modes[4]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[5]/era/mac_vs_all_phi",
+      "/summary/modes[5]/era_order_check/mac_vs_all_phi"
+     ],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 32.383256100001745,
+     "old_wall_s": 30.080674400000134
+    },
+    {
+     "case": "S5/middle_pitch",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S5/batch_20261022_045341/middle_pitch",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S5/middle_pitch",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 5,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "bf3e0a4d03a8af8c5b34407e4caaf0fb84c0a42d2be57e405fb50835f0f0111e",
+       "new_sha256": "bf3e0a4d03a8af8c5b34407e4caaf0fb84c0a42d2be57e405fb50835f0f0111e"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [
+      "/modes[0]/era/mac_vs_all_phi",
+      "/modes[0]/era_order_check/mac_vs_all_phi",
+      "/modes[1]/era/mac_vs_all_phi",
+      "/modes[1]/era_order_check/mac_vs_all_phi",
+      "/modes[2]/era/mac_vs_all_phi",
+      "/modes[2]/era_order_check/mac_vs_all_phi",
+      "/modes[3]/era/mac_vs_all_phi",
+      "/modes[3]/era_order_check/mac_vs_all_phi",
+      "/modes[4]/era/mac_vs_all_phi",
+      "/modes[4]/era_order_check/mac_vs_all_phi",
+      "/modes[5]/era/mac_vs_all_phi",
+      "/modes[5]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[0]/era/mac_vs_all_phi",
+      "/summary/modes[0]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[1]/era/mac_vs_all_phi",
+      "/summary/modes[1]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[2]/era/mac_vs_all_phi",
+      "/summary/modes[2]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[3]/era/mac_vs_all_phi",
+      "/summary/modes[3]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[4]/era/mac_vs_all_phi",
+      "/summary/modes[4]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[5]/era/mac_vs_all_phi",
+      "/summary/modes[5]/era_order_check/mac_vs_all_phi"
+     ],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 32.48185819998616,
+     "old_wall_s": 31.054964199996903
+    },
+    {
+     "case": "S5/middle_roll",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S5/batch_20261022_045341/middle_roll",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S5/middle_roll",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 5,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "fc300de622060d7286d11ef3318a4dfbb9e81b4518766c231d21fc1ae2cda29d",
+       "new_sha256": "fc300de622060d7286d11ef3318a4dfbb9e81b4518766c231d21fc1ae2cda29d"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [
+      "/modes[0]/era/mac_vs_all_phi",
+      "/modes[0]/era_order_check/mac_vs_all_phi",
+      "/modes[1]/era/mac_vs_all_phi",
+      "/modes[1]/era_order_check/mac_vs_all_phi",
+      "/modes[2]/era/mac_vs_all_phi",
+      "/modes[2]/era_order_check/mac_vs_all_phi",
+      "/modes[3]/era/mac_vs_all_phi",
+      "/modes[3]/era_order_check/mac_vs_all_phi",
+      "/modes[4]/era/mac_vs_all_phi",
+      "/modes[4]/era_order_check/mac_vs_all_phi",
+      "/modes[5]/era/mac_vs_all_phi",
+      "/modes[5]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[0]/era/mac_vs_all_phi",
+      "/summary/modes[0]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[1]/era/mac_vs_all_phi",
+      "/summary/modes[1]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[2]/era/mac_vs_all_phi",
+      "/summary/modes[2]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[3]/era/mac_vs_all_phi",
+      "/summary/modes[3]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[4]/era/mac_vs_all_phi",
+      "/summary/modes[4]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[5]/era/mac_vs_all_phi",
+      "/summary/modes[5]/era_order_check/mac_vs_all_phi"
+     ],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 40.687259800033644,
+     "old_wall_s": 32.7505181000015
+    },
+    {
+     "case": "S5/top_pitch",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S5/batch_20261022_045341/top_pitch",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S5/top_pitch",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 5,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "75b02f48d7b93c8beb4252e1fc465412badbc1a5dfff298de482873be2e4f238",
+       "new_sha256": "75b02f48d7b93c8beb4252e1fc465412badbc1a5dfff298de482873be2e4f238"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [
+      "/modes[0]/era/mac_vs_all_phi",
+      "/modes[0]/era_order_check/mac_vs_all_phi",
+      "/modes[1]/era/mac_vs_all_phi",
+      "/modes[1]/era_order_check/mac_vs_all_phi",
+      "/modes[2]/era/mac_vs_all_phi",
+      "/modes[2]/era_order_check/mac_vs_all_phi",
+      "/modes[3]/era/mac_vs_all_phi",
+      "/modes[3]/era_order_check/mac_vs_all_phi",
+      "/modes[4]/era/mac_vs_all_phi",
+      "/modes[4]/era_order_check/mac_vs_all_phi",
+      "/modes[5]/era/mac_vs_all_phi",
+      "/modes[5]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[0]/era/mac_vs_all_phi",
+      "/summary/modes[0]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[1]/era/mac_vs_all_phi",
+      "/summary/modes[1]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[2]/era/mac_vs_all_phi",
+      "/summary/modes[2]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[3]/era/mac_vs_all_phi",
+      "/summary/modes[3]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[4]/era/mac_vs_all_phi",
+      "/summary/modes[4]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[5]/era/mac_vs_all_phi",
+      "/summary/modes[5]/era_order_check/mac_vs_all_phi"
+     ],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 42.65777240000898,
+     "old_wall_s": 33.105770999987726
+    },
+    {
+     "case": "S5/top_roll",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S5/batch_20261022_045341/top_roll",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S5/top_roll",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 5,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "f64c936bbea941a9caf9604e0c58443816eb15ec885cbb2c34dbaba6c8a31126",
+       "new_sha256": "f64c936bbea941a9caf9604e0c58443816eb15ec885cbb2c34dbaba6c8a31126"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [
+      "/modes[0]/era/mac_vs_all_phi",
+      "/modes[0]/era_order_check/mac_vs_all_phi",
+      "/modes[1]/era/mac_vs_all_phi",
+      "/modes[1]/era_order_check/mac_vs_all_phi",
+      "/modes[2]/era/mac_vs_all_phi",
+      "/modes[2]/era_order_check/mac_vs_all_phi",
+      "/modes[3]/era/mac_vs_all_phi",
+      "/modes[3]/era_order_check/mac_vs_all_phi",
+      "/modes[4]/era/mac_vs_all_phi",
+      "/modes[4]/era_order_check/mac_vs_all_phi",
+      "/modes[5]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[0]/era/mac_vs_all_phi",
+      "/summary/modes[0]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[1]/era/mac_vs_all_phi",
+      "/summary/modes[1]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[2]/era/mac_vs_all_phi",
+      "/summary/modes[2]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[3]/era/mac_vs_all_phi",
+      "/summary/modes[3]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[4]/era/mac_vs_all_phi",
+      "/summary/modes[4]/era_order_check/mac_vs_all_phi",
+      "/summary/modes[5]/era_order_check/mac_vs_all_phi"
+     ],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 38.688579500012565,
+     "old_wall_s": 32.49971910000022
+    },
+    {
+     "case": "S5/v1_bottom",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S5/batch_20261022_045341/v1_bottom",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S5/v1_bottom",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 5,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "49d2c7cf4f0277307193d4c73eb514291f4af1ec9ab50662eb15be0e06f6e7e6",
+       "new_sha256": "49d2c7cf4f0277307193d4c73eb514291f4af1ec9ab50662eb15be0e06f6e7e6"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 28.3811299999943,
+     "old_wall_s": 20.58226680000371
+    },
+    {
+     "case": "S5/v1_middle",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S5/batch_20261022_045341/v1_middle",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S5/v1_middle",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 5,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "2057a5c351bb813c87ecbd4e70f96163893b83905f035160db97b0e037485da4",
+       "new_sha256": "2057a5c351bb813c87ecbd4e70f96163893b83905f035160db97b0e037485da4"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 28.39988280000398,
+     "old_wall_s": 20.648489800005336
+    },
+    {
+     "case": "S5/v1_top",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S5/batch_20261022_045341/v1_top",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S5/v1_top",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 5,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "7bd15ceefb28c3a01e381cdd6dd0f572a10efd826fcc8c559f18773ad71efab5",
+       "new_sha256": "7bd15ceefb28c3a01e381cdd6dd0f572a10efd826fcc8c559f18773ad71efab5"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [
+      "/run_meta/engine/rod_chamber/applied_extra_force: only in new",
+      "/run_meta/engine/rod_chamber/contact_damping_N_s_m: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[0]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[1]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[2]/head_stiffness_source: only in new",
+      "/run_meta/engine/rod_chamber/parameter_alignment[3]/head_stiffness_source: only in new"
+     ],
+     "wall_s": 28.37519529997371,
+     "old_wall_s": 20.512551400010125
+    },
+    {
+     "case": "S6/v11b_FL_dt2e-4",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S6/batch_20261024_004403/v11b_FL_dt2e-4",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S6/v11b_FL_dt2e-4",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 7,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "8633026ae34fb5ba97b0ecf1958d8141c7f166878e23cf4c628be1787571c5a8",
+       "new_sha256": "8633026ae34fb5ba97b0ecf1958d8141c7f166878e23cf4c628be1787571c5a8"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 6.179629799968097,
+     "old_wall_s": 2.5977406000019982
+    },
+    {
+     "case": "S6/truth_static",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S6/batch_20261024_004403/truth_static",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S6/truth_static",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 4.235331400006544,
+     "old_wall_s": 1.4533569999912288
+    },
+    {
+     "case": "S6/v17_top",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S6/batch_20261024_004403/v17_top",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S6/v17_top",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 24,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "944ce118d346543c3c8245cc4a067ee53f28f1b26e2a4fe4d97a857c5fbe0b52",
+       "new_sha256": "944ce118d346543c3c8245cc4a067ee53f28f1b26e2a4fe4d97a857c5fbe0b52"
+      },
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "8350f9b00394fd786257c6b7ca4b42ef37f9342b6f563a255af769459fbc8851",
+       "new_sha256": "8350f9b00394fd786257c6b7ca4b42ef37f9342b6f563a255af769459fbc8851"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 46.47170539997751,
+     "old_wall_s": 24.005735900005675
+    },
+    {
+     "case": "S6/smoke60_top",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S6/batch_20261024_004403/smoke60_top",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S6/smoke60_top",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 24,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "6b85e8973704d678cb5fbe6cf2f448487a00ec0783ca37faccde316776a15deb",
+       "new_sha256": "6b85e8973704d678cb5fbe6cf2f448487a00ec0783ca37faccde316776a15deb"
+      },
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "7d24a8fd4720e7e238ad752c23477a479d3f397b3e8aa9714fb73ce6e5ee812b",
+       "new_sha256": "7d24a8fd4720e7e238ad752c23477a479d3f397b3e8aa9714fb73ce6e5ee812b"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 231.90902660001302,
+     "old_wall_s": 115.16646609999589
+    },
+    {
+     "case": "S6/regress_lift_on",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S6/batch_20261024_004403/regress_lift_on",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S6/regress_lift_on",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 11,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "f70813faa36a86241778a4fe39e18c6f911f9fe966d86f7a3280f7506a33272b",
+       "new_sha256": "f70813faa36a86241778a4fe39e18c6f911f9fe966d86f7a3280f7506a33272b"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 80.43593179999152,
+     "old_wall_s": 41.06035739999788
+    },
+    {
+     "case": "S6/regress_lift_off",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S6/batch_20261024_004403/regress_lift_off",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S6/regress_lift_off",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 11,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "f70813faa36a86241778a4fe39e18c6f911f9fe966d86f7a3280f7506a33272b",
+       "new_sha256": "f70813faa36a86241778a4fe39e18c6f911f9fe966d86f7a3280f7506a33272b"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 72.64263610000489,
+     "old_wall_s": 38.73068150000472
+    },
+    {
+     "case": "S6/v17_middle",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S6/batch_20261024_004403/v17_middle",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S6/v17_middle",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 24,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "ea169c7006924f99ca0db84da629a2139b6194c77104659f2affa97307b7992e",
+       "new_sha256": "ea169c7006924f99ca0db84da629a2139b6194c77104659f2affa97307b7992e"
+      },
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "8ef788520bfd06f40e961cf7af4859a433498ead7b1db71e9b18159dfbff061a",
+       "new_sha256": "8ef788520bfd06f40e961cf7af4859a433498ead7b1db71e9b18159dfbff061a"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 46.469411699974444,
+     "old_wall_s": 24.272211399991647
+    },
+    {
+     "case": "S6/v17_bottom",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S6/batch_20261024_004403/v17_bottom",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S6/v17_bottom",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "record/record.npz",
+       "n_keys": 24,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "44ea9ba1a51385d0fcbcc198d866ce2eb2d9485fce0b1aa8fd1f5acaee984b9a",
+       "new_sha256": "44ea9ba1a51385d0fcbcc198d866ce2eb2d9485fce0b1aa8fd1f5acaee984b9a"
+      },
+      {
+       "file": "series.npz",
+       "n_keys": 9,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "16dbb40e9f9ae32669a31e54ed31f88021642675723dbfd8cc5c1cccaf5aa0cf",
+       "new_sha256": "16dbb40e9f9ae32669a31e54ed31f88021642675723dbfd8cc5c1cccaf5aa0cf"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "record/meta.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 44.74302049999824,
+     "old_wall_s": 23.91227150001214
+    },
+    {
+     "case": "S6/v11b_FL_dt1e-5",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S6/batch_20261024_004403/v11b_FL_dt1e-5",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S6/v11b_FL_dt1e-5",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 7,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "844f285763d352a819cc984728b57aaa478193ccc81447d08d5d2349973c5891",
+       "new_sha256": "844f285763d352a819cc984728b57aaa478193ccc81447d08d5d2349973c5891"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 78.53770839999197,
+     "old_wall_s": 40.234208699999726
+    },
+    {
+     "case": "S6/v11b_RL_dt2e-4",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S6/batch_20261024_004403/v11b_RL_dt2e-4",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S6/v11b_RL_dt2e-4",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 7,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "b35a67a3f831d7ba31a076d36ebc975604b4d66f80399e4c265f278206f9e15e",
+       "new_sha256": "b35a67a3f831d7ba31a076d36ebc975604b4d66f80399e4c265f278206f9e15e"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 6.246779999986757,
+     "old_wall_s": 2.5751435999991372
+    },
+    {
+     "case": "S6/v11b_RL_dt1e-5",
+     "results_file": "07_results/params_bundle_R2_20261026_011024/r2_results_run2.json",
+     "old_dir": "07_results/S6/batch_20261024_004403/v11b_RL_dt1e-5",
+     "new_dir": "07_results/params_bundle_R2_20261026_011024/S6/v11b_RL_dt1e-5",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "npz": [
+      {
+       "file": "series.npz",
+       "n_keys": 7,
+       "n_array_diffs": 0,
+       "bytes_only_diffs": [],
+       "old_sha256": "d1d93d3bab6a3cadd35a3904be3a9a8b99b43528e4b63e6f143c15ebf5f94b10",
+       "new_sha256": "d1d93d3bab6a3cadd35a3904be3a9a8b99b43528e4b63e6f143c15ebf5f94b10"
+      }
+     ],
+     "json_files": [
+      "case.json",
+      "result.json"
+     ],
+     "n_json_diffs": 0,
+     "added_keys_new_only": [],
+     "run_meta_info_diffs": [],
+     "wall_s": 78.99491619999753,
+     "old_wall_s": 34.61625720000302
+    }
+   ]
+  },
   "R3": null
  }
 }
