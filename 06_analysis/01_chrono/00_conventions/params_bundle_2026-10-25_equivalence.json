@@ -1,0 +1,1271 @@
+{
+ "format": "outrigger_sim.params_equivalence",
+ "format_version": 1,
+ "spec": "00_docs/00_cad/yaml_regen_bundle_2026-10-25.md 7 (D8: R0-R3)",
+ "principle": "bundle changes no numeric leaf; regressions rebuild stored results under the new fingerprints and show bit identity (no re-stamping, R16)",
+ "yaml": {
+  "old": {
+   "path": "02_params/history/rexome33_2026-10-25_before_bundle.yaml",
+   "file_sha256": "a7128d75d066650c9e1f5337cfdbf2abdee170a82ee4afd85a43ae9ff5a0c96a"
+  },
+  "new": {
+   "path": "02_params/rexome33.yaml",
+   "file_sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce"
+  }
+ },
+ "fingerprints": [
+  {
+   "model": "L1",
+   "level": "top",
+   "old_params_sha256": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+   "new_params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723"
+  },
+  {
+   "model": "L1",
+   "level": "middle",
+   "old_params_sha256": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599",
+   "new_params_sha256": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67"
+  },
+  {
+   "model": "L1",
+   "level": "bottom",
+   "old_params_sha256": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+   "new_params_sha256": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2"
+  },
+  {
+   "model": "L2b_NSC",
+   "level": "top",
+   "old_params_sha256": "46684d27e529aeafff664452722a8c4f0df6e7270a887ac0264402b11f0d08c6",
+   "new_params_sha256": "d06a97dddf71553995b89254b5e1161cd85af43bc87a1c1658945cada64d8859"
+  },
+  {
+   "model": "L2b_NSC",
+   "level": "middle",
+   "old_params_sha256": "71beab1f403802335e7879eac8df75aaf72badf97862d209a371c72a16525d01",
+   "new_params_sha256": "2f98bff17ee6b704aa39f026bcd32042bb7b2cdc020302e122e2a8e0d26c54bf"
+  },
+  {
+   "model": "L2b_NSC",
+   "level": "bottom",
+   "old_params_sha256": "6f049a86d088af937bb7f0da46ee3d7522279e0d47ca728206aee55596d1935e",
+   "new_params_sha256": "c3d52cb0290d6f3acb2a48e35e445286f78f7cef41804869929daaa59d0e2182"
+  }
+ ],
+ "regressions": {
+  "R1": {
+   "updated": "2026-10-26T00:55:28",
+   "scope": "37 live L1 snapshots: states S1_L1 3 + S2b_crawler 3, states_L1R S1_L1 3 + S6 crawler 26 (top 14 incl. flat_L1Roff and flat_RRpre, middle 6, bottom 6), S6 fdown32 __yaml 2",
+   "criterion": "every npz array np.array_equal(old, new, equal_nan=True) incl. shape/dtype and key set; meta equal except saved_utc / params_sha256 / npz_sha256 (time_s and held_command_t_s compared)",
+   "verdict": "36 of 37 bit identical; 1 accepted exception (RRpre, old-code artefact, not a bundle effect)",
+   "batch": "07_results/params_bundle_R1_20261026_001438",
+   "progress_log": "07_results/params_bundle_R1_20261026_001438/progress.log",
+   "coordinator": "scratchpad cad-run/r1_regress.py (archive / run [--cases --out] / worker / install [--results --except]); copy of the RRpre diagnostic in the batch folder",
+   "runs": [
+    {
+     "results_file": "07_results/params_bundle_R1_20261026_001438/r1_results_run1.json",
+     "finished": "2026-10-26T00:31:51",
+     "batch_wall_s": 1025.2626355999964,
+     "stop_reason": "mismatch: states_L1R/S6_crawler_top_flat_RRpre",
+     "subset": null,
+     "n_cases": 37,
+     "n_ok": 35,
+     "jobs": 8,
+     "note": "stopped at the RRpre mismatch; the 2 fdown32 cases running then were killed"
+    },
+    {
+     "results_file": "07_results/params_bundle_R1_20261026_001438/r1_results_f32.json",
+     "finished": "2026-10-26T00:50:35",
+     "batch_wall_s": 274.2310630999855,
+     "stop_reason": null,
+     "subset": [
+      "fdown32/S6_crawler_bottom_fdown3.2__yaml",
+      "fdown32/S6_crawler_bottom_fdown3.5__yaml"
+     ],
+     "n_cases": 2,
+     "n_ok": 2,
+     "jobs": 2,
+     "note": "the 2 killed fdown32 __yaml cases only (r1_regress.py run --cases)"
+    }
+   ],
+   "placement": "P-core affinity + EcoQoS off (outrigger_sim.hostcpu.place_process('pcore')) for S6, RRpre and F32 workers (F32 pinned in the rerun only); not a cost measurement",
+   "n_cases": 37,
+   "n_identical": 36,
+   "accepted_exceptions": {
+    "states_L1R/S6_crawler_top_flat_RRpre": {
+     "case": "states_L1R/S6_crawler_top_flat_RRpre",
+     "decision": "accepted exception: difference is an old-code artefact unrelated to the YAML regen bundle (user decision 2026-10-26); root cause traced separately by python-expert",
+     "decided": "2026-10-26",
+     "evidence": {
+      "diagnostic": "current code + OLD YAML (02_params/history/rexome33_2026-10-25_before_bundle.yaml, params_sha256 de068f3b) + archived old S6_crawler_top_flat as start state",
+      "diag_result": "07_results/params_bundle_R1_20261026_001438/diag_rrpre_oldyaml/diag.json",
+      "diag_script": "07_results/params_bundle_R1_20261026_001438/diag_rrpre_oldyaml/diag_rrpre_oldyaml.py",
+      "events": "07_results/params_bundle_R1_20261026_001438/diag_rrpre_oldyaml/events_old_vs_newR1.txt",
+      "vs_new_R1": "bit identical (all 93 keys; npz sha256 9ac9f8c0f5dc5997841d2e6b0db8851eda3619ba126cccc3242212bdc23e56e6 equal)",
+      "vs_old_file": "39 array keys differ (+6 meta: time_s / held_command_t_s 119.76 -> 120.04 s, stop rms, event array lengths)",
+      "conclusion": "the bundle (new YAML) does not change this case; the old file comes from code before 2026-10-22 changes"
+     },
+     "first_divergence": {
+      "t_s": [
+       85.3,
+       85.61
+      ],
+      "where": "RR ground_bushing 3rd event (yield start): old 85.6058 s, new 85.6064 s; events 1-2 (85.0732, 85.3032 s) equal",
+      "crawler_bushing_events": "old 8, new 6 (first 4 equal, 5th 86.5196 -> 86.5198 s)"
+     },
+     "max_abs_diff": {
+      "payload.ground_bushing.normal_force_raw_N": 268.7238567750719,
+      "payload.rod_chamber.engine_last_cylinder_force_N": 264.80078188687185,
+      "payload.crawler_bushing.normal_force_raw_N": 209.9981566168135,
+      "payload.bodies.pos_m": 5.8489585084480974e-05,
+      "payload.bodies.quat_wxyz": 7.520464270572795e-06,
+      "payload.motors.pos_m": 1.3877787807814457e-15
+     },
+     "n_array_diff_keys": 39,
+     "n_meta_diffs": 6,
+     "note": "PS-7a family 07_results/S6/stage2_L1R_20261022_120926/PS7* (flat_RRpre start-state cases) is not reproduced by the current code",
+     "reason_file": "C:\\workspace\\outrigger_control\\07_results\\params_bundle_R1_20261026_001438\\diag_rrpre_oldyaml\\exception_RRpre.json"
+    }
+   },
+   "archive": {
+    "dir": "07_results/states/history/params_bundle_2026-10-25",
+    "manifest": "07_results/states/history/params_bundle_2026-10-25/manifest.json",
+    "subdirs": [
+     "states",
+     "states_L1R",
+     "S6_fdown32_L1R_20261022_131436_states"
+    ],
+    "n_files": 74
+   },
+   "installed": {
+    "when": "2026-10-26T00:51:52",
+    "files": 74,
+    "record": "07_results/params_bundle_R1_20261026_001438/install.json",
+    "targets": [
+     "07_results/states",
+     "07_results/states_L1R",
+     "07_results/S6/fdown32_L1R_20261022_131436/states"
+    ]
+   },
+   "cases": [
+    {
+     "case": "states_L1R/S6_crawler_top_flat",
+     "path": "07_results/states_L1R/S6_crawler_top_flat.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "e28be7ba3b458f954e79a2408c4fd8fdb1a32128b511b59ecdf8759ab65d026c",
+     "npz_sha256_new": "e28be7ba3b458f954e79a2408c4fd8fdb1a32128b511b59ecdf8759ab65d026c",
+     "wall_s": 286.37300329998834
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_diag3",
+     "path": "07_results/states_L1R/S6_crawler_top_diag3.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "72d9f86c306a667c5dc202cf9df1e669aa2dc7acf45ba40c618160ee0d4d79eb",
+     "npz_sha256_new": "72d9f86c306a667c5dc202cf9df1e669aa2dc7acf45ba40c618160ee0d4d79eb",
+     "wall_s": 268.29488160001347
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_fdown3.2",
+     "path": "07_results/states_L1R/S6_crawler_top_fdown3.2.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "ecee0d4a14918a5d30da9edc690b4dcc8992e8a503a57bd191003a2964edceec",
+     "npz_sha256_new": "ecee0d4a14918a5d30da9edc690b4dcc8992e8a503a57bd191003a2964edceec",
+     "wall_s": 248.09246299997903
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_fdown3.5",
+     "path": "07_results/states_L1R/S6_crawler_top_fdown3.5.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "8f93d107fcd7ff8e4f22a0952dd35ca5bb409645737a0260ee354a7b6bedf9bd",
+     "npz_sha256_new": "8f93d107fcd7ff8e4f22a0952dd35ca5bb409645737a0260ee354a7b6bedf9bd",
+     "wall_s": 260.25889100000495
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_fup3.2",
+     "path": "07_results/states_L1R/S6_crawler_top_fup3.2.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "d61043e69643252b70a25ecce53a7ae11256c21e67283a06de407e2ad39505d9",
+     "npz_sha256_new": "d61043e69643252b70a25ecce53a7ae11256c21e67283a06de407e2ad39505d9",
+     "wall_s": 290.39443669997854
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_fup3.5",
+     "path": "07_results/states_L1R/S6_crawler_top_fup3.5.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "27e374864dfd04cb2b23d530c11837d2359f46b90610441c0d508e2f60995935",
+     "npz_sha256_new": "27e374864dfd04cb2b23d530c11837d2359f46b90610441c0d508e2f60995935",
+     "wall_s": 288.3685599999735
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_roll3",
+     "path": "07_results/states_L1R/S6_crawler_top_roll3.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "09320f97c85ff2a6bbf07fb2b640cad19a7f35ba334c7e38808ef9e8c668a32b",
+     "npz_sha256_new": "09320f97c85ff2a6bbf07fb2b640cad19a7f35ba334c7e38808ef9e8c668a32b",
+     "wall_s": 280.313280900009
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_roll4.4",
+     "path": "07_results/states_L1R/S6_crawler_top_roll4.4.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "65b1372fb3d32919c6e1ae9b9a0f42c85abaf99a91162a4fcdd5c89d844a55b9",
+     "npz_sha256_new": "65b1372fb3d32919c6e1ae9b9a0f42c85abaf99a91162a4fcdd5c89d844a55b9",
+     "wall_s": 278.2825583999511
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_roll5.5",
+     "path": "07_results/states_L1R/S6_crawler_top_roll5.5.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "d37ce2d6e2a5f09e7a82f387db66d627b37ee647b8f55778cef074235a65054b",
+     "npz_sha256_new": "d37ce2d6e2a5f09e7a82f387db66d627b37ee647b8f55778cef074235a65054b",
+     "wall_s": 286.2333742000046
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_rp05",
+     "path": "07_results/states_L1R/S6_crawler_top_rp05.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "5c31d8d226ae7e746b322278b43e6d5027fe44b6a1d88c913aa477700d889afd",
+     "npz_sha256_new": "5c31d8d226ae7e746b322278b43e6d5027fe44b6a1d88c913aa477700d889afd",
+     "wall_s": 274.2211644999916
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_rpB",
+     "path": "07_results/states_L1R/S6_crawler_top_rpB.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "beec4135ef16f4b735129c0bc2d3cd3abe43ae9b6ba0ed760ab4e6eb7b1c36ec",
+     "npz_sha256_new": "beec4135ef16f4b735129c0bc2d3cd3abe43ae9b6ba0ed760ab4e6eb7b1c36ec",
+     "wall_s": 274.2300097999978
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_rpBop",
+     "path": "07_results/states_L1R/S6_crawler_top_rpBop.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "b4100060080c8bd734832a2b4956b78426f9abdc7d6365157e0ade16200d6c48",
+     "npz_sha256_new": "b4100060080c8bd734832a2b4956b78426f9abdc7d6365157e0ade16200d6c48",
+     "wall_s": 276.2299501999514
+    },
+    {
+     "case": "states_L1R/S6_crawler_middle_fdown3.5",
+     "path": "07_results/states_L1R/S6_crawler_middle_fdown3.5.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599",
+     "params_sha256_new": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67",
+     "npz_sha256_old": "fcab78d3ea76159d9fe64643aabc303323f48a9ff3122ad05a4786c7d1a213ba",
+     "npz_sha256_new": "fcab78d3ea76159d9fe64643aabc303323f48a9ff3122ad05a4786c7d1a213ba",
+     "wall_s": 276.22774170001503
+    },
+    {
+     "case": "states_L1R/S6_crawler_middle_flat",
+     "path": "07_results/states_L1R/S6_crawler_middle_flat.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599",
+     "params_sha256_new": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67",
+     "npz_sha256_old": "b42bd2e1d9f6cbdd6246f998c8026913aa7ebf8405ceab351951110f270d7c50",
+     "npz_sha256_new": "b42bd2e1d9f6cbdd6246f998c8026913aa7ebf8405ceab351951110f270d7c50",
+     "wall_s": 294.25538190000225
+    },
+    {
+     "case": "states_L1R/S6_crawler_middle_fup3.5",
+     "path": "07_results/states_L1R/S6_crawler_middle_fup3.5.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599",
+     "params_sha256_new": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67",
+     "npz_sha256_old": "6be6097903a8bf743260e45d37d99d4dced633508ea8ea5f52af0e1660ba0d1f",
+     "npz_sha256_new": "6be6097903a8bf743260e45d37d99d4dced633508ea8ea5f52af0e1660ba0d1f",
+     "wall_s": 298.2592101999908
+    },
+    {
+     "case": "states_L1R/S6_crawler_middle_roll5.5",
+     "path": "07_results/states_L1R/S6_crawler_middle_roll5.5.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599",
+     "params_sha256_new": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67",
+     "npz_sha256_old": "30a2ea093b0cc32100289a39f21ffb047db29d09b68aa0aa71d922a9acf17596",
+     "npz_sha256_new": "30a2ea093b0cc32100289a39f21ffb047db29d09b68aa0aa71d922a9acf17596",
+     "wall_s": 286.1869842999731
+    },
+    {
+     "case": "states_L1R/S6_crawler_middle_rp05",
+     "path": "07_results/states_L1R/S6_crawler_middle_rp05.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599",
+     "params_sha256_new": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67",
+     "npz_sha256_old": "c748cae34d9f11a2b35d97b4c2e8fe4cb7323745d1eb464a3f42fea07b7b2be7",
+     "npz_sha256_new": "c748cae34d9f11a2b35d97b4c2e8fe4cb7323745d1eb464a3f42fea07b7b2be7",
+     "wall_s": 286.26670069998363
+    },
+    {
+     "case": "states_L1R/S6_crawler_middle_rpB",
+     "path": "07_results/states_L1R/S6_crawler_middle_rpB.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599",
+     "params_sha256_new": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67",
+     "npz_sha256_old": "023d643ebb89a41b92df4ece8ac8abfbb55d0e945789592c7242a7270f4b4715",
+     "npz_sha256_new": "023d643ebb89a41b92df4ece8ac8abfbb55d0e945789592c7242a7270f4b4715",
+     "wall_s": 286.2718051999691
+    },
+    {
+     "case": "states_L1R/S6_crawler_bottom_fdown3.5",
+     "path": "07_results/states_L1R/S6_crawler_bottom_fdown3.5.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+     "params_sha256_new": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
+     "npz_sha256_old": "a8c52ff73fc044d4c46ebdd365345122cd2872ca6a80e8bbaae66853cfb7b0c6",
+     "npz_sha256_new": "a8c52ff73fc044d4c46ebdd365345122cd2872ca6a80e8bbaae66853cfb7b0c6",
+     "wall_s": 276.20980029995553
+    },
+    {
+     "case": "states_L1R/S6_crawler_bottom_flat",
+     "path": "07_results/states_L1R/S6_crawler_bottom_flat.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+     "params_sha256_new": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
+     "npz_sha256_old": "f9c82e489b1356505fc796a410845ca339f7f649b76cfbe0198cc968d61ea7b8",
+     "npz_sha256_new": "f9c82e489b1356505fc796a410845ca339f7f649b76cfbe0198cc968d61ea7b8",
+     "wall_s": 298.25415990001056
+    },
+    {
+     "case": "states_L1R/S6_crawler_bottom_fup3.5",
+     "path": "07_results/states_L1R/S6_crawler_bottom_fup3.5.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+     "params_sha256_new": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
+     "npz_sha256_old": "bff2da12634038bbd147f18c4666992e9e08785e64b410be9c06d43485c1453b",
+     "npz_sha256_new": "bff2da12634038bbd147f18c4666992e9e08785e64b410be9c06d43485c1453b",
+     "wall_s": 300.2548353000311
+    },
+    {
+     "case": "states_L1R/S6_crawler_bottom_roll5.5",
+     "path": "07_results/states_L1R/S6_crawler_bottom_roll5.5.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+     "params_sha256_new": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
+     "npz_sha256_old": "153d8dfa3506a9b1b2339fbe69196af448e3c4bd360ff499fe59f73219cb0339",
+     "npz_sha256_new": "153d8dfa3506a9b1b2339fbe69196af448e3c4bd360ff499fe59f73219cb0339",
+     "wall_s": 288.26289579999866
+    },
+    {
+     "case": "states_L1R/S6_crawler_bottom_rp05",
+     "path": "07_results/states_L1R/S6_crawler_bottom_rp05.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+     "params_sha256_new": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
+     "npz_sha256_old": "50f34b2cb86094a8fe8c8acbd1969de5c335866b7943af3ed7f022af1e2d1d9c",
+     "npz_sha256_new": "50f34b2cb86094a8fe8c8acbd1969de5c335866b7943af3ed7f022af1e2d1d9c",
+     "wall_s": 288.2640199000016
+    },
+    {
+     "case": "states_L1R/S6_crawler_bottom_rpB",
+     "path": "07_results/states_L1R/S6_crawler_bottom_rpB.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+     "params_sha256_new": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
+     "npz_sha256_old": "04057ba81e6b6ce2c9109c4609108c5d4ff92d8cfa668e06e4b5ed46fbbe0e44",
+     "npz_sha256_new": "04057ba81e6b6ce2c9109c4609108c5d4ff92d8cfa668e06e4b5ed46fbbe0e44",
+     "wall_s": 288.27775399998063
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_flat_L1Roff",
+     "path": "07_results/states_L1R/S6_crawler_top_flat_L1Roff.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "e16a9d0e2d31831697efd7cb05afdea2fac8a921877eec5213d948d615afe014",
+     "npz_sha256_new": "e16a9d0e2d31831697efd7cb05afdea2fac8a921877eec5213d948d615afe014",
+     "wall_s": 194.42789299995638
+    },
+    {
+     "case": "states_L1R/S6_crawler_top_flat_RRpre",
+     "path": "07_results/states_L1R/S6_crawler_top_flat_RRpre.npz",
+     "status": "ok",
+     "identical": false,
+     "accepted_exception": true,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 39,
+     "array_diffs": [
+      {
+       "key": "payload.bodies.acc_m_s2",
+       "issue": "values",
+       "max_abs_diff": 0.00444485035479755,
+       "first_index": [
+        0,
+        0
+       ]
+      },
+      {
+       "key": "payload.bodies.angacc_local_rad_s2",
+       "issue": "values",
+       "max_abs_diff": 0.0011796345014901482,
+       "first_index": [
+        0,
+        0
+       ]
+      },
+      {
+       "key": "payload.bodies.omega_local_rad_s",
+       "issue": "values",
+       "max_abs_diff": 0.00016658591556230828,
+       "first_index": [
+        0,
+        0
+       ]
+      },
+      {
+       "key": "payload.bodies.pos_m",
+       "issue": "values",
+       "max_abs_diff": 5.8489585084480974e-05,
+       "first_index": [
+        0,
+        0
+       ]
+      },
+      {
+       "key": "payload.bodies.quat_wxyz",
+       "issue": "values",
+       "max_abs_diff": 7.520464270572795e-06,
+       "first_index": [
+        0,
+        0
+       ]
+      },
+      {
+       "key": "payload.bodies.vel_m_s",
+       "issue": "values",
+       "max_abs_diff": 0.0006501811021294585,
+       "first_index": [
+        0,
+        0
+       ]
+      },
+      {
+       "key": "payload.crawler_bushing.anchor_floor_local_m",
+       "issue": "values",
+       "max_abs_diff": 2.4982749028401585e-06,
+       "first_index": [
+        13,
+        0
+       ]
+      },
+      {
+       "key": "payload.crawler_bushing.event_kind",
+       "issue": "shape/dtype (8,)int64 vs (6,)int64"
+      },
+      {
+       "key": "payload.crawler_bushing.event_leg",
+       "issue": "shape/dtype (8,)int64 vs (6,)int64"
+      },
+      {
+       "key": "payload.crawler_bushing.event_t_s",
+       "issue": "shape/dtype (8,)float64 vs (6,)float64"
+      },
+      {
+       "key": "payload.crawler_bushing.loaded_anchor_floor_local_m",
+       "issue": "values",
+       "max_abs_diff": 2.4982749028401585e-06,
+       "first_index": [
+        13,
+        0
+       ]
+      },
+      {
+       "key": "payload.crawler_bushing.normal_force_raw_N",
+       "issue": "values",
+       "max_abs_diff": 209.9981566168135,
+       "first_index": [
+        1
+       ]
+      },
+      {
+       "key": "payload.crawler_bushing.slip_total_m",
+       "issue": "values",
+       "max_abs_diff": 2.1538409623941845e-05,
+       "first_index": [
+        0,
+        0
+       ]
+      },
+      {
+       "key": "payload.crawler_bushing.yield_steps",
+       "issue": "values",
+       "max_abs_diff": 33.0,
+       "first_index": [
+        0
+       ]
+      },
+      {
+       "key": "payload.ground_bushing.anchor_floor_local_m",
+       "issue": "values",
+       "max_abs_diff": 2.1422704707951823e-06,
+       "first_index": [
+        3,
+        0
+       ]
+      },
+      {
+       "key": "payload.ground_bushing.event_t_s",
+       "issue": "values",
+       "max_abs_diff": 0.007200000000239015,
+       "first_index": [
+        2
+       ]
+      },
+      {
+       "key": "payload.ground_bushing.frame_a_quat_body_local_wxyz",
+       "issue": "values",
+       "max_abs_diff": 2.3919437990912933e-06,
+       "first_index": [
+        3,
+        0
+       ]
+      },
+      {
+       "key": "payload.ground_bushing.loaded_anchor_floor_local_m",
+       "issue": "values",
+       "max_abs_diff": 2.1422704707951823e-06,
+       "first_index": [
+        3,
+        0
+       ]
+      },
+      {
+       "key": "payload.ground_bushing.normal_force_raw_N",
+       "issue": "values",
+       "max_abs_diff": 268.7238567750719,
+       "first_index": [
+        3
+       ]
+      },
+      {
+       "key": "payload.ground_bushing.slip_total_m",
+       "issue": "values",
+       "max_abs_diff": 4.947868143609889e-06,
+       "first_index": [
+        3,
+        0
+       ]
+      },
+      {
+       "key": "payload.ground_bushing.yield_steps",
+       "issue": "values",
+       "max_abs_diff": 5.0,
+       "first_index": [
+        3
+       ]
+      },
+      {
+       "key": "payload.motors.pos_m",
+       "issue": "values",
+       "max_abs_diff": 1.3877787807814457e-15,
+       "first_index": [
+        0
+       ]
+      },
+      {
+       "key": "payload.motors.vel_m_s",
+       "issue": "values",
+       "max_abs_diff": 2.0464913158051767e-12,
+       "first_index": [
+        0
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_last_cylinder_force_N",
+       "issue": "values",
+       "max_abs_diff": 264.80078188687185,
+       "first_index": [
+        0
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_last_extra_force_N",
+       "issue": "values",
+       "max_abs_diff": 69.937582267783,
+       "first_index": [
+        3
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_last_head_pressure_Pa",
+       "issue": "values",
+       "max_abs_diff": 19715.901761349756,
+       "first_index": [
+        0
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_last_normal_force_N",
+       "issue": "values",
+       "max_abs_diff": 268.2148420716512,
+       "first_index": [
+        3
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_last_piston_travel_m",
+       "issue": "values",
+       "max_abs_diff": 8.851134113516462e-06,
+       "first_index": [
+        3
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_last_rod_pressure_Pa",
+       "issue": "values",
+       "max_abs_diff": 24648.103925727773,
+       "first_index": [
+        3
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_last_stroke_true_m",
+       "issue": "values",
+       "max_abs_diff": 8.851134112142223e-06,
+       "first_index": [
+        0
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_last_t_s",
+       "issue": "values",
+       "max_abs_diff": 0.28000000000929504,
+       "first_index": [
+        0
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_loaded_force_world_N",
+       "issue": "values",
+       "max_abs_diff": 70.07071761766201,
+       "first_index": [
+        3,
+        2
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_loaded_torque_local_N_m",
+       "issue": "values",
+       "max_abs_diff": 0.085628406670478,
+       "first_index": [
+        3,
+        0
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_pending_force_world_N",
+       "issue": "values",
+       "max_abs_diff": 69.937582267783,
+       "first_index": [
+        3,
+        2
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.engine_pending_torque_local_N_m",
+       "issue": "values",
+       "max_abs_diff": 0.08546552243084965,
+       "first_index": [
+        3,
+        0
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.l1r_Fx_prev_N",
+       "issue": "values",
+       "max_abs_diff": 69.937582267783,
+       "first_index": [
+        3
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.l1r_delta_m",
+       "issue": "values",
+       "max_abs_diff": 4.6371942343803596e-05,
+       "first_index": [
+        0
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.l1r_p_r_tracked_Pa",
+       "issue": "values",
+       "max_abs_diff": 24648.103925727773,
+       "first_index": [
+        3
+       ]
+      },
+      {
+       "key": "payload.rod_chamber.l1r_t_s",
+       "issue": "values",
+       "max_abs_diff": 0.28000000000929504,
+       "first_index": [
+        0
+       ]
+      }
+     ],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [
+      "/held_command_t_s: 119.76000000172856 -> 120.04000000173785",
+      "/note/stop: 'quiet: rms 8.715e-05 <= 0.5 x 1.745e-04 rad/s' -> 'quiet: rms 8.639e-05 <= 0.5 x 1.745e-04 rad/s'",
+      "/payload/crawler_bushing.event_kind/shape: [8] -> [6]",
+      "/payload/crawler_bushing.event_leg/shape: [8] -> [6]",
+      "/payload/crawler_bushing.event_t_s/shape: [8] -> [6]",
+      "/time_s: 119.76000000172856 -> 120.04000000173785"
+     ],
+     "time_s_old": 119.76000000172856,
+     "time_s_new": 120.04000000173785,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "efa47a4cfd13e57d473ca3275dda22546f007eb2b56848616e603a1811a34621",
+     "npz_sha256_new": "9ac9f8c0f5dc5997841d2e6b0db8851eda3619ba126cccc3242212bdc23e56e6",
+     "wall_s": 204.407980900025
+    },
+    {
+     "case": "fdown32/S6_crawler_bottom_fdown3.2__yaml",
+     "path": "07_results/S6/fdown32_L1R_20261022_131436/states/S6_crawler_bottom_fdown3.2__yaml.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_f32.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+     "params_sha256_new": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
+     "npz_sha256_old": "0ac5c73dffbb10420cc7c98f7ba3d04b9fb2ef8a04ed4641c3755a9cf79d8a91",
+     "npz_sha256_new": "0ac5c73dffbb10420cc7c98f7ba3d04b9fb2ef8a04ed4641c3755a9cf79d8a91",
+     "wall_s": 274.2112695000251
+    },
+    {
+     "case": "fdown32/S6_crawler_bottom_fdown3.5__yaml",
+     "path": "07_results/S6/fdown32_L1R_20261022_131436/states/S6_crawler_bottom_fdown3.5__yaml.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_f32.json",
+     "n_keys": 93,
+     "n_keys_old": 93,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 68.5000000000269,
+     "time_s_new": 68.5000000000269,
+     "params_sha256_old": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+     "params_sha256_new": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
+     "npz_sha256_old": "a8c52ff73fc044d4c46ebdd365345122cd2872ca6a80e8bbaae66853cfb7b0c6",
+     "npz_sha256_new": "a8c52ff73fc044d4c46ebdd365345122cd2872ca6a80e8bbaae66853cfb7b0c6",
+     "wall_s": 270.0537582000252
+    },
+    {
+     "case": "states/S2b_crawler_top",
+     "path": "07_results/states/S2b_crawler_top.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 74,
+     "n_keys_old": 74,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 14.999999999991719,
+     "time_s_new": 14.999999999991719,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "974db384df9a659db71ac967de9496841b26b60c19cdc0e363d058319d66285b",
+     "npz_sha256_new": "974db384df9a659db71ac967de9496841b26b60c19cdc0e363d058319d66285b",
+     "wall_s": 44.106592199997976
+    },
+    {
+     "case": "states/S2b_crawler_middle",
+     "path": "07_results/states/S2b_crawler_middle.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 74,
+     "n_keys_old": 74,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 14.999999999991719,
+     "time_s_new": 14.999999999991719,
+     "params_sha256_old": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599",
+     "params_sha256_new": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67",
+     "npz_sha256_old": "6793e72a29c6025c7bf3cd87f60d26d8b131e56437f7d951fde93ed2d3c087d0",
+     "npz_sha256_new": "6793e72a29c6025c7bf3cd87f60d26d8b131e56437f7d951fde93ed2d3c087d0",
+     "wall_s": 42.11230069998419
+    },
+    {
+     "case": "states/S2b_crawler_bottom",
+     "path": "07_results/states/S2b_crawler_bottom.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 74,
+     "n_keys_old": 74,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 14.999999999991719,
+     "time_s_new": 14.999999999991719,
+     "params_sha256_old": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+     "params_sha256_new": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
+     "npz_sha256_old": "93f51cae2ff3fd4c45229db861dd2a399315d08c620e9fce3177d812ea58c9ce",
+     "npz_sha256_new": "93f51cae2ff3fd4c45229db861dd2a399315d08c620e9fce3177d812ea58c9ce",
+     "wall_s": 42.10933239996666
+    },
+    {
+     "case": "states_L1R/S1_L1_top",
+     "path": "07_results/states_L1R/S1_L1_top.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 61,
+     "n_keys_old": 61,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 14.999999999991719,
+     "time_s_new": 14.999999999991719,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "a0b1d7efa31a81f7d8de8006729b23ade7c3dd0be3d9c53f677eb3e41f0419b4",
+     "npz_sha256_new": "a0b1d7efa31a81f7d8de8006729b23ade7c3dd0be3d9c53f677eb3e41f0419b4",
+     "wall_s": 40.10306819999823
+    },
+    {
+     "case": "states_L1R/S1_L1_middle",
+     "path": "07_results/states_L1R/S1_L1_middle.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 61,
+     "n_keys_old": 61,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 14.999999999991719,
+     "time_s_new": 14.999999999991719,
+     "params_sha256_old": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599",
+     "params_sha256_new": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67",
+     "npz_sha256_old": "1a4e99ce27d0ec6ac12957e2fca3da9a4c2084732947a44f89540eddc2a06972",
+     "npz_sha256_new": "1a4e99ce27d0ec6ac12957e2fca3da9a4c2084732947a44f89540eddc2a06972",
+     "wall_s": 40.14092819998041
+    },
+    {
+     "case": "states_L1R/S1_L1_bottom",
+     "path": "07_results/states_L1R/S1_L1_bottom.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 61,
+     "n_keys_old": 61,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 14.999999999991719,
+     "time_s_new": 14.999999999991719,
+     "params_sha256_old": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+     "params_sha256_new": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
+     "npz_sha256_old": "e9aac87ae5810f9f353de50251854a3941fc5ece95c49a7cef1b4877e5b2d1a3",
+     "npz_sha256_new": "e9aac87ae5810f9f353de50251854a3941fc5ece95c49a7cef1b4877e5b2d1a3",
+     "wall_s": 40.11995109997224
+    },
+    {
+     "case": "states/S1_L1_top",
+     "path": "07_results/states/S1_L1_top.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 61,
+     "n_keys_old": 61,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 14.999999999991719,
+     "time_s_new": 14.999999999991719,
+     "params_sha256_old": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+     "params_sha256_new": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "npz_sha256_old": "e973fe8c20e14e920a44ef98df5109e2dc59d7388460f7725f59b8d484337125",
+     "npz_sha256_new": "e973fe8c20e14e920a44ef98df5109e2dc59d7388460f7725f59b8d484337125",
+     "wall_s": 20.031386699993163
+    },
+    {
+     "case": "states/S1_L1_middle",
+     "path": "07_results/states/S1_L1_middle.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 61,
+     "n_keys_old": 61,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 14.999999999991719,
+     "time_s_new": 14.999999999991719,
+     "params_sha256_old": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599",
+     "params_sha256_new": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67",
+     "npz_sha256_old": "6c3b7732593a36ab1339810537766e0d69d19d389c9aaab8c8ea86e798e6d1c5",
+     "npz_sha256_new": "6c3b7732593a36ab1339810537766e0d69d19d389c9aaab8c8ea86e798e6d1c5",
+     "wall_s": 20.032954499998596
+    },
+    {
+     "case": "states/S1_L1_bottom",
+     "path": "07_results/states/S1_L1_bottom.npz",
+     "status": "ok",
+     "identical": true,
+     "accepted_exception": false,
+     "results_file": "r1_results_run1.json",
+     "n_keys": 61,
+     "n_keys_old": 61,
+     "n_array_diffs": 0,
+     "array_diffs": [],
+     "bytes_only_diffs": [],
+     "meta_diffs_excl_fingerprint_time_sha": [],
+     "time_s_old": 14.999999999991719,
+     "time_s_new": 14.999999999991719,
+     "params_sha256_old": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+     "params_sha256_new": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
+     "npz_sha256_old": "2ca900925fa689d66f0ba1081bdc25745e17b821e9c6c987546f64a50e48e65d",
+     "npz_sha256_new": "2ca900925fa689d66f0ba1081bdc25745e17b821e9c6c987546f64a50e48e65d",
+     "wall_s": 18.039279699965846
+    }
+   ],
+   "chrono_tests_after": {
+    "command": "Chrono-dev python -I -m pytest 05_tests/chrono -m \"not slow\" -n 6 -p no:cacheprovider",
+    "when": "2026-10-26T00:55",
+    "result": "265 passed, 1 warning (test_l2b_s8::test_crawler_compliance_option RuntimeWarning, known S8-L4 tag), 115.6 s",
+    "before_R0": "6 failed (SnapshotMismatchError params_sha256 de068f3b != 61078f29), 259 passed",
+    "previously_failing_now_passed": [
+     "05_tests/chrono/test_energy_budget.py::test_budget_at_rest",
+     "05_tests/chrono/test_energy_budget.py::test_budget_after_kick",
+     "05_tests/chrono/test_ground_settlement.py::test_default_model_has_no_settlement",
+     "05_tests/chrono/test_ground_settlement.py::test_rr_settles_and_anchor_follows",
+     "05_tests/chrono/test_crawler_bushing.py::test_stage2_snapshot_restores_and_holds",
+     "05_tests/chrono/test_runner.py::test_pad_recorder_on_settled_state"
+    ]
+   }
+  },
+  "R2": null,
+  "R3": null
+ }
+}
