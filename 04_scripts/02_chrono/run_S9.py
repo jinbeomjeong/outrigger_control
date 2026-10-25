@@ -20,9 +20,16 @@ judgement, native = comparison only), ``--stiffness-mode {series,l1_kt,janosi}``
 ``--soil-override KEY=VALUE`` (sensitivities of 5.32.4, e.g. ``elastic_K=7e8``), ``--ray-shape
 {mesh,convex}`` (SCM ray targets; mesh = default, P1-V0 5.34.10), ``--crawler-grid`` (dual terrain).
 
-Load ramps (dynamics 5.34.2 / 5.34.3): ``machine`` and ``level`` settle with the gravity magnitude
-Poly345 over ``--gravity-ramp`` 3 s and hold ``--gravity-hold`` 2 s (``--gravity-ramp-shape step``
-= the former sudden gravity); ``single-pad`` ramps the vertical load (gravity on pad + share body)
+Machine settle (``machine`` and ``level``; dynamics 5.35.4 (a), user decision U-S9P-1 2026-10-26):
+gravity magnitude Poly345 over ``--gravity-ramp`` 3 s and hold ``--gravity-hold`` (default 5 s,
+settle 8 s, judged on the last 1 s = 7-8 s) with the **settle dashpot** (``--settle-dashpot zrp``,
+default): ground-fixed damper on the superstructure COG, heave ``--dashpot-c-z`` 2e6 N s/m along
+the SCM plane normal, pitch ``--dashpot-c-pitch`` 3.4e6 and roll ``--dashpot-c-roll`` 2.2e6
+N m s/rad about the plane y / x axes (ASSUMPTION, trial values), in-plane translation and yaw
+free, full until 3 s, linear to 0 at 5 s (``--dashpot-fade 3 5``), :class:`~outrigger_sim.chrono.
+scm_model.SettleDashpot`. ``--settle-dashpot none`` = the former procedure (Poly345 3 s + hold
+2 s, dynamics 5.34.2; default hold 2 s then); ``--gravity-ramp-shape step`` = the former sudden
+gravity. ``single-pad`` ramps the vertical load (gravity on pad + share body)
 Poly345 over ``--load-ramp`` 1 s. Single pad records the SCM nodes inside the pad bottom polygon
 (``GetNodeInfo``: contact nodes, node mean sinkage, node - geometric) every 0.1 s and the P1-L6
 diagnostics in ``hold.p1_l6``; ``level`` adds the P3 record values (``p3_records``, 5.34.6).
@@ -62,9 +69,12 @@ G = 9.80665
 RECORD_S = 1.0e-3
 """Series sampling (every step is too much for the SCM node queries)."""
 NODE_SINKAGE_EVERY_S = 0.1
-CRAWLER_SETTLE_S = 5.0
-"""Machine crawler settle before a lift: gravity Poly345 3 s + hold 2 s (dynamics 5.34.2 P2 rule;
-``--gravity-ramp`` / ``--gravity-hold``; the former default was 3 s of sudden gravity)."""
+CRAWLER_SETTLE_S = 8.0
+"""Machine crawler settle before a lift: gravity Poly345 3 s + hold 5 s with the settle dashpot
+(dynamics 5.35.4 (a), U-S9P-1; ``--gravity-ramp`` / ``--gravity-hold``). Former values: 5 s
+(Poly345 3 s + hold 2 s, 5.34.2, ``--settle-dashpot none``), before that 3 s of sudden gravity."""
+GRAVITY_HOLD_DASHPOT_S = 5.0
+GRAVITY_HOLD_FORMER_S = 2.0
 
 # --- P1 ... P3 case plan (dynamics 5.33.9, 3.11.4; control spec 284) ---------------------------------
 
@@ -111,18 +121,18 @@ def case_plan() -> list[dict[str, Any]]:
         add("P1-L6", f"L6_J1_B_native_dt{dt}", 7.5 * (2 if dt == "5e-5" else 1), "single",
             "drift F dt / M +-5 % (record)")
     for soil in ("J1", "J2", "G1", "S1"):
-        add("P2", f"P2_{soil}_crawler_settle", 5.0, "machine", "A_c vs R rule +-10 %")
+        add("P2", f"P2prime_{soil}_crawler_settle", 8.0, "machine", "P2prime-a..d, dashpot settle 8 s (5.35.4)")
     for soil in ("J1", "G1"):
         for pad in ("A", "B"):
-            add("P3a", f"P3a_{soil}_{pad}_lift_open_loop", 25.0, "machine", "lift V4-type, ~20 s")
+            add("P3a", f"P3a_{soil}_{pad}_lift_open_loop", 28.0, "machine", "lift V4-type, ~20 s")
     for soil in ("J1", "J2", "G1", "S1"):
         for pad in ("A", "B"):
             for lvl in ("top", "middle", "bottom"):
-                add("P3b", f"P3b_{soil}_{pad}_{lvl}_Fs4", 93.0, "machine", "C2 levelling (284), after C2 soil")
+                add("P3b", f"P3b_{soil}_{pad}_{lvl}_Fs4", 98.0, "machine", "C2 levelling (284), after C2 soil")
     for soil in ("J1", "J2", "G1", "S1"):
         for pad in ("A", "B"):
             for fs in (0, 8):
-                add("P3b", f"P3b_{soil}_{pad}_top_Fs{fs}", 93.0, "machine", "C2 levelling (284), after C2 soil")
+                add("P3b", f"P3b_{soil}_{pad}_top_Fs{fs}", 98.0, "machine", "C2 levelling (284), after C2 soil")
     return rows
 
 
@@ -569,19 +579,42 @@ def build_machine(args, params, pv, soil):
                    ray_shape=args.ray_shape, crawler_grid_m=args.crawler_grid)
 
 
+def gravity_hold_s(args) -> float:
+    """``--gravity-hold`` or its default: 5 s with the settle dashpot (5.35.4 (a)), 2 s without (5.34.2)."""
+    if args.gravity_hold is not None:
+        return float(args.gravity_hold)
+    return GRAVITY_HOLD_DASHPOT_S if args.settle_dashpot != "none" else GRAVITY_HOLD_FORMER_S
+
+
 def settle_time_s(args) -> float:
-    """Machine settle time: ``--t-settle`` or gravity ramp + hold (P2 rule 3 + 2 s)."""
+    """Machine settle time: ``--t-settle`` or gravity ramp + hold (3 + 5 s dashpot, 3 + 2 s former)."""
     if args.t_settle is not None:
         return float(args.t_settle)
     ramp = 0.0 if args.gravity_ramp_shape == "step" else args.gravity_ramp
-    return ramp + args.gravity_hold
+    return ramp + gravity_hold_s(args)
 
 
-def gravity_schedule_meta(args) -> dict[str, Any]:
-    return {"shape": args.gravity_ramp_shape, "ramp_s": args.gravity_ramp, "hold_s": args.gravity_hold,
-            "settle_s": settle_time_s(args),
-            "rule": "dynamics_model.md 5.34.2 P2: |g| Poly345 3 s + hold 2 s, judge last 1 s mean"
-                    if args.gravity_ramp_shape == "poly345" else "sensitivity / former sudden gravity"}
+def add_settle_dashpot(args, model):
+    """Settle dashpot of ``--settle-dashpot`` on the S9 model (None for ``none``)."""
+    if args.settle_dashpot == "none":
+        return None
+    from outrigger_sim.chrono.scm_model import SettleDashpot
+
+    return SettleDashpot(model, c_z_N_s_m=args.dashpot_c_z, c_pitch_N_m_s_rad=args.dashpot_c_pitch,
+                         c_roll_N_m_s_rad=args.dashpot_c_roll, fade_s=tuple(args.dashpot_fade))
+
+
+def gravity_schedule_meta(args, dashpot=None) -> dict[str, Any]:
+    if args.gravity_ramp_shape != "poly345":
+        rule = "sensitivity / former sudden gravity"
+    elif args.settle_dashpot != "none":
+        rule = ("dynamics_model.md 5.35.4 (a), U-S9P-1: |g| Poly345 3 s + hold 5 s with the heave / roll / pitch "
+                "settle dashpot (full until 3 s, linear to 0 at 5 s), judge the last 1 s (7-8 s) mean")
+    else:
+        rule = "dynamics_model.md 5.34.2 P2 (former): |g| Poly345 3 s + hold 2 s, judge last 1 s mean"
+    return {"shape": args.gravity_ramp_shape, "ramp_s": args.gravity_ramp, "hold_s": gravity_hold_s(args),
+            "settle_s": settle_time_s(args), "rule": rule, "settle_dashpot_mode": args.settle_dashpot,
+            "settle_dashpot": None if dashpot is None else dashpot.meta()}
 
 
 def settle_judgement(rows: list[dict[str, Any]], w_total: float, window_s: float = 1.0) -> dict[str, Any]:
@@ -608,6 +641,7 @@ def run_machine(args) -> Path:
     params, pv, soil = load_inputs(args)
     tb = time.perf_counter()
     model = build_machine(args, params, pv, soil)
+    dashpot = add_settle_dashpot(args, model)
     build_s = time.perf_counter() - tb
     dt = model.dt_s
     every = max(1, round(RECORD_S / dt))
@@ -668,7 +702,7 @@ def run_machine(args) -> Path:
                 "pad_tilt_deg": last["pad_tilt_deg"], "track_utilisation": last.get("track_utilisation"),
                 "s_motor_m": last["s_motor_m"], "F_cyl_N": last["F_cyl_N"]},
         "node_sinkage": node_rows[-3:],
-        "gravity_schedule": gravity_schedule_meta(args),
+        "gravity_schedule": gravity_schedule_meta(args, dashpot),
         "first_step": first_step,
         "start_rise": {"z_origin_max_mm": float(max(r["body_pos_m"][2] for r in rows) * 1e3),
                        "z_origin_start_mm": float(rows[0]["body_pos_m"][2] * 1e3)},
@@ -795,6 +829,9 @@ def run_level(args) -> Path:
     """C2 closed loop on the S9 model (P3b, control spec 284). Not run without ``--approved``."""
     if not args.approved:
         raise SystemExit("P3b C2 levelling is a main run: the user confirms it first (--approved)")
+    if args.threads != SCM_THREADS_FIXED and not args.allow_other_threads:
+        raise SystemExit(f"P3b runs use --threads {SCM_THREADS_FIXED} (dynamics 5.34.12 / 5.35.5 #4: one OpenMP "
+                         "thread count for every P3b case); --allow-other-threads for a comparison run")
     from outrigger_sim.control.c2 import C2Config, C2Controller
 
     config = C2Config().with_10hz_d1()
@@ -815,6 +852,7 @@ def run_level(args) -> Path:
     from outrigger_sim.chrono.scm_model import gravity_ramp_factor
 
     model = build_machine(args, params, pv, soil)
+    dashpot = add_settle_dashpot(args, model)
     for k in range(round(settle_time_s(args) / model.dt_s)):
         model.set_gravity_factor(gravity_ramp_factor(k * model.dt_s, args.gravity_ramp, args.gravity_ramp_shape))
         model.step()
@@ -844,7 +882,7 @@ def run_level(args) -> Path:
     ctl_meta = c2.meta()
     summary = {"action": "level", "args": vars(args), "placement": placement, "meta": engine.meta(),
                "c2_soil": ctl_meta.get("soil"), "s9_rows": soil_rows, "monitor": engine.step_monitor(),
-               "events": [str(e) for e in c2.events], "gravity_schedule": gravity_schedule_meta(args),
+               "events": [str(e) for e in c2.events], "gravity_schedule": gravity_schedule_meta(args, dashpot),
                "p3_records": p3_records(soil_rows, model_weight_N(params))}
     (d / "result.json").write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), "utf-8")
     engine.close()
@@ -884,9 +922,25 @@ def _gravity_ramp_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--t-settle", type=float, default=None,
                    help="settle time [s]; default gravity ramp + hold (P2 rule 3 + 2 s)")
     p.add_argument("--gravity-ramp", type=float, default=3.0, help="gravity ramp time [s] (5.34.2 P2)")
-    p.add_argument("--gravity-hold", type=float, default=2.0, help="hold after the ramp [s]")
+    p.add_argument("--gravity-hold", type=float, default=None,
+                   help=f"hold after the ramp [s]; default {GRAVITY_HOLD_DASHPOT_S:g} s with the settle dashpot "
+                        f"(5.35.4 (a)), {GRAVITY_HOLD_FORMER_S:g} s with --settle-dashpot none (5.34.2)")
     p.add_argument("--gravity-ramp-shape", choices=("poly345", "linear", "step"), default="poly345",
                    help="step = the former sudden gravity (comparison only)")
+    from outrigger_sim.chrono.scm_model import (  # noqa: PLC0415
+        SETTLE_DASHPOT_C_PITCH_N_M_S_RAD, SETTLE_DASHPOT_C_ROLL_N_M_S_RAD, SETTLE_DASHPOT_C_Z_N_S_M,
+        SETTLE_DASHPOT_FADE_S)
+
+    p.add_argument("--settle-dashpot", choices=("zrp", "none"), default="zrp",
+                   help="zrp = ground-fixed heave + roll + pitch settle dashpot (default, U-S9P-1, 5.35.4 (a)); "
+                        "none = the former settle (Poly345 3 s + hold 2 s)")
+    p.add_argument("--dashpot-c-z", type=float, default=SETTLE_DASHPOT_C_Z_N_S_M, help="heave damping [N s/m]")
+    p.add_argument("--dashpot-c-pitch", type=float, default=SETTLE_DASHPOT_C_PITCH_N_M_S_RAD,
+                   help="pitch damping about the plane y axis [N m s/rad]")
+    p.add_argument("--dashpot-c-roll", type=float, default=SETTLE_DASHPOT_C_ROLL_N_M_S_RAD,
+                   help="roll damping about the plane x axis [N m s/rad]")
+    p.add_argument("--dashpot-fade", type=float, nargs=2, default=SETTLE_DASHPOT_FADE_S, metavar=("T0", "T1"),
+                   help="full damping until T0, linear to 0 at T1 [s]")
 
 
 def main(argv) -> None:
@@ -932,6 +986,8 @@ def main(argv) -> None:
     lp.add_argument("--seed", type=int, default=20261026)
     lp.add_argument("--approved", action="store_true")
     lp.add_argument("--allow-current-c2", action="store_true")
+    lp.add_argument("--allow-other-threads", action="store_true",
+                    help=f"allow --threads != {SCM_THREADS_FIXED} (comparison only)")
     args = ap.parse_args(argv)
     if args.action == "plan":
         print(json.dumps(_plain(plan_summary()), indent=1))

@@ -34,7 +34,8 @@ contact at all, every ground force comes from the SCM loader or from the anchor 
   pad domains on one terrain (``grid_m``), the track domains on a second (``crawler_grid_m``),
   forces summed by :class:`ScmForceReader`;
 * **gravity ramp** (5.34.2 P2): :meth:`S9Model.set_gravity_factor` with
-  :func:`gravity_ramp_factor` (the runner applies Poly345 3 s + hold 2 s by default);
+  :func:`gravity_ramp_factor` (the runner applies Poly345 3 s + hold; settle 8 s with the
+  :class:`SettleDashpot` by default since 2026-10-26, U-S9P-1 / 5.35.4 (a));
 * **SCM shear** (5.33.7 #1): ``"bprime"`` (default, judgement) = ``SetSoilParameters(..., c 0,
   phi 0, ...)`` (tau = 0 exactly, normal law unchanged) + tangential force by ground-fixed
   anchor bushings; ``"native"`` = the set's c, phi in SCM and no anchor bushings (comparison
@@ -768,6 +769,111 @@ class SwivelStabiliser:
                 "warnings": list(self.warnings)}
 
 
+# --- settle dashpot (dynamics 5.35.4 (a), U-S9P-1) ------------------------------------------------
+
+
+SETTLE_DASHPOT_C_Z_N_S_M = 2.0e6
+"""Heave damping along the SCM plane normal (5.35.4 (a), ASSUMPTION / trial value)."""
+SETTLE_DASHPOT_C_PITCH_N_M_S_RAD = 3.4e6
+"""Pitch damping about the plane y axis = c_z (1.3 m)^2 (5.35.4 (a), ASSUMPTION)."""
+SETTLE_DASHPOT_C_ROLL_N_M_S_RAD = 2.2e6
+"""Roll damping about the plane x axis = c_z (1.045 m)^2 (5.35.4 (a), ASSUMPTION; not checked by
+the planar replica, 5.35.9)."""
+SETTLE_DASHPOT_FADE_S = (3.0, 5.0)
+"""Full damping until 3 s, linear to 0 at 5 s, 0 afterwards (5.35.4 (a))."""
+
+
+class SettleDashpot:
+    """Ground-fixed settle damper on the superstructure (dynamics 5.35.4 (a), user decision U-S9P-1).
+
+    Force ``-f(t) c_z (v . n) n`` at the superstructure COG (``ChLoadBodyForce``, local point 0 =
+    COG of the ``ChBody``) and torque ``-f(t) [c_roll (w . e_x) e_x + c_pitch (w . e_y) e_y]``
+    (``ChLoadBodyTorque``, world axes), ``n, e_x, e_y`` = SCM plane normal and plane x / y axes
+    (world, ground fixed). In-plane translation and yaw are free (the (c) variant with surge was
+    rejected, 5.35.4). ``f(t)`` = 1 until ``fade[0]``, linear to 0 at ``fade[1]``, 0 afterwards.
+    Explicit Python hook on the COG velocity / angular velocity after a step (load hook of
+    :class:`S9Model`): it acts in a later step like every hook value (input lag); ``c dt / m`` =
+    5e-3 at the default values (5.35.4 stability note). The dissipated energy ``sum -F . v dt -
+    T . w dt`` (sampled velocities) is accumulated for the record.
+    """
+
+    def __init__(self, model: S9Model, *, c_z_N_s_m: float = SETTLE_DASHPOT_C_Z_N_S_M,
+                 c_pitch_N_m_s_rad: float = SETTLE_DASHPOT_C_PITCH_N_M_S_RAD,
+                 c_roll_N_m_s_rad: float = SETTLE_DASHPOT_C_ROLL_N_M_S_RAD,
+                 fade_s: Sequence[float] = SETTLE_DASHPOT_FADE_S) -> None:
+        t0, t1 = (float(v) for v in fade_s)
+        if not (0.0 <= t0 <= t1):
+            raise ValueError(f"fade must be 0 <= start <= end: {fade_s!r}")
+        for name, c in (("c_z", c_z_N_s_m), ("c_pitch", c_pitch_N_m_s_rad), ("c_roll", c_roll_N_m_s_rad)):
+            if not (c >= 0.0 and math.isfinite(c)):
+                raise ValueError(f"{name} must be >= 0: {c!r}")
+        self.c_z = float(c_z_N_s_m)
+        self.c_pitch = float(c_pitch_N_m_s_rad)
+        self.c_roll = float(c_roll_N_m_s_rad)
+        self.fade_s = (t0, t1)
+        self.body = model.superstructure
+        r = np.asarray(model.plane_rot, dtype=float)
+        self.e_x, self.e_y, self.n = r[:, 0].copy(), r[:, 1].copy(), r[:, 2].copy()
+        zero = ch.ChVector3d(0.0, 0.0, 0.0)
+        self.container = ch.ChLoadContainer()
+        model.system.Add(self.container)
+        self.force_load = ch.ChLoadBodyForce(self.body, zero, False, zero, True)
+        self.torque_load = ch.ChLoadBodyTorque(self.body, zero, False)
+        self.container.Add(self.force_load)
+        self.container.Add(self.torque_load)
+        self.force_world_N = np.zeros(3)
+        self.torque_world_Nm = np.zeros(3)
+        self.factor_now = 1.0
+        self.force_abs_max_N = 0.0
+        self.torque_abs_max_Nm = 0.0
+        self.energy_J = 0.0
+        self.off_since_s: float | None = None
+        model.load_hooks.append(self.hook)
+        model.settle_dashpot = self
+
+    def factor(self, t_s: float) -> float:
+        t0, t1 = self.fade_s
+        if t_s <= t0:
+            return 1.0
+        if t_s >= t1:
+            return 0.0
+        return (t1 - t_s) / (t1 - t0)
+
+    def hook(self, model: S9Model, dt_s: float) -> None:
+        # power of the force acting in the step just taken (applied value x end-of-step velocity)
+        v = _v(self.body.GetPosDt())
+        w = _v(self.body.GetAngVelParent())
+        self.energy_J -= float(self.force_world_N @ v + self.torque_world_Nm @ w) * dt_s
+        t = float(model.system.GetChTime())
+        f = self.factor(t)
+        self.factor_now = f
+        if f > 0.0:
+            force = -f * self.c_z * float(v @ self.n) * self.n
+            torque = -f * (self.c_roll * float(w @ self.e_x) * self.e_x + self.c_pitch * float(w @ self.e_y) * self.e_y)
+        else:
+            force = np.zeros(3)
+            torque = np.zeros(3)
+            if self.off_since_s is None:
+                self.off_since_s = t
+        self.force_world_N, self.torque_world_Nm = force, torque
+        self.force_abs_max_N = max(self.force_abs_max_N, float(np.linalg.norm(force)))
+        self.torque_abs_max_Nm = max(self.torque_abs_max_Nm, float(np.linalg.norm(torque)))
+        self.force_load.SetForce(chvec(force), False)
+        self.torque_load.SetTorque(chvec(torque), False)
+
+    def meta(self) -> dict[str, Any]:
+        return {"type": "ground-fixed settle dashpot on the superstructure COG (dynamics 5.35.4 (a), U-S9P-1): "
+                        "heave along the SCM plane normal + roll / pitch about the plane x / y axes; in-plane "
+                        "translation and yaw free; ChLoadBodyForce + ChLoadBodyTorque set by a Python load hook "
+                        "(explicit, input lag as every hook value)",
+                "c_z_N_s_m": self.c_z, "c_pitch_N_m_s_rad": self.c_pitch, "c_roll_N_m_s_rad": self.c_roll,
+                "fade_s": list(self.fade_s), "fade": "1 until fade[0], linear to 0 at fade[1], 0 after",
+                "axes_world": {"normal": self.n.tolist(), "roll_axis": self.e_x.tolist(), "pitch_axis": self.e_y.tolist()},
+                "values_basis": "ASSUMPTION (trial values of 5.35.4; c_pitch = c_z 1.3^2, c_roll = c_z 1.045^2)",
+                "force_abs_max_N": self.force_abs_max_N, "torque_abs_max_Nm": self.torque_abs_max_Nm,
+                "dissipated_energy_J": self.energy_J, "zero_since_s": self.off_since_s}
+
+
 def _quat_to_mat(q: Any) -> NDArray[np.float64]:
     from outrigger_sim.frames import quat_to_matrix
 
@@ -1058,6 +1164,8 @@ class S9Model:
         self.record_hooks: list[RecordHook] = []
         self._rut: dict[str, Any] | None = None
         self.n_patches_last = 0
+        self.settle_dashpot: SettleDashpot | None = None
+        """Set by :class:`SettleDashpot` (runner settle, 5.35.4 (a)); None = no dashpot."""
 
     # --- L2bModel-compatible members ---------------------------------------------------------
 
@@ -1313,6 +1421,7 @@ class S9Model:
             actuator=self.actuator.meta(),
             input_lag_steps=1,
             num_threads_chrono=self.num_threads,
+            settle_dashpot=None if self.settle_dashpot is None else self.settle_dashpot.meta(),
             c2_soil=None,
         )
         return meta

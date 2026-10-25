@@ -215,3 +215,61 @@ def test_engine_truth_and_measurements(params_b) -> None:
     assert np.all(np.isfinite(meas.head_pressure_Pa))
     assert engine.info.model == "S9_SCM"
     engine.close()
+
+
+def test_settle_dashpot_heave_roll_pitch_only(params_b) -> None:
+    """Settle dashpot (5.35.4 (a), U-S9P-1): force along the plane normal opposing the COG normal
+    velocity, torque about the plane x / y axes only (yaw free), fade 3 -> 5 s, zero after."""
+    from outrigger_sim.chrono.scm_model import SettleDashpot
+
+    pv = pad_variant_meta("dwg_rear250", params=params_b)
+    model = S9Model(params_b, load_soil_set("G1"), pv, grid_m=0.04)
+    dp = SettleDashpot(model)
+    assert model.settle_dashpot is dp and model.load_hooks[-1] == dp.hook
+    assert (dp.c_z, dp.c_pitch, dp.c_roll, dp.fade_s) == (2.0e6, 3.4e6, 2.2e6, (3.0, 5.0))
+    assert dp.factor(0.0) == 1.0 and dp.factor(3.0) == 1.0 and dp.factor(4.0) == pytest.approx(0.5)
+    assert dp.factor(5.0) == 0.0 and dp.factor(7.0) == 0.0
+    sup = model.superstructure
+    for _ in range(200):
+        model.step()
+        v = np.array([sup.GetPosDt().x, sup.GetPosDt().y, sup.GetPosDt().z])
+        w = np.array([sup.GetAngVelParent().x, sup.GetAngVelParent().y, sup.GetAngVelParent().z])
+        f, t = dp.force_world_N, dp.torque_world_Nm
+        assert f[0] == 0.0 and f[1] == 0.0  # level plane: normal = world z, in-plane free
+        assert f[2] == pytest.approx(-2.0e6 * v[2], rel=1e-12, abs=1e-9)
+        assert t[2] == 0.0  # yaw free
+        assert t[0] == pytest.approx(-2.2e6 * w[0], rel=1e-12, abs=1e-9)
+        assert t[1] == pytest.approx(-3.4e6 * w[1], rel=1e-12, abs=1e-9)
+    assert dp.force_abs_max_N > 0.0 and dp.energy_J >= 0.0
+    meta = model.meta()["settle_dashpot"]
+    assert meta["c_z_N_s_m"] == 2.0e6 and meta["fade_s"] == [3.0, 5.0]
+    dp.fade_s = (0.0, 0.0)  # past the fade: zero force and torque
+    model.step()
+    assert not dp.force_world_N.any() and not dp.torque_world_Nm.any() and dp.off_since_s is not None
+    with pytest.raises(ValueError):
+        SettleDashpot(model, fade_s=(5.0, 3.0))
+
+
+def test_runner_settle_defaults() -> None:
+    """run_S9 settle: dashpot default 3 + 5 s; --settle-dashpot none = former 3 + 2 s."""
+    import importlib
+    import sys
+    from pathlib import Path
+
+    scripts = Path(__file__).resolve().parents[2] / "04_scripts" / "02_chrono"
+    sys.path.insert(0, str(scripts))
+    try:
+        run_s9 = importlib.import_module("run_S9")
+    finally:
+        sys.path.remove(str(scripts))
+    import argparse
+
+    p = argparse.ArgumentParser()
+    run_s9._gravity_ramp_args(p)
+    a = p.parse_args([])
+    assert a.settle_dashpot == "zrp" and run_s9.settle_time_s(a) == 8.0
+    assert run_s9.gravity_schedule_meta(a)["hold_s"] == 5.0
+    b = p.parse_args(["--settle-dashpot", "none"])
+    assert run_s9.settle_time_s(b) == 5.0
+    c = p.parse_args(["--settle-dashpot", "none", "--gravity-hold", "17"])
+    assert run_s9.settle_time_s(c) == 20.0

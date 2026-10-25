@@ -30,6 +30,8 @@ RUN = [PY, "-I", "-X", "utf8", "-u", str(HERE / "run_S9.py")]
 EQ = [PY, "-I", "-X", "utf8", "-u", str(HERE / "s9_dual_terrain_equivalence.py")]
 
 B = ["--pad-variant", "dwg_rear250"]
+FORMER = ["--settle-dashpot", "none"]
+"""Batches run before 2026-10-26 U-S9P-1 used the former settle (no dashpot, hold 2 s / given hold)."""
 STEPS = ["--load-steps", "0.25,0.5,0.75,1.0,0.5", "--load-ramp", "1.0", "--step-ramp", "0.5", "--step-hold", "auto"]
 
 
@@ -90,7 +92,7 @@ def batches() -> dict[str, list[dict]]:
         lc.append({"case": f"L5_{soil}_M14s_pitch3.5", "est_s": 600,
                    "argv": RUN + ["machine", "--soil", soil, *B, "--grid", str(h), "--crawler-grid", "0.04",
                                   "--floor-pitch", "3.5", "--gravity-ramp", "3", "--gravity-hold", "12",
-                                  "--drift-window", "10"]})
+                                  "--drift-window", "10", *FORMER]})
     for joint in ("fixed", "spherical"):
         for dt in ("1e-4", "5e-5"):
             lc.append({"case": f"L6_J1_B_RL_native_{joint}_dt{dt}_1cm", "est_s": 180 * (2 if dt == "5e-5" else 1),
@@ -101,15 +103,20 @@ def batches() -> dict[str, list[dict]]:
     p2 = []
     for soil, h in (("J1", 0.01), ("J2", 0.01), ("S1", 0.02)):
         p2.append({"case": f"P2-1_{soil}_top_M14s", "est_s": 240,
-                   "argv": RUN + ["machine", "--soil", soil, *B, "--grid", str(h), "--crawler-grid", "0.04"]})
+                   "argv": RUN + ["machine", "--soil", soil, *B, "--grid", str(h), "--crawler-grid", "0.04", *FORMER]})
     for soil in ("J1", "S1"):
         p2.append({"case": f"P2-2_{soil}_top_single2cm", "est_s": 600,
-                   "argv": RUN + ["machine", "--soil", soil, *B, "--grid", "0.02"]})
+                   "argv": RUN + ["machine", "--soil", soil, *B, "--grid", "0.02", *FORMER]})
     for lvl in ("middle", "bottom"):
         p2.append({"case": f"P2-3_G1_{lvl}_M14s", "est_s": 150,
                    "argv": RUN + ["machine", "--soil", "G1", *B, "--level", lvl, "--grid", "0.02",
-                                  "--crawler-grid", "0.04"]})
+                                  "--crawler-grid", "0.04", *FORMER]})
     out["P2"] = p2
+    # P2prime (dynamics 5.35.4 / 5.35.5 #2, U-S9P-1): settle dashpot (runner default), t_end 8 s, M14s, top
+    out["P2prime"] = [{"case": f"P2prime_{soil}_top_M14s_dashpot8s", "est_s": 420 if soil in ("J1", "J2") else 300,
+                        "argv": RUN + ["machine", "--soil", soil, *B, "--grid", str(h), "--crawler-grid", "0.04",
+                                       "--settle-dashpot", "zrp"]}
+                       for soil, h in (("J1", 0.01), ("J2", 0.01), ("G1", 0.02), ("S1", 0.02))]
     return out
 
 
