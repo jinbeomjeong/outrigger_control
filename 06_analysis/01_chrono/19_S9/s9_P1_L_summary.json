@@ -1,0 +1,701 @@
+{
+ "batch": "P1-L1 ... L6 (5.33.9, 5.34.4)",
+ "cost": {
+  "folder": "C:/workspace/outrigger_control/.claude/worktrees/agent-ac4ca09081d79438a/07_results/S9/batch_P1_L_20261026_034511",
+  "parallel": 2,
+  "failed": false,
+  "wall_serial_s": 2176.5336359001813,
+  "est_serial_s": 5640,
+  "wall_over_est": 0.3859102191312378,
+  "per_case": [
+   {
+    "case": "L1_J1_fixed_F0_native_1cm",
+    "rc": 0,
+    "wall_s": 24.009811599971727,
+    "est_s": 75
+   },
+   {
+    "case": "L1_J1_fixed_F0_bprime_1cm",
+    "rc": 0,
+    "wall_s": 24.005039200012106,
+    "est_s": 75
+   },
+   {
+    "case": "L1_G1_fixed_F0_native_2cm",
+    "rc": 0,
+    "wall_s": 8.00645720004104,
+    "est_s": 75
+   },
+   {
+    "case": "L1_G1_fixed_F0_bprime_2cm",
+    "rc": 0,
+    "wall_s": 10.008871600031853,
+    "est_s": 75
+   },
+   {
+    "case": "L2_J1_B_RL_F6980_1cm",
+    "rc": 0,
+    "wall_s": 108.01986880000914,
+    "est_s": 320
+   },
+   {
+    "case": "L2_J1_B_RL_F4450_1cm",
+    "rc": 0,
+    "wall_s": 118.0402379000443,
+    "est_s": 320
+   },
+   {
+    "case": "L3_J1_B_RL_1.2limit_1cm",
+    "rc": 0,
+    "wall_s": 44.00839239999186,
+    "est_s": 150
+   },
+   {
+    "case": "L3_J2_B_RL_1.2limit_1cm",
+    "rc": 0,
+    "wall_s": 42.007566799991764,
+    "est_s": 150
+   },
+   {
+    "case": "L2_J1_B_RL_F20000_1cm",
+    "rc": 0,
+    "wall_s": 102.04324989998713,
+    "est_s": 320
+   },
+   {
+    "case": "L4_J1_B_RL_1cm",
+    "rc": 0,
+    "wall_s": 184.03869939997094,
+    "est_s": 450
+   },
+   {
+    "case": "L4_J1_A_FL_1cm",
+    "rc": 0,
+    "wall_s": 222.05073720001383,
+    "est_s": 450
+   },
+   {
+    "case": "L4_G1_B_RL_2cm",
+    "rc": 0,
+    "wall_s": 66.02750150003703,
+    "est_s": 450
+   },
+   {
+    "case": "L4_J1_B_RL_1cm_ksw0",
+    "rc": 0,
+    "wall_s": 164.03659440000774,
+    "est_s": 450
+   },
+   {
+    "case": "L5_J1_M14s_pitch3.5",
+    "rc": 0,
+    "wall_s": 418.0857326000114,
+    "est_s": 600
+   },
+   {
+    "case": "L6_J1_B_RL_native_fixed_dt1e-4_1cm",
+    "rc": 0,
+    "wall_s": 54.008753400004935,
+    "est_s": 180
+   },
+   {
+    "case": "L5_G1_M14s_pitch3.5",
+    "rc": 0,
+    "wall_s": 344.0760674000485,
+    "est_s": 600
+   },
+   {
+    "case": "L6_J1_B_RL_native_spherical_dt1e-4_1cm",
+    "rc": 0,
+    "wall_s": 52.009737300046254,
+    "est_s": 180
+   },
+   {
+    "case": "L6_J1_B_RL_native_fixed_dt5e-5_1cm",
+    "rc": 0,
+    "wall_s": 102.03163479996147,
+    "est_s": 360
+   },
+   {
+    "case": "L6_J1_B_RL_native_spherical_dt5e-5_1cm",
+    "rc": 0,
+    "wall_s": 90.01868249999825,
+    "est_s": 360
+   }
+  ],
+  "note": "P-cores shared with the main-tree YAML regression R3 (8 P-cores) and 2 S9 runs at a time: contended"
+ },
+ "L1": [
+  {
+   "soil": "J1",
+   "grid_m": 0.01,
+   "bprime_scm_tangential_abs_max_N": 0.0,
+   "native_scm_tangential_abs_max_N": 0.0,
+   "Fz_native_N": 72820.73556933027,
+   "Fz_bprime_N": 72820.7355690346,
+   "Fz_rel_diff_pct": -4.060187133491172e-10,
+   "sinkage_native_mm": 89.74799226340197,
+   "sinkage_bprime_mm": 89.7479922693201,
+   "sinkage_rel_diff_pct": 6.594158273347717e-09,
+   "node_sinkage_native_mm": 89.7479585918928,
+   "node_sinkage_bprime_mm": 89.7479585918928,
+   "criterion": "bprime |F_t| = 0 exactly; settle Fz and sinkage diff <= 0.1 %"
+  },
+  {
+   "soil": "G1",
+   "grid_m": 0.02,
+   "bprime_scm_tangential_abs_max_N": 0.0,
+   "native_scm_tangential_abs_max_N": 0.0,
+   "Fz_native_N": 72814.03806696835,
+   "Fz_bprime_N": 72814.00585624356,
+   "Fz_rel_diff_pct": -4.4236970846843024e-05,
+   "sinkage_native_mm": 7.738038214660111,
+   "sinkage_bprime_mm": 7.738037692733367,
+   "sinkage_rel_diff_pct": -6.744949172016416e-06,
+   "node_sinkage_native_mm": 7.738033629906405,
+   "node_sinkage_bprime_mm": 7.73803192149302,
+   "criterion": "bprime |F_t| = 0 exactly; settle Fz and sinkage diff <= 0.1 %"
+  }
+ ],
+ "L2": [
+  {
+   "last_5s": {
+    "window_s": [
+     8.5,
+     13.5
+    ],
+    "drift_window_means_mm": -0.0033960601305152785,
+    "Ft_pp_rel": 0.011616957792204813,
+    "Ft_over_F": 1.0000307614685657,
+    "step_range_rel_max": 9.976265322638937e-05,
+    "x_mean_mm": 7.39238966581355
+   },
+   "case": "L2_J1_B_RL_F20000_1cm",
+   "force_N": 20000.0,
+   "drift_mm": 0.08532235480725354,
+   "drift_window_means_mm": 0.16897167928596296,
+   "drift_velocity_m_s": 3.302542758579824e-06,
+   "Ft_over_F": 0.9992960120806258,
+   "Ft_step_range_rel": 0.23095509261147854,
+   "x_mean_mm": 7.386929726086388,
+   "elastic_expected_mm": 7.3921479443383395,
+   "elastic_ratio": 0.9992940863344126,
+   "slip_total_x_mm": 4.2126659155379885e-09,
+   "tilt_deg_max": 0.08328437598788395,
+   "limit_N": 53299.04477836635,
+   "F_over_limit": 0.3752412465019981,
+   "window_s": [
+    4.0,
+    13.5
+   ],
+   "criterion": "drift <= 0.01 mm, F_t = F +-0.5 %, step range <= 1 %, elastic F / k_t +-1 %"
+  },
+  {
+   "last_5s": {
+    "window_s": [
+     8.5,
+     13.5
+    ],
+    "drift_window_means_mm": -0.0007609516087044195,
+    "Ft_pp_rel": 0.011603706838922631,
+    "Ft_over_F": 1.0000309298013206,
+    "step_range_rel_max": 9.964838063588309e-05,
+    "x_mean_mm": 1.6448069824699478
+   },
+   "case": "L2_J1_B_RL_F4450_1cm",
+   "force_N": 4450.0,
+   "drift_mm": 0.01888636901487277,
+   "drift_window_means_mm": 0.037582826160180174,
+   "drift_velocity_m_s": 7.345270044913086e-07,
+   "Ft_over_F": 0.999296268044971,
+   "Ft_step_range_rel": 0.23084984036555817,
+   "x_mean_mm": 1.6435923172057036,
+   "elastic_expected_mm": 1.6447529176152804,
+   "elastic_ratio": 0.9992943618478212,
+   "slip_total_x_mm": 4.2126659155379885e-09,
+   "tilt_deg_max": 0.214888892488161,
+   "limit_N": 53299.04477836635,
+   "F_over_limit": 0.08349117734669458,
+   "window_s": [
+    4.0,
+    13.5
+   ],
+   "criterion": "drift <= 0.01 mm, F_t = F +-0.5 %, step range <= 1 %, elastic F / k_t +-1 %"
+  },
+  {
+   "last_5s": {
+    "window_s": [
+     8.5,
+     13.5
+    ],
+    "drift_window_means_mm": -0.0011839096858237176,
+    "Ft_pp_rel": 0.011616694937130372,
+    "Ft_over_F": 1.000030733739377,
+    "step_range_rel_max": 9.976075276768241e-05,
+    "x_mean_mm": 2.579943934879217
+   },
+   "case": "L2_J1_B_RL_F6980_1cm",
+   "force_N": 6980.0,
+   "drift_mm": 0.029760353855812043,
+   "drift_window_means_mm": 0.05896987671017177,
+   "drift_velocity_m_s": 1.1525708883016636e-06,
+   "Ft_over_F": 0.9992960215422392,
+   "Ft_step_range_rel": 0.230948692568249,
+   "x_mean_mm": 2.5780385138635618,
+   "elastic_expected_mm": 2.57985963257408,
+   "elastic_ratio": 0.9992941016295909,
+   "slip_total_x_mm": 4.2126659155379885e-09,
+   "tilt_deg_max": 0.15557489541675437,
+   "limit_N": 53299.04477836635,
+   "F_over_limit": 0.13095919502919734,
+   "window_s": [
+    4.0,
+    13.5
+   ],
+   "criterion": "drift <= 0.01 mm, F_t = F +-0.5 %, step range <= 1 %, elastic F / k_t +-1 %"
+  }
+ ],
+ "L3": [
+  {
+   "case": "L3_J1_B_RL_1.2limit_1cm",
+   "force_N": 63958.853734039614,
+   "limit_N": 53299.04477836635,
+   "Ft_over_limit_mean": 1.007687110716047,
+   "Ft_over_limit_last_1s": 1.007687110716047,
+   "slip_total_x_mm": 1730.625662892063,
+   "window_s": [
+    4.0,
+    5.0
+   ],
+   "criterion": "F_t / limit = 1 +-2 % while sliding"
+  },
+  {
+   "case": "L3_J2_B_RL_1.2limit_1cm",
+   "force_N": 36824.947888760995,
+   "limit_N": 30687.456573967494,
+   "Ft_over_limit_mean": 1.007645428757035,
+   "Ft_over_limit_last_1s": 1.007645428757035,
+   "slip_total_x_mm": 996.2791499161143,
+   "window_s": [
+    4.0,
+    5.0
+   ],
+   "criterion": "F_t / limit = 1 +-2 % while sliding"
+  }
+ ],
+ "L4": [
+  {
+   "case": "L4_G1_B_RL_2cm",
+   "k_sw_N_m_rad": 15000.0,
+   "tilt_deg_max_all": 0.0002050763587411666,
+   "tilt_deg_end": 0.0,
+   "sinkage_end_mm": 7.734585419158536,
+   "Fz_end_N": 72814.04995409386,
+   "swivel": {
+    "type": "ChLoadBodyBodyBushingMate pad <-> ground (translation 0, rotation k_sw, damping 0), neutral = parallel to the SCM plane with the pad yaw at creation; created / removed with the pad anchor bushing (R15)",
+    "stiffness_N_m_rad": 15000.0,
+    "tilt_warn_deg": [
+     10.0
+    ],
+    "tilt_max_deg": [
+     0.00020519006895713525
+    ],
+    "events": [
+     [
+      0.18309999999999615,
+      0,
+      1
+     ],
+     [
+      0.27829999999998567,
+      0,
+      2
+     ],
+     [
+      0.3015999999999831,
+      0,
+      1
+     ]
+    ],
+    "warnings": []
+   },
+   "criterion": "tilt <= 0.5 deg (k_sw 0: instability record)"
+  },
+  {
+   "case": "L4_J1_A_FL_1cm",
+   "k_sw_N_m_rad": 15000.0,
+   "tilt_deg_max_all": 0.660951988779872,
+   "tilt_deg_end": 0.0,
+   "sinkage_end_mm": 52.21362659923094,
+   "Fz_end_N": 119146.52789370468,
+   "swivel": {
+    "type": "ChLoadBodyBodyBushingMate pad <-> ground (translation 0, rotation k_sw, damping 0), neutral = parallel to the SCM plane with the pad yaw at creation; created / removed with the pad anchor bushing (R15)",
+    "stiffness_N_m_rad": 15000.0,
+    "tilt_warn_deg": [
+     10.0
+    ],
+    "tilt_max_deg": [
+     0.652043577712331
+    ],
+    "events": [
+     [
+      0.18309999999999615,
+      0,
+      1
+     ],
+     [
+      0.2226999999999918,
+      0,
+      2
+     ],
+     [
+      0.8043999999999277,
+      0,
+      1
+     ],
+     [
+      0.8059999999999276,
+      0,
+      2
+     ],
+     [
+      0.8189999999999261,
+      0,
+      1
+     ],
+     [
+      0.8225999999999257,
+      0,
+      2
+     ],
+     [
+      0.829099999999925,
+      0,
+      1
+     ],
+     [
+      0.9032999999999168,
+      0,
+      2
+     ],
+     [
+      1.2409999999998798,
+      0,
+      1
+     ],
+     [
+      1.321499999999871,
+      0,
+      2
+     ],
+     [
+      1.5009999999998511,
+      0,
+      1
+     ],
+     [
+      1.5895999999998414,
+      0,
+      2
+     ],
+     [
+      1.6817999999998312,
+      0,
+      1
+     ],
+     [
+      1.7903999999998192,
+      0,
+      2
+     ],
+     [
+      1.8144999999998166,
+      0,
+      1
+     ]
+    ],
+    "warnings": []
+   },
+   "criterion": "tilt <= 0.5 deg (k_sw 0: instability record)"
+  },
+  {
+   "case": "L4_J1_B_RL_1cm",
+   "k_sw_N_m_rad": 15000.0,
+   "tilt_deg_max_all": 0.019830803831736864,
+   "tilt_deg_end": 0.0,
+   "sinkage_end_mm": 89.78910997451418,
+   "Fz_end_N": 72818.47554268019,
+   "swivel": {
+    "type": "ChLoadBodyBodyBushingMate pad <-> ground (translation 0, rotation k_sw, damping 0), neutral = parallel to the SCM plane with the pad yaw at creation; created / removed with the pad anchor bushing (R15)",
+    "stiffness_N_m_rad": 15000.0,
+    "tilt_warn_deg": [
+     10.0
+    ],
+    "tilt_max_deg": [
+     0.019766712186658795
+    ],
+    "events": [
+     [
+      0.18309999999999615,
+      0,
+      1
+     ],
+     [
+      0.22469999999999157,
+      0,
+      2
+     ],
+     [
+      0.8236999999999256,
+      0,
+      1
+     ],
+     [
+      0.901799999999917,
+      0,
+      2
+     ],
+     [
+      1.23799999999988,
+      0,
+      1
+     ],
+     [
+      1.3226999999998708,
+      0,
+      2
+     ],
+     [
+      1.5030999999998509,
+      0,
+      1
+     ],
+     [
+      1.5962999999998406,
+      0,
+      2
+     ],
+     [
+      1.6897999999998303,
+      0,
+      1
+     ],
+     [
+      1.8040999999998177,
+      0,
+      2
+     ],
+     [
+      1.828499999999815,
+      0,
+      1
+     ]
+    ],
+    "warnings": []
+   },
+   "criterion": "tilt <= 0.5 deg (k_sw 0: instability record)"
+  },
+  {
+   "case": "L4_J1_B_RL_1cm_ksw0",
+   "k_sw_N_m_rad": 0.0,
+   "tilt_deg_max_all": 0.0016406766256106956,
+   "tilt_deg_end": 4.796354146214209e-05,
+   "sinkage_end_mm": 89.78911057653937,
+   "Fz_end_N": 72818.47280336733,
+   "swivel": null,
+   "criterion": "tilt <= 0.5 deg (k_sw 0: instability record)"
+  }
+ ],
+ "L5": [
+  {
+   "case": "L5_G1_M14s_pitch3.5",
+   "settle_drift": {
+    "window_s": [
+     5.000000000001686,
+     14.99999999997838
+    ],
+    "d_origin_world_m": [
+     0.0005825183149587021,
+     -1.4456121797410196e-07,
+     0.00025021402396019354
+    ],
+    "d_in_plane_mm": 0.5661566186004164,
+    "d_normal_mm": 0.2853092167483665,
+    "d_pitch_deg": 0.02797544460617507,
+    "d_roll_deg": 7.725601856713215e-06,
+    "criterion_mm": 0.1,
+    "note": "P1-L5 (dynamics 5.33.9): 10 s drift <= 0.1 mm (in plane)"
+   },
+   "settle_last_1s": {
+    "window_s": [
+     13.99999999998071,
+     14.99999999997838
+    ],
+    "pitch_mean_deg": 3.8765364146287054,
+    "pitch_pp_deg": 0.04281960051639633,
+    "roll_mean_deg": 0.00021093003656729502,
+    "roll_pp_deg": 1.12555156525164e-05,
+    "z_origin_mean_mm": -2.144063158263768,
+    "x_origin_pp_mm": 0.8983562453729332,
+    "normal_over_weight": 0.9981651781734864
+   },
+   "track_utilisation": [
+    0.07567183298598432,
+    0.07564533180947645
+   ],
+   "equilibrium_rel_error": -0.0019375758016648894,
+   "first_step_force_norm_max_N": 0.0,
+   "us_per_step": 2279.0309966669884,
+   "criterion": "10 s drift <= 0.1 mm, track utilisation recorded"
+  },
+  {
+   "case": "L5_J1_M14s_pitch3.5",
+   "settle_drift": {
+    "window_s": [
+     5.000000000001686,
+     14.99999999997838
+    ],
+    "d_origin_world_m": [
+     0.001759870814461162,
+     4.4867488275916745e-06,
+     0.0007831329570087142
+    ],
+    "d_in_plane_mm": 1.708785067781407,
+    "d_normal_mm": 0.8891097991742867,
+    "d_pitch_deg": 0.08897921342540505,
+    "d_roll_deg": -3.96019653419218e-05,
+    "criterion_mm": 0.1,
+    "note": "P1-L5 (dynamics 5.33.9): 10 s drift <= 0.1 mm (in plane)"
+   },
+   "settle_last_1s": {
+    "window_s": [
+     13.99999999998071,
+     14.99999999997838
+    ],
+    "pitch_mean_deg": 3.926916840756729,
+    "pitch_pp_deg": 0.09267666901252003,
+    "roll_mean_deg": 0.00045569448046784984,
+    "roll_pp_deg": 2.9843852372832085e-05,
+    "z_origin_mean_mm": 0.9658640535667851,
+    "x_origin_pp_mm": 1.8310068781001165,
+    "normal_over_weight": 0.9981144914799747
+   },
+   "track_utilisation": [
+    0.09383009870672192,
+    0.09399320499365119
+   ],
+   "equilibrium_rel_error": -0.0019368226086366534,
+   "first_step_force_norm_max_N": 0.0,
+   "us_per_step": 2768.808051333375,
+   "criterion": "10 s drift <= 0.1 mm, track utilisation recorded"
+  }
+ ],
+ "L6": [
+  {
+   "case": "L6_J1_B_RL_native_fixed_dt1e-4_1cm",
+   "joint": "fixed",
+   "dt_s": 0.0001,
+   "drift_velocity_m_s": 5.989195597165353e-05,
+   "F_dt_over_M_m_s": 5.993282729534195e-05,
+   "ratio": 0.999318047795626,
+   "tilt_deg_max": 0.0,
+   "p1_l6": {
+    "omega_rms_rad_s": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "v_rot_rms_m_s": 0.0,
+    "v_trans_rms_m_s": 7.197604461161276e-05,
+    "rot_over_trans": 0.0,
+    "Fx_total_step_range_N": [
+     -5761.46593598715,
+     5761.456659489995
+    ],
+    "sampling": "every 0.001 s (record rate), hold window"
+   },
+   "Fx_scm_abs_max_N": 5761.456659489995,
+   "criterion": "fixed: drift = F dt / M +-5 %; spherical: record (5.34.4), not judged"
+  },
+  {
+   "case": "L6_J1_B_RL_native_fixed_dt5e-5_1cm",
+   "joint": "fixed",
+   "dt_s": 5e-05,
+   "drift_velocity_m_s": 2.995390720788369e-05,
+   "F_dt_over_M_m_s": 2.9966413647670974e-05,
+   "ratio": 0.9995826514332236,
+   "tilt_deg_max": 0.0,
+   "p1_l6": {
+    "omega_rms_rad_s": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "v_rot_rms_m_s": 0.0,
+    "v_trans_rms_m_s": 3.593920421128473e-05,
+    "rot_over_trans": 0.0,
+    "Fx_total_step_range_N": [
+     -5190.668682363534,
+     5190.57405303879
+    ],
+    "sampling": "every 0.001 s (record rate), hold window"
+   },
+   "Fx_scm_abs_max_N": 5190.668682363534,
+   "criterion": "fixed: drift = F dt / M +-5 %; spherical: record (5.34.4), not judged"
+  },
+  {
+   "case": "L6_J1_B_RL_native_spherical_dt1e-4_1cm",
+   "joint": "spherical",
+   "dt_s": 0.0001,
+   "drift_velocity_m_s": 0.015893612449507283,
+   "F_dt_over_M_m_s": 5.993282729534195e-05,
+   "ratio": 265.1904334695479,
+   "tilt_deg_max": 1.2894160387111595,
+   "p1_l6": {
+    "omega_rms_rad_s": [
+     0.009276307741945192,
+     0.010641446756016035,
+     1.3651006347787125
+    ],
+    "v_rot_rms_m_s": 0.20204880037087142,
+    "v_trans_rms_m_s": 0.01586386679436048,
+    "rot_over_trans": 12.736415590850692,
+    "Fx_total_step_range_N": [
+     -5354.729457660037,
+     -3686.1913599606833
+    ],
+    "sampling": "every 0.001 s (record rate), hold window"
+   },
+   "Fx_scm_abs_max_N": 5336.608196247243,
+   "criterion": "fixed: drift = F dt / M +-5 %; spherical: record (5.34.4), not judged"
+  },
+  {
+   "case": "L6_J1_B_RL_native_spherical_dt5e-5_1cm",
+   "joint": "spherical",
+   "dt_s": 5e-05,
+   "drift_velocity_m_s": 0.00800407208741875,
+   "F_dt_over_M_m_s": 2.9966413647670974e-05,
+   "ratio": 267.1014350107537,
+   "tilt_deg_max": 1.2728401773625755,
+   "p1_l6": {
+    "omega_rms_rad_s": [
+     0.006697787004878312,
+     0.00931946873470453,
+     0.6818631830739555
+    ],
+    "v_rot_rms_m_s": 0.10092609458220078,
+    "v_trans_rms_m_s": 0.008019521907764919,
+    "rot_over_trans": 12.585051296446848,
+    "Fx_total_step_range_N": [
+     -5396.605524489921,
+     -3651.972896010586
+    ],
+    "sampling": "every 0.001 s (record rate), hold window"
+   },
+   "Fx_scm_abs_max_N": 5326.447371011512,
+   "criterion": "fixed: drift = F dt / M +-5 %; spherical: record (5.34.4), not judged"
+  }
+ ],
+ "source_batch": "07_results/S9/batch_P1_L_20261026_034511",
+ "generator": "04_scripts/02_chrono/s9_batch_summary.py"
+}

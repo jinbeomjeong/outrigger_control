@@ -250,7 +250,22 @@ def summary_l(folder: Path) -> dict[str, Any]:
             continue
         h = r["hold"]
         F = r["force_N"]
-        l2.append({"case": k, "force_N": F, "drift_mm": h["drift_mm"], "drift_window_means_mm": h["drift_window_means_mm"],
+        # the share mass rings on k_t (about 3 Hz, zeta about 0.03, decay time about 1.5 s): values of the
+        # last 5 s of the hold as well (ringing mostly gone), from the 1 ms series
+        z = np.load(folder / k / "series.npz")
+        t = z["t"]
+        late = t >= t[-1] - 5.0
+        x = z["x"]
+        a0 = (t >= t[-1] - 5.0) & (t < t[-1] - 4.5)
+        a1 = t >= t[-1] - 0.5
+        ft = -(z["Fx_scm"] + z["Ft_bush_x"])
+        last5 = {"window_s": [float(t[late][0]), float(t[-1])],
+                 "drift_window_means_mm": float((x[a1].mean() - x[a0].mean()) * 1e3),
+                 "Ft_pp_rel": float(np.ptp(ft[late]) / F),
+                 "Ft_over_F": float(ft[late].mean() / F),
+                 "step_range_rel_max": float((z["Fx_step_max"][late] - z["Fx_step_min"][late]).max() / F),
+                 "x_mean_mm": float(x[late].mean() * 1e3)}
+        l2.append({"last_5s": last5,"case": k, "force_N": F, "drift_mm": h["drift_mm"], "drift_window_means_mm": h["drift_window_means_mm"],
                    "drift_velocity_m_s": h["drift_velocity_m_s"], "Ft_over_F": h["Ft_over_F"],
                    "Ft_step_range_rel": (h["Ft_step_range_N"][1] - h["Ft_step_range_N"][0]) / F,
                    "x_mean_mm": h["x_mean_mm"], "elastic_expected_mm": h["elastic_expected_mm"],
