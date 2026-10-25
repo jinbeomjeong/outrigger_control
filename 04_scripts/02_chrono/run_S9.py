@@ -77,6 +77,11 @@ estimate (4 ms) did not count the patch search. 4 cm grid: 3.2 ms/step. Triangle
 (2026-10-26, same load, P-cores shared with the main-tree regression): 4 cm 3.81 ms/step against
 4.38 ms with the former convex shapes; 2 cm 18.9 ms/step (crawler only, 1 s settle)."""
 MACHINE_COST_4CM_US_PER_STEP = 3200.0
+SCM_THREADS_FIXED = 4
+"""SCM ray-casting threads for every action (machine, single pad, level). Fixed (not the Chrono
+default = all processors) because the OpenMP hit-merge order may depend on the thread count and
+P3b layouts are compared by judgement values only (dynamics 5.34.12); = scm_model.SCM_THREADS.
+Before 2026-10-26 (batch P1/P2) the single-pad action used the Chrono default."""
 
 
 def case_plan() -> list[dict[str, Any]]:
@@ -164,7 +169,12 @@ def place():
     return place_process("pcore")
 
 
-def out_dir(action: str, tag: str) -> Path:
+def out_dir(action: str, tag: str, root: str | None = None) -> Path:
+    """``07_results/S9/<action>_<tag>_<stamp>/`` or, with ``root`` (batch folder), ``<root>/<tag>/``."""
+    if root:
+        d = Path(root) / tag
+        d.mkdir(parents=True, exist_ok=True)
+        return d
     stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
     d = RESULTS / f"{action}_{tag}_{stamp}"
     d.mkdir(parents=True, exist_ok=True)
@@ -194,7 +204,8 @@ def _plain(x):
 
 def build_single_pad(params, pv, soil, *, leg: str, shear: str, joint: str, k_sw: float,
                      stiffness_mode: str, interface: bool, grid_m: float, dt_s: float,
-                     normal_load_N: float | None = None, ray_shape: str = "mesh"):
+                     normal_load_N: float | None = None, ray_shape: str = "mesh", num_threads: int = 4,
+                     terrain_size_m: tuple[float, float] = (1.2, 1.2)):
     """Single swivel pad (YAML pad body + pad hull) under a 'share' body (mass N/g - m_pad,
     translation free, rotation locked to the ground) on a level SCM plane z = 0 (the 5.33.2 probe
     layout with the project pad body, anchor bushing and swivel stabiliser)."""
@@ -212,6 +223,8 @@ def build_single_pad(params, pv, soil, *, leg: str, shear: str, joint: str, k_sw
     i = LEG_ORDER.index(leg)
     bundle = make_system(params, "L1", dt=dt_s, floor_plate=False)
     s, ground = bundle.system, bundle.floor
+    if num_threads > 0:  # SCM ray casting = num_threads_chrono (CHANGELOG.md:502); fixed, not the Chrono default
+        s.SetNumThreads(int(num_threads), 1, 1)
     m_p, c_p, i_p = split_body_props(params, i, "pad_body")
     above = float(params.get(f"legs.{leg}.pad_body.com_above_pad_bottom_m"))
     h_ball = float(params.legs[i].pad.swivel_center_above_pad_bottom_m)
@@ -247,7 +260,9 @@ def build_single_pad(params, pv, soil, *, leg: str, shear: str, joint: str, k_sw
     s.Add(loads)
     fload = ch.ChLoadBodyForce(share, ch.ChVector3d(0, 0, 0), False, ch.ChVector3d(0, 0, 0), True)
     loads.Add(fload)
-    terrain, tmeta = make_terrain(s, soil, shear, (0.0, 0.0, 0.0), np.eye(3), grid_m=grid_m, size_m=(1.2, 1.2))
+    terrain, tmeta = make_terrain(s, soil, shear, (0.0, 0.0, 0.0), np.eye(3), grid_m=grid_m, size_m=tuple(terrain_size_m))
+    # SCM grid indices are bounded by the size (SCMLoader::CheckMeshBounds, SCMTerrain.cpp:747): a sliding
+    # pad (P1-L3) needs a long patch
     bottom_local = np.array([0.0, 0.0, -above])
     add_active_domain(terrain, tmeta, pad, bottom_local, (PAD_DOMAIN_XY_M, PAD_DOMAIN_XY_M, ACTIVE_DOMAIN_HEIGHT_M),
                       f"pad_{leg}")
@@ -272,18 +287,23 @@ def build_single_pad(params, pv, soil, *, leg: str, shear: str, joint: str, k_sw
     meta = {"bundle": bundle.meta(), "scm": tmeta, "pad_values": values.meta(), "leg": leg, "leg_index": i,
             "normal_load_N": N, "share_mass_kg": N / G - m_p, "pad_mass_kg": m_p, "joint": joint,
             "k_sw_N_m_rad": k_sw if swivel else 0.0, "pad_bottom_start_z_m": z0,
-            "pad_area_m2": area[i], "frame": "world z up, SCM plane z = 0, load along +x", "ray_shape": ray_shape}
+            "pad_area_m2": area[i], "frame": "world z up, SCM plane z = 0, load along +x", "ray_shape": ray_shape,
+            "num_threads_chrono": int(num_threads)}
     outline = pad_bottom_outline_local_m(pv["pad_variant"], i, -c_p)
+    obj_offset = float(outline[0, 2] + above)  # OBJ bottom - YAML bottom, pad COG frame z [m]
+    meta["obj_bottom_minus_yaml_bottom_m"] = obj_offset
     return {"system": s, "pad": pad, "share": share, "terrain": terrain, "reader": reader, "bushing": bushing,
             "swivel": swivel, "fload": fload, "dt_s": bundle.dt_s, "above": above, "meta": meta,
             "limit_N": None if bushing is None else float(bushing.tangential_limit_N([N])[0]),
             "k_t_N_m": values.stiffness_N_m[i], "outline_local_m": outline, "grid_m": grid_m,
-            "bundle": bundle}
+            "bundle": bundle, "obj_bottom_offset_m": obj_offset}
 
 
 def single_pad_node_stats(m) -> dict[str, Any]:
     """SCM nodes inside the pad bottom polygon (P1-V0 (iii)): contact node count, node mean sinkage,
-    geometric sinkage of the pad bottom (``-z_bottom``) and their difference [m]."""
+    geometric sinkage of the pad bottom (``-z_bottom``, YAML pad bottom) and their difference [m].
+    ``sinkage_geometric_obj_m`` / ``node_minus_geometric_obj_m`` use the hull OBJ bottom instead
+    (type A rear OBJ bottom is 0.044 mm below the YAML bottom, dynamics 5.34.10; type B 0.0 mm)."""
     from outrigger_sim.chrono.scm_model import node_stats_in_outline
 
     pad = m["pad"]
@@ -293,11 +313,59 @@ def single_pad_node_stats(m) -> dict[str, Any]:
                                                  for p in m["outline_local_m"])])
     st = node_stats_in_outline(m["terrain"], (0.0, 0.0, 0.0), np.eye(3), m["grid_m"], world)
     geo = -(pad.GetPos().z - m["above"])
+    geo_obj = geo - m["obj_bottom_offset_m"]
     st["sinkage_geometric_m"] = float(geo)
+    st["sinkage_geometric_obj_m"] = float(geo_obj)
     sc = st["sinkage_mean_contact_m"]
     st["node_minus_geometric_m"] = None if sc is None else float(sc - geo)
+    st["node_minus_geometric_obj_m"] = None if sc is None else float(sc - geo_obj)
     st["ray_hits"] = int(m["terrain"].GetNumRayHits())
+    st["contact_patches"] = int(m["terrain"].GetNumContactPatches())
     return st
+
+
+def bekker_tau_s(soil, area_m2: float, b_m: float, load_N: float, unloading: bool) -> float:
+    """Settle time constant of a pad load level (dynamics 5.31.8): tau = R A / (dF/dz) on the
+    virgin branch F = A (Kc/b + Kphi) z^n (dF/dz = n F / z), tau = R / K on unloading (elastic)."""
+    c = soil.chrono
+    if unloading:
+        return c["damping_R"] / c["elastic_K"]
+    k = c["Kc"] / b_m + c["Kphi"]
+    z = (load_N / (area_m2 * k)) ** (1.0 / c["n"])
+    return c["damping_R"] * area_m2 / (c["n"] * load_N / z)
+
+
+def load_step_schedule(args, soil, area_m2: float, b_m: float, n_full_N: float) -> list[dict[str, Any]]:
+    """Vertical load steps (P1-V16a-c): factors ``--load-steps``; the first ramp is ``--load-ramp``
+    (Poly345 from 0), later ramps ``--step-ramp`` (Poly345 between levels); hold per level
+    ``--step-hold`` [s] or 'auto' = max(1 s, 5 tau) rounded up to 0.1 s (dynamics 5.31.8 / 5.34.3)."""
+    levels = [float(v) for v in args.load_steps.split(",")]
+    holds_in = args.step_hold.split(",")
+    rows, t, prev, peak = [], 0.0, 0.0, 0.0
+    for k, f in enumerate(levels):
+        ramp = args.load_ramp if k == 0 else args.step_ramp
+        unloading = f < peak
+        tau = bekker_tau_s(soil, area_m2, b_m, f * n_full_N, unloading)
+        h = holds_in[min(k, len(holds_in) - 1)]
+        hold = max(1.0, math.ceil(5.0 * tau * 10.0 - 1e-9) / 10.0) if h == "auto" else float(h)
+        rows.append({"level": k, "factor": f, "from_factor": prev, "t_ramp_start_s": t, "ramp_s": ramp,
+                     "t_hold_start_s": t + ramp, "hold_s": hold, "t_hold_end_s": t + ramp + hold,
+                     "tau_est_s": tau, "unloading": unloading})
+        t += ramp + hold
+        prev, peak = f, max(peak, f)
+    return rows
+
+
+def load_step_factor(t_s: float, schedule: list[dict[str, Any]]) -> float:
+    from outrigger_sim.chrono.scm_model import gravity_ramp_factor
+
+    for row in schedule:
+        if t_s < row["t_hold_start_s"]:
+            u = gravity_ramp_factor(t_s - row["t_ramp_start_s"], row["ramp_s"], "poly345")
+            return row["from_factor"] + (row["factor"] - row["from_factor"]) * u
+        if t_s < row["t_hold_end_s"]:
+            return row["factor"]
+    return schedule[-1]["factor"]
 
 
 def run_single_pad(args) -> Path:
@@ -307,16 +375,35 @@ def run_single_pad(args) -> Path:
     params, pv, soil = load_inputs(args)
     m = build_single_pad(params, pv, soil, leg=args.leg, shear=args.scm_shear, joint=args.joint, k_sw=args.k_sw,
                          stiffness_mode=args.stiffness_mode, interface=args.interface, grid_m=args.grid,
-                         dt_s=args.dt, normal_load_N=args.normal_load, ray_shape=args.ray_shape)
+                         dt_s=args.dt, normal_load_N=args.normal_load, ray_shape=args.ray_shape,
+                         num_threads=args.threads, terrain_size_m=tuple(args.terrain_size))
     from outrigger_sim.chrono.scm_model import gravity_ramp_factor
     from outrigger_sim.chrono.system import gravity_vector, set_gravity
 
     s, pad, share, reader, bushing, swivel = (m[k] for k in ("system", "pad", "share", "reader", "bushing", "swivel"))
     dt = m["dt_s"]
+    if args.force_limit_factor is not None:  # P1-L3: horizontal load = factor x tangential limit at full load
+        if m["limit_N"] is None:
+            raise SystemExit("--force-limit-factor needs the anchor bushing (--scm-shear bprime)")
+        args.force = float(args.force_limit_factor * m["limit_N"])
+    schedule = None
+    if args.load_steps:
+        outline = m["outline_local_m"][:, :2]
+        on = np.roll(outline, -1, axis=0)
+        a_out = float(0.5 * abs(np.sum(outline[:, 0] * on[:, 1] - on[:, 0] * outline[:, 1])))
+        b_out = 2.0 * a_out / float(np.sum(np.hypot(*(on - outline).T)))
+        schedule = load_step_schedule(args, soil, m["meta"]["pad_area_m2"], b_out, m["meta"]["normal_load_N"])
+        args.t_end = max(args.t_end, schedule[-1]["t_hold_end_s"])
+        args.t_settle = max(args.t_settle, schedule[-1]["t_hold_end_s"])  # no horizontal load in a step run
+    level_marks = {} if schedule is None else {round(r["t_hold_end_s"] / dt): ("end", r["level"]) for r in schedule}
+    if schedule is not None:
+        level_marks.update({round(r["t_hold_start_s"] / dt): ("start", r["level"]) for r in schedule})
+    level_rows: dict[int, dict[str, Any]] = {}
+    ft_scm_abs_max = 0.0
     n_steps = round(args.t_end / dt)
     every = max(1, round(RECORD_S / dt))
     node_every = max(1, round(NODE_SINKAGE_EVERY_S / dt))
-    keys = ("t", "x", "y", "z_bottom", "tilt_deg", "Fx_scm", "Fz_scm", "Ft_bush_x", "N_bush", "slip_x",
+    keys = ("t", "x", "y", "z_bottom", "tilt_deg", "Fx_scm", "Fy_scm", "Fz_scm", "Ft_bush_x", "N_bush", "slip_x",
             "Fx_step_min", "Fx_step_max", "g_factor", "omega_x", "omega_y", "omega_z", "v_t_com", "v_rot_rms")
     rec = {k: [] for k in keys}
     node_rows: list[dict[str, Any]] = []
@@ -333,11 +420,20 @@ def run_single_pad(args) -> Path:
             fh = args.force * (t - args.t_settle) / args.t_ramp
         else:
             fh = args.force
-        gf = gravity_ramp_factor(t, args.load_ramp, args.load_ramp_shape)
+        gf = (gravity_ramp_factor(t, args.load_ramp, args.load_ramp_shape) if schedule is None
+              else load_step_factor(t, schedule))
         set_gravity(s, gf * g_vec)
         m["fload"].SetForce(ch.ChVector3d(fh, 0, 0), False)
         s.DoStepDynamics(dt)
         reader.refresh()
+        ft_scm_abs_max = max(ft_scm_abs_max, float(np.hypot(reader.pad_force_N[0, 0], reader.pad_force_N[0, 1])))
+        mark = level_marks.get(k + 1)
+        if mark is not None:
+            row = level_rows.setdefault(mark[1], {"level": mark[1]})
+            row[mark[0]] = {"t_s": (k + 1) * dt, "factor": gf, "load_N": gf * m["meta"]["normal_load_N"],
+                            "Fz_scm_N": float(reader.pad_force_N[0, 2]),
+                            "z_bottom_m": float(pad.GetPos().z - m["above"]),
+                            "nodes": single_pad_node_stats(m)}
         if bushing is not None:
             bushing.after_step(dt)
         if swivel is not None:
@@ -354,6 +450,7 @@ def run_single_pad(args) -> Path:
             rec["z_bottom"].append(pad.GetPos().z - m["above"])
             rec["tilt_deg"].append(math.degrees(math.acos(max(-1.0, min(1.0, zax.z)))))
             rec["Fx_scm"].append(reader.pad_force_N[0, 0])
+            rec["Fy_scm"].append(reader.pad_force_N[0, 1])
             rec["Fz_scm"].append(reader.pad_force_N[0, 2])
             rec["Ft_bush_x"].append(bushing.tangential_force_world_N()[0, 0] if bushing else 0.0)
             rec["N_bush"].append(float(bushing.normal_force_N[0]) if bushing else float(reader.pad_force_N[0, 2]))
@@ -399,6 +496,15 @@ def run_single_pad(args) -> Path:
         "first_step": {"first_record_t_s": float(r["t"][0]) if len(r["t"]) else None,
                        "first_record_Fz_scm_N": float(r["Fz_scm"][0]) if len(r["Fz_scm"]) else None},
         "node_series": node_rows,
+        "force_N": args.force,
+        "scm_tangential_abs_max_N": ft_scm_abs_max,
+        "scm_tangential_abs_max_note": "max over every step of |(Fx, Fy)| of the SCM resultant on the pad (P1-L1)",
+        "tilt_deg_max_all": float(r["tilt_deg"].max()) if len(r["tilt_deg"]) else None,
+        "tilt_deg_end": float(r["tilt_deg"][-1]) if len(r["tilt_deg"]) else None,
+        "z_bottom_end_mm": float(r["z_bottom"][-1] * 1e3) if len(r["z_bottom"]) else None,
+        "Fz_scm_end_N": float(r["Fz_scm"][-1]) if len(r["Fz_scm"]) else None,
+        "load_steps": None if schedule is None else {
+            "schedule": schedule, "levels": [level_rows.get(row["level"]) for row in schedule]},
     }
     settle_nodes = [n for n in node_rows if n["t_s"] <= args.t_settle + 1e-9]
     if settle_nodes:
@@ -417,6 +523,9 @@ def run_single_pad(args) -> Path:
             "elastic_expected_mm": None if not m["k_t_N_m"] else float(args.force / m["k_t_N_m"] * 1e3),
             "Ft_total_mean_N": float(ft_total[hold].mean()),
             "Ft_over_F": float(ft_total[hold].mean() / args.force) if args.force else None,
+            "Ft_over_limit": float(ft_total[hold].mean() / m["limit_N"]) if m["limit_N"] else None,
+            "Ft_over_limit_last_1s": (float(ft_total[hold & (r["t"] >= r["t"][-1] - 1.0)].mean() / m["limit_N"])
+                                      if m["limit_N"] else None),
             "Ft_step_range_N": [float(-r["Fx_step_max"][hold].max()), float(-r["Fx_step_min"][hold].min())],
             "Fx_scm_abs_max_N": float(np.abs(r["Fx_scm"][hold]).max()),
             "tilt_deg_max": float(r["tilt_deg"][hold].max()),
@@ -434,8 +543,8 @@ def run_single_pad(args) -> Path:
                 "Fx_total_step_range_N": [float(r["Fx_step_min"][hold].min()), float(r["Fx_step_max"][hold].max())],
                 "sampling": f"every {RECORD_S:g} s (record rate), hold window"},
         }
-    tag = f"{args.soil}_{args.pad_variant}_{args.leg}_{args.scm_shear}_F{args.force:.0f}"
-    d = out_dir("single", tag)
+    tag = args.case or f"{args.soil}_{args.pad_variant}_{args.leg}_{args.scm_shear}_F{args.force:.0f}"
+    d = out_dir("single", tag, args.out_root)
     np.savez(d / "series.npz", **r)
     (d / "result.json").write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), "utf-8")
     print(json.dumps(_plain({k: summary.get(k) for k in ("settle_end", "first_step", "hold", "us_per_step",
@@ -571,10 +680,28 @@ def run_machine(args) -> Path:
         "crawler_bushing_events": None if model.crawler_bushing is None else {
             k: v.tolist() for k, v in model.crawler_bushing.event_table().items()},
     }
+    # P1-L5: origin drift over the last args.drift_window seconds of the settle (in the plane and
+    # along the plane normal, world frame), and the track anchor slip
+    settle_rows = [r for r in rows if r["t_s"] <= t_settle + 1e-9]
+    if settle_rows and args.drift_window > 0.0 and settle_rows[-1]["t_s"] - settle_rows[0]["t_s"] >= args.drift_window:
+        t_a = settle_rows[-1]["t_s"] - args.drift_window
+        ra = min(settle_rows, key=lambda r: abs(r["t_s"] - t_a))
+        rb = settle_rows[-1]
+        dp = np.asarray(rb["body_pos_m"]) - np.asarray(ra["body_pos_m"])
+        nrm = model.floor_normal_world()
+        dn = float(dp @ nrm)
+        dpl = dp - dn * nrm
+        summary["settle_drift"] = {
+            "window_s": [float(ra["t_s"]), float(rb["t_s"])], "d_origin_world_m": dp.tolist(),
+            "d_in_plane_mm": float(np.linalg.norm(dpl) * 1e3), "d_normal_mm": float(dn * 1e3),
+            "d_pitch_deg": float(rb["roll_pitch_deg"][1] - ra["roll_pitch_deg"][1]),
+            "d_roll_deg": float(rb["roll_pitch_deg"][0] - ra["roll_pitch_deg"][0]),
+            "criterion_mm": 0.1, "note": "P1-L5 (dynamics 5.33.9): 10 s drift <= 0.1 mm (in plane)"}
+    summary["num_threads_chrono"] = model.num_threads
     grids = f"{args.grid * 100:g}cm" + ("" if args.crawler_grid is None else f"_c{args.crawler_grid * 100:g}cm")
-    tag = (f"{args.soil}_{args.pad_variant}_{args.scm_shear}_{grids}_{args.gravity_ramp_shape}"
-           f"{args.gravity_ramp:g}_lift{args.lift_s:g}")
-    d = out_dir("machine", tag)
+    tag = args.case or (f"{args.soil}_{args.pad_variant}_{args.scm_shear}_{grids}_{args.gravity_ramp_shape}"
+                        f"{args.gravity_ramp:g}_lift{args.lift_s:g}")
+    d = out_dir("machine", tag, args.out_root)
     series = {key: np.asarray([r[key] for r in rows], dtype=float) for key in
               ("t_s", "scm_crawler_normal_N", "scm_pad_normal_N", "pad_sinkage_geometric_m", "body_pos_m",
                "roll_pitch_deg", "s_motor_m", "F_cyl_N", "scm_contact_patches", "body_omega_world_rad_s",
@@ -741,7 +868,12 @@ def _common(p: argparse.ArgumentParser) -> None:
     p.add_argument("--grid", type=float, default=0.02)
     p.add_argument("--dt", type=float, default=1.0e-4)
     p.add_argument("--soil-override", nargs="*")
-    p.add_argument("--threads", type=int, default=4, help="SCM ray-casting OpenMP threads (0 = Chrono default)")
+    p.add_argument("--threads", type=int, default=SCM_THREADS_FIXED,
+                   help=f"SCM ray-casting OpenMP threads (num_threads_chrono), fixed default {SCM_THREADS_FIXED} "
+                        "for every S9 action (dynamics 5.34.12: P3b with one thread count); 0 = Chrono default "
+                        "(all processors, comparison only)")
+    p.add_argument("--case", default=None, help="case name (output folder name; batch runs)")
+    p.add_argument("--out-root", default=None, help="batch folder: write to <out-root>/<case>/ instead of a stamp")
     p.add_argument("--ray-shape", choices=("mesh", "convex"), default="mesh",
                    help="SCM ray targets: static triangle meshes (default, P1-V0) or the former convex box / hull")
     p.add_argument("--crawler-grid", type=float, default=None,
@@ -773,9 +905,20 @@ def main(argv) -> None:
     sp.add_argument("--load-ramp", type=float, default=1.0, help="vertical load (gravity) ramp [s] (5.34.3 P1-V0)")
     sp.add_argument("--load-ramp-shape", choices=("poly345", "linear", "step"), default="poly345",
                     help="step = the former sudden load (P1-V16d record only)")
+    sp.add_argument("--load-steps", default=None,
+                    help="vertical load factors, e.g. 0.25,0.5,0.75,1.0,0.5 (P1-V16a-c); replaces --load-ramp-shape")
+    sp.add_argument("--step-ramp", type=float, default=0.5, help="Poly345 ramp between load steps [s]")
+    sp.add_argument("--step-hold", default="auto",
+                    help="hold per step [s], comma list or 'auto' = max(1 s, 5 tau) (dynamics 5.31.8)")
+    sp.add_argument("--terrain-size", type=float, nargs=2, default=(1.2, 1.2),
+                    help="SCM patch size x y [m] centred on the pad start (P1-L3 sliding: 6 1.2)")
+    sp.add_argument("--force-limit-factor", type=float, default=None,
+                    help="horizontal load = factor x anchor tangential limit at the full normal load (P1-L3)")
     mp = sub.add_parser("machine")
     _common(mp)
     _gravity_ramp_args(mp)
+    mp.add_argument("--drift-window", type=float, default=10.0,
+                    help="settle drift record over the last window [s] (P1-L5), when the settle is long enough")
     mp.add_argument("--lift-s", type=float, default=0.0, help="open-loop extension time after the settle")
     mp.add_argument("--lift-speed-fraction", type=float, default=1.0)
     mp.add_argument("--floor-roll", type=float, default=0.0)

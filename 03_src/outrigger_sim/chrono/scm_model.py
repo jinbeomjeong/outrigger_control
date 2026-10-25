@@ -514,10 +514,24 @@ def node_stats_in_outline(terrain: Any, plane_point: ArrayLike, plane_rot: NDArr
         info = terrain.GetNodeInfo(ch.ChVector3d(float(w[0]), float(w[1]), float(w[2])))
         sink[k], sigma[k] = float(info.sinkage), float(info.sigma)
     contact = sigma > 0.0
+    # convex hull of the contact node points (the SCM patch b = 2 area / perimeter of the hull of
+    # the patch node points, SCMTerrain.cpp:1316-1378; P1-V16a discrete reference)
+    hull_area = hull_perimeter = None
+    if int(contact.sum()) >= 3:
+        pc = nodes[contact]
+        hidx = convex_hull_2d(pc)
+        if len(hidx) >= 3:
+            h = pc[hidx]
+            hn = np.roll(h, -1, axis=0)
+            hull_area = float(0.5 * abs(np.sum(h[:, 0] * hn[:, 1] - hn[:, 0] * h[:, 1])))
+            hull_perimeter = float(np.sum(np.hypot(*(hn - h).T)))
     return {"n_inside": int(len(nodes)), "n_contact": int(contact.sum()),
+            "n_sigma_negative": int((sigma < 0.0).sum()),
             "sinkage_mean_inside_m": float(sink.mean()) if len(nodes) else None,
             "sinkage_mean_contact_m": float(sink[contact].mean()) if contact.any() else None,
-            "sigma_mean_contact_Pa": float(sigma[contact].mean()) if contact.any() else None}
+            "sigma_mean_contact_Pa": float(sigma[contact].mean()) if contact.any() else None,
+            "sigma_sum_area_N": float(sigma.sum() * d * d),
+            "contact_hull_area_m2": hull_area, "contact_hull_perimeter_m": hull_perimeter}
 
 
 GRAVITY_RAMP_SHAPES = ("poly345", "linear", "step")
