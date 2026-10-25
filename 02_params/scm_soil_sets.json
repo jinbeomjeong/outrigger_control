@@ -1,0 +1,2206 @@
+{
+ "schema": 1,
+ "generated": "2026-10-25T21:39:19",
+ "generator": {
+  "path": "04_scripts/01_dynamics/export_scm_soil_sets.py",
+  "sha256": "e83878b7c33bb131fb868e09a1494248dd417f6e7036ec53049c4e231d05c5ea"
+ },
+ "doc": "00_docs/01_dynamics/dynamics_model.md 5.32 (rev. 46); survey 00_docs/01_dynamics/scm_soil_parameter_survey.md",
+ "decision": "user decision 2026-10-25 (soil sets for S9, U-PAD-5: judgement 1 ... 2 + soft 1 sensitivity); sets are a PROPOSAL until the user confirms (rev. 46 5.32.8)",
+ "inputs": {
+  "survey_md": {
+   "path": "00_docs\\01_dynamics\\scm_soil_parameter_survey.md",
+   "sha256": "5670cc94828d8da3649130bc5bcd4a96adce8ae6a9fd63067d50acb79eef7552"
+  },
+  "params_yaml": {
+   "path": "02_params\\rexome33.yaml",
+   "sha256": "a7128d75d066650c9e1f5337cfdbf2abdee170a82ee4afd85a43ae9ff5a0c96a",
+   "use": "read only"
+  },
+  "pad_variants": {
+   "path": "02_params\\pad_variants.json",
+   "sha256": "698bc5e045d366c025d2ff66033d97af4adae0d1ecf62c4eed1dcc495a88cb0e"
+  }
+ },
+ "use": "S9 SCM runs: SCMTerrain.SetSoilParameters(Kphi, Kc, n, cohesion, friction, Janosi, elastic_K, damping_R) with the 'chrono' block of one set. Not part of the YAML / L1 / L2b fingerprints.",
+ "units": {
+  "Kphi": "N/m^(n+2)",
+  "Kc": "N/m^(n+1)",
+  "n": "-",
+  "cohesion": "Pa",
+  "friction": "deg",
+  "Janosi": "m",
+  "elastic_K": "Pa/m",
+  "damping_R": "Pa s/m",
+  "note": "Chrono SI: Wong kN-based table x 1000 (Chrono forum 'SCM Terrain Parameter Units', survey [9b])"
+ },
+ "frame": "SCM plane = crawler block-bottom plane (z = ground.crawler_bottom_z_m + 0.004, 3.11.2), normal +z body",
+ "chrono_source_checks": {
+  "elastic_K_clamp": "SetSoilParameters: m_elastic_K = max(elastic_K, Bekker_Kphi) (SCMTerrain.cpp:148-165); silent, no warning; numbers compared in different units unless n = 1; Kc/b not included. SoilParametersCallback values are used per hit node without this clamp (SCMTerrain.cpp:1394-1413)",
+  "normal_law": "elastic trial sigma = K (s - s_p); if sigma > sigma_yield: sigma = (oob Kc + Kphi) s^n, sigma_yield = sigma, s_p = s - sigma / K (SCMTerrain.cpp:1430-1458); then sigma += -Vn R (not clamped; the 'if (Vn < 0)' guard is commented out, 1459-1465)",
+  "patch_b": "hit nodes flood-filled into patches with 4-neighbours; per patch ChConvexHull2D of the node points m_delta (i, j): oob = perimeter / (2 area), oob = 0 if area < 1e-6 m^2 (SCMTerrain.cpp:1316-1378); matches rev. 45 (5.31.2)",
+  "tangential": "T = -(v - Vn N) normalised; zero tangential speed -> ChVector3::Normalize sets [1, 0, 0] (ChVector3.h:193); kshear += |v_t| dt, never decreases; tau = (c + sigma tan phi)(1 - exp(-kshear / Janosi)) along T: no static friction on pads/crawler",
+  "chrono_demo_values": {
+   "SCMLoader ctor default": {
+    "Kphi": 2000000.0,
+    "Kc": 0,
+    "n": 1.1,
+    "c": 50,
+    "phi": 20,
+    "J": 0.01,
+    "K": 50000000.0,
+    "R": 0,
+    "src": "src/chrono_vehicle/terrain/SCMTerrain.cpp:392"
+   },
+   "SynSCM Soft": {
+    "Kphi": 200000.0,
+    "Kc": 0,
+    "n": 1.1,
+    "c": 0,
+    "phi": 30,
+    "J": 0.01,
+    "K": 40000000.0,
+    "R": 30000.0,
+    "src": "src/chrono_synchrono/agent/SynSCMTerrainAgent.h:152"
+   },
+   "SynSCM Mid": {
+    "Kphi": 2000000.0,
+    "Kc": 0,
+    "n": 1.1,
+    "c": 0,
+    "phi": 30,
+    "J": 0.01,
+    "K": 200000000.0,
+    "R": 30000.0,
+    "src": "src/chrono_synchrono/agent/SynSCMTerrainAgent.h:162"
+   },
+   "SynSCM Hard (= LETE sand)": {
+    "Kphi": 5301000.0,
+    "Kc": 102000.0,
+    "n": 0.793,
+    "c": 1300.0,
+    "phi": 31.1,
+    "J": 0.012,
+    "K": 400000000.0,
+    "R": 30000.0,
+    "src": "src/chrono_synchrono/agent/SynSCMTerrainAgent.h:172"
+   },
+   "RigidTire demo": {
+    "Kphi": 200000.0,
+    "Kc": 0,
+    "n": 1.1,
+    "c": 0,
+    "phi": 30,
+    "J": 0.01,
+    "K": 40000000.0,
+    "R": 30000.0,
+    "src": "src/demos/vehicle/terrain/demo_VEH_SCMTerrain_RigidTire.cpp:207"
+   },
+   "Curiosity demo": {
+    "Kphi": 820000.0,
+    "Kc": 1400.0,
+    "n": 1.0,
+    "c": 170.0,
+    "phi": 35,
+    "J": 0.0178,
+    "K": 200000000.0,
+    "R": 30000.0,
+    "src": "src/demos/robot/curiosity/demo_ROBOT_Curiosity_SCM_Sensor.cpp:102"
+   }
+  }
+ },
+ "survey_check": {
+  "conversion": {
+   "lean_clay_22": {
+    "imperial": {
+     "n": 0.2,
+     "kc_lb_in^(n+1)": 45,
+     "kphi_lb_in^(n+2)": 120,
+     "c_psi": 10,
+     "phi_deg": 20
+    },
+    "computed_SI": {
+     "kc_kN_m^(n+1)": 16.42852110319133,
+     "kphi_kN_m^(n+2)": 1724.7791184452853,
+     "c_kPa": 68.94757293168361
+    },
+    "claimed_SI": {
+     "n": 0.2,
+     "kc": 16.43,
+     "kphi": 1724.69,
+     "c_kPa": 68.95,
+     "phi_deg": 20
+    },
+    "rel_diff": {
+     "kc": -9.001197861657761e-05,
+     "kphi": 5.1672152842074937e-05,
+     "c": -3.5200410680058525e-05
+    },
+    "max_abs_rel_diff_vs_claimed": 9.001197861657761e-05
+   },
+   "lean_clay_32": {
+    "imperial": {
+     "n": 0.15,
+     "kc_lb_in^(n+1)": 5,
+     "kphi_lb_in^(n+2)": 10,
+     "c_psi": 2,
+     "phi_deg": 11
+    },
+    "computed_SI": {
+     "kc_kN_m^(n+1)": 1.5191394655209145,
+     "kphi_kN_m^(n+2)": 119.61728074967832,
+     "c_kPa": 13.789514586336722
+    },
+    "claimed_SI": {
+     "n": 0.15,
+     "kc": 1.52,
+     "kphi": 119.61,
+     "c_kPa": 13.79,
+     "phi_deg": 11
+    },
+    "rel_diff": {
+     "kc": -0.0005661411046615772,
+     "kphi": 6.0870743903596036e-05,
+     "c": -3.5200410680058525e-05
+    },
+    "max_abs_rel_diff_vs_claimed": 0.0005661411046615772
+   },
+   "heavy_clay_40": {
+    "imperial": {
+     "n": 0.11,
+     "kc_lb_in^(n+1)": 7,
+     "kphi_lb_in^(n+2)": 10,
+     "c_psi": 3,
+     "phi_deg": 6
+    },
+    "computed_SI": {
+     "kc_kN_m^(n+1)": 1.8361959734575897,
+     "kphi_kN_m^(n+2)": 103.27311436769337,
+     "c_kPa": 20.684271879505083
+    },
+    "claimed_SI": {
+     "n": 0.11,
+     "kc": 1.84,
+     "kphi": 103.27,
+     "c_kPa": 20.69,
+     "phi_deg": 6
+    },
+    "rel_diff": {
+     "kc": -0.0020674057295708703,
+     "kphi": 3.0157525838792054e-05,
+     "c": -0.0002768545430119618
+    },
+    "max_abs_rel_diff_vs_claimed": 0.0020674057295708703
+   },
+   "heavy_clay_25": {
+    "imperial": {
+     "n": 0.13,
+     "kc_lb_in^(n+1)": 45,
+     "kphi_lb_in^(n+2)": 140,
+     "c_psi": 10,
+     "phi_deg": 34
+    },
+    "computed_SI": {
+     "kc_kN_m^(n+1)": 12.703893085712835,
+     "kphi_kN_m^(n+2)": 1556.0323989499532,
+     "c_kPa": 68.94757293168361
+    },
+    "claimed_SI": {
+     "n": 0.13,
+     "kc": 12.7,
+     "kphi": 1555.95,
+     "c_kPa": 68.95,
+     "phi_deg": 34
+    },
+    "rel_diff": {
+     "kc": 0.0003065421821131231,
+     "kphi": 5.295732507670792e-05,
+     "c": -3.5200410680058525e-05
+    },
+    "typo_check": {
+     "key": "c_kPa",
+     "secondary_value": 69.95,
+     "source": "NASA TM-20250006958 [1]",
+     "computed": 68.94757293168361,
+     "secondary_rel_diff": 0.014538975422813571,
+     "confirmed_typo": true
+    },
+    "max_abs_rel_diff_vs_claimed": 0.0003065421821131231
+   },
+   "sandy_loam_LLL_22": {
+    "imperial": {
+     "n": 0.2,
+     "kc_lb_in^(n+1)": 7,
+     "kphi_lb_in^(n+2)": 3,
+     "c_psi": 0.2,
+     "phi_deg": 38
+    },
+    "computed_SI": {
+     "kc_kN_m^(n+1)": 2.5555477271630953,
+     "kphi_kN_m^(n+2)": 43.11947796113213,
+     "c_kPa": 1.3789514586336722
+    },
+    "claimed_SI": {
+     "n": 0.2,
+     "kc": 2.56,
+     "kphi": 43.12,
+     "c_kPa": 1.38,
+     "phi_deg": 38
+    },
+    "rel_diff": {
+     "kc": -0.0017391690769159585,
+     "kphi": -1.2106652779952931e-05,
+     "c": -0.0007598125842954717
+    },
+    "max_abs_rel_diff_vs_claimed": 0.0017391690769159585
+   },
+   "sandy_loam_Michigan_11": {
+    "imperial": {
+     "n": 0.9,
+     "kc_lb_in^(n+1)": 11,
+     "kphi_lb_in^(n+2)": 6,
+     "c_psi": 0.7,
+     "phi_deg": 20
+    },
+    "computed_SI": {
+     "kc_kN_m^(n+1)": 52.52850488887192,
+     "kphi_kN_m^(n+2)": 1128.028021951437,
+     "c_kPa": 4.826330105217852
+    },
+    "claimed_SI": {
+     "n": 0.9,
+     "kc": 52.53,
+     "kphi": 1127.97,
+     "c_kPa": 4.83,
+     "phi_deg": 20
+    },
+    "rel_diff": {
+     "kc": -2.8462043176857854e-05,
+     "kphi": 5.143926827577694e-05,
+     "c": -0.0007598125842956938
+    },
+    "typo_check": {
+     "key": "kphi",
+     "secondary_value": 11127.97,
+     "source": "NASA TM-20250006958 [1]",
+     "computed": 1128.028021951437,
+     "secondary_rel_diff": 8.86497656392358,
+     "confirmed_typo": true
+    },
+    "max_abs_rel_diff_vs_claimed": 0.0007598125842956938
+   },
+   "sandy_loam_Hanamoto_26": {
+    "imperial": {
+     "n": 0.3,
+     "kc_lb_in^(n+1)": 5.3,
+     "kphi_lb_in^(n+2)": 6.8,
+     "c_psi": 2,
+     "phi_deg": 22
+    },
+    "computed_SI": {
+     "kc_kN_m^(n+1)": 2.7936915495588863,
+     "kphi_kN_m^(n+2)": 141.11649485217958,
+     "c_kPa": 13.789514586336722
+    },
+    "claimed_SI": {
+     "n": 0.3,
+     "kc": 2.79,
+     "kphi": 141.11,
+     "c_kPa": 13.79,
+     "phi_deg": 22
+    },
+    "rel_diff": {
+     "kc": 0.0013231360426115835,
+     "kphi": 4.602687392507576e-05,
+     "c": -3.5200410680058525e-05
+    },
+    "max_abs_rel_diff_vs_claimed": 0.0013231360426115835
+   },
+   "sandy_loam_Hanamoto_32": {
+    "imperial": {
+     "n": 0.5,
+     "kc_lb_in^(n+1)": 0.7,
+     "kphi_lb_in^(n+2)": 1.2,
+     "c_psi": 0.75,
+     "phi_deg": 11
+    },
+    "computed_SI": {
+     "kc_kN_m^(n+1)": 0.7691904458761284,
+     "kphi_kN_m^(n+2)": 51.91386586340573,
+     "c_kPa": 5.171067969876271
+    },
+    "claimed_SI": {
+     "n": 0.5,
+     "kc": 0.77,
+     "kphi": 51.91,
+     "c_kPa": 5.17,
+     "phi_deg": 11
+    },
+    "rel_diff": {
+     "kc": -0.0010513689920410574,
+     "kphi": 7.447242160929513e-05,
+     "c": 0.0002065705756810754
+    },
+    "max_abs_rel_diff_vs_claimed": 0.0010513689920410574
+   },
+   "dry_sand_LLL": {
+    "imperial": {
+     "n": 1.1,
+     "kc_lb_in^(n+1)": 0.1,
+     "kphi_lb_in^(n+2)": 3.9,
+     "c_psi": 0.15,
+     "phi_deg": 28
+    },
+    "computed_SI": {
+     "kc_kN_m^(n+1)": 0.9954870418546027,
+     "kphi_kN_m^(n+2)": 1528.5037256822636,
+     "c_kPa": 1.0342135939752541
+    },
+    "claimed_SI": {
+     "n": 1.1,
+     "kc": 0.99,
+     "kphi": 1528.43,
+     "c_kPa": 1.04,
+     "phi_deg": 28
+    },
+    "rel_diff": {
+     "kc": 0.005542466519800726,
+     "kphi": 4.823621772898079e-05,
+     "c": -0.005563851946871035
+    },
+    "typo_check": {
+     "key": "kc",
+     "secondary_value": 0.95,
+     "source": "Kasetsart Univ. e-book p.457 [2]",
+     "computed": 0.9954870418546027,
+     "secondary_rel_diff": -0.04569325359560672,
+     "confirmed_typo": true
+    },
+    "max_abs_rel_diff_vs_claimed": 0.005563851946871035
+   },
+   "WES_lean_clay_CI207": {
+    "imperial": {
+     "n": 0.365,
+     "kc_lb_in^(n+1)": 75,
+     "kphi_lb_in^(n+2)": 133,
+     "c_psi": null,
+     "phi_deg": null
+    },
+    "computed_SI": {
+     "kc_kN_m^(n+1)": 50.193751513271614,
+     "kphi_kN_m^(n+2)": 3504.3406568320893,
+     "c_kPa": null
+    },
+    "claimed_SI": {
+     "n": 0.365,
+     "kc": 50,
+     "kphi": 3500.0,
+     "c_kPa": null,
+     "phi_deg": null
+    },
+    "rel_diff": {
+     "kc": 0.0038750302654322333,
+     "kphi": 0.0012401876663112876,
+     "c": null
+    },
+    "max_abs_rel_diff_vs_claimed": 0.0038750302654322333
+   }
+  },
+  "section3": {
+   "b_m": {
+    "survey_regular_octagon_0.1071": 0.1797784304811615,
+    "P0_330": 0.171400364,
+    "P0_250": 0.130578967
+   },
+   "B_sq_m": {
+    "survey": 0.3,
+    "P0_330": 0.327261363,
+    "P0_250": 0.2463737
+   },
+   "rows": {
+    "heavy_clay_25": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 0.023701656597886662,
+      "P0_330": 0.02331816411381413,
+      "P0_250": 0.02091969613859854,
+      "survey_value": 0.024,
+      "survey_rel_diff": 0.012587449357440272
+     },
+     "q_ult_MPa": {
+      "terzaghi_square_B0.3_recomputed": 4.803678022941441,
+      "survey_value": 4.8,
+      "P0_vesic_330": 5.009631010890304,
+      "P0_vesic_250": 4.991694615579614,
+      "undrained_(pi+2)1.2c": 0.42541537615801944,
+      "survey_rel_diff_vs_terzaghi": -0.0007656680826391149
+     }
+    },
+    "lean_clay_22": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 0.05062030926145589,
+      "P0_330": 0.05000230205008341,
+      "P0_250": 0.046082691500506874,
+      "survey_value": 0.05,
+      "survey_rel_diff": -0.012254157876672833
+     },
+     "q_ult_MPa": {
+      "terzaghi_square_B0.3_recomputed": 1.5951868979599606,
+      "survey_value": 1.6,
+      "P0_vesic_330": 1.473610322702741,
+      "P0_vesic_250": 1.4712576146625447,
+      "undrained_(pi+2)1.2c": 0.42541537615801944,
+      "survey_rel_diff_vs_terzaghi": 0.0030172652785669385
+     }
+    },
+    "WES_CI207": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 0.026148257611956226,
+      "P0_330": 0.025891401321330693,
+      "P0_250": 0.02425429247471726,
+      "survey_value": 0.026,
+      "survey_rel_diff": -0.005669884936747693
+     }
+    },
+    "chrono_hard": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 0.0656516217243942,
+      "P0_330": 0.0656516217243942,
+      "P0_250": 0.0656516217243942,
+      "survey_value": 0.066,
+      "survey_rel_diff": 0.005306468697274358
+     }
+    },
+    "LETE_sand": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 0.10646172913083275,
+      "P0_330": 0.10582826141842766,
+      "P0_250": 0.10174752241088089,
+      "survey_value": 0.11,
+      "survey_rel_diff": 0.03323514372774272
+     },
+     "q_ult_MPa": {
+      "terzaghi_square_B0.3_recomputed": 0.12096768573569801,
+      "survey_value": 0.12,
+      "P0_vesic_330": 0.1165825555999196,
+      "P0_vesic_250": 0.10505728865178986,
+      "undrained_(pi+2)1.2c": 0.008020884539600077,
+      "survey_rel_diff_vs_terzaghi": -0.00799953913156859
+     }
+    },
+    "Grenville_loam": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 0.17306763768879566,
+      "P0_330": 0.17306716231302155,
+      "P0_250": 0.1730639734473782,
+      "survey_value": 0.17,
+      "survey_rel_diff": -0.01772507979979343
+     },
+     "q_ult_MPa": {
+      "terzaghi_square_B0.3_recomputed": 0.18936730158943804,
+      "survey_value": 0.19,
+      "P0_vesic_330": 0.18616403088654462,
+      "P0_vesic_250": 0.1766636339866909,
+      "undrained_(pi+2)1.2c": 0.01912672467135403,
+      "survey_rel_diff_vs_terzaghi": 0.00334111752795474
+     }
+    },
+    "sandy_loam_LLL_15": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 0.5374792322272091,
+      "P0_330": 0.5367676372417124,
+      "P0_250": 0.5320352106329919,
+      "survey_value": 0.54,
+      "survey_rel_diff": 0.0046899817177035175
+     },
+     "q_ult_MPa": {
+      "terzaghi_square_B0.3_recomputed": 0.11352136310559761,
+      "survey_value": 0.11,
+      "P0_vesic_330": 0.11037676449360331,
+      "P0_vesic_250": 0.10193006853263727,
+      "undrained_(pi+2)1.2c": 0.010612247237009332,
+      "survey_rel_diff_vs_terzaghi": -0.031019387093881523
+     }
+    },
+    "chrono_soft": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 0.5325205447199813,
+      "P0_330": 0.5325205447199813,
+      "P0_250": 0.5325205447199813,
+      "survey_value": 0.53,
+      "survey_rel_diff": -0.0047332346985912155
+     }
+    },
+    "dry_sand_LLL": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 0.6777727857505976,
+      "P0_330": 0.6776646819619008,
+      "P0_250": 0.6769404311833628,
+      "survey_value": 0.68,
+      "survey_rel_diff": 0.003286078013498228
+     },
+     "q_ult_MPa": {
+      "terzaghi_square_B0.3_recomputed": 0.074253398518099,
+      "survey_value": 0.07,
+      "P0_vesic_330": 0.07168630307207041,
+      "P0_vesic_250": 0.06438450771906477,
+      "undrained_(pi+2)1.2c": 0.006416707631680061,
+      "survey_rel_diff_vs_terzaghi": -0.05728220664623518
+     }
+    },
+    "lean_clay_32": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 892209.8014403195,
+      "P0_330": 873250.2417470514,
+      "P0_250": 757404.0867967012,
+      "survey_value": null
+     },
+     "q_ult_MPa": {
+      "terzaghi_square_B0.3_recomputed": 0.18480170286149317,
+      "survey_value": 0.19,
+      "P0_vesic_330": 0.16124877980819594,
+      "P0_vesic_250": 0.16061876045248705,
+      "undrained_(pi+2)1.2c": 0.08508307523160388,
+      "survey_rel_diff_vs_terzaghi": 0.028129054321555103
+     }
+    },
+    "heavy_clay_40": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 389743631.7817182,
+      "P0_330": 374468807.0819058,
+      "P0_250": 287654716.5291854,
+      "survey_value": null
+     },
+     "q_ult_MPa": {
+      "terzaghi_square_B0.3_recomputed": 0.20901569711193602,
+      "survey_value": 0.21,
+      "P0_vesic_330": 0.17746740792641533,
+      "P0_vesic_250": 0.177218027665026,
+      "undrained_(pi+2)1.2c": 0.12765546240332737,
+      "survey_rel_diff_vs_terzaghi": 0.004709229506034918
+     }
+    },
+    "North_Gower": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 0.2561905110926487,
+      "P0_330": 0.25472890641395907,
+      "P0_250": 0.24528590848442108,
+      "survey_value": null
+     },
+     "q_ult_MPa": {
+      "terzaghi_square_B0.3_recomputed": 0.2501379533932988,
+      "survey_value": 0.25,
+      "P0_vesic_330": 0.24306609321116115,
+      "P0_vesic_250": 0.2370985140027,
+      "undrained_(pi+2)1.2c": 0.03763645822427728,
+      "survey_rel_diff_vs_terzaghi": -0.0005515092429092538
+     }
+    },
+    "K30_147_linear": {
+     "z_1MPa_m": {
+      "survey_def_recomputed": 0.006798096532970768,
+      "P0_330": 0.006798096532970768,
+      "P0_250": 0.006798096532970768,
+      "survey_value": 0.007,
+      "survey_rel_diff": 0.02970000000000006
+     }
+    }
+   }
+  }
+ },
+ "design_loads_N": {
+  "FL_FR_RL_RR_contact_twist_free_top": [
+   119146.2887808078,
+   117153.15047746843,
+   72814.17291553626,
+   70999.29989027165
+  ]
+ },
+ "sets": {
+  "J1": {
+   "name": "heavy_clay_25",
+   "label": "J1 judgement: heavy clay (WES) 25 % moisture",
+   "role": "judgement (drained c-phi interpretation only)",
+   "n": 0.13,
+   "Kc": 12700.0,
+   "Kphi": 1555950.0,
+   "c": 68950.0,
+   "phi": 34.0,
+   "J": 0.01,
+   "K": 200000000.0,
+   "source": "Wong, Theory of Ground Vehicles (Bekker 1969 WES data), survey table 1; imperial n 0.13 / kc 45 / kphi 140 / c 10 psi / phi 34 deg re-converted here (c 68.95 kPa; NASA TM 69.95 is a typo)",
+   "basis_K": "2e8 Pa/m: P0 / S0 demo level (SynSCM Mid, Wheeled/Tracked demos); Lysmer analogue Vs 100 m/s gives 1.8e8; no measurement for this clay. Sensitivity 5e7 (low, still >> loading tangent) / 7e8 (Lysmer Vs 200 m/s, small-strain upper bound)",
+   "basis_J": "ASSUMPTION 0.01 m (Chrono demos / comment 'few mm or cm'); stationary pads: affects only the lateral force build-up, sensitivity 5 / 25 mm (bevameter range 5 ... 56 mm, survey [10])",
+   "conditions": [
+    "c, phi are bevameter shear-ring values, not geotechnical c', phi' or c_u (survey [3][10])",
+    "p / q_ult <= 1/2 only with the drained reading (c = 68.95 kPa, phi = 34 deg); undrained (phi_u = 0, c as c_u) fails (p/q_u 2.6 / 2.8)",
+    "n = 0.13: 1 % pressure -> 7.7 % sinkage; Bekker plate data at <= 0.2 MPa, 1.1 ... 1.2 MPa is an extrapolation"
+   ],
+   "chrono": {
+    "Kphi": 1555950.0,
+    "Kc": 12700.0,
+    "n": 0.13,
+    "cohesion": 68950.0,
+    "friction": 34.0,
+    "Janosi": 0.01,
+    "elastic_K": 200000000.0,
+    "damping_R": 992000.0
+   },
+   "chrono_call": "terrain.SetSoilParameters(1.55595e+06, 12700, 0.13, 68950, 34.0, 0.01, 2e+08, 992000)",
+   "sensitivity": {
+    "K_Pa_m": [
+     50000000.0,
+     700000000.0
+    ],
+    "Janosi_m": [
+     0.005,
+     0.025
+    ],
+    "damping_R_Pa_s_m": [
+     30000.0,
+     300000.0,
+     600000.0
+    ]
+   },
+   "basis_R": "rule 3.11.3: R = 2 zeta sqrt(K m / A_c), zeta 0.2 (YAML damping_ratio_heave_soil) on the crawler elastic heave branch, A_c from the P0 crawler settle on this set (C envelope, 20 mm, hull b); sensitivity 3e4 (Chrono demos), 3e5 / 6e5 (Lysmer analogue Vs 100 / 200 m/s)",
+   "crawler_settle_P0": {
+    "A_c_m2": 1.26,
+    "mass_kg": 38760.729919400015,
+    "z0_mm": -0.03815924623836594,
+    "pitch_deg": 0.006121884211155271,
+    "roll_deg": 6.2133176566929085e-06,
+    "resid": 1.5313255368619007e-16,
+    "crawler_heave_Hz": 12.832888728972904
+   },
+   "K_checks": {
+    "A": {
+     "FL": {
+      "p_kPa": 1112.477019428644,
+      "z_mm": 52.93943997943499,
+      "loading_tangent_Pa_m": 2731838.730857448,
+      "K_over_tangent": 73.21076377639085,
+      "virgin_crossover_mm": 3.9723332557493043,
+      "elastic_rebound_mm": 5.5623850971432205
+     },
+     "FR": {
+      "p_kPa": 1093.8669512368667,
+      "z_mm": 46.49660970640329,
+      "loading_tangent_Pa_m": 3058345.641944926,
+      "K_over_tangent": 65.39483217888083,
+      "virgin_crossover_mm": 3.9723332557493043,
+      "elastic_rebound_mm": 5.469334756184333
+     },
+     "RL": {
+      "p_kPa": 679.8708955698997,
+      "z_mm": 1.1985800551282995,
+      "loading_tangent_Pa_m": 73739935.88991114,
+      "K_over_tangent": 2.7122345251097966,
+      "virgin_crossover_mm": 3.9723332557493043,
+      "elastic_rebound_mm": 3.3993544778494984
+     },
+     "RR": {
+      "p_kPa": 662.925302430174,
+      "z_mm": 0.9870634905344735,
+      "loading_tangent_Pa_m": 87309773.02104232,
+      "K_over_tangent": 2.2906943069454377,
+      "virgin_crossover_mm": 3.9723332557493043,
+      "elastic_rebound_mm": 3.3146265121508707
+     }
+    },
+    "B": {
+     "FL": {
+      "p_kPa": 1112.477019428644,
+      "z_mm": 52.93943997943499,
+      "loading_tangent_Pa_m": 2731838.730857448,
+      "K_over_tangent": 73.21076377639085,
+      "virgin_crossover_mm": 3.9723332557493043,
+      "elastic_rebound_mm": 5.5623850971432205
+     },
+     "FR": {
+      "p_kPa": 1093.8669512368667,
+      "z_mm": 46.49660970640329,
+      "loading_tangent_Pa_m": 3058345.641944926,
+      "K_over_tangent": 65.39483217888083,
+      "virgin_crossover_mm": 3.9723332557493043,
+      "elastic_rebound_mm": 5.469334756184333
+     },
+     "RL": {
+      "p_kPa": 1199.5745126118,
+      "z_mm": 84.81196767215245,
+      "loading_tangent_Pa_m": 1838710.867343048,
+      "K_over_tangent": 108.77185943269134,
+      "virgin_crossover_mm": 4.037285222569479,
+      "elastic_rebound_mm": 5.9978725630589995
+     },
+     "RR": {
+      "p_kPa": 1169.67545124006,
+      "z_mm": 69.8449773891913,
+      "loading_tangent_Pa_m": 2177075.7804660583,
+      "K_over_tangent": 91.86634741634255,
+      "virgin_crossover_mm": 4.037285222569479,
+      "elastic_rebound_mm": 5.8483772562003
+     }
+    },
+    "chrono_clamp": {
+     "K_effective_in_Chrono": 200000000.0,
+     "clamped": false,
+     "comparison_meaningful": false,
+     "n1_full_condition_K_gt_kc_over_b_plus_kphi": null
+    }
+   },
+   "bearing": {
+    "A": {
+     "p_max_kPa": 1112.477019428644,
+     "q_ult_drained_kPa": [
+      5009.631010890304,
+      5009.631010890304,
+      5009.631010890304,
+      5009.631010890304
+     ],
+     "p_over_qult_drained_max": 0.22206765668175157,
+     "p_over_qult_undrained_max": 2.6150371655006124
+    },
+    "B": {
+     "p_max_kPa": 1199.5745126118,
+     "q_ult_drained_kPa": [
+      5009.631010890304,
+      5009.631010890304,
+      4991.694615579613,
+      4991.694615579613
+     ],
+     "p_over_qult_drained_max": 0.24031408269003462,
+     "p_over_qult_undrained_max": 2.8197723444914247
+    }
+   },
+   "explicit_dt_check": {
+    "FL": {
+     "m_moving_part_kg": 106.783666,
+     "dt_stiffness_limit_s_typeA": 0.004465526548752085,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.0020098315591192614,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "FR": {
+     "m_moving_part_kg": 106.783666,
+     "dt_stiffness_limit_s_typeA": 0.004465526548752085,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.0020098315591192614,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "RL": {
+     "m_moving_part_kg": 73.1629937,
+     "dt_stiffness_limit_s_typeA": 0.0036962896504745698,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.001377039197154963,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "RR": {
+     "m_moving_part_kg": 73.1629937,
+     "dt_stiffness_limit_s_typeA": 0.0036962896504745698,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.001377039197154963,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    }
+   },
+   "soil_damping_levelled_modes": {
+    "R_3e+04": {
+     "A": {
+      "f_Hz": [
+       1.421652640440493,
+       2.3613118994857736,
+       4.0463732540325985,
+       5.241048702632277,
+       5.963164715494412,
+       7.28350568199004,
+       118.6518947736283,
+       118.78453801368083,
+       131.8040638506057,
+       131.9149243121442
+      ],
+      "zeta": [
+       0.0003798421309449152,
+       0.0005164664726135194,
+       7.336824586143314e-06,
+       0.0005128137771369658,
+       0.0015345353402983913,
+       0.00017086192961807703,
+       0.02017088683616258,
+       0.020103689971150723,
+       0.026508792298029844,
+       0.026441469025043938
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.332097684601235,
+       2.1813805475764183,
+       4.044722255699759,
+       5.215564221366237,
+       5.404157284899196,
+       7.245011061825881,
+       118.65125986734873,
+       118.7751174212906,
+       118.99742297700537,
+       119.15688115186218
+      ],
+      "zeta": [
+       0.0003906735873427229,
+       0.0005675911867718423,
+       6.881773568839379e-06,
+       0.00032208773437118364,
+       0.001695505331760311,
+       0.00015990254123478682,
+       0.0201654620744321,
+       0.020030330014268856,
+       0.016644788058427264,
+       0.016649176303732506
+      ]
+     }
+    },
+    "R_3e+05": {
+     "A": {
+      "f_Hz": [
+       1.4216843752940431,
+       2.361466554708618,
+       4.046377516323979,
+       5.242108013500697,
+       5.964426223287664,
+       7.283812114864655,
+       118.64757974814802,
+       118.75930906341905,
+       131.80021810700322,
+       131.87975987864286
+      ],
+      "zeta": [
+       0.0037983739258069804,
+       0.005164218321719997,
+       7.335290381360202e-05,
+       0.005112602242452526,
+       0.015358813017709461,
+       0.0017076346368841888,
+       0.2017160267552575,
+       0.20107650774816743,
+       0.2650958677063713,
+       0.2644878083546751
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.3321228994874166,
+       2.18150133403308,
+       4.044725725880398,
+       5.215781490439266,
+       5.405641704521541,
+       7.245257389175083,
+       118.64745616331713,
+       118.75751460328641,
+       118.99483529635444,
+       119.13025999425693
+      ],
+      "zeta": [
+       0.003906717450542314,
+       0.005675724916150879,
+       6.880690339005728e-05,
+       0.0032169551941008978,
+       0.01695887938880977,
+       0.0015983487204915847,
+       0.20171549746759465,
+       0.201068841074788,
+       0.16639730838380348,
+       0.16579517415743056
+      ]
+     }
+    },
+    "R_9.92e+05": {
+     "A": {
+      "f_Hz": [
+       1.4220030872356673,
+       2.363020509639704,
+       4.046420201303122,
+       5.25200551815898,
+       5.978105825259853,
+       7.286872473739108,
+       118.49929624982202,
+       118.60400324663404,
+       131.53176072891065,
+       131.76221193755677
+      ],
+      "zeta": [
+       0.012560521812230148,
+       0.017064393988390318,
+       0.00024208692876846884,
+       0.01643120621882369,
+       0.051200751397332885,
+       0.00561499635598792,
+       0.666449510423864,
+       0.6673665686562755,
+       0.8770449099353631,
+       0.8769875323518427
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.3323761295676395,
+       2.18271528325898,
+       4.0447604988125905,
+       5.21764631365995,
+       5.420994128492695,
+       7.247720941730166,
+       118.50023374982037,
+       118.60406739318786,
+       118.94208361236655,
+       118.97423979396744
+      ],
+      "zeta": [
+       0.012919801378020498,
+       0.01876469925684044,
+       0.00022720135473199932,
+       0.010590661999584647,
+       0.05613140499663456,
+       0.00526371041680396,
+       0.6664522182909535,
+       0.6673667519384466,
+       0.5491555430831874,
+       0.5504076367151234
+      ]
+     }
+    }
+   }
+  },
+  "J2": {
+   "name": "lean_clay_22",
+   "label": "J2 boundary: lean clay (WES) 22 % moisture",
+   "role": "boundary (p/q_ult 0.75 / 0.82 drained: <= 1 but > 1/2)",
+   "n": 0.2,
+   "Kc": 16430.0,
+   "Kphi": 1724690.0,
+   "c": 68950.0,
+   "phi": 20.0,
+   "J": 0.01,
+   "K": 200000000.0,
+   "source": "Wong / Bekker WES lean clay 22 %, imperial n 0.20 / kc 45 / kphi 120 / c 10 psi / phi 20 deg re-converted here (agrees with NASA TM and [4])",
+   "basis_K": "as J1",
+   "basis_J": "as J1",
+   "conditions": [
+    "as J1 (bevameter c, phi; drained reading only)",
+    "boundary set: shows behaviour near bearing failure that SCM cannot represent"
+   ],
+   "chrono": {
+    "Kphi": 1724690.0,
+    "Kc": 16430.0,
+    "n": 0.2,
+    "cohesion": 68950.0,
+    "friction": 20.0,
+    "Janosi": 0.01,
+    "elastic_K": 200000000.0,
+    "damping_R": 1103000.0
+   },
+   "chrono_call": "terrain.SetSoilParameters(1.72469e+06, 16430, 0.2, 68950, 20.0, 0.01, 2e+08, 1.103e+06)",
+   "sensitivity": {
+    "K_Pa_m": [
+     50000000.0,
+     700000000.0
+    ],
+    "Janosi_m": [
+     0.005,
+     0.025
+    ],
+    "damping_R_Pa_s_m": [
+     30000.0,
+     300000.0,
+     600000.0
+    ]
+   },
+   "basis_R": "rule 3.11.3: R = 2 zeta sqrt(K m / A_c), zeta 0.2 (YAML damping_ratio_heave_soil) on the crawler elastic heave branch, A_c from the P0 crawler settle on this set (C envelope, 20 mm, hull b); sensitivity 3e4 (Chrono demos), 3e5 / 6e5 (Lysmer analogue Vs 100 / 200 m/s)",
+   "crawler_settle_P0": {
+    "A_c_m2": 1.02,
+    "mass_kg": 38760.729919400015,
+    "z0_mm": -0.12109163462461266,
+    "pitch_deg": 0.06303589457148707,
+    "roll_deg": 7.490103366643573e-05,
+    "resid": 9.201910615387592e-17,
+    "crawler_heave_Hz": 11.54620441285772
+   },
+   "K_checks": {
+    "A": {
+     "FL": {
+      "p_kPa": 1112.477019428644,
+      "z_mm": 85.20110780251873,
+      "loading_tangent_Pa_m": 2611414.447819555,
+      "K_over_tangent": 76.5868474714894,
+      "virgin_crossover_mm": 2.8116742634356275,
+      "elastic_rebound_mm": 5.5623850971432205
+     },
+     "FR": {
+      "p_kPa": 1093.8669512368667,
+      "z_mm": 78.30914922127968,
+      "loading_tangent_Pa_m": 2793714.3031548094,
+      "K_over_tangent": 71.5892816148557,
+      "virgin_crossover_mm": 2.8116742634356275,
+      "elastic_rebound_mm": 5.469334756184333
+     },
+     "RL": {
+      "p_kPa": 679.8708955698997,
+      "z_mm": 7.263103769240783,
+      "loading_tangent_Pa_m": 18721222.14332529,
+      "K_over_tangent": 10.683063235340452,
+      "virgin_crossover_mm": 2.8116742634356275,
+      "elastic_rebound_mm": 3.3993544778494984
+     },
+     "RR": {
+      "p_kPa": 662.925302430174,
+      "z_mm": 6.401960295016869,
+      "loading_tangent_Pa_m": 20710072.286645673,
+      "K_over_tangent": 9.657136741573064,
+      "virgin_crossover_mm": 2.8116742634356275,
+      "elastic_rebound_mm": 3.3146265121508707
+     }
+    },
+    "B": {
+     "FL": {
+      "p_kPa": 1112.477019428644,
+      "z_mm": 85.20110780251873,
+      "loading_tangent_Pa_m": 2611414.447819555,
+      "K_over_tangent": 76.5868474714894,
+      "virgin_crossover_mm": 2.8116742634356275,
+      "elastic_rebound_mm": 5.5623850971432205
+     },
+     "FR": {
+      "p_kPa": 1093.8669512368667,
+      "z_mm": 78.30914922127968,
+      "loading_tangent_Pa_m": 2793714.3031548094,
+      "K_over_tangent": 71.5892816148557,
+      "virgin_crossover_mm": 2.8116742634356275,
+      "elastic_rebound_mm": 5.469334756184333
+     },
+     "RL": {
+      "p_kPa": 1199.5745126118,
+      "z_mm": 114.46533538804722,
+      "loading_tangent_Pa_m": 2095961.2070241882,
+      "K_over_tangent": 95.42161340092585,
+      "virgin_crossover_mm": 2.8696441557685732,
+      "elastic_rebound_mm": 5.9978725630589995
+     },
+     "RR": {
+      "p_kPa": 1169.67545124006,
+      "z_mm": 100.89385414173535,
+      "loading_tangent_Pa_m": 2318625.7700036,
+      "K_over_tangent": 86.25799065439071,
+      "virgin_crossover_mm": 2.8696441557685732,
+      "elastic_rebound_mm": 5.8483772562003
+     }
+    },
+    "chrono_clamp": {
+     "K_effective_in_Chrono": 200000000.0,
+     "clamped": false,
+     "comparison_meaningful": false,
+     "n1_full_condition_K_gt_kc_over_b_plus_kphi": null
+    }
+   },
+   "bearing": {
+    "A": {
+     "p_max_kPa": 1112.477019428644,
+     "q_ult_drained_kPa": [
+      1473.610322702741,
+      1473.610322702741,
+      1473.610322702741,
+      1473.610322702741
+     ],
+     "p_over_qult_drained_max": 0.7549329712812107,
+     "p_over_qult_undrained_max": 2.6150371655006124
+    },
+    "B": {
+     "p_max_kPa": 1199.5745126118,
+     "q_ult_drained_kPa": [
+      1473.610322702741,
+      1473.610322702741,
+      1471.2576146625445,
+      1471.2576146625445
+     ],
+     "p_over_qult_drained_max": 0.8153395439771033,
+     "p_over_qult_undrained_max": 2.8197723444914247
+    }
+   },
+   "explicit_dt_check": {
+    "FL": {
+     "m_moving_part_kg": 106.783666,
+     "dt_stiffness_limit_s_typeA": 0.004465526548752085,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.0018083166235682649,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "FR": {
+     "m_moving_part_kg": 106.783666,
+     "dt_stiffness_limit_s_typeA": 0.004465526548752085,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.0018083166235682649,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "RL": {
+     "m_moving_part_kg": 73.1629937,
+     "dt_stiffness_limit_s_typeA": 0.0036962896504745698,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.0012389709277983605,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "RR": {
+     "m_moving_part_kg": 73.1629937,
+     "dt_stiffness_limit_s_typeA": 0.0036962896504745698,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.0012389709277983605,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    }
+   },
+   "soil_damping_levelled_modes": {
+    "R_3e+04": {
+     "A": {
+      "f_Hz": [
+       1.421652640440493,
+       2.3613118994857736,
+       4.0463732540325985,
+       5.241048702632277,
+       5.963164715494412,
+       7.28350568199004,
+       118.6518947736283,
+       118.78453801368083,
+       131.8040638506057,
+       131.9149243121442
+      ],
+      "zeta": [
+       0.0003798421309449152,
+       0.0005164664726135194,
+       7.336824586143314e-06,
+       0.0005128137771369658,
+       0.0015345353402983913,
+       0.00017086192961807703,
+       0.02017088683616258,
+       0.020103689971150723,
+       0.026508792298029844,
+       0.026441469025043938
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.332097684601235,
+       2.1813805475764183,
+       4.044722255699759,
+       5.215564221366237,
+       5.404157284899196,
+       7.245011061825881,
+       118.65125986734873,
+       118.7751174212906,
+       118.99742297700537,
+       119.15688115186218
+      ],
+      "zeta": [
+       0.0003906735873427229,
+       0.0005675911867718423,
+       6.881773568839379e-06,
+       0.00032208773437118364,
+       0.001695505331760311,
+       0.00015990254123478682,
+       0.0201654620744321,
+       0.020030330014268856,
+       0.016644788058427264,
+       0.016649176303732506
+      ]
+     }
+    },
+    "R_3e+05": {
+     "A": {
+      "f_Hz": [
+       1.4216843752940431,
+       2.361466554708618,
+       4.046377516323979,
+       5.242108013500697,
+       5.964426223287664,
+       7.283812114864655,
+       118.64757974814802,
+       118.75930906341905,
+       131.80021810700322,
+       131.87975987864286
+      ],
+      "zeta": [
+       0.0037983739258069804,
+       0.005164218321719997,
+       7.335290381360202e-05,
+       0.005112602242452526,
+       0.015358813017709461,
+       0.0017076346368841888,
+       0.2017160267552575,
+       0.20107650774816743,
+       0.2650958677063713,
+       0.2644878083546751
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.3321228994874166,
+       2.18150133403308,
+       4.044725725880398,
+       5.215781490439266,
+       5.405641704521541,
+       7.245257389175083,
+       118.64745616331713,
+       118.75751460328641,
+       118.99483529635444,
+       119.13025999425693
+      ],
+      "zeta": [
+       0.003906717450542314,
+       0.005675724916150879,
+       6.880690339005728e-05,
+       0.0032169551941008978,
+       0.01695887938880977,
+       0.0015983487204915847,
+       0.20171549746759465,
+       0.201068841074788,
+       0.16639730838380348,
+       0.16579517415743056
+      ]
+     }
+    },
+    "R_1.1e+06": {
+     "A": {
+      "f_Hz": [
+       1.4220856696031496,
+       2.3634233831749536,
+       4.046431225781188,
+       5.2543661142033615,
+       5.981932487960221,
+       7.287660388826552,
+       118.43187369818936,
+       118.59277240891277,
+       131.44098630946937,
+       131.75240008454605
+      ],
+      "zeta": [
+       0.01395978524461272,
+       0.01896171995618882,
+       0.00026891878643772315,
+       0.018137029977360414,
+       0.05701011824019646,
+       0.0062313997536783535,
+       0.7411399015532514,
+       0.741807126863477,
+       0.9754515377132729,
+       0.9747898405628792
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.3324417441347687,
+       2.1830300988042515,
+       4.044769485884379,
+       5.2181005702751975,
+       5.4250369055138545,
+       7.248356231802589,
+       118.43289411143643,
+       118.59284194037714,
+       118.89353177796278,
+       118.96894298539742
+      ],
+      "zeta": [
+       0.014359379588274043,
+       0.020853996230151734,
+       0.0002524171071681761,
+       0.011765298985231093,
+       0.062390684931064616,
+       0.005843863041428563,
+       0.7411386191156822,
+       0.7418070388659502,
+       0.6106021392844504,
+       0.6117713255956444
+      ]
+     }
+    }
+   }
+  },
+  "G1": {
+   "name": "compacted_gravel_K30",
+   "label": "G1 compacted gravel / work platform (linear, K30-based)",
+   "role": "judgement candidate for stiffness (bearing to be confirmed by a field plate test)",
+   "n": 1.0,
+   "Kc": 0.0,
+   "Kphi": 150000000.0,
+   "c": 0.0,
+   "phi": 40.0,
+   "J": 0.01,
+   "K": 350000000.0,
+   "source": "NOT a Bekker measurement. Substitute basis: plate-load modulus K30 (KS F 2310, 0.3 m plate) acceptance values (survey [16], secondary source): subgrade >= 147.1 / 196.1 MN/m^3, sub-base >= 294 MN/m^3, embankment >= 98.1 MN/m^3; Bowles k_s dense sand 64 ... 128 MN/m^3 [14]. SCM mapping n = 1, kc = 0, kphi = K30 (survey section 5, investigator's inference)",
+   "basis_K": "ASSUMPTION K = 2.3 kphi (reload / first-load ratio Ev2/Ev1 about 2.0 ... 2.5 for compacted granular layers, plate-test practice; general knowledge, not from the survey). K must exceed kphi for n = 1, otherwise Chrono silently sets K = kphi and the soil becomes elastic (no rut). Sensitivity 2.5e8 (1.7 kphi) / 7e8 (Lysmer Vs 200 m/s)",
+   "basis_J": "ASSUMPTION 0.01 m (no gravel value found)",
+   "conditions": [
+    "K30 is a secant at 1.25 / 2.5 mm settlement (about 0.18 ... 0.5 MPa); 1.1 ... 1.2 MPa with n = 1 is a linear extrapolation (real curve softens -> sinkage underestimated)",
+    "plate size: K30 plate 0.30 m vs pads B_sq 0.33 / 0.25 m; Terzaghi size factor for granular soil 0.92 / 1.23, inside the kphi sensitivity range (kc kept 0)",
+    "c = 0, phi 40 deg are ASSUMPTIONS for SCM shear only (dense gravel phi' 35 ... 45 deg)",
+    "bearing: presumed allowable dense gravel > 600 kPa (CPA, FS 2 in its example), compacted gravel 400 kPa (CICA), gravel 300 kPa long-term / 450 short-term (Korean rule, appendix 8): p 1.11 / 1.20 MPa is at or above q_ult implied by these tables -> field plate test to >= 1.5 MPa or a pad mat is required before G1 can be a judgement soil"
+   ],
+   "chrono": {
+    "Kphi": 150000000.0,
+    "Kc": 0.0,
+    "n": 1.0,
+    "cohesion": 0.0,
+    "friction": 40.0,
+    "Janosi": 0.01,
+    "elastic_K": 350000000.0,
+    "damping_R": 1207000.0
+   },
+   "chrono_call": "terrain.SetSoilParameters(1.5e+08, 0, 1.0, 0, 40.0, 0.01, 3.5e+08, 1.207e+06)",
+   "sensitivity": {
+    "Kphi_K_pairs_Pa_m": [
+     [
+      100000000.0,
+      230000000.0
+     ],
+     [
+      300000000.0,
+      690000000.0
+     ]
+    ],
+    "K_Pa_m": [
+     250000000.0,
+     700000000.0
+    ],
+    "phi_deg": [
+     35.0,
+     45.0
+    ],
+    "Janosi_m": [
+     0.005,
+     0.025
+    ],
+    "damping_R_Pa_s_m": [
+     30000.0,
+     300000.0,
+     600000.0
+    ]
+   },
+   "basis_R": "rule 3.11.3: R = 2 zeta sqrt(K m / A_c), zeta 0.2 (YAML damping_ratio_heave_soil) on the crawler elastic heave branch, A_c from the P0 crawler settle on this set (C envelope, 20 mm, hull b); sensitivity 3e4 (Chrono demos), 3e5 / 6e5 (Lysmer analogue Vs 100 / 200 m/s)",
+   "crawler_settle_P0": {
+    "A_c_m2": 1.49,
+    "mass_kg": 38760.729919400015,
+    "z0_mm": -1.2267655100074597,
+    "pitch_deg": 0.14184448177581582,
+    "roll_deg": 0.00013028396893907543,
+    "resid": 5.4533533116110654e-17,
+    "crawler_heave_Hz": 18.460833892474966
+   },
+   "K_checks": {
+    "A": {
+     "FL": {
+      "p_kPa": 1112.477019428644,
+      "z_mm": 7.416513462857628,
+      "loading_tangent_Pa_m": 150000000.0,
+      "K_over_tangent": 2.3333333333333335,
+      "virgin_crossover_mm": null,
+      "elastic_rebound_mm": 3.178505769796126
+     },
+     "FR": {
+      "p_kPa": 1093.8669512368667,
+      "z_mm": 7.292446341579112,
+      "loading_tangent_Pa_m": 150000000.0,
+      "K_over_tangent": 2.3333333333333335,
+      "virgin_crossover_mm": null,
+      "elastic_rebound_mm": 3.125334146391048
+     },
+     "RL": {
+      "p_kPa": 679.8708955698997,
+      "z_mm": 4.532472637132664,
+      "loading_tangent_Pa_m": 150000000.0,
+      "K_over_tangent": 2.3333333333333335,
+      "virgin_crossover_mm": null,
+      "elastic_rebound_mm": 1.9424882730568562
+     },
+     "RR": {
+      "p_kPa": 662.925302430174,
+      "z_mm": 4.419502016201161,
+      "loading_tangent_Pa_m": 150000000.0,
+      "K_over_tangent": 2.3333333333333335,
+      "virgin_crossover_mm": null,
+      "elastic_rebound_mm": 1.89407229265764
+     }
+    },
+    "B": {
+     "FL": {
+      "p_kPa": 1112.477019428644,
+      "z_mm": 7.416513462857628,
+      "loading_tangent_Pa_m": 150000000.0,
+      "K_over_tangent": 2.3333333333333335,
+      "virgin_crossover_mm": null,
+      "elastic_rebound_mm": 3.178505769796126
+     },
+     "FR": {
+      "p_kPa": 1093.8669512368667,
+      "z_mm": 7.292446341579112,
+      "loading_tangent_Pa_m": 150000000.0,
+      "K_over_tangent": 2.3333333333333335,
+      "virgin_crossover_mm": null,
+      "elastic_rebound_mm": 3.125334146391048
+     },
+     "RL": {
+      "p_kPa": 1199.5745126118,
+      "z_mm": 7.997163417411999,
+      "loading_tangent_Pa_m": 150000000.0,
+      "K_over_tangent": 2.3333333333333335,
+      "virgin_crossover_mm": null,
+      "elastic_rebound_mm": 3.4273557503194283
+     },
+     "RR": {
+      "p_kPa": 1169.67545124006,
+      "z_mm": 7.797836341600401,
+      "loading_tangent_Pa_m": 150000000.0,
+      "K_over_tangent": 2.3333333333333335,
+      "virgin_crossover_mm": null,
+      "elastic_rebound_mm": 3.3419298606858865
+     }
+    },
+    "chrono_clamp": {
+     "K_effective_in_Chrono": 350000000.0,
+     "clamped": false,
+     "comparison_meaningful": true,
+     "n1_full_condition_K_gt_kc_over_b_plus_kphi": true
+    }
+   },
+   "bearing": {
+    "A": {
+     "p_max_kPa": 1112.477019428644,
+     "q_ult_drained_kPa": [
+      193.35156206303793,
+      193.35156206303793,
+      193.35156206303793,
+      193.35156206303793
+     ],
+     "p_over_qult_drained_max": 5.753648988188396,
+     "p_over_qult_undrained_max": null
+    },
+    "B": {
+     "p_max_kPa": 1199.5745126118,
+     "q_ult_drained_kPa": [
+      193.35156206303793,
+      193.35156206303793,
+      145.56175929099916,
+      145.56175929099916
+     ],
+     "p_over_qult_drained_max": 8.24100037300096,
+     "p_over_qult_undrained_max": null
+    }
+   },
+   "bearing_G1": {
+    "vesic": {
+     "A": {
+      "phi_35": 13.106935044557321,
+      "phi_40": 5.753648988188396,
+      "phi_45": 2.3165234812724718,
+      "phi_50": 0.8251983518320135,
+      "phi_for_p_over_q_0.5": 52.17936927437175,
+      "phi_for_p_over_q_1.0": 49.12222714512336
+     },
+     "B": {
+      "phi_35": 18.773174521566673,
+      "phi_40": 8.24100037300096,
+      "phi_45": 3.3179762812125917,
+      "phi_50": 1.1819386165558572,
+      "phi_for_p_over_q_0.5": 53.64793497652961,
+      "phi_for_p_over_q_1.0": 50.74453271610521
+     }
+    },
+    "tables": {
+     "A": {
+      "CPA 1402 Annex B dense gravel (allowable, > 600; FS 2 in its example)": {
+       "q_ult_implied_kPa": 1200.0,
+       "p_max_over_q_ult": 0.9270641828572034
+      },
+      "CPA 1402 medium dense gravel (200 ... 600)": {
+       "q_ult_implied_kPa": 1200.0,
+       "p_max_over_q_ult": 0.9270641828572034
+      },
+      "CICA/CANZ compacted gravel (max allowable 400; FS not stated, 2 assumed)": {
+       "q_ult_implied_kPa": 800.0,
+       "p_max_over_q_ult": 1.3905962742858051
+      },
+      "KR building rule appendix 8 gravel long-term 300 (FS 3 assumed)": {
+       "q_ult_implied_kPa": 900.0,
+       "p_max_over_q_ult": 1.236085577142938
+      },
+      "KR building rule appendix 8 gravel short-term 450 (= 1.5 x long-term, FS 2 implied)": {
+       "q_ult_implied_kPa": 900.0,
+       "p_max_over_q_ult": 1.236085577142938
+      }
+     },
+     "B": {
+      "CPA 1402 Annex B dense gravel (allowable, > 600; FS 2 in its example)": {
+       "q_ult_implied_kPa": 1200.0,
+       "p_max_over_q_ult": 0.9996454271765
+      },
+      "CPA 1402 medium dense gravel (200 ... 600)": {
+       "q_ult_implied_kPa": 1200.0,
+       "p_max_over_q_ult": 0.9996454271765
+      },
+      "CICA/CANZ compacted gravel (max allowable 400; FS not stated, 2 assumed)": {
+       "q_ult_implied_kPa": 800.0,
+       "p_max_over_q_ult": 1.4994681407647499
+      },
+      "KR building rule appendix 8 gravel long-term 300 (FS 3 assumed)": {
+       "q_ult_implied_kPa": 900.0,
+       "p_max_over_q_ult": 1.3328605695686666
+      },
+      "KR building rule appendix 8 gravel short-term 450 (= 1.5 x long-term, FS 2 implied)": {
+       "q_ult_implied_kPa": 900.0,
+       "p_max_over_q_ult": 1.3328605695686666
+      }
+     }
+    }
+   },
+   "explicit_dt_check": {
+    "FL": {
+     "m_moving_part_kg": 106.783666,
+     "dt_stiffness_limit_s_typeA": 0.0033756207774155904,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.001652146287040315,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "FR": {
+     "m_moving_part_kg": 106.783666,
+     "dt_stiffness_limit_s_typeA": 0.0033756207774155904,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.001652146287040315,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "RL": {
+     "m_moving_part_kg": 73.1629937,
+     "dt_stiffness_limit_s_typeA": 0.0027941323396621625,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.0011319705805025366,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "RR": {
+     "m_moving_part_kg": 73.1629937,
+     "dt_stiffness_limit_s_typeA": 0.0027941323396621625,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.0011319705805025366,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    }
+   },
+   "soil_damping_levelled_modes": {
+    "R_3e+04": {
+     "A": {
+      "f_Hz": [
+       1.6328174653493446,
+       2.631191022162081,
+       4.05091486926116,
+       5.518984050968977,
+       6.875574427165014,
+       7.3897551778875075,
+       133.74497766159033,
+       133.83778657671536,
+       151.43784083530306,
+       151.51087828047696
+      ],
+      "zeta": [
+       0.00018623923471370614,
+       0.00022189648149505226,
+       4.440762913089526e-06,
+       0.0002563863875223932,
+       0.0008422458408010296,
+       0.0001046389790618873,
+       0.01789768007142345,
+       0.017860499811756157,
+       0.023074016080710816,
+       0.023040494854942882
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.5541207387462135,
+       2.4898296733631335,
+       4.049109805636223,
+       5.4298950337951375,
+       6.39547528983323,
+       7.347254185827304,
+       131.5739575921649,
+       131.68372558981721,
+       133.7450982319762,
+       133.83955196577827
+      ],
+      "zeta": [
+       0.00020041031942162252,
+       0.00026416612874574066,
+       4.418418425469619e-06,
+       0.00022521694240534954,
+       0.000921097828031916,
+       0.00010327508737089949,
+       0.015050621603137809,
+       0.015015669030391332,
+       0.017897434213896158,
+       0.01785688729083133
+      ]
+     }
+    },
+    "R_3e+05": {
+     "A": {
+      "f_Hz": [
+       1.6328328935831993,
+       2.6312512449677614,
+       4.050916875055917,
+       5.519195972572366,
+       6.876672735258251,
+       7.389901062635288,
+       133.74259868786544,
+       133.82373527296807,
+       151.4359304251849,
+       151.49340964560173
+      ],
+      "zeta": [
+       0.0018623615931485451,
+       0.0022187854640848327,
+       4.4402058857811684e-05,
+       0.0025632654862793344,
+       0.008420993036988796,
+       0.0010459446927694295,
+       0.17897996091772264,
+       0.178623251126646,
+       0.23074311039603498,
+       0.23043198717478766
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.554134380721333,
+       2.4898863951482504,
+       4.049111590040043,
+       5.430019888567211,
+       6.396405406308871,
+       7.347385981679525,
+       131.57286241804766,
+       131.6745510742626,
+       133.74256886402384,
+       133.82329876360188
+      ],
+      "zeta": [
+       0.0020040820080235123,
+       0.0026415327612958747,
+       4.417974791183375e-05,
+       0.0022520228754736413,
+       0.009209991304983402,
+       0.0010324480978025651,
+       0.15050567206799337,
+       0.15014055944835114,
+       0.1789795114623442,
+       0.17861671383991354
+      ]
+     }
+    },
+    "R_1.21e+06": {
+     "A": {
+      "f_Hz": [
+       1.6330695877500778,
+       2.632174777026115,
+       4.050947580910188,
+       5.522429994081729,
+       6.89358909137382,
+       7.3921346820894325,
+       133.60568845699774,
+       133.70607157705797,
+       151.2280702456908,
+       151.40692980501876
+      ],
+      "zeta": [
+       0.007490822830499704,
+       0.008915624780871892,
+       0.0001782969272099649,
+       0.010276155747704798,
+       0.03378716820286992,
+       0.004181072920952568,
+       0.7198123620415869,
+       0.7202758791329108,
+       0.9287145595776327,
+       0.9285127604873222
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.5543436853400587,
+       2.4907566796061587,
+       4.0491389178303905,
+       5.431935965404055,
+       6.410732501421493,
+       7.34939983629263,
+       131.5015545075254,
+       131.5539224637334,
+       133.6061755408057,
+       133.70610490976037
+      ],
+      "zeta": [
+       0.008061588256339217,
+       0.01061957085344676,
+       0.0001774722443922,
+       0.009051356108225482,
+       0.03699228513048918,
+       0.004135167024173982,
+       0.6048171614969075,
+       0.6056055224014115,
+       0.7198125543329077,
+       0.7202758922523902
+      ]
+     }
+    }
+   }
+  },
+  "S1": {
+   "name": "LETE_sand",
+   "label": "S1 sensitivity: LETE sand (outside judgement)",
+   "role": "sensitivity only (p/q_ult 9.5 / 11.4: bearing failure in reality, SCM gives finite sinkage)",
+   "n": 0.79,
+   "Kc": 102000.0,
+   "Kphi": 5301000.0,
+   "c": 1300.0,
+   "phi": 31.1,
+   "J": 0.012,
+   "K": 200000000.0,
+   "source": "Wong LETE sand (NASA TM [1]); same values as Chrono SynSCM 'Hard' preset except n 0.793 (SynSCMTerrainAgent.h:172)",
+   "basis_K": "2e8 nominal (P0 continuity); 4e8 = Chrono 'Hard' (LETE) preset; 6e7 = Wong repetitive-load unloading slope k_u = A_u z_u (A_u 503,000 kN/m^4 [24], search excerpt only) at the pad sinkage 0.12 m",
+   "basis_J": "0.012 m: Chrono 'Hard' (LETE) preset / RigidTire demo comment",
+   "conditions": [
+    "not a judgement soil (bearing)",
+    "kept for continuity with 3.11.2 / 5.30.4 / 5.31"
+   ],
+   "chrono": {
+    "Kphi": 5301000.0,
+    "Kc": 102000.0,
+    "n": 0.79,
+    "cohesion": 1300.0,
+    "friction": 31.1,
+    "Janosi": 0.012,
+    "elastic_K": 200000000.0,
+    "damping_R": 741000.0
+   },
+   "chrono_call": "terrain.SetSoilParameters(5.301e+06, 102000, 0.79, 1300, 31.1, 0.012, 2e+08, 741000)",
+   "sensitivity": {
+    "K_Pa_m": [
+     60000000.0,
+     400000000.0
+    ],
+    "Janosi_m": [
+     0.005,
+     0.025
+    ],
+    "damping_R_Pa_s_m": [
+     30000.0,
+     300000.0,
+     600000.0
+    ]
+   },
+   "basis_R": "rule 3.11.3: R = 2 zeta sqrt(K m / A_c), zeta 0.2 (YAML damping_ratio_heave_soil) on the crawler elastic heave branch, A_c from the P0 crawler settle on this set (C envelope, 20 mm, hull b); sensitivity 3e4 (Chrono demos), 3e5 / 6e5 (Lysmer analogue Vs 100 / 200 m/s)",
+   "crawler_settle_P0": {
+    "A_c_m2": 2.2600000000000002,
+    "mass_kg": 38760.729919400015,
+    "z0_mm": -11.49651860032313,
+    "pitch_deg": 0.7098378795885754,
+    "roll_deg": 0.0010855817696115765,
+    "resid": 1.5313255368619007e-16,
+    "crawler_heave_Hz": 17.186734799687894
+   },
+   "K_checks": {
+    "A": {
+     "FL": {
+      "p_kPa": 1112.477019428644,
+      "z_mm": 121.11499772107634,
+      "loading_tangent_Pa_m": 7256383.287663562,
+      "K_over_tangent": 27.561939890911795,
+      "virgin_crossover_mm": 5.153116499251235e-05,
+      "elastic_rebound_mm": 5.5623850971432205
+     },
+     "FR": {
+      "p_kPa": 1093.8669512368667,
+      "z_mm": 118.55607559018955,
+      "loading_tangent_Pa_m": 7288997.102638855,
+      "K_over_tangent": 27.438617025597868,
+      "virgin_crossover_mm": 5.153116499251235e-05,
+      "elastic_rebound_mm": 5.469334756184333
+     },
+     "RL": {
+      "p_kPa": 679.8708955698997,
+      "z_mm": 64.9356577070913,
+      "loading_tangent_Pa_m": 8271233.809980599,
+      "K_over_tangent": 24.180189388270854,
+      "virgin_crossover_mm": 5.153116499251235e-05,
+      "elastic_rebound_mm": 3.3993544778494984
+     },
+     "RR": {
+      "p_kPa": 662.925302430174,
+      "z_mm": 62.89374832062246,
+      "loading_tangent_Pa_m": 8326916.472684076,
+      "K_over_tangent": 24.018494800096455,
+      "virgin_crossover_mm": 5.153116499251235e-05,
+      "elastic_rebound_mm": 3.3146265121508707
+     }
+    },
+    "B": {
+     "FL": {
+      "p_kPa": 1112.477019428644,
+      "z_mm": 121.11499772107634,
+      "loading_tangent_Pa_m": 7256383.287663562,
+      "K_over_tangent": 27.561939890911795,
+      "virgin_crossover_mm": 5.153116499251235e-05,
+      "elastic_rebound_mm": 5.5623850971432205
+     },
+     "FR": {
+      "p_kPa": 1093.8669512368667,
+      "z_mm": 118.55607559018955,
+      "loading_tangent_Pa_m": 7288997.102638855,
+      "K_over_tangent": 27.438617025597868,
+      "virgin_crossover_mm": 5.153116499251235e-05,
+      "elastic_rebound_mm": 5.469334756184333
+     },
+     "RL": {
+      "p_kPa": 1199.5745126118,
+      "z_mm": 128.10270808269715,
+      "loading_tangent_Pa_m": 7397687.98916846,
+      "K_over_tangent": 27.035473825448683,
+      "virgin_crossover_mm": 5.974686032637415e-05,
+      "elastic_rebound_mm": 5.9978725630589995
+     },
+     "RR": {
+      "p_kPa": 1169.67545124006,
+      "z_mm": 124.07450337510747,
+      "loading_tangent_Pa_m": 7447489.8657142995,
+      "K_over_tangent": 26.85468575401918,
+      "virgin_crossover_mm": 5.974686032637415e-05,
+      "elastic_rebound_mm": 5.8483772562003
+     }
+    },
+    "chrono_clamp": {
+     "K_effective_in_Chrono": 200000000.0,
+     "clamped": false,
+     "comparison_meaningful": false,
+     "n1_full_condition_K_gt_kc_over_b_plus_kphi": null
+    }
+   },
+   "bearing": {
+    "A": {
+     "p_max_kPa": 1112.477019428644,
+     "q_ult_drained_kPa": [
+      116.5825555999196,
+      116.5825555999196,
+      116.5825555999196,
+      116.5825555999196
+     ],
+     "p_over_qult_drained_max": 9.54239691953889,
+     "p_over_qult_undrained_max": 138.6975481240517
+    },
+    "B": {
+     "p_max_kPa": 1199.5745126118,
+     "q_ult_drained_kPa": [
+      116.5825555999196,
+      116.5825555999196,
+      105.05728865178986,
+      105.05728865178986
+     ],
+     "p_over_qult_drained_max": 11.418289278221943,
+     "p_over_qult_undrained_max": 149.55638704052595
+    }
+   },
+   "explicit_dt_check": {
+    "FL": {
+     "m_moving_part_kg": 106.783666,
+     "dt_stiffness_limit_s_typeA": 0.004465526548752085,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.002691712110044192,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "FR": {
+     "m_moving_part_kg": 106.783666,
+     "dt_stiffness_limit_s_typeA": 0.004465526548752085,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.002691712110044192,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "RL": {
+     "m_moving_part_kg": 73.1629937,
+     "dt_stiffness_limit_s_typeA": 0.0036962896504745698,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.0018442307098669652,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    },
+    "RR": {
+     "m_moving_part_kg": 73.1629937,
+     "dt_stiffness_limit_s_typeA": 0.0036962896504745698,
+     "dt_damping_limit_2m_over_RA_s_typeA": 0.0018442307098669652,
+     "note": "SCM node forces are applied as loads (no Jacobian): explicit; pad body + rod move together axially through the swivel; dt 1e-4 s (L2b-NSC) must be below both limits"
+    }
+   },
+   "soil_damping_levelled_modes": {
+    "R_3e+04": {
+     "A": {
+      "f_Hz": [
+       1.421652640440493,
+       2.3613118994857736,
+       4.0463732540325985,
+       5.241048702632277,
+       5.963164715494412,
+       7.28350568199004,
+       118.6518947736283,
+       118.78453801368083,
+       131.8040638506057,
+       131.9149243121442
+      ],
+      "zeta": [
+       0.0003798421309449152,
+       0.0005164664726135194,
+       7.336824586143314e-06,
+       0.0005128137771369658,
+       0.0015345353402983913,
+       0.00017086192961807703,
+       0.02017088683616258,
+       0.020103689971150723,
+       0.026508792298029844,
+       0.026441469025043938
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.332097684601235,
+       2.1813805475764183,
+       4.044722255699759,
+       5.215564221366237,
+       5.404157284899196,
+       7.245011061825881,
+       118.65125986734873,
+       118.7751174212906,
+       118.99742297700537,
+       119.15688115186218
+      ],
+      "zeta": [
+       0.0003906735873427229,
+       0.0005675911867718423,
+       6.881773568839379e-06,
+       0.00032208773437118364,
+       0.001695505331760311,
+       0.00015990254123478682,
+       0.0201654620744321,
+       0.020030330014268856,
+       0.016644788058427264,
+       0.016649176303732506
+      ]
+     }
+    },
+    "R_3e+05": {
+     "A": {
+      "f_Hz": [
+       1.4216843752940431,
+       2.361466554708618,
+       4.046377516323979,
+       5.242108013500697,
+       5.964426223287664,
+       7.283812114864655,
+       118.64757974814802,
+       118.75930906341905,
+       131.80021810700322,
+       131.87975987864286
+      ],
+      "zeta": [
+       0.0037983739258069804,
+       0.005164218321719997,
+       7.335290381360202e-05,
+       0.005112602242452526,
+       0.015358813017709461,
+       0.0017076346368841888,
+       0.2017160267552575,
+       0.20107650774816743,
+       0.2650958677063713,
+       0.2644878083546751
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.3321228994874166,
+       2.18150133403308,
+       4.044725725880398,
+       5.215781490439266,
+       5.405641704521541,
+       7.245257389175083,
+       118.64745616331713,
+       118.75751460328641,
+       118.99483529635444,
+       119.13025999425693
+      ],
+      "zeta": [
+       0.003906717450542314,
+       0.005675724916150879,
+       6.880690339005728e-05,
+       0.0032169551941008978,
+       0.01695887938880977,
+       0.0015983487204915847,
+       0.20171549746759465,
+       0.201068841074788,
+       0.16639730838380348,
+       0.16579517415743056
+      ]
+     }
+    },
+    "R_7.41e+05": {
+     "A": {
+      "f_Hz": [
+       1.421847838973246,
+       2.362263388381401,
+       4.0463994364034965,
+       5.247347270434355,
+       5.971218832358178,
+       7.285385623707409,
+       118.62520274158872,
+       118.6262722293555,
+       131.70142317450367,
+       131.78067614131595
+      ],
+      "zeta": [
+       0.009379188867435542,
+       0.012746953172804026,
+       0.00018094453377427358,
+       0.012435921831509511,
+       0.03808966381135499,
+       0.004204381793712664,
+       0.4982158479480587,
+       0.4970885571327459,
+       0.6540245760798982,
+       0.6547318260184875
+      ]
+     },
+     "B": {
+      "f_Hz": [
+       1.3322527787432685,
+       2.1821237511490343,
+       4.044743578198776,
+       5.216773866154601,
+       5.413452083680317,
+       7.246523254848029,
+       118.62519125651762,
+       118.62610034544659,
+       118.98423975954982,
+       119.03356133579852
+      ],
+      "zeta": [
+       0.009647103375873775,
+       0.01401338326472142,
+       0.00016977575081378372,
+       0.007918465445230703,
+       0.041902791454842436,
+       0.003938408572752008,
+       0.49821640923021354,
+       0.49709674289298916,
+       0.4109403874774939,
+       0.4097255961208364
+      ]
+     }
+    }
+   }
+  }
+ },
+ "sandy_loam_note": "'Sandy loam' names six rows (LLL 15 / 22 %, Michigan 11 / 23 %, Hanamoto 26 / 32 %). None is in the sets. If a sandy loam is wanted as a further sensitivity, use 'sandy loam Michigan 23 %' (n 0.4, kc 11.42 kN/m^1.4, kphi 808.96 kN/m^2.4, c 9.65 kPa, phi 35 deg), the row already screened in P0 (p/q_ult 1.31 / 1.44: fails)",
+ "lysmer_reference": {
+  "A_FL_Vs100_nu0.3": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 177322883.40932593,
+   "R_Pa_s_m": 278293.78620639985
+  },
+  "A_FL_Vs100_nu0.35": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 190963105.21004328,
+   "R_Pa_s_m": 299701.00052996905
+  },
+  "A_FL_Vs150_nu0.3": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 398976487.6709833,
+   "R_Pa_s_m": 417440.6793095998
+  },
+  "A_FL_Vs150_nu0.35": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 429666986.7225974,
+   "R_Pa_s_m": 449551.5007949536
+  },
+  "A_FL_Vs200_nu0.3": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 709291533.6373037,
+   "R_Pa_s_m": 556587.5724127997
+  },
+  "A_FL_Vs200_nu0.35": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 763852420.8401731,
+   "R_Pa_s_m": 599402.0010599381
+  },
+  "A_RL_Vs100_nu0.3": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 177322883.40932593,
+   "R_Pa_s_m": 278293.78620639985
+  },
+  "A_RL_Vs100_nu0.35": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 190963105.21004328,
+   "R_Pa_s_m": 299701.00052996905
+  },
+  "A_RL_Vs150_nu0.3": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 398976487.6709833,
+   "R_Pa_s_m": 417440.6793095998
+  },
+  "A_RL_Vs150_nu0.35": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 429666986.7225974,
+   "R_Pa_s_m": 449551.5007949536
+  },
+  "A_RL_Vs200_nu0.3": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 709291533.6373037,
+   "R_Pa_s_m": 556587.5724127997
+  },
+  "A_RL_Vs200_nu0.35": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 763852420.8401731,
+   "R_Pa_s_m": 599402.0010599381
+  },
+  "B_FL_Vs100_nu0.3": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 177322883.40932593,
+   "R_Pa_s_m": 278293.78620639985
+  },
+  "B_FL_Vs100_nu0.35": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 190963105.21004328,
+   "R_Pa_s_m": 299701.00052996905
+  },
+  "B_FL_Vs150_nu0.3": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 398976487.6709833,
+   "R_Pa_s_m": 417440.6793095998
+  },
+  "B_FL_Vs150_nu0.35": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 429666986.7225974,
+   "R_Pa_s_m": 449551.5007949536
+  },
+  "B_FL_Vs200_nu0.3": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 709291533.6373037,
+   "R_Pa_s_m": 556587.5724127997
+  },
+  "B_FL_Vs200_nu0.35": {
+   "R_eq_m": 0.18463745234996062,
+   "K_Pa_m": 763852420.8401731,
+   "R_Pa_s_m": 599402.0010599381
+  },
+  "B_RL_Vs100_nu0.3": {
+   "R_eq_m": 0.13900147514093544,
+   "K_Pa_m": 235540273.24423045,
+   "R_Pa_s_m": 278293.78620639985
+  },
+  "B_RL_Vs100_nu0.35": {
+   "R_eq_m": 0.13900147514093544,
+   "K_Pa_m": 253658755.80147895,
+   "R_Pa_s_m": 299701.00052996905
+  },
+  "B_RL_Vs150_nu0.3": {
+   "R_eq_m": 0.13900147514093544,
+   "K_Pa_m": 529965614.7995185,
+   "R_Pa_s_m": 417440.6793095998
+  },
+  "B_RL_Vs150_nu0.35": {
+   "R_eq_m": 0.13900147514093544,
+   "K_Pa_m": 570732200.5533277,
+   "R_Pa_s_m": 449551.5007949536
+  },
+  "B_RL_Vs200_nu0.3": {
+   "R_eq_m": 0.13900147514093544,
+   "K_Pa_m": 942161092.9769218,
+   "R_Pa_s_m": 556587.5724127997
+  },
+  "B_RL_Vs200_nu0.35": {
+   "R_eq_m": 0.13900147514093544,
+   "K_Pa_m": 1014635023.2059158,
+   "R_Pa_s_m": 599402.0010599381
+  }
+ }
+}
