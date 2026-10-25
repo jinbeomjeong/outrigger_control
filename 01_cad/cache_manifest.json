@@ -1,12 +1,12 @@
 {
  "schema": 1,
- "updated_at": "2026-10-25T20:14:57",
+ "updated_at": "2026-10-25T23:54:48",
  "updated_by": {
   "script": "04_scripts/00_cad/check_cache.py",
   "exists": true,
   "sha256": "a43c695ff4a26c4fc4806f5840fec89101b492ce59c1670298fb0f8cb64af8f6",
   "git_blob": "774950d1c8bae57282e3f600ad6dd873b50387b6",
-  "git_last_commit": "7e634da08d3d46440d0eed144e8edd34b6ae88fb",
+  "git_last_commit": "de88239700accad58ce0e440672df025952bf5f1",
   "git_tracked": true
  },
  "environment": {
@@ -37,8 +37,8 @@
      "exists": true,
      "sha256": "7e48ce0ef90b42e82496a94f66fc98b0247176fc3bce899315e31c4f78792b11",
      "git_blob": "5e1d43a9892bdd862394524e10adf4c228317ba2",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     }
    ],
    "file_count": 2,
@@ -72,7 +72,7 @@
      "exists": true,
      "sha256": "fc975a60b361bebbb7042dd0f574d17afd6c63d523b9c9d145f1af2fa85e8ab4",
      "git_blob": "a0c01fc14a34fb33c84dc351ebc61ad02a9d11e1",
-     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_last_commit": "7148180773b05da707a09cdf756e28783c630257",
      "git_tracked": true
     },
     {
@@ -531,16 +531,16 @@
      "exists": true,
      "sha256": "34086814399230881f9f58613b6d15a7544a07edc555d5a089de6f316dbe320a",
      "git_blob": "6bde9f1d785443a727600567721e1f06ba86346f",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/render_auger_descent.py",
      "exists": true,
      "sha256": "c6fdb0da9278ba1df821cd5d59320d92bd6946c8899bbbe0b62df14db7607560",
      "git_blob": "562c353270f3d15080af62fe927ff75e48fb23bd",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     }
    ],
    "file_count": 7,
@@ -6049,16 +6049,16 @@
      "exists": true,
      "sha256": "f2dbe952b8d809b9d9cfa65504a6bd10f30329f471ee34eb9639b608d04c33e1",
      "git_blob": "646bf41dc4ad0356f9a24b9902fdd6cd2cf96273",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/export_meshes.py",
      "exists": true,
      "sha256": "d0f081fb2882577bcf1cf6624ab8782089c928696615cfb7741ec54c68459c02",
      "git_blob": "fc172db5f5b75862cfd56f36e9b51cb2c267ac5b",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
+     "git_tracked": true
     }
    ],
    "file_count": 4,
@@ -6114,16 +6114,16 @@
      "exists": true,
      "sha256": "be840435b47f28e13e6d7c04bf307f861089e77080bb5fcbc468dbd2899eca90",
      "git_blob": "c6b4b34850f14130e30248de2912cd35f530af2f",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/check_upper_run.py",
      "exists": true,
      "sha256": "f665a8d14de65d40323d4467628940abc98a5520f55ddc9069ff845cfed34a49",
      "git_blob": "0d68482b2d147cf598bb713b0bb5192a59b5eda1",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/convert_brep_cache.py",
@@ -6154,8 +6154,8 @@
      "exists": true,
      "sha256": "9f39d8a112e2a6b752db5907b9fafe28d834baa460fe0a3f9c3a502a9c0d2897",
      "git_blob": "6f6eecef0d1d9cd8dadd8b0476e426aeccbdc85e",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/verify_brep_cache.py",
@@ -11469,8 +11469,8 @@
      "exists": true,
      "sha256": "9f39d8a112e2a6b752db5907b9fafe28d834baa460fe0a3f9c3a502a9c0d2897",
      "git_blob": "6f6eecef0d1d9cd8dadd8b0476e426aeccbdc85e",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
+     "git_tracked": true
     }
    ],
    "file_count": 5,
@@ -11525,16 +11525,16 @@
      "exists": true,
      "sha256": "03cd85f14f0f0b55474068e6a5e7ba1f02ff17e157a626aed4f84f150e2c6486",
      "git_blob": "34754faa12258d811ce838f919565f23681e1260",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/render_style_views.py",
      "exists": true,
      "sha256": "31db5e150accce7090de2140ff0ef5e15c4e43ed1e4daed2f9eced918ac68315",
      "git_blob": "8f249f21f35f652ffc5401be9b0c7fc7a96e2b25",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
+     "git_tracked": true
     }
    ],
    "file_count": 9,
@@ -11610,13 +11610,13 @@
    "description": "Chrono visual / collision shapes (C8): simplified meshes, pads (+ pad-type A hulls), convex hulls and decompositions, upper rollers, index, verification, Irrlicht snapshots",
    "folder": "01_cad/09_sim_shapes",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-25T20:14:47",
+   "newest_file_mtime": "2026-10-25T23:54:39",
    "generators": [
     {
      "script": "04_scripts/00_cad/build_sim_shapes.py",
      "exists": true,
-     "sha256": "868a94d5da012037753f674f0884610398ebe4803f13507e1818a7e7b6d72690",
-     "git_blob": "b0c1a752d3b4676e1a71b9c6777934dc68e58e30",
+     "sha256": "fa85cd302649e9bc6da1bd2c3461922825428ab63eb933a628a4e3a7357e61d4",
+     "git_blob": "9d0187d9af35d0ab2dbdb160f026df3addfb6b17",
      "git_last_commit": "674fc05114799ba605eeb6202faab2a2a914ba9e",
      "git_tracked": true
     },
@@ -11631,10 +11631,10 @@
     {
      "script": "04_scripts/00_cad/export_pad_variants.py",
      "exists": true,
-     "sha256": "b5419ef3aa125489e901881ba098c73096ee5bf409e379f3b84d9be4a3338d0d",
-     "git_blob": "53464184eeb5a51cc2194a630d7b5e8a92177f69",
-     "git_last_commit": null,
-     "git_tracked": false
+     "sha256": "cba97e1409543838fedd0eb02a051cb212bf202b2b51e76d09fd4b0a86648f10",
+     "git_blob": "ea5b4c540c6e53958e615eece8268f353f9e37a6",
+     "git_last_commit": "de88239700accad58ce0e440672df025952bf5f1",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/render_sim_shapes.py",
@@ -11647,9 +11647,9 @@
     {
      "script": "04_scripts/00_cad/verify_sim_shapes.py",
      "exists": true,
-     "sha256": "10edbf47ce8b8ec1a8885278c581ccce210172ac2b0c2c3cc9289b6a2037a9b5",
-     "git_blob": "4bdd22fc377fa18dd2095dbae1b7d776f52a8d5b",
-     "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
+     "sha256": "14258a04c4dfcc228778e0729a18d3bbd621053444198ac099bbace85f758989",
+     "git_blob": "56a622ba1d1879144f684f85bd00e598b9a5e5d3",
+     "git_last_commit": "de88239700accad58ce0e440672df025952bf5f1",
      "git_tracked": true
     }
    ],
@@ -11933,7 +11933,7 @@
     {
      "path": "sim_shapes_verification.json",
      "bytes": 50653,
-     "sha256": "4815c4977dfeebdaeebace10f9b4d8c21fb452208a2b9a41e22a5e8b11cd234d",
+     "sha256": "8ae9e9c3e8b87bf99ca756fe39926f172c3b33a12e09cd9655c978afad32079e",
      "generator": "verify_sim_shapes.py",
      "git_ignored": false
     },

@@ -11,6 +11,8 @@ The loader:
 * fails on the first missing key with its dotted path.
 * checks the leg order against :data:`LEG_ORDER` (FL, FR, RL, RR = indices 0-3).
 * selects one auger level (``top``, ``middle``, ``bottom``).
+* fills the pad bottom polygons from ``pad_shapes.types[pad_shapes.default_type]`` (YAML bundle
+  2026-10-25; a YAML without ``pad_shapes`` keeps them in ``legs.<leg>.pad``).
 * applies run-time overrides (dotted path -> value) in memory; the file is left untouched.
 * fingerprints the loaded parameters with SHA-256 (see :func:`parameters_sha256`).
 
@@ -58,6 +60,7 @@ TEXT_KEYS = frozenset(
         "damping_basis",
         "damping_input_convention",
         "default_auger_level",
+        "default_type",
         "definition",
         "description",
         "discharge",
@@ -70,6 +73,7 @@ TEXT_KEYS = frozenset(
         "geometry",
         "inertia_convention",
         "joint",
+        "label",
         "leg_order",
         "location",
         "lock_valve",
@@ -83,9 +87,11 @@ TEXT_KEYS = frozenset(
         "shape",
         "smc_material",
         "solver",
+        "source_kind",
         "status",
         "tangential_model",
         "type",
+        "type_order",
         "units",
     }
 )
@@ -120,6 +126,16 @@ L2B_ONLY_HASH_PATHS: tuple[tuple[str, ...], ...] = (
     ("actuator", "counterbalance"),
     ("contact", "crawler", "L2b_NSC"),
 )
+
+# Pad bottom shape types (YAML bundle 2026-10-25, user decisions U-PAD-1..6, D5;
+# dynamics_model.md 5.30.5 (3)). The rigid-floor models do not use the pad area (5.30.3), so the
+# block is left out of the L1 **and** the L2b fingerprint: switching the type
+# (override ``pad_shapes.default_type``) never invalidates a rigid-floor snapshot. A soft-soil
+# (SCM) run fingerprints the block and the selected type with :func:`scm_run_sha256`.
+SCM_ONLY_HASH_PATHS: tuple[tuple[str, ...], ...] = (("pad_shapes",),)
+PAD_SHAPES_KEY = "pad_shapes"
+PAD_TYPE_OVERRIDE_KEY = "pad_shapes.default_type"
+"""Dotted path that selects the pad type at load time (``load_params(overrides=...)``)."""
 
 KeyPath = tuple[str | int, ...]
 Vector2 = tuple[float, float]
@@ -218,13 +234,25 @@ class Actuator:
 
 @dataclass(frozen=True)
 class Pad:
-    """``legs.<leg>.pad``: pad bottom face and swivel joint."""
+    """``legs.<leg>.pad``: pad bottom face and swivel joint.
+
+    The bottom polygon and area come from ``pad_shapes.types[pad_shapes.default_type].legs.<leg>``
+    (YAML bundle 2026-10-25); a YAML without ``pad_shapes`` (``02_params/history``) keeps them in
+    ``legs.<leg>.pad`` and leaves :attr:`pad_type`, :attr:`perimeter_m` and :attr:`bekker_b_m`
+    at None.
+    """
 
     polygon_xy_m: tuple[Vector2, ...]
+    """Relative to ``legs.<leg>.pad_bottom_center_retracted_m`` (x, y), counter-clockwise."""
     bottom_area_m2: float
     thickness_m: float
     swivel_center_above_pad_bottom_m: float
     swivel_tilt_range_rad: float
+    pad_type: str | None = None
+    """``pad_shapes.default_type`` after overrides (``cad330`` / ``dwg_rear250``)."""
+    perimeter_m: float | None = None
+    bekker_b_m: float | None = None
+    """Chrono SCM patch width ``2 A / perimeter`` [m]."""
 
 
 @dataclass(frozen=True)
@@ -700,16 +728,21 @@ def parameters_sha256(
     no whitespace and no NaN/inf. The tree must already be coerced, so ``1e9`` and
     ``1000000000.0`` are the same float and JSON writes Python's shortest round-trip repr.
     The level is included because the same file gives a different superstructure per level.
-    Paths in :data:`HASH_EXCLUDED_PATHS` are dropped (L1 also drops
-    :data:`L2B_ONLY_HASH_PATHS`, S8). YAML comments never enter the hash.
+    Paths in :data:`HASH_EXCLUDED_PATHS` and :data:`SCM_ONLY_HASH_PATHS` are dropped (L1 also
+    drops :data:`L2B_ONLY_HASH_PATHS`, S8). YAML comments never enter the hash.
     A model other than L1 adds ``"model": <model>`` to the payload (S7), so L1 fingerprints
     (and the saved L1 snapshots, R16) are unchanged and an L2b snapshot never matches L1.
+
+    The tree is the file tree after overrides, as loaded: the pad polygons the loader copies
+    into :class:`Pad` from ``pad_shapes`` are not written back into it, so the default pad type
+    never enters a rigid-floor fingerprint.
     """
+    excluded = SCM_ONLY_HASH_PATHS
+    if model is ModelKind.L1:
+        excluded = (*excluded, *L2B_ONLY_HASH_PATHS)
     payload: dict[str, Any] = {
         "level": level.value,
-        "params": _without_excluded_paths(
-            coerced_tree, L2B_ONLY_HASH_PATHS if model is ModelKind.L1 else ()
-        ),
+        "params": _without_excluded_paths(coerced_tree, excluded),
     }
     if model is not ModelKind.L1:
         payload["model"] = model.value
@@ -724,6 +757,15 @@ def _freeze(node: Any) -> Any:
         return MappingProxyType({key: _freeze(value) for key, value in node.items()})
     if isinstance(node, list):
         return tuple(_freeze(item) for item in node)
+    return node
+
+
+def _thaw(node: Any) -> Any:
+    """Inverse of :func:`_freeze` (plain dicts and lists, JSON-ready)."""
+    if isinstance(node, Mapping):
+        return {key: _thaw(value) for key, value in node.items()}
+    if isinstance(node, tuple | list):
+        return [_thaw(item) for item in node]
     return node
 
 
@@ -876,23 +918,58 @@ def _read_actuator(root: _Reader) -> Actuator:
     )
 
 
-def _read_pad(block: _Reader) -> Pad:
+def _read_pad(block: _Reader, shape: _Reader, pad_type: str | None) -> Pad:
+    """``block`` = ``legs.<leg>.pad``; ``shape`` = where the bottom polygon / area live (the
+    ``pad_shapes`` type leg, or ``block`` itself for a YAML without ``pad_shapes``)."""
+    has_shape_type = pad_type is not None
     return Pad(
-        polygon_xy_m=block.polygon("polygon_xy_m"),
-        bottom_area_m2=block.number("bottom_area_m2"),
+        polygon_xy_m=shape.polygon("polygon_xy_m"),
+        bottom_area_m2=shape.number("bottom_area_m2"),
         thickness_m=block.number("thickness_m"),
         swivel_center_above_pad_bottom_m=block.number("swivel_center_above_pad_bottom_m"),
         swivel_tilt_range_rad=math.radians(block.number("swivel_tilt_range_deg")),
+        pad_type=pad_type,
+        perimeter_m=shape.number("perimeter_m") if has_shape_type else None,
+        bekker_b_m=shape.number("bekker_b_m") if has_shape_type else None,
     )
+
+
+def _selected_pad_type(root: _Reader) -> tuple[str, _Reader] | None:
+    """(name, legs) of the selected ``pad_shapes`` type; None for a YAML without the block."""
+    if PAD_SHAPES_KEY not in root.mapping:
+        return None
+    pad_shapes = root.child(PAD_SHAPES_KEY)
+    pad_type = pad_shapes.text("default_type")
+    type_order = pad_shapes.text_list("type_order")
+    types = pad_shapes.child("types")
+    if set(type_order) != set(types.mapping):
+        raise ParamsError(
+            "pad_shapes.type_order", f"{list(type_order)} differs from types {list(types.mapping)}"
+        )
+    if pad_type not in types.mapping:
+        raise ParamsError(
+            PAD_TYPE_OVERRIDE_KEY, f"unknown pad type {pad_type!r}, expected one of {type_order}"
+        )
+    type_legs = types.child(pad_type).child("legs")
+    if set(type_legs.mapping) != set(LEG_ORDER):
+        raise ParamsError(
+            f"pad_shapes.types.{pad_type}.legs",
+            f"expected legs {LEG_ORDER}, got {tuple(type_legs.mapping)}",
+        )
+    return pad_type, type_legs
 
 
 def _read_legs(root: _Reader) -> tuple[Leg, ...]:
     legs = root.child("legs")
     if set(legs.mapping) != set(LEG_ORDER):
         raise ParamsError("legs", f"expected legs {LEG_ORDER}, got {tuple(legs.mapping)}")
+    selected = _selected_pad_type(root)
+    pad_type, type_legs = (None, None) if selected is None else selected
     result = []
     for index, name in enumerate(LEG_ORDER):
         block = legs.child(name)
+        pad_block = block.child("pad")
+        shape = pad_block if type_legs is None else type_legs.child(name)
         leg = Leg(
             name=name,
             index=index,
@@ -901,7 +978,7 @@ def _read_legs(root: _Reader) -> tuple[Leg, ...]:
             extension_range_m=block.vector2("extension_range_m"),
             retracted_offset_from_cad_m=block.number("retracted_offset_from_cad_m"),
             pad_bottom_center_retracted_m=block.vector3("pad_bottom_center_retracted_m"),
-            pad=_read_pad(block.child("pad")),
+            pad=_read_pad(pad_block, shape, pad_type),
             moving_part=_read_mass_properties(block.child("moving_part"), "com_retracted_m"),
         )
         result.append(leg)
@@ -1311,3 +1388,29 @@ def load_params(
         model=selected_model,
         l2b=l2b,
     )
+
+
+def scm_run_sha256(params: Params) -> str:
+    """Fingerprint of a soft-soil (SCM, S9) run: rigid-floor fingerprint + pad shapes + type.
+
+    Decision D5 of the YAML bundle 2026-10-25: ``pad_shapes`` is left out of
+    :attr:`Params.sha256` (:data:`SCM_ONLY_HASH_PATHS`), so an SCM run or snapshot must
+    fingerprint it itself; a snapshot of the other pad type then never matches (5.30.5).
+    Canonical form: ``{"params_sha256", "pad_shapes", "pad_type"}`` as UTF-8 JSON with sorted
+    keys and no whitespace; ``pad_type`` is the selected type (``pad_shapes.default_type``
+    after overrides, :attr:`Pad.pad_type`).
+
+    Raises:
+        ParamsError: The YAML has no ``pad_shapes`` block (a YAML from before the bundle).
+    """
+    if PAD_SHAPES_KEY not in params.raw:
+        raise ParamsError(PAD_SHAPES_KEY, "missing; an SCM run needs the pad shape types")
+    payload = {
+        "params_sha256": params.sha256,
+        "pad_shapes": _thaw(params.raw[PAD_SHAPES_KEY]),
+        "pad_type": params.legs[0].pad.pad_type,
+    }
+    canonical = json.dumps(
+        payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()

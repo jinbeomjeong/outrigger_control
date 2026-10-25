@@ -4,8 +4,9 @@ Engine independent part of ``00_docs/03_chrono/chrono_build_plan.md`` S6 (pressu
 virtual sensors, 350 bar indicator / V17 path). The engine supplies the true head pressure
 ``p = F_cyl / A_head`` and the strokes; this module adds noise and resolution.
 
-* Pressure: the sensor sits in the lock valve block and keeps reading the trapped pressure
-  while locked (YAML ``sensors.cylinder_pressure.location``). Readings are not clipped at 0.
+* Pressure: head and rod sensors at the chamber-side A / B ports between the cylinder and the
+  pilot-operated check block keep reading the trapped pressures while locked (YAML
+  ``sensors.cylinder_pressure.location``, R6-P). Readings are not clipped at 0.
 * Stroke: one sensor per cylinder. When the engine also gives the oil-compression corrected
   stroke (L1), both readouts get the **same** noise sample because they stand for one sensor.
 * Noise defaults are zero (ideal). :func:`reduced_model_leg_sensor_config` gives the values of
@@ -80,7 +81,14 @@ def head_area_m2(bore_diameter_m: float) -> float:
 
 
 def head_area_from_params(params: Params) -> float:
-    """Head area from YAML ``actuator.bore_diameter_m``."""
+    """Head area from the common key ``actuator.bore_diameter_m`` (old YAML only).
+
+    The common cylinder keys were removed by the YAML bundle of 2026-10-25 (decision D1); a
+    current YAML has only ``legs.<leg>.cylinder.*`` (use :func:`leg_head_areas_from_params`).
+
+    Raises:
+        ParamsError: The YAML has no ``actuator.bore_diameter_m``.
+    """
     return head_area_m2(float(params.get(BORE_DIAMETER_KEY)))
 
 
@@ -92,22 +100,29 @@ def _optional(params: Params, key: str) -> float | None:
 
 
 def leg_head_areas_from_params(params: Params) -> NDArray[np.float64]:
-    """Head area per leg (4,), LEG_ORDER: ``legs.<leg>.cylinder.*`` or the common bore."""
-    common = head_area_from_params(params)
+    """Head area per leg (4,), LEG_ORDER.
+
+    Per leg: ``legs.<leg>.cylinder.head_area_m2``, else ``pi / 4 bore^2`` of
+    ``legs.<leg>.cylinder.bore_diameter_m``, else (old YAML) the common
+    ``actuator.bore_diameter_m``. The common key is read only when a leg needs it.
+    """
     areas = []
     for leg in LEG_ORDER:
         area = _optional(params, LEG_HEAD_AREA_KEY.format(leg=leg))
         bore = _optional(params, LEG_BORE_DIAMETER_KEY.format(leg=leg))
         if area is None:
-            area = common if bore is None else head_area_m2(bore)
+            area = head_area_from_params(params) if bore is None else head_area_m2(bore)
         areas.append(area)
     return np.array(areas)
 
 
 def leg_annulus_areas_from_params(params: Params) -> NDArray[np.float64]:
-    """Annulus (rod side) area per leg (4,): ``pi / 4 (bore^2 - rod^2)`` from the per-leg
-    diameters when both are given, else the common ``actuator.annulus_area_m2``."""
-    common = float(params.get(ANNULUS_AREA_KEY))
+    """Annulus (rod side) area per leg (4,), LEG_ORDER.
+
+    Per leg: ``legs.<leg>.cylinder.annulus_area_m2``, else ``pi / 4 (bore^2 - rod^2)`` from the
+    per-leg diameters when both are given, else (old YAML) the common
+    ``actuator.annulus_area_m2``. The common key is read only when a leg needs it.
+    """
     areas = []
     for leg in LEG_ORDER:
         area = _optional(params, LEG_ANNULUS_AREA_KEY.format(leg=leg))
@@ -116,7 +131,7 @@ def leg_annulus_areas_from_params(params: Params) -> NDArray[np.float64]:
         if area is not None:
             areas.append(area)
         elif bore is None or rod is None:
-            areas.append(common)
+            areas.append(float(params.get(ANNULUS_AREA_KEY)))
         else:
             areas.append(math.pi / 4.0 * (bore**2 - rod**2))
     return np.array(areas)

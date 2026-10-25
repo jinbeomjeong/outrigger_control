@@ -904,7 +904,9 @@ def stage_legs(state: dict) -> None:
             COLLISION_DIR / f"pad_{leg_name}_hull.obj", [(sv, sf)],
             [f"C8 collision candidate: pad plate of {leg_name} as one convex hull (= pad_{leg_name}_simple)", *header])
         np.savez_compressed(WORK_DIR / f"pad_simple_{leg_name}.npz", vertices=sv, faces=sf)
-        # --- pad comparison: B-rep face, YAML, simple mesh bottom
+        # --- pad comparison: B-rep face, YAML, simple mesh bottom. The YAML pad polygon / area are the
+        # pad_shapes default type (bundle 2026-10-25): dwg_rear250 = front CAD 330, rear 250 synthesis, the
+        # same B-reps as moving_brep_path (record field yaml_pad_type)
         yaml_xy = np.array(leg.pad.polygon_xy_m) + np.array(leg.pad_bottom_center_retracted_m)[:2]
         normal_body = CAD_TO_BODY @ np.array(bottom["normal_cad"])
         normal_body /= np.linalg.norm(normal_body)
@@ -920,6 +922,7 @@ def stage_legs(state: dict) -> None:
             "brep_bottom_z_m": bottom_z,
             "brep_centroid_body_m": centre_body.tolist(),
             "brep_polygon_xy_body_m": xy.tolist(),
+            "yaml_pad_type": leg.pad.pad_type,
             "yaml_bottom_area_m2": float(leg.pad.bottom_area_m2),
             "yaml_polygon_area_m2": polygon_area(yaml_xy),
             "yaml_side_angle_deg": side_angle_deg(yaml_xy),

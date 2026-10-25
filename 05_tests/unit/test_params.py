@@ -15,13 +15,24 @@ from hypothesis import strategies as st
 
 from outrigger_sim.params import (
     LEG_ORDER,
+    PAD_SHAPES_KEY,
+    PAD_TYPE_OVERRIDE_KEY,
     AugerLevel,
+    ModelKind,
     Params,
     ParamsError,
     find_numeric_strings,
     load_params,
     parameters_sha256,
+    scm_run_sha256,
 )
+
+OLD_YAML_PATH = (
+    Path(__file__).resolve().parents[2]
+    / "02_params" / "history" / "rexome33_2026-10-25_before_comment_sources.yaml"
+)
+"""A YAML from before the bundle of 2026-10-25: pad polygons in ``legs.<leg>.pad``, common
+``actuator.*`` cylinder keys, no ``pad_shapes``."""
 
 GROUND_MASS_LINE = "ground_body_mass_kg: 1000000000.0"
 # Integer counts in the YAML; every other number must load as float.
@@ -74,6 +85,67 @@ def _dump_tree(tmp_path: Path, tree: dict[str, Any], *, sort_keys: bool = False)
     text = yaml.safe_dump(tree, sort_keys=sort_keys, allow_unicode=True)
     variant.write_text(text, encoding="utf-8")
     return variant
+
+
+def _yaml_pad_shape(tree: dict[str, Any], leg: str) -> dict[str, Any]:
+    """Bottom polygon / area of ``leg`` where the YAML keeps them (``pad_shapes`` default type
+    after the bundle of 2026-10-25, ``legs.<leg>.pad`` before)."""
+    if PAD_SHAPES_KEY not in tree:
+        return tree["legs"][leg]["pad"]
+    pad_shapes = tree[PAD_SHAPES_KEY]
+    return pad_shapes["types"][pad_shapes["default_type"]]["legs"][leg]
+
+
+def _perimeter(polygon: list[list[float]]) -> float:
+    return sum(math.dist(p, q) for p, q in zip(polygon, polygon[1:] + polygon[:1], strict=True))
+
+
+REAR_LEGS = ("RL", "RR")
+SMALL_PAD_SCALE = 0.75
+"""Synthetic second pad type of :func:`_tree_with_pad_shapes`: rear polygons scaled by this."""
+
+
+def _tree_with_pad_shapes(yaml_tree: dict[str, Any]) -> dict[str, Any]:
+    """The YAML tree with a ``pad_shapes`` block of two types.
+
+    A bundle YAML is returned as is. A YAML from before the bundle gets the block synthesised
+    from ``legs.<leg>.pad``: type ``cad330`` = those polygons, type ``dwg_rear250`` (default) =
+    rear polygons scaled by :data:`SMALL_PAD_SCALE`; the polygon / area keys leave the legs.
+    """
+    tree = copy.deepcopy(yaml_tree)
+    if PAD_SHAPES_KEY in tree:
+        return tree
+    cad_legs: dict[str, Any] = {}
+    small_legs: dict[str, Any] = {}
+    for leg in LEG_ORDER:
+        pad = tree["legs"][leg]["pad"]
+        polygon = pad.pop("polygon_xy_m")
+        area = pad.pop("bottom_area_m2")
+        scale = SMALL_PAD_SCALE if leg in REAR_LEGS else 1.0
+        for legs, factor in ((cad_legs, 1.0), (small_legs, scale)):
+            scaled = [[factor * x, factor * y] for x, y in polygon]
+            perimeter = _perimeter(scaled)
+            legs[leg] = {
+                "source_kind": "cad_brep",
+                "polygon_xy_m": scaled,
+                "bottom_area_m2": factor**2 * area,
+                "perimeter_m": perimeter,
+                "bekker_b_m": 2.0 * factor**2 * area / perimeter,
+            }
+    tree[PAD_SHAPES_KEY] = {
+        "default_type": "dwg_rear250",
+        "type_order": ["cad330", "dwg_rear250"],
+        "types": {
+            "cad330": {"label": "A", "legs": cad_legs},
+            "dwg_rear250": {"label": "B", "legs": small_legs},
+        },
+    }
+    return tree
+
+
+def _other_pad_type(tree: dict[str, Any]) -> str:
+    pad_shapes = tree[PAD_SHAPES_KEY]
+    return next(name for name in pad_shapes["type_order"] if name != pad_shapes["default_type"])
 
 
 # --- round trip --------------------------------------------------------------------------
@@ -156,7 +228,9 @@ def test_leg_geometry_equals_yaml(params: Params, yaml_tree: dict) -> None:
         assert params.legs[index] is leg and leg.index == index
         assert list(leg.attachment_point_m) == yaml_leg["attachment_point_m"]
         assert list(leg.pad_bottom_center_retracted_m) == yaml_leg["pad_bottom_center_retracted_m"]
-        assert [list(v) for v in leg.pad.polygon_xy_m] == yaml_leg["pad"]["polygon_xy_m"]
+        yaml_shape = _yaml_pad_shape(yaml_tree, name)
+        assert [list(v) for v in leg.pad.polygon_xy_m] == yaml_shape["polygon_xy_m"]
+        assert leg.pad.bottom_area_m2 == yaml_shape["bottom_area_m2"]
         assert leg.moving_part.mass_kg == yaml_leg["moving_part"]["mass_kg"]
         assert list(leg.moving_part.com_m) == yaml_leg["moving_part"]["com_retracted_m"]
         tilt_deg = yaml_leg["pad"]["swivel_tilt_range_deg"]
@@ -390,3 +464,90 @@ def test_flag_keys_load_as_bool_and_reject_other_types(tmp_path: Path, yaml_tree
     tree["meta"]["flag_probe"] = {"not_a_flag": True}
     with pytest.raises(ParamsError, match="expected a number"):
         load_params(_dump_tree(tmp_path, tree))
+
+
+# --- pad shape types (YAML bundle 2026-10-25, P-1 / D5) ------------------------------------
+
+
+@pytest.fixture(scope="module")
+def pad_shapes_path(tmp_path_factory: pytest.TempPathFactory, yaml_tree: dict) -> Path:
+    """A YAML with a ``pad_shapes`` block (the project YAML itself once regenerated)."""
+    return _dump_tree(tmp_path_factory.mktemp("pad_shapes"), _tree_with_pad_shapes(yaml_tree))
+
+
+def test_pad_polygons_come_from_the_default_pad_type(pad_shapes_path: Path) -> None:
+    tree = yaml.safe_load(pad_shapes_path.read_text(encoding="utf-8"))
+    default_type = tree[PAD_SHAPES_KEY]["default_type"]
+    loaded = load_params(pad_shapes_path)
+    for leg in loaded.legs:
+        shape = tree[PAD_SHAPES_KEY]["types"][default_type]["legs"][leg.name]
+        assert leg.pad.pad_type == default_type
+        assert [list(v) for v in leg.pad.polygon_xy_m] == shape["polygon_xy_m"]
+        assert leg.pad.bottom_area_m2 == shape["bottom_area_m2"]
+        assert leg.pad.perimeter_m == shape["perimeter_m"]
+        assert leg.pad.bekker_b_m == shape["bekker_b_m"]
+
+
+def test_pad_shape_text_keys_load_as_text(pad_shapes_path: Path) -> None:
+    loaded = load_params(pad_shapes_path)
+    assert isinstance(loaded.get("pad_shapes.default_type"), str)
+    assert all(isinstance(name, str) for name in loaded.get("pad_shapes.type_order"))
+    for name in loaded.get("pad_shapes.type_order"):
+        assert isinstance(loaded.get(f"pad_shapes.types.{name}.label"), str)
+        assert isinstance(loaded.get(f"pad_shapes.types.{name}.legs.RL.source_kind"), str)
+
+
+@pytest.mark.parametrize("model", list(ModelKind))
+def test_pad_type_switch_keeps_the_rigid_floor_fingerprint(
+    pad_shapes_path: Path, model: ModelKind
+) -> None:
+    tree = yaml.safe_load(pad_shapes_path.read_text(encoding="utf-8"))
+    other_type = _other_pad_type(tree)
+    default = load_params(pad_shapes_path, model=model)
+    switched = load_params(
+        pad_shapes_path, model=model, overrides={PAD_TYPE_OVERRIDE_KEY: other_type}
+    )
+    assert switched.legs[2].pad.pad_type == other_type
+    assert switched.legs[2].pad.bottom_area_m2 != default.legs[2].pad.bottom_area_m2
+    assert switched.legs[0].pad.polygon_xy_m == default.legs[0].pad.polygon_xy_m  # front = CAD
+    assert switched.sha256 == default.sha256
+    assert scm_run_sha256(switched) != scm_run_sha256(default)
+
+
+def test_pad_shapes_block_is_left_out_of_the_fingerprint(pad_shapes_path: Path) -> None:
+    from outrigger_sim.params import _coerce_tree
+
+    tree = _coerce_tree(yaml.safe_load(pad_shapes_path.read_text(encoding="utf-8")))
+    without = copy.deepcopy(tree)
+    del without[PAD_SHAPES_KEY]
+    for model in ModelKind:
+        for level in AugerLevel:
+            assert parameters_sha256(tree, level, model) == parameters_sha256(without, level, model)
+
+
+def test_scm_fingerprint_sees_a_polygon_change(tmp_path: Path, pad_shapes_path: Path) -> None:
+    tree = yaml.safe_load(pad_shapes_path.read_text(encoding="utf-8"))
+    base = load_params(pad_shapes_path)
+    other_type = _other_pad_type(tree)
+    tree[PAD_SHAPES_KEY]["types"][other_type]["legs"]["RR"]["polygon_xy_m"][0][0] += 1e-6
+    changed = load_params(_dump_tree(tmp_path, tree))
+    assert changed.sha256 == base.sha256
+    assert scm_run_sha256(changed) != scm_run_sha256(base)
+
+
+def test_unknown_pad_type_raises(pad_shapes_path: Path) -> None:
+    with pytest.raises(ParamsError, match=r"pad_shapes\.default_type"):
+        load_params(pad_shapes_path, overrides={PAD_TYPE_OVERRIDE_KEY: "cad250"})
+
+
+def test_yaml_before_the_bundle_keeps_the_pad_polygons_in_the_legs() -> None:
+    old_tree = yaml.safe_load(OLD_YAML_PATH.read_text(encoding="utf-8"))
+    assert PAD_SHAPES_KEY not in old_tree
+    old = load_params(OLD_YAML_PATH)
+    for leg in old.legs:
+        assert leg.pad.pad_type is None and leg.pad.bekker_b_m is None
+        assert [list(v) for v in leg.pad.polygon_xy_m] == old_tree["legs"][leg.name]["pad"][
+            "polygon_xy_m"
+        ]
+    with pytest.raises(ParamsError, match=PAD_SHAPES_KEY):
+        scm_run_sha256(old)

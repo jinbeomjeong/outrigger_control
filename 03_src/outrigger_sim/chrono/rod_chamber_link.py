@@ -213,6 +213,18 @@ def _per_leg_value(value: Any, leg: str, index: int) -> float:
     return float(value)
 
 
+def _leg_or_common_diameter(params: Params, leg: str, key: str) -> float:
+    """``legs.<leg>.cylinder.<key>``, else (old YAML) the common ``actuator.<key>``.
+
+    The common cylinder keys were removed by the YAML bundle of 2026-10-25 (decision D1), so
+    they are read only when the leg has no key of its own.
+    """
+    value = _optional(params, f"legs.{leg}.cylinder.{key}")
+    if value is None:
+        value = params.get(f"actuator.{key}")
+    return float(value)
+
+
 def mechanics_from_params(
     params: Params, override: RodSideMechanics | str | None = None
 ) -> RodSideMechanics:
@@ -272,15 +284,11 @@ def leg_params_from_params(
     block = _optional(params, ROD_SIDE_KEY) or {}
     head_areas = leg_head_areas_from_params(params)
     annulus_areas = leg_annulus_areas_from_params(params)
-    common_bore = float(params.get("actuator.bore_diameter_m"))
-    common_rod = float(params.get("actuator.rod_diameter_m"))
     out: list[RodChamberLegParams] = []
     records: list[dict[str, Any]] = []
     for i, (leg, leg_params) in enumerate(zip(LEG_ORDER, params.legs, strict=True)):
-        bore = _optional(params, f"legs.{leg}.cylinder.bore_diameter_m")
-        rod = _optional(params, f"legs.{leg}.cylinder.rod_diameter_m")
-        bore = common_bore if bore is None else float(bore)
-        rod = common_rod if rod is None else float(rod)
+        bore = _leg_or_common_diameter(params, leg, "bore_diameter_m")
+        rod = _leg_or_common_diameter(params, leg, "rod_diameter_m")
         extension = _per_leg_value(e_op, leg, i)
         column = block.get("column_length_m")
         dead_rod = (

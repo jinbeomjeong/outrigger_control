@@ -15,10 +15,17 @@ from outrigger_sim.sensors.hydraulic import (
     LegSensorModel,
     head_area_from_params,
     head_area_m2,
+    leg_head_areas_from_params,
     locked_pressure_limit_from_params,
     locked_pressure_report,
     reduced_model_leg_sensor_config,
 )
+
+OLD_COMMON_CYLINDER_YAML = (
+    Path(__file__).resolve().parents[2]
+    / "02_params" / "history" / "rexome33_2026-10-22_before_rexome35.yaml"
+)
+"""A YAML with the common ``actuator.bore_diameter_m`` (REXOME33 CAD ø115)."""
 
 PRESSURES = [9.0e6, 9.1e6, 8.0e6, 8.1e6]
 STROKES = [0.10, 0.10, 0.12, 0.12]
@@ -33,12 +40,24 @@ def params(params_path: Path) -> Params:
 
 
 def test_head_area_and_locked_limit_match_the_yaml(params: Params) -> None:
-    area = head_area_from_params(params)
-    assert area == pytest.approx(head_area_m2(0.115))
-    assert area == pytest.approx(0.0103869, rel=1e-5)  # YAML annulus comment
+    # REXOME35 per-leg cylinders (front ø130 / rear ø110); the common actuator.* keys are gone
+    # from the bundle-2026-10-25 YAML and must not be needed.
+    areas = leg_head_areas_from_params(params)
+    np.testing.assert_allclose(areas, [1.32732e-2, 1.32732e-2, 9.50332e-3, 9.50332e-3], rtol=1e-5)
+    # the YAML writes 9 significant digits
+    np.testing.assert_allclose(areas[:2], head_area_m2(0.13), rtol=1e-8)
+    np.testing.assert_allclose(areas[2:], head_area_m2(0.11), rtol=1e-8)
     limit = locked_pressure_limit_from_params(params)
     assert limit == 35.0e6
-    assert limit * area == pytest.approx(363541.0, abs=1.0)  # YAML: 350 bar x head area
+    # YAML legs.<leg>.cylinder.locked_force_limit_N = 350 bar x head area
+    np.testing.assert_allclose(limit * areas, [464563.0, 464563.0, 332616.0, 332616.0], atol=1.0)
+
+
+def test_common_head_area_reads_the_old_yaml() -> None:
+    old = load_params(OLD_COMMON_CYLINDER_YAML)
+    area = head_area_from_params(old)
+    assert area == pytest.approx(head_area_m2(0.115))
+    assert area * locked_pressure_limit_from_params(old) == pytest.approx(363541.0, abs=1.0)
 
 
 def test_reduced_model_noise_levels() -> None:
@@ -258,7 +277,7 @@ def test_per_leg_areas_from_the_cylinder_keys() -> None:
 
     common = {"actuator.bore_diameter_m": 0.115, "actuator.annulus_area_m2": 8.836e-4}
     np.testing.assert_allclose(leg_head_areas_from_params(_Stub(common)), math.pi / 4 * 0.115**2)
-    per_leg = dict(common)
+    per_leg: dict[str, float] = {}  # no common keys: the bundle-2026-10-25 YAML has none
     for leg, bore, rod in (("FL", 0.13, 0.11), ("FR", 0.13, 0.11), ("RL", 0.11, 0.09)):
         per_leg[f"legs.{leg}.cylinder.bore_diameter_m"] = bore
         per_leg[f"legs.{leg}.cylinder.rod_diameter_m"] = rod

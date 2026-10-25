@@ -1,7 +1,9 @@
 """Pad type table and run-time override (``outrigger_sim.pad_variants``, U-PAD 2026-10-25).
 
 The rigid-floor fingerprints must not change: loading the YAML is untouched, only
-:func:`apply_pad_variant` changes the pad polygons in memory.
+:func:`apply_pad_variant` changes the pad polygons in memory. The tests pass on a YAML from
+before the bundle of 2026-10-25 (shapes in the table) and on a bundle YAML (shapes in
+``pad_shapes``).
 """
 
 from __future__ import annotations
@@ -13,7 +15,13 @@ import math
 import pytest
 
 from outrigger_sim import pad_variants as pv
-from outrigger_sim.params import LEG_ORDER, load_params
+from outrigger_sim.params import (
+    LEG_ORDER,
+    PAD_TYPE_OVERRIDE_KEY,
+    Params,
+    load_params,
+    scm_run_sha256,
+)
 
 if not pv.PAD_VARIANTS_JSON.exists():  # pragma: no cover - generated data
     pytest.skip("02_params/pad_variants.json missing", allow_module_level=True)
@@ -62,35 +70,92 @@ def test_polygon_area_perimeter_and_bekker_width(table: pv.PadVariantTable) -> N
     assert table.variant("cad330").leg("RR").bekker_b_m == pytest.approx(0.1714, abs=5e-5)
 
 
-def test_yaml_fingerprint_untouched_by_the_table(table: pv.PadVariantTable) -> None:
+def test_table_fits_the_yaml(table: pv.PadVariantTable) -> None:
     base = load_params()
-    assert table.params_file_sha256 == base.file_sha256
-    pv.check_table_against_params(table, base)  # type A = YAML polygons today
+    pv.check_table_against_params(table, base)
+    if pv.has_pad_shapes(base):  # bundle 2026-10-25: the YAML is the shape source
+        assert table.geometry_source == pv.GEOMETRY_FROM_YAML
+        for variant in table.variants.values():
+            for shape in variant.legs:
+                yaml_shape = base.get(f"pad_shapes.types.{variant.name}.legs.{shape.leg}")
+                assert [list(p) for p in shape.polygon_xy_m] == [
+                    list(p) for p in yaml_shape["polygon_xy_m"]
+                ]
+                assert shape.bekker_b_m == yaml_shape["bekker_b_m"]
+    else:  # before the bundle: type A = YAML polygons, the table is the shape source
+        assert table.geometry_source == pv.GEOMETRY_FROM_TABLE
+        assert table.params_file_sha256 == base.file_sha256
 
 
-def test_apply_type_a_equals_yaml_and_type_b_changes_only_rear_pads(table: pv.PadVariantTable) -> None:
+def _assert_pad_type_keeps_masses_and_joint(out: Params, base: Params) -> None:
+    for i, leg in enumerate(LEG_ORDER):
+        assert out.legs[i].moving_part == base.legs[i].moving_part  # U-PAD-3
+        assert out.get(f"legs.{leg}.pad_body") == base.get(f"legs.{leg}.pad_body")
+        assert out.legs[i].pad.thickness_m == base.legs[i].pad.thickness_m
+        assert (out.legs[i].pad.swivel_center_above_pad_bottom_m
+                == base.legs[i].pad.swivel_center_above_pad_bottom_m)
+
+
+def test_apply_type_a_and_type_b_change_only_rear_pads(table: pv.PadVariantTable) -> None:
     base = load_params()
     a = pv.apply_pad_variant(base, "cad330", table=table)
     b = pv.apply_pad_variant(base, None, table=table)
-    assert a.sha256 == base.sha256  # type A polygons are the YAML polygons
     assert a.file_sha256 == b.file_sha256 == base.file_sha256
-    assert b.sha256 != base.sha256  # the run fingerprint contains the type
-    for i, leg in enumerate(LEG_ORDER):
-        assert b.legs[i].moving_part == base.legs[i].moving_part  # U-PAD-3
-        assert b.get(f"legs.{leg}.pad_body") == base.get(f"legs.{leg}.pad_body")
-        assert b.legs[i].pad.thickness_m == base.legs[i].pad.thickness_m
-        assert b.legs[i].pad.swivel_center_above_pad_bottom_m == base.legs[i].pad.swivel_center_above_pad_bottom_m
+    _assert_pad_type_keeps_masses_and_joint(a, base)
+    _assert_pad_type_keeps_masses_and_joint(b, base)
+    assert a.legs[2].pad.bottom_area_m2 == pytest.approx(0.1071, rel=1e-9)
     assert b.legs[2].pad.bottom_area_m2 == pytest.approx(0.0607, rel=1e-9)
-    assert b.legs[0].pad == base.legs[0].pad
-    assert set(b.overrides) == {f"legs.{leg}.pad.{k}" for leg in LEG_ORDER for k in pv.PAD_KEYS}
-    # base object untouched
-    assert base.legs[2].pad.bottom_area_m2 == pytest.approx(0.1071, rel=1e-9)
+    assert a.legs[0].pad.polygon_xy_m == b.legs[0].pad.polygon_xy_m
+    if pv.has_pad_shapes(base):
+        # the type is not part of the rigid-floor fingerprint, only of the SCM one (D5)
+        assert a.sha256 == b.sha256 == base.sha256
+        assert scm_run_sha256(a) != scm_run_sha256(b)
+        assert scm_run_sha256(b) == scm_run_sha256(base)  # YAML default = type B
+        assert a.legs[2].pad.pad_type == "cad330" and b.legs[2].pad.pad_type == "dwg_rear250"
+        assert set(b.overrides) == {PAD_TYPE_OVERRIDE_KEY}
+    else:
+        assert a.sha256 == base.sha256  # type A polygons are the YAML polygons
+        assert b.sha256 != base.sha256  # the run fingerprint contains the type
+        assert b.legs[0].pad == base.legs[0].pad
+        assert set(b.overrides) == {f"legs.{leg}.pad.{k}" for leg in LEG_ORDER for k in pv.PAD_KEYS}
+        assert base.legs[2].pad.bottom_area_m2 == pytest.approx(0.1071, rel=1e-9)  # untouched
     # re-applying another type replaces the pad overrides, other overrides stay
     other = load_params(overrides={"actuator.oil_bulk_modulus_eff_Pa": 1.6e9})
     b2 = pv.apply_pad_variant(other, "dwg_rear250", table=table)
     a2 = pv.apply_pad_variant(b2, "cad330", table=table)
     assert a2.overrides["actuator.oil_bulk_modulus_eff_Pa"] == 1.6e9
-    assert a2.sha256 == other.sha256
+    assert a2.legs[2].pad.bottom_area_m2 == pytest.approx(0.1071, rel=1e-9)
+    assert a2.sha256 == pv.apply_pad_variant(other, "cad330", table=table).sha256
+
+
+GEOMETRY_RECORD_KEYS = ("polygon_xy_m", "polygon_sha256", "bottom_area_m2", "perimeter_m",
+                        "bekker_b_m")
+
+
+def test_table_with_only_the_c8_mapping(tmp_path, table: pv.PadVariantTable) -> None:
+    """The reduced table format (C8 hull / visual mapping, no polygons; cad C-2) is read when
+    the YAML has ``pad_shapes`` and refused otherwise (no shape source left)."""
+    doc = json.loads(pv.PAD_VARIANTS_JSON.read_text(encoding="utf-8"))
+    for item in doc["variants"].values():
+        for record in item["legs"].values():
+            for key in GEOMETRY_RECORD_KEYS:
+                record.pop(key)
+    reduced_path = tmp_path / "02_params" / "pad_variants.json"
+    reduced_path.parent.mkdir()
+    reduced_path.write_text(json.dumps(doc), encoding="utf-8")
+    base = load_params()
+    if not pv.has_pad_shapes(base):
+        with pytest.raises(pv.PadVariantError, match="no pad_shapes"):
+            pv.load_pad_variants(reduced_path, params=base)
+        return
+    reduced = pv.load_pad_variants(reduced_path, params=base)
+    for name, variant in reduced.variants.items():
+        for shape, full in zip(variant.legs, table.variant(name).legs, strict=True):
+            assert shape.polygon_xy_m == full.polygon_xy_m
+            assert shape.polygon_sha256 == full.polygon_sha256
+            assert shape.hull_name == full.hull_name
+            assert shape.hull_file.relative_to(tmp_path.resolve()) == full.hull_file.relative_to(
+                pv.PROJECT_ROOT)
 
 
 def test_apply_keeps_model_and_level(table: pv.PadVariantTable) -> None:

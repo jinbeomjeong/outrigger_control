@@ -4,24 +4,32 @@ Pad area is an experiment variable with two types (user decisions U-PAD-1..6 202
 ``00_docs/01_dynamics/dynamics_model.md`` rev. 44 5.30, implementation (1) of 5.30.5):
 
 * ``cad330``      type A: all four pads are the REXOME33 CAD pad (330 x 330, chamfer 30,
-                  0.1071 m^2), B-rep ``01_cad/02_legs/legs/*_10_1.brep`` (= YAML today);
+                  0.1071 m^2), B-rep ``01_cad/02_legs/legs/*_10_1.brep``;
 * ``dwg_rear250`` type B (**default**): front pads as CAD, rear pads REXOME35 drawing SECTION
                   A-A' 250 x 250 with the corner chamfer 30 mm **ASSUMPTION** (0.0607 m^2), from
                   the drawing-chain synthesis B-rep ``01_cad/02_legs/rexome35/moving_R{L,R}.brep``
                   (orientation of the CAD pad kept, ASSUMPTION).
 
-The masses are not part of the table: type A uses the same moving-part / pad-body masses as
-type B (U-PAD-3, only area and polygon change). The YAML ``02_params/rexome33.yaml`` is only
-read (pad bottom centre, retracted offsets); it is never written here, so ``Params.sha256``
-and ``file_sha256`` stay as they are. The table is a generated file (do not edit by hand);
-it moves into a YAML block ``pad_shapes`` (excluded from the L1 / L2b fingerprint) at the next
-YAML regeneration bundle (5.30.5 (3)).
+Shape source (YAML regeneration bundle 2026-10-25, decision D4,
+``00_docs/00_cad/yaml_regen_bundle_2026-10-25.md`` 1.4 / C-2): the polygon, bottom area,
+perimeter and Bekker width of every type and leg are **read from the YAML block**
+``pad_shapes.types.<type>.legs.<leg>`` (written by ``export_params.py`` from the same B-reps,
+left out of the L1 / L2b fingerprint). This table keeps those four keys as a copy (schema 2,
+backward compatible with the schema 1 consumers that read ``polygon_xy_m`` / ``bottom_area_m2``
+/ ``perimeter_m`` / ``bekker_b_m`` from the JSON) and adds what the YAML does not hold: the C8
+pad hull / simple visual OBJ mapping and their checks, the B-rep side angle / thickness, and an
+independent re-measurement of every pad face from its B-rep, compared with the YAML copy
+(tolerance ``TOL``). The masses are not part of the table: type A uses the same moving-part /
+pad-body masses as type B (U-PAD-3). The YAML is only read; it is never written here. The
+table is a generated file (do not edit by hand); rerun it after every YAML regeneration
+(``params_yaml.file_sha256`` records the YAML it was made from).
 
-Per leg and type: ``polygon_xy_m`` (bottom face outer wire relative to
+Per leg and type: ``polygon_xy_m`` (YAML copy: bottom face outer wire relative to
 ``legs.<leg>.pad_bottom_center_retracted_m``, counter-clockwise from +z, body frame, 9
-significant digits like the YAML), ``bottom_area_m2`` (B-rep face area), perimeter, Chrono SCM
-Bekker width ``b = 2 A / perimeter`` (``vehicle_terrain.md`` 82-97), equivalent radius, side
-angle, source B-rep (path, sha256), assumptions, and the C8 pad hull / simple visual OBJ
+significant digits), ``bottom_area_m2``, ``perimeter_m``, Chrono SCM Bekker width
+``bekker_b_m = 2 A / perimeter`` (``vehicle_terrain.md`` 82-97) (YAML copies), equivalent
+radius / square side (from the YAML area), side angle, thickness, side height (B-rep), source
+B-rep (path, sha256), assumptions, and the C8 pad hull / simple visual OBJ
 (existing ``01_cad/09_sim_shapes`` entries, or for the type A rear pads new OBJs under
 ``01_cad/09_sim_shapes/pad_variants/`` built here with the same recipe as
 ``build_sim_shapes.stage_legs``: convex hull of the bottom octagon, the side height and the
@@ -76,7 +84,7 @@ from build_sim_shapes import (  # noqa: E402
 from cad_common import LEGS_DIR  # noqa: E402
 
 sys.path.insert(0, str(PROJECT_ROOT / "03_src"))
-from outrigger_sim.params import DEFAULT_PARAMS_PATH, load_params  # noqa: E402
+from outrigger_sim.params import DEFAULT_PARAMS_PATH, PAD_TYPE_OVERRIDE_KEY, load_params  # noqa: E402
 
 TABLE_JSON = PROJECT_ROOT / "02_params" / "pad_variants.json"
 SIM_SHAPES_DIR = PROJECT_ROOT / "01_cad" / "09_sim_shapes"
@@ -84,16 +92,21 @@ SIM_SHAPES_INDEX = SIM_SHAPES_DIR / "sim_shapes.json"
 VARIANT_SHAPES_DIR = SIM_SHAPES_DIR / "pad_variants"
 CAD_BREP = {leg: LEGS_DIR / "legs" / ROD_PAD_BREP[leg] for leg in LEG_ORDER}
 DRAWING_BREP = {leg: LEGS_DIR / "rexome35" / f"moving_{leg}.brep" for leg in ("RL", "RR")}
-SCHEMA = 1
+SCHEMA = 2  # 2: shapes copied from the YAML pad_shapes (bundle 2026-10-25); same per-leg keys as 1
 DEFAULT_VARIANT = "dwg_rear250"
+PAD_SHAPES_KEY = "pad_shapes"
+SHAPE_KEYS = ("polygon_xy_m", "bottom_area_m2", "perimeter_m", "bekker_b_m")
+SOURCE_KIND = {"cad": "cad_brep", "drawing": "drawing_synthesis_brep"}
 SIGNIFICANT_DIGITS = 9
 DRAWING_SIDE_MM = 250.0
 DRAWING_CHAMFER_MM = 30.0  # ASSUMPTION: no chamfer dimension on the drawing (figure read 25 ... 30)
 TOL = {
     "area_vs_polygon_rel": 1e-6,     # B-rep face area vs shoelace area of the outer wire
     "area_vs_drawing_rel": 1e-6,     # synthesis B-rep vs 250^2 - 2 x 30^2 mm^2
-    "polygon_vs_yaml_m": 1e-9,       # type A polygon vs YAML legs.<leg>.pad.polygon_xy_m
-    "area_vs_yaml_rel": 1e-9,        # type A area vs YAML legs.<leg>.pad.bottom_area_m2
+    "polygon_vs_yaml_m": 1e-9,       # B-rep polygon (9 significant digits) vs YAML pad_shapes polygon
+    "area_vs_yaml_rel": 1e-9,        # B-rep face area (9 significant digits) vs YAML pad_shapes area
+    "perimeter_vs_yaml_rel": 1e-9,   # B-rep outer-wire perimeter (9 significant digits) vs YAML pad_shapes
+    "bekker_b_vs_yaml_rel": 1e-9,    # B-rep 2 A / perimeter (9 significant digits) vs YAML pad_shapes
     "centroid_vs_yaml_m": 1e-4,      # face centroid vs YAML pad_bottom_center (0.1 mm rounding)
     "bottom_z_vs_yaml_m": 1e-4,
     "hull_volume_rel": 1e-5,         # OBJ (6 decimals) vs B-rep plate, as verify_sim_shapes
@@ -308,33 +321,9 @@ def build(write_shapes: bool) -> tuple[dict, list[str]]:
                 failures.append(f"{leg} {role}: bottom z {item['obj_bottom_minus_yaml_z_m']:+.2e} m off the YAML")
         c8[(leg, kind)] = entry
 
-    # --- per-leg records and checks
-    records = {}
+    # --- B-rep checks per measured pad face (geometry of the B-rep itself, frame of the YAML)
     for (leg, kind), m in measured.items():
         i = LEG_ORDER.index(leg)
-        yaml_pad = params.legs[i].pad
-        polygon = [[sig(x), sig(y)] for x, y in m["polygon_rel_xy_m"]]
-        area = sig(m["bottom_area_m2"])
-        peri = sig(m["perimeter_m"])
-        rec = {
-            "source_kind": "cad_brep" if kind == "cad" else "drawing_synthesis_brep",
-            "source": SOURCE_TEXT[kind].replace("<leg>", ROD_PAD_BREP[leg][:-5] if kind == "cad" else leg),
-            "brep": {"path": m["brep"]["path"], "bytes": m["brep"]["bytes"], "sha256": m["brep"]["sha256"]},
-            "assumptions": ASSUMPTIONS[kind],
-            "polygon_xy_m": polygon,
-            "polygon_sha256": polygon_sha256(polygon),
-            "polygon_reference": f"relative to legs.{leg}.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z",
-            "bottom_area_m2": area,
-            "perimeter_m": peri,
-            "bekker_b_m": sig(2.0 * m["bottom_area_m2"] / m["perimeter_m"]),
-            "equivalent_radius_m": sig(math.sqrt(m["bottom_area_m2"] / math.pi)),
-            "equivalent_square_side_m": sig(math.sqrt(m["bottom_area_m2"])),
-            "side_angle_deg": sig(m["side_angle_deg"]),
-            "thickness_m": sig(m["thickness_m"]),
-            "side_height_m": sig(m["side_height_m"]),
-            "c8": c8[(leg, kind)],
-        }
-        records[(leg, kind)] = rec
         item = {
             "area_vs_polygon_rel": m["bottom_area_m2"] / m["polygon_area_m2"] - 1.0,
             "centroid_minus_yaml_m": m["centroid_minus_yaml_m"].tolist(),
@@ -343,15 +332,7 @@ def build(write_shapes: bool) -> tuple[dict, list[str]]:
             "edges_m": sorted(set(round(float(e), 6) for e in m["edges_m"])),
             "plate_valid": m["plate_valid"],
         }
-        if kind == "cad":
-            diff = np.abs(np.array(polygon) - np.array(yaml_pad.polygon_xy_m)) if len(polygon) == len(yaml_pad.polygon_xy_m) else None
-            item["polygon_vs_yaml_max_abs_m"] = None if diff is None else float(diff.max())
-            item["area_vs_yaml_rel"] = area / yaml_pad.bottom_area_m2 - 1.0
-            if diff is None or diff.max() > TOL["polygon_vs_yaml_m"]:
-                failures.append(f"{leg} cad: polygon differs from the YAML ({item['polygon_vs_yaml_max_abs_m']})")
-            if abs(item["area_vs_yaml_rel"]) > TOL["area_vs_yaml_rel"]:
-                failures.append(f"{leg} cad: area differs from the YAML ({item['area_vs_yaml_rel']:+.2e})")
-        else:
+        if kind == "drawing":
             expected = (DRAWING_SIDE_MM**2 - 2.0 * DRAWING_CHAMFER_MM**2) * MM**2
             item["area_vs_drawing_rel"] = m["bottom_area_m2"] / expected - 1.0
             item["drawing_area_m2"] = expected
@@ -371,15 +352,68 @@ def build(write_shapes: bool) -> tuple[dict, list[str]]:
             failures.append(f"{leg} {kind}: pad plate B-rep not valid")
         checks.setdefault("legs", {})[f"{leg}.{kind}"] = item
 
+    # --- per type and leg: shapes from the YAML pad_shapes, checked against the B-rep re-measurement
+    yaml_types = tuple(params.get(f"{PAD_SHAPES_KEY}.type_order"))
+    if yaml_types != tuple(VARIANTS):
+        failures.append(f"YAML pad_shapes.type_order {yaml_types} differs from {tuple(VARIANTS)}")
+    if params.get(f"{PAD_SHAPES_KEY}.default_type") != DEFAULT_VARIANT:
+        failures.append(f"YAML pad_shapes.default_type differs from {DEFAULT_VARIANT}")
     variants = {}
     for name, spec in VARIANTS.items():
-        legs = {leg: records[(leg, spec["sources"][leg])] for leg in LEG_ORDER}
+        legs = {}
+        for leg in LEG_ORDER:
+            kind = spec["sources"][leg]
+            m = measured[(leg, kind)]
+            shape_path = f"{PAD_SHAPES_KEY}.types.{name}.legs.{leg}"
+            y = params.get(shape_path)
+            polygon = [[float(px), float(py)] for px, py in y["polygon_xy_m"]]
+            area, peri, b = (float(y[k]) for k in SHAPE_KEYS[1:])
+            legs[leg] = {
+                "source_kind": SOURCE_KIND[kind],
+                "source": SOURCE_TEXT[kind].replace("<leg>", ROD_PAD_BREP[leg][:-5] if kind == "cad" else leg),
+                "brep": {"path": m["brep"]["path"], "bytes": m["brep"]["bytes"], "sha256": m["brep"]["sha256"]},
+                "assumptions": ASSUMPTIONS[kind],
+                "shape_source": f"{rel(DEFAULT_PARAMS_PATH)} {shape_path} (copy of {', '.join(SHAPE_KEYS)})",
+                "polygon_xy_m": polygon,
+                "polygon_sha256": polygon_sha256(polygon),
+                "polygon_reference": f"relative to legs.{leg}.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z",
+                "bottom_area_m2": area,
+                "perimeter_m": peri,
+                "bekker_b_m": b,
+                "equivalent_radius_m": sig(math.sqrt(area / math.pi)),
+                "equivalent_square_side_m": sig(math.sqrt(area)),
+                "side_angle_deg": sig(m["side_angle_deg"]),
+                "thickness_m": sig(m["thickness_m"]),
+                "side_height_m": sig(m["side_height_m"]),
+                "c8": c8[(leg, kind)],
+            }
+            # independent check: the B-rep face (9 significant digits like the YAML) vs the YAML copy
+            brep_poly = np.array([[sig(px), sig(py)] for px, py in m["polygon_rel_xy_m"]])
+            same_n = len(brep_poly) == len(polygon)
+            item = {
+                "source_kind_yaml": str(y["source_kind"]),
+                "polygon_vs_yaml_max_abs_m": float(np.abs(brep_poly - np.array(polygon)).max()) if same_n else None,
+                "area_vs_yaml_rel": sig(m["bottom_area_m2"]) / area - 1.0,
+                "perimeter_vs_yaml_rel": sig(m["perimeter_m"]) / peri - 1.0,
+                "bekker_b_vs_yaml_rel": sig(2.0 * m["bottom_area_m2"] / m["perimeter_m"]) / b - 1.0,
+                "bekker_b_yaml_vs_2A_over_P_rel": b / (2.0 * area / peri) - 1.0,
+            }
+            checks.setdefault("yaml_vs_brep", {})[f"{name}.{leg}"] = item
+            where = f"{name}.{leg}"
+            if item["source_kind_yaml"] != SOURCE_KIND[kind]:
+                failures.append(f"{where}: YAML source_kind {item['source_kind_yaml']} != {SOURCE_KIND[kind]}")
+            if not same_n or item["polygon_vs_yaml_max_abs_m"] > TOL["polygon_vs_yaml_m"]:
+                failures.append(f"{where}: B-rep polygon differs from the YAML ({item['polygon_vs_yaml_max_abs_m']})")
+            for key, tol in (("area_vs_yaml_rel", "area_vs_yaml_rel"), ("perimeter_vs_yaml_rel", "perimeter_vs_yaml_rel"),
+                             ("bekker_b_vs_yaml_rel", "bekker_b_vs_yaml_rel")):
+                if abs(item[key]) > TOL[tol]:
+                    failures.append(f"{where}: {key} {item[key]:+.2e}")
         variants[name] = {
             "label": spec["label"],
             "description": spec["description"],
             "mass_note": spec["mass_note"],
             "legs": legs,
-            "override_keys": [f"legs.{leg}.pad.{key}" for leg in LEG_ORDER for key in ("polygon_xy_m", "bottom_area_m2")],
+            "override_keys": [PAD_TYPE_OVERRIDE_KEY],
         }
     params_file = DEFAULT_PARAMS_PATH
     table = {
@@ -391,14 +425,16 @@ def build(write_shapes: bool) -> tuple[dict, list[str]]:
         "default": DEFAULT_VARIANT,
         "names": list(VARIANTS),
         "use": "S9 (SCM) and shape consumers only: outrigger_sim.pad_variants.apply_pad_variant(params, name) "
-               "overrides legs.<leg>.pad.polygon_xy_m / bottom_area_m2 in memory (the run fingerprint then holds the "
-               "type); rigid-floor L1 / L2b (S1 ... S8) do not use the pad area (5.30.3) and keep the YAML as is",
+               "overrides pad_shapes.default_type in memory (the L1 / L2b fingerprint is unchanged; an SCM run "
+               "fingerprints the type with params.scm_run_sha256); rigid-floor L1 / L2b (S1 ... S8) do not use the "
+               "pad area (5.30.3). Shape source: YAML pad_shapes (this table holds a checked copy and the C8 shapes)",
         "frame": "machine body axes (x forward, y left, z up), metres; polygons relative to "
                  "legs.<leg>.pad_bottom_center_retracted_m",
         "units": "SI (m, m^2); angles in deg (side_angle_deg: long pad sides from body x, folded to [0, 90))",
         "bekker_b_definition": "b = 2 A / perimeter (Chrono SCM patch width, vehicle_terrain.md 82-97)",
         "params_yaml": {"path": rel(params_file), "file_sha256": params.file_sha256,
-                        "note": "read only (pad bottom centres, retracted offsets, type A comparison)"},
+                        "note": "read only (pad_shapes = shape source, pad bottom centres, retracted offsets); "
+                                "rerun this script after every YAML regeneration"},
         "c8_index": source_record(SIM_SHAPES_INDEX),
         "variants": variants,
         "tolerances": TOL,

@@ -4,7 +4,8 @@ Builds one hand-written .hmf per scenario (flipped topology: HydraulicCylinderC 
 to the inertial frame, so the bench is barrel -- cylinder -- rod m_r -- spring k_g -- M), runs
 hopsancli through the hydraulics-expert helper hopsan_run.py and converts the results to the record
 format of single_leg.run (s, p_A_g, p_B_g, F_g, xM, ...). Same parameters and breakpoints as the
-Python spec implementation (l2_params.build, scenarios.make).
+Python spec implementation (l2_params.build, scenarios.make). Basis: the pinned history YAML of
+l2_params (REXOME33 old common dimensions 115/110 mm, D7 2026-10-25), not the current per-leg YAML.
 
 Hopsan conventions handled here (measured 2026-10-20, Hopsan 2.24.4):
   * pressures are ABSOLUTE (tank 1e5 Pa); the cylinder force is A1 p1 - A2 p2 (no atmosphere term),

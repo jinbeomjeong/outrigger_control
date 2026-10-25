@@ -48,7 +48,7 @@
    "F_min_fraction_of_mean_leg_load": 0.1,
    "F_min_basis": "cylinder force (pressure x bore area) = superstructure weight share; contact force = cylinder force + rod weight"
   },
-  "runtime_s": 34.6
+  "runtime_s": 28.61
  },
  "operating_point": {
   "touch_extension_m": [
@@ -10566,8 +10566,8 @@
   "rigid_pad_octagon_hull (comparison)": {
    "support_polygon_xy_m": [
     [
-     -2.681,
-     -1.4155
+     -2.6435,
+     -1.3733
     ],
     [
      2.2804,
@@ -10598,24 +10598,24 @@
      1.535
     ],
     [
-     -2.431,
-     1.3405
+     -2.4685,
+     1.2983
     ],
     [
-     -2.7005,
-     1.3246
+     -2.6582,
+     1.2871
     ],
     [
-     -2.7287,
-     1.2929
+     -2.6864,
+     1.2554
     ],
     [
-     -2.7287,
-     -1.1178
+     -2.6864,
+     -1.1554
     ],
     [
-     -2.7128,
-     -1.3874
+     -2.6752,
+     -1.3451
     ]
    ],
    "top": {
@@ -10626,24 +10626,24 @@
     "cg_height_above_floor_m": 3.2574,
     "edges": {
      "right edge (tip right)": {
-      "margin_m": 1.4902,
-      "tip_angle_deg": 24.58
+      "margin_m": 1.4738,
+      "tip_angle_deg": 24.34
      },
      "front edge (tip forward)": {
       "margin_m": 2.0476,
       "tip_angle_deg": 32.15
      },
      "left edge (tip left)": {
-      "margin_m": 1.4604,
-      "tip_angle_deg": 24.15
+      "margin_m": 1.4444,
+      "tip_angle_deg": 23.91
      },
      "rear edge (tip backward)": {
-      "margin_m": 3.1876,
-      "tip_angle_deg": 44.38
+      "margin_m": 3.1453,
+      "tip_angle_deg": 44.0
      }
     },
-    "min_margin_m": 1.4604,
-    "min_tip_angle_deg": 24.15,
+    "min_margin_m": 1.4444,
+    "min_tip_angle_deg": 23.91,
     "first_leg_liftoff_tilt_deg (azimuth 0 = gravity tilted toward +x i.e. nose-down slope)": {
      "azimuth_0deg": 29.36,
      "azimuth_45deg": 17.27,
@@ -10666,13 +10666,13 @@
     },
     "tip_over_tilt_deg (same azimuths, rigid, CoM projection leaves the support polygon)": {
      "azimuth_0deg": 32.15,
-     "azimuth_45deg": 33.5,
-     "azimuth_90deg": 24.17,
-     "azimuth_135deg": 31.36,
-     "azimuth_180deg": 44.38,
-     "azimuth_225deg": 32.28,
-     "azimuth_270deg": 24.59,
-     "azimuth_315deg": 33.56
+     "azimuth_45deg": 33.46,
+     "azimuth_90deg": 23.94,
+     "azimuth_135deg": 30.88,
+     "azimuth_180deg": 44.0,
+     "azimuth_225deg": 31.79,
+     "azimuth_270deg": 24.36,
+     "azimuth_315deg": 33.51
     }
    },
    "middle": {
@@ -10683,24 +10683,24 @@
     "cg_height_above_floor_m": 2.5635,
     "edges": {
      "right edge (tip right)": {
-      "margin_m": 1.4902,
-      "tip_angle_deg": 30.17
+      "margin_m": 1.4738,
+      "tip_angle_deg": 29.9
      },
      "front edge (tip forward)": {
       "margin_m": 2.0476,
       "tip_angle_deg": 38.62
      },
      "left edge (tip left)": {
-      "margin_m": 1.4604,
-      "tip_angle_deg": 29.67
+      "margin_m": 1.4444,
+      "tip_angle_deg": 29.4
      },
      "rear edge (tip backward)": {
-      "margin_m": 3.1876,
-      "tip_angle_deg": 51.19
+      "margin_m": 3.1453,
+      "tip_angle_deg": 50.82
      }
     },
-    "min_margin_m": 1.4604,
-    "min_tip_angle_deg": 29.67,
+    "min_margin_m": 1.4444,
+    "min_tip_angle_deg": 29.4,
     "first_leg_liftoff_tilt_deg (azimuth 0 = gravity tilted toward +x i.e. nose-down slope)": {
      "azimuth_0deg": 35.56,
      "azimuth_45deg": 21.56,
@@ -10723,13 +10723,13 @@
     },
     "tip_over_tilt_deg (same azimuths, rigid, CoM projection leaves the support polygon)": {
      "azimuth_0deg": 38.62,
-     "azimuth_45deg": 40.07,
-     "azimuth_90deg": 29.69,
-     "azimuth_135deg": 37.75,
-     "azimuth_180deg": 51.19,
-     "azimuth_225deg": 38.76,
-     "azimuth_270deg": 30.18,
-     "azimuth_315deg": 40.13
+     "azimuth_45deg": 40.02,
+     "azimuth_90deg": 29.43,
+     "azimuth_135deg": 37.23,
+     "azimuth_180deg": 50.82,
+     "azimuth_225deg": 38.22,
+     "azimuth_270deg": 29.91,
+     "azimuth_315deg": 40.08
     }
    },
    "bottom": {
@@ -10740,24 +10740,24 @@
     "cg_height_above_floor_m": 1.8695,
     "edges": {
      "right edge (tip right)": {
-      "margin_m": 1.4902,
-      "tip_angle_deg": 38.56
+      "margin_m": 1.4738,
+      "tip_angle_deg": 38.25
      },
      "front edge (tip forward)": {
       "margin_m": 2.0476,
       "tip_angle_deg": 47.6
      },
      "left edge (tip left)": {
-      "margin_m": 1.4604,
-      "tip_angle_deg": 38.0
+      "margin_m": 1.4444,
+      "tip_angle_deg": 37.69
      },
      "rear edge (tip backward)": {
-      "margin_m": 3.1876,
-      "tip_angle_deg": 59.61
+      "margin_m": 3.1453,
+      "tip_angle_deg": 59.27
      }
     },
-    "min_margin_m": 1.4604,
-    "min_tip_angle_deg": 38.0,
+    "min_margin_m": 1.4444,
+    "min_tip_angle_deg": 37.69,
     "first_leg_liftoff_tilt_deg (azimuth 0 = gravity tilted toward +x i.e. nose-down slope)": {
      "azimuth_0deg": 44.43,
      "azimuth_45deg": 28.45,
@@ -10780,13 +10780,13 @@
     },
     "tip_over_tilt_deg (same azimuths, rigid, CoM projection leaves the support polygon)": {
      "azimuth_0deg": 47.6,
-     "azimuth_45deg": 49.08,
-     "azimuth_90deg": 38.02,
-     "azimuth_135deg": 46.71,
-     "azimuth_180deg": 59.61,
-     "azimuth_225deg": 47.75,
-     "azimuth_270deg": 38.57,
-     "azimuth_315deg": 49.13
+     "azimuth_45deg": 49.03,
+     "azimuth_90deg": 37.72,
+     "azimuth_135deg": 46.17,
+     "azimuth_180deg": 59.27,
+     "azimuth_225deg": 47.19,
+     "azimuth_270deg": 38.27,
+     "azimuth_315deg": 49.08
     }
    }
   }
@@ -11913,7 +11913,7 @@
     7.16e-08,
     67
    ],
-   "runtime_s": 12.54,
+   "runtime_s": 6.08,
    "series_npz": "06_analysis/00_dynamics/reference_L1R_series.npz"
   },
   "leg_parameters": {
@@ -16604,7 +16604,7 @@
    ],
    "assumptions": "beta 1.0 GPa, L0h 0.05 m, L0r 0.05 m, frame 1e9 N/m, Westergaard slab, p_r0 2 bar g after an extension (RULE), p_floor 0.1 bar abs, zeta 0.03 locked (on k1) / 0.10 moving (on k2), lateral bushing = L1 kt at the contact point, mu 0.5, rigid NSC contact (1e13 N/m)",
    "cross_check_L1R_V6_max_abs_diff_mm": 0.0,
-   "runtime_s": 17.21
+   "runtime_s": 8.54
   },
   "leg_parameters": {
    "head_area_m2": [
@@ -19097,7 +19097,7 @@
      17.847
     ]
    },
-   "wall_s": 17.0
+   "wall_s": 8.43
   },
   "V12_rule": "reference = reference.json slope_V12/<case>/L2b_NSC (rev. 35: S7 Chrono topology, dyn_model.static_slope_l2b_chrono_topology, axial ko = series(oil head, rod, frame, concrete) at the levelled extension, kt barrel-rod horizontal, place and settle); the rod-side law is armed (anchor taken) only after the gravity ramp and settle, so the V12 values do not change",
   "V14": {

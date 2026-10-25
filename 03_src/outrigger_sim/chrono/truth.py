@@ -25,8 +25,9 @@ Ideal values (no sensor error; :class:`outrigger_sim.sensors.suite.SensorSuite` 
   ``A_head`` and ``k_oil`` as below, bit-identical to the formulas, and ``rod_pressure_Pa``
   stays None (no rod-side sensor in the net-equivalent path).
 * **Head pressure** (formula, mechanics off) ``p = F_cyl / A_head`` (Pa), ``A_head`` per leg
-  (``sensors.hydraulic.leg_head_areas_from_params``: ``legs.<leg>.cylinder.*`` or the common
-  ``actuator.bore_diameter_m``); ``F_cyl`` = ``GetMotorForce()`` (+ pushes the pad down, R4).
+  (``sensors.hydraulic.leg_head_areas_from_params``: ``legs.<leg>.cylinder.*``; the common
+  ``actuator.bore_diameter_m`` only for a YAML from before the bundle of 2026-10-25);
+  ``F_cyl`` = ``GetMotorForce()`` (+ pushes the pad down, R4).
   Without the rod side a pulling cylinder reads a negative head pressure.
 * **Strokes** (risk 3, both): ``stroke_m`` = motor position (the L1 rigid stroke) and
   ``stroke_corrected_m`` = ``stroke_true`` = ``s_motor - F_cyl / k_oil`` (CLAUDE.md '센서',

@@ -3,14 +3,17 @@
 Checks (results in 01_cad/09_sim_shapes/sim_shapes_verification.json):
     files       every OBJ of the index exists; vertex / face / piece counts as in the index
     pads        bottom area vs the pad-type table 02_params/pad_variants.json (the C8 index pads are
-                type dwg_rear250: front 330 = 0.1071 m^2, rear 250 = 0.0607 m^2; U-PAD 2026-10-25,
-                the YAML legs.<leg>.pad.bottom_area_m2 is recorded but not judged), outward normal
+                type dwg_rear250: front 330 = 0.1071 m^2, rear 250 = 0.0607 m^2; U-PAD 2026-10-25;
+                the YAML pad area (pad_shapes default type, bundle 2026-10-25) is recorded, not
+                judged here: the table is checked against the YAML in pad_variants), outward normal
                 (-z), side angle (47.1 / 3.4 deg, YAML), bottom height (YAML, 0.1 mm rounding),
                 simple plate vs B-rep plate (volume, COM, inertia), down-facing area of the OBJ,
                 inertia validity
     pad_variants every pad type of the table: hull / simple OBJ exist with the table SHA-256,
                 down-facing area = table area, table polygon area = table area, b = 2 A / perimeter,
-                bottom height (YAML), convex, CAD-type polygons = YAML polygons
+                bottom height (YAML), convex, table shapes = YAML pad_shapes (every type and leg;
+                before the bundle: CAD-type polygons = YAML legs.<leg>.pad), via
+                outrigger_sim.pad_variants.check_table_against_params
     legs        rod / pad / moving-part meshes vs B-rep (volume, COM, inertia), COM inside bbox,
                 YAML moving-part COM inside the moving-part mesh bbox (attach offset sanity)
     visual      superstructure meshes vs B-rep: volume and bbox (recomputed from the OBJ)
@@ -128,7 +131,8 @@ def check_pads(index: dict, params, table) -> dict:
             "table_polygon_max_vertex_diff_m": float(np.abs(
                 _nearest_diff(np.asarray(face["brep_polygon_xy_body_m"]), table_poly)).max()),
             "obj_down_area_rel_to_brep": down_area / face["brep_area_m2"] - 1,
-            # YAML still holds the CAD 330 rear polygon until the YAML bundle (5.30.5): recorded, not judged
+            # YAML pad = pad_shapes default type (dwg_rear250 since the bundle 2026-10-25, before it the
+            # CAD 330 rear pad): recorded, not judged (the table vs YAML check is in check_pad_variants)
             "yaml_area_rel_to_brep_info": face["yaml_polygon_area_m2"] / face["brep_area_m2"] - 1,
             "tilt_deg": face["brep_tilt_from_vertical_deg"],
             "side_angle_brep_deg": face["brep_side_angle_deg"],

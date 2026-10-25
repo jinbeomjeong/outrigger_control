@@ -23,9 +23,9 @@ Conventions of the copied state (all SI, world frame Z-up):
   (checked 2026-10-20 with a body rotated 30 deg; the pad sphere is the only contact shape
   of the rod body).
 * ``stroke_true_m``: actual stroke = motor position minus the compression of the locked oil
-  column ``F_cyl / k_oil`` (``contact.rigid_floor.L1.derivation.k_oil_N_m``, head side only,
-  ``actuator.rod_side_chamber_model``). In L1 the oil compliance is lumped into the pad
-  contact stiffness, so the rigid motor position is the commanded (locked) stroke and the
+  column ``F_cyl / k_oil`` (``contact.rigid_floor.L1.derivation.k_oil_N_m``, head side only;
+  the rod side is the separate ``actuator.rod_side`` spring of L1-R). In L1 the oil
+  compliance is lumped into the pad contact stiffness, so the rigid motor position is the commanded (locked) stroke and the
   piston sits ``F_cyl / k_oil`` (about 5 mm at the operating point) shorter (signals
   ``TruthState.stroke_true_m``, user decision 2026-10-20). Rod, frame and slab compliance do
   not change the stroke.

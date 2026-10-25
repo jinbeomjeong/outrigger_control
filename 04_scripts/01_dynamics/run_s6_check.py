@@ -92,8 +92,8 @@ PARAMS = ARGS.params
 params = yaml.safe_load(PARAMS.read_text(encoding="utf-8"))
 act = params["actuator"]
 LEG_NAMES = ("FL", "FR", "RL", "RR")
-A_HEAD_LEGS = np.array([math.pi / 4.0 * float(((params["legs"][n].get("cylinder") or {}).get("bore_diameter_m",
-                                                                                            act["bore_diameter_m"]))) ** 2
+A_HEAD_LEGS = np.array([math.pi / 4.0 * float(((params["legs"][n].get("cylinder") or {}).get("bore_diameter_m")
+                                                 or act["bore_diameter_m"])) ** 2   # common key only for old YAML
                         for n in LEG_NAMES])
 A_HEAD = float(A_HEAD_LEGS[0])  # FL (the V11b / physical reference leg)
 BETA = float(act["oil_bulk_modulus_eff_Pa"])

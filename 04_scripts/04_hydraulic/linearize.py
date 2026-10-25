@@ -9,6 +9,11 @@ Outputs 06_analysis/03_hydraulic/l2_linear_plant.json:
   D  discrete coupling map: numerical damping / stability of a stiff force law applied through a
      Python hook with 0 or 1 step lag (and with the lag predictor), as a function of omega dt
 
+HISTORICAL BASIS (pinned 2026-10-25, D7): every YAML value comes from l2_params.load_yaml(), i.e. the
+frozen history YAML 02_params/history/rexome33_2026-10-22_before_rexome35.yaml (REXOME33 old common
+dimensions 115/110 mm, stroke 0.68 m, with that file's own damping and loads). The output is the
+"REXOME33 old-dimension L2 reference response history", not a plant for the current REXOME35 legs.
+
 Run (conda hydraulics-dev): python -I 04_scripts/04_hydraulic/linearize.py
 """
 from __future__ import annotations
@@ -30,7 +35,7 @@ LEGS = ("FL", "FR", "RL", "RR")
 
 
 def k_oil_table() -> dict:
-    y = lp.load_yaml()
+    y = lp.load_yaml()  # pinned history YAML (old common cylinder keys exist only there)
     act = y["actuator"]
     D, d = act["bore_diameter_m"], act["rod_diameter_m"]
     A_A = math.pi / 4 * D ** 2
@@ -189,7 +194,9 @@ def lag_table() -> dict:
 
 
 def main() -> None:
+    lp.print_basis()
     res = {"meta": {"script": "04_scripts/04_hydraulic/linearize.py", "env": "conda hydraulics-dev",
+                    "yaml": lp.YAML_REL, "basis": lp.BASIS_NOTE,
                     "control_version": ct.__version__, "date": "2026-10-20",
                     "pressure": "gauge (linear, deviations from the static point)",
                     "units": "SI: m, m/s, Pa, N, m^3/s, s"}}

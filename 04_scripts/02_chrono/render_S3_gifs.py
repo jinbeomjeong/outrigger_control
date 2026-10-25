@@ -132,6 +132,8 @@ INDEP_COLOR = "#5f7fb3"
 DT_COLORS = {2.0e-4: "#c0392b", 1.0e-4: "#1f6fb2", 5.0e-5: "#2e8b57", 1.0e-5: "#3b3b3b"}
 ARROW_N_M_PER_N = 1.0 / 100e3
 LIFT_BOX = (8, 96, 560, 796)
+# Placeholder 218.125 kN = the old common CAD cylinder value (removed from the YAML in the bundle
+# 2026-10-25); main() overwrites both from legs.<leg>.cylinder.max_force_extend_N (REXOME35).
 F_MAX_MOVING_KN = 218.125
 F_MAX_MOVING_LEG_KN = [F_MAX_MOVING_KN] * 4
 """Per-leg moving saturation [kN] (LEG_ORDER); main() sets it (legs.<leg>.cylinder.*)."""
@@ -152,7 +154,6 @@ def draw_moving_limits(ax, x_text=None) -> None:
     if x_text is not None:
         ax.text(x_text, min(F_MAX_MOVING_LEG_KN) - 4, "이동 중 포화 (210 bar, 다리별)",
                 color=ACCENT, fontsize=7.5, va="top")
-"""Moving saturation [kN]; main() sets it from the YAML actuator.max_force_extend_N."""
 
 plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False

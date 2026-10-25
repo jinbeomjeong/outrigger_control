@@ -17,22 +17,23 @@ meta:
     dynamics: "00_docs/01_dynamics/dynamics_model.md"
     dynamics_formulas: "04_scripts/01_dynamics/dyn_model.py, 04_scripts/01_dynamics/run_reference.py"
     dynamics_reference: "06_analysis/00_dynamics/reference.json"
+    pad_shapes: "01_cad/02_legs/legs/*_10_1.brep (CAD pads), 01_cad/02_legs/rexome35/moving_R{L,R}.brep (drawing rear 250 pads)"
   # 00_docs/01_dynamics/dynamics_model.md 10 (rev. 4): stage in which each dynamics key is needed (common / L1 / L2b / L2 / SCM); operating plan B (decision_log.md sec. 3): L1 for the controller, L2b = L2b-NSC for re-assessment
   dynamics_stages:
-    common: "needed from L1 on: legs.*.pad.{joint, swivel_center_above_pad_bottom_m, swivel_tilt_range_deg}, actuator.{model_default, bore/rod/barrel diameters, oil_*, frame_stiffness_N_m, cylinder_type, annulus_area_m2, rod_side_chamber_model, relief_pressure_moving_Pa, max_force_extend_N, max_force_retract_N, locked_pressure_limit_Pa, lock_valve, pump_flow_m3_s, flow_control}, control.*, sensors.*, contact.rigid_floor.{model, geometry, friction, ground_body_mass_kg, damping_input_convention, concrete}, contact.crawler.*, simulation.crawler_clearance_m"
+    common: "needed from L1 on: legs.*.pad.{joint, swivel_center_above_pad_bottom_m, swivel_tilt_range_deg}, legs.*.cylinder.*, actuator.{model_default, oil_*, rod_dead_length_m, frame_stiffness_N_m, cylinder_type, rod_side, relief_pressure_moving_Pa, locked_pressure_limit_Pa, lock_valve, pump_flow_m3_s, pump_volumetric_efficiency, flow_control}, control.*, sensors.*, contact.rigid_floor.{model, geometry, friction, ground_body_mass_kg, damping_input_convention, concrete}, contact.crawler.*, simulation.crawler_clearance_m"
     L1: "L1 default (controller development): contact.rigid_floor.L1.*, simulation.L1.*"
     L2b: "L2b-NSC, operating plan B re-assessment (large slope, seal friction, SCM): contact.rigid_floor.L2b_NSC.*, actuator.L2b_NSC.*, simulation.L2b_NSC.*"
     L2: "when switching to L2 after the hydraulic spec is known (rigid-guide L2 and SMC-L2b keys, kept per 00_docs/01_dynamics/dynamics_model.md 10; operating plan B uses L2b instead): contact.rigid_floor.L2.*, actuator.L2.*, simulation.L2.*"
-    SCM: "soft soil (separate pad body): legs.*.pad_body.*, legs.*.rod_body.*"
+    SCM: "soft soil (separate pad body): legs.*.pad_body.*, legs.*.rod_body.*, pad_shapes.*"
   # decision_log.md sec. 2 '기준 질량' (case C); replace when the operating weight is known
   mass_basis:
     case: "C"
     status: "provisional"
-    description: "STEP densities; the 5 AUGER TOOL rows as steel 7.85 g/cm^3 (CLAUDE.md 2026-10-19)"
+    description: "STEP densities; the 5 AUGER TOOL rows as steel 7.85 g/cm^3 (CLAUDE.md 2026-10-19); REXOME35 barrels replace the CAD barrels (superstructure.barrel_replacement)"
   # CLAUDE.md '좌표계와 명명'
   frame:
     axes: "x forward (mast / FRONT JACK CYL side), y left, z up; right-handed"
-    origin: "CAD origin (body origin undecided)"
+    origin: "CAD origin = axis of the slewing-ring bolt circle PCD 1120 mm at the deck underside"
     units: "SI (m, kg, s, rad, N)"
     cad_length_unit: "mm"
     cad_axes:
@@ -153,20 +154,13 @@ actuator:
   command_accel_limit_m_s2: 0.209243016  # [common] derived: max_speed_m_s / command_ramp_s
   extension_direction: [0.0, 0.0, -1.0]  # body frame: extending pushes the pad down (-z)
   model_default: "L1"  # [common] user decision 2026-10-19 (decision_log.md sec. 3 '구동기 모델'): L1 temporary default
-  bore_diameter_m: 0.115  # SUPERSEDED by legs.<leg>.cylinder (REXOME35, per leg); old REXOME33 CAD common value kept only until 03_src reads the per-leg keys (python-expert, dynamics_model.md 5.11.10 order 4) - do not use
-  rod_diameter_m: 0.11  # SUPERSEDED by legs.<leg>.cylinder (REXOME35, per leg); old REXOME33 CAD common value kept only until 03_src reads the per-leg keys (python-expert, dynamics_model.md 5.11.10 order 4) - do not use
-  barrel_outer_diameter_m: 0.16  # SUPERSEDED by legs.<leg>.cylinder (REXOME35, per leg); old REXOME33 CAD common value kept only until 03_src reads the per-leg keys (python-expert, dynamics_model.md 5.11.10 order 4) - do not use
   oil_bulk_modulus_eff_Pa: 1000000000.0  # [common, L2b, L2] ASSUMPTION: 사용자 결정 (decision_log.md sec. 7, 2026-10-19); drives the L1 stiffness and the L2b k_oil(s)
   oil_bulk_modulus_sensitivity_range_Pa: [690000000.0, 1600000000.0]  # [common] ASSUMPTION: 사용자 결정 (decision_log.md sec. 7), 00_docs/01_dynamics/dynamics_model.md 2.4; = dyn_model.py ASSUMPTIONS oil_bulk_modulus_range_Pa (checked)
   oil_dead_length_m: 0.05  # [common, L2b, L2] ASSUMPTION: head-side port/pipe volume as column length, 00_docs/01_dynamics/dynamics_model.md 2.3; sensitivity 0.05 ... 0.08 m (user decision 2026-10-22, hydraulics rod_side_pressure.md 16); head side only since rev. 30
   rod_dead_length_m: 0.05  # [L1-R, L2b] ASSUMPTION: rod-side dead length (column length = stroke - e + this), sensitivity 0.02 ... 0.1 m (user decision 2026-10-22, hydraulics rod_side_pressure.md 16); L2b override as a scalar or a 4-list (ML draws U(0.02, 0.10) m)
   frame_stiffness_N_m: 1000000000.0  # [common, L2b, L2] ASSUMPTION: bracket / outrigger box, 00_docs/01_dynamics/dynamics_model.md 2.3
-  cylinder_type: "double-acting; dual pilot-operated check valve mounted on the cylinder (both chambers locked); hose outside the locked volume"  # [common] circuit drawing, 00_docs/02_hydraulic/hydraulic_circuit.md
-  annulus_area_m2: 0.000883572934  # SUPERSEDED by legs.<leg>.cylinder (REXOME35, per leg); old REXOME33 CAD common value kept only until 03_src reads the per-leg keys (python-expert, dynamics_model.md 5.11.10 order 4) - do not use
-  rod_side_chamber_model: "neglected (head side only); one-sided +10 % kv when the leg unloads, sensitivity only"  # [common] superseded by actuator.rod_side (L1-R, user decision 2026-10-22, dynamics_model.md 5.12); text kept for old readers
+  cylinder_type: "double-acting; dual pilot-operated check valve mounted on the cylinder (both chambers locked); hose outside the locked volume"  # [common] circuit drawing, 00_docs/02_hydraulic/hydraulic_circuit.md; per-leg dimensions, areas and force limits in legs.<leg>.cylinder (the common REXOME33 keys bore/rod/barrel diameters, annulus_area_m2, max_force_* and rod_side_chamber_model were removed in the 2026-10-25 bundle)
   relief_pressure_moving_Pa: 21000000.0  # [common] circuit drawing: MCV relief 210 bar, reached only at the stroke ends (decision_log.md sec. 4 '압력 한계')
-  max_force_extend_N: 218124.705  # SUPERSEDED by legs.<leg>.cylinder (REXOME35, per leg); old REXOME33 CAD common value kept only until 03_src reads the per-leg keys (python-expert, dynamics_model.md 5.11.10 order 4) - do not use
-  max_force_retract_N: 18555.0316  # SUPERSEDED by legs.<leg>.cylinder (REXOME35, per leg); old REXOME33 CAD common value kept only until 03_src reads the per-leg keys (python-expert, dynamics_model.md 5.11.10 order 4) - do not use
   locked_pressure_limit_Pa: 35000000.0  # [common] manufacturer: cylinder maximum load test pressure 350 bar (locked, judgement metric V17); force per leg = legs.<leg>.cylinder.locked_force_limit_N
   lock_valve: "pilot_check"  # [common] manufacturer: current dual pilot-operated check; option "counterbalance" (relieves like a 350 bar relief, L2b model in 00_docs/01_dynamics/dynamics_model.md 4.4; S8 L2b model actuator.counterbalance, user decision U-S8-H5/H6 2026-10-24)
   pump_flow_m3_s: 0.00100333333  # [common] circuit drawing: 60.2 L/min; 4 legs at max_speed_m_s need sum(A_p) v_max = 57.1900 L/min = 60.2 x pump_volumetric_efficiency (checked: <= pump flow)
@@ -194,7 +188,7 @@ actuator:
       FR: 0.3489
       RL: 0.3591
       RR: 0.3591
-    # derived: oil_bulk_modulus_eff_Pa x annulus_area_m2 / column_length_m
+    # derived: oil_bulk_modulus_eff_Pa x legs.<leg>.cylinder.annulus_area_m2 / column_length_m
     k_rod_side_N_m:
       FL: 10805133.8
       FR: 10805133.8
@@ -243,7 +237,7 @@ actuator:
     blocked_line_capacity_m3: 1.87e-05  # ASSUMPTION: V_line (p_cr - p_line0) / beta_hose, 3/8 in. x 4 m, beta 0.5 GPa (spec 4.4)
   # [L2b] ChLinkMotorLinearForce F = k_ax(s)(s_ref - s) + c_oil(ds_ref - ds), s_ref <- clip(s_ref + sat(u) dt, 0, stroke), 00_docs/01_dynamics/dynamics_model.md 2.3 / 4.4; on SCM drop k_concrete from k_ax (series(k_oil(s), k_rod, k_frame)); lateral bushing with the drive guide freed in x, y
   L2b_NSC:
-    # ASSUMPTION (derived): k_oil(s) = oil_bulk_modulus_eff_Pa pi/4 bore^2 / (oil_dead_length_m + s); operating point = contact.rigid_floor.L1.kn_per_pad_N_m (run_reference.py:529-530)
+    # ASSUMPTION (derived): k_oil(s) = oil_bulk_modulus_eff_Pa legs.<leg>.cylinder.head_area_m2 / (oil_dead_length_m + s); operating point = contact.rigid_floor.L1.kn_per_pad_N_m (run_reference.py:529-530)
     axial_stiffness:
       formula: "series(k_oil(s), k_rod, k_frame, k_concrete)"
       operating_point_N_m:
@@ -275,7 +269,7 @@ actuator:
       FR: 7898.13173
       RL: 5686.18896
       RR: 5686.18896
-  # [L2] ChLinkMotorLinearForce F = k_oil(s)(s_ref - s) + c_oil(ds_ref - ds), 00_docs/01_dynamics/dynamics_model.md 4.4; k_oil(s) = oil_bulk_modulus_eff_Pa * pi/4 bore^2 / (oil_dead_length_m + s)
+  # [L2] ChLinkMotorLinearForce F = k_oil(s)(s_ref - s) + c_oil(ds_ref - ds), 00_docs/01_dynamics/dynamics_model.md 4.4; k_oil(s) = oil_bulk_modulus_eff_Pa legs.<leg>.cylinder.head_area_m2 / (oil_dead_length_m + s)
   L2:
     # ASSUMPTION (derived): locked leg (pilot check closed): 2 zeta sqrt(k_axial_leg m/4), zeta 0.03 on the heave mode (m = damping_mass_kg; sensitivity 0.01 ... 0.1), user decision 2026-10-20, 00_docs/01_dynamics/damping_survey.md (literature-derived, not measured); run_reference.py:509
     oil_damping_N_s_m:
@@ -324,21 +318,11 @@ legs:
       max_force_retract_N: 79168.1349
       locked_force_limit_N: 464563.014
     pad_bottom_center_retracted_m: [2.2938, 1.3238, -0.6998]  # cad_summary.json legs.FL.pad_center_body_m (bottom face) + retracted_offset_from_cad_m in z
+    # joint, swivel and plate profile (same for both pad types); bottom polygon / area in pad_shapes (bundle 2026-10-25, SCM only)
     pad:
       shape: "octagon"
       thickness_m: 0.025  # BREP 01_cad/02_legs/legs/FRONT_JACK_CYL_1___10_1.brep: bottom face to the pad top face (+Y_cad plane), incl. the 45 deg top-edge chamfer
       side_height_m: 0.02  # BREP: height of the 8 vertical side faces; 00_docs/00_cad/cad_review.md 3.1 '두께 20 mm' is this value
-      bottom_area_m2: 0.1071  # BREP 01_cad/02_legs/legs/FRONT_JACK_CYL_1___10_1.brep lowest -Y_cad plane; 00_docs/00_cad/cad_review.md gives 0.1071
-      # outer wire vertices of the pad bottom face relative to pad_bottom_center_retracted_m (x, y), counter-clockwise from +z; CAD shape and orientation (decision_log.md sec. 2 '다리 기하')
-      polygon_xy_m:
-        - [-0.212809176, 0.013279973]
-        - [-0.21123253, -0.0291171282]
-        - [-0.0133506668, -0.212809176]
-        - [0.0290464344, -0.21123253]
-        - [0.212738482, -0.0133506668]
-        - [0.211161836, 0.0290464344]
-        - [0.013279973, 0.212738482]
-        - [-0.0291171282, 0.211161836]
       joint: "spherical"  # [common] user decision 2026-10-19 (decision_log.md sec. 2 '다리 기하'): swivel pad
       swivel_center_above_pad_bottom_m: 0.06  # [common] ASSUMPTION: ball centre height (CAD has no swivel), 00_docs/01_dynamics/dynamics_model.md 2.1
       swivel_tilt_range_deg: 10.0  # [common] ASSUMPTION: free tilt about the ball, 00_docs/01_dynamics/dynamics_model.md 2.2
@@ -392,21 +376,11 @@ legs:
       max_force_retract_N: 79168.1349
       locked_force_limit_N: 464563.014
     pad_bottom_center_retracted_m: [2.2938, -1.3238, -0.6998]  # cad_summary.json legs.FR.pad_center_body_m (bottom face) + retracted_offset_from_cad_m in z
+    # joint, swivel and plate profile (same for both pad types); bottom polygon / area in pad_shapes (bundle 2026-10-25, SCM only)
     pad:
       shape: "octagon"
       thickness_m: 0.025  # BREP 01_cad/02_legs/legs/FRONT_JACK_CYL_2___10_1.brep: bottom face to the pad top face (+Y_cad plane), incl. the 45 deg top-edge chamfer
       side_height_m: 0.02  # BREP: height of the 8 vertical side faces; 00_docs/00_cad/cad_review.md 3.1 '두께 20 mm' is this value
-      bottom_area_m2: 0.1071  # BREP 01_cad/02_legs/legs/FRONT_JACK_CYL_2___10_1.brep lowest -Y_cad plane; 00_docs/00_cad/cad_review.md gives 0.1071
-      # outer wire vertices of the pad bottom face relative to pad_bottom_center_retracted_m (x, y), counter-clockwise from +z; CAD shape and orientation (decision_log.md sec. 2 '다리 기하')
-      polygon_xy_m:
-        - [0.013279973, 0.212809176]
-        - [-0.0291171282, 0.21123253]
-        - [-0.212809176, 0.0133506668]
-        - [-0.21123253, -0.0290464344]
-        - [-0.0133506668, -0.212738482]
-        - [0.0290464344, -0.211161836]
-        - [0.212738482, -0.013279973]
-        - [0.211161836, 0.0291171282]
       joint: "spherical"  # [common] user decision 2026-10-19 (decision_log.md sec. 2 '다리 기하'): swivel pad
       swivel_center_above_pad_bottom_m: 0.06  # [common] ASSUMPTION: ball centre height (CAD has no swivel), 00_docs/01_dynamics/dynamics_model.md 2.1
       swivel_tilt_range_deg: 10.0  # [common] ASSUMPTION: free tilt about the ball, 00_docs/01_dynamics/dynamics_model.md 2.2
@@ -460,21 +434,11 @@ legs:
       max_force_retract_N: 65973.4457
       locked_force_limit_N: 332616.122
     pad_bottom_center_retracted_m: [-2.556, 1.1679, -0.71]  # cad_summary.json legs.RL.pad_center_body_m (bottom face) + retracted_offset_from_cad_m in z
+    # joint, swivel and plate profile (same for both pad types); bottom polygon / area in pad_shapes (bundle 2026-10-25, SCM only)
     pad:
       shape: "octagon"
       thickness_m: 0.025  # BREP 01_cad/02_legs/legs/REAR_JACK_CYL_1___10_1.brep: bottom face to the pad top face (+Y_cad plane), incl. the 45 deg top-edge chamfer
       side_height_m: 0.02  # BREP: height of the 8 vertical side faces; 00_docs/00_cad/cad_review.md 3.1 '두께 20 mm' is this value
-      bottom_area_m2: 0.1071  # BREP 01_cad/02_legs/legs/REAR_JACK_CYL_1___10_1.brep lowest -Y_cad plane; 00_docs/00_cad/cad_review.md gives 0.1071
-      # outer wire vertices of the pad bottom face relative to pad_bottom_center_retracted_m (x, y), counter-clockwise from +z; CAD shape and orientation (decision_log.md sec. 2 '다리 기하')
-      polygon_xy_m:
-        - [-0.144483263, 0.156730148]
-        - [-0.172664354, 0.125015387]
-        - [-0.156762836, -0.144515951]
-        - [-0.125048074, -0.172697041]
-        - [0.144483263, -0.156795523]
-        - [0.172664354, -0.125080761]
-        - [0.156762836, 0.144450576]
-        - [0.125048074, 0.172631667]
       joint: "spherical"  # [common] user decision 2026-10-19 (decision_log.md sec. 2 '다리 기하'): swivel pad
       swivel_center_above_pad_bottom_m: 0.06  # [common] ASSUMPTION: ball centre height (CAD has no swivel), 00_docs/01_dynamics/dynamics_model.md 2.1
       swivel_tilt_range_deg: 10.0  # [common] ASSUMPTION: free tilt about the ball, 00_docs/01_dynamics/dynamics_model.md 2.2
@@ -488,7 +452,7 @@ legs:
         - [7.94437735, 0.0, 0.0]
         - [0.0, 7.94437735, 0.0]
         - [0.0, 0.0, 0.228800409]
-    # [SCM, held until S9] ball-joint split of the synthesized rear leg: pad plate (below pad bottom + split_plane_above_pad_bottom_m) + socket housing with 4 ribs; NOTE pad.polygon_xy_m stays the CAD 330 pad (rear 250 x 250 deferred to S9); com_m / inertia about com_m in body axes
+    # [SCM, held until S9] ball-joint split of the synthesized rear leg: pad plate (below pad bottom + split_plane_above_pad_bottom_m) + socket housing with 4 ribs; the plate is the rear 250 pad of pad_shapes type B (dwg_rear250), used for both types (U-PAD-3); com_m / inertia about com_m in body axes
     pad_body:
       split_plane_above_pad_bottom_m: 0.025
       mass_kg: 25.8007906
@@ -528,21 +492,11 @@ legs:
       max_force_retract_N: 65973.4457
       locked_force_limit_N: 332616.122
     pad_bottom_center_retracted_m: [-2.556, -1.2429, -0.71]  # cad_summary.json legs.RR.pad_center_body_m (bottom face) + retracted_offset_from_cad_m in z
+    # joint, swivel and plate profile (same for both pad types); bottom polygon / area in pad_shapes (bundle 2026-10-25, SCM only)
     pad:
       shape: "octagon"
       thickness_m: 0.025  # BREP 01_cad/02_legs/legs/REAR_JACK_CYL_2___10_1.brep: bottom face to the pad top face (+Y_cad plane), incl. the 45 deg top-edge chamfer
       side_height_m: 0.02  # BREP: height of the 8 vertical side faces; 00_docs/00_cad/cad_review.md 3.1 '두께 20 mm' is this value
-      bottom_area_m2: 0.1071  # BREP 01_cad/02_legs/legs/REAR_JACK_CYL_2___10_1.brep lowest -Y_cad plane; 00_docs/00_cad/cad_review.md gives 0.1071
-      # outer wire vertices of the pad bottom face relative to pad_bottom_center_retracted_m (x, y), counter-clockwise from +z; CAD shape and orientation (decision_log.md sec. 2 '다리 기하')
-      polygon_xy_m:
-        - [0.144483263, -0.156730148]
-        - [0.172664354, -0.125015387]
-        - [0.156762836, 0.144515951]
-        - [0.125048074, 0.172697041]
-        - [-0.144483263, 0.156795523]
-        - [-0.172664354, 0.125080761]
-        - [-0.156762836, -0.144450576]
-        - [-0.125048074, -0.172631667]
       joint: "spherical"  # [common] user decision 2026-10-19 (decision_log.md sec. 2 '다리 기하'): swivel pad
       swivel_center_above_pad_bottom_m: 0.06  # [common] ASSUMPTION: ball centre height (CAD has no swivel), 00_docs/01_dynamics/dynamics_model.md 2.1
       swivel_tilt_range_deg: 10.0  # [common] ASSUMPTION: free tilt about the ball, 00_docs/01_dynamics/dynamics_model.md 2.2
@@ -556,7 +510,7 @@ legs:
         - [7.94437735, 0.0, 0.0]
         - [0.0, 7.94437735, 0.0]
         - [0.0, 0.0, 0.228800409]
-    # [SCM, held until S9] ball-joint split of the synthesized rear leg: pad plate (below pad bottom + split_plane_above_pad_bottom_m) + socket housing with 4 ribs; NOTE pad.polygon_xy_m stays the CAD 330 pad (rear 250 x 250 deferred to S9); com_m / inertia about com_m in body axes
+    # [SCM, held until S9] ball-joint split of the synthesized rear leg: pad plate (below pad bottom + split_plane_above_pad_bottom_m) + socket housing with 4 ribs; the plate is the rear 250 pad of pad_shapes type B (dwg_rear250), used for both types (U-PAD-3); com_m / inertia about com_m in body axes
     pad_body:
       split_plane_above_pad_bottom_m: 0.025
       mass_kg: 25.8007906
@@ -575,6 +529,131 @@ legs:
         - [3.61101369, 0.0, 0.0]
         - [0.0, 3.61101369, 0.0]
         - [0.0, 0.0, 0.0481824176]
+# [SCM] bundle 2026-10-25 (user decisions U-PAD-1..6, dynamics_model.md 5.30.5 (3)): pad bottom shape types, an experiment variable of the soft-soil stage only; left out of the L1 / L2b fingerprint (params.py SCM_ONLY_HASH_PATHS); the rigid-floor models do not use the pad area (dynamics_model.md 5.30.3). Masses are not part of a type (U-PAD-3: legs.<leg>.moving_part / pad_body = the synthesized rear 250 pad for both types). Polygons relative to legs.<leg>.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z, body frame; bekker_b_m = 2 A / perimeter (Chrono SCM patch width, vehicle_terrain.md 82-97)
+pad_shapes:
+  default_type: "dwg_rear250"  # user decision U-PAD-1 (2026-10-25): type B = REXOME35 drawing (front 330 / rear 250); the loader fills legs.<leg>.pad polygon / area from this type
+  type_order: ["cad330", "dwg_rear250"]
+  types:
+    # type A: REXOME33 CAD pad on all four legs, 330 x 330, chamfer 30, 0.1071 m^2 (B-rep 01_cad/02_legs/legs/*_10_1.brep, lowest -Y_cad plane, outer wire)
+    cad330:
+      label: "A"
+      legs:
+        FL:
+          source_kind: "cad_brep"
+          polygon_xy_m:
+            - [-0.212809176, 0.013279973]
+            - [-0.21123253, -0.0291171282]
+            - [-0.0133506668, -0.212809176]
+            - [0.0290464344, -0.21123253]
+            - [0.212738482, -0.0133506668]
+            - [0.211161836, 0.0290464344]
+            - [0.013279973, 0.212738482]
+            - [-0.0291171282, 0.211161836]
+          bottom_area_m2: 0.1071
+          perimeter_m: 1.24970563
+          bekker_b_m: 0.171400364
+        FR:
+          source_kind: "cad_brep"
+          polygon_xy_m:
+            - [0.013279973, 0.212809176]
+            - [-0.0291171282, 0.21123253]
+            - [-0.212809176, 0.0133506668]
+            - [-0.21123253, -0.0290464344]
+            - [-0.0133506668, -0.212738482]
+            - [0.0290464344, -0.211161836]
+            - [0.212738482, -0.013279973]
+            - [0.211161836, 0.0291171282]
+          bottom_area_m2: 0.1071
+          perimeter_m: 1.24970563
+          bekker_b_m: 0.171400364
+        RL:
+          source_kind: "cad_brep"
+          polygon_xy_m:
+            - [-0.144483263, 0.156730148]
+            - [-0.172664354, 0.125015387]
+            - [-0.156762836, -0.144515951]
+            - [-0.125048074, -0.172697041]
+            - [0.144483263, -0.156795523]
+            - [0.172664354, -0.125080761]
+            - [0.156762836, 0.144450576]
+            - [0.125048074, 0.172631667]
+          bottom_area_m2: 0.1071
+          perimeter_m: 1.24970563
+          bekker_b_m: 0.171400364
+        RR:
+          source_kind: "cad_brep"
+          polygon_xy_m:
+            - [0.144483263, -0.156730148]
+            - [0.172664354, -0.125015387]
+            - [0.156762836, 0.144515951]
+            - [0.125048074, 0.172697041]
+            - [-0.144483263, 0.156795523]
+            - [-0.172664354, 0.125080761]
+            - [-0.156762836, -0.144450576]
+            - [-0.125048074, -0.172631667]
+          bottom_area_m2: 0.1071
+          perimeter_m: 1.24970563
+          bekker_b_m: 0.171400364
+    # type B (default): front = CAD pad (drawing = CAD); rear = REXOME35 drawing REXOME35-9206 Rev.0 SECTION A-A' 250 x 250 (08_test_data/datasheets/cylinder_rear_extract.md), synthesis B-rep 01_cad/02_legs/rexome35/moving_R{L,R}.brep; ASSUMPTION: corner chamfer 30 mm, CAD pad orientation (3.4 deg), plate thickness 25 / side height 20 mm as the CAD pad
+    dwg_rear250:
+      label: "B"
+      legs:
+        FL:
+          source_kind: "cad_brep"
+          polygon_xy_m:
+            - [-0.212809176, 0.013279973]
+            - [-0.21123253, -0.0291171282]
+            - [-0.0133506668, -0.212809176]
+            - [0.0290464344, -0.21123253]
+            - [0.212738482, -0.0133506668]
+            - [0.211161836, 0.0290464344]
+            - [0.013279973, 0.212738482]
+            - [-0.0291171282, 0.211161836]
+          bottom_area_m2: 0.1071
+          perimeter_m: 1.24970563
+          bekker_b_m: 0.171400364
+        FR:
+          source_kind: "cad_brep"
+          polygon_xy_m:
+            - [0.013279973, 0.212809176]
+            - [-0.0291171282, 0.21123253]
+            - [-0.212809176, 0.0133506668]
+            - [-0.21123253, -0.0290464344]
+            - [-0.0133506668, -0.212738482]
+            - [0.0290464344, -0.211161836]
+            - [0.212738482, -0.013279973]
+            - [0.211161836, 0.0291171282]
+          bottom_area_m2: 0.1071
+          perimeter_m: 1.24970563
+          bekker_b_m: 0.171400364
+        RL:
+          source_kind: "drawing_synthesis_brep"
+          polygon_xy_m:
+            - [0.119188048, 0.102196914]
+            - [0.0874732861, 0.130378005]
+            - [-0.102196914, 0.119188048]
+            - [-0.130378005, 0.0874732861]
+            - [-0.119188048, -0.102196914]
+            - [-0.0874732861, -0.130378005]
+            - [0.102196914, -0.119188048]
+            - [0.130378005, -0.0874732861]
+          bottom_area_m2: 0.0607
+          perimeter_m: 0.929705627
+          bekker_b_m: 0.130578967
+        RR:
+          source_kind: "drawing_synthesis_brep"
+          polygon_xy_m:
+            - [0.119188048, 0.102196914]
+            - [0.0874732861, 0.130378005]
+            - [-0.102196914, 0.119188048]
+            - [-0.130378005, 0.0874732861]
+            - [-0.119188048, -0.102196914]
+            - [-0.0874732861, -0.130378005]
+            - [0.102196914, -0.119188048]
+            - [0.130378005, -0.0874732861]
+          bottom_area_m2: 0.0607
+          perimeter_m: 0.929705627
+          bekker_b_m: 0.130578967
 # 00_docs/01_dynamics/dynamics_model.md 4.1 / 4.2 (all contact parameters are assumptions)
 contact:
   rigid_floor:
@@ -675,7 +754,7 @@ contact:
           RR: 3750346.99
         steel_E_Pa: 210000000000.0
         rod_length_for_k_rod_m: 1.05
-        damping_ratio: 0.03  # ASSUMPTION: leg axial zeta, locked cylinder (L1, L2b at rest), user decision 2026-10-20, 00_docs/01_dynamics/damping_survey.md (literature-derived, not measured); cn = 2 zeta sqrt(kn m/4) gives exactly this zeta in the uncoupled heave mode (damping_reference_mode_Hz, about 7.4 Hz); a fixed dashpot gives zeta proportional to frequency, so the L1 rocking modes get less (1st about 0.008); the same zeta is used for the tangential / bushing dashpots; seal friction F_s is modelled separately
+        damping_ratio: 0.03  # ASSUMPTION: leg axial zeta, locked cylinder (L1, L2b at rest), user decision 2026-10-20, 00_docs/01_dynamics/damping_survey.md (literature-derived, not measured); cn = 2 zeta sqrt(k_lock m/4) gives exactly this zeta in the uncoupled heave mode (damping_reference_mode_Hz, 8.88 Hz); a fixed dashpot gives zeta proportional to frequency, so the L1 rocking modes get less (06_analysis/00_dynamics/reference.json L1 zeta); the same zeta is used for the tangential / bushing dashpots; seal friction F_s is modelled separately
         damping_ratio_sensitivity_range: [0.01, 0.1]  # ASSUMPTION: user decision 2026-10-20
         damping_reference_mode_Hz: 8.87993688  # derived: uncoupled heave on the L1 pads with the LOCK stiffness sqrt(sum(k_lock_N_m) / damping_mass_kg) / 2 pi
         damping_mass_kg: 38760.7299
@@ -747,12 +826,12 @@ contact:
 # [common] decision_log.md sec. 2 'F_min' (user decision 2026-10-19), 00_docs/01_dynamics/dynamics_model.md 3.2 / 6
 control:
   F_min_fraction_of_mean_leg_load: 0.1  # user decision 2026-10-19
-  F_min_cylinder_N: 9414.58911  # derived: fraction * superstructure mass * g / 4 (cylinder force basis; pad contact force basis adds the rod weight, about 10.50 kN)
-  F_min_basis: "cylinder force (pressure x bore area) = superstructure weight share; pad contact force = cylinder force + rod weight"
-# [common] decision_log.md sec. 2 '센서' / sec. 4 '압력 센서' (2026-10-19), 00_docs/02_hydraulic/hydraulic_circuit.md
+  F_min_cylinder_N: 9414.58911  # derived: fraction * superstructure mass * g / 4 (net cylinder force basis); pad contact force basis adds the moving-part weight: FL 10.46 / FR 10.46 / RL 10.13 / RR 10.13 kN
+  F_min_basis: "net cylinder force F_cyl = p_h A_p - p_r A_ann (two pressure sensors per leg, after zero-offset calibration) = superstructure weight share; pad contact force = cylinder force + moving-part weight"  # user decision 2026-10-19 (F_min); net force of the two pressure sensors (R6-P / U52; CLAUDE.md 'F_min')
+# [common] decision_log.md sec. 2 '센서' / sec. 4 '압력 센서' (2026-10-19, two sensors per leg 2026-10-22 U43-U61), 00_docs/02_hydraulic/hydraulic_circuit.md; sample periods are not in this file: pressure, stroke and valve output 10 Hz point samples (c2.py R8_PERIOD_S), IMU 100 Hz (c2.py R8_IMU_SAMPLE_PERIOD_S)
 sensors:
   cylinder_pressure:
-    location: "lock valve block on the cylinder (head chamber); reads the trapped load pressure while locked; p = F_cyl / head area"  # manufacturer description; head-side reading, rod-side pressure 0 assumed
+    location: "two sensors per leg, head and rod chamber, at the chamber-side A / B ports between the cylinder and the pilot-operated check block; read the trapped pressures while locked; net cylinder force F_cyl = p_h A_p - p_r A_ann with the per-leg areas legs.<leg>.cylinder.head_area_m2 / annulus_area_m2, zero-offset calibrated"  # R6-P / U52 (2026-10-22), CLAUDE.md '센서·주기': WIKA A-10 0-400 bar, +-4 bar (08_test_data/datasheets/WIKA_A-10_pressure_sensor_summary.md); the sensor error model is in 03_src/outrigger_sim/sensors (not in this file); before 2026-10-25 this value was the pre-R6-P head-only text
   # user decision 2026-10-22 (decision_log.md sec. 6, dynamics_model.md 5.12.3): software stroke-end limits from the sensor range, plant stroke actuator.stroke_m
   stroke:
     measurable_max_m: 0.6948  # ASSUMPTION: unit no-load test reading 694.8 mm (front type; rear assumed equal)

@@ -1,8 +1,17 @@
 """Parameters of the L2 hydraulic leg model (spec 00_docs/02_hydraulic/l2_hydraulic_model_spec.md, 2 and 7).
 
-Reads 02_params/rexome33.yaml (read only) and adds the hydraulic ASSUMPTIONs that the YAML does not
-carry yet. Every derived number is computed with pint units and written to
-06_analysis/03_hydraulic/l2_params.json together with its source / ASSUMPTION tag.
+HISTORICAL BASIS (pinned 2026-10-25, YAML regen bundle H-1 / user decision D7):
+this is the "REXOME33 old-dimension L2 reference response history" path. It reads the frozen
+history YAML 02_params/history/rexome33_2026-10-22_before_rexome35.yaml (read only), NOT the current
+02_params/rexome33.yaml. Geometry (common bore/rod 115/110 mm, stroke 0.68 m), v_max, damping
+(actuator.L2.oil_damping*), loads and F_min all come from that one file, so the L2 spec first
+edition (2026-10-21) is reproduced bit for bit and old areas are no longer mixed with REXOME35
+per-leg damping. The current YAML no longer carries the common cylinder keys. A per-leg REXOME35
+re-run would be option (b) of D7 (re-run and re-judge the L2 spec), not done here.
+
+Adds the hydraulic ASSUMPTIONs that the YAML does not carry. Every derived number is computed with
+pint units and written to 06_analysis/03_hydraulic/l2_params.json with its source / ASSUMPTION tag.
+Importers (linearize.py, run_l2_reference.py, hopsan_single_leg.py) get the same basis via build().
 
 Run (conda hydraulics-dev):  python -I 04_scripts/04_hydraulic/l2_params.py
 """
@@ -17,7 +26,11 @@ import yaml
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-YAML_PATH = ROOT / "02_params" / "rexome33.yaml"
+# Pinned history YAML (D7): do not point this at the current 02_params/rexome33.yaml.
+YAML_REL = "02_params/history/rexome33_2026-10-22_before_rexome35.yaml"
+YAML_PATH = ROOT / YAML_REL
+BASIS_NOTE = ("L2 reference basis = REXOME33 old dimensions (history, pinned 2026-10-25 D7): "
+              f"{YAML_REL}; common bore/rod 115/110 mm, stroke 0.68 m; NOT the current REXOME35 per-leg YAML")
 OUT_DIR = ROOT / "06_analysis" / "03_hydraulic"
 sys.path.insert(0, str(HERE))
 
@@ -27,8 +40,13 @@ G = 9.80665
 
 
 def load_yaml() -> dict:
+    """Frozen history YAML (see module docstring). Every read of this L2 path goes through here."""
     with open(YAML_PATH, encoding="utf-8") as fh:
         return yaml.safe_load(fh)
+
+
+def print_basis() -> None:
+    print(f"[basis] {BASIS_NOTE}")
 
 
 def series(*k: float) -> float:
@@ -232,10 +250,11 @@ def unit_table() -> dict:
 
 
 def main() -> None:
+    print_basis()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     prm, c = build()
     out = {
-        "meta": {"script": "04_scripts/04_hydraulic/l2_params.py", "yaml": "02_params/rexome33.yaml",
+        "meta": {"script": "04_scripts/04_hydraulic/l2_params.py", "yaml": YAML_REL, "basis": BASIS_NOTE,
                  "env": "conda hydraulics-dev", "pressure_convention": "absolute inside, gauge in reports",
                  "date": "2026-10-20"},
         "scenario_constants_FL": c,

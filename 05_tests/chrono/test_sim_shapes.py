@@ -87,8 +87,9 @@ def test_pad_visual_lands_on_pad_bottom(
     # rear pads: YAML pad bottom is rounded to 0.1 mm (-0.710 vs B-rep -0.710044 m)
     assert np.allclose(world.mean(axis=0), expected, atol=1e-4)
     # bottom face area (mesh normal pointing down) = B-rep pad face of the generated shape:
-    # front 0.1071 m^2 (CAD 330 pad), rear 0.0607 m^2 (C8: REXOME35 250 pad); the YAML
-    # legs.<leg>.pad.bottom_area_m2 still carries the CAD 0.1071 for the rear legs
+    # front 0.1071 m^2 (CAD 330 pad), rear 0.0607 m^2 (C8: REXOME35 250 pad) = YAML pad type B
+    # (pad_shapes.dwg_rear250, the default type after the bundle of 2026-10-25); a YAML from
+    # before the bundle still carries the CAD 0.1071 in legs.<leg>.pad.bottom_area_m2
     brep_area_m2 = index.data["legs"][leg]["pad_face"]["brep_area_m2"]
     a, b, c = (vertices[faces[:, k]] for k in range(3))
     n = np.cross(b - a, c - a)

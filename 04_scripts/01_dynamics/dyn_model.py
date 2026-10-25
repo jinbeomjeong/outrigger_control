@@ -111,13 +111,13 @@ class Body:
     inertia: np.ndarray  # about com, body axes
 
 
-def geometry_from_params(p: dict) -> Geometry:
+def geometry_from_params(p: dict, pad_type: str | None = None) -> Geometry:  # pad_type: pad_shapes type (D-1, 2026-10-25)
     legs = p["legs"]
     pad_xy = np.array([legs[n]["pad_bottom_center_retracted_m"][:2] for n in LEG_NAMES])
     pad_z = np.array([legs[n]["pad_bottom_center_retracted_m"][2] for n in LEG_NAMES])
     attach_z = np.array([legs[n]["attachment_point_m"][2] for n in LEG_NAMES])
     barrel_bot = np.array([legs[n]["barrel_z_range_m"][0] for n in LEG_NAMES])
-    polys = [np.array(legs[n]["pad"]["polygon_xy_m"]) for n in LEG_NAMES]
+    polys = pad_polygons_from_params(p, pad_type)  # YAML pad_shapes (bundle 2026-10-25) or old legs.<leg>.pad, end of file
     rod_mass = np.array([legs[n]["moving_part"]["mass_kg"] for n in LEG_NAMES])
     rod_com = np.array([legs[n]["moving_part"]["com_retracted_m"] for n in LEG_NAMES])
     rod_I = [np.array(legs[n]["moving_part"]["inertia_kg_m2"]) for n in LEG_NAMES]
@@ -762,3 +762,45 @@ def scalar_if_equal(a):
 def annulus_area(leg=None):
     """Rod-side (annulus) area pi/4 (D_bore^2 - D_rod^2) [m^2]: scalar if all legs are equal, else (4,)."""
     return math.pi / 4 * (cylinder_value("bore_diameter_m", leg) ** 2 - cylinder_value("rod_diameter_m", leg) ** 2)
+
+
+# ---------------------------------------------------------------------------
+# Pad bottom shapes (YAML regeneration bundle 2026-10-25, D-1; user decisions U-PAD-1..6, D6 = default type)
+# ---------------------------------------------------------------------------
+# Appended at the end of the file (line references, see CYLINDER_KEYS above). Source order:
+#   YAML pad_shapes.types[<type>].legs[<leg>]  (bundle YAML; <type> = argument or pad_shapes.default_type)
+#   YAML legs.<leg>.pad.{polygon_xy_m, bottom_area_m2}  (YAML before the bundle, 02_params/history; type "legacy")
+# Polygons are relative to legs.<leg>.pad_bottom_center_retracted_m (x, y), body frame, counter-clockwise from +z.
+LEGACY_PAD_TYPE = "legacy"
+
+
+def pad_type_from_params(p: dict, pad_type: str | None = None) -> str:
+    """Pad shape type used for p: the argument, else YAML pad_shapes.default_type, else 'legacy' (old YAML)."""
+    ps = p.get("pad_shapes") if isinstance(p, dict) else None
+    if not ps:
+        if pad_type not in (None, LEGACY_PAD_TYPE):
+            raise KeyError(f"pad type {pad_type!r} requested but the YAML has no pad_shapes block (pre-bundle YAML)")
+        return LEGACY_PAD_TYPE
+    t = pad_type if pad_type is not None else ps["default_type"]
+    if t not in ps["types"]:
+        raise KeyError(f"pad type {t!r} not in pad_shapes.types {list(ps['types'])}")
+    return t
+
+
+def pad_shape_from_params(p: dict, leg: str, pad_type: str | None = None) -> dict:
+    """{polygon_xy_m (8,2) array, bottom_area_m2, type} of one leg (perimeter_m, bekker_b_m when the YAML has them)."""
+    t = pad_type_from_params(p, pad_type)
+    if t == LEGACY_PAD_TYPE:
+        d = p["legs"][leg]["pad"]
+    else:
+        d = p["pad_shapes"]["types"][t]["legs"][leg]
+    out = {"type": t, "polygon_xy_m": np.array(d["polygon_xy_m"], float), "bottom_area_m2": float(d["bottom_area_m2"])}
+    for k in ("perimeter_m", "bekker_b_m", "source_kind"):
+        if k in d:
+            out[k] = d[k] if k == "source_kind" else float(d[k])
+    return out
+
+
+def pad_polygons_from_params(p: dict, pad_type: str | None = None) -> list:
+    """List of the four pad polygons (8,2) [m] in LEG_NAMES order (see pad_shape_from_params)."""
+    return [pad_shape_from_params(p, n, pad_type)["polygon_xy_m"] for n in LEG_NAMES]

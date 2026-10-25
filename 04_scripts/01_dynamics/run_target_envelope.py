@@ -82,7 +82,8 @@ ASSUMPTIONS = {
                                                 # re-anchoring (<= 2.9 mm), F_s hysteresis; C2 clips at s_max - 0.1 mm
     "clearance_variants_m": [0.0, 0.020, 0.050],  # task: 0 / 20 / 50 mm (C2 heave target 50 mm = YAML)
     "F_guard_margin_N": 5000.0,                 # C2 guard threshold F_min + 5 kN (variant)
-    "force_upper_N": None,                      # filled: actuator.max_force_extend_N (210 bar, moving)
+    "force_upper_N": None,                      # filled: legs.<leg>.cylinder.max_force_extend_N (210 bar, moving)
+    "rod_section": "per leg, legs.<leg>.cylinder.rod_diameter_m (bundle 2026-10-25 D-2; before: 110 mm for all)",
     "touchdown_pose": "settled on the crawler (layout D, dyn_model.static_unilateral), pads stick at first touch",
     "tangential_compliance": "rod lateral (perpendicular to the leg axis) k_t = series(swivel cantilever, concrete); "
                              "'yaml' = L1 kt_per_pad (upper bound), 'ext' = secant k_t(e) (best estimate)",
@@ -182,8 +183,13 @@ class Ctx:
                 r.append([c["lever_gland_centre_m"], c["tip_deflection_m"], c["imperfection_m"], c["P_euler_sway_N"]])
             rows.append(r)
         self.rod_tab = np.array(rows)   # (151, 4, 4): a_c, flex [m/N], e0, P_E
-        D = float(p["actuator"]["rod_diameter_m"])
-        self.A_r, _, self.Z_r = lrc.sec_rod(D)
+        # per-leg rod section (bundle 2026-10-25, D-2): the same section leg_case uses (leg_geometry dims =
+        # legs.<leg>.cylinder.rod_diameter_m, old YAML: actuator.rod_diameter_m). Before the fix one common
+        # actuator.rod_diameter_m (110 mm) was used for all legs, so the rear 90 mm rods were rated too strong.
+        self.rod_D = np.array([float(self.rodg[leg]["dims"][1]) for leg in LEGS])
+        sec = [lrc.sec_rod(D) for D in self.rod_D]
+        self.A_r = np.array([s[0] for s in sec])
+        self.Z_r = np.array([s[2] for s in sec])
         self.rod_sy = lrc.ASSUMPTIONS["rod_yield_Pa"]
 
     # -------- stiffness helpers
@@ -204,7 +210,7 @@ class Ctx:
             a_c, flex, e0, PE = (np.interp(e[i], self.e_tab, self.rod_tab[:, i, j]) for j in range(4))
             AF = 1.0 / (1.0 - P[i] / PE)
             M = (abs(F[i]) * a_c + P[i] * (abs(F[i]) * flex + e0)) * AF
-            out[i] = sy / (P[i] / self.A_r + M / self.Z_r)
+            out[i] = sy / (P[i] / self.A_r[i] + M / self.Z_r[i])
         return out
 
     # -------- touchdown anchors
@@ -656,7 +662,7 @@ def stage_main():
                                    "left up, pitch > 0 nose down; floor slope (phi_g, theta_g) = plane z = -tan(theta_g) x "
                                    "+ tan(phi_g) y (attitude on the crawler); forces kN, strokes m (motor coordinate)",
                     "F_min_N": ctx().F_min, "F_up_N": ASSUMPTIONS["force_upper_N"], "stroke_m": ctx().stroke,
-                    "swivel_max_deg": ctx().swivel_max}}
+                    "swivel_max_deg": ctx().swivel_max, "rod_diameter_m": ctx().rod_D.tolist()}}
     out["checks"] = stage_checks()
     print(f"checks done {time.time()-t0:.1f} s", flush=True)
     jobs = [(lv, "flat") for lv in dm.LEVELS] + [("top", fk) for fk in FLOORS if fk != "flat"]
@@ -881,16 +887,18 @@ def figure(d):
         ax.set_xlabel("목표 roll φ_t [deg] (+ = 좌측 위)")
     for ax in axs[:, 0]:
         ax.set_ylabel("목표 pitch θ_t [deg] (+ = 앞내림)")
-    handles = [Patch(fc="#d9f0d3", label="도달 가능(크롤러 50 mm, s ≤ 680 mm, F ≥ F_min+5 kN, 스위블, 218 kN) + 로드 1.5 충족"),
+    s_mm = round(smax * 1e3)
+    fup_txt = "/".join(f"{x / 1e3:.1f}" for x in np.unique(np.atleast_1d(Fup))[::-1]) + " kN"
+    handles = [Patch(fc="#d9f0d3", label=f"도달 가능(크롤러 50 mm, s ≤ {s_mm} mm, F ≥ F_min+5 kN, 스위블, {fup_txt}) + 로드 1.5 충족(다리별 로드 단면)"),
                Patch(fc="#fdd49e", label="도달 가능, 로드 굽힘 여유 < 1.5 (할선·C45 또는 YAML·20MnV6)"),
                Patch(fc="#9ecae1", label="불가: 스트로크 끝(크롤러 여유 50 mm)"),
                Patch(fc="#fb6a4a", label="불가: F_cyl < F_min + 5 kN"),
                Patch(fc="#9e9ac8", label="불가: 스위블 > 10°"),
-               Patch(fc="#636363", label="불가: F_cyl > 218 kN"),
-               plt.Line2D([], [], color="#08519c", lw=1.6, label="스트로크 680 mm 경계: 실선 50 / 파선 20 / 점선 0 mm 여유"),
-               plt.Line2D([], [], color="#6baed6", lw=0.9, label="스트로크 670 mm(마진 10 mm, 50 mm 여유)"),
+               Patch(fc="#636363", label=f"불가: F_cyl > 다리별 한계({fup_txt})"),
+               plt.Line2D([], [], color="#08519c", lw=1.6, label=f"스트로크 {s_mm} mm 경계: 실선 50 / 파선 20 / 점선 0 mm 여유"),
+               plt.Line2D([], [], color="#6baed6", lw=0.9, label=f"스트로크 {s_mm - 10} mm(마진 10 mm, 50 mm 여유)"),
                plt.Line2D([], [], color="#d94801", lw=1.3, label="로드 여유 1.5: 실선 할선·C45 / 파선 YAML·20MnV6"),
-               plt.Line2D([], [], color="#a50f15", lw=1.3, label="F_cyl = F_min (9.45 kN)"),
+               plt.Line2D([], [], color="#a50f15", lw=1.3, label=f"F_cyl = F_min ({Fmin / 1e3:.2f} kN)"),
                Patch(fc="none", ec="k", lw=2, label="사용자 잠정 범위 roll ±6°, pitch ±3°"),
                plt.Line2D([], [], color="#006d2c", lw=2, label="권고 규칙: |Δφ|/4.4+|Δθ|/3.2 ≤ 1 그리고 |φ_t|/4.4+|θ_t|/3.2 ≤ 1 (Δ = 목표 - 지면)"),
                plt.Line2D([], [], color="#54278f", lw=2, ls="--", label="기하 규칙(로드 제외): |Δφ|/5.5+|Δθ|/3.5 ≤ 1")]

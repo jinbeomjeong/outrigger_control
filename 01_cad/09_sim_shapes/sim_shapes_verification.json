@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-25T20:14:36",
+ "generated_at": "2026-10-25T23:54:29",
  "index": {
   "path": "01_cad/09_sim_shapes/sim_shapes.json",
   "bytes": 129651,
@@ -7,13 +7,13 @@
  },
  "script": {
   "path": "04_scripts/00_cad/verify_sim_shapes.py",
-  "bytes": 25371,
-  "sha256": "10edbf47ce8b8ec1a8885278c581ccce210172ac2b0c2c3cc9289b6a2037a9b5"
+  "bytes": 25738,
+  "sha256": "14258a04c4dfcc228778e0729a18d3bbd621053444198ac099bbace85f758989"
  },
  "pad_variants_table": {
   "path": "02_params/pad_variants.json",
-  "bytes": 23585,
-  "sha256": "698bc5e045d366c025d2ff66033d97af4adae0d1ecf62c4eed1dcc495a88cb0e",
+  "bytes": 26408,
+  "sha256": "00cf734bddc2877be1365da2cf995689b38ccb2736156ba6d307823cfab443ee",
   "default": "dwg_rear250",
   "index_pad_variant": "dwg_rear250"
  },
@@ -1800,5 +1800,5 @@
   },
   "note": "superstructure visual meshes are display only; their volume is not used for mass"
  },
- "time_s": 10.630128499993589
+ "time_s": 10.554019400035031
 }

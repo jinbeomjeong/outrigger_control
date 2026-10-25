@@ -1,0 +1,802 @@
+{
+ "schema": 1,
+ "generated": "2026-10-25T20:12:32",
+ "generator": {
+  "path": "04_scripts/00_cad/export_pad_variants.py",
+  "sha256": "b5419ef3aa125489e901881ba098c73096ee5bf409e379f3b84d9be4a3338d0d"
+ },
+ "decision": "user decisions U-PAD-1..6 2026-10-25 (00_docs/decision_log.md sec. 2; 00_docs/01_dynamics/dynamics_model.md rev. 44 5.30.5 / 5.30.8)",
+ "default": "dwg_rear250",
+ "names": [
+  "cad330",
+  "dwg_rear250"
+ ],
+ "use": "S9 (SCM) and shape consumers only: outrigger_sim.pad_variants.apply_pad_variant(params, name) overrides legs.<leg>.pad.polygon_xy_m / bottom_area_m2 in memory (the run fingerprint then holds the type); rigid-floor L1 / L2b (S1 ... S8) do not use the pad area (5.30.3) and keep the YAML as is",
+ "frame": "machine body axes (x forward, y left, z up), metres; polygons relative to legs.<leg>.pad_bottom_center_retracted_m",
+ "units": "SI (m, m^2); angles in deg (side_angle_deg: long pad sides from body x, folded to [0, 90))",
+ "bekker_b_definition": "b = 2 A / perimeter (Chrono SCM patch width, vehicle_terrain.md 82-97)",
+ "params_yaml": {
+  "path": "02_params/rexome33.yaml",
+  "file_sha256": "a7128d75d066650c9e1f5337cfdbf2abdee170a82ee4afd85a43ae9ff5a0c96a",
+  "note": "read only (pad bottom centres, retracted offsets, type A comparison)"
+ },
+ "c8_index": {
+  "path": "01_cad/09_sim_shapes/sim_shapes.json",
+  "bytes": 129651,
+  "sha256": "1bca462922f8a56b2b59c74e12b0dd319857a3a1ae0a23bb238f668e8fcf7fd5"
+ },
+ "variants": {
+  "cad330": {
+   "label": "A",
+   "description": "REXOME33 CAD pads on all four legs: 330 x 330, chamfer 30, 0.1071 m^2 (B-rep)",
+   "mass_note": "moving-part / pad-body masses as in the YAML (= type B rear 250 synthesis); U-PAD-3: only area and polygon change",
+   "legs": {
+    "FL": {
+     "source_kind": "cad_brep",
+     "source": "REXOME33 CAD B-rep 01_cad/02_legs/legs/FRONT_JACK_CYL_1___10_1_10_1.brep, lowest -Y_cad plane (outer wire)",
+     "brep": {
+      "path": "01_cad/02_legs/legs/FRONT_JACK_CYL_1___10_1.brep",
+      "bytes": 44215,
+      "sha256": "4fd2375116b3b56fafe6f422d17853555fc4b97d8823af0edd6a5e4ca4f0d249"
+     },
+     "assumptions": [],
+     "polygon_xy_m": [
+      [
+       -0.212809176,
+       0.013279973
+      ],
+      [
+       -0.21123253,
+       -0.0291171282
+      ],
+      [
+       -0.0133506668,
+       -0.212809176
+      ],
+      [
+       0.0290464344,
+       -0.21123253
+      ],
+      [
+       0.212738482,
+       -0.0133506668
+      ],
+      [
+       0.211161836,
+       0.0290464344
+      ],
+      [
+       0.013279973,
+       0.212738482
+      ],
+      [
+       -0.0291171282,
+       0.211161836
+      ]
+     ],
+     "polygon_sha256": "a285cd0b1881d4e5ba0378e78fbbd93dd2b2b924e729577d82008e67c915d377",
+     "polygon_reference": "relative to legs.FL.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z",
+     "bottom_area_m2": 0.1071,
+     "perimeter_m": 1.24970563,
+     "bekker_b_m": 0.171400364,
+     "equivalent_radius_m": 0.184637452,
+     "equivalent_square_side_m": 0.327261363,
+     "side_angle_deg": 47.1297108,
+     "thickness_m": 0.025,
+     "side_height_m": 0.02,
+     "c8": {
+      "in_c8_index": true,
+      "hull": {
+       "name": "pad_FL_hull",
+       "file": "01_cad/09_sim_shapes/collision/pad_FL_hull.obj",
+       "sha256": "c13021c1b08d59a3b498e1c122780521746d82ca8427808adb6bfe75d9c1c2fa",
+       "faces": 44
+      },
+      "visual_simple": {
+       "name": "pad_FL_simple",
+       "file": "01_cad/09_sim_shapes/visual/pad_FL_simple.obj",
+       "sha256": "f67e212cbb2bbe021650be94154943a468ce45f7e115bcc62e4218ae1831083f",
+       "faces": 44
+      }
+     }
+    },
+    "FR": {
+     "source_kind": "cad_brep",
+     "source": "REXOME33 CAD B-rep 01_cad/02_legs/legs/FRONT_JACK_CYL_2___10_1_10_1.brep, lowest -Y_cad plane (outer wire)",
+     "brep": {
+      "path": "01_cad/02_legs/legs/FRONT_JACK_CYL_2___10_1.brep",
+      "bytes": 44216,
+      "sha256": "02ac33d11e486dec42605ce59403cfa1f29be4c034bd495641d6269d3caf98dd"
+     },
+     "assumptions": [],
+     "polygon_xy_m": [
+      [
+       0.013279973,
+       0.212809176
+      ],
+      [
+       -0.0291171282,
+       0.21123253
+      ],
+      [
+       -0.212809176,
+       0.0133506668
+      ],
+      [
+       -0.21123253,
+       -0.0290464344
+      ],
+      [
+       -0.0133506668,
+       -0.212738482
+      ],
+      [
+       0.0290464344,
+       -0.211161836
+      ],
+      [
+       0.212738482,
+       -0.013279973
+      ],
+      [
+       0.211161836,
+       0.0291171282
+      ]
+     ],
+     "polygon_sha256": "7e8c5e018c796a38875802c3891c952f45d75be5c3c55d5b9595ad5163609f6a",
+     "polygon_reference": "relative to legs.FR.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z",
+     "bottom_area_m2": 0.1071,
+     "perimeter_m": 1.24970563,
+     "bekker_b_m": 0.171400364,
+     "equivalent_radius_m": 0.184637452,
+     "equivalent_square_side_m": 0.327261363,
+     "side_angle_deg": 47.1297108,
+     "thickness_m": 0.025,
+     "side_height_m": 0.02,
+     "c8": {
+      "in_c8_index": true,
+      "hull": {
+       "name": "pad_FR_hull",
+       "file": "01_cad/09_sim_shapes/collision/pad_FR_hull.obj",
+       "sha256": "5f229a9ba09f5c798bdd72eed072c58eb55cd7f2fce65714512a97ce1650c19e",
+       "faces": 44
+      },
+      "visual_simple": {
+       "name": "pad_FR_simple",
+       "file": "01_cad/09_sim_shapes/visual/pad_FR_simple.obj",
+       "sha256": "1247c0487fbe1a1fe12993f4fb676608c6c15ea91b84f6cc16fbfc46672be203",
+       "faces": 44
+      }
+     }
+    },
+    "RL": {
+     "source_kind": "cad_brep",
+     "source": "REXOME33 CAD B-rep 01_cad/02_legs/legs/REAR_JACK_CYL_1___10_1_10_1.brep, lowest -Y_cad plane (outer wire)",
+     "brep": {
+      "path": "01_cad/02_legs/legs/REAR_JACK_CYL_1___10_1.brep",
+      "bytes": 44208,
+      "sha256": "a9260d1408d3f0f78533c14ae15c9b57fdc5e3eb5b2fc72c4393ff051a507656"
+     },
+     "assumptions": [],
+     "polygon_xy_m": [
+      [
+       -0.144483263,
+       0.156730148
+      ],
+      [
+       -0.172664354,
+       0.125015387
+      ],
+      [
+       -0.156762836,
+       -0.144515951
+      ],
+      [
+       -0.125048074,
+       -0.172697041
+      ],
+      [
+       0.144483263,
+       -0.156795523
+      ],
+      [
+       0.172664354,
+       -0.125080761
+      ],
+      [
+       0.156762836,
+       0.144450576
+      ],
+      [
+       0.125048074,
+       0.172631667
+      ]
+     ],
+     "polygon_sha256": "bef4cb5e3ad520810916fb8df3ed764ee3721fe34479b1571cb74579edd6eab8",
+     "polygon_reference": "relative to legs.RL.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z",
+     "bottom_area_m2": 0.1071,
+     "perimeter_m": 1.24970563,
+     "bekker_b_m": 0.171400364,
+     "equivalent_radius_m": 0.184637452,
+     "equivalent_square_side_m": 0.327261363,
+     "side_angle_deg": 3.37636082,
+     "thickness_m": 0.025,
+     "side_height_m": 0.02,
+     "c8": {
+      "in_c8_index": false,
+      "hull": {
+       "name": "pad_RL_hull_cad330",
+       "file": "01_cad/09_sim_shapes/pad_variants/collision/pad_RL_hull_cad330.obj",
+       "sha256": "094db318522723b5c474ecef8ca0ed0134fa2c1cb70ed7fa3061965f3ecfb463",
+       "faces": 44
+      },
+      "visual_simple": {
+       "name": "pad_RL_simple_cad330",
+       "file": "01_cad/09_sim_shapes/pad_variants/visual/pad_RL_simple_cad330.obj",
+       "sha256": "23548bb1f12a3212de38274da0fd01ffe63c15c891fe00dcbedff8edb06ef158",
+       "faces": 44
+      }
+     }
+    },
+    "RR": {
+     "source_kind": "cad_brep",
+     "source": "REXOME33 CAD B-rep 01_cad/02_legs/legs/REAR_JACK_CYL_2___10_1_10_1.brep, lowest -Y_cad plane (outer wire)",
+     "brep": {
+      "path": "01_cad/02_legs/legs/REAR_JACK_CYL_2___10_1.brep",
+      "bytes": 44211,
+      "sha256": "0b05375e72f5d85a578748e61a765ee63a46df31e109c92349b2d9aa974b4408"
+     },
+     "assumptions": [],
+     "polygon_xy_m": [
+      [
+       0.144483263,
+       -0.156730148
+      ],
+      [
+       0.172664354,
+       -0.125015387
+      ],
+      [
+       0.156762836,
+       0.144515951
+      ],
+      [
+       0.125048074,
+       0.172697041
+      ],
+      [
+       -0.144483263,
+       0.156795523
+      ],
+      [
+       -0.172664354,
+       0.125080761
+      ],
+      [
+       -0.156762836,
+       -0.144450576
+      ],
+      [
+       -0.125048074,
+       -0.172631667
+      ]
+     ],
+     "polygon_sha256": "eab261ebbc67cfe89196c0c47c1f250882379820cab16e81c67bc9962115ad5b",
+     "polygon_reference": "relative to legs.RR.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z",
+     "bottom_area_m2": 0.1071,
+     "perimeter_m": 1.24970563,
+     "bekker_b_m": 0.171400364,
+     "equivalent_radius_m": 0.184637452,
+     "equivalent_square_side_m": 0.327261363,
+     "side_angle_deg": 3.37636082,
+     "thickness_m": 0.025,
+     "side_height_m": 0.02,
+     "c8": {
+      "in_c8_index": false,
+      "hull": {
+       "name": "pad_RR_hull_cad330",
+       "file": "01_cad/09_sim_shapes/pad_variants/collision/pad_RR_hull_cad330.obj",
+       "sha256": "9898ee2ca6748feca105e6881959b2e75f2e720a4a31561c70000ac5e64ed919",
+       "faces": 44
+      },
+      "visual_simple": {
+       "name": "pad_RR_simple_cad330",
+       "file": "01_cad/09_sim_shapes/pad_variants/visual/pad_RR_simple_cad330.obj",
+       "sha256": "b968e5b03e816e7b5a20d518ef913a9d8e31dee49e91474afcb511a7dfae2244",
+       "faces": 44
+      }
+     }
+    }
+   },
+   "override_keys": [
+    "legs.FL.pad.polygon_xy_m",
+    "legs.FL.pad.bottom_area_m2",
+    "legs.FR.pad.polygon_xy_m",
+    "legs.FR.pad.bottom_area_m2",
+    "legs.RL.pad.polygon_xy_m",
+    "legs.RL.pad.bottom_area_m2",
+    "legs.RR.pad.polygon_xy_m",
+    "legs.RR.pad.bottom_area_m2"
+   ]
+  },
+  "dwg_rear250": {
+   "label": "B",
+   "description": "front CAD 330 (drawing = CAD), rear REXOME35 drawing 250 x 250, chamfer 30 mm ASSUMPTION, 0.0607 m^2 (drawing-chain synthesis B-rep)",
+   "mass_note": "moving-part / pad-body masses as in the YAML (rear: 250 pad synthesis)",
+   "legs": {
+    "FL": {
+     "source_kind": "cad_brep",
+     "source": "REXOME33 CAD B-rep 01_cad/02_legs/legs/FRONT_JACK_CYL_1___10_1_10_1.brep, lowest -Y_cad plane (outer wire)",
+     "brep": {
+      "path": "01_cad/02_legs/legs/FRONT_JACK_CYL_1___10_1.brep",
+      "bytes": 44215,
+      "sha256": "4fd2375116b3b56fafe6f422d17853555fc4b97d8823af0edd6a5e4ca4f0d249"
+     },
+     "assumptions": [],
+     "polygon_xy_m": [
+      [
+       -0.212809176,
+       0.013279973
+      ],
+      [
+       -0.21123253,
+       -0.0291171282
+      ],
+      [
+       -0.0133506668,
+       -0.212809176
+      ],
+      [
+       0.0290464344,
+       -0.21123253
+      ],
+      [
+       0.212738482,
+       -0.0133506668
+      ],
+      [
+       0.211161836,
+       0.0290464344
+      ],
+      [
+       0.013279973,
+       0.212738482
+      ],
+      [
+       -0.0291171282,
+       0.211161836
+      ]
+     ],
+     "polygon_sha256": "a285cd0b1881d4e5ba0378e78fbbd93dd2b2b924e729577d82008e67c915d377",
+     "polygon_reference": "relative to legs.FL.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z",
+     "bottom_area_m2": 0.1071,
+     "perimeter_m": 1.24970563,
+     "bekker_b_m": 0.171400364,
+     "equivalent_radius_m": 0.184637452,
+     "equivalent_square_side_m": 0.327261363,
+     "side_angle_deg": 47.1297108,
+     "thickness_m": 0.025,
+     "side_height_m": 0.02,
+     "c8": {
+      "in_c8_index": true,
+      "hull": {
+       "name": "pad_FL_hull",
+       "file": "01_cad/09_sim_shapes/collision/pad_FL_hull.obj",
+       "sha256": "c13021c1b08d59a3b498e1c122780521746d82ca8427808adb6bfe75d9c1c2fa",
+       "faces": 44
+      },
+      "visual_simple": {
+       "name": "pad_FL_simple",
+       "file": "01_cad/09_sim_shapes/visual/pad_FL_simple.obj",
+       "sha256": "f67e212cbb2bbe021650be94154943a468ce45f7e115bcc62e4218ae1831083f",
+       "faces": 44
+      }
+     }
+    },
+    "FR": {
+     "source_kind": "cad_brep",
+     "source": "REXOME33 CAD B-rep 01_cad/02_legs/legs/FRONT_JACK_CYL_2___10_1_10_1.brep, lowest -Y_cad plane (outer wire)",
+     "brep": {
+      "path": "01_cad/02_legs/legs/FRONT_JACK_CYL_2___10_1.brep",
+      "bytes": 44216,
+      "sha256": "02ac33d11e486dec42605ce59403cfa1f29be4c034bd495641d6269d3caf98dd"
+     },
+     "assumptions": [],
+     "polygon_xy_m": [
+      [
+       0.013279973,
+       0.212809176
+      ],
+      [
+       -0.0291171282,
+       0.21123253
+      ],
+      [
+       -0.212809176,
+       0.0133506668
+      ],
+      [
+       -0.21123253,
+       -0.0290464344
+      ],
+      [
+       -0.0133506668,
+       -0.212738482
+      ],
+      [
+       0.0290464344,
+       -0.211161836
+      ],
+      [
+       0.212738482,
+       -0.013279973
+      ],
+      [
+       0.211161836,
+       0.0291171282
+      ]
+     ],
+     "polygon_sha256": "7e8c5e018c796a38875802c3891c952f45d75be5c3c55d5b9595ad5163609f6a",
+     "polygon_reference": "relative to legs.FR.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z",
+     "bottom_area_m2": 0.1071,
+     "perimeter_m": 1.24970563,
+     "bekker_b_m": 0.171400364,
+     "equivalent_radius_m": 0.184637452,
+     "equivalent_square_side_m": 0.327261363,
+     "side_angle_deg": 47.1297108,
+     "thickness_m": 0.025,
+     "side_height_m": 0.02,
+     "c8": {
+      "in_c8_index": true,
+      "hull": {
+       "name": "pad_FR_hull",
+       "file": "01_cad/09_sim_shapes/collision/pad_FR_hull.obj",
+       "sha256": "5f229a9ba09f5c798bdd72eed072c58eb55cd7f2fce65714512a97ce1650c19e",
+       "faces": 44
+      },
+      "visual_simple": {
+       "name": "pad_FR_simple",
+       "file": "01_cad/09_sim_shapes/visual/pad_FR_simple.obj",
+       "sha256": "1247c0487fbe1a1fe12993f4fb676608c6c15ea91b84f6cc16fbfc46672be203",
+       "faces": 44
+      }
+     }
+    },
+    "RL": {
+     "source_kind": "drawing_synthesis_brep",
+     "source": "REXOME35 drawing REXOME35-9206 Rev.0 rear SECTION A-A' 250 x 250 (08_test_data/datasheets/cylinder_rear_extract.md); synthesis B-rep 01_cad/02_legs/rexome35/moving_RL.brep (cyl35_synth.py), lowest -Y_cad plane",
+     "brep": {
+      "path": "01_cad/02_legs/rexome35/moving_RL.brep",
+      "bytes": 37824,
+      "sha256": "97461c3c8fbf2cf04af2acc7a92bf9fc0b4f7fae9c30922adb078e8fb766b4c1"
+     },
+     "assumptions": [
+      "ASSUMPTION: corner chamfer 30 x 30 mm (no dimension on the drawing; figure read 25 ... 30, 25 mm gives +0.9 % area, -0.4 % b)",
+      "ASSUMPTION: pad orientation of the CAD pad kept (3.376 deg from body x; swivel pad)",
+      "ASSUMPTION: plate thickness 25 mm / side height 20 mm as the CAD pad"
+     ],
+     "polygon_xy_m": [
+      [
+       0.119188048,
+       0.102196914
+      ],
+      [
+       0.0874732861,
+       0.130378005
+      ],
+      [
+       -0.102196914,
+       0.119188048
+      ],
+      [
+       -0.130378005,
+       0.0874732861
+      ],
+      [
+       -0.119188048,
+       -0.102196914
+      ],
+      [
+       -0.0874732861,
+       -0.130378005
+      ],
+      [
+       0.102196914,
+       -0.119188048
+      ],
+      [
+       0.130378005,
+       -0.0874732861
+      ]
+     ],
+     "polygon_sha256": "94bdeed215790aac434cec4a1a1ceb0b86c1242411a03682690c52b0952b9c47",
+     "polygon_reference": "relative to legs.RL.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z",
+     "bottom_area_m2": 0.0607,
+     "perimeter_m": 0.929705627,
+     "bekker_b_m": 0.130578967,
+     "equivalent_radius_m": 0.139001475,
+     "equivalent_square_side_m": 0.2463737,
+     "side_angle_deg": 3.37636075,
+     "thickness_m": 0.0250000001,
+     "side_height_m": 0.02,
+     "c8": {
+      "in_c8_index": true,
+      "hull": {
+       "name": "pad_RL_hull",
+       "file": "01_cad/09_sim_shapes/collision/pad_RL_hull.obj",
+       "sha256": "c438d934d958296cd0362aab9f4670a4e35c60467df513c62a65042f21b33063",
+       "faces": 44
+      },
+      "visual_simple": {
+       "name": "pad_RL_simple",
+       "file": "01_cad/09_sim_shapes/visual/pad_RL_simple.obj",
+       "sha256": "cc9faa38dfb613b264273777909e9096d63c38d9b7ddcb80f1450bc91b23fc94",
+       "faces": 44
+      }
+     }
+    },
+    "RR": {
+     "source_kind": "drawing_synthesis_brep",
+     "source": "REXOME35 drawing REXOME35-9206 Rev.0 rear SECTION A-A' 250 x 250 (08_test_data/datasheets/cylinder_rear_extract.md); synthesis B-rep 01_cad/02_legs/rexome35/moving_RR.brep (cyl35_synth.py), lowest -Y_cad plane",
+     "brep": {
+      "path": "01_cad/02_legs/rexome35/moving_RR.brep",
+      "bytes": 38072,
+      "sha256": "89f60d3c944b77f7a74898ad5f782799c691987da26561934f212d352c73a1fb"
+     },
+     "assumptions": [
+      "ASSUMPTION: corner chamfer 30 x 30 mm (no dimension on the drawing; figure read 25 ... 30, 25 mm gives +0.9 % area, -0.4 % b)",
+      "ASSUMPTION: pad orientation of the CAD pad kept (3.376 deg from body x; swivel pad)",
+      "ASSUMPTION: plate thickness 25 mm / side height 20 mm as the CAD pad"
+     ],
+     "polygon_xy_m": [
+      [
+       0.119188048,
+       0.102196914
+      ],
+      [
+       0.0874732861,
+       0.130378005
+      ],
+      [
+       -0.102196914,
+       0.119188048
+      ],
+      [
+       -0.130378005,
+       0.0874732861
+      ],
+      [
+       -0.119188048,
+       -0.102196914
+      ],
+      [
+       -0.0874732861,
+       -0.130378005
+      ],
+      [
+       0.102196914,
+       -0.119188048
+      ],
+      [
+       0.130378005,
+       -0.0874732861
+      ]
+     ],
+     "polygon_sha256": "94bdeed215790aac434cec4a1a1ceb0b86c1242411a03682690c52b0952b9c47",
+     "polygon_reference": "relative to legs.RR.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z",
+     "bottom_area_m2": 0.0607,
+     "perimeter_m": 0.929705627,
+     "bekker_b_m": 0.130578967,
+     "equivalent_radius_m": 0.139001475,
+     "equivalent_square_side_m": 0.2463737,
+     "side_angle_deg": 3.37636075,
+     "thickness_m": 0.0250000001,
+     "side_height_m": 0.02,
+     "c8": {
+      "in_c8_index": true,
+      "hull": {
+       "name": "pad_RR_hull",
+       "file": "01_cad/09_sim_shapes/collision/pad_RR_hull.obj",
+       "sha256": "e56be49191ed36f737cf7fde86deac9c90a43911aa7893830fd5b1df9031362f",
+       "faces": 44
+      },
+      "visual_simple": {
+       "name": "pad_RR_simple",
+       "file": "01_cad/09_sim_shapes/visual/pad_RR_simple.obj",
+       "sha256": "1482d72eecd37008b27a289451c2aaef2accb0270949b0179d64f690352c5999",
+       "faces": 44
+      }
+     }
+    }
+   },
+   "override_keys": [
+    "legs.FL.pad.polygon_xy_m",
+    "legs.FL.pad.bottom_area_m2",
+    "legs.FR.pad.polygon_xy_m",
+    "legs.FR.pad.bottom_area_m2",
+    "legs.RL.pad.polygon_xy_m",
+    "legs.RL.pad.bottom_area_m2",
+    "legs.RR.pad.polygon_xy_m",
+    "legs.RR.pad.bottom_area_m2"
+   ]
+  }
+ },
+ "tolerances": {
+  "area_vs_polygon_rel": 1e-06,
+  "area_vs_drawing_rel": 1e-06,
+  "polygon_vs_yaml_m": 1e-09,
+  "area_vs_yaml_rel": 1e-09,
+  "centroid_vs_yaml_m": 0.0001,
+  "bottom_z_vs_yaml_m": 0.0001,
+  "hull_volume_rel": 1e-05,
+  "hull_down_area_rel": 1e-06
+ },
+ "checks": {
+  "type_a_rear_shapes": {
+   "RL.hull": {
+    "down_area_rel_to_brep": 2.987768445983363e-07,
+    "volume_rel_to_brep_plate": 9.332063988232164e-08,
+    "com_abs_m": 1.0333650992603946e-07,
+    "obj_convex": true,
+    "obj_bottom_z_m": -0.710044,
+    "obj_bottom_minus_yaml_z_m": -4.4000000000044004e-05
+   },
+   "RL.visual_simple": {
+    "down_area_rel_to_brep": 2.987768445983363e-07,
+    "volume_rel_to_brep_plate": 9.332063988232164e-08,
+    "com_abs_m": 1.0333650992603946e-07,
+    "obj_convex": true,
+    "obj_bottom_z_m": -0.710044,
+    "obj_bottom_minus_yaml_z_m": -4.4000000000044004e-05
+   },
+   "RR.hull": {
+    "down_area_rel_to_brep": 2.987768445983363e-07,
+    "volume_rel_to_brep_plate": 1.731514052139005e-07,
+    "com_abs_m": 9.171746633164753e-08,
+    "obj_convex": true,
+    "obj_bottom_z_m": -0.710044,
+    "obj_bottom_minus_yaml_z_m": -4.4000000000044004e-05
+   },
+   "RR.visual_simple": {
+    "down_area_rel_to_brep": 2.987768445983363e-07,
+    "volume_rel_to_brep_plate": 1.731514052139005e-07,
+    "com_abs_m": 9.171746633164753e-08,
+    "obj_convex": true,
+    "obj_bottom_z_m": -0.710044,
+    "obj_bottom_minus_yaml_z_m": -4.4000000000044004e-05
+   }
+  },
+  "legs": {
+   "FL.cad": {
+    "area_vs_polygon_rel": 4.1744385725905886e-14,
+    "centroid_minus_yaml_m": [
+     -3.53469197791334e-05,
+     -3.534691978046567e-05,
+     1.1102230246251565e-16
+    ],
+    "bottom_z_minus_yaml_m": 0.0,
+    "normal_body": [
+     -7.038608583143613e-17,
+     2.978089719446412e-16,
+     -1.0
+    ],
+    "edges_m": [
+     0.042426,
+     0.27
+    ],
+    "plate_valid": true,
+    "polygon_vs_yaml_max_abs_m": 0.0,
+    "area_vs_yaml_rel": 0.0
+   },
+   "FR.cad": {
+    "area_vs_polygon_rel": 7.549516567451064e-15,
+    "centroid_minus_yaml_m": [
+     -3.534691978046567e-05,
+     3.5346919779355446e-05,
+     3.1086244689504383e-15
+    ],
+    "bottom_z_minus_yaml_m": 3.1086244689504383e-15,
+    "normal_body": [
+     2.748280787110684e-16,
+     -3.1099430336326145e-17,
+     -1.0000000000000002
+    ],
+    "edges_m": [
+     0.042426,
+     0.27
+    ],
+    "plate_valid": true,
+    "polygon_vs_yaml_max_abs_m": 0.0,
+    "area_vs_yaml_rel": 0.0
+   },
+   "RL.cad": {
+    "area_vs_polygon_rel": -7.993605777301127e-15,
+    "centroid_minus_yaml_m": [
+     0.0,
+     -3.268723081983893e-05,
+     -4.398518012127539e-05
+    ],
+    "bottom_z_minus_yaml_m": -4.398518012127539e-05,
+    "normal_body": [
+     2.309135738403044e-15,
+     -4.983058035283021e-16,
+     -1.0
+    ],
+    "edges_m": [
+     0.042426,
+     0.27
+    ],
+    "plate_valid": true,
+    "polygon_vs_yaml_max_abs_m": 0.0,
+    "area_vs_yaml_rel": 0.0
+   },
+   "RL.drawing": {
+    "area_vs_polygon_rel": -6.916689443414725e-14,
+    "centroid_minus_yaml_m": [
+     0.0,
+     0.0,
+     1.1102230246251565e-16
+    ],
+    "bottom_z_minus_yaml_m": 0.0,
+    "normal_body": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "edges_m": [
+     0.042426,
+     0.19
+    ],
+    "plate_valid": true,
+    "area_vs_drawing_rel": 0.0,
+    "drawing_area_m2": 0.0607,
+    "area_vs_c8_index_rel": 0.0
+   },
+   "RR.cad": {
+    "area_vs_polygon_rel": 8.659739592076221e-15,
+    "centroid_minus_yaml_m": [
+     1.021405182655144e-14,
+     3.268723081983893e-05,
+     -4.398518012271868e-05
+    ],
+    "bottom_z_minus_yaml_m": -4.3985180122829703e-05,
+    "normal_body": [
+     7.655115907607757e-15,
+     -1.4086586124741186e-16,
+     -1.0
+    ],
+    "edges_m": [
+     0.042426,
+     0.27
+    ],
+    "plate_valid": true,
+    "polygon_vs_yaml_max_abs_m": 0.0,
+    "area_vs_yaml_rel": 0.0
+   },
+   "RR.drawing": {
+    "area_vs_polygon_rel": -1.0658141036401503e-14,
+    "centroid_minus_yaml_m": [
+     0.0,
+     0.0,
+     1.1102230246251565e-16
+    ],
+    "bottom_z_minus_yaml_m": 0.0,
+    "normal_body": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "edges_m": [
+     0.042426,
+     0.19
+    ],
+    "plate_valid": true,
+    "area_vs_drawing_rel": 0.0,
+    "drawing_area_m2": 0.0607,
+    "area_vs_c8_index_rel": 0.0
+   }
+  }
+ },
+ "failures": [],
+ "time_s": 1.2584002999938093
+}

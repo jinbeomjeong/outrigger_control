@@ -363,10 +363,12 @@ def pad_shape_entries(
 ) -> tuple[ShapeEntry, ShapeEntry]:
     """(simple pad visual, convex pad hull) of ``leg`` for a pad type (U-PAD 2026-10-25).
 
-    ``pad_variant`` None = the default type (``dwg_rear250``). Shapes that are in the C8 index
-    (front pads; rear 250 pads) come from the index; the type A rear 330 pads come from
-    ``01_cad/09_sim_shapes/pad_variants/`` (``export_pad_variants.py``). Same frame and attach
-    rule as the index (leg moving part, retracted state).
+    ``pad_variant`` None = the default type (``dwg_rear250``). The pad types are those of the
+    YAML ``pad_shapes``; which OBJ draws each type comes from the C8 mapping of
+    ``02_params/pad_variants.json``. Shapes that are in the C8 index (front pads; rear 250 pads)
+    come from the index; the type A rear 330 pads come from ``01_cad/09_sim_shapes/pad_variants/``
+    (``export_pad_variants.py``). Same frame and attach rule as the index (leg moving part,
+    retracted state).
     """
     from outrigger_sim.pad_variants import load_pad_variants
 

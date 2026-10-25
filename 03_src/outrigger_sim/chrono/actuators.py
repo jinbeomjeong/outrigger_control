@@ -197,7 +197,8 @@ def _vector(value: ArrayLike, n: int, name: str) -> NDArray[np.float64]:
 def leg_force_limits_N(params: Params) -> tuple[list[float], list[float]]:
     """Per-leg (LEG_ORDER) force saturation limits ``(extend, retract)`` [N]:
     ``legs.<leg>.cylinder.max_force_{extend,retract}_N`` (REXOME35, 210 bar x head / annulus
-    area) when every leg has both keys, else the common ``actuator.max_force_*_N``."""
+    area) when every leg has both keys, else (YAML from before the bundle of 2026-10-25) the
+    common ``actuator.max_force_*_N``."""
     from outrigger_sim.params import LEG_ORDER, ParamsError
 
     try:
@@ -333,7 +334,7 @@ class L1SpeedActuator:
     ) -> L1SpeedActuator:
         """YAML keys ``actuator.max_speed_m_s``, ``actuator.command_ramp_s`` (used when
         ``ramp_s`` is None), ``legs.<leg>.extension_range_m`` and, with ``force_saturation``
-        (default, S6), ``actuator.max_force_extend_N`` / ``actuator.max_force_retract_N``."""
+        (default, S6), the per-leg force limits of :func:`leg_force_limits_N`."""
         f_ext = f_ret = None
         if force_saturation:
             f_ext, f_ret = leg_force_limits_N(params)

@@ -2,12 +2,14 @@
 
 00_docs/01_dynamics/dynamics_model.md 5.30 (rev. 44). Output 06_analysis/00_dynamics/pad_variant_check.json.
 Run: conda run -n dynamics-dev python -I 04_scripts/01_dynamics/run_pad_variant_check.py   (~3 s)
+     [--params <yaml>] [--out <json>]   (bundle 2026-10-25: rear hull polygons from YAML pad_shapes when present)
 
 Variants
   A  = all four pads CAD REXOME33 octagon 330 x 330, chamfer 30 (0.1071 m^2)
   B  = front 330 (CAD = drawing), rear REXOME35 drawing 250 x 250, chamfer 30 (ASSUMPTION) (0.0607 m^2)
 Units SI, body frame x fwd, y left, z up, pitch > 0 = nose down, g = 9.80665 m/s^2 along -z.
 """
+import argparse
 import json
 import math
 import sys
@@ -19,8 +21,12 @@ ROOT = Path(r"C:\workspace\outrigger_control")
 sys.path.insert(0, str(ROOT / "04_scripts" / "01_dynamics"))
 import dyn_model as dm  # noqa: E402
 
-OUT = ROOT / "06_analysis" / "00_dynamics" / "pad_variant_check.json"
-p = dm.load_params()
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--params", type=Path, default=dm.YAML_PATH, help="params YAML (default: project YAML)")
+_ap.add_argument("--out", type=Path, default=ROOT / "06_analysis" / "00_dynamics" / "pad_variant_check.json")
+_ARGS = _ap.parse_args()
+OUT = _ARGS.out
+p = dm.load_params(_ARGS.params)
 geo = dm.geometry_from_params(p)
 g = geo.g
 L1 = p["contact"]["rigid_floor"]["L1"]
@@ -166,17 +172,26 @@ res["rear_rod"] = {
 }
 
 # support polygon (rigid pad hull, swivel=False reference only)
-def rear_edge_margin(types):
+# Polygon source (bundle 2026-10-25, D-3): YAML pad_shapes type A = cad330, B = dwg_rear250 (B-rep polygons, rear
+# 250 x 250 chamfer 30). Old YAML without pad_shapes: the CAD 330 polygon of legs.<leg>.pad scaled by side 250/330
+# (chamfer scales too, 22.7 mm instead of 30 mm; the pre-bundle record).
+PAD_SHAPE_TYPE = {"A": "cad330", "B": "dwg_rear250"}
+
+
+def rear_edge_margin(variant):
+    types = VARIANTS[variant]
     pts = []
     for i, t in enumerate(types):
-        poly = np.array(p["legs"][LEGS[i]]["pad"]["polygon_xy_m"])
-        s = PAD[t]["side_m"] / PAD["330"]["side_m"]
-        pts.append(geo.pad_xy[i] + poly * s)
+        if p.get("pad_shapes"):
+            poly = dm.pad_shape_from_params(p, LEGS[i], PAD_SHAPE_TYPE[variant])["polygon_xy_m"]
+        else:
+            poly = dm.pad_shape_from_params(p, LEGS[i])["polygon_xy_m"] * (PAD[t]["side_m"] / PAD["330"]["side_m"])
+        pts.append(geo.pad_xy[i] + poly)
     pts = np.vstack(pts)
     return float(pts[:, 0].min())
 
 
-res["support_polygon_rigid_hull_rear_x_m"] = {"A": rear_edge_margin(VARIANTS["A"]), "B": rear_edge_margin(VARIANTS["B"]),
+res["support_polygon_rigid_hull_rear_x_m"] = {"A": rear_edge_margin("A"), "B": rear_edge_margin("B"),
                                               "pad_centre_rear_x_m": float(geo.pad_xy[2][0])}
 
 # ---------------- 4. soil (example Bekker values, NOT project soil) ----------------------

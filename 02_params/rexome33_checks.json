@@ -382,6 +382,125 @@
    }
   }
  },
+ "pad_shapes": {
+  "entries": {
+   "FL.cad_brep": {
+    "vertex_count": 8,
+    "area_vs_polygon_rel": 3.887335520396206e-16,
+    "centroid_minus_axis_xy_mm": [
+     -0.0353469,
+     -0.0353469
+    ],
+    "bottom_y_cad_mm": -699.7999999999998,
+    "bottom_y_minus_cad_pad_mm": 0.0
+   },
+   "FR.cad_brep": {
+    "vertex_count": 8,
+    "area_vs_polygon_rel": 3.88733552039621e-16,
+    "centroid_minus_axis_xy_mm": [
+     -0.0353469,
+     0.0353469
+    ],
+    "bottom_y_cad_mm": -699.7999999999969,
+    "bottom_y_minus_cad_pad_mm": 0.0
+   },
+   "RL.cad_brep": {
+    "vertex_count": 8,
+    "area_vs_polygon_rel": 2.591557013597471e-16,
+    "centroid_minus_axis_xy_mm": [
+     0.0,
+     -0.0326872
+    ],
+    "bottom_y_cad_mm": -712.0439851801212,
+    "bottom_y_minus_cad_pad_mm": 0.0
+   },
+   "RL.drawing_synthesis_brep": {
+    "vertex_count": 8,
+    "area_vs_polygon_rel": 3.989578208342048e-14,
+    "centroid_minus_axis_xy_mm": [
+     0.0,
+     -2.22045e-13
+    ],
+    "bottom_y_cad_mm": -711.9999999999999,
+    "bottom_y_minus_cad_pad_mm": 0.04398518012135355,
+    "area_vs_drawing_rel": 0.0
+   },
+   "RR.cad_brep": {
+    "vertex_count": 8,
+    "area_vs_polygon_rel": 1.425356357478609e-15,
+    "centroid_minus_axis_xy_mm": [
+     1.02141e-11,
+     0.0326872
+    ],
+    "bottom_y_cad_mm": -712.0439851801227,
+    "bottom_y_minus_cad_pad_mm": 0.0
+   },
+   "RR.drawing_synthesis_brep": {
+    "vertex_count": 8,
+    "area_vs_polygon_rel": 3.9781467521576866e-14,
+    "centroid_minus_axis_xy_mm": [
+     0.0,
+     2.22045e-13
+    ],
+    "bottom_y_cad_mm": -711.9999999999999,
+    "bottom_y_minus_cad_pad_mm": 0.04398518012283148,
+    "area_vs_drawing_rel": 0.0
+   }
+  },
+  "table": {
+   "sha256": "00cf734bddc2877be1365da2cf995689b38ccb2736156ba6d307823cfab443ee",
+   "default_equal": true,
+   "types_equal": true,
+   "cad330.FL": {
+    "polygon_max_abs_m": 0.0,
+    "area_rel": 0.0,
+    "bekker_b_rel": 0.0,
+    "source_kind_equal": true
+   },
+   "cad330.FR": {
+    "polygon_max_abs_m": 0.0,
+    "area_rel": 0.0,
+    "bekker_b_rel": 0.0,
+    "source_kind_equal": true
+   },
+   "cad330.RL": {
+    "polygon_max_abs_m": 0.0,
+    "area_rel": 0.0,
+    "bekker_b_rel": 0.0,
+    "source_kind_equal": true
+   },
+   "cad330.RR": {
+    "polygon_max_abs_m": 0.0,
+    "area_rel": 0.0,
+    "bekker_b_rel": 0.0,
+    "source_kind_equal": true
+   },
+   "dwg_rear250.FL": {
+    "polygon_max_abs_m": 0.0,
+    "area_rel": 0.0,
+    "bekker_b_rel": 0.0,
+    "source_kind_equal": true
+   },
+   "dwg_rear250.FR": {
+    "polygon_max_abs_m": 0.0,
+    "area_rel": 0.0,
+    "bekker_b_rel": 0.0,
+    "source_kind_equal": true
+   },
+   "dwg_rear250.RL": {
+    "polygon_max_abs_m": 0.0,
+    "area_rel": 0.0,
+    "bekker_b_rel": 0.0,
+    "source_kind_equal": true
+   },
+   "dwg_rear250.RR": {
+    "polygon_max_abs_m": 0.0,
+    "area_rel": 0.0,
+    "bekker_b_rel": 0.0,
+    "source_kind_equal": true
+   }
+  }
+ },
  "dynamics": {
   "dyn_model_import": "ok",
   "dyn_model_same_inputs": {

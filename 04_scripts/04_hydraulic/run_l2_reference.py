@@ -13,6 +13,10 @@ Stages (python -I run_l2_reference.py <cache_dir> [stage ...]; default all):
   report metrics, comparison verdicts, JSON 06_analysis/03_hydraulic/l2_reference_responses.json and figures
 Each run is cached as <cache_dir>/<key>.npz so stages can be repeated cheaply.
 Run on the E-cores (logical 16-27) with below-normal priority; hopsancli inherits the affinity.
+
+HISTORICAL BASIS (pinned 2026-10-25, D7): parameters come from l2_params.build(), which reads the frozen
+history YAML 02_params/history/rexome33_2026-10-22_before_rexome35.yaml (REXOME33 old common dimensions
+115/110 mm). The results are the "REXOME33 old-dimension L2 reference response history".
 """
 from __future__ import annotations
 
@@ -306,6 +310,7 @@ def stage_report(cache: Path) -> dict:
     _, c = lp.build()
     res: dict = {"meta": {
         "script": "04_scripts/04_hydraulic/run_l2_reference.py", "date": "2026-10-20",
+        "yaml": lp.YAML_REL, "basis": lp.BASIS_NOTE,
         "env": "conda hydraulics-dev (Python 3.13), Hopsan 2.24.4 hopsancli; E-cores 16-27, below normal",
         "pressure": "bar gauge (p_atm = 1e5 Pa); Hopsan absolute converted",
         "cross_check_convention": "flipped topology + Hopsan force convention F = A1 p1_abs - A2 p2_abs "
@@ -524,6 +529,7 @@ def figures(cache: Path, c: dict) -> None:
 
 
 def main() -> None:
+    lp.print_basis()
     cache = Path(sys.argv[1])
     cache.mkdir(parents=True, exist_ok=True)
     stages = sys.argv[2:] or ["py", "hop", "conv", "spec1", "spec2", "spec3", "spec4", "spec5", "report"]

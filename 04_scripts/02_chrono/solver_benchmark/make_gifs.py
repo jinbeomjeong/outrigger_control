@@ -18,6 +18,10 @@ current YAML layout D (24 crawler spheres: 12 rollers + 12 gapped end shoes). Th
 on the frames were measured with the old 2 x 9 layout (18 spheres); they are re-measured in the
 S0 cost measurement. Re-running this script therefore changes the scenes (sphere positions,
 SCM crawler strips) but not the printed costs.
+
+Pads: the parameters are bench_case.P, fixed to pad type cad330 (four 330 CAD pads, YAML bundle
+2026-10-25 decision D10), so the pad polygons (L1 drawing) and the SCM pad radius stay those of
+the stored benchmark.
 """
 
 from __future__ import annotations

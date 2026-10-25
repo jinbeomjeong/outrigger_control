@@ -62,10 +62,20 @@ Usage:
 Rev. 30 (REXOME35 cylinders, user decision 2026-10-22, dynamics_model.md 5.12.7 '순서 2 명세'): default
 --cylinders rexome35 writes legs.<leg>.cylinder.*, stroke 0.70 m, v_max = pump / sum A_p, the L1-R keys
 (actuator.rod_side, mechanics "off"), sensors.stroke and the synthesized rear moving part
-(01_cad/02_legs/rexome35); geometry keys unchanged (Q-C2). --cylinders cad reproduces the REXOME33 CAD YAML
-(regression: identical except meta.generated). reference.json / crawler_layout_check.json are generated from this
-YAML: after a cylinder change they are 'stale' (recorded, not required) until dynamics reruns them; then rerun this
+(01_cad/02_legs/rexome35); geometry keys unchanged (Q-C2). --cylinders cad rebuilds the REXOME33 CAD YAML (not
+identical: 2 settle checks fail on the REXOME35 reference.json, D11). reference.json / crawler_layout_check.json
+are generated from this YAML: after a cylinder change they are 'stale' until dynamics reruns them; then rerun this
 script (two-pass rule; simulation.settle_on_pads_min_s and simulation.L2b_NSC.dt_s read reference.json).
+
+Regeneration bundle 2026-10-25 (00_docs/00_cad/yaml_regen_bundle_2026-10-25.md; --cylinders rexome35 only, the
+cad mode still reproduces the REXOME33 CAD YAML):
+  1. sensors.cylinder_pressure.location = the R6-P layout (head + rod sensor per leg, net force);
+  2. the superseded common cylinder keys actuator.{bore,rod,barrel_outer}_diameter_m, annulus_area_m2,
+     max_force_extend_N, max_force_retract_N and the text actuator.rod_side_chamber_model are no longer written
+     (per-leg legs.<leg>.cylinder.*, actuator.rod_side);
+  3. pad polygons / areas move from legs.<leg>.pad to the SCM-only block pad_shapes (two types, default B =
+     dwg_rear250), meant to be left out of the L1 / L2b fingerprint (params.py SCM_ONLY_HASH_PATHS);
+  4. control.F_min_basis and meta.dynamics_stages texts follow the current model.
 """
 
 import csv
@@ -354,11 +364,36 @@ CYLINDER_TYPE = ("double-acting; dual pilot-operated check valve mounted on the 
                  "hose outside the locked volume")
 ROD_SIDE_CHAMBER_MODEL = "neglected (head side only); one-sided +10 % kv when the leg unloads, sensitivity only"
 FLOW_CONTROL = "proportional directional valve, section pressure compensated (LS); load-independent speed"
-# Pre-R6-P text (head side only). The current layout is two sensors per leg (head and rod, R6-P / U52), see the
-# comment of sensors.cylinder_pressure.location. Not rewritten here: the value enters Params.sha256, and changing it
-# invalidates the saved snapshots (R16). Replace it together with the next planned YAML regeneration.
-PRESSURE_SENSOR_LOCATION = ("lock valve block on the cylinder (head chamber); reads the trapped load pressure while "
-                            "locked; p = F_cyl / head area")
+# Pre-R6-P text (head side only), kept for the --cylinders cad regression only.
+PRESSURE_SENSOR_LOCATION_CAD = ("lock valve block on the cylinder (head chamber); reads the trapped load pressure "
+                                "while locked; p = F_cyl / head area")
+# Bundle 2026-10-25 item 1: current layout (R6-P, U52; CLAUDE.md '센서·주기'; the value enters Params.sha256).
+PRESSURE_SENSOR_LOCATION = ("two sensors per leg, head and rod chamber, at the chamber-side A / B ports between "
+                            "the cylinder and the pilot-operated check block; read the trapped pressures while "
+                            "locked; net cylinder force F_cyl = p_h A_p - p_r A_ann with the per-leg areas "
+                            "legs.<leg>.cylinder.head_area_m2 / annulus_area_m2, zero-offset calibrated")
+F_MIN_BASIS_CAD = ("cylinder force (pressure x bore area) = superstructure weight share; "
+                   "pad contact force = cylinder force + rod weight")
+# Bundle 2026-10-25 item 6: F_min is judged on the net force of the two pressure sensors (CLAUDE.md 'F_min').
+F_MIN_BASIS = ("net cylinder force F_cyl = p_h A_p - p_r A_ann (two pressure sensors per leg, after zero-offset "
+               "calibration) = superstructure weight share; pad contact force = cylinder force + moving-part weight")
+# Bundle 2026-10-25 item 3: superseded common cylinder keys, written only in the --cylinders cad regression.
+LEGACY_COMMON_CYLINDER_KEYS = ("bore_diameter_m", "rod_diameter_m", "barrel_outer_diameter_m", "annulus_area_m2",
+                               "rod_side_chamber_model", "max_force_extend_N", "max_force_retract_N")
+# Bundle 2026-10-25 item 5 (U-PAD-1..6, dynamics_model.md 5.30.5 (3)): pad types of the SCM-only block pad_shapes.
+# Type A cad330 = the CAD pad B-rep on all legs; type B dwg_rear250 (default) = CAD front, REXOME35 drawing rear
+# 250 x 250 (chamfer 30 mm ASSUMPTION) from the synthesis B-rep (REX35_MOVING_BREP). Masses are not part of a type
+# (U-PAD-3). 02_params/pad_variants.json (export_pad_variants.py) is compared as a check, not read as a source.
+PAD_SHAPES_DEFAULT = "dwg_rear250"
+PAD_SHAPE_TYPES = {
+    "cad330": {"label": "A", "sources": {leg: "cad_brep" for leg in ("FL", "FR", "RL", "RR")}},
+    "dwg_rear250": {"label": "B", "sources": {"FL": "cad_brep", "FR": "cad_brep",
+                                              "RL": "drawing_synthesis_brep", "RR": "drawing_synthesis_brep"}},
+}
+PAD_DRAWING_SIDE_MM = 250.0
+PAD_DRAWING_CHAMFER_MM = 30.0                # ASSUMPTION (no chamfer dimension on the drawing)
+PAD_VARIANTS_JSON = PROJECT_ROOT / "02_params" / "pad_variants.json"
+PAD_TABLE_TOL = 1e-9                         # polygon [m] / area (relative) vs pad_variants.json (same B-reps)
 # Source line references "<file>.py:<first>[-<last>]" used in this script's comments: each range must contain the
 # listed text in the current source (check_line_references). Update both when 04_scripts/01_dynamics changes.
 LINE_REFS = {
@@ -700,6 +735,68 @@ def _read_shape(path: Path):
 def polygon_area(xy: np.ndarray) -> float:
     x, y = xy[:, 0], xy[:, 1]
     return 0.5 * float(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1)))
+
+
+def pad_shape_from_face(face: dict, pad_bottom_cad_xy: np.ndarray) -> dict:
+    """Bundle 2026-10-25 item 5: one pad_shapes leg entry from a pad bottom face (pad_bottom_face), body frame.
+
+    polygon_xy_m: outer wire relative to the pad bottom centre (axis point, x / y), counter-clockwise from +z,
+    9 significant digits (same rule as the former legs.<leg>.pad.polygon_xy_m); bottom_area_m2: B-rep face area;
+    perimeter_m and bekker_b_m = 2 A / perimeter (Chrono SCM patch width) from the unrounded polygon.
+    """
+    vertices_body = (CAD_TO_BODY @ (face["vertices_cad_mm"] * MM).T).T
+    xy = vertices_body[:, :2] - pad_bottom_cad_xy
+    if polygon_area(xy) < 0:
+        xy = xy[::-1]
+    area = face["area_mm2"] * 1e-6
+    perimeter = float(np.linalg.norm(np.roll(xy, -1, axis=0) - xy, axis=1).sum())
+    centroid_body = CAD_TO_BODY @ (face["centroid_cad_mm"] * MM)
+    return {
+        "record": {"polygon_xy_m": [vec(p) for p in xy], "bottom_area_m2": sig(area), "perimeter_m": sig(perimeter),
+                   "bekker_b_m": sig(2.0 * area / perimeter)},
+        "check": {"vertex_count": int(len(xy)), "area_vs_polygon_rel": abs(area - polygon_area(xy)) / area,
+                  "centroid_minus_axis_xy_mm": vec((centroid_body[:2] - pad_bottom_cad_xy) / MM, 6),
+                  "bottom_y_cad_mm": face["y_cad_mm"]},
+    }
+
+
+def pad_shapes_block(entries: dict) -> tuple[dict, dict]:
+    """YAML block pad_shapes and its checks. entries[(leg, source_kind)] = pad_shape_from_face(...) plus the CAD
+    pad bottom y (y_cad_ref_mm). Types per PAD_SHAPE_TYPES; checks: 8 vertices, face area = polygon area, centroid on
+    the leg axis, drawing pads at the CAD pad bottom height, drawing area = 250^2 - 2 x 30^2 mm^2, and the side table
+    02_params/pad_variants.json (U-PAD, export_pad_variants.py) equal within PAD_TABLE_TOL when it exists."""
+    types = {}
+    for name, spec in PAD_SHAPE_TYPES.items():
+        types[name] = {"label": spec["label"],
+                       "legs": {leg: {"source_kind": kind, **entries[(leg, kind)]["record"]}
+                                for leg, kind in ((leg, spec["sources"][leg]) for leg in LEG_ORDER)}}
+    block = {"default_type": PAD_SHAPES_DEFAULT, "type_order": list(PAD_SHAPE_TYPES), "types": types}
+    checks = {"entries": {}, "table": {}}
+    drawing_area_m2 = (PAD_DRAWING_SIDE_MM ** 2 - 2.0 * PAD_DRAWING_CHAMFER_MM ** 2) * 1e-6
+    for (leg, kind), entry in entries.items():
+        c = dict(entry["check"])
+        c["bottom_y_minus_cad_pad_mm"] = c["bottom_y_cad_mm"] - entry["y_cad_ref_mm"]
+        if kind == "drawing_synthesis_brep":
+            c["area_vs_drawing_rel"] = abs(entry["record"]["bottom_area_m2"] / drawing_area_m2 - 1.0)
+        checks["entries"][f"{leg}.{kind}"] = c
+    if PAD_VARIANTS_JSON.exists():
+        table = json.loads(PAD_VARIANTS_JSON.read_text(encoding="utf-8"))
+        checks["table"]["sha256"] = sha256_of(PAD_VARIANTS_JSON)
+        checks["table"]["default_equal"] = table["default"] == PAD_SHAPES_DEFAULT
+        checks["table"]["types_equal"] = sorted(table["variants"]) == sorted(PAD_SHAPE_TYPES)
+        for name, t in types.items():
+            for leg, rec in t["legs"].items():
+                ref = table["variants"][name]["legs"][leg]
+                same_n = len(ref["polygon_xy_m"]) == len(rec["polygon_xy_m"])
+                checks["table"][f"{name}.{leg}"] = {
+                    "polygon_max_abs_m": float(np.max(np.abs(np.array(ref["polygon_xy_m"]) - np.array(rec["polygon_xy_m"]))))
+                    if same_n else float("inf"),
+                    "area_rel": abs(rec["bottom_area_m2"] / ref["bottom_area_m2"] - 1.0),
+                    "bekker_b_rel": abs(rec["bekker_b_m"] / ref["bekker_b_m"] - 1.0),
+                    "source_kind_equal": ref["source_kind"] == rec["source_kind"]}
+    else:
+        checks["table"]["status"] = "absent (not compared)"
+    return block, checks
 
 
 # --------------------------------------------------------------------------
@@ -1568,6 +1665,7 @@ def main() -> None:
     # ---------------- legs ----------------
     legs = {}
     leg_masses = []
+    pad_entries = {}  # bundle 2026-10-25 item 5: pad_shapes inputs (leg, source_kind)
     for leg in LEG_ORDER:
         geometry = summary["legs"][leg]
         axis_x_cad, axis_z_cad = geometry["axis_cad_mm"]["X"], geometry["axis_cad_mm"]["Z"]
@@ -1601,6 +1699,12 @@ def main() -> None:
         if polygon_area(polygon) < 0:
             polygon = polygon[::-1]  # counter-clockwise seen from +z
         face_centroid_body = body_from_cad_mm(face["centroid_cad_mm"])
+        if CYLINDER_MODE != "cad":  # bundle 2026-10-25 item 5: pad_shapes (CAD pad; rear drawing pad from the synthesis)
+            pad_entries[(leg, "cad_brep")] = {**pad_shape_from_face(face, pad_bottom_cad[:2]), "y_cad_ref_mm": face["y_cad_mm"]}
+            if leg in REX35_MOVING_BREP:
+                synth_face = pad_bottom_face(REX35_DIR / REX35_MOVING_BREP[leg])
+                pad_entries[(leg, "drawing_synthesis_brep")] = {**pad_shape_from_face(synth_face, pad_bottom_cad[:2]),
+                                                                "y_cad_ref_mm": face["y_cad_mm"]}
         # SCM bodies (00_docs/01_dynamics/dynamics_model.md 2.1 / 10): pad plate and rod+piston from the same BREP solid.
         # rev. 30 synthesized rear: the pad plate + socket housing (one piece above the plane) form the pad body,
         # ball + rod + piston the rod body (ball-joint split; the plate split plane is the same 25 mm).
@@ -1632,8 +1736,9 @@ def main() -> None:
                 "shape": "octagon",
                 "thickness_m": sig(face["thickness_mm"] * MM),
                 "side_height_m": sig(face["side_height_mm"] * MM),
-                "bottom_area_m2": sig(face["area_mm2"] * 1e-6),
-                "polygon_xy_m": [vec(p) for p in polygon],
+                # bundle 2026-10-25 item 5: polygon / area only in pad_shapes (rexome35); the cad regression keeps them
+                **({"bottom_area_m2": sig(face["area_mm2"] * 1e-6), "polygon_xy_m": [vec(p) for p in polygon]}
+                   if CYLINDER_MODE == "cad" else {}),
                 "joint": PAD_JOINT,
                 "swivel_center_above_pad_bottom_m": SWIVEL_CENTER_ABOVE_PAD_BOTTOM_M,
                 "swivel_tilt_range_deg": SWIVEL_TILT_RANGE_DEG,
@@ -1732,6 +1837,10 @@ def main() -> None:
         comments[f"legs.{leg}.pad.bottom_area_m2"] = (
             f"BREP 01_cad/02_legs/legs/{ROD_PAD_BREP[leg]} lowest -Y_cad plane; 00_docs/00_cad/cad_review.md gives 0.1071")
 
+    pad_shapes, pad_shapes_checks = pad_shapes_block(pad_entries) if CYLINDER_MODE != "cad" else (None, None)
+    if pad_shapes_checks is not None:
+        checks["pad_shapes"] = pad_shapes_checks
+
     # ---------------- totals ----------------
     total = mass_properties_si(combine_mass_properties(table, TOOL_STEEL))
     super_cad_pose = mass_properties_si(combine_mass_properties(table[is_superstructure], TOOL_STEEL))
@@ -1813,31 +1922,48 @@ def main() -> None:
                 "dynamics": DYNAMICS_DOC,
                 "dynamics_formulas": f"{DYN_MODEL_PY}, {RUN_REFERENCE_PY}",
                 "dynamics_reference": "06_analysis/00_dynamics/reference.json",
+                **({} if CYLINDER_MODE == "cad" else {
+                    "pad_shapes": ("01_cad/02_legs/legs/*_10_1.brep (CAD pads), "
+                                   "01_cad/02_legs/rexome35/moving_R{L,R}.brep (drawing rear 250 pads)")}),
             },
             "dynamics_stages": {
-                "common": ("needed from L1 on: legs.*.pad.{joint, swivel_center_above_pad_bottom_m, "
-                           "swivel_tilt_range_deg}, actuator.{model_default, bore/rod/barrel diameters, oil_*, "
-                           "frame_stiffness_N_m, cylinder_type, annulus_area_m2, rod_side_chamber_model, "
-                           "relief_pressure_moving_Pa, max_force_extend_N, max_force_retract_N, "
-                           "locked_pressure_limit_Pa, lock_valve, pump_flow_m3_s, flow_control}, control.*, "
-                           "sensors.*, contact.rigid_floor.{model, geometry, friction, ground_body_mass_kg, "
-                           "damping_input_convention, concrete}, contact.crawler.*, simulation.crawler_clearance_m"),
+                "common": (("needed from L1 on: legs.*.pad.{joint, swivel_center_above_pad_bottom_m, "
+                            "swivel_tilt_range_deg}, actuator.{model_default, bore/rod/barrel diameters, oil_*, "
+                            "frame_stiffness_N_m, cylinder_type, annulus_area_m2, rod_side_chamber_model, "
+                            "relief_pressure_moving_Pa, max_force_extend_N, max_force_retract_N, "
+                            "locked_pressure_limit_Pa, lock_valve, pump_flow_m3_s, flow_control}, control.*, "
+                            "sensors.*, contact.rigid_floor.{model, geometry, friction, ground_body_mass_kg, "
+                            "damping_input_convention, concrete}, contact.crawler.*, simulation.crawler_clearance_m")
+                           if CYLINDER_MODE == "cad" else
+                           ("needed from L1 on: legs.*.pad.{joint, swivel_center_above_pad_bottom_m, "
+                            "swivel_tilt_range_deg}, legs.*.cylinder.*, actuator.{model_default, oil_*, "
+                            "rod_dead_length_m, frame_stiffness_N_m, cylinder_type, rod_side, relief_pressure_moving_Pa, "
+                            "locked_pressure_limit_Pa, lock_valve, pump_flow_m3_s, pump_volumetric_efficiency, "
+                            "flow_control}, control.*, sensors.*, contact.rigid_floor.{model, geometry, friction, "
+                            "ground_body_mass_kg, damping_input_convention, concrete}, contact.crawler.*, "
+                            "simulation.crawler_clearance_m")),
                 "L1": "L1 default (controller development): contact.rigid_floor.L1.*, simulation.L1.*",
                 "L2b": ("L2b-NSC, operating plan B re-assessment (large slope, seal friction, SCM): "
                         "contact.rigid_floor.L2b_NSC.*, actuator.L2b_NSC.*, simulation.L2b_NSC.*"),
                 "L2": ("when switching to L2 after the hydraulic spec is known (rigid-guide L2 and SMC-L2b keys, kept "
                        "per 00_docs/01_dynamics/dynamics_model.md 10; operating plan B uses L2b instead): contact.rigid_floor.L2.*, "
                        "actuator.L2.*, simulation.L2.*"),
-                "SCM": "soft soil (separate pad body): legs.*.pad_body.*, legs.*.rod_body.*",
+                "SCM": ("soft soil (separate pad body): legs.*.pad_body.*, legs.*.rod_body.*" if CYLINDER_MODE == "cad"
+                        else "soft soil (separate pad body): legs.*.pad_body.*, legs.*.rod_body.*, pad_shapes.*"),
             },
             "mass_basis": {
                 "case": "C",
                 "status": "provisional",
-                "description": "STEP densities; the 5 AUGER TOOL rows as steel 7.85 g/cm^3 (CLAUDE.md 2026-10-19)",
+                "description": ("STEP densities; the 5 AUGER TOOL rows as steel 7.85 g/cm^3 (CLAUDE.md 2026-10-19)"
+                                if CYLINDER_MODE == "cad" else
+                                "STEP densities; the 5 AUGER TOOL rows as steel 7.85 g/cm^3 (CLAUDE.md 2026-10-19); "
+                                "REXOME35 barrels replace the CAD barrels (superstructure.barrel_replacement)"),
             },
             "frame": {
                 "axes": "x forward (mast / FRONT JACK CYL side), y left, z up; right-handed",
-                "origin": "CAD origin (body origin undecided)",
+                # bundle 2026-10-25 item 6: the origin is defined (CLAUDE.md '좌표계와 명명'), no longer "undecided"
+                "origin": ("CAD origin (body origin undecided)" if CYLINDER_MODE == "cad" else
+                           "CAD origin = axis of the slewing-ring bolt circle PCD 1120 mm at the deck underside"),
                 "units": "SI (m, kg, s, rad, N)",
                 "cad_length_unit": "mm",
                 "cad_axes": {"x": "+Z_cad", "y": "+X_cad", "z": "+Y_cad"},
@@ -1929,6 +2055,7 @@ def main() -> None:
             },
         },
         "legs": legs,
+        **({} if pad_shapes is None else {"pad_shapes": pad_shapes}),
         "contact": {
             "rigid_floor": {
                 "model": RIGID_FLOOR_MODEL,
@@ -2018,12 +2145,11 @@ def main() -> None:
         "control": {
             "F_min_fraction_of_mean_leg_load": F_MIN_FRACTION,
             "F_min_cylinder_N": sig(f_min_cylinder),
-            "F_min_basis": ("cylinder force (pressure x bore area) = superstructure weight share; "
-                            "pad contact force = cylinder force + rod weight"),
+            "F_min_basis": F_MIN_BASIS_CAD if CYLINDER_MODE == "cad" else F_MIN_BASIS,
         },
         "sensors": {
             "cylinder_pressure": {
-                "location": PRESSURE_SENSOR_LOCATION,
+                "location": PRESSURE_SENSOR_LOCATION_CAD if CYLINDER_MODE == "cad" else PRESSURE_SENSOR_LOCATION,
             },
             **({} if CYLINDER_MODE == "cad" else {"stroke": {
                 "measurable_max_m": MEASURABLE_STROKE_MAX_M,
@@ -2040,6 +2166,10 @@ def main() -> None:
             "L2": {"dt_s": derived["dt_l2"]},
         },
     }
+
+    if CYLINDER_MODE != "cad":  # bundle 2026-10-25 item 3 / 4: superseded common keys are not written
+        for key in LEGACY_COMMON_CYLINDER_KEYS:
+            data["actuator"].pop(key)
 
     comments.update({
         "meta.mass_basis": "decision_log.md sec. 2 '기준 질량' (case C); replace when the operating weight is known",
@@ -2385,7 +2515,7 @@ def main() -> None:
             "the swivel centre (pad bottom + swivel_center_above_pad_bottom_m) is an ASSUMPTION")
 
     if CYLINDER_MODE != "cad":
-        rex35_comments(comments, derived)
+        rex35_comments(comments, derived, f_min_cylinder)
 
     header = [
         "# REXOME33 shared simulation parameters (Chrono and MuJoCo read this file).",
@@ -2429,11 +2559,10 @@ def main() -> None:
     print(f"wrote {PARAMS_YAML}")
 
 
-def rex35_comments(comments: dict, derived: dict) -> None:
+def rex35_comments(comments: dict, derived: dict, f_min_cylinder: float) -> None:
     """Comments of the REXOME35 cylinder export (rev. 30); the CAD mode keeps the old comments."""
-    sup = ("SUPERSEDED by legs.<leg>.cylinder (REXOME35, per leg); old REXOME33 CAD common value kept only until "
-           "03_src reads the per-leg keys (python-expert, dynamics_model.md 5.11.10 order 4) - do not use")
     ap = np.broadcast_to(derived["head_area"], (4,))
+    contact_f_min = f_min_cylinder + np.asarray(derived["rod_mass"], float) * GRAVITY_M_S2  # bundle 2026-10-25 item 6
     comments.update({
         "actuator": ("decision_log.md sec. 6 '실린더 치수 기준 교체' (user decision 2026-10-22): REXOME35 cylinders per leg "
                      "(legs.<leg>.cylinder), stroke 0.70 m, common speed limit = pump flow / sum of head areas"),
@@ -2447,12 +2576,49 @@ def rex35_comments(comments: dict, derived: dict) -> None:
                                    "(4 legs together at the delivered pump flow)"),
         "actuator.pump_volumetric_efficiency": ("ASSUMPTION (user decision 2026-10-22): pump volumetric efficiency, "
                                                 "delivered flow = pump_flow_m3_s x this; basis of max_speed_m_s"),
-        "actuator.bore_diameter_m": sup, "actuator.rod_diameter_m": sup, "actuator.barrel_outer_diameter_m": sup,
-        "actuator.annulus_area_m2": sup, "actuator.max_force_extend_N": sup, "actuator.max_force_retract_N": sup,
         "actuator.locked_pressure_limit_Pa": ("[common] manufacturer: cylinder maximum load test pressure 350 bar (locked, "
                                               "judgement metric V17); force per leg = legs.<leg>.cylinder.locked_force_limit_N"),
-        "actuator.rod_side_chamber_model": ("[common] superseded by actuator.rod_side (L1-R, user decision 2026-10-22, "
-                                            "dynamics_model.md 5.12); text kept for old readers"),
+        "actuator.cylinder_type": ("[common] circuit drawing, 00_docs/02_hydraulic/hydraulic_circuit.md; per-leg "
+                                   "dimensions, areas and force limits in legs.<leg>.cylinder (the common REXOME33 "
+                                   "keys bore/rod/barrel diameters, annulus_area_m2, max_force_* and "
+                                   "rod_side_chamber_model were removed in the 2026-10-25 bundle)"),
+        "actuator.L2b_NSC.axial_stiffness": ("ASSUMPTION (derived): k_oil(s) = oil_bulk_modulus_eff_Pa "
+                                             "legs.<leg>.cylinder.head_area_m2 / (oil_dead_length_m + s); operating point "
+                                             "= contact.rigid_floor.L1.kn_per_pad_N_m (run_reference.py:529-530)"),
+        "actuator.L2": ("[L2] ChLinkMotorLinearForce F = k_oil(s)(s_ref - s) + c_oil(ds_ref - ds), "
+                        "00_docs/01_dynamics/dynamics_model.md 4.4; k_oil(s) = oil_bulk_modulus_eff_Pa "
+                        "legs.<leg>.cylinder.head_area_m2 / (oil_dead_length_m + s)"),
+        "contact.rigid_floor.L1.derivation.damping_ratio": (
+            f"ASSUMPTION: leg axial zeta, locked cylinder (L1, L2b at rest), {DAMPING_DECISION}; cn = 2 zeta sqrt(k_lock "
+            f"m/4) gives exactly this zeta in the uncoupled heave mode (damping_reference_mode_Hz, "
+            f"{float(derived['f_heave_l1']):.2f} Hz); a fixed dashpot gives zeta proportional to frequency, so the L1 "
+            f"rocking modes get less (06_analysis/00_dynamics/reference.json L1 zeta); the same zeta is used for the "
+            f"tangential / bushing dashpots; seal friction F_s is modelled separately"),
+        "control.F_min_cylinder_N": ("derived: fraction * superstructure mass * g / 4 (net cylinder force basis); pad "
+                                     "contact force basis adds the moving-part weight: "
+                                     + " / ".join(f"{leg} {v / 1000:.2f}" for leg, v in zip(LEG_ORDER, contact_f_min))
+                                     + " kN"),
+        "control.F_min_basis": "user decision 2026-10-19 (F_min); net force of the two pressure sensors (R6-P / U52; CLAUDE.md 'F_min')",
+        "sensors.cylinder_pressure.location": ("R6-P / U52 (2026-10-22), CLAUDE.md '센서·주기': WIKA A-10 0-400 bar, "
+                                               "+-4 bar (08_test_data/datasheets/WIKA_A-10_pressure_sensor_summary.md); "
+                                               "the sensor error model is in 03_src/outrigger_sim/sensors (not in this "
+                                               "file); before 2026-10-25 this value was the pre-R6-P head-only text"),
+        "pad_shapes": ("[SCM] bundle 2026-10-25 (user decisions U-PAD-1..6, dynamics_model.md 5.30.5 (3)): pad bottom "
+                       "shape types, an experiment variable of the soft-soil stage only; left out of the L1 / L2b "
+                       "fingerprint (params.py SCM_ONLY_HASH_PATHS); the rigid-floor models do not use the pad area "
+                       "(dynamics_model.md 5.30.3). Masses are not part of a type (U-PAD-3: legs.<leg>.moving_part / "
+                       "pad_body = the synthesized rear 250 pad for both types). Polygons relative to "
+                       "legs.<leg>.pad_bottom_center_retracted_m (x, y), counter-clockwise from +z, body frame; "
+                       "bekker_b_m = 2 A / perimeter (Chrono SCM patch width, vehicle_terrain.md 82-97)"),
+        "pad_shapes.default_type": ("user decision U-PAD-1 (2026-10-25): type B = REXOME35 drawing (front 330 / rear "
+                                    "250); the loader fills legs.<leg>.pad polygon / area from this type"),
+        "pad_shapes.types.cad330": ("type A: REXOME33 CAD pad on all four legs, 330 x 330, chamfer 30, 0.1071 m^2 "
+                                    "(B-rep 01_cad/02_legs/legs/*_10_1.brep, lowest -Y_cad plane, outer wire)"),
+        "pad_shapes.types.dwg_rear250": ("type B (default): front = CAD pad (drawing = CAD); rear = REXOME35 drawing "
+                                         "REXOME35-9206 Rev.0 SECTION A-A' 250 x 250 (08_test_data/datasheets/"
+                                         "cylinder_rear_extract.md), synthesis B-rep 01_cad/02_legs/rexome35/"
+                                         "moving_R{L,R}.brep; ASSUMPTION: corner chamfer 30 mm, CAD pad orientation "
+                                         "(3.4 deg), plate thickness 25 / side height 20 mm as the CAD pad"),
         "actuator.pump_flow_m3_s": ("[common] circuit drawing: 60.2 L/min; 4 legs at max_speed_m_s need sum(A_p) v_max = "
                                     f"{derived['flow_4_legs_at_vmax_m3_s'] * 60000.0:.4f} L/min = 60.2 x "
                                     f"pump_volumetric_efficiency (checked: <= pump flow)"),
@@ -2474,7 +2640,8 @@ def rex35_comments(comments: dict, derived: dict) -> None:
         "actuator.rod_dead_length_m": ("[L1-R, L2b] ASSUMPTION: rod-side dead length (column length = stroke - e + this), "
                                        "sensitivity 0.02 ... 0.1 m (user decision 2026-10-22, hydraulics rod_side_pressure.md 16); "
                                        "L2b override as a scalar or a 4-list (ML draws U(0.02, 0.10) m)"),
-        "actuator.rod_side.k_rod_side_N_m": "derived: oil_bulk_modulus_eff_Pa x annulus_area_m2 / column_length_m",
+        "actuator.rod_side.k_rod_side_N_m": ("derived: oil_bulk_modulus_eff_Pa x legs.<leg>.cylinder.annulus_area_m2 / "
+                                             "column_length_m"),
         "actuator.rod_side.release_tau_s": "ASSUMPTION (hydraulics 14.3): exp(-t / tau) release on lock -> move",
         "actuator.rod_side.lock_eps_m_s": "dynamics 5.12.8 Q-D5: |u_applied| <= this -> LOCK",
         "actuator.rod_side.predictor": "dynamics 5.12.8: F_x(delta_n + d delta_n dt)",
@@ -2523,6 +2690,8 @@ def rex35_comments(comments: dict, derived: dict) -> None:
             f"decision_log.md sec. 2 '다리 기하': {CAD_RETRACT_STROKE_M} (CAD stroke estimate, geometry held Q-C2) - cad_summary.json "
             f"legs.{leg}.remaining_extension_mm (= bore top - piston top); the CAD pose is extension = this value")
         comments[f"legs.{leg}.extension_range_m"] = "user decision Q-C1 / Q-U4: 0 = fully retracted ... actuator.stroke_m"
+        comments[f"legs.{leg}.pad"] = ("joint, swivel and plate profile (same for both pad types); bottom polygon / area "
+                                       "in pad_shapes (bundle 2026-10-25, SCM only)")
         if leg in REX35_MOVING_BREP:
             comments[f"legs.{leg}.moving_part"] = (
                 "ASSUMPTION (estimate, user decision Q-C3 / Q-C4 2026-10-22): REXOME35 rear drawing-chain synthesis "
@@ -2531,8 +2700,8 @@ def rex35_comments(comments: dict, derived: dict) -> None:
                 "piston D110 x 30; steel 7.85 (ASSUMPTION); retracted state; replace with the manufacturer mass")
             comments[f"legs.{leg}.pad_body"] = (
                 "[SCM, held until S9] ball-joint split of the synthesized rear leg: pad plate (below pad bottom + "
-                "split_plane_above_pad_bottom_m) + socket housing with 4 ribs; NOTE pad.polygon_xy_m stays the CAD 330 "
-                "pad (rear 250 x 250 deferred to S9); com_m / inertia about com_m in body axes")
+                "split_plane_above_pad_bottom_m) + socket housing with 4 ribs; the plate is the rear 250 pad of "
+                "pad_shapes type B (dwg_rear250), used for both types (U-PAD-3); com_m / inertia about com_m in body axes")
             comments[f"legs.{leg}.rod_body"] = (
                 "[SCM, held until S9] ball D90 + neck + rod D90 + piston of the synthesized rear leg; pad_body + rod_body "
                 "= moving_part (parallel-axis check in rexome33_checks.json); retracted state")
@@ -2691,6 +2860,27 @@ def evaluate_checks(checks: dict) -> list[str]:
         require(b["undo_com_max_abs_m"] <= ABS_COM_TOL_M, "barrel_replacement.undo_com_max_abs_m", b["undo_com_max_abs_m"])
         for key in ("cad_barrel_vs_cache_json_mass_rel", "new_barrel_vs_cache_json_mass_rel"):
             require(max(b[key].values()) <= REL_TOL, f"barrel_replacement.{key}", b[key])
+    if "pad_shapes" in checks:  # bundle 2026-10-25 item 5
+        ps = checks["pad_shapes"]
+        for key, c in ps["entries"].items():
+            q = f"pad_shapes.entries.{key}"
+            require(c["vertex_count"] == 8, f"{q}.vertex_count", c["vertex_count"])
+            require(c["area_vs_polygon_rel"] <= REL_TOL, f"{q}.area_vs_polygon_rel", c["area_vs_polygon_rel"])
+            require(max(abs(v) for v in c["centroid_minus_axis_xy_mm"]) <= CAD_SUMMARY_TOL_MM,
+                    f"{q}.centroid_minus_axis_xy_mm", c["centroid_minus_axis_xy_mm"])
+            require(abs(c["bottom_y_minus_cad_pad_mm"]) <= CAD_SUMMARY_TOL_MM, f"{q}.bottom_y_minus_cad_pad_mm",
+                    c["bottom_y_minus_cad_pad_mm"])
+            if "area_vs_drawing_rel" in c:
+                require(c["area_vs_drawing_rel"] <= REL_TOL, f"{q}.area_vs_drawing_rel", c["area_vs_drawing_rel"])
+        t = ps["table"]
+        if "sha256" in t:
+            require(t["default_equal"] and t["types_equal"], "pad_shapes.table.default/types", (t["default_equal"],
+                                                                                                t["types_equal"]))
+            for key, c in t.items():
+                if not isinstance(c, dict):
+                    continue
+                require(c["polygon_max_abs_m"] <= PAD_TABLE_TOL and c["area_rel"] <= PAD_TABLE_TOL
+                        and c["bekker_b_rel"] <= PAD_TABLE_TOL and c["source_kind_equal"], f"pad_shapes.table.{key}", c)
     require(checks["yaml_round_trip_equal"], "yaml_round_trip_equal", checks["yaml_round_trip_equal"])
     return failures
 

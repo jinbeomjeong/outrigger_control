@@ -37,9 +37,13 @@ import pychrono as ch  # noqa: E402
 from crawler_contact import layout_from_params  # noqa: E402
 
 from outrigger_sim.chrono.system import make_system  # noqa: E402
-from outrigger_sim.params import load_params  # noqa: E402
+from outrigger_sim.params import PAD_TYPE_OVERRIDE_KEY, load_params  # noqa: E402
 
-P = load_params()  # default auger level = top
+# Default auger level = top. Pad type fixed to cad330 (four 330 CAD pads, the pad of the stored S0
+# measurements; YAML bundle 2026-10-25 decision D10): the SCM case uses the pad area below, and the
+# YAML default type B (rear 250) would change the rear equivalent radius. The L1 fingerprint is the
+# same for both types (pad_shapes is not part of it).
+P = load_params(overrides={PAD_TYPE_OVERRIDE_KEY: "cad330"})
 G = P.meta.gravity_m_s2
 
 TIMERS = ("Step", "Advance", "LSsetup", "LSsolve", "Setup", "Update", "Jacobian", "Collision")
