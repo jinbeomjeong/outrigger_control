@@ -1,0 +1,519 @@
+{
+ "rows": {
+  "base|G1|A": {
+   "n": 9,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 51.477771744816344,
+   "att_end_max": 0.013849890482199116,
+   "t_ready_max": 41.40000000001565,
+   "t_ready_min": 40.80000000001279,
+   "clear_min": 44.9672178724915,
+   "clear_max": 45.469156545999894,
+   "stroke_max": 410.29102019704163,
+   "att_off_max": 0.10894637275200188,
+   "rise_pinned_min": 1e+18,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 6
+  },
+  "base|G1|B": {
+   "n": 9,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 53.28731834342168,
+   "att_end_max": 0.007373370349587224,
+   "t_ready_max": 40.100000000009445,
+   "t_ready_min": 38.900000000003715,
+   "clear_min": 42.29175650223105,
+   "clear_max": 43.07868520526906,
+   "stroke_max": 407.5012988749319,
+   "att_off_max": 0.0706083154987261,
+   "rise_pinned_min": 1e+18,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 9
+  },
+  "base|J1|A": {
+   "n": 9,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 55.732625344965875,
+   "att_end_max": 0.05651020169185358,
+   "t_ready_max": 48.000000000047166,
+   "t_ready_min": 47.600000000045256,
+   "clear_min": 34.918868210657465,
+   "clear_max": 36.73057406142956,
+   "stroke_max": 451.70868673630787,
+   "att_off_max": 0.5515648195982623,
+   "rise_pinned_min": 1e+18,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 0
+  },
+  "base|J1|B": {
+   "n": 9,
+   "ready_fail": 0,
+   "crawler_max_N": 31387.778410134553,
+   "recontact": 0,
+   "min_margin_kN": 1000000000.0,
+   "att_end_max": 0.03922274888201135,
+   "t_ready_max": 45.80000000003666,
+   "t_ready_min": 45.50000000003523,
+   "clear_min": 3.7054246804375586,
+   "clear_max": 4.066636451256119,
+   "stroke_max": 423.62200799771927,
+   "att_off_max": 0.0,
+   "rise_pinned_min": 1e+18,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 0
+  },
+  "base|J2|A": {
+   "n": 9,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 56.58721119818006,
+   "att_end_max": 0.036669556536868174,
+   "t_ready_max": 51.200000000062445,
+   "t_ready_min": 50.90000000006101,
+   "clear_min": 27.45410436495553,
+   "clear_max": 28.913332089564914,
+   "stroke_max": 474.6634276840205,
+   "att_off_max": 0.4004577054300243,
+   "rise_pinned_min": 1e+18,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 0
+  },
+  "base|J2|B": {
+   "n": 9,
+   "ready_fail": 0,
+   "crawler_max_N": 78851.6358363013,
+   "recontact": 0,
+   "min_margin_kN": 1000000000.0,
+   "att_end_max": 0.02322447858301897,
+   "t_ready_max": 46.90000000004191,
+   "t_ready_min": 46.60000000004048,
+   "clear_min": 2.9960492178871734,
+   "clear_max": 3.21528546896108,
+   "stroke_max": 420.300857030618,
+   "att_off_max": 0.0,
+   "rise_pinned_min": 1e+18,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 0
+  },
+  "base|S1|A": {
+   "n": 9,
+   "ready_fail": 0,
+   "crawler_max_N": 87827.35879265473,
+   "recontact": 0,
+   "min_margin_kN": 1000000000.0,
+   "att_end_max": 0.011898121553258895,
+   "t_ready_max": 59.00000000009969,
+   "t_ready_min": 58.70000000009826,
+   "clear_min": -3.0315591748845474,
+   "clear_max": -2.7122910048818487,
+   "stroke_max": 463.3513915460864,
+   "att_off_max": 0.0,
+   "rise_pinned_min": 1e+18,
+   "reapproach": 11,
+   "relevel": 0,
+   "warn": 0
+  },
+  "base|S1|B": {
+   "n": 9,
+   "ready_fail": 9,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 1000000000.0,
+   "att_end_max": 0.0,
+   "t_ready_max": 0.0,
+   "t_ready_min": 1000000000.0,
+   "clear_min": 1000000000.0,
+   "clear_max": -1000000000.0,
+   "stroke_max": 0.0,
+   "att_off_max": 0.0,
+   "rise_pinned_min": 1e+18,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 0
+  },
+  "loc|G1|A": {
+   "n": 20,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 50.06784983080275,
+   "att_end_max": 0.014081426637043988,
+   "t_ready_max": 41.50000000001613,
+   "t_ready_min": 40.80000000001279,
+   "clear_min": 44.9672178724915,
+   "clear_max": 45.469156545999894,
+   "stroke_max": 412.0584874312231,
+   "att_off_max": 0.11476163163010628,
+   "rise_pinned_min": 171884.0,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 17
+  },
+  "loc|G1|B": {
+   "n": 20,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 52.12301019615488,
+   "att_end_max": 0.011635674579922258,
+   "t_ready_max": 41.40000000001565,
+   "t_ready_min": 38.900000000003715,
+   "clear_min": 42.29175650223105,
+   "clear_max": 43.07868520526906,
+   "stroke_max": 409.2773023972273,
+   "att_off_max": 0.07262978749119574,
+   "rise_pinned_min": 153919.8,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 18
+  },
+  "loc|J1|A": {
+   "n": 20,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 55.52806058224332,
+   "att_end_max": 0.060363103465803966,
+   "t_ready_max": 48.000000000047166,
+   "t_ready_min": 47.80000000004621,
+   "clear_min": 35.49484461989577,
+   "clear_max": 37.039335812554064,
+   "stroke_max": 454.4978531472485,
+   "att_off_max": 0.5517015737902229,
+   "rise_pinned_min": 8908.2,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 0
+  },
+  "loc|J1|B": {
+   "n": 20,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 59.300684530120634,
+   "att_end_max": 0.043792040909067284,
+   "t_ready_max": 63.70000000012213,
+   "t_ready_min": 61.40000000011115,
+   "clear_min": 44.88405477778056,
+   "clear_max": 50.744367453306104,
+   "stroke_max": 486.7143061798713,
+   "att_off_max": 0.3089200835736794,
+   "rise_pinned_min": 6635.7,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 0
+  },
+  "loc|J2|A": {
+   "n": 20,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 56.84479871070113,
+   "att_end_max": 0.0356904595879473,
+   "t_ready_max": 50.400000000058625,
+   "t_ready_min": 49.90000000005624,
+   "clear_min": 35.87982009948309,
+   "clear_max": 37.91061928922783,
+   "stroke_max": 485.2231078164549,
+   "att_off_max": 0.6536574920577957,
+   "rise_pinned_min": 13288.9,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 0
+  },
+  "loc|J2|B": {
+   "n": 20,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 59.37610706567073,
+   "att_end_max": 0.042538227329430196,
+   "t_ready_max": 67.90000000014219,
+   "t_ready_min": 66.30000000013455,
+   "clear_min": 46.45686835783427,
+   "clear_max": 49.82902411914318,
+   "stroke_max": 516.0338734047778,
+   "att_off_max": 0.2710425793658327,
+   "rise_pinned_min": 5885.2,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 0
+  },
+  "loc|S1|A": {
+   "n": 20,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 57.689765328229434,
+   "att_end_max": 0.027757277898191775,
+   "t_ready_max": 52.800000000070085,
+   "t_ready_min": 52.400000000068175,
+   "clear_min": 55.41996183413635,
+   "clear_max": 57.45700874402501,
+   "stroke_max": 540.0051716543284,
+   "att_off_max": 0.5121475748066507,
+   "rise_pinned_min": 27266.6,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 0
+  },
+  "loc|S1|B": {
+   "n": 20,
+   "ready_fail": 0,
+   "crawler_max_N": 0.0,
+   "recontact": 0,
+   "min_margin_kN": 58.711998614887065,
+   "att_end_max": 0.03488047560285578,
+   "t_ready_max": 57.600000000093004,
+   "t_ready_min": 57.30000000009157,
+   "clear_min": 39.93100367763528,
+   "clear_max": 43.55745178496666,
+   "stroke_max": 521.8095405986255,
+   "att_off_max": 0.2285353306778812,
+   "rise_pinned_min": 14087.1,
+   "reapproach": 0,
+   "relevel": 0,
+   "warn": 0
+  }
+ },
+ "fails": [
+  [
+   "base|J1|B|top|Fs0",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J1|B|top|Fs4",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J1|B|top|Fs8",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J1|B|middle|Fs0",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J1|B|middle|Fs4",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J1|B|middle|Fs8",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J1|B|bottom|Fs0",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J1|B|bottom|Fs4",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J1|B|bottom|Fs8",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J2|B|top|Fs0",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J2|B|top|Fs4",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J2|B|top|Fs8",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J2|B|middle|Fs0",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J2|B|middle|Fs4",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J2|B|middle|Fs8",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J2|B|bottom|Fs0",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J2|B|bottom|Fs4",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|J2|B|bottom|Fs8",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|S1|A|top|Fs0",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|S1|A|top|Fs4",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|S1|A|top|Fs8",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|S1|A|middle|Fs0",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|S1|A|middle|Fs4",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|S1|A|middle|Fs8",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|S1|A|bottom|Fs0",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|S1|A|bottom|Fs4",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|S1|A|bottom|Fs8",
+   [
+    "crawler",
+    "clear<25"
+   ]
+  ],
+  [
+   "base|S1|B|top|Fs0",
+   "no READY"
+  ],
+  [
+   "base|S1|B|top|Fs4",
+   "no READY"
+  ],
+  [
+   "base|S1|B|top|Fs8",
+   "no READY"
+  ],
+  [
+   "base|S1|B|middle|Fs0",
+   "no READY"
+  ],
+  [
+   "base|S1|B|middle|Fs4",
+   "no READY"
+  ],
+  [
+   "base|S1|B|middle|Fs8",
+   "no READY"
+  ],
+  [
+   "base|S1|B|bottom|Fs0",
+   "no READY"
+  ],
+  [
+   "base|S1|B|bottom|Fs4",
+   "no READY"
+  ],
+  [
+   "base|S1|B|bottom|Fs8",
+   "no READY"
+  ]
+ ]
+}
