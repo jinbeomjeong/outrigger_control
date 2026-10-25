@@ -12,7 +12,7 @@ from dataclasses import dataclass, field, replace
 import numpy as np
 import pytest
 
-from outrigger_sim.control.c2 import C2Geometry
+from outrigger_sim.control.c2 import C2Config, C2Geometry
 from outrigger_sim.control.ground_contact import (
     LoadBand,
     ProbeProfile,
@@ -556,3 +556,130 @@ def test_u63_correction_uses_the_measured_secant_when_grounded() -> None:
     assert given.seal_friction_estimate_N == pytest.approx(0.5 * (secant - 5.83e6) * 2e-3)
     assert measured.seal_friction_estimate_N == pytest.approx(0.0, abs=1e-6)
     assert measured.load_estimate_N == pytest.approx(50e3)
+
+
+# --- P-S8-9: the 7c estimator bias (spec rev. 44 214.4 cause 1), no behaviour change ---------
+
+PROBE_DEPTH_M = 2e-3
+OIL_STIFFNESS_N_M = 2.0e7
+START_FORCE_N = 70e3
+START_ROD_STROKE_M = 0.66
+START_MOTOR_STROKE_M = 0.6658
+
+
+@dataclass(frozen=True)
+class _SealedLegProbe:
+    """One leg's +d / -d probe with a Coulomb seal between oil column and support spring.
+
+    The motor (oil volume) moves ``depth_m`` and back. The oil column ``k_oil`` sits between
+    motor and piston; the piston (``stroke_corrected_m``, the rod reading) drives the support
+    spring with ``k_extend`` on the way out and ``k_return`` on the way back (a stiffer return
+    stands for the other legs' seals sticking after the reversal, spec 212.5 / 214.4). The
+    reading is the oil force ``P = F + f`` with the seal force ``f`` (+F_s sliding out, -F_s
+    sliding back); while the seal sticks the piston stays and only ``P`` changes. The seal is
+    unloaded (f = 0) at the start.
+    """
+
+    seal_friction_N: float
+    k_extend_N_m: float
+    k_return_N_m: float
+    k_oil_N_m: float = OIL_STIFFNESS_N_M
+    depth_m: float = PROBE_DEPTH_M
+
+    def _extend(self, motor_travel_m: float) -> tuple[float, float, float]:
+        """(piston travel, reading, true force) after ``motor_travel_m`` outwards."""
+        stick_travel_m = self.seal_friction_N / self.k_oil_N_m
+        if motor_travel_m <= stick_travel_m:
+            return 0.0, START_FORCE_N + self.k_oil_N_m * motor_travel_m, START_FORCE_N
+        piston_m = (motor_travel_m - stick_travel_m) / (1.0 + self.k_extend_N_m / self.k_oil_N_m)
+        force_N = START_FORCE_N + self.k_extend_N_m * piston_m
+        return piston_m, force_N + self.seal_friction_N, force_N
+
+    def run(self) -> tuple[ProbeSample, dict[str, float]]:
+        """The probe sample and the truth: T1, T2, rod gap and the shrink by the seal."""
+        mid_piston_m, mid_reading_N, _ = self._extend(0.5 * self.depth_m)
+        out_piston_m, out_reading_N, out_force_N = self._extend(self.depth_m)
+        # Back to the start motor position: oil balance -(x_e - y) = (P_r - P_0) / k_oil with
+        # P_r = P_e - k_return y - 2 F_s (the seal turns from +F_s to -F_s).
+        turned_reading_N = out_reading_N - 2.0 * self.seal_friction_N
+        return_m = (
+            out_piston_m + (turned_reading_N - START_FORCE_N) / self.k_oil_N_m
+        ) / (1.0 + self.k_return_N_m / self.k_oil_N_m)
+        back_force_N = out_force_N - self.k_return_N_m * return_m
+        back_reading_N = back_force_N - self.seal_friction_N
+        sample = ProbeSample(
+            leg_index=3,
+            start_force_N=START_FORCE_N,
+            start_rod_stroke_m=START_ROD_STROKE_M,
+            start_motor_stroke_m=START_MOTOR_STROKE_M,
+            extended_force_N=out_reading_N,
+            extended_rod_stroke_m=START_ROD_STROKE_M + out_piston_m,
+            extended_motor_stroke_m=START_MOTOR_STROKE_M + self.depth_m,
+            retracted_force_N=back_reading_N,
+            retracted_rod_stroke_m=START_ROD_STROKE_M + out_piston_m - return_m,
+            retracted_motor_stroke_m=START_MOTOR_STROKE_M,
+            first_move_mid_force_N=mid_reading_N,
+            first_move_mid_rod_stroke_m=START_ROD_STROKE_M + mid_piston_m,
+        )
+        oil_shrink_m = (out_reading_N - back_reading_N - (out_force_N - back_force_N)) / (
+            self.k_oil_N_m
+        )
+        truth = {"T1_N": out_force_N, "T2_N": back_force_N, "rod_gap_m": return_m,
+                 "seal_shrink_m": oil_shrink_m}
+        return sample, truth
+
+
+R8_PROBE = C2Config().with_10hz_d1().probe
+REAR_SII_N_M = 6.98e6
+"""``PROBE_CORRECTION_SENSITIVITY_N_M`` of RL / RR (grounded threshold 0.3 of it)."""
+
+
+@pytest.mark.parametrize("seal_friction_N", [0.0, 2e3, 4e3, 8e3])
+def test_seal_shrinks_the_rod_gap_but_alone_leaves_the_estimate_unbiased(seal_friction_N):
+    """Spec 214.4 cause 1 as stated: the rod-reading gap is 2 F_s / k_oil shorter than the
+    motor gap. True, but with the R8 probe (measured second-half stiffness as the correction)
+    and one support stiffness, the estimate equals T2 for every F_s: the shrink alone is not
+    the bias."""
+    stiffness_N_m = 15e6
+    leg = _SealedLegProbe(seal_friction_N, stiffness_N_m, stiffness_N_m)
+    sample, truth = leg.run()
+    motor_gap_m = sample.extended_motor_stroke_m - sample.retracted_motor_stroke_m
+    rod_gap_m = sample.extended_rod_stroke_m - sample.retracted_rod_stroke_m
+    true_drop_N = truth["T1_N"] - truth["T2_N"]
+
+    assert rod_gap_m == pytest.approx(truth["rod_gap_m"], abs=1e-15)
+    assert motor_gap_m - rod_gap_m == pytest.approx(
+        (true_drop_N + 2.0 * seal_friction_N) / OIL_STIFFNESS_N_M, rel=1e-9)
+    assert truth["seal_shrink_m"] == pytest.approx(2.0 * seal_friction_N / OIL_STIFFNESS_N_M,
+                                                   abs=1e-15)
+
+    result = evaluate_probe(sample, REAR_SII_N_M, (0.0, 0.0), R8_PROBE, REAR_SII_N_M)
+    assert result.is_grounded_by_stiffness
+    assert result.incremental_stiffness_N_m == pytest.approx(stiffness_N_m, rel=1e-9)
+    assert result.load_estimate_N - truth["T2_N"] == pytest.approx(0.0, abs=1e-6)
+    assert result.seal_friction_estimate_N == pytest.approx(seal_friction_N, abs=1e-6)
+
+
+@pytest.mark.parametrize("seal_friction_N", [0.0, 6.66e3])
+def test_a_stiffer_return_biases_the_estimate_high(seal_friction_N):
+    """The bias E - T2 is (k_return - k_extend) / 2 times the rod gap: the correction (the
+    extension's second-half stiffness) is smaller than the return secant. In the spec's terms
+    S_c / S_true = k_extend / k_return (both on the motor gap). k_extend / k_return here are
+    the p1r K8 fup3.5 RR probe (record t 59.1-62.0 s): 14.3 MN/m measured on the extension,
+    11.3 kN over a 0.183 mm rod gap on the return (62 MN/m); spec table 0.24."""
+    k_extend_N_m, k_return_N_m = 14.3e6, 61.7e6
+    leg = _SealedLegProbe(seal_friction_N, k_extend_N_m, k_return_N_m)
+    sample, truth = leg.run()
+    rod_gap_m = truth["rod_gap_m"]
+    motor_gap_m = sample.extended_motor_stroke_m - sample.retracted_motor_stroke_m
+
+    result = evaluate_probe(sample, REAR_SII_N_M, (0.0, 0.0), R8_PROBE, REAR_SII_N_M)
+    bias_N = result.load_estimate_N - truth["T2_N"]
+    assert bias_N == pytest.approx(0.5 * (k_return_N_m - k_extend_N_m) * rod_gap_m, rel=1e-9)
+    assert bias_N > 0.0
+
+    readings_mid_N = 0.5 * (sample.extended_force_N + sample.retracted_force_N)
+    equivalent_correction_N_m = (readings_mid_N - result.load_estimate_N) / (0.5 * motor_gap_m)
+    secant_N_m = (truth["T1_N"] - truth["T2_N"]) / motor_gap_m
+    assert equivalent_correction_N_m / secant_N_m == pytest.approx(
+        k_extend_N_m / k_return_N_m, rel=1e-9)

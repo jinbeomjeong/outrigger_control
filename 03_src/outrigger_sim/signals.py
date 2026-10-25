@@ -157,6 +157,9 @@ class Measurements:
             mean over one IMU sample interval (10 ms at 100 Hz). ``None`` when the engine
             delivers only the period mean ``specific_force_m_s2``. The C2 R8 preset filters
             the attitude at the IMU rate on these samples (``s6_control_spec.md`` 139 P-3).
+        imu_angular_rate_samples_rad_s: The gyro samples of the same IMU-rate intervals,
+            shape (n, 3), or ``None``. The C2 D1'' head-step rule takes the angular
+            acceleration from the last two (lever term, dynamics rev. 41 R41-2).
     """
 
     t_s: float
@@ -168,6 +171,7 @@ class Measurements:
     rod_pressure_Pa: NDArray[np.float64] | None = None
     oil_temperature_C: float | None = None
     imu_specific_force_samples_m_s2: NDArray[np.float64] | None = None
+    imu_angular_rate_samples_rad_s: NDArray[np.float64] | None = None
 
     def __post_init__(self) -> None:
         _freeze_fields(
@@ -187,15 +191,15 @@ class Measurements:
                 self.rod_pressure_Pa, (LEG_COUNT,), "rod_pressure_Pa", allow_nan=True
             )
             object.__setattr__(self, "rod_pressure_Pa", rod)
-        if self.imu_specific_force_samples_m_s2 is not None:
-            self._freeze_imu_samples()
+        for name in ("imu_specific_force_samples_m_s2", "imu_angular_rate_samples_rad_s"):
+            if getattr(self, name) is not None:
+                self._freeze_imu_samples(name)
 
-    def _freeze_imu_samples(self) -> None:
-        name = "imu_specific_force_samples_m_s2"
-        sample_count = np.shape(self.imu_specific_force_samples_m_s2)[0]
+    def _freeze_imu_samples(self, name: str) -> None:
+        sample_count = np.shape(getattr(self, name))[0]
         if sample_count < 1:
             raise InvalidSignalError(name, "needs at least one sample")
-        samples = _frozen_array(self.imu_specific_force_samples_m_s2, (sample_count, 3), name)
+        samples = _frozen_array(getattr(self, name), (sample_count, 3), name)
         object.__setattr__(self, name, samples)
 
 

@@ -45,6 +45,7 @@ from typing import Any
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
+from outrigger_sim.hydraulics.counterbalance import CounterbalanceLegParams
 from outrigger_sim.hydraulics.rod_chamber import (
     ATMOSPHERE_PA,
     RodChamberLeg,
@@ -110,6 +111,7 @@ class L2bRodSide:
         lock_eps_m_s: float,
         mechanics: str = "one_sided_parallel",
         armed: bool = True,
+        counterbalance: Any = None,
     ) -> None:
         self._a_p = np.array(head_area_m2, dtype=float).reshape(-1)
         n = self._a_p.size
@@ -124,6 +126,10 @@ class L2bRodSide:
         self._p_floor_abs = float(p_floor_abs_Pa)
         self._tau = float(release_tau_s)
         self._eps = float(lock_eps_m_s)
+        self._cb = counterbalance
+        """CB parameters (S8 spec 4.3) or None (pilot-operated check)."""
+        self.arm_count = 0
+        """Number of :meth:`arm` calls (the seal friction re-arms with the law, spec 2.6)."""
         self.mechanics = RodSideMechanics(str(mechanics))
         self._options = RodChamberOptions(
             mechanics=RodSideMechanics.ONE_SIDED_PARALLEL,
@@ -140,6 +146,8 @@ class L2bRodSide:
 
     def _reset_state(self) -> None:
         n = self._n
+        self._last_s = np.full(n, np.nan)
+        self._last_t = math.nan
         self._locked = np.zeros(n, dtype=bool)
         self._c_lock = np.full(n, np.nan)
         self._s_lock = np.full(n, np.nan)
@@ -156,8 +164,13 @@ class L2bRodSide:
 
     @classmethod
     def from_params(cls, params: Any, legs: Sequence[int], *, include_concrete: bool = True,
-                    armed: bool = True, mechanics: str | None = None) -> L2bRodSide:
-        """From ``params.l2b`` (loaded with ``model="L2b_NSC"``) for the leg indices ``legs``."""
+                    armed: bool = True, mechanics: str | None = None,
+                    oil_only: bool = False, counterbalance: Any = None) -> L2bRodSide:
+        """From ``params.l2b`` (loaded with ``model="L2b_NSC"``) for the leg indices ``legs``.
+
+        ``oil_only``: ``k_out = inf`` (the oil law G of the seal-friction / CB path, S8 spec
+        2.2). ``counterbalance``: CB parameters (moving rod-side regulation and lock pressure,
+        spec 4.3); None = pilot-operated check."""
         a = params.l2b.actuator
         rs = params.l2b.rod_side
         idx = list(legs)
@@ -166,7 +179,7 @@ class L2bRodSide:
             parts = [a.k_rod_N_m[i], a.frame_stiffness_N_m]
             if include_concrete:
                 parts.append(a.k_concrete_N_m)
-            k_out.append(_series(*parts))
+            k_out.append(math.inf if oil_only else _series(*parts))
         return cls(
             head_area_m2=[a.head_area_m2[i] for i in idx],
             annulus_area_m2=[rs.annulus_area_m2[i] for i in idx],
@@ -182,6 +195,7 @@ class L2bRodSide:
             lock_eps_m_s=rs.lock_eps_m_s,
             mechanics=rs.mechanics if mechanics is None else mechanics,
             armed=armed,
+            counterbalance=counterbalance,
         )
 
     # --- stiffness of the oil columns -------------------------------------------------------
@@ -200,6 +214,20 @@ class L2bRodSide:
                        self._k_out[i])
 
     def _leg_params(self, i: int, s_m: float) -> RodChamberLegParams:
+        if self._cb is not None:
+            return CounterbalanceLegParams(
+                head_area_m2=float(self._a_p[i]),
+                annulus_area_m2=float(self._a_r[i]),
+                head_stiffness_N_m=self.head_stiffness_N_m(i, s_m),
+                rod_stiffness_N_m=self.rod_stiffness_N_m(i, s_m),
+                outer_stiffness_N_m=float(self._k_out[i]),
+                rod_weight_N=0.0,
+                p_rod_locked_after_extend_Pa=float(self._p_ext[i]),
+                cavitation_floor_abs_Pa=self._p_floor_abs,
+                cb_p_set_Pa=float(self._cb.p_set_Pa),
+                cb_pilot_ratio=float(self._cb.pilot_ratio),
+                cb_back_pressure_Pa=float(self._cb.back_pressure_Pa),
+            )
         return RodChamberLegParams(
             head_area_m2=float(self._a_p[i]),
             annulus_area_m2=float(self._a_r[i]),
@@ -274,6 +302,7 @@ class L2bRodSide:
             raise RuntimeError("rod-side mechanics is off")
         self._reset_state()
         self._armed = True
+        self.arm_count += 1
 
     def disarm(self) -> None:
         self._reset_state()
@@ -318,6 +347,8 @@ class L2bRodSide:
         c = np.array(c_m, dtype=float).reshape(self._n)
         f_cyl = np.array(cylinder_force_N, dtype=float).reshape(self._n)
         self._last_c = c.copy()
+        self._last_s = s.copy()
+        self._last_t = float(t_s)
         out = np.empty(self._n)
         p_r = np.zeros(self._n)
         if not self._armed:
@@ -342,7 +373,11 @@ class L2bRodSide:
                 # the machine locks in this step: its parameters at s_lock (5.20.2)
                 leg.params = self._leg_params(i, float(s[i]))
             override = math.nan
-            if not was_locked and standstill and leg.last_direction is RodChamberMode.RET:
+            if not was_locked and standstill and self._cb is not None:
+                # CB: lock pressure from the regulation at the lock instant (spec 4.3)
+                override = leg.params.moving_target_rod_pressure_Pa(
+                    leg.last_direction, float(f_cyl[i]))
+            elif not was_locked and standstill and leg.last_direction is RodChamberMode.RET:
                 override = float(self._p_ret[i])
             f_before = (
                 self._locked_force(i, float(c[i])) if was_locked
@@ -391,6 +426,65 @@ class L2bRodSide:
         self._last_force = out
         self._last_p_r = p_r
         return out.copy()
+
+    # --- pure evaluation (S8 seal-friction path, spec 2.5 / C-2) -----------------------------
+
+    def oil_force_N(self, i: int, c_m: float) -> float:
+        """Law value of leg ``i`` at compression ``c_m`` with the state of the last
+        :meth:`spring_force_N` call (column coordinate and time of that call); state unchanged."""
+        s = float(self._last_s[i])
+        if not self._armed:
+            return self.k2_N_m(i, s) * c_m
+        if self._locked[i]:
+            return self._locked_force(i, c_m)
+        return self._moving_force(i, s, c_m, self._last_t)
+
+    def oil_slope_N_m(self, i: int, c_m: float) -> float:
+        """``dG/dc`` of leg ``i`` at ``c_m`` (piecewise constant: one knee while locked)."""
+        if self._armed and self._locked[i]:
+            knee_c = self.knee_force_N(i) / self.k1_lock(i)
+            return self.k1_lock(i) if c_m - self._c_lock[i] < knee_c else self.k2_lock(i)
+        return self.k2_N_m(i, float(self._last_s[i]))
+
+    def refresh_readings(self, c_m: ArrayLike) -> None:
+        """Re-evaluate the law value and the rod pressure at the final compression of the step
+        (the seal-friction solve moved ``c`` after :meth:`spring_force_N`); state unchanged."""
+        c = np.array(c_m, dtype=float).reshape(self._n)
+        self._last_c = c.copy()
+        out = np.array([self.oil_force_N(i, float(c[i])) for i in range(self._n)])
+        if self._armed:
+            for i in range(self._n):
+                if self._locked[i]:
+                    share = self._k_r[i] / (self._k_h[i] + self._k_r[i])
+                    self._last_p_r[i] = max(self.p_floor_gauge_Pa,
+                                            self._p_r0[i] - share * (out[i] - self._f_lock[i])
+                                            / self._a_r[i])
+        self._last_force = out
+
+    def shift_head(self, i: int, delta_m: float) -> None:
+        """CB head discharge of ``delta_m = dV / A_p`` (spec 4.2): the caller lowers ``s_ref`` by
+        ``delta_m``; a locked leg moves its anchor so that the head force drops by ``k_h delta``
+        and the rod side is unchanged (``c_lock -= delta``, ``F_lock -= k_h delta``)."""
+        if self._armed and self._locked[i]:
+            self._c_lock[i] -= delta_m
+            self._f_lock[i] -= self._k_h[i] * delta_m
+
+    def vent_rod(self, i: int, volume_m3: float) -> None:
+        """CB rod-side discharge (spec 4.2): ``p_r0 -= k_r dV / A_ann^2``, ``F_lock += k_r dV /
+        A_ann`` (locked legs only)."""
+        if volume_m3 == 0.0 or not (self._armed and self._locked[i]):
+            return
+        self._p_r0[i] -= self._k_r[i] * volume_m3 / self._a_r[i] ** 2
+        self._f_lock[i] += self._k_r[i] * volume_m3 / self._a_r[i]
+
+    @property
+    def annulus_area_m2(self) -> NDArray[np.float64]:
+        return self._a_r.copy()
+
+    @property
+    def oil_only(self) -> bool:
+        """``k_out = inf`` on every leg (oil law G of the seal-friction / CB path)."""
+        return bool(np.all(np.isinf(self._k_out)))
 
     # --- snapshot ---------------------------------------------------------------------------
 
@@ -465,7 +559,9 @@ class L2bRodSide:
             "rod_dead_length_m": self._l0r.tolist(),
             "head_dead_length_m": self._l0h,
             "stroke_m": self._stroke,
-            "k_out_N_m": self._k_out.tolist(),
+            "k_out_N_m": [float(v) if math.isfinite(v) else "inf" for v in self._k_out],
+            "oil_only": self.oil_only,
+            "lock_valve": "pilot_check" if self._cb is None else "counterbalance",
             "p_r0_after_extend_Pa": self._p_ext.tolist(),
             "p_r0_after_retract_Pa": self._p_ret.tolist(),
             "p_floor_abs_Pa": self._p_floor_abs,

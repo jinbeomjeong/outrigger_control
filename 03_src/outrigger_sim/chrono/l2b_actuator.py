@@ -61,7 +61,9 @@ from numpy.typing import ArrayLike, NDArray
 
 from outrigger_sim.actuation import SATURATION_STOP_S, SpeedReference
 from outrigger_sim.chrono.actuators import leg_force_limits_N
+from outrigger_sim.hydraulics.counterbalance import Counterbalance
 from outrigger_sim.hydraulics.l2b_rod_side import L2bRodSide
+from outrigger_sim.hydraulics.seal_friction import SealFriction, leg_limits_N
 from outrigger_sim.params import LEG_ORDER, Params
 
 PART_PREFIX = "l2b_actuator"
@@ -72,6 +74,32 @@ HOOK_TIME_REL_TOL = 1.0e-12
 
 GUIDE_FREE_XY = (False, False, True, True, True)
 """``SetGuideConstraint(c_x, c_y, c_rx, c_ry, c_rz)`` of the L2b motor (plan S7 risk 1)."""
+
+HEAD_RETURN_BACK_PRESSURE_PA = 2.0e5
+"""S8-A1 (``dynamics_model.md`` 5.26.10): head-side floor of the pressure split while the valve
+drives the leg (``|u| > lock_eps``): return back pressure 2 bar g (ASSUMPTION). Locked legs use
+the cavitation floor of the rod-side law (``actuator.rod_side.p_floor_Pa``, 0.1 bar abs)."""
+
+
+def split_pressures(force_N: ArrayLike, rod_pressure_Pa: ArrayLike, head_area_m2: ArrayLike,
+                    annulus_area_m2: ArrayLike, floor_Pa: ArrayLike
+                    ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.bool_]]:
+    """S8-A1 pressure split of the net (pressure) force ``F_p = p_h A_p - p_r A_ann``:
+    ``p_h = max(floor, (F_p + p_r A_ann) / A_p)``; where the floor binds, ``p_r = (p_h A_p -
+    F_p) / A_ann`` (net force unchanged). Returns (``p_h``, ``p_r``, hit mask). Legs above the
+    floor keep the unfloored expression bit for bit."""
+    f = np.asarray(force_N, dtype=float)
+    p_r = np.asarray(rod_pressure_Pa, dtype=float)
+    a_p = np.asarray(head_area_m2, dtype=float)
+    a_r = np.asarray(annulus_area_m2, dtype=float)
+    p_h = (f + p_r * a_r) / a_p
+    floor = np.broadcast_to(np.asarray(floor_Pa, dtype=float), p_h.shape)
+    hit = p_h < floor
+    if not np.any(hit):
+        return p_h, p_r.copy(), hit
+    p_h = np.where(hit, floor, p_h)
+    p_r = np.where(hit, (floor * a_p - f) / a_r, p_r)
+    return p_h, p_r, hit
 
 
 class L2bHookMissedError(RuntimeError):
@@ -128,6 +156,9 @@ class L2bForceActuator:
         damping_moving_N_s_m: ArrayLike,
         lock_eps_m_s: float = LOCK_EPS_M_S,
         rod_side: L2bRodSide | None = None,
+        seal_friction: SealFriction | None = None,
+        counterbalance: Counterbalance | None = None,
+        oil_law: L2bRodSide | None = None,
     ) -> None:
         n = len(motors)
         if n == 0 or len(functions) != n or reference.n_legs != n:
@@ -148,6 +179,37 @@ class L2bForceActuator:
             raise ValueError("rod-side law must have one leg per motor")
         self.rod_side = rod_side
         """Rod-side law (``hydraulics.l2b_rod_side``, dyn rev. 33 5.20.2); None = head only."""
+        # S8 seal friction / counterbalance path (module docstring "S8")
+        if counterbalance is not None and seal_friction is None:
+            raise ValueError("the counterbalance path needs a SealFriction (limit 0 allowed)")
+        self.seal_friction = seal_friction
+        """Seal friction element (S8, ``hydraulics.seal_friction``); None = S7 path."""
+        self.counterbalance = counterbalance
+        """Counterbalance element (``lock_valve = "counterbalance"``); None = pilot check."""
+        self._oil = rod_side if oil_law is None else oil_law
+        if seal_friction is not None:
+            if self._oil is None or not self._oil.oil_only:
+                raise ValueError("the friction path needs an oil-only law (L2bRodSide, k_out = inf)")
+            if seal_friction.n_legs != n or self._oil.n_legs != n:
+                raise ValueError("friction / oil law must have one leg per motor")
+        flex = 1.0 / self._k_rod + 1.0 / self._k_frame
+        if self._k_c is not None:
+            flex = flex + 1.0 / self._k_c
+        self._k_out = 1.0 / flex
+        self._acting_f = np.zeros(n)
+        self._f_next = np.zeros(n)
+        self._acting_sp = np.full(n, np.nan)
+        self._sp_next = np.full(n, np.nan)
+        self._oil_arm_seen = -1
+        self._last_spring: NDArray[np.float64] | None = None
+        self._last_ph: NDArray[np.float64] | None = None
+        self._last_pr: NDArray[np.float64] | None = None
+        self.friction_state_defaulted = False
+        self.cb_below_soft_limit_steps = np.zeros(n, dtype=np.int64)
+        self.pressure_floor_enabled = True
+        """S8-A1 head-side floor of the pressure split (False = the S7 split, regression)."""
+        self.pressure_floor_hook_hits = np.zeros(n, dtype=np.int64)
+        """Hook steps (friction path) whose ``p_h`` (CB / pressure-model input) hit the floor."""
         self._force = np.zeros(n)
         self._acting_force = np.zeros(n)
         self._k_last = np.full(n, np.nan)
@@ -215,14 +277,57 @@ class L2bForceActuator:
             if rod_side is None
             else bool(rod_side)
         )
+        # S8 (C-1/C-3/C-4): friction level from actuator.seal_friction.level_N, CB from
+        # actuator.lock_valve; level 0 + pilot check = the S7 path (bypass, bit-identical)
+        sf_cfg = params.l2b.seal_friction
+        level = 0.0 if sf_cfg is None else float(sf_cfg.level_N)
+        cb_cfg = params.l2b.counterbalance if params.l2b.lock_valve == "counterbalance" else None
+        friction_path = level > 0.0 or cb_cfg is not None
         law = (
             L2bRodSide.from_params(
                 params, idx, include_concrete=include_concrete, armed=rod_side_armed,
-                mechanics="one_sided_parallel",
+                mechanics="one_sided_parallel", oil_only=friction_path, counterbalance=cb_cfg,
             )
             if use_rod_side
             else None
         )
+        friction = counterbalance = oil = None
+        if friction_path:
+            oil = law if law is not None else L2bRodSide.from_params(
+                params, idx, include_concrete=include_concrete, armed=False, mechanics="off",
+                oil_only=True)
+            names = [LEG_ORDER[i] for i in idx]
+            rear_scale = 1.0 if sf_cfg is None else sf_cfg.rear_scale
+            seal = None
+            if sf_cfg is not None and sf_cfg.pressure_model == "seal_geometry":
+                seal = {"kappa_N_per_m_Pa": sf_cfg.kappa_N_per_m_Pa, "F0_N": sf_cfg.F0_N,
+                        "F0_seal_diameter_sum_m": sf_cfg.F0_seal_diameter_sum_m,
+                        "p_ref_head_Pa": [sf_cfg.p_ref_head_Pa[i] for i in idx],
+                        "p_ref_rod_Pa": sf_cfg.p_ref_rod_Pa,
+                        "bore_diameter_m": [sf_cfg.bore_diameter_m[i] for i in idx],
+                        "rod_diameter_m": [sf_cfg.rod_diameter_m[i] for i in idx]}
+            k_out = []
+            for i in idx:
+                fl = 1.0 / a.k_rod_N_m[i] + 1.0 / a.frame_stiffness_N_m
+                if include_concrete:
+                    fl = fl + 1.0 / a.k_concrete_N_m
+                k_out.append(1.0 / fl)
+            # ML input (python-expert spec): limit = level x rear 0.833 x leg_scale[i]
+            leg_scale = (1.0,) * 4 if sf_cfg is None else sf_cfg.leg_scale
+            limits = leg_limits_N(level, rear_scale, names)
+            if any(float(leg_scale[i]) != 1.0 for i in idx):
+                limits = limits * np.array([float(leg_scale[i]) for i in idx])
+            friction = SealFriction(
+                limits, k_out,
+                static_ratio=1.0 if sf_cfg is None else sf_cfg.static_ratio,
+                stick_stiffness_N_m=0.0 if sf_cfg is None else sf_cfg.stick_stiffness_N_m,
+                pressure_model="constant" if sf_cfg is None else sf_cfg.pressure_model,
+                seal=seal,
+            )
+            if cb_cfg is not None:
+                counterbalance = Counterbalance(
+                    cb_cfg, [a.head_area_m2[i] for i in idx],
+                    [params.l2b.rod_side.annulus_area_m2[i] for i in idx])
         return cls(
             motors,
             functions,
@@ -236,6 +341,9 @@ class L2bForceActuator:
             damping_locked_N_s_m=[c_lock[i] for i in idx],
             damping_moving_N_s_m=[c_move[i] for i in idx],
             rod_side=law,
+            seal_friction=friction,
+            counterbalance=counterbalance,
+            oil_law=oil,
         )
 
     # --- law ------------------------------------------------------------------------------
@@ -293,6 +401,28 @@ class L2bForceActuator:
     @property
     def head_area_m2(self) -> NDArray[np.float64]:
         return self._area.copy()
+
+    def head_floor_Pa(self, u_m_s: ArrayLike) -> NDArray[np.float64]:
+        """S8-A1 floor per leg: return back pressure while moving, cavitation floor locked."""
+        u = np.asarray(u_m_s, dtype=float).reshape(self.n_legs)
+        locked_floor = (self.rod_side.p_floor_gauge_Pa if self.rod_side is not None
+                        else -np.inf)
+        return np.where(np.abs(u) > self._eps, HEAD_RETURN_BACK_PRESSURE_PA, locked_floor)
+
+    def pressure_split(self, pressure_force_N: ArrayLike, rod_pressure_Pa: ArrayLike,
+                       u_m_s: ArrayLike
+                       ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.bool_]]:
+        """Head / rod pressure of the net force ``F_p`` (S8-A1, :func:`split_pressures`); the
+        S7 split ``p_h = (F_p + p_r A_ann) / A_p`` when the rod-side law is off or the floor is
+        disabled. Returns (``p_h``, ``p_r``, hit mask)."""
+        f = np.asarray(pressure_force_N, dtype=float).reshape(self.n_legs)
+        p_r = np.asarray(rod_pressure_Pa, dtype=float).reshape(self.n_legs)
+        if self.rod_side is None:
+            return f / self._area, p_r.copy(), np.zeros(self.n_legs, dtype=bool)
+        a_r = self.rod_side.annulus_area_m2
+        if not self.pressure_floor_enabled:
+            return (f + p_r * a_r) / self._area, p_r.copy(), np.zeros(self.n_legs, dtype=bool)
+        return split_pressures(f, p_r, self._area, a_r, self.head_floor_Pa(u_m_s))
 
     # --- R8 valve model and law-C views (same names as L1SpeedActuator, run_S6C helpers) ----
 
@@ -364,6 +494,9 @@ class L2bForceActuator:
     def on_step_end(self) -> None:
         """Right after ``DoStepDynamics``: the force set before the step acted in it."""
         self._acting_force = self._force.copy()
+        if self.seal_friction is not None:
+            self._acting_f = self._f_next.copy()
+            self._acting_sp = self._sp_next.copy()
 
     def hook(self, t_s: float, dt_s: float) -> None:
         """After step ``n`` (state at ``t_s``): saturation judgement with the force that
@@ -372,6 +505,9 @@ class L2bForceActuator:
         ds = np.array([m.GetMotorPosDt() for m in self._motors], dtype=float)
         s_ref_now = self.reference.s_ref_m
         u_acting = self.reference.u_applied_m_s
+        if self.seal_friction is not None:
+            self._friction_hook(t_s, dt_s, s, ds, s_ref_now, u_acting)
+            return
         self.reference.advance(dt_s, cylinder_force_N=self._acting_force)
         u = self.reference.u_applied_m_s
         self._monitor_piston(t_s, s, self._acting_force)
@@ -390,6 +526,112 @@ class L2bForceActuator:
         self._apply()
         self._hook_t = float(t_s)
 
+    def _friction_hook(self, t_s: float, dt_s: float, s: NDArray[np.float64],
+                       ds: NDArray[np.float64], s_ref_now: NDArray[np.float64],
+                       u_acting: NDArray[np.float64]) -> None:
+        """S8 path (spec 2.5, 4.2): oil law G (k_out = inf) || seal friction, series k_out; law C
+        on the pressure force F - f; counterbalance discharge for the next step."""
+        sf = self.seal_friction
+        oil = self._oil
+        assert sf is not None and oil is not None
+        fp_acting = self._acting_force - self._acting_f
+        self.reference.advance(dt_s, cylinder_force_N=fp_acting)
+        u = self.reference.u_applied_m_s
+        if not sf.armed or oil.arm_count != self._oil_arm_seen:
+            # arming (2.6): s_p = s + F_spr / k_out, f = 0, stuck (ASSUMPTION f = 0)
+            spring0 = self._acting_force if self._last_spring is None else self._last_spring
+            sf.arm(self.stroke_true_m(s, spring0))
+            self._oil_arm_seen = oil.arm_count
+            self._acting_sp = sf.s_p.copy()
+        oil.spring_force_N(t_s, dt_s, u_acting, s_ref_now, s_ref_now - sf.s_p, fp_acting)
+        sf.update_limits(self._last_ph, self._last_pr)
+        enabled = self.rod_side is None or self.rod_side.armed
+        spring = sf.step(s, s_ref_now, oil.oil_force_N, oil.oil_slope_N_m, enabled=enabled,
+                         t_s=t_s)
+        oil.refresh_readings(s_ref_now - sf.s_p)
+        self._monitor_piston_sp(t_s, self._acting_sp)
+        c = np.where(np.abs(u) <= self._eps, self._c_lock, self._c_move)
+        self._k_last = self.axial_stiffness_N_m(s_ref_now)
+        force = spring + c * (u - ds)
+        if not np.all(np.isfinite(force)):
+            raise FloatingPointError(f"L2b force law not finite: {force}")
+        f_p = force - sf.f
+        p_r = (oil.rod_pressure_Pa if (self.rod_side is not None and self.rod_side.armed)
+               else np.zeros(self.n_legs))
+        if self.rod_side is None or not self.pressure_floor_enabled:
+            p_h = (f_p + p_r * oil.annulus_area_m2) / self._area
+        else:
+            # S8-A1: head floor (CB cracking / pressure-model input never below vacuum)
+            p_h, p_r, hit = split_pressures(f_p, p_r, self._area, oil.annulus_area_m2,
+                                            self.head_floor_Pa(u))
+            self.pressure_floor_hook_hits += hit
+        cb = self.counterbalance
+        if cb is not None:
+            locked = np.abs(u) <= self._eps
+            dv_h, dv_r = cb.step(dt_s, locked, p_h, p_r)
+            if np.any(dv_h > 0.0):
+                delta = dv_h / self._area
+                low = self.reference.shift_reference(delta)
+                self.cb_below_soft_limit_steps += low
+                for i in np.flatnonzero(dv_h > 0.0):
+                    oil.shift_head(int(i), float(delta[i]))
+            for i in np.flatnonzero(dv_r > 0.0):
+                oil.vent_rod(int(i), float(dv_r[i]))
+        self._last_spring = spring
+        self._last_ph, self._last_pr = p_h, p_r
+        self._f_next = sf.f.copy()
+        self._sp_next = sf.s_p.copy()
+        self._force = force
+        self._apply()
+        self._hook_t = float(t_s)
+
+    # --- S8 views ---------------------------------------------------------------------------
+
+    @property
+    def friction_path(self) -> bool:
+        """True when the S8 seal-friction / counterbalance force law is in use."""
+        return self.seal_friction is not None
+
+    @property
+    def acting_friction_N(self) -> NDArray[np.float64]:
+        """Seal friction ``f`` that belongs to the acting force (0 on the S7 path)."""
+        return self._acting_f.copy()
+
+    @property
+    def acting_pressure_force_N(self) -> NDArray[np.float64]:
+        """Pressure force ``F_p = F - f`` of the step just taken (= two-sensor net force
+        truth ``p_h A_p - p_r A_ann``); ``= acting_force_N`` on the S7 path."""
+        if self.seal_friction is None:
+            return self._acting_force.copy()
+        return self._acting_force - self._acting_f
+
+    @property
+    def acting_piston_m(self) -> NDArray[np.float64] | None:
+        """Piston position ``s_p`` that belongs to the acting force (None on the S7 path)."""
+        return None if self.seal_friction is None else self._acting_sp.copy()
+
+    def stroke_sensor_true_m(self, s_m: ArrayLike) -> NDArray[np.float64]:
+        """Stroke sensor truth (C-6): the piston state ``s_p`` on the friction path, else the
+        S7 formula ``s + F / k_out`` with the acting force (bit-identical)."""
+        if self.seal_friction is None or not np.all(np.isfinite(self._acting_sp)):
+            return self.stroke_true_m(s_m, self._acting_force)
+        return self._acting_sp.copy()
+
+    def s8_record(self) -> dict[str, Any]:
+        """Friction and CB state (C-7) for the run summary; None parts on the S7 path."""
+        return {
+            "friction_path": self.friction_path,
+            "seal_friction": None if self.seal_friction is None else self.seal_friction.record(),
+            "counterbalance": None if self.counterbalance is None else self.counterbalance.record(),
+            "cb_below_soft_limit_steps": self.cb_below_soft_limit_steps.tolist(),
+            "friction_state_defaulted": self.friction_state_defaulted,
+            "pressure_floor": {"enabled": self.pressure_floor_enabled,
+                               "hook_hit_steps": self.pressure_floor_hook_hits.tolist(),
+                               "rule": "S8-A1: p_h = max(floor, (F_p + p_r A_ann) / A_p), p_r "
+                                       "re-solved where it binds; floor = return 2 bar g moving, "
+                                       "rod-side cavitation floor locked"},
+        }
+
     # --- piston stop monitor (dynamics_model.md 5.20.11 supplement 1) -------------------------
 
     PISTON_STOP_TOL_M = 2.0e-4
@@ -397,7 +639,11 @@ class L2bForceActuator:
     0.2 mm]`` (5.20.11: covers the hanging-rod stretch ~0.06 mm). Recorded, never clipped."""
 
     def _monitor_piston(self, t_s: float, s: NDArray[np.float64], f: NDArray[np.float64]) -> None:
-        sp = self.stroke_true_m(s, f)
+        self._monitor_piston_sp(t_s, self.stroke_true_m(s, f))
+
+    def _monitor_piston_sp(self, t_s: float, sp: NDArray[np.float64]) -> None:
+        if not np.all(np.isfinite(sp)):
+            return
         up = sp > self._sp_max
         self._sp_max = np.where(up, sp, self._sp_max)
         self._sp_max_t = np.where(up, t_s, self._sp_max_t)
@@ -444,6 +690,24 @@ class L2bForceActuator:
         out["hook_t_s"] = np.array([np.nan if self._hook_t is None else self._hook_t])
         if self.rod_side is not None:
             out.update({f"rod_{k}": v for k, v in self.rod_side.state_arrays().items()})
+        if self.seal_friction is not None:
+            # S8 (C-8): friction, CB, the private head-only oil law and the hook carry-overs
+            out.update({f"fr_{k}": v for k, v in self.seal_friction.state_arrays().items()})
+            if self.counterbalance is not None:
+                out.update({f"cb_{k}": v for k, v in self.counterbalance.state_arrays().items()})
+            if self.rod_side is None and self._oil is not None:
+                out.update({f"oil_{k}": v for k, v in self._oil.state_arrays().items()})
+            nan4 = np.full(self.n_legs, np.nan)
+            out.update({
+                "s8_acting_f_N": self._acting_f.copy(), "s8_f_next_N": self._f_next.copy(),
+                "s8_acting_sp_m": self._acting_sp.copy(), "s8_sp_next_m": self._sp_next.copy(),
+                "s8_oil_arm_seen": np.array([self._oil_arm_seen]),
+                "s8_last_spring_N": nan4 if self._last_spring is None else self._last_spring.copy(),
+                "s8_last_ph_Pa": nan4 if self._last_ph is None else self._last_ph.copy(),
+                "s8_last_pr_Pa": nan4 if self._last_pr is None else self._last_pr.copy(),
+                "s8_cb_below_soft_limit_steps": self.cb_below_soft_limit_steps.copy(),
+                "s8_pressure_floor_hook_hits": self.pressure_floor_hook_hits.copy(),
+            })
         return out
 
     def restore_state(self, arrays: Mapping[str, NDArray[Any]]) -> None:
@@ -458,7 +722,55 @@ class L2bForceActuator:
             self.rod_side.restore_state(
                 {k[4:]: v for k, v in arrays.items() if k.startswith("rod_")}
             )
+        if self.seal_friction is not None:
+            self._restore_s8(arrays)
         self._apply()
+
+    def _restore_s8(self, arrays: Mapping[str, NDArray[Any]]) -> None:
+        """S8 part of :meth:`restore_state`; a snapshot without friction keys re-arms at the
+        next hook (spec 2.6: s_p from the force, f = 0, stuck) and sets
+        :attr:`friction_state_defaulted`."""
+        sf = self.seal_friction
+        assert sf is not None
+        fr = {k[3:]: v for k, v in arrays.items() if k.startswith("fr_")}
+        if not fr:
+            sf.reset()
+            self.friction_state_defaulted = True
+            self._acting_f = np.zeros(self.n_legs)
+            self._f_next = np.zeros(self.n_legs)
+            self._acting_sp = np.full(self.n_legs, np.nan)
+            self._sp_next = np.full(self.n_legs, np.nan)
+            self._last_spring = self._last_ph = self._last_pr = None
+            if self.counterbalance is not None:
+                self.counterbalance.reset()
+            return
+        sf.restore_state(fr)
+        if self.counterbalance is not None:
+            self.counterbalance.restore_state(
+                {k[3:]: v for k, v in arrays.items() if k.startswith("cb_")})
+        if self.rod_side is None and self._oil is not None:
+            self._oil.restore_state({k[4:]: v for k, v in arrays.items() if k.startswith("oil_")})
+
+        def opt(key: str) -> NDArray[np.float64] | None:
+            v = np.array(arrays[key], dtype=float).reshape(self.n_legs)
+            return None if np.all(np.isnan(v)) else v
+
+        self._acting_f = np.array(arrays["s8_acting_f_N"], dtype=float).reshape(self.n_legs)
+        self._f_next = np.array(arrays["s8_f_next_N"], dtype=float).reshape(self.n_legs)
+        self._acting_sp = np.array(arrays["s8_acting_sp_m"], dtype=float).reshape(self.n_legs)
+        self._sp_next = np.array(arrays["s8_sp_next_m"], dtype=float).reshape(self.n_legs)
+        self._oil_arm_seen = int(np.asarray(arrays["s8_oil_arm_seen"]).reshape(-1)[0])
+        if self._oil is not None and self._oil_arm_seen >= 0:
+            self._oil.arm_count = self._oil_arm_seen
+        self._last_spring = opt("s8_last_spring_N")
+        self._last_ph = opt("s8_last_ph_Pa")
+        self._last_pr = opt("s8_last_pr_Pa")
+        self.cb_below_soft_limit_steps = np.array(
+            arrays["s8_cb_below_soft_limit_steps"], dtype=np.int64).reshape(self.n_legs)
+        if "s8_pressure_floor_hook_hits" in arrays:  # absent in snapshots before S8-A1
+            self.pressure_floor_hook_hits = np.array(
+                arrays["s8_pressure_floor_hook_hits"], dtype=np.int64).reshape(self.n_legs)
+        self.friction_state_defaulted = False
 
     def stroke_true_m(self, s_m: ArrayLike, force_N: ArrayLike) -> NDArray[np.float64]:
         """Piston-to-head stroke: ``s + F / k_out`` (rod, frame and concrete compression are
@@ -500,6 +812,24 @@ class L2bForceActuator:
             "input_lag": "force from the state at t_n acts during step n+1 (explicit)",
             "rod_side": None if self.rod_side is None else self.rod_side.meta(),
             "valve": self.reference.valve_meta(),
+            "s8": self.s8_meta(),
+        }
+
+    def s8_meta(self) -> dict[str, Any]:
+        """S8 force-law description (C-7, C-8): friction path, friction and CB parameters."""
+        if self.seal_friction is None:
+            return {"friction_path": False, "lock_valve": "pilot_check",
+                    "seal_friction": None, "counterbalance": None,
+                    "law": "S7 series law (seal friction level 0, pilot check)"}
+        return {
+            "friction_path": True,
+            "lock_valve": "pilot_check" if self.counterbalance is None else "counterbalance",
+            "law": "F = k_out (s_p - s) + c (u - ds), k_out (s_p - s) = G(s_ref - s_p) + f, "
+                   "|f| <= F_s (S8 spec 2.1 / 2.5); law C on F - f; stroke truth s_p",
+            "k_out_N_m": self._k_out.tolist(),
+            "seal_friction": self.seal_friction.meta(),
+            "counterbalance": None if self.counterbalance is None else self.counterbalance.meta(),
+            "oil_law": None if self._oil is None else self._oil.meta(),
         }
 
 

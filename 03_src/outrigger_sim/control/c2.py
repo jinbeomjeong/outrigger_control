@@ -271,6 +271,7 @@ from outrigger_sim.sensors.hydraulic import (
     leg_annulus_areas_from_params,
     leg_head_areas_from_params,
 )
+from outrigger_sim.sensors.imu import IMU_MOUNT_C1_BODY_M
 from outrigger_sim.signals import DEFAULT_CONTROL_PERIOD_S, LEG_COUNT, Command, Measurements
 
 logger = logging.getLogger(__name__)
@@ -307,6 +308,8 @@ REANCHOR_RETURN_DONE_M = 1e-10
 OIL_BULK_MODULUS_KEY = "actuator.oil_bulk_modulus_eff_Pa"
 OIL_DEAD_LENGTH_KEY = "actuator.oil_dead_length_m"
 LOCKED_PRESSURE_LIMIT_KEY = "actuator.locked_pressure_limit_Pa"
+RETRACT_LOCK_ROD_PRESSURE_KEY = "actuator.rod_side.p_r0_after_retract_Pa"
+CB_LAG_TAU_KEY = "actuator.rod_side.release_tau_s"
 
 # Spec 2.3 A5: stroke window of a READY target change, 10 mm stroke margin + 3 mm for the
 # predictor error (-2.39 ... +2.35 mm against the envelope map).
@@ -360,6 +363,12 @@ class C2Phase(StrEnum):
 GEOMETRY_GATE_PHASES = frozenset({C2Phase.DONE, C2Phase.PROBE, C2Phase.READY})
 """GE1'-c (spec 32.1): phases in which the standstill gate may open (the probe moves are kept
 out by the command-free time)."""
+CRAWLER_LIFTED_PHASES = frozenset(
+    {C2Phase.LEVEL, C2Phase.DONE, C2Phase.REANCHOR, C2Phase.PROBE, C2Phase.READY}
+)
+"""D1'' (spec rev. 48 218.4, P-S8-14): phases after the crawler left the ground, in which a
+head step is judged by the IMU residual (the crawler load of CHECK / TOUCH is not in the leg
+sum). FAULT keeps the D1' sum rule."""
 REFERENCE_UPDATE_PHASES = frozenset({C2Phase.DONE, C2Phase.READY})
 """GE1'-b: phases whose entry arms a refresh of the shadow reference."""
 REAPPROACH_PHASES = frozenset({C2Phase.LEVEL, C2Phase.DONE, C2Phase.PROBE, C2Phase.READY})
@@ -874,10 +883,12 @@ def _is_positive_int(value: object) -> bool:
 
 @dataclass(frozen=True)
 class LiftedReapproachSettings:
-    """Re-approach of a leg that lifted again (P-R8-13, spec rev. 34 174.4 / 179.1, U-R8-21).
+    """Re-approach of a low-load or lifted leg (P-R8-13, spec rev. 34 174.4 / 179.1, U-R8-21;
+    start level P-S8-5, spec rev. 42 212.10, U-S8-9).
 
-    Once the machine is lifted, a touched leg whose lower load estimate stays below
-    ``load_fraction_of_F_min F_min`` for ``samples`` periods in a row (LEVEL, DONE, PROBE or
+    Once the machine is lifted, a touched leg that is low-load (lower load estimate below
+    ``load_fraction_of_F_min F_min``, 1.4 ``F_min`` in the R8 preset) or lifted for
+    ``samples`` periods in a row (LEVEL, DONE, PROBE or
     READY; never the leg being probed or re-grounded) starts a re-approach (event
     ``leg_reapproach_start:<leg>``). READY, DONE and PROBE go back to LEVEL as the P5 re-level
     does, and no DONE is declared while it is active. ``single_leg``: while one leg
@@ -901,7 +912,10 @@ class LiftedReapproachSettings:
     enable: bool = False
     mode: ReapproachMode = ReapproachMode.TWIST
     load_fraction_of_F_min: float = 0.5
-    """ASSUMPTION (spec 172.5): 4.7 kN, below the 10.75 kN G4 minimum."""
+    """Start level as a fraction of ``F_min``, in (0, 2]. Default ASSUMPTION (spec 172.5):
+    4.7 kN, below the 10.75 kN G4 minimum. The R8 preset uses 1.4 (13.2 kN, U-S8-9, spec
+    rev. 43 213.3.2): with seal friction the low-load leg must start moving before its lower
+    bound falls under ``F_min / 2``, or the G4 minimum drops below ``F_min``."""
     samples: int | None = 1
     """Consecutive low samples to start (spec 174.4: 1); ``None`` =
     ``SampleConfirmation.relevel_samples`` (P-R8-12: 2)."""
@@ -926,8 +940,8 @@ class LiftedReapproachSettings:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "mode", ReapproachMode(self.mode))
-        if not 0.0 < self.load_fraction_of_F_min < 1.0:
-            raise ValueError("load_fraction_of_F_min must be in (0, 1)")
+        if not 0.0 < self.load_fraction_of_F_min <= 2.0:
+            raise ValueError("load_fraction_of_F_min must be in (0, 2]")
         if self.samples is not None and not _is_positive_int(self.samples):
             raise ValueError(f"samples must be an int >= 1 or None, got {self.samples!r}")
         if not _is_positive_int(self.exit_samples):
@@ -977,6 +991,19 @@ class R8Settings:
     """R-2: before a leg has seen its touch load, it extends at ``touch_window_speed_fraction``
     once its motor stroke is within this distance of the level-floor touch extension."""
     touch_window_speed_fraction: float = 0.5
+    touch_free_air_min_travel_m: float | None = None
+    """P-S8-6 (spec rev. 43 213.3.1 / 213.8, U-S8-11), combined judge only: the free-air
+    reference of a leg takes only the TOUCH samples whose motor stroke has advanced at least
+    this far since TOUCH entry (seal friction reversed to the extending side), for
+    ``thresholds.free_air_window_s`` from its first such sample, and the leg rod weight is
+    ``C2Geometry.rod_weight_N``. ``None`` = the R7 rule (every sample from TOUCH entry, the
+    scalar ``thresholds.rod_weight_N``)."""
+    touch_free_air_min_samples: int = 1
+    """P-S8-6: a leg is judged for touchdown only once its free-air reference holds this many
+    samples (before that its touchdown load is ``-inf``)."""
+    touch_seen_samples: int = 1
+    """P-S8-6, combined judge only: ``touch_seen`` (the slow approach) latches after this many
+    touchdown-load samples in a row; 1 = the R7 latch on one sample."""
     confirmation: SampleConfirmation = field(default_factory=SampleConfirmation)
     end_slowdown_window_m: float | None = None
     """Spec 99.3: within this distance below ``soft end - 10 mm`` the leg speeds are scaled so
@@ -1026,6 +1053,13 @@ class R8Settings:
             raise ValueError("imu_sample_period_s must be > 0 or None")
         if not 0.0 < self.touch_window_speed_fraction <= 1.0:
             raise ValueError("touch_window_speed_fraction must be in (0, 1]")
+        min_travel = self.touch_free_air_min_travel_m
+        if min_travel is not None and not min_travel > 0.0:
+            raise ValueError("touch_free_air_min_travel_m must be > 0 or None")
+        for name in ("touch_free_air_min_samples", "touch_seen_samples"):
+            value = getattr(self, name)
+            if not _is_positive_int(value):
+                raise ValueError(f"{name} must be an int >= 1, got {value!r}")
         if not 0.0 < self.end_slowdown_speed_fraction <= 1.0:
             raise ValueError("end_slowdown_speed_fraction must be in (0, 1]")
         if not self.pre_probe_stiffness_scale > 0.0:
@@ -1094,12 +1128,24 @@ STIFFNESS_SCALE_DENOMINATOR = "load_sensitivity_diag_N_m (head-only k_nom)"
 R8_D1_FAST_RELEVEL_HORIZON_PERIODS = 4
 """P-R8-10 (ASSUMPTION, spec 157.2 / 163.4): ``1 + d + ceil(tau_v / T)`` plus one period of
 sample phase; to be confirmed by the harness (3 against 4) and the Chrono re-run."""
+R8_D1_TOUCH_FREE_AIR_MIN_TRAVEL_M = 0.5e-3
+"""P-S8-6 (ASSUMPTION, spec rev. 43 213.9): travel that reverses the seal friction, stick band
+/ oil stiffness ~ 16 kN / 3e7 N/m."""
+R8_D1_TOUCH_FREE_AIR_MIN_SAMPLES = 3
+"""P-S8-6 (ASSUMPTION, spec 213.9): a stable median."""
+R8_D1_TOUCH_SEEN_SAMPLES = 2
+"""P-S8-6 (ASSUMPTION, spec 213.9): the R8 sample-confirmation rule."""
+R8_D1_REAPPROACH_LOAD_FRACTION_OF_F_MIN = 1.4
+"""P-S8-5 (U-S8-9, spec rev. 42 212.4 / rev. 43 213.3.2): re-approach start level."""
 R8_D1_SETTINGS = R8Settings(
     output_delay_periods=1,
     imu_sample_period_s=R8_IMU_SAMPLE_PERIOD_S,
     increment_limit=IncrementLimit(),
     touch_window_m=0.04,
     touch_window_speed_fraction=0.5,
+    touch_free_air_min_travel_m=R8_D1_TOUCH_FREE_AIR_MIN_TRAVEL_M,
+    touch_free_air_min_samples=R8_D1_TOUCH_FREE_AIR_MIN_SAMPLES,
+    touch_seen_samples=R8_D1_TOUCH_SEEN_SAMPLES,
     confirmation=SampleConfirmation(above_samples=3, below_samples=2, relevel_samples=2),
     end_slowdown_window_m=0.015,
     end_slowdown_speed_fraction=0.25,
@@ -1112,11 +1158,14 @@ R8_D1_SETTINGS = R8Settings(
     is_instant_sampling=True,
     check_attitude_from_raw_tilt=True,
     probe_abort_on_low_load=True,
-    lifted_reapproach=LiftedReapproachSettings(enable=True),
+    lifted_reapproach=LiftedReapproachSettings(
+        enable=True, load_fraction_of_F_min=R8_D1_REAPPROACH_LOAD_FRACTION_OF_F_MIN
+    ),
 )
 """The R8 part of :meth:`C2Config.with_10hz_d1` (spec 99.3, 136, 139, rev. 31 149, rev. 32
 163.1: P-R8-9 raw-tilt CHECK attitude, P-R8-10 R-5 on with horizon 4, P-R8-11 PROBE abort;
-rev. 34 174.4: P-R8-13 lifted-leg re-approach in the twist mode, replacing P-R8-12)."""
+rev. 34 174.4: P-R8-13 lifted-leg re-approach in the twist mode, replacing P-R8-12; rev. 43
+213.8: P-S8-5 re-approach start at 1.4 ``F_min``, P-S8-6 TOUCH free air from moving samples)."""
 QUASI_STATIC_PRESSURE_NOTE = (
     "10 Hz instantaneous samples: the 345 bar warning sees about 43 % of a heave transient "
     "and hardly any 102 Hz ringing; it is a quasi-static watch, not an overpressure "
@@ -1226,6 +1275,21 @@ class C2Config:
         """
         return replace(self, two_pressure=self.two_pressure.with_r8_period())
 
+    def with_lock_valve(self, lock_valve: str, counterbalance: Any | None = None) -> C2Config:
+        """Copy whose R6-P diagnosis knows the lock valve of the run (P-S8-11, U-S8-23).
+
+        Only ``two_pressure`` is touched (:meth:`TwoPressureSettings.with_lock_valve`): with
+        ``counterbalance`` the D2 extend upper bound and the fallback estimate ``p_r_hat``
+        follow the CB rod-side law (spec rev. 46 216.10); ``pilot_check`` is the default.
+
+        Args:
+            lock_valve: YAML ``actuator.lock_valve``.
+            counterbalance: YAML ``actuator.counterbalance`` (``params.l2b.counterbalance`` of
+                the plant parameters), needed for ``counterbalance``.
+        """
+        two_pressure = self.two_pressure.with_lock_valve(lock_valve, counterbalance)
+        return replace(self, two_pressure=two_pressure)
+
     def with_10hz_d1(self) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
 
@@ -1246,7 +1310,10 @@ class C2Config:
         stops the probe (P-R8-11, U-R8-14). Spec rev. 34 174.4 (U-R8-21, replacing P-R8-12 of
         rev. 33): a leg that lifts again is re-approached in the twist mode, fastest leg 0.25
         ``v_max``, one leg at a time, started on one low sample and ended on three samples at
-        ``F_min + 5 kN`` (P-R8-13, :class:`LiftedReapproachSettings`). The start-IMU form
+        ``F_min + 5 kN`` (P-R8-13, :class:`LiftedReapproachSettings`). Spec rev. 43 213.8:
+        the re-approach starts below 1.4 ``F_min`` (P-S8-5, U-S8-9), and the TOUCH free-air
+        reference takes only samples after 0.5 mm of travel, judges with 3 of them and
+        latches the slow approach on 2 samples in a row (P-S8-6, U-S8-11). The start-IMU form
         only: the late IMU read (C1) is not implemented (U-R8-6 = C2).
         """
         config = self.with_r8_diagnostics()
@@ -1376,6 +1443,22 @@ def _optional_float(params: Params, key: str, default: float) -> float:
         return default
 
 
+def _optional_float_or_none(params: Params, key: str) -> float | None:
+    try:
+        return float(params.get(key))
+    except ParamsError:
+        return None
+
+
+def _optional_per_leg(params: Params, key: str) -> NDArray[np.float64] | None:
+    """A YAML mapping ``{FL: .., FR: .., RL: .., RR: ..}`` in LEG_ORDER, ``None`` if absent."""
+    try:
+        by_leg = params.get(key)
+    except ParamsError:
+        return None
+    return np.array([float(by_leg[leg]) for leg in LEG_ORDER])
+
+
 def _leg_locked_force_limits_N(params: Params, head_area_m2: NDArray[np.float64]) -> NDArray:
     """350 bar head force per leg: ``legs.<leg>.cylinder.locked_force_limit_N`` when the YAML
     has it, else ``actuator.locked_pressure_limit_Pa`` x head area (P-15)."""
@@ -1456,6 +1539,19 @@ class C2Geometry:
     rod_weight_N: NDArray[np.float64] | None = None
     """``m_rod g`` per leg from YAML ``legs.<leg>.moving_part.mass_kg`` (spec 76.4 (2)):
     zero calibration and the two-pressure monitor; ``None`` = their constants (tests)."""
+    rod_lock_pressure_after_retract_Pa: NDArray[np.float64] | None = None
+    """YAML ``actuator.rod_side.p_r0_after_retract_Pa`` per leg: the lower end of the fallback
+    start after a retraction (P-S8-13); ``None`` = the monitor's constants (tests, old
+    pickles)."""
+    counterbalance_lag_tau_s: float | None = None
+    """YAML ``actuator.rod_side.release_tau_s``: the CB rod-side lag bound of the fallback
+    estimate (P-S8-15); ``None`` = the monitor's constant."""
+    superstructure_mass_kg: float | None = None
+    """YAML superstructure mass of the run's auger level: the D1'' ``nominal`` ``M_eff``
+    option (dynamics rev. 41 R41-1); ``None`` = the monitor's constant."""
+    imu_lever_arm_m: NDArray[np.float64] | None = None
+    """IMU mount C1 minus the superstructure centre of mass of the auger level (body axes):
+    the D1'' lever term (P-S8-14 ⑤); ``None`` = the monitor's constant (top level)."""
     attitude_sensitivity_rad_m: NDArray[np.float64] = field(init=False, repr=False)
     _plane_fit: NDArray[np.float64] = field(init=False, repr=False)
     """Pseudo-inverse of ``[1, x, y]`` at the pads (least-squares pad plane)."""
@@ -1495,6 +1591,13 @@ class C2Geometry:
             rod_weight_N=np.array(
                 [leg.moving_part.mass_kg * params.meta.gravity_m_s2 for leg in params.legs]
             ),
+            rod_lock_pressure_after_retract_Pa=_optional_per_leg(
+                params, RETRACT_LOCK_ROD_PRESSURE_KEY
+            ),
+            counterbalance_lag_tau_s=_optional_float_or_none(params, CB_LAG_TAU_KEY),
+            superstructure_mass_kg=params.superstructure.mass_properties.mass_kg,
+            imu_lever_arm_m=(np.array(IMU_MOUNT_C1_BODY_M)
+                             - np.array(params.superstructure.mass_properties.com_m)),
         )
 
     def __post_init__(self) -> None:
@@ -2073,6 +2176,17 @@ def _no_output_limits() -> dict[str, NDArray[np.bool_]]:
     return {limit.value: np.zeros(LEG_COUNT, dtype=bool) for limit in OutputLimit}
 
 
+def _last_imu_specific_force_z_m_s2(measurements: Measurements) -> float | None:
+    """Body-z specific force of the last IMU sample of the period (the 10 ms partial mean
+    ending at ``t_s``, D1'' 218.4); ``None`` when only the period mean is delivered (the
+    monitor then keeps the D1' sum rule)."""
+    samples = measurements.imu_specific_force_samples_m_s2
+    if samples is None:
+        return None
+    return float(samples[-1][2])
+
+
+
 @dataclass(frozen=True)
 class _Reground:
     leg: int
@@ -2185,6 +2299,20 @@ class _RunState:
     """Crawler-zone latch (R1); on at LEVEL entry and kept through re-levelling."""
     free_air_readings: list[NDArray[np.float64]] = field(default_factory=list)
     free_air_force_N: NDArray[np.float64] | None = None
+    touch_load_counts: NDArray[np.int_] = field(
+        default_factory=lambda: np.zeros(LEG_COUNT, dtype=int)
+    )
+    """Consecutive TOUCH samples at the touchdown load per leg (P-S8-6 ``touch_seen``)."""
+    touch_entry_motor_stroke_m: NDArray[np.float64] | None = None
+    """Motor strokes of the first TOUCH sample (P-S8-6 travel reference)."""
+    free_air_first_moving_sample: list[int | None] = field(
+        default_factory=lambda: [None] * LEG_COUNT
+    )
+    """P-S8-6: TOUCH sample index of each leg's first moving sample (its window start)."""
+    free_air_moving_readings_N: list[list[float]] = field(
+        default_factory=lambda: [[] for _ in range(LEG_COUNT)]
+    )
+    """P-S8-6: per-leg readings of the moving samples inside the free-air window."""
     roll_rad: float = 0.0
     pitch_rad: float = 0.0
     rate_attitude_rad: tuple[float, float] = (0.0, 0.0)
@@ -2367,6 +2495,10 @@ class C2Controller:
         config: Gains, filters, thresholds and options; ``None`` = decided design values.
     """
 
+    _fallback_guard_log: list[dict[str, Any]] | None = None
+    """Spec 218.10 record (P-S8-13 complement): stretches of periods in which the F_min guard
+    acts on a rod-side fallback leg. Class default for controllers pickled before it."""
+
     def __init__(self, geometry: C2Geometry, config: C2Config | None = None) -> None:
         self.geometry = geometry
         self.config = config if config is not None else C2Config()
@@ -2408,6 +2540,11 @@ class C2Controller:
             self.config.load_estimate,
             self.config.two_pressure,
             geometry.rod_weight_N,
+            stroke_max_m=geometry.stroke_max_m,
+            retract_lock_rod_pressure_Pa=geometry.rod_lock_pressure_after_retract_Pa,
+            counterbalance_lag_tau_s=geometry.counterbalance_lag_tau_s,
+            body_mass_kg=geometry.superstructure_mass_kg,
+            imu_lever_arm_m=geometry.imu_lever_arm_m,
         )
         self._pressures.set_offset_allowance_N(self.config.pressure_offset_allowance_N)
         self._standstill_gate = StandstillGate(
@@ -2486,6 +2623,7 @@ class C2Controller:
         self._pressures.reset()
         self._pressures.set_offset_allowance_N(self.config.pressure_offset_allowance_N)
         self._state = self._new_run_state()
+        self._fallback_guard_log = None
 
     def update(self, measurements: Measurements) -> Command:
         """Leg speed command for the next period (design 14.3 order: read, filter, phase, ramp)."""
@@ -2575,6 +2713,7 @@ class C2Controller:
             "rod_stroke_fallback": str(self.config.rod_stroke_fallback),
             "load_estimate": str(self.config.load_estimate),
             "two_pressure": self._pressures.meta(),
+            "fallback_guard": [dict(stretch) for stretch in self._fallback_guard_log or []],
             "geometry_judge": {
                 "settings": {**asdict(self.config.geometry_judge),
                              "mode": str(self.config.geometry_judge.mode)},
@@ -2949,6 +3088,36 @@ class C2Controller:
             return check
         return self._change_target_in_ready(target, state.last_reading)
 
+    def request_probe(self) -> bool:
+        """Ask for one more probe round from READY (test-bench / operator entry point).
+
+        Spec rev. 39 205.3 "탐침 반복" episodes (P-S8-2). The controller never calls it, so a
+        run without it is unchanged bit for bit. Accepted only in READY with the combined judge
+        (the pressure judge has no probe) and no U67 lock tail pending: the next update runs a
+        probe round as DONE -> PROBE does (P-R8-11 low-load abort, D5 band widen-only, P-5
+        stiffness scale, then READY; a weak leg is re-grounded while the run's round count is
+        below ``max_rounds``). Events ``probe_requested`` / ``probe_request_rejected:<phase>``.
+
+        Returns:
+            Whether the request was accepted.
+        """
+        state = self._state
+        is_accepted = (
+            state.phase is C2Phase.READY
+            and self.config.contact is ContactJudge.COMBINED
+            and not state.lock_tail_speeds
+        )
+        if not is_accepted:
+            reason = state.phase.value if state.phase is not C2Phase.READY else "busy"
+            self._add_event(self._last_time_s(), f"probe_request_rejected:{reason}",
+                            is_warning=True)
+            return False
+        self._add_event(self._last_time_s(), "probe_requested")
+        state.phase = C2Phase.PROBE
+        state.probe_round = None
+        state.reground = None
+        return True
+
     # --- input and filters ---
 
     def _read(self, measurements: Measurements) -> _Reading:
@@ -2960,6 +3129,10 @@ class C2Controller:
             state.applied_output_m_s,  # what the legs do now (d = 0: the last output)
             state.phase is C2Phase.READY,
             self._leg_seal_bands_N(),
+            stroke_m=measurements.stroke_m,  # P-S8-11 ③ stroke check only (off by default)
+            imu_specific_force_z_m_s2=_last_imu_specific_force_z_m_s2(measurements),
+            is_crawler_lifted=state.phase in CRAWLER_LIFTED_PHASES,
+            imu_gyro_rad_s=measurements.imu_angular_rate_samples_rad_s,  # lever term
         )
         self._take_pressure_events(measurements.t_s)
         force = forces.nominal
@@ -3149,7 +3322,7 @@ class C2Controller:
                 float(reading.rod_stroke_m[leg]),
                 (state.roll_rad, state.pitch_rad),
             )
-        state.touch_seen |= bears_touch_load
+        self._update_touch_seen(bears_touch_load)
         max_speed = self.geometry.max_speed_m_s
         approach_speed = np.where(
             state.touch_seen,
@@ -3322,9 +3495,70 @@ class C2Controller:
                 is_waiting[leg] = True
         return is_waiting
 
+    def _update_touch_seen(self, bears_touch_load: NDArray[np.bool_]) -> None:
+        """Latch ``touch_seen`` after ``touch_seen_samples`` touchdown-load samples in a row
+        (combined judge; the pressure judge keeps the one-sample latch)."""
+        state = self._state
+        state.touch_load_counts = np.where(bears_touch_load, state.touch_load_counts + 1, 0)
+        required_samples = 1
+        if self.config.contact is not ContactJudge.PRESSURE:
+            required_samples = self.config.r8.touch_seen_samples
+        state.touch_seen |= state.touch_load_counts >= required_samples
+
     def _touchdown_load_N(self, reading: _Reading) -> NDArray[np.float64]:
         if self.config.contact is ContactJudge.PRESSURE:
             return reading.cylinder_force_N
+        if self.config.r8.touch_free_air_min_travel_m is None:
+            return self._touchdown_load_from_touch_entry_N(reading)
+        return self._touchdown_load_from_moving_samples_N(reading)
+
+    def _touchdown_load_from_moving_samples_N(self, reading: _Reading) -> NDArray[np.float64]:
+        """P-S8-6 (spec rev. 43 213.3.1, U-S8-11): free-air reference from moving samples.
+
+        With ``d = 1`` the first TOUCH samples still hold the CHECK end, where the seal
+        friction acts in the retracting direction (-F_s - m g). A median over them makes the
+        friction reversal of the first moving sample (2 F_s) look like touchdown load, which
+        latched front legs in the air at F_s 8 kN. Only samples whose motor stroke has
+        advanced ``touch_free_air_min_travel_m`` since TOUCH entry enter the reference, for
+        ``free_air_window_s`` from the leg's first such sample; a leg with fewer than
+        ``touch_free_air_min_samples`` of them is not judged (``-inf``).
+        """
+        state = self._state
+        r8 = self.config.r8
+        if state.touch_entry_motor_stroke_m is None:
+            state.touch_entry_motor_stroke_m = reading.motor_stroke_m.copy()
+        travel_m = reading.motor_stroke_m - state.touch_entry_motor_stroke_m
+        has_moved = travel_m >= r8.touch_free_air_min_travel_m
+        touch_sample = state.sample_count - state.touch_start_sample
+        window_s = self.config.thresholds.free_air_window_s
+        rod_weight = self._touch_rod_weight_N()
+        free_air = np.full(LEG_COUNT, np.nan)
+        touchdown_load = np.full(LEG_COUNT, -np.inf)
+        for leg in range(LEG_COUNT):
+            readings = state.free_air_moving_readings_N[leg]
+            if has_moved[leg]:
+                first_sample = state.free_air_first_moving_sample[leg]
+                if first_sample is None:
+                    first_sample = state.free_air_first_moving_sample[leg] = touch_sample
+                # As the R7 window: moving sample m closes at (m + 1) T.
+                if (touch_sample - first_sample + 1) * self.config.period_s < window_s:
+                    readings.append(float(reading.cylinder_force_N[leg]))
+            if len(readings) < r8.touch_free_air_min_samples:
+                continue
+            free_air[leg] = np.median(readings)
+            touchdown_load[leg] = reading.cylinder_force_N[leg] - free_air[leg] - rod_weight[leg]
+        state.free_air_force_N = free_air
+        return touchdown_load
+
+    def _touch_rod_weight_N(self) -> NDArray[np.float64]:
+        """Per-leg ``m_rod g`` from the YAML (front 1047 N, rear 718 N); the scalar threshold
+        when the geometry has none (tests)."""
+        if self.geometry.rod_weight_N is None:
+            return np.full(LEG_COUNT, self.config.thresholds.rod_weight_N)
+        return np.asarray(self.geometry.rod_weight_N, dtype=float)
+
+    def _touchdown_load_from_touch_entry_N(self, reading: _Reading) -> NDArray[np.float64]:
+        """R7 rule: free-air reference = running median of every TOUCH sample of the window."""
         state = self._state
         # The first sample closes the first control period, so sample k ends at (k + 1) T;
         # counted from TOUCH entry (after CHECK).
@@ -4108,9 +4342,10 @@ class C2Controller:
         period's reading.
         """
         geometry = self.geometry
+        load_estimates_N = self._load_estimate_N(reading.cylinder_force_lower_N)
         rates = twist_rates(
             self._twist_loop_load_N(reading),
-            self._load_estimate_N(reading.cylinder_force_lower_N),
+            load_estimates_N,
             geometry,
             self.config.gains,
             self.config.thresholds,
@@ -4122,7 +4357,41 @@ class C2Controller:
             return 0.0
         if rates.is_guard_active:
             self._state.guard_m_s = geometry.twist_vector * rates.guard_m_s
+            self._log_fallback_guard(reading, load_estimates_N)
         return rates.total_m_s
+
+    def _log_fallback_guard(
+        self, reading: _Reading, load_estimates_N: NDArray[np.float64]
+    ) -> None:
+        """Spec 218.10 record: the guard acts on the lowest load estimate (:func:`twist_rates`);
+        when that leg is a rod-side fallback leg, extend its current stretch (consecutive
+        periods) or open a new one. ``head_end_Pa`` is the head reading of the stretch's last
+        guarded period, where the guard stopped (compare with ``h*`` of 218.10)."""
+        guarded_leg = int(np.argmin(np.asarray(load_estimates_N, dtype=float)))
+        if guarded_leg not in self._pressures.fallback_legs:
+            return
+        if self._fallback_guard_log is None:
+            self._fallback_guard_log = []
+        period_s = self.config.period_s
+        t_s = float(reading.t_s)
+        head_force_N = reading.head_only_force_N[guarded_leg]
+        head_Pa = float(head_force_N / self.geometry.head_area_m2[guarded_leg])
+        stretch = self._last_fallback_guard_stretch(guarded_leg)
+        is_continued = stretch is not None and abs(t_s - stretch["t_end_s"] - period_s) < 1e-6
+        if not is_continued:
+            stretch = {"leg": LEG_ORDER[guarded_leg], "t_start_s": t_s, "periods": 0}
+            self._fallback_guard_log.append(stretch)
+        stretch["t_end_s"] = t_s
+        stretch["periods"] += 1
+        stretch["duration_s"] = stretch["periods"] * period_s
+        stretch["head_end_Pa"] = head_Pa
+        stretch["load_estimate_end_N"] = float(load_estimates_N[guarded_leg])
+
+    def _last_fallback_guard_stretch(self, leg: int) -> dict[str, Any] | None:
+        for stretch in reversed(self._fallback_guard_log or []):
+            if stretch["leg"] == LEG_ORDER[leg]:
+                return stretch
+        return None
 
     def _twist_loop_load_N(self, reading: _Reading) -> float:
         """``n^T P`` of the twist loop: raw, or (R8 C2) through its own low-pass."""

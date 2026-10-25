@@ -1,0 +1,7340 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s8/s8_g4_cause_and_fix.py",
+  "doc": "S8 G4 diagnostics on the rev. 42 reduced harness (s6_control_spec.md rev. 42, 212.3 / 212.4).\n\nA  cause of the combined-judge gap to Chrono L1-R (+0.6..+1.8 kN, dynamics 5.26.6): rod side armed at the event\n   branch (dynamics 5.26.6) vs armed before levelling (rev. 42 default, as Chrono L1-R / L2b, where the probe\n   already sees it). Prints the probe-measured twist stiffness scale (U-R8-8), F_band and the G4 minima.\nB  intervention: rod side from the start, but the controller's twist stiffness scale set to the value of the\n   branch-armed run before the G4 branch. If the G4 minima move back, the scale is the cause.\nC  U-S8-5 candidate: start level of the P-R8-13 re-approach (LiftedReapproachSettings.load_fraction_of_F_min, set past its (0, 1) check by object.__setattr__,\n   a config knob, controller code unchanged) 0.5 (now) / 0.75 / 1.0 / 1.4 / 1.8 of F_min. Whole run with the variant\n   (levelling, probe, READY): D8, READY time, re-approach starts in the E0 hold (false starts), G4 4 phases,\n   SS 2 phases, RE1bF drop 2 phases. Floors flat and rpB, combined judge, F_s 0 / 4 / 8 kN.\nSame harness as s8_fs_precheck.py (3-4-5 sink on 1 ms chunks, L1-R rod side from the start, rear seal x 0.8333).\nDeterministic. Run: conda run -n dynamics-dev python -I s8_g4_cause_and_fix.py <project_root> <out_json> [workers]\n",
+  "wall_s": 92.13571110001067
+ },
+ "runs": [
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 55.40086581925881,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 1.7945678304601815,
+   "twist_stiffness_scale": 1.4551854354915505,
+   "twist_stiffness_raw_ratio": 1.4551854354915505,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.124298888973033,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.589881397703092,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 11.726275267520922,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.798954335848261,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 29.221711150104248,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.9,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 29.594150999399556,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       9.95,
+       "shadow_G2"
+      ],
+      [
+       9.95,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       9.95,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.95,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.30380375094668,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.38206140001421
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 0.75,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 55.40086581925881,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 1.7945678304601815,
+   "twist_stiffness_scale": 1.4551854354915505,
+   "twist_stiffness_raw_ratio": 1.4551854354915505,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.124298888973033,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.589881397703092,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 11.726275267520922,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.798954335848261,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 29.221711150104248,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.9,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 29.594150999399556,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       9.95,
+       "shadow_G2"
+      ],
+      [
+       9.95,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       9.95,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.95,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.30380375094668,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.45463940000627
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 1.0,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 55.40086581925881,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 1.7945678304601815,
+   "twist_stiffness_scale": 1.4551854354915505,
+   "twist_stiffness_raw_ratio": 1.4551854354915505,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.124298888973033,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.6,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.1,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.589881397703092,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 11.726275267520922,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.798954335848261,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.63,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.13,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 29.221711150104248,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.9,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 29.594150999399556,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       9.95,
+       "shadow_G2"
+      ],
+      [
+       9.95,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       9.95,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.95,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.30380375094668,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.50287959998241
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 1.4,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 55.40086581925881,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 1.7945678304601815,
+   "twist_stiffness_scale": 1.4551854354915505,
+   "twist_stiffness_raw_ratio": 1.4551854354915505,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.165251506107529,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.5,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.0,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.648818862824951,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.48,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.98,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 12.185840540148734,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.45,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.95,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.83259159155656,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.53,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.03,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 29.221711150104248,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.9,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 29.594150999399556,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       9.95,
+       "shadow_G2"
+      ],
+      [
+       9.95,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       9.95,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.95,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.30380375094668,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.5926943999948
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 1.8,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 55.40086581925881,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 1.7945678304601815,
+   "twist_stiffness_scale": 1.4551854354915505,
+   "twist_stiffness_raw_ratio": 1.4551854354915505,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 13.172178316675874,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.4,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.9,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 13.910647403093922,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.38,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.88,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 12.185840540148734,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.45,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.95,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 12.497442810054679,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.43,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.93,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 29.221711150104248,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.9,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 29.594150999399556,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       9.95,
+       "shadow_G2"
+      ],
+      [
+       9.95,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       9.95,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.95,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.30380375094668,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.21295769998687
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 54.69401556016723,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.722452316093826,
+   "twist_stiffness_scale": 1.3892650651650815,
+   "twist_stiffness_raw_ratio": 1.3892650651650815,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.687929333485728,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.2,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.662535535996735,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.68,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.18,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 8.736298808752531,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.15,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 8.758243477754185,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.73,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.23,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 25.504617240519853,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.1,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 25.121511251287725,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.15,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.48218498527838,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.63229209999554
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 0.75,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 54.69401556016723,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.722452316093826,
+   "twist_stiffness_scale": 1.3892650651650815,
+   "twist_stiffness_raw_ratio": 1.3892650651650815,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 10.042178610777036,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.5,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.0,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 10.577681337841634,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.48,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.98,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 9.282805054776516,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.55,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.05,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 9.591421126341507,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.53,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.03,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 25.504617240519853,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.1,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 25.121511251287725,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.15,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.48218498527838,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.7610338999948
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 1.0,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 54.69401556016723,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.722452316093826,
+   "twist_stiffness_scale": 1.3892650651650815,
+   "twist_stiffness_raw_ratio": 1.3892650651650815,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.197414604177665,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.4,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.9,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 10.577681337841634,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.48,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.98,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 10.00151654321682,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.45,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.95,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.572514315800127,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.43,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.93,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 25.504617240519853,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.1,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 25.121511251287725,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.15,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.48218498527838,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.59070190001512
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 1.4,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 54.69401556016723,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.722452316093826,
+   "twist_stiffness_scale": 1.3892650651650815,
+   "twist_stiffness_raw_ratio": 1.3892650651650815,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 13.714079406507983,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.3,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.8,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.872993125269458,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.38,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.88,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 12.034557081698498,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.35,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.85,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 12.894458180336407,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.33,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.83,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 25.504617240519853,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.1,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 25.121511251287725,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.15,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.48218498527838,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.64171610001358
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 1.8,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 54.69401556016723,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.722452316093826,
+   "twist_stiffness_scale": 1.3892650651650815,
+   "twist_stiffness_raw_ratio": 1.3892650651650815,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 17.0266813987344,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.2,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 14.540704747916449,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.28,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.78,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 15.206176789832083,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.25,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.75,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 16.17104757794116,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.23,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.73,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 25.504617240519853,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.1,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 25.121511251287725,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.15,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.48218498527838,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.697467599995434
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 53.2615922892134,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 12.943151573994118,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.9593057280537423,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.466089166904775,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.4,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.0,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.438586946377512,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.68,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.48,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.08,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 7.3408738535697236,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.45,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.05,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 7.909074792434324,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.43,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.03,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 21.073694746545122,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.1,
+       "shadow_G2"
+      ],
+      [
+       10.1,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.1,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.2,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 21.44153718651656,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.15,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.7174838721681049,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.13586447510747,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.82411489999504
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 0.75,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 53.2615922892134,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 12.943151573994118,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.9593057280537423,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 10.224675735702265,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.3,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.9,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.711838330656368,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.68,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.38,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.98,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 8.855107775265303,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.35,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.95,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 9.508752144243251,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.33,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.93,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 21.073694746545122,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.1,
+       "shadow_G2"
+      ],
+      [
+       10.1,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.1,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.2,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 21.44153718651656,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.15,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.7174838721681049,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.13586447510747,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.81539390000398
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 1.0,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 53.2615922892134,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 12.943151573994118,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.9593057280537423,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 10.224675735702265,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.3,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.9,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.067202685889159,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.68,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.28,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.88,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 11.78297039169247,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.25,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.85,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 9.508752144243251,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.33,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.93,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 21.073694746545122,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.1,
+       "shadow_G2"
+      ],
+      [
+       10.1,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.1,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.2,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 21.44153718651656,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.15,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.7174838721681049,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.13586447510747,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.65777180000441
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 1.4,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 53.2615922892134,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 12.943151573994118,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.9593057280537423,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 13.609130725205524,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.2,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.8,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 14.471068037860425,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.68,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.18,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.78,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 11.78297039169247,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.25,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.85,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 12.6677555103575,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.23,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.83,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 21.073694746545122,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.1,
+       "shadow_G2"
+      ],
+      [
+       10.1,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.1,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.2,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 21.44153718651656,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.15,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.7174838721681049,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.13586447510747,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.83388690001448
+  },
+  {
+   "part": "C",
+   "floor": "flat",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 1.8,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 53.2615922892134,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 12.943151573994118,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.9593057280537423,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 13.609130725205524,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.2,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.8,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 14.471068037860425,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.68,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.18,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.78,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 15.360083349982727,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.15,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.75,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 16.285063207414673,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.13,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.73,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 22.60169114240953,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       10.0,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       10.3,
+       "leg_reapproach_contact:RR"
+      ],
+      [
+       38.3,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 22.221113174355978,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       10.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       10.35,
+       "leg_reapproach_contact:RR"
+      ],
+      [
+       38.35,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.7174838721681049,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.13586447510747,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 62.60403430002043
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 54.60000000007868,
+   "D8_min_kN": 44.1184464222767,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 2.36296080412434,
+   "twist_stiffness_scale": 1.394782996694402,
+   "twist_stiffness_raw_ratio": 1.394782996694402,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.898031383717022,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 12.298641691176345,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 12.471702541811174,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 11.355778843950523,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 30.150641741631606,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.4,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 30.52393723510933,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       9.95,
+       "shadow_G2"
+      ],
+      [
+       9.95,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       9.95,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.45,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.79958234891659,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 64.93394720001379
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 0.75,
+   "t_ready_s": 54.60000000007868,
+   "D8_min_kN": 44.1184464222767,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 2.36296080412434,
+   "twist_stiffness_scale": 1.394782996694402,
+   "twist_stiffness_raw_ratio": 1.394782996694402,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.898031383717022,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 12.298641691176345,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 12.471702541811174,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 11.355778843950523,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 30.150641741631606,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.4,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 30.52393723510933,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       9.95,
+       "shadow_G2"
+      ],
+      [
+       9.95,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       9.95,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.45,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.79958234891659,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 64.88449339999352
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 1.0,
+   "t_ready_s": 54.60000000007868,
+   "D8_min_kN": 44.1184464222767,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 2.36296080412434,
+   "twist_stiffness_scale": 1.394782996694402,
+   "twist_stiffness_raw_ratio": 1.394782996694402,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.898031383717022,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 12.298641691176345,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 12.471702541811174,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 11.355778843950523,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.63,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.03,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 30.150641741631606,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.4,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 30.52393723510933,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       9.95,
+       "shadow_G2"
+      ],
+      [
+       9.95,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       9.95,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.45,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.79958234891659,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 64.79435609999928
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 1.4,
+   "t_ready_s": 54.60000000007868,
+   "D8_min_kN": 44.1184464222767,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 2.36296080412434,
+   "twist_stiffness_scale": 1.394782996694402,
+   "twist_stiffness_raw_ratio": 1.394782996694402,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.957990982380762,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.5,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.0,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 12.423617863194355,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.48,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.98,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 12.815131432757143,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.55,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.05,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 11.392295039164638,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.53,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.03,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 30.150641741631606,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.4,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 30.52393723510933,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       9.95,
+       "shadow_G2"
+      ],
+      [
+       9.95,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       9.95,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.45,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.79958234891659,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 64.64398320001783
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 1.8,
+   "t_ready_s": 54.60000000007868,
+   "D8_min_kN": 44.1184464222767,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 2.36296080412434,
+   "twist_stiffness_scale": 1.394782996694402,
+   "twist_stiffness_raw_ratio": 1.394782996694402,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 14.35082643669124,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.4,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.9,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 15.091047654751737,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.38,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.88,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 12.936079664357816,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.45,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.95,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 13.340533259568943,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.43,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.93,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 30.150641741631606,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.4,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 30.52393723510933,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       9.95,
+       "shadow_G2"
+      ],
+      [
+       9.95,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       9.95,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.45,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "level"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.79958234891659,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 64.70686310000019
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 54.400000000077725,
+   "D8_min_kN": 44.16132119536995,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.753791300009355,
+   "twist_stiffness_scale": 1.3753997045539164,
+   "twist_stiffness_raw_ratio": 1.3753997045539164,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 9.421144373453364,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 9.377447553614163,
+     "t_below_Fmin_s": 0.1,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 9.482752870418787,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 9.496278494030939,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 26.340675009739474,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.2,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 25.962915776320855,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.25,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.8691594154418951,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.1,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.97343880129121,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 64.87478350001038
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 0.75,
+   "t_ready_s": 54.400000000077725,
+   "D8_min_kN": 44.16132119536995,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.753791300009355,
+   "twist_stiffness_scale": 1.3753997045539164,
+   "twist_stiffness_raw_ratio": 1.3753997045539164,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 10.762034970185237,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.5,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.0,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 9.990195255776628,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.58,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.08,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 10.052439210899298,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.55,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.05,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.341733525719357,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.53,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.03,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 26.340675009739474,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.2,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 25.962915776320855,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.25,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.8691594154418951,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.1,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.97343880129121,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 64.93519899999956
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 1.0,
+   "t_ready_s": 54.400000000077725,
+   "D8_min_kN": 44.16132119536995,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.753791300009355,
+   "twist_stiffness_scale": 1.3753997045539164,
+   "twist_stiffness_raw_ratio": 1.3753997045539164,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 10.762034970185237,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.5,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.0,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.28782288881406,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.48,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.98,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 10.728998771741724,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.45,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.95,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 11.277797041617296,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.43,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.93,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 26.340675009739474,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.2,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 25.962915776320855,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.25,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.8691594154418951,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.1,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.97343880129121,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 64.926138299983
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 1.4,
+   "t_ready_s": 54.400000000077725,
+   "D8_min_kN": 44.16132119536995,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.753791300009355,
+   "twist_stiffness_scale": 1.3753997045539164,
+   "twist_stiffness_raw_ratio": 1.3753997045539164,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.849483312935082,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.4,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.9,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 12.472025359463926,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.38,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.88,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 12.673857253083913,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.35,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.85,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 13.533308214180867,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.33,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.83,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 26.340675009739474,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.2,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 25.962915776320855,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.25,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.8691594154418951,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.1,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.97343880129121,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 64.86324350000359
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 1.8,
+   "t_ready_s": 54.400000000077725,
+   "D8_min_kN": 44.16132119536995,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.753791300009355,
+   "twist_stiffness_scale": 1.3753997045539164,
+   "twist_stiffness_raw_ratio": 1.3753997045539164,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 14.375183614615064,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.3,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.8,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 15.213296010121269,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.28,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.78,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 15.945617566642795,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.25,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.75,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 16.93494826740779,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.23,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.73,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 26.340675009739474,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.0,
+       "shadow_G2"
+      ],
+      [
+       10.0,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.0,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.2,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 25.962915776320855,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       38.25,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.8691594154418951,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.1,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.97343880129121,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 64.77775480001583
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 54.400000000077725,
+   "D8_min_kN": 45.97094242608466,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 13.06182987762223,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.915599871538979,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.996962144861632,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.4,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.0,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 7.6167954430530305,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.48,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.08,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 7.958574326210871,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.45,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.05,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 8.448981476114145,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.43,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.03,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 21.911693642105533,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.1,
+       "shadow_G2"
+      ],
+      [
+       10.1,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.1,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.3,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 22.297837600704938,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.35,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.7174838721681049,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.3,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 71.04596417160056,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 64.70009110000683
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 0.75,
+   "t_ready_s": 54.400000000077725,
+   "D8_min_kN": 45.97094242608466,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 13.06182987762223,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.915599871538979,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.996962144861632,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.4,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.0,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.821706277502436,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.38,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.98,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 9.421287774539158,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.35,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.95,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.087769705033754,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.33,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.93,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 21.911693642105533,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.1,
+       "shadow_G2"
+      ],
+      [
+       10.1,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.1,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.3,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 22.297837600704938,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.35,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.7174838721681049,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.3,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 71.04596417160056,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 29.23824069998227
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 1.0,
+   "t_ready_s": 54.400000000077725,
+   "D8_min_kN": 45.97094242608466,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 13.06182987762223,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.915599871538979,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 10.722179587882136,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.3,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.9,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.36273093581265,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.28,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.88,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 9.421287774539158,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.35,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.95,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.087769705033754,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.33,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.93,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 21.911693642105533,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.1,
+       "shadow_G2"
+      ],
+      [
+       10.1,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.1,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.3,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 22.297837600704938,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.35,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.7174838721681049,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.3,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 71.04596417160056,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 28.80620380002074
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 1.4,
+   "t_ready_s": 54.400000000077725,
+   "D8_min_kN": 45.97094242608466,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 13.06182987762223,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.915599871538979,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 14.107265265451764,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.2,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.8,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.36273093581265,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.28,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.88,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 12.31563864752439,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.25,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.85,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 13.20923283262464,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.23,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.83,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 21.911693642105533,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.1,
+       "shadow_G2"
+      ],
+      [
+       10.1,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.1,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.3,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 22.297837600704938,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       39.35,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.7174838721681049,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.3,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 71.04596417160056,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 28.992918700008886
+  },
+  {
+   "part": "C",
+   "floor": "rpB",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 1.8,
+   "t_ready_s": 54.400000000077725,
+   "D8_min_kN": 45.97094242608466,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 13.06182987762223,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.915599871538979,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 14.107265265451764,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.2,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.8,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 15.096667012316223,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.18,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.78,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 16.043898516539937,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.15,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.75,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 16.986994093278827,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.13,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.63,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "SS": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 22.6666722688488,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       10.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       10.4,
+       "leg_reapproach_contact:RR"
+      ],
+      [
+       38.5,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 22.297837600704938,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       10.05,
+       "shadow_G2"
+      ],
+      [
+       10.05,
+       "INFO_FLOOR_NONPLANAR"
+      ],
+      [
+       10.05,
+       "WARN_SUPPORT_CHANGED:G2"
+      ],
+      [
+       10.15,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       10.45,
+       "leg_reapproach_contact:RR"
+      ],
+      [
+       38.45,
+       "ready_heave_tail"
+      ]
+     ],
+     "final_phase": "ready"
+    }
+   ],
+   "DROP": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.0471900381788999,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.4000000000000001,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.1,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.1,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.7174838721681049,
+     "t_below_Fmin_s": 1.4000000000000001,
+     "t_lift_s": 1.3,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.05,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       0.05,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "E0": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 71.04596417160056,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 0,
+     "events": [],
+     "final_phase": "ready"
+    }
+   ],
+   "wall_s": 29.158337400003802
+  },
+  {
+   "part": "A",
+   "floor": "flat",
+   "Fs_kN": 0.0,
+   "rod": "branch",
+   "fraction": 0.5,
+   "t_ready_s": 39.29999999999911,
+   "D8_min_kN": 58.33062885142797,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 1.9899262240626714,
+   "twist_stiffness_scale": 1.171538718273002,
+   "twist_stiffness_raw_ratio": 1.171538718273002,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 12.504031729069668,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 12.9261633173219,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 13.394500522252844,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 12.171755769040905,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "wall_s": 15.742678500013426
+  },
+  {
+   "part": "A",
+   "floor": "flat",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 55.40086581925881,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 1.7945678304601815,
+   "twist_stiffness_scale": 1.4551854354915505,
+   "twist_stiffness_raw_ratio": 1.4551854354915505,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.124298888973033,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.589881397703092,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 11.726275267520922,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.798954335848261,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "wall_s": 17.198568299994804
+  },
+  {
+   "part": "A",
+   "floor": "flat",
+   "Fs_kN": 4.0,
+   "rod": "branch",
+   "fraction": 0.5,
+   "t_ready_s": 39.29999999999911,
+   "D8_min_kN": 56.991672538400465,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.81094724763032,
+   "twist_stiffness_scale": 1.1662883666208903,
+   "twist_stiffness_raw_ratio": 1.1662883666208903,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 10.328427302509093,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 10.250680208144503,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 10.296462733707648,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.355865409034912,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "wall_s": 15.532281199994031
+  },
+  {
+   "part": "A",
+   "floor": "flat",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 54.69401556016723,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.722452316093826,
+   "twist_stiffness_scale": 1.3892650651650815,
+   "twist_stiffness_raw_ratio": 1.3892650651650815,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.687929333485728,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.7,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.2,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.662535535996735,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.68,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.18,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 8.736298808752531,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.65,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.15,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 8.758243477754185,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.73,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.23,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "wall_s": 17.463011399988318
+  },
+  {
+   "part": "A",
+   "floor": "flat",
+   "Fs_kN": 8.0,
+   "rod": "branch",
+   "fraction": 0.5,
+   "t_ready_s": 39.29999999999911,
+   "D8_min_kN": 55.54397630251905,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 12.71082121937268,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.742431251389494,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.52550984185013,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.4,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.0,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.30779461381507,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.38,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       1.98,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 7.241966858080299,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.45,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.05,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 7.8604564930721015,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.43,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.03,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "wall_s": 14.86019700000179
+  },
+  {
+   "part": "A",
+   "floor": "flat",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 53.2615922892134,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 12.943151573994118,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.9593057280537423,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.466089166904775,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.4,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.0,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.438586946377512,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.68,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.48,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.08,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 7.3408738535697236,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.45,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.05,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 7.909074792434324,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.43,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.03,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "wall_s": 15.977955300011672
+  },
+  {
+   "part": "B",
+   "floor": "flat",
+   "Fs_kN": 0.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 55.40086581925881,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 1.7945678304601815,
+   "twist_stiffness_scale": 1.4551854354915505,
+   "twist_stiffness_raw_ratio": 1.4551854354915505,
+   "scale_set_to": 1.171538718273002,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 12.462971676079048,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.9,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 12.88984772784835,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.88,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 13.366156286068692,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 12.186235681077159,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.93,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "wall_s": 20.795435000007274
+  },
+  {
+   "part": "B",
+   "floor": "flat",
+   "Fs_kN": 4.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 54.69401556016723,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 7.722452316093826,
+   "twist_stiffness_scale": 1.3892650651650815,
+   "twist_stiffness_raw_ratio": 1.3892650651650815,
+   "scale_set_to": 1.1662883666208903,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 10.300534264367842,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.8,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 10.23885137236575,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.78,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 10.261770047382521,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.85,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.334817499014838,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 0,
+     "n_leave_ready_events": 1,
+     "events": [
+      [
+       0.83,
+       "relevel_predicted:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "wall_s": 21.306298200011952
+  },
+  {
+   "part": "B",
+   "floor": "flat",
+   "Fs_kN": 8.0,
+   "rod": "start",
+   "fraction": 0.5,
+   "t_ready_s": 39.4000000000061,
+   "D8_min_kN": 53.2615922892134,
+   "reapproach_starts_levelling": 0,
+   "F_band_kN": 12.943151573994118,
+   "twist_stiffness_scale": 1.5,
+   "twist_stiffness_raw_ratio": 1.9593057280537423,
+   "scale_set_to": 1.5,
+   "G4": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.466089166904775,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.7,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.4,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.0,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.438586946377512,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.68,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.48,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.08,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 7.3408738535697236,
+     "t_below_Fmin_s": 0.30000000000000004,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.75,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.45,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.05,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 7.909074792434324,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "n_reapproach_start": 1,
+     "n_leave_ready_events": 2,
+     "events": [
+      [
+       0.73,
+       "relevel_predicted:RR"
+      ],
+      [
+       1.43,
+       "leg_reapproach_start:RR"
+      ],
+      [
+       2.03,
+       "leg_reapproach_contact:RR"
+      ]
+     ],
+     "final_phase": "probe"
+    }
+   ],
+   "wall_s": 21.151710900012404
+  }
+ ]
+}

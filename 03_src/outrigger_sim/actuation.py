@@ -340,6 +340,15 @@ class SpeedReference:
     def reset_saturation_counters(self) -> None:
         self._saturation_steps[:] = 0
 
+    def shift_reference(self, delta_m: ArrayLike) -> NDArray[np.bool_]:
+        """Move ``s_ref`` by ``-delta_m`` without a speed (S8 counterbalance discharge,
+        ``s8_seal_friction_counterbalance.md`` 4.2 / C-4): ``u``, the ramp and the valve state
+        are unchanged, no clipping. Returns the legs that ended below the soft lower limit (the
+        caller records them; the next :meth:`advance` would clip them back)."""
+        d = _vector(delta_m, self._n, "delta_m")
+        self._s_ref = self._s_ref - d
+        return self._s_ref < self._soft_lo
+
     # --- step -----------------------------------------------------------------------------
 
     def advance(self, dt_s: float, *, cylinder_force_N: ArrayLike | None = None) -> None:

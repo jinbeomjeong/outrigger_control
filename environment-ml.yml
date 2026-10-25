@@ -33,11 +33,23 @@ dependencies:
   - onnx=1.23.2
   - onnxruntime=1.31.0=*cpu*   # 추론 전용 CPU 빌드 (CUDA 빌드는 약 1 GB)
   - skl2onnx=1.20.0
+  - onnxmltools=1.16.0         # conda-forge 설치. LightGBM ONNX 내보내기(E5), 2026-10-24 추가
+                               # (onnxconverter-common 1.16.0이 함께 들어옴)
   - optuna=5.0.0               # 하이퍼파라미터 탐색 (2026-10-24 추가)
   - ffmpeg=9.0.2               # MP4 인코딩, Library\bin\ffmpeg.exe (GPL 빌드, 2026-10-24 추가)
+  - shap=0.52.0=*cpu*          # 특징 기여도(S8 ML 대 물리 판정 비교). CPU 빌드: CUDA 빌드는 cudart 12.9를 끌어와 cu130 torch와 섞임
+                               # (numba 0.68.0, llvmlite 0.50.0, slicer가 함께 들어옴, 2026-10-24 추가)
+  - imbalanced-learn=0.14.2    # 드문 부상·하중 상실 라벨 재표본 (sklearn-compat 동반, 2026-10-24 추가)
+  - optuna-dashboard=0.21.0    # optuna 탐색 기록 브라우저 보기 (bottle 동반, 2026-10-24 추가)
   - pytest
   - ipykernel
   - pip
   - pip:
       - --index-url https://download.pytorch.org/whl/cu130
-      - torch==2.14.1
+      # onnxscript는 PyTorch 색인에 없어 PyPI를 보조 색인으로 둔다(2026-10-24 확인).
+      # 그래서 torch는 +cu130까지 고정해 PyPI의 다른 빌드가 끼지 않게 한다.
+      - --extra-index-url https://pypi.org/simple
+      - torch==2.14.1+cu130
+      # pip 설치(conda-forge 미사용). torch.onnx.export 기본 dynamo 경로에 필요, 2026-10-24 추가.
+      # pip 의존성으로 onnx-ir 1.1.0이 함께 들어온다(ml_dtypes는 conda 쪽 것을 씀).
+      - onnxscript==0.7.2

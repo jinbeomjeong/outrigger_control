@@ -129,6 +129,17 @@ def bench_config(**r8_changes) -> C2Config:
     return replace(config, r8=r8, zero_calibration=zero_calibration)
 
 
+R7_TOUCH_RULE = {
+    "touch_free_air_min_travel_m": None,
+    "touch_free_air_min_samples": 1,
+    "touch_seen_samples": 1,
+}
+"""The TOUCH free-air rule before P-S8-6 (spec rev. 43 213.3.1 'current')."""
+NO_REAPPROACH = {"lifted_reapproach": LiftedReapproachSettings()}
+"""Re-approach off: tests of the twist, guard and P5 terms on a reading at ``F_min`` (below the
+1.4 ``F_min`` start of P-S8-5, the re-approach would replace the twist and guard terms)."""
+
+
 def operating_strokes(geometry: C2Geometry) -> np.ndarray:
     """Strokes with every pad on a level floor and the crawler 50 mm above it."""
     return geometry.operating_extension_m(0.05)
@@ -258,12 +269,16 @@ def test_preset_values() -> None:
     assert r8.fast_relevel == FastRelevelSettings(horizon_periods=4)
     assert r8.check_attitude_from_raw_tilt and r8.uses_raw_check_attitude
     assert r8.probe_abort_on_low_load
-    # Rev. 34 174.4 / 179.1 P-R8-13 (U-R8-21): twist-mode re-approach replaces P-R8-12.
+    # Rev. 34 174.4 / 179.1 P-R8-13 (U-R8-21): twist-mode re-approach replaces P-R8-12;
+    # rev. 43 213.8 P-S8-5 (U-S8-9): start level 1.4 F_min.
     assert r8.lifted_reapproach == LiftedReapproachSettings(
-        enable=True, mode=ReapproachMode.TWIST, load_fraction_of_F_min=0.5, samples=1,
+        enable=True, mode=ReapproachMode.TWIST, load_fraction_of_F_min=1.4, samples=1,
         single_leg=True, exit_margin_N=5000.0, exit_samples=3, twist_speed_fraction=0.25,
         protect_margin_N=5000.0, speed_fraction=0.25, max_travel_m=0.04,
     )
+    # Rev. 43 213.8 P-S8-6 (U-S8-11): TOUCH free air from moving samples.
+    assert r8.touch_free_air_min_travel_m == 0.5e-3
+    assert (r8.touch_free_air_min_samples, r8.touch_seen_samples) == (3, 2)
     assert config.target.check_quiet_after_motion_s == 0.5
     assert config.reanchor.stop_predictor is StopPredictor.READING_RATE
     calibration = config.zero_calibration
@@ -328,7 +343,11 @@ def test_increment_limit_replaces_the_soft_ramp() -> None:
         lambda: FastRelevelSettings(horizon_periods=2.0),
         lambda: TargetSettings(check_quiet_after_motion_s=-0.1),
         lambda: ReanchorSettings(stop_predictor_intervals=0),
-        lambda: LiftedReapproachSettings(load_fraction_of_F_min=1.0),
+        lambda: LiftedReapproachSettings(load_fraction_of_F_min=0.0),
+        lambda: LiftedReapproachSettings(load_fraction_of_F_min=2.01),  # (0, 2], P-S8-5
+        lambda: R8Settings(touch_free_air_min_travel_m=0.0),
+        lambda: R8Settings(touch_free_air_min_samples=0),
+        lambda: R8Settings(touch_seen_samples=True),
         lambda: LiftedReapproachSettings(samples=0),
         lambda: LiftedReapproachSettings(samples=True),
         lambda: LiftedReapproachSettings(speed_fraction=0.0),
@@ -650,7 +669,7 @@ def test_below_needs_two_samples(geometry) -> None:
 def test_ready_relevels_on_the_second_low_sample(geometry) -> None:
     """(c) P5 needs two samples in a row; one low sample leaves READY (R-5 off: a step down
     is a fast fall it would act on at once)."""
-    bench = ready_bench(geometry, bench_config(fast_relevel=None))
+    bench = ready_bench(geometry, bench_config(fast_relevel=None, **NO_REAPPROACH))
     controller = bench.controller
     assert controller.phase is C2Phase.READY
     low = np.full(4, STEADY_LOAD_N)
@@ -666,7 +685,7 @@ def test_ready_relevels_on_the_second_low_sample(geometry) -> None:
 
 def test_guard_acts_on_the_first_low_sample(geometry) -> None:
     """(d) The F_min guard keeps the one-sample reaction (raw reading)."""
-    bench = ready_bench(geometry, bench_config())
+    bench = ready_bench(geometry, bench_config(**NO_REAPPROACH))
     low = np.full(4, STEADY_LOAD_N)
     low[RR] = geometry.F_min_N
     bench.step(low)
@@ -750,7 +769,7 @@ def test_twist_filter_leaves_the_guard_reading(geometry) -> None:
     """P-4: the 0.2 s filter slows the twist term, the guard sees the raw low reading."""
     forces = np.full(4, STEADY_LOAD_N)
     forces[RR] = geometry.F_min_N  # twist load and a guard deficit at once
-    no_limit = {"output_delay_periods": 0, "increment_limit": None}
+    no_limit = {"output_delay_periods": 0, "increment_limit": None, **NO_REAPPROACH}
     filtered = C2Controller(geometry, bench_config(**no_limit))
     raw_config = bench_config(**no_limit)
     raw_config = replace(raw_config, filters=replace(raw_config.filters,
@@ -795,7 +814,7 @@ def test_pre_probe_scale_divides_twist_and_guard_by_1_2(geometry) -> None:
     """P-R8-1: before the first probe the twist and guard commands are 1 / 1.2 of k_nom's."""
     forces = np.full(4, STEADY_LOAD_N)
     forces[RR] = geometry.F_min_N  # twist load and a guard deficit at once
-    no_limit = {"output_delay_periods": 0, "increment_limit": None}
+    no_limit = {"output_delay_periods": 0, "increment_limit": None, **NO_REAPPROACH}
     preset = C2Controller(geometry, bench_config(**no_limit))
     on_k_nom = C2Controller(
         geometry, bench_config(twist_gain_reference=TwistGainReference.NOMINAL, **no_limit)
@@ -1186,8 +1205,10 @@ FREE_AIR_PERIODS = 51
 
 
 def combined_bench(geometry: C2Geometry, **r8_changes) -> Bench:
-    """Combined judge bench after its free-air window (zero loads), in TOUCH."""
-    config = replace(bench_config(**r8_changes), contact=ContactJudge.COMBINED)
+    """Combined judge bench after its free-air window (zero loads), in TOUCH. The strokes of
+    this bench do not move in TOUCH, so it keeps the R7 free-air rule (P-S8-6 judges only
+    moving samples and would never touch; its own tests are at the end of the file)."""
+    config = replace(bench_config(**(R7_TOUCH_RULE | r8_changes)), contact=ContactJudge.COMBINED)
     bench = Bench(C2Controller(geometry, config), geometry, operating_strokes(geometry))
     for _ in range(FREE_AIR_PERIODS):
         bench.step(np.zeros(4))
@@ -1263,8 +1284,7 @@ def test_probe_without_a_low_load_is_unchanged(geometry) -> None:
 
 LIFTED_READING_N = -1e3
 """Spec 172.1 test: a grounded leg's reading steps to -1 kN (the rod weight hanging)."""
-NO_REAPPROACH = {"lifted_reapproach": LiftedReapproachSettings()}
-LEG_MODE = {"lifted_reapproach": LiftedReapproachSettings.leg_mode()}
+LEG_MODE ={"lifted_reapproach": LiftedReapproachSettings.leg_mode()}
 """P-R8-12 as revision 33 ran it (kept as an option by U-R8-21)."""
 
 
@@ -1366,15 +1386,16 @@ def test_reapproach_without_contact_warns_after_40_mm(geometry) -> None:
 
 @pytest.mark.parametrize("mode_changes", [{}, LEG_MODE], ids=["twist", "leg"])
 def test_g4_type_fall_does_not_start_a_reapproach(geometry, mode_changes) -> None:
-    """A 70 kN/s fall that stops at 10 kN (G4: the leg keeps bearing) re-levels by R-5 but
-    never reads below 0.5 F_min (not even on one sample, P-R8-13), so the re-approach stays
-    off and the commands are those with the re-approach off."""
+    """A 70 kN/s fall that stops at 14 kN (the leg keeps bearing) re-levels by R-5 but never
+    reads below the start level (1.4 F_min = 13.2 kN in the preset, P-S8-5; 0.5 F_min in leg
+    mode; not even on one sample, P-R8-13), so the re-approach stays off and the commands are
+    those with the re-approach off."""
     outputs = {}
     for name, r8_changes in (("on", mode_changes), ("off", NO_REAPPROACH)):
         bench = ready_bench(geometry, bench_config(**r8_changes))
         forces = np.full(4, STEADY_LOAD_N)
         for _ in range(60):
-            forces[RR] = max(forces[RR] - G4_UNLOAD_RATE_N_S * PERIOD_S, 10e3)
+            forces[RR] = max(forces[RR] - G4_UNLOAD_RATE_N_S * PERIOD_S, 14e3)
             bench.step(forces.copy())
         assert reapproach_names(bench.controller) == []
         assert "relevel_predicted:RR" in [event.name for event in bench.controller.events]
@@ -1452,6 +1473,23 @@ def test_twist_reapproach_starts_on_one_low_sample(geometry) -> None:
     np.testing.assert_array_equal(bench.outputs[-1], computed)
     (interval,) = controller.meta()["lifted_reapproach"]
     assert interval["mode"] == "twist" and interval["outcome"] is None
+
+
+@pytest.mark.parametrize(("lower_N", "starts"), [(12e3, True), (14e3, False)])
+def test_twist_reapproach_starts_below_1_4_f_min(geometry, lower_N, starts) -> None:
+    """P-S8-5 (spec rev. 42 212.10, U-S8-9): a low-load RR (lower bound 12 kN, one sample)
+    starts the re-approach below 1.4 F_min = 13.2 kN; 14 kN does not."""
+    bench = twist_ready_bench(geometry)
+    bench.step(lifted_rr_forces(lower_N))
+    expected = ["leg_reapproach_start:RR"] if starts else []
+    assert reapproach_names(bench.controller) == expected
+
+
+@pytest.mark.parametrize("fraction", [1.0, 2.0])
+def test_reapproach_start_fraction_accepts_up_to_two(fraction) -> None:
+    assert LiftedReapproachSettings(load_fraction_of_F_min=fraction).load_fraction_of_F_min == (
+        fraction
+    )
 
 
 def test_twist_reapproach_watches_no_other_leg_while_active(geometry) -> None:
@@ -1567,7 +1605,8 @@ def test_command_components_add_up_to_the_unscaled_level_command(geometry, mode_
     seen_parts = set()
     bench.tilt_rad = (math.radians(0.3), math.radians(-0.2))  # keeps the attitude term busy
     for step in range(40):
-        forces[RR] = max(forces[RR] - G4_UNLOAD_RATE_N_S * PERIOD_S, 10e3)
+        # 14 kN: inside the guard (F_min + 5 kN) and above the 1.4 F_min re-approach start.
+        forces[RR] = max(forces[RR] - G4_UNLOAD_RATE_N_S * PERIOD_S, 14e3)
         level_periods_before = len(controller.unscaled_log)
         bench.step(lifted_rr_forces() if step >= 20 else forces.copy())
         if len(controller.unscaled_log) == level_periods_before:
@@ -1727,3 +1766,128 @@ def test_command_components_are_copies(geometry) -> None:
     components = bench.controller.command_components_m_s
     components["reapproach"][:] = 0.0
     assert np.any(bench.controller.command_components_m_s["reapproach"] != 0.0)
+
+
+# --- TOUCH free-air reference from moving samples (P-S8-6, rev. 43 213.3.1 / 213.8) ----------
+
+
+CHECK_END_READING_FS8_N = -8.97e3
+"""Spec 213.3.1: front leg, F_s 8 kN, the CHECK end holds a retraction (-F_s - m g)."""
+EXTENDING_READING_FS8_N = 7.02e3
+"""Spec 213.3.1: the same leg extending in the air (+F_s - m g)."""
+HANGING_READING_FS0_N = -1.0472e3
+"""F_s 0: the rod weight hanging (-m g, front)."""
+TOUCHDOWN_STEP_N = 30e3
+"""Spec 213.8 P-S8-6 test 2: the pad load step on contact."""
+FREE_AIR_SAMPLES_BEFORE_STEP = 10
+
+
+def touch_config(**r8_changes) -> C2Config:
+    """The preset with the combined judge and no CHECK (TOUCH from the first sample)."""
+    config = replace(bench_config(), contact=ContactJudge.COMBINED)
+    return replace(config, r8=replace(config.r8, **r8_changes))
+
+
+@dataclass
+class TouchBench:
+    """10 Hz TOUCH readings given per sample; the motor strokes follow the returned (delayed,
+    d = 1) commands, so the first two samples do not move (spec 213.3.1)."""
+
+    controller: C2Controller
+    geometry: C2Geometry
+    strokes_m: np.ndarray = field(default_factory=lambda: np.full(4, 0.1))
+    t_s: float = 0.0
+
+    def step(self, cylinder_force_N: np.ndarray) -> np.ndarray:
+        """One period; a negative force is read on the rod side (``p_h A_p - p_r A_ann``)."""
+        self.t_s = round(self.t_s + PERIOD_S, 10)
+        force = np.asarray(cylinder_force_N, dtype=float)
+        reading = Measurements(
+            t_s=self.t_s,
+            specific_force_m_s2=up_in_body((0.0, 0.0)),
+            angular_rate_rad_s=np.zeros(3),
+            head_pressure_Pa=np.maximum(force, 0.0) / self.geometry.head_area_m2,
+            rod_pressure_Pa=np.maximum(-force, 0.0) / self.geometry.annulus_area_m2,
+            stroke_m=self.strokes_m.copy(),
+            stroke_corrected_m=self.strokes_m.copy(),
+        )
+        command = np.array(self.controller.update(reading).leg_speed_m_s)
+        self.strokes_m = self.strokes_m + command * PERIOD_S
+        return self.controller._state.touch_seen.copy()
+
+
+def run_touch(geometry: C2Geometry, readings_N: list[float], **r8_changes) -> list[np.ndarray]:
+    """``touch_seen`` after each sample; every leg gets the same reading."""
+    bench = TouchBench(C2Controller(geometry, touch_config(**r8_changes)), geometry)
+    seen = []
+    for reading in readings_N:
+        seen.append(bench.step(np.full(4, reading)))
+        assert bench.controller.phase is C2Phase.TOUCH or seen[-1].all()
+    return seen
+
+
+def first_seen_sample(seen: list[np.ndarray]) -> np.ndarray:
+    """Index of the first sample with ``touch_seen`` per leg (-1 = never)."""
+    stacked = np.array(seen)
+    return np.where(stacked.any(axis=0), stacked.argmax(axis=0), -1)
+
+
+def fs8_free_air_readings(sample_count: int) -> list[float]:
+    """Spec 213.8 test 1: [-8.97, -8.97, +7.02, +7.02, ...] kN."""
+    return [CHECK_END_READING_FS8_N] * 2 + [EXTENDING_READING_FS8_N] * (sample_count - 2)
+
+
+def test_touch_friction_reversal_in_the_air_is_not_touchdown(geometry) -> None:
+    """P-S8-6 test 1: the friction reversal (+16 kN on the third sample) does not latch
+    ``touch_seen``; the R7 rule latched it there (14.94 kN >= 1.5 F_min, spec 213.3.1)."""
+    readings = fs8_free_air_readings(30)
+    seen = run_touch(geometry, readings)
+    assert not np.array(seen).any()
+    r7_seen = run_touch(geometry, readings, **R7_TOUCH_RULE)
+    np.testing.assert_array_equal(first_seen_sample(r7_seen), [2, 2, 2, 2])
+
+
+def test_touch_step_latches_after_two_samples(geometry) -> None:
+    """P-S8-6 test 2: a +30 kN step after the friction reversal latches on its second
+    sample."""
+    readings = fs8_free_air_readings(FREE_AIR_SAMPLES_BEFORE_STEP)
+    readings += [EXTENDING_READING_FS8_N + TOUCHDOWN_STEP_N] * 3
+    seen = run_touch(geometry, readings)
+    step_sample = FREE_AIR_SAMPLES_BEFORE_STEP
+    np.testing.assert_array_equal(first_seen_sample(seen), [step_sample + 1] * 4)
+
+
+def test_touch_without_friction_is_at_most_one_sample_late(geometry) -> None:
+    """P-S8-6 test 3: F_s 0 (the reading only the hanging rod weight): the new rule sees the
+    contact step one sample after the R7 rule, never earlier."""
+    readings = [HANGING_READING_FS0_N] * FREE_AIR_SAMPLES_BEFORE_STEP
+    readings += [HANGING_READING_FS0_N + TOUCHDOWN_STEP_N] * 3
+    new_first = first_seen_sample(run_touch(geometry, readings))
+    r7_first = first_seen_sample(run_touch(geometry, readings, **R7_TOUCH_RULE))
+    np.testing.assert_array_equal(r7_first, [FREE_AIR_SAMPLES_BEFORE_STEP] * 4)
+    np.testing.assert_array_equal(new_first - r7_first, [1, 1, 1, 1])
+
+
+def test_touch_waits_for_three_moving_samples(geometry) -> None:
+    """A load step on the first moving samples is not judged before the reference holds
+    three moving samples (its touchdown load is -inf until then)."""
+    bench = TouchBench(C2Controller(geometry, touch_config()), geometry)
+    for _ in range(4):  # samples 0, 1 still; 2, 3 moving
+        bench.step(np.full(4, EXTENDING_READING_FS8_N))
+    assert np.isnan(bench.controller._state.free_air_force_N).all()
+    bench.step(np.full(4, EXTENDING_READING_FS8_N))  # third moving sample
+    np.testing.assert_allclose(bench.controller._state.free_air_force_N, EXTENDING_READING_FS8_N)
+
+
+def test_touch_uses_the_rod_weight_of_each_leg(geometry) -> None:
+    """P-S8-6: front 1047 N, rear 718 N. A step 0.9 kN above ``1.5 F_min`` over the free air
+    reaches the touchdown load on the rear legs only."""
+    rod_weight = geometry.rod_weight_N
+    assert rod_weight is not None
+    assert rod_weight[:2] == pytest.approx(1047.2, abs=1.0)
+    assert rod_weight[2:] == pytest.approx(717.5, abs=1.0)
+    touch_level = 1.5 * geometry.F_min_N
+    readings = fs8_free_air_readings(FREE_AIR_SAMPLES_BEFORE_STEP)
+    readings += [EXTENDING_READING_FS8_N + touch_level + 900.0] * 2
+    seen = run_touch(geometry, readings)
+    np.testing.assert_array_equal(seen[-1], [False, False, True, True])

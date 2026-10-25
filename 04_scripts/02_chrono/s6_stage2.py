@@ -1021,16 +1021,31 @@ def _settle_map(level: str):
 
 class ForcedRetract:
     """Controller wrapper of RE1c: after ``t_start`` RR retracts ``depth`` at ``speed`` (measured
-    stroke), every other leg 0; the wrapped controller is still updated (Measurements only)."""
+    stroke); the wrapped controller is still updated (Measurements only).
 
-    def __init__(self, inner, *, leg: int, depth_m: float, speed_m_s: float) -> None:
+    ``others``:
+    * ``"zero"`` (default, RE1c as before): every other leg 0 from the start, and after the
+      retraction is done every leg 0 to the run end;
+    * ``"controller"`` (ML retract episodes, U-S8-27 / C-S8-25 ①): only the forced leg is
+      overridden until the retraction is done; the other legs take the controller command, and
+      after ``done`` every leg is back to the controller.
+    ``done_t_s``: time of the first period with ``done`` (None while retracting)."""
+
+    OTHERS = ("zero", "controller")
+
+    def __init__(self, inner, *, leg: int, depth_m: float, speed_m_s: float,
+                 others: str = "zero") -> None:
+        if others not in self.OTHERS:
+            raise ValueError(f"others must be one of {self.OTHERS}: {others!r}")
         self.inner = inner
         self.leg = leg
         self.depth_m = depth_m
         self.speed_m_s = speed_m_s
+        self.others = others
         self.t_start: float | None = None
         self.s0: float | None = None
         self.done = False
+        self.done_t_s: float | None = None
 
     @property
     def period_s(self) -> float:
@@ -1040,6 +1055,7 @@ class ForcedRetract:
         self.inner.reset()
         self.s0 = None
         self.done = False
+        self.done_t_s = None
 
     def update(self, measurements):
         import numpy as np
@@ -1052,16 +1068,25 @@ class ForcedRetract:
         s = float(measurements.stroke_m[self.leg])
         if self.s0 is None:
             self.s0 = s
-        u = np.zeros(4)
-        if not self.done and self.s0 - s < self.depth_m:
-            u[self.leg] = -self.speed_m_s
-        else:
+        retracting = not self.done and self.s0 - s < self.depth_m
+        if not retracting and not self.done:
             self.done = True
+            self.done_t_s = float(measurements.t_s)
+        if self.others == "controller":
+            if not retracting:
+                return cmd
+            u = np.array(cmd.leg_speed_m_s, dtype=float, copy=True)
+            u[self.leg] = -self.speed_m_s
+            return replace(cmd, leg_speed_m_s=u)
+        u = np.zeros(4)
+        if retracting:
+            u[self.leg] = -self.speed_m_s
         return Command(t_s=measurements.t_s, leg_speed_m_s=u)
 
     def meta(self) -> dict[str, Any]:
         return {"wrapper": "ForcedRetract", "leg": self.leg, "depth_m": self.depth_m,
                 "speed_m_s": self.speed_m_s, "t_start_s": self.t_start,
+                "others": self.others, "done_t_s": self.done_t_s,
                 "inner": self.inner.meta()}
 
 

@@ -1,0 +1,218 @@
+{
+ "CB_H4V_fdown3.5_Fs0": {
+  "cb": {
+   "D8_min_excl_reanchor_kN": 51.63500194998678,
+   "reanchor_min_kN": 19.2450980206917,
+   "min_after_liftoff_kN": 19.2450980206917,
+   "ready_s": 78.90000000159336,
+   "final_phase": "ready",
+   "event_min_kN": 19.2450980206917,
+   "cb_delta_max_mm": 0.0,
+   "rod_p_max_bar": 156.014351189997,
+   "head_p_max_bar": 139.25778948036634
+  },
+  "pilot_check": {
+   "D8_min_excl_reanchor_kN": 51.667097317108734,
+   "reanchor_min_kN": 19.28618472128324,
+   "min_after_liftoff_kN": 19.28618472128324,
+   "ready_s": 78.90000000159336,
+   "final_phase": "ready",
+   "event_min_kN": 19.28618472128324,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 64.58963536762143,
+   "head_p_max_bar": 139.3150961021531
+  },
+  "twin": "K0V_top_fdown3.5_Fs0",
+  "diff": {
+   "D8_min_excl_reanchor_kN": -0.032095367121954155,
+   "reanchor_min_kN": -0.04108670059154207,
+   "min_after_liftoff_kN": -0.04108670059154207,
+   "ready_s": 0.0,
+   "final_phase": null,
+   "event_min_kN": -0.04108670059154207,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 91.42471582237557,
+   "head_p_max_bar": -0.05730662178675061
+  }
+ },
+ "CB_H4V_fdown3.5_Fs8": {
+  "cb": {
+   "D8_min_excl_reanchor_kN": 49.44907324733605,
+   "reanchor_min_kN": 38.47363756806146,
+   "min_after_liftoff_kN": 38.47363756806146,
+   "ready_s": 76.50000000151368,
+   "final_phase": "ready",
+   "event_min_kN": 38.47363756806146,
+   "cb_delta_max_mm": 0.0,
+   "rod_p_max_bar": 155.9779075835061,
+   "head_p_max_bar": 125.21945461374038
+  },
+  "pilot_check": {
+   "D8_min_excl_reanchor_kN": 49.580215629811484,
+   "reanchor_min_kN": 38.47487703091442,
+   "min_after_liftoff_kN": 38.47487703091442,
+   "ready_s": 76.50000000151368,
+   "final_phase": "ready",
+   "event_min_kN": 38.47487703091442,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 41.634392270103135,
+   "head_p_max_bar": 122.86617758073689
+  },
+  "twin": "K8_top_fdown3.5_Fs8",
+  "diff": {
+   "D8_min_excl_reanchor_kN": -0.13114238247543142,
+   "reanchor_min_kN": -0.001239462852957729,
+   "min_after_liftoff_kN": -0.001239462852957729,
+   "ready_s": 0.0,
+   "final_phase": null,
+   "event_min_kN": -0.001239462852957729,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 114.34351531340296,
+   "head_p_max_bar": 2.3532770330034936
+  }
+ },
+ "CB_G4_Fs0": {
+  "cb": {
+   "D8_min_excl_reanchor_kN": 10.443862848833135,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": 10.443862848833135,
+   "ready_s": 42.80000000039497,
+   "final_phase": "ready",
+   "event_min_kN": 10.443862848833135,
+   "cb_delta_max_mm": 0.0,
+   "rod_p_max_bar": 155.9791343378259,
+   "head_p_max_bar": 154.00869950680553
+  },
+  "pilot_check": {
+   "D8_min_excl_reanchor_kN": 12.185846216270221,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": 12.185846216270221,
+   "ready_s": 42.80000000039497,
+   "final_phase": "ready",
+   "event_min_kN": 12.185846216270221,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 50.31973840690213,
+   "head_p_max_bar": 153.4812505819045
+  },
+  "twin": "E_G4_Fs0",
+  "diff": {
+   "D8_min_excl_reanchor_kN": -1.7419833674370864,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": -1.7419833674370864,
+   "ready_s": 0.0,
+   "final_phase": null,
+   "event_min_kN": -1.7419833674370864,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 105.65939593092378,
+   "head_p_max_bar": 0.527448924901023
+  }
+ },
+ "CB_G4_Fs8": {
+  "cb": {
+   "D8_min_excl_reanchor_kN": 13.14576905330496,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": 13.14576905330496,
+   "ready_s": 42.60000000038833,
+   "final_phase": "ready",
+   "event_min_kN": 13.14576905330496,
+   "cb_delta_max_mm": 0.0,
+   "rod_p_max_bar": 155.9671673071828,
+   "head_p_max_bar": 145.01203446309276
+  },
+  "pilot_check": {
+   "D8_min_excl_reanchor_kN": 13.069607604402643,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": 13.069607604402643,
+   "ready_s": 42.60000000038833,
+   "final_phase": "ready",
+   "event_min_kN": 13.069607604402643,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 47.875714809051715,
+   "head_p_max_bar": 145.38345396032335
+  },
+  "twin": "E_G4_Fs8",
+  "diff": {
+   "D8_min_excl_reanchor_kN": 0.07616144890231702,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": 0.07616144890231702,
+   "ready_s": 0.0,
+   "final_phase": null,
+   "event_min_kN": 0.07616144890231702,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 108.09145249813108,
+   "head_p_max_bar": -0.3714194972305904
+  }
+ },
+ "CB_RE1bF_Fs0": {
+  "cb": {
+   "D8_min_excl_reanchor_kN": -14.333361186033367,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": -14.333361186033367,
+   "ready_s": 42.80000000039497,
+   "final_phase": "ready",
+   "event_min_kN": -14.333361186033367,
+   "cb_delta_max_mm": 0.0,
+   "rod_p_max_bar": 155.9791343378259,
+   "head_p_max_bar": 192.09866776304912
+  },
+  "pilot_check": {
+   "D8_min_excl_reanchor_kN": -14.393233932026504,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": -14.393233932026504,
+   "ready_s": 42.80000000039497,
+   "final_phase": "ready",
+   "event_min_kN": -14.393233932026504,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 78.17562703696049,
+   "head_p_max_bar": 200.05622746511034
+  },
+  "twin": "E_RE1bF_Fs0",
+  "diff": {
+   "D8_min_excl_reanchor_kN": 0.059872745993137855,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": 0.059872745993137855,
+   "ready_s": 0.0,
+   "final_phase": null,
+   "event_min_kN": 0.059872745993137855,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 77.80350730086542,
+   "head_p_max_bar": -7.957559702061218
+  }
+ },
+ "CB_RE1bF_Fs8": {
+  "cb": {
+   "D8_min_excl_reanchor_kN": -14.233873081982454,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": -14.233873081982454,
+   "ready_s": 42.60000000038833,
+   "final_phase": "ready",
+   "event_min_kN": -14.233873081982454,
+   "cb_delta_max_mm": 0.0,
+   "rod_p_max_bar": 155.9671673071828,
+   "head_p_max_bar": 177.43858513143022
+  },
+  "pilot_check": {
+   "D8_min_excl_reanchor_kN": -14.155050841210253,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": -14.155050841210253,
+   "ready_s": 42.60000000038833,
+   "final_phase": "ready",
+   "event_min_kN": -14.155050841210253,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 76.43627195012795,
+   "head_p_max_bar": 182.39848522325863
+  },
+  "twin": "E_RE1bF_Fs8",
+  "diff": {
+   "D8_min_excl_reanchor_kN": -0.07882224077220101,
+   "reanchor_min_kN": null,
+   "min_after_liftoff_kN": -0.07882224077220101,
+   "ready_s": 0.0,
+   "final_phase": null,
+   "event_min_kN": -0.07882224077220101,
+   "cb_delta_max_mm": null,
+   "rod_p_max_bar": 79.53089535705485,
+   "head_p_max_bar": -4.959900091828416
+  }
+ }
+}

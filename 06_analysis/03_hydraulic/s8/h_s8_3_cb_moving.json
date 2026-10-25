@@ -1,0 +1,355 @@
+{
+ "n_samples": 22800,
+ "watch_under_bar": [
+  {
+   "case": "CB_H4V_fdown3.5_Fs0",
+   "leg": "RR",
+   "t": 26.0,
+   "p_r_true_bar": 129.54,
+   "R0": 36.18,
+   "R1": -17.41,
+   "R2": 13.01,
+   "R2D": 13.01,
+   "R3": -17.41,
+   "R4D": -17.41
+  },
+  {
+   "case": "CB_H4V_fdown3.5_Fs0",
+   "leg": "RR",
+   "t": 26.0,
+   "p_r_true_bar": 129.54,
+   "R0": 36.18,
+   "R1": -17.41,
+   "R2": 13.01,
+   "R2D": 13.01,
+   "R3": -17.41,
+   "R4D": -17.41
+  },
+  {
+   "case": "CB_H4V_fdown3.5_Fs0",
+   "leg": "RR",
+   "t": 26.4,
+   "p_r_true_bar": 105.33,
+   "R0": 18.66,
+   "R1": 18.66,
+   "R2": 8.0,
+   "R2D": 8.0,
+   "R3": 8.0,
+   "R4D": -1.72
+  },
+  {
+   "case": "CB_H4V_fdown3.5_Fs0",
+   "leg": "RR",
+   "t": 26.4,
+   "p_r_true_bar": 105.33,
+   "R0": 18.66,
+   "R1": 18.66,
+   "R2": 8.0,
+   "R2D": 8.0,
+   "R3": 8.0,
+   "R4D": -1.72
+  },
+  {
+   "case": "CB_H4V_fdown3.5_Fs0",
+   "leg": "RR",
+   "t": 26.5,
+   "p_r_true_bar": 91.73,
+   "R0": 18.0,
+   "R1": 5.07,
+   "R2": 10.97,
+   "R2D": 10.97,
+   "R3": 5.07,
+   "R4D": 2.31
+  },
+  {
+   "case": "CB_H4V_fdown3.5_Fs0",
+   "leg": "RR",
+   "t": 26.5,
+   "p_r_true_bar": 91.73,
+   "R0": 18.0,
+   "R1": 5.07,
+   "R2": 10.97,
+   "R2D": 10.97,
+   "R3": 5.07,
+   "R4D": 2.31
+  }
+ ],
+ "summary": {
+  "R0": {
+   "max_under_bar": 69.56,
+   "max_under_kN": 26.22,
+   "at": "CB_RE1bF_Fs0 FL 52.6",
+   "n_under_gt_0p6kN_with_11p4": 344,
+   "over_p50_bar": -0.0,
+   "over_p90_bar": 0.59,
+   "top5": [
+    "CB_RE1bF_Fs0 FL 52.6 69.6 bar",
+    "CB_RE1bF_Fs0 FL 52.7 68.6 bar",
+    "CB_RE1bF_Fs0 RR 53.0 64.5 bar",
+    "CB_RE1bF_Fs0 FL 52.5 60.7 bar",
+    "CB_RE1bF_Fs0 FL 56.4 59.2 bar"
+   ]
+  },
+  "R1": {
+   "max_under_bar": 65.31,
+   "max_under_kN": 24.62,
+   "at": "CB_RE1bF_Fs0 FL 52.6",
+   "n_under_gt_0p6kN_with_11p4": 69,
+   "over_p50_bar": -0.0,
+   "over_p90_bar": 0.75,
+   "top5": [
+    "CB_RE1bF_Fs0 FL 52.6 65.3 bar",
+    "CB_RE1bF_Fs0 FL 52.5 60.7 bar",
+    "CB_RE1bF_Fs0 FR 53.0 48.3 bar",
+    "CB_H4V_fdown3.5_Fs0 RL 37.7 28.7 bar",
+    "CB_H4V_fdown3.5_Fs0 RL 37.7 28.7 bar"
+   ]
+  },
+  "R2": {
+   "max_under_bar": 67.72,
+   "max_under_kN": 25.53,
+   "at": "CB_RE1bF_Fs0 FL 52.6",
+   "n_under_gt_0p6kN_with_11p4": 191,
+   "over_p50_bar": -0.0,
+   "over_p90_bar": 0.6,
+   "top5": [
+    "CB_RE1bF_Fs0 FL 52.6 67.7 bar",
+    "CB_RE1bF_Fs0 FL 52.5 60.7 bar",
+    "CB_RE1bF_Fs0 FL 52.7 46.9 bar",
+    "CB_RE1bF_Fs0 FR 53.0 45.0 bar",
+    "CB_RE1bF_Fs0 FL 56.4 34.0 bar"
+   ]
+  },
+  "R2D": {
+   "max_under_bar": 27.95,
+   "max_under_kN": 10.54,
+   "at": "CB_RE1bF_Fs0 FL 52.1",
+   "n_under_gt_0p6kN_with_11p4": 133,
+   "over_p50_bar": 0.0,
+   "over_p90_bar": 1.75,
+   "top5": [
+    "CB_RE1bF_Fs0 FL 52.1 28.0 bar",
+    "CB_RE1bF_Fs0 FL 51.4 26.8 bar",
+    "CB_RE1bF_Fs0 FL 51.4 26.4 bar",
+    "CB_H4V_fdown3.5_Fs8 FR 26.5 23.2 bar",
+    "CB_H4V_fdown3.5_Fs8 FR 26.5 23.2 bar"
+   ]
+  },
+  "R3": {
+   "max_under_bar": 16.41,
+   "max_under_kN": 5.15,
+   "at": "CB_RE1bF_Fs0 RR 54.2",
+   "n_under_gt_0p6kN_with_11p4": 2,
+   "over_p50_bar": 0.05,
+   "over_p90_bar": 2.75,
+   "top5": [
+    "CB_RE1bF_Fs0 RR 54.2 16.4 bar",
+    "CB_RE1bF_Fs0 RR 52.5 15.9 bar",
+    "CB_RE1bF_Fs0 FL 52.2 11.9 bar",
+    "CB_RE1bF_Fs0 FL 51.5 11.3 bar",
+    "CB_RE1bF_Fs0 FL 52.2 11.1 bar"
+   ]
+  },
+  "R4D": {
+   "max_under_bar": 11.39,
+   "max_under_kN": 3.58,
+   "at": "CB_RE1bF_Fs0 RR 52.5",
+   "n_under_gt_0p6kN_with_11p4": 0,
+   "over_p50_bar": 0.1,
+   "over_p90_bar": 4.01,
+   "top5": [
+    "CB_RE1bF_Fs0 RR 52.5 11.4 bar",
+    "CB_RE1bF_Fs0 FL 51.5 6.4 bar",
+    "CB_RE1bF_Fs0 RR 54.2 6.3 bar",
+    "CB_RE1bF_Fs0 FL 52.2 5.7 bar",
+    "CB_RE1bF_Fs0 RR 55.3 5.2 bar"
+   ]
+  }
+ },
+ "by_direction": {
+  "1.0": {
+   "R0": {
+    "max_under_bar": 68.6,
+    "max_under_kN": 25.86,
+    "at": "CB_RE1bF_Fs0 FL 52.7",
+    "n_under_gt_0p6kN_with_11p4": 341,
+    "over_p50_bar": -0.0,
+    "over_p90_bar": 0.49,
+    "top5": [
+     "CB_RE1bF_Fs0 FL 52.7 68.6 bar",
+     "CB_RE1bF_Fs0 RR 53.0 64.5 bar",
+     "CB_RE1bF_Fs0 FL 56.4 59.2 bar",
+     "CB_G4_Fs8 RL 54.4 58.2 bar",
+     "CB_G4_Fs8 RL 54.4 58.2 bar"
+    ]
+   },
+   "R1": {
+    "max_under_bar": 48.3,
+    "max_under_kN": 18.21,
+    "at": "CB_RE1bF_Fs0 FR 53.0",
+    "n_under_gt_0p6kN_with_11p4": 66,
+    "over_p50_bar": -0.0,
+    "over_p90_bar": 0.73,
+    "top5": [
+     "CB_RE1bF_Fs0 FR 53.0 48.3 bar",
+     "CB_H4V_fdown3.5_Fs0 RL 37.7 28.7 bar",
+     "CB_H4V_fdown3.5_Fs0 RL 37.7 28.7 bar",
+     "CB_RE1bF_Fs0 RL 53.1 25.3 bar",
+     "CB_G4_Fs0 FL 57.0 24.4 bar"
+    ]
+   },
+   "R2": {
+    "max_under_bar": 46.85,
+    "max_under_kN": 17.66,
+    "at": "CB_RE1bF_Fs0 FL 52.7",
+    "n_under_gt_0p6kN_with_11p4": 188,
+    "over_p50_bar": -0.0,
+    "over_p90_bar": 0.58,
+    "top5": [
+     "CB_RE1bF_Fs0 FL 52.7 46.9 bar",
+     "CB_RE1bF_Fs0 FR 53.0 45.0 bar",
+     "CB_RE1bF_Fs0 FL 56.4 34.0 bar",
+     "CB_G4_Fs8 RL 54.4 33.1 bar",
+     "CB_G4_Fs8 RL 54.4 33.1 bar"
+    ]
+   },
+   "R2D": {
+    "max_under_bar": 27.95,
+    "max_under_kN": 10.54,
+    "at": "CB_RE1bF_Fs0 FL 52.1",
+    "n_under_gt_0p6kN_with_11p4": 133,
+    "over_p50_bar": -0.0,
+    "over_p90_bar": 1.03,
+    "top5": [
+     "CB_RE1bF_Fs0 FL 52.1 28.0 bar",
+     "CB_RE1bF_Fs0 FL 51.4 26.8 bar",
+     "CB_RE1bF_Fs0 FL 51.4 26.4 bar",
+     "CB_H4V_fdown3.5_Fs8 FR 26.5 23.2 bar",
+     "CB_H4V_fdown3.5_Fs8 FR 26.5 23.2 bar"
+    ]
+   },
+   "R3": {
+    "max_under_bar": 16.41,
+    "max_under_kN": 5.15,
+    "at": "CB_RE1bF_Fs0 RR 54.2",
+    "n_under_gt_0p6kN_with_11p4": 2,
+    "over_p50_bar": 0.0,
+    "over_p90_bar": 2.01,
+    "top5": [
+     "CB_RE1bF_Fs0 RR 54.2 16.4 bar",
+     "CB_RE1bF_Fs0 RR 52.5 15.9 bar",
+     "CB_RE1bF_Fs0 FL 52.2 11.9 bar",
+     "CB_RE1bF_Fs0 FL 51.5 11.3 bar",
+     "CB_RE1bF_Fs0 FL 52.2 11.1 bar"
+    ]
+   },
+   "R4D": {
+    "max_under_bar": 11.39,
+    "max_under_kN": 3.58,
+    "at": "CB_RE1bF_Fs0 RR 52.5",
+    "n_under_gt_0p6kN_with_11p4": 0,
+    "over_p50_bar": 0.02,
+    "over_p90_bar": 2.99,
+    "top5": [
+     "CB_RE1bF_Fs0 RR 52.5 11.4 bar",
+     "CB_RE1bF_Fs0 FL 51.5 6.4 bar",
+     "CB_RE1bF_Fs0 RR 54.2 6.3 bar",
+     "CB_RE1bF_Fs0 FL 52.2 5.7 bar",
+     "CB_RE1bF_Fs0 RR 55.3 5.2 bar"
+    ]
+   }
+  },
+  "-1.0": {
+   "R0": {
+    "max_under_bar": 69.56,
+    "max_under_kN": 26.22,
+    "at": "CB_RE1bF_Fs0 FL 52.6",
+    "n_under_gt_0p6kN_with_11p4": 3,
+    "over_p50_bar": 0.15,
+    "over_p90_bar": 1.43,
+    "top5": [
+     "CB_RE1bF_Fs0 FL 52.6 69.6 bar",
+     "CB_RE1bF_Fs0 FL 52.5 60.7 bar",
+     "CB_RE1bF_Fs0 FL 53.1 22.2 bar",
+     "CB_G4_Fs0 FL 5.3 11.4 bar",
+     "CB_G4_Fs0 FL 5.3 11.4 bar"
+    ]
+   },
+   "R1": {
+    "max_under_bar": 65.31,
+    "max_under_kN": 24.62,
+    "at": "CB_RE1bF_Fs0 FL 52.6",
+    "n_under_gt_0p6kN_with_11p4": 3,
+    "over_p50_bar": 0.22,
+    "over_p90_bar": 2.03,
+    "top5": [
+     "CB_RE1bF_Fs0 FL 52.6 65.3 bar",
+     "CB_RE1bF_Fs0 FL 52.5 60.7 bar",
+     "CB_RE1bF_Fs0 FL 53.1 22.2 bar",
+     "CB_G4_Fs0 FL 5.3 11.4 bar",
+     "CB_RE1bF_Fs0 FL 5.3 11.4 bar"
+    ]
+   },
+   "R2": {
+    "max_under_bar": 67.72,
+    "max_under_kN": 25.53,
+    "at": "CB_RE1bF_Fs0 FL 52.6",
+    "n_under_gt_0p6kN_with_11p4": 3,
+    "over_p50_bar": 0.16,
+    "over_p90_bar": 1.45,
+    "top5": [
+     "CB_RE1bF_Fs0 FL 52.6 67.7 bar",
+     "CB_RE1bF_Fs0 FL 52.5 60.7 bar",
+     "CB_RE1bF_Fs0 FL 53.1 22.2 bar",
+     "CB_RE1bF_Fs0 FL 52.4 6.4 bar",
+     "CB_RE1bF_Fs0 FL 53.2 4.5 bar"
+    ]
+   },
+   "R2D": {
+    "max_under_bar": 0.91,
+    "max_under_kN": 0.29,
+    "at": "CB_RE1bF_Fs0 RL 51.3",
+    "n_under_gt_0p6kN_with_11p4": 0,
+    "over_p50_bar": 0.3,
+    "over_p90_bar": 10.89,
+    "top5": [
+     "CB_RE1bF_Fs0 RL 51.3 0.9 bar",
+     "CB_RE1bF_Fs0 RL 51.3 0.8 bar",
+     "CB_RE1bF_Fs0 RL 51.7 0.7 bar",
+     "CB_RE1bF_Fs0 FL 53.8 0.6 bar",
+     "CB_RE1bF_Fs0 RL 51.7 0.6 bar"
+    ]
+   },
+   "R3": {
+    "max_under_bar": 0.28,
+    "max_under_kN": 0.09,
+    "at": "CB_RE1bF_Fs8 RL 51.9",
+    "n_under_gt_0p6kN_with_11p4": 0,
+    "over_p50_bar": 0.32,
+    "over_p90_bar": 10.89,
+    "top5": [
+     "CB_RE1bF_Fs8 RL 51.9 0.3 bar",
+     "CB_RE1bF_Fs8 RL 51.9 0.3 bar",
+     "CB_RE1bF_Fs0 FL 56.5 0.1 bar",
+     "CB_H4V_fdown3.5_Fs8 FL 6.3 0.1 bar",
+     "CB_H4V_fdown3.5_Fs8 FL 6.3 0.1 bar"
+    ]
+   },
+   "R4D": {
+    "max_under_bar": 0.28,
+    "max_under_kN": 0.09,
+    "at": "CB_RE1bF_Fs8 RL 51.9",
+    "n_under_gt_0p6kN_with_11p4": 0,
+    "over_p50_bar": 0.34,
+    "over_p90_bar": 11.33,
+    "top5": [
+     "CB_RE1bF_Fs8 RL 51.9 0.3 bar",
+     "CB_RE1bF_Fs8 RL 51.9 0.3 bar",
+     "CB_H4V_fdown3.5_Fs8 FL 6.3 0.1 bar",
+     "CB_H4V_fdown3.5_Fs8 FL 6.3 0.1 bar",
+     "CB_H4V_fdown3.5_Fs8 FR 6.3 0.0 bar"
+    ]
+   }
+  }
+ }
+}

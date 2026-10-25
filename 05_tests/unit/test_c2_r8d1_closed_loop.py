@@ -63,8 +63,10 @@ SETTLE_MIN_FORCE_ALLOWANCE_KN = 1.0
 """G4-type sink: the harness C2 lifts RR to -W_rod (-0.72 kN, spec 134); c2.py may not do
 worse by more than this."""
 SCRIPT_TIMEOUT_S = 600
-SETTLE_REAPPROACH_TRUE_LOAD_KN = 4.7
-"""0.5 F_min: the G-type sink re-approach is legitimate only if RR truly fell below it."""
+SETTLE_REAPPROACH_START_FRACTION = 1.4
+"""P-S8-5 (U-S8-9): the re-approach starts on a lower bound below 1.4 F_min, so the G-type
+sink re-approach is legitimate only if RR truly fell below it (and it keeps RR above F_min:
+3.04 kN with the 0.5 F_min start, 12.98 kN with 1.4, 2026-10-24)."""
 SETTLE_REAPPROACH_MAX_S = 0.5
 SETTLE_REAPPROACH_MAX_TRAVEL_M = 0.005
 """U57 net travel limit (spec 177): the re-approach of a leg that only just unloaded."""
@@ -132,19 +134,21 @@ def test_settlement_case_recovers_like_the_harness(closed_loop, harness_metrics,
     )
 
 
-def test_reapproach_leaves_the_runs_without_a_lifted_leg_unchanged(closed_loop) -> None:
+def test_reapproach_leaves_the_runs_without_a_lifted_leg_unchanged(closed_loop, f_min_kN) -> None:
     """P-R8-13 (spec 179.1): in the runs where no leg lifts again the re-approach never starts
     and the commands are bit for bit those with it off. Only the G-type sink of the
-    revision-30 harness starts one: its RR truly unloads to about 3 kN (below 0.5 F_min), which
-    the one-sample watch of P-R8-13 catches (P-R8-12 needed two samples and did not). That
-    re-approach ends on contact within 0.5 s and a few mm; the recovery metrics are judged by
+    revision-30 harness starts one: its RR unloads below the 1.4 F_min start (P-S8-5, U-S8-9;
+    with the 0.5 F_min start it fell to about 3 kN first), which the one-sample watch of
+    P-R8-13 catches, and now RR stays above F_min. That re-approach ends on contact within
+    0.5 s and a few mm; the recovery metrics are judged by
     :func:`test_settlement_case_recovers_like_the_harness`."""
     runs_on = [*closed_loop["harness"], closed_loop["imu_100hz"]]
     runs_off = [*closed_loop["harness_without_reapproach"],
                 closed_loop["imu_100hz_without_reapproach"]]
     for run_on, run_off in zip(runs_on, runs_off, strict=True):
         if run_on.get("id", "").startswith("G|"):
-            assert run_on["metrics"]["min_true_after_sink_kN"] < SETTLE_REAPPROACH_TRUE_LOAD_KN
+            min_after_sink_kN = run_on["metrics"]["min_true_after_sink_kN"]
+            assert f_min_kN <= min_after_sink_kN < SETTLE_REAPPROACH_START_FRACTION * f_min_kN
             assert [interval["outcome"] for interval in run_on["reapproach_intervals"]] == [
                 "contact"
             ]

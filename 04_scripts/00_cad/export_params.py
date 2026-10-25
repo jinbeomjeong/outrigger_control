@@ -35,8 +35,8 @@ Writes:
     02_params/rexome33.yaml       commented YAML, SI units, body frame
     02_params/rexome33_checks.json  verification results of this export
 
-Mass case C (CLAUDE.md, 2026-10-19, provisional): STEP densities, but the five
-AUGER TOOL rows as steel 7.85 g/cm^3.
+Mass case C (00_docs/decision_log.md sec. 2 '기준 질량', 2026-10-19, provisional): STEP
+densities, but the five AUGER TOOL rows as steel 7.85 g/cm^3.
 
 Frames. CAD root frame: mm, Y up. Body frame (CLAUDE.md): x forward = +Z_cad,
 y left = +X_cad, z up = +Y_cad, origin = CAD origin, SI units. Inertia tensors
@@ -49,7 +49,7 @@ independent re-implementation and against 01_cad/03_auger/auger_levels.json. Eac
 has a threshold (REL_TOL etc.); if any check fails, the checks JSON is written
 with the failures and the YAML is NOT written (exit code 1).
 
-Leg geometry (CLAUDE.md "다리 기하", 2026-10-19): all four legs use the same
+Leg geometry (00_docs/decision_log.md sec. 2 "다리 기하", 2026-10-19): all four legs use the same
 extension range 0 ... 0.680 m. In the CAD pose the rear pistons (RL, RR) sit
 2 mm below the bore top, so the fully retracted state (extension 0) of a rear
 leg is its moving part (rod + piston + pad) raised by +0.002 m (body +z) from
@@ -132,11 +132,11 @@ ROD_PAD_BREP = {
     "RR": "REAR_JACK_CYL_2___10_1.brep",
 }
 
-# CLAUDE.md "구동기" (2026-10-19): actuator stroke and speed.
+# 00_docs/decision_log.md sec. 2 "구동기" (2026-10-19): actuator stroke and speed.
 STROKE_M = 0.680
 FULL_STROKE_TIME_S = 30.0
 MAX_SPEED_M_S = STROKE_M / FULL_STROKE_TIME_S
-# CLAUDE.md "오거 위치" (2026-10-19): "기본 실행 단계는 상단이다(무게중심이 가장 높아 제어가 가장 어려운 경우)."
+# 00_docs/decision_log.md sec. 2 "시나리오" (오거 위치, 2026-10-19): "기본 실행 단계는 상단이다(무게중심이 가장 높아 제어가 가장 어려운 경우)."
 DEFAULT_AUGER_LEVEL = "top"
 # Pad plate "두께 20 mm" in 00_docs/00_cad/cad_review.md 3.1. The BREP shows 20 mm vertical sides plus a 5 mm x 45 deg
 # top-edge chamfer (top face 25 mm above the bottom). The exported thickness and side height are measured from
@@ -171,11 +171,11 @@ DYN_MODEL_PY = "04_scripts/01_dynamics/dyn_model.py"
 RUN_REFERENCE_PY = "04_scripts/01_dynamics/run_reference.py"
 REFERENCE_JSON = PROJECT_ROOT / "06_analysis" / "00_dynamics" / "reference.json"
 DYN_MODEL_DIR = PROJECT_ROOT / "04_scripts" / "01_dynamics"
-ACTUATOR_MODEL_DEFAULT = "L1"               # CLAUDE.md '구동기 모델' (2026-10-19): L1 temporary default
+ACTUATOR_MODEL_DEFAULT = "L1"               # decision_log.md sec. 3 '구동기 모델' (2026-10-19): L1 temporary default
 BORE_DIAMETER_M = 0.115                     # CAD, 00_docs/00_cad/cad_review.md 3.1
 ROD_DIAMETER_M = 0.110                      # CAD, 00_docs/00_cad/cad_review.md 3.1
 BARREL_OUTER_DIAMETER_M = 0.160             # CAD, 00_docs/00_cad/cad_review.md 3.1
-# ---- rev. 30: REXOME35 cylinders (user decision 2026-10-22, CLAUDE.md '실린더 치수 기준 교체'; dynamics_model.md
+# ---- rev. 30: REXOME35 cylinders (user decision 2026-10-22, decision_log.md sec. 6 '실린더 치수 기준 교체'; dynamics_model.md
 # 5.11.10 / 5.12.7 '순서 2 명세'). Selected with --cylinders rexome35 (default); --cylinders cad reproduces the
 # REXOME33 CAD YAML (regression). Per leg (bore, rod, barrel outer) [m]:
 CYLINDER_SETS = {
@@ -209,8 +209,9 @@ ROD_SIDE_LOCK_EPS_M_S = 1.0e-6               # dynamics 5.12.8 Q-D5
 ROD_SIDE_PREDICTOR = True                    # dynamics 5.12.8 (predictor F_x(delta + d delta dt))
 HYD_L1R_SPEC_JSON = PROJECT_ROOT / "06_analysis" / "03_hydraulic" / "l1r_rod_spring_spec.json"
 CYLINDER_MODE = "rexome35"                   # set by main() from --cylinders
-OIL_BULK_MODULUS_EFF_PA = 1.0e9             # ASSUMPTION, 사용자 결정 (CLAUDE.md, 2026-10-19)
-OIL_BULK_MODULUS_SENSITIVITY_PA = [0.69e9, 1.6e9]  # 사용자 결정 (CLAUDE.md); = dyn_model ASSUMPTIONS oil_bulk_modulus_range_Pa
+# 사용자 결정 2026-10-19 (decision_log.md sec. 7)
+OIL_BULK_MODULUS_EFF_PA = 1.0e9             # ASSUMPTION
+OIL_BULK_MODULUS_SENSITIVITY_PA = [0.69e9, 1.6e9]  # 사용자 결정 (decision_log.md sec. 7); = dyn_model ASSUMPTIONS oil_bulk_modulus_range_Pa
 OIL_DEAD_LENGTH_M = 0.05                    # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 2.3
 ROD_DEAD_LENGTH_M = 0.05                    # ASSUMPTION, user decision 2026-10-22 (hydraulics rod_side_pressure.md 16): rod-side dead length
 FRAME_STIFFNESS_N_M = 1.0e9                 # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 2.3
@@ -227,16 +228,17 @@ LEG_DAMPING_RATIO_MOVING = 0.10             # ASSUMPTION, leg axial zeta while t
 LEG_DAMPING_RATIO_RANGE = [0.01, 0.10]      # sensitivity range, locked (dyn_model.py leg_damping_ratio_range)
 LEG_DAMPING_RATIO_MOVING_RANGE = [0.05, 0.20]  # sensitivity range, moving (dyn_model.py leg_damping_ratio_moving_range)
 DAMPING_DECISION = "user decision 2026-10-20, 00_docs/01_dynamics/damping_survey.md (literature-derived, not measured)"
-ROD_LOCAL_DAMPING_RATIO = 0.3               # ASSUMPTION, total zeta of the L2 rod local mode, run_reference.py:510-513
+ROD_LOCAL_DAMPING_RATIO = 0.3               # ASSUMPTION, total zeta of the L2 rod local mode, run_reference.py:511-514
 SWIVEL_CENTER_ABOVE_PAD_BOTTOM_M = 0.06     # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 2.1 (CAD has no swivel)
 SWIVEL_TILT_RANGE_DEG = 10.0                # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 2.2
-PAD_JOINT = "spherical"                     # user decision 2026-10-19 (CLAUDE.md '다리 기하')
-F_MIN_FRACTION = 0.10                       # user decision 2026-10-19 (CLAUDE.md 'F_min')
+# user decisions 2026-10-19 (decision_log.md sec. 2 '다리 기하' / 'F_min')
+PAD_JOINT = "spherical"
+F_MIN_FRACTION = 0.10
 RIGID_FLOOR_FRICTION = 0.5                  # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 4.2
 CRAWLER_KN_TOTAL_N_M = 1.0e8                # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 4.2
 CRAWLER_FRICTION = 0.5                      # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 4.2 (L2b-NSC crawler contact only)
 # ---- rev. 5 (00_docs/01_dynamics/dynamics_model.md 4.2 / 4.5 / 10 "개정 5"): compliant crawler sphere layout for L1 (SMC) ----
-# Layout D (user decision 2026-10-20, CLAUDE.md '크롤러 접촉 배치', 00_docs/01_dynamics/dynamics_model.md 3.8):
+# Layout D (user decision 2026-10-20, decision_log.md sec. 9 '크롤러 접촉 배치', 00_docs/01_dynamics/dynamics_model.md 3.8):
 # lower track roller stations (gap 0) + raised end shoes beyond the end rollers as gapped unilateral springs.
 # Positions and gaps are read from the crawler B-rep cache (derive_crawler_cache.py); the drawn undercarriage is
 # the REXOME25 model (another machine, per the STEP description) -> ASSUMPTION until the manufacturer confirms.
@@ -268,17 +270,17 @@ CRAWLER_SMC_MATERIAL = ("Hooke, kn = kn_per_sphere, gn = gn_per_sphere, kt = 0, 
                         "(not the pad patches)")
 CRAWLER_COLLISION_FILTER = "disable rod-superstructure and rod-crawler pairs (collision families)"
 SETTLE_DECAY_FACTOR = 100.0                 # settle length = ln(100) x time constant (amplitude to 1 %)
-# Time step rules (00_docs/01_dynamics/dynamics_model.md 4.3; run_reference.py:482-487 dt_rec).
+# Time step rules (00_docs/01_dynamics/dynamics_model.md 4.3; run_reference.py:483-488 dt_rec).
 DT_LADDER_S = (1e-3, 5e-4, 2e-4, 1e-4, 5e-5, 2e-5, 1e-5)
 DT_POINTS_PER_PERIOD = 50
 DT_NUMERICAL_DAMPING_SHARE = 0.1  # L1, L2b-NSC: zeta_num = omega dt / 2 <= 10 % of the 1st rocking zeta
-DT_REFERENCE_S = 1.0e-5           # user decision 2026-10-20 (CLAUDE.md): reference solutions (V9 convergence)
-DT_TRANSITION_S = 1.0e-5          # user decision 2026-10-20 (CLAUDE.md): contact transitions (V4, lift-off, D2 peaks)
+DT_REFERENCE_S = 1.0e-5           # user decision 2026-10-20 (decision_log.md sec. 9): reference solutions (V9 convergence)
+DT_TRANSITION_S = 1.0e-5          # user decision 2026-10-20 (decision_log.md sec. 9): contact transitions (V4, lift-off, D2 peaks)
 # user decision 2026-10-21 (S3 V9 passed at 2e-4 s, 00_docs/01_dynamics/dynamics_model.md 5.7): L1 general runs.
 # Rule (5.7): mode-wise numerical damping r_i omega_i dt / 2 <= 0.1 zeta_i (modes 1-6, three auger levels); the
 # bushing-dominated (tangential) modes bound it at dt <= 0.1 c_t / k_t (checked below, dynamics_l1_dt_rule).
 L1_DT_S = 2.0e-4
-# user decision 2026-10-20 (CLAUDE.md '구동기' command acceleration limit; dynamics_model.md 5.6 item 3 / 5.7 key table)
+# user decision 2026-10-20 (decision_log.md sec. 2 '구동기' command acceleration limit; dynamics_model.md 5.6 item 3 / 5.7 key table)
 COMMAND_RAMP_S = 0.1
 # ---- rev. 4: Chrono 10 input conventions (00_docs/01_dynamics/dynamics_model.md 4.1, 00_docs/03_chrono/chrono_stick_friction_test.md) ----
 GROUND_BODY_MASS_KG = 1.0e9                 # implementation convention: fixed floor mass enters m_eff of SMC gn
@@ -288,12 +290,52 @@ L2B_NSC_SOLVER = "PSOR"                     # stick friction test 2.4 (APGD 25x 
 L2B_NSC_SOLVER_MAX_ITERATIONS = 50
 L2B_NSC_FRICTION = 0.5                      # ASSUMPTION, 00_docs/01_dynamics/dynamics_model.md 4.2
 # ---- rev. 4: hydraulic circuit (00_docs/02_hydraulic/hydraulic_circuit.md,
-# CLAUDE.md '유압 회로' / '압력 한계') ----
+# decision_log.md sec. 4 '유압 회로' / '압력 한계') ----
 RELIEF_PRESSURE_MOVING_PA = 2.10e7          # circuit drawing: MCV relief 210 bar (reached only at the stroke ends)
 LOCKED_PRESSURE_LIMIT_PA = 3.50e7           # manufacturer: cylinder maximum load test pressure 350 bar (locked)
 PUMP_FLOW_L_MIN = 60.2                      # circuit drawing: P6, 60.2 L/min
 PUMP_VOLUMETRIC_EFFICIENCY = 0.95           # ASSUMPTION / user decision 2026-10-22: pump volumetric efficiency (REXOME35 speed rule)
 LOCK_VALVE = "pilot_check"                  # current circuit; option "counterbalance" (manufacturer plan)
+# ---- S8 (user decisions U-S8-H1..H6 / U-S8-L3, 2026-10-24; 00_docs/02_hydraulic/s8_seal_friction_counterbalance.md) ----
+# Seal friction (spec 2.3 / C-1): level = Coulomb limit of the FRONT legs (static = kinetic), constant in a run; rear =
+# level x rear_scale; L2b only (H4). Default level 0 = the S7 path (bit-identical); runs set the level by override.
+SEAL_FRICTION = {
+    "level_N": 0.0,
+    "nominal_level_N": 4000.0,
+    "sensitivity_levels_N": [0.0, 2000.0, 4000.0, 8000.0],
+    "rear_scale": 0.8333,
+    "static_ratio": 1.0,
+    "stick_stiffness_N_m": 0.0,
+    "pressure_model": "constant",
+    "kappa_N_per_m_Pa": 23.1e-5,        # 23.1 N/(m bar) -> N/(m Pa)
+    "F0_N": 1270.0,
+    "F0_seal_diameter_sum_m": 0.240,
+    "p_ref_head_Pa": {"FL": 89.0e5, "FR": 89.0e5, "RL": 76.0e5, "RR": 76.0e5},
+    "p_ref_rod_Pa": 2.0e5,
+    "leg_scale": {"FL": 1.0, "FR": 1.0, "RL": 1.0, "RR": 1.0},
+}
+# Counterbalance (spec 4.4, all ASSUMPTION; used only with lock_valve = "counterbalance")
+COUNTERBALANCE = {
+    "p_set_Pa": 330.0e5,
+    "override_Pa": 20.0e5,
+    "rated_flow_m3_s": 1.0e-3,
+    "tau_s": 0.010,
+    "hysteresis_Pa": 0.0,
+    "pilot_ratio": 4.0,
+    "tank_pressure_Pa": 2.0e5,
+    "back_pressure_Pa": 2.0e5,
+    "sides": "both",
+    "discharge": "tank",
+    "blocked_line_capacity_m3": 1.87e-5,
+}
+# L2b crawler NSC compliance (U-S8-L3 option 1, dynamics_model.md 5.25.5 S8-L3): 1 / kn_per_sphere, c / k (zeta 0.05)
+# "rigid" (S7) kept as the default: the S8-L4 check of 2026-10-24 found that NSC SetCompliance does not act
+# as a spring in pychrono 10.0.0 (PSOR / APGD / BB): a body on compliant spheres sinks at a steady speed ~ comp F / h
+# and falls through the floor at 1.2e-7 m/N (00_docs/decision_log.md sec. 5, 'U-S8-L3 결말' 2026-10-24; the probe
+# scripts were session-only and not kept); option kept for the record
+CRAWLER_L2B_NSC_MODEL = "rigid"
+CRAWLER_L2B_NSC_COMPLIANCE_M_N = 1.2e-7
+CRAWLER_L2B_NSC_DAMPING_F_S = 2.0e-3
 RIGID_FLOOR_MODEL = (
     "L1: SMC Hooke, UseMaterialProperties false, normal only (kt = gt = mu = 0) + ground-fixed tangential bushing "
     "with circular Coulomb return mapping; L2b: ChSystemNSC (PSOR) + lateral leg bushing. SMC tangential models "
@@ -329,25 +371,25 @@ LINE_REFS = {
     ("dyn_model.py", 317, 334): ["def crawler_points", "np.full(n, c_tot / n)"],
     ("dyn_model.py", 337, 345): ["CRAWLER_DEFAULTS = {", '"damping_total_N_s_m": None'],
     ("dyn_model.py", 349, 352): ["def crawler_damping_total", "2 * zeta * math.sqrt(kn_total * mass_total)"],
-    ("run_reference.py", 68, 72): ["bw = dm.body_with_rods(p, geo, \"top\", e_op)", "c_tot = dm.crawler_damping_total"],
-    ("run_reference.py", 174, 191): ["crawler-on-floor modes", "settle_length_s (ln(100) x max tau)"],
-    ("run_reference.py", 268, 269): ["touch = geo.touch_extension", 'e_op = touch + A_["crawler_clearance_m"]'],
-    ("run_reference.py", 277, 285): ["kc_nom = wc", "ko_eff = dm.series(ko, kr, kf)", "kh_free = dm.k_leg_lateral_legs"],
-    ("run_reference.py", 482, 487): ["def dt_rec", "if dt <= T / ppc"],
-    ("run_reference.py", 482, 490): ["def dt_rec", "f_rod_local = math.sqrt((ko_eff.mean() + kc_nom)"],
-    ("run_reference.py", 490, 490): ["f_rod_local = math.sqrt((ko_eff.mean() + kc_nom)"],
-    ("run_reference.py", 504, 530): ["zt = A_", "L1_rigid_motor_lumped_contact", "L2b_NSC_force_motor_axial_spring"],
-    ("run_reference.py", 506, 520): ["k_L1 = kv_H", "kt_L1 = dm.series(kh_free, kc_nom)", "c_tan=2 * zt"],
-    ("run_reference.py", 508, 508): ["c_o = 2 * zt * np.sqrt(ko_eff * W_tot / g / 4)"],
-    ("run_reference.py", 509, 509): ['c_o_moving = 2 * A_["leg_damping_ratio_moving"] * np.sqrt(ko_eff * W_tot / g / 4)'],
-    ("run_reference.py", 510, 513): ["zeta_rod = 0.3", "c_c = 2 * zeta_rod"],
-    ("run_reference.py", 528, 529): ["L2b_NSC_force_motor_axial_spring_lateral_bushing", "kh=kt_L1", "ko=kv_H"],
-    ("run_reference.py", 564, 564): ["ch=2 * zt * np.sqrt(cfg[\"kh\"] * W_tot / g / 4)"],
-    ("run_reference.py", 608, 608): ["\"c_tangential_N_s_m\": r(2 * zt * np.sqrt(cfg[\"kh\"] * W_tot / g / 4))"],
-    ("run_reference.py", 613, 615): ["L1_numerical_damping_bound_s", "0.2 * z1 / (2 * math.pi * f1)"],
-    ("run_reference.py", 617, 618): ["L2b_NSC_rod_on_axial_spring_Hz", "L2b_NSC_dt_s", "kv_H.mean() / m_rod"],
-    ("run_reference.py", 619, 620): ["N_top = tests", "L2b_NSC_numerical_damping_bound_s"],
-    ("run_reference.py", 626, 641): ["A_head = dm.piston_area()", "A_ann = math.pi / 4", "p_max = 210e5",
+    ("run_reference.py", 69, 73): ["bw = dm.body_with_rods(p, geo, \"top\", e_op)", "c_tot = dm.crawler_damping_total"],
+    ("run_reference.py", 175, 192): ["crawler-on-floor modes", "settle_length_s (ln(100) x max tau)"],
+    ("run_reference.py", 269, 270): ["touch = geo.touch_extension", 'e_op = touch + A_["crawler_clearance_m"]'],
+    ("run_reference.py", 278, 286): ["kc_nom = wc", "ko_eff = dm.series(ko, kr, kf)", "kh_free = dm.k_leg_lateral_legs"],
+    ("run_reference.py", 483, 488): ["def dt_rec", "if dt <= T / ppc"],
+    ("run_reference.py", 483, 491): ["def dt_rec", "f_rod_local = math.sqrt((ko_eff.mean() + kc_nom)"],
+    ("run_reference.py", 491, 491): ["f_rod_local = math.sqrt((ko_eff.mean() + kc_nom)"],
+    ("run_reference.py", 505, 531): ["zt = A_", "L1_rigid_motor_lumped_contact", "L2b_NSC_force_motor_axial_spring"],
+    ("run_reference.py", 507, 521): ["k_L1 = kv_H", "kt_L1 = dm.series(kh_free, kc_nom)", "c_tan=2 * zt"],
+    ("run_reference.py", 509, 509): ["c_o = 2 * zt * np.sqrt(ko_eff * W_tot / g / 4)"],
+    ("run_reference.py", 510, 510): ['c_o_moving = 2 * A_["leg_damping_ratio_moving"] * np.sqrt(ko_eff * W_tot / g / 4)'],
+    ("run_reference.py", 511, 514): ["zeta_rod = 0.3", "c_c = 2 * zeta_rod"],
+    ("run_reference.py", 529, 530): ["L2b_NSC_force_motor_axial_spring_lateral_bushing", "kh=kt_L1", "ko=kv_H"],
+    ("run_reference.py", 565, 565): ["ch=2 * zt * np.sqrt(cfg[\"kh\"] * W_tot / g / 4)"],
+    ("run_reference.py", 609, 609): ["\"c_tangential_N_s_m\": r(2 * zt * np.sqrt(cfg[\"kh\"] * W_tot / g / 4))"],
+    ("run_reference.py", 614, 616): ["L1_numerical_damping_bound_s", "0.2 * z1 / (2 * math.pi * f1)"],
+    ("run_reference.py", 618, 619): ["L2b_NSC_rod_on_axial_spring_Hz", "L2b_NSC_dt_s", "kv_H.mean() / m_rod"],
+    ("run_reference.py", 620, 621): ["N_top = tests", "L2b_NSC_numerical_damping_bound_s"],
+    ("run_reference.py", 627, 642): ["A_head = dm.piston_area()", "A_ann = math.pi / 4", "p_max = 210e5",
                                      "max_rod_side_force_N", "pump_flow_L_min"],
 }
 # Pad plate split (SCM bodies): the pad plate is the part of the rod+pad solid below this height above the pad
@@ -766,7 +808,7 @@ def configure(mode: str) -> None:
     global CYLINDER_MODE, STROKE_M, FULL_STROKE_TIME_S, MAX_SPEED_M_S
     CYLINDER_MODE = mode
     if mode == "cad":
-        return  # module constants (CLAUDE.md '구동기' 2026-10-19: 680 mm in 30 s)
+        return  # module constants (decision_log.md sec. 2 '구동기' 2026-10-19: 680 mm in 30 s)
     STROKE_M = STROKE_REX35_M
     # Q-C5 (user decision 2026-10-22, dynamics 5.11.10 (a)): common speed limit = pump flow / sum of the head areas
     # user decision 2026-10-22: delivered flow = 60.2 L/min x volumetric efficiency 0.95
@@ -853,7 +895,7 @@ def k_leg_lateral_swivel(ext: float, attach_z: float, barrel_bottom_z: float, pa
 
 
 def dt_ladder(dt_max: float) -> float:
-    """run_reference.py:482-487 dt_rec(): largest ladder value <= dt_max."""
+    """run_reference.py:483-488 dt_rec(): largest ladder value <= dt_max."""
     for dt in DT_LADDER_S:
         if dt <= dt_max:
             return dt
@@ -866,11 +908,11 @@ def dynamics_derivation(pad_z: np.ndarray, attach_z: np.ndarray, barrel_bottom_z
                         l2b_first_mode: tuple[float, float]) -> dict:
     """All derived dynamics values, per leg in LEG_ORDER (inputs = values as written to the YAML).
 
-    Sources: run_reference.py:268-269 (operating point), run_reference.py:277-285 (stiffness),
-    run_reference.py:504-530 (L1 / L2 / L2b / L2b-NSC configurations), run_reference.py:564 and
-    run_reference.py:608 (tangential / bushing damping), run_reference.py:490 (rod local mode),
-    run_reference.py:613-615 (L1 time step rule), run_reference.py:617-618 (L2b-NSC time step),
-    run_reference.py:626-641 (hydraulic circuit), 00_docs/01_dynamics/dynamics_model.md 4.1 (Chrono input conventions).
+    Sources: run_reference.py:269-270 (operating point), run_reference.py:278-286 (stiffness),
+    run_reference.py:505-531 (L1 / L2 / L2b / L2b-NSC configurations), run_reference.py:565 and
+    run_reference.py:609 (tangential / bushing damping), run_reference.py:491 (rod local mode),
+    run_reference.py:614-616 (L1 time step rule), run_reference.py:618-619 (L2b-NSC time step),
+    run_reference.py:627-642 (hydraulic circuit), 00_docs/01_dynamics/dynamics_model.md 4.1 (Chrono input conventions).
     rod_mass is legs.<leg>.moving_part.mass_kg (the SMC contact pair is moving part + floor, doc 4.1).
     """
     e_op = (pad_z - crawler_bottom_z) + CRAWLER_CLEARANCE_M           # touch extension + clearance
@@ -916,7 +958,7 @@ def dynamics_derivation(pad_z: np.ndarray, attach_z: np.ndarray, barrel_bottom_z
     # L2b-NSC: axial force law = series(oil, rod, frame, concrete) (operating point) = L1 kn; bushing = L1 kt
     k_axial_l2b = series(ko_eff, kc)
     bushing_l2b = kt_l1
-    bushing_damping_l2b = 2 * zeta * np.sqrt(bushing_l2b * m_tot / 4)   # run_reference.py:608 with kh = kt_L1
+    bushing_damping_l2b = 2 * zeta * np.sqrt(bushing_l2b * m_tot / 4)   # run_reference.py:609 with kh = kt_L1
     bushing_input_l2b = BUSHING_DAMPING_INPUT_FACTOR * bushing_damping_l2b
     # L2b-NSC dt: the rod is held by the rigid contact; if it separates it rides on the axial spring alone
     f_rod_axial = np.sqrt(k_axial_l2b.mean() / rod_mass.mean()) / (2 * np.pi)
@@ -1050,7 +1092,7 @@ def crawler_derivation(m_tot: float, m_body: float, l1_first_mode: tuple[float, 
     Points: 2 tracks x (6 roller stations, gap 0) + 2 tracks x (6 raised end shoes, gap = CAD lowest point);
     sphere bottom = floor + gap. kn_per_sphere = kn_total / (number of gap-0 points = 12), same value on the gapped
     end-shoe spheres (end engagement upper bound, dynamics 3.8). damping_total = 2 zeta sqrt(kn_total m_tot), m_tot =
-    superstructure top + 4 moving parts (dyn_model.py:349-352, run_reference.py:68-72), split over the 12 gap-0
+    superstructure top + 4 moving parts (dyn_model.py:349-352, run_reference.py:69-73), split over the 12 gap-0
     points; gn = damping_total / 12 / m_body for all 24 spheres (one Chrono material), m_body = superstructure body
     mass (00_docs/01_dynamics/dynamics_model.md 4.1 convention).
     Settle on the crawler = ln(100) x largest tau of the crawler-on-floor modes of layout D, taken as printed by
@@ -1163,7 +1205,7 @@ def dynamics_checks(derived: dict, reference: dict, dt_values: dict, f_min: floa
         z = a["modal_damping_ratio_body"]
         cn_dm, ct_dm = 2 * z * np.sqrt(kn * m_tot / 4), 2 * z * np.sqrt(kt * m_tot / 4)
         head_dm = dm.piston_area()
-        annulus_dm = dm.annulus_area()  # run_reference.py:626-641
+        annulus_dm = dm.annulus_area()  # run_reference.py:627-642
         k_lock_dm = dm.series(dm.k_oil(e_op) + a["oil_bulk_modulus_eff_Pa"] * annulus_dm
                               / (STROKE_M - e_op + a["oil_dead_length_m"]),
                               dm.k_rod(), a["frame_bracket_stiffness_N_m"], kc)
@@ -1542,7 +1584,7 @@ def main() -> None:
         if synth:
             synth_whole = _volume_properties(_read_shape(moving_brep))
             rod = unit_to_mass_properties_si(synth_whole, density_kg_mm3, np.zeros(3))
-        # CLAUDE.md "다리 기하": retracted state = moving part raised until the piston reaches the bore top,
+        # decision_log.md sec. 2 "다리 기하": retracted state = moving part raised until the piston reaches the bore top,
         # so that every leg extends 0 ... STROKE_M. Offset (CAD pose -> retracted) along body +z, in mm.
         # rev. 30: defined with the CAD stroke estimate (geometry held, Q-C2), not with the plant stroke.
         retract_offset_mm = CAD_RETRACT_STROKE_M / MM - geometry["remaining_extension_mm"]
@@ -1862,6 +1904,10 @@ def main() -> None:
             **({} if CYLINDER_MODE == "cad" else {"pump_volumetric_efficiency": PUMP_VOLUMETRIC_EFFICIENCY}),
             "flow_control": FLOW_CONTROL,
             **({} if CYLINDER_MODE == "cad" else {"rod_side": rod_side_block(derived, per_leg)}),
+            **({} if CYLINDER_MODE == "cad" else {
+                "seal_friction": {k: (per_leg([v[n] for n in LEG_ORDER]) if isinstance(v, dict) else v)
+                                  for k, v in SEAL_FRICTION.items()},
+                "counterbalance": dict(COUNTERBALANCE)}),
             "L2b_NSC": {
                 "axial_stiffness": {
                     "formula": L2B_NSC_AXIAL_STIFFNESS_FORMULA,
@@ -1960,6 +2006,10 @@ def main() -> None:
                 "gn_per_sphere_1_s": sig(derived["crawler"]["gn_per_sphere"]),
                 "smc_material": CRAWLER_SMC_MATERIAL,
                 "collision_filter": CRAWLER_COLLISION_FILTER,
+                **({} if CYLINDER_MODE == "cad" else {"L2b_NSC": {
+                    "model": CRAWLER_L2B_NSC_MODEL,
+                    "compliance_m_N": CRAWLER_L2B_NSC_COMPLIANCE_M_N,
+                    "damping_f_s": CRAWLER_L2B_NSC_DAMPING_F_S}}),
             },
         },
         "control": {
@@ -1989,25 +2039,25 @@ def main() -> None:
     }
 
     comments.update({
-        "meta.mass_basis": "CLAUDE.md '기준 질량' (case C); replace when the operating weight is known",
+        "meta.mass_basis": "decision_log.md sec. 2 '기준 질량' (case C); replace when the operating weight is known",
         "meta.frame": "CLAUDE.md '좌표계와 명명'",
         "meta.gravity_m_s2": "standard gravity used for the static leg loads; set it explicitly in every engine",
         "ground.crawler_bottom_z_m": "cad_summary.json geometric_low_part_check.ground_y_cad_mm (crawler bottom, CAD pose)",
         "ground.lowest_pad_bottom_z_m": "min of legs.*.pad_bottom_center_retracted_m z (all legs fully retracted)",
         "superstructure.definition": "00_docs/00_cad/cad_review.md 3.2",
-        "superstructure.default_auger_level": ("CLAUDE.md '오거 위치' (2026-10-19): default run level is top "
+        "superstructure.default_auger_level": ("decision_log.md sec. 2 '시나리오' (오거 위치, 2026-10-19): default run level is top "
                                                "(highest CoM, hardest case); controller checks use all three levels"),
         "superstructure.auger_levels": ("auger_levels.json levels.<name>.mass.tool_steel, recomputed at full precision "
                                         "(combine_mass_properties, case tool_steel)"),
         "superstructure.auger_moving_set_at_cad_pose": "auger_parts.csv motion moving_drive + moving_tool, case C",
         "superstructure.auger_moving_set_at_cad_pose.travel_range_m": "auger_levels.json range lower/upper_travel_mm",
         "superstructure.fixed_part": "check: fixed_part + moving set at a travel = auger_levels entry",
-        "actuator": "CLAUDE.md '구동기' (680 mm, 0 -> full stroke in 30 s)",
-        "actuator.stroke_m": "CLAUDE.md; CAD estimate bore 700 - piston 20 (cad_summary.json legs.*.stroke_estimate_mm)",
-        "actuator.full_stroke_time_s": ("CLAUDE.md '구동기': constant-speed time 0 -> stroke_m at max_speed_m_s; "
+        "actuator": "decision_log.md sec. 2 '구동기' (680 mm, 0 -> full stroke in 30 s)",
+        "actuator.stroke_m": "decision_log.md sec. 2 '구동기'; CAD estimate bore 700 - piston 20 (cad_summary.json legs.*.stroke_estimate_mm)",
+        "actuator.full_stroke_time_s": ("decision_log.md sec. 2 '구동기': constant-speed time 0 -> stroke_m at max_speed_m_s; "
                                         "stop-to-stop (ramped start and stop) = + command_ramp_s"),
         "actuator.max_speed_m_s": "stroke_m / full_stroke_time_s",
-        "actuator.command_ramp_s": ("[common] ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '구동기'): command "
+        "actuator.command_ramp_s": ("[common] ASSUMPTION: user decision 2026-10-20 (decision_log.md sec. 2 '구동기'): command "
                                     "acceleration limit 0 -> max_speed_m_s in this time (valve response size, no "
                                     "hydraulic data); start and stop ramped; stroke ends braked with the same limit "
                                     "(end cushion = command ramp, 00_docs/01_dynamics/dynamics_model.md 5.6 item 3, "
@@ -2016,15 +2066,15 @@ def main() -> None:
         "actuator.extension_direction": "body frame: extending pushes the pad down (-z)",
         # ---- dynamics keys, 00_docs/01_dynamics/dynamics_model.md section 10 ----
         "meta.dynamics_stages": ("00_docs/01_dynamics/dynamics_model.md 10 (rev. 4): stage in which each dynamics key is needed "
-                                 "(common / L1 / L2b / L2 / SCM); operating plan B (CLAUDE.md): L1 for the "
+                                 "(common / L1 / L2b / L2 / SCM); operating plan B (decision_log.md sec. 3): L1 for the "
                                  "controller, L2b = L2b-NSC for re-assessment"),
-        "actuator.model_default": "[common] user decision 2026-10-19 (CLAUDE.md '구동기 모델'): L1 temporary default",
+        "actuator.model_default": "[common] user decision 2026-10-19 (decision_log.md sec. 3 '구동기 모델'): L1 temporary default",
         "actuator.bore_diameter_m": "[common] CAD, 00_docs/00_cad/cad_review.md 3.1",
         "actuator.rod_diameter_m": "[common] CAD, 00_docs/00_cad/cad_review.md 3.1",
         "actuator.barrel_outer_diameter_m": "[common] CAD, 00_docs/00_cad/cad_review.md 3.1",
-        "actuator.oil_bulk_modulus_eff_Pa": ("[common, L2b, L2] ASSUMPTION: 사용자 결정 (CLAUDE.md, 2026-10-19); "
+        "actuator.oil_bulk_modulus_eff_Pa": ("[common, L2b, L2] ASSUMPTION: 사용자 결정 (decision_log.md sec. 7, 2026-10-19); "
                                              "drives the L1 stiffness and the L2b k_oil(s)"),
-        "actuator.oil_bulk_modulus_sensitivity_range_Pa": ("[common] ASSUMPTION: 사용자 결정 (CLAUDE.md), "
+        "actuator.oil_bulk_modulus_sensitivity_range_Pa": ("[common] ASSUMPTION: 사용자 결정 (decision_log.md sec. 7), "
                                                            "00_docs/01_dynamics/dynamics_model.md 2.4; = dyn_model.py ASSUMPTIONS "
                                                            "oil_bulk_modulus_range_Pa (checked)"),
         "actuator.oil_dead_length_m": ("[common, L2b, L2] ASSUMPTION: port/pipe volume as column length, "
@@ -2034,10 +2084,10 @@ def main() -> None:
         "actuator.cylinder_type": ("[common] circuit drawing, "
                                    "00_docs/02_hydraulic/hydraulic_circuit.md"),
         "actuator.annulus_area_m2": ("[common] derived from CAD bore / rod: pi/4 (bore^2 - rod^2); "
-                                     "head area = pi/4 bore^2 = 0.0103869 m^2 (run_reference.py:626-641)"),
+                                     "head area = pi/4 bore^2 = 0.0103869 m^2 (run_reference.py:627-642)"),
         "actuator.rod_side_chamber_model": "[common] ASSUMPTION: 00_docs/01_dynamics/dynamics_model.md 2.3 (sensitivity only)",
         "actuator.relief_pressure_moving_Pa": ("[common] circuit drawing: MCV relief 210 bar, reached only at the stroke "
-                                               "ends (CLAUDE.md '압력 한계')"),
+                                               "ends (decision_log.md sec. 4 '압력 한계')"),
         "actuator.max_force_extend_N": ("[common] derived: relief_pressure_moving_Pa x head area; force saturation while "
                                         "moving (extend), "
                                         "00_docs/01_dynamics/dynamics_model.md 4.4 / V11b"),
@@ -2047,7 +2097,52 @@ def main() -> None:
                                               "judgement metric V17); force = 350 bar x head area = "
                                               f"{np.max(derived['locked_force_limit']):.0f} N"),
         "actuator.lock_valve": ("[common] manufacturer: current dual pilot-operated check; option \"counterbalance\" "
-                                "(relieves like a 350 bar relief, L2b model in 00_docs/01_dynamics/dynamics_model.md 4.4)"),
+                                "(relieves like a 350 bar relief, L2b model in 00_docs/01_dynamics/dynamics_model.md 4.4; "
+                                "S8 L2b model actuator.counterbalance, user decision U-S8-H5/H6 2026-10-24)"),
+        "actuator.seal_friction": (
+            "[L2b] S8 seal friction (user decisions U-S8-H1..H4 2026-10-24, 00_docs/02_hydraulic/"
+            "s8_seal_friction_counterbalance.md 2): Coulomb rigid stick, static = kinetic, parallel to the oil spring "
+            "only, in series with k_out, massless piston; L1 has no friction (H4)"),
+        "actuator.seal_friction.level_N": ("Coulomb limit of the FRONT legs (FL, FR) [N], constant in a run; 0 = off "
+                                           "(the S7 force-law path, bit-identical); runs set the level by override"),
+        "actuator.seal_friction.nominal_level_N": "user decision U-S8-H1: nominal 4 kN (unit test 3.72 kN, -7 %)",
+        "actuator.seal_friction.sensitivity_levels_N": "user decision 2026-10-24 (decision_log.md sec. 5, S8 범위): F_s 0 / 2 / 4 / 8 kN",
+        "actuator.seal_friction.rear_scale": ("ASSUMPTION (U-S8-H2): rear (RL, RR) = front x this, seal perimeter "
+                                              "ratio (110 + 90) / (130 + 110)"),
+        "actuator.seal_friction.static_ratio": ("ASSUMPTION (U-S8-H3): static / kinetic limit; 1.0 default, "
+                                                "sensitivity 1.1 only"),
+        "actuator.seal_friction.stick_stiffness_N_m": ("ASSUMPTION (U-S8-H3): seal stick stiffness k_st; 0 = rigid "
+                                                       "stick (default); sensitivity 1e8 only"),
+        "actuator.seal_friction.pressure_model": ("U-S8-H3: \"constant\" (default) or \"seal_geometry\" (spec 2.4, "
+                                                  "sensitivity only: F_s(p) = level phi(p_h, p_r) / phi(p_ref))"),
+        "actuator.seal_friction.kappa_N_per_m_Pa": ("ASSUMPTION (spec 2.3 kappa model): 23.1 N/(m bar) per seal "
+                                                    "perimeter; piston seal x |p_h - p_r|, rod seal x p_r"),
+        "actuator.seal_friction.F0_N": "unit test E1 low-pressure friction (front) [N] (spec 2.3)",
+        "actuator.seal_friction.F0_seal_diameter_sum_m": "front bore + rod diameter of the F0 test cylinder [m]",
+        "actuator.seal_friction.p_ref_head_Pa": ("GAUGE head pressure of the static operating load (spec 2.4: the "
+                                                 "pressure model equals the level here)"),
+        "actuator.seal_friction.p_ref_rod_Pa": "GAUGE rod pressure locked after an extension (spec 2.4)",
+        "actuator.seal_friction.leg_scale": ("per-leg factor on the limit (ML input, python-expert spec 2026-10-24): "
+                                             "limit = level x rear_scale (RL, RR) x leg_scale; default 1; override "
+                                             "as a 4-list (LEG_ORDER) or a per-leg mapping; ML draws U(0.8, 1.2)"),
+        "actuator.counterbalance": (
+            "[L2b] S8 counterbalance option, used only with lock_valve \"counterbalance\" (U-S8-H5/H6 2026-10-24, "
+            "00_docs/02_hydraulic/s8_seal_friction_counterbalance.md 4); ALL values ASSUMPTION (no manufacturer data); "
+            "GAUGE pressures"),
+        "actuator.counterbalance.p_set_Pa": "ASSUMPTION: cracking 330 bar g (<= 350 bar at rated flow); sensitivity 300 / 345 bar",
+        "actuator.counterbalance.override_Pa": "ASSUMPTION: cracking -> rated flow pressure rise 20 bar; sensitivity 10 / 40 bar",
+        "actuator.counterbalance.rated_flow_m3_s": "ASSUMPTION: 60 L/min cartridge (linear flow slope rated_flow / override)",
+        "actuator.counterbalance.tau_s": "ASSUMPTION: poppet first-order lag; sensitivity 0.002 / 0.030 s",
+        "actuator.counterbalance.hysteresis_Pa": "ASSUMPTION: 0; sensitivity 0.05 p_set",
+        "actuator.counterbalance.pilot_ratio": "ASSUMPTION: psi 4; sensitivity 3 / 8 (typical CB 3:1 ... 10:1)",
+        "actuator.counterbalance.tank_pressure_Pa": ("ASSUMPTION: neutral A, B -> T line pressure 2 bar g "
+                                                     "(effective cracking p_set - (psi - 1) p_T); sensitivity 0 / 5 bar"),
+        "actuator.counterbalance.back_pressure_Pa": "ASSUMPTION: extend back pressure floor p_back of the rod-side CB (spec 4.3)",
+        "actuator.counterbalance.sides": "\"both\" (dual CB, default) or \"head\"",
+        "actuator.counterbalance.discharge": ("\"tank\" (default) or \"blocked_line\" (neutral A, B blocked: "
+                                              "cumulative discharge capped by blocked_line_capacity_m3)"),
+        "actuator.counterbalance.blocked_line_capacity_m3": ("ASSUMPTION: V_line (p_cr - p_line0) / beta_hose, "
+                                                             "3/8 in. x 4 m, beta 0.5 GPa (spec 4.4)"),
         "actuator.pump_flow_m3_s": ("[common] circuit drawing: 60.2 L/min; 4 legs at max_speed_m_s need 56.5 L/min "
                                     "(checked)"),
         "actuator.flow_control": ("[common] ASSUMPTION (확인 필요): circuit drawing read as proportional + section pressure "
@@ -2058,7 +2153,7 @@ def main() -> None:
                              "guide freed in x, y"),
         "actuator.L2b_NSC.axial_stiffness": ("ASSUMPTION (derived): k_oil(s) = oil_bulk_modulus_eff_Pa pi/4 bore^2 / "
                                              "(oil_dead_length_m + s); operating point = contact.rigid_floor.L1.kn_per_pad_N_m "
-                                             "(run_reference.py:528-529)"),
+                                             "(run_reference.py:529-530)"),
         "actuator.L2b_NSC.oil_damping_N_s_m": (f"ASSUMPTION (derived): = actuator.L2.oil_damping_N_s_m (locked, leg zeta "
                                                f"{BODY_DAMPING_RATIO} on the heave mode; {DAMPING_DECISION})"),
         "actuator.L2b_NSC.oil_damping_moving_N_s_m": (f"ASSUMPTION (derived): = actuator.L2.oil_damping_moving_N_s_m "
@@ -2067,26 +2162,26 @@ def main() -> None:
                                                  "(swivel leg bending in series with the concrete tangential k)"),
         "actuator.L2b_NSC.lateral_bushing_damping_input_N_s_m": (
             "ASSUMPTION (derived): Chrono input = actual / 2 (contact.rigid_floor.damping_input_convention); actual = "
-            f"2 zeta sqrt(k_bushing m/4), zeta {BODY_DAMPING_RATIO} = leg zeta (run_reference.py:608)"),
+            f"2 zeta sqrt(k_bushing m/4), zeta {BODY_DAMPING_RATIO} = leg zeta (run_reference.py:609)"),
         "actuator.L2": ("[L2] ChLinkMotorLinearForce F = k_oil(s)(s_ref - s) + c_oil(ds_ref - ds), "
                         "00_docs/01_dynamics/dynamics_model.md 4.4; k_oil(s) = oil_bulk_modulus_eff_Pa * pi/4 bore^2 / (oil_dead_length_m + s)"),
         "actuator.L2.oil_damping_N_s_m": (f"ASSUMPTION (derived): locked leg (pilot check closed): 2 zeta "
                                           f"sqrt(k_axial_leg m/4), zeta {BODY_DAMPING_RATIO} on the heave mode "
                                           f"(m = damping_mass_kg; sensitivity {LEG_DAMPING_RATIO_RANGE[0]} ... "
-                                          f"{LEG_DAMPING_RATIO_RANGE[1]}), {DAMPING_DECISION}; run_reference.py:508"),
+                                          f"{LEG_DAMPING_RATIO_RANGE[1]}), {DAMPING_DECISION}; run_reference.py:509"),
         "actuator.L2.oil_damping_moving_N_s_m": (f"ASSUMPTION (derived): while the valve section drives the leg (u != 0): "
                                                  f"2 zeta sqrt(k_axial_leg m/4), zeta {LEG_DAMPING_RATIO_MOVING} "
                                                  f"(sensitivity {LEG_DAMPING_RATIO_MOVING_RANGE[0]} ... "
                                                  f"{LEG_DAMPING_RATIO_MOVING_RANGE[1]}); use instead of oil_damping_N_s_m "
                                                  f"in F = k(s_ref - s) + c(ds_ref - ds) while moving; {DAMPING_DECISION}; "
-                                                 "run_reference.py:509"),
+                                                 "run_reference.py:510"),
         "actuator.L2.lateral_bushing_N_m": ("ASSUMPTION (derived): SMC-L2b option (bushing without the concrete), swivel "
                                             "leg fixed-free beam, per-leg geometry, load at the swivel centre = "
                                             "contact.rigid_floor.L1.derivation.k_lateral_leg_swivel_N_m, "
                                             "dyn_model.py:207-244; L2b-NSC uses actuator.L2b_NSC.lateral_bushing_N_m"),
         "actuator.L2.lateral_bushing_damping_N_s_m": (f"ASSUMPTION (derived): SMC-L2b lateral zeta {BODY_DAMPING_RATIO}, ACTUAL value (Chrono "
                                                       "input = half): 2 zeta sqrt(series(bushing, concrete k) m/4), "
-                                                      "run_reference.py:564 and run_reference.py:608"),
+                                                      "run_reference.py:565 and run_reference.py:609"),
         "contact": ("00_docs/01_dynamics/dynamics_model.md 4.1 / 4.2 "
                     "(all contact parameters are assumptions)"),
         "contact.rigid_floor.model": ("[common] recommendation, 00_docs/01_dynamics/dynamics_model.md 4.1 (rev. 4), "
@@ -2104,7 +2199,7 @@ def main() -> None:
                                    "kn = series(k_oil, k_rod, k_frame, k_concrete), kt = series(k_lateral_leg_swivel, "
                                    f"k_concrete), c = 2 zeta sqrt(k m/4) (actual values), zeta = derivation.damping_ratio "
                                    f"(leg axial, locked cylinder, set on the heave mode; {DAMPING_DECISION}); "
-                                   "run_reference.py:506-520, "
+                                   "run_reference.py:507-521, "
                                    "dyn_model.py series/k_oil/k_rod/k_leg_lateral_legs (per-leg geometry, load at the "
                                    "swivel centre); kt / ct act through the ground-fixed bushing, not the SMC material; "
                                    "rerun when an assumption changes"),
@@ -2130,23 +2225,31 @@ def main() -> None:
             "derived: uncoupled heave on the L1 pads sqrt(sum(kn_per_pad_N_m) / damping_mass_kg) / 2 pi"),
         "contact.rigid_floor.L1.derivation": ("intermediate values; operating extension = pad bottom - "
                                               "ground.crawler_bottom_z_m + simulation.crawler_clearance_m "
-                                              "(run_reference.py:268-269); damping_mass_kg = superstructure top + 4 moving parts"),
+                                              "(run_reference.py:269-270); damping_mass_kg = superstructure top + 4 moving parts"),
         "contact.rigid_floor.L2b_NSC": ("[L2b] ChSystemNSC rigid contact (stick exact), 00_docs/01_dynamics/dynamics_model.md 4.1 / 4.2; "
                                         "solver: GetSolver().AsIterative().SetMaxIterations(solver_max_iterations); "
                                         "friction ASSUMPTION; no contact compliance or damping (in actuator.L2b_NSC)"),
         "contact.rigid_floor.L2": ("[L2] ASSUMPTION: kn = kt = concrete k; cn = 2 * 0.30 * sqrt((k_axial_leg + k_concrete) "
                                    "m_rod_mean) - actuator.L2.oil_damping (total rod local mode zeta 0.30, "
-                                   f"run_reference.py:510-513); ct = 2 * {BODY_DAMPING_RATIO} * sqrt(k_concrete m/4), not used in L2b "
+                                   f"run_reference.py:511-514); ct = 2 * {BODY_DAMPING_RATIO} * sqrt(k_concrete m/4), not used in L2b "
                                    "(bushing damping instead)"),
         "contact.crawler": "[common] ASSUMPTION: crawler-floor contact before lift-off, 00_docs/01_dynamics/dynamics_model.md 4.2",
-        "contact.crawler.friction": ("[L2b] ASSUMPTION: L2b-NSC crawler contact only (rigid NSC, no damping); "
-                                     "not used by the L1 SMC crawler material (smc_material: mu = 0)"),
-        "contact.crawler.kn_total_sensitivity_range_N_m": ("ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '크롤러 접촉 "
-                                                           "배치'): kn_total_N_m kept, x3 as sensitivity (weak basis; "
+        "contact.crawler.friction": ("[L2b] ASSUMPTION: L2b-NSC crawler contact only (NSC, compliance in "
+                                     "contact.crawler.L2b_NSC); not used by the L1 SMC crawler material (smc_material: mu = 0)"),
+        "contact.crawler.L2b_NSC": (
+            "[L2b] crawler sphere NSC material (user decision U-S8-L3 option 1, 2026-10-24; dynamics_model.md 5.25.5 "
+            "S8-L3). model \"rigid\" = S7 (default: S8-L4 check FAILED 2026-10-24, NSC compliance in pychrono "
+            "10.0.0 creeps instead of acting as a spring, the machine falls through the floor); \"compliant\" sets "
+            "SetCompliance / SetDampingF on the crawler spheres and SetDampingF on the floor (not usable)"),
+        "contact.crawler.L2b_NSC.compliance_m_N": "ASSUMPTION (derived): 1 / kn_per_sphere_N_m (normal only, tangential rigid)",
+        "contact.crawler.L2b_NSC.damping_f_s": ("ASSUMPTION (derived): Rayleigh [R] = alpha [K], alpha = c / k = "
+                                                "damping_total_N_s_m / kn_total_N_m (heave zeta 0.05)"),
+        "contact.crawler.kn_total_sensitivity_range_N_m": ("ASSUMPTION: user decision 2026-10-20 (decision_log.md sec. 9 "
+                                                           "'크롤러 접촉 배치'): kn_total_N_m kept, x3 as sensitivity (weak basis; "
                                                            "00_docs/01_dynamics/dynamics_model.md 3.8 layout F); scale "
                                                            "kn_per_sphere_N_m and the dashpot (same heave zeta) together"),
         "contact.crawler.sphere_layout": (
-            "[common] layout D, user decision 2026-10-20 (CLAUDE.md '크롤러 접촉 배치', 00_docs/01_dynamics/dynamics_model.md "
+            "[common] layout D, user decision 2026-10-20 (decision_log.md sec. 9 '크롤러 접촉 배치', 00_docs/01_dynamics/dynamics_model.md "
             "3.8): 2 tracks at y = +/- track_centre_y_m; per track one sphere at each roller_x_m (sphere bottom = "
             "ground.crawler_bottom_z_m) and one at each end_shoe_x_m (sphere bottom = floor + end_shoe_gap_m: "
             "unilateral, contact only after the gap closes); 24 spheres on the superstructure body. CAD: B-rep cache "
@@ -2180,7 +2283,7 @@ def main() -> None:
                                                      "the concrete value)"),
         "contact.crawler.damping_ratio_heave_sensitivity_range": "ASSUMPTION: user decision 2026-10-20 (concrete and soil)",
         "contact.crawler.damping_total_N_s_m": ("[L1] ASSUMPTION (derived): 2 zeta sqrt(kn_total m), m = superstructure "
-                                                "top + 4 moving parts, dyn_model.py:349-352, run_reference.py:68-72"),
+                                                "top + 4 moving parts, dyn_model.py:349-352, run_reference.py:69-73"),
         "contact.crawler.gn_per_sphere_1_s": ("[L1] ASSUMPTION (derived): damping_total / 12 roller spheres / superstructure "
                                               "body mass (m_eff of the crawler spheres; 00_docs/01_dynamics/dynamics_model.md "
                                               "4.1 convention); same value on all 24 spheres (one material, dynamics 3.8)"),
@@ -2196,14 +2299,16 @@ def main() -> None:
         "simulation.settle_on_pads_min_s": ("[L1] ASSUMPTION (derived): ln(100) / (zeta1 omega1), 1st L1 rocking mode "
                                             "(top); not needed when initialised at the analytic static solution "
                                             "(00_docs/01_dynamics/dynamics_model.md 4.5 item 1)"),
-        "control": "[common] CLAUDE.md 'F_min' (user decision 2026-10-19), 00_docs/01_dynamics/dynamics_model.md 3.2 / 6",
+        "control": "[common] decision_log.md sec. 2 'F_min' (user decision 2026-10-19), 00_docs/01_dynamics/dynamics_model.md 3.2 / 6",
         "control.F_min_fraction_of_mean_leg_load": "user decision 2026-10-19",
         "control.F_min_cylinder_N": ("derived: fraction * superstructure mass * g / 4 (cylinder force basis; "
                                      "pad contact force basis adds the rod weight, about 10.50 kN)"),
         "simulation.crawler_clearance_m": "[common] ASSUMPTION: crawler lifted 50 mm in the levelled state, 00_docs/01_dynamics/dynamics_model.md 1.3",
-        "simulation.dt_reference_s": ("[L1, L2b] ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '시뮬레이션 시간 간격'): "
+        "simulation.dt_reference_s": ("[L1, L2b] ASSUMPTION: user decision 2026-10-20 (decision_log.md sec. 9 "
+                                      "'시뮬레이션 시간 간격'): "
                                       "time step for reference solutions (V9 convergence judgement)"),
-        "simulation.dt_transition_s": ("[L1, L2b] ASSUMPTION: user decision 2026-10-20 (CLAUDE.md '시뮬레이션 시간 간격'): "
+        "simulation.dt_transition_s": ("[L1, L2b] ASSUMPTION: user decision 2026-10-20 (decision_log.md sec. 9 "
+                                       "'시뮬레이션 시간 간격'): "
                                        "time step for contact-transition analyses (V4 lift, leg lift-off / re-touch, D2 "
                                        "disturbance load peaks); may be used only inside the transition window of a run"),
         "simulation.L1": ("[L1] ASSUMPTION (rule, confirmed S2a dt study + S3 V8(a)/V9, "
@@ -2214,17 +2319,17 @@ def main() -> None:
                           "modes not judged or 5e-5 s; transitions, references, D2 use dt_transition_s / "
                           "dt_reference_s"),
         "simulation.L2b_NSC": ("[L2b] ASSUMPTION (rule, confirm by V9; general runs): smaller of (a) dt <= T / 50 of the rod "
-                               "on the axial spring alone (contact open) sqrt(mean k_ax / m_rod) / 2 pi, run_reference.py:617-618, "
+                               "on the axial spring alone (contact open) sqrt(mean k_ax / m_rod) / 2 pi, run_reference.py:618-619, "
                                "and (b) omega1 dt / 2 <= 0.1 zeta1 of the 1st L2b-NSC rocking mode (top), "
-                               "run_reference.py:619-620 (user decision 2026-10-20); PSOR 50 at "
+                               "run_reference.py:620-621 (user decision 2026-10-20); PSOR 50 at "
                                "2e-4 s held a 2 deg slope (stick friction test), 00_docs/01_dynamics/dynamics_model.md 4.3"),
         "simulation.L2": ("[L2] ASSUMPTION (rule): dt <= T / 50 of the rod local mode sqrt((k_axial_leg + k_concrete) "
-                          "/ m_rod) / 2 pi, run_reference.py:482-490, 00_docs/01_dynamics/dynamics_model.md 4.3"),
-        "sensors": ("[common] CLAUDE.md '센서' / '압력 센서' (2026-10-19), "
+                          "/ m_rod) / 2 pi, run_reference.py:483-491, 00_docs/01_dynamics/dynamics_model.md 4.3"),
+        "sensors": ("[common] decision_log.md sec. 2 '센서' / sec. 4 '압력 센서' (2026-10-19), "
                     "00_docs/02_hydraulic/hydraulic_circuit.md"),
         "sensors.cylinder_pressure.location": "manufacturer description; head-side reading, rod-side pressure 0 assumed",
         "legs": ("cad_summary.json legs.<leg> (axis_cad_mm, pad_bottom_y_cad_mm, bracket_bolt_holes_y_cad_mm, ...); "
-                 "CLAUDE.md '다리 기하': every leg extends 0 ... 0.680 m from the retracted state, "
+                 "decision_log.md sec. 2 '다리 기하': every leg extends 0 ... 0.680 m from the retracted state, "
                  "retracted = CAD pose + retracted_offset_from_cad_m along +z"),
     })
     for name in LEVEL_NAMES:
@@ -2242,14 +2347,14 @@ def main() -> None:
         comments[f"legs.{leg}.barrel_z_range_m"] = f"cad_summary.json legs.{leg}.barrel_y_cad_mm"
         comments[f"legs.{leg}.bore_z_range_m"] = f"cad_summary.json legs.{leg}.bore_y_cad_mm"
         comments[f"legs.{leg}.retracted_offset_from_cad_m"] = (
-            f"CLAUDE.md '다리 기하': stroke_m - cad_summary.json legs.{leg}.remaining_extension_mm "
+            f"decision_log.md sec. 2 '다리 기하': stroke_m - cad_summary.json legs.{leg}.remaining_extension_mm "
             "(= bore top - piston top); the CAD pose is extension = this value")
-        comments[f"legs.{leg}.extension_range_m"] = "CLAUDE.md '다리 기하' / '구동기': 0 = fully retracted"
+        comments[f"legs.{leg}.extension_range_m"] = "decision_log.md sec. 2 '다리 기하' / '구동기': 0 = fully retracted"
         comments[f"legs.{leg}.pad_bottom_center_retracted_m"] = (
             f"cad_summary.json legs.{leg}.pad_center_body_m (bottom face) + retracted_offset_from_cad_m in z")
         comments[f"legs.{leg}.pad.polygon_xy_m"] = ("outer wire vertices of the pad bottom face relative to "
                                                     "pad_bottom_center_retracted_m (x, y), counter-clockwise from +z; "
-                                                    "CAD shape and orientation (CLAUDE.md '다리 기하')")
+                                                    "CAD shape and orientation (decision_log.md sec. 2 '다리 기하')")
         comments[f"legs.{leg}.pad.thickness_m"] = (f"BREP 01_cad/02_legs/legs/{ROD_PAD_BREP[leg]}: bottom face to the pad top "
                                                    "face (+Y_cad plane), incl. the 45 deg top-edge chamfer")
         comments[f"legs.{leg}.pad.side_height_m"] = ("BREP: height of the 8 vertical side faces; "
@@ -2257,7 +2362,7 @@ def main() -> None:
         comments[f"legs.{leg}.moving_part"] = (f"rod + piston + pad (solid 10, SS400 7.85), parts_classified.csv "
                                                f"group leg_rod_pad leg {leg}; retracted state (CAD + offset in z)")
         comments[f"legs.{leg}.moving_part.inertia_kg_m2"] = "about com_retracted_m, body axes"
-        comments[f"legs.{leg}.pad.joint"] = "[common] user decision 2026-10-19 (CLAUDE.md '다리 기하'): swivel pad"
+        comments[f"legs.{leg}.pad.joint"] = "[common] user decision 2026-10-19 (decision_log.md sec. 2 '다리 기하'): swivel pad"
         comments[f"legs.{leg}.pad.swivel_center_above_pad_bottom_m"] = (
             "[common] ASSUMPTION: ball centre height (CAD has no swivel), 00_docs/01_dynamics/dynamics_model.md 2.1")
         comments[f"legs.{leg}.pad.swivel_tilt_range_deg"] = "[common] ASSUMPTION: free tilt about the ball, 00_docs/01_dynamics/dynamics_model.md 2.2"
@@ -2321,7 +2426,7 @@ def rex35_comments(comments: dict, derived: dict) -> None:
            "03_src reads the per-leg keys (python-expert, dynamics_model.md 5.11.10 order 4) - do not use")
     ap = np.broadcast_to(derived["head_area"], (4,))
     comments.update({
-        "actuator": ("CLAUDE.md '실린더 치수 기준 교체' (user decision 2026-10-22): REXOME35 cylinders per leg "
+        "actuator": ("decision_log.md sec. 6 '실린더 치수 기준 교체' (user decision 2026-10-22): REXOME35 cylinders per leg "
                      "(legs.<leg>.cylinder), stroke 0.70 m, common speed limit = pump flow / sum of head areas"),
         "actuator.stroke_m": ("user decision Q-C1 / Q-U4 (2026-10-22): mechanical stroke 700 mm (drawing 'Stoke 700'); "
                               "sensor-readable end sensors.stroke.measurable_max_m"),
@@ -2358,7 +2463,8 @@ def rex35_comments(comments: dict, derived: dict) -> None:
                                        "00_docs/01_dynamics/dynamics_model.md 2.3; sensitivity 0.05 ... 0.08 m (user decision "
                                        "2026-10-22, hydraulics rod_side_pressure.md 16); head side only since rev. 30"),
         "actuator.rod_dead_length_m": ("[L1-R, L2b] ASSUMPTION: rod-side dead length (column length = stroke - e + this), "
-                                       "sensitivity 0.02 ... 0.1 m (user decision 2026-10-22, hydraulics rod_side_pressure.md 16)"),
+                                       "sensitivity 0.02 ... 0.1 m (user decision 2026-10-22, hydraulics rod_side_pressure.md 16); "
+                                       "L2b override as a scalar or a 4-list (ML draws U(0.02, 0.10) m)"),
         "actuator.rod_side.k_rod_side_N_m": "derived: oil_bulk_modulus_eff_Pa x annulus_area_m2 / column_length_m",
         "actuator.rod_side.release_tau_s": "ASSUMPTION (hydraulics 14.3): exp(-t / tau) release on lock -> move",
         "actuator.rod_side.lock_eps_m_s": "dynamics 5.12.8 Q-D5: |u_applied| <= this -> LOCK",
@@ -2376,7 +2482,7 @@ def rex35_comments(comments: dict, derived: dict) -> None:
         "contact.rigid_floor.L1.derivation.damping_reference_mode_Hz": (
             "derived: uncoupled heave on the L1 pads with the LOCK stiffness sqrt(sum(k_lock_N_m) / damping_mass_kg) / 2 pi"),
         "contact.rigid_floor.L1.derivation.damping_basis": "dynamics 5.12.8 Q-D3: pad dashpot on the LOCK stiffness",
-        "sensors.stroke": ("user decision 2026-10-22 (CLAUDE.md, dynamics_model.md 5.12.3): software stroke-end limits "
+        "sensors.stroke": ("user decision 2026-10-22 (decision_log.md sec. 6, dynamics_model.md 5.12.3): software stroke-end limits "
                            "from the sensor range, plant stroke actuator.stroke_m"),
         "sensors.stroke.measurable_max_m": "ASSUMPTION: unit no-load test reading 694.8 mm (front type; rear assumed equal)",
         "sensors.stroke.fault_threshold_m": "derived: measurable_max_m - 1 mm (end margin 10 mm measured from 0.6848 m)",
@@ -2405,7 +2511,7 @@ def rex35_comments(comments: dict, derived: dict) -> None:
         comments[f"legs.{leg}.cylinder"] = (f"[common] {CYLINDER_SOURCE_REX35}; areas pi/4 D^2, forces 210 bar (moving) "
                                             "and 350 bar (locked) x area; user decision 2026-10-22")
         comments[f"legs.{leg}.retracted_offset_from_cad_m"] = (
-            f"CLAUDE.md '다리 기하': {CAD_RETRACT_STROKE_M} (CAD stroke estimate, geometry held Q-C2) - cad_summary.json "
+            f"decision_log.md sec. 2 '다리 기하': {CAD_RETRACT_STROKE_M} (CAD stroke estimate, geometry held Q-C2) - cad_summary.json "
             f"legs.{leg}.remaining_extension_mm (= bore top - piston top); the CAD pose is extension = this value")
         comments[f"legs.{leg}.extension_range_m"] = "user decision Q-C1 / Q-U4: 0 = fully retracted ... actuator.stroke_m"
         if leg in REX35_MOVING_BREP:

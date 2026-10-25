@@ -36,14 +36,21 @@ def _pressures(load_N=LOAD_N, rod_bar=2.0):
     return (load_N + rod * ANNULUS) / HEAD_AREA, rod
 
 
+START_STROKE_M = 0.2
+
+
 def _run(monitor, periods, *, start_s=0.0, load_N=LOAD_N, rod_bar=2.0, command=STILL,
          locked=True, band=2e3, rod_override=None):
+    """Read ``periods`` samples; the measured stroke follows the command (U-S8-28 stroke
+    check of D2 / D3)."""
     forces = None
     for k in range(periods):
+        t_s = start_s + k * PERIOD_S
         head, rod = _pressures(load_N, rod_bar)
         if rod_override is not None:
             rod = rod_override(rod.copy())
-        forces = monitor.read(start_s + k * PERIOD_S, head, rod, command, locked, band)
+        stroke = START_STROKE_M + command * t_s
+        forces = monitor.read(t_s, head, rod, command, locked, band, stroke_m=stroke)
     return forces
 
 

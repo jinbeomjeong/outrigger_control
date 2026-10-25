@@ -1,0 +1,171 @@
+{
+ "k_out_N_m": {
+  "front": 216648306.62608215,
+  "rear": 205103212.89089358
+ },
+ "stick_to_lock_stiffness_ratio": {
+  "front": 6.385339907056042,
+  "rear": 7.768439920731345
+ },
+ "regression_Fs0_vs_composite_max_rel": {
+  "front": 7.144562504486327e-16,
+  "rear": 1.1161270647906367e-15
+ },
+ "cycle_front_Fs4kN_amp0p5mm": {
+  "c=+amp": {
+   "c_mm": 0.5,
+   "F_true_kN": 135.5361175354962,
+   "F_pressure_kN": 131.5361175354962,
+   "f_kN": 4.0,
+   "s_p_um": -419.5141757300172,
+   "stick": false
+  },
+  "c=0 (down)": {
+   "c_mm": 0.001253132832080184,
+   "F_true_kN": 114.76795250185938,
+   "F_pressure_kN": 118.76795250185938,
+   "f_kN": -4.0,
+   "s_p_um": -16.62850109604613,
+   "stick": false
+  },
+  "c=-amp": {
+   "c_mm": -0.5,
+   "F_true_kN": 97.7609264077455,
+   "F_pressure_kN": 101.7609264077455,
+   "f_kN": -4.0,
+   "s_p_um": 406.1240131114599,
+   "stick": false
+  },
+  "c=0 (end)": {
+   "c_mm": 0.0,
+   "F_true_kN": 121.4725650633759,
+   "F_pressure_kN": 117.4725650633759,
+   "f_kN": 4.0,
+   "s_p_um": 15.571619810527302,
+   "stick": false
+  },
+  "first_slip_c_um": 20.100502512562816,
+  "first_slip_c_um_analytic": 18.463102999940286
+ },
+ "cycle_front_Fs4kN_kst1e8": {
+  "c=+amp": {
+   "c_mm": 0.5,
+   "F_true_kN": 135.5361175354962,
+   "F_pressure_kN": 131.5361175354962,
+   "f_kN": 4.0,
+   "s_p_um": -419.5141757300172,
+   "stick": false
+  },
+  "c=0 (down)": {
+   "c_mm": 0.001253132832080184,
+   "F_true_kN": 114.76795250185938,
+   "F_pressure_kN": 118.76795250185938,
+   "f_kN": -4.0,
+   "s_p_um": -16.62850109604613,
+   "stick": false
+  },
+  "c=-amp": {
+   "c_mm": -0.5,
+   "F_true_kN": 97.7609264077455,
+   "F_pressure_kN": 101.7609264077455,
+   "f_kN": -4.0,
+   "s_p_um": 406.1240131114599,
+   "stick": false
+  },
+  "c=0 (end)": {
+   "c_mm": 0.0,
+   "F_true_kN": 121.4725650633759,
+   "F_pressure_kN": 117.4725650633759,
+   "f_kN": 4.0,
+   "s_p_um": 15.571619810527302,
+   "stick": false
+  },
+  "first_slip_c_um": 67.8391959798995,
+  "first_slip_c_um_analytic": 18.463102999940286
+ },
+ "cycle_rear_Fs3p333kN_amp0p5mm": {
+  "c=+amp": {
+   "c_mm": 0.5,
+   "F_true_kN": 85.6899545134804,
+   "F_pressure_kN": 82.35675451348041,
+   "f_kN": 3.3332,
+   "s_p_um": -433.7262721442043,
+   "stick": false
+  },
+  "c=0 (down)": {
+   "c_mm": 0.001253132832080184,
+   "F_true_kN": 69.22595477067122,
+   "F_pressure_kN": 72.55915477067121,
+   "f_kN": -3.3332,
+   "s_p_um": -15.25118380779091,
+   "stick": false
+  },
+  "c=-amp": {
+   "c_mm": -0.5,
+   "F_true_kN": 55.99181393099967,
+   "F_pressure_kN": 59.32501393099967,
+   "f_kN": -3.3332,
+   "s_p_um": 421.4776509738654,
+   "stick": false
+  },
+  "c=0 (end)": {
+   "c_mm": 0.0,
+   "F_true_kN": 75.00113058142796,
+   "F_pressure_kN": 71.66793058142797,
+   "f_kN": 3.3332,
+   "s_p_um": 14.159361720836834,
+   "stick": false
+  },
+  "first_slip_c_um": 17.587939698492463,
+  "first_slip_c_um_analytic": 16.251330015844875
+ },
+ "seal_pressure_model": {
+  "kappa_N_per_m_bar": 23.106939885934437,
+  "F_s_kN": {
+   "front_locked_static": 2.1069925925925928,
+   "front_locked_200bar": 3.1545037037037047,
+   "front_liftoff_path": 4.108370370370371,
+   "rear_locked_static": 1.6623037037037038
+  },
+  "head_only_linear_front_static_kN": 5.949184549356223,
+  "rod_only_linear_front_static_kN": 1.2996969696969698
+ },
+ "cb_rod_lock": {
+  "front_psi3": {
+   "p_r0_after_extend_bar_g": 34.05470632914204,
+   "p_r0_after_retract_bar_g": 73.39286672910549,
+   "p_h_extend_bar_g": 98.64843122361933,
+   "psi_needed_for_full_open_on_extend": 3.6629981007748857
+  },
+  "front_psi4": {
+   "p_r0_after_extend_bar_g": 2.0,
+   "p_r0_after_retract_bar_g": 56.26110639685573,
+   "p_h_extend_bar_g": 89.5441359717368,
+   "psi_needed_for_full_open_on_extend": 3.6629981007748857
+  },
+  "front_psi8": {
+   "p_r0_after_extend_bar_g": 2.0,
+   "p_r0_after_retract_bar_g": 29.095029304316505,
+   "p_h_extend_bar_g": 89.5441359717368,
+   "psi_needed_for_full_open_on_extend": 3.6629981007748857
+  },
+  "rear_psi3": {
+   "p_r0_after_extend_bar_g": 51.41007744681349,
+   "p_r0_after_retract_bar_g": 76.30258781555334,
+   "p_h_extend_bar_g": 92.86330751772884,
+   "psi_needed_for_full_open_on_extend": 4.285934687949948
+  },
+  "rear_psi4": {
+   "p_r0_after_extend_bar_g": 11.422674532570797,
+   "p_r0_after_retract_bar_g": 58.68309711574098,
+   "p_h_extend_bar_g": 79.64433136685729,
+   "psi_needed_for_full_open_on_extend": 4.285934687949948
+  },
+  "rear_psi8": {
+   "p_r0_after_extend_bar_g": 2.0,
+   "p_r0_after_retract_bar_g": 30.50589572124755,
+   "p_h_extend_bar_g": 76.52939764158872,
+   "psi_needed_for_full_open_on_extend": 4.285934687949948
+  }
+ }
+}

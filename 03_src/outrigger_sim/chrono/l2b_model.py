@@ -231,6 +231,17 @@ class L2bStepResult:
     probe: ProbeState | None
 
 
+CRAWLER_CHECK_PASSED = False
+"""S8-L4 check of the compliant NSC crawler (U-S8-L3 option 1) on 2026-10-24: FAILED. In pychrono
+10.0.0 NSC ``SetCompliance`` does not act as a contact spring (PSOR, APGD and BB): a body on
+compliant spheres sinks at a steady speed of about ``compliance F / h`` and falls through the floor
+at 1.2e-7 m/N (z -9 m after 3 s). Results on the L2b crawler stay "rigid crawler upper bound"
+(S8-L5)."""
+
+CRAWLER_CHECK_NOTE = ("S8-L4 failed 2026-10-24: NSC compliance creeps (no restoring spring) in "
+                      "pychrono 10.0.0; crawler contact stays rigid NSC, S8-L5 tag applies")
+
+
 class L2bModel:
     """L2b-NSC four-leg model (module docstring).
 
@@ -250,6 +261,11 @@ class L2bModel:
         force_saturation: Per-leg 210 bar limits (law C).
         actuator_ramp_s: Command ramp override.
         lateral_damping_scale: Factor on the lateral bushing dashpot (V8(a): 0).
+        crawler_contact: ``"rigid"`` (S7), ``"compliant"`` (U-S8-L3 option 1: NSC
+            ``SetCompliance`` / ``SetDampingF`` of ``contact.crawler.L2b_NSC`` on the crawler
+            spheres, ``SetDampingF`` also on the floor material because NSC combines dampingf by
+            min; the pads keep compliance 0, so their contacts are unchanged) or None = the YAML
+            ``contact.crawler.L2b_NSC.model`` (rigid when the block is absent).
     """
 
     def __init__(
@@ -269,6 +285,7 @@ class L2bModel:
         force_saturation: bool = True,
         actuator_ramp_s: float | None = None,
         lateral_damping_scale: float = 1.0,
+        crawler_contact: str | None = None,
     ) -> None:
         if params.l2b is None:
             raise ValueError('params must be loaded with model="L2b_NSC"')
@@ -345,9 +362,35 @@ class L2bModel:
             crawler_layout(params) if crawler else None
         )
         self.crawler_centres_local_m: NDArray[np.float64] = np.zeros((0, 3))
+        cc = params.l2b.crawler_contact
+        mode = (cc.model if cc is not None else "rigid") if crawler_contact is None else crawler_contact
+        if mode not in ("rigid", "compliant"):
+            raise ValueError(f"unknown crawler_contact {crawler_contact!r}")
+        if mode == "compliant" and cc is None:
+            raise ValueError("compliant crawler needs contact.crawler.L2b_NSC in the YAML")
+        if mode == "compliant" and not CRAWLER_CHECK_PASSED:
+            import warnings
+
+            warnings.warn("compliant NSC crawler: " + CRAWLER_CHECK_NOTE, RuntimeWarning, stacklevel=2)
+        self.crawler_check_passed = CRAWLER_CHECK_PASSED
+        self.crawler_contact = {"model": mode, "check_passed": CRAWLER_CHECK_PASSED,
+                                "check_note": CRAWLER_CHECK_NOTE, "source": "argument" if crawler_contact else (
+            "YAML contact.crawler.L2b_NSC.model" if cc is not None else "default rigid (no YAML block)")}
         if self.crawler_layout is not None:
             sup.EnableCollision(True)
             mat = make_nsc_material(params.l2b.rigid_floor.crawler_friction)
+            if mode == "compliant" and crawler:
+                assert cc is not None
+                mat.SetCompliance(float(cc.compliance_m_N))
+                mat.SetDampingF(float(cc.damping_f_s))
+                bundle.floor_material.SetDampingF(float(cc.damping_f_s))
+                self.crawler_contact.update(
+                    compliance_m_N=float(cc.compliance_m_N), damping_f_s=float(cc.damping_f_s),
+                    material_float32={"compliance": float(mat.GetCompliance()),
+                                      "dampingf": float(mat.GetDampingF()),
+                                      "floor_dampingf": float(bundle.floor_material.GetDampingF())},
+                    composite="compliance = sum (floor 0), dampingf = min(crawler, floor); "
+                              "pad-floor: compliance 0 -> rigid (dampingf unused)")
             centres = self.crawler_layout.centres_body_m(self.floor_z_m)
             self.crawler_centres_local_m = centres - com_body
             for c in centres:
@@ -509,10 +552,10 @@ class L2bModel:
             probe, s_ref_m=self.s_ref_m, u_applied_m_s=self.u_applied_m_s,
             k_oil_N_m=[np.inf] * len(LEG_ORDER),
         )
-        return dataclasses.replace(
-            state, stroke_true_m=self.actuator.stroke_true_m(probe.motor_pos_m,
-                                                             probe.motor_force_N)
-        )
+        stroke = (self.actuator.stroke_sensor_true_m(probe.motor_pos_m)
+                  if self.actuator.friction_path
+                  else self.actuator.stroke_true_m(probe.motor_pos_m, probe.motor_force_N))
+        return dataclasses.replace(state, stroke_true_m=stroke)
 
     # --- snapshot (R16) -------------------------------------------------------------------------
 
@@ -560,6 +603,7 @@ class L2bModel:
             start_forces_N=self.start_forces_N.tolist(),
             k_ax0_N_m=self.k_ax0_N_m.tolist(),
             crawler_spheres=0 if self.crawler_layout is None else self.crawler_layout.n_points,
+            crawler_contact=self.crawler_contact,
             floor_pose=None if self.floor_pose is None else {
                 "origin_m": list(self.floor_pose.origin_m),
                 "quat_wxyz": list(self.floor_pose.quat_wxyz)},
@@ -708,6 +752,8 @@ def run_l2b_settle(model: L2bModel, duration_s: float, *, sample_every: int = 1)
 
 __all__ = [
     "ACTUATOR_PART",
+    "CRAWLER_CHECK_NOTE",
+    "CRAWLER_CHECK_PASSED",
     "BUSHING_PART",
     "L2bModel",
     "L2bSettleRun",

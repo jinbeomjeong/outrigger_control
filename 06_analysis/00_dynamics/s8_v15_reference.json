@@ -1,0 +1,1819 @@
+{
+ "meta": {
+  "script": "04_scripts/01_dynamics/s8_v15_reference.py",
+  "params": "02_params/rexome33.yaml",
+  "params_sha256": null,
+  "frame": "body x fwd, y left, z up; g = -9.80665 z; leg order FL FR RL RR",
+  "force_basis": "true = rod axial force F = k_out (s_p - s) (compression +, F_min basis); net reading = G = F - f (two sensors p_h A_p - p_r A_ann); head-only reading = G + p_r A_ann; contact N = F + m_rod g",
+  "model": "Replaces actuator_L2_feasibility.json / C_seal_friction / V15_rev5 for S8 (user decision U-S8-6, 2026-10-24).\nChrono-independent reduced model (no pychrono, no 03_src):",
+  "level": "top",
+  "e_op_m": [
+   0.4011,
+   0.4011,
+   0.3909,
+   0.3909
+  ],
+  "F_min_N": 9414.59,
+  "rear_scale": 0.8333,
+  "k_h_N_m": [
+   29424100.0,
+   29424100.0,
+   21554400.0,
+   21554400.0
+  ],
+  "k_r_N_m": [
+   10805100.0,
+   10805100.0,
+   8748520.0,
+   8748520.0
+  ],
+  "k_out_N_m": [
+   216648000.0,
+   216648000.0,
+   205103000.0,
+   205103000.0
+  ],
+  "k2_N_m": [
+   25905700.0,
+   25905700.0,
+   19504600.0,
+   19504600.0
+  ],
+  "k1_N_m": [
+   33929000.0,
+   33929000.0,
+   26402100.0,
+   26402100.0
+  ],
+  "stick_over_lock_stiffness": [
+   6.38534,
+   6.38534,
+   7.76844,
+   7.76844
+  ],
+  "knee_oil_force_N": [
+   4089.04,
+   4089.04,
+   3170.13,
+   3170.13
+  ],
+  "p_r0_after_extend_Pa": [
+   200000.0,
+   200000.0,
+   200000.0,
+   200000.0
+  ],
+  "p_floor_gauge_Pa": -91325.0,
+  "rod_weight_N": [
+   1047.19,
+   1047.19,
+   717.484,
+   717.484
+  ],
+  "settled_cyl_force_N": [
+   118225.0,
+   115980.0,
+   71958.6,
+   70419.9
+  ],
+  "settled_contact_N": [
+   119272.0,
+   117027.0,
+   72676.1,
+   71137.3
+  ],
+  "assumptions": "initial friction f = 0 (stick) at arming after the settle (spec 2.6); rigid stick (k_st = inf); static = kinetic (r_s 1); FL valve open (moving law, rod side released with R0 = 0, p_r 0 g); locked legs p_r0 2 bar g (RULE, after an extension); quasi-static (dashpot c_mov u = 10.0 N on FL at 0.1 mm/s and inertia not included)",
+  "runtime_s": 5.39655
+ },
+ "regression_Fs0_vs_reference_json_kh_fixed": {
+  "rod_side": {
+   "mine_F_min_liftoff_mm": [
+    9.95345,
+    11.5734
+   ],
+   "reference_json_mm": [
+    9.9534,
+    11.573
+   ],
+   "max_abs_diff_mm": 0.000449842,
+   "legs": [
+    "RL",
+    "RL"
+   ]
+  },
+  "head_only": {
+   "mine_F_min_liftoff_mm": [
+    11.4399,
+    13.2932
+   ],
+   "reference_json_mm": [
+    11.44,
+    13.293
+   ],
+   "max_abs_diff_mm": 0.000199118,
+   "legs": [
+    "RL",
+    "RL"
+   ]
+  }
+ },
+ "V15_rev39": {
+  "rod_side": {
+   "a_upsweep_unilateral": {
+    "L0": {
+     "F_s_front_rear_N": [
+      0.0,
+      0.0
+     ],
+     "F_min_true": {
+      "mm": 10.0865,
+      "leg": "RL"
+     },
+     "F_min_net_reading": {
+      "mm": 10.0865,
+      "leg": "RL"
+     },
+     "F_min_head_only_reading": null,
+     "liftoff": {
+      "mm": 11.7365,
+      "leg": "RL"
+     },
+     "at_liftoff": {
+      "lifting_leg": "RL",
+      "true_cyl_force_N (= -m_rod g)": -717.484,
+      "net_reading_N (G = F - f)": -717.484,
+      "head_only_reading_N (p_h A_p)": 20892.6,
+      "friction_N": 0.0,
+      "expected_F_s_minus_m_g_N": -717.484,
+      "net_reading_minus_F_min_N": -10132.1,
+      "all_legs_true_N": [
+       184401.0,
+       49804.3,
+       -717.484,
+       143096.0
+      ],
+      "all_legs_net_N": [
+       184401.0,
+       49804.3,
+       -717.484,
+       143096.0
+      ],
+      "all_legs_f_N": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "all_legs_stick": [
+       false,
+       false,
+       false,
+       false
+      ],
+      "modes": [
+       "MOVE",
+       "LOCK",
+       "LOCK",
+       "KNEE"
+      ]
+     },
+     "first_slip_mm": [
+      null,
+      null,
+      null,
+      null
+     ],
+     "knees (leg, mm, kind)": [
+      [
+       "RR",
+       0.464473,
+       "knee"
+      ]
+     ],
+     "p_r_max_locked_bar_g": [
+      -Infinity,
+      49.1474,
+      68.7871,
+      1.93726
+     ],
+     "pressure_dependent_option_at_liftoff (spec 2.4)": {
+      "leg": "RL",
+      "p_h_bar_g": 21.9845,
+      "p_r_bar_g": 68.7871,
+      "phi_ratio_vs_operating": 1.13184,
+      "F_s_at_liftoff_N": 0.0,
+      "reading_F_s_minus_m_g_N": -717.484,
+      "kappa_N_per_m_bar": 23.1069
+     }
+    },
+    "L2": {
+     "F_s_front_rear_N": [
+      2000.0,
+      1666.6
+     ],
+     "F_min_true": {
+      "mm": 9.9593,
+      "leg": "RL"
+     },
+     "F_min_net_reading": {
+      "mm": 10.2306,
+      "leg": "RL"
+     },
+     "F_min_head_only_reading": null,
+     "liftoff": {
+      "mm": 11.6094,
+      "leg": "RL"
+     },
+     "at_liftoff": {
+      "lifting_leg": "RL",
+      "true_cyl_force_N (= -m_rod g)": -717.484,
+      "net_reading_N (G = F - f)": 949.116,
+      "head_only_reading_N (p_h A_p)": 22078.1,
+      "friction_N": -1666.6,
+      "expected_F_s_minus_m_g_N": 949.116,
+      "net_reading_minus_F_min_N": -8465.47,
+      "all_legs_true_N": [
+       184401.0,
+       49804.3,
+       -717.484,
+       143096.0
+      ],
+      "all_legs_net_N": [
+       186401.0,
+       51804.3,
+       949.116,
+       141429.0
+      ],
+      "all_legs_f_N": [
+       -2000.0,
+       -2000.0,
+       -1666.6,
+       1666.6
+      ],
+      "all_legs_stick": [
+       false,
+       false,
+       false,
+       false
+      ],
+      "modes": [
+       "MOVE",
+       "LOCK",
+       "LOCK",
+       "KNEE"
+      ]
+     },
+     "first_slip_mm": [
+      0.068592,
+      0.218343,
+      0.152804,
+      0.152804
+     ],
+     "knees (leg, mm, kind)": [
+      [
+       "RR",
+       0.605328,
+       "knee"
+      ]
+     ],
+     "p_r_max_locked_bar_g": [
+      -Infinity,
+      47.7225,
+      67.2555,
+      2.0
+     ],
+     "pressure_dependent_option_at_liftoff (spec 2.4)": {
+      "leg": "RL",
+      "p_h_bar_g": 23.232,
+      "p_r_bar_g": 67.2555,
+      "phi_ratio_vs_operating": 1.11248,
+      "F_s_at_liftoff_N": 1854.05,
+      "reading_F_s_minus_m_g_N": 1136.57,
+      "kappa_N_per_m_bar": 23.1069
+     }
+    },
+    "L4": {
+     "F_s_front_rear_N": [
+      4000.0,
+      3333.2
+     ],
+     "F_min_true": {
+      "mm": 9.83203,
+      "leg": "RL"
+     },
+     "F_min_net_reading": {
+      "mm": 10.3747,
+      "leg": "RL"
+     },
+     "F_min_head_only_reading": null,
+     "liftoff": {
+      "mm": 11.4823,
+      "leg": "RL"
+     },
+     "at_liftoff": {
+      "lifting_leg": "RL",
+      "true_cyl_force_N (= -m_rod g)": -717.484,
+      "net_reading_N (G = F - f)": 2615.72,
+      "head_only_reading_N (p_h A_p)": 23263.5,
+      "friction_N": -3333.2,
+      "expected_F_s_minus_m_g_N": 2615.72,
+      "net_reading_minus_F_min_N": -6798.87,
+      "all_legs_true_N": [
+       184401.0,
+       49804.3,
+       -717.484,
+       143096.0
+      ],
+      "all_legs_net_N": [
+       188401.0,
+       53804.3,
+       2615.72,
+       139763.0
+      ],
+      "all_legs_f_N": [
+       -4000.0,
+       -4000.0,
+       -3333.2,
+       3333.2
+      ],
+      "all_legs_stick": [
+       false,
+       false,
+       false,
+       false
+      ],
+      "modes": [
+       "MOVE",
+       "LOCK",
+       "LOCK",
+       "KNEE"
+      ]
+     },
+     "first_slip_mm": [
+      0.137205,
+      0.436818,
+      0.305689,
+      0.305689
+     ],
+     "knees (leg, mm, kind)": [
+      [
+       "RR",
+       0.746258,
+       "knee"
+      ]
+     ],
+     "p_r_max_locked_bar_g": [
+      -Infinity,
+      46.2975,
+      65.724,
+      2.0
+     ],
+     "pressure_dependent_option_at_liftoff (spec 2.4)": {
+      "leg": "RL",
+      "p_h_bar_g": 24.4794,
+      "p_r_bar_g": 65.724,
+      "phi_ratio_vs_operating": 1.09311,
+      "F_s_at_liftoff_N": 3643.54,
+      "reading_F_s_minus_m_g_N": 2926.06,
+      "kappa_N_per_m_bar": 23.1069
+     }
+    },
+    "L8": {
+     "F_s_front_rear_N": [
+      8000.0,
+      6666.4
+     ],
+     "F_min_true": {
+      "mm": 9.57735,
+      "leg": "RL"
+     },
+     "F_min_net_reading": {
+      "mm": 10.6631,
+      "leg": "RL"
+     },
+     "F_min_head_only_reading": null,
+     "liftoff": {
+      "mm": 11.2279,
+      "leg": "RL"
+     },
+     "at_liftoff": {
+      "lifting_leg": "RL",
+      "true_cyl_force_N (= -m_rod g)": -717.484,
+      "net_reading_N (G = F - f)": 5948.92,
+      "head_only_reading_N (p_h A_p)": 25634.4,
+      "friction_N": -6666.4,
+      "expected_F_s_minus_m_g_N": 5948.92,
+      "net_reading_minus_F_min_N": -3465.67,
+      "all_legs_true_N": [
+       184401.0,
+       49804.3,
+       -717.484,
+       143096.0
+      ],
+      "all_legs_net_N": [
+       192401.0,
+       57804.3,
+       5948.92,
+       136430.0
+      ],
+      "all_legs_f_N": [
+       -8000.0,
+       -8000.0,
+       -6666.4,
+       6666.4
+      ],
+      "all_legs_stick": [
+       false,
+       false,
+       false,
+       false
+      ],
+      "modes": [
+       "MOVE",
+       "LOCK",
+       "LOCK",
+       "KNEE"
+      ]
+     },
+     "first_slip_mm": [
+      0.274493,
+      0.874169,
+      0.611706,
+      0.611706
+     ],
+     "knees (leg, mm, kind)": [
+      [
+       "RR",
+       1.02835,
+       "knee"
+      ]
+     ],
+     "p_r_max_locked_bar_g": [
+      -Infinity,
+      43.4477,
+      62.6609,
+      2.0
+     ],
+     "pressure_dependent_option_at_liftoff (spec 2.4)": {
+      "leg": "RL",
+      "p_h_bar_g": 26.9742,
+      "p_r_bar_g": 62.6609,
+      "phi_ratio_vs_operating": 1.05437,
+      "F_s_at_liftoff_N": 7028.85,
+      "reading_F_s_minus_m_g_N": 6311.37,
+      "kappa_N_per_m_bar": 23.1069
+     }
+    }
+   },
+   "b_roundtrip_10mm": {
+    "L0": {
+     "F_s_front_rear_N": [
+      0.0,
+      0.0
+     ],
+     "residual_true_load_change_after_return_N": [
+      0.278715,
+      -0.278715,
+      -0.306091,
+      0.306091
+     ],
+     "residual_net_reading_change_after_return_N": [
+      0.278715,
+      -0.278715,
+      -0.306091,
+      0.306091
+     ],
+     "residual_head_reading_change_after_return_N": [
+      0.278715,
+      -0.203855,
+      -0.217722,
+      0.217722
+     ],
+     "friction_after_return_N": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "stick_after_return": [
+      false,
+      false,
+      false,
+      false
+     ],
+     "piston_residual_um": [
+      0.0349657,
+      0.00692816,
+      0.0101011,
+      -0.0101011
+     ],
+     "min_contact_force_along_path_N": 10663.9,
+     "F_min_reached_on_the_way (true, net) [mm, leg]": [
+      null,
+      null
+     ],
+     "at_+10mm": {
+      "true_N": [
+       174691.0,
+       59514.4,
+       9946.43,
+       132432.0
+      ],
+      "net_N": [
+       174691.0,
+       59514.4,
+       9946.43,
+       132432.0
+      ],
+      "f_N": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "N_N": [
+       175738.0,
+       60561.6,
+       10663.9,
+       133150.0
+      ]
+     },
+     "RL_change_at_+1mm_true_N": -6487.53,
+     "RL_change_at_+1mm_net_N": -6487.53,
+     "first_slip_mm (up)": [
+      null,
+      null,
+      null,
+      null
+     ],
+     "knees (leg, mm, kind)": [
+      [
+       "RR",
+       0.464473,
+       "knee"
+      ],
+      [
+       "RR",
+       0.46443,
+       "back"
+      ]
+     ]
+    },
+    "L2": {
+     "F_s_front_rear_N": [
+      2000.0,
+      1666.6
+     ],
+     "residual_true_load_change_after_return_N": [
+      -642.859,
+      642.859,
+      706.004,
+      -706.004
+     ],
+     "residual_net_reading_change_after_return_N": [
+      -2642.86,
+      -1357.14,
+      -960.596,
+      960.596
+     ],
+     "residual_head_reading_change_after_return_N": [
+      -2642.86,
+      -992.628,
+      -683.27,
+      683.27
+     ],
+     "friction_after_return_N": [
+      2000.0,
+      2000.0,
+      1666.6,
+      -1666.6
+     ],
+     "stick_after_return": [
+      false,
+      false,
+      false,
+      false
+     ],
+     "piston_residual_um": [
+      89.8667,
+      33.7352,
+      31.6998,
+      -31.6998
+     ],
+     "min_contact_force_along_path_N": 9882.01,
+     "F_min_reached_on_the_way (true, net) [mm, leg]": [
+      [
+       9.9593,
+       "RL"
+      ],
+      null
+     ],
+     "at_+10mm": {
+      "true_N": [
+       175403.0,
+       58802.4,
+       9164.53,
+       133214.0
+      ],
+      "net_N": [
+       177403.0,
+       60802.4,
+       10831.1,
+       131547.0
+      ],
+      "f_N": [
+       -2000.0,
+       -2000.0,
+       -1666.6,
+       1666.6
+      ],
+      "N_N": [
+       176450.0,
+       59849.6,
+       9882.01,
+       133931.0
+      ]
+     },
+     "RL_change_at_+1mm_true_N": -7280.93,
+     "RL_change_at_+1mm_net_N": -5614.33,
+     "first_slip_mm (up)": [
+      0.068592,
+      0.218343,
+      0.152804,
+      0.152804
+     ],
+     "knees (leg, mm, kind)": [
+      [
+       "RR",
+       0.605328,
+       "knee"
+      ],
+      [
+       "RR",
+       0.323646,
+       "back"
+      ]
+     ]
+    },
+    "L4": {
+     "F_s_front_rear_N": [
+      4000.0,
+      3333.2
+     ],
+     "residual_true_load_change_after_return_N": [
+      -1286.0,
+      1286.0,
+      1412.31,
+      -1412.31
+     ],
+     "residual_net_reading_change_after_return_N": [
+      -5286.0,
+      -2714.0,
+      -1920.89,
+      1920.89
+     ],
+     "residual_head_reading_change_after_return_N": [
+      -5286.0,
+      -1985.05,
+      -1366.32,
+      1366.32
+     ],
+     "friction_after_return_N": [
+      4000.0,
+      4000.0,
+      3333.2,
+      -3333.2
+     ],
+     "stick_after_return": [
+      false,
+      false,
+      false,
+      false
+     ],
+     "piston_residual_um": [
+      179.699,
+      67.4634,
+      63.3896,
+      -63.3896
+     ],
+     "min_contact_force_along_path_N": 9100.11,
+     "F_min_reached_on_the_way (true, net) [mm, leg]": [
+      [
+       9.83203,
+       "RL"
+      ],
+      null
+     ],
+     "at_+10mm": {
+      "true_N": [
+       176115.0,
+       58090.5,
+       8382.63,
+       133996.0
+      ],
+      "net_N": [
+       180115.0,
+       62090.5,
+       11715.8,
+       130663.0
+      ],
+      "f_N": [
+       -4000.0,
+       -4000.0,
+       -3333.2,
+       3333.2
+      ],
+      "N_N": [
+       177162.0,
+       59137.7,
+       9100.11,
+       134713.0
+      ]
+     },
+     "RL_change_at_+1mm_true_N": -8074.33,
+     "RL_change_at_+1mm_net_N": -4741.13,
+     "first_slip_mm (up)": [
+      0.137205,
+      0.436818,
+      0.305689,
+      0.305689
+     ],
+     "knees (leg, mm, kind)": [
+      [
+       "RR",
+       0.746258,
+       "knee"
+      ],
+      [
+       "RR",
+       0.182936,
+       "back"
+      ]
+     ]
+    },
+    "L8": {
+     "F_s_front_rear_N": [
+      8000.0,
+      6666.4
+     ],
+     "residual_true_load_change_after_return_N": [
+      -2628.51,
+      2628.51,
+      2886.7,
+      -2886.7
+     ],
+     "residual_net_reading_change_after_return_N": [
+      -10628.5,
+      -5371.49,
+      -3779.7,
+      3779.7
+     ],
+     "residual_head_reading_change_after_return_N": [
+      -10628.5,
+      -3928.77,
+      -2688.49,
+      2864.48
+     ],
+     "friction_after_return_N": [
+      8000.0,
+      8000.0,
+      6666.4,
+      -6666.4
+     ],
+     "stick_after_return": [
+      false,
+      false,
+      false,
+      false
+     ],
+     "piston_residual_um": [
+      361.274,
+      133.522,
+      124.731,
+      -132.896
+     ],
+     "min_contact_force_along_path_N": 7536.3,
+     "F_min_reached_on_the_way (true, net) [mm, leg]": [
+      [
+       9.57735,
+       "RL"
+      ],
+      null
+     ],
+     "at_+10mm": {
+      "true_N": [
+       177539.0,
+       56666.5,
+       6818.82,
+       135560.0
+      ],
+      "net_N": [
+       185539.0,
+       64666.5,
+       13485.2,
+       128893.0
+      ],
+      "f_N": [
+       -8000.0,
+       -8000.0,
+       -6666.4,
+       6666.4
+      ],
+      "N_N": [
+       178586.0,
+       57713.7,
+       7536.3,
+       136277.0
+      ]
+     },
+     "RL_change_at_+1mm_true_N": -9643.36,
+     "RL_change_at_+1mm_net_N": -2976.96,
+     "first_slip_mm (up)": [
+      0.274493,
+      0.874169,
+      0.611706,
+      0.611706
+     ],
+     "knees (leg, mm, kind)": [
+      [
+       "RR",
+       1.02835,
+       "knee"
+      ]
+     ]
+    }
+   },
+   "kh_fixed_sensitivity (a)": {
+    "L0": {
+     "F_min_true": -0.133095,
+     "F_min_net": -0.133095,
+     "liftoff": -0.163024
+    },
+    "L2": {
+     "F_min_true": -0.132916,
+     "F_min_net": -0.137706,
+     "liftoff": -0.163008
+    },
+    "L4": {
+     "F_min_true": -0.132698,
+     "F_min_net": -0.142394,
+     "liftoff": -0.162952
+    },
+    "L8": {
+     "F_min_true": -0.132145,
+     "F_min_net": -0.152002,
+     "liftoff": -0.162724
+    }
+   },
+   "seg_cap_convergence_L8_mm": {
+    "F_min_true": 1.96762e-05,
+    "F_min_net": 2.15894e-05,
+    "liftoff": 2.25826e-05
+   }
+  },
+  "head_only": {
+   "a_upsweep_unilateral": {
+    "L0": {
+     "F_s_front_rear_N": [
+      0.0,
+      0.0
+     ],
+     "F_min_true": {
+      "mm": 11.5929,
+      "leg": "RL"
+     },
+     "F_min_net_reading": {
+      "mm": 11.5929,
+      "leg": "RL"
+     },
+     "F_min_head_only_reading": {
+      "mm": 11.5929,
+      "leg": "RL"
+     },
+     "liftoff": {
+      "mm": 13.4805,
+      "leg": "RL"
+     },
+     "at_liftoff": {
+      "lifting_leg": "RL",
+      "true_cyl_force_N (= -m_rod g)": -717.484,
+      "net_reading_N (G = F - f)": -717.484,
+      "head_only_reading_N (p_h A_p)": -717.484,
+      "friction_N": 0.0,
+      "expected_F_s_minus_m_g_N": -717.484,
+      "net_reading_minus_F_min_N": -10132.1,
+      "all_legs_true_N": [
+       184401.0,
+       49804.3,
+       -717.484,
+       143096.0
+      ],
+      "all_legs_net_N": [
+       184401.0,
+       49804.3,
+       -717.484,
+       143096.0
+      ],
+      "all_legs_f_N": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "all_legs_stick": [
+       false,
+       false,
+       false,
+       false
+      ],
+      "modes": [
+       "MOVE",
+       "HEAD",
+       "HEAD",
+       "HEAD"
+      ]
+     },
+     "first_slip_mm": [
+      null,
+      null,
+      null,
+      null
+     ],
+     "knees (leg, mm, kind)": [],
+     "p_r_max_locked_bar_g": [
+      -Infinity,
+      -Infinity,
+      -Infinity,
+      -Infinity
+     ],
+     "pressure_dependent_option_at_liftoff (spec 2.4)": {
+      "leg": "RL",
+      "p_h_bar_g": -0.754983,
+      "p_r_bar_g": 0.0,
+      "phi_ratio_vs_operating": 0.640293,
+      "F_s_at_liftoff_N": 0.0,
+      "reading_F_s_minus_m_g_N": -717.484,
+      "kappa_N_per_m_bar": 23.1069
+     }
+    },
+    "L2": {
+     "F_s_front_rear_N": [
+      2000.0,
+      1666.6
+     ],
+     "F_min_true": {
+      "mm": 11.4226,
+      "leg": "RL"
+     },
+     "F_min_net_reading": {
+      "mm": 11.7329,
+      "leg": "RL"
+     },
+     "F_min_head_only_reading": {
+      "mm": 11.7329,
+      "leg": "RL"
+     },
+     "liftoff": {
+      "mm": 13.3103,
+      "leg": "RL"
+     },
+     "at_liftoff": {
+      "lifting_leg": "RL",
+      "true_cyl_force_N (= -m_rod g)": -717.484,
+      "net_reading_N (G = F - f)": 949.116,
+      "head_only_reading_N (p_h A_p)": 949.116,
+      "friction_N": -1666.6,
+      "expected_F_s_minus_m_g_N": 949.116,
+      "net_reading_minus_F_min_N": -8465.47,
+      "all_legs_true_N": [
+       184401.0,
+       49804.3,
+       -717.484,
+       143096.0
+      ],
+      "all_legs_net_N": [
+       186401.0,
+       51804.3,
+       949.116,
+       141429.0
+      ],
+      "all_legs_f_N": [
+       -2000.0,
+       -2000.0,
+       -1666.6,
+       1666.6
+      ],
+      "all_legs_stick": [
+       false,
+       false,
+       false,
+       false
+      ],
+      "modes": [
+       "MOVE",
+       "HEAD",
+       "HEAD",
+       "HEAD"
+      ]
+     },
+     "first_slip_mm": [
+      0.068592,
+      0.234076,
+      0.152804,
+      0.152804
+     ],
+     "knees (leg, mm, kind)": [],
+     "p_r_max_locked_bar_g": [
+      -Infinity,
+      -Infinity,
+      -Infinity,
+      -Infinity
+     ],
+     "pressure_dependent_option_at_liftoff (spec 2.4)": {
+      "leg": "RL",
+      "p_h_bar_g": 0.998721,
+      "p_r_bar_g": 0.0,
+      "phi_ratio_vs_operating": 0.641464,
+      "F_s_at_liftoff_N": 1069.06,
+      "reading_F_s_minus_m_g_N": 351.58,
+      "kappa_N_per_m_bar": 23.1069
+     }
+    },
+    "L4": {
+     "F_s_front_rear_N": [
+      4000.0,
+      3333.2
+     ],
+     "F_min_true": {
+      "mm": 11.2521,
+      "leg": "RL"
+     },
+     "F_min_net_reading": {
+      "mm": 11.8729,
+      "leg": "RL"
+     },
+     "F_min_head_only_reading": {
+      "mm": 11.8729,
+      "leg": "RL"
+     },
+     "liftoff": {
+      "mm": 13.14,
+      "leg": "RL"
+     },
+     "at_liftoff": {
+      "lifting_leg": "RL",
+      "true_cyl_force_N (= -m_rod g)": -717.484,
+      "net_reading_N (G = F - f)": 2615.72,
+      "head_only_reading_N (p_h A_p)": 2615.72,
+      "friction_N": -3333.2,
+      "expected_F_s_minus_m_g_N": 2615.72,
+      "net_reading_minus_F_min_N": -6798.87,
+      "all_legs_true_N": [
+       184401.0,
+       49804.3,
+       -717.484,
+       143096.0
+      ],
+      "all_legs_net_N": [
+       188401.0,
+       53804.3,
+       2615.72,
+       139763.0
+      ],
+      "all_legs_f_N": [
+       -4000.0,
+       -4000.0,
+       -3333.2,
+       3333.2
+      ],
+      "all_legs_stick": [
+       false,
+       false,
+       false,
+       false
+      ],
+      "modes": [
+       "MOVE",
+       "HEAD",
+       "HEAD",
+       "HEAD"
+      ]
+     },
+     "first_slip_mm": [
+      0.137205,
+      0.468294,
+      0.305689,
+      0.305689
+     ],
+     "knees (leg, mm, kind)": [],
+     "p_r_max_locked_bar_g": [
+      -Infinity,
+      -Infinity,
+      -Infinity,
+      -Infinity
+     ],
+     "pressure_dependent_option_at_liftoff (spec 2.4)": {
+      "leg": "RL",
+      "p_h_bar_g": 2.75242,
+      "p_r_bar_g": 0.0,
+      "phi_ratio_vs_operating": 0.649888,
+      "F_s_at_liftoff_N": 2166.21,
+      "reading_F_s_minus_m_g_N": 1448.72,
+      "kappa_N_per_m_bar": 23.1069
+     }
+    },
+    "L8": {
+     "F_s_front_rear_N": [
+      8000.0,
+      6666.4
+     ],
+     "F_min_true": {
+      "mm": 10.9112,
+      "leg": "RL"
+     },
+     "F_min_net_reading": {
+      "mm": 12.1532,
+      "leg": "RL"
+     },
+     "F_min_head_only_reading": {
+      "mm": 12.1532,
+      "leg": "RL"
+     },
+     "liftoff": {
+      "mm": 12.7994,
+      "leg": "RL"
+     },
+     "at_liftoff": {
+      "lifting_leg": "RL",
+      "true_cyl_force_N (= -m_rod g)": -717.484,
+      "net_reading_N (G = F - f)": 5948.92,
+      "head_only_reading_N (p_h A_p)": 5948.92,
+      "friction_N": -6666.4,
+      "expected_F_s_minus_m_g_N": 5948.92,
+      "net_reading_minus_F_min_N": -3465.67,
+      "all_legs_true_N": [
+       184401.0,
+       49804.3,
+       -717.484,
+       143096.0
+      ],
+      "all_legs_net_N": [
+       192401.0,
+       57804.3,
+       5948.92,
+       136430.0
+      ],
+      "all_legs_f_N": [
+       -8000.0,
+       -8000.0,
+       -6666.4,
+       6666.4
+      ],
+      "all_legs_stick": [
+       false,
+       false,
+       false,
+       false
+      ],
+      "modes": [
+       "MOVE",
+       "HEAD",
+       "HEAD",
+       "HEAD"
+      ]
+     },
+     "first_slip_mm": [
+      0.274493,
+      0.937158,
+      0.611706,
+      0.611706
+     ],
+     "knees (leg, mm, kind)": [],
+     "p_r_max_locked_bar_g": [
+      -Infinity,
+      -Infinity,
+      -Infinity,
+      -Infinity
+     ],
+     "pressure_dependent_option_at_liftoff (spec 2.4)": {
+      "leg": "RL",
+      "p_h_bar_g": 6.25983,
+      "p_r_bar_g": 0.0,
+      "phi_ratio_vs_operating": 0.666737,
+      "F_s_at_liftoff_N": 4444.73,
+      "reading_F_s_minus_m_g_N": 3727.25,
+      "kappa_N_per_m_bar": 23.1069
+     }
+    }
+   },
+   "b_roundtrip_10mm": {
+    "L0": {
+     "F_s_front_rear_N": [
+      0.0,
+      0.0
+     ],
+     "residual_true_load_change_after_return_N": [
+      0.193947,
+      -0.193947,
+      -0.212997,
+      0.212997
+     ],
+     "residual_net_reading_change_after_return_N": [
+      0.193947,
+      -0.193947,
+      -0.212997,
+      0.212997
+     ],
+     "residual_head_reading_change_after_return_N": [
+      0.193947,
+      -0.193947,
+      -0.212997,
+      0.212997
+     ],
+     "friction_after_return_N": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "stick_after_return": [
+      false,
+      false,
+      false,
+      false
+     ],
+     "piston_residual_um": [
+      0.0323679,
+      0.00659141,
+      0.00988185,
+      -0.00988185
+     ],
+     "min_contact_force_along_path_N": 18693.8,
+     "F_min_reached_on_the_way (true, net) [mm, leg]": [
+      null,
+      null
+     ],
+     "at_+10mm": {
+      "true_N": [
+       167379.0,
+       66826.1,
+       17976.3,
+       124402.0
+      ],
+      "net_N": [
+       167379.0,
+       66826.1,
+       17976.3,
+       124402.0
+      ],
+      "f_N": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "N_N": [
+       168426.0,
+       67873.3,
+       18693.8,
+       125120.0
+      ]
+     },
+     "RL_change_at_+1mm_true_N": -5416.45,
+     "RL_change_at_+1mm_net_N": -5416.45,
+     "first_slip_mm (up)": [
+      null,
+      null,
+      null,
+      null
+     ],
+     "knees (leg, mm, kind)": []
+    },
+    "L2": {
+     "F_s_front_rear_N": [
+      2000.0,
+      1666.6
+     ],
+     "residual_true_load_change_after_return_N": [
+      -845.242,
+      845.242,
+      928.265,
+      -928.265
+     ],
+     "residual_net_reading_change_after_return_N": [
+      -2845.24,
+      -1154.76,
+      -738.335,
+      738.335
+     ],
+     "residual_head_reading_change_after_return_N": [
+      -2845.24,
+      -1154.76,
+      -738.335,
+      738.335
+     ],
+     "friction_after_return_N": [
+      2000.0,
+      2000.0,
+      1666.6,
+      -1666.6
+     ],
+     "stick_after_return": [
+      false,
+      false,
+      false,
+      false
+     ],
+     "piston_residual_um": [
+      96.7396,
+      39.2453,
+      34.2545,
+      -34.2545
+     ],
+     "min_contact_force_along_path_N": 17777.0,
+     "F_min_reached_on_the_way (true, net) [mm, leg]": [
+      null,
+      null
+     ],
+     "at_+10mm": {
+      "true_N": [
+       168214.0,
+       65991.3,
+       17059.5,
+       125319.0
+      ],
+      "net_N": [
+       170214.0,
+       67991.3,
+       18726.1,
+       123652.0
+      ],
+      "f_N": [
+       -2000.0,
+       -2000.0,
+       -1666.6,
+       1666.6
+      ],
+      "N_N": [
+       169261.0,
+       67038.4,
+       17777.0,
+       126037.0
+      ]
+     },
+     "RL_change_at_+1mm_true_N": -6343.78,
+     "RL_change_at_+1mm_net_N": -4677.18,
+     "first_slip_mm (up)": [
+      0.068592,
+      0.234076,
+      0.152804,
+      0.152804
+     ],
+     "knees (leg, mm, kind)": []
+    },
+    "L4": {
+     "F_s_front_rear_N": [
+      4000.0,
+      3333.2
+     ],
+     "residual_true_load_change_after_return_N": [
+      -1690.68,
+      1690.68,
+      1856.74,
+      -1856.74
+     ],
+     "residual_net_reading_change_after_return_N": [
+      -5690.68,
+      -2309.32,
+      -1476.46,
+      1476.46
+     ],
+     "residual_head_reading_change_after_return_N": [
+      -5690.68,
+      -2309.32,
+      -1476.46,
+      1476.46
+     ],
+     "friction_after_return_N": [
+      4000.0,
+      4000.0,
+      3333.2,
+      -3333.2
+     ],
+     "stick_after_return": [
+      false,
+      false,
+      false,
+      false
+     ],
+     "piston_residual_um": [
+      193.447,
+      78.484,
+      68.4992,
+      -68.4992
+     ],
+     "min_contact_force_along_path_N": 16860.1,
+     "F_min_reached_on_the_way (true, net) [mm, leg]": [
+      null,
+      null
+     ],
+     "at_+10mm": {
+      "true_N": [
+       169049.0,
+       65156.4,
+       16142.6,
+       126236.0
+      ],
+      "net_N": [
+       173049.0,
+       69156.4,
+       19475.8,
+       122903.0
+      ],
+      "f_N": [
+       -4000.0,
+       -4000.0,
+       -3333.2,
+       3333.2
+      ],
+      "N_N": [
+       170096.0,
+       66203.6,
+       16860.1,
+       126953.0
+      ]
+     },
+     "RL_change_at_+1mm_true_N": -7271.11,
+     "RL_change_at_+1mm_net_N": -3937.91,
+     "first_slip_mm (up)": [
+      0.137205,
+      0.468294,
+      0.305689,
+      0.305689
+     ],
+     "knees (leg, mm, kind)": []
+    },
+    "L8": {
+     "F_s_front_rear_N": [
+      8000.0,
+      6666.4
+     ],
+     "residual_true_load_change_after_return_N": [
+      -3381.55,
+      3381.55,
+      3713.7,
+      -3713.7
+     ],
+     "residual_net_reading_change_after_return_N": [
+      -11381.5,
+      -4618.45,
+      -2952.7,
+      2952.7
+     ],
+     "residual_head_reading_change_after_return_N": [
+      -11381.5,
+      -4618.45,
+      -2952.7,
+      2952.7
+     ],
+     "friction_after_return_N": [
+      8000.0,
+      8000.0,
+      6666.4,
+      -6666.4
+     ],
+     "stick_after_return": [
+      false,
+      false,
+      false,
+      false
+     ],
+     "piston_residual_um": [
+      386.861,
+      156.961,
+      136.989,
+      -136.989
+     ],
+     "min_contact_force_along_path_N": 15026.5,
+     "F_min_reached_on_the_way (true, net) [mm, leg]": [
+      null,
+      null
+     ],
+     "at_+10mm": {
+      "true_N": [
+       170718.0,
+       63486.8,
+       14309.0,
+       128069.0
+      ],
+      "net_N": [
+       178718.0,
+       71486.8,
+       20975.4,
+       121403.0
+      ],
+      "f_N": [
+       -8000.0,
+       -8000.0,
+       -6666.4,
+       6666.4
+      ],
+      "N_N": [
+       171765.0,
+       64534.0,
+       15026.5,
+       128787.0
+      ]
+     },
+     "RL_change_at_+1mm_true_N": -9125.77,
+     "RL_change_at_+1mm_net_N": -2459.37,
+     "first_slip_mm (up)": [
+      0.274493,
+      0.937158,
+      0.611706,
+      0.611706
+     ],
+     "knees (leg, mm, kind)": []
+    }
+   },
+   "kh_fixed_sensitivity (a)": {
+    "L0": {
+     "F_min_true": -0.152976,
+     "F_min_net": -0.152976,
+     "liftoff": -0.187253
+    },
+    "L2": {
+     "F_min_true": -0.152448,
+     "F_min_net": -0.157931,
+     "liftoff": -0.186893
+    },
+    "L4": {
+     "F_min_true": -0.151868,
+     "F_min_net": -0.162961,
+     "liftoff": -0.186482
+    },
+    "L8": {
+     "F_min_true": -0.150552,
+     "F_min_net": -0.173248,
+     "liftoff": -0.185502
+    }
+   },
+   "seg_cap_convergence_L8_mm": {
+    "F_min_true": 1.98469e-05,
+    "F_min_head": 2.17893e-05,
+    "F_min_net": 2.17893e-05,
+    "liftoff": 2.27983e-05
+   }
+  }
+ },
+ "D2_pressure_only_miss_threshold": {
+  "rear_scale_0.8333": {
+   "rows": [
+    {
+     "level_kN": 8,
+     "liftoff": {
+      "mm": 11.2279,
+      "leg": "RL"
+     },
+     "F_min_net": {
+      "mm": 10.6631,
+      "leg": "RL"
+     },
+     "net_reading_at_liftoff_N": 5948.92,
+     "head_reading_at_liftoff_N": 25634.4
+    },
+    {
+     "level_kN": 9,
+     "liftoff": {
+      "mm": 11.1643,
+      "leg": "RL"
+     },
+     "F_min_net": {
+      "mm": 10.7352,
+      "leg": "RL"
+     },
+     "net_reading_at_liftoff_N": 6782.22,
+     "head_reading_at_liftoff_N": 26227.1
+    },
+    {
+     "level_kN": 10,
+     "liftoff": {
+      "mm": 11.1007,
+      "leg": "RL"
+     },
+     "F_min_net": {
+      "mm": 10.8074,
+      "leg": "RL"
+     },
+     "net_reading_at_liftoff_N": 7615.52,
+     "head_reading_at_liftoff_N": 26819.9
+    },
+    {
+     "level_kN": 10.5,
+     "liftoff": {
+      "mm": 11.0689,
+      "leg": "RL"
+     },
+     "F_min_net": {
+      "mm": 10.8435,
+      "leg": "RL"
+     },
+     "net_reading_at_liftoff_N": 8032.17,
+     "head_reading_at_liftoff_N": 27116.2
+    },
+    {
+     "level_kN": 11,
+     "liftoff": {
+      "mm": 11.0371,
+      "leg": "RL"
+     },
+     "F_min_net": {
+      "mm": 10.8796,
+      "leg": "RL"
+     },
+     "net_reading_at_liftoff_N": 8448.82,
+     "head_reading_at_liftoff_N": 27412.6
+    },
+    {
+     "level_kN": 11.5,
+     "liftoff": {
+      "mm": 11.0053,
+      "leg": "RL"
+     },
+     "F_min_net": {
+      "mm": 10.9157,
+      "leg": "RL"
+     },
+     "net_reading_at_liftoff_N": 8865.47,
+     "head_reading_at_liftoff_N": 27708.9
+    },
+    {
+     "level_kN": 12,
+     "liftoff": {
+      "mm": 10.9734,
+      "leg": "RL"
+     },
+     "F_min_net": {
+      "mm": 10.9518,
+      "leg": "RL"
+     },
+     "net_reading_at_liftoff_N": 9282.12,
+     "head_reading_at_liftoff_N": 28005.3
+    },
+    {
+     "level_kN": 12.5,
+     "liftoff": {
+      "mm": 10.9416,
+      "leg": "RL"
+     },
+     "F_min_net": null,
+     "net_reading_at_liftoff_N": 9698.77,
+     "head_reading_at_liftoff_N": 28301.7
+    },
+    {
+     "level_kN": 13,
+     "liftoff": {
+      "mm": 10.9098,
+      "leg": "RL"
+     },
+     "F_min_net": null,
+     "net_reading_at_liftoff_N": 10115.4,
+     "head_reading_at_liftoff_N": 28598.0
+    },
+    {
+     "level_kN": 14,
+     "liftoff": {
+      "mm": 10.8461,
+      "leg": "RL"
+     },
+     "F_min_net": null,
+     "net_reading_at_liftoff_N": 10948.7,
+     "head_reading_at_liftoff_N": 29190.8
+    }
+   ],
+   "level_where_net_reading_at_liftoff_eq_F_min_kN": 12.159
+  },
+  "rear_scale_1": {
+   "rows": [
+    {
+     "level_kN": 8,
+     "liftoff": {
+      "mm": 11.1099,
+      "leg": "RL"
+     },
+     "F_min_net": {
+      "mm": 10.7624,
+      "leg": "RL"
+     },
+     "net_reading_at_liftoff_N": 7282.52,
+     "head_reading_at_liftoff_N": 26583.0
+    },
+    {
+     "level_kN": 9,
+     "liftoff": {
+      "mm": 11.0316,
+      "leg": "RL"
+     },
+     "F_min_net": {
+      "mm": 10.847,
+      "leg": "RL"
+     },
+     "net_reading_at_liftoff_N": 8282.52,
+     "head_reading_at_liftoff_N": 27294.3
+    },
+    {
+     "level_kN": 10,
+     "liftoff": {
+      "mm": 10.9532,
+      "leg": "RL"
+     },
+     "F_min_net": {
+      "mm": 10.9317,
+      "leg": "RL"
+     },
+     "net_reading_at_liftoff_N": 9282.52,
+     "head_reading_at_liftoff_N": 28005.6
+    },
+    {
+     "level_kN": 10.5,
+     "liftoff": {
+      "mm": 10.914,
+      "leg": "RL"
+     },
+     "F_min_net": null,
+     "net_reading_at_liftoff_N": 9782.52,
+     "head_reading_at_liftoff_N": 28361.2
+    },
+    {
+     "level_kN": 11,
+     "liftoff": {
+      "mm": 10.8748,
+      "leg": "RL"
+     },
+     "F_min_net": null,
+     "net_reading_at_liftoff_N": 10282.5,
+     "head_reading_at_liftoff_N": 28716.9
+    },
+    {
+     "level_kN": 11.5,
+     "liftoff": {
+      "mm": 10.8356,
+      "leg": "RL"
+     },
+     "F_min_net": null,
+     "net_reading_at_liftoff_N": 10782.5,
+     "head_reading_at_liftoff_N": 29072.5
+    },
+    {
+     "level_kN": 12,
+     "liftoff": {
+      "mm": 10.7964,
+      "leg": "RL"
+     },
+     "F_min_net": null,
+     "net_reading_at_liftoff_N": 11282.5,
+     "head_reading_at_liftoff_N": 29428.2
+    },
+    {
+     "level_kN": 12.5,
+     "liftoff": {
+      "mm": 10.7572,
+      "leg": "RL"
+     },
+     "F_min_net": null,
+     "net_reading_at_liftoff_N": 11782.5,
+     "head_reading_at_liftoff_N": 29783.8
+    },
+    {
+     "level_kN": 13,
+     "liftoff": {
+      "mm": 10.718,
+      "leg": "RL"
+     },
+     "F_min_net": null,
+     "net_reading_at_liftoff_N": 12282.5,
+     "head_reading_at_liftoff_N": 30139.5
+    },
+    {
+     "level_kN": 14,
+     "liftoff": {
+      "mm": 10.6395,
+      "leg": "RL"
+     },
+     "F_min_net": null,
+     "net_reading_at_liftoff_N": 13282.5,
+     "head_reading_at_liftoff_N": 30850.8
+    }
+   ],
+   "level_where_net_reading_at_liftoff_eq_F_min_kN": 10.1321
+  },
+  "analytic_bound": {
+   "lifted_leg_reading_max_N (F_s - m g)": "front 8 kN: 6952.8, rear 0.833 x 8 kN: 5948.9",
+   "F_s_needed_for_a_miss_N (F_min + m g)": {
+    "front": 10461.8,
+    "rear": 10132.1
+   },
+   "front_level_for_a_rear_miss (0.833)": 12159.0
+  }
+ }
+}

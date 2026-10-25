@@ -1,0 +1,2150 @@
+[
+ {
+  "run": "ML00_ep0",
+  "leg_settle": "FR",
+  "depth_mm": 12.7,
+  "ramp_s": 5.7544,
+  "v_settle_mm_s": 2.2,
+  "fs_kN": 0.0,
+  "level": "top",
+  "beta": 1.3058,
+  "L0r": 0.0361,
+  "floor": [
+   -1.7925,
+   1.275
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML00_ep4",
+  "leg_settle": "RR",
+  "depth_mm": 25.1,
+  "ramp_s": 1.7363,
+  "v_settle_mm_s": 14.5,
+  "fs_kN": 0.0,
+  "level": "top",
+  "beta": 1.3058,
+  "L0r": 0.0361,
+  "floor": [
+   -1.7925,
+   1.275
+  ],
+  "lift_s": 0.783,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.005,
+  "lat_valve_s": 0.105,
+  "u_mean_mm_s": 5.04,
+  "u_others_mean_mm_s": [
+   4.58,
+   -4.94,
+   -5.43,
+   5.04
+  ],
+  "ds_leg_mm": 3.43,
+  "gap_max_mm": 4.89,
+  "t_gap_max_rel_s": 0.477,
+  "settle_left_mm": 14.53,
+  "t_a_rel_event_s": 0.795,
+  "events": [
+   "-0.30:relevel_predicted:RR",
+   "-0.10:leg_reapproach_start:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML00_ep5",
+  "leg_settle": "FR",
+  "depth_mm": 23.9,
+  "ramp_s": 0.3048,
+  "v_settle_mm_s": 78.5,
+  "fs_kN": 0.0,
+  "level": "top",
+  "beta": 1.3058,
+  "L0r": 0.0361,
+  "floor": [
+   -1.7925,
+   1.275
+  ],
+  "lift_s": 0.537,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.007,
+  "lat_valve_s": 0.107,
+  "u_mean_mm_s": 5.51,
+  "u_others_mean_mm_s": [
+   -4.63,
+   4.58,
+   5.51,
+   -5.23
+  ],
+  "ds_leg_mm": 2.32,
+  "gap_max_mm": 17.91,
+  "t_gap_max_rel_s": 0.257,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.193,
+  "events": [
+   "+0.41:leg_reapproach_start:RL",
+   "+0.81:leg_reapproach_contact:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML01_ep0",
+  "leg_settle": "FL",
+  "depth_mm": 16.5,
+  "ramp_s": 0.3649,
+  "v_settle_mm_s": 45.2,
+  "fs_kN": 2.0,
+  "level": "middle",
+  "beta": 1.3162,
+  "L0r": 0.0484,
+  "floor": [
+   -2.0561,
+   -0.0656
+  ],
+  "lift_s": 0.34,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.062,
+  "lat_valve_s": 0.162,
+  "u_mean_mm_s": 5.08,
+  "u_others_mean_mm_s": [
+   3.96,
+   -5.24,
+   -5.69,
+   5.08
+  ],
+  "ds_leg_mm": 0.95,
+  "gap_max_mm": 9.94,
+  "t_gap_max_rel_s": 0.164,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.238,
+  "events": [
+   "-0.04:leg_reapproach_start:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML01_ep1",
+  "leg_settle": "FR",
+  "depth_mm": 4.7,
+  "ramp_s": 4.536,
+  "v_settle_mm_s": 1.0,
+  "fs_kN": 2.0,
+  "level": "middle",
+  "beta": 1.3162,
+  "L0r": 0.0484,
+  "floor": [
+   -2.0561,
+   -0.0656
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML01_ep2",
+  "leg_settle": "RL",
+  "depth_mm": 15.7,
+  "ramp_s": 0.2405,
+  "v_settle_mm_s": 65.2,
+  "fs_kN": 2.0,
+  "level": "middle",
+  "beta": 1.3162,
+  "L0r": 0.0484,
+  "floor": [
+   -2.0561,
+   -0.0656
+  ],
+  "lift_s": 0.541,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.103,
+  "lat_valve_s": 0.203,
+  "u_mean_mm_s": 4.23,
+  "u_others_mean_mm_s": [
+   -4.15,
+   3.81,
+   4.23,
+   -4.43
+  ],
+  "ds_leg_mm": 1.7,
+  "gap_max_mm": 5.72,
+  "t_gap_max_rel_s": 0.11,
+  "settle_left_mm": 10.62,
+  "t_a_rel_event_s": 0.097,
+  "events": [
+   "+0.00:leg_reapproach_start:RL",
+   "+0.00:relevel_predicted:RL",
+   "+0.80:leg_reapproach_contact:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML01_ep3",
+  "leg_settle": "FR",
+  "depth_mm": 2.3,
+  "ramp_s": 0.1538,
+  "v_settle_mm_s": 15.1,
+  "fs_kN": 2.0,
+  "level": "middle",
+  "beta": 1.3162,
+  "L0r": 0.0484,
+  "floor": [
+   -2.0561,
+   -0.0656
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML01_ep5",
+  "leg_settle": "RR",
+  "depth_mm": 21.4,
+  "ramp_s": 6.6386,
+  "v_settle_mm_s": 3.2,
+  "fs_kN": 2.0,
+  "level": "middle",
+  "beta": 1.3162,
+  "L0r": 0.0484,
+  "floor": [
+   -2.0561,
+   -0.0656
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML01_ep6",
+  "leg_settle": "FR",
+  "depth_mm": 15.4,
+  "ramp_s": 3.9769,
+  "v_settle_mm_s": 3.9,
+  "fs_kN": 2.0,
+  "level": "middle",
+  "beta": 1.3162,
+  "L0r": 0.0484,
+  "floor": [
+   -2.0561,
+   -0.0656
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML02_ep1",
+  "leg_settle": "FL",
+  "depth_mm": 8.5,
+  "ramp_s": 0.1097,
+  "v_settle_mm_s": 77.4,
+  "fs_kN": 4.0,
+  "level": "bottom",
+  "beta": 1.0434,
+  "L0r": 0.047,
+  "floor": [
+   -1.1321,
+   -2.7796
+  ],
+  "lift_s": 0.014,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.058,
+  "lat_valve_s": 0.258,
+  "u_mean_mm_s": null,
+  "u_others_mean_mm_s": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "ds_leg_mm": 0.0,
+  "gap_max_mm": 0.04,
+  "t_gap_max_rel_s": 0.009,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.142,
+  "events": [
+   "-0.04:relevel_predicted:RR",
+   "+0.06:leg_reapproach_start:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML02_ep3",
+  "leg_settle": "RL",
+  "depth_mm": 4.5,
+  "ramp_s": 2.0123,
+  "v_settle_mm_s": 2.3,
+  "fs_kN": 4.0,
+  "level": "bottom",
+  "beta": 1.0434,
+  "L0r": 0.047,
+  "floor": [
+   -1.1321,
+   -2.7796
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML02_ep5",
+  "leg_settle": "RL",
+  "depth_mm": 6.7,
+  "ramp_s": 0.0886,
+  "v_settle_mm_s": 75.6,
+  "fs_kN": 4.0,
+  "level": "bottom",
+  "beta": 1.0434,
+  "L0r": 0.047,
+  "floor": [
+   -1.1321,
+   -2.7796
+  ],
+  "lift_s": 0.027,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.355,
+  "lat_valve_s": 0.455,
+  "u_mean_mm_s": null,
+  "u_others_mean_mm_s": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "ds_leg_mm": 0.0,
+  "gap_max_mm": 0.56,
+  "t_gap_max_rel_s": 0.015,
+  "settle_left_mm": 3.25,
+  "t_a_rel_event_s": 0.045,
+  "events": [
+   "+0.26:leg_reapproach_start:RL"
+  ],
+  "phase_at_lift": "ready"
+ },
+ {
+  "run": "ML03_ep0",
+  "leg_settle": "FL",
+  "depth_mm": 2.5,
+  "ramp_s": 12.9126,
+  "v_settle_mm_s": 0.2,
+  "fs_kN": 8.0,
+  "level": "top",
+  "beta": 1.2301,
+  "L0r": 0.0828,
+  "floor": [
+   1.2764,
+   2.1951
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML03_ep3",
+  "leg_settle": "FL",
+  "depth_mm": 10.8,
+  "ramp_s": 2.3843,
+  "v_settle_mm_s": 4.5,
+  "fs_kN": 8.0,
+  "level": "top",
+  "beta": 1.2301,
+  "L0r": 0.0828,
+  "floor": [
+   1.2764,
+   2.1951
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML03_ep6",
+  "leg_settle": "RL",
+  "depth_mm": 21.3,
+  "ramp_s": 3.3118,
+  "v_settle_mm_s": 6.4,
+  "fs_kN": 8.0,
+  "level": "top",
+  "beta": 1.2301,
+  "L0r": 0.0828,
+  "floor": [
+   1.2764,
+   2.1951
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML04_ep0",
+  "leg_settle": "RL",
+  "depth_mm": 14.5,
+  "ramp_s": 0.0667,
+  "v_settle_mm_s": 217.4,
+  "fs_kN": 0.22,
+  "level": "middle",
+  "beta": 0.8921,
+  "L0r": 0.0984,
+  "floor": [
+   1.8604,
+   0.6531
+  ],
+  "lift_s": 0.157,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.167,
+  "lat_valve_s": 0.267,
+  "u_mean_mm_s": 0.0,
+  "u_others_mean_mm_s": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "ds_leg_mm": 0.0,
+  "gap_max_mm": 4.7,
+  "t_gap_max_rel_s": 0.023,
+  "settle_left_mm": 7.39,
+  "t_a_rel_event_s": 0.033,
+  "events": [
+   "+0.07:leg_reapproach_start:RL",
+   "+0.07:relevel_predicted:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML04_ep1",
+  "leg_settle": "FR",
+  "depth_mm": 4.5,
+  "ramp_s": 7.48,
+  "v_settle_mm_s": 0.6,
+  "fs_kN": 0.22,
+  "level": "middle",
+  "beta": 0.8921,
+  "L0r": 0.0984,
+  "floor": [
+   1.8604,
+   0.6531
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML04_ep4",
+  "leg_settle": "RR",
+  "depth_mm": 12.8,
+  "ramp_s": 15.7337,
+  "v_settle_mm_s": 0.8,
+  "fs_kN": 0.22,
+  "level": "middle",
+  "beta": 0.8921,
+  "L0r": 0.0984,
+  "floor": [
+   1.8604,
+   0.6531
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML04_ep5",
+  "leg_settle": "RL",
+  "depth_mm": 7.5,
+  "ramp_s": 2.1298,
+  "v_settle_mm_s": 3.5,
+  "fs_kN": 0.22,
+  "level": "middle",
+  "beta": 0.8921,
+  "L0r": 0.0984,
+  "floor": [
+   1.8604,
+   0.6531
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML05_ep0",
+  "leg_settle": "FR",
+  "depth_mm": 11.3,
+  "ramp_s": 7.0085,
+  "v_settle_mm_s": 1.6,
+  "fs_kN": 4.514,
+  "level": "bottom",
+  "beta": 0.7944,
+  "L0r": 0.0381,
+  "floor": [
+   4.5622,
+   -0.384
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML05_ep3",
+  "leg_settle": "RR",
+  "depth_mm": 13.3,
+  "ramp_s": 7.2116,
+  "v_settle_mm_s": 1.8,
+  "fs_kN": 4.514,
+  "level": "bottom",
+  "beta": 0.7944,
+  "L0r": 0.0381,
+  "floor": [
+   4.5622,
+   -0.384
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML05_ep7",
+  "leg_settle": "RR",
+  "depth_mm": 29.6,
+  "ramp_s": 0.1075,
+  "v_settle_mm_s": 274.9,
+  "fs_kN": 4.514,
+  "level": "bottom",
+  "beta": 0.7944,
+  "L0r": 0.0381,
+  "floor": [
+   4.5622,
+   -0.384
+  ],
+  "lift_s": 0.718,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.166,
+  "lat_valve_s": 0.266,
+  "u_mean_mm_s": 4.48,
+  "u_others_mean_mm_s": [
+   4.18,
+   -3.97,
+   -4.47,
+   4.48
+  ],
+  "ds_leg_mm": 2.3,
+  "gap_max_mm": 16.35,
+  "t_gap_max_rel_s": 0.057,
+  "settle_left_mm": 24.08,
+  "t_a_rel_event_s": 0.034,
+  "events": [
+   "+0.07:leg_reapproach_start:RR",
+   "+0.07:relevel_predicted:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML06_ep0",
+  "leg_settle": "RR",
+  "depth_mm": 11.6,
+  "ramp_s": 9.6549,
+  "v_settle_mm_s": 1.2,
+  "fs_kN": 7.079,
+  "level": "top",
+  "beta": 0.9248,
+  "L0r": 0.0693,
+  "floor": [
+   -0.2739,
+   -1.4435
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML06_ep1",
+  "leg_settle": "FL",
+  "depth_mm": 14.9,
+  "ramp_s": 0.0528,
+  "v_settle_mm_s": 282.6,
+  "fs_kN": 7.079,
+  "level": "top",
+  "beta": 0.9248,
+  "L0r": 0.0693,
+  "floor": [
+   -0.2739,
+   -1.4435
+  ],
+  "lift_s": 0.347,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.048,
+  "lat_valve_s": 0.148,
+  "u_mean_mm_s": 5.2,
+  "u_others_mean_mm_s": [
+   4.55,
+   -4.92,
+   -5.2,
+   5.2
+  ],
+  "ds_leg_mm": 1.08,
+  "gap_max_mm": 8.3,
+  "t_gap_max_rel_s": 0.176,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.152,
+  "events": [
+   "+0.25:leg_reapproach_start:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML06_ep2",
+  "leg_settle": "RL",
+  "depth_mm": 8.9,
+  "ramp_s": 1.9325,
+  "v_settle_mm_s": 4.6,
+  "fs_kN": 7.079,
+  "level": "top",
+  "beta": 0.9248,
+  "L0r": 0.0693,
+  "floor": [
+   -0.2739,
+   -1.4435
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML06_ep3",
+  "leg_settle": "RL",
+  "depth_mm": 9.6,
+  "ramp_s": 2.8629,
+  "v_settle_mm_s": 3.3,
+  "fs_kN": 7.079,
+  "level": "top",
+  "beta": 0.9248,
+  "L0r": 0.0693,
+  "floor": [
+   -0.2739,
+   -1.4435
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML06_ep5",
+  "leg_settle": "RL",
+  "depth_mm": 21.7,
+  "ramp_s": 0.2458,
+  "v_settle_mm_s": 88.1,
+  "fs_kN": 7.079,
+  "level": "top",
+  "beta": 0.9248,
+  "L0r": 0.0693,
+  "floor": [
+   -0.2739,
+   -1.4435
+  ],
+  "lift_s": 0.685,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.114,
+  "lat_valve_s": 0.214,
+  "u_mean_mm_s": 4.39,
+  "u_others_mean_mm_s": [
+   -4.18,
+   4.07,
+   4.39,
+   -4.44
+  ],
+  "ds_leg_mm": 2.41,
+  "gap_max_mm": 8.73,
+  "t_gap_max_rel_s": 0.119,
+  "settle_left_mm": 16.57,
+  "t_a_rel_event_s": 0.086,
+  "events": [
+   "+0.01:leg_reapproach_start:RL",
+   "+0.01:relevel_predicted:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML06_ep6",
+  "leg_settle": "FR",
+  "depth_mm": 5.2,
+  "ramp_s": 0.0554,
+  "v_settle_mm_s": 94.6,
+  "fs_kN": 7.079,
+  "level": "top",
+  "beta": 0.9248,
+  "L0r": 0.0693,
+  "floor": [
+   -0.2739,
+   -1.4435
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML07_ep4",
+  "leg_settle": "RL",
+  "depth_mm": 25.6,
+  "ramp_s": 0.1962,
+  "v_settle_mm_s": 130.6,
+  "fs_kN": 4.822,
+  "level": "middle",
+  "beta": 1.3993,
+  "L0r": 0.0315,
+  "floor": [
+   -0.9872,
+   -0.7784
+  ],
+  "lift_s": 1.085,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.142,
+  "lat_valve_s": 0.242,
+  "u_mean_mm_s": 5.05,
+  "u_others_mean_mm_s": [
+   -4.39,
+   4.11,
+   5.05,
+   -4.54
+  ],
+  "ds_leg_mm": 4.63,
+  "gap_max_mm": 15.72,
+  "t_gap_max_rel_s": 0.129,
+  "settle_left_mm": 21.6,
+  "t_a_rel_event_s": 0.058,
+  "events": [
+   "+0.04:leg_reapproach_start:RL",
+   "+0.04:relevel_predicted:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML07_ep6",
+  "leg_settle": "RL",
+  "depth_mm": 23.6,
+  "ramp_s": 0.1567,
+  "v_settle_mm_s": 150.4,
+  "fs_kN": 4.822,
+  "level": "middle",
+  "beta": 1.3993,
+  "L0r": 0.0315,
+  "floor": [
+   -0.9872,
+   -0.7784
+  ],
+  "lift_s": 1.032,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.151,
+  "lat_valve_s": 0.251,
+  "u_mean_mm_s": 4.97,
+  "u_others_mean_mm_s": [
+   -4.34,
+   4.11,
+   4.97,
+   -4.49
+  ],
+  "ds_leg_mm": 4.29,
+  "gap_max_mm": 13.34,
+  "t_gap_max_rel_s": 0.121,
+  "settle_left_mm": 19.32,
+  "t_a_rel_event_s": 0.049,
+  "events": [
+   "+0.05:leg_reapproach_start:RL",
+   "+0.05:relevel_predicted:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML07_ep7",
+  "leg_settle": "RR",
+  "depth_mm": 23.1,
+  "ramp_s": 1.3782,
+  "v_settle_mm_s": 16.7,
+  "fs_kN": 4.822,
+  "level": "middle",
+  "beta": 1.3993,
+  "L0r": 0.0315,
+  "floor": [
+   -0.9872,
+   -0.7784
+  ],
+  "lift_s": 0.897,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.078,
+  "lat_valve_s": 0.178,
+  "u_mean_mm_s": 4.91,
+  "u_others_mean_mm_s": [
+   4.22,
+   -5.29,
+   -5.56,
+   4.91
+  ],
+  "ds_leg_mm": 3.52,
+  "gap_max_mm": 7.19,
+  "t_gap_max_rel_s": 0.346,
+  "settle_left_mm": 13.63,
+  "t_a_rel_event_s": 0.622,
+  "events": [
+   "-0.02:leg_reapproach_start:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML08_ep4",
+  "leg_settle": "RR",
+  "depth_mm": 19.0,
+  "ramp_s": 0.0715,
+  "v_settle_mm_s": 265.3,
+  "fs_kN": 2.887,
+  "level": "bottom",
+  "beta": 1.0427,
+  "L0r": 0.0889,
+  "floor": [
+   0.4224,
+   0.852
+  ],
+  "lift_s": 0.606,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.17,
+  "lat_valve_s": 0.27,
+  "u_mean_mm_s": 4.27,
+  "u_others_mean_mm_s": [
+   4.03,
+   -3.9,
+   -4.37,
+   4.27
+  ],
+  "ds_leg_mm": 1.71,
+  "gap_max_mm": 8.63,
+  "t_gap_max_rel_s": 0.031,
+  "settle_left_mm": 12.3,
+  "t_a_rel_event_s": 0.03,
+  "events": [
+   "+0.07:leg_reapproach_start:RR",
+   "+0.07:relevel_predicted:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML08_ep7",
+  "leg_settle": "FL",
+  "depth_mm": 19.8,
+  "ramp_s": 0.9984,
+  "v_settle_mm_s": 19.8,
+  "fs_kN": 2.887,
+  "level": "bottom",
+  "beta": 1.0427,
+  "L0r": 0.0889,
+  "floor": [
+   0.4224,
+   0.852
+  ],
+  "lift_s": 0.443,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.02,
+  "lat_valve_s": 0.12,
+  "u_mean_mm_s": 5.11,
+  "u_others_mean_mm_s": [
+   4.52,
+   -4.88,
+   -5.47,
+   5.11
+  ],
+  "ds_leg_mm": 1.71,
+  "gap_max_mm": 4.19,
+  "t_gap_max_rel_s": 0.268,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.58,
+  "events": [
+   "-0.28:relevel_predicted:RR",
+   "-0.08:leg_reapproach_start:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML09_ep0",
+  "leg_settle": "RL",
+  "depth_mm": 16.2,
+  "ramp_s": 0.9509,
+  "v_settle_mm_s": 17.1,
+  "fs_kN": 1.949,
+  "level": "top",
+  "beta": 1.2932,
+  "L0r": 0.0485,
+  "floor": [
+   -3.6257,
+   -1.1927
+  ],
+  "lift_s": 0.421,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.082,
+  "lat_valve_s": 0.182,
+  "u_mean_mm_s": 5.21,
+  "u_others_mean_mm_s": [
+   -4.82,
+   4.73,
+   5.21,
+   -5.24
+  ],
+  "ds_leg_mm": 1.3,
+  "gap_max_mm": 2.06,
+  "t_gap_max_rel_s": 0.246,
+  "settle_left_mm": 3.82,
+  "t_a_rel_event_s": 0.618,
+  "events": [
+   "-0.02:leg_reapproach_start:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML09_ep2",
+  "leg_settle": "RR",
+  "depth_mm": 18.8,
+  "ramp_s": 0.2678,
+  "v_settle_mm_s": 70.2,
+  "fs_kN": 1.949,
+  "level": "top",
+  "beta": 1.2932,
+  "L0r": 0.0485,
+  "floor": [
+   -3.6257,
+   -1.1927
+  ],
+  "lift_s": 0.697,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.106,
+  "lat_valve_s": 0.206,
+  "u_mean_mm_s": 3.9,
+  "u_others_mean_mm_s": [
+   3.67,
+   -4.55,
+   -5.01,
+   3.9
+  ],
+  "ds_leg_mm": 2.24,
+  "gap_max_mm": 6.73,
+  "t_gap_max_rel_s": 0.124,
+  "settle_left_mm": 14.35,
+  "t_a_rel_event_s": 0.094,
+  "events": [
+   "+0.01:leg_reapproach_start:RR",
+   "+0.01:relevel_predicted:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML09_ep3",
+  "leg_settle": "FL",
+  "depth_mm": 8.3,
+  "ramp_s": 19.3895,
+  "v_settle_mm_s": 0.4,
+  "fs_kN": 1.949,
+  "level": "top",
+  "beta": 1.2932,
+  "L0r": 0.0485,
+  "floor": [
+   -3.6257,
+   -1.1927
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML09_ep6",
+  "leg_settle": "RR",
+  "depth_mm": 21.3,
+  "ramp_s": 0.1777,
+  "v_settle_mm_s": 119.8,
+  "fs_kN": 1.949,
+  "level": "top",
+  "beta": 1.2932,
+  "L0r": 0.0485,
+  "floor": [
+   -3.6257,
+   -1.1927
+  ],
+  "lift_s": 0.791,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.143,
+  "lat_valve_s": 0.243,
+  "u_mean_mm_s": 4.01,
+  "u_others_mean_mm_s": [
+   3.65,
+   -4.67,
+   -5.15,
+   4.01
+  ],
+  "ds_leg_mm": 2.52,
+  "gap_max_mm": 10.7,
+  "t_gap_max_rel_s": 0.102,
+  "settle_left_mm": 17.21,
+  "t_a_rel_event_s": 0.057,
+  "events": [
+   "+0.04:leg_reapproach_start:RR",
+   "+0.04:relevel_predicted:RR",
+   "+1.04:leg_reapproach_contact:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML10_ep0",
+  "leg_settle": "FR",
+  "depth_mm": 25.4,
+  "ramp_s": 0.212,
+  "v_settle_mm_s": 120.0,
+  "fs_kN": 4.909,
+  "level": "middle",
+  "beta": 0.7588,
+  "L0r": 0.0326,
+  "floor": [
+   -3.6917,
+   0.4197
+  ],
+  "lift_s": 0.398,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.014,
+  "lat_valve_s": 0.114,
+  "u_mean_mm_s": 5.31,
+  "u_others_mean_mm_s": [
+   -4.91,
+   4.16,
+   5.31,
+   -5.49
+  ],
+  "ds_leg_mm": 1.48,
+  "gap_max_mm": 18.37,
+  "t_gap_max_rel_s": 0.182,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.186,
+  "events": [
+   "+0.31:leg_reapproach_start:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML10_ep2",
+  "leg_settle": "RL",
+  "depth_mm": 4.8,
+  "ramp_s": 0.2737,
+  "v_settle_mm_s": 17.6,
+  "fs_kN": 4.909,
+  "level": "middle",
+  "beta": 0.7588,
+  "L0r": 0.0326,
+  "floor": [
+   -3.6917,
+   0.4197
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML10_ep4",
+  "leg_settle": "FL",
+  "depth_mm": 29.0,
+  "ramp_s": 0.1053,
+  "v_settle_mm_s": 275.4,
+  "fs_kN": 4.909,
+  "level": "middle",
+  "beta": 0.7588,
+  "L0r": 0.0326,
+  "floor": [
+   -3.6917,
+   0.4197
+  ],
+  "lift_s": 0.442,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.041,
+  "lat_valve_s": 0.141,
+  "u_mean_mm_s": 4.82,
+  "u_others_mean_mm_s": [
+   3.63,
+   -5.33,
+   -6.01,
+   4.82
+  ],
+  "ds_leg_mm": 1.65,
+  "gap_max_mm": 25.92,
+  "t_gap_max_rel_s": 0.206,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.159,
+  "events": [
+   "+0.34:leg_reapproach_start:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML10_ep5",
+  "leg_settle": "FR",
+  "depth_mm": 4.0,
+  "ramp_s": 2.4727,
+  "v_settle_mm_s": 1.6,
+  "fs_kN": 4.909,
+  "level": "middle",
+  "beta": 0.7588,
+  "L0r": 0.0326,
+  "floor": [
+   -3.6917,
+   0.4197
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML11_ep1",
+  "leg_settle": "FR",
+  "depth_mm": 25.6,
+  "ramp_s": 4.7738,
+  "v_settle_mm_s": 5.4,
+  "fs_kN": 3.635,
+  "level": "bottom",
+  "beta": 1.1474,
+  "L0r": 0.0852,
+  "floor": [
+   -0.5218,
+   -0.2421
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML11_ep3",
+  "leg_settle": "RR",
+  "depth_mm": 7.8,
+  "ramp_s": 0.7774,
+  "v_settle_mm_s": 10.1,
+  "fs_kN": 3.635,
+  "level": "bottom",
+  "beta": 1.1474,
+  "L0r": 0.0852,
+  "floor": [
+   -0.5218,
+   -0.2421
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML11_ep4",
+  "leg_settle": "FL",
+  "depth_mm": 16.1,
+  "ramp_s": 0.1101,
+  "v_settle_mm_s": 146.6,
+  "fs_kN": 3.635,
+  "level": "bottom",
+  "beta": 1.1474,
+  "L0r": 0.0852,
+  "floor": [
+   -0.5218,
+   -0.2421
+  ],
+  "lift_s": 27.001,
+  "lift_leg": "RR",
+  "lat_cmd_s": null,
+  "lat_valve_s": null,
+  "u_mean_mm_s": 0.0,
+  "u_others_mean_mm_s": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "ds_leg_mm": 0.0,
+  "gap_max_mm": 4.31,
+  "t_gap_max_rel_s": 0.159,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.999,
+  "events": [],
+  "phase_at_lift": "fault"
+ },
+ {
+  "run": "ML12_ep0",
+  "leg_settle": "FR",
+  "depth_mm": 25.9,
+  "ramp_s": 2.1465,
+  "v_settle_mm_s": 12.1,
+  "fs_kN": 2.996,
+  "level": "top",
+  "beta": 1.0115,
+  "L0r": 0.0329,
+  "floor": [
+   3.5455,
+   0.1415
+  ],
+  "lift_s": 0.459,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.077,
+  "lat_valve_s": 0.077,
+  "u_mean_mm_s": 4.51,
+  "u_others_mean_mm_s": [
+   -5.42,
+   4.32,
+   4.51,
+   -5.76
+  ],
+  "ds_leg_mm": 1.98,
+  "gap_max_mm": 1.05,
+  "t_gap_max_rel_s": 0.269,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 1.223,
+  "events": [
+   "-0.22:leg_reapproach_start:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML12_ep3",
+  "leg_settle": "RR",
+  "depth_mm": 22.6,
+  "ramp_s": 6.7182,
+  "v_settle_mm_s": 3.4,
+  "fs_kN": 2.996,
+  "level": "top",
+  "beta": 1.0115,
+  "L0r": 0.0329,
+  "floor": [
+   3.5455,
+   0.1415
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML12_ep5",
+  "leg_settle": "RR",
+  "depth_mm": 17.1,
+  "ramp_s": 0.0671,
+  "v_settle_mm_s": 255.3,
+  "fs_kN": 2.996,
+  "level": "top",
+  "beta": 1.0115,
+  "L0r": 0.0329,
+  "floor": [
+   3.5455,
+   0.1415
+  ],
+  "lift_s": 0.237,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.17,
+  "lat_valve_s": 0.27,
+  "u_mean_mm_s": 2.62,
+  "u_others_mean_mm_s": [
+   2.56,
+   -2.22,
+   -2.41,
+   2.62
+  ],
+  "ds_leg_mm": 0.1,
+  "gap_max_mm": 7.93,
+  "t_gap_max_rel_s": 0.029,
+  "settle_left_mm": 10.25,
+  "t_a_rel_event_s": 0.03,
+  "events": [
+   "+0.07:leg_reapproach_start:RR",
+   "+0.07:relevel_predicted:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML12_ep6",
+  "leg_settle": "RL",
+  "depth_mm": 20.5,
+  "ramp_s": 17.3026,
+  "v_settle_mm_s": 1.2,
+  "fs_kN": 2.996,
+  "level": "top",
+  "beta": 1.0115,
+  "L0r": 0.0329,
+  "floor": [
+   3.5455,
+   0.1415
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML13_ep3",
+  "leg_settle": "RL",
+  "depth_mm": 19.9,
+  "ramp_s": 2.3392,
+  "v_settle_mm_s": 8.5,
+  "fs_kN": 3.467,
+  "level": "middle",
+  "beta": 1.5502,
+  "L0r": 0.0556,
+  "floor": [
+   2.2296,
+   -1.7127
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML13_ep4",
+  "leg_settle": "RL",
+  "depth_mm": 2.1,
+  "ramp_s": 0.1739,
+  "v_settle_mm_s": 12.1,
+  "fs_kN": 3.467,
+  "level": "middle",
+  "beta": 1.5502,
+  "L0r": 0.0556,
+  "floor": [
+   2.2296,
+   -1.7127
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML13_ep6",
+  "leg_settle": "FL",
+  "depth_mm": 15.1,
+  "ramp_s": 13.3148,
+  "v_settle_mm_s": 1.1,
+  "fs_kN": 3.467,
+  "level": "middle",
+  "beta": 1.5502,
+  "L0r": 0.0556,
+  "floor": [
+   2.2296,
+   -1.7127
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML14_ep0",
+  "leg_settle": "RL",
+  "depth_mm": 7.6,
+  "ramp_s": 0.1452,
+  "v_settle_mm_s": 52.2,
+  "fs_kN": 3.424,
+  "level": "bottom",
+  "beta": 1.3224,
+  "L0r": 0.0994,
+  "floor": [
+   -2.2172,
+   -0.3011
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML14_ep1",
+  "leg_settle": "FR",
+  "depth_mm": 11.7,
+  "ramp_s": 1.8017,
+  "v_settle_mm_s": 6.5,
+  "fs_kN": 3.424,
+  "level": "bottom",
+  "beta": 1.3224,
+  "L0r": 0.0994,
+  "floor": [
+   -2.2172,
+   -0.3011
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML14_ep3",
+  "leg_settle": "FL",
+  "depth_mm": 23.0,
+  "ramp_s": 3.3462,
+  "v_settle_mm_s": 6.9,
+  "fs_kN": 3.424,
+  "level": "bottom",
+  "beta": 1.3224,
+  "L0r": 0.0994,
+  "floor": [
+   -2.2172,
+   -0.3011
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML14_ep4",
+  "leg_settle": "FR",
+  "depth_mm": 29.6,
+  "ramp_s": 9.7667,
+  "v_settle_mm_s": 3.0,
+  "fs_kN": 3.424,
+  "level": "bottom",
+  "beta": 1.3224,
+  "L0r": 0.0994,
+  "floor": [
+   -2.2172,
+   -0.3011
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML14_ep6",
+  "leg_settle": "RL",
+  "depth_mm": 5.8,
+  "ramp_s": 3.4268,
+  "v_settle_mm_s": 1.7,
+  "fs_kN": 3.424,
+  "level": "bottom",
+  "beta": 1.3224,
+  "L0r": 0.0994,
+  "floor": [
+   -2.2172,
+   -0.3011
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML15_ep2",
+  "leg_settle": "FL",
+  "depth_mm": 2.2,
+  "ramp_s": 0.0693,
+  "v_settle_mm_s": 32.2,
+  "fs_kN": 4.226,
+  "level": "top",
+  "beta": 1.3804,
+  "L0r": 0.0593,
+  "floor": [
+   -2.5435,
+   -0.3898
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML15_ep4",
+  "leg_settle": "RR",
+  "depth_mm": 27.6,
+  "ramp_s": 2.2619,
+  "v_settle_mm_s": 12.2,
+  "fs_kN": 4.226,
+  "level": "top",
+  "beta": 1.3804,
+  "L0r": 0.0593,
+  "floor": [
+   -2.5435,
+   -0.3898
+  ],
+  "lift_s": 0.807,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.098,
+  "lat_valve_s": 0.098,
+  "u_mean_mm_s": 4.73,
+  "u_others_mean_mm_s": [
+   3.95,
+   -5.45,
+   -5.85,
+   4.73
+  ],
+  "ds_leg_mm": 3.58,
+  "gap_max_mm": 2.14,
+  "t_gap_max_rel_s": 0.42,
+  "settle_left_mm": 16.75,
+  "t_a_rel_event_s": 1.002,
+  "events": [
+   "-0.20:leg_reapproach_start:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML16_ep0",
+  "leg_settle": "FR",
+  "depth_mm": 26.4,
+  "ramp_s": 2.0292,
+  "v_settle_mm_s": 13.0,
+  "fs_kN": 6.177,
+  "level": "middle",
+  "beta": 0.9573,
+  "L0r": 0.0456,
+  "floor": [
+   3.2088,
+   0.698
+  ],
+  "lift_s": 0.455,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.075,
+  "lat_valve_s": 0.075,
+  "u_mean_mm_s": 4.56,
+  "u_others_mean_mm_s": [
+   -5.36,
+   4.33,
+   4.56,
+   -5.75
+  ],
+  "ds_leg_mm": 1.98,
+  "gap_max_mm": 0.65,
+  "t_gap_max_rel_s": 0.31,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 1.125,
+  "events": [
+   "-0.23:leg_reapproach_start:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML16_ep4",
+  "leg_settle": "FL",
+  "depth_mm": 16.0,
+  "ramp_s": 16.287,
+  "v_settle_mm_s": 1.0,
+  "fs_kN": 6.177,
+  "level": "middle",
+  "beta": 0.9573,
+  "L0r": 0.0456,
+  "floor": [
+   3.2088,
+   0.698
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML16_ep6",
+  "leg_settle": "FR",
+  "depth_mm": 29.1,
+  "ramp_s": 0.6965,
+  "v_settle_mm_s": 41.9,
+  "fs_kN": 6.177,
+  "level": "middle",
+  "beta": 0.9573,
+  "L0r": 0.0456,
+  "floor": [
+   3.2088,
+   0.698
+  ],
+  "lift_s": 0.645,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.052,
+  "lat_valve_s": 0.152,
+  "u_mean_mm_s": 4.92,
+  "u_others_mean_mm_s": [
+   -5.27,
+   4.02,
+   4.92,
+   -5.75
+  ],
+  "ds_leg_mm": 2.52,
+  "gap_max_mm": 13.84,
+  "t_gap_max_rel_s": 0.321,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.348,
+  "events": [
+   "-0.05:leg_reapproach_start:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML17_ep0",
+  "leg_settle": "FR",
+  "depth_mm": 18.3,
+  "ramp_s": 1.467,
+  "v_settle_mm_s": 12.5,
+  "fs_kN": 1.432,
+  "level": "bottom",
+  "beta": 1.3701,
+  "L0r": 0.0556,
+  "floor": [
+   1.7836,
+   0.8736
+  ],
+  "lift_s": 0.403,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.085,
+  "lat_valve_s": 0.085,
+  "u_mean_mm_s": 4.82,
+  "u_others_mean_mm_s": [
+   -5.16,
+   4.43,
+   4.82,
+   -5.59
+  ],
+  "ds_leg_mm": 1.59,
+  "gap_max_mm": 1.64,
+  "t_gap_max_rel_s": 0.267,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.815,
+  "events": [
+   "-0.12:leg_reapproach_start:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML17_ep4",
+  "leg_settle": "FR",
+  "depth_mm": 21.4,
+  "ramp_s": 0.1752,
+  "v_settle_mm_s": 121.9,
+  "fs_kN": 1.432,
+  "level": "bottom",
+  "beta": 1.3701,
+  "L0r": 0.0556,
+  "floor": [
+   1.7836,
+   0.8736
+  ],
+  "lift_s": 26.884,
+  "lift_leg": "RL",
+  "lat_cmd_s": null,
+  "lat_valve_s": null,
+  "u_mean_mm_s": 0.0,
+  "u_others_mean_mm_s": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "ds_leg_mm": 0.0,
+  "gap_max_mm": 9.03,
+  "t_gap_max_rel_s": 0.137,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 1.116,
+  "events": [],
+  "phase_at_lift": "fault"
+ },
+ {
+  "run": "ML17_ep7",
+  "leg_settle": "RR",
+  "depth_mm": 28.3,
+  "ramp_s": 0.258,
+  "v_settle_mm_s": 109.7,
+  "fs_kN": 1.432,
+  "level": "bottom",
+  "beta": 1.3701,
+  "L0r": 0.0556,
+  "floor": [
+   1.7836,
+   0.8736
+  ],
+  "lift_s": 1.086,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.12,
+  "lat_valve_s": 0.22,
+  "u_mean_mm_s": 4.68,
+  "u_others_mean_mm_s": [
+   4.04,
+   -4.46,
+   -4.95,
+   4.68
+  ],
+  "ds_leg_mm": 4.42,
+  "gap_max_mm": 17.77,
+  "t_gap_max_rel_s": 0.336,
+  "settle_left_mm": 23.3,
+  "t_a_rel_event_s": 0.08,
+  "events": [
+   "+0.02:leg_reapproach_start:RR",
+   "+0.02:relevel_predicted:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML18_ep1",
+  "leg_settle": "FR",
+  "depth_mm": 15.5,
+  "ramp_s": 2.2589,
+  "v_settle_mm_s": 6.9,
+  "fs_kN": 4.858,
+  "level": "top",
+  "beta": 0.8187,
+  "L0r": 0.0374,
+  "floor": [
+   0.1466,
+   -0.8128
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML18_ep2",
+  "leg_settle": "RL",
+  "depth_mm": 11.4,
+  "ramp_s": 11.8082,
+  "v_settle_mm_s": 1.0,
+  "fs_kN": 4.858,
+  "level": "top",
+  "beta": 0.8187,
+  "L0r": 0.0374,
+  "floor": [
+   0.1466,
+   -0.8128
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML18_ep3",
+  "leg_settle": "RR",
+  "depth_mm": 18.8,
+  "ramp_s": 0.3069,
+  "v_settle_mm_s": 61.4,
+  "fs_kN": 4.858,
+  "level": "top",
+  "beta": 0.8187,
+  "L0r": 0.0374,
+  "floor": [
+   0.1466,
+   -0.8128
+  ],
+  "lift_s": 0.202,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.078,
+  "lat_valve_s": 0.178,
+  "u_mean_mm_s": 5.35,
+  "u_others_mean_mm_s": [
+   4.96,
+   -4.57,
+   -4.99,
+   5.35
+  ],
+  "ds_leg_mm": 0.28,
+  "gap_max_mm": 4.08,
+  "t_gap_max_rel_s": 0.116,
+  "settle_left_mm": 12.94,
+  "t_a_rel_event_s": 0.122,
+  "events": [
+   "-0.02:leg_reapproach_start:RR",
+   "-0.02:relevel_predicted:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML18_ep4",
+  "leg_settle": "RL",
+  "depth_mm": 8.7,
+  "ramp_s": 0.1282,
+  "v_settle_mm_s": 67.7,
+  "fs_kN": 4.858,
+  "level": "top",
+  "beta": 0.8187,
+  "L0r": 0.0374,
+  "floor": [
+   0.1466,
+   -0.8128
+  ],
+  "lift_s": 0.043,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.13,
+  "lat_valve_s": 0.23,
+  "u_mean_mm_s": 0.0,
+  "u_others_mean_mm_s": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "ds_leg_mm": 0.0,
+  "gap_max_mm": 0.75,
+  "t_gap_max_rel_s": 0.022,
+  "settle_left_mm": 3.6,
+  "t_a_rel_event_s": 0.07,
+  "events": [
+   "+0.03:leg_reapproach_start:RL",
+   "+0.03:relevel_predicted:RL",
+   "+0.33:leg_reapproach_contact:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML18_ep5",
+  "leg_settle": "FL",
+  "depth_mm": 12.6,
+  "ramp_s": 0.1926,
+  "v_settle_mm_s": 65.6,
+  "fs_kN": 4.858,
+  "level": "top",
+  "beta": 0.8187,
+  "L0r": 0.0374,
+  "floor": [
+   0.1466,
+   -0.8128
+  ],
+  "lift_s": 0.238,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.091,
+  "lat_valve_s": 0.091,
+  "u_mean_mm_s": 5.43,
+  "u_others_mean_mm_s": [
+   4.47,
+   -4.93,
+   -5.15,
+   5.43
+  ],
+  "ds_leg_mm": 0.77,
+  "gap_max_mm": 4.36,
+  "t_gap_max_rel_s": 0.146,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.209,
+  "events": [
+   "+0.19:leg_reapproach_start:RR",
+   "+0.49:leg_reapproach_contact:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML18_ep6",
+  "leg_settle": "FR",
+  "depth_mm": 29.4,
+  "ramp_s": 0.4505,
+  "v_settle_mm_s": 65.4,
+  "fs_kN": 4.858,
+  "level": "top",
+  "beta": 0.8187,
+  "L0r": 0.0374,
+  "floor": [
+   0.1466,
+   -0.8128
+  ],
+  "lift_s": 0.539,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.012,
+  "lat_valve_s": 0.112,
+  "u_mean_mm_s": 4.89,
+  "u_others_mean_mm_s": [
+   -5.48,
+   3.69,
+   4.89,
+   -5.87
+  ],
+  "ds_leg_mm": 2.24,
+  "gap_max_mm": 22.51,
+  "t_gap_max_rel_s": 0.302,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.288,
+  "events": [
+   "+0.31:leg_reapproach_start:RL",
+   "+0.81:leg_reapproach_contact:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML19_ep0",
+  "leg_settle": "RL",
+  "depth_mm": 19.7,
+  "ramp_s": 2.7398,
+  "v_settle_mm_s": 7.2,
+  "fs_kN": 4.44,
+  "level": "middle",
+  "beta": 1.3535,
+  "L0r": 0.0667,
+  "floor": [
+   3.7752,
+   0.9023
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML19_ep5",
+  "leg_settle": "RL",
+  "depth_mm": 25.2,
+  "ramp_s": 1.5363,
+  "v_settle_mm_s": 16.4,
+  "fs_kN": 4.44,
+  "level": "middle",
+  "beta": 1.3535,
+  "L0r": 0.0667,
+  "floor": [
+   3.7752,
+   0.9023
+  ],
+  "lift_s": 0.788,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.039,
+  "lat_valve_s": 0.039,
+  "u_mean_mm_s": 4.98,
+  "u_others_mean_mm_s": [
+   -5.14,
+   4.34,
+   4.98,
+   -5.53
+  ],
+  "ds_leg_mm": 3.61,
+  "gap_max_mm": 5.67,
+  "t_gap_max_rel_s": 0.335,
+  "settle_left_mm": 12.82,
+  "t_a_rel_event_s": 0.761,
+  "events": [
+   "-0.16:leg_reapproach_start:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML19_ep6",
+  "leg_settle": "FL",
+  "depth_mm": 4.8,
+  "ramp_s": 6.6635,
+  "v_settle_mm_s": 0.7,
+  "fs_kN": 4.44,
+  "level": "middle",
+  "beta": 1.3535,
+  "L0r": 0.0667,
+  "floor": [
+   3.7752,
+   0.9023
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML20_ep5",
+  "leg_settle": "FL",
+  "depth_mm": 16.2,
+  "ramp_s": 6.9361,
+  "v_settle_mm_s": 2.3,
+  "fs_kN": 0.494,
+  "level": "bottom",
+  "beta": 1.0638,
+  "L0r": 0.0358,
+  "floor": [
+   3.1414,
+   -1.5009
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML20_ep6",
+  "leg_settle": "RL",
+  "depth_mm": 14.9,
+  "ramp_s": 2.8195,
+  "v_settle_mm_s": 5.3,
+  "fs_kN": 0.494,
+  "level": "bottom",
+  "beta": 1.0638,
+  "L0r": 0.0358,
+  "floor": [
+   3.1414,
+   -1.5009
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML21_ep0",
+  "leg_settle": "RL",
+  "depth_mm": 21.2,
+  "ramp_s": 10.5104,
+  "v_settle_mm_s": 2.0,
+  "fs_kN": 5.118,
+  "level": "top",
+  "beta": 1.4671,
+  "L0r": 0.0748,
+  "floor": [
+   3.4471,
+   -0.9304
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML21_ep1",
+  "leg_settle": "FR",
+  "depth_mm": 22.3,
+  "ramp_s": 0.3962,
+  "v_settle_mm_s": 56.2,
+  "fs_kN": 5.118,
+  "level": "top",
+  "beta": 1.4671,
+  "L0r": 0.0748,
+  "floor": [
+   3.4471,
+   -0.9304
+  ],
+  "lift_s": 0.494,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.058,
+  "lat_valve_s": 0.158,
+  "u_mean_mm_s": 4.99,
+  "u_others_mean_mm_s": [
+   -5.37,
+   3.79,
+   4.99,
+   -5.81
+  ],
+  "ds_leg_mm": 1.74,
+  "gap_max_mm": 18.1,
+  "t_gap_max_rel_s": 0.296,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.242,
+  "events": [
+   "+0.36:leg_reapproach_start:RL",
+   "+0.76:leg_reapproach_contact:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML21_ep2",
+  "leg_settle": "FR",
+  "depth_mm": 20.4,
+  "ramp_s": 13.6874,
+  "v_settle_mm_s": 1.5,
+  "fs_kN": 5.118,
+  "level": "top",
+  "beta": 1.4671,
+  "L0r": 0.0748,
+  "floor": [
+   3.4471,
+   -0.9304
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML21_ep3",
+  "leg_settle": "FR",
+  "depth_mm": 2.7,
+  "ramp_s": 8.0316,
+  "v_settle_mm_s": 0.3,
+  "fs_kN": 5.118,
+  "level": "top",
+  "beta": 1.4671,
+  "L0r": 0.0748,
+  "floor": [
+   3.4471,
+   -0.9304
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML21_ep4",
+  "leg_settle": "RR",
+  "depth_mm": 13.2,
+  "ramp_s": 3.3555,
+  "v_settle_mm_s": 3.9,
+  "fs_kN": 5.118,
+  "level": "top",
+  "beta": 1.4671,
+  "L0r": 0.0748,
+  "floor": [
+   3.4471,
+   -0.9304
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML21_ep5",
+  "leg_settle": "FL",
+  "depth_mm": 8.7,
+  "ramp_s": 11.3668,
+  "v_settle_mm_s": 0.8,
+  "fs_kN": 5.118,
+  "level": "top",
+  "beta": 1.4671,
+  "L0r": 0.0748,
+  "floor": [
+   3.4471,
+   -0.9304
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML22_ep0",
+  "leg_settle": "FL",
+  "depth_mm": 11.5,
+  "ramp_s": 0.692,
+  "v_settle_mm_s": 16.6,
+  "fs_kN": 1.894,
+  "level": "middle",
+  "beta": 1.1334,
+  "L0r": 0.0235,
+  "floor": [
+   -0.2957,
+   2.6928
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML22_ep3",
+  "leg_settle": "RL",
+  "depth_mm": 24.6,
+  "ramp_s": 1.8297,
+  "v_settle_mm_s": 13.5,
+  "fs_kN": 1.894,
+  "level": "middle",
+  "beta": 1.1334,
+  "L0r": 0.0235,
+  "floor": [
+   -0.2957,
+   2.6928
+  ],
+  "lift_s": 0.602,
+  "lift_leg": "RL",
+  "lat_cmd_s": 0.045,
+  "lat_valve_s": 0.045,
+  "u_mean_mm_s": 5.29,
+  "u_others_mean_mm_s": [
+   -4.67,
+   4.76,
+   5.29,
+   -5.26
+  ],
+  "ds_leg_mm": 2.88,
+  "gap_max_mm": 2.92,
+  "t_gap_max_rel_s": 0.336,
+  "settle_left_mm": 11.31,
+  "t_a_rel_event_s": 0.955,
+  "events": [
+   "-0.16:leg_reapproach_start:RL"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML22_ep4",
+  "leg_settle": "FL",
+  "depth_mm": 7.5,
+  "ramp_s": 0.1956,
+  "v_settle_mm_s": 38.3,
+  "fs_kN": 1.894,
+  "level": "middle",
+  "beta": 1.1334,
+  "L0r": 0.0235,
+  "floor": [
+   -0.2957,
+   2.6928
+  ],
+  "lift_s": 0.111,
+  "lift_leg": "RR",
+  "lat_cmd_s": 0.082,
+  "lat_valve_s": 0.182,
+  "u_mean_mm_s": 5.75,
+  "u_others_mean_mm_s": [
+   4.89,
+   -4.48,
+   -4.86,
+   5.75
+  ],
+  "ds_leg_mm": 0.05,
+  "gap_max_mm": 0.94,
+  "t_gap_max_rel_s": 0.078,
+  "settle_left_mm": null,
+  "t_a_rel_event_s": 0.218,
+  "events": [
+   "-0.02:leg_reapproach_start:RR",
+   "+0.38:leg_reapproach_contact:RR"
+  ],
+  "phase_at_lift": "level"
+ },
+ {
+  "run": "ML22_ep7",
+  "leg_settle": "RR",
+  "depth_mm": 16.4,
+  "ramp_s": 13.2988,
+  "v_settle_mm_s": 1.2,
+  "fs_kN": 1.894,
+  "level": "middle",
+  "beta": 1.1334,
+  "L0r": 0.0235,
+  "floor": [
+   -0.2957,
+   2.6928
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ },
+ {
+  "run": "ML23_ep1",
+  "leg_settle": "RR",
+  "depth_mm": 8.4,
+  "ramp_s": 2.3115,
+  "v_settle_mm_s": 3.6,
+  "fs_kN": 2.406,
+  "level": "bottom",
+  "beta": 0.9532,
+  "L0r": 0.0994,
+  "floor": [
+   -3.526,
+   0.3166
+  ],
+  "lift_s": 0.0,
+  "lift_leg": null
+ }
+]

@@ -1,0 +1,1166 @@
+{
+ "meta": {
+  "spec": "00_docs/04_control/s6_control_spec.md rev. 41 211.2, rebuilt rev. 42 212.6 (I4 of 203.5)",
+  "source": "06_analysis/02_control/s8/s8_fs_precheck.json (reduced rev. 42 harness, flat floor)",
+  "harness": {
+   "sink": "poly345_1ms",
+   "rod_side": "start",
+   "rear_scale": 0.8333
+  },
+  "f_min_kN": 9.41459,
+  "lift_min_s": 0.3,
+  "uncertainty_kN": 1.0,
+  "classes": {
+   "p_miss": "offline J_P judge level F_hat < F_min over U/L episodes (203.1) with t_on >= event start and without crawler_transient: miss / detect / none",
+   "item6": "min over legs of the 1 ms rod-axis force (C-S8-2) on [event start, end] >= F_min: pass / fail",
+   "reapproach": "any leg_reapproach_start with t >= event start: yes / no; if_lift = expected yes when an L episode >= lift_min_s exists after the event start, else not compared",
+   "n/a": "not compared (see basis)"
+  },
+  "event_start": {
+   "G4/SS/SS9/RE1bF/RE1c": "EVENTS[ev]['at'] (ready + 5 s)",
+   "RE1bP": "probe start + 0.1 s",
+   "HOLD": "READY entry",
+   "D8": "crawler lift-off + 8 s"
+  },
+  "n_cases": 33,
+  "n_group_N": {
+   "pressure": 12,
+   "combined": 3
+  }
+ },
+ "cases": {
+  "E_G4_Fs0": {
+   "event": "G4",
+   "judge": "combined",
+   "fs_kN": 0.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "if_lift"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true 10.80..11.73 kN (F_min 9.41, U 1 kN -> item6 pass); J_P ['none']; re-approach [False], lift max 0.0 s. G4 re-approach compared only with a lift >= 0.3 s: in the harness it may start without a lift (lower bound P - F_band < F_min/2), which depends on the measured F_band.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.12,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 1.79
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.59,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 1.79
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 11.73,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 1.79
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.8,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 1.79
+    }
+   ]
+  },
+  "E_G4_Fs0_ph0.05": {
+   "event": "G4",
+   "judge": "combined",
+   "fs_kN": 0.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "if_lift"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true 10.80..11.73 kN (F_min 9.41, U 1 kN -> item6 pass); J_P ['none']; re-approach [False], lift max 0.0 s. G4 re-approach compared only with a lift >= 0.3 s: in the harness it may start without a lift (lower bound P - F_band < F_min/2), which depends on the measured F_band.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.12,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 1.79
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 11.59,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 1.79
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 11.73,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 1.79
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 10.8,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 1.79
+    }
+   ]
+  },
+  "E_G4_Fs2": {
+   "event": "G4",
+   "judge": "combined",
+   "fs_kN": 2.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "if_lift"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true 10.82..11.09 kN (F_min 9.41, U 1 kN -> item6 pass); J_P ['none']; re-approach [False], lift max 0.0 s. G4 re-approach compared only with a lift >= 0.3 s: in the harness it may start without a lift (lower bound P - F_band < F_min/2), which depends on the measured F_band.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 10.98,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 5.25
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 10.82,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 5.25
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 11.09,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 5.25
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 11.04,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 5.25
+    }
+   ]
+  },
+  "E_G4_Fs2_ph0.05": {
+   "event": "G4",
+   "judge": "combined",
+   "fs_kN": 2.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "if_lift"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true 10.82..11.09 kN (F_min 9.41, U 1 kN -> item6 pass); J_P ['none']; re-approach [False], lift max 0.0 s. G4 re-approach compared only with a lift >= 0.3 s: in the harness it may start without a lift (lower bound P - F_band < F_min/2), which depends on the measured F_band.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 10.98,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 5.25
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 10.82,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 5.25
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 11.09,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 5.25
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 11.04,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 5.25
+    }
+   ]
+  },
+  "E_G4_Fs4": {
+   "event": "G4",
+   "judge": "combined",
+   "fs_kN": 4.0,
+   "expected": {
+    "p_miss": "n/a",
+    "item6": "n/a",
+    "reapproach": "if_lift"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true 8.66..8.76 kN (F_min 9.41, U 1 kN -> item6 n/a); J_P ['miss']; re-approach [True], lift max 0.0 s. Within U of F_min: not compared (C8 / item 6 gate decides). G4 re-approach compared only with a lift >= 0.3 s: in the harness it may start without a lift (lower bound P - F_band < F_min/2), which depends on the measured F_band.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.69,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 7.72
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.66,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 7.72
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 8.74,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 7.72
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 8.76,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 7.72
+    }
+   ]
+  },
+  "E_G4_Fs4_ph0.05": {
+   "event": "G4",
+   "judge": "combined",
+   "fs_kN": 4.0,
+   "expected": {
+    "p_miss": "n/a",
+    "item6": "n/a",
+    "reapproach": "if_lift"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true 8.66..8.76 kN (F_min 9.41, U 1 kN -> item6 n/a); J_P ['miss']; re-approach [True], lift max 0.0 s. Within U of F_min: not compared (C8 / item 6 gate decides). G4 re-approach compared only with a lift >= 0.3 s: in the harness it may start without a lift (lower bound P - F_band < F_min/2), which depends on the measured F_band.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.69,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 7.72
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.66,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 7.72
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 8.74,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 7.72
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 8.76,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 7.72
+    }
+   ]
+  },
+  "E_G4_Fs8": {
+   "event": "G4",
+   "judge": "combined",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "n/a",
+    "item6": "n/a",
+    "reapproach": "if_lift"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true 7.34..8.47 kN (F_min 9.41, U 1 kN -> item6 n/a); J_P ['miss']; re-approach [True], lift max 0.0 s. Within U of F_min: not compared (C8 / item 6 gate decides). G4 re-approach compared only with a lift >= 0.3 s: in the harness it may start without a lift (lower bound P - F_band < F_min/2), which depends on the measured F_band.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.47,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 12.94
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.44,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 12.94
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 7.34,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 12.94
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 7.91,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 12.94
+    }
+   ]
+  },
+  "E_G4_Fs8_ph0.05": {
+   "event": "G4",
+   "judge": "combined",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "n/a",
+    "item6": "n/a",
+    "reapproach": "if_lift"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true 7.34..8.47 kN (F_min 9.41, U 1 kN -> item6 n/a); J_P ['miss']; re-approach [True], lift max 0.0 s. Within U of F_min: not compared (C8 / item 6 gate decides). G4 re-approach compared only with a lift >= 0.3 s: in the harness it may start without a lift (lower bound P - F_band < F_min/2), which depends on the measured F_band.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.47,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 12.94
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 8.44,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 12.94
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 7.34,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 12.94
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 7.91,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 12.94
+    }
+   ]
+  },
+  "E_SS_Fs0": {
+   "event": "SS",
+   "judge": "combined",
+   "fs_kN": 0.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "no"
+   },
+   "basis": "reduced rev. 42 (flat, 2 phases): min true 29.22..29.59 kN (F_min 9.41, U 1 kN -> item6 pass); J_P ['none']; re-approach [False], lift max 0.0 s.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 29.22,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 1.79
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 29.59,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 1.79
+    }
+   ]
+  },
+  "E_SS_Fs4": {
+   "event": "SS",
+   "judge": "combined",
+   "fs_kN": 4.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "no"
+   },
+   "basis": "reduced rev. 42 (flat, 2 phases): min true 25.12..25.50 kN (F_min 9.41, U 1 kN -> item6 pass); J_P ['none']; re-approach [False], lift max 0.0 s.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 25.5,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 7.72
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 25.12,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 7.72
+    }
+   ]
+  },
+  "E_SS_Fs8": {
+   "event": "SS",
+   "judge": "combined",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "no"
+   },
+   "basis": "reduced rev. 42 (flat, 2 phases): min true 21.07..21.44 kN (F_min 9.41, U 1 kN -> item6 pass); J_P ['none']; re-approach [False], lift max 0.0 s.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 21.07,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 12.94
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 21.44,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 12.94
+    }
+   ]
+  },
+  "E_RE1bF_Fs0": {
+   "event": "RE1bF",
+   "judge": "combined",
+   "fs_kN": 0.0,
+   "expected": {
+    "p_miss": "detect",
+    "item6": "fail",
+    "reapproach": "yes"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true -1.05..-1.05 kN (F_min 9.41, U 1 kN -> item6 fail); J_P ['detect']; re-approach [True], lift max 1.5 s.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.05,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "reapproach": true,
+     "p_miss": "detect",
+     "F_band_kN": 1.79
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": -1.05,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "reapproach": true,
+     "p_miss": "detect",
+     "F_band_kN": 1.79
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.05,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "reapproach": true,
+     "p_miss": "detect",
+     "F_band_kN": 1.79
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": -1.05,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "reapproach": true,
+     "p_miss": "detect",
+     "F_band_kN": 1.79
+    }
+   ]
+  },
+  "E_RE1bF_Fs8": {
+   "event": "RE1bF",
+   "judge": "combined",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "n/a",
+    "item6": "fail",
+    "reapproach": "yes"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true -1.05..-0.72 kN (F_min 9.41, U 1 kN -> item6 fail); J_P ['detect', 'miss']; re-approach [True], lift max 1.4 s.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.05,
+     "t_below_Fmin_s": 1.4,
+     "t_lift_s": 1.4,
+     "reapproach": true,
+     "p_miss": "detect",
+     "F_band_kN": 12.94
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": -0.72,
+     "t_below_Fmin_s": 1.4,
+     "t_lift_s": 1.4,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 12.94
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.72,
+     "t_below_Fmin_s": 1.4,
+     "t_lift_s": 1.4,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 12.94
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": -0.72,
+     "t_below_Fmin_s": 1.4,
+     "t_lift_s": 1.3,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 12.94
+    }
+   ]
+  },
+  "E_RE1bP_Fs0": {
+   "event": "RE1bP",
+   "judge": "combined",
+   "fs_kN": 0.0,
+   "expected": {
+    "p_miss": "detect",
+    "item6": "fail",
+    "reapproach": "yes"
+   },
+   "basis": "not in the reduced harness; mechanism as RE1bF (drop lifts RR; lifted reading F_s - m g <= 5.95 kN < F_min, so J_P flags; combined lower bound < F_min/2).",
+   "reduced_ref": null
+  },
+  "E_RE1bP_Fs8": {
+   "event": "RE1bP",
+   "judge": "combined",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "detect",
+    "item6": "fail",
+    "reapproach": "yes"
+   },
+   "basis": "not in the reduced harness; mechanism as RE1bF (drop lifts RR; lifted reading F_s - m g <= 5.95 kN < F_min, so J_P flags; combined lower bound < F_min/2).",
+   "reduced_ref": null
+  },
+  "E_HOLD120_Fs8": {
+   "event": "HOLD",
+   "judge": "combined",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "no"
+   },
+   "basis": "reduced E0 (40 s hold, all floors, F_s 0..8): no READY exit, no flag; 120 s extension is an ASSUMPTION.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.14,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 12.94
+    }
+   ]
+  },
+  "N_SS_Fs0_pressure": {
+   "event": "SS",
+   "judge": "pressure",
+   "fs_kN": 0.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "no"
+   },
+   "basis": "reduced rev. 42 (flat, 2 phases): min true 15.08..15.42 kN (F_min 9.41, U 1 kN -> item6 pass); J_P ['none']; re-approach [False], lift max 0.0 s.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 15.08,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 15.42,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 13.0
+    }
+   ]
+  },
+  "N_SS_Fs4_pressure": {
+   "event": "SS",
+   "judge": "pressure",
+   "fs_kN": 4.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "no"
+   },
+   "basis": "reduced rev. 42 (flat, 2 phases): min true 11.94..12.26 kN (F_min 9.41, U 1 kN -> item6 pass); J_P ['none']; re-approach [False], lift max 0.0 s.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 11.94,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 12.26,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 13.0
+    }
+   ]
+  },
+  "N_SS_Fs8_pressure": {
+   "event": "SS",
+   "judge": "pressure",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "n/a",
+    "item6": "n/a",
+    "reapproach": "no"
+   },
+   "basis": "reduced rev. 42 (flat, 2 phases): min true 8.63..8.96 kN (F_min 9.41, U 1 kN -> item6 n/a); J_P ['miss']; re-approach [False], lift max 0.0 s. Within U of F_min: not compared (C8 / item 6 gate decides).",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 8.96,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 8.63,
+     "t_below_Fmin_s": 0.3,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    }
+   ]
+  },
+  "N_SS9_Fs8_pressure": {
+   "event": "SS9",
+   "judge": "pressure",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "n/a",
+    "item6": "n/a",
+    "reapproach": "no"
+   },
+   "basis": "reduced rev. 42 (flat, 2 phases): min true 9.16..9.36 kN (F_min 9.41, U 1 kN -> item6 n/a); J_P ['miss']; re-approach [False], lift max 0.0 s. Within U of F_min: not compared (C8 / item 6 gate decides).",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 9.16,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 9.36,
+     "t_below_Fmin_s": 0.1,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    }
+   ]
+  },
+  "N_SS9_Fs8_combined": {
+   "event": "SS9",
+   "judge": "combined",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "no"
+   },
+   "basis": "reduced rev. 42 (flat, 2 phases): min true 22.53..22.80 kN (F_min 9.41, U 1 kN -> item6 pass); J_P ['none']; re-approach [False], lift max 0.0 s.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 22.8,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 12.94
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 22.53,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 12.94
+    }
+   ]
+  },
+  "N_G4_Fs0_pressure": {
+   "event": "G4",
+   "judge": "pressure",
+   "fs_kN": 0.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "if_lift"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true 11.59..12.78 kN (F_min 9.41, U 1 kN -> item6 pass); J_P ['none']; re-approach [False], lift max 0.0 s. G4 re-approach compared only with a lift >= 0.3 s: in the harness it may start without a lift (lower bound P - F_band < F_min/2), which depends on the measured F_band.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 12.34,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 12.78,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 11.59,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 11.94,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 13.0
+    }
+   ]
+  },
+  "N_G4_Fs4_pressure": {
+   "event": "G4",
+   "judge": "pressure",
+   "fs_kN": 4.0,
+   "expected": {
+    "p_miss": "n/a",
+    "item6": "n/a",
+    "reapproach": "if_lift"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true 8.77..9.84 kN (F_min 9.41, U 1 kN -> item6 n/a); J_P ['miss', 'none']; re-approach [False], lift max 0.0 s. Within U of F_min: not compared (C8 / item 6 gate decides). G4 re-approach compared only with a lift >= 0.3 s: in the harness it may start without a lift (lower bound P - F_band < F_min/2), which depends on the measured F_band.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 9.64,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 9.84,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 8.77,
+     "t_below_Fmin_s": 0.2,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 9.2,
+     "t_below_Fmin_s": 0.1,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    }
+   ]
+  },
+  "N_G4_Fs8_pressure": {
+   "event": "G4",
+   "judge": "pressure",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "miss",
+    "item6": "fail",
+    "reapproach": "no"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true 6.23..6.95 kN (F_min 9.41, U 1 kN -> item6 fail); J_P ['miss']; re-approach [False], lift max 0.0 s.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 6.23,
+     "t_below_Fmin_s": 0.6,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": 6.29,
+     "t_below_Fmin_s": 0.6,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": 6.41,
+     "t_below_Fmin_s": 0.6,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": 6.95,
+     "t_below_Fmin_s": 0.5,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    }
+   ]
+  },
+  "N_RE1bF_Fs0_pressure": {
+   "event": "RE1bF",
+   "judge": "pressure",
+   "fs_kN": 0.0,
+   "expected": {
+    "p_miss": "detect",
+    "item6": "fail",
+    "reapproach": "yes"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true -1.05..-1.05 kN (F_min 9.41, U 1 kN -> item6 fail); J_P ['detect']; re-approach [True], lift max 1.5 s.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.05,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "reapproach": true,
+     "p_miss": "detect",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": -1.05,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "reapproach": true,
+     "p_miss": "detect",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -1.05,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "reapproach": true,
+     "p_miss": "detect",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": -1.05,
+     "t_below_Fmin_s": 1.5,
+     "t_lift_s": 1.5,
+     "reapproach": true,
+     "p_miss": "detect",
+     "F_band_kN": 13.0
+    }
+   ]
+  },
+  "N_RE1bF_Fs8_pressure": {
+   "event": "RE1bF",
+   "judge": "pressure",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "n/a",
+    "item6": "fail",
+    "reapproach": "yes"
+   },
+   "basis": "reduced rev. 42 (flat, 4 phases): min true -1.05..-0.72 kN (F_min 9.41, U 1 kN -> item6 fail); J_P ['detect', 'miss']; re-approach [True], lift max 1.4 s.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": -1.05,
+     "t_below_Fmin_s": 1.4,
+     "t_lift_s": 1.4,
+     "reapproach": true,
+     "p_miss": "detect",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.025,
+     "min_true_kN": -0.72,
+     "t_below_Fmin_s": 1.4,
+     "t_lift_s": 1.4,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.05,
+     "min_true_kN": -0.72,
+     "t_below_Fmin_s": 1.4,
+     "t_lift_s": 1.4,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    },
+    {
+     "offset_s": 0.075,
+     "min_true_kN": -0.72,
+     "t_below_Fmin_s": 1.4,
+     "t_lift_s": 1.3,
+     "reapproach": true,
+     "p_miss": "miss",
+     "F_band_kN": 13.0
+    }
+   ]
+  },
+  "N_RE1c_Fs0_combined": {
+   "event": "RE1c",
+   "judge": "combined",
+   "fs_kN": 0.0,
+   "expected": {
+    "p_miss": "detect",
+    "item6": "n/a",
+    "reapproach": "n/a"
+   },
+   "basis": "not in the reduced harness; forced retract (runner overrides RR): reading -F_s - m g (retract-direction friction, 203.4), item 6 and reapproach are not controller outcomes.",
+   "reduced_ref": null
+  },
+  "N_RE1c_Fs8_combined": {
+   "event": "RE1c",
+   "judge": "combined",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "detect",
+    "item6": "n/a",
+    "reapproach": "n/a"
+   },
+   "basis": "not in the reduced harness; forced retract (runner overrides RR): reading -F_s - m g (retract-direction friction, 203.4), item 6 and reapproach are not controller outcomes.",
+   "reduced_ref": null
+  },
+  "N_HOLD120_Fs8_pressure": {
+   "event": "HOLD",
+   "judge": "pressure",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "no"
+   },
+   "basis": "reduced E0 (40 s hold, all floors, F_s 0..8): no READY exit, no flag; 120 s extension is an ASSUMPTION.",
+   "reduced_ref": [
+    {
+     "offset_s": 0.0,
+     "min_true_kN": 70.3,
+     "t_below_Fmin_s": 0.0,
+     "t_lift_s": 0.0,
+     "reapproach": false,
+     "p_miss": "none",
+     "F_band_kN": 13.0
+    }
+   ]
+  },
+  "N_D8_top_rpB_Fs8_pressure": {
+   "event": "D8",
+   "judge": "pressure",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "n/a",
+    "reapproach": "no"
+   },
+   "basis": "reduced 200.1 / 212.2 (D8 min >= 42 kN, F_s <= 8): no U/L episode after lift-off + 8 s; item 6 not applicable (C1 is the gate). fdown3.5 is not in the reduced set (mechanism only).",
+   "reduced_ref": [
+    {
+     "D8_min_true_after_liftoff_kN": 51.13,
+     "F_band_kN": 13.0
+    }
+   ]
+  },
+  "K8_top_rpB_Fs8": {
+   "event": "D8",
+   "judge": "combined",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "n/a",
+    "reapproach": "no"
+   },
+   "basis": "reduced 200.1 / 212.2 (D8 min >= 42 kN, F_s <= 8): no U/L episode after lift-off + 8 s; item 6 not applicable (C1 is the gate). fdown3.5 is not in the reduced set (mechanism only).",
+   "reduced_ref": [
+    {
+     "D8_min_true_after_liftoff_kN": 45.97,
+     "F_band_kN": 13.06
+    }
+   ]
+  },
+  "N_D8_top_fdown3.5_Fs8_pressure": {
+   "event": "D8",
+   "judge": "pressure",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "n/a",
+    "reapproach": "no"
+   },
+   "basis": "reduced 200.1 / 212.2 (D8 min >= 42 kN, F_s <= 8): no U/L episode after lift-off + 8 s; item 6 not applicable (C1 is the gate). fdown3.5 is not in the reduced set (mechanism only).",
+   "reduced_ref": null
+  },
+  "K8_top_fdown3.5_Fs8": {
+   "event": "D8",
+   "judge": "combined",
+   "fs_kN": 8.0,
+   "expected": {
+    "p_miss": "none",
+    "item6": "n/a",
+    "reapproach": "no"
+   },
+   "basis": "reduced 200.1 / 212.2 (D8 min >= 42 kN, F_s <= 8): no U/L episode after lift-off + 8 s; item 6 not applicable (C1 is the gate). fdown3.5 is not in the reduced set (mechanism only).",
+   "reduced_ref": null
+  }
+ }
+}

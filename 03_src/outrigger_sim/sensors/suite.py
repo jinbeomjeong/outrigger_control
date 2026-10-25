@@ -121,6 +121,7 @@ class SensorSuite:
             rod_pressure_Pa=leg_reading.rod_pressure_Pa,
             oil_temperature_C=ideal.oil_temperature_C,
             imu_specific_force_samples_m_s2=delivered_force,
+            imu_angular_rate_samples_rad_s=delivered_rate,
         )
 
     def setup(self) -> SensorSetup:

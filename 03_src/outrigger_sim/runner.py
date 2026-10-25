@@ -290,8 +290,22 @@ def run_closed_loop(
     dt_schedule: DtSchedule | None = None,
     capture_every_s: float | None = None,
     command_offset_s: float = 0.0,
+    resume_command: Command | None = None,
+    stop_when: Callable[[], bool] | None = None,
 ) -> ClosedLoopResult:
     """Run ``controller`` in closed loop for ``duration_s`` from the engine's current state.
+
+    ``stop_when`` (S8 run end rule, ``s6_control_spec.md`` rev. 43 C-S8-17): called after every
+    control update (after ``on_control``); ``True`` ends the run at that control instant, before
+    ``duration_s`` (then the upper bound). The result meta carries ``stopped_early`` and the run
+    length. ``None`` (default) = the fixed duration, unchanged.
+
+    ``resume_command`` (S8 episode branch, ``s6_control_spec.md`` rev. 39 C-S8-4): continue a
+    run that stopped exactly at a control instant. The controller and the sensor suite are
+    **not** reset (their state carries on, e.g. a deep copy taken at that instant), and the
+    held command is ``resume_command`` (the command applied at that instant) instead of zero
+    speed. Only valid with ``command_delay_periods`` 0 and ``command_offset_s`` 0 (no runner
+    queue state to carry). ``None`` (default) = a fresh run, unchanged.
 
     Args:
         engine: Closed-loop engine (module docstring).
@@ -353,9 +367,12 @@ def run_closed_loop(
 
         placement_info = place_process(placement)
 
+    if resume_command is not None and (delay != 0 or offset != 0.0):
+        raise RunnerError("resume_command needs command_delay_periods 0 and command_offset_s 0")
     if recorder is None and run_meta is not None:
         recorder = Recorder(run_meta)
-    controller.reset()
+    if resume_command is None:
+        controller.reset()
     controller_delay = controller_output_delay_periods(controller)
     if controller_delay >= 1 and delay > 0:
         raise RunnerError(
@@ -363,16 +380,19 @@ def run_closed_loop(
             f"(meta timing.d); command_delay_periods = {delay} would count the delay twice "
             "(s6_control_spec 148 R-4)"
         )
-    sensors.reset()
+    if resume_command is None:
+        sensors.reset()
     t0 = float(engine.time_s)
     averager = ControlPeriodAverager(
         period, t0, sample_period_s=sample_period if imu_per_period > 1 else None
     )
-    held = Command.stopped(t0)
+    held = (Command.stopped(t0) if resume_command is None
+            else Command(t_s=t0, leg_speed_m_s=resume_command.leg_speed_m_s))
     engine.apply_command(held)
     cmd_t: list[float] = []
     cmd_u: list[NDArray[np.float64]] = []
-    state: dict[str, Any] = {"held": held, "nonfinite": 0, "updates": 0, "pending": None}
+    state: dict[str, Any] = {"held": held, "nonfinite": 0, "updates": 0, "pending": None,
+                             "stop": False}
     queue: list[Command] = []
     offset_tol = PERIOD_STEP_REL_TOL * period
 
@@ -431,6 +451,8 @@ def run_closed_loop(
         cmd_u.append(np.array(command.leg_speed_m_s, dtype=float))
         if on_control is not None:
             on_control(delivered, command)
+        if stop_when is not None and stop_when():
+            state["stop"] = True
 
     engine.set_step_callback(on_step)
     wall0 = time.perf_counter()
@@ -441,23 +463,37 @@ def run_closed_loop(
                 if capture_every_steps is not None and k % capture_every_steps == 0:
                     capture = True
                 engine.step(capture=capture)
+                if state["stop"]:
+                    n_steps = k
+                    break
         else:
             n_steps = _run_scheduled(
-                engine, dt_schedule, averager, t0, n_steps * dt, period, capture_every_s
+                engine, dt_schedule, averager, t0, n_steps * dt, period, capture_every_s,
+                stop=lambda: state["stop"],
             )
     finally:
         engine.set_step_callback(None)
     wall = time.perf_counter() - wall0
-    expected_updates = (
-        n_steps // n_period
-        if dt_schedule is None
-        else int(math.floor(round(duration_s / dt) * dt / period + 1e-9))
-    )
+    if state["stop"]:
+        expected_updates = state["updates"]  # ended at a control instant (checked below)
+        if dt_schedule is None and n_steps % n_period != 0:
+            raise RunnerError(f"stop_when ended the run off a control instant (step {n_steps})")
+    else:
+        expected_updates = (
+            n_steps // n_period
+            if dt_schedule is None
+            else int(math.floor(round(duration_s / dt) * dt / period + 1e-9))
+        )
     if state["updates"] != expected_updates:
         raise RunnerError(
             f"{state['updates']} controller updates for {n_steps} steps of {n_period} per period"
         )
     meta = runner_meta(controller, sensors, period, dt)
+    if resume_command is not None:
+        meta.update(resumed=True, resume_command_m_s=list(map(float, held.leg_speed_m_s)))
+    if stop_when is not None:
+        meta.update(stopped_early=bool(state["stop"]),
+                    run_length_s=float(engine.time_s) - t0, duration_upper_s=float(duration_s))
     meta.update(placement=placement_info, start_t_s=t0, n_steps=n_steps,
                 command_delay_periods=delay,
                 command_delay_note="delay 0" if delay == 0 else f"ZOH + {delay} control period(s)")
@@ -489,8 +525,10 @@ def _run_scheduled(
     duration_s: float,
     period: float,
     capture_every_s: float | None,
+    stop: Callable[[], bool] | None = None,
 ) -> int:
-    """Time-driven loop of :func:`run_closed_loop` with a :class:`DtSchedule`; step count."""
+    """Time-driven loop of :func:`run_closed_loop` with a :class:`DtSchedule`; step count.
+    ``stop()`` True after a step ends the loop (``stop_when`` of the caller)."""
     if not hasattr(engine, "set_dt"):
         raise RunnerError(f"{type(engine).__name__} has no set_dt: no dt schedule possible")
     schedule.start(t0)
@@ -514,6 +552,8 @@ def _run_scheduled(
                 next_cap += capture_every_s
         engine.step(capture=capture)
         steps += 1
+        if stop is not None and stop():
+            break
     if float(engine.dt_s) != schedule.base_dt_s:
         engine.set_dt(schedule.base_dt_s)
     schedule.finish(float(engine.time_s))

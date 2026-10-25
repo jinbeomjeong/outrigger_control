@@ -1070,7 +1070,8 @@ class R8Series:
         self.rows: dict[str, list[Any]] = {k: [] for k in (
             "t", "valve_u", "amp_u", "computed_u", "raw_u", "limit_flags", "issued_u",
             "scale_used", "scale_raw", "grounded_leg_count", "guard_active", "guard_u",
-            "imu_samples", "phase", *(f"cmp_{n}_u" for n in self.COMPONENTS))}
+            "imu_samples", "imu_gyro_samples", "phase",
+            *(f"cmp_{n}_u" for n in self.COMPONENTS))}
         self.raw_source: str | None = None
         self.limit_source: str | None = None
         self.component_source: str | None = None
@@ -1152,6 +1153,11 @@ class R8Series:
         samples = meas.imu_specific_force_samples_m_s2
         r["imu_samples"].append(np.full((10, 3), np.nan) if samples is None
                                 else np.asarray(samples, float))
+        # C-S8-31 (spec rev. 49 219.11): the delivered gyro 10 ms partial means of the same
+        # IMU-rate intervals (body axes, rad/s) that C2 hands to the D1'' lever term
+        gyro = getattr(meas, "imu_angular_rate_samples_rad_s", None)
+        r["imu_gyro_samples"].append(np.full((10, 3), np.nan) if gyro is None
+                                     else np.asarray(gyro, float))
         r["phase"].append(str(getattr(self.c2.phase, "value", self.c2.phase)))
 
     def save(self, path: Path) -> dict[str, Any]:
@@ -1185,7 +1191,12 @@ class R8Series:
                 "warn_probe_stiffness_out_of_range": [
                     str(e) for e in self.c2.events
                     if "WARN_PROBE_STIFFNESS_OUT_OF_RANGE" in str(e)],
-                "units": "m/s, -, m/s^2; t absolute s"}
+                "imu_gyro_samples": "C-S8-31: delivered gyro 10 ms partial means per period "
+                                    "(periods x 10 x 3, rad/s, body axes, oldest first, the "
+                                    "last ends at t); NaN = no IMU-rate samples",
+                "imu_gyro_available": bool(np.isfinite(arr["imu_gyro_samples"]).any())
+                if arr["imu_gyro_samples"].size else False,
+                "units": "m/s, -, m/s^2, rad/s (imu_gyro_samples); t absolute s"}
 
 
 # --- job ----------------------------------------------------------------------------------

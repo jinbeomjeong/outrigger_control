@@ -1427,6 +1427,9 @@ class LegProbeTruth:
     """7c truth: mean true cylinder force over the 0.5 s before the first move start."""
     midpoint_load_N: float | None
     """Former 7c truth (spec 55.1), recorded: midpoint of the hold-end means."""
+    end_load_N: float | None = None
+    """Mean true cylinder force at the second (return) hold end, ``T_2`` of spec rev. 44 214.4
+    (record: 7c split ``E - T_2`` / ``T_2 - T_0``, U-S8-16)."""
 
 
 def _kN_or_none(value_N: float | None) -> float | None:
@@ -1461,7 +1464,8 @@ def _leg_truth(
     first = _mean_near(tp, cylinder_force, times_s[1])
     second = _mean_near(tp, cylinder_force, times_s[2])
     midpoint = None if first is None or second is None else 0.5 * (first + second)
-    return LegProbeTruth(grounded, _mean_before(tp, cylinder_force, times_s[0]), midpoint)
+    return LegProbeTruth(grounded, _mean_before(tp, cylinder_force, times_s[0]), midpoint,
+                         second)
 
 
 def _probe_window_attitude_changes(
@@ -1627,6 +1631,7 @@ def _probe_leg_rows(case, tm, t, t_event_s, deduction_legs) -> list[dict[str, An
                     "load_estimate_kN": float(r["load_estimate_N"]) / 1e3,
                     "truth_cyl_kN": _kN_or_none(truth.start_load_N),
                     "truth_midpoint_kN": _kN_or_none(truth.midpoint_load_N),
+                    "truth_end_kN": _kN_or_none(truth.end_load_N),
                     "zero_cal_deduction": LEGS[leg] in deduction_legs,
                     "seal_friction_estimate_kN": float(r.get("seal_friction_estimate_N", math.nan))
                     / 1e3,

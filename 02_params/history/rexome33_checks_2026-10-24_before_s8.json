@@ -1,0 +1,736 @@
+{
+ "levels": {
+  "top": {
+   "independent_mass_rel": 4.004915914311012e-10,
+   "independent_com_max_abs_m": 2.317949387986573e-09,
+   "independent_inertia_rel_to_max": 5.274879091109381e-10,
+   "auger_json_mass_abs_kg": 0.03619999999500578,
+   "auger_json_com_max_abs_m": 4.756999999999678e-05,
+   "auger_json_inertia_max_abs_kg_m2": 0.03899999998975545,
+   "auger_json_inertia_rel_to_max": 5.646977055862424e-08,
+   "auger_json_leg_loads_max_abs_kN": 0.004600000000010596,
+   "tensor": {
+    "symmetric": true,
+    "positive_definite": true,
+    "triangle_inequality": true
+   },
+   "leg_load_sum_rel_to_weight": 6.839547027791569e-08,
+   "two_body_com_max_abs_m": 2.076960825547758e-09
+  },
+  "middle": {
+   "independent_mass_rel": 4.004915914311012e-10,
+   "independent_com_max_abs_m": 3.5149156918379276e-09,
+   "independent_inertia_rel_to_max": 1.1584391566228964e-09,
+   "auger_json_mass_abs_kg": 0.03619999999500578,
+   "auger_json_com_max_abs_m": 3.1508000000013414e-05,
+   "auger_json_inertia_max_abs_kg_m2": 0.1909999999916181,
+   "auger_json_inertia_rel_to_max": 4.604097067663066e-07,
+   "auger_json_leg_loads_max_abs_kN": 0.004600000000010596,
+   "tensor": {
+    "symmetric": true,
+    "positive_definite": true,
+    "triangle_inequality": true
+   },
+   "leg_load_sum_rel_to_weight": 6.839547027791569e-08,
+   "two_body_com_max_abs_m": 4.295215294547461e-09
+  },
+  "bottom": {
+   "independent_mass_rel": 4.004915914311012e-10,
+   "independent_com_max_abs_m": 3.1470681616241336e-10,
+   "independent_inertia_rel_to_max": 1.4769078515561302e-09,
+   "auger_json_mass_abs_kg": 0.03619999999500578,
+   "auger_json_com_max_abs_m": 3.1508000000013414e-05,
+   "auger_json_inertia_max_abs_kg_m2": 0.04449999999633292,
+   "auger_json_inertia_rel_to_max": 1.3371896479384868e-07,
+   "auger_json_leg_loads_max_abs_kN": 0.004600000000010596,
+   "tensor": {
+    "symmetric": true,
+    "positive_definite": true,
+    "triangle_inequality": true
+   },
+   "leg_load_sum_rel_to_weight": 6.839547027791569e-08,
+   "two_body_com_max_abs_m": 2.5971180761530377e-10
+  }
+ },
+ "legs": {
+  "FL": {
+   "moving_part_source": "cad_solid10",
+   "tensor": {
+    "symmetric": true,
+    "positive_definite": true,
+    "triangle_inequality": true
+   },
+   "com_inside_part_bbox": true,
+   "pad_vertex_count": 8,
+   "pad_face_y_vs_summary_mm": 1.1368683772161603e-13,
+   "pad_face_centroid_minus_axis_xy_mm": [
+    -0.0353469,
+    -0.0353469
+   ],
+   "retract_offset_mm": 0.0,
+   "retract_offset_minus_piston_gap_mm": 0.0,
+   "com_above_pad_bottom_cad_minus_retracted_m": 0.0,
+   "pad_thickness_brep_mm": 25.0,
+   "pad_side_height_brep_mm": 20.0,
+   "pad_side_face_count": 8,
+   "pad_side_height_brep_minus_doc_mm": 0.0,
+   "pad_top_face_area_m2": 0.07223630765286426,
+   "pad_area_brep_vs_polygon_rel": 3.887335520396206e-16,
+   "rod_mass_vs_csv_rel": 1.330807901939057e-16,
+   "split": {
+    "split_plane_minus_pad_thickness_mm": 0.0,
+    "whole_valid": true,
+    "pad_valid": true,
+    "rod_valid": true,
+    "whole_solids": 1,
+    "pad_solids": 1,
+    "rod_solids": 5,
+    "rod_piece_volumes_mm3": [
+     10748998.08760349,
+     48000.00000000086,
+     48000.0000000008,
+     48000.00000000028,
+     47999.999999999665
+    ],
+    "gusset_count": 4,
+    "gusset_mass_kg_in_pad_body": 1.5072000000000125,
+    "plate_mass_kg": 20.896831494124623,
+    "gussets_touch_split_plane": true,
+    "rod_piece_starts_at_split_plane": true,
+    "volume_pad_plus_rod_minus_whole_rel": 4.1078654357556106e-16,
+    "brep_whole_vs_moving_part_mass_rel": 1.1977271117451514e-15,
+    "sum_mass_rel": 1.7300502725207742e-15,
+    "sum_com_max_abs_m": 1.6653345369377348e-16,
+    "sum_inertia_rel_to_max": 1.13365446291357e-14,
+    "written_sum_mass_rel": 4.68236404936333e-09,
+    "written_sum_com_max_abs_m": 3.2467389887713693e-10,
+    "written_sum_inertia_rel_to_max": 8.140524981572887e-10,
+    "pad_tensor": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "rod_tensor": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "pad_com_inside_bbox": true,
+    "pad_com_below_ball_centre": true,
+    "rod_com_inside_bbox": true,
+    "pad_com_below_split_plane": true,
+    "rod_com_above_split_plane": true
+   }
+  },
+  "FR": {
+   "moving_part_source": "cad_solid10",
+   "tensor": {
+    "symmetric": true,
+    "positive_definite": true,
+    "triangle_inequality": true
+   },
+   "com_inside_part_bbox": true,
+   "pad_vertex_count": 8,
+   "pad_face_y_vs_summary_mm": 3.069544618483633e-12,
+   "pad_face_centroid_minus_axis_xy_mm": [
+    -0.0353469,
+    0.0353469
+   ],
+   "retract_offset_mm": 0.0,
+   "retract_offset_minus_piston_gap_mm": 0.0,
+   "com_above_pad_bottom_cad_minus_retracted_m": 0.0,
+   "pad_thickness_brep_mm": 25.0,
+   "pad_side_height_brep_mm": 20.0,
+   "pad_side_face_count": 8,
+   "pad_side_height_brep_minus_doc_mm": 0.0,
+   "pad_top_face_area_m2": 0.07223630765286423,
+   "pad_area_brep_vs_polygon_rel": 3.88733552039621e-16,
+   "rod_mass_vs_csv_rel": 1.330807901939057e-16,
+   "split": {
+    "split_plane_minus_pad_thickness_mm": 0.0,
+    "whole_valid": true,
+    "pad_valid": true,
+    "rod_valid": true,
+    "whole_solids": 1,
+    "pad_solids": 1,
+    "rod_solids": 5,
+    "rod_piece_volumes_mm3": [
+     10748998.087603468,
+     48000.00000000106,
+     48000.00000000059,
+     48000.000000000255,
+     47999.99999999964
+    ],
+    "gusset_count": 4,
+    "gusset_mass_kg_in_pad_body": 1.507200000000012,
+    "plate_mass_kg": 20.896831494124594,
+    "gussets_touch_split_plane": true,
+    "rod_piece_starts_at_split_plane": true,
+    "volume_pad_plus_rod_minus_whole_rel": 1.3692884785852052e-16,
+    "brep_whole_vs_moving_part_mass_rel": 0.0,
+    "sum_mass_rel": 1.330807901939057e-16,
+    "sum_com_max_abs_m": 4.440892098500626e-16,
+    "sum_inertia_rel_to_max": 9.936971218131292e-15,
+    "written_sum_mass_rel": 4.68236404936333e-09,
+    "written_sum_com_max_abs_m": 3.2467389887713693e-10,
+    "written_sum_inertia_rel_to_max": 8.140524981572887e-10,
+    "pad_tensor": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "rod_tensor": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "pad_com_inside_bbox": true,
+    "pad_com_below_ball_centre": true,
+    "rod_com_inside_bbox": true,
+    "pad_com_below_split_plane": true,
+    "rod_com_above_split_plane": true
+   }
+  },
+  "RL": {
+   "moving_part_source": "rexome35_synthesis",
+   "tensor": {
+    "symmetric": true,
+    "positive_definite": true,
+    "triangle_inequality": true
+   },
+   "com_inside_part_bbox": true,
+   "pad_vertex_count": 8,
+   "pad_face_y_vs_summary_mm": -0.043985180121239864,
+   "pad_face_centroid_minus_axis_xy_mm": [
+    0.0,
+    -0.0326872
+   ],
+   "retract_offset_mm": 2.0,
+   "retract_offset_minus_piston_gap_mm": 0.0,
+   "com_above_pad_bottom_cad_minus_retracted_m": 0.0,
+   "pad_thickness_brep_mm": 25.0,
+   "pad_side_height_brep_mm": 20.000000000000455,
+   "pad_side_face_count": 8,
+   "pad_side_height_brep_minus_doc_mm": 4.547473508864641e-13,
+   "pad_top_face_area_m2": 0.07223630765286426,
+   "pad_area_brep_vs_polygon_rel": 2.591557013597471e-16,
+   "rod_mass_vs_csv_rel": 4.4674177721744635e-15,
+   "split": {
+    "split_plane_minus_pad_thickness_mm": 0.0,
+    "whole_valid": true,
+    "pad_valid": true,
+    "rod_valid": true,
+    "whole_solids": 2,
+    "pad_solids": 1,
+    "rod_solids": 2,
+    "rod_piece_volumes_mm3": [
+     6033401.673522419,
+     1783178.110618473
+    ],
+    "gusset_count": 1,
+    "gusset_mass_kg_in_pad_body": 13.997948168355013,
+    "plate_mass_kg": 11.802842423320337,
+    "gussets_touch_split_plane": true,
+    "rod_piece_starts_at_split_plane": false,
+    "volume_pad_plus_rod_minus_whole_rel": 5.995557457226664e-16,
+    "brep_whole_vs_moving_part_mass_rel": 0.0,
+    "sum_mass_rel": 4.661653327486397e-15,
+    "sum_com_max_abs_m": 4.163336342344337e-15,
+    "sum_inertia_rel_to_max": 1.9900333504639975e-14,
+    "written_sum_mass_rel": 0.0,
+    "written_sum_com_max_abs_m": 3.2676400474329625e-10,
+    "written_sum_inertia_rel_to_max": 9.260598951814259e-10,
+    "pad_tensor": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "rod_tensor": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "pad_com_inside_bbox": true,
+    "pad_com_below_ball_centre": true,
+    "rod_com_inside_bbox": true,
+    "pad_com_below_split_plane": false,
+    "rod_com_above_split_plane": true
+   }
+  },
+  "RR": {
+   "moving_part_source": "rexome35_synthesis",
+   "tensor": {
+    "symmetric": true,
+    "positive_definite": true,
+    "triangle_inequality": true
+   },
+   "com_inside_part_bbox": true,
+   "pad_vertex_count": 8,
+   "pad_face_y_vs_summary_mm": -0.04398518012271779,
+   "pad_face_centroid_minus_axis_xy_mm": [
+    1.02141e-11,
+    0.0326872
+   ],
+   "retract_offset_mm": 2.0,
+   "retract_offset_minus_piston_gap_mm": 0.0,
+   "com_above_pad_bottom_cad_minus_retracted_m": 0.0,
+   "pad_thickness_brep_mm": 25.0,
+   "pad_side_height_brep_mm": 20.000000000001364,
+   "pad_side_face_count": 8,
+   "pad_side_height_brep_minus_doc_mm": 1.3642420526593924e-12,
+   "pad_top_face_area_m2": 0.07223630765286426,
+   "pad_area_brep_vs_polygon_rel": 1.425356357478609e-15,
+   "rod_mass_vs_csv_rel": 4.467417772174496e-15,
+   "split": {
+    "split_plane_minus_pad_thickness_mm": 0.0,
+    "whole_valid": true,
+    "pad_valid": true,
+    "rod_valid": true,
+    "whole_solids": 2,
+    "pad_solids": 1,
+    "rod_solids": 2,
+    "rod_piece_volumes_mm3": [
+     6033401.673522419,
+     1783178.1106184868
+    ],
+    "gusset_count": 1,
+    "gusset_mass_kg_in_pad_body": 13.99794816835512,
+    "plate_mass_kg": 11.802842423319683,
+    "gussets_touch_split_plane": true,
+    "rod_piece_starts_at_split_plane": false,
+    "volume_pad_plus_rod_minus_whole_rel": 1.9985191524089025e-16,
+    "brep_whole_vs_moving_part_mass_rel": 0.0,
+    "sum_mass_rel": 4.467417772174496e-15,
+    "sum_com_max_abs_m": 3.9968028886505635e-15,
+    "sum_inertia_rel_to_max": 3.3428088302737804e-14,
+    "written_sum_mass_rel": 0.0,
+    "written_sum_com_max_abs_m": 3.2676400474329625e-10,
+    "written_sum_inertia_rel_to_max": 9.260598951814259e-10,
+    "pad_tensor": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "rod_tensor": {
+     "symmetric": true,
+     "positive_definite": true,
+     "triangle_inequality": true
+    },
+    "pad_com_inside_bbox": true,
+    "pad_com_below_ball_centre": true,
+    "rod_com_inside_bbox": true,
+    "pad_com_below_split_plane": false,
+    "rod_com_above_split_plane": true
+   }
+  }
+ },
+ "totals": {
+  "superstructure_plus_4_rods_minus_total_rel": 0.0,
+  "moving_plus_fixed_minus_superstructure_rel": 1.887130683273928e-16,
+  "total_case_c_kg": 38982.79845048603,
+  "total_case_a_kg_cad_summary": 37744.0,
+  "tool_steel_minus_step_kg": 1238.7966502709949,
+  "total_c_minus_a_minus_tool_delta_kg": 0.0018002150338816136,
+  "level_masses_equal": true
+ },
+ "barrel_replacement": {
+  "delta_mass_kg_per_leg": {
+   "FL": -15.860428686418317,
+   "FR": -15.86042868641826,
+   "RL": -61.55315391259632,
+   "RR": -61.55315391259635
+  },
+  "delta_mass_kg_total": -154.82716519802926,
+  "superstructure_top_mass_cad_kg": 38555.6638,
+  "superstructure_top_mass_kg": 38400.8366,
+  "superstructure_top_com_shift_m": [
+   0.00812201,
+   0.000114265,
+   0.00861826
+  ],
+  "undo_mass_rel": 0.0,
+  "undo_com_max_abs_m": 4.336808689942018e-19,
+  "undo_inertia_rel_to_max": 1.0697419788174169e-16,
+  "cad_barrel_vs_cache_json_mass_rel": {
+   "FL": 2.7755575615628914e-15,
+   "FR": 8.881784197001252e-16,
+   "RL": 2.220446049250313e-16,
+   "RR": 2.220446049250313e-16
+  },
+  "new_barrel_vs_cache_json_mass_rel": {
+   "FL": 8.881784197001252e-16,
+   "FR": 3.219646771412954e-15,
+   "RL": 6.661338147750939e-16,
+   "RR": 6.661338147750939e-16
+  },
+  "sources": {
+   "FL": {
+    "brep": "01_cad/02_legs/rexome35/barrel_FL.brep",
+    "sha256": "865d60fca29cabd5a8edee7e0c1c54b55a2476378d934a54c20652861e74d001"
+   },
+   "FR": {
+    "brep": "01_cad/02_legs/rexome35/barrel_FR.brep",
+    "sha256": "5a8596596235abe86d19845ff604724e4f8243095732d99049d0aff669430f50"
+   },
+   "RL": {
+    "brep": "01_cad/02_legs/rexome35/barrel_RL.brep",
+    "sha256": "65e773f57b07a81540facfbf5143488bbf84ad7978141bf7b139073fb3c6f8a8"
+   },
+   "RR": {
+    "brep": "01_cad/02_legs/rexome35/barrel_RR.brep",
+    "sha256": "6190e1c8ae306008b0f0ec73e15c325fa69cb8dc3a63dd0f9d886e260be3d076"
+   }
+  }
+ },
+ "dynamics": {
+  "dyn_model_import": "ok",
+  "dyn_model_same_inputs": {
+   "oil_bulk_modulus_eff_Pa": true,
+   "oil_dead_length_m": true,
+   "frame_bracket_stiffness_N_m": true,
+   "bore_rod_barrel_diameters": true,
+   "steel_E_Pa": true,
+   "concrete": true,
+   "crawler_clearance_m": true,
+   "modal_damping_ratio_body": true,
+   "leg_damping_ratio_moving": true,
+   "leg_damping_ratio_ranges": true,
+   "swivel_ball_height_above_pad_bottom_m": true,
+   "swivel_tilt_range_deg": true,
+   "F_min_fraction_of_mean_leg_load": true,
+   "oil_bulk_modulus_range_Pa": true,
+   "crawler_sphere_radius_m": true,
+   "crawler_damping_ratio_heave": true,
+   "crawler_damping_ratio_heave_soil": true,
+   "crawler_damping_ratio_range": true
+  },
+  "dyn_model_full_precision_rel": {
+   "kc": 0.0,
+   "ko_eff": 0.0,
+   "kh_free": 1.27327001654369e-16,
+   "kn_l1": 0.0,
+   "kt_l1": 1.3020445661655535e-16,
+   "cn_l1": 0.0,
+   "ct_l1": 0.0,
+   "c_oil": 0.0,
+   "c_oil_moving": 0.0,
+   "ct_l2": 0.0,
+   "c_bushing_l2b": 0.0,
+   "gn_l1": 0.0,
+   "bushing_input_l1": 0.0,
+   "k_axial_l2b": 0.0,
+   "bushing_l2b": 1.3020445661655535e-16,
+   "bushing_input_l2b": 0.0,
+   "f_rod_axial_l2b": 0.0,
+   "head_area": 0.0,
+   "annulus_area": 0.0,
+   "max_force_extend": 0.0,
+   "max_force_retract": 0.0,
+   "locked_force_limit": 0.0,
+   "k_lock": 0.0,
+   "crawler.damping_total": 0.0,
+   "crawler.kn_floor_contact_sum": 0.0,
+   "crawler.gn_per_sphere": 0.0
+  },
+  "crawler_cad_layout": {
+   "rollers_per_track (left, right)": [
+    6,
+    6
+   ],
+   "raised_shoes_per_track (left, right)": [
+    6,
+    6
+   ],
+   "raised_shoes_rear_front (left)": [
+    3,
+    3
+   ],
+   "flat_shoes_per_track (left, right)": [
+    10,
+    10
+   ],
+   "raised_shoes_outside_end_rollers": true,
+   "flat_shoes_inside_raised": true,
+   "left_right_roller_x_max_abs_m": 0.0,
+   "left_right_station_x_max_abs_m": 0.0,
+   "left_right_station_gap_max_abs_m": 0.0,
+   "roller_abs_y_minus_track_centre_max_abs_m": 9.999982781838668e-07,
+   "grouser_pad_planes": 128,
+   "end_shoe_gap_min_m": 0.0022305384248097653
+  },
+  "crawler_rounding_abs_m": {
+   "track_centre_y": 1.7217338665886928e-12,
+   "roller_x": 0.0,
+   "end_shoe_x": 1.1102230246251565e-16,
+   "end_shoe_gap": 4.874424809841148e-06
+  },
+  "crawler_layout_check_json": {
+   "n_points_equal": true,
+   "rel": {
+    "track_centre_y_m": 1.647592216831285e-12,
+    "roller_axes_x_m": 0.0,
+    "shoe_station_x_m": 1.8108351404748924e-16,
+    "end_shoe_gap_mm": 0.0002998312457333722,
+    "x_floor_contact_range_m": 0.0,
+    "k_per_point_N_m": 4.000001599628111e-07,
+    "c_per_point_N_s_m": 2.798756494035638e-06,
+    "damping_total_N_s_m": 2.2805427702667327e-06,
+    "gn_per_point_1_s": 2.3475793510999876e-07
+   },
+   "flat_station_gap_max_abs_mm": 4.2480996853555553e-07,
+   "settle_on_crawler_s": 65.41,
+   "settle_from_printed_tau_s": 65.3934166410309,
+   "settle_abs_diff_s": 0.01658335896910046,
+   "settle_tau_rounding_tol_s": 0.02802585092994046
+  },
+  "reference_json_rel": {
+   "levelled_extension_m": 0.0,
+   "k_slab_N_m": 0.0,
+   "k_axial_leg_N_m": 0.0,
+   "k_lateral_leg_swivel_pad_N_m": 0.0,
+   "L1.kn": 0.0,
+   "L1.kt": 0.0,
+   "L1.cn": 0.0,
+   "L1.ct": 0.0,
+   "L2.c_oil": 0.0,
+   "L2.c_oil_moving": 0.0,
+   "L2.c_contact": 0.0,
+   "L2.c_tangential": 0.0,
+   "L2b.c_contact": 0.0,
+   "L2b.c_tangential (bushing damping)": 0.0,
+   "L2b.k_horizontal": 0.0,
+   "F_min_cylinder_N": 0.0,
+   "L2.dt_s": 0.0,
+   "L1.dt_max_s (numerical damping bound, 4 digits)": 0.0,
+   "L1.gn x moving mass = c_pad": 0.0,
+   "L1.bushing_input x 2 = c_tan": 0.0,
+   "L2b_NSC.k_axial (k_vertical)": 0.0,
+   "L2b_NSC.lateral_bushing (k_horizontal)": 0.0,
+   "L2b_NSC.c_oil": 0.0,
+   "L2b_NSC.c_oil_moving": 0.0,
+   "L2b_NSC.bushing_damping_actual (c_tangential)": 0.0,
+   "L2b_NSC.rod_on_axial_spring_Hz (4 digits)": 0.0,
+   "L2b_NSC.dt_s (rod rule)": 0.0,
+   "L2b_NSC.dt_max_s (numerical damping bound, 4 digits)": 0.0,
+   "hydraulic.annulus_area_m2": 0.0,
+   "hydraulic.head_area_m2": 0.0,
+   "hydraulic.relief_pressure_Pa": 0.0,
+   "hydraulic.max_force_extend_N": 0.0,
+   "hydraulic.max_force_retract_N": 0.0,
+   "hydraulic.pump_flow_L_min": 1.1803035477742526e-16,
+   "hydraulic.flow_4_legs_at_vmax_L_min (4 digits)": 0.0,
+   "crawler.damping_total_N_s_m": 0.0,
+   "crawler.damping_mass_kg": 0.0,
+   "crawler.gn_mass_kg (superstructure body)": 0.0,
+   "crawler.kn_total_N_m": 0.0,
+   "crawler.damping_ratio_heave": 0.0
+  },
+  "reference_json_status": "current",
+  "gn_m_moving_vs_exact_m_eff_rel": 8.293880015860703e-08,
+  "pump_flow_covers_4_legs_at_vmax": true,
+  "line_references": {
+   "ranges_checked": 31,
+   "references_in_source": 28,
+   "missing_text": [],
+   "unlisted_references": [],
+   "old_style_references": []
+  },
+  "doc10_printed": {
+   "L1.dt_s": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 5e-06,
+    "max_rel_diff": 0.0
+   },
+   "L2.kn_per_pad_N_m": {
+    "max_abs_diff": 338088.0485289097,
+    "half_unit_tol": 500000.0,
+    "max_rel_diff": 0.0010434816312620669
+   },
+   "L2.kt_per_pad_N_m": {
+    "max_abs_diff": 338088.0485289097,
+    "half_unit_tol": 500000.0,
+    "max_rel_diff": 0.0010434816312620669
+   },
+   "concrete.k_N_m": {
+    "max_abs_diff": 338088.0485289097,
+    "half_unit_tol": 500000.0,
+    "max_rel_diff": 0.0010434816312620669
+   },
+   "ground_body_mass_kg": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 50000000.0,
+    "max_rel_diff": 0.0
+   },
+   "L1.slip_damping_reenable_speed_m_s": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 5e-05,
+    "max_rel_diff": 0.0
+   },
+   "L2b_NSC.solver_max_iterations": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.5,
+    "max_rel_diff": 0.0
+   },
+   "L2b_NSC.friction": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.05,
+    "max_rel_diff": 0.0
+   },
+   "relief_pressure_moving_Pa": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 50000.0,
+    "max_rel_diff": 0.0
+   },
+   "locked_pressure_limit_Pa": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 50000.0,
+    "max_rel_diff": 0.0
+   },
+   "pump_flow_m3_s": {
+    "max_abs_diff": 3.3333333333135373e-09,
+    "half_unit_tol": 5e-09,
+    "max_rel_diff": 3.322270173635332e-06
+   },
+   "crawler.sphere_radius_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.005,
+    "max_rel_diff": 0.0
+   },
+   "crawler.damping_ratio_heave": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.005,
+    "max_rel_diff": 0.0
+   },
+   "crawler.damping_ratio_heave_soil": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.05,
+    "max_rel_diff": 0.0
+   },
+   "crawler.D.track_centre_y_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.0005,
+    "max_rel_diff": 0.0
+   },
+   "crawler.D.roller_x_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 0.0005,
+    "max_rel_diff": 0.0
+   },
+   "crawler.D.end_shoe_x_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 5e-05,
+    "max_rel_diff": 0.0
+   },
+   "crawler.D.end_shoe_gap_m": {
+    "max_abs_diff": 0.0,
+    "half_unit_tol": 5e-06,
+    "max_rel_diff": 0.0
+   },
+   "crawler.D.kn_per_sphere_N_m": {
+    "max_abs_diff": 3.3333333330228925,
+    "half_unit_tol": 5.0,
+    "max_rel_diff": 4.000001599628111e-07
+   },
+   "L1.kn_per_pad_N_m": {
+    "max_abs_diff": 4614.904674090445,
+    "half_unit_tol": 5000.0,
+    "max_rel_diff": 0.00017811287819723834
+   },
+   "L1.kt_per_pad_N_m": {
+    "max_abs_diff": 388.60758735612035,
+    "half_unit_tol": 500.0,
+    "max_rel_diff": 5.432791658830146e-05
+   },
+   "L1.bushing_stiffness_per_pad_N_m": {
+    "max_abs_diff": 388.60758735612035,
+    "half_unit_tol": 500.0,
+    "max_rel_diff": 5.432791658830146e-05
+   },
+   "L2.lateral_bushing_N_m": {
+    "max_abs_diff": 415.3440726362169,
+    "half_unit_tol": 500.0,
+    "max_rel_diff": 5.678754069404114e-05
+   },
+   "L2b_NSC.axial_stiffness_operating_point_N_m": {
+    "max_abs_diff": 4614.904674090445,
+    "half_unit_tol": 5000.0,
+    "max_rel_diff": 0.00017811287819723834
+   },
+   "L2b_NSC.lateral_bushing_N_m": {
+    "max_abs_diff": 388.60758735612035,
+    "half_unit_tol": 500.0,
+    "max_rel_diff": 5.432791658830146e-05
+   },
+   "annulus_area_m2": {
+    "max_abs_diff": 2.653589793212563e-09,
+    "half_unit_tol": 5e-09,
+    "max_rel_diff": 7.038867753374916e-07
+   },
+   "legs.cylinder.head_area_m2": {
+    "max_abs_diff": 2.896141687754039e-08,
+    "half_unit_tol": 5e-08,
+    "max_rel_diff": 2.1819468460914013e-06
+   },
+   "max_force_extend_N": {
+    "max_abs_diff": 0.026680708397179842,
+    "half_unit_tol": 0.05,
+    "max_rel_diff": 9.571973516752963e-08
+   },
+   "max_force_retract_N": {
+    "max_abs_diff": 0.045725385658442974,
+    "half_unit_tol": 0.05,
+    "max_rel_diff": 5.775733617257832e-07
+   },
+   "legs.cylinder.locked_force_limit_N": {
+    "max_abs_diff": 0.022198819380719215,
+    "half_unit_tol": 0.05,
+    "max_rel_diff": 4.7784303486758984e-08
+   }
+  },
+  "reference_json_assumptions_beta_Pa": 1000000000.0,
+  "l1_dt_rule": {
+   "f1_Hz": 1.8314,
+   "zeta1": 0.00895,
+   "dt_max_first_mode_s": 0.00015555714105847584,
+   "dt_first_mode_ladder_s (record, rev. 7 rule)": 0.0001,
+   "dt_bushing_bound_per_leg_s (0.1 c_t / k_t)": [
+    0.0002208411946555484,
+    0.0002208411946555484,
+    0.0003067490120101442,
+    0.0003067490120101442
+   ],
+   "dt_s": 0.0002,
+   "dt_within_bushing_bound": true,
+   "source": "user decision 2026-10-21, dynamics_model.md 5.7 (S3 V8(a), V9)"
+  },
+  "l2_dt_rule": {
+   "f_rod_local_Hz": 313.05983956683673,
+   "dt_max_s": 6.38855498925473e-05,
+   "dt_s": 5e-05
+  },
+  "l2b_nsc_dt_rule": {
+   "f_rod_on_axial_spring_Hz": 79.95133225888607,
+   "dt_rod_max_s": 0.0002501521792687467,
+   "f1_Hz": 1.8323,
+   "zeta1": 0.00826,
+   "dt_rocking_max_s": 0.00014349395076560122,
+   "dt_max_s": 0.00014349395076560122,
+   "dt_s": 0.0001
+  }
+ },
+ "yaml_round_trip_equal": true,
+ "thresholds": {
+  "REL_TOL": 1e-06,
+  "ABS_COM_TOL_M": 1e-06,
+  "JSON_MASS_TOL_KG": 0.05,
+  "JSON_COM_TOL_M": 5e-05,
+  "JSON_INERTIA_REL_TOL": 1e-06,
+  "JSON_LOAD_TOL_KN": 0.005,
+  "CAD_SUMMARY_TOL_MM": 0.05,
+  "PAD_THICKNESS_TOL_MM": 0.01,
+  "DOC10_PRINTED": "half a unit of the last printed digit (00_docs/01_dynamics/dynamics_model.md 10)",
+  "REFERENCE_JSON": "REL_TOL after rounding the generated value to 6 significant digits (run_reference.py r())"
+ },
+ "failures": [],
+ "passed": true
+}

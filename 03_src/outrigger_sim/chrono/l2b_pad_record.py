@@ -89,6 +89,8 @@ class L2bPadRecorder:
         self._f_min = np.full(n, np.inf)
         self._r_sum = np.zeros((n, 3))
         self._a_ann = np.asarray(model.params.l2b.rod_side.annulus_area_m2, dtype=float)
+        self.pressure_floor_samples = np.zeros(n, dtype=np.int64)
+        """Samples (per leg) whose head pressure hit the S8-A1 floor."""
 
     def __call__(self, engine: Any) -> None:
         model = self.model
@@ -116,6 +118,10 @@ class L2bPadRecorder:
         s_link = np.array([m.GetMotorPos() for m in model.motors], dtype=float)
         p_r = (np.zeros(len(f)) if act.rod_side is None or not act.rod_side.armed
                else act.rod_side.rod_pressure_Pa)
+        # S8-A1 head floor (split of the pressure force F - f; = F on S7)
+        p_h, p_r, hit = act.pressure_split(act.acting_pressure_force_N, p_r,
+                                           act.reference.u_applied_m_s)
+        self.pressure_floor_samples += hit
         row = {
             "t": t, "R_world_1ms": self._r_sum / self.every_steps, "N_raw": raw @ n,
             "n_world": n, "a_world": a, "ball_centre_world": centres,
@@ -123,9 +129,11 @@ class L2bPadRecorder:
             "anchor_world": np.full((len(f), 3), np.nan), "slip_total": np.zeros((len(f), 3)),
             "sliding": np.zeros(len(f), dtype=bool), "F_cyl": f,
             "F_cyl_min_interval": self._f_min.copy(),
-            "head_pressure": (f + p_r * self._a_ann) / act.head_area_m2, "rod_pressure": p_r,
+            # S8 (C-6): pressure force F - f and the piston s_p (= F, s + F / k_out on S7)
+            "head_pressure": p_h,
+            "rod_pressure": p_r,
             "s_motor": act.reference.s_ref_m, "s_link": s_link,
-            "stroke_true": act.stroke_true_m(s_link, f),
+            "stroke_true": act.stroke_sensor_true_m(s_link),
             "lateral_force_world": np.asarray(model.bushings.acting_force_on_rod_N, dtype=float),
             "body_quat_wxyz": quat,
         }
@@ -154,6 +162,8 @@ class L2bPadRecorder:
     def meta(self) -> dict[str, Any]:
         return {"format": "l2b_pad_record_v1", "sample_s": self.sample_s,
                 "every_steps": self.every_steps, "contact_window_s": self.window_s,
+                "pressure_floor_samples": self.pressure_floor_samples.tolist(),
+                "pressure_rule": "S8-A1 head floor (L2bForceActuator.pressure_split)",
                 "contact_window_samples": self.window_samples, "mu": self.mu,
                 "rule": "dynamics_model.md 5.22.3: loads from the force-law output (every-step "
                         "minimum per 1 ms); NSC contact force as a 20 ms centred mean of the "

@@ -60,6 +60,9 @@ TEXT_KEYS = frozenset(
         "default_auger_level",
         "definition",
         "description",
+        "discharge",
+        "pressure_model",
+        "sides",
         "flow_control",
         "formula",
         "generated",
@@ -107,6 +110,16 @@ FLAG_KEYS = frozenset({"applied", "predictor"})
 # Left out of the parameter fingerprint: the generation date changes on every export even
 # when no value changes, and must not invalidate saved snapshots (R16).
 HASH_EXCLUDED_PATHS: tuple[tuple[str, ...], ...] = (("meta", "generated"),)
+
+# S8 blocks used only by the L2b-NSC model (U-S8-H4: no seal friction in L1; the counterbalance
+# and the crawler NSC compliance are L2b options). Left out of the **L1** fingerprint so that
+# adding them does not invalidate the saved L1 snapshots (``07_results/states_L1R``, R16); the
+# L2b fingerprint includes them (an L2b snapshot of another friction level never matches).
+L2B_ONLY_HASH_PATHS: tuple[tuple[str, ...], ...] = (
+    ("actuator", "seal_friction"),
+    ("actuator", "counterbalance"),
+    ("contact", "crawler", "L2b_NSC"),
+)
 
 KeyPath = tuple[str | int, ...]
 Vector2 = tuple[float, float]
@@ -370,6 +383,63 @@ class RigidFloorL2bNSC:
 
 
 @dataclass(frozen=True)
+class SealFrictionParams:
+    """``actuator.seal_friction`` (S8, ``00_docs/02_hydraulic/s8_seal_friction_counterbalance.md``
+    2 / C-1; user decisions U-S8-H1..H4 2026-10-24). L2b only (H4: no friction in L1).
+
+    ``level_N`` = Coulomb limit of the **front** legs (static = kinetic), constant during a run;
+    rear legs ``rear_scale x level_N``. ``stick_stiffness_N_m`` 0 = rigid stick (default).
+    ``pressure_model`` ``"constant"`` (default) or ``"seal_geometry"`` (2.4 option)."""
+
+    level_N: float
+    nominal_level_N: float
+    sensitivity_levels_N: tuple[float, ...]
+    rear_scale: float
+    static_ratio: float
+    stick_stiffness_N_m: float
+    pressure_model: str
+    kappa_N_per_m_Pa: float
+    F0_N: float
+    F0_seal_diameter_sum_m: float
+    p_ref_head_Pa: PerLeg
+    p_ref_rod_Pa: float
+    bore_diameter_m: PerLeg
+    rod_diameter_m: PerLeg
+    leg_scale: PerLeg = (1.0, 1.0, 1.0, 1.0)
+    """Per-leg factor on the limit (ML input, python-expert spec 2026-10-24): limit_i = level x
+    (rear_scale for RL / RR) x leg_scale[i]. YAML / override ``actuator.seal_friction.leg_scale``
+    as a per-leg mapping or a 4-list; absent = all 1."""
+
+
+@dataclass(frozen=True)
+class CounterbalanceParams:
+    """``actuator.counterbalance`` (S8 spec 4.4, all ASSUMPTION; U-S8-H5/H6). Used when
+    ``actuator.lock_valve == "counterbalance"``. Pressures gauge."""
+
+    p_set_Pa: float
+    override_Pa: float
+    rated_flow_m3_s: float
+    tau_s: float
+    hysteresis_Pa: float
+    pilot_ratio: float
+    tank_pressure_Pa: float
+    back_pressure_Pa: float
+    sides: str
+    discharge: str
+    blocked_line_capacity_m3: float
+
+
+@dataclass(frozen=True)
+class CrawlerContactL2bNSC:
+    """``contact.crawler.L2b_NSC`` (U-S8-L3 option 1, 2026-10-24): NSC compliance of the
+    crawler sphere material. ``model`` ``"rigid"`` (S7) or ``"compliant"``."""
+
+    model: str
+    compliance_m_N: float
+    damping_f_s: float
+
+
+@dataclass(frozen=True)
 class L2bNSC:
     """Typed L2b-NSC blocks, present when :func:`load_params` was called with
     ``model="L2b_NSC"``."""
@@ -379,6 +449,14 @@ class L2bNSC:
     dt_s: float
     """``simulation.L2b_NSC.dt_s``."""
     rod_side: L2bRodSide | None = None
+    seal_friction: SealFrictionParams | None = None
+    """None when the YAML has no ``actuator.seal_friction`` (before S8)."""
+    counterbalance: CounterbalanceParams | None = None
+    """None when the YAML has no ``actuator.counterbalance`` (before S8)."""
+    lock_valve: str = "pilot_check"
+    """``actuator.lock_valve``: ``"pilot_check"`` or ``"counterbalance"``."""
+    crawler_contact: CrawlerContactL2bNSC | None = None
+    """None when the YAML has no ``contact.crawler.L2b_NSC`` (rigid NSC crawler, S7)."""
 
 
 L2B_OPERATING_POINT_REL_TOL = 1.0e-6
@@ -600,9 +678,11 @@ def _apply_overrides(tree: dict[str, Any], overrides: Mapping[str, Any]) -> None
 # --- fingerprint -------------------------------------------------------------------------
 
 
-def _without_excluded_paths(tree: dict[str, Any]) -> dict[str, Any]:
+def _without_excluded_paths(
+    tree: dict[str, Any], extra: tuple[tuple[str, ...], ...] = ()
+) -> dict[str, Any]:
     trimmed = copy.deepcopy(tree)
-    for path in HASH_EXCLUDED_PATHS:
+    for path in (*HASH_EXCLUDED_PATHS, *extra):
         parent: Any = trimmed
         for key in path[:-1]:
             parent = parent.get(key, {}) if isinstance(parent, dict) else {}
@@ -620,13 +700,16 @@ def parameters_sha256(
     no whitespace and no NaN/inf. The tree must already be coerced, so ``1e9`` and
     ``1000000000.0`` are the same float and JSON writes Python's shortest round-trip repr.
     The level is included because the same file gives a different superstructure per level.
-    Paths in :data:`HASH_EXCLUDED_PATHS` are dropped. YAML comments never enter the hash.
+    Paths in :data:`HASH_EXCLUDED_PATHS` are dropped (L1 also drops
+    :data:`L2B_ONLY_HASH_PATHS`, S8). YAML comments never enter the hash.
     A model other than L1 adds ``"model": <model>`` to the payload (S7), so L1 fingerprints
     (and the saved L1 snapshots, R16) are unchanged and an L2b snapshot never matches L1.
     """
     payload: dict[str, Any] = {
         "level": level.value,
-        "params": _without_excluded_paths(coerced_tree),
+        "params": _without_excluded_paths(
+            coerced_tree, L2B_ONLY_HASH_PATHS if model is ModelKind.L1 else ()
+        ),
     }
     if model is not ModelKind.L1:
         payload["model"] = model.value
@@ -861,7 +944,8 @@ def _read_simulation(root: _Reader) -> Simulation:
     )
 
 
-def _read_l2b_nsc(root: _Reader, operating_extension_m: PerLeg) -> L2bNSC:
+def _read_l2b_nsc(root: _Reader, operating_extension_m: PerLeg, *,
+                  rod_dead_length_override: bool = False) -> L2bNSC:
     """Typed L2b-NSC blocks; checks k_ax(e_op) against the YAML operating point."""
     act = root.child("actuator")
     blk = act.child("L2b_NSC")
@@ -916,12 +1000,135 @@ def _read_l2b_nsc(root: _Reader, operating_extension_m: PerLeg) -> L2bNSC:
         crawler_friction=root.child("contact").child("crawler").number("friction"),
     )
     dt = root.child("simulation").child("L2b_NSC").number("dt_s")
+    lock_valve = act.text("lock_valve")
+    if lock_valve not in LOCK_VALVES:
+        raise ParamsError("actuator.lock_valve", f"unknown value {lock_valve!r}, expected {LOCK_VALVES}")
+    counterbalance = _read_counterbalance(act)
+    if lock_valve == "counterbalance" and counterbalance is None:
+        raise ParamsError("actuator.counterbalance", 'missing (lock_valve = "counterbalance")')
     return L2bNSC(
         actuator=actuator,
         rigid_floor=rigid_floor,
         dt_s=dt,
-        rod_side=_read_l2b_rod_side(root, blk, operating_extension_m),
+        rod_side=_read_l2b_rod_side(root, blk, operating_extension_m,
+                                    dead_length_override=rod_dead_length_override),
+        seal_friction=_read_seal_friction(root, act),
+        counterbalance=counterbalance,
+        lock_valve=lock_valve,
+        crawler_contact=_read_crawler_contact_l2b(root),
     )
+
+
+LOCK_VALVES = ("pilot_check", "counterbalance")
+ROD_DEAD_LENGTH_LEAF = "rod_dead_length_m"
+ROD_DEAD_LENGTH_KEY = "actuator." + ROD_DEAD_LENGTH_LEAF
+"""``L_0r`` key: scalar (YAML) or a 4-list / per-leg mapping (override, ML input)."""
+SEAL_PRESSURE_MODELS = ("constant", "seal_geometry")
+CB_SIDES = ("both", "head")
+CB_DISCHARGES = ("tank", "blocked_line")
+CRAWLER_CONTACT_MODELS = ("rigid", "compliant")
+
+
+def _per_leg_or_list(blk: _Reader, key: str, *, allow_scalar: bool = False) -> PerLeg:
+    """Per-leg value given as a ``{FL, FR, RL, RR}`` mapping, a 4-list (LEG_ORDER) or, with
+    ``allow_scalar``, one number for every leg."""
+    raw = blk._value(key)
+    if isinstance(raw, Mapping):
+        return blk.per_leg(key)
+    if isinstance(raw, (list, tuple)):
+        if len(raw) != 4 or not all(isinstance(v, (int, float)) and not isinstance(v, bool)
+                                    for v in raw):
+            raise blk._error(key, f"expected 4 numbers (LEG_ORDER {LEG_ORDER}), got {raw!r}")
+        vals = tuple(float(v) for v in raw)
+        return (vals[0], vals[1], vals[2], vals[3])
+    if allow_scalar:
+        v = blk.number(key)
+        return (v, v, v, v)
+    raise blk._error(key, f"expected a per-leg mapping or a 4-list, got {raw!r}")
+
+
+def _read_seal_friction(root: _Reader, act: _Reader) -> SealFrictionParams | None:
+    if "seal_friction" not in act.mapping:
+        return None
+    blk = act.child("seal_friction")
+    legs = root.child("legs")
+    bore = tuple(legs.child(n).child("cylinder").number("bore_diameter_m") for n in LEG_ORDER)
+    rod = tuple(legs.child(n).child("cylinder").number("rod_diameter_m") for n in LEG_ORDER)
+    model = blk.text("pressure_model")
+    if model not in SEAL_PRESSURE_MODELS:
+        raise ParamsError("actuator.seal_friction.pressure_model",
+                          f"unknown value {model!r}, expected {SEAL_PRESSURE_MODELS}")
+    levels = blk._value("sensitivity_levels_N")
+    out = SealFrictionParams(
+        level_N=blk.number("level_N"),
+        nominal_level_N=blk.number("nominal_level_N"),
+        sensitivity_levels_N=tuple(float(v) for v in levels),
+        rear_scale=blk.number("rear_scale"),
+        static_ratio=blk.number("static_ratio"),
+        stick_stiffness_N_m=blk.number("stick_stiffness_N_m"),
+        pressure_model=model,
+        kappa_N_per_m_Pa=blk.number("kappa_N_per_m_Pa"),
+        F0_N=blk.number("F0_N"),
+        F0_seal_diameter_sum_m=blk.number("F0_seal_diameter_sum_m"),
+        p_ref_head_Pa=blk.per_leg("p_ref_head_Pa"),
+        p_ref_rod_Pa=blk.number("p_ref_rod_Pa"),
+        bore_diameter_m=(bore[0], bore[1], bore[2], bore[3]),
+        rod_diameter_m=(rod[0], rod[1], rod[2], rod[3]),
+        leg_scale=(_per_leg_or_list(blk, "leg_scale") if "leg_scale" in blk.mapping
+                   else (1.0, 1.0, 1.0, 1.0)),
+    )
+    if any(not (v > 0.0 and math.isfinite(v)) for v in out.leg_scale):
+        raise ParamsError("actuator.seal_friction.leg_scale", f"need 4 finite values > 0, got "
+                          f"{out.leg_scale}")
+    if out.level_N < 0.0 or out.rear_scale < 0.0 or out.static_ratio < 1.0:
+        raise ParamsError("actuator.seal_friction", "need level_N >= 0, rear_scale >= 0, "
+                          "static_ratio >= 1")
+    if out.stick_stiffness_N_m < 0.0:
+        raise ParamsError("actuator.seal_friction.stick_stiffness_N_m", "must be >= 0 (0 = rigid)")
+    return out
+
+
+def _read_counterbalance(act: _Reader) -> CounterbalanceParams | None:
+    if "counterbalance" not in act.mapping:
+        return None
+    blk = act.child("counterbalance")
+    sides, discharge = blk.text("sides"), blk.text("discharge")
+    if sides not in CB_SIDES:
+        raise ParamsError("actuator.counterbalance.sides", f"unknown value {sides!r}")
+    if discharge not in CB_DISCHARGES:
+        raise ParamsError("actuator.counterbalance.discharge", f"unknown value {discharge!r}")
+    out = CounterbalanceParams(
+        p_set_Pa=blk.number("p_set_Pa"),
+        override_Pa=blk.number("override_Pa"),
+        rated_flow_m3_s=blk.number("rated_flow_m3_s"),
+        tau_s=blk.number("tau_s"),
+        hysteresis_Pa=blk.number("hysteresis_Pa"),
+        pilot_ratio=blk.number("pilot_ratio"),
+        tank_pressure_Pa=blk.number("tank_pressure_Pa"),
+        back_pressure_Pa=blk.number("back_pressure_Pa"),
+        sides=sides,
+        discharge=discharge,
+        blocked_line_capacity_m3=blk.number("blocked_line_capacity_m3"),
+    )
+    if out.override_Pa <= 0.0 or out.rated_flow_m3_s <= 0.0 or out.tau_s < 0.0:
+        raise ParamsError("actuator.counterbalance", "need override_Pa > 0, rated_flow > 0, tau >= 0")
+    return out
+
+
+def _read_crawler_contact_l2b(root: _Reader) -> CrawlerContactL2bNSC | None:
+    crawler = root.child("contact").child("crawler")
+    if "L2b_NSC" not in crawler.mapping:
+        return None
+    blk = crawler.child("L2b_NSC")
+    model = blk.text("model")
+    if model not in CRAWLER_CONTACT_MODELS:
+        raise ParamsError("contact.crawler.L2b_NSC.model",
+                          f"unknown value {model!r}, expected {CRAWLER_CONTACT_MODELS}")
+    out = CrawlerContactL2bNSC(model=model, compliance_m_N=blk.number("compliance_m_N"),
+                               damping_f_s=blk.number("damping_f_s"))
+    if out.compliance_m_N < 0.0 or out.damping_f_s < 0.0:
+        raise ParamsError("contact.crawler.L2b_NSC", "compliance and damping must be >= 0")
+    return out
 
 
 L2B_DERIVED_KEY_REL_TOL = 1.0e-6
@@ -971,15 +1178,27 @@ def _with_rev33_damping(root: _Reader, actuator: ActuatorL2bNSC) -> ActuatorL2bN
 
 
 def _read_l2b_rod_side(
-    root: _Reader, blk: _Reader, operating_extension_m: PerLeg
+    root: _Reader, blk: _Reader, operating_extension_m: PerLeg, *,
+    dead_length_override: bool = False,
 ) -> L2bRodSide:
     """``actuator.rod_side`` values for the L2b law (5.20.2); mechanics from
-    ``actuator.L2b_NSC.rod_side.mechanics`` when present, else the rev. 33 decision."""
+    ``actuator.L2b_NSC.rod_side.mechanics`` when present, else the rev. 33 decision.
+
+    ``L_0r``: from the derived ``column_length_m`` (bit-identical to before) unless
+    ``actuator.rod_dead_length_m`` is overridden (``dead_length_override``) or written per leg;
+    then that value, a scalar (all legs) or a 4-list / per-leg mapping (ML input, python-expert
+    spec 2026-10-24). The derived ``column_length_m`` / ``k_rod_side_N_m`` keys are not used by
+    the L2b law (it evaluates the columns at ``s_lock``)."""
     act = root.child("actuator")
     rod = act.child("rod_side")
     stroke = act.number("stroke_m")
     column = rod.per_leg("column_length_m")
-    dead = tuple(column[i] - (stroke - operating_extension_m[i]) for i in range(4))
+    dead: tuple[float, ...] = tuple(
+        column[i] - (stroke - operating_extension_m[i]) for i in range(4))
+    if dead_length_override or not isinstance(act._value(ROD_DEAD_LENGTH_LEAF), float):
+        dead = _per_leg_or_list(act, ROD_DEAD_LENGTH_LEAF, allow_scalar=True)
+        if any(not (v > 0.0 and math.isfinite(v)) for v in dead):
+            raise ParamsError(ROD_DEAD_LENGTH_KEY, f"need finite values > 0, got {dead}")
     legs = root.child("legs")
     annulus = tuple(
         legs.child(name).child("cylinder").number("annulus_area_m2") for name in LEG_ORDER
@@ -1069,7 +1288,8 @@ def load_params(
     selected_model = _resolve_model(model)
     contact = _read_contact(root)
     l2b = (
-        _read_l2b_nsc(root, contact.rigid_floor.L1.operating_extension_m)
+        _read_l2b_nsc(root, contact.rigid_floor.L1.operating_extension_m,
+                      rod_dead_length_override=ROD_DEAD_LENGTH_KEY in applied_overrides)
         if selected_model is ModelKind.L2B_NSC
         else None
     )

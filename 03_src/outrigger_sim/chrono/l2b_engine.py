@@ -14,6 +14,9 @@ S7 control ③ preparation 2026-10-24). Same definitions as the L1-R sensor trut
   (``L2bForceActuator.acting_force_N``; the hook computed it from the state at ``t_{n-1}``);
 * head pressure ``p_h = (F + p_r A_ann) / A_p`` and rod pressure ``p_r`` = the rod-side law
   pressure of the same hook call (two sensors, R6-P net force ``p_h A_p - p_r A_ann = F``);
+  S8-A1 (``dynamics_model.md`` 5.26.10): ``p_h`` has a floor (return back pressure 2 bar g while
+  the leg moves, the rod-side cavitation floor when locked) and ``p_r`` is re-solved from ``F``
+  where it binds (``L2bForceActuator.pressure_split``; net force unchanged);
   with the rod-side law off: ``p_h = F / A_p`` and ``rod_pressure_Pa`` None (L1 mechanics-off
   convention). ``p_r`` and ``F`` are one physics step (1e-4 s) older than the kinematics, the
   same for every leg (negligible at 10 Hz);
@@ -87,6 +90,8 @@ class L2bEngine:
         self._cn = 0
         self._ci = 0
         self._held = Command(t_s=self.time_s, leg_speed_m_s=model.actuator.reference.command_m_s)
+        self.pressure_floor_samples = np.zeros(LEG_COUNT, dtype=np.int64)
+        """Measurement calls (per leg) whose head pressure hit the S8-A1 floor."""
         self._reset_monitor()
         model.actuator_hooks.insert(0, self._pre_actuator_hook)
 
@@ -155,16 +160,22 @@ class L2bEngine:
     def measure_l2b(self) -> dict[str, NDArray[np.float64]]:
         """Ideal leg readings of the step just taken (module docstring)."""
         act = self.model.actuator
-        f = act.acting_force_N
+        # S8 (C-6): pressure force F - f and the piston stroke s_p; = F and s + F / k_out on the
+        # S7 path (seal friction level 0, pilot check), bit-identical
+        f = act.acting_pressure_force_N
         s = np.array([m.GetMotorPos() for m in self.model.motors], dtype=float)
         p_r = (np.zeros(LEG_COUNT) if act.rod_side is None or not act.rod_side.armed
                else act.rod_side.rod_pressure_Pa)
-        a_r = np.asarray(self.model.params.l2b.rod_side.annulus_area_m2, dtype=float)
+        # S8-A1: head-side floor (return 2 bar g moving, cavitation floor locked); u = the speed
+        # that acted in the step just taken (this runs before the force-law hook)
+        p_h, p_r, hit = act.pressure_split(f, p_r, act.reference.u_applied_m_s)
+        self.pressure_floor_samples += hit
         return {
             "cylinder_force_N": f,
             "rod_pressure_Pa": p_r,
-            "head_pressure_Pa": (f + p_r * a_r) / act.head_area_m2,
-            "stroke_m": act.stroke_true_m(s, f),
+            "head_pressure_Pa": p_h,
+            "stroke_m": act.stroke_sensor_true_m(s),
+            "actual_force_N": act.acting_force_N,
             "link_displacement_m": s,
         }
 
@@ -204,12 +215,17 @@ class L2bEngine:
         act = self.model.actuator
         return {
             **self.sensor_truth.meta(),
-            "pressure": ("p_h = (F + p_r A_ann) / A_p, p_r = rod-side law pressure of the same "
-                         "hook (two sensors)" if act.rod_side is not None
+            "pressure": ("p_h = max(floor, (F + p_r A_ann) / A_p), p_r = rod-side law pressure of "
+                         "the same hook, re-solved (p_h A_p - F) / A_ann where the floor binds "
+                         "(S8-A1: floor = return 2 bar g while moving, rod-side cavitation floor "
+                         "locked; two sensors)" if act.rod_side is not None
                          else "p_h = F / A_p, no rod-side sensor"),
-            "cylinder_force": "force-law value that acted in the step (L2bForceActuator)",
+            "pressure_floor_enabled": act.pressure_floor_enabled,
+            "cylinder_force": "pressure force F - f of the step (S8; = force-law value without "
+                              "seal friction)",
             "stroke_m": "s_ref (oil-volume coordinate, = L1 motor position)",
-            "stroke_corrected_m": "piston s + F / k_out (cylinder-internal sensor truth)",
+            "stroke_corrected_m": ("piston state s_p (seal friction path)" if act.friction_path
+                                   else "piston s + F / k_out (cylinder-internal sensor truth)"),
             "head_area_m2": act.head_area_m2.tolist(),
             "k_oil_N_m": None,
             "stroke_model": "piston s + F / k_out",
@@ -285,6 +301,7 @@ class L2bEngine:
             "cylinder_force_min_N": self._f_min.tolist(),
             "cylinder_force_min_t_s": self._f_min_t.tolist(),
             "saturation_step_count": self.model.actuator.reference.saturation_step_count.tolist(),
+            "pressure_floor_measurements": self.pressure_floor_samples.tolist(),
         }
 
     def _reset_monitor(self) -> None:
