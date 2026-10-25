@@ -129,6 +129,11 @@ def nz(x):
     return np.array([np.nan if v is None else float(v) for v in x])
 
 
+def round_or_none(value, ndigits):
+    """Round like round(), but pass None through (no re-READY -> no rr / fmin_post)."""
+    return None if value is None else round(value, ndigits)
+
+
 def summ(name, a, r, worse_if="lower"):
     a, r = nz(a), nz(r)
     d = a - r
@@ -166,7 +171,12 @@ for c in ("ML78_ep0", "ML78_ep1", "ML78_ep3", "ML00_ep5", "ML21_ep1", "ML90_ep1"
 d = sorted(rows, key=lambda r: r["fmin_after_A"] - r["fmin_after_R"])[:6]
 print("worst fmin_after deltas:", [(r["case"], round(r["fmin_after_A"], 2), round(r["fmin_after_R"], 2)) for r in d])
 d = sorted(rows, key=lambda r: -((r["rr_A"] or 0) - (r["rr_R"] or 0)))[:6]
-print("worst re-READY deltas:", [(r["case"], round(r["rr_A"], 2), round(r["rr_R"], 2)) for r in d])
+print("worst re-READY deltas:",
+      [(r["case"], round_or_none(r["rr_A"], 2), round_or_none(r["rr_R"], 2)) for r in d])
 d = sorted(rows, key=lambda r: (r["fmin_post_A"] or 0) - (r["fmin_post_R"] or 0))[:6]
-print("worst fmin_post deltas:", [(r["case"], round(r["fmin_post_A"], 2), round(r["fmin_post_R"], 2)) for r in d])
-print("min fmin_post A:", min(r["fmin_post_A"] for r in rows), "F_min", F_MIN_KN)
+print("worst fmin_post deltas:",
+      [(r["case"], round_or_none(r["fmin_post_A"], 2), round_or_none(r["fmin_post_R"], 2))
+       for r in d])
+fmin_post_A_known = [r["fmin_post_A"] for r in rows if r["fmin_post_A"] is not None]
+print("min fmin_post A:", min(fmin_post_A_known), "F_min", F_MIN_KN,
+      f"(None excluded: {len(rows) - len(fmin_post_A_known)})")

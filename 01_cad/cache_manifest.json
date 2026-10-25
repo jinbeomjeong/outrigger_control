@@ -1,12 +1,12 @@
 {
  "schema": 1,
- "updated_at": "2026-10-21T17:11:15",
+ "updated_at": "2026-10-25T19:41:01",
  "updated_by": {
   "script": "04_scripts/00_cad/check_cache.py",
   "exists": true,
-  "sha256": "3b4c6396581cd6539eef32e344f4864f56e524d334047c22e6d74281fdbde356",
-  "git_blob": "12c3050a0932db6835a2e296c67a57477db64bac",
-  "git_last_commit": "5eb1aff328a19bbd53d17108d9d68205fba39d12",
+  "sha256": "7238fda27de2149e4ead0e9edcb73beb8850591f9c976a951f3be73f1c3717af",
+  "git_blob": "a4565a4b0828a5d081efc24f49f43cd203bce10e",
+  "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
   "git_tracked": true
  },
  "environment": {
@@ -199,11 +199,27 @@
    ]
   },
   "02_legs": {
-   "description": "Jack cylinder B-rep (world placed), face table, extension figures, rod lateral check",
+   "description": "Jack cylinder B-rep (world placed), face table, extension figures, rod lateral check, REXOME35 cylinder shapes (rexome35/), drawing check, leg support",
    "folder": "01_cad/02_legs",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-21T10:58:51",
+   "newest_file_mtime": "2026-10-25T19:10:43",
    "generators": [
+    {
+     "script": "04_scripts/00_cad/cylinder_drawing/cyl_drawing_values.py",
+     "exists": true,
+     "sha256": "d34fcfe799774888301975bff1bb9609c8db75e0da32992c74b358afa16a623f",
+     "git_blob": "f332316a8261d5e346f08c99604e1a4d05e07b1b",
+     "git_last_commit": "67f797df284dd28f6bac43fd477080a4ce2c817a",
+     "git_tracked": true
+    },
+    {
+     "script": "04_scripts/00_cad/cylinder_drawing/cyl_measure.py",
+     "exists": true,
+     "sha256": "4a2d1d593b0ca2d0079bf8cd8cec00436d563492cd9725d971263338f4cc15f8",
+     "git_blob": "ff1c12171d3731b448dafd4ad7f4746d65b11936",
+     "git_last_commit": "67f797df284dd28f6bac43fd477080a4ce2c817a",
+     "git_tracked": true
+    },
     {
      "script": "04_scripts/00_cad/inspect_legs.py",
      "exists": true,
@@ -215,9 +231,9 @@
     {
      "script": "04_scripts/00_cad/leg_rod_lateral_check.py",
      "exists": true,
-     "sha256": "1ade72fd23425c0d150ab71994daa5b1f234ca4b70cad8114fc13e35115e0062",
-     "git_blob": "17ae7a9d0f88768464c2d1c7a3a5ac0052fa41aa",
-     "git_last_commit": "4bee07965ca073e3e632f09c12cc162f7b442c39",
+     "sha256": "31cb2525fa18f0cf0ed95b8e74856e2c52dd8c347d0451b04aac927a70647bd5",
+     "git_blob": "2b7e055abbdaefcb749449f1ed2991a208947a15",
+     "git_last_commit": "674fc05114799ba605eeb6202faab2a2a914ba9e",
      "git_tracked": true
     },
     {
@@ -227,12 +243,50 @@
      "git_blob": "ecb823807c176d960c1e05481d1195faa15c1e1f",
      "git_last_commit": "7148180773b05da707a09cdf756e28783c630257",
      "git_tracked": true
+    },
+    {
+     "script": "04_scripts/00_cad/rexome35_cylinder/cyl35_aggregate.py",
+     "exists": true,
+     "sha256": "6ea96117311558883ede26cd3b09a005623857745b211f13675cc98cabfd5dec",
+     "git_blob": "f37cdeece895da9087301b9e5e26a78f3da07be3",
+     "git_last_commit": "67f797df284dd28f6bac43fd477080a4ce2c817a",
+     "git_tracked": true
+    },
+    {
+     "script": "04_scripts/00_cad/rexome35_cylinder/cyl35_run.py",
+     "exists": true,
+     "sha256": "4f98ce3a74c8bfc8fbab45580d9c18bcf2e2213af480fe49d61232e986482709",
+     "git_blob": "895b2086a781f66f11f0ebcf19011b45b81483db",
+     "git_last_commit": "67f797df284dd28f6bac43fd477080a4ce2c817a",
+     "git_tracked": true
+    },
+    {
+     "script": "04_scripts/00_cad/rexome35_cylinder/cyl35_synth.py",
+     "exists": true,
+     "sha256": "02bd142f880bb448e9f79aa01a980b0e0d648f4c3a700c746262d63a8a3e1911",
+     "git_blob": "dad6a55d57cbfee8a30731ef37cba2ba1843f38a",
+     "git_last_commit": "67f797df284dd28f6bac43fd477080a4ce2c817a",
+     "git_tracked": true
     }
    ],
-   "file_count": 13,
-   "total_bytes": 9185295,
+   "file_count": 35,
+   "total_bytes": 17964824,
    "git_ignored_file_count": 1,
    "files": [
+    {
+     "path": "drawing_check/cyl_drawing_values.json",
+     "bytes": 3273,
+     "sha256": "549016210814478075f8e334ebc9c251f4a75672654d42428f6a5c58b81c890d",
+     "generator": "cylinder_drawing/cyl_drawing_values.py",
+     "git_ignored": false
+    },
+    {
+     "path": "drawing_check/cyl_measure.json",
+     "bytes": 21036,
+     "sha256": "b94c7e1bf2e448182ed2fee71b5843353efa87125cbcbb3c6eb509496976ce27",
+     "generator": "cylinder_drawing/cyl_measure.py",
+     "git_ignored": false
+    },
     {
      "path": "leg_extension.gif",
      "bytes": 7926150,
@@ -256,16 +310,23 @@
     },
     {
      "path": "leg_rod_lateral_check.json",
-     "bytes": 572527,
-     "sha256": "07e55e8c2552ce27dd98680a9ca5f275bf0be2c485347923bac409658de36594",
+     "bytes": 8603332,
+     "sha256": "d704b184181b36e0965b0da5bfc6274a1e22f87d9b51bcc6e68a1c5b34537618",
      "generator": "leg_rod_lateral_check.py",
      "git_ignored": false
     },
     {
      "path": "leg_rod_lateral_check.png",
-     "bytes": 221418,
-     "sha256": "e23ab04a03594b9eb9a765fcaac7bbc86ac0141068c1ffc7ce8a2561f39f818a",
+     "bytes": 222727,
+     "sha256": "df35e9faf0af7f5946a29b7e2e2fe7ae3c898f97fcb96aa9aa424710ea5cf919",
      "generator": "leg_rod_lateral_check.py",
+     "git_ignored": false
+    },
+    {
+     "path": "leg_support_and_closed_length.json",
+     "bytes": 22300,
+     "sha256": "f2659e4e52eaad445f93c58cfc156c5b3c2466d2395a9c024aa81ea50a922235",
+     "generator": "",
      "git_ignored": false
     },
     {
@@ -322,6 +383,139 @@
      "bytes": 36076,
      "sha256": "5e167e4bb1b9f73dc752fa69eff351ff8dd320370234ff8daff81a56e84e1eb6",
      "generator": "inspect_legs.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/barrel_FL.brep",
+     "bytes": 40190,
+     "sha256": "865d60fca29cabd5a8edee7e0c1c54b55a2476378d934a54c20652861e74d001",
+     "generator": "rexome35_cylinder/cyl35_synth.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/barrel_FR.brep",
+     "bytes": 40053,
+     "sha256": "5a8596596235abe86d19845ff604724e4f8243095732d99049d0aff669430f50",
+     "generator": "rexome35_cylinder/cyl35_synth.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/barrel_RL.brep",
+     "bytes": 17333,
+     "sha256": "65e773f57b07a81540facfbf5143488bbf84ad7978141bf7b139073fb3c6f8a8",
+     "generator": "rexome35_cylinder/cyl35_synth.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/barrel_RR.brep",
+     "bytes": 17574,
+     "sha256": "6190e1c8ae306008b0f0ec73e15c325fa69cb8dc3a63dd0f9d886e260be3d076",
+     "generator": "rexome35_cylinder/cyl35_synth.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/cache_meta.json",
+     "bytes": 4652,
+     "sha256": "82c12c7c95dbc497f384c9a54ee4c0ddccadc69c289c6c63d85cce5c414f4338",
+     "generator": "rexome35_cylinder/cyl35_aggregate.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/jobs/all_jobs.json",
+     "bytes": 101257,
+     "sha256": "69610132c2268015f2be18c7d8078ac194365a1587c338e57d998d42736c6f30",
+     "generator": "rexome35_cylinder/cyl35_run.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/jobs/barrel_FL_synth.brep",
+     "bytes": 23335,
+     "sha256": "de4e3a007b9fa76bb6f07561f3b4987d188ed669ccb6bba79651b0e572ce778b",
+     "generator": "rexome35_cylinder/cyl35_run.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/jobs/barrel_FR_synth.brep",
+     "bytes": 24850,
+     "sha256": "0cf9f691cd21a3c3e5990572c7654ccfdf258240186b073dafc8c44e6878d575",
+     "generator": "rexome35_cylinder/cyl35_run.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/jobs/moving_FL_synth.brep",
+     "bytes": 40183,
+     "sha256": "28c4274adface9591f5a6e7f3dbae85482acd232065c45f458fc6413a871b54c",
+     "generator": "rexome35_cylinder/cyl35_run.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/jobs/moving_FL_yamlpad_synth.brep",
+     "bytes": 40153,
+     "sha256": "856ee24b2ab02886634cc99ab15a83ec4447e75aa6cf5a9d7895ffd0e2d7f8b2",
+     "generator": "rexome35_cylinder/cyl35_run.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/jobs/moving_FR_synth.brep",
+     "bytes": 40349,
+     "sha256": "35b4793fa4514a2d5c3f5c76a7ef9fb1e611cd802b310138077bf7b5f3c7abe6",
+     "generator": "rexome35_cylinder/cyl35_run.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/leg_source_rear.json",
+     "bytes": 229,
+     "sha256": "c731407718cb3fa96a7a1b5236d83c83588c1da8f845a5ac03eb58ddef6daae9",
+     "generator": "",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/moving_FL.brep",
+     "bytes": 53804,
+     "sha256": "9b357535e05e64a4575c5fd82505440b773716d5af910901d22c30a64cccbdeb",
+     "generator": "rexome35_cylinder/cyl35_synth.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/moving_FR.brep",
+     "bytes": 53104,
+     "sha256": "0b44f77fa6e3a5b7904a089f9c4ebfc2e1651d082b08ff6233134db714984ddb",
+     "generator": "rexome35_cylinder/cyl35_synth.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/moving_RL.brep",
+     "bytes": 37824,
+     "sha256": "97461c3c8fbf2cf04af2acc7a92bf9fc0b4f7fae9c30922adb078e8fb766b4c1",
+     "generator": "rexome35_cylinder/cyl35_synth.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/moving_RR.brep",
+     "bytes": 38072,
+     "sha256": "89f60d3c944b77f7a74898ad5f782799c691987da26561934f212d352c73a1fb",
+     "generator": "rexome35_cylinder/cyl35_synth.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/rexome35_cylinder_jobs.json",
+     "bytes": 96482,
+     "sha256": "b5b5862def1d3952fa605fac5b8b44cd903c8a757972ec9902af2b67bab81091",
+     "generator": "rexome35_cylinder/cyl35_aggregate.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/rexome35_cylinder_mass_properties.csv",
+     "bytes": 3662,
+     "sha256": "76d6ce2caa1a00b2d9571ddd9b2da64be86731d440e7a50831bf71737df35e6e",
+     "generator": "rexome35_cylinder/cyl35_aggregate.py",
+     "git_ignored": false
+    },
+    {
+     "path": "rexome35/rexome35_cylinder_mass_properties.json",
+     "bytes": 27700,
+     "sha256": "eda92a877dcf2ffaecaa40b5b626a66b2ab57ac496f2003c88f7fc4d25043324",
+     "generator": "rexome35_cylinder/cyl35_aggregate.py",
      "git_ignored": false
     }
    ]
@@ -11416,44 +11610,44 @@
    "description": "Chrono visual / collision shapes (C8): simplified meshes, pads, convex hulls and decompositions, upper rollers, index, verification, Irrlicht snapshots",
    "folder": "01_cad/09_sim_shapes",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-21T16:08:53",
+   "newest_file_mtime": "2026-10-22T04:04:00",
    "generators": [
     {
      "script": "04_scripts/00_cad/build_sim_shapes.py",
      "exists": true,
-     "sha256": "a26bcf86bf99d0916ada165a54c1726542ebd47497205d643478a3aeef850d74",
-     "git_blob": "8766d74f1fe4ab15142484dfd97b2cf9aee4c7bb",
-     "git_last_commit": null,
-     "git_tracked": false
+     "sha256": "868a94d5da012037753f674f0884610398ebe4803f13507e1818a7e7b6d72690",
+     "git_blob": "b0c1a752d3b4676e1a71b9c6777934dc68e58e30",
+     "git_last_commit": "674fc05114799ba605eeb6202faab2a2a914ba9e",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/check_upper_roller_overlap.py",
      "exists": true,
      "sha256": "66c379b0643a105d5ab08b1dbf5dbed0f27a18418c72ab896cd92c0495e4ceca",
      "git_blob": "99ec0a69d4077817c85be30dca5503b849fb4a14",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/render_sim_shapes.py",
      "exists": true,
      "sha256": "cc4da3e0a0f268f605e27c654b315caa91aa23a9f7579886a7dff95bb7923cb0",
      "git_blob": "4f27e1965168caa2f7b06d1faa72f12c378b3889",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
+     "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/verify_sim_shapes.py",
      "exists": true,
      "sha256": "700543ad79866121c23ba815797ed0be50760f333e673fcf2fb83d4c679a02e5",
      "git_blob": "a8abd80ff9db0a963d81ea85c73678c18f834286",
-     "git_last_commit": null,
-     "git_tracked": false
+     "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
+     "git_tracked": true
     }
    ],
    "file_count": 106,
-   "total_bytes": 137165416,
-   "git_ignored_file_count": 32,
+   "total_bytes": 138512306,
+   "git_ignored_file_count": 50,
    "files": [
     {
      "path": "collision/auger_coacd.obj",
@@ -11513,15 +11707,15 @@
     },
     {
      "path": "collision/moving_RL_coacd.obj",
-     "bytes": 195164,
-     "sha256": "a0d2c9d479555a34d3e574f529e1fc12c34bf07eedeaf87f86d2d7dd866b6e08",
+     "bytes": 169278,
+     "sha256": "aced79e90ea65919b0afcb4157fdd81d47e7f455858bc9bbc3b967b4c9e9d139",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
     {
      "path": "collision/moving_RR_coacd.obj",
-     "bytes": 160747,
-     "sha256": "af371d5926197dfae1dad33571466bded6bfbdb33f6a64a71294948c359a0191",
+     "bytes": 171823,
+     "sha256": "9288832130d444453908f3bb0c6a25e405839d7532eb6fcbb6bef0e243f9f502",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
@@ -11562,29 +11756,29 @@
     },
     {
      "path": "collision/pad_RL_coacd.obj",
-     "bytes": 282588,
-     "sha256": "316439e901069205bc5b2f5ba1d794b864276b77deade4545f868e542549b679",
+     "bytes": 815473,
+     "sha256": "2ca2f12d09ea2e080dde15412cd4301939e874bcc609736080e7e2871e15fd98",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
     {
      "path": "collision/pad_RL_hull.obj",
      "bytes": 1336,
-     "sha256": "f1470de82373a1417fb5dff0c44410796cc589a6c7525467da3fb7acbf2e0e3e",
+     "sha256": "c438d934d958296cd0362aab9f4670a4e35c60467df513c62a65042f21b33063",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
     {
      "path": "collision/pad_RR_coacd.obj",
-     "bytes": 280122,
-     "sha256": "1a55bb4f0cd876b6a0405b20933d66536e276cb98d445655d29b31da08a76b1d",
+     "bytes": 850852,
+     "sha256": "73765a7fdc4cb307722266bd9399e01f6b9f6a915e3f42a429ff96cb0c8ee6da",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
     {
      "path": "collision/pad_RR_hull.obj",
-     "bytes": 1358,
-     "sha256": "d0d2b09a2a4980d7fd5cc445fc115f6edf54f17be5cf689bb54e03020ed99b35",
+     "bytes": 1360,
+     "sha256": "e56be49191ed36f737cf7fde86deac9c90a43911aa7893830fd5b1df9031362f",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
@@ -11604,15 +11798,15 @@
     },
     {
      "path": "collision/rod_RL_hull.obj",
-     "bytes": 8608,
-     "sha256": "4091962917f5d5e0f278094bdda88eee5e3e1d841012198250f9c09ba65102c9",
+     "bytes": 8457,
+     "sha256": "a18703de14fc1055c51affd75208c14736d39ddda3d92806c0d45fed33bc80ae",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
     {
      "path": "collision/rod_RR_hull.obj",
-     "bytes": 8817,
-     "sha256": "a4d06fd96b41a0ce9b61424dec2cff1e699bbc4559b4a80272a32389663a016e",
+     "bytes": 8611,
+     "sha256": "a39f1459c2cc46bde1be762319834b2de3d3abb48210a503165b8b63d39cdb5c",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
@@ -11667,8 +11861,8 @@
     },
     {
      "path": "sim_shapes.json",
-     "bytes": 128968,
-     "sha256": "80565b93817060026f9b16796dc414e47c883b7ace32b77be625c81cd374ee82",
+     "bytes": 129651,
+     "sha256": "1bca462922f8a56b2b59c74e12b0dd319857a3a1ae0a23bb238f668e8fcf7fd5",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
@@ -11702,8 +11896,8 @@
     },
     {
      "path": "sim_shapes_verification.json",
-     "bytes": 39422,
-     "sha256": "11fa6b6e5a6d868d1868ae73d021bd9e5285ad047af4f1ee016e2ce18ed8d958",
+     "bytes": 39542,
+     "sha256": "e69d419538ed4f8e0f6618cc9bcb9946ebae60db917bad79c5d1fda331a37774",
      "generator": "verify_sim_shapes.py",
      "git_ignored": false
     },
@@ -11744,15 +11938,15 @@
     },
     {
      "path": "visual/barrel_RL.obj",
-     "bytes": 9165,
-     "sha256": "a2616fb835ce603dae844e1c6b771f5fad60042c83a432d5f338c43113650a62",
+     "bytes": 101454,
+     "sha256": "ee1c5cac5113961e1d39c9f36d1b006441f5b519337a1f5b3fc3dddd174bd27b",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
     {
      "path": "visual/barrel_RR.obj",
-     "bytes": 9325,
-     "sha256": "8e2bbbadf76df54b6ecbd35bf62fe813311d7742a54470b1905c7c818ea28f0c",
+     "bytes": 103112,
+     "sha256": "c53818ffb0189ee7191ea8e0a0869a7846cbe97dcc49d52a5430e0868c5fa8f7",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
@@ -11814,29 +12008,29 @@
     },
     {
      "path": "visual/pad_RL_cad.obj",
-     "bytes": 3733,
-     "sha256": "49b7f11a95fdb31ceacf23ae2920802da8cc1ed7d86f318f5be498b687ca7882",
+     "bytes": 18909,
+     "sha256": "3fffce132a279cfa2fa9a2a54e60bb756d324ecc122acf2ad721c6a1df8c834f",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
     {
      "path": "visual/pad_RL_simple.obj",
      "bytes": 1317,
-     "sha256": "83573ef45a578f4c167496e8ffb30911e4439ff811896f8f5a0c1578c782d8bb",
+     "sha256": "cc9faa38dfb613b264273777909e9096d63c38d9b7ddcb80f1450bc91b23fc94",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
     {
      "path": "visual/pad_RR_cad.obj",
-     "bytes": 3795,
-     "sha256": "d71eb6a132e0b7622805991b77b46e8b433922845c12b1d6023eebacef3c5ac0",
+     "bytes": 19227,
+     "sha256": "a3115d5d94b23d348f51c1579bd378d5d8a2237854e1ab71f177a8f81da3fb9b",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
     {
      "path": "visual/pad_RR_simple.obj",
-     "bytes": 1339,
-     "sha256": "b85be1cc495cc5b59fc41a3500a774b3e13e3ac32fe81909e1e57560409f3255",
+     "bytes": 1341,
+     "sha256": "1482d72eecd37008b27a289451c2aaef2accb0270949b0179d64f690352c5999",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
@@ -11856,15 +12050,15 @@
     },
     {
      "path": "visual/rod_RL.obj",
-     "bytes": 26396,
-     "sha256": "0069176980920c8058a2e66f91010c7f982c5c15599a082efb97eb3482e82f77",
+     "bytes": 19955,
+     "sha256": "0486b5bf5b987d78f72a8f2068ac5b3b01fa3938b6a50ec3bd6d18abff748e6a",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
     {
      "path": "visual/rod_RR.obj",
-     "bytes": 26847,
-     "sha256": "ed24c85ac4b3a86365eaaa8f53f0c49f3cb450a0278fa1fcb48c6367d4d5892e",
+     "bytes": 20304,
+     "sha256": "4e8569756773ae4f7a732b113cb69a77f4dc0932e2488baf614694c720b4466c",
      "generator": "build_sim_shapes.py",
      "git_ignored": false
     },
@@ -11891,10 +12085,10 @@
     },
     {
      "path": "work/auger_coacd.json",
-     "bytes": 834,
-     "sha256": "1893460940a112a31f6296cb221bad8f5cf4bdc36f4253805256b7a0c716f5fc",
+     "bytes": 835,
+     "sha256": "c2aeb7cdedf932eb749f3afdd784a6ae4f92a7b6a221d9279194c3ef59bdac75",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/barrel_FL.npz",
@@ -11912,15 +12106,15 @@
     },
     {
      "path": "work/barrel_RL.npz",
-     "bytes": 3800,
-     "sha256": "2b67646e27293612c0c3032d53f26d827a853937be3759b094317e2d43a89e69",
+     "bytes": 24495,
+     "sha256": "edd97f422aef5c6a75e7cec083587b31d6fb8878db7cc7e48453c31166a0a4cc",
      "generator": "build_sim_shapes.py",
      "git_ignored": true
     },
     {
      "path": "work/barrel_RR.npz",
-     "bytes": 3795,
-     "sha256": "e48cc8f79b0bca529542d0744787e34389b519ea65e1c75839955ff12dd7e6d7",
+     "bytes": 24579,
+     "sha256": "d6fc0cde7cb00593c8fdd8ef33f096153b5f1aec5756476efdd577f574cede7a",
      "generator": "build_sim_shapes.py",
      "git_ignored": true
     },
@@ -11940,10 +12134,10 @@
     },
     {
      "path": "work/deck_coacd.json",
-     "bytes": 834,
-     "sha256": "4c01519f60b4b791f204d23e766d04477f4679acb786dbb5ed3e0a2be3bcbaba",
+     "bytes": 835,
+     "sha256": "f52e33cb8ea67240e12b66d5fdffc4587c2ddc67c4bc50af8c1b9143f506cef1",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/mast.npz",
@@ -11954,10 +12148,10 @@
     },
     {
      "path": "work/mast_coacd.json",
-     "bytes": 831,
-     "sha256": "c4a357292a39bb4f4d333b40ef548fb92f597eccab6c27152dead03c3e9478da",
+     "bytes": 832,
+     "sha256": "a6c06880cdbaf4ad890451070911455317d25cf62c4e26a4488893d010ca3c6d",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/moving_FL.npz",
@@ -11968,10 +12162,10 @@
     },
     {
      "path": "work/moving_FL_coacd.json",
-     "bytes": 818,
-     "sha256": "10ac77e3ab07468d4e4490b62b3597f1df1866ef4c2abef10a7fe2cc013bafd2",
+     "bytes": 819,
+     "sha256": "f5c6490c58918f4e0ab9216299aceb220336b32061e646dfe96071e5606ec2e1",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/moving_FR.npz",
@@ -11983,37 +12177,37 @@
     {
      "path": "work/moving_FR_coacd.json",
      "bytes": 823,
-     "sha256": "b0bf025055a5d901ec2110b5887004b62855ffa0857be90c97b61e460b1bed3d",
+     "sha256": "152e9482e29dc0df55dd929e63620bf428ed2d1f29084d69c0315e151d0b01d4",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/moving_RL.npz",
-     "bytes": 12382,
-     "sha256": "733c0091f7313d040e4b5e7785b8cec1e5838165566e15390f48123268602bf6",
+     "bytes": 13632,
+     "sha256": "02d761bf493ca2948d6a656e122516c7dac2935ea957a19aeaacba3b47cb55e2",
      "generator": "build_sim_shapes.py",
      "git_ignored": true
     },
     {
      "path": "work/moving_RL_coacd.json",
-     "bytes": 823,
-     "sha256": "05ab8f520ab1b0ca6233e5072f53b4e73c7fde7515d793d1d2b23773e21b51f2",
+     "bytes": 819,
+     "sha256": "a150e78a4a31532c6fa6e059a44b9d6af42adc2a363441f0219039b34798b690",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/moving_RR.npz",
-     "bytes": 12566,
-     "sha256": "50d6277589e794c0c9fa5427f24ce2dc23add57298a3cc8ab57687fcd20388f4",
+     "bytes": 13610,
+     "sha256": "57c80896fda5a1417407b5dc3c5414e413d574f1fdec8a341cbbc1f7dd502aa7",
      "generator": "build_sim_shapes.py",
      "git_ignored": true
     },
     {
      "path": "work/moving_RR_coacd.json",
      "bytes": 826,
-     "sha256": "cfb37209301e09c84d8561fc8c5c17a11890868f5d309368008b496bb1fb4800",
+     "sha256": "af430765ae0e83c507c9e0276b8803eafb5cb9bf5e7f8233afeda3c24a127222",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/pad_cad_FL.npz",
@@ -12031,52 +12225,52 @@
     },
     {
      "path": "work/pad_cad_RL.npz",
-     "bytes": 1824,
-     "sha256": "9ed9ab0ec34b738e9bb920e2b6097095e40b72973f6d26fe1000bdc0bb6bdcf7",
+     "bytes": 9588,
+     "sha256": "9879c0e7c903f561018db0c6cc35a2d8e20f13a03ac27af975ca21a9233fb06c",
      "generator": "build_sim_shapes.py",
      "git_ignored": true
     },
     {
      "path": "work/pad_cad_RR.npz",
-     "bytes": 1808,
-     "sha256": "7d7b7e18aa648df791b3ff77791d825e229d7719c03bef3c582e5f17f30053c5",
+     "bytes": 9571,
+     "sha256": "2fbaafe528ec3c36ce101026e1746c47bb3476aa88c000a0e46c25d8d47e29b4",
      "generator": "build_sim_shapes.py",
      "git_ignored": true
     },
     {
      "path": "work/pad_FL_coacd.json",
-     "bytes": 821,
-     "sha256": "5a937590c6e74191168be8cec52e42d931bdadbf0424b59fd5bdb0713a29e637",
+     "bytes": 820,
+     "sha256": "baeea96c8e826b23e0d22a1f57f53ab7242206ba838416a3e7624c7a667a2406",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/pad_FL_vhacd.json",
-     "bytes": 762,
-     "sha256": "2474fce8eb93fb4060625c521a2c60df97817c4e0d09823283aa0d4ddd2c2560",
+     "bytes": 761,
+     "sha256": "bac3c0a947001825fef17fc6399ead991cd602c108bda5ab4c0741761b863ccb",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/pad_FR_coacd.json",
      "bytes": 823,
-     "sha256": "3278b0223dcf4049e37f0647c2b5dfcabd9103099ac9968144c187c5480c4575",
+     "sha256": "f4b88d3e8f930a95f18401ef1b00bfa09fe768cf66e54d605c4c2b3c552135ba",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/pad_RL_coacd.json",
-     "bytes": 824,
-     "sha256": "84696c852e543f4d4f931644b65c60f98a2b4b4153be230a24875a2d826b84a7",
+     "bytes": 826,
+     "sha256": "087a3af95e53f10d46eca41bd11b2fe923ad5fe1b3730d9d7d85d7f1cbff3daa",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/pad_RR_coacd.json",
-     "bytes": 824,
-     "sha256": "69137e9d0582345c283b8f86735a34387598a651e45f96412c63b01c78e0bb7c",
+     "bytes": 830,
+     "sha256": "709575647d3dcffc8efc00747cc1118c3e6e475bff5a3c04abf04f27b31dc213",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/pad_simple_FL.npz",
@@ -12094,15 +12288,15 @@
     },
     {
      "path": "work/pad_simple_RL.npz",
-     "bytes": 925,
-     "sha256": "40b1cc17e2c6f4d0379218ba5de237e93b929a4e59ae4b35612f7525348ca093",
+     "bytes": 915,
+     "sha256": "1d18be29bd8872272fe1e16857fd4dbc150e0aba18cf13ff8784dd63f991b8cb",
      "generator": "build_sim_shapes.py",
      "git_ignored": true
     },
     {
      "path": "work/pad_simple_RR.npz",
-     "bytes": 919,
-     "sha256": "02b43a1d4aa191fbde0655f7740b5dc020de31a81d07eef229bebbfd432df8cd",
+     "bytes": 914,
+     "sha256": "2f60ac3a23c6aefc9c8caba5811892113d7120e5cf19f293a4268be3b792083f",
      "generator": "build_sim_shapes.py",
      "git_ignored": true
     },
@@ -12122,24 +12316,24 @@
     },
     {
      "path": "work/rod_RL.npz",
-     "bytes": 11628,
-     "sha256": "687603d75ad748e6858b8a35a2ecce0459ddf9173de76de4123e5259ae9af667",
+     "bytes": 8921,
+     "sha256": "b0ff374d3e998f3871d88def2a19b0f650b4ccf3276f9623fdb69bbfed239678",
      "generator": "build_sim_shapes.py",
      "git_ignored": true
     },
     {
      "path": "work/rod_RR.npz",
-     "bytes": 11627,
-     "sha256": "a5c042bbeaf9b10bef0fe31e013f137a388ba4cc8a5deceac578c41ff250d33e",
+     "bytes": 8910,
+     "sha256": "2b555387ee5f24469b9f06eb9f4ee41d955a2da8d11c90324793368d561d973d",
      "generator": "build_sim_shapes.py",
      "git_ignored": true
     },
     {
      "path": "work/state.json",
-     "bytes": 100848,
-     "sha256": "ececf7d042c63a70a6be79141aad2b84ea3b2a0cae750064750fad3f8c383b1b",
+     "bytes": 100916,
+     "sha256": "2722e5796bfdc109687cb07161fa91dc3de328f1e49537f11763c12fba706f9f",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/track_C.npz",
@@ -12158,16 +12352,16 @@
     {
      "path": "work/track_L_coacd.json",
      "bytes": 839,
-     "sha256": "4820b49c984e47750174ef457b1bce544dd4fb6b705ee95c82633916e317283b",
+     "sha256": "413b49f47524089796d330a10804ba209aadcfcb2a4a27d8fdbb0901a34a3f9c",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/track_L_vhacd.json",
-     "bytes": 768,
-     "sha256": "35f5d5d0cca375de6bc2aebb7232b44d98d4eb5e5a700afb28df2f7f588a2ae7",
+     "bytes": 767,
+     "sha256": "e5079a10546c49656801546209e49bee14121d80cb4d6cb57dffcf303012eba2",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/track_R.npz",
@@ -12178,24 +12372,24 @@
     },
     {
      "path": "work/track_R_coacd.json",
-     "bytes": 844,
-     "sha256": "79cae981685e13698bcf72e5e4bc4eddf469032866ec9214f6bd879a8f57736e",
+     "bytes": 845,
+     "sha256": "c2ce7765ff67ebd53d9b50f15efa56393088c73c3a769e43778a9278305665df",
      "generator": "build_sim_shapes.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/upper_roller_check/a_crawler.png",
      "bytes": 247520,
      "sha256": "60e0a911f1a2e24015f27f3cbc4ce085a989952fa4bfc9a752988e5034c858ae",
      "generator": "check_upper_roller_overlap.py",
-     "git_ignored": false
+     "git_ignored": true
     },
     {
      "path": "work/upper_roller_check/b_no_rollers_plus_roller.png",
      "bytes": 248411,
      "sha256": "b839d04ff99addb11d88c1ed76a1bd60801ce1a5cd7c840f08d74ac10c6c873c",
      "generator": "check_upper_roller_overlap.py",
-     "git_ignored": false
+     "git_ignored": true
     }
    ]
   }
