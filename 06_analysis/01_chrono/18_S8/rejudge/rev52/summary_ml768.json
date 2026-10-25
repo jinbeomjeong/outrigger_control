@@ -1,0 +1,123 @@
+{
+ "target": "ml768",
+ "batch": "C:\\workspace\\outrigger_control\\07_results\\S8\\ml_main_20261025_090131",
+ "wall_s": 130.78004620003048,
+ "old_failed": [
+  [
+   "U-S8-32 adjacent legs U57: lift sum <= 0.5 s, gap <= 2 mm in the physical window, 0 outside",
+   "ML78_ep0"
+  ],
+  [
+   "U-S8-32 adjacent legs U57: lift sum <= 0.5 s, gap <= 2 mm in the physical window, 0 outside",
+   "ML78_ep3"
+  ],
+  [
+   "U-S8-32 event legs (settled + diagonal): cumulative lift <= 1.8 s, last re-contact <= event + 3 s (U-S8-37; column <= 2.5 s nominal damping, display), FAULT 0 (ASSUMPTION)",
+   "ML78_ep0"
+  ]
+ ],
+ "new_failed": [
+  [
+   "U-S8-32 adjacent legs U57: lift sum <= 0.5 s, gap <= 2 mm in the physical window, 0 outside",
+   "ML78_ep0"
+  ],
+  [
+   "U-S8-32 adjacent legs U57: lift sum <= 0.5 s, gap <= 2 mm in the physical window, 0 outside",
+   "ML78_ep3"
+  ],
+  [
+   "U-S8-32 event legs (settled + diagonal): cumulative lift <= 1.8 s, last re-contact <= event + 3 s (U-S8-37; column <= 2.5 s nominal damping, display), FAULT 0 (ASSUMPTION)",
+   "ML78_ep0"
+  ]
+ ],
+ "only_old": [],
+ "only_new": [],
+ "rows_old": 540,
+ "rows_new": 542,
+ "new_rows": [
+  {
+   "item": "C-S8-37 re-approach record after the event: runs / re-triggers / deferred starts (P-S8-16 RT; record)",
+   "case": "*",
+   "value": {
+    "runs_with_reapproach": 412,
+    "runs_after_event": 552,
+    "retriggers": 0,
+    "deferred": 0,
+    "starts_after_1.5_s": 106,
+    "runs_with_deferred": []
+   },
+   "limit": null,
+   "passed": null,
+   "kind": "record"
+  },
+  {
+   "item": "C-S8-36 twist-mode actuator work, every 0.5 s bin after event + 1.5 s <= +20 J (ASSUMPTION) - record (runs without the RT variant tag)",
+   "case": "*",
+   "value": {
+    "runs": 768,
+    "over_limit": 40,
+    "worst": [
+     "ML21_ep1",
+     187.85
+    ]
+   },
+   "limit": 20.0,
+   "passed": null,
+   "kind": "record"
+  }
+ ],
+ "work_ml24_ep7": {
+  "bins_J": [
+   -33.14,
+   -308.94,
+   -244.57,
+   -72.77,
+   -15.68,
+   0.04,
+   -0.29,
+   -0.66,
+   -0.44,
+   -0.38,
+   -0.36,
+   -0.35,
+   -0.28,
+   -0.22,
+   -0.17,
+   -0.15
+  ],
+  "bin_s": 0.5,
+  "covered_s": 7.999000001468801,
+  "D0_kN": 2.87308869108191,
+  "max_bin_after_J": 0.039273488533072276,
+  "pos_sum_after_J": 0.039273488533072276,
+  "limit_J": 20.0,
+  "passed": true
+ },
+ "work_ml78_ep0": {
+  "bins_J": [
+   23.17,
+   -482.77,
+   -60.18,
+   73.83,
+   -20.86,
+   139.33,
+   -12.74,
+   -8.18,
+   121.96,
+   -29.87,
+   3.18,
+   -4.36,
+   -3.08,
+   -1.87,
+   -1.11,
+   -0.68
+  ],
+  "bin_s": 0.5,
+  "covered_s": 7.999000001355107,
+  "D0_kN": -4.019895042250369,
+  "max_bin_after_J": 139.3252365754359,
+  "pos_sum_after_J": 338.29835670178204,
+  "limit_J": 20.0,
+  "passed": false
+ }
+}

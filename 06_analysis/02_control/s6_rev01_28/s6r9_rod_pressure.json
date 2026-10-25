@@ -1,0 +1,205 @@
+{
+ "noise_N": {
+  "head_only": 311.60672132793763,
+  "rod_only": 26.507188019999997,
+  "dual": 312.7321214609632,
+  "dual_over_head": 1.0036116041663978
+ },
+ "H0_bias_N": {
+  "p_r_2bar": 176.71458679999998,
+  "p_r_3bar": 265.0718802,
+  "p_r_5bar": 441.78646699999996,
+  "p_r_10bar": 883.5729339999999,
+  "lifted_p_r_bar": 11.849616027283155,
+  "lifted": 1047.0
+ },
+ "area_ratio": 0.085066162588013,
+ "H2_bias": {
+  "rho_3": {
+   "guard_14.45kN": {
+    "p_r_bar": 4.638073096886128,
+    "bias_N": 409.8075854322142
+   },
+   "relevel_16.45kN": {
+    "p_r_bar": 5.279907776021685,
+    "bias_N": 466.5183604908895
+   },
+   "RL_73.8kN": {
+    "p_r_bar": 23.68369966010208,
+    "bias_N": 2092.6275996651193
+   },
+   "FL_119.1kN": {
+    "p_r_bar": 38.22125514252246,
+    "bias_N": 3377.1266547441155
+   }
+  },
+  "rho_4": {
+   "guard_14.45kN": {
+    "p_r_bar": 3.4785548226645955,
+    "bias_N": 307.35568907416064
+   },
+   "relevel_16.45kN": {
+    "p_r_bar": 3.959930832016264,
+    "bias_N": 349.8887703681671
+   },
+   "RL_73.8kN": {
+    "p_r_bar": 17.76277474507656,
+    "bias_N": 1569.4706997488397
+   },
+   "FL_119.1kN": {
+    "p_r_bar": 28.665941356891846,
+    "bias_N": 2532.8449910580866
+   }
+  }
+ },
+ "H1": {
+  "beta_r_1e+09": {
+   "e_0.20": {
+    "kappa": 0.03857760099505298,
+    "lift_from_72kN_headonly_N": 2032.1921399861299,
+    "lift_from_119kN_headonly_N": 3853.0549069526305,
+    "lift_from_119kN_p_r_bar": 55.457277134664146,
+    "relevel_true_N_from_72kN": 13951.98003722261,
+    "guard_true_N_from_72kN": 11871.728940441466
+   },
+   "e_0.39": {
+    "kappa": 0.09916858661519898,
+    "lift_from_72kN_headonly_N": 6452.12276801892,
+    "lift_from_119kN_headonly_N": 11132.88005625631,
+    "lift_from_119kN_p_r_bar": 137.84804386342046,
+    "relevel_true_N_from_72kN": 10054.327721693558,
+    "guard_true_N_from_72kN": 7834.156477348113
+   },
+   "e_0.40": {
+    "kappa": 0.10394210041911905,
+    "lift_from_72kN_headonly_N": 6800.336279473478,
+    "lift_from_119kN_headonly_N": 11706.403419255896,
+    "lift_from_119kN_p_r_bar": 144.33900053411887,
+    "relevel_true_N_from_72kN": 9724.861098530815,
+    "guard_true_N_from_72kN": 7492.862473290779
+   },
+   "e_0.55": {
+    "kappa": 0.220913107545693,
+    "lift_from_72kN_headonly_N": 15333.020336335665,
+    "lift_from_119kN_headonly_N": 25760.119012492378,
+    "lift_from_119kN_p_r_bar": 303.39452444672077,
+    "relevel_true_N_from_72kN": 389.97344225309814,
+    "guard_true_N_from_72kN": -2177.134308333655
+   },
+   "e_0.65": {
+    "kappa": 0.42671362779240485,
+    "lift_from_72kN_headonly_N": 30345.55088677256,
+    "lift_from_119kN_headonly_N": 50486.43411857406,
+    "lift_from_119kN_p_r_bar": 583.2391660672357,
+    "relevel_true_N_from_72kN": -25280.967612510598,
+    "guard_true_N_from_72kN": -28769.625457800823
+   }
+  },
+  "beta_r_1e+08": {
+   "e_0.20": {
+    "kappa": 0.003996518589053328,
+    "lift_from_72kN_headonly_N": -490.39407828432684,
+    "lift_from_119kN_headonly_N": -301.75840088100983,
+    "lift_from_119kN_p_r_bar": 8.434409548346242,
+    "relevel_true_N_from_72kN": 15963.926070542262,
+    "guard_true_N_from_72kN": 13955.900960864148
+   },
+   "e_0.39": {
+    "kappa": 0.0108886933589653,
+    "lift_from_72kN_headonly_N": 12.369394656441727,
+    "lift_from_119kN_headonly_N": 526.3157211996039,
+    "lift_from_119kN_p_r_bar": 17.806291486058626,
+    "relevel_true_N_from_72kN": 15574.160838989357,
+    "guard_true_N_from_72kN": 13552.143714554812
+   },
+   "e_0.40": {
+    "kappa": 0.01146691582662575,
+    "lift_from_72kN_headonly_N": 54.54898900486853,
+    "lift_from_119kN_headonly_N": 595.7874160216039,
+    "lift_from_119kN_p_r_bar": 18.59255023334162,
+    "relevel_true_N_from_72kN": 15541.214176673084,
+    "guard_true_N_from_72kN": 13518.014314149079
+   },
+   "e_0.55": {
+    "kappa": 0.027573529417162432,
+    "lift_from_72kN_headonly_N": 1229.4781305937481,
+    "lift_from_119kN_headonly_N": 2530.948719083815,
+    "lift_from_119kN_p_r_bar": 40.49409597559962,
+    "relevel_true_N_from_72kN": 14607.72541104531,
+    "guard_true_N_from_72kN": 12551.014635986636
+   },
+   "e_0.65": {
+    "kappa": 0.06927644602133694,
+    "lift_from_72kN_headonly_N": 4271.5807881184655,
+    "lift_from_119kN_headonly_N": 7541.42904032557,
+    "lift_from_119kN_p_r_bar": 97.20113314749375,
+    "relevel_true_N_from_72kN": 12040.631305568942,
+    "guard_true_N_from_72kN": 9891.765521039919
+   }
+  }
+ },
+ "blocks": {
+  "H0_p_r0_5bar": {
+   "bias_N": 441.78646699999996,
+   "guard_true_N": 14010.761043,
+   "relevel_true_min_N": 15010.761043,
+   "relevel_margin_left_N": 558.2135330000001,
+   "Q2_threshold_true_N": 14010.761043
+  },
+  "H0_lift_11.85bar": {
+   "bias_N": 1047.0,
+   "guard_true_N": 13405.54751,
+   "relevel_true_min_N": 14405.54751,
+   "relevel_margin_left_N": -47.0,
+   "Q2_threshold_true_N": 13405.54751
+  },
+  "H2_rho3_at_guard": {
+   "bias_N": 409.8075854322142,
+   "guard_true_N": 14042.739924567786,
+   "relevel_true_min_N": 15042.739924567786,
+   "relevel_margin_left_N": 590.1924145677858,
+   "Q2_threshold_true_N": 14042.739924567786
+  }
+ },
+ "probe_H2": {
+  "rho3_RL_73.8kN": {
+   "band_under_N": 913.7778597325596,
+   "midpoint_over_N": 1178.8497399325597
+  },
+  "rho3_FL_119.1kN": {
+   "band_under_N": 1556.0273872720577,
+   "midpoint_over_N": 1821.0992674720578
+  },
+  "rho3_guard": {
+   "band_under_N": 72.36785261610709,
+   "midpoint_over_N": 337.4397328161071
+  },
+  "rho4_RL_73.8kN": {
+   "band_under_N": 652.1994097744198,
+   "midpoint_over_N": 917.2712899744199
+  },
+  "rho4_FL_119.1kN": {
+   "band_under_N": 1133.8865554290433,
+   "midpoint_over_N": 1398.9584356290434
+  },
+  "rho4_guard": {
+   "band_under_N": 21.141904437080314,
+   "midpoint_over_N": 286.2137846370803
+  }
+ },
+ "twist_worst_N_H0_0_to_5bar": 882.689361066,
+ "twist_worst_N_H2_rho3": 5351.4413999430735,
+ "friction_miss": {
+  "net_force_dual_N": 10953.0,
+  "head_only_N_H0": 11218.0718802,
+  "p_h_bar": 10.800221348621685,
+  "p_r_bar_unchanged": 3.0,
+  "net_minus_Fmin_N": 1500.4524899999997,
+  "friction_threshold_for_detection_N": 10499.54751
+ },
+ "p350": {
+  "net_over_Ap_underreads_bar_at_11.85bar_rod": 1.008034026667954,
+  "rod_350bar_force_N": 30925.052689999997,
+  "head_350bar_force_N": 363541.1748825939
+ }
+}

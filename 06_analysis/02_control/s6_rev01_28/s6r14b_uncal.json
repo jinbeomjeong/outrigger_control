@@ -1,0 +1,78 @@
+{
+ "normal": {
+  "guard": {
+   "P_leg_front_gt_2.5": 0.076365,
+   "P_machine_any_gt_2.5": 0.17123,
+   "P_leg_front_gt_5.0": 0.0001,
+   "P_machine_any_gt_5.0": 0.000205,
+   "P_leg_front_gt_7.5": 0.0,
+   "P_machine_any_gt_7.5": 0.0,
+   "b999_front_kN": 4.495640279565049,
+   "b999_rear_kN": 3.216600741475823,
+   "max_front_kN": 5.4231099749780505,
+   "max_rear_kN": 4.0247688419077345
+  },
+  "reanchor_floor_L1": {
+   "P_leg_front_gt_2.5": 0.061805,
+   "P_machine_any_gt_2.5": 0.13553,
+   "P_leg_front_gt_5.0": 3e-05,
+   "P_machine_any_gt_5.0": 8e-05,
+   "P_leg_front_gt_7.5": 0.0,
+   "P_machine_any_gt_7.5": 0.0,
+   "b999_front_kN": 4.281368098157021,
+   "b999_rear_kN": 3.0057488288346677,
+   "max_front_kN": 5.296790777482511,
+   "max_rear_kN": 3.8186129154236923
+  },
+  "reanchor_floor_L2b": {
+   "P_leg_front_gt_2.5": 0.05931,
+   "P_machine_any_gt_2.5": 0.127775,
+   "P_leg_front_gt_5.0": 1e-05,
+   "P_machine_any_gt_5.0": 2.5e-05,
+   "P_leg_front_gt_7.5": 0.0,
+   "P_machine_any_gt_7.5": 0.0,
+   "b999_front_kN": 4.239798077079386,
+   "b999_rear_kN": 2.9715278865482917,
+   "max_front_kN": 5.141241790496711,
+   "max_rear_kN": 3.7834618549634857
+  }
+ },
+ "conservative": {
+  "guard": {
+   "P_leg_front_gt_2.5": 0.270145,
+   "P_machine_any_gt_2.5": 0.648135,
+   "P_leg_front_gt_5.0": 0.08895,
+   "P_machine_any_gt_5.0": 0.20304,
+   "P_leg_front_gt_7.5": 0.011245,
+   "P_machine_any_gt_7.5": 0.022185,
+   "b999_front_kN": 9.175168473104575,
+   "b999_rear_kN": 6.652743002378025,
+   "max_front_kN": 10.857770420902307,
+   "max_rear_kN": 8.472900636075027
+  },
+  "reanchor_floor_L1": {
+   "P_leg_front_gt_2.5": 0.269515,
+   "P_machine_any_gt_2.5": 0.645615,
+   "P_leg_front_gt_5.0": 0.085585,
+   "P_machine_any_gt_5.0": 0.192525,
+   "P_leg_front_gt_7.5": 0.00959,
+   "P_machine_any_gt_7.5": 0.01891,
+   "b999_front_kN": 8.970651581631103,
+   "b999_rear_kN": 6.496461763413693,
+   "max_front_kN": 10.823442099101266,
+   "max_rear_kN": 8.159189262101561
+  },
+  "reanchor_floor_L2b": {
+   "P_leg_front_gt_2.5": 0.2668,
+   "P_machine_any_gt_2.5": 0.64404,
+   "P_leg_front_gt_5.0": 0.082615,
+   "P_machine_any_gt_5.0": 0.18721,
+   "P_leg_front_gt_7.5": 0.00879,
+   "P_machine_any_gt_7.5": 0.017875,
+   "b999_front_kN": 8.963859412174564,
+   "b999_rear_kN": 6.443034320550746,
+   "max_front_kN": 10.466256493604238,
+   "max_rear_kN": 8.208627171446281
+  }
+ }
+}

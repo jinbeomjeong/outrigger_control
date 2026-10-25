@@ -1,5 +1,12 @@
 # L2 유압 다리 모델 명세와 독립 기준 응답 (2026-10-21, 초판)
 
+> **갱신 이력·현재 상태(2026-10-25, S8 마감 뒤 확인)**: 본문은 2026-10-21 초판 그대로다(수치 재계산 없음). 읽을 때 다음을 먼저 본다.
+>
+> - **치수가 이전 값이다.** 2절·6절의 수치는 공통 치수 ø115/ø110($A_A$ 103.87 cm², $\varphi$ 11.76), 행정 680 mm, $v_{max}$ 22.667 mm/s, 210/350 bar 힘 218.1/363.5 kN, $F_{min}$ 9.45 kN 기준이다. 현재 기준은 REXOME35 다리별 치수(전방 ø130/ø110, 후방 ø110/ø90, 행정 700 mm), $v_{max}$ 20.924 mm/s, 신장 210 bar 278.7/199.6 kN, 잠김 350 bar 464.6/332.6 kN, $F_{min}$ 9.415 kN이다(YAML `legs.<leg>.cylinder`, [hydraulic_circuit.md](hydraulic_circuit.md) 4절). `l2_params.py`는 YAML의 폐기 공통 키(`actuator.bore_diameter_m`·`rod_diameter_m`, YAML 주석 "SUPERSEDED … do not use")를 읽으므로 지금 다시 돌려도 이전 치수 값이 나온다.
+> - **S7·S8에서 실제로 쓴 L2b-NSC 힘 법칙은 이 명세의 두 챔버 기름량 모델(`l2_cylinder.py`)이 아니다.** `03_src/outrigger_sim/chrono/l2b_actuator.py`(`ChLinkMotorLinearForce` + 명시 1스텝 힘 법칙)가 헤드 기름 강성 직렬 법칙에 로드측 L1-R 상태 기계(`hydraulics/l2b_rod_side.py`, [rod_side_pressure.md](rod_side_pressure.md) 14절, dynamics 개정 33 5.20.2)를 얹은 형태로 S7(제어 ③ 준비)과 S8(실 마찰, CB, 제어 ③ 재판정)에 쓰였다. 이 명세에서 이어 쓰인 것은 1스텝 지연 분석과 예측자(0절·5.3~5.6절), 압력 밸브 법칙(4.3절), 판독 오차 기구(3.2절)다.
+> - **실 마찰은 LuGre(3.4절)가 아니라 기름 스프링에만 병렬인 Coulomb 복귀 사상**으로 구현했다(`hydraulics/seal_friction.py`, [s8_seal_friction_counterbalance.md](s8_seal_friction_counterbalance.md) 2절). 감도 레벨도 **$F_s$ 0 / 2 / 4 / 8 kN**(전방, 후방 × 0.833, 공칭 4 kN)으로 바뀌었다. 이 문서의 0 / 2 / 5 / 12 kN(2.2·3.4·6.2.4절)과 S1f·S5의 5 kN은 초판 감도이고, 그 결과 수치(6.2.4 표)는 기록으로만 남긴다.
+> - **CB는 [s8_seal_friction_counterbalance.md](s8_seal_friction_counterbalance.md) 4절 모델**(`hydraulics/counterbalance.py`, YAML `actuator.lock_valve`)로 구현했다. 4.4절·6.2.4절의 CB 값은 초판 가정이다.
+
 작성: hydraulics-expert. S7(L2b-NSC)·S8(실 마찰·카운터 밸런스·D2) 준비용이다. 유압 사양이 확정되지 않았으므로 **모든 유압 수치는 가정(ASSUMPTION)** 이고, 근거와 감도 범위를 함께 적는다. 제조사 자료가 오면 2절 표와 `04_scripts/04_hydraulic/l2_params.py`의 `ASSUMPTIONS`만 바꾸고 스크립트를 다시 돌린다.
 
 - 입력(읽기만 함): `CLAUDE.md`, [hydraulic_circuit.md](hydraulic_circuit.md), [hydraulic_fluid_survey.md](hydraulic_fluid_survey.md), [actuator_L2_feasibility.md](../01_dynamics/actuator_L2_feasibility.md), [dynamics_model.md](../01_dynamics/dynamics_model.md)(개정 14), [chrono_build_plan.md](../03_chrono/chrono_build_plan.md) S7·S8, `02_params/rexome33.yaml`.
@@ -69,7 +76,7 @@
 | `poc_pilot_ratio`, 크래킹, 히스테리시스 | 3.5, 3 bar, 2 bar | 2~6 | 이중 POC 통상 3:1~4:1 / Q-H3 |
 | CB 설정·파일럿 비 | 350 bar g, 4:1 | 3~8 | 제조사 설명 / Q-H4 |
 | CB 오버라이드·용량·응답 | 20 L/min at +20 bar, $q_{nom}$ 60 L/min@70 bar, τ 10 ms, 히스테리시스 5 bar | 6.2.4절 | Q-H4 |
-| `seal_friction_Fs_N` | 0 | 0 / 2 / 5 / 12 kN(V15) | Q-H1 |
+| `seal_friction_Fs_N` | 0 | 0 / 2 / 5 / 12 kN(V15, **초판 값**. 현재 0 / 2 / 4 / 8 kN, s8 문서 2.3절) | Q-H1 |
 | `seal_friction_Fc_over_Fs` | 1.0(정지 = 운동, V15 모드) | 0.6~1.0(Stribeck) | Kühnlein 2012 관행 |
 | LuGre $v_s$, $\sigma_0$, $\sigma_1$ | 5 mm/s, 1×10¹⁰ N/m(합친 형태), 0 | 별도 로드 바디는 $\sigma_0$ 2×10⁸, $\sigma_1$ 1.3×10⁵(3.4절) | 수치 조건 |
 | 누설(내부, POC 시트) | 0 | 2.6×10⁻¹⁶ / 3.6×10⁻¹⁶ m³/(s·Pa) | 0.5 mL/min@315 bar, 5방울/min@115 bar |
@@ -131,11 +138,13 @@ $Q_{int}=C_{int}(p_A-p_B)$(피스톤 실, A → B), $Q_{ext,A}=C_{ext}\max(p_{A,
 
 ### 3.4 실 마찰(LuGre, 기름 기둥과 병렬)
 
+> 2026-10-25 주: S8 구현은 LuGre를 쓰지 않았다. 기름 스프링에만 병렬인 Coulomb 복귀 사상이고, 이유(파라미터 데이터 없음, 판정에 들어가는 것은 띠 폭 $2F_s$와 이력)는 [s8_seal_friction_counterbalance.md](s8_seal_friction_counterbalance.md) 2.1절에 있다. 이 절은 초판 참조 구현(`l2_cylinder.py`)의 기록이다.
+
 $$g(v)=F_c+(F_s-F_c)\,e^{-(v/v_s)^2},\quad \dot z=v-\frac{\sigma_0|v|}{g(v)}z,\quad F_f=\sigma_0z+\sigma_1\dot z$$
 
 | 기호 | 뜻 | 기본 |
 |---|---|---|
-| $F_s$, $F_c$ | 정지(이탈), Coulomb 마찰 | V15 모드: $F_c=F_s$ ∈ {0, 2, 5, 12 kN} |
+| $F_s$, $F_c$ | 정지(이탈), Coulomb 마찰 | V15 모드: $F_c=F_s$ ∈ {0, 2, 5, 12 kN}(**초판 값**. S8 구현은 Coulomb 복귀 사상, {0, 2, 4, 8 kN}, s8 문서 2절) |
 | $v_s$ | Stribeck 속도 | 5 mm/s |
 | $\sigma_0$, $\sigma_1$ | 강모 강성, 강모 감쇠 | 아래 규칙 |
 | $v$ | 피스톤 상대 속도 $\dot s_p$ | |
@@ -383,6 +392,8 @@ Chrono 결과와 비교할 값은 이 표다(`l2_reference_responses.json / spec
 | S1·S3 합친 형태 | 최대·최종 압력이 물리 위상과 1×10⁻⁵ 안, $f_d$ 6.614 / 6.645 Hz, Δs는 링크 기준이라 −0.942 / −5.927 mm(로드·콘크리트 압축 포함) |
 
 #### 6.2.4 감도(물리 위상, Python)
+
+> 2026-10-25 주: 이 표는 초판 치수(ø115/ø110)와 초판 감도($F_s$ 0 / 2 / 5 / 12 kN, LuGre)로 계산한 기록이다. 현재 감도 레벨(0 / 2 / 4 / 8 kN)의 결과는 s8 문서 2.9절·`06_analysis/03_hydraulic/s8/friction_ref.json`에 있다.
 
 | 감도 | 결과 |
 |---|---|

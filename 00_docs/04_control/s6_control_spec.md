@@ -1,12 +1,87 @@
 # S6 제어 설계 명세 (갈래 C, 2026-10-21)
 
-control-expert 작업이다. S6 폐루프(L1 Chrono)에 들어갈 C2(개정 R2, H4) 제어기의 **목표 자세 수용·범위 밖 처리, H4 재설정 트리거, heave 목표 변경 규칙, $F_{min}$ 가드, 제어기 검증 항목 1~8 판정 기준과 실행 행렬**을 정한다. 구현은 python-expert(`control/*`), Chrono runner는 cad-expert가 맡는다. 기존 문서·코드·YAML은 고치지 않았다. 갱신이 필요한 문구는 9절에 모았다. **결정은 사용자가 한다**(8절).
+> **현재 상태(2026-10-25 갱신)**: 현재 개정은 **56**(2026-10-25, S8 마감, U-S8-58)이다.
+>
+> - 아래 초판 본문(0~9절)은 **C2 R2/H4(50 Hz) 기준**이다. 현행 제어기는 **R8 C2**(10 Hz, 출력 지연 d = 1, 프리셋 `C2Config.with_10hz_d1()`)다. 현행 구조·게인의 원본은 **개정 30(130~141절, 특히 136절 이후)** 과 그 뒤 개정들(31~56)이다. 앞 절과 뒤 개정이 다르면 **뒤 개정이 맞다**.
+> - 초판 본문의 "고치지 않았다", "scratchpad에 있다" 같은 문장은 **초판 당시** 상태다. 2026-10-24·25 이관으로 스크립트 대부분은 `04_scripts/03_control/`(S6 `r8d1/`, S8 `s8/`, 개정 53~56 `s8/rev53_56/`)로, 결과는 `06_analysis/02_control/`로 옮겼다. 옮기지 못한 것은 각 개정에 "스크립트 미보존"으로 적었다.
+> - 재현성(2026-10-25, 초판~개정 28): 이 명세가 "scratchpad `ctrl-run\`"(2026-10-21·22 세션)로 가리키는 파일은 두 세션 폴더(`ac6418dc…`, `a06eea4a…`)에서 찾아 옮겼다. 같은 내용(SHA-256)이 저장소에 이미 있던 39개(빈 로그 2개 제외)는 그 위치를 쓰고(예: `04_scripts/03_control/s6_*.py`·`s6r4_*`·`s6s2_*`·`d8x_*`, `06_analysis/02_control/r8_10hz/`), 나머지 스크립트 47개는 `04_scripts/03_control/s6_rev01_28/`, 결과 37개는 `06_analysis/02_control/s6_rev01_28/`에 있다. 목록·원 SHA-256·경로 수정 내역은 `06_analysis/02_control/s6_rev01_28/migration_manifest.json`이다. 스크립트 출력 위치는 `06_analysis/02_control/s6_rev01_28/`로 바꿨다. 1 MB 넘는 결과 2개(`s6r16_touch_hold_sweep.json` 4.5 MB, `s6r17_h4_fs_order.json` 1.1 MB)는 옮기지 않았다(manifest에 SHA-256). 결정적 스크립트 5개(`s6r9_rod_pressure`, `s6r9b_hyd_align`, `s6r11_rexome35`, `s6r14_sensor_error`(시드 20261022), `s6r12_envelope`)를 이관 뒤 다시 돌렸다. 앞 넷은 옮긴 결과와 바이트 단위로 같고, `s6r12_envelope`는 0.32 mm 다르다(최악 행정 642.19 → 642.51 mm). `s6_envelope_check.py`는 당시 사본과 같으므로, 이 차는 그 뒤 바뀐 입력(`dyn_model`·포락선 지도 등) 몫으로 본다(**추정**, 원인 파일은 확인하지 않았다). 옮긴 결과 파일은 원본 그대로 두었다.
+> - 재현성(2026-10-25, 문서 최신화): 개정 53~56의 control 보조 스크립트·결과 이관 목록은 `06_analysis/02_control/s8/rev53_56/migration_manifest.json`이다. cad 재판정 출력(rev. 52·54·55·56)은 요약만 git(`06_analysis/01_chrono/18_S8/rejudge/rev5x/`)에 있고, verify 전체는 `07_results/S8/archive/18_S8_extra/rejudge/rev5x/`, ml768 원본은 `07_results/S8/archive/rejudge_ml768/rev5x/`에 있다(07_results는 git 제외, 로컬 전용; 목록·SHA-256은 `18_S8/README.md`·`_manifest.json`). 스크립트는 저장소 상대 경로를 쓰고 경로 해석은 `04_scripts/03_control/s8/rev53_56/rejudge_paths.py`가 한다. 환경 변수 `S8_REJUDGE_DIR`(verify 부모, `rev5x/`를 담음)와 `S8_REJUDGE_ML768_DIR`(ml768 부모)로 바꿀 수 있다. 1 MB 넘는 결과(`c36_work_768.json`)는 옮기지 않고 목록만 남겼다. 작성 당시 사본이 없어진 것(개정 49의 `ds87`·`d1pp` npz, `verify_S8ML_rev48.json`, `jump.json`, 개정 53 E1 상한 한 줄 계산)은 각 절에 "스크립트 미보존"·"재계산 경로"를 적었다. ML v2 요약의 소스 트리는 237절 표를 본다.
+> - 단계 체크 상태의 원본은 계획 문서 `00_docs/03_chrono/chrono_build_plan.md` 체크리스트이고, `00_docs/00_roadmap.md` 4절이 같은 상태를 보여 준다. 성능 목표 대비 점검표는 `00_docs/00_performance_checklist.md`다.
+
+### 개정 이력
+
+`# 개정 N` 헤딩에서 만들었다(2026-10-25). 제목은 헤딩 앞부분을 줄였고, 절은 그 개정 안의 번호 절(`## k.`) 범위다. 개정 54는 앞부분(판정 기준)과 뒷부분(판정)으로 나뉜다.
+
+| 개정 | 날짜 | 제목(요약) | 절 |
+|---|---|---|---|
+| 초판 | 2026-10-21 | S6 C2(R2, H4) 목표 수용·H4 트리거·heave 목표·$F_{min}$ 가드·검증 항목 1~8 | 0~9 |
+| 1 | 2026-10-21 | R3 구현 뒤 남은 SPEC POINT 판단 | 10~11 |
+| 2 | 2026-10-21 | 검증 모드 수용 경계를 크롤러 컴플라이언스만큼 넓힌다 | 12~15 |
+| 3 | 2026-10-21 | S6 2단계 폐루프 31사례 결과 판단 | 16~20 |
+| 4 | 2026-10-21 | 정정 지지 탐침 오판(위험 쪽)과 H4 재평가(마찰 분해 옵션 1) | 21~24 |
+| 5 | 2026-10-21 | 스트로크 길이를 이용한 기하 접지 단서와 세 입력의 역할 | 25~31 |
+| 6 | 2026-10-21 | R4.1 구현 뒤 발견 5건과 R5 구성 | 32~36 |
+| 7 | 2026-10-22 | S6 재실행(C2 R4.1, 20사례) 판정과 R5 확정 | 37~43 |
+| 8 | 2026-10-22 | C2 R5 구현 확인 항목 판정 | 44~46 |
+| 9 | 2026-10-22 | 헤드·로드 두 압력 센서를 쓰는 C2 R6 검토 | 47~53 |
+| 10 | 2026-10-22 | RE3(C2 R5) 판정과 R6-G 진입 | 54~62 |
+| 11 | 2026-10-22 | 탐침 끝 방향·R-H4 판정, REXOME35 재계산, R6-P 기본값 확정 | 63~64 |
+| 12 | 2026-10-22 | 신장 꼬리 길이 재결정, L1-R 반영 F_min 여유·규칙 A 포락선 재판정 | 65~67 |
+| 13 | 2026-10-22 | 배럴 질량 변화(약 −155 kg) 반영, $F_{min}$ 기준 식 정리 | 68~70 |
+| 14 | 2026-10-22 | 압력 센서(WIKA A-10) 오차 모델, 판정 영향, 교정 절차 | 71~76 |
+| 15 | 2026-10-22 | 순서 6 하류 재처리(REXOME35)가 이 명세에 주는 영향 | (번호 절 없음) |
+| 16 | 2026-10-22 | C2 R6-P 설계 메모 | 77 |
+| 17 | 2026-10-22 | S-TH1 판정, 채택안 H4의 실 마찰 감도, H4 첫 단계 후방 축력 | 78~81 |
+| 18 | 2026-10-22 | H4 패드 횡하중 기구, 앞들림 선택지 A~D의 제어 쪽 수치, 실행 파일 이관 | 82~84 |
+| 19 | 2026-10-22 | 앞들림 H4 사용자 결정 기록("C 우선, 잠정 B") | 85 |
+| 20 | 2026-10-22 | C 구현 반영, 앞내림 H4 유지 확정, B 근거와 복귀 조건, 방향별 운용 한계 명세 | 86~87 |
+| 21 | 2026-10-22 | H4lb 로드 끝 횡하중 기대값을 REXOME35로 다시 정함 | 88~89 |
+| 22 | 2026-10-22 | C2 R7 구현 반영과 고착점 갱신 규칙 판단 | 90~91 |
+| 23 | 2026-10-22 | PS-7 "CHECK 중 RR 접지" 시나리오 정의, L1-R 크롤러 스냅숏과 A1 수용 | 92~94 |
+| 24 | 2026-10-22 | 급낙하 뒤 로드 진동(102 Hz)과 압력 판독의 표본화 | 95~96 |
+| 25 | 2026-10-22 | 압력·행정 10 Hz, IMU 100 Hz 계측 주기 검토 | 97~98 |
+| 26 | 2026-10-22 | 10 Hz 제어 재설계(C2 R8 후보) | 99~101 |
+| 27 | 2026-10-22 | R8 사용자 결정 기록, 묶음 B(L1-R) 판정 중 control 몫, 앞들림 3.2° 복귀 권고, R8 하네스 이관 | 102~106 |
+| 28 | 2026-10-22 | 배치 B2(L1-R 켬, M1 뒤) 판정 중 control 몫, 압력 진단 기준선 결함, S6 마무리 목록 | 107~116 |
+| 29 | 2026-10-24 | C2 R7 마무리 최종 판정, S6 제어 판정 완료, R8·U-R8-2 이관 | 117~129 |
+| **30** | 2026-10-24 | **출력 지연 d = 1 전제의 R8 재설계(현행 R8 C2 원본)** | 130~141 |
+| 31 | 2026-10-24 | C2 R8-D1 구현(`C2Config.with_10hz_d1()`) 확인 판단과 Chrono 묶음 C 확정 | 142~155 |
+| 32 | 2026-10-24 | R8 Chrono 묶음 C 판정 | 156~163 |
+| 33 | 2026-10-24 | R8 묶음 C 재실행(rerun32) 판정 | 164~172 |
+| 34 | 2026-10-24 | rerun33(P-R8-12) 판정과 재접근 재설계 | 173~179 |
+| 35 | 2026-10-24 | rerun34(P-R8-13·P-R8-14·C-R11) 판정 | 180~188 |
+| 36 | 2026-10-24 | rerun35 판정 요약 | 189 |
+| 37 | 2026-10-24 | S7 "제어 ③ 준비"(L2b-NSC 폐루프 연기 시험) 판정 | 190~196 |
+| 38 | 2026-10-24 | 경계 재실행(U-S7-2) 판정, 193.2·개정 37 머리말 정정 | 197~198 |
+| 39 | 2026-10-24 | S8 계획(제어 ③ 재판정 사례 행렬, 검증 항목 9, 접지 판정 ML/DL 명세) | 199~209 |
+| 40 | 2026-10-24 | 이륙 과도 구간 정정(8 s), S8 크롤러 구간 규칙, 이탈 직전 heave 감속, U-S8-1~6 확정 | 210 |
+| 41 | 2026-10-24 | S8 판정 명세 보완 | 211 |
+| 42 | 2026-10-24 | S8 축소 하네스 수정·재계산, U-S8-5 재정리, I4 기대 분류표 재작성 등 | 212 |
+| 43 | 2026-10-24 | S8 제어 ③ 재판정 1차(우선순위 1, 36사례) 판정 | 213 |
+| 44 | 2026-10-24 | S8 1차 재실행(p1r, 37사례) 판정 | 214 |
+| 45 | 2026-10-24 | S8 판정 기준 재판단 | 215 |
+| 46 | 2026-10-25 | S8 rest(49사례)·CB(6사례) 판정 | 216 |
+| 47 | 2026-10-25 | S8 ML 시범 판정 문제 2건 | 217 |
+| 48 | 2026-10-25 | S8 ML 시범 재실행 판정 | 218 |
+| 49 | 2026-10-25 | S8 D1″ 세부 확정(R41-1~3) | 219 |
+| 50 | 2026-10-25 | S8 MLJ 6사례 판정 | 220~221 |
+| 51 | 2026-10-25 | S8 본 ML 768 판정 | 222~226 |
+| 52 | 2026-10-25 | R51-1 재접근 재발동 규칙(P-S8-16) 설계 | 227~236 |
+| 53 | 2026-10-25 | S8 ML 후속(P-S8-19, 시드 5·보정 판독) 판정 | 237~246 |
+| 54 앞부분 | 2026-10-25 | C-S8-36 판정 기준 확정(실행 중, 판정 전) | 247~254 |
+| 54 뒷부분 | 2026-10-25 | C-S8-36 최종 판정 | 255~265 |
+| 55 | 2026-10-25 | 261절 정정(FS24_Fs0 RR 보류 창 최소 6.97 → 0.59 kN)과 U-S8-57 재판정 | 266~273 |
+| **56** | 2026-10-25 | **U-S8-56 (a) 재실행(묶음 E, c37) 최종 판정, S8 마감(U-S8-58)** | 274~280 |
+
+---
+
+control-expert 작업이다(**초판 당시** 기록). S6 폐루프(L1 Chrono)에 들어갈 C2(개정 R2, H4) 제어기의 **목표 자세 수용·범위 밖 처리, H4 재설정 트리거, heave 목표 변경 규칙, $F_{min}$ 가드, 제어기 검증 항목 1~8 판정 기준과 실행 행렬**을 정한다. 구현은 python-expert(`control/*`), Chrono runner는 cad-expert가 맡는다. 초판 당시에는 기존 문서·코드·YAML을 고치지 않았다. 갱신이 필요한 문구는 9절에 모았다. **결정은 사용자가 한다**(8절).
 
 - 근거: CLAUDE.md(C2 확정 사항, 목표 범위 잠정 pitch ±3°/roll ±4°, 규칙 A, D8), [c2_design.md](c2_design.md) 14·16·17절, [control_candidates_comparison.md](control_candidates_comparison.md) 7.3절, [chrono_build_plan.md](../03_chrono/chrono_build_plan.md) S6 절, [dynamics_model.md](../01_dynamics/dynamics_model.md) 3.9.7·3.10·3.12절
 - 수치 근거: `06_analysis/00_dynamics/s6_control_spec.json`(키 `envelope_rule_A`, `overshoot_runs`, `reanchor_trigger`, `target_change`, `chrono_matrix`, `regression_zero_target`)
-- 계산(dynamics-dev, 모두 `conda run -n dynamics-dev python -I`). 스크립트는 scratchpad `ctrl-run\`에 있고, 프로젝트 스크립트는 import만 했다.
+- 계산(dynamics-dev, 모두 `conda run -n dynamics-dev python -I`). 초판 당시 스크립트는 scratchpad `ctrl-run\`에 있었고, 프로젝트 스크립트는 import만 했다. 지금은 `04_scripts/03_control/s6_envelope_check.py`·`s6_target_sim.py`로 옮겨져 있다(2026-10-25 확인).
   - `s6_envelope_check.py`: `target_envelope.json`(dynamics 개정 21) 지도에서 규칙 A 수용 집합, 최악 행정, heave 목표 감도를 구한다. 선형 행정 예측기(경로 B)를 지도(경로 A)와 비교한다.
-  - 경로: `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace\ac6418dc-b52c-42d7-ba64-81b7424d2311\scratchpad\ctrl-run\`(세션 임시 폴더). 남기려면 `04_scripts/03_control/`로 옮긴다(메인 세션 결정).
+  - 경로: 초판 당시 `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace\ac6418dc-b52c-42d7-ba64-81b7424d2311\scratchpad\ctrl-run\`(2026-10-22 세션 임시 폴더). 2026-10-25 이관 완료: 이미 옮겨진 것은 `04_scripts/03_control/` 바로 아래(같은 이름), 나머지 스크립트는 `04_scripts/03_control/s6_rev01_28/`, 결과는 `06_analysis/02_control/s6_rev01_28/`(목록·원 SHA-256 `migration_manifest.json`).
   - `s6_target_sim.py`: 축소 6자유도(`run_pad_tangential_check.TPlant`)에 `run_c2_reanchor.C2RN`(H4)을 쓰고, 목표 자세·트리거 방식·목표 변경·목표 램프를 래퍼로 넣었다. 모두 62회 실행했고 오류는 0건이다.
 - Julia 교차 검증은 하지 않았다. 이번 작업은 루프 전달함수를 바꾸지 않는다(목표는 기준 입력이다). 두 경로 대조는 다음 둘로 대신했다.
   - (a) 목표 0 회귀: c2_design.md 17.7 Q11 값과 비트 단위로 같다. DONE 36.06 s, REANCHOR 38.10~52.58 s, READY 53.64 s, 멈춤 판독 44.73/32.32/32.39/32.21 kN, $F_t$ 16.81 kN, 최소 29.61 kN이다.
@@ -344,7 +419,7 @@ $$s_{worst}(c^*)=641.9\ \mathrm{mm}+1.005\,(c^*-50\ \mathrm{mm})\le s_{max}-10\ 
 배경은 다음과 같다.
 - 갈래 B(python-expert)가 이 명세로 C2 R3를 구현했다(U1~U4는 사용자가 권고안대로 채택). 파일은 `control/c2.py`, `target.py`, `ground_contact.py`, `c8.py`이다. 시험 843개가 통과했고, 목표 0 R2 회귀는 비트 단위로 같다.
 - 남은 판단 6건을 정한다. 코드는 고치지 않았다.
-- 새 계산은 자이로 오차 몬테카를로 하나다: scratchpad `ctrl-run\s6_gyro_probe_noise.py`(dynamics-dev, 시드 20261021, 표본 2×10⁵).
+- 새 계산은 자이로 오차 몬테카를로 하나다: `04_scripts/03_control/s6_gyro_probe_noise.py`(작성 당시 scratchpad `ctrl-run\`, dynamics-dev, 시드 20261021, 표본 2×10⁵).
 - 1번의 축소 플랜트 사례(RR 바닥 30 mm 하강)는 **갈래 B 실행 결과를 인용**했다. 독립 재현은 하지 않았다.
 
 ## 10. 결정 목록
@@ -446,7 +521,7 @@ $c^*_{max}=50+(680-10-641.9)/1.005$ = 77.96 mm다. 1.005는 받아들인 점의 
 - cad가 Q12 크롤러 부싱을 켜고 경사 정착 스냅숏 14개를 만들었다(`07_results/S6/snapshots_20261021_195044`).
 - 크롤러 위 기체 자세가 바닥보다 앞내림 쪽으로 더 기울었다. 그래서 검증 모드에서도 A1 `REJ_SLOPE_D8`가 났다.
 - 사용자 결정(2026-10-21): 검증 범위만 크롤러 컴플라이언스 보정만큼 넓히고, 운용 한계(3.2°/4.4°)는 유지한다. 정확한 경계값은 dynamics-expert 개정 24가 정한다. 이 절은 제어 쪽 구조만 정한다.
-- 코드는 고치지 않았다. 계산은 모두 dynamics-dev(`conda run -n dynamics-dev python -I`)로 했고, 스크립트는 scratchpad `ctrl-run\`에 있다.
+- 코드는 고치지 않았다. 계산은 모두 dynamics-dev(`conda run -n dynamics-dev python -I`)로 했고, 스크립트는 작성 당시 scratchpad `ctrl-run\`에 있었다(2026-10-25 이관: `04_scripts/03_control/` 또는 `04_scripts/03_control/s6_rev01_28/`, 결과 `06_analysis/02_control/s6_rev01_28/`, 대응표는 그 폴더의 `migration_manifest.json`).
   - `d8x_settle_probe.py`: 축소 플랜트의 크롤러 정착 자세를 Chrono 스냅숏과 비교한다(20회, 35 s).
   - `d8x_boundary_sim.py`: 경계 근처 C2 R2(H4) 폐루프를 돌린다. `s6_target_sim.run_tgt`를 import만 해서 14회 돌렸다(29 s, 오류 0).
   - `d8x_gate_options.py`: 스냅숏 14개에 수용식 세 안을 적용한다.
@@ -605,7 +680,7 @@ $$\text{A1: }\frac{\lvert\hat\varphi_g\rvert}{\Phi_r}+\frac{\lvert\hat\theta_g\r
 - (B) 측정 기반: TOUCH 끝(네 패드 접지 확인, 크롤러가 아직 하중을 받는 순간)의 다리 스트로크로 기체 축 기준 패드 평면을 맞추고, IMU 자세와 합쳐 절대 바닥 경사를 구한다.
 - (C) 결합: CHECK에서 (A)로 예비 판정을 하고, TOUCH 끝에서 (B)로 확정한다.
 
-계산은 scratchpad `ctrl-run\d8x_floor_est.py`로 했다(dynamics-dev, 72개 해석 자세 + 축소 폐루프 24회, 57 s, 오류 0).
+계산은 `04_scripts/03_control/d8x_floor_est.py`(작성 당시 scratchpad `ctrl-run\`, 결과 `06_analysis/02_control/s6_rev01_28/d8x_floor_est.json`)로 했다(dynamics-dev, 72개 해석 자세 + 축소 폐루프 24회, 57 s, 오류 0).
 - (A) 쪽은 `scenarios/crawler_slope.crawler_slope_pose`(Chrono 끝값과 ≤ 0.005° 일치)에 크롤러 구 법선 강성 $k_n$ ×1/3·×1·×3을 `load_params(overrides=...)`로 넣었다.
 - (B) 쪽은 `s6_target_sim.run_tgt` 위에 TOUCH 끝 기록 훅만 얹었다. 바닥은 6가지(평지, ±3.5°, roll 5.5°, 대각 3°, roll −4.4°)이고, 상단·하단 × IMU 영점(축소 기본 0.5 mg / 0)이다.
 
@@ -728,7 +803,7 @@ $$\hat n_w=R_y(\theta_f)R_x(\varphi_f)\,\hat n_b,\qquad \hat\theta_g=\operatorna
 - Chrono L1, C2 R3.1, 검증 모드 + 정착 사상, 지연 1, 결합 판정 기본 켬으로 31사례를 돌렸다. 결과는 `07_results/S6/stage2_20261021_213235`이고, roll 5.5°는 `stage2_20261021_214443`에서 다시 돌렸다. 요약은 `06_analysis/01_chrono/16_S6/verify_S6_L1_closed_loop.json`이다.
 - cad 사전 판정은 실패 11행이다. 그중 1행은 보통 출하 등급의 의도된 실패라 실제 판정 실패는 10행이다. integrity-checker 감사는 원자료 재계산이 31사례 모두 일치했고, 판정 누락 8건을 지적했다.
 - 이 절은 원인, 대책, 판정 기준 조정을 정한다. 코드와 다른 문서는 고치지 않았다.
-- 계산은 모두 dynamics-dev(`conda run -n dynamics-dev python -I <파일>`)로 했다. 스크립트는 scratchpad `ctrl-run\`에 있다.
+- 계산은 모두 dynamics-dev(`conda run -n dynamics-dev python -I <파일>`)로 했다. 스크립트는 작성 당시 scratchpad `ctrl-run\`에 있었다(2026-10-25 이관: `04_scripts/03_control/` 또는 `04_scripts/03_control/s6_rev01_28/`, 결과 `06_analysis/02_control/s6_rev01_28/`, 대응표는 그 폴더의 `migration_manifest.json`).
 
 | 스크립트 | 내용 |
 |---|---|
@@ -1036,7 +1111,7 @@ Julia 교차 검증은 하지 않았다. 루프 전달함수가 바뀌지 않기
 - python-expert가 C2 R4(P1 사다리꼴 탐침, P2 공동 적분, P5 재레벨 7 kN, P6 탐침 행정 가드)를 구현했다. 그런데 RR이 뜬 세 다리 정정 지지 상태에서 사다리꼴 탐침이 RR을 '접지'로 잘못 판정했다(위험 쪽).
 - dynamics 개정 26(`fric_mode` 1, Chrono식 마찰 분해)에서 앞내림 H4 효과가 줄었다.
 
-이 절은 둘을 판단한다. 코드와 다른 문서는 고치지 않았다. 계산은 모두 dynamics-dev(`conda run -n dynamics-dev python -I <파일>`)로 했고, 스크립트는 scratchpad `ctrl-run\`에 있다.
+이 절은 둘을 판단한다. 코드와 다른 문서는 고치지 않았다. 계산은 모두 dynamics-dev(`conda run -n dynamics-dev python -I <파일>`)로 했고, 스크립트는 작성 당시 scratchpad `ctrl-run\`에 있었다(2026-10-25 이관: `04_scripts/03_control/` 또는 `04_scripts/03_control/s6_rev01_28/`, 결과 `06_analysis/02_control/s6_rev01_28/`, 대응표는 그 폴더의 `migration_manifest.json`).
 
 | 스크립트 | 내용 |
 |---|---|
@@ -1198,7 +1273,7 @@ H4 끝의 로드 횡하중 $L$ 최대(네 다리 중) [kN]. 괄호는 끔 대비
 - 기하 단서 G1~G3를 설계·평가한다.
 - 실 마찰 $F_s$에 따른 단서별 판정 성능을 비교한다.
 
-코드와 다른 문서는 고치지 않았다. 계산은 모두 dynamics-dev(`conda run -n dynamics-dev python -I <파일>`)로 했고, 스크립트는 scratchpad `ctrl-run\`에 있다.
+코드와 다른 문서는 고치지 않았다. 계산은 모두 dynamics-dev(`conda run -n dynamics-dev python -I <파일>`)로 했고, 스크립트는 작성 당시 scratchpad `ctrl-run\`에 있었다(2026-10-25 이관: `04_scripts/03_control/` 또는 `04_scripts/03_control/s6_rev01_28/`, 결과 `06_analysis/02_control/s6_rev01_28/`, 대응표는 그 폴더의 `migration_manifest.json`).
 
 | 스크립트 | 내용 |
 |---|---|
@@ -1452,7 +1527,7 @@ $$p_i=R(\varphi_f,\theta_f)\begin{bmatrix}x_i\\y_i\\z_{p,i}-e_i+F_i/k_s\end{bmat
 - 사용자 결정 U30-a·U31-a·U32-a를 전제로 한다. U24′는 이 개정의 40절과 함께 정한다.
 - 코드(`control/*`)와 다른 문서는 고치지 않았다. 이 문서 26.1절 식의 처짐 부호만 32.5절 결정대로 고쳤다.
 
-계산(dynamics-dev, `conda run -n dynamics-dev python -I <파일>`, scratchpad `ctrl-run\`)
+계산(dynamics-dev, `conda run -n dynamics-dev python -I <파일>`, 작성 당시 scratchpad `ctrl-run\`; 2026-10-25 이관: `04_scripts/03_control/` 또는 `04_scripts/03_control/s6_rev01_28/`, 결과 `06_analysis/02_control/s6_rev01_28/`, 대응표 `migration_manifest.json`)
 
 | 스크립트 | 내용 |
 |---|---|
@@ -1688,7 +1763,7 @@ $$d_i^{\Delta}=\Delta h_i-\operatorname{median}_{j\ne i}\Delta h_j,\qquad r=\big
 - python-expert가 C2 R5(H5a, B1′, GE1′)를 구현했다. 단위 시험 991개가 통과했고, R4.1 legacy는 비트 단위로 같다.
 - 이 개정은 구현 보고의 "확인 필요" 6건을 판정한다. 코드와 다른 문서는 고치지 않았다.
 
-계산(dynamics-dev, `conda run -n dynamics-dev python -I <파일>`, scratchpad `ctrl-run\`)
+계산(dynamics-dev, `conda run -n dynamics-dev python -I <파일>`, 작성 당시 scratchpad `ctrl-run\`; 2026-10-25 이관: `04_scripts/03_control/` 또는 `04_scripts/03_control/s6_rev01_28/`, 결과 `06_analysis/02_control/s6_rev01_28/`, 대응표 `migration_manifest.json`)
 
 | 스크립트 | 내용 |
 |---|---|
@@ -1811,7 +1886,7 @@ $$d_i^{\Delta}=\Delta h_i-\operatorname{median}_{j\ne i}\Delta h_j,\qquad r=\big
 
 | 스크립트(dynamics-dev, `conda run -n dynamics-dev python -I`) | 내용 |
 |---|---|
-| `s6r9_rod_pressure.py` → `s6r9_rod_pressure.json`(scratchpad `ctrl-run\`) | 판독 잡음, 가설 H0·H1·H2의 편향 $b=p_rA_{ann}$, 블록 문턱에서의 참 힘, 탐침 띠·중점 편향, 비틀림 좌표 편향, 마찰 고착 부상 판독, 350 bar 환산 |
+| `s6r9_rod_pressure.py` → `s6r9_rod_pressure.json`(작성 당시 scratchpad `ctrl-run\`; 지금 `04_scripts/03_control/s6_rev01_28/` → `06_analysis/02_control/s6_rev01_28/`) | 판독 잡음, 가설 H0·H1·H2의 편향 $b=p_rA_{ann}$, 블록 문턱에서의 참 힘, 탐침 띠·중점 편향, 비틀림 좌표 편향, 마찰 고착 부상 판독, 350 bar 환산 |
 
 - Julia 교차 검증은 하지 않았다. 루프 전달함수가 바뀌지 않기 때문이다. 순 힘은 같은 시점·같은 대역의 신호이고, 잡음만 0.36 % 커진다(48절).
 - 두 경로 대조는 이렇게 했다. H1의 분담비 $\kappa(e_{op})$를 dynamics_model.md 2.3절 표의 $k_{ann}/k_{oil}$(전방 +11.7 %)에서 따로 구하면 $0.117/1.117=0.105$다. 스크립트 값은 0.104다($e$ = 0.40 m).
@@ -2009,7 +2084,7 @@ $$d_i^{\Delta}=\Delta h_i-\operatorname{median}_{j\ne i}\Delta h_j,\qquad r=\big
 > **실린더 치수 교체 전 값. REXOME35 재계산 완료(개정 11, 64절이 대체, 2026-10-22).** 이 절의 로드측·헤드측 수치는 공통 $A_p$ 1.0387×10⁻² m², $A_{ann}$ 8.84×10⁻⁴ m², 행정 680 mm 기준이다. 사용자가 REXOME35 실린더 도면(DWG REXOME35-9206)으로 치수를 바꾸기로 정했으므로, 편향 $b=p_rA_{ann}$, 분담비 $r$, 350 bar 경계, 두 센서 한계, 진단 문턱, 물러남 공제는 dynamics·hydraulics가 새 파라미터를 확정한 뒤 다시 계산한다. 판정 논리·구조(순 힘, 진단 항목, 물러남 규칙의 형식)는 그대로다.
 
 - 입력: [rod_side_pressure.md](../02_hydraulic/rod_side_pressure.md)(hydraulics-expert 초판, 2026-10-22). 이 절이 47.2·48(H0 열)·50(D2·D3·D6, 물러남)·52의 해당 부분을 대체한다. 앞 절의 본문은 기록으로 남긴다.
-- 계산: `s6r9b_hyd_align.py` → `s6r9b_hyd_align.json`(scratchpad `ctrl-run\`, dynamics-dev `conda run -n dynamics-dev python -I`, 1 s 미만, 대수식).
+- 계산: `s6r9b_hyd_align.py` → `s6r9b_hyd_align.json`(작성 당시 scratchpad `ctrl-run\`; 지금 `04_scripts/03_control/s6_rev01_28/` → `06_analysis/02_control/s6_rev01_28/`, dynamics-dev `conda run -n dynamics-dev python -I`, 1 s 미만, 대수식).
 - 대조
   - 부상 순간 로드측 압력(전방 118 kN, $r$ 0.1047)은 이 스크립트에서 143.4 bar, hydraulics 문서에서 144 bar다.
   - $F_0$ 292 kN에서 로드측은 349.2 bar다. hydraulics 문서의 "350 bar 초과 감하중 292 kN"과 같다.
@@ -2110,7 +2185,7 @@ hydraulics 기본 모델: $p_{r0}$ 2 bar, $r$ 0.105/0.100, 수축 뒤 31~37 bar,
 - 판정 요약은 `06_analysis/01_chrono/16_S6/verify_S6_L1_closed_loop_re3.json`(529행, 실패 17, 미판정 51, b1 실패 1)과 `verify_S6_L1_ge1_re3.json`(U39 사전 점검 46행)이다.
 - 무결성 감사(메인 세션 전달): 파일·병합·수치 이상 없음. 실패 17행은 사건 반응 10행과 판정 정의 7행으로 나뉜다.
 - 코드와 다른 문서는 고치지 않았고 커밋하지 않았다. 이 문서의 정정 세 곳(41.3 1626행, 41.2 RE1b-F·-P 60 s 가정 한 줄, 44.6 1764행)만 고쳤다.
-- 계산은 판정 JSON 읽기뿐이다(`s6r10_extract.py`, `_extract2.py`, `_extract3.py`, scratchpad `ctrl-run\`, dynamics-dev `conda run -n dynamics-dev python -I`). 판정 경로 대조는 사건 사례의 탐침 결과(제어기 판정)를 같은 JSON의 패드 수직력 참값 시계열 요약(`event_cases_RE1b_RE1c`)과 맞춰 보는 방식으로 했다. Julia는 쓰지 않았다(루프 변경 없음).
+- 계산은 판정 JSON 읽기뿐이다(`s6r10_extract.py`, `_extract2.py`, `_extract3.py`, 작성 당시 scratchpad `ctrl-run\`, 지금 `04_scripts/03_control/s6_rev01_28/`, dynamics-dev `conda run -n dynamics-dev python -I`). 판정 경로 대조는 사건 사례의 탐침 결과(제어기 판정)를 같은 JSON의 패드 수직력 참값 시계열 요약(`event_cases_RE1b_RE1c`)과 맞춰 보는 방식으로 했다. Julia는 쓰지 않았다(루프 변경 없음).
 - 이 개정의 사용자 결정 번호는 개정 9 보완(U49~U52) 다음인 **U53**부터다.
 
 ## 54. 실패 17행 판정
@@ -2399,7 +2474,7 @@ hydraulics 기본 모델: $p_{r0}$ 2 bar, $r$ 0.105/0.100, 수축 뒤 31~37 bar,
 - 코드와 다른 문서는 고치지 않았고 커밋하지 않았다. 47·53절의 "재계산 대기" 표시는 64절 값으로 바꿨다.
 - J-3(b1 사유 코드) 확인: 운동 연장 뒤 편향이 수용되면 편향 오차를 판정하는 구현이 맞다. 55.3에 정정 한 줄을 적었다(코드 변경 없음).
 
-계산(dynamics-dev, `conda run -n dynamics-dev python -I`, 두 스크립트를 병렬로 돌림, 각 1 s 미만, scratchpad `ctrl-run\`)
+계산(dynamics-dev, `conda run -n dynamics-dev python -I`, 두 스크립트를 병렬로 돌림, 각 1 s 미만, 작성 당시 scratchpad `ctrl-run\`; 2026-10-25 이관: `04_scripts/03_control/` 또는 `04_scripts/03_control/s6_rev01_28/`, 결과 `06_analysis/02_control/s6_rev01_28/`, 대응표 `migration_manifest.json`)
 
 | 스크립트 → 결과 | 내용 |
 |---|---|
@@ -2566,7 +2641,7 @@ hydraulics 기본 모델: $p_{r0}$ 2 bar, $r$ 0.105/0.100, 수축 뒤 31~37 bar,
 - cad C-5와 RE3 재처리(re3b): 실패 0, b1 실패 0, 542행. dry-run과 45개 키가 모두 같다(65.4).
 - 코드와 다른 문서는 고치지 않았고 커밋하지 않았다. 62.2절에 앵커 통계량 결정 한 줄을 넣었다.
 
-계산(dynamics-dev, `conda run -n dynamics-dev python -I`, scratchpad `ctrl-run\`)
+계산(dynamics-dev, `conda run -n dynamics-dev python -I`, 작성 당시 scratchpad `ctrl-run\`; 2026-10-25 이관: `04_scripts/03_control/` 또는 `04_scripts/03_control/s6_rev01_28/`, 결과 `06_analysis/02_control/s6_rev01_28/`, 대응표 `migration_manifest.json`)
 
 | 스크립트 → 결과 | 내용 |
 |---|---|
@@ -2734,7 +2809,7 @@ hydraulics 기본 모델: $p_{r0}$ 2 bar, $r$ 0.105/0.100, 수축 뒤 31~37 bar,
   - 온도 0~80 °C: 전형 ±1 %, 최대 ±1.5 %(구판 ±2.5 % = ±10 bar)
   - 드리프트 ±0.1 %
   - 단품 실측: 영점 −1.28 / −1.38 bar, 잡음 σ 0.06~0.20 bar
-- 계산: `s6r14_sensor_error.py` → `.json`(dynamics-dev, `conda run -n dynamics-dev python -I`, 몬테카를로 20만 회, 시드 20261022, 수 s). 위치는 scratchpad `ctrl-run\`이다.
+- 계산: `s6r14_sensor_error.py` → `.json`(dynamics-dev, `conda run -n dynamics-dev python -I`, 몬테카를로 20만 회, 시드 20261022, 수 s). 작성 당시 위치는 scratchpad `ctrl-run\`이었고, 지금은 `04_scripts/03_control/s6_rev01_28/` → `06_analysis/02_control/s6_rev01_28/`이다(2026-10-25 재실행, 결과 바이트 동일).
 - 입력값: 개정 13 $F_{min}$ 9,414.55 N, 상단 정적 힘 118.22 / 71.96 kN, 후방 이동부 73.163 kg.
 - 대조: 몬테카를로 최대값을 데이터시트 선형 상한과 맞춰 봤다.
   - 정상 등급 미교정 정적 전방 최대 3.98 kN ≤ 선형 상한(헤드 4 bar 5.31 + 로드 4 bar 1.51 kN)
@@ -3093,7 +3168,7 @@ $$c_i[k]=\mathbb{1}\{\hat F_i[k]\ge\kappa F_{min}\},\qquad \ell_i[k]=1 \iff c_i[
 - 시드는 접지 사건의 위상을 흔드는 수단이다. 시드 8개 × β 3개가 위상 표본이다.
 
 **명령**(프로젝트 루트, dynamics-dev 활성화. 드라이버는 project 파일을 import만 한다)
-- `<ctrl-run>` = `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace\ac6418dc-b52c-42d7-ba64-81b7424d2311\scratchpad\ctrl-run`(세션 scratchpad)이다. 이 폴더가 지워졌으면 위 표와 아래 점검대로 드라이버를 다시 만든다. 표가 명세다.
+- `<ctrl-run>` = `04_scripts\03_control\s6_rev01_28`(2026-10-25 이관; 작성 당시는 `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace\ac6418dc-b52c-42d7-ba64-81b7424d2311\scratchpad\ctrl-run`)이다. 출력 JSON은 `06_analysis\02_control\s6_rev01_28\`에 쓴다. 당시 출력 `s6r16_touch_hold_sweep.json`(4.5 MB)은 크기 기준으로 옮기지 않았다(SHA-256은 `migration_manifest.json`). 표가 명세다.
 
 ```powershell
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I <ctrl-run>\s6r16_touch_hold_sweep.py --dry-run --anchor   # 점검, 약 20 s
@@ -3102,7 +3177,7 @@ $$c_i[k]=\mathbb{1}\{\hat F_i[k]\ge\kappa F_{min}\},\qquad \ell_i[k]=1 \iff c_i[
 ```
 
 - 예상 시간: 12 워커에서 **약 20~30분**이다. td_robust 실측 432사례 472 s(1.09 s/사례)로 추정했다. 처음 numba 컴파일 약 1분이 더해진다. 30분을 넘으면 long-running-task-monitor 규칙을 따른다.
-- 출력: `<ctrl-run>\s6r16_touch_hold_sweep.json`(사례별 최소 힘, 다리, 이탈 뒤 시각, 접지 시각). 판정 결과는 이 명세의 다음 개정에 옮긴다.
+- 출력: `06_analysis\02_control\s6_rev01_28\s6r16_touch_hold_sweep.json`(이관 뒤 위치, 사례별 최소 힘, 다리, 이탈 뒤 시각, 접지 시각). 판정 결과는 이 명세의 다음 개정에 옮긴다.
 - 점검(2026-10-22 실행함, dry-run)
   - 사례 1,216개(A 864, B 144, C 144, R 64)이고 id 중복은 없다.
   - 회귀 앵커: $t_h$ 0.50, r+p+0.5, 강체, β 1.0, 시드 12346을 돌렸다. 최소 49.63 kN(접지 18.74 s)이 td_robust `seed|top|rigid|r+p+0.5|1`의 49.63 kN과 같다(저장 정밀도 0.01 kN).
@@ -3156,7 +3231,7 @@ R1에서는 TOUCH 자체에서 ①이 없어졌다. 아래 세 판정에 ①~③
 
 ## 78. S-TH1 판정(접지 확인 시간)
 
-입력은 `<ctrl-run>\s6r16_touch_hold_sweep.json`, 표는 `s6r16_judge.py` 출력이다. 최소 힘은 1 ms 하위 표본의 최소 실제 실린더 힘이다.
+입력은 `s6r16_touch_hold_sweep.json`(작성 당시 scratchpad, 4.5 MB라 저장소에 없음. 위 명령으로 다시 만들면 `06_analysis\02_control\s6_rev01_28\`에 생긴다), 표는 `s6r16_judge.py`(`04_scripts/03_control/s6_rev01_28/`) 출력이다. 최소 힘은 1 ms 하위 표본의 최소 실제 실린더 힘이다.
 
 | 군 | $t_h$ [s] | 사례 | 최소 [kN] | 가드 미만 | `Fmin_true` 실패 | 비고 |
 |---|---|---|---|---|---|---|
@@ -3181,7 +3256,7 @@ R1에서는 TOUCH 자체에서 ①이 없어졌다. 아래 세 판정에 ①~③
 
 ## 79. 채택안 H4의 실 마찰 감도
 
-**실행**: `<ctrl-run>\s6r17_h4_fs_order.py --part all`(P코어 0~15 고정, 워커 8개, 256사례, 509 s, 오류 0). 출력은 `s6r17_h4_fs_order.json`, 표는 `s6r17_report.py`다.
+**실행**: `<ctrl-run>\s6r17_h4_fs_order.py --part all`(P코어 0~15 고정, 워커 8개, 256사례, 509 s, 오류 0). 출력은 `s6r17_h4_fs_order.json`, 표는 `s6r17_report.py`다(`<ctrl-run>` 정의는 위와 같다. 출력 1.1 MB는 저장소에 옮기지 않았고, 같은 216사례 F 부분은 아래 이관 드라이버 결과 `06_analysis/02_control/h4_fs_order_check_F.json`에 있다).
 - 경로: `run_pad_friction_mode_check.case`(마찰 분해 모드 1, `t_hold` 60 s) → `run_pad_tangential_check.run_one`. pad_friction h4와 같은 경로다.
 - 범위: V:pitch±3.5, P:pitch±3.2. 강체는 YAML / 할선 $k_t$ × 시드 12345~12347이고, stiff / upper / lower 마스트는 YAML × 시드 12345다. $F_s$는 0 / 3.7 / 12 kN이다. 경사·$F_s$·명세마다 9사례씩이다.
 - 명세 A(채택안, `H4_SPEC`): $P_{stop}$ 45 / 32.41 / 32.41 / 32.41 kN. 띠 13 kN 고정, 여유 10 kN이다.
@@ -3649,7 +3724,7 @@ dynamics 기준은 목표 − 바닥(정착 사상으로 역산한 바닥 경사
 ### 88.1 독립 경로 실행
 
 - 경로: dynamics 하네스 `run_pad_tangential_check.C2RA`(압력 판독 정지, `fric_mode` 1), 프로젝트 드라이버 `run_h4_fs_order_check.mk` import
-- 스크립트: scratchpad `ctrl-run\s6r21_h4lb.py`
+- 스크립트: `04_scripts/03_control/s6_rev01_28/s6r21_h4lb.py`(작성 당시 scratchpad `ctrl-run\`, 결과 `06_analysis/02_control/s6_rev01_28/s6r21_h4lb.json`)
 - 조건
   - 계단은 시험과 같은 45 / 30 / 21.91 / 21.91 kN이다(바닥 = $F_{min}$ + 띠 2.50 + 10 kN, R5 바닥 여유).
   - 상단, 강체, YAML / 할선 $k_t$, 시드 12345~12347, $F_s$ 0, β 1.0 GPa, 이산 $T$ 20 ms, 지연 1스텝
@@ -3970,7 +4045,7 @@ cad-expert의 묶음 B 준비 질문 두 건에 답한다.
 
 ## 97. 검토
 
-계산: dynamics-dev, E코어(16~27) 고정, 축소 플랜트 216사례, 403 s. 스크립트는 scratchpad `ctrl-run\s6r25_rate.py`·`s6r25_report.py`다.
+계산: dynamics-dev, E코어(16~27) 고정, 축소 플랜트 216사례, 403 s. 스크립트는 `04_scripts/03_control/s6_rev01_28/s6r25_rate.py`·`s6r25_report.py`다(작성 당시 scratchpad `ctrl-run\`. 결과는 `06_analysis/02_control/r8_10hz/r7_rate_study_s6r25.json`과 같은 파일).
 - 플랜트: L1 축소 + 패드 접선 부싱 + 크롤러. L1-R은 없다.
 - 제어기: C2 R1 + H4 R6 계단, 결합 판정 띠 2.3 kN, 바닥 23.2 kN
 - 사례
@@ -4107,7 +4182,7 @@ cad-expert의 묶음 B 준비 질문 두 건에 답한다.
 
 ## 99. 계산(dynamics-dev, E코어)
 
-스크립트는 scratchpad `ctrl-run\`에 있다.
+스크립트는 작성 당시 scratchpad `ctrl-run\`에 있었다(2026-10-25 이관: `04_scripts/03_control/` 또는 `04_scripts/03_control/s6_rev01_28/`, 결과 `06_analysis/02_control/s6_rev01_28/`, 대응표는 그 폴더의 `migration_manifest.json`).
 
 | 스크립트 | 내용 | 결과 |
 |---|---|---|
@@ -4382,7 +4457,7 @@ D8 576사례(td_main 144 + td_robust 432, 시드·β 0.69 / 1.6·지연 0·유�
   - 묶음 B 요약(새 판정식 재생성) `verify_S6_L1_closed_loop_L1R.json`(65사례, M1 적용 전, 침하·낙하는 L1-R 끔 대체).
   - dynamics 5.15(M4), 5.17(묶음 B), 5.18(AL-R, 앞내림 3.2° 미확정).
   - 실행 기록 `record/record.npz`(20 ms), `result.json`, `controller_events.json`.
-- 계산: JSON·npz 읽기만 했다(dynamics-dev, `conda run` 없이 env python `-I`, 각 수 초). 스크립트는 scratchpad `ctrl-run\`(`b2_summary.py`, `b2_compact.py`, `cmp_b2_b.py`, `loadsum.py`)에 있다. Julia 교차 검증은 하지 않았다. 이번 판정은 시뮬레이션 결과 해석과 판정 정의이고, 루프 전달함수·이득을 바꾸지 않는다.
+- 계산: JSON·npz 읽기만 했다(dynamics-dev, `conda run` 없이 env python `-I`, 각 수 초). 스크립트는 `04_scripts/03_control/s6_rev01_28/`(`b2_summary.py`, `b2_compact.py`, `cmp_b2_b.py`, `loadsum.py`; 작성 당시 세션 a06eea4a scratchpad `ctrl-run\`, 2026-10-25 이관, 출력 `b2.txt`는 `06_analysis/02_control/s6_rev01_28/`)에 있다. Julia 교차 검증은 하지 않았다. 이번 판정은 시뮬레이션 결과 해석과 판정 정의이고, 루프 전달함수·이득을 바꾸지 않는다.
 - 코드는 고치지 않았다. 고칠 것은 116절 위임 명세에 적었다.
 - 단위: 힘 kN(실린더 순 힘, + = 압축), 압력 bar g, 시각 s(사례 시작 기준, 사례 내부 절대 시각은 `t0` 68.5 s 또는 119.76 s를 더한 값), 이산 제어 주기 $T$ = 20 ms(R7).
 
@@ -9818,8 +9893,11 @@ cad-expert
 | 분할·규모 | 분할 시드 20261024: 학습 360 / 검증 81 / 시험 72 / OOD-1 288 / OOD-2 63 에피소드. 시험 사건 71 |
 | 모델 시드 | 20261024~20261028(분할 고정) |
 | 실행 시간 | 학습·평가 전체 1,475 s(학습 env, GPU) |
+| 소스 트리(2026-10-25 보완) | 요약 JSON의 `source_tree`·`reproduce_command --src`는 세션 scratchpad 고정 사본(`pinned\tree\03_src`, 지금 없음)을 가리킨다. 값은 고치지 않고 같은 JSON에 주석 키 `source_tree_note`를 더했다. 재현 때는 `git archive 9636556 03_src 02_params`(또는 `git worktree add <dir> 9636556`)로 만든 트리를 `--src`로 준다. 두 제어 파일의 SHA-256 앞자리(c2.py 8120b8d4, contact_replay.py 2082cc01)는 커밋 9636556과 같음을 2026-10-25 다시 확인했다. 나머지 03_src 파일이 커밋과 같았다는 것은 **가정**이다(사본이 없어 확인 불가) |
 
-control 쪽 독립 확인(코드는 고치지 않았다, 보조 스크립트는 scratchpad)
+control 쪽 독립 확인(코드는 고치지 않았다. 보조 스크립트는 작성 당시 scratchpad `ctrl-run/`에 있었고 2026-10-25 `04_scripts/03_control/s8/rev53_56/rev53/`으로 옮겼다)
+- 스크립트: `s8ml_gate_miss.py`(관문 놓침 재추론, ML env `pytorch_214_cuda_python_313` — onnxruntime·lightgbm 필요), `s8ml_train_dist.py`(학습 분포 집계), `s8ml_band_check.py`(실 마찰 띠·탐침 문맥), `s8ml_v2_extract.py <report.json>`(시드별 행 추출). 저장소 상대 경로로 고쳤고 `03_src`는 실행 시점 작업 트리를 import한다(작성 당시 트리는 커밋 9636556 + P-S8-16 작업 중). 결과는 표준 출력뿐이라 이관할 결과 파일이 없다.
+- E1 95 % 상한(아래 둘째 항목)은 `scipy.stats.beta.ppf(0.95, k+1, n−k)` 한 줄 계산이었고 **스크립트 미보존**이다. 식과 값이 아래에 있어 다시 계산할 수 있다.
 - **관문 놓침 사례 재추론**: `N_G4_Fs8_pressure`·`N_SS_Fs8_pressure`의 RR을 보정 판독으로 다시 만들고, 시드별 GRU ONNX(onnxruntime CPU)와 LightGBM 부스터(txt)로 다시 추론했다. 각 시드 문턱으로 "사건 안 표본 하나라도 $P(U)+P(L)\ge$ 문턱"을 다시 셌다. 결과는 python 보고의 시드별 관문 놓침(GRU 0/2/1/2/0, LGBM 1/1/2/1/2)과 **20/20 같다**. python 경로는 torch GPU 추론이므로, 추론 경로가 다른 두 계산의 일치다.
 - **E1 95 % 상한**: Clopper–Pearson 단측 상한을 scipy `beta.ppf`로 다시 계산했다. 3/71 0.1056, 4/71 0.1243, 5/71 0.1424, 6/71 0.1600으로 보고서와 같다.
 - **학습 분포 집계**: 864 에피소드 전체에서 진실 사건(U∪L, 이륙 과도 제외)을 몫별로 다시 셌다(590건).
@@ -9974,7 +10052,7 @@ control 쪽 독립 확인(코드는 고치지 않았다, 보조 스크립트는 
 # 개정 54 (2026-10-25) 앞부분: C-S8-36 판정 기준 확정(실행 중, 판정 전). 230절 비틀림 일 문턱을 "재발 금지" 행으로 바꾼다. 보정 판독은 L2b-NSC이고 다리 $F_{s,i}>0$인 경우에만 $\min(0.5\ \text{kN},\,2F_{s,i})$로 한다. MLJ_FS24는 묶음 D 추가를 권고한다(사용자 결정)
 
 - C-S8-36 배치(`07_results/S8/c36_20261025_155317`, 묶음 A 55, B 2, C 2)가 끝나기 전에 cad가 올린 판정 기준 문제 세 가지를 정한다. 판정 자체(개정 54 뒷부분)는 배치가 끝난 뒤 쓴다.
-- 확인 계산에는 Chrono를 쓰지 않았다. 768 기록(`07_results/S8/ml_main_20261025_090131/episodes`), MLJ 기록, cad 스모크(ML78_ep0 rt·f1only, 6 s)를 읽기만 했다. 보조 스크립트는 scratchpad `ctrl-run/c36_work_*.py`에 있다(dynamics-dev, 단일 프로세스, 768 전체 약 15 s).
+- 확인 계산에는 Chrono를 쓰지 않았다. 768 기록(`07_results/S8/ml_main_20261025_090131/episodes`), MLJ 기록, cad 스모크(ML78_ep0 rt·f1only, 6 s)를 읽기만 했다. 보조 스크립트는 `04_scripts/03_control/s8/rev53_56/rev54/c36_work_*.py`·`c36_over_list.py`다(작성 당시 scratchpad `ctrl-run/`, 2026-10-25 이관; dynamics-dev, 단일 프로세스, 768 전체 약 15 s). 결과 `c36_work_768.txt`는 `06_analysis/02_control/s8/rev53_56/rev54/`에 있다. `c36_work_768.json`(1.1 MB)은 크기 기준(1 MB)으로 옮기지 않았고, `c36_work_def.py <out.json> <에피소드 폴더…>`로 768 기록에서 다시 만든다(SHA-256은 `migration_manifest.json`).
 
 ## 247. cad 보고 요지와 결정
 
@@ -10114,7 +10192,7 @@ control 쪽 독립 확인(코드는 고치지 않았다, 보조 스크립트는 
 
 # 개정 54 뒷부분 (2026-10-25): C-S8-36 최종 판정 — 판정 행 기준 통과(A·C·D 실패 0). 768 실패 3행이 RT로 해소돼 S8 ML·제어 ③ 관문 판정 행이 닫힌다. 판정 행 밖에서 새 결함 둘을 찾았다: F1이 드러낸 D1′ 로드 거짓 대체(A 17/55, READY 지연), RT 보류 중 보류 다리 하중 저하(FS24_Fs0 RR 6.97 kN; 개정 55 정정: 보류 창 0.59 kN). **S8 마감은 P-S8-21(D1′ 배수 설명) 뒤를 권고**(사용자 결정)
 
-- 배치는 `07_results/S8/c36_20261025_155317`(A 55, B 2, C 2, D 2)다. 판정기는 rev. 54(`JUDGE_REVISION_REV54`, C-S8-40)다. 기존 기록 재판정(768·MLJ·p1r·rest) 결과는 scratchpad `cad-run/rejudge54/`에 있다.
+- 배치는 `07_results/S8/c36_20261025_155317`(A 55, B 2, C 2, D 2)다. 판정기는 rev. 54(`JUDGE_REVISION_REV54`, C-S8-40)다. 기존 기록 재판정(768·MLJ·p1r·rest) 결과는 요약이 `06_analysis/01_chrono/18_S8/rejudge/rev54/`, verify 전체가 `07_results/S8/archive/18_S8_extra/rejudge/rev54/`, ml768이 `07_results/S8/archive/rejudge_ml768/rev54/`에 있다(작성 당시 scratchpad `cad-run/rejudge54/`, 2026-10-25 이관).
 - 되먹임·연속/이산 규약은 앞 개정과 같다. 제어기는 R8 C2, 10 Hz($T_s$ = 0.1 s), 출력 지연 d = 1이다. 여기서 쓴 수치는 모두 기록 판정이다. 루프 전달함수 계산이 없으므로 Julia 교차 검증은 하지 않았다.
 
 ## 255. 입력과 확인 방법
@@ -10123,7 +10201,7 @@ control 쪽 독립 확인(코드는 고치지 않았다, 보조 스크립트는 
 |---|---|
 | 판정기 출력 | `A_rt/verify_S8ML.json`(135행), `B_f1only/verify_S8ML.json`(27행), `C_gate/verify_S8C.json`(129행), `D_fs24/verify_S8C.json`(123행) |
 | 비교 기준 | A·B는 768(`ml_main_20261025_090131/episodes`)의 같은 에피소드, C는 p1r(`p1r_20261024_222013`), D는 MLJ(`mlj_20261025_080212`) |
-| control 독립 확인 | 판정기를 거치지 않고 원 기록(`pads.npz` 1 ms, `r8_series.npz`·`record.npz` 10 Hz, `controller_events.json`, `result.json`)에서 직접 다시 셌다. 대상은 단계 순서·re-READY 시각, 사건 뒤 최소 참 힘(창별), 자세, 로드 대체 경고, 보류 이벤트, 768 해제 계단 분포다. 스크립트는 scratchpad `ctrl-run/c36f_*.py`(dynamics-dev, 단일 프로세스, 768 주사는 12 프로세스 약 1분)에 있다 |
+| control 독립 확인 | 판정기를 거치지 않고 원 기록(`pads.npz` 1 ms, `r8_series.npz`·`record.npz` 10 Hz, `controller_events.json`, `result.json`)에서 직접 다시 셌다. 대상은 단계 순서·re-READY 시각, 사건 뒤 최소 참 힘(창별), 자세, 로드 대체 경고, 보류 이벤트, 768 해제 계단 분포다. 스크립트는 `04_scripts/03_control/s8/rev53_56/rev54/c36f_*.py`(작성 당시 scratchpad `ctrl-run/`, 2026-10-25 이관; dynamics-dev, 단일 프로세스, 768 주사는 12 프로세스 약 1분)다. 결과 `c36f_compare.csv`·`c36f_exposure.json`은 `06_analysis/02_control/s8/rev53_56/rev54/`에 있다. rev. 54 재판정 파일을 읽는 스크립트(`c36f_compare`·`c36f_postwin`·`c36f_rj`·`c36f_gate_ref`)는 `rejudge_paths.py`로 기본 `07_results/S8/archive/18_S8_extra/rejudge/rev54/`(verify)와 `07_results/S8/archive/rejudge_ml768/rev54/`(ml768)를 본다(로컬 전용). 다른 위치면 환경 변수 `S8_REJUDGE_DIR`·`S8_REJUDGE_ML768_DIR`에 `rev5x/`의 부모 폴더를 준다. `c36f_compare.py`는 re-READY 없는 실행(`rr_R` None)에서 마지막 출력 줄 TypeError로 끝난다(작성 당시부터, CSV는 정상) |
 | 두 경로 대조 | 로드 대체 실행 수 17 = 판정기 ML-1 17. FS24_Fs0 창 끝~re-READY 최소는 판정기 6.97 kN = 내 `F_cyl_min_interval` 6.97 kN이다(1 ms 표본 `F_cyl`로는 7.26 kN, 20 ms 평균으로는 8.40 kN). U-S8-32 값은 판정기 행을 그대로 썼다(개정 51에서 대조 끝) |
 | 시각 기준 | ML 에피소드는 `result.json` `event_t_s`와 기록 시각이 같은 기준이다. S8C 실행(C·D)은 `event_t_s`가 판정기 기준이고, 기록 시각은 그보다 3.0 s 늦다. 이 절의 "사건 + x s"는 모두 사건 기준 상대 시각이다 |
 
@@ -10349,7 +10427,7 @@ control 쪽 독립 확인(코드는 고치지 않았다, 보조 스크립트는 
 
 - 계기: cad가 C-S8-41(판정기 rev. 55)을 넣고 재판정하면서, 261절 FS24_Fs0 RR 6.97 kN이 보류 창이 아니라 257.2 창(U-S8-32 창 끝 ~ re-READY, 사건 + 3.21 s)의 값임을 찾았다. 사용자는 이 값을 근거로 U-S8-57 (a)를 골랐다. 그래서 다시 판정한다.
 - 규약은 앞 개정과 같다. R8 C2, 10 Hz($T_s$ = 0.1 s), 출력 지연 d = 1, 음되먹임이다. 힘은 S8-A2 판정 힘(`pads.F_cyl_min_interval`, 부상 표본은 `F_cyl_mean_20ms`), 단위 kN, 시각은 사건 기준 상대 s다. $F_{min}$ = 9.415 kN, 1.4 $F_{min}$ = 13.18 kN이다.
-- 이 개정의 수치는 모두 기록 판정이다. Chrono를 돌리지 않았고 루프 전달함수 계산이 없으므로 Julia 교차 검증은 하지 않았다. 대신 두 경로로 대조했다. (1) cad 판정기 rev. 55 출력(scratchpad `cad-run/rejudge55/`), (2) 판정기를 거치지 않고 원 기록(`pads.npz`, `r8_series.npz`, `controller_events.json`)을 직접 읽은 control 스크립트(scratchpad `ctrl-run55/c55_*.py`, dynamics-dev, 단일 프로세스, 각 수 초).
+- 이 개정의 수치는 모두 기록 판정이다. Chrono를 돌리지 않았고 루프 전달함수 계산이 없으므로 Julia 교차 검증은 하지 않았다. 대신 두 경로로 대조했다. (1) cad 판정기 rev. 55 출력(요약 `06_analysis/01_chrono/18_S8/rejudge/rev55/`, verify 전체 `07_results/S8/archive/18_S8_extra/rejudge/rev55/`, ml768 `07_results/S8/archive/rejudge_ml768/rev55/`; 작성 당시 scratchpad `cad-run/rejudge55/`, 2026-10-25 이관), (2) 판정기를 거치지 않고 원 기록(`pads.npz`, `r8_series.npz`, `controller_events.json`)을 직접 읽은 control 스크립트(`04_scripts/03_control/s8/rev53_56/rev55/c55_*.py`; 작성 당시 scratchpad `ctrl-run55/`, 2026-10-25 이관; dynamics-dev, 단일 프로세스, 각 수 초). 결과 `c55_avail_c36A17.json`·`c55_defer.json`은 `06_analysis/02_control/s8/rev53_56/rev55/`에 있다. 이관 뒤 `c55_defer.py`(인자 없음)를 다시 돌려 옮긴 `c55_defer.json`과 바이트 단위로 같음을 확인했다(2026-10-25).
 
 ## 266. 261절 정정과 U-S8-57 재판정
 
@@ -10479,8 +10557,8 @@ FLAG 창의 다리. "아래 시간"은 판정 힘 < $F_{min}$인 시간, "부상
 | 5 | U-S8-32·재발 금지·FAULT·C 관문 값·D 지정 사례 | 판정기 행 | 실패 0, 256.1과 같은 기준 |
 
 - 방법 시험(c36 A 17에 적용): PROBE 복귀 7(ML25_ep7, ML34_ep7, ML42_ep6, ML51_ep4, ML87_ep1, ML87_ep5, ML89_ep0), 768 0, 768만 도달 7(모두 PROBE 복귀 또는 대체), 둘 다 도달 6의 중앙 −0.6 s → **실패**. 260.3 기록과 같다. 그러니 이 방법은 결함을 잡는다.
-- 실행: `conda run -n dynamics-dev python -I <scratchpad>\ctrl-run55\c55_avail.py <c37 폴더>\<A 에피소드 폴더> --out <json>`, `... c55_defer.py <c37 에피소드 폴더>`(기준 768 기본). 판정기 행이 생기면(269.3 #3) 그 행으로 옮긴다.
-- 이전 스크립트 `ctrl-run/c36f_phase.py`(re-READY 정의)와 `c36f_level.py`(PROBE 사건)는 위 두 스크립트로 합쳤다. 정의는 같다.
+- 실행: `conda run -n dynamics-dev python -I 04_scripts\03_control\s8\rev53_56\rev55\c55_avail.py <c37 폴더>\<A 에피소드 폴더> --out <json>`, `... rev55\c55_defer.py <c37 에피소드 폴더>`(기준 768 기본, 출력은 기본 `06_analysis/02_control/s8/rev53_56/rev55/c55_defer.json`, 환경 변수 `C55_DEFER_OUT`로 바꾼다). 판정기 행이 생기면(269.3 #3) 그 행으로 옮긴다. (작성 당시 경로는 scratchpad `ctrl-run55\`였다. 2026-10-25 이관)
+- 이전 스크립트 `c36f_phase.py`(re-READY 정의)와 `c36f_level.py`(PROBE 사건)는 위 두 스크립트로 합쳤다. 정의는 같다. 두 이전 스크립트도 `04_scripts/03_control/s8/rev53_56/rev54/`에 남겼다.
 
 ### 269.3 판정기 변경 명세(C-S8-42, cad, 재실행 판정 전, 재실행 불필요)
 
@@ -10549,7 +10627,7 @@ FLAG 창의 다리. "아래 시간"은 판정 힘 < $F_{min}$인 시간, "부상
 
 - 계기: 메인 세션이 `c36 --bundle E`(P-S8-21 + R-2 + RT + F1, 대체 17 + C 2 + D 2)를 돌렸다. 출력은 `07_results/S8/c37_20261025_180821/`이고 wall 905 s, 실패 0이다. 판정기는 rev. 56(C-S8-42, 표지 "spec rev. 55 267 / 269.3 for rev. 56")이다. 세 판정 파일의 `meta.summary.failed`는 모두 [ ]다.
 - 규약은 앞 개정과 같다. R8 C2, 10 Hz($T_s$ = 0.1 s, 이산), 출력 지연 d = 1, 음되먹임이다. 힘은 S8-A2 판정 힘(`pads.F_cyl_min_interval`, 부상 표본은 `F_cyl_mean_20ms`), 단위 kN, 시각은 사건 기준 상대 s다. 압력은 bar g다. $F_{min}$ = 9.415 kN이다.
-- 이 개정의 수치는 모두 기록 판정이다. 루프 전달함수 계산이 없으므로 Julia 교차 검증은 하지 않았다. 대신 두 경로로 대조했다. (1) cad 판정기 rev. 56 출력(위 세 `verify_*.json`), (2) 판정기를 거치지 않고 원 기록(`pads.npz`, `r8_series.npz`, `s8_series.npz`, `controller_events.json`, `result.json`)을 직접 읽은 control 스크립트(scratchpad `ctrl-run56/`, dynamics-dev, 단일 프로세스, 각 수 초). 두 경로의 값은 아래 모든 항목에서 같다(274.3).
+- 이 개정의 수치는 모두 기록 판정이다. 루프 전달함수 계산이 없으므로 Julia 교차 검증은 하지 않았다. 대신 두 경로로 대조했다. (1) cad 판정기 rev. 56 출력(위 세 `verify_*.json`), (2) 판정기를 거치지 않고 원 기록(`pads.npz`, `r8_series.npz`, `s8_series.npz`, `controller_events.json`, `result.json`)을 직접 읽은 control 스크립트(`04_scripts/03_control/s8/rev53_56/rev56/s56_*.py`와 `rev55/c55_avail.py`·`c55_defer.py`(rev56에서 쓴 사본과 같은 파일); 작성 당시 scratchpad `ctrl-run56/`, 2026-10-25 이관; dynamics-dev, 단일 프로세스, 각 수 초). 결과 `avail_E.json`·`c55_defer.json`(묶음 E)·`s56_compare.json`·`s56_done.json`은 `06_analysis/02_control/s8/rev53_56/rev56/`에 있다. 이관 뒤 `s56_done.py`를 다시 돌려 옮긴 결과와 바이트 단위로 같음을 확인했다(2026-10-25). 두 경로의 값은 아래 모든 항목에서 같다(274.3).
 - 정정: 메인 세션 지시에 "ML78_ep0은 대체 17에 들어 있으니 E 값으로 다시 본다"가 있었다. 그러나 ML78_ep0은 대체 17(260.1 목록)에 없다. 묶음 E에도 없다. ML78_ep0은 A의 나머지 38 실행에 속하고, P-S8-21 기록 재생에서 제어기 출력이 비트 동일이었다(python 보고). 그래서 c36 A 기록이 최종 코드의 기록이다. 276절은 c36 A 기록으로 판정한다.
 
 ## 274. 262.1 최종 판정(269.2 방법)

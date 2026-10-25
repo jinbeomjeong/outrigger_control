@@ -1,0 +1,425 @@
+counts {'cases': 23, 'rows': 387, 'failed_rows': 2, 'not_judged_rows': 56, 'b1_failed_rows': 0}
+lists {'not_ready': [], 'idle': [], 'fault': [], 'rejected_codes': {}, 'failed_processes': []}
+
+== FAILED rows
+{'item': '7c load estimate error', 'case': 'PS2_G4_old_worst_nocal', 'value': 0.4800228830325608, 'limit': '<= 0 (max(5 kN,10 %))', 'passed': False, 'note': 'per round and leg (U53); truth = probe start load (0.5 s mean before the first move, spec rev. 27 102.1); zero-calibration deduction legs one-sided (estimate - truth)', 'kind': 'function'}
+{'item': '7c load estimate error', 'case': 'PS4_RE1bF_FLp4_RRm4_nocal', 'value': 0.30883256654900126, 'limit': '<= 0 (max(5 kN,10 %))', 'passed': False, 'note': 'per round and leg (U53); probes overlapping the event left out; truth = probe start load (0.5 s mean before the first move, spec rev. 27 102.1); zero-calibration deduction legs one-sided (estimate - truth)', 'kind': 'function'}
+
+== not judged items
+Counter({'K8 shadow (B) - true floor': 22, '3 F_min (1 ms)': 11, '3 lift-off RR time / ratio (report)': 11, '5a rocking amplitude in the event transient (report)': 11, '7a probe attitude change (event overlap)': 1})
+
+== items Counter({'run': 23, '2 attitude +-0.2 (+mount)': 23, '2 sensor path filter - true = grade tilt': 23, '3 F_min (1 ms)': 23, '4 saturation steps': 23, '5b filter residual last 5 s': 23, '7a probe attitude change': 22, '7b verdict = truth': 22, '7c load estimate error': 22, 'K8 shadow (B) - true floor': 22, '4 max moving pressure': 12, '5a rocking amplitude': 12, '3 F_min before the event': 11, '3 F_min after the re-READY': 11, '3 lift-off other legs in the event transient': 11, '3 lift-off other legs after the transient': 11, '3 lift-off RR after the re-READY': 11, '3 lift-off RR time / ratio (report)': 11, 'RE1b re-READY <= 60 s': 11, '4 max moving pressure outside the event transient': 11, '4 max pressure in the event transient': 11, '5a rocking amplitude after the re-READY': 11, '5a rocking amplitude in the event transient (report)': 11, '7c zero-calibration deduction legs: warning event': 7, '6 min after settlement': 2, '6 re-READY <= 40 s': 2, '6 final >= F_min + 5 kN': 2, '6 attitude <= 0.2 deg (+mount)': 2, '7a probe attitude change (event overlap)': 1})
+
+== per case
+G4_top_flat_settleRR_combined            ph=ready  att=0.0129 minF=15.12(RR@44.6) exclRA=15.12 pmax=134.7 sat=0 grade=ideal ev=settle_RR
+G4_top_flat_settleRR_pressure            ph=ready  att=0.0131 minF=13.90(RR@33.9) exclRA=13.90 pmax=136.0 sat=0 grade=ideal ev=settle_RR
+PS1_G4_normal_cal_s12346                 ph=ready  att=0.0153 minF=16.36(RR@44.6) exclRA=16.36 pmax=133.4 sat=0 grade=ideal ev=settle_RR
+PS1_G4_normal_cal_s12347                 ph=ready  att=0.0129 minF=16.80(RR@44.6) exclRA=16.80 pmax=132.9 sat=0 grade=ideal ev=settle_RR
+PS1_RE1bF_normal_cal_s12346              ph=ready  att=0.0224 minF=-1.05(FL@43.7) exclRA=-1.05 pmax=190.0 sat=0 grade=ideal ev=drop_RR_30
+PS1_RE1bF_normal_cal_s12347              ph=ready  att=0.0215 minF=-1.05(FL@43.8) exclRA=-1.05 pmax=190.3 sat=0 grade=ideal ev=drop_RR_30
+PS2_G4_conservative_nocal                ph=ready  att=0.0128 minF=20.46(RR@44.2) exclRA=20.46 pmax=129.1 sat=0 grade=ideal ev=settle_RR
+PS2_G4_old_worst_nocal                   ph=ready  att=0.0126 minF=30.22(RR@44.5) exclRA=30.22 pmax=119.5 sat=0 grade=ideal ev=settle_RR
+PS2_RE1bF_conservative_nocal             ph=ready  att=0.0209 minF=-1.05(FL@43.4) exclRA=-1.05 pmax=190.6 sat=0 grade=ideal ev=drop_RR_30
+PS2_RE1bF_old_worst_nocal                ph=ready  att=0.0214 minF=-1.06(FL@43.4) exclRA=-1.06 pmax=191.3 sat=0 grade=ideal ev=drop_RR_30
+PS3_G4_old_worst_cal                     ph=ready  att=0.0141 minF=16.02(RR@44.6) exclRA=16.02 pmax=133.7 sat=0 grade=ideal ev=settle_RR
+PS3_RE1bF_old_worst_cal                  ph=ready  att=0.0216 minF=-1.05(FL@43.8) exclRA=-1.05 pmax=190.7 sat=0 grade=ideal ev=drop_RR_30
+PS4_G4_FLp4_RRm4_cal                     ph=ready  att=0.0129 minF=16.21(RR@44.6) exclRA=16.21 pmax=133.5 sat=0 grade=ideal ev=settle_RR
+PS4_G4_FLp4_RRm4_nocal                   ph=ready  att=0.0128 minF=22.54(RR@44.2) exclRA=22.54 pmax=127.0 sat=0 grade=ideal ev=settle_RR
+PS4_RE1bF_FLp4_RRm4_cal                  ph=ready  att=0.0225 minF=-1.05(FL@43.8) exclRA=-1.05 pmax=189.9 sat=0 grade=ideal ev=drop_RR_30
+PS4_RE1bF_FLp4_RRm4_nocal                ph=ready  att=0.0204 minF=-1.05(FL@43.4) exclRA=-1.05 pmax=189.9 sat=0 grade=ideal ev=drop_RR_30
+PS7a_flat_RRpre_p2.0mm                   ph=ready  att=0.0132 minF=55.17(RL@42.5) exclRA=55.17 pmax=100.9 sat=0 grade=ideal ev=None
+PS7b_flat_RRpre_m1.5mm                   ph=ready  att=0.0138 minF=55.21(RL@66.5) exclRA=55.21 pmax=100.8 sat=0 grade=ideal ev=None
+PS7c_flat_RRpre_m2.7mm                   ph=ready  att=0.0138 minF=55.75(RR@63.1) exclRA=55.75 pmax=101.9 sat=0 grade=ideal ev=None
+RE1bF_top_flat_dropRR30                  ph=ready  att=0.0223 minF=-1.05(FL@43.8) exclRA=-1.05 pmax=190.0 sat=0 grade=ideal ev=drop_RR_30
+RE1bF_top_flat_dropRR30_normal           ph=ready  att=0.0984 minF=-1.06(FL@51.3) exclRA=-1.06 pmax=189.2 sat=0 grade=normal_zeroed ev=drop_RR_30
+RE1bP_top_flat_dropRR30_probe            ph=ready  att=0.0256 minF=-1.09(FL@28.8) exclRA=-1.09 pmax=192.6 sat=0 grade=ideal ev=drop_RR_30_probe
+RE1b_top_flat_settleRR30                 ph=ready  att=0.0341 minF=10.59(RR@46.5) exclRA=10.59 pmax=139.4 sat=0 grade=ideal ev=settle_RR_30
+
+== rows by case (selected items)
+-- G4_top_flat_settleRR_combined
+   2 attitude +-0.2 (+mount)    v=0.03290364199263341                                          lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.00025583831419125704                                       lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=15.119981175922343                                           lim=9.414589110000001                        p=True RR at 44.64 s; D8 margin ok
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=134.52943864993966                                           lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.009112104667756846                                         lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.000237621684003219                                         lim=0.005                                    p=True 
+   6 min after settlement       v=15.119981175922343                                           lim=9.414589110000001                        p=True 
+   6 re-READY <= 40 s           v=18.180000000769482                                           lim=40.0                                     p=True 
+   6 final >= F_min + 5 kN      v=[117.47431652301326, 116.69128829523555, 72.89494316928572,  lim=14.414589110000001                       p=True 
+   6 attitude <= 0.2 deg (+mount) v=0.012903641992633408                                         lim=0.2                                      p=True 
+   7a probe attitude change     v=0.028111870884814212                                         lim=0.1                                      p=True per round and leg (U53)
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53)
+   7c load estimate error       v=-6.123655175691323                                           lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); truth = probe start load (0.5 s mean before the first m
+   K8 shadow (B) - true floor   v=0.0048598963655220465                                        lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- G4_top_flat_settleRR_pressure
+   2 attitude +-0.2 (+mount)    v=0.0330524806106846                                           lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.000256044386432808                                         lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=13.901856943539695                                           lim=9.414589110000001                        p=True RR at 33.94 s; D8 margin spec shortfall
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=135.82847277392176                                           lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.008641535722038782                                         lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.00023158632021602274                                       lim=0.005                                    p=True 
+   6 min after settlement       v=13.901856943539695                                           lim=9.414589110000001                        p=True 
+   6 re-READY <= 40 s           v=7.700000000421596                                            lim=40.0                                     p=True 
+   6 final >= F_min + 5 kN      v=[117.48594628498032, 116.68250627569067, 72.88379112856168,  lim=14.414589110000001                       p=True 
+   6 attitude <= 0.2 deg (+mount) v=0.013052480610684604                                         lim=0.2                                      p=True 
+   K8 shadow (B) - true floor   v=0.003256205280992355                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS1_G4_normal_cal_s12346
+   2 attitude +-0.2 (+mount)    v=0.03531086752917585                                          lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0002779308864184685                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=16.363466337560833                                           lim=9.414589110000001                        p=True RR at 44.56 s; D8 margin ok
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=133.2423790040155                                            lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.00925399211725167                                          lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.00019748271939285487                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.027033490944844897                                         lim=0.1                                      p=True per round and leg (U53)
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53)
+   7c load estimate error       v=-4.264315166529355                                           lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); truth = probe start load (0.5 s mean before the first m
+   K8 shadow (B) - true floor   v=0.0020927574886576753                                        lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS1_G4_normal_cal_s12347
+   2 attitude +-0.2 (+mount)    v=0.03294656672297705                                          lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.00011456115022988648                                       lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=16.799972697969803                                           lim=9.414589110000001                        p=True RR at 44.62 s; D8 margin ok
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=132.78946861955222                                           lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.009262224177478004                                         lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.0002717731856455904                                        lim=0.005                                    p=True 
+   7a probe attitude change     v=0.028000688326555563                                         lim=0.1                                      p=True per round and leg (U53)
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53)
+   7c load estimate error       v=-5.006386697548618                                           lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); truth = probe start load (0.5 s mean before the first m
+   K8 shadow (B) - true floor   v=0.0030838017109642867                                        lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS1_RE1bF_normal_cal_s12346
+   2 attitude +-0.2 (+mount)    v=0.04236414945572251                                          lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=9.297983160214322e-05                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=-1.0534352288067674                                          lim=9.414589110000001                        p=None event case: intended lift-off (spec 41.2/23); FL at 43.75 s; D8 margin spec shor
+   3 F_min before the event     v=55.3721018691434                                             lim=9.414589110000001                        p=True crawler lift-off .. t_event
+   3 F_min after the re-READY   v=66.61390013679292                                            lim=9.414589110000001                        p=True re-READY .. end
+   3 lift-off other legs in the event transient v={'lift_s': [0.11300000003586774, 0.0, 0.0], 'rise_m': [0.000 lim={'lift_s': 0.5, 'rise_m': 0.002, 'anchor p=True U57 (spec 62.2), physical window [43.360, 45.722] s, notes -; FL FR RL
+   3 lift-off other legs after the transient v=0.0                                                          lim=0.0                                      p=True U57: window end .. case end; whole run after the event: FL FR RL [s] [0.11300000
+   3 lift-off RR after the re-READY v=0.0                                                          lim=0.0                                      p=True 
+   3 lift-off RR time / ratio (report) v=[1.5290000004853255, 0.0765265265415884]                     lim=None                                     p=None t_event .. re-READY
+   RE1b re-READY <= 60 s        v=19.980000002409483                                           lim=60.0                                     p=True 
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure outside the event transient v=115.504949357701                                             lim=180.0                                    p=True U58: extend_only samples outside [43.360, 45.722] s; retraction maximum 110.5303
+   4 max pressure in the event transient v=189.97214785728585                                           lim=350.0                                    p=True U58: head F/A_p in any state in [43.360, 45.722] s (no F - m_rod a); peak {'max_
+   5a rocking amplitude after the re-READY v=0.0010986379353974639                                        lim=0.06                                     p=True U58
+   5a rocking amplitude in the event transient (report) v=0.08657274617587193                                          lim=0.06                                     p=None U58: [43.360, 45.722] s
+   5b filter residual last 5 s  v=0.0002085255906867766                                        lim=0.005                                    p=True 
+   7a probe attitude change     v=0.03304782243678829                                          lim=0.1                                      p=True per round and leg (U53); probes overlapping the event left out
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53); probes overlapping the event left out
+   7c load estimate error       v=-4.367514426331993                                           lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); probes overlapping the event left out; truth = probe st
+   K8 shadow (B) - true floor   v=0.0020927574886576753                                        lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS1_RE1bF_normal_cal_s12347
+   2 attitude +-0.2 (+mount)    v=0.041505958285459554                                         lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0002934385611991183                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=-1.0538646538406093                                          lim=9.414589110000001                        p=None event case: intended lift-off (spec 41.2/23); FL at 43.81 s; D8 margin spec shor
+   3 F_min before the event     v=55.76673325366275                                            lim=9.414589110000001                        p=True crawler lift-off .. t_event
+   3 F_min after the re-READY   v=67.52408435948635                                            lim=9.414589110000001                        p=True re-READY .. end
+   3 lift-off other legs in the event transient v={'lift_s': [0.11500000003650257, 0.0, 0.0], 'rise_m': [0.000 lim={'lift_s': 0.5, 'rise_m': 0.002, 'anchor p=True U57 (spec 62.2), physical window [43.420, 45.776] s, notes -; FL FR RL
+   3 lift-off other legs after the transient v=0.0                                                          lim=0.0                                      p=True U57: window end .. case end; whole run after the event: FL FR RL [s] [0.11500000
+   3 lift-off RR after the re-READY v=0.0                                                          lim=0.0                                      p=True 
+   3 lift-off RR time / ratio (report) v=[1.523000000483421, 0.07414800390963026]                     lim=None                                     p=None t_event .. re-READY
+   RE1b re-READY <= 60 s        v=20.54000000242239                                            lim=60.0                                     p=True 
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure outside the event transient v=114.75820961572575                                           lim=180.0                                    p=True U58: extend_only samples outside [43.420, 45.776] s; retraction maximum 114.2973
+   4 max pressure in the event transient v=190.28699409415947                                           lim=350.0                                    p=True U58: head F/A_p in any state in [43.420, 45.776] s (no F - m_rod a); peak {'max_
+   5a rocking amplitude after the re-READY v=0.0011848725414565359                                        lim=0.06                                     p=True U58
+   5a rocking amplitude in the event transient (report) v=0.0876622401803625                                           lim=0.06                                     p=None U58: [43.420, 45.776] s
+   5b filter residual last 5 s  v=0.0003065000899496774                                        lim=0.005                                    p=True 
+   7a probe attitude change     v=0.03239658165723962                                          lim=0.1                                      p=True per round and leg (U53); probes overlapping the event left out
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53); probes overlapping the event left out
+   7c load estimate error       v=-0.37138213621511795                                         lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); probes overlapping the event left out; truth = probe st
+   K8 shadow (B) - true floor   v=0.0030838017109642867                                        lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS2_G4_conservative_nocal
+   2 attitude +-0.2 (+mount)    v=0.03281860469758727                                          lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0002558390327646191                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=20.460299238338926                                           lim=9.414589110000001                        p=True RR at 44.18 s; D8 margin ok
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=129.02613784018462                                           lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.009254132425052783                                         lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.00023083959604841553                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.028099250197252297                                         lim=0.1                                      p=True per round and leg (U53)
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53)
+   7c load estimate error       v=-3.1046517496705777                                          lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); truth = probe start load (0.5 s mean before the first m
+   K8 shadow (B) - true floor   v=0.005186630266059817                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS2_G4_old_worst_nocal
+   2 attitude +-0.2 (+mount)    v=0.032567024423368666                                         lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0002560333043227205                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=30.219440026905176                                           lim=9.414589110000001                        p=True RR at 44.50 s; D8 margin ok
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=119.40793569229889                                           lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.00824202696778574                                          lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.00022929991723034775                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.02813759203005735                                          lim=0.1                                      p=True per round and leg (U53)
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53)
+   7c load estimate error       v=0.4800228830325608                                           lim=<= 0 (max(5 kN,10 %))                    p=False per round and leg (U53); truth = probe start load (0.5 s mean before the first m
+   K8 shadow (B) - true floor   v=0.005186630266059817                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS2_RE1bF_conservative_nocal
+   2 attitude +-0.2 (+mount)    v=0.040920202504668116                                         lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0005001697705886493                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=-1.0545983266717358                                          lim=9.414589110000001                        p=None event case: intended lift-off (spec 41.2/23); FL at 43.41 s; D8 margin spec shor
+   3 F_min before the event     v=55.65463899763077                                            lim=9.414589110000001                        p=True crawler lift-off .. t_event
+   3 F_min after the re-READY   v=66.40522495016945                                            lim=9.414589110000001                        p=True re-READY .. end
+   3 lift-off other legs in the event transient v={'lift_s': [0.11400000003618516, 0.0, 0.0], 'rise_m': [0.000 lim={'lift_s': 0.5, 'rise_m': 0.002, 'anchor p=True U57 (spec 62.2), physical window [43.020, 45.314] s, notes -; FL FR RL
+   3 lift-off other legs after the transient v=0.0                                                          lim=0.0                                      p=True U57: window end .. case end; whole run after the event: FL FR RL [s] [0.11400000
+   3 lift-off RR after the re-READY v=0.0                                                          lim=0.0                                      p=True 
+   3 lift-off RR time / ratio (report) v=[1.3570000004307303, 0.06987641607957014]                    lim=None                                     p=None t_event .. re-READY
+   RE1b re-READY <= 60 s        v=19.420000002368155                                           lim=60.0                                     p=True 
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure outside the event transient v=115.1650513113093                                            lim=180.0                                    p=True U58: extend_only samples outside [43.020, 45.314] s; retraction maximum 116.8624
+   4 max pressure in the event transient v=190.63557140359976                                           lim=350.0                                    p=True U58: head F/A_p in any state in [43.020, 45.314] s (no F - m_rod a); peak {'max_
+   5a rocking amplitude after the re-READY v=0.0018157197669154308                                        lim=0.06                                     p=True U58
+   5a rocking amplitude in the event transient (report) v=0.09069978984291774                                          lim=0.06                                     p=None U58: [43.020, 45.314] s
+   5b filter residual last 5 s  v=0.00028335578950475573                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.03368217167614958                                          lim=0.1                                      p=True per round and leg (U53); probes overlapping the event left out
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53); probes overlapping the event left out
+   7c load estimate error       v=-2.9063320210509325                                          lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); probes overlapping the event left out; truth = probe st
+   K8 shadow (B) - true floor   v=0.005186630266059817                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS2_RE1bF_old_worst_nocal
+   2 attitude +-0.2 (+mount)    v=0.041447542653196424                                         lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0005003371214939169                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=-1.0554011371392302                                          lim=9.414589110000001                        p=None event case: intended lift-off (spec 41.2/23); FL at 43.42 s; D8 margin spec shor
+   3 F_min before the event     v=56.82776705328677                                            lim=9.414589110000001                        p=True crawler lift-off .. t_event
+   3 F_min after the re-READY   v=67.31538715520719                                            lim=9.414589110000001                        p=True re-READY .. end
+   3 lift-off other legs in the event transient v={'lift_s': [0.12200000003872447, 0.0, 0.0], 'rise_m': [0.000 lim={'lift_s': 0.5, 'rise_m': 0.002, 'anchor p=True U57 (spec 62.2), physical window [43.020, 45.293] s, notes -; FL FR RL
+   3 lift-off other legs after the transient v=0.0                                                          lim=0.0                                      p=True U57: window end .. case end; whole run after the event: FL FR RL [s] [0.12200000
+   3 lift-off RR after the re-READY v=0.0                                                          lim=0.0                                      p=True 
+   3 lift-off RR time / ratio (report) v=[1.2820000004069243, 0.06601441813856679]                    lim=None                                     p=None t_event .. re-READY
+   RE1b re-READY <= 60 s        v=19.42000000236247                                            lim=60.0                                     p=True 
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure outside the event transient v=115.06000510272095                                           lim=180.0                                    p=True U58: extend_only samples outside [43.020, 45.293] s; retraction maximum 117.9852
+   4 max pressure in the event transient v=191.28086693403327                                           lim=350.0                                    p=True U58: head F/A_p in any state in [43.020, 45.293] s (no F - m_rod a); peak {'max_
+   5a rocking amplitude after the re-READY v=0.0019315555829918021                                        lim=0.06                                     p=True U58
+   5a rocking amplitude in the event transient (report) v=0.09391621461382821                                          lim=0.06                                     p=None U58: [43.020, 45.293] s
+   5b filter residual last 5 s  v=0.00028157519600593983                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.03419881373208984                                          lim=0.1                                      p=True per round and leg (U53); probes overlapping the event left out
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53); probes overlapping the event left out
+   7c load estimate error       v=-2.1209427982472624                                          lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); probes overlapping the event left out; truth = probe st
+   K8 shadow (B) - true floor   v=0.005186630266059817                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS3_G4_old_worst_cal
+   2 attitude +-0.2 (+mount)    v=0.034060577255260474                                         lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.00025604236549419367                                       lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=16.015376186928936                                           lim=9.414589110000001                        p=True RR at 44.64 s; D8 margin ok
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=133.58196357946625                                           lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.009121186737797188                                         lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.00023827590118199495                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.027638277617647894                                         lim=0.1                                      p=True per round and leg (U53)
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53)
+   7c load estimate error       v=-2.4156901761994254                                          lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); truth = probe start load (0.5 s mean before the first m
+   7c zero-calibration deduction legs: warning event v={'RL': True}                                                 lim=WARN_PRESSURE_ZERO_IMPLAUSIBLE / _SKIPPE p=True spec rev. 27 102.1 / 103.3: a leg judged one-sided in 7c must carry its calibrat
+   K8 shadow (B) - true floor   v=0.004944786319420977                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS3_RE1bF_old_worst_cal
+   2 attitude +-0.2 (+mount)    v=0.041646991604272945                                         lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0005002092331169203                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=-1.0545282524259698                                          lim=9.414589110000001                        p=None event case: intended lift-off (spec 41.2/23); FL at 43.81 s; D8 margin spec shor
+   3 F_min before the event     v=55.92134764867705                                            lim=9.414589110000001                        p=True crawler lift-off .. t_event
+   3 F_min after the re-READY   v=66.72521472066003                                            lim=9.414589110000001                        p=True re-READY .. end
+   3 lift-off other legs in the event transient v={'lift_s': [0.12000000003808964, 0.0, 0.0], 'rise_m': [0.000 lim={'lift_s': 0.5, 'rise_m': 0.002, 'anchor p=True U57 (spec 62.2), physical window [43.420, 45.770] s, notes -; FL FR RL
+   3 lift-off other legs after the transient v=0.0                                                          lim=0.0                                      p=True U57: window end .. case end; whole run after the event: FL FR RL [s] [0.12000000
+   3 lift-off RR after the re-READY v=0.0                                                          lim=0.0                                      p=True 
+   3 lift-off RR time / ratio (report) v=[1.4840000004710419, 0.07420000001463153]                    lim=None                                     p=None t_event .. re-READY
+   RE1b re-READY <= 60 s        v=20.000000002404462                                           lim=60.0                                     p=True 
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure outside the event transient v=114.34853768954927                                           lim=180.0                                    p=True U58: extend_only samples outside [43.420, 45.770] s; retraction maximum 113.0166
+   4 max pressure in the event transient v=190.6999913617567                                            lim=350.0                                    p=True U58: head F/A_p in any state in [43.420, 45.770] s (no F - m_rod a); peak {'max_
+   5a rocking amplitude after the re-READY v=0.001688293758110821                                         lim=0.06                                     p=True U58
+   5a rocking amplitude in the event transient (report) v=0.08898618235971356                                          lim=0.06                                     p=None U58: [43.420, 45.770] s
+   5b filter residual last 5 s  v=0.0002857621560583591                                        lim=0.005                                    p=True 
+   7a probe attitude change     v=0.033209949409625086                                         lim=0.1                                      p=True per round and leg (U53); probes overlapping the event left out
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53); probes overlapping the event left out
+   7c load estimate error       v=-3.3433668760260646                                          lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); probes overlapping the event left out; truth = probe st
+   7c zero-calibration deduction legs: warning event v={'RL': True}                                                 lim=WARN_PRESSURE_ZERO_IMPLAUSIBLE / _SKIPPE p=True spec rev. 27 102.1 / 103.3: a leg judged one-sided in 7c must carry its calibrat
+   K8 shadow (B) - true floor   v=0.004944786319420977                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS4_G4_FLp4_RRm4_cal
+   2 attitude +-0.2 (+mount)    v=0.032898124547667024                                         lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0002562304752157436                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=16.206115895471036                                           lim=9.414589110000001                        p=True RR at 44.62 s; D8 margin ok
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=133.42199158546418                                           lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.009169083194750793                                         lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.00024099124698788443                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.02810690820399482                                          lim=0.1                                      p=True per round and leg (U53)
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53)
+   7c load estimate error       v=-5.962146242377827                                           lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); truth = probe start load (0.5 s mean before the first m
+   7c zero-calibration deduction legs: warning event v={'FL': True}                                                 lim=WARN_PRESSURE_ZERO_IMPLAUSIBLE / _SKIPPE p=True spec rev. 27 102.1 / 103.3: a leg judged one-sided in 7c must carry its calibrat
+   K8 shadow (B) - true floor   v=0.004860403190399941                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS4_G4_FLp4_RRm4_nocal
+   2 attitude +-0.2 (+mount)    v=0.03277198845452244                                          lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0002559172359786341                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=22.541264075222806                                           lim=9.414589110000001                        p=True RR at 44.16 s; D8 margin ok
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=126.92415013041368                                           lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.009188081274566856                                         lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.0002252481119664005                                        lim=0.005                                    p=True 
+   7a probe attitude change     v=0.028113151329713794                                         lim=0.1                                      p=True per round and leg (U53)
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53)
+   7c load estimate error       v=-2.3330279394813704                                          lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); truth = probe start load (0.5 s mean before the first m
+   K8 shadow (B) - true floor   v=0.005186630266059817                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS4_RE1bF_FLp4_RRm4_cal
+   2 attitude +-0.2 (+mount)    v=0.04250161851720845                                          lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0005001844602476199                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=-1.0531454447772188                                          lim=9.414589110000001                        p=None event case: intended lift-off (spec 41.2/23); FL at 43.81 s; D8 margin spec shor
+   3 F_min before the event     v=55.220368488052564                                           lim=9.414589110000001                        p=True crawler lift-off .. t_event
+   3 F_min after the re-READY   v=64.99370302266811                                            lim=9.414589110000001                        p=True re-READY .. end
+   3 lift-off other legs in the event transient v={'lift_s': [0.11200000003555033, 0.0, 0.0], 'rise_m': [0.000 lim={'lift_s': 0.5, 'rise_m': 0.002, 'anchor p=True U57 (spec 62.2), physical window [43.420, 45.792] s, notes -; FL FR RL
+   3 lift-off other legs after the transient v=0.0                                                          lim=0.0                                      p=True U57: window end .. case end; whole run after the event: FL FR RL [s] [0.11200000
+   3 lift-off RR after the re-READY v=0.0                                                          lim=0.0                                      p=True 
+   3 lift-off RR time / ratio (report) v=[1.5390000004884996, 0.07695000001515194]                    lim=None                                     p=None t_event .. re-READY
+   RE1b re-READY <= 60 s        v=20.000000002410147                                           lim=60.0                                     p=True 
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure outside the event transient v=117.6810559091786                                            lim=180.0                                    p=True U58: extend_only samples outside [43.420, 45.792] s; retraction maximum 112.5534
+   4 max pressure in the event transient v=189.87175198830025                                           lim=350.0                                    p=True U58: head F/A_p in any state in [43.420, 45.792] s (no F - m_rod a); peak {'max_
+   5a rocking amplitude after the re-READY v=0.0012386738999238013                                        lim=0.06                                     p=True U58
+   5a rocking amplitude in the event transient (report) v=0.08628205023898672                                          lim=0.06                                     p=None U58: [43.420, 45.792] s
+   5b filter residual last 5 s  v=0.00028589436417999353                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.033284885405144474                                         lim=0.1                                      p=True per round and leg (U53); probes overlapping the event left out
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53); probes overlapping the event left out
+   7c load estimate error       v=-5.543146336555077                                           lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); probes overlapping the event left out; truth = probe st
+   7c zero-calibration deduction legs: warning event v={'FL': True}                                                 lim=WARN_PRESSURE_ZERO_IMPLAUSIBLE / _SKIPPE p=True spec rev. 27 102.1 / 103.3: a leg judged one-sided in 7c must carry its calibrat
+   K8 shadow (B) - true floor   v=0.004860403190399941                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS4_RE1bF_FLp4_RRm4_nocal
+   2 attitude +-0.2 (+mount)    v=0.04036728214822838                                          lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0005006295264196671                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=-1.0532414240079604                                          lim=9.414589110000001                        p=None event case: intended lift-off (spec 41.2/23); FL at 43.42 s; D8 margin spec shor
+   3 F_min before the event     v=55.85277498345341                                            lim=9.414589110000001                        p=True crawler lift-off .. t_event
+   3 F_min after the re-READY   v=64.86815510253639                                            lim=9.414589110000001                        p=True re-READY .. end
+   3 lift-off other legs in the event transient v={'lift_s': [0.10900000003459809, 0.0, 0.0], 'rise_m': [0.000 lim={'lift_s': 0.5, 'rise_m': 0.002, 'anchor p=True U57 (spec 62.2), physical window [43.040, 45.335] s, notes -; FL FR RL
+   3 lift-off other legs after the transient v=0.0                                                          lim=0.0                                      p=True U57: window end .. case end; whole run after the event: FL FR RL [s] [0.10900000
+   3 lift-off RR after the re-READY v=0.0                                                          lim=0.0                                      p=True 
+   3 lift-off RR time / ratio (report) v=[1.3720000004354915, 0.07057613170104472]                    lim=None                                     p=None t_event .. re-READY
+   RE1b re-READY <= 60 s        v=19.44000000236882                                            lim=60.0                                     p=True 
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure outside the event transient v=115.22881720795628                                           lim=180.0                                    p=True U58: extend_only samples outside [43.040, 45.335] s; retraction maximum 117.0447
+   4 max pressure in the event transient v=189.93698420474297                                           lim=350.0                                    p=True U58: head F/A_p in any state in [43.040, 45.335] s (no F - m_rod a); peak {'max_
+   5a rocking amplitude after the re-READY v=0.0018180714356381932                                        lim=0.06                                     p=True U58
+   5a rocking amplitude in the event transient (report) v=0.08846166298123381                                          lim=0.06                                     p=None U58: [43.040, 45.335] s
+   5b filter residual last 5 s  v=0.00029284916480747103                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.033680426042302536                                         lim=0.1                                      p=True per round and leg (U53); probes overlapping the event left out
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53); probes overlapping the event left out
+   7c load estimate error       v=0.30883256654900126                                          lim=<= 0 (max(5 kN,10 %))                    p=False per round and leg (U53); probes overlapping the event left out; truth = probe st
+   K8 shadow (B) - true floor   v=0.005186630266059817                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS7a_flat_RRpre_p2.0mm
+   2 attitude +-0.2 (+mount)    v=0.033199274063480264                                         lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0001418280710186452                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=55.17058507942949                                            lim=9.414589110000001                        p=True RL at 42.47 s; D8 margin ok
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=99.15236142442802                                            lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.0070701233218684045                                        lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.0002719847759311525                                        lim=0.005                                    p=True 
+   7a probe attitude change     v=0.026128370662076055                                         lim=0.1                                      p=True per round and leg (U53)
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53)
+   7c load estimate error       v=-5.22944172837441                                            lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); truth = probe start load (0.5 s mean before the first m
+   7c zero-calibration deduction legs: warning event v={'RR': True}                                                 lim=WARN_PRESSURE_ZERO_IMPLAUSIBLE / _SKIPPE p=True spec rev. 27 102.1 / 103.3: a leg judged one-sided in 7c must carry its calibrat
+   K8 shadow (B) - true floor   v=0.010606024963324611                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS7b_flat_RRpre_m1.5mm
+   2 attitude +-0.2 (+mount)    v=0.033844019489505536                                         lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.00023236336073055998                                       lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=55.20538796665444                                            lim=9.414589110000001                        p=True RL at 66.53 s; D8 margin ok
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=99.4861018590222                                             lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.010283915925314163                                         lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.00048620891100525617                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.02595559760254635                                          lim=0.1                                      p=True per round and leg (U53)
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53)
+   7c load estimate error       v=-3.7648085187966833                                          lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); truth = probe start load (0.5 s mean before the first m
+   7c zero-calibration deduction legs: warning event v={'RR': True}                                                 lim=WARN_PRESSURE_ZERO_IMPLAUSIBLE / _SKIPPE p=True spec rev. 27 102.1 / 103.3: a leg judged one-sided in 7c must carry its calibrat
+   K8 shadow (B) - true floor   v=0.01163380072987361                                          lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- PS7c_flat_RRpre_m2.7mm
+   2 attitude +-0.2 (+mount)    v=0.033819319648093725                                         lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0002140431684457981                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=55.748591656864775                                           lim=9.414589110000001                        p=True RR at 63.06 s; D8 margin ok
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure        v=101.88680615141656                                           lim=180.0                                    p=True 
+   5a rocking amplitude         v=0.0164915021469427                                           lim=0.06                                     p=True 
+   5b filter residual last 5 s  v=0.00043168486283299147                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.026626953509730093                                         lim=0.1                                      p=True per round and leg (U53)
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53)
+   7c load estimate error       v=-6.852786240612355                                           lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); truth = probe start load (0.5 s mean before the first m
+   7c zero-calibration deduction legs: warning event v={'RR': True}                                                 lim=WARN_PRESSURE_ZERO_IMPLAUSIBLE / _SKIPPE p=True spec rev. 27 102.1 / 103.3: a leg judged one-sided in 7c must carry its calibrat
+   K8 shadow (B) - true floor   v=0.012850298463172148                                         lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- RE1bF_top_flat_dropRR30
+   2 attitude +-0.2 (+mount)    v=0.04226335052922491                                          lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0005003520925294362                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=-1.0535422748656267                                          lim=9.414589110000001                        p=None event case: intended lift-off (spec 41.2/23); FL at 43.81 s; D8 margin spec shor
+   3 F_min before the event     v=55.4905246773157                                             lim=9.414589110000001                        p=True crawler lift-off .. t_event
+   3 F_min after the re-READY   v=66.4237996790828                                             lim=9.414589110000001                        p=True re-READY .. end
+   3 lift-off other legs in the event transient v={'lift_s': [0.11300000003586774, 0.0, 0.0], 'rise_m': [0.000 lim={'lift_s': 0.5, 'rise_m': 0.002, 'anchor p=True U57 (spec 62.2), physical window [43.420, 45.782] s, notes -; FL FR RL
+   3 lift-off other legs after the transient v=0.0                                                          lim=0.0                                      p=True U57: window end .. case end; whole run after the event: FL FR RL [s] [0.11300000
+   3 lift-off RR after the re-READY v=0.0                                                          lim=0.0                                      p=True 
+   3 lift-off RR time / ratio (report) v=[1.5290000004853255, 0.07645000001505349]                    lim=None                                     p=None t_event .. re-READY
+   RE1b re-READY <= 60 s        v=20.000000002410147                                           lim=60.0                                     p=True 
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure outside the event transient v=115.44159322949129                                           lim=180.0                                    p=True U58: extend_only samples outside [43.420, 45.782] s; retraction maximum 110.4346
+   4 max pressure in the event transient v=190.04478804738142                                           lim=350.0                                    p=True U58: head F/A_p in any state in [43.420, 45.782] s (no F - m_rod a); peak {'max_
+   5a rocking amplitude after the re-READY v=0.0012607606029747948                                        lim=0.06                                     p=True U58
+   5a rocking amplitude in the event transient (report) v=0.08681661773299348                                          lim=0.06                                     p=None U58: [43.420, 45.782] s
+   5b filter residual last 5 s  v=0.0002849419062309795                                        lim=0.005                                    p=True 
+   7a probe attitude change     v=0.03319963013836434                                          lim=0.1                                      p=True per round and leg (U53); probes overlapping the event left out
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53); probes overlapping the event left out
+   7c load estimate error       v=-5.130873050677507                                           lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); probes overlapping the event left out; truth = probe st
+   K8 shadow (B) - true floor   v=0.0048598963655220465                                        lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- RE1bF_top_flat_dropRR30_normal
+   2 attitude +-0.2 (+mount)    v=0.11838654168554394                                          lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0027340602774418854                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.07199994315114597, -0.07199988630242662]
+   3 F_min (1 ms)               v=-1.0551645976343578                                          lim=9.414589110000001                        p=None event case: intended lift-off (spec 41.2/23); FL at 51.26 s; D8 margin spec shor
+   3 F_min before the event     v=55.14379640101059                                            lim=9.414589110000001                        p=True crawler lift-off .. t_event
+   3 F_min after the re-READY   v=65.91772774850148                                            lim=9.414589110000001                        p=True re-READY .. end
+   3 lift-off other legs in the event transient v={'lift_s': [0.1030000000326936, 0.0, 0.0], 'rise_m': [0.0007 lim={'lift_s': 0.5, 'rise_m': 0.002, 'anchor p=True U57 (spec 62.2), physical window [50.900, 53.259] s, notes -; FL FR RL
+   3 lift-off other legs after the transient v=0.0                                                          lim=0.0                                      p=True U57: window end .. case end; whole run after the event: FL FR RL [s] [0.10300000
+   3 lift-off RR after the re-READY v=0.0                                                          lim=0.0                                      p=True 
+   3 lift-off RR time / ratio (report) v=[1.5260000004843732, 0.07622377623881346]                    lim=None                                     p=None t_event .. re-READY
+   RE1b re-READY <= 60 s        v=20.020000002405126                                           lim=60.0                                     p=True 
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure outside the event transient v=115.23669023655961                                           lim=180.0                                    p=True U58: extend_only samples outside [50.900, 53.259] s; retraction maximum 98.22517
+   4 max pressure in the event transient v=189.2401224270751                                            lim=350.0                                    p=True U58: head F/A_p in any state in [50.900, 53.259] s (no F - m_rod a); peak {'max_
+   5a rocking amplitude after the re-READY v=0.0013729045050093341                                        lim=0.06                                     p=True U58
+   5a rocking amplitude in the event transient (report) v=0.0847426570735112                                           lim=0.06                                     p=None U58: [50.900, 53.259] s
+   5b filter residual last 5 s  v=0.0015606173478356425                                        lim=0.005                                    p=True 
+   7a probe attitude change     v=0.03344014942382387                                          lim=0.1                                      p=True per round and leg (U53); probes overlapping the event left out
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53); probes overlapping the event left out
+   7c load estimate error       v=-1.917494906787402                                           lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); probes overlapping the event left out; truth = probe st
+-- RE1bP_top_flat_dropRR30_probe
+   2 attitude +-0.2 (+mount)    v=0.04556040768119861                                          lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0005001939295522122                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=-1.0870347447289752                                          lim=9.414589110000001                        p=None event case: intended lift-off (spec 41.2/23); FL at 28.85 s; D8 margin spec shor
+   3 F_min before the event     v=66.41767383044245                                            lim=9.414589110000001                        p=True crawler lift-off .. t_event
+   3 F_min after the re-READY   v=66.4576991536641                                             lim=9.414589110000001                        p=True re-READY .. end
+   3 lift-off other legs in the event transient v={'lift_s': [0.36300000011522116, 0.0, 0.0], 'rise_m': [0.001 lim={'lift_s': 0.5, 'rise_m': 0.002, 'anchor p=True U57 (spec 62.2), physical window [27.820, 31.489] s, notes -; FL FR RL
+   3 lift-off other legs after the transient v=0.0                                                          lim=0.0                                      p=True U57: window end .. case end; whole run after the event: FL FR RL [s] [0.36300000
+   3 lift-off RR after the re-READY v=0.0                                                          lim=0.0                                      p=True 
+   3 lift-off RR time / ratio (report) v=[2.609000000828132, 0.12531219983498804]                     lim=None                                     p=None t_event .. re-READY
+   RE1b re-READY <= 60 s        v=20.820000002104194                                           lim=60.0                                     p=True 
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure outside the event transient v=118.03517793297019                                           lim=180.0                                    p=True U58: extend_only samples outside [27.820, 31.489] s; retraction maximum 98.43953
+   4 max pressure in the event transient v=192.59705583200562                                           lim=350.0                                    p=True U58: head F/A_p in any state in [27.820, 31.489] s (no F - m_rod a); peak {'max_
+   5a rocking amplitude after the re-READY v=0.0011841634727443456                                        lim=0.06                                     p=True U58
+   5a rocking amplitude in the event transient (report) v=0.13159650986655438                                          lim=0.06                                     p=None U58: [27.820, 31.489] s
+   5b filter residual last 5 s  v=0.00028569445389338075                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.03318083257958662                                          lim=0.1                                      p=True per round and leg (U53); probes overlapping the event left out
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53); probes overlapping the event left out
+   7c load estimate error       v=-3.2964154436946753                                          lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); probes overlapping the event left out; truth = probe st
+   7a probe attitude change (event overlap) v=0.2576797942414483                                           lim=0.1                                      p=None U53: probe overlapping the floor event, reported only (spec 55.1)
+   K8 shadow (B) - true floor   v=0.0048598963655220465                                        lim=0.03                                     p=None J5 / I6 report: within 0.03 deg
+-- RE1b_top_flat_settleRR30
+   2 attitude +-0.2 (+mount)    v=0.054128113999227276                                         lim=0.2                                      p=True 
+   2 sensor path filter - true = grade tilt v=0.0005003686502903208                                        lim=0.005                                    p=True I5 / J7; grade tilt [0.0, -0.0]
+   3 F_min (1 ms)               v=10.588379162178066                                           lim=9.414589110000001                        p=None event case: intended lift-off (spec 41.2/23); RR at 46.52 s; D8 margin spec shor
+   3 F_min before the event     v=55.4905246773157                                             lim=9.414589110000001                        p=True crawler lift-off .. t_event
+   3 F_min after the re-READY   v=66.1543182671467                                             lim=9.414589110000001                        p=True re-READY .. end
+   3 lift-off other legs in the event transient v={'lift_s': [0.0, 0.0, 0.0], 'rise_m': [3.3940476407146036e-0 lim={'lift_s': 0.5, 'rise_m': 0.002, 'anchor p=True U57 (spec 62.2), physical window [43.420, 44.240] s, notes -; FL FR RL
+   3 lift-off other legs after the transient v=0.0                                                          lim=0.0                                      p=True U57: window end .. case end; whole run after the event: FL FR RL [s] [0.0, 0.0, 
+   3 lift-off RR after the re-READY v=0.0                                                          lim=0.0                                      p=True 
+   3 lift-off RR time / ratio (report) v=[0.0, 0.0]                                                   lim=None                                     p=None t_event .. re-READY
+   RE1b re-READY <= 60 s        v=21.620000000883678                                           lim=60.0                                     p=True 
+   4 saturation steps           v=0                                                            lim=0                                        p=True 
+   4 max moving pressure outside the event transient v=113.97418629800372                                           lim=180.0                                    p=True U58: extend_only samples outside [43.420, 44.240] s; retraction maximum 139.3904
+   4 max pressure in the event transient v=92.33121143149519                                            lim=350.0                                    p=True U58: head F/A_p in any state in [43.420, 44.240] s (no F - m_rod a); peak {'max_
+   5a rocking amplitude after the re-READY v=0.0009068334935240507                                        lim=0.06                                     p=True U58
+   5a rocking amplitude in the event transient (report) v=None                                                         lim=0.06                                     p=None U58: [43.420, 44.240] s
+   5b filter residual last 5 s  v=0.00028910193208684515                                       lim=0.005                                    p=True 
+   7a probe attitude change     v=0.026989949850491076                                         lim=0.1                                      p=True per round and leg (U53); probes overlapping the event left out
+   7b verdict = truth           v=True                                                         lim=True                                     p=True per round and leg (U53); probes overlapping the event left out
+   7c load estimate error       v=-4.612874965971594                                           lim=<= 0 (max(5 kN,10 %))                    p=True per round and leg (U53); probes overlapping the event left out; truth = probe st
+   K8 shadow (B) - true floor   v=0.0048598963655220465                                        lim=0.03                                     p=None J5 / I6 report: within 0.03 deg

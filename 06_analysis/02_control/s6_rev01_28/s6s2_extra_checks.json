@@ -1,0 +1,152 @@
+{
+ "reanchor": {
+  "G2-R_bottom_fdown3.5": [
+   0.0014
+  ],
+  "G2-R_bottom_fup3.5": [
+   0.0013
+  ],
+  "G2-R_middle_fdown3.5": [
+   0.0012
+  ],
+  "G2-R_middle_fup3.5": [
+   0.0017
+  ],
+  "G2-R_top_fdown3.5": [
+   0.0015
+  ],
+  "G2-R_top_fup3.5": [
+   0.0016
+  ],
+  "G3_top_fdown3.5_good_zeroed": [
+   0.0017
+  ],
+  "G3_top_fdown3.5_normal_zeroed": [
+   0.0017
+  ],
+  "G3_top_fdown3.5_normal_zeroed_repeatability": [
+   0.0016
+  ],
+  "G5_top_flat_change_p3": [
+   0.0014
+  ],
+  "G5_top_flat_target_p3": [
+   0.0014
+  ],
+  "G6_top_fdown3.5_H4on": [
+   0.0016
+  ],
+  "G6_top_fup3.5_H4on": [
+   0.0016
+  ]
+ },
+ "level_time": {
+  "flat": {
+   "top": 13.5,
+   "middle": 13.5,
+   "bottom": 13.5,
+   "mid-top": 0.0,
+   "bot-mid": 0.0
+  },
+  "roll5.5": {
+   "top": 35.08,
+   "middle": 33.14,
+   "bottom": 31.68,
+   "mid-top": -1.94,
+   "bot-mid": -1.46
+  },
+  "fdown3.5": {
+   "top": 42.4,
+   "middle": 42.38,
+   "bottom": 42.32,
+   "mid-top": -0.02,
+   "bot-mid": -0.06
+  },
+  "fup3.5": {
+   "top": 42.76,
+   "middle": 42.7,
+   "bottom": 42.64,
+   "mid-top": -0.06,
+   "bot-mid": -0.06
+  }
+ },
+ "linearity": {
+  "G3_top_flat_good_zeroed": {
+   "zero_deg": 0.046,
+   "delta_deg": [
+    -0.052,
+    0.0519
+   ],
+   "delta_minus_expect_deg": [
+    -0.006,
+    0.0059
+   ]
+  },
+  "G3_top_flat_normal_zeroed": {
+   "zero_deg": 0.072,
+   "delta_deg": [
+    -0.0816,
+    0.0804
+   ],
+   "delta_minus_expect_deg": [
+    -0.0096,
+    0.0084
+   ]
+  },
+  "G3_top_flat_normal_zeroed_repeatability": {
+   "zero_deg": 0.122,
+   "delta_deg": [
+    -0.1377,
+    0.1371
+   ],
+   "delta_minus_expect_deg": [
+    -0.0157,
+    0.0151
+   ]
+  },
+  "G3_top_flat_normal_as_shipped": {
+   "zero_deg": 0.17,
+   "delta_deg": [
+    -0.1917,
+    0.1918
+   ],
+   "delta_minus_expect_deg": [
+    -0.0217,
+    0.0218
+   ]
+  },
+  "G3_top_fdown3.5_good_zeroed": {
+   "zero_deg": 0.046,
+   "delta_deg": [
+    -0.0565,
+    0.046
+   ],
+   "delta_minus_expect_deg": [
+    -0.0105,
+    0.0
+   ]
+  },
+  "G3_top_fdown3.5_normal_zeroed": {
+   "zero_deg": 0.072,
+   "delta_deg": [
+    -0.0894,
+    0.069
+   ],
+   "delta_minus_expect_deg": [
+    -0.0174,
+    -0.003
+   ]
+  },
+  "G3_top_fdown3.5_normal_zeroed_repeatability": {
+   "zero_deg": 0.122,
+   "delta_deg": [
+    -0.1447,
+    0.1232
+   ],
+   "delta_minus_expect_deg": [
+    -0.0227,
+    0.0012
+   ]
+  }
+ }
+}

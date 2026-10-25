@@ -1,0 +1,3056 @@
+{
+ "runs": [
+  {
+   "id": "axis|top|flat",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.88,
+   "t_crawler_liftoff_s": 17.34,
+   "t_done_s": 23.82,
+   "t_ready_s": 23.84,
+   "min_true_cyl_force_kN": 63.85,
+   "min_true_leg": "RR",
+   "max_pressure_bar": 120.1,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.17,
+    116.37,
+    72.47,
+    71.09
+   ],
+   "final_clearance_mm": 48.6,
+   "events": [
+    [
+     18.38,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    23.84
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 23.84,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    407.12,
+    405.5,
+    395.42,
+    393.9
+   ],
+   "s_final_mm": [
+    406.86,
+    405.21,
+    395.14,
+    393.65
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.29,
+   "min_true_crawler_clearance_post_lift_mm": -2.1,
+   "ss_err_vs_target_deg": 0.034,
+   "ss_att_mean_deg": [
+    0.0339,
+    0.0099
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.128,
+    "Ft_final_kN": [
+     1.63,
+     1.64,
+     1.59,
+     1.63
+    ],
+    "Ft_at_done_kN": [
+     1.6,
+     1.61,
+     1.63,
+     1.67
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 63.7,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.128,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 6.96,
+   "wall_s": 9.9,
+   "band": "axis"
+  },
+  {
+   "id": "axis|top|roll3",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    3.0,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.9,
+   "t_crawler_liftoff_s": 19.54,
+   "t_done_s": 31.9,
+   "t_ready_s": 31.92,
+   "min_true_cyl_force_kN": 58.22,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 133.2,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    119.02,
+    115.5,
+    72.16,
+    71.42
+   ],
+   "final_clearance_mm": 49.0,
+   "events": [
+    [
+     23.82,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    31.92
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 31.92,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    408.42,
+    546.12,
+    404.16,
+    529.76
+   ],
+   "s_final_mm": [
+    408.11,
+    545.87,
+    403.82,
+    529.38
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.37,
+   "min_true_crawler_clearance_post_lift_mm": -8.6,
+   "ss_err_vs_target_deg": 0.019,
+   "ss_att_mean_deg": [
+    0.0182,
+    0.0016
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.134,
+    "Ft_final_kN": [
+     15.52,
+     15.73,
+     14.09,
+     13.97
+    ],
+    "Ft_at_done_kN": [
+     15.43,
+     15.8,
+     14.07,
+     13.98
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 58.21,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.134,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 15.02,
+   "wall_s": 11.2,
+   "band": "axis"
+  },
+  {
+   "id": "axis|top|diag3",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    2.1213203435596424,
+    2.1213203435596424
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 17.82,
+   "t_crawler_liftoff_s": 18.56,
+   "t_done_s": 36.72,
+   "t_ready_s": 36.74,
+   "min_true_cyl_force_kN": 49.54,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 130.6,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.96,
+    115.63,
+    71.73,
+    71.77
+   ],
+   "final_clearance_mm": 48.7,
+   "events": [
+    [
+     27.06,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    36.74
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 36.74,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    559.48,
+    656.55,
+    374.31,
+    462.77
+   ],
+   "s_final_mm": [
+    559.2,
+    656.27,
+    373.97,
+    462.51
+   ],
+   "s_overshoot_mm": 0.28,
+   "s_overshoot_any_leg_mm": 0.34,
+   "min_true_crawler_clearance_post_lift_mm": -2.0,
+   "ss_err_vs_target_deg": 0.0175,
+   "ss_att_mean_deg": [
+    0.0175,
+    0.0151
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 2.291,
+    "Ft_final_kN": [
+     4.15,
+     30.77,
+     29.14,
+     5.16
+    ],
+    "Ft_at_done_kN": [
+     4.15,
+     30.78,
+     29.14,
+     5.16
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 49.61,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 2.291,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 18.92,
+   "wall_s": 11.4,
+   "band": "axis"
+  },
+  {
+   "id": "axis|top|roll5.5",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    5.5,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.92,
+   "t_crawler_liftoff_s": 19.62,
+   "t_done_s": 41.78,
+   "t_ready_s": 41.8,
+   "min_true_cyl_force_kN": 45.09,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 150.8,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    117.41,
+    117.11,
+    73.42,
+    70.15
+   ],
+   "final_clearance_mm": 49.3,
+   "events": [
+    [
+     29.18,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    41.8
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 41.8,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    410.81,
+    664.78,
+    413.37,
+    644.49
+   ],
+   "s_final_mm": [
+    410.28,
+    664.14,
+    413.05,
+    644.07
+   ],
+   "s_overshoot_mm": 0.63,
+   "s_overshoot_any_leg_mm": 0.63,
+   "min_true_crawler_clearance_post_lift_mm": -11.7,
+   "ss_err_vs_target_deg": 0.0232,
+   "ss_att_mean_deg": [
+    0.0227,
+    0.0019
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.132,
+    "Ft_final_kN": [
+     51.68,
+     53.48,
+     36.06,
+     34.42
+    ],
+    "Ft_at_done_kN": [
+     51.61,
+     53.53,
+     36.04,
+     34.42
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 45.05,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.132,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 24.88,
+   "wall_s": 12.3,
+   "band": "axis"
+  },
+  {
+   "id": "axis|top|fdown3.5",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    3.5
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.94,
+   "t_crawler_liftoff_s": 17.56,
+   "t_done_s": 36.06,
+   "t_ready_s": 53.64,
+   "min_true_cyl_force_kN": 29.61,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 151.4,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.13,
+    116.43,
+    72.63,
+    70.91
+   ],
+   "final_clearance_mm": 49.1,
+   "events": [
+    [
+     20.72,
+     "crawler_zone_off"
+    ],
+    [
+     22.22,
+     "crawler_zone_rearm"
+    ],
+    [
+     25.48,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    53.64
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 36.08,
+     "what": "wait",
+     "theta_ground_deg": 3.755,
+     "P_stop_kN": [
+      45.0,
+      32.45,
+      32.45,
+      32.45
+     ],
+     "F_band_kN": 13.0
+    },
+    {
+     "t": 52.58,
+     "what": "finish",
+     "outcome": "completed"
+    }
+   ],
+   "s_max_seen_mm": [
+    661.0,
+    659.25,
+    355.72,
+    355.41
+   ],
+   "s_final_mm": [
+    659.32,
+    657.53,
+    351.56,
+    349.93
+   ],
+   "s_overshoot_mm": 1.68,
+   "s_overshoot_any_leg_mm": 5.48,
+   "min_true_crawler_clearance_post_lift_mm": -2.6,
+   "ss_err_vs_target_deg": 0.0374,
+   "ss_att_mean_deg": [
+    0.037,
+    0.0168
+   ],
+   "ra": {
+    "outcome": "completed",
+    "theta_ground_deg": 3.755,
+    "Ft_final_kN": [
+     16.32,
+     15.97,
+     15.41,
+     16.81
+    ],
+    "Ft_at_done_kN": [
+     36.52,
+     35.96,
+     36.55,
+     35.73
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 29.61,
+    "min_true_cyl_during_kN": 29.61,
+    "max_att_dev_deg": [
+     0.0017,
+     0.001
+    ],
+    "duration_s": 14.48,
+    "Ft_maxleg_start_kN": 36.54,
+    "Ft_maxleg_final_kN": 16.81,
+    "Ft_maxleg_reduction": 0.54,
+    "t_start_s": 38.1,
+    "t_end_s": 52.58,
+    "theta_crawler_abs_deg": 3.755,
+    "stop_readings_kN": [
+     44.73,
+     32.32,
+     32.39,
+     32.21
+    ]
+   },
+   "t_level_after_touch_s": 36.7,
+   "wall_s": 13.7,
+   "band": "axis"
+  },
+  {
+   "id": "axis|top|fup3.5",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    -3.5
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.44,
+   "t_crawler_liftoff_s": 17.6,
+   "t_done_s": 35.6,
+   "t_ready_s": 53.22,
+   "min_true_cyl_force_kN": 29.88,
+   "min_true_leg": "RR",
+   "max_pressure_bar": 151.2,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.87,
+    115.8,
+    71.69,
+    71.74
+   ],
+   "final_clearance_mm": 48.9,
+   "events": [
+    [
+     27.94,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    53.22
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 35.62,
+     "what": "wait",
+     "theta_ground_deg": -3.435,
+     "P_stop_kN": [
+      45.0,
+      32.45,
+      32.45,
+      32.45
+     ],
+     "F_band_kN": 13.0
+    },
+    {
+     "t": 52.16,
+     "what": "finish",
+     "outcome": "completed"
+    }
+   ],
+   "s_max_seen_mm": [
+    381.35,
+    379.48,
+    668.7,
+    667.27
+   ],
+   "s_final_mm": [
+    379.75,
+    377.87,
+    666.85,
+    665.27
+   ],
+   "s_overshoot_mm": 1.86,
+   "s_overshoot_any_leg_mm": 2.0,
+   "min_true_crawler_clearance_post_lift_mm": -7.2,
+   "ss_err_vs_target_deg": 0.0374,
+   "ss_att_mean_deg": [
+    0.0374,
+    0.0366
+   ],
+   "ra": {
+    "outcome": "completed",
+    "theta_ground_deg": -3.435,
+    "Ft_final_kN": [
+     15.84,
+     16.87,
+     15.75,
+     16.73
+    ],
+    "Ft_at_done_kN": [
+     35.69,
+     36.76,
+     36.17,
+     36.18
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 29.87,
+    "min_true_cyl_during_kN": 29.87,
+    "max_att_dev_deg": [
+     0.0018,
+     0.001
+    ],
+    "duration_s": 14.52,
+    "Ft_maxleg_start_kN": 36.75,
+    "Ft_maxleg_final_kN": 16.87,
+    "Ft_maxleg_reduction": 0.5409,
+    "t_start_s": 37.64,
+    "t_end_s": 52.16,
+    "theta_crawler_abs_deg": -3.435,
+    "stop_readings_kN": [
+     44.75,
+     32.32,
+     32.27,
+     31.97
+    ]
+   },
+   "t_level_after_touch_s": 36.78,
+   "wall_s": 13.9,
+   "band": "axis"
+  },
+  {
+   "id": "axis|middle|roll5.5",
+   "group": null,
+   "level": "middle",
+   "floor_deg": [
+    5.5,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.9,
+   "t_crawler_liftoff_s": 19.76,
+   "t_done_s": 41.34,
+   "t_ready_s": 41.36,
+   "min_true_cyl_force_kN": 55.33,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 131.4,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.87,
+    115.65,
+    71.82,
+    71.75
+   ],
+   "final_clearance_mm": 49.3,
+   "events": [
+    [
+     29.16,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    41.36
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 41.36,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    410.79,
+    664.6,
+    413.31,
+    644.54
+   ],
+   "s_final_mm": [
+    410.35,
+    664.03,
+    412.99,
+    644.11
+   ],
+   "s_overshoot_mm": 0.58,
+   "s_overshoot_any_leg_mm": 0.58,
+   "min_true_crawler_clearance_post_lift_mm": -11.7,
+   "ss_err_vs_target_deg": 0.0238,
+   "ss_att_mean_deg": [
+    0.0237,
+    0.0032
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.13,
+    "Ft_final_kN": [
+     52.17,
+     52.16,
+     35.73,
+     35.91
+    ],
+    "Ft_at_done_kN": [
+     52.17,
+     52.16,
+     35.73,
+     35.91
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 55.31,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.13,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 24.46,
+   "wall_s": 12.4,
+   "band": "axis"
+  },
+  {
+   "id": "axis|bottom|roll5.5",
+   "group": null,
+   "level": "bottom",
+   "floor_deg": [
+    5.5,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.7,
+   "t_crawler_liftoff_s": 19.64,
+   "t_done_s": 39.92,
+   "t_ready_s": 39.94,
+   "min_true_cyl_force_kN": 58.12,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 119.8,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.94,
+    115.58,
+    71.8,
+    71.76
+   ],
+   "final_clearance_mm": 49.3,
+   "events": [
+    [
+     28.94,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    39.94
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 39.94,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    410.62,
+    664.44,
+    413.42,
+    644.59
+   ],
+   "s_final_mm": [
+    410.32,
+    663.92,
+    413.1,
+    644.16
+   ],
+   "s_overshoot_mm": 0.52,
+   "s_overshoot_any_leg_mm": 0.52,
+   "min_true_crawler_clearance_post_lift_mm": -11.7,
+   "ss_err_vs_target_deg": 0.0252,
+   "ss_att_mean_deg": [
+    0.0252,
+    0.0052
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.111,
+    "Ft_final_kN": [
+     51.95,
+     51.92,
+     35.71,
+     35.94
+    ],
+    "Ft_at_done_kN": [
+     51.93,
+     51.93,
+     35.7,
+     35.95
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 58.11,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.111,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 23.24,
+   "wall_s": 12.4,
+   "band": "axis"
+  },
+  {
+   "id": "axis|top|flat|0->p+3",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": [
+    2.0,
+    [
+     0.0,
+     3.0
+    ]
+   ],
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [
+    "ss_err>0.2"
+   ],
+   "fails": [],
+   "t_touch_s": 16.88,
+   "t_crawler_liftoff_s": 17.34,
+   "t_done_s": 23.82,
+   "t_ready_s": 23.84,
+   "min_true_cyl_force_kN": 29.8,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 152.0,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    125.13,
+    123.5,
+    65.61,
+    64.39
+   ],
+   "final_clearance_mm": 48.8,
+   "events": [
+    [
+     18.38,
+     "crawler_zone_off"
+    ],
+    [
+     27.24,
+     "relevel"
+    ]
+   ],
+   "ready_times_s": [
+    23.84,
+    62.28
+   ],
+   "changed_at_s": 25.84,
+   "ra_reruns": 1,
+   "ra_events": [
+    {
+     "t": 23.84,
+     "what": "skip",
+     "reason": "theta_below_min"
+    },
+    {
+     "t": 45.84,
+     "what": "wait",
+     "theta_ground_deg": -2.998,
+     "P_stop_kN": [
+      45.0,
+      32.45,
+      32.45,
+      32.45
+     ],
+     "F_band_kN": 13.0
+    },
+    {
+     "t": 61.22,
+     "what": "finish",
+     "outcome": "completed"
+    }
+   ],
+   "s_max_seen_mm": [
+    407.12,
+    405.5,
+    627.81,
+    626.56
+   ],
+   "s_final_mm": [
+    383.75,
+    382.22,
+    626.47,
+    625.08
+   ],
+   "s_overshoot_mm": 1.35,
+   "s_overshoot_any_leg_mm": 23.36,
+   "s_max_after_change_mm": [
+    407.12,
+    405.46,
+    627.81,
+    626.56
+   ],
+   "min_true_crawler_clearance_after_change_mm": 33.3,
+   "min_true_cyl_after_change_kN": 29.8,
+   "t_change_to_ready_s": 36.44,
+   "att_overshoot_after_change_deg": [
+    0.0,
+    0.022
+   ],
+   "min_true_crawler_clearance_post_lift_mm": -2.1,
+   "ss_err_vs_target_deg": 0.0315,
+   "ss_att_mean_deg": [
+    0.0315,
+    3.0207
+   ],
+   "ra": {
+    "outcome": "completed",
+    "theta_ground_deg": -2.998,
+    "Ft_final_kN": [
+     25.73,
+     26.65,
+     15.64,
+     16.59
+    ],
+    "Ft_at_done_kN": [
+     1.6,
+     1.61,
+     1.63,
+     1.67
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 29.79,
+    "min_true_cyl_during_kN": 29.79,
+    "max_att_dev_deg": [
+     0.0014,
+     0.0008
+    ],
+    "duration_s": 13.36,
+    "Ft_maxleg_start_kN": 35.47,
+    "Ft_maxleg_final_kN": 26.65,
+    "Ft_maxleg_reduction": 0.2487,
+    "t_start_s": 47.86,
+    "t_end_s": 61.22,
+    "theta_crawler_abs_deg": 0.002,
+    "stop_readings_kN": [
+     43.82,
+     30.88,
+     32.03,
+     32.28
+    ]
+   },
+   "t_level_after_touch_s": 6.96,
+   "wall_s": 24.0,
+   "band": "axis"
+  },
+  {
+   "id": "joint|top|flat",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.88,
+   "t_crawler_liftoff_s": 17.34,
+   "t_done_s": 23.82,
+   "t_ready_s": 23.84,
+   "min_true_cyl_force_kN": 63.85,
+   "min_true_leg": "RR",
+   "max_pressure_bar": 120.1,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.17,
+    116.37,
+    72.47,
+    71.09
+   ],
+   "final_clearance_mm": 48.6,
+   "events": [
+    [
+     18.38,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    23.84
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 23.84,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    407.12,
+    405.5,
+    395.42,
+    393.9
+   ],
+   "s_final_mm": [
+    406.86,
+    405.21,
+    395.14,
+    393.65
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.29,
+   "min_true_crawler_clearance_post_lift_mm": -2.1,
+   "ss_err_vs_target_deg": 0.034,
+   "ss_att_mean_deg": [
+    0.0339,
+    0.0099
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.128,
+    "Ft_final_kN": [
+     1.63,
+     1.64,
+     1.59,
+     1.63
+    ],
+    "Ft_at_done_kN": [
+     1.6,
+     1.61,
+     1.63,
+     1.67
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 63.7,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.128,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 6.96,
+   "wall_s": 9.6,
+   "band": "joint"
+  },
+  {
+   "id": "joint|top|roll3",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    3.0,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.9,
+   "t_crawler_liftoff_s": 19.56,
+   "t_done_s": 30.8,
+   "t_ready_s": 30.82,
+   "min_true_cyl_force_kN": 58.33,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 133.1,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    119.15,
+    115.49,
+    72.17,
+    71.29
+   ],
+   "final_clearance_mm": 48.5,
+   "events": [
+    [
+     23.86,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    30.82
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 30.82,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    407.65,
+    545.33,
+    405.64,
+    531.23
+   ],
+   "s_final_mm": [
+    407.34,
+    545.08,
+    405.31,
+    530.86
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.37,
+   "min_true_crawler_clearance_post_lift_mm": -8.9,
+   "ss_err_vs_target_deg": 0.0283,
+   "ss_att_mean_deg": [
+    0.0186,
+    0.0283
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.134,
+    "Ft_final_kN": [
+     15.65,
+     15.58,
+     13.98,
+     14.09
+    ],
+    "Ft_at_done_kN": [
+     15.44,
+     15.76,
+     13.92,
+     14.12
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 58.33,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.134,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 13.92,
+   "wall_s": 11.4,
+   "band": "joint"
+  },
+  {
+   "id": "joint|top|diag3",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    2.1213203435596424,
+    2.1213203435596424
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 17.82,
+   "t_crawler_liftoff_s": 18.56,
+   "t_done_s": 36.72,
+   "t_ready_s": 36.74,
+   "min_true_cyl_force_kN": 49.54,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 130.6,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.96,
+    115.63,
+    71.73,
+    71.78
+   ],
+   "final_clearance_mm": 48.7,
+   "events": [
+    [
+     27.06,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    36.74
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 36.74,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    559.48,
+    656.47,
+    374.3,
+    462.71
+   ],
+   "s_final_mm": [
+    559.2,
+    656.2,
+    373.96,
+    462.44
+   ],
+   "s_overshoot_mm": 0.28,
+   "s_overshoot_any_leg_mm": 0.34,
+   "min_true_crawler_clearance_post_lift_mm": -2.0,
+   "ss_err_vs_target_deg": 0.019,
+   "ss_att_mean_deg": [
+    0.0189,
+    0.0151
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 2.291,
+    "Ft_final_kN": [
+     4.15,
+     30.76,
+     29.13,
+     5.17
+    ],
+    "Ft_at_done_kN": [
+     4.15,
+     30.76,
+     29.12,
+     5.17
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 49.61,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 2.291,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 18.92,
+   "wall_s": 12.7,
+   "band": "joint"
+  },
+  {
+   "id": "joint|top|roll5.5",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    5.5,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.92,
+   "t_crawler_liftoff_s": 19.62,
+   "t_done_s": 36.0,
+   "t_ready_s": 36.02,
+   "min_true_cyl_force_kN": 45.13,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 150.8,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    117.78,
+    116.86,
+    73.76,
+    69.7
+   ],
+   "final_clearance_mm": 48.2,
+   "events": [
+    [
+     29.2,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    36.02
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 36.02,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    409.38,
+    663.47,
+    414.25,
+    645.45
+   ],
+   "s_final_mm": [
+    409.07,
+    663.22,
+    413.91,
+    645.19
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.34,
+   "min_true_crawler_clearance_post_lift_mm": -12.5,
+   "ss_err_vs_target_deg": 0.0259,
+   "ss_att_mean_deg": [
+    0.0165,
+    0.0259
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.132,
+    "Ft_final_kN": [
+     51.81,
+     53.64,
+     36.35,
+     34.4
+    ],
+    "Ft_at_done_kN": [
+     51.44,
+     53.92,
+     36.24,
+     34.44
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 45.09,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.132,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 19.1,
+   "wall_s": 28.8,
+   "band": "joint"
+  },
+  {
+   "id": "joint|top|fdown3.5",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    3.5
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.94,
+   "t_crawler_liftoff_s": 17.56,
+   "t_done_s": 36.06,
+   "t_ready_s": 53.64,
+   "min_true_cyl_force_kN": 29.65,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 151.5,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.16,
+    116.39,
+    72.66,
+    70.88
+   ],
+   "final_clearance_mm": 49.1,
+   "events": [
+    [
+     20.72,
+     "crawler_zone_off"
+    ],
+    [
+     22.22,
+     "crawler_zone_rearm"
+    ],
+    [
+     25.42,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    53.64
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 36.08,
+     "what": "wait",
+     "theta_ground_deg": 3.755,
+     "P_stop_kN": [
+      45.0,
+      32.45,
+      32.45,
+      32.45
+     ],
+     "F_band_kN": 13.0
+    },
+    {
+     "t": 52.58,
+     "what": "finish",
+     "outcome": "completed"
+    }
+   ],
+   "s_max_seen_mm": [
+    660.62,
+    659.24,
+    355.69,
+    355.41
+   ],
+   "s_final_mm": [
+    658.94,
+    657.52,
+    351.21,
+    349.91
+   ],
+   "s_overshoot_mm": 1.68,
+   "s_overshoot_any_leg_mm": 5.5,
+   "min_true_crawler_clearance_post_lift_mm": -2.6,
+   "ss_err_vs_target_deg": 0.0295,
+   "ss_att_mean_deg": [
+    0.0291,
+    0.0169
+   ],
+   "ra": {
+    "outcome": "completed",
+    "theta_ground_deg": 3.755,
+    "Ft_final_kN": [
+     16.25,
+     16.04,
+     15.42,
+     16.79
+    ],
+    "Ft_at_done_kN": [
+     36.4,
+     36.01,
+     36.59,
+     35.74
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 29.64,
+    "min_true_cyl_during_kN": 29.64,
+    "max_att_dev_deg": [
+     0.0017,
+     0.001
+    ],
+    "duration_s": 14.48,
+    "Ft_maxleg_start_kN": 36.57,
+    "Ft_maxleg_final_kN": 16.79,
+    "Ft_maxleg_reduction": 0.5409,
+    "t_start_s": 38.1,
+    "t_end_s": 52.58,
+    "theta_crawler_abs_deg": 3.755,
+    "stop_readings_kN": [
+     44.68,
+     32.38,
+     32.36,
+     32.25
+    ]
+   },
+   "t_level_after_touch_s": 36.7,
+   "wall_s": 15.3,
+   "band": "joint"
+  },
+  {
+   "id": "joint|top|fup3.5",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    -3.5
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.44,
+   "t_crawler_liftoff_s": 17.6,
+   "t_done_s": 35.58,
+   "t_ready_s": 53.16,
+   "min_true_cyl_force_kN": 29.85,
+   "min_true_leg": "RR",
+   "max_pressure_bar": 151.0,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.92,
+    115.78,
+    71.72,
+    71.7
+   ],
+   "final_clearance_mm": 48.9,
+   "events": [
+    [
+     27.94,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    53.16
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 35.6,
+     "what": "wait",
+     "theta_ground_deg": -3.435,
+     "P_stop_kN": [
+      45.0,
+      32.45,
+      32.45,
+      32.45
+     ],
+     "F_band_kN": 13.0
+    },
+    {
+     "t": 52.1,
+     "what": "finish",
+     "outcome": "completed"
+    }
+   ],
+   "s_max_seen_mm": [
+    380.94,
+    379.46,
+    668.32,
+    667.19
+   ],
+   "s_final_mm": [
+    379.35,
+    377.86,
+    666.47,
+    665.25
+   ],
+   "s_overshoot_mm": 1.85,
+   "s_overshoot_any_leg_mm": 1.95,
+   "min_true_crawler_clearance_post_lift_mm": -7.2,
+   "ss_err_vs_target_deg": 0.0367,
+   "ss_att_mean_deg": [
+    0.029,
+    0.0366
+   ],
+   "ra": {
+    "outcome": "completed",
+    "theta_ground_deg": -3.435,
+    "Ft_final_kN": [
+     16.1,
+     16.9,
+     16.15,
+     16.6
+    ],
+    "Ft_at_done_kN": [
+     35.79,
+     36.67,
+     36.19,
+     36.16
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 29.84,
+    "min_true_cyl_during_kN": 29.84,
+    "max_att_dev_deg": [
+     0.0018,
+     0.001
+    ],
+    "duration_s": 14.48,
+    "Ft_maxleg_start_kN": 36.67,
+    "Ft_maxleg_final_kN": 16.9,
+    "Ft_maxleg_reduction": 0.5392,
+    "t_start_s": 37.62,
+    "t_end_s": 52.1,
+    "theta_crawler_abs_deg": -3.435,
+    "stop_readings_kN": [
+     44.8,
+     32.12,
+     32.36,
+     32.38
+    ]
+   },
+   "t_level_after_touch_s": 36.72,
+   "wall_s": 15.8,
+   "band": "joint"
+  },
+  {
+   "id": "joint|middle|roll5.5",
+   "group": null,
+   "level": "middle",
+   "floor_deg": [
+    5.5,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.9,
+   "t_crawler_liftoff_s": 19.74,
+   "t_done_s": 35.98,
+   "t_ready_s": 36.0,
+   "min_true_cyl_force_kN": 55.38,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 131.5,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.96,
+    115.64,
+    71.79,
+    71.69
+   ],
+   "final_clearance_mm": 48.3,
+   "events": [
+    [
+     29.18,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    36.0
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 36.0,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    409.47,
+    663.41,
+    414.08,
+    645.44
+   ],
+   "s_final_mm": [
+    409.16,
+    663.16,
+    413.75,
+    645.17
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.34,
+   "min_true_crawler_clearance_post_lift_mm": -12.0,
+   "ss_err_vs_target_deg": 0.0259,
+   "ss_att_mean_deg": [
+    0.0165,
+    0.0259
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.13,
+    "Ft_final_kN": [
+     52.2,
+     52.4,
+     35.94,
+     35.86
+    ],
+    "Ft_at_done_kN": [
+     52.14,
+     52.45,
+     35.93,
+     35.87
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 55.37,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.13,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 19.1,
+   "wall_s": 13.5,
+   "band": "joint"
+  },
+  {
+   "id": "joint|bottom|roll5.5",
+   "group": null,
+   "level": "bottom",
+   "floor_deg": [
+    5.5,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.7,
+   "t_crawler_liftoff_s": 19.62,
+   "t_done_s": 35.78,
+   "t_ready_s": 35.8,
+   "min_true_cyl_force_kN": 57.97,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 119.8,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    119.03,
+    115.55,
+    71.76,
+    71.75
+   ],
+   "final_clearance_mm": 48.3,
+   "events": [
+    [
+     28.94,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    35.8
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 35.8,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    409.5,
+    663.43,
+    414.07,
+    645.44
+   ],
+   "s_final_mm": [
+    409.18,
+    663.19,
+    413.73,
+    645.17
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.34,
+   "min_true_crawler_clearance_post_lift_mm": -11.7,
+   "ss_err_vs_target_deg": 0.0256,
+   "ss_att_mean_deg": [
+    0.0164,
+    0.0256
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.111,
+    "Ft_final_kN": [
+     52.02,
+     52.18,
+     35.94,
+     35.92
+    ],
+    "Ft_at_done_kN": [
+     52.08,
+     52.13,
+     35.97,
+     35.9
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 57.94,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.111,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 19.1,
+   "wall_s": 13.6,
+   "band": "joint"
+  },
+  {
+   "id": "joint|top|flat|0->p+3",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": [
+    2.0,
+    [
+     0.0,
+     3.0
+    ]
+   ],
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [
+    "ss_err>0.2"
+   ],
+   "fails": [],
+   "t_touch_s": 16.88,
+   "t_crawler_liftoff_s": 17.34,
+   "t_done_s": 23.82,
+   "t_ready_s": 23.84,
+   "min_true_cyl_force_kN": 29.8,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 152.0,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    125.13,
+    123.5,
+    65.61,
+    64.39
+   ],
+   "final_clearance_mm": 48.8,
+   "events": [
+    [
+     18.38,
+     "crawler_zone_off"
+    ],
+    [
+     27.24,
+     "relevel"
+    ]
+   ],
+   "ready_times_s": [
+    23.84,
+    62.28
+   ],
+   "changed_at_s": 25.84,
+   "ra_reruns": 1,
+   "ra_events": [
+    {
+     "t": 23.84,
+     "what": "skip",
+     "reason": "theta_below_min"
+    },
+    {
+     "t": 45.84,
+     "what": "wait",
+     "theta_ground_deg": -2.998,
+     "P_stop_kN": [
+      45.0,
+      32.45,
+      32.45,
+      32.45
+     ],
+     "F_band_kN": 13.0
+    },
+    {
+     "t": 61.22,
+     "what": "finish",
+     "outcome": "completed"
+    }
+   ],
+   "s_max_seen_mm": [
+    407.12,
+    405.5,
+    627.81,
+    626.56
+   ],
+   "s_final_mm": [
+    383.75,
+    382.22,
+    626.47,
+    625.08
+   ],
+   "s_overshoot_mm": 1.35,
+   "s_overshoot_any_leg_mm": 23.36,
+   "s_max_after_change_mm": [
+    407.12,
+    405.46,
+    627.81,
+    626.56
+   ],
+   "min_true_crawler_clearance_after_change_mm": 33.3,
+   "min_true_cyl_after_change_kN": 29.8,
+   "t_change_to_ready_s": 36.44,
+   "att_overshoot_after_change_deg": [
+    0.0,
+    0.022
+   ],
+   "min_true_crawler_clearance_post_lift_mm": -2.1,
+   "ss_err_vs_target_deg": 0.0315,
+   "ss_att_mean_deg": [
+    0.0315,
+    3.0207
+   ],
+   "ra": {
+    "outcome": "completed",
+    "theta_ground_deg": -2.998,
+    "Ft_final_kN": [
+     25.73,
+     26.65,
+     15.64,
+     16.59
+    ],
+    "Ft_at_done_kN": [
+     1.6,
+     1.61,
+     1.63,
+     1.67
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 29.79,
+    "min_true_cyl_during_kN": 29.79,
+    "max_att_dev_deg": [
+     0.0014,
+     0.0008
+    ],
+    "duration_s": 13.36,
+    "Ft_maxleg_start_kN": 35.47,
+    "Ft_maxleg_final_kN": 26.65,
+    "Ft_maxleg_reduction": 0.2487,
+    "t_start_s": 47.86,
+    "t_end_s": 61.22,
+    "theta_crawler_abs_deg": 0.002,
+    "stop_readings_kN": [
+     43.82,
+     30.88,
+     32.03,
+     32.28
+    ]
+   },
+   "t_level_after_touch_s": 6.96,
+   "wall_s": 25.7,
+   "band": "joint"
+  },
+  {
+   "id": "joint+reset|top|flat",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.88,
+   "t_crawler_liftoff_s": 17.34,
+   "t_done_s": 23.82,
+   "t_ready_s": 23.84,
+   "min_true_cyl_force_kN": 63.85,
+   "min_true_leg": "RR",
+   "max_pressure_bar": 120.1,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.17,
+    116.37,
+    72.47,
+    71.09
+   ],
+   "final_clearance_mm": 48.6,
+   "events": [
+    [
+     18.38,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    23.84
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 23.84,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    407.12,
+    405.5,
+    395.42,
+    393.9
+   ],
+   "s_final_mm": [
+    406.86,
+    405.21,
+    395.14,
+    393.65
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.29,
+   "min_true_crawler_clearance_post_lift_mm": -2.1,
+   "ss_err_vs_target_deg": 0.034,
+   "ss_att_mean_deg": [
+    0.0339,
+    0.0099
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.128,
+    "Ft_final_kN": [
+     1.63,
+     1.64,
+     1.59,
+     1.63
+    ],
+    "Ft_at_done_kN": [
+     1.6,
+     1.61,
+     1.63,
+     1.67
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 63.7,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.128,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 6.96,
+   "wall_s": 11.0,
+   "band": "joint+reset"
+  },
+  {
+   "id": "joint+reset|top|roll3",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    3.0,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.9,
+   "t_crawler_liftoff_s": 19.56,
+   "t_done_s": 30.8,
+   "t_ready_s": 30.82,
+   "min_true_cyl_force_kN": 58.33,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 133.1,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    119.15,
+    115.49,
+    72.17,
+    71.29
+   ],
+   "final_clearance_mm": 48.5,
+   "events": [
+    [
+     23.86,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    30.82
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 30.82,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    407.65,
+    545.33,
+    405.64,
+    531.23
+   ],
+   "s_final_mm": [
+    407.34,
+    545.08,
+    405.31,
+    530.86
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.37,
+   "min_true_crawler_clearance_post_lift_mm": -8.9,
+   "ss_err_vs_target_deg": 0.0283,
+   "ss_att_mean_deg": [
+    0.0186,
+    0.0283
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.134,
+    "Ft_final_kN": [
+     15.65,
+     15.58,
+     13.98,
+     14.09
+    ],
+    "Ft_at_done_kN": [
+     15.44,
+     15.76,
+     13.92,
+     14.12
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 58.33,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.134,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 13.92,
+   "wall_s": 12.0,
+   "band": "joint+reset"
+  },
+  {
+   "id": "joint+reset|top|diag3",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    2.1213203435596424,
+    2.1213203435596424
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 17.82,
+   "t_crawler_liftoff_s": 18.56,
+   "t_done_s": 36.72,
+   "t_ready_s": 36.74,
+   "min_true_cyl_force_kN": 49.54,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 130.6,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.96,
+    115.63,
+    71.73,
+    71.78
+   ],
+   "final_clearance_mm": 48.7,
+   "events": [
+    [
+     27.06,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    36.74
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 36.74,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    559.48,
+    656.47,
+    374.3,
+    462.71
+   ],
+   "s_final_mm": [
+    559.2,
+    656.2,
+    373.96,
+    462.44
+   ],
+   "s_overshoot_mm": 0.28,
+   "s_overshoot_any_leg_mm": 0.34,
+   "min_true_crawler_clearance_post_lift_mm": -2.0,
+   "ss_err_vs_target_deg": 0.019,
+   "ss_att_mean_deg": [
+    0.0189,
+    0.0151
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 2.291,
+    "Ft_final_kN": [
+     4.15,
+     30.76,
+     29.13,
+     5.17
+    ],
+    "Ft_at_done_kN": [
+     4.15,
+     30.76,
+     29.12,
+     5.17
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 49.61,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 2.291,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 18.92,
+   "wall_s": 13.5,
+   "band": "joint+reset"
+  },
+  {
+   "id": "joint+reset|top|roll5.5",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    5.5,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.92,
+   "t_crawler_liftoff_s": 19.62,
+   "t_done_s": 36.0,
+   "t_ready_s": 36.02,
+   "min_true_cyl_force_kN": 45.13,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 150.8,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    117.78,
+    116.86,
+    73.76,
+    69.7
+   ],
+   "final_clearance_mm": 48.2,
+   "events": [
+    [
+     29.2,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    36.02
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 36.02,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    409.38,
+    663.47,
+    414.25,
+    645.45
+   ],
+   "s_final_mm": [
+    409.07,
+    663.22,
+    413.91,
+    645.19
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.34,
+   "min_true_crawler_clearance_post_lift_mm": -12.5,
+   "ss_err_vs_target_deg": 0.0259,
+   "ss_att_mean_deg": [
+    0.0165,
+    0.0259
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.132,
+    "Ft_final_kN": [
+     51.81,
+     53.64,
+     36.35,
+     34.4
+    ],
+    "Ft_at_done_kN": [
+     51.44,
+     53.92,
+     36.24,
+     34.44
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 45.09,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.132,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 19.1,
+   "wall_s": 13.3,
+   "band": "joint+reset"
+  },
+  {
+   "id": "joint+reset|top|fdown3.5",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    3.5
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.94,
+   "t_crawler_liftoff_s": 17.56,
+   "t_done_s": 36.06,
+   "t_ready_s": 53.64,
+   "min_true_cyl_force_kN": 29.65,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 151.5,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.16,
+    116.39,
+    72.66,
+    70.88
+   ],
+   "final_clearance_mm": 49.1,
+   "events": [
+    [
+     20.72,
+     "crawler_zone_off"
+    ],
+    [
+     22.22,
+     "crawler_zone_rearm"
+    ],
+    [
+     25.42,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    53.64
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 36.08,
+     "what": "wait",
+     "theta_ground_deg": 3.755,
+     "P_stop_kN": [
+      45.0,
+      32.45,
+      32.45,
+      32.45
+     ],
+     "F_band_kN": 13.0
+    },
+    {
+     "t": 52.58,
+     "what": "finish",
+     "outcome": "completed"
+    }
+   ],
+   "s_max_seen_mm": [
+    660.62,
+    659.24,
+    355.69,
+    355.41
+   ],
+   "s_final_mm": [
+    658.94,
+    657.52,
+    351.21,
+    349.91
+   ],
+   "s_overshoot_mm": 1.68,
+   "s_overshoot_any_leg_mm": 5.5,
+   "min_true_crawler_clearance_post_lift_mm": -2.6,
+   "ss_err_vs_target_deg": 0.0295,
+   "ss_att_mean_deg": [
+    0.0291,
+    0.0169
+   ],
+   "ra": {
+    "outcome": "completed",
+    "theta_ground_deg": 3.755,
+    "Ft_final_kN": [
+     16.25,
+     16.04,
+     15.42,
+     16.79
+    ],
+    "Ft_at_done_kN": [
+     36.4,
+     36.01,
+     36.59,
+     35.74
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 29.64,
+    "min_true_cyl_during_kN": 29.64,
+    "max_att_dev_deg": [
+     0.0017,
+     0.001
+    ],
+    "duration_s": 14.48,
+    "Ft_maxleg_start_kN": 36.57,
+    "Ft_maxleg_final_kN": 16.79,
+    "Ft_maxleg_reduction": 0.5409,
+    "t_start_s": 38.1,
+    "t_end_s": 52.58,
+    "theta_crawler_abs_deg": 3.755,
+    "stop_readings_kN": [
+     44.68,
+     32.38,
+     32.36,
+     32.25
+    ]
+   },
+   "t_level_after_touch_s": 36.7,
+   "wall_s": 16.4,
+   "band": "joint+reset"
+  },
+  {
+   "id": "joint+reset|top|fup3.5",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    -3.5
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.44,
+   "t_crawler_liftoff_s": 17.6,
+   "t_done_s": 35.58,
+   "t_ready_s": 53.16,
+   "min_true_cyl_force_kN": 29.85,
+   "min_true_leg": "RR",
+   "max_pressure_bar": 151.0,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.92,
+    115.78,
+    71.72,
+    71.7
+   ],
+   "final_clearance_mm": 48.9,
+   "events": [
+    [
+     27.94,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    53.16
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 35.6,
+     "what": "wait",
+     "theta_ground_deg": -3.435,
+     "P_stop_kN": [
+      45.0,
+      32.45,
+      32.45,
+      32.45
+     ],
+     "F_band_kN": 13.0
+    },
+    {
+     "t": 52.1,
+     "what": "finish",
+     "outcome": "completed"
+    }
+   ],
+   "s_max_seen_mm": [
+    380.94,
+    379.46,
+    668.32,
+    667.19
+   ],
+   "s_final_mm": [
+    379.35,
+    377.86,
+    666.47,
+    665.25
+   ],
+   "s_overshoot_mm": 1.85,
+   "s_overshoot_any_leg_mm": 1.95,
+   "min_true_crawler_clearance_post_lift_mm": -7.2,
+   "ss_err_vs_target_deg": 0.0367,
+   "ss_att_mean_deg": [
+    0.029,
+    0.0366
+   ],
+   "ra": {
+    "outcome": "completed",
+    "theta_ground_deg": -3.435,
+    "Ft_final_kN": [
+     16.1,
+     16.9,
+     16.15,
+     16.6
+    ],
+    "Ft_at_done_kN": [
+     35.79,
+     36.67,
+     36.19,
+     36.16
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 29.84,
+    "min_true_cyl_during_kN": 29.84,
+    "max_att_dev_deg": [
+     0.0018,
+     0.001
+    ],
+    "duration_s": 14.48,
+    "Ft_maxleg_start_kN": 36.67,
+    "Ft_maxleg_final_kN": 16.9,
+    "Ft_maxleg_reduction": 0.5392,
+    "t_start_s": 37.62,
+    "t_end_s": 52.1,
+    "theta_crawler_abs_deg": -3.435,
+    "stop_readings_kN": [
+     44.8,
+     32.12,
+     32.36,
+     32.38
+    ]
+   },
+   "t_level_after_touch_s": 36.72,
+   "wall_s": 17.4,
+   "band": "joint+reset"
+  },
+  {
+   "id": "joint+reset|middle|roll5.5",
+   "group": null,
+   "level": "middle",
+   "floor_deg": [
+    5.5,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.9,
+   "t_crawler_liftoff_s": 19.74,
+   "t_done_s": 35.98,
+   "t_ready_s": 36.0,
+   "min_true_cyl_force_kN": 55.38,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 131.5,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    118.96,
+    115.64,
+    71.79,
+    71.69
+   ],
+   "final_clearance_mm": 48.3,
+   "events": [
+    [
+     29.18,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    36.0
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 36.0,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    409.47,
+    663.41,
+    414.08,
+    645.44
+   ],
+   "s_final_mm": [
+    409.16,
+    663.16,
+    413.75,
+    645.17
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.34,
+   "min_true_crawler_clearance_post_lift_mm": -12.0,
+   "ss_err_vs_target_deg": 0.0259,
+   "ss_att_mean_deg": [
+    0.0165,
+    0.0259
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.13,
+    "Ft_final_kN": [
+     52.2,
+     52.4,
+     35.94,
+     35.86
+    ],
+    "Ft_at_done_kN": [
+     52.14,
+     52.45,
+     35.93,
+     35.87
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 55.37,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.13,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 19.1,
+   "wall_s": 25.0,
+   "band": "joint+reset"
+  },
+  {
+   "id": "joint+reset|bottom|roll5.5",
+   "group": null,
+   "level": "bottom",
+   "floor_deg": [
+    5.5,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": null,
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [],
+   "fails": [],
+   "t_touch_s": 16.7,
+   "t_crawler_liftoff_s": 19.62,
+   "t_done_s": 35.78,
+   "t_ready_s": 35.8,
+   "min_true_cyl_force_kN": 57.97,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 119.8,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    119.03,
+    115.55,
+    71.76,
+    71.75
+   ],
+   "final_clearance_mm": 48.3,
+   "events": [
+    [
+     28.94,
+     "crawler_zone_off"
+    ]
+   ],
+   "ready_times_s": [
+    35.8
+   ],
+   "changed_at_s": null,
+   "ra_reruns": 0,
+   "ra_events": [
+    {
+     "t": 35.8,
+     "what": "skip",
+     "reason": "theta_below_min"
+    }
+   ],
+   "s_max_seen_mm": [
+    409.5,
+    663.43,
+    414.07,
+    645.44
+   ],
+   "s_final_mm": [
+    409.18,
+    663.19,
+    413.73,
+    645.17
+   ],
+   "s_overshoot_mm": 0.25,
+   "s_overshoot_any_leg_mm": 0.34,
+   "min_true_crawler_clearance_post_lift_mm": -11.7,
+   "ss_err_vs_target_deg": 0.0256,
+   "ss_att_mean_deg": [
+    0.0164,
+    0.0256
+   ],
+   "ra": {
+    "outcome": "skipped:theta_below_min",
+    "theta_ground_deg": 0.111,
+    "Ft_final_kN": [
+     52.02,
+     52.18,
+     35.94,
+     35.92
+    ],
+    "Ft_at_done_kN": [
+     52.08,
+     52.13,
+     35.97,
+     35.9
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 57.94,
+    "min_true_cyl_during_kN": null,
+    "max_att_dev_deg": null,
+    "duration_s": null,
+    "Ft_maxleg_start_kN": null,
+    "Ft_maxleg_final_kN": null,
+    "Ft_maxleg_reduction": null,
+    "t_start_s": null,
+    "t_end_s": null,
+    "theta_crawler_abs_deg": 0.111,
+    "stop_readings_kN": []
+   },
+   "t_level_after_touch_s": 19.1,
+   "wall_s": 13.8,
+   "band": "joint+reset"
+  },
+  {
+   "id": "joint+reset|top|flat|0->p+3",
+   "group": null,
+   "level": "top",
+   "floor_deg": [
+    0.0,
+    0.0
+   ],
+   "target_deg": [
+    0.0,
+    0.0
+   ],
+   "change": [
+    2.0,
+    [
+     0.0,
+     3.0
+    ]
+   ],
+   "ra_mode": "rel",
+   "contact": "pressure",
+   "fails_raw": [
+    "ss_err>0.2"
+   ],
+   "fails": [],
+   "t_touch_s": 16.88,
+   "t_crawler_liftoff_s": 17.34,
+   "t_done_s": 23.82,
+   "t_ready_s": 23.84,
+   "min_true_cyl_force_kN": 29.76,
+   "min_true_leg": "RL",
+   "max_pressure_bar": 152.0,
+   "stroke_limit_steps": 0,
+   "force_sat_210bar_steps": 0,
+   "levelled_loads_true_kN": [
+    125.18,
+    123.53,
+    65.59,
+    64.34
+   ],
+   "final_clearance_mm": 48.8,
+   "events": [
+    [
+     18.38,
+     "crawler_zone_off"
+    ],
+    [
+     27.24,
+     "relevel"
+    ]
+   ],
+   "ready_times_s": [
+    23.84,
+    62.22
+   ],
+   "changed_at_s": 25.84,
+   "ra_reruns": 1,
+   "ra_events": [
+    {
+     "t": 23.84,
+     "what": "skip",
+     "reason": "theta_below_min"
+    },
+    {
+     "t": 45.82,
+     "what": "wait",
+     "theta_ground_deg": -2.998,
+     "P_stop_kN": [
+      45.0,
+      32.45,
+      32.45,
+      32.45
+     ],
+     "F_band_kN": 13.0
+    },
+    {
+     "t": 61.16,
+     "what": "finish",
+     "outcome": "completed"
+    }
+   ],
+   "s_max_seen_mm": [
+    407.12,
+    405.5,
+    628.89,
+    627.79
+   ],
+   "s_final_mm": [
+    383.49,
+    382.12,
+    627.51,
+    626.28
+   ],
+   "s_overshoot_mm": 1.38,
+   "s_overshoot_any_leg_mm": 23.63,
+   "s_max_after_change_mm": [
+    407.12,
+    405.46,
+    628.89,
+    627.79
+   ],
+   "min_true_crawler_clearance_after_change_mm": 33.3,
+   "min_true_cyl_after_change_kN": 29.76,
+   "t_change_to_ready_s": 36.38,
+   "att_overshoot_after_change_deg": [
+    0.0,
+    0.0378
+   ],
+   "min_true_crawler_clearance_post_lift_mm": -2.1,
+   "ss_err_vs_target_deg": 0.0361,
+   "ss_att_mean_deg": [
+    0.0278,
+    3.0361
+   ],
+   "ra": {
+    "outcome": "completed",
+    "theta_ground_deg": -2.998,
+    "Ft_final_kN": [
+     25.79,
+     26.67,
+     15.63,
+     16.59
+    ],
+    "Ft_at_done_kN": [
+     1.6,
+     1.61,
+     1.63,
+     1.67
+    ],
+    "min_true_cyl_post_liftoff_substep_kN": 29.76,
+    "min_true_cyl_during_kN": 29.76,
+    "max_att_dev_deg": [
+     0.0013,
+     0.0008
+    ],
+    "duration_s": 13.32,
+    "Ft_maxleg_start_kN": 35.78,
+    "Ft_maxleg_final_kN": 26.67,
+    "Ft_maxleg_reduction": 0.2544,
+    "t_start_s": 47.84,
+    "t_end_s": 61.16,
+    "theta_crawler_abs_deg": 0.002,
+    "stop_readings_kN": [
+     44.83,
+     31.55,
+     32.29,
+     32.26
+    ]
+   },
+   "t_level_after_touch_s": 6.96,
+   "wall_s": 22.8,
+   "band": "joint+reset"
+  }
+ ],
+ "runtime_s": 74.19717288017273
+}

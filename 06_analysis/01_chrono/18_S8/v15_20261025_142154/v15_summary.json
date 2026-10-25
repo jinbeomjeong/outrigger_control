@@ -1,0 +1,677 @@
+{
+ "batch": "07_results\\S8\\v15_20261025_142154",
+ "cases": {
+  "V15a_L4_head": {
+   "summary": {
+    "n_checks": 17,
+    "n_failed": 0,
+    "failed": []
+   },
+   "metrics": {
+    "smooth_window_samples": 20,
+    "F_min_N": 9414.58911,
+    "F_min_true": {
+     "mm": 11.183016717698152,
+     "leg": "RL",
+     "t_s": 115.33090799553295
+    },
+    "F_min_net_reading": {
+     "mm": 11.797819331706723,
+     "leg": "RL",
+     "t_s": 121.4789341390588
+    },
+    "liftoff": {
+     "mm": 13.063530425245663,
+     "leg": "RL",
+     "t_s": 134.13600000413024
+    },
+    "lam_end_mm": 13.074430425542015,
+    "at_liftoff": {
+     "true_N": [
+      182894.1887424469,
+      51050.21753206253,
+      -701.8198694229126,
+      143232.91349687576
+     ],
+     "net_N": [
+      186883.75681095122,
+      55034.16411762238,
+      2188.5540195465087,
+      139910.1177230835
+     ],
+     "f_N": [
+      -3989.5680686414244,
+      -3983.9465855419635,
+      -2890.37388907969,
+      3322.7957738488913
+     ],
+     "N_N": [
+      183942.08623924255,
+      52086.56291780472,
+      0.0,
+      143907.38292646408
+     ],
+     "stuck_fraction": [
+      0.9680000000022119,
+      0.9864999999990687,
+      0.9915000000000873,
+      0.885500000002503
+     ],
+     "edge_deficit_N": [
+      10.431931358575639,
+      16.053414458036514,
+      442.8261109203104,
+      10.404226151109015
+     ],
+     "lifting_leg": "RL",
+     "lifting_leg_deficit_vs_upper_N (F + F_s - G)": 442.8261110305789
+    },
+    "last_0p1mm": {
+     "n_blocks": 999,
+     "hf_rod_force_std_1ms_N": [
+      6.541440051908932,
+      4.285946278292746,
+      176.77694646642,
+      1.3143269254359127
+     ]
+    },
+    "last_0p2s": {
+     "leg": "RL",
+     "n_blocks": 200,
+     "n_blocks_N_min_zero": 200
+    },
+    "W1": {
+     "t_s": [
+      115.33090799553295,
+      131.31800000323577
+     ],
+     "n_blocks": 15987,
+     "lam_mm": [
+      11.183025918415357,
+      12.78162591757398
+     ],
+     "edge_deficit_mean_N": [
+      6.998154125425022,
+      9.549923149637403,
+      8.070372412639651,
+      9.70444052214153
+     ],
+     "edge_deficit_max_1ms_N": [
+      22.265120393031793,
+      36.49787387232482,
+      42.146460510885845,
+      29.544307386098353
+     ],
+     "edge_track_mean_N (G - (F - sigma F_s))": [
+      -6.99815412542476,
+      -9.549923149637427,
+      -8.070372412639657,
+      9.70444052214864
+     ],
+     "stuck_fraction_mean": [
+      0.5022643397760138,
+      0.918183524113202,
+      0.9358728967284404,
+      0.761837743166306
+     ],
+     "piston_slip_um": [
+      1307.9673894990096,
+      262.237131773535,
+      400.48833768169254,
+      -402.50148665044173
+     ],
+     "end_source": "timeline.fine_start_t_s"
+    }
+   },
+   "D_f_J": 72.00451996673462,
+   "ledger": {
+    "rule": "L-1 (dynamics_model.md 5.29.7)",
+    "change_J": {
+     "E_kin_J": 0.00488992405688668,
+     "E_grav_J": 1487.7864810148021,
+     "U_lat_J": 0.046859039701530006,
+     "U_ax_J": 461.4607358846797,
+     "D_visc_J": -17.76985727653489,
+     "D_f_J": 72.07427983054492,
+     "W_m_J": 2033.3032100029784,
+     "W_L_J": -12.076966136861389,
+     "W_res_J": 0.0,
+     "W_switch_J": 0.0
+    },
+    "dissipation_J": 54.30442255401003,
+    "D_f_J": 72.07427983054492,
+    "D_visc_J": -17.76985727653489,
+    "D_cb_J": 0.0,
+    "E_ref_J": 72.07427983054492,
+    "R_end_J": -17.62285544880538,
+    "R_max_J": 0.008075339440123933,
+    "R_min_J": -17.62622966705382,
+    "R_smooth_end_J": -17.60881084391043,
+    "R_smooth_max_J": -0.004389387559834008,
+    "creation_rel_raw": 0.00011204190259146539,
+    "creation_rel_smooth": -6.0900886837218105e-05,
+    "R_mech_end_J": 0.14700182772950754,
+    "R_mech_max_J": 0.21169890122568802,
+    "R_mech_min_J": -0.02356336747721194,
+    "R_mech_smooth_end_J": 0.13997578972976044,
+    "R_mech_end_over_D_f": 0.0019421045906925455,
+    "R_mech_end_over_D_f_raw": 0.002039587881767616,
+    "judged": true,
+    "creation_raw_flag": false,
+    "D_visc": {
+     "D_visc_J": -17.76985727653489,
+     "D_visc_ax_J": null,
+     "D_visc_lat_J": null,
+     "split_note": "record has no axial / lateral split (recorder before L-1)",
+     "rate_W": -0.13591336716001678,
+     "rate_coarse_W": -0.06169566421938493,
+     "time_coarse_s": 127.8170000032328,
+     "rate_fine_1e-5_W": -3.376871390389124,
+     "time_fine_1e-5_s": 2.9270000009290698,
+     "note": "negative D_visc: lagged dashpot - NSC noise loop (5.29.5); excluded from E_ref, removed in R_mech"
+    },
+    "check_1": true,
+    "check_4": true
+   },
+   "checks": [
+    {
+     "row": "V15(a)",
+     "name": "true F_min threshold [mm]",
+     "value": 11.183016717698152,
+     "reference": 11.2521,
+     "tolerance": "+-5%",
+     "passed": true,
+     "note": "rel -0.6140%"
+    },
+    {
+     "row": "V15(a)",
+     "name": "true F_min threshold [mm]: leg",
+     "value": "RL",
+     "reference": "RL",
+     "tolerance": "equal",
+     "passed": true,
+     "note": ""
+    },
+    {
+     "row": "V15(a)",
+     "name": "net reading F_min threshold [mm]",
+     "value": 11.797819331706723,
+     "reference": 11.8729,
+     "tolerance": "+-5%",
+     "passed": true,
+     "note": "rel -0.6324%"
+    },
+    {
+     "row": "V15(a)",
+     "name": "net reading F_min threshold [mm]: leg",
+     "value": "RL",
+     "reference": "RL",
+     "tolerance": "equal",
+     "passed": true,
+     "note": ""
+    },
+    {
+     "row": "V15(a)",
+     "name": "lift-off threshold [mm]",
+     "value": 13.063530425245663,
+     "reference": 13.14,
+     "tolerance": "+-5%",
+     "passed": true,
+     "note": "rel -0.5820%"
+    },
+    {
+     "row": "V15(a)",
+     "name": "lift-off threshold [mm]: leg",
+     "value": "RL",
+     "reference": "RL",
+     "tolerance": "equal",
+     "passed": true,
+     "note": ""
+    },
+    {
+     "row": "V15(a) A-2(i)",
+     "name": "RL true force at lift-off F + m g [N]",
+     "value": 15.664130577087462,
+     "reference": 0.0,
+     "tolerance": "+-300 N",
+     "passed": true,
+     "note": "F -701.8 N, -m g -717.5 N"
+    },
+    {
+     "row": "V15(a) A-2(ii)",
+     "name": "RL W1 mean G - (F + F_s) [N]",
+     "value": -8.070372412639657,
+     "reference": 0.0,
+     "tolerance": "+-300 N",
+     "passed": true,
+     "note": "W1 [115.33090799553295, 131.31800000323577] s, 15987 blocks"
+    },
+    {
+     "row": "V15(a) A-2(iii)",
+     "name": "RL net reading at lift-off in the band [N]",
+     "value": 2188.5540195465087,
+     "reference": [
+      -4035.019869422913,
+      2931.3801305770876
+     ],
+     "tolerance": "F - F_s <= G <= F + F_s + 300 N",
+     "passed": true,
+     "note": "deficit F + F_s - G +442.8 N (reference G 2615.7 N)"
+    },
+    {
+     "row": "V15(a)",
+     "name": "friction sign at lift-off (FL FR RL RR)",
+     "value": [
+      -1.0,
+      -1.0,
+      -1.0,
+      1.0
+     ],
+     "reference": [
+      -1.0,
+      -1.0,
+      -1.0,
+      1.0
+     ],
+     "tolerance": "equal",
+     "passed": true,
+     "note": ""
+    },
+    {
+     "row": "V15(a) A-1",
+     "name": "FL sliding in W1",
+     "value": {
+      "deficit_mean_N": 6.998154125425022,
+      "piston_slip_um": 1307.9673894990096
+     },
+     "reference": {
+      "deficit_max_N": 80.0,
+      "slip_sign": 1.0,
+      "slip_min_um": 10.0
+     },
+     "tolerance": "deficit <= max(0.02 F_s, 50 N), sign, |slip| >= 10 um",
+     "passed": true,
+     "note": "deficit ok, sign ok, length ok"
+    },
+    {
+     "row": "V15(a) A-1",
+     "name": "FR sliding in W1",
+     "value": {
+      "deficit_mean_N": 9.549923149637403,
+      "piston_slip_um": 262.237131773535
+     },
+     "reference": {
+      "deficit_max_N": 80.0,
+      "slip_sign": 1.0,
+      "slip_min_um": 10.0
+     },
+     "tolerance": "deficit <= max(0.02 F_s, 50 N), sign, |slip| >= 10 um",
+     "passed": true,
+     "note": "deficit ok, sign ok, length ok"
+    },
+    {
+     "row": "V15(a) A-1",
+     "name": "RL sliding in W1",
+     "value": {
+      "deficit_mean_N": 8.070372412639651,
+      "piston_slip_um": 400.48833768169254
+     },
+     "reference": {
+      "deficit_max_N": 66.664,
+      "slip_sign": 1.0,
+      "slip_min_um": 10.0
+     },
+     "tolerance": "deficit <= max(0.02 F_s, 50 N), sign, |slip| >= 10 um",
+     "passed": true,
+     "note": "deficit ok, sign ok, length ok"
+    },
+    {
+     "row": "V15(a) A-1",
+     "name": "RR sliding in W1",
+     "value": {
+      "deficit_mean_N": 9.70444052214153,
+      "piston_slip_um": -402.50148665044173
+     },
+     "reference": {
+      "deficit_max_N": 66.664,
+      "slip_sign": -1.0,
+      "slip_min_um": 10.0
+     },
+     "tolerance": "deficit <= max(0.02 F_s, 50 N), sign, |slip| >= 10 um",
+     "passed": true,
+     "note": "deficit ok, sign ok, length ok"
+    },
+    {
+     "row": "V15(a) A-3 record",
+     "name": "stuck fraction at lift-off (FL FR RL RR)",
+     "value": [
+      0.9680000000022119,
+      0.9864999999990687,
+      0.9915000000000873,
+      0.885500000002503
+     ],
+     "reference": null,
+     "tolerance": "record",
+     "passed": null,
+     "note": ""
+    },
+    {
+     "row": "V15(a) A-3 record",
+     "name": "band-edge deficit at lift-off (FL FR RL RR) [N]",
+     "value": [
+      10.431931358575639,
+      16.053414458036514,
+      442.8261109203104,
+      10.404226151109015
+     ],
+     "reference": null,
+     "tolerance": "record",
+     "passed": null,
+     "note": ""
+    },
+    {
+     "row": "V15(a) A-3 record",
+     "name": "RL deficit F + F_s - G at lift-off [N]",
+     "value": 442.8261110305789,
+     "reference": null,
+     "tolerance": "record",
+     "passed": null,
+     "note": "5.29.2: NSC contact-chatter ratchet, about 0.45 kN expected"
+    },
+    {
+     "row": "V15(a) A-3 record",
+     "name": "1 ms rod-force HF sigma, last 0.1 mm (FL FR RL RR) [N]",
+     "value": [
+      6.541440051908932,
+      4.285946278292746,
+      176.77694646642,
+      1.3143269254359127
+     ],
+     "reference": null,
+     "tolerance": "record",
+     "passed": null,
+     "note": "999 blocks"
+    },
+    {
+     "row": "V15(a) A-3 record",
+     "name": "RL blocks with N_min = 0, last 0.2 s",
+     "value": 200,
+     "reference": 200,
+     "tolerance": "record",
+     "passed": null,
+     "note": ""
+    },
+    {
+     "row": "V15 D_f",
+     "name": "D_f (a) [J]",
+     "value": 72.00451996673462,
+     "reference": 72.1722,
+     "tolerance": "+-5%",
+     "passed": true,
+     "note": "rel -0.2323%"
+    },
+    {
+     "row": "V8(b) (1)",
+     "name": "creation: max 20 ms mean R / E_ref",
+     "value": -6.0900886837218105e-05,
+     "reference": 0.001,
+     "tolerance": "<= 0.001",
+     "passed": true,
+     "note": "raw max R +0.008075 J (rel 0.000112)"
+    },
+    {
+     "row": "V8(b) (4)",
+     "name": "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+     "value": 0.0019421045906925455,
+     "reference": 0.01,
+     "tolerance": "<= 0.01",
+     "passed": true,
+     "note": "R_mech end +0.14 J (raw +0.147 J), D_f 72.07 J, D_visc -17.77 J"
+    }
+   ],
+   "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)"
+  },
+  "V15b_L4_head": {
+   "summary": {
+    "n_checks": 12,
+    "n_failed": 0,
+    "failed": []
+   },
+   "metrics": {
+    "mean_s": 1.0,
+    "t_start_s": 3.5000000000029616,
+    "t_end_s": 213.50100000596396,
+    "residual_true_N": [
+     -1670.5010014246218,
+     1662.9481360629288,
+     1810.0796709442657,
+     -1802.5626090427832
+    ],
+    "residual_net_N": [
+     -5568.984430081662,
+     -2263.8014279158815,
+     -1474.001416099578,
+     1411.1603911713028
+    ],
+    "residual_head_N": [
+     -5568.984430081662,
+     -2263.8014279158815,
+     -1474.001416099578,
+     1411.1603911713028
+    ],
+    "friction_change_N": [
+     3898.48342865707,
+     3926.749563978619,
+     3284.0810870441014,
+     -3213.723000214262
+    ],
+    "min_contact_force_N": 16520.290689516067,
+    "min_contact_leg": "RL",
+    "F_min_true_on_the_way": null,
+    "lam_max_mm": 9.99999211624436,
+    "lam_end_mm": 0.0
+   },
+   "D_f_J": 108.08884494795946,
+   "ledger": {
+    "rule": "L-1 (dynamics_model.md 5.29.7)",
+    "change_J": {
+     "E_kin_J": 1.4902897136513177e-06,
+     "E_grav_J": 31.624808536027558,
+     "U_lat_J": -1.2028096664374924e-05,
+     "U_ax_J": -30.8829061794346,
+     "D_visc_J": -12.705752227926698,
+     "D_f_J": 108.08884494795946,
+     "W_m_J": 109.80482805858108,
+     "W_L_J": -1.1742767871964717,
+     "W_res_J": 0.0,
+     "W_switch_J": 0.0
+    },
+    "dissipation_J": 95.38309272003276,
+    "D_f_J": 108.08884494795946,
+    "D_visc_J": -12.705752227926698,
+    "D_cb_J": 0.0,
+    "E_ref_J": 108.08884494795946,
+    "R_end_J": -12.505566732532277,
+    "R_max_J": 0.008075339440123933,
+    "R_min_J": -12.513787081216865,
+    "R_smooth_end_J": -12.506333209214393,
+    "R_smooth_max_J": -0.004389387559834008,
+    "creation_rel_raw": 7.471020200106581e-05,
+    "creation_rel_smooth": -4.0609070824536296e-05,
+    "R_mech_end_J": 0.20018549539442176,
+    "R_mech_max_J": 0.20878157592947488,
+    "R_mech_min_J": -0.02356336747721194,
+    "R_mech_smooth_end_J": 0.19921801229627983,
+    "R_mech_end_over_D_f": 0.0018430950242108285,
+    "R_mech_end_over_D_f_raw": 0.0018520458377624743,
+    "judged": true,
+    "creation_raw_flag": false,
+    "D_visc": {
+     "D_visc_J": -12.705752227926698,
+     "D_visc_ax_J": null,
+     "D_visc_lat_J": null,
+     "split_note": "record has no axial / lateral split (recorder before L-1)",
+     "rate_W": -0.06050358203602874,
+     "rate_coarse_W": -0.06050358203602874,
+     "time_coarse_s": 210.000000005961,
+     "rate_fine_1e-5_W": null,
+     "time_fine_1e-5_s": 0.0,
+     "note": "negative D_visc: lagged dashpot - NSC noise loop (5.29.5); excluded from E_ref, removed in R_mech"
+    },
+    "check_1": true,
+    "check_4": true
+   },
+   "checks": [
+    {
+     "row": "V15(b)",
+     "name": "residual_true_N FL [N]",
+     "value": -1670.5010014246218,
+     "reference": -1690.68,
+     "tolerance": "+-300 N",
+     "passed": true,
+     "note": "diff +20.2 N"
+    },
+    {
+     "row": "V15(b)",
+     "name": "residual_true_N FR [N]",
+     "value": 1662.9481360629288,
+     "reference": 1690.68,
+     "tolerance": "+-300 N",
+     "passed": true,
+     "note": "diff -27.7 N"
+    },
+    {
+     "row": "V15(b)",
+     "name": "residual_true_N RL [N]",
+     "value": 1810.0796709442657,
+     "reference": 1856.74,
+     "tolerance": "+-300 N",
+     "passed": true,
+     "note": "diff -46.7 N"
+    },
+    {
+     "row": "V15(b)",
+     "name": "residual_true_N RR [N]",
+     "value": -1802.5626090427832,
+     "reference": -1856.74,
+     "tolerance": "+-300 N",
+     "passed": true,
+     "note": "diff +54.2 N"
+    },
+    {
+     "row": "V15(b)",
+     "name": "residual_net_N FL [N]",
+     "value": -5568.984430081662,
+     "reference": -5690.68,
+     "tolerance": "+-569 N",
+     "passed": true,
+     "note": "diff +121.7 N"
+    },
+    {
+     "row": "V15(b)",
+     "name": "residual_net_N FR [N]",
+     "value": -2263.8014279158815,
+     "reference": -2309.32,
+     "tolerance": "+-300 N",
+     "passed": true,
+     "note": "diff +45.5 N"
+    },
+    {
+     "row": "V15(b)",
+     "name": "residual_net_N RL [N]",
+     "value": -1474.001416099578,
+     "reference": -1476.46,
+     "tolerance": "+-300 N",
+     "passed": true,
+     "note": "diff +2.5 N"
+    },
+    {
+     "row": "V15(b)",
+     "name": "residual_net_N RR [N]",
+     "value": 1411.1603911713028,
+     "reference": 1476.46,
+     "tolerance": "+-300 N",
+     "passed": true,
+     "note": "diff -65.3 N"
+    },
+    {
+     "row": "V15(b) record",
+     "name": "residual_head_N FL [N]",
+     "value": -5568.984430081662,
+     "reference": -5690.68,
+     "tolerance": "+-569 N",
+     "passed": null,
+     "note": "diff +121.7 N"
+    },
+    {
+     "row": "V15(b) record",
+     "name": "residual_head_N FR [N]",
+     "value": -2263.8014279158815,
+     "reference": -2309.32,
+     "tolerance": "+-300 N",
+     "passed": null,
+     "note": "diff +45.5 N"
+    },
+    {
+     "row": "V15(b) record",
+     "name": "residual_head_N RL [N]",
+     "value": -1474.001416099578,
+     "reference": -1476.46,
+     "tolerance": "+-300 N",
+     "passed": null,
+     "note": "diff +2.5 N"
+    },
+    {
+     "row": "V15(b) record",
+     "name": "residual_head_N RR [N]",
+     "value": 1411.1603911713028,
+     "reference": 1476.46,
+     "tolerance": "+-300 N",
+     "passed": null,
+     "note": "diff -65.3 N"
+    },
+    {
+     "row": "V15(b)",
+     "name": "min contact force along the path [N] (> 0, no lift-off)",
+     "value": 16520.290689516067,
+     "reference": 16860.1,
+     "tolerance": "> 0",
+     "passed": true,
+     "note": "leg RL (reference value recorded only)"
+    },
+    {
+     "row": "V15 D_f",
+     "name": "D_f (b) [J]",
+     "value": 108.08884494795946,
+     "reference": 107.762,
+     "tolerance": "+-5%",
+     "passed": true,
+     "note": "rel +0.3033%"
+    },
+    {
+     "row": "V8(b) (1)",
+     "name": "creation: max 20 ms mean R / E_ref",
+     "value": -4.0609070824536296e-05,
+     "reference": 0.001,
+     "tolerance": "<= 0.001",
+     "passed": true,
+     "note": "raw max R +0.008075 J (rel 7.47e-05)"
+    },
+    {
+     "row": "V8(b) (4)",
+     "name": "end: |R_mech,end| / D_f (R_mech = R - D_visc)",
+     "value": 0.0018430950242108285,
+     "reference": 0.01,
+     "tolerance": "<= 0.01",
+     "passed": true,
+     "note": "R_mech end +0.1992 J (raw +0.2002 J), D_f 108.1 J, D_visc -12.71 J"
+    }
+   ],
+   "judge_rule": "rev. 42 5.29.7 (A-1..A-4, L-1..L-2)"
+  }
+ },
+ "speed_pair_checks": [],
+ "n_checks": 29,
+ "n_failed": 0,
+ "date": "2026-10-25T14:44:58"
+}

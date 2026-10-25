@@ -1,5 +1,7 @@
 # C2 레벨링 제어기 설계·튜닝 (S6 준비, 2026-10-21)
 
+> **현행 제어기 안내(2026-10-25, S8 마감)**: 현행 제어기는 **R8 C2**(10 Hz, 출력 지연 d = 1, 주기 시작 IMU, 프리셋 `C2Config.with_10hz_d1()`)다. 게인·구조의 원본은 [s6_control_spec.md](s6_control_spec.md) **136절과 개정 30~56**이다(현행 값: 자세 PI $K_p$ 0.2 s⁻¹·$K_i$ 0.01 s⁻², 비틀림 $K_{tw}$ 0.5 s⁻¹, 자세 필터 2차 저역통과 τ 0.8 s × 2단, 가드 이득 0.15; 상수는 `03_src/outrigger_sim/control/c2.py`의 `R8_D1_*`). 이 문서의 게인($K_p$ 0.4, $K_{tw}$ 1.0, 1차 필터 τ 0.5 s 등)과 20 ms(50 Hz) 주기는 **R7까지의 이력**이다. 설계 방법·여유 판정 절차의 참고로만 읽는다. 아래 "고치지 않았다" 같은 문장은 작성 당시 상태다.
+
 control-expert 작업이다. [control_candidates_comparison.md](control_candidates_comparison.md)에서 잠정 확정된 C2(기구학 분해 + 압력 기반 비틀림 루프 + $F_{min}$ 가드)를 루프별로 이산 설계하고, 여유·결합·비선형·시간 응답으로 검증했다. **결정은 사용자가 한다.** 이 문서는 게인 제안·근거·구현 명세를 담는다. 기존 문서·YAML·`03_src`는 고치지 않았다(문서 갱신 제안은 15절).
 
 - 스크립트: `04_scripts/03_control/c2_linear.py`(선형 플랜트·이산 루프), `run_c2_design.py`(주파수 영역·μ·기술함수·LQG), `run_c2_timedomain.py`(축소 6자유도 시간 응답), `c2_margin_check.jl`(Julia 교차 검증)

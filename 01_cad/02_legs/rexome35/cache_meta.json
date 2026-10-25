@@ -1,6 +1,7 @@
 {
  "generated_at": "2026-10-22T02:54:18",
  "generator": "scratchpad cad-run/cyl35/cyl35_synth.py + cyl35_run.py + cyl35_aggregate.py (cad-expert, 2026-10-22)",
+ "moved_2026_10_25": "generator scripts copied to 04_scripts/00_cad/rexome35_cylinder/ (only the path constants changed: project root from the script location, job folder 01_cad/02_legs/rexome35/jobs/; so their sha256 differs from generator_scripts below, which are the 2026-10-22 originals). Front-leg synth BREPs and all_jobs.json copied to jobs/; scratchpad paths in rexome35_cylinder_jobs.json and jobs/all_jobs.json replaced by the jobs/ paths (rexome35_cylinder_jobs.json: original 96827 B sha256 f803b72a..., now 96482 B sha256 b5b5862def1d3952fa605fac5b8b44cd903c8a757972ec9902af2b67bab81091; values unchanged).",
  "generator_scripts": {
   "cyl35_synth.py": "9ab137ad7a57f42cb8732627d65687831ac71f5cdc52e2d3282d9a69438960f5",
   "cyl35_run.py": "18604cc27596802223534b88e677f25a6919d885f3ed08a93167e4ddd7b2430c",

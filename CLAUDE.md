@@ -32,7 +32,7 @@
 |---|---|---|
 | `Chrono-dev` (Py 3.12) | `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe` | PyChrono 10 시뮬레이션, CAD 추출(pythonocc-core, trimesh), MuJoCo, control, PyVista 0.49.1(pip), ffmpeg, psutil. 정의 [environment.yml](environment.yml) |
 | `pytorch_214_cuda_python_313` (Py 3.13) | `...\envs\pytorch_214_cuda_python_313\python.exe` | ML/DL 학습(PyTorch 2.14.1+cu130, scikit-learn, LightGBM, ONNX, optuna, shap, imbalanced-learn). 정의 [environment-ml.yml](environment-ml.yml). GPU RTX 4070 SUPER 12 GB |
-| `dynamics-dev` | `conda run -n dynamics-dev python -I` | 동역학·제어 해석(dynamics-expert, control-expert) |
+| `dynamics-dev` | `conda run -n dynamics-dev python -I` | 동역학·제어 해석(dynamics-expert, control-expert). 정의 [environment-dynamics.yml](environment-dynamics.yml) |
 | `hydraulics-dev` | — | 유압 해석(hydraulics-expert), Hopsan 2.24.4, OpenModelica |
 | `reliability-dev` | `conda run -n reliability-dev python -I` | 신뢰도 해석(openturns). dynamics-dev와 한 프로세스로 섞지 않는다 |
 
@@ -114,12 +114,15 @@
 
 ## 미정 사항
 
-상세 원문은 decision_log 12절이다.
+이 목록이 현행이다. decision_log 12절은 2026-10-25 이관 때의 원문 스냅숏이다.
 
 - 상부체 운용 중량(엔진·작동유·연료, 운전실·오거 공구·크롤러 실제 질량). 크롤러 하부체는 다른 기종(REXOME25) 모델이다.
 - 연약 지면 SCM 파라미터(Bekker kc·kφ·n, 응집력, 내부마찰각, Janosi 전단 계수) — 없으면 S9 보류.
-- 유압 사양(배관, 응답 시정수 τ_v), 접촉 강성·감쇠·마찰 실측값 — 지금은 가정치.
-- 하드웨어 확인 U-R8-9: 압력 표본→출력 흔들림 ≤ 20 ms, IMU 전송 지연 ≤ 20 ms, τ_v 실측.
+- 유압 사양(배관, 응답 시정수 τ_v), 접촉 강성·감쇠 실측값 — 지금은 가정치. 실 마찰은 단품 시험 3.72 kN을 근거로 공칭 4 kN(근거 있는 가정치). 카운터 밸런스 파라미터는 모두 가정(제조사 확인 U-S8-H5).
+- 하드웨어 확인 U-R8-9: 압력 표본→출력 흔들림 ≤ 20 ms, IMU 전송 지연 ≤ 20 ms, τ_v 실측. ④에 로드측 해제 1 kHz 기록·신장 배압·밸브 중립 형식·B 호스 체적을 더한다(R-5).
+- U-S8-59(U-R8-9 ④ 뒤): 실기 로드측 배수 진단 규칙 — 두 주기 보류 또는 단조 하강 보류(δ 1 bar, 2 s). 시뮬레이션 플랜트는 한 주기 보류로 충분.
+- S9에서 감시: RT 보류 중 보류 다리 하중 저하(U-S8-57), DONE 관문의 느린 꼬리(READY 분포).
+- 접지 판정 ML 재개(선택, S9 이후): 높은 F_s·첫 탐침 전 표적 데이터, F_s,air 입력, 정정된 판정 규칙(U-S8-53·54).
 - 제조사 확인: 후방 로드 소재(C45면 앞들림 한계 재판정), 전방 팔 핀·부싱(Q-L2), 평형추 결합(Q-L3), 센서 블록 체적(Q-M12), 마스트 붐·백스테이 실린더 잠김(Q-B3·Q-B1·Q-B4·Q-B2).
 - 마스트 유연성: S1~S8은 강체 마스트, D2·V17 전에 방향별 1모드 유연 마스트를 넣는다.
 - IMU 센서 모델 선정, 장착점 C1 실기 확인(점검구 접근, 판 국부 강성).

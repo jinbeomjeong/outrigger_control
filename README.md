@@ -27,12 +27,16 @@
 ```
 outrigger_control/
 ├── 00_docs/        설계 문서, 좌표계·모델 정의, 결정 기록
-│   ├── 00_cad/         CAD 검토(제원·다리, 오거 3단계, 마스트 참고용, 크롤러 접지 C7, 시뮬레이션 형상 C8, STEP 색 C11)
-│   ├── 01_dynamics/    동역학 모델·검증 기준, 구동기 L2 검토
-│   ├── 02_hydraulic/   유압 회로 해석, 유압유 조사 (회로도 이미지는 git 제외)
-│   ├── 03_chrono/      Chrono 구축 계획·검토, 정지 마찰 시험
-│   ├── 04_control/     레벨링 제어 조사, 제어 구조 후보 비교
-│   └── 05_sensors/     자세 센서 조사, IMU 장착·정확도 검토
+│   ├── 00_roadmap.md       전체 로드맵·지금 위치·체크리스트(체크 원본은 계획 문서)
+│   ├── decision_log.md     결정 이력·근거(U-*, Q-*, 재실행 판정)
+│   ├── 00_performance_checklist.md  성능 목표 대비 점검표
+│   ├── 00_cad/         CAD 검토(제원·다리, 오거 3단계, 마스트 참고용, 크롤러 접지 C7, 시뮬레이션 형상 C8, STEP 색 C11, 실린더 도면 대조)
+│   ├── 01_dynamics/    동역학 모델·검증 기준 V0~V17(`dynamics_model.md`), 구동기 L2 검토, 감쇠 조사
+│   ├── 02_hydraulic/   유압 회로 해석, 유압유 조사, L2 유압 모델 명세, 로드측 압력, S8 실 마찰·카운터 밸런스, 단품 시험 분석 (회로도 이미지는 git 제외)
+│   ├── 03_chrono/      Chrono 구축 계획(`chrono_build_plan.md`)·검토, 정지 마찰 시험, 주행 시험 계획
+│   ├── 04_control/     레벨링 제어 조사, 제어 구조 후보 비교, C2 설계(`c2_design.md`), 제어기 명세·판정(`s6_control_spec.md`, 현행 R8 C2)
+│   ├── 05_sensors/     자세 센서 조사, IMU 장착·정확도 검토
+│   └── history/        바꾸기 전 문서 보관본
 ├── 01_cad/         CAD에서 뽑은 치수·질량·그림 (STEP 원본은 루트에 두고 git 제외)
 │   ├── 00_step/        STEP 헤더·제품 목록
 │   ├── 01_parts/       부품 표·분류, 요약, 3면도
@@ -45,17 +49,26 @@ outrigger_control/
 │   ├── 08_style/       STEP 색(C11): 인스턴스·프로토타입·면 색 표, 질의 04_scripts/00_cad/style_index.py
 │   └── 09_sim_shapes/  Chrono 시각화 메시·충돌 후보(C8, 상부 롤러 포함; *_lowres.obj는 git 제외)
 ├── 02_params/      시뮬레이션 공통 파라미터 (04_scripts/00_cad/export_params.py가 생성)
-├── 03_src/outrigger_sim/  시뮬레이션 패키지 (엔진 독립 코어 + chrono/, sensors/, control/, scenarios/, verify/)
+├── 03_src/outrigger_sim/  시뮬레이션 패키지 (엔진 독립 코어 + chrono/, sensors/, control/(C2·R8, 압력 진단 two_pressure), hydraulics/(L2b 로드측·실 마찰·CB), ml/(접지 판정 ML 비교), scenarios/, verify/(단계별 판정기))
 ├── 04_scripts/     실행·분석 스크립트
 │   ├── 00_cad/         CAD 추출·파라미터 생성·그림 (Chrono-dev)
-│   ├── 01_dynamics/    동역학 기준해 (dynamics-dev)
-│   └── 02_chrono/      Chrono 시험 (Chrono-dev)
-├── 05_tests/       pytest (unit/, chrono/, verify/)
+│   ├── 01_dynamics/    동역학 기준해·판정 (dynamics-dev)
+│   ├── 02_chrono/      Chrono 시험·단계 실행기 `run_S1.py`~`run_S8C.py`, `run_S8V15.py` (Chrono-dev)
+│   ├── 03_control/     제어 해석·판정 보조 (dynamics-dev)
+│   ├── 04_hydraulic/   유압 해석 (hydraulics-dev, Hopsan)
+│   └── 05_ml/          ML 데이터셋·학습·보고 (`pytorch_214_cuda_python_313`)
+├── 05_tests/       pytest (unit/, chrono/, verify/, data/)
 ├── 06_analysis/    해석 결과(작은 JSON·그림)
 │   ├── 00_dynamics/    동역학 기준해, 제어 비교, IMU 검토
-│   └── 01_chrono/      Chrono 시험 결과: 00_conventions(규약 시험) · 01_cost(솔버·스텝 비용) · 11_S1~19_S9(단계별 판정 `verify_S*_L1`·그림·렌더 메타, 보관본은 `history/`) · 20_track_drive(주행 시험 T)
-└── 07_results/     시뮬레이션 원자료 (git 제외)
+│   ├── 01_chrono/      Chrono 시험 결과: 00_conventions(규약 시험) · 01_cost(솔버·스텝 비용) · 11_S1~19_S9(단계별 판정 `verify_S*`·그림·렌더 메타, 보관본은 `history/`) · 20_track_drive(주행 시험 T)
+│   ├── 02_control/     제어 해석 결과(R8 10 Hz, S8 판정 보조·ML 보고서)
+│   └── 03_hydraulic/   유압 해석 결과
+├── 07_results/     시뮬레이션 원자료 (git 제외; 단계 판정 요약은 06_analysis/01_chrono/1N_SN/에 복사)
+├── 08_test_data/   단품 시험 자료·데이터시트 요약(실린더 도면, 압력 센서)
+└── environment*.yml  conda 환경 정의(Chrono-dev, ML, dynamics-dev)
 ```
+
+대량 배치 실행기(`run_S6C.py`, `run_S7.py`, `run_S7C.py`, `run_S8C.py`, `run_S8V15.py`)는 `--approved`가 있어야 실제로 돈다(없으면 계획·dry-run). 사용법은 각 스크립트 docstring을 본다.
 
 전체 작업 순서·지금 위치·결정 마감은 [00_docs/00_roadmap.md](00_docs/00_roadmap.md), 패키지 구조와 단계별 구축 계획은 [00_docs/03_chrono/chrono_build_plan.md](00_docs/03_chrono/chrono_build_plan.md)를 본다.
 
@@ -96,8 +109,10 @@ STEP 원본·B-rep·메시 캐시처럼 더 큰 생성물은 `01_cad/cache_manif
 
 ## 동역학·구동기 자료
 
-- [00_docs/01_dynamics/dynamics_model.md](00_docs/01_dynamics/dynamics_model.md): 모델 구조 권고, 기준해(하중 분배·민감도·고유진동수·전도 여유), 접촉·적분기 권고, Chrono 모델 검증 기준 V0~V13, 제어 구조 후보.
+- [00_docs/01_dynamics/dynamics_model.md](00_docs/01_dynamics/dynamics_model.md): 모델 구조 권고, 기준해(하중 분배·민감도·고유진동수·전도 여유), 접촉·적분기 권고, Chrono 모델 검증 기준 V0~V17, 제어 구조 후보.
 - [00_docs/02_hydraulic/hydraulic_fluid_survey.md](00_docs/02_hydraulic/hydraulic_fluid_survey.md): 유압유 체적 탄성계수 등 유압 특성 조사.
+- [00_docs/02_hydraulic/s8_seal_friction_counterbalance.md](00_docs/02_hydraulic/s8_seal_friction_counterbalance.md): S8 실 마찰·카운터 밸런스·로드측 배수(H-S8-5).
+- [00_docs/04_control/s6_control_spec.md](00_docs/04_control/s6_control_spec.md): 제어기 명세·판정 원본(현행 R8 C2, 개정 56까지).
 - 기준해 스크립트는 `04_scripts/01_dynamics/`(conda `dynamics-dev`, 프로젝트 루트에서 실행), 결과는 `06_analysis/00_dynamics/`.
 
 ## CAD 자료

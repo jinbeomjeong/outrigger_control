@@ -1,0 +1,67 @@
+{
+ "sigma_dual_N": 312.7321214609632,
+ "front_L0r_0.05": {
+  "r": 0.1047,
+  "guard_true_N": 2116.673654864291,
+  "relevel_true_N": 4350.561737071373,
+  "lift_headonly_N": 11620.1104868,
+  "lift_fs12_headonly_N": 22363.710486800002
+ },
+ "front_L0r_0.6": {
+  "r": 0.042,
+  "guard_true_N": 9717.46651691023,
+  "relevel_true_N": 11805.149189144051,
+  "lift_headonly_N": 4140.1885868,
+  "lift_fs12_headonly_N": 15636.1885868
+ },
+ "rear_L0r_0.05": {
+  "r": 0.0999,
+  "guard_true_N": 7880.2609967781345,
+  "relevel_true_N": 10102.236332851904,
+  "lift_headonly_N": 6417.1198868,
+  "lift_fs12_headonly_N": 17218.3198868
+ },
+ "rear_L0r_0.6": {
+  "r": 0.042,
+  "guard_true_N": 11749.51244592902,
+  "relevel_true_N": 13837.195118162841,
+  "lift_headonly_N": 2193.4885868,
+  "lift_fs12_headonly_N": 13689.488586800002
+ },
+ "after_retract_bias_N": [
+  2739.0760953999998,
+  3269.2198558
+ ],
+ "after_extend_bias_N": 176.71458679999998,
+ "guard_true_after_retract_N": [
+  11713.4714146,
+  11183.3276542
+ ],
+ "relevel_min_after_retract_N": [
+  12713.4714146,
+  12183.3276542
+ ],
+ "dual_lift_visible_Fs_max_N": 9561.35114561711,
+ "twist_worst_N": 3089.4127637310003,
+ "rod_liftoff_bar": {
+  "118kN": 143.36236432067986,
+  "200kN": 240.23297534371966,
+  "292kN": 349.24944279472464
+ },
+ "rod_thermal_K_to_350_from_144bar": 34.91525423728813,
+ "airborne_retract_Fs0": {
+  "F2s_N": -1047.0,
+  "pad_upper_N": 1000.0,
+  "below_test": true
+ },
+ "airborne_retract_Fs5": {
+  "F2s_N": -6047.0,
+  "pad_upper_N": 1000.0,
+  "below_test": true
+ },
+ "airborne_retract_Fs12": {
+  "F2s_N": -13047.0,
+  "pad_upper_N": 1000.0,
+  "below_test": true
+ }
+}

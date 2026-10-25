@@ -1,0 +1,1051 @@
+{
+ "inputs": {
+  "A_p_m2": 0.010386890710931254,
+  "A_ann_m2": 0.0008835729338221301,
+  "phi": 11.755555555555546,
+  "mg_N": 1047.1900381788998,
+  "beta_Pa": 1000000000.0,
+  "L0_m": 0.05,
+  "e_op_m": {
+   "front": 0.4015,
+   "rear": 0.3915
+  },
+  "sigma_p_bar": 0.3
+ },
+ "flows_lpm_per_leg": {
+  "head": 14.126171366866508,
+  "rod": 1.201659189998097
+ },
+ "hose_dp_bar_4m_3_8in": {
+  "head_14lpm": 1.8852804825009024,
+  "rod_1.2lpm": 0.16037357601614494
+ },
+ "stiffness": {
+  "front": {
+   "k_head": 23005295.040822268,
+   "k_rod": 2689719.7376624965,
+   "r=k_r/(k_h+k_r)": 0.10467866085504969,
+   "dp_r/dp_h (locked, beta const)": -1.374429223744292,
+   "L_h_m": 0.4515,
+   "L_r_m": 0.3285
+  },
+  "rear": {
+   "k_head": 23526366.27617498,
+   "k_rod": 2610259.7749545937,
+   "r=k_r/(k_h+k_r)": 0.09986980606633361,
+   "dp_r/dp_h (locked, beta const)": -1.3042836041358934,
+   "L_h_m": 0.4415,
+   "L_r_m": 0.3385
+  }
+ },
+ "locked_unload_to_liftoff_front_pr0_3bar": [
+  {
+   "F0_kN": 20.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 0.819115700832461,
+   "p_h_bar": 1.368141390407062,
+   "p_r_bar": 27.935028944671643,
+   "head_only_reading_kN": 1.4210735099259684,
+   "two_sensor_reading_kN": -1.0471900381789963,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": -8.031926490074031
+  },
+  {
+   "F0_kN": 20.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 0.6245254255162291,
+   "p_h_bar": 5.678003523656938,
+   "p_r_bar": 22.011428478425188,
+   "head_only_reading_kN": 5.897680205650718,
+   "two_sensor_reading_kN": 3.952809961820905,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": -3.5553197943492822
+  },
+  {
+   "F0_kN": 20.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 0.3520990400735044,
+   "p_h_bar": 11.711810510206766,
+   "p_r_bar": 13.718387825677906,
+   "head_only_reading_kN": 12.164929579665367,
+   "two_sensor_reading_kN": 10.952809961820964,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 2.7119295796653677
+  },
+  {
+   "F0_kN": 20.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 0.8264885047997966,
+   "p_h_bar": 1.2048456214738266,
+   "p_r_bar": 26.015396570093763,
+   "head_only_reading_kN": 1.2514599793792682,
+   "two_sensor_reading_kN": -1.0471900478191247,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": -8.201540020620733
+  },
+  {
+   "F0_kN": 20.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 0.6315485697824664,
+   "p_h_bar": 5.522452155633965,
+   "p_r_bar": 20.182835729885078,
+   "head_only_reading_kN": 5.736110699691671,
+   "two_sensor_reading_kN": 3.952809961821204,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": -3.7168893003083294
+  },
+  {
+   "F0_kN": 20.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 0.3581258620479471,
+   "p_h_bar": 11.57832608109397,
+   "p_r_bar": 12.149204203440002,
+   "head_only_reading_kN": 12.0262807619848,
+   "two_sensor_reading_kN": 10.952809961821036,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 2.573280761984801
+  },
+  {
+   "F0_kN": 20.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 0.879507245759332,
+   "p_h_bar": 0.030565644518446643,
+   "p_r_bar": 12.211082874189291,
+   "head_only_reading_kN": 0.031748200912228026,
+   "two_sensor_reading_kN": -1.0471900311170321,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": -9.421251799087772
+  },
+  {
+   "F0_kN": 20.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 0.6755348183107173,
+   "p_h_bar": 4.548227382029292,
+   "p_r_bar": 8.730282251101505,
+   "head_only_reading_kN": 4.724194074560323,
+   "two_sensor_reading_kN": 3.9528099643902204,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": -4.728805925439676
+  },
+  {
+   "F0_kN": 20.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 0.3842094423237656,
+   "p_h_bar": 11.000616661917478,
+   "p_r_bar": 5.35790903068604,
+   "head_only_reading_kN": 11.426220302018624,
+   "two_sensor_reading_kN": 10.952809961879089,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 1.9732203020186243
+  },
+  {
+   "F0_kN": 60.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 2.3758379033623167,
+   "p_h_bar": 5.399325072541497,
+   "p_r_bar": 75.32383267465262,
+   "head_only_reading_kN": 5.60821994412795,
+   "two_sensor_reading_kN": -1.0471900381790546,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": -3.84478005587205
+  },
+  {
+   "F0_kN": 60.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 2.181247628046085,
+   "p_h_bar": 9.709187205791372,
+   "p_r_bar": 69.40023220840335,
+   "head_only_reading_kN": 10.084826639852697,
+   "two_sensor_reading_kN": 3.9528099618210946,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 0.6318266398526976
+  },
+  {
+   "F0_kN": 60.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 1.9088212426033602,
+   "p_h_bar": 15.742994192341202,
+   "p_r_bar": 61.107191555658886,
+   "head_only_reading_kN": 16.352076013867354,
+   "two_sensor_reading_kN": 10.952809961820911,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 6.899076013867353
+  },
+  {
+   "F0_kN": 60.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 2.383989355018308,
+   "p_h_bar": 5.218783507624753,
+   "p_r_bar": 73.20146627384214,
+   "head_only_reading_kN": 5.420693393770877,
+   "two_sensor_reading_kN": -1.0471900377951642,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": -4.032306606229123
+  },
+  {
+   "F0_kN": 60.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 2.189363560373161,
+   "p_h_bar": 9.529432336974628,
+   "p_r_bar": 67.28711385562902,
+   "head_only_reading_kN": 9.898117222136968,
+   "two_sensor_reading_kN": 3.9528099623527844,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 0.44511722213696703
+  },
+  {
+   "F0_kN": 60.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 1.9168740184050572,
+   "p_h_bar": 15.564638139147469,
+   "p_r_bar": 59.01051705372938,
+   "head_only_reading_kN": 16.16681953065172,
+   "two_sensor_reading_kN": 10.952809962699266,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 6.713819530651717
+  },
+  {
+   "F0_kN": 60.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 2.4559300935493407,
+   "p_h_bar": 3.6254116686206963,
+   "p_r_bar": 54.47049510375693,
+   "head_only_reading_kN": 3.765675478409809,
+   "two_sensor_reading_kN": -1.04719003814724,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": -5.687324521590192
+  },
+  {
+   "F0_kN": 60.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 2.2606640098212325,
+   "p_h_bar": 7.950241873008478,
+   "p_r_bar": 48.72285262894601,
+   "head_only_reading_kN": 8.257829346040847,
+   "two_sensor_reading_kN": 3.9528099618867354,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": -1.1951706539591542
+  },
+  {
+   "F0_kN": 60.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 1.9869712745299684,
+   "p_h_bar": 14.012096475251326,
+   "p_r_bar": 40.75952727918976,
+   "head_only_reading_kN": 14.554211471946058,
+   "two_sensor_reading_kN": 10.952809962018373,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 5.101211471946057
+  },
+  {
+   "F0_kN": 100.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 3.9325601058921724,
+   "p_h_bar": 9.430508754675946,
+   "p_r_bar": 122.71263640463266,
+   "head_only_reading_kN": 9.795366378329946,
+   "two_sensor_reading_kN": -1.0471900381790147,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 0.3423663783299471
+  },
+  {
+   "F0_kN": 100.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 3.7379698305759406,
+   "p_h_bar": 13.74037088792583,
+   "p_r_bar": 116.78903593838528,
+   "head_only_reading_kN": 14.271973074054705,
+   "two_sensor_reading_kN": 3.9528099618209764,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 4.818973074054703
+  },
+  {
+   "F0_kN": 100.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 3.465543445133216,
+   "p_h_bar": 19.77417787447565,
+   "p_r_bar": 108.49599528563706,
+   "head_only_reading_kN": 20.53922244806935,
+   "two_sensor_reading_kN": 10.952809961821114,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 11.086222448069348
+  },
+  {
+   "F0_kN": 100.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 3.9408533174937848,
+   "p_h_bar": 9.246827434595936,
+   "p_r_bar": 120.55336044132093,
+   "head_only_reading_kN": 9.60457859859888,
+   "two_sensor_reading_kN": -1.0471900381265842,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 0.15157859859888048
+  },
+  {
+   "F0_kN": 100.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 3.7462535080678467,
+   "p_h_bar": 13.55690073306634,
+   "p_r_bar": 114.63224233942115,
+   "head_only_reading_kN": 14.08140462933039,
+   "two_sensor_reading_kN": 3.952809961885214,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 4.628404629330389
+  },
+  {
+   "F0_kN": 100.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 3.4738110569040206,
+   "p_h_bar": 19.5910635495409,
+   "p_r_bar": 106.34338466486322,
+   "head_only_reading_kN": 20.349023599999025,
+   "two_sensor_reading_kN": 10.952809961908175,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 10.896023599999026
+  },
+  {
+   "F0_kN": 100.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 4.015117991037216,
+   "p_h_bar": 7.6019841667458605,
+   "p_r_bar": 101.21731402651788,
+   "head_only_reading_kN": 7.896097872621905,
+   "two_sensor_reading_kN": -1.047190038178721,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": -1.5569021273780954
+  },
+  {
+   "F0_kN": 100.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 3.82037069202444,
+   "p_h_bar": 11.91532412273204,
+   "p_r_bar": 95.33459729865379,
+   "head_only_reading_kN": 12.376316944814052,
+   "two_sensor_reading_kN": 3.9528099618217674,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 2.9233169448140526
+  },
+  {
+   "F0_kN": 100.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 3.5476782274120477,
+   "p_h_bar": 17.955024335631094,
+   "p_r_bar": 87.11083479565241,
+   "head_only_reading_kN": 18.64968754863112,
+   "two_sensor_reading_kN": 10.952809961822172,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 9.196687548631122
+  },
+  {
+   "F0_kN": 140.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 5.489282308422029,
+   "p_h_bar": 13.461692436810397,
+   "p_r_bar": 170.10144013461274,
+   "head_only_reading_kN": 13.982512812531942,
+   "two_sensor_reading_kN": -1.0471900381789765,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 4.529512812531943
+  },
+  {
+   "F0_kN": 140.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 5.294692033105796,
+   "p_h_bar": 17.771554570060278,
+   "p_r_bar": 164.17783966836626,
+   "head_only_reading_kN": 18.4591195082567,
+   "two_sensor_reading_kN": 3.9528099618209325,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 9.006119508256699
+  },
+  {
+   "F0_kN": 140.0,
+   "x_air_atm": 0.0,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 5.022265647663072,
+   "p_h_bar": 23.80536155661009,
+   "p_r_bar": 155.884799015619,
+   "head_only_reading_kN": 24.726368882271334,
+   "two_sensor_reading_kN": 10.952809961820977,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 15.273368882271335
+  },
+  {
+   "F0_kN": 140.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 5.497614763544924,
+   "p_h_bar": 13.277141935749594,
+   "p_r_bar": 167.9319464664387,
+   "head_only_reading_kN": 13.790822224015326,
+   "two_sensor_reading_kN": -1.047190038165887,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 4.337822224015326
+  },
+  {
+   "F0_kN": 140.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 5.303022137451706,
+   "p_h_bar": 17.587056134934908,
+   "p_r_bar": 162.00895806416136,
+   "head_only_reading_kN": 18.267483000058192,
+   "two_sensor_reading_kN": 3.952809961836445,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 8.814483000058193
+  },
+  {
+   "F0_kN": 140.0,
+   "x_air_atm": 0.001,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 5.030591497319411,
+   "p_h_bar": 23.620957356026732,
+   "p_r_bar": 153.71702519076646,
+   "head_only_reading_kN": 24.53483025446173,
+   "two_sensor_reading_kN": 10.952809961840154,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 15.081830254461734
+  },
+  {
+   "F0_kN": 140.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 0.0,
+   "piston_out_mm": 5.572507058111528,
+   "p_h_bar": 11.618397870044056,
+   "p_r_bar": 148.43248844973672,
+   "head_only_reading_kN": 12.067902891226408,
+   "two_sensor_reading_kN": -1.0471900381789236,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 2.6149028912264076
+  },
+  {
+   "F0_kN": 140.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 5.0,
+   "piston_out_mm": 5.37787208038092,
+   "p_h_bar": 15.929250089991093,
+   "p_r_bar": 142.52052700265918,
+   "head_only_reading_kN": 16.54553797918293,
+   "two_sensor_reading_kN": 3.9528099618213637,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 7.092537979182933
+  },
+  {
+   "F0_kN": 140.0,
+   "x_air_atm": 0.01,
+   "F_s_kN": 12.0,
+   "piston_out_mm": 5.105369046391458,
+   "p_h_bar": 21.96475471877208,
+   "p_r_bar": 134.24744307747713,
+   "head_only_reading_kN": 22.814550675629715,
+   "two_sensor_reading_kN": 10.952809961821128,
+   "true_cyl_force_kN": -1.0471900381788999,
+   "head_only_minus_Fmin_kN": 13.361550675629715
+  }
+ ],
+ "F0_where_head_only_liftoff_reading_eq_Fmin_kN": {
+  "x_air_0": 96.72935844293983,
+  "x_air_0.001": 98.5513884796367,
+  "x_air_0.01": 114.94965881465092
+ },
+ "locked_load_to_floor_front": [
+  {
+   "x_air_atm": 0.0,
+   "piston_in_mm": 0.12854993400003542,
+   "dF_to_floor_kN": 3.30309333747699,
+   "rod_force_released_kN": 0.34576417832794504
+  },
+  {
+   "x_air_atm": 0.001,
+   "piston_in_mm": 3.3737724861369123,
+   "dF_to_floor_kN": 77.96039562251605,
+   "rod_force_released_kN": 0.34576417832794504
+  },
+  {
+   "x_air_atm": 0.01,
+   "piston_in_mm": 32.580775454974415,
+   "dF_to_floor_kN": 749.8761161787946,
+   "rod_force_released_kN": 0.34576417832794504
+  },
+  {
+   "x_air_atm": 0.0,
+   "piston_in_mm": 1.0154999339999813,
+   "dF_to_floor_kN": 26.093286695252807,
+   "rod_force_released_kN": 2.731411099647696
+  },
+  {
+   "x_air_atm": 0.001,
+   "piston_in_mm": 4.332927592601106,
+   "dF_to_floor_kN": 102.41168875795589,
+   "rod_force_released_kN": 2.731411099647696
+  },
+  {
+   "x_air_atm": 0.01,
+   "piston_in_mm": 34.189776519979546,
+   "dF_to_floor_kN": 789.2773073215548,
+   "rod_force_released_kN": 2.731411099647696
+  }
+ ],
+ "retract_meter_in_limited": [
+  {
+   "F_cyl_kN": 100.0,
+   "psi": 3.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 99.4349840260827,
+   "p_r_bar": 37.14499467536096,
+   "head_only_err_kN": 3.2820311922116088
+  },
+  {
+   "F_cyl_kN": 100.0,
+   "psi": 3.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 99.72681281985702,
+   "p_r_bar": 40.57560427328568,
+   "head_only_err_kN": 3.5851505709352787
+  },
+  {
+   "F_cyl_kN": 100.0,
+   "psi": 3.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 100.13537313114107,
+   "p_r_bar": 45.37845771038031,
+   "head_only_err_kN": 4.009517701148419
+  },
+  {
+   "F_cyl_kN": 100.0,
+   "psi": 4.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 98.73651721758861,
+   "p_r_bar": 28.934129304396993,
+   "head_only_err_kN": 2.556541351707492
+  },
+  {
+   "F_cyl_kN": 100.0,
+   "psi": 4.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 99.06244672024434,
+   "p_r_bar": 32.76561168006121,
+   "head_only_err_kN": 2.8950807640628335
+  },
+  {
+   "F_cyl_kN": 100.0,
+   "psi": 4.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 99.51874802396235,
+   "p_r_bar": 38.12968700599048,
+   "head_only_err_kN": 3.369035941360256
+  },
+  {
+   "F_cyl_kN": 100.0,
+   "psi": 6.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 98.04809547345447,
+   "p_r_bar": 20.84134924557568,
+   "head_only_err_kN": 1.8414852097724943
+  },
+  {
+   "F_cyl_kN": 100.0,
+   "psi": 6.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 98.40763526252447,
+   "p_r_bar": 25.067939210420743,
+   "head_only_err_kN": 2.214935259302627
+  },
+  {
+   "F_cyl_kN": 100.0,
+   "psi": 6.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 98.91099096722243,
+   "p_r_bar": 30.985165161203568,
+   "head_only_err_kN": 2.7377653286447896
+  },
+  {
+   "F_cyl_kN": 60.0,
+   "psi": 3.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 59.8010682366613,
+   "p_r_bar": 23.933689412220517,
+   "head_only_err_kN": 2.114716017114333
+  },
+  {
+   "F_cyl_kN": 60.0,
+   "psi": 3.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 60.092897030435616,
+   "p_r_bar": 27.36429901014523,
+   "head_only_err_kN": 2.417835395838003
+  },
+  {
+   "F_cyl_kN": 60.0,
+   "psi": 3.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 60.50145734171967,
+   "p_r_bar": 32.16715244724003,
+   "head_only_err_kN": 2.842202526051158
+  },
+  {
+   "F_cyl_kN": 60.0,
+   "psi": 4.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 59.38966503842377,
+   "p_r_bar": 19.09741625960598,
+   "head_only_err_kN": 1.6873960112922506
+  },
+  {
+   "F_cyl_kN": 60.0,
+   "psi": 4.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 59.7155945410795,
+   "p_r_bar": 22.92889863526995,
+   "head_only_err_kN": 2.0259354236475704
+  },
+  {
+   "F_cyl_kN": 60.0,
+   "psi": 4.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 60.171895844797504,
+   "p_r_bar": 28.292973961199387,
+   "head_only_err_kN": 2.4998906009450073
+  },
+  {
+   "F_cyl_kN": 60.0,
+   "psi": 6.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 58.98417847295092,
+   "p_r_bar": 14.330696412158508,
+   "head_only_err_kN": 1.2662215472605167
+  },
+  {
+   "F_cyl_kN": 60.0,
+   "psi": 6.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 59.343718262020914,
+   "p_r_bar": 18.55728637700357,
+   "head_only_err_kN": 1.6396715967906494
+  },
+  {
+   "F_cyl_kN": 60.0,
+   "psi": 6.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 59.847073966718895,
+   "p_r_bar": 24.474512327786478,
+   "head_only_err_kN": 2.162501666132819
+  },
+  {
+   "F_cyl_kN": 20.0,
+   "psi": 3.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 20.167152447239886,
+   "p_r_bar": 10.722384149079982,
+   "head_only_err_kN": 0.9474008420170503
+  },
+  {
+   "F_cyl_kN": 20.0,
+   "psi": 3.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 20.458981241014207,
+   "p_r_bar": 14.152993747004736,
+   "head_only_err_kN": 1.2505202207407238
+  },
+  {
+   "F_cyl_kN": 20.0,
+   "psi": 3.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 20.867541552298256,
+   "p_r_bar": 18.955847184099454,
+   "head_only_err_kN": 1.6748873509538718
+  },
+  {
+   "F_cyl_kN": 20.0,
+   "psi": 4.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 20.042812859258913,
+   "p_r_bar": 9.260703214814756,
+   "head_only_err_kN": 0.8182506708769907
+  },
+  {
+   "F_cyl_kN": 20.0,
+   "psi": 4.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 20.368742361914634,
+   "p_r_bar": 13.092185590478643,
+   "head_only_err_kN": 1.156790083232303
+  },
+  {
+   "F_cyl_kN": 20.0,
+   "psi": 4.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 20.825043665632645,
+   "p_r_bar": 18.456260916408162,
+   "head_only_err_kN": 1.6307452605297477
+  },
+  {
+   "F_cyl_kN": 20.0,
+   "psi": 6.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 19.920261472447365,
+   "p_r_bar": 7.8200435787412115,
+   "head_only_err_kN": 0.6909578847485282
+  },
+  {
+   "F_cyl_kN": 20.0,
+   "psi": 6.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 20.279801261517356,
+   "p_r_bar": 12.046633543586236,
+   "head_only_err_kN": 1.0644079342786572
+  },
+  {
+   "F_cyl_kN": 20.0,
+   "psi": 6.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 20.783156966215344,
+   "p_r_bar": 17.963859494369224,
+   "head_only_err_kN": 1.5872380036208342
+  },
+  {
+   "F_cyl_kN": -1.0471900381788999,
+   "psi": 3.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 3.0,
+   "p_r_bar": 47.118433488551965,
+   "head_only_err_kN": 4.163257251458276
+  },
+  {
+   "F_cyl_kN": -1.0471900381788999,
+   "psi": 3.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 8.0,
+   "p_r_bar": 105.8962112663297,
+   "head_only_err_kN": 9.356702606923903
+  },
+  {
+   "F_cyl_kN": -1.0471900381788999,
+   "psi": 3.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 15.0,
+   "p_r_bar": 188.1851001552185,
+   "head_only_err_kN": 16.62752610457578
+  },
+  {
+   "F_cyl_kN": -1.0471900381788999,
+   "psi": 4.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 3.0,
+   "p_r_bar": 47.118433488551965,
+   "head_only_err_kN": 4.163257251458276
+  },
+  {
+   "F_cyl_kN": -1.0471900381788999,
+   "psi": 4.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 8.0,
+   "p_r_bar": 105.8962112663297,
+   "head_only_err_kN": 9.356702606923903
+  },
+  {
+   "F_cyl_kN": -1.0471900381788999,
+   "psi": 4.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 15.0,
+   "p_r_bar": 188.1851001552185,
+   "head_only_err_kN": 16.62752610457578
+  },
+  {
+   "F_cyl_kN": -1.0471900381788999,
+   "psi": 6.0,
+   "p_backA_bar": 3.0,
+   "p_h_bar": 3.0,
+   "p_r_bar": 47.118433488551965,
+   "head_only_err_kN": 4.163257251458276
+  },
+  {
+   "F_cyl_kN": -1.0471900381788999,
+   "psi": 6.0,
+   "p_backA_bar": 8.0,
+   "p_h_bar": 8.0,
+   "p_r_bar": 105.8962112663297,
+   "head_only_err_kN": 9.356702606923903
+  },
+  {
+   "F_cyl_kN": -1.0471900381788999,
+   "psi": 6.0,
+   "p_backA_bar": 15.0,
+   "p_h_bar": 15.0,
+   "p_r_bar": 188.1851001552185,
+   "head_only_err_kN": 16.62752610457578
+  }
+ ],
+ "retract_airborne": [
+  {
+   "F_s_kN": 0.0,
+   "p_backA_bar": 3.0,
+   "p_r_bar": 47.118433488551965,
+   "exceeds_210bar": false,
+   "head_only_reading_kN": 3.116067213279376,
+   "true_F_cyl_kN": -1.0471900381789
+  },
+  {
+   "F_s_kN": 0.0,
+   "p_backA_bar": 8.0,
+   "p_r_bar": 105.8962112663297,
+   "exceeds_210bar": false,
+   "head_only_reading_kN": 8.309512568745003,
+   "true_F_cyl_kN": -1.0471900381789
+  },
+  {
+   "F_s_kN": 0.0,
+   "p_backA_bar": 15.0,
+   "p_r_bar": 188.1851001552185,
+   "exceeds_210bar": false,
+   "head_only_reading_kN": 15.580336066396882,
+   "true_F_cyl_kN": -1.0471900381788983
+  },
+  {
+   "F_s_kN": 2.0,
+   "p_backA_bar": 3.0,
+   "p_r_bar": 69.75380317273262,
+   "exceeds_210bar": false,
+   "head_only_reading_kN": 3.116067213279376,
+   "true_F_cyl_kN": -3.0471900381789
+  },
+  {
+   "F_s_kN": 2.0,
+   "p_backA_bar": 8.0,
+   "p_r_bar": 128.53158095051035,
+   "exceeds_210bar": false,
+   "head_only_reading_kN": 8.309512568745003,
+   "true_F_cyl_kN": -3.0471900381789
+  },
+  {
+   "F_s_kN": 2.0,
+   "p_backA_bar": 15.0,
+   "p_r_bar": 210.82046983939915,
+   "exceeds_210bar": true,
+   "head_only_reading_kN": 15.580336066396882,
+   "true_F_cyl_kN": -3.0471900381788983
+  },
+  {
+   "F_s_kN": 5.0,
+   "p_backA_bar": 3.0,
+   "p_r_bar": 103.70685769900358,
+   "exceeds_210bar": false,
+   "head_only_reading_kN": 3.116067213279376,
+   "true_F_cyl_kN": -6.047190038178899
+  },
+  {
+   "F_s_kN": 5.0,
+   "p_backA_bar": 8.0,
+   "p_r_bar": 162.48463547678134,
+   "exceeds_210bar": false,
+   "head_only_reading_kN": 8.309512568745003,
+   "true_F_cyl_kN": -6.0471900381789
+  },
+  {
+   "F_s_kN": 5.0,
+   "p_backA_bar": 15.0,
+   "p_r_bar": 244.7735243656701,
+   "exceeds_210bar": true,
+   "head_only_reading_kN": 15.580336066396882,
+   "true_F_cyl_kN": -6.047190038178898
+  },
+  {
+   "F_s_kN": 12.0,
+   "p_backA_bar": 3.0,
+   "p_r_bar": 182.93065159363587,
+   "exceeds_210bar": false,
+   "head_only_reading_kN": 3.116067213279376,
+   "true_F_cyl_kN": -13.047190038178899
+  },
+  {
+   "F_s_kN": 12.0,
+   "p_backA_bar": 8.0,
+   "p_r_bar": 241.7084293714136,
+   "exceeds_210bar": true,
+   "head_only_reading_kN": 8.309512568745003,
+   "true_F_cyl_kN": -13.0471900381789
+  },
+  {
+   "F_s_kN": 12.0,
+   "p_backA_bar": 15.0,
+   "p_r_bar": 323.9973182603024,
+   "exceeds_210bar": true,
+   "head_only_reading_kN": 15.580336066396882,
+   "true_F_cyl_kN": -13.047190038178899
+  }
+ ],
+ "retract_airborne_Fs_limit_kN": {
+  "p_backA_3bar": 14.391774358806455,
+  "p_backA_8bar": 9.19832900334083,
+  "p_backA_15bar": 1.9275055056889505
+ },
+ "extend": {
+  "p_r_range_bar": [
+   1,
+   8
+  ],
+  "head_only_err_kN": [
+   0.08835729338221301,
+   0.7068583470577041
+  ],
+  "airborne_hold_weight_p_r_bar (F_s=0)": 11.851766821885324
+ },
+ "noise": {
+  "head_only_sigma_kN": 0.31160672132793765,
+  "two_sensor_sigma_kN": 0.3127321214605109,
+  "increase_pct": 0.3611604164946325,
+  "rod_sigma_1bar_two_sensor_kN": 0.32389158690922715,
+  "rod_offset_0.5bar_kN": 0.04417864669110651,
+  "head_offset_0.5bar_kN": 0.5193445355465627
+ },
+ "probe_head_only_bias": [
+  {
+   "p_r_ext_bar": 3.0,
+   "p_r_ret_bar": 30.0,
+   "F_s_hat_bias_kN": -1.1928234606598755,
+   "midpoint_bias_kN": 1.4578953408065147
+  },
+  {
+   "p_r_ext_bar": 3.0,
+   "p_r_ret_bar": 40.0,
+   "F_s_hat_bias_kN": -1.6346099275709407,
+   "midpoint_bias_kN": 1.8996818077175797
+  },
+  {
+   "p_r_ext_bar": 3.0,
+   "p_r_ret_bar": 20.0,
+   "F_s_hat_bias_kN": -0.7510369937488106,
+   "midpoint_bias_kN": 1.0161088738954496
+  }
+ ],
+ "liftoff_sensitivity_rod_dead_length": [
+  {
+   "side": "front",
+   "F0_kN": 118.0,
+   "L0_rod_m": 0.05,
+   "r": 0.10467866085504969,
+   "p_r_liftoff_bar": 144.0375980831234,
+   "head_only_liftoff_reading_kN": 11.679582273720918
+  },
+  {
+   "side": "front",
+   "F0_kN": 118.0,
+   "L0_rod_m": 0.2,
+   "r": 0.07430223372975825,
+   "p_r_liftoff_bar": 103.11026594968533,
+   "head_only_liftoff_reading_kN": 8.063353981055455
+  },
+  {
+   "side": "front",
+   "F0_kN": 118.0,
+   "L0_rod_m": 0.6,
+   "r": 0.04188795243318135,
+   "p_r_liftoff_bar": 59.43725427455192,
+   "head_only_liftoff_reading_kN": 4.204524875590878
+  },
+  {
+   "side": "rear",
+   "F0_kN": 72.0,
+   "L0_rod_m": 0.05,
+   "r": 0.09986980606633361,
+   "p_r_liftoff_bar": 85.5648729556051,
+   "head_only_liftoff_reading_kN": 6.513090544771282
+  },
+  {
+   "side": "rear",
+   "F0_kN": 72.0,
+   "L0_rod_m": 0.2,
+   "r": 0.07139289359072032,
+   "p_r_liftoff_bar": 62.02229534055262,
+   "head_only_liftoff_reading_kN": 4.432932107464571
+  },
+  {
+   "side": "rear",
+   "F0_kN": 72.0,
+   "L0_rod_m": 0.6,
+   "r": 0.0405555192657854,
+   "p_r_liftoff_bar": 36.528264725017245,
+   "head_only_liftoff_reading_kN": 2.180348564872591
+  },
+  {
+   "side": "front",
+   "F0_kN": 100.0,
+   "L0_rod_m": 0.05,
+   "r": 0.10467866085504969,
+   "p_r_liftoff_bar": 122.71263640463224,
+   "head_only_liftoff_reading_kN": 9.795366378330023
+  },
+  {
+   "side": "front",
+   "F0_kN": 100.0,
+   "L0_rod_m": 0.2,
+   "r": 0.07430223372975825,
+   "p_r_liftoff_bar": 87.97353919018407,
+   "head_only_liftoff_reading_kN": 6.725913773919808
+  },
+  {
+   "side": "front",
+   "F0_kN": 100.0,
+   "L0_rod_m": 0.6,
+   "r": 0.04188795243318135,
+   "p_r_liftoff_bar": 50.903910676806014,
+   "head_only_liftoff_reading_kN": 3.4505417317936136
+  }
+ ],
+ "thermal_rod_chamber_front": {
+  "alpha_1_K": 0.00065,
+  "S_leg_N_m": 4770000.0,
+  "dp_r_bar_per_K": 5.926122769940248,
+  "dF_cyl_true_kN_per_K": -0.0899234056255977,
+  "head_only_reading_change_kN_per_K": 0.4336927625770255,
+  "head_only_error_growth_kN_per_K": 0.5236161682026232,
+  "cooling_K_to_reach_floor_from_3bar": 0.6581031395067307
+ },
+ "locked_liftoff_visibility": {
+  "front": {
+   "F0_kN": 118.0,
+   "r": 0.10467866085504969,
+   "head_only_Fs_max_kN": null,
+   "two_sensor_Fs_max_kN": 9.561993673797367
+  },
+  "rear": {
+   "F0_kN": 72.0,
+   "r": 0.09986980606633361,
+   "head_only_Fs_max_kN": 2.2275547523658186,
+   "two_sensor_Fs_max_kN": 9.561993673797367
+  }
+ },
+ "F0_for_rod_350bar_on_liftoff_kN": {
+  "front": 291.84899867103,
+  "rear": 305.9523127270866
+ }
+}

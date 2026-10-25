@@ -1,0 +1,47 @@
+{
+ "target": "mlj",
+ "batch": "C:\\workspace\\outrigger_control\\07_results\\S8\\ml_main_20261025_090131\\judged",
+ "wall_s": 23.843326100031845,
+ "old_failed": [],
+ "new_failed": [],
+ "only_old": [],
+ "only_new": [],
+ "rows_old": 308,
+ "rows_new": 334,
+ "item9_cases": 6,
+ "item9_raw_vs_corrected_differs": {},
+ "new_rows": [
+  {
+   "item": "C-S8-37 re-approach record after the event: runs / re-triggers / deferred starts (P-S8-16 RT; record)",
+   "case": "*",
+   "value": {
+    "runs_with_reapproach": 3,
+    "runs_after_event": 11,
+    "retriggers": 0,
+    "deferred": 0,
+    "starts_after_1.5_s": 3,
+    "runs_with_deferred": []
+   },
+   "limit": null,
+   "passed": null,
+   "kind": "record",
+   "note": "MLJ_FS24_Fs0: 7 runs, None re-trig, 0 deferred, 3 after 1.5 s; MLJ_FS24_Fs8: 3 runs, None re-trig, 0 deferred, 0 after 1.5 s; MLJ_K0V_fdown3.5_G4RF_Fs8: 1 runs, None re-trig, 0 deferred, 0 after 1.5 s"
+  },
+  {
+   "item": "C-S8-36 twist-mode actuator work, every 0.5 s bin after event + 1.5 s <= +20 J (ASSUMPTION) - record (runs without the RT variant tag)",
+   "case": "*",
+   "value": {
+    "runs": 6,
+    "over_limit": 2,
+    "worst": [
+     "MLJ_FS24_Fs0",
+     75.4
+    ]
+   },
+   "limit": 20.0,
+   "passed": null,
+   "kind": "record",
+   "note": "MLJ_FS24_Fs0: 75.4 J; MLJ_FS24_Fs8: 47.0 J"
+  }
+ ]
+}

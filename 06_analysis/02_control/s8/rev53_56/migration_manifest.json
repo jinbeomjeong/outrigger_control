@@ -1,0 +1,514 @@
+{
+ "source": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\85e4a02e-5208-42d0-8012-d36d25080593\\scratchpad",
+ "rejudge_paths_update": {
+  "date": "2026-10-25",
+  "note": "The 'REJUDGE / rejudgeNN' replacements recorded in 'edits' below are superseded: the re-judge verify files moved to 07_results (local only, gitignored). c55_rj, c55_rj2, c36f_rj, c36f_gate_ref, c36f_postwin, c36f_compare now resolve them through 04_scripts/03_control/s8/rev53_56/rejudge_paths.py; s56_cd no longer names the (unused) re-judge folder. Outputs re-checked byte-identical to the scratchpad originals.",
+  "verify_dir_env": "S8_REJUDGE_DIR",
+  "verify_dir_default": "07_results/S8/archive/18_S8_extra/rejudge/<rev5x>/ (verify_S8C_*, verify_S8ML_{A,B}_*)",
+  "ml768_dir_env": "S8_REJUDGE_ML768_DIR",
+  "ml768_dir_default": "07_results/S8/archive/rejudge_ml768/<rev5x>/ (verify_S8ML_ml768_*)",
+  "git_summaries": "06_analysis/01_chrono/18_S8/rejudge/ (README.md, _manifest.json)"
+ },
+ "scripts": [
+  {
+   "src": "ctrl-run/c36_over_list.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36_over_list.py",
+   "src_sha256": "f45fc9ed52d3a7420ca2be3a273d79bd91fb6ed57b9a8ee399c9ea4bf3a39700",
+   "edits": []
+  },
+  {
+   "src": "ctrl-run/c36_work_def.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36_work_def.py",
+   "src_sha256": "c11e2df74224c9ba862f8e7222d4164d31c90e9a8181f9ccacc9f0f0071d951c",
+   "edits": []
+  },
+  {
+   "src": "ctrl-run/c36_work_detail.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36_work_detail.py",
+   "src_sha256": "7215b77c2e17ddcb5fe65c845ed4d94084ce9aec4ee6a98ead069d090172346f",
+   "edits": []
+  },
+  {
+   "src": "ctrl-run/c36_work_rule2.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36_work_rule2.py",
+   "src_sha256": "3daaebe39cb6b8248dc82e2a61561483b2ceedba746cb44713be286f82d0bf1b",
+   "edits": []
+  },
+  {
+   "src": "ctrl-run/c36_work_rules.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36_work_rules.py",
+   "src_sha256": "a8869a2e72471ee6d1558c9aba231a99c33bc07801a7067f24f9aa5d7b4efb1d",
+   "edits": []
+  },
+  {
+   "src": "ctrl-run/c36_work_view.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36_work_view.py",
+   "src_sha256": "4b8844b8c4df64216ac745029ba3700fe111590258aa878b151413be35f59721",
+   "edits": []
+  },
+  {
+   "src": "ctrl-run/c36f_compare.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_compare.py",
+   "src_sha256": "d6237987b02ddbd00b3f7714d5be51269e10bdfb89b554ceb5a1d7f7993f13ab",
+   "edits": [
+    [
+     "scratch",
+     "cad-run\\rejudge54\\verify_S8ML_ml768_rev54.json",
+     "str(REJUDGE / r\"rejudge54\\verify_S8ML_ml768_rev54.json\")"
+    ],
+    [
+     "scratch",
+     "ctrl-run",
+     "str(OUT_DIR)"
+    ],
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/c36f_defer.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_defer.py",
+   "src_sha256": "eaf12755368032c76000ebc6cbdaf8be2bcba7ae88a4c1ab045e03566d3b0a20",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/c36f_exposure.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_exposure.py",
+   "src_sha256": "d74045ad86884890211ebfd8c923cfc69df2dce79e8ff9a42d37a0c20d96e35b",
+   "edits": [
+    [
+     "scratch",
+     "ctrl-run\\c36f_exposure.json",
+     "str(OUT_DIR / r\"c36f_exposure.json\")"
+    ],
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/c36f_fallback.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_fallback.py",
+   "src_sha256": "1de3457aa42fd21a97afefa8f9105cddacd14ceb3f9e13a617ba39b05e4e8e6f",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/c36f_fs24.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_fs24.py",
+   "src_sha256": "b4658aa8d35f03a21ed905ed4a64131d5849c225c151f9639da34dca0ee84317",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8\\c36_20261025_155317\\D_fs24\\MLJ_FS24_Fs0",
+     "str(REPO / r\"07_results\\S8\\c36_20261025_155317\\D_fs24\\MLJ_FS24_Fs0\")"
+    ],
+    [
+     "repo",
+     "07_results\\S8\\mlj_20261025_080212\\MLJ_FS24_Fs0",
+     "str(REPO / r\"07_results\\S8\\mlj_20261025_080212\\MLJ_FS24_Fs0\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/c36f_fs24b.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_fs24b.py",
+   "src_sha256": "df86bfec102d6bc843c7e0fb886cb2153e9691157e73b3f5c001b9139bb04663",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8\\c36_20261025_155317\\D_fs24\\MLJ_FS24_Fs0\\pads.npz",
+     "str(REPO / r\"07_results\\S8\\c36_20261025_155317\\D_fs24\\MLJ_FS24_Fs0\\pads.npz\")"
+    ],
+    [
+     "repo",
+     "07_results\\S8\\mlj_20261025_080212\\MLJ_FS24_Fs0\\pads.npz",
+     "str(REPO / r\"07_results\\S8\\mlj_20261025_080212\\MLJ_FS24_Fs0\\pads.npz\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/c36f_gate_ref.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_gate_ref.py",
+   "src_sha256": "4e5afb03e0256348188195a81459fb3bb1ff4008a1fd66203c6ac7e67abb23f0",
+   "edits": [
+    [
+     "scratch",
+     "cad-run\\rejudge54",
+     "str(REJUDGE / r\"rejudge54\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/c36f_level.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_level.py",
+   "src_sha256": "620792f3f704ad1f8cfdcd94274bbf70972c20f3296e5429ea968455aee2989f",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/c36f_phase.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_phase.py",
+   "src_sha256": "9c2d36140080beef85478436dcc665bf316fe2b94bbbca0516bb92d8084adb52",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/c36f_postwin.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_postwin.py",
+   "src_sha256": "d89dc168b632bfbb610a3d99820d7383163f96d3545a76255c6b5bdab3e745fa",
+   "edits": [
+    [
+     "scratch",
+     "cad-run\\rejudge54\\verify_S8ML_ml768_rev54.json",
+     "str(REJUDGE / r\"rejudge54\\verify_S8ML_ml768_rev54.json\")"
+    ],
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/c36f_rj.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_rj.py",
+   "src_sha256": "15ce0628bcf1a62d919743ab94a17ab666c462cb7d7b2d041fc33d5bfabe65a5",
+   "edits": [
+    [
+     "scratch",
+     "cad-run\\rejudge54",
+     "str(REJUDGE / r\"rejudge54\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/c36f_rows.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_rows.py",
+   "src_sha256": "19bbdd72681fcd078cc3c4a48cd950b2df621b31f9dad54dcc261f3483a0c0c7",
+   "edits": []
+  },
+  {
+   "src": "ctrl-run/c36f_twist.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev54\\c36f_twist.py",
+   "src_sha256": "ba7751397a85c65367a5ffce35eee34cfefe0d3d8470e32827979f3a292c7dd1",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/s8ml_band_check.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev53\\s8ml_band_check.py",
+   "src_sha256": "7e3ce26e6270e2baf5c23ce666de3e2005c0edfcb91e64acd17338a1c758aff3",
+   "edits": [
+    [
+     "repo",
+     "Path(root)",
+     "REPO"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/s8ml_gate_miss.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev53\\s8ml_gate_miss.py",
+   "src_sha256": "69c930bb0e52df1c8930ccbf98359b4f4bad4936c6c2f50f1fffb1e9918c8577",
+   "edits": [
+    [
+     "repo",
+     "Path(root)",
+     "REPO"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/s8ml_train_dist.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev53\\s8ml_train_dist.py",
+   "src_sha256": "5f28801f972847966a216617ccf6fcde7f92c8dc6e4e039bfbeb7d12b9c4d0a8",
+   "edits": [
+    [
+     "repo",
+     "Path(root)",
+     "REPO"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run/s8ml_v2_extract.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev53\\s8ml_v2_extract.py",
+   "src_sha256": "4275ff47d73115619e9ff8e08936f6d275ff12db4e15a126f81421ed0f539be9",
+   "edits": []
+  },
+  {
+   "src": "ctrl-run55/c55_avail.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev55\\c55_avail.py",
+   "src_sha256": "530ccb6cda432ed09f54271d731f6d4e89cc883c687538f8bfd96f0103a7ac55",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8\\ml_main_20261025_090131\\episodes",
+     "str(REPO / r\"07_results\\S8\\ml_main_20261025_090131\\episodes\")"
+    ],
+    [
+     "out",
+     "os.path.dirname(os.path.abspath(__file__))",
+     "str(OUT_DIR)"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run55/c55_defer.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev55\\c55_defer.py",
+   "src_sha256": "c52314affe7f696d5dab022c29a0296dd4a8702316a5f3bf0370d623169973c9",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ],
+    [
+     "out",
+     "os.path.dirname(__file__)",
+     "str(OUT_DIR)"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run55/c55_rj.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev55\\c55_rj.py",
+   "src_sha256": "0f63e84c639a4e9538448c401015661e66041b916def3b8deb79726c03f6b769",
+   "edits": [
+    [
+     "scratch",
+     "cad-run",
+     "str(REJUDGE)"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run55/c55_rj2.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev55\\c55_rj2.py",
+   "src_sha256": "97673dc80d3d866d4d7d529d1d4d621ae759d6f673c312f4383805655d8546f9",
+   "edits": [
+    [
+     "scratch",
+     "cad-run\\rejudge55",
+     "str(REJUDGE / r\"rejudge55\")"
+    ],
+    [
+     "repo",
+     "07_results\\S8\\c36_20261025_155317",
+     "str(REPO / r\"07_results\\S8\\c36_20261025_155317\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run56/s56_cd.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev56\\s56_cd.py",
+   "src_sha256": "36d7baa2a0442c4e1a05256edd95c3bf35be0da08a52de93cacff38a1fcb78d5",
+   "edits": [
+    [
+     "scratch",
+     "cad-run55",
+     "str(REJUDGE)  # was scratchpad cad-run55 (unused)"
+    ],
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run56/s56_compare.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev56\\s56_compare.py",
+   "src_sha256": "d4a5ffc0b4c373714f73016eb26ae8f964f8da29c85a7ed4812771932c04e861",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ],
+    [
+     "out",
+     "os.path.dirname(os.path.abspath(__file__))",
+     "str(OUT_DIR)"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run56/s56_done.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev56\\s56_done.py",
+   "src_sha256": "2140d351cc444a256bb33ca35094f5953096233b9008ee82850554a6a29775c0",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ],
+    [
+     "out",
+     "os.path.dirname(os.path.abspath(__file__))",
+     "str(OUT_DIR)"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run56/s56_drain.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev56\\s56_drain.py",
+   "src_sha256": "c278f2cd89f62661ef62150093656234273fea12cfe9361697df605aed990620",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8\\c37_20261025_180821\\E_drain\\episodes",
+     "str(REPO / r\"07_results\\S8\\c37_20261025_180821\\E_drain\\episodes\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run56/s56_phase.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev56\\s56_phase.py",
+   "src_sha256": "5b76e4a6595f208da494199a9b3205abda59df3ae29399fa03589eabf88a314c",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run56/s56_rows.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev56\\s56_rows.py",
+   "src_sha256": "a97fa15ee03719d893aab16c1f139528eb0ea3eae72b7cbe9f02c3268f1c0056",
+   "edits": []
+  },
+  {
+   "src": "ctrl-run56/s56_summary.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev56\\s56_summary.py",
+   "src_sha256": "28ae9d61e05d579be1baa1d71b9924d7f64dcde123f2c6eacbcfd77f0a62f6f7",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  },
+  {
+   "src": "ctrl-run56/s56_tail.py",
+   "dst": "04_scripts\\03_control\\s8\\rev53_56\\rev56\\s56_tail.py",
+   "src_sha256": "dd477f32d691b9634531a8f4e22899a3e388e267420db0d4374c812af4177b47",
+   "edits": [
+    [
+     "repo",
+     "07_results\\S8",
+     "str(REPO / r\"07_results\\S8\")"
+    ]
+   ]
+  }
+ ],
+ "results": [
+  {
+   "src": "ctrl-run/c36_work_768.txt",
+   "dst": "06_analysis\\02_control\\s8\\rev53_56\\rev54\\c36_work_768.txt",
+   "bytes": 81329,
+   "sha256": "389bbe578dd71c8f9184f521c7f59b50de654d97fd2a56bb17d4a933994e4714"
+  },
+  {
+   "src": "ctrl-run/c36f_compare.csv",
+   "dst": "06_analysis\\02_control\\s8\\rev53_56\\rev54\\c36f_compare.csv",
+   "bytes": 20776,
+   "sha256": "04c72b297330717873b5fe6ee71bad7dc5940c162a7a530e0f46a779229c9f1c"
+  },
+  {
+   "src": "ctrl-run/c36f_exposure.json",
+   "dst": "06_analysis\\02_control\\s8\\rev53_56\\rev54\\c36f_exposure.json",
+   "bytes": 116152,
+   "sha256": "685e6d8063f32a5d5a11451617851108a951166a1d8815cbd66cb5d7d322511d"
+  },
+  {
+   "src": "ctrl-run55/c55_avail_c36A17.json",
+   "dst": "06_analysis\\02_control\\s8\\rev53_56\\rev55\\c55_avail_c36A17.json",
+   "bytes": 8513,
+   "sha256": "ede567fe5e0456a217d4e1ce4133bcf349c3e0603efd29f48cbda4fcf2dfad4e"
+  },
+  {
+   "src": "ctrl-run55/c55_defer.json",
+   "dst": "06_analysis\\02_control\\s8\\rev53_56\\rev55\\c55_defer.json",
+   "bytes": 21659,
+   "sha256": "166289519c79e7cc01d174fb5cb4d1f3209380e2aa5bc47f55ec49b916344b26"
+  },
+  {
+   "src": "ctrl-run56/avail_E.json",
+   "dst": "06_analysis\\02_control\\s8\\rev53_56\\rev56\\avail_E.json",
+   "bytes": 6324,
+   "sha256": "55fd491aae671762eaebda191ddd8850fd33c81579fae8ca622dd6aba798ad0a"
+  },
+  {
+   "src": "ctrl-run56/c55_defer.json",
+   "dst": "06_analysis\\02_control\\s8\\rev53_56\\rev56\\c55_defer.json",
+   "bytes": 6859,
+   "sha256": "d85921957116cf53dfbed5612ce889b4ecc0ba769ad1498dc91bd90a56a7a71b"
+  },
+  {
+   "src": "ctrl-run56/s56_compare.json",
+   "dst": "06_analysis\\02_control\\s8\\rev53_56\\rev56\\s56_compare.json",
+   "bytes": 30720,
+   "sha256": "1a4309d794f270939e834b50a9e64d7ee000dd0886f17e94e3f2a70c02d867c9"
+  },
+  {
+   "src": "ctrl-run56/s56_done.json",
+   "dst": "06_analysis\\02_control\\s8\\rev53_56\\rev56\\s56_done.json",
+   "bytes": 8641,
+   "sha256": "c8b2d05218827874ea5eb6cb4f0503e37f33798b1efcf48e202919bbe9152b68"
+  }
+ ],
+ "skipped": [
+  {
+   "src": "ctrl-run/c36_work_768.json",
+   "bytes": 1115440,
+   "sha256": "c30cc1e07f21a8ebd38be3b10bf932adc5ebfa1eff9b0374890e5246f687af1e",
+   "reason": "> 1 MB, not copied"
+  }
+ ],
+ "duplicates": [
+  {
+   "src": "ctrl-run56/c55_avail.py",
+   "same_as": "04_scripts\\03_control\\s8\\rev53_56\\rev55\\c55_avail.py"
+  },
+  {
+   "src": "ctrl-run56/c55_defer.py",
+   "same_as": "04_scripts\\03_control\\s8\\rev53_56\\rev55\\c55_defer.py"
+  }
+ ]
+}

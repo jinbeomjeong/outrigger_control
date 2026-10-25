@@ -1,0 +1,157 @@
+{
+ "target": "rest",
+ "batch": "C:\\workspace\\outrigger_control\\07_results\\S8\\rest_20261024_233615",
+ "wall_s": 123.84182359999977,
+ "old_failed": [],
+ "new_failed": [],
+ "only_old": [],
+ "only_new": [],
+ "rows_old": 1997,
+ "rows_new": 2181,
+ "item9_cases": 45,
+ "item9_raw_vs_corrected_differs": {
+  "N_RE1bF_Fs8_pressure": {
+   "J_P": {
+    "corrected": {
+     "M1": 1,
+     "M1p": 0,
+     "M4_kN": null
+    },
+    "raw": {
+     "M1": 0,
+     "M1p": 0,
+     "M4_kN": null
+    },
+    "upper": {
+     "M1": 0,
+     "M1p": 0,
+     "M4_kN": null
+    }
+   },
+   "J_C": {
+    "corrected": {
+     "M1": 0,
+     "M1p": 0,
+     "M4_kN": null
+    },
+    "raw": {
+     "M1": 0,
+     "M1p": 0,
+     "M4_kN": null
+    },
+    "upper": {
+     "M1": 0,
+     "M1p": 0,
+     "M4_kN": null
+    }
+   },
+   "stats": {
+    "source": "N_raw",
+    "samples": 809,
+    "corrected_per_leg": {
+     "FL": 255,
+     "FR": 249,
+     "RL": 245,
+     "RR": 263
+    },
+    "lifted_per_leg": {
+     "FL": 255,
+     "FR": 249,
+     "RL": 244,
+     "RR": 263
+    }
+   }
+  }
+ },
+ "new_rows": [
+  {
+   "item": "I1 J_C: M1 = 0, M1' = 0 (fast events), F2 = 0",
+   "case": "*",
+   "value": [
+    0,
+    0,
+    0
+   ],
+   "limit": 0,
+   "passed": true,
+   "kind": "judged",
+   "note": "3 combined cases, 2 episodes, upper95 0.776393202250021; sampling_only 0 of the 0 missed (211.2: judgement level missed between 10 Hz samples, action level within t_on + tau_d; still counted in the gate until U-S8-7)"
+  },
+  {
+   "item": "I1 raw reading: J_C / J_P M1 missed, M1' late (record)",
+   "case": "*",
+   "value": {
+    "J_C": {
+     "cases": 15,
+     "M1_missed_combined": 0,
+     "M1_missed_all": 0,
+     "M1p_late_all": 0
+    },
+    "J_P": {
+     "cases": 15,
+     "M1_missed_combined": 0,
+     "M1_missed_all": 2,
+     "M1p_late_all": 0
+    }
+   },
+   "limit": null,
+   "passed": null,
+   "kind": "record",
+   "note": "default judgement (I1 row) = corrected reading (+0.5 kN where pad N < 1.5 kN)"
+  },
+  {
+   "item": "I1 upper_sensitivity reading: J_C / J_P M1 missed, M1' late (sensitivity)",
+   "case": "*",
+   "value": {
+    "J_C": {
+     "cases": 15,
+     "M1_missed_combined": 0,
+     "M1_missed_all": 0,
+     "M1p_late_all": 0
+    },
+    "J_P": {
+     "cases": 15,
+     "M1_missed_combined": 0,
+     "M1_missed_all": 2,
+     "M1p_late_all": 0
+    }
+   },
+   "limit": null,
+   "passed": null,
+   "kind": "sensitivity",
+   "note": "default judgement (I1 row) = corrected reading (+0.5 kN where pad N < 1.5 kN)"
+  },
+  {
+   "item": "C-S8-37 re-approach record after the event: runs / re-triggers / deferred starts (P-S8-16 RT; record)",
+   "case": "*",
+   "value": {
+    "runs_with_reapproach": 5,
+    "runs_after_event": 5,
+    "retriggers": 0,
+    "deferred": 0,
+    "starts_after_1.5_s": 2,
+    "runs_with_deferred": []
+   },
+   "limit": null,
+   "passed": null,
+   "kind": "record",
+   "note": "N_G4_Fs0_pressure: 1 runs, None re-trig, 0 deferred, 1 after 1.5 s; N_RE1bF_Fs0_pressure: 1 runs, None re-trig, 0 deferred, 0 after 1.5 s; N_RE1bF_Fs8_pressure: 1 runs, None re-trig, 0 deferred, 0 after 1.5 s; N_RE1c_Fs0_combined: 1 runs, None re-trig, 0 deferred, 1 after 1.5 s; N_RE1c_Fs8_combined: 1 runs, None re-trig, 0 deferred, 0 after 1.5 s"
+  },
+  {
+   "item": "C-S8-36 twist-mode actuator work, every 0.5 s bin after event + 1.5 s <= +20 J (ASSUMPTION) - record (runs without the RT variant tag)",
+   "case": "*",
+   "value": {
+    "runs": 12,
+    "over_limit": 2,
+    "worst": [
+     "N_RE1c_Fs0_combined",
+     180.18
+    ]
+   },
+   "limit": 20.0,
+   "passed": null,
+   "kind": "record",
+   "note": "N_RE1c_Fs0_combined: 180.2 J; N_RE1c_Fs8_combined: 178.9 J"
+  }
+ ]
+}

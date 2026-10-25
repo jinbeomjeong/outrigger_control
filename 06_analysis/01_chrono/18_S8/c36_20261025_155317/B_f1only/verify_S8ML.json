@@ -1,0 +1,1852 @@
+{
+ "meta": {
+  "batch": "07_results\\S8\\c36_20261025_155317\\B_f1only",
+  "module": "outrigger_sim.verify.s8_control",
+  "rows": 27,
+  "failed": 2,
+  "bases_recorded": 0,
+  "episodes_recorded": 2,
+  "plan": {
+   "bases": 2,
+   "episodes": 2
+  },
+  "ref_twist_work": {
+   "episodes": "C:\\workspace\\outrigger_control\\07_results\\S8\\ml_main_20261025_090131\\episodes",
+   "source": "--ref-batch"
+  },
+  "judge_revision": "spec rev. 54 248.3 / 249 / 251 (C-S8-40: twist-work row = recurrence ban, forced window [start, done_s + 0.1 s] masked, clusters of 0.5 s bins > +20 J after event + 1.5 s <= 1, judged for RT-variant runs, records: rev. 52 bin max / masked bin max / largest cluster, reference-batch FLAG > +20 J; item 9 default reading + delta_i = min(0.5 kN, 2 F_s,i) on L2b-NSC legs with F_s,i > 0 where pad N < 1.5 kN, all-apply +0.5 kN = sensitivity rows) on spec rev. 52 232 / 230 (C-S8-37, U-S8-51: item 9 default = corrected reading + 0.5 kN where pad N < 1.5 kN, raw reading record rows, F_s - m g ceiling sensitivity rows; RT record rows (runs / re-triggers / deferred) and the twist-work row <= +20 J per 0.5 s bin after event + 1.5 s, judged for RT-variant runs) on spec rev. 51 225 (C-S8-34, U-S8-44 / 47: ① ML-0 FAULT split by cause, stroke-end FAULT = U-S8-44 protective stop row, ② event-leg row does not repeat an ML-0 FAULT, ③ ML-2 rod fallback with the applied commands and plant lock, ④ ML tags fault_tail / plant_rod_collapse / reapproach_pingpong + H-S8-4 12.6 plant_release_rod_step and collapse windows to re-contact + 0.1 s) on spec rev. 50 220.6 (C-S8-33, U-S8-41..43: ① s6 floor event also = result.event settle faster than v_max (event legs settled + diagonal, U-S8-32 window), ② item 4 moving = |u_applied| > 1e-6 m/s, ③ injected-leg rod fallback within [fault, +2 T] expected, ④ C-S8-29 guard_cap_s from cmp_guard_u (push_cap_s = former issued_u count), h* / h_a / R_ub per lock window, F1 calibrated record without the faulty leg after the fault, ⑤ C-S8-24 round-start lower bounds vs 24.41 kN) on spec rev. 49 219.11 (C-S8-27 update: U-S8-37 event-leg re-contact gate 3.0 s + 2.5 s flag column, U-S8-39 forced retract 203.1 row; C-S8-32 D1'' step ratio row) on rev. 48 218.13 (C-S8-27 ① U-S8-32 adjacent / event legs, ② FAULT reason, ③ forced retract events, ④ FAULT mask; U-S8-34 forced window not masked), rev. 47 217.9 and rev. 46 216.8 ML-0 ... ML-3",
+  "mask_rule": "C-S8-27 ④ / U-S8-34 (spec rev. 48 218.13): mask = FAULT entry .. run end (fault_t_s); the forced-retract window is no longer masked for ForcedRetract(others='controller') (U-S8-34, in-window products recorded only); pre-U-S8-27 episodes (every leg held to the run end) keep start .. end + 3 s",
+  "u_s8_32": {
+   "u57_lift_sum_s": 0.5,
+   "u57_gap_m": 0.002,
+   "u57_cap_s": 5.0,
+   "event_leg_cum_s": 1.8,
+   "event_leg_recontact_s": 3.0,
+   "event_leg_recontact_nominal_s": 2.5
+  },
+  "d1pp_step_ratio": {
+   "flag": 0.4,
+   "step_bar": 100.0,
+   "grades_kN": [
+    0.0,
+    2.5,
+    5.0
+   ]
+  },
+  "stroke_end_rule": "U-S8-44 (spec rev. 51 222.2 / 224): a stroke-end FAULT is a protective stop; it passes when the floor is outside the operating diamond |phi_g|/4.4 + |theta_g|/3.2 > 1 and, from the FAULT entry to the run end, every leg's 1 ms judged force >= F_min + 5 kN, no pad lift and the true attitude error (pads body_quat_wxyz vs controller target) <= 0.2 deg; inside the operating diamond it fails. Cause: P-S8-17 event FAULT_STROKE_END:<leg>, else the record (every meas.stroke sample of a leg over the 2 s before the FAULT >= soft end - margin)",
+  "ml_tag_rules": {
+   "fault_tail": "ml_mask with reason 'fault' (FAULT entry .. run end); excluded from training and E1..E4 (already masked)",
+   "plant_rod_collapse": "locked lift-off with a rod-pressure fall > 50 bar within 10 ms (rev. 51 222.4), window lift-off +- 0.3 s; training weight 0, kept in the test metrics and shown apart",
+   "reapproach_pingpong": ">= 3 re-approach starts later than event + 1.5 s (rev. 51 222.3), window event + 1.5 s .. last re-approach end + 1 s; training as is, E1 / E3 reported apart",
+   "plant_release_rod_step": "H-S8-4 F1 reading step: plant release (valve |u| > lock_eps) with a 1 ms rod-pressure change > 20 bar, not a plant_rod_collapse; window [t_b, t_b + 0.3 s]; weight 0 on that leg's head / rod pressure features only (net force, stroke, IMU and labels kept); none after the F1 fix"
+  }
+ },
+ "rows": [
+  {
+   "item": "ML-0 failed runs (case.log 'failed' / no result.json; excluded from every ML row and mask)",
+   "case": "*",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "0 excluded, 0 still running / not finished; {}",
+   "kind": "judged",
+   "source": "s8_control",
+   "failed": {},
+   "running": []
+  },
+  {
+   "item": "ML-0 base runs reach READY (and branch)",
+   "case": "*",
+   "value": [
+    0,
+    0,
+    2
+   ],
+   "limit": 2,
+   "passed": null,
+   "note": "ready 0 of 0 recorded bases (plan 2); batch incomplete: not judged; not ready: []",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "ML-0 episode meta: crawler_contact / crawler_check_passed (P-S8-10), sensor_grade / zero_calibration split (P-S8-9)",
+   "case": "*",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "2 runs checked; {}",
+   "kind": "judged",
+   "source": "s8_control",
+   "bad": {}
+  },
+  {
+   "item": "ML-0 runs per crawler contact (record)",
+   "case": "*",
+   "value": {
+    "nsc_rigid": 2
+   },
+   "limit": null,
+   "passed": null,
+   "note": "episodes recorded 2 (plan 2)",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "ML-0 no FAULT entry without a sensor-fault injection, stroke-end FAULT apart (C-S8-26 ②; reason from INFO_HEAD_PRESSURE_FAULT_REASON, C-S8-27 ②; cause split C-S8-34 ①)",
+   "case": "*",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "none; stroke-end FAULT judged by U-S8-44 below: []",
+   "kind": "judged",
+   "source": "s8_control",
+   "fault": {},
+   "stroke_end": []
+  },
+  {
+   "item": "ML-0 FAULT entries by cause (C-S8-34 ①, record)",
+   "case": "*",
+   "value": {},
+   "limit": null,
+   "passed": null,
+   "note": "none",
+   "kind": "record",
+   "source": "s8_control",
+   "by_cause": {}
+  },
+  {
+   "item": "ML-0 D1 step rule per run (C-S8-28 meta, record)",
+   "case": "*",
+   "value": {
+    "explained_imu": 2
+   },
+   "limit": null,
+   "passed": null,
+   "note": "explained_imu: 2",
+   "kind": "record",
+   "source": "s8_control",
+   "step_rules": {
+    "explained_imu": [
+     "ML78_ep0",
+     "ML88_ep0"
+    ]
+   }
+  },
+  {
+   "item": "ML-0 episode settings refreshed after the branch restore and 1-period compare old vs refreshed (C-S8-25 ③, record)",
+   "case": "*",
+   "value": {
+    "refreshed": 2,
+    "compared": 2,
+    "differ": 0
+   },
+   "limit": null,
+   "passed": null,
+   "note": "episodes 2; differ {}",
+   "kind": "record",
+   "source": "s8_control",
+   "differ": {}
+  },
+  {
+   "item": "ML-1 runs with a rod-pressure fallback warning (record)",
+   "case": "*",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "none",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "ML-1 / ML-2 INFO_PRESSURE_STEP explained pressure steps (D1', U-S8-26; record)",
+   "case": "*",
+   "value": 12,
+   "limit": null,
+   "passed": null,
+   "note": "2 runs; {'ML78_ep0': [('FL', 56.1, 'rod:lock_load_loss'), ('FL', 56.3, 'rod:lock_load_regain'), ('FR', 56.4, 'head:imu_residual'), ('FR', 56.7, 'head:imu_residual'), ('FL', 57.1, 'head:imu_residual'), ('FR', 57.1, 'head:imu_residual'), ('FL', 57.3, 'head:imu_residual'), ('FR', 57.6, 'head:imu_residual'), ('RL', 57.6, 'head:imu_residual'), ('RL', 57.8, 'head:imu_residual'), ('RR', 58.1, 'head:imu_residual')], 'ML88_ep0': [('RR', 60.2, 'rod:lock_load_loss')]}",
+   "kind": "record",
+   "source": "s8_control",
+   "steps": {
+    "ML78_ep0": [
+     [
+      "FL",
+      56.1,
+      "rod:lock_load_loss"
+     ],
+     [
+      "FL",
+      56.3,
+      "rod:lock_load_regain"
+     ],
+     [
+      "FR",
+      56.4,
+      "head:imu_residual"
+     ],
+     [
+      "FR",
+      56.7,
+      "head:imu_residual"
+     ],
+     [
+      "FL",
+      57.1,
+      "head:imu_residual"
+     ],
+     [
+      "FR",
+      57.1,
+      "head:imu_residual"
+     ],
+     [
+      "FL",
+      57.3,
+      "head:imu_residual"
+     ],
+     [
+      "FR",
+      57.6,
+      "head:imu_residual"
+     ],
+     [
+      "RL",
+      57.6,
+      "head:imu_residual"
+     ],
+     [
+      "RL",
+      57.8,
+      "head:imu_residual"
+     ],
+     [
+      "RR",
+      58.1,
+      "head:imu_residual"
+     ]
+    ],
+    "ML88_ep0": [
+     [
+      "RR",
+      60.2,
+      "rod:lock_load_loss"
+     ]
+    ]
+   }
+  },
+  {
+   "item": "U-S8-30 settlement episodes with a pad lift: longest lift per episode (record, every settlement; flag > 0.5 s)",
+   "case": "*",
+   "value": {
+    "episodes": 2,
+    "over_flag": 1
+   },
+   "limit": null,
+   "passed": null,
+   "note": "{'ML78_ep0': 0.558, 'ML88_ep0': 0.353}",
+   "kind": "record",
+   "source": "s8_control",
+   "longest": {
+    "ML78_ep0": 0.558,
+    "ML88_ep0": 0.353
+   }
+  },
+  {
+   "item": "U-S8-32 adjacent legs U57: lift sum <= 0.5 s, gap <= 2 mm in the physical window, 0 outside",
+   "case": "ML78_ep0",
+   "value": [
+    0.386,
+    2.169,
+    0.0
+   ],
+   "limit": [
+    0.5,
+    2.0,
+    0.0
+   ],
+   "passed": false,
+   "note": "settle FL 24.1 mm / 0.0994 s (242 mm/s); window event .. +4.46 s (T3 0.82 s); adjacent ['FR', 'RL'] per leg {'FR': 0.087, 'RL': 0.299}",
+   "kind": "judged",
+   "source": "s8_control",
+   "split": {
+    "settle_leg": "FL",
+    "depth_m": 0.02406,
+    "ramp_s": 0.0994,
+    "settle_speed_mm_s": 242.0523138832998,
+    "event_legs": [
+     "FL",
+     "RR"
+    ],
+    "adjacent_legs": [
+     "FR",
+     "RL"
+    ],
+    "cum_lift_s": {
+     "FL": 0.5750000001816602,
+     "FR": 0.08700000002733077,
+     "RL": 0.29900000009405403,
+     "RR": 0.9360000002897095
+    },
+    "any_lift": true,
+    "event": {
+     "FL": {
+      "cum_s": 0.5750000001816602,
+      "lifts": 3,
+      "first_lift_rel_s": 0.03600000021992855,
+      "last_recontact_rel_s": 1.4240000006602145,
+      "lifted_at_end": false,
+      "gap_max_m": 0.012356325315123845
+     },
+     "RR": {
+      "cum_s": 0.9360000002897095,
+      "lifts": 4,
+      "first_lift_rel_s": 0.12300000024754354,
+      "last_recontact_rel_s": 3.6430000012105097,
+      "lifted_at_end": false,
+      "gap_max_m": 0.020067525024826005
+     }
+    },
+    "primary": "RR",
+    "event_cum_max_s": 0.9360000002897095,
+    "event_recontact_max_rel_s": 3.6430000012105097,
+    "fault_t_s": null,
+    "fault_after_event": false,
+    "fault_gate": true,
+    "fault_cause": null,
+    "event_pass": false,
+    "event_recontact_gate_s": 3.0,
+    "event_recontact_nominal_s": 2.5,
+    "event_recontact_within_nominal": false,
+    "window_end_rel_s": 4.46300000121051,
+    "t3_s": 0.82,
+    "window_capped": false,
+    "adjacent_sum_s": 0.3860000001213848,
+    "adjacent_per_leg_s": {
+     "FR": 0.08700000002733077,
+     "RL": 0.29900000009405403
+    },
+    "adjacent_gap_max_m": 0.0021689484794222835,
+    "adjacent_outside_window_s": 0.0,
+    "u57_pass": false,
+    "rule": "U-S8-32 (spec rev. 48 218.5) / U-S8-37 (rev. 49 219.3): event legs = settled + diagonal, adjacent = the other two; U57 physical window (spec 62) on the adjacent legs; event legs: cumulative lift <= 1.8 s, last re-contact <= event + 3.0 s (gate; <= 2.5 s nominal-damping flag column), FAULT 0 (ASSUMPTION)",
+    "T3_from_top_level": false
+   }
+  },
+  {
+   "item": "U-S8-32 event legs (settled + diagonal): cumulative lift <= 1.8 s, last re-contact <= event + 3 s (U-S8-37; column <= 2.5 s nominal damping, display), FAULT 0 (ASSUMPTION)",
+   "case": "ML78_ep0",
+   "value": [
+    0.936,
+    3.643,
+    null,
+    false
+   ],
+   "limit": [
+    1.8,
+    3.0,
+    null,
+    "<= 2.5 s (flag)"
+   ],
+   "passed": false,
+   "note": "settle FL 24.1 mm / 0.0994 s (242 mm/s); window event .. +4.46 s (T3 0.82 s); FLAG re-contact 3.643 s > 2.5 s (nominal damping expectation, U-S8-37 display only); primary RR; per event leg FL cum 0.575 s, lifts 3, re-contact 1.4240000006602145, gap 12.4 mm; RR cum 0.936 s, lifts 4, re-contact 3.6430000012105097, gap 20.1 mm",
+   "kind": "judged",
+   "source": "s8_control",
+   "split": {
+    "settle_leg": "FL",
+    "depth_m": 0.02406,
+    "ramp_s": 0.0994,
+    "settle_speed_mm_s": 242.0523138832998,
+    "event_legs": [
+     "FL",
+     "RR"
+    ],
+    "adjacent_legs": [
+     "FR",
+     "RL"
+    ],
+    "cum_lift_s": {
+     "FL": 0.5750000001816602,
+     "FR": 0.08700000002733077,
+     "RL": 0.29900000009405403,
+     "RR": 0.9360000002897095
+    },
+    "any_lift": true,
+    "event": {
+     "FL": {
+      "cum_s": 0.5750000001816602,
+      "lifts": 3,
+      "first_lift_rel_s": 0.03600000021992855,
+      "last_recontact_rel_s": 1.4240000006602145,
+      "lifted_at_end": false,
+      "gap_max_m": 0.012356325315123845
+     },
+     "RR": {
+      "cum_s": 0.9360000002897095,
+      "lifts": 4,
+      "first_lift_rel_s": 0.12300000024754354,
+      "last_recontact_rel_s": 3.6430000012105097,
+      "lifted_at_end": false,
+      "gap_max_m": 0.020067525024826005
+     }
+    },
+    "primary": "RR",
+    "event_cum_max_s": 0.9360000002897095,
+    "event_recontact_max_rel_s": 3.6430000012105097,
+    "fault_t_s": null,
+    "fault_after_event": false,
+    "fault_gate": true,
+    "fault_cause": null,
+    "event_pass": false,
+    "event_recontact_gate_s": 3.0,
+    "event_recontact_nominal_s": 2.5,
+    "event_recontact_within_nominal": false,
+    "window_end_rel_s": 4.46300000121051,
+    "t3_s": 0.82,
+    "window_capped": false,
+    "adjacent_sum_s": 0.3860000001213848,
+    "adjacent_per_leg_s": {
+     "FR": 0.08700000002733077,
+     "RL": 0.29900000009405403
+    },
+    "adjacent_gap_max_m": 0.0021689484794222835,
+    "adjacent_outside_window_s": 0.0,
+    "u57_pass": false,
+    "rule": "U-S8-32 (spec rev. 48 218.5) / U-S8-37 (rev. 49 219.3): event legs = settled + diagonal, adjacent = the other two; U57 physical window (spec 62) on the adjacent legs; event legs: cumulative lift <= 1.8 s, last re-contact <= event + 3.0 s (gate; <= 2.5 s nominal-damping flag column), FAULT 0 (ASSUMPTION)",
+    "T3_from_top_level": false
+   },
+   "recontact_within_nominal": false
+  },
+  {
+   "item": "U-S8-32 adjacent legs U57: lift sum <= 0.5 s, gap <= 2 mm in the physical window, 0 outside",
+   "case": "ML88_ep0",
+   "value": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "limit": [
+    0.5,
+    2.0,
+    0.0
+   ],
+   "passed": true,
+   "note": "settle FL 16.9 mm / 0.3201 s (53 mm/s); window event .. +1.76 s (T3 0.82 s); adjacent ['FR', 'RL'] per leg {}",
+   "kind": "judged",
+   "source": "s8_control",
+   "split": {
+    "settle_leg": "FL",
+    "depth_m": 0.01692,
+    "ramp_s": 0.3201,
+    "settle_speed_mm_s": 52.85848172446111,
+    "event_legs": [
+     "FL",
+     "RR"
+    ],
+    "adjacent_legs": [
+     "FR",
+     "RL"
+    ],
+    "cum_lift_s": {
+     "FL": 0.11900000003748801,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.4930000001559165
+    },
+    "any_lift": true,
+    "event": {
+     "FL": {
+      "cum_s": 0.11900000003748801,
+      "lifts": 1,
+      "first_lift_rel_s": 0.6010000003992673,
+      "last_recontact_rel_s": 0.7200000004367553,
+      "lifted_at_end": false,
+      "gap_max_m": 0.0009945994989291052
+     },
+     "RR": {
+      "cum_s": 0.4930000001559165,
+      "lifts": 2,
+      "first_lift_rel_s": 0.20400000027325405,
+      "last_recontact_rel_s": 0.9400000005065863,
+      "lifted_at_end": false,
+      "gap_max_m": 0.01122160992858623
+     }
+    },
+    "primary": "RR",
+    "event_cum_max_s": 0.4930000001559165,
+    "event_recontact_max_rel_s": 0.9400000005065863,
+    "fault_t_s": null,
+    "fault_after_event": false,
+    "fault_gate": true,
+    "fault_cause": null,
+    "event_pass": true,
+    "event_recontact_gate_s": 3.0,
+    "event_recontact_nominal_s": 2.5,
+    "event_recontact_within_nominal": true,
+    "window_end_rel_s": 1.7600000005065866,
+    "t3_s": 0.82,
+    "window_capped": false,
+    "adjacent_sum_s": 0.0,
+    "adjacent_per_leg_s": {},
+    "adjacent_gap_max_m": 0.0,
+    "adjacent_outside_window_s": 0.0,
+    "u57_pass": true,
+    "rule": "U-S8-32 (spec rev. 48 218.5) / U-S8-37 (rev. 49 219.3): event legs = settled + diagonal, adjacent = the other two; U57 physical window (spec 62) on the adjacent legs; event legs: cumulative lift <= 1.8 s, last re-contact <= event + 3.0 s (gate; <= 2.5 s nominal-damping flag column), FAULT 0 (ASSUMPTION)",
+    "T3_from_top_level": true
+   }
+  },
+  {
+   "item": "U-S8-32 event legs (settled + diagonal): cumulative lift <= 1.8 s, last re-contact <= event + 3 s (U-S8-37; column <= 2.5 s nominal damping, display), FAULT 0 (ASSUMPTION)",
+   "case": "ML88_ep0",
+   "value": [
+    0.493,
+    0.94,
+    null,
+    true
+   ],
+   "limit": [
+    1.8,
+    3.0,
+    null,
+    "<= 2.5 s (flag)"
+   ],
+   "passed": true,
+   "note": "settle FL 16.9 mm / 0.3201 s (53 mm/s); window event .. +1.76 s (T3 0.82 s); primary RR; per event leg FL cum 0.119 s, lifts 1, re-contact 0.7200000004367553, gap 1.0 mm; RR cum 0.493 s, lifts 2, re-contact 0.9400000005065863, gap 11.2 mm",
+   "kind": "judged",
+   "source": "s8_control",
+   "split": {
+    "settle_leg": "FL",
+    "depth_m": 0.01692,
+    "ramp_s": 0.3201,
+    "settle_speed_mm_s": 52.85848172446111,
+    "event_legs": [
+     "FL",
+     "RR"
+    ],
+    "adjacent_legs": [
+     "FR",
+     "RL"
+    ],
+    "cum_lift_s": {
+     "FL": 0.11900000003748801,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.4930000001559165
+    },
+    "any_lift": true,
+    "event": {
+     "FL": {
+      "cum_s": 0.11900000003748801,
+      "lifts": 1,
+      "first_lift_rel_s": 0.6010000003992673,
+      "last_recontact_rel_s": 0.7200000004367553,
+      "lifted_at_end": false,
+      "gap_max_m": 0.0009945994989291052
+     },
+     "RR": {
+      "cum_s": 0.4930000001559165,
+      "lifts": 2,
+      "first_lift_rel_s": 0.20400000027325405,
+      "last_recontact_rel_s": 0.9400000005065863,
+      "lifted_at_end": false,
+      "gap_max_m": 0.01122160992858623
+     }
+    },
+    "primary": "RR",
+    "event_cum_max_s": 0.4930000001559165,
+    "event_recontact_max_rel_s": 0.9400000005065863,
+    "fault_t_s": null,
+    "fault_after_event": false,
+    "fault_gate": true,
+    "fault_cause": null,
+    "event_pass": true,
+    "event_recontact_gate_s": 3.0,
+    "event_recontact_nominal_s": 2.5,
+    "event_recontact_within_nominal": true,
+    "window_end_rel_s": 1.7600000005065866,
+    "t3_s": 0.82,
+    "window_capped": false,
+    "adjacent_sum_s": 0.0,
+    "adjacent_per_leg_s": {},
+    "adjacent_gap_max_m": 0.0,
+    "adjacent_outside_window_s": 0.0,
+    "u57_pass": true,
+    "rule": "U-S8-32 (spec rev. 48 218.5) / U-S8-37 (rev. 49 219.3): event legs = settled + diagonal, adjacent = the other two; U57 physical window (spec 62) on the adjacent legs; event legs: cumulative lift <= 1.8 s, last re-contact <= event + 3.0 s (gate; <= 2.5 s nominal-damping flag column), FAULT 0 (ASSUMPTION)",
+    "T3_from_top_level": true
+   },
+   "recontact_within_nominal": true
+  },
+  {
+   "item": "U-S8-32 summary: settlement episodes with a lift, adjacent U57 failures, event-leg failures (record)",
+   "case": "*",
+   "value": {
+    "episodes": 2,
+    "adjacent_fail": 1,
+    "event_fail": 1,
+    "event_recontact_over_nominal": 1
+   },
+   "limit": null,
+   "passed": null,
+   "note": "worst adjacent ML78_ep0 0.386 s / 2.17 mm; event-leg re-contact > 2.5 s (nominal damping flag, 219.8 re-open at >= 2 nominal-damping runs): ['ML78_ep0']",
+   "kind": "record",
+   "source": "s8_control",
+   "over_nominal": [
+    "ML78_ep0"
+   ]
+  },
+  {
+   "item": "ML tag reapproach_pingpong: episodes with >= 3 re-approach starts later than event + 1.5 s (C-S8-34 ④, spec rev. 51 222.3 / 223.2; record)",
+   "case": "*",
+   "value": 1,
+   "limit": null,
+   "passed": null,
+   "note": "ML78_ep0: 5 late starts, window 57.50..61.70 s",
+   "kind": "record",
+   "source": "s8_control",
+   "episodes": [
+    "ML78_ep0"
+   ]
+  },
+  {
+   "item": "C-S8-37 re-approach record after the event: runs / re-triggers / deferred starts (P-S8-16 RT; record)",
+   "case": "*",
+   "value": {
+    "runs_with_reapproach": 2,
+    "runs_after_event": 12,
+    "retriggers": 0,
+    "deferred": 0,
+    "starts_after_1.5_s": 5,
+    "runs_with_deferred": []
+   },
+   "limit": null,
+   "passed": null,
+   "note": "ML78_ep0: 9 runs, 0 re-trig, 0 deferred, 5 after 1.5 s; ML88_ep0: 3 runs, 0 re-trig, 0 deferred, 0 after 1.5 s",
+   "kind": "record",
+   "source": "s8_control",
+   "per_run": {
+    "ML78_ep0": {
+     "runs_after_event": 9,
+     "retriggers": 0,
+     "deferred": 0,
+     "starts_after_1.5_s": 5,
+     "deferred_rel_s": [],
+     "runs": [
+      {
+       "start_s": 0.1,
+       "leg": "FL",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 0.5
+      },
+      {
+       "start_s": 0.5,
+       "leg": "RR",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 0.9
+      },
+      {
+       "start_s": 0.9,
+       "leg": "FL",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 1.2
+      },
+      {
+       "start_s": 1.2,
+       "leg": "RR",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 1.5
+      },
+      {
+       "start_s": 1.7,
+       "leg": "FR",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 2.0
+      },
+      {
+       "start_s": 2.1,
+       "leg": "RR",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 2.5
+      },
+      {
+       "start_s": 2.9,
+       "leg": "RL",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 3.3
+      },
+      {
+       "start_s": 3.6,
+       "leg": "RR",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 4.0
+      },
+      {
+       "start_s": 4.4,
+       "leg": "RL",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 4.7
+      }
+     ]
+    },
+    "ML88_ep0": {
+     "runs_after_event": 3,
+     "retriggers": 0,
+     "deferred": 0,
+     "starts_after_1.5_s": 0,
+     "deferred_rel_s": [],
+     "runs": [
+      {
+       "start_s": 0.2,
+       "leg": "FL",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 0.5
+      },
+      {
+       "start_s": 0.5,
+       "leg": "RR",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 1.2
+      },
+      {
+       "start_s": 1.5,
+       "leg": "RL",
+       "is_retrigger": false,
+       "outcome": "contact",
+       "end_s": 1.8
+      }
+     ]
+    }
+   }
+  },
+  {
+   "item": "C-S8-36 twist-mode work recurrence: clusters of 0.5 s bins > +20 J after event + 1.5 s (forced window masked) <= 1 (spec rev. 54 248.3, ASSUMPTION) - record (runs without the RT variant tag)",
+   "case": "*",
+   "value": {
+    "runs": 2,
+    "failed": 1,
+    "not_judgeable": [],
+    "worst": [
+     "ML78_ep0",
+     3,
+     139.3
+    ]
+   },
+   "limit": 1,
+   "passed": null,
+   "note": "ML78_ep0: 3 clusters 1.5 s +73.9 J, 2.5 s +139.3 J, 4 s +121.9 J",
+   "kind": "record",
+   "source": "s8_control",
+   "over": {
+    "ML78_ep0": [
+     [
+      1.5,
+      73.86
+     ],
+     [
+      2.5,
+      139.3
+     ],
+     [
+      4.0,
+      121.93
+     ]
+    ]
+   },
+   "not_judgeable": [],
+   "rule": "C-S8-40 (spec rev. 54 248.3): W = sum over the 1 ms pad record of D/2 (n . u_applied) dt per 0.5 s bin from the event, 8 s, D = (F_FL + F_RR) - (F_FR + F_RL) - D0 (true rod forces pads F_cyl, D0 = median over event - 0.5 .. 0 s), n = (+,-,-,+)/2, u_applied from record.npz held between samples; power 0 in the forced window [forced start, done_s + 0.1 s] (to the run end when done_s is None); judged bins = bins starting >= event + 1.5 s with an unmasked sample; cluster = consecutive judged bins > +20 J; judged: clusters <= 1 (recurrence ban; ASSUMPTION 254). Records: the rev. 52 unmasked bin max (raw_max_bin_after_J), the masked bin max and the largest cluster work"
+  },
+  {
+   "item": "C-S8-36 twist-mode actuator work, every 0.5 s bin after event + 1.5 s <= +20 J (ASSUMPTION) (record, rev. 52) - record (runs without the RT variant tag)",
+   "case": "*",
+   "value": {
+    "runs": 2,
+    "over_limit": 1,
+    "worst": [
+     "ML78_ep0",
+     139.3
+    ]
+   },
+   "limit": 20.0,
+   "passed": null,
+   "note": "ML78_ep0: 139.3 J",
+   "kind": "record",
+   "source": "s8_control",
+   "over": {
+    "ML78_ep0": 139.30001161727932
+   }
+  },
+  {
+   "item": "C-S8-36 twist-mode work after event + 1.5 s, forced window masked: max bin / largest cluster [J] (record, rev. 54) - record (runs without the RT variant tag)",
+   "case": "*",
+   "value": {
+    "runs": 2,
+    "masked_runs": 0,
+    "worst_cluster": [
+     "ML78_ep0",
+     139.3
+    ]
+   },
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s8_control",
+   "per_run": {
+    "ML78_ep0": {
+     "max_bin_after_J": 139.3,
+     "max_cluster_J": 139.3,
+     "n_clusters": 3,
+     "masked_s": null
+    },
+    "ML88_ep0": {
+     "max_bin_after_J": 11.26,
+     "max_cluster_J": 0.0,
+     "n_clusters": 0,
+     "masked_s": null
+    }
+   }
+  },
+  {
+   "item": "ML tag plant_rod_collapse: locked lift-offs with a rod-pressure fall > 50 bar within 10 ms (C-S8-34 ④, spec rev. 51 222.4 / 223.2; record)",
+   "case": "*",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "none",
+   "kind": "record",
+   "source": "s8_control",
+   "runs": []
+  },
+  {
+   "item": "ML tag plant_release_rod_step: plant releases with a 1 ms rod-pressure step > 20 bar outside plant_rod_collapse (H-S8-4 F1, hydraulics 12.6; record, 0 after the fix)",
+   "case": "*",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "0 runs; airborne before the release 0; first ",
+   "kind": "record",
+   "source": "s8_control",
+   "runs": []
+  },
+  {
+   "item": "ML tag fault_tail: FAULT entry .. run end (C-S8-34 ④; record, = ml_masks reason fault)",
+   "case": "*",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "none",
+   "kind": "record",
+   "source": "s8_control",
+   "runs": []
+  },
+  {
+   "item": "ML-3 R45-4 low-load probes (lower bound < F_min + 15 kN at the round start; record)",
+   "case": "*",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "0 runs; none: C-S8-24 dedicated cases if still 0 after the pilot",
+   "kind": "record",
+   "source": "s8_control",
+   "probes": {}
+  },
+  {
+   "item": "ML C-S8-32 D1'' actual head steps > 100 bar: count and max |dr| / J per F_s grade (record; flag >= 0.4, threshold 0.5)",
+   "case": "*",
+   "value": {
+    "<=2.5": {
+     "steps": 9,
+     "ratio_max": 0.056
+    }
+   },
+   "limit": "flag >= 0.4",
+   "passed": null,
+   "note": "F_s <=2.5: 9 steps in 2 runs, max 0.056 (ML78_ep0 FR 59.70 s), uncorrected max 0.199; lever-corrected runs 2, uncorrected (no gyro record) 0",
+   "kind": "record",
+   "source": "s8_control",
+   "flagged_grades": [],
+   "over_flag": [],
+   "grades": {
+    "0": {
+     "steps": 0,
+     "ratio_max": null,
+     "case": null,
+     "ratio_uncorrected_max": null,
+     "flag": false,
+     "runs": 0
+    },
+    "<=2.5": {
+     "steps": 9,
+     "ratio_max": 0.056049545355836956,
+     "case": "ML78_ep0 FR 59.70 s",
+     "ratio_uncorrected_max": 0.1989331103149716,
+     "flag": false,
+     "runs": 2
+    },
+    "<=5": {
+     "steps": 0,
+     "ratio_max": null,
+     "case": null,
+     "ratio_uncorrected_max": null,
+     "flag": false,
+     "runs": 0
+    },
+    ">5": {
+     "steps": 0,
+     "ratio_max": null,
+     "case": null,
+     "ratio_uncorrected_max": null,
+     "flag": false,
+     "runs": 0
+    },
+    "unknown": {
+     "steps": 0,
+     "ratio_max": null,
+     "case": null,
+     "ratio_uncorrected_max": null,
+     "flag": false,
+     "runs": 0
+    }
+   },
+   "rule": "C-S8-32 (spec rev. 49 219.2 (c), 219.11): offline recomputation from the record (not the monitor's INFO events, which carry no ratio). Candidate = 10 Hz head reading step |dp_h,i| > 100 bar (record meas.head_pressure) with the crawler lifted in the period before (phase not idle / check / touch / fault, the run without a pressure-sensor fault injection); r_k = sum F_hat_cal - M_eff (f_z - (alpha x r_C1)_z), F_hat_cal = s8_series F_nominal_N (F_hat_N where NaN), f_z = r8 imu_samples[k, -1, 2], alpha = (gyro[k, -1] - gyro[k, -2]) / T_imu from r8 imu_gyro_samples (C-S8-31; absent in older records -> uncorrected), r_C1 = IMU C1 - superstructure COM of the run's level; M_eff = READY median (last stay, 60 s, >= 3 samples), else the YAML superstructure mass; ratio = |r_k - r_k-1| / (|dp_h,i| A_p,i). F_s grade = run mean of the per-leg pads F_seal_limit maximum."
+  },
+  {
+   "item": "ML F2 F_hat_cal - F_band - F <= 0.6 kN outside the forced window, after lift-off (record)",
+   "case": "*",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "{}",
+   "kind": "record",
+   "source": "s8_control"
+  }
+ ],
+ "ml_masks": {},
+ "ml_tags": {
+  "fault_tail": {},
+  "plant_rod_collapse": {},
+  "reapproach_pingpong": {
+   "ML78_ep0": {
+    "start_s": 57.50000000076677,
+    "end_s": 61.70000000201237,
+    "start_engine_s": 60.50000000076867,
+    "end_engine_s": 64.70000000201428,
+    "late_starts": 5,
+    "rule": ">= 3 re-approach starts later than event + 1.5 s (rev. 51 222.3), window event + 1.5 s .. last re-approach end + 1 s; training as is, E1 / E3 reported apart"
+   }
+  },
+  "plant_release_rod_step": {}
+ },
+ "ml_metrics": {
+  "ML78_ep0": {
+   "case": "ML78_ep0",
+   "kind": "settle",
+   "base": "ML78",
+   "ready_t_s": null,
+   "branched": null,
+   "lock_valve": "pilot_check",
+   "meta": {
+    "crawler_contact": "nsc_rigid",
+    "crawler_check_passed": false,
+    "sensor_grade": "normal",
+    "zero_calibration": true,
+    "sensor_condition": "normal",
+    "engine": null,
+    "event": "settle"
+   },
+   "settings_refreshed": true,
+   "first_period_compare": {
+    "t_s": 57.10000000077199,
+    "command_new_m_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "command_old_m_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "max_abs_command_diff_m_s": 0.0,
+    "phase_new": "ready",
+    "phase_old": "ready",
+    "events_new": [],
+    "events_old": [],
+    "identical": true
+   },
+   "fault_injected": false,
+   "head_faults": [],
+   "head_fault_reasons": [],
+   "rod_fault_reasons": [],
+   "pressure_steps": [
+    {
+     "t_s": 56.10000000100701,
+     "leg": "FL",
+     "detail": "rod:lock_load_loss"
+    },
+    {
+     "t_s": 56.300000001070494,
+     "leg": "FL",
+     "detail": "rod:lock_load_regain"
+    },
+    {
+     "t_s": 56.400000001102235,
+     "leg": "FR",
+     "detail": "head:imu_residual"
+    },
+    {
+     "t_s": 56.70000000119746,
+     "leg": "FR",
+     "detail": "head:imu_residual"
+    },
+    {
+     "t_s": 57.100000001324425,
+     "leg": "FL",
+     "detail": "head:imu_residual"
+    },
+    {
+     "t_s": 57.100000001324425,
+     "leg": "FR",
+     "detail": "head:imu_residual"
+    },
+    {
+     "t_s": 57.30000000138791,
+     "leg": "FL",
+     "detail": "head:imu_residual"
+    },
+    {
+     "t_s": 57.60000000148313,
+     "leg": "FR",
+     "detail": "head:imu_residual"
+    },
+    {
+     "t_s": 57.60000000148313,
+     "leg": "RL",
+     "detail": "head:imu_residual"
+    },
+    {
+     "t_s": 57.800000001546614,
+     "leg": "RL",
+     "detail": "head:imu_residual"
+    },
+    {
+     "t_s": 58.10000000164184,
+     "leg": "RR",
+     "detail": "head:imu_residual"
+    }
+   ],
+   "step_rule": "explained_imu",
+   "fault_entry_s": null,
+   "fault_cause": null,
+   "lift": {
+    "intervals_s": {
+     "FL": [
+      [
+       56.0360000009867,
+       56.27000000106069
+      ],
+      [
+       56.667000001186985,
+       56.948000001275894
+      ],
+      [
+       57.36400000140822,
+       57.42400000142698
+      ]
+     ],
+     "FR": [
+      [
+       57.6270000014917,
+       57.71400000151903
+      ]
+     ],
+     "RL": [
+      [
+       57.41100000142314,
+       57.42100000142603
+      ],
+      [
+       57.82900000155582,
+       57.97500000160188
+      ],
+      [
+       58.84500000187831,
+       58.98800000192342
+      ]
+     ],
+     "RR": [
+      [
+       56.12300000101431,
+       56.681000001191144
+      ],
+      [
+       56.98500000128792,
+       57.24600000137048
+      ],
+      [
+       58.13400000165263,
+       58.22800000168218
+      ],
+      [
+       59.620000001976514,
+       59.64300000197728
+      ]
+     ]
+    },
+    "longest_s": {
+     "FL": 0.281000000088909,
+     "FR": 0.08700000002733077,
+     "RL": 0.14600000004605818,
+     "RR": 0.5580000001768326
+    },
+    "lifted_legs": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "max_s": 0.5580000001768326,
+    "diagonal": true,
+    "deep_fast": true,
+    "depth_m": 0.02406,
+    "ramp_s": 0.0994,
+    "leg": "FL"
+   },
+   "u_s8_32": {
+    "settle_leg": "FL",
+    "depth_m": 0.02406,
+    "ramp_s": 0.0994,
+    "settle_speed_mm_s": 242.0523138832998,
+    "event_legs": [
+     "FL",
+     "RR"
+    ],
+    "adjacent_legs": [
+     "FR",
+     "RL"
+    ],
+    "cum_lift_s": {
+     "FL": 0.5750000001816602,
+     "FR": 0.08700000002733077,
+     "RL": 0.29900000009405403,
+     "RR": 0.9360000002897095
+    },
+    "any_lift": true,
+    "event": {
+     "FL": {
+      "cum_s": 0.5750000001816602,
+      "lifts": 3,
+      "first_lift_rel_s": 0.03600000021992855,
+      "last_recontact_rel_s": 1.4240000006602145,
+      "lifted_at_end": false,
+      "gap_max_m": 0.012356325315123845
+     },
+     "RR": {
+      "cum_s": 0.9360000002897095,
+      "lifts": 4,
+      "first_lift_rel_s": 0.12300000024754354,
+      "last_recontact_rel_s": 3.6430000012105097,
+      "lifted_at_end": false,
+      "gap_max_m": 0.020067525024826005
+     }
+    },
+    "primary": "RR",
+    "event_cum_max_s": 0.9360000002897095,
+    "event_recontact_max_rel_s": 3.6430000012105097,
+    "fault_t_s": null,
+    "fault_after_event": false,
+    "fault_gate": true,
+    "fault_cause": null,
+    "event_pass": false,
+    "event_recontact_gate_s": 3.0,
+    "event_recontact_nominal_s": 2.5,
+    "event_recontact_within_nominal": false,
+    "window_end_rel_s": 4.46300000121051,
+    "t3_s": 0.82,
+    "window_capped": false,
+    "adjacent_sum_s": 0.3860000001213848,
+    "adjacent_per_leg_s": {
+     "FR": 0.08700000002733077,
+     "RL": 0.29900000009405403
+    },
+    "adjacent_gap_max_m": 0.0021689484794222835,
+    "adjacent_outside_window_s": 0.0,
+    "u57_pass": false,
+    "rule": "U-S8-32 (spec rev. 48 218.5) / U-S8-37 (rev. 49 219.3): event legs = settled + diagonal, adjacent = the other two; U57 physical window (spec 62) on the adjacent legs; event legs: cumulative lift <= 1.8 s, last re-contact <= event + 3.0 s (gate; <= 2.5 s nominal-damping flag column), FAULT 0 (ASSUMPTION)",
+    "T3_from_top_level": false
+   },
+   "fs_mean_kN": 1.653637190335,
+   "d1pp": {
+    "steps": [
+     {
+      "t_s": 59.40000000110414,
+      "leg": "FR",
+      "dp_bar": -143.0,
+      "J_kN": 189.8071747,
+      "dr_kN": 6.939653291994298,
+      "ratio": 0.03656159627771067,
+      "ratio_uncorrected": 0.00013457828664394464,
+      "lever_used": true,
+      "M_eff_kg": 39055.92141311595,
+      "M_eff_source": "ready_median",
+      "phase_before": "level"
+     },
+     {
+      "t_s": 59.70000000119936,
+      "leg": "FR",
+      "dp_bar": 108.55,
+      "J_kN": 144.080900795,
+      "dr_kN": 8.075668984019197,
+      "ratio": 0.056049545355836956,
+      "ratio_uncorrected": 0.11823283103908382,
+      "lever_used": true,
+      "M_eff_kg": 39055.92141311595,
+      "M_eff_source": "ready_median",
+      "phase_before": "level"
+     },
+     {
+      "t_s": 60.10000000132633,
+      "leg": "FL",
+      "dp_bar": 100.575,
+      "J_kN": 133.49550066749998,
+      "dr_kN": 6.120664373486128,
+      "ratio": 0.04584921845966175,
+      "ratio_uncorrected": 0.0479714137533672,
+      "lever_used": true,
+      "M_eff_kg": 39055.92141311595,
+      "M_eff_source": "ready_median",
+      "phase_before": "level"
+     },
+     {
+      "t_s": 60.10000000132633,
+      "leg": "FR",
+      "dp_bar": -123.025,
+      "J_kN": 163.29389977249997,
+      "dr_kN": 6.120664373486128,
+      "ratio": 0.037482504747656825,
+      "ratio_uncorrected": 0.03921743497862147,
+      "lever_used": true,
+      "M_eff_kg": 39055.92141311595,
+      "M_eff_source": "ready_median",
+      "phase_before": "level"
+     },
+     {
+      "t_s": 60.30000000138981,
+      "leg": "FL",
+      "dp_bar": -104.425,
+      "J_kN": 138.60569383249998,
+      "dr_kN": -6.883798896496068,
+      "ratio": 0.04966461843057394,
+      "ratio_uncorrected": 0.0029091234239976005,
+      "lever_used": true,
+      "M_eff_kg": 39055.92141311595,
+      "M_eff_source": "ready_median",
+      "phase_before": "level"
+     },
+     {
+      "t_s": 60.600000001485036,
+      "leg": "FR",
+      "dp_bar": -114.425,
+      "J_kN": 151.8789228325,
+      "dr_kN": -1.455915700951824,
+      "ratio": 0.009586028619372577,
+      "ratio_uncorrected": 0.12954815609612907,
+      "lever_used": true,
+      "M_eff_kg": 39055.92141311595,
+      "M_eff_source": "ready_median",
+      "phase_before": "level"
+     },
+     {
+      "t_s": 60.600000001485036,
+      "leg": "RL",
+      "dp_bar": 104.075,
+      "J_kN": 98.90577979535,
+      "dr_kN": -1.455915700951824,
+      "ratio": 0.014720228726413348,
+      "ratio_uncorrected": 0.1989331103149716,
+      "lever_used": true,
+      "M_eff_kg": 39055.92141311595,
+      "M_eff_source": "ready_median",
+      "phase_before": "level"
+     },
+     {
+      "t_s": 60.80000000154852,
+      "leg": "RL",
+      "dp_bar": -121.85,
+      "J_kN": 115.7979271493,
+      "dr_kN": 0.540557603966794,
+      "ratio": 0.004668111228535593,
+      "ratio_uncorrected": 0.13156011118758557,
+      "lever_used": true,
+      "M_eff_kg": 39055.92141311595,
+      "M_eff_source": "ready_median",
+      "phase_before": "level"
+     },
+     {
+      "t_s": 61.10000000164374,
+      "leg": "RR",
+      "dp_bar": -104.65,
+      "J_kN": 99.45222056769998,
+      "dr_kN": 2.6454929845945445,
+      "ratio": 0.02660064269549096,
+      "ratio_uncorrected": 0.04253200299261193,
+      "lever_used": true,
+      "M_eff_kg": 39055.92141311595,
+      "M_eff_source": "ready_median",
+      "phase_before": "level"
+     }
+    ],
+    "ratio_max": 0.056049545355836956,
+    "lever_correction_available": true,
+    "fault_injected_run_skipped": false,
+    "lever_arm_m": [
+     -0.15019050299999998,
+     0.88136232581,
+     -2.14347069
+    ],
+    "t_imu_s": 0.010000000000331966
+   },
+   "forced_window": null,
+   "run_end_s": 84.00000000278584,
+   "ml_mask": null,
+   "fault_tail": null,
+   "rod_fallback": {
+    "events": [],
+    "injected": false
+   },
+   "reapproach": {
+    "starts_rel_s": [
+     [
+      0.1,
+      "FL"
+     ],
+     [
+      0.5,
+      "RR"
+     ],
+     [
+      0.9,
+      "FL"
+     ],
+     [
+      1.2,
+      "RR"
+     ],
+     [
+      1.7,
+      "FR"
+     ],
+     [
+      2.1,
+      "RR"
+     ],
+     [
+      2.9,
+      "RL"
+     ],
+     [
+      3.6,
+      "RR"
+     ],
+     [
+      4.4,
+      "RL"
+     ]
+    ],
+    "late_starts": 5,
+    "leg_changes": 8,
+    "window": {
+     "start_s": 57.50000000076677,
+     "end_s": 61.70000000201237,
+     "start_engine_s": 60.50000000076867,
+     "end_engine_s": 64.70000000201428,
+     "late_starts": 5,
+     "rule": ">= 3 re-approach starts later than event + 1.5 s (rev. 51 222.3), window event + 1.5 s .. last re-approach end + 1 s; training as is, E1 / E3 reported apart"
+    }
+   },
+   "reapproach_pingpong": {
+    "start_s": 57.50000000076677,
+    "end_s": 61.70000000201237,
+    "start_engine_s": 60.50000000076867,
+    "end_engine_s": 64.70000000201428,
+    "late_starts": 5,
+    "rule": ">= 3 re-approach starts later than event + 1.5 s (rev. 51 222.3), window event + 1.5 s .. last re-approach end + 1 s; training as is, E1 / E3 reported apart"
+   },
+   "rt": {
+    "runs_after_event": 9,
+    "retriggers": 0,
+    "starts_after_1.5_s": 5,
+    "deferred": 0,
+    "deferred_rel_s": [],
+    "runs": [
+     {
+      "start_s": 0.1,
+      "leg": "FL",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 0.5
+     },
+     {
+      "start_s": 0.5,
+      "leg": "RR",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 0.9
+     },
+     {
+      "start_s": 0.9,
+      "leg": "FL",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 1.2
+     },
+     {
+      "start_s": 1.2,
+      "leg": "RR",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 1.5
+     },
+     {
+      "start_s": 1.7,
+      "leg": "FR",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 2.0
+     },
+     {
+      "start_s": 2.1,
+      "leg": "RR",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 2.5
+     },
+     {
+      "start_s": 2.9,
+      "leg": "RL",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 3.3
+     },
+     {
+      "start_s": 3.6,
+      "leg": "RR",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 4.0
+     },
+     {
+      "start_s": 4.4,
+      "leg": "RL",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 4.7
+     }
+    ],
+    "is_retrigger_recorded": true,
+    "work": {
+     "bins_J": [
+      23.17,
+      -482.77,
+      -60.18,
+      73.86,
+      -21.04,
+      139.3,
+      -12.71,
+      -8.17,
+      121.93,
+      -29.84,
+      3.18,
+      -4.36,
+      -3.08,
+      -1.87,
+      -1.11,
+      -0.68
+     ],
+     "raw_bins_J": [
+      23.17,
+      -482.77,
+      -60.18,
+      73.86,
+      -21.04,
+      139.3,
+      -12.71,
+      -8.17,
+      121.93,
+      -29.84,
+      3.18,
+      -4.36,
+      -3.08,
+      -1.87,
+      -1.11,
+      -0.68
+     ],
+     "bin_s": 0.5,
+     "covered_s": 7.999000001355107,
+     "D0_kN": -4.019895042250369,
+     "masked_s": null,
+     "judged_bins": 13,
+     "max_bin_after_J": 139.30001161727932,
+     "raw_max_bin_after_J": 139.30001161727932,
+     "pos_sum_after_J": 338.2761598748131,
+     "clusters": [
+      [
+       1.5,
+       73.86
+      ],
+      [
+       2.5,
+       139.3
+      ],
+      [
+       4.0,
+       121.93
+      ]
+     ],
+     "n_clusters": 3,
+     "max_cluster_J": 139.3,
+     "limit_J": 20.0,
+     "max_clusters": 1,
+     "passed_rev52": false,
+     "passed": false,
+     "status": "judged"
+    },
+    "rule": "C-S8-40 (spec rev. 54 248.3): W = sum over the 1 ms pad record of D/2 (n . u_applied) dt per 0.5 s bin from the event, 8 s, D = (F_FL + F_RR) - (F_FR + F_RL) - D0 (true rod forces pads F_cyl, D0 = median over event - 0.5 .. 0 s), n = (+,-,-,+)/2, u_applied from record.npz held between samples; power 0 in the forced window [forced start, done_s + 0.1 s] (to the run end when done_s is None); judged bins = bins starting >= event + 1.5 s with an unmasked sample; cluster = consecutive judged bins > +20 J; judged: clusters <= 1 (recurrence ban; ASSUMPTION 254). Records: the rev. 52 unmasked bin max (raw_max_bin_after_J), the masked bin max and the largest cluster work"
+   },
+   "reapproach_variant": "f1only",
+   "plant_rod_collapse": [],
+   "plant_release_rod_step": [],
+   "release_rule": {
+    "tau_v_s": 0.1,
+    "lock_eps_m_s": 1e-06,
+    "v_max_m_s": 0.0209243016
+   },
+   "F2": {
+    "outside": {
+     "samples": 1200,
+     "violations": 0,
+     "max_kN": -2.063084421911539
+    },
+    "forced": {
+     "samples": 0,
+     "violations": 0,
+     "max_kN": null
+    },
+    "lower_source": "F_lower_est_N (controller _load_estimate_N(forces.lower))",
+    "share_kN": 0.6
+   },
+   "R45_4": []
+  },
+  "ML88_ep0": {
+   "case": "ML88_ep0",
+   "kind": "settle",
+   "base": "ML88",
+   "ready_t_s": null,
+   "branched": null,
+   "lock_valve": "pilot_check",
+   "meta": {
+    "crawler_contact": "nsc_rigid",
+    "crawler_check_passed": false,
+    "sensor_grade": "normal",
+    "zero_calibration": true,
+    "sensor_condition": "normal",
+    "engine": null,
+    "event": "settle"
+   },
+   "settings_refreshed": true,
+   "first_period_compare": {
+    "t_s": 61.10000000090478,
+    "command_new_m_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "command_old_m_s": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "max_abs_command_diff_m_s": 0.0,
+    "phase_new": "ready",
+    "phase_old": "ready",
+    "events_new": [],
+    "events_old": [],
+    "identical": true
+   },
+   "fault_injected": false,
+   "head_faults": [],
+   "head_fault_reasons": [],
+   "rod_fault_reasons": [],
+   "pressure_steps": [
+    {
+     "t_s": 60.20000000117154,
+     "leg": "RR",
+     "detail": "rod:lock_load_loss"
+    }
+   ],
+   "step_rule": "explained_imu",
+   "fault_entry_s": null,
+   "fault_cause": null,
+   "lift": {
+    "intervals_s": {
+     "FL": [
+      [
+       60.60100000129882,
+       60.72000000133631
+      ]
+     ],
+     "FR": [],
+     "RL": [],
+     "RR": [
+      [
+       60.20400000117281,
+       60.55700000128457
+      ],
+      [
+       60.80000000136199,
+       60.94000000140614
+      ]
+     ]
+    },
+    "longest_s": {
+     "FL": 0.11900000003748801,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.3530000001117628
+    },
+    "lifted_legs": [
+     "FL",
+     "RR"
+    ],
+    "max_s": 0.3530000001117628,
+    "diagonal": true,
+    "deep_fast": true,
+    "depth_m": 0.01692,
+    "ramp_s": 0.3201,
+    "leg": "FL"
+   },
+   "u_s8_32": {
+    "settle_leg": "FL",
+    "depth_m": 0.01692,
+    "ramp_s": 0.3201,
+    "settle_speed_mm_s": 52.85848172446111,
+    "event_legs": [
+     "FL",
+     "RR"
+    ],
+    "adjacent_legs": [
+     "FR",
+     "RL"
+    ],
+    "cum_lift_s": {
+     "FL": 0.11900000003748801,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.4930000001559165
+    },
+    "any_lift": true,
+    "event": {
+     "FL": {
+      "cum_s": 0.11900000003748801,
+      "lifts": 1,
+      "first_lift_rel_s": 0.6010000003992673,
+      "last_recontact_rel_s": 0.7200000004367553,
+      "lifted_at_end": false,
+      "gap_max_m": 0.0009945994989291052
+     },
+     "RR": {
+      "cum_s": 0.4930000001559165,
+      "lifts": 2,
+      "first_lift_rel_s": 0.20400000027325405,
+      "last_recontact_rel_s": 0.9400000005065863,
+      "lifted_at_end": false,
+      "gap_max_m": 0.01122160992858623
+     }
+    },
+    "primary": "RR",
+    "event_cum_max_s": 0.4930000001559165,
+    "event_recontact_max_rel_s": 0.9400000005065863,
+    "fault_t_s": null,
+    "fault_after_event": false,
+    "fault_gate": true,
+    "fault_cause": null,
+    "event_pass": true,
+    "event_recontact_gate_s": 3.0,
+    "event_recontact_nominal_s": 2.5,
+    "event_recontact_within_nominal": true,
+    "window_end_rel_s": 1.7600000005065866,
+    "t3_s": 0.82,
+    "window_capped": false,
+    "adjacent_sum_s": 0.0,
+    "adjacent_per_leg_s": {},
+    "adjacent_gap_max_m": 0.0,
+    "adjacent_outside_window_s": 0.0,
+    "u57_pass": true,
+    "rule": "U-S8-32 (spec rev. 48 218.5) / U-S8-37 (rev. 49 219.3): event legs = settled + diagonal, adjacent = the other two; U57 physical window (spec 62) on the adjacent legs; event legs: cumulative lift <= 1.8 s, last re-contact <= event + 3.0 s (gate; <= 2.5 s nominal-damping flag column), FAULT 0 (ASSUMPTION)",
+    "T3_from_top_level": true
+   },
+   "fs_mean_kN": 2.3460829903,
+   "d1pp": {
+    "steps": [],
+    "ratio_max": null,
+    "lever_correction_available": true,
+    "fault_injected_run_skipped": false,
+    "lever_arm_m": [
+     -0.15019050299999998,
+     0.88136232581,
+     -1.4430225399999999
+    ],
+    "t_imu_s": 0.010000000000331966
+   },
+   "forced_window": null,
+   "run_end_s": 88.00000000300389,
+   "ml_mask": null,
+   "fault_tail": null,
+   "rod_fallback": {
+    "events": [],
+    "injected": false
+   },
+   "reapproach": {
+    "starts_rel_s": [
+     [
+      0.2,
+      "FL"
+     ],
+     [
+      0.5,
+      "RR"
+     ],
+     [
+      1.5,
+      "RL"
+     ]
+    ],
+    "late_starts": 0,
+    "leg_changes": 2,
+    "window": null
+   },
+   "reapproach_pingpong": null,
+   "rt": {
+    "runs_after_event": 3,
+    "retriggers": 0,
+    "starts_after_1.5_s": 0,
+    "deferred": 0,
+    "deferred_rel_s": [],
+    "runs": [
+     {
+      "start_s": 0.2,
+      "leg": "FL",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 0.5
+     },
+     {
+      "start_s": 0.5,
+      "leg": "RR",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 1.2
+     },
+     {
+      "start_s": 1.5,
+      "leg": "RL",
+      "is_retrigger": false,
+      "outcome": "contact",
+      "end_s": 1.8
+     }
+    ],
+    "is_retrigger_recorded": true,
+    "work": {
+     "bins_J": [
+      -27.89,
+      -469.48,
+      -4.28,
+      -1.46,
+      11.26,
+      -4.44,
+      -3.85,
+      -2.97,
+      -2.17,
+      -1.62,
+      -1.22,
+      -0.92,
+      -0.71,
+      -0.51,
+      -0.36,
+      -0.28
+     ],
+     "raw_bins_J": [
+      -27.89,
+      -469.48,
+      -4.28,
+      -1.46,
+      11.26,
+      -4.44,
+      -3.85,
+      -2.97,
+      -2.17,
+      -1.62,
+      -1.22,
+      -0.92,
+      -0.71,
+      -0.51,
+      -0.36,
+      -0.28
+     ],
+     "bin_s": 0.5,
+     "covered_s": 7.999000001440372,
+     "D0_kN": 0.8313652981717605,
+     "masked_s": null,
+     "judged_bins": 13,
+     "max_bin_after_J": 11.259972180018531,
+     "raw_max_bin_after_J": 11.259972180018531,
+     "pos_sum_after_J": 11.259972180018531,
+     "clusters": [],
+     "n_clusters": 0,
+     "max_cluster_J": 0.0,
+     "limit_J": 20.0,
+     "max_clusters": 1,
+     "passed_rev52": true,
+     "passed": true,
+     "status": "judged"
+    },
+    "rule": "C-S8-40 (spec rev. 54 248.3): W = sum over the 1 ms pad record of D/2 (n . u_applied) dt per 0.5 s bin from the event, 8 s, D = (F_FL + F_RR) - (F_FR + F_RL) - D0 (true rod forces pads F_cyl, D0 = median over event - 0.5 .. 0 s), n = (+,-,-,+)/2, u_applied from record.npz held between samples; power 0 in the forced window [forced start, done_s + 0.1 s] (to the run end when done_s is None); judged bins = bins starting >= event + 1.5 s with an unmasked sample; cluster = consecutive judged bins > +20 J; judged: clusters <= 1 (recurrence ban; ASSUMPTION 254). Records: the rev. 52 unmasked bin max (raw_max_bin_after_J), the masked bin max and the largest cluster work"
+   },
+   "reapproach_variant": "f1only",
+   "plant_rod_collapse": [],
+   "plant_release_rod_step": [],
+   "release_rule": {
+    "tau_v_s": 0.1,
+    "lock_eps_m_s": 1e-06,
+    "v_max_m_s": 0.0209243016
+   },
+   "F2": {
+    "outside": {
+     "samples": 1200,
+     "violations": 0,
+     "max_kN": -3.5226563653765335
+    },
+    "forced": {
+     "samples": 0,
+     "violations": 0,
+     "max_kN": null
+    },
+    "lower_source": "F_lower_est_N (controller _load_estimate_N(forces.lower))",
+    "share_kN": 0.6
+   },
+   "R45_4": []
+  }
+ }
+}

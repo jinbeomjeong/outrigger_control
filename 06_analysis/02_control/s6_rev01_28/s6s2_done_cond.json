@@ -1,0 +1,86 @@
+{
+ "G1_top_roll3": {
+  "chrono": {
+   "twist_in_3kN_after_level_s": 0.0,
+   "twist_in_2kN_after_level_s": 0.0,
+   "twist_at_kN": {
+    "5": 1.17,
+    "10": 0.99,
+    "15": 0.97,
+    "18": 0.96
+   },
+   "twist_final_kN": 0.96,
+   "done_after_level_s": 18.6,
+   "twist_cmd_rms_mm_s_8s_to_done": 0.0004
+  },
+  "reduced": {
+   "twist_in_3kN_after_level_s": 0.02,
+   "twist_in_2kN_after_level_s": 0.76,
+   "twist_at_kN": {
+    "5": 1.49,
+    "10": 1.33,
+    "15": 1.29,
+    "18": 1.3
+   },
+   "twist_final_kN": 1.29,
+   "done_after_level_s": 15.0,
+   "twist_cmd_rms_mm_s_8s_to_done": 0.0009
+  }
+ },
+ "G1_top_diag3": {
+  "chrono": {
+   "twist_in_3kN_after_level_s": 7.92,
+   "twist_in_2kN_after_level_s": 11.3,
+   "twist_at_kN": {
+    "5": 4.76,
+    "10": 2.2,
+    "15": 1.72,
+    "18": 1.66
+   },
+   "twist_final_kN": 1.64,
+   "done_after_level_s": 19.0,
+   "twist_cmd_rms_mm_s_8s_to_done": 0.0079
+  },
+  "reduced": {
+   "twist_in_3kN_after_level_s": 5.86,
+   "twist_in_2kN_after_level_s": 9.82,
+   "twist_at_kN": {
+    "5": 3.31,
+    "10": 1.97,
+    "15": 1.69,
+    "18": 1.64
+   },
+   "twist_final_kN": 1.61,
+   "done_after_level_s": 18.9,
+   "twist_cmd_rms_mm_s_8s_to_done": 0.0052
+  }
+ },
+ "G2_top_roll5.5": {
+  "chrono": {
+   "twist_in_3kN_after_level_s": 1.98,
+   "twist_in_2kN_after_level_s": 14.8,
+   "twist_at_kN": {
+    "5": -2.3,
+    "10": -2.15,
+    "15": -1.84,
+    "18": -1.76
+   },
+   "twist_final_kN": -0.66,
+   "done_after_level_s": 28.98,
+   "twist_cmd_rms_mm_s_8s_to_done": 0.0107
+  },
+  "reduced": {
+   "twist_in_3kN_after_level_s": 0.02,
+   "twist_in_2kN_after_level_s": 10.96,
+   "twist_at_kN": {
+    "5": -1.94,
+    "10": -1.86,
+    "15": -1.78,
+    "18": -1.68
+   },
+   "twist_final_kN": -0.43,
+   "done_after_level_s": 24.84,
+   "twist_cmd_rms_mm_s_8s_to_done": 0.0056
+  }
+ }
+}

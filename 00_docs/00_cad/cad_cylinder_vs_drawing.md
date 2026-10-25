@@ -22,7 +22,7 @@
 
 | 항목 | 내용 |
 |---|---|
-| 측정 스크립트 | `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace\ac6418dc-b52c-42d7-ba64-81b7424d2311\scratchpad\cad-run\cyl_measure.py`(면 분류·질량 특성·패드 바닥 다각형), `cyl_flange_planes.py`(장착판 면의 축 거리), `cyl_drawing_values.py`(도면 기준 면적·힘·질량 추정). 결과는 같은 폴더의 `cyl_measure.json`, `cyl_drawing_values.json` |
+| 측정 스크립트 | `04_scripts/00_cad/cylinder_drawing/cyl_measure.py`(면 분류·질량 특성·패드 바닥 다각형), `cyl_flange_planes.py`(장착판 면의 축 거리), `cyl_drawing_values.py`(도면 기준 면적·힘·질량 추정). 결과는 `01_cad/02_legs/drawing_check/`의 `cyl_measure.json`(+ 실행 로그 `cyl_measure.log`), `cyl_drawing_values.json`. 2026-10-22 세션 scratchpad `cad-run\`에서 2026-10-25에 옮겼다(경로 상수만 프로젝트 기준으로 바꿈, 결과 파일은 원본 그대로) |
 | 실행 | `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I -X utf8 <script>`(pythonocc-core 8.0.1, 측정은 E코어 마스크 0x0FFF0000). 각 1~2 s |
 | CAD 단위 | mm(STEP 단위는 기존 검토 `cad_review.md` 2절에서 확인함, 캐시 BREP은 조립 좌표 mm) |
 | CAD 축 | Y-상방. 기체 좌표 대응 x = +Z_cad, y = +X_cad, z = +Y_cad(CLAUDE.md). 원점은 CAD 원점 = 기체 원점 |

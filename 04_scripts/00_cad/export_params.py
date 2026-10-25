@@ -354,6 +354,9 @@ CYLINDER_TYPE = ("double-acting; dual pilot-operated check valve mounted on the 
                  "hose outside the locked volume")
 ROD_SIDE_CHAMBER_MODEL = "neglected (head side only); one-sided +10 % kv when the leg unloads, sensitivity only"
 FLOW_CONTROL = "proportional directional valve, section pressure compensated (LS); load-independent speed"
+# Pre-R6-P text (head side only). The current layout is two sensors per leg (head and rod, R6-P / U52), see the
+# comment of sensors.cylinder_pressure.location. Not rewritten here: the value enters Params.sha256, and changing it
+# invalidates the saved snapshots (R16). Replace it together with the next planned YAML regeneration.
 PRESSURE_SENSOR_LOCATION = ("lock valve block on the cylinder (head chamber); reads the trapped load pressure while "
                             "locked; p = F_cyl / head area")
 # Source line references "<file>.py:<first>[-<last>]" used in this script's comments: each range must contain the
@@ -2325,9 +2328,15 @@ def main() -> None:
                                "2e-4 s held a 2 deg slope (stick friction test), 00_docs/01_dynamics/dynamics_model.md 4.3"),
         "simulation.L2": ("[L2] ASSUMPTION (rule): dt <= T / 50 of the rod local mode sqrt((k_axial_leg + k_concrete) "
                           "/ m_rod) / 2 pi, run_reference.py:483-491, 00_docs/01_dynamics/dynamics_model.md 4.3"),
-        "sensors": ("[common] decision_log.md sec. 2 '센서' / sec. 4 '압력 센서' (2026-10-19), "
-                    "00_docs/02_hydraulic/hydraulic_circuit.md"),
-        "sensors.cylinder_pressure.location": "manufacturer description; head-side reading, rod-side pressure 0 assumed",
+        "sensors": ("[common] decision_log.md sec. 2 '센서' / sec. 4 '압력 센서' (2026-10-19, two sensors per leg "
+                    "2026-10-22 U43-U61), 00_docs/02_hydraulic/hydraulic_circuit.md; sample periods are not in this "
+                    "file: pressure, stroke and valve output 10 Hz point samples (c2.py R8_PERIOD_S), "
+                    "IMU 100 Hz (c2.py R8_IMU_SAMPLE_PERIOD_S)"),
+        "sensors.cylinder_pressure.location": ("pre-R6-P text, kept unchanged because the value enters Params.sha256; "
+                                               "current (R6-P, U52): head and rod pressure sensor per leg "
+                                               "(WIKA A-10, 0-400 bar), chamber-side A/B ports between the cylinder "
+                                               "and the pilot check block, net force F_cyl = p_h A_p - p_r A_ann "
+                                               "(08_test_data/datasheets/WIKA_A-10_pressure_sensor_summary.md)"),
         "legs": ("cad_summary.json legs.<leg> (axis_cad_mm, pad_bottom_y_cad_mm, bracket_bolt_holes_y_cad_mm, ...); "
                  "decision_log.md sec. 2 '다리 기하': every leg extends 0 ... 0.680 m from the retracted state, "
                  "retracted = CAD pose + retracted_offset_from_cad_m along +z"),

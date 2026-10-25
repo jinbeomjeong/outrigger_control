@@ -1,0 +1,97 @@
+{
+ "G1_top_roll3": {
+  "chrono": {
+   "lift_after_level_s": 2.6,
+   "done_after_level_s": 18.6,
+   "below_1.0_after_level_s": 4.82,
+   "below_0.2_after_level_s": 7.82,
+   "below_0.05_after_level_s": 9.08,
+   "vmax_share_in_level": 0.375
+  },
+  "reduced": {
+   "lift_after_level_s": 2.64,
+   "done_after_level_s": 15.0,
+   "below_1.0_after_level_s": 4.76,
+   "below_0.2_after_level_s": 7.9,
+   "below_0.05_after_level_s": 9.58,
+   "vmax_share_in_level": 0.461,
+   "reduced_t_touch_s": 16.9
+  }
+ },
+ "G1_top_diag3": {
+  "chrono": {
+   "lift_after_level_s": 0.76,
+   "done_after_level_s": 19.0,
+   "below_1.0_after_level_s": 7.52,
+   "below_0.2_after_level_s": 11.92,
+   "below_0.05_after_level_s": 13.46,
+   "vmax_share_in_level": 0.62
+  },
+  "reduced": {
+   "lift_after_level_s": 0.74,
+   "done_after_level_s": 18.9,
+   "below_1.0_after_level_s": 7.54,
+   "below_0.2_after_level_s": 11.98,
+   "below_0.05_after_level_s": 13.94,
+   "vmax_share_in_level": 0.617,
+   "reduced_t_touch_s": 17.82
+  }
+ },
+ "G1_top_flat": {
+  "chrono": {
+   "lift_after_level_s": 0.46,
+   "done_after_level_s": 7.36,
+   "below_1.0_after_level_s": 0.0,
+   "below_0.2_after_level_s": 0.0,
+   "below_0.05_after_level_s": 2.44,
+   "vmax_share_in_level": 0.154
+  },
+  "reduced": {
+   "lift_after_level_s": 0.46,
+   "done_after_level_s": 6.94,
+   "below_1.0_after_level_s": 0.02,
+   "below_0.2_after_level_s": 0.02,
+   "below_0.05_after_level_s": 3.06,
+   "vmax_share_in_level": 0.165,
+   "reduced_t_touch_s": 16.88
+  }
+ },
+ "G2_top_roll5.5": {
+  "chrono": {
+   "lift_after_level_s": 3.06,
+   "done_after_level_s": 28.98,
+   "below_1.0_after_level_s": 9.96,
+   "below_0.2_after_level_s": 12.98,
+   "below_0.05_after_level_s": 17.0,
+   "vmax_share_in_level": 0.423
+  },
+  "reduced": {
+   "lift_after_level_s": 2.7,
+   "done_after_level_s": 24.84,
+   "below_1.0_after_level_s": 9.86,
+   "below_0.2_after_level_s": 13.02,
+   "below_0.05_after_level_s": 14.74,
+   "vmax_share_in_level": 0.487,
+   "reduced_t_touch_s": 16.92
+  }
+ },
+ "G2_bottom_roll5.5": {
+  "chrono": {
+   "lift_after_level_s": 3.08,
+   "done_after_level_s": 25.58,
+   "below_1.0_after_level_s": 9.84,
+   "below_0.2_after_level_s": 12.94,
+   "below_0.05_after_level_s": 14.34,
+   "vmax_share_in_level": 0.477
+  },
+  "reduced": {
+   "lift_after_level_s": 2.94,
+   "done_after_level_s": 23.22,
+   "below_1.0_after_level_s": 9.82,
+   "below_0.2_after_level_s": 13.0,
+   "below_0.05_after_level_s": 14.76,
+   "vmax_share_in_level": 0.519,
+   "reduced_t_touch_s": 16.7
+  }
+ }
+}

@@ -2,11 +2,13 @@
 
 작성: hydraulics-expert. **검토 문서**다. 코드·YAML·다른 문서는 고치지 않았다. 제안한 변경은 9절 위임 목록으로 넘긴다.
 
+> **갱신 이력**: 초판 0~11절 2026-10-22 → 12~18절 2026-10-22 → 19절 2026-10-24(L2b $s_{lock}$ 고정, 행정 끝 $L_{0r}$ 감도) → 2026-10-25 문서 정리(S8 마감 뒤): 세션 scratchpad에만 있던 `rod_side_calc.py`·`ctrl10hz_check.py`를 `04_scripts/04_hydraulic/`로 옮기고 9·18절 경로를 고쳤다(수치 변경 없음, 다시 돌려 결과 JSON이 바이트 단위로 같음). 이 문서의 결론 가운데 L1-R(14절)·두 센서 순 힘·10 Hz 전제는 S7·S8 구현의 근거로 쓰였다. S8 이후의 로드측 압력 판단(CB 범위, 잠긴 다리 비, 해제 뒤 배수)은 [s8_seal_friction_counterbalance.md](s8_seal_friction_counterbalance.md) 9~13절에 있다.
+
 > **보완 12절(2026-10-22)**: 실린더 치수가 REXOME35 도면(전방 ø130/ø110, 후방 ø110/ø90, 행정 700)으로 바뀌었다. 0~11절의 수치는 **이전 공통 치수(ø115/ø110, $\varphi$ 11.76, 행정 680) 기준**이라 대부분 무효다. 새 치수의 로드측 모델 파라미터, H-1(수축 중 하중 급증), H-2(최대 하중에서 잠김 → 부상)는 12절에 있다. 로드측을 L1 강성에 넣을지에 대한 판정(Q16)은 13절에 있다. 사용자가 (b)를 택해 그 유압 명세(L1-R 상태 기계)를 14절에 적었다. R-H4′ 신장 꼬리 길이 확인은 15절에 있다. 침하·낙하 다리와 L1-R(부상 순간 인장 산물, LIFT 압력, 침하 가정)은 17절에 있다. 10 Hz 제어 전제의 유압 쪽 검토(밸브 계단 과도, 피크 감시 수단, 에일리어싱 최악 오차)는 18절에 있다. 판정 논리와 구조(두 센서 순 힘, 잠김 상태방정식, 7.4 인터페이스)는 그대로다.
 
 - 계기: 압력 센서가 다리마다 헤드측·로드측 두 개라는 사용자 확인(2026-10-22, `CLAUDE.md` 51행). 지금 S6 모델·C2 R5는 헤드측만 쓴다($p=F/A_p$, 로드측 0 가정).
 - 입력(읽기만 함): `CLAUDE.md`, [hydraulic_circuit.md](hydraulic_circuit.md), [l2_hydraulic_model_spec.md](l2_hydraulic_model_spec.md)(L2 명세, 이하 "L2 명세"), [hydraulic_fluid_survey.md](hydraulic_fluid_survey.md), [dynamics_model.md](../01_dynamics/dynamics_model.md) 2.3절(370·379·381~385행), 5.2절(2390행), 3498행, [actuator_L2_feasibility.md](../01_dynamics/actuator_L2_feasibility.md), [c2_design.md](../04_control/c2_design.md)(탐침), `03_src/outrigger_sim/chrono/actuators.py`, `03_src/outrigger_sim/sensors/hydraulic.py`, `02_params/rexome33.yaml`.
-- 계산: conda `hydraulics-dev`, `conda run -n hydraulics-dev python -I rod_side_calc.py`(1 s 미만). 스크립트·결과는 세션 scratchpad `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace\ac6418dc-b52c-42d7-ba64-81b7424d2311\scratchpad\hyd-run\rod_side\rod_side_calc.py`, `rod_side_calc.json`에 있다(세션 한정. 남기려면 `04_scripts/04_hydraulic/`로 옮긴다, 9절). Hopsan·OpenModelica는 이번에 돌리지 않았다. 대신 L2 명세의 Hopsan·Python 기준 응답과 대조했다(8절).
+- 계산: conda `hydraulics-dev`, `conda run -n hydraulics-dev python -I 04_scripts/04_hydraulic/rod_side_calc.py 06_analysis/03_hydraulic/rod_side_calc.json`(1 s 미만). 스크립트는 2026-10-22 세션 scratchpad(`hyd-run\rod_side\`)에서 2026-10-25에 옮겼다. 바꾼 것은 출력 경로를 인자로 받게 한 것뿐이고, 다시 돌린 JSON은 원래 결과와 바이트 단위로 같다. 이 스크립트의 수치는 **이전 공통 치수** 기준이다(REXOME35 값은 `rod_side_rexome35.py`, 12절). Hopsan·OpenModelica는 이번에 돌리지 않았다. 대신 L2 명세의 Hopsan·Python 기준 응답과 대조했다(8절).
 
 ## 0. 요약
 
@@ -336,7 +338,7 @@ $$p_h=\frac{F_{cyl}+p_rA_{ann}}{A_p}\quad\Rightarrow\quad F_{2s}\equiv F_{cyl}\ 
 |---|---|
 | dynamics-expert | ① `dynamics_model.md` 2.3절 383~385행·5.2절 2390행의 "로드측은 압력 0 근처, 받을 수 있는 힘 $p_{r0}A_r$ ≈ 0.4 kN" 서술이 **하중 증가 방향에만 맞음**을 반영한다. 감하중 방향은 감소분의 10 %를 로드측이 받고, 부상 때 판독 오차가 최대 12.7 kN이다(3.2절). ② 7.1절 L1 가상 로드측 센서를 S6 센서 경로 정의에 넣을지 판정한다. ③ L2b(S7·S8)에 L2 명세 두 챔버 모델을 쓰고, V15·D2·탐침 판정에서 $F_{ho}$/$F_{2s}$를 같이 기록하는 검증 항목을 정의한다. ④ 수축 힘 포화를 $F_{cyl}\le-18.6$ kN이 아니라 로드측 압력 ≥ 210 bar로 판정하는 안(`actuators.py` 82·147행 기준). 공중 수축에서 실제 여유는 18.6 − $p_{bA}A_p$ − $m_{rod}g$다. ⑤ $F_s$ 12 kN 감도 경우의 공중 수축 가능 조건($p_{bA}$ ≤ 약 4 bar)을 기록한다 |
 | cad-expert | ① Chrono 쪽 구현: L1 actuator hook·probe에 7.1절 합성 상태를 넣는다(이동/잠김 판정, $x_{lock}$, $m_r$ 스냅숏 키 — R16 선택 키). L2b 힘 법칙에 로드측 챔버를 넣는다(L2 명세 참조 구현 이식). ② CAD에서 로크 밸브 블록·실린더 로드측 포트 통로 체적을 뽑을 수 있으면 $L_{0r}$를 준다(현재 0.05 m 가정. 감도 0.05~0.6 m는 **이전 범위**이고 그때 부상 판독을 11.7 ↔ 4.2 kN으로 바꿨다. 현재 범위는 0.02~0.1 m, 16절) |
-| python-expert | 엔진 독립부 `sensors/hydraulic.py`: `LegSensorReading`에 로드측 압력을 넣는다. 잡음 난수 순서(현재 8개/샘플) 호환 방침, 음수 자르기 옵션, `locked_pressure_report`에 로드측도 넣는다. 이 scratchpad 계산 스크립트를 `04_scripts/04_hydraulic/rod_side_calc.py`로 옮길지도 정한다 |
+| python-expert | 엔진 독립부 `sensors/hydraulic.py`: `LegSensorReading`에 로드측 압력을 넣는다. 잡음 난수 순서(현재 8개/샘플) 호환 방침, 음수 자르기 옵션, `locked_pressure_report`에 로드측도 넣는다. 이 scratchpad 계산 스크립트를 `04_scripts/04_hydraulic/rod_side_calc.py`로 옮길지도 정한다. **처리(2026-10-25, hydraulics-expert)**: 스크립트를 `04_scripts/04_hydraulic/rod_side_calc.py`로, 결과를 `06_analysis/03_hydraulic/rod_side_calc.json`으로 옮겼다(머리말 계산 항목) |
 | control-expert | C2(R6 검토): ① $P$ 판독을 $F_{2s}$로 바꾼다. ② 탐침 $\hat F_s$·하중 중점의 헤드만 편향(−0.75~−1.6 / +1.0~1.9 kN)과 탐침 뒤 잠김 편향(+2.7~3.3 kN)을 해소한다. ③ RETRACT·고착점 재설정(G9)의 $P_{stop}$ 판정: 수축 중 헤드만 판독은 2~4 kN 과대라 비보수적이다. ④ 공중 수축의 $F_{2s}<0$을 부상 확정 신호로 쓴다. ⑤ $F_{band}$와 "$F_{min}+F_{band}+8$ kN" 마진을 다시 검토한다 |
 | web-research-expert(선택) | 이중 POC 파일럿 비·크래킹 압력의 대표 범위, 모바일용 압력 센서 정확도 등급(제조사 답이 늦을 때만) |
 
@@ -957,7 +959,7 @@ $e$에 따른 변화($L_{0r}$ 0.05 m; L1은 $e_{op}$ 고정값을 쓰고, 운용
 
 ## 17. 침하·낙하 다리와 L1-R(2026-10-22): 부상 순간 인장 과도, LIFT 중 로드측 압력, 침하 다리 가정
 
-- 계기: python-expert가 침하 다리 + L1-R 지원을 scratchpad 사본에 구현했다(`rod_chamber_link.py` diff, 원본 미반영). 사례 RE1b-F(RR 지반 30 mm, Poly345 램프 0.05 s)에서 RR의 $F_{cyl}$ 최소가 L1-R on −18.0 kN, off(묶음 A) −1.2 kN으로 나왔다.
+- 계기: python-expert가 침하 다리 + L1-R 지원을 scratchpad 사본에 구현했다(`rod_chamber_link.py` diff, 원본 미반영). 이후 S6 코드 커밋(8c68c76)으로 `03_src/outrigger_sim/chrono/rod_chamber_link.py`에 들어갔다(2026-10-25 확인, 침하 사례 RE1b는 `04_scripts/02_chrono/run_S6*.py`). 사례 RE1b-F(RR 지반 30 mm, Poly345 램프 0.05 s)에서 RR의 $F_{cyl}$ 최소가 L1-R on −18.0 kN, off(묶음 A) −1.2 kN으로 나왔다.
 - 계산: `conda run -n hydraulics-dev python -I 04_scripts/04_hydraulic/drop_tension_check.py 06_analysis/03_hydraulic/l1r_drop_tension_check.json`(E코어 고정, 5.7 s). 스크립트는 `04_scripts/04_hydraulic/drop_tension_check.py`(python-expert가 B2 반영 때 옮김), 결과는 `06_analysis/03_hydraulic/l1r_drop_tension_check.json`이다.
 - 입력은 RR(후방) 값이다: $A_p$ 9.503×10⁻³, $A_{ann}$ 3.142×10⁻³ m², $k_h$ 2.155×10⁷, $k_r$ 8.749×10⁶, $k_n$ 1.950×10⁷, $k_n'$ 2.640×10⁷, $k_{out}$ 2.051×10⁸ N/m, $c_n$ 30,348 N·s/m(LOCK 단일), $m_{rod}$ 73.163 kg, $F_{cyl,lock}$ 70.282 kN(패드 71.00 kN), $p_{r0}$ 2 bar g(신장 뒤), β 1.0 GPa. 압력은 게이지, 바닥만 0.1 bar abs다.
 - 세 경로를 같은 원 파라미터에서 따로 계산했다.
@@ -1048,8 +1050,8 @@ $e$에 따른 변화($L_{0r}$ 0.05 m; L1은 $e_{op}$ 고정값을 쓰고, 운용
 ## 18. 10 Hz 제어 전제의 유압 쪽 검토(2026-10-22)
 
 - 전제(사용자 확인, `CLAUDE.md`): 밸브 명령 출력, 압력(헤드·로드), 행정이 모두 **10 Hz**다. 압력·행정은 IO 노드에서 평균하지 않은 **순간 표본**이다. 그래서 control 개정 25의 97.4 권고(IO 노드 ≥ 1 kHz 표본 → 구간 평균·최대·최소)는 쓸 수 없다. control-expert가 이 전제로 C2를 다시 설계한다(c10 구성).
-- 계산: `hydraulics-dev`, `python -I ctrl10hz_check.py <out.json>`(E코어 0x0FFF0000, 4.7 s). 스크립트는 세션 scratchpad `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace\ac6418dc-b52c-42d7-ba64-81b7424d2311\scratchpad\hyd-run\l1r_drop\ctrl10hz_check.py`에 있다. 결과는 `06_analysis/03_hydraulic/ctrl10hz_hydraulic_check.json`이다.
-  - 스크립트는 세션 한정이다. `04_scripts/04_hydraulic/ctrl10hz_check.py`로 옮기도록 python-expert에 위임한다(18.4).
+- 계산: `hydraulics-dev`, `python -I 04_scripts/04_hydraulic/ctrl10hz_check.py 06_analysis/03_hydraulic/ctrl10hz_hydraulic_check.json`(E코어 0x0FFF0000, 4.7 s). 결과는 `06_analysis/03_hydraulic/ctrl10hz_hydraulic_check.json`이다.
+  - 스크립트는 2026-10-22 세션 scratchpad(`hyd-run\l1r_drop\`)에서 2026-10-25에 그대로 옮겼다(docstring만 더함). 다시 돌린 JSON은 기록된 결과와 바이트 단위로 같다.
 - 모델: 다리마다 heave 1자유도($f_h$ 7.4 Hz, $m_{eff}=k_n/\omega_h^2$, ζ 0.03 잠김 / 0.1 이동)를 둔다.
   - 압력 보상 밸브를 속도원으로 본다. 명령은 100 ms ZOH이고, 밸브는 1차 지연 $\tau_v$를 거친다.
   - 동적 힘은 준정적 하중에서 벗어난 몫 $\Delta F=m_{eff}\ddot x$다.
@@ -1148,7 +1150,7 @@ control에 넘기는 최악값(한 다리, 순간 표본 한 개):
 | control-expert | 18.1 표(밸브 계단 과도와 $\tau_v$ 의존성), 18.3 최악 오차 표. 주기당 증분 제한 값, 부상·접지 연속 표본 확인, $\tau_v$를 루프 지연에 넣을지, 아날로그 RC 필터 채택 여부 판단. 순간 표본 345 bar 경고의 한계 문구 |
 | 사용자(제조사) | Q-M6(밸브 계단 응답·앰프 램프 기능), 과압 제한 수단(18.2 #1: CB 파일럿 비와 감쇠, 또는 블록 포트 릴리프 + T 배출 라인), 압력 스위치 포트 추가(#2), 펌프 형식·회전수(맥동) |
 | web-research-expert | 하드웨어 압력 스위치·4~20 mA 한계 경보 모듈 후보(응답 시간, 설정 범위 0~400 bar, 반복 정밀도) |
-| python-expert | `ctrl10hz_check.py`를 `04_scripts/04_hydraulic/`로 옮긴다. 구동기 옵션 "10 Hz ZOH + 1차 지연 $\tau_v$"(18.1 권고 3)는 dynamics 판단 뒤에 넣는다 |
+| python-expert | `ctrl10hz_check.py`를 `04_scripts/04_hydraulic/`로 옮긴다(**처리 2026-10-25**, hydraulics-expert가 옮김). 구동기 옵션 "10 Hz ZOH + 1차 지연 $\tau_v$"(18.1 권고 3)는 dynamics 판단 뒤에 넣는다 |
 | dynamics-expert | 구동기 모델의 ZOH + $\tau_v$ 옵션 채택 판단. 다중 다리 계단이 로킹·비틀림을 함께 흔드는 몫(1자유도 밖)과 R-4 외란 진폭 |
 
 검증 상태: 1자유도 수치 적분 한 경로다. 이상 밸브의 정지 계단 값은 닫힌 식 $\Delta v\sqrt{k\,m_{eff}}$(전방 11.6 kN)과 견줄 수 있다. 수치값 13.4 kN은 출발 울림이 겹친 값이다. Hopsan·Chrono로는 확인하지 않았다. 밸브 응답($\tau_v$)이 결과를 3~4배 바꾸는 지배 가정이고, 실측이 없다.
@@ -1160,7 +1162,7 @@ control에 넘기는 최악값(한 다리, 순간 표본 한 개):
 - 계산: `conda run -n hydraulics-dev python -I 04_scripts/04_hydraulic/d2_l2b_hydraulic_check.py`(6.5 s, 난수 없음)로 `06_analysis/03_hydraulic/d2_l2b_hydraulic_check.json`을 만든다.
   - dynamics 정역학(`l2b_reference.SlopeSystem`·`piecewise_path`·`v14_block`)을 고치지 않고 쓴다. 다리별 기름 강성 함수만 $L_{0r}$·$L_{0h}$·β 변형으로 다시 만든다.
   - 이 절에서는 JSON의 `C_V14_RLplus`(V14 $L_{0r}$ 감도)와 `D_nonlinear_s_lock`(비선형 점검)만 쓴다. `A_D2_static`·`B_decomposition`·`E_D2_dynamic`은 범위를 줄이기 전에 계산했다. 판정하지 않았고 보고하지도 않는다.
-- 행정 끝 기계 정지 점검(19.1 (3))은 같은 함수로 세션 scratchpad 스크립트에서 했다. 스크립트는 보존하지 않고, 수치는 아래 표에 모두 옮겼다.
+- 행정 끝 기계 정지 점검(19.1 (3))은 같은 함수로 세션 scratchpad 스크립트에서 했다. **스크립트 미보존(세션 임시 폴더, 2026-10-25 확인 때 남아 있지 않음), 수치는 이 문서 표가 원본이다.** 같은 함수는 `d2_l2b_hydraulic_check.py`에 있다.
 - 압력은 게이지로 적는다. 바닥만 0.1 bar abs다. 기준값은 β 1.0 GPa, $L_{0h}$ 0.05 m, $p_{r0}$ 2 bar g(신장 뒤)다(14.3절).
 
 ### 19.1 질문 1: 잠기는 순간의 $s_{lock}$에서 $k_h$·$k_r$를 정해 고정하는 방식

@@ -1,0 +1,867 @@
+{
+ "source": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace\\ac6418dc-b52c-42d7-ba64-81b7424d2311\\scratchpad\\ctrl-run",
+ "scripts": [
+  {
+   "src": "inspect_env.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\inspect_env.py",
+   "src_sha256": "60acc9df445ddf349bf9a6c5005c052d7676a4252fcbe84b6d99c8c1ec235d4e",
+   "edits": []
+  },
+  {
+   "src": "inspect_env2.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\inspect_env2.py",
+   "src_sha256": "f50f4d0cf25b1a574e168b9738cefae086101c678fbe5ef0f62a67ff20ada91d",
+   "edits": []
+  },
+  {
+   "src": "inspect_env3.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\inspect_env3.py",
+   "src_sha256": "9889fb06fe88b26775de07d268566d04b249272fdb31d71caf70cf8c3b0286d6",
+   "edits": []
+  },
+  {
+   "src": "inspect_env4.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\inspect_env4.py",
+   "src_sha256": "868df28df608f7619f9b8b021d3c565e01c814016e8a563a9d8858d2a5a5116a",
+   "edits": []
+  },
+  {
+   "src": "inspect_env5.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\inspect_env5.py",
+   "src_sha256": "8e57532c06f5be59277e052a29e8c500b2ba2c25c912e4901cd43af962eb58a7",
+   "edits": []
+  },
+  {
+   "src": "s6r10_extract.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r10_extract.py",
+   "src_sha256": "0a8b0dcb197341a625a5aec60b30b6c1ec5d9b597d6d8d387f0261d14ca4b6aa",
+   "edits": [
+    "Path\\(r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\"\\) x1",
+    "Path\\(__file__\\)\\.with_suffix\\( x1"
+   ]
+  },
+  {
+   "src": "s6r10_extract2.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r10_extract2.py",
+   "src_sha256": "31b54e26d6d6969cc0a716ceeae18eb28ab06de340f9de4134d83423228c667e",
+   "edits": [
+    "Path\\(r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\"\\) x1",
+    "Path\\(__file__\\)\\.with_suffix\\( x1"
+   ]
+  },
+  {
+   "src": "s6r10_extract3.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r10_extract3.py",
+   "src_sha256": "ea821c38952441e8bee1ad4a6059bcdf50cbaf1fe6ccb7466029c4ac80ba781a",
+   "edits": [
+    "Path\\(r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\"\\) x1",
+    "Path\\(__file__\\)\\.with_suffix\\( x1"
+   ]
+  },
+  {
+   "src": "s6r11_probe_end.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r11_probe_end.py",
+   "src_sha256": "f018c683d8efb0a321b781ac35c454bcf0f51790d30936bac07a8ff6109ed57f",
+   "edits": [
+    "Path\\(__file__\\)\\.with_suffix\\( x1"
+   ]
+  },
+  {
+   "src": "s6r11_rexome35.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r11_rexome35.py",
+   "src_sha256": "d456db696d8aa8f98098ecd953b130addafa2a75e29f611b8a9a1a375d9ea0b2",
+   "edits": [
+    "Path\\(__file__\\)\\.with_suffix\\( x1"
+   ]
+  },
+  {
+   "src": "s6r12_envelope.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r12_envelope.py",
+   "src_sha256": "927f97d29f57eab33091c5473a015bd6fe0b45b42e53a5de44f2f5b0254f541b",
+   "edits": [
+    "HERE / (\"[^\"]+\\.(?:json|txt|csv|npz|png|log)\") x2"
+   ]
+  },
+  {
+   "src": "s6r14_sensor_error.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r14_sensor_error.py",
+   "src_sha256": "f6241d6dd950fda3ee4ecc56470463b89a05079e32b97e96cefcb24ce9f0823a",
+   "edits": [
+    "Path\\(__file__\\)\\.with_suffix\\( x1"
+   ]
+  },
+  {
+   "src": "s6r14b_uncal.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r14b_uncal.py",
+   "src_sha256": "eb926a196001481cd2ab941c9bf5b29dff7ede6b772b849cfc7f705b5cbd03a8",
+   "edits": [
+    "HERE / (\"[^\"]+\\.(?:json|txt|csv|npz|png|log)\") x1"
+   ]
+  },
+  {
+   "src": "s6r16_judge.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r16_judge.py",
+   "src_sha256": "2ece47cb8624c73bdc3a4ae52ca2a9ddf805433b08856b4226fc0bfc6ec4aa02",
+   "edits": [
+    "Path\\(__file__\\)\\.resolve\\(\\)\\.parent / (\\\"[^\\\"]+\\.(?:json|txt|csv|npz|png|log)\\\"|\\(\\\"s6r17_part\\\") x1"
+   ]
+  },
+  {
+   "src": "s6r16_touch_hold_sweep.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r16_touch_hold_sweep.py",
+   "src_sha256": "aad4d42cd0554a1d65874d8985eed9c1203dd9c4fd21ee6384e422807a813745",
+   "edits": [
+    "Path\\(r\"C:\\\\workspace\\\\outrigger_control\"\\) x1",
+    "Path\\(__file__\\)\\.resolve\\(\\)\\.parent / (\\\"[^\\\"]+\\.(?:json|txt|csv|npz|png|log)\\\"|\\(\\\"s6r17_part\\\") x1"
+   ]
+  },
+  {
+   "src": "s6r17_h4_fs_order.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r17_h4_fs_order.py",
+   "src_sha256": "5354712b3a26d5730baeb316b7def1c854ab4eda47551f1fa9cd68439180f013",
+   "edits": [
+    "Path\\(r\"C:\\\\workspace\\\\outrigger_control\"\\) x1",
+    "Path\\(__file__\\)\\.resolve\\(\\)\\.parent / (\\\"[^\\\"]+\\.(?:json|txt|csv|npz|png|log)\\\"|\\(\\\"s6r17_part\\\") x1"
+   ]
+  },
+  {
+   "src": "s6r17_report.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r17_report.py",
+   "src_sha256": "ddad8d362fa690cb88cb574025f5144a5ecce66320f4c96e2e091968eb099c8f",
+   "edits": [
+    "Path\\(__file__\\)\\.resolve\\(\\)\\.parent / (\\\"[^\\\"]+\\.(?:json|txt|csv|npz|png|log)\\\"|\\(\\\"s6r17_part\\\") x1"
+   ]
+  },
+  {
+   "src": "s6r17_reportO.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r17_reportO.py",
+   "src_sha256": "0369fb8a3e16070ffcc14891c22b449cd5851b5642d5991b262621544b29c77e",
+   "edits": [
+    "Path\\(__file__\\)\\.resolve\\(\\)\\.parent / (\\\"[^\\\"]+\\.(?:json|txt|csv|npz|png|log)\\\"|\\(\\\"s6r17_part\\\") x1"
+   ]
+  },
+  {
+   "src": "s6r18_look.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r18_look.py",
+   "src_sha256": "5686e4bc69aab4f2abf38fde6bca6dd0371034f9809007c65e6fe2e640deef3a",
+   "edits": [
+    "\\(HERE / fn\\) x1"
+   ]
+  },
+  {
+   "src": "s6r18_move.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r18_move.py",
+   "src_sha256": "63e422dec5fbaaa5936345014e614cb79f1dfc12ffa0e2dbb9d9c4843f97d94b",
+   "edits": [
+    "Path\\(r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\"\\) x1",
+    "^SRC = Path\\(__file__\\)\\.resolve\\(\\)\\.parent$ x1"
+   ]
+  },
+  {
+   "src": "s6r18_report.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r18_report.py",
+   "src_sha256": "2a635e873f4b286fbb366aa6e492208de99bdca39989b52626c1e593731b40da",
+   "edits": [
+    "Path\\(r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\"\\) x1"
+   ]
+  },
+  {
+   "src": "s6r21_h4lb.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r21_h4lb.py",
+   "src_sha256": "4c0548cd2a7366ef0bdc56bc288350d0830171a83379a25e5f1dd415b2229c09",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x1",
+    "Path\\(__file__\\)\\.resolve\\(\\)\\.parent / (\\\"[^\\\"]+\\.(?:json|txt|csv|npz|png|log)\\\"|\\(\\\"s6r17_part\\\") x1"
+   ]
+  },
+  {
+   "src": "s6r25_margins.jl",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r25_margins.jl",
+   "src_sha256": "528a18a02677b243d78a573cb258c27ff863cf0b313b41cfb11702a3b4c63e7e",
+   "edits": []
+  },
+  {
+   "src": "s6r25_margins.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r25_margins.py",
+   "src_sha256": "3a67444cdf3c2e8e91a4113a673a5af91fb751da69f2ecae87e3162001d8bfae",
+   "edits": [
+    "Path\\(__file__\\)\\.with_name\\( x1"
+   ]
+  },
+  {
+   "src": "s6r25_rate.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r25_rate.py",
+   "src_sha256": "e5321a179008ef520c8295d5c94799e59e87c1f6c09b9a5343ca4ad04aad2e6f",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x2",
+    "Path\\(__file__\\)\\.resolve\\(\\)\\.parent / (\\\"[^\\\"]+\\.(?:json|txt|csv|npz|png|log)\\\"|\\(\\\"s6r17_part\\\") x1"
+   ]
+  },
+  {
+   "src": "s6r25_report.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r25_report.py",
+   "src_sha256": "8bd8f3277220207678d533cbfced9940f18dc3aa332417c6c0679bb623127e7f",
+   "edits": [
+    "Path\\(__file__\\)\\.resolve\\(\\)\\.parent / (\\\"[^\\\"]+\\.(?:json|txt|csv|npz|png|log)\\\"|\\(\\\"s6r17_part\\\") x1"
+   ]
+  },
+  {
+   "src": "s6r26_c10.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r26_c10.py",
+   "src_sha256": "a6700d70f6a017550145d68418cee4485e3c176749ee4cae7232395c734b4355",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x2",
+    "HERE / \\(f\" x1"
+   ]
+  },
+  {
+   "src": "s6r26_d8report.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r26_d8report.py",
+   "src_sha256": "aba1a50daa1ee79797f6863131d6dcd05f13d1a203643416723d2b98d657fb94",
+   "edits": []
+  },
+  {
+   "src": "s6r26_lin.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r26_lin.py",
+   "src_sha256": "a6badc10cbe7dd92479a7b7be16f628b5f77f18314f4fbb44bb3622512554329",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x2",
+    "HERE / (\"[^\"]+\\.(?:json|txt|csv|npz|png|log)\") x2"
+   ]
+  },
+  {
+   "src": "s6r26_lin_check.jl",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r26_lin_check.jl",
+   "src_sha256": "2b37929f2e5849db891b4147659d779e60ce28d7d973617ea6a48a0d6818eb22",
+   "edits": []
+  },
+  {
+   "src": "s6r26_lin_mr.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r26_lin_mr.py",
+   "src_sha256": "6ce1b11487a7d2c4ea62a5c664f2795465d519336d83ebe3d20f164c94770562",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x2",
+    "HERE / (\"[^\"]+\\.(?:json|txt|csv|npz|png|log)\") x2"
+   ]
+  },
+  {
+   "src": "s6r26_lin_sweep.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r26_lin_sweep.py",
+   "src_sha256": "e1f08d29ac4ef6a70fa14ec9473d01ba36e6c6d81adf13b89aa49d203e54fdb0",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x2",
+    "HERE / (\"[^\"]+\\.(?:json|txt|csv|npz|png|log)\") x2"
+   ]
+  },
+  {
+   "src": "s6r26_lin_sweep2.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r26_lin_sweep2.py",
+   "src_sha256": "6c9cdf38c1b3b66025e50fa3e7fc6fab3ace1ebfdcaf57437daef2705813285c",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x2",
+    "HERE / (\"[^\"]+\\.(?:json|txt|csv|npz|png|log)\") x2"
+   ]
+  },
+  {
+   "src": "s6r26_report.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r26_report.py",
+   "src_sha256": "8c66551c24fce924f45e4d4f01209ff9d956b01aac727bd715f93a7521404a64",
+   "edits": [
+    "Path\\(__file__\\)\\.resolve\\(\\)\\.parent / (\\\"[^\\\"]+\\.(?:json|txt|csv|npz|png|log)\\\"|\\(\\\"s6r17_part\\\") x1"
+   ]
+  },
+  {
+   "src": "s6r6_gyro_bias.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r6_gyro_bias.py",
+   "src_sha256": "a67141960658cd6cbd1507cbed0d03b661786725efeee637b0f106febb84258e",
+   "edits": []
+  },
+  {
+   "src": "s6r7_gate_event.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r7_gate_event.py",
+   "src_sha256": "656fda2238c76e0fad5a3a5e6f858829b8ecc21bf7fc5bf06d63d81b55445138",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x1"
+   ]
+  },
+  {
+   "src": "s6r7_gate_q1.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r7_gate_q1.py",
+   "src_sha256": "3fe8137666ed2291143e6f02ba96bb5cfcecd40db0d8de3dd015d9dceab1210b",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x1"
+   ]
+  },
+  {
+   "src": "s6r7_ge1.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r7_ge1.py",
+   "src_sha256": "7f20b19c02f538f066aaf2bef38e3285e548f148a0ef0a2e5966955c3e0e1869",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x1",
+    "os\\.path\\.dirname\\(os\\.path\\.abspath\\(__file__\\)\\) x1"
+   ]
+  },
+  {
+   "src": "s6r7_re1b_window.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r7_re1b_window.py",
+   "src_sha256": "ac194a6110b07c6ca99eb50ac148ee0cae735b5c74f4a60c640eba555ca96b81",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x1"
+   ]
+  },
+  {
+   "src": "s6r8_gate_mc.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r8_gate_mc.py",
+   "src_sha256": "c0b915766da3245c5ff5d20f7a7de4aa5b1dcf61a193becb9edd7518c45040c0",
+   "edits": []
+  },
+  {
+   "src": "s6r8_gate_window.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r8_gate_window.py",
+   "src_sha256": "e33d18ff421f4489a8474c0d85eeaadc0ac9b0247622072670795001db5f7f13",
+   "edits": [
+    "r\"C:\\\\workspace\\\\outrigger_control\\\\([^\"]+)\" x1"
+   ]
+  },
+  {
+   "src": "s6r9_rod_pressure.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r9_rod_pressure.py",
+   "src_sha256": "321b365e91281e86c98c88fbf5d1e0dc0efdbce26dbdcc550f54bac2a374a21a",
+   "edits": [
+    "Path\\(__file__\\)\\.with_suffix\\( x1"
+   ]
+  },
+  {
+   "src": "s6r9b_hyd_align.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\s6r9b_hyd_align.py",
+   "src_sha256": "407b2ca366c67bc7b9364a58e83d709688ac8216511f7c4124afbe69eba38fcd",
+   "edits": [
+    "Path\\(__file__\\)\\.with_suffix\\( x1"
+   ]
+  },
+  {
+   "src": "[a06eea4a] b2_compact.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\b2_compact.py",
+   "src_sha256": "6376b5072517a1087fe386111e86fa165154ed85a1fd5baa7daa649bdc55845b",
+   "edits": [
+    "ROOT/BASE absolute path -> repository-relative (Edit)"
+   ]
+  },
+  {
+   "src": "[a06eea4a] b2_summary.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\b2_summary.py",
+   "src_sha256": "d25ade3c0480de0e7b8d00485e0fd1d3e384327cbd0d17a410b9663e3bd998e0",
+   "edits": [
+    "ROOT/BASE absolute path -> repository-relative (Edit)"
+   ]
+  },
+  {
+   "src": "[a06eea4a] cmp_b2_b.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\cmp_b2_b.py",
+   "src_sha256": "eb2766eb92efb838c080662aa2f9c34fbd58077a28071d8d712d5b413e68c021",
+   "edits": [
+    "ROOT/BASE absolute path -> repository-relative (Edit)"
+   ]
+  },
+  {
+   "src": "[a06eea4a] loadsum.py",
+   "dst": "04_scripts\\03_control\\s6_rev01_28\\loadsum.py",
+   "src_sha256": "91784e3e73c2779b72f8415a799e370850361c4cc0d8e0df2d5d7a484ce9cb5b",
+   "edits": [
+    "ROOT/BASE absolute path -> repository-relative (Edit)"
+   ]
+  }
+ ],
+ "results": [
+  {
+   "src": "copied_O.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\copied_O.json",
+   "bytes": 329709,
+   "sha256": "073734a88e81db15b3ad7d74ef937f846086e2eef677923c92409126e1388e82"
+  },
+  {
+   "src": "d8x_boundary_sim.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\d8x_boundary_sim.json",
+   "bytes": 30825,
+   "sha256": "2d2c37c0cd51e0d3705c28e0654942a60dadb1bd28a43a1f97173794374ec21d"
+  },
+  {
+   "src": "d8x_floor_est.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\d8x_floor_est.json",
+   "bytes": 58307,
+   "sha256": "9d3f81f584b9a1a316544ea134d38531b51a681ca6bc2bafd94080cfee0aba7c"
+  },
+  {
+   "src": "d8x_gate_options.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\d8x_gate_options.json",
+   "bytes": 8363,
+   "sha256": "950cbeeac2b2e1c082474f64e77600c129d9c77d246581172addd936853e05dc"
+  },
+  {
+   "src": "d8x_settle_probe.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\d8x_settle_probe.json",
+   "bytes": 5311,
+   "sha256": "a87d841edfb9dbe4e2d24be5fe42aba649c9a6d24ec2faa8a102ae0fc9da4b18"
+  },
+  {
+   "src": "envelope_check.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\envelope_check.json",
+   "bytes": 14669,
+   "sha256": "352c31830e93616108b8416fed5499524709b4e67145bb8f2f74994b35fc134e"
+  },
+  {
+   "src": "s6r11_probe_end.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r11_probe_end.json",
+   "bytes": 4666,
+   "sha256": "6bfa02e9fffa09325fa95270db981ca3d7ec76c795fc56c390051883bab744c9"
+  },
+  {
+   "src": "s6r11_rexome35.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r11_rexome35.json",
+   "bytes": 3178,
+   "sha256": "22cf49c084b426bc459ed307077d0d3629a8c905042033608aa86a44fa6fbe29"
+  },
+  {
+   "src": "s6r12_envelope.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r12_envelope.json",
+   "bytes": 1190,
+   "sha256": "3e4215cf2f0610769ccfca0520b082cc8707de01e486a0b0fbc61e34217df4fa"
+  },
+  {
+   "src": "s6r14_sensor_error.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r14_sensor_error.json",
+   "bytes": 5432,
+   "sha256": "0e60512217ee12bea44620adafba73fe475516215dcc3d463e55629fec613c89"
+  },
+  {
+   "src": "s6r14b_uncal.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r14b_uncal.json",
+   "bytes": 2432,
+   "sha256": "6983d9db45a62e0b1c0dbb98d0196a7f01294a0cf695d6bdd77076d051cf4f3e"
+  },
+  {
+   "src": "s6r17_partO.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r17_partO.json",
+   "bytes": 329529,
+   "sha256": "166f743546bc0e410575f3bbeeb0cab619bfa9baf986c4e178d161c6a398f179"
+  },
+  {
+   "src": "s6r17_partO2.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r17_partO2.json",
+   "bytes": 236630,
+   "sha256": "602038d26747d73c54a673469d9392315ded5dfb498d954e296d5e9f44d46328"
+  },
+  {
+   "src": "s6r17_run.log",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r17_run.log",
+   "bytes": 262,
+   "sha256": "355799e9e18d233a8129c141b981434b5cc16a7ed118a0770a35654959206cc0"
+  },
+  {
+   "src": "s6r21_h4lb.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r21_h4lb.json",
+   "bytes": 213723,
+   "sha256": "b315e69b91c22e85f7d70442e4fd997851c4f508dbb47d76ab690a3b8f74f592"
+  },
+  {
+   "src": "s6r4_h4_fric1.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r4_h4_fric1.json",
+   "bytes": 20415,
+   "sha256": "3f049c08c5580ec9af5d184b8690f0615aa83e4c59bc75cf0b9b42cc15d264d7"
+  },
+  {
+   "src": "s6r4_lifted_probe.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r4_lifted_probe.json",
+   "bytes": 66622,
+   "sha256": "65479262ed42c72fc789059f4970a8a1e3dc4e5f32f166a694ab93c2aa1f4e1e"
+  },
+  {
+   "src": "s6r5_fs_probe.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r5_fs_probe.json",
+   "bytes": 15765,
+   "sha256": "7f1cf98d9d6683188befcdde2b25e9c42f0827d9349a1cbde431649769c5f240"
+  },
+  {
+   "src": "s6r5_geom_cue.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r5_geom_cue.json",
+   "bytes": 283963,
+   "sha256": "05894fef205ea57db03112b2d4643b303e636682330ab0fe161781e26a3a5d57"
+  },
+  {
+   "src": "s6r6_gyro_bias.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r6_gyro_bias.json",
+   "bytes": 3295,
+   "sha256": "3518a3b947e7c76b1f27b6680d728a2a5c0e9a79be61a6200a57ae4e595a5038"
+  },
+  {
+   "src": "s6r7_ge1_out.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r7_ge1_out.json",
+   "bytes": 26907,
+   "sha256": "be16ea2c6fb18bcd9e2347b340964af5a454f6d43f4b1ab2b34486d81a1f762f"
+  },
+  {
+   "src": "s6r9_rod_pressure.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r9_rod_pressure.json",
+   "bytes": 6399,
+   "sha256": "8a061b30a7a22ad0f15587b1b22728fb8fc14d0f44121df4082b0b14e0c765ab"
+  },
+  {
+   "src": "s6r9b_hyd_align.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6r9b_hyd_align.json",
+   "bytes": 1683,
+   "sha256": "1cfe829bf320b96a42b376b28f679f7e7c03648403d9a7df0eb24e891598ecbf"
+  },
+  {
+   "src": "s6s2_corrective.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6s2_corrective.json",
+   "bytes": 1196,
+   "sha256": "83677345bcca8bcb3079287d9ba78857064cbe9effa6b8400bdcba8a0007be22"
+  },
+  {
+   "src": "s6s2_done_cond.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6s2_done_cond.json",
+   "bytes": 1882,
+   "sha256": "089b4caebc0e5581c37eff39c47f1bd88e2359210454931d876cc05639c11089"
+  },
+  {
+   "src": "s6s2_extra_checks.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6s2_extra_checks.json",
+   "bytes": 2464,
+   "sha256": "4707e69c0c59436d38117d688c5fa0aa4ca3d97c177a0e22d0c176a1eb890e14"
+  },
+  {
+   "src": "s6s2_joint_band.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6s2_joint_band.json",
+   "bytes": 58221,
+   "sha256": "9a4904a04c39d6efb09cf9292d7f9e0330819a592f782d609d57aca2913a49e1"
+  },
+  {
+   "src": "s6s2_level_time.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6s2_level_time.json",
+   "bytes": 2600,
+   "sha256": "373cab3d8d0eef7584b7daac3a59981040a8ba3344b677c8087712a9d570b7fa"
+  },
+  {
+   "src": "s6s2_probe_shaping.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6s2_probe_shaping.json",
+   "bytes": 10461,
+   "sha256": "0d03a17fac295931ca588031282f098447173c58cbd8f5ba7f06234a620afc97"
+  },
+  {
+   "src": "s6s2_rocking.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6s2_rocking.json",
+   "bytes": 64760,
+   "sha256": "6f91d59fb55e460d18557fcf51b2393127151ea21df6e1aadd0bd0e14e64def9"
+  },
+  {
+   "src": "s6s2_tail.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\s6s2_tail.json",
+   "bytes": 2331,
+   "sha256": "ea1d5f06beaeeab018021002acb025994a1295b740cca6235b7b067828ecb0c6"
+  },
+  {
+   "src": "sth1.report.out",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\sth1.report.out",
+   "bytes": 5419,
+   "sha256": "4923d9c8d6313ad8d33e3f41a99d9274bd79801fee75555d19f046c42208dd06"
+  },
+  {
+   "src": "sth1.sweep.out",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\sth1.sweep.out",
+   "bytes": 5419,
+   "sha256": "4923d9c8d6313ad8d33e3f41a99d9274bd79801fee75555d19f046c42208dd06"
+  },
+  {
+   "src": "target_sim.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\target_sim.json",
+   "bytes": 78592,
+   "sha256": "4653e79305448bb02a74b48d10a69c1f7a03d991b59dec8bb9ce579d03587177"
+  },
+  {
+   "src": "target_sim_change2.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\target_sim_change2.json",
+   "bytes": 35846,
+   "sha256": "04a0135d43b26d1ed22d960b9a8ae43535ea10a1ee5a3233831f98a71b2ace86"
+  },
+  {
+   "src": "target_sim_change3.json",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\target_sim_change3.json",
+   "bytes": 19593,
+   "sha256": "aba550d860c050bd15284be496b924ec401c02aea016e51763292e297e7d3c65"
+  },
+  {
+   "src": "[a06eea4a] b2.txt",
+   "dst": "06_analysis\\02_control\\s6_rev01_28\\b2.txt",
+   "bytes": 73292,
+   "sha256": "50a145908c68179b7afe2f58b02cc86a95aa38b40d394335e7d9daafe215c620"
+  }
+ ],
+ "already_in_repo": [
+  {
+   "src": "d8x_boundary_sim.py",
+   "at": [
+    "04_scripts\\03_control\\d8x_boundary_sim.py"
+   ]
+  },
+  {
+   "src": "d8x_floor_est.py",
+   "at": [
+    "04_scripts\\03_control\\d8x_floor_est.py"
+   ]
+  },
+  {
+   "src": "d8x_gate_options.py",
+   "at": [
+    "04_scripts\\03_control\\d8x_gate_options.py"
+   ]
+  },
+  {
+   "src": "d8x_settle_probe.py",
+   "at": [
+    "04_scripts\\03_control\\d8x_settle_probe.py"
+   ]
+  },
+  {
+   "src": "s6_build_spec_json.py",
+   "at": [
+    "04_scripts\\03_control\\s6_build_spec_json.py"
+   ]
+  },
+  {
+   "src": "s6_envelope_check.py",
+   "at": [
+    "04_scripts\\03_control\\s6_envelope_check.py"
+   ]
+  },
+  {
+   "src": "s6_gyro_probe_noise.py",
+   "at": [
+    "04_scripts\\03_control\\s6_gyro_probe_noise.py"
+   ]
+  },
+  {
+   "src": "s6_summary.py",
+   "at": [
+    "04_scripts\\03_control\\s6_summary.py"
+   ]
+  },
+  {
+   "src": "s6_target_sim.py",
+   "at": [
+    "04_scripts\\03_control\\s6_target_sim.py"
+   ]
+  },
+  {
+   "src": "s6r25_margins_jl.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\s6r25_margins_jl.json"
+   ]
+  },
+  {
+   "src": "s6r25_margins_py.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\s6r25_margins_py.json"
+   ]
+  },
+  {
+   "src": "s6r25_rate.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\r7_rate_study_s6r25.json"
+   ]
+  },
+  {
+   "src": "s6r26_D8_c10_R12AR.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\r8_D8_c10_R12AR.json"
+   ]
+  },
+  {
+   "src": "s6r26_D8_c10_R12AR10.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\r8_D8_c10_R12AR10.json"
+   ]
+  },
+  {
+   "src": "s6r26_lin.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\s6r26_lin.json"
+   ]
+  },
+  {
+   "src": "s6r26_lin_check_jl.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\s6r26_lin_check_jl.json"
+   ]
+  },
+  {
+   "src": "s6r26_lin_export.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\s6r26_lin_export.json"
+   ]
+  },
+  {
+   "src": "s6r26_lin_mr.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\s6r26_lin_mr.json"
+   ]
+  },
+  {
+   "src": "s6r26_lin_mr_export.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\s6r26_lin_mr_export.json"
+   ]
+  },
+  {
+   "src": "s6r26_lin_sweep.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\s6r26_lin_sweep.json"
+   ]
+  },
+  {
+   "src": "s6r26_lin_sweep2.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\s6r26_lin_sweep2.json"
+   ]
+  },
+  {
+   "src": "s6r26_lin_sweep2_export.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\s6r26_lin_sweep2_export.json"
+   ]
+  },
+  {
+   "src": "s6r26_lin_sweep_export.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\s6r26_lin_sweep_export.json"
+   ]
+  },
+  {
+   "src": "s6r26_S.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\r8_S_c10_R12AR10.json"
+   ]
+  },
+  {
+   "src": "s6r26_S_v1.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\r8_S_c10_R1_R1v05_R2_R12_R12g.json"
+   ]
+  },
+  {
+   "src": "s6r26_S_v2.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\r8_S_c10_R12A_c10_R12AR.json"
+   ]
+  },
+  {
+   "src": "s6r26_S_v3.json",
+   "at": [
+    "06_analysis\\02_control\\r8_10hz\\r8_S_c10_R12AR10.json"
+   ]
+  },
+  {
+   "src": "s6r4_h4_fric1.py",
+   "at": [
+    "04_scripts\\03_control\\s6r4_h4_fric1.py"
+   ]
+  },
+  {
+   "src": "s6r4_lifted_probe.py",
+   "at": [
+    "04_scripts\\03_control\\s6r4_lifted_probe.py"
+   ]
+  },
+  {
+   "src": "s6r5_geom_cue.py",
+   "at": [
+    "04_scripts\\03_control\\s6r5_geom_cue.py"
+   ]
+  },
+  {
+   "src": "s6s2_corrective.py",
+   "at": [
+    "04_scripts\\03_control\\s6s2_corrective.py"
+   ]
+  },
+  {
+   "src": "s6s2_done_cond.py",
+   "at": [
+    "04_scripts\\03_control\\s6s2_done_cond.py"
+   ]
+  },
+  {
+   "src": "s6s2_extra_checks.py",
+   "at": [
+    "04_scripts\\03_control\\s6s2_extra_checks.py"
+   ]
+  },
+  {
+   "src": "s6s2_joint_band.py",
+   "at": [
+    "04_scripts\\03_control\\s6s2_joint_band.py"
+   ]
+  },
+  {
+   "src": "s6s2_level_time.py",
+   "at": [
+    "04_scripts\\03_control\\s6s2_level_time.py"
+   ]
+  },
+  {
+   "src": "s6s2_probe_shaping.py",
+   "at": [
+    "04_scripts\\03_control\\s6s2_probe_shaping.py"
+   ]
+  },
+  {
+   "src": "s6s2_rocking.py",
+   "at": [
+    "04_scripts\\03_control\\s6s2_rocking.py"
+   ]
+  },
+  {
+   "src": "s6s2_tail.py",
+   "at": [
+    "04_scripts\\03_control\\s6s2_tail.py"
+   ]
+  },
+  {
+   "src": "s6s2_tail_rate.py",
+   "at": [
+    "04_scripts\\03_control\\s6s2_tail_rate.py"
+   ]
+  },
+  {
+   "src": "sth1.report.err",
+   "at": [
+    "04_scripts\\.gitkeep"
+   ]
+  },
+  {
+   "src": "sth1.sweep.err",
+   "at": [
+    "04_scripts\\.gitkeep"
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "src": "s6r16_touch_hold_sweep.json",
+   "bytes": 4479993,
+   "sha256": "b7757f5725f61b892b89e6c819f8f30ca89590fe63dfd9eafc270f0b051f66c9",
+   "reason": "> 1 MB, not copied"
+  },
+  {
+   "src": "s6r17_h4_fs_order.json",
+   "bytes": 1096605,
+   "sha256": "d2ebf5e1d1c3931f46e8dbdac7b4b4786824499af3947604d761cbac437c446f",
+   "reason": "> 1 MB, not copied"
+  },
+  {
+   "src": "s6r5_fs_probe.py",
+   "bytes": 3703,
+   "reason": "repository copy differs (later edit), kept"
+  }
+ ],
+ "source_2": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\a06eea4a-1d98-427b-b73a-a8a84789982d\\scratchpad\\ctrl-run"
+}

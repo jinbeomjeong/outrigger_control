@@ -335,7 +335,7 @@ H4 실행 쌍(control-expert `step_pairs`)으로 계산했다. 반영 방법(JSO
 
 ### 7.1 A: R5 압력 단독 판정 모드 (`s6r17_partO.json`, `base` 사례, 개정 3.2)
 
-입력: `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace\ac6418dc-b52c-42d7-ba64-81b7424d2311\scratchpad\ctrl-run\s6r17_partO.json`(07:22:40). 이 파일은 scratchpad에 있어 세션 뒤 사라진다. 프로젝트 안으로 옮겨야 한다(12절). 계단 순서는 RR → RL → RR → RL이고 P_stop 판독은 43.7~45.0 / 30.6~32.4 kN이다. 재설정 중 최소 실제 실린더 힘은 28.2~30.3 kN이다.
+입력: `06_analysis/02_control/s6r17_partO.json`(2026-10-22 07:22:40 control 실행 출력, 329,529 B; 2026-10-25 세션 scratchpad `ctrl-run\s6r17_partO.json`에서 바이트 그대로 옮겼다. `leg_rod_lateral_check.json`의 `sources` 경로도 새 경로로 바꿨다). 계단 순서는 RR → RL → RR → RL이고 P_stop 판독은 43.7~45.0 / 30.6~32.4 kN이다. 재설정 중 최소 실제 실린더 힘은 28.2~30.3 kN이다.
 
 값은 실행 각에서 계산했다.
 - 레벨링 끝 → 잔류 [kN]은 실행값이다.
@@ -557,7 +557,7 @@ $env:OPENBLAS_NUM_THREADS='1'
 
 - H4 인자를 모두 빼면 `h4_adopted`·`h4_sets` 키가 없고 출력은 개정 3.1과 같다. 판정 쌍(AL-R)을 내려면 R6 세트가 필요하다.
 - `--h4-set LABEL MODE FILE…`는 id 둘째 토큰이 MODE인 실행만 읽는다. `S|*` 감도 실행은 모두 넣고, 나쁜 쪽이 지배한다.
-- 개정 3.3 실행의 A 입력은 `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace\ac6418dc-b52c-42d7-ba64-81b7424d2311\scratchpad\ctrl-run\s6r17_partO.json`이다(scratchpad라 세션 뒤 사라진다). 경로와 수정 시각은 `h4_sets.<label>.sources`에 남아 있다.
+- 개정 3.3 실행의 A 입력은 `06_analysis/02_control/s6r17_partO.json`이다(2026-10-25 scratchpad에서 옮김, 내용 같음). 경로와 수정 시각은 `h4_sets.<label>.sources`에 남아 있다. 경로는 옮긴 뒤 새 경로로 바꿨고, 수정 시각은 원 실행 때 값이다.
 
 - 입력 `06_analysis/00_dynamics/pad_tangential_check.json`이 바뀌면 다시 돌린다. 어느 단계(`clip`, `reanchor2`·`reanchor3`, 행렬)를 다시 돌렸는지에 따라 바뀌는 키가 다르다. `clip`만 바뀌면 `pitch3.7_clip_check`만 바뀐다. 이 스크립트는 `reanchor` 단계(ra1)를 읽지 않는다.
 - `OPENBLAS_NUM_THREADS=1`이 없으면 E코어 친화도·낮은 우선순위에서 작은 고유값 문제가 수백 배 느려진다.
@@ -574,7 +574,7 @@ $env:OPENBLAS_NUM_THREADS='1'
 - **control-expert**
   - (처리됨, 개정 20 86.5) `Ft_at_Fl_max_Ft_held_kN`과 20 ms 시계열은 앞내림 묶음 N에 들어왔다. 앞들림 묶음(O3·S)에는 아직 없어서 앞들림 쪽은 상한 조합으로 남아 있다. 다만 C 기본이면 앞들림 H4가 돌지 않으므로 판정에는 쓰지 않는다.
   - R6 앞들림 지배는 k3(두 번째 RL 내림, P_stop 23.2 kN)에서 RL 접선력이 ×1.30으로 커지는 것이다. C(앞들림에서 H4 생략)를 구현하면 이 항은 없어진다.
-  - `s6r17_partO.json`(A 입력)은 scratchpad에만 있다. 필요하면 프로젝트 출력 폴더로 옮겨 달라. R6 입력은 이미 `06_analysis/02_control/`에 있다.
+  - (처리됨, 2026-10-25 cad) `s6r17_partO.json`(A 입력)을 `06_analysis/02_control/`로 옮겼다(R6 입력과 같은 폴더). 이 파일을 만든 control 스크립트(`ctrl-run\s6r17_reportO.py` 등)는 control이 `04_scripts/03_control/s6_rev01_28/`로 옮겼다(2026-10-25). control 이관 때 같은 파일의 사본이 `06_analysis/02_control/s6_rev01_28/s6r17_partO.json`에도 있다(SHA-256 같음, 이관 목록 `06_analysis/02_control/s6_rev01_28/migration_manifest.json`). 이 문서와 `leg_rod_lateral_check.json`은 `06_analysis/02_control/s6r17_partO.json`을 가리킨다.
 - **D8 결정(사용자)**
   - 사용자 결정 "C 우선, 잠정 B"(2026-10-22)의 근거 수치는 다음과 같다.
     - C: 앞들림 3.42 / 3.30°(여유 +0.22 / +0.10°)

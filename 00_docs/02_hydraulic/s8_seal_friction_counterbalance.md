@@ -2,6 +2,8 @@
 
 작성: hydraulics-expert. **명세 문서**다. 코드·YAML·다른 문서는 고치지 않았다. 구현은 cad-expert, 기준해·판정은 dynamics-expert, 제어 쪽 판단은 control-expert에 넘긴다(7절).
 
+> **갱신 이력**: 초판 0~8절 2026-10-24 → 9~13절 2026-10-25(H-S8-1 CB 로드측 압력 범위, H-S8-2 잠긴 다리 비 상계, H-S8-3 CB 이동 중 추정 지연·잠금 창, H-S8-4 잠긴 다리 이륙 압력, H-S8-5 해제 뒤 배수와 P-S8-21) → 2026-10-25 S8 마감 뒤 정리: 13절 스크립트를 `04_scripts/04_hydraulic/s8_cb/`로 옮기고(13.8 메인 세션 위임 처리) 경로를 고쳤다. 수치는 바뀌지 않았다. 0~8절 명세(실 마찰, CB 옵션)는 S8 구현(L2b-NSC)과 제어 ③ 재판정에 쓰였다. S8 마감 상태와 판정 수치는 `decision_log.md`와 `s6_control_spec.md`가 원본이다.
+
 - 범위(사용자 결정 2026-10-24, S8 시작): 실 마찰 + V15, 카운터 밸런스 옵션(U-R8-4), 제어 ③ 재판정, 접지 판정 ML/DL. **D2·V17은 보류**다. 실 마찰 감도는 **$F_s$ 0 / 2 / 4 / 8 kN**이다.
 - 근거:
   - `unit_test_noload_analysis.md`(단품 공중 왕복 $F_s$ 3.72 kN, 저압 1.27 kN)
@@ -1057,9 +1059,9 @@ $$\frac{dp_r}{dt}=-\frac{\beta}{V_r}K\sqrt{p_r},\quad K=\frac{A_{ann}u}{\sqrt{\D
 
 | 항목 | 내용 |
 |---|---|
-| 스크립트 | `06_analysis/03_hydraulic/s8/h_s8_5_src/`의 `h_s8_5_plant_drain.py`(플랜트, 1,296조합, 약 126 s), `h_s8_5_physical_drain.py`(실기 추정 폐형식, 약 69만 조합, 약 109 s), `h_s8_5_rules.py`(규칙 변형 비교, 약 200 s), `h_s8_5_crosscheck.py`(폐형식 ↔ RK4 수치 적분). 이번에는 다른 작업과 겹치지 않게 `04_scripts`에 두지 않았다(13.8) |
+| 스크립트 | `04_scripts/04_hydraulic/s8_cb/`의 `h_s8_5_plant_drain.py`(플랜트, 1,296조합, 약 126 s), `h_s8_5_physical_drain.py`(실기 추정 폐형식, 약 69만 조합, 약 109 s), `h_s8_5_rules.py`(규칙 변형 비교, 약 200 s), `h_s8_5_crosscheck.py`(폐형식 ↔ RK4 수치 적분). 처음에는 `06_analysis/03_hydraulic/s8/h_s8_5_src/`에 두었다가 2026-10-25 `git mv`로 옮겼다(13.8). 출력 경로는 모두 인자라 옮겨도 바뀌지 않는다. 옮긴 뒤 다시 돌린 결과는 13.10에 있다 |
 | 결과 | `06_analysis/03_hydraulic/s8/h_s8_5_plant_drain.json`, `h_s8_5_physical_drain.json`, `h_s8_5_rules.json` |
-| 실행 | `conda run -n hydraulics-dev python -I <스크립트> <repo 또는 out.json>`(`plant_drain`은 `<repo_root> <out.json>`, 나머지는 `<out.json>`) |
+| 실행 | `conda run -n hydraulics-dev python -I 04_scripts/04_hydraulic/s8_cb/<스크립트> <repo 또는 out.json>`(`plant_drain`은 `<repo_root> <out.json>`, `physical_drain`·`rules`는 `<out.json>`, `crosscheck`는 인자 없이 화면 출력). 예: `… h_s8_5_plant_drain.py . 06_analysis/03_hydraulic/s8/h_s8_5_plant_drain.json`. 직접 `python.exe`로 부를 때는 `run.ps1`(PATH에 `Library\bin`)을 쓴다 |
 | 난수 | 없음(격자 전수) |
 | 압력 기준 | 모두 **bar g**. 로드측 바닥만 0.1 bar abs |
 | 교차 확인 | 플랜트: 모듈 출력 ↔ 해석식 $p_\infty+(p_{pre}-p_\infty)e^{-t/0.05}$ ↔ ML00_ep5 FR 1 ms 기록(13.2). 실기 추정: 폐형식 ↔ 고정 스텝 RK4(5 µs) 8사례, 최대 차 < 1×10⁻⁴ bar. Hopsan·OpenHydraulics는 쓰지 않았다(같은 오리피스 식을 다시 푸는 것이라 독립성이 더해지지 않음) |
@@ -1202,7 +1204,7 @@ $$\theta=\frac{2C}{K}\Big[(y_0-y)+y_\infty\ln\frac{y_0-y_\infty}{y-y_\infty}\Big
 |---|---|
 | control-expert | R-1(260.5 근거 문장 정정), R-2(초과분 형식, 선택), R-4(바닥 = $p_{hi}$ 묶음, CB 여유 +15 전제)를 명세에 반영한다. R-3은 U-R8-9 ④ 뒤 결정 항목으로 등록한다. P-S8-21 단위 시험에 CB 사례로 "pre 324 → $p_k$ = 조절값 + 81 bar → $p_{k+1}$ = 조절값 + 11 bar, 설명됨(+15 여유)"를 더한다 |
 | python-expert | (control 결정 뒤) `two_pressure._rod_step_reason`의 `CHECK_DRAINING` 판정식이 R-2를 따르면 그 식으로 고친다. 이번 절은 코드에 손대지 않았다 |
-| 메인 세션 | `06_analysis/03_hydraulic/s8/h_s8_5_src/*.py`를 다른 작업이 끝난 뒤 `04_scripts/04_hydraulic/s8_cb/`로 옮긴다(이번에는 `04_scripts` 읽기 전용 지시 때문에 결과 폴더에 두었다). U-R8-9 ④ 시험 항목에 R-5를 더한다 |
+| 메인 세션 | `06_analysis/03_hydraulic/s8/h_s8_5_src/*.py`를 다른 작업이 끝난 뒤 `04_scripts/04_hydraulic/s8_cb/`로 옮긴다(이번에는 `04_scripts` 읽기 전용 지시 때문에 결과 폴더에 두었다). **처리(2026-10-25, hydraulics-expert)**: 네 파일을 `04_scripts/04_hydraulic/s8_cb/`로 `git mv`했고 `__pycache__`는 지웠다(13.10). U-R8-9 ④ 시험 항목에 R-5를 더한다 |
 
 ### 13.9 가정(이번 절)
 
@@ -1217,3 +1219,14 @@ $$\theta=\frac{2C}{K}\Big[(y_0-y)+y_\infty\ln\frac{y_0-y_\infty}{y-y_\infty}\Big
 | 헤드 사체적 $L_{0h}$ | 0.08 m | 범위 0.05~0.08의 위 끝(느린 쪽) |
 | 센서 오차 | 정적 오프셋 ±4 bar(두 표본 같음), 잡음 무시 | 9.5 정상 등급 클립과 같음 |
 | 작동유 | $\beta_{eff}$ 0.69~1.6 GPa(공기·호스 포함 유효값), 등급·온도 미상 | 기존 결정 |
+
+### 13.10 스크립트 이관 확인(2026-10-25)
+
+`06_analysis/03_hydraulic/s8/h_s8_5_src/`의 네 파일을 `git mv`로 `04_scripts/04_hydraulic/s8_cb/`에 옮기고 `__pycache__`와 빈 폴더를 지웠다. 파일 내용은 바꾸지 않았다(출력 경로는 인자, 모듈 간 import는 `Path(__file__).parent` 기준이라 그대로 동작한다). 옮긴 위치에서 `conda run -n hydraulics-dev python -I …`로 다시 돌린 결과:
+
+| 스크립트 | 비교 대상 | 결과 |
+|---|---|---|
+| `h_s8_5_plant_drain.py . <out>` | `06_analysis/03_hydraulic/s8/h_s8_5_plant_drain.json` | 바이트 단위 같음 |
+| `h_s8_5_physical_drain.py <out>` | `h_s8_5_physical_drain.json` | 바이트 단위 같음 |
+| `h_s8_5_rules.py <out>` | `h_s8_5_rules.json` | 바이트 단위 같음 |
+| `h_s8_5_crosscheck.py` | 13절 머리 표 "교차 확인" 행(폐형식 ↔ RK4) | 8사례 최대 차 0.0000 bar(표시 자리) |
