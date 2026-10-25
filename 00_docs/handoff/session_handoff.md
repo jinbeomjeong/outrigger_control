@@ -2,43 +2,47 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-10-26 01:35 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력)
-- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, PS7a 재실행 판정·M1 기록). 그 전: 2cb021f(R1 완료·S9 결정), 8616be9(YAML 묶음 1~6단계)
+- 갱신: 2026-10-26 03:08 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력)
+- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`). 그 전: ed3abc0(R2 완료·S9 결정), af1bdfe(PS7a·M1), 2cb021f(R1·S9 결정), 8616be9(YAML 묶음 1~6단계)
 
 ## 현재 위치
 
-- S8 완료(U-S8-58). 지금은 **S9 착수 전 작업**이다. 근거: `00_docs/00_roadmap.md` 1절·6절 1항.
-- 착수 전 작업 세 가지 중 C2 토양 대응 설계(control 개정 57, 커밋 3fc758b)와 SCM 패드 수평 구속(dynamics 개정 47, 커밋 004107c)은 끝났다. YAML 재생성 묶음(명세 `00_docs/00_cad/yaml_regen_bundle_2026-10-25.md`)은 1~6단계와 R0가 끝났다(커밋 8616be9).
-- S9 사용자 결정 11건 확정(2026-10-26, 모두 권고안): U-S9L-1~5(`dynamics_model.md` 5.33.10), U-S9-C1~C6(`s6_control_spec.md` 286절). 기록은 `decision_log.md`.
+- S8 완료(U-S8-58). 지금은 **S9 착수 전 작업 막바지 + S9 P1·P2 본 실행 시작**이다. 근거: `00_docs/00_roadmap.md` 1절·6절 1항(로드맵 갱신은 남은 단계 2).
+- YAML 재생성 묶음(명세 `00_docs/00_cad/yaml_regen_bundle_2026-10-25.md`): 1~6단계·R0·R1·R2 끝, R3 실행 중.
+- 사용자 결정(모두 `00_docs/decision_log.md` 5절 S9 블록): U-S9L-1~5, U-S9-C1~C7(C7 = S-3 판정을 ĉ_min(t_P) > 20 mm로·표본 없는 경로 원시 기울기), U-S9G-1(M14s 이중 터레인)·2(P3b 24사례)·3(하중 램프), P2 기준 변경(같은 위상 복제 대비, E1~E4), P1·P2를 R3와 병행 시작, RRpre·R2 예외 수용, PS7a 재실행(통과), R8 PS-7a 공백은 S9 뒤.
 
 ## 진행 중 작업 (이 판 작성 시점)
 
-| 작업 | 담당 | 위치 | 상태 확인 |
+| 작업 | 담당 | 위치 | 상태 |
 |---|---|---|---|
-| ✅ 회귀 R1(스냅숏 37개) | cad-expert | 배치 `07_results/params_bundle_R1_20261026_001438/` | **완료(00:57)**: 36/37 비트 동일, RRpre(`states_L1R/S6_crawler_top_flat_RRpre`) 1건은 사용자 승인 예외(묶음과 무관한 10-22 이후 코드 변경 탓, 근거 `diag_rrpre_oldyaml/exception_RRpre.json`). 새 스냅숏 설치(`install.json`), 옛 보관본 `07_results/states/history/params_bundle_2026-10-25/`, chrono 시험 265 통과, 동등성 `06_analysis/01_chrono/00_conventions/params_bundle_2026-10-25_equivalence.json` |
-| ⚠️ 회귀 R2(index 102사례 = 명세 96 + S4_energy 6) | cad-expert | 메인 트리, 배치 `07_results/params_bundle_R2_20261026_011024/` | **01:32 비트 차이로 중단**: `S3_L1R/v6_FLp_fast`(array_diffs 10, json_diffs 80). 그 전 END 7건 동일. 원인 조사·사용자 결정 대기. 도구 `tools/r2_regress.py` |
-| C2 토양 대응 구현 P-S9-1~10, `test_c2_soil.py`, 회귀 P-S9-9 | python-expert | worktree `.claude/worktrees/agent-a21e7da9d589ffc9b`, 브랜치 `worktree-agent-a21e7da9d589ffc9b` | 브랜치에 커밋 db3e9b4(00:56, "off by default"). 회귀 P-S9-9·R8 기본 켜기 완결 여부는 에이전트 리포트로 확인 |
-| ✅ `GroundBushingCoulomb` 부착력 인자, S9 실행기 본체(`run_S9.py`, `scm_engine.py`, `scm_model.py`), 스모크 | cad-expert | worktree `.claude/worktrees/agent-ac4ca09081d79438a`, 브랜치 `worktree-agent-ac4ca09081d79438a` | 커밋 b6fe355. 기본값 0 L1 비트 동일. **비용 2 cm 격자 15.4 ms/스텝(예상의 약 4배)**, P3b 40사례 2 cm 약 40 h·4 cm 약 8 h(6병렬 추정) → 격자 선택은 사용자 결정 |
-| S9 dynamics 판정(1 Hz pitch 진동, 침하 +19 %, native 표류, 격자 선택지, 287절 검토, 5.33.10 확정) | dynamics-expert | 같은 worktree(ac4ca…)에 문서·결과 커밋 예정 | 리포트 대기 |
-| ✅ RRpre 원인 추적 | python-expert | worktree `.claude/worktrees/agent-ad53ae05f03708a30`(변경 없음, 지워도 됨) | **완료**: 원인 M1(단방향 패드 법선력, 10-22 적용, 8c68c76). 근거 `07_results/params_bundle_R1_20261026_001438/diag_rrpre_bisect/`. PS7a를 B2 설정으로 재실행해 통과(`07_results/S6/PS7a_rerun_20261026_012044/`, 명세 개정 58 108.1절) |
+| 회귀 R3(138실행 = S8 베이스 42 재구성 + c36 61 + c37 21 + ctrl3 12 + rerun 2, 비교 96) | cad-expert | 메인 트리 `07_results/params_bundle_R3_20261026_025133/`(`progress.log`, `r3_plan.json`, tools/`r3_regress.py`) | 02:58 시작, P 8 + E 7, 자동 진단 규칙(불일치 → 현재 코드 + 옛 YAML + 옛 시작 상태 → 새 결과와 같으면 `bundle_unrelated` 예외로 계속). E풀 워커가 P코어 마스크로 잡힌 문제를 고치라고 전함. 끝나면 install, S7·S8 판정 표 스크래치 비교, `regressions.R3` 기록 |
+| S9 P1·P2 본 실행(45건, `dynamics_model.md` 5.34.13 계획) | cad-expert | S9 worktree `.claude/worktrees/agent-ac4ca09081d79438a`(브랜치 `worktree-agent-ac4ca09081d79438a`) | 시작. 먼저 E3·E4 시험 추가, `--threads` 고정. 묶음마다 요약 JSON·커밋. P3a·P3b는 돌리지 않음 |
+| J1·J2·S1 K_c/b 크롤러 정착 복제(P2-b 비교값) | dynamics-expert | 같은 S9 worktree(자기 파일만 커밋) | 진행 중 |
+| C2 합치기 조건 M-3(Chrono P3-10 확장 4사례 켬·끔)·M-4(S7·S8 기록 LOC 존재) | cad-expert | C2 worktree `.claude/worktrees/agent-a21e7da9d589ffc9b`(브랜치 `worktree-agent-a21e7da9d589ffc9b`), 결과 `07_results/S9_merge/m3_20261026/` | roll55 켬·끔 끝, 재접근 사례 진행 중 |
 
-- 세션이 끊기면 백그라운드 에이전트는 사라진다. 디스크(로그·브랜치 커밋·worktree의 미커밋 변경)로 어디까지 됐는지 판단하고, 반쯤 쓴 파일이 없는지 먼저 본다.
-- worktree 두 개는 **R3이 끝난 뒤** 메인에 합친다. 그 전에 메인의 `03_src`·`c2.py`를 고치면 R2·R3 비트 비교가 깨진다.
+- 브랜치 커밋: C2 = db3e9b4(구현, 기본 끔)·0400274(R8 프리셋 켬, 재접근 10 s)·f850ab6(S-3 (나-1)+(나-2))·2821cfc(명세 개정 59). S9 = b6fe355(실행기)·5055b9a(dyn 개정 48)·f1efed7(광선 mesh·램프·노드 기록·이중 터레인)·09d1e43(dyn 개정 49).
+- 세션이 끊기면 백그라운드 에이전트는 사라진다. 디스크(로그·브랜치 커밋·worktree 미커밋 변경)로 어디까지 됐는지 판단하고, 반쯤 쓴 파일이 없는지 먼저 본다.
+- **R3가 끝나기 전에는 메인 트리의 `03_src`·`c2.py`를 고치지 않는다**(비트 비교가 깨진다).
+
+## 끝난 것 (이번 세션)
+
+- R1: 37 중 36 비트 동일, RRpre 예외(M1 탓, `07_results/params_bundle_R1_20261026_001438/diag_rrpre_bisect/`). PS7a 재실행 통과(`07_results/S6/PS7a_rerun_20261026_012044/`, 명세 개정 58 108.1절).
+- R2: 102 중 98 비트 동일, S3_L1R 4건 예외(M1·판정식 변경, 판정 FAIL → 통과는 개정 32 의도, dynamics 판정). `verify_S3_L1_L1R.json` 갱신(옛 판 `06_analysis/01_chrono/13_S3/history/pre_bundle_R2_2026-10-26/`), 옛 index는 `07_results/<폴더>/history/index_before_params_bundle_R2_20261026_011024.json`. 동등성 `06_analysis/01_chrono/00_conventions/params_bundle_2026-10-25_equivalence.json`의 `regressions.R1`·`R2`.
+- S9 실행기 광선 결함(Bullet convex cast 10 mm) 수정, P1-V0 통과. 4 cm 정착 +6.6 %는 P0 격자 위상 차.
+- RRpre 원인 추적 worktree는 정리됨(`git worktree list`에 없음).
 
 ## 남은 단계
 
-1. 회귀 R1 ✅ → R2(102사례, ⚠️ 01:32 v6_FLp_fast 비트 차이로 중단, 원인 조사 대기) → R3(S7·S8 94사례, 약 1.4~1.6시간). 명세 7절. 비트 차이가 나면 멈추고 보고(원인 후보는 소비 코드, python-expert). 결과는 동등성 JSON의 `regressions.R2`·`R3`에 모은다. 명세 정정 거리: 5.1 표 states_L1R S6 소계 25 → 26(top 13 → 14), 7절 R2 96 → 102(S4_energy 6 누락).
-2. 묶음 8단계 문서 갱신: decision_log 실행 완료 줄, CLAUDE.md M-1(YAML `sensors` 주석 서술), 로드맵, 명세 머리말(3행 "아직 바꾸지 않음"·5행 SHA·108행 표 SHA가 낡음), rev48 초안 3절 153행·4절 상태, `dynamics_model.md` 5.30.5·5.30.8, `cad_cylinder_vs_drawing.md` 6절. `l2_hydraulic_model_spec.md` 머리말은 이미 갱신됨.
-3. 결정 반영 문서: `s6_control_spec.md` 286절 ✅(개정 58), `dynamics_model.md` 5.33.10은 dynamics 판정 작업에 포함, 로드맵 S9 준비 항목.
-4. ✅ RRpre·PS7a 처리 끝(재실행 통과). R8 C2의 PS-7a 미판정 공백은 S9 뒤(CLAUDE.md 미정 사항).
-5. worktree 구현 브랜치 두 개(C2 토양 대응, S9 실행기) 합치기 → 무결성 점검 → 커밋·푸시. C2 토양 대응을 R8 기본으로 켜면 기존 S6~S8 결과 해시가 바뀌는지 확인.
-6. dynamics-expert 검토(`s6_control_spec.md` 287절): 축소 하네스 크롤러 근사·패드 R 결합, P3 이탈 뒤 탐침 침하(J1 A 전방 +7 mm) 물리 판정, 5.31.11 연결.
-7. S9 계획을 사용자에게 보고하고 확인(격자 선택 포함)을 받은 뒤 본 판정 시작: 착수 전 점검 1~6, 패드/로드 분리, P1 단일 패드 비용·격자, V16, 제어 ④(P3a 4사례, P3b 12사례). 로드맵 4절 S9.
+1. R3 완료 → 무결성 점검 → 커밋·푸시(인계 갱신 포함).
+2. 묶음 8단계 문서: decision_log 실행 완료 줄, CLAUDE.md M-1(YAML `sensors` 주석 서술), 로드맵 1·4·6절, 명세 머리말(3행 "아직 바꾸지 않음"·5행 SHA·108행 표 SHA)·5.1 표 states_L1R S6 소계 25 → 26(top 13 → 14)·7절 R2 96 → 102, rev48 초안 3절 153행·4절, `dynamics_model.md` 5.30.5·5.30.8, `cad_cylinder_vs_drawing.md` 6절.
+3. worktree 합치기(R3 뒤): C2 브랜치 → S9 브랜치 순서 권장. 충돌 예상: `s6_control_spec.md` 3행·개정표·끝(메인 개정 58 먼저, 브랜치 59 뒤, 291절 5번 "P3 판정 개정 60 예정"), `dynamics_model.md` 머리말(메인 개정 47 + 5.17.5 보완 문단, 브랜치 48·49). R8 기본 켜기(0400274 이후)는 M-3·M-4 통과 뒤에만 유지, 아니면 db3e9b4까지만 합친다. 합친 뒤 메인에서 unit·chrono 시험(worktree에서 건너뛴 07_results 의존 시험 포함), CLAUDE.md 제어기 행 갱신(control 제안 문구: 개정 57 S-1~S-5, U-S9-C1·C2·C7, 재접근 10 s).
+4. S9 P1·P2 결과 dynamics 판정 → 사용자에게 P3a·P3b 계획(24사례, M14s, 비용은 R3 뒤 단독 측정으로 갱신) 보고·확인 → P3 실행.
+5. 미뤄 둔 것: R8 C2 PS-7a 판정(S9 뒤), U-S8-57·DONE 꼬리 감시(S9 중), 남은 worktree 정리.
 
 ## 작업 규칙 (이 프로젝트 메모리에 있음)
 
 - 긴 단계를 마칠 때마다 integrity-checker → 이상 없으면 단계 단위 커밋·`origin/master` 푸시(상시 승인). **커밋마다 이 인계 문서를 갱신해 같은 커밋에 넣는다.**
-- 예상 15분 이상 작업은 long-running-task-monitor 주기 점검(약 12~15분 간격 cron). 프로세스 종료 등 조치는 사용자 승인 뒤.
-- 에이전트 지시문에 매번: 셸 heredoc·`python -` 금지, Write로 쓴 파일을 `python -I`로 실행.
-- 디스크 전체 `find /` 금지(옛 세션에서 40분 폭주). 세션이 멈추면 메모리 `suspended-git-stall`, `no-heredoc-python-stdin` 참고.
+- 예상 15분 이상 작업은 long-running-task-monitor 주기 점검(약 15분 간격 cron). 프로세스 종료 등 조치는 사용자 승인 뒤.
+- 에이전트 지시문에 매번: 셸 heredoc·`python -`·`sed -i` 금지, Write로 쓴 파일을 `python -I`로 실행, 커밋 메시지는 `git commit -F <파일>`. (이번 세션에도 에이전트가 `python -` 고아를 두 번 만들었다.)
+- 디스크 전체 `find /` 금지. 세션이 멈추면 메모리 `suspended-git-stall`, `no-heredoc-python-stdin` 참고.
 - S단계 본 판정 실행 전에는 사용자에게 알리고 확인받는다.
