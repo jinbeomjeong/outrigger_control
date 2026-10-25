@@ -1,12 +1,12 @@
 {
  "schema": 1,
- "generated": "2026-10-25T21:39:19",
+ "generated": "2026-10-25T23:02:30",
  "generator": {
   "path": "04_scripts/01_dynamics/export_scm_soil_sets.py",
-  "sha256": "e83878b7c33bb131fb868e09a1494248dd417f6e7036ec53049c4e231d05c5ea"
+  "sha256": "fc7e9b51f7bd72287f6f7f545526cb99c15a6354e851e33e23c7c7224bf463e8"
  },
  "doc": "00_docs/01_dynamics/dynamics_model.md 5.32 (rev. 46); survey 00_docs/01_dynamics/scm_soil_parameter_survey.md",
- "decision": "user decision 2026-10-25 (soil sets for S9, U-PAD-5: judgement 1 ... 2 + soft 1 sensitivity); sets are a PROPOSAL until the user confirms (rev. 46 5.32.8)",
+ "decision": "user decision 2026-10-25 (soil sets for S9, U-PAD-5: judgement 1 ... 2 + soft 1 sensitivity); sets CONFIRMED by the user 2026-10-25 (U-SOIL-1 ... 4 as recommended, decision_log.md sec. 2; dynamics_model.md 5.32.8, rev. 47)",
  "inputs": {
   "survey_md": {
    "path": "00_docs\\01_dynamics\\scm_soil_parameter_survey.md",

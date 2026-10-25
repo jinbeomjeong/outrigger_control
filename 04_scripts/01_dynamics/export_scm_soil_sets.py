@@ -373,7 +373,8 @@ def main():
                       "sha256": sha(Path(__file__))},
         "doc": "00_docs/01_dynamics/dynamics_model.md 5.32 (rev. 46); survey 00_docs/01_dynamics/scm_soil_parameter_survey.md",
         "decision": "user decision 2026-10-25 (soil sets for S9, U-PAD-5: judgement 1 ... 2 + soft 1 sensitivity); "
-                    "sets are a PROPOSAL until the user confirms (rev. 46 5.32.8)",
+                    "sets CONFIRMED by the user 2026-10-25 (U-SOIL-1 ... 4 as recommended, decision_log.md sec. 2; "
+                    "dynamics_model.md 5.32.8, rev. 47)",
         "inputs": {"survey_md": {"path": str(SURVEY.relative_to(ROOT)), "sha256": sha(SURVEY)},
                    "params_yaml": {"path": str(YAML.relative_to(ROOT)), "sha256": sha(YAML), "use": "read only"},
                    "pad_variants": {"path": str(PADV.relative_to(ROOT)), "sha256": sha(PADV)}},
