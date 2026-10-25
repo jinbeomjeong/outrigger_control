@@ -41,6 +41,7 @@ from outrigger_sim.control.c2 import (
     ReanchorSettings,
     ReapproachMode,
     SampleConfirmation,
+    SoilResponseSettings,
     StopPredictor,
     TargetSettings,
     TwistGainReference,
@@ -117,7 +118,9 @@ def geometry() -> C2Geometry:
 
 def bench_config(**r8_changes) -> C2Config:
     """The preset on synthetic benches: no CHECK, pressure judge, IMU on the period mean, zero
-    calibration off (without CHECK it would leave its allowance on every leg)."""
+    calibration off (without CHECK it would leave its allowance on every leg), soil response
+    off (the bench strokes do not follow the commands, so the lift-off confirmation of spec
+    rev. 57 285 never comes and DONE would wait for it; ``test_c2_soil.py`` turns it on)."""
     base = C2Config(
         target=TargetSettings(check_time_s=0.0, acceptance=TargetAcceptance.OFF),
         contact=ContactJudge.PRESSURE,
@@ -126,7 +129,9 @@ def bench_config(**r8_changes) -> C2Config:
     config = base.with_10hz_d1()
     r8 = replace(config.r8, imu_sample_period_s=None, **r8_changes)
     zero_calibration = replace(config.zero_calibration, mode=ZeroCalibrationMode.OFF)
-    return replace(config, r8=r8, zero_calibration=zero_calibration)
+    return replace(
+        config, r8=r8, zero_calibration=zero_calibration, soil=SoilResponseSettings()
+    )
 
 
 R7_TOUCH_RULE = {
@@ -271,14 +276,16 @@ def test_preset_values() -> None:
     assert r8.probe_abort_on_low_load
     # Rev. 34 174.4 / 179.1 P-R8-13 (U-R8-21): twist-mode re-approach replaces P-R8-12;
     # rev. 43 213.8 P-S8-5 (U-S8-9): start level 1.4 F_min; rev. 52 228.3 P-S8-16 (U-S8-49):
-    # re-trigger rule RT.
+    # re-trigger rule RT; rev. 57 285 P-S9-10 (U-S9-C4): time limit 10 s.
     assert r8.lifted_reapproach == LiftedReapproachSettings(
         enable=True, mode=ReapproachMode.TWIST, load_fraction_of_F_min=1.4, samples=1,
         single_leg=True, exit_margin_N=5000.0, exit_samples=3, twist_speed_fraction=0.25,
         protect_margin_N=5000.0, speed_fraction=0.25, max_travel_m=0.04,
         retrigger_window_s=2.0, retrigger_speed_factor=0.6, opposite_window_s=0.8,
-        opposite_strong_level_N=0.0, opposite_strong_samples=2,
+        opposite_strong_level_N=0.0, opposite_strong_samples=2, max_duration_s=10.0,
     )
+    # Rev. 57 285 (U-S9-C1): the soil response with its defaults.
+    assert config.soil == SoilResponseSettings(enable=True)
     # Rev. 43 213.8 P-S8-6 (U-S8-11): TOUCH free air from moving samples.
     assert r8.touch_free_air_min_travel_m == 0.5e-3
     assert (r8.touch_free_air_min_samples, r8.touch_seen_samples) == (3, 2)

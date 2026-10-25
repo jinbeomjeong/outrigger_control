@@ -179,7 +179,10 @@ confirms the crawler lift-off from a flat load sum while every leg extends (S-1)
 crawler zone and pushes every leg up until then (S-2, soil mode), corrects the corner clearance
 by the pad sinkage seen at the lift-off (S-3), stops after 150 mm of unconfirmed push (S-4) and
 records the weight estimate (S-5); ``LiftedReapproachSettings.max_duration_s`` ends a
-re-approach that runs too long (P-S9-10). Both are off unless set.
+re-approach that runs too long (P-S9-10). ``C2Config()`` keeps both off; since U-S9-C1 /
+U-S9-C4 :meth:`C2Config.with_10hz_d1` turns both on (10 s limit); ``replace(config,
+soil=SoilResponseSettings())`` turns the soil response off again (revision-56 commands unless a
+re-approach lasts 10 s).
 Only the start-IMU form exists
 (the late IMU read C1 is not implemented). ``C2Config()`` keeps every R8 setting off, so the
 R7 commands stay bit for bit.
@@ -1238,6 +1241,9 @@ R8_D1_REAPPROACH_OPPOSITE_STRONG_LEVEL_N = 0.0
 """P-S8-16 (spec rev. 52 228.3, U-S8-45): lower bound below zero = surely lifted."""
 R8_D1_REAPPROACH_OPPOSITE_STRONG_SAMPLES = 2
 """P-S8-16 (spec rev. 52 228.3): 2 and 3 gave the same result, 1 failed 3 of 28."""
+R8_D1_REAPPROACH_MAX_DURATION_S = 10.0
+"""P-S9-10 (spec rev. 57 283.3 / 285, U-S9-C4 2026-10-26): the longest re-approach of the S8
+records (1,068 runs of ``07_results/S8``, c37 bundle E and ML 768 included) lasted 1.8 s."""
 R8_D1_SETTINGS = R8Settings(
     output_delay_periods=1,
     imu_sample_period_s=R8_IMU_SAMPLE_PERIOD_S,
@@ -1267,13 +1273,14 @@ R8_D1_SETTINGS = R8Settings(
         opposite_window_s=R8_D1_REAPPROACH_OPPOSITE_WINDOW_S,
         opposite_strong_level_N=R8_D1_REAPPROACH_OPPOSITE_STRONG_LEVEL_N,
         opposite_strong_samples=R8_D1_REAPPROACH_OPPOSITE_STRONG_SAMPLES,
+        max_duration_s=R8_D1_REAPPROACH_MAX_DURATION_S,
     ),
 )
 """The R8 part of :meth:`C2Config.with_10hz_d1` (spec 99.3, 136, 139, rev. 31 149, rev. 32
 163.1: P-R8-9 raw-tilt CHECK attitude, P-R8-10 R-5 on with horizon 4, P-R8-11 PROBE abort;
 rev. 34 174.4: P-R8-13 lifted-leg re-approach in the twist mode, replacing P-R8-12; rev. 43
 213.8: P-S8-5 re-approach start at 1.4 ``F_min``, P-S8-6 TOUCH free air from moving samples;
-rev. 52 228.3: P-S8-16 re-trigger rule RT)."""
+rev. 52 228.3: P-S8-16 re-trigger rule RT; rev. 57 285: P-S9-10 re-approach time limit 10 s)."""
 QUASI_STATIC_PRESSURE_NOTE = (
     "10 Hz instantaneous samples: the 345 bar warning sees about 43 % of a heave transient "
     "and hardly any 102 Hz ringing; it is a quasi-static watch, not an overpressure "
@@ -1511,12 +1518,16 @@ class C2Config:
         ``F_min + 5 kN`` (P-R8-13, :class:`LiftedReapproachSettings`). Spec rev. 43 213.8:
         the re-approach starts below 1.4 ``F_min`` (P-S8-5, U-S8-9), and the TOUCH free-air
         reference takes only samples after 0.5 mm of travel, judges with 3 of them and
-        latches the slow approach on 2 samples in a row (P-S8-6, U-S8-11). The start-IMU form
-        only: the late IMU read (C1) is not implemented (U-R8-6 = C2).
+        latches the slow approach on 2 samples in a row (P-S8-6, U-S8-11). Spec rev. 57 285
+        (U-S9-C1 / U-S9-C4, 2026-10-26, after the P-S9-9 regression): the soil response
+        S-1 .. S-5 is on (:class:`SoilResponseSettings`, the other soil keys of this config
+        stay) and a re-approach ends after 10 s (P-S9-10). The start-IMU form only: the late
+        IMU read (C1) is not implemented (U-R8-6 = C2).
         """
         config = self.with_r8_diagnostics()
         return replace(
             config,
+            soil=replace(config.soil, enable=True),
             period_s=R8_PERIOD_S,
             output_ramp_time_s=None,
             gains=replace(config.gains, **R8_D1_C2_GAINS),
@@ -1537,7 +1548,9 @@ class C2Config:
 
     def with_soil_response(self) -> C2Config:
         """Copy of :meth:`with_10hz_d1` with the soil response S-1 .. S-5 on (P-S9-8, spec
-        rev. 57 285); the other :class:`SoilResponseSettings` keys of this config stay."""
+        rev. 57 285); the other :class:`SoilResponseSettings` keys of this config stay. Since
+        U-S9-C1 the R8 preset has it on as well, so this is :meth:`with_10hz_d1`; it stays as
+        the explicit S9 name."""
         return replace(self.with_10hz_d1(), soil=replace(self.soil, enable=True))
 
     def with_interim_b(self) -> C2Config:

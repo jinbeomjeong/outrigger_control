@@ -52,7 +52,9 @@ from outrigger_sim.control.c2 import (
     C2Phase,
     LiftedReapproachSettings,
     SoilResponseSettings,
+    TargetSettings,
     _PlateauSample,
+    _RawTilt,
     _Reading,
     _RunState,
     _SoilState,
@@ -518,6 +520,27 @@ def test_settle_attitude_is_the_mean_tilt_of_the_first_touch_periods(geometry) -
     assert soil.settle_attitude_rad == (float(roll), float(pitch))
 
 
+def test_settle_attitude_with_check_is_the_check_attitude(geometry) -> None:
+    """P-S9-4 with CHECK: the settle attitude is ``(phi_c, theta_c)``, no TOUCH samples."""
+    config = replace(soil_config(), target=TargetSettings(check_time_s=2.0))
+    controller = C2Controller(geometry, config)
+    controller._state.crawler_attitude_rad = (0.01, -0.02)
+    controller._state.phase = C2Phase.TOUCH
+    controller._record_settle_tilt()
+    assert controller._soil_state().settle_tilts == []
+    assert controller._settle_attitude_rad() == (0.01, -0.02)
+
+
+def test_period_raw_attitude_is_the_mean_of_the_imu_rate_tilts(geometry) -> None:
+    controller = C2Controller(geometry, soil_config())
+    controller._state.period_raw_tilts = [
+        _RawTilt(0.01, 0.010, -0.020),
+        _RawTilt(0.02, 0.012, -0.024),
+    ]
+    roll, pitch = controller._period_raw_attitude_rad()
+    assert (roll, pitch) == (pytest.approx(0.011, abs=1e-15), pytest.approx(-0.022, abs=1e-15))
+
+
 # --- events, meta, settings, presets, old pickles -----------------------------------------------
 
 
@@ -590,6 +613,11 @@ def test_presets() -> None:
     soil = base.with_soil_response()
     assert soil.soil.enable
     assert replace(soil, soil=r8.soil) == r8
+    # U-S9-C1 / U-S9-C4 (2026-10-26): the R8 preset carries both
+    assert r8.soil == SoilResponseSettings(enable=True)
+    assert r8.r8.lifted_reapproach.max_duration_s == MAX_DURATION_S
+    custom = C2Config(soil=SoilResponseSettings(plateau_rise_max_N=3000.0)).with_10hz_d1()
+    assert custom.soil == SoilResponseSettings(enable=True, plateau_rise_max_N=3000.0)
 
 
 def aged(controller: C2Controller) -> C2Controller:
@@ -656,11 +684,15 @@ def test_reapproach_time_limit_ends_a_run_that_never_moves(geometry) -> None:
     ]
 
 
-def test_reapproach_time_limit_none_is_bit_identical(geometry) -> None:
-    reference = ready_bench(geometry, bench_config())
-    off = ready_bench(geometry, duration_config(None))
+def test_reapproach_time_limit_changes_nothing_before_it_is_reached(geometry) -> None:
+    """Up to the period the limit ends the run, the commands with and without it are the same
+    bits (``None`` = the behaviour before P-S9-10)."""
+    limited = ready_bench(geometry, duration_config(MAX_DURATION_S))
+    unlimited = ready_bench(geometry, duration_config(None))
     lifted = lifted_rr_forces()
-    for _ in range(50):
-        reference.step(lifted)
-        off.step(lifted)
-    np.testing.assert_array_equal(np.array(reference.outputs), np.array(off.outputs))
+    periods_before_end = round(MAX_DURATION_S / PERIOD_S)
+    for _ in range(periods_before_end):
+        limited.step(lifted)
+        unlimited.step(lifted)
+    np.testing.assert_array_equal(np.array(limited.outputs), np.array(unlimited.outputs))
+    assert len(reapproach_events(limited.controller)) == 1  # still active
