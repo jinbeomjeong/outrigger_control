@@ -173,6 +173,13 @@ the phase command of the other periods; :attr:`C2Controller.raw_output_m_s` and
 :attr:`C2Controller.output_limit_flags` give the command before the limits and which limit
 changed which leg (P-R8-15, revision 35 188.2). The probe stiffness warning range is
 (0.8, 2.3) (P-R8-16).
+Revision 57 285 (P-S9-1 .. P-S9-10, user decisions U-S9-C1 .. C6 of 2026-10-26): the soil
+response :class:`SoilResponseSettings` (``C2Config.soil``, :meth:`C2Config.with_soil_response`)
+confirms the crawler lift-off from a flat load sum while every leg extends (S-1), holds the
+crawler zone and pushes every leg up until then (S-2, soil mode), corrects the corner clearance
+by the pad sinkage seen at the lift-off (S-3), stops after 150 mm of unconfirmed push (S-4) and
+records the weight estimate (S-5); ``LiftedReapproachSettings.max_duration_s`` ends a
+re-approach that runs too long (P-S9-10). Both are off unless set.
 Only the start-IMU form exists
 (the late IMU read C1 is not implemented). ``C2Config()`` keeps every R8 setting off, so the
 R7 commands stay bit for bit.
@@ -250,6 +257,7 @@ from outrigger_sim.control.target import (
     ramp_reference,
 )
 from outrigger_sim.control.two_pressure import (
+    BODY_MASS_WITHOUT_YAML_KG,
     LoadEstimate,
     PressureForces,
     TwoPressureMonitor,
@@ -274,7 +282,7 @@ from outrigger_sim.sensors.hydraulic import (
     leg_annulus_areas_from_params,
     leg_head_areas_from_params,
 )
-from outrigger_sim.sensors.imu import IMU_MOUNT_C1_BODY_M
+from outrigger_sim.sensors.imu import IMU_MOUNT_C1_BODY_M, STANDARD_GRAVITY_M_S2
 from outrigger_sim.signals import DEFAULT_CONTROL_PERIOD_S, LEG_COUNT, Command, Measurements
 
 logger = logging.getLogger(__name__)
@@ -296,6 +304,9 @@ DESIGN_SOURCE = (
 # -> body (y, x). Not in the YAML; same value as 04_scripts/01_dynamics/dyn_model.py
 # geometry_from_params (used by the reduced model the design was verified on).
 CRAWLER_XY_BOX_M = ((-1.840, 1.844), (-1.366, 1.366))
+CRAWLER_CORNER_NAMES = ("RR", "RL", "FR", "FL")
+"""Corners of ``C2Geometry.crawler_corners_xy_m`` in its order (x_min / x_max = rear / front,
+y_min / y_max = right / left)."""
 
 # Float sample times (k * T) may miss the touch hold time by rounding; this slack keeps the
 # latch on the intended period (same value as the reduced model, design 14.4).
@@ -924,7 +935,8 @@ class LiftedReapproachSettings:
       ``speed_fraction v_max`` with the twist and guard terms held at zero.
 
     It ends after ``exit_samples`` samples in a row at or above ``F_min + exit_margin_N``
-    (``leg_reapproach_contact:<leg>``), or after ``max_travel_m`` of motor stroke
+    (``leg_reapproach_contact:<leg>``), or after ``max_travel_m`` of motor stroke or (P-S9-10,
+    spec rev. 57 285, U-S9-C4) ``max_duration_s`` of time
     (``WARN_LEG_REAPPROACH_NO_CONTACT:<leg>``; the leg then stays on the guard path until it
     reads ``F_min`` again).
 
@@ -980,6 +992,10 @@ class LiftedReapproachSettings:
     """RT 1: the lower load estimate must be below this (0 N: lifted beyond the seal band)."""
     opposite_strong_samples: int = 2
     """RT 1: consecutive samples below ``opposite_strong_level_N``."""
+    max_duration_s: float | None = None
+    """P-S9-10 (spec rev. 57 283.3 / 285, U-S9-C4): a re-approach still active this long after
+    its start ends as ``no_contact`` (the twist protection can hold ``tau_dot`` at zero for good
+    when two legs lift together, so ``max_travel_m`` is never reached); ``None`` = off."""
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "mode", ReapproachMode(self.mode))
@@ -997,7 +1013,7 @@ class LiftedReapproachSettings:
             raise ValueError("twist_speed_fraction must be in (0, 1]")
         if not self.max_travel_m > 0.0:
             raise ValueError("max_travel_m must be > 0")
-        for name in ("retrigger_window_s", "opposite_window_s"):
+        for name in ("retrigger_window_s", "opposite_window_s", "max_duration_s"):
             window_s = getattr(self, name)
             if window_s is not None and not window_s > 0.0:
                 raise ValueError(f"{name} must be > 0 or None, got {window_s!r}")
@@ -1008,6 +1024,12 @@ class LiftedReapproachSettings:
                 "opposite_strong_samples must be an int >= 1, "
                 f"got {self.opposite_strong_samples!r}"
             )
+
+    def has_run_too_long(self, t_s: float, start_s: float) -> bool:
+        """P-S9-10: a run started at ``start_s`` has reached ``max_duration_s`` at ``t_s``."""
+        if self.max_duration_s is None:
+            return False
+        return t_s - start_s >= self.max_duration_s - REAPPROACH_WINDOW_TOLERANCE_S
 
     def is_retrigger(self, t_s: float, last_end_s: float | None) -> bool:
         """RT 2: a start at ``t_s`` falls inside the re-trigger window of the last end."""
@@ -1275,6 +1297,93 @@ def _r6_probe_settings() -> ProbeSettings:
     )
 
 
+SOIL_PLATEAU_WINDOW_MAX_SAMPLES = 200
+"""Memory bound of the S-1 window (as the reference rules ``04_scripts/03_control/s9/
+s9_soil_rules.py``). Every window sample has a mean leg speed of at least 0.15 ``v_max``, so
+200 samples span >= 63 mm of mean stroke and the 10 mm tail never reaches the bound."""
+SOIL_EVENT_MODE_START = "soil_mode_start"
+SOIL_EVENT_LIFTOFF_CONFIRMED = "crawler_liftoff_confirmed"
+SOIL_EVENT_CLEARANCE_BIAS = "INFO_CLEARANCE_BIAS"
+SOIL_EVENT_LIFTOFF_UNCONFIRMED = "WARN_CRAWLER_LIFTOFF_UNCONFIRMED"
+SOIL_EVENT_WEIGHT_MISMATCH = "WARN_WEIGHT_MISMATCH"
+
+
+@dataclass(frozen=True)
+class SoilResponseSettings:
+    """C2 soil response S-1 .. S-5 (spec rev. 57 282.4 / 285 P-S9-1, U-S9-C1 / C2 / C6).
+
+    On soft soil the pads sink while the crawler still carries weight, so the stroke-based
+    crawler clearance (rigid floor) overstates the real one: the crawler-zone latch would
+    release and the attitude loop could retract legs with the crawler still loaded.
+
+    * S-1 lift-off confirmation (LOC): in LEVEL before the LOC, a window of consecutive
+      periods whose previous applied output retracted no leg and averaged at least
+      ``plateau_mean_speed_fraction v_max``; once its mean motor stroke has advanced
+      ``plateau_window_m``, the load sum ``sum F_i`` regressed on the mean stroke over the
+      shortest such tail rises by at most ``plateau_rise_max_N`` per ``plateau_window_m`` and
+      averages at least ``plausibility_fraction W_ref`` -> ``crawler_liftoff_confirmed``.
+    * S-2 soil mode: a crawler-zone release without the LOC keeps the zone latched instead
+      (``soil_mode_start``); every leg then extends at least ``push_speed_fraction v_max``
+      (pure heave added, rescaled to ``v_max``) and DONE waits for the LOC.
+    * S-3 corner bias: at the LOC ``b_k = c_k(t_P) - (rho_k - min rho)``, ``rho_k = y_k d_phi
+      - x_k d_theta`` (raw-tilt attitude change since the crawler settle), clipped at zero and
+      dropped when its maximum is within ``corner_bias_deadzone_m``; every control use of the
+      crawler-corner clearance reads ``c_k - b_k`` afterwards.
+    * S-4 limit: ``max_push_m`` of mean motor stroke in soil mode without the LOC ->
+      ``WARN_CRAWLER_LIFTOFF_UNCONFIRMED`` and FAULT.
+    * S-5 record: ``W_hat / W_ref`` outside ``weight_record_range`` -> ``WARN_WEIGHT_MISMATCH``
+      (no command effect).
+
+    Every key has a class-level default (``enable`` False), so configs unpickled from older
+    code read "off" and run revision 56 bit for bit.
+    """
+
+    enable: bool = False
+    plateau_window_m: float = 0.010
+    """S-1 mean motor-stroke progress of the plateau window."""
+    plateau_mean_speed_fraction: float = 0.15
+    """S-1 minimum mean leg speed of a window period, fraction of ``v_max``."""
+    plateau_rise_max_N: float = 2000.0
+    """S-1 largest load-sum rise over ``plateau_window_m`` on the plateau (U-S9-C2)."""
+    plausibility_fraction: float = 0.85
+    """S-1 window-mean load sum at least this fraction of ``W_ref``."""
+    push_speed_fraction: float = 0.25
+    """S-2 smallest leg speed in soil mode, fraction of ``v_max``."""
+    corner_bias_deadzone_m: float = 0.020
+    """S-3 no bias while the largest corner bias is at most this."""
+    max_push_m: float = 0.15
+    """S-4 mean motor-stroke increase in soil mode without the LOC (observed <= 93.7 mm)."""
+    weight_record_range: tuple[float, float] = (0.9, 1.15)
+    """S-5 ``W_hat / W_ref`` range without a warning (ASSUMPTION, U-S9-C6: record only)."""
+    settle_tilt_samples: int = 10
+    """S-3 without CHECK: periods of raw tilt at the TOUCH start that give the settle attitude."""
+
+    def __post_init__(self) -> None:
+        for name in ("plateau_window_m", "max_push_m"):
+            if not getattr(self, name) > 0.0:
+                raise ValueError(f"{name} must be > 0, got {getattr(self, name)!r}")
+        for name in ("plateau_mean_speed_fraction", "push_speed_fraction"):
+            if not 0.0 < getattr(self, name) <= 1.0:
+                raise ValueError(f"{name} must be in (0, 1], got {getattr(self, name)!r}")
+        if not self.plateau_rise_max_N >= 0.0 or not self.corner_bias_deadzone_m >= 0.0:
+            raise ValueError("plateau_rise_max_N and corner_bias_deadzone_m must be >= 0")
+        if not self.plausibility_fraction > 0.0:
+            raise ValueError("plausibility_fraction must be > 0")
+        low, high = self.weight_record_range
+        if not 0.0 < low <= high:
+            raise ValueError("weight_record_range must be (low, high) with 0 < low <= high")
+        object.__setattr__(self, "weight_record_range", (float(low), float(high)))
+        if not _is_positive_int(self.settle_tilt_samples):
+            raise ValueError(
+                f"settle_tilt_samples must be an int >= 1, got {self.settle_tilt_samples!r}"
+            )
+
+    def to_meta(self) -> dict[str, Any]:
+        meta = asdict(self)
+        meta["weight_record_range"] = list(self.weight_record_range)
+        return meta
+
+
 @dataclass(frozen=True)
 class C2Config:
     """Complete C2 setting; the defaults are the decided design values."""
@@ -1317,6 +1426,9 @@ class C2Config:
     A leg whose calibration fails takes the larger of this and the failure allowance."""
     r8: R8Settings = field(default_factory=R8Settings)
     """10 Hz / output-delay behaviour (default R7; :meth:`with_10hz_d1`)."""
+    soil: SoilResponseSettings = SoilResponseSettings()
+    """Soil response S-1 .. S-5 (spec rev. 57 285); off by default. A plain class-level default,
+    so configs unpickled from older code read "off"."""
 
     def __post_init__(self) -> None:
         if not self.period_s > 0.0:
@@ -1422,6 +1534,11 @@ class C2Config:
             ),
             r8=R8_D1_SETTINGS,
         )
+
+    def with_soil_response(self) -> C2Config:
+        """Copy of :meth:`with_10hz_d1` with the soil response S-1 .. S-5 on (P-S9-8, spec
+        rev. 57 285); the other :class:`SoilResponseSettings` keys of this config stay."""
+        return replace(self.with_10hz_d1(), soil=replace(self.soil, enable=True))
 
     def with_interim_b(self) -> C2Config:
         """Copy with the provisional nose-up limit B: 3.1 deg on the relative nose-up side.
@@ -1723,18 +1840,21 @@ class C2Geometry:
         rod_stroke_m: ArrayLike,
         attitude_change_rad: tuple[float, float],
         clearance_target_m: float,
+        corner_bias_m: ArrayLike | None = None,
     ) -> NDArray[np.float64]:
         """Strokes after tilting by ``(d_phi, d_theta)`` at the clearance target (spec 2.3 A5).
 
         ``dz = c* - min_k(c_k + y_k d_phi - x_k d_theta)``, ``s_i + dz + y_i d_phi - x_i d_theta``
-        (rigid body, small angles, linear in the extensions).
+        (rigid body, small angles, linear in the extensions). ``corner_bias_m``: the S-3
+        soil bias ``b_k`` subtracted from ``c_k`` (spec rev. 57 282.4); ``None`` = none.
         """
         roll_change, pitch_change = attitude_change_rad
         corners_xy = self.crawler_corners_xy_m
         corner_rise = corners_xy[:, 1] * roll_change - corners_xy[:, 0] * pitch_change
-        heave = clearance_target_m - float(
-            np.min(self.clearance_corners_m(rod_stroke_m) + corner_rise)
-        )
+        corner_clearance = self.clearance_corners_m(rod_stroke_m)
+        if corner_bias_m is not None:
+            corner_clearance = corner_clearance - np.asarray(corner_bias_m, dtype=float)
+        heave = clearance_target_m - float(np.min(corner_clearance + corner_rise))
         pad_rise = self.pad_xy_m[:, 1] * roll_change - self.pad_xy_m[:, 0] * pitch_change
         return np.asarray(motor_stroke_m, dtype=float) + heave + pad_rise
 
@@ -2262,6 +2382,12 @@ def _no_output_limits() -> dict[str, NDArray[np.bool_]]:
     return {limit.value: np.zeros(LEG_COUNT, dtype=bool) for limit in OutputLimit}
 
 
+def _corner_values_mm(values_m: NDArray[np.float64]) -> str:
+    """``FL=..,FR=..,RL=..,RR=..`` in mm of a per-crawler-corner array (event text)."""
+    by_name = dict(zip(CRAWLER_CORNER_NAMES, values_m, strict=True))
+    return ",".join(f"{name}={by_name[name] * 1e3:.1f}" for name in LEG_ORDER)
+
+
 def _last_imu_specific_force_z_m_s2(measurements: Measurements) -> float | None:
     """Body-z specific force of the last IMU sample of the period (the 10 ms partial mean
     ending at ``t_s``, D1'' 218.4); ``None`` when only the period mean is delivered (the
@@ -2303,7 +2429,11 @@ class C2Event:
             ``INFO_FLOOR_NONPLANAR`` (:func:`is_shadow_event`); R-5 ``relevel_predicted:<leg>``;
             P-R8-11 ``probe_aborted_low_load:<leg>``; P-R8-12 / P-R8-13
             ``leg_reapproach_start:<leg>``,
-            ``leg_reapproach_contact:<leg>`` and ``WARN_LEG_REAPPROACH_NO_CONTACT:<leg>``.
+            ``leg_reapproach_contact:<leg>`` and ``WARN_LEG_REAPPROACH_NO_CONTACT:<leg>``;
+            soil response (spec rev. 57 285 P-S9-7) ``soil_mode_start``,
+            ``crawler_liftoff_confirmed``, ``INFO_CLEARANCE_BIAS:FL=..,FR=..,RL=..,RR=..``
+            (crawler-corner bias in mm), ``WARN_CRAWLER_LIFTOFF_UNCONFIRMED`` and
+            ``WARN_WEIGHT_MISMATCH:<W_hat / W_ref>``.
     """
 
     t_s: float
@@ -2372,6 +2502,58 @@ class _Reapproach:
             "protected_periods": self.protected_periods,
             "is_retrigger": self.is_retrigger,
         }
+
+
+@dataclass(frozen=True)
+class _PlateauSample:
+    """One period of the S-1 lift-off window (spec rev. 57 285 P-S9-2)."""
+
+    t_s: float
+    mean_motor_stroke_m: float
+    load_sum_N: float
+    corner_clearance_m: NDArray[np.float64]
+    """Stroke-based crawler-corner clearance ``c_k`` (rigid floor, no bias)."""
+    raw_attitude_rad: tuple[float, float]
+    """Mean raw tilt (roll, pitch) of the period (the filtered attitude without IMU samples)."""
+
+
+@dataclass
+class _SoilState:
+    """Soil response S-1 .. S-5 of one lifting cycle (cleared at TOUCH entry, P-S9-6)."""
+
+    is_liftoff_confirmed: bool = False
+    is_soil_mode: bool = False
+    window: deque[_PlateauSample] = field(
+        default_factory=lambda: deque(maxlen=SOIL_PLATEAU_WINDOW_MAX_SAMPLES)
+    )
+    settle_tilts: list[tuple[float, float]] = field(default_factory=list)
+    """Raw tilts of the first TOUCH periods (settle attitude without CHECK)."""
+    settle_attitude_rad: tuple[float, float] | None = None
+    """Crawler settle attitude the S-3 corner rise is measured from."""
+    corner_bias_m: NDArray[np.float64] = field(default_factory=lambda: np.zeros(LEG_COUNT))
+    """S-3 bias ``b_k`` per crawler corner (order of ``C2Geometry.crawler_corners_xy_m``)."""
+    corner_bias_raw_m: NDArray[np.float64] | None = None
+    """``b_k`` before the clip at zero and the dead zone."""
+    plateau_start_s: float | None = None
+    """``t_P``: first sample of the confirming window (lift-off estimate)."""
+    liftoff_s: float | None = None
+    """``t_L``: LOC time."""
+    weight_estimate_N: float | None = None
+    """``W_hat``: window-mean load sum at the LOC."""
+    weight_ratio: float | None = None
+    clearance_at_plateau_start_m: float | None = None
+    clearance_at_liftoff_m: float | None = None
+    """Smallest unbiased corner clearance at ``t_P`` / ``t_L`` (rigid-floor check, spec 285:
+    the LOC must come before the 20 mm crawler-zone release)."""
+    soil_mode_start_s: float | None = None
+    soil_mode_start_stroke_m: float | None = None
+    push_m: float | None = None
+    """Mean motor-stroke increase since the soil-mode start, updated every soil-mode period
+    (so it ends at the LOC or the S-4 FAULT)."""
+
+    @property
+    def has_corner_bias(self) -> bool:
+        return bool(np.any(self.corner_bias_m != 0.0))
 
 
 @dataclass
@@ -2561,6 +2743,9 @@ class _RunState:
         default_factory=lambda: _no_output_limits()
     )
     """P-R8-15: per :class:`OutputLimit`, the legs whose speed that stage changed."""
+    soil: _SoilState | None = None
+    """Soil response state (spec rev. 57 285); ``None`` in run states unpickled from older
+    code, which only run with the soil response off."""
 
 
 @dataclass(frozen=True)
@@ -2682,6 +2867,7 @@ class C2Controller:
             requested_target=self.config.target.target,
             output_queue=deque(np.zeros(LEG_COUNT) for _ in range(delay)),
             load_estimate_history=deque(maxlen=history_length),
+            soil=_SoilState(),
         )
 
     @classmethod
@@ -2780,6 +2966,7 @@ class C2Controller:
             "r8": r8.to_meta(),
             "twist_gain_stiffness": self._twist_gain_stiffness_meta(),
             "lifted_reapproach": [run.to_meta() for run in self._state.reapproach_history],
+            "soil": self._soil_meta(),
             "locked_pressure_warning_note": (
                 QUASI_STATIC_PRESSURE_NOTE if r8.is_instant_sampling else None
             ),
@@ -3330,6 +3517,8 @@ class C2Controller:
             previous_roll + (roll_rate - roll_bias) * period_s,
             previous_pitch + (pitch_rate - pitch_bias) * period_s,
         )
+        if self.config.soil.enable:
+            self._record_settle_tilt()
 
     def _target_rad(self) -> tuple[float, float]:
         """Final target ``(phi_t, theta_t)``; level while none is accepted."""
@@ -3848,7 +4037,9 @@ class C2Controller:
             if run.exit_samples_seen >= settings.exit_samples:
                 self._end_reapproach(leg, reading, "contact")
                 self._add_event(reading.t_s, f"leg_reapproach_contact:{LEG_ORDER[leg]}")
-            elif travel > settings.max_travel_m:
+            elif travel > settings.max_travel_m or settings.has_run_too_long(
+                reading.t_s, run.start_s
+            ):
                 self._end_reapproach(leg, reading, "no_contact")
                 state.is_reapproach_armed[leg] = False
                 self._add_event(
@@ -4182,6 +4373,7 @@ class C2Controller:
         state.active_target = state.reference = check.accepted  # R2: no ramp the first time
         state.phase = C2Phase.TOUCH
         state.touch_start_sample = state.sample_count
+        state.soil = _SoilState()  # P-S9-6: a new lifting cycle
         return True
 
     def _check_quiet_start_s(self) -> float | None:
@@ -4350,6 +4542,7 @@ class C2Controller:
             reading.rod_stroke_m,
             attitude_change,
             self.config.thresholds.clearance_target_m,
+            corner_bias_m=self._active_corner_bias_m(),
         )
         upper = self.geometry.stroke_soft_max_m - TARGET_STROKE_MARGIN_M
         return bool(strokes.min() >= TARGET_STROKE_MARGIN_M and strokes.max() <= upper)
@@ -4377,9 +4570,12 @@ class C2Controller:
 
     def _level(self, reading: _Reading) -> NDArray[np.float64]:
         """One LEVEL period in the fixed order of design 14.5."""
+        if self.config.soil.enable and self._state.phase is C2Phase.LEVEL:
+            # S-1 first: a confirmation this period already corrects the clearance below.
+            self._update_liftoff_window(reading)
         geometry = self.geometry
         thresholds = self.config.thresholds
-        clearance = geometry.clearance_estimate_m(reading.rod_stroke_m)
+        clearance = self._clearance_estimate_m(reading.rod_stroke_m)
         if clearance > thresholds.lifted_clearance_m:
             self._state.is_lifted = True
         roll_rate, pitch_rate = self._attitude_rates()
@@ -4613,16 +4809,24 @@ class C2Controller:
         compression = reading.cylinder_force_lowpass_N / self.geometry.oil_stiffness_N_m(
             motor_stroke
         )
-        slow_clearance = self.geometry.clearance_estimate_m(motor_stroke - compression)
+        slow_clearance = self._clearance_estimate_m(motor_stroke - compression)
         if state.in_crawler_zone and slow_clearance >= thresholds.crawler_zone_release_m:
             state.in_crawler_zone = False
         elif not state.in_crawler_zone and slow_clearance < thresholds.crawler_zone_rearm_m:
             state.in_crawler_zone = True
+        if self.config.soil.enable:
+            self._hold_crawler_zone_until_liftoff(reading)
         return state.in_crawler_zone
 
     def _lift_without_retracting(self, leg_speeds: NDArray[np.float64]) -> NDArray[np.float64]:
-        """Crawler zone (14.5 step 8): add pure heave so that no leg retracts, then rescale."""
-        lifted = leg_speeds + max(0.0, -float(leg_speeds.min()))
+        """Crawler zone (14.5 step 8): add pure heave so that no leg retracts, then rescale.
+
+        Soil mode (S-2) raises the floor from zero to ``push_speed_fraction v_max``.
+        """
+        floor_m_s = 0.0
+        if self._is_in_soil_mode():
+            floor_m_s = self.config.soil.push_speed_fraction * self.geometry.max_speed_m_s
+        lifted = leg_speeds + max(0.0, floor_m_s - float(leg_speeds.min()))
         return scale_to_speed_limit(lifted, self.geometry.max_speed_m_s)
 
     def _update_stroke_end_fault(self, reading: _Reading, leg_speeds: NDArray[np.float64]) -> bool:
@@ -4647,8 +4851,12 @@ class C2Controller:
         return clipped
 
     def _update_completion(self, reading: _Reading, filtered_clearance_m: float) -> bool:
-        """Completion conditions held for ``done_hold_s`` (14.5 step 11)."""
+        """Completion conditions held for ``done_hold_s`` (14.5 step 11); with the soil response
+        never before the lift-off confirmation (S-2)."""
         state = self._state
+        if self.config.soil.enable and not self._is_liftoff_confirmed():
+            state.complete_since_s = None
+            return False
         thresholds = self.config.thresholds
         twist_load = float(self.geometry.twist_vector @ reading.cylinder_force_N)
         # T2: only once the ramped reference has reached the final target.
@@ -4669,6 +4877,228 @@ class C2Controller:
             state.complete_since_s = reading.t_s
             return False
         return reading.t_s - state.complete_since_s >= thresholds.done_hold_s
+
+    # --- soil response S-1 .. S-5 (spec rev. 57 282.4 / 285) ---
+
+    def _soil_state(self) -> _SoilState:
+        state = self._state
+        if state.soil is None:
+            state.soil = _SoilState()
+        return state.soil
+
+    def _is_liftoff_confirmed(self) -> bool:
+        return self._soil_state().is_liftoff_confirmed
+
+    def _is_in_soil_mode(self) -> bool:
+        """S-2 is acting: soil mode started and no lift-off confirmed yet."""
+        if not self.config.soil.enable:
+            return False
+        soil = self._soil_state()
+        return soil.is_soil_mode and not soil.is_liftoff_confirmed
+
+    def _active_corner_bias_m(self) -> NDArray[np.float64] | None:
+        """S-3 bias ``b_k`` in force, ``None`` when off or zero (commands stay bit for bit)."""
+        if not self.config.soil.enable:
+            return None
+        soil = self._soil_state()
+        return soil.corner_bias_m if soil.has_corner_bias else None
+
+    def _clearance_corners_m(self, rod_stroke_m: ArrayLike) -> NDArray[np.float64]:
+        """Crawler-corner clearance of the control paths: ``c_k``, or ``c_k - b_k`` (S-3)."""
+        corners = self.geometry.clearance_corners_m(rod_stroke_m)
+        bias = self._active_corner_bias_m()
+        return corners if bias is None else corners - bias
+
+    def _clearance_estimate_m(self, rod_stroke_m: ArrayLike) -> float:
+        return float(np.min(self._clearance_corners_m(rod_stroke_m)))
+
+    def _reference_weight_N(self) -> float:
+        """``W_ref``: YAML superstructure mass times g (S-1 plausibility, S-5 record)."""
+        mass_kg = self.geometry.superstructure_mass_kg
+        if mass_kg is None:
+            mass_kg = BODY_MASS_WITHOUT_YAML_KG
+        return mass_kg * STANDARD_GRAVITY_M_S2
+
+    def _period_raw_attitude_rad(self) -> tuple[float, float]:
+        """Mean raw tilt of this period; the filtered attitude without IMU-rate samples."""
+        state = self._state
+        tilts = state.period_raw_tilts
+        if not tilts:
+            return state.roll_rad, state.pitch_rad
+        roll = float(np.mean([tilt.roll_rad for tilt in tilts]))
+        pitch = float(np.mean([tilt.pitch_rad for tilt in tilts]))
+        return roll, pitch
+
+    def _record_settle_tilt(self) -> None:
+        """P-S9-4 without CHECK: the settle attitude is the mean raw tilt of the first
+        ``settle_tilt_samples`` TOUCH periods (with CHECK it is the CHECK attitude)."""
+        soil = self._soil_state()
+        if self._has_check() or soil.settle_attitude_rad is not None:
+            return
+        if self._state.phase is not C2Phase.TOUCH:
+            return
+        soil.settle_tilts.append(self._period_raw_attitude_rad())
+        if len(soil.settle_tilts) >= self.config.soil.settle_tilt_samples:
+            roll, pitch = np.mean(soil.settle_tilts, axis=0)
+            soil.settle_attitude_rad = (float(roll), float(pitch))
+
+    def _settle_attitude_rad(self) -> tuple[float, float] | None:
+        if self._has_check():
+            return self._state.crawler_attitude_rad
+        return self._soil_state().settle_attitude_rad
+
+    def _is_plateau_period(self) -> bool:
+        """S-1 window condition on the output applied during the period before this sample:
+        no leg retracting and the mean speed at least the window fraction of ``v_max``."""
+        applied = np.asarray(self._state.applied_output_m_s, dtype=float)
+        min_mean_m_s = self.config.soil.plateau_mean_speed_fraction * self.geometry.max_speed_m_s
+        return bool(np.all(applied >= 0.0) and float(np.mean(applied)) >= min_mean_m_s)
+
+    def _plateau_tail(self) -> list[_PlateauSample] | None:
+        """Shortest tail of the window spanning ``plateau_window_m`` of mean motor stroke."""
+        window = self._soil_state().window
+        span_m = self.config.soil.plateau_window_m
+        last_stroke_m = window[-1].mean_motor_stroke_m
+        if last_stroke_m - window[0].mean_motor_stroke_m < span_m:
+            return None
+        start = len(window) - 1
+        while start > 0 and last_stroke_m - window[start].mean_motor_stroke_m < span_m:
+            start -= 1
+        return list(window)[start:]
+
+    def _plateau_rise_N(self, tail: list[_PlateauSample]) -> float:
+        """Load-sum rise over ``plateau_window_m`` of a first-order fit on the mean stroke
+        (end-point difference below three samples)."""
+        strokes_m = np.array([sample.mean_motor_stroke_m for sample in tail])
+        loads_N = np.array([sample.load_sum_N for sample in tail])
+        if len(tail) >= 3:
+            slope_N_m = float(np.polyfit(strokes_m - strokes_m.mean(), loads_N, 1)[0])
+        else:
+            slope_N_m = (loads_N[-1] - loads_N[0]) / max(strokes_m[-1] - strokes_m[0], 1e-9)
+        return slope_N_m * self.config.soil.plateau_window_m
+
+    def _update_liftoff_window(self, reading: _Reading) -> None:
+        """S-1 (P-S9-2): one LEVEL period of the load-sum plateau window before the LOC."""
+        soil = self._soil_state()
+        if soil.is_liftoff_confirmed:
+            return
+        if not self._is_plateau_period():
+            soil.window.clear()
+            return
+        soil.window.append(
+            _PlateauSample(
+                t_s=float(reading.t_s),
+                mean_motor_stroke_m=float(np.mean(reading.motor_stroke_m)),
+                load_sum_N=float(np.sum(reading.cylinder_force_N)),
+                corner_clearance_m=self.geometry.clearance_corners_m(reading.rod_stroke_m),
+                raw_attitude_rad=self._period_raw_attitude_rad(),
+            )
+        )
+        tail = self._plateau_tail()
+        if tail is None:
+            return
+        settings = self.config.soil
+        rise_N = self._plateau_rise_N(tail)
+        mean_load_N = float(np.array([sample.load_sum_N for sample in tail]).mean())
+        is_flat = rise_N <= settings.plateau_rise_max_N
+        if is_flat and mean_load_N >= settings.plausibility_fraction * self._reference_weight_N():
+            self._confirm_liftoff(reading.t_s, tail, mean_load_N)
+
+    def _corner_bias_m(self, sample: _PlateauSample) -> NDArray[np.float64]:
+        """S-3 raw ``b_k = c_k(t_P) - (rho_k - min rho)``: at ``t_P`` the last corner has just
+        left the rut, and the body attitude change since the settle lifted corner ``k`` by
+        ``rho_k = y_k d_phi - x_k d_theta``."""
+        settle_rad = self._settle_attitude_rad()
+        if settle_rad is None:
+            settle_rad = sample.raw_attitude_rad
+        roll_change = sample.raw_attitude_rad[0] - settle_rad[0]
+        pitch_change = sample.raw_attitude_rad[1] - settle_rad[1]
+        corners_xy = self.geometry.crawler_corners_xy_m
+        corner_rise = corners_xy[:, 1] * roll_change - corners_xy[:, 0] * pitch_change
+        return sample.corner_clearance_m - (corner_rise - corner_rise.min())
+
+    def _confirm_liftoff(
+        self, t_s: float, tail: list[_PlateauSample], mean_load_N: float
+    ) -> None:
+        """LOC: store ``t_P``, ``W_hat`` and the S-3 bias, end soil mode, report (S-5)."""
+        soil = self._soil_state()
+        settings = self.config.soil
+        plateau_start = tail[0]
+        soil.is_liftoff_confirmed = True
+        soil.is_soil_mode = False
+        soil.liftoff_s = float(t_s)
+        soil.plateau_start_s = plateau_start.t_s
+        soil.weight_estimate_N = mean_load_N
+        soil.weight_ratio = mean_load_N / self._reference_weight_N()
+        soil.clearance_at_plateau_start_m = float(plateau_start.corner_clearance_m.min())
+        soil.clearance_at_liftoff_m = float(tail[-1].corner_clearance_m.min())
+        raw_bias_m = self._corner_bias_m(plateau_start)
+        soil.corner_bias_raw_m = raw_bias_m
+        bias_m = np.maximum(raw_bias_m, 0.0)  # never raise a corner's clearance estimate
+        if float(bias_m.max()) <= settings.corner_bias_deadzone_m:
+            bias_m = np.zeros(LEG_COUNT)
+        soil.corner_bias_m = bias_m
+        self._add_event(t_s, SOIL_EVENT_LIFTOFF_CONFIRMED)
+        if soil.has_corner_bias:
+            self._add_event(t_s, f"{SOIL_EVENT_CLEARANCE_BIAS}:{_corner_values_mm(bias_m)}")
+        low, high = settings.weight_record_range
+        if not low <= soil.weight_ratio <= high:
+            self._add_event(
+                t_s, f"{SOIL_EVENT_WEIGHT_MISMATCH}:{soil.weight_ratio:.3f}", is_warning=True
+            )
+
+    def _hold_crawler_zone_until_liftoff(self, reading: _Reading) -> None:
+        """S-2 / S-4: before the LOC a released crawler-zone latch is held on (soil mode);
+        ``max_push_m`` of mean motor stroke in soil mode raises the S-4 FAULT."""
+        soil = self._soil_state()
+        if soil.is_liftoff_confirmed:
+            return
+        state = self._state
+        mean_stroke_m = float(np.mean(reading.motor_stroke_m))
+        if not state.in_crawler_zone:
+            if not soil.is_soil_mode:
+                soil.is_soil_mode = True
+                soil.soil_mode_start_s = float(reading.t_s)
+                soil.soil_mode_start_stroke_m = mean_stroke_m
+                self._add_event(reading.t_s, SOIL_EVENT_MODE_START)
+            state.in_crawler_zone = True
+        if not soil.is_soil_mode or soil.soil_mode_start_stroke_m is None:
+            return
+        soil.push_m = mean_stroke_m - soil.soil_mode_start_stroke_m
+        if soil.push_m > self.config.soil.max_push_m:
+            # As the reference rules: this period's command still goes out, FAULT holds next.
+            self._add_event(reading.t_s, SOIL_EVENT_LIFTOFF_UNCONFIRMED, is_warning=True)
+            state.phase = C2Phase.FAULT
+
+    def _soil_meta(self) -> dict[str, Any]:
+        """P-S9-7 meta ``soil`` (JSON-serialisable)."""
+        settings = self.config.soil
+        meta: dict[str, Any] = {"settings": settings.to_meta()}
+        if not settings.enable:
+            return meta
+        soil = self._soil_state()
+        raw_bias = soil.corner_bias_raw_m
+        settle = self._settle_attitude_rad()
+        meta.update(
+            {
+                "loc": soil.is_liftoff_confirmed,
+                "soil_mode": soil.is_soil_mode,
+                "t_P_s": soil.plateau_start_s,
+                "t_loc_s": soil.liftoff_s,
+                "W_hat_N": soil.weight_estimate_N,
+                "W_ratio": soil.weight_ratio,
+                "W_ref_N": self._reference_weight_N(),
+                "corner_order": list(CRAWLER_CORNER_NAMES),
+                "bias_corner_m": soil.corner_bias_m.tolist(),
+                "bias_corner_raw_m": None if raw_bias is None else raw_bias.tolist(),
+                "clearance_at_P_m": soil.clearance_at_plateau_start_m,
+                "clearance_at_loc_m": soil.clearance_at_liftoff_m,
+                "settle_attitude_rad": None if settle is None else [float(a) for a in settle],
+                "soil_mode_t_s": soil.soil_mode_start_s,
+                "push_m": soil.push_m,
+            }
+        )
+        return meta
 
     # --- REANCHOR (revision R2, design 17) ---
 
