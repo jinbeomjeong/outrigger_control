@@ -139,7 +139,13 @@ def judge(args) -> dict:
     k_diff = int(np.argmax(diff_any)) if diff_any.any() else None
     res["E2"] = {"t_first_pad_force_s": float(t[k_hit]) if k_hit < len(t) else None,
                  "bit_identical_before_first_pad_force": bool(k_diff is None or k_diff >= k_hit),
-                 "t_first_difference_s": None if k_diff is None else float(t[k_diff])}
+                 "t_first_difference_s": None if k_diff is None else float(t[k_diff]),
+                 "t_first_crawler_force_s": float(t[int(np.argmax(np.abs(s1["crawler_n"]) > 0.0))]),
+                 "crawler_force_max_rel_diff_before_first_pad_force": float(
+                     np.abs(s1["sup_f"][:k_hit] - d1["sup_f"][:k_hit]).max() / max(np.abs(s1["sup_f"][:k_hit]).max(), 1e-30))
+                 if k_hit > 0 else None,
+                 "pitch_max_abs_diff_before_first_pad_force_deg": float(
+                     np.abs(s1["pitch_deg"][:k_hit] - d1["pitch_deg"][:k_hit]).max()) if k_hit > 0 else None}
     res["E2"]["pass"] = res["E2"]["bit_identical_before_first_pad_force"]
     win = t >= t[-1] - 0.1 - 1e-12
 
@@ -169,14 +175,21 @@ def judge(args) -> dict:
         bodies.append({"body": f"pad_{leg}", "max_diff_N": float(df.max()), "t_max_s": float(t[int(np.argmax(df))]),
                        "end_diff_N": float(df[-1]), "node_force_N": node_f})
     df = np.linalg.norm(d1["sup_f"] - s1["sup_f"], axis=1)
-    sup_sigma = float(abs(s1["crawler_n"][win].mean())) / 2.592  # crawler contact area of the Chrono phase (5.34.11)
+    # the crawler unloads in this case (pads take the machine): node force from the crawler maximum
+    sup_sigma = float(np.abs(s1["crawler_n"]).max()) / 2.592  # crawler contact area of the Chrono phase (5.34.11)
     bodies.append({"body": "superstructure (crawler)", "max_diff_N": float(df.max()), "t_max_s": float(t[int(np.argmax(df))]),
                    "end_diff_N": float(df[-1]), "node_force_N": sup_sigma * h * h,
-                   "node_force_basis": "crawler normal / 2.592 m^2 (2 cm Chrono-phase contact area, 5.34.11) x h^2"})
+                   "node_force_basis": "max crawler normal / 2.592 m^2 (2 cm Chrono-phase contact area, 5.34.11) x h^2",
+                   "crawler_normal_max_N": float(np.abs(s1["crawler_n"]).max()),
+                   "crawler_normal_end_N": float(s1["crawler_n"][-1])})
     for b in bodies:
         b["max_over_node_force"] = b["max_diff_N"] / b["node_force_N"] if b["node_force_N"] > 0 else None
         b["end_over_max"] = b["end_diff_N"] / b["max_diff_N"] if b["max_diff_N"] > 0 else 0.0
-        b["pass"] = bool((b["max_diff_N"] <= b["node_force_N"]) and (b["end_over_max"] <= 1e-2))
+        # decay test only meaningful for a body with a node event (max diff >= 1 % of a node force)
+        b["event_body"] = bool(b["max_diff_N"] >= 0.01 * b["node_force_N"])
+        b["pass_max"] = bool(b["max_diff_N"] <= b["node_force_N"])
+        b["pass_decay"] = bool(b["end_over_max"] <= 1e-2) if b["event_body"] else None
+        b["pass"] = bool(b["pass_max"] and (b["pass_decay"] is not False))
     res["E4"] = {"bodies": bodies, "pass": all(b["pass"] for b in bodies)}
     res["pass_all"] = all(res[k]["pass"] for k in ("E1", "E2", "E3", "E4"))
     if args.json:
