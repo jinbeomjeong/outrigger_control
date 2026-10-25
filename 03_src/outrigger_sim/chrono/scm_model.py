@@ -12,6 +12,12 @@ contact at all, every ground force comes from the SCM loader or from the anchor 
   (3 per track: flat + front 2.134 deg + rear 3.187 deg ramp, 3.11.2 table; bottom = block bottom
   = ``ground.crawler_bottom_z_m + 0.004``) as SCM collision shapes; the 24 crawler spheres are
   not used;
+* **SCM ray targets** (5.34.10, P1-V0): crawler boxes and pad hulls are static triangle soups
+  (``ray_shape="mesh"``, default). The former ``ChCollisionShapeBox`` / ``ConvexHull`` shapes
+  (``"convex"``) are ray-tested by Bullet's sub-simplex convex cast (``cbtCollisionWorld.cpp:300``),
+  which stops at a squared distance of ``MAX_CONVEX_CAST_EPSILON`` = 1e-4 m^2 (single precision,
+  i.e. 10 mm; ``cbtConvexCast.h``) and hit the bottoms up to 10 mm low (pads median -1 mm);
+  ``cbtBvhTriangleMeshShape`` uses the exact ray-triangle test (measured |error| <= 5e-4 mm);
 * per leg a **rod body** (``legs.<leg>.rod_body``) on a ``ChLinkMotorLinearForce`` (link Z =
   body -z, R4) driven by :class:`~outrigger_sim.chrono.l2b_actuator.L2bForceActuator` with the
   concrete dropped from ``k_ax`` (``include_concrete=False``; YAML ``actuator.L2b_NSC`` comment
@@ -24,7 +30,11 @@ contact at all, every ground force comes from the SCM loader or from the anchor 
   floor normal), soil set from ``02_params/scm_soil_sets.json`` ``sets.<key>.chrono``; active
   domains: one box per pad body and one per track (2.94 x 0.80 m, 3.11.2), height
   :data:`ACTIVE_DOMAIN_HEIGHT_M`; pre-check ``elastic_K > Kphi`` (n = 1) against the silent
-  Chrono clamp (5.32.3);
+  Chrono clamp (5.32.3); optional **dual terrain** (``crawler_grid_m``, U-S9G-1 M14s): the
+  pad domains on one terrain (``grid_m``), the track domains on a second (``crawler_grid_m``),
+  forces summed by :class:`ScmForceReader`;
+* **gravity ramp** (5.34.2 P2): :meth:`S9Model.set_gravity_factor` with
+  :func:`gravity_ramp_factor` (the runner applies Poly345 3 s + hold 2 s by default);
 * **SCM shear** (5.33.7 #1): ``"bprime"`` (default, judgement) = ``SetSoilParameters(..., c 0,
   phi 0, ...)`` (tau = 0 exactly, normal law unchanged) + tangential force by ground-fixed
   anchor bushings; ``"native"`` = the set's c, phi in SCM and no anchor bushings (comparison
@@ -53,8 +63,10 @@ contact at all, every ground force comes from the SCM loader or from the anchor 
   A_c / 2)``, damping by the ``crawler_bushing`` zeta rule ``c = (c_total / 2) sqrt(k / (kn_total
   / 2))``;
 * records (#8, control spec 284 keys): SCM force on the crawler (= crawler patch force sum),
-  on each pad, number of SCM contact patches, pad sinkage (geometric and node mean), crawler
-  clearance above the rut (after :meth:`S9Model.mark_rut_reference`).
+  on each pad, number of SCM contact patches, pad sinkage (geometric and node mean inside the
+  pad bottom polygon, :meth:`S9Model.pad_node_stats`), crawler clearance above the rut (after
+  :meth:`S9Model.mark_rut_reference`), body angular velocity (crawler rocking), running pad tilt
+  maximum (P3 keys, 5.34.6).
 
 Hook order (as L2bModel): actuator guard -> ``DoStepDynamics`` -> actuator end -> SCM force read
 -> state copy -> pad anchor bushings -> swivel stabiliser -> crawler bushings -> actuator hooks
@@ -90,7 +102,7 @@ from outrigger_sim.chrono.ground_bushing import (
 from outrigger_sim.chrono.l2b_actuator import L2bForceActuator, make_force_motor
 from outrigger_sim.chrono.probes import ProbeState, chvec, truth_state
 from outrigger_sim.chrono.sim_shapes import add_pad_hull
-from outrigger_sim.chrono.system import gravity_vector, make_system
+from outrigger_sim.chrono.system import gravity_vector, make_system, set_gravity
 from outrigger_sim.geometry import extension_direction, pad_bottom_body_m, pad_sphere_centre_body_m
 from outrigger_sim.pad_variants import PROJECT_ROOT
 from outrigger_sim.params import LEG_ORDER, Params, axial_stiffness_N_m, scm_run_sha256
@@ -373,6 +385,161 @@ def crawler_box_specs(params: Params) -> list[dict[str, Any]]:
     return out
 
 
+RAY_SHAPES = ("mesh", "convex")
+DEFAULT_RAY_SHAPE = "mesh"
+"""SCM ray-target shapes (dynamics_model.md 5.34.10, P1-V0). ``"mesh"`` (default) = static
+triangle soups (``ChCollisionShapeTriangleMesh(..., is_static=True)`` -> Bullet
+``cbtBvhTriangleMeshShape``, exact ray-triangle test; ``ChCollisionModelBullet.cpp:556``);
+``"convex"`` = the former ``ChCollisionShapeBox`` / ``ChCollisionShapeConvexHull`` whose ray test
+is the iterative sub-simplex convex cast (``cbtCollisionWorld.cpp:300``) and hits the bottom up
+to about 10 mm too low. The S9 bodies have no rigid contact at all (only SCM rays), so a static
+mesh on a moving body is safe here (no concave-concave narrow phase is ever needed)."""
+
+
+def box_triangles(centre: ArrayLike, angle_y_rad: float, size: ArrayLike
+                  ) -> tuple[NDArray[np.float64], NDArray[np.int64]]:
+    """(8 vertices, 12 outward triangles) of a box rotated about +y by ``angle_y_rad``."""
+    hx, hy, hz = (0.5 * float(v) for v in size)
+    c, s = math.cos(angle_y_rad), math.sin(angle_y_rad)
+    rot = np.array([[c, 0.0, s], [0.0, 1.0, 0.0], [-s, 0.0, c]])
+    corners = np.array([[sx * hx, sy * hy, sz * hz] for sx in (-1, 1) for sy in (-1, 1)
+                        for sz in (-1, 1)])
+    verts = corners @ rot.T + np.asarray(centre, dtype=float)
+    # corner index = 4 * (sx > 0) + 2 * (sy > 0) + (sz > 0)
+    faces = np.array([[0, 2, 6], [0, 6, 4], [1, 5, 7], [1, 7, 3],   # -z, +z
+                      [0, 4, 5], [0, 5, 1], [2, 3, 7], [2, 7, 6],   # -y, +y
+                      [0, 1, 3], [0, 3, 2], [4, 6, 7], [4, 7, 5]],  # -x, +x
+                     dtype=np.int64)
+    return verts, faces
+
+
+def add_ray_mesh(body: ch.ChBody, pieces: Sequence[tuple[ArrayLike, ArrayLike]],
+                 material: ch.ChContactMaterial) -> int:
+    """Add one static triangle-soup collision shape (all ``pieces`` (vertices in the body COG
+    frame, triangles)) to ``body``; returns the number of triangles."""
+    soup = ch.ChTriangleMeshSoup()
+    n = 0
+    for verts, faces in pieces:
+        v = np.asarray(verts, dtype=float)
+        for a, b, c in np.asarray(faces, dtype=np.int64):
+            soup.AddTriangle(chvec(v[a]), chvec(v[b]), chvec(v[c]))
+            n += 1
+    body.AddCollisionShape(ch.ChCollisionShapeTriangleMesh(material, soup, True, False, 0.0),
+                           ch.ChFramed())
+    return n
+
+
+def add_pad_ray_mesh(body: ch.ChBody, leg_index: int, material: ch.ChContactMaterial, *,
+                     pad_variant: str | None, offset_m: ArrayLike) -> int:
+    """The C8 pad hull of the pad type as a static triangle soup (OBJ triangles + ``offset_m``)."""
+    from outrigger_sim.chrono.sim_shapes import _require_file, pad_shape_entries, read_obj_pieces
+
+    _, hull = pad_shape_entries(LEG_ORDER[leg_index], pad_variant)
+    off = np.asarray(offset_m, dtype=float)
+    pieces = [(v + off, f) for v, f in read_obj_pieces(_require_file(hull))]
+    body.EnableCollision(True)
+    return add_ray_mesh(body, pieces, material)
+
+
+def pad_bottom_outline_local_m(pad_variant: str | None, leg_index: int, offset_m: ArrayLike,
+                               *, tol_m: float = 1.0e-4) -> NDArray[np.float64]:
+    """Bottom-face polygon of the pad hull OBJ (vertices within ``tol_m`` of the lowest one),
+    counter-clockwise in xy, as (k, 3) points in the body frame given by ``offset_m`` (the
+    ``add_pad_ray_mesh`` offset)."""
+    from outrigger_sim.chrono.sim_shapes import _require_file, pad_shape_entries, read_obj_pieces
+
+    _, hull = pad_shape_entries(LEG_ORDER[leg_index], pad_variant)
+    v = np.vstack([p[0] for p in read_obj_pieces(_require_file(hull))]) + np.asarray(offset_m, float)
+    zmin = float(v[:, 2].min())
+    bottom = v[v[:, 2] <= zmin + tol_m]
+    idx = convex_hull_2d(bottom[:, :2])
+    out = bottom[idx].copy()
+    out[:, 2] = zmin
+    return out
+
+
+def convex_hull_2d(xy: ArrayLike) -> NDArray[np.int64]:
+    """Indices of the 2D convex hull, counter-clockwise (monotone chain, collinear dropped)."""
+    p = np.asarray(xy, dtype=float)
+    order = np.lexsort((p[:, 1], p[:, 0]))
+
+    def cross(o: int, a: int, b: int) -> float:
+        return float((p[a, 0] - p[o, 0]) * (p[b, 1] - p[o, 1]) - (p[a, 1] - p[o, 1]) * (p[b, 0] - p[o, 0]))
+
+    lower: list[int] = []
+    for i in order:
+        while len(lower) >= 2 and cross(lower[-2], lower[-1], i) <= 1e-15:
+            lower.pop()
+        lower.append(int(i))
+    upper: list[int] = []
+    for i in order[::-1]:
+        while len(upper) >= 2 and cross(upper[-2], upper[-1], i) <= 1e-15:
+            upper.pop()
+        upper.append(int(i))
+    return np.array(lower[:-1] + upper[:-1], dtype=np.int64)
+
+
+def inside_convex_polygon(poly_xy: ArrayLike, pts_xy: ArrayLike, *, tol: float = 1e-12) -> NDArray[np.bool_]:
+    """True for points strictly inside a counter-clockwise convex polygon (edges excluded)."""
+    poly = np.asarray(poly_xy, dtype=float)
+    pts = np.asarray(pts_xy, dtype=float).reshape(-1, 2)
+    inside = np.ones(len(pts), dtype=bool)
+    for k in range(len(poly)):
+        a, b = poly[k], poly[(k + 1) % len(poly)]
+        c = (b[0] - a[0]) * (pts[:, 1] - a[1]) - (b[1] - a[1]) * (pts[:, 0] - a[0])
+        inside &= c > tol * max(1.0, float(np.hypot(*(b - a))))
+    return inside
+
+
+def node_stats_in_outline(terrain: Any, plane_point: ArrayLike, plane_rot: NDArray[np.float64],
+                          grid_m: float, outline_world_m: ArrayLike) -> dict[str, Any]:
+    """SCM node state (``GetNodeInfo``) of the grid nodes strictly inside a footprint polygon
+    projected on the SCM plane. Returns the node count inside, the count in contact (sigma > 0),
+    the mean sinkage of the nodes inside and of the contact nodes [m] (``NodeInfo.sinkage`` =
+    initial level - level, along the plane normal; nodes never touched read 0) and the mean
+    pressure of the contact nodes [Pa]. Record rate only (one Python call per node)."""
+    p0 = np.asarray(plane_point, dtype=float)
+    r = np.asarray(plane_rot, dtype=float)
+    q = (np.asarray(outline_world_m, dtype=float) - p0) @ r  # plane coordinates
+    poly = q[convex_hull_2d(q[:, :2]), :2]
+    d = float(grid_m)
+    i0, i1 = int(math.floor(poly[:, 0].min() / d)), int(math.ceil(poly[:, 0].max() / d))
+    j0, j1 = int(math.floor(poly[:, 1].min() / d)), int(math.ceil(poly[:, 1].max() / d))
+    ii, jj = np.meshgrid(np.arange(i0, i1 + 1), np.arange(j0, j1 + 1), indexing="ij")
+    nodes = np.column_stack([ii.ravel() * d, jj.ravel() * d])
+    nodes = nodes[inside_convex_polygon(poly, nodes)]
+    sink, sigma = np.empty(len(nodes)), np.empty(len(nodes))
+    for k, (x, y) in enumerate(nodes):
+        w = p0 + r @ np.array([x, y, 0.0])
+        info = terrain.GetNodeInfo(ch.ChVector3d(float(w[0]), float(w[1]), float(w[2])))
+        sink[k], sigma[k] = float(info.sinkage), float(info.sigma)
+    contact = sigma > 0.0
+    return {"n_inside": int(len(nodes)), "n_contact": int(contact.sum()),
+            "sinkage_mean_inside_m": float(sink.mean()) if len(nodes) else None,
+            "sinkage_mean_contact_m": float(sink[contact].mean()) if contact.any() else None,
+            "sigma_mean_contact_Pa": float(sigma[contact].mean()) if contact.any() else None}
+
+
+GRAVITY_RAMP_SHAPES = ("poly345", "linear", "step")
+MACHINE_GRAVITY_RAMP_S = 3.0
+MACHINE_GRAVITY_HOLD_S = 2.0
+"""P2 settle rule (dynamics_model.md 5.34.2): gravity magnitude Poly345 over 3 s, hold 2 s,
+judge on the last 1 s mean."""
+SINGLE_PAD_LOAD_RAMP_S = 1.0
+"""P1 single pad: vertical load Poly345 over 1 s (5.34.3 P1-V0 (iii), V16: no sudden load)."""
+
+
+def gravity_ramp_factor(t_s: float, ramp_s: float, shape: str = "poly345") -> float:
+    """Gravity (load) factor in [0, 1]: Poly345 ``10u^3 - 15u^4 + 6u^5``, linear ``u``
+    (``u = t / ramp``), or ``step`` (1 from t = 0, the former sudden load)."""
+    if shape not in GRAVITY_RAMP_SHAPES:
+        raise ValueError(f"ramp shape must be one of {GRAVITY_RAMP_SHAPES}, got {shape!r}")
+    if shape == "step" or ramp_s <= 0.0:
+        return 1.0
+    u = min(max(float(t_s) / float(ramp_s), 0.0), 1.0)
+    return u if shape == "linear" else 10.0 * u ** 3 - 15.0 * u ** 4 + 6.0 * u ** 5
+
+
 def _rigid_body(name: str, mass: float, inertia: ArrayLike, com_body: ArrayLike,
                 pose: BodyPose) -> ch.ChBody:
     i = np.asarray(inertia, dtype=float)
@@ -402,10 +569,16 @@ class ScmForceReader:
     """Reads the SCM resultant on the pads and the superstructure once per step (copies).
 
     ``GetContactForceBody`` gives the force (world) and the moment about the body COM (world)
-    accumulated by the loader at the start of the step just taken (``SCMTerrain.cpp:1489``)."""
+    accumulated by the loader at the start of the step just taken (``SCMTerrain.cpp:1489``).
+    ``terrain`` is one ``SCMTerrain`` or a sequence of them (dual terrain, U-S9G-1): the force
+    and moment on each body are the sums over the terrains (each loader only knows the hits of
+    its own active domains; the moments are all about the body COM, so they add). With one
+    terrain the values are those of that terrain unchanged (no extra addition)."""
 
     def __init__(self, terrain: Any, pads: Sequence[ch.ChBody], superstructure: ch.ChBody) -> None:
-        self.terrain = terrain
+        self.terrains: tuple[Any, ...] = (tuple(terrain) if isinstance(terrain, (list, tuple))
+                                          else (terrain,))
+        self.terrain = self.terrains[0]
         self.pads = tuple(pads)
         self.superstructure = superstructure
         self.pad_force_N = np.zeros((len(pads), 3))
@@ -415,15 +588,22 @@ class ScmForceReader:
         self._f = ch.ChVector3d(0, 0, 0)
         self._t = ch.ChVector3d(0, 0, 0)
 
-    def refresh(self) -> None:
+    def _body(self, body: ch.ChBody) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
         f, t = self._f, self._t
+        first = self.terrains[0]
+        first.GetContactForceBody(body, f, t)
+        force = np.array([f.x, f.y, f.z])
+        torque = np.array([t.x, t.y, t.z])
+        for terrain in self.terrains[1:]:
+            terrain.GetContactForceBody(body, f, t)
+            force += (f.x, f.y, f.z)
+            torque += (t.x, t.y, t.z)
+        return force, torque
+
+    def refresh(self) -> None:
         for i, pad in enumerate(self.pads):
-            self.terrain.GetContactForceBody(pad, f, t)
-            self.pad_force_N[i] = (f.x, f.y, f.z)
-            self.pad_torque_Nm[i] = (t.x, t.y, t.z)
-        self.terrain.GetContactForceBody(self.superstructure, f, t)
-        self.sup_force_N = np.array([f.x, f.y, f.z])
-        self.sup_torque_Nm = np.array([t.x, t.y, t.z])
+            self.pad_force_N[i], self.pad_torque_Nm[i] = self._body(pad)
+        self.sup_force_N, self.sup_torque_Nm = self._body(self.superstructure)
 
 
 class PadNormals:
@@ -640,7 +820,10 @@ class S9Model:
         stiffness_mode, interface: Anchor sensitivities (U-S9L-2 / 3).
         swivel_stiffness_N_m_rad: ``k_sw``; 0 = no stabiliser (P1-L4 comparison).
         crawler_bushings: Track anchors (bprime only).
-        grid_m: SCM grid.
+        grid_m: SCM grid (the pad terrain grid when ``crawler_grid_m`` is set).
+        ray_shape: SCM ray targets, ``"mesh"`` (default) or ``"convex"`` (:data:`RAY_SHAPES`).
+        crawler_grid_m: None = one SCM terrain for pads and tracks; a value = dual terrain, the
+            tracks on a second terrain with this grid (U-S9G-1 M14s: pads 1 / 2 cm, crawler 4 cm).
     """
 
     def __init__(self, params: Params, soil: SoilSet, pad_variant_meta: Mapping[str, Any], *,
@@ -649,11 +832,15 @@ class S9Model:
                  stiffness_mode: str = "series", interface: bool = False,
                  swivel_stiffness_N_m_rad: float = SWIVEL_K_N_M_RAD, crawler_bushings: bool = True,
                  grid_m: float = GRID_M, force_saturation: bool = True,
-                 actuator_ramp_s: float | None = None, num_threads: int = SCM_THREADS) -> None:
+                 actuator_ramp_s: float | None = None, num_threads: int = SCM_THREADS,
+                 ray_shape: str = DEFAULT_RAY_SHAPE, crawler_grid_m: float | None = None) -> None:
         if params.l2b is None:
             raise ValueError('params must be loaded with model="L2b_NSC"')
         if shear not in SCM_SHEAR_MODES:
             raise ValueError(f"shear must be one of {SCM_SHEAR_MODES}")
+        if ray_shape not in RAY_SHAPES:
+            raise ValueError(f"ray_shape must be one of {RAY_SHAPES}, got {ray_shape!r}")
+        self.ray_shape = ray_shape
         self.params = params
         self.soil = soil
         self.shear = shear
@@ -701,11 +888,16 @@ class S9Model:
         com_body = np.asarray(params.superstructure.mass_properties.com_m, dtype=float)
         sup.EnableCollision(True)
         self.crawler_boxes = crawler_box_specs(params)
-        for box in self.crawler_boxes:
-            q = ch.QuatFromAngleY(float(box["angle_y_rad"]))
-            sx, sy, sz = box["size"]
-            sup.AddCollisionShape(ch.ChCollisionShapeBox(ch.ChContactMaterialSMC(), sx, sy, sz),
-                                  ch.ChFramed(chvec(np.asarray(box["centre"]) - com_body), q))
+        if ray_shape == "mesh":
+            add_ray_mesh(sup, [box_triangles(np.asarray(b["centre"]) - com_body, float(b["angle_y_rad"]),
+                                             b["size"]) for b in self.crawler_boxes],
+                         ch.ChContactMaterialSMC())
+        else:
+            for box in self.crawler_boxes:
+                q = ch.QuatFromAngleY(float(box["angle_y_rad"]))
+                sx, sy, sz = box["size"]
+                sup.AddCollisionShape(ch.ChCollisionShapeBox(ch.ChContactMaterialSMC(), sx, sy, sz),
+                                      ch.ChFramed(chvec(np.asarray(box["centre"]) - com_body), q))
         set_family(sup, FAMILY_SUPERSTRUCTURE, no_collision_with=(FAMILY_ROD,))
         self.system.Add(sup)
         self.superstructure = sup
@@ -725,8 +917,12 @@ class S9Model:
             self.rod_com_retracted_m.append(c_r)
             self.pad_com_retracted_m.append(c_p)
             pad.EnableCollision(True)
-            add_pad_hull(pad, params, i, ch.ChContactMaterialSMC(),
-                         pad_variant=self.pad_variant_meta["pad_variant"], offset_m=-c_p)
+            if ray_shape == "mesh":
+                add_pad_ray_mesh(pad, i, ch.ChContactMaterialSMC(),
+                                 pad_variant=self.pad_variant_meta["pad_variant"], offset_m=-c_p)
+            else:
+                add_pad_hull(pad, params, i, ch.ChContactMaterialSMC(),
+                             pad_variant=self.pad_variant_meta["pad_variant"], offset_m=-c_p)
             set_family(pad, FAMILY_ROD, no_collision_with=(FAMILY_SUPERSTRUCTURE, FAMILY_ROD))
             self.system.Add(rod)
             self.system.Add(pad)
@@ -758,10 +954,22 @@ class S9Model:
             include_concrete=False, ramp_s=actuator_ramp_s)
         self.actuator.set_initial_force(f0)
 
-        # SCM terrain
+        # SCM terrain: one (pads + tracks) or two (pad terrain + crawler terrain, U-S9G-1 M14s;
+        # active domains of the two do not overlap, so no node is cast twice, 5.34.5)
+        self.dual_terrain = crawler_grid_m is not None
         terrain, tmeta = make_terrain(self.system, soil, shear, p_plane, r_plane, grid_m=grid_m)
+        if self.dual_terrain:
+            c_terrain, c_meta = make_terrain(self.system, soil, shear, p_plane, r_plane,
+                                             grid_m=float(crawler_grid_m))
+        else:
+            c_terrain, c_meta = terrain, tmeta
         self.terrain = terrain
-        self.terrain_meta = tmeta
+        """Pad terrain (the only terrain when single)."""
+        self.pad_terrain = terrain
+        self.crawler_terrain = c_terrain
+        self.terrains: tuple[Any, ...] = (terrain, c_terrain) if self.dual_terrain else (terrain,)
+        self.pad_grid_m = float(grid_m)
+        self.crawler_grid_m = float(crawler_grid_m) if self.dual_terrain else float(grid_m)
         for i, pad in enumerate(pads):
             centre = np.asarray(self.pad_bottom_local_pad_m[i])
             add_active_domain(terrain, tmeta, pad, centre,
@@ -771,10 +979,20 @@ class S9Model:
         x_mid = 0.5 * (REAR_RAMP_X_M[0] + FRONT_RAMP_X_M[1])
         for side, sy in (("L", 1.0), ("R", -1.0)):
             centre = np.array([x_mid, sy * TRACK_Y_M, z_block]) - com_body
-            add_active_domain(terrain, tmeta, sup, centre,
+            add_active_domain(c_terrain, c_meta, sup, centre,
                               (*TRACK_DOMAIN_XY_M, ACTIVE_DOMAIN_HEIGHT_M), f"track_{side}")
         initialize_terrain(terrain, tmeta)
-        self.forces = ScmForceReader(terrain, pads, sup)
+        if self.dual_terrain:
+            initialize_terrain(c_terrain, c_meta)
+        tmeta["layout"] = "dual (pad terrain + crawler terrain)" if self.dual_terrain else "single"
+        tmeta["crawler_terrain"] = c_meta if self.dual_terrain else None
+        tmeta["ray_shape"] = ray_shape
+        self.terrain_meta = tmeta
+        self.forces = ScmForceReader(list(self.terrains), pads, sup)
+        self.pad_outline_local_m = [
+            pad_bottom_outline_local_m(self.pad_variant_meta["pad_variant"], i, -self.pad_com_retracted_m[i])
+            for i in range(len(pads))]
+        self.gravity_factor = 1.0
 
         # anchor bushings (bprime)
         self.pad_values = pad_tangential_values(params, soil, areas, stiffness_mode=stiffness_mode,
@@ -856,6 +1074,14 @@ class S9Model:
             if b is not None:
                 b.dt_s = dt
 
+    def set_gravity_factor(self, factor: float) -> None:
+        """World gravity = ``factor`` x ``gravity_vector(params)`` (settle ramp, 5.34.2 P2)."""
+        f = float(factor)
+        if not (0.0 <= f <= 1.0):
+            raise ValueError(f"gravity factor must be in [0, 1]: {factor!r}")
+        self.gravity_factor = f
+        set_gravity(self.system, [f * g for g in gravity_vector(self.params)])
+
     def system_gravity(self) -> tuple[float, float, float]:
         g = self.system.GetGravitationalAcceleration()
         return (float(g.x), float(g.y), float(g.z))
@@ -933,24 +1159,40 @@ class S9Model:
             out[i] = -float((p - self.plane_point_world_m) @ self.normal_world)
         return out
 
-    def pad_node_sinkage_m(self, *, per_side: int = 3) -> NDArray[np.float64]:
-        """Mean SCM node sinkage (``GetNodeInfo``) on a ``per_side`` x ``per_side`` grid inside
-        each pad (half the pad half-width) [m]. Record rate only (Python per point)."""
-        out = np.empty(4)
-        half = 0.25 * float(np.sqrt(self.pad_values.pad_area_m2[0]))
-        offs = np.linspace(-half, half, per_side)
-        for i, pad in enumerate(self.pads):
-            vals = []
-            for dx in offs:
-                for dy in offs:
-                    local = np.asarray(self.pad_bottom_local_pad_m[i]) + np.array([dx, dy, 0.0])
-                    p = pad.TransformPointLocalToParent(chvec(local))
-                    vals.append(float(self.terrain.GetNodeInfo(p).sinkage))
-            out[i] = float(np.mean(vals))
+    def pad_outline_world_m(self, i: int) -> NDArray[np.float64]:
+        """Bottom polygon of pad ``i`` (hull OBJ bottom face) in world coordinates (k, 3)."""
+        pad = self.pads[i]
+        return np.array([_v(pad.TransformPointLocalToParent(chvec(p))) for p in self.pad_outline_local_m[i]])
+
+    def pad_node_stats(self) -> list[dict[str, Any]]:
+        """Per pad: SCM node state inside the projected pad bottom polygon
+        (:func:`node_stats_in_outline` on the pad terrain) plus the geometric sinkage of the pad
+        bottom centre; ``node_minus_geometric_m`` = node mean (contact nodes) - geometric (the
+        P1-V0 (iii) / P3-S1 quantity). Record rate only."""
+        geo = self.pad_sinkage_m()
+        out = []
+        for i in range(len(self.pads)):
+            st = node_stats_in_outline(self.pad_terrain, self.plane_point_world_m, self.plane_rot,
+                                       self.pad_grid_m, self.pad_outline_world_m(i))
+            st["sinkage_geometric_m"] = float(geo[i])
+            sc = st["sinkage_mean_contact_m"]
+            st["node_minus_geometric_m"] = None if sc is None else float(sc - geo[i])
+            out.append(st)
         return out
 
+    def pad_node_sinkage_m(self) -> NDArray[np.float64]:
+        """Mean SCM node sinkage (``GetNodeInfo``) of the nodes inside each projected pad bottom
+        polygon [m] (contact nodes; NaN when none). Record rate only (Python per node)."""
+        return np.array([np.nan if s["sinkage_mean_contact_m"] is None else s["sinkage_mean_contact_m"]
+                         for s in self.pad_node_stats()])
+
     def num_contact_patches(self) -> int:
-        return int(self.terrain.GetNumContactPatches())
+        return int(sum(t.GetNumContactPatches() for t in self.terrains))
+
+    def num_ray_hits(self) -> int:
+        """SCM ray hits of the last step (all terrains; hit = ray met a shape, not necessarily
+        a loaded node)."""
+        return int(sum(t.GetNumRayHits() for t in self.terrains))
 
     def mark_rut_reference(self, *, step_m: float = 0.1) -> dict[str, Any]:
         """Remember the crawler block-bottom points that touch the soil now (node sinkage > 0 at
@@ -971,7 +1213,7 @@ class S9Model:
                 for y in ys:
                     local = np.array([x, sy * y, zb]) - self.sup_com_body_m
                     p = sup.TransformPointLocalToParent(chvec(local))
-                    if float(self.terrain.GetNodeInfo(p).sinkage) > 0.0:
+                    if float(self.crawler_terrain.GetNodeInfo(p).sinkage) > 0.0:
                         pts.append(local)
                         heights.append(float(_v(p) @ self.normal_world))
         self._rut = {"points_local_m": np.array(pts).reshape(-1, 3), "height_m": np.array(heights),
@@ -1004,6 +1246,11 @@ class S9Model:
             "pad_sinkage_geometric_m": self.pad_sinkage_m().tolist(),
             "rut_clearance_m": self.rut_clearance_m(),
             "pad_tilt_deg": None if self.swivel is None else self.swivel.tilt_deg().tolist(),
+            # P3 keys (dynamics 5.34.6): crawler rocking (truth rate), running pad tilt maximum
+            "pad_tilt_max_deg": None if self.swivel is None else self.swivel.tilt_max_deg.tolist(),
+            "body_omega_world_rad_s": _v(self.superstructure.GetAngVelParent()).tolist(),
+            "scm_ray_hits": self.num_ray_hits(),
+            "gravity_factor": self.gravity_factor,
         }
         if self.pad_bushing is not None:
             row["pad_slip_total_m"] = self.pad_bushing.slip_total_m.tolist()
@@ -1033,6 +1280,14 @@ class S9Model:
             initial_pose={"origin_m": list(self.pose.origin_m), "quat_wxyz": list(self.pose.quat_wxyz)},
             crawler_shape={"kind": "C envelope boxes, 3 per track (dynamics_model.md 3.11.2)",
                            "boxes": self.crawler_boxes},
+            ray_shape={"mode": self.ray_shape,
+                       "basis": ("static triangle soups (cbtBvhTriangleMeshShape, exact ray-triangle) "
+                                 "for the crawler boxes and the pad hulls (P1-V0, 5.34.10)")
+                       if self.ray_shape == "mesh" else
+                       "ChCollisionShapeBox / ConvexHull (sub-simplex convex-cast ray test, up to 10 mm low)"},
+            terrain_layout={"dual": self.dual_terrain, "pad_grid_m": self.pad_grid_m,
+                            "crawler_grid_m": self.crawler_grid_m},
+            gravity_factor_now=self.gravity_factor,
             lateral_leg="PRISMATIC guide (rod laterally rigid); k_lat in the anchor bushing series",
             pad_anchor=None if self.pad_bushing is None else {
                 **self.pad_values.meta(), "adhesion_full_normal_N": ADHESION_FULL_NORMAL_N,
@@ -1085,10 +1340,14 @@ def read_s9_probe(model: S9Model) -> ProbeState:
 
 
 __all__ = [
-    "ACTIVE_DOMAIN_HEIGHT_M", "GRID_M", "KAPPA_HORIZONTAL", "SCM_SHEAR_MODES", "STIFFNESS_MODES",
-    "SWIVEL_K_N_M_RAD", "PadNormals", "PadTangentialValues", "S9Model", "ScmForceReader",
-    "SoilParameterError", "SoilSet", "SwivelStabiliser", "TrackNormals", "TrackTangentialValues",
-    "add_active_domain", "check_soil", "crawler_box_specs", "initialize_terrain", "load_soil_set",
-    "make_terrain", "pad_tangential_values", "plane_frame", "read_s9_probe", "scm_call_values",
+    "ACTIVE_DOMAIN_HEIGHT_M", "DEFAULT_RAY_SHAPE", "GRAVITY_RAMP_SHAPES", "GRID_M",
+    "KAPPA_HORIZONTAL", "MACHINE_GRAVITY_HOLD_S", "MACHINE_GRAVITY_RAMP_S", "RAY_SHAPES",
+    "SCM_SHEAR_MODES", "SINGLE_PAD_LOAD_RAMP_S", "STIFFNESS_MODES", "SWIVEL_K_N_M_RAD",
+    "PadNormals", "PadTangentialValues", "S9Model", "ScmForceReader", "SoilParameterError",
+    "SoilSet", "SwivelStabiliser", "TrackNormals", "TrackTangentialValues", "add_active_domain",
+    "add_pad_ray_mesh", "add_ray_mesh", "box_triangles", "check_soil", "convex_hull_2d",
+    "crawler_box_specs", "gravity_ramp_factor", "initialize_terrain", "inside_convex_polygon",
+    "load_soil_set", "make_terrain", "node_stats_in_outline", "pad_bottom_outline_local_m",
+    "pad_tangential_values", "plane_frame", "read_s9_probe", "scm_call_values",
     "split_body_props", "track_tangential_values",
 ]

@@ -125,6 +125,77 @@ def test_machine_build_and_step(params_b) -> None:
         assert key in row
 
 
+def test_gravity_ramp_and_polygon_helpers() -> None:
+    from outrigger_sim.chrono.scm_model import convex_hull_2d, gravity_ramp_factor, inside_convex_polygon
+
+    assert gravity_ramp_factor(0.0, 3.0) == 0.0 and gravity_ramp_factor(3.0, 3.0) == 1.0
+    assert gravity_ramp_factor(1.5, 3.0) == pytest.approx(0.5)  # Poly345 is symmetric about u = 0.5
+    assert gravity_ramp_factor(1.0, 2.0, "linear") == 0.5 and gravity_ramp_factor(0.0, 3.0, "step") == 1.0
+    with pytest.raises(ValueError):
+        gravity_ramp_factor(0.0, 1.0, "cosine")
+    sq = np.array([[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0], [0.5, 0.5], [0.5, 0.0]])
+    idx = convex_hull_2d(sq)
+    assert sorted(idx.tolist()) == [0, 1, 2, 3]
+    inside = inside_convex_polygon(sq[idx], [[0.5, 0.5], [1.0, 0.5], [1.5, 0.5]])
+    assert inside.tolist() == [True, False, False]  # edge points excluded
+
+
+def _ray_dev_mm(model, cs, res, x, y, z_nom):
+    import pychrono as ch
+
+    cs.RayHit(ch.ChVector3d(x, y, z_nom - 0.3), ch.ChVector3d(x, y, z_nom + 0.02), res)
+    assert res.hit
+    return (res.abs_hitPoint.z - z_nom) * 1e3
+
+
+def test_ray_mesh_bottoms_exact_and_zero_first_step_force(params_b) -> None:
+    """P1-V0 (i) / (ii) in small (dynamics 5.34.10): with the default static triangle meshes the
+    SCM rays hit the crawler block bottom and the pad bottoms within 0.05 mm, and the zero-gravity
+    first step gives no SCM force; the former convex shapes hit up to about 10 mm low."""
+    import pychrono as ch
+
+    pv = pad_variant_meta("dwg_rear250", params=params_b)
+    model = S9Model(params_b, load_soil_set("G1"), pv, grid_m=0.04)
+    assert model.ray_shape == "mesh" and model.meta()["ray_shape"]["mode"] == "mesh"
+    model.set_gravity_factor(0.0)
+    model.step()
+    assert np.abs(model.forces.sup_force_N).max() <= 100.0 and np.abs(model.forces.pad_force_N).max() <= 100.0
+    cs, res = model.system.GetCollisionSystem(), ch.ChRayhitResult()
+    z0 = params_b.ground.crawler_bottom_z_m + 0.004
+    devs = [_ray_dev_mm(model, cs, res, float(x), float(y), z0)
+            for x in np.linspace(-0.9, 0.85, 15) for y in np.linspace(0.82, 1.27, 7)]
+    for i, pad in enumerate(model.pads):
+        c = np.asarray(model.pad_bottom_local_pad_m[i])
+        for dx in (-0.08, 0.0, 0.07):
+            for dy in (-0.08, 0.0, 0.06):
+                p = pad.TransformPointLocalToParent(ch.ChVector3d(*(float(v) for v in c + [dx, dy, 0.0])))
+                devs.append(_ray_dev_mm(model, cs, res, p.x, p.y, p.z))
+    assert np.abs(devs).max() <= 0.05
+    assert model.num_ray_hits() > 0  # the block bottom touches the plane (zero sinkage, zero force)
+
+
+def test_force_reader_sums_terrains(params_b) -> None:
+    """ScmForceReader over several terrains = sum of the per-terrain reads; one terrain = that read."""
+    from outrigger_sim.chrono.scm_model import ScmForceReader
+
+    pv = pad_variant_meta("dwg_rear250", params=params_b)
+    model = S9Model(params_b, load_soil_set("G1"), pv, grid_m=0.04, crawler_grid_m=0.04)
+    assert model.dual_terrain and len(model.terrains) == 2 and model.terrain is model.pad_terrain
+    for _ in range(20):
+        model.step()
+    one = [ScmForceReader(t, model.pads, model.superstructure) for t in model.terrains]
+    for r in one:
+        r.refresh()
+    assert np.array_equal(model.forces.sup_force_N, one[0].sup_force_N + one[1].sup_force_N)
+    assert np.array_equal(model.forces.pad_force_N, one[0].pad_force_N + one[1].pad_force_N)
+    assert one[0].sup_force_N[2] == 0.0 and one[1].sup_force_N[2] > 0.0  # tracks on the crawler terrain
+    meta = model.meta()
+    assert meta["terrain_layout"] == {"dual": True, "pad_grid_m": 0.04, "crawler_grid_m": 0.04}
+    assert meta["scm"]["layout"].startswith("dual") and meta["scm"]["crawler_terrain"]["grid_m"] == 0.04
+    stats = model.pad_node_stats()
+    assert len(stats) == 4 and all(s["n_inside"] > 0 and s["n_contact"] == 0 for s in stats)  # pads in the air
+
+
 def test_engine_truth_and_measurements(params_b) -> None:
     from outrigger_sim.chrono.scm_engine import S9Engine
 
