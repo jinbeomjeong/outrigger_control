@@ -1,12 +1,21 @@
-"""Value summaries of the S9 P1 / P2 / P3a batches against the criteria of dynamics_model.md 5.34.13
-(rev. 49), 5.35.4, 5.36.3 (P2'-b J1 / J2 health limit) and 5.36.5 (P3a, rev. 51).
+"""Value summaries of the S9 P1 / P2 / P2' / P3a / P3b / P3-10 batches against the criteria of
+dynamics_model.md 5.34.13 (rev. 49), 5.35.4, 5.36.3 (P2'-b J1 / J2 health limit) and 5.36.5 (P3a,
+rev. 51), and of control spec 284 (P3b C2 levelling on SCM, optionally re-judged with the rev. 60
+definitions via ``--rejudge``; P3-10 rigid L1 soil response on / off).
 
-Values and criterion comparisons only; pass / fail decisions are dynamics-expert's. Reads a batch
+Values and criterion comparisons only; pass / fail decisions are dynamics-expert's (P3b / P3-10:
+control's, with dynamics for the physics). Reads a batch
 folder of ``s9_batch.py`` and writes one JSON to ``06_analysis/01_chrono/19_S9/``.
 
 Usage (Chrono-dev, worktree root)::
 
-    python -I -X utf8 04_scripts/02_chrono/s9_batch_summary.py <V0p|V16|L|P2|P2prime|P3a> <batch folder> [<out.json>]
+    python -I -X utf8 04_scripts/02_chrono/s9_batch_summary.py <V0p|V16|L|P2|P2prime|P3a|P3b|P3-10> <batch folder> [<out.json>]
+    python -I -X utf8 04_scripts/02_chrono/s9_batch_summary.py P3b <batch folder> [<out.json>] --rejudge
+
+``P3b --rejudge`` first re-judges every case with the spec rev. 60 P3-2 / P3-5 / P3-7 definitions
+(C-S9-60, ``run_S9.rejudge_case``; no Chrono run, ``result.json`` untouched, writes
+``<case>/result_rejudge_rev60.json``). Without the flag an existing re-judgement file is used.
+Archive the old summary in ``06_analysis/01_chrono/19_S9/history/`` before overwriting it.
 
 Units: SI in keys ending _m, _N, _s; mm / deg / % where the key says so. Frames: single pad world
 z up, SCM plane z = 0; machine world = body axes at the start (x forward, z up), pitch > 0 nose down.
@@ -798,20 +807,58 @@ def re1c_summary(case_dir: Path) -> dict[str, Any]:
             "lifted_reapproach_settings": lr_set}
 
 
-def summary_p3b(folder: Path) -> dict[str, Any]:
+def _run_s9():
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S9  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    return run_S9
+
+
+def _p3b_of_case(case_dir: Path, r: dict[str, Any], rejudge_file: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    """The case's ``p3b``: the spec rev. 60 re-judgement (``<case>/result_rejudge_rev60.json``) when it
+    exists and was made from this ``result.json`` (SHA-256), else the run's own ``p3b``."""
+    rj = case_dir / rejudge_file
+    if not rj.exists():
+        return r["p3b"], {"p3b_source": "result.json"}
+    import hashlib  # noqa: PLC0415
+
+    o = json.loads(rj.read_text("utf-8"))
+    sha = hashlib.sha256((case_dir / "result.json").read_bytes()).hexdigest()
+    if (o.get("inputs_sha256") or {}).get("result.json") != sha:
+        raise RuntimeError(f"{rj}: made from another result.json (SHA-256 differs); run the re-judgement again")
+    return o["p3b"], {"p3b_source": rejudge_file, "rejudge_rule": o.get("rule"),
+                      "rejudge_unchanged_blocks_equal": o.get("unchanged_blocks_equal"),
+                      "rejudge_params_file_match": o.get("params_file_match"), "checks_before_rev60": o.get("checks_before")}
+
+
+def summary_p3b(folder: Path, rejudge: bool = False) -> dict[str, Any]:
     """P3b C2 levelling on SCM (control spec 284 P3-1 ... 9, 301 W-61): per ``run_S9.py level`` case the
     ``p3b`` values (``checks`` and the main items) and the C2 meta ``soil`` block; the S8 re-approach
-    limit cases of the same batch run in their own run_S8C folders (named in ``<case>.log``)."""
+    limit cases of the same batch run in their own run_S8C folders (named in ``<case>.log``).
+    ``rejudge``: first re-judge every case with the spec rev. 60 definitions (``run_S9.rejudge_case``,
+    C-S9-60, no Chrono run; writes ``<case>/result_rejudge_rev60.json``); a case with that file is
+    summarised from it (``p3b_source``), the former checks stay in ``checks_before_rev60``."""
+    rs9 = _run_s9()
+    if rejudge:
+        for d in rs9.rejudge_targets([str(folder)]):
+            res = rs9.rejudge_case(d)
+            if not res["unchanged_blocks_equal"]:
+                raise RuntimeError(f"{d.name}: blocks outside {rs9.REJUDGED_BLOCKS} changed on re-judgement: "
+                                   f"{res['unchanged_block_diffs']}")
     rows = {}
     for k, r in cases(folder).items():
-        p = r.get("p3b")
-        if p is None:
+        if r.get("p3b") is None:
             continue
+        p, src = _p3b_of_case(folder / k, r, rs9.REJUDGE_FILE)
         a = r["args"]
         rows[k] = {"soil": a["soil"], "pad_variant": a["pad_variant"], "level": a["level"], "fs_kN": a.get("fs_kN"),
-                   "pad_grid_m": a["grid"], "crawler_grid_m": a["crawler_grid"], "checks": p["checks"],
+                   "pad_grid_m": a["grid"], "crawler_grid_m": a["crawler_grid"], **src, "checks": p["checks"],
                    "departure": p["departure"], "P3-2_loc": p["P3-2_loc"], "P3-3_leg_force": p["P3-3_leg_force"],
                    "P3-4_attitude": p["P3-4_attitude"], "creep_stop": p["creep_stop"],
+                   "P3-5_clearance_stroke": {kk: v for kk, v in p["P3-5_clearance_stroke"].items() if kk != "probe_sinkage"},
+                   "P3-7_plateau": p.get("P3-7_plateau"),
                    "pre_liftoff_min_F_cyl": p["pre_liftoff_min_F_cyl"], "P3-6_ready": p["P3-6_ready"],
                    "P3-8_counts": p["P3-8_false_triggers"]["counts"], "P3-9_deferred": p["P3-9_deferred"],
                    "track_utilisation": {kk: p["track_utilisation"][kk] for kk in ("max", "t_max_s", "rule")},
@@ -839,8 +886,19 @@ def summary_p3b(folder: Path) -> dict[str, Any]:
     return {"batch": "P3b C2 levelling on SCM (control spec 284; user decision U-S9P-6 (가) 2026-10-26)",
             "criteria": {"P3-4 (main)": "max |roll|, |pitch| (true, absolute) <= 0.2 deg over [max(two-sided creep "
                                         "stop, last READY entry), t_end] (control D-3); window < 5 s = window_short FLAG",
+                         "P3-2": "spec rev. 60 U-S9P-13 (가): LOC before the first DONE, crawler normal < 0.01 W at the "
+                                 "LOC, 0 <= LOC - departure <= T_lim = plateau_window_m / (push_speed_fraction v_max) "
+                                 "+ 1.0 s (= 2.9117 s; 1.0 s ASSUMPTION crawler load tail); former 2 s clause = "
+                                 "P3-2_within_2s_record",
+                         "P3-5": "spec rev. 60 U-S9P-14 (가): min rut clearance (10 Hz) from the first READY entry to "
+                                 "the run end >= 25 mm (ASSUMPTION U-S9-C3) and s_motor <= 0.6848 m; former minimum "
+                                 "after the departure = P3-5_within_after_departure_record",
+                         "P3-7": "spec rev. 60 U-S9P-15 (가): S-1 window reconstruction (gate t_P / t_loc = C2 meta "
+                                 "within 1e-6 s); rise per 10 mm >= 4 kN on the windows ending with crawler true normal "
+                                 "> 0.01 W_ref (3.77 kN); no such window = pass; > 1 kN (former) and > 0.05 W_ref are "
+                                 "records",
                          "RE1c": "R-1 ... R-4 (control D-5), R-5 record",
-                         "P3-1..3, 5..9": "control spec 284 (records / FLAGs as defined there)",
+                         "P3-1, 3, 6, 8, 9": "control spec 284 (records / FLAGs as defined there)",
                          "W-61": "spec 301 record rows (warnings, not judgements)"},
             "values_only": "pass / fail decisions are control's (284) and dynamics' (physics)",
             "rows": rows, "s8c_reapproach_limit_cases": s8c, "cost": batch_cost(folder)}
@@ -900,10 +958,14 @@ def summary_p3_10(folder: Path) -> dict[str, Any]:
 
 
 def main(argv) -> None:
+    rejudge = "--rejudge" in argv
+    argv = [a for a in argv if a != "--rejudge"]
     kind, folder = argv[0], Path(argv[1])
+    if rejudge and kind != "P3b":
+        raise SystemExit("--rejudge is for P3b only (spec rev. 60 C-S9-60)")
     fn = {"V0p": summary_v0p, "V16": summary_v16, "L": summary_l, "P2": summary_p2, "P2prime": summary_p2prime,
           "P3a": summary_p3a, "P3b": summary_p3b, "P3-10": summary_p3_10}[kind]
-    res = fn(folder)
+    res = fn(folder, rejudge=True) if rejudge else fn(folder)
     res["source_batch"] = folder.as_posix()
     res["generator"] = "04_scripts/02_chrono/s9_batch_summary.py"
     out = Path(argv[2]) if len(argv) > 2 else OUT / (f"s9_{kind}_summary.json" if kind.startswith(("P2", "P3"))

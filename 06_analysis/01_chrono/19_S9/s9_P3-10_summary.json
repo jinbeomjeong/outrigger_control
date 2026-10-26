@@ -1,0 +1,205 @@
+{
+ "batch": "P3-10 rigid L1 soil response on / off (control spec 284; M-3 runner, spec 295)",
+ "criterion": "issued-command SHA-256 equal on / off (bit-identical) for flat and rpB, top auger",
+ "rows": {
+  "flat": {
+   "status": "ok",
+   "case_id": "M3_D8_top_flat_b1.0",
+   "n_periods": [
+    740,
+    740
+   ],
+   "sha256_issued_u": [
+    "d73c071307aaeb2c8481447ae67b3dcb5dbc3e33c52d3de5544d52ae1bc54d22",
+    "d73c071307aaeb2c8481447ae67b3dcb5dbc3e33c52d3de5544d52ae1bc54d22"
+   ],
+   "commands_equal": true,
+   "events_equal": false,
+   "first_command_diff_t_s": null,
+   "config_on": {
+    "soil_enable": true,
+    "reapproach_max_duration_s": 10.0,
+    "soil_settings": {
+     "enable": true,
+     "plateau_window_m": 0.01,
+     "plateau_mean_speed_fraction": 0.15,
+     "plateau_rise_max_N": 2000.0,
+     "plausibility_fraction": 0.85,
+     "push_speed_fraction": 0.25,
+     "corner_bias_deadzone_m": 0.02,
+     "max_push_m": 0.15,
+     "weight_record_range": [
+      0.9,
+      1.15
+     ],
+     "settle_tilt_samples": 10
+    }
+   },
+   "config_off": {
+    "soil_enable": false,
+    "reapproach_max_duration_s": null,
+    "soil_settings": {
+     "enable": false,
+     "plateau_window_m": 0.01,
+     "plateau_mean_speed_fraction": 0.15,
+     "plateau_rise_max_N": 2000.0,
+     "plausibility_fraction": 0.85,
+     "push_speed_fraction": 0.25,
+     "corner_bias_deadzone_m": 0.02,
+     "max_push_m": 0.15,
+     "weight_record_range": [
+      0.9,
+      1.15
+     ],
+     "settle_tilt_samples": 10
+    }
+   },
+   "configs_differ_as_intended": true,
+   "soil_on": {
+    "loc": true,
+    "t_P_s": 93.20000000084686,
+    "t_loc_s": 93.80000000086677,
+    "clearance_at_P_m": -0.0006926680125693974,
+    "clearance_at_loc_m": 0.011646027465997077,
+    "soil_mode_t_s": null,
+    "bias_corner_m": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "loc_before_release": true,
+   "bias_zero": true,
+   "foreign_modules": [],
+   "ready_t_s": [
+    43.40000000144073,
+    43.40000000144073
+   ],
+   "wall_s": [
+    501.78624099999433,
+    498.82172730000457
+   ],
+   "bit_identical": false
+  },
+  "rpB": {
+   "status": "ok",
+   "case_id": "M3_D8_top_rpB_b1.0",
+   "n_periods": [
+    740,
+    740
+   ],
+   "sha256_issued_u": [
+    "e072f15c9ae292225d50f412d5ca4768c4b3ffd68422c4e1ca10386349f72e32",
+    "e072f15c9ae292225d50f412d5ca4768c4b3ffd68422c4e1ca10386349f72e32"
+   ],
+   "commands_equal": true,
+   "events_equal": false,
+   "first_command_diff_t_s": null,
+   "config_on": {
+    "soil_enable": true,
+    "reapproach_max_duration_s": 10.0,
+    "soil_settings": {
+     "enable": true,
+     "plateau_window_m": 0.01,
+     "plateau_mean_speed_fraction": 0.15,
+     "plateau_rise_max_N": 2000.0,
+     "plausibility_fraction": 0.85,
+     "push_speed_fraction": 0.25,
+     "corner_bias_deadzone_m": 0.02,
+     "max_push_m": 0.15,
+     "weight_record_range": [
+      0.9,
+      1.15
+     ],
+     "settle_tilt_samples": 10
+    }
+   },
+   "config_off": {
+    "soil_enable": false,
+    "reapproach_max_duration_s": null,
+    "soil_settings": {
+     "enable": false,
+     "plateau_window_m": 0.01,
+     "plateau_mean_speed_fraction": 0.15,
+     "plateau_rise_max_N": 2000.0,
+     "plausibility_fraction": 0.85,
+     "push_speed_fraction": 0.25,
+     "corner_bias_deadzone_m": 0.02,
+     "max_push_m": 0.15,
+     "weight_record_range": [
+      0.9,
+      1.15
+     ],
+     "settle_tilt_samples": 10
+    }
+   },
+   "configs_differ_as_intended": true,
+   "soil_on": {
+    "loc": true,
+    "t_P_s": 93.4000000008535,
+    "t_loc_s": 94.40000000088669,
+    "clearance_at_P_m": -0.0013696905974909246,
+    "clearance_at_loc_m": 0.005389644487713285,
+    "soil_mode_t_s": null,
+    "bias_corner_m": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "loc_before_release": true,
+   "bias_zero": true,
+   "foreign_modules": [],
+   "ready_t_s": [
+    58.20000000193204,
+    58.20000000193204
+   ],
+   "wall_s": [
+    481.69207550003193,
+    482.8946850000066
+   ],
+   "bit_identical": false
+  }
+ },
+ "all_bit_identical": false,
+ "values_only": "pass / fail decision is control's",
+ "cost": {
+  "folder": "C:/workspace/outrigger_control/07_results/S9/batch_P3-10_20261026_122444",
+  "parallel": 2,
+  "failed": false,
+  "wall_serial_s": 1972.391079199966,
+  "est_serial_s": 2400.0,
+  "wall_over_est": 0.8218296163333192,
+  "per_case": [
+   {
+    "case": "P3-10_flat__off",
+    "rc": 0,
+    "wall_s": 500.0972246999736,
+    "est_s": 600.0
+   },
+   {
+    "case": "P3-10_flat__on",
+    "rc": 0,
+    "wall_s": 504.11508000001777,
+    "est_s": 600.0
+   },
+   {
+    "case": "P3-10_rpB__on",
+    "rc": 0,
+    "wall_s": 484.0948635999812,
+    "est_s": 600.0
+   },
+   {
+    "case": "P3-10_rpB__off",
+    "rc": 0,
+    "wall_s": 484.0839108999935,
+    "est_s": 600.0
+   }
+  ],
+  "note": "P-cores shared with the main-tree YAML regression R3 (8 P-cores) and 2 S9 runs at a time: contended"
+ },
+ "source_batch": "07_results/S9/batch_P3-10_20261026_122444",
+ "generator": "04_scripts/02_chrono/s9_batch_summary.py"
+}

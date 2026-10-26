@@ -102,6 +102,9 @@ def test_pre_liftoff_min_force_window_and_flag() -> None:
 # --- P3b record assembly ------------------------------------------------------------------------------
 
 T0 = 8.0
+V_MAX = 0.0209243016
+SOIL_SETTINGS = {"enable": True, "plateau_window_m": 0.01, "plateau_mean_speed_fraction": 0.15,
+                 "plateau_rise_max_N": 2000.0, "plausibility_fraction": 0.85, "push_speed_fraction": 0.25}
 
 
 def _run(t_dep: float = 30.0, end_pitch_deg: float = 0.05):
@@ -128,7 +131,11 @@ def _run(t_dep: float = 30.0, end_pitch_deg: float = 0.05):
     events = [(t_dep + 0.8, "crawler_liftoff_confirmed")]
     ctx = {"weight_N": W, "F_min_N": F_MIN, "P5_N": P5, "s_motor_limit_m": 0.6848, "t_loop_start_s": T0,
            "settle": {"track_normal_N": [0.25 * W, 0.25 * W], "end_roll_pitch_deg": [0.0, 0.15]},
-           "fallback_meta": None, "T_o_s": 0.8}
+           "fallback_meta": None, "T_o_s": 0.8,
+           # spec rev. 60 P3-2 T_lim inputs (C2 meta soil block, v_max); no record -> P3-7 not judgeable
+           "soil_meta": {"settings": dict(SOIL_SETTINGS), "loc": True, "t_P_s": t_dep + 0.2, "t_loc_s": t_dep + 0.8,
+                         "W_ref_N": W},
+           "v_max_m_s": V_MAX}
     return s, rows, events, phases, ctx
 
 
@@ -148,6 +155,8 @@ def test_p3b_records_nominal_run() -> None:
     assert a["post_liftoff_absmax_deg"][1] == pytest.approx(0.5)
     assert not a["done"]["before_creep_stop"]
     assert p["P3-5_clearance_stroke"]["within"]
+    assert p["P3-2_loc"]["window_s"] == pytest.approx(0.6) and p["P3-2_loc"]["tP_minus_departure_s"] == pytest.approx(0.2)
+    assert p["P3-7_plateau"]["within"] is None and "inputs missing" in p["P3-7_plateau"]["reason"]
     assert p["P3-6_ready"]["t_ready_after_loop_start_s"] == pytest.approx(37.0) and p["P3-6_ready"]["within"]
     assert p["P3-8_false_triggers"]["within"] and p["P3-8_false_triggers"]["first_touch_t_s"]["FL"] == pytest.approx(12.0)
     assert p["P3-9_deferred"]["note"] == "deferrals 0" and not p["P3-9_deferred"]["flag"]

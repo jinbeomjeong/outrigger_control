@@ -12,6 +12,8 @@ Usage (Chrono-dev python, project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/run_S9.py machine --soil G1 [--gravity-ramp 3 --gravity-hold 2] [--lift-s 0]
         [--crawler-grid 0.04]   # dual terrain (U-S9G-1 M14s: pads on --grid, crawler on --crawler-grid)
     python -I -X utf8 -u 04_scripts/02_chrono/run_S9.py level --soil G1 --approved ...   # P3b, gated
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S9.py rejudge <batch or case folder> [--dry-run]
+        # spec rev. 60 P3-2 / 5 / 7 re-judgement of finished level cases (no Chrono run)
 
 Options common to the SCM runs: ``--soil {J1,J2,G1,S1}`` (``02_params/scm_soil_sets.json``),
 ``--pad-variant {cad330,dwg_rear250}``, ``--scm-shear {bprime,native}`` (U-S9L-1: bprime =
@@ -1666,6 +1668,297 @@ def reapproach_limit_records(history: list[dict[str, Any]] | None, settings: dic
             "note": "SCM: FLAG (record), not a pass / fail (control D-4)"}
 
 
+# --- P3-2 / P3-5 / P3-7 judgement definitions of spec rev. 60 (U-S9P-13 / 14 / 15 (가), C-S9-60) --------
+
+P32_TAIL_ALLOWANCE_S = 1.0
+"""P3-2 time clause T_lim = plateau_window_m / (push_speed_fraction v_max) + this (spec rev. 60 308,
+U-S9P-13 (가)). ASSUMPTION (spec 308): crawler load-tail share; observed tail max t_P - t_D 1.01 s,
+set to 1.0 s (slightly below the observed max, not rounded up)."""
+P37_RISE_MIN_N = 4000.0
+"""P3-7: minimum S-1 window rise per plateau_window_m on the crawler-loaded windows (spec 284 / 310)."""
+P37_LOADED_FRACTION = 0.01
+"""P3-7 loaded window: crawler true normal at the window end > this x W_ref (spec rev. 60 310, U-S9P-15
+(가): "0.01 W = 3.77 kN", W_ref = C2 meta ``soil.W_ref_N`` = YAML superstructure mass x g, 376.58 kN).
+The departure rule's 0.01 W uses ``p3b.weight_N`` (+ leg moving parts, 380.1 kN, 3.80 kN); the spec
+number and control's p3b_loc_detail.json window counts follow W_ref."""
+P37_RECORD_GT_N = 1000.0
+"""P3-7 record: the former loaded-window definition (crawler > 1 kN)."""
+P37_RECORD_FRACTION_HI = 0.05
+"""P3-7 record: crawler > 0.05 W_ref windows."""
+P37_GATE_TOL_S = 1.0e-6
+"""P3-7 reconstruction gate: |t_P, t_loc (reconstructed) - C2 meta soil| <= this."""
+REJUDGE_FILE = "result_rejudge_rev60.json"
+"""Per-case re-judgement file of :func:`rejudge_case` (the run's ``result.json`` stays untouched)."""
+
+
+def p32_time_limit_s(settings: dict[str, Any], v_max_m_s: float) -> float:
+    """P3-2 time clause [s]: ``plateau_window_m / (push_speed_fraction v_max) + P32_TAIL_ALLOWANCE_S``
+    (10 mm / (0.25 x 20.924 mm/s) + 1.0 = 2.9117 s; spec rev. 60 308)."""
+    return float(settings["plateau_window_m"]) / (float(settings["push_speed_fraction"]) * float(v_max_m_s)) \
+        + P32_TAIL_ALLOWANCE_S
+
+
+def p32_loc_block(t: np.ndarray, cn: np.ndarray, w_n: float, *, t_loc: float | None, t_dep: float | None,
+                  t_done: float | None, t_soil_mode: float | None, soil_meta: dict[str, Any] | None,
+                  v_max_m_s: float | None) -> dict[str, Any]:
+    """P3-2 LOC (spec 284, rev. 60 U-S9P-13 (가)): ``within`` = LOC before the first DONE, the
+    crawler not loaded at the LOC (1 ms crawler normal < 0.01 W) and 0 <= t_L - t_D <= T_lim
+    (:func:`p32_time_limit_s`); ``within_2s_record`` = the former 2 s clause. Absolute times [s]."""
+    soil_meta = soil_meta or {}
+    settings = soil_meta.get("settings") or {}
+    t_lim = None if v_max_m_s is None or not settings else p32_time_limit_s(settings, v_max_m_s)
+    p32: dict[str, Any] = {
+        "criterion": "spec rev. 60, U-S9P-13 (가): crawler_liftoff_confirmed before the first DONE; no LOC while the "
+                     "crawler is loaded (normal >= 0.01 W at the LOC); LOC - departure <= T_lim = plateau_window_m / "
+                     f"(push_speed_fraction v_max) + {P32_TAIL_ALLOWANCE_S:g} s (ASSUMPTION tail share); the former "
+                     f"<= {P3B_LOC_AFTER_DEPARTURE_S:g} s clause is within_2s_record",
+        "t_loc_s": t_loc, "t_departure_s": t_dep, "t_first_done_s": t_done,
+        "soil_mode_start_t_s": t_soil_mode, "soil_mode_used": t_soil_mode is not None,
+        "limit_s": t_lim, "limit_basis": {"plateau_window_m": settings.get("plateau_window_m"),
+                                          "push_speed_fraction": settings.get("push_speed_fraction"),
+                                          "v_max_m_s": v_max_m_s, "tail_allowance_s": P32_TAIL_ALLOWANCE_S}}
+    t_p = soil_meta.get("t_P_s")
+    p32["tP_minus_departure_s"] = None if (t_p is None or t_dep is None) else float(t_p) - t_dep
+    p32["window_s"] = None if (t_p is None or t_loc is None) else t_loc - float(t_p)
+    if t_loc is None:
+        p32.update(within=False, within_2s_record=False, reason="no LOC")
+        return p32
+    k = _at(t, t_loc)
+    d = None if t_dep is None else t_loc - t_dep
+    p32.update(loc_before_first_done=bool(t_done is None or t_loc <= t_done + 1e-9), loc_minus_departure_s=d,
+               crawler_normal_at_loc_N=float(cn[k]), crawler_loaded_at_loc=bool(cn[k] >= P3A_OFF_FRACTION * w_n))
+    base = p32["loc_before_first_done"] and d is not None and not p32["crawler_loaded_at_loc"] and d >= 0.0
+    p32["within_2s_record"] = bool(base and d <= P3B_LOC_AFTER_DEPARTURE_S + 1e-9)
+    if t_lim is None:
+        p32.update(within=None, reason="no soil settings / v_max: T_lim unknown")
+    else:
+        p32["within"] = bool(base and d <= t_lim + 1e-9)
+    return p32
+
+
+def p35_clearance_block(rows: list[dict[str, Any]], phases: list[tuple[float, str]], *, t_dep: float | None,
+                        t_loc: float | None, s_motor_max_m: list[float], s_motor_limit_m: float,
+                        probe_sinkage: list[dict[str, Any]]) -> dict[str, Any]:
+    """P3-5 (spec 284, rev. 60 U-S9P-14 (가)): judgement value = minimum 10 Hz ``rut_clearance_m``
+    from the first READY entry (``phases``) to the run end >= 25 mm (ASSUMPTION U-S9-C3), and
+    s_motor <= the end-margin stroke. Without READY: ``within`` None (reason). The former value
+    (minimum after the crawler departure, ~0 by definition) is kept as a record."""
+    rt = np.array([float(r["t_s"]) for r in rows]) if rows else np.array([])
+    rc = np.array([np.nan if r.get("rut_clearance_m") is None else float(r["rut_clearance_m"]) for r in rows])
+    after_dep = (rt >= t_dep - 1e-9) & np.isfinite(rc) if t_dep is not None else np.zeros(len(rt), bool)
+    min_dep = float(rc[after_dep].min()) if after_dep.any() else None
+    stroke_ok = bool(max(s_motor_max_m) <= s_motor_limit_m) if s_motor_max_m else False
+    t_ready = next((tp for tp, ph in phases if ph == "ready"), None)
+    out: dict[str, Any] = {
+        "criterion": f"spec rev. 60, U-S9P-14 (가): min rut clearance (10 Hz) from the first READY entry to the run end "
+                     f">= {P3B_RUT_CLEARANCE_MIN_M * 1e3:g} mm (ASSUMPTION U-S9-C3); s_motor <= {s_motor_limit_m:g} m; "
+                     "the minimum after the departure is within_after_departure_record",
+        "t_first_ready_s": t_ready, "rut_clearance_min_after_first_ready_m": None, "t_at_min_s": None,
+        "rut_clearance_min_after_departure_m": min_dep,
+        "rut_clearance_end_m": None if not len(rc) or not np.isfinite(rc[-1]) else float(rc[-1]),
+        "s_motor_max_m": list(s_motor_max_m), "s_motor_limit_m": s_motor_limit_m, "stroke_within": stroke_ok,
+        "within_after_departure_record": bool(min_dep is not None and min_dep >= P3B_RUT_CLEARANCE_MIN_M and stroke_ok),
+        "probe_sinkage": probe_sinkage}
+    if t_loc is not None and len(rt):
+        k = int(np.searchsorted(rt, t_loc - 1e-9))
+        out["rut_clearance_at_loc_m"] = float(rc[k]) if k < len(rt) and np.isfinite(rc[k]) else None
+    else:
+        out["rut_clearance_at_loc_m"] = None
+    if t_ready is None:
+        out.update(within=None, reason="no READY entry: not judgeable")
+        return out
+    sel = (rt >= t_ready - 1e-9) & np.isfinite(rc)
+    if not sel.any():
+        out.update(within=None, reason="no rut clearance row after the first READY")
+        return out
+    k = int(np.nonzero(sel)[0][np.argmin(rc[sel])])
+    out.update(rut_clearance_min_after_first_ready_m=float(rc[k]), t_at_min_s=float(rt[k]),
+               within=bool(rc[k] >= P3B_RUT_CLEARANCE_MIN_M and stroke_ok))
+    return out
+
+
+def s1_window_reconstruct(t: np.ndarray, in_level: np.ndarray, u_applied: np.ndarray, stroke_m: np.ndarray,
+                          load_N: np.ndarray, settings: dict[str, Any], v_max_m_s: float, w_ref_N: float,
+                          stop_at_loc: bool = True) -> dict[str, Any]:
+    """Offline replica of the C2 S-1 plateau window (spec 285 P-S9-2, ``c2._update_liftoff_window``):
+    LEVEL samples only; a sample whose applied output (same 10 Hz sample, ``u_applied``) has a
+    retracting leg or a mean < ``plateau_mean_speed_fraction v_max`` clears the window, else it is
+    appended as (mean stroke, load sum). Every sample with >= ``plateau_window_m`` of stroke in the
+    window evaluates the shortest such tail: rise = ``polyfit(e - e_mean, F, 1)`` slope x
+    ``plateau_window_m`` (end-point difference below 3 samples). Rise <= ``plateau_rise_max_N`` and
+    tail mean >= ``plausibility_fraction W_ref`` = LOC (stops when ``stop_at_loc``). Returns the
+    reconstructed t_P / t_loc and every evaluated window (t_start, t_end, rise, mean load)."""
+    span = float(settings["plateau_window_m"])
+    min_mean = float(settings["plateau_mean_speed_fraction"]) * float(v_max_m_s)
+    rise_max = float(settings["plateau_rise_max_N"])
+    plaus = float(settings["plausibility_fraction"]) * float(w_ref_N)
+    win: list[tuple[float, float, float]] = []
+    windows: list[dict[str, Any]] = []
+    t_p = t_l = None
+    for k in range(len(t)):
+        if not in_level[k]:
+            continue  # C2 only updates the window in LEVEL periods (no clearing outside them)
+        u = u_applied[k]
+        if not (np.all(u >= 0.0) and float(np.mean(u)) >= min_mean):
+            win.clear()
+            continue
+        win.append((float(t[k]), float(np.mean(stroke_m[k])), float(np.sum(load_N[k]))))
+        last = win[-1][1]
+        if last - win[0][1] < span:
+            continue
+        s = len(win) - 1
+        while s > 0 and last - win[s][1] < span:
+            s -= 1
+        tail = win[s:]
+        e = np.array([x[1] for x in tail])
+        f = np.array([x[2] for x in tail])
+        if len(tail) >= 3:
+            slope = float(np.polyfit(e - e.mean(), f, 1)[0])
+        else:
+            slope = (f[-1] - f[0]) / max(e[-1] - e[0], 1e-9)
+        rise = slope * span
+        mean_f = float(f.mean())
+        windows.append({"t_start_s": tail[0][0], "t_end_s": tail[-1][0], "rise_N": rise, "mean_load_N": mean_f,
+                        "n": len(tail)})
+        if rise <= rise_max and mean_f >= plaus:
+            t_p, t_l = tail[0][0], tail[-1][0]
+            if stop_at_loc:
+                break
+    return {"t_P_s": t_p, "t_loc_s": t_l, "windows": windows}
+
+
+def _rise_bucket(windows: list[dict[str, Any]], t: np.ndarray, cn: np.ndarray, threshold_N: float) -> dict[str, Any]:
+    """Minimum rise of the windows whose crawler true normal at the window end (first 1 ms sample
+    at / after it) exceeds ``threshold_N``; ``n`` = number of such windows."""
+    sel = []
+    for w in windows:
+        c = float(cn[_at(t, w["t_end_s"])])
+        if c > threshold_N:
+            sel.append((w["rise_N"], w["t_end_s"], c, w["t_start_s"]))
+    if not sel:
+        return {"n": 0, "threshold_N": threshold_N, "rise_min_N": None}
+    rise, t_end, c_end, t_start = min(sel)
+    return {"n": len(sel), "threshold_N": threshold_N, "rise_min_N": rise, "t_end_s": t_end, "t_start_s": t_start,
+            "crawler_at_end_N": c_end, "crawler_at_start_N": float(cn[_at(t, t_start)])}
+
+
+def p37_plateau_block(t: np.ndarray, cn: np.ndarray, phases: list[tuple[float, str]],
+                      rec: dict[str, np.ndarray] | None, areas: dict[str, list[float]] | None,
+                      soil_meta: dict[str, Any] | None, v_max_m_s: float | None) -> dict[str, Any]:
+    """P3-7 plateau margin (spec 284, rev. 60 U-S9P-15 (가), C-S9-60-3): reconstruct the S-1 windows
+    (:func:`s1_window_reconstruct`) from the 10 Hz readings of ``record.npz`` (load = sum of
+    ``p_h A_p - p_r A_ann``, mean ``meas.stroke``, same-sample ``u_applied``; zero offsets drop
+    out of the slope), gate: reconstructed t_P / t_loc = C2 meta ``soil`` within 1e-6 s. Judgement:
+    the windows ending with the crawler true normal (1 ms) > 0.01 W_ref rise >= 4 kN; none = pass
+    (``no_loaded_window``). Records: > 1 kN and > 0.05 W_ref minima, and the same on the truth
+    (``F_cyl`` sum, mean ``s_motor``, own LOC). ``t`` / ``cn`` = 1 ms series [s] / [N]; W_ref =
+    C2 meta ``soil.W_ref_N`` (:data:`P37_LOADED_FRACTION`)."""
+    soil_meta = soil_meta or {}
+    w_ref = soil_meta.get("W_ref_N")
+    thr = None if w_ref is None else P37_LOADED_FRACTION * float(w_ref)
+    out: dict[str, Any] = {
+        "criterion": "spec rev. 60, U-S9P-15 (가): S-1 window rise per plateau_window_m >= "
+                     f"{P37_RISE_MIN_N / 1e3:g} kN on the windows whose end crawler true normal > {P37_LOADED_FRACTION:g}"
+                     f" W_ref; none = pass; > {P37_RECORD_GT_N / 1e3:g} kN (former definition) and > "
+                     f"{P37_RECORD_FRACTION_HI:g} W_ref are records; gate: reconstructed t_P / t_loc = C2 meta within "
+                     f"{P37_GATE_TOL_S:g} s",
+        "loaded_threshold_N": thr, "W_ref_N": w_ref, "reconstruct_ok": False, "within": None}
+    settings = soil_meta.get("settings") or {}
+    if rec is None or areas is None or v_max_m_s is None or not settings or w_ref is None:
+        out["reason"] = "inputs missing (record arrays, cylinder areas, v_max, C2 soil settings or W_ref)"
+        return out
+    if not soil_meta.get("loc"):
+        out["reason"] = "no LOC in the C2 meta soil block"
+        return out
+    w_ref = float(w_ref)
+    rt = np.asarray(rec["t"], dtype=float)
+    lev = np.zeros(len(rt), bool)
+    k = 0
+    cur = None
+    for i, ti in enumerate(rt):  # phase in force at the sample = last phases entry at / before it
+        while k < len(phases) and phases[k][0] <= ti + 1e-9:
+            cur = phases[k][1]
+            k += 1
+        lev[i] = cur == "level"
+    a_p = np.asarray(areas["head_area_m2"], dtype=float)
+    a_a = np.asarray(areas["annulus_area_m2"], dtype=float)
+    load_read = np.asarray(rec["meas.head_pressure"], float) * a_p - np.asarray(rec["meas.rod_pressure"], float) * a_a
+    u = np.asarray(rec["u_applied"], dtype=float)
+    read = s1_window_reconstruct(rt, lev, u, np.asarray(rec["meas.stroke"], float), load_read, settings, v_max_m_s,
+                                 w_ref)
+    true = s1_window_reconstruct(rt, lev, u, np.asarray(rec["s_motor"], float), np.asarray(rec["F_cyl"], float),
+                                 settings, v_max_m_s, w_ref)
+    t_p_m, t_l_m = soil_meta.get("t_P_s"), soil_meta.get("t_loc_s")
+    gate = (read["t_P_s"] is not None and t_p_m is not None and abs(read["t_P_s"] - float(t_p_m)) <= P37_GATE_TOL_S
+            and read["t_loc_s"] is not None and t_l_m is not None
+            and abs(read["t_loc_s"] - float(t_l_m)) <= P37_GATE_TOL_S)
+    loaded = _rise_bucket(read["windows"], t, cn, thr)
+    out.update(reconstruct_ok=bool(gate), t_P_rec_s=read["t_P_s"], t_loc_rec_s=read["t_loc_s"],
+               t_P_meta_s=t_p_m, t_loc_meta_s=t_l_m, n_windows=len(read["windows"]),
+               n_loaded_windows=loaded["n"], rise_min_loaded_N=loaded["rise_min_N"],
+               t_end_at_min_s=loaded.get("t_end_s"), crawler_at_end_N=loaded.get("crawler_at_end_N"),
+               no_loaded_window=loaded["n"] == 0,
+               rise_min_gt1kN_N=_rise_bucket(read["windows"], t, cn, P37_RECORD_GT_N)["rise_min_N"],
+               rise_min_gt0p05W_N=_rise_bucket(read["windows"], t, cn, P37_RECORD_FRACTION_HI * w_ref)["rise_min_N"],
+               buckets_read={"gt1kN": _rise_bucket(read["windows"], t, cn, P37_RECORD_GT_N), "gt0p01W": loaded,
+                             "gt0p05W": _rise_bucket(read["windows"], t, cn, P37_RECORD_FRACTION_HI * w_ref)},
+               truth={"t_P_s": true["t_P_s"], "t_loc_s": true["t_loc_s"], "n_windows": len(true["windows"]),
+                      "basis": "record.npz F_cyl sum, mean s_motor, same u_applied gate, own LOC"},
+               rise_min_loaded_true_N=_rise_bucket(true["windows"], t, cn, thr)["rise_min_N"])
+    if not gate:
+        out["reason"] = (f"reconstruction gate failed: t_P {read['t_P_s']} vs meta {t_p_m}, t_loc {read['t_loc_s']} "
+                         f"vs meta {t_l_m}")
+        return out
+    out["within"] = bool(loaded["n"] == 0 or loaded["rise_min_N"] >= P37_RISE_MIN_N)
+    return out
+
+
+def p3b_checks(out: dict[str, Any]) -> dict[str, Any]:
+    """``p3b.checks`` from the p3b blocks (shared by the run and :func:`rejudge_case`)."""
+    p31, p32, p33, p34 = out["P3-1_crawler"], out["P3-2_loc"], out["P3-3_leg_force"], out["P3-4_attitude"]
+    p35, p37 = out["P3-5_clearance_stroke"], out["P3-7_plateau"]
+    windows = out["P3-9_deferred"]["windows"]
+    return {"P3-1_crawler_zero_after_ready": p31.get("crawler_zero"),
+            "P3-1_recontact": out["departure"].get("recontact_t_s"),
+            "P3-2_within": p32.get("within"), "P3-2_within_2s_record": p32.get("within_2s_record"),
+            "P3-2_loc_minus_departure_s": p32.get("loc_minus_departure_s"), "P3-2_limit_s": p32.get("limit_s"),
+            "P3-3_within": p33.get("within"),
+            "P3-4_within_0p2": p34["within_0p2"], "P3-4_absmax_deg": p34.get("p34_absmax_overall_deg"),
+            "P3-4_window_s": p34.get("p34_window_s"), "P3-4_flags": p34.get("flags"),
+            "P3-4_window_short": p34.get("window_short"),
+            "P3-4_creep_vibration_suspect": p34.get("creep_vibration_suspect"),
+            "P3-4_sensor_allowance_left_deg": p34.get("sensor_allowance_left_deg"),
+            "P3-4_budget_residual_le_0p04_record": p34.get("budget_residual_le_0p04"),
+            "reapproach_limit_fired_FLAG": out["reapproach_limit"]["fired"],
+            "reapproach_limit_by_cause": out["reapproach_limit"]["by_cause"],
+            "P3-5_within": p35.get("within"),
+            "P3-5_within_after_departure_record": p35.get("within_after_departure_record"),
+            "P3-5_rut_clearance_min_after_first_ready_m": p35.get("rut_clearance_min_after_first_ready_m"),
+            "P3-6_within": out["P3-6_ready"]["within"],
+            "P3-7_within": p37.get("within"), "P3-7_rise_min_loaded_N": p37.get("rise_min_loaded_N"),
+            "P3-7_reconstruct_ok": p37.get("reconstruct_ok"),
+            "P3-8_within": out["P3-8_false_triggers"]["within"],
+            "P3-9_flags": sum(1 for w in windows if w.get("below_F_min")),
+            "pre_liftoff_flag": out["pre_liftoff_min_F_cyl"]["any_flag"],
+            "W61_warnings": len(out["W61_watch"]["warnings"]),
+            "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+            "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"}
+
+
+def p37_record_arrays(record_dir: Path) -> dict[str, np.ndarray]:
+    """The ``record.npz`` fields P3-7 reads (10 Hz)."""
+    keys = ("t", "u_applied", "meas.head_pressure", "meas.rod_pressure", "meas.stroke", "F_cyl", "s_motor")
+    with np.load(Path(record_dir) / "record.npz", allow_pickle=False) as z:
+        return {k: np.asarray(z[k]) for k in keys}
+
+
+def p37_plant_inputs(params) -> dict[str, Any]:
+    """Cylinder areas per leg (YAML ``legs.<leg>.cylinder``) and ``actuator.max_speed_m_s``."""
+    return {"cyl_areas": {key: [float(params.get(f"legs.{leg}.cylinder.{key}")) for leg in LEGS]
+                          for key in ("head_area_m2", "annulus_area_m2")},
+            "v_max_m_s": float(params.get("actuator.max_speed_m_s"))}
+
+
 def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: list[tuple[float, str]],
                 phases: list[tuple[float, str]], ctx: dict[str, Any]) -> dict[str, Any]:
     """P3b values of one ``level`` run (control spec 284 P3-1 ... P3-9 with the J1 / J2
@@ -1674,8 +1967,10 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
     (absolute simulation time), ``ctx``: ``weight_N``, ``F_min_N``, ``P5_N``,
     ``s_motor_limit_m``, ``t_loop_start_s``, ``settle`` (:func:`settle_reference`),
     ``fallback_meta``, ``T_o_s`` (re-approach opposite window, P3-9 deferral window; None = the S8
-    judge default 0.8 s). Values and criterion comparisons only; decisions are control's /
-    dynamics'. Angles deg (pitch > 0 nose down), forces N, lengths m."""
+    judge default 0.8 s), and for P3-2 / P3-7 (spec rev. 60): ``soil_meta`` (C2 meta ``soil``),
+    ``v_max_m_s``, ``cyl_areas`` and ``record`` (:func:`p37_plant_inputs`, :func:`p37_record_arrays`).
+    Values and criterion comparisons only; decisions are control's / dynamics'. Angles deg (pitch >
+    0 nose down), forces N, lengths m."""
     t = np.asarray(s["t_s"], dtype=float)
     cn, pn, f = s["scm_crawler_normal_N"], s["scm_pad_normal_N"], s["F_cyl_N"]
     sm, sink, rp = s["s_motor_m"], s["pad_sinkage_geometric_m"], s["roll_pitch_deg"]
@@ -1707,23 +2002,10 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
         p31["crawler_zero"] = bool(w.any() and cn[w].max() <= 0.0)
     p31.update(recontact_t_s=dep.get("recontact_t_s"), recontact_count=dep.get("recontact_count"))
     out["P3-1_crawler"] = p31
-    # P3-2 LOC
-    p32: dict[str, Any] = {"criterion": f"crawler_liftoff_confirmed before the first DONE; LOC - departure <= "
-                                        f"{P3B_LOC_AFTER_DEPARTURE_S:g} s; no LOC while the crawler is loaded",
-                           "t_loc_s": t_loc, "t_departure_s": t_dep, "t_first_done_s": t_done,
-                           "soil_mode_start_t_s": first_event(SOIL_MODE_EVENT),
-                           "soil_mode_used": first_event(SOIL_MODE_EVENT) is not None}
-    if t_loc is not None:
-        k = _at(t, t_loc)
-        p32.update(loc_before_first_done=bool(t_done is None or t_loc <= t_done + 1e-9),
-                   loc_minus_departure_s=None if t_dep is None else t_loc - t_dep,
-                   crawler_normal_at_loc_N=float(cn[k]),
-                   crawler_loaded_at_loc=bool(cn[k] >= P3A_OFF_FRACTION * w_n))
-        p32["within"] = bool(p32["loc_before_first_done"] and t_dep is not None
-                             and 0.0 <= t_loc - t_dep <= P3B_LOC_AFTER_DEPARTURE_S + 1e-9
-                             and not p32["crawler_loaded_at_loc"])
-    else:
-        p32["within"] = False
+    # P3-2 LOC (spec rev. 60 T_lim)
+    p32 = p32_loc_block(t, cn, w_n, t_loc=t_loc, t_dep=t_dep, t_done=t_done,
+                        t_soil_mode=first_event(SOIL_MODE_EVENT), soil_meta=ctx.get("soil_meta"),
+                        v_max_m_s=ctx.get("v_max_m_s"))
     out["P3-2_loc"] = p32
     # P3-3 leg force after the departure
     p33: dict[str, Any] = {"criterion": f"true F_cyl min after the departure >= F_min ({f_min:.0f} N); guard + "
@@ -1777,10 +2059,7 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
                        "shift_5s_end_minus_done_deg": (rp[wd][-1] - rp[kd]).tolist(),
                        "shift_5s_range_deg": [np.ptp(rp[wd][:, 0]).item(), np.ptp(rp[wd][:, 1]).item()]}
     out["P3-4_attitude"] = p34
-    # P3-5 rut clearance, stroke, sinkage around probes
-    rt = np.array([r["t_s"] for r in rows]) if rows else np.array([])
-    rc = [r.get("rut_clearance_m") for r in rows]
-    after_rows = [c for tt, c in zip(rt, rc, strict=True) if c is not None and t_dep is not None and tt >= t_dep - 1e-9]
+    # P3-5 rut clearance (spec rev. 60: minimum after the first READY), stroke, sinkage around probes
     probe_iv = []
     for k, (tp, ph) in enumerate(phases):
         if ph != "probe":
@@ -1788,22 +2067,16 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
         te = phases[k + 1][0] if k + 1 < len(phases) else t_end
         ka, kb = _at(t, tp), _at(t, te)
         probe_iv.append({"t_start_s": tp, "t_end_s": te, "d_sinkage_m": (sink[kb] - sink[ka]).tolist()})
-    out["P3-5_clearance_stroke"] = {
-        "criterion": f"rut clearance >= {P3B_RUT_CLEARANCE_MIN_M * 1e3:g} mm (ASSUMPTION U-S9-C3); s_motor <= "
-                     f"{ctx['s_motor_limit_m']:g} m",
-        "rut_clearance_min_after_departure_m": float(min(after_rows)) if after_rows else None,
-        "rut_clearance_end_m": rc[-1] if rc else None, "s_motor_max_m": sm.max(axis=0).tolist(),
-        "s_motor_limit_m": ctx["s_motor_limit_m"],
-        "within": bool(after_rows and min(after_rows) >= P3B_RUT_CLEARANCE_MIN_M
-                       and sm.max() <= ctx["s_motor_limit_m"]),
-        "probe_sinkage": probe_iv}
+    out["P3-5_clearance_stroke"] = p35_clearance_block(rows, phases, t_dep=t_dep, t_loc=t_loc,
+                                                       s_motor_max_m=sm.max(axis=0).tolist(),
+                                                       s_motor_limit_m=ctx["s_motor_limit_m"], probe_sinkage=probe_iv)
     # P3-6 READY time
     out["P3-6_ready"] = {"t_ready_after_loop_start_s": None if t_ready is None else t_ready - t0,
                          "limit_s": P3B_READY_LIMIT_S, "ASSUMPTION": "90 s (reduced max 68.1 s x 1.3)",
                          "within": bool(t_ready is not None and t_ready - t0 <= P3B_READY_LIMIT_S + 1e-9)}
-    # P3-7: computed by control from the series (crawler-loaded window rise per 10 mm)
-    out["P3-7_plateau"] = {"note": "not computed here: control derives the crawler-loaded window rise from "
-                                   "step_series.npz (F_cyl, s_motor, crawler normal) and the C2 meta soil block"}
+    # P3-7 plateau margin (spec rev. 60: S-1 window reconstruction, loaded window > 0.01 W)
+    out["P3-7_plateau"] = p37_plateau_block(t, cn, phases, ctx.get("record"), ctx.get("cyl_areas"),
+                                            ctx.get("soil_meta"), ctx.get("v_max_m_s"))
     # P3-8 false triggers before the LOC, first-touch annotation (J1 note 4)
     t_lim = np.inf if t_loc is None else t_loc
     kinds = ("leg_reapproach_start", "relevel_predicted", "probe_aborted_low_load")
@@ -1848,27 +2121,102 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
                                                                                                 float), t)}
     out["W61_watch"] = w61_watch(events, phases, s, ctx, t_loc)
     out["reapproach_limit"] = reapproach_limit_records(ctx.get("reapproach_history"), ctx.get("reapproach_settings"))
-    out["checks"] = {"P3-1_crawler_zero_after_ready": p31.get("crawler_zero"), "P3-1_recontact": dep.get("recontact_t_s"),
-                     "P3-2_within": p32["within"], "P3-3_within": p33.get("within"),
-                     "P3-4_within_0p2": p34["within_0p2"], "P3-4_absmax_deg": p34.get("p34_absmax_overall_deg"),
-                     "P3-4_window_s": p34.get("p34_window_s"), "P3-4_flags": p34.get("flags"),
-                     "P3-4_window_short": p34.get("window_short"),
-                     "P3-4_creep_vibration_suspect": p34.get("creep_vibration_suspect"),
-                     "P3-4_sensor_allowance_left_deg": p34.get("sensor_allowance_left_deg"),
-                     "P3-4_budget_residual_le_0p04_record": p34.get("budget_residual_le_0p04"),
-                     "reapproach_limit_fired_FLAG": out["reapproach_limit"]["fired"],
-                     "reapproach_limit_by_cause": out["reapproach_limit"]["by_cause"],
-                     "P3-5_within": out["P3-5_clearance_stroke"]["within"], "P3-6_within": out["P3-6_ready"]["within"],
-                     "P3-8_within": out["P3-8_false_triggers"]["within"],
-                     "P3-9_flags": sum(1 for w in windows if w.get("below_F_min")),
-                     "pre_liftoff_flag": out["pre_liftoff_min_F_cyl"]["any_flag"],
-                     "W61_warnings": len(out["W61_watch"]["warnings"]),
-                     "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"}
+    out["checks"] = p3b_checks(out)
     return out
 
 
 SOIL_LOC_EVENT = "crawler_liftoff_confirmed"
 SOIL_MODE_EVENT = "soil_mode_start"
+REJUDGED_BLOCKS = ("P3-2_loc", "P3-5_clearance_stroke", "P3-7_plateau", "checks")
+"""p3b blocks whose definition changed in spec rev. 60 (C-S9-60); every other block must come out equal."""
+
+
+def _file_sha256(path: Path) -> str:
+    import hashlib
+
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _canonical(x: Any) -> str:
+    return json.dumps(json.loads(json.dumps(_plain(x), ensure_ascii=False)), sort_keys=True, ensure_ascii=False)
+
+
+def rejudge_case(case_dir: Path, write: bool = True) -> dict[str, Any]:
+    """Re-judge one finished ``level`` case with the spec rev. 60 definitions (C-S9-60), no Chrono
+    re-run: rebuild the :func:`p3b_records` context from ``result.json`` (phases, events, 10 Hz
+    rows, settle reference, C2 soil / re-approach meta, W-61 P5 and fallback meta),
+    ``step_series.npz``, ``record/record.npz`` and the YAML cylinder areas / v_max, recompute the
+    whole ``p3b`` and require every block outside :data:`REJUDGED_BLOCKS` to equal the stored one.
+    Writes ``<case>/result_rejudge_rev60.json`` (the run's ``result.json`` is never modified) with
+    the new ``p3b``, the former ``checks``, input SHA-256 and the YAML fingerprint match."""
+    from outrigger_sim.params import load_params
+
+    case_dir = Path(case_dir)
+    r = json.loads((case_dir / "result.json").read_text("utf-8"))
+    if r.get("action") != "level" or "p3b" not in r:
+        raise ValueError(f"{case_dir}: not a run_S9 level result")
+    old = r["p3b"]
+    with np.load(case_dir / "step_series.npz", allow_pickle=False) as z:
+        series = {k: np.asarray(z[k]) for k in z.files}
+    rec = p37_record_arrays(case_dir / "record")
+    rec_meta = json.loads((case_dir / "record" / "meta.json").read_text("utf-8"))
+    params = load_params()
+    run_sha = (rec_meta.get("run") or {}).get("params_file_sha256")
+    phases = [(float(p["t_s"]), str(p["phase"])) for p in r["phases"]]
+    events = [(float(e["t_s"]), str(e["name"])) for e in r["events"]]
+    w61 = old.get("W61_watch") or {}
+    lr = r.get("c2_lifted_reapproach")
+    ctx = {"weight_N": old["weight_N"], "F_min_N": old["F_min_N"], "P5_N": w61["P5_N"],
+           "s_motor_limit_m": old["P3-5_clearance_stroke"]["s_motor_limit_m"], "t_loop_start_s": old["t_loop_start_s"],
+           "settle": r.get("settle_reference"), "T_o_s": (lr or {}).get("opposite_window_s"),
+           "fallback_meta": w61.get("fallback_meta"), "reapproach_history": r.get("c2_lifted_reapproach_history"),
+           "reapproach_settings": lr, "soil_meta": r.get("c2_soil"), "record": rec, **p37_plant_inputs(params)}
+    new = _plain(p3b_records(series, r["s9_rows"], events, phases, ctx))
+    diffs = sorted(k for k in set(old) | set(new)
+                   if k not in REJUDGED_BLOCKS and _canonical(old.get(k)) != _canonical(new.get(k)))
+    out = {"rule": "spec rev. 60 C-S9-60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 S-1 "
+                   "window > 0.01 W; re-judged from the stored records, no Chrono re-run",
+           "generator": "04_scripts/02_chrono/run_S9.py rejudge", "case": case_dir.name,
+           "created_utc": _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds"),
+           "inputs_sha256": {n: _file_sha256(case_dir / n) for n in ("result.json", "step_series.npz",
+                                                                    "record/record.npz")},
+           "params_file_sha256": params.file_sha256, "params_file_sha256_run": run_sha,
+           "params_file_match": bool(run_sha == params.file_sha256),
+           "rejudged_blocks": list(REJUDGED_BLOCKS), "unchanged_blocks_equal": not diffs, "unchanged_block_diffs": diffs,
+           "checks_before": old.get("checks"), "p3b": new}
+    if write:
+        (case_dir / REJUDGE_FILE).write_text(json.dumps(_plain(out), indent=1, ensure_ascii=False), "utf-8")
+    return out
+
+
+def rejudge_targets(paths: list[str]) -> list[Path]:
+    """Case folders of ``rejudge``: a case folder (``result.json`` of action ``level``) or a batch
+    folder (its ``P3b_*`` case folders)."""
+    out = []
+    for p in map(Path, paths):
+        if (p / "result.json").exists():
+            out.append(p)
+        else:
+            out += sorted(d for d in p.glob("P3b_*") if d.is_dir() and (d / "result.json").exists())
+    return out
+
+
+def run_rejudge(args) -> None:
+    rows = {}
+    for d in rejudge_targets(args.paths):
+        res = rejudge_case(d, write=not args.dry_run)
+        c, p = res["p3b"]["checks"], res["p3b"]
+        rows[d.name] = {"P3-2": [c["P3-2_within"], c["P3-2_within_2s_record"], c["P3-2_loc_minus_departure_s"]],
+                        "P3-5": [c["P3-5_within"], c["P3-5_rut_clearance_min_after_first_ready_m"]],
+                        "P3-7": [c["P3-7_within"], c["P3-7_reconstruct_ok"], c["P3-7_rise_min_loaded_N"],
+                                 p["P3-7_plateau"].get("rise_min_gt1kN_N")],
+                        "unchanged_blocks_equal": res["unchanged_blocks_equal"],
+                        "params_file_match": res["params_file_match"]}
+    print(json.dumps(_plain(rows), indent=1), flush=True)
 
 
 def run_level(args) -> Path:
@@ -1961,7 +2309,8 @@ def run_level(args) -> Path:
            "T_o_s": (c2_setup["lifted_reapproach"] or {}).get("opposite_window_s"),
            "fallback_meta": {k: tp_meta.get(k) for k in ("fallback_lock_current", "fallback_lock_log")},
            "reapproach_history": ctl_meta.get("lifted_reapproach"),
-           "reapproach_settings": c2_setup["lifted_reapproach"]}
+           "reapproach_settings": c2_setup["lifted_reapproach"],
+           "soil_meta": ctl_meta.get("soil"), "record": p37_record_arrays(d / "record"), **p37_plant_inputs(params)}
     p3b = p3b_records(series, soil_rows, events, phases, ctx)
     sensors_end = {**sensor_meta, "suite_setup": dict(suite.setup().config), "noise_seed": args.seed,
                    "zero_calibration": zero_calibration_outcome(ctl_meta),
@@ -2058,6 +2407,8 @@ def main(argv) -> None:
         run_single_pad(args)
     elif args.action == "machine":
         run_machine(args)
+    elif args.action == "rejudge":
+        run_rejudge(args)
     else:
         run_level(args)
 
@@ -2125,6 +2476,10 @@ def build_parser() -> argparse.ArgumentParser:
                          "that lost it; soil-off comparison only (expected to fail on J1 B, J2 B, S1, spec 281)")
     lp.add_argument("--allow-other-threads", action="store_true",
                     help=f"allow --threads != {SCM_THREADS_FIXED} (comparison only)")
+    rj = sub.add_parser("rejudge", help="re-judge finished level cases with the spec rev. 60 P3-2 / 5 / 7 definitions "
+                                        f"(no Chrono run; writes <case>/{REJUDGE_FILE}, result.json untouched)")
+    rj.add_argument("paths", nargs="+", help="case folders or batch folders (their P3b_* cases)")
+    rj.add_argument("--dry-run", action="store_true", help="print only, write nothing")
     return ap
 
 
