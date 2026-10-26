@@ -217,6 +217,7 @@ from __future__ import annotations
 import logging
 import math
 from collections import deque
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass, field, replace
 from enum import Enum, StrEnum
 from typing import Any
@@ -266,6 +267,7 @@ from outrigger_sim.control.two_pressure import (
     NOMINAL_DEAD_LENGTH_M,
     FallbackRatioChoice,
     FallbackRatioSource,
+    FallbackSlopeInputs,
     LoadEstimate,
     PressureForces,
     TwoPressureMonitor,
@@ -957,6 +959,75 @@ class FastRelevelSettings:
         meta["fallback_slope"] = str(self.fallback_slope)
         meta["fallback_ratio_source"] = str(self.fallback_ratio_source)
         return meta
+
+
+FALLBACK_SLOPE_EVENT = "INFO_R5_FALLBACK_SLOPE"
+
+
+@dataclass(frozen=True)
+class FallbackSlopeReport:
+    """One leg whose R-5 fallback fall passed the rate threshold (spec 304 ⑤).
+
+    Attributes:
+        leg: Leg index (LEG_ORDER).
+        horizon_drop_N: ``(h / n) D``: the fall subtracted from ``L`` for the prediction.
+        horizon_gap_N: ``(h / n) gap``: how far the covering term lies above the nominal one.
+    """
+
+    leg: int
+    horizon_drop_N: float
+    horizon_gap_N: float
+
+    @property
+    def event_name(self) -> str:
+        """``INFO_R5_FALLBACK_SLOPE:<leg>:<D_kN>:<gap_kN>`` (kN, two decimals, over ``h``)."""
+        values_kN = f"{self.horizon_drop_N / 1e3:.2f}:{self.horizon_gap_N / 1e3:.2f}"
+        return f"{FALLBACK_SLOPE_EVENT}:{LEG_ORDER[self.leg]}:{values_kN}"
+
+
+def fallback_slope_drops(
+    drop_per_period: NDArray[np.float64],
+    inputs_by_leg: Sequence[FallbackSlopeInputs | None],
+    settings: FastRelevelSettings,
+    horizon_periods: int,
+    period_s: float,
+    excluded_leg: int | None,
+) -> tuple[NDArray[np.float64], list[FallbackSlopeReport]]:
+    """P-S8-22 (spec 302.2): the R-5 per-period fall with ``D / n`` on every leg that has
+    fallback inputs (302.2 conditions 1-3 met); the other legs keep their value bit for bit.
+
+    Shared by :class:`C2Controller` and the offline replay
+    (:mod:`outrigger_sim.control.contact_replay`).
+
+    Args:
+        drop_per_period: ``(L_(k-n) - L_k) / n`` per leg (4,); returned unchanged (the same
+            array) when no leg has inputs.
+        inputs_by_leg: :class:`FallbackSlopeInputs` per leg, ``None`` = the level rule.
+        settings: R-5 settings (``n``, rate threshold).
+        horizon_periods: ``h``.
+        period_s: ``T``.
+        excluded_leg: The probed leg (not watched: neither replaced nor reported).
+
+    Returns:
+        (per-period fall, reports): a report for every replaced leg whose ``D / (n T)``
+        passes the rate threshold, whether or not it triggers (304 ⑤).
+    """
+    rate_intervals = settings.rate_intervals
+    horizon_scale = horizon_periods / rate_intervals
+    drops = drop_per_period
+    reports = []
+    for leg, inputs in enumerate(inputs_by_leg):
+        if inputs is None or leg == excluded_leg:
+            continue
+        drop_N, gap_N = inputs.drop_N(rate_intervals, horizon_periods)
+        if drops is drop_per_period:
+            drops = drop_per_period.copy()
+        drops[leg] = drop_N / rate_intervals
+        if drops[leg] / period_s > settings.rate_threshold_N_s:
+            reports.append(
+                FallbackSlopeReport(leg, horizon_scale * drop_N, horizon_scale * gap_N)
+            )
+    return drops, reports
 
 
 class ReapproachMode(StrEnum):
@@ -4196,27 +4267,15 @@ class C2Controller:
         t_s: float,
         excluded_leg: int | None,
     ) -> NDArray[np.float64]:
-        """P-S8-22 (spec 302.2): the per-period fall with ``D / n`` on every fallback leg the
-        monitor gave R-5 inputs for; the other legs keep their value bit for bit.
-
-        A watched leg whose ``D / (n T)`` passes the rate threshold gets
-        ``INFO_R5_FALLBACK_SLOPE:<leg>:<D_kN>:<gap_kN>`` (``D`` and the gap over ``n``
-        periods), whether or not it triggers (304 ⑤).
-        """
-        settings = self.config.r8.fast_relevel
-        rate_intervals = settings.rate_intervals
-        drops = drop_per_period
-        for leg in range(LEG_COUNT):
-            inputs = self._pressures.r5_fallback_inputs(leg)
-            if inputs is None or leg == excluded_leg:
-                continue
-            drop_N, gap_N = inputs.drop_N(rate_intervals, horizon_periods)
-            if drops is drop_per_period:
-                drops = drop_per_period.copy()
-            drops[leg] = drop_N / rate_intervals
-            if drops[leg] / self.config.period_s > settings.rate_threshold_N_s:
-                values_kN = f"{drop_N / 1e3:.2f}:{gap_N / 1e3:.2f}"
-                self._add_event(t_s, f"INFO_R5_FALLBACK_SLOPE:{LEG_ORDER[leg]}:{values_kN}")
+        """P-S8-22: :func:`fallback_slope_drops` on the monitor's inputs, with its reports as
+        ``INFO_R5_FALLBACK_SLOPE`` events."""
+        inputs_by_leg = [self._pressures.r5_fallback_inputs(leg) for leg in range(LEG_COUNT)]
+        drops, reports = fallback_slope_drops(
+            drop_per_period, inputs_by_leg, self.config.r8.fast_relevel, horizon_periods,
+            self.config.period_s, excluded_leg,
+        )
+        for report in reports:
+            self._add_event(t_s, report.event_name)
         return drops
 
     def _start_relevel(self) -> None:

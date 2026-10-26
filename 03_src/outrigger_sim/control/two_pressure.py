@@ -342,7 +342,8 @@ class FallbackRatioSource(StrEnum):
     """Machine and L2b: ``R_hi = R_ub(s) / kappa``, ``R_rate = R_nom(s)`` (nominal dead lengths)."""
     ONLINE = "online"
     """As ``column_nominal``, but ``R_rate = min(R_hat, R_hi)`` with ``R_hat`` the last two-sensor
-    locked ratio of the leg (``column_nominal`` without one, warned once)."""
+    locked ratio of the leg, used only within 5 mm of the stroke it was learned at
+    (``column_nominal`` otherwise; without any ``R_hat`` warned once)."""
 
 
 class RodSensorState(StrEnum):
@@ -992,8 +993,9 @@ class TwoPressureMonitor:
     """The choice of the last read; ``None`` = R-5 fallback slope off (nothing changes)."""
     _r5_inputs: list[FallbackSlopeInputs | None] | None = None
     """Per leg the R-5 inputs of the last read (``None`` = the leg does not qualify)."""
-    _online_ratios: list[float | None] | None = None
-    """④ per leg the last two-sensor locked ``-dp_r / dp_h`` (kept once the leg falls back)."""
+    _online_ratios: list[tuple[float, float] | None] | None = None
+    """④ per leg the last two-sensor locked ``-dp_r / dp_h`` and its reference stroke ``s_ref``
+    (kept once the leg falls back)."""
     _BUFFER_SIZING_FIELDS = (
         "stuck_window_s",
         "rising_window_s",
@@ -1355,7 +1357,10 @@ class TwoPressureMonitor:
         if self._uses_cb_lag_bound:
             optional["counterbalance_lag_tau_s_used"] = self._cb_lag_tau_s
         if self._is_tracking_online_ratio:
-            optional["r5_online_ratio"] = list(self._online_ratios or [None] * LEG_COUNT)
+            optional["r5_online_ratio"] = [
+                None if learned is None else {"ratio": learned[0], "stroke_m": learned[1]}
+                for learned in (self._online_ratios or [None] * LEG_COUNT)
+            ]
         return {
             **optional,
             "load_estimate": str(self.load_estimate),
@@ -2114,12 +2119,21 @@ class TwoPressureMonitor:
             return high_ratio
         rate_ratio = self._nominal_ratio(stroke_m)
         if source is FallbackRatioSource.ONLINE:
-            online_ratio = self._online_ratios[leg] if self._online_ratios else None
-            if online_ratio is None:
-                self._event_once(f"WARN_R5_ONLINE_RATIO_MISSING:{LEG_ORDER[leg]}")
-            else:
-                rate_ratio = online_ratio
+            rate_ratio = self._online_rate_ratio(leg, stroke_m, rate_ratio)
         return min(max(rate_ratio, 0.0), high_ratio)
+
+    def _online_rate_ratio(self, leg: int, stroke_m: float, nominal_ratio: float) -> float:
+        """④ ``R_hat`` when it was learned within 5 mm of this lock stroke (the ratio depends
+        on the stroke); otherwise ``R_nom(s)`` without a warning. No ``R_hat`` at all: ``R_nom``
+        and ``WARN_R5_ONLINE_RATIO_MISSING`` once."""
+        learned = self._online_ratios[leg] if self._online_ratios else None
+        if learned is None:
+            self._event_once(f"WARN_R5_ONLINE_RATIO_MISSING:{LEG_ORDER[leg]}")
+            return nominal_ratio
+        ratio, reference_stroke_m = learned
+        if abs(stroke_m - reference_stroke_m) > ONLINE_RATIO_MAX_STROKE_CHANGE_M:
+            return nominal_ratio
+        return ratio
 
     @property
     def _is_tracking_online_ratio(self) -> bool:
@@ -2147,11 +2161,13 @@ class TwoPressureMonitor:
             return
         if self._online_ratios is None:
             self._online_ratios = [None] * LEG_COUNT
-        self._online_ratios[leg] = -(rod_Pa - reference_rod_Pa) / head_change_Pa
+        ratio = -(rod_Pa - reference_rod_Pa) / head_change_Pa
+        self._online_ratios[leg] = (ratio, reference_stroke_m)
 
     def _update_r5_inputs(self, choice: FallbackRatioChoice) -> None:
-        if (not self.settings.diagnostics
-                or self.settings.locked_ratio_rule is not LockedRatioRule.COLUMN_BOUND):
+        # Not gated on ``diagnostics``: without it no leg falls back in a run, and the offline
+        # replay (contact_replay.replay_fallback_monitor) forces the fallback with it off.
+        if self.settings.locked_ratio_rule is not LockedRatioRule.COLUMN_BOUND:
             return
         for leg in self.fallback_legs:
             self._r5_inputs[leg] = self._r5_inputs_of_leg(leg, choice.rate_intervals)

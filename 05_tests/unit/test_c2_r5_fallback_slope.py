@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import math
 import pickle
+import re
 from collections import deque
 from dataclasses import replace
 
@@ -96,13 +97,16 @@ def _choice(source: str) -> FallbackRatioChoice:
     return FallbackRatioChoice(FallbackRatioSource(source), RATE_INTERVALS)
 
 
-def _feed(monitor, samples, stroke_m, choice, leg=FR):
+def _feed(monitor, samples, stroke_m, choice, leg=FR, fallback_from=None):
     """Read ``(command, head, rod)`` samples on ``leg`` at ``stroke_m`` (one value, or one per
-    sample); the other legs stay locked and steady. Returns per sample (lower reading of
-    ``leg``, R-5 inputs of ``leg``)."""
+    sample); the other legs stay locked and steady; ``fallback_from`` = index of the sample
+    from which the rod sensor of ``leg`` is fallen back. Returns per sample (lower reading
+    of ``leg``, R-5 inputs of ``leg``)."""
     strokes = np.broadcast_to(np.asarray(stroke_m, dtype=float), (len(samples),))
     rows = []
     for k, (command, head_Pa, rod_Pa) in enumerate(samples):
+        if k == fallback_from:
+            monitor.rod_state[leg] = RodSensorState.FALLBACK
         commanded, head, rod = np.zeros(4), np.full(4, OTHER_HEAD_PA), np.full(4, OTHER_ROD_PA)
         commanded[leg], head[leg], rod[leg] = command, head_Pa, rod_Pa
         stroke = np.full(4, 0.4)
@@ -330,18 +334,36 @@ def test_ps2_reconstruction_of_spec_302_5(rate_ratio, high_ratio, predicted_kN) 
 # --- ④ online ratio --------------------------------------------------------------------------
 
 
-def test_online_ratio_is_learned_healthy_and_kept_after_the_fallback() -> None:
-    learned_ratio = 6.0
+def _learn_then_fall_back(learn_stroke_m: float, fallback_stroke_m: float):
+    """FR learns ``R_hat`` 6.0 healthy at ``learn_stroke_m``, then falls back and locks again
+    at ``fallback_stroke_m`` with a true ratio of 12 (one continuous run)."""
     monitor = _monitor()
-    healthy = _lock_samples(_falling_heads(8), learned_ratio)
-    _feed(monitor, healthy, STROKE_LONG_M, _choice("online"))
-    assert monitor._online_ratios[FR] == pytest.approx(learned_ratio, rel=1e-9)
-    monitor.rod_state[FR] = RodSensorState.FALLBACK
+    healthy = _lock_samples(_falling_heads(8), 6.0)
     later = _lock_samples(_falling_heads(10), 12.0)  # a fallback leg is never re-learned
-    rows = _feed(monitor, later, STROKE_LONG_M, _choice("online"))
-    assert monitor._online_ratios[FR] == pytest.approx(learned_ratio, rel=1e-9)
-    assert rows[-1][1].rate_ratio == pytest.approx(learned_ratio, rel=1e-9)
-    assert monitor.meta()["r5_online_ratio"][FR] == pytest.approx(learned_ratio)
+    strokes = [learn_stroke_m] * len(healthy) + [fallback_stroke_m] * len(later)
+    rows = _feed(monitor, healthy + later, strokes, _choice("online"),
+                 fallback_from=len(healthy))
+    return monitor, rows
+
+
+def test_online_ratio_is_learned_healthy_and_kept_after_the_fallback() -> None:
+    monitor, rows = _learn_then_fall_back(STROKE_LONG_M, STROKE_LONG_M)
+    ratio, reference_stroke_m = monitor._online_ratios[FR]
+    assert ratio == pytest.approx(6.0, rel=1e-9)
+    assert reference_stroke_m == STROKE_LONG_M
+    assert rows[-1][1].rate_ratio == pytest.approx(6.0, rel=1e-9)
+    learned_meta = monitor.meta()["r5_online_ratio"][FR]
+    assert learned_meta["ratio"] == pytest.approx(6.0)
+    assert learned_meta["stroke_m"] == STROKE_LONG_M
+
+
+def test_online_ratio_of_another_stroke_is_not_used() -> None:
+    """O-1: ``R_hat`` learned at 0.35 m does not stand for a 0.66 m lock (``R_nom`` instead,
+    no warning)."""
+    monitor, rows = _learn_then_fall_back(0.35, 0.66)
+    assert monitor._online_ratios[FR][0] == pytest.approx(6.0, rel=1e-9)
+    assert rows[-1][1].rate_ratio == pytest.approx(_nominal_ratio(0.66), rel=1e-12)
+    assert not any(name.startswith("WARN_R5_ONLINE") for name, _ in monitor.pop_events())
 
 
 def test_online_ratio_needs_the_stroke_within_5_mm() -> None:
@@ -429,14 +451,27 @@ def test_nominal_gap_slow_fall_neither_triggers_nor_reports(geometry) -> None:
 def test_nominal_gap_fast_fall_above_p5_reports_without_trigger(geometry) -> None:
     controller = _falling_controller(geometry, _config(), _inputs_with_drop(9e3))  # 30 kN/s
     assert controller._leg_falling_below(P5_N, 10.0, None) is None  # 30 - 12 = 18 > 16.91
-    assert _r5_names(controller) == ["INFO_R5_FALLBACK_SLOPE:FL:9.00:0.00"]
+    assert _r5_names(controller) == ["INFO_R5_FALLBACK_SLOPE:FL:12.00:0.00"]
 
 
 def test_nominal_gap_fast_fall_below_p5_triggers(geometry) -> None:
     controller = _falling_controller(geometry, _config(), _inputs_with_drop(12e3))
     assert controller._leg_falling_below(P5_N, 10.0, None) == FL  # 30 - 16 = 14 < 16.91
-    assert _r5_names(controller) == ["INFO_R5_FALLBACK_SLOPE:FL:12.00:0.00",
+    assert _r5_names(controller) == ["INFO_R5_FALLBACK_SLOPE:FL:16.00:0.00",
                                      "relevel_predicted:FL"]
+
+
+def test_event_values_are_over_the_horizon_as_the_ps2_table(geometry) -> None:
+    """O-2: the 127.8 s inputs of 302.5 (machine setting) report ``(h / n) D`` 35.8x kN and
+    ``(h / n) gap`` 9.0x kN."""
+    inputs = FallbackSlopeInputs(
+        head_drop_Pa=4.73 * BAR, depth_Pa=8.03 * BAR, level_ratio=14.56, high_ratio=13.24,
+        rate_ratio=7.77, head_area_m2=132.73e-4, annulus_area_m2=37.70e-4,
+    )
+    controller = _falling_controller(geometry, _config(), inputs)
+    controller._leg_falling_below(P5_N, 10.0, None)
+    (name,) = [name for name in _r5_names(controller) if name.startswith("INFO_R5")]
+    assert re.fullmatch(r"INFO_R5_FALLBACK_SLOPE:FL:35\.8\d:9\.0\d", name), name
 
 
 def test_nominal_gap_without_inputs_is_the_level_rule(geometry) -> None:
