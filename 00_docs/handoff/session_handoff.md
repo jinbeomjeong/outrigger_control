@@ -37,6 +37,12 @@
 - 30분 넘으므로 long-running-task-monitor 주기 점검(약 15분 cron).
 - 끝나면 control·dynamics 판정 → 명세 개정 60(306절~), J1·J2 해석 보완 P3-3·5·7·8/9 포함.
 
+## 논문 초안 (커밋 안 함)
+
+- `09_paper/`(LaTeX `latex/build.ps1`, MiKTeX xelatex→bibtex→xelatex×2, PDF·docx 변환본, 원고 `draft/*.md`, 그림 `figures/`, 참고문헌 `refs/`)는 **커밋하지 않는다**(사용자 2026-10-26, `.git/info/exclude`). 본문 약 9.2쪽(사용자가 분량 유지 결정). P3b 판정 뒤 4.4절·그림 7(`figures/scripts/fig7_p3b.py`)·초록·결론 TBD를 채운다.
+- 논문 점검에서 나온 원본 문서 쪽 정정(P3b 판정 때 dynamics 개정 53에서): `dynamics_model.md` 5.37.1 P3a-7 Δroll/Δpitch가 `s9_P3a_summary.json` `d_roll_pitch_end_deg`와 다름(J1 A −0.003 대 −0.011 등) — 정본 결정. D2 Δt 비교 정의(끝 침하 0.0049 %, 자세 7.1×10⁻⁶°로 재계산됨) 정리.
+- 원고 리뷰는 프로젝트 에이전트 `paper-reviewer`(`.claude/agents/paper-reviewer.md`, opus·effort medium, 읽기 전용, 결과는 응답으로만)에 맡긴다(2026-10-26). 새 세션부터 인식된다. 첫 시험은 "`draft/00_front_abstract.md` 초록만 리뷰".
+
 ## P3b 뒤
 
 - P-S8-22(R-5 대체 다리 기울기, U-S8-60~62) 구현(python, 명세 304절) → V-1~V-5 → cad V-4 → hydraulics H-61-1(R_hi 확정).
