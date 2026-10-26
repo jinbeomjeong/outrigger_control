@@ -1,0 +1,1850 @@
+{
+ "meta": {
+  "batch": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\f556fe97-a1cd-4d18-9af9-03853d1dd52a\\scratchpad\\ctrl-run\\judge_new",
+  "module": "outrigger_sim.verify.s7_control",
+  "rows": 67,
+  "failed": 0,
+  "pair_flags": [],
+  "pair_flag_N": 1840.0,
+  "pair_flag_basis": "1 s centred mean of the 1 ms true cylinder force (C-R18, spec rev. 37 193)",
+  "pair_batch": null,
+  "pair_sources": {
+   "L2b_PS2_fdown3.5_old_worst_nocal": "same batch L1_PS2_fdown3.5_old_worst_nocal"
+  },
+  "ready_hold_s": 60.0,
+  "failed_by_engine": {
+   "L2b_NSC": 0,
+   "L1R": 0
+  }
+ },
+ "rows": [
+  {
+   "item": "run",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": "ready",
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "2 attitude +-0.2 (+mount)",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.036114329009394236,
+   "limit": 0.2,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "3 F_min (1 ms)",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 13.176055260525482,
+   "limit": 9.414589110000001,
+   "passed": true,
+   "note": "RL at 80.27 s; D8 margin spec shortfall",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "4 saturation steps",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "4 max moving pressure",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 133.98352609535672,
+   "limit": 180.0,
+   "passed": true,
+   "note": "moving = |u_applied| > 1e-06 m/s (spec rev. 50 220.6 ②)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "5a rocking amplitude",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.019333228634095256,
+   "limit": 0.06,
+   "passed": true,
+   "note": "1 s moving mean = 10 samples (Record 10 Hz, C-R4)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "7a probe attitude change",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.02738199095624856,
+   "limit": 0.1,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "7b verdict = truth",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": true,
+   "limit": true,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "7c load estimate error",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 6.050874216053799,
+   "limit": "<= 0 (max(5 kN,10 %))",
+   "passed": null,
+   "note": "sensitivity condition (pressure grade old_worst, zero calibration off): reported (spec rev. 28 111); per round and leg (U53); truth = probe start load (0.5 s mean before the first move, spec rev. 27 102.1); zero-calibration deduction legs one-sided (estimate - truth)",
+   "kind": "report",
+   "passed_raw": false,
+   "condition": "sensitivity",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "R/D8 min force >= F_min + 5 kN",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 13.176055260525482,
+   "limit": 14.414589110000001,
+   "passed": null,
+   "note": "sensitivity condition (pressure grade old_worst, zero calibration off): reported (spec rev. 28 111)",
+   "kind": "report",
+   "passed_raw": false,
+   "condition": "sensitivity",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "R/D8 no pad lift-off",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 14.467224423705037,
+   "limit": "> 0",
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "R attitude change during REANCHOR",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.016448675080252422,
+   "limit": 0.1,
+   "passed": true,
+   "note": "I2",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "R H4 mechanism T_READY / mu(P_stop + m_rod g)",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": {
+    "legs": [
+     "RL",
+     "RR"
+    ],
+    "ratio": [
+     0.5731306927352173,
+     1.2114652632073648
+    ],
+    "T_done_kN": [
+     20.74320565838849,
+     20.625175799851196
+    ],
+    "T_ready_kN": [
+     6.750689951194806,
+     14.269391749943875
+    ],
+    "expected_kN": [
+     11.77862228766307,
+     11.77862228766307
+    ],
+    "P_stop_last_kN": 22.83976070315804,
+    "reduction_recorded": [
+     0.6745589827161143,
+     0.30815660004959455
+    ]
+   },
+   "limit": "[0.9, 1.1] and T_READY < T_DONE (rear legs)",
+   "passed": null,
+   "note": "J6 (dynamics 5.17.3, spec rev. 27 103.1); reduction recorded only; reported (J6 judged on group G6)",
+   "kind": "report",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "R H4 mechanism one-sided T_READY / mu(P_stop + m_rod g)",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": {
+    "legs": [
+     "RL",
+     "RR"
+    ],
+    "ratio": [
+     0.5731306927352173,
+     1.2114652632073648
+    ],
+    "T_done_kN": [
+     20.74320565838849,
+     20.625175799851196
+    ],
+    "T_ready_kN": [
+     6.750689951194806,
+     14.269391749943875
+    ]
+   },
+   "limit": "<= 1.1 and T_READY < T_DONE (rear legs)",
+   "passed": null,
+   "note": "sensitivity condition (pressure grade old_worst, zero calibration off): reported (spec rev. 28 111); J6 one-sided (spec rev. 28 112.1); ratio below 0.9 = safe side, recorded",
+   "kind": "report",
+   "passed_raw": false,
+   "condition": "sensitivity",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "K8 shadow (B) - true floor",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.04159832780570705,
+   "limit": 0.03,
+   "passed": null,
+   "note": "J5 / I6 report: beyond 0.03 deg",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "72.1 (6) no false pressure diagnosis",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": {
+    "WARN_LOAD_SUM_MISMATCH": 0,
+    "WARN_PRESSURE_DRIFT": 0
+   },
+   "limit": "0 warnings",
+   "passed": true,
+   "note": "spec rev. 28 110.1, rev. 29 122",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L1R"
+  },
+  {
+   "item": "run",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": "ready",
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "2 attitude +-0.2 (+mount)",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.03501803280414708,
+   "limit": 0.2,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "3 F_min (1 ms)",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 13.092190796839388,
+   "limit": 9.414589110000001,
+   "passed": true,
+   "note": "RL at 72.30 s; D8 margin spec shortfall",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "4 saturation steps",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "4 max moving pressure",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 133.88548723402596,
+   "limit": 180.0,
+   "passed": true,
+   "note": "moving = |u_applied| > 1e-06 m/s (spec rev. 50 220.6 ②)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "5a rocking amplitude",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.015168963961633475,
+   "limit": 0.06,
+   "passed": true,
+   "note": "1 s moving mean = 10 samples (Record 10 Hz, C-R4)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "7a probe attitude change",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.02525635467491538,
+   "limit": 0.1,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "7b verdict = truth",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": true,
+   "limit": true,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "7c load estimate error",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.49641814215451596,
+   "limit": "<= 0 (max(5 kN,10 %))",
+   "passed": null,
+   "note": "sensitivity condition (pressure grade old_worst, zero calibration off): reported (spec rev. 28 111); per round and leg (U53); truth = probe start load (0.5 s mean before the first move, spec rev. 27 102.1); zero-calibration deduction legs one-sided (estimate - truth)",
+   "kind": "report",
+   "passed_raw": false,
+   "condition": "sensitivity",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "R/D8 min force >= F_min + 5 kN",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 13.092190796839388,
+   "limit": 14.414589110000001,
+   "passed": null,
+   "note": "sensitivity condition (pressure grade old_worst, zero calibration off): reported (spec rev. 28 111)",
+   "kind": "report",
+   "passed_raw": false,
+   "condition": "sensitivity",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "R/D8 no pad lift-off",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 14.402029619736982,
+   "limit": "> 0",
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "R attitude change during REANCHOR",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.012329675411219822,
+   "limit": 0.1,
+   "passed": true,
+   "note": "I2",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "R H4 mechanism T_READY / mu(P_stop + m_rod g)",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": {
+    "legs": [
+     "RL",
+     "RR"
+    ],
+    "ratio": [
+     0.33087272971726384,
+     1.1050470399370684
+    ],
+    "T_done_kN": [
+     17.8254090578202,
+     17.496451394654102
+    ],
+    "T_ready_kN": [
+     3.850328966679798,
+     12.859308867942227
+    ],
+    "expected_kN": [
+     11.636888207650015,
+     11.636888207650015
+    ],
+    "P_stop_last_kN": 22.556292543131928,
+    "reduction_recorded": [
+     0.7839977217807175,
+     0.2650333157344532
+    ]
+   },
+   "limit": "[0.9, 1.1] and T_READY < T_DONE (rear legs)",
+   "passed": null,
+   "note": "J6 (dynamics 5.17.3, spec rev. 27 103.1); reduction recorded only; reported (J6 judged on group G6)",
+   "kind": "report",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "R H4 mechanism one-sided T_READY / mu(P_stop + m_rod g)",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": {
+    "legs": [
+     "RL",
+     "RR"
+    ],
+    "ratio": [
+     0.33087272971726384,
+     1.1050470399370684
+    ],
+    "T_done_kN": [
+     17.8254090578202,
+     17.496451394654102
+    ],
+    "T_ready_kN": [
+     3.850328966679798,
+     12.859308867942227
+    ]
+   },
+   "limit": "<= 1.1 and T_READY < T_DONE (rear legs)",
+   "passed": null,
+   "note": "sensitivity condition (pressure grade old_worst, zero calibration off): reported (spec rev. 28 111); J6 one-sided (spec rev. 28 112.1); ratio below 0.9 = safe side, recorded",
+   "kind": "report",
+   "passed_raw": false,
+   "condition": "sensitivity",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "K8 shadow (B) - true floor",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.020089172260060018,
+   "limit": 0.03,
+   "passed": null,
+   "note": "J5 / I6 report: within 0.03 deg",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "72.1 (6) no false pressure diagnosis",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": {
+    "WARN_LOAD_SUM_MISMATCH": 0,
+    "WARN_PRESSURE_DRIFT": 0
+   },
+   "limit": "0 warnings",
+   "passed": true,
+   "note": "spec rev. 28 110.1, rev. 29 122",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "C-R5 CHECK attitude error <= 0.017 deg",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.0035053467225814702,
+   "limit": 0.017,
+   "passed": true,
+   "note": "controller - truth roll/pitch +0.0005/-0.0035 deg, 10 samples, window controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True); ASSUMPTION limit (U11 settling residual)",
+   "kind": "judged",
+   "source": "bundle_c",
+   "engine": "L1R"
+  },
+  {
+   "item": "C-R5 A1 floor usage (controller / truth crawler / nominal floor)",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": [
+    1.002600031523983,
+    1.003469482807936,
+    1.0
+   ],
+   "limit": "<= 1 + 0.01",
+   "passed": null,
+   "note": "code ACCEPTED",
+   "kind": "report",
+   "source": "bundle_c",
+   "engine": "L1R"
+  },
+  {
+   "item": "D8 min true cylinder force >= F_min + 5 kN",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 13.176055260525482,
+   "limit": 14.414589110000001,
+   "passed": null,
+   "note": "sensitivity (103.2) condition (pressure grade old_worst, zero calibration off): reported (spec rev. 37 194, C-R19)",
+   "kind": "report",
+   "source": "bundle_c",
+   "passed_raw": false,
+   "condition": "sensitivity",
+   "engine": "L1R"
+  },
+  {
+   "item": "D8 no pad lift-off",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 14.467224423705037,
+   "limit": "> 0",
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "bundle_c",
+   "engine": "L1R"
+  },
+  {
+   "item": "D8 attitude last 5 s + mount <= 0.2 deg",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.036114329009394236,
+   "limit": 0.2,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "bundle_c",
+   "engine": "L1R"
+  },
+  {
+   "item": "REANCHOR min >= F_min + 7 kN",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 13.176055260525482,
+   "limit": 16.41458911,
+   "passed": null,
+   "note": "sensitivity (103.2) condition (pressure grade old_worst, zero calibration off): reported (spec rev. 37 194, C-R19)",
+   "kind": "report",
+   "source": "bundle_c",
+   "passed_raw": false,
+   "condition": "sensitivity",
+   "engine": "L1R"
+  },
+  {
+   "item": "C-8 no false D5 / E-5 (10 Hz constants, live)",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "bundle_c",
+   "engine": "L1R"
+  },
+  {
+   "item": "C-8 replay 1.5 s baseline (offline)",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.0,
+   "limit": "< 0.5 s",
+   "passed": true,
+   "note": "",
+   "kind": "replay",
+   "source": "bundle_c",
+   "engine": "L1R"
+  },
+  {
+   "item": "5.24.2 unexpected warnings",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "0 expected (not counted)",
+   "kind": "anomaly",
+   "source": "bundle_c",
+   "engine": "L1R"
+  },
+  {
+   "item": "5.24.2 law-C saturation steps",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "steps {'FL': 0, 'FR': 0, 'RL': 0, 'RR': 0}",
+   "kind": "report",
+   "source": "bundle_c",
+   "engine": "L1R"
+  },
+  {
+   "item": "146 consistency vs reduced (142 C)",
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "value": null,
+   "limit": null,
+   "passed": null,
+   "note": "no reference file given",
+   "kind": "consistency",
+   "source": "bundle_c",
+   "engine": "L1R"
+  },
+  {
+   "item": "C-R5 CHECK attitude error <= 0.017 deg",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.005354612443532351,
+   "limit": 0.017,
+   "passed": true,
+   "note": "controller - truth roll/pitch -0.0025/+0.0054 deg, 1000 samples, window controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True); ASSUMPTION limit (U11 settling residual)",
+   "kind": "judged",
+   "source": "bundle_c",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "C-R5 A1 floor usage (controller / truth crawler / nominal floor)",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": [
+    1.0020434732018835,
+    1.0000500236832444,
+    1.0
+   ],
+   "limit": "<= 1 + 0.01",
+   "passed": null,
+   "note": "code ACCEPTED",
+   "kind": "report",
+   "source": "bundle_c",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "D8 min true cylinder force >= F_min + 5 kN",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 13.092190796839388,
+   "limit": 14.414589110000001,
+   "passed": null,
+   "note": "sensitivity (103.2) condition (pressure grade old_worst, zero calibration off): reported (spec rev. 37 194, C-R19)",
+   "kind": "report",
+   "source": "bundle_c",
+   "passed_raw": false,
+   "condition": "sensitivity",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "D8 no pad lift-off",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 14.402029619736982,
+   "limit": "> 0",
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "bundle_c",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "D8 attitude last 5 s + mount <= 0.2 deg",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.03501803280414708,
+   "limit": 0.2,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "bundle_c",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "REANCHOR min >= F_min + 7 kN",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 13.092190796839388,
+   "limit": 16.41458911,
+   "passed": null,
+   "note": "sensitivity (103.2) condition (pressure grade old_worst, zero calibration off): reported (spec rev. 37 194, C-R19)",
+   "kind": "report",
+   "source": "bundle_c",
+   "passed_raw": false,
+   "condition": "sensitivity",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "C-8 no false D5 / E-5 (10 Hz constants, live)",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "bundle_c",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "C-8 replay 1.5 s baseline (offline)",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.0,
+   "limit": "< 0.5 s",
+   "passed": true,
+   "note": "",
+   "kind": "replay",
+   "source": "bundle_c",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "5.24.2 unexpected warnings",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "0 expected (not counted)",
+   "kind": "anomaly",
+   "source": "bundle_c",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "5.24.2 law-C saturation steps",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "steps {'FL': 0, 'FR': 0, 'RL': 0, 'RR': 0}",
+   "kind": "report",
+   "source": "bundle_c",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "146 consistency vs reduced (142 C)",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": null,
+   "limit": null,
+   "passed": null,
+   "note": "no reference file given",
+   "kind": "consistency",
+   "source": "bundle_c",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "5.22.3 NSC read-out (contact >= 20 ms mean, loads = law output)",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 0.02,
+   "limit": 0.02,
+   "passed": true,
+   "note": "dynamics_model.md 5.22.3: loads from the force-law output (every-step minimum per 1 ms); NSC contact force as a 20 ms centred mean of the per-step 1 ms means (N, T, L, utilisation, R_world)",
+   "kind": "judged",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: D8 min true cylinder force after crawler lift-off, 1 s centred mean [kN]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": -0.08162525846288915,
+   "limit": "|diff| <= 1.84 (flag only)",
+   "passed": null,
+   "note": "L2b 13.742, L1 13.824 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "pair_flag": false,
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: D8 min true cylinder force after crawler lift-off, raw 1 ms [kN]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": -0.08386446368609413,
+   "limit": null,
+   "passed": null,
+   "note": "L2b 13.092, L1 13.176 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: min true cylinder force lift-off + 5 s .. READY, raw 1 ms [kN]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": -0.08386446368609413,
+   "limit": null,
+   "passed": null,
+   "note": "L2b 13.092, L1 13.176 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: min true cylinder force outside REANCHOR [kN]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 1.1299932182946009,
+   "limit": null,
+   "passed": null,
+   "note": "L2b 54.356, L1 53.226 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: min true cylinder force inside REANCHOR [kN]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": -0.08386446368609413,
+   "limit": null,
+   "passed": null,
+   "note": "L2b 13.092, L1 13.176 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: READY - TOUCH end [s]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": 4.499999999875833,
+   "limit": null,
+   "passed": null,
+   "note": "L2b 58.800, L1 54.300 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: final twist load n^T F (last 5 s) [kN]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": -0.29276912130590027,
+   "limit": null,
+   "passed": null,
+   "note": "L2b 4.557, L1 4.849 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: attitude error last 5 s max [deg]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": -0.0010962962052471544,
+   "limit": null,
+   "passed": null,
+   "note": "L2b 0.015, L1 0.016 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: oscillation half-amplitude 0-3 s after lift-off (1 ms - 1 s centred mean), FL [kN]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": -3.6107139942030777,
+   "limit": null,
+   "passed": null,
+   "note": "L2b 9.220, L1 12.831, ratio 0.72 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: oscillation half-amplitude 0-3 s after lift-off (1 ms - 1 s centred mean), FR [kN]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": -3.796212270403979,
+   "limit": null,
+   "passed": null,
+   "note": "L2b 8.623, L1 12.419, ratio 0.69 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: oscillation half-amplitude 0-3 s after lift-off (1 ms - 1 s centred mean), RL [kN]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": -2.5243399143480447,
+   "limit": null,
+   "passed": null,
+   "note": "L2b 5.712, L1 8.236, ratio 0.69 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  },
+  {
+   "item": "pair L2b - L1: oscillation half-amplitude 0-3 s after lift-off (1 ms - 1 s centred mean), RR [kN]",
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "value": -4.072479201898411,
+   "limit": null,
+   "passed": null,
+   "note": "L2b 4.203, L1 8.276, ratio 0.51 (same batch L1_PS2_fdown3.5_old_worst_nocal)",
+   "kind": "pair",
+   "source": "s7_control",
+   "engine": "L2b_NSC"
+  }
+ ],
+ "metrics": [
+  {
+   "case": "L1_PS2_fdown3.5_old_worst_nocal",
+   "group": "PS",
+   "level": "top",
+   "floor": "fdown3.5",
+   "grade": "ideal",
+   "event": null,
+   "times_s": {
+    "t0": 68.5000000000269,
+    "touch": 29.700000000985938,
+    "ready": 84.0000000027885,
+    "liftoff": 30.600000001015815,
+    "end": 125.00000000414956
+   },
+   "phases": [
+    [
+     0.10000000000331966,
+     "check"
+    ],
+    [
+     10.100000000335285,
+     "touch"
+    ],
+    [
+     29.700000000985938,
+     "level"
+    ],
+    [
+     52.4000000017395,
+     "done"
+    ],
+    [
+     52.50000000174282,
+     "probe"
+    ],
+    [
+     64.40000000213784,
+     "reanchor"
+    ],
+    [
+     82.60000000274202,
+     "level"
+    ],
+    [
+     83.90000000278518,
+     "done"
+    ],
+    [
+     84.0000000027885,
+     "ready"
+    ]
+   ],
+   "final_phase": "ready",
+   "F_min_N": 9414.58911,
+   "ready_window_ok": true,
+   "att_err_last5_maxabs_deg": 0.016114329009394236,
+   "att_err_last5_mean_deg": [
+    -0.0007442878705760714,
+    -0.016112534205515873
+   ],
+   "t_within_0p2_after_level_s": 15.200000000504588,
+   "min_cyl_after_liftoff_kN": 13.176055260525482,
+   "min_cyl_leg": "RL",
+   "min_cyl_t_s": 80.27000000266467,
+   "pad_N_min_after_liftoff_kN": 14.467224423705037,
+   "min_cyl_excl_reanchor_kN": 53.225581352399765,
+   "min_cyl_reanchor_kN": 13.176055260525482,
+   "max_moving_pressure_bar": 133.98352609535672,
+   "moving_eps_m_s": 1e-06,
+   "max_pressure_any_step_bar": 134.29385128324657,
+   "saturation_steps": 0,
+   "record_rate_hz": 9.999999999668034,
+   "rocking_window_samples": 10,
+   "rocking_amp_deg": 0.019333228634095256,
+   "final_cyl_kN": [
+    121.36845905467224,
+    114.58772628203114,
+    68.76276751695103,
+    71.8637645801041
+   ],
+   "final_corrective_kN": [
+    119.05978396388699,
+    116.8964013728164,
+    71.29821142368864,
+    69.32832067336648
+   ],
+   "final_twist_kN": 4.849423982088039,
+   "t_ready_minus_touch_s": 54.30000000180256,
+   "reanchor_att_change_max_deg": 0.016448675080252422,
+   "stroke": {
+    "max_m": [
+     0.6610058792943173,
+     0.6604588770586037,
+     0.3515482357362585,
+     0.35215195781499997
+    ],
+    "min_m": [
+     -1.5466245929528713e-15,
+     -1.491232797059725e-15,
+     -1.672059705238312e-15,
+     -1.8105171080887523e-15
+    ],
+    "margin_to_end_m": [
+     0.038994120705682644,
+     0.03954112294139622,
+     0.34845176426374147,
+     0.347848042185
+    ]
+   },
+   "h4": {
+    "enabled": true,
+    "outcome": "completed",
+    "expected": {
+     "relative_pitch_deg": -3.5,
+     "triggers": true,
+     "nose_up": false,
+     "direction": "nose_down_only",
+     "expected": "reanchor (run)",
+     "reanchor_applicable": true
+    },
+    "direction": "nose_down_only",
+    "n_reanchor_skipped_nose_up": 0,
+    "n_reanchor_started": 1
+   },
+   "h4_mechanism": {
+    "legs": [
+     "RL",
+     "RR"
+    ],
+    "t_done_s": 52.4000000017395,
+    "t_ready_s": 84.0000000027885,
+    "T_done_kN": [
+     20.74320565838849,
+     20.625175799851196
+    ],
+    "T_ready_kN": [
+     6.750689951194806,
+     14.269391749943875
+    ],
+    "P_stop_last_kN": 22.83976070315804,
+    "friction": 0.5,
+    "expected_kN": [
+     11.77862228766307,
+     11.77862228766307
+    ],
+    "ratio": [
+     0.5731306927352173,
+     1.2114652632073648
+    ],
+    "reduction_recorded": [
+     0.6745589827161143,
+     0.30815660004959455
+    ]
+   },
+   "target_code": "ACCEPTED",
+   "last_check": {
+    "requested_rad": [
+     0.0,
+     0.0
+    ],
+    "accepted_rad": [
+     0.0,
+     0.0
+    ],
+    "code": "ACCEPTED",
+    "crawler_attitude_rad": [
+     1.4874972856959505e-05,
+     0.06689884035128078
+    ],
+    "floor_estimate_rad": [
+     1.4726675237319695e-05,
+     0.061235979186817995
+    ],
+    "floor_usage": 1.002600031523983
+   },
+   "floor_true_deg": [
+    0.0,
+    3.5
+   ],
+   "shadow_floor_deg": [
+    0.0009900239494224994,
+    3.541598327805707
+   ],
+   "shadow_minus_true_deg": [
+    0.0009900239494224994,
+    0.04159832780570705
+   ],
+   "shadow_residual_mm": 0.09590055914032725,
+   "shadow_floor_usage": 1.0120652408703568,
+   "contact": "combined",
+   "condition": "sensitivity",
+   "condition_reasons": [
+    "pressure grade old_worst",
+    "zero calibration off"
+   ],
+   "diagnostic_check": {
+    "counts": {
+     "WARN_LOAD_SUM_MISMATCH": 0,
+     "WARN_PRESSURE_DRIFT": 0
+    },
+    "injection": [],
+    "constant_offset": [],
+    "pre_load_reference_code": false,
+    "replay": null
+   },
+   "events": [
+    "C2Event(t_s=78.60000000036219, name='WARN_GYRO_BIAS_SKIPPED')",
+    "C2Event(t_s=98.20000000101284, name='floor_estimate_touch')",
+    "C2Event(t_s=103.50000000118878, name='WARN_ROD_PRESSURE_FALLBACK:FL')",
+    "C2Event(t_s=103.50000000118878, name='INFO_ROD_PRESSURE_FAULT_REASON:FL:D2')",
+    "C2Event(t_s=132.90000000216475, name='reanchor_started')",
+    "C2Event(t_s=151.10000000276892, name='reanchor_completed')"
+   ],
+   "bundle_c": {
+    "config": "C-1",
+    "beta_GPa": 1.0,
+    "tau_v_s": 0.1,
+    "amp_ramp": "none",
+    "L0r_m": null,
+    "command_offset_s": 0.0,
+    "increment": "sym0.25",
+    "twist_reference": "measured_Sii",
+    "c2_implementation": {
+     "P-R8-9_check_quiet_after_motion_s": 0.5,
+     "P-R8-10_fast_relevel_on": true,
+     "P-R8-10_horizon_periods": 4,
+     "P-R8-11_probe_abort_event_in_source": true,
+     "rerun32_ready": true,
+     "P-R8-12_settings_type": "LiftedReapproachSettings",
+     "P-R8-12_enable": true,
+     "P-R8-12_event_in_source": true,
+     "rerun33_keys_are_placeholders": true,
+     "rerun33_ready": true,
+     "P-R8-13_mode": "twist",
+     "P-R8-13_settings": {
+      "samples": 1,
+      "single_leg": true,
+      "exit_margin_N": 5000.0,
+      "exit_samples": 3,
+      "twist_speed_fraction": 0.25,
+      "protect_margin_N": 5000.0
+     },
+     "P-R8-13_missing_keys": [],
+     "P-R8-13_deviations_from_spec_defaults": {},
+     "P-R8-14_command_components_attr": true,
+     "rerun34_keys_are_spec_names": true,
+     "rerun34_ready": true,
+     "c2_revision_meta": "R8-D1 (C2)",
+     "P-R8-1_pre_probe_stiffness_scale": 1.2,
+     "P-R8-1_expected": 1.2,
+     "P-R8-3_measured_stiffness_scale_max": 1.5,
+     "P-R8-6_computed_output_attr": true,
+     "module_file": "C:\\workspace\\outrigger_control\\03_src\\outrigger_sim\\control\\c2.py"
+    },
+    "saturation_steps": {
+     "steps": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "starts": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "first_t_s": {
+      "FL": null,
+      "FR": null,
+      "RL": null,
+      "RR": null
+     },
+     "episodes": [],
+     "static_window_s": [
+      0.1,
+      0.5
+     ],
+     "mechanism_share_limit_N": 250.0,
+     "rule": "static end - limit <= 0.25 kN = law-C mechanism share (dyn 5.24.2); static window ASSUMPTION; t relative to the start state"
+    },
+    "snapshot_retag_check": {
+     "passed": true,
+     "conditions": {
+      "l1r_state_LIFT": {
+       "key": "rod_chamber.l1r_state",
+       "value": [
+        5.0,
+        5.0,
+        5.0,
+        5.0
+       ],
+       "passed": true
+      },
+      "F_lock_zero": {
+       "key": "rod_chamber.l1r_F_lock_N",
+       "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "passed": true
+      },
+      "no_pad_contact": {
+       "key": "ground_bushing.in_contact",
+       "value": [
+        false,
+        false,
+        false,
+        false
+       ],
+       "passed": true
+      },
+      "u_applied_zero": {
+       "key": "l1_actuator.u_applied_m_s",
+       "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "passed": true
+      }
+     },
+     "rule": "dyn rev. 37 5.24.3: four legs LIFT, F_lock 0, no pad contact, u_applied 0",
+     "snapshot": "S6_crawler_top_fdown3.5",
+     "required": false
+    },
+    "beta_leak_fixed": true,
+    "crawler_kt_factor": 1.0,
+    "warnings": [],
+    "c11": null
+   },
+   "guard_oscillation": [
+    {
+     "t_end_s": 98.40000000101948,
+     "amp0_kN": 22.417874265869813,
+     "amp2_kN": 7.316818556437967,
+     "ratio": 0.3263832453364005,
+     "passed": true
+    },
+    {
+     "t_end_s": 98.70000000102944,
+     "amp0_kN": 18.948410343511743,
+     "amp2_kN": 6.686453465144528,
+     "ratio": 0.3528767502881361,
+     "passed": true
+    }
+   ],
+   "guard_periods": 3,
+   "c5a_command_reversals": {
+    "threshold_m_s": 0.000418486032,
+    "window_s": 4.0,
+    "first_guard_s": 98.30000000101616,
+    "max_reversals": 2,
+    "leg": "FL",
+    "window_start_s": 121.00000000176972,
+    "reversals_total_per_leg": {
+     "FL": 7,
+     "FR": 6,
+     "RL": 7,
+     "RR": 6
+    }
+   },
+   "c5b_guard_restarts": {
+    "starts_s": [
+     98.30000000101616,
+     98.5000000010228
+    ],
+    "starts": 2,
+    "max_in_window": 2,
+    "window_s": 10.0
+   },
+   "c5c_ready_settling": {
+    "windows": [
+     [
+      89.00000000295448,
+      125.00000000414956
+     ]
+    ],
+    "per_window": [
+     {
+      "window_s": [
+       89.00000000295448,
+       125.00000000414956
+      ],
+      "channel": "roll",
+      "half_range_deg": 0.00013760214914638173,
+      "zero_cross_hz": 2.0138888888220348
+     },
+     {
+      "window_s": [
+       89.00000000295448,
+       125.00000000414956
+      ],
+      "channel": "pitch",
+      "half_range_deg": 1.6793214474154772e-05,
+      "zero_cross_hz": 2.8194444443508484
+     }
+    ],
+    "worst": {
+     "window_s": [
+      89.00000000295448,
+      125.00000000414956
+     ],
+     "channel": "roll",
+     "half_range_deg": 0.00013760214914638173,
+     "zero_cross_hz": 2.0138888888220348
+    },
+    "source": "Record 10 Hz (1 ms attitude not recorded)",
+    "floor_events_s": []
+   },
+   "check_attitude": {
+    "code": "ACCEPTED",
+    "window_abs_s": [
+     77.6000000003323,
+     78.60000000036219
+    ],
+    "window_source": "controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True)",
+    "check_window": {
+     "t_judged_s": 78.60000000036219,
+     "t_first_sample_s": 77.6100000003323,
+     "t_last_sample_s": 78.60000000036219,
+     "sample_count": 100,
+     "quiet_start_s": null,
+     "last_nonzero_command_t_s": null,
+     "is_quiet_window_full": true
+    },
+    "truth_source": "Record 10 Hz",
+    "t_decision_s": 10.100000000335285,
+    "n_samples": 10,
+    "controller_deg": [
+     0.000852273165075436,
+     3.8330212064478784
+    ],
+    "truth_deg": [
+     0.0003478189017005506,
+     3.83652655317046
+    ],
+    "error_deg": [
+     0.0005044542633748854,
+     -0.0035053467225814702
+    ],
+    "error_maxabs_deg": 0.0035053467225814702,
+    "usage_controller": 1.002600031523983,
+    "usage_truth_crawler": 1.003469482807936,
+    "usage_floor_nominal": 1.0,
+    "usage_tolerance": 0.01,
+    "usage_truth_identity": 1.0962136835632976,
+    "usage_truth": 1.003469482807936,
+    "truth_map_basis": "run settle map",
+    "settle_map_is_identity": false,
+    "engine": "L1R",
+    "settle_map": {
+     "theta0_deg": 0.17366,
+     "k_dn": 0.04298,
+     "k_up": 0.02478,
+     "k_phi": 0.01007
+    },
+    "note": "truth = mean of the Record 10 Hz instantaneous body attitude (rocking 1.6-2.4 Hz is sampled 4-6 times per cycle)"
+   },
+   "relevel_predicted": {
+    "probe_abort": [],
+    "other": [],
+    "probe_aborted_low_load": [],
+    "counts": {
+     "probe_abort": 0,
+     "other": 0
+    }
+   },
+   "reapproach": {
+    "starts": [],
+    "count": 0
+   },
+   "floor_event_t_s": null,
+   "diagnostic_replay": {
+    "baselines": [
+     {
+      "t_s": 86.10000000285821,
+      "sum_kN": 392.1141702713799
+     }
+    ],
+    "longest_run_over_4kN_s": 0.0,
+    "max_abs_dev_kN": 2.1969419266950574,
+    "replay_passed": true,
+    "rule": "settle 0.5 s, mean 1.5 s, limit 4000.0 N, D5 hold 0.5 s, E-5 hold 30.0 s, 10 Hz record"
+   },
+   "ready_s": 84.0000000027885,
+   "rerun_group": null,
+   "slow_window_s": 1.0,
+   "slow_window_samples": 1001,
+   "slow_sample_s": 0.0010000000000331966,
+   "min_cyl_slow_after_liftoff_kN": 13.8237213775066,
+   "min_cyl_slow_leg": "RL",
+   "min_cyl_slow_t_s": 79.96200000265445,
+   "osc_half_amp_kN": [
+    12.830580407163238,
+    12.419262250813889,
+    8.236448807664178,
+    8.275948116094026
+   ],
+   "min_cyl_late_kN": 13.176055260525482
+  },
+  {
+   "case": "L2b_PS2_fdown3.5_old_worst_nocal",
+   "group": "PS",
+   "level": "top",
+   "floor": "fdown3.5",
+   "grade": "ideal",
+   "event": null,
+   "times_s": {
+    "t0": 3.0000000000019065,
+    "touch": 21.2999999999548,
+    "ready": 80.10000000163319,
+    "liftoff": 21.799999999953634,
+    "end": 125.00000000312372
+   },
+   "phases": [
+    [
+     0.10000000000021103,
+     "check"
+    ],
+    [
+     2.0999999999995462,
+     "touch"
+    ],
+    [
+     21.2999999999548,
+     "level"
+    ],
+    [
+     43.70000000042484,
+     "done"
+    ],
+    [
+     43.80000000042816,
+     "probe"
+    ],
+    [
+     55.7000000008232,
+     "reanchor"
+    ],
+    [
+     75.10000000146721,
+     "level"
+    ],
+    [
+     80.00000000162987,
+     "done"
+    ],
+    [
+     80.10000000163319,
+     "ready"
+    ]
+   ],
+   "final_phase": "ready",
+   "F_min_N": 9414.58911,
+   "ready_window_ok": true,
+   "att_err_last5_maxabs_deg": 0.015018032804147081,
+   "att_err_last5_mean_deg": [
+    0.0009856170499317309,
+    -0.015018018819112702
+   ],
+   "t_within_0p2_after_level_s": 15.00000000022439,
+   "min_cyl_after_liftoff_kN": 13.092190796839388,
+   "min_cyl_leg": "RL",
+   "min_cyl_t_s": 72.29600000137413,
+   "pad_N_min_after_liftoff_kN": 14.402029619736982,
+   "min_cyl_excl_reanchor_kN": 54.355574570694365,
+   "min_cyl_reanchor_kN": 13.092190796839388,
+   "max_moving_pressure_bar": 133.88548723402596,
+   "moving_eps_m_s": 1e-06,
+   "max_pressure_any_step_bar": 134.09700825013346,
+   "saturation_steps": 0,
+   "record_rate_hz": 9.999999999668034,
+   "rocking_window_samples": 10,
+   "rocking_amp_deg": 0.015168963961633475,
+   "final_cyl_kN": [
+    121.2462659234278,
+    114.71518605422615,
+    68.92333481100886,
+    71.69169025810348
+   ],
+   "final_corrective_kN": [
+    119.0769700208114,
+    116.88448195684255,
+    71.30570905680577,
+    69.30931601230657
+   ],
+   "final_twist_kN": 4.556654860782139,
+   "t_ready_minus_touch_s": 58.80000000167839,
+   "reanchor_att_change_max_deg": 0.012329675411219822,
+   "stroke": {
+    "max_m": [
+     0.6543909749695425,
+     0.654894726387407,
+     0.3472435557375618,
+     0.347372418931425
+    ],
+    "min_m": [
+     6.668604456408201e-06,
+     5.755655702538535e-06,
+     4.966069939161109e-06,
+     5.448482487422041e-06
+    ],
+    "margin_to_end_m": [
+     0.045609025030457495,
+     0.04510527361259298,
+     0.35275644426243813,
+     0.35262758106857495
+    ],
+    "coordinate": "s_ref (L2b; = L1 motor position)"
+   },
+   "h4": {
+    "enabled": true,
+    "outcome": "completed",
+    "expected": {
+     "relative_pitch_deg": -3.5,
+     "triggers": true,
+     "nose_up": false,
+     "direction": "nose_down_only",
+     "expected": "reanchor (run)",
+     "reanchor_applicable": true
+    },
+    "direction": "nose_down_only",
+    "n_reanchor_skipped_nose_up": 0,
+    "n_reanchor_started": 1
+   },
+   "h4_mechanism": {
+    "legs": [
+     "RL",
+     "RR"
+    ],
+    "t_done_s": 43.70000000042484,
+    "t_ready_s": 80.10000000163319,
+    "T_done_kN": [
+     17.8254090578202,
+     17.496451394654102
+    ],
+    "T_ready_kN": [
+     3.850328966679798,
+     12.859308867942227
+    ],
+    "P_stop_last_kN": 22.556292543131928,
+    "friction": 0.5,
+    "expected_kN": [
+     11.636888207650015,
+     11.636888207650015
+    ],
+    "ratio": [
+     0.33087272971726384,
+     1.1050470399370684
+    ],
+    "reduction_recorded": [
+     0.7839977217807175,
+     0.2650333157344532
+    ]
+   },
+   "target_code": "ACCEPTED",
+   "last_check": {
+    "requested_rad": [
+     0.0,
+     0.0
+    ],
+    "accepted_rad": [
+     0.0,
+     0.0
+    ],
+    "code": "ACCEPTED",
+    "crawler_attitude_rad": [
+     -4.748192583328997e-05,
+     0.061181136723238695
+    ],
+    "floor_estimate_rad": [
+     -4.748192583328997e-05,
+     0.061181136723238695
+    ],
+    "floor_usage": 1.0020434732018835
+   },
+   "floor_true_deg": [
+    0.0,
+    3.5
+   ],
+   "shadow_floor_deg": [
+    -0.003785949861905786,
+    3.47991082773994
+   ],
+   "shadow_minus_true_deg": [
+    -0.003785949861905786,
+    -0.020089172260060018
+   ],
+   "shadow_residual_mm": 0.06789861557787713,
+   "shadow_floor_usage": 0.9949485910174722,
+   "contact": "combined",
+   "condition": "sensitivity",
+   "condition_reasons": [
+    "pressure grade old_worst",
+    "zero calibration off"
+   ],
+   "diagnostic_check": {
+    "counts": {
+     "WARN_LOAD_SUM_MISMATCH": 0,
+     "WARN_PRESSURE_DRIFT": 0
+    },
+    "injection": [],
+    "constant_offset": [],
+    "pre_load_reference_code": false,
+    "replay": null
+   },
+   "events": [
+    "C2Event(t_s=24.299999999956707, name='floor_estimate_touch')",
+    "C2Event(t_s=27.09999999995018, name='WARN_ROD_PRESSURE_FALLBACK:FL')",
+    "C2Event(t_s=27.09999999995018, name='INFO_ROD_PRESSURE_FAULT_REASON:FL:D2')",
+    "C2Event(t_s=58.700000000825106, name='reanchor_started')",
+    "C2Event(t_s=78.10000000146911, name='reanchor_completed')"
+   ],
+   "bundle_c": {
+    "config": "C-1",
+    "beta_GPa": 1.0,
+    "tau_v_s": 0.1,
+    "amp_ramp": "none",
+    "L0r_m": null,
+    "command_offset_s": 0.0,
+    "increment": "sym0.25",
+    "twist_reference": "measured_Sii",
+    "c2_implementation": {
+     "P-R8-9_check_quiet_after_motion_s": 0.5,
+     "P-R8-10_fast_relevel_on": true,
+     "P-R8-10_horizon_periods": 4,
+     "P-R8-11_probe_abort_event_in_source": true,
+     "rerun32_ready": true,
+     "P-R8-12_settings_type": "LiftedReapproachSettings",
+     "P-R8-12_enable": true,
+     "P-R8-12_event_in_source": true,
+     "rerun33_keys_are_placeholders": true,
+     "rerun33_ready": true,
+     "P-R8-13_mode": "twist",
+     "P-R8-13_settings": {
+      "samples": 1,
+      "single_leg": true,
+      "exit_margin_N": 5000.0,
+      "exit_samples": 3,
+      "twist_speed_fraction": 0.25,
+      "protect_margin_N": 5000.0
+     },
+     "P-R8-13_missing_keys": [],
+     "P-R8-13_deviations_from_spec_defaults": {},
+     "P-R8-14_command_components_attr": true,
+     "rerun34_keys_are_spec_names": true,
+     "rerun34_ready": true,
+     "c2_revision_meta": "R8-D1 (C2)",
+     "P-R8-1_pre_probe_stiffness_scale": 1.2,
+     "P-R8-1_expected": 1.2,
+     "P-R8-3_measured_stiffness_scale_max": 1.5,
+     "P-R8-6_computed_output_attr": true,
+     "module_file": "C:\\workspace\\outrigger_control\\03_src\\outrigger_sim\\control\\c2.py"
+    },
+    "saturation_steps": {
+     "steps": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "starts": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "first_t_s": {
+      "FL": null,
+      "FR": null,
+      "RL": null,
+      "RR": null
+     },
+     "episodes": [],
+     "static_window_s": [
+      0.1,
+      0.5
+     ],
+     "mechanism_share_limit_N": 250.0,
+     "rule": "static end - limit <= 0.25 kN = law-C mechanism share (dyn 5.24.2); static window ASSUMPTION; t relative to the start state"
+    },
+    "snapshot_retag_check": null,
+    "beta_leak_fixed": false,
+    "crawler_kt_factor": 1.0,
+    "warnings": [],
+    "c11": null
+   },
+   "guard_oscillation": [],
+   "guard_periods": 0,
+   "c5a_command_reversals": {
+    "threshold_m_s": 0.000418486032,
+    "window_s": 4.0,
+    "first_guard_s": null,
+    "max_reversals": null,
+    "status": "no guard activation"
+   },
+   "c5b_guard_restarts": {
+    "starts_s": [],
+    "starts": 0,
+    "max_in_window": 0,
+    "window_s": 10.0
+   },
+   "c5c_ready_settling": {
+    "windows": [
+     [
+      85.10000000179917,
+      125.00000000312372
+     ]
+    ],
+    "per_window": [
+     {
+      "window_s": [
+       85.10000000179917,
+       125.00000000312372
+      ],
+      "channel": "roll",
+      "half_range_deg": 5.203710823936615e-05,
+      "zero_cross_hz": 2.2055137843879375
+     },
+     {
+      "window_s": [
+       85.10000000179917,
+       125.00000000312372
+      ],
+      "channel": "pitch",
+      "half_range_deg": 7.258336511143174e-07,
+      "zero_cross_hz": 1.9172932330190593
+     }
+    ],
+    "worst": {
+     "window_s": [
+      85.10000000179917,
+      125.00000000312372
+     ],
+     "channel": "roll",
+     "half_range_deg": 5.203710823936615e-05,
+     "zero_cross_hz": 2.2055137843879375
+    },
+    "source": "pads 1 ms",
+    "floor_events_s": []
+   },
+   "check_attitude": {
+    "code": "ACCEPTED",
+    "window_abs_s": [
+     4.100000000003551,
+     5.100000000001453
+    ],
+    "window_source": "controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True)",
+    "check_window": {
+     "t_judged_s": 5.100000000001453,
+     "t_first_sample_s": 4.11000000000355,
+     "t_last_sample_s": 5.100000000001453,
+     "sample_count": 100,
+     "quiet_start_s": null,
+     "last_nonzero_command_t_s": null,
+     "is_quiet_window_full": true
+    },
+    "truth_source": "pads 1 ms",
+    "t_decision_s": 2.0999999999995462,
+    "n_samples": 1000,
+    "controller_deg": [
+     -0.00272051395340071,
+     3.505420920054428
+    ],
+    "truth_deg": [
+     -0.00017093258357912399,
+     3.5000663076108958
+    ],
+    "error_deg": [
+     -0.0025495813698215857,
+     0.005354612443532351
+    ],
+    "error_maxabs_deg": 0.005354612443532351,
+    "usage_controller": 1.0020434732018835,
+    "usage_truth_crawler": 1.0000500236832444,
+    "usage_floor_nominal": 1.0,
+    "usage_tolerance": 0.01,
+    "usage_truth_identity": 1.0000500236832444,
+    "usage_truth": 1.0000500236832444,
+    "truth_map_basis": "identity (rigid crawler of engine L2b_NSC, spec rev. 37 C-R16)",
+    "settle_map_is_identity": true,
+    "engine": "L2b_NSC",
+    "settle_map": {
+     "theta0_deg": 0.0,
+     "k_dn": 0.0,
+     "k_up": 0.0,
+     "k_phi": 0.0
+    },
+    "note": "truth = mean of the pads 1 ms instantaneous body attitude"
+   },
+   "relevel_predicted": {
+    "probe_abort": [],
+    "other": [],
+    "probe_aborted_low_load": [],
+    "counts": {
+     "probe_abort": 0,
+     "other": 0
+    }
+   },
+   "reapproach": {
+    "starts": [],
+    "count": 0
+   },
+   "floor_event_t_s": null,
+   "diagnostic_replay": {
+    "baselines": [
+     {
+      "t_s": 82.2000000017029,
+      "sum_kN": 392.1855106052266
+     }
+    ],
+    "longest_run_over_4kN_s": 0.0,
+    "max_abs_dev_kN": 2.0541303599233505,
+    "replay_passed": true,
+    "rule": "settle 0.5 s, mean 1.5 s, limit 4000.0 N, D5 hold 0.5 s, E-5 hold 30.0 s, 10 Hz record"
+   },
+   "ready_s": 80.10000000163319,
+   "rerun_group": null,
+   "slow_window_s": 1.0,
+   "slow_window_samples": 1001,
+   "slow_sample_s": 0.0010000000000331966,
+   "min_cyl_slow_after_liftoff_kN": 13.74209611904371,
+   "min_cyl_slow_leg": "RL",
+   "min_cyl_slow_t_s": 72.2650000013731,
+   "osc_half_amp_kN": [
+    9.21986641296016,
+    8.62304998040991,
+    5.712108893316134,
+    4.203468914195615
+   ],
+   "min_cyl_late_kN": 13.092190796839388
+  }
+ ]
+}

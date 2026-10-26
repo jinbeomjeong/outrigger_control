@@ -1,0 +1,73 @@
+{
+ "check": "V-5 (s6_control_spec.md 303, rev. 61 supplement 3 and rev. 62): control judgement of the V-4 Chrono re-runs of P-S8-22 (R-5 fallback slope, U-S8-60..62)",
+ "date": "2026-10-27",
+ "code": "master 0941c0c (P-S8-22 merge d7638e9..88d483c + cad C-1/C-2 3368317), not pushed",
+ "environment": {
+  "replay_and_rows": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev (conda run -n dynamics-dev python -I), affinity 0xFFFF (P cores)",
+  "s7_judge": "outrigger_sim.verify.s7_control.judge_batch in dynamics-dev (same judge code as run_S7C.py judge)",
+  "scripts": "scratchpad ctrl-run\\v5_replay.py, v5_g4rf_rows.py, v5_s7_judge.py, v5_sha.py, v5_make_forced.py (not kept in the repository)"
+ },
+ "verdict": {
+  "V-5 (1) S7 ctrl3 PS2 L1/L2b": "pass",
+  "V-5 (2) C-S8-29 G4RF Fs0/Fs8": "pass",
+  "V-5 (3) ML88_ep0 (rebased)": "not judgeable: INFO_R5_FALLBACK_SLOPE 0 (no rod fallback in the episode; 303 V-5 rule)",
+  "V-5 (4) D8 rpB on, plant_meta / column_nominal": "pass (SHA equal)",
+  "overall": "(1)(2)(4) pass, (3) not judgeable; U-S8-67 = (na) confirmed 2026-10-27: V-5 closed on (1)(2)(4), positive test (3') MLJ_K0V_fdown3.5_G4RRF_Fs0/Fs8 delegated to cad C-S8-67 (spec 317.1)"
+ },
+ "case_1_ps2": {
+  "L1_PS2_fdown3.5_old_worst_nocal": {
+   "run": "07_results/S7/ctrl3_check_20261027_010709/L1_PS2_fdown3.5_old_worst_nocal (125 s, L1-R, plant_meta [1.29292, 1.29292, 1.22779, 1.22779])",
+   "s7_judge": "06_analysis/02_control/s9/v5/verify_S7C_v4_ps2.json: 67 rows (L1 + L2b pair), fails 0",
+   "ready_rel_s": 84.0, "ready_limit_s": 90.0, "ready_expected_s": "84-86 (fixed_ratio 84.0, old 85.8)",
+   "rows": {"2 attitude deg": 0.0361, "3 F_min 1ms kN": 13.18, "4 max moving pressure bar": 134.0, "5a rocking deg": 0.0193, "D8 last 5 s deg": 0.0361},
+   "r5_events": 0, "probe_aborted_low_load": 0, "info_r5_fallback_slope": 7,
+   "replay_same_run_gate": "R-5/abort events equal, INFO 7/7 equal (time, leg, D, gap to 0.01 kN)",
+   "replay_level_gate_record": "level replay on this run would fire relevel_predicted:FL + probe_aborted_low_load:FL at controller 127.8 and 127.9 s (the old false re-level); the controller (plant_meta) fired none",
+   "replay_plant_meta": {"truth": "F_cyl_no_friction", "judged_falling_rows": 266, "judged_falling_max_kN": -0.133, "allowance_kN": 0.05, "slope_rows_missed": 0, "record_rising_max_kN": 3.71, "record_level_rows": 4, "record_level_max_kN": 1.43, "level_missed": 0, "judgement_passed": true},
+   "replay_column_nominal": {"judged_falling_max_kN": -0.133, "slope_rows_missed": 0, "record_rising_max_kN": 17.47, "judgement_passed": true}
+  },
+  "L2b_PS2_fdown3.5_old_worst_nocal": {
+   "run": "07_results/S7/ctrl3_check_20261027_010707/L2b_PS2_fdown3.5_old_worst_nocal (125 s, L2b-NSC, column_nominal, F_s = 0)",
+   "ready_rel_s": 80.1, "baseline_ready_rel_s": 80.1,
+   "rows_vs_R3_baseline": "all judged rows equal to params_bundle_R3_20261026_025133/ctrl3 L2b (verify_S7C_r3_ps2_baseline.json): 2 attitude 0.0350 deg, 3 F_min 13.09 kN, 4 133.9 bar, 5a 0.0152 deg, 7a 0.0253 deg, NSC read-out pass; pair rows improved (D8 min force L2b - L1 -40.5 -> -0.08 kN, the L1 twin no longer ends in REANCHOR)",
+   "r5_events": 0, "info_r5_fallback_slope": 22,
+   "replay_same_run_gate": "R-5 events equal (none), INFO 22/22 equal",
+   "replay_column_nominal": {"truth": "F_cyl_no_friction (F_s = 0, cad C-2 record settings.bundle_c.pads_seal_fields)", "judged_falling_rows": 277, "judged_falling_max_kN": -3.05, "allowance_kN": 1.2, "slope_rows_missed": 0, "record_rising_max_kN": 22.19, "record_level_max_kN": 0.65, "level_missed": 0, "judgement_passed": true},
+   "replay_plant_meta": {"judged_falling_max_kN": -1.43, "slope_rows_missed": 0, "judgement_passed": true}
+  }
+ },
+ "case_2_g4rf": {
+  "note": "same-run replay (no E_G4 pair, U-S8-66); compared with the original S8 mlj_20261025_080212 runs (pre-P-S8-22)",
+  "Fs0": {"info_r5_fallback_slope": 14, "r5_events": "relevel_predicted:RR 87.8 s (healthy event leg, as original)", "same_run_gate": "equal", "judged_falling_max_kN": -15.29, "slope_rows_missed": 0, "level_missed": 0,
+          "rows_218_10_new_vs_orig": {"guard_saturation_cmp_guard_s": [0.0, 0.0], "judge_guard_cap_issued_u_s": [1.3, 1.3], "fr_head_true_max_bar": [139.58, 139.58], "others_min_true_force_kN": [15.381, 15.344], "fr_true_min_force_kN": [99.93, 99.93], "h_star_bar": "76.1-84.2 vs h_a 86.9-96.4 (h* < h_a)"},
+          "issued_u_max_abs_diff_m_s": 1.43e-06, "phases_equal": true},
+  "Fs8": {"info_r5_fallback_slope": 6, "r5_events": "relevel_predicted:RR 85.2 s (as original)", "same_run_gate": "equal", "judged_falling_max_kN": -5.99, "slope_rows_missed": 0, "level_missed": 0, "record_level_moving_max_kN": 19.84,
+          "rows_218_10_new_vs_orig": {"guard_saturation_cmp_guard_s": [0.0, 0.0], "judge_guard_cap_issued_u_s": [1.8, 1.8], "fr_head_true_max_bar": [130.35, 130.34], "others_min_true_force_kN_F_cyl": [16.348, 16.299], "others_min_true_force_kN_F_pressure": [23.014, 22.965], "fr_true_min_force_kN_F_cyl": [97.71, 97.71], "fr_true_min_force_kN_F_pressure": [95.73, 95.74], "h_star_bar": "71.9-82.4 vs h_a 81.8-96.0 (h* < h_a)"},
+          "issued_u_max_abs_diff_m_s": 9.7e-07, "phases_equal": true},
+  "F_min_N": 9415.0
+ },
+ "case_3_ml88": {
+  "run": "07_results/S9/v4_20261027_010707/c36_smoke/ML88_ep0 (60 s, base 07_results/S8/ml88_rebase_20261027_012458, user decision (ga))",
+  "rod_fallback_events": 0, "info_r5_fallback_slope": 0,
+  "verdict": "not judgeable (303 V-5: (1)-(3) need INFO >= 1)",
+  "evidence_no_candidate": "params_bundle_R3_20261026_025133 (current YAML, pre-P-S8-22 code): WARN_ROD_PRESSURE_FALLBACK only in ctrl3 PS2 L1/L2b; c36 A_rt 8 episodes (incl. ML88_ep0), c36 B_f1only, c37 E_drain: 0. S8 c36_20261025_155317 ML88_ep0: 0. cb_20261025_013946 CB_G4_Fs0 / CB_RE1bF_Fs0: 0 (cb_000840 had RR fallbacks). ML00_ep5 fallback only in ml_pilot _replaced_20261025_015059."
+ },
+ "case_4_rpB": {
+  "baseline": "07_results/S9/batch_P3-10_20261026_122444/rpB__on (pre-P-S8-22 code)",
+  "sha256_issued_u": "e072f15c9ae292225d50f412d5ca4768c4b3ffd68422c4e1ca10386349f72e32 (baseline, plant_meta, column_nominal; recomputed from r8_series.npz)",
+  "sha256_computed_u_prefix": "f532415fc9a781c8 (all three)",
+  "n_periods": 740, "rod_fallback_events": 0, "verdict": "pass"
+ },
+ "whatif_true_low_load": {
+  "file": "06_analysis/02_control/s9/v5/v5_whatif_RRfb.json",
+  "method": "offline, open loop: the V-4 G4RF records with an extra forced WARN_ROD_PRESSURE_FALLBACK:RR at the fault time (RR is the G4 settle leg, healthy-sensor R-5 at 87.8 / 85.2 s)",
+  "result": "fallback R-5 on RR fires at 87.7 s (Fs0) and 85.1 s (Fs8), one period before the healthy-sensor R-5 (both plant_meta and column_nominal); judged_falling max -2.82 / -3.06 kN, slope rows missed 0; missed rows only on unwatched rows after the R-5 (LEVEL)",
+  "status": "record (not a Chrono closed-loop run)"
+ },
+ "tool_defects_worked_around": [
+  "D-1 contact_replay.ReplaySettings.from_controller_meta raises TypeError on V-4 L1 records: r8.fast_relevel meta has cad C-1 keys fallback_plant_ratio_source / fallback_ratio_source_override unknown to FastRelevelSettings; monitor_setting_differences also lists them (P_S8_22_FAST_RELEVEL_KEYS lacks them)",
+  "D-2 r5_fallback_replay.true_forces_at does not read the cad C-2 record settings.bundle_c.pads_seal_fields (F_s_front_N 0, friction_path false): S7 L2b records are 'not replayable' although F_cyl_no_friction is the defined truth",
+  "D-3 r5_fallback_replay.run_engine returns None for S8 records (engine in settings.s8.engine / settings.s7c.engine): allowance None, judgement_passed None",
+  "D-4 the level gate is defined for pre-P-S8-22 records; for records run with nominal_gap the gate is the run's own source variant (R-5/abort events and INFO list equal)"
+ ]
+}

@@ -2,45 +2,45 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-10-26 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **S9 P3b 판정 끝: control 개정 60 + dynamics 개정 53 + C-S9-60 재판정**). 그 전: 27c785e(개정 61 보충 3 V-2 판정 집합), d05c10e(H-61-1), f8c814a(dynamics 개정 54), 071a095(S9 배치 P/E 풀), a0d41f1(P3b 실행 구성)
+- 갱신: 2026-10-27 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **S9 완료(단독 비용) + P-S8-22 V-3·V-4·V-5 판정(개정 62)**). 그 전: 0941c0c(P-S8-22 merge), 3368317(cad C-1/C-2, worktree 브랜치), e9a6ea4(S9 P3b 판정), 6791c36(사용자: paper-reviewer 추가), 27c785e(개정 61 보충 3)
 - 세션 기록: 일반 Windows 터미널에서 `claude`를 직접 실행한다(2026-10-26 결정).
 
 ## 현재 위치
 
-- S8 완료(U-S8-58). **S9 5/6(합계 64/67)**: P1·P2·P2′·P3a·**P3b 판정 끝**. 남은 체크는 "S9 착수 전 점검 1~6"의 단독 비용 측정 하나다(1·5·6은 dynamics 개정 53 5.37.10에서 닫힘, 4는 P3b 경합 실측만 있음). 근거: `00_docs/00_roadmap.md` 1절·4절·6절.
-- worktree P-S8-22(`.claude/worktrees/agent-a42ab63c487597861`)는 **아직 merge 전**이다(아래 "다음 단계" 1).
+- S8 완료(U-S8-58). **S9 완료(6/6, 2026-10-27, 합계 65/67)**: P1·P2·P2′·P3a·P3b 판정, 착수 전 점검 1~6(4 단독 비용 측정 포함) 모두 닫힘. 근거: `00_docs/00_roadmap.md` 1·4·6절.
+- **P-S8-22(R-5 대체 다리 기울기) master merge 0941c0c**, V-3 통과, V-4 실행, **V-5 ①②④ 통과·③ 판정 불가 → U-S8-67 = (나): 양성 시험 ③′ 2건 추가(C-S8-67, 아래 다음 단계 1)**. 명세 `s6_control_spec.md` 개정 62(316~317.1절).
+- worktree `.claude/worktrees/agent-a42ab63c487597861`·브랜치는 ③′ 판정이 끝날 때까지 남겨 둔다.
 
 ## 이번 커밋에서 바뀐 것
 
-- **P3b 실행(2026-10-26 12:24~22:07)**: SCM 24건 + RE1c 2건 전부 rc 0. 배치 `07_results/S9/batch_P3b_20261026_122444`(git 제외). cpu-scheduler-expert 재배정(사용자 승인)으로 G1_A_top_Fs0·Fs8을 새 P코어 실행기(`batch_P3b_20261026_193021`, `_201553`)에서 돌린 뒤 원 배치 폴더로 복사했고, 원 실행기(PID 84748)는 G1_A Fs4 3건 시작 뒤 멈췄다. 그래서 원 `progress.log`에는 S1_A·S1_B·G1_A Fs4 3건의 END가 없다(사례 폴더·로그는 완전). 실측: P코어 G1 5,100~6,500 s, J1 약 10,850~11,150 s, E코어 J1 13,750~14,275 s, E코어 G1 6,650~6,770 s(E/P ≈ 1.05). 끝 시각 22:07(재배정 없으면 약 00:56 추정).
-- **control 판정(명세 `s6_control_spec.md` 개정 60, 306~315절)**: 주 판정 P3-1·P3-3·P3-4(끝 자세 ±0.2°) 24/24 통과(최대 0.061° S1 B), P3-8·P3-10·RE1c R-1~R-4 통과, Chrono 재실행 불필요. 기준 정의 사용자 결정 U-S9P-13~16 모두 (가): P3-2 시간 한계 2.91165 s, P3-5 첫 READY 뒤 최소 ≥ 25 mm, P3-7 창 끝 크롤러 > 0.01 W_ref 창에서 4 kN, 잔차 예산은 기록 + 연약 지면 IMU 영점 허용 0.12°(IMU 선정 조건, CLAUDE.md 정확도 행). 정정 기준으로 P3 전 항목 통과·FLAG 0.
-- **dynamics 판정(`dynamics_model.md` 개정 53, 5.37.10·5.38)**: 24건 물리 판정 통과, D1(pitch −0.0004 %, z₀ +0.0035 %)·D2(침하 ≤ 0.0049 %) 일치, 착수 전 점검 1·5·6 닫힘, 5.37.1 P3a-7 불일치 정정(정본 JSON `d_roll_pitch_end_deg`), D2 정의 정리. 해석: 크리프 정지 시각은 레벨링 완료 시각이 정함, J1·J2 B 패드 6건만 탐침 소성 침하로 재레벨링 2회(READY +18~29 s), W_ratio 차는 실 마찰.
-- **C-S9-60(cad)**: `run_S9.py rejudge <batch|case>`, `s9_batch_summary.py P3b <batch> --rejudge`. 사례별 `result_rejudge_rev60.json`(원 `result.json` 불변), 새 요약 `06_analysis/01_chrono/19_S9/s9_P3b_summary.json`(옛 판 `history/s9_P3b_summary_2026-10-26_before_rev60_rejudge.json`). 시험 `05_tests/unit/test_s9_p3b_rev60.py`(8) 포함 30 통과. control 기준값과 차 0.
-- 후처리 스크립트 이관(사용자 결정): `04_scripts/03_control/s9/p3b/`(7개), `04_scripts/01_dynamics/s9/p3b/`(6개), 각 README. 재실행 결과 비트 동일(dyn 최종 JSON은 출처 키 2개만 다름 → 저장소 JSON은 작성 당시 그대로).
-- 결과 JSON: `06_analysis/01_chrono/19_S9/s9_P3-10_summary.json`(명령 SHA 동일, 이벤트 차는 `crawler_liftoff_confirmed`뿐), `s9_P3b_dyn_judgement_rev53.json`, `06_analysis/02_control/s9/p3b/`.
-- 문서 색인: `04_scripts/00_docs/build_doc_index.py`(+ `05_tests/unit/test_build_doc_index.py`)가 만드는 `00_docs/**/*_index.md` 7개. 큰 문서는 색인으로 필요한 절만 읽는다. 원본을 고치면 색인을 다시 만든다.
-- 문서: 명세 개정 60, dynamics 개정 53, decision_log(S9 P3b control·dynamics 줄, U-S9P-13~16), 로드맵 1·4절(S9 5/6, 64/67), `chrono_build_plan.md` S9 체크, CLAUDE.md 정확도 행.
+- **S9 단독 비용 측정**(사용자 결정 계획 A, 2026-10-26 23:06~10-27 00:29): `04_scripts/02_chrono/solver_benchmark/step_cost_S9.py`, 결과 `06_analysis/01_chrono/01_cost/S9_P3b_solo_step_cost.json`(원자료 `07_results/S9/cost_solo_20261026_230636`). P코어 4스레드 단독 전 하중 G1 2.64·S1 2.66·J1 4.55·J2 4.62 ms/스텝, 4병렬 경합 대비 약 2배 빠름. `--duration` 단축 궤적은 P3b와 0~40 s 비트 동일. dynamics 개정 53 보완(5.37.10 점검 4 닫힘), 로드맵 S9 6/6, `chrono_build_plan.md`.
+- **P-S8-22 merge(0941c0c)**: worktree 커밋 d7638e9..88d483c + cad C-1/C-2(3368317: `outrigger_sim.chrono.fallback_ratio`, `run_rows`, 실행기 `fallback_ratio` 기록, 환경 변수 `OUTRIGGER_L1_FALLBACK_RATIO_SOURCE` 거부·`--allow-env-override`, `m3_run --fallback-ratio-source`, `probed_leg` 기록). merge 뒤 unit 2459 통과·7 건너뜀, chrono not slow 285 통과.
+- **V-3**: 강체 135·토양 72·센서 72·β 16·r8d1 8 명령 해시 비트 동일, INFO_R5_FALLBACK_SLOPE 0회(`06_analysis/02_control/s9/v3/v3_judgement.json`).
+- **V-4**(`07_results/S9/v4_20261027_010707`): ① L1·L2b PS2, ② MLJ_K0V G4RF Fs0·Fs8 rc 0·INFO 7/22/14/6회, ④ rpB plant_meta·column_nominal 명령 SHA = 기준선 e072f15c…. ③ ML88_ep0: 원 ML 스냅숏이 옛 YAML(params_sha256 불일치)이라 사용자 결정 (가)로 ML88 base 재생성(`07_results/S8/ml88_rebase_20261027_012458`) 뒤 재생 rc 0, 그러나 로드 대체 미발생(INFO 0). **원 ML 배치 branch.pkl은 YAML 재생성(8616be9) 뒤 복원 불가 — 재생하려면 base부터 다시.**
+- **V-5(control, 명세 개정 62 316절)**: ①②④ 통과, ③ 판정 불가, 사양 미달 0. 재생 도구 결함 D-1~D-4(316.6, 우회로 판정). 303 V-2에 "S7 L2b는 F_s = 0이라 `F_cyl_no_friction`으로 재생" 명시, 304.1을 구현 기록으로. 결과 `06_analysis/02_control/s9/v5/`.
+- 문서: 명세 개정 62, decision_log(S9 단독 비용, P-S8-22 merge·V-5·U-S8-67), 로드맵, CLAUDE.md(미정 사항 "S9 뒤 계속 감시"; 정확도 행 0.119°는 앞 커밋), 색인 재생성.
 
 ## 다음 단계
 
-1. **P-S8-22 merge**(R-5 대체 다리 기울기, U-S8-60~62, 명세 304절): worktree 브랜치 `worktree-agent-a42ab63c487597861`, 커밋 d7638e9·88625da·0b1a55e·349b908·c52fdc4·88d483c + cad C-1·C-2 미커밋(`run_S9.py` `run_level` 안 3곳 포함 — 메인의 C-S9-60 수정과 같은 함수, 줄은 10줄 떨어짐, merge 때 확인). merge 뒤 V-3 축소 하네스 해시, V-4(명세 303 보강표 ①~④), V-5 판정, W-61-3 대상 재실행(P3b에서 W-61 경고 0건이라 대상 없음).
-2. hydraulics H-61-1 후속(R_hi는 U-S8-64로 채택), 실기 κ_hi 상태식 P-S8-22b는 U-R8-9 ④ 확인 뒤.
-3. S9 남은 체크: 단독 비용 측정(다른 계산과 겹치지 않게).
-4. R8 C2 PS-7a 판정(S9 뒤), U-S8-57·DONE 꼬리 감시. IMU 선정에 0.12° 조건 반영.
-5. cpu-scheduler-expert `기록` 모드로 P3b 실측(위 시간) 남기기.
+1. **C-S8-67(cad, 명세 317.1)**: `run_S8C.py`에 `G4RRF` 사건(로드 고장 다리 RR, 나머지 G4RF와 같음)·집합 `mlj_c67` 정의 → `run_S8C.py run --only MLJ_K0V_fdown3.5_G4RRF_Fs0 MLJ_K0V_fdown3.5_G4RRF_Fs8 --tag v5_c67 --approved --workers p7`(사용자 결정 U-S8-67 (나)로 승인, P코어, 동시 2 이하, 건당 약 6~7분). 기존 mlj·mlj_c29 해시 불변 확인. → control V-5 ③′ 판정(317.1 기준 4개).
+2. **python D-1~D-4**(`03_src/outrigger_sim/control/r5_fallback_replay.py`, `contact_replay.py`): C-1 meta 키 TypeError, C-2 `pads_seal_fields` 미사용, S8 엔진 None, `nominal_gap` 기록 관문. 고친 뒤 V-4 기록 4건이 우회 없이 `judgement_passed` True.
+3. 위 둘 뒤 worktree·브랜치 정리(사용자 확인).
+4. hydraulics H-61-1 후속, 실기 κ_hi 상태식 P-S8-22b는 U-R8-9 ④ 확인 뒤.
+5. R8 C2 PS-7a 판정(S9 뒤), U-S8-57·DONE 꼬리 감시, IMU 선정에 0.119° 반영, `run_S9.py` `P3B_US_PER_STEP_UPPER` 갱신 검토(경합 상한 G1·S1 4500 µs가 P3b 4병렬 실측 128 s 평균 G1 5.10·S1 4.98 ms/스텝보다 작다; J1·J2 9000 µs는 실측 8.69·8.48 이상), 재레벨 문턱 문서 불일치(control 311절 0.07° vs dynamics 5.38.4 0.03°) 정리.
 
 ## 논문·포스터 (커밋 안 함)
 
-- `09_paper/`는 **커밋하지 않는다**(사용자 2026-10-26, `.git/info/exclude`). LaTeX `latex/build.ps1`(MiKTeX xelatex→bibtex→xelatex×2), PDF·docx 변환본, 원고 `draft/*.md`. 본문 약 9.2쪽(분량 유지 결정).
-- **P3b 판정이 끝났으니** 4.4절·그림 7(`figures/scripts/fig7_p3b.py`)·초록·결론 TBD를 채운다. 수치 출처: 명세 315절(control), `dynamics_model.md` 5.38(dynamics 4.4절 초안 문단·표).
-- 포스터 `09_paper/poster/`: 초록 docx, A1 세로 v1(`포스터_A1_세로.pptx`)과 수식을 줄인 v2(`포스터_A1_세로_v2.pptx`, 그림 `figures/*_v2.svg`). ⑧ P3b 상자는 "진행 중 9건 예비" 문구 → 24건 결과로 바꿔야 한다. 생성 스크립트는 세션 scratchpad에 있었다(새 세션에서는 없음; 그림 스크립트는 `09_paper/poster/figures/scripts/`).
-- 원고 리뷰는 프로젝트 에이전트 `paper-reviewer`(`.claude/agents/paper-reviewer.md`, 읽기 전용).
+- `09_paper/`는 **커밋하지 않는다**(사용자 2026-10-26, `.git/info/exclude`). LaTeX `latex/build.ps1`(MiKTeX xelatex→bibtex→xelatex×2). 분량 제한은 잠정적으로 두지 않는다(사용자 2026-10-26 밤).
+- 2026-10-27: 4.4절(표 7)·초록·결론 P3b 반영, 그림 7(`figures/fig7_p3b.png`) 렌더, `md2tex.py` 표 대응 갱신, 빌드 `latex/main.pdf` 11쪽. 원고 백업 `draft/history/`. 남은 점: 4.3·04_1 "표 3" 번호 중복, 결론 (2) 앞 문장을 "들어 올림 과정"으로 고친 것 확인.
+- 포스터 `09_paper/poster/`: **v2만 수정**(사용자). v2 ⑧ P3b 상자를 24건 결과로(사용자 승인 문구), ⑦을 오른쪽 단으로 이동. 선택: 왼쪽 ⑧ 아래 15 mm 공백에 ④ 블록도 확대(230→240 mm). 생성 스크립트는 세션 scratchpad에 있었다(새 세션에서는 없음; 그림 스크립트는 `09_paper/poster/figures/scripts/`).
+- 원고 리뷰는 프로젝트 에이전트 `paper-reviewer`(`.claude/agents/paper-reviewer.md`, opus·effort medium, 읽기 전용, 결과는 응답으로만)에 맡긴다(사용자 추가 6791c36). 첫 시험은 "`draft/00_front_abstract.md` 초록만 리뷰".
 
 ## 작업 규칙 (이 프로젝트 메모리에 있음)
 
 - **모든 커밋 직전 integrity-checker → 이상 없을 때만 커밋·`origin/master` 푸시(상시 승인).** 커밋마다 이 인계 문서를 갱신해 같은 커밋에 넣는다. Medium·Low 지적도 커밋 전에 고친다.
-- 예상 15분 이상 작업은 long-running-task-monitor 주기 점검(약 15분 간격 cron, Suspended 스레드 검사 포함). 프로세스 종료·재개 등 조치는 사용자 승인 뒤.
-- 에이전트 지시문에 매번: 셸 heredoc·`python -`·`sed -i` 금지, Write로 쓴 파일을 `python -I`로 실행, Python·pytest·긴 명령은 Bash가 아니라 PowerShell 도구로, 커밋 메시지는 `git commit -F <파일>`.
-- 계산은 컴퓨터 자원을 최대한 쓴다(사용자 2026-10-26). 다중 계산 작업의 P/E 배치는 **cpu-scheduler-expert**에 맡긴다. 비용 측정만 단독.
+- **모든 계산 작업은 cpu-scheduler-expert 배치표로 P·E 코어를 최대한 쓴다**(사용자 2026-10-27, 단건 포함). 비용 측정만 단독.
+- 예상 15분 이상 작업은 **long-running-task-monitor**에 15분 주기 점검을 맡긴다(Suspended 검사 포함).
+- **Suspended·응답 없는 프로세스는 추천 방법으로 자동 조치 뒤 사후 보고**(사용자 2026-10-26): Suspended는 ResumeThread, 일회성 고아만 단일 PID 종료, 시뮬레이션·실행기는 자동 종료 금지. Bash·Grep 도구 자식(git·grep·bash·ripgrep)이 Suspended로 멈추는 일이 반복돼 Python·검색·긴 명령은 PowerShell 도구로 한다(검색은 `Select-String`).
+- 에이전트 지시문에 매번: 셸 heredoc·`python -`·`sed -i` 금지, Write로 쓴 파일을 `python -I`로 실행, 커밋 메시지는 `git commit -F <파일>`.
 - S단계 본 판정 실행 전에는 사용자에게 알리고 확인받는다.

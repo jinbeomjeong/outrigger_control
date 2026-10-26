@@ -1,0 +1,594 @@
+{
+ "Fs0_v4": {
+  "case": "C:\\workspace\\outrigger_control\\07_results\\S8\\v4_c29_Fs0_20261027_011211\\MLJ_K0V_fdown3.5_G4RF_Fs0",
+  "engine_hint": {
+   "s7c": "L2b_NSC",
+   "s8": "{\"case_id\": \"MLJ_K0V_fdown3.5_G4RF_Fs0\", \"group\": \"MLJ\", \"priority\": 5, \"engine\": \"L2b_NSC\", \"fs_kN\": 0.0, \"event\": \"G4RF\", \"event_spec\": {\"kind\": \"settle\", \"leg\": \"RR\", \"depth_m\": 0.0115, \"ramp_s\": 2"
+  },
+  "fault": {
+   "leg": "FR",
+   "t_start_s": 83.90000000159526,
+   "rod_fault_t_s_rel": 80.90000000159336
+  },
+  "areas_m2": {
+   "A_p": 0.013273229,
+   "A_ann": 0.00376991118
+  },
+  "B_fb_N": 13000.0,
+  "F_min_N": 9415.0,
+  "guard_cap_s_cmp_guard_per_leg": {
+   "FL": 0.0,
+   "FR": 0.0,
+   "RL": 0.0,
+   "RR": 0.0
+  },
+  "guard_nonzero_s_per_leg": {
+   "FL": 0.0,
+   "FR": 0.0,
+   "RL": 0.0,
+   "RR": 0.0
+  },
+  "judge_guard_cap_s_issued_u": 1.3,
+  "fr_lock_windows": [
+   {
+    "t_start_s": 106.0,
+    "R_ub": 14.591,
+    "M_bar": 45.19,
+    "h_a_bar": 96.43,
+    "h_star_bar": 84.19,
+    "head_true_at_lock_bar": 96.43,
+    "lower_at_h_a_kN": 97.95
+   },
+   {
+    "t_start_s": 110.0,
+    "R_ub": 14.055,
+    "M_bar": 42.7,
+    "h_a_bar": 86.92,
+    "h_star_bar": 76.07,
+    "head_true_at_lock_bar": 86.92,
+    "lower_at_h_a_kN": 86.27
+   },
+   {
+    "t_start_s": 111.5,
+    "R_ub": 14.59,
+    "M_bar": 13.0,
+    "h_a_bar": 88.58,
+    "h_star_bar": 76.1,
+    "head_true_at_lock_bar": 88.1,
+    "lower_at_h_a_kN": 99.68
+   },
+   {
+    "t_start_s": 118.3,
+    "R_ub": 15.022,
+    "M_bar": 13.0,
+    "h_a_bar": 88.37,
+    "h_star_bar": 76.21,
+    "head_true_at_lock_bar": 87.98,
+    "lower_at_h_a_kN": 99.4
+   }
+  ],
+  "fr_head_true_max_bar": 139.58,
+  "fr_true_min_F_cyl_min_interval": {
+   "min_kN": 99.926,
+   "leg": "FR",
+   "t_s": 116.258
+  },
+  "fr_true_min_F_pressure_min_interval": {
+   "min_kN": 99.926,
+   "leg": "FR",
+   "t_s": 116.258
+  },
+  "others_min_F_cyl_min_interval": {
+   "min_kN": 15.381,
+   "leg": "RR",
+   "t_s": 88.66
+  },
+  "others_min_F_pressure_min_interval": {
+   "min_kN": 15.381,
+   "leg": "RR",
+   "t_s": 88.66
+  },
+  "ready_t_s_rel": 78.90000000159336,
+  "phases": [
+   [
+    0.10000000000021103,
+    "check"
+   ],
+   [
+    4.699999999993487,
+    "touch"
+   ],
+   [
+    23.89999999994874,
+    "level"
+   ],
+   [
+    46.300000000511154,
+    "done"
+   ],
+   [
+    46.400000000514474,
+    "probe"
+   ],
+   [
+    58.30000000090951,
+    "reanchor"
+   ],
+   [
+    77.70000000155352,
+    "level"
+   ],
+   [
+    78.80000000159004,
+    "done"
+   ],
+   [
+    78.90000000159336,
+    "ready"
+   ],
+   [
+    84.80000000178921,
+    "level"
+   ],
+   [
+    102.70000000238343,
+    "done"
+   ],
+   [
+    102.80000000238675,
+    "probe"
+   ],
+   [
+    114.70000000278179,
+    "ready"
+   ]
+  ],
+  "issued_u_vs_orig": {
+   "rows_compared": 1289,
+   "max_abs_m_s": 1.4349258080492152e-06,
+   "first_diff_t_s": 88.10000000180108,
+   "phases_equal": true
+  }
+ },
+ "Fs0_orig": {
+  "case": "C:\\workspace\\outrigger_control\\07_results\\S8\\mlj_20261025_080212\\MLJ_K0V_fdown3.5_G4RF_Fs0",
+  "engine_hint": {
+   "s7c": "L2b_NSC",
+   "s8": "{\"case_id\": \"MLJ_K0V_fdown3.5_G4RF_Fs0\", \"group\": \"MLJ\", \"priority\": 5, \"engine\": \"L2b_NSC\", \"fs_kN\": 0.0, \"event\": \"G4RF\", \"event_spec\": {\"kind\": \"settle\", \"leg\": \"RR\", \"depth_m\": 0.0115, \"ramp_s\": 2"
+  },
+  "fault": {
+   "leg": "FR",
+   "t_start_s": 83.90000000159526,
+   "rod_fault_t_s_rel": 80.90000000159336
+  },
+  "areas_m2": {
+   "A_p": 0.013273229,
+   "A_ann": 0.00376991118
+  },
+  "B_fb_N": 13000.0,
+  "F_min_N": 9415.0,
+  "guard_cap_s_cmp_guard_per_leg": {
+   "FL": 0.0,
+   "FR": 0.0,
+   "RL": 0.0,
+   "RR": 0.0
+  },
+  "guard_nonzero_s_per_leg": {
+   "FL": 0.0,
+   "FR": 0.0,
+   "RL": 0.0,
+   "RR": 0.0
+  },
+  "judge_guard_cap_s_issued_u": 1.3,
+  "fr_lock_windows": [
+   {
+    "t_start_s": 106.0,
+    "R_ub": 14.591,
+    "M_bar": 45.19,
+    "h_a_bar": 96.33,
+    "h_star_bar": 84.12,
+    "head_true_at_lock_bar": 96.33,
+    "lower_at_h_a_kN": 97.83
+   },
+   {
+    "t_start_s": 110.0,
+    "R_ub": 14.055,
+    "M_bar": 42.7,
+    "h_a_bar": 86.92,
+    "h_star_bar": 76.08,
+    "head_true_at_lock_bar": 86.92,
+    "lower_at_h_a_kN": 86.28
+   },
+   {
+    "t_start_s": 111.5,
+    "R_ub": 14.59,
+    "M_bar": 13.0,
+    "h_a_bar": 88.54,
+    "h_star_bar": 76.06,
+    "head_true_at_lock_bar": 88.2,
+    "lower_at_h_a_kN": 99.62
+   },
+   {
+    "t_start_s": 118.3,
+    "R_ub": 15.022,
+    "M_bar": 13.0,
+    "h_a_bar": 88.29,
+    "h_star_bar": 76.15,
+    "head_true_at_lock_bar": 87.98,
+    "lower_at_h_a_kN": 99.28
+   }
+  ],
+  "fr_head_true_max_bar": 139.58,
+  "fr_true_min_F_cyl_min_interval": {
+   "min_kN": 99.925,
+   "leg": "FR",
+   "t_s": 116.259
+  },
+  "fr_true_min_F_pressure_min_interval": {
+   "min_kN": 99.925,
+   "leg": "FR",
+   "t_s": 116.259
+  },
+  "others_min_F_cyl_min_interval": {
+   "min_kN": 15.344,
+   "leg": "RR",
+   "t_s": 88.659
+  },
+  "others_min_F_pressure_min_interval": {
+   "min_kN": 15.344,
+   "leg": "RR",
+   "t_s": 88.659
+  },
+  "ready_t_s_rel": 78.90000000159336,
+  "phases": [
+   [
+    0.10000000000021103,
+    "check"
+   ],
+   [
+    4.699999999993487,
+    "touch"
+   ],
+   [
+    23.89999999994874,
+    "level"
+   ],
+   [
+    46.300000000511154,
+    "done"
+   ],
+   [
+    46.400000000514474,
+    "probe"
+   ],
+   [
+    58.30000000090951,
+    "reanchor"
+   ],
+   [
+    77.70000000155352,
+    "level"
+   ],
+   [
+    78.80000000159004,
+    "done"
+   ],
+   [
+    78.90000000159336,
+    "ready"
+   ],
+   [
+    84.80000000178921,
+    "level"
+   ],
+   [
+    102.70000000238343,
+    "done"
+   ],
+   [
+    102.80000000238675,
+    "probe"
+   ],
+   [
+    114.70000000278179,
+    "ready"
+   ]
+  ]
+ },
+ "Fs8_v4": {
+  "case": "C:\\workspace\\outrigger_control\\07_results\\S8\\v4_c29_Fs8_20261027_011151\\MLJ_K0V_fdown3.5_G4RF_Fs8",
+  "engine_hint": {
+   "s7c": "L2b_NSC",
+   "s8": "{\"case_id\": \"MLJ_K0V_fdown3.5_G4RF_Fs8\", \"group\": \"MLJ\", \"priority\": 5, \"engine\": \"L2b_NSC\", \"fs_kN\": 8.0, \"event\": \"G4RF\", \"event_spec\": {\"kind\": \"settle\", \"leg\": \"RR\", \"depth_m\": 0.0115, \"ramp_s\": 2"
+  },
+  "fault": {
+   "leg": "FR",
+   "t_start_s": 81.50000000151559,
+   "rod_fault_t_s_rel": 78.50000000151368
+  },
+  "areas_m2": {
+   "A_p": 0.013273229,
+   "A_ann": 0.00376991118
+  },
+  "B_fb_N": 13000.0,
+  "F_min_N": 9415.0,
+  "guard_cap_s_cmp_guard_per_leg": {
+   "FL": 0.0,
+   "FR": 0.0,
+   "RL": 0.0,
+   "RR": 0.0
+  },
+  "guard_nonzero_s_per_leg": {
+   "FL": 0.0,
+   "FR": 0.0,
+   "RL": 0.0,
+   "RR": 0.0
+  },
+  "judge_guard_cap_s_issued_u": 1.8,
+  "fr_lock_windows": [
+   {
+    "t_start_s": 95.6,
+    "R_ub": 14.678,
+    "M_bar": 13.0,
+    "h_a_bar": 93.21,
+    "h_star_bar": 79.89,
+    "head_true_at_lock_bar": 93.21,
+    "lower_at_h_a_kN": 105.82
+   },
+   {
+    "t_start_s": 99.6,
+    "R_ub": 14.136,
+    "M_bar": 40.27,
+    "h_a_bar": 81.81,
+    "h_star_bar": 71.9,
+    "head_true_at_lock_bar": 81.81,
+    "lower_at_h_a_kN": 80.41
+   },
+   {
+    "t_start_s": 101.1,
+    "R_ub": 14.678,
+    "M_bar": 13.0,
+    "h_a_bar": 95.24,
+    "h_star_bar": 81.53,
+    "head_true_at_lock_bar": 95.09,
+    "lower_at_h_a_kN": 108.52
+   },
+   {
+    "t_start_s": 107.9,
+    "R_ub": 15.114,
+    "M_bar": 13.0,
+    "h_a_bar": 95.95,
+    "h_star_bar": 82.42,
+    "head_true_at_lock_bar": 94.75,
+    "lower_at_h_a_kN": 109.46
+   }
+  ],
+  "fr_head_true_max_bar": 130.35,
+  "fr_true_min_F_cyl_min_interval": {
+   "min_kN": 97.707,
+   "leg": "FR",
+   "t_s": 105.627
+  },
+  "fr_true_min_F_pressure_min_interval": {
+   "min_kN": 95.734,
+   "leg": "FR",
+   "t_s": 99.373
+  },
+  "others_min_F_cyl_min_interval": {
+   "min_kN": 16.348,
+   "leg": "RR",
+   "t_s": 85.935
+  },
+  "others_min_F_pressure_min_interval": {
+   "min_kN": 23.014,
+   "leg": "RR",
+   "t_s": 85.935
+  },
+  "ready_t_s_rel": 76.50000000151368,
+  "phases": [
+   [
+    0.10000000000021103,
+    "check"
+   ],
+   [
+    4.699999999993487,
+    "touch"
+   ],
+   [
+    23.89999999994874,
+    "level"
+   ],
+   [
+    46.300000000511154,
+    "done"
+   ],
+   [
+    46.400000000514474,
+    "probe"
+   ],
+   [
+    58.30000000090951,
+    "reanchor"
+   ],
+   [
+    75.30000000147385,
+    "level"
+   ],
+   [
+    76.40000000151036,
+    "done"
+   ],
+   [
+    76.50000000151368,
+    "ready"
+   ],
+   [
+    82.2000000017029,
+    "level"
+   ],
+   [
+    92.30000000203819,
+    "done"
+   ],
+   [
+    92.40000000204151,
+    "probe"
+   ],
+   [
+    104.30000000243655,
+    "ready"
+   ]
+  ],
+  "issued_u_vs_orig": {
+   "rows_compared": 1265,
+   "max_abs_m_s": 9.742266344742095e-07,
+   "first_diff_t_s": 85.30000000170813,
+   "phases_equal": true
+  }
+ },
+ "Fs8_orig": {
+  "case": "C:\\workspace\\outrigger_control\\07_results\\S8\\mlj_20261025_080212\\MLJ_K0V_fdown3.5_G4RF_Fs8",
+  "engine_hint": {
+   "s7c": "L2b_NSC",
+   "s8": "{\"case_id\": \"MLJ_K0V_fdown3.5_G4RF_Fs8\", \"group\": \"MLJ\", \"priority\": 5, \"engine\": \"L2b_NSC\", \"fs_kN\": 8.0, \"event\": \"G4RF\", \"event_spec\": {\"kind\": \"settle\", \"leg\": \"RR\", \"depth_m\": 0.0115, \"ramp_s\": 2"
+  },
+  "fault": {
+   "leg": "FR",
+   "t_start_s": 81.50000000151559,
+   "rod_fault_t_s_rel": 78.50000000151368
+  },
+  "areas_m2": {
+   "A_p": 0.013273229,
+   "A_ann": 0.00376991118
+  },
+  "B_fb_N": 13000.0,
+  "F_min_N": 9415.0,
+  "guard_cap_s_cmp_guard_per_leg": {
+   "FL": 0.0,
+   "FR": 0.0,
+   "RL": 0.0,
+   "RR": 0.0
+  },
+  "guard_nonzero_s_per_leg": {
+   "FL": 0.0,
+   "FR": 0.0,
+   "RL": 0.0,
+   "RR": 0.0
+  },
+  "judge_guard_cap_s_issued_u": 1.8,
+  "fr_lock_windows": [
+   {
+    "t_start_s": 95.6,
+    "R_ub": 14.678,
+    "M_bar": 13.0,
+    "h_a_bar": 93.3,
+    "h_star_bar": 79.96,
+    "head_true_at_lock_bar": 93.3,
+    "lower_at_h_a_kN": 105.94
+   },
+   {
+    "t_start_s": 99.6,
+    "R_ub": 14.136,
+    "M_bar": 40.27,
+    "h_a_bar": 81.81,
+    "h_star_bar": 71.89,
+    "head_true_at_lock_bar": 81.81,
+    "lower_at_h_a_kN": 80.4
+   },
+   {
+    "t_start_s": 101.1,
+    "R_ub": 14.678,
+    "M_bar": 13.0,
+    "h_a_bar": 95.28,
+    "h_star_bar": 81.55,
+    "head_true_at_lock_bar": 95.28,
+    "lower_at_h_a_kN": 108.56
+   },
+   {
+    "t_start_s": 107.9,
+    "R_ub": 15.114,
+    "M_bar": 13.0,
+    "h_a_bar": 95.93,
+    "h_star_bar": 82.4,
+    "head_true_at_lock_bar": 94.81,
+    "lower_at_h_a_kN": 109.43
+   }
+  ],
+  "fr_head_true_max_bar": 130.34,
+  "fr_true_min_F_cyl_min_interval": {
+   "min_kN": 97.705,
+   "leg": "FR",
+   "t_s": 105.627
+  },
+  "fr_true_min_F_pressure_min_interval": {
+   "min_kN": 95.744,
+   "leg": "FR",
+   "t_s": 99.377
+  },
+  "others_min_F_cyl_min_interval": {
+   "min_kN": 16.299,
+   "leg": "RR",
+   "t_s": 85.92
+  },
+  "others_min_F_pressure_min_interval": {
+   "min_kN": 22.965,
+   "leg": "RR",
+   "t_s": 85.92
+  },
+  "ready_t_s_rel": 76.50000000151368,
+  "phases": [
+   [
+    0.10000000000021103,
+    "check"
+   ],
+   [
+    4.699999999993487,
+    "touch"
+   ],
+   [
+    23.89999999994874,
+    "level"
+   ],
+   [
+    46.300000000511154,
+    "done"
+   ],
+   [
+    46.400000000514474,
+    "probe"
+   ],
+   [
+    58.30000000090951,
+    "reanchor"
+   ],
+   [
+    75.30000000147385,
+    "level"
+   ],
+   [
+    76.40000000151036,
+    "done"
+   ],
+   [
+    76.50000000151368,
+    "ready"
+   ],
+   [
+    82.2000000017029,
+    "level"
+   ],
+   [
+    92.30000000203819,
+    "done"
+   ],
+   [
+    92.40000000204151,
+    "probe"
+   ],
+   [
+    104.30000000243655,
+    "ready"
+   ]
+  ]
+ }
+}

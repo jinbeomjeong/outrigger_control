@@ -1,0 +1,157 @@
+{
+ "check": "V-3 (s6_control_spec.md 303): reduced-harness command hashes after the P-S8-22 merge equal the pre-merge reference",
+ "date": "2026-10-27",
+ "code": "master 0941c0c (merge of P-S8-22), working tree code dirs clean",
+ "environment": {
+  "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I",
+  "MKL_THREADING_LAYER": "TBB",
+  "S9_CTRL": "preset",
+  "S9_RULE": "{\"dF_thr_N\":2000}"
+ },
+ "criterion": "rigid 135/135, soil 72/72, sensor 72/72, beta 16/16, c2py_r8d1 8/8",
+ "sets": {
+  "rigid": {
+   "equal": 135,
+   "total": 135,
+   "reference_total": 135,
+   "first_different": [],
+   "errors": 0,
+   "info_r5_fallback_slope_events": 0,
+   "meta": {
+    "script": "04_scripts/03_control/s9/s9_soil_closed_loop.py",
+    "script_sha256": "eaa8b44ed945978e27b2d85d4b466597db986009fc84fb01cccc95388622962c",
+    "wall_s": 162.6,
+    "workers": 8,
+    "set": "rigid",
+    "rule": {
+     "dF_thr_N": 2000
+    },
+    "n_cases": 135,
+    "controller": "preset"
+   },
+   "output": "07_results/S9/v3/rigid.json",
+   "output_sha256": "1f1cb99dcf999442d5eb98968286d08c07ba18c5cbae3a3ba39bb742835ef099",
+   "reference": "06_analysis/02_control/s9/rigid_dF2.json",
+   "reference_sha256": "fa2e9392885ac8c0de303558e1c8313c32dc171376509cc381580d74ab158297",
+   "schedule": {
+    "stage": 1,
+    "cores": "P",
+    "affinity": "0x0000FFFF",
+    "priority": "Normal"
+   },
+   "s9_filter": "loc"
+  },
+  "soil": {
+   "equal": 72,
+   "total": 72,
+   "reference_total": 72,
+   "first_different": [],
+   "errors": 0,
+   "info_r5_fallback_slope_events": 0,
+   "meta": {
+    "script": "04_scripts/03_control/s9/s9_soil_closed_loop.py",
+    "script_sha256": "eaa8b44ed945978e27b2d85d4b466597db986009fc84fb01cccc95388622962c",
+    "wall_s": 269.5,
+    "workers": 6,
+    "set": "soil",
+    "rule": {
+     "dF_thr_N": 2000
+    },
+    "n_cases": 72,
+    "controller": "preset"
+   },
+   "output": "07_results/S9/v3/soil.json",
+   "output_sha256": "0749a56fcfa2e6127bab4ed294c231f8eb5fb96a789572ac0a8026977d307241",
+   "reference": "06_analysis/02_control/s9/soil_dF2.json",
+   "reference_sha256": "ea07988a451e5df6d7740bc71bd42b8a02bdf54c6de074054cc000c2a91b5431",
+   "schedule": {
+    "stage": 1,
+    "cores": "E",
+    "affinity": "0x0FFF0000",
+    "priority": "BelowNormal"
+   },
+   "s9_filter": "loc"
+  },
+  "sensor": {
+   "equal": 72,
+   "total": 72,
+   "reference_total": 72,
+   "first_different": [],
+   "errors": 0,
+   "info_r5_fallback_slope_events": 0,
+   "meta": {
+    "script": "04_scripts/03_control/s9/s9_soil_closed_loop.py",
+    "script_sha256": "eaa8b44ed945978e27b2d85d4b466597db986009fc84fb01cccc95388622962c",
+    "wall_s": 273.6,
+    "workers": 6,
+    "set": "sensor",
+    "rule": {
+     "dF_thr_N": 2000
+    },
+    "n_cases": 72,
+    "controller": "preset"
+   },
+   "output": "07_results/S9/v3/sensor.json",
+   "output_sha256": "ca68d6e9159f871a9c8c176d61cffbd5bfcf719f42f99586cd80b7ddcd626cd0",
+   "reference": "06_analysis/02_control/s9/sensor_dF2.json",
+   "reference_sha256": "a71c147ce613930cd1183fd0eceda70b4bb6f80478895bed257b9ceb6b44ee21",
+   "schedule": {
+    "stage": 1,
+    "cores": "E",
+    "affinity": "0x0FFF0000",
+    "priority": "BelowNormal"
+   },
+   "s9_filter": null
+  },
+  "beta": {
+   "equal": 16,
+   "total": 16,
+   "reference_total": 16,
+   "first_different": [],
+   "errors": 0,
+   "info_r5_fallback_slope_events": 0,
+   "meta": {
+    "script": "04_scripts/03_control/s9/s9_soil_closed_loop.py",
+    "script_sha256": "eaa8b44ed945978e27b2d85d4b466597db986009fc84fb01cccc95388622962c",
+    "wall_s": 32.4,
+    "workers": 8,
+    "set": "beta",
+    "rule": {
+     "dF_thr_N": 2000
+    },
+    "n_cases": 16,
+    "controller": "preset"
+   },
+   "output": "07_results/S9/v3/beta.json",
+   "output_sha256": "cfc96710992fab24b108aa43340cd1802cbb600933a689a109f0385cf448f1cd",
+   "reference": "06_analysis/02_control/s9/beta_dF2.json",
+   "reference_sha256": "629c05a458c5ce1b15172880a32bfc013f71aa8e31330591662fb3d2f6c4c0d4",
+   "schedule": {
+    "stage": 2,
+    "cores": "P",
+    "affinity": "0x0000FFFF",
+    "priority": "Normal"
+   },
+   "s9_filter": null
+  },
+  "r8d1": {
+   "equal": 8,
+   "total": 8,
+   "whole_json_equal": true,
+   "output": "07_results/S9/v3/r8d1_closed_loop.json",
+   "output_sha256": "0821d4e81cd3277f77469ef7fc59c6ce25b07e6f35f107a18349fc58c94f72ef",
+   "reference": "07_results/S9/v3/r8d1_closed_loop_premerge_e9a6ea4.json",
+   "reference_sha256": "0821d4e81cd3277f77469ef7fc59c6ce25b07e6f35f107a18349fc58c94f72ef",
+   "reference_note": "pre-merge baseline: git archive e9a6ea4 (03_src, 04_scripts, 02_params, 01_cad, 05_tests, 06_analysis/00_dynamics, 06_analysis/02_control) run with the same command; 04_scripts/03_control and 01_dynamics imported from the main tree via r8d1_td.py's absolute path are identical at e9a6ea4, 0941c0c and the working tree",
+   "schedule": {
+    "stage": 2,
+    "cores": "E",
+    "affinity": "0x0FFF0000",
+    "priority": "BelowNormal",
+    "workers": 1
+   }
+  }
+ },
+ "passed": true,
+ "v4_may_start": true
+}

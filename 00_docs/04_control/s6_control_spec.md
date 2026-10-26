@@ -1,6 +1,6 @@
 # S6 제어 설계 명세 (갈래 C, 2026-10-21)
 
-> **현재 상태(2026-10-26 갱신)**: **마지막으로 쓴 개정은 60(2026-10-26, 306~315절, 파일 끝): S9 P3b 제어 판정. 주 판정(P3-1·P3-3·P3-4 ±0.2°) 24/24 통과, P3-8·P3-10·RE1c R-1~R-4 통과. 기준 정의 3건(P3-2 시간 조항 2.9 s, P3-5 첫 READY 뒤 최소, P3-7 > 0.01 W 부담 창)과 연약 지면 잔차 예산(기록 유지, IMU 센서 허용 0.12°)은 사용자 결정 2026-10-26 U-S9P-13~16 모두 (가)로 확정, 정정 기준으로 P3 전 항목 통과, Chrono 재실행 불필요. 실행기 반영 C-S9-60 끝(314.1절 구현 기록, $T_{lim}$ 2.91165 s, P3-7은 $W_{ref}$ 기준).** 번호상 최신 개정은 **61**(2026-10-26, 298~305절, 보완 2는 284.1·305.2절, 보완 3은 304.1·305.3절과 219.7 ④ 부가 행)이다. **61 보완 3: H-61-1 반영(L2b·L1 $R_{hi}$ 유지, 실기 $\kappa_{hi}$ 식은 정의만·구현은 U-R8-9 ④ 부가 확인 뒤 P-S8-22b), V-2·V-4·V-5 보강, P-S8-22 구현 기록(worktree, 메인 merge 전·P3b 뒤 merge 예정), U-S8-64~66.** 개정 60은 S9 P3 판정용으로 예약한 번호이고 61 뒤(파일 끝)에 썼다. 개정 61(R3 회귀 PS2 nocal 합격 → 불합격 원인 기록, 재실행 판정 (가), R-5 대체 다리 하강률 설계 (다), P3b 감시 항목)이 60보다 먼저 쓰였다. 번호 순서와 작성 순서가 다르다: 60은 나중에 파일 끝(61 뒤)에 붙이고 개정표는 번호순으로 둔다. 절 번호는 61이 298~305를 쓰고 60은 306부터 쓴다. (61의 (다)는 설계만이고 구현은 S9 P3b 뒤다.) **61 보완(305.1)으로 284절 S9 P3 판정 기준을 고쳤다. 자세의 주 판정은 정상상태 끝 자세 ±0.2°(프로젝트 목표)다. 0.03° 기준들(완료 데드밴드, J1·J2 정착 건전성 한계, P3-S3)은 기록·건전성 항목이고 합격 판정이 아니다.** 함께 반영한 사용자 결정은 셋이다: U-S9P-6 (가) P3b 24건 전부, U-S9P-7 (가) J1·J2 보완 4개 항, U-S9P-8 (가) SCM $R$ 공칭. 그 앞 상태: 개정 59 보완(2026-10-26)까지가 메인에 있다. 개정 58(PS7a 재실행 회귀 통과 108.1, U-S9-C1~C6 확정 기록)과 개정 59(S-3 거짓 보정 대책 (나-1)·(나-2), 292~296절), 59 보완(297절: 옛 `branch.pkl` 토양 상태 복원 (다)·(가), 축소 하네스 수정, M-3·M-4 판정)이 모두 메인에 있다. 개정 57(C2 토양 대응)은 U-S9-C1~C7 확정 뒤 구현되어 2026-10-26 메인에 합쳤다(C2 브랜치 db3e9b4·0400274·f850ab6·2821cfc·089bfd5·7d07495·f541499·d53af22, R8 프리셋 토양 대응 기본 켬, 295절 M-1~M-4 통과). P3 판정은 개정 60 예정이다.
+> **현재 상태(2026-10-27 갱신)**: **마지막으로 쓴 개정은 62(2026-10-27, 316~317절, 파일 끝): P-S8-22 merge(master 0941c0c) 뒤 V-3 통과와 V-5 판정. ① S7 PS2 L1·L2b, ② C-S8-29 G4RF Fs0·Fs8, ④ D8 rpB SHA 통과, ③ ML88_ep0는 로드 대체가 나지 않아 판정 불가 → U-S8-67 = (나) 확정(2026-10-27): V-5는 ①②④로 닫고, 양성 시험 ③′(RR 로드 고장 + G4, Fs0·Fs8)를 cad C-S8-67(317.1)로 더한다. 303 "V-2 통과 판정 집합"에 S7 L2b 재생 참값 `F_cyl_no_friction`($F_s$ = 0) 명시, 304.1에 merge·cad C-1/C-2(3368317) 구현 기록. 재생 도구 결함 D-1~D-4는 python 위임(316.6).** 그 앞에 쓴 개정은 60(2026-10-26, 306~315절): S9 P3b 제어 판정. 주 판정(P3-1·P3-3·P3-4 ±0.2°) 24/24 통과, P3-8·P3-10·RE1c R-1~R-4 통과. 기준 정의 3건(P3-2 시간 조항 2.9 s, P3-5 첫 READY 뒤 최소, P3-7 > 0.01 W 부담 창)과 연약 지면 잔차 예산(기록 유지, IMU 센서 허용 0.12°)은 사용자 결정 2026-10-26 U-S9P-13~16 모두 (가)로 확정, 정정 기준으로 P3 전 항목 통과, Chrono 재실행 불필요. 실행기 반영 C-S9-60 끝(314.1절 구현 기록, $T_{lim}$ 2.91165 s, P3-7은 $W_{ref}$ 기준).** 번호상 최신 개정은 **61**(2026-10-26, 298~305절, 보완 2는 284.1·305.2절, 보완 3은 304.1·305.3절과 219.7 ④ 부가 행)이다. **61 보완 3: H-61-1 반영(L2b·L1 $R_{hi}$ 유지, 실기 $\kappa_{hi}$ 식은 정의만·구현은 U-R8-9 ④ 부가 확인 뒤 P-S8-22b), V-2·V-4·V-5 보강, P-S8-22 구현 기록(worktree, 메인 merge 전·P3b 뒤 merge 예정), U-S8-64~66.** 개정 60은 S9 P3 판정용으로 예약한 번호이고 61 뒤(파일 끝)에 썼다. 개정 61(R3 회귀 PS2 nocal 합격 → 불합격 원인 기록, 재실행 판정 (가), R-5 대체 다리 하강률 설계 (다), P3b 감시 항목)이 60보다 먼저 쓰였다. 번호 순서와 작성 순서가 다르다: 60은 나중에 파일 끝(61 뒤)에 붙이고 개정표는 번호순으로 둔다. 절 번호는 61이 298~305를 쓰고 60은 306부터 쓴다. (61의 (다)는 설계만이고 구현은 S9 P3b 뒤다.) **61 보완(305.1)으로 284절 S9 P3 판정 기준을 고쳤다. 자세의 주 판정은 정상상태 끝 자세 ±0.2°(프로젝트 목표)다. 0.03° 기준들(완료 데드밴드, J1·J2 정착 건전성 한계, P3-S3)은 기록·건전성 항목이고 합격 판정이 아니다.** 함께 반영한 사용자 결정은 셋이다: U-S9P-6 (가) P3b 24건 전부, U-S9P-7 (가) J1·J2 보완 4개 항, U-S9P-8 (가) SCM $R$ 공칭. 그 앞 상태: 개정 59 보완(2026-10-26)까지가 메인에 있다. 개정 58(PS7a 재실행 회귀 통과 108.1, U-S9-C1~C6 확정 기록)과 개정 59(S-3 거짓 보정 대책 (나-1)·(나-2), 292~296절), 59 보완(297절: 옛 `branch.pkl` 토양 상태 복원 (다)·(가), 축소 하네스 수정, M-3·M-4 판정)이 모두 메인에 있다. 개정 57(C2 토양 대응)은 U-S9-C1~C7 확정 뒤 구현되어 2026-10-26 메인에 합쳤다(C2 브랜치 db3e9b4·0400274·f850ab6·2821cfc·089bfd5·7d07495·f541499·d53af22, R8 프리셋 토양 대응 기본 켬, 295절 M-1~M-4 통과). P3 판정은 개정 60 예정이다.
 >
 > - 아래 초판 본문(0~9절)은 **C2 R2/H4(50 Hz) 기준**이다. 현행 제어기는 **R8 C2**(10 Hz, 출력 지연 d = 1, 프리셋 `C2Config.with_10hz_d1()`)다. 현행 구조·게인의 원본은 **개정 30(130~141절, 특히 136절 이후)** 과 그 뒤 개정들(31~56)이다. 앞 절과 뒤 개정이 다르면 **뒤 개정이 맞다**.
 > - 초판 본문의 "고치지 않았다", "scratchpad에 있다" 같은 문장은 **초판 당시** 상태다. 2026-10-24·25 이관으로 스크립트 대부분은 `04_scripts/03_control/`(S6 `r8d1/`, S8 `s8/`, 개정 53~56 `s8/rev53_56/`)로, 결과는 `06_analysis/02_control/`로 옮겼다. 옮기지 못한 것은 각 개정에 "스크립트 미보존"으로 적었다.
@@ -78,6 +78,7 @@
 | **59 보완** | 2026-10-26 | **토양 상태 없는 옛 `branch.pkl` 처리((다) 기본, (가) `--soil-off-replay`), 축소 하네스 `reference_config` 결함 수정·LF 기준 SHA, M-3·M-4 판정(합치기 허용), P3 해석 보완 예약(개정 60)** | 289·291·295·297 |
 | 60 | 2026-10-26 | S9 P3b 제어 판정(291절 5·6번). 주 판정 24/24 통과, P3-10·RE1c 통과, 정정 기준으로 P3 전 항목 통과, P3-2·P3-5·P3-7 기준 정의와 잔차 예산은 U-S9P-13~16 (가) 확정(284절 표 수정), 실행기 반영 위임 C-S9-60. 61보다 뒤에 썼고 파일에서는 61 뒤에 있다 | 306~315 |
 | **61** | 2026-10-26 | **R3 회귀 S7 ctrl3 `L1_PS2_fdown3.5_old_worst_nocal` 합격 → 불합격 원인(P-S8-13 column bound가 R-5 하강률을 약 3.75배 키운 거짓 재레벨, 안전 쪽 보수) 기록, `current_dur125` 재실행 S7 판정 2·5b((가): 실패 0, 2 통과, 5b는 10 Hz 기록이라 판정 행 없음), 판정 표기 차이(`c2_revision: "R7"` 대 실제 R8-D1), P3b 감시 항목, R-5 대체 다리 하강률 설계 (다)(명목 기울기 + 차액 항, 낙관 0 논증, 구현은 S9 P3b 뒤). 보완(305.1): 284절 P3-4 주 판정 = 정상상태 끝 자세 ±0.2°, 0.03° 기준은 기록·건전성, U-S9P-6~8 (가) 반영(P3b 24건, J1·J2 보완 4항, SCM R 공칭). 보완 2(305.2, 284.1): P3b 실행 구성(26건 = SCM 24 + RE1c 2, 압력 WIKA 정상 + 교정, IMU ideal, 시드 20261026, 120 s 고정, 양방향 크리프 P3-4 창, RE1c R-1~R-5), U-S9P-9~12. 보완 3(305.3): H-61-1 반영(302.3 한계, 302.4 실기 $R_{hi}$ 정의·구현 보류, 재생 낙관 허용 L2b 1.2 kN·L1 0.05 kN), V-2 관문·탐침 다리 출처, V-4 ② 같은 실행 재생·④ 기준선 SHA·INFO ≥ 1회, U-R8-9 ④ 부가, P-S8-22 구현 기록 304.1(worktree, merge 전), U-S8-64~66** | 219.7·284·284.1·285·298~305.3 |
+| **62** | 2026-10-27 | **P-S8-22 merge(0941c0c) 뒤 V-3 통과·V-5 판정: ① S7 ctrl3 PS2 L1(READY 84.0 s, R-5 0, 재생 하강 행 낙관 −0.13 kN)·L2b(판정 행 R3 기준선과 같음, −3.05 kN), ② G4RF Fs0·Fs8(218.10 행 악화 없음, −15.29 / −5.99 kN), ④ rpB SHA 같음 통과, ③ ML88_ep0 대체 없음 판정 불가 → U-S8-67 (나) 확정: V-5 ①②④로 닫음 + 양성 시험 ③′ 위임 C-S8-67(317.1). 303 S7 L2b 재생 참값 `F_cyl_no_friction`, 304.1 merge·cad C-1/C-2 기록, 재생 도구 결함 D-1~D-4 위임** | 303·304.1·316~317 |
 
 ---
 
@@ -11579,7 +11580,7 @@ $$\hat L^{true}_k-\hat L^{fb}_k=(F_k-b-L_k)+\tfrac{h}{n}\big(D_k-G(R_{true})\Del
 | V-2 탐침 다리 출처 | 우선순위는 셋이다. ① 실행기 10 Hz 행 `probed_leg`(cad, V-4 실행부터) ② `probe_history.json`의 끝난 회차 ③ PROBE 중 명령이 0이 아닌 주기에서 직전 주기 \|issued\| 최대 다리. ③은 같은 실행의 끝난 회차에서 ②와 100 % 같을 때만 쓴다. 같지 않으면 재생 불가다. ③으로 정한 중단 회차의 탐침 다리가 그 회차를 끊은 다리와 같으면 모순이라 재생 불가다. 명령 주기가 없는 회차는 탐침 다리 없음으로 두고 네 다리를 모두 감시한다. 행마다 `probed_leg_source`를 남긴다. `contact_episode`의 공용 재구성은 바꾸지 않는다(ML 에피소드 영향, ML 재개 때 검토) |
 | V-2 재생 설정 | 감시기 설정은 원 실행 `controller_meta.two_pressure`와 필드별로 같아야 한다(P-S8-22 새 키는 예외로 기록). E-6 공제는 meta에서 읽는다(meta에 없고 교정 실패가 있으면 재생 불가). 대체 시점은 원 이벤트로 강제한다(P-S8-22는 진단을 바꾸지 않음). 재생 자체 진단과 시각이 다르면 기록만 한다 |
 | V-2 통과 | 관문을 통과한 실행에서 `plant_meta`·`column_nominal` 재생의 거짓 R-5(참 힘 ≥ 3 $P_5$)는 0회. 참 저하중 R-5(참 힘 < $P_5$ + 5 kN)는 같은 주기 또는 더 이른 주기에 남는다. 주기별 낙관 $\hat L^{fb}-\hat L^{true}$($\hat L^{true}$ = 같은 실행 1 ms 참 압력 힘으로 계산한 정상 센서 다리 예측)는 **헤드 하강 행(Δh ≥ 0)**에서 L1 ≤ 0.05 kN, L2b ≤ 1.2 kN(판정 집합의 자세한 정의는 다음 행). 302.7의 15건은 통과 수와 재생 불가 수(사유별)를 함께 보고한다 |
-| V-2 통과 판정 집합(개정 61 보완 3의 같은 날 추가) | 낙관 $\hat L^{fb}-\hat L^{true}$와 놓친 발동은 **R-5 감시 주기**(READY, PROBE의 탐침하지 않는 다리)에서만 센다. 놓친 발동은 정상 센서 예측으로는 R-5 세 조건이 모두 성립하는데 대체 예측으로는 발동하지 않은 주기다. $\hat L^{true}$의 참값은 같은 실행의 1 ms **압력 힘**이다: L2b는 `pads.npz` `F_pressure`(두 센서 순 힘 참값, 실 마찰 제외), L1-R은 마찰 요소가 없어 `F_cyl`이다. L2b에서 $F_s$ > 0인데 `F_pressure`가 없으면 재생 불가다. 행마다 `true_force_source`를 남긴다. **판정**은 302.2 조건이 성립하는 R-5 감시 행(nominal_gap)에서 하며 두 가지다. (i) **헤드 하강 행(Δh ≥ 0, 302.3 증명 범위)**의 낙관이 L1 ≤ 0.05 kN, L2b ≤ 1.2 kN이어야 한다. (ii) **302.2 조건이 성립하는 감시 행 전체**(헤드 상승 행 포함, level 규칙 행 `record_level` 제외)에서 놓친 발동이 0이어야 한다. level 규칙 행의 놓친 발동은 판정에 넣지 않는다. FLAG만 달고 302.2 확장 검토로 넘긴다. 헤드 상승 행(Δh < 0)에서는 하강률 조건이 서지 않아 대체·정상 어느 쪽도 R-5가 발동하지 않으므로, 낙관이 소비되지 않는다. 그래서 그 행은 **기록**만 한다. 정상 센서가 발동할 수 있는 행은 모두 Δh > 0이므로 (i) 집합이 소비 행을 모두 덮는다. 재생 요약의 행 분류는 `judged_falling` / `record_rising` / `record_level`이다. **`current_dur125` 결과(python P-1 349b908 → 공식 판정 필드 c52fdc4 `judgement_passed`, L1 `F_cyl_no_friction`): 통과.** 하강 행 낙관 최대는 −0.10 kN(plant_meta), −0.24 kN(column_nominal)이고 놓친 발동은 0이다. 기록 값은 상승 행 최대 +3.71 / +20.06 kN(124.0 s, 159.0~159.2 s, 발동 없음)과 level 감시 행 8개(moving 최대 +4.19, short −1.23, other +0.68 kN, 놓친 발동 0, FLAG 없음)다. 169.0 s +2.10 kN 행은 REANCHOR 구간이라 감시 행이 아니다. **level 규칙 행**(이동 중, 잠김 구간 n주기 미만)은 P-S8-22 전과 같은 식이라 302.3 증명 범위 밖이다. 낙관 최대와 놓친 발동 수를 이유별로 **기록**만 하고 V-5 불합격으로 쓰지 않는다. 놓친 발동이 1회 이상이면 FLAG를 달고 302.2 적용 범위 확장 검토로 넘긴다. 구현: python P-1(`r5_fallback_replay.py`), cad C-2(S7 L2b 기록기에 `F_pressure`·`rod_pressure`가 있는지 확인하고, 없으면 더함) |
+| V-2 통과 판정 집합(개정 61 보완 3의 같은 날 추가) | 낙관 $\hat L^{fb}-\hat L^{true}$와 놓친 발동은 **R-5 감시 주기**(READY, PROBE의 탐침하지 않는 다리)에서만 센다. 놓친 발동은 정상 센서 예측으로는 R-5 세 조건이 모두 성립하는데 대체 예측으로는 발동하지 않은 주기다. $\hat L^{true}$의 참값은 같은 실행의 1 ms **압력 힘**이다: L2b는 `pads.npz` `F_pressure`(두 센서 순 힘 참값, 실 마찰 제외), L1-R은 마찰 요소가 없어 `F_cyl`이다. L2b에서 $F_s$ > 0인데 `F_pressure`가 없으면 재생 불가다. **(개정 62) S7 L2b 기록은 $F_s$ = 0(실 마찰 요소 없음)이라 cad C-2가 `F_pressure`를 더하지 않았다(`F_pressure` = `F_cyl`, 근거 기록 `result.json` `settings.bundle_c.pads_seal_fields`: `F_s_front_N` 0, `friction_path` false). 그래서 S7 L2b 재생의 참값은 `F_pressure`가 아니라 `F_cyl_no_friction`이다(316.2).** 행마다 `true_force_source`를 남긴다. **판정**은 302.2 조건이 성립하는 R-5 감시 행(nominal_gap)에서 하며 두 가지다. (i) **헤드 하강 행(Δh ≥ 0, 302.3 증명 범위)**의 낙관이 L1 ≤ 0.05 kN, L2b ≤ 1.2 kN이어야 한다. (ii) **302.2 조건이 성립하는 감시 행 전체**(헤드 상승 행 포함, level 규칙 행 `record_level` 제외)에서 놓친 발동이 0이어야 한다. level 규칙 행의 놓친 발동은 판정에 넣지 않는다. FLAG만 달고 302.2 확장 검토로 넘긴다. 헤드 상승 행(Δh < 0)에서는 하강률 조건이 서지 않아 대체·정상 어느 쪽도 R-5가 발동하지 않으므로, 낙관이 소비되지 않는다. 그래서 그 행은 **기록**만 한다. 정상 센서가 발동할 수 있는 행은 모두 Δh > 0이므로 (i) 집합이 소비 행을 모두 덮는다. 재생 요약의 행 분류는 `judged_falling` / `record_rising` / `record_level`이다. **`current_dur125` 결과(python P-1 349b908 → 공식 판정 필드 c52fdc4 `judgement_passed`, L1 `F_cyl_no_friction`): 통과.** 하강 행 낙관 최대는 −0.10 kN(plant_meta), −0.24 kN(column_nominal)이고 놓친 발동은 0이다. 기록 값은 상승 행 최대 +3.71 / +20.06 kN(124.0 s, 159.0~159.2 s, 발동 없음)과 level 감시 행 8개(moving 최대 +4.19, short −1.23, other +0.68 kN, 놓친 발동 0, FLAG 없음)다. 169.0 s +2.10 kN 행은 REANCHOR 구간이라 감시 행이 아니다. **level 규칙 행**(이동 중, 잠김 구간 n주기 미만)은 P-S8-22 전과 같은 식이라 302.3 증명 범위 밖이다. 낙관 최대와 놓친 발동 수를 이유별로 **기록**만 하고 V-5 불합격으로 쓰지 않는다. 놓친 발동이 1회 이상이면 FLAG를 달고 302.2 적용 범위 확장 검토로 넘긴다. 구현: python P-1(`r5_fallback_replay.py`), cad C-2(S7 L2b 기록기에 `F_pressure`·`rod_pressure`가 있는지 확인하고, 없으면 더함) |
 | V-4 ① | `run_S7C.py check --only L1_PS2_fdown3.5_old_worst_nocal L2b_PS2_fdown3.5_old_worst_nocal --duration 125 --jobs 2`. L1 = `plant_meta`(플랜트 params 비, meta 기록), L2b = `column_nominal` |
 | V-4 ② | `run_S8C.py run --only MLJ_K0V_fdown3.5_G4RF_Fs0 MLJ_K0V_fdown3.5_G4RF_Fs8 --tag v4_c29 --approved`. **`E_G4_Fs0/Fs8`은 짝으로 쓰지 않는다**(평지라 바닥·행정·비가 다르다). 짝 대신 **같은 실행 재생**으로 헤드 하강 행(Δh ≥ 0)에서 $\hat L^{fb}\le\hat L^{true}$ + 1.2 kN을 본다. 비교 기준은 S8 mlj 원 결과(`07_results/S8/mlj_20261025_080212`)의 같은 두 사례다 |
 | V-4 ③ | `run_S8C.py c36 --smoke ML88_ep0 --episode-s <원 에피소드 길이, 최소 60> --variant rt --rerun-from …/ml_main_20261025_090131`. **길이 규칙(개정 61 보완 3의 같은 날 추가)**: `--episode-s`는 원 ml_main 에피소드 길이(`ml_plan.json` 또는 원 meta)로 두고 60 s보다 짧게는 하지 않는다. cad 확인 결과 RR R-5는 80.0 s, 91.0 s까지 LEVEL이라 30 s는 부족하고 60 s면 끝 121 s다. 원 실행에도 창 안 re-READY가 없으면 비교 항목은 R-5 시각·다리, R-5 뒤 단계 경로, 창 끝 단계, 참 최소 $F_{cyl}$이고, re-READY 여부는 판정하지 않는다. L2b(`column_nominal`), $F_s$ 2.744 kN이므로 참 힘은 `F_pressure`, 재생 허용은 헤드 하강 행 1.2 kN이다 |
@@ -11606,9 +11607,10 @@ $$\hat L^{true}_k-\hat L^{fb}_k=(F_k-b-L_k)+\tfrac{h}{n}\big(D_k-G(R_{true})\Del
 - 금지: 수준 소비자(P5 확인·가드·재접근·Q2·탐침·$h^*$)의 입력을 바꾸지 않는다. ①의 설정 기본값은 `"level"`이고, R8-D1 프리셋은 U-S8-61 확정값으로 켠다.
 - 순서: S9 P3b 판정(개정 60) → P-S8-22 ①~⑤ → V-1~V-3 → cad V-4 → control V-5.
 
-### 304.1 구현 기록(개정 61 보완 3, 2026-10-26): **worktree 구현, 메인 merge 전(P3b 뒤 merge 예정)**
+### 304.1 구현 기록(개정 61 보완 3, 2026-10-26; 개정 62 갱신 2026-10-27): **master 0941c0c에 merge(미푸시)**
 
-- 위치: worktree `.claude/worktrees/agent-a42ab63c487597861`, 브랜치 `worktree-agent-a42ab63c487597861`. python 커밋 **d7638e9**(①~⑤)와 **88625da**(control 검토 O-1~O-3). cad C-1(L1 실행기 `plant_meta` 분기: `03_src/outrigger_sim/chrono/fallback_ratio.py`, `run_S6C.py` `l1_fallback_ratio`)은 **미커밋**이다. P3b(메인 코드)는 이 구현 전 코드로 돈다.
+- (개정 62) **merge**: master **0941c0c** = P-S8-22 merge(python d7638e9..88d483c + cad C-1/C-2 **3368317**). merge 뒤 unit 2459·chrono not slow 285 통과(메인 보고). V-3·V-4·V-5는 316절. 아래 "미커밋" 표기는 당시 상태이고, cad 몫의 구현 내용은 이 절 끝 "cad C-1/C-2 구현 기록(3368317)"이다.
+- 위치(당시): worktree `.claude/worktrees/agent-a42ab63c487597861`, 브랜치 `worktree-agent-a42ab63c487597861`. python 커밋 **d7638e9**(①~⑤)와 **88625da**(control 검토 O-1~O-3). cad C-1(L1 실행기 `plant_meta` 분기: `03_src/outrigger_sim/chrono/fallback_ratio.py`, `run_S6C.py` `l1_fallback_ratio`)은 당시 미커밋이었다(3368317로 커밋). P3b(메인 코드)는 이 구현 전 코드로 돌았다.
 - ① `FastRelevelSettings`에 새 필드를 더했다.
   - `fallback_slope`: 클래스 기본 `level`(옛 pickle도 `level`로 읽는다)
   - `fallback_ratio_source`: `plant_meta` / `column_nominal` / `online`
@@ -11635,10 +11637,22 @@ $$\hat L^{true}_k-\hat L^{fb}_k=(F_k-b-L_k)+\tfrac{h}{n}\big(D_k-G(R_{true})\Del
   - python **349b908**(P-1): 행별 단계·감시 여부·302.2 조건 이유·`true_force_source`를 기록한다. `current_dur125` V-2 결과를 냈다.
   - python **c52fdc4**: 행 분류를 `judged_falling`/`record_rising`/`record_level`로 정했다. 공식 판정 필드는 `judgement_passed` 하나만 두고 옛 필드(`is_judgement_passed*`, `level_missed_flag`)는 뺐다. level 행 놓친 발동은 판정에서 빼고 FLAG로만 두는 수정은 python에 넘겼다(303 "V-2 통과 판정 집합" (ii)).
   - python **88d483c**: 그 수정. `judgement_passed` = `judged_falling` 낙관 허용 + 302.2 성립 감시 행(`judged_falling` + `record_rising`) 놓친 발동 0(`slope_rows_missed_triggers`). `record_level` 놓친 발동은 `level_missed_trigger_flag`·`level_missed_triggers`로 기록만. `current_dur125` 두 변형 `judgement_passed` True, 관련 시험 29 통과.
-  - cad C-1 후속(미커밋): L1 `plant_meta` meta 키, 환경 변수 거부·기록.
-  - cad C-2(미커밋): S7 L2b 기록기에 `F_pressure`·`rod_pressure`가 있는지 확인하고, 없으면 더한다.
-- 다음: P3b 판정(개정 60) → merge → V-1~V-3 → V-4(303 보강표) → V-5.
+  - cad C-1 후속(당시 미커밋 → 3368317): L1 `plant_meta` meta 키, 환경 변수 거부·기록.
+  - cad C-2(당시 미커밋 → 3368317): S7 L2b 기록기에 `F_pressure`·`rod_pressure`가 있는지 확인하고, 없으면 더한다.
+- 다음(당시): P3b 판정(개정 60) → merge → V-1~V-3 → V-4(303 보강표) → V-5. **(개정 62) 모두 끝: merge 0941c0c, V-3 통과, V-4 실행, V-5 판정 316절.**
 - 보류: P-S8-22b(실기 $\kappa_{hi}$ 상태식, 헤드 20 bar 미만 경고, 새 출처). 착수 조건은 U-R8-9 ④ 부가 결과다.
+- **cad C-1/C-2 구현 기록(3368317, 개정 62에 적음)**. 코드에서 확인한 키·인자다(값은 `07_results/S7/ctrl3_check_20261027_010709` L1 기록으로 확인).
+  - 공통 모듈 `03_src/outrigger_sim/chrono/fallback_ratio.py`: `with_engine_fallback_ratio(config, engine)`가 엔진별 출처를 고른다(L1/L1R → `plant_meta`, L2b_NSC·SCM → 프리셋 `column_nominal` 유지). 플랜트 비는 `model.rod_chamber.leg_params`(플랜트)에서 $k_rA_p/(k_hA_{ann})$로 계산한다.
+  - meta 키(R-5 설정 `r8.fast_relevel` 안과 실행 기록 `fallback_ratio` 블록)
+    - `fallback_plant_ratio`: 다리별 비(L1 PS2: [1.29292, 1.29292, 1.22779, 1.22779])
+    - `fallback_plant_ratio_source`: `{kind: plant_params, ratio_override_keys, dead_length_override_keys, known_plant_ratio_upper}`. `known_plant_ratio_upper`는 $L_{0h}$·$L_{0r}$ 덮어쓰기가 있을 때 true다("플랜트 비를 아는 상한", U-S8-66)
+    - `fallback_ratio_source_override`: `None`(기본) / `cli` / `env`. `env`일 때 `override_env_name` = `OUTRIGGER_L1_FALLBACK_RATIO_SOURCE`
+  - 실행 기록 위치: `run_S6C.py`·`run_S7C.py`(bundle-C) `result.json` `settings.bundle_c.fallback_ratio`(`engine`, `source_rule`, `applied`, `fallback_ratio_source`, `fallback_plant_ratio`, `ratio_origin`, `formula` 등. L2b는 `applied: false`, `reason: "preset kept (L2b / SCM)"`), `run_S8C.py` 결과의 `fallback_ratio` 블록, `run_S9.py level`의 C2 설정 기록 `fallback_ratio`(SCM은 `column_nominal`)
+  - 환경 변수 거부: `run_S6C`·`run_S7C`·`run_S8C`(`run`/`check`)와 `s9_batch.py run`은 `OUTRIGGER_L1_FALLBACK_RATIO_SOURCE`가 있으면 시작하지 않는다. `--allow-env-override`를 주면 시작하고 meta에 `env`로 남기며 표준 출력에 경고한다(`refuse_env_override`)
+  - 단건 비교 인자: `04_scripts/02_chrono/s9_merge/m3_run.py ... --fallback-ratio-source {plant_meta,column_nominal}`(L1 키만, meta `cli`). `m3.json`에 `fallback_ratio`와 명령 SHA-256(`sha256_issued_u`·`sha256_computed_u`·`sha256_events`)을 남긴다
+  - `probed_leg`: `r8_series.npz`의 10 Hz 행에 int8로 남긴다(0~3 = FL, FR, RL, RR, −1 = 없음, 갱신 뒤 `C2Controller._probed_leg()`). `run_S6C` 계열과 `run_S9.py`(`outrigger_sim/chrono/run_rows.py` `MinimalR8Series`, S9 `result.json`에 `controller_meta`·`r8_series` 키 추가)가 같은 키·뜻으로 남긴다. V-2 탐침 다리 출처 ①이다
+  - C-2: S7 L2b 기록기는 $F_s$ = 0이라 `F_pressure`를 더하지 않았다. 대신 `settings.bundle_c.pads_seal_fields`에 `F_s_front_N` 0, `friction_path` false, `pressure_fields_present` [`head_pressure`, `rod_pressure`, `F_cyl`]과 이유를 남긴다. 그래서 **S7 L2b 재생은 `F_pressure`가 아니라 `F_cyl_no_friction`으로 한다**(303 "V-2 통과 판정 집합", 316.2). S8 L2b 기록(`run_S8C`)은 원래 `F_pressure`가 있다
+  - 시험: `05_tests/unit/test_fallback_ratio_engine.py`, `test_run_rows_probed_leg.py`(3368317)
 
 ## 305. 결정·위임·가정·재현
 
@@ -11945,3 +11959,180 @@ $t_L-t_D=(t_P-t_D)+T_w$다.
 - 크롤러 이탈 뒤 최소 실린더 힘/$F_{min}$: G1 6.44, J1 6.87, J2 7.01, S1 7.10(최소 60.6 kN). 이륙 전 엇갈린 접지 골은 최소 1.19 $F_{min}$이다.
 - 레벨링 완료(READY) 시간(폐루프 시작 기준): G1 43.3~44.7 s, J1 51.1~79.7 s, J2 53.2~74.7 s, S1 56.5~60.0 s. 연약 지반 J1 B·J2 B는 탐침 소성 침하로 재레벨 1회가 더해진다.
 - READY 뒤 크롤러 부담 0, 재접촉 0(24/24). 최종 크롤러 여유(바퀴 자국 위, READY 뒤 최소)는 35.3~51.7 mm(목표 50 mm, 판정 ≥ 25 mm)다. 강체 지면에서 토양 대응 켬/끔 명령은 비트 동일이다.
+
+# 개정 62 (2026-10-27): P-S8-22 merge 뒤 V-3·V-4 결과와 V-5 판정 — ①·②·④ 통과, ③ 판정 불가(대체 없음). U-S8-67 (나) 확정: V-5를 ①②④로 닫고 양성 시험 ③′ 위임(C-S8-67)
+
+- 요청: 메인 세션. 입력은 master **0941c0c**(P-S8-22 merge: python d7638e9..88d483c + cad C-1/C-2 3368317, 미푸시), V-3(`06_analysis/02_control/s9/v3/v3_judgement.json`), V-4(`07_results/S9/v4_20261027_010707/`: `progress.log`, `v4_batch.json`, `v4_m3.json`, `logs/`)와 cad V-4 보고다.
+- control은 Chrono를 새로 돌리지 않았다. 기록 재생(dynamics-dev), 판정 코드(`outrigger_sim.verify.s7_control.judge_batch`) 실행, 기록 스캔, 명령 SHA 재계산만 했다.
+- 규약: 음되먹임, 이산 10 Hz, $T$ = 0.1 s, d = 1, ZOH. 힘 kN, 압력 bar(내부 Pa). 단계 표는 실행 상대 시각, 이벤트·기록은 제어기 시각이다(S7 L1: 상대 + 68.5 s, S7 L2b·S8: 상대 + 3.0 s).
+- 판정 기준은 303절 V-5 행과 보강표("V-2 통과 판정 집합" 포함)다. 이 개정에서 기준을 바꾸지 않았다.
+
+## 316. V-5 판정
+
+| 기호 | 뜻 | 단위 |
+|---|---|---|
+| $\hat L^{fb}$, $\hat L^{true}$ | 대체 다리 R-5 예측, 같은 다리에 정상 로드 센서가 있을 때의 예측(1 ms 참 압력 힘으로 계산) | kN |
+| 낙관 | $\hat L^{fb}-\hat L^{true}$(> 0이면 대체가 낙관) | kN |
+| `judged_falling` | 302.2 조건이 성립하는 R-5 감시 행 중 헤드 하강(Δh ≥ 0) 행: 낙관 판정 집합 | — |
+| 놓친 발동 | 정상 센서 예측으로는 R-5 세 조건이 성립하는데 대체 예측으로는 발동하지 않은 감시 행 | 회 |
+| $P_5$ | $F_{min}$ + 7.5 kN = 16.91 kN | kN |
+| $h^*$, $h_a$ | 가드·재접근이 멈추는 헤드(218.10), 잠금 앵커 헤드 | bar |
+| 같은 실행 관문 | 재생에서 실행 자신의 설정(L1 `plant_meta`, L2b `column_nominal`) 변형이 제어기의 `relevel_predicted`·`probe_aborted_low_load`와 `INFO_R5_FALLBACK_SLOPE`(시각·다리·$D$·gap, 0.01 kN)를 모두 재현함 | — |
+
+### 316.1 요약
+
+| # | 대상 | `INFO_R5_FALLBACK_SLOPE` | 결과 | 판정 |
+|---|---|---|---|---|
+| ① | S7 ctrl3 `L1_PS2_fdown3.5_old_worst_nocal`(125 s, L1-R, `plant_meta`) | 7(FL) | 판정 행 실패 0, R-5 0회, READY **84.0 s**(≤ 90 s, 기대 84~86), 재생 하강 행 낙관 최대 **−0.13 kN**(≤ 0.05), 놓친 발동 0 | **통과** |
+| ① | S7 ctrl3 `L2b_PS2_fdown3.5_old_worst_nocal`(125 s, L2b, `column_nominal`) | 22(FL) | 판정 행이 R3 기준선과 같다(짝 행은 개선), R-5 0회, READY 80.1 s(같음), 재생 낙관 최대 **−3.05 kN**(≤ 1.2), 놓친 발동 0 | **통과** |
+| ② | C-S8-29 `MLJ_K0V_fdown3.5_G4RF_Fs0` / `Fs8`(L2b, `column_nominal`) | 14 / 6(FR) | 218.10 기록 행 악화 없음, FR 참 최소 99.9 / 95.7 kN ≥ $F_{min}$, 재생 낙관 최대 **−15.29 / −5.99 kN**, 놓친 발동 0 | **통과** |
+| ③ | `ML88_ep0`(현재 YAML 재생성 base, 60 s) | **0** | 로드 대체(`WARN_ROD_PRESSURE_FALLBACK:RR`)가 나지 않음 | **판정 불가**(303 V-5: INFO 0회) |
+| ④ | D8 rpB on, `plant_meta`·`column_nominal` | (대체 없음) | `issued_u` SHA-256 `e072f15c…` = P-S8-22 이전 기준선(n 740), `computed_u`도 같음 | **통과** |
+
+- **V-5 종합: ①·②·④ 통과, ③ 판정 불가.** 사양 미달 없음. 1.2 kN·0.05 kN 허용은 낙관 행에만 썼다.
+- ③ 처리는 사용자 결정 **U-S8-67 = (나)(확정 2026-10-27, 317절)**: ③은 판정 불가로 기록하고 V-5를 ①②④로 닫는다. 양성 시험 V-5 ③′(RR 로드 고장 + G4, 2사례)를 더한다(위임 C-S8-67, 317.1). ③의 목적(참 저하중 대체 다리 R-5 유지)은 지금 Chrono 기록에 양성 사례가 없다. 오프라인 what-if(316.4)로 방향만 확인했다.
+
+### 316.2 ① S7 ctrl3 PS2 L1·L2b
+
+- 판정: 두 사례 폴더를 한 묶음(junction)으로 `judge_batch`에 넣었다. 출력 `06_analysis/02_control/s9/v5/verify_S7C_v4_ps2.json`(67행, 실패 0). L2b 기준선은 R3 묶음(`params_bundle_R3_20261026_025133/ctrl3`, P-S8-22 이전 코드, 85 s)을 같은 방식으로 판정한 `verify_S7C_r3_ps2_baseline.json`이다.
+
+| 판정 행 | L1 V-4 | L1 `fixed_ratio`(300절) | L1 `current_dur125`(300절) | L2b V-4 | L2b R3 기준선 |
+|---|---|---|---|---|---|
+| run(끝 단계) / READY(상대) | ready / **84.0 s** | ready / 84.0 s | ready / 116.6 s | ready / 80.1 s | ready / 80.1 s |
+| 2 attitude ±0.2°(+장착) | 0.0361 통과 | 0.0361 | 0.0329 | 0.0350 통과 | 0.0350 |
+| 3 $F_{min}$(1 ms) ≥ 9.41 kN | 13.18 통과 | 13.18 | 15.92 | 13.09 통과 | 13.09 |
+| 4 이동 중 최대 압력 ≤ 180 bar | 134.0 통과 | 134.0 | 131.1 | 133.9 통과 | 133.9 |
+| 5a rocking | 0.0193 통과 | 0.0193 | 0.0193 | 0.0152 통과 | 0.0152 |
+| 7a / 7b | 0.0274 / 참 | — | — | 0.0253 / 참 | 같음 |
+| R-5 `relevel_predicted`·탐침 중단 | **0 / 0** | 0 | 2 / 2(거짓) | 0 / 0 | 0 / 0 |
+| 짝 L2b − L1: D8 최소 참 힘(크롤러 이탈 뒤) | — | — | — | **−0.08 kN**(\|차\| ≤ 1.84 기록) | −40.5 kN(L1 쌍이 REANCHOR로 끝남) |
+| 행 수 / 실패 | 67(두 사례) / 0 | 27 / 0 | 28 / 0 | (같은 파일) | 66 / 1(L1 `run`) |
+
+- L1은 `fixed_ratio`(`locked_ratio_rule = "fixed"` 한 스위치 재실행)와 판정 값이 같고, READY도 84.0 s로 같다. INFO 7회는 PROBE 중(제어기 124.7~132.6 s)이고, 127.8 s 값 11.44 / 0.00 kN이 302.5 표 "L1 설정" 행(명목 하강 11.44, 차액 0)과 같다.
+- L2b 판정 행은 R3 기준선과 같다(자세 행 차이 < 1×10⁻⁶°. 기준선은 85 s, V-4는 125 s 실행이다). 짝 행은 L1 쌍둥이가 READY에 닿아 좋아졌다.
+- 재생(`r5_fallback_replay.replay_case`, dynamics-dev): 출력 `06_analysis/02_control/s9/v5/v5_replay.json`.
+
+| 재생 항목 | L1(`plant_meta`) | L1(`column_nominal` 변형) | L2b(`column_nominal`) | L2b(`plant_meta` 변형) |
+|---|---|---|---|---|
+| 같은 실행 관문(R-5·INFO) | 통과(INFO 7/7) | — | 통과(INFO 22/22) | — |
+| 참값 출처 | `F_cyl_no_friction` | 같음 | `F_cyl_no_friction`($F_s$ = 0, C-2 기록) | 같음 |
+| `judged_falling` 행 / 낙관 최대 | 266 / **−0.133 kN** | 266 / −0.133 | 277 / **−3.05 kN** | 277 / −1.43 |
+| 놓친 발동(302.2 성립 감시 행) | 0 | 0 | 0 | 0 |
+| 기록: 상승 행 낙관 최대 | +3.71 kN | +17.47 | +22.19 | +3.26 |
+| 기록: level 행(이동·짧음·기타) | 4행, 최대 +1.43 kN, 놓친 발동 0, FLAG 없음 | 같음 | 4행, 최대 +0.65 kN, 0, FLAG 없음 | 같음 |
+| `judgement_passed`(공식) | **True** | True | **True**(우회 2 적용, 316.6) | True |
+
+- 기록: 원래 `level` 규칙으로 이 L1 궤적을 재생하면 제어기 127.8·127.9 s에 `relevel_predicted:FL` + `probe_aborted_low_load:FL`이 난다. 곧 V-4 L1 실행에서 거짓 재레벨이 사라진 것은 P-S8-22 규칙 때문이다(개입 증거).
+- 상승 행·level 행의 양의 값은 303 정의대로 기록이다(발동이 소비하지 않는 행).
+
+### 316.3 ② C-S8-29 G4RF Fs0·Fs8
+
+- V-4 실행(`07_results/S8/v4_c29_Fs0_20261027_011211`, `v4_c29_Fs8_20261027_011151`)과 원 실행(`07_results/S8/mlj_20261025_080212`, P-S8-22 이전)을 같은 식으로 계산했다(`06_analysis/02_control/s9/v5/v5_g4rf_218_10.json`). 시각은 제어기 시각이고, 고장은 FR 로드 dropout(83.9 / 81.5 s)이다.
+
+| 218.10 기록 행(고장 뒤) | Fs0 V-4 | Fs0 원 | Fs8 V-4 | Fs8 원 | 판단 |
+|---|---|---|---|---|---|
+| 가드 포화 시간(`cmp_guard_u` ≥ 0.95 × 2.5 mm/s, 네 다리) | 0 s | 0 s | 0 s | 0 s | 같음 |
+| (기록) 판정기 `guard_cap_s` 정의(FR `issued_u`) | 1.3 s | 1.3 s | 1.8 s | 1.8 s | 같음(220.3 판정기 결함 정의) |
+| FR 잠금 창 $h^*$ / $h_a$ [bar] | 76.1~84.2 / 86.9~96.4 | 76.1~84.1 / 86.9~96.3 | 71.9~82.4 / 81.8~96.0 | 71.9~82.4 / 81.8~95.9 | $h^*<h_a$, 같음 |
+| FR 헤드 최대(참) [bar] | 139.58 | 139.58 | 130.35 | 130.34 | 같음 |
+| 다른 다리 최소 참 힘(1 ms, `F_cyl_min_interval`) [kN] | **15.38**(RR 88.66 s) | 15.34 | **16.35**(RR 85.94 s) | 16.30 | 나빠지지 않음(+0.04 / +0.05) |
+| FR 참 최소 힘 `F_cyl` / `F_pressure` [kN] | 99.93 / 99.93 | 99.93 / 99.93 | 97.71 / 95.73 | 97.71 / 95.74 | ≥ $F_{min}$ 9.415 |
+| READY(상대) / 단계 경로 | 78.9 → 114.7 s, 같음 | 같음 | 76.5 → 104.3 s, 같음 | 같음 | 같음 |
+| `issued_u` 최대 차(V-4 − 원) | 1.43×10⁻⁶ m/s(88.1 s부터) | — | 9.7×10⁻⁷ m/s(85.3 s부터) | — | 수치 수준 |
+
+- 원 실행 값이 220.3 표(RR 15.34 / 16.30 kN, FR 헤드 139.6 / 130.3 bar)와 같다. 계산 경로 대조다.
+- RR `relevel_predicted`(87.8 / 85.2 s)는 G4 사건 다리(정상 센서)의 참 저하중 R-5이고, 원 실행과 같은 주기에 남았다.
+- 재생(같은 실행): 관문 통과(R-5 같음, INFO 14/14, 6/6). `judged_falling` 127 / 185행, 낙관 최대 **−15.29 / −5.99 kN**(≤ 1.2), 302.2 성립 감시 행 놓친 발동 0, level 행 놓친 발동 0(FLAG 없음). 기록: Fs8 level 행(이동 중) 낙관 최대 +19.84 kN(4행, 발동 소비 없음, 원 실행 재생에서도 +17.16 kN로 있던 값). 참값은 `pads.npz` `F_pressure`다. 엔진 판독 결함(316.6 D-3) 때문에 공식 필드는 None이고, 위 판정은 L2b 허용 1.2 kN으로 control이 냈다.
+
+### 316.4 ③ ML88_ep0: 판정 불가와 후보
+
+- V-4 ③: 원 ML 배치 스냅숏이 옛 YAML이라(params SHA 불일치) 사용자 결정 (가)로 ML88 base를 현재 YAML로 다시 만들었다(`07_results/S8/ml88_rebase_20261027_012458`). c36 smoke 60 s(`07_results/S9/v4_20261027_010707/c36_smoke/ML88_ep0`)는 rc 0이다. 이벤트는 63.1 s `relevel_predicted:FL`(정상 다리), RR `lock_load_loss` 진단, FL·RR 재접근이고, **로드 대체가 없다**. 그래서 INFO 0회, 303 V-5 규칙으로 판정 불가다.
+- 기록(cad): 63 s 뒤 참 최소 $F_{cyl}$ 원 [−1.74, 49.02, 15.45, −1.89] → 이번 [−1.82, 76.34, 48.56, −1.92] kN(FL, FR, RL, RR). 판정 행이 아니다.
+- **302.7 후보로 바꿀 수 있는가(기록 스캔)**: 없다.
+  - R3 묶음(`params_bundle_R3_20261026_025133`, 현재 YAML, P-S8-22 이전 코드)에서 `WARN_ROD_PRESSURE_FALLBACK`이 있는 실행은 ctrl3 PS2 L1·L2b(와 그 진단 사본)뿐이다. c36 A_rt 8 에피소드(ML88_ep0 포함)·B_f1only·c37 E_drain은 0이다.
+  - S8 `c36_20261025_155317` ML88_ep0도 0이다(이전 코드에서도 없었다).
+  - CB: `cb_20261025_000840`에는 RR 대체가 있었으나 뒤 실행 `cb_20261025_013946`에는 없다. ML00_ep5의 대체는 ml_pilot `_replaced_20261025_015059`(교체 전)에만 있다.
+  - 그래서 302.7 후보를 현재 코드·YAML로 다시 돌려도 INFO 0으로 판정 불가가 될 가능성이 크다(**추정**, 기록 근거). base 재생성 비용만 든다.
+- **오프라인 what-if(기록, Chrono 폐루프 아님)**: V-4 G4RF 기록에 `WARN_ROD_PRESSURE_FALLBACK:RR`을 고장 시각에 강제로 넣고 재생했다(`06_analysis/02_control/s9/v5/v5_whatif_RRfb.json`). RR은 G4 침하 다리라 정상 센서 R-5가 87.8 / 85.2 s에 난 다리다.
+  - 대체 RR의 R-5가 **87.7 / 85.1 s**에 난다. 정상 센서보다 **한 주기 이르다**(`plant_meta`·`column_nominal` 모두). `level` 규칙도 같은 시각이다.
+  - `judged_falling` 낙관 최대 −2.82 / −3.06 kN, 302.2 성립 감시 행 놓친 발동 0이다. 놓친 발동 행(88.0 s 등)은 R-5 뒤 LEVEL이라 감시 행이 아니다.
+  - 한계: 기록 궤적은 RR 정상 센서로 돈 것이다. 대체가 바꾸는 하한 소비자(가드·재접근)의 폐루프 효과는 보지 않는다. 그래서 판정이 아니라 기록이다.
+
+### 316.5 ④ D8 rpB
+
+- 기준선: `07_results/S9/batch_P3-10_20261026_122444/rpB__on`(P-S8-22 이전 코드, P3-10). V-4: `m3_plant_meta/rpB__on`, `m3_column_nominal/rpB__on`.
+- control이 세 폴더의 `r8_series.npz`에서 SHA-256을 다시 계산했다(`m3_run.array_sha`와 같은 float64 C 순서 바이트). `issued_u` 셋 모두 `e072f15c9ae29222…`, `computed_u` 셋 모두 `f532415fc9a781c8…`, 최대 차 0.0, 로드 대체 0이다. V-4 meta의 R-5 설정은 `nominal_gap` + 각 출처로 실제 켜져 있었다. **통과.**
+
+### 316.6 재생 도구 결함(우회해서 판정)과 위임
+
+V-4 기록은 P-S8-22 뒤 실행이라 `r5_fallback_replay.py`(python 88d483c)가 그대로 읽지 못하는 곳이 넷 있다. control은 scratch 스크립트에서 아래처럼 우회해 판정했다(코드는 고치지 않았다).
+
+| # | 결함 | 영향 | 우회(scratch) | 위임(python) |
+|---|---|---|---|---|
+| D-1 | `contact_replay.ReplaySettings.from_controller_meta`가 cad C-1 meta 키(`r8.fast_relevel`의 `fallback_plant_ratio_source`, `fallback_ratio_source_override`)를 `FastRelevelSettings`에 넘겨 `TypeError` | L1 V-4 기록 재생 불가 | 알 수 없는 키를 지우고 호출 | 기록 전용 키를 무시하고 `monitor_setting_differences`의 P-S8-22 예외 키에 더한다 |
+| D-2 | `true_forces_at`가 C-2 기록(`settings.bundle_c.pads_seal_fields`: `F_s_front_N` 0, `friction_path` false)을 읽지 않음 | S7 L2b가 "마찰 모름 → 재생 불가" | 그 기록이 $F_s$ = 0이면 `seal_friction_N` = 0을 넣어 `F_cyl_no_friction` | C-2 기록을 마찰 출처로 읽는다 |
+| D-3 | `run_engine`이 S8 기록의 엔진(`settings.s8.engine`·`settings.s7c.engine`)을 못 읽어 None | G4RF 허용 None, 공식 필드 None | control이 L2b 허용 1.2 kN으로 판정 | 엔진 출처를 더한다 |
+| D-4 | 관문이 `level` 재생 = 원 이벤트로만 정의됨 | `nominal_gap`으로 돈 기록은 관문 실패로 나옴 | 실행 자신의 출처 변형이 R-5·탐침 중단·INFO(값 포함)를 모두 재현하는지 봄(316 기호 표 "같은 실행 관문") | `nominal_gap` 기록용 관문을 더하고 `level` 재생 결과는 기록 필드로 둔다 |
+
+- D-4 정의는 303 V-2 관문의 취지(재생이 원 실행을 그대로 재현해야 판정한다)를 P-S8-22 뒤 기록에 맞춘 것이다. 판정 기준을 바꾸지 않는다(**가정**, 316.1 판정에 썼다).
+
+### 316.7 V-3 기록
+
+- `06_analysis/02_control/s9/v3/v3_judgement.json`(2026-10-27, master 0941c0c): 축소 하네스 명령 해시가 merge 전 기준과 강체 135/135, 토양 72/72, 센서 72/72, β 16/16, c2py_r8d1 8/8 같고 `INFO_R5_FALLBACK_SLOPE` 0회다(대체 없음). **통과**(303 V-3).
+
+### 316.8 두 경로 대조
+
+- 규칙 변경이라 새 루프 수치량(극·여유)이 없다. Julia 교차 검증은 해당 없다(303).
+- 대신 셋으로 대조했다. (i) 제어기 이벤트 ↔ 같은 실행 재생: R-5·탐침 중단·INFO가 시각·다리·값(0.01 kN)까지 같다(4 실행). (ii) 이번 218.10 행 계산 ↔ 220.3 원 판정 값: 원 실행에서 같은 값이다. (iii) 실행기 `m3.json` SHA ↔ control 재계산 SHA: 같다.
+
+## 317. 결정·위임·가정·재현
+
+**확정(사용자 결정 2026-10-27): U-S8-67 = (나)(= 권고).** ③은 판정 불가로 기록하고 V-5를 ①②④로 닫는다. 그리고 G4RF와 같은 조건에서 로드 고장 다리만 RR로 바꾼 Chrono 양성 시험 2건(Fs0·Fs8)을 더한다(**V-5 ③′**, 위임 명세 317.1, 통과 기준은 아래 (나) 그대로).
+
+| # | 결정(확정 2026-10-27) | 선택지 | 권고(= 확정 (나)) |
+|---|---|---|---|
+| **U-S8-67** | V-5 ③(ML88_ep0 판정 불가) 처리 | (가) ③을 "판정 불가(현재 YAML에서 대체 없음)"로 기록하고 V-5를 ①②④로 닫는다. 참 저하중 유지는 302.3 증명·V-1 (b)·316.4 what-if로 둔다. (나) (가)로 닫고, 참 저하중 대체 R-5의 Chrono 양성 시험 하나를 더한다: G4RF와 같은 조건에서 **로드 고장 다리를 RR(G4 침하 다리)로 바꾼** 2사례(Fs0·Fs8). 통과 기준은 RR `relevel_predicted`가 V-4 G4RF의 정상 센서 시각(87.8 / 85.2 s) 이하, INFO ≥ 1, 같은 실행 재생 낙관 ≤ 1.2 kN·놓친 발동 0, 다른 다리 최소 참 힘 ≥ $F_{min}$ + 5 kN(기록) (다) 302.7 후보(c36 A_rt 7, CB 2, ML00_ep5)로 바꾼다(base 재생성 필요) | **(나).** ③의 목적은 "대체 다리라도 참 저하중이면 R-5가 늦지 않음"인데 지금 Chrono 기록에 양성 사례가 없다. what-if는 한 주기 이르다는 방향을 보였지만 개루프다. (나)는 사례 정의 추가(cad, `run_S8C.py`)와 2실행(약 6~7분씩, V-4 ② 실측 324·386 s 기준 **추정**)이면 된다. (다)는 316.4 스캔대로 현재 코드·YAML에서 대체가 나지 않아 판정 불가가 반복될 가능성이 크다. merge 상태와 푸시는 (가)·(나) 어느 쪽이든 막지 않는다(①②④ 통과, 사양 미달 없음) |
+
+| 대상 | 내용 |
+|---|---|
+| 메인 세션 | U-S8-67 확정(2026-10-27, (나)). decision_log·로드맵 반영(control이 적었다). cad C-S8-67 → control V-5 ③′ 판정 순서 |
+| python-expert | 316.6 D-1~D-4(`03_src/outrigger_sim/control/r5_fallback_replay.py`, `contact_replay.py`). 시험: V-4 기록 4건(316.2·316.3)이 우회 없이 같은 결과(공식 `judgement_passed` True, 관문 통과)를 내는 것. ③′ 판정 전에 끝나면 ③′는 우회 없이 재생한다(아니면 control이 316.6 우회로 판정) |
+| cad-expert | **C-S8-67**(317.1): `run_S8C.py`에 RR 로드 고장 + G4 사례 2개를 더하고 실행한다 |
+
+### 317.1 위임 명세 C-S8-67(cad-expert): V-5 ③′ 양성 시험 사례 — RR 로드 고장 + G4(RR)
+
+- 목적: 대체 다리가 **참 저하중**일 때 P-S8-22 R-5(`nominal_gap` + `column_nominal`)가 정상 센서보다 늦지 않게 발동하는지 Chrono 폐루프로 확인한다(303 V-2 "참 저하중 R-5는 같은 주기 또는 더 이른 주기에 남는다"). 짝(정상 센서 기준)은 V-4 ② G4RF 실행이다. 그 실행에서 RR은 정상 센서이고 G4 침하로 참 저하중 R-5가 났다.
+- 사례 정의(`04_scripts/02_chrono/run_S8C.py`)
+
+| 항목 | 값 |
+|---|---|
+| 사례 키 | `MLJ_K0V_fdown3.5_G4RRF_Fs0`, `MLJ_K0V_fdown3.5_G4RRF_Fs8`(그룹 `MLJ`, 우선순위 5) |
+| 사건 | 새 사건 `"G4RRF"`: `"G4RF"` 항목을 그대로 복사하고 `rod_fault.leg`만 `"FR"` → `"RR"`로 바꾼다. 곧 `{"kind": "settle", "leg": "RR", "depth_m": G4_DEPTH_M, "ramp_s": G4_RAMP_S, "at": "ready+5", "stage2": "settle_RR", "fine": False, "rod_fault": {"leg": "RR", "fault": "dropout", "after_ready_s": G4RF_FAULT_AFTER_S}}` |
+| 시나리오 | `_event_scenario`에 `"G4RRF"` 분기를 G4RF와 같게 둔다(`top`, `fdown3.5`, `event="settle_RR"`, `extra=st.T_SETTLE_EXTRA`, `items=("R", "6")`). 이름만 `H4V_G4RRF_{contact}` |
+| 같게 둘 것 | 시작 스냅숏·바닥·오거(상단)·시드·센서 등급·영점 교정·엔진(L2b_NSC, 파일럿 체크)·$F_s$(0 / 8 kN)·실행 길이·제어기 설정(R8-D1 프리셋, `column_nominal`)을 G4RF와 같게 한다. 다른 것은 고장 다리 하나뿐이다 |
+| 묶음 | 새 집합 `mlj_c67`(이 두 사례). 기존 `mlj`·`mlj_c29` 구성은 바꾸지 않는다(기존 사례 명령 해시 불변이 조건) |
+| 실행 | `run_S8C.py run --only MLJ_K0V_fdown3.5_G4RRF_Fs0 MLJ_K0V_fdown3.5_G4RRF_Fs8 --tag v5_c67 --approved --workers p7`(기본 `p7e8`이면 한 건이 E코어로 갈 수 있다), P코어, 동시 2개 이하. 환경 변수 `OUTRIGGER_L1_FALLBACK_RATIO_SOURCE` 없이(있으면 실행기가 거부). 시간 약 6~7분씩(**추정**, V-4 ② 324·386 s) |
+| 출력 | `07_results/S8/v5_c67_<stamp>/<case>/`에 G4RF와 같은 파일: `result.json`(`rod_fault`, `rod_fault_t_s`, `fallback_ratio` 블록, `controller_meta`), `controller_events.json`, `probe_history.json`, `r8_series.npz`(`probed_leg` 포함), `s8_series.npz`, `pads.npz`(`F_pressure`·`F_pressure_min_interval`·`head_pressure`·`rod_pressure`·`F_cyl_min_interval`), `record/record.npz`·`meta.json` |
+| cad 보고 | 사례별 rc, wall, 고장 시각(제어기), G4 시작 시각, `WARN_ROD_PRESSURE_FALLBACK:RR`·`INFO_ROD_PRESSURE_FAULT_REASON:RR:*` 시각, `INFO_R5_FALLBACK_SLOPE:RR` 횟수, `relevel_predicted:*` 시각·다리, 단계 경로·READY. 그리고 기존 G4RF 2사례 명령 해시가 정의 추가 전후로 같다는 확인(`--dry-run` 또는 1건 재실행 SHA). 판정은 하지 않는다 |
+
+- **통과 기준(control V-5 ③′, U-S8-67 확정 그대로)**. 시각은 제어기 시각이다. G4 시작 $t_{G4}$는 첫 READY + 5 s다.
+  1. RR `relevel_predicted`가 짝의 정상 센서 시각 이하다. 짝(V-4 ② G4RF)은 87.8 s(Fs0) / 85.2 s(Fs8)이고, 이는 $t_{G4}$ + 0.9 s / + 0.7 s다. READY가 짝과 다르면 $t_{G4}$ 기준 상대 시각으로 본다. 또 고장부터 $t_{G4}$ 전까지 RR 거짓 R-5(그때 참 힘 ≥ 3 $P_5$)는 0회여야 한다.
+  2. `INFO_R5_FALLBACK_SLOPE:RR` ≥ 1회다(0회면 303 V-5 규칙으로 판정 불가).
+  3. 같은 실행 재생(316 "같은 실행 관문" 통과 뒤): RR `judged_falling` 낙관 ≤ 1.2 kN(L2b), 302.2 성립 감시 행 놓친 발동 0. level 행 놓친 발동은 FLAG(판정 제외).
+  4. 다른 다리(FL·FR·RL) 최소 참 힘(1 ms `F_pressure_min_interval`, 고장 뒤)은 **기록**한다. 기준 $F_{min}$ + 5 kN = 14.4 kN과 짝 값(V-4 ② RR 사건 다리가 아니므로 짝의 FL·FR·RL 최소)을 나란히 적는다.
+  - 함께 볼 판정 행(기존 기준 그대로): 실행이 READY에 닿음, FAULT 0, 모든 다리 참 힘 ≥ $F_{min}$(1 ms), 끝 자세 ±0.2°.
+- 판정 경로: control이 `r5_fallback_replay`(D-1~D-4 수정 뒤면 그대로, 아니면 316.6 우회)와 218.10 행 계산(316.3과 같은 식)으로 한다. 결과는 이 명세의 다음 개정에 적는다.
+- 가정: 고장 종류·시각(dropout, READY + 2 s)은 G4RF와 같다(218.10 C-S8-29의 가정 그대로). G4 동안 RR 하한이 대체(column bound) 값이라 가드·재접근이 짝과 다르게 걸릴 수 있다. 그것은 판정 기준 1~4로 보고, 차이는 기록한다.
+
+- 가정
+  - (1) 같은 실행 관문(316.6 D-4)은 303 V-2 관문을 P-S8-22 뒤 기록에 적용한 해석이다.
+  - (2) S7 L2b 참값 `F_cyl_no_friction`은 C-2 기록($F_s$ = 0)에 근거한다.
+  - (3) 316.4 what-if는 개루프 기록이다. 판정에 쓰지 않았다.
+  - (4) (나) 실행 시간은 V-4 ② 실측에서 추정했다.
+- 재현(dynamics-dev, `conda run -n dynamics-dev python -I`, P코어 affinity 0xFFFF). 스크립트는 이 세션 scratchpad `ctrl-run\`에 있고 저장소에는 보존하지 않았다(**스크립트 미보존**). 출력은 `06_analysis/02_control/s9/v5/`에 있다.
+  - `v5_replay.py`: 316.2·316.3 재생과 우회 D-1~D-4. 출력 `v5_replay.json`
+  - `v5_g4rf_rows.py`: 316.3 218.10 행. 출력 `v5_g4rf_218_10.json`
+  - `v5_s7_judge.py`: 316.2 판정. 출력 `verify_S7C_v4_ps2.json`, `verify_S7C_r3_ps2_baseline.json`
+  - `v5_make_forced.py` + `v5_replay.py`: 316.4 what-if. 출력 `v5_whatif_RRfb.json`
+  - `v5_sha.py`: 316.5 SHA 재계산
+  - 판정 요약: `v5_judgement.json`

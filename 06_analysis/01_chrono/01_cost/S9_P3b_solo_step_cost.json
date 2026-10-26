@@ -1,0 +1,808 @@
+{
+ "purpose": "S9 pre-start check 4: stand-alone P3b step cost (one case at a time, P-cores, EcoQoS off)",
+ "root": "C:\\workspace\\outrigger_control\\07_results\\S9\\cost_solo_20261026_230636",
+ "started": "20261026_230636",
+ "cases": [
+  {
+   "soil": "G1",
+   "case": "solo_G1_B_top_Fs4_end40",
+   "end_s": 40.0,
+   "process_wall_s": 907.7271976000047,
+   "top_cpu_before": [
+    {
+     "pid": 15460,
+     "name": "GnAgent.exe",
+     "cpu_pct": 20.0
+    },
+    {
+     "pid": 78976,
+     "name": "esrv_svc.exe",
+     "cpu_pct": 17.2
+    },
+    {
+     "pid": 12696,
+     "name": "MsMpEng.exe",
+     "cpu_pct": 12.3
+    },
+    {
+     "pid": 54844,
+     "name": "claude.exe",
+     "cpu_pct": 9.4
+    },
+    {
+     "pid": 6932,
+     "name": "PresentMonService.exe",
+     "cpu_pct": 6.2
+    },
+    {
+     "pid": 49464,
+     "name": "HWiNFO64.EXE",
+     "cpu_pct": 6.2
+    }
+   ],
+   "busy_before": [],
+   "num_threads_chrono": 4,
+   "dt_s": 0.0001,
+   "n_steps_timed": 400000,
+   "n_steps_run_S9": 400000,
+   "build_s": 0.4403681000112556,
+   "settle_wall_s": 156.0985581999994,
+   "loop_wall_s": 750.2411387999891,
+   "us_per_step_run_S9": 2265.8492424999713,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true,
+    "requested": "pcore",
+    "env_var": "OUTRIGGER_PLACEMENT",
+    "env_value": "pcore"
+   },
+   "cpu_affinity_end": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ],
+   "cpu_user_s": 2667.796875,
+   "cpu_system_s": 938.84375,
+   "peak_rss_MB": 147.99609375,
+   "phases": [
+    {
+     "t_s": 8.099999999994461,
+     "phase": "check"
+    },
+    {
+     "t_s": 12.799999999983507,
+     "phase": "touch"
+    },
+    {
+     "t_s": 31.69999999993946,
+     "phase": "level"
+    },
+    {
+     "t_s": 39.30000000018109,
+     "phase": "done"
+    },
+    {
+     "t_s": 39.40000000018441,
+     "phase": "probe"
+    }
+   ],
+   "phase_detection": {
+    "t_pad_first_s": 30.448999999942377,
+    "t_full_load_s": 32.39199999995177,
+    "pad_sum_max_N": 396846.23443740164,
+    "full_load_rule": "pad SCM normal sum >= 0.95 x 380.1 kN; first contact > 1000 N"
+   },
+   "windows": {
+    "settle": {
+     "t_from_s": 0.0,
+     "t_to_s": 8.0,
+     "steps": 80000,
+     "ms_per_step_physics": 1.941379351237265,
+     "ms_per_step_inclusive": 1.9529286187505932
+    },
+    "pre_contact": {
+     "t_from_s": 8.0,
+     "t_to_s": 30.0,
+     "steps": 220000,
+     "ms_per_step_physics": 2.2009399717972635,
+     "ms_per_step_inclusive": 2.2038738227272088
+    },
+    "load_transfer": {
+     "t_from_s": 30.5,
+     "t_to_s": 32.0,
+     "steps": 15000,
+     "ms_per_step_physics": 2.740784780289202,
+     "ms_per_step_inclusive": 2.7438079399988053
+    },
+    "full_load": {
+     "t_from_s": 32.5,
+     "t_to_s": 40.0,
+     "steps": 75000,
+     "ms_per_step_physics": 2.634906241139397,
+     "ms_per_step_inclusive": 2.637746408672916
+    },
+    "closed_loop_all": {
+     "t_from_s": 8.0,
+     "t_to_s": 40.0,
+     "steps": 320000,
+     "ms_per_step_physics": 2.341536454947891,
+     "ms_per_step_inclusive": 2.3444528479701123
+    },
+    "whole_run": {
+     "t_from_s": 0.0,
+     "t_to_s": 40.0,
+     "steps": 400000,
+     "ms_per_step_physics": 2.261505034205766,
+     "ms_per_step_inclusive": 2.2661480021262084
+    }
+   },
+   "extrapolation_128s": {
+    "rule": "measured wall to end_s + (128 s - end_s) / dt x full_load inclusive ms/step (ASSUMPTION: the levelling / READY / hold part after end_s costs as the measured full-load window)",
+    "wall_s": 3227.556536632155,
+    "ms_per_step": 2.521528544243871
+   },
+   "contended_P3b_reference": {
+    "result": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_P3b_20261026_122444\\P3b_G1_B_top_Fs4\\result.json",
+    "wall_s": 6533.685964300006,
+    "ms_per_step": 5.10444215960938,
+    "settle_ms_per_step": 3.9433275249997677,
+    "ratio_contended_over_solo_128s": 2.02434438874855
+   }
+  },
+  {
+   "soil": "S1",
+   "case": "solo_S1_B_top_Fs4_end50",
+   "end_s": 50.0,
+   "process_wall_s": 1211.2475929000066,
+   "top_cpu_before": [
+    {
+     "pid": 25272,
+     "name": "whale.exe",
+     "cpu_pct": 56.9
+    },
+    {
+     "pid": 82364,
+     "name": "nossvc.exe",
+     "cpu_pct": 13.6
+    },
+    {
+     "pid": 4,
+     "name": "System",
+     "cpu_pct": 10.6
+    },
+    {
+     "pid": 1828,
+     "name": "lsass.exe",
+     "cpu_pct": 6.2
+    },
+    {
+     "pid": 12176,
+     "name": "dwm.exe",
+     "cpu_pct": 4.6
+    },
+    {
+     "pid": 49464,
+     "name": "HWiNFO64.EXE",
+     "cpu_pct": 4.6
+    }
+   ],
+   "busy_before": [
+    {
+     "pid": 25272,
+     "name": "whale.exe",
+     "cpu_pct": 56.9
+    }
+   ],
+   "num_threads_chrono": 4,
+   "dt_s": 0.0001,
+   "n_steps_timed": 500000,
+   "n_steps_run_S9": 500000,
+   "build_s": 0.4410739000304602,
+   "settle_wall_s": 162.30249150004238,
+   "loop_wall_s": 1047.6775366000365,
+   "us_per_step_run_S9": 2419.960056200158,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true,
+    "requested": "pcore",
+    "env_var": "OUTRIGGER_PLACEMENT",
+    "env_value": "pcore"
+   },
+   "cpu_affinity_end": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ],
+   "cpu_user_s": 3564.625,
+   "cpu_system_s": 1248.765625,
+   "peak_rss_MB": 158.1015625,
+   "phases": [
+    {
+     "t_s": 8.099999999994461,
+     "phase": "check"
+    },
+    {
+     "t_s": 12.799999999983507,
+     "phase": "touch"
+    },
+    {
+     "t_s": 34.80000000003171,
+     "phase": "level"
+    }
+   ],
+   "phase_detection": {
+    "t_pad_first_s": 27.570999999949084,
+    "t_full_load_s": 44.331000000348105,
+    "pad_sum_max_N": 384827.5519475877,
+    "full_load_rule": "pad SCM normal sum >= 0.95 x 380.1 kN; first contact > 1000 N"
+   },
+   "windows": {
+    "settle": {
+     "t_from_s": 0.0,
+     "t_to_s": 8.0,
+     "steps": 80000,
+     "ms_per_step_physics": 2.0188499776486424,
+     "ms_per_step_inclusive": 2.0289666700002273
+    },
+    "pre_contact": {
+     "t_from_s": 8.0,
+     "t_to_s": 27.5,
+     "steps": 195000,
+     "ms_per_step_physics": 2.215190271293231,
+     "ms_per_step_inclusive": 2.2181373379485776
+    },
+    "load_transfer": {
+     "t_from_s": 28.0,
+     "t_to_s": 44.0,
+     "steps": 160000,
+     "ms_per_step_physics": 2.7581611292749586,
+     "ms_per_step_inclusive": 2.7611211737497796
+    },
+    "full_load": {
+     "t_from_s": 44.5,
+     "t_to_s": 50.0,
+     "steps": 55000,
+     "ms_per_step_physics": 2.657114296407566,
+     "ms_per_step_inclusive": 2.659902620119658
+    },
+    "closed_loop_all": {
+     "t_from_s": 8.0,
+     "t_to_s": 50.0,
+     "steps": 420000,
+     "ms_per_step_physics": 2.491499185436849,
+     "ms_per_step_inclusive": 2.494430362872788
+    },
+    "whole_run": {
+     "t_from_s": 0.0,
+     "t_to_s": 50.0,
+     "steps": 500000,
+     "ms_per_step_physics": 2.4158753121907357,
+     "ms_per_step_inclusive": 2.4199561720131784
+    }
+   },
+   "extrapolation_128s": {
+    "rule": "measured wall to end_s + (128 s - end_s) / dt x full_load inclusive ms/step (ASSUMPTION: the levelling / READY / hold part after end_s costs as the measured full-load window)",
+    "wall_s": 3284.7040717934124,
+    "ms_per_step": 2.5661750560886034
+   },
+   "contended_P3b_reference": {
+    "result": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_P3b_20261026_122444\\P3b_S1_B_top_Fs4\\result.json",
+    "wall_s": 6370.781386999995,
+    "ms_per_step": 4.977172958593746,
+    "settle_ms_per_step": 3.9503921312498274,
+    "ratio_contended_over_solo_128s": 1.9395297864752907
+   }
+  },
+  {
+   "soil": "J1",
+   "case": "solo_J1_B_top_Fs4_end40",
+   "end_s": 40.0,
+   "process_wall_s": 1294.1351265999838,
+   "top_cpu_before": [
+    {
+     "pid": 82364,
+     "name": "nossvc.exe",
+     "cpu_pct": 9.4
+    },
+    {
+     "pid": 4,
+     "name": "System",
+     "cpu_pct": 9.2
+    },
+    {
+     "pid": 1828,
+     "name": "lsass.exe",
+     "cpu_pct": 6.2
+    },
+    {
+     "pid": 6932,
+     "name": "PresentMonService.exe",
+     "cpu_pct": 4.7
+    },
+    {
+     "pid": 12472,
+     "name": "nvcontainer.exe",
+     "cpu_pct": 3.1
+    },
+    {
+     "pid": 21248,
+     "name": "uMain.exe",
+     "cpu_pct": 3.1
+    }
+   ],
+   "busy_before": [],
+   "num_threads_chrono": 4,
+   "dt_s": 0.0001,
+   "n_steps_timed": 400000,
+   "n_steps_run_S9": 400000,
+   "build_s": 0.44328159996075556,
+   "settle_wall_s": 195.02710120001575,
+   "loop_wall_s": 1097.8586716999998,
+   "us_per_step_run_S9": 3232.214432250039,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true,
+    "requested": "pcore",
+    "env_var": "OUTRIGGER_PLACEMENT",
+    "env_value": "pcore"
+   },
+   "cpu_affinity_end": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ],
+   "cpu_user_s": 3980.484375,
+   "cpu_system_s": 1164.859375,
+   "peak_rss_MB": 148.76171875,
+   "phases": [
+    {
+     "t_s": 8.099999999994461,
+     "phase": "check"
+    },
+    {
+     "t_s": 12.799999999983507,
+     "phase": "touch"
+    },
+    {
+     "t_s": 31.599999999939694,
+     "phase": "level"
+    }
+   ],
+   "phase_detection": {
+    "t_pad_first_s": 30.933999999941246,
+    "t_full_load_s": 34.38200000001783,
+    "pad_sum_max_N": 380209.69978918805,
+    "full_load_rule": "pad SCM normal sum >= 0.95 x 380.1 kN; first contact > 1000 N"
+   },
+   "windows": {
+    "settle": {
+     "t_from_s": 0.0,
+     "t_to_s": 8.0,
+     "steps": 80000,
+     "ms_per_step_physics": 2.427910222391074,
+     "ms_per_step_inclusive": 2.438024332499481
+    },
+    "pre_contact": {
+     "t_from_s": 8.0,
+     "t_to_s": 30.5,
+     "steps": 225000,
+     "ms_per_step_physics": 2.9567567741053384,
+     "ms_per_step_inclusive": 2.9597212333333056
+    },
+    "load_transfer": {
+     "t_from_s": 31.0,
+     "t_to_s": 34.0,
+     "steps": 30000,
+     "ms_per_step_physics": 4.595834119866291,
+     "ms_per_step_inclusive": 4.598923963333557
+    },
+    "full_load": {
+     "t_from_s": 34.5,
+     "t_to_s": 40.0,
+     "steps": 55000,
+     "ms_per_step_physics": 4.549005612958519,
+     "ms_per_step_inclusive": 4.551583113701733
+    },
+    "closed_loop_all": {
+     "t_from_s": 8.0,
+     "t_to_s": 40.0,
+     "steps": 320000,
+     "ms_per_step_physics": 3.427791687760691,
+     "ms_per_step_inclusive": 3.430704204229997
+    },
+    "whole_run": {
+     "t_from_s": 0.0,
+     "t_to_s": 40.0,
+     "steps": 400000,
+     "ms_per_step_physics": 3.227815394686768,
+     "ms_per_step_inclusive": 3.232168229883894
+    }
+   },
+   "extrapolation_128s": {
+    "rule": "measured wall to end_s + (128 s - end_s) / dt x full_load inclusive ms/step (ASSUMPTION: the levelling / READY / hold part after end_s costs as the measured full-load window)",
+    "wall_s": 5298.278912957541,
+    "ms_per_step": 4.1392804007480795
+   },
+   "contended_P3b_reference": {
+    "result": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_P3b_20261026_122444\\P3b_J1_B_top_Fs4\\result.json",
+    "wall_s": 11118.338060499984,
+    "ms_per_step": 8.686201609765613,
+    "settle_ms_per_step": 5.342981238749781,
+    "ratio_contended_over_solo_128s": 2.0984810809617493
+   }
+  },
+  {
+   "soil": "J2",
+   "case": "solo_J2_B_top_Fs4_end45",
+   "end_s": 45.0,
+   "process_wall_s": 1543.4368010999751,
+   "top_cpu_before": [
+    {
+     "pid": 4,
+     "name": "System",
+     "cpu_pct": 13.8
+    },
+    {
+     "pid": 82364,
+     "name": "nossvc.exe",
+     "cpu_pct": 7.8
+    },
+    {
+     "pid": 6932,
+     "name": "PresentMonService.exe",
+     "cpu_pct": 6.2
+    },
+    {
+     "pid": 15460,
+     "name": "GnAgent.exe",
+     "cpu_pct": 6.2
+    },
+    {
+     "pid": 18328,
+     "name": "GnPlugin.exe",
+     "cpu_pct": 3.1
+    },
+    {
+     "pid": 49464,
+     "name": "HWiNFO64.EXE",
+     "cpu_pct": 3.1
+    }
+   ],
+   "busy_before": [],
+   "num_threads_chrono": 4,
+   "dt_s": 0.0001,
+   "n_steps_timed": 450000,
+   "n_steps_run_S9": 450000,
+   "build_s": 0.44313580001471564,
+   "settle_wall_s": 196.65963660000125,
+   "loop_wall_s": 1345.5338992000325,
+   "us_per_step_run_S9": 3427.096746222297,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true,
+    "requested": "pcore",
+    "env_var": "OUTRIGGER_PLACEMENT",
+    "env_value": "pcore"
+   },
+   "cpu_affinity_end": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ],
+   "cpu_user_s": 4745.953125,
+   "cpu_system_s": 1391.578125,
+   "peak_rss_MB": 153.10546875,
+   "phases": [
+    {
+     "t_s": 8.099999999994461,
+     "phase": "check"
+    },
+    {
+     "t_s": 12.799999999983507,
+     "phase": "touch"
+    },
+    {
+     "t_s": 31.499999999939927,
+     "phase": "level"
+    }
+   ],
+   "phase_detection": {
+    "t_pad_first_s": 30.809999999941535,
+    "t_full_load_s": 39.945000000202505,
+    "pad_sum_max_N": 379651.614550918,
+    "full_load_rule": "pad SCM normal sum >= 0.95 x 380.1 kN; first contact > 1000 N"
+   },
+   "windows": {
+    "settle": {
+     "t_from_s": 0.0,
+     "t_to_s": 8.0,
+     "steps": 80000,
+     "ms_per_step_physics": 2.448393302470504,
+     "ms_per_step_inclusive": 2.4584288787496917
+    },
+    "pre_contact": {
+     "t_from_s": 8.0,
+     "t_to_s": 30.5,
+     "steps": 225000,
+     "ms_per_step_physics": 2.9831786897675032,
+     "ms_per_step_inclusive": 2.9861221315556516
+    },
+    "load_transfer": {
+     "t_from_s": 31.0,
+     "t_to_s": 39.5,
+     "steps": 85000,
+     "ms_per_step_physics": 4.67728753898238,
+     "ms_per_step_inclusive": 4.680372809411903
+    },
+    "full_load": {
+     "t_from_s": 40.0,
+     "t_to_s": 45.0,
+     "steps": 50000,
+     "ms_per_step_physics": 4.6197731880832,
+     "ms_per_step_inclusive": 4.622302754781698
+    },
+    "closed_loop_all": {
+     "t_from_s": 8.0,
+     "t_to_s": 45.0,
+     "steps": 370000,
+     "ms_per_step_physics": 3.633560618154415,
+     "ms_per_step_inclusive": 3.6364844563219894
+    },
+    "whole_run": {
+     "t_from_s": 0.0,
+     "t_to_s": 45.0,
+     "steps": 450000,
+     "ms_per_step_physics": 3.4228642064772754,
+     "ms_per_step_inclusive": 3.4270523536424697
+    }
+   },
+   "extrapolation_128s": {
+    "rule": "measured wall to end_s + (128 s - end_s) / dt x full_load inclusive ms/step (ASSUMPTION: the levelling / READY / hold part after end_s costs as the measured full-load window)",
+    "wall_s": 5378.704822268843,
+    "ms_per_step": 4.2021131423975335
+   },
+   "contended_P3b_reference": {
+    "result": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_P3b_20261026_122444\\P3b_J2_B_top_Fs4\\result.json",
+    "wall_s": 10856.039737100014,
+    "ms_per_step": 8.481281044609386,
+    "settle_ms_per_step": 4.738766706250317,
+    "ratio_contended_over_solo_128s": 2.0183371454321084
+   }
+  }
+ ],
+ "trajectory_check": {
+  "ref": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_P3b_20261026_122444\\P3b_G1_B_top_Fs4",
+  "rows_compared": 32000,
+  "t_end_compared_s": 40.00000000020433,
+  "keys": {
+   "t_s": {
+    "bit_identical": true,
+    "max_abs_diff": 0.0
+   },
+   "s_motor_m": {
+    "bit_identical": true,
+    "max_abs_diff": 0.0
+   },
+   "F_cyl_N": {
+    "bit_identical": true,
+    "max_abs_diff": 0.0
+   },
+   "roll_pitch_deg": {
+    "bit_identical": true,
+    "max_abs_diff": 0.0
+   },
+   "z_origin_m": {
+    "bit_identical": true,
+    "max_abs_diff": 0.0
+   },
+   "scm_pad_normal_N": {
+    "bit_identical": true,
+    "max_abs_diff": 0.0
+   },
+   "scm_crawler_normal_N": {
+    "bit_identical": true,
+    "max_abs_diff": 0.0
+   }
+  },
+  "bit_identical": true
+ },
+ "setup": "run_S9.p3b_level_argv(P3b_<soil>_B_top_Fs4) with --duration = end_s - 8 s; pad B dwg_rear250, auger top, F_s 4 kN, 4 SCM threads, dt 1e-4 s",
+ "finished": "20261027_002917",
+ "status": "complete",
+ "table_ms_per_step": [
+  {
+   "soil": "G1",
+   "pad_grid_m": 0.02,
+   "settle": 1.9529286187505932,
+   "pre_contact": 2.2038738227272088,
+   "load_transfer": 2.7438079399988053,
+   "full_load": 2.637746408672916,
+   "run_mean": 2.2658492424999714,
+   "est_128s": 2.521528544243871,
+   "contended_P3b_128s": 5.10444215960938
+  },
+  {
+   "soil": "S1",
+   "pad_grid_m": 0.02,
+   "settle": 2.0289666700002273,
+   "pre_contact": 2.2181373379485776,
+   "load_transfer": 2.7611211737497796,
+   "full_load": 2.659902620119658,
+   "run_mean": 2.419960056200158,
+   "est_128s": 2.5661750560886034,
+   "contended_P3b_128s": 4.977172958593746
+  },
+  {
+   "soil": "J1",
+   "pad_grid_m": 0.01,
+   "settle": 2.438024332499481,
+   "pre_contact": 2.9597212333333056,
+   "load_transfer": 4.598923963333557,
+   "full_load": 4.551583113701733,
+   "run_mean": 3.232214432250039,
+   "est_128s": 4.1392804007480795,
+   "contended_P3b_128s": 8.686201609765613
+  },
+  {
+   "soil": "J2",
+   "pad_grid_m": 0.01,
+   "settle": 2.4584288787496917,
+   "pre_contact": 2.9861221315556516,
+   "load_transfer": 4.680372809411903,
+   "full_load": 4.622302754781698,
+   "run_mean": 3.427096746222297,
+   "est_128s": 4.2021131423975335,
+   "contended_P3b_128s": 8.481281044609386
+  }
+ ],
+ "notes": [
+  "ms/step = wall per physics step at dt 1e-4 s, 4 SCM OpenMP threads, process pinned to the P-core logical processors 0-15 (8 P-cores x 2 SMT) with EcoQoS off; the 4 threads were not pinned to distinct physical cores",
+  "inclusive = between successive step starts (adds controller, sensors, recording); physics = S9Model.step only",
+  "trajectory check: the shortened G1 run is bit-identical to the P3b G1 B top Fs4 run over 0-40 s (step_series keys)",
+  "S1 start: a browser (whale.exe) at 57 % in the 1 s sample before the case; S1 phase costs match G1 within 1-4 %"
+ ]
+}

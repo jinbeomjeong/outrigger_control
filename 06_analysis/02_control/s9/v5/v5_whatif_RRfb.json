@@ -1,0 +1,1994 @@
+{
+ "Fs0_RRfb": {
+  "case": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\f556fe97-a1cd-4d18-9af9-03853d1dd52a\\scratchpad\\ctrl-run\\whatif\\Fs0_RRfb\\MLJ_K0V_fdown3.5_G4RF_Fs0",
+  "run_fallback_slope": "nominal_gap",
+  "run_ratio_source": "column_nominal",
+  "run_plant_ratio": null,
+  "engine": null,
+  "replayable_tool": false,
+  "reasons_tool": [
+   "level replay differs from the controller: replay {'relevel_predicted': [(87.7, 3), (87.8, 3)], 'probe_aborted_low_load': []}, controller {'relevel_predicted': [(87.8, 3)], 'probe_aborted_low_load': []}"
+  ],
+  "notes": [
+   "fallback forced at the run's events; the monitor's own diagnosis is not replayed",
+   "E-6 deduction from the run meta",
+   "truth: pads F_pressure",
+   "engine None unknown: no optimism allowance"
+  ],
+  "probed_leg_source_counts": {
+   "record": 238,
+   "history": 0,
+   "command": 0,
+   "none": 0
+  },
+  "command_history_match": null,
+  "level_gate": {
+   "passed": false,
+   "replay": {
+    "relevel_predicted": [
+     [
+      87.7,
+      3
+     ],
+     [
+      87.8,
+      3
+     ]
+    ],
+    "probe_aborted_low_load": []
+   },
+   "controller": {
+    "relevel_predicted": [
+     [
+      87.8,
+      3
+     ]
+    ],
+    "probe_aborted_low_load": []
+   }
+  },
+  "same_run_gate": {
+   "own_source": "column_nominal",
+   "r5_equal": false,
+   "info_equal": false,
+   "controller_info_count": 14,
+   "replay_info_count": 25,
+   "info_first_diff": [
+    [
+     87.4,
+     "RR",
+     "11.05",
+     "0.19"
+    ],
+    [
+     106.3,
+     "FR",
+     "16.76",
+     "4.76"
+    ]
+   ]
+  },
+  "controller_info": [
+   [
+    106.3,
+    "FR",
+    "16.76",
+    "4.76"
+   ],
+   [
+    106.4,
+    "FR",
+    "16.67",
+    "4.62"
+   ],
+   [
+    106.5,
+    "FR",
+    "13.44",
+    "3.44"
+   ],
+   [
+    113.9,
+    "FR",
+    "16.15",
+    "5.27"
+   ],
+   [
+    114.0,
+    "FR",
+    "31.08",
+    "10.15"
+   ],
+   [
+    114.1,
+    "FR",
+    "44.04",
+    "14.38"
+   ],
+   [
+    114.2,
+    "FR",
+    "46.46",
+    "15.16"
+   ],
+   [
+    114.3,
+    "FR",
+    "37.30",
+    "11.88"
+   ],
+   [
+    114.4,
+    "FR",
+    "21.21",
+    "6.58"
+   ],
+   [
+    115.4,
+    "FR",
+    "9.92",
+    "2.41"
+   ],
+   [
+    115.5,
+    "FR",
+    "12.04",
+    "2.87"
+   ],
+   [
+    115.6,
+    "FR",
+    "13.53",
+    "3.15"
+   ],
+   [
+    115.7,
+    "FR",
+    "12.64",
+    "2.70"
+   ],
+   [
+    115.8,
+    "FR",
+    "8.91",
+    "1.41"
+   ]
+  ],
+  "true_force_source": "F_pressure",
+  "stripped_meta_keys_so_far": [],
+  "c2_seal_record": null,
+  "zero_friction_injected": false,
+  "variants": {
+   "plant_meta": {
+    "r5_events": {
+     "relevel_predicted": [
+      [
+       87.7,
+       3
+      ],
+      [
+       87.8,
+       3
+      ]
+     ],
+     "probe_aborted_low_load": []
+    },
+    "fallback_slope_events": [
+     [
+      87.3,
+      "RR",
+      [
+       8.262791219123224,
+       0.0
+      ]
+     ],
+     [
+      87.4,
+      "RR",
+      [
+       11.486950798278123,
+       0.0
+      ]
+     ],
+     [
+      87.5,
+      "RR",
+      [
+       14.308288462041586,
+       0.0
+      ]
+     ],
+     [
+      87.6,
+      "RR",
+      [
+       18.119831941401962,
+       0.0
+      ]
+     ],
+     [
+      87.7,
+      "RR",
+      [
+       22.251428640466536,
+       0.0
+      ]
+     ],
+     [
+      87.8,
+      "RR",
+      [
+       26.288584256581665,
+       0.0
+      ]
+     ],
+     [
+      108.1,
+      "RR",
+      [
+       10.24452238710825,
+       0.0
+      ]
+     ],
+     [
+      108.2,
+      "RR",
+      [
+       10.665205798484024,
+       0.0
+      ]
+     ],
+     [
+      108.3,
+      "RR",
+      [
+       8.710437713599452,
+       0.0
+      ]
+     ],
+     [
+      111.1,
+      "RR",
+      [
+       10.12507351669338,
+       0.0
+      ]
+     ],
+     [
+      111.2,
+      "RR",
+      [
+       10.554661470177882,
+       0.0
+      ]
+     ],
+     [
+      111.3,
+      "RR",
+      [
+       8.258133872896911,
+       0.0
+      ]
+     ],
+     [
+      114.0,
+      "FR",
+      [
+       8.918362573347524,
+       0.0
+      ]
+     ],
+     [
+      114.1,
+      "FR",
+      [
+       12.637164058732054,
+       0.0
+      ]
+     ],
+     [
+      114.2,
+      "FR",
+      [
+       13.337516101189237,
+       0.0
+      ]
+     ],
+     [
+      114.3,
+      "FR",
+      [
+       10.835119699879382,
+       0.0
+      ]
+     ]
+    ],
+    "row_classes": {
+     "judged_falling": {
+      "rows": 264,
+      "max_difference_N": -2831.575551633301,
+      "missed": 0
+     },
+     "record_rising": {
+      "rows": 258,
+      "max_difference_N": -2344.0312552565447,
+      "missed": 0
+     },
+     "record_level": {
+      "rows": 20,
+      "max_difference_N": 2069.707182447717,
+      "missed": 0
+     },
+     "unwatched": {
+      "rows": 420,
+      "max_difference_N": 15563.492701324081,
+      "missed": 1
+     }
+    },
+    "allowance_N": null,
+    "judged_falling_within_allowance": null,
+    "slope_rows_missed_triggers": 0,
+    "judgement_passed": null,
+    "level_missed_triggers": 0,
+    "level_missed_trigger_flag": false,
+    "record_nominal_gap": {
+     "watched_rows": 522,
+     "max_difference_N": -2344.0312552565447,
+     "max_difference_falling_N": -2831.575551633301,
+     "falling_rows": 264,
+     "missed": 0,
+     "by_condition": {
+      "met": {
+       "rows": 522,
+       "max_difference_N": -2344.0312552565447,
+       "missed": 0
+      }
+     }
+    },
+    "record_level": {
+     "watched_rows": 20,
+     "max_difference_N": 2069.707182447717,
+     "max_difference_falling_N": -2761.215673462604,
+     "falling_rows": 9,
+     "missed": 0,
+     "by_condition": {
+      "moving": {
+       "rows": 8,
+       "max_difference_N": 2069.707182447717,
+       "missed": 0
+      },
+      "short": {
+       "rows": 8,
+       "max_difference_N": -2761.215673462604,
+       "missed": 0
+      },
+      "other": {
+       "rows": 4,
+       "max_difference_N": -2583.049591433519,
+       "missed": 0
+      }
+     }
+    },
+    "worst_judged_falling_row": {
+     "t_s": 118.80000000282021,
+     "leg": "RR",
+     "phase": "ready",
+     "is_watched": true,
+     "condition": "met",
+     "rule": "nominal_gap",
+     "head_drop_Pa": 21215.26609514281,
+     "fallback_drop_N": 283.72787549718913,
+     "L_hat_fb_N": 66082.49130584393,
+     "L_hat_true_N": 68914.06685747723,
+     "difference_N": -2831.575551633301,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "judged_falling"
+    },
+    "worst_record_rising_row": {
+     "t_s": 118.60000000281357,
+     "leg": "RR",
+     "phase": "ready",
+     "is_watched": true,
+     "condition": "met",
+     "rule": "nominal_gap",
+     "head_drop_Pa": -41856.70428469498,
+     "fallback_drop_N": -559.7815143468581,
+     "L_hat_fb_N": 67731.5304340979,
+     "L_hat_true_N": 70075.56168935445,
+     "difference_N": -2344.0312552565447,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "record_rising"
+    },
+    "worst_record_level_row": {
+     "t_s": 118.00000000279366,
+     "leg": "RR",
+     "phase": "ready",
+     "is_watched": true,
+     "condition": "moving",
+     "rule": "level",
+     "head_drop_Pa": null,
+     "fallback_drop_N": -2491.918322942256,
+     "L_hat_fb_N": 71147.32972036375,
+     "L_hat_true_N": 69077.62253791603,
+     "difference_N": 2069.707182447717,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "record_level"
+    },
+    "missed_rows": [
+     {
+      "t_s": 88.00000000179776,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 12273.414451619108,
+      "L_hat_fb_N": 7241.115207313158,
+      "L_hat_true_N": 2084.9797254800615,
+      "difference_N": 5156.1354818330965,
+      "is_rate_passed": true,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     }
+    ],
+    "fires_rows": [
+     {
+      "t_s": 87.7000000017878,
+      "leg": "RR",
+      "phase": "ready",
+      "is_watched": true,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1247859.3584892303,
+      "fallback_drop_N": 16688.571480349903,
+      "L_hat_fb_N": 13627.65362062454,
+      "L_hat_true_N": 21117.00913145845,
+      "difference_N": -7489.35551083391,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": false,
+      "is_missed": false,
+      "row_class": "judged_falling"
+     },
+     {
+      "t_s": 87.80000000179112,
+      "leg": "RR",
+      "phase": "ready",
+      "is_watched": true,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1474262.907611683,
+      "fallback_drop_N": 19716.43819243625,
+      "L_hat_fb_N": 1916.4363140249043,
+      "L_hat_true_N": 10287.694927318298,
+      "difference_N": -8371.258613293394,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "judged_falling"
+     },
+     {
+      "t_s": 87.90000000179444,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1597935.6028867494,
+      "fallback_drop_N": 21370.407128297935,
+      "L_hat_fb_N": -7719.813013181072,
+      "L_hat_true_N": 1351.1600721935938,
+      "difference_N": -9070.973085374666,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 88.00000000179776,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 12273.414451619108,
+      "L_hat_fb_N": 7241.115207313158,
+      "L_hat_true_N": 2084.9797254800615,
+      "difference_N": 5156.1354818330965,
+      "is_rate_passed": true,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 88.40000000181104,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 10783.918338405012,
+      "L_hat_fb_N": 824.5009913470894,
+      "L_hat_true_N": 3594.732017651346,
+      "difference_N": -2770.2310263042564,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 88.50000000181436,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 12937.845991244572,
+      "L_hat_fb_N": -3820.2463634110754,
+      "L_hat_true_N": -1234.877585908438,
+      "difference_N": -2585.3687775026374,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 88.60000000181768,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 7125.485324464189,
+      "L_hat_fb_N": 2611.7241328778346,
+      "L_hat_true_N": 5172.07452557915,
+      "difference_N": -2560.3503927013153,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     }
+    ]
+   },
+   "column_nominal": {
+    "r5_events": {
+     "relevel_predicted": [
+      [
+       87.7,
+       3
+      ],
+      [
+       87.8,
+       3
+      ]
+     ],
+     "probe_aborted_low_load": []
+    },
+    "fallback_slope_events": [
+     [
+      87.4,
+      "RR",
+      [
+       11.046334868752066,
+       0.1923519913676197
+      ]
+     ],
+     [
+      87.5,
+      "RR",
+      [
+       13.715258916278476,
+       0.19540315133898062
+      ]
+     ],
+     [
+      87.6,
+      "RR",
+      [
+       17.332548188012705,
+       0.2111772439897201
+      ]
+     ],
+     [
+      87.7,
+      "RR",
+      [
+       21.23529743075427,
+       0.20999404935834173
+      ]
+     ],
+     [
+      87.8,
+      "RR",
+      [
+       25.023122097665038,
+       0.18312335453581666
+      ]
+     ],
+     [
+      106.3,
+      "FR",
+      [
+       16.756985648982564,
+       4.761142745607758
+      ]
+     ],
+     [
+      106.4,
+      "FR",
+      [
+       16.668046645636526,
+       4.622485048122847
+      ]
+     ],
+     [
+      106.5,
+      "FR",
+      [
+       13.438182749117326,
+       3.4444377830832345
+      ]
+     ],
+     [
+      108.1,
+      "RR",
+      [
+       10.288429602546545,
+       0.4665241785709392
+      ]
+     ],
+     [
+      108.2,
+      "RR",
+      [
+       10.642561723111818,
+       0.4173273274344283
+      ]
+     ],
+     [
+      108.3,
+      "RR",
+      [
+       8.63788175544408,
+       0.2867754576956855
+      ]
+     ],
+     [
+      111.1,
+      "RR",
+      [
+       10.181217545504463,
+       0.47383337141083876
+      ]
+     ],
+     [
+      111.2,
+      "RR",
+      [
+       10.554815989267306,
+       0.4355656401615912
+      ]
+     ],
+     [
+      111.3,
+      "RR",
+      [
+       8.212774952871518,
+       0.2953136195649725
+      ]
+     ],
+     [
+      113.9,
+      "FR",
+      [
+       16.148292126960424,
+       5.2731588814961885
+      ]
+     ],
+     [
+      114.0,
+      "FR",
+      [
+       31.077101441939092,
+       10.148100628308677
+      ]
+     ],
+     [
+      114.1,
+      "FR",
+      [
+       44.035710161112256,
+       14.379681412338265
+      ]
+     ],
+     [
+      114.2,
+      "FR",
+      [
+       46.45531522094715,
+       15.15574839600002
+      ]
+     ],
+     [
+      114.3,
+      "FR",
+      [
+       37.30273822493007,
+       11.87562342111461
+      ]
+     ],
+     [
+      114.4,
+      "FR",
+      [
+       21.212575327555655,
+       6.581735278004817
+      ]
+     ],
+     [
+      115.4,
+      "FR",
+      [
+       9.924848083812725,
+       2.406918830520757
+      ]
+     ],
+     [
+      115.5,
+      "FR",
+      [
+       12.035066352447876,
+       2.8747376883621363
+      ]
+     ],
+     [
+      115.6,
+      "FR",
+      [
+       13.529978498007674,
+       3.148414045883085
+      ]
+     ],
+     [
+      115.7,
+      "FR",
+      [
+       12.63741668190879,
+       2.703963197681217
+      ]
+     ],
+     [
+      115.8,
+      "FR",
+      [
+       8.91268457597711,
+       1.4104986847734822
+      ]
+     ]
+    ],
+    "row_classes": {
+     "judged_falling": {
+      "rows": 264,
+      "max_difference_N": -2819.8346752510843,
+      "missed": 0
+     },
+     "record_rising": {
+      "rows": 258,
+      "max_difference_N": 34632.01250565596,
+      "missed": 0
+     },
+     "record_level": {
+      "rows": 20,
+      "max_difference_N": 2069.707182447717,
+      "missed": 0
+     },
+     "unwatched": {
+      "rows": 420,
+      "max_difference_N": 38755.11636944761,
+      "missed": 1
+     }
+    },
+    "allowance_N": null,
+    "judged_falling_within_allowance": null,
+    "slope_rows_missed_triggers": 0,
+    "judgement_passed": null,
+    "level_missed_triggers": 0,
+    "level_missed_trigger_flag": false,
+    "record_nominal_gap": {
+     "watched_rows": 522,
+     "max_difference_N": 34632.01250565596,
+     "max_difference_falling_N": -2819.8346752510843,
+     "falling_rows": 264,
+     "missed": 0,
+     "by_condition": {
+      "met": {
+       "rows": 522,
+       "max_difference_N": 34632.01250565596,
+       "missed": 0
+      }
+     }
+    },
+    "record_level": {
+     "watched_rows": 20,
+     "max_difference_N": 2069.707182447717,
+     "max_difference_falling_N": -2761.215673462604,
+     "falling_rows": 9,
+     "missed": 0,
+     "by_condition": {
+      "moving": {
+       "rows": 8,
+       "max_difference_N": 2069.707182447717,
+       "missed": 0
+      },
+      "short": {
+       "rows": 8,
+       "max_difference_N": -2761.215673462604,
+       "missed": 0
+      },
+      "other": {
+       "rows": 4,
+       "max_difference_N": -2583.049591433519,
+       "missed": 0
+      }
+     }
+    },
+    "worst_judged_falling_row": {
+     "t_s": 118.80000000282021,
+     "leg": "RR",
+     "phase": "ready",
+     "is_watched": true,
+     "condition": "met",
+     "rule": "nominal_gap",
+     "head_drop_Pa": 21215.26609514281,
+     "fallback_drop_N": 274.9222182105232,
+     "L_hat_fb_N": 66094.23218222614,
+     "L_hat_true_N": 68914.06685747723,
+     "difference_N": -2819.8346752510843,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "judged_falling"
+    },
+    "worst_record_rising_row": {
+     "t_s": 87.80000000179112,
+     "leg": "FR",
+     "phase": "ready",
+     "is_watched": true,
+     "condition": "met",
+     "rule": "nominal_gap",
+     "head_drop_Pa": -1282349.2522593867,
+     "fallback_drop_N": -55477.6877390055,
+     "L_hat_fb_N": 201829.47387654753,
+     "L_hat_true_N": 167197.46137089157,
+     "difference_N": 34632.01250565596,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "record_rising"
+    },
+    "worst_record_level_row": {
+     "t_s": 118.00000000279366,
+     "leg": "RR",
+     "phase": "ready",
+     "is_watched": true,
+     "condition": "moving",
+     "rule": "level",
+     "head_drop_Pa": null,
+     "fallback_drop_N": -2491.918322942256,
+     "L_hat_fb_N": 71147.32972036375,
+     "L_hat_true_N": 69077.62253791603,
+     "difference_N": 2069.707182447717,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "record_level"
+    },
+    "missed_rows": [
+     {
+      "t_s": 88.00000000179776,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 12589.937698976639,
+      "L_hat_fb_N": 6819.084210836452,
+      "L_hat_true_N": 2084.9797254800615,
+      "difference_N": 4734.104485356391,
+      "is_rate_passed": true,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     }
+    ],
+    "fires_rows": [
+     {
+      "t_s": 87.7000000017878,
+      "leg": "RR",
+      "phase": "ready",
+      "is_watched": true,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1247859.3584892303,
+      "fallback_drop_N": 15926.473073065703,
+      "L_hat_fb_N": 14960.308077694339,
+      "L_hat_true_N": 21117.00913145845,
+      "difference_N": -6156.701053764111,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": false,
+      "is_missed": false,
+      "row_class": "judged_falling"
+     },
+     {
+      "t_s": 87.80000000179112,
+      "leg": "RR",
+      "phase": "ready",
+      "is_watched": true,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1474262.907611683,
+      "fallback_drop_N": 18767.341573248777,
+      "L_hat_fb_N": 3581.8893266736122,
+      "L_hat_true_N": 10287.694927318298,
+      "difference_N": -6705.805600644686,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "judged_falling"
+     },
+     {
+      "t_s": 87.90000000179444,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1597935.6028867494,
+      "fallback_drop_N": 20253.238270778373,
+      "L_hat_fb_N": -5749.440221422799,
+      "L_hat_true_N": 1351.1600721935938,
+      "difference_N": -7100.600293616393,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 88.00000000179776,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 12589.937698976639,
+      "L_hat_fb_N": 6819.084210836452,
+      "L_hat_true_N": 2084.9797254800615,
+      "difference_N": 4734.104485356391,
+      "is_rate_passed": true,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 88.40000000181104,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 10783.918338405012,
+      "L_hat_fb_N": 824.5009913470894,
+      "L_hat_true_N": 3594.732017651346,
+      "difference_N": -2770.2310263042564,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 88.50000000181436,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 12937.845991244572,
+      "L_hat_fb_N": -3820.2463634110754,
+      "L_hat_true_N": -1234.877585908438,
+      "difference_N": -2585.3687775026374,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 88.60000000181768,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 7125.485324464189,
+      "L_hat_fb_N": 2611.7241328778346,
+      "L_hat_true_N": 5172.07452557915,
+      "difference_N": -2560.3503927013153,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     }
+    ]
+   }
+  }
+ },
+ "Fs8_RRfb": {
+  "case": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\f556fe97-a1cd-4d18-9af9-03853d1dd52a\\scratchpad\\ctrl-run\\whatif\\Fs8_RRfb\\MLJ_K0V_fdown3.5_G4RF_Fs8",
+  "run_fallback_slope": "nominal_gap",
+  "run_ratio_source": "column_nominal",
+  "run_plant_ratio": null,
+  "engine": null,
+  "replayable_tool": false,
+  "reasons_tool": [
+   "level replay differs from the controller: replay {'relevel_predicted': [(85.1, 3), (85.2, 3)], 'probe_aborted_low_load': []}, controller {'relevel_predicted': [(85.2, 3)], 'probe_aborted_low_load': []}"
+  ],
+  "notes": [
+   "fallback forced at the run's events; the monitor's own diagnosis is not replayed",
+   "E-6 deduction from the run meta",
+   "truth: pads F_pressure",
+   "engine None unknown: no optimism allowance"
+  ],
+  "probed_leg_source_counts": {
+   "record": 238,
+   "history": 0,
+   "command": 0,
+   "none": 0
+  },
+  "command_history_match": null,
+  "level_gate": {
+   "passed": false,
+   "replay": {
+    "relevel_predicted": [
+     [
+      85.1,
+      3
+     ],
+     [
+      85.2,
+      3
+     ]
+    ],
+    "probe_aborted_low_load": []
+   },
+   "controller": {
+    "relevel_predicted": [
+     [
+      85.2,
+      3
+     ]
+    ],
+    "probe_aborted_low_load": []
+   }
+  },
+  "same_run_gate": {
+   "own_source": "column_nominal",
+   "r5_equal": false,
+   "info_equal": false,
+   "controller_info_count": 6,
+   "replay_info_count": 14,
+   "info_first_diff": [
+    [
+     84.9,
+     "RR",
+     "14.71",
+     "0.33"
+    ],
+    [
+     96.1,
+     "FR",
+     "11.98",
+     "3.42"
+    ]
+   ]
+  },
+  "controller_info": [
+   [
+    96.1,
+    "FR",
+    "11.98",
+    "3.42"
+   ],
+   [
+    96.3,
+    "FR",
+    "11.22",
+    "2.89"
+   ],
+   [
+    105.1,
+    "FR",
+    "11.76",
+    "2.73"
+   ],
+   [
+    105.2,
+    "FR",
+    "20.17",
+    "5.13"
+   ],
+   [
+    105.3,
+    "FR",
+    "20.48",
+    "5.03"
+   ],
+   [
+    105.4,
+    "FR",
+    "11.25",
+    "2.01"
+   ]
+  ],
+  "true_force_source": "F_pressure",
+  "stripped_meta_keys_so_far": [],
+  "c2_seal_record": null,
+  "zero_friction_injected": false,
+  "variants": {
+   "plant_meta": {
+    "r5_events": {
+     "relevel_predicted": [
+      [
+       85.1,
+       3
+      ],
+      [
+       85.2,
+       3
+      ]
+     ],
+     "probe_aborted_low_load": []
+    },
+    "fallback_slope_events": [
+     [
+      84.9,
+      "RR",
+      [
+       15.215844847290292,
+       0.0
+      ]
+     ],
+     [
+      85.0,
+      "RR",
+      [
+       19.893080470116672,
+       0.0
+      ]
+     ],
+     [
+      85.1,
+      "RR",
+      [
+       20.236277003262163,
+       0.0
+      ]
+     ],
+     [
+      85.2,
+      "RR",
+      [
+       19.30331786528205,
+       0.0
+      ]
+     ],
+     [
+      102.1,
+      "RR",
+      [
+       9.887422359769742,
+       0.0
+      ]
+     ],
+     [
+      102.2,
+      "RR",
+      [
+       12.866045512217571,
+       0.0
+      ]
+     ],
+     [
+      102.3,
+      "RR",
+      [
+       11.148605015301031,
+       0.0
+      ]
+     ],
+     [
+      102.4,
+      "RR",
+      [
+       9.284440440858306,
+       0.0
+      ]
+     ]
+    ],
+    "row_classes": {
+     "judged_falling": {
+      "rows": 361,
+      "max_difference_N": -3064.9554399305853,
+      "missed": 0
+     },
+     "record_rising": {
+      "rows": 317,
+      "max_difference_N": -1523.6231283647066,
+      "missed": 0
+     },
+     "record_level": {
+      "rows": 20,
+      "max_difference_N": 19841.380707788077,
+      "missed": 0
+     },
+     "unwatched": {
+      "rows": 264,
+      "max_difference_N": 13043.936526193487,
+      "missed": 2
+     }
+    },
+    "allowance_N": null,
+    "judged_falling_within_allowance": null,
+    "slope_rows_missed_triggers": 0,
+    "judgement_passed": null,
+    "level_missed_triggers": 0,
+    "level_missed_trigger_flag": false,
+    "record_nominal_gap": {
+     "watched_rows": 678,
+     "max_difference_N": -1523.6231283647066,
+     "max_difference_falling_N": -3064.9554399305853,
+     "falling_rows": 361,
+     "missed": 0,
+     "by_condition": {
+      "met": {
+       "rows": 678,
+       "max_difference_N": -1523.6231283647066,
+       "missed": 0
+      }
+     }
+    },
+    "record_level": {
+     "watched_rows": 20,
+     "max_difference_N": 19841.380707788077,
+     "max_difference_falling_N": -2968.1113290795693,
+     "falling_rows": 11,
+     "missed": 0,
+     "by_condition": {
+      "moving": {
+       "rows": 8,
+       "max_difference_N": 19841.380707788077,
+       "missed": 0
+      },
+      "short": {
+       "rows": 8,
+       "max_difference_N": -2968.1113290795693,
+       "missed": 0
+      },
+      "other": {
+       "rows": 4,
+       "max_difference_N": -2968.1113290795765,
+       "missed": 0
+      }
+     }
+    },
+    "worst_judged_falling_row": {
+     "t_s": 96.00000000206333,
+     "leg": "RR",
+     "phase": "probe",
+     "is_watched": true,
+     "condition": "met",
+     "rule": "nominal_gap",
+     "head_drop_Pa": 6960.800513807684,
+     "fallback_drop_N": 93.09207495608845,
+     "L_hat_fb_N": 63246.84735321829,
+     "L_hat_true_N": 66311.80279314888,
+     "difference_N": -3064.9554399305853,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "judged_falling"
+    },
+    "worst_record_rising_row": {
+     "t_s": 85.20000000170481,
+     "leg": "FR",
+     "phase": "ready",
+     "is_watched": true,
+     "condition": "met",
+     "rule": "nominal_gap",
+     "head_drop_Pa": -873743.0386414211,
+     "fallback_drop_N": -15866.32944921205,
+     "L_hat_fb_N": 135811.19017579788,
+     "L_hat_true_N": 137334.81330416258,
+     "difference_N": -1523.6231283647066,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "record_rising"
+    },
+    "worst_record_level_row": {
+     "t_s": 107.60000000244841,
+     "leg": "FR",
+     "phase": "ready",
+     "is_watched": true,
+     "condition": "moving",
+     "rule": "level",
+     "head_drop_Pa": null,
+     "fallback_drop_N": -29641.429035045847,
+     "L_hat_fb_N": 146372.96952571513,
+     "L_hat_true_N": 126531.58881792706,
+     "difference_N": 19841.380707788077,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "record_level"
+    },
+    "missed_rows": [
+     {
+      "t_s": 85.40000000171145,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 8324.775038668424,
+      "L_hat_fb_N": 15386.91476572341,
+      "L_hat_true_N": 12245.301392191705,
+      "difference_N": 3141.6133735317053,
+      "is_rate_passed": true,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.50000000171477,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 4980.782093994807,
+      "L_hat_fb_N": 16974.394926370216,
+      "L_hat_true_N": 14949.495611346152,
+      "difference_N": 2024.899315024064,
+      "is_rate_passed": false,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     }
+    ],
+    "fires_rows": [
+     {
+      "t_s": 85.10000000170149,
+      "leg": "RR",
+      "phase": "ready",
+      "is_watched": true,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1134849.7234724807,
+      "fallback_drop_N": 15177.207752446624,
+      "L_hat_fb_N": 14575.11285268757,
+      "L_hat_true_N": 21700.755328927786,
+      "difference_N": -7125.642476240217,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": false,
+      "is_missed": false,
+      "row_class": "judged_falling"
+     },
+     {
+      "t_s": 85.20000000170481,
+      "leg": "RR",
+      "phase": "ready",
+      "is_watched": true,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1082529.4068659637,
+      "fallback_drop_N": 14477.48839896154,
+      "L_hat_fb_N": 9292.90194707605,
+      "L_hat_true_N": 16847.024627441933,
+      "difference_N": -7554.122680365883,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "judged_falling"
+     },
+     {
+      "t_s": 85.30000000170813,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1218176.3866107902,
+      "fallback_drop_N": 16291.598540593055,
+      "L_hat_fb_N": 1055.464493759555,
+      "L_hat_true_N": 9208.00573879961,
+      "difference_N": -8152.5412450400545,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.40000000171145,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 8324.775038668424,
+      "L_hat_fb_N": 15386.91476572341,
+      "L_hat_true_N": 12245.301392191705,
+      "difference_N": 3141.6133735317053,
+      "is_rate_passed": true,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.50000000171477,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 4980.782093994807,
+      "L_hat_fb_N": 16974.394926370216,
+      "L_hat_true_N": 14949.495611346152,
+      "difference_N": 2024.899315024064,
+      "is_rate_passed": false,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.7000000017214,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 11422.948649769725,
+      "L_hat_fb_N": -166.93203218138297,
+      "L_hat_true_N": 3970.2637957634834,
+      "difference_N": -4137.195827944866,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.80000000172473,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 13123.857785943394,
+      "L_hat_fb_N": -7006.897115504624,
+      "L_hat_true_N": -3880.567404643538,
+      "difference_N": -3126.329710861086,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.90000000172805,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 13608.407624007814,
+      "L_hat_fb_N": -10604.39135878746,
+      "L_hat_true_N": -7614.8675001961965,
+      "difference_N": -2989.523858591263,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     }
+    ]
+   },
+   "column_nominal": {
+    "r5_events": {
+     "relevel_predicted": [
+      [
+       85.1,
+       3
+      ],
+      [
+       85.2,
+       3
+      ]
+     ],
+     "probe_aborted_low_load": []
+    },
+    "fallback_slope_events": [
+     [
+      84.9,
+      "RR",
+      [
+       14.711183611628803,
+       0.33010371094263
+      ]
+     ],
+     [
+      85.0,
+      "RR",
+      [
+       19.234830053699362,
+       0.43311496112764625
+      ]
+     ],
+     [
+      85.1,
+      "RR",
+      [
+       19.446158586299905,
+       0.3200752569107135
+      ]
+     ],
+     [
+      85.2,
+      "RR",
+      [
+       18.353579384440494,
+       0.10927160166228471
+      ]
+     ],
+     [
+      96.1,
+      "FR",
+      [
+       11.981753233027762,
+       3.4212825637972855
+      ]
+     ],
+     [
+      96.3,
+      "FR",
+      [
+       11.22443941934375,
+       2.893293346053781
+      ]
+     ],
+     [
+      102.1,
+      "RR",
+      [
+       9.55469473868542,
+       0.07942349819348843
+      ]
+     ],
+     [
+      102.2,
+      "RR",
+      [
+       12.482807884163872,
+       0.15307556517204163
+      ]
+     ],
+     [
+      102.3,
+      "RR",
+      [
+       10.691498372759568,
+       0.007616099974162353
+      ]
+     ],
+     [
+      102.4,
+      "RR",
+      [
+       8.897424251973966,
+       0.0
+      ]
+     ],
+     [
+      105.1,
+      "FR",
+      [
+       11.760836437702018,
+       2.725713685787535
+      ]
+     ],
+     [
+      105.2,
+      "FR",
+      [
+       20.174287799630175,
+       5.1269062843359645
+      ]
+     ],
+     [
+      105.3,
+      "FR",
+      [
+       20.47766780737012,
+       5.032535315033948
+      ]
+     ],
+     [
+      105.4,
+      "FR",
+      [
+       11.24698370910757,
+       2.0090010581908913
+      ]
+     ]
+    ],
+    "row_classes": {
+     "judged_falling": {
+      "rows": 361,
+      "max_difference_N": -3060.1595139161946,
+      "missed": 0
+     },
+     "record_rising": {
+      "rows": 317,
+      "max_difference_N": 27868.189621066675,
+      "missed": 0
+     },
+     "record_level": {
+      "rows": 20,
+      "max_difference_N": 19841.380707788077,
+      "missed": 0
+     },
+     "unwatched": {
+      "rows": 264,
+      "max_difference_N": 44207.872543465695,
+      "missed": 2
+     }
+    },
+    "allowance_N": null,
+    "judged_falling_within_allowance": null,
+    "slope_rows_missed_triggers": 0,
+    "judgement_passed": null,
+    "level_missed_triggers": 0,
+    "level_missed_trigger_flag": false,
+    "record_nominal_gap": {
+     "watched_rows": 678,
+     "max_difference_N": 27868.189621066675,
+     "max_difference_falling_N": -3060.1595139161946,
+     "falling_rows": 361,
+     "missed": 0,
+     "by_condition": {
+      "met": {
+       "rows": 678,
+       "max_difference_N": 27868.189621066675,
+       "missed": 0
+      }
+     }
+    },
+    "record_level": {
+     "watched_rows": 20,
+     "max_difference_N": 19841.380707788077,
+     "max_difference_falling_N": -2968.1113290795693,
+     "falling_rows": 11,
+     "missed": 0,
+     "by_condition": {
+      "moving": {
+       "rows": 8,
+       "max_difference_N": 19841.380707788077,
+       "missed": 0
+      },
+      "short": {
+       "rows": 8,
+       "max_difference_N": -2968.1113290795693,
+       "missed": 0
+      },
+      "other": {
+       "rows": 4,
+       "max_difference_N": -2968.1113290795765,
+       "missed": 0
+      }
+     }
+    },
+    "worst_judged_falling_row": {
+     "t_s": 96.00000000206333,
+     "leg": "RR",
+     "phase": "probe",
+     "is_watched": true,
+     "condition": "met",
+     "rule": "nominal_gap",
+     "head_drop_Pa": 6960.800513807684,
+     "fallback_drop_N": 89.49513044529358,
+     "L_hat_fb_N": 63251.64327923268,
+     "L_hat_true_N": 66311.80279314888,
+     "difference_N": -3060.1595139161946,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "judged_falling"
+    },
+    "worst_record_rising_row": {
+     "t_s": 85.20000000170481,
+     "leg": "FR",
+     "phase": "ready",
+     "is_watched": true,
+     "condition": "met",
+     "rule": "nominal_gap",
+     "head_drop_Pa": -873743.0386414211,
+     "fallback_drop_N": -37910.18901128559,
+     "L_hat_fb_N": 165203.00292522926,
+     "L_hat_true_N": 137334.81330416258,
+     "difference_N": 27868.189621066675,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "record_rising"
+    },
+    "worst_record_level_row": {
+     "t_s": 107.60000000244841,
+     "leg": "FR",
+     "phase": "ready",
+     "is_watched": true,
+     "condition": "moving",
+     "rule": "level",
+     "head_drop_Pa": null,
+     "fallback_drop_N": -29641.429035045847,
+     "L_hat_fb_N": 146372.96952571513,
+     "L_hat_true_N": 126531.58881792706,
+     "difference_N": 19841.380707788077,
+     "is_rate_passed": false,
+     "fallback_fires": false,
+     "healthy_fires": false,
+     "is_missed": false,
+     "row_class": "record_level"
+    },
+    "missed_rows": [
+     {
+      "t_s": 85.40000000171145,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 8554.300890042538,
+      "L_hat_fb_N": 15080.880297224592,
+      "L_hat_true_N": 12245.301392191705,
+      "difference_N": 2835.5789050328876,
+      "is_rate_passed": true,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.50000000171477,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 5275.979800135145,
+      "L_hat_fb_N": 16580.797984849767,
+      "L_hat_true_N": 14949.495611346152,
+      "difference_N": 1631.302373503615,
+      "is_rate_passed": false,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     }
+    ],
+    "fires_rows": [
+     {
+      "t_s": 85.10000000170149,
+      "leg": "RR",
+      "phase": "ready",
+      "is_watched": true,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1134849.7234724807,
+      "fallback_drop_N": 14584.61893972493,
+      "L_hat_fb_N": 15594.75712102394,
+      "L_hat_true_N": 21700.755328927786,
+      "difference_N": -6105.9982079038455,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": false,
+      "is_missed": false,
+      "row_class": "judged_falling"
+     },
+     {
+      "t_s": 85.20000000170481,
+      "leg": "RR",
+      "phase": "ready",
+      "is_watched": true,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1082529.4068659637,
+      "fallback_drop_N": 13765.184538330372,
+      "L_hat_fb_N": 10537.838134057944,
+      "L_hat_true_N": 16847.024627441933,
+      "difference_N": -6309.18649338399,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "judged_falling"
+     },
+     {
+      "t_s": 85.30000000170813,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "met",
+      "rule": "nominal_gap",
+      "head_drop_Pa": 1218176.3866107902,
+      "fallback_drop_N": 15442.812874081537,
+      "L_hat_fb_N": 2543.858219366495,
+      "L_hat_true_N": 9208.00573879961,
+      "difference_N": -6664.147519433114,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.40000000171145,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 8554.300890042538,
+      "L_hat_fb_N": 15080.880297224592,
+      "L_hat_true_N": 12245.301392191705,
+      "difference_N": 2835.5789050328876,
+      "is_rate_passed": true,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.50000000171477,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 5275.979800135145,
+      "L_hat_fb_N": 16580.797984849767,
+      "L_hat_true_N": 14949.495611346152,
+      "difference_N": 1631.302373503615,
+      "is_rate_passed": false,
+      "fallback_fires": false,
+      "healthy_fires": true,
+      "is_missed": true,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.7000000017214,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 11422.948649769725,
+      "L_hat_fb_N": -166.93203218138297,
+      "L_hat_true_N": 3970.2637957634834,
+      "difference_N": -4137.195827944866,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.80000000172473,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 13123.857785943394,
+      "L_hat_fb_N": -7006.897115504624,
+      "L_hat_true_N": -3880.567404643538,
+      "difference_N": -3126.329710861086,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     },
+     {
+      "t_s": 85.90000000172805,
+      "leg": "RR",
+      "phase": "level",
+      "is_watched": false,
+      "condition": "moving",
+      "rule": "level",
+      "head_drop_Pa": null,
+      "fallback_drop_N": 13608.407624007814,
+      "L_hat_fb_N": -10604.39135878746,
+      "L_hat_true_N": -7614.8675001961965,
+      "difference_N": -2989.523858591263,
+      "is_rate_passed": true,
+      "fallback_fires": true,
+      "healthy_fires": true,
+      "is_missed": false,
+      "row_class": "unwatched"
+     }
+    ]
+   }
+  }
+ }
+}
