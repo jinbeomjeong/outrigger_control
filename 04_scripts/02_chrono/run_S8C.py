@@ -52,6 +52,14 @@ Usage (Chrono-dev python, project root)::
         --lookup-batch 07_results/S8/p1r_20261024_222013
         --deferred-ref 07_results/S8/mlj_20261025_080212
 
+Soil response merge rule (user decision 2026-10-26, control options (다) / (가)): an episode
+restored from a ``branch.pkl`` pickled without the C2 soil response (older code:
+``_RunState.soil`` None; or a soil-off config) gets the LOC of the offline judge on its base record (``s9_merge/m4_offline.py``; loc True,
+soil mode off, bias 0; event ``INFO_SOIL_STATE_RESTORED``, meta ``soil.restored_from`` and
+``settings_refreshed.soil_state``) and stops with :class:`SoilStateRestoreError` when the
+record does not allow it. ``--soil-off-replay`` (option (가)) runs the episodes with the soil
+response off and no re-approach time limit instead, only to reproduce old ML / RT data.
+
 Rev. 52 (C-S8-36): ``ml_episode`` jobs take ``variant`` (``rt`` = R8 preset with the P-S8-16
 rule RT, ``f1only`` = RT keys None, :func:`with_reapproach_variant`); episodes can read their
 ``branch.pkl`` from another batch (``base_dir``, read only). ``settings_refreshed`` lists the
@@ -923,14 +931,16 @@ def reapproach_settings_meta(controller) -> dict[str, Any] | None:
                      else getattr(lr, f.name)) for f in dataclasses.fields(lr)}
 
 
-def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = None):
+def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = None, *,
+                soil_off_replay: bool = False):
     """C2 controller of an L2b S8 case.
 
     ``params_ctrl`` is the L1 YAML (C-R11: controller at beta 1.0) and has no
     ``l2b.counterbalance``; the CB law of the lock-valve diagnosis (P-S8-11, U-S8-23) therefore
     comes from the L2b plant params ``params_plant`` (from :func:`build_l2b`). Pilot-check cases
     do not touch the config (bit-identical to the S7 / pre-P-S8-11 path). ``variant``: C-S8-36
-    re-approach variant (:func:`with_reapproach_variant`; None = the preset)."""
+    re-approach variant (:func:`with_reapproach_variant`; None = the preset).
+    ``soil_off_replay``: option (가), :func:`with_soil_off_replay`."""
     from outrigger_sim.control.c2 import C2Controller
 
     config, settle_meta = s7c.apply_settle_map(s6c.controller_config(params_ctrl, case.base),
@@ -943,6 +953,8 @@ def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = N
         config = config.with_lock_valve("counterbalance", l2b.counterbalance)
     config = with_lock_window_tau(config, case.base.tau_v_s)
     config = with_reapproach_variant(config, variant)
+    if soil_off_replay:
+        config = with_soil_off_replay(config)
     return C2Controller.from_params(params_ctrl, config), config, settle_meta
 
 
@@ -1723,12 +1735,159 @@ class FirstPeriodCompare:
         return self.ctrl.meta()
 
 
+# --- soil state of branches pickled before the soil response (user decision 2026-10-26) ----------
+
+SOIL_OFF_REPLAY_KEY = "soil_off_replay"
+"""Job setting / CLI ``--soil-off-replay``: control option (가), soil response off and no
+re-approach time limit, only to reproduce old ML / RT episodes bit for bit."""
+SOIL_RESTORE_SOURCE = "offline_loc"
+SOIL_RESTORE_LOAD_SOURCE = "controller"
+"""The offline LOC sums the controller's calibrated reading (``s8_series.F_nominal_N``), as the
+S-1 window of a soil-on controller does (``m4_offline.LOAD_SOURCES``)."""
+SOIL_RESTORE_TOLERANCE_S = 1e-9
+NEW_CYCLE_PHASES = ("check", "touch")
+"""A phase after the LOC that starts a new lifting cycle (P-S9-6 clears the soil state there)."""
+
+
+class SoilStateRestoreError(RuntimeError):
+    """The compatibility rule (다) cannot restore the soil state of an old branch."""
+
+
+def with_soil_off_replay(config):
+    """Control option (가): the config with the soil response off and no re-approach time limit
+    (the revision-56 controller of the old ML / RT data)."""
+    lifted = replace(config.r8.lifted_reapproach, max_duration_s=None)
+    return replace(config, soil=replace(config.soil, enable=False),
+                   r8=replace(config.r8, lifted_reapproach=lifted))
+
+
+def ran_without_soil_response(controller) -> bool:
+    """True for an unpickled controller whose soil state never ran: code before the soil
+    response (no ``soil`` attribute in the run state, ``_RunState.soil`` class default None;
+    no ``soil`` setting, class default off) or a config with the soil response off (its soil
+    state stays empty). Call it before the settings refresh replaces the config."""
+    state = getattr(controller, "_state", None)
+    if state is None:
+        return False
+    settings = getattr(getattr(controller, "config", None), "soil", None)
+    is_enabled = bool(getattr(settings, "enable", False))
+    return getattr(state, "soil", None) is None or not is_enabled
+
+
+def _phases_after(base_dir: Path, t_s: float) -> list[str]:
+    import numpy as np
+
+    with np.load(base_dir / s6c.R8_SERIES_NAME, allow_pickle=False) as series:
+        times = np.asarray(series["t"], float)
+        phases = [str(p) for p in series["phase"]]
+    return [phase for t, phase in zip(times, phases, strict=True)
+            if t > t_s + SOIL_RESTORE_TOLERANCE_S]
+
+
+def soil_restore_problems(judge: dict[str, Any], branch_t_s: float,
+                          phases_after_loc: Sequence[str]) -> list[str]:
+    """Reasons the offline LOC judge ``judge`` (``m4_offline.analyse``) does not allow rule (다):
+    no LOC, a LOC after the crawler-zone release or the first DONE, an S-3 bias, a LOC after the
+    branch instant, or a new lifting cycle between the LOC and the branch."""
+    if judge.get("status") != "ok":
+        return [f"offline judge status {judge.get('status')!r}"]
+    loc = judge.get("loc")
+    if loc is None:
+        return [f"no LOC in the base record ({judge.get('reason')})"]
+    problems = []
+    if not judge["loc_before_release"]:
+        problems.append(f"LOC at {loc['t_loc_s']} s after the crawler-zone release at "
+                        f"{judge['release_t_s']} s")
+    if not judge["loc_before_done"]:
+        problems.append(f"LOC at {loc['t_loc_s']} s not before the first DONE at "
+                        f"{judge['first_done_t_s']} s")
+    if judge["bias_applied"]:
+        problems.append(f"S-3 bias: c_min(t_P) {loc['clearance_at_P_m']} m above the dead zone")
+    if branch_t_s < loc["t_loc_s"] - SOIL_RESTORE_TOLERANCE_S:
+        problems.append(f"branch at {branch_t_s} s before the LOC at {loc['t_loc_s']} s")
+    new_cycle = sorted(set(phases_after_loc) & set(NEW_CYCLE_PHASES))
+    if new_cycle:
+        problems.append(f"new lifting cycle after the LOC (phases {new_cycle})")
+    return problems
+
+
+def restore_soil_state(restored, fresh, base_dir: Path, branch_t_s: float) -> dict[str, Any]:
+    """Compatibility rule (다) (user decision 2026-10-26): give the refreshed controller
+    ``restored`` of an old branch (no soil state when pickled) the LOC a soil-on run would have
+    had at the branch: the offline LOC judge on the base record ``base_dir`` with the case's
+    fresh controller ``fresh`` (geometry, settings), then ``loc`` True, soil mode off, bias 0
+    and ``t_P``, ``t_L``, ``c(t_P)``, ``c(t_L)``, ``W_hat`` restored. Returns the meta.
+
+    Raises:
+        SoilStateRestoreError: missing base record or a condition of
+            :func:`soil_restore_problems` fails (never silently skipped).
+    """
+    from s9_merge import m4_offline
+
+    from outrigger_sim.control.c2 import RestoredLiftoff
+
+    try:
+        judge = m4_offline.analyse(base_dir, fresh, load_source=SOIL_RESTORE_LOAD_SOURCE)
+        loc = judge.get("loc")
+        phases = [] if loc is None else _phases_after(base_dir, loc["t_loc_s"])
+    except (OSError, KeyError, ValueError) as exc:
+        raise SoilStateRestoreError(f"{base_dir}: base record not usable for the offline LOC "
+                                    f"({type(exc).__name__}: {exc})") from exc
+    problems = soil_restore_problems(judge, branch_t_s, phases)
+    if problems:
+        raise SoilStateRestoreError(f"{base_dir}: soil state not restorable (rule (다)): "
+                                    + "; ".join(problems))
+    source = f"{SOIL_RESTORE_SOURCE}:{base_dir.name}"
+    restored.restore_liftoff_confirmation(RestoredLiftoff(
+        plateau_start_s=loc["t_P_s"], liftoff_s=loc["t_loc_s"], weight_estimate_N=loc["W_hat_N"],
+        clearance_at_plateau_start_m=loc["clearance_at_P_m"],
+        clearance_at_liftoff_m=loc["clearance_at_loc_m"], source=source))
+    return {"rule": "(다) compatibility: offline LOC of the base record (user decision "
+                    "2026-10-26)",
+            "restored": True, "restored_from": source, "base_dir": str(base_dir),
+            "branch_t_s": branch_t_s, "load_source": SOIL_RESTORE_LOAD_SOURCE,
+            "offline_judge": {k: judge.get(k) for k in (
+                "loc", "release_t_s", "first_done_t_s", "loc_before_release",
+                "loc_before_done", "bias_applied", "reason")}}
+
+
+def apply_soil_rule(restored, fresh, base_dir: Path, branch_t_s: float, *,
+                    ran_without_soil: bool, soil_off_replay: bool) -> dict[str, Any]:
+    """Soil state of a refreshed episode controller: option (가) leaves it (soil off), a branch
+    pickled with the soil response on keeps its soil state, a branch pickled without it
+    (``ran_without_soil``, :func:`ran_without_soil_response`) gets rule (다)
+    (:func:`restore_soil_state`)."""
+    pickled = {"pickled_with_soil_response": not ran_without_soil}
+    if soil_off_replay:
+        return {"rule": "(가) soil-off replay", "restored": False, **pickled}
+    if not ran_without_soil:
+        return {"rule": "pickled soil state kept", "restored": False, **pickled}
+    if not restored.config.soil.enable:
+        return {"rule": "soil response off in the current config", "restored": False, **pickled}
+    return {**restore_soil_state(restored, fresh, base_dir, branch_t_s), **pickled}
+
+
+def reapproach_limit_meta(pickled_lr: dict[str, Any] | None, restored, fresh) -> dict[str, Any]:
+    """C-S8-25 ③ check of the P-S9-10 re-approach limit after the refresh: the value in use must
+    be the fresh one (old pickles carry None)."""
+    in_use = (reapproach_settings_meta(restored) or {}).get("max_duration_s")
+    wanted = (reapproach_settings_meta(fresh) or {}).get("max_duration_s")
+    if in_use != wanted:
+        raise RuntimeError(f"re-approach max_duration_s {in_use!r} after the refresh, fresh "
+                           f"{wanted!r}")
+    return {"pickled": (pickled_lr or {}).get("max_duration_s"), "in_use": in_use,
+            "fresh": wanted}
+
+
 def job_ml_episode(base: MLBase, ep: dict[str, Any], base_dir: Path, case_dir: Path,
-                   episode_s: float | None = None, variant: str | None = None):
+                   episode_s: float | None = None, variant: str | None = None, *,
+                   soil_off_replay: bool = False):
     """One 30 s episode from the base's ``branch.pkl`` (``episode_s``: shorter run for the
     resume smoke test only; None = :data:`ML_EPISODE_S`). ``variant``: C-S8-36 re-approach
     variant of the refreshed controller (:func:`with_reapproach_variant`; None = preset).
-    ``base_dir`` is only read (C-S8-36 writes the episodes to a new batch)."""
+    ``base_dir`` is only read (C-S8-36 writes the episodes to a new batch). A branch pickled
+    without the soil response gets rule (다) (:func:`apply_soil_rule`, meta
+    ``settings.settings_refreshed.soil_state``); ``soil_off_replay``: option (가) instead."""
     episode_s = ML_EPISODE_S if episode_s is None else float(episode_s)
     import numpy as np
 
@@ -1747,12 +1906,20 @@ def job_ml_episode(base: MLBase, ep: dict[str, Any], base_dir: Path, case_dir: P
     c2, suite, held = restore_branch(blob, engine)
     # C-S8-25 ③: settings of the current code on the unpickled controller (+ 1-period compare)
     old_c2 = copy.deepcopy(c2)
-    fresh_c2, *_ = _controller(case, params_ctrl, params, variant=variant)
+    ran_without_soil = ran_without_soil_response(c2)  # before the refresh replaces the config
+    pickled_lr = reapproach_settings_meta(c2)
+    fresh_c2, *_ = _controller(case, params_ctrl, params, variant=variant,
+                               soil_off_replay=soil_off_replay)
     refresh = refresh_restored_controller(c2, fresh_c2)
     refresh["lock_window_tau_case_s"] = float(case.base.tau_v_s)  # spec rev. 48 218.12
     refresh["reapproach_variant"] = variant  # C-S8-36 (None = preset)
-    compare = FirstPeriodCompare(c2, old_c2)
+    refresh["reapproach_max_duration_s"] = reapproach_limit_meta(pickled_lr, c2, fresh_c2)
     t_b = engine.time_s
+    refresh["soil_state"] = apply_soil_rule(c2, fresh_c2, base_dir, t_b,
+                                            ran_without_soil=ran_without_soil,
+                                            soil_off_replay=soil_off_replay)
+    refresh[SOIL_OFF_REPLAY_KEY] = soil_off_replay
+    compare = FirstPeriodCompare(c2, old_c2)
     controller = compare
     forced = None
     schedule = None
@@ -1885,7 +2052,8 @@ def job_case(case, case_dir):
         run_meta = None
     elif kind == "ml_episode":
         summary = job_ml_episode(MLBase(**_tuples(s["base"])), s["episode"], Path(s["base_dir"]),
-                                 d, episode_s=s.get("episode_s"), variant=s.get("variant"))
+                                 d, episode_s=s.get("episode_s"), variant=s.get("variant"),
+                                 soil_off_replay=bool(s.get(SOIL_OFF_REPLAY_KEY, False)))
         run_meta = None
     else:
         c = case_table()[case.case_id]
@@ -2362,7 +2530,8 @@ def ml_resume_plan(batch_dir: Path, *, failed_only: bool = True,
 
 def run_ml_resume(batch_dir: Path, layout: str, *, failed_only: bool = True,
                   only: list[str] | None = None, dry_run: bool = False,
-                  episode_s: float | None = None) -> dict[str, Any]:
+                  episode_s: float | None = None,
+                  soil_off_replay: bool = False) -> dict[str, Any]:
     """Re-run episodes of an existing ML batch (bases and ``branch.pkl`` reused). Steps: check
     the plan against the code (:func:`ml_resume_plan`; abort on a mismatch); move the folders to
     re-run to ``episodes/_failed_<stamp>/``; run them into ``episodes/_rerun_<stamp>/``
@@ -2383,6 +2552,7 @@ def run_ml_resume(batch_dir: Path, layout: str, *, failed_only: bool = True,
     show["rerun_by_kind"] = kinds
     show["rerun"] = [e["episode_id"] for e in rp["rerun"]]
     show["episode_s"] = ML_EPISODE_S if episode_s is None else episode_s
+    show[SOIL_OFF_REPLAY_KEY] = soil_off_replay
     print(json.dumps(show, indent=1), flush=True)
     if not rp["plan_matches_code"]:
         raise SystemExit(f"ml_plan.json differs from the seeded draws of this code: "
@@ -2408,6 +2578,8 @@ def run_ml_resume(batch_dir: Path, layout: str, *, failed_only: bool = True,
                     "base_dir": str(batch_dir / "bases" / e["base_id"])}
         if episode_s is not None:
             settings["episode_s"] = float(episode_s)
+        if soil_off_replay:
+            settings[SOIL_OFF_REPLAY_KEY] = True
         jobs.append(Case(e["episode_id"], settings))
     outcomes = run_cases_mixed(jobs, job_case, stage, layout=layout, timeout_s=CASE_TIMEOUT_S,
                                wall_of=lambda j: 1.0)
@@ -2474,12 +2646,14 @@ def _measured_wall_s(case_dir: Path) -> float | None:
 
 def c36_jobs(source: Path | str = C36_SOURCE, affected: Path | str = C36_AFFECTED,
              *, episode_s: float | None = None, ids_a: Sequence[str] | None = None,
-             ids_b: Sequence[str] = C36_F1ONLY, gate: Sequence[str] = C36_GATE
-             ) -> dict[str, Any]:
+             ids_b: Sequence[str] = C36_F1ONLY, gate: Sequence[str] = C36_GATE,
+             soil_off_replay: bool = False) -> dict[str, Any]:
     """Jobs and plan of the three C-S8-36 bundles. A / B come from the source ML batch plan
     (:func:`ml_resume_plan`: the plan must equal this code's seeded draws, every base needs its
     ``branch.pkl``); C from :func:`case_table`. C-S8-41: ``ids_a`` replaces the ``affected``
-    list (bundle E of :func:`run_c37`), ``ids_b`` / ``gate`` may be empty."""
+    list (bundle E of :func:`run_c37`), ``ids_b`` / ``gate`` may be empty.
+    ``soil_off_replay``: option (가) on the A / B episodes (the gate cases run from the start
+    with the preset)."""
     from outrigger_sim.batch import Case
 
     src = _root_path(source)
@@ -2510,6 +2684,8 @@ def c36_jobs(source: Path | str = C36_SOURCE, affected: Path | str = C36_AFFECTE
                         "base_dir": str(src / "bases" / e["base_id"]), "variant": variant}
             if episode_s is not None:
                 settings["episode_s"] = float(episode_s)
+            if soil_off_replay:
+                settings[SOIL_OFF_REPLAY_KEY] = True
             jobs[bundle].append(Case(eid, settings))
             bases_used[e["base_id"]] = b
             eps_used.setdefault(e["base_id"], []).append(ep)
@@ -2530,7 +2706,7 @@ def c36_jobs(source: Path | str = C36_SOURCE, affected: Path | str = C36_AFFECTE
                      "wall_estimate_s": c.wall_estimate_s("p")})
     return {"source": str(src), "affected": str(_root_path(affected)), "jobs": jobs,
             "rows": rows, "sub_plans": sub_plans, "problems": problems,
-            "counts": {k: len(v) for k, v in jobs.items()}}
+            "counts": {k: len(v) for k, v in jobs.items()}, SOIL_OFF_REPLAY_KEY: soil_off_replay}
 
 
 def c36_plan(info: dict[str, Any]) -> dict[str, Any]:
@@ -2557,14 +2733,15 @@ def c36_plan(info: dict[str, Any]) -> dict[str, Any]:
 
 
 def run_c36(layout: str, *, source: Path | str = C36_SOURCE, affected: Path | str = C36_AFFECTED,
-            dry_run: bool = False, approved: bool = False) -> dict[str, Any]:
+            dry_run: bool = False, approved: bool = False,
+            soil_off_replay: bool = False) -> dict[str, Any]:
     """C-S8-36: bundles A (affected 55, RT + F1), B (F1 alone, 2) and C (gate RE1bF / RE1bP,
     RT + F1) in one pool into a new batch ``07_results/S8/c36_<stamp>/`` with ``A_rt/episodes``,
     ``B_f1only/episodes`` (each with an ``ml_plan.json`` for ``judge``) and ``C_gate/``. The
-    source batch is not changed."""
-    info = c36_jobs(source, affected)
+    source batch is not changed. ``soil_off_replay``: option (가) on the A / B episodes."""
+    info = c36_jobs(source, affected, soil_off_replay=soil_off_replay)
     doc = {"plan": c36_plan(info), "problems": info["problems"], "source": info["source"],
-           "affected": info["affected"],
+           "affected": info["affected"], SOIL_OFF_REPLAY_KEY: soil_off_replay,
            "ids": {k: [c.case_id for c in v] for k, v in info["jobs"].items()},
            "out": "07_results/S8/c36_<stamp>/{A_rt/episodes, B_f1only/episodes, C_gate}"}
     print(json.dumps(s6c._plain(doc), indent=1), flush=True)
@@ -2784,7 +2961,7 @@ def c37_extra_problems(extra_ids: Sequence[str], affected: Path | str = C36_AFFE
 
 
 def c37_jobs(layout: str, *, source: Path | str = C36_SOURCE, regression: bool = True,
-             extra_ids: Sequence[str] = ()) -> dict[str, Any]:
+             extra_ids: Sequence[str] = (), soil_off_replay: bool = False) -> dict[str, Any]:
     """Jobs and plan of the C-S8-41 re-run: bundle E (:data:`C37_IDS`, RT + F1 + P-S8-21, from
     the 768 ``branch.pkl``) and, with ``regression``, the C-S8-36 gate cases C (RE1bF / RE1bP)
     and D (MLJ_FS24 Fs0 / Fs8) run from the start. ``extra_ids`` (C-S8-42, spec rev. 55 269.1):
@@ -2795,7 +2972,7 @@ def c37_jobs(layout: str, *, source: Path | str = C36_SOURCE, regression: bool =
 
     extra = tuple(extra_ids)
     info = c36_jobs(source, ids_a=C37_IDS + extra, ids_b=(),
-                    gate=C36_GATE if regression else ())
+                    gate=C36_GATE if regression else (), soil_off_replay=soil_off_replay)
     problems = list(info["problems"]) + c37_extra_problems(extra)
     got = c37_fallback_ids()
     if got is None:
@@ -2842,7 +3019,8 @@ def c37_jobs(layout: str, *, source: Path | str = C36_SOURCE, regression: bool =
         plan_[k]["makespan_min"] = plan_[k]["makespan_s"] / 60.0
     return {"info": info, "jobs": jobs, "rows": rows, "plan": plan_, "problems": problems,
             "fallback_ids_c36": got, "regression": regression, "layout": layout,
-            "extra_ids": list(extra), "p_s8_21": p_s8_21_status()}
+            "extra_ids": list(extra), "p_s8_21": p_s8_21_status(),
+            SOIL_OFF_REPLAY_KEY: soil_off_replay}
 
 
 C37_D_DEFERRED_REF = Path("07_results/S8/mlj_20261025_080212")
@@ -2852,14 +3030,17 @@ for the per-leg deferred comparison (``judge --deferred-ref``)."""
 
 def run_c37(layout: str, *, source: Path | str = C36_SOURCE, regression: bool = True,
             dry_run: bool = False, approved: bool = False,
-            extra_ids: Sequence[str] = ()) -> dict[str, Any]:
+            extra_ids: Sequence[str] = (), soil_off_replay: bool = False) -> dict[str, Any]:
     """C-S8-41 (U-S8-56 (a), spec rev. 54 262.1): bundle E (17 episodes, RT + F1 + P-S8-21)
     + regression C / D into a new batch ``07_results/S8/c37_<stamp>/`` with
     ``E_drain/{ml_plan.json, episodes/}``, ``C_gate/`` and ``D_fs24/``. The 768 source and the
     C-S8-36 batch are read only. Refuses to run (not to plan) without P-S8-21. ``extra_ids``
-    (C-S8-42, spec rev. 55 269.1): further bundle-A episodes added to bundle E."""
-    p = c37_jobs(layout, source=source, regression=regression, extra_ids=extra_ids)
+    (C-S8-42, spec rev. 55 269.1): further bundle-A episodes added to bundle E.
+    ``soil_off_replay``: option (가) on the bundle-E episodes."""
+    p = c37_jobs(layout, source=source, regression=regression, extra_ids=extra_ids,
+                 soil_off_replay=soil_off_replay)
     doc = {"plan": p["plan"], "rows": p["rows"], "problems": p["problems"],
+           SOIL_OFF_REPLAY_KEY: soil_off_replay,
            "p_s8_21": p["p_s8_21"], "source": p["info"]["source"],
            "fallback_ids_c36": p["fallback_ids_c36"], "regression": regression,
            "extra_ids": p["extra_ids"],
@@ -2935,7 +3116,7 @@ def run_c37(layout: str, *, source: Path | str = C36_SOURCE, regression: bool = 
 
 
 def smoke_c36(episode_id: str, out_dir: Path, *, episode_s: float, variant: str = "rt",
-              source: Path | str = C36_SOURCE) -> dict[str, Any]:
+              source: Path | str = C36_SOURCE, soil_off_replay: bool = False) -> dict[str, Any]:
     """C-S8-36 smoke (single process): one episode of the source batch, shortened, written to
     ``out_dir/<id>``; returns the RT evidence (re-approach events, ``is_retrigger`` meta, the
     refreshed settings and the first-period compare)."""
@@ -2952,7 +3133,8 @@ def smoke_c36(episode_id: str, out_dir: Path, *, episode_s: float, variant: str 
     case_dir.mkdir(parents=True)
     t0 = time.perf_counter()
     summary = job_ml_episode(MLBase(**_tuples(b)), ep, src / "bases" / e["base_id"], case_dir,
-                             episode_s=episode_s, variant=variant)
+                             episode_s=episode_s, variant=variant,
+                             soil_off_replay=soil_off_replay)
     (case_dir / "result.json").write_text(json.dumps(s6c._plain(summary), indent=1), "utf-8")
     cm = summary["controller_meta"]
     names = json.loads((case_dir / "controller_events.json").read_text(encoding="utf-8"))
@@ -2973,7 +3155,8 @@ def smoke_c36(episode_id: str, out_dir: Path, *, episode_s: float, variant: str 
             "refresh_changed_rt_fields": [f for r in refresh.get("replaced", [])
                                           for f in r.get("changed_fields", [])
                                           if "lifted_reapproach" in f["path"]],
-            "refresh_added": refresh.get("added")}
+            "refresh_added": refresh.get("added"),
+            "soil_state": refresh.get("soil_state")}
 
 
 def smoke_branch(seconds_before: float = 0.5, seconds_after: float = 1.0, *,
@@ -3125,7 +3308,17 @@ def main(argv):
                          "batch (copied to judged/, not run again; U-S8-40)")
     ap.add_argument("--skip-judged", dest="skip_judged", action="store_true",
                     help="ml --stage main: no MLJ judged cases in the batch (U-S8-40)")
+    ap.add_argument("--soil-off-replay", dest="soil_off_replay", action="store_true",
+                    help="ml --resume / c36 (A, B, E, --smoke): episodes from branch.pkl with "
+                         "the soil response off and no re-approach time limit (control option "
+                         "(가), only to reproduce old ML / RT data bit for bit); default: rule "
+                         "(다), the offline LOC restored on branches pickled without a soil "
+                         "state (user decision 2026-10-26)")
     args = ap.parse_args(argv)
+    replays_branches = (args.action == "c36" and args.bundle != "D") or \
+        (args.action == "ml" and bool(args.resume))
+    if args.soil_off_replay and not replays_branches:
+        raise SystemExit("--soil-off-replay only with ml --resume or c36 (not --bundle D)")
     os.environ[CRAWLER_ENV] = args.crawler
     if args.action == "smoke-branch":
         print(json.dumps(smoke_branch(case_id=(args.only or ["smoke_E_G4_Fs0"])[0]), indent=1))
@@ -3140,7 +3333,9 @@ def main(argv):
             print(json.dumps(s6c._plain(smoke_c36(args.smoke, Path(args.out),
                                                   episode_s=args.episode_s,
                                                   variant=args.variant,
-                                                  source=args.rerun_from)), indent=1))
+                                                  source=args.rerun_from,
+                                                  soil_off_replay=args.soil_off_replay)),
+                             indent=1))
             return
         if args.bundle == "D":
             run_c36_bundle_d(args.workers, batch=None if not args.batch else Path(args.batch),
@@ -3149,12 +3344,14 @@ def main(argv):
         if args.bundle == "E":  # C-S8-41
             run_c37(args.workers, source=args.rerun_from, regression=args.regression,
                     dry_run=args.dry_run, approved=args.approved,
-                    extra_ids=[c.strip() for c in args.extra_ids.split(",") if c.strip()])
+                    extra_ids=[c.strip() for c in args.extra_ids.split(",") if c.strip()],
+                    soil_off_replay=args.soil_off_replay)
             return
         if args.extra_ids:
             raise SystemExit("--extra-ids only with c36 --bundle E")
         run_c36(args.workers, source=args.rerun_from, affected=args.affected,
-                dry_run=args.dry_run, approved=args.approved)
+                dry_run=args.dry_run, approved=args.approved,
+                soil_off_replay=args.soil_off_replay)
         return
     mlj_from = None if not args.mlj_from else Path(args.mlj_from)
     if (mlj_from is not None or args.skip_judged) and args.action not in ("ml", "ml-plan"):
@@ -3203,7 +3400,8 @@ def main(argv):
         if not args.approved and not args.dry_run:
             raise SystemExit("ML re-run needs the user's confirmation: --approved (or --dry-run)")
         run_ml_resume(Path(args.resume), args.workers, failed_only=args.failed_only,
-                      only=args.only, dry_run=args.dry_run, episode_s=args.episode_s)
+                      only=args.only, dry_run=args.dry_run, episode_s=args.episode_s,
+                      soil_off_replay=args.soil_off_replay)
         return
     if args.action == "ml":
         mode = _judged_mode(args.stage, mlj_from, args.skip_judged)
