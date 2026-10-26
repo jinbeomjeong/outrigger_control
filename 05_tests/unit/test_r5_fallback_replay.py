@@ -192,9 +192,10 @@ def test_record_official_judgement_passes(record_replay, source) -> None:
     assert variant["judgement_passed"] is True
     assert classes["judged_falling"]["rows"] > 0
     assert classes["judged_falling"]["max_difference_N"] <= OPTIMISM_ALLOWANCE_L1_N
-    assert variant["watched_missed"] == 0
+    assert variant["slope_rows_missed_triggers"] == 0
     assert classes["record_rising"]["max_difference_N"] > OPTIMISM_ALLOWANCE_L1_N
-    assert not variant["record_level_missed_flag"]
+    assert variant["level_missed_triggers"] == 0
+    assert not variant["level_missed_trigger_flag"]
     assert set(variant["record_level"]["by_condition"]) <= {"moving", "short", "other"}
 
 
@@ -272,15 +273,47 @@ def _missed_case(slope_drop_N: float | None):
     return rows, judged_summary(rows, OPTIMISM_ALLOWANCE_L1_N)
 
 
-def test_missed_trigger_on_level_rows_fails_the_judgement() -> None:
+def test_missed_trigger_on_level_rows_is_only_flagged() -> None:
     rows, summary = _missed_case(None)
     assert [row["is_missed"] for row in rows] == [True, True, True]
     assert {row["condition"] for row in rows} == {"other"}
     assert {row["row_class"] for row in rows} == {"record_level"}
     assert summary["record_level"]["by_condition"]["other"]["missed"] == 3
-    assert summary["record_level_missed_flag"]
-    assert summary["watched_missed"] == 3
-    assert summary["judgement_passed"] is False  # (ii): every watched row
+    assert summary["level_missed_triggers"] == 3
+    assert summary["level_missed_trigger_flag"]
+    assert summary["slope_rows_missed_triggers"] == 0
+    assert summary["judgement_passed"] is None  # no judged_falling row to judge
+
+
+def _summary_row(row_class_name: str, *, difference_N: float, is_missed: bool) -> dict:
+    """A watched row of the given class, as ``optimism_rows`` builds it."""
+    is_level = row_class_name == "record_level"
+    head_drop_Pa = None if is_level else (-1e5 if row_class_name == "record_rising" else 1e5)
+    return {"is_watched": True, "rule": "level" if is_level else "nominal_gap",
+            "head_drop_Pa": head_drop_Pa, "condition": "moving" if is_level else "met",
+            "difference_N": difference_N, "fallback_drop_N": 1e3, "is_missed": is_missed}
+
+
+def test_one_level_missed_trigger_passes_with_the_flag() -> None:
+    rows = [
+        _summary_row("judged_falling", difference_N=-200.0, is_missed=False),
+        _summary_row("record_rising", difference_N=3e3, is_missed=False),
+        _summary_row("record_level", difference_N=4e3, is_missed=True),
+    ]
+    summary = judged_summary(rows, OPTIMISM_ALLOWANCE_L1_N)
+    assert summary["judgement_passed"] is True
+    assert summary["level_missed_trigger_flag"] is True
+    assert summary["level_missed_triggers"] == 1
+
+
+def test_missed_trigger_on_a_rising_row_fails_the_judgement() -> None:
+    rows = [
+        _summary_row("judged_falling", difference_N=-200.0, is_missed=False),
+        _summary_row("record_rising", difference_N=3e3, is_missed=True),
+    ]
+    summary = judged_summary(rows, OPTIMISM_ALLOWANCE_L1_N)
+    assert summary["slope_rows_missed_triggers"] == 1
+    assert summary["judgement_passed"] is False
 
 
 def test_missed_trigger_on_judged_rows_fails_the_judgement() -> None:
@@ -289,7 +322,7 @@ def test_missed_trigger_on_judged_rows_fails_the_judgement() -> None:
     assert summary["row_classes"]["judged_falling"]["missed"] == 3
     assert summary["judgement_passed"] is False
     _, fires = _missed_case(40e3)  # D of the true fall: both fire, nothing missed
-    assert fires["watched_missed"] == 0
+    assert fires["slope_rows_missed_triggers"] == 0
 
 
 def test_row_classes() -> None:

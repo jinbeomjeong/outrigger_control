@@ -36,8 +36,9 @@ what a judgement on the result needs:
    classes (:class:`RowClass`): ``judged_falling`` (watched ``nominal_gap`` rows with
    ``Dh >= 0``), ``record_rising``, ``record_level``, ``unwatched``. The one official verdict
    ``judgement_passed`` (control decision 2026-10-26): the ``judged_falling`` optimism within the
-   allowance (L1 0.05 kN, L2b 1.2 kN) and no missed trigger on any watched row; the rest is
-   recorded.
+   allowance (L1 0.05 kN, L2b 1.2 kN) and no missed trigger on the watched rows that meet 302.2
+   (``judged_falling`` + ``record_rising``); a missed trigger on a ``record_level`` row only
+   sets ``level_missed_trigger_flag``; the rest is recorded.
 
 Units SI; per-leg arrays follow ``LEG_ORDER``; times are controller times (``record.npz`` ``t``).
 """
@@ -731,20 +732,21 @@ def judged_summary(rows: list[dict[str, Any]], limit_N: float | None) -> dict[st
     """V-2 judgement of one variant (control decision 2026-10-26).
 
     ``judgement_passed`` (the only official verdict): the ``judged_falling`` rows have their
-    largest ``L_hat_fb - L_hat_true`` within the engine allowance, and no watched row (any
-    class) has a missed trigger. A missed trigger fails it in any case; otherwise ``None`` =
-    no judged row or no allowance (engine unknown).
-    The ``record_rising`` / ``record_level`` classes and the per-rule summaries are records.
+    largest ``L_hat_fb - L_hat_true`` within the engine allowance, and the watched rows that
+    meet 302.2 (``judged_falling`` + ``record_rising``) have no missed trigger. Such a missed
+    trigger fails it in any case; otherwise ``None`` = no judged row or no allowance (engine
+    unknown). A missed trigger on a ``record_level`` row only sets
+    ``level_missed_trigger_flag`` (count ``level_missed_triggers``); the rest is recorded.
     """
     for row in rows:
         row["row_class"] = row_class(row).value
     classes = _class_summary(rows)
     judged = classes[RowClass.JUDGED_FALLING.value]
-    watched_missed = sum(entry["missed"] for kind, entry in classes.items()
-                         if kind != RowClass.UNWATCHED.value)
+    slope_missed = judged["missed"] + classes[RowClass.RECORD_RISING.value]["missed"]
+    level_missed = classes[RowClass.RECORD_LEVEL.value]["missed"]
     worst_N = judged["max_difference_N"]
     is_within = None if worst_N is None or limit_N is None else worst_N <= limit_N
-    if watched_missed > 0:
+    if slope_missed > 0:
         verdict: bool | None = False
     else:
         verdict = is_within
@@ -753,9 +755,10 @@ def judged_summary(rows: list[dict[str, Any]], limit_N: float | None) -> dict[st
         "row_classes": classes,
         "allowance_N": limit_N,
         "judged_falling_within_allowance": is_within,
-        "watched_missed": watched_missed,
+        "slope_rows_missed_triggers": slope_missed,
         "judgement_passed": verdict,
+        "level_missed_triggers": level_missed,
+        "level_missed_trigger_flag": level_missed >= 1,
         "record_nominal_gap": _rule_summary(rows, "nominal_gap"),
         "record_level": _rule_summary(rows, "level"),
-        "record_level_missed_flag": classes[RowClass.RECORD_LEVEL.value]["missed"] >= 1,
     }
