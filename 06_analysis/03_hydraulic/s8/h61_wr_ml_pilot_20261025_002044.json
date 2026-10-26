@@ -1,0 +1,2853 @@
+{
+ "cases": 271,
+ "by_case_meta": [
+  {
+   "name": "ML00",
+   "batch": "bases",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 704
+  },
+  {
+   "name": "ML01",
+   "batch": "bases",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 1146
+  },
+  {
+   "name": "ML02",
+   "batch": "bases",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 864
+  },
+  {
+   "name": "ML03",
+   "batch": "bases",
+   "Fs_N": 9165.6,
+   "lock_valve": "pilot_check",
+   "beta": 1230100000.0,
+   "windows": 1554
+  },
+  {
+   "name": "ML04",
+   "batch": "bases",
+   "Fs_N": 257.752,
+   "lock_valve": "pilot_check",
+   "beta": 892100000.0,
+   "windows": 740
+  },
+  {
+   "name": "ML05",
+   "batch": "bases",
+   "Fs_N": 4765.429800000001,
+   "lock_valve": "pilot_check",
+   "beta": 794400000.0,
+   "windows": 1186
+  },
+  {
+   "name": "ML06",
+   "batch": "bases",
+   "Fs_N": 8054.486199999999,
+   "lock_valve": "pilot_check",
+   "beta": 924800000.0,
+   "windows": 840
+  },
+  {
+   "name": "ML07",
+   "batch": "bases",
+   "Fs_N": 4699.039,
+   "lock_valve": "pilot_check",
+   "beta": 1399300000.0,
+   "windows": 1162
+  },
+  {
+   "name": "ML08",
+   "batch": "bases",
+   "Fs_N": 3291.4687,
+   "lock_valve": "pilot_check",
+   "beta": 1042700000.0,
+   "windows": 788
+  },
+  {
+   "name": "ML09",
+   "batch": "bases",
+   "Fs_N": 2256.7471,
+   "lock_valve": "pilot_check",
+   "beta": 1293200000.0,
+   "windows": 1170
+  },
+  {
+   "name": "ML10",
+   "batch": "bases",
+   "Fs_N": 5393.0274,
+   "lock_valve": "pilot_check",
+   "beta": 758800000.0,
+   "windows": 794
+  },
+  {
+   "name": "ML11",
+   "batch": "bases",
+   "Fs_N": 4008.678,
+   "lock_valve": "pilot_check",
+   "beta": 1147400000.0,
+   "windows": 1202
+  },
+  {
+   "name": "ML12",
+   "batch": "bases",
+   "Fs_N": 3415.7396,
+   "lock_valve": "pilot_check",
+   "beta": 1011500000.0000001,
+   "windows": 776
+  },
+  {
+   "name": "ML13",
+   "batch": "bases",
+   "Fs_N": 4121.9163,
+   "lock_valve": "pilot_check",
+   "beta": 1550200000.0,
+   "windows": 1236
+  },
+  {
+   "name": "ML14",
+   "batch": "bases",
+   "Fs_N": 3464.0608,
+   "lock_valve": "pilot_check",
+   "beta": 1322400000.0,
+   "windows": 762
+  },
+  {
+   "name": "ML15",
+   "batch": "bases",
+   "Fs_N": 4453.7814,
+   "lock_valve": "pilot_check",
+   "beta": 1380400000.0,
+   "windows": 1172
+  },
+  {
+   "name": "ML16",
+   "batch": "bases",
+   "Fs_N": 7224.6192,
+   "lock_valve": "pilot_check",
+   "beta": 957300000.0,
+   "windows": 817
+  },
+  {
+   "name": "ML17",
+   "batch": "bases",
+   "Fs_N": 1583.5056,
+   "lock_valve": "pilot_check",
+   "beta": 1370100000.0,
+   "windows": 1204
+  },
+  {
+   "name": "ML18",
+   "batch": "bases",
+   "Fs_N": 5168.912,
+   "lock_valve": "pilot_check",
+   "beta": 818700000.0,
+   "windows": 760
+  },
+  {
+   "name": "ML19",
+   "batch": "bases",
+   "Fs_N": 4287.708,
+   "lock_valve": "pilot_check",
+   "beta": 1353500000.0,
+   "windows": 1254
+  },
+  {
+   "name": "ML20",
+   "batch": "bases",
+   "Fs_N": 467.0583169200001,
+   "lock_valve": "pilot_check",
+   "beta": 1063800000.0000001,
+   "windows": 757
+  },
+  {
+   "name": "ML21",
+   "batch": "bases",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 1166
+  },
+  {
+   "name": "ML22",
+   "batch": "bases",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 1122
+  },
+  {
+   "name": "ML23",
+   "batch": "bases",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 1184
+  },
+  {
+   "name": "ML00_ep0",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 864
+  },
+  {
+   "name": "ML00_ep1",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 1168
+  },
+  {
+   "name": "ML00_ep2",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML00_ep3",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 1150
+  },
+  {
+   "name": "ML00_ep4",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 905
+  },
+  {
+   "name": "ML00_ep5",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 1697
+  },
+  {
+   "name": "ML00_ep6",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 1154
+  },
+  {
+   "name": "ML00_ep7",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML01_ep0",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 964
+  },
+  {
+   "name": "ML01_ep1",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 970
+  },
+  {
+   "name": "ML01_ep2",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 1066
+  },
+  {
+   "name": "ML01_ep3",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 1134
+  },
+  {
+   "name": "ML01_ep4",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 1222
+  },
+  {
+   "name": "ML01_ep5",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 884
+  },
+  {
+   "name": "ML01_ep6",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 936
+  },
+  {
+   "name": "ML01_ep7",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 1218
+  },
+  {
+   "name": "ML02_ep0",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1190
+  },
+  {
+   "name": "ML02_ep1",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1218
+  },
+  {
+   "name": "ML02_ep2",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1932
+  },
+  {
+   "name": "ML02_ep3",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1286
+  },
+  {
+   "name": "ML02_ep4",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1932
+  },
+  {
+   "name": "ML02_ep5",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 425
+  },
+  {
+   "name": "ML02_ep6",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1172
+  },
+  {
+   "name": "ML02_ep7",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1932
+  },
+  {
+   "name": "ML03_ep0",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 9165.6,
+   "lock_valve": "pilot_check",
+   "beta": 1230100000.0,
+   "windows": 1502
+  },
+  {
+   "name": "ML03_ep1",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 9165.6,
+   "lock_valve": "pilot_check",
+   "beta": 1230100000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML21_ep2",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 456
+  },
+  {
+   "name": "ML21_ep3",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 1388
+  },
+  {
+   "name": "ML21_ep4",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 1024
+  },
+  {
+   "name": "ML21_ep5",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 815
+  },
+  {
+   "name": "ML21_ep6",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 1934
+  },
+  {
+   "name": "ML21_ep7",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML22_ep0",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 1006
+  },
+  {
+   "name": "ML22_ep1",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 1222
+  },
+  {
+   "name": "ML22_ep2",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML22_ep3",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 896
+  },
+  {
+   "name": "ML22_ep4",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 1036
+  },
+  {
+   "name": "ML22_ep5",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 1934
+  },
+  {
+   "name": "ML22_ep6",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 1208
+  },
+  {
+   "name": "ML22_ep7",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 452
+  },
+  {
+   "name": "ML23_ep0",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML23_ep1",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 684
+  },
+  {
+   "name": "ML23_ep2",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML23_ep3",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML23_ep4",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 1228
+  },
+  {
+   "name": "ML23_ep5",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 1210
+  },
+  {
+   "name": "ML23_ep6",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 1938
+  },
+  {
+   "name": "ML23_ep7",
+   "batch": "_replaced_20261025_015059",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 1214
+  },
+  {
+   "name": "ML00_ep5",
+   "batch": "_replaced_20261025_075743",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 941
+  },
+  {
+   "name": "ML08_ep4",
+   "batch": "_replaced_20261025_075743",
+   "Fs_N": 3291.4687,
+   "lock_valve": "pilot_check",
+   "beta": 1042700000.0,
+   "windows": 906
+  },
+  {
+   "name": "ML10_ep4",
+   "batch": "_replaced_20261025_075743",
+   "Fs_N": 5393.0274,
+   "lock_valve": "pilot_check",
+   "beta": 758800000.0,
+   "windows": 1191
+  },
+  {
+   "name": "ML11_ep4",
+   "batch": "_replaced_20261025_075743",
+   "Fs_N": 4008.678,
+   "lock_valve": "pilot_check",
+   "beta": 1147400000.0,
+   "windows": 2287
+  },
+  {
+   "name": "ML17_ep4",
+   "batch": "_replaced_20261025_075743",
+   "Fs_N": 1583.5056,
+   "lock_valve": "pilot_check",
+   "beta": 1370100000.0,
+   "windows": 2200
+  },
+  {
+   "name": "ML18_ep6",
+   "batch": "_replaced_20261025_075743",
+   "Fs_N": 5168.912,
+   "lock_valve": "pilot_check",
+   "beta": 818700000.0,
+   "windows": 946
+  },
+  {
+   "name": "ML21_ep1",
+   "batch": "_replaced_20261025_075743",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 280
+  },
+  {
+   "name": "ML00_ep0",
+   "batch": "episodes",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 864
+  },
+  {
+   "name": "ML00_ep1",
+   "batch": "episodes",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 716
+  },
+  {
+   "name": "ML00_ep2",
+   "batch": "episodes",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML00_ep3",
+   "batch": "episodes",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 716
+  },
+  {
+   "name": "ML00_ep4",
+   "batch": "episodes",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 905
+  },
+  {
+   "name": "ML00_ep5",
+   "batch": "episodes",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 941
+  },
+  {
+   "name": "ML00_ep6",
+   "batch": "episodes",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 762
+  },
+  {
+   "name": "ML00_ep7",
+   "batch": "episodes",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML01_ep0",
+   "batch": "episodes",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 964
+  },
+  {
+   "name": "ML01_ep1",
+   "batch": "episodes",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 970
+  },
+  {
+   "name": "ML01_ep2",
+   "batch": "episodes",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 1066
+  },
+  {
+   "name": "ML01_ep3",
+   "batch": "episodes",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 1134
+  },
+  {
+   "name": "ML01_ep4",
+   "batch": "episodes",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 1104
+  },
+  {
+   "name": "ML01_ep5",
+   "batch": "episodes",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 884
+  },
+  {
+   "name": "ML01_ep6",
+   "batch": "episodes",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 936
+  },
+  {
+   "name": "ML01_ep7",
+   "batch": "episodes",
+   "Fs_N": 2332.6,
+   "lock_valve": "pilot_check",
+   "beta": 1316200000.0,
+   "windows": 964
+  },
+  {
+   "name": "ML02_ep0",
+   "batch": "episodes",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 806
+  },
+  {
+   "name": "ML02_ep1",
+   "batch": "episodes",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1328
+  },
+  {
+   "name": "ML02_ep2",
+   "batch": "episodes",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1932
+  },
+  {
+   "name": "ML02_ep3",
+   "batch": "episodes",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1286
+  },
+  {
+   "name": "ML02_ep4",
+   "batch": "episodes",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1932
+  },
+  {
+   "name": "ML02_ep5",
+   "batch": "episodes",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1303
+  },
+  {
+   "name": "ML02_ep6",
+   "batch": "episodes",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 188
+  },
+  {
+   "name": "ML02_ep7",
+   "batch": "episodes",
+   "Fs_N": 4418.8,
+   "lock_valve": "pilot_check",
+   "beta": 1043400000.0000001,
+   "windows": 1932
+  },
+  {
+   "name": "ML03_ep0",
+   "batch": "episodes",
+   "Fs_N": 9165.6,
+   "lock_valve": "pilot_check",
+   "beta": 1230100000.0,
+   "windows": 1502
+  },
+  {
+   "name": "ML03_ep1",
+   "batch": "episodes",
+   "Fs_N": 9165.6,
+   "lock_valve": "pilot_check",
+   "beta": 1230100000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML03_ep2",
+   "batch": "episodes",
+   "Fs_N": 9165.6,
+   "lock_valve": "pilot_check",
+   "beta": 1230100000.0,
+   "windows": 790
+  },
+  {
+   "name": "ML03_ep3",
+   "batch": "episodes",
+   "Fs_N": 9165.6,
+   "lock_valve": "pilot_check",
+   "beta": 1230100000.0,
+   "windows": 1086
+  },
+  {
+   "name": "ML03_ep4",
+   "batch": "episodes",
+   "Fs_N": 9165.6,
+   "lock_valve": "pilot_check",
+   "beta": 1230100000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML03_ep5",
+   "batch": "episodes",
+   "Fs_N": 9165.6,
+   "lock_valve": "pilot_check",
+   "beta": 1230100000.0,
+   "windows": 188
+  },
+  {
+   "name": "ML03_ep6",
+   "batch": "episodes",
+   "Fs_N": 9165.6,
+   "lock_valve": "pilot_check",
+   "beta": 1230100000.0,
+   "windows": 854
+  },
+  {
+   "name": "ML03_ep7",
+   "batch": "episodes",
+   "Fs_N": 9165.6,
+   "lock_valve": "pilot_check",
+   "beta": 1230100000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML04_ep0",
+   "batch": "episodes",
+   "Fs_N": 257.752,
+   "lock_valve": "pilot_check",
+   "beta": 892100000.0,
+   "windows": 1098
+  },
+  {
+   "name": "ML04_ep1",
+   "batch": "episodes",
+   "Fs_N": 257.752,
+   "lock_valve": "pilot_check",
+   "beta": 892100000.0,
+   "windows": 1332
+  },
+  {
+   "name": "ML04_ep2",
+   "batch": "episodes",
+   "Fs_N": 257.752,
+   "lock_valve": "pilot_check",
+   "beta": 892100000.0,
+   "windows": 1928
+  },
+  {
+   "name": "ML04_ep3",
+   "batch": "episodes",
+   "Fs_N": 257.752,
+   "lock_valve": "pilot_check",
+   "beta": 892100000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML04_ep4",
+   "batch": "episodes",
+   "Fs_N": 257.752,
+   "lock_valve": "pilot_check",
+   "beta": 892100000.0,
+   "windows": 540
+  },
+  {
+   "name": "ML04_ep5",
+   "batch": "episodes",
+   "Fs_N": 257.752,
+   "lock_valve": "pilot_check",
+   "beta": 892100000.0,
+   "windows": 876
+  },
+  {
+   "name": "ML04_ep6",
+   "batch": "episodes",
+   "Fs_N": 257.752,
+   "lock_valve": "pilot_check",
+   "beta": 892100000.0,
+   "windows": 1928
+  },
+  {
+   "name": "ML04_ep7",
+   "batch": "episodes",
+   "Fs_N": 257.752,
+   "lock_valve": "pilot_check",
+   "beta": 892100000.0,
+   "windows": 187
+  },
+  {
+   "name": "ML05_ep0",
+   "batch": "episodes",
+   "Fs_N": 4765.429800000001,
+   "lock_valve": "pilot_check",
+   "beta": 794400000.0,
+   "windows": 424
+  },
+  {
+   "name": "ML05_ep1",
+   "batch": "episodes",
+   "Fs_N": 4765.429800000001,
+   "lock_valve": "pilot_check",
+   "beta": 794400000.0,
+   "windows": 208
+  },
+  {
+   "name": "ML05_ep2",
+   "batch": "episodes",
+   "Fs_N": 4765.429800000001,
+   "lock_valve": "pilot_check",
+   "beta": 794400000.0,
+   "windows": 284
+  },
+  {
+   "name": "ML05_ep3",
+   "batch": "episodes",
+   "Fs_N": 4765.429800000001,
+   "lock_valve": "pilot_check",
+   "beta": 794400000.0,
+   "windows": 350
+  },
+  {
+   "name": "ML05_ep4",
+   "batch": "episodes",
+   "Fs_N": 4765.429800000001,
+   "lock_valve": "pilot_check",
+   "beta": 794400000.0,
+   "windows": 1940
+  },
+  {
+   "name": "ML05_ep5",
+   "batch": "episodes",
+   "Fs_N": 4765.429800000001,
+   "lock_valve": "pilot_check",
+   "beta": 794400000.0,
+   "windows": 210
+  },
+  {
+   "name": "ML05_ep6",
+   "batch": "episodes",
+   "Fs_N": 4765.429800000001,
+   "lock_valve": "pilot_check",
+   "beta": 794400000.0,
+   "windows": 1940
+  },
+  {
+   "name": "ML05_ep7",
+   "batch": "episodes",
+   "Fs_N": 4765.429800000001,
+   "lock_valve": "pilot_check",
+   "beta": 794400000.0,
+   "windows": 152
+  },
+  {
+   "name": "ML06_ep0",
+   "batch": "episodes",
+   "Fs_N": 8054.486199999999,
+   "lock_valve": "pilot_check",
+   "beta": 924800000.0,
+   "windows": 648
+  },
+  {
+   "name": "ML06_ep1",
+   "batch": "episodes",
+   "Fs_N": 8054.486199999999,
+   "lock_valve": "pilot_check",
+   "beta": 924800000.0,
+   "windows": 1146
+  },
+  {
+   "name": "ML06_ep2",
+   "batch": "episodes",
+   "Fs_N": 8054.486199999999,
+   "lock_valve": "pilot_check",
+   "beta": 924800000.0,
+   "windows": 700
+  },
+  {
+   "name": "ML06_ep3",
+   "batch": "episodes",
+   "Fs_N": 8054.486199999999,
+   "lock_valve": "pilot_check",
+   "beta": 924800000.0,
+   "windows": 692
+  },
+  {
+   "name": "ML06_ep4",
+   "batch": "episodes",
+   "Fs_N": 8054.486199999999,
+   "lock_valve": "pilot_check",
+   "beta": 924800000.0,
+   "windows": 188
+  },
+  {
+   "name": "ML06_ep5",
+   "batch": "episodes",
+   "Fs_N": 8054.486199999999,
+   "lock_valve": "pilot_check",
+   "beta": 924800000.0,
+   "windows": 985
+  },
+  {
+   "name": "ML06_ep6",
+   "batch": "episodes",
+   "Fs_N": 8054.486199999999,
+   "lock_valve": "pilot_check",
+   "beta": 924800000.0,
+   "windows": 855
+  },
+  {
+   "name": "ML06_ep7",
+   "batch": "episodes",
+   "Fs_N": 8054.486199999999,
+   "lock_valve": "pilot_check",
+   "beta": 924800000.0,
+   "windows": 698
+  },
+  {
+   "name": "ML07_ep0",
+   "batch": "episodes",
+   "Fs_N": 4699.039,
+   "lock_valve": "pilot_check",
+   "beta": 1399300000.0,
+   "windows": 736
+  },
+  {
+   "name": "ML07_ep1",
+   "batch": "episodes",
+   "Fs_N": 4699.039,
+   "lock_valve": "pilot_check",
+   "beta": 1399300000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML07_ep2",
+   "batch": "episodes",
+   "Fs_N": 4699.039,
+   "lock_valve": "pilot_check",
+   "beta": 1399300000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML07_ep3",
+   "batch": "episodes",
+   "Fs_N": 4699.039,
+   "lock_valve": "pilot_check",
+   "beta": 1399300000.0,
+   "windows": 1938
+  },
+  {
+   "name": "ML07_ep4",
+   "batch": "episodes",
+   "Fs_N": 4699.039,
+   "lock_valve": "pilot_check",
+   "beta": 1399300000.0,
+   "windows": 954
+  },
+  {
+   "name": "ML07_ep5",
+   "batch": "episodes",
+   "Fs_N": 4699.039,
+   "lock_valve": "pilot_check",
+   "beta": 1399300000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML07_ep6",
+   "batch": "episodes",
+   "Fs_N": 4699.039,
+   "lock_valve": "pilot_check",
+   "beta": 1399300000.0,
+   "windows": 928
+  },
+  {
+   "name": "ML07_ep7",
+   "batch": "episodes",
+   "Fs_N": 4699.039,
+   "lock_valve": "pilot_check",
+   "beta": 1399300000.0,
+   "windows": 896
+  },
+  {
+   "name": "ML08_ep0",
+   "batch": "episodes",
+   "Fs_N": 3291.4687,
+   "lock_valve": "pilot_check",
+   "beta": 1042700000.0,
+   "windows": 1018
+  },
+  {
+   "name": "ML08_ep1",
+   "batch": "episodes",
+   "Fs_N": 3291.4687,
+   "lock_valve": "pilot_check",
+   "beta": 1042700000.0,
+   "windows": 990
+  },
+  {
+   "name": "ML08_ep2",
+   "batch": "episodes",
+   "Fs_N": 3291.4687,
+   "lock_valve": "pilot_check",
+   "beta": 1042700000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML08_ep3",
+   "batch": "episodes",
+   "Fs_N": 3291.4687,
+   "lock_valve": "pilot_check",
+   "beta": 1042700000.0,
+   "windows": 794
+  },
+  {
+   "name": "ML08_ep4",
+   "batch": "episodes",
+   "Fs_N": 3291.4687,
+   "lock_valve": "pilot_check",
+   "beta": 1042700000.0,
+   "windows": 906
+  },
+  {
+   "name": "ML08_ep5",
+   "batch": "episodes",
+   "Fs_N": 3291.4687,
+   "lock_valve": "pilot_check",
+   "beta": 1042700000.0,
+   "windows": 176
+  },
+  {
+   "name": "ML08_ep6",
+   "batch": "episodes",
+   "Fs_N": 3291.4687,
+   "lock_valve": "pilot_check",
+   "beta": 1042700000.0,
+   "windows": 800
+  },
+  {
+   "name": "ML08_ep7",
+   "batch": "episodes",
+   "Fs_N": 3291.4687,
+   "lock_valve": "pilot_check",
+   "beta": 1042700000.0,
+   "windows": 1042
+  },
+  {
+   "name": "ML09_ep0",
+   "batch": "episodes",
+   "Fs_N": 2256.7471,
+   "lock_valve": "pilot_check",
+   "beta": 1293200000.0,
+   "windows": 1024
+  },
+  {
+   "name": "ML09_ep1",
+   "batch": "episodes",
+   "Fs_N": 2256.7471,
+   "lock_valve": "pilot_check",
+   "beta": 1293200000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML09_ep2",
+   "batch": "episodes",
+   "Fs_N": 2256.7471,
+   "lock_valve": "pilot_check",
+   "beta": 1293200000.0,
+   "windows": 1003
+  },
+  {
+   "name": "ML09_ep3",
+   "batch": "episodes",
+   "Fs_N": 2256.7471,
+   "lock_valve": "pilot_check",
+   "beta": 1293200000.0,
+   "windows": 798
+  },
+  {
+   "name": "ML09_ep4",
+   "batch": "episodes",
+   "Fs_N": 2256.7471,
+   "lock_valve": "pilot_check",
+   "beta": 1293200000.0,
+   "windows": 672
+  },
+  {
+   "name": "ML09_ep5",
+   "batch": "episodes",
+   "Fs_N": 2256.7471,
+   "lock_valve": "pilot_check",
+   "beta": 1293200000.0,
+   "windows": 224
+  },
+  {
+   "name": "ML09_ep6",
+   "batch": "episodes",
+   "Fs_N": 2256.7471,
+   "lock_valve": "pilot_check",
+   "beta": 1293200000.0,
+   "windows": 971
+  },
+  {
+   "name": "ML09_ep7",
+   "batch": "episodes",
+   "Fs_N": 2256.7471,
+   "lock_valve": "pilot_check",
+   "beta": 1293200000.0,
+   "windows": 1928
+  },
+  {
+   "name": "ML10_ep0",
+   "batch": "episodes",
+   "Fs_N": 5393.0274,
+   "lock_valve": "pilot_check",
+   "beta": 758800000.0,
+   "windows": 882
+  },
+  {
+   "name": "ML10_ep1",
+   "batch": "episodes",
+   "Fs_N": 5393.0274,
+   "lock_valve": "pilot_check",
+   "beta": 758800000.0,
+   "windows": 200
+  },
+  {
+   "name": "ML10_ep2",
+   "batch": "episodes",
+   "Fs_N": 5393.0274,
+   "lock_valve": "pilot_check",
+   "beta": 758800000.0,
+   "windows": 710
+  },
+  {
+   "name": "ML10_ep3",
+   "batch": "episodes",
+   "Fs_N": 5393.0274,
+   "lock_valve": "pilot_check",
+   "beta": 758800000.0,
+   "windows": 252
+  },
+  {
+   "name": "ML10_ep4",
+   "batch": "episodes",
+   "Fs_N": 5393.0274,
+   "lock_valve": "pilot_check",
+   "beta": 758800000.0,
+   "windows": 152
+  },
+  {
+   "name": "ML10_ep5",
+   "batch": "episodes",
+   "Fs_N": 5393.0274,
+   "lock_valve": "pilot_check",
+   "beta": 758800000.0,
+   "windows": 1300
+  },
+  {
+   "name": "ML10_ep6",
+   "batch": "episodes",
+   "Fs_N": 5393.0274,
+   "lock_valve": "pilot_check",
+   "beta": 758800000.0,
+   "windows": 1944
+  },
+  {
+   "name": "ML10_ep7",
+   "batch": "episodes",
+   "Fs_N": 5393.0274,
+   "lock_valve": "pilot_check",
+   "beta": 758800000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML11_ep0",
+   "batch": "episodes",
+   "Fs_N": 4008.678,
+   "lock_valve": "pilot_check",
+   "beta": 1147400000.0,
+   "windows": 1938
+  },
+  {
+   "name": "ML11_ep1",
+   "batch": "episodes",
+   "Fs_N": 4008.678,
+   "lock_valve": "pilot_check",
+   "beta": 1147400000.0,
+   "windows": 888
+  },
+  {
+   "name": "ML11_ep2",
+   "batch": "episodes",
+   "Fs_N": 4008.678,
+   "lock_valve": "pilot_check",
+   "beta": 1147400000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML11_ep3",
+   "batch": "episodes",
+   "Fs_N": 4008.678,
+   "lock_valve": "pilot_check",
+   "beta": 1147400000.0,
+   "windows": 828
+  },
+  {
+   "name": "ML11_ep4",
+   "batch": "episodes",
+   "Fs_N": 4008.678,
+   "lock_valve": "pilot_check",
+   "beta": 1147400000.0,
+   "windows": 153
+  },
+  {
+   "name": "ML11_ep5",
+   "batch": "episodes",
+   "Fs_N": 4008.678,
+   "lock_valve": "pilot_check",
+   "beta": 1147400000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML11_ep6",
+   "batch": "episodes",
+   "Fs_N": 4008.678,
+   "lock_valve": "pilot_check",
+   "beta": 1147400000.0,
+   "windows": 1082
+  },
+  {
+   "name": "ML11_ep7",
+   "batch": "episodes",
+   "Fs_N": 4008.678,
+   "lock_valve": "pilot_check",
+   "beta": 1147400000.0,
+   "windows": 708
+  },
+  {
+   "name": "ML12_ep0",
+   "batch": "episodes",
+   "Fs_N": 3415.7396,
+   "lock_valve": "pilot_check",
+   "beta": 1011500000.0000001,
+   "windows": 900
+  },
+  {
+   "name": "ML12_ep1",
+   "batch": "episodes",
+   "Fs_N": 3415.7396,
+   "lock_valve": "pilot_check",
+   "beta": 1011500000.0000001,
+   "windows": 2384
+  },
+  {
+   "name": "ML12_ep2",
+   "batch": "episodes",
+   "Fs_N": 3415.7396,
+   "lock_valve": "pilot_check",
+   "beta": 1011500000.0000001,
+   "windows": 842
+  },
+  {
+   "name": "ML12_ep3",
+   "batch": "episodes",
+   "Fs_N": 3415.7396,
+   "lock_valve": "pilot_check",
+   "beta": 1011500000.0000001,
+   "windows": 280
+  },
+  {
+   "name": "ML12_ep4",
+   "batch": "episodes",
+   "Fs_N": 3415.7396,
+   "lock_valve": "pilot_check",
+   "beta": 1011500000.0000001,
+   "windows": 2384
+  },
+  {
+   "name": "ML12_ep5",
+   "batch": "episodes",
+   "Fs_N": 3415.7396,
+   "lock_valve": "pilot_check",
+   "beta": 1011500000.0000001,
+   "windows": 1098
+  },
+  {
+   "name": "ML12_ep6",
+   "batch": "episodes",
+   "Fs_N": 3415.7396,
+   "lock_valve": "pilot_check",
+   "beta": 1011500000.0000001,
+   "windows": 536
+  },
+  {
+   "name": "ML12_ep7",
+   "batch": "episodes",
+   "Fs_N": 3415.7396,
+   "lock_valve": "pilot_check",
+   "beta": 1011500000.0000001,
+   "windows": 842
+  },
+  {
+   "name": "ML13_ep0",
+   "batch": "episodes",
+   "Fs_N": 4121.9163,
+   "lock_valve": "pilot_check",
+   "beta": 1550200000.0,
+   "windows": 174
+  },
+  {
+   "name": "ML13_ep1",
+   "batch": "episodes",
+   "Fs_N": 4121.9163,
+   "lock_valve": "pilot_check",
+   "beta": 1550200000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML13_ep2",
+   "batch": "episodes",
+   "Fs_N": 4121.9163,
+   "lock_valve": "pilot_check",
+   "beta": 1550200000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML13_ep3",
+   "batch": "episodes",
+   "Fs_N": 4121.9163,
+   "lock_valve": "pilot_check",
+   "beta": 1550200000.0,
+   "windows": 934
+  },
+  {
+   "name": "ML13_ep4",
+   "batch": "episodes",
+   "Fs_N": 4121.9163,
+   "lock_valve": "pilot_check",
+   "beta": 1550200000.0,
+   "windows": 1134
+  },
+  {
+   "name": "ML13_ep5",
+   "batch": "episodes",
+   "Fs_N": 4121.9163,
+   "lock_valve": "pilot_check",
+   "beta": 1550200000.0,
+   "windows": 766
+  },
+  {
+   "name": "ML13_ep6",
+   "batch": "episodes",
+   "Fs_N": 4121.9163,
+   "lock_valve": "pilot_check",
+   "beta": 1550200000.0,
+   "windows": 718
+  },
+  {
+   "name": "ML13_ep7",
+   "batch": "episodes",
+   "Fs_N": 4121.9163,
+   "lock_valve": "pilot_check",
+   "beta": 1550200000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML14_ep0",
+   "batch": "episodes",
+   "Fs_N": 3464.0608,
+   "lock_valve": "pilot_check",
+   "beta": 1322400000.0,
+   "windows": 1096
+  },
+  {
+   "name": "ML14_ep1",
+   "batch": "episodes",
+   "Fs_N": 3464.0608,
+   "lock_valve": "pilot_check",
+   "beta": 1322400000.0,
+   "windows": 1094
+  },
+  {
+   "name": "ML14_ep2",
+   "batch": "episodes",
+   "Fs_N": 3464.0608,
+   "lock_valve": "pilot_check",
+   "beta": 1322400000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML14_ep3",
+   "batch": "episodes",
+   "Fs_N": 3464.0608,
+   "lock_valve": "pilot_check",
+   "beta": 1322400000.0,
+   "windows": 916
+  },
+  {
+   "name": "ML14_ep4",
+   "batch": "episodes",
+   "Fs_N": 3464.0608,
+   "lock_valve": "pilot_check",
+   "beta": 1322400000.0,
+   "windows": 840
+  },
+  {
+   "name": "ML14_ep5",
+   "batch": "episodes",
+   "Fs_N": 3464.0608,
+   "lock_valve": "pilot_check",
+   "beta": 1322400000.0,
+   "windows": 1934
+  },
+  {
+   "name": "ML14_ep6",
+   "batch": "episodes",
+   "Fs_N": 3464.0608,
+   "lock_valve": "pilot_check",
+   "beta": 1322400000.0,
+   "windows": 900
+  },
+  {
+   "name": "ML14_ep7",
+   "batch": "episodes",
+   "Fs_N": 3464.0608,
+   "lock_valve": "pilot_check",
+   "beta": 1322400000.0,
+   "windows": 776
+  },
+  {
+   "name": "ML15_ep0",
+   "batch": "episodes",
+   "Fs_N": 4453.7814,
+   "lock_valve": "pilot_check",
+   "beta": 1380400000.0,
+   "windows": 1936
+  },
+  {
+   "name": "ML15_ep1",
+   "batch": "episodes",
+   "Fs_N": 4453.7814,
+   "lock_valve": "pilot_check",
+   "beta": 1380400000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML15_ep2",
+   "batch": "episodes",
+   "Fs_N": 4453.7814,
+   "lock_valve": "pilot_check",
+   "beta": 1380400000.0,
+   "windows": 1067
+  },
+  {
+   "name": "ML15_ep3",
+   "batch": "episodes",
+   "Fs_N": 4453.7814,
+   "lock_valve": "pilot_check",
+   "beta": 1380400000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML15_ep4",
+   "batch": "episodes",
+   "Fs_N": 4453.7814,
+   "lock_valve": "pilot_check",
+   "beta": 1380400000.0,
+   "windows": 850
+  },
+  {
+   "name": "ML15_ep5",
+   "batch": "episodes",
+   "Fs_N": 4453.7814,
+   "lock_valve": "pilot_check",
+   "beta": 1380400000.0,
+   "windows": 710
+  },
+  {
+   "name": "ML15_ep6",
+   "batch": "episodes",
+   "Fs_N": 4453.7814,
+   "lock_valve": "pilot_check",
+   "beta": 1380400000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML15_ep7",
+   "batch": "episodes",
+   "Fs_N": 4453.7814,
+   "lock_valve": "pilot_check",
+   "beta": 1380400000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML16_ep0",
+   "batch": "episodes",
+   "Fs_N": 7224.6192,
+   "lock_valve": "pilot_check",
+   "beta": 957300000.0,
+   "windows": 957
+  },
+  {
+   "name": "ML16_ep1",
+   "batch": "episodes",
+   "Fs_N": 7224.6192,
+   "lock_valve": "pilot_check",
+   "beta": 957300000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML16_ep2",
+   "batch": "episodes",
+   "Fs_N": 7224.6192,
+   "lock_valve": "pilot_check",
+   "beta": 957300000.0,
+   "windows": 1044
+  },
+  {
+   "name": "ML16_ep3",
+   "batch": "episodes",
+   "Fs_N": 7224.6192,
+   "lock_valve": "pilot_check",
+   "beta": 957300000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML16_ep4",
+   "batch": "episodes",
+   "Fs_N": 7224.6192,
+   "lock_valve": "pilot_check",
+   "beta": 957300000.0,
+   "windows": 604
+  },
+  {
+   "name": "ML16_ep5",
+   "batch": "episodes",
+   "Fs_N": 7224.6192,
+   "lock_valve": "pilot_check",
+   "beta": 957300000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML16_ep6",
+   "batch": "episodes",
+   "Fs_N": 7224.6192,
+   "lock_valve": "pilot_check",
+   "beta": 957300000.0,
+   "windows": 969
+  },
+  {
+   "name": "ML16_ep7",
+   "batch": "episodes",
+   "Fs_N": 7224.6192,
+   "lock_valve": "pilot_check",
+   "beta": 957300000.0,
+   "windows": 1940
+  },
+  {
+   "name": "ML17_ep0",
+   "batch": "episodes",
+   "Fs_N": 1583.5056,
+   "lock_valve": "pilot_check",
+   "beta": 1370100000.0,
+   "windows": 1020
+  },
+  {
+   "name": "ML17_ep1",
+   "batch": "episodes",
+   "Fs_N": 1583.5056,
+   "lock_valve": "pilot_check",
+   "beta": 1370100000.0,
+   "windows": 828
+  },
+  {
+   "name": "ML17_ep2",
+   "batch": "episodes",
+   "Fs_N": 1583.5056,
+   "lock_valve": "pilot_check",
+   "beta": 1370100000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML17_ep3",
+   "batch": "episodes",
+   "Fs_N": 1583.5056,
+   "lock_valve": "pilot_check",
+   "beta": 1370100000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML17_ep4",
+   "batch": "episodes",
+   "Fs_N": 1583.5056,
+   "lock_valve": "pilot_check",
+   "beta": 1370100000.0,
+   "windows": 1056
+  },
+  {
+   "name": "ML17_ep5",
+   "batch": "episodes",
+   "Fs_N": 1583.5056,
+   "lock_valve": "pilot_check",
+   "beta": 1370100000.0,
+   "windows": 1928
+  },
+  {
+   "name": "ML17_ep6",
+   "batch": "episodes",
+   "Fs_N": 1583.5056,
+   "lock_valve": "pilot_check",
+   "beta": 1370100000.0,
+   "windows": 1928
+  },
+  {
+   "name": "ML17_ep7",
+   "batch": "episodes",
+   "Fs_N": 1583.5056,
+   "lock_valve": "pilot_check",
+   "beta": 1370100000.0,
+   "windows": 884
+  },
+  {
+   "name": "ML18_ep0",
+   "batch": "episodes",
+   "Fs_N": 5168.912,
+   "lock_valve": "pilot_check",
+   "beta": 818700000.0,
+   "windows": 684
+  },
+  {
+   "name": "ML18_ep1",
+   "batch": "episodes",
+   "Fs_N": 5168.912,
+   "lock_valve": "pilot_check",
+   "beta": 818700000.0,
+   "windows": 204
+  },
+  {
+   "name": "ML18_ep2",
+   "batch": "episodes",
+   "Fs_N": 5168.912,
+   "lock_valve": "pilot_check",
+   "beta": 818700000.0,
+   "windows": 710
+  },
+  {
+   "name": "ML18_ep3",
+   "batch": "episodes",
+   "Fs_N": 5168.912,
+   "lock_valve": "pilot_check",
+   "beta": 818700000.0,
+   "windows": 990
+  },
+  {
+   "name": "ML18_ep4",
+   "batch": "episodes",
+   "Fs_N": 5168.912,
+   "lock_valve": "pilot_check",
+   "beta": 818700000.0,
+   "windows": 938
+  },
+  {
+   "name": "ML18_ep5",
+   "batch": "episodes",
+   "Fs_N": 5168.912,
+   "lock_valve": "pilot_check",
+   "beta": 818700000.0,
+   "windows": 1169
+  },
+  {
+   "name": "ML18_ep6",
+   "batch": "episodes",
+   "Fs_N": 5168.912,
+   "lock_valve": "pilot_check",
+   "beta": 818700000.0,
+   "windows": 946
+  },
+  {
+   "name": "ML18_ep7",
+   "batch": "episodes",
+   "Fs_N": 5168.912,
+   "lock_valve": "pilot_check",
+   "beta": 818700000.0,
+   "windows": 780
+  },
+  {
+   "name": "ML19_ep0",
+   "batch": "episodes",
+   "Fs_N": 4287.708,
+   "lock_valve": "pilot_check",
+   "beta": 1353500000.0,
+   "windows": 882
+  },
+  {
+   "name": "ML19_ep1",
+   "batch": "episodes",
+   "Fs_N": 4287.708,
+   "lock_valve": "pilot_check",
+   "beta": 1353500000.0,
+   "windows": 786
+  },
+  {
+   "name": "ML19_ep2",
+   "batch": "episodes",
+   "Fs_N": 4287.708,
+   "lock_valve": "pilot_check",
+   "beta": 1353500000.0,
+   "windows": 790
+  },
+  {
+   "name": "ML19_ep3",
+   "batch": "episodes",
+   "Fs_N": 4287.708,
+   "lock_valve": "pilot_check",
+   "beta": 1353500000.0,
+   "windows": 842
+  },
+  {
+   "name": "ML19_ep4",
+   "batch": "episodes",
+   "Fs_N": 4287.708,
+   "lock_valve": "pilot_check",
+   "beta": 1353500000.0,
+   "windows": 176
+  },
+  {
+   "name": "ML19_ep5",
+   "batch": "episodes",
+   "Fs_N": 4287.708,
+   "lock_valve": "pilot_check",
+   "beta": 1353500000.0,
+   "windows": 934
+  },
+  {
+   "name": "ML19_ep6",
+   "batch": "episodes",
+   "Fs_N": 4287.708,
+   "lock_valve": "pilot_check",
+   "beta": 1353500000.0,
+   "windows": 870
+  },
+  {
+   "name": "ML19_ep7",
+   "batch": "episodes",
+   "Fs_N": 4287.708,
+   "lock_valve": "pilot_check",
+   "beta": 1353500000.0,
+   "windows": 960
+  },
+  {
+   "name": "ML20_ep0",
+   "batch": "episodes",
+   "Fs_N": 467.0583169200001,
+   "lock_valve": "pilot_check",
+   "beta": 1063800000.0000001,
+   "windows": 628
+  },
+  {
+   "name": "ML20_ep1",
+   "batch": "episodes",
+   "Fs_N": 467.0583169200001,
+   "lock_valve": "pilot_check",
+   "beta": 1063800000.0000001,
+   "windows": 184
+  },
+  {
+   "name": "ML20_ep2",
+   "batch": "episodes",
+   "Fs_N": 467.0583169200001,
+   "lock_valve": "pilot_check",
+   "beta": 1063800000.0000001,
+   "windows": 2384
+  },
+  {
+   "name": "ML20_ep3",
+   "batch": "episodes",
+   "Fs_N": 467.0583169200001,
+   "lock_valve": "pilot_check",
+   "beta": 1063800000.0000001,
+   "windows": 642
+  },
+  {
+   "name": "ML20_ep4",
+   "batch": "episodes",
+   "Fs_N": 467.0583169200001,
+   "lock_valve": "pilot_check",
+   "beta": 1063800000.0000001,
+   "windows": 538
+  },
+  {
+   "name": "ML20_ep5",
+   "batch": "episodes",
+   "Fs_N": 467.0583169200001,
+   "lock_valve": "pilot_check",
+   "beta": 1063800000.0000001,
+   "windows": 388
+  },
+  {
+   "name": "ML20_ep6",
+   "batch": "episodes",
+   "Fs_N": 467.0583169200001,
+   "lock_valve": "pilot_check",
+   "beta": 1063800000.0000001,
+   "windows": 818
+  },
+  {
+   "name": "ML20_ep7",
+   "batch": "episodes",
+   "Fs_N": 467.0583169200001,
+   "lock_valve": "pilot_check",
+   "beta": 1063800000.0000001,
+   "windows": 1922
+  },
+  {
+   "name": "ML21_ep0",
+   "batch": "episodes",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 356
+  },
+  {
+   "name": "ML21_ep1",
+   "batch": "episodes",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 280
+  },
+  {
+   "name": "ML21_ep2",
+   "batch": "episodes",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 456
+  },
+  {
+   "name": "ML21_ep3",
+   "batch": "episodes",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 1388
+  },
+  {
+   "name": "ML21_ep4",
+   "batch": "episodes",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 1024
+  },
+  {
+   "name": "ML21_ep5",
+   "batch": "episodes",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 815
+  },
+  {
+   "name": "ML21_ep6",
+   "batch": "episodes",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 1934
+  },
+  {
+   "name": "ML21_ep7",
+   "batch": "episodes",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML22_ep0",
+   "batch": "episodes",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 1006
+  },
+  {
+   "name": "ML22_ep1",
+   "batch": "episodes",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 840
+  },
+  {
+   "name": "ML22_ep2",
+   "batch": "episodes",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML22_ep3",
+   "batch": "episodes",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 896
+  },
+  {
+   "name": "ML22_ep4",
+   "batch": "episodes",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 1092
+  },
+  {
+   "name": "ML22_ep5",
+   "batch": "episodes",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 1934
+  },
+  {
+   "name": "ML22_ep6",
+   "batch": "episodes",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 964
+  },
+  {
+   "name": "ML22_ep7",
+   "batch": "episodes",
+   "Fs_N": 2220.9044000000004,
+   "lock_valve": "pilot_check",
+   "beta": 1133400000.0,
+   "windows": 452
+  },
+  {
+   "name": "ML23_ep0",
+   "batch": "episodes",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML23_ep1",
+   "batch": "episodes",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 684
+  },
+  {
+   "name": "ML23_ep2",
+   "batch": "episodes",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML23_ep3",
+   "batch": "episodes",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 2384
+  },
+  {
+   "name": "ML23_ep4",
+   "batch": "episodes",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 1228
+  },
+  {
+   "name": "ML23_ep5",
+   "batch": "episodes",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 992
+  },
+  {
+   "name": "ML23_ep6",
+   "batch": "episodes",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 1938
+  },
+  {
+   "name": "ML23_ep7",
+   "batch": "episodes",
+   "Fs_N": 2823.9222,
+   "lock_valve": "pilot_check",
+   "beta": 953200000.0,
+   "windows": 802
+  }
+ ],
+ "summary": {
+  "n1_front_dh0.5-1bar": {
+   "count": 2426,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0015,
+    1.1106,
+    1.3821
+   ],
+   "Rsec/Rmodel truth min": 0.5207,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9998,
+    1.3185,
+    0.487
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9848,
+    Infinity,
+    -Infinity
+   ],
+   "excess_kN truth max": 0.234,
+   "excess_kN spring-head max(abs)": 0.2266,
+   "s_lock range": [
+    0.354,
+    0.648
+   ]
+  },
+  "n1_front_dh1-2bar": {
+   "count": 2049,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9996,
+    1.049,
+    1.1587
+   ],
+   "Rsec/Rmodel truth min": 0.6012,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9999,
+    1.1729,
+    0.7321
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9881,
+    5.3528,
+    0.0343
+   ],
+   "excess_kN truth max": 0.238,
+   "excess_kN spring-head max(abs)": 0.1759,
+   "s_lock range": [
+    0.354,
+    0.648
+   ]
+  },
+  "n1_front_dh2-5bar": {
+   "count": 260,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9995,
+    1.1726,
+    1.233
+   ],
+   "Rsec/Rmodel truth min": 0.669,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.123,
+    0.8468
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9867,
+    1.4881,
+    0.6335
+   ],
+   "excess_kN truth max": 0.998,
+   "excess_kN spring-head max(abs)": 0.7709,
+   "s_lock range": [
+    0.384,
+    0.648
+   ]
+  },
+  "n1_front_dh5-10bar": {
+   "count": 72,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.998,
+    1.0846,
+    1.0943
+   ],
+   "Rsec/Rmodel truth min": 0.9009,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0467,
+    0.9612
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0081,
+    1.1569,
+    0.859
+   ],
+   "excess_kN truth max": 0.73,
+   "excess_kN spring-head max(abs)": 0.3644,
+   "s_lock range": [
+    0.395,
+    0.61
+   ]
+  },
+  "n1_front_dh10-1e+09bar": {
+   "count": 127,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9992,
+    1.2533,
+    1.3229
+   ],
+   "Rsec/Rmodel truth min": 0.9339,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0437,
+    0.9778
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9954,
+    1.3015,
+    0.8981
+   ],
+   "excess_kN truth max": 1.932,
+   "excess_kN spring-head max(abs)": 0.5723,
+   "s_lock range": [
+    0.384,
+    0.615
+   ]
+  },
+  "n1_rear_dh0.5-1bar": {
+   "count": 1946,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0007,
+    1.1367,
+    1.4973
+   ],
+   "Rsec/Rmodel truth min": 0.3542,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9998,
+    1.6791,
+    0.3225
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9835,
+    Infinity,
+    -28.8734
+   ],
+   "excess_kN truth max": 0.252,
+   "excess_kN spring-head max(abs)": 0.2272,
+   "s_lock range": [
+    0.004,
+    0.671
+   ]
+  },
+  "n1_rear_dh1-2bar": {
+   "count": 2529,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0001,
+    1.0691,
+    1.3259
+   ],
+   "Rsec/Rmodel truth min": 0.6075,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.2402,
+    0.6367
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9931,
+    4.0238,
+    0.2603
+   ],
+   "excess_kN truth max": 0.177,
+   "excess_kN spring-head max(abs)": 0.225,
+   "s_lock range": [
+    0.344,
+    0.655
+   ]
+  },
+  "n1_rear_dh2-5bar": {
+   "count": 995,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9993,
+    1.0403,
+    1.8015
+   ],
+   "Rsec/Rmodel truth min": 0.8668,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.1175,
+    0.9112
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0056,
+    2.1176,
+    0.6417
+   ],
+   "excess_kN truth max": 0.996,
+   "excess_kN spring-head max(abs)": 0.2781,
+   "s_lock range": [
+    0.356,
+    0.651
+   ]
+  },
+  "n1_rear_dh5-10bar": {
+   "count": 73,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.997,
+    1.2198,
+    1.2403
+   ],
+   "Rsec/Rmodel truth min": 0.8698,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0001,
+    1.0632,
+    0.9326
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9929,
+    1.2913,
+    0.8777
+   ],
+   "excess_kN truth max": 2.18,
+   "excess_kN spring-head max(abs)": 0.5422,
+   "s_lock range": [
+    0.36,
+    0.651
+   ]
+  },
+  "n1_rear_dh10-1e+09bar": {
+   "count": 68,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0,
+    1.1117,
+    1.131
+   ],
+   "Rsec/Rmodel truth min": 0.8253,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9997,
+    1.0229,
+    0.9663
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9884,
+    1.1477,
+    0.7961
+   ],
+   "excess_kN truth max": 0.829,
+   "excess_kN spring-head max(abs)": 0.8687,
+   "s_lock range": [
+    0.344,
+    0.661
+   ]
+  },
+  "n3_front_dh0.5-1bar": {
+   "count": 1851,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0023,
+    1.0836,
+    2.1245
+   ],
+   "Rsec/Rmodel truth min": 0.3814,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9996,
+    1.125,
+    0.686
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9818,
+    Infinity,
+    -38.5718
+   ],
+   "excess_kN truth max": 1.053,
+   "excess_kN spring-head max(abs)": 0.4767,
+   "s_lock range": [
+    0.004,
+    0.648
+   ]
+  },
+  "n3_front_dh1-2bar": {
+   "count": 2529,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0014,
+    1.0475,
+    1.3205
+   ],
+   "Rsec/Rmodel truth min": 0.5873,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9999,
+    1.2681,
+    0.9057
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9997,
+    10.1563,
+    0.3088
+   ],
+   "excess_kN truth max": 0.226,
+   "excess_kN spring-head max(abs)": 0.2379,
+   "s_lock range": [
+    0.354,
+    0.648
+   ]
+  },
+  "n3_front_dh2-5bar": {
+   "count": 3231,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0004,
+    1.025,
+    1.2271
+   ],
+   "Rsec/Rmodel truth min": 0.8325,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0001,
+    1.1315,
+    0.956
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9988,
+    1.8068,
+    0.5517
+   ],
+   "excess_kN truth max": 0.58,
+   "excess_kN spring-head max(abs)": 0.2926,
+   "s_lock range": [
+    0.382,
+    0.648
+   ]
+  },
+  "n3_front_dh5-10bar": {
+   "count": 252,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.999,
+    1.1252,
+    1.3402
+   ],
+   "Rsec/Rmodel truth min": 0.8667,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9999,
+    1.0384,
+    0.9183
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0013,
+    1.3751,
+    0.8048
+   ],
+   "excess_kN truth max": 2.01,
+   "excess_kN spring-head max(abs)": 0.7497,
+   "s_lock range": [
+    0.384,
+    0.648
+   ]
+  },
+  "n3_front_dh10-1e+09bar": {
+   "count": 203,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9974,
+    1.0368,
+    1.1033
+   ],
+   "Rsec/Rmodel truth min": 0.8951,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0245,
+    0.9701
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.994,
+    1.1249,
+    0.8722
+   ],
+   "excess_kN truth max": 1.062,
+   "excess_kN spring-head max(abs)": 0.572,
+   "s_lock range": [
+    0.384,
+    0.615
+   ]
+  },
+  "n3_rear_dh0.5-1bar": {
+   "count": 1457,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0026,
+    1.1255,
+    1.2734
+   ],
+   "Rsec/Rmodel truth min": 0.3022,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.7589,
+    0.3169
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0035,
+    Infinity,
+    -26.2381
+   ],
+   "excess_kN truth max": 0.266,
+   "excess_kN spring-head max(abs)": 0.2301,
+   "s_lock range": [
+    0.004,
+    0.671
+   ]
+  },
+  "n3_rear_dh1-2bar": {
+   "count": 2076,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0017,
+    1.0715,
+    1.3165
+   ],
+   "Rsec/Rmodel truth min": 0.6672,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.3455,
+    0.8544
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.986,
+    3.5645,
+    0.351
+   ],
+   "excess_kN truth max": 0.311,
+   "excess_kN spring-head max(abs)": 0.3163,
+   "s_lock range": [
+    0.356,
+    0.671
+   ]
+  },
+  "n3_rear_dh2-5bar": {
+   "count": 3212,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0004,
+    1.0336,
+    1.0916
+   ],
+   "Rsec/Rmodel truth min": 0.8209,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9999,
+    1.1138,
+    0.958
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.994,
+    1.6603,
+    0.6541
+   ],
+   "excess_kN truth max": 0.196,
+   "excess_kN spring-head max(abs)": 0.6486,
+   "s_lock range": [
+    0.344,
+    0.671
+   ]
+  },
+  "n3_rear_dh5-10bar": {
+   "count": 1166,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9998,
+    1.017,
+    1.2667
+   ],
+   "Rsec/Rmodel truth min": 0.8699,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0001,
+    1.0473,
+    0.9482
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.995,
+    1.2275,
+    0.8047
+   ],
+   "excess_kN truth max": 5.743,
+   "excess_kN spring-head max(abs)": 0.669,
+   "s_lock range": [
+    0.344,
+    0.661
+   ]
+  },
+  "n3_rear_dh10-1e+09bar": {
+   "count": 169,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9962,
+    1.0214,
+    1.0256
+   ],
+   "Rsec/Rmodel truth min": 0.8977,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9998,
+    1.0134,
+    0.9632
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9924,
+    1.0782,
+    0.8929
+   ],
+   "excess_kN truth max": 0.664,
+   "excess_kN spring-head max(abs)": 0.5395,
+   "s_lock range": [
+    0.344,
+    0.661
+   ]
+  }
+ },
+ "worst_excess_n3_dh_ge1bar": [
+  {
+   "excess_kN": 5.743,
+   "case": "ML02_ep5",
+   "leg": 2,
+   "s_lock": 0.6615,
+   "R_model": 8.318,
+   "dh_bar": 8.24,
+   "dr_bar": 86.827,
+   "dh_spring_bar": 10.694
+  },
+  {
+   "excess_kN": 5.743,
+   "case": "ML02_ep5",
+   "leg": 2,
+   "s_lock": 0.6615,
+   "R_model": 8.318,
+   "dh_bar": 8.24,
+   "dr_bar": 86.827,
+   "dh_spring_bar": 10.694
+  },
+  {
+   "excess_kN": 2.01,
+   "case": "ML02_ep1",
+   "leg": 0,
+   "s_lock": 0.4376,
+   "R_model": 1.576,
+   "dh_bar": 9.945,
+   "dr_bar": 21.0,
+   "dh_spring_bar": 13.193
+  },
+  {
+   "excess_kN": 2.01,
+   "case": "ML02_ep1",
+   "leg": 0,
+   "s_lock": 0.4376,
+   "R_model": 1.576,
+   "dh_bar": 9.945,
+   "dr_bar": 21.0,
+   "dh_spring_bar": 13.193
+  },
+  {
+   "excess_kN": 1.062,
+   "case": "ML00_ep5",
+   "leg": 1,
+   "s_lock": 0.5003,
+   "R_model": 2.334,
+   "dh_bar": 51.342,
+   "dr_bar": 122.64,
+   "dh_spring_bar": 52.634
+  },
+  {
+   "excess_kN": 1.045,
+   "case": "ML17_ep4",
+   "leg": 1,
+   "s_lock": 0.5519,
+   "R_model": 2.954,
+   "dh_bar": 7.499,
+   "dr_bar": 24.925,
+   "dh_spring_bar": 8.126
+  },
+  {
+   "excess_kN": 1.045,
+   "case": "ML17_ep4",
+   "leg": 1,
+   "s_lock": 0.5519,
+   "R_model": 2.954,
+   "dh_bar": 7.499,
+   "dr_bar": 24.925,
+   "dh_spring_bar": 8.126
+  },
+  {
+   "excess_kN": 1.006,
+   "case": "ML00_ep5",
+   "leg": 1,
+   "s_lock": 0.5003,
+   "R_model": 2.334,
+   "dh_bar": 11.065,
+   "dr_bar": 28.492,
+   "dh_spring_bar": 12.06
+  },
+  {
+   "excess_kN": 0.844,
+   "case": "ML22_ep0",
+   "leg": 0,
+   "s_lock": 0.6155,
+   "R_model": 6.159,
+   "dh_bar": 9.369,
+   "dr_bar": 59.949,
+   "dh_spring_bar": 9.41
+  },
+  {
+   "excess_kN": 0.844,
+   "case": "ML22_ep0",
+   "leg": 0,
+   "s_lock": 0.6155,
+   "R_model": 6.159,
+   "dh_bar": 9.369,
+   "dr_bar": 59.949,
+   "dh_spring_bar": 9.41
+  },
+  {
+   "excess_kN": 0.833,
+   "case": "ML00_ep5",
+   "leg": 1,
+   "s_lock": 0.5003,
+   "R_model": 2.334,
+   "dh_bar": 33.77,
+   "dr_bar": 81.024,
+   "dh_spring_bar": 34.793
+  },
+  {
+   "excess_kN": 0.778,
+   "case": "ML02_ep1",
+   "leg": 0,
+   "s_lock": 0.4376,
+   "R_model": 1.576,
+   "dh_bar": 37.293,
+   "dr_bar": 60.824,
+   "dh_spring_bar": 38.583
+  },
+  {
+   "excess_kN": 0.778,
+   "case": "ML02_ep1",
+   "leg": 0,
+   "s_lock": 0.4376,
+   "R_model": 1.576,
+   "dh_bar": 37.293,
+   "dr_bar": 60.824,
+   "dh_spring_bar": 38.583
+  },
+  {
+   "excess_kN": 0.772,
+   "case": "ML00_ep5",
+   "leg": 1,
+   "s_lock": 0.5003,
+   "R_model": 2.334,
+   "dh_bar": 34.923,
+   "dr_bar": 83.553,
+   "dh_spring_bar": 35.768
+  },
+  {
+   "excess_kN": 0.734,
+   "case": "ML00_ep5",
+   "leg": 1,
+   "s_lock": 0.5003,
+   "R_model": 2.334,
+   "dh_bar": 9.798,
+   "dr_bar": 24.813,
+   "dh_spring_bar": 10.569
+  }
+ ],
+ "case_groups": {
+  "(False, 'pilot_check', 1305800000.0)": 18,
+  "(True, 'pilot_check', 1316200000.0)": 17,
+  "(True, 'pilot_check', 1043400000.0000001)": 17,
+  "(True, 'pilot_check', 1230100000.0)": 11,
+  "(True, 'pilot_check', 892100000.0)": 9,
+  "(True, 'pilot_check', 794400000.0)": 9,
+  "(True, 'pilot_check', 924800000.0)": 9,
+  "(True, 'pilot_check', 1399300000.0)": 9,
+  "(True, 'pilot_check', 1042700000.0)": 10,
+  "(True, 'pilot_check', 1293200000.0)": 9,
+  "(True, 'pilot_check', 758800000.0)": 10,
+  "(True, 'pilot_check', 1147400000.0)": 10,
+  "(True, 'pilot_check', 1011500000.0000001)": 9,
+  "(True, 'pilot_check', 1550200000.0)": 9,
+  "(True, 'pilot_check', 1322400000.0)": 9,
+  "(True, 'pilot_check', 1380400000.0)": 9,
+  "(True, 'pilot_check', 957300000.0)": 9,
+  "(True, 'pilot_check', 1370100000.0)": 10,
+  "(True, 'pilot_check', 818700000.0)": 10,
+  "(True, 'pilot_check', 1353500000.0)": 9,
+  "(True, 'pilot_check', 1063800000.0000001)": 9,
+  "(True, 'pilot_check', 1467100000.0)": 16,
+  "(True, 'pilot_check', 1133400000.0)": 17,
+  "(True, 'pilot_check', 953200000.0)": 17
+ }
+}

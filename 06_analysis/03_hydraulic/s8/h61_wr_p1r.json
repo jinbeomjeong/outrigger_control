@@ -1,0 +1,959 @@
+{
+ "cases": 37,
+ "by_case_meta": [
+  {
+   "name": "E_G4_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 3186
+  },
+  {
+   "name": "E_G4_Fs0_ph0.05",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 3190
+  },
+  {
+   "name": "E_G4_Fs2",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 2000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 3192
+  },
+  {
+   "name": "E_G4_Fs2_ph0.05",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 2000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 3192
+  },
+  {
+   "name": "E_G4_Fs4",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 4000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 3204
+  },
+  {
+   "name": "E_G4_Fs4_ph0.05",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 4000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 3218
+  },
+  {
+   "name": "E_G4_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 3108
+  },
+  {
+   "name": "E_G4_Fs8_ph0.05",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 3100
+  },
+  {
+   "name": "E_HOLD120_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 10188
+  },
+  {
+   "name": "E_RE1bF_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 3015
+  },
+  {
+   "name": "E_RE1bF_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 2984
+  },
+  {
+   "name": "E_RE1bP_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 2200
+  },
+  {
+   "name": "E_RE1bP_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 2234
+  },
+  {
+   "name": "E_SS_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 2410
+  },
+  {
+   "name": "E_SS_Fs4",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 4000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 2496
+  },
+  {
+   "name": "E_SS_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 2502
+  },
+  {
+   "name": "K0_top_fdown3.2_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1785
+  },
+  {
+   "name": "K0_top_fup3.2_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1424
+  },
+  {
+   "name": "K0_top_roll4.4_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1346
+  },
+  {
+   "name": "K0_top_rpBop_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1391
+  },
+  {
+   "name": "K0V_top_fdown3.5_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1785
+  },
+  {
+   "name": "K0V_top_flat_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1344
+  },
+  {
+   "name": "K0V_top_fup3.5_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1458
+  },
+  {
+   "name": "K0V_top_roll5.5_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1342
+  },
+  {
+   "name": "K0V_top_rpB_Fs0",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1430
+  },
+  {
+   "name": "K8_top_fdown3.2_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1884
+  },
+  {
+   "name": "K8_top_fdown3.5_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1878
+  },
+  {
+   "name": "K8_top_flat_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1388
+  },
+  {
+   "name": "K8_top_fup3.2_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1460
+  },
+  {
+   "name": "K8_top_fup3.5_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1482
+  },
+  {
+   "name": "K8_top_roll4.4_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1392
+  },
+  {
+   "name": "K8_top_roll5.5_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1355
+  },
+  {
+   "name": "K8_top_rpB_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1476
+  },
+  {
+   "name": "K8_top_rpBop_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1468
+  },
+  {
+   "name": "N_D8_top_rpB_Fs8_pressure",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 874
+  },
+  {
+   "name": "S_top_fdown3.5_wika_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1862
+  },
+  {
+   "name": "S_top_rpB_wika_Fs8",
+   "batch": "p1r_20261024_222013",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 1480
+  }
+ ],
+ "summary": {
+  "n1_front_dh0.5-1bar": {
+   "count": 540,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0015,
+    1.0919,
+    1.1457
+   ],
+   "Rsec/Rmodel truth min": 0.6072,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.1229,
+    0.7056
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0017,
+    2.0058,
+    0.5553
+   ],
+   "excess_kN truth max": 0.236,
+   "excess_kN spring-head max(abs)": 0.2349,
+   "s_lock range": [
+    0.0,
+    0.667
+   ]
+  },
+  "n1_front_dh1-2bar": {
+   "count": 392,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0005,
+    1.0362,
+    1.054
+   ],
+   "Rsec/Rmodel truth min": 0.926,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0465,
+    0.9372
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0007,
+    2.6814,
+    0.926
+   ],
+   "excess_kN truth max": 0.066,
+   "excess_kN spring-head max(abs)": 0.1163,
+   "s_lock range": [
+    0.355,
+    0.666
+   ]
+  },
+  "n1_front_dh2-5bar": {
+   "count": 72,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9972,
+    1.0747,
+    1.0977
+   ],
+   "Rsec/Rmodel truth min": 0.9761,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9998,
+    1.0175,
+    0.9756
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9972,
+    1.0977,
+    0.9761
+   ],
+   "excess_kN truth max": 0.089,
+   "excess_kN spring-head max(abs)": 0.0298,
+   "s_lock range": [
+    0.354,
+    0.412
+   ]
+  },
+  "n1_front_dh5-10bar": {
+   "count": 1,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.8686,
+    0.8686,
+    0.8686
+   ],
+   "Rsec/Rmodel truth min": 0.8686,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.8686,
+    0.8686,
+    0.8686
+   ],
+   "excess_kN truth max": -0.587,
+   "excess_kN spring-head max(abs)": 0.0002,
+   "s_lock range": [
+    0.406,
+    0.406
+   ]
+  },
+  "n1_front_dh10-1e+09bar": {
+   "count": 3,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0072,
+    1.0254,
+    1.0258
+   ],
+   "Rsec/Rmodel truth min": 0.9407,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9918,
+    1.0016,
+    0.9788
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0072,
+    1.0258,
+    0.9407
+   ],
+   "excess_kN truth max": 0.395,
+   "excess_kN spring-head max(abs)": 0.1546,
+   "s_lock range": [
+    0.406,
+    0.406
+   ]
+  },
+  "n1_rear_dh0.5-1bar": {
+   "count": 401,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0004,
+    1.1252,
+    1.3208
+   ],
+   "Rsec/Rmodel truth min": 0.2907,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9999,
+    1.2212,
+    0.292
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0004,
+    6.1521,
+    0.2907
+   ],
+   "excess_kN truth max": 0.286,
+   "excess_kN spring-head max(abs)": 0.3223,
+   "s_lock range": [
+    0.0,
+    0.666
+   ]
+  },
+  "n1_rear_dh1-2bar": {
+   "count": 522,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0002,
+    1.0677,
+    1.1668
+   ],
+   "Rsec/Rmodel truth min": 0.8444,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9998,
+    1.0841,
+    0.9206
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0002,
+    1.5413,
+    0.5585
+   ],
+   "excess_kN truth max": 0.073,
+   "excess_kN spring-head max(abs)": 0.1154,
+   "s_lock range": [
+    0.345,
+    0.666
+   ]
+  },
+  "n1_rear_dh2-5bar": {
+   "count": 184,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9976,
+    1.041,
+    1.123
+   ],
+   "Rsec/Rmodel truth min": 0.9558,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0465,
+    0.968
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9979,
+    1.3493,
+    0.8498
+   ],
+   "excess_kN truth max": 0.086,
+   "excess_kN spring-head max(abs)": 0.0312,
+   "s_lock range": [
+    0.345,
+    0.497
+   ]
+  },
+  "n1_rear_dh5-10bar": {
+   "count": 14,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9998,
+    1.0453,
+    1.0499
+   ],
+   "Rsec/Rmodel truth min": 0.9883,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0004,
+    1.0074,
+    0.9863
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9998,
+    1.0499,
+    0.9883
+   ],
+   "excess_kN truth max": 0.129,
+   "excess_kN spring-head max(abs)": 0.0276,
+   "s_lock range": [
+    0.345,
+    0.395
+   ]
+  },
+  "n1_rear_dh10-1e+09bar": {
+   "count": 3,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9966,
+    1.0248,
+    1.0254
+   ],
+   "Rsec/Rmodel truth min": 0.9962,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9959,
+    0.9994,
+    0.9955
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9966,
+    1.0254,
+    0.9962
+   ],
+   "excess_kN truth max": 0.081,
+   "excess_kN spring-head max(abs)": 0.095,
+   "s_lock range": [
+    0.345,
+    0.395
+   ]
+  },
+  "n3_front_dh0.5-1bar": {
+   "count": 657,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9999,
+    1.0927,
+    1.1387
+   ],
+   "Rsec/Rmodel truth min": 0.4412,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.1268,
+    0.4413
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9998,
+    2.0631,
+    0.4412
+   ],
+   "excess_kN truth max": 0.253,
+   "excess_kN spring-head max(abs)": 0.1893,
+   "s_lock range": [
+    0.0,
+    0.667
+   ]
+  },
+  "n3_front_dh1-2bar": {
+   "count": 578,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0005,
+    1.0486,
+    1.0611
+   ],
+   "Rsec/Rmodel truth min": 0.9384,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0596,
+    0.9372
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0004,
+    1.744,
+    0.7588
+   ],
+   "excess_kN truth max": 0.274,
+   "excess_kN spring-head max(abs)": 0.2428,
+   "s_lock range": [
+    0.355,
+    0.667
+   ]
+  },
+  "n3_front_dh2-5bar": {
+   "count": 589,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9999,
+    1.0202,
+    1.0296
+   ],
+   "Rsec/Rmodel truth min": 0.9731,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0277,
+    0.9716
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9999,
+    1.1617,
+    0.9436
+   ],
+   "excess_kN truth max": 0.14,
+   "excess_kN spring-head max(abs)": 0.1553,
+   "s_lock range": [
+    0.377,
+    0.663
+   ]
+  },
+  "n3_front_dh5-10bar": {
+   "count": 56,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9973,
+    1.005,
+    1.0074
+   ],
+   "Rsec/Rmodel truth min": 0.8951,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.04,
+    0.989
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9973,
+    1.0074,
+    0.8951
+   ],
+   "excess_kN truth max": 0.021,
+   "excess_kN spring-head max(abs)": 0.1455,
+   "s_lock range": [
+    0.405,
+    0.412
+   ]
+  },
+  "n3_front_dh10-1e+09bar": {
+   "count": 10,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9973,
+    0.999,
+    0.999
+   ],
+   "Rsec/Rmodel truth min": 0.9407,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9985,
+    1.0012,
+    0.9788
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9973,
+    0.999,
+    0.9407
+   ],
+   "excess_kN truth max": -0.005,
+   "excess_kN spring-head max(abs)": 0.1545,
+   "s_lock range": [
+    0.406,
+    0.406
+   ]
+  },
+  "n3_rear_dh0.5-1bar": {
+   "count": 407,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.002,
+    1.1036,
+    1.2857
+   ],
+   "Rsec/Rmodel truth min": 0.0271,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0001,
+    1.0883,
+    0.3764
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0021,
+    6.5869,
+    0.0271
+   ],
+   "excess_kN truth max": 0.148,
+   "excess_kN spring-head max(abs)": 0.3828,
+   "s_lock range": [
+    0.0,
+    0.666
+   ]
+  },
+  "n3_rear_dh1-2bar": {
+   "count": 490,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0011,
+    1.0725,
+    1.2725
+   ],
+   "Rsec/Rmodel truth min": 0.9124,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0001,
+    1.1467,
+    0.9295
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0012,
+    1.3885,
+    0.6165
+   ],
+   "excess_kN truth max": 0.478,
+   "excess_kN spring-head max(abs)": 0.4378,
+   "s_lock range": [
+    0.344,
+    0.666
+   ]
+  },
+  "n3_rear_dh2-5bar": {
+   "count": 633,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0035,
+    1.0295,
+    1.0386
+   ],
+   "Rsec/Rmodel truth min": 0.94,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0399,
+    0.9668
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0036,
+    1.1271,
+    0.8053
+   ],
+   "excess_kN truth max": 0.149,
+   "excess_kN spring-head max(abs)": 0.1766,
+   "s_lock range": [
+    0.344,
+    0.647
+   ]
+  },
+  "n3_rear_dh5-10bar": {
+   "count": 158,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9981,
+    1.0183,
+    1.039
+   ],
+   "Rsec/Rmodel truth min": 0.9785,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0151,
+    0.9853
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9981,
+    1.078,
+    0.8801
+   ],
+   "excess_kN truth max": 0.064,
+   "excess_kN spring-head max(abs)": 0.0332,
+   "s_lock range": [
+    0.345,
+    0.482
+   ]
+  },
+  "n3_rear_dh10-1e+09bar": {
+   "count": 31,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9986,
+    1.002,
+    1.0021
+   ],
+   "Rsec/Rmodel truth min": 0.9924,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0036,
+    0.9944
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9986,
+    1.0021,
+    0.9924
+   ],
+   "excess_kN truth max": 0.043,
+   "excess_kN spring-head max(abs)": 0.0798,
+   "s_lock range": [
+    0.395,
+    0.395
+   ]
+  }
+ },
+ "worst_excess_n3_dh_ge1bar": [
+  {
+   "excess_kN": 0.478,
+   "case": "K0V_top_fup3.5_Fs0",
+   "leg": 2,
+   "s_lock": 0.6654,
+   "R_model": 8.456,
+   "dh_bar": 1.108,
+   "dr_bar": 10.891,
+   "dh_spring_bar": 1.123
+  },
+  {
+   "excess_kN": 0.274,
+   "case": "K0V_top_rpB_Fs0",
+   "leg": 1,
+   "s_lock": 0.6628,
+   "R_model": 8.175,
+   "dh_bar": 1.518,
+   "dr_bar": 13.135,
+   "dh_spring_bar": 1.528
+  },
+  {
+   "excess_kN": 0.202,
+   "case": "K0V_top_roll5.5_Fs0",
+   "leg": 1,
+   "s_lock": 0.6662,
+   "R_model": 8.549,
+   "dh_bar": 1.854,
+   "dr_bar": 16.384,
+   "dh_spring_bar": 1.844
+  },
+  {
+   "excess_kN": 0.198,
+   "case": "K0V_top_fdown3.5_Fs0",
+   "leg": 1,
+   "s_lock": 0.6603,
+   "R_model": 7.919,
+   "dh_bar": 1.73,
+   "dr_bar": 14.224,
+   "dh_spring_bar": 1.736
+  },
+  {
+   "excess_kN": 0.179,
+   "case": "K0V_top_fdown3.5_Fs0",
+   "leg": 0,
+   "s_lock": 0.6604,
+   "R_model": 7.93,
+   "dh_bar": 1.854,
+   "dr_bar": 15.175,
+   "dh_spring_bar": 1.852
+  },
+  {
+   "excess_kN": 0.165,
+   "case": "K8_top_rpB_Fs8",
+   "leg": 1,
+   "s_lock": 0.6632,
+   "R_model": 8.22,
+   "dh_bar": 1.441,
+   "dr_bar": 12.287,
+   "dh_spring_bar": 1.466
+  },
+  {
+   "excess_kN": 0.156,
+   "case": "K0_top_rpBop_Fs0",
+   "leg": 2,
+   "s_lock": 0.3447,
+   "R_model": 0.974,
+   "dh_bar": 1.914,
+   "dr_bar": 2.361,
+   "dh_spring_bar": 2.413
+  },
+  {
+   "excess_kN": 0.149,
+   "case": "K0_top_fup3.2_Fs0",
+   "leg": 2,
+   "s_lock": 0.6422,
+   "R_model": 6.42,
+   "dh_bar": 2.073,
+   "dr_bar": 13.782,
+   "dh_spring_bar": 2.109
+  },
+  {
+   "excess_kN": 0.14,
+   "case": "K0_top_roll4.4_Fs0",
+   "leg": 1,
+   "s_lock": 0.6139,
+   "R_model": 4.877,
+   "dh_bar": 2.575,
+   "dr_bar": 12.932,
+   "dh_spring_bar": 2.58
+  },
+  {
+   "excess_kN": 0.139,
+   "case": "K0V_top_fup3.5_Fs0",
+   "leg": 2,
+   "s_lock": 0.6654,
+   "R_model": 8.456,
+   "dh_bar": 1.702,
+   "dr_bar": 14.836,
+   "dh_spring_bar": 1.733
+  },
+  {
+   "excess_kN": 0.139,
+   "case": "K8_top_roll5.5_Fs8",
+   "leg": 1,
+   "s_lock": 0.6667,
+   "R_model": 8.6,
+   "dh_bar": 1.609,
+   "dr_bar": 14.204,
+   "dh_spring_bar": 1.619
+  },
+  {
+   "excess_kN": 0.138,
+   "case": "K0_top_fdown3.2_Fs0",
+   "leg": 0,
+   "s_lock": 0.6386,
+   "R_model": 6.185,
+   "dh_bar": 1.888,
+   "dr_bar": 12.04,
+   "dh_spring_bar": 1.903
+  },
+  {
+   "excess_kN": 0.135,
+   "case": "K0V_top_fup3.5_Fs0",
+   "leg": 3,
+   "s_lock": 0.6653,
+   "R_model": 8.446,
+   "dh_bar": 1.285,
+   "dr_bar": 11.283,
+   "dh_spring_bar": 1.296
+  },
+  {
+   "excess_kN": 0.135,
+   "case": "K0V_top_fdown3.5_Fs0",
+   "leg": 0,
+   "s_lock": 0.6604,
+   "R_model": 7.93,
+   "dh_bar": 1.371,
+   "dr_bar": 11.23,
+   "dh_spring_bar": 1.38
+  },
+  {
+   "excess_kN": 0.113,
+   "case": "K0V_top_fdown3.5_Fs0",
+   "leg": 0,
+   "s_lock": 0.6604,
+   "R_model": 7.93,
+   "dh_bar": 1.101,
+   "dr_bar": 9.035,
+   "dh_spring_bar": 1.102
+  }
+ ],
+ "case_groups": {
+  "(False, 'pilot_check', 1000000000.0)": 14,
+  "(True, 'pilot_check', 1000000000.0)": 23
+ }
+}

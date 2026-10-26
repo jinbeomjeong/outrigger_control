@@ -1,0 +1,847 @@
+{
+ "cases": 21,
+ "by_case_meta": [
+  {
+   "name": "E_RE1bF_Fs0",
+   "batch": "C_gate",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 3015
+  },
+  {
+   "name": "E_RE1bP_Fs0",
+   "batch": "C_gate",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 2200
+  },
+  {
+   "name": "MLJ_FS24_Fs0",
+   "batch": "D_fs24",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 2802
+  },
+  {
+   "name": "MLJ_FS24_Fs8",
+   "batch": "D_fs24",
+   "Fs_N": 8000.0,
+   "lock_valve": "pilot_check",
+   "beta": 1000000000.0,
+   "windows": 3210
+  },
+  {
+   "name": "ML00_ep5",
+   "batch": "episodes",
+   "Fs_N": 0.0,
+   "lock_valve": "pilot_check",
+   "beta": 1305800000.0,
+   "windows": 746
+  },
+  {
+   "name": "ML10_ep0",
+   "batch": "episodes",
+   "Fs_N": 5393.0274,
+   "lock_valve": "pilot_check",
+   "beta": 758800000.0,
+   "windows": 978
+  },
+  {
+   "name": "ML21_ep1",
+   "batch": "episodes",
+   "Fs_N": 5356.4988,
+   "lock_valve": "pilot_check",
+   "beta": 1467100000.0,
+   "windows": 1010
+  },
+  {
+   "name": "ML24_ep6",
+   "batch": "episodes",
+   "Fs_N": 2947.3296,
+   "lock_valve": "pilot_check",
+   "beta": 784200000.0,
+   "windows": 959
+  },
+  {
+   "name": "ML25_ep7",
+   "batch": "episodes",
+   "Fs_N": 657.8572,
+   "lock_valve": "pilot_check",
+   "beta": 1228400000.0,
+   "windows": 840
+  },
+  {
+   "name": "ML33_ep4",
+   "batch": "episodes",
+   "Fs_N": 7119.8435,
+   "lock_valve": "pilot_check",
+   "beta": 1440900000.0,
+   "windows": 888
+  },
+  {
+   "name": "ML34_ep7",
+   "batch": "episodes",
+   "Fs_N": 6149.532,
+   "lock_valve": "pilot_check",
+   "beta": 1537900000.0,
+   "windows": 988
+  },
+  {
+   "name": "ML39_ep5",
+   "batch": "episodes",
+   "Fs_N": 5599.5546,
+   "lock_valve": "pilot_check",
+   "beta": 899900000.0,
+   "windows": 726
+  },
+  {
+   "name": "ML42_ep6",
+   "batch": "episodes",
+   "Fs_N": 411.59999999999997,
+   "lock_valve": "pilot_check",
+   "beta": 1258100000.0,
+   "windows": 977
+  },
+  {
+   "name": "ML51_ep4",
+   "batch": "episodes",
+   "Fs_N": 3715.9674999999997,
+   "lock_valve": "pilot_check",
+   "beta": 974300000.0,
+   "windows": 889
+  },
+  {
+   "name": "ML54_ep0",
+   "batch": "episodes",
+   "Fs_N": 554.442,
+   "lock_valve": "pilot_check",
+   "beta": 794400000.0,
+   "windows": 891
+  },
+  {
+   "name": "ML59_ep7",
+   "batch": "episodes",
+   "Fs_N": 3569.1605,
+   "lock_valve": "pilot_check",
+   "beta": 709800000.0,
+   "windows": 277
+  },
+  {
+   "name": "ML71_ep6",
+   "batch": "episodes",
+   "Fs_N": 2099.0724,
+   "lock_valve": "pilot_check",
+   "beta": 1016200000.0,
+   "windows": 650
+  },
+  {
+   "name": "ML81_ep5",
+   "batch": "episodes",
+   "Fs_N": 2664.493,
+   "lock_valve": "pilot_check",
+   "beta": 1131800000.0,
+   "windows": 978
+  },
+  {
+   "name": "ML87_ep1",
+   "batch": "episodes",
+   "Fs_N": 3006.7414999999996,
+   "lock_valve": "pilot_check",
+   "beta": 783600000.0,
+   "windows": 365
+  },
+  {
+   "name": "ML87_ep5",
+   "batch": "episodes",
+   "Fs_N": 3006.7414999999996,
+   "lock_valve": "pilot_check",
+   "beta": 783600000.0,
+   "windows": 351
+  },
+  {
+   "name": "ML89_ep0",
+   "batch": "episodes",
+   "Fs_N": 1295.085,
+   "lock_valve": "pilot_check",
+   "beta": 1096100000.0,
+   "windows": 678
+  }
+ ],
+ "summary": {
+  "n1_front_dh0.5-1bar": {
+   "count": 299,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0012,
+    1.0764,
+    1.1237
+   ],
+   "Rsec/Rmodel truth min": 0.3915,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9997,
+    1.0989,
+    0.3917
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9955,
+    19.189,
+    -5.2723
+   ],
+   "excess_kN truth max": 0.071,
+   "excess_kN spring-head max(abs)": 0.1545,
+   "s_lock range": [
+    0.375,
+    0.604
+   ]
+  },
+  "n1_front_dh1-2bar": {
+   "count": 221,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9993,
+    1.0424,
+    1.052
+   ],
+   "Rsec/Rmodel truth min": 0.9385,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0444,
+    0.9381
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0,
+    3.4719,
+    0.5271
+   ],
+   "excess_kN truth max": 0.036,
+   "excess_kN spring-head max(abs)": 0.0608,
+   "s_lock range": [
+    0.375,
+    0.583
+   ]
+  },
+  "n1_front_dh2-5bar": {
+   "count": 20,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0039,
+    1.4403,
+    1.4605
+   ],
+   "Rsec/Rmodel truth min": 0.9848,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9997,
+    1.014,
+    0.9846
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.004,
+    1.3542,
+    0.7983
+   ],
+   "excess_kN truth max": 0.998,
+   "excess_kN spring-head max(abs)": 0.2358,
+   "s_lock range": [
+    0.389,
+    0.515
+   ]
+  },
+  "n1_front_dh5-10bar": {
+   "count": 5,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0469,
+    1.1184,
+    1.1213
+   ],
+   "Rsec/Rmodel truth min": 0.8686,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9848,
+    1.0467,
+    0.9815
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0286,
+    1.1213,
+    0.8686
+   ],
+   "excess_kN truth max": 0.574,
+   "excess_kN spring-head max(abs)": 0.1254,
+   "s_lock range": [
+    0.385,
+    0.547
+   ]
+  },
+  "n1_front_dh10-1e+09bar": {
+   "count": 24,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.999,
+    1.0249,
+    1.0258
+   ],
+   "Rsec/Rmodel truth min": 0.9635,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0002,
+    1.021,
+    0.9918
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9951,
+    1.038,
+    0.944
+   ],
+   "excess_kN truth max": 0.511,
+   "excess_kN spring-head max(abs)": 0.3289,
+   "s_lock range": [
+    0.379,
+    0.564
+   ]
+  },
+  "n1_rear_dh0.5-1bar": {
+   "count": 247,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0044,
+    1.119,
+    1.2572
+   ],
+   "Rsec/Rmodel truth min": 0.0059,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0001,
+    1.1903,
+    0.0059
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9991,
+    5.6493,
+    -11.598
+   ],
+   "excess_kN truth max": 0.134,
+   "excess_kN spring-head max(abs)": 0.3143,
+   "s_lock range": [
+    0.373,
+    0.664
+   ]
+  },
+  "n1_rear_dh1-2bar": {
+   "count": 269,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0004,
+    1.0482,
+    1.0635
+   ],
+   "Rsec/Rmodel truth min": 0.9337,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9997,
+    1.068,
+    0.9448
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0041,
+    2.2069,
+    0.5944
+   ],
+   "excess_kN truth max": 0.132,
+   "excess_kN spring-head max(abs)": 0.1067,
+   "s_lock range": [
+    0.373,
+    0.664
+   ]
+  },
+  "n1_rear_dh2-5bar": {
+   "count": 58,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0011,
+    1.0273,
+    1.0322
+   ],
+   "Rsec/Rmodel truth min": 0.9663,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0001,
+    1.0611,
+    0.9797
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0006,
+    1.5106,
+    0.7311
+   ],
+   "excess_kN truth max": 0.027,
+   "excess_kN spring-head max(abs)": 0.0698,
+   "s_lock range": [
+    0.373,
+    0.628
+   ]
+  },
+  "n1_rear_dh5-10bar": {
+   "count": 4,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9516,
+    1.0247,
+    1.0264
+   ],
+   "Rsec/Rmodel truth min": 0.9325,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0091,
+    1.0943,
+    0.9963
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9982,
+    1.0437,
+    0.949
+   ],
+   "excess_kN truth max": 0.148,
+   "excess_kN spring-head max(abs)": 0.4942,
+   "s_lock range": [
+    0.5,
+    0.616
+   ]
+  },
+  "n1_rear_dh10-1e+09bar": {
+   "count": 13,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9987,
+    1.0299,
+    1.0308
+   ],
+   "Rsec/Rmodel truth min": 0.9601,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9961,
+    1.006,
+    0.9799
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0121,
+    1.0433,
+    0.9644
+   ],
+   "excess_kN truth max": 1.418,
+   "excess_kN spring-head max(abs)": 0.4776,
+   "s_lock range": [
+    0.395,
+    0.651
+   ]
+  },
+  "n3_front_dh0.5-1bar": {
+   "count": 203,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.002,
+    1.0797,
+    1.1044
+   ],
+   "Rsec/Rmodel truth min": 0.3814,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0934,
+    0.4413
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.002,
+    27.3858,
+    -5.9921
+   ],
+   "excess_kN truth max": 0.059,
+   "excess_kN spring-head max(abs)": 0.4767,
+   "s_lock range": [
+    0.376,
+    0.604
+   ]
+  },
+  "n3_front_dh1-2bar": {
+   "count": 247,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9978,
+    1.0484,
+    1.0736
+   ],
+   "Rsec/Rmodel truth min": 0.9087,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9992,
+    1.0442,
+    0.9437
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9975,
+    2.3613,
+    0.4817
+   ],
+   "excess_kN truth max": 0.075,
+   "excess_kN spring-head max(abs)": 0.1134,
+   "s_lock range": [
+    0.375,
+    0.604
+   ]
+  },
+  "n3_front_dh2-5bar": {
+   "count": 370,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0004,
+    1.02,
+    1.0295
+   ],
+   "Rsec/Rmodel truth min": 0.9696,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0274,
+    0.9697
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.998,
+    1.4767,
+    0.703
+   ],
+   "excess_kN truth max": 0.062,
+   "excess_kN spring-head max(abs)": 0.0944,
+   "s_lock range": [
+    0.375,
+    0.583
+   ]
+  },
+  "n3_front_dh5-10bar": {
+   "count": 7,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9977,
+    1.0073,
+    1.0076
+   ],
+   "Rsec/Rmodel truth min": 0.8951,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9997,
+    1.04,
+    0.9941
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9893,
+    1.0076,
+    0.8951
+   ],
+   "excess_kN truth max": 0.022,
+   "excess_kN spring-head max(abs)": 0.1455,
+   "s_lock range": [
+    0.405,
+    0.436
+   ]
+  },
+  "n3_front_dh10-1e+09bar": {
+   "count": 42,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0,
+    1.0612,
+    1.0889
+   ],
+   "Rsec/Rmodel truth min": 0.969,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0008,
+    1.0069,
+    0.9859
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9983,
+    1.0644,
+    0.9304
+   ],
+   "excess_kN truth max": 1.045,
+   "excess_kN spring-head max(abs)": 0.2836,
+   "s_lock range": [
+    0.379,
+    0.564
+   ]
+  },
+  "n3_rear_dh0.5-1bar": {
+   "count": 153,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.004,
+    1.1822,
+    1.736
+   ],
+   "Rsec/Rmodel truth min": 0.0178,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9995,
+    1.4807,
+    0.0563
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9849,
+    Infinity,
+    0.0664
+   ],
+   "excess_kN truth max": 0.165,
+   "excess_kN spring-head max(abs)": 0.2804,
+   "s_lock range": [
+    0.373,
+    0.664
+   ]
+  },
+  "n3_rear_dh1-2bar": {
+   "count": 189,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0082,
+    1.0561,
+    1.1063
+   ],
+   "Rsec/Rmodel truth min": 0.9275,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.1771,
+    0.9245
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0059,
+    2.1216,
+    0.615
+   ],
+   "excess_kN truth max": 0.185,
+   "excess_kN spring-head max(abs)": 0.289,
+   "s_lock range": [
+    0.373,
+    0.664
+   ]
+  },
+  "n3_rear_dh2-5bar": {
+   "count": 377,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0028,
+    1.0308,
+    1.04
+   ],
+   "Rsec/Rmodel truth min": 0.9155,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.038,
+    0.9457
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0028,
+    1.5552,
+    0.6588
+   ],
+   "excess_kN truth max": 0.156,
+   "excess_kN spring-head max(abs)": 0.1339,
+   "s_lock range": [
+    0.373,
+    0.664
+   ]
+  },
+  "n3_rear_dh5-10bar": {
+   "count": 60,
+   "Rsec/Rmodel truth p50/p99/max": [
+    0.9982,
+    1.0192,
+    1.0241
+   ],
+   "Rsec/Rmodel truth min": 0.92,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    0.9996,
+    1.0852,
+    0.9449
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    0.9969,
+    1.1325,
+    0.8883
+   ],
+   "excess_kN truth max": 0.143,
+   "excess_kN spring-head max(abs)": 0.495,
+   "s_lock range": [
+    0.373,
+    0.616
+   ]
+  },
+  "n3_rear_dh10-1e+09bar": {
+   "count": 24,
+   "Rsec/Rmodel truth p50/p99/max": [
+    1.0,
+    1.0079,
+    1.0081
+   ],
+   "Rsec/Rmodel truth min": 0.9678,
+   "Rsec/Rmodel spring-head p50/max/min": [
+    1.0,
+    1.0082,
+    0.9939
+   ],
+   "Rsec/Rmodel readings p50/max/min": [
+    1.0006,
+    1.0297,
+    0.9432
+   ],
+   "excess_kN truth max": 0.421,
+   "excess_kN spring-head max(abs)": 0.4259,
+   "s_lock range": [
+    0.373,
+    0.67
+   ]
+  }
+ },
+ "worst_excess_n3_dh_ge1bar": [
+  {
+   "excess_kN": 1.045,
+   "case": "ML59_ep7",
+   "leg": 1,
+   "s_lock": 0.4312,
+   "R_model": 1.399,
+   "dh_bar": 22.279,
+   "dr_bar": 33.944,
+   "dh_spring_bar": 24.096
+  },
+  {
+   "excess_kN": 0.421,
+   "case": "ML87_ep5",
+   "leg": 3,
+   "s_lock": 0.6686,
+   "R_model": 7.407,
+   "dh_bar": 22.458,
+   "dr_bar": 167.676,
+   "dh_spring_bar": 22.456
+  },
+  {
+   "excess_kN": 0.383,
+   "case": "ML87_ep1",
+   "leg": 2,
+   "s_lock": 0.6704,
+   "R_model": 7.565,
+   "dh_bar": 22.555,
+   "dr_bar": 171.848,
+   "dh_spring_bar": 22.554
+  },
+  {
+   "excess_kN": 0.264,
+   "case": "ML34_ep7",
+   "leg": 0,
+   "s_lock": 0.3885,
+   "R_model": 1.232,
+   "dh_bar": 48.115,
+   "dr_bar": 59.999,
+   "dh_spring_bar": 48.579
+  },
+  {
+   "excess_kN": 0.23,
+   "case": "ML54_ep0",
+   "leg": 3,
+   "s_lock": 0.6216,
+   "R_model": 5.612,
+   "dh_bar": 26.548,
+   "dr_bar": 149.718,
+   "dh_spring_bar": 26.548
+  },
+  {
+   "excess_kN": 0.21,
+   "case": "ML87_ep1",
+   "leg": 1,
+   "s_lock": 0.3792,
+   "R_model": 1.111,
+   "dh_bar": 23.62,
+   "dr_bar": 26.796,
+   "dh_spring_bar": 24.466
+  },
+  {
+   "excess_kN": 0.201,
+   "case": "ML54_ep0",
+   "leg": 0,
+   "s_lock": 0.4036,
+   "R_model": 1.343,
+   "dh_bar": 60.972,
+   "dr_bar": 82.412,
+   "dh_spring_bar": 61.52
+  },
+  {
+   "excess_kN": 0.185,
+   "case": "ML10_ep0",
+   "leg": 2,
+   "s_lock": 0.5569,
+   "R_model": 3.454,
+   "dh_bar": 1.6,
+   "dr_bar": 6.116,
+   "dh_spring_bar": 1.504
+  },
+  {
+   "excess_kN": 0.179,
+   "case": "ML34_ep7",
+   "leg": 3,
+   "s_lock": 0.6056,
+   "R_model": 4.727,
+   "dh_bar": 29.615,
+   "dr_bar": 140.544,
+   "dh_spring_bar": 29.614
+  },
+  {
+   "excess_kN": 0.156,
+   "case": "ML87_ep1",
+   "leg": 3,
+   "s_lock": 0.6615,
+   "R_model": 6.833,
+   "dh_bar": 2.432,
+   "dr_bar": 17.116,
+   "dh_spring_bar": 2.467
+  },
+  {
+   "excess_kN": 0.143,
+   "case": "ML81_ep5",
+   "leg": 3,
+   "s_lock": 0.4999,
+   "R_model": 2.098,
+   "dh_bar": 9.043,
+   "dr_bar": 19.425,
+   "dh_spring_bar": 8.533
+  },
+  {
+   "excess_kN": 0.139,
+   "case": "ML34_ep7",
+   "leg": 3,
+   "s_lock": 0.5939,
+   "R_model": 4.283,
+   "dh_bar": 4.009,
+   "dr_bar": 17.61,
+   "dh_spring_bar": 4.035
+  },
+  {
+   "excess_kN": 0.138,
+   "case": "ML51_ep4",
+   "leg": 3,
+   "s_lock": 0.6179,
+   "R_model": 5.486,
+   "dh_bar": 2.101,
+   "dr_bar": 11.965,
+   "dh_spring_bar": 2.141
+  },
+  {
+   "excess_kN": 0.128,
+   "case": "ML42_ep6",
+   "leg": 3,
+   "s_lock": 0.6344,
+   "R_model": 5.604,
+   "dh_bar": 3.336,
+   "dr_bar": 19.104,
+   "dh_spring_bar": 3.333
+  },
+  {
+   "excess_kN": 0.113,
+   "case": "ML21_ep1",
+   "leg": 3,
+   "s_lock": 0.6283,
+   "R_model": 4.631,
+   "dh_bar": 2.311,
+   "dr_bar": 11.061,
+   "dh_spring_bar": 2.354
+  }
+ ],
+ "case_groups": {
+  "(False, 'pilot_check', 1000000000.0)": 3,
+  "(True, 'pilot_check', 1000000000.0)": 1,
+  "(False, 'pilot_check', 1305800000.0)": 1,
+  "(True, 'pilot_check', 758800000.0)": 1,
+  "(True, 'pilot_check', 1467100000.0)": 1,
+  "(True, 'pilot_check', 784200000.0)": 1,
+  "(True, 'pilot_check', 1228400000.0)": 1,
+  "(True, 'pilot_check', 1440900000.0)": 1,
+  "(True, 'pilot_check', 1537900000.0)": 1,
+  "(True, 'pilot_check', 899900000.0)": 1,
+  "(True, 'pilot_check', 1258100000.0)": 1,
+  "(True, 'pilot_check', 974300000.0)": 1,
+  "(True, 'pilot_check', 794400000.0)": 1,
+  "(True, 'pilot_check', 709800000.0)": 1,
+  "(True, 'pilot_check', 1016200000.0)": 1,
+  "(True, 'pilot_check', 1131800000.0)": 1,
+  "(True, 'pilot_check', 783600000.0)": 2,
+  "(True, 'pilot_check', 1096100000.0)": 1
+ }
+}

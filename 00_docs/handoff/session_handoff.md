@@ -41,7 +41,8 @@
 
 - P-S8-22(R-5 대체 다리 기울기, U-S8-60~62) 구현(python, 명세 304절) → V-1~V-5 → cad V-4 → hydraulics H-61-1(R_hi 확정).
 - ✅(2026-10-26, P3b 실행 중 미리 함) dynamics `dynamics_model.md` 개정 54: 5.12.13 L1-R 잠김 강성 대표 범위(U-S8-63: 수준은 대표, 변화율 −Δp_r/Δp_h·G는 대표 못 함 → L1-R의 R-5·`lock_load_regain`은 실기 근거 아님), 5.30.10 rev48 YAML 묶음 초안 합침. **개정 53은 P3b 판정(5.37.10 착수 전 점검 1~6 종결 포함)용으로 비워 둠** — 넣을 때 머리말·개정표 순서를 맞춘다. hydraulics H-61-1은 5.12.13 표를 출발값으로 쓴다.
-- 🔄 P-S8-22 구현은 python-expert가 별도 worktree에서 진행 중(메인 `03_src`를 바꾸면 대기 중 P3b 사례가 새 코드를 불러오므로, P3b 끝난 뒤 merge).
+- 🔄 **P-S8-22는 worktree 구현, P3b 뒤 merge**: worktree `.claude/worktrees/agent-a42ab63c487597861`, 브랜치 `worktree-agent-a42ab63c487597861`, 커밋 d7638e9(①~⑤) + 88625da(O-1~O-3), cad C-1(L1 `plant_meta` 분기, `03_src/outrigger_sim/chrono/fallback_ratio.py`, run_S6C 등) 미커밋, python O-4(V-2 재생 관문·탐침 다리 출처·L̂_true)와 cad 후속(meta 키·환경 변수 거부·10 Hz `probed_leg` 기록) 진행 중. 메인 `03_src`·`04_scripts`를 바꾸면 대기 중 P3b 사례가 새 코드를 불러오므로 merge는 P3b 뒤. merge 뒤: V-3 축소 하네스 해시, V-4(명세 303 보강표: ① PS2 L1·L2b 125 s, ② MLJ_K0V G4RF Fs0/Fs8 같은 실행 재생, ③ ML88_ep0, ④ rpB 기준선 SHA), V-5 판정.
+- ✅ H-61-1(hydraulics `s8_seal_friction_counterbalance.md` 14절, 스크립트 `04_scripts/04_hydraulic/h61/`, 결과 `06_analysis/03_hydraulic/s8/h61_*.json`) 채택 U-S8-64, U-R8-9 ④ 부가 U-S8-65, V-2·V-4 방식 U-S8-66(명세 개정 61 보완 3, 219.7·302.3·302.4·303·304.1·305.3). 실기 κ_hi 상태식 구현 P-S8-22b는 U-R8-9 ④ 확인 뒤.
 - S9 착수 전 점검 1·5·6 닫힘 확인(`dynamics_model.md` 5.32.7 표는 4~6 "미실행").
 - R8 C2 PS-7a 판정(S9 뒤), U-S8-57·DONE 꼬리 감시.
 
