@@ -23,6 +23,8 @@ Usage (Chrono-dev python, project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py ml --resume 07_results/S8/ml_pilot_<stamp>
         --only ML00_ep5 ML08_ep4 ML10_ep4 ML11_ep4 ML17_ep4 ML18_ep6 ML21_ep1 --approved  # C-S8-28
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj_c29 --approved  # C-S8-29
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj_c67 --tag v5_c67
+        --approved --workers p7   # C-S8-67 (spec rev. 62 317.1): G4RRF x F_s 0 / 8
     # U-S8-40 (spec rev. 49 219.9): C-S8-28 -> MLJ 6 alone -> main 768 reusing the MLJ batch
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj --approved   # MLJ 6
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py ml --stage main
@@ -427,9 +429,16 @@ EVENTS: dict[str, dict[str, Any]] = {
     "G4RF": {"kind": "settle", "leg": "RR", "depth_m": G4_DEPTH_M, "ramp_s": G4_RAMP_S,
              "at": "ready+5", "stage2": "settle_RR", "fine": False,
              "rod_fault": {"leg": "FR", "fault": "dropout", "after_ready_s": G4RF_FAULT_AFTER_S}},
+    # C-S8-67 (spec rev. 62 317.1, U-S8-67 (나)): G4RF with the rod fault on RR (the G4 leg)
+    "G4RRF": {"kind": "settle", "leg": "RR", "depth_m": G4_DEPTH_M, "ramp_s": G4_RAMP_S,
+              "at": "ready+5", "stage2": "settle_RR", "fine": False,
+              "rod_fault": {"leg": "RR", "fault": "dropout",
+                            "after_ready_s": G4RF_FAULT_AFTER_S}},
 }
 """Spec rev. 39 202 E / 203.4 events (depth, ramp, start rule). ``FS24`` / ``SS9P`` / ``G4RF``:
-the judged cases of the main ML batch (group ``MLJ``, :data:`MLJ_CASES`)."""
+the judged cases of the main ML batch (group ``MLJ``, :data:`MLJ_CASES`). ``G4RRF`` (C-S8-67,
+V-5 ③′ positive test): ``G4RF`` with the rod-sensor dropout on RR instead of FR; not part of
+the ``mlj`` set."""
 
 
 def step_us(fs_kN: float, lock_valve: str = "pilot_check") -> float:
@@ -484,6 +493,9 @@ def _event_scenario(event: str, contact: str):
                        - END_EVENT_AFTER_S, items=("6",))
     if event == "G4RF":
         return s6c._sc(f"H4V_G4RF_{contact}", "G4", "top", "fdown3.5", contact=contact,
+                       event="settle_RR", extra=st.T_SETTLE_EXTRA, items=("R", "6"))
+    if event == "G4RRF":  # C-S8-67: as G4RF, only the name differs
+        return s6c._sc(f"H4V_G4RRF_{contact}", "G4", "top", "fdown3.5", contact=contact,
                        event="settle_RR", extra=st.T_SETTLE_EXTRA, items=("R", "6"))
     raise ValueError(event)
 
@@ -600,6 +612,13 @@ def s8_cases() -> list[S8Case]:
             _event_scenario("G4RF", "combined"), fs_kN=fs, event="G4RF",
             notes=("C-S8-29 / U-S8-33: FR rod-sensor dropout at READY + 2 s + G4 RR at "
                    "READY + 5 s, nose down 3.5 deg top (K0V point)",))
+    # C-S8-67 (spec rev. 62 317.1): V-5 ③′ positive test, appended after the C-S8-30 cases so
+    # their order and definitions stay as they were; set mlj_c67 (not in mlj)
+    for fs in (0.0, 8.0):
+        add(f"MLJ_K0V_fdown3.5_G4RRF_{_fs_tag(fs)}", MLJ_GROUP, 5,
+            _event_scenario("G4RRF", "combined"), fs_kN=fs, event="G4RRF",
+            notes=("C-S8-67 / U-S8-67 (나): RR rod-sensor dropout at READY + 2 s + G4 RR at "
+                   "READY + 5 s, nose down 3.5 deg top (G4RF with the fault leg FR -> RR)",))
     # smoke (F_s 0, short)
     add("smoke_E_G4_Fs0", "smoke", 0, _event_scenario("G4", "combined"), fs_kN=0.0, event="G4")
     add("smoke_K0_top_rpBop_Fs0", "smoke", 0, _d8_scenario("top", "rpBop"), fs_kN=0.0)
@@ -632,19 +651,26 @@ def case_set(name: str) -> list[S8Case]:
         "all": main,
         "cb": [c for c in cases if c.group == "CB"],
         "smoke": [c for c in cases if c.group == "smoke"],
-        "mlj": [c for c in cases if c.group == MLJ_GROUP],
+        # the six C-S8-30 judged cases (C-S8-67 G4RRF kept out: ML main batch unchanged)
+        "mlj": [c for c in cases if c.group == MLJ_GROUP and c.event not in MLJ_EXTRA_EVENTS],
         "mlj_c29": [c for c in cases if c.group == MLJ_GROUP and c.event == "G4RF"],
+        "mlj_c67": [c for c in cases if c.group == MLJ_GROUP and c.event == "G4RRF"],
     }
     if name not in sets:
         raise KeyError(f"unknown set {name!r}; sets {tuple(sets)}")
     return sets[name]
 
 
-SET_NAMES = ("p1", "p1r", "p2", "p3", "rest", "all", "cb", "smoke", "mlj", "mlj_c29")
+SET_NAMES = ("p1", "p1r", "p2", "p3", "rest", "all", "cb", "smoke", "mlj", "mlj_c29",
+             "mlj_c67")
 MLJ_GROUP = "MLJ"
 """Judged cases of the main ML batch (6): U-S8-32 front fast settlement (FS24) x F_s 0 / 8,
 C-S8-24 R45-4 (SS9P) x F_s 0 / 8, C-S8-29 rod-sensor fault + G4 (G4RF) x F_s 0 / 8.
-``mlj_c29`` = the two C-S8-29 cases alone (they need P-S8-13)."""
+``mlj_c29`` = the two C-S8-29 cases alone (they need P-S8-13). ``mlj_c67`` = C-S8-67 (spec rev.
+62 317.1): G4RF with the rod fault on RR (G4RRF) x F_s 0 / 8; group MLJ (same judge rows) but
+not in ``mlj`` (:data:`MLJ_EXTRA_EVENTS`)."""
+MLJ_EXTRA_EVENTS = ("G4RRF",)
+"""MLJ-group events outside the ``mlj`` set (the main ML batch judged pool stays the six)."""
 P1R_EXTRA = ("N_D8_top_rpB_Fs8_pressure",)
 """Spec rev. 43 213.6 step 3: the 1st-priority re-run = 36 + N_D8 rpB pressure-only = 37."""
 

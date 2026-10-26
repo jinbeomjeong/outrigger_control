@@ -41,7 +41,7 @@ from __future__ import annotations
 
 from collections import deque
 from collections.abc import Mapping, Sequence
-from dataclasses import asdict, dataclass, field, replace
+from dataclasses import asdict, dataclass, field, fields, replace
 from enum import StrEnum
 from typing import Any
 
@@ -159,7 +159,13 @@ class ReplaySettings:
 
     @classmethod
     def from_controller_meta(cls, meta: Mapping[str, Any], F_min_N: float) -> ReplaySettings:
-        """From ``C2Controller.meta()`` as saved in ``result.json`` (``controller_meta``)."""
+        """From ``C2Controller.meta()`` as saved in ``result.json`` (``controller_meta``).
+
+        ``r8.fast_relevel`` keys that are not :class:`FastRelevelSettings` fields are ignored:
+        runners add record-only keys there (cad C-1, spec rev. 62 316.6 D-1:
+        ``fallback_plant_ratio_source``, ``fallback_ratio_source_override``, ...); see
+        :func:`fast_relevel_record_only_keys`.
+        """
         r8 = meta["r8"]
         fast = r8.get("fast_relevel")
         return cls(
@@ -169,7 +175,7 @@ class ReplaySettings:
             relevel_samples=int(r8["confirmation"]["relevel_samples"]),
             output_delay_periods=int(r8["output_delay_periods"]),
             probe_abort_on_low_load=bool(r8.get("probe_abort_on_low_load", False)),
-            fast_relevel=None if fast is None else FastRelevelSettings(**fast),
+            fast_relevel=None if fast is None else _fast_relevel_from_meta(fast),
             reapproach=_reapproach_from_meta(r8.get("lifted_reapproach") or {}),
         )
 
@@ -207,6 +213,21 @@ def replay_meta_from_config(config: C2Config) -> dict[str, Any]:
             "lifted_reapproach": reapproach,
         },
     }
+
+
+FAST_RELEVEL_SETTING_KEYS = frozenset(setting.name for setting in fields(FastRelevelSettings))
+"""The ``r8.fast_relevel`` meta keys that are settings (the rest are records)."""
+
+
+def fast_relevel_record_only_keys(fast_meta: Mapping[str, Any]) -> list[str]:
+    """Keys of a recorded ``r8.fast_relevel`` that are not settings (ignored by the replay)."""
+    return sorted(set(fast_meta) - FAST_RELEVEL_SETTING_KEYS)
+
+
+def _fast_relevel_from_meta(fast_meta: Mapping[str, Any]) -> FastRelevelSettings:
+    settings = {key: value for key, value in fast_meta.items()
+                if key in FAST_RELEVEL_SETTING_KEYS}
+    return FastRelevelSettings(**settings)
 
 
 def _reapproach_from_meta(meta: Mapping[str, Any]) -> LiftedReapproachSettings:

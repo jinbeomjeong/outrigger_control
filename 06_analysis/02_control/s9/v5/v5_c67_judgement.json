@@ -1,0 +1,2471 @@
+{
+ "spec": "s6_control_spec rev. 63 (317.1 criteria, U-S8-67 (b))",
+ "batch": "C:\\workspace\\outrigger_control\\07_results\\S8\\v5_c67_20261027_032104",
+ "cases": {
+  "Fs0": {
+   "case_id": "MLJ_K0V_fdown3.5_G4RRF_Fs0",
+   "controller": {
+    "case": "C:\\workspace\\outrigger_control\\07_results\\S8\\v5_c67_20261027_032104\\MLJ_K0V_fdown3.5_G4RRF_Fs0",
+    "time_offset_s(ctrl-run)": 3.0000000000019043,
+    "fault": {
+     "leg": "RR",
+     "kind": "dropout",
+     "t_ctrl_s": 83.9,
+     "applied_periods": 481,
+     "periods_without_rod_reading": 0
+    },
+    "t_G4_ctrl_s": 86.9,
+    "phases_ctrl_s": [
+     [
+      3.1,
+      "check"
+     ],
+     [
+      7.7,
+      "touch"
+     ],
+     [
+      26.9,
+      "level"
+     ],
+     [
+      49.3,
+      "done"
+     ],
+     [
+      49.4,
+      "probe"
+     ],
+     [
+      61.3,
+      "reanchor"
+     ],
+     [
+      80.7,
+      "level"
+     ],
+     [
+      81.8,
+      "done"
+     ],
+     [
+      81.9,
+      "ready"
+     ],
+     [
+      87.6,
+      "level"
+     ],
+     [
+      97.5,
+      "done"
+     ],
+     [
+      97.6,
+      "probe"
+     ],
+     [
+      109.5,
+      "ready"
+     ]
+    ],
+    "ready_ctrl_s": [
+     81.9,
+     109.5
+    ],
+    "relevel_predicted": [
+     [
+      87.6,
+      "RR"
+     ]
+    ],
+    "relevel_predicted_rel_G4_s": [
+     [
+      0.7,
+      "RR"
+     ]
+    ],
+    "probe_aborted_low_load": [],
+    "info_r5_fallback_slope": [
+     [
+      87.4,
+      "INFO_R5_FALLBACK_SLOPE:RR:11.05:0.19"
+     ],
+     [
+      87.5,
+      "INFO_R5_FALLBACK_SLOPE:RR:13.72:0.20"
+     ],
+     [
+      87.6,
+      "INFO_R5_FALLBACK_SLOPE:RR:17.33:0.21"
+     ],
+     [
+      99.8,
+      "INFO_R5_FALLBACK_SLOPE:RR:9.36:0.33"
+     ],
+     [
+      99.9,
+      "INFO_R5_FALLBACK_SLOPE:RR:10.84:0.32"
+     ],
+     [
+      100.0,
+      "INFO_R5_FALLBACK_SLOPE:RR:9.73:0.22"
+     ],
+     [
+      101.3,
+      "INFO_R5_FALLBACK_SLOPE:RR:8.53:0.00"
+     ],
+     [
+      101.4,
+      "INFO_R5_FALLBACK_SLOPE:RR:10.02:0.00"
+     ],
+     [
+      101.5,
+      "INFO_R5_FALLBACK_SLOPE:RR:8.48:0.00"
+     ],
+     [
+      104.2,
+      "INFO_R5_FALLBACK_SLOPE:RR:8.02:0.00"
+     ],
+     [
+      104.3,
+      "INFO_R5_FALLBACK_SLOPE:RR:9.36:0.00"
+     ],
+     [
+      104.4,
+      "INFO_R5_FALLBACK_SLOPE:RR:10.39:0.00"
+     ],
+     [
+      104.5,
+      "INFO_R5_FALLBACK_SLOPE:RR:10.37:0.00"
+     ],
+     [
+      104.6,
+      "INFO_R5_FALLBACK_SLOPE:RR:8.38:0.00"
+     ]
+    ],
+    "info_r5_fallback_slope_count_by_leg": {
+     "FL": 0,
+     "FR": 0,
+     "RL": 0,
+     "RR": 14
+    },
+    "warn_rod_pressure_fallback": [
+     [
+      83.9,
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ]
+    ],
+    "info_rod_fault_reason": [
+     [
+      83.9,
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D1"
+     ]
+    ],
+    "fault_events": [],
+    "warn_events": [
+     [
+      83.9,
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ]
+    ],
+    "reapproach": [
+     [
+      88.2,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      88.8,
+      "leg_reapproach_contact:RR"
+     ]
+    ],
+    "all_event_count": 30,
+    "s8_end": {
+     "anchor": "event",
+     "after_s": 45.0,
+     "upper_s": 193.0,
+     "rule": "C-S8-17 (spec rev. 43 213.8): D8 READY + 10 s, event + 45 s, HOLD READY + 120 s; upper bound duration + 60 s, else timeout",
+     "applied": true,
+     "upper_used_s": 193.0,
+     "anchor_t_s": 83.90000000159336,
+     "target_t_s": 128.90000000159336,
+     "end_t_s": 128.90000000325318,
+     "stopped_at_target": true,
+     "timeout": false,
+     "final_phase": "ready",
+     "phase_lengths": {
+      "total_s": {
+       "check": 4.599999999993276,
+       "touch": 19.199999999955253,
+       "level": 33.40000000092758,
+       "done": 0.30000000000995897,
+       "probe": 23.800000000790078,
+       "reanchor": 19.400000000644006,
+       "ready": 28.100000000932823
+      },
+      "first_touch_s": 19.199999999955253,
+      "first_level_s": 22.400000000562414
+     }
+    }
+   },
+   "forces": {
+    "F_min_N": 9414.58911,
+    "P5_N": 16914.58911,
+    "F_min_plus_5kN_N": 14414.58911,
+    "F_pressure_min_interval_after_fault": {
+     "FL": {
+      "min_kN": 73.277,
+      "leg": "FL",
+      "t_ctrl_s": 88.318
+     },
+     "FR": {
+      "min_kN": 105.243,
+      "leg": "FR",
+      "t_ctrl_s": 98.764
+     },
+     "RL": {
+      "min_kN": 58.294,
+      "leg": "RL",
+      "t_ctrl_s": 98.943
+     },
+     "RR": {
+      "min_kN": 21.333,
+      "leg": "RR",
+      "t_ctrl_s": 88.353
+     }
+    },
+    "others_min_after_fault": {
+     "min_kN": 58.294,
+     "leg": "RL",
+     "t_ctrl_s": 98.943
+    },
+    "fault_leg_min_after_fault": {
+     "min_kN": 21.333,
+     "leg": "RR",
+     "t_ctrl_s": 88.353
+    },
+    "F_pressure_min_interval_fault_to_G4": {
+     "FL": {
+      "min_kN": 118.522,
+      "leg": "FL",
+      "t_ctrl_s": 84.196
+     },
+     "FR": {
+      "min_kN": 117.186,
+      "leg": "FR",
+      "t_ctrl_s": 84.421
+     },
+     "RL": {
+      "min_kN": 71.472,
+      "leg": "RL",
+      "t_ctrl_s": 84.216
+     },
+     "RR": {
+      "min_kN": 68.963,
+      "leg": "RR",
+      "t_ctrl_s": 84.856
+     }
+    },
+    "F_pressure_min_interval_from_first_ready": {
+     "FL": {
+      "min_kN": 73.277,
+      "leg": "FL",
+      "t_ctrl_s": 88.318
+     },
+     "FR": {
+      "min_kN": 105.243,
+      "leg": "FR",
+      "t_ctrl_s": 98.764
+     },
+     "RL": {
+      "min_kN": 58.294,
+      "leg": "RL",
+      "t_ctrl_s": 98.943
+     },
+     "RR": {
+      "min_kN": 21.333,
+      "leg": "RR",
+      "t_ctrl_s": 88.353
+     }
+    },
+    "all_legs_min_from_first_ready": {
+     "min_kN": 21.333,
+     "leg": "RR",
+     "t_ctrl_s": 88.353
+    },
+    "fault_leg_false_r5_fault_to_G4": [],
+    "true_force_at_relevel": [
+     {
+      "t_ctrl_s": 87.6,
+      "leg": "RR",
+      "F_pressure_kN": 50.136,
+      "F_pressure_min_interval_kN": 50.136,
+      "F_pressure_at_t_plus_horizon_kN": 37.473,
+      "min_next_2s_kN": 21.333,
+      "min_next_2s_t_ctrl_s": 88.353,
+      "class_at_fire": "between"
+     }
+    ],
+    "fault_leg_head_true_max_after_fault_bar": 86.32,
+    "fault_leg_lock_windows": [
+     {
+      "t_start_s": 97.8,
+      "R_ub": 1.381,
+      "M_bar": 13.0,
+      "h_a_bar": 83.89,
+      "h_star_bar": 49.05,
+      "head_true_at_lock_bar": 75.77
+     },
+     {
+      "t_start_s": 107.8,
+      "R_ub": 1.367,
+      "M_bar": 35.86,
+      "h_a_bar": 65.67,
+      "h_star_bar": 48.48,
+      "head_true_at_lock_bar": 65.52
+     },
+     {
+      "t_start_s": 109.3,
+      "R_ub": 1.381,
+      "M_bar": 13.0,
+      "h_a_bar": 76.29,
+      "h_star_bar": 46.67,
+      "head_true_at_lock_bar": 75.55
+     },
+     {
+      "t_start_s": 110.1,
+      "R_ub": 1.391,
+      "M_bar": 13.0,
+      "h_a_bar": 75.87,
+      "h_star_bar": 46.61,
+      "head_true_at_lock_bar": 75.5
+     }
+    ],
+    "guard_saturation_s_per_leg(cmp_guard_u)": {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    },
+    "judge_guard_cap_s(issued_u fault leg)": 1.9
+   },
+   "replay": {
+    "engine": "L2b_NSC",
+    "replayable": true,
+    "reasons": [],
+    "notes": [
+     "fallback forced at the run's events; the monitor's own diagnosis is not replayed",
+     "E-6 deduction from the run meta",
+     "engine 'L2b_NSC' from settings.s8.engine",
+     "truth: pads F_pressure"
+    ],
+    "probed_leg_source_counts": {
+     "record": 238,
+     "history": 0,
+     "command": 0,
+     "none": 0
+    },
+    "command_history_match": null,
+    "gate": {
+     "kind": "same_run",
+     "passed": true
+    },
+    "level_gate": {
+     "passed": true,
+     "replay": {
+      "relevel_predicted": [
+       [
+        87.6,
+        3
+       ]
+      ],
+      "probe_aborted_low_load": []
+     },
+     "controller": {
+      "relevel_predicted": [
+       [
+        87.6,
+        3
+       ]
+      ],
+      "probe_aborted_low_load": []
+     },
+     "role": "record"
+    },
+    "same_run_gate": {
+     "source": "column_nominal",
+     "passed": true,
+     "r5_equal": true,
+     "fallback_slope_equal": true,
+     "controller_fallback_slope_count": 14,
+     "replay_fallback_slope_count": 14,
+     "first_fallback_slope_difference": null
+    },
+    "true_force_source": "F_pressure",
+    "variants": {
+     "plant_meta": {
+      "r5_events": {
+       "relevel_predicted": [
+        [
+         87.6,
+         3
+        ]
+       ],
+       "probe_aborted_low_load": []
+      },
+      "fallback_slope_events": [
+       [
+        87.3,
+        "RR",
+        [
+         8.262791219123224,
+         0.0
+        ]
+       ],
+       [
+        87.4,
+        "RR",
+        [
+         11.486950798278123,
+         0.0
+        ]
+       ],
+       [
+        87.5,
+        "RR",
+        [
+         14.308288462041586,
+         0.0
+        ]
+       ],
+       [
+        87.6,
+        "RR",
+        [
+         18.119831941401962,
+         0.0
+        ]
+       ],
+       [
+        99.8,
+        "RR",
+        [
+         9.426290132913396,
+         0.0
+        ]
+       ],
+       [
+        99.9,
+        "RR",
+        [
+         10.9789636058115,
+         0.0
+        ]
+       ],
+       [
+        100.0,
+        "RR",
+        [
+         9.924351705059673,
+         0.0
+        ]
+       ],
+       [
+        101.3,
+        "RR",
+        [
+         8.909658563037922,
+         0.0
+        ]
+       ],
+       [
+        101.4,
+        "RR",
+        [
+         10.458643716109862,
+         0.0
+        ]
+       ],
+       [
+        101.5,
+        "RR",
+        [
+         8.856524273076477,
+         0.0
+        ]
+       ],
+       [
+        104.2,
+        "RR",
+        [
+         8.372197083668672,
+         0.0
+        ]
+       ],
+       [
+        104.3,
+        "RR",
+        [
+         9.76606776212783,
+         0.0
+        ]
+       ],
+       [
+        104.4,
+        "RR",
+        [
+         10.841909379523019,
+         0.0
+        ]
+       ],
+       [
+        104.5,
+        "RR",
+        [
+         10.825053549362828,
+         0.0
+        ]
+       ],
+       [
+        104.6,
+        "RR",
+        [
+         8.750870689891002,
+         0.0
+        ]
+       ]
+      ],
+      "row_classes": {
+       "judged_falling": {
+        "rows": 184,
+        "max_difference_N": -4020.2668567038563,
+        "missed": 0
+       },
+       "record_rising": {
+        "rows": 157,
+        "max_difference_N": -11985.476005882912,
+        "missed": 0
+       },
+       "record_level": {
+        "rows": 10,
+        "max_difference_N": -12596.95128357008,
+        "missed": 0
+       },
+       "unwatched": {
+        "rows": 130,
+        "max_difference_N": -8643.229761644798,
+        "missed": 0
+       }
+      },
+      "allowance_N": 1200.0,
+      "judged_falling_within_allowance": true,
+      "slope_rows_missed_triggers": 0,
+      "judgement_passed": true,
+      "level_missed_triggers": 0,
+      "level_missed_trigger_flag": false,
+      "worst_judged_falling_row": {
+       "t_s": 83.90000000166165,
+       "leg": "RR",
+       "phase": "ready",
+       "is_watched": true,
+       "condition": "met",
+       "rule": "nominal_gap",
+       "head_drop_Pa": 4710.832818461582,
+       "fallback_drop_N": 63.00154715997414,
+       "L_hat_fb_N": 63259.78329639781,
+       "L_hat_true_N": 67280.05015310166,
+       "difference_N": -4020.2668567038563,
+       "is_rate_passed": false,
+       "fallback_fires": false,
+       "healthy_fires": false,
+       "is_missed": false,
+       "row_class": "judged_falling"
+      },
+      "missed_rows": [],
+      "first_fallback_fire_watched_s": 87.60000000178448,
+      "first_healthy_fire_watched_s": null,
+      "watched_fire_rows": [
+       [
+        87.6,
+        "ready",
+        "judged_falling",
+        true,
+        false,
+        13.315,
+        31.362
+       ]
+      ]
+     },
+     "column_nominal": {
+      "r5_events": {
+       "relevel_predicted": [
+        [
+         87.6,
+         3
+        ]
+       ],
+       "probe_aborted_low_load": []
+      },
+      "fallback_slope_events": [
+       [
+        87.4,
+        "RR",
+        [
+         11.046334868752066,
+         0.1923519913676197
+        ]
+       ],
+       [
+        87.5,
+        "RR",
+        [
+         13.715258916278476,
+         0.19540315133898062
+        ]
+       ],
+       [
+        87.6,
+        "RR",
+        [
+         17.332548188012705,
+         0.2111772439897201
+        ]
+       ],
+       [
+        99.8,
+        "RR",
+        [
+         9.357415360781578,
+         0.3278844852536555
+        ]
+       ],
+       [
+        99.9,
+        "RR",
+        [
+         10.837111952344918,
+         0.3202607349368069
+        ]
+       ],
+       [
+        100.0,
+        "RR",
+        [
+         9.725371944332274,
+         0.21874326254164284
+        ]
+       ],
+       [
+        101.3,
+        "RR",
+        [
+         8.5346446959508,
+         0.0
+        ]
+       ],
+       [
+        101.4,
+        "RR",
+        [
+         10.018431962010109,
+         0.0
+        ]
+       ],
+       [
+        101.5,
+        "RR",
+        [
+         8.483746866052595,
+         0.0
+        ]
+       ],
+       [
+        104.2,
+        "RR",
+        [
+         8.01980535258851,
+         0.0
+        ]
+       ],
+       [
+        104.3,
+        "RR",
+        [
+         9.355007022617105,
+         0.0
+        ]
+       ],
+       [
+        104.4,
+        "RR",
+        [
+         10.385565701001992,
+         0.0
+        ]
+       ],
+       [
+        104.5,
+        "RR",
+        [
+         10.369419344724173,
+         0.0
+        ]
+       ],
+       [
+        104.6,
+        "RR",
+        [
+         8.382540317343436,
+         0.0
+        ]
+       ]
+      ],
+      "row_classes": {
+       "judged_falling": {
+        "rows": 184,
+        "max_difference_N": -3997.837082455808,
+        "missed": 0
+       },
+       "record_rising": {
+        "rows": 157,
+        "max_difference_N": -12261.675227828564,
+        "missed": 0
+       },
+       "record_level": {
+        "rows": 10,
+        "max_difference_N": -12596.95128357008,
+        "missed": 0
+       },
+       "unwatched": {
+        "rows": 130,
+        "max_difference_N": -8882.34582350136,
+        "missed": 0
+       }
+      },
+      "allowance_N": 1200.0,
+      "judged_falling_within_allowance": true,
+      "slope_rows_missed_triggers": 0,
+      "judgement_passed": true,
+      "level_missed_triggers": 0,
+      "level_missed_trigger_flag": false,
+      "worst_judged_falling_row": {
+       "t_s": 83.90000000166165,
+       "leg": "RR",
+       "phase": "ready",
+       "is_watched": true,
+       "condition": "met",
+       "rule": "nominal_gap",
+       "head_drop_Pa": 4710.832818461582,
+       "fallback_drop_N": 59.529959354016846,
+       "L_hat_fb_N": 63282.213070645856,
+       "L_hat_true_N": 67280.05015310166,
+       "difference_N": -3997.837082455808,
+       "is_rate_passed": false,
+       "fallback_fires": false,
+       "healthy_fires": false,
+       "is_missed": false,
+       "row_class": "judged_falling"
+      },
+      "missed_rows": [],
+      "first_fallback_fire_watched_s": 87.60000000178448,
+      "first_healthy_fire_watched_s": null,
+      "watched_fire_rows": [
+       [
+        87.6,
+        "ready",
+        "judged_falling",
+        true,
+        false,
+        14.344,
+        31.362
+       ]
+      ]
+     }
+    }
+   }
+  },
+  "Fs8": {
+   "case_id": "MLJ_K0V_fdown3.5_G4RRF_Fs8",
+   "controller": {
+    "case": "C:\\workspace\\outrigger_control\\07_results\\S8\\v5_c67_20261027_032104\\MLJ_K0V_fdown3.5_G4RRF_Fs8",
+    "time_offset_s(ctrl-run)": 3.0000000000019043,
+    "fault": {
+     "leg": "RR",
+     "kind": "dropout",
+     "t_ctrl_s": 81.5,
+     "applied_periods": 481,
+     "periods_without_rod_reading": 0
+    },
+    "t_G4_ctrl_s": 84.5,
+    "phases_ctrl_s": [
+     [
+      3.1,
+      "check"
+     ],
+     [
+      7.7,
+      "touch"
+     ],
+     [
+      26.9,
+      "level"
+     ],
+     [
+      49.3,
+      "done"
+     ],
+     [
+      49.4,
+      "probe"
+     ],
+     [
+      61.3,
+      "reanchor"
+     ],
+     [
+      78.3,
+      "level"
+     ],
+     [
+      79.4,
+      "done"
+     ],
+     [
+      79.5,
+      "ready"
+     ],
+     [
+      85.1,
+      "level"
+     ],
+     [
+      95.3,
+      "done"
+     ],
+     [
+      95.4,
+      "probe"
+     ],
+     [
+      107.3,
+      "ready"
+     ]
+    ],
+    "ready_ctrl_s": [
+     79.5,
+     107.3
+    ],
+    "relevel_predicted": [
+     [
+      85.1,
+      "RR"
+     ]
+    ],
+    "relevel_predicted_rel_G4_s": [
+     [
+      0.6,
+      "RR"
+     ]
+    ],
+    "probe_aborted_low_load": [],
+    "info_r5_fallback_slope": [
+     [
+      84.9,
+      "INFO_R5_FALLBACK_SLOPE:RR:14.71:0.33"
+     ],
+     [
+      85.0,
+      "INFO_R5_FALLBACK_SLOPE:RR:19.23:0.43"
+     ],
+     [
+      85.1,
+      "INFO_R5_FALLBACK_SLOPE:RR:19.45:0.32"
+     ],
+     [
+      99.2,
+      "INFO_R5_FALLBACK_SLOPE:RR:11.42:0.11"
+     ],
+     [
+      99.3,
+      "INFO_R5_FALLBACK_SLOPE:RR:12.56:0.09"
+     ],
+     [
+      99.4,
+      "INFO_R5_FALLBACK_SLOPE:RR:8.53:0.00"
+     ],
+     [
+      102.3,
+      "INFO_R5_FALLBACK_SLOPE:RR:10.12:0.00"
+     ],
+     [
+      102.4,
+      "INFO_R5_FALLBACK_SLOPE:RR:8.85:0.00"
+     ]
+    ],
+    "info_r5_fallback_slope_count_by_leg": {
+     "FL": 0,
+     "FR": 0,
+     "RL": 0,
+     "RR": 8
+    },
+    "warn_rod_pressure_fallback": [
+     [
+      81.5,
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ]
+    ],
+    "info_rod_fault_reason": [
+     [
+      81.5,
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D1"
+     ]
+    ],
+    "fault_events": [],
+    "warn_events": [
+     [
+      81.5,
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     [
+      107.3,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.750"
+     ]
+    ],
+    "reapproach": [
+     [
+      85.8,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      86.3,
+      "leg_reapproach_contact:RR"
+     ]
+    ],
+    "all_event_count": 24,
+    "s8_end": {
+     "anchor": "event",
+     "after_s": 45.0,
+     "upper_s": 193.0,
+     "rule": "C-S8-17 (spec rev. 43 213.8): D8 READY + 10 s, event + 45 s, HOLD READY + 120 s; upper bound duration + 60 s, else timeout",
+     "applied": true,
+     "upper_used_s": 193.0,
+     "anchor_t_s": 81.50000000151368,
+     "target_t_s": 126.50000000151368,
+     "end_t_s": 126.50000000317351,
+     "stopped_at_target": true,
+     "timeout": false,
+     "final_phase": "ready",
+     "phase_lengths": {
+      "total_s": {
+       "check": 4.599999999993276,
+       "touch": 19.199999999955253,
+       "level": 33.700000000937536,
+       "done": 0.30000000000995897,
+       "probe": 23.800000000790078,
+       "reanchor": 17.000000000564334,
+       "ready": 27.800000000922864
+      },
+      "first_touch_s": 19.199999999955253,
+      "first_level_s": 22.400000000562414
+     }
+    }
+   },
+   "forces": {
+    "F_min_N": 9414.58911,
+    "P5_N": 16914.58911,
+    "F_min_plus_5kN_N": 14414.58911,
+    "F_pressure_min_interval_after_fault": {
+     "FL": {
+      "min_kN": 77.493,
+      "leg": "FL",
+      "t_ctrl_s": 85.934
+     },
+     "FR": {
+      "min_kN": 108.369,
+      "leg": "FR",
+      "t_ctrl_s": 101.006
+     },
+     "RL": {
+      "min_kN": 64.402,
+      "leg": "RL",
+      "t_ctrl_s": 97.64
+     },
+     "RR": {
+      "min_kN": 22.033,
+      "leg": "RR",
+      "t_ctrl_s": 85.94
+     }
+    },
+    "others_min_after_fault": {
+     "min_kN": 64.402,
+     "leg": "RL",
+     "t_ctrl_s": 97.64
+    },
+    "fault_leg_min_after_fault": {
+     "min_kN": 22.033,
+     "leg": "RR",
+     "t_ctrl_s": 85.94
+    },
+    "F_pressure_min_interval_fault_to_G4": {
+     "FL": {
+      "min_kN": 122.636,
+      "leg": "FL",
+      "t_ctrl_s": 83.297
+     },
+     "FR": {
+      "min_kN": 120.701,
+      "leg": "FR",
+      "t_ctrl_s": 81.739
+     },
+     "RL": {
+      "min_kN": 75.451,
+      "leg": "RL",
+      "t_ctrl_s": 81.862
+     },
+     "RR": {
+      "min_kN": 72.467,
+      "leg": "RR",
+      "t_ctrl_s": 83.326
+     }
+    },
+    "F_pressure_min_interval_from_first_ready": {
+     "FL": {
+      "min_kN": 77.493,
+      "leg": "FL",
+      "t_ctrl_s": 85.934
+     },
+     "FR": {
+      "min_kN": 108.369,
+      "leg": "FR",
+      "t_ctrl_s": 101.006
+     },
+     "RL": {
+      "min_kN": 64.402,
+      "leg": "RL",
+      "t_ctrl_s": 97.64
+     },
+     "RR": {
+      "min_kN": 22.033,
+      "leg": "RR",
+      "t_ctrl_s": 85.94
+     }
+    },
+    "all_legs_min_from_first_ready": {
+     "min_kN": 22.033,
+     "leg": "RR",
+     "t_ctrl_s": 85.94
+    },
+    "fault_leg_false_r5_fault_to_G4": [],
+    "true_force_at_relevel": [
+     {
+      "t_ctrl_s": 85.1,
+      "leg": "RR",
+      "F_pressure_kN": 53.79,
+      "F_pressure_min_interval_kN": 53.79,
+      "F_pressure_at_t_plus_horizon_kN": 41.192,
+      "min_next_2s_kN": 22.033,
+      "min_next_2s_t_ctrl_s": 85.94,
+      "class_at_fire": "false(>=3P5)"
+     }
+    ],
+    "fault_leg_head_true_max_after_fault_bar": 84.27,
+    "fault_leg_lock_windows": [
+     {
+      "t_start_s": 95.6,
+      "R_ub": 1.383,
+      "M_bar": 13.0,
+      "h_a_bar": 84.04,
+      "h_star_bar": 49.11,
+      "head_true_at_lock_bar": 83.97
+     },
+     {
+      "t_start_s": 105.6,
+      "R_ub": 1.369,
+      "M_bar": 31.14,
+      "h_a_bar": 51.91,
+      "h_star_bar": 43.12,
+      "head_true_at_lock_bar": 51.86
+     },
+     {
+      "t_start_s": 107.1,
+      "R_ub": 1.383,
+      "M_bar": 13.0,
+      "h_a_bar": 79.79,
+      "h_star_bar": 47.78,
+      "head_true_at_lock_bar": 79.41
+     },
+     {
+      "t_start_s": 107.9,
+      "R_ub": 1.393,
+      "M_bar": 13.0,
+      "h_a_bar": 79.7,
+      "h_star_bar": 47.83,
+      "head_true_at_lock_bar": 77.86
+     }
+    ],
+    "guard_saturation_s_per_leg(cmp_guard_u)": {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    },
+    "judge_guard_cap_s(issued_u fault leg)": 1.8
+   },
+   "replay": {
+    "engine": "L2b_NSC",
+    "replayable": true,
+    "reasons": [],
+    "notes": [
+     "fallback forced at the run's events; the monitor's own diagnosis is not replayed",
+     "E-6 deduction from the run meta",
+     "engine 'L2b_NSC' from settings.s8.engine",
+     "truth: pads F_pressure"
+    ],
+    "probed_leg_source_counts": {
+     "record": 238,
+     "history": 0,
+     "command": 0,
+     "none": 0
+    },
+    "command_history_match": null,
+    "gate": {
+     "kind": "same_run",
+     "passed": true
+    },
+    "level_gate": {
+     "passed": true,
+     "replay": {
+      "relevel_predicted": [
+       [
+        85.1,
+        3
+       ]
+      ],
+      "probe_aborted_low_load": []
+     },
+     "controller": {
+      "relevel_predicted": [
+       [
+        85.1,
+        3
+       ]
+      ],
+      "probe_aborted_low_load": []
+     },
+     "role": "record"
+    },
+    "same_run_gate": {
+     "source": "column_nominal",
+     "passed": true,
+     "r5_equal": true,
+     "fallback_slope_equal": true,
+     "controller_fallback_slope_count": 8,
+     "replay_fallback_slope_count": 8,
+     "first_fallback_slope_difference": null
+    },
+    "true_force_source": "F_pressure",
+    "variants": {
+     "plant_meta": {
+      "r5_events": {
+       "relevel_predicted": [
+        [
+         85.1,
+         3
+        ]
+       ],
+       "probe_aborted_low_load": []
+      },
+      "fallback_slope_events": [
+       [
+        84.9,
+        "RR",
+        [
+         15.215844847290292,
+         0.0
+        ]
+       ],
+       [
+        85.0,
+        "RR",
+        [
+         19.893080470116672,
+         0.0
+        ]
+       ],
+       [
+        85.1,
+        "RR",
+        [
+         20.236277003262163,
+         0.0
+        ]
+       ],
+       [
+        99.2,
+        "RR",
+        [
+         11.803787787869188,
+         0.0
+        ]
+       ],
+       [
+        99.3,
+        "RR",
+        [
+         13.014591954528198,
+         0.0
+        ]
+       ],
+       [
+        99.4,
+        "RR",
+        [
+         8.902508936575176,
+         0.0
+        ]
+       ],
+       [
+        102.3,
+        "RR",
+        [
+         10.557905529944158,
+         0.0
+        ]
+       ],
+       [
+        102.4,
+        "RR",
+        [
+         9.24088893562247,
+         0.0
+        ]
+       ]
+      ],
+      "row_classes": {
+       "judged_falling": {
+        "rows": 175,
+        "max_difference_N": -3053.7403105502963,
+        "missed": 0
+       },
+       "record_rising": {
+        "rows": 163,
+        "max_difference_N": -2799.5433103266114,
+        "missed": 0
+       },
+       "record_level": {
+        "rows": 10,
+        "max_difference_N": -2907.087665676765,
+        "missed": 0
+       },
+       "unwatched": {
+        "rows": 133,
+        "max_difference_N": 2169.2862667113004,
+        "missed": 0
+       }
+      },
+      "allowance_N": 1200.0,
+      "judged_falling_within_allowance": true,
+      "slope_rows_missed_triggers": 0,
+      "judgement_passed": true,
+      "level_missed_triggers": 0,
+      "level_missed_trigger_flag": false,
+      "worst_judged_falling_row": {
+       "t_s": 95.90000000206001,
+       "leg": "RR",
+       "phase": "probe",
+       "is_watched": true,
+       "condition": "met",
+       "rule": "nominal_gap",
+       "head_drop_Pa": 2816.4999975096434,
+       "fallback_drop_N": 37.66719479489377,
+       "L_hat_fb_N": 62146.49810118909,
+       "L_hat_true_N": 65200.23841173939,
+       "difference_N": -3053.7403105502963,
+       "is_rate_passed": false,
+       "fallback_fires": false,
+       "healthy_fires": false,
+       "is_missed": false,
+       "row_class": "judged_falling"
+      },
+      "missed_rows": [],
+      "first_fallback_fire_watched_s": 85.10000000170149,
+      "first_healthy_fire_watched_s": null,
+      "watched_fire_rows": [
+       [
+        85.1,
+        "ready",
+        "judged_falling",
+        true,
+        false,
+        14.545,
+        21.701
+       ]
+      ]
+     },
+     "column_nominal": {
+      "r5_events": {
+       "relevel_predicted": [
+        [
+         85.1,
+         3
+        ]
+       ],
+       "probe_aborted_low_load": []
+      },
+      "fallback_slope_events": [
+       [
+        84.9,
+        "RR",
+        [
+         14.711183611628803,
+         0.33010371094263
+        ]
+       ],
+       [
+        85.0,
+        "RR",
+        [
+         19.234830053699362,
+         0.43311496112764625
+        ]
+       ],
+       [
+        85.1,
+        "RR",
+        [
+         19.446158586299905,
+         0.3200752569107135
+        ]
+       ],
+       [
+        99.2,
+        "RR",
+        [
+         11.415936056707949,
+         0.10531940882782025
+        ]
+       ],
+       [
+        99.3,
+        "RR",
+        [
+         12.561591447276866,
+         0.09075894234698595
+        ]
+       ],
+       [
+        99.4,
+        "RR",
+        [
+         8.53055541115466,
+         0.0
+        ]
+       ],
+       [
+        102.3,
+        "RR",
+        [
+         10.116788288625191,
+         0.0
+        ]
+       ],
+       [
+        102.4,
+        "RR",
+        [
+         8.854797639100111,
+         0.0
+        ]
+       ]
+      ],
+      "row_classes": {
+       "judged_falling": {
+        "rows": 175,
+        "max_difference_N": -3051.6419198305884,
+        "missed": 0
+       },
+       "record_rising": {
+        "rows": 163,
+        "max_difference_N": -2828.281699740721,
+        "missed": 0
+       },
+       "record_level": {
+        "rows": 10,
+        "max_difference_N": -2907.087665676765,
+        "missed": 0
+       },
+       "unwatched": {
+        "rows": 133,
+        "max_difference_N": 1929.8804761963547,
+        "missed": 0
+       }
+      },
+      "allowance_N": 1200.0,
+      "judged_falling_within_allowance": true,
+      "slope_rows_missed_triggers": 0,
+      "judgement_passed": true,
+      "level_missed_triggers": 0,
+      "level_missed_trigger_flag": false,
+      "worst_judged_falling_row": {
+       "t_s": 95.90000000206001,
+       "leg": "RR",
+       "phase": "probe",
+       "is_watched": true,
+       "condition": "met",
+       "rule": "nominal_gap",
+       "head_drop_Pa": 2816.4999975096434,
+       "fallback_drop_N": 36.093401755116076,
+       "L_hat_fb_N": 62148.5964919088,
+       "L_hat_true_N": 65200.23841173939,
+       "difference_N": -3051.6419198305884,
+       "is_rate_passed": false,
+       "fallback_fires": false,
+       "healthy_fires": false,
+       "is_missed": false,
+       "row_class": "judged_falling"
+      },
+      "missed_rows": [],
+      "first_fallback_fire_watched_s": 85.10000000170149,
+      "first_healthy_fire_watched_s": null,
+      "watched_fire_rows": [
+       [
+        85.1,
+        "ready",
+        "judged_falling",
+        true,
+        false,
+        15.564,
+        21.701
+       ]
+      ]
+     }
+    }
+   }
+  }
+ },
+ "pairs": {
+  "Fs0": {
+   "case_id": "MLJ_K0V_fdown3.5_G4RF_Fs0",
+   "controller": {
+    "case": "C:\\workspace\\outrigger_control\\07_results\\S8\\v4_c29_Fs0_20261027_011211\\MLJ_K0V_fdown3.5_G4RF_Fs0",
+    "time_offset_s(ctrl-run)": 3.0000000000019043,
+    "fault": {
+     "leg": "FR",
+     "kind": "dropout",
+     "t_ctrl_s": 83.9,
+     "applied_periods": 481,
+     "periods_without_rod_reading": 0
+    },
+    "t_G4_ctrl_s": 86.9,
+    "phases_ctrl_s": [
+     [
+      3.1,
+      "check"
+     ],
+     [
+      7.7,
+      "touch"
+     ],
+     [
+      26.9,
+      "level"
+     ],
+     [
+      49.3,
+      "done"
+     ],
+     [
+      49.4,
+      "probe"
+     ],
+     [
+      61.3,
+      "reanchor"
+     ],
+     [
+      80.7,
+      "level"
+     ],
+     [
+      81.8,
+      "done"
+     ],
+     [
+      81.9,
+      "ready"
+     ],
+     [
+      87.8,
+      "level"
+     ],
+     [
+      105.7,
+      "done"
+     ],
+     [
+      105.8,
+      "probe"
+     ],
+     [
+      117.7,
+      "ready"
+     ]
+    ],
+    "ready_ctrl_s": [
+     81.9,
+     117.7
+    ],
+    "relevel_predicted": [
+     [
+      87.8,
+      "RR"
+     ]
+    ],
+    "relevel_predicted_rel_G4_s": [
+     [
+      0.9,
+      "RR"
+     ]
+    ],
+    "probe_aborted_low_load": [],
+    "info_r5_fallback_slope": [
+     [
+      106.3,
+      "INFO_R5_FALLBACK_SLOPE:FR:16.76:4.76"
+     ],
+     [
+      106.4,
+      "INFO_R5_FALLBACK_SLOPE:FR:16.67:4.62"
+     ],
+     [
+      106.5,
+      "INFO_R5_FALLBACK_SLOPE:FR:13.44:3.44"
+     ],
+     [
+      113.9,
+      "INFO_R5_FALLBACK_SLOPE:FR:16.15:5.27"
+     ],
+     [
+      114.0,
+      "INFO_R5_FALLBACK_SLOPE:FR:31.08:10.15"
+     ],
+     [
+      114.1,
+      "INFO_R5_FALLBACK_SLOPE:FR:44.04:14.38"
+     ],
+     [
+      114.2,
+      "INFO_R5_FALLBACK_SLOPE:FR:46.46:15.16"
+     ],
+     [
+      114.3,
+      "INFO_R5_FALLBACK_SLOPE:FR:37.30:11.88"
+     ],
+     [
+      114.4,
+      "INFO_R5_FALLBACK_SLOPE:FR:21.21:6.58"
+     ],
+     [
+      115.4,
+      "INFO_R5_FALLBACK_SLOPE:FR:9.92:2.41"
+     ],
+     [
+      115.5,
+      "INFO_R5_FALLBACK_SLOPE:FR:12.04:2.87"
+     ],
+     [
+      115.6,
+      "INFO_R5_FALLBACK_SLOPE:FR:13.53:3.15"
+     ],
+     [
+      115.7,
+      "INFO_R5_FALLBACK_SLOPE:FR:12.64:2.70"
+     ],
+     [
+      115.8,
+      "INFO_R5_FALLBACK_SLOPE:FR:8.91:1.41"
+     ]
+    ],
+    "info_r5_fallback_slope_count_by_leg": {
+     "FL": 0,
+     "FR": 14,
+     "RL": 0,
+     "RR": 0
+    },
+    "warn_rod_pressure_fallback": [
+     [
+      83.9,
+      "WARN_ROD_PRESSURE_FALLBACK:FR"
+     ]
+    ],
+    "info_rod_fault_reason": [
+     [
+      83.9,
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D1"
+     ]
+    ],
+    "fault_events": [],
+    "warn_events": [
+     [
+      83.9,
+      "WARN_ROD_PRESSURE_FALLBACK:FR"
+     ]
+    ],
+    "reapproach": [],
+    "all_event_count": 28,
+    "s8_end": {
+     "anchor": "event",
+     "after_s": 45.0,
+     "upper_s": 193.0,
+     "rule": "C-S8-17 (spec rev. 43 213.8): D8 READY + 10 s, event + 45 s, HOLD READY + 120 s; upper bound duration + 60 s, else timeout",
+     "applied": true,
+     "upper_used_s": 193.0,
+     "anchor_t_s": 83.90000000159336,
+     "target_t_s": 128.90000000159336,
+     "end_t_s": 128.90000000325318,
+     "stopped_at_target": true,
+     "timeout": false,
+     "final_phase": "ready",
+     "phase_lengths": {
+      "total_s": {
+       "check": 4.599999999993276,
+       "touch": 19.199999999955253,
+       "level": 41.40000000119315,
+       "done": 0.30000000000995897,
+       "probe": 23.800000000790078,
+       "reanchor": 19.400000000644006,
+       "ready": 20.10000000066725
+      },
+      "first_touch_s": 19.199999999955253,
+      "first_level_s": 22.400000000562414
+     }
+    }
+   },
+   "forces": {
+    "F_min_N": 9414.58911,
+    "P5_N": 16914.58911,
+    "F_min_plus_5kN_N": 14414.58911,
+    "F_pressure_min_interval_after_fault": {
+     "FL": {
+      "min_kN": 68.004,
+      "leg": "FL",
+      "t_ctrl_s": 88.882
+     },
+     "FR": {
+      "min_kN": 99.926,
+      "leg": "FR",
+      "t_ctrl_s": 116.258
+     },
+     "RL": {
+      "min_kN": 53.047,
+      "leg": "RL",
+      "t_ctrl_s": 116.454
+     },
+     "RR": {
+      "min_kN": 15.381,
+      "leg": "RR",
+      "t_ctrl_s": 88.66
+     }
+    },
+    "others_min_after_fault": {
+     "min_kN": 15.381,
+     "leg": "RR",
+     "t_ctrl_s": 88.66
+    },
+    "fault_leg_min_after_fault": {
+     "min_kN": 99.926,
+     "leg": "FR",
+     "t_ctrl_s": 116.258
+    },
+    "F_pressure_min_interval_fault_to_G4": {
+     "FL": {
+      "min_kN": 118.522,
+      "leg": "FL",
+      "t_ctrl_s": 84.196
+     },
+     "FR": {
+      "min_kN": 117.186,
+      "leg": "FR",
+      "t_ctrl_s": 84.421
+     },
+     "RL": {
+      "min_kN": 71.472,
+      "leg": "RL",
+      "t_ctrl_s": 84.216
+     },
+     "RR": {
+      "min_kN": 68.963,
+      "leg": "RR",
+      "t_ctrl_s": 84.856
+     }
+    },
+    "F_pressure_min_interval_from_first_ready": {
+     "FL": {
+      "min_kN": 68.004,
+      "leg": "FL",
+      "t_ctrl_s": 88.882
+     },
+     "FR": {
+      "min_kN": 99.926,
+      "leg": "FR",
+      "t_ctrl_s": 116.258
+     },
+     "RL": {
+      "min_kN": 53.047,
+      "leg": "RL",
+      "t_ctrl_s": 116.454
+     },
+     "RR": {
+      "min_kN": 15.381,
+      "leg": "RR",
+      "t_ctrl_s": 88.66
+     }
+    },
+    "all_legs_min_from_first_ready": {
+     "min_kN": 15.381,
+     "leg": "RR",
+     "t_ctrl_s": 88.66
+    },
+    "fault_leg_false_r5_fault_to_G4": [],
+    "true_force_at_relevel": [
+     {
+      "t_ctrl_s": 87.8,
+      "leg": "RR",
+      "F_pressure_kN": 36.773,
+      "F_pressure_min_interval_kN": 36.763,
+      "F_pressure_at_t_plus_horizon_kN": 30.575,
+      "min_next_2s_kN": 15.381,
+      "min_next_2s_t_ctrl_s": 88.66,
+      "class_at_fire": "between"
+     }
+    ],
+    "fault_leg_head_true_max_after_fault_bar": 139.58,
+    "fault_leg_lock_windows": [
+     {
+      "t_start_s": 106.0,
+      "R_ub": 14.591,
+      "M_bar": 45.19,
+      "h_a_bar": 96.43,
+      "h_star_bar": 84.19,
+      "head_true_at_lock_bar": 96.43
+     },
+     {
+      "t_start_s": 110.0,
+      "R_ub": 14.055,
+      "M_bar": 42.7,
+      "h_a_bar": 86.92,
+      "h_star_bar": 76.07,
+      "head_true_at_lock_bar": 86.92
+     },
+     {
+      "t_start_s": 111.5,
+      "R_ub": 14.59,
+      "M_bar": 13.0,
+      "h_a_bar": 88.58,
+      "h_star_bar": 76.1,
+      "head_true_at_lock_bar": 88.1
+     },
+     {
+      "t_start_s": 118.3,
+      "R_ub": 15.022,
+      "M_bar": 13.0,
+      "h_a_bar": 88.37,
+      "h_star_bar": 76.21,
+      "head_true_at_lock_bar": 87.98
+     }
+    ],
+    "guard_saturation_s_per_leg(cmp_guard_u)": {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    },
+    "judge_guard_cap_s(issued_u fault leg)": 1.3
+   }
+  },
+  "Fs8": {
+   "case_id": "MLJ_K0V_fdown3.5_G4RF_Fs8",
+   "controller": {
+    "case": "C:\\workspace\\outrigger_control\\07_results\\S8\\v4_c29_Fs8_20261027_011151\\MLJ_K0V_fdown3.5_G4RF_Fs8",
+    "time_offset_s(ctrl-run)": 3.0000000000019043,
+    "fault": {
+     "leg": "FR",
+     "kind": "dropout",
+     "t_ctrl_s": 81.5,
+     "applied_periods": 481,
+     "periods_without_rod_reading": 0
+    },
+    "t_G4_ctrl_s": 84.5,
+    "phases_ctrl_s": [
+     [
+      3.1,
+      "check"
+     ],
+     [
+      7.7,
+      "touch"
+     ],
+     [
+      26.9,
+      "level"
+     ],
+     [
+      49.3,
+      "done"
+     ],
+     [
+      49.4,
+      "probe"
+     ],
+     [
+      61.3,
+      "reanchor"
+     ],
+     [
+      78.3,
+      "level"
+     ],
+     [
+      79.4,
+      "done"
+     ],
+     [
+      79.5,
+      "ready"
+     ],
+     [
+      85.2,
+      "level"
+     ],
+     [
+      95.3,
+      "done"
+     ],
+     [
+      95.4,
+      "probe"
+     ],
+     [
+      107.3,
+      "ready"
+     ]
+    ],
+    "ready_ctrl_s": [
+     79.5,
+     107.3
+    ],
+    "relevel_predicted": [
+     [
+      85.2,
+      "RR"
+     ]
+    ],
+    "relevel_predicted_rel_G4_s": [
+     [
+      0.7,
+      "RR"
+     ]
+    ],
+    "probe_aborted_low_load": [],
+    "info_r5_fallback_slope": [
+     [
+      96.1,
+      "INFO_R5_FALLBACK_SLOPE:FR:11.98:3.42"
+     ],
+     [
+      96.3,
+      "INFO_R5_FALLBACK_SLOPE:FR:11.22:2.89"
+     ],
+     [
+      105.1,
+      "INFO_R5_FALLBACK_SLOPE:FR:11.76:2.73"
+     ],
+     [
+      105.2,
+      "INFO_R5_FALLBACK_SLOPE:FR:20.17:5.13"
+     ],
+     [
+      105.3,
+      "INFO_R5_FALLBACK_SLOPE:FR:20.48:5.03"
+     ],
+     [
+      105.4,
+      "INFO_R5_FALLBACK_SLOPE:FR:11.25:2.01"
+     ]
+    ],
+    "info_r5_fallback_slope_count_by_leg": {
+     "FL": 0,
+     "FR": 6,
+     "RL": 0,
+     "RR": 0
+    },
+    "warn_rod_pressure_fallback": [
+     [
+      81.5,
+      "WARN_ROD_PRESSURE_FALLBACK:FR"
+     ]
+    ],
+    "info_rod_fault_reason": [
+     [
+      81.5,
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D1"
+     ]
+    ],
+    "fault_events": [],
+    "warn_events": [
+     [
+      81.5,
+      "WARN_ROD_PRESSURE_FALLBACK:FR"
+     ],
+     [
+      107.3,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.962"
+     ]
+    ],
+    "reapproach": [
+     [
+      85.8,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      86.3,
+      "leg_reapproach_contact:RR"
+     ]
+    ],
+    "all_event_count": 22,
+    "s8_end": {
+     "anchor": "event",
+     "after_s": 45.0,
+     "upper_s": 193.0,
+     "rule": "C-S8-17 (spec rev. 43 213.8): D8 READY + 10 s, event + 45 s, HOLD READY + 120 s; upper bound duration + 60 s, else timeout",
+     "applied": true,
+     "upper_used_s": 193.0,
+     "anchor_t_s": 81.50000000151368,
+     "target_t_s": 126.50000000151368,
+     "end_t_s": 126.50000000317351,
+     "stopped_at_target": true,
+     "timeout": false,
+     "final_phase": "ready",
+     "phase_lengths": {
+      "total_s": {
+       "check": 4.599999999993276,
+       "touch": 19.199999999955253,
+       "level": 33.600000000934216,
+       "done": 0.30000000000995897,
+       "probe": 23.800000000790078,
+       "reanchor": 17.000000000564334,
+       "ready": 27.900000000926184
+      },
+      "first_touch_s": 19.199999999955253,
+      "first_level_s": 22.400000000562414
+     }
+    }
+   },
+   "forces": {
+    "F_min_N": 9414.58911,
+    "P5_N": 16914.58911,
+    "F_min_plus_5kN_N": 14414.58911,
+    "F_pressure_min_interval_after_fault": {
+     "FL": {
+      "min_kN": 76.606,
+      "leg": "FL",
+      "t_ctrl_s": 85.934
+     },
+     "FR": {
+      "min_kN": 95.734,
+      "leg": "FR",
+      "t_ctrl_s": 99.373
+     },
+     "RL": {
+      "min_kN": 56.483,
+      "leg": "RL",
+      "t_ctrl_s": 106.666
+     },
+     "RR": {
+      "min_kN": 23.014,
+      "leg": "RR",
+      "t_ctrl_s": 85.935
+     }
+    },
+    "others_min_after_fault": {
+     "min_kN": 23.014,
+     "leg": "RR",
+     "t_ctrl_s": 85.935
+    },
+    "fault_leg_min_after_fault": {
+     "min_kN": 95.734,
+     "leg": "FR",
+     "t_ctrl_s": 99.373
+    },
+    "F_pressure_min_interval_fault_to_G4": {
+     "FL": {
+      "min_kN": 122.636,
+      "leg": "FL",
+      "t_ctrl_s": 83.297
+     },
+     "FR": {
+      "min_kN": 120.701,
+      "leg": "FR",
+      "t_ctrl_s": 81.739
+     },
+     "RL": {
+      "min_kN": 75.451,
+      "leg": "RL",
+      "t_ctrl_s": 81.862
+     },
+     "RR": {
+      "min_kN": 72.467,
+      "leg": "RR",
+      "t_ctrl_s": 83.326
+     }
+    },
+    "F_pressure_min_interval_from_first_ready": {
+     "FL": {
+      "min_kN": 76.606,
+      "leg": "FL",
+      "t_ctrl_s": 85.934
+     },
+     "FR": {
+      "min_kN": 95.734,
+      "leg": "FR",
+      "t_ctrl_s": 99.373
+     },
+     "RL": {
+      "min_kN": 56.483,
+      "leg": "RL",
+      "t_ctrl_s": 106.666
+     },
+     "RR": {
+      "min_kN": 23.014,
+      "leg": "RR",
+      "t_ctrl_s": 85.935
+     }
+    },
+    "all_legs_min_from_first_ready": {
+     "min_kN": 23.014,
+     "leg": "RR",
+     "t_ctrl_s": 85.935
+    },
+    "fault_leg_false_r5_fault_to_G4": [],
+    "true_force_at_relevel": [
+     {
+      "t_ctrl_s": 85.2,
+      "leg": "RR",
+      "F_pressure_kN": 48.07,
+      "F_pressure_min_interval_kN": 48.02,
+      "F_pressure_at_t_plus_horizon_kN": 37.07,
+      "min_next_2s_kN": 23.014,
+      "min_next_2s_t_ctrl_s": 85.935,
+      "class_at_fire": "between"
+     }
+    ],
+    "fault_leg_head_true_max_after_fault_bar": 130.35,
+    "fault_leg_lock_windows": [
+     {
+      "t_start_s": 95.6,
+      "R_ub": 14.678,
+      "M_bar": 13.0,
+      "h_a_bar": 93.21,
+      "h_star_bar": 79.89,
+      "head_true_at_lock_bar": 93.21
+     },
+     {
+      "t_start_s": 99.6,
+      "R_ub": 14.136,
+      "M_bar": 40.27,
+      "h_a_bar": 81.81,
+      "h_star_bar": 71.9,
+      "head_true_at_lock_bar": 81.81
+     },
+     {
+      "t_start_s": 101.1,
+      "R_ub": 14.678,
+      "M_bar": 13.0,
+      "h_a_bar": 95.24,
+      "h_star_bar": 81.53,
+      "head_true_at_lock_bar": 95.09
+     },
+     {
+      "t_start_s": 107.9,
+      "R_ub": 15.114,
+      "M_bar": 13.0,
+      "h_a_bar": 95.95,
+      "h_star_bar": 82.42,
+      "head_true_at_lock_bar": 94.75
+     }
+    ],
+    "guard_saturation_s_per_leg(cmp_guard_u)": {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    },
+    "judge_guard_cap_s(issued_u fault leg)": 1.8
+   }
+  }
+ },
+ "judge": {
+  "c67": {
+   "file": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s9\\v5\\verify_S8C_c67.json",
+   "batch_failed": 0,
+   "batch_rows": 140,
+   "summary": {
+    "rows": 140,
+    "failed": [],
+    "ml0_rod_fallback_gate": null,
+    "ml1_rod_fallback_runs": null,
+    "deferred_leg_below_F_min": {
+     "flagged_runs": 0,
+     "runs": []
+    },
+    "flag_rows": [
+     "F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)"
+    ]
+   },
+   "MLJ_K0V_fdown3.5_G4RRF_Fs0": {
+    "rows": 75,
+    "failed": [],
+    "judged_rows": [
+     {
+      "item": "R-5 justified firing (floor event)",
+      "value": 42.75568854341721,
+      "limit": "t > t_event and >= 20 kN/s (0.3 s mean)",
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "D8 no pad lift-off",
+      "value": 20.7431808946755,
+      "limit": "> 0",
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "D8 attitude last 5 s + mount <= 0.2 deg",
+      "value": 0.03452857629390285,
+      "limit": 0.2,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "REANCHOR min >= F_min + 7 kN",
+      "value": 19.222323457680048,
+      "limit": 16.41458911,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "G4 item 6 (1) min after settlement >= F_min",
+      "value": 21.3327551670018,
+      "limit": 9.414589110000001,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",
+      "value": 51.66687937961214,
+      "limit": 14.414589110000001,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "C2 REANCHOR min >= F_min + 7 kN",
+      "value": 19.222323457680048,
+      "limit": 16.41458911,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",
+      "value": 0,
+      "limit": [
+       0.1,
+       0.1,
+       0.1,
+       0.1
+      ],
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)",
+      "value": 0,
+      "limit": 0,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "F3 F_band >= F_s after the first probe",
+      "value": 1.6718900076978815,
+      "limit": 0.0,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "F8 no false re-level in event-free READY",
+      "value": 0,
+      "limit": 0,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact)",
+      "value": 0,
+      "limit": 0,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY",
+      "value": 0,
+      "limit": 0,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "MLJ FAULT 0 (a rod-sensor fault falls back, it does not FAULT)",
+      "value": null,
+      "limit": null,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "C-S8-29 the injected rod fault is caught (fallback on the faulty leg)",
+      "value": 1,
+      "limit": ">= 1",
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "C-S8-36 twist-mode work recurrence: clusters of 0.5 s bins > +20 J after event + 1.5 s (forced window masked) <= 1 (spec rev. 54 248.3, ASSUMPTION) - judged (RT variant runs)",
+      "value": {
+       "runs": 2,
+       "failed": 0,
+       "not_judgeable": [],
+       "worst": [
+        "MLJ_K0V_fdown3.5_G4RRF_Fs0",
+        0,
+        0.0
+       ]
+      },
+      "limit": 1,
+      "passed": true,
+      "kind": "judged"
+     }
+    ]
+   },
+   "MLJ_K0V_fdown3.5_G4RRF_Fs8": {
+    "rows": 76,
+    "failed": [],
+    "judged_rows": [
+     {
+      "item": "R-5 justified firing (floor event)",
+      "value": 47.799827330738864,
+      "limit": "t > t_event and >= 20 kN/s (0.3 s mean)",
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "D8 no pad lift-off",
+      "value": 16.729433795777915,
+      "limit": "> 0",
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "D8 attitude last 5 s + mount <= 0.2 deg",
+      "value": 0.046377971820099076,
+      "limit": 0.2,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "REANCHOR min >= F_min + 7 kN",
+      "value": 38.464896175966324,
+      "limit": 16.41458911,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "G4 item 6 (1) min after settlement >= F_min",
+      "value": 15.366615410611724,
+      "limit": 9.414589110000001,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",
+      "value": 49.578216515508835,
+      "limit": 14.414589110000001,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "C2 REANCHOR min >= F_min + 7 kN",
+      "value": 38.464896175966324,
+      "limit": 16.41458911,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",
+      "value": 0,
+      "limit": [
+       0.1,
+       0.1,
+       0.1,
+       0.1
+      ],
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)",
+      "value": 0,
+      "limit": 0,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "F3 F_band >= F_s after the first probe",
+      "value": 12.969514847032729,
+      "limit": 8.0,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "F8 no false re-level in event-free READY",
+      "value": 0,
+      "limit": 0,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact)",
+      "value": 0,
+      "limit": 0,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY",
+      "value": 0,
+      "limit": 0,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "MLJ FAULT 0 (a rod-sensor fault falls back, it does not FAULT)",
+      "value": null,
+      "limit": null,
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "C-S8-29 the injected rod fault is caught (fallback on the faulty leg)",
+      "value": 1,
+      "limit": ">= 1",
+      "passed": true,
+      "kind": "judged"
+     },
+     {
+      "item": "C-S8-36 twist-mode work recurrence: clusters of 0.5 s bins > +20 J after event + 1.5 s (forced window masked) <= 1 (spec rev. 54 248.3, ASSUMPTION) - judged (RT variant runs)",
+      "value": {
+       "runs": 2,
+       "failed": 0,
+       "not_judgeable": [],
+       "worst": [
+        "MLJ_K0V_fdown3.5_G4RRF_Fs0",
+        0,
+        0.0
+       ]
+      },
+      "limit": 1,
+      "passed": true,
+      "kind": "judged"
+     }
+    ]
+   }
+  }
+ },
+ "verdict": {
+  "Fs0": {
+   "1_rr_relevel_ctrl_s": 87.6,
+   "1_rr_relevel_rel_G4_s": 0.7,
+   "1_pair_healthy_ctrl_s": 87.8,
+   "1_pair_rel_G4_s": 0.9,
+   "1_same_ready": true,
+   "1_rr_r5_fault_to_G4": 0,
+   "1_false_r5(>=3P5)": 0,
+   "1_passed": true,
+   "2_info_rr_count": 14,
+   "2_passed": true,
+   "3_gate": {
+    "kind": "same_run",
+    "passed": true
+   },
+   "3_same_run_gate_passed": true,
+   "3_worst_judged_falling_kN": -3.998,
+   "3_judged_falling_rows": 184,
+   "3_slope_missed": 0,
+   "3_level_missed_flag": false,
+   "3_judgement_passed_tool": true,
+   "3_passed": true,
+   "4_others_min_after_fault": {
+    "min_kN": 58.294,
+    "leg": "RL",
+    "t_ctrl_s": 98.943
+   },
+   "4_pair_others_min_after_fault": {
+    "leg": "RL",
+    "min_kN": 53.047,
+    "t_ctrl_s": 116.454
+   },
+   "4_limit_kN(record)": 14.415,
+   "4_meets_record_limit": true,
+   "two_path_r5_equal": true,
+   "two_path_info_equal": true,
+   "replay_first_fallback_fire_s": 87.60000000178448,
+   "replay_first_healthy_fire_s": null
+  },
+  "Fs8": {
+   "1_rr_relevel_ctrl_s": 85.1,
+   "1_rr_relevel_rel_G4_s": 0.6,
+   "1_pair_healthy_ctrl_s": 85.2,
+   "1_pair_rel_G4_s": 0.7,
+   "1_same_ready": true,
+   "1_rr_r5_fault_to_G4": 0,
+   "1_false_r5(>=3P5)": 0,
+   "1_passed": true,
+   "2_info_rr_count": 8,
+   "2_passed": true,
+   "3_gate": {
+    "kind": "same_run",
+    "passed": true
+   },
+   "3_same_run_gate_passed": true,
+   "3_worst_judged_falling_kN": -3.052,
+   "3_judged_falling_rows": 175,
+   "3_slope_missed": 0,
+   "3_level_missed_flag": false,
+   "3_judgement_passed_tool": true,
+   "3_passed": true,
+   "4_others_min_after_fault": {
+    "min_kN": 64.402,
+    "leg": "RL",
+    "t_ctrl_s": 97.64
+   },
+   "4_pair_others_min_after_fault": {
+    "leg": "RL",
+    "min_kN": 56.483,
+    "t_ctrl_s": 106.666
+   },
+   "4_limit_kN(record)": 14.415,
+   "4_meets_record_limit": true,
+   "two_path_r5_equal": true,
+   "two_path_info_equal": true,
+   "replay_first_fallback_fire_s": 85.10000000170149,
+   "replay_first_healthy_fire_s": null
+  }
+ }
+}

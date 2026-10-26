@@ -17,14 +17,23 @@ what a judgement on the result needs:
    ``command`` is used only when it agrees with ``history`` on every row of every finished round
    of the run, and a round it decides must not have its probed leg equal to the leg of the
    ``probe_aborted_low_load:<leg>`` that ended it (the controller never watches the probed leg).
-2. **Level gate**: the ``level`` replay must give the controller's ``relevel_predicted:<leg>`` and
-   ``probe_aborted_low_load:<leg>`` at the same rows and legs; only then do the ``nominal_gap``
-   replays of the run count.
+2. **Gate** (:class:`GateKind`): only when the replay reproduces the run do its ``nominal_gap``
+   replays count.
+
+   * ``level`` (a run with the ``level`` rule or R-5 off, i.e. before P-S8-22): the ``level``
+     replay gives the controller's ``relevel_predicted:<leg>`` and
+     ``probe_aborted_low_load:<leg>`` at the same rows and legs.
+   * ``same_run`` (a run that ran ``nominal_gap``; spec rev. 62 316 "같은 실행 관문", 316.6
+     D-4, an ASSUMPTION of control 317 (1)): the replay of the run's own
+     ``fallback_ratio_source`` gives those events and every ``INFO_R5_FALLBACK_SLOPE``
+     (time, leg, ``D`` and gap to the event's 0.01 kN). The ``level`` replay of such a run is
+     a record (``level_gate``, ``role`` ``record``).
 3. **Monitor inputs**: the E-6 deduction from the run meta (missing with a failed calibration:
    not replayable; missing without one: 0, noted); the replay's two-pressure settings equal the
    run's ``controller_meta.two_pressure.settings`` field by field (only the P-S8-22 keys of
-   ``r8.fast_relevel`` may differ, noted); the fallback is forced at the run's events (the
-   monitor's own diagnosis is not replayed, noted).
+   ``r8.fast_relevel`` may differ, noted; keys that are no setting, e.g. cad C-1's
+   ``fallback_plant_ratio_source``, are records, noted); the fallback is forced at the run's
+   events (the monitor's own diagnosis is not replayed, noted).
 4. **Optimism record** (P-1): per fallback-leg row the watch phase, whether R-5 watches the
    leg there (READY, or PROBE on a leg not being probed), the 302.2 condition (``met`` /
    ``moving`` / ``short`` / ``other``), the replayed prediction ``L_hat_fb`` and the R-5
@@ -32,7 +41,11 @@ what a judgement on the result needs:
    band ``b`` of the healthy legs, over the controller's ``n`` and ``h``), and whether the healthy
    R-5 fires (all three conditions) where the fallback one does not (a missed trigger). Truth
    (``true_force_source``): ``pads.npz`` ``F_pressure`` (two-sensor net force); without it
-   ``F_cyl`` only for a run with ``F_s = 0`` (``F_cyl_no_friction``), else not replayable. Row
+   ``F_cyl`` only for a run with ``F_s = 0`` (``F_cyl_no_friction``), else not replayable.
+   ``F_s`` comes from the episode meta, else from cad C-2's record
+   ``settings.bundle_c.pads_seal_fields`` (316.6 D-2), else 0 for L1. The engine (allowance)
+   comes from the episode meta, ``settings.s8.engine``, ``settings.s7c.engine`` (D-3) or the
+   case id prefix. Row
    classes (:class:`RowClass`): ``judged_falling`` (watched ``nominal_gap`` rows with
    ``Dh >= 0``), ``record_rising``, ``record_level``, ``unwatched``. The one official verdict
    ``judgement_passed`` (control decision 2026-10-26): the ``judged_falling`` optimism within the
@@ -62,8 +75,9 @@ from outrigger_sim.contact_episode import (
     build_episode,
     read_controller_events,
 )
-from outrigger_sim.control.c2 import C2Config, C2Geometry, C2Phase
+from outrigger_sim.control.c2 import FALLBACK_SLOPE_EVENT, C2Config, C2Geometry, C2Phase
 from outrigger_sim.control.contact_replay import (
+    FAST_RELEVEL_SETTING_KEYS,
     ActionKind,
     Judge,
     ReplayInput,
@@ -99,6 +113,12 @@ ZERO_CALIBRATION_WARNING_PREFIX = "WARN_PRESSURE_ZERO"
 RECORDED_PROBED_LEG_KEY = "probed_leg"
 """ASSUMPTION: the runner's 10 Hz key holds ``C2Controller._probed_leg()`` after the update
 (-1 = none), the episode convention."""
+PADS_SEAL_FIELDS_KEY = "pads_seal_fields"
+"""cad C-2 record in ``settings.bundle_c``: ``F_s_front_N`` and ``friction_path`` of the run."""
+ENGINE_SETTING_PATHS = (("s8", "engine"), ("s7c", "engine"))
+"""Where S8 / S7 runner settings state the engine (spec rev. 62 316.6 D-3), in this order."""
+SLOPE_VALUE_FORMAT = ".2f"
+"""``INFO_R5_FALLBACK_SLOPE`` values: kN with two decimals (``FallbackSlopeReport``)."""
 
 
 class ProbedLegSource(StrEnum):
@@ -273,6 +293,75 @@ def replay_r5_events(replay, inputs: ReplayInput) -> dict[str, list[tuple]]:
     return found
 
 
+SlopeEventKey = tuple[float, str, str, str]
+"""``(t_s, leg name, D_kN, gap_kN)`` of an ``INFO_R5_FALLBACK_SLOPE``, values as the event's
+text (two decimals)."""
+
+
+def controller_fallback_slope_events(events: Sequence[tuple[float, str]]) -> list[SlopeEventKey]:
+    """The run's ``INFO_R5_FALLBACK_SLOPE:<leg>:<D_kN>:<gap_kN>`` events."""
+    found = []
+    for time_s, name in events:
+        prefix, _, rest = name.partition(":")
+        if prefix != FALLBACK_SLOPE_EVENT:
+            continue
+        leg_name, drop_kN, gap_kN = rest.split(":")
+        found.append((round(float(time_s), TIME_KEY_DECIMALS), leg_name, drop_kN, gap_kN))
+    return found
+
+
+def replay_fallback_slope_events(
+    slope_events: Sequence[tuple[float, str, Sequence[float]]],
+) -> list[SlopeEventKey]:
+    """A variant's ``fallback_slope_events`` formatted as the controller writes them."""
+    return [
+        (round(float(time_s), TIME_KEY_DECIMALS), leg_name,
+         format(float(values_kN[0]), SLOPE_VALUE_FORMAT),
+         format(float(values_kN[1]), SLOPE_VALUE_FORMAT))
+        for time_s, leg_name, values_kN in slope_events
+    ]
+
+
+class GateKind(StrEnum):
+    """Which replay must reproduce the run (module docstring, 2)."""
+
+    LEVEL = "level"
+    SAME_RUN = "same_run"
+
+
+def run_own_slope_source(run: ReplaySettings) -> str | None:
+    """``fallback_ratio_source`` of a run that ran ``nominal_gap``; ``None`` = ``level`` rule or
+    R-5 off (the ``level`` gate applies)."""
+    fast = run.fast_relevel
+    if fast is None or not fast.uses_fallback_slope:
+        return None
+    return str(fast.fallback_ratio_source)
+
+
+def same_run_gate(
+    variant: Mapping[str, Any],
+    controller_r5: Mapping[str, list[tuple]],
+    controller_slope: Sequence[SlopeEventKey],
+) -> dict[str, Any]:
+    """Same-run gate on the variant of the run's own source: its R-5 re-levels, probe aborts
+    and ``INFO_R5_FALLBACK_SLOPE`` events equal the controller's."""
+    replayed_slope = replay_fallback_slope_events(variant["fallback_slope_events"])
+    is_r5_equal = variant["r5_events"] == controller_r5
+    is_slope_equal = replayed_slope == list(controller_slope)
+    # Counts may differ (reported separately); the first differing pair is a pointer only.
+    paired = zip(replayed_slope, controller_slope, strict=False)
+    first_difference = next(
+        ((replayed, recorded) for replayed, recorded in paired if replayed != recorded), None)
+    return {
+        "passed": is_r5_equal and is_slope_equal,
+        "r5_equal": is_r5_equal,
+        "fallback_slope_equal": is_slope_equal,
+        "controller_fallback_slope_count": len(controller_slope),
+        "replay_fallback_slope_count": len(replayed_slope),
+        "first_fallback_slope_difference": first_difference,
+    }
+
+
 def _normalized(value: Any) -> Any:
     return json.loads(json.dumps(value))
 
@@ -281,7 +370,8 @@ def monitor_setting_differences(
     run_meta: Mapping[str, Any], config: C2Config, geometry: C2Geometry
 ) -> tuple[list[str], list[str]]:
     """(differences, notes): the replay's two-pressure settings and resolved monitor values
-    against the run's ``controller_meta``; ``r8.fast_relevel`` keys other than P-S8-22's."""
+    against the run's ``controller_meta``; ``r8.fast_relevel`` settings other than P-S8-22's.
+    Record-only ``r8.fast_relevel`` keys (no setting) are notes."""
     differences, notes = [], []
     run_monitor = run_meta["two_pressure"]
     run_settings = run_monitor["settings"]
@@ -307,7 +397,10 @@ def monitor_setting_differences(
     for key in sorted(set(run_fast) | set(replay_fast)):
         if run_fast.get(key, "<missing>") == replay_fast.get(key, "<missing>"):
             continue
-        if key in P_S8_22_FAST_RELEVEL_KEYS:
+        if key not in FAST_RELEVEL_SETTING_KEYS:  # cad C-1 records (316.6 D-1), not settings
+            notes.append(f"r8.fast_relevel.{key}: run {run_fast.get(key)!r} "
+                         "(record-only key, ignored by the replay)")
+        elif key in P_S8_22_FAST_RELEVEL_KEYS:
             notes.append(f"r8.fast_relevel.{key}: run {run_fast.get(key)!r} "
                          f"replay {replay_fast.get(key)!r} (P-S8-22 key)")
         else:
@@ -400,13 +493,41 @@ def _sample_at(pads_t: NDArray, values: NDArray, t_s: NDArray) -> NDArray[np.flo
     return out
 
 
-def _seal_friction_N(episode_meta: Mapping[str, Any], engine: str | None) -> float | None:
-    """Largest seal friction limit of the run: the episode meta ``seal_friction_N``; L1 runs
-    without it have none (the L1 / L1-R plant has no seal-friction element); ``None`` =
-    unknown."""
+def recorded_seal_friction_N(result: Mapping[str, Any]) -> float | None:
+    """Largest seal friction limit stated by cad C-2's record
+    ``settings.bundle_c.pads_seal_fields`` (spec rev. 62 316.6 D-2).
+
+    ``friction_path`` false with ``F_s_front_N`` 0: no seal-friction element, 0. ``friction_path``
+    true with ``F_s_front_N`` > 0: that front limit (the rear one is smaller). Otherwise
+    (no record, missing or contradicting fields): ``None`` = the record does not say.
+    """
+    bundle = (result.get("settings") or {}).get("bundle_c") or {}
+    record = bundle.get(PADS_SEAL_FIELDS_KEY)
+    if not isinstance(record, Mapping):
+        return None
+    front_N = record.get("F_s_front_N")
+    has_friction_path = record.get("friction_path")
+    if front_N is None or not isinstance(has_friction_path, bool):
+        return None
+    front_N = float(front_N)
+    if not has_friction_path and front_N == 0.0:
+        return 0.0
+    if has_friction_path and front_N > 0.0:
+        return front_N
+    return None
+
+
+def _seal_friction_N(
+    episode_meta: Mapping[str, Any], engine: str | None, recorded_N: float | None
+) -> float | None:
+    """Largest seal friction limit of the run: the episode meta ``seal_friction_N``, else the
+    C-2 record (``recorded_N``); L1 runs without either have none (the L1 / L1-R plant has no
+    seal-friction element); ``None`` = unknown."""
     friction = episode_meta.get("seal_friction_N")
     if friction is not None:
         return float(np.max(np.atleast_1d(np.asarray(friction, dtype=float))))
+    if recorded_N is not None:
+        return recorded_N
     if engine is not None and engine.upper().startswith("L1"):
         return 0.0
     return None
@@ -414,16 +535,25 @@ def _seal_friction_N(episode_meta: Mapping[str, Any], engine: str | None) -> flo
 
 def true_forces_at(
     pads_path: Path, t_s: NDArray[np.float64], episode_meta: Mapping[str, Any],
-    engine: str | None,
+    engine: str | None, *, recorded_seal_friction: float | None = None,
 ) -> TrueForces:
     """Net-force truth at each ``t_k`` (n, 4): ``F_pressure`` first; without it ``F_cyl``
-    only for a run with ``F_s = 0`` (``F_s > 0`` or unknown: not replayable)."""
+    only for a run with ``F_s = 0`` (``F_s > 0`` or unknown: not replayable).
+
+    Args:
+        pads_path: The run's ``pads.npz``.
+        t_s: Update times (n,).
+        episode_meta: Episode meta (``seal_friction_N`` when the runner gave it).
+        engine: Engine of the run (:func:`run_engine`).
+        recorded_seal_friction: Seal friction limit [N] of the C-2 record
+            (:func:`recorded_seal_friction_N`), used without an episode ``seal_friction_N``.
+    """
     with np.load(pads_path, allow_pickle=False) as pads:
         pads_t = np.asarray(pads["t"], dtype=float)
         if "F_pressure" in pads.files:
             force = _sample_at(pads_t, pads["F_pressure"], t_s)
             return TrueForces(force, TrueForceSource.F_PRESSURE, "truth: pads F_pressure")
-        friction_N = _seal_friction_N(episode_meta, engine)
+        friction_N = _seal_friction_N(episode_meta, engine, recorded_seal_friction)
         if friction_N is None:
             return TrueForces(None, None, "no pads F_pressure and the seal friction is unknown")
         if friction_N > 0.0:
@@ -560,14 +690,31 @@ def _rule_summary(rows: Sequence[Mapping[str, Any]], rule: str) -> dict[str, Any
     }
 
 
-def run_engine(result: Mapping[str, Any], episode_meta: Mapping[str, Any]) -> str | None:
-    """Engine of the run: the episode meta, else the case id prefix (``L1_...``, ``L2b_...``)."""
+def run_engine_and_origin(
+    result: Mapping[str, Any], episode_meta: Mapping[str, Any]
+) -> tuple[str | None, str]:
+    """Engine of the run and where it was read (:func:`run_engine`)."""
     engine = episode_meta.get("engine")
     if engine:
-        return str(engine)
-    case_id = str((result.get("settings") or {}).get("case_id", ""))
+        return str(engine), "episode meta"
+    settings = result.get("settings") or {}
+    for block, key in ENGINE_SETTING_PATHS:
+        engine = (settings.get(block) or {}).get(key)
+        if engine:
+            return str(engine), f"settings.{block}.{key}"
+    case_id = str(settings.get("case_id", ""))
     prefix = case_id.split("_", 1)[0]
-    return prefix if prefix.upper().startswith(("L1", "L2B")) else None
+    if prefix.upper().startswith(("L1", "L2B")):
+        return prefix, "case id prefix"
+    return None, "not found"
+
+
+def run_engine(result: Mapping[str, Any], episode_meta: Mapping[str, Any]) -> str | None:
+    """Engine of the run: the episode meta, else ``settings.s8.engine`` /
+    ``settings.s7c.engine`` (S8 / S7 runners), else the case id prefix (``L1_...``,
+    ``L2b_...``); ``None`` = unknown."""
+    engine, _ = run_engine_and_origin(result, episode_meta)
+    return engine
 
 
 # --- one case ---------------------------------------------------------------------------------
@@ -607,11 +754,14 @@ def replay_case(
         geometry: Machine of the run (``C2Geometry.from_params``).
         config: The run's controller setting (lock valve included); its ``r8.fast_relevel``
             is replaced per variant.
-        sources: ``fallback_ratio_source`` values replayed with ``nominal_gap``.
+        sources: ``fallback_ratio_source`` values replayed with ``nominal_gap``; a run that
+            ran ``nominal_gap`` has its own source replayed as well (same-run gate).
 
     Returns:
         JSON-able result: ``replayable``, ``reasons``, ``notes``, the probed-leg sources, the
-        level gate and per source the events and the optimism record.
+        gate (``gate``: kind and verdict; ``level_gate``: the ``level`` replay, the gate or a
+        record; ``same_run_gate``: ``None`` for a ``level`` run) and per source the events and
+        the optimism record.
     """
     case_dir = Path(case_dir)
     result = json.loads((case_dir / "result.json").read_text(encoding="utf-8"))
@@ -638,16 +788,23 @@ def replay_case(
         reasons.append(allowance.note)
         allowance = replace(allowance, deduction_N=np.zeros(LEG_COUNT))  # replay still runs
     run = ReplaySettings.from_controller_meta(run_meta, episode.F_min_N)
+    own_source = run_own_slope_source(run)
+    gate_kind = GateKind.LEVEL if own_source is None else GateKind.SAME_RUN
     controller = controller_r5_events(events)
     level_replay, level_inputs, _, _ = _replay_variant(
         episode, events, geometry, config, run, track, "level", None, allowance)
     level_events = replay_r5_events(level_replay, level_inputs)
-    is_gate_passed = level_events == controller
-    if not is_gate_passed:
-        reasons.append(f"level replay differs from the controller: replay {level_events}, "
-                       f"controller {controller}")
-    engine = run_engine(result, episode.meta)
-    truth = true_forces_at(case_dir / "pads.npz", t_s, episode.meta, engine)
+    is_level_equal = level_events == controller
+    level_difference = (f"level replay differs from the controller: replay {level_events}, "
+                        f"controller {controller}")
+    if gate_kind is GateKind.LEVEL and not is_level_equal:
+        reasons.append(level_difference)
+    elif not is_level_equal:
+        notes.append(f"{level_difference} (record: the run ran nominal_gap)")
+    engine, engine_origin = run_engine_and_origin(result, episode.meta)
+    notes.append(f"engine {engine!r} from {engine_origin}")
+    truth = true_forces_at(case_dir / "pads.npz", t_s, episode.meta, engine,
+                           recorded_seal_friction=recorded_seal_friction_N(result))
     notes.append(truth.note)
     if truth.force_N is None:
         reasons.append(truth.note)
@@ -656,8 +813,11 @@ def replay_case(
         notes.append(f"engine {engine!r} unknown: no optimism allowance")
     commands = np.asarray(episode["command_m_s"], dtype=float)
     acting = np.vstack((np.zeros((1, LEG_COUNT)), commands[:-1]))  # d = 1: output of k - 1
+    replayed_sources = list(sources)
+    if own_source is not None and own_source not in replayed_sources:
+        replayed_sources.append(own_source)  # the same-run gate needs it
     variants = {}
-    for source in sources:
+    for source in replayed_sources:
         replay, inputs, monitor_replay, settings = _replay_variant(
             episode, events, geometry, config, run, track, "nominal_gap", source, allowance)
         variant: dict[str, Any] = {
@@ -671,6 +831,14 @@ def replay_case(
                                  monitor_replay.fallback_rows, truth.force_N, acting, settings)
             variant.update(judged_summary(rows, limit_N))
         variants[source] = variant
+    same_run = None
+    if own_source is not None:
+        same_run = {"source": own_source, **same_run_gate(
+            variants[own_source], controller, controller_fallback_slope_events(events))}
+        if not same_run["passed"]:
+            reasons.append(f"same-run replay ({own_source}) differs from the controller: "
+                           f"{same_run}")
+    is_gate_passed = is_level_equal if same_run is None else same_run["passed"]
     source_counts = {source.value: int(np.sum(track.sources == source.value))
                      for source in ProbedLegSource if source is not ProbedLegSource.NOT_PROBE}
     return {
@@ -684,8 +852,11 @@ def replay_case(
         "probed_leg_source": track.sources.tolist(),
         "probed_leg": track.legs.tolist(),
         "command_history_match": track.command_history_match,
-        "level_gate": {"passed": is_gate_passed, "replay": level_events,
-                       "controller": controller},
+        "gate": {"kind": gate_kind.value, "passed": is_gate_passed},
+        "level_gate": {"passed": is_level_equal, "replay": level_events,
+                       "controller": controller,
+                       "role": "gate" if gate_kind is GateKind.LEVEL else "record"},
+        "same_run_gate": same_run,
         "true_force_source": None if truth.source is None else truth.source.value,
         "variants": variants,
     }

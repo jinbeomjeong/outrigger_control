@@ -4,30 +4,48 @@ Synthetic: probed-leg sources and their checks, the E-6 deduction rules, the eng
 allowances. Record (``07_results``, git-ignored; skipped without it): ``current_dur125`` passes
 the level gate, the command source agrees with the finished round on every row, the aborted
 rounds probed RL, and the 302.5 reconstruction at 127.8 s with ``L_hat_true``.
+
+Spec rev. 62 316.6 D-1 .. D-4 (records after P-S8-22): record-only ``r8.fast_relevel`` keys,
+the C-2 seal-friction record, the S8 / S7 engine settings and the same-run gate; the four V-4
+records replay without a workaround and give control's verdicts.
 """
 
 from __future__ import annotations
 
+import json
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
 import pytest
 
 from outrigger_sim.control.c2 import C2Config, C2Geometry
-from outrigger_sim.control.contact_replay import ReplayInput, ReplaySettings
+from outrigger_sim.control.contact_replay import (
+    ReplayInput,
+    ReplaySettings,
+    fast_relevel_record_only_keys,
+    replay_meta_from_config,
+)
 from outrigger_sim.control.r5_fallback_replay import (
     OPTIMISM_ALLOWANCE_L1_N,
     OPTIMISM_ALLOWANCE_L2B_N,
+    GateKind,
     ProbedLegSource,
     RowClass,
     TrueForceSource,
+    controller_fallback_slope_events,
     judged_summary,
+    monitor_setting_differences,
     offset_allowance,
     optimism_allowance_N,
     optimism_rows,
     probed_leg_track,
+    recorded_seal_friction_N,
     replay_case,
     row_class,
+    run_engine,
+    run_own_slope_source,
+    same_run_gate,
     true_forces_at,
 )
 from outrigger_sim.control.two_pressure import FallbackSlopeInputs
@@ -331,3 +349,200 @@ def test_row_classes() -> None:
     assert row_class({**base, "head_drop_Pa": -1.0}) is RowClass.RECORD_RISING
     assert row_class({**base, "rule": "level", "head_drop_Pa": None}) is RowClass.RECORD_LEVEL
     assert row_class({**base, "is_watched": False}) is RowClass.UNWATCHED
+
+
+# --- 316.6 D-1 .. D-4: records after P-S8-22 (spec rev. 62) ----------------------------------
+
+
+def _nominal_gap_config(source: str = "column_nominal") -> C2Config:
+    config = C2Config().with_10hz_d1()
+    fast = replace(config.r8.fast_relevel, fallback_slope="nominal_gap",
+                   fallback_ratio_source=source)
+    return replace(config, r8=replace(config.r8, fast_relevel=fast))
+
+
+C1_RECORD_KEYS = {
+    "fallback_plant_ratio_source": {"kind": "plant_params", "ratio_override_keys": [],
+                                    "dead_length_override_keys": [],
+                                    "known_plant_ratio_upper": False},
+    "fallback_ratio_source_override": None,
+    "override_env_name": None,
+}
+"""cad C-1 record-only keys a runner adds to ``controller_meta.r8.fast_relevel``."""
+
+
+def test_d1_record_only_fast_relevel_keys_are_ignored() -> None:
+    config = _nominal_gap_config()
+    meta = replay_meta_from_config(config)
+    plain = ReplaySettings.from_controller_meta(meta, 9414.59)
+    meta["r8"]["fast_relevel"] = {**meta["r8"]["fast_relevel"], **C1_RECORD_KEYS}
+    with_records = ReplaySettings.from_controller_meta(meta, 9414.59)  # no TypeError
+    assert with_records == plain
+    assert fast_relevel_record_only_keys(meta["r8"]["fast_relevel"]) == sorted(C1_RECORD_KEYS)
+
+
+def test_d1_record_only_keys_are_notes_not_differences() -> None:
+    config = _nominal_gap_config()
+    run_meta = {
+        "two_pressure": {"settings": json.loads(json.dumps(config.two_pressure.to_meta()))},
+        "r8": {"fast_relevel": {**json.loads(json.dumps(config.r8.fast_relevel.to_meta())),
+                                **C1_RECORD_KEYS}},
+    }
+    geometry = C2Geometry.from_params(load_params())
+    differences, notes = monitor_setting_differences(run_meta, config, geometry)
+    assert differences == []
+    for key in C1_RECORD_KEYS:
+        assert any(key in note and "record-only" in note for note in notes)
+
+
+def _bundle_c(**record) -> dict:
+    return {"settings": {"bundle_c": {"pads_seal_fields": record}}}
+
+
+def test_d2_c2_record_states_the_seal_friction() -> None:
+    assert recorded_seal_friction_N(_bundle_c(F_s_front_N=0.0, friction_path=False)) == 0.0
+    assert recorded_seal_friction_N(_bundle_c(F_s_front_N=4e3, friction_path=True)) == 4e3
+    # contradicting or incomplete records do not say
+    assert recorded_seal_friction_N(_bundle_c(F_s_front_N=4e3, friction_path=False)) is None
+    assert recorded_seal_friction_N(_bundle_c(F_s_front_N=0.0, friction_path=True)) is None
+    assert recorded_seal_friction_N(_bundle_c(F_s_front_N=0.0)) is None
+    assert recorded_seal_friction_N({"settings": {}}) is None
+
+
+def test_d2_l2b_truth_from_the_c2_record(tmp_path) -> None:
+    pads = _write_pads(tmp_path / "pads.npz", with_pressure=False)
+    t_s = np.array([0.1, 0.2])
+    frictionless = true_forces_at(pads, t_s, {}, "L2b_NSC", recorded_seal_friction=0.0)
+    assert frictionless.source is TrueForceSource.F_CYL_NO_FRICTION
+    assert np.all(frictionless.force_N == 50e3)
+    with_friction = true_forces_at(pads, t_s, {}, "L2b_NSC", recorded_seal_friction=4e3)
+    assert with_friction.force_N is None
+    # the episode meta comes first
+    meta_first = true_forces_at(pads, t_s, {"seal_friction_N": [4e3] * 4}, "L2b_NSC",
+                                recorded_seal_friction=0.0)
+    assert meta_first.force_N is None
+
+
+def test_d3_engine_from_the_s8_and_s7c_settings() -> None:
+    s8 = {"settings": {"case_id": "MLJ_K0V_fdown3.5_G4RF_Fs0", "s8": {"engine": "L2b_NSC"},
+                       "s7c": {"engine": "L2b_NSC"}}}
+    assert run_engine(s8, {}) == "L2b_NSC"
+    assert optimism_allowance_N(run_engine(s8, {})) == OPTIMISM_ALLOWANCE_L2B_N
+    s7 = {"settings": {"case_id": "L1_PS2", "s7c": {"engine": "L1R"}}}
+    assert run_engine(s7, {}) == "L1R"
+    assert run_engine(s7, {"engine": "L2b"}) == "L2b"  # episode meta first
+    assert run_engine({"settings": {"case_id": "L2b_PS2"}}, {}) == "L2b"  # case id prefix
+    assert run_engine({"settings": {"case_id": "MLJ_x"}}, {}) is None
+
+
+def test_d4_own_source_picks_the_gate() -> None:
+    level = ReplaySettings.from_config(C2Config().with_10hz_d1(), 9414.59)
+    level = replace(level, fast_relevel=replace(level.fast_relevel, fallback_slope="level"))
+    assert run_own_slope_source(level) is None
+    assert run_own_slope_source(replace(level, fast_relevel=None)) is None
+    gap = ReplaySettings.from_config(_nominal_gap_config("plant_meta"), 9414.59)
+    assert run_own_slope_source(gap) == "plant_meta"
+    assert {kind.value for kind in GateKind} == {"level", "same_run"}
+
+
+def test_d4_same_run_gate_needs_r5_and_every_info_event() -> None:
+    events = [(127.8, "INFO_R5_FALLBACK_SLOPE:FL:11.44:0.00"), (127.8, "relevel_predicted:FL"),
+              (130.0, "INFO_R5_FALLBACK_SLOPE:FL:-0.00:1.25")]
+    controller_slope = controller_fallback_slope_events(events)
+    assert controller_slope == [(127.8, "FL", "11.44", "0.00"), (130.0, "FL", "-0.00", "1.25")]
+    controller_r5 = {"relevel_predicted": [(127.8, FL)], "probe_aborted_low_load": []}
+    variant = {"r5_events": controller_r5,
+               "fallback_slope_events": [(127.8, "FL", (11.4449, 0.0)),
+                                         (130.0, "FL", (-0.001, 1.2504))]}
+    assert same_run_gate(variant, controller_r5, controller_slope)["passed"]
+    off_by_a_cent = {**variant, "fallback_slope_events": [(127.8, "FL", (11.43, 0.0)),
+                                                          (130.0, "FL", (-0.001, 1.2504))]}
+    gate = same_run_gate(off_by_a_cent, controller_r5, controller_slope)
+    assert not gate["passed"] and gate["r5_equal"] and not gate["fallback_slope_equal"]
+    assert gate["first_fallback_slope_difference"] == ((127.8, "FL", "11.43", "0.00"),
+                                                       (127.8, "FL", "11.44", "0.00"))
+    missing = {**variant, "fallback_slope_events": variant["fallback_slope_events"][:1]}
+    assert not same_run_gate(missing, controller_r5, controller_slope)["passed"]
+    no_r5 = {**variant, "r5_events": {"relevel_predicted": [], "probe_aborted_low_load": []}}
+    assert not same_run_gate(no_r5, controller_r5, controller_slope)["r5_equal"]
+
+
+# V-4 records of spec rev. 62 316.2 / 316.3 (git-ignored; skipped without them): the fixed tool
+# replays them without a workaround and gives control's verdicts (316.2 / 316.3 tables).
+RESULTS = Path(__file__).resolve().parents[2] / "07_results"
+V4_CASES = {
+    # label: (case folder, own source, engine, INFO count, judged_falling max [kN])
+    "L1_PS2": ("S7/ctrl3_check_20261027_010709/L1_PS2_fdown3.5_old_worst_nocal",
+               "plant_meta", "L1R", 7, -0.133),
+    "L2b_PS2": ("S7/ctrl3_check_20261027_010707/L2b_PS2_fdown3.5_old_worst_nocal",
+                "column_nominal", "L2b_NSC", 22, -3.05),
+    "G4RF_Fs0": ("S8/v4_c29_Fs0_20261027_011211/MLJ_K0V_fdown3.5_G4RF_Fs0",
+                 "column_nominal", "L2b_NSC", 14, -15.29),
+    "G4RF_Fs8": ("S8/v4_c29_Fs8_20261027_011151/MLJ_K0V_fdown3.5_G4RF_Fs8",
+                 "column_nominal", "L2b_NSC", 6, -5.99),
+}
+
+
+def _run_config(case: Path) -> C2Config:
+    """The run's preset with its recorded ratio source (L1: ``plant_meta`` + plant ratio)."""
+    result = json.loads((case / "result.json").read_text(encoding="utf-8"))
+    fast = result["controller_meta"]["r8"]["fast_relevel"]
+    config = C2Config().with_10hz_d1()
+    if fast["fallback_ratio_source"] == "column_nominal":
+        return config
+    ratio = fast.get("fallback_plant_ratio")
+    return config.with_fallback_ratio_source(fast["fallback_ratio_source"],
+                                             None if ratio is None else tuple(ratio))
+
+
+@pytest.fixture(scope="module", params=sorted(V4_CASES))
+def v4_replay(request):
+    folder, *expected = V4_CASES[request.param]
+    case = RESULTS / folder
+    if not case.is_dir():
+        pytest.skip(f"{case} not present")
+    replay = replay_case(case, C2Geometry.from_params(load_params()), _run_config(case))
+    return replay, expected
+
+
+def test_v4_record_passes_the_same_run_gate(v4_replay) -> None:
+    replay, (own_source, engine, info_count, _) = v4_replay
+    assert replay["replayable"], replay["reasons"]
+    assert replay["gate"] == {"kind": "same_run", "passed": True}
+    assert replay["level_gate"]["role"] == "record"
+    gate = replay["same_run_gate"]
+    assert gate["source"] == own_source
+    assert gate["r5_equal"] and gate["fallback_slope_equal"]
+    assert gate["controller_fallback_slope_count"] == info_count
+    assert replay["engine"] == engine
+
+
+def test_v4_record_official_judgement(v4_replay) -> None:
+    replay, (own_source, _, _, worst_kN) = v4_replay
+    variant = replay["variants"][own_source]
+    judged = variant["row_classes"]["judged_falling"]
+    print(f"{replay['case']}: judged_falling {judged}")
+    assert variant["judgement_passed"] is True
+    assert judged["max_difference_N"] / 1e3 == pytest.approx(worst_kN, abs=0.01)
+    assert variant["slope_rows_missed_triggers"] == 0
+
+
+def test_v4_own_source_is_replayed_even_when_not_asked() -> None:
+    folder, own_source, *_ = V4_CASES["L1_PS2"]
+    case = RESULTS / folder
+    if not case.is_dir():
+        pytest.skip(f"{case} not present")
+    replay = replay_case(case, C2Geometry.from_params(load_params()), _run_config(case),
+                         sources=("column_nominal",))
+    assert set(replay["variants"]) == {"column_nominal", own_source}
+    assert replay["gate"] == {"kind": "same_run", "passed": True}
+
+
+def test_v4_record_truth_source(v4_replay) -> None:
+    """S7 records have no ``F_pressure``: ``F_cyl`` (L1, and L2b by the C-2 record ``F_s`` 0);
+    S8 records have it."""
+    replay, _ = v4_replay
+    stage = Path(replay["case"]).parent.parent.name
+    expected = (TrueForceSource.F_CYL_NO_FRICTION if stage == "S7"
+                else TrueForceSource.F_PRESSURE)
+    assert replay["true_force_source"] == expected.value

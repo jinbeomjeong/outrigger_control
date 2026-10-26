@@ -2,7 +2,7 @@
 
 - 원본: `00_docs/04_control/c2_design.md`
 - 원본 SHA-256(앞 12자): `cdfab6c175c5`
-- 생성: 2026-10-27 03:15:22 (`04_scripts/00_docs/build_doc_index.py`, depth 4, split-lines 400)
+- 생성: 2026-10-27 03:43:52 (`04_scripts/00_docs/build_doc_index.py`, depth 4, split-lines 400)
 - 총 줄 수: 1,158 (110.3 KB)
 - 사용법: Read에 offset=시작 줄, limit=줄 수. 끝 줄은 하위 절을 포함한다. `+단락`·`+표`는 긴 절 안의 위치 안내다. 원본 SHA가 다르면 색인을 다시 만든다.
 

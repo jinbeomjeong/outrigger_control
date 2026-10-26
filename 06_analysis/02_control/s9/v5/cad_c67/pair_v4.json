@@ -1,0 +1,420 @@
+[
+ {
+  "case": "MLJ_K0V_fdown3.5_G4RF_Fs0",
+  "case_log": [
+   "2026-10-27 01:15:50,725 WARNING outrigger_sim.control.c2: C2 t=87.80 s: relevel_predicted:RR",
+   "2026-10-27 01:16:58,577 WARNING outrigger_sim.control.c2: C2 t=117.70 s: reanchor_band_exceeded",
+   "2026-10-27 01:17:33,466 INFO outrigger_sim.batch: case MLJ_K0V_fdown3.5_G4RF_Fs0 finished: ok"
+  ],
+  "t0_offset_s(ctrl-run)": 3.0,
+  "rod_fault": {
+   "leg": "FR",
+   "fault": "dropout",
+   "t_start_s": 83.90000000159526,
+   "applied_periods": 481,
+   "periods_without_rod_reading": 0
+  },
+  "fault_t_ctrl_s": 83.9,
+  "fault_t_run_s": 80.9,
+  "first_ready_run_s": 78.90000000159336,
+  "G4_start_run_s": 83.90000000159336,
+  "G4_start_ctrl_s": 86.9,
+  "WARN_ROD_PRESSURE_FALLBACK": [
+   [
+    83.9,
+    "WARN_ROD_PRESSURE_FALLBACK:FR"
+   ]
+  ],
+  "INFO_ROD_PRESSURE_FAULT_REASON": [
+   [
+    83.9,
+    "INFO_ROD_PRESSURE_FAULT_REASON:FR:D1"
+   ]
+  ],
+  "INFO_R5_FALLBACK_SLOPE_RR_count": 0,
+  "INFO_R5_FALLBACK_SLOPE_RR_first_last_ctrl_s": null,
+  "INFO_R5_FALLBACK_SLOPE_RR_first3": [],
+  "INFO_R5_FALLBACK_SLOPE_count_by_leg": {
+   "FR": 14
+  },
+  "relevel_predicted(ctrl_s, leg, rel_to_G4_s)": [
+   [
+    87.8,
+    "RR",
+    0.9
+   ]
+  ],
+  "FAULT_events": [],
+  "WARN_events": [
+   [
+    83.9,
+    "WARN_ROD_PRESSURE_FALLBACK:FR"
+   ]
+  ],
+  "phase_path(run_s)": [
+   [
+    0.1,
+    "check"
+   ],
+   [
+    4.7,
+    "touch"
+   ],
+   [
+    23.9,
+    "level"
+   ],
+   [
+    46.3,
+    "done"
+   ],
+   [
+    46.4,
+    "probe"
+   ],
+   [
+    58.3,
+    "reanchor"
+   ],
+   [
+    77.7,
+    "level"
+   ],
+   [
+    78.8,
+    "done"
+   ],
+   [
+    78.9,
+    "ready"
+   ],
+   [
+    84.8,
+    "level"
+   ],
+   [
+    102.7,
+    "done"
+   ],
+   [
+    102.8,
+    "probe"
+   ],
+   [
+    114.7,
+    "ready"
+   ]
+  ],
+  "ready_times_run_s": [
+   78.9,
+   114.7
+  ],
+  "s8_end": {
+   "applied": true,
+   "target_t_s": 128.90000000159336,
+   "end_t_s": 128.90000000325318,
+   "timeout": false
+  },
+  "pads": {
+   "samples": 128900,
+   "sample_s": 0.001,
+   "F_pressure_min_interval_after_fault": {
+    "FL": {
+     "min_kN": 68.004,
+     "t_run_s": 88.882
+    },
+    "FR": {
+     "min_kN": 99.926,
+     "t_run_s": 116.258
+    },
+    "RL": {
+     "min_kN": 53.047,
+     "t_run_s": 116.454
+    },
+    "RR": {
+     "min_kN": 15.381,
+     "t_run_s": 88.66
+    }
+   },
+   "F_pressure_after_fault": {
+    "FL": {
+     "min_kN": 68.05,
+     "t_run_s": 88.871
+    },
+    "FR": {
+     "min_kN": 100.001,
+     "t_run_s": 116.257
+    },
+    "RL": {
+     "min_kN": 53.063,
+     "t_run_s": 116.485
+    },
+    "RR": {
+     "min_kN": 15.426,
+     "t_run_s": 88.655
+    }
+   },
+   "F_pressure_min_interval_fault_to_G4": {
+    "FL": {
+     "min_kN": 118.362,
+     "t_run_s": 81.733
+    },
+    "FR": {
+     "min_kN": 116.991,
+     "t_run_s": 81.285
+    },
+    "RL": {
+     "min_kN": 71.318,
+     "t_run_s": 82.3
+    },
+    "RR": {
+     "min_kN": 68.806,
+     "t_run_s": 81.574
+    }
+   },
+   "F_pressure_min_interval_whole_run": {
+    "FL": {
+     "min_kN": -2.457,
+     "t_run_s": 5.818
+    },
+    "FR": {
+     "min_kN": -2.541,
+     "t_run_s": 5.961
+    },
+    "RL": {
+     "min_kN": -1.892,
+     "t_run_s": 5.818
+    },
+    "RR": {
+     "min_kN": -1.944,
+     "t_run_s": 14.887
+    }
+   }
+  },
+  "r8_series_probed_leg": {
+   "present": true,
+   "shape": [
+    1289
+   ],
+   "dtype": "int8",
+   "unique": [
+    "-1",
+    "0",
+    "1",
+    "2",
+    "3"
+   ]
+  }
+ },
+ {
+  "case": "MLJ_K0V_fdown3.5_G4RF_Fs8",
+  "case_log": [
+   "2026-10-27 01:16:14,655 WARNING outrigger_sim.control.c2: C2 t=85.80 s: leg_reapproach_start:RR",
+   "2026-10-27 01:17:14,465 WARNING outrigger_sim.control.c2: C2 t=107.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.962",
+   "2026-10-27 01:18:16,099 INFO outrigger_sim.batch: case MLJ_K0V_fdown3.5_G4RF_Fs8 finished: ok"
+  ],
+  "t0_offset_s(ctrl-run)": 3.0,
+  "rod_fault": {
+   "leg": "FR",
+   "fault": "dropout",
+   "t_start_s": 81.50000000151559,
+   "applied_periods": 481,
+   "periods_without_rod_reading": 0
+  },
+  "fault_t_ctrl_s": 81.5,
+  "fault_t_run_s": 78.5,
+  "first_ready_run_s": 76.50000000151368,
+  "G4_start_run_s": 81.50000000151368,
+  "G4_start_ctrl_s": 84.5,
+  "WARN_ROD_PRESSURE_FALLBACK": [
+   [
+    81.5,
+    "WARN_ROD_PRESSURE_FALLBACK:FR"
+   ]
+  ],
+  "INFO_ROD_PRESSURE_FAULT_REASON": [
+   [
+    81.5,
+    "INFO_ROD_PRESSURE_FAULT_REASON:FR:D1"
+   ]
+  ],
+  "INFO_R5_FALLBACK_SLOPE_RR_count": 0,
+  "INFO_R5_FALLBACK_SLOPE_RR_first_last_ctrl_s": null,
+  "INFO_R5_FALLBACK_SLOPE_RR_first3": [],
+  "INFO_R5_FALLBACK_SLOPE_count_by_leg": {
+   "FR": 6
+  },
+  "relevel_predicted(ctrl_s, leg, rel_to_G4_s)": [
+   [
+    85.2,
+    "RR",
+    0.7
+   ]
+  ],
+  "FAULT_events": [],
+  "WARN_events": [
+   [
+    81.5,
+    "WARN_ROD_PRESSURE_FALLBACK:FR"
+   ],
+   [
+    107.3,
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.962"
+   ]
+  ],
+  "phase_path(run_s)": [
+   [
+    0.1,
+    "check"
+   ],
+   [
+    4.7,
+    "touch"
+   ],
+   [
+    23.9,
+    "level"
+   ],
+   [
+    46.3,
+    "done"
+   ],
+   [
+    46.4,
+    "probe"
+   ],
+   [
+    58.3,
+    "reanchor"
+   ],
+   [
+    75.3,
+    "level"
+   ],
+   [
+    76.4,
+    "done"
+   ],
+   [
+    76.5,
+    "ready"
+   ],
+   [
+    82.2,
+    "level"
+   ],
+   [
+    92.3,
+    "done"
+   ],
+   [
+    92.4,
+    "probe"
+   ],
+   [
+    104.3,
+    "ready"
+   ]
+  ],
+  "ready_times_run_s": [
+   76.5,
+   104.3
+  ],
+  "s8_end": {
+   "applied": true,
+   "target_t_s": 126.50000000151368,
+   "end_t_s": 126.50000000317351,
+   "timeout": false
+  },
+  "pads": {
+   "samples": 126500,
+   "sample_s": 0.001,
+   "F_pressure_min_interval_after_fault": {
+    "FL": {
+     "min_kN": 76.606,
+     "t_run_s": 85.934
+    },
+    "FR": {
+     "min_kN": 95.734,
+     "t_run_s": 99.373
+    },
+    "RL": {
+     "min_kN": 56.483,
+     "t_run_s": 106.666
+    },
+    "RR": {
+     "min_kN": 23.014,
+     "t_run_s": 85.935
+    }
+   },
+   "F_pressure_after_fault": {
+    "FL": {
+     "min_kN": 76.741,
+     "t_run_s": 85.915
+    },
+    "FR": {
+     "min_kN": 95.867,
+     "t_run_s": 99.38
+    },
+    "RL": {
+     "min_kN": 56.516,
+     "t_run_s": 105.998
+    },
+    "RR": {
+     "min_kN": 23.036,
+     "t_run_s": 85.931
+    }
+   },
+   "F_pressure_min_interval_fault_to_G4": {
+    "FL": {
+     "min_kN": 118.375,
+     "t_run_s": 78.501
+    },
+    "FR": {
+     "min_kN": 116.794,
+     "t_run_s": 78.501
+    },
+    "RL": {
+     "min_kN": 71.674,
+     "t_run_s": 78.501
+    },
+    "RR": {
+     "min_kN": 67.687,
+     "t_run_s": 78.502
+    }
+   },
+   "F_pressure_min_interval_whole_run": {
+    "FL": {
+     "min_kN": -10.466,
+     "t_run_s": 5.994
+    },
+    "FR": {
+     "min_kN": -10.372,
+     "t_run_s": 5.763
+    },
+    "RL": {
+     "min_kN": -8.496,
+     "t_run_s": 5.994
+    },
+    "RR": {
+     "min_kN": -8.406,
+     "t_run_s": 5.763
+    }
+   }
+  },
+  "r8_series_probed_leg": {
+   "present": true,
+   "shape": [
+    1265
+   ],
+   "dtype": "int8",
+   "unique": [
+    "-1",
+    "0",
+    "1",
+    "2",
+    "3"
+   ]
+  }
+ }
+]
