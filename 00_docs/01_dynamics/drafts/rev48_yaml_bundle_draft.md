@@ -1,5 +1,6 @@
 # dynamics_model.md 개정 48 초안 — YAML 재생성 묶음 dynamics 몫(D-1~D-4)과 로드 단면 결함 재판정
 
+> **합침(개정 54, 2026-10-26)**: 이 초안은 `dynamics_model.md` 개정 54로 합쳤다. 본문 위치는 5.30.10(D-1~D-4 기록)과 3.12·3.13·7·8절(3.7 반영 목록)이다. 합칠 때 `target_envelope.json` `rules`와 `s6_slope_boundary_check.json` `envelope`를 다시 읽어, 3.5 표의 하단 반올림 세 곳(1.60~1.63 → 1.59~1.63, 1.61~1.63 → 1.60~1.63, 1.38~1.41 → 1.37~1.41)을 본문에서 고쳤다. 이 파일은 기록으로만 남긴다(고치지 않는다).
 > 이 파일은 초안이다. 메인 세션이 `dynamics_model.md` 개정 48로 합친다(개정 47은 SCM 패드 수평 구속 검토가 쓰는 중).
 > 상태(2026-10-26, YAML 묶음 8단계): D-1~D-4는 모두 끝났다(커밋 8616be9, 4절). 이 초안은 아직 `dynamics_model.md`에 합치지 않았다. 그 사이 `dynamics_model.md`의 개정 48 번호는 S9 실행기 스모크 판정(5.34)에 쓰였다. 그래서 합칠 때는 새 번호를 쓴다. 판정 요지는 `decision_log.md` 2절 "별도 결함" 줄에 있다.
 > 작성 2026-10-25, dynamics-expert. 근거 명세 `00_docs/00_cad/yaml_regen_bundle_2026-10-25.md` 6.2·8절, 사용자 결정 D1~D11 모두 권고안(D6 = 기본 타입 B), decision_log 2절 끝 "run_target_envelope 결함은 dynamics 재판정".

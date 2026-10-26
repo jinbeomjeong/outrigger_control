@@ -40,7 +40,8 @@
 ## P3b 뒤
 
 - P-S8-22(R-5 대체 다리 기울기, U-S8-60~62) 구현(python, 명세 304절) → V-1~V-5 → cad V-4 → hydraulics H-61-1(R_hi 확정).
-- dynamics: U-S8-63에 따른 L1-R 잠김 강성 대표 범위 문구. rev48 초안을 `dynamics_model.md`에 새 개정 번호로 합치기(개정 48 번호는 S9 스모크에 쓰였다).
+- ✅(2026-10-26, P3b 실행 중 미리 함) dynamics `dynamics_model.md` 개정 54: 5.12.13 L1-R 잠김 강성 대표 범위(U-S8-63: 수준은 대표, 변화율 −Δp_r/Δp_h·G는 대표 못 함 → L1-R의 R-5·`lock_load_regain`은 실기 근거 아님), 5.30.10 rev48 YAML 묶음 초안 합침. **개정 53은 P3b 판정(5.37.10 착수 전 점검 1~6 종결 포함)용으로 비워 둠** — 넣을 때 머리말·개정표 순서를 맞춘다. hydraulics H-61-1은 5.12.13 표를 출발값으로 쓴다.
+- 🔄 P-S8-22 구현은 python-expert가 별도 worktree에서 진행 중(메인 `03_src`를 바꾸면 대기 중 P3b 사례가 새 코드를 불러오므로, P3b 끝난 뒤 merge).
 - S9 착수 전 점검 1·5·6 닫힘 확인(`dynamics_model.md` 5.32.7 표는 4~6 "미실행").
 - R8 C2 PS-7a 판정(S9 뒤), U-S8-57·DONE 꼬리 감시.
 
