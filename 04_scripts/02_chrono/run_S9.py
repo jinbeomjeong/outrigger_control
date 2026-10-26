@@ -33,6 +33,11 @@ gravity. ``single-pad`` ramps the vertical load (gravity on pad + share body)
 Poly345 over ``--load-ramp`` 1 s. Single pad records the SCM nodes inside the pad bottom polygon
 (``GetNodeInfo``: contact nodes, node mean sinkage, node - geometric) every 0.1 s and the P1-L6
 diagnostics in ``hold.p1_l6``; ``level`` adds the P3 record values (``p3_records``, 5.34.6).
+``machine`` with ``--lift-s`` > 0 adds the P3a block (``p3a``: lift-off time, force peaks, end
+equilibrium, max s_motor, loaded pad tilt, first-touch SCM rise, minimum cylinder force, sinkage,
+attitude, rut clearance, track utilisation; dynamics 5.36.5) and the series keys ``pad_tilt_deg``,
+``rut_clearance_m``, ``track_utilisation``, ``node_sinkage_mean_contact_m`` (0.1 s);
+``--abort-on-limit`` exits 3 after writing when a force limit or the stroke end margin is exceeded.
 
 ``level`` (P3b) needs ``--approved`` (the user confirms the main runs) and refuses while the
 controller has no ``soil`` settings (C2 soil response, control spec rev. 57 285, python-expert);
@@ -732,6 +737,10 @@ def run_machine(args) -> Path:
             "d_roll_deg": float(rb["roll_pitch_deg"][0] - ra["roll_pitch_deg"][0]),
             "criterion_mm": 0.1, "note": "P1-L5 (dynamics 5.33.9): 10 s drift <= 0.1 mm (in plane)"}
     summary["num_threads_chrono"] = model.num_threads
+    limits = p3a_limits(params)
+    if t_lift_steps:
+        summary["p3a"] = p3a_lift_records(rows, node_rows, t_lift_start_s=t_settle_steps * dt, weight_N=w_total,
+                                          design_loads_N=list(soil.design_loads_N), limits=limits)
     grids = f"{args.grid * 100:g}cm" + ("" if args.crawler_grid is None else f"_c{args.crawler_grid * 100:g}cm")
     tag = args.case or (f"{args.soil}_{args.pad_variant}_{args.scm_shear}_{grids}_{args.gravity_ramp_shape}"
                         f"{args.gravity_ramp:g}_lift{args.lift_s:g}")
@@ -740,12 +749,241 @@ def run_machine(args) -> Path:
               ("t_s", "scm_crawler_normal_N", "scm_pad_normal_N", "pad_sinkage_geometric_m", "body_pos_m",
                "roll_pitch_deg", "s_motor_m", "F_cyl_N", "scm_contact_patches", "body_omega_world_rad_s",
                "gravity_factor", "scm_ray_hits")}
+    # P3a record series (dynamics 5.36.5): None -> NaN (no swivel / no rut reference / no track limit)
+    series.update({key: _nan_array(rows, key, width) for key, width in
+                   (("pad_tilt_deg", 4), ("rut_clearance_m", None), ("track_utilisation", 2))})
+    series.update(node_t_s=np.asarray([n["t_s"] for n in node_rows], dtype=float),
+                  node_sinkage_mean_contact_m=np.asarray(
+                      [[np.nan if s["sinkage_mean_contact_m"] is None else s["sinkage_mean_contact_m"]
+                        for s in n["pad_nodes"]] for n in node_rows], dtype=float).reshape(-1, 4),
+                  node_n_contact=np.asarray([[s["n_contact"] for s in n["pad_nodes"]] for n in node_rows],
+                                            dtype=float).reshape(-1, 4))
     np.savez(d / "series.npz", **series)
     (d / "result.json").write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), "utf-8")
     print(json.dumps(_plain({k: summary[k] for k in ("end", "first_step", "start_rise", "settle_last_1s",
                                                      "us_per_step", "build_s")}), indent=1), flush=True)
+    if "p3a" in summary:
+        print(json.dumps(_plain(summary["p3a"]["checks"]), indent=1), flush=True)
     print("->", d, flush=True)
+    if args.abort_on_limit and "p3a" in summary and summary["p3a"]["checks"]["abort"]:
+        print("P3a limit exceeded (force or stroke end margin): exit 3 so the batch stops new launches", flush=True)
+        sys.exit(3)
     return d
+
+
+def _nan_array(rows: list[dict[str, Any]], key: str, width: int | None) -> np.ndarray:
+    def one(v):
+        if width is None:
+            return np.nan if v is None else float(v)
+        if v is None:
+            return [np.nan] * width
+        return [np.nan if x is None else float(x) for x in v]
+
+    return np.asarray([one(r.get(key)) for r in rows], dtype=float)
+
+
+# --- P3a open-loop lift records (dynamics 5.36.5, U-S9P-5) ------------------------------------------------
+
+P3A_OFF_FRACTION = 0.01
+"""P3a-2: crawler departed when the crawler SCM normal sum < 1 % W ..."""
+P3A_OFF_HOLD_S = 0.1
+"""... for 0.1 s without a break (dynamics 5.36.5)."""
+P3A_LOADED_FRACTION = 0.01
+"""P3a-5: pad tilt judged while the pad SCM normal > 1 % of that leg's design load N (L4 rule, 5.35.2)."""
+P3A_TOUCH_WINDOW_S = 0.2
+STROKE_END_MARGIN_M = 0.01
+"""Stroke end margin below the measurable maximum (YAML sensors.stroke: 0.6948 - 0.01 = 0.6848 m)."""
+
+
+def p3a_limits(params) -> dict[str, Any]:
+    from outrigger_sim.params import LEG_ORDER
+
+    f_ext = [float(params.get(f"legs.{leg}.cylinder.max_force_extend_N")) for leg in LEG_ORDER]
+    s_meas = float(params.get("sensors.stroke.measurable_max_m"))
+    return {"F_extend_limit_N": f_ext, "F_basis": "legs.<leg>.cylinder.max_force_extend_N (210 bar extension)",
+            "s_motor_limit_m": s_meas - STROKE_END_MARGIN_M,
+            "s_basis": f"sensors.stroke.measurable_max_m {s_meas:g} - end margin {STROKE_END_MARGIN_M:g} m",
+            "F_min_cylinder_N": float(params.get("control.F_min_cylinder_N"))}
+
+
+def _first_run(t: np.ndarray, flag: np.ndarray, hold_s: float) -> tuple[int | None, int | None]:
+    """First index where ``flag`` holds without a break for ``hold_s`` (start index, index where the
+    hold is reached); (None, None) if never."""
+    start = None
+    for k in range(len(t)):
+        if flag[k]:
+            if start is None:
+                start = k
+            if t[k] - t[start] >= hold_s - 1e-9:
+                return start, k
+        else:
+            start = None
+    return None, None
+
+
+def p3a_lift_records(rows: list[dict[str, Any]], node_rows: list[dict[str, Any]], *, t_lift_start_s: float,
+                     weight_N: float, design_loads_N: list[float], limits: dict[str, Any]) -> dict[str, Any]:
+    """P3a values of an open-loop lift (dynamics 5.36.5 P3a-1 ... 10) from the 1 ms machine rows.
+    Values and criterion comparisons only; the pass / fail decisions are dynamics-expert's.
+    Forces: SCM normals along the plane normal; F_cyl = L2b acting force (+ = extension push).
+    Angles: deg, pitch > 0 nose down; changes relative to the settle end (lift start)."""
+    from outrigger_sim.params import LEG_ORDER
+
+    t = np.array([r["t_s"] for r in rows])
+    crawler_n = np.array([r["scm_crawler_normal_N"] for r in rows])
+    pad_n = np.array([r["scm_pad_normal_N"] for r in rows])
+    f_cyl = np.array([r["F_cyl_N"] for r in rows])
+    s_mot = np.array([r["s_motor_m"] for r in rows])
+    rp = np.array([r["roll_pitch_deg"] for r in rows])
+    z0 = np.array([r["body_pos_m"][2] for r in rows])
+    sink = np.array([r["pad_sinkage_geometric_m"] for r in rows])
+    tilt = _nan_array(rows, "pad_tilt_deg", 4)
+    rut = _nan_array(rows, "rut_clearance_m", None)
+    util = _nan_array(rows, "track_utilisation", 2)
+    lift = t > t_lift_start_s + 1e-9
+    i0 = int(np.argmax(lift)) - 1 if lift.any() else len(t) - 1  # last settle row = reference
+    ref_rp, ref_z = rp[max(i0, 0)], z0[max(i0, 0)]
+    out: dict[str, Any] = {"t_lift_start_s": t_lift_start_s, "weight_N": weight_N, "limits": limits,
+                           "basis": "1 ms rows; SI, deg for angles; changes vs the last settle row "
+                                    f"(t = {float(t[max(i0, 0)]):.4f} s)"}
+    tl = t[lift]
+    # P3a-2 crawler lift-off
+    k_start, k_hold = _first_run(tl, crawler_n[lift] < P3A_OFF_FRACTION * weight_N, P3A_OFF_HOLD_S)
+    lo: dict[str, Any] = {"rule": f"crawler SCM normal < {P3A_OFF_FRACTION:g} W ({P3A_OFF_FRACTION * weight_N:.0f} N) "
+                                  f"for {P3A_OFF_HOLD_S:g} s", "lifted": k_start is not None}
+    k_lo = None
+    if k_start is not None:
+        k_lo = int(np.nonzero(lift)[0][k_start])
+        t_lo = float(t[k_lo])
+        after = t >= float(tl[k_hold]) - 1e-12
+        back = np.nonzero(after & (crawler_n >= P3A_OFF_FRACTION * weight_N))[0]
+        lo.update(t_liftoff_s=t_lo, t_confirmed_s=float(tl[k_hold]), t_after_lift_start_s=t_lo - t_lift_start_s,
+                  s_motor_at_liftoff_m=s_mot[k_lo].tolist(), pad_normal_at_liftoff_N=pad_n[k_lo].tolist(),
+                  crawler_normal_max_after_confirm_N=float(crawler_n[after].max()),
+                  recontact_after_confirm_t_s=float(t[back[0]]) if back.size else None)
+    out["P3a-2_liftoff"] = lo
+    # P3a-1 cylinder force peaks (lift phase) and whole-run peaks
+    f_lim = np.asarray(limits["F_extend_limit_N"])
+    fl = f_cyl[lift]
+    kpk = np.argmax(fl, axis=0)
+    out["P3a-1_force_peak"] = {
+        "F_peak_N": fl.max(axis=0).tolist(), "t_peak_s": [float(tl[k]) for k in kpk],
+        "pad_sinkage_at_peak_m": [float(sink[lift][k, i]) for i, k in enumerate(kpk)],
+        "F_peak_whole_run_N": f_cyl.max(axis=0).tolist(), "limit_N": f_lim.tolist(),
+        "peak_over_limit": (fl.max(axis=0) / f_lim).tolist(),
+        "within": bool(np.all(fl.max(axis=0) <= f_lim)), "legs": list(LEG_ORDER)}
+    # P3a-3 end equilibrium (last 1 s, only if entirely after the confirmed lift-off)
+    eq: dict[str, Any] = {"rule": "last 1 s pad SCM normal sum / W, 1 +- 0.002, after lift-off"}
+    win = t >= t[-1] - 1.0 + 1e-9
+    eq.update(window_s=[float(t[win][0]), float(t[-1])], pad_normal_sum_over_weight=float(pad_n[win].sum(axis=1).mean() / weight_N),
+              crawler_normal_mean_N=float(crawler_n[win].mean()),
+              total_normal_over_weight=float((pad_n[win].sum(axis=1) + crawler_n[win]).mean() / weight_N),
+              pad_normal_mean_N=pad_n[win].mean(axis=0).tolist())
+    eq["window_after_liftoff"] = bool(lo["lifted"] and t[win][0] >= lo["t_confirmed_s"])
+    eq["within"] = bool(eq["window_after_liftoff"] and abs(eq["pad_normal_sum_over_weight"] - 1.0) <= 0.002)
+    out["P3a-3_end_equilibrium"] = eq
+    # P3a-4 stroke
+    smax = s_mot.max(axis=0)
+    out["P3a-4_stroke"] = {"s_motor_max_m": smax.tolist(), "s_motor_max_all_m": float(smax.max()),
+                           "s_motor_end_m": s_mot[-1].tolist(), "limit_m": limits["s_motor_limit_m"],
+                           "margin_m": float(limits["s_motor_limit_m"] - smax.max()),
+                           "within": bool(smax.max() <= limits["s_motor_limit_m"])}
+    # P3a-5 pad tilt while loaded
+    loaded = pad_n > P3A_LOADED_FRACTION * np.asarray(design_loads_N)[None, :]
+    tl_max, tl_t = [], []
+    for i in range(4):
+        m = loaded[:, i] & np.isfinite(tilt[:, i])
+        if m.any():
+            k = int(np.nanargmax(np.where(m, tilt[:, i], -np.inf)))
+            tl_max.append(float(tilt[k, i]))
+            tl_t.append(float(t[k]))
+        else:
+            tl_max.append(None)
+            tl_t.append(None)
+    vals = [v for v in tl_max if v is not None]
+    out["P3a-5_pad_tilt"] = {"rule": f"pad tilt while pad SCM normal > {P3A_LOADED_FRACTION:g} x design load N",
+                             "design_loads_N": list(design_loads_N), "tilt_max_loaded_deg": tl_max,
+                             "t_tilt_max_loaded_s": tl_t, "tilt_end_deg": tilt[-1].tolist(),
+                             "tilt_max_all_deg": np.nanmax(tilt, axis=0).tolist(), "criterion_deg": 0.5,
+                             "within": bool(vals and max(vals) <= 0.5)}
+    # P3a-8 first touch SCM force rise, P3a-9 minimum cylinder force after touch
+    touch, ftm = [], []
+    for i in range(4):
+        idx = np.nonzero(lift & (pad_n[:, i] > 0.0))[0]
+        if not idx.size:
+            touch.append(None)
+            ftm.append(None)
+            continue
+        k = int(idx[0])
+        tt = float(t[k])
+
+        def at(dt_s, k=k, i=i, tt=tt):
+            j = int(np.searchsorted(t, tt + dt_s - 1e-9))
+            return None if j >= len(t) else float(pad_n[j, i])
+
+        w2 = (t >= tt - 1e-12) & (t <= tt + P3A_TOUCH_WINDOW_S + 1e-9)
+        touch.append({"t_touch_s": tt, "t_after_lift_start_s": tt - t_lift_start_s, "s_motor_m": float(s_mot[k, i]),
+                      "F_scm_at_N": {"0.05": at(0.05), "0.1": at(0.1), "0.2": at(0.2)},
+                      "F_scm_max_0p2s_N": float(pad_n[w2, i].max()), "F_cyl_at_0p2s_N": float(f_cyl[w2, i][-1]),
+                      "sinkage_geometric_at_0p2s_m": float(sink[w2, i][-1])})
+        after = t >= tt - 1e-12
+        kmin = int(np.argmin(np.where(after, f_cyl[:, i], np.inf)))
+        rec = {"F_cyl_min_after_touch_N": float(f_cyl[kmin, i]), "t_s": float(t[kmin])}
+        if k_lo is not None:
+            a2 = t >= t[k_lo] - 1e-12
+            kk = int(np.argmin(np.where(a2, f_cyl[:, i], np.inf)))
+            rec.update(F_cyl_min_after_liftoff_N=float(f_cyl[kk, i]), t_min_after_liftoff_s=float(t[kk]))
+        ftm.append(rec)
+    out["P3a-8_first_touch"] = {"rule": "first lift row with pad SCM normal > 0; values at +0.05 / 0.1 / 0.2 s",
+                                "legs": touch}
+    out["P3a-9_min_cylinder_force"] = {"F_min_cylinder_N": limits["F_min_cylinder_N"], "legs": ftm,
+                                       "note": "open loop: record only (not an F_min judgement)"}
+    # P3a-6 sinkage history (series in npz), P3a-7 attitude
+    nt = np.array([n["t_s"] for n in node_rows]) if node_rows else np.array([])
+
+    def node_at(tq):
+        if not nt.size:
+            return None
+        j = int(np.argmin(abs(nt - tq)))
+        return {"t_s": float(nt[j]), "sinkage_mean_contact_m": [s["sinkage_mean_contact_m"] for s in node_rows[j]["pad_nodes"]],
+                "n_contact": [s["n_contact"] for s in node_rows[j]["pad_nodes"]]}
+
+    out["P3a-6_sinkage"] = {"geometric_at_liftoff_m": None if k_lo is None else sink[k_lo].tolist(),
+                            "geometric_end_m": sink[-1].tolist(), "geometric_max_m": sink.max(axis=0).tolist(),
+                            "node_at_liftoff": None if k_lo is None else node_at(float(t[k_lo])),
+                            "node_end": node_at(float(t[-1])),
+                            "series": "series.npz: pad_sinkage_geometric_m (1 ms), node_sinkage_mean_contact_m (0.1 s)"}
+    d_rp = rp[lift] - ref_rp
+    out["P3a-7_attitude"] = {
+        "settle_end_roll_pitch_deg": ref_rp.tolist(), "settle_end_z0_m": float(ref_z),
+        "d_roll_range_deg": [float(d_rp[:, 0].min()), float(d_rp[:, 0].max())],
+        "d_pitch_range_deg": [float(d_rp[:, 1].min()), float(d_rp[:, 1].max())],
+        "t_d_pitch_min_max_s": [float(tl[int(np.argmin(d_rp[:, 1]))]), float(tl[int(np.argmax(d_rp[:, 1]))])],
+        "d_roll_pitch_at_liftoff_deg": None if k_lo is None else (rp[k_lo] - ref_rp).tolist(),
+        "d_roll_pitch_end_deg": (rp[-1] - ref_rp).tolist(), "end_roll_pitch_deg": rp[-1].tolist(),
+        "d_z0_end_m": float(z0[-1] - ref_z),
+        "end_last_1s_pitch_pp_deg": float(np.ptp(rp[win, 1])), "end_last_1s_roll_pp_deg": float(np.ptp(rp[win, 0]))}
+    # P3a-10 rut clearance and track utilisation
+    rc: dict[str, Any] = {"rut_clearance_end_m": None if not np.isfinite(rut[-1]) else float(rut[-1])}
+    if k_lo is not None:
+        a2 = (t >= t[k_lo] - 1e-12) & np.isfinite(rut)
+        rc.update(rut_clearance_at_liftoff_m=float(rut[k_lo]) if np.isfinite(rut[k_lo]) else None,
+                  rut_clearance_min_after_liftoff_m=float(rut[a2].min()) if a2.any() else None)
+    ul = util[lift]
+    rc.update(track_utilisation_settle_end=util[max(i0, 0)].tolist(),
+              track_utilisation_max_lift=[None if not np.isfinite(ul[:, j]).any() else float(np.nanmax(ul[:, j]))
+                                          for j in range(2)],
+              t_track_utilisation_max_s=[None if not np.isfinite(ul[:, j]).any() else float(tl[int(np.nanargmax(ul[:, j]))])
+                                         for j in range(2)],
+              track_order="track_normals order (2 tracks)")
+    out["P3a-10_rut_track"] = rc
+    out["checks"] = {
+        "P3a-1_within": out["P3a-1_force_peak"]["within"], "P3a-2_lifted": lo["lifted"],
+        "P3a-3_within": eq["within"], "P3a-4_within": out["P3a-4_stroke"]["within"],
+        "P3a-5_within": out["P3a-5_pad_tilt"]["within"],
+        "abort": bool((not out["P3a-1_force_peak"]["within"]) or (not out["P3a-4_stroke"]["within"])),
+        "note": "values vs criteria; decisions are dynamics-expert's"}
+    return out
 
 
 # --- P3 record keys (dynamics 5.34.6) -------------------------------------------------------------------
@@ -975,6 +1213,9 @@ def main(argv) -> None:
                     help="settle drift record over the last window [s] (P1-L5), when the settle is long enough")
     mp.add_argument("--lift-s", type=float, default=0.0, help="open-loop extension time after the settle")
     mp.add_argument("--lift-speed-fraction", type=float, default=1.0)
+    mp.add_argument("--abort-on-limit", action="store_true",
+                    help="P3a batch: exit 3 after writing the result when a cylinder force peak exceeds the 210 bar "
+                         "extension limit or s_motor exceeds the end-margin stroke (the batch stops new launches)")
     mp.add_argument("--floor-roll", type=float, default=0.0)
     mp.add_argument("--floor-pitch", type=float, default=0.0)
     lp = sub.add_parser("level")

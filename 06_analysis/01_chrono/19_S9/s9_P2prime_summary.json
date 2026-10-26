@@ -1,8 +1,8 @@
 {
- "batch": "P2' (dynamics_model.md 5.35.4 / 5.35.5 #2; user decisions U-S9P-1, U-S9P-2 2026-10-26)",
+ "batch": "P2' (dynamics_model.md 5.35.4 / 5.35.5 #2 / 5.36.3; user decisions U-S9P-1, U-S9P-2, U-S9P-4 (c) 2026-10-26)",
  "criteria": {
   "P2'-a": "first-step SCM force <= 100 N, start rise (max z0 up to 5 s) <= 2 mm",
-  "P2'-b": "G1, S1: replica (a) f64 <= 1 %; J1, J2: replica f64-f32 range +- (0.005 deg, 0.05 mm)",
+  "P2'-b": "G1, S1: replica (a) f64 <= 1 %; J1, J2: record + health limit |d pitch| <= 0.03 deg, |d z0| <= 0.5 mm vs replica f64 (U-S9P-4 (c), 5.36.3); P3 judged relative to each case's own settle state",
   "P2'-c": "7-8 s pitch p-p <= 0.02 deg",
   "P2'-d": "SCM normal sum / weight 1 +- 0.002 (last 1 s)"
  },
@@ -216,18 +216,32 @@
     "power_throttling_off_ok": true
    },
    "P2'-b": {
-    "basis": "replica f64-f32 range +- (0.005 deg, 0.05 mm) (5.35.4, U-S9P-2)",
-    "pitch_range_deg": [
-     0.03925335002327742,
-     0.04323662588614925
+    "basis": "record + health limit vs replica f64 |d pitch| <= 0.03 deg, |d z0| <= 0.5 mm (5.36.3, U-S9P-4 (c))",
+    "kind": "record",
+    "pitch_ref_f64_deg": 0.03925335002327742,
+    "z0_ref_f64_mm": 0.1469359735027802,
+    "d_pitch_vs_f64_deg": 0.025147009146622067,
+    "d_z0_vs_f64_mm": 0.3073565882423397,
+    "health_limit_deg_mm": [
+     0.03,
+     0.5
     ],
-    "z0_range_mm": [
-     0.1469359735027802,
-     0.2415759853186725
-    ],
-    "pitch_outside_range_deg": 0.021163733283750236,
-    "z0_outside_range_mm": 0.2127165764264474,
-    "within": false
+    "health_within": true,
+    "former_range_record": {
+     "basis": "replica f64-f32 range +- (0.005 deg, 0.05 mm) (5.35.4, U-S9P-2; superseded)",
+     "pitch_range_deg": [
+      0.03925335002327742,
+      0.04323662588614925
+     ],
+     "z0_range_mm": [
+      0.1469359735027802,
+      0.2415759853186725
+     ],
+     "pitch_outside_range_deg": 0.021163733283750236,
+     "z0_outside_range_mm": 0.2127165764264474,
+     "within_range_margin": false
+    },
+    "within": true
    }
   },
   "P2prime_J2_top_M14s_dashpot8s": {
@@ -329,18 +343,32 @@
     "power_throttling_off_ok": true
    },
    "P2'-b": {
-    "basis": "replica f64-f32 range +- (0.005 deg, 0.05 mm) (5.35.4, U-S9P-2)",
-    "pitch_range_deg": [
-     0.07886010788923851,
-     0.0798238442190843
+    "basis": "record + health limit vs replica f64 |d pitch| <= 0.03 deg, |d z0| <= 0.5 mm (5.36.3, U-S9P-4 (c))",
+    "kind": "record",
+    "pitch_ref_f64_deg": 0.07886010788923851,
+    "z0_ref_f64_mm": -0.08232438270593877,
+    "d_pitch_vs_f64_deg": 0.006624767632777778,
+    "d_z0_vs_f64_mm": 0.03679661095314878,
+    "health_limit_deg_mm": [
+     0.03,
+     0.5
     ],
-    "z0_range_mm": [
-     -0.08357396652698279,
-     -0.08232438270593877
-    ],
-    "pitch_outside_range_deg": 0.005661031302931996,
-    "z0_outside_range_mm": 0.03679661095314878,
-    "within": false
+    "health_within": true,
+    "former_range_record": {
+     "basis": "replica f64-f32 range +- (0.005 deg, 0.05 mm) (5.35.4, U-S9P-2; superseded)",
+     "pitch_range_deg": [
+      0.07886010788923851,
+      0.0798238442190843
+     ],
+     "z0_range_mm": [
+      -0.08357396652698279,
+      -0.08232438270593877
+     ],
+     "pitch_outside_range_deg": 0.005661031302931996,
+     "z0_outside_range_mm": 0.03679661095314878,
+     "within_range_margin": false
+    },
+    "within": true
    }
   },
   "P2prime_S1_top_M14s_dashpot8s": {

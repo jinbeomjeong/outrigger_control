@@ -117,6 +117,17 @@ def batches() -> dict[str, list[dict]]:
                         "argv": RUN + ["machine", "--soil", soil, *B, "--grid", str(h), "--crawler-grid", "0.04",
                                        "--settle-dashpot", "zrp"]}
                        for soil, h in (("J1", 0.01), ("J2", 0.01), ("G1", 0.02), ("S1", 0.02))]
+    # P3a (dynamics 5.36.5, U-S9P-5 (a) 2026-10-26): open-loop lift 28 s after the 8 s dashpot settle,
+    # J1 / G1 x type B / A, top auger; --abort-on-limit = exit 3 on a force-limit or stroke-margin excess.
+    # Order B J1, B G1, A J1, A G1: with 2 slots the two long J1 runs overlap the G1 pair (about 1.5 h)
+    p3a = []
+    for soil, pad, pv, h, est in (("J1", "B", "dwg_rear250", 0.01, 3600), ("G1", "B", "dwg_rear250", 0.02, 1800),
+                                  ("J1", "A", "cad330", 0.01, 3600), ("G1", "A", "cad330", 0.02, 1800)):
+        p3a.append({"case": f"P3a_{soil}_{pad}", "est_s": est,
+                    "argv": RUN + ["machine", "--soil", soil, "--pad-variant", pv, "--grid", str(h),
+                                   "--crawler-grid", "0.04", "--settle-dashpot", "zrp", "--lift-s", "28",
+                                   "--level", "top", "--threads", "4", "--abort-on-limit"]})
+    out["P3a"] = p3a
     return out
 
 

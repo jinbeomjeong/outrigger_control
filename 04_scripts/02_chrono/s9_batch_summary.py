@@ -1,11 +1,12 @@
-"""Value summaries of the S9 P1 / P2 batches against the criteria of dynamics_model.md 5.34.13 (rev. 49).
+"""Value summaries of the S9 P1 / P2 / P3a batches against the criteria of dynamics_model.md 5.34.13
+(rev. 49), 5.35.4, 5.36.3 (P2'-b J1 / J2 health limit) and 5.36.5 (P3a, rev. 51).
 
 Values and criterion comparisons only; pass / fail decisions are dynamics-expert's. Reads a batch
 folder of ``s9_batch.py`` and writes one JSON to ``06_analysis/01_chrono/19_S9/``.
 
 Usage (Chrono-dev, worktree root)::
 
-    python -I -X utf8 04_scripts/02_chrono/s9_batch_summary.py <V0p|V16|L|P2> <batch folder> [<out.json>]
+    python -I -X utf8 04_scripts/02_chrono/s9_batch_summary.py <V0p|V16|L|P2|P2prime|P3a> <batch folder> [<out.json>]
 
 Units: SI in keys ending _m, _N, _s; mm / deg / % where the key says so. Frames: single pad world
 z up, SCM plane z = 0; machine world = body axes at the start (x forward, z up), pitch > 0 nose down.
@@ -495,7 +496,9 @@ def summary_p2(folder: Path) -> dict[str, Any]:
 
 
 P2P_RANGE_MARGIN = (0.005, 0.05)
-"""P2'-b J1 / J2 margin around the replica f64-f32 range (deg, mm) (5.35.4, U-S9P-2)."""
+"""P2'-b J1 / J2 margin around the replica f64-f32 range (deg, mm) (5.35.4, U-S9P-2; record since U-S9P-4)."""
+P2P_HEALTH_LIMIT = (0.03, 0.5)
+"""P2'-b J1 / J2 health limit vs the replica f64 (deg, mm) (5.36.3, U-S9P-4 (c) 2026-10-26)."""
 
 
 def p2prime_references() -> dict[str, dict[str, Any]]:
@@ -550,18 +553,32 @@ def summary_p2prime(folder: Path) -> dict[str, Any]:
                             "pitch_rel_pct": (pm - p_ref) / p_ref * 100.0, "z0_rel_pct": (zm - z_ref) / z_ref * 100.0}
             row["P2'-b"]["within"] = bool(abs(row["P2'-b"]["pitch_rel_pct"]) <= 1.0 and abs(row["P2'-b"]["z0_rel_pct"]) <= 1.0)
         elif ref:
+            # U-S9P-4 (c) 2026-10-26 (dynamics 5.36.3): the J1 / J2 settle state is a record; health limit
+            # |pitch - replica f64| <= 0.03 deg, |z0 - replica f64| <= 0.5 mm. The former U-S9P-2 range
+            # +- (0.005 deg, 0.05 mm) is kept as a record (two samples of the rounding-pattern spread, 5.36.2)
             pr = sorted((ref["f64"]["pitch_deg"], ref["f32"]["pitch_deg"]))
             zr = sorted((ref["f64"]["z0_mm"], ref["f32"]["z0_mm"]))
             mp, mz = P2P_RANGE_MARGIN
-            row["P2'-b"] = {"basis": "replica f64-f32 range +- (0.005 deg, 0.05 mm) (5.35.4, U-S9P-2)",
-                            "pitch_range_deg": pr, "z0_range_mm": zr,
-                            "pitch_outside_range_deg": max(pr[0] - pm, pm - pr[1], 0.0),
-                            "z0_outside_range_mm": max(zr[0] - zm, zm - zr[1], 0.0)}
-            row["P2'-b"]["within"] = bool(pr[0] - mp <= pm <= pr[1] + mp and zr[0] - mz <= zm <= zr[1] + mz)
+            hp, hz = P2P_HEALTH_LIMIT
+            dp, dz = pm - ref["f64"]["pitch_deg"], zm - ref["f64"]["z0_mm"]
+            row["P2'-b"] = {"basis": "record + health limit vs replica f64 |d pitch| <= 0.03 deg, |d z0| <= 0.5 mm "
+                                     "(5.36.3, U-S9P-4 (c))",
+                            "kind": "record", "pitch_ref_f64_deg": ref["f64"]["pitch_deg"], "z0_ref_f64_mm": ref["f64"]["z0_mm"],
+                            "d_pitch_vs_f64_deg": dp, "d_z0_vs_f64_mm": dz, "health_limit_deg_mm": [hp, hz],
+                            "health_within": bool(abs(dp) <= hp and abs(dz) <= hz),
+                            "former_range_record": {
+                                "basis": "replica f64-f32 range +- (0.005 deg, 0.05 mm) (5.35.4, U-S9P-2; superseded)",
+                                "pitch_range_deg": pr, "z0_range_mm": zr,
+                                "pitch_outside_range_deg": max(pr[0] - pm, pm - pr[1], 0.0),
+                                "z0_outside_range_mm": max(zr[0] - zm, zm - zr[1], 0.0),
+                                "within_range_margin": bool(pr[0] - mp <= pm <= pr[1] + mp and zr[0] - mz <= zm <= zr[1] + mz)}}
+            row["P2'-b"]["within"] = row["P2'-b"]["health_within"]
         rows[k] = row
-    return {"batch": "P2' (dynamics_model.md 5.35.4 / 5.35.5 #2; user decisions U-S9P-1, U-S9P-2 2026-10-26)",
+    return {"batch": "P2' (dynamics_model.md 5.35.4 / 5.35.5 #2 / 5.36.3; user decisions U-S9P-1, U-S9P-2, U-S9P-4 (c) 2026-10-26)",
             "criteria": {"P2'-a": "first-step SCM force <= 100 N, start rise (max z0 up to 5 s) <= 2 mm",
-                         "P2'-b": "G1, S1: replica (a) f64 <= 1 %; J1, J2: replica f64-f32 range +- (0.005 deg, 0.05 mm)",
+                         "P2'-b": "G1, S1: replica (a) f64 <= 1 %; J1, J2: record + health limit |d pitch| <= 0.03 deg, "
+                                  "|d z0| <= 0.5 mm vs replica f64 (U-S9P-4 (c), 5.36.3); P3 judged relative to each "
+                                  "case's own settle state",
                          "P2'-c": "7-8 s pitch p-p <= 0.02 deg", "P2'-d": "SCM normal sum / weight 1 +- 0.002 (last 1 s)"},
             "case_def": "machine settle, type B pads, top auger, M14s (pads 1 cm J1 / J2, 2 cm G1 / S1; crawler 4 cm), "
                         "gravity Poly345 3 s + hold 5 s, settle dashpot c_z 2e6 N s/m, c_pitch 3.4e6, c_roll 2.2e6 N m s/rad "
@@ -571,13 +588,127 @@ def summary_p2prime(folder: Path) -> dict[str, Any]:
             "rows": rows, "cost": batch_cost(folder)}
 
 
+P3A_EXPECTED = {"P3a_J1_B": {"t_liftoff_s": 28.7, "end_pitch_deg": -0.44, "set_by": "rear"},
+                "P3a_J1_A": {"t_liftoff_s": 27.4, "end_pitch_deg": 0.6, "set_by": "front"},
+                "P3a_G1_B": {"t_liftoff_s": 25.2, "end_pitch_deg": "|.| <= 0.02"},
+                "P3a_G1_A": {"t_liftoff_s": 25.0, "end_pitch_deg": "|.| <= 0.02"}}
+"""dynamics 5.36.5 qualitative expectations (single-pad V16 design-load sinkage, same-speed lift);
+lift start = 8.0 s; end pitch change ~ (front - rear sinkage) / 4.85 m."""
+V16_JSON = OUT / "s9_P1_V16_summary.json"
+LEGS = ("FL", "FR", "RL", "RR")
+
+
+def v16_reference_levels(soil: str, grid_m: float) -> dict[str, Any]:
+    """V16 single-pad node sinkage per virgin load level (type B; FL = front 330, RL = rear 250 pad) for
+    the P3a-6 comparison, with a linear interpolation helper at a given load (record only)."""
+    if not V16_JSON.exists():
+        return {}
+    doc = json.loads(V16_JSON.read_text("utf-8"))
+    out = {}
+    for row in doc["rows"]:
+        if row.get("kind") != "V16a-c load steps" or row["soil"] != soil or abs(row["grid_m"] - grid_m) > 1e-9:
+            continue
+        lv = [(e["load_N"], e["node_sinkage_mm"]) for e in row["levels"] if not e["unloading"] and e["node_sinkage_mm"] is not None]
+        out[row["leg"]] = {"case": row["case"], "pad_variant": row["pad_variant"], "levels_load_N_sinkage_mm": lv}
+    return out
+
+
+def _interp_sinkage_mm(levels: list[tuple[float, float]], load_N: float) -> float | None:
+    if not levels:
+        return None
+    f, z = zip(*sorted(levels), strict=True)
+    if load_N > f[-1] or load_N < f[0]:
+        return None  # outside the V16 steps: no extrapolation
+    return float(np.interp(load_N, f, z))
+
+
+def summary_p3a(folder: Path) -> dict[str, Any]:
+    """P3a open-loop lift (dynamics 5.36.5, U-S9P-5 (a)): judged items P3a-1 ... 5 as values vs criteria,
+    records P3a-6 ... 10. J1 values relative to each run's own settle end (5.36.3, U-S9P-4 (c))."""
+    rows = {}
+    for k, r in cases(folder).items():
+        p = r.get("p3a")
+        if p is None:
+            continue
+        a = r["args"]
+        lo = p["P3a-2_liftoff"]
+        f1 = p["P3a-1_force_peak"]
+        eq = p["P3a-3_end_equilibrium"]
+        st = p["P3a-4_stroke"]
+        tl = p["P3a-5_pad_tilt"]
+        exp = P3A_EXPECTED.get(k, {})
+        end_load = eq["pad_normal_mean_N"]
+        v16 = v16_reference_levels(a["soil"], float(a["grid"]))
+        node_end = (p["P3a-6_sinkage"].get("node_end") or {}).get("sinkage_mean_contact_m")
+        sink_cmp = []
+        for i, leg in enumerate(LEGS):
+            ref_leg = "FL" if i < 2 else "RL"
+            ref = v16.get(ref_leg)
+            same_pad = ref is not None and (i < 2 or a["pad_variant"] == "dwg_rear250")
+            sink_cmp.append({"leg": leg, "end_pad_normal_N": end_load[i],
+                             "end_geometric_sinkage_mm": p["P3a-6_sinkage"]["geometric_end_m"][i] * 1e3,
+                             "end_node_sinkage_mm": None if (node_end is None or node_end[i] is None) else node_end[i] * 1e3,
+                             "V16_case": None if ref is None else ref["case"],
+                             "V16_same_pad": same_pad,
+                             "V16_interp_at_end_load_mm": (_interp_sinkage_mm(ref["levels_load_N_sinkage_mm"], end_load[i])
+                                                           if same_pad else None)})
+        rows[k] = {
+            "soil": a["soil"], "pad_variant": a["pad_variant"], "pad_grid_m": a["grid"], "crawler_grid_m": a["crawler_grid"],
+            "level": a["level"], "lift_s": a["lift_s"], "t_lift_start_s": p["t_lift_start_s"],
+            "judged": {
+                "P3a-1_force_peak": {"F_peak_kN": [v / 1e3 for v in f1["F_peak_N"]], "limit_kN": [v / 1e3 for v in f1["limit_N"]],
+                                     "peak_over_limit": f1["peak_over_limit"], "t_peak_s": f1["t_peak_s"],
+                                     "within": f1["within"]},
+                "P3a-2_liftoff": {"lifted": lo["lifted"], "t_liftoff_s": lo.get("t_liftoff_s"),
+                                  "t_after_lift_start_s": lo.get("t_after_lift_start_s"),
+                                  "expected_t_liftoff_s": exp.get("t_liftoff_s"),
+                                  "minus_expected_s": (None if lo.get("t_liftoff_s") is None or exp.get("t_liftoff_s") is None
+                                                       else lo["t_liftoff_s"] - exp["t_liftoff_s"]),
+                                  "recontact_after_confirm_t_s": lo.get("recontact_after_confirm_t_s"), "rule": lo["rule"]},
+                "P3a-3_end_equilibrium": {"pad_normal_sum_over_weight": eq["pad_normal_sum_over_weight"],
+                                          "window_s": eq["window_s"], "window_after_liftoff": eq["window_after_liftoff"],
+                                          "crawler_normal_mean_N": eq["crawler_normal_mean_N"], "criterion": "1 +- 0.002",
+                                          "within": eq["within"]},
+                "P3a-4_stroke": {"s_motor_max_m": st["s_motor_max_m"], "limit_m": st["limit_m"], "margin_m": st["margin_m"],
+                                 "within": st["within"]},
+                "P3a-5_pad_tilt": {"tilt_max_loaded_deg": tl["tilt_max_loaded_deg"], "t_s": tl["t_tilt_max_loaded_s"],
+                                   "criterion_deg": tl["criterion_deg"], "within": tl["within"]}},
+            "records": {
+                "P3a-6_sinkage": {**p["P3a-6_sinkage"], "V16_comparison": sink_cmp},
+                "P3a-7_attitude": {**p["P3a-7_attitude"], "expected_end_pitch_change_deg": exp.get("end_pitch_deg")},
+                "P3a-8_first_touch": p["P3a-8_first_touch"], "P3a-9_min_cylinder_force": p["P3a-9_min_cylinder_force"],
+                "P3a-10_rut_track": p["P3a-10_rut_track"]},
+            "end_equilibrium_total_over_weight": r["end"]["equilibrium_rel_error"] + 1.0,
+            "settle_last_1s": r.get("settle_last_1s"),
+            "us_per_step": r["us_per_step"], "wall_s": r["wall_s"], "build_s": r["build_s"],
+            "threads": r.get("num_threads_chrono"), "placement": r.get("placement")}
+    return {"batch": "P3a open-loop lift (dynamics_model.md 5.36.5; user decisions U-S9P-4 (c), U-S9P-5 (a) 2026-10-26)",
+            "criteria": {"P3a-1": "cylinder force peak per leg <= 278.7 kN (FL, FR) / 199.6 kN (RL, RR), 210 bar extension",
+                         "P3a-2": "crawler SCM normal < 1 % W for 0.1 s within the run (lift-off)",
+                         "P3a-3": "last 1 s pad SCM normal sum / W = 1 +- 0.002 after lift-off",
+                         "P3a-4": "max s_motor <= 0.6848 m",
+                         "P3a-5": "pad tilt while loaded (> 1 % of the leg design load) <= 0.5 deg",
+                         "P3a-6..10": "records: sinkage history (V16 comparison), pitch / roll transient vs the settle end, "
+                                      "first-touch 0.2 s SCM force rise, minimum cylinder force, rut clearance and track utilisation"},
+            "case_def": "machine, top auger, M14s (pads 1 cm J1 / 2 cm G1, crawler 4 cm), settle 8 s (gravity Poly345 3 s + "
+                        "hold 5 s, dashpot c_z 2e6 N s/m, c_pitch 3.4e6, c_roll 2.2e6 N m s/rad ASSUMPTION, full to 3 s, 0 at 5 s), "
+                        "then four legs at v_max 20.924 mm/s (command ramp 0.1 s) for 28 s; (b'), Δt 1e-4 s, mesh ray targets, "
+                        "4 SCM threads, L2b force-law actuator; F_cyl = acting force (+ = extension push)",
+            "frames": "world = body axes at the start, x forward, y left, z up; pitch > 0 nose down; SCM normals along the plane normal",
+            "expected_source": "dynamics_model.md 5.36.5 (qualitative, single-pad V16 design-load sinkage)",
+            "values_only": "pass / fail decisions are dynamics-expert's; *within flags compare with the 5.36.5 criteria",
+            "rows": rows, "cost": batch_cost(folder)}
+
+
 def main(argv) -> None:
     kind, folder = argv[0], Path(argv[1])
-    fn = {"V0p": summary_v0p, "V16": summary_v16, "L": summary_l, "P2": summary_p2, "P2prime": summary_p2prime}[kind]
+    fn = {"V0p": summary_v0p, "V16": summary_v16, "L": summary_l, "P2": summary_p2, "P2prime": summary_p2prime,
+          "P3a": summary_p3a}[kind]
     res = fn(folder)
     res["source_batch"] = folder.as_posix()
     res["generator"] = "04_scripts/02_chrono/s9_batch_summary.py"
-    out = Path(argv[2]) if len(argv) > 2 else OUT / f"s9_P1_{kind}_summary.json".replace("P1_P2", "P2")
+    out = Path(argv[2]) if len(argv) > 2 else OUT / (f"s9_{kind}_summary.json" if kind.startswith(("P2", "P3"))
+                                                     else f"s9_P1_{kind}_summary.json")
     out.write_text(json.dumps(res, indent=1, ensure_ascii=False, default=float), "utf-8")
     print(out)
 
