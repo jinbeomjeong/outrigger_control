@@ -361,12 +361,31 @@ def main(argv) -> None:
                         '"parallel_p": N, "parallel_e": M} (e.g. the cpu-scheduler-expert LPT plan); '
                         "command-line values given explicitly win")
     r.add_argument("--only", nargs="*")
+    r.add_argument("--allow-env-override", action="store_true",
+                   help="start even with OUTRIGGER_L1_FALLBACK_RATIO_SOURCE set (B(iii) comparison batch; "
+                        "the L1 cases of the batch, e.g. P3-10 m3_run, take the override)")
     a = ap.parse_args(argv)
     if a.action == "list":
         for k, v in batches().items():
             print(k, len(v), [c["case"] for c in v])
     else:
+        env_override_guard(a.allow_env_override, a.batch)
         run_batch(a.batch, only=a.only or None, **schedule_args(a, argv))
+
+
+def env_override_guard(allow: bool, batch: str) -> str | None:
+    """B(iii) (control 2026-10-26): refuse a batch while ``OUTRIGGER_L1_FALLBACK_RATIO_SOURCE``
+    is set (the child processes inherit it) unless ``--allow-env-override``."""
+    src = str(ROOT / "03_src")
+    added = src not in sys.path
+    if added:
+        sys.path.insert(0, src)
+    try:
+        from outrigger_sim.chrono.fallback_ratio import refuse_env_override
+    finally:
+        if added:
+            sys.path.remove(src)
+    return refuse_env_override(allow, f"s9_batch run {batch}")
 
 
 def schedule_args(a: argparse.Namespace, argv: list[str]) -> dict:

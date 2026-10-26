@@ -25,6 +25,14 @@ with the low-load abort, the re-approach phases), so a replay of the controller'
 reproduces its events; :attr:`WatchMode.CONTINUOUS` watches every period after lift-off, for
 comparing judges on a record whose phases came from the other judge.
 
+R-5 fallback slope (P-S8-22, spec rev. 61 302.2, V-2): with ``fallback_slope = "nominal_gap"``
+in the replay settings and the per-period :class:`FallbackSlopeInputs` of
+:func:`replay_fallback_monitor` in the input (:meth:`ReplayInput.with_fallback_monitor`), R-5
+uses the controller's own rule :func:`~outrigger_sim.control.c2.fallback_slope_drops` and
+reports ``INFO_R5_FALLBACK_SLOPE`` events. The inputs come from a two-pressure monitor run
+offline on the recorded readings, with the rod-side fallback forced at the controller's
+``WARN_ROD_PRESSURE_FALLBACK`` events (the monitor's own diagnosis is off).
+
 Not replayed: the attitude re-level (it resets the P5 counter in the controller) and the periods
 a U67 lock tail skips the READY check; both only shift a P5 confirmation by a period.
 """
@@ -32,7 +40,7 @@ a U67 lock tail skips the READY check; both only shift a P5 confirmation by a pe
 from __future__ import annotations
 
 from collections import deque
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, field, replace
 from enum import StrEnum
 from typing import Any
@@ -40,13 +48,28 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
-from outrigger_sim.contact_episode import LEG_COUNT, NO_LEG, Episode
+from outrigger_sim.contact_episode import (
+    LEG_COUNT,
+    LEG_NAMES,
+    NO_LEG,
+    ZERO_CALIBRATED_EVENT,
+    Episode,
+)
 from outrigger_sim.control.c2 import (
+    FALLBACK_SLOPE_EVENT,
     REAPPROACH_PHASES,
     C2Config,
+    C2Geometry,
     C2Phase,
+    FallbackSlopeReport,
     FastRelevelSettings,
     LiftedReapproachSettings,
+    fallback_slope_drops,
+)
+from outrigger_sim.control.two_pressure import (
+    FallbackSlopeInputs,
+    RodSensorState,
+    TwoPressureMonitor,
 )
 from outrigger_sim.verify.contact_metrics import RecordJudgement, truth_classes
 
@@ -78,6 +101,8 @@ class ActionKind(StrEnum):
     REAPPROACH_DEFERRED = "leg_reapproach_deferred"
     """P-S8-16 RT 1: first sample of a deferred other-diagonal start (bookkeeping)."""
     GE2 = "support_changed"
+    R5_FALLBACK_SLOPE = FALLBACK_SLOPE_EVENT
+    """P-S8-22: a fallback leg's R-5 fall passed the rate threshold (information)."""
 
 
 ACTION_START_KINDS = frozenset(
@@ -208,6 +233,8 @@ class ReplayInput:
         touched: Touch latch at the start of update ``k`` (n, 4).
         probed_leg: Probed leg at the start of update ``k`` (n,), -1 = none.
         ge2_lift_mark, ge2_trigger_mark, probe_not_grounded_mark: J_C marks (n, 4).
+        fallback_slope_inputs: P-S8-22 R-5 inputs of update ``k`` (n, 4 objects,
+            :class:`FallbackSlopeInputs` or ``None``); ``None`` = not replayed (level rule).
     """
 
     t_s: NDArray[np.float64]
@@ -221,10 +248,22 @@ class ReplayInput:
     ge2_lift_mark: NDArray[np.bool_]
     ge2_trigger_mark: NDArray[np.bool_]
     probe_not_grounded_mark: NDArray[np.bool_]
+    fallback_slope_inputs: NDArray[np.object_] | None = None
 
     @property
     def sample_count(self) -> int:
         return int(self.t_s.size)
+
+    def with_fallback_monitor(self, monitor_replay: FallbackMonitorReplay) -> ReplayInput:
+        """Copy with the replayed fallback readings: from its fallback row on, the lower
+        reading of a fallback leg is the monitor's column-bound one (an S7 episode records
+        the net force there), and the R-5 fallback inputs per update."""
+        lower = np.array(self.lower_reading_N, dtype=float)
+        for leg, first_row in enumerate(monitor_replay.fallback_rows):
+            if first_row is not None:
+                lower[first_row:, leg] = monitor_replay.lower_reading_N[first_row:, leg]
+        return replace(self, lower_reading_N=lower,
+                       fallback_slope_inputs=monitor_replay.slope_inputs)
 
     @classmethod
     def from_episode(cls, episode: Episode) -> ReplayInput:
@@ -260,6 +299,8 @@ class ReplayEvent:
     t_s: float
     leg: int
     kind: ActionKind
+    values_kN: tuple[float, float] | None = None
+    """``R5_FALLBACK_SLOPE``: ``((h / n) D, (h / n) gap)`` in kN, as the controller event."""
 
 
 @dataclass
@@ -296,19 +337,38 @@ def predicted_falling_leg(
     excluded_leg: int,
 ) -> int | None:
     """R-5 (``C2Controller._leg_falling_below``) on the estimate history, or ``None``."""
+    leg, _ = predicted_falling_leg_with_reports(history, settings, excluded_leg)
+    return leg
+
+
+def predicted_falling_leg_with_reports(
+    history: deque[NDArray[np.float64]],
+    settings: ReplaySettings,
+    excluded_leg: int,
+    fallback_inputs: Sequence[FallbackSlopeInputs | None] | None = None,
+) -> tuple[int | None, list[FallbackSlopeReport]]:
+    """R-5 with the P-S8-22 fallback slope when the settings have it and ``fallback_inputs``
+    (per leg, this update) are given: (triggered leg or ``None``, fallback slope reports)."""
     fast = settings.fast_relevel
     if fast is None or len(history) < fast.rate_intervals + 1:
-        return None
+        return None, []
     oldest, previous, latest = history[0], history[-2], history[-1]
     drop_per_period = (oldest - latest) / fast.rate_intervals
-    predicted = latest - drop_per_period * settings.fast_relevel_horizon_periods
+    horizon_periods = settings.fast_relevel_horizon_periods
+    reports = []
+    if fast.uses_fallback_slope and fallback_inputs is not None:
+        drop_per_period, reports = fallback_slope_drops(
+            drop_per_period, fallback_inputs, fast, horizon_periods, settings.period_s,
+            None if excluded_leg == NO_LEG else excluded_leg,
+        )
+    predicted = latest - drop_per_period * horizon_periods
     is_fast = drop_per_period / settings.period_s > fast.rate_threshold_N_s
     triggered = is_fast & (previous > latest) & (predicted < settings.relevel_level_N)
     if excluded_leg != NO_LEG:
         triggered[excluded_leg] = False
     if not triggered.any():
-        return None
-    return int(np.argmin(np.where(triggered, predicted, np.inf)))
+        return None, reports
+    return int(np.argmin(np.where(triggered, predicted, np.inf))), reports
 
 
 @dataclass
@@ -466,7 +526,15 @@ class _Replayer:
             state.relevel_low_count = 0
             return
         probed_leg = int(self.inputs.probed_leg[row])
-        predicted_leg = predicted_falling_leg(state.history, self.settings, probed_leg)
+        all_inputs = self.inputs.fallback_slope_inputs
+        predicted_leg, reports = predicted_falling_leg_with_reports(
+            state.history, self.settings, probed_leg,
+            None if all_inputs is None else list(all_inputs[row]),
+        )
+        for report in reports:
+            values_kN = (report.horizon_drop_N / 1e3, report.horizon_gap_N / 1e3)
+            self.events.append(ReplayEvent(float(self.inputs.t_s[row]), report.leg,
+                                           ActionKind.R5_FALLBACK_SLOPE, values_kN))
         if predicted_leg is not None:
             self._add(row, predicted_leg, ActionKind.R5)
             state.relevel_low_count = 0
@@ -532,6 +600,178 @@ def replay_both(
         settings = ReplaySettings.from_controller_meta(episode.meta["controller"], episode.F_min_N)
     inputs = ReplayInput.from_episode(episode)
     return {judge: replay_judge(inputs, settings, judge, watch=watch) for judge in Judge}
+
+
+# --- P-S8-22: two-pressure monitor replay for the R-5 fallback slope (V-2) ------------------
+
+FALLBACK_EVENT_PREFIX = "WARN_ROD_PRESSURE_FALLBACK"
+FAULT_REASON_PREFIX = "INFO_ROD_PRESSURE_FAULT_REASON"
+LATE_FALLBACK_REASONS = frozenset({"D4", "D6"})
+"""Fallbacks the controller's monitor raises after the period's estimate update (D4 in the
+locked check on the forces, D6 at a probe round end): forced from the next row on. D1-D3 are
+judged before the estimate update of the same read."""
+EVENT_TIME_TOLERANCE_FRACTION = 0.25
+"""An event belongs to the row whose period end lies within this fraction of ``T``."""
+
+
+@dataclass(frozen=True)
+class FallbackMonitorReplay:
+    """Offline two-pressure monitor of one record (:func:`replay_fallback_monitor`).
+
+    Attributes:
+        lower_reading_N: The monitor's ``forces.lower`` per update (n, 4).
+        slope_inputs: R-5 fallback inputs per update (n, 4 objects, ``None`` = none).
+        fallback_rows: Per leg the first row read as a fallback leg (``None`` = never).
+    """
+
+    lower_reading_N: NDArray[np.float64]
+    slope_inputs: NDArray[np.object_]
+    fallback_rows: tuple[int | None, ...]
+
+
+def _row_of_event(t_s: NDArray[np.float64], time_s: float, period_s: float) -> int | None:
+    row = int(np.argmin(np.abs(t_s - time_s)))
+    if abs(t_s[row] - time_s) > EVENT_TIME_TOLERANCE_FRACTION * period_s:
+        return None
+    return row
+
+
+def _leg_of_event(name: str) -> int | None:
+    parts = name.split(":")
+    if len(parts) < 2 or parts[1] not in LEG_NAMES:
+        return None
+    return LEG_NAMES.index(parts[1])
+
+
+def fallback_rows_from_events(
+    events: Sequence[tuple[float, str]], t_s: NDArray[np.float64], period_s: float
+) -> tuple[int | None, ...]:
+    """Per leg the first row the controller's monitor read as a fallback leg, from
+    ``WARN_ROD_PRESSURE_FALLBACK:<leg>`` and the reason of
+    ``INFO_ROD_PRESSURE_FAULT_REASON:<leg>:<reason>`` (:data:`LATE_FALLBACK_REASONS`: next
+    row)."""
+    reasons: dict[int, str] = {}
+    for _, name in events:
+        if name.startswith(FAULT_REASON_PREFIX):
+            leg = _leg_of_event(name)
+            if leg is not None:
+                reasons.setdefault(leg, name.split(":")[2] if name.count(":") >= 2 else "")
+    rows: list[int | None] = [None] * LEG_COUNT
+    for time_s, name in events:
+        leg = _leg_of_event(name)
+        if not name.startswith(FALLBACK_EVENT_PREFIX) or leg is None or rows[leg] is not None:
+            continue
+        row = _row_of_event(t_s, time_s, period_s)
+        if row is None:
+            continue
+        rows[leg] = row + 1 if reasons.get(leg) in LATE_FALLBACK_REASONS else row
+    return tuple(rows)
+
+
+def _calibration_rows(events, t_s, period_s) -> NDArray[np.int64]:
+    """Per leg the first row with the zero offset removed (the row after its event)."""
+    first = np.full(LEG_COUNT, t_s.size, dtype=np.int64)
+    for time_s, name in events:
+        leg = _leg_of_event(name)
+        if not name.startswith(ZERO_CALIBRATED_EVENT) or leg is None:
+            continue
+        row = _row_of_event(t_s, time_s, period_s)
+        if row is not None:
+            first[leg] = min(first[leg], row + 1)
+    return first
+
+
+def replay_fallback_monitor(
+    episode: Episode,
+    events: Sequence[tuple[float, str]],
+    geometry: C2Geometry,
+    config: C2Config,
+    *,
+    offset_allowance_N: NDArray[np.float64] | None = None,
+    offset_allowance_from_s: float | None = None,
+) -> FallbackMonitorReplay:
+    """Run the controller's two-pressure monitor offline on a record (P-S8-22 V-2).
+
+    The monitor is built as :class:`~outrigger_sim.control.c2.C2Controller` builds it, but
+    with its diagnosis off: the rod-side fallback is forced at the recorded events
+    (:func:`fallback_rows_from_events`), so the replay does not depend on the IMU inputs of
+    D1''. Each row reads the delivered head / rod pressures and measured strokes with the
+    issued command of the row before (the output acting during the period, ``d = 1``), as
+    the controller's read did; the zero offsets (episode meta ``zero_offset_N``) apply from
+    the row after each leg's ``INFO_PRESSURE_ZERO_CALIBRATED`` event.
+
+    Args:
+        episode: The record (head and rod-side pressures needed).
+        events: The controller events of the run (``read_controller_events``).
+        geometry: Machine of the run (``C2Geometry.from_params``).
+        config: Controller setting of the run, with the fallback-slope choice to replay
+            (``r8.fast_relevel``; ``level`` gives no inputs) and the run's lock valve.
+        offset_allowance_N: E-6 lower-bound deduction per leg (not in the episode; ``None``
+            = zero), from the calibration row of the leg on, or from
+            ``offset_allowance_from_s`` when given.
+        offset_allowance_from_s: Time from which the deduction applies to every leg (the
+            calibration end ``zero_calibration.result.t_end_s``, when the controller set it).
+
+    Raises:
+        ValueError: The episode has no rod-side pressure.
+    """
+    if not episode.has("rod_pressure_Pa"):
+        raise ValueError("replay_fallback_monitor needs the rod-side pressure of the record")
+    t_s = np.asarray(episode["t_s"], dtype=float)
+    period_s = config.period_s
+    head = np.asarray(episode["head_pressure_Pa"], dtype=float)
+    rod = np.asarray(episode["rod_pressure_Pa"], dtype=float)
+    stroke = np.asarray(episode["motor_stroke_m"], dtype=float)
+    acting = _previous(np.asarray(episode["command_m_s"], dtype=float), fill=0.0)
+    is_ready = _previous(np.asarray(episode["phase"]), fill="") == C2Phase.READY.value
+    seal_band = _previous(np.asarray(episode["seal_band_N"], dtype=float))
+    monitor = _offline_monitor(geometry, config)
+    fallback_rows = fallback_rows_from_events(events, t_s, period_s)
+    calibration_rows = _calibration_rows(events, t_s, period_s)
+    offsets = np.asarray(episode.meta.get("zero_offset_N") or np.zeros(LEG_COUNT), dtype=float)
+    allowance = np.zeros(LEG_COUNT) if offset_allowance_N is None else np.asarray(
+        offset_allowance_N, dtype=float)
+    fast = config.r8.fast_relevel
+    choice = None if fast is None else fast.fallback_ratio_choice()
+    lower = np.empty_like(head)
+    inputs = np.full(head.shape, None, dtype=object)
+    for row in range(t_s.size):
+        is_calibrated = calibration_rows <= row
+        monitor.set_zero_offsets_N(np.where(is_calibrated, offsets, 0.0))
+        if offset_allowance_from_s is None:
+            has_allowance = is_calibrated
+        else:
+            has_allowance = np.full(LEG_COUNT, t_s[row] > offset_allowance_from_s + 1e-9)
+        monitor.set_offset_allowance_N(np.where(has_allowance, allowance, 0.0))
+        for leg, first_row in enumerate(fallback_rows):
+            if first_row == row:
+                monitor.rod_state[leg] = RodSensorState.FALLBACK
+        forces = monitor.read(float(t_s[row]), head[row], rod[row], acting[row],
+                              bool(is_ready[row]), seal_band[row], stroke_m=stroke[row],
+                              r5_fallback_ratios=choice)
+        lower[row] = forces.lower
+        for leg in range(LEG_COUNT):
+            inputs[row, leg] = monitor.r5_fallback_inputs(leg)
+    return FallbackMonitorReplay(lower, inputs, fallback_rows)
+
+
+def _offline_monitor(geometry: C2Geometry, config: C2Config) -> TwoPressureMonitor:
+    """The monitor of ``C2Controller.__init__`` with the diagnosis off."""
+    return TwoPressureMonitor(
+        geometry.head_area_m2,
+        geometry.annulus_area_m2,
+        geometry.max_speed_m_s,
+        geometry.F_min_N,
+        config.period_s,
+        config.load_estimate,
+        replace(config.two_pressure, diagnostics=False),
+        geometry.rod_weight_N,
+        stroke_max_m=geometry.stroke_max_m,
+        retract_lock_rod_pressure_Pa=geometry.rod_lock_pressure_after_retract_Pa,
+        counterbalance_lag_tau_s=geometry.counterbalance_lag_tau_s,
+        body_mass_kg=geometry.superstructure_mass_kg,
+        imu_lever_arm_m=geometry.imu_lever_arm_m,
+    )
 
 
 def watched_samples(episode: Episode) -> NDArray[np.bool_]:

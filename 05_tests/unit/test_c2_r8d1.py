@@ -271,7 +271,10 @@ def test_preset_values() -> None:
     assert (r8.measured_stiffness_scale_min, r8.measured_stiffness_scale_max) == (1.0, 1.5)
     assert r8.stiffness_warning_range == (0.8, 2.3)  # P-R8-3, upper end rev. 35 P-R8-16
     # Rev. 32 163.1: R-5 on with horizon 4 (U-R8-13), raw-tilt CHECK, PROBE abort (U-R8-14).
-    assert r8.fast_relevel == FastRelevelSettings(horizon_periods=4)
+    # Rev. 61 304 ① (U-S8-61): the fallback slope with the operating ratio source.
+    assert r8.fast_relevel == FastRelevelSettings(
+        horizon_periods=4, fallback_slope="nominal_gap", fallback_ratio_source="column_nominal"
+    )
     assert r8.check_attitude_from_raw_tilt and r8.uses_raw_check_attitude
     assert r8.probe_abort_on_low_load
     # Rev. 34 174.4 / 179.1 P-R8-13 (U-R8-21): twist-mode re-approach replaces P-R8-12;

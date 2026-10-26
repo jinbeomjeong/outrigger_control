@@ -2,7 +2,11 @@
 
 Usage (Chrono-dev python, any cwd)::
 
-    python -I -X utf8 -u 04_scripts/02_chrono/s9_merge/m3_run.py <case_key> <on|off> <out_root>
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_merge/m3_run.py <case_key> <on|off> <out_root> [duration] [--fallback-ratio-source {plant_meta,column_nominal}]
+
+``duration`` (s) is for smoke runs only. ``--fallback-ratio-source`` overrides the L1 R-5
+fallback ratio source for a single run and applies to the L1 keys only; with a non-L1 key the
+run stops with ``SystemExit`` ("... applies to the L1 keys only ...").
 
 ``on``  = the R8 preset as installed (``C2Config.with_10hz_d1()``: soil response on, re-approach
           time limit 10 s, spec rev. 57 285 / 0400274).
@@ -82,9 +86,28 @@ def array_sha(a) -> str:
     return hashlib.sha256(np.ascontiguousarray(np.asarray(a, dtype=np.float64)).tobytes()).hexdigest()
 
 
+def parse_args(argv: list[str]):
+    """``<case_key> <on|off> <out_root> [duration]`` + ``--fallback-ratio-source`` (B(iii),
+    control 2026-10-26: single-run override of the L1 R-5 ratio source; default = the run_S6C
+    rule, ``plant_meta`` unless the environment variable is set)."""
+    import argparse
+
+    ap = argparse.ArgumentParser(prog="m3_run.py")
+    ap.add_argument("key", choices=sorted(CASES))
+    ap.add_argument("variant", choices=("on", "off"))
+    ap.add_argument("out_root", type=Path)
+    ap.add_argument("duration", nargs="?", type=float, default=None, help="smoke only")
+    ap.add_argument("--fallback-ratio-source", dest="fallback_ratio_source", default=None,
+                    choices=("plant_meta", "column_nominal"),
+                    help="L1 keys only: R-5 fallback ratio source (comparison run, V-4 (4))")
+    return ap.parse_args(argv)
+
+
 def main(argv: list[str]) -> int:
-    key, variant, out_root = argv[0], argv[1], Path(argv[2])
-    duration = float(argv[3]) if len(argv) > 3 else None  # smoke only
+    args = parse_args(argv)
+    key, variant, out_root, duration = args.key, args.variant, args.out_root, args.duration
+    if args.fallback_ratio_source is not None and CASES[key][0] != "L1":
+        raise SystemExit(f"--fallback-ratio-source applies to the L1 keys only, not {key!r}")
     engine, case_id = CASES[key]
     case_dir = out_root / f"{key}__{variant}"
     case_dir.mkdir(parents=True, exist_ok=True)
@@ -100,7 +123,8 @@ def main(argv: list[str]) -> int:
     wall0 = time.perf_counter()
     if engine == "L1":
         case = l1_case(case_id)
-        summary, run_meta = s6c.job_bundle_c(case, case_dir, duration_s=duration)
+        summary, run_meta = s6c.job_bundle_c(case, case_dir, duration_s=duration,
+                                             fallback_ratio_source=args.fallback_ratio_source)
     else:
         import run_S8C as s8c
 
@@ -122,6 +146,8 @@ def main(argv: list[str]) -> int:
     out = {
         "case_key": key, "case_id": case_id, "engine": engine, "variant": variant,
         "config_seen": seen, "placement": placement, "wall_s": wall,
+        "fallback_ratio_source_cli": args.fallback_ratio_source,
+        "fallback_ratio": (summary.get("settings", {}).get("bundle_c") or {}).get("fallback_ratio"),
         "outrigger_sim_file": str(src), "foreign_project_modules": foreign,
         "n_periods": int(len(r8["t"])),
         "sha256_issued_u": array_sha(r8["issued_u"]),

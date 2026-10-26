@@ -217,6 +217,7 @@ from __future__ import annotations
 import logging
 import math
 from collections import deque
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass, field, replace
 from enum import Enum, StrEnum
 from typing import Any
@@ -263,6 +264,10 @@ from outrigger_sim.control.target import (
 )
 from outrigger_sim.control.two_pressure import (
     BODY_MASS_WITHOUT_YAML_KG,
+    NOMINAL_DEAD_LENGTH_M,
+    FallbackRatioChoice,
+    FallbackRatioSource,
+    FallbackSlopeInputs,
     LoadEstimate,
     PressureForces,
     TwoPressureMonitor,
@@ -861,6 +866,16 @@ class SampleConfirmation:
         return max(self.above_samples, self.below_samples) > 1
 
 
+class FallbackSlope(StrEnum):
+    """Fall of a rod-side fallback leg in R-5 (P-S8-22, spec rev. 61 302.4)."""
+
+    LEVEL = "level"
+    """The change of the lower load estimate itself (the rule before P-S8-22)."""
+    NOMINAL_GAP = "nominal_gap"
+    """Spec 302.2: in a column-bound lock stretch the fall is
+    ``D = max{G(R_rate) Dh, G(R_hi) Dh - (n / h) C}`` (nominal slope plus the gap term)."""
+
+
 @dataclass(frozen=True)
 class FastRelevelSettings:
     """R-5 (spec 134, 139 P-9; on in the R8-D1 preset, U-R8-13): P5 on the predicted reading.
@@ -871,6 +886,13 @@ class FastRelevelSettings:
     ``rate_intervals`` periods, the latest period falling as well) and whose predicted estimate
     ``L - r_hat h T`` is below the P5 threshold re-levels on that one sample. Only the falling
     direction counts, so a single upward 102 Hz sample does not.
+
+    P-S8-22 (spec rev. 61 302 / 304, U-S8-60 .. 62): with ``fallback_slope = "nominal_gap"``
+    a rod-side fallback leg inside one column-bound lock stretch falls by ``D`` of
+    :class:`~outrigger_sim.control.two_pressure.FallbackSlopeInputs` instead of the change
+    of its (column-bound) lower estimate; the rate test uses ``D / (n T)`` as well. The level
+    ``L`` and every level consumer stay. The class defaults keep the rule before P-S8-22 (and
+    a settings object pickled before it reads them).
     """
 
     rate_threshold_N_s: float = 20e3
@@ -879,6 +901,16 @@ class FastRelevelSettings:
     horizon_periods: int | None = None
     """Prediction horizon ``h`` in periods (P-R8-10, spec 157.2); ``None`` = ``1 + d`` (the
     revision-31 behaviour)."""
+    fallback_slope: FallbackSlope = FallbackSlope.LEVEL
+    fallback_ratio_source: FallbackRatioSource = FallbackRatioSource.COLUMN_NOMINAL
+    """``nominal_gap`` only (spec 302.4, U-S8-61): ``column_nominal`` for the machine and L2b,
+    ``plant_meta`` for L1 runs, ``online`` as an option."""
+    fallback_nominal_head_dead_m: float = NOMINAL_DEAD_LENGTH_M
+    fallback_nominal_rod_dead_m: float = NOMINAL_DEAD_LENGTH_M
+    """``L_0h`` / ``L_0r`` of ``R_nom(s)`` (ASSUMPTION, hydraulics nominal, spec 305 (1))."""
+    fallback_plant_ratio: tuple[float, ...] | None = None
+    """``plant_meta``: fixed L1-R ratio per leg from the plant meta; ``None`` = the two-pressure
+    ``fallback_locked_ratio`` (1.296 / 1.232, spec 302.4: +0.2 / +0.3 % on the plant)."""
 
     def __post_init__(self) -> None:
         if not self.rate_threshold_N_s > 0.0 or self.rate_intervals < 1:
@@ -887,6 +919,115 @@ class FastRelevelSettings:
         if horizon is not None and (isinstance(horizon, bool) or not isinstance(horizon, int)
                                     or horizon < 1):
             raise ValueError(f"horizon_periods must be an int >= 1 or None, got {horizon!r}")
+        object.__setattr__(self, "fallback_slope", FallbackSlope(self.fallback_slope))
+        object.__setattr__(
+            self, "fallback_ratio_source", FallbackRatioSource(self.fallback_ratio_source)
+        )
+        for name in ("fallback_nominal_head_dead_m", "fallback_nominal_rod_dead_m"):
+            length_m = getattr(self, name)
+            if not (math.isfinite(length_m) and length_m > 0.0):
+                raise ValueError(f"{name} must be a finite length > 0, got {length_m!r}")
+        if self.fallback_plant_ratio is not None:
+            ratios = tuple(float(value) for value in self.fallback_plant_ratio)
+            if len(ratios) != LEG_COUNT or not all(
+                math.isfinite(value) and value > 0.0 for value in ratios
+            ):
+                raise ValueError(
+                    f"fallback_plant_ratio: expected {LEG_COUNT} finite ratios > 0, "
+                    f"got {self.fallback_plant_ratio!r}"
+                )
+            object.__setattr__(self, "fallback_plant_ratio", ratios)
+
+    @property
+    def uses_fallback_slope(self) -> bool:
+        return self.fallback_slope is FallbackSlope.NOMINAL_GAP
+
+    def fallback_ratio_choice(self) -> FallbackRatioChoice | None:
+        """The monitor's ratio choice for ``nominal_gap``; ``None`` for ``level``."""
+        if not self.uses_fallback_slope:
+            return None
+        return FallbackRatioChoice(
+            source=self.fallback_ratio_source,
+            rate_intervals=self.rate_intervals,
+            nominal_head_dead_m=self.fallback_nominal_head_dead_m,
+            nominal_rod_dead_m=self.fallback_nominal_rod_dead_m,
+            plant_ratio=self.fallback_plant_ratio,
+        )
+
+    def to_meta(self) -> dict[str, Any]:
+        meta = asdict(self)
+        meta["fallback_slope"] = str(self.fallback_slope)
+        meta["fallback_ratio_source"] = str(self.fallback_ratio_source)
+        return meta
+
+
+FALLBACK_SLOPE_EVENT = "INFO_R5_FALLBACK_SLOPE"
+
+
+@dataclass(frozen=True)
+class FallbackSlopeReport:
+    """One leg whose R-5 fallback fall passed the rate threshold (spec 304 ⑤).
+
+    Attributes:
+        leg: Leg index (LEG_ORDER).
+        horizon_drop_N: ``(h / n) D``: the fall subtracted from ``L`` for the prediction.
+        horizon_gap_N: ``(h / n) gap``: how far the covering term lies above the nominal one.
+    """
+
+    leg: int
+    horizon_drop_N: float
+    horizon_gap_N: float
+
+    @property
+    def event_name(self) -> str:
+        """``INFO_R5_FALLBACK_SLOPE:<leg>:<D_kN>:<gap_kN>`` (kN, two decimals, over ``h``)."""
+        values_kN = f"{self.horizon_drop_N / 1e3:.2f}:{self.horizon_gap_N / 1e3:.2f}"
+        return f"{FALLBACK_SLOPE_EVENT}:{LEG_ORDER[self.leg]}:{values_kN}"
+
+
+def fallback_slope_drops(
+    drop_per_period: NDArray[np.float64],
+    inputs_by_leg: Sequence[FallbackSlopeInputs | None],
+    settings: FastRelevelSettings,
+    horizon_periods: int,
+    period_s: float,
+    excluded_leg: int | None,
+) -> tuple[NDArray[np.float64], list[FallbackSlopeReport]]:
+    """P-S8-22 (spec 302.2): the R-5 per-period fall with ``D / n`` on every leg that has
+    fallback inputs (302.2 conditions 1-3 met); the other legs keep their value bit for bit.
+
+    Shared by :class:`C2Controller` and the offline replay
+    (:mod:`outrigger_sim.control.contact_replay`).
+
+    Args:
+        drop_per_period: ``(L_(k-n) - L_k) / n`` per leg (4,); returned unchanged (the same
+            array) when no leg has inputs.
+        inputs_by_leg: :class:`FallbackSlopeInputs` per leg, ``None`` = the level rule.
+        settings: R-5 settings (``n``, rate threshold).
+        horizon_periods: ``h``.
+        period_s: ``T``.
+        excluded_leg: The probed leg (not watched: neither replaced nor reported).
+
+    Returns:
+        (per-period fall, reports): a report for every replaced leg whose ``D / (n T)``
+        passes the rate threshold, whether or not it triggers (304 ⑤).
+    """
+    rate_intervals = settings.rate_intervals
+    horizon_scale = horizon_periods / rate_intervals
+    drops = drop_per_period
+    reports = []
+    for leg, inputs in enumerate(inputs_by_leg):
+        if inputs is None or leg == excluded_leg:
+            continue
+        drop_N, gap_N = inputs.drop_N(rate_intervals, horizon_periods)
+        if drops is drop_per_period:
+            drops = drop_per_period.copy()
+        drops[leg] = drop_N / rate_intervals
+        if drops[leg] / period_s > settings.rate_threshold_N_s:
+            reports.append(
+                FallbackSlopeReport(leg, horizon_scale * drop_N, horizon_scale * gap_N)
+            )
+    return drops, reports
 
 
 class ReapproachMode(StrEnum):
@@ -1186,6 +1327,8 @@ class R8Settings:
     def to_meta(self) -> dict[str, Any]:
         meta = asdict(self)
         meta["twist_gain_reference"] = str(self.twist_gain_reference)
+        if self.fast_relevel is not None:
+            meta["fast_relevel"] = self.fast_relevel.to_meta()
         return meta
 
 
@@ -1263,7 +1406,11 @@ R8_D1_SETTINGS = R8Settings(
     measured_stiffness_scale_min=1.0,
     measured_stiffness_scale_max=R8_D1_MEASURED_STIFFNESS_SCALE_MAX,
     stiffness_warning_range=R8_D1_STIFFNESS_WARNING_RANGE,
-    fast_relevel=FastRelevelSettings(horizon_periods=R8_D1_FAST_RELEVEL_HORIZON_PERIODS),
+    fast_relevel=FastRelevelSettings(
+        horizon_periods=R8_D1_FAST_RELEVEL_HORIZON_PERIODS,
+        fallback_slope=FallbackSlope.NOMINAL_GAP,
+        fallback_ratio_source=FallbackRatioSource.COLUMN_NOMINAL,
+    ),
     is_instant_sampling=True,
     check_attitude_from_raw_tilt=True,
     probe_abort_on_low_load=True,
@@ -1282,7 +1429,10 @@ R8_D1_SETTINGS = R8Settings(
 163.1: P-R8-9 raw-tilt CHECK attitude, P-R8-10 R-5 on with horizon 4, P-R8-11 PROBE abort;
 rev. 34 174.4: P-R8-13 lifted-leg re-approach in the twist mode, replacing P-R8-12; rev. 43
 213.8: P-S8-5 re-approach start at 1.4 ``F_min``, P-S8-6 TOUCH free air from moving samples;
-rev. 52 228.3: P-S8-16 re-trigger rule RT; rev. 57 285: P-S9-10 re-approach time limit 10 s)."""
+rev. 52 228.3: P-S8-16 re-trigger rule RT; rev. 57 285: P-S9-10 re-approach time limit 10 s;
+rev. 61 304: P-S8-22 R-5 fallback slope ``nominal_gap`` with ``column_nominal``, the
+operating default of U-S8-61 (L1 runs switch to ``plant_meta`` with
+:meth:`C2Config.with_fallback_ratio_source`))."""
 QUASI_STATIC_PRESSURE_NOTE = (
     "10 Hz instantaneous samples: the 345 bar warning sees about 43 % of a heave transient "
     "and hardly any 102 Hz ringing; it is a quasi-static watch, not an overpressure "
@@ -1521,6 +1671,31 @@ class C2Config:
         """
         two_pressure = self.two_pressure.with_lock_valve(lock_valve, counterbalance)
         return replace(self, two_pressure=two_pressure)
+
+    def with_fallback_ratio_source(
+        self, source: str, plant_ratio: tuple[float, ...] | None = None
+    ) -> C2Config:
+        """Copy whose R-5 fallback slope takes its ratios from ``source`` (P-S8-22, U-S8-61).
+
+        Simulation runs choose per engine (spec 304 ①): L1 ``plant_meta`` (with the L1-R
+        plant meta ratio when the runner has it), L2b ``column_nominal`` (the preset value).
+        Only ``r8.fast_relevel`` is touched.
+
+        Args:
+            source: ``plant_meta``, ``column_nominal`` or ``online``.
+            plant_ratio: Fixed L1-R ratio per leg for ``plant_meta``; ``None`` = the
+                two-pressure ``fallback_locked_ratio``.
+
+        Raises:
+            ValueError: R-5 is off, or an unknown source.
+        """
+        fast_relevel = self.r8.fast_relevel
+        if fast_relevel is None:
+            raise ValueError("with_fallback_ratio_source needs R-5 (r8.fast_relevel) on")
+        fast_relevel = replace(
+            fast_relevel, fallback_ratio_source=source, fallback_plant_ratio=plant_ratio
+        )
+        return replace(self, r8=replace(self.r8, fast_relevel=fast_relevel))
 
     def with_10hz_d1(self) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
@@ -2466,8 +2641,9 @@ class C2Event:
             ``WARN_TARGET_PROJECTED``, ``target_changed``; ``locked_pressure_over_limit:<leg>``;
             B1' ``WARN_GYRO_BIAS_SKIPPED``, ``WARN_GYRO_BIAS_IMPLAUSIBLE``; GE1' shadow flags
             ``shadow_G1L:<leg>``, ``shadow_G1S:<leg>``, ``shadow_G2`` and
-            ``INFO_FLOOR_NONPLANAR`` (:func:`is_shadow_event`); R-5 ``relevel_predicted:<leg>``;
-            P-R8-11 ``probe_aborted_low_load:<leg>``; P-R8-12 / P-R8-13
+            ``INFO_FLOOR_NONPLANAR`` (:func:`is_shadow_event`); R-5 ``relevel_predicted:<leg>``
+            and (P-S8-22) ``INFO_R5_FALLBACK_SLOPE:<leg>:<D_kN>:<gap_kN>``; P-R8-11
+            ``probe_aborted_low_load:<leg>``; P-R8-12 / P-R8-13
             ``leg_reapproach_start:<leg>``,
             ``leg_reapproach_contact:<leg>`` and ``WARN_LEG_REAPPROACH_NO_CONTACT:<leg>``;
             soil response (spec rev. 57 285 P-S9-7) ``soil_mode_start``,
@@ -3507,6 +3683,7 @@ class C2Controller:
             imu_specific_force_z_m_s2=_last_imu_specific_force_z_m_s2(measurements),
             is_crawler_lifted=state.phase in CRAWLER_LIFTED_PHASES,
             imu_gyro_rad_s=measurements.imu_angular_rate_samples_rad_s,  # lever term
+            r5_fallback_ratios=self._r5_fallback_ratio_choice(),
         )
         self._take_pressure_events(measurements.t_s)
         force = forces.nominal
@@ -4051,7 +4228,8 @@ class C2Controller:
         """R-5: the leg falling fast whose predicted estimate is lowest below P5, or ``None``.
 
         The prediction horizon is ``fast_relevel.horizon_periods`` (``None`` = ``1 + d``).
-        ``excluded_leg`` (the probed leg) is not watched.
+        ``excluded_leg`` (the probed leg) is not watched. With ``fallback_slope =
+        "nominal_gap"`` the fall of a qualifying fallback leg is ``D`` (P-S8-22, spec 302.2).
         """
         settings = self.config.r8.fast_relevel
         history = self._state.load_estimate_history
@@ -4062,6 +4240,10 @@ class C2Controller:
         horizon_periods = settings.horizon_periods
         if horizon_periods is None:
             horizon_periods = 1 + self.config.r8.output_delay_periods
+        if settings.uses_fallback_slope:
+            drop_per_period = self._fallback_slope_drops(
+                drop_per_period, horizon_periods, t_s, excluded_leg
+            )
         predicted = latest - drop_per_period * horizon_periods
         is_fast = drop_per_period / self.config.period_s > settings.rate_threshold_N_s
         is_falling_now = previous > latest
@@ -4073,6 +4255,28 @@ class C2Controller:
         leg = int(np.argmin(np.where(triggered, predicted, np.inf)))
         self._add_event(t_s, f"relevel_predicted:{LEG_ORDER[leg]}", is_warning=True)
         return leg
+
+    def _r5_fallback_ratio_choice(self) -> FallbackRatioChoice | None:
+        settings = self.config.r8.fast_relevel
+        return None if settings is None else settings.fallback_ratio_choice()
+
+    def _fallback_slope_drops(
+        self,
+        drop_per_period: NDArray[np.float64],
+        horizon_periods: int,
+        t_s: float,
+        excluded_leg: int | None,
+    ) -> NDArray[np.float64]:
+        """P-S8-22: :func:`fallback_slope_drops` on the monitor's inputs, with its reports as
+        ``INFO_R5_FALLBACK_SLOPE`` events."""
+        inputs_by_leg = [self._pressures.r5_fallback_inputs(leg) for leg in range(LEG_COUNT)]
+        drops, reports = fallback_slope_drops(
+            drop_per_period, inputs_by_leg, self.config.r8.fast_relevel, horizon_periods,
+            self.config.period_s, excluded_leg,
+        )
+        for report in reports:
+            self._add_event(t_s, report.event_name)
+        return drops
 
     def _start_relevel(self) -> None:
         """Back to LEVEL keeping the integrators; probe bookkeeping restarts.
