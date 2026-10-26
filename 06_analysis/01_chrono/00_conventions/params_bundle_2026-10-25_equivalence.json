@@ -5469,6 +5469,306 @@
     }
    ]
   },
-  "R3": null
+  "R3": {
+   "updated": "2026-10-26T09:59:56",
+   "scope": "S7 ctrl3 12 + ctrl3_rerun 2, S8 c36 61 + c37 21 (compared 96) + 42 S8 ML bases rebuilt (episodes start from the new base branch.pkl; Params fingerprint check) = 138 runs",
+   "method": "each case re-run from the settings of its old case.json by calling the stage module job_case(case, case_dir) into the batch folder; P 8 + E 7 jobs, OPENBLAS/MKL threads 1, OUTRIGGER_ROD_SIDE_MECHANICS=one_sided_parallel; not a cost measurement",
+   "criterion": "bit comparison as R2 (npz arrays equal_nan, JSON without timing / sha / run meta) plus branch.pkl state for bases; spec 7 R3 criterion 'S7 / S8 judgement tables unchanged' checked separately with the current judge code on old and new folders",
+   "diagnosis_rule": "mismatch -> current code + OLD YAML (02_params/history/rexome33_2026-10-25_before_bundle.yaml) + old start states (archived R1 snapshots; episodes start from the base diagnostic's branch.pkl); bit identical to the new R3 run -> bundle_unrelated exception, continue (user decision 2026-10-26 'auto diagnosis, then continue', R2 rule applied to R3)",
+   "verdict": "4 of 138 bit identical, 134 bundle_unrelated exceptions (every one reproduced bit for bit by current code + OLD YAML): the YAML regen bundle changes no R3 result. The differences old -> new are code drift since the old batches (2026-10-24 / 25). Exceptions accepted by the auto rule and confirmed by the user (2026-10-26); the S7 PS2 nocal pass->fail judgement change (code drift, not bundle) is handed to control-expert for analysis",
+   "judgement_tables": {
+    "rule": "current judge on old folder vs on R3 new folder (tools/r3_judge.py; ML new tree: hard-link mirror without case.log, fix 2026-10-26), pass/fail by (item, case) tools/r3_judge_verdicts.py",
+    "unchanged": [
+     "c36_C_gate",
+     "c36_D_fs24",
+     "c37_C_gate",
+     "c37_D_fs24"
+    ],
+    "pass_fail_unchanged_values_differ": [
+     "c36_B_f1only",
+     "c37_E_drain",
+     "S7_ctrl3_rerun"
+    ],
+    "pass_fail_changed": {
+     "c36_A_rt": [
+      {
+       "row": "ML-0 no rod-pressure fallback without a sensor-fault injection (gate; C-S8-41, spec rev. 54 260.5 / U-S8-56 (a)) | *",
+       "old": [
+        false
+       ],
+       "new": [
+        true
+       ]
+      }
+     ],
+     "S7_ctrl3": [
+      {
+       "row": "run | L1_PS2_fdown3.5_old_worst_nocal",
+       "old": [
+        true
+       ],
+       "new": [
+        false
+       ]
+      },
+      {
+       "row": "run | L2b_D8_top_fup3.5_b1.0",
+       "old": [
+        false
+       ],
+       "new": [
+        true
+       ]
+      },
+      {
+       "row": "run | L2b_D8_top_roll5.5_b1.0",
+       "old": [
+        false
+       ],
+       "new": [
+        true
+       ]
+      }
+     ]
+    },
+    "per_judge": {
+     "c36_A_rt": {
+      "n_rows_old_new": [
+       139,
+       122
+      ],
+      "failed_old_new": [
+       1,
+       0
+      ],
+      "table_identical": false,
+      "n_table_diffs": 62,
+      "passed_changed": [
+       {
+        "row": "ML-0 no rod-pressure fallback without a sensor-fault injection (gate; C-S8-41, spec rev. 54 260.5 / U-S8-56 (a)) | *",
+        "old": [
+         false
+        ],
+        "new": [
+         true
+        ]
+       }
+      ],
+      "n_rows_only_old": 17,
+      "n_rows_only_new": 0
+     },
+     "c36_B_f1only": {
+      "n_rows_old_new": [
+       30,
+       30
+      ],
+      "failed_old_new": [
+       2,
+       2
+      ],
+      "table_identical": false,
+      "n_table_diffs": 1,
+      "passed_changed": [],
+      "n_rows_only_old": 0,
+      "n_rows_only_new": 0
+     },
+     "c36_C_gate": {
+      "n_rows_old_new": [
+       130,
+       130
+      ],
+      "failed_old_new": [
+       0,
+       0
+      ],
+      "table_identical": true,
+      "n_table_diffs": 0,
+      "passed_changed": [],
+      "n_rows_only_old": 0,
+      "n_rows_only_new": 0
+     },
+     "c36_D_fs24": {
+      "n_rows_old_new": [
+       124,
+       124
+      ],
+      "failed_old_new": [
+       0,
+       0
+      ],
+      "table_identical": true,
+      "n_table_diffs": 0,
+      "passed_changed": [],
+      "n_rows_only_old": 0,
+      "n_rows_only_new": 0
+     },
+     "c37_C_gate": {
+      "n_rows_old_new": [
+       130,
+       130
+      ],
+      "failed_old_new": [
+       0,
+       0
+      ],
+      "table_identical": true,
+      "n_table_diffs": 0,
+      "passed_changed": [],
+      "n_rows_only_old": 0,
+      "n_rows_only_new": 0
+     },
+     "c37_D_fs24": {
+      "n_rows_old_new": [
+       124,
+       124
+      ],
+      "failed_old_new": [
+       0,
+       0
+      ],
+      "table_identical": true,
+      "n_table_diffs": 0,
+      "passed_changed": [],
+      "n_rows_only_old": 0,
+      "n_rows_only_new": 0
+     },
+     "c37_E_drain": {
+      "n_rows_old_new": [
+       62,
+       62
+      ],
+      "failed_old_new": [
+       0,
+       0
+      ],
+      "table_identical": false,
+      "n_table_diffs": 8,
+      "passed_changed": [],
+      "n_rows_only_old": 0,
+      "n_rows_only_new": 0
+     },
+     "S7_ctrl3": {
+      "n_rows_old_new": [
+       338,
+       359
+      ],
+      "failed_old_new": [
+       2,
+       1
+      ],
+      "table_identical": false,
+      "n_table_diffs": 597,
+      "passed_changed": [
+       {
+        "row": "run | L1_PS2_fdown3.5_old_worst_nocal",
+        "old": [
+         true
+        ],
+        "new": [
+         false
+        ]
+       },
+       {
+        "row": "run | L2b_D8_top_fup3.5_b1.0",
+        "old": [
+         false
+        ],
+        "new": [
+         true
+        ]
+       },
+       {
+        "row": "run | L2b_D8_top_roll5.5_b1.0",
+        "old": [
+         false
+        ],
+        "new": [
+         true
+        ]
+       }
+      ],
+      "n_rows_only_old": 5,
+      "n_rows_only_new": 26
+     },
+     "S7_ctrl3_rerun": {
+      "n_rows_old_new": [
+       72,
+       72
+      ],
+      "failed_old_new": [
+       0,
+       0
+      ],
+      "table_identical": false,
+      "n_table_diffs": 1,
+      "passed_changed": [],
+      "n_rows_only_old": 0,
+      "n_rows_only_new": 0
+     }
+    },
+    "finding_S7_PS2": "ctrl3/L1_PS2_fdown3.5_old_worst_nocal (sensitivity condition old_worst, zero calibration off): old run ended READY, new run ends in REANCHOR ('run' row failed; items 2 / 5b not judged, run too short); repeated probe_aborted_low_load / relevel_predicted FL at 127.8 s and 141.5 s. Bundle unrelated (diagnostic bit identical); code drift since 2026-10-24 -> control-expert",
+    "improvements": "S7 ctrl3 L2b fup3.5 / roll5.5 'run' rows fail -> pass (identity settle map, as ctrl3_rerun); c36 A_rt ML-0 rod-pressure fallback gate 17 -> 0 (fail -> pass)"
+   },
+   "batch": "07_results/params_bundle_R3_20261026_025133",
+   "progress_log": "07_results/params_bundle_R3_20261026_025133/progress.log",
+   "coordinator": "07_results/params_bundle_R3_20261026_025133/tools/r3_regress.py (plan / check / run [--resume-from] / worker / diag / compare)",
+   "diag2_tool": "07_results/params_bundle_R3_20261026_025133/tools/r3_diag2.py",
+   "install": "07_results/params_bundle_R3_20261026_025133/install.json (no S7 / S8 index.json exists; old batch folders untouched)",
+   "exceptions_file": "07_results/params_bundle_R3_20261026_025133/r3_exceptions.json",
+   "judge_diff": "07_results/params_bundle_R3_20261026_025133/r3_judge_diff.json",
+   "judge_verdicts": "07_results/params_bundle_R3_20261026_025133/r3_judge_verdicts.json",
+   "runs": [
+    {
+     "results_file": "07_results/params_bundle_R3_20261026_025133/r3_results_run1.json",
+     "finished": "2026-10-26T03:43:04",
+     "batch_wall_s": 2688.638829000003,
+     "jobs_p": 8,
+     "jobs_e": 7,
+     "stop_reason": "diagnosis not bundle-unrelated: c36/A_rt/episodes/ML83_ep2 verdict=bundle_related rc=0",
+     "all_identical_or_exception": false,
+     "note": "stopped: 5 episode diagnostics started from the OLD 768-batch base (old-code state) -> bundle_related; fixed by starting episode diagnostics from the base diagnostic (diag_oldyaml/bases__<id>), re-diagnosed in diag2_oldyaml_diagbase (5 x bundle_unrelated)"
+    },
+    {
+     "results_file": "07_results/params_bundle_R3_20261026_025133/r3_results_run2.json",
+     "finished": "2026-10-26T09:56:06",
+     "batch_wall_s": 8535.800418899977,
+     "jobs_p": 8,
+     "jobs_e": 7,
+     "stop_reason": null,
+     "all_identical_or_exception": true,
+     "note": "resume of run1 (30 kept: 25 exceptions + 5 diag2), 108 run; E pool placement fix (OUTRIGGER_RUN_PLACEMENT) checked: E workers logical 16-27"
+    }
+   ],
+   "n_cases": 138,
+   "n_identical": 4,
+   "n_accepted_exceptions": 134,
+   "by_tag": {
+    "bases": {
+     "n": 42,
+     "identical": 0,
+     "exception": 42
+    },
+    "c36": {
+     "n": 61,
+     "identical": 0,
+     "exception": 61
+    },
+    "c37": {
+     "n": 21,
+     "identical": 4,
+     "exception": 17
+    },
+    "ctrl3": {
+     "n": 12,
+     "identical": 0,
+     "exception": 12
+    },
+    "ctrl3_rerun": {
+     "n": 2,
+     "identical": 0,
+     "exception": 2
+    }
+   }
+  }
  }
 }
