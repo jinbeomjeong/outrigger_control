@@ -263,11 +263,32 @@ def load_inputs(args):
     return params, pv, soil
 
 
-def place():
-    sys.path.insert(0, str(HERE / "solver_benchmark"))
-    from step_cost_S0 import place_process  # noqa: PLC0415
+PLACEMENT_ENV = "OUTRIGGER_PLACEMENT"
+"""Core pool of this process (``s9_batch`` E pool): ``pcore`` (default) or ``ecore``."""
+PLACEMENT_MODES = ("pcore", "ecore")
 
-    return place_process("pcore")
+
+def placement_mode(environ=None) -> str:
+    """``OUTRIGGER_PLACEMENT`` (unset / empty = ``pcore``); any other value than
+    :data:`PLACEMENT_MODES` raises ValueError."""
+    env = os.environ if environ is None else environ
+    mode = (env.get(PLACEMENT_ENV) or "pcore").strip().lower()
+    if mode not in PLACEMENT_MODES:
+        raise ValueError(f"{PLACEMENT_ENV}={env.get(PLACEMENT_ENV)!r}: must be one of {PLACEMENT_MODES}")
+    return mode
+
+
+def place():
+    """Pin this process to the pool of :func:`placement_mode` with EcoQoS off
+    (``outrigger_sim.hostcpu.place_process``; before 2026-10-26 always ``pcore`` through the
+    identical ``solver_benchmark/step_cost_S0.place_process``). The returned dict (result meta
+    ``placement``) carries the mode, the environment value and the affinity outcome."""
+    from outrigger_sim.hostcpu import place_process  # noqa: PLC0415
+
+    mode = placement_mode()
+    info = dict(place_process(mode))
+    info.update(requested=mode, env_var=PLACEMENT_ENV, env_value=os.environ.get(PLACEMENT_ENV))
+    return info
 
 
 def out_dir(action: str, tag: str, root: str | None = None) -> Path:

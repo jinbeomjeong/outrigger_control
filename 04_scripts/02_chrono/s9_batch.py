@@ -12,6 +12,14 @@ Usage (worktree root)::
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py list
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run P1_V0p [--parallel 2]
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run P3b --parallel 4   # 2 S8C + 24 level (approved)
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run P3b --parallel-p 3 --parallel-e 2 \
+        --e-cases P3b_G1_A_top_Fs4 ... --order lpt      # or --schedule plan.json
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run P3-10 --parallel 2   # rigid L1 soil on / off
+
+Pools (2026-10-26): ``--parallel`` (= ``--parallel-p``) P-pool slots, ``--parallel-e`` E-pool slots;
+each case process gets ``OUTRIGGER_PLACEMENT`` = ``pcore`` / ``ecore`` (``run_S9.place``). Cases go to
+the E pool only when named (``--e-cases`` or the ``--schedule`` JSON); ``--order given|lpt`` and
+``--order-cases`` set the queue order. ``s8c`` rows stay on the P pool.
 
 ``s8c`` rows run ``run_S8C.py run --only <case>`` unchanged (no ``--case`` / ``--out-root``): the
 S8 runner writes ``07_results/S8/<tag>_<stamp>/`` and prints it at the end of ``<case>.log``.
@@ -25,6 +33,7 @@ from __future__ import annotations
 import argparse
 import datetime as _dt
 import json
+import os
 import subprocess
 import sys
 import time
@@ -137,7 +146,25 @@ def batches() -> dict[str, list[dict]]:
                                    "--level", "top", "--threads", "4", "--abort-on-limit"]})
     out["P3a"] = p3a
     out["P3b"] = p3b_batch()
+    out["P3-10"] = p3_10_batch()
     return out
+
+
+M3 = [PY, "-I", "-X", "utf8", "-u", str(HERE / "s9_merge" / "m3_run.py")]
+P3_10_KEYS = ("flat", "rpB")
+"""Control spec 284 P3-10: L1 rigid floor, top auger, D8 on the flat floor and on rpB (beta 1.0),
+``s9_merge/m3_run.py`` keys (the M-3 runner of spec 295 / 297.3, 089bfd5)."""
+P3_10_EST_S = 600.0
+"""ASSUMPTION: 'a few minutes per case' (spec 284 P3-10 note); one L1 bundle-C D8 run."""
+
+
+def p3_10_batch() -> list[dict]:
+    """P3-10 (control spec 284, outside the P3b set, before the rev. 60 judgement): the two L1 rigid
+    cases with the C2 soil response on (R8 preset) and off (soil.enable False, re-approach limit None),
+    4 runs of ``m3_run.py <key> <on|off> <batch folder>``; compared by ``s9_batch_summary.py P3-10``
+    (issued-command and event SHA-256). m3_run pins itself to the P-cores (P pool only)."""
+    return [{"case": f"P3-10_{key}__{variant}", "est_s": P3_10_EST_S, "m3": True, "fixed_pcore": True,
+             "argv": M3 + [key, variant]} for key in P3_10_KEYS for variant in ("on", "off")]
 
 
 def p3b_batch() -> list[dict]:
@@ -196,39 +223,94 @@ def _log(path: Path, text: str) -> None:
         f.write(text + "\n")
 
 
-def run_batch(name: str, parallel: int, only: list[str] | None) -> Path:
+PLACEMENT_ENV = "OUTRIGGER_PLACEMENT"
+"""Read by ``run_S9.place`` (``pcore`` / ``ecore``); set per case from its pool."""
+POOLS = ("pcore", "ecore")
+ORDERS = ("given", "lpt")
+
+
+def schedule_cases(cases: list[dict], *, e_cases: list[str] | None = None, order: str = "given",
+                   order_cases: list[str] | None = None, parallel_e: int = 0) -> dict[str, list[dict]]:
+    """Split ``cases`` into the P and E pool queues (no effect on any judgement).
+
+    ``e_cases``: case names sent to the E pool (``OUTRIGGER_PLACEMENT=ecore``); every other case
+    goes to the P pool. ``order``: ``given`` (batch definition order) or ``lpt`` (longest
+    ``est_s`` first, stable). ``order_cases``: explicit order; the listed cases come first in
+    that order, the rest follow by ``order``. Raises ValueError on unknown names, an E case
+    without E slots or an ``s8c`` row on the E pool (run_S8C places its own processes)."""
+    names = [c["case"] for c in cases]
+    e_set = set(e_cases or ())
+    unknown = sorted((e_set | set(order_cases or ())) - set(names))
+    if unknown:
+        raise ValueError(f"unknown case names: {unknown}")
+    if order not in ORDERS:
+        raise ValueError(f"order must be one of {ORDERS}: {order!r}")
+    if e_set and parallel_e < 1:
+        raise ValueError(f"E-pool cases {sorted(e_set)} but --parallel-e {parallel_e}")
+    bad = sorted(c["case"] for c in cases if c["case"] in e_set and (c.get("s8c") or c.get("fixed_pcore")))
+    if bad:
+        raise ValueError(f"s8c / fixed-P rows cannot go to the E pool (they pin their own process): {bad}")
+    rest = list(cases) if order == "given" else sorted(cases, key=lambda c: -float(c["est_s"]))
+    if order_cases:
+        first = [next(c for c in cases if c["case"] == n) for n in order_cases]
+        rest = first + [c for c in rest if c["case"] not in set(order_cases)]
+    return {"pcore": [c for c in rest if c["case"] not in e_set], "ecore": [c for c in rest if c["case"] in e_set]}
+
+
+def _case_env(pool: str) -> dict[str, str]:
+    env = dict(os.environ)
+    env[PLACEMENT_ENV] = pool
+    return env
+
+
+def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, parallel_e: int = 0,
+              e_cases: list[str] | None = None, order: str = "given",
+              order_cases: list[str] | None = None) -> Path:
+    """Run the batch ``name`` with ``parallel`` P-pool slots and ``parallel_e`` E-pool slots
+    (:func:`schedule_cases`). Each case process gets ``OUTRIGGER_PLACEMENT`` of its pool."""
     cases = [c for c in batches()[name] if not only or c["case"] in only]
+    queues = schedule_cases(cases, e_cases=e_cases, order=order, order_cases=order_cases, parallel_e=parallel_e)
+    slots = {"pcore": int(parallel), "ecore": int(parallel_e)}
     stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
     folder = ROOT / "07_results" / "S9" / f"batch_{name}_{stamp}"
     folder.mkdir(parents=True, exist_ok=True)
     progress = folder / "progress.log"
-    _log(progress, f"# batch {name} {len(cases)} cases, parallel {parallel}, started {_dt.datetime.now().isoformat(timespec='seconds')}")
-    pending = list(cases)
-    running: list[tuple[dict, subprocess.Popen, float, object]] = []
+    _log(progress, f"# batch {name} {len(cases)} cases, parallel P {slots['pcore']} / E {slots['ecore']}, order {order}"
+                   f"{' (explicit list first)' if order_cases else ''}, started "
+                   f"{_dt.datetime.now().isoformat(timespec='seconds')}")
+    for pool in POOLS:
+        if queues[pool]:
+            _log(progress, f"# queue {pool}: {' '.join(c['case'] for c in queues[pool])}")
+    running: list[tuple[dict, subprocess.Popen, float, object, str]] = []
     done: list[dict] = []
     failed = False
-    while pending or running:
-        while pending and len(running) < parallel and not failed:
-            c = pending.pop(0)
-            if c.get("s8c"):  # run_S8C writes its own batch folder (named in the case log)
-                argv = list(c["argv"])
-            else:
-                argv = list(c["argv"]) + (["--out", str(folder / "E")] if c.get("eq_out")
-                                          else ["--case", c["case"], "--out-root", str(folder)])
-            logf = (folder / f"{c['case']}.log").open("w", encoding="utf-8")
-            p = subprocess.Popen(argv, cwd=str(ROOT), stdout=logf, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)
-            _log(progress, f"START {c['case']} {_dt.datetime.now().isoformat(timespec='seconds')} pid={p.pid} est_s={c['est_s']}")
-            running.append((c, p, time.perf_counter(), logf))
+    while any(queues.values()) or running:
+        for pool in POOLS:
+            while queues[pool] and sum(1 for r in running if r[4] == pool) < slots[pool] and not failed:
+                c = queues[pool].pop(0)
+                if c.get("s8c"):  # run_S8C writes its own batch folder (named in the case log)
+                    argv = list(c["argv"])
+                elif c.get("m3"):  # m3_run.py <key> <variant> <out_root> -> <out_root>/<key>__<variant>/
+                    argv = list(c["argv"]) + [str(folder)]
+                else:
+                    argv = list(c["argv"]) + (["--out", str(folder / "E")] if c.get("eq_out")
+                                              else ["--case", c["case"], "--out-root", str(folder)])
+                logf = (folder / f"{c['case']}.log").open("w", encoding="utf-8")
+                p = subprocess.Popen(argv, cwd=str(ROOT), stdout=logf, stderr=subprocess.STDOUT,
+                                     stdin=subprocess.DEVNULL, env=_case_env(pool))
+                _log(progress, f"START {c['case']} {_dt.datetime.now().isoformat(timespec='seconds')} pid={p.pid} "
+                               f"est_s={c['est_s']} pool={pool}")
+                running.append((c, p, time.perf_counter(), logf, pool))
         time.sleep(2.0)
         for item in list(running):
-            c, p, t0, logf = item
+            c, p, t0, logf, pool = item
             rc = p.poll()
             if rc is None:
                 continue
             logf.close()
             wall = time.perf_counter() - t0
             running.remove(item)
-            entry = {"case": c["case"], "argv": c["argv"], "rc": rc, "wall_s": wall, "est_s": c["est_s"]}
+            entry = {"case": c["case"], "argv": c["argv"], "rc": rc, "wall_s": wall, "est_s": c["est_s"], "pool": pool}
             note = ""
             if c.get("s8c") and rc == 0:  # run_S8C returns 0 even when its case failed: read the outcome
                 chk = s8c_case_check((folder / f"{c['case']}.log").read_text("utf-8", errors="replace"), c["case"])
@@ -244,12 +326,16 @@ def run_batch(name: str, parallel: int, only: list[str] | None) -> Path:
                            f"wall_s={wall:.0f}{note}")
             if rc != 0:
                 failed = True
-        if failed and pending:
-            for c in pending:
-                _log(progress, f"SKIP {c['case']} (earlier failure)")
-                done.append({"case": c["case"], "argv": c["argv"], "rc": None, "wall_s": 0.0, "est_s": c["est_s"]})
-            pending = []
-    status = {"batch": name, "folder": folder.as_posix(), "parallel": parallel, "cases": done, "failed": failed,
+        if failed and any(queues.values()):
+            for pool in POOLS:
+                for c in queues[pool]:
+                    _log(progress, f"SKIP {c['case']} (earlier failure)")
+                    done.append({"case": c["case"], "argv": c["argv"], "rc": None, "wall_s": 0.0, "est_s": c["est_s"],
+                                 "pool": pool})
+                queues[pool] = []
+    status = {"batch": name, "folder": folder.as_posix(), "parallel": parallel, "parallel_e": parallel_e,
+              "order": order, "order_cases": order_cases, "e_cases": sorted(e_cases or ()),
+              "cases": done, "failed": failed,
               "wall_serial_s": sum(d["wall_s"] for d in done), "est_serial_s": sum(d["est_s"] for d in done)}
     (folder / "batch.json").write_text(json.dumps(status, indent=1), "utf-8")
     _log(progress, f"# batch {name} finished {_dt.datetime.now().isoformat(timespec='seconds')} failed={failed}")
@@ -263,14 +349,44 @@ def main(argv) -> None:
     sub.add_parser("list")
     r = sub.add_parser("run")
     r.add_argument("batch", choices=sorted(batches()))
-    r.add_argument("--parallel", type=int, default=2)
+    r.add_argument("--parallel", "--parallel-p", dest="parallel", type=int, default=2,
+                   help="P-pool slots (OUTRIGGER_PLACEMENT=pcore); --parallel keeps its former meaning")
+    r.add_argument("--parallel-e", type=int, default=0, help="E-pool slots (OUTRIGGER_PLACEMENT=ecore)")
+    r.add_argument("--e-cases", nargs="*", default=None, help="cases sent to the E pool (others: P pool)")
+    r.add_argument("--order", choices=ORDERS, default="given",
+                   help="queue order: batch definition order or LPT (longest est_s first)")
+    r.add_argument("--order-cases", nargs="*", default=None, help="explicit order (listed cases first)")
+    r.add_argument("--schedule", default=None,
+                   help='JSON file {"e_cases": [...], "order": "given"|"lpt", "order_cases": [...], '
+                        '"parallel_p": N, "parallel_e": M} (e.g. the cpu-scheduler-expert LPT plan); '
+                        "command-line values given explicitly win")
     r.add_argument("--only", nargs="*")
     a = ap.parse_args(argv)
     if a.action == "list":
         for k, v in batches().items():
             print(k, len(v), [c["case"] for c in v])
     else:
-        run_batch(a.batch, a.parallel, a.only)
+        run_batch(a.batch, only=a.only or None, **schedule_args(a, argv))
+
+
+def schedule_args(a: argparse.Namespace, argv: list[str]) -> dict:
+    """``run_batch`` keywords from the CLI and an optional ``--schedule`` JSON file; an option
+    written on the command line wins over the file."""
+    given = {tok.split("=", 1)[0] for tok in argv if tok.startswith("--")}
+    out = {"parallel": a.parallel, "parallel_e": a.parallel_e, "e_cases": a.e_cases, "order": a.order,
+           "order_cases": a.order_cases}
+    if a.schedule:
+        doc = json.loads(Path(a.schedule).read_text("utf-8"))
+        unknown = sorted(set(doc) - {"e_cases", "order", "order_cases", "parallel_p", "parallel_e", "note", "source"})
+        if unknown:
+            raise SystemExit(f"--schedule {a.schedule}: unknown keys {unknown}")
+        file_map = {"e_cases": ("e_cases", "--e-cases"), "order": ("order", "--order"),
+                    "order_cases": ("order_cases", "--order-cases"), "parallel_p": ("parallel", "--parallel-p"),
+                    "parallel_e": ("parallel_e", "--parallel-e")}
+        for key, (dest, flag) in file_map.items():
+            if key in doc and flag not in given and not (dest == "parallel" and "--parallel" in given):
+                out[dest] = doc[key]
+    return out
 
 
 if __name__ == "__main__":

@@ -846,10 +846,63 @@ def summary_p3b(folder: Path) -> dict[str, Any]:
             "rows": rows, "s8c_reapproach_limit_cases": s8c, "cost": batch_cost(folder)}
 
 
+P3_10_CLEARANCE_M = 0.020
+"""Rigid bit-identity conditions (spec 285 note, rev. 59): clearance_at_loc_m < 20 mm, clearance_at_P_m <= 20 mm."""
+
+
+def summary_p3_10(folder: Path) -> dict[str, Any]:
+    """P3-10 (control spec 284): per L1 rigid case (flat, rpB; ``m3_run.py``) the soil-on vs soil-off
+    pair: issued-command SHA-256 (``r8_series.npz`` ``issued_u``) and event SHA-256 equal, the configs
+    really differ (soil.enable True / False), the on-run soil meta conditions (LOC before the zone
+    release: clearance_at_loc_m < 20 mm; no bias: clearance_at_P_m <= 20 mm), no foreign project
+    modules. ``bit_identical`` = commands and events equal; the full M-3 table (record arrays, offline
+    M-4 cross-check) is ``s9_merge/m3_compare.py <folder> <out.json>``."""
+    rows = {}
+    for on_d in sorted(folder.glob("*__on")):
+        key = on_d.name.split("__")[0]
+        off_d = folder / f"{key}__off"
+        if not (on_d / "m3.json").exists() or not (off_d / "m3.json").exists():
+            rows[key] = {"status": "missing", "on": (on_d / "m3.json").exists(), "off": (off_d / "m3.json").exists()}
+            continue
+        on = json.loads((on_d / "m3.json").read_text("utf-8"))
+        off = json.loads((off_d / "m3.json").read_text("utf-8"))
+        soil = on.get("soil") or {}
+        c_loc, c_p = soil.get("clearance_at_loc_m"), soil.get("clearance_at_P_m")
+        first_diff = None
+        if on["sha256_issued_u"] != off["sha256_issued_u"]:
+            with np.load(on_d / "r8_series.npz", allow_pickle=False) as za, \
+                    np.load(off_d / "r8_series.npz", allow_pickle=False) as zb:
+                a, b = za["issued_u"], zb["issued_u"]
+                n = min(len(a), len(b))
+                idx = np.nonzero(np.any(a[:n] != b[:n], axis=1))[0]
+                first_diff = float(za["t"][idx[0]]) if idx.size else (None if len(a) == len(b) else "length")
+        rows[key] = {
+            "status": "ok", "case_id": on.get("case_id"), "n_periods": [on.get("n_periods"), off.get("n_periods")],
+            "sha256_issued_u": [on["sha256_issued_u"], off["sha256_issued_u"]],
+            "commands_equal": on["sha256_issued_u"] == off["sha256_issued_u"],
+            "events_equal": on["sha256_events"] == off["sha256_events"],
+            "first_command_diff_t_s": first_diff,
+            "config_on": on.get("config_seen"), "config_off": off.get("config_seen"),
+            "configs_differ_as_intended": bool((on.get("config_seen") or {}).get("soil_enable") is True
+                                               and (off.get("config_seen") or {}).get("soil_enable") is False),
+            "soil_on": {k: soil.get(k) for k in ("loc", "t_P_s", "t_loc_s", "clearance_at_P_m", "clearance_at_loc_m",
+                                                 "soil_mode_t_s", "bias_corner_m")},
+            "loc_before_release": None if c_loc is None else bool(c_loc < P3_10_CLEARANCE_M),
+            "bias_zero": None if c_p is None else bool(c_p <= P3_10_CLEARANCE_M),
+            "foreign_modules": (on.get("foreign_project_modules") or []) + (off.get("foreign_project_modules") or []),
+            "ready_t_s": [on.get("ready_t_s"), off.get("ready_t_s")], "wall_s": [on.get("wall_s"), off.get("wall_s")]}
+        rows[key]["bit_identical"] = bool(rows[key]["commands_equal"] and rows[key]["events_equal"])
+    ok = [r for r in rows.values() if r.get("status") == "ok"]
+    return {"batch": "P3-10 rigid L1 soil response on / off (control spec 284; M-3 runner, spec 295)",
+            "criterion": "issued-command SHA-256 equal on / off (bit-identical) for flat and rpB, top auger",
+            "rows": rows, "all_bit_identical": bool(ok and len(ok) == len(rows) and all(r["bit_identical"] for r in ok)),
+            "values_only": "pass / fail decision is control's", "cost": batch_cost(folder)}
+
+
 def main(argv) -> None:
     kind, folder = argv[0], Path(argv[1])
     fn = {"V0p": summary_v0p, "V16": summary_v16, "L": summary_l, "P2": summary_p2, "P2prime": summary_p2prime,
-          "P3a": summary_p3a, "P3b": summary_p3b}[kind]
+          "P3a": summary_p3a, "P3b": summary_p3b, "P3-10": summary_p3_10}[kind]
     res = fn(folder)
     res["source_batch"] = folder.as_posix()
     res["generator"] = "04_scripts/02_chrono/s9_batch_summary.py"

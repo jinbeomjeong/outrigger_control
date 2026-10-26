@@ -421,3 +421,127 @@ def test_re1c_summary_r1_to_r5(tmp_path) -> None:
     again = s.re1c_summary(_re1c_case(tmp_path / "again", restart=True))
     assert not again["R-4"]["ok"] and again["R-4"]["rr_restarts_after_warning"] == [70.0]
     assert not again["R-1"]["ok"]  # two starts after the forced retract
+
+
+# --- core pools, order, P3-10 (2026-10-26) ------------------------------------------------------------
+
+
+def test_placement_mode_env() -> None:
+    assert r9.placement_mode({}) == "pcore" and r9.placement_mode({"OUTRIGGER_PLACEMENT": ""}) == "pcore"
+    assert r9.placement_mode({"OUTRIGGER_PLACEMENT": "ecore"}) == "ecore"
+    assert r9.placement_mode({"OUTRIGGER_PLACEMENT": " PCORE "}) == "pcore"
+    with pytest.raises(ValueError, match="OUTRIGGER_PLACEMENT"):
+        r9.placement_mode({"OUTRIGGER_PLACEMENT": "os"})
+    assert r9.PLACEMENT_ENV == _import("s9_batch").PLACEMENT_ENV
+
+
+def _rows(*spec):
+    return [{"case": n, "est_s": e, "argv": ["x"], **kw} for n, e, kw in spec]
+
+
+def test_schedule_cases_pools_and_order() -> None:
+    b = _import("s9_batch")
+    cases = _rows(("a", 10, {}), ("b", 30, {}), ("c", 20, {}), ("d", 5, {"s8c": True}))
+    q = b.schedule_cases(cases)
+    assert [c["case"] for c in q["pcore"]] == ["a", "b", "c", "d"] and q["ecore"] == []
+    q = b.schedule_cases(cases, e_cases=["a", "c"], order="lpt", parallel_e=1)
+    assert [c["case"] for c in q["pcore"]] == ["b", "d"] and [c["case"] for c in q["ecore"]] == ["c", "a"]
+    q = b.schedule_cases(cases, order="lpt", order_cases=["d", "a"])
+    assert [c["case"] for c in q["pcore"]] == ["d", "a", "b", "c"]
+    with pytest.raises(ValueError, match="unknown"):
+        b.schedule_cases(cases, e_cases=["zz"], parallel_e=1)
+    with pytest.raises(ValueError, match="parallel-e"):
+        b.schedule_cases(cases, e_cases=["a"])
+    with pytest.raises(ValueError, match="E pool"):
+        b.schedule_cases(cases, e_cases=["d"], parallel_e=1)
+    with pytest.raises(ValueError, match="order"):
+        b.schedule_cases(cases, order="fifo")
+    p310 = b.batches()["P3-10"]
+    with pytest.raises(ValueError, match="E pool"):
+        b.schedule_cases(p310, e_cases=[p310[0]["case"]], parallel_e=1)
+
+
+def test_schedule_args_file_and_cli_override(tmp_path) -> None:
+    import argparse
+    import json
+
+    b = _import("s9_batch")
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps({"e_cases": ["P3b_G1_A_top_Fs4"], "order": "lpt", "parallel_p": 3, "parallel_e": 2,
+                                "source": "cpu-scheduler-expert"}), "utf-8")
+
+    def parse(argv):
+        ap = argparse.ArgumentParser()
+        sub = ap.add_subparsers(dest="action")
+        r = sub.add_parser("run")
+        r.add_argument("batch")
+        r.add_argument("--parallel", "--parallel-p", dest="parallel", type=int, default=2)
+        r.add_argument("--parallel-e", type=int, default=0)
+        r.add_argument("--e-cases", nargs="*", default=None)
+        r.add_argument("--order", default="given")
+        r.add_argument("--order-cases", nargs="*", default=None)
+        r.add_argument("--schedule", default=None)
+        r.add_argument("--only", nargs="*")
+        return ap.parse_args(argv)
+
+    argv = ["run", "P3b", "--schedule", str(plan)]
+    kw = b.schedule_args(parse(argv), argv)
+    assert kw == {"parallel": 3, "parallel_e": 2, "e_cases": ["P3b_G1_A_top_Fs4"], "order": "lpt", "order_cases": None}
+    argv = ["run", "P3b", "--schedule", str(plan), "--parallel", "4", "--order", "given"]
+    kw = b.schedule_args(parse(argv), argv)
+    assert kw["parallel"] == 4 and kw["order"] == "given" and kw["parallel_e"] == 2
+    bad = tmp_path / "bad.json"
+    bad.write_text(json.dumps({"e_case": []}), "utf-8")
+    with pytest.raises(SystemExit, match="unknown keys"):
+        b.schedule_args(parse(["run", "P3b", "--schedule", str(bad)]), ["run", "P3b", "--schedule", str(bad)])
+
+
+def test_run_batch_two_pools_set_the_placement_env(tmp_path, monkeypatch) -> None:
+    import json
+
+    b = _import("s9_batch")
+    show = [sys.executable, "-I", "-c", "import os; print('POOL', os.environ.get('OUTRIGGER_PLACEMENT'))"]
+    rows = [{"case": n, "est_s": e, "argv": show} for n, e in (("p1", 1), ("e1", 3), ("e2", 2))]
+    monkeypatch.setattr(b, "ROOT", tmp_path)
+    monkeypatch.setattr(b, "batches", lambda: {"T": rows})
+    # plain rows get --case / --out-root appended: python -c ignores the extra argv
+    folder = b.run_batch("T", parallel=1, only=None, parallel_e=1, e_cases=["e1", "e2"], order="lpt")
+    doc = json.loads((folder / "batch.json").read_text("utf-8"))
+    by = {c["case"]: c for c in doc["cases"]}
+    assert by["p1"]["pool"] == "pcore" and by["e1"]["pool"] == "ecore" and all(c["rc"] == 0 for c in doc["cases"])
+    assert "POOL pcore" in (folder / "p1.log").read_text("utf-8")
+    assert "POOL ecore" in (folder / "e2.log").read_text("utf-8")
+    prog = (folder / "progress.log").read_text("utf-8")
+    assert "# queue ecore: e1 e2" in prog and "pool=ecore" in prog
+    assert doc["parallel_e"] == 1 and doc["e_cases"] == ["e1", "e2"] and doc["order"] == "lpt"
+
+
+def test_p3_10_batch_and_summary(tmp_path) -> None:
+    import json
+
+    b = _import("s9_batch")
+    rows = b.batches()["P3-10"]
+    assert [r["case"] for r in rows] == ["P3-10_flat__on", "P3-10_flat__off", "P3-10_rpB__on", "P3-10_rpB__off"]
+    for r in rows:
+        assert r["argv"][5].endswith("m3_run.py") and r["m3"] and r["fixed_pcore"]
+        assert r["argv"][6:] == [r["case"].split("_", 1)[1].split("__")[0], r["case"].rsplit("__", 1)[1]]
+    s = _import("s9_batch_summary")
+    u = np.zeros((5, 4))
+    for key, same in (("flat", True), ("rpB", False)):
+        for variant in ("on", "off"):
+            d = tmp_path / f"{key}__{variant}"
+            d.mkdir()
+            uu = u.copy()
+            if not same and variant == "off":
+                uu[3, 2] = 1e-3
+            np.savez(d / "r8_series.npz", t=np.arange(5) * 0.1 + 3.1, issued_u=uu)
+            m3 = {"case_id": key, "n_periods": 5, "sha256_issued_u": "A" if (same or variant == "on") else "B",
+                  "sha256_events": "E", "config_seen": {"soil_enable": variant == "on"},
+                  "soil": {"loc": True, "clearance_at_loc_m": 0.0129, "clearance_at_P_m": 0.006} if variant == "on"
+                  else {}, "foreign_project_modules": [], "ready_t_s": 40.0, "wall_s": 100.0}
+            (d / "m3.json").write_text(json.dumps(m3), "utf-8")
+    res = s.summary_p3_10(tmp_path)
+    assert res["rows"]["flat"]["bit_identical"] and res["rows"]["flat"]["configs_differ_as_intended"]
+    assert res["rows"]["flat"]["loc_before_release"] and res["rows"]["flat"]["bias_zero"]
+    assert not res["rows"]["rpB"]["bit_identical"] and res["rows"]["rpB"]["first_command_diff_t_s"] == pytest.approx(3.4)
+    assert not res["all_bit_identical"]
