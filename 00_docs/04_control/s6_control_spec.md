@@ -11577,13 +11577,18 @@ $$\hat L^{true}_k-\hat L^{fb}_k=(F_k-b-L_k)+\tfrac{h}{n}\big(D_k-G(R_{true})\Del
 | V-2 관문 | 재생은 원 실행의 `level` 재생이 `relevel_predicted:<leg>`·`probe_aborted_low_load:<leg>`를 시각(±0 주기)·다리까지 **모두** 재현할 때만 판정한다. 하나라도 다르면 그 실행은 "재생 불가"(사유 기록). `current_dur125`는 127.8·141.5 s를 재현해 통과했다(python 88625da 대조) |
 | V-2 탐침 다리 출처 | 우선순위는 셋이다. ① 실행기 10 Hz 행 `probed_leg`(cad, V-4 실행부터) ② `probe_history.json`의 끝난 회차 ③ PROBE 중 명령이 0이 아닌 주기에서 직전 주기 \|issued\| 최대 다리. ③은 같은 실행의 끝난 회차에서 ②와 100 % 같을 때만 쓴다. 같지 않으면 재생 불가다. ③으로 정한 중단 회차의 탐침 다리가 그 회차를 끊은 다리와 같으면 모순이라 재생 불가다. 명령 주기가 없는 회차는 탐침 다리 없음으로 두고 네 다리를 모두 감시한다. 행마다 `probed_leg_source`를 남긴다. `contact_episode`의 공용 재구성은 바꾸지 않는다(ML 에피소드 영향, ML 재개 때 검토) |
 | V-2 재생 설정 | 감시기 설정은 원 실행 `controller_meta.two_pressure`와 필드별로 같아야 한다(P-S8-22 새 키는 예외로 기록). E-6 공제는 meta에서 읽는다(meta에 없고 교정 실패가 있으면 재생 불가). 대체 시점은 원 이벤트로 강제한다(P-S8-22는 진단을 바꾸지 않음). 재생 자체 진단과 시각이 다르면 기록만 한다 |
-| V-2 통과 | 관문을 통과한 실행에서 `plant_meta`·`column_nominal` 재생의 거짓 R-5(참 힘 ≥ 3 $P_5$)는 0회. 참 저하중 R-5(참 힘 < $P_5$ + 5 kN)는 같은 주기 또는 더 이른 주기에 남는다. 주기별 낙관 $\hat L^{fb}-\hat L^{true}$($\hat L^{true}$ = 같은 실행 1 ms 참 로드·헤드압으로 계산한 정상 센서 다리 예측)는 L1 ≤ 0.05 kN, L2b ≤ 1.2 kN. 302.7의 15건은 통과 수와 재생 불가 수(사유별)를 함께 보고한다 |
+| V-2 통과 | 관문을 통과한 실행에서 `plant_meta`·`column_nominal` 재생의 거짓 R-5(참 힘 ≥ 3 $P_5$)는 0회. 참 저하중 R-5(참 힘 < $P_5$ + 5 kN)는 같은 주기 또는 더 이른 주기에 남는다. 주기별 낙관 $\hat L^{fb}-\hat L^{true}$($\hat L^{true}$ = 같은 실행 1 ms 참 압력 힘으로 계산한 정상 센서 다리 예측)는 **헤드 하강 행(Δh ≥ 0)**에서 L1 ≤ 0.05 kN, L2b ≤ 1.2 kN(판정 집합의 자세한 정의는 다음 행). 302.7의 15건은 통과 수와 재생 불가 수(사유별)를 함께 보고한다 |
+| V-2 통과 판정 집합(개정 61 보완 3의 같은 날 추가) | 낙관 $\hat L^{fb}-\hat L^{true}$와 놓친 발동은 **R-5 감시 주기**(READY, PROBE의 탐침하지 않는 다리)에서만 센다. 놓친 발동은 정상 센서 예측으로는 R-5 세 조건이 모두 성립하는데 대체 예측으로는 발동하지 않은 주기다. $\hat L^{true}$의 참값은 같은 실행의 1 ms **압력 힘**이다: L2b는 `pads.npz` `F_pressure`(두 센서 순 힘 참값, 실 마찰 제외), L1-R은 마찰 요소가 없어 `F_cyl`이다. L2b에서 $F_s$ > 0인데 `F_pressure`가 없으면 재생 불가다. 행마다 `true_force_source`를 남긴다. **판정**은 302.2 조건이 성립하는 R-5 감시 행(nominal_gap)에서 하며 두 가지다. (i) **헤드 하강 행(Δh ≥ 0, 302.3 증명 범위)**의 낙관이 L1 ≤ 0.05 kN, L2b ≤ 1.2 kN이어야 한다. (ii) **302.2 조건이 성립하는 감시 행 전체**(헤드 상승 행 포함, level 규칙 행 `record_level` 제외)에서 놓친 발동이 0이어야 한다. level 규칙 행의 놓친 발동은 판정에 넣지 않는다. FLAG만 달고 302.2 확장 검토로 넘긴다. 헤드 상승 행(Δh < 0)에서는 하강률 조건이 서지 않아 대체·정상 어느 쪽도 R-5가 발동하지 않으므로, 낙관이 소비되지 않는다. 그래서 그 행은 **기록**만 한다. 정상 센서가 발동할 수 있는 행은 모두 Δh > 0이므로 (i) 집합이 소비 행을 모두 덮는다. 재생 요약의 행 분류는 `judged_falling` / `record_rising` / `record_level`이다. **`current_dur125` 결과(python P-1 349b908 → 공식 판정 필드 c52fdc4 `judgement_passed`, L1 `F_cyl_no_friction`): 통과.** 하강 행 낙관 최대는 −0.10 kN(plant_meta), −0.24 kN(column_nominal)이고 놓친 발동은 0이다. 기록 값은 상승 행 최대 +3.71 / +20.06 kN(124.0 s, 159.0~159.2 s, 발동 없음)과 level 감시 행 8개(moving 최대 +4.19, short −1.23, other +0.68 kN, 놓친 발동 0, FLAG 없음)다. 169.0 s +2.10 kN 행은 REANCHOR 구간이라 감시 행이 아니다. **level 규칙 행**(이동 중, 잠김 구간 n주기 미만)은 P-S8-22 전과 같은 식이라 302.3 증명 범위 밖이다. 낙관 최대와 놓친 발동 수를 이유별로 **기록**만 하고 V-5 불합격으로 쓰지 않는다. 놓친 발동이 1회 이상이면 FLAG를 달고 302.2 적용 범위 확장 검토로 넘긴다. 구현: python P-1(`r5_fallback_replay.py`), cad C-2(S7 L2b 기록기에 `F_pressure`·`rod_pressure`가 있는지 확인하고, 없으면 더함) |
 | V-4 ① | `run_S7C.py check --only L1_PS2_fdown3.5_old_worst_nocal L2b_PS2_fdown3.5_old_worst_nocal --duration 125 --jobs 2`. L1 = `plant_meta`(플랜트 params 비, meta 기록), L2b = `column_nominal` |
-| V-4 ② | `run_S8C.py run --only MLJ_K0V_fdown3.5_G4RF_Fs0 MLJ_K0V_fdown3.5_G4RF_Fs8 --tag v4_c29 --approved`. **`E_G4_Fs0/Fs8`은 짝으로 쓰지 않는다**(평지라 바닥·행정·비가 다르다). 짝 대신 **같은 실행 재생**으로 $\hat L^{fb}\le\hat L^{true}$ + 1.2 kN을 본다. 비교 기준은 S8 mlj 원 결과(`07_results/S8/mlj_20261025_080212`)의 같은 두 사례다 |
-| V-4 ③ | `run_S8C.py c36 --smoke ML88_ep0 --episode-s 30 --variant rt --rerun-from …/ml_main_20261025_090131`. 실행 전에 30 s 창이 원래 RR R-5 시각과 re-READY를 덮는지 cad가 확인한다(못 덮으면 늘린다) |
+| V-4 ② | `run_S8C.py run --only MLJ_K0V_fdown3.5_G4RF_Fs0 MLJ_K0V_fdown3.5_G4RF_Fs8 --tag v4_c29 --approved`. **`E_G4_Fs0/Fs8`은 짝으로 쓰지 않는다**(평지라 바닥·행정·비가 다르다). 짝 대신 **같은 실행 재생**으로 헤드 하강 행(Δh ≥ 0)에서 $\hat L^{fb}\le\hat L^{true}$ + 1.2 kN을 본다. 비교 기준은 S8 mlj 원 결과(`07_results/S8/mlj_20261025_080212`)의 같은 두 사례다 |
+| V-4 ③ | `run_S8C.py c36 --smoke ML88_ep0 --episode-s <원 에피소드 길이, 최소 60> --variant rt --rerun-from …/ml_main_20261025_090131`. **길이 규칙(개정 61 보완 3의 같은 날 추가)**: `--episode-s`는 원 ml_main 에피소드 길이(`ml_plan.json` 또는 원 meta)로 두고 60 s보다 짧게는 하지 않는다. cad 확인 결과 RR R-5는 80.0 s, 91.0 s까지 LEVEL이라 30 s는 부족하고 60 s면 끝 121 s다. 원 실행에도 창 안 re-READY가 없으면 비교 항목은 R-5 시각·다리, R-5 뒤 단계 경로, 창 끝 단계, 참 최소 $F_{cyl}$이고, re-READY 여부는 판정하지 않는다. L2b(`column_nominal`), $F_s$ 2.744 kN이므로 참 힘은 `F_pressure`, 재생 허용은 헤드 하강 행 1.2 kN이다 |
 | V-4 ④ | `m3_run.py rpB on`을 L1 `plant_meta`·`column_nominal` 두 설정으로 돌린다. **기준선은 P-S8-22 이전 코드로 같은 명령을 돌린 명령 SHA-256**이다. 두 설정 모두 같아야 한다. 비교용 출처 전환(환경 변수 `OUTRIGGER_L1_FALLBACK_RATIO_SOURCE`)은 meta 기록과 표준 출력 경고가 있어야 하고, 묶음 실행기는 그 변수가 있으면 거부한다(명시 허용 인자 없이는) |
-| V-5 | ①: 실패 0, 거짓 R-5 0, L1 READY 상대 ≤ 90 s(기대 84~86 s), L2b 판정 행이 그대로이거나 나아짐. ②: 218.10 기록 행이 나빠지지 않음, FR 참 $F_{cyl}$ 최소 ≥ $F_{min}$, 같은 실행 재생 낙관 ≤ 1.2 kN. ③: 판정 행이 그대로이거나 나아짐, V-2 분류가 참 저하중이면 R-5 유지·거짓이면 소멸, 재생 낙관 ≤ 1.2 kN(L2b일 때; L1이면 0.05 kN). ④: SHA 같음. **①~③은 `INFO_R5_FALLBACK_SLOPE`가 1회 이상 나와야 판정한다**(새 경로가 실제로 돌았는지 확인, 0회면 판정 불가). 1.2 kN 허용은 이 "낙관 0" 행에만 쓰고 자세·$F_{min}$·READY 기준에는 쓰지 않는다 |
+| V-5 | ①: 실패 0, 거짓 R-5 0, L1 READY 상대 ≤ 90 s(기대 84~86 s), L2b 판정 행이 그대로이거나 나아짐. ②: 218.10 기록 행이 나빠지지 않음, FR 참 $F_{cyl}$ 최소 ≥ $F_{min}$, 같은 실행 재생에서 헤드 하강 행(Δh ≥ 0) 낙관 ≤ 1.2 kN·놓친 발동 0(level 행 제외). ③: 판정 행이 그대로이거나 나아짐, V-2 분류가 참 저하중이면 R-5 유지·거짓이면 소멸, 재생에서 헤드 하강 행 낙관 ≤ 1.2 kN(L2b일 때; L1이면 0.05 kN)·놓친 발동 0(level 행 제외). ④: SHA 같음. **①~③은 `INFO_R5_FALLBACK_SLOPE`가 1회 이상 나와야 판정한다**(새 경로가 실제로 돌았는지 확인, 0회면 판정 불가). 1.2 kN 허용은 이 "낙관 0" 행에만 쓰고 자세·$F_{min}$·READY 기준에는 쓰지 않는다 |
 
+- **S9(P3b) 사례 V-2 재생(개정 61 보완 3의 같은 날 추가)**: 지금은 하지 않는다.
+  - 이유: P3b는 P-S8-22 이전 코드로 돈다. W-61(301절)은 `result.json`의 사건·단계, two_pressure meta, `p3b.W61_watch`로 기록·판정하므로 재생이 필요 없다.
+  - 조건부: P3b에서 W-61-1이 나고 W-61-3(거짓 재레벨 반복)으로 분류된 사례는 재생하지 않는다. **merge 뒤 새 코드로 대상 재실행**해서 (다)의 효과를 본다(V-4에 넣을지는 그때 정한다).
+  - S9 실행을 재생 가능하게 만드는 기록 추가는 **보류**한다. 필요한 것: `probe_history.json`, 사건 기록(`result.json` `events`로 대신할 수 있음), `step_series.npz`의 1 ms `F_pressure`·`head_pressure`·`rod_pressure`. 지금 `F_cyl`은 작용력이라 $F_s$ > 0에서 압력 힘과 다르다. 쓸 일이 생기면 cad에 위임한다.
 - 두 경로 대조: 규칙 변경이라 새 루프 수치량(극·여유)이 없다. Julia 교차 검증은 해당 없다. 대신 (i) 제어기 이벤트 ↔ 오프라인 재구성(299.3), (ii) 해석 증명 ↔ 무작위 시험(302.3), (iii) 구현 ↔ 재생(V-2)으로 대조한다.
 
 ## 304. 구현 위임 명세(python-expert, P-S8-22; 착수는 S9 P3b 판정 뒤)
@@ -11624,6 +11629,13 @@ $$\hat L^{true}_k-\hat L^{fb}_k=(F_k-b-L_k)+\tfrac{h}{n}\big(D_k-G(R_{true})\Del
   - $R_{nom}(s)$는 행정 판독 그대로 쓴다(5 mm 여유 없음, 302.5 재현).
   - 판독 상계(`estimate_source` READING)의 기준 판독에 남은 로드 오차(≤ 약 1.5 kN)는 띠 여유 $B_{fb}-b$가 덮는다.
 - 시험: unit 2218 통과·0 실패(구현자, d7638e9). 새 시험 `05_tests/unit/test_c2_r5_fallback_slope.py` 38개는 control이 다시 돌려 38 passed였다. 302.5 손 계산 대조는 127.8 s 실기 설정 $\hat L$ 20.65 kN 대 표 20.70 kN(반올림)으로 맞는다.
+- 같은 날 이어진 커밋(worktree, 메인 merge 전)
+  - python **0b1a55e**(O-4): V-2 재생 도구 `r5_fallback_replay.py`. 관문, 탐침 다리 출처 ①→②→③, 재생 설정 대조를 넣었다.
+  - python **349b908**(P-1): 행별 단계·감시 여부·302.2 조건 이유·`true_force_source`를 기록한다. `current_dur125` V-2 결과를 냈다.
+  - python **c52fdc4**: 행 분류를 `judged_falling`/`record_rising`/`record_level`로 정했다. 공식 판정 필드는 `judgement_passed` 하나만 두고 옛 필드(`is_judgement_passed*`, `level_missed_flag`)는 뺐다. level 행 놓친 발동은 판정에서 빼고 FLAG로만 두는 수정은 python에 넘겼다(303 "V-2 통과 판정 집합" (ii)).
+  - python **88d483c**: 그 수정. `judgement_passed` = `judged_falling` 낙관 허용 + 302.2 성립 감시 행(`judged_falling` + `record_rising`) 놓친 발동 0(`slope_rows_missed_triggers`). `record_level` 놓친 발동은 `level_missed_trigger_flag`·`level_missed_triggers`로 기록만. `current_dur125` 두 변형 `judgement_passed` True, 관련 시험 29 통과.
+  - cad C-1 후속(미커밋): L1 `plant_meta` meta 키, 환경 변수 거부·기록.
+  - cad C-2(미커밋): S7 L2b 기록기에 `F_pressure`·`rod_pressure`가 있는지 확인하고, 없으면 더한다.
 - 다음: P3b 판정(개정 60) → merge → V-1~V-3 → V-4(303 보강표) → V-5.
 - 보류: P-S8-22b(실기 $\kappa_{hi}$ 상태식, 헤드 20 bar 미만 경고, 새 출처). 착수 조건은 U-R8-9 ④ 부가 결과다.
 
@@ -11711,3 +11723,9 @@ $$\hat L^{true}_k-\hat L^{fb}_k=(F_k-b-L_k)+\tfrac{h}{n}\big(D_k-G(R_{true})\Del
   - 머리말과 개정표.
 - 바꾸지 않은 것: 302.2 규칙, 302.3 증명, 302.5 표, 수준 소비자.
 - hydraulics 14.8의 control 넘길 일 ①~③은 이 보완으로 반영했다.
+- 같은 날 추가(303 보강표 "V-2 통과 판정 집합" 행): 낙관과 놓친 발동은 R-5 감시 주기에서만 센다. 참 힘은 L2b `F_pressure`, L1-R `F_cyl`이다. level 규칙 행 낙관은 기록하고, 놓친 발동이 있으면 FLAG다(U-S8-66 보충). 위임은 python P-1, cad C-2다.
+- 같은 날 추가 2
+  - V-2 판정 집합: 헤드 하강 행(Δh ≥ 0)의 낙관, 그리고 302.2 조건 성립 감시 행 전체의 놓친 발동 0(level 행 놓친 발동은 FLAG, 판정 제외). 상승 행·level 행은 기록이다.
+  - `current_dur125` V-2 **통과**(하강 행 −0.10 / −0.24 kN, 놓친 발동 0).
+  - V-4 ③ 길이: 원 에피소드 길이, 최소 60 s. re-READY가 없으면 비교 항목을 바꾼다.
+  - S9 P3b 재생은 하지 않는다. W-61-3 사례는 merge 뒤 대상 재실행하고, S9 재생 기록 추가는 보류한다(303 보강표 아래).
