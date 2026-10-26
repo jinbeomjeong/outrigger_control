@@ -1,0 +1,81 @@
+{
+ "batch": "P1-V0'",
+ "criteria": "5.34.13 P1-V0': node - geometric <= 0.05 mm; sinkage = 1-DoF replica with the same contact node count +-0.5 %",
+ "case_def": "single pad G1 RL type B, fixed joint, load 72.8 kN Poly345 1 s + 1 s hold, Δt 1e-4 s, mesh",
+ "rows": [
+  {
+   "case": "V0p_G1_B_RL_0p5cm",
+   "grid_m": 0.005,
+   "n_contact": 2421,
+   "n_inside": 2421,
+   "node_sinkage_mm": 8.030752051669376,
+   "geometric_sinkage_mm": 8.030751347533261,
+   "node_minus_geometric_mm": 7.041361139992208e-07,
+   "criterion_node_minus_geometric_mm": 0.05,
+   "within_0p05mm": true,
+   "replica_ramp_mm": 8.03074111560821,
+   "replica_basis": "A = n_contact h^2 = 0.060525 m^2",
+   "node_vs_replica_pct": 0.0001361774836044071,
+   "criterion_pct": 0.5,
+   "within_0p5pct": true,
+   "Fz_over_load": 1.0000039571234023,
+   "first_record_Fz_N": 0.0,
+   "us_per_step": 8064.537735001067,
+   "threads": 4
+  },
+  {
+   "case": "V0p_G1_B_RL_1cm",
+   "grid_m": 0.01,
+   "n_contact": 601,
+   "n_inside": 601,
+   "node_sinkage_mm": 8.087825160256637,
+   "geometric_sinkage_mm": 8.087819140665323,
+   "node_minus_geometric_mm": 6.019591314992967e-06,
+   "criterion_node_minus_geometric_mm": 0.05,
+   "within_0p05mm": true,
+   "replica_ramp_mm": 8.0878209437901,
+   "replica_basis": "A = n_contact h^2 = 0.060100 m^2",
+   "node_vs_replica_pct": 5.213352976124828e-05,
+   "criterion_pct": 0.5,
+   "within_0p5pct": true,
+   "Fz_over_load": 0.9999993961421474,
+   "first_record_Fz_N": 0.0,
+   "us_per_step": 1861.0247050004546,
+   "threads": 4
+  },
+  {
+   "case": "V0 (iii) 2 cm, cad 2026-10-26 (5.34.10 table)",
+   "grid_m": 0.02,
+   "n_contact": 157,
+   "node_minus_geometric_mm": -9.5e-06,
+   "node_sinkage_mm": 7.738,
+   "replica_ramp_mm": 7.738,
+   "note": "earlier run, Chrono-default SCM threads"
+  }
+ ],
+ "cost": {
+  "folder": "C:/workspace/outrigger_control/.claude/worktrees/agent-ac4ca09081d79438a/07_results/S9/batch_P1_V0p_20261026_030143",
+  "parallel": 2,
+  "failed": false,
+  "wall_serial_s": 204.15536569996038,
+  "est_serial_s": 240,
+  "wall_over_est": 0.8506473570831683,
+  "per_case": [
+   {
+    "case": "V0p_G1_B_RL_1cm",
+    "rc": 0,
+    "wall_s": 40.019726099970285,
+    "est_s": 120
+   },
+   {
+    "case": "V0p_G1_B_RL_0p5cm",
+    "rc": 0,
+    "wall_s": 164.1356395999901,
+    "est_s": 120
+   }
+  ],
+  "note": "P-cores shared with the main-tree YAML regression R3 (8 P-cores) and 2 S9 runs at a time: contended"
+ },
+ "source_batch": "07_results/S9/batch_P1_V0p_20261026_030143",
+ "generator": "04_scripts/02_chrono/s9_batch_summary.py"
+}

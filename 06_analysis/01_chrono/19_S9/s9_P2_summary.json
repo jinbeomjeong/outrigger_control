@@ -1,0 +1,250 @@
+{
+ "batch": "P2-1 ... P2-3 (5.34.11 criteria P2-a ... P2-f, user decision 2026-10-26)",
+ "criteria": {
+  "P2-a": "first-step SCM force <= 100 N, start rise <= 0.1 mm",
+  "P2-b": "same node-phase replica: <= 1 % (G1, S1); J1 / J2 vs Kc/b replica <= 3 % (provisional)",
+  "P2-c": "last 1 s pitch p-p <= 0.02 deg",
+  "P2-d": "normal sum / weight 1 +- 0.002",
+  "P2-e": "crawler 4 cm vs 2 cm pitch, z0 <= 2 %",
+  "P2-f": "vs P0 record only, warn > 10 %"
+ },
+ "case_def": "machine settle, gravity Poly345 3 s + hold 2 s, judged on the last 1 s mean; type B pads, (b'), Δt 1e-4 s, mesh ray targets, 4 SCM threads",
+ "G1_top_reference": "M14s G1 top (5.34.11): pitch 0.151153 deg, z0 -1.2693 mm",
+ "rows": {
+  "P2-1_J1_top_M14s": {
+   "soil": "J1",
+   "level": "top",
+   "pad_grid_m": 0.01,
+   "crawler_grid_m": 0.04,
+   "P2-a_first_step_force_N": 0.0,
+   "P2-a_start_rise_mm": 28.13155017328084,
+   "pitch_mean_deg": 0.11635691180970957,
+   "z0_mean_mm": 1.232222519224013,
+   "roll_mean_deg": -0.00010547950010462992,
+   "P2-b_replica": "pending (dynamics-expert: J1 / J2 Kc/b replica; S1 / G1 middle-bottom same-phase replica)",
+   "P2-c_pitch_pp_deg": 0.12110208031697257,
+   "P2-d_normal_over_weight": 0.9999425002148556,
+   "P2-f_vs_P0": {
+    "P0_pitch_deg": 0.006121884211155271,
+    "P0_z0_mm": -0.03815924623836594,
+    "pitch_pct": 1800.6715546446387,
+    "z0_pct": -3329.158436534095,
+    "warn_over_pct": 10.0
+   },
+   "us_per_step": 2845.4019319999497,
+   "build_s": 0.4500800999812782,
+   "threads": 4
+  },
+  "P2-1_J2_top_M14s": {
+   "soil": "J2",
+   "level": "top",
+   "pad_grid_m": 0.01,
+   "crawler_grid_m": 0.04,
+   "P2-a_first_step_force_N": 0.0,
+   "P2-a_start_rise_mm": 7.852131341124835,
+   "pitch_mean_deg": 0.1020583779890737,
+   "z0_mean_mm": 0.059201594496254936,
+   "roll_mean_deg": -0.0002573548495619617,
+   "P2-b_replica": "pending (dynamics-expert: J1 / J2 Kc/b replica; S1 / G1 middle-bottom same-phase replica)",
+   "P2-c_pitch_pp_deg": 0.045118004089019975,
+   "P2-d_normal_over_weight": 0.9999792306073596,
+   "P2-f_vs_P0": {
+    "P0_pitch_deg": 0.06303589457148707,
+    "P0_z0_mm": -0.12109163462461266,
+    "pitch_pct": 61.90517907750548,
+    "z0_pct": -148.8899127340889,
+    "warn_over_pct": 10.0
+   },
+   "us_per_step": 2810.416271999711,
+   "build_s": 0.4474249000195414,
+   "threads": 4
+  },
+  "P2-1_S1_top_M14s": {
+   "soil": "S1",
+   "level": "top",
+   "pad_grid_m": 0.02,
+   "crawler_grid_m": 0.04,
+   "P2-a_first_step_force_N": 0.0,
+   "P2-a_start_rise_mm": 6.381215111872507e-06,
+   "pitch_mean_deg": 0.8214037460356317,
+   "z0_mean_mm": -12.169117420406563,
+   "roll_mean_deg": 0.001272190563478414,
+   "P2-b_replica": "pending (dynamics-expert: J1 / J2 Kc/b replica; S1 / G1 middle-bottom same-phase replica)",
+   "P2-c_pitch_pp_deg": 0.00233408955475245,
+   "P2-d_normal_over_weight": 1.0000036852618976,
+   "P2-f_vs_P0": {
+    "P0_pitch_deg": 0.7098378795885754,
+    "P0_z0_mm": -11.49651860032313,
+    "pitch_pct": 15.717091135192776,
+    "z0_pct": 5.850456503106327,
+    "warn_over_pct": 10.0
+   },
+   "us_per_step": 2286.933911999222,
+   "build_s": 0.5176788000389934,
+   "threads": 4
+  },
+  "P2-2_J1_top_single2cm": {
+   "soil": "J1",
+   "level": "top",
+   "pad_grid_m": 0.02,
+   "crawler_grid_m": null,
+   "P2-a_first_step_force_N": 0.0,
+   "P2-a_start_rise_mm": 28.002354178971345,
+   "pitch_mean_deg": 0.12286590646537071,
+   "z0_mean_mm": 1.2601628663594036,
+   "roll_mean_deg": 4.231998125369879e-05,
+   "P2-b_replica": "pending (dynamics-expert: J1 / J2 Kc/b replica; S1 / G1 middle-bottom same-phase replica)",
+   "P2-c_pitch_pp_deg": 0.1253196593713115,
+   "P2-d_normal_over_weight": 0.9999445771393947,
+   "P2-f_vs_P0": {
+    "P0_pitch_deg": 0.006121884211155271,
+    "P0_z0_mm": -0.03815924623836594,
+    "pitch_pct": 1906.9949418756562,
+    "z0_pct": -3402.3788218657605,
+    "warn_over_pct": 10.0
+   },
+   "us_per_step": 10941.241042000474,
+   "build_s": 0.513287500012666,
+   "threads": 4
+  },
+  "P2-2_S1_top_single2cm": {
+   "soil": "S1",
+   "level": "top",
+   "pad_grid_m": 0.02,
+   "crawler_grid_m": null,
+   "P2-a_first_step_force_N": 0.0,
+   "P2-a_start_rise_mm": 6.381215111872507e-06,
+   "pitch_mean_deg": 0.8055894660629649,
+   "z0_mean_mm": -12.134387738734247,
+   "roll_mean_deg": 0.001272022436913281,
+   "P2-b_replica": "pending (dynamics-expert: J1 / J2 Kc/b replica; S1 / G1 middle-bottom same-phase replica)",
+   "P2-c_pitch_pp_deg": 0.0020805124947068654,
+   "P2-d_normal_over_weight": 1.0000041977793943,
+   "P2-f_vs_P0": {
+    "P0_pitch_deg": 0.7098378795885754,
+    "P0_z0_mm": -11.49651860032313,
+    "pitch_pct": 13.489219049550794,
+    "z0_pct": 5.548367819743179,
+    "warn_over_pct": 10.0
+   },
+   "us_per_step": 11275.616062000627,
+   "build_s": 0.5170758999884129,
+   "threads": 4
+  },
+  "P2-3_G1_bottom_M14s": {
+   "soil": "G1",
+   "level": "bottom",
+   "pad_grid_m": 0.02,
+   "crawler_grid_m": 0.04,
+   "P2-a_first_step_force_N": 8.995605484187763,
+   "P2-a_start_rise_mm": 0.00011617309481071203,
+   "pitch_mean_deg": 0.14896355242393877,
+   "z0_mean_mm": -1.2759313420650997,
+   "roll_mean_deg": 0.00013442855787884476,
+   "P2-b_replica": "pending (dynamics-expert: J1 / J2 Kc/b replica; S1 / G1 middle-bottom same-phase replica)",
+   "P2-c_pitch_pp_deg": 0.0010573891159277315,
+   "P2-d_normal_over_weight": 0.9999978267711591,
+   "P2-f_vs_P0": null,
+   "us_per_step": 1968.952888000058,
+   "build_s": 0.5151421999908052,
+   "threads": 4
+  },
+  "P2-3_G1_middle_M14s": {
+   "soil": "G1",
+   "level": "middle",
+   "pad_grid_m": 0.02,
+   "crawler_grid_m": 0.04,
+   "P2-a_first_step_force_N": 0.0,
+   "P2-a_start_rise_mm": 6.290890031124263e-06,
+   "pitch_mean_deg": 0.15024450270658105,
+   "z0_mean_mm": -1.2702747962157697,
+   "roll_mean_deg": 0.00013532693662690856,
+   "P2-b_replica": "pending (dynamics-expert: J1 / J2 Kc/b replica; S1 / G1 middle-bottom same-phase replica)",
+   "P2-c_pitch_pp_deg": 0.0009578629136722805,
+   "P2-d_normal_over_weight": 1.0000030708040843,
+   "P2-f_vs_P0": null,
+   "us_per_step": 2276.888948000269,
+   "build_s": 0.5062610000022687,
+   "threads": 4
+  }
+ },
+ "P2-e": [
+  {
+   "soil": "J1",
+   "M14s_pitch_deg": 0.11635691180970957,
+   "single2cm_pitch_deg": 0.12286590646537071,
+   "pitch_rel_pct": -5.297641016058166,
+   "M14s_z0_mm": 1.232222519224013,
+   "single2cm_z0_mm": 1.2601628663594036,
+   "z0_rel_pct": -2.2172012746344336,
+   "criterion_pct": 2.0,
+   "note": "crawler 4 cm (M14s) vs 2 cm (single terrain)"
+  },
+  {
+   "soil": "S1",
+   "M14s_pitch_deg": 0.8214037460356317,
+   "single2cm_pitch_deg": 0.8055894660629649,
+   "pitch_rel_pct": 1.9630693596272495,
+   "M14s_z0_mm": -12.169117420406563,
+   "single2cm_z0_mm": -12.134387738734247,
+   "z0_rel_pct": 0.28620876817257684,
+   "criterion_pct": 2.0,
+   "note": "crawler 4 cm (M14s) vs 2 cm (single terrain)"
+  }
+ ],
+ "cost": {
+  "folder": "C:/workspace/outrigger_control/.claude/worktrees/agent-ac4ca09081d79438a/07_results/S9/batch_P2_20261026_040423",
+  "parallel": 2,
+  "failed": false,
+  "wall_serial_s": 1734.3669769000262,
+  "est_serial_s": 2220,
+  "wall_over_est": 0.7812463859910028,
+  "per_case": [
+   {
+    "case": "P2-1_J2_top_M14s",
+    "rc": 0,
+    "wall_s": 142.0258931000135,
+    "est_s": 240
+   },
+   {
+    "case": "P2-1_J1_top_M14s",
+    "rc": 0,
+    "wall_s": 144.03594979998888,
+    "est_s": 240
+   },
+   {
+    "case": "P2-1_S1_top_M14s",
+    "rc": 0,
+    "wall_s": 116.02884290000657,
+    "est_s": 240
+   },
+   {
+    "case": "P2-2_J1_top_single2cm",
+    "rc": 0,
+    "wall_s": 550.1062699999893,
+    "est_s": 600
+   },
+   {
+    "case": "P2-3_G1_middle_M14s",
+    "rc": 0,
+    "wall_s": 116.0221501000342,
+    "est_s": 150
+   },
+   {
+    "case": "P2-2_S1_top_single2cm",
+    "rc": 0,
+    "wall_s": 566.1168646999868,
+    "est_s": 600
+   },
+   {
+    "case": "P2-3_G1_bottom_M14s",
+    "rc": 0,
+    "wall_s": 100.031006300007,
+    "est_s": 150
+   }
+  ],
+  "note": "P-cores shared with the main-tree YAML regression R3 (8 P-cores) and 2 S9 runs at a time: contended"
+ },
+ "source_batch": "07_results/S9/batch_P2_20261026_040423",
+ "generator": "04_scripts/02_chrono/s9_batch_summary.py"
+}

@@ -1,0 +1,337 @@
+{
+ "doc": "S9 runner smoke (cad-expert 2026-10-26): dynamics_model.md 5.33.7 / 5.33.9, not a judgement run",
+ "commands": [
+  "python -I -X utf8 -u 04_scripts/02_chrono/run_S9.py single-pad --soil G1 --pad-variant dwg_rear250 --leg RL --force 4450 --t-settle 2 --t-end 6",
+  "python -I -X utf8 -u 04_scripts/02_chrono/run_S9.py single-pad --soil G1 --pad-variant dwg_rear250 --leg RL --force 4450 --t-settle 2 --t-end 5 --scm-shear native",
+  "python -I -X utf8 -u 04_scripts/02_chrono/run_S9.py machine --soil G1 --t-settle 1.5"
+ ],
+ "frame": "world z up, x forward; SI; gravity (0, 0, -9.80665)",
+ "cases": {
+  "single_G1_B_RL_bprime_F4450": {
+   "settle_end": {
+    "z_bottom_mm": -9.557089566038172,
+    "sinkage_mm": 9.557089566038172,
+    "Fz_scm_N": 72884.17464224862,
+    "Fz_over_weight": 1.0009613750168331,
+    "tilt_deg": 0.10942538027083863,
+    "x_mm": 1.6760578795063122e-05,
+    "y_mm": 1.94818296809099e-05
+   },
+   "hold": {
+    "window_s": [
+     3.0,
+     6.0
+    ],
+    "drift_mm": 0.14424872477588518,
+    "drift_window_means_mm": 0.009038489043724195,
+    "x_window_means_mm": [
+     1.4399821743862424,
+     1.4418020382672352,
+     1.459272269045039,
+     1.4403535075462774,
+     1.4513573729936335,
+     1.4492291362828156
+    ],
+    "drift_velocity_m_s": 3.645169966678953e-06,
+    "x_mean_mm": 1.447004582869581,
+    "elastic_expected_mm": 1.4483831835602086,
+    "Ft_total_mean_N": 4446.012760283601,
+    "Ft_over_F": 0.9991039910749665,
+    "Ft_step_range_N": [
+     3974.1847817396315,
+     4875.844961151586
+    ],
+    "Fx_scm_abs_max_N": 0.0,
+    "tilt_deg_max": 0.23070672569039552,
+    "sinkage_change_mm": 0.0005911189401922035,
+    "slip_total_x_mm": 0.0
+   },
+   "end": null,
+   "us_per_step": 510.57582333257113,
+   "limit_N": 61098.34563790516,
+   "k_t_N_m": 3072391.3744024877,
+   "rut_reference": null,
+   "node_sinkage": null,
+   "pad_bushing_events": null,
+   "crawler_bushing_events": null,
+   "bushing_events": {
+    "t": [
+     0.0001
+    ],
+    "leg": [
+     0
+    ],
+    "kind": [
+     1
+    ]
+   },
+   "swivel_warnings": [],
+   "swivel_tilt_max_deg": [
+    0.24145963055186068
+   ],
+   "result_dir": "07_results/S9/single_G1_dwg_rear250_RL_bprime_F4450_20261026_004237",
+   "result_json_sha256": "12641e2370b66039768e7ba5729dccf8b471fb6628094ed1103d0e7d1b90f980",
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   }
+  },
+  "single_G1_B_RL_native_F4450": {
+   "settle_end": {
+    "z_bottom_mm": -9.563783470717478,
+    "sinkage_mm": 9.563783470717478,
+    "Fz_scm_N": 72986.83029298476,
+    "Fz_over_weight": 1.0023712056394403,
+    "tilt_deg": 0.15653057435093803,
+    "x_mm": 0.34107128452287555,
+    "y_mm": 0.3343874628674864
+   },
+   "hold": {
+    "window_s": [
+     3.0,
+     5.0
+    ],
+    "drift_mm": 25.486664481681018,
+    "drift_window_means_mm": 18.68633058337576,
+    "x_window_means_mm": [
+     13.15312894663009,
+     19.905494630788617,
+     25.89079164873188,
+     31.83974390491452
+    ],
+    "drift_velocity_m_s": 0.012435341900239679,
+    "x_mean_mm": 22.70350386546232,
+    "elastic_expected_mm": 1.4483831835602086,
+    "Ft_total_mean_N": 4997.380963214559,
+    "Ft_over_F": 1.1230069580257438,
+    "Ft_step_range_N": [
+     -3667.309274596302,
+     14687.762248827732
+    ],
+    "Fx_scm_abs_max_N": 10989.647738328025,
+    "tilt_deg_max": 0.38902916788348096,
+    "sinkage_change_mm": 0.019009698186620017,
+    "slip_total_x_mm": 0.0
+   },
+   "end": null,
+   "us_per_step": 456.459505999228,
+   "limit_N": null,
+   "k_t_N_m": 3072391.3744024877,
+   "rut_reference": null,
+   "node_sinkage": null,
+   "pad_bushing_events": null,
+   "crawler_bushing_events": null,
+   "bushing_events": null,
+   "swivel_warnings": [],
+   "swivel_tilt_max_deg": [
+    0.38944407997883335
+   ],
+   "result_dir": "07_results/S9/single_G1_dwg_rear250_RL_native_F4450_20261026_005152",
+   "result_json_sha256": "0babbdb53c223da68b3077dcac3e4311078449c27a6105487571961343f33fff",
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   }
+  },
+  "machine_G1_B_bprime_settle1.5": {
+   "settle_end": null,
+   "hold": null,
+   "end": {
+    "t_s": 1.4999999999998512,
+    "roll_pitch_deg": [
+     4.0061050022116374e-05,
+     0.298681561724628
+    ],
+    "body_pos_m": [
+     0.005806922053001151,
+     -1.9972602127629052e-07,
+     -0.0007604610413571855
+    ],
+    "window_s": 0.1,
+    "scm_crawler_normal_mean_N": 379972.3223432287,
+    "scm_pad_normal_mean_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "total_normal_N": 379972.3223432287,
+    "weight_N": 380112.91206408397,
+    "equilibrium_rel_error": -0.0003698630496182411,
+    "contact_patches": 2,
+    "track_normal_raw_N": [
+     189562.18625511712,
+     193035.72008833825
+    ],
+    "pad_sinkage_geometric_m": [
+     -0.33438640566920297,
+     -0.3343845975386197,
+     -0.3494725383774826,
+     -0.349470921398386
+    ],
+    "rut_clearance_m": 0.0,
+    "pad_tilt_deg": [
+     0.18943313609650564,
+     0.20327071263537608,
+     0.6636453292151028,
+     0.6695973128828729
+    ],
+    "track_utilisation": [
+     0.023459271804413963,
+     0.024026564106953367
+    ],
+    "s_motor_m": [
+     5.608460622384935e-06,
+     5.6150811601165205e-06,
+     4.981927293490963e-06,
+     4.985821228558629e-06
+    ],
+    "F_cyl_N": [
+     -1060.2316849432136,
+     -1061.3424692242284,
+     -707.1428066149414,
+     -707.5976127645646
+    ]
+   },
+   "us_per_step": 15427.16918666847,
+   "limit_N": null,
+   "k_t_N_m": null,
+   "rut_reference": {
+    "t_s": 1.4999999999998512,
+    "n_points": 230,
+    "step_m": 0.1
+   },
+   "node_sinkage": [
+    {
+     "t_s": 1.2999999999998733,
+     "pad_node_sinkage_m": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "t_s": 1.3999999999998622,
+     "pad_node_sinkage_m": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "t_s": 1.4999999999998512,
+     "pad_node_sinkage_m": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   ],
+   "pad_bushing_events": {
+    "t": [],
+    "leg": [],
+    "kind": []
+   },
+   "crawler_bushing_events": {
+    "t": [
+     0.0001,
+     0.0001
+    ],
+    "leg": [
+     0,
+     1
+    ],
+    "kind": [
+     1,
+     1
+    ]
+   },
+   "bushing_events": null,
+   "swivel_warnings": [],
+   "swivel_tilt_max_deg": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "result_dir": "07_results/S9/machine_G1_dwg_rear250_bprime_lift0_20261026_005521",
+   "result_json_sha256": "1cf49dd066c71e359b856ece1e3d98c4261c9b878cd3ffd847efb550bf1ba93d",
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   }
+  }
+ }
+}
