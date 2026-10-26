@@ -1881,6 +1881,11 @@ def run_level(args) -> Path:
     from outrigger_sim.control.c2 import C2Controller
 
     config, c2_meta = level_c2_config(args.allow_current_c2)
+    # U-S8-61 (spec 304 1): SCM keeps the preset R-5 fallback ratio (column_nominal); the L1 rigid
+    # cases of S9 (P3-10, s9_merge/m3_run.py) take plant_meta in run_S6C.job_bundle_c
+    from outrigger_sim.chrono.fallback_ratio import with_engine_fallback_ratio
+
+    config, c2_meta["fallback_ratio"] = with_engine_fallback_ratio(config, "SCM")
     imu_cfg, leg_cfg, config, sensor_meta = level_sensor_setup(args.pressure_grade, args.imu_grade, config)
     from outrigger_sim.chrono.scm_engine import S9Engine
     from outrigger_sim.params import load_params
@@ -1922,12 +1927,18 @@ def run_level(args) -> Path:
     t_loop0 = float(model.system.GetChTime())
     step_rec = StepSeries(model, every, round(args.duration / STEP_SERIES_S) + 16)
 
+    from outrigger_sim.chrono.run_rows import MinimalR8Series, R8_SERIES_NAME, probed_leg
+
+    r8_rows = MinimalR8Series(c2)  # (가): r8_series.npz probed_leg, same key / meaning as run_S6C
+
     def observe(meas, command):  # 10 Hz S9 keys (287: crawler patch force sum, pad node sinkage, rut clearance)
         from outrigger_sim.frames import roll_pitch_from_quat
 
+        r8_rows(meas, command)
         row = model.s9_record()
         ph = str(getattr(c2, "phase", None))
         row["c2_phase"] = ph
+        row["probed_leg"] = probed_leg(c2)  # (가) control 2026-10-26: record only (None = not PROBE)
         if not phases or phases[-1][1] != ph:
             phases.append((float(meas.t_s), ph))
         q = model.superstructure.GetRot()
@@ -1948,6 +1959,7 @@ def run_level(args) -> Path:
     d = out_dir("level", tag, args.out_root)
     save_record(res.record, d / "record")  # 10 Hz: meas.head_pressure / rod_pressure / stroke, u_cmd (applied)
     np.savez(d / "controller_commands.npz", t_s=res.command_t_s, issued_u_m_s=res.command_m_s)
+    r8_series_info = r8_rows.save(d / R8_SERIES_NAME)
     series = step_rec.arrays()
     series["sinkage_rate_0p2s_m_s"] = sinkage_rate(series["t_s"], series["pad_sinkage_geometric_m"])
     np.savez(d / "step_series.npz", **series)
@@ -1982,7 +1994,9 @@ def run_level(args) -> Path:
                "settle_reference": settle, "rut_reference": rut, "t_loop_start_s": t_loop0,
                "phases": [{"t_s": t, "phase": p} for t, p in phases],
                "events": [{"t_s": t, "name": n} for t, n in events],
-               "s9_rows": soil_rows, "monitor": engine.step_monitor(),
+               "s9_rows": soil_rows, "r8_series": r8_series_info,
+               "controller_meta": ctl_meta,  # same key as the run_S6C / S7C / S8C result.json (replay tools)
+               "monitor": engine.step_monitor(),
                "gravity_schedule": gravity_schedule_meta(args, dashpot),
                "p3_records": p3_records(soil_rows, ctx["weight_N"], p3b["departure"].get("t_departure_s")),
                "p3b": p3b, "step_series": {"file": "step_series.npz", "rate_s": STEP_SERIES_S,

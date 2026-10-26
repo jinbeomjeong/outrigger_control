@@ -940,11 +940,20 @@ def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = N
     comes from the L2b plant params ``params_plant`` (from :func:`build_l2b`). Pilot-check cases
     do not touch the config (bit-identical to the S7 / pre-P-S8-11 path). ``variant``: C-S8-36
     re-approach variant (:func:`with_reapproach_variant`; None = the preset).
-    ``soil_off_replay``: option (가), :func:`with_soil_off_replay`."""
+    ``soil_off_replay``: option (가), :func:`with_soil_off_replay`.
+
+    Returns ``(controller, config, settle_meta, fallback_ratio_meta)``; the last item is the
+    ``with_engine_fallback_ratio`` meta (U-S8-61), written to the result as ``fallback_ratio``
+    like run_S7C / run_S9."""
     from outrigger_sim.control.c2 import C2Controller
 
     config, settle_meta = s7c.apply_settle_map(s6c.controller_config(params_ctrl, case.base),
                                                "L2b_NSC", case.scenario.level)
+    # U-S8-61 (spec 304 1): L2b-NSC keeps the preset R-5 fallback ratio (column_nominal); the
+    # L1 cases of this runner go through run_S6C.job_bundle_c (plant_meta there)
+    from outrigger_sim.chrono.fallback_ratio import with_engine_fallback_ratio
+
+    config, fallback_ratio_meta = with_engine_fallback_ratio(config, "L2b_NSC")
     if case.lock_valve == "counterbalance":
         l2b = params_plant.l2b
         if l2b is None or l2b.lock_valve != "counterbalance" or l2b.counterbalance is None:
@@ -955,7 +964,8 @@ def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = N
     config = with_reapproach_variant(config, variant)
     if soil_off_replay:
         config = with_soil_off_replay(config)
-    return C2Controller.from_params(params_ctrl, config), config, settle_meta
+    return (C2Controller.from_params(params_ctrl, config), config, settle_meta,
+            fallback_ratio_meta)
 
 
 LOCK_WINDOW_TAU_KEY = "lock_window_valve_tau_s"
@@ -1004,7 +1014,7 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
     leg_sensors = st.leg_sensor_config_for(sc, t0) if bcase.sensor_model else LegSensorConfig()
     suite = SensorSuite(imu_config_for_grade(sc.grade, sample_period_s=s6c.IMU_SAMPLE_PERIOD_S),
                         leg_sensors, seed=sc.seed)
-    c2, config, settle_meta = _controller(case, params_ctrl, params)
+    c2, config, settle_meta, fallback_ratio_meta = _controller(case, params_ctrl, params)
     controller = c2
     forced = None
     if ev and ev["kind"] == "retract":
@@ -1139,6 +1149,7 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
     bundle = {**bcase.to_meta(), "param_overrides": {k: v for k, v in over.items()},
               "controller_param_overrides": {},
               "controller_params_beta_GPa": s6c.CONTROLLER_BETA_GPA,
+              "fallback_ratio": fallback_ratio_meta,  # U-S8-61, as run_S7C bundle_c
               "valve": model.actuator.valve_meta(),
               "imu_sample_period_s": s6c.IMU_SAMPLE_PERIOD_S,
               "leg_sensors": "WIKA error model" if bcase.sensor_model
@@ -1479,7 +1490,7 @@ def job_ml_base(base: MLBase, case_dir: Path) -> dict[str, Any]:
     suite = SensorSuite(imu_config_for_grade(sc.grade, sample_period_s=s6c.IMU_SAMPLE_PERIOD_S),
                         st.leg_sensor_config_for(sc, t0) if case.base.sensor_model
                         else LegSensorConfig(), seed=sc.seed)
-    c2, config, settle_meta = _controller(case, params_ctrl, params)
+    c2, config, settle_meta, fallback_ratio_meta = _controller(case, params_ctrl, params)
     pads = L2bPadRecorderS8(engine, sample_s=s7c.PAD_RECORD_S)
     series = S8Series(model, c2, model.actuator.head_area_m2, params.l2b.rod_side.annulus_area_m2)
     twist_hist = TwistScaleHistory(c2, t0)
@@ -1501,6 +1512,7 @@ def job_ml_base(base: MLBase, case_dir: Path) -> dict[str, Any]:
                 "case_id": base.base_id, "floor": sc.floor, "level": sc.level,
                 "pressure_grade": base.pressure_grade, "event": None, "seed": base.seed,
                 "contact": sc.contact,
+                "fallback_ratio": fallback_ratio_meta,  # U-S8-61
                 "ml_meta": ml_meta(base, model, event=None)}
     run_meta = make_run_meta(params, engine.meta(), scenario=f"S8ML_{base.base_id}",
                              scenario_settings=s6c._plain(settings), sensors=suite.setup(),
@@ -3317,7 +3329,14 @@ def main(argv):
                          "(가), only to reproduce old ML / RT data bit for bit); default: rule "
                          "(다), the offline LOC restored on branches pickled without a soil "
                          "state (user decision 2026-10-26)")
+    ap.add_argument("--allow-env-override", action="store_true",
+                    help="run / check: start even with OUTRIGGER_L1_FALLBACK_RATIO_SOURCE set "
+                         "(B(iii) comparison batch; the L1R cases take the override)")
     args = ap.parse_args(argv)
+    if args.action in ("run", "check") and not args.dry_run:
+        from outrigger_sim.chrono.fallback_ratio import refuse_env_override
+
+        refuse_env_override(args.allow_env_override, f"run_S8C {args.action}")
     replays_branches = (args.action == "c36" and args.bundle != "D") or \
         (args.action == "ml" and bool(args.resume))
     if args.soil_off_replay and not replays_branches:

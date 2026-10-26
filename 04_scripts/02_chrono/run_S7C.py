@@ -282,6 +282,33 @@ def settle_l2b(model, seconds: float) -> dict[str, Any]:
             "window_s": win * model.dt_s}
 
 
+S8_SEAL_PAD_FIELDS = ("F_pressure", "F_pressure_min_interval", "F_pressure_max_interval",
+                      "f_seal", "seal_stuck", "s_piston", "F_seal_limit")
+"""Fields the S8 recorder (``chrono/l2b_pad_record_s8.py``) adds to ``pads.npz`` on the
+friction path; the S7 recorder (``l2b_pad_record.py``) already has ``head_pressure`` /
+``rod_pressure`` (1 ms) and has no seal element to record."""
+
+
+def l2b_pads_seal_fields_meta(params, model) -> dict[str, Any]:
+    """C-2 (control 2026-10-26, before V-4 (1)): the S7 L2b ``pads.npz`` keeps the S7 fields.
+    The S8 seal fields are recorded only on the friction path (F_s > 0 or counterbalance),
+    which this runner does not build (``job_l2b`` refuses parameter overrides, YAML
+    ``actuator.seal_friction.level_N`` = 0); the meta states why they are absent. A friction
+    path here raises (the S8 runner records it)."""
+    sf = getattr(getattr(params, "l2b", None), "seal_friction", None)
+    level_N = 0.0 if sf is None else float(sf.level_N)
+    friction_path = bool(getattr(model.actuator, "friction_path", False))
+    if friction_path:
+        raise RuntimeError("run_S7C L2b: friction path (F_s > 0 / CB) built; the S7 pad recorder "
+                           "has no seal fields - use run_S8C (l2b_pad_record_s8)")
+    return {"added": False, "fields_s8": list(S8_SEAL_PAD_FIELDS), "F_s_front_N": level_N,
+            "friction_path": friction_path,
+            "pressure_fields_present": ["head_pressure", "rod_pressure", "F_cyl"],
+            "reason": "F_s = 0 (YAML actuator.seal_friction.level_N, no override in run_S7C): "
+                      "no seal friction element, so F_pressure = F_cyl and f_seal = 0; nothing "
+                      "to add (C-2, control 2026-10-26)"}
+
+
 def job_l2b(case: Ctrl3Case, case_dir: Path, *, duration_s: float | None = None):
     """Run one L2b-NSC case. Returns (summary, run_meta)."""
     import numpy as np
@@ -320,6 +347,10 @@ def job_l2b(case: Ctrl3Case, case_dir: Path, *, duration_s: float | None = None)
                         leg_sensors, seed=sc.seed)
     config, settle_meta = apply_settle_map(s6c.controller_config(params_ctrl, bcase),
                                            case.engine, sc.level)
+    # U-S8-61 (spec 304 1): L2b-NSC keeps the preset R-5 fallback ratio (column_nominal)
+    from outrigger_sim.chrono.fallback_ratio import with_engine_fallback_ratio
+
+    config, fallback_ratio_meta = with_engine_fallback_ratio(config, case.engine)
     c2 = C2Controller.from_params(params_ctrl, config)
     pads = L2bPadRecorder(engine, every_steps=max(1, round(PAD_RECORD_S / model.dt_s)))
     sat_rec = s6c.SaturationRecorder(model, t0)
@@ -356,6 +387,8 @@ def job_l2b(case: Ctrl3Case, case_dir: Path, *, duration_s: float | None = None)
     expect = st.expected_reanchor(sc, c2_meta["reanchor_direction"])
     bundle = {**bcase.to_meta(), "param_overrides": {}, "controller_param_overrides": {},
               "controller_params_beta_GPa": s6c.CONTROLLER_BETA_GPA,
+              "fallback_ratio": fallback_ratio_meta,
+              "pads_seal_fields": l2b_pads_seal_fields_meta(params, model),
               "valve": model.actuator.valve_meta(),
               "imu_sample_period_s": s6c.IMU_SAMPLE_PERIOD_S,
               "leg_sensors": "WIKA error model" if bcase.sensor_model
@@ -548,8 +581,15 @@ def main(argv):
     ap.add_argument("--out")
     ap.add_argument("--pair-batch", dest="pair_batch",
                     help="judge: batch holding the L1 twins (default: s7c.pair_batch)")
+    ap.add_argument("--allow-env-override", action="store_true",
+                    help="run / check: start even with OUTRIGGER_L1_FALLBACK_RATIO_SOURCE set "
+                         "(B(iii) comparison batch; the L1 twins take the override)")
     args = ap.parse_args(argv)
     jobs = max(1, min(args.jobs, MAX_WORKERS))
+    if args.action in ("run", "check"):
+        from outrigger_sim.chrono.fallback_ratio import refuse_env_override
+
+        refuse_env_override(args.allow_env_override, f"run_S7C {args.action}")
     if args.action == "list":
         for c in CASE_SETS[args.case_set]():
             print(f"{c.case_id:36s} {c.engine:8s} {c.duration_s:6.1f} s  "

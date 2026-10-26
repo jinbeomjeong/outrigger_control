@@ -899,6 +899,67 @@ def controller_config(params, case: BundleCCase):
     return config
 
 
+def l1_fallback_ratio(config, model, source: str | None = None):
+    """U-S8-61 / spec 304 (1): the L1 / L1-R ``config`` with the R-5 fallback ratio source
+    ``plant_meta`` and the ratio of the built plant (``k_r A_p / (k_h A_ann)`` of
+    ``model.rod_chamber.leg_params``; :mod:`outrigger_sim.chrono.fallback_ratio`). Applied by
+    :func:`job_bundle_c` after :func:`controller_config` (which the L2b paths of run_S7C /
+    run_S8C share and keep at the preset ``column_nominal``). A config without R-5 or with
+    the ``level`` slope is returned unchanged. Returns (config, meta).
+
+    B(i): the meta has ``fallback_plant_ratio`` and ``fallback_plant_ratio_source`` (plant
+    params, the ratio-relevant override keys, ``known_plant_ratio_upper`` when ``L_0h`` /
+    ``L_0r`` are overridden). B(iii), comparison runs only: ``source`` (the single-run CLI
+    ``--fallback-ratio-source``) or else the environment variable
+    :data:`L1_FALLBACK_SOURCE_ENV` chooses ``plant_meta`` / ``column_nominal``; the meta
+    records ``fallback_ratio_source_override`` = ``cli`` / ``env`` (None = default) and the env
+    case prints a warning. Other values raise."""
+    from outrigger_sim.chrono.fallback_ratio import (
+        COLUMN_NOMINAL,
+        L1_SOURCE_CHOICES,
+        PLANT_META,
+        env_override_value,
+        plant_fallback_ratio_of_model,
+        with_engine_fallback_ratio,
+    )
+
+    override = None
+    wanted = PLANT_META
+    if source is not None:
+        override, wanted = "cli", str(source)
+    else:
+        env = env_override_value()
+        if env is not None:
+            override, wanted = "env", env
+    if wanted not in L1_SOURCE_CHOICES:
+        raise ValueError(f"L1 fallback ratio source {wanted!r} ({override}): expected one of "
+                         f"{L1_SOURCE_CHOICES}")
+    if override == "env":
+        print(f"WARNING: {L1_FALLBACK_SOURCE_ENV}={wanted!r} overrides the L1 R-5 fallback ratio "
+              "source (comparison run; recorded as fallback_ratio_source_override: env)",
+              flush=True)
+    override_meta = {"fallback_ratio_source_override": override,
+                     "override_value": None if override is None else wanted,
+                     "override_env_name": L1_FALLBACK_SOURCE_ENV if override == "env" else None}
+    if wanted == COLUMN_NOMINAL:
+        out, meta = with_engine_fallback_ratio(config, "L2b_NSC")  # preset kept
+        return out, {**meta, "engine": "L1R", **override_meta,
+                     "reason": "comparison override: L1 kept at the preset"}
+    fr = getattr(getattr(config, "r8", None), "fast_relevel", None)
+    ratio = (plant_fallback_ratio_of_model(model)
+             if fr is not None and getattr(fr, "uses_fallback_slope", False) else None)
+    out, meta = with_engine_fallback_ratio(config, "L1R", getattr(model, "params", None),
+                                           plant_ratio=ratio)
+    if ratio is not None:
+        meta["ratio_origin"] = "model.rod_chamber.leg_params (plant)"
+    return out, {**meta, **override_meta}
+
+
+L1_FALLBACK_SOURCE_ENV = "OUTRIGGER_L1_FALLBACK_RATIO_SOURCE"
+"""B(iii) comparison switch of :func:`l1_fallback_ratio` (unset = ``plant_meta``, U-S8-61); the
+same name as ``outrigger_sim.chrono.fallback_ratio.L1_FALLBACK_SOURCE_ENV`` (unit test)."""
+
+
 RERUN32_KEYS = {
     "P-R8-9": ("target", "check_quiet_after_motion_s"),
     "P-R8-10": ("r8.fast_relevel", "horizon_periods"),
@@ -1070,7 +1131,7 @@ class R8Series:
         self.rows: dict[str, list[Any]] = {k: [] for k in (
             "t", "valve_u", "amp_u", "computed_u", "raw_u", "limit_flags", "issued_u",
             "scale_used", "scale_raw", "grounded_leg_count", "guard_active", "guard_u",
-            "imu_samples", "imu_gyro_samples", "phase",
+            "imu_samples", "imu_gyro_samples", "phase", "probed_leg",
             *(f"cmp_{n}_u" for n in self.COMPONENTS))}
         self.raw_source: str | None = None
         self.limit_source: str | None = None
@@ -1159,13 +1220,20 @@ class R8Series:
         r["imu_gyro_samples"].append(np.full((10, 3), np.nan) if gyro is None
                                      else np.asarray(gyro, float))
         r["phase"].append(str(getattr(self.c2.phase, "value", self.c2.phase)))
+        # (가) control 2026-10-26: the leg the probe moves after this call (record only)
+        from outrigger_sim.chrono.run_rows import probed_leg_code
+
+        r["probed_leg"].append(probed_leg_code(self.c2))
 
     def save(self, path: Path) -> dict[str, Any]:
         import numpy as np
 
+        from outrigger_sim.chrono.run_rows import PROBED_LEG_NONE, PROBED_LEG_SOURCE
+
         arr = {k: np.asarray(v) for k, v in self.rows.items()
-               if k not in ("phase", "limit_flags")}
+               if k not in ("phase", "limit_flags", "probed_leg")}
         arr["phase"] = np.asarray(self.rows["phase"], dtype="U16")
+        arr["probed_leg"] = np.asarray(self.rows["probed_leg"], dtype=np.int8)
         arr["limit_flags"] = np.asarray(self.rows["limit_flags"], dtype=str)
         np.savez_compressed(path, **arr)
         return {"file": path.name, "samples": len(self.rows["t"]),
@@ -1196,6 +1264,9 @@ class R8Series:
                                     "last ends at t); NaN = no IMU-rate samples",
                 "imu_gyro_available": bool(np.isfinite(arr["imu_gyro_samples"]).any())
                 if arr["imu_gyro_samples"].size else False,
+                "probed_leg": f"(가): leg index 0..3 (FL, FR, RL, RR) the probe moves, "
+                              f"{PROBED_LEG_NONE} = none (not PROBE / round not started); "
+                              f"{PROBED_LEG_SOURCE}",
                 "units": "m/s, -, m/s^2, rad/s (imu_gyro_samples); t absolute s"}
 
 
@@ -1223,8 +1294,10 @@ def _snapshot_dir(name: str, batch_states: Path | None) -> Path:
 
 
 def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None = None,
-                 states_dir: Path | None = None):
-    """Run one bundle-C case. Returns (summary, run_meta)."""
+                 states_dir: Path | None = None, fallback_ratio_source: str | None = None):
+    """Run one bundle-C case. Returns (summary, run_meta). ``fallback_ratio_source``: B(iii)
+    single-run override of the L1 R-5 ratio source (:func:`l1_fallback_ratio`; None = the
+    environment variable, else ``plant_meta``)."""
     import numpy as np
 
     from outrigger_sim.chrono.l1_engine import L1Engine
@@ -1290,6 +1363,8 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
     suite = SensorSuite(imu_config_for_grade(sc.grade, sample_period_s=IMU_SAMPLE_PERIOD_S),
                         leg_sensors, seed=sc.seed)
     config = controller_config(params_ctrl, case)
+    # U-S8-61 (spec 304 1): L1 / L1-R runs take the R-5 fallback ratio from the plant meta
+    config, fallback_ratio_meta = l1_fallback_ratio(config, model, fallback_ratio_source)
     c2 = C2Controller.from_params(params_ctrl, config)
     dt_fine = float(params.get("simulation.dt_transition_s"))
     schedule = DtSchedule(model.dt_s, config.period_s) if sc.fine_dt else None
@@ -1389,6 +1464,7 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
         "param_overrides": overrides,
         "controller_param_overrides": ctrl_overrides,
         "controller_params_beta_GPa": CONTROLLER_BETA_GPA,
+        "fallback_ratio": fallback_ratio_meta,
         "crawler_kt_scale_beta": kt_scales["beta"],
         "beta_leak_fix": {
             "rule": "C-R11 (spec rev. 34 176.3): controller built without the beta / frame "
@@ -1478,6 +1554,10 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
     s_motor = np.asarray(arr["s_motor"])
     reanchor = c2.reanchor_outcome
     ctl_meta = c2.meta()
+    # B(i) / B(iii): runner-added keys of r8.fast_relevel (ratio provenance, override)
+    from outrigger_sim.chrono.fallback_ratio import add_to_controller_meta
+
+    add_to_controller_meta(ctl_meta, fallback_ratio_meta)
     n_floor = model.bushing.normal_world()
     p_floor = np.asarray(model.floor_point_world_m, dtype=float)
     acceptance = {
@@ -1681,8 +1761,15 @@ def main(argv):
     ap.add_argument("--allow-incomplete-c2", action="store_true",
                     help="run --set rerun32 / rerun33: start even when the installed c2.py "
                          "lacks P-R8-9 ... 11 (RERUN32_KEYS) / P-R8-12 (RERUN33_KEYS)")
+    ap.add_argument("--allow-env-override", action="store_true",
+                    help="run / check: start even with OUTRIGGER_L1_FALLBACK_RATIO_SOURCE set "
+                         "(B(iii) comparison batch; every L1 case takes the override)")
     args = ap.parse_args(argv)
     jobs = max(1, min(args.jobs, MAX_WORKERS))
+    if args.action in ("run", "check"):
+        from outrigger_sim.chrono.fallback_ratio import refuse_env_override
+
+        refuse_env_override(args.allow_env_override, f"run_S6C {args.action}")
     if args.action == "list":
         groups = (GROUP_SETS[args.case_set]() if args.case_set in GROUP_SETS
                   else {"": bundle_c_cases()})

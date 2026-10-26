@@ -1133,6 +1133,11 @@ def _controller(params, case: Stage2Case):
         ),
     )
     _ = ReanchorSettings, TargetSettings  # types documented in the meta
+    # U-S8-61 (spec 304 1): L1 runs take the R-5 fallback ratio from the plant meta. The R7
+    # config of stage 2 has R-5 off, so this returns it unchanged (bit-identical runs).
+    from outrigger_sim.chrono.fallback_ratio import with_engine_fallback_ratio
+
+    config, _fallback_ratio_meta = with_engine_fallback_ratio(config, "L1", plant_params=params)
     return C2Controller.from_params(params, config), config
 
 
