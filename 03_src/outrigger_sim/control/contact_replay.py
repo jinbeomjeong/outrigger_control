@@ -688,6 +688,7 @@ def replay_fallback_monitor(
     config: C2Config,
     *,
     offset_allowance_N: NDArray[np.float64] | None = None,
+    offset_allowance_from_s: float | None = None,
 ) -> FallbackMonitorReplay:
     """Run the controller's two-pressure monitor offline on a record (P-S8-22 V-2).
 
@@ -705,8 +706,11 @@ def replay_fallback_monitor(
         geometry: Machine of the run (``C2Geometry.from_params``).
         config: Controller setting of the run, with the fallback-slope choice to replay
             (``r8.fast_relevel``; ``level`` gives no inputs) and the run's lock valve.
-        offset_allowance_N: E-6 lower-bound deduction per leg from the calibration row on
-            (not in the episode; ``None`` = zero).
+        offset_allowance_N: E-6 lower-bound deduction per leg (not in the episode; ``None``
+            = zero), from the calibration row of the leg on, or from
+            ``offset_allowance_from_s`` when given.
+        offset_allowance_from_s: Time from which the deduction applies to every leg (the
+            calibration end ``zero_calibration.result.t_end_s``, when the controller set it).
 
     Raises:
         ValueError: The episode has no rod-side pressure.
@@ -734,7 +738,11 @@ def replay_fallback_monitor(
     for row in range(t_s.size):
         is_calibrated = calibration_rows <= row
         monitor.set_zero_offsets_N(np.where(is_calibrated, offsets, 0.0))
-        monitor.set_offset_allowance_N(np.where(is_calibrated, allowance, 0.0))
+        if offset_allowance_from_s is None:
+            has_allowance = is_calibrated
+        else:
+            has_allowance = np.full(LEG_COUNT, t_s[row] > offset_allowance_from_s + 1e-9)
+        monitor.set_offset_allowance_N(np.where(has_allowance, allowance, 0.0))
         for leg, first_row in enumerate(fallback_rows):
             if first_row == row:
                 monitor.rod_state[leg] = RodSensorState.FALLBACK
