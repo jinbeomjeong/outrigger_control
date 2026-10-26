@@ -71,6 +71,13 @@ commands and its phase.
   values ``M_j`` of the moving samples are that bound. ``counterbalance_moving_rule = "law"``
   (:meth:`TwoPressureSettings.with_cb_law_estimate`) is the 9.6 estimate; the pilot check
   is unchanged.
+* R-5 fallback slope inputs (P-S8-22, spec rev. 61 302 / 304 ②, ④): with a
+  :class:`FallbackRatioChoice` passed to :meth:`TwoPressureMonitor.read` (the controller does
+  so for ``fast_relevel.fallback_slope = "nominal_gap"``), a fallback leg whose last ``n + 1``
+  samples lie in one column-bound lock stretch gets :class:`FallbackSlopeInputs` (head drop,
+  depth below the anchor, ``R_lvl``, ``R_hi``, ``R_rate``); ``plant_meta`` (L1 runs) also
+  raises the level ratio to ``max(R_ub, kappa R_plant)`` (302.6), and ``online`` keeps the
+  last two-sensor locked ratio of every leg. Without a choice nothing changes, bit for bit.
 
 Every threshold here depends on the cylinder dimensions; the defaults are the values of spec 53
 for the YAML cylinder and are settings only, to be replaced after the REXOME35 recalculation
@@ -227,6 +234,14 @@ COLUMN_BOUND_META_KEYS = (
     "locked_start_lookback_s",
 )
 
+# P-S8-22 R-5 fallback slope (spec rev. 61 302.4, 304 ①, ④)
+NOMINAL_DEAD_LENGTH_M = 0.05
+"""ASSUMPTION (spec 305 (1), hydraulics nominal): ``L_0h`` = ``L_0r`` = 0.05 m of ``R_nom(s)``."""
+ONLINE_RATIO_MIN_HEAD_CHANGE_PA = 5.0 * BAR_PA
+ONLINE_RATIO_MAX_STROKE_CHANGE_M = 5e-3
+"""Spec 302.4 (1): an online ``-dp_r / dp_h`` needs a head change of at least 5 bar with the
+stroke reading within 5 mm of its reference sample."""
+
 
 class LoadEstimate(StrEnum):
     """Load estimate of C2 (P-2, U43)."""
@@ -315,6 +330,19 @@ class EstimateSource(StrEnum):
 
     MODEL = "model"
     READING = "reading"
+
+
+class FallbackRatioSource(StrEnum):
+    """Where ``R_rate`` / ``R_hi`` of the R-5 fallback slope come from (P-S8-22, spec 302.4)."""
+
+    PLANT_META = "plant_meta"
+    """L1-R runs: ``R_hi = R_rate`` = the fixed plant ratio (``fallback_locked_ratio``, at least
+    the plant meta value); the level ratio becomes ``max(R_ub, kappa R_plant)`` (302.6)."""
+    COLUMN_NOMINAL = "column_nominal"
+    """Machine and L2b: ``R_hi = R_ub(s) / kappa``, ``R_rate = R_nom(s)`` (nominal dead lengths)."""
+    ONLINE = "online"
+    """As ``column_nominal``, but ``R_rate = min(R_hat, R_hi)`` with ``R_hat`` the last two-sensor
+    locked ratio of the leg (``column_nominal`` without one, warned once)."""
 
 
 class RodSensorState(StrEnum):
@@ -697,6 +725,71 @@ class TwoPressureSettings:
         return meta
 
 
+@dataclass(frozen=True)
+class FallbackRatioChoice:
+    """Ratio choice of the R-5 fallback slope (P-S8-22, spec 302.4 / 302.6), built by the
+    controller from ``FastRelevelSettings``.
+
+    Attributes:
+        source: Where ``R_rate`` and ``R_hi`` come from.
+        rate_intervals: R-5 ``n``: the head drop is taken over this many periods.
+        nominal_head_dead_m: ``L_0h`` of ``R_nom(s)``.
+        nominal_rod_dead_m: ``L_0r`` of ``R_nom(s)``.
+        plant_ratio: Fixed L1-R plant ratio per leg (plant meta); ``None`` = the settings'
+            ``fallback_locked_ratio``.
+    """
+
+    source: FallbackRatioSource
+    rate_intervals: int
+    nominal_head_dead_m: float = NOMINAL_DEAD_LENGTH_M
+    nominal_rod_dead_m: float = NOMINAL_DEAD_LENGTH_M
+    plant_ratio: tuple[float, ...] | None = None
+
+
+@dataclass(frozen=True)
+class FallbackSlopeInputs:
+    """R-5 inputs of one fallback leg in a lock stretch (spec 302.1, 304 ②).
+
+    Attributes:
+        head_drop_Pa: ``Delta h_k = p_h(k - n) - p_h(k)``.
+        depth_Pa: ``d_k = (h_a - p_h(k))^+`` below the anchor of the level bound.
+        level_ratio: ``R_lvl``, the ratio of the level bound (after the 302.6 raise).
+        high_ratio: ``R_hi``, the largest true ratio to cover.
+        rate_ratio: ``R_rate``, the nominal ratio, already cut to ``[0, R_hi]``.
+        head_area_m2: ``A_p`` of the leg.
+        annulus_area_m2: ``A_ann`` of the leg.
+    """
+
+    head_drop_Pa: float
+    depth_Pa: float
+    level_ratio: float
+    high_ratio: float
+    rate_ratio: float
+    head_area_m2: float
+    annulus_area_m2: float
+
+    def force_gain_N_per_Pa(self, ratio: float) -> float:
+        """``G(R) = A_p + R A_ann``: force drop per pascal of head drop [N/Pa]."""
+        return self.head_area_m2 + ratio * self.annulus_area_m2
+
+    @property
+    def level_reserve_N(self) -> float:
+        """``C_k = (R_lvl - R_hi) A_ann d_k``: conservatism the level bound already holds."""
+        return (self.level_ratio - self.high_ratio) * self.annulus_area_m2 * self.depth_Pa
+
+    def drop_N(self, rate_intervals: int, horizon_periods: int) -> tuple[float, float]:
+        """302.2 ``D_k = max{G(R_rate) Dh, G(R_hi) Dh - (n / h) C_k}`` over ``n`` periods.
+
+        Returns:
+            (``D_k``, gap): the gap is how far the covering term lies above the nominal
+            term (0 when the nominal term decides), both in N over ``n`` periods.
+        """
+        nominal_N = self.force_gain_N_per_Pa(self.rate_ratio) * self.head_drop_Pa
+        covering_N = (self.force_gain_N_per_Pa(self.high_ratio) * self.head_drop_Pa
+                      - rate_intervals / horizon_periods * self.level_reserve_N)
+        return max(nominal_N, covering_N), max(covering_N - nominal_N, 0.0)
+
+
 @dataclass(frozen=True, eq=False)
 class PressureForces:
     """Cylinder-force readings of one period (N, (4,) each).
@@ -791,6 +884,11 @@ class _LockStretch:
     """``Y_k-1`` of the moving stretch (pre-margin); NaN = no moving stretch yet (①)."""
     lag_law_Pa: float = math.nan
     """``L_k-1``: the CB law (or both laws) at the last head reading."""
+    # P-S8-22 (immutable defaults: class attributes for pickles before it)
+    ratio_stroke_m: float = math.nan
+    """Stroke reading behind ``ratio_bound`` (-inf = none; NaN = not yet computed)."""
+    online_reference: tuple[float, float, float] | None = None
+    """(head, rod, stroke) of the first two-sensor sample after the lock window (④)."""
 
     def summary(self, leg: int) -> dict[str, Any]:
         """Meta row of the stretch (10.4 ⑦)."""
@@ -889,6 +987,13 @@ class TwoPressureMonitor:
     _rod_drain_held_Pa: list[float | None] | None = None
     """P-S8-21: per leg the rod-side reading of a ``check_draining`` fall held for the next
     period (``None`` = no hold); the list itself ``None`` = a monitor pickled before it."""
+    # P-S8-22: class defaults for monitors pickled before it.
+    _r5_ratio_choice: FallbackRatioChoice | None = None
+    """The choice of the last read; ``None`` = R-5 fallback slope off (nothing changes)."""
+    _r5_inputs: list[FallbackSlopeInputs | None] | None = None
+    """Per leg the R-5 inputs of the last read (``None`` = the leg does not qualify)."""
+    _online_ratios: list[float | None] | None = None
+    """④ per leg the last two-sensor locked ``-dp_r / dp_h`` (kept once the leg falls back)."""
     _BUFFER_SIZING_FIELDS = (
         "stuck_window_s",
         "rising_window_s",
@@ -1004,6 +1109,9 @@ class TwoPressureMonitor:
         self._was_locked_phase = False
         self._imu_slope_sums = (0.0, 0.0, 0)
         self._rod_drain_held_Pa = [None] * LEG_COUNT
+        self._r5_ratio_choice = None
+        self._r5_inputs = [None] * LEG_COUNT
+        self._online_ratios = [None] * LEG_COUNT
 
     def refresh_settings(self, settings: TwoPressureSettings) -> None:
         """Use ``settings`` from the next read on, keeping the run's state.
@@ -1070,6 +1178,7 @@ class TwoPressureMonitor:
         imu_specific_force_z_m_s2: float | None = None,
         is_crawler_lifted: bool = False,
         imu_gyro_rad_s: ArrayLike | None = None,
+        r5_fallback_ratios: FallbackRatioChoice | None = None,
     ) -> PressureForces:
         """One period: the force readings; diagnosis and watch events go to :meth:`pop_events`.
 
@@ -1082,8 +1191,11 @@ class TwoPressureMonitor:
         not available); ``is_crawler_lifted`` = the phase is LEVEL or later (D1'' applies);
         ``imu_gyro_rad_s`` = the last two gyro partial means of the period (10 ms each,
         oldest first, body axes, shape (2, 2) x-y or (2, 3); D1'' lever term; ``None`` = no
-        gyro samples).
+        gyro samples); ``r5_fallback_ratios`` = the R-5 fallback slope choice (P-S8-22,
+        :meth:`r5_fallback_inputs`; ``None`` = off, bit for bit the reading before it).
         """
+        self._r5_ratio_choice = r5_fallback_ratios
+        self._r5_inputs = [None] * LEG_COUNT
         self._update_stroke_rate(stroke_m)
         self._count_command_free(commanded_m_s)
         head_only = head_pressure_Pa * self.head_area_m2
@@ -1114,6 +1226,8 @@ class TwoPressureMonitor:
             self._watch_retraction(forces.nominal, commanded_m_s, seal_band_N)
             self._watch_drift(t_s, forces.nominal, is_locked_phase)
         self._history.append((float(t_s), np.array(rod), np.array(head_pressure_Pa)))
+        if r5_fallback_ratios is not None:
+            self._update_r5_inputs(r5_fallback_ratios)
         return forces
 
     @property
@@ -1220,6 +1334,17 @@ class TwoPressureMonitor:
             bands[leg] = max(bands[leg], self.settings.fallback_min_band_N)
         return bands
 
+    def r5_fallback_inputs(self, leg: int) -> FallbackSlopeInputs | None:
+        """P-S8-22: the R-5 fallback slope inputs of ``leg`` from the last read.
+
+        ``None`` unless that read had a :class:`FallbackRatioChoice` and the leg met spec
+        302.2 conditions 1-3: a rod-side fallback leg on the column bound, whose last
+        ``n + 1`` samples all lie in one open lock stretch (stretch start at or before
+        ``t_(k-n)``, so no command in between), with a finite level bound.
+        """
+        inputs = self._r5_inputs
+        return None if inputs is None else inputs[leg]
+
     def meta(self) -> dict[str, Any]:
         optional = {}
         if self.settings.step_rule is StepRule.EXPLAINED_IMU:
@@ -1229,6 +1354,8 @@ class TwoPressureMonitor:
             optional["d1_imu_slope_samples"] = self._imu_slope_sums[2]
         if self._uses_cb_lag_bound:
             optional["counterbalance_lag_tau_s_used"] = self._cb_lag_tau_s
+        if self._is_tracking_online_ratio:
+            optional["r5_online_ratio"] = list(self._online_ratios or [None] * LEG_COUNT)
         return {
             **optional,
             "load_estimate": str(self.load_estimate),
@@ -1753,6 +1880,8 @@ class TwoPressureMonitor:
             if t_s < stretch.window_end_s - 1e-9 or not stretch.candidates:
                 self._add_lock_candidate(leg, stretch, head_Pa, stroke_m)
             self._track_valid_reading(leg, stretch, t_s, head_Pa, rod_Pa, stroke_m)
+            if self._is_tracking_online_ratio:
+                self._track_online_ratio(leg, stretch, t_s, head_Pa, rod_Pa, stroke_m)
             watch.rod_estimate_Pa = self._locked_upper_bound_Pa(leg, stretch, head_Pa)
         self._remember_command(stretch, head_Pa, command_m_s)
 
@@ -1860,6 +1989,7 @@ class TwoPressureMonitor:
         stretch.valid_rod_Pa = None
         stretch.valid_head_max_Pa = -math.inf
         stretch.valid_stroke_m = -math.inf
+        stretch.online_reference = None
         self._seed_from_old_anchor(leg, stretch)
 
     def _seed_from_old_anchor(self, leg, stretch) -> None:
@@ -1901,23 +2031,25 @@ class TwoPressureMonitor:
 
     def _locked_upper_bound_Pa(self, leg, stretch, head_Pa) -> float:
         """④ model bound and ⑤ reading bound, the larger one; the meta fields follow it."""
-        ratio = self._ratio_bound(leg, stretch.stroke_window_max_m)
+        ratio = self._level_ratio(leg, self._ratio_bound(leg, stretch.stroke_window_max_m))
         best_Pa, best_start_Pa, best_head_Pa = -math.inf, math.nan, math.nan
         for start_Pa, candidate_head_Pa in stretch.candidates:
             bound_Pa = start_Pa + ratio * max(candidate_head_Pa - head_Pa, 0.0)
             if bound_Pa > best_Pa:
                 best_Pa, best_start_Pa, best_head_Pa = bound_Pa, start_Pa, candidate_head_Pa
         stretch.ratio_bound = ratio
+        stretch.ratio_stroke_m = stretch.stroke_window_max_m
         stretch.estimate_source = EstimateSource.MODEL
         if stretch.valid_rod_Pa is not None:
             reading_stroke_m = max(stretch.stroke_window_max_m, stretch.valid_stroke_m)
-            reading_ratio = self._ratio_bound(leg, reading_stroke_m)
+            reading_ratio = self._level_ratio(leg, self._ratio_bound(leg, reading_stroke_m))
             reading_Pa = stretch.valid_rod_Pa + reading_ratio * max(
                 stretch.valid_head_max_Pa - head_Pa, 0.0)
             if reading_Pa > best_Pa:
                 best_Pa = reading_Pa
                 best_start_Pa, best_head_Pa = stretch.valid_rod_Pa, stretch.valid_head_max_Pa
                 stretch.ratio_bound = reading_ratio
+                stretch.ratio_stroke_m = reading_stroke_m
                 stretch.estimate_source = EstimateSource.READING
         stretch.start_Pa, stretch.anchor_head_Pa = best_start_Pa, best_head_Pa
         return best_Pa
@@ -1940,6 +2072,116 @@ class TwoPressureMonitor:
         head_column_m = settings.locked_ratio_head_dead_max_m + bound_stroke_m
         rod_column_m = settings.locked_ratio_rod_dead_min_m + stroke_max_m - bound_stroke_m
         return settings.locked_ratio_kappa * head_column_m / rod_column_m
+
+    # --- R-5 fallback slope (P-S8-22, spec rev. 61 302, 304 ② / ④) ---
+
+    def _plant_ratio(self, leg: int) -> float:
+        """``R_plant``: the plant meta ratio of the choice, else ``fallback_locked_ratio``."""
+        plant_ratio = self._r5_ratio_choice.plant_ratio
+        if plant_ratio is None:
+            return self.settings.fallback_locked_ratio[leg]
+        return plant_ratio[leg]
+
+    def _level_ratio(self, leg: int, column_ratio: float) -> float:
+        """302.6 (L1 runs, ``plant_meta`` only): ``R_lvl = max(R_ub, kappa R_plant)``, so that a
+        short lock stroke (``R_ub`` below the fixed L1-R ratio) keeps the level bound."""
+        choice = self._r5_ratio_choice
+        if choice is None or choice.source is not FallbackRatioSource.PLANT_META:
+            return column_ratio
+        return max(column_ratio, self.settings.locked_ratio_kappa * self._plant_ratio(leg))
+
+    def _high_ratio(self, leg: int, stroke_m: float) -> float:
+        """``R_hi`` (302.4): the fixed L1 setting (at least the plant ratio) for ``plant_meta``,
+        else the worst-case column ratio ``R_ub(s) / kappa``."""
+        if self._r5_ratio_choice.source is FallbackRatioSource.PLANT_META:
+            return max(self.settings.fallback_locked_ratio[leg], self._plant_ratio(leg))
+        return self._ratio_bound(leg, stroke_m) / self.settings.locked_ratio_kappa
+
+    def _nominal_ratio(self, stroke_m: float) -> float:
+        """``R_nom(s) = (L_0h + s) / (L_0r + s_max - s)`` at the stroke reading itself (no
+        5 mm margin: 302.5 reproduces 7.77 / 7.84 that way), ``s`` cut to ``[0, s_max]``."""
+        choice = self._r5_ratio_choice
+        stroke_max_m = self._column_stroke_max_m
+        stroke = min(max(stroke_m, 0.0), stroke_max_m)
+        return ((choice.nominal_head_dead_m + stroke)
+                / (choice.nominal_rod_dead_m + stroke_max_m - stroke))
+
+    def _rate_ratio(self, leg: int, stroke_m: float, high_ratio: float) -> float:
+        """``R_rate`` (302.4), cut to ``[0, R_hi]``. ASSUMPTION: without a stroke reading
+        ``R_rate = R_hi`` (no nominal relief; the soundness does not depend on it)."""
+        source = self._r5_ratio_choice.source
+        if source is FallbackRatioSource.PLANT_META or not math.isfinite(stroke_m):
+            return high_ratio
+        rate_ratio = self._nominal_ratio(stroke_m)
+        if source is FallbackRatioSource.ONLINE:
+            online_ratio = self._online_ratios[leg] if self._online_ratios else None
+            if online_ratio is None:
+                self._event_once(f"WARN_R5_ONLINE_RATIO_MISSING:{LEG_ORDER[leg]}")
+            else:
+                rate_ratio = online_ratio
+        return min(max(rate_ratio, 0.0), high_ratio)
+
+    @property
+    def _is_tracking_online_ratio(self) -> bool:
+        choice = self._r5_ratio_choice
+        return choice is not None and choice.source is FallbackRatioSource.ONLINE
+
+    def _track_online_ratio(self, leg, stretch, t_s, head_Pa, rod_Pa, stroke_m) -> None:
+        """④ ``R_hat = -dp_r / dp_h`` against the first two-sensor sample after the lock window
+        (ASSUMPTION: the window keeps the valve-closing samples out), once the head moved
+        at least 5 bar with the stroke within 5 mm; the last value is kept per leg and is
+        no longer updated after the leg falls back."""
+        is_valid = (self.rod_state[leg] is RodSensorState.OK and math.isfinite(rod_Pa)
+                    and math.isfinite(head_Pa) and math.isfinite(stroke_m))
+        if not is_valid or t_s < stretch.window_end_s - 1e-9:
+            return
+        reference = stretch.online_reference
+        if reference is None:
+            stretch.online_reference = (head_Pa, rod_Pa, stroke_m)
+            return
+        reference_head_Pa, reference_rod_Pa, reference_stroke_m = reference
+        head_change_Pa = head_Pa - reference_head_Pa
+        if abs(head_change_Pa) < ONLINE_RATIO_MIN_HEAD_CHANGE_PA:
+            return
+        if abs(stroke_m - reference_stroke_m) > ONLINE_RATIO_MAX_STROKE_CHANGE_M:
+            return
+        if self._online_ratios is None:
+            self._online_ratios = [None] * LEG_COUNT
+        self._online_ratios[leg] = -(rod_Pa - reference_rod_Pa) / head_change_Pa
+
+    def _update_r5_inputs(self, choice: FallbackRatioChoice) -> None:
+        if (not self.settings.diagnostics
+                or self.settings.locked_ratio_rule is not LockedRatioRule.COLUMN_BOUND):
+            return
+        for leg in self.fallback_legs:
+            self._r5_inputs[leg] = self._r5_inputs_of_leg(leg, choice.rate_intervals)
+
+    def _r5_inputs_of_leg(self, leg: int, rate_intervals: int) -> FallbackSlopeInputs | None:
+        """302.2 conditions 2 and 3 for a fallback leg, then the inputs of 302.1."""
+        history = self._history
+        stretch = self._stretch_states()[leg]
+        if len(history) < rate_intervals + 1 or not stretch.is_open:
+            return None
+        t_now_s, _, head_now = history[-1]
+        t_old_s, _, head_old = history[-1 - rate_intervals]
+        is_consecutive = abs(t_now_s - t_old_s - rate_intervals * self.period_s) < (
+            0.5 * self.period_s)
+        if not is_consecutive or stretch.start_t_s > t_old_s + 1e-9:
+            return None
+        if not (math.isfinite(stretch.anchor_head_Pa) and math.isfinite(stretch.ratio_bound)):
+            return None
+        head_Pa = float(head_now[leg])
+        stroke_m = stretch.ratio_stroke_m
+        high_ratio = self._high_ratio(leg, stroke_m)
+        return FallbackSlopeInputs(
+            head_drop_Pa=float(head_old[leg]) - head_Pa,
+            depth_Pa=max(stretch.anchor_head_Pa - head_Pa, 0.0),
+            level_ratio=stretch.ratio_bound,
+            high_ratio=high_ratio,
+            rate_ratio=self._rate_ratio(leg, stroke_m, high_ratio),
+            head_area_m2=float(self.head_area_m2[leg]),
+            annulus_area_m2=float(self.annulus_area_m2[leg]),
+        )
 
     def _moving_rod_estimate_Pa(self, leg: int, sign: float, head_Pa: float) -> float:
         """``p_r_hat`` of a moving leg: unchanged but for the pilot extend value (10.4 ③)."""
