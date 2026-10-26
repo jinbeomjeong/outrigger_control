@@ -3255,6 +3255,9 @@ def main(argv):
                     help="c36 --smoke: re-approach variant")
     ap.add_argument("--set", dest="case_set", choices=SET_NAMES, default="p1")
     ap.add_argument("--only", nargs="*")
+    ap.add_argument("--tag", default=None,
+                    help="run / check: batch folder tag (07_results/S8/<tag>_<stamp>); default the --set name "
+                         "(S9 P3b re-approach limit cases: p3b_<case>)")
     ap.add_argument("--workers", choices=tuple(WORKER_LAYOUTS), default="p7e8")
     ap.add_argument("--approved", action="store_true")
     ap.add_argument("--duration", type=float, default=CHECK_DURATION_S)
@@ -3432,15 +3435,16 @@ def main(argv):
         if args.dry_run:
             print(json.dumps({"dry_run": args.action, "set": args.case_set,
                               "cases": [c.case_id for c in cases],
-                              "out": f"07_results/S8/{args.case_set}_<stamp>"}, indent=1))
+                              "out": f"07_results/S8/{args.tag or args.case_set}_<stamp>"}, indent=1))
         return
+    tag = args.tag or args.case_set
     if args.action == "check":
-        run_batch(cases, tag=args.case_set, layout=args.workers, check=True,
+        run_batch(cases, tag=tag, layout=args.workers, check=True,
                   duration_s=args.duration)
         return
     if not args.approved:
         raise SystemExit("S8 main run needs the user's confirmation: add --approved")
-    run_batch(cases, tag=args.case_set, layout=args.workers, check=False, duration_s=0.0)
+    run_batch(cases, tag=tag, layout=args.workers, check=False, duration_s=0.0)
 
 
 if __name__ == "__main__":

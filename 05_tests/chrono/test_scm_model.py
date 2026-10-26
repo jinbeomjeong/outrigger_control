@@ -275,3 +275,54 @@ def test_runner_settle_defaults() -> None:
     assert run_s9.settle_time_s(b) == 5.0
     c = p.parse_args(["--settle-dashpot", "none", "--gravity-hold", "17"])
     assert run_s9.settle_time_s(c) == 20.0
+
+
+def _run_s9():
+    import importlib
+    import sys
+    from pathlib import Path
+
+    scripts = Path(__file__).resolve().parents[2] / "04_scripts" / "02_chrono"
+    sys.path.insert(0, str(scripts))
+    try:
+        return importlib.import_module("run_S9")
+    finally:
+        sys.path.remove(str(scripts))
+
+
+def test_level_parser_accepts_the_p3b_argv() -> None:
+    """Every P3b case line parses: F_s, 4 threads, M14s grids, dashpot settle 8 s, 90 s loop."""
+    run_s9 = _run_s9()
+    ap = run_s9.build_parser()
+    for c in run_s9.p3b_cases():
+        a = ap.parse_args(run_s9.p3b_level_argv(c) + ["--case", c["case"], "--out-root", "x"])
+        assert a.action == "level" and a.approved and not a.allow_current_c2
+        assert a.fs_kN == c["fs_kN"] and a.threads == run_s9.SCM_THREADS_FIXED == 4
+        assert a.grid == c["grid_m"] and a.crawler_grid == 0.04 and a.level == c["level"]
+        assert run_s9.settle_time_s(a) == 8.0 and a.duration == 90.0 and a.imu_grade == "ideal"
+
+
+def test_level_fs_override_step_series_and_settle_reference() -> None:
+    """--fs-kN 4 puts the plant on the seal-friction path (0: unchanged S7 path); the 1 ms step
+    series reads the S9 model (shapes, finite values, crawler on the soil, pads in the air)."""
+    run_s9 = _run_s9()
+    ap = run_s9.build_parser()
+    a4 = ap.parse_args(["level", "--soil", "G1", "--grid", "0.04", "--fs-kN", "4"])
+    params, pv, soil = run_s9.load_inputs(a4)
+    assert params.overrides["actuator.seal_friction.level_N"] == 4000.0
+    model = run_s9.build_machine(a4, params, pv, soil)
+    assert model.actuator.friction_path
+    a0 = ap.parse_args(["level", "--soil", "G1", "--grid", "0.04"])
+    p0, _, _ = run_s9.load_inputs(a0)
+    assert "actuator.seal_friction.level_N" not in p0.overrides
+    rec = run_s9.StepSeries(model, 5, 1)  # capacity 16 grows to 32
+    for _ in range(100):
+        model.step()
+        rec(None)
+    s = rec.arrays()
+    assert s["t_s"].shape == (20,) and s["F_cyl_N"].shape == (20, 4) and s["roll_pitch_deg"].shape == (20, 2)
+    assert np.allclose(np.diff(s["t_s"]), 5e-4)
+    assert all(np.all(np.isfinite(v)) for k, v in s.items() if k != "track_utilisation")
+    assert s["scm_crawler_normal_N"][-1] > 0.0 and np.all(s["scm_pad_normal_N"] == 0.0)
+    ref = run_s9.settle_reference(s)
+    assert ref["rows"] == 20 and len(ref["track_normal_N"]) == 2 and len(ref["end_roll_pitch_deg"]) == 2

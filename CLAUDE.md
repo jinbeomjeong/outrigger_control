@@ -64,7 +64,7 @@
 | 시간 간격 | L1 **2×10⁻⁴ s**, L2b-NSC 1×10⁻⁴ s, 기준해·접지 전환 1×10⁻⁵ s, L2 5×10⁻⁵ s | YAML `simulation.*.dt_s` |
 | 선형 솔버 | L1(SMC) SPARSE_LU + `LockSparsityPattern(True)`, L2b(NSC) PSOR 50회 | `06_analysis/01_chrono/01_cost/solver_benchmark.json` |
 | 크롤러 접촉 | D안(롤러 위치 6개/측 + 끝 슈 3개/끝), 총 강성 1×10⁸ N/m(×3 감도). L2b는 **강체**(NSC 유연 접촉 안 1은 PyChrono 10에서 크리프로 동작해 불가) | YAML `contact.crawler` |
-| 센서·주기 | 압력 헤드·로드 각 1개(WIKA A-10, 0~400 bar, ±4 bar; 실린더와 파일럿 체크 블록 사이 챔버 쪽 A·B 포트), 압력·행정 센서와 밸브 출력 **10 Hz 순간 표본**, IMU **100 Hz**. 압력 영점 교정은 CHECK 단계에서 의무. 센서 오차는 3등급 모델(오프셋·스팬·비직선·비반복·노이즈) | `c2.py` `R8_PERIOD_S`·IMU 표본 주기, `08_test_data/datasheets/WIKA_A-10_pressure_sensor_summary.md`. YAML `sensors` 블록의 "헤드측만, 로드측 0 가정" 주석은 R6-P 전 서술이다(재생성 때 갱신 대상) |
+| 센서·주기 | 압력 헤드·로드 각 1개(WIKA A-10, 0~400 bar, ±4 bar; 실린더와 파일럿 체크 블록 사이 챔버 쪽 A·B 포트), 압력·행정 센서와 밸브 출력 **10 Hz 순간 표본**, IMU **100 Hz**. 압력 영점 교정은 CHECK 단계에서 의무. 센서 오차는 3등급 모델(오프셋·스팬·비직선·비반복·노이즈) | `c2.py` `R8_PERIOD_S`·IMU 표본 주기, `08_test_data/datasheets/WIKA_A-10_pressure_sensor_summary.md`, YAML `sensors.cylinder_pressure`(두 센서 순 힘, 2026-10-25 재생성) |
 | 제어기 | **R8 C2**: 10 Hz, 출력 지연 d = 1, 주기 시작 IMU. 프리셋 `C2Config.with_10hz_d1()`(`03_src/outrigger_sim/control/c2.py`). 가드 이득 0.15, 비틀림·가드 이득 S_ii 정규화, R-5 예측 4주기, 증분 제한 대칭 0.25 v_max/주기, 재접근 시작 1.4 F_min, 재접근 재발동(직전 회차 끝 2.0 s 안) 속도 ×0.6·반대 대각(0.8 s 안)은 하한 < 0 N 2표본 연속일 때만 시작(아니면 보류). 토양 대응 기본 켬(U-S9-C1): 크롤러 이탈 확인(LOC, 10 mm 창 평탄 상승 ≤ 2 kN, U-S9-C2), 해제 전 LOC가 없으면 토양 모드, 모서리 보정은 ĉ_min(t_P) > 20 mm일 때만(U-S9-C7), 재접근 시간 한계 10 s → `WARN_LEG_REAPPROACH_NO_CONTACT`, 가드 경로(U-S9-C4) | `s6_control_spec.md`(개정 30~59, 토양 대응 285·293·295·297절). 게인·세부는 명세가 원본 |
 | 자세 필터 | 2차 저역통과, R8 C2 **τ 0.8 s × 2단**(IMU 10 ms 표본, 100 Hz 계산). 자세 PI Kp 0.2 s⁻¹·Ki 0.01 s⁻², 비틀림 Ktw 0.5 s⁻¹ | `c2.py` `R8_D1_*` 상수, `s6_control_spec.md` 136절. 0.5 s × 2·Kp 0.4는 R7(50 Hz) 값. 1차 필터는 쓰지 않는다 |
 | 정확도 | 정상상태 오차 **±0.2°**, 완료 데드밴드 0.03°, IMU 정지 영점 오차 허용 0.14°(장착 몫 0.02°). IMU 현장 영점 교정 의무 | `00_docs/05_sensors/imu_cabin_and_accuracy_review.md` |
@@ -82,7 +82,7 @@
   - L2b = `ChSystemNSC` 접촉 + `ChLinkMotorLinearForce` Python 힘 법칙(PyChrono 10은 C++ 유압 클래스를 노출하지 않음).
 - Chrono 10 SMC 접촉에는 **정지 마찰이 없다**. 그래서 L1 패드는 지면 고정 `ChLoadBodyBodyBushingSpherical` + 매 스텝 원형 Coulomb 항복 처리(`SetApplicationFrameB`로 고정점 이동)를 쓴다. `ChLoadBodyBodyBushingPlastic`은 쓰지 않는다.
 - Chrono 함정: Hooke `gn`·`gt`는 유효 질량당 값이라 고정 바닥 바디 질량을 크게(예: 1e9 kg) 둔다. 부싱 감쇠는 입력의 2배로 작용하므로 ct/2를 넣는다. `GetPos()`는 참조라 저장할 때 복사한다. 훅 입력은 다음 스텝부터 반영된다(1스텝 지연 규약).
-- 패드는 팔각(정사각 + 모서리 모따기)이고 방향은 CAD 그대로이며, 로드와 **구면(스위블) 조인트**로 잇는다. 면적은 실험 변수다(U-PAD-1~6): 타입 B `dwg_rear250`(**기본**: 전방 330 0.1071 m², 후방 250 0.0607 m², 모따기 30 mm 가정) / 타입 A `cad330`(네 다리 0.1071 m²). 표 `02_params/pad_variants.json`, 실행 인자 `--pad-variant`(`outrigger_sim.pad_variants`). L1·L2b 강체 지면은 면적을 쓰지 않아 결과가 같고, SCM(S9)에서만 차이가 난다. 후방 패드는 CAD보다 2 mm 올린 위치가 완전 수축(0 mm)이다.
+- 패드는 팔각(정사각 + 모서리 모따기)이고 방향은 CAD 그대로이며, 로드와 **구면(스위블) 조인트**로 잇는다. 면적은 실험 변수다(U-PAD-1~6): 타입 B `dwg_rear250`(**기본**: 전방 330 0.1071 m², 후방 250 0.0607 m², 모따기 30 mm 가정) / 타입 A `cad330`(네 다리 0.1071 m²). 형상 원본은 YAML `pad_shapes`(기본 `default_type`), 대응표 `02_params/pad_variants.json`, 실행 인자 `--pad-variant`(`outrigger_sim.pad_variants`). L1·L2b 강체 지면은 면적을 쓰지 않아 결과가 같고, SCM(S9)에서만 차이가 난다. 후방 패드는 CAD보다 2 mm 올린 위치가 완전 수축(0 mm)이다.
 - 스트로크 센서는 실린더 내장형으로 가정한다: `stroke_true = s_motor − F_cyl/k_oil`.
 - 센서 모델은 `03_src/outrigger_sim/sensors/`에 둔다. IMU 영점 오차는 센서 등급 잔차만 쓴다(교정 절차는 모델링하지 않음).
 - 실 마찰 F_s는 점성 감쇠에 섞지 않고 따로 모델링한다.

@@ -195,6 +195,11 @@
 
 YAML은 생성물이라 손으로 고치지 않는다(CLAUDE.md '작업 규칙'). 생성 경로는 7절에 정리했다. "새 값"의 ✓는 도면 치수에서 바로 나온 값이다. "가정"은 도면에 없는 값을 보탠 경우다. "조건부"는 Q-C2 답에 달린 값이다.
 
+**표 상태(2026-10-26)**: 아래 "현재값" 열은 2026-10-22 검토 당시 값이다. 실린더 치수는 2026-10-22 REXOME35 재생성 때 다리별 키 `legs.<leg>.cylinder.{bore_diameter_m, rod_diameter_m, barrel_outer_diameter_m, head_area_m2, annulus_area_m2, max_force_extend_N, max_force_retract_N}`로 들어갔다. `actuator.stroke_m`은 0.70이다. 그 뒤 YAML 재생성 묶음(2026-10-25, `00_docs/00_cad/yaml_regen_bundle_2026-10-25.md`, 커밋 8616be9, 회귀 R0~R3 묶음 탓 차이 0)에서 아래 세 가지를 정리했다.
+- 공통 키 `actuator.{bore_diameter_m, rod_diameter_m, barrel_outer_diameter_m, annulus_area_m2, max_force_extend_N, max_force_retract_N}`와 `actuator.rod_side_chamber_model`을 **삭제**했다(결정 D1·D2). 다리별 키만 남는다.
+- 패드 다각형·면적을 `legs.<leg>.pad`에서 SCM 전용 최상위 블록 `pad_shapes`로 옮겼다(타입 `cad330` / `dwg_rear250`, 기본 B, L1·L2b 지문 제외, 결정 D4~D6).
+- `sensors.cylinder_pressure.location`을 R6-P 두 센서 문구로 바꿨다.
+
 | YAML 키 | 현재값 | 도면 기준 새 값 | 근거 | 영향 모듈 |
 |---|---|---|---|---|
 | `actuator.bore_diameter_m` (공통) | 0.115 | **다리별**: F 0.130 / R 0.110 ✓ | ø130H9 / ø110H9 | sensors(`hydraulic.head_area_from_params`), truth(`head_area_m2`, k_oil), control(`c2` 압력→힘), verify(`s6` head_area), actuators(L2 k_oil) |
@@ -214,7 +219,7 @@ YAML은 생성물이라 손으로 고치지 않는다(CLAUDE.md '작업 규칙')
 | `legs.<leg>.extension_range_m` | [0, 0.68] | [0, 0.70] ✓ | 행정 | actuators, control |
 | `legs.<leg>.moving_part.{mass_kg, com_retracted_m, inertia_kg_m2}` | 106.784 kg (공통) | F 유지(106.8, 추정 103~107) / R 약 71.5(66~74.5) **가정** | 4.4절 | bodies, contact(gn), actuators(법칙 C 관성 보정), F_min 접촉력 기준 |
 | `legs.<leg>.pad_body`, `rod_body` (SCM) | 22.40 / 84.38 kg | R: 다시 계산(형상 합성 필요) | 4.4절 | bodies(SCM 분리 바디), S9 |
-| `legs.RL/RR.pad.polygon_xy_m`, `bottom_area_m2` | 330 정사각·모따기 30, 0.1071 | 250 정사각·모따기 30(가정), 0.0607 | SECTION A-A' 250 × 250 | sim_shapes(C8 hull), SCM 접촉, `dyn_model.support_polygon`, `k_concrete_westergaard` 상한. **상태(2026-10-25, U-PAD-1~6)**: 실험 변수 2타입으로 처리. YAML은 그대로(330) 두고 부속표 `02_params/pad_variants.json`(`export_pad_variants.py` 생성, 기본 `dwg_rear250` = 후방 250, 비교 `cad330`)과 실행 덮어쓰기 `outrigger_sim.pad_variants.apply_pad_variant`로 S9에서만 적용. YAML 키 이동(`pad_shapes`, 지문 제외)은 다음 재생성 묶음 |
+| `legs.RL/RR.pad.polygon_xy_m`, `bottom_area_m2` | 330 정사각·모따기 30, 0.1071 | 250 정사각·모따기 30(가정), 0.0607 | SECTION A-A' 250 × 250 | sim_shapes(C8 hull), SCM 접촉, `dyn_model.support_polygon`, `k_concrete_westergaard` 상한. **상태(2026-10-25, U-PAD-1~6)**: 실험 변수 2타입으로 처리. YAML은 그대로(330) 두고 부속표 `02_params/pad_variants.json`(`export_pad_variants.py` 생성, 기본 `dwg_rear250` = 후방 250, 비교 `cad330`)과 실행 덮어쓰기 `outrigger_sim.pad_variants.apply_pad_variant`로 S9에서만 적용. YAML 키 이동(`pad_shapes`, 지문 제외)은 다음 재생성 묶음. **2026-10-26: 묶음에서 이동 완료.** 다각형·면적은 `pad_shapes.types.<type>.legs.<leg>`에 있다(기본 `dwg_rear250`). `pad_variants.json`은 C8 대응표로 줄었다 |
 | `legs.<leg>.pad.thickness_m` | 0.025 | 그대로(그림 판독 약 26) | 도면 치수 없음 | sim_shapes |
 | `legs.<leg>.pad.swivel_center_above_pad_bottom_m` | 0.06 (가정) | 후보 0.085(그림 판독, 치수 없음) **가정** | 도면 볼 조인트 그림 | contact(L1 구 반지름 = 스위블 높이), 접선 모멘트 팔, `leg_rod_lateral_check` |
 | `legs.<leg>.pad_bottom_center_retracted_m` z | −0.6998 / −0.7100 | −0.6455 / −0.6357 **조건부** | 4.5절 | 기구학 전체, crawler 틈, 정적 하중, scenarios(settle·crawler_settle) |
@@ -223,10 +228,10 @@ YAML은 생성물이라 손으로 고치지 않는다(CLAUDE.md '작업 규칙')
 | `legs.RL/RR.retracted_offset_from_cad_m` | 0.002 | 다시 정의 | 4.2절 | export_params 패드 z |
 | `ground.lowest_pad_bottom_z_m` | −0.71 | −0.6455 **조건부** | 파생 | scenarios |
 | `control.F_min_cylinder_N` | 9,452.5 | 그대로(상부체 무게 기준) | 정의상 면적과 무관 | control. 패드 접촉력 기준 10.50 kN은 후방 로드 무게가 줄어 바뀐다 |
-| `sensors.cylinder_pressure.location` 주석 | "p = F_cyl / head area", 로드측 0 가정 | 다리별 A_p, R6-P 두 센서 | CLAUDE.md U43~U61 | sensors |
+| `sensors.cylinder_pressure.location` 주석 | "p = F_cyl / head area", 로드측 0 가정 | 다리별 A_p, R6-P 두 센서 | CLAUDE.md U43~U61 | sensors. **2026-10-26: 묶음에서 반영 완료**(헤드·로드 두 센서, $F_{cyl}=p_hA_p-p_rA_{ann}$, 다리별 면적) |
 | `simulation.L2b.dt_s`, `simulation.L2.dt_s` 규칙값 | 파생 | 다시 판정 | 로드 국부 모드 √(k/m_rod): 후방 m −33 %, k 변화 | runner, dt 규칙 |
 
-- 거의 모든 `actuator.*` 키가 지금은 **전후방 공통 스칼라**다. 소비 코드(`sensors/hydraulic.py:37-47`, `chrono/truth.py:146·181`, `control/c2.py:680`, `chrono/actuators.py:280-281`, `chrono/single_leg.py:148-149`, `verify/s6.py`)도 스칼라 하나를 읽는다. 다리별 값으로 바꾸려면 YAML 스키마와 소비 코드를 함께 바꿔야 한다. 제안: `legs.<leg>.cylinder.{bore_diameter_m, rod_diameter_m, barrel_outer_diameter_m, head_area_m2, annulus_area_m2, max_force_extend_N, max_force_retract_N}`를 새로 두고, `actuator.*`의 같은 키는 없애거나 "per-leg" 표시로 바꾼다. 결정은 구현자(python-expert)와 메인 세션이 한다.
+- (2026-10-22 검토 당시 서술. 다리별 키는 2026-10-22 재생성에서 들어갔고, 공통 키는 2026-10-25 묶음에서 삭제됐다. 위 "표 상태" 참조.) 거의 모든 `actuator.*` 키가 지금은 **전후방 공통 스칼라**다. 소비 코드(`sensors/hydraulic.py:37-47`, `chrono/truth.py:146·181`, `control/c2.py:680`, `chrono/actuators.py:280-281`, `chrono/single_leg.py:148-149`, `verify/s6.py`)도 스칼라 하나를 읽는다. 다리별 값으로 바꾸려면 YAML 스키마와 소비 코드를 함께 바꿔야 한다. 제안: `legs.<leg>.cylinder.{bore_diameter_m, rod_diameter_m, barrel_outer_diameter_m, head_area_m2, annulus_area_m2, max_force_extend_N, max_force_retract_N}`를 새로 두고, `actuator.*`의 같은 키는 없애거나 "per-leg" 표시로 바꾼다. 결정은 구현자(python-expert)와 메인 세션이 한다.
 
 ## 7. 생성 절차 (YAML을 손으로 고치지 않는 경로)
 

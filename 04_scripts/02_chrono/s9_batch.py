@@ -11,6 +11,13 @@ Usage (worktree root)::
 
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py list
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run P1_V0p [--parallel 2]
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run P3b --parallel 4   # 2 S8C + 24 level (approved)
+
+``s8c`` rows run ``run_S8C.py run --only <case>`` unchanged (no ``--case`` / ``--out-root``): the
+S8 runner writes ``07_results/S8/<tag>_<stamp>/`` and prints it at the end of ``<case>.log``.
+run_S8C exits 0 even when its case failed, so an ``s8c`` row with return code 0 is checked from its
+log (:func:`s8c_case_check`: outcome line ``ok``, batch folder line, ``result.json``); a failed check
+is recorded as rc 4 (``batch.json`` ``s8c_check``) and stops new launches like any failure.
 """
 
 from __future__ import annotations
@@ -28,6 +35,7 @@ ROOT = HERE.parents[1]
 PY = sys.executable
 RUN = [PY, "-I", "-X", "utf8", "-u", str(HERE / "run_S9.py")]
 EQ = [PY, "-I", "-X", "utf8", "-u", str(HERE / "s9_dual_terrain_equivalence.py")]
+S8C = [PY, "-I", "-X", "utf8", "-u", str(HERE / "run_S8C.py")]
 
 B = ["--pad-variant", "dwg_rear250"]
 FORMER = ["--settle-dashpot", "none"]
@@ -128,6 +136,57 @@ def batches() -> dict[str, list[dict]]:
                                    "--crawler-grid", "0.04", "--settle-dashpot", "zrp", "--lift-s", "28",
                                    "--level", "top", "--threads", "4", "--abort-on-limit"]})
     out["P3a"] = p3a
+    out["P3b"] = p3b_batch()
+    return out
+
+
+def p3b_batch() -> list[dict]:
+    """P3b (control spec 284, U-S9P-6 (가); dynamics 5.37.6): the two re-approach 10 s limit positive
+    tests first (run_S8C L2b-NSC rigid floor, R8 preset ``with_10hz_d1``, one case per process, own
+    folder ``07_results/S8/p3b_<case>_<stamp>``; user decision 2026-10-26), then the 24 ``run_S9.py
+    level`` cases in the 5.37.6 order (G1 10, J1 10, J2 / S1 4). Run with ``--parallel 4`` (4 SCM
+    threads each = 16 P-core logical processors)."""
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S9 as r9  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    rows = [{"case": cid, "est_s": est, "s8c": True,
+             "argv": S8C + ["run", "--only", cid, "--approved", "--workers", "p7", "--tag", f"p3b_{cid}"]}
+            for cid, est in r9.P3B_S8C_CASES.items()]
+    rows += [{"case": c["case"], "est_s": c["est_s"], "argv": RUN + r9.p3b_level_argv(c)} for c in r9.p3b_cases()]
+    return rows
+
+
+S8C_FAILED_RC = 4
+"""Return code recorded for an ``s8c`` row whose run_S8C process exited 0 but whose case failed
+(run_S8C ``run`` prints the case outcome and returns 0 either way; its behaviour is unchanged)."""
+
+
+def s8c_case_check(log_text: str, case_id: str, root: Path = ROOT) -> dict:
+    """Outcome of one ``run_S8C.py run --only <case_id>`` from its log: the outcome line
+    ``<case_id>: ok <wall>s`` (``run_batch``), the batch folder of the last ``batch wall ... -> <dir>``
+    line and ``<dir>/<case_id>/result.json``. ``ok`` only when all three hold."""
+    lines = log_text.splitlines()
+    status = next((ln.split(":", 1)[1].split()[0] for ln in reversed(lines)
+                   if ln.startswith(f"{case_id}:") and len(ln.split(":", 1)[1].split()) >= 1), None)
+    batch_dir = next((ln.split("->", 1)[1].strip() for ln in reversed(lines)
+                      if ln.startswith("batch wall") and "->" in ln), None)
+    result = None
+    if batch_dir:
+        d = Path(batch_dir)
+        result = (d if d.is_absolute() else root / d) / case_id / "result.json"
+    out = {"case": case_id, "status": status, "batch_dir": batch_dir,
+           "result_json": None if result is None else result.as_posix(),
+           "result_exists": bool(result is not None and result.is_file())}
+    reasons = []
+    if status != "ok":
+        reasons.append(f"case outcome {status!r} (expected 'ok')")
+    if batch_dir is None:
+        reasons.append("no 'batch wall ... -> <dir>' line")
+    elif not out["result_exists"]:
+        reasons.append("result.json missing")
+    out.update(ok=not reasons, reason="; ".join(reasons) or None)
     return out
 
 
@@ -150,8 +209,11 @@ def run_batch(name: str, parallel: int, only: list[str] | None) -> Path:
     while pending or running:
         while pending and len(running) < parallel and not failed:
             c = pending.pop(0)
-            argv = list(c["argv"]) + (["--out", str(folder / "E")] if c.get("eq_out")
-                                      else ["--case", c["case"], "--out-root", str(folder)])
+            if c.get("s8c"):  # run_S8C writes its own batch folder (named in the case log)
+                argv = list(c["argv"])
+            else:
+                argv = list(c["argv"]) + (["--out", str(folder / "E")] if c.get("eq_out")
+                                          else ["--case", c["case"], "--out-root", str(folder)])
             logf = (folder / f"{c['case']}.log").open("w", encoding="utf-8")
             p = subprocess.Popen(argv, cwd=str(ROOT), stdout=logf, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)
             _log(progress, f"START {c['case']} {_dt.datetime.now().isoformat(timespec='seconds')} pid={p.pid} est_s={c['est_s']}")
@@ -165,8 +227,20 @@ def run_batch(name: str, parallel: int, only: list[str] | None) -> Path:
             logf.close()
             wall = time.perf_counter() - t0
             running.remove(item)
-            done.append({"case": c["case"], "argv": c["argv"], "rc": rc, "wall_s": wall, "est_s": c["est_s"]})
-            _log(progress, f"END {c['case']} {_dt.datetime.now().isoformat(timespec='seconds')} rc={rc} wall_s={wall:.0f}")
+            entry = {"case": c["case"], "argv": c["argv"], "rc": rc, "wall_s": wall, "est_s": c["est_s"]}
+            note = ""
+            if c.get("s8c") and rc == 0:  # run_S8C returns 0 even when its case failed: read the outcome
+                chk = s8c_case_check((folder / f"{c['case']}.log").read_text("utf-8", errors="replace"), c["case"])
+                entry["s8c_check"] = chk
+                if not chk["ok"]:
+                    rc = entry["rc"] = S8C_FAILED_RC
+                    entry["process_rc"] = 0
+                    note = f" s8c_check=FAILED ({chk['reason']})"
+                else:
+                    note = f" s8c_check=ok {chk['batch_dir']}"
+            done.append(entry)
+            _log(progress, f"END {c['case']} {_dt.datetime.now().isoformat(timespec='seconds')} rc={rc} "
+                           f"wall_s={wall:.0f}{note}")
             if rc != 0:
                 failed = True
         if failed and pending:

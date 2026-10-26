@@ -1,6 +1,7 @@
 # dynamics_model.md 개정 48 초안 — YAML 재생성 묶음 dynamics 몫(D-1~D-4)과 로드 단면 결함 재판정
 
 > 이 파일은 초안이다. 메인 세션이 `dynamics_model.md` 개정 48로 합친다(개정 47은 SCM 패드 수평 구속 검토가 쓰는 중).
+> 상태(2026-10-26, YAML 묶음 8단계): D-1~D-4는 모두 끝났다(커밋 8616be9, 4절). 이 초안은 아직 `dynamics_model.md`에 합치지 않았다. 그 사이 `dynamics_model.md`의 개정 48 번호는 S9 실행기 스모크 판정(5.34)에 쓰였다. 그래서 합칠 때는 새 번호를 쓴다. 판정 요지는 `decision_log.md` 2절 "별도 결함" 줄에 있다.
 > 작성 2026-10-25, dynamics-expert. 근거 명세 `00_docs/00_cad/yaml_regen_bundle_2026-10-25.md` 6.2·8절, 사용자 결정 D1~D11 모두 권고안(D6 = 기본 타입 B), decision_log 2절 끝 "run_target_envelope 결함은 dynamics 재판정".
 
 ## 머리말 한 줄(개정 이력 칸에 넣을 문안)
@@ -150,11 +151,17 @@ $$\mathrm{SF}_{rod,i}=\frac{\sigma_y}{P_i/A_{r,i}+M_i/Z_{r,i}},\qquad M_i=\frac{
 | 3.13.5 셋째 항목, 3.13.6 표 운용 행 | "1.82~1.86 / 1.91" → "1.79~1.82 / 1.60~1.63" |
 | 검증 일람(8124행 근처) 목표 포락선 행 | C5 1.03×10⁻⁶(개정 48 재실행) |
 | 스크립트 일람(8188행 근처) | `run_target_envelope.py` "다리별 로드 단면(개정 48)", `run_pad_variant_check.py` "`--params`·`--out`, `pad_shapes` 다각형(개정 48)", `dyn_model.py` "`pad_shapes` 다각형 출처(개정 48, 파일 끝 함수)" |
-| 5.30.5·5.30.8 상태(명세 8절 8단계) | D-1~D-3 완료, D-4 재생성 뒤 |
+| 5.30.5·5.30.8 상태(명세 8절 8단계) | D-1~D-4 완료(D-4는 재생성 뒤 실행, 커밋 8616be9). **반영함(2026-10-26)**: 5.30.5·5.30.8에 묶음 완료 상태를 적었다 |
 
 ## 4. D-4 준비(재생성 뒤 실행, 2회 규칙)
 
-**지금은 실행하지 않았다.** 명세 8절 5단계 순서(cad C-1 재생성 → dynamics D-4 → 바이트가 바뀌면 cad 생성기 재실행)를 따른다.
+**실행함(2026-10-25~26, 커밋 8616be9).** 아래는 초안 당시의 준비 기록이다. 결과는 다음과 같다(2026-10-26 확인).
+
+- `reference.json`: 지금 SHA-256 `81c65a79…`. 묶음 전 사본은 `06_analysis/00_dynamics/history/reference_2026-10-25_before_bundle.json`·`reference_L1R_series_2026-10-25_before_bundle.npz`다. 사본 대비 차는 61개 잎이다. 그중 57개는 `stability/rigid_pad_octagon_hull (comparison)`(판정 미사용 기록, 후방 −42.3 mm)이고, 나머지 4개는 실행 시간(`meta.runtime_s` 3개, `L2b_NSC_reference_rev33.V4_NSC.wall_s`)이다. 아래 판정 기준과 같다.
+- `pad_variant_check.json`: 지금 SHA-256 `b9acade9…`, 묶음 전 사본 `history/pad_variant_check_2026-10-25_before_bundle.json`.
+- 재생성된 YAML `file_sha256`은 `ef2880f9…`로 스테이징과 같다. `Params.sha256`(L1 상단 `61078f29…`)도 명세 4절 표와 같다(동등성 기록 `06_analysis/01_chrono/00_conventions/params_bundle_2026-10-25_equivalence.json`).
+
+준비 당시 문안: 명세 8절 5단계 순서(cad C-1 재생성 → dynamics D-4 → 바이트가 바뀌면 cad 생성기 재실행)를 따른다.
 
 미리보기(scratchpad `dyn-run/d2/preview_reference.py`, `run_reference.OUT`을 scratch로 돌리고 `dm.load_params`를 지정 YAML로 바꿈, `--with-l2b`, 각 약 85 s 병렬 2개):
 

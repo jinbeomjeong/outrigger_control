@@ -700,10 +700,45 @@ def summary_p3a(folder: Path) -> dict[str, Any]:
             "rows": rows, "cost": batch_cost(folder)}
 
 
+def summary_p3b(folder: Path) -> dict[str, Any]:
+    """P3b C2 levelling on SCM (control spec 284 P3-1 ... 9, 301 W-61): per ``run_S9.py level`` case the
+    ``p3b`` values (``checks`` and the main items) and the C2 meta ``soil`` block; the S8 re-approach
+    limit cases of the same batch run in their own run_S8C folders (named in ``<case>.log``)."""
+    rows = {}
+    for k, r in cases(folder).items():
+        p = r.get("p3b")
+        if p is None:
+            continue
+        a = r["args"]
+        rows[k] = {"soil": a["soil"], "pad_variant": a["pad_variant"], "level": a["level"], "fs_kN": a.get("fs_kN"),
+                   "pad_grid_m": a["grid"], "crawler_grid_m": a["crawler_grid"], "checks": p["checks"],
+                   "departure": p["departure"], "P3-2_loc": p["P3-2_loc"], "P3-3_leg_force": p["P3-3_leg_force"],
+                   "P3-4_attitude": p["P3-4_attitude"], "creep_stop": p["creep_stop"],
+                   "pre_liftoff_min_F_cyl": p["pre_liftoff_min_F_cyl"], "P3-6_ready": p["P3-6_ready"],
+                   "P3-8_counts": p["P3-8_false_triggers"]["counts"], "P3-9_deferred": p["P3-9_deferred"],
+                   "track_utilisation": {kk: p["track_utilisation"][kk] for kk in ("max", "t_max_s", "rule")},
+                   "W61_warnings": p["W61_watch"]["warnings"], "W61_rows": p["W61_watch"]["rows"],
+                   "c2_soil": r.get("c2_soil"), "c2_reapproach_max_duration_s":
+                       (r.get("c2_lifted_reapproach") or {}).get("max_duration_s"),
+                   "settle_reference": r.get("settle_reference"),
+                   "us_per_step": r.get("us_per_step"), "wall_s": r.get("wall_s"),
+                   "threads": r.get("num_threads_chrono"), "placement": r.get("placement")}
+    s8c = []
+    for log in sorted(folder.glob("N_RE1c_*.log")):
+        lines = [ln for ln in log.read_text("utf-8", errors="replace").splitlines() if "->" in ln]
+        s8c.append({"case": log.stem, "s8c_batch": lines[-1].split("->", 1)[1].strip() if lines else None})
+    return {"batch": "P3b C2 levelling on SCM (control spec 284; user decision U-S9P-6 (가) 2026-10-26)",
+            "criteria": {"P3-4 (main)": "steady end attitude |roll|, |pitch| <= 0.2 deg after the creep stop",
+                         "P3-1..3, 5..9": "control spec 284 (records / FLAGs as defined there)",
+                         "W-61": "spec 301 record rows (warnings, not judgements)"},
+            "values_only": "pass / fail decisions are control's (284) and dynamics' (physics)",
+            "rows": rows, "s8c_reapproach_limit_cases": s8c, "cost": batch_cost(folder)}
+
+
 def main(argv) -> None:
     kind, folder = argv[0], Path(argv[1])
     fn = {"V0p": summary_v0p, "V16": summary_v16, "L": summary_l, "P2": summary_p2, "P2prime": summary_p2prime,
-          "P3a": summary_p3a}[kind]
+          "P3a": summary_p3a, "P3b": summary_p3b}[kind]
     res = fn(folder)
     res["source_batch"] = folder.as_posix()
     res["generator"] = "04_scripts/02_chrono/s9_batch_summary.py"

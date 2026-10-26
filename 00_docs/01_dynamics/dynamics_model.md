@@ -7527,6 +7527,8 @@ $k_{slab}$(YAML, $a\to0$) 3.2366×10⁸ N/m에 대해 330 패드 +3.00 %, 250 �
 
 권고: **지금은 ①, 묶음 때 ③.** 기본값은 **B**다. 근거: (a) 실린더 기준이 REXOME35 도면이다(사용자 결정 2026-10-22). (b) 후방 이동부 질량·`pad_body`가 이미 250 패드 합성이다. 기본을 B로 하면 YAML 안의 다각형·질량 불일치가 없어진다. (c) C8 후방 hull이 이미 250이다. 그러면 `verify_sim_shapes` 실패 4건은 "변형 표와 대조"로 바꿔 해소된다(**개정 45: cad 완료, 실패 4 → 0**). 타입 A의 질량은 B와 같게 둔다(5.30.3 판정). 그래야 크롤러 정착 스냅숏을 두 타입이 같이 쓴다.
 
+**상태(2026-10-26): ③ 반영 완료.** YAML 재생성 묶음(명세 `00_docs/00_cad/yaml_regen_bundle_2026-10-25.md`, 커밋 8616be9, 결정 D4·D5·D6)에서 다각형·면적이 최상위 블록 `pad_shapes`(`default_type: "dwg_rear250"`)로 옮겨졌다. `params.py`의 `SCM_ONLY_HASH_PATHS = (("pad_shapes",),)`가 이 블록을 L1·L2b 지문에서 뺀다. ①의 덮어쓰기는 이제 `legs.<leg>.pad.*`가 아니라 `pad_shapes.default_type`을 바꾼다(`outrigger_sim.pad_variants.apply_pad_variant`). SCM 실행은 타입을 자기 지문(`params.scm_run_sha256`)에 넣는다. `pad_variants.json`은 C8 hull 대응표(schema 2)로 줄었다. 새 YAML은 `file_sha256` `ef2880f9…`, L1 상단 지문 `61078f29…`이다. 회귀 R0~R3에서 묶음 탓 차이는 0이다(동등성 기록 `06_analysis/01_chrono/00_conventions/params_bundle_2026-10-25_equivalence.json`).
+
 기준해·V 회귀:
 - 강체 지면(V0~V15, `reference.json`, `reference_L1R_*`, S3~S8 기준): **타입별로 나누지 않는다**(5.30.3에서 차가 허용 오차의 10⁻²~10⁻⁴). 지문만 B로 묶는다.
 - S9: V16 단일 패드 Bekker 기준은 타입별(330·250)이다. 크롤러 정착 기준(`crawler_contact_check.json` `partB_scm_shape`)은 공통이다. S9 레벨링 기준해(축소 Bekker 직렬 모델, 5.30.6 P0)는 타입 × 토양별이다.
@@ -7562,13 +7564,15 @@ $k_{slab}$(YAML, $a\to0$) 3.2366×10⁸ N/m에 대해 330 패드 +3.00 %, 250 �
 
 #### 5.30.8 넘길 일
 
+상태 갱신 2026-10-26(YAML 묶음 8단계): 아래 표의 굵은 "2026-10-26" 주가 지금 상태다.
+
 | 대상 | 내용 | 담당 |
 |---|---|---|
-| 부속표 `02_params/pad_variants.json` | 타입 A·B 다각형(후방 330은 CAD 원 B-rep, 250은 도면 합성 3.38°), $A$, $\Pi$, $b$, 출처. **완료(개정 45 확인)**: `04_scripts/00_cad/export_pad_variants.py`가 생성, SHA-256 `698BC5E0…`, 기본 `dwg_rear250`, 표 값 A 0.1071 m²·$b$ 0.171400 m, B 후방 0.0607 m²·둘레 0.92971 m·$b$ 0.130579 m, 실패 0 | cad |
-| S9 실행기 | `--pad-variant` → `Params` 덮어쓰기, meta 기록, C8 패드 hull 선택(`pad_<leg>_hull` 330/250). **덮어쓰기·hull 선택 부품 완료**(`03_src/outrigger_sim/pad_variants.py` `apply_pad_variant`·`add_pad_variant_argument`, 타입별 hull `01_cad/09_sim_shapes/pad_variants/`, L1·L2b 지문·`file_sha256` 불변). **S9 실행기 본체는 미작성** | cad |
+| 부속표 `02_params/pad_variants.json` | 타입 A·B 다각형(후방 330은 CAD 원 B-rep, 250은 도면 합성 3.38°), $A$, $\Pi$, $b$, 출처. **완료(개정 45 확인)**: `04_scripts/00_cad/export_pad_variants.py`가 생성, SHA-256 `698BC5E0…`, 기본 `dwg_rear250`, 표 값 A 0.1071 m²·$b$ 0.171400 m, B 후방 0.0607 m²·둘레 0.92971 m·$b$ 0.130579 m, 실패 0. **2026-10-26: 묶음 C-2로 C8 대응표(schema 2, SHA-256 `00CF734B…`)로 줄었다. 형상 원본은 YAML `pad_shapes`다. 옛 표 `698BC5E0…`는 `02_params/history/pad_variants_2026-10-25_before_bundle.json`에 있다** | cad |
+| S9 실행기 | `--pad-variant` → `Params` 덮어쓰기, meta 기록, C8 패드 hull 선택(`pad_<leg>_hull` 330/250). **덮어쓰기·hull 선택 부품 완료**(`03_src/outrigger_sim/pad_variants.py` `apply_pad_variant`·`add_pad_variant_argument`, 타입별 hull `01_cad/09_sim_shapes/pad_variants/`, L1·L2b 지문·`file_sha256` 불변). **2026-10-26: S9 실행기 본체(`04_scripts/02_chrono/run_S9.py`)를 작성해 메인에 합쳤다(개정 48~52, 5.34~5.37). 덮어쓰기는 묶음 뒤 `pad_shapes.default_type`을 바꾼다** | cad |
 | `verify_sim_shapes.py` | 후방 면적 대조를 YAML 고정값 대신 선택 타입의 표와 대조. **완료: 실패 4 → 0** | cad |
-| `params.py` | (③ 때) `pad_shapes` 블록 읽기, `SCM_ONLY_HASH_PATHS`, 시험 | python |
-| 재생성 묶음 | 압력 센서 설명, 옛 실린더 키 정리, 패드 블록 이동(기본 B) | cad(`export_params.py`) → python(로더) |
+| `params.py` | (③ 때) `pad_shapes` 블록 읽기, `SCM_ONLY_HASH_PATHS`, 시험. **2026-10-26: 완료(묶음 P-1, 커밋 8616be9)** | python |
+| 재생성 묶음 | 압력 센서 설명, 옛 실린더 키 정리, 패드 블록 이동(기본 B). **2026-10-26: 완료.** 1~6단계와 회귀 R0~R3가 끝났고 묶음 탓 차이는 0이다(명세 7.1절) | cad(`export_params.py`) → python(로더) |
 | P0 축소 Bekker 직렬 모델 | 타입 × 토양 × 오거 예측표(S9 기준해 후보). **완료(개정 45, 5.31)** | dyn |
 | C2 토양 판정 | 탐침·재접근·접지 판정이 소성 침하(압력 정체 + 스트로크 증가)에서 맞는지, 타입 B 후방 침하 속도 | control |
 

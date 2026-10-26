@@ -1,9 +1,9 @@
 # YAML 재생성 묶음 명세 (2026-10-25, S9 착수 전 작업 1)
 
-작성: cad-expert. 상태: **명세 확정(D1~D11 결정됨, 2026-10-25 사용자 — D8은 R0~R3, decision_log 2절 끝) + 생성기 스테이징 완료, 프로젝트 YAML·생성기는 아직 바꾸지 않음.** 실제 재생성(`02_params/rexome33.yaml` 덮어쓰기)과 스냅숏 재생성·회귀는 메인 세션이 사용자에게 범위를 확인한 뒤 한다(9절 결정 목록).
+작성: cad-expert. 상태: **완료(2026-10-26).** 명세 확정(D1~D11 결정됨, 2026-10-25 사용자 — D8은 R0~R3, decision_log 2절 끝) → 1~6단계(소비 코드·생성기 반영·재생성, 커밋 8616be9) → 회귀 R0~R3 끝, **묶음 탓 차이 0**(7절 끝 결과, 동등성 기록 `06_analysis/01_chrono/00_conventions/params_bundle_2026-10-25_equivalence.json`) → 8단계 문서 갱신. 아래 본문(0~7절)은 스테이징 당시 서술이고, 실제 값과 다른 곳에는 2026-10-26 주를 달았다.
 
-- 스테이징 생성기: `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\85e4a02e-5208-42d0-8012-d36d25080593\scratchpad\cad-run\yaml_regen\export_params_staged.py`(SHA-256 `3fdb62e6…`). 원본 대비 diff: 같은 폴더 `export_params_staged.diff`(±254줄, 18 hunk).
-- 스테이징 YAML: 같은 폴더 `staged_out\rexome33.yaml`(853줄, SHA-256 `ef2880f9…`), 점검표 `staged_out\rexome33_checks.json`(`passed: true`, 실패 0).
+- 스테이징 생성기: `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\85e4a02e-5208-42d0-8012-d36d25080593\scratchpad\cad-run\yaml_regen\export_params_staged.py`(SHA-256 `3fdb62e6…`). 원본 대비 diff: 같은 폴더 `export_params_staged.diff`(±254줄, 18 hunk). **반영본(2026-10-26 확인)**: `04_scripts/00_cad/export_params.py`(SHA-256 `3cf17ab6…`, 커밋 8616be9). 반영 전 원본은 `02_params/history/export_params_2026-10-25_before_bundle.py`(`8d8e3f76…`).
+- 스테이징 YAML: 같은 폴더 `staged_out\rexome33.yaml`(853줄, SHA-256 `ef2880f9…`), 점검표 `staged_out\rexome33_checks.json`(`passed: true`, 실패 0). **재생성된 프로젝트 YAML `02_params/rexome33.yaml`도 SHA-256 `ef2880f9…`(전체 `ef2880f98aa6a20d…87ce`)로 스테이징과 같다**(2026-10-26 확인). 옛 YAML은 `02_params/history/rexome33_2026-10-25_before_bundle.yaml`(`a7128d75…`).
 - 실행: `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I run_generator.py <생성기> <출력 폴더> [--cylinders cad]`(같은 폴더). 실행기는 생성기 사본에 `--out-dir`를 주고, 프로젝트 YAML·checks·`export_params.py`·`pad_variants.json`의 SHA-256을 실행 전후로 비교한다(모든 실행에서 "변경 없음").
 - 좌표·단위: 기체 좌표(x 전방, y 좌, z 상, 원점 CAD 원점), SI. CAD는 mm, Y-상방.
 
@@ -105,7 +105,7 @@ pad_shapes:
 - `legs.<leg>.pad`에는 `shape`, `thickness_m`, `side_height_m`, `joint`, `swivel_center_above_pad_bottom_m`, `swivel_tilt_range_deg`가 남는다(두 타입 공통; 후방 판 두께·옆면 높이를 CAD와 같게 둔 것은 **가정**).
 - 질량은 타입에 들어가지 않는다(U-PAD-3). `legs.RL/RR.moving_part`·`pad_body`는 지금처럼 250 합성이다.
 - 생성 방식: 생성기가 B-rep에서 직접 계산한다(`pad_shape_from_face`, `pad_bottom_face`). `02_params/pad_variants.json`은 **읽지 않고 점검으로만 대조**한다(그 표가 YAML을 읽으므로 원본으로 쓰면 순환 의존이 생긴다).
-- 점검(스테이징 실행, `rexome33_checks.json` `pad_shapes`): 꼭짓점 8개, 면 면적 대 신발끈 면적 상대차 ≤ 4.0×10⁻¹⁴, 면 무게중심 대 다리 축 ≤ 0.035 mm, 합성 후방 바닥 높이 대 CAD 패드 바닥 0.04399 mm(허용 0.05 mm, CAD_SUMMARY_TOL_MM), 후방 면적 대 $250^2-2\cdot30^2$ mm² 상대차 0, **`pad_variants.json`과 다각형 최대차 0.0 m·면적·$b$ 상대차 0**(8개 타입·다리 모두, 표 SHA-256 `698bc5e0…`).
+- 점검(스테이징 실행, `rexome33_checks.json` `pad_shapes`): 꼭짓점 8개, 면 면적 대 신발끈 면적 상대차 ≤ 4.0×10⁻¹⁴, 면 무게중심 대 다리 축 ≤ 0.035 mm, 합성 후방 바닥 높이 대 CAD 패드 바닥 0.04399 mm(허용 0.05 mm, CAD_SUMMARY_TOL_MM), 후방 면적 대 $250^2-2\cdot30^2$ mm² 상대차 0, **`pad_variants.json`과 다각형 최대차 0.0 m·면적·$b$ 상대차 0**(8개 타입·다리 모두, 표 SHA-256 `698bc5e0…`). 2026-10-26 주: `698bc5e0…`은 묶음 전 표(지금 `02_params/history/pad_variants_2026-10-25_before_bundle.json`)다. C-2 뒤 표는 schema 2 C8 대응표(형상 원본은 YAML `pad_shapes`)로 바뀌었고 SHA-256은 `00cf734b…`, 그 `params_yaml.file_sha256`은 `ef2880f9…`다.
 - 지문: `pad_shapes`를 L1·L2b 지문에서 빼면, 타입을 바꿔도(`default_type`을 `cad330`으로 덮어써도) L1·L2b 6개 지문이 그대로임을 계산으로 확인했다(4절 `pad_type_switch_keeps_fingerprints: true`).
 
 **부속표 `pad_variants.json`과의 관계(권고)**: 형상 값(다각형·면적·둘레·$b$)은 YAML `pad_shapes`가 원본이 된다. `pad_variants.json`은 C8 hull·시각 OBJ 대응표(파일·SHA-256)와 C8 점검만 남기는 생성물로 줄이고, 다각형은 YAML에서 읽어 기록만 한다. `outrigger_sim/pad_variants.py`의 `apply_pad_variant`는 `legs.<leg>.pad.*` 덮어쓰기 대신 `pad_shapes.default_type` 덮어쓰기(또는 로더 인자)로 바꾼다. 이유: 지금 방식은 재생성 뒤 그대로 두면 `check_table_against_params`(`pad_variants.py:191-212`)가 **반드시 실패**한다. YAML 기본 패드가 B(후방 250)가 되는데, 표의 타입 A 후방(`cad_brep`, 330)과 비교하기 때문이다.
@@ -172,6 +172,7 @@ pad_shapes:
 | L1 top / middle / bottom | `de068f3b…` / `55686abc…` / `06f3ae97…` | `61078f29…` / `9845dae7…` / `5888afd5…` |
 | L2b_NSC top / middle / bottom | `46684d27…` / `71beab1f…` / `6f049a86…` | `d06a97dd…` / `2f98bff1…` / `c3d52cb0…` |
 
+- 실제 재생성 결과(2026-10-26, 동등성 기록 `yaml`·`fingerprints`): `file_sha256` `ef2880f9…`(스테이징과 같음), 6개 지문은 위 "묶음 뒤" 열과 같다.
 - `pad_shapes.default_type`를 `cad330`으로 바꿔도 위 6개 지문 불변(확인).
 - 주의: 생성기는 `simulation.settle_on_crawler_min_s` 주석에 crawler_layout_check.json SHA-256 앞 16자를 쓴다. 그 파일의 바이트가 바뀌면 `Params.sha256`은 그대로지만 `file_sha256`이 또 바뀐다. 그래서 dynamics 재실행(8절 5단계)을 **회귀 실행보다 먼저** 끝낸다.
 
@@ -186,15 +187,17 @@ pad_shapes:
 | `07_results/states/S1_L1_{top,middle,bottom}.meta.json` + `.npz` | 3 | L1 |
 | `07_results/states/S2b_crawler_{top,middle,bottom}` | 3 | L1 |
 | `07_results/states_L1R/S1_L1_{top,middle,bottom}` | 3 | L1 |
-| `07_results/states_L1R/S6_crawler_*`(bottom 6, middle 6, top 13) | 25 | L1 |
+| `07_results/states_L1R/S6_crawler_*`(bottom 6, middle 6, top 14 — `flat_L1Roff`·`flat_RRpre` 포함) | 26 | L1 |
 | `07_results/S6/fdown32_L1R_20261022_131436/states/S6_crawler_bottom_fdown3.{2,5}__yaml` | 2 | L1 |
 | 합 | **37**(L1 top 17·middle 9·bottom 11) | |
+
+- 2026-10-26 정정: S6 소계는 초판의 25(top 13)가 아니라 **26(top 14)**이다(`07_results/states_L1R`의 `S6_crawler_top_*.meta.json` 14개, R1 기록 `regressions.R1.scope`). 합 37과 수준별 합은 원래 26 기준이었다.
 
 이미 무효인 것 43개(`07_results/history_pre_rexome35_2026-10-22/states` 20, `07_results/states`의 S6 계열 14, S6 fdown32 일부 6, S7 settle 3)는 영향 없음.
 
 ### 5.2 `file_sha256`(index_guard)
 
-- `07_results/{L1R_checks, S3, S3_L1R, S4_energy, S5, S6}/index.json` 96개 항목 중 현 YAML 파일 해시와 맞는 항목은 **이미 0개**다(2026-10-25 주석 출처 재생성 때 파일 해시가 바뀌었다). 묶음으로 새로 잃는 것은 없다. 요약 스크립트는 지금도 전부 "판정 보류"로 처리한다.
+- `07_results/{L1R_checks, S3, S3_L1R, S4_energy, S5, S6}/index.json` 102개 항목(2026-10-26 정정: 초판 96은 S4_energy 6을 빠뜨린 수) 중 현 YAML 파일 해시와 맞는 항목은 **이미 0개**다(2026-10-25 주석 출처 재생성 때 파일 해시가 바뀌었다). 묶음으로 새로 잃는 것은 없다. 요약 스크립트는 지금도 전부 "판정 보류"로 처리한다.
 - `case.json` `run_meta.params_file_sha256`이 현 YAML과 맞는 것은 S8 8건뿐이다. `run_meta.params_sha256`이 현 지문과 맞는 것은 S3 29, S3_L1R 12, S4 12, S4_energy 6, S5 9, S6 257, S7 14, S8 53(ML 데이터 포함)이다. 묶음 뒤 이 기록들은 "물리 동일·지문 다름" 상태가 된다(7절 동등성 기록으로 처리).
 
 ### 5.3 기준해·부속표
@@ -254,13 +257,27 @@ pad_shapes:
 |---|---|---|---|---|---|
 | R0 | `05_tests/unit`, `05_tests/chrono`(빠른 것), `export_params.py` 점검표, `export_pad_variants --check`, `verify_sim_shapes.py` | — | 수 분 | 5~10분(`-n auto`) | 전부 통과 |
 | **R1(필수)** | 스냅숏 37개 재생성: S1 L1 3수준(`run_S1.py`), S2b 크롤러 3(`run_S2b.py`), L1R S1·S6 크롤러 28(`run_S6.py`/`run_S6C.py` 스냅숏 모드, 근거 batch `snapshots_L1R_20261022_100905` 중앙 267 s, `snapshots_bundleC_*` 약 230 s), S6 fdown32 `__yaml` 2(`s6_fdown32_direct.py`, 중앙 285 s) | 37 | 약 2.5 h | **약 20~25분**(최장 약 5분 × 5파) | 새 npz 상태 배열이 옛 npz와 `np.array_equal(..., equal_nan=True)`로 같음(시각·명령 포함). 다르면 즉시 중단·보고 |
-| **R2(권장)** | index 항목 재실행(index_guard가 요약에 쓰게): S3 30(근거 batch 044954 중앙 87 s, 최장 803 s), S3_L1R 12(합 1.04 h, 최장 1,079 s), L1R_checks 34(합 0.65 h), S5 9(합 0.07 h), S6 11(stage2_L1R급 중앙 290~590 s 가정) | 96 | 약 4~5 h | **약 40~50분**(최장 사례 18분이 꼬리) | 각 사례 출력 시계열이 옛 사례와 비트 동일(또는 기록 자릿수 안 동일), 요약 판정 표 불변 |
-| R3(선택) | S7 ctrl3 12(합 1.06 h), S8 c36 61(6.66 h)·c37 21(2.60 h) | 94 | 약 10.3 h | 약 1.4~1.6 h | S7·S8 판정 표 불변. R1·R2가 비트 동일이면 생략 권고 |
+| **R2(권장)** | index 항목 재실행(index_guard가 요약에 쓰게): S3 30(근거 batch 044954 중앙 87 s, 최장 803 s), S3_L1R 12(합 1.04 h, 최장 1,079 s), L1R_checks 34(합 0.65 h), S4_energy 6(2026-10-26 추가: index_guard 대상), S5 9(합 0.07 h), S6 11(stage2_L1R급 중앙 290~590 s 가정) | 102(초판 96) | 약 4~5 h | **약 40~50분**(최장 사례 18분이 꼬리) | 각 사례 출력 시계열이 옛 사례와 비트 동일(또는 기록 자릿수 안 동일), 요약 판정 표 불변 |
+| R3(선택) | S7 ctrl3 12(합 1.06 h), S8 c36 61(6.66 h)·c37 21(2.60 h) | 94(2026-10-26 주: 실제 138 = 94 + ctrl3_rerun 2 + ML 베이스 재구성 42, 7.1절) | 약 10.3 h | 약 1.4~1.6 h | S7·S8 판정 표 불변. R1·R2가 비트 동일이면 생략 권고 |
 | 생략 | S8 ML 데이터(ml_main 870, 64.5 h; ml_pilot 415, 18.6 h), S0 벤치마크, S4 A_modes(131, 2.45 h) | — | — | — | 재실행하지 않고 동등성 기록으로 묶는다 |
 
 - 권고 범위는 R0 + R1 + R2(약 1~1.5시간)였으나, **사용자 결정(2026-10-25)으로 R0 + R1 + R2 + R3**, 합 벽시계 약 2.5~3시간. 30분을 넘으므로 long-running-task-monitor 점검 규칙을 따른다.
 - 동등성 기록(제안): `06_analysis/01_chrono/00_conventions/params_bundle_2026-10-25_equivalence.json`에 옛→새 지문 6쌍, 옛→새 `file_sha256`, R1·R2 비트 비교 결과, 생략한 저장물 목록을 남긴다. ML 데이터·S7·S8 기록은 이 파일로 "물리 동일"을 보인다.
 - R1에서 비트 차이가 나면 원인은 소비 코드 변경(P-2·P-3의 대체 경로가 다른 값을 고름 등)이다. 회귀를 멈추고 python에 넘긴다.
+
+### 7.1 결과 (2026-10-26)
+
+원본은 동등성 기록 `06_analysis/01_chrono/00_conventions/params_bundle_2026-10-25_equivalence.json`(`regressions.R1`~`R3`)이다. 결정은 `decision_log.md` 2절 D8 줄에 있다. 불일치가 나면 "현재 코드 + 옛 YAML(`02_params/history/rexome33_2026-10-25_before_bundle.yaml`) + 옛 시작 상태"로 다시 돌렸다. 그 결과가 새 실행과 비트 단위로 같으면 묶음과 무관한 예외(`bundle_unrelated`)로 두고 계속했다(사용자 결정 2026-10-26).
+
+| 단계 | 배치 | 사례 | 비트 동일 | 수용 예외(묶음 무관) | 묶음 탓 |
+|---|---|---|---|---|---|
+| R0 | — | unit·chrono 시험, 점검표 | R0 통과(커밋 8616be9). chrono 스냅숏 지문 실패 6건은 R1 뒤 통과(265 통과) | — | 0 |
+| R1 | `07_results/params_bundle_R1_20261026_001438` | 37 | 36 | 1(`states_L1R/S6_crawler_top_flat_RRpre`, M1 전 옛 코드 산물) | 0 |
+| R2 | `07_results/params_bundle_R2_20261026_011024` | 102 | 98 | 4(S3_L1R, 옛 코드 산물) | 0 |
+| R3 | `07_results/params_bundle_R3_20261026_025133` | 138(S7 ctrl3 12 + ctrl3_rerun 2, S8 c36 61 + c37 21, S8 ML 베이스 재구성 42) | 4 | 134(모두 현재 코드 + 옛 YAML이 새 결과를 비트 재현) | 0 |
+
+- R3 차이는 옛 배치(2026-10-24·25) 뒤의 코드 변경 몫이다. S7·S8 판정 표(현행 판정 코드로 옛 폴더 대 새 폴더)는 9묶음 중 4개가 같고, 나머지는 값 차이 또는 불합격 → 합격이다. 합격 → 불합격은 `S7 ctrl3 L1_PS2_fdown3.5_old_worst_nocal` 1건이다. 원인은 코드 변경이고 묶음 탓이 아니며, `s6_control_spec.md` 개정 61(298~305절)에 분석과 재실행 판정이 있다.
+- S8 ML 데이터는 재실행하지 않고 동등성 기록으로 묶었다(D8).
 
 ## 8. 실행 순서 (사용자 확인 뒤)
 
@@ -272,6 +289,8 @@ pad_shapes:
 6. cad C-2~C-4.
 7. 회귀 R0 → R1 → R2(→ R3).
 8. 문서: decision_log, CLAUDE.md(M-1), 로드맵, `cad_cylinder_vs_drawing.md` 6절 표 상태, `l2_hydraulic_model_spec.md` 머리말(hydraulics), `dynamics_model.md` 5.30.5·5.30.8 상태(dynamics).
+
+진행(2026-10-26): 1~7단계 끝(7.1절). 8단계 문서 갱신은 2026-10-26에 했다. 대상은 이 명세 머리말·5.1·5.2·7절, CLAUDE.md M-1, 로드맵, `cad_cylinder_vs_drawing.md` 6절, `dynamics_model.md` 5.30.5·5.30.8, rev48 초안이다. decision_log D8 줄과 `l2_hydraulic_model_spec.md` 머리말은 그 전에 갱신돼 있었다.
 
 ## 9. 사용자 확인이 필요한 결정
 
