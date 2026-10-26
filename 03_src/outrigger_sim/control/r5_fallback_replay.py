@@ -32,10 +32,12 @@ what a judgement on the result needs:
    band ``b`` of the healthy legs, over the controller's ``n`` and ``h``), and whether the healthy
    R-5 fires (all three conditions) where the fallback one does not (a missed trigger). Truth
    (``true_force_source``): ``pads.npz`` ``F_pressure`` (two-sensor net force); without it
-   ``F_cyl`` only for a run with ``F_s = 0`` (``F_cyl_no_friction``), else not replayable. Judged:
-   the watched ``nominal_gap`` rows, largest optimism within the allowance (L1 0.05 kN, L2b
-   1.2 kN) and no missed trigger. Recorded per condition: the watched ``level`` rows; a missed
-   trigger there is a FLAG, not a failure.
+   ``F_cyl`` only for a run with ``F_s = 0`` (``F_cyl_no_friction``), else not replayable. Row
+   classes (:class:`RowClass`): ``judged_falling`` (watched ``nominal_gap`` rows with
+   ``Dh >= 0``), ``record_rising``, ``record_level``, ``unwatched``. The one official verdict
+   ``judgement_passed`` (control decision 2026-10-26): the ``judged_falling`` optimism within the
+   allowance (L1 0.05 kN, L2b 1.2 kN) and no missed trigger on any watched row; the rest is
+   recorded.
 
 Units SI; per-leg arrays follow ``LEG_ORDER``; times are controller times (``record.npz`` ``t``).
 """
@@ -688,26 +690,72 @@ def replay_case(
     }
 
 
+class RowClass(StrEnum):
+    """Role of a fallback-leg row in the V-2 judgement (control decision 2026-10-26)."""
+
+    JUDGED_FALLING = "judged_falling"
+    """Watched, ``nominal_gap``, head falling or still (``Dh >= 0``): its optimism is judged."""
+    RECORD_RISING = "record_rising"
+    """Watched, ``nominal_gap``, head rising: recorded (neither prediction fires R-5 there)."""
+    RECORD_LEVEL = "record_level"
+    """Watched, ``level`` rule (302.2 not met): recorded per condition."""
+    UNWATCHED = "unwatched"
+    """R-5 does not watch the leg in this period."""
+
+
+def row_class(row: Mapping[str, Any]) -> RowClass:
+    if not row["is_watched"]:
+        return RowClass.UNWATCHED
+    if row["rule"] == "level":
+        return RowClass.RECORD_LEVEL
+    if row["head_drop_Pa"] >= 0.0:
+        return RowClass.JUDGED_FALLING
+    return RowClass.RECORD_RISING
+
+
+def _class_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
+    summary = {}
+    for kind in RowClass:
+        members = [row for row in rows if row["row_class"] == kind.value]
+        differences = [row["difference_N"] for row in members
+                       if np.isfinite(row["difference_N"])]
+        summary[kind.value] = {
+            "rows": len(members),
+            "max_difference_N": max(differences, default=None),
+            "missed": sum(int(row["is_missed"]) for row in members),
+        }
+    return summary
+
+
 def judged_summary(rows: list[dict[str, Any]], limit_N: float | None) -> dict[str, Any]:
-    """Judgement of one variant (P-1): the watched ``nominal_gap`` rows pass with their
-    largest optimism within the allowance and no missed trigger; the ``level`` rows of a
-    fallback leg are recorded per condition and FLAG a missed trigger (no failure)."""
-    judged = _rule_summary(rows, "nominal_gap")
-    level = _rule_summary(rows, "level")
+    """V-2 judgement of one variant (control decision 2026-10-26).
 
-    def passes(worst_N: float | None) -> bool | None:
-        if worst_N is None or limit_N is None:
-            return None
-        return worst_N <= limit_N and judged["missed"] == 0
-
+    ``judgement_passed`` (the only official verdict): the ``judged_falling`` rows have their
+    largest ``L_hat_fb - L_hat_true`` within the engine allowance, and no watched row (any
+    class) has a missed trigger. A missed trigger fails it in any case; otherwise ``None`` =
+    no judged row or no allowance (engine unknown).
+    The ``record_rising`` / ``record_level`` classes and the per-rule summaries are records.
+    """
+    for row in rows:
+        row["row_class"] = row_class(row).value
+    classes = _class_summary(rows)
+    judged = classes[RowClass.JUDGED_FALLING.value]
+    watched_missed = sum(entry["missed"] for kind, entry in classes.items()
+                         if kind != RowClass.UNWATCHED.value)
+    worst_N = judged["max_difference_N"]
+    is_within = None if worst_N is None or limit_N is None else worst_N <= limit_N
+    if watched_missed > 0:
+        verdict: bool | None = False
+    else:
+        verdict = is_within
     return {
         "optimism_rows": rows,
-        "nominal_gap": judged,
-        "level": level,
+        "row_classes": classes,
         "allowance_N": limit_N,
-        "is_within_allowance": None if judged["max_difference_N"] is None or limit_N is None
-        else judged["max_difference_N"] <= limit_N,
-        "is_judgement_passed": passes(judged["max_difference_N"]),
-        "is_judgement_passed_falling": passes(judged["max_difference_falling_N"]),
-        "level_missed_flag": level["missed"] >= 1,
+        "judged_falling_within_allowance": is_within,
+        "watched_missed": watched_missed,
+        "judgement_passed": verdict,
+        "record_nominal_gap": _rule_summary(rows, "nominal_gap"),
+        "record_level": _rule_summary(rows, "level"),
+        "record_level_missed_flag": classes[RowClass.RECORD_LEVEL.value]["missed"] >= 1,
     }
