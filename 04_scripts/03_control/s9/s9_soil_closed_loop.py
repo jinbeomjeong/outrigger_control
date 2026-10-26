@@ -33,6 +33,7 @@ import math
 import os
 import sys
 import time
+from dataclasses import replace
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -246,8 +247,18 @@ def _imports():
     return cl, c2, Measurements
 
 
-def make_controller(cl, c2, variant: dict):
+def reference_config(cl, c2):
+    """Harness preset with the project soil response explicitly off.
+
+    Since 0400274 ``with_10hz_d1`` turns the project soil response on; the reference runs need
+    the controller without it ("base" = project C2 before spec rev. 57, "loc" = SoilC2, whose
+    own rules would otherwise run on top of the project ones: LOC twice, corner bias added)."""
     cfg = cl.preset_config(c2.ContactJudge.COMBINED, with_imu_samples=True, with_reapproach=True)
+    return replace(cfg, soil=c2.SoilResponseSettings())
+
+
+def make_controller(cl, c2, variant: dict):
+    cfg = reference_config(cl, c2)
     rule = variant.get("rule")
     if rule is None:
         ctrl = c2.C2Controller.from_params(cl.PARAMS, cfg)
@@ -427,7 +438,9 @@ def run_batch(cases, out_path: Path, workers: int, meta: dict | None = None):
     with Pool(min(workers, len(cases))) as pool:
         res = pool.map(_safe, cases, chunksize=1)
     out = {"meta": {"script": str(Path(__file__).relative_to(ROOT)).replace("\\", "/"),
-                    "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                    # LF line ends: a CRLF checkout (Windows worktree) gives the same digest
+                    "script_sha256": hashlib.sha256(
+                        Path(__file__).read_bytes().replace(b"\r\n", b"\n")).hexdigest(),
                     "wall_s": round(time.perf_counter() - t0, 1), "workers": workers, **(meta or {})},
            "runs": res}
     out_path.parent.mkdir(parents=True, exist_ok=True)
