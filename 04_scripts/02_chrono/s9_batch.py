@@ -152,7 +152,8 @@ def p3b_batch() -> list[dict]:
     finally:
         sys.path.remove(str(HERE))
     rows = [{"case": cid, "est_s": est, "s8c": True,
-             "argv": S8C + ["run", "--only", cid, "--approved", "--workers", "p7", "--tag", f"p3b_{cid}"]}
+             "argv": S8C + ["run", "--set", "rest", "--only", cid, "--tag", f"p3b_{cid}", "--approved",
+                            "--workers", "p7"]}  # S8 'rest' set member; S8 sensors (ideal) unchanged
             for cid, est in r9.P3B_S8C_CASES.items()]
     rows += [{"case": c["case"], "est_s": c["est_s"], "argv": RUN + r9.p3b_level_argv(c)} for c in r9.p3b_cases()]
     return rows

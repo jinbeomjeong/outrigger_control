@@ -51,7 +51,10 @@ result. ``--fs-kN`` sets the seal friction level of the plant (front legs; rear 
 F_cyl, s_motor, pad sinkage, roll / pitch), the 10 Hz ``s9_rows`` (SCM crawler patch force sum,
 pad node sinkage, rut clearance), and ``p3b`` (P3-1 ... P3-9 values, crawler departure by the
 P3a-2 rule, creep stop, pre-lift-off minimum F_cyl, track utilisation with the 5 % rule, the
-W-61-1 ... 4 watch). ``plan`` lists the approved P3b set (U-S9P-6 (가): 24 cases) and the two
+W-61-1 ... 4 watch, the P3-4 judgement window of control D-3 and the re-approach limit FLAG of D-4).
+Sensors (control D-1): ``--pressure-grade`` (default WIKA A-10 ``normal``, CHECK zero calibration on)
+and ``--imu-grade`` (default ``ideal``); ``record/`` keeps the 10 Hz readings and the applied output,
+``controller_commands.npz`` the issued commands. P3b loop length 120 s fixed (D-2). ``plan`` lists the approved P3b set (U-S9P-6 (가): 24 cases) and the two
 S8 re-approach limit cases run with it (``s9_batch.py run P3b``).
 
 Outputs ``07_results/S9/<action>_<tag>_<stamp>/`` (``result.json`` + ``series.npz``). Units SI;
@@ -159,11 +162,17 @@ P3B_PAD = {"A": "cad330", "B": "dwg_rear250"}
 P3B_PAD_GRID_M = {"G1": 0.02, "J1": 0.01, "J2": 0.01, "S1": 0.02}
 """M14s pad terrain grid per soil (dynamics 5.37.6: G1 / S1 2 cm, J1 / J2 1 cm); crawler 4 cm."""
 P3B_CRAWLER_GRID_M = 0.04
-P3B_DURATION_S = 90.0
-"""Closed-loop time after the 8 s settle (READY <= 90 s ASSUMPTION P3-6 from the closed-loop start)."""
+P3B_DURATION_S = 120.0
+"""Closed-loop time after the 8 s settle, fixed (user decision 2026-10-26, control D-2: 90 -> 120 s, no end
+rule; READY <= 90 s ASSUMPTION P3-6 from the closed-loop start leaves >= 30 s after READY)."""
 P3B_SIM_S = CRAWLER_SETTLE_S + P3B_DURATION_S
-P3B_EST_S = {"G1": 4300.0, "S1": 4300.0, "J1": 8600.0, "J2": 8600.0}
-"""Wall estimate per case [s] (dynamics 5.37.6: G1 / S1 0.8-1.2 h, J1 / J2 1.3-2.4 h; upper ends)."""
+P3B_US_PER_STEP_UPPER = {"G1": 4500.0, "S1": 4500.0, "J1": 9000.0, "J2": 9000.0}
+"""Upper per-step cost [us] at dt 1e-4 s (dynamics 5.37.6: G1 / S1 3-4.5, J1 / J2 5-9 ms/step, contended P3a
+values incl. the pad node cost of a ~70 % loaded run). The extra 30 s of the 120 s loop are loaded (pads on the
+soil, the costly phase), so the upper per-step value is used for the whole run."""
+P3B_EST_S = {soil: round(P3B_SIM_S / 1.0e-4 * us * 1e-6, -2) for soil, us in P3B_US_PER_STEP_UPPER.items()}
+"""Wall estimate per case [s] = P3B_SIM_S (128 s) / 1e-4 x upper us/step: G1 / S1 5800, J1 / J2 11500 (before
+D-2, 98 s: 4300 / 8600)."""
 P3B_S8C_CASES = {"N_RE1c_Fs0_combined": 433.0, "N_RE1c_Fs8_combined": 528.0}
 """Re-approach 10 s limit positive tests added to the P3b set (user decision 2026-10-26): run_S8C
 L2b-NSC (rigid floor) cases with the R8 preset; P-core wall estimates of ``run_S8C.py list``."""
@@ -197,7 +206,14 @@ def p3b_level_argv(c: dict[str, Any]) -> list[str]:
     return ["level", "--soil", c["soil"], "--pad-variant", c["pad_variant"], "--level", c["level"],
             "--fs-kN", f"{c['fs_kN']:g}", "--grid", f"{c['grid_m']:g}", "--crawler-grid", f"{c['crawler_grid_m']:g}",
             "--settle-dashpot", "zrp", "--threads", str(SCM_THREADS_FIXED), "--duration", f"{P3B_DURATION_S:g}",
+            "--pressure-grade", P3B_PRESSURE_GRADE, "--imu-grade", P3B_IMU_GRADE, "--seed", str(P3B_SEED),
             "--approved"]
+
+
+P3B_PRESSURE_GRADE = "normal"
+P3B_IMU_GRADE = "ideal"
+P3B_SEED = 20261026
+"""Sensors of the P3b set (control D-1, user-confirmed 2026-10-26): WIKA A-10 normal, IMU ideal, one seed."""
 
 
 def seal_friction_override(fs_kN: float | None) -> dict[str, Any]:
@@ -979,20 +995,28 @@ def creep_stop(t: np.ndarray, sinkage_m: np.ndarray, t_from_s: float | None, *,
     window starts there). Also the rate maxima and the rates at lift-off + 1 / 2 / 4 s."""
     t = np.asarray(t, dtype=float)
     out: dict[str, Any] = {"rule": f"all pads: sinkage rate over {window_s:g} s < {limit_m_s * 1e3:g} mm/s "
-                                   "(+ = deeper), after the crawler departure", "t_from_s": t_from_s,
-                           "t_first_s": None, "t_final_s": None}
+                                   "(+ = deeper; t_*_two_sided_s: |rate|), after the crawler departure",
+                           "t_from_s": t_from_s, "t_first_s": None, "t_final_s": None,
+                           "t_first_two_sided_s": None, "t_final_two_sided_s": None}
     if t_from_s is None or len(t) < 2:
         return out
     rate = sinkage_rate(t, sinkage_m, window_s)
     valid = np.all(np.isfinite(rate), axis=1)
     after = (t >= t_from_s - 1e-12) & valid
-    ok = after & np.all(rate < limit_m_s, axis=1)
-    k = np.nonzero(ok)[0]
-    if k.size:
-        out["t_first_s"] = float(t[k[0]])
-        if ok[-1]:
-            bad = np.nonzero(after & ~ok)[0]
-            out["t_final_s"] = float(t[k[0]]) if not bad.size else float(t[bad[-1] + 1])
+
+    def first_final(ok: np.ndarray) -> tuple[float | None, float | None]:
+        k = np.nonzero(ok)[0]
+        if not k.size:
+            return None, None
+        if not ok[-1]:
+            return float(t[k[0]]), None
+        bad = np.nonzero(after & ~ok)[0]
+        return float(t[k[0]]), (float(t[k[0]]) if not bad.size else float(t[bad[-1] + 1]))
+
+    out["t_first_s"], out["t_final_s"] = first_final(after & np.all(rate < limit_m_s, axis=1))
+    # two-sided (control D-3, 2026-10-26): |rate| < limit, so a rebound or a rocking pad also counts
+    out["t_first_two_sided_s"], out["t_final_two_sided_s"] = first_final(
+        after & np.all(np.abs(rate) < limit_m_s, axis=1))
     if after.any():
         out["rate_max_after_m_s"] = np.nanmax(rate[after], axis=0).tolist()
 
@@ -1293,6 +1317,12 @@ P3B_ATTITUDE_LIMIT_DEG = 0.2
 """P3-4 main judgement: steady end attitude +-0.2 deg (CLAUDE.md accuracy row, spec 284 rev. 61 suppl.)."""
 P3B_DEADBAND_DEG = 0.03
 """Completion dead band 0.03 deg: record only (spec 284)."""
+P3B_MIN_WINDOW_S = 5.0
+"""P3-4 judgement window shorter than this -> ``window_short`` FLAG (control D-3)."""
+P3B_MOUNT_SHARE_DEG = 0.02
+"""IMU mounting share of the 0.2 deg budget (CLAUDE.md accuracy row)."""
+P3B_BUDGET_RESIDUAL_DEG = 0.04
+"""0.2 - 0.02 mount - 0.14 IMU zero error = 0.04 deg left for control (``budget_residual_le_0p04``, record only)."""
 P3B_END_WINDOW_S = 1.0
 P3B_DONE_SHIFT_S = 5.0
 P3B_READY_LIMIT_S = 90.0
@@ -1325,6 +1355,54 @@ def level_c2_config(allow_soil_off: bool, config: Any = None) -> tuple[Any, dict
     return config, {"preset": "C2Config().with_10hz_d1()", "soil_enable": enabled,
                     "soil_settings": soil.to_meta() if hasattr(soil, "to_meta") else None,
                     "allow_soil_off": bool(allow_soil_off)}
+
+
+PRESSURE_GRADES = ("ideal", "normal", "conservative", "old_worst")
+IMU_GRADES = ("ideal", "good_zeroed", "normal_zeroed", "normal_zeroed_repeatability", "normal_as_shipped")
+
+
+def level_sensor_setup(pressure_grade: str, imu_grade: str, config: Any) -> tuple[Any, Any, Any, dict[str, Any]]:
+    """Sensors of ``level`` (control D-1, 2026-10-26): IMU of ``imu_grade`` at 10 ms samples;
+    pressure / stroke sensors ``LegSensorConfig()`` for ``ideal``, else
+    ``wika_a10_leg_sensor_config(grade)`` (WIKA A-10 grade errors, stroke noise 0.1 mm). The
+    CHECK zero calibration stays as the preset. A non-ideal IMU sets the C2 target
+    ``gyro_noise_std_rad_s`` to the grade value at the control period (run_S6C.controller_config).
+    Returns (imu config, leg config, C2 config, meta)."""
+    from dataclasses import replace
+
+    from outrigger_sim.sensors.hydraulic import LegSensorConfig, wika_a10_leg_sensor_config
+    from outrigger_sim.sensors.imu import imu_config_for_grade
+
+    if pressure_grade not in PRESSURE_GRADES:
+        raise ValueError(f"pressure grade must be one of {PRESSURE_GRADES}: {pressure_grade!r}")
+    imu = imu_config_for_grade(imu_grade, sample_period_s=IMU_SAMPLE_PERIOD_S)
+    legs = LegSensorConfig() if pressure_grade == "ideal" else wika_a10_leg_sensor_config(pressure_grade)
+    gyro_sigma = None
+    if imu_grade != "ideal":
+        # sigma_g of one delivered gyro value = mean of the IMU samples of a period (run_S6C 878)
+        gyro_sigma = float(imu_config_for_grade(imu_grade, sample_period_s=config.period_s).gyro_noise_std_rad_s)
+        config = replace(config, target=replace(config.target, gyro_noise_std_rad_s=gyro_sigma))
+    zc = getattr(config, "zero_calibration", None)
+    meta = {"pressure_grade": pressure_grade, "imu_grade": imu_grade,
+            "leg_sensors": legs.to_meta(), "leg_sensor_source": "LegSensorConfig()" if pressure_grade == "ideal"
+            else f"wika_a10_leg_sensor_config({pressure_grade!r})",
+            "imu_sample_period_s": IMU_SAMPLE_PERIOD_S,
+            "c2_target_gyro_noise_std_rad_s": float(config.target.gyro_noise_std_rad_s),
+            "c2_target_gyro_noise_set_from_grade": gyro_sigma is not None,
+            "zero_calibration_mode": None if zc is None else str(zc.mode)}
+    return imu, legs, config, meta
+
+
+def zero_calibration_outcome(controller_meta: dict[str, Any]) -> dict[str, Any]:
+    """Per-leg CHECK zero calibration result of a run (C2 meta ``zero_calibration``): status,
+    success (``calibrated``), offsets in use; ``all_calibrated`` over the four legs."""
+    zc = controller_meta.get("zero_calibration") or {}
+    legs = ((zc.get("result") or {}).get("legs")) or {}
+    rows = {leg: {"status": (legs.get(leg) or {}).get("status"), "reason": (legs.get(leg) or {}).get("reason"),
+                  "success": (legs.get(leg) or {}).get("status") == "calibrated"} for leg in LEGS}
+    return {"is_active": zc.get("is_active"), "legs": rows, "all_calibrated": all(r["success"] for r in rows.values()),
+            "offsets_N": zc.get("offsets_N"), "t_start_s": (zc.get("result") or {}).get("t_start_s"),
+            "t_end_s": (zc.get("result") or {}).get("t_end_s")}
 
 
 def lifted_reapproach_meta(config: Any) -> dict[str, Any] | None:
@@ -1486,6 +1564,87 @@ def w61_watch(events: list[tuple[float, str]], phases: list[tuple[float, str]], 
             "fallback_meta": ctx.get("fallback_meta")}
 
 
+def p34_judgement_window(t: np.ndarray, rp_deg: np.ndarray, creep: dict[str, Any],
+                         phases: list[tuple[float, str]]) -> dict[str, Any]:
+    """P3-4 main judgement (control D-3, user-confirmed 2026-10-26): window from max(two-sided
+    creep stop, last READY entry) to the run end; value = max |roll|, |pitch| of the true attitude
+    in it (absolute, target 0) <= 0.2 deg. Without a two-sided creep stop the signed one sets the
+    window and ``creep_vibration_suspect`` is raised; a window < 5 s raises ``window_short``.
+    ``sensor_allowance_left_deg`` = 0.2 - 0.02 (mount) - absmax; ``budget_residual_le_0p04`` =
+    absmax <= 0.04 deg (= allowance >= the 0.14 deg IMU zero error budget; record only)."""
+    t = np.asarray(t, dtype=float)
+    rp = np.asarray(rp_deg, dtype=float)
+    t_end = float(t[-1])
+    readies = [tp for k, (tp, ph) in enumerate(phases) if ph == "ready" and (k == 0 or phases[k - 1][1] != "ready")]
+    t_ready_last = readies[-1] if readies else None
+    two = creep.get("t_final_two_sided_s")
+    signed = creep.get("t_final_s")
+    suspect = two is None and signed is not None
+    t_creep = two if two is not None else signed
+    out: dict[str, Any] = {"t_ready_last_entry_s": t_ready_last,
+                           "ready_at_end": bool(phases and phases[-1][1] == "ready"),
+                           "creep_stop_used_s": t_creep,
+                           "creep_stop_basis": "two_sided" if two is not None else ("signed" if signed is not None
+                                                                                    else None),
+                           "creep_vibration_suspect": bool(suspect)}
+    flags = []
+    if t_ready_last is None:
+        flags.append("no_ready")
+    if t_creep is None:
+        flags.append("no_creep_stop")
+    if suspect:
+        flags.append("creep_vibration_suspect")
+    if "no_ready" in flags or "no_creep_stop" in flags:
+        out.update(p34_window_s=None, p34_absmax_deg=None, p34_absmax_overall_deg=None, window_short=True,
+                   sensor_allowance_left_deg=None, budget_residual_le_0p04=None, within_0p2=False,
+                   flags=flags + ["window_short"])
+        return out
+    t0w = max(t_ready_last, t_creep)
+    w = t >= t0w - 1e-9
+    short = (t_end - t0w) < P3B_MIN_WINDOW_S - 1e-9 or not w.any()
+    if short:
+        flags.append("window_short")
+    absmax = np.abs(rp[w]).max(axis=0) if w.any() else np.array([np.nan, np.nan])
+    overall = float(np.max(absmax))
+    allowance = P3B_ATTITUDE_LIMIT_DEG - P3B_MOUNT_SHARE_DEG - overall
+    out.update(p34_window_s=[float(t0w), t_end], p34_window_length_s=float(t_end - t0w),
+               p34_absmax_deg=absmax.tolist(), p34_absmax_overall_deg=overall, window_short=bool(short),
+               sensor_allowance_left_deg=float(allowance),
+               budget_residual_le_0p04=bool(overall <= P3B_BUDGET_RESIDUAL_DEG + 1e-12),
+               within_0p2=bool(w.any() and overall <= P3B_ATTITUDE_LIMIT_DEG), flags=flags)
+    return out
+
+
+def reapproach_limit_records(history: list[dict[str, Any]] | None, settings: dict[str, Any] | None) -> dict[str, Any]:
+    """C2 lifted re-approach intervals (meta ``lifted_reapproach``) ended by the P-S9-10 limits
+    (control D-4): ``no_contact`` runs with their cause ``travel`` (travel > ``max_travel_m``,
+    checked first as in C2) or ``time`` (end - start >= ``max_duration_s``), duration and
+    ``protected_periods``. On SCM a firing is a FLAG, not a pass / fail."""
+    settings = settings or {}
+    max_d, max_tr = settings.get("max_duration_s"), settings.get("max_travel_m")
+    rows = []
+    for run in history or []:
+        if run.get("outcome") != "no_contact":
+            continue
+        dur = None if run.get("end_s") is None else float(run["end_s"]) - float(run["start_s"])
+        travel = float(run.get("travel_m") or 0.0)
+        if max_tr is not None and travel > float(max_tr):
+            cause = "travel"
+        elif max_d is not None and dur is not None and dur >= float(max_d) - 0.05:
+            cause = "time"
+        else:
+            cause = "unknown"
+        rows.append({"leg": run.get("leg"), "start_s": run.get("start_s"), "end_s": run.get("end_s"),
+                     "duration_s": dur, "travel_m": travel, "cause": cause,
+                     "protected_periods": run.get("protected_periods")})
+    return {"fired": len(rows), "by_cause": {c: sum(1 for r in rows if r["cause"] == c) for c in ("time", "travel",
+                                                                                                    "unknown")},
+            "rows": rows, "intervals_total": len(history or []), "open_at_end": sum(1 for r in history or []
+                                                                                   if r.get("end_s") is None),
+            "max_duration_s": max_d, "max_travel_m": max_tr,
+            "note": "SCM: FLAG (record), not a pass / fail (control D-4)"}
+
+
 def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: list[tuple[float, str]],
                 phases: list[tuple[float, str]], ctx: dict[str, Any]) -> dict[str, Any]:
     """P3b values of one ``level`` run (control spec 284 P3-1 ... P3-9 with the J1 / J2
@@ -1572,16 +1731,20 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
     end_absmax = np.abs(rp[w_end]).max(axis=0)
     ref_rp = np.asarray(settle.get("end_roll_pitch_deg", [np.nan, np.nan]), dtype=float)
     p34: dict[str, Any] = {
-        "criterion": f"steady end attitude |roll|, |pitch| <= {P3B_ATTITUDE_LIMIT_DEG:g} deg in a window after the creep "
-                     f"stop (main judgement); dead band {P3B_DEADBAND_DEG:g} deg and post-lift-off max "
-                     f"<= {P3B_POST_LIFTOFF_ATTITUDE_DEG:g} deg recorded",
+        "criterion": f"main judgement (control D-3, 2026-10-26): window [max(two-sided creep stop, last READY entry), "
+                     f"t_end]; true attitude (quaternion roll / pitch, absolute, target 0) max |roll|, |pitch| <= "
+                     f"{P3B_ATTITUDE_LIMIT_DEG:g} deg; window < {P3B_MIN_WINDOW_S:g} s -> window_short FLAG; no two-sided "
+                     "creep stop -> signed creep stop + creep_vibration_suspect FLAG; end 1 s values, dead band "
+                     f"{P3B_DEADBAND_DEG:g} deg, post-lift-off max <= {P3B_POST_LIFTOFF_ATTITUDE_DEG:g} deg recorded",
         "end_window_s": [float(t[w_end][0]), t_end], "end_mean_roll_pitch_deg": end_mean.tolist(),
         "end_absmax_roll_pitch_deg": end_absmax.tolist(),
         "end_mean_minus_settle_deg": (end_mean - ref_rp).tolist(),
         "t_creep_stop_final_s": cs.get("t_final_s"),
+        "t_creep_stop_final_two_sided_s": cs.get("t_final_two_sided_s"),
         "window_after_creep_stop": bool(cs.get("t_final_s") is not None and float(t[w_end][0]) >= cs["t_final_s"] - 1e-9),
-        "within_0p2": bool(np.all(end_absmax <= P3B_ATTITUDE_LIMIT_DEG)),
+        "end_1s_within_0p2_record": bool(np.all(end_absmax <= P3B_ATTITUDE_LIMIT_DEG)),
         "within_deadband_0p03_record": bool(np.all(np.abs(end_mean) <= P3B_DEADBAND_DEG))}
+    p34.update(p34_judgement_window(t, rp, cs, phases))
     if t_dep is not None:
         a = t >= t_dep - 1e-9
         p34["post_liftoff_absmax_deg"] = np.abs(rp[a]).max(axis=0).tolist()
@@ -1663,9 +1826,17 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
                                 settle.get("track_normal_N"), "unmasked": _nan_stats(np.asarray(s["track_utilisation"],
                                                                                                 float), t)}
     out["W61_watch"] = w61_watch(events, phases, s, ctx, t_loc)
+    out["reapproach_limit"] = reapproach_limit_records(ctx.get("reapproach_history"), ctx.get("reapproach_settings"))
     out["checks"] = {"P3-1_crawler_zero_after_ready": p31.get("crawler_zero"), "P3-1_recontact": dep.get("recontact_t_s"),
                      "P3-2_within": p32["within"], "P3-3_within": p33.get("within"),
-                     "P3-4_within_0p2": p34["within_0p2"], "P3-4_window_after_creep_stop": p34["window_after_creep_stop"],
+                     "P3-4_within_0p2": p34["within_0p2"], "P3-4_absmax_deg": p34.get("p34_absmax_overall_deg"),
+                     "P3-4_window_s": p34.get("p34_window_s"), "P3-4_flags": p34.get("flags"),
+                     "P3-4_window_short": p34.get("window_short"),
+                     "P3-4_creep_vibration_suspect": p34.get("creep_vibration_suspect"),
+                     "P3-4_sensor_allowance_left_deg": p34.get("sensor_allowance_left_deg"),
+                     "P3-4_budget_residual_le_0p04_record": p34.get("budget_residual_le_0p04"),
+                     "reapproach_limit_fired_FLAG": out["reapproach_limit"]["fired"],
+                     "reapproach_limit_by_cause": out["reapproach_limit"]["by_cause"],
                      "P3-5_within": out["P3-5_clearance_stroke"]["within"], "P3-6_within": out["P3-6_ready"]["within"],
                      "P3-8_within": out["P3-8_false_triggers"]["within"],
                      "P3-9_flags": sum(1 for w in windows if w.get("below_F_min")),
@@ -1689,12 +1860,11 @@ def run_level(args) -> Path:
     from outrigger_sim.control.c2 import C2Controller
 
     config, c2_meta = level_c2_config(args.allow_current_c2)
+    imu_cfg, leg_cfg, config, sensor_meta = level_sensor_setup(args.pressure_grade, args.imu_grade, config)
     from outrigger_sim.chrono.scm_engine import S9Engine
     from outrigger_sim.params import load_params
     from outrigger_sim.record import make_run_meta, save_record
     from outrigger_sim.runner import run_closed_loop
-    from outrigger_sim.sensors.hydraulic import LegSensorConfig
-    from outrigger_sim.sensors.imu import imu_config_for_grade
     from outrigger_sim.sensors.suite import SensorSuite
 
     placement = place()
@@ -1724,10 +1894,8 @@ def run_level(args) -> Path:
     settle = settle_reference(settle_rec.arrays())
     engine = S9Engine(model, imu_method="chrono_point")
     c2 = C2Controller.from_params(params_ctrl, config)
-    # IMU 10 ms samples (R8); grade = --imu-grade (default "ideal" = the S6 / S8 stage-2 scenario default;
-    # the former "G2" was not an ImuGradeName and the action had never run); leg sensors ideal
-    suite = SensorSuite(imu_config_for_grade(args.imu_grade, sample_period_s=IMU_SAMPLE_PERIOD_S), LegSensorConfig(),
-                        seed=args.seed)
+    # control D-1: IMU --imu-grade (10 ms samples), pressure / stroke --pressure-grade (WIKA A-10 normal default)
+    suite = SensorSuite(imu_cfg, leg_cfg, seed=args.seed)
     soil_rows: list[dict[str, Any]] = []
     phases: list[tuple[float, str]] = []
     t_loop0 = float(model.system.GetChTime())
@@ -1747,7 +1915,7 @@ def run_level(args) -> Path:
         row["scm_crawler_patches"] = int(model.crawler_terrain.GetNumContactPatches())
         soil_rows.append(row)
 
-    c2_setup = {**c2_meta, "lifted_reapproach": lifted_reapproach_meta(config)}
+    c2_setup = {**c2_meta, "lifted_reapproach": lifted_reapproach_meta(config), "sensors": sensor_meta}
     run_meta = make_run_meta(params, engine.meta(), scenario=f"S9_P3b_{args.soil}_{args.pad_variant}",
                              scenario_settings={"args": vars(args), "rut_reference": rut, "c2_setup": c2_setup},
                              sensors=suite.setup())
@@ -1757,7 +1925,8 @@ def run_level(args) -> Path:
     loop_wall = time.perf_counter() - t_run0
     tag = args.case or f"{args.soil}_{args.pad_variant}_{args.level}_Fs{args.fs_kN:g}"
     d = out_dir("level", tag, args.out_root)
-    save_record(res.record, d / "record")
+    save_record(res.record, d / "record")  # 10 Hz: meas.head_pressure / rod_pressure / stroke, u_cmd (applied)
+    np.savez(d / "controller_commands.npz", t_s=res.command_t_s, issued_u_m_s=res.command_m_s)
     series = step_rec.arrays()
     series["sinkage_rate_0p2s_m_s"] = sinkage_rate(series["t_s"], series["pad_sinkage_geometric_m"])
     np.savez(d / "step_series.npz", **series)
@@ -1769,8 +1938,14 @@ def run_level(args) -> Path:
            "P5_N": float(c2.geometry.F_min_N + c2.config.thresholds.relevel_load_margin_N),
            "s_motor_limit_m": limits["s_motor_limit_m"], "t_loop_start_s": t_loop0, "settle": settle,
            "T_o_s": (c2_setup["lifted_reapproach"] or {}).get("opposite_window_s"),
-           "fallback_meta": {k: tp_meta.get(k) for k in ("fallback_lock_current", "fallback_lock_log")}}
+           "fallback_meta": {k: tp_meta.get(k) for k in ("fallback_lock_current", "fallback_lock_log")},
+           "reapproach_history": ctl_meta.get("lifted_reapproach"),
+           "reapproach_settings": c2_setup["lifted_reapproach"]}
     p3b = p3b_records(series, soil_rows, events, phases, ctx)
+    sensors_end = {**sensor_meta, "suite_setup": dict(suite.setup().config), "noise_seed": args.seed,
+                   "zero_calibration": zero_calibration_outcome(ctl_meta),
+                   "record_10hz": "record/record.npz: meas.head_pressure, meas.rod_pressure, meas.stroke, u_cmd "
+                                  "(applied), u_applied; controller_commands.npz: issued commands"}
     n_steps = n_settle + res.n_steps
     wall = settle_wall + loop_wall
     run_meta_end = engine.meta()
@@ -1780,7 +1955,8 @@ def run_level(args) -> Path:
                "n_steps": n_steps, "us_per_step": wall / max(n_steps, 1) * 1e6,
                "num_threads_chrono": model.num_threads, "fs_kN": args.fs_kN,
                "plant_s8": model.actuator.s8_meta(), "plant_s8_record": model.actuator.s8_record(),
-               "c2_setup": c2_setup, "c2_soil": ctl_meta.get("soil"),
+               "c2_setup": c2_setup, "sensors": sensors_end, "c2_soil": ctl_meta.get("soil"),
+               "c2_lifted_reapproach_history": ctl_meta.get("lifted_reapproach"),
                "c2_lifted_reapproach": c2_setup["lifted_reapproach"], "c2_timing": ctl_meta.get("timing"),
                "settle_reference": settle, "rut_reference": rut, "t_loop_start_s": t_loop0,
                "phases": [{"t_s": t, "phase": p} for t, p in phases],
@@ -1906,17 +2082,21 @@ def build_parser() -> argparse.ArgumentParser:
     _common(lp)
     _gravity_ramp_args(lp)
     lp.add_argument("--duration", type=float, default=P3B_DURATION_S,
-                    help=f"closed-loop time after the settle [s] (P3b {P3B_DURATION_S:g} s; READY <= 90 s ASSUMPTION P3-6)")
+                    help=f"closed-loop time after the settle [s], fixed (P3b {P3B_DURATION_S:g} s, control D-2; no end "
+                         "rule; READY <= 90 s ASSUMPTION P3-6)")
     lp.add_argument("--fs-kN", type=float, default=0.0,
                     help="plant seal friction level of the front legs [kN] (rear x 0.8333, "
                          "actuator.seal_friction.level_N); 0 = no override (P3a plant). P3b: 4 (0 / 8 at top)")
-    lp.add_argument("--imu-grade", default="ideal",
-                    choices=("ideal", "good_zeroed", "normal_zeroed", "normal_zeroed_repeatability", "normal_as_shipped"),
-                    help="IMU error grade (sensors.imu.ImuGradeName); default ideal = S6 / S8 stage-2 scenario default; "
-                         "pressure / stroke sensors stay ideal (LegSensorConfig())")
+    lp.add_argument("--imu-grade", default="ideal", choices=IMU_GRADES,
+                    help="IMU error grade (sensors.imu.ImuGradeName), 10 ms samples; default ideal (control D-1). "
+                         "A non-ideal grade sets the C2 target gyro_noise_std_rad_s to the grade value")
+    lp.add_argument("--pressure-grade", default="normal", choices=PRESSURE_GRADES,
+                    help="head / rod pressure and stroke sensors (control D-1): ideal = LegSensorConfig(), else "
+                         "wika_a10_leg_sensor_config(grade) (WIKA A-10 errors, stroke noise 0.1 mm); default normal. "
+                         "The CHECK zero calibration stays on (preset)")
     lp.add_argument("--floor-roll", type=float, default=0.0)
     lp.add_argument("--floor-pitch", type=float, default=0.0)
-    lp.add_argument("--seed", type=int, default=20261026)
+    lp.add_argument("--seed", type=int, default=P3B_SEED, help="sensor-suite noise seed")
     lp.add_argument("--approved", action="store_true")
     lp.add_argument("--allow-current-c2", action="store_true",
                     help="run a C2 config whose soil response is off (soil.enable False). The R8 preset "

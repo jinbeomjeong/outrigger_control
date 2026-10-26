@@ -23,14 +23,16 @@
 
 ## 남은 단계 (P3b 시작 전)
 
-1. **센서·C2 구성 확정**: control-expert 권고가 나왔다(2026-10-26) — IMU `ideal`, 압력·행정 WIKA 정상 등급 + CHECK 영점 교정(U71), 시드 20261026 공통, C2 `with_10hz_d1()` 그대로, 90 s 고정 대신 끝내기 규칙(마지막 READY 15 s + 양방향 크리프 정지 5 s, 상한 150 s), P3-4 창 = [max(양방향 크리프 정지, 마지막 READY), 끝] ≥ 5 s, RE1c 합격 R-1~R-5, SCM에서 재접근 시간 한계 발동은 FLAG. 실행기 반영 D-1~D-5(cad-expert). **사용자 확인 3건 대기**: 압력 센서 정상 등급 전환, 이상 IMU 잔차 0.04° 예산 대응값을 기록/판정 중 무엇으로, 끝내기 규칙·상한 150 s. 명세 284.1절 문안 초안은 control 리포트에 있다(반영 시 명세 개정에 넣는다).
-2. **스모크 1건 + 단독 비용 측정**(다른 계산과 겹치지 않게): P코어 1건, E코어 1건 실행 시간, 건당 최대 메모리, 4·2스레드 비교 → 동시 실행 수(P코어 4 + E코어 2~3) 결정, P3b 시간 재추정(지금 4병렬 7~11 h).
-3. 명세 문서 갱신(control): 284·287절 기록 키 구현 위치, 301절(`w61_watch` 추가), P-S9-10(RE1c 묶음 포함), decision_log(RE1c 포함 결정, IMU 기본값).
+0. **(끝남, 이번 커밋)** 센서·C2 구성 확정과 실행기 반영. 사용자 결정 U-S9P-9~12(decision_log 5절): 압력·행정 WIKA 정상 + 영점 교정, IMU ideal + 0.04° 기록만, **실행 길이 120 s 고정**(끝내기 규칙 아님). 명세 개정 61 보완 2(284.1·305.2절). 실행기 새 기본: `--pressure-grade normal --imu-grade ideal --seed 20261026 --duration 120`, P3-4 창 `p34_judgement_window`, `reapproach_limit_records`, RE1c 요약 `re1c_summary`. 건별 예상 G1·S1 5800 s, J1·J2 11500 s, 26건 직렬 합 208,561 s(약 57.9 h; 4병렬 약 15~16 h, 경합 측정 외삽). FAULT/IDLE 조기 정지는 넣지 않았다. 새 `level` 경로는 단위 시험뿐이고 실제 실행은 스모크가 처음이다. 시험 unit 2307 통과·7 건너뜀, chrono 285 통과.
+1. (아래는 결정 전 기록) **센서·C2 구성 확정**: control-expert 권고가 나왔다(2026-10-26) — IMU `ideal`, 압력·행정 WIKA 정상 등급 + CHECK 영점 교정(U71), 시드 20261026 공통, C2 `with_10hz_d1()` 그대로, 90 s 고정 대신 끝내기 규칙(마지막 READY 15 s + 양방향 크리프 정지 5 s, 상한 150 s), P3-4 창 = [max(양방향 크리프 정지, 마지막 READY), 끝] ≥ 5 s, RE1c 합격 R-1~R-5, SCM에서 재접근 시간 한계 발동은 FLAG. 실행기 반영 D-1~D-5(cad-expert). **사용자 확인 3건 대기**: 압력 센서 정상 등급 전환, 이상 IMU 잔차 0.04° 예산 대응값을 기록/판정 중 무엇으로, 끝내기 규칙·상한 150 s. 명세 284.1절 문안 초안은 control 리포트에 있다(반영 시 명세 개정에 넣는다).
+2. **스모크 1건 + 단독 비용 측정**(다른 계산과 겹치지 않게, 계획은 cpu-scheduler-expert): P코어 1건, E코어 1건 실행 시간, 건당 최대 메모리, 4·2스레드 비교 → cpu-scheduler-expert가 26건 + P3-10 배치 결정, P3b 시간 재추정. 스모크 확인: 영점 교정 `sensors.zero_calibration.all_calibrated`, `pressure_error_terms`·시드, `record/record.npz` 10 Hz 판독·`controller_commands.npz`, `checks`의 P3-4·재접근 한계 키, C2 soil 블록, µs/step·RSS.
+2a. **P3-10**: L1 강체 2사례 토양 대응 켬/끔 SHA 비교 짧은 실행(P3b 묶음 밖, 개정 60 판정 전).
+3. (끝남) 명세 284·284.1·285·301·305.2절, decision_log U-S9P-9~12.
 
 ## P3b (승인됨)
 
 - 실행: `python.exe -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run P3b --parallel <N>` → `s9_batch_summary.py P3b 07_results/S9/batch_P3b_<stamp>`. RE1c 결과는 `07_results/S8/p3b_N_RE1c_*`.
-- 24건: G1 10(A·B × 오거 3 × F_s 4 kN + 상단 F_s 0·8 kN × A·B) → J1 10(같은 구성, 패드 1 cm) → J2·S1 각 A·B 상단 4 kN 4. 격자 G1·S1 패드 2 cm, J1·J2 1 cm, 크롤러 4 cm, 감쇠기 정착 8 s, 루프 90 s. 건별 예상 G1·S1 4300 s, J1·J2 8600 s(개정 52 상한).
+- 24건: G1 10(A·B × 오거 3 × F_s 4 kN + 상단 F_s 0·8 kN × A·B) → J1 10(같은 구성, 패드 1 cm) → J2·S1 각 A·B 상단 4 kN 4. 격자 G1·S1 패드 2 cm, J1·J2 1 cm, 크롤러 4 cm, 감쇠기 정착 8 s, 루프 120 s 고정(U-S9P-12). 건별 예상 G1·S1 5800 s, J1·J2 11500 s(개정 52 상한 스텝 비용 × 1.28×10⁶ 스텝). 센서·C2 구성은 명세 284.1절.
 - 판정: **주 판정은 정상상태 끝 자세 ±0.2°**(크리프 정지 뒤 창) + control 284절 P3-1~10. J1·J2 보완 4개 항(U-S9P-7). 0.03° 기준들은 기록. 탐침 한도 0.1°(E7)는 별개.
 - 30분 넘으므로 long-running-task-monitor 주기 점검(약 15분 cron).
 - 끝나면 control·dynamics 판정 → 명세 개정 60(306절~), J1·J2 해석 보완 P3-3·5·7·8/9 포함.
@@ -48,4 +50,5 @@
 - 예상 15분 이상 작업은 long-running-task-monitor 주기 점검(약 15분 간격 cron). 프로세스 종료 등 조치는 사용자 승인 뒤.
 - 에이전트 지시문에 매번: 셸 heredoc·`python -`·`sed -i` 금지, Write로 쓴 파일을 `python -I`로 실행, 커밋 메시지는 `git commit -F <파일>`.
 - 계산은 컴퓨터 자원을 최대한 쓴다(사용자 2026-10-26). 독립 작업은 에이전트를 병렬로 띄운다. 비용 측정만 단독.
+- 다중 계산 작업의 P/E 코어 배치·동시 실행 수는 **cpu-scheduler-expert**에 맡긴다(사용자 2026-10-26). 배치표·실행 명령을 받아 메인이 실행하고, 끝나면 `기록` 모드로 실측을 남긴다.
 - S단계 본 판정 실행 전에는 사용자에게 알리고 확인받는다(P3b는 2026-10-26 승인됨).

@@ -225,7 +225,8 @@ def test_p3b_set_24_cases_and_batch_26() -> None:
     assert {c["grid_m"] for c in cases if c["soil"] in ("G1", "S1")} == {0.02}
     argv = r9.p3b_level_argv(cases[0])
     for a, b in (("--threads", "4"), ("--crawler-grid", "0.04"), ("--fs-kN", "4"), ("--settle-dashpot", "zrp"),
-                 ("--duration", "90")):
+                 ("--duration", "120"), ("--pressure-grade", "normal"), ("--imu-grade", "ideal"),
+                 ("--seed", "20261026")):
         assert argv[argv.index(a) + 1] == b
     assert argv[0] == "level" and "--approved" in argv
     batch = _import("s9_batch").batches()["P3b"]
@@ -236,6 +237,10 @@ def test_p3b_set_24_cases_and_batch_26() -> None:
         a = c["argv"]
         assert a[a.index("--only") + 1] == c["case"] and a[a.index("--tag") + 1] == f"p3b_{c['case']}"
         assert a[5].endswith("run_S8C.py") and "--approved" in a
+        assert a[6:12] == ["run", "--set", "rest", "--only", c["case"], "--tag"]  # control D-5 command form
+    assert r9.P3B_DURATION_S == 120.0 and r9.P3B_SIM_S == 128.0
+    assert r9.P3B_EST_S == {"G1": 5800.0, "S1": 5800.0, "J1": 11500.0, "J2": 11500.0}
+    assert sum(c["est_s"] for c in batch) == pytest.approx(12 * 5800 + 12 * 11500 + 433 + 528)
     assert [c["case"] for c in batch if not c.get("s8c")] == [c["case"] for c in cases]
     plan = r9.plan_summary()["groups"]
     assert plan["P3b-1"]["cases"] == 10 and plan["P3b-RE1c"]["cases"] == 2
@@ -295,3 +300,124 @@ def test_s9_batch_marks_an_s8c_row_failed_when_its_case_failed(tmp_path, monkeyp
     assert by["after"]["rc"] is None  # skipped after the failure
     prog = (folder / "progress.log").read_text("utf-8")
     assert f"END {bad}" in prog and "s8c_check=FAILED" in prog and "SKIP after" in prog
+
+
+# --- control D-1 ... D-5 (2026-10-26) -------------------------------------------------------------------
+
+
+def test_creep_stop_two_sided_counts_the_rebound() -> None:
+    """D-3: the signed rule takes a rebound (sinkage decreasing) as stopped; |rate| does not."""
+    t = _t(0.0, 6.0)
+    s = np.zeros((t.size, 4))
+    s[:, 0] = np.where(t < 2.0, 1e-3 * t, np.where(t < 3.0, 2e-3 - 1e-3 * (t - 2.0), 1e-3))
+    c = r9.creep_stop(t, s, 0.5)
+    assert c["t_final_s"] == pytest.approx(2.091, abs=1.5e-3)
+    assert c["t_final_two_sided_s"] == pytest.approx(3.181, abs=1.5e-3)
+    assert c["t_first_two_sided_s"] == pytest.approx(2.091, abs=1.5e-3)  # the rate passes 0 at the turn
+
+
+def test_p34_judgement_window() -> None:
+    t = _t(0.0, 30.0)
+    rp = np.zeros((t.size, 2))
+    rp[:, 1] = np.where(t < 20.0, 0.5, 0.03)
+    rp[t >= 20.0, 0] = -0.02
+    ph = [(1.0, "level"), (15.0, "ready"), (16.0, "probe"), (20.0, "ready")]
+    w = r9.p34_judgement_window(t, rp, {"t_final_s": 10.0, "t_final_two_sided_s": 12.0}, ph)
+    assert w["t_ready_last_entry_s"] == 20.0 and w["p34_window_s"] == [20.0, 30.0] and w["ready_at_end"]
+    assert w["p34_absmax_deg"] == pytest.approx([0.02, 0.03]) and w["within_0p2"] and not w["window_short"]
+    assert w["sensor_allowance_left_deg"] == pytest.approx(0.2 - 0.02 - 0.03) and w["budget_residual_le_0p04"]
+    assert w["creep_stop_basis"] == "two_sided" and not w["creep_vibration_suspect"] and w["flags"] == []
+    short = r9.p34_judgement_window(t, rp, {"t_final_s": 10.0, "t_final_two_sided_s": 27.0}, ph)
+    assert short["p34_window_s"] == [27.0, 30.0] and short["window_short"] and "window_short" in short["flags"]
+    sus = r9.p34_judgement_window(t, rp, {"t_final_s": 22.0, "t_final_two_sided_s": None}, ph)
+    assert sus["creep_vibration_suspect"] and sus["creep_stop_basis"] == "signed" and sus["p34_window_s"][0] == 22.0
+    none = r9.p34_judgement_window(t, rp, {"t_final_s": 22.0, "t_final_two_sided_s": 23.0}, ph[:1])
+    assert not none["within_0p2"] and "no_ready" in none["flags"] and none["p34_window_s"] is None
+    rp2 = rp.copy()
+    rp2[t >= 25.0, 1] = 0.21
+    bad = r9.p34_judgement_window(t, rp2, {"t_final_s": 10.0, "t_final_two_sided_s": 12.0}, ph)
+    assert not bad["within_0p2"] and bad["sensor_allowance_left_deg"] < 0 and not bad["budget_residual_le_0p04"]
+    p = r9.p3b_records(*_run())
+    assert p["P3-4_attitude"]["p34_window_s"][0] == pytest.approx(45.0)  # last READY entry after the creep stop
+    assert p["checks"]["P3-4_absmax_deg"] == pytest.approx(0.05) and p["checks"]["reapproach_limit_fired_FLAG"] == 0
+
+
+def test_reapproach_limit_records_cause() -> None:
+    hist = [{"leg": "RR", "start_s": 10.0, "end_s": 20.0, "travel_m": 0.01, "outcome": "no_contact",
+             "protected_periods": 95},
+            {"leg": "FL", "start_s": 30.0, "end_s": 31.0, "travel_m": 0.045, "outcome": "no_contact",
+             "protected_periods": 0},
+            {"leg": "RL", "start_s": 40.0, "end_s": 41.0, "travel_m": 0.01, "outcome": "contact"},
+            {"leg": "RR", "start_s": 50.0, "end_s": None, "travel_m": 0.0, "outcome": None}]
+    r = r9.reapproach_limit_records(hist, {"max_duration_s": 10.0, "max_travel_m": 0.04})
+    assert r["fired"] == 2 and r["by_cause"] == {"time": 1, "travel": 1, "unknown": 0}
+    assert r["rows"][0]["protected_periods"] == 95 and r["rows"][0]["duration_s"] == pytest.approx(10.0)
+    assert r["open_at_end"] == 1 and r["intervals_total"] == 4
+    assert r9.reapproach_limit_records(None, None)["fired"] == 0
+
+
+def test_level_sensor_setup_grades() -> None:
+    from outrigger_sim.control.c2 import C2Config
+    from outrigger_sim.sensors.imu import imu_config_for_grade
+
+    cfg = C2Config().with_10hz_d1()
+    _, legs, c, m = r9.level_sensor_setup("ideal", "ideal", cfg)
+    assert m["leg_sensor_source"] == "LegSensorConfig()" and c is cfg and not m["c2_target_gyro_noise_set_from_grade"]
+    imu, legs, c, m = r9.level_sensor_setup("normal", "normal_zeroed", cfg)
+    assert legs.stroke_noise_std_m == pytest.approx(1e-4) and str(legs.pressure_error_grade) == "normal"
+    assert m["leg_sensors"]["pressure_error_grade"] == "normal" and m["imu_sample_period_s"] == 0.01
+    want = imu_config_for_grade("normal_zeroed", sample_period_s=cfg.period_s).gyro_noise_std_rad_s
+    assert c.target.gyro_noise_std_rad_s == pytest.approx(want) and m["c2_target_gyro_noise_set_from_grade"]
+    assert m["zero_calibration_mode"] == "airborne_roundtrip" and c.zero_calibration == cfg.zero_calibration
+    with pytest.raises(ValueError):
+        r9.level_sensor_setup("legacy", "ideal", cfg)
+
+
+def test_zero_calibration_outcome() -> None:
+    meta = {"zero_calibration": {"is_active": True, "offsets_N": [1.0, 2.0, 3.0, 4.0],
+                                 "result": {"t_start_s": 9.0, "t_end_s": 12.0,
+                                            "legs": {"FL": {"status": "calibrated"}, "FR": {"status": "calibrated"},
+                                                     "RL": {"status": "skipped", "reason": "grounded"},
+                                                     "RR": {"status": "calibrated"}}}}}
+    z = r9.zero_calibration_outcome(meta)
+    assert not z["all_calibrated"] and z["legs"]["RL"] == {"status": "skipped", "reason": "grounded", "success": False}
+    meta["zero_calibration"]["result"]["legs"]["RL"] = {"status": "calibrated"}
+    assert r9.zero_calibration_outcome(meta)["all_calibrated"]
+    assert not r9.zero_calibration_outcome({})["all_calibrated"]
+
+
+def _re1c_case(d: Path, *, warn_t: float = 62.6, end_s: float = 62.6, restart: bool = False) -> Path:
+    import json
+
+    d.mkdir(parents=True)
+    ev = [(7.2, "INFO_PRESSURE_ZERO_CALIBRATED:FL"), (52.6, "leg_reapproach_start:RR"),
+          (warn_t, "WARN_LEG_REAPPROACH_NO_CONTACT:RR")]
+    if restart:
+        ev.append((70.0, "leg_reapproach_start:RR"))
+    (d / "controller_events.json").write_text(json.dumps([f"C2Event(t_s={t}, name='{n}')" for t, n in ev]), "utf-8")
+    res = {"event": {"forced_retract": {"t_start_s": 50.8}},
+           "controller_meta": {"r8": {"lifted_reapproach": {"max_duration_s": 10.0, "max_travel_m": 0.04}},
+                               "lifted_reapproach": [{"leg": "RR", "start_s": 52.6, "end_s": end_s, "travel_m": 0.0,
+                                                      "outcome": "no_contact", "protected_periods": 100}]},
+           "phases": [[0.1, "check"], [20.0, "level"], [60.0, "ready"]],
+           "s8_end": {"end_t_s": 92.8, "target_t_s": 92.8, "stopped_at_target": True, "timeout": False}}
+    (d / "result.json").write_text(json.dumps(res), "utf-8")
+    ts = np.round(np.arange(3.1, 92.85, 0.1), 6)
+    cu = np.zeros((ts.size, 4))
+    cu[ts >= warn_t, 3] = -0.002
+    np.savez(d / "r8_series.npz", t=ts, computed_u=cu)
+    (d / "case.log").write_text("... case N_RE1c_Fs0_combined finished: ok\n", "utf-8")
+    return d
+
+
+def test_re1c_summary_r1_to_r5(tmp_path) -> None:
+    s = _import("s9_batch_summary")
+    ok = s.re1c_summary(_re1c_case(tmp_path / "ok"))
+    assert ok["all_ok"] and all(ok[k]["ok"] for k in ("R-1", "R-2", "R-3", "R-4"))
+    assert ok["R-2"]["warn_minus_start_s"] == pytest.approx(10.0)
+    assert ok["R-5"]["computed_u_RR_at_warning_m_s"] == pytest.approx(-0.002)
+    early = s.re1c_summary(_re1c_case(tmp_path / "early", warn_t=61.0, end_s=61.0))
+    assert not early["R-2"]["ok"] and not early["R-3"]["ok"] and early["R-1"]["ok"]
+    again = s.re1c_summary(_re1c_case(tmp_path / "again", restart=True))
+    assert not again["R-4"]["ok"] and again["R-4"]["rr_restarts_after_warning"] == [70.0]
+    assert not again["R-1"]["ok"]  # two starts after the forced retract

@@ -700,6 +700,104 @@ def summary_p3a(folder: Path) -> dict[str, Any]:
             "rows": rows, "cost": batch_cost(folder)}
 
 
+RE1C_LIMIT_S = 10.0
+"""P-S9-10 re-approach time limit of the R8 preset (``max_duration_s``)."""
+RE1C_TIME_TOL_S = 0.1
+RE1C_QUIET_BEFORE_S = 9.9
+RE1C_MAX_TRAVEL_M = 0.04
+
+
+def _c2_event_list(case_dir: Path, r: dict[str, Any]) -> list[tuple[float, str]]:
+    """C2 events (absolute engine time) of an S8 case: ``controller_events.json`` (``C2Event(t_s=..,
+    name='..')`` strings or dicts)."""
+    p = case_dir / "controller_events.json"
+    raw = json.loads(p.read_text("utf-8")) if p.exists() else (r.get("events") or [])
+    out = []
+    for e in raw:
+        if isinstance(e, dict):
+            out.append((float(e["t_s"]), str(e["name"])))
+            continue
+        s = str(e)
+        try:
+            out.append((float(s.split("t_s=")[1].split(",")[0]), s.split("name='")[1].rstrip("')")))
+        except (IndexError, ValueError):
+            continue
+    return sorted(out)
+
+
+def re1c_summary(case_dir: Path) -> dict[str, Any]:
+    """RE1c positive test of the re-approach time limit (P-S9-10, control D-5): R-1 one
+    ``leg_reapproach_start:RR`` after the forced-retract start and none before; R-2 exactly one
+    ``WARN_LEG_REAPPROACH_NO_CONTACT:RR`` at start + 10.0 s (+-0.1 s), its meta interval
+    ``no_contact``, end - start in [9.9, 10.1] s, travel < 0.04 m; R-3 no such warning on any leg
+    before start + 9.9 s; R-4 no RR restart after it, no FAULT event / phase, no exception, the run
+    reached its end; R-5 (record) RR ``computed_u`` after the warning (r8_series.npz). Inputs:
+    run_S8C ``result.json`` (``controller_meta.lifted_reapproach``, ``event.forced_retract``,
+    ``s8_end``), ``controller_events.json``, ``r8_series.npz``, ``case.log``; absolute engine times."""
+    r = load(case_dir)
+    ev = _c2_event_list(case_dir, r)
+    cm = r.get("controller_meta") or {}
+    hist = cm.get("lifted_reapproach") or []
+    lr_set = (cm.get("r8") or {}).get("lifted_reapproach") or {}
+    t_force = ((r.get("event") or {}).get("forced_retract") or {}).get("t_start_s")
+    starts = [t for t, n in ev if n == "leg_reapproach_start:RR"]
+    before = [t for t in starts if t_force is not None and t < t_force - 1e-9]
+    after = [t for t in starts if t_force is not None and t >= t_force - 1e-9]
+    r1 = {"t_forced_start_s": t_force, "starts_before": len(before), "starts_after": len(after),
+          "ok": bool(t_force is not None and not before and len(after) == 1)}
+    t0 = after[0] if after else None
+    warns = [(t, n) for t, n in ev if n.startswith("WARN_LEG_REAPPROACH_NO_CONTACT:")]
+    warn_rr = [t for t, n in warns if n.endswith(":RR")]
+    row = None if t0 is None else next((h for h in hist if h.get("leg") == "RR"
+                                        and abs(float(h.get("start_s", -1e9)) - t0) <= RE1C_TIME_TOL_S), None)
+    dur = None if row is None or row.get("end_s") is None else float(row["end_s"]) - float(row["start_s"])
+    r2 = {"t_start_s": t0, "warn_rr_t_s": warn_rr, "warn_minus_start_s": None if (t0 is None or not warn_rr)
+          else warn_rr[0] - t0, "interval": row, "interval_duration_s": dur,
+          "max_duration_s_setting": lr_set.get("max_duration_s")}
+    r2["ok"] = bool(t0 is not None and len(warn_rr) == 1
+                    and abs(warn_rr[0] - (t0 + RE1C_LIMIT_S)) <= RE1C_TIME_TOL_S + 1e-9
+                    and row is not None and row.get("outcome") == "no_contact" and dur is not None
+                    and RE1C_LIMIT_S - RE1C_TIME_TOL_S - 1e-9 <= dur <= RE1C_LIMIT_S + RE1C_TIME_TOL_S + 1e-9
+                    and float(row.get("travel_m") or 0.0) < RE1C_MAX_TRAVEL_M)
+    early = [] if t0 is None else [(t, n) for t, n in warns if t < t0 + RE1C_QUIET_BEFORE_S - 1e-9]
+    r3 = {"early_warnings": early, "ok": bool(t0 is not None and not early)}
+    t_w = warn_rr[0] if warn_rr else None
+    restarts = [] if t_w is None else [t for t in starts if t > t_w + 1e-9]
+    faults = [(t, n) for t, n in ev if n.startswith("FAULT")]
+    phases = r.get("phases") or []
+    fault_phase = any((p[1] if isinstance(p, (list, tuple)) else p) == "fault" for p in phases)
+    log = case_dir / "case.log"
+    log_text = log.read_text("utf-8", errors="replace") if log.exists() else ""
+    exception = ("Traceback" in log_text) or ("finished: failed" in log_text)
+    s8_end = r.get("s8_end") or {}
+    reached = bool(s8_end.get("end_t_s") is not None and (s8_end.get("stopped_at_target") or s8_end.get("timeout")))
+    r4 = {"rr_restarts_after_warning": restarts, "fault_events": faults, "fault_phase": fault_phase,
+          "exception_in_log": exception, "s8_end": {k: s8_end.get(k) for k in ("end_t_s", "target_t_s", "upper_used_s",
+                                                                                "stopped_at_target", "timeout",
+                                                                                "final_phase")},
+          "reached_end": reached}
+    r4["ok"] = bool(t_w is not None and not restarts and not faults and not fault_phase and not exception and reached)
+    r5: dict[str, Any] = {"note": "record only"}
+    sp = case_dir / "r8_series.npz"
+    if t_w is not None and sp.exists():
+        with np.load(sp, allow_pickle=False) as z:
+            if "computed_u" in z.files:
+                ts, cu = np.asarray(z["t"], float), np.asarray(z["computed_u"], float)[:, 3]
+                a = ts >= t_w - 1e-9
+
+                def at(dt):
+                    k = int(np.searchsorted(ts, t_w + dt - 1e-9))
+                    return None if k >= len(ts) else float(cu[k])
+
+                r5.update(computed_u_RR_at_warning_m_s=at(0.0), at_plus_1s=at(1.0), at_plus_5s=at(5.0),
+                          min_after_m_s=float(cu[a].min()) if a.any() else None,
+                          max_after_m_s=float(cu[a].max()) if a.any() else None,
+                          mean_after_m_s=float(cu[a].mean()) if a.any() else None, end_m_s=float(cu[-1]))
+    return {"rule": "control D-5 R-1 ... R-5 (P-S9-10 positive test)", "R-1": r1, "R-2": r2, "R-3": r3, "R-4": r4,
+            "R-5": r5, "all_ok": bool(r1["ok"] and r2["ok"] and r3["ok"] and r4["ok"]),
+            "lifted_reapproach_settings": lr_set}
+
+
 def summary_p3b(folder: Path) -> dict[str, Any]:
     """P3b C2 levelling on SCM (control spec 284 P3-1 ... 9, 301 W-61): per ``run_S9.py level`` case the
     ``p3b`` values (``checks`` and the main items) and the C2 meta ``soil`` block; the S8 re-approach
@@ -718,17 +816,30 @@ def summary_p3b(folder: Path) -> dict[str, Any]:
                    "P3-8_counts": p["P3-8_false_triggers"]["counts"], "P3-9_deferred": p["P3-9_deferred"],
                    "track_utilisation": {kk: p["track_utilisation"][kk] for kk in ("max", "t_max_s", "rule")},
                    "W61_warnings": p["W61_watch"]["warnings"], "W61_rows": p["W61_watch"]["rows"],
+                   "reapproach_limit_FLAG": p.get("reapproach_limit"),
+                   "sensors": {k: (r.get("sensors") or {}).get(k) for k in ("pressure_grade", "imu_grade", "noise_seed",
+                                                                            "zero_calibration")},
                    "c2_soil": r.get("c2_soil"), "c2_reapproach_max_duration_s":
                        (r.get("c2_lifted_reapproach") or {}).get("max_duration_s"),
                    "settle_reference": r.get("settle_reference"),
                    "us_per_step": r.get("us_per_step"), "wall_s": r.get("wall_s"),
                    "threads": r.get("num_threads_chrono"), "placement": r.get("placement")}
+    sys.path.insert(0, str(HERE))
+    try:
+        import s9_batch  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
     s8c = []
     for log in sorted(folder.glob("N_RE1c_*.log")):
-        lines = [ln for ln in log.read_text("utf-8", errors="replace").splitlines() if "->" in ln]
-        s8c.append({"case": log.stem, "s8c_batch": lines[-1].split("->", 1)[1].strip() if lines else None})
+        chk = s9_batch.s8c_case_check(log.read_text("utf-8", errors="replace"), log.stem)
+        row = {"case": log.stem, "s8c_check": chk, "s8c_batch": chk["batch_dir"]}
+        if chk["result_exists"]:
+            row["re1c"] = re1c_summary(Path(chk["result_json"]).parent)
+        s8c.append(row)
     return {"batch": "P3b C2 levelling on SCM (control spec 284; user decision U-S9P-6 (가) 2026-10-26)",
-            "criteria": {"P3-4 (main)": "steady end attitude |roll|, |pitch| <= 0.2 deg after the creep stop",
+            "criteria": {"P3-4 (main)": "max |roll|, |pitch| (true, absolute) <= 0.2 deg over [max(two-sided creep "
+                                        "stop, last READY entry), t_end] (control D-3); window < 5 s = window_short FLAG",
+                         "RE1c": "R-1 ... R-4 (control D-5), R-5 record",
                          "P3-1..3, 5..9": "control spec 284 (records / FLAGs as defined there)",
                          "W-61": "spec 301 record rows (warnings, not judgements)"},
             "values_only": "pass / fail decisions are control's (284) and dynamics' (physics)",

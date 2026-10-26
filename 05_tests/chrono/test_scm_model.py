@@ -299,7 +299,10 @@ def test_level_parser_accepts_the_p3b_argv() -> None:
         assert a.action == "level" and a.approved and not a.allow_current_c2
         assert a.fs_kN == c["fs_kN"] and a.threads == run_s9.SCM_THREADS_FIXED == 4
         assert a.grid == c["grid_m"] and a.crawler_grid == 0.04 and a.level == c["level"]
-        assert run_s9.settle_time_s(a) == 8.0 and a.duration == 90.0 and a.imu_grade == "ideal"
+        assert run_s9.settle_time_s(a) == 8.0 and a.duration == 120.0 and a.imu_grade == "ideal"
+        assert a.pressure_grade == "normal" and a.seed == 20261026  # control D-1 / D-2
+    d = ap.parse_args(["level"])
+    assert d.pressure_grade == "normal" and d.imu_grade == "ideal" and d.duration == 120.0
 
 
 def test_level_fs_override_step_series_and_settle_reference() -> None:
