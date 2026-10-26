@@ -25,12 +25,17 @@ what a judgement on the result needs:
    run's ``controller_meta.two_pressure.settings`` field by field (only the P-S8-22 keys of
    ``r8.fast_relevel`` may differ, noted); the fallback is forced at the run's events (the
    monitor's own diagnosis is not replayed, noted).
-4. **Optimism record**: per fallback-leg row the replayed prediction ``L_hat_fb`` and the R-5
-   prediction a healthy rod sensor would have given, ``L_hat_true`` from the 1 ms truth
-   (``pads.npz`` ``F_cyl`` at ``t_k``, minus the controller band ``b`` = the band of the healthy
-   legs, over the controller's ``n`` and ``h``), and their difference; the largest difference over
-   the rows whose fall passes the rate threshold is compared with the record-only allowances
-   (L1 0.05 kN, L2b 1.2 kN).
+4. **Optimism record** (P-1): per fallback-leg row the watch phase, whether R-5 watches the
+   leg there (READY, or PROBE on a leg not being probed), the 302.2 condition (``met`` /
+   ``moving`` / ``short`` / ``other``), the replayed prediction ``L_hat_fb`` and the R-5
+   prediction a healthy rod sensor would have given, ``L_hat_true`` (truth at ``t_k`` minus the
+   band ``b`` of the healthy legs, over the controller's ``n`` and ``h``), and whether the healthy
+   R-5 fires (all three conditions) where the fallback one does not (a missed trigger). Truth
+   (``true_force_source``): ``pads.npz`` ``F_pressure`` (two-sensor net force); without it
+   ``F_cyl`` only for a run with ``F_s = 0`` (``F_cyl_no_friction``), else not replayable. Judged:
+   the watched ``nominal_gap`` rows, largest optimism within the allowance (L1 0.05 kN, L2b
+   1.2 kN) and no missed trigger. Recorded per condition: the watched ``level`` rows; a missed
+   trigger there is a FLAG, not a failure.
 
 Units SI; per-leg arrays follow ``LEG_ORDER``; times are controller times (``record.npz`` ``t``).
 """
@@ -354,18 +359,119 @@ def optimism_allowance_N(engine: str | None) -> float | None:
     return None
 
 
-def true_forces_at(pads_path: Path, t_s: NDArray[np.float64]) -> NDArray[np.float64]:
-    """``F_cyl`` of the 1 ms truth at each ``t_k`` (n, 4); NaN where no sample lies within
-    :data:`PADS_TIME_TOLERANCE_S`."""
-    with np.load(pads_path, allow_pickle=False) as pads:
-        pads_t = np.asarray(pads["t"], dtype=float)
-        force = np.asarray(pads["F_cyl"], dtype=float)
+class TrueForceSource(StrEnum):
+    F_PRESSURE = "F_pressure"
+    """``pads.npz`` ``F_pressure``: the two-sensor net force truth (S8 L2b pad record)."""
+    F_CYL_NO_FRICTION = "F_cyl_no_friction"
+    """``F_cyl`` of a run without seal friction (``F_s = 0``): equal to the pressure force."""
+
+
+class SlopeCondition(StrEnum):
+    """302.2 conditions of a fallback-leg row (``met`` = the monitor gave R-5 inputs)."""
+
+    MET = "met"
+    MOVING = "moving"
+    """The leg's acting command is not zero this period."""
+    SHORT = "short"
+    """The lock stretch is younger than ``n`` periods (opened after ``t_(k-n)``)."""
+    OTHER = "other"
+    """No inputs for another reason (no finite level bound, a gap in the reading history)."""
+
+
+@dataclass(frozen=True)
+class TrueForces:
+    """Truth for ``L_hat_true`` (``force_N`` ``None`` = not replayable, ``note`` says why)."""
+
+    force_N: NDArray[np.float64] | None
+    source: TrueForceSource | None
+    note: str
+
+
+def _sample_at(pads_t: NDArray, values: NDArray, t_s: NDArray) -> NDArray[np.float64]:
+    """``values`` of the 1 ms sample nearest each ``t_k``; NaN beyond the tolerance."""
     index = np.clip(np.searchsorted(pads_t, t_s), 1, pads_t.size - 1)
     nearer = np.where(np.abs(pads_t[index - 1] - t_s) <= np.abs(pads_t[index] - t_s),
                       index - 1, index)
-    out = force[nearer].copy()
+    out = np.asarray(values, dtype=float)[nearer].copy()
     out[np.abs(pads_t[nearer] - t_s) > PADS_TIME_TOLERANCE_S] = np.nan
     return out
+
+
+def _seal_friction_N(episode_meta: Mapping[str, Any], engine: str | None) -> float | None:
+    """Largest seal friction limit of the run: the episode meta ``seal_friction_N``; L1 runs
+    without it have none (the L1 / L1-R plant has no seal-friction element); ``None`` =
+    unknown."""
+    friction = episode_meta.get("seal_friction_N")
+    if friction is not None:
+        return float(np.max(np.atleast_1d(np.asarray(friction, dtype=float))))
+    if engine is not None and engine.upper().startswith("L1"):
+        return 0.0
+    return None
+
+
+def true_forces_at(
+    pads_path: Path, t_s: NDArray[np.float64], episode_meta: Mapping[str, Any],
+    engine: str | None,
+) -> TrueForces:
+    """Net-force truth at each ``t_k`` (n, 4): ``F_pressure`` first; without it ``F_cyl``
+    only for a run with ``F_s = 0`` (``F_s > 0`` or unknown: not replayable)."""
+    with np.load(pads_path, allow_pickle=False) as pads:
+        pads_t = np.asarray(pads["t"], dtype=float)
+        if "F_pressure" in pads.files:
+            force = _sample_at(pads_t, pads["F_pressure"], t_s)
+            return TrueForces(force, TrueForceSource.F_PRESSURE, "truth: pads F_pressure")
+        friction_N = _seal_friction_N(episode_meta, engine)
+        if friction_N is None:
+            return TrueForces(None, None, "no pads F_pressure and the seal friction is unknown")
+        if friction_N > 0.0:
+            return TrueForces(None, None, f"no pads F_pressure with seal friction "
+                              f"{friction_N:.0f} N > 0: F_cyl is not the pressure force")
+        force = _sample_at(pads_t, pads["F_cyl"], t_s)
+    return TrueForces(force, TrueForceSource.F_CYL_NO_FRICTION,
+                      "truth: pads F_cyl of a run without seal friction")
+
+
+def _stretch_start_rows(acting_m_s: NDArray[np.float64]) -> NDArray[np.int64]:
+    """Per row and leg the first row of the current run of zero acting commands (the row
+    itself when the command is not zero)."""
+    starts = np.zeros(acting_m_s.shape, dtype=np.int64)
+    for leg in range(acting_m_s.shape[1]):
+        start = 0
+        for row in range(acting_m_s.shape[0]):
+            if acting_m_s[row, leg] != 0.0 or row == 0:
+                start = row
+            starts[row, leg] = start
+    return starts
+
+
+def _slope_condition(slope, acting_m_s, stretch_starts, row, leg, n) -> SlopeCondition:
+    if slope is not None:
+        return SlopeCondition.MET
+    if acting_m_s[row, leg] != 0.0:
+        return SlopeCondition.MOVING
+    if stretch_starts[row, leg] > row - n:
+        return SlopeCondition.SHORT
+    return SlopeCondition.OTHER
+
+
+def _is_watched(inputs: ReplayInput, settings: ReplaySettings, row: int, leg: int) -> bool:
+    """``C2Controller._needs_relevel`` watches the leg: lifted, and READY, or PROBE (with the
+    P-R8-11 abort) on a leg not being probed."""
+    if not inputs.is_lifted[row]:
+        return False
+    phase = str(inputs.watch_phase[row])
+    if phase == C2Phase.READY.value:
+        return True
+    is_probe_watch = phase == C2Phase.PROBE.value and settings.probe_abort_on_low_load
+    return is_probe_watch and int(inputs.probed_leg[row]) != leg
+
+
+def _r5_fires(drop_N: float, previous_N: float, latest_N: float, predicted_N: float,
+              settings: ReplaySettings) -> bool:
+    """The three R-5 conditions of one leg: rate, latest period falling, prediction below P5."""
+    fast = settings.fast_relevel
+    is_fast = drop_N / fast.rate_intervals / settings.period_s > fast.rate_threshold_N_s
+    return bool(is_fast and previous_N > latest_N and predicted_N < settings.relevel_level_N)
 
 
 def optimism_rows(
@@ -373,51 +479,82 @@ def optimism_rows(
     monitor_slope_inputs: NDArray[np.object_],
     fallback_rows: Sequence[int | None],
     true_force_N: NDArray[np.float64],
+    acting_m_s: NDArray[np.float64],
     settings: ReplaySettings,
 ) -> list[dict[str, Any]]:
-    """Per fallback-leg row from its fallback row on (module docstring, 4)."""
+    """Per fallback-leg row from its fallback row on (module docstring, 4): phase, R-5 watch,
+    302.2 condition, both predictions and whether a healthy sensor's R-5 would fire where the
+    fallback one does not (``is_missed``)."""
     fast = settings.fast_relevel
     n = fast.rate_intervals
     h = settings.fast_relevel_horizon_periods
     healthy_band = np.min(inputs.seal_band_N, axis=1)
     estimate = inputs.lower_reading_N - inputs.seal_band_N
     true_level = true_force_N - healthy_band[:, None]
+    stretch_starts = _stretch_start_rows(acting_m_s)
     rows = []
     for leg, first_row in enumerate(fallback_rows):
         if first_row is None:
             continue
         for row in range(max(first_row, n), inputs.sample_count):
             slope = monitor_slope_inputs[row, leg]
-            level_drop_N = estimate[row - n, leg] - estimate[row, leg]
-            if fast.uses_fallback_slope and slope is not None:
+            uses_slope = fast.uses_fallback_slope and slope is not None
+            if uses_slope:
                 drop_N, _ = slope.drop_N(n, h)
             else:
-                drop_N = level_drop_N
+                drop_N = estimate[row - n, leg] - estimate[row, leg]
             fallback_N = estimate[row, leg] - h / n * drop_N
             true_drop_N = true_level[row - n, leg] - true_level[row, leg]
             healthy_N = true_level[row, leg] - h / n * true_drop_N
+            fallback_fires = _r5_fires(drop_N, estimate[row - 1, leg], estimate[row, leg],
+                                       fallback_N, settings)
+            healthy_fires = _r5_fires(true_drop_N, true_level[row - 1, leg],
+                                      true_level[row, leg], healthy_N, settings)
             rows.append({
                 "t_s": float(inputs.t_s[row]),
                 "leg": LEG_NAMES[leg],
-                "rule": "nominal_gap" if fast.uses_fallback_slope and slope is not None
-                else "level",
+                "phase": str(inputs.watch_phase[row]),
+                "is_watched": _is_watched(inputs, settings, row, leg),
+                "condition": _slope_condition(slope, acting_m_s, stretch_starts, row, leg,
+                                              n).value,
+                "rule": "nominal_gap" if uses_slope else "level",
+                "head_drop_Pa": None if slope is None else float(slope.head_drop_Pa),
+                "fallback_drop_N": float(drop_N),
                 "L_hat_fb_N": float(fallback_N),
                 "L_hat_true_N": float(healthy_N),
                 "difference_N": float(fallback_N - healthy_N),
                 "is_rate_passed": bool(drop_N / n / settings.period_s > fast.rate_threshold_N_s),
+                "fallback_fires": fallback_fires,
+                "healthy_fires": healthy_fires,
+                "is_missed": healthy_fires and not fallback_fires,
             })
     return rows
 
 
-def _worst_rate_passed_difference_N(rows: Sequence[Mapping[str, Any]], rule: str) -> float | None:
-    """Largest ``L_hat_fb - L_hat_true`` over the rows of ``rule`` whose fall passes the rate
-    threshold. The allowance judges the ``nominal_gap`` rows (the rows 302.3 covers); the
-    ``level`` rows of a fallback leg (moving, or the stretch younger than ``n`` periods) are
-    recorded apart."""
-    differences = [row["difference_N"] for row in rows
-                   if row["rule"] == rule and row["is_rate_passed"]
-                   and np.isfinite(row["difference_N"])]
-    return max(differences, default=None)
+def _rule_summary(rows: Sequence[Mapping[str, Any]], rule: str) -> dict[str, Any]:
+    """Watched rows of ``rule``: largest ``L_hat_fb - L_hat_true`` and missed triggers, also
+    per 302.2 condition."""
+    watched = [row for row in rows if row["rule"] == rule and row["is_watched"]
+               and np.isfinite(row["difference_N"])]
+    by_condition: dict[str, dict[str, Any]] = {}
+    for row in watched:
+        entry = by_condition.setdefault(row["condition"],
+                                        {"rows": 0, "max_difference_N": None, "missed": 0})
+        entry["rows"] += 1
+        worst = entry["max_difference_N"]
+        entry["max_difference_N"] = (row["difference_N"] if worst is None
+                                     else max(worst, row["difference_N"]))
+        entry["missed"] += int(row["is_missed"])
+    # 302.3 covers a falling head (fall >= 0); on a rising head neither prediction fires R-5.
+    falling = [row["difference_N"] for row in watched if row["fallback_drop_N"] >= 0.0]
+    return {
+        "watched_rows": len(watched),
+        "max_difference_N": max((row["difference_N"] for row in watched), default=None),
+        "max_difference_falling_N": max(falling, default=None),
+        "falling_rows": len(falling),
+        "missed": sum(int(row["is_missed"]) for row in watched),
+        "by_condition": by_condition,
+    }
 
 
 def run_engine(result: Mapping[str, Any], episode_meta: Mapping[str, Any]) -> str | None:
@@ -506,31 +643,31 @@ def replay_case(
     if not is_gate_passed:
         reasons.append(f"level replay differs from the controller: replay {level_events}, "
                        f"controller {controller}")
-    true_force = true_forces_at(case_dir / "pads.npz", t_s)
     engine = run_engine(result, episode.meta)
+    truth = true_forces_at(case_dir / "pads.npz", t_s, episode.meta, engine)
+    notes.append(truth.note)
+    if truth.force_N is None:
+        reasons.append(truth.note)
     limit_N = optimism_allowance_N(engine)
     if limit_N is None:
         notes.append(f"engine {engine!r} unknown: no optimism allowance")
+    commands = np.asarray(episode["command_m_s"], dtype=float)
+    acting = np.vstack((np.zeros((1, LEG_COUNT)), commands[:-1]))  # d = 1: output of k - 1
     variants = {}
     for source in sources:
         replay, inputs, monitor_replay, settings = _replay_variant(
             episode, events, geometry, config, run, track, "nominal_gap", source, allowance)
-        rows = optimism_rows(inputs, monitor_replay.slope_inputs, monitor_replay.fallback_rows,
-                             true_force, settings)
-        worst_N = _worst_rate_passed_difference_N(rows, "nominal_gap")
-        variants[source] = {
+        variant: dict[str, Any] = {
             "r5_events": replay_r5_events(replay, inputs),
             "fallback_slope_events": [
                 (round(e.t_s, TIME_KEY_DECIMALS), LEG_NAMES[e.leg], e.values_kN)
                 for e in replay.events if e.kind is ActionKind.R5_FALLBACK_SLOPE],
-            "optimism_rows": rows,
-            "max_rate_passed_difference_N": worst_N,
-            "max_rate_passed_difference_level_rows_N": _worst_rate_passed_difference_N(
-                rows, "level"),
-            "allowance_N": limit_N,
-            "is_within_allowance": None if worst_N is None or limit_N is None
-            else worst_N <= limit_N,
         }
+        if truth.force_N is not None:
+            rows = optimism_rows(inputs, monitor_replay.slope_inputs,
+                                 monitor_replay.fallback_rows, truth.force_N, acting, settings)
+            variant.update(judged_summary(rows, limit_N))
+        variants[source] = variant
     source_counts = {source.value: int(np.sum(track.sources == source.value))
                      for source in ProbedLegSource if source is not ProbedLegSource.NOT_PROBE}
     return {
@@ -546,5 +683,31 @@ def replay_case(
         "command_history_match": track.command_history_match,
         "level_gate": {"passed": is_gate_passed, "replay": level_events,
                        "controller": controller},
+        "true_force_source": None if truth.source is None else truth.source.value,
         "variants": variants,
+    }
+
+
+def judged_summary(rows: list[dict[str, Any]], limit_N: float | None) -> dict[str, Any]:
+    """Judgement of one variant (P-1): the watched ``nominal_gap`` rows pass with their
+    largest optimism within the allowance and no missed trigger; the ``level`` rows of a
+    fallback leg are recorded per condition and FLAG a missed trigger (no failure)."""
+    judged = _rule_summary(rows, "nominal_gap")
+    level = _rule_summary(rows, "level")
+
+    def passes(worst_N: float | None) -> bool | None:
+        if worst_N is None or limit_N is None:
+            return None
+        return worst_N <= limit_N and judged["missed"] == 0
+
+    return {
+        "optimism_rows": rows,
+        "nominal_gap": judged,
+        "level": level,
+        "allowance_N": limit_N,
+        "is_within_allowance": None if judged["max_difference_N"] is None or limit_N is None
+        else judged["max_difference_N"] <= limit_N,
+        "is_judgement_passed": passes(judged["max_difference_N"]),
+        "is_judgement_passed_falling": passes(judged["max_difference_falling_N"]),
+        "level_missed_flag": level["missed"] >= 1,
     }

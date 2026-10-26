@@ -14,15 +14,21 @@ import numpy as np
 import pytest
 
 from outrigger_sim.control.c2 import C2Config, C2Geometry
+from outrigger_sim.control.contact_replay import ReplayInput, ReplaySettings
 from outrigger_sim.control.r5_fallback_replay import (
     OPTIMISM_ALLOWANCE_L1_N,
     OPTIMISM_ALLOWANCE_L2B_N,
     ProbedLegSource,
+    TrueForceSource,
+    judged_summary,
     offset_allowance,
     optimism_allowance_N,
+    optimism_rows,
     probed_leg_track,
     replay_case,
+    true_forces_at,
 )
+from outrigger_sim.control.two_pressure import FallbackSlopeInputs
 from outrigger_sim.params import load_params
 
 PERIOD_S = 0.1
@@ -168,4 +174,111 @@ def test_record_302_5_reconstruction_with_l_hat_true(record_replay, source, fall
     assert row["L_hat_true_N"] / 1e3 == pytest.approx(88.06, abs=0.05)
     assert row["difference_N"] < 0.0
     assert variant["allowance_N"] == OPTIMISM_ALLOWANCE_L1_N
-    assert variant["is_within_allowance"]
+
+
+@pytest.mark.parametrize("source", ["plant_meta", "column_nominal"])
+def test_record_p1_summary(record_replay, source) -> None:
+    """P-1: L1 truth is ``F_cyl`` of a run without seal friction; no missed trigger; on the
+    falling rows the fallback prediction is not above the healthy one (the rising-head rows,
+    where neither fires, exceed the allowance and are kept in ``max_difference_N``)."""
+    assert record_replay["true_force_source"] == "F_cyl_no_friction"
+    variant = record_replay["variants"][source]
+    judged, level = variant["nominal_gap"], variant["level"]
+    assert judged["missed"] == 0 and level["missed"] == 0
+    assert not variant["level_missed_flag"]
+    assert judged["max_difference_falling_N"] <= OPTIMISM_ALLOWANCE_L1_N
+    assert variant["is_judgement_passed_falling"]
+    assert judged["max_difference_N"] > OPTIMISM_ALLOWANCE_L1_N  # rising-head rows (record)
+    assert set(level["by_condition"]) <= {"moving", "short", "other"}
+
+
+def test_record_169_0_row_is_not_watched(record_replay) -> None:
+    """The +2.1 kN level row of O-4 (169.0 s): REANCHOR, FL moving, not an R-5 period."""
+    row = _row_of(record_replay, 169.0)
+    print(f"169.0 s: phase {row['phase']}, watched {row['is_watched']}, "
+          f"condition {row['condition']}, difference {row['difference_N']:.0f} N")
+    assert (row["phase"], row["is_watched"], row["condition"]) == ("reanchor", False, "moving")
+    assert row["rule"] == "level"
+
+
+# --- P-1 truth source and missed triggers (synthetic) -----------------------------------------
+
+
+def _write_pads(path: Path, *, with_pressure: bool) -> Path:
+    t_s = np.round(np.arange(1, 1001) * 1e-3, 6)
+    arrays = {"t": t_s, "F_cyl": np.full((t_s.size, 4), 50e3)}
+    if with_pressure:
+        arrays["F_pressure"] = np.full((t_s.size, 4), 48e3)
+    np.savez(path, **arrays)
+    return path
+
+
+def test_truth_prefers_f_pressure(tmp_path) -> None:
+    pads = _write_pads(tmp_path / "pads.npz", with_pressure=True)
+    truth = true_forces_at(pads, np.array([0.1, 0.2]), {"seal_friction_N": [4e3] * 4}, "L2b")
+    assert truth.source is TrueForceSource.F_PRESSURE
+    assert np.all(truth.force_N == 48e3)
+
+
+def test_truth_without_f_pressure_needs_no_seal_friction(tmp_path) -> None:
+    pads = _write_pads(tmp_path / "pads.npz", with_pressure=False)
+    t_s = np.array([0.1, 0.2])
+    with_friction = true_forces_at(pads, t_s, {"seal_friction_N": [4e3, 4e3, 3.3e3, 3.3e3]},
+                                   "L2b_NSC")
+    assert with_friction.force_N is None and "seal friction" in with_friction.note
+    unknown = true_forces_at(pads, t_s, {}, "L2b_NSC")
+    assert unknown.force_N is None
+    frictionless = true_forces_at(pads, t_s, {"seal_friction_N": [0.0] * 4}, "L2b_NSC")
+    assert frictionless.source is TrueForceSource.F_CYL_NO_FRICTION
+    l1 = true_forces_at(pads, t_s, {}, "L1")
+    assert l1.source is TrueForceSource.F_CYL_NO_FRICTION and np.all(l1.force_N == 50e3)
+
+
+def _ready_input(lower_N: np.ndarray) -> ReplayInput:
+    count = lower_N.shape[0]
+    marks = np.zeros((count, 4), dtype=bool)
+    return ReplayInput(
+        t_s=_times(count), watch_phase=np.full(count, "ready"), lower_reading_N=lower_N,
+        seal_band_N=np.zeros((count, 4)), motor_stroke_m=np.zeros((count, 4)),
+        is_lifted=np.ones(count, dtype=bool), touched=np.ones((count, 4), dtype=bool),
+        probed_leg=np.full(count, -1), ge2_lift_mark=marks, ge2_trigger_mark=marks,
+        probe_not_grounded_mark=marks,
+    )
+
+
+def _missed_case(slope_drop_N: float | None):
+    """FL fallback reading flat at 60 kN; its truth falls 10 kN per period (healthy R-5
+    fires from row 3); ``slope_drop_N`` = a fallback-slope ``D`` on every row, or level."""
+    count = 6
+    lower = np.full((count, 4), 80e3)
+    lower[:, FL] = 60e3 - 100.0 * np.arange(count)  # falling a little: latest < previous
+    truth = np.full((count, 4), 80e3)
+    truth[:, FL] = 60e3 - 10e3 * np.arange(count)
+    slope_inputs = np.full((count, 4), None, dtype=object)
+    if slope_drop_N is not None:
+        gain = 1.3273229e-2 + 3.76991118e-3
+        for row in range(count):
+            slope_inputs[row, FL] = FallbackSlopeInputs(
+                slope_drop_N / gain, 0.0, 1.0, 1.0, 1.0, 1.3273229e-2, 3.76991118e-3)
+    settings = ReplaySettings.from_config(C2Config().with_10hz_d1(), 9414.59)
+    rows = optimism_rows(_ready_input(lower), slope_inputs, (0, None, None, None), truth,
+                         np.zeros((count, 4)), settings)
+    return rows, judged_summary(rows, OPTIMISM_ALLOWANCE_L1_N)
+
+
+def test_missed_trigger_on_level_rows_is_a_flag() -> None:
+    rows, summary = _missed_case(None)
+    assert [row["is_missed"] for row in rows] == [True, True, True]
+    assert {row["condition"] for row in rows} == {"other"}
+    assert summary["level"]["missed"] == 3
+    assert summary["level"]["by_condition"]["other"]["missed"] == 3
+    assert summary["level_missed_flag"]
+    assert summary["nominal_gap"]["missed"] == 0
+
+
+def test_missed_trigger_on_nominal_gap_rows_fails_the_judgement() -> None:
+    _, summary = _missed_case(1e3)  # D far below the true fall: the fallback R-5 stays quiet
+    assert summary["nominal_gap"]["missed"] == 3
+    assert summary["is_judgement_passed"] is False
+    _, fires = _missed_case(40e3)  # D of the true fall: both fire, nothing missed
+    assert fires["nominal_gap"]["missed"] == 0
