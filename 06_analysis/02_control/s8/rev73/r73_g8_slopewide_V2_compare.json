@@ -1,0 +1,21 @@
+{
+ "script": "04_scripts/03_control/s8/r73_g8_compare.py",
+ "inputs": {
+  "--runs": [
+   "06_analysis\\02_control\\s8\\rev73\\r73_g8_slopewide_V2.json"
+  ],
+  "--base": [
+   "06_analysis\\02_control\\s8\\rev73\\_base_slope.json",
+   "06_analysis\\02_control\\s8\\rev70\\r70_wide_AG2c5.json"
+  ]
+ },
+ "n": 174,
+ "n_same": 174,
+ "n_changed_relaxed": 0,
+ "n_unexplained": 0,
+ "missing": [],
+ "errors": [],
+ "changed": [],
+ "unexplained": [],
+ "changed_fail": []
+}

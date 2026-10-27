@@ -150,6 +150,18 @@ def case_plan() -> list[dict[str, Any]]:
             f"C2 levelling (284), {c['soil']} {c['pad']} {c['level']} F_s {c['fs_kN']:g} kN, pad grid {c['grid_m']:g} m; "
             "wall = P3B_EST_S (dynamics 5.37.6, M14s, contended P3a cost)")
         rows[-1]["wall_est_s"] = rows[-1]["wall_est_4cm_grid_s"] = c["est_s"]
+    for c in g6_open_loop_cases():
+        sp = c["soil_patch"]
+        add(c["group"], c["case"], c["sim_s"], "machine",
+            f"G6 open loop: P3a G1 B lift with {sp['set']} under {sp['leg']}"
+            + (" (optional)" if c["optional"] else f"; compared with {G6_P3A_REFERENCE}"))
+        rows[-1]["wall_est_s"] = rows[-1]["wall_est_4cm_grid_s"] = c["est_s"]
+    for c in g6_cases():
+        sp = c["soil_patch"]
+        add(c["group"], c["case"], c["sim_s"], "machine",
+            f"G6 soil patch: {c['soil']} base, {sp['set']} under {sp['leg']} (grid {sp['grid_m']:g} m), "
+            f"{c['pad']} {c['level']} F_s {c['fs_kN']:g} kN; triple terrain; wall = G6_US_PER_STEP_UPPER (ASSUMPTION)")
+        rows[-1]["wall_est_s"] = rows[-1]["wall_est_4cm_grid_s"] = c["est_s"]
     for cid, est in P3B_S8C_CASES.items():
         rows.append({"group": "P3b-RE1c", "case": cid, "sim_s": 104.0, "kind": "s8c_L2b_rigid",
                      "wall_est_s": est, "wall_est_4cm_grid_s": est,
@@ -208,12 +220,97 @@ def p3b_cases() -> list[dict[str, Any]]:
 
 
 def p3b_level_argv(c: dict[str, Any]) -> list[str]:
-    """``run_S9.py level`` arguments of a :func:`p3b_cases` row (without the interpreter)."""
-    return ["level", "--soil", c["soil"], "--pad-variant", c["pad_variant"], "--level", c["level"],
-            "--fs-kN", f"{c['fs_kN']:g}", "--grid", f"{c['grid_m']:g}", "--crawler-grid", f"{c['crawler_grid_m']:g}",
-            "--settle-dashpot", "zrp", "--threads", str(SCM_THREADS_FIXED), "--duration", f"{P3B_DURATION_S:g}",
-            "--pressure-grade", P3B_PRESSURE_GRADE, "--imu-grade", P3B_IMU_GRADE, "--seed", str(P3B_SEED),
-            "--approved"]
+    """``run_S9.py level`` arguments of a :func:`p3b_cases` / :func:`g6_cases` row (without the
+    interpreter). A row with ``soil_patch`` adds ``--soil-patch LEG:SET --soil-patch-grid``."""
+    out = ["level", "--soil", c["soil"], "--pad-variant", c["pad_variant"], "--level", c["level"],
+           "--fs-kN", f"{c['fs_kN']:g}", "--grid", f"{c['grid_m']:g}", "--crawler-grid", f"{c['crawler_grid_m']:g}",
+           "--settle-dashpot", "zrp", "--threads", str(SCM_THREADS_FIXED), "--duration", f"{P3B_DURATION_S:g}",
+           "--pressure-grade", P3B_PRESSURE_GRADE, "--imu-grade", P3B_IMU_GRADE, "--seed", str(P3B_SEED),
+           "--approved"]
+    if "duration_s" in c:  # G6 rows only (the P3b rows keep the fixed P3B_DURATION_S, D-2)
+        out[out.index("--duration") + 1] = f"{c['duration_s']:g}"
+    sp = c.get("soil_patch")
+    if sp is not None:
+        out[-1:-1] = ["--soil-patch", f"{sp['leg']}:{sp['set']}", "--soil-patch-grid", f"{sp['grid_m']:g}"]
+    return out
+
+
+# --- G6 soil patch (one soft pad, cad G6 study 2026-10-27; acceptance after P-S8-29) ----------------
+
+G6_US_PER_STEP_UPPER = {"J1": 7000.0, "J2": 7000.0, "G1": 5500.0, "S1": 5500.0}
+"""Upper per-step cost [us] of a G1 base with a patch of this set, 4-parallel contended (ASSUMPTION: the G1
+base 5.5 ms plus one pad on the patch grid; a 1 cm loaded pad costs about +55 % of its 2 cm value, SCM memory
+2026-10-27; the split terrain itself showed no measurable overhead in the G6 probe). To be replaced by the
+first run's ``us_per_step``."""
+
+
+def g6_case(base: str, patch_set: str, leg: str, *, pad: str = "B", level: str = "top", fs: float = 4.0,
+            group: str = "G6", duration_s: float = P3B_DURATION_S) -> dict[str, Any]:
+    """One G6 closed-loop case: the P3b case of ``base`` with the pad ``leg`` on a ``patch_set`` soil patch
+    (``soil_patch`` = {leg, set, grid_m}; patch grid = the P3b pad grid of that set); ``duration_s`` = the
+    closed-loop time after the 8 s settle (``level --duration``)."""
+    sp = {"leg": leg, "set": patch_set, "grid_m": P3B_PAD_GRID_M[patch_set]}
+    us = max(G6_US_PER_STEP_UPPER[patch_set], P3B_US_PER_STEP_UPPER[base])
+    sim_s = CRAWLER_SETTLE_S + float(duration_s)
+    return {"group": group, "case": f"G6_{base}_{pad}_{level}_Fs{fs:g}_sp{patch_set}{leg}", "soil": base,
+            "pad": pad, "pad_variant": P3B_PAD[pad], "level": level, "fs_kN": fs, "grid_m": P3B_PAD_GRID_M[base],
+            "crawler_grid_m": P3B_CRAWLER_GRID_M, "est_s": round(sim_s / 1.0e-4 * us * 1e-6, -2),
+            "soil_patch": sp, "duration_s": float(duration_s), "sim_s": sim_s}
+
+
+G6_DURATION_S = {"J1RR": 160.0, "J1FL": 200.0, "G1RR": 120.0}
+"""Closed-loop time per G6 case (user decision 2026-10-28 with P-S8-29 V2b: J1@RR 160 s, J1@FL 200 s; the G1
+control keeps the P3b 120 s)."""
+
+
+def g6_cases() -> list[dict[str, Any]]:
+    """G6 closed-loop set (user decisions 2026-10-27 / 28; acceptance after P-S8-29, not run yet): G1 base,
+    pad B, top, F_s 4 kN; J1 patch under RR (160 s) and under FL (200 s), and the layout control (G1 patch
+    under RR, 120 s = four G1 pads on the same triple layout; the layout change alone moves bits)."""
+    return [g6_case("G1", "J1", "RR", duration_s=G6_DURATION_S["J1RR"]),
+            g6_case("G1", "J1", "FL", duration_s=G6_DURATION_S["J1FL"]),
+            g6_case("G1", "G1", "RR", group="G6-ref", duration_s=G6_DURATION_S["G1RR"])]
+
+
+G6_OPEN_LOOP_LIFT_S = 28.0
+G6_OPEN_LOOP_EST_S = {"G1": 1800.0, "J1": 3600.0}
+"""Wall estimates of the open-loop rows = the P3a batch estimates of the patch set's own P3a (G1 B 1800 s,
+J1 B 3600 s; s9_batch P3a)."""
+G6_P3A_REFERENCE = "07_results/S9/batch_P3a_20261026_092653/P3a_G1_B"
+"""G6-0a compares with this P3a run (same arguments, dual layout; params / scm_run fingerprints equal to the
+tree of 2026-10-28)."""
+
+
+def g6_open_loop_cases() -> list[dict[str, Any]]:
+    """Open-loop G6 rows (dynamics / user 2026-10-28): G6-0a = the P3a G1 B lift with a G1 patch under RR
+    (triple layout, physics unchanged; compared with :data:`G6_P3A_REFERENCE` by ``s9_g6_patch_compare.py``),
+    G6-0b (optional) = the same lift with a J1 patch under RR."""
+    out = []
+    for name, key, grid, optional in (("G6-0a", "G1", 0.02, False), ("G6-0b", "J1", 0.01, True)):
+        out.append({"group": name, "case": f"{name}_G1_B_lift_sp{key}RR", "optional": optional,
+                    "soil_patch": {"leg": "RR", "set": key, "grid_m": grid}, "est_s": G6_OPEN_LOOP_EST_S[key],
+                    "sim_s": CRAWLER_SETTLE_S + G6_OPEN_LOOP_LIFT_S})
+    return out
+
+
+def g6_machine_argv(c: dict[str, Any]) -> list[str]:
+    """``run_S9.py machine`` arguments of a :func:`g6_open_loop_cases` row: the P3a G1 B arguments (s9_batch
+    P3a) plus the soil patch."""
+    sp = c["soil_patch"]
+    return ["machine", "--soil", "G1", "--pad-variant", "dwg_rear250", "--grid", "0.02", "--crawler-grid", "0.04",
+            "--settle-dashpot", "zrp", "--lift-s", f"{G6_OPEN_LOOP_LIFT_S:g}", "--level", "top", "--threads", "4",
+            "--abort-on-limit", "--soil-patch", f"{sp['leg']}:{sp['set']}", "--soil-patch-grid", f"{sp['grid_m']:g}"]
+
+
+def parse_soil_patch(text: str | None) -> tuple[str, str] | None:
+    """``--soil-patch LEG:SET`` -> (leg, set); None / '' -> None."""
+    if not text:
+        return None
+    leg, sep, key = text.partition(":")
+    if not sep or leg not in ("FL", "FR", "RL", "RR") or key not in P3B_PAD_GRID_M:
+        raise ValueError(f"--soil-patch must be LEG:SET with LEG in FL/FR/RL/RR and SET in "
+                         f"{sorted(P3B_PAD_GRID_M)}, got {text!r}")
+    return leg, key
 
 
 P3B_PRESSURE_GRADE = "normal"
@@ -267,6 +364,14 @@ def load_inputs(args):
     pv = pad_variant_meta(args.pad_variant, params=params)
     soil = load_soil_set(args.soil, overrides=_soil_overrides(args.soil_override))
     return params, pv, soil
+
+
+def load_soil_patch(args):
+    """G6: ``(leg, SoilSet)`` of ``--soil-patch`` (no soil overrides on the patch set) or None."""
+    from outrigger_sim.chrono.scm_model import load_soil_set
+
+    sp = parse_soil_patch(getattr(args, "soil_patch", None))
+    return None if sp is None else (sp[0], load_soil_set(sp[1]))
 
 
 PLACEMENT_ENV = "OUTRIGGER_PLACEMENT"
@@ -691,10 +796,13 @@ def build_machine(args, params, pv, soil):
 
     normal = None if (args.floor_roll == 0.0 and args.floor_pitch == 0.0) else floor_normal(
         args.floor_roll, args.floor_pitch)
+    patch = load_soil_patch(args)
+    extra = {} if patch is None else {"soil_patch": patch,
+                                      "soil_patch_grid_m": getattr(args, "soil_patch_grid", None)}
     return S9Model(params, soil, pv, shear=args.scm_shear, floor_normal=normal, dt_s=args.dt,
                    stiffness_mode=args.stiffness_mode, interface=args.interface,
                    swivel_stiffness_N_m_rad=args.k_sw, grid_m=args.grid, num_threads=args.threads,
-                   ray_shape=args.ray_shape, crawler_grid_m=args.crawler_grid)
+                   ray_shape=args.ray_shape, crawler_grid_m=args.crawler_grid, **extra)
 
 
 def gravity_hold_s(args) -> float:
@@ -1501,6 +1609,196 @@ class StepSeries:
         return {k: v[: self.n].copy() for k, v in self.data.items()}
 
 
+COMPLETION_SERIES_NAME = "completion_series.npz"
+P3B_EXT_EVENTS = ("INFO_LOC_CLEARANCE_ANCHOR", "INFO_TWIST_UNSETTLED", "WARN_LIFT_STROKE_LIMITED",
+                  "FAULT_STROKE_END", "FAULT_LIFT_STROKE_LIMIT", "fault_reground_start", "fault_reground_end")
+"""Controller events counted by :func:`p3b_ext_records` (name or ``name:<suffix>``). ``INFO_TWIST_UNSETTLED``
+is the P-S8-29 V2b event (name confirmed 2026-10-28)."""
+COMPLETION_REASONS = ("attitude", "clearance", "twist", "loc")
+
+
+class CompletionProbe:
+    """Per control instant (``on_control``, after the controller update), read-only: the twist load
+    ``D = n^T F`` of the controller's last reading (raw, and the twist-loop low-pass output when the
+    preset has one), the completion-filtered attitude deviation, the filtered clearance and the
+    controller's own clearance verdict, the LOC flag, and the completion conditions of
+    ``C2Controller._update_completion`` (spec rev. 70; mirrored, not changed): attitude (reference on
+    target and deviation < ``done_attitude_rad``), clearance (``_is_clearance_done``), twist
+    (``|D| < done_twist_N``), LOC (soil response on and lift-off not confirmed). A value the
+    controller does not expose reads NaN (private members; the record stays usable when P-S8-29
+    renames them). Arrays: ``t_s`` absolute, ``phase``, ``D_raw_N``, ``D_loop_N``, ``deviation_rad``,
+    ``on_target``, ``clearance_filtered_m``, ``ok_<reason>`` (1 / 0 / -1 unknown),
+    ``complete_since_s``."""
+
+    def __init__(self, c2: Any):
+        self.c2 = c2
+        self.rows: list[dict[str, Any]] = []
+
+    @staticmethod
+    def _try(fn, default=math.nan):
+        try:
+            v = fn()
+        except Exception:  # noqa: BLE001 - private controller members, record only
+            return default
+        return default if v is None else v
+
+    def __call__(self, meas: Any, command: Any = None) -> None:
+        c2 = self.c2
+        st = getattr(c2, "_state", None)
+        rd = getattr(st, "last_reading", None)
+        th = c2.config.thresholds
+        d_raw = self._try(lambda: float(c2.geometry.twist_vector @ np.asarray(rd.cylinder_force_N, float)))
+        flt = getattr(c2, "_twist_load_filter", None)
+        d_loop = self._try(lambda: float(np.asarray(flt._stages[-1]).reshape(-1)[0])) if flt is not None else d_raw
+        dev = self._try(lambda: float(c2._completion_deviation_rad()))
+        on_t = self._try(lambda: bool(c2._is_reference_on_target()), None)
+        cf = getattr(c2, "_clearance_filter", None)
+        clr = self._try(lambda: float(np.asarray(cf._stages[-1]).reshape(-1)[0]))
+        clr_ok = self._try(lambda: bool(c2._is_clearance_done(clr)), None) if math.isfinite(clr) else None
+        soil_on = bool(getattr(getattr(c2.config, "soil", None), "enable", False))
+        loc = self._try(lambda: bool(c2._is_liftoff_confirmed()), None) if soil_on else True
+
+        def flag(v):
+            return -1 if v is None else int(bool(v))
+
+        att_ok = None if (on_t is None or not math.isfinite(dev)) else (on_t and dev < th.done_attitude_rad)
+        tw_ok = None if not math.isfinite(d_raw) else abs(d_raw) < th.done_twist_N
+        self.rows.append({"t_s": float(meas.t_s), "phase": str(getattr(c2, "phase", "")),
+                          "D_raw_N": d_raw, "D_loop_N": d_loop, "deviation_rad": dev,
+                          "on_target": flag(on_t), "clearance_filtered_m": clr,
+                          "ok_attitude": flag(att_ok), "ok_clearance": flag(clr_ok), "ok_twist": flag(tw_ok),
+                          "ok_loc": flag(loc),
+                          "complete_since_s": self._try(lambda: float(st.complete_since_s))})
+
+    def arrays(self) -> dict[str, np.ndarray]:
+        keys = ("t_s", "D_raw_N", "D_loop_N", "deviation_rad", "on_target", "clearance_filtered_m",
+                "ok_attitude", "ok_clearance", "ok_twist", "ok_loc", "complete_since_s")
+        out = {k: np.asarray([r[k] for r in self.rows], float) for k in keys}
+        out["phase"] = np.asarray([r["phase"] for r in self.rows], dtype="U32")
+        return out
+
+    def save(self, path: Path) -> dict[str, Any]:
+        arr = self.arrays()
+        np.savez(path, **arr)
+        return {"file": path.name, "rows": int(arr["t_s"].size),
+                "rule": "runner mirror of C2Controller._update_completion (spec rev. 70), read-only; -1 = unknown"}
+
+
+def completion_block_summary(arr: dict[str, np.ndarray], done_twist_N: float) -> dict[str, Any]:
+    """LEVEL samples of :class:`CompletionProbe`: share of samples blocked by each reason, the reasons at the
+    last LEVEL sample, and the D range in LEVEL [N]."""
+    ph = arr["phase"]
+    lv = np.array(["level" in str(p).lower() for p in ph])
+    out: dict[str, Any] = {"level_samples": int(lv.sum()), "done_twist_N": done_twist_N}
+    if not lv.any():
+        return out
+    out["blocked_share"] = {r: float(np.mean(arr[f"ok_{r}"][lv] == 0)) for r in COMPLETION_REASONS}
+    out["unknown_share"] = {r: float(np.mean(arr[f"ok_{r}"][lv] < 0)) for r in COMPLETION_REASONS}
+    k = int(np.flatnonzero(lv)[-1])
+    out["last_level_t_s"] = float(arr["t_s"][k])
+    out["last_level_blocking"] = [r for r in COMPLETION_REASONS if arr[f"ok_{r}"][k] == 0]
+    d = arr["D_raw_N"][lv]
+    d = d[np.isfinite(d)]
+    if d.size:
+        out["D_level_N"] = {"min": float(d.min()), "max": float(d.max()), "abs_last": float(abs(d[-1]))}
+    return out
+
+
+VIRGIN_UNCERTAINTY = {"stroke_mm": 2.5, "force_fraction": 0.20}
+"""Dynamics 2026-10-28: a C2 decision on the soft leg taken while its pad load is still below F_x (elastic
+branch, before the virgin Bekker branch) carries stroke +-2.5 mm and force +20 % uncertainty."""
+_PAD_TYPE = {"cad330": "A", "dwg_rear250": "B"}
+
+
+def virgin_crossover_force_N(set_key: str, pad_variant: str, leg: str, path: Path | None = None) -> float | None:
+    """``F_x = K A s_x``: elastic stiffness of the set x pad bottom area of the leg (pad variant) x virgin
+    crossover sinkage ``K_checks.<type>.<leg>.virgin_crossover_mm`` of ``02_params/scm_soil_sets.json``
+    [N]; None when the set has no crossover (linear sets, e.g. G1). J1: B rear 49.0 / front 85.1 kN,
+    J2: 34.8 / 60.2 kN (dynamics 2026-10-28)."""
+    from outrigger_sim.chrono.scm_model import SOIL_SETS_JSON
+    from outrigger_sim.pad_variants import pad_variant_meta
+
+    data = json.loads(Path(path or SOIL_SETS_JSON).read_text("utf-8"))
+    entry = data["sets"][set_key]
+    sx = ((entry.get("K_checks") or {}).get(_PAD_TYPE[pad_variant]) or {}).get(leg, {}).get("virgin_crossover_mm")
+    if sx is None:
+        return None
+    area = float(pad_variant_meta(pad_variant)["pad_bottom_area_m2"][leg])
+    return float(entry["chrono"]["elastic_K"]) * area * float(sx) * 1e-3
+
+
+def virgin_branch_record(series: dict[str, np.ndarray], soil_rows: list[dict[str, Any]], soil_meta: dict | None,
+                         phases: list[tuple[float, str]], *, leg: str, fx_N: float | None,
+                         t_loop_start_s: float) -> dict[str, Any]:
+    """Soft-leg virgin-branch record (dynamics / user 2026-10-28): first time the soft pad's SCM normal
+    exceeds ``F_x``; the C2 decisions about that leg (t_P, LOC, the first probe of the leg) taken before it
+    are marked "virgin-branch window" with :data:`VIRGIN_UNCERTAINTY`. TOUCH values of the soft pad are a
+    record, not judged. Times relative to the loop start [s]."""
+    j = ("FL", "FR", "RL", "RR").index(leg)
+    t = np.asarray(series["t_s"], float)
+    n = np.asarray(series["scm_pad_normal_N"], float)[:, j]
+    over = np.flatnonzero(n > fx_N) if fx_N is not None else np.zeros(0, int)
+    t_x = None if not over.size else float(t[over[0]])
+    sm = soil_meta or {}
+    first_probe = next((float(r["t_s"]) for r in soil_rows if r.get("probed_leg") == j), None)
+    decisions = {"t_P_s": sm.get("t_P_s"), "t_L_s": sm.get("t_loc_s"), "first_probe_s": first_probe}
+
+    def rel(v):
+        return None if v is None else float(v) - t_loop_start_s
+
+    window = {k: (v is not None and (t_x is None or v < t_x)) for k, v in decisions.items()} if fx_N is not None \
+        else {k: False for k in decisions}
+    touch = []
+    for (t1, ph), nxt in zip(phases, [*phases[1:], (float(t[-1]) if t.size else 0.0, "end")], strict=True):
+        if "touch" in str(ph).lower():
+            m = (t >= t1) & (t <= nxt[0])
+            if m.any():
+                touch.append({"t_rel_s": [rel(t1), rel(nxt[0])], "pad_normal_max_N": float(n[m].max()),
+                              "sinkage_end_mm": float(np.asarray(series["pad_sinkage_geometric_m"])[m, j][-1] * 1e3)})
+    return {"leg": leg, "F_x_N": fx_N, "t_first_over_F_x_rel_s": rel(t_x),
+            "decisions_rel_s": {k: rel(v) for k, v in decisions.items()},
+            "virgin_branch_window": window, "any_in_window": bool(any(window.values())),
+            "uncertainty_if_in_window": dict(VIRGIN_UNCERTAINTY),
+            "touch_record": touch,
+            "rule": "dynamics / user 2026-10-28: C2 decisions on the soft leg before its pad normal first exceeds "
+                    "F_x = K A s_x are in the virgin-branch window (stroke +-2.5 mm, force +20 %); TOUCH values of "
+                    "the soft pad are a record, not judged; F_x None (linear set) = no window"}
+
+
+def p3b_ext_records(series: dict[str, np.ndarray], events: list[tuple[float, str]], soil_meta: dict | None,
+                    completion: dict[str, np.ndarray], *, done_twist_N: float, soil_patch_leg: str | None,
+                    t_loop_start_s: float) -> dict[str, Any]:
+    """G6 / P-S8-29 record block (user decision 2026-10-27): controller event counts
+    (:data:`P3B_EXT_EVENTS`), t_P / t_L / c_min(t_P) of the C2 soil meta (``t_P_s``, ``t_loc_s``,
+    ``clearance_at_P_m``; relative to the loop start), the completion block summary and the pad sinkage
+    summary (1 ms geometric sinkage; soft leg = the G6 patch leg, None without a patch)."""
+    names = [n for _t, n in events]
+    counts = {k: sum(1 for n in names if n == k or n.startswith(k + ":")) for k in P3B_EXT_EVENTS}
+    sm = soil_meta or {}
+
+    def rel(v):
+        return None if v is None else float(v) - t_loop_start_s
+
+    sink = np.asarray(series.get("pad_sinkage_geometric_m", np.zeros((0, 4))), float)
+    legs = ("FL", "FR", "RL", "RR")
+    sink_sum: dict[str, Any] = {}
+    if sink.size:
+        sink_sum = {"end_mm": dict(zip(legs, (sink[-1] * 1e3).tolist())),
+                    "max_mm": dict(zip(legs, (np.nanmax(sink, axis=0) * 1e3).tolist()))}
+        if soil_patch_leg is not None:
+            j = legs.index(soil_patch_leg)
+            others = [i for i in range(4) if i != j]
+            sink_sum["soft_leg"] = soil_patch_leg
+            sink_sum["soft_minus_others_mean_end_mm"] = float((sink[-1, j] - np.mean(sink[-1, others])) * 1e3)
+    return {"event_counts": counts,
+            "soil_times_rel_s": {"t_P_s": rel(sm.get("t_P_s")), "t_L_s": rel(sm.get("t_loc_s"))},
+            "c_min_at_P_m": sm.get("clearance_at_P_m"), "loc": sm.get("loc"),
+            "loc_anchor_applied": sm.get("loc_anchor_applied"),
+            "completion": completion_block_summary(completion, done_twist_N),
+            "pad_sinkage": sink_sum,
+            "rule": "G6 / P-S8-29 record (2026-10-27): records only, no judgement"}
+
+
 def settle_reference(s: dict[str, np.ndarray]) -> dict[str, Any]:
     """Settle reference of a ``level`` run from the last 1 s of the settle (:class:`StepSeries`):
     means of the track normals (5 % utilisation rule), roll / pitch, origin z, pad sinkage, crawler
@@ -2282,11 +2580,13 @@ def run_level(args) -> Path:
     from outrigger_sim.chrono.run_rows import MinimalR8Series, R8_SERIES_NAME, probed_leg
 
     r8_rows = MinimalR8Series(c2)  # (가): r8_series.npz probed_leg, same key / meaning as run_S6C
+    completion = CompletionProbe(c2)  # G6 / P-S8-29 record (read-only)
 
     def observe(meas, command):  # 10 Hz S9 keys (287: crawler patch force sum, pad node sinkage, rut clearance)
         from outrigger_sim.frames import roll_pitch_from_quat
 
         r8_rows(meas, command)
+        completion(meas, command)
         row = model.s9_record()
         ph = str(getattr(c2, "phase", None))
         row["c2_phase"] = ph
@@ -2307,7 +2607,8 @@ def run_level(args) -> Path:
     res = run_closed_loop(engine, c2, suite, args.duration, run_meta=run_meta, on_control=observe,
                           command_delay_periods=0, placement=None, step_hook=step_rec)
     loop_wall = time.perf_counter() - t_run0
-    tag = args.case or f"{args.soil}_{args.pad_variant}_{args.level}_Fs{args.fs_kN:g}"
+    tag = args.case or (f"{args.soil}_{args.pad_variant}_{args.level}_Fs{args.fs_kN:g}"
+                        + ("" if not args.soil_patch else "_sp" + args.soil_patch.replace(":", "")))
     d = out_dir("level", tag, args.out_root)
     save_record(res.record, d / "record")  # 10 Hz: meas.head_pressure / rod_pressure / stroke, u_cmd (applied)
     np.savez(d / "controller_commands.npz", t_s=res.command_t_s, issued_u_m_s=res.command_m_s)
@@ -2328,6 +2629,16 @@ def run_level(args) -> Path:
            "reapproach_settings": c2_setup["lifted_reapproach"],
            "soil_meta": ctl_meta.get("soil"), "record": p37_record_arrays(d / "record"), **p37_plant_inputs(params)}
     p3b = p3b_records(series, soil_rows, events, phases, ctx)
+    completion_info = completion.save(d / COMPLETION_SERIES_NAME)
+    p3b_ext = p3b_ext_records(series, events, ctl_meta.get("soil"), completion.arrays(),
+                              done_twist_N=float(c2.config.thresholds.done_twist_N),
+                              soil_patch_leg=model.soil_patch_leg, t_loop_start_s=t_loop0)
+    p3b_ext["completion_series"] = completion_info
+    if model.soil_patch_leg is not None:  # G6: virgin-branch window of the soft leg (dynamics 2026-10-28)
+        p3b_ext["virgin_branch"] = virgin_branch_record(
+            series, soil_rows, ctl_meta.get("soil"), phases, leg=model.soil_patch_leg,
+            fx_N=virgin_crossover_force_N(model.soil_patch_set.key, args.pad_variant, model.soil_patch_leg),
+            t_loop_start_s=t_loop0)
     sensors_end = {**sensor_meta, "suite_setup": dict(suite.setup().config), "noise_seed": args.seed,
                    "zero_calibration": zero_calibration_outcome(ctl_meta),
                    "record_10hz": "record/record.npz: meas.head_pressure, meas.rod_pressure, meas.stroke, u_cmd "
@@ -2352,7 +2663,8 @@ def run_level(args) -> Path:
                "monitor": engine.step_monitor(),
                "gravity_schedule": gravity_schedule_meta(args, dashpot),
                "p3_records": p3_records(soil_rows, ctx["weight_N"], p3b["departure"].get("t_departure_s")),
-               "p3b": p3b, "step_series": {"file": "step_series.npz", "rate_s": STEP_SERIES_S,
+               "p3b": p3b, "p3b_ext": p3b_ext,
+               "step_series": {"file": "step_series.npz", "rate_s": STEP_SERIES_S,
                                            "keys": sorted(series), "rows": int(len(series["t_s"]))}}
     (d / "result.json").write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), "utf-8")
     engine.close()
@@ -2390,6 +2702,13 @@ def _common(p: argparse.ArgumentParser) -> None:
                    help="SCM ray targets: static triangle meshes (default, P1-V0) or the former convex box / hull")
     p.add_argument("--crawler-grid", type=float, default=None,
                    help="dual terrain: crawler terrain grid [m] (pads on --grid); default one terrain")
+
+
+def _soil_patch_args(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--soil-patch", default=None, metavar="LEG:SET",
+                   help="G6: that pad on a third SCM terrain with soil SET (needs --crawler-grid), e.g. RR:J1")
+    p.add_argument("--soil-patch-grid", type=float, default=None,
+                   help="G6: grid of the soil-patch terrain [m] (default --grid)")
 
 
 def _gravity_ramp_args(p: argparse.ArgumentParser) -> None:
@@ -2459,6 +2778,7 @@ def build_parser() -> argparse.ArgumentParser:
     mp = sub.add_parser("machine")
     _common(mp)
     _gravity_ramp_args(mp)
+    _soil_patch_args(mp)
     mp.add_argument("--drift-window", type=float, default=10.0,
                     help="settle drift record over the last window [s] (P1-L5), when the settle is long enough")
     mp.add_argument("--lift-s", type=float, default=0.0, help="open-loop extension time after the settle")
@@ -2471,6 +2791,7 @@ def build_parser() -> argparse.ArgumentParser:
     lp = sub.add_parser("level")
     _common(lp)
     _gravity_ramp_args(lp)
+    _soil_patch_args(lp)
     lp.add_argument("--duration", type=float, default=P3B_DURATION_S,
                     help=f"closed-loop time after the settle [s], fixed (P3b {P3B_DURATION_S:g} s, control D-2; no end "
                          "rule; READY <= 90 s ASSUMPTION P3-6)")

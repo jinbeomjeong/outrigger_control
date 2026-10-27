@@ -68,10 +68,11 @@ def g8(rows):
         if r["floor"] == "flat" and abs(m) > 5:
             model[f"{kind}|{r['leg']}|{r['level']}"].append(round(over / m, 3))
         d8 = min(r["min_F_after_liftoff_kN"].values()) if r.get("min_F_after_liftoff_kN") else None
-        smax = max(r["stroke_end_mm"])
+        smax = max(r.get("stroke_max_run_mm") or r["stroke_end_mm"])  # rev. 72: run maximum where recorded
         row = {"key": r["key"], "h_mm": h, "outcome": outcome(r), "flags": r["flags"], "escalate": r["escalate"],
                "D8_min_kN": d8, "lifted": {k: v for k, v in (r.get("lift_after_liftoff_s") or {}).items() if v > 0},
-               "stroke_max_mm": smax, "stroke_max_leg": LEGS[r["stroke_end_mm"].index(smax)],
+               "stroke_max_mm": smax,
+               "stroke_max_leg": LEGS[(r.get("stroke_max_run_mm") or r["stroke_end_mm"]).index(smax)],
                "stroke_margin_mm": round(STROKE_OK_MM - smax, 1), "att_end_deg": r.get("att_end_deg"),
                "over_lift_minus_ref_mm": round(over, 1), "model_mm": round(m, 1),
                "T3_mm": tch.get("post_contact_stroke_mm"), "T4_deg": max(tch.get("max_abs_att_change_deg") or [0]),

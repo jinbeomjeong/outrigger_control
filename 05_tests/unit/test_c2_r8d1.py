@@ -45,6 +45,7 @@ from outrigger_sim.control.c2 import (
     SoilResponseSettings,
     StopPredictor,
     TargetSettings,
+    TwistCompletionRelaxSettings,
     TwistGainReference,
     twist_rates,
 )
@@ -329,6 +330,21 @@ def test_preset_values() -> None:
         stroke_end_entry=True,
         stroke_end_travel_m=0.030,
     )
+    # User decision 2026-10-27: the READY tail skip check keeps 0.5 mm for the overshoot;
+    # the other tail keys and the default (0, the earlier rule) stay.
+    assert config.lock_tail == replace(base.lock_tail, end_overshoot_margin_m=0.0005)
+    assert base.lock_tail.end_overshoot_margin_m == 0.0
+    # User decision 2026-10-28 (P-S8-29, V2b): relaxed twist completion on; off by default.
+    assert config.twist_completion_relax == TwistCompletionRelaxSettings(
+        enable=True,
+        settle_s=10.0,
+        window_s=5.0,
+        drop_N=0.0,
+        rise_tol_N=300.0,
+        max_twist_N=15000.0,
+        require_loads_ge_F_min=True,
+    )
+    assert not base.twist_completion_relax.enable
 
 
 def test_preset_leaves_the_other_settings() -> None:

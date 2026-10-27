@@ -5,7 +5,10 @@ Acceptance (spec 364 / rev. 70): per run FAULT 0, no pad lift after the crawler 
 clearance (all nodes) >= target - 5 mm = 45 mm. Records per variant: counts, worst values, guard / anchor use,
 re-ground runs, command hashes against a baseline (r69 batch JSON: proj).
 
-Usage: python -I r70_judge.py <out_json> --runs <r70 json> [...] [--base <r69 json> [...]]
+Stroke gate (rev. 72, spec 366 correction): run maximum of the motor stroke (``stroke_max_run_mm``) where the record
+has it, else the end value (records before rev. 72; ``--runmax`` re-runs of the same commands fill it in).
+
+Usage: python -I r70_judge.py <out_json> --runs <r70 json> [...] [--base <r69 json> [...]] [--runmax <json> [...]]
 """
 from __future__ import annotations
 
@@ -35,7 +38,7 @@ def verdict(r):
 
 def main():
     out = Path(sys.argv[1])
-    args = {"--runs": [], "--base": []}
+    args = {"--runs": [], "--base": [], "--runmax": []}
     cur = None
     for a in sys.argv[2:]:
         if a in args:
@@ -44,13 +47,32 @@ def main():
             args[cur].append(a)
     rows = load(args["--runs"])
     base = {r["key"]: r for r in load(args["--base"])} if args["--base"] else {}
+    # spec rev. 72 (366 correction): stroke gate = run maximum. Old records hold only the end value; re-runs given
+    # with --runmax (same command hash required) supply the run maximum for those keys.
+    override = {r["key"]: r for r in load(args["--runmax"])} if args["--runmax"] else {}
+    n_override = 0
+    for r in rows:
+        o = override.get(r.get("key"))
+        if o is None or "error" in r:
+            continue
+        if o.get("cmd_sha256") != r.get("cmd_sha256"):
+            raise SystemExit(f"command hash differs for {r['key']}")
+        r["stroke_max_run_mm"] = o["stroke_max_run_mm"]
+        r["gates"]["stroke_end"] = o["gates"]["stroke_end"]
+        n_override += 1
+    for r in rows:
+        if "error" not in r:
+            r["stroke_basis"] = "run_max" if "stroke_max_run_mm" in r else "end_value"
     by_var = defaultdict(list)
     for r in rows:
         if "error" in r:
             by_var["errors"].append(r["key"])
             continue
         by_var[r["variant"]].append(r)
-    res = {"script": "04_scripts/03_control/s8/r70_judge.py", "inputs": args, "variants": {}}
+    res = {"script": "04_scripts/03_control/s8/r70_judge.py", "inputs": args, "variants": {},
+           "stroke_gate": "run maximum where recorded (rev. 72), else end value",
+           "n_runmax_override": n_override,
+           "n_end_value_only": sum(1 for r in rows if r.get("stroke_basis") == "end_value")}
     for var, rs in by_var.items():
         if var == "errors":
             res["errors"] = rs
@@ -75,7 +97,7 @@ def main():
                 flags.append({"key": r["r69_key"], "flags": r["flags"],
                               "latch_after_contact_s": (r.get("touch") or {}).get("latch_after_contact_s")})
             d8 = min(r["min_F_after_liftoff_kN"].values()) if r.get("min_F_after_liftoff_kN") else None
-            vals = {"D8_min_kN": d8, "stroke_max_mm": max(r["stroke_end_mm"]),
+            vals = {"D8_min_kN": d8, "stroke_max_mm": max(r.get("stroke_max_run_mm") or r["stroke_end_mm"]),
                     "att_end_deg": max(abs(a) for a in r.get("att_end_deg") or [0.0]),
                     "clear_min_mm": (r.get("crawler_clearance_end_mm") or {}).get("true"),
                     "clear_max_mm": (r.get("crawler_clearance_end_mm") or {}).get("true")}

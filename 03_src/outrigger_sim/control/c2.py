@@ -121,7 +121,8 @@ Revision R6 (``s6_control_spec.md`` 51.1, 53.3-53.4, 57, 61.3, 63-64; user decis
 * R-H4' (U62, shape U66 / U67 of spec 65.1): just before READY all four legs extend together
   1.5 mm at 0.25 v_max and settle 0.2 s (``ready_heave``), so READY locks after an extension
   with no load or attitude change; skipped (``WARN_TAIL_SKIPPED:stroke_margin``) when a leg
-  would pass the end-margin stroke. Short locks (probe holds, REANCHOR, DONE) get no tail and
+  would pass the end-margin stroke (less ``end_overshoot_margin_m``, 0.5 mm in the R8 preset).
+  Short locks (probe holds, REANCHOR, DONE) get no tail and
   the probe keeps +d -> E -> -d -> R. U63: the probe corrections use the C1 ``S_ii`` or the
   measured secant; U65: a fallback leg keeps a band >= 13 kN, its head-only probe estimates
   are not used and a rear fallback skips REANCHOR. U68 / U69: READY re-levels below F_min +
@@ -202,6 +203,9 @@ margin (:class:`LiftStrokeGuardSettings`, ``WARN_LIFT_STROKE_LIMITED``,
 ``FAULT_LIFT_STROKE_LIMIT``), the stroke-end FAULT is named (``FAULT_STROKE_END``) and a
 stroke-end FAULT re-grounds the lifted legs first (``FaultRegroundSettings.stroke_end_entry``).
 :meth:`C2Config.with_10hz_d1` turns all of them on; ``C2Config()`` keeps them off.
+P-S8-29 (user decision 2026-10-28, variant V2b): on a creeping pad DONE may accept a twist load
+up to 15 kN that has stopped rising once attitude and clearance have held for 10 s
+(:class:`TwistCompletionRelaxSettings`, event ``INFO_TWIST_UNSETTLED``); preset on, default off.
 Only the start-IMU form exists
 (the late IMU read C1 is not implemented). ``C2Config()`` keeps every R8 setting off, so the
 R7 commands stay bit for bit.
@@ -854,11 +858,17 @@ class LockTailSettings:
     """``retract_tail_speed_fraction`` of ``v_max``."""
     settle_s: float = 0.2
     """``tail_settle_s``: standstill after the tail before READY acts."""
+    end_overshoot_margin_m: float = 0.0
+    """Extra stroke kept clear of the stroke-end guard when deciding whether the READY tail
+    fits (``WARN_TAIL_SKIPPED:stroke_margin``); covers the overshoot after the tail. 0 keeps
+    the pre-2026-10-27 rule; the R8 preset uses 0.5 mm."""
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "mode", RetractTailMode(self.mode))
         if self.tail_m < 0.0 or not 0.0 < self.speed_fraction <= 1.0:
             raise ValueError("tail_m must be >= 0 and speed_fraction in (0, 1]")
+        if self.end_overshoot_margin_m < 0.0:
+            raise ValueError("end_overshoot_margin_m must be >= 0")
 
 
 class TwistGainReference(StrEnum):
@@ -1484,6 +1494,15 @@ R8_LIFT_GUARD_LOOKAHEAD_PERIODS = 2
 R8_LIFT_GUARD_HOLD_LIMIT_S = 3.0
 R8_LIFT_GUARD_SHIFT_CLEARANCE_MARGIN_M = 0.005
 R8_STROKE_END_REGROUND_TRAVEL_M = 0.030
+R8_TAIL_END_OVERSHOOT_MARGIN_M = 0.0005
+"""READY tail skip margin (user decision 2026-10-27): the harness rerun showed the run
+maximum after a tail at the end value + 0.50 mm (lock settle-back after the tail rise)."""
+# P-S8-29 relaxed twist completion (user decision 2026-10-28: variant V2b of the r73 screen)
+R8_TWIST_RELAX_SETTLE_S = 10.0
+R8_TWIST_RELAX_WINDOW_S = 5.0
+R8_TWIST_RELAX_DROP_N = 0.0
+R8_TWIST_RELAX_RISE_TOL_N = 300.0
+R8_TWIST_RELAX_MAX_TWIST_N = 15000.0
 R8_D1_SETTINGS = R8Settings(
     output_delay_periods=1,
     imu_sample_period_s=R8_IMU_SAMPLE_PERIOD_S,
@@ -1718,6 +1737,48 @@ class LiftStrokeGuardSettings:
             )
 
 
+TWIST_RELAX_DONE_EVENT = "INFO_TWIST_UNSETTLED"
+"""``INFO_TWIST_UNSETTLED:<D kN, one decimal>``: DONE through the relaxed twist condition
+(P-S8-29); the S9 recorder counts it by this name."""
+TWIST_RELAX_TIME_TOLERANCE_S = 1e-9
+"""Sample times are sums of 0.1 s steps; equal times must compare as equal."""
+
+
+@dataclass(frozen=True)
+class TwistCompletionRelaxSettings:
+    """Relaxed twist condition of the completion on a creeping pad (P-S8-29, variant V2b).
+
+    On a soft pad the twist load ``|D|`` (``D = n . F``) falls slowly and DONE waits long for
+    ``done_twist_N``. In LEVEL after the LOC the twist condition also counts as met when the
+    attitude condition (reference on target, completion deviation below ``done_attitude_rad``)
+    and the clearance condition have held without a break for ``settle_s``, ``|D|`` has not
+    risen over the last ``window_s`` (now <= window start - ``drop_N``, window maximum <=
+    window start + ``rise_tol_N``), ``|D| <= max_twist_N`` and (``require_loads_ge_F_min``)
+    every leg's lower load estimate is at least ``F_min``. Such a DONE raises
+    :data:`TWIST_RELAX_DONE_EVENT`.
+
+    Off by default; plain class-level defaults, so configs unpickled from older code read
+    "off".
+    """
+
+    enable: bool = False
+    settle_s: float = 10.0
+    window_s: float = 5.0
+    drop_N: float = 0.0
+    """V2b: 0 accepts a standing ``|D|`` (V2 asked for a 500 N fall)."""
+    rise_tol_N: float = 300.0
+    max_twist_N: float = 15000.0
+    require_loads_ge_F_min: bool = True
+
+    def __post_init__(self) -> None:
+        for name in ("settle_s", "window_s"):
+            if not getattr(self, name) > 0.0:
+                raise ValueError(f"{name} must be > 0, got {getattr(self, name)!r}")
+        for name in ("drop_N", "rise_tol_N", "max_twist_N"):
+            if not getattr(self, name) >= 0.0:
+                raise ValueError(f"{name} must be >= 0, got {getattr(self, name)!r}")
+
+
 @dataclass(frozen=True)
 class RestoredLiftoff:
     """S-1 lift-off confirmation handed to :meth:`C2Controller.restore_liftoff_confirmation`.
@@ -1790,6 +1851,9 @@ class C2Config:
     plain class-level default as ``soil``."""
     lift_stroke_guard: LiftStrokeGuardSettings = LiftStrokeGuardSettings()
     """Stroke-budget guard of LEVEL (P-S8-28, spec rev. 70 369.2); off by default, a plain
+    class-level default as ``soil``."""
+    twist_completion_relax: TwistCompletionRelaxSettings = TwistCompletionRelaxSettings()
+    """Relaxed twist condition of DONE on a creeping pad (P-S8-29); off by default, a plain
     class-level default as ``soil``."""
 
     def __post_init__(self) -> None:
@@ -1913,7 +1977,12 @@ class C2Config:
         samples below the touchdown level (P-S8-27). Spec rev. 70 369 (P-S8-28, U-S8-78 /
         U-S8-79, 2026-10-27): the LOC anchor (20 mm dead zone, 5 mm offset), the stroke-budget
         guard (2 mm, 2 periods, 3 s hold, 5 mm) with the named stroke-end FAULT, and the
-        stroke-end FAULT re-ground (30 mm travel). The start-IMU form only:
+        stroke-end FAULT re-ground (30 mm travel). User decision 2026-10-27: the READY tail
+        is skipped when it would leave less than 0.5 mm below the end-margin stroke
+        (``LockTailSettings.end_overshoot_margin_m``). User decision 2026-10-28 (P-S8-29,
+        variant V2b): after 10 s of attitude and clearance on target and a twist load that has
+        not risen over 5 s, DONE accepts ``|D|`` up to 15 kN
+        (:class:`TwistCompletionRelaxSettings`). The start-IMU form only:
         the late IMU read (C1) is not implemented (U-R8-6 = C2).
         """
         config = self.with_r8_diagnostics()
@@ -1950,12 +2019,27 @@ class C2Config:
             shift_clearance_margin_m=R8_LIFT_GUARD_SHIFT_CLEARANCE_MARGIN_M,
             name_stroke_end_fault=True,
         )
+        lock_tail = replace(
+            config.lock_tail, end_overshoot_margin_m=R8_TAIL_END_OVERSHOOT_MARGIN_M
+        )
+        twist_completion_relax = replace(
+            config.twist_completion_relax,
+            enable=True,
+            settle_s=R8_TWIST_RELAX_SETTLE_S,
+            window_s=R8_TWIST_RELAX_WINDOW_S,
+            drop_N=R8_TWIST_RELAX_DROP_N,
+            rise_tol_N=R8_TWIST_RELAX_RISE_TOL_N,
+            max_twist_N=R8_TWIST_RELAX_MAX_TWIST_N,
+            require_loads_ge_F_min=True,
+        )
         return replace(
             config,
             two_pressure=two_pressure,
             fault_reground=reground_settings,
             soil=soil,
             lift_stroke_guard=lift_stroke_guard,
+            lock_tail=lock_tail,
+            twist_completion_relax=twist_completion_relax,
             period_s=R8_PERIOD_S,
             output_ramp_time_s=None,
             gains=replace(config.gains, **R8_D1_C2_GAINS),
@@ -3277,6 +3361,18 @@ class _RunState:
     """Guard periods per mode over the run (meta ``lift_stroke_guard.mode_counts``)."""
     lift_guard_longest_hold_s: float = 0.0
     """Longest run of hold periods so far (meta ``lift_stroke_guard.hold_s``)."""
+    # P-S8-29 (immutable defaults: class attributes for run states pickled before them)
+    twist_relax_settled_since_s: float | None = None
+    """Start of the unbroken run of LEVEL periods with the attitude and clearance on target
+    after the LOC."""
+    twist_relax_history: deque[tuple[float, float]] | None = None
+    """``(t, |D|)`` of those periods over the last ``window_s``; created on first use."""
+    twist_relaxed_load_N: float | None = None
+    """Twist load ``D`` of this period when its completion check met the twist condition only
+    through the relaxation, else ``None``."""
+    twist_relax_done_count: int = 0
+    twist_relax_last_D_N: float | None = None
+    """Twist load of the last relaxed DONE (meta ``twist_relax``)."""
 
 
 @dataclass(frozen=True)
@@ -3502,6 +3598,7 @@ class C2Controller:
             "soil": self._soil_meta(),
             "fault_reground": self._fault_reground_meta(),
             "lift_stroke_guard": self._lift_stroke_guard_meta(),
+            "twist_relax": self._twist_relax_meta(),
             "locked_pressure_warning_note": (
                 QUASI_STATIC_PRESSURE_NOTE if r8.is_instant_sampling else None
             ),
@@ -4237,6 +4334,7 @@ class C2Controller:
         if state.touched.all():
             state.phase = C2Phase.LEVEL
             self._clear_lift_guard_latch()
+            self._clear_twist_relax()
             state.theta_crawler_rad = state.pitch_rad
             state.reanchor_anchor_pitch_rad = state.pitch_rad
             state.roll_integral = 0.0
@@ -4709,6 +4807,7 @@ class C2Controller:
         state.skips_probe_after_reanchor = False
         state.relevel_low_count = 0
         self._clear_lift_guard_latch()
+        self._clear_twist_relax()
 
     # --- lifted-leg re-approach (P-R8-12 leg mode, P-R8-13 twist mode) ---
 
@@ -5829,6 +5928,9 @@ class C2Controller:
             # P-R8-12 / P-R8-13: no DONE while a leg is still in the air.
             self._state.complete_since_s = None
             is_complete = False
+        relaxed_twist_load_N = self._state.twist_relaxed_load_N
+        if is_complete and relaxed_twist_load_N is not None:
+            self._report_twist_relaxed_done(reading.t_s, relaxed_twist_load_N)
         if self._update_crawler_zone(reading):
             lifted_speeds = self._lift_without_retracting(leg_speeds)
             self._note_output_limit(OutputLimit.CRAWLER_RULE, leg_speeds, lifted_speeds)
@@ -6095,6 +6197,7 @@ class C2Controller:
         """Completion conditions held for ``done_hold_s`` (14.5 step 11); with the soil response
         never before the lift-off confirmation (S-2)."""
         state = self._state
+        state.twist_relaxed_load_N = None
         if self.config.soil.enable and not self._is_liftoff_confirmed():
             state.complete_since_s = None
             return False
@@ -6105,11 +6208,18 @@ class C2Controller:
             self._is_reference_on_target()
             and self._completion_deviation_rad() < thresholds.done_attitude_rad
         )
-        is_complete_now = (
-            is_on_target
-            and self._is_clearance_done(filtered_clearance_m)
-            and abs(twist_load) < thresholds.done_twist_N
-        )
+        if self.config.twist_completion_relax.enable and state.phase is C2Phase.LEVEL:
+            is_clearance_done = self._is_clearance_done(filtered_clearance_m)
+            is_twist_ok = self._is_twist_condition_met(
+                reading, twist_load, is_on_target, is_clearance_done
+            )
+            is_complete_now = is_on_target and is_clearance_done and is_twist_ok
+        else:
+            is_complete_now = (
+                is_on_target
+                and self._is_clearance_done(filtered_clearance_m)
+                and abs(twist_load) < thresholds.done_twist_N
+            )
         if not is_complete_now:
             state.complete_since_s = None
             return False
@@ -6129,6 +6239,114 @@ class C2Controller:
             return True
         clearance_error_m = abs(filtered_clearance_m - thresholds.clearance_target_m)
         return clearance_error_m < thresholds.done_clearance_tolerance_m
+
+    # --- relaxed twist completion (P-S8-29) ---
+
+    def _is_twist_condition_met(
+        self,
+        reading: _Reading,
+        twist_load_N: float,
+        is_on_target: bool,
+        is_clearance_done: bool,
+    ) -> bool:
+        """Twist condition of a LEVEL completion: ``|D| < done_twist_N`` or the relaxation.
+
+        The relaxation history is updated every LEVEL period, also while ``|D|`` is small.
+        """
+        is_relax_ok = self._is_twist_relax_ok(
+            reading, twist_load_N, is_on_target, is_clearance_done
+        )
+        if abs(twist_load_N) < self.config.thresholds.done_twist_N:
+            return True
+        if is_relax_ok:
+            self._state.twist_relaxed_load_N = twist_load_N
+        return is_relax_ok
+
+    def _is_twist_relax_ok(
+        self,
+        reading: _Reading,
+        twist_load_N: float,
+        is_on_target: bool,
+        is_clearance_done: bool,
+    ) -> bool:
+        """P-S8-29: settled attitude and clearance, a twist load that has not risen over the
+        window, ``|D| <= max_twist_N`` and (optionally) every lower load at least ``F_min``.
+
+        A break of the attitude or clearance condition (or no LOC yet) restarts the settle time
+        and empties the history.
+        """
+        settings = self.config.twist_completion_relax
+        state = self._state
+        t_s = float(reading.t_s)
+        if not (is_on_target and is_clearance_done and self._is_liftoff_confirmed()):
+            self._clear_twist_relax()
+            return False
+        if state.twist_relax_settled_since_s is None:
+            state.twist_relax_settled_since_s = t_s
+        history = self._twist_relax_history()
+        history.append((t_s, abs(twist_load_N)))
+        window_start_s = t_s - settings.window_s - TWIST_RELAX_TIME_TOLERANCE_S
+        while history[0][0] < window_start_s:
+            history.popleft()
+        settled_s = t_s - state.twist_relax_settled_since_s
+        if settled_s < settings.settle_s - TWIST_RELAX_TIME_TOLERANCE_S:
+            return False
+        if not self._is_twist_relax_window_full(history):
+            return False
+        if not self._has_twist_load_stopped_rising(history):
+            return False
+        if abs(twist_load_N) > settings.max_twist_N:
+            return False
+        if not settings.require_loads_ge_F_min:
+            return True
+        lower_loads_N = self._load_estimate_N(reading.cylinder_force_lower_N)
+        return bool(np.all(lower_loads_N >= self.geometry.F_min_N))
+
+    def _is_twist_relax_window_full(self, history: deque[tuple[float, float]]) -> bool:
+        """The history spans the window, one period short at most."""
+        window_s = self.config.twist_completion_relax.window_s
+        span_s = history[-1][0] - history[0][0]
+        return span_s >= window_s - self.config.period_s - TWIST_RELAX_TIME_TOLERANCE_S
+
+    def _has_twist_load_stopped_rising(self, history: deque[tuple[float, float]]) -> bool:
+        """``|D|`` now at least ``drop_N`` below the window start, and no rise above the window
+        start by more than ``rise_tol_N`` inside the window."""
+        settings = self.config.twist_completion_relax
+        oldest_twist_N = history[0][1]
+        newest_twist_N = history[-1][1]
+        largest_twist_N = max(twist_N for _, twist_N in history)
+        return (
+            newest_twist_N <= oldest_twist_N - settings.drop_N
+            and largest_twist_N <= oldest_twist_N + settings.rise_tol_N
+        )
+
+    def _twist_relax_history(self) -> deque[tuple[float, float]]:
+        state = self._state
+        if state.twist_relax_history is None:
+            state.twist_relax_history = deque()
+        return state.twist_relax_history
+
+    def _clear_twist_relax(self) -> None:
+        """Settle time and history start again (a break, the TOUCH -> LEVEL entry, a re-level)."""
+        state = self._state
+        state.twist_relax_settled_since_s = None
+        if state.twist_relax_history is not None:
+            state.twist_relax_history.clear()
+
+    def _report_twist_relaxed_done(self, t_s: float, twist_load_N: float) -> None:
+        """``INFO_TWIST_UNSETTLED:<D kN>`` and the meta counters of a relaxed DONE."""
+        state = self._state
+        state.twist_relax_done_count += 1
+        state.twist_relax_last_D_N = twist_load_N
+        self._add_event(t_s, f"{TWIST_RELAX_DONE_EVENT}:{twist_load_N / 1e3:.1f}")
+
+    def _twist_relax_meta(self) -> dict[str, Any]:
+        state = self._state
+        return {
+            "settings": asdict(self.config.twist_completion_relax),
+            "n_relaxed_done": state.twist_relax_done_count,
+            "last_D_N": state.twist_relax_last_D_N,
+        }
 
     # --- stroke-budget guard and stroke-end FAULT (P-S8-28, spec rev. 70 369.2 .. 369.4) ---
 
@@ -7059,8 +7277,9 @@ class C2Controller:
         if not np.any(state.last_nonzero_output_m_s < 0.0):
             return  # already locked after an extension
         tail_m = self.config.lock_tail.tail_m
+        overshoot_margin_m = self.config.lock_tail.end_overshoot_margin_m
         guard_m = self.geometry.stroke_soft_max_m - STROKE_END_MARGIN_M
-        if np.any(reading.motor_stroke_m + tail_m > guard_m):
+        if np.any(reading.motor_stroke_m + tail_m + overshoot_margin_m > guard_m):
             self._add_event(reading.t_s, "WARN_TAIL_SKIPPED:stroke_margin", is_warning=True)
             return
         speeds = self._tail_speeds()

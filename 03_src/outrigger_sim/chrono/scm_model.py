@@ -944,6 +944,13 @@ class S9Model:
         ray_shape: SCM ray targets, ``"mesh"`` (default) or ``"convex"`` (:data:`RAY_SHAPES`).
         crawler_grid_m: None = one SCM terrain for pads and tracks; a value = dual terrain, the
             tracks on a second terrain with this grid (U-S9G-1 M14s: pads 1 / 2 cm, crawler 4 cm).
+        soil_patch: G6 (``(leg, SoilSet)``, needs the dual terrain): that pad's active domain on a
+            third SCMTerrain with its own soil set (layout ``triple``); its anchor bushing takes the
+            patch set's tangential values and ``tan phi`` (``PadBushingSpec.friction``). None =
+            the model unchanged. The SCM nodes do not interact (bulldozing off), so the patch is
+            "the soil under that pad" wherever the pad goes (cad G6 study 2026-10-27: same result
+            as a ``SoilParametersCallback`` square, no per-node Python cost).
+        soil_patch_grid_m: Grid of the patch terrain (None = ``grid_m``).
     """
 
     def __init__(self, params: Params, soil: SoilSet, pad_variant_meta: Mapping[str, Any], *,
@@ -953,7 +960,14 @@ class S9Model:
                  swivel_stiffness_N_m_rad: float = SWIVEL_K_N_M_RAD, crawler_bushings: bool = True,
                  grid_m: float = GRID_M, force_saturation: bool = True,
                  actuator_ramp_s: float | None = None, num_threads: int = SCM_THREADS,
-                 ray_shape: str = DEFAULT_RAY_SHAPE, crawler_grid_m: float | None = None) -> None:
+                 ray_shape: str = DEFAULT_RAY_SHAPE, crawler_grid_m: float | None = None,
+                 soil_patch: tuple[str, SoilSet] | None = None,
+                 soil_patch_grid_m: float | None = None) -> None:
+        if soil_patch is not None:
+            if crawler_grid_m is None:
+                raise ValueError("soil_patch needs the dual terrain (crawler_grid_m)")
+            if soil_patch[0] not in LEG_ORDER or not isinstance(soil_patch[1], SoilSet):
+                raise ValueError(f"soil_patch must be (leg in {LEG_ORDER}, SoilSet), got {soil_patch!r}")
         if params.l2b is None:
             raise ValueError('params must be loaded with model="L2b_NSC"')
         if shear not in SCM_SHEAR_MODES:
@@ -1090,10 +1104,27 @@ class S9Model:
         self.terrains: tuple[Any, ...] = (terrain, c_terrain) if self.dual_terrain else (terrain,)
         self.pad_grid_m = float(grid_m)
         self.crawler_grid_m = float(crawler_grid_m) if self.dual_terrain else float(grid_m)
+        # G6 soil patch: third terrain carrying the one pad's domain (own soil, own grid)
+        self.soil_patch_leg: str | None = None if soil_patch is None else soil_patch[0]
+        self.soil_patch_set: SoilSet | None = None if soil_patch is None else soil_patch[1]
+        p_terrain = p_meta = None
+        self.soil_patch_grid_m: float | None = None
+        if soil_patch is not None:
+            self.soil_patch_grid_m = float(grid_m if soil_patch_grid_m is None else soil_patch_grid_m)
+            p_terrain, p_meta = make_terrain(self.system, soil_patch[1], shear, p_plane, r_plane,
+                                             grid_m=self.soil_patch_grid_m)
+            self.terrains = (*self.terrains, p_terrain)
+        self.pad_terrain_by_leg: tuple[Any, ...] = tuple(
+            p_terrain if name == self.soil_patch_leg else terrain for name in LEG_ORDER)
+        """SCM terrain under each pad (LEG_ORDER): the pad terrain, or the patch terrain (G6)."""
+        self.pad_grid_by_leg_m: tuple[float, ...] = tuple(
+            self.soil_patch_grid_m if name == self.soil_patch_leg else self.pad_grid_m
+            for name in LEG_ORDER)
         for i, pad in enumerate(pads):
             centre = np.asarray(self.pad_bottom_local_pad_m[i])
-            add_active_domain(terrain, tmeta, pad, centre,
-                              (PAD_DOMAIN_XY_M, PAD_DOMAIN_XY_M, ACTIVE_DOMAIN_HEIGHT_M),
+            on_patch = LEG_ORDER[i] == self.soil_patch_leg
+            add_active_domain(p_terrain if on_patch else terrain, p_meta if on_patch else tmeta, pad,
+                              centre, (PAD_DOMAIN_XY_M, PAD_DOMAIN_XY_M, ACTIVE_DOMAIN_HEIGHT_M),
                               f"pad_{LEG_ORDER[i]}")
         z_block = float(params.ground.crawler_bottom_z_m) + BLOCK_BOTTOM_ABOVE_CRAWLER_BOTTOM_M
         x_mid = 0.5 * (REAR_RAMP_X_M[0] + FRONT_RAMP_X_M[1])
@@ -1104,8 +1135,16 @@ class S9Model:
         initialize_terrain(terrain, tmeta)
         if self.dual_terrain:
             initialize_terrain(c_terrain, c_meta)
+        if p_terrain is not None:
+            initialize_terrain(p_terrain, p_meta)
         tmeta["layout"] = "dual (pad terrain + crawler terrain)" if self.dual_terrain else "single"
         tmeta["crawler_terrain"] = c_meta if self.dual_terrain else None
+        if p_terrain is not None:  # key only with a patch: the earlier meta stays unchanged
+            tmeta["layout"] = "triple"
+            tmeta["layout_note"] = ("pad terrain (3 pads) + crawler terrain + soil-patch terrain "
+                                    f"({self.soil_patch_leg}, set {soil_patch[1].key}); G6")
+            tmeta["soil_patch"] = {"leg": self.soil_patch_leg, "set": soil_patch[1].key,
+                                   "grid_m": self.soil_patch_grid_m, "terrain": p_meta}
         tmeta["ray_shape"] = ray_shape
         self.terrain_meta = tmeta
         self.forces = ScmForceReader(list(self.terrains), pads, sup)
@@ -1117,6 +1156,10 @@ class S9Model:
         # anchor bushings (bprime)
         self.pad_values = pad_tangential_values(params, soil, areas, stiffness_mode=stiffness_mode,
                                                 interface=interface)
+        self.patch_pad_values: PadTangentialValues | None = None
+        if self.soil_patch_set is not None:  # G6: the soft pad's anchor values from its own set
+            self.patch_pad_values = pad_tangential_values(params, self.soil_patch_set, areas,
+                                                          stiffness_mode=stiffness_mode, interface=interface)
         self.track_values = track_tangential_values(params, soil, interface=interface)
         surface_point = p_plane
         self.pad_bushing: GroundBushingCoulomb | None = None
@@ -1130,12 +1173,17 @@ class S9Model:
         self.track_normals = TrackNormals(self.forces, self.normal_world,
                                           (flat_centre_x, 0.0, z_block), com_body)
         if shear == "bprime":
+            def _vals(name: str) -> PadTangentialValues:
+                return self.patch_pad_values if name == self.soil_patch_leg else self.pad_values
+
             specs = [PadBushingSpec(name=leg.name, body=pads[i],
                                     sphere_centre_body_local_m=tuple(float(c) for c in self.ball_local_pad_m[i]),
                                     sphere_radius_m=self.sphere_radii_m[i],
-                                    stiffness_N_m=self.pad_values.stiffness_N_m[i],
-                                    damping_input_N_s_m=self.pad_values.damping_input_N_s_m[i],
-                                    adhesion_N=self.pad_values.adhesion_N[i])
+                                    stiffness_N_m=_vals(leg.name).stiffness_N_m[i],
+                                    damping_input_N_s_m=_vals(leg.name).damping_input_N_s_m[i],
+                                    adhesion_N=_vals(leg.name).adhesion_N[i],
+                                    **({"friction": self.patch_pad_values.friction}
+                                       if leg.name == self.soil_patch_leg else {}))
                      for i, leg in enumerate(params.legs)]
             self.pad_bushing = GroundBushingCoulomb(
                 self.system, self.floor, specs, friction=self.pad_values.friction,
@@ -1294,8 +1342,8 @@ class S9Model:
         geo = self.pad_sinkage_m()
         out = []
         for i in range(len(self.pads)):
-            st = node_stats_in_outline(self.pad_terrain, self.plane_point_world_m, self.plane_rot,
-                                       self.pad_grid_m, self.pad_outline_world_m(i))
+            st = node_stats_in_outline(self.pad_terrain_by_leg[i], self.plane_point_world_m, self.plane_rot,
+                                       self.pad_grid_by_leg_m[i], self.pad_outline_world_m(i))
             st["sinkage_geometric_m"] = float(geo[i])
             sc = st["sinkage_mean_contact_m"]
             st["node_minus_geometric_m"] = None if sc is None else float(sc - geo[i])
@@ -1424,6 +1472,15 @@ class S9Model:
             settle_dashpot=None if self.settle_dashpot is None else self.settle_dashpot.meta(),
             c2_soil=None,
         )
+        if self.soil_patch_leg is not None:  # G6 only (earlier meta unchanged)
+            meta["terrain_layout"].update(layout="triple", soil_patch_leg=self.soil_patch_leg,
+                                          soil_patch_set=self.soil_patch_set.key,
+                                          soil_patch_grid_m=self.soil_patch_grid_m)
+            meta["soil_patch"] = {
+                "leg": self.soil_patch_leg, "set": self.soil_patch_set.meta(),
+                "pad_anchor_values": None if self.patch_pad_values is None else self.patch_pad_values.meta(),
+                "rule": "G6: that pad on a third SCMTerrain with this set; its anchor bushing takes this "
+                        "set's stiffness / damping / adhesion of the leg and tan phi (PadBushingSpec.friction)"}
         return meta
 
 

@@ -263,6 +263,50 @@ def test_ready_heave_tail_is_skipped_near_the_stroke_end(geometry) -> None:
     assert "WARN_TAIL_SKIPPED:stroke_margin" in names and "ready_heave_tail" not in names
 
 
+def _tail_decision_at_stroke(
+    geometry: C2Geometry, stroke_m: float, overshoot_margin_m: float
+) -> list[str]:
+    """Events of one READY entry after a retraction with every leg at ``stroke_m``."""
+    lock_tail = replace(
+        C2Config().lock_tail, end_overshoot_margin_m=overshoot_margin_m
+    )
+    bench = _ready(_Bench(C2Controller(geometry, _config(lock_tail=lock_tail)), geometry))
+    controller = bench.controller
+    state = controller._state
+    state.lock_tail_speeds = {}
+    state.last_nonzero_output_m_s = np.full(4, -1e-3)
+    reading = replace(state.last_reading, motor_stroke_m=np.full(4, stroke_m))
+    event_count_before = len(controller.events)
+    controller._request_ready_heave(reading, C2Phase.CHECK)
+    return [event.name for event in controller.events[event_count_before:]]
+
+
+@pytest.mark.parametrize(
+    ("stroke_m", "overshoot_margin_m", "is_skipped"),
+    [
+        (0.6830, 0.0005, True),  # 683.0 + 1.5 + 0.5 = 685.0 mm > 684.8 mm
+        (0.6830, 0.0, False),  # 683.0 + 1.5 = 684.5 mm
+        (0.6827, 0.0005, False),  # 682.7 + 2.0 = 684.7 mm
+        (0.6827, 0.0, False),
+    ],
+)
+def test_tail_skip_keeps_the_end_overshoot_margin(
+    geometry, stroke_m, overshoot_margin_m, is_skipped
+) -> None:
+    """User decision 2026-10-27: skip when s + tail + margin > s_soft - 10 mm (684.8 mm)."""
+    assert geometry.stroke_soft_max_m == pytest.approx(0.6948)
+    names = _tail_decision_at_stroke(geometry, stroke_m, overshoot_margin_m)
+    if is_skipped:
+        assert names == ["WARN_TAIL_SKIPPED:stroke_margin"]
+    else:
+        assert names == ["ready_heave_tail"]
+
+
+def test_tail_overshoot_margin_must_not_be_negative() -> None:
+    with pytest.raises(ValueError, match="end_overshoot_margin_m"):
+        replace(C2Config().lock_tail, end_overshoot_margin_m=-1e-4)
+
+
 def test_relevel_and_reanchor_margins(geometry) -> None:
     """U68 / U69 defaults; the P5 check is guard margin + 2.5 kN."""
     config = C2Config()

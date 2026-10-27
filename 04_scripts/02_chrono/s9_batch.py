@@ -147,7 +147,26 @@ def batches() -> dict[str, list[dict]]:
     out["P3a"] = p3a
     out["P3b"] = p3b_batch()
     out["P3-10"] = p3_10_batch()
+    out["G6"] = g6_batch()
+    out["G6_opt"] = g6_batch(optional=True)
     return out
+
+
+def g6_batch(optional: bool = False) -> list[dict]:
+    """G6 soil patch (cad G6 study, user decisions 2026-10-27 / 28; acceptance after P-S8-29). ``G6``: the
+    open-loop layout control G6-0a (``run_S9.py machine``, P3a G1 B arguments + G1 patch under RR; compare
+    afterwards with ``s9_g6_patch_compare.py``) and the ``run_S9.g6_cases`` closed-loop runs (J1 under RR 160 s
+    / FL 200 s, G1-patch control 120 s). ``G6_opt``: G6-0b (open loop, J1 under RR)."""
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S9 as r9  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    rows = [{"case": c["case"], "est_s": c["est_s"], "argv": RUN + r9.g6_machine_argv(c)}
+            for c in r9.g6_open_loop_cases() if c["optional"] is optional]
+    if not optional:
+        rows += [{"case": c["case"], "est_s": c["est_s"], "argv": RUN + r9.p3b_level_argv(c)} for c in r9.g6_cases()]
+    return rows
 
 
 M3 = [PY, "-I", "-X", "utf8", "-u", str(HERE / "s9_merge" / "m3_run.py")]

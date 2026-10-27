@@ -1,0 +1,1589 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s8/r72_g6_screen.py",
+  "spec": "rev. 72 draft (G6 weak patch under one pad)",
+  "path": "per_leg",
+  "filter": null,
+  "workers": 6,
+  "affinity": "FC00000",
+  "wall_s": 75.1,
+  "n_jobs": 16
+ },
+ "results": [
+  {
+   "key": "ref|G1|top|Fs0",
+   "soil": "G1",
+   "base": "G1",
+   "weak_leg": null,
+   "level": "top",
+   "fs_kN": 0.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 21.89999999999431,
+   "t_off_s": 21.399999999995476,
+   "t_ready_s": 40.100000000009445,
+   "t_done_s": 28.09999999997986,
+   "loc_delay_s": 0.5,
+   "t_P_s": 21.29999999999571,
+   "c_min_tP_mm": 11.6,
+   "corner_bias_mm": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 63.15744748571774,
+   "D8_margin_kN": 48.74,
+   "att_end_deg": [
+    -0.001388408905506269,
+    -0.007303679945052102
+   ],
+   "att_max_after_off_deg": 0.0706083154987261,
+   "rut_clear_ready_mm": 42.5377506109743,
+   "rut_clear_end_mm": 44.06477070869008,
+   "clear_est_end_mm": 51.51791619351109,
+   "max_motor_stroke_mm": 407.2389167799712,
+   "sink_final_mm": [
+    7.716534835028558,
+    7.545370517692988,
+    8.472763397417145,
+    8.321188241861014
+   ],
+   "sink_rate_max_mm_s": [
+    9.85462004168071,
+    9.801900478008033,
+    11.179930095974681,
+    11.170871846270975
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 1,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.2,
+     "level"
+    ],
+    [
+     28.1,
+     "done"
+    ],
+    [
+     28.2,
+     "probe"
+    ],
+    [
+     40.1,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "20.2 floor_estimate_touch",
+    "21.8 soil_mode_start",
+    "21.9 crawler_liftoff_confirmed",
+    "40.1 WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.512",
+    "40.1 reanchor_skipped:disabled",
+    "40.1 ready_heave_tail"
+   ],
+   "commands_sha256": "ab56466ae289d2d18a8698b692fe8fd6c68559ead5fdaf327e700e5157f93730",
+   "wall_s": 17.9,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "key": "ref|G1|top|Fs4",
+   "soil": "G1",
+   "base": "G1",
+   "weak_leg": null,
+   "level": "top",
+   "fs_kN": 4.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 21.89999999999431,
+   "t_off_s": 21.399999999995476,
+   "t_ready_s": 40.100000000009445,
+   "t_done_s": 28.09999999997986,
+   "loc_delay_s": 0.5,
+   "t_P_s": 21.29999999999571,
+   "c_min_tP_mm": 11.4,
+   "corner_bias_mm": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 62.88570959713286,
+   "D8_margin_kN": 48.47,
+   "att_end_deg": [
+    -0.0018746952312397975,
+    -0.007373370349587224
+   ],
+   "att_max_after_off_deg": 0.069717124070351,
+   "rut_clear_ready_mm": 42.78307714644917,
+   "rut_clear_end_mm": 44.07641200010081,
+   "clear_est_end_mm": 51.54091638357294,
+   "max_motor_stroke_mm": 407.36880062249986,
+   "sink_final_mm": [
+    7.72529786055982,
+    7.53244091247225,
+    8.478584149964291,
+    8.311149340394852
+   ],
+   "sink_rate_max_mm_s": [
+    9.551694561168267,
+    9.502187379787296,
+    11.169464117602965,
+    11.160141065575095
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 1,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.2,
+     "level"
+    ],
+    [
+     28.1,
+     "done"
+    ],
+    [
+     28.2,
+     "probe"
+    ],
+    [
+     40.1,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "20.2 floor_estimate_touch",
+    "21.8 soil_mode_start",
+    "21.9 crawler_liftoff_confirmed",
+    "40.1 WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.644",
+    "40.1 reanchor_skipped:disabled",
+    "40.1 ready_heave_tail"
+   ],
+   "commands_sha256": "91490a108f7c379cd5a5dabd2fe736e0bf3aaca52acee5ae71b0487e8134b3ac",
+   "wall_s": 17.8,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "key": "ref|G1|bottom|Fs0",
+   "soil": "G1",
+   "base": "G1",
+   "weak_leg": null,
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 21.799999999994544,
+   "t_off_s": 21.399999999995476,
+   "t_ready_s": 38.900000000003715,
+   "t_done_s": 26.899999999982658,
+   "loc_delay_s": 0.4,
+   "t_P_s": 21.199999999995942,
+   "c_min_tP_mm": 10.5,
+   "corner_bias_mm": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 63.529257313364596,
+   "D8_margin_kN": 49.11,
+   "att_end_deg": [
+    -0.0013972091984016952,
+    -0.0017483611910320829
+   ],
+   "att_max_after_off_deg": 0.044585270380566214,
+   "rut_clear_ready_mm": 42.29175650223105,
+   "rut_clear_end_mm": 43.777200586458214,
+   "clear_est_end_mm": 50.927224455844964,
+   "max_motor_stroke_mm": 406.5878231109879,
+   "sink_final_mm": [
+    7.669336624929041,
+    7.5109583140428215,
+    8.412410737163242,
+    8.278245134727698
+   ],
+   "sink_rate_max_mm_s": [
+    9.579924780028716,
+    9.59059535453319,
+    11.189944526133296,
+    11.149191860481723
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 1,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.2,
+     "level"
+    ],
+    [
+     26.9,
+     "done"
+    ],
+    [
+     27.0,
+     "probe"
+    ],
+    [
+     38.9,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "20.2 floor_estimate_touch",
+    "21.7 soil_mode_start",
+    "21.8 crawler_liftoff_confirmed",
+    "38.9 WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.507",
+    "38.9 reanchor_skipped:disabled",
+    "38.9 ready_heave_tail"
+   ],
+   "commands_sha256": "cff9ecf96e38700ea69bebb32ddcbae13ef524e81b9cc72d9f315815aea89a78",
+   "wall_s": 17.4,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "key": "ref|G1|bottom|Fs4",
+   "soil": "G1",
+   "base": "G1",
+   "weak_leg": null,
+   "level": "bottom",
+   "fs_kN": 4.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 21.799999999994544,
+   "t_off_s": 21.399999999995476,
+   "t_ready_s": 39.4000000000061,
+   "t_done_s": 27.399999999981492,
+   "loc_delay_s": 0.4,
+   "t_P_s": 21.199999999995942,
+   "c_min_tP_mm": 10.4,
+   "corner_bias_mm": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 62.931248629641274,
+   "D8_margin_kN": 48.52,
+   "att_end_deg": [
+    -0.0011611224129016483,
+    -0.0036746143604726887
+   ],
+   "att_max_after_off_deg": 0.05637264385345907,
+   "rut_clear_ready_mm": 42.71693163585526,
+   "rut_clear_end_mm": 44.00461928251805,
+   "clear_est_end_mm": 51.25770641807148,
+   "max_motor_stroke_mm": 407.0684447533562,
+   "sink_final_mm": [
+    7.687855203153451,
+    7.534247050345829,
+    8.455027780964242,
+    8.31103663922177
+   ],
+   "sink_rate_max_mm_s": [
+    9.347312264634116,
+    9.262257861748779,
+    11.196158918889543,
+    11.1491201298219
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 1,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.2,
+     "level"
+    ],
+    [
+     27.4,
+     "done"
+    ],
+    [
+     27.5,
+     "probe"
+    ],
+    [
+     39.4,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "20.2 floor_estimate_touch",
+    "21.7 soil_mode_start",
+    "21.8 crawler_liftoff_confirmed",
+    "39.4 WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.577",
+    "39.4 reanchor_skipped:disabled",
+    "39.4 ready_heave_tail"
+   ],
+   "commands_sha256": "e953b743b810f762fc6697f7e82c12be612489e7d910e9b6fb8d4af7b1efa5aa",
+   "wall_s": 17.6,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ]
+  },
+  {
+   "key": "ref|J1|top|Fs0",
+   "soil": "J1",
+   "base": "J1",
+   "weak_leg": null,
+   "level": "top",
+   "fs_kN": 0.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 27.899999999980327,
+   "t_off_s": 27.299999999981726,
+   "t_ready_s": 62.20000000011497,
+   "t_done_s": 50.20000000005767,
+   "loc_delay_s": 0.6,
+   "t_P_s": 26.49999999998359,
+   "c_min_tP_mm": 55.4,
+   "corner_bias_mm": [
+    65.6,
+    65.1,
+    52.4,
+    51.9
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 69.28938048685772,
+   "D8_margin_kN": 54.87,
+   "att_end_deg": [
+    -0.0010098999135189416,
+    0.016586914851256622
+   ],
+   "att_max_after_off_deg": 0.32269677560763177,
+   "rut_clear_ready_mm": 47.19647927478023,
+   "rut_clear_end_mm": 47.22739627234694,
+   "clear_est_end_mm": 50.14534653143428,
+   "max_motor_stroke_mm": 487.62808608035186,
+   "sink_final_mm": [
+    59.72650811182381,
+    50.33200618814203,
+    88.30209558293994,
+    82.03752177991846
+   ],
+   "sink_rate_max_mm_s": [
+    15.69239303623321,
+    16.41459917951435,
+    27.318200172644218,
+    26.985173721176537
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "probe",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.4,
+     "level"
+    ],
+    [
+     50.2,
+     "done"
+    ],
+    [
+     50.3,
+     "probe"
+    ],
+    [
+     62.2,
+     "ready"
+    ],
+    [
+     65.2,
+     "level"
+    ],
+    [
+     72.1,
+     "done"
+    ],
+    [
+     72.2,
+     "probe"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "19.6 INFO_TOUCH_DIP_HELD:RL",
+    "20.4 floor_estimate_touch",
+    "21.9 soil_mode_start",
+    "27.9 crawler_liftoff_confirmed",
+    "27.9 INFO_CLEARANCE_BIAS:FL=51.9,FR=52.4,RL=65.1,RR=65.6",
+    "62.2 reanchor_skipped:disabled",
+    "62.2 ready_heave_tail"
+   ],
+   "commands_sha256": "0027bdaed7f195d269b2ff615c6470515707fec295babd4d0b460881f6cf150f",
+   "wall_s": 24.8,
+   "warnings": []
+  },
+  {
+   "key": "ref|J1|top|Fs4",
+   "soil": "J1",
+   "base": "J1",
+   "weak_leg": null,
+   "level": "top",
+   "fs_kN": 4.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 27.999999999980094,
+   "t_off_s": 27.09999999998219,
+   "t_ready_s": 63.60000000012165,
+   "t_done_s": 51.600000000064355,
+   "loc_delay_s": 0.9,
+   "t_P_s": 26.599999999983357,
+   "c_min_tP_mm": 55.6,
+   "corner_bias_mm": [
+    64.8,
+    66.1,
+    51.6,
+    52.9
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 68.81308276717006,
+   "D8_margin_kN": 54.4,
+   "att_end_deg": [
+    0.01749861899564293,
+    -0.02007250947699286
+   ],
+   "att_max_after_off_deg": 0.23742557042661372,
+   "rut_clear_ready_mm": 47.417292534825364,
+   "rut_clear_end_mm": 48.61214385174174,
+   "clear_est_end_mm": 51.45572054879098,
+   "max_motor_stroke_mm": 486.4554259948323,
+   "sink_final_mm": [
+    58.66224475956433,
+    49.19996740984334,
+    87.546503022496,
+    80.31737836841508
+   ],
+   "sink_rate_max_mm_s": [
+    15.598240177841504,
+    15.70090397122123,
+    25.567801603971347,
+    25.65794123329454
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.4,
+     "level"
+    ],
+    [
+     51.6,
+     "done"
+    ],
+    [
+     51.7,
+     "probe"
+    ],
+    [
+     63.6,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "19.6 INFO_TOUCH_DIP_HELD:RL",
+    "19.6 INFO_TOUCH_DIP_HELD:RR",
+    "20.4 floor_estimate_touch",
+    "21.9 soil_mode_start",
+    "28.0 crawler_liftoff_confirmed",
+    "28.0 INFO_CLEARANCE_BIAS:FL=52.9,FR=51.6,RL=66.1,RR=64.8",
+    "63.6 reanchor_skipped:disabled",
+    "63.6 ready_heave_tail"
+   ],
+   "commands_sha256": "97130f345733dfb46a494250bda51f55445c5a03ee873c512389ee55ec61b8dd",
+   "wall_s": 25.4,
+   "warnings": []
+  },
+  {
+   "key": "ref|J1|bottom|Fs0",
+   "soil": "J1",
+   "base": "J1",
+   "weak_leg": null,
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 28.09999999997986,
+   "t_off_s": 27.19999999998196,
+   "t_ready_s": 63.30000000012022,
+   "t_done_s": 51.30000000006292,
+   "loc_delay_s": 0.9,
+   "t_P_s": 26.599999999983357,
+   "c_min_tP_mm": 56.8,
+   "corner_bias_mm": [
+    65.3,
+    67.0,
+    53.5,
+    55.2
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 69.68321505867628,
+   "D8_margin_kN": 55.27,
+   "att_end_deg": [
+    0.007452302000967971,
+    -0.02206645673472378
+   ],
+   "att_max_after_off_deg": 0.22471158038657518,
+   "rut_clear_ready_mm": 50.80444517757368,
+   "rut_clear_end_mm": 52.29980452274005,
+   "clear_est_end_mm": 51.70737233508994,
+   "max_motor_stroke_mm": 485.7089478970678,
+   "sink_final_mm": [
+    56.87644351461103,
+    47.85796790648733,
+    86.28206305563043,
+    78.606567617518
+   ],
+   "sink_rate_max_mm_s": [
+    16.251005624436793,
+    16.039628783114797,
+    24.008055525742698,
+    24.001673462670237
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.3,
+     "level"
+    ],
+    [
+     51.3,
+     "done"
+    ],
+    [
+     51.4,
+     "probe"
+    ],
+    [
+     63.3,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "20.3 floor_estimate_touch",
+    "21.7 soil_mode_start",
+    "28.1 crawler_liftoff_confirmed",
+    "28.1 INFO_CLEARANCE_BIAS:FL=55.2,FR=53.5,RL=67.0,RR=65.3",
+    "63.3 reanchor_skipped:disabled",
+    "63.3 ready_heave_tail"
+   ],
+   "commands_sha256": "b5f072113946e828991613ed06709a549f2a7730e4a7f6dff308a91ad19e81e7",
+   "wall_s": 27.3,
+   "warnings": []
+  },
+  {
+   "key": "ref|J1|bottom|Fs4",
+   "soil": "J1",
+   "base": "J1",
+   "weak_leg": null,
+   "level": "bottom",
+   "fs_kN": 4.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 28.199999999979628,
+   "t_off_s": 27.19999999998196,
+   "t_ready_s": 63.100000000119266,
+   "t_done_s": 51.10000000006197,
+   "loc_delay_s": 1.0,
+   "t_P_s": 26.699999999983124,
+   "c_min_tP_mm": 57.2,
+   "corner_bias_mm": [
+    65.8,
+    67.8,
+    53.5,
+    55.5
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 69.62252137547355,
+   "D8_margin_kN": 55.21,
+   "att_end_deg": [
+    0.0021002463366817012,
+    -0.015714809894068312
+   ],
+   "att_max_after_off_deg": 0.223015174352239,
+   "rut_clear_ready_mm": 51.07914565602593,
+   "rut_clear_end_mm": 52.285389604795924,
+   "clear_est_end_mm": 51.463212931701904,
+   "max_motor_stroke_mm": 485.9835014028164,
+   "sink_final_mm": [
+    56.68063045357008,
+    47.80447420172888,
+    85.84730443425723,
+    77.81394506252948
+   ],
+   "sink_rate_max_mm_s": [
+    16.198694900562693,
+    16.036020406100942,
+    24.040214272578325,
+    23.97667208585419
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.3,
+     "level"
+    ],
+    [
+     51.1,
+     "done"
+    ],
+    [
+     51.2,
+     "probe"
+    ],
+    [
+     63.1,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "20.3 floor_estimate_touch",
+    "21.7 soil_mode_start",
+    "28.2 crawler_liftoff_confirmed",
+    "28.2 INFO_CLEARANCE_BIAS:FL=55.5,FR=53.5,RL=67.8,RR=65.8",
+    "63.1 reanchor_skipped:disabled",
+    "63.1 ready_heave_tail"
+   ],
+   "commands_sha256": "601bcd8b8a8661538d3d97eafa43b386f2e6076fb78e6cfcd0a06ce7c80ead62",
+   "wall_s": 27.4,
+   "warnings": []
+  },
+  {
+   "key": "ref|J2|top|Fs0",
+   "soil": "J2",
+   "base": "J2",
+   "weak_leg": null,
+   "level": "top",
+   "fs_kN": 0.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 33.39999999997745,
+   "t_off_s": 32.499999999973156,
+   "t_ready_s": 66.20000000013407,
+   "t_done_s": 54.20000000007677,
+   "loc_delay_s": 0.9,
+   "t_P_s": 31.69999999997147,
+   "c_min_tP_mm": 84.2,
+   "corner_bias_mm": [
+    98.6,
+    99.9,
+    83.4,
+    84.7
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 69.23513034246201,
+   "D8_margin_kN": 54.82,
+   "att_end_deg": [
+    0.04153684979298928,
+    -0.03600515864689452
+   ],
+   "att_max_after_off_deg": 0.27459246483008565,
+   "rut_clear_ready_mm": 47.760489449318236,
+   "rut_clear_end_mm": 49.23332916053353,
+   "clear_est_end_mm": 51.808859047896476,
+   "max_motor_stroke_mm": 515.4049482386355,
+   "sink_final_mm": [
+    90.82894126180588,
+    82.17700444169321,
+    118.33686999603927,
+    110.52321350032187
+   ],
+   "sink_rate_max_mm_s": [
+    16.21709514182737,
+    16.20826408580897,
+    24.611586763412934,
+    24.510249185216022
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.2,
+     "level"
+    ],
+    [
+     54.2,
+     "done"
+    ],
+    [
+     54.3,
+     "probe"
+    ],
+    [
+     66.2,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "20.2 floor_estimate_touch",
+    "21.7 soil_mode_start",
+    "33.4 crawler_liftoff_confirmed",
+    "33.4 INFO_CLEARANCE_BIAS:FL=84.7,FR=83.4,RL=99.9,RR=98.6",
+    "66.2 reanchor_skipped:disabled",
+    "66.2 ready_heave_tail"
+   ],
+   "commands_sha256": "32138efac2bb4d8dedf3141241a864f0f1efd3c703b5400a0bce9599f35afe41",
+   "wall_s": 28.3,
+   "warnings": []
+  },
+  {
+   "key": "ref|J2|top|Fs4",
+   "soil": "J2",
+   "base": "J2",
+   "weak_leg": null,
+   "level": "top",
+   "fs_kN": 4.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 33.39999999997745,
+   "t_off_s": 32.499999999973156,
+   "t_ready_s": 66.40000000013502,
+   "t_done_s": 54.400000000077725,
+   "loc_delay_s": 0.9,
+   "t_P_s": 31.69999999997147,
+   "c_min_tP_mm": 84.2,
+   "corner_bias_mm": [
+    98.6,
+    99.9,
+    83.3,
+    84.7
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 68.79859771658771,
+   "D8_margin_kN": 54.38,
+   "att_end_deg": [
+    0.020918445817359972,
+    -0.03266969941246267
+   ],
+   "att_max_after_off_deg": 0.27450932257818195,
+   "rut_clear_ready_mm": 48.147839786440976,
+   "rut_clear_end_mm": 49.34911157707183,
+   "clear_est_end_mm": 51.55370705273404,
+   "max_motor_stroke_mm": 515.5470209774762,
+   "sink_final_mm": [
+    90.94132712012274,
+    81.74470738267708,
+    118.05859122081853,
+    109.79876409552891
+   ],
+   "sink_rate_max_mm_s": [
+    16.250144736256605,
+    16.24648665706982,
+    24.422399502187915,
+    24.31578972435233
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.2,
+     "level"
+    ],
+    [
+     54.4,
+     "done"
+    ],
+    [
+     54.5,
+     "probe"
+    ],
+    [
+     66.4,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "20.2 floor_estimate_touch",
+    "21.7 soil_mode_start",
+    "33.4 crawler_liftoff_confirmed",
+    "33.4 INFO_CLEARANCE_BIAS:FL=84.7,FR=83.3,RL=99.9,RR=98.6",
+    "66.4 reanchor_skipped:disabled",
+    "66.4 ready_heave_tail"
+   ],
+   "commands_sha256": "4ca891a0d0b5e768dccbf761d037f2ca29bc04606e6358561ac4b611660dcd11",
+   "wall_s": 28.6,
+   "warnings": []
+  },
+  {
+   "key": "ref|J2|bottom|Fs0",
+   "soil": "J2",
+   "base": "J2",
+   "weak_leg": null,
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 33.699999999978886,
+   "t_off_s": 32.59999999997363,
+   "t_ready_s": 68.10000000014314,
+   "t_done_s": 56.10000000008584,
+   "loc_delay_s": 1.1,
+   "t_P_s": 31.999999999970772,
+   "c_min_tP_mm": 85.5,
+   "corner_bias_mm": [
+    98.3,
+    100.9,
+    83.4,
+    86.0
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 69.55850280579546,
+   "D8_margin_kN": 55.14,
+   "att_end_deg": [
+    0.01352342841610049,
+    -0.026850691442453743
+   ],
+   "att_max_after_off_deg": 0.22628292318431545,
+   "rut_clear_ready_mm": 49.68331883072698,
+   "rut_clear_end_mm": 51.171797471189855,
+   "clear_est_end_mm": 51.68970761587348,
+   "max_motor_stroke_mm": 514.1707209918588,
+   "sink_final_mm": [
+    89.04594369225447,
+    80.1483880386745,
+    116.91221359126277,
+    108.84713967976573
+   ],
+   "sink_rate_max_mm_s": [
+    16.342205451873316,
+    16.25689399294139,
+    23.390139309603654,
+    23.255770956315953
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.3,
+     "level"
+    ],
+    [
+     56.1,
+     "done"
+    ],
+    [
+     56.2,
+     "probe"
+    ],
+    [
+     68.1,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "20.3 floor_estimate_touch",
+    "21.7 soil_mode_start",
+    "33.7 crawler_liftoff_confirmed",
+    "33.7 INFO_CLEARANCE_BIAS:FL=86.0,FR=83.4,RL=100.9,RR=98.3",
+    "68.1 reanchor_skipped:disabled",
+    "68.1 ready_heave_tail"
+   ],
+   "commands_sha256": "5002581977afe5963932891637984b21831ca99abebcd2e5b8d42c391faf7099",
+   "wall_s": 28.9,
+   "warnings": []
+  },
+  {
+   "key": "ref|J2|bottom|Fs4",
+   "soil": "J2",
+   "base": "J2",
+   "weak_leg": null,
+   "level": "bottom",
+   "fs_kN": 4.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 33.699999999978886,
+   "t_off_s": 32.59999999997363,
+   "t_ready_s": 67.60000000014075,
+   "t_done_s": 55.600000000083455,
+   "loc_delay_s": 1.1,
+   "t_P_s": 31.999999999970772,
+   "c_min_tP_mm": 85.5,
+   "corner_bias_mm": [
+    98.3,
+    100.9,
+    83.4,
+    86.0
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 69.54602648195467,
+   "D8_margin_kN": 55.13,
+   "att_end_deg": [
+    0.010991925022399382,
+    -0.021407190735043758
+   ],
+   "att_max_after_off_deg": 0.22626044124815445,
+   "rut_clear_ready_mm": 49.93999628038473,
+   "rut_clear_end_mm": 51.14667640166208,
+   "clear_est_end_mm": 51.42494784862432,
+   "max_motor_stroke_mm": 514.3265289825106,
+   "sink_final_mm": [
+    88.88733818366603,
+    80.0146594415766,
+    116.34094698846891,
+    108.31675291396503
+   ],
+   "sink_rate_max_mm_s": [
+    16.34599135075243,
+    16.257369788146708,
+    23.391071918680424,
+    23.26304146051464
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.3,
+     "level"
+    ],
+    [
+     55.6,
+     "done"
+    ],
+    [
+     55.7,
+     "probe"
+    ],
+    [
+     67.6,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "20.3 floor_estimate_touch",
+    "21.7 soil_mode_start",
+    "33.7 crawler_liftoff_confirmed",
+    "33.7 INFO_CLEARANCE_BIAS:FL=86.0,FR=83.4,RL=100.9,RR=98.3",
+    "67.6 reanchor_skipped:disabled",
+    "67.6 ready_heave_tail"
+   ],
+   "commands_sha256": "5471fb376ab75abc930c3378fcf22b0b9fcbcbbb735a98e65598027a6cba5924",
+   "wall_s": 29.1,
+   "warnings": []
+  },
+  {
+   "key": "ref|S1|top|Fs0",
+   "soil": "S1",
+   "base": "S1",
+   "weak_leg": null,
+   "level": "top",
+   "fs_kN": 0.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 37.299999999996075,
+   "t_off_s": 35.99999999998987,
+   "t_ready_s": 57.30000000009157,
+   "t_done_s": 45.300000000034274,
+   "loc_delay_s": 1.3,
+   "t_P_s": 35.699999999988435,
+   "c_min_tP_mm": 118.0,
+   "corner_bias_mm": [
+    118.0,
+    118.3,
+    74.1,
+    74.4
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 68.28592982397714,
+   "D8_margin_kN": 53.87,
+   "att_end_deg": [
+    0.031081146873136622,
+    0.03267666360641743
+   ],
+   "att_max_after_off_deg": 0.22180568740507947,
+   "rut_clear_ready_mm": 41.99086032446442,
+   "rut_clear_end_mm": 43.422205243426085,
+   "clear_est_end_mm": 51.81190040471684,
+   "max_motor_stroke_mm": 520.8044229919733,
+   "sink_final_mm": [
+    124.1662590874022,
+    121.55595054370671,
+    131.32188818649837,
+    129.1927803543046
+   ],
+   "sink_rate_max_mm_s": [
+    18.42473390081811,
+    18.37114623988445,
+    15.917450019796442,
+    15.955303611550619
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     23.0,
+     "level"
+    ],
+    [
+     45.3,
+     "done"
+    ],
+    [
+     45.4,
+     "probe"
+    ],
+    [
+     57.3,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "23.0 floor_estimate_touch",
+    "25.4 soil_mode_start",
+    "37.3 crawler_liftoff_confirmed",
+    "37.3 INFO_CLEARANCE_BIAS:FL=74.4,FR=74.1,RL=118.3,RR=118.0",
+    "57.3 reanchor_skipped:disabled",
+    "57.3 ready_heave_tail"
+   ],
+   "commands_sha256": "40dc5667de35029bc79df877d12da0e78939d672fb25f697e98bae8f012b4d74",
+   "wall_s": 24.7,
+   "warnings": []
+  },
+  {
+   "key": "ref|S1|top|Fs4",
+   "soil": "S1",
+   "base": "S1",
+   "weak_leg": null,
+   "level": "top",
+   "fs_kN": 4.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 37.299999999996075,
+   "t_off_s": 35.99999999998987,
+   "t_ready_s": 57.40000000009205,
+   "t_done_s": 45.40000000003475,
+   "loc_delay_s": 1.3,
+   "t_P_s": 35.699999999988435,
+   "c_min_tP_mm": 117.9,
+   "corner_bias_mm": [
+    117.9,
+    118.2,
+    74.0,
+    74.2
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 68.19125631435001,
+   "D8_margin_kN": 53.78,
+   "att_end_deg": [
+    0.03016624841501322,
+    0.032900471563014386
+   ],
+   "att_max_after_off_deg": 0.22219672616359754,
+   "rut_clear_ready_mm": 42.31578492949987,
+   "rut_clear_end_mm": 43.510888455442824,
+   "clear_est_end_mm": 51.80893588510194,
+   "max_motor_stroke_mm": 520.7184444822642,
+   "sink_final_mm": [
+    123.91630546467492,
+    121.28956788665494,
+    131.19858026991554,
+    128.99841649247313
+   ],
+   "sink_rate_max_mm_s": [
+    18.436877570859878,
+    18.382060321217587,
+    16.100163223779774,
+    16.12109371106063
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     23.0,
+     "level"
+    ],
+    [
+     45.4,
+     "done"
+    ],
+    [
+     45.5,
+     "probe"
+    ],
+    [
+     57.4,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "23.0 floor_estimate_touch",
+    "25.4 soil_mode_start",
+    "37.3 crawler_liftoff_confirmed",
+    "37.3 INFO_CLEARANCE_BIAS:FL=74.2,FR=74.0,RL=118.2,RR=117.9",
+    "57.4 reanchor_skipped:disabled",
+    "57.4 ready_heave_tail"
+   ],
+   "commands_sha256": "68546591221e4766e5a04256fbc0ff874ff51ff125a917339ebe29b01a4aeb34",
+   "wall_s": 24.8,
+   "warnings": []
+  },
+  {
+   "key": "ref|S1|bottom|Fs0",
+   "soil": "S1",
+   "base": "S1",
+   "weak_leg": null,
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 37.299999999996075,
+   "t_off_s": 35.99999999998987,
+   "t_ready_s": 57.30000000009157,
+   "t_done_s": 45.300000000034274,
+   "loc_delay_s": 1.3,
+   "t_P_s": 35.699999999988435,
+   "c_min_tP_mm": 117.8,
+   "corner_bias_mm": [
+    117.8,
+    117.5,
+    74.6,
+    74.3
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 68.73371055103003,
+   "D8_margin_kN": 54.32,
+   "att_end_deg": [
+    0.014481219883311676,
+    0.019078602803495846
+   ],
+   "att_max_after_off_deg": 0.21363022685022418,
+   "rut_clear_ready_mm": 42.763243470200216,
+   "rut_clear_end_mm": 44.23236458956341,
+   "clear_est_end_mm": 51.81421762172911,
+   "max_motor_stroke_mm": 521.218059059211,
+   "sink_final_mm": [
+    123.80283752538097,
+    120.6026768231066,
+    131.1050608360984,
+    128.4373592969344
+   ],
+   "sink_rate_max_mm_s": [
+    18.370916141097204,
+    18.353400892165418,
+    15.402380544836392,
+    15.42741917556073
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     22.9,
+     "level"
+    ],
+    [
+     45.3,
+     "done"
+    ],
+    [
+     45.4,
+     "probe"
+    ],
+    [
+     57.3,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "22.9 floor_estimate_touch",
+    "25.2 soil_mode_start",
+    "37.3 crawler_liftoff_confirmed",
+    "37.3 INFO_CLEARANCE_BIAS:FL=74.3,FR=74.6,RL=117.5,RR=117.8",
+    "57.3 reanchor_skipped:disabled",
+    "57.3 ready_heave_tail"
+   ],
+   "commands_sha256": "62ef39386c82ae267c5fa7f198f30806c67462efd6bb6bd22777a146f0e2cb8b",
+   "wall_s": 24.7,
+   "warnings": []
+  },
+  {
+   "key": "ref|S1|bottom|Fs4",
+   "soil": "S1",
+   "base": "S1",
+   "weak_leg": null,
+   "level": "bottom",
+   "fs_kN": 4.0,
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true
+   },
+   "pass": true,
+   "t_loc_s": 37.299999999996075,
+   "t_off_s": 35.99999999998987,
+   "t_ready_s": 57.40000000009205,
+   "t_done_s": 45.40000000003475,
+   "loc_delay_s": 1.3,
+   "t_P_s": 35.699999999988435,
+   "c_min_tP_mm": 117.7,
+   "corner_bias_mm": [
+    117.7,
+    117.4,
+    74.6,
+    74.3
+   ],
+   "anchor_events": [],
+   "anchor_applied": false,
+   "guard_events": [],
+   "min_true_Fcyl_after_off_kN": 68.66889350343024,
+   "D8_margin_kN": 54.25,
+   "att_end_deg": [
+    0.015044729493990414,
+    0.02158747498094788
+   ],
+   "att_max_after_off_deg": 0.21402067823251614,
+   "rut_clear_ready_mm": 43.083144317217176,
+   "rut_clear_end_mm": 44.25971487983019,
+   "clear_est_end_mm": 51.79934680206277,
+   "max_motor_stroke_mm": 521.142542220862,
+   "sink_final_mm": [
+    123.6774767203615,
+    120.52939866979267,
+    130.92718201159764,
+    128.22340845481494
+   ],
+   "sink_rate_max_mm_s": [
+    18.368195736029325,
+    18.349647584167684,
+    15.372883097768131,
+    15.382595978191693
+   ],
+   "weak_leg_events": {},
+   "n_reapproach": 0,
+   "n_relevel": 0,
+   "n_warn": 0,
+   "pre_loc_events": [],
+   "final_phase": "ready",
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     22.9,
+     "level"
+    ],
+    [
+     45.4,
+     "done"
+    ],
+    [
+     45.5,
+     "probe"
+    ],
+    [
+     57.4,
+     "ready"
+    ]
+   ],
+   "n_probe_rounds": 1,
+   "events_head": [
+    "22.9 floor_estimate_touch",
+    "25.2 soil_mode_start",
+    "37.3 crawler_liftoff_confirmed",
+    "37.3 INFO_CLEARANCE_BIAS:FL=74.3,FR=74.6,RL=117.4,RR=117.7",
+    "57.4 reanchor_skipped:disabled",
+    "57.4 ready_heave_tail"
+   ],
+   "commands_sha256": "341f88625b75b5aefdcd29eb2109ffbc93f9a02d069306a8d701f26543362cf4",
+   "wall_s": 24.8,
+   "warnings": []
+  }
+ ]
+}

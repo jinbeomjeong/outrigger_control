@@ -2,11 +2,26 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-10-27 22:50 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 69~71: G8(비평면 시작)·G5 잔여 스크린, C-S8-76 Chrono(패드 아래 블록), P-S8-28(LOC 기준 틈·행정 예산 가드·`FAULT_STROKE_END`·행정 끝 재접지) 구현·인수**). 그 전: 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
+- 갱신: 2026-10-28 01:40 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 72·73: G6(SCM 한 패드 연약부) 하네스 판정, P-S8-29(V2b 비틀림 완료 완화) 구현·인수, 꼬리 생략 검사 여유 0.5 mm, G6 Chrono 연약 패드 별도 SCMTerrain 기능(실행 전), P-S8-30 Af3B4 인수 미달**). 그 전: 34c806d(개정 69~71, G8·P-S8-28), 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
 - 세션 기록: 일반 Windows 터미널에서 `claude`를 직접 실행한다(2026-10-26 결정).
 
-## 이번 커밋에서 바뀐 것 (7862ef6 이후)
+## 이번 커밋에서 바뀐 것 (34c806d 이후)
+
+1. **개정 72(375~379)**: 하네스 행정 관문 = 실행 중 최대(재판정 불변). **꼬리 생략 검사 여유**(python, `LockTailSettings.end_overshoot_margin_m` R8 0.0005; 인수 해시 불변). **G6 하네스**(control `r72_g6_screen.py`: 패드별 토양 `SoilPadsPerLeg`, 강체 기반 `MixedRigidPads` — 사용자 결정으로 강체 기반 추가) G1 기반 64 + 강체 기반 52: 자세 116/116 ≤ 0.042°, 후방 연약 J1·J2 32건 READY 미도달(비틀림 완료 조건; dynamics 가설대로 비틀림 강성 약 1/60 저하 × 루프 이득), S1 LOC 전 재접근 → P3-8 FLAG 강등(사용자 결정). **P-S8-29 = V2b**(사용자 결정 2026-10-28) python 구현(`TwistCompletionRelaxSettings`, `INFO_TWIST_UNSETTLED`, 시험 `test_c2_p29.py` 22 + unit 2747) → 해시 G6 116 = 후보, G8 516·V-3·r8d1 불변. 결과 `06_analysis/02_control/s8/rev72/`·`rev73/`.
+2. **개정 73(380~383)**: (C) 강체 + S1 전방 대각 부상 판정 정의 U-S9-G6c (가)(이탈 뒤 엄격, LOC 전 하중 소실 FLAG). P-S8-30 후보 탐색 12 → Af3B4 (C) 8/8이지만 나머지 108 중 20 회귀(LOC 지연) → 인수 미달, python 구현 되돌림(`c2.py` = P-S8-29 상태 확인). 결과 `rev74/`(기대 해시 파일은 `_provisional`, 인수에 쓰지 않음).
+3. **G6 Chrono 기능(cad, 실행 전)**: `scm_model.py` `soil_patch`(연약 패드만 세 번째 SCMTerrain, 앵커 부싱 연약 세트·패드별 마찰 `ground_bushing.PadBushingSpec.friction`), `run_S9.py` `--soil-patch`·`--soil-patch-grid`·G6 사례(G6-0a 열린 루프 대조 G1@RR, G6-0b 선택, J1@RR 160 s, J1@FL 200 s, G1@RR 120 s, `duration_s`)·`p3b_ext`(완료 막힘 사유·D 시계열 `completion_series.npz`, 사건 수, t_P·c_min, 처녀 가지 구간 `virgin_branch`), `s9_batch.py` G6·G6_opt, 비교기 `s9_g6_patch_compare.py`. soil_patch 없으면 비트 동일, 기존 정의 불변. 시험 `test_s9_g6_soil_patch.py`·`test_s9_g6_patch_compare.py`·`05_tests/chrono/test_scm_soil_patch.py`. dynamics 판단: 연약 세트 J1 유지(첫 접촉 튐은 TOUCH 첫 약 0.2 s만, `dynamics_model.md` 5.40 개정 초안은 아직 문서에 안 넣음).
+4. 문서: 명세 개정 72·73, decision_log, 로드맵 6절 1번, CLAUDE.md 제어기 행(P-S8-29·꼬리 여유, 개정 30~73)·커버리지 공백 줄, 색인.
+
+## 다음 할 일 (권장 순서)
+
+1. **P-S8-30 수정 후보 비교**(control): P30-f(정지 대신 0.15 $v_{max}$ 느린 들어 올림)·P30-n(문턱 2.0/2.5 $F_{min}$)·P30-fn을 `r74_p30_screen.py`에 넣고 (C) 8 + 회귀 20 + ref 20 비교(약 7분) → 통과 후보로 G6 116·G8 516 전체 회귀(약 30분, 메인 세션 배치) → python 구현(383절 갱신 명세, Af3B4 참조 구현 특성은 python 리포트 기록) → 인수.
+2. **G6 Chrono**(사용자 확인 뒤): `s9_batch.py run G6 --parallel 4`(약 4.1 h, G6-0a 끝나면 `s9_g6_patch_compare.py`부터), long-running-task-monitor 15분 점검. P-S8-30 확정 뒤 최종 제어기로. G6 판정 행을 S9 판정기에 넣을지(cad 제안)·C-4 허용값(dynamics) 확정.
+3. dynamics_model.md 5.40(G6 첫 접촉 판단) 개정을 문서에 반영(dynamics 초안 있음).
+4. **G3(앞 다리 사건 + 그 다리 로드 고장)**: 축소 하네스에 로드 판독 고장 주입, 약 72실행.
+5. 선택: C-S8-76 C5(L2b G5 A형 0.5 s 평균). 나중: 크롤러 재접촉 합성(322.2), U-S8-57·DONE 꼬리 감시.
+
+## 34c806d에서 바뀐 것
 
 1. **정리(7862ef6 직후, 사용자 확인)**: worktree `agent-acc9eadf7f3760ab1`·브랜치 삭제(미커밋 파일 20개는 메인과 같거나 메인이 최신), 점검 폴더 `c72smoke_*`·`c75chk_*`·`bundleC_ps7r8_check_*` 삭제. 저장소 브랜치는 master 하나.
 2. **진동 진폭 정의 정정(명세 359절)**: `r68_p27_screen.py`·`r68_c73_rocking.py`에 추세 제거 진폭 열 `half_pp_detrended_per_2s_kN` 추가(기존 키 불변, python). 개정 68 351.1·356.1 인용 정정, 결론 불변.
@@ -16,7 +31,7 @@
 6. 문서: 명세 개정 69~71, decision_log 4줄, 로드맵 6절 1·6번, CLAUDE.md 제어기 행(P-S8-28, 개정 30~71)·미정 사항 커버리지 공백(G3·G6만 남음), 색인. 커밋 전 무결성 점검 Medium 2·Low 6 모두 고침.
 7. 분석: `04_scripts/03_control/s8/r69_*`(g8_screen·g5_screen·table·judge·g8_xcheck)·`r70_*`(p28_screen·judge·c76_harness), 결과 `06_analysis/02_control/s8/rev69/`·`rev70/`. 시험 `test_s6_c_s8_76.py`·`05_tests/chrono/test_pad_block.py`·`test_c2_p28.py`·`test_s8_soil_restore.py`.
 
-## 다음 할 일 (권장 순서)
+### 34c806d 당시 다음 할 일 (기록)
 
 1. **G6(SCM 한 패드 연약부) 스크린**: s9 하네스 `SoilPads`를 다리별 토양 세트로 확장(control 설계: 한 패드 J1·J2·S1 / 나머지 G1·rigid × 다리 4 × 상·하단 × $F_s$ 0·4, 약 96실행). P-S8-28 앵커가 패드별 침하로 작동할 수 있으니 앵커·참 틈·끝 자세·$t_P$ 표본을 함께 본다(명세 374).
 2. **G3(앞 다리 사건 + 그 다리 로드 고장)**: 축소 하네스에 로드 판독 고장 주입 추가, 사건 FL·FR × G4·RE1bF·FS24 × 고장 시각 3 × $F_s$ 0·8, 약 72실행.

@@ -245,8 +245,13 @@ def job(key):
     phases = [q[1] for q in log]
     g["fault0"] = not any(p in ("fault", "fault_reground") for p in phases)
     stroke_end = np.asarray(plant.sref, float)
-    g["stroke_end"] = bool(np.all(stroke_end <= STROKE_END_OK_M))
+    # spec rev. 72 (366 correction): the stroke gate is the run maximum (10 Hz log of the motor stroke reference,
+    # resolution <= v_max T_s); the end value stays as a record
+    stroke_run_max = np.max(np.array([q[2] for q in log] + [stroke_end]), axis=0)
+    g["stroke_end"] = bool(np.all(stroke_run_max <= STROKE_END_OK_M))
     res["stroke_end_mm"] = (stroke_end * 1e3).round(2).tolist()
+    res["stroke_max_run_mm"] = (stroke_run_max * 1e3).round(2).tolist()
+    res["stroke_end_value_ok"] = bool(np.all(stroke_end <= STROKE_END_OK_M))
     c_true, c_est = crawler_clearance(cl, plant, ctrl, node_d0)
     res["crawler_clearance_end_mm"] = {"true": c_true, "controller_estimate": c_est,
                                        "target": round(ctrl.config.thresholds.clearance_target_m * 1e3, 1)}

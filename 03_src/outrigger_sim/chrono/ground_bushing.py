@@ -286,6 +286,8 @@ class PadBushingSpec:
             limit is ``mu N + adhesion_N min(1, N / N_c)``
             (:attr:`GroundBushingCoulomb.adhesion_full_normal_N`). Default 0 = the L1 limit
             ``mu N`` (bit-identical code path).
+        friction: Coulomb coefficient of this pad only (S9 G6 soil patch: the soft pad's
+            ``tan phi``); None = the bushing's common ``friction`` (default, code path unchanged).
     """
 
     name: str
@@ -295,6 +297,7 @@ class PadBushingSpec:
     stiffness_N_m: float
     damping_input_N_s_m: float
     adhesion_N: float = 0.0
+    friction: float | None = None
 
 
 @dataclass(frozen=True)
@@ -446,6 +449,8 @@ class GroundBushingCoulomb:
                 raise ValueError(f"pad {pad.name}: stiffness must be > 0 and damping >= 0")
             if pad.sphere_radius_m <= 0.0:
                 raise ValueError(f"pad {pad.name}: sphere radius must be > 0")
+            if pad.friction is not None and not (pad.friction >= 0.0 and math.isfinite(pad.friction)):
+                raise ValueError(f"pad {pad.name}: friction must be finite and >= 0")
         if touch_threshold_N < 0.0:
             raise ValueError(f"touch threshold must be >= 0: {touch_threshold_N!r}")
         if force_point not in FORCE_POINTS:
@@ -607,7 +612,7 @@ class GroundBushingCoulomb:
         n = np.maximum(np.asarray(normal_force_N, dtype=float).reshape(len(self._pads)), 0.0)
         out = np.empty(len(self._pads))
         for i, pad in enumerate(self._pads):
-            limit = self._mu * float(n[i])
+            limit = (self._mu if pad.friction is None else pad.friction) * float(n[i])
             if pad.adhesion_N != 0.0:
                 limit = limit + pad.adhesion_N * min(1.0, float(n[i]) / self._n_c)
             out[i] = limit
@@ -1015,7 +1020,7 @@ class GroundBushingCoulomb:
         dz = dz - dd * nz
         dn = math.sqrt(dx * dx + dy * dy + dz * dz)
         k = pad.stiffness_N_m
-        limit = self._mu * normal_force_N
+        limit = (self._mu if pad.friction is None else pad.friction) * normal_force_N
         if pad.adhesion_N != 0.0:  # S9 Mohr-Coulomb; the L1 path (0) stays bit-identical
             limit = limit + pad.adhesion_N * min(1.0, normal_force_N / self._n_c)
         if k * dn > limit:
