@@ -1,0 +1,1951 @@
+{
+ "rows": [
+  {
+   "no": 1,
+   "case": "G1L_RE1bF_FL_top_o050_Fs2",
+   "Fs_kN": 2,
+   "c72_case": "G1L_RE1bF_FL_top_Fs0",
+   "phase": "level",
+   "failed": [],
+   "event_leg": [
+    1.212,
+    2.232,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     48.28328456004691,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 11.24904571865167,
+     "leg": "RL",
+     "t_s": 31.38600000059117,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 11.25 kN (RL at 31.386 s) vs F_min 9.415 kN; per leg {'FL': 76.13, 'FR': 35.25, 'RL': 11.25, 'RR': 37.62} kN"
+   },
+   "recurrence": {
+    "n": 1,
+    "max_J": 31.4827526204691,
+    "passed": true
+   },
+   "late_starts": 2,
+   "union_s": 1.8960000000040012,
+   "end_att": 0.021981147046814278,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.054
+    ],
+    "fmin": {
+     "value": [
+      36.38224973309755,
+      0.054000000001792614
+     ],
+     "passed": false
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": -0.8331039047771679,
+      "leg": "RL",
+      "t_s": 31.887000000750195,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.30000000000995897,
+       "RR": 0.0
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.1420000000047139,
+       "RR": 0.0
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.08100000000268892,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.054000000001792614,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min -0.83 kN (RL at 31.887 s) vs F_min 9.415 kN; per leg {'FL': 60.28, 'FR': 12.18, 'RL': -0.83, 'RR': 20.16} kN"
+    },
+    "late_starts": 4,
+    "event_leg": [
+     1.205,
+     2.263,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 1,
+   "case": "G1L_RE1bF_FL_top_o050_Fs4",
+   "Fs_kN": 4,
+   "c72_case": "G1L_RE1bF_FL_top_Fs0",
+   "phase": "level",
+   "failed": [],
+   "event_leg": [
+    1.223,
+    2.034,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     49.50858789785218,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 21.37097398168396,
+     "leg": "RL",
+     "t_s": 31.349000000579426,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 21.37 kN (RL at 31.349 s) vs F_min 9.415 kN; per leg {'FL': 90.47, 'FR': 46.12, 'RL': 21.37, 'RR': 47.29} kN"
+   },
+   "recurrence": {
+    "n": 1,
+    "max_J": 33.55211390320902,
+    "passed": true
+   },
+   "late_starts": 2,
+   "union_s": 1.8840000000039758,
+   "end_att": 0.02164458026230231,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.054
+    ],
+    "fmin": {
+     "value": [
+      36.38224973309755,
+      0.054000000001792614
+     ],
+     "passed": false
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": -0.8331039047771679,
+      "leg": "RL",
+      "t_s": 31.887000000750195,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.30000000000995897,
+       "RR": 0.0
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.1420000000047139,
+       "RR": 0.0
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.08100000000268892,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.054000000001792614,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min -0.83 kN (RL at 31.887 s) vs F_min 9.415 kN; per leg {'FL': 60.28, 'FR': 12.18, 'RL': -0.83, 'RR': 20.16} kN"
+    },
+    "late_starts": 4,
+    "event_leg": [
+     1.205,
+     2.263,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 2,
+   "case": "G1L_RE1bF_FR_top_o075_Fs2",
+   "Fs_kN": 2,
+   "c72_case": "G1L_RE1bF_FR_top_Fs0",
+   "phase": "level",
+   "failed": [],
+   "event_leg": [
+    1.191,
+    2.032,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     48.69992320228195,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 11.066198174483265,
+     "leg": "RR",
+     "t_s": 31.403000000596567,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 11.07 kN (RR at 31.403 s) vs F_min 9.415 kN; per leg {'FL': 38.38, 'FR': 72.26, 'RL': 36.97, 'RR': 11.07} kN"
+   },
+   "recurrence": {
+    "n": 1,
+    "max_J": 30.16122738938132,
+    "passed": true
+   },
+   "late_starts": 3,
+   "union_s": 1.868000000003942,
+   "end_att": 0.022331835560418394,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.047,
+     0.119,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      43.36949736622357,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": 0.20222953450142359,
+      "leg": "RR",
+      "t_s": 31.995000000784476,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.2030000000067389
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.10800000000358523
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min 0.20 kN (RR at 31.995 s) vs F_min 9.415 kN; per leg {'FL': 20.46, 'FR': 48.8, 'RL': 16.21, 'RR': 0.2} kN"
+    },
+    "late_starts": 5,
+    "event_leg": [
+     1.239,
+     2.333,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 2,
+   "case": "G1L_RE1bF_FR_top_o075_Fs4",
+   "Fs_kN": 4,
+   "c72_case": "G1L_RE1bF_FR_top_Fs0",
+   "phase": "level",
+   "failed": [],
+   "event_leg": [
+    1.134,
+    1.973,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     44.706108533020256,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 15.378744743561374,
+     "leg": "RR",
+     "t_s": 31.327000000572443,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 15.38 kN (RR at 31.327 s) vs F_min 9.415 kN; per leg {'FL': 43.79, 'FR': 92.97, 'RL': 53.42, 'RR': 15.38} kN"
+   },
+   "recurrence": {
+    "n": 1,
+    "max_J": 48.76300596159969,
+    "passed": true
+   },
+   "late_starts": 2,
+   "union_s": 1.7780000000037521,
+   "end_att": 0.021992132299578828,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.047,
+     0.119,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      43.36949736622357,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": 0.20222953450142359,
+      "leg": "RR",
+      "t_s": 31.995000000784476,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.2030000000067389
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.10800000000358523
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min 0.20 kN (RR at 31.995 s) vs F_min 9.415 kN; per leg {'FL': 20.46, 'FR': 48.8, 'RL': 16.21, 'RR': 0.2} kN"
+    },
+    "late_starts": 5,
+    "event_leg": [
+     1.239,
+     2.333,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 3,
+   "case": "G1L_FS24_FR_top_o025_Fs2",
+   "Fs_kN": 2,
+   "c72_case": "G1L_FS24_FR_top_Fs0",
+   "phase": "level",
+   "failed": [],
+   "event_leg": [
+    0.847,
+    1.85,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     56.56980397863579,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 17.366303526030848,
+     "leg": "RR",
+     "t_s": 30.695000000371838,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 17.37 kN (RR at 30.695 s) vs F_min 9.415 kN; per leg {'FL': 44.86, 'FR': 63.11, 'RL': 37.41, 'RR': 17.37} kN"
+   },
+   "recurrence": {
+    "n": 0,
+    "max_J": 16.138955094057852,
+    "passed": true
+   },
+   "late_starts": 2,
+   "union_s": 1.3490000000028468,
+   "end_att": 0.024766480912440488,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      41.86226678974318,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": -0.10954426401024296,
+      "leg": "RR",
+      "t_s": 31.238000000544194,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.13300000000441514
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.117000000003884
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.002000000000066393
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min -0.11 kN (RR at 31.238 s) vs F_min 9.415 kN; per leg {'FL': 20.68, 'FR': 61.61, 'RL': 32.92, 'RR': -0.11} kN"
+    },
+    "late_starts": 3,
+    "event_leg": [
+     0.967,
+     1.912,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 3,
+   "case": "G1L_FS24_FR_top_o025_Fs4",
+   "Fs_kN": 4,
+   "c72_case": "G1L_FS24_FR_top_Fs0",
+   "phase": "level",
+   "failed": [],
+   "event_leg": [
+    0.803,
+    1.589,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     53.65141295224858,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 25.32087442463762,
+     "leg": "RR",
+     "t_s": 30.681000000367394,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 25.32 kN (RR at 30.681 s) vs F_min 9.415 kN; per leg {'FL': 51.89, 'FR': 70.64, 'RL': 31.46, 'RR': 25.32} kN"
+   },
+   "recurrence": {
+    "n": 0,
+    "max_J": 2.1474599678266735,
+    "passed": true
+   },
+   "late_starts": 1,
+   "union_s": 1.2899999999969936,
+   "end_att": 0.020746417803214446,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      41.86226678974318,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": -0.10954426401024296,
+      "leg": "RR",
+      "t_s": 31.238000000544194,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.13300000000441514
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.117000000003884
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.002000000000066393
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min -0.11 kN (RR at 31.238 s) vs F_min 9.415 kN; per leg {'FL': 20.68, 'FR': 61.61, 'RL': 32.92, 'RR': -0.11} kN"
+    },
+    "late_starts": 3,
+    "event_leg": [
+     0.967,
+     1.912,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 4,
+   "case": "G1L_FS24_FL_top_o075_Fs2",
+   "Fs_kN": 2,
+   "c72_case": "G1L_FS24_FL_top_Fs0",
+   "phase": "level",
+   "failed": [],
+   "event_leg": [
+    0.883,
+    1.848,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     43.749682648623704,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 9.723755446959059,
+     "leg": "RL",
+     "t_s": 31.24000000054483,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 9.72 kN (RL at 31.240 s) vs F_min 9.415 kN; per leg {'FL': 78.61, 'FR': 30.83, 'RL': 9.72, 'RR': 56.1} kN"
+   },
+   "recurrence": {
+    "n": 1,
+    "max_J": 54.49906843254732,
+    "passed": true
+   },
+   "late_starts": 2,
+   "union_s": 1.368000000002887,
+   "end_att": 0.03399958645807162,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      44.62557701933956,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": -0.5394947333767732,
+      "leg": "RL",
+      "t_s": 31.273000000555303,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.11300000000375121,
+       "RR": 0.0
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.11200000000371801,
+       "RR": 0.0
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.016000000000531145,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min -0.54 kN (RL at 31.273 s) vs F_min 9.415 kN; per leg {'FL': 57.62, 'FR': 15.15, 'RL': -0.54, 'RR': 23.44} kN"
+    },
+    "late_starts": 4,
+    "event_leg": [
+     0.962,
+     1.891,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 4,
+   "case": "G1L_FS24_FL_top_o075_Fs4",
+   "Fs_kN": 4,
+   "c72_case": "G1L_FS24_FL_top_Fs0",
+   "phase": "level",
+   "failed": [],
+   "event_leg": [
+    0.828,
+    1.799,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     56.191068994356634,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 31.253663206304168,
+     "leg": "RL",
+     "t_s": 30.707000000375647,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 31.25 kN (RL at 30.707 s) vs F_min 9.415 kN; per leg {'FL': 71.62, 'FR': 62.97, 'RL': 31.25, 'RR': 48.59} kN"
+   },
+   "recurrence": {
+    "n": 0,
+    "max_J": 0.0803090020153405,
+    "passed": true
+   },
+   "late_starts": 1,
+   "union_s": 1.297000000002737,
+   "end_att": 0.027954027694847495,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      44.62557701933956,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": -0.5394947333767732,
+      "leg": "RL",
+      "t_s": 31.273000000555303,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.11300000000375121,
+       "RR": 0.0
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.11200000000371801,
+       "RR": 0.0
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.016000000000531145,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min -0.54 kN (RL at 31.273 s) vs F_min 9.415 kN; per leg {'FL': 57.62, 'FR': 15.15, 'RL': -0.54, 'RR': 23.44} kN"
+    },
+    "late_starts": 4,
+    "event_leg": [
+     0.962,
+     1.891,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 5,
+   "case": "G1L_RE1bF_FL_top_o000_Fs2",
+   "Fs_kN": 2,
+   "c72_case": "G1L_RE1bF_FL_top_Fs8",
+   "phase": "level",
+   "failed": [],
+   "event_leg": [
+    1.254,
+    2.289,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     49.68098400075841,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 12.18889830509654,
+     "leg": "RL",
+     "t_s": 31.372000000583174,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 12.19 kN (RL at 31.372 s) vs F_min 9.415 kN; per leg {'FL': 70.99, 'FR': 36.44, 'RL': 12.19, 'RR': 31.39} kN"
+   },
+   "recurrence": {
+    "n": 1,
+    "max_J": 20.2770305330709,
+    "passed": true
+   },
+   "late_starts": 3,
+   "union_s": 2.021000000004265,
+   "end_att": 0.022285034720420482,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      53.87585646274757,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": 46.004612988052436,
+      "leg": "RR",
+      "t_s": 31.017000000470492,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "1 ms min 46.00 kN (RR at 31.017 s) vs F_min 9.415 kN; per leg {'FL': 102.0, 'FR': 90.34, 'RL': 56.45, 'RR': 46.0} kN"
+    },
+    "late_starts": 0,
+    "event_leg": [
+     1.258,
+     2.039,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 5,
+   "case": "G1L_RE1bF_FL_top_o000_Fs4",
+   "Fs_kN": 4,
+   "c72_case": "G1L_RE1bF_FL_top_Fs8",
+   "phase": "level",
+   "failed": [],
+   "event_leg": [
+    1.242,
+    2.055,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     50.579923614517924,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 21.494943719557472,
+     "leg": "RL",
+     "t_s": 31.3390000005727,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 21.49 kN (RL at 31.339 s) vs F_min 9.415 kN; per leg {'FL': 88.8, 'FR': 47.01, 'RL': 21.49, 'RR': 43.17} kN"
+   },
+   "recurrence": {
+    "n": 1,
+    "max_J": 24.535892177622753,
+    "passed": true
+   },
+   "late_starts": 3,
+   "union_s": 1.9160000000040434,
+   "end_att": 0.020823478430388787,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      53.87585646274757,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": 46.004612988052436,
+      "leg": "RR",
+      "t_s": 31.017000000470492,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "1 ms min 46.00 kN (RR at 31.017 s) vs F_min 9.415 kN; per leg {'FL': 102.0, 'FR': 90.34, 'RL': 56.45, 'RR': 46.0} kN"
+    },
+    "late_starts": 0,
+    "event_leg": [
+     1.258,
+     2.039,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 6,
+   "case": "G1R_RE1bF_FL_top_o000_Fs2",
+   "Fs_kN": 2,
+   "c72_case": "G1R_RE1bF_FL_top_Fs0",
+   "phase": "ready",
+   "failed": [],
+   "event_leg": [
+    1.212,
+    2.03,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     56.526876972400665,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 19.778646804850776,
+     "leg": "RR",
+     "t_s": 50.83400000209242,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 19.78 kN (RR at 50.834 s) vs F_min 9.415 kN; per leg {'FL': 60.04, 'FR': 45.83, 'RL': 23.72, 'RR': 19.78} kN"
+   },
+   "recurrence": {
+    "n": 0,
+    "max_J": 7.316776461261102,
+    "passed": true
+   },
+   "late_starts": 2,
+   "union_s": 1.862000000061812,
+   "end_att": 0.022375317480208747,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      48.424329916213516,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": 2.8935631402472444,
+      "leg": "RL",
+      "t_s": 51.16200000219653,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.09000000000298769,
+       "RR": 0.0
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.09000000000298769,
+       "RR": 0.0
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min 2.89 kN (RL at 51.162 s) vs F_min 9.415 kN; per leg {'FL': 55.74, 'FR': 24.03, 'RL': 2.89, 'RR': 22.03} kN"
+    },
+    "late_starts": 4,
+    "event_leg": [
+     1.223,
+     2.276,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 6,
+   "case": "G1R_RE1bF_FL_top_o000_Fs4",
+   "Fs_kN": 4,
+   "c72_case": "G1R_RE1bF_FL_top_Fs0",
+   "phase": "ready",
+   "failed": [],
+   "event_leg": [
+    1.218,
+    2.023,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     56.20759028150368,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 30.21871019194978,
+     "leg": "RR",
+     "t_s": 50.72400000208592,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 30.22 kN (RR at 50.724 s) vs F_min 9.415 kN; per leg {'FL': 76.2, 'FR': 57.88, 'RL': 33.96, 'RR': 30.22} kN"
+   },
+   "recurrence": {
+    "n": 0,
+    "max_J": 6.416010765108056,
+    "passed": true
+   },
+   "late_starts": 2,
+   "union_s": 1.8580000000616792,
+   "end_att": 0.020788689761059582,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      48.424329916213516,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": 2.8935631402472444,
+      "leg": "RL",
+      "t_s": 51.16200000219653,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.09000000000298769,
+       "RR": 0.0
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.09000000000298769,
+       "RR": 0.0
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min 2.89 kN (RL at 51.162 s) vs F_min 9.415 kN; per leg {'FL': 55.74, 'FR': 24.03, 'RL': 2.89, 'RR': 22.03} kN"
+    },
+    "late_starts": 4,
+    "event_leg": [
+     1.223,
+     2.276,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 7,
+   "case": "G1R_FS24_FL_top_o025_Fs2",
+   "Fs_kN": 2,
+   "c72_case": "G1R_FS24_FL_top_Fs0",
+   "phase": "ready",
+   "failed": [],
+   "event_leg": [
+    0.853,
+    1.833,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     56.48180125333214,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 16.69696800844909,
+     "leg": "RL",
+     "t_s": 50.48300000195258,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 16.70 kN (RL at 50.483 s) vs F_min 9.415 kN; per leg {'FL': 64.87, 'FR': 41.62, 'RL': 16.7, 'RR': 40.74} kN"
+   },
+   "recurrence": {
+    "n": 0,
+    "max_J": 0.01529435644349959,
+    "passed": true
+   },
+   "late_starts": 1,
+   "union_s": 1.3400000000444834,
+   "end_att": 0.02931358312005793,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.083
+    ],
+    "fmin": {
+     "value": [
+      38.06062753167724,
+      0.08300000000275531
+     ],
+     "passed": false
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": -0.8931752489958341,
+      "leg": "RL",
+      "t_s": 50.9720000021078,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.25300000000839873,
+       "RR": 0.0
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.15200000000504588,
+       "RR": 0.0
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.10700000000355203,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.08300000000275531,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min -0.89 kN (RL at 50.972 s) vs F_min 9.415 kN; per leg {'FL': 68.71, 'FR': 9.83, 'RL': -0.89, 'RR': 35.28} kN"
+    },
+    "late_starts": 3,
+    "event_leg": [
+     0.898,
+     1.874,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 7,
+   "case": "G1R_FS24_FL_top_o025_Fs4",
+   "Fs_kN": 4,
+   "c72_case": "G1R_FS24_FL_top_Fs0",
+   "phase": "ready",
+   "failed": [],
+   "event_leg": [
+    0.813,
+    1.573,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     55.97650280005741,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 26.0238734961591,
+     "leg": "RL",
+     "t_s": 50.36500000194355,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 26.02 kN (RL at 50.365 s) vs F_min 9.415 kN; per leg {'FL': 73.32, 'FR': 51.17, 'RL': 26.02, 'RR': 28.43} kN"
+   },
+   "recurrence": {
+    "n": 0,
+    "max_J": 2.267561007722703,
+    "passed": true
+   },
+   "late_starts": 1,
+   "union_s": 1.2840000000426244,
+   "end_att": 0.027492000282151065,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.0,
+     0.0,
+     0.083
+    ],
+    "fmin": {
+     "value": [
+      38.06062753167724,
+      0.08300000000275531
+     ],
+     "passed": false
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": -0.8931752489958341,
+      "leg": "RL",
+      "t_s": 50.9720000021078,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.25300000000839873,
+       "RR": 0.0
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.15200000000504588,
+       "RR": 0.0
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.10700000000355203,
+       "RR": 0.0
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.08300000000275531,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min -0.89 kN (RL at 50.972 s) vs F_min 9.415 kN; per leg {'FL': 68.71, 'FR': 9.83, 'RL': -0.89, 'RR': 35.28} kN"
+    },
+    "late_starts": 3,
+    "event_leg": [
+     0.898,
+     1.874,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 8,
+   "case": "G1R_RE1bF_FR_top_o075_Fs2",
+   "Fs_kN": 2,
+   "c72_case": "G1R_RE1bF_FR_top_Fs0",
+   "phase": "ready",
+   "failed": [],
+   "event_leg": [
+    1.149,
+    1.985,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     54.1832925738554,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 23.194952056056362,
+     "leg": "RL",
+     "t_s": 50.873000002076374,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 23.19 kN (RL at 50.873 s) vs F_min 9.415 kN; per leg {'FL': 48.38, 'FR': 58.59, 'RL': 23.19, 'RR': 24.03} kN"
+   },
+   "recurrence": {
+    "n": 0,
+    "max_J": 3.29546721982276,
+    "passed": true
+   },
+   "late_starts": 1,
+   "union_s": 1.7840000000592227,
+   "end_att": 0.017763124226364214,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.116,
+     0.744,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      44.270174458802224,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": -0.6649475396667471,
+      "leg": "RR",
+      "t_s": 50.58800000201433,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.12100000000401678
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.10800000000358523
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.018000000000597538
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min -0.66 kN (RR at 50.588 s) vs F_min 9.415 kN; per leg {'FL': 15.97, 'FR': 52.89, 'RL': 24.11, 'RR': -0.66} kN"
+    },
+    "late_starts": 3,
+    "event_leg": [
+     1.148,
+     2.213,
+     null,
+     true
+    ]
+   }
+  },
+  {
+   "no": 8,
+   "case": "G1R_RE1bF_FR_top_o075_Fs4",
+   "Fs_kN": 4,
+   "c72_case": "G1R_RE1bF_FR_top_Fs0",
+   "phase": "ready",
+   "failed": [],
+   "event_leg": [
+    1.148,
+    1.974,
+    null,
+    true
+   ],
+   "u57": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fmin": {
+    "value": [
+     53.80081033627987,
+     0.0
+    ],
+    "passed": true
+   },
+   "fmin_instant": {
+    "value": {
+     "instant_min_kN": 34.06135127026719,
+     "leg": "RL",
+     "t_s": 50.75600000206766,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    "note": "1 ms min 34.06 kN (RL at 50.756 s) vs F_min 9.415 kN; per leg {'FL': 60.26, 'FR': 75.87, 'RL': 34.06, 'RR': 34.91} kN"
+   },
+   "recurrence": {
+    "n": 0,
+    "max_J": 2.8576840327381823,
+    "passed": true
+   },
+   "late_starts": 1,
+   "union_s": 1.7740000000588907,
+   "end_att": 0.016549023204324463,
+   "B": false,
+   "A": false,
+   "c72": {
+    "u57": [
+     0.116,
+     0.744,
+     0.0
+    ],
+    "fmin": {
+     "value": [
+      44.270174458802224,
+      0.0
+     ],
+     "passed": true
+    },
+    "fmin_instant": {
+     "value": {
+      "instant_min_kN": -0.6649475396667471,
+      "leg": "RR",
+      "t_s": 50.58800000201433,
+      "below_F_min_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.12100000000401678
+      },
+      "longest_below_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.10800000000358523
+      },
+      "below_zero_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.018000000000597538
+      },
+      "airborne_s": {
+       "FL": 0.0,
+       "FR": 0.0,
+       "RL": 0.0,
+       "RR": 0.0
+      }
+     },
+     "note": "FLAG: 1 ms min -0.66 kN (RR at 50.588 s) vs F_min 9.415 kN; per leg {'FL': 15.97, 'FR': 52.89, 'RL': 24.11, 'RR': -0.66} kN"
+    },
+    "late_starts": 3,
+    "event_leg": [
+     1.148,
+     2.213,
+     null,
+     true
+    ]
+   }
+  }
+ ],
+ "summary": {
+  "rows": 1008,
+  "failed": [],
+  "ml0_rod_fallback_gate": null,
+  "ml1_rod_fallback_runs": null,
+  "deferred_leg_below_F_min": {
+   "flagged_runs": 0,
+   "runs": []
+  },
+  "flag_rows": []
+ }
+}

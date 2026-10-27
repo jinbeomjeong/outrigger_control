@@ -1,0 +1,39 @@
+2026-10-27 15:54:25 C-S8-72 orchestration start (spec rev. 67 345); controller must be master e8ef7df
+2026-10-27 15:54:25 control/*.py SHA-256 = baseline (e8ef7df); git diff HEAD control: empty
+2026-10-27 15:54:25 L2b command: C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set g1 --tag c72 --approved --workers p8e3 (cwd C:\workspace\outrigger_control); log C:\workspace\outrigger_control\06_analysis\02_control\s8\rev67\c72_l2b_run.log
+2026-10-27 15:54:25 L1-R command (after the L2b P-core cases end): C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py run --set ps7r8 --approved --jobs 4; log C:\workspace\outrigger_control\06_analysis\02_control\s8\rev67\c72_l1r_ps7_run.log
+2026-10-27 15:54:25 L2b started pid 10468; batch folder 07_results/S8/c72_<stamp>
+2026-10-27 15:54:25 elapsed       0 s | L2b rc None P-proc 0 E-proc 0 batch None results 0/11 | L1-R not started
+2026-10-27 15:54:55 elapsed      30 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 15:55:25 elapsed      60 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 15:55:55 elapsed      90 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 15:56:25 elapsed     120 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 15:56:56 elapsed     150 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 15:57:26 elapsed     180 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 15:57:56 elapsed     210 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 15:58:26 elapsed     240 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 15:58:56 elapsed     271 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 15:59:26 elapsed     301 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 15:59:56 elapsed     331 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 16:00:26 elapsed     361 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 16:00:56 elapsed     391 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 16:01:26 elapsed     421 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 16:01:56 elapsed     451 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 16:02:26 elapsed     481 s | L2b rc None P-proc 8 E-proc 3 batch c72_20261027_155426 results 0/11 | L1-R not started
+2026-10-27 16:02:56 elapsed     511 s | L2b rc None P-proc 7 E-proc 3 batch c72_20261027_155426 results 1/11 | L1-R not started
+2026-10-27 16:03:26 elapsed     541 s | L2b rc None P-proc 7 E-proc 3 batch c72_20261027_155426 results 1/11 | L1-R not started
+2026-10-27 16:03:56 elapsed     571 s | L2b rc None P-proc 5 E-proc 3 batch c72_20261027_155426 results 3/11 | L1-R not started
+2026-10-27 16:04:26 elapsed     601 s | L2b rc None P-proc 3 E-proc 2 batch c72_20261027_155426 results 6/11 | L1-R not started
+2026-10-27 16:04:57 elapsed     631 s | L2b rc None P-proc 2 E-proc 2 batch c72_20261027_155426 results 7/11 | L1-R not started
+2026-10-27 16:05:12 L1-R ps7r8 started pid 88832 (L2b P-core cases done: True); batch folder 07_results/S6/bundleC_ps7r8_L1R_<stamp>
+2026-10-27 16:05:27 elapsed     661 s | L2b rc None P-proc 0 E-proc 2 batch c72_20261027_155426 results 9/11 | L1-R rc None
+2026-10-27 16:05:57 elapsed     691 s | L2b rc None P-proc 0 E-proc 2 batch c72_20261027_155426 results 9/11 | L1-R rc None
+2026-10-27 16:06:27 elapsed     721 s | L2b rc None P-proc 0 E-proc 2 batch c72_20261027_155426 results 9/11 | L1-R rc None
+2026-10-27 16:06:57 elapsed     752 s | L2b rc None P-proc 0 E-proc 2 batch c72_20261027_155426 results 9/11 | L1-R rc None
+2026-10-27 16:07:27 elapsed     782 s | L2b rc None P-proc 0 E-proc 2 batch c72_20261027_155426 results 9/11 | L1-R rc None
+2026-10-27 16:07:57 elapsed     812 s | L2b rc None P-proc 0 E-proc 2 batch c72_20261027_155426 results 9/11 | L1-R rc None
+2026-10-27 16:08:27 elapsed     842 s | L2b rc None P-proc 0 E-proc 2 batch c72_20261027_155426 results 9/11 | L1-R rc None
+2026-10-27 16:08:57 elapsed     872 s | L2b rc None P-proc 0 E-proc 2 batch c72_20261027_155426 results 9/11 | L1-R rc None
+2026-10-27 16:09:27 elapsed     902 s | L2b rc None P-proc 0 E-proc 1 batch c72_20261027_155426 results 10/11 | L1-R rc None
+2026-10-27 16:09:47 elapsed     922 s | L2b rc 0 P-proc 0 E-proc 0 batch c72_20261027_155426 results 11/11 | L1-R rc 0
+2026-10-27 16:09:47 END L2b rc 0, L1-R rc 0, wall 922 s

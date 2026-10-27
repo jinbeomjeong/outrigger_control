@@ -209,6 +209,17 @@ class BundleCCase:
     the ``crawler_bushing_kt_scale`` after the beta / C-11 compensation, so it acts on the beta
     1.0 crawler value. ``chrono/crawler_bushing`` keeps the tangential damping ratio, i.e. ``ct``
     scales with ``sqrt(factor)`` (ASSUMPTION of that module, the earlier x0.3 / x3 runs)."""
+    preground_leg: str | None = field(default=None, repr=False)
+    """C-S8-72 (spec rev. 67 345.3): the one leg already on the floor in the start snapshot
+    (PS-7a ``RRpre`` / ``FLpre``); the snapshot check allows it LOCK / in contact / F_lock > 0
+    (``verify.s6_bundle_c.snapshot_retag_check(preground_leg=...)``). None = 5.24.3 as before."""
+    end_after_ready_s: float | None = field(default=None, repr=False)
+    """C-S8-72: stop the run at the first READY + this (PS-7: READY + 5 s, spec 92); the
+    scenario length is then only the upper bound. None = fixed length (as before)."""
+
+    OPTIONAL_META = ("preground_leg", "end_after_ready_s")
+    """Fields left out of :meth:`to_meta` while None and out of ``repr`` (``repr=False``), so
+    the earlier cases' definitions (meta and repr hashes) stay as they were."""
 
     @property
     def snapshot(self) -> str:
@@ -230,7 +241,8 @@ class BundleCCase:
         return sc.wall_estimate_s()
 
     def to_meta(self) -> dict[str, Any]:
-        out = {k: v for k, v in asdict(self).items() if k != "scenario"}
+        out = {k: v for k, v in asdict(self).items() if k != "scenario"
+               and not (k in self.OPTIONAL_META and v is None)}
         out["scenario"] = asdict(self.scenario)
         out["duration_s"] = self.duration_s
         return out
@@ -553,8 +565,43 @@ def rerun35_cases() -> list[BundleCCase]:
     return out
 
 
+PS7_R8_END_AFTER_READY_S = 5.0
+"""Spec 92 / rev. 67 345.1: a PS-7 run ends at READY + 5 s."""
+PS7_R8_EXTRA_S = 60.0
+"""C-S8-72 upper bound added to the stage-2 PS-7 length (ASSUMPTION: the harness READY of PS7a_RR
+proj 63 s vs ref 40 s, spec rev. 67 344.2; the run stops at READY + 5 s)."""
+PS7_R8_KEYS = (("PS7a_RR_R8", "a", "RR"), ("PS7a_FL_R8", "a", "FL"),
+               ("PS7b_RR_R8", "b", "RR"), ("PS7c_RR_R8", "c", "RR"))
+"""Spec rev. 67 345.1 #12-15: (case key, PS-7 variant, leg)."""
+
+
+def ps7r8_cases() -> list[BundleCCase]:
+    """C-S8-72 (spec rev. 67 345.1 #12-15): R8 PS-7 on L1-R. 7a = settled pre-grounded start
+    snapshot (``S6_crawler_top_flat_RRpre`` / ``..._FLpre``, leg at g0 + 2 mm); 7b / 7c = the
+    stage-2 in-run pre-extension (``PreExtend``) of RR to g0 - 1.5 / - 2.7 mm. Normal-grade
+    pressure sensors with the zero calibration on (``sensor_model``), the R8 preset, run end READY
+    + 5 s (:data:`PS7_R8_END_AFTER_READY_S`)."""
+    by_key = {c.case_id[3]: c for c in st.ps7_cases()}  # "PS7a_flat_..." -> "a"
+    out = []
+    for cid, key, leg in PS7_R8_KEYS:
+        sc = by_key[key]
+        if key == "a":
+            sc = replace(sc, snapshot_override=st.preground_snapshot_name(leg))
+        elif leg != "RR":
+            raise ValueError(f"{cid}: PS-7{key} only on RR (stage-2 pre-extension)")
+        note = (f"C-S8-72 / spec rev. 67 345.1: PS-7{key} {leg} R8 (with_10hz_d1), "
+                + ("settled pre-grounded snapshot g0 + 2 mm" if key == "a"
+                   else f"in-run pre-extension g0 {st.PS7_PRE_EXTEND_MM[key]:+.1f} mm"))
+        sc = replace(sc, case_id=cid, duration_s=sc.duration_s + PS7_R8_EXTRA_S, notes=(note,))
+        out.append(BundleCCase(
+            cid, "PS7-R8", sc, sensor_model=True,
+            preground_leg=leg if key == "a" else None,
+            end_after_ready_s=PS7_R8_END_AFTER_READY_S, notes=(note,)))
+    return out
+
+
 CASE_SETS = {"bundleC": bundle_c_cases, "rerun32": rerun32_cases, "rerun33": rerun33_cases,
-             "rerun34": rerun34_cases, "rerun35": rerun35_cases}
+             "rerun34": rerun34_cases, "rerun35": rerun35_cases, "ps7r8": ps7r8_cases}
 GROUP_SETS = {"rerun32": rerun32_groups, "rerun33": rerun33_groups, "rerun34": rerun34_groups,
               "rerun35": rerun35_groups}
 ROLE_SETS = {"rerun34": RERUN34_ROLES, "rerun35": RERUN35_ROLES}
@@ -1083,6 +1130,24 @@ def rerun34_readiness(config=None) -> dict[str, Any]:
     return out
 
 
+REV43_CONTROLLER_KEYS = ("touch_free_air_min_travel_m", "touch_free_air_min_samples",
+                         "touch_free_air_cap_excess_N", "touch_hold_dip_samples",
+                         "touch_seen_samples")
+"""``R8Settings`` names recorded per case under ``bundle_c.rev43_controller`` (C-S8-73: the
+same block as ``run_S8C.py``; ``touch_free_air_cap_excess_N`` = P-S8-26, None = no cap;
+``touch_hold_dip_samples`` = P-S8-27)."""
+
+
+def rev43_controller_meta(config) -> dict[str, Any]:
+    """U-S8-9 (P-S8-5) / U-S8-11 (P-S8-6) / U-S8-73 (P-S8-26) TOUCH and re-approach settings of
+    ``config`` (getattr rule: a name missing from the installed c2.py gives None)."""
+    r8 = config.r8
+    reapproach = getattr(r8, "lifted_reapproach", None)
+    return {"reapproach_load_fraction_of_F_min":
+            getattr(reapproach, "load_fraction_of_F_min", None),
+            **{k: getattr(r8, k, None) for k in REV43_CONTROLLER_KEYS}}
+
+
 def c2_implementation_status(c2) -> dict[str, Any]:
     """Which 149 P-R8 items the installed c2.py has (recorded per case; R-7 getattr rule)."""
     from outrigger_sim.control import c2 as mod
@@ -1131,7 +1196,7 @@ class R8Series:
         self.rows: dict[str, list[Any]] = {k: [] for k in (
             "t", "valve_u", "amp_u", "computed_u", "raw_u", "limit_flags", "issued_u",
             "scale_used", "scale_raw", "grounded_leg_count", "guard_active", "guard_u",
-            "imu_samples", "imu_gyro_samples", "phase", "probed_leg",
+            "imu_samples", "imu_gyro_samples", "phase", "probed_leg", "touched",
             *(f"cmp_{n}_u" for n in self.COMPONENTS))}
         self.raw_source: str | None = None
         self.limit_source: str | None = None
@@ -1202,6 +1267,11 @@ class R8Series:
         guard = getattr(state, "guard_m_s", None)
         r["guard_active"].append(guard is not None)
         r["guard_u"].append(np.full(4, np.nan) if guard is None else np.asarray(guard, float))
+        # C-S8-72 (spec rev. 67 345.2 T-2): TOUCH latch per leg (controller _state.touched,
+        # 1 / 0; NaN = not available)
+        touched = getattr(state, "touched", None)
+        r["touched"].append(np.full(4, np.nan) if touched is None
+                            else np.asarray(touched, bool).astype(float))
         comps = getattr(self.c2, self.COMPONENT_ATTR, None)
         comps = comps() if callable(comps) else comps
         if isinstance(comps, dict):
@@ -1267,6 +1337,8 @@ class R8Series:
                 "probed_leg": f"(가): leg index 0..3 (FL, FR, RL, RR) the probe moves, "
                               f"{PROBED_LEG_NONE} = none (not PROBE / round not started); "
                               f"{PROBED_LEG_SOURCE}",
+                "touched": "C-S8-72: controller _state.touched per leg (1 latched / 0; NaN = "
+                           "not available), the TOUCH latch of spec rev. 67 345.2 T-2",
                 "units": "m/s, -, m/s^2, rad/s (imu_gyro_samples); t absolute s"}
 
 
@@ -1349,7 +1421,8 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
     check_settle_offset(case, model.dt_s)
     snap = load_snapshot(case.snapshot, params_sha256=base_params.sha256, directory=states)
     # dyn rev. 37 5.24.3: refuse to re-tag a snapshot that is not "legs unloaded"
-    snap, retag_check = retag_snapshot(snap, params.sha256, name=case.snapshot)
+    snap, retag_check = retag_snapshot(snap, params.sha256, name=case.snapshot,
+                                       preground_leg=case.preground_leg)  # C-S8-72
     retagged = retag_check["required"]
     model.actuator.configure_valve(tau_s=case.tau_v_s, amp_ramp=case.amp_ramp,
                                    amp_ramp_s=AMP_RAMP_S)
@@ -1366,6 +1439,25 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
     # U-S8-61 (spec 304 1): L1 / L1-R runs take the R-5 fallback ratio from the plant meta
     config, fallback_ratio_meta = l1_fallback_ratio(config, model, fallback_ratio_source)
     c2 = C2Controller.from_params(params_ctrl, config)
+    controller = c2
+    pre, pre_info = None, None
+    if sc.pre_extend_leg is not None:  # C-S8-72: PS-7b / 7c in-run pre-extension (stage 2)
+        from outrigger_sim.sensors.hydraulic import (
+            leg_annulus_areas_from_params,
+            leg_head_areas_from_params,
+        )
+
+        gaps = st.pad_gaps_m(model)
+        leg = sc.pre_extend_leg
+        target = float(gaps[leg]) + sc.pre_extend_offset_mm * 1e-3
+        pre = st.PreExtend(c2, leg=leg, target_m=target, speed_m_s=params.actuator.max_speed_m_s,
+                           head_area_m2=leg_head_areas_from_params(params),
+                           annulus_area_m2=leg_annulus_areas_from_params(params),
+                           grounded_check=sc.pre_extend_offset_mm > 0.0)
+        controller = pre
+        pre_info = {"g0_m": gaps.tolist(), "leg": leg, "offset_mm": sc.pre_extend_offset_mm,
+                    "target_m": target, "rule": "g0 = n . (c - p0) - r on the restored state "
+                                                "(s6_stage2.PreExtend)"}
     dt_fine = float(params.get("simulation.dt_transition_s"))
     schedule = DtSchedule(model.dt_s, config.period_s) if sc.fine_dt else None
     pads = None
@@ -1415,6 +1507,7 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
 
     def observe(meas, command):
         series(meas, command)
+        state["last_t"] = meas.t_s  # C-S8-72 end rule
         ph = c2.phase
         n_rounds = len(c2.probe_history)
         if not phases or phases[-1][1] != ph.value:
@@ -1501,6 +1594,7 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
         "imu_sample_period_s": IMU_SAMPLE_PERIOD_S,
         "leg_sensors": "WIKA error model" if case.sensor_model else "ideal (LegSensorConfig())",
         "c2_implementation": impl,
+        "rev43_controller": rev43_controller_meta(config),  # C-S8-73, as run_S8C bundle_c
         "controller_timing": c2.meta().get("timing"),
         "gyro_noise_std_rad_s_passed": config.target.gyro_noise_std_rad_s,
     }
@@ -1515,17 +1609,25 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
     run_meta = make_run_meta(params, engine.meta(), scenario=f"S6_bundleC_{case.case_id}",
                              scenario_settings=settings, sensors=suite.setup(),
                              reference_sha256=load_references().sha256_by_file())
+    # C-S8-72: READY + end_after_ready_s end rule (fixed-length check runs keep their length)
+    use_end_rule = case.end_after_ready_s is not None and duration_s is None
+
+    def stop_now() -> bool:
+        return (state["ready_t"] is not None and state.get("last_t") is not None
+                and state["last_t"] >= state["ready_t"] + case.end_after_ready_s - 1e-9)
+
     wall0 = time.perf_counter()
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")  # every occurrence (also after a dt change)
-        res = run_closed_loop(engine, c2, suite, duration_s or case.duration_s,
+        res = run_closed_loop(engine, controller, suite, duration_s or case.duration_s,
                               run_meta=run_meta, on_control=observe, command_delay_periods=0,
                               command_offset_s=case.command_offset_s,
                               step_hook=st._chain_hooks(pads, settle_vel, sat_rec),
                               capture_every_steps=5 if pads and schedule is None else None,
                               dt_schedule=schedule,
                               capture_every_s=1.0e-3 if pads and schedule is not None else None,
-                              placement=st.run_placement())
+                              placement=st.run_placement(),
+                              **({"stop_when": stop_now} if use_end_rule else {}))
     wall = time.perf_counter() - wall0
     observed = []
     for w in caught:
@@ -1588,8 +1690,22 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
         "probe_events": [e for e in events if "probe" in e],
         "probe_skipped": [e for e in events if "probe_skipped" in e],
         "floor_plane": {"normal_world": n_floor.tolist(), "offset_m": float(n_floor @ p_floor)},
-        "zero_calibration_report": st.zero_calibration_report(arr, phases, t0, ctl_meta, events,
-                                                              params, start_s=None),
+        "zero_calibration_report": st.zero_calibration_report(
+            arr, phases, t0, ctl_meta, events, params,
+            start_s=None if pre is None or pre.handover_t is None else pre.handover_t - t0),
+        # C-S8-72: PS-7b / 7c pre-extension, PS-7 end rule
+        **({} if pre is None else {"pre_extend": {**pre_info, **{
+            k: v for k, v in pre.meta().items() if k != "inner"}},
+            "pre_extend_handover_t_s": None if pre.handover_t is None
+            else pre.handover_t - t0}),
+        **({} if case.end_after_ready_s is None else {"end_rule": {
+            "after_ready_s": case.end_after_ready_s, "applied": use_end_rule,
+            "stopped_early": bool(res.meta.get("stopped_early", False)),
+            "end_t_s": float(engine.time_s) - t0,
+            "upper_s": duration_s or case.duration_s,
+            "timeout": bool(use_end_rule and not res.meta.get("stopped_early", False)),
+            "rule": "C-S8-72 / spec 92: READY + 5 s, the case length only as the upper "
+                    "bound"}}),
         "ready_t_s": None if state["ready_t"] is None else state["ready_t"] - t0,
         "probe_intervals": probe_intervals,
         "first_probe_t_s": None if state["probe_t"] is None else state["probe_t"] - t0,
@@ -1698,8 +1814,33 @@ def build_snapshots(jobs: int):
     return report
 
 
+def build_preground_snapshot(leg: str, *, overwrite: bool = False,
+                             placement: str = "pcore") -> dict[str, Any]:
+    """C-S8-72 (spec rev. 67 345.3): the PS-7a start snapshot of ``leg``
+    (``s6_stage2.job_snapshot_preground``, the RRpre procedure with that leg) into
+    :data:`STATES`, in this process (L1-R on); the build record goes to
+    ``07_results/S6/snapshot_<leg>pre_L1R_<stamp>/result.json``."""
+    from outrigger_sim.hostcpu import place_process
+
+    placed = place_process(placement)
+    stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    out = RESULTS / f"snapshot_{leg}pre_L1R_{stamp}"
+    out.mkdir(parents=True, exist_ok=True)
+    t0 = time.perf_counter()
+    summary = st.job_snapshot_preground(out, STATES, leg=leg, overwrite=overwrite)
+    summary.update(placement=placed, wall_total_s=time.perf_counter() - t0,
+                   env={k: os.environ.get(k) for k in ("OUTRIGGER_ROD_SIDE_MECHANICS",
+                                                       "OPENBLAS_NUM_THREADS")})
+    (out / "result.json").write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False),
+                                     encoding="utf-8")
+    print(json.dumps(_plain({k: summary[k] for k in ("snapshot", "leg", "t_reach_s", "t_end_s",
+                                                     "stop", "wall_s")}), indent=1), flush=True)
+    print(f"-> {out}", flush=True)
+    return summary
+
+
 def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DURATION_S,
-              case_set: str = "bundleC"):
+              case_set: str = "bundleC", run_tag: str | None = None):
     from outrigger_sim.batch import Case, run_cases
 
     table = case_table()
@@ -1711,13 +1852,16 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
         raise SystemExit(f"cases without a start snapshot (run `snaps`): {blocked}")
     stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
     tag = "bundleC" if case_set == "bundleC" else f"bundleC_{case_set}"
+    if run_tag:  # C-S8-73: e.g. bundleC_ps7r8_c73_L1R_<stamp>
+        tag = f"{tag}_{run_tag}"
     batch_dir = RESULTS / (f"{tag}_check_L1R_{stamp}" if check else f"{tag}_L1R_{stamp}")
     batch_dir.mkdir(parents=True, exist_ok=True)
     groups = ({g: [c.case_id for c in v] for g, v in GROUP_SETS[case_set]().items()}
               if case_set in GROUP_SETS else None)
     c11_roles = {c: table[c].c11_role for c in ids if table[c].c11_role is not None}
     roles = {c: r for c, r in ROLE_SETS.get(case_set, {}).items() if c in ids}
-    meta = {"mode": "check" if check else "run", "case_set": case_set, "groups": groups,
+    meta = {"mode": "check" if check else "run", "case_set": case_set, "run_tag": run_tag,
+            "groups": groups,
             "c11_roles": c11_roles or None, "roles": roles or None,
             "check_duration_s": check_duration_s if check
             else None, "cases": ids, "jobs": jobs,
@@ -1743,8 +1887,19 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
 
 def main(argv):
     ap = argparse.ArgumentParser()
-    ap.add_argument("action", choices=("list", "plan", "snaps", "check", "run", "judge"))
+    ap.add_argument("action", choices=("list", "plan", "snaps", "snaps-pre", "check", "run",
+                                       "judge", "judge-ps7"))
+    ap.add_argument("--leg", choices=st.PREGROUND_LEGS, default="FL",
+                    help="snaps-pre (C-S8-72): leg of the pre-grounded PS-7a start snapshot")
+    ap.add_argument("--overwrite", action="store_true",
+                    help="snaps-pre: replace an existing snapshot of that leg")
+    ap.add_argument("--placement", choices=("pcore", "ecore", "os"), default="pcore",
+                    help="snaps-pre: CPU placement of the snapshot process")
+    ap.add_argument("--touch-ref", dest="touch_ref",
+                    help="judge-ps7: case folder of the TOUCH-length reference (T-1)")
     ap.add_argument("--jobs", type=int, default=MAX_WORKERS)
+    ap.add_argument("--tag", default=None,
+                    help="run / check: label added to the batch folder name (C-S8-73)")
     ap.add_argument("--only", nargs="*")
     ap.add_argument("--approved", action="store_true",
                     help="run: the user approved the bundle-C run (spec 150)")
@@ -1791,6 +1946,16 @@ def main(argv):
     if args.action == "snaps":
         build_snapshots(jobs)
         return
+    if args.action == "snaps-pre":  # C-S8-72: FLpre (spec rev. 67 345.3)
+        build_preground_snapshot(args.leg, overwrite=args.overwrite, placement=args.placement)
+        return
+    if args.action == "judge-ps7":  # C-S8-72: 345.2 PS-7 D8 / TOUCH rows
+        from outrigger_sim.verify.s6_control import judge_ps7_batch
+
+        out = judge_ps7_batch(Path(args.batch), None if not args.out else Path(args.out),
+                              touch_ref=None if not args.touch_ref else Path(args.touch_ref))
+        print(f"-> {out}")
+        return
     if args.action == "judge":
         from outrigger_sim.verify.s6_bundle_c import judge_batch
 
@@ -1802,7 +1967,8 @@ def main(argv):
     set_ids = [c.case_id for c in CASE_SETS[args.case_set]()]
     if args.action == "check":
         ids = args.only or set_ids
-        run_batch(ids, jobs, check=True, check_duration_s=args.duration, case_set=args.case_set)
+        run_batch(ids, jobs, check=True, check_duration_s=args.duration, case_set=args.case_set,
+                  run_tag=args.tag)
         return
     if not args.approved:
         raise SystemExit("bundle C needs the user's approval: add --approved (spec 150; "
@@ -1821,7 +1987,7 @@ def main(argv):
     else:
         table = case_table()
         ids = args.only or [c for c in set_ids if args.with_c9 or not table[c].conditional]
-    run_batch(ids, jobs, check=False, case_set=args.case_set)
+    run_batch(ids, jobs, check=False, case_set=args.case_set, run_tag=args.tag)
 
 
 if __name__ == "__main__":

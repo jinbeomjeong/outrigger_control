@@ -1,0 +1,2362 @@
+{
+ "meta": {
+  "batch": "07_results\\S6\\bundleC_ps7r8_c75_L1R_20261027_174330",
+  "module": "outrigger_sim.verify.s6_bundle_c",
+  "rows": 68,
+  "failed": 0,
+  "failed_c11_record": 0,
+  "failed_rerun_record": 0,
+  "failed_excluding_c11_record": 0,
+  "failed_excluding_record": 0,
+  "leak_compare_flags": null,
+  "leak_reference_missing": null,
+  "leak_screened": null,
+  "truth_undefined_7c": null,
+  "sensitivity_reference_missing": null,
+  "consistency_ref": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\r8_10hz\\d1\\bundle_c_consistency_ref.json"
+ },
+ "rows": [
+  {
+   "item": "run",
+   "case": "PS7a_FL_R8",
+   "value": "ready",
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "2 attitude +-0.2 (+mount)",
+   "case": "PS7a_FL_R8",
+   "value": 0.03065282140275901,
+   "limit": 0.2,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "3 F_min (1 ms)",
+   "case": "PS7a_FL_R8",
+   "value": 54.45445953881313,
+   "limit": 9.414589110000001,
+   "passed": true,
+   "note": "RR at 40.00 s; D8 margin ok",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "4 saturation steps",
+   "case": "PS7a_FL_R8",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "4 max moving pressure",
+   "case": "PS7a_FL_R8",
+   "value": 97.27533116163673,
+   "limit": 180.0,
+   "passed": true,
+   "note": "moving = |u_applied| > 1e-06 m/s (spec rev. 50 220.6 ②)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "5a rocking amplitude",
+   "case": "PS7a_FL_R8",
+   "value": 0.005756061771551985,
+   "limit": 0.06,
+   "passed": true,
+   "note": "1 s moving mean = 10 samples (Record 10 Hz, C-R4)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7a probe attitude change",
+   "case": "PS7a_FL_R8",
+   "value": 0.026818779811743857,
+   "limit": 0.1,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7b verdict = truth",
+   "case": "PS7a_FL_R8",
+   "value": true,
+   "limit": true,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7c load estimate error",
+   "case": "PS7a_FL_R8",
+   "value": -3.409105546591232,
+   "limit": "<= 0 (max(5 kN,10 %))",
+   "passed": true,
+   "note": "per round and leg (U53); truth = probe start load (0.5 s mean before the first move, spec rev. 27 102.1); zero-calibration deduction legs one-sided (estimate - truth)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7c zero-calibration deduction legs: warning event",
+   "case": "PS7a_FL_R8",
+   "value": {
+    "FL": true
+   },
+   "limit": "WARN_PRESSURE_ZERO_IMPLAUSIBLE / _SKIPPED per deduction leg",
+   "passed": true,
+   "note": "spec rev. 27 102.1 / 103.3: a leg judged one-sided in 7c must carry its calibration warning event",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "K8 shadow (B) - true floor",
+   "case": "PS7a_FL_R8",
+   "value": 0.01477236119403583,
+   "limit": 0.03,
+   "passed": null,
+   "note": "J5 / I6 report: within 0.03 deg",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "72.1 (6) no false pressure diagnosis",
+   "case": "PS7a_FL_R8",
+   "value": {
+    "WARN_LOAD_SUM_MISMATCH": 0,
+    "WARN_PRESSURE_DRIFT": 0
+   },
+   "limit": "0 warnings",
+   "passed": true,
+   "note": "spec rev. 28 110.1, rev. 29 122",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "run",
+   "case": "PS7a_RR_R8",
+   "value": "ready",
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "2 attitude +-0.2 (+mount)",
+   "case": "PS7a_RR_R8",
+   "value": 0.03717791751608081,
+   "limit": 0.2,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "3 F_min (1 ms)",
+   "case": "PS7a_RR_R8",
+   "value": 54.82812252337994,
+   "limit": 9.414589110000001,
+   "passed": true,
+   "note": "RR at 43.73 s; D8 margin ok",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "4 saturation steps",
+   "case": "PS7a_RR_R8",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "4 max moving pressure",
+   "case": "PS7a_RR_R8",
+   "value": 97.93799586303761,
+   "limit": 180.0,
+   "passed": true,
+   "note": "moving = |u_applied| > 1e-06 m/s (spec rev. 50 220.6 ②)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "5a rocking amplitude",
+   "case": "PS7a_RR_R8",
+   "value": 0.0055226922823077874,
+   "limit": 0.06,
+   "passed": true,
+   "note": "1 s moving mean = 10 samples (Record 10 Hz, C-R4)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7a probe attitude change",
+   "case": "PS7a_RR_R8",
+   "value": 0.027741882327435567,
+   "limit": 0.1,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7b verdict = truth",
+   "case": "PS7a_RR_R8",
+   "value": true,
+   "limit": true,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7c load estimate error",
+   "case": "PS7a_RR_R8",
+   "value": -6.08034744674884,
+   "limit": "<= 0 (max(5 kN,10 %))",
+   "passed": true,
+   "note": "per round and leg (U53); truth = probe start load (0.5 s mean before the first move, spec rev. 27 102.1); zero-calibration deduction legs one-sided (estimate - truth)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7c zero-calibration deduction legs: warning event",
+   "case": "PS7a_RR_R8",
+   "value": {
+    "RR": true
+   },
+   "limit": "WARN_PRESSURE_ZERO_IMPLAUSIBLE / _SKIPPED per deduction leg",
+   "passed": true,
+   "note": "spec rev. 27 102.1 / 103.3: a leg judged one-sided in 7c must carry its calibration warning event",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "K8 shadow (B) - true floor",
+   "case": "PS7a_RR_R8",
+   "value": 0.029436626449702737,
+   "limit": 0.03,
+   "passed": null,
+   "note": "J5 / I6 report: within 0.03 deg",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "72.1 (6) no false pressure diagnosis",
+   "case": "PS7a_RR_R8",
+   "value": {
+    "WARN_LOAD_SUM_MISMATCH": 0,
+    "WARN_PRESSURE_DRIFT": 0
+   },
+   "limit": "0 warnings",
+   "passed": true,
+   "note": "spec rev. 28 110.1, rev. 29 122",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "run",
+   "case": "PS7b_RR_R8",
+   "value": "ready",
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "2 attitude +-0.2 (+mount)",
+   "case": "PS7b_RR_R8",
+   "value": 0.03640284905652292,
+   "limit": 0.2,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "3 F_min (1 ms)",
+   "case": "PS7b_RR_R8",
+   "value": 55.0547806879792,
+   "limit": 9.414589110000001,
+   "passed": true,
+   "note": "RR at 64.03 s; D8 margin ok",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "4 saturation steps",
+   "case": "PS7b_RR_R8",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "4 max moving pressure",
+   "case": "PS7b_RR_R8",
+   "value": 97.80774711584013,
+   "limit": 180.0,
+   "passed": true,
+   "note": "moving = |u_applied| > 1e-06 m/s (spec rev. 50 220.6 ②)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "5a rocking amplitude",
+   "case": "PS7b_RR_R8",
+   "value": 0.005285499808969026,
+   "limit": 0.06,
+   "passed": true,
+   "note": "1 s moving mean = 10 samples (Record 10 Hz, C-R4)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7a probe attitude change",
+   "case": "PS7b_RR_R8",
+   "value": 0.026521807950680782,
+   "limit": 0.1,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7b verdict = truth",
+   "case": "PS7b_RR_R8",
+   "value": true,
+   "limit": true,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7c load estimate error",
+   "case": "PS7b_RR_R8",
+   "value": -6.693151632563981,
+   "limit": "<= 0 (max(5 kN,10 %))",
+   "passed": true,
+   "note": "per round and leg (U53); truth = probe start load (0.5 s mean before the first move, spec rev. 27 102.1); zero-calibration deduction legs one-sided (estimate - truth)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7c zero-calibration deduction legs: warning event",
+   "case": "PS7b_RR_R8",
+   "value": {
+    "RR": true
+   },
+   "limit": "WARN_PRESSURE_ZERO_IMPLAUSIBLE / _SKIPPED per deduction leg",
+   "passed": true,
+   "note": "spec rev. 27 102.1 / 103.3: a leg judged one-sided in 7c must carry its calibration warning event",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "K8 shadow (B) - true floor",
+   "case": "PS7b_RR_R8",
+   "value": 0.05826969312023209,
+   "limit": 0.03,
+   "passed": null,
+   "note": "J5 / I6 report: beyond 0.03 deg",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "72.1 (6) no false pressure diagnosis",
+   "case": "PS7b_RR_R8",
+   "value": {
+    "WARN_LOAD_SUM_MISMATCH": 0,
+    "WARN_PRESSURE_DRIFT": 0
+   },
+   "limit": "0 warnings",
+   "passed": true,
+   "note": "spec rev. 28 110.1, rev. 29 122",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "run",
+   "case": "PS7c_RR_R8",
+   "value": "ready",
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "2 attitude +-0.2 (+mount)",
+   "case": "PS7c_RR_R8",
+   "value": 0.0364202168133312,
+   "limit": 0.2,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "3 F_min (1 ms)",
+   "case": "PS7c_RR_R8",
+   "value": 54.3485262955839,
+   "limit": 9.414589110000001,
+   "passed": true,
+   "note": "RR at 63.57 s; D8 margin ok",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "4 saturation steps",
+   "case": "PS7c_RR_R8",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "4 max moving pressure",
+   "case": "PS7c_RR_R8",
+   "value": 98.49517975028986,
+   "limit": 180.0,
+   "passed": true,
+   "note": "moving = |u_applied| > 1e-06 m/s (spec rev. 50 220.6 ②)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "5a rocking amplitude",
+   "case": "PS7c_RR_R8",
+   "value": 0.009097082925257946,
+   "limit": 0.06,
+   "passed": true,
+   "note": "1 s moving mean = 10 samples (Record 10 Hz, C-R4)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7a probe attitude change",
+   "case": "PS7c_RR_R8",
+   "value": 0.02956195797880883,
+   "limit": 0.1,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7b verdict = truth",
+   "case": "PS7c_RR_R8",
+   "value": true,
+   "limit": true,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7c load estimate error",
+   "case": "PS7c_RR_R8",
+   "value": -5.884241909219876,
+   "limit": "<= 0 (max(5 kN,10 %))",
+   "passed": true,
+   "note": "per round and leg (U53); truth = probe start load (0.5 s mean before the first move, spec rev. 27 102.1); zero-calibration deduction legs one-sided (estimate - truth)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "7c zero-calibration deduction legs: warning event",
+   "case": "PS7c_RR_R8",
+   "value": {
+    "RR": true
+   },
+   "limit": "WARN_PRESSURE_ZERO_IMPLAUSIBLE / _SKIPPED per deduction leg",
+   "passed": true,
+   "note": "spec rev. 27 102.1 / 103.3: a leg judged one-sided in 7c must carry its calibration warning event",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "K8 shadow (B) - true floor",
+   "case": "PS7c_RR_R8",
+   "value": 0.041386632773842164,
+   "limit": 0.03,
+   "passed": null,
+   "note": "J5 / I6 report: beyond 0.03 deg",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "72.1 (6) no false pressure diagnosis",
+   "case": "PS7c_RR_R8",
+   "value": {
+    "WARN_LOAD_SUM_MISMATCH": 0,
+    "WARN_PRESSURE_DRIFT": 0
+   },
+   "limit": "0 warnings",
+   "passed": true,
+   "note": "spec rev. 28 110.1, rev. 29 122",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 9.999999999668034
+  },
+  {
+   "item": "C-R5 CHECK attitude error <= 0.017 deg",
+   "case": "PS7a_FL_R8",
+   "value": 0.0010033273965534288,
+   "limit": 0.017,
+   "passed": true,
+   "note": "controller - truth roll/pitch -0.0007/-0.0010 deg, 10 samples, window controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True); ASSUMPTION limit (U11 settling residual)",
+   "kind": "judged",
+   "source": "bundle_c"
+  },
+  {
+   "item": "C-R5 A1 floor usage (controller / truth crawler / nominal floor)",
+   "case": "PS7a_FL_R8",
+   "value": [
+    0.014645597099879651,
+    0.014495474967240704,
+    0.0
+   ],
+   "limit": "<= 1 + 0.01",
+   "passed": null,
+   "note": "code ACCEPTED",
+   "kind": "report",
+   "source": "bundle_c"
+  },
+  {
+   "item": "5.24.2 unexpected warnings",
+   "case": "PS7a_FL_R8",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "0 expected (not counted)",
+   "kind": "anomaly",
+   "source": "bundle_c"
+  },
+  {
+   "item": "5.24.2 law-C saturation steps",
+   "case": "PS7a_FL_R8",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "steps {'FL': 0, 'FR': 0, 'RL': 0, 'RR': 0}",
+   "kind": "report",
+   "source": "bundle_c"
+  },
+  {
+   "item": "146 consistency vs reduced (142 C)",
+   "case": "PS7a_FL_R8",
+   "value": null,
+   "limit": null,
+   "passed": null,
+   "note": "case not in the reference",
+   "kind": "consistency",
+   "source": "bundle_c"
+  },
+  {
+   "item": "C-R5 CHECK attitude error <= 0.017 deg",
+   "case": "PS7a_RR_R8",
+   "value": 8.295292316113247e-05,
+   "limit": 0.017,
+   "passed": true,
+   "note": "controller - truth roll/pitch +0.0001/-0.0000 deg, 10 samples, window controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True); ASSUMPTION limit (U11 settling residual)",
+   "kind": "judged",
+   "source": "bundle_c"
+  },
+  {
+   "item": "C-R5 A1 floor usage (controller / truth crawler / nominal floor)",
+   "case": "PS7a_RR_R8",
+   "value": [
+    0.015158347107840864,
+    0.015173932603255072,
+    0.0
+   ],
+   "limit": "<= 1 + 0.01",
+   "passed": null,
+   "note": "code ACCEPTED",
+   "kind": "report",
+   "source": "bundle_c"
+  },
+  {
+   "item": "5.24.2 unexpected warnings",
+   "case": "PS7a_RR_R8",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "0 expected (not counted)",
+   "kind": "anomaly",
+   "source": "bundle_c"
+  },
+  {
+   "item": "5.24.2 law-C saturation steps",
+   "case": "PS7a_RR_R8",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "steps {'FL': 0, 'FR': 0, 'RL': 0, 'RR': 0}",
+   "kind": "report",
+   "source": "bundle_c"
+  },
+  {
+   "item": "146 consistency vs reduced (142 C)",
+   "case": "PS7a_RR_R8",
+   "value": null,
+   "limit": null,
+   "passed": null,
+   "note": "case not in the reference",
+   "kind": "consistency",
+   "source": "bundle_c"
+  },
+  {
+   "item": "C-R5 CHECK attitude error <= 0.017 deg",
+   "case": "PS7b_RR_R8",
+   "value": 0.007102320093076927,
+   "limit": 0.017,
+   "passed": true,
+   "note": "controller - truth roll/pitch -0.0005/+0.0071 deg, 10 samples, window controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True); ASSUMPTION limit (U11 settling residual)",
+   "kind": "judged",
+   "source": "bundle_c"
+  },
+  {
+   "item": "C-R5 A1 floor usage (controller / truth crawler / nominal floor)",
+   "case": "PS7b_RR_R8",
+   "value": [
+    0.004173130159420391,
+    0.0021289427229300227,
+    0.0
+   ],
+   "limit": "<= 1 + 0.01",
+   "passed": null,
+   "note": "code ACCEPTED",
+   "kind": "report",
+   "source": "bundle_c"
+  },
+  {
+   "item": "5.24.2 unexpected warnings",
+   "case": "PS7b_RR_R8",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "0 expected (not counted)",
+   "kind": "anomaly",
+   "source": "bundle_c"
+  },
+  {
+   "item": "5.24.2 law-C saturation steps",
+   "case": "PS7b_RR_R8",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "steps {'FL': 0, 'FR': 0, 'RL': 0, 'RR': 0}",
+   "kind": "report",
+   "source": "bundle_c"
+  },
+  {
+   "item": "146 consistency vs reduced (142 C)",
+   "case": "PS7b_RR_R8",
+   "value": null,
+   "limit": null,
+   "passed": null,
+   "note": "case not in the reference",
+   "kind": "consistency",
+   "source": "bundle_c"
+  },
+  {
+   "item": "C-R5 CHECK attitude error <= 0.017 deg",
+   "case": "PS7c_RR_R8",
+   "value": 0.0036237387581233645,
+   "limit": 0.017,
+   "passed": true,
+   "note": "controller - truth roll/pitch +0.0036/+0.0036 deg, 10 samples, window controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True); ASSUMPTION limit (U11 settling residual)",
+   "kind": "judged",
+   "source": "bundle_c"
+  },
+  {
+   "item": "C-R5 A1 floor usage (controller / truth crawler / nominal floor)",
+   "case": "PS7c_RR_R8",
+   "value": [
+    0.003191674068121474,
+    0.0015618892053882224,
+    0.0
+   ],
+   "limit": "<= 1 + 0.01",
+   "passed": null,
+   "note": "code ACCEPTED",
+   "kind": "report",
+   "source": "bundle_c"
+  },
+  {
+   "item": "5.24.2 unexpected warnings",
+   "case": "PS7c_RR_R8",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "0 expected (not counted)",
+   "kind": "anomaly",
+   "source": "bundle_c"
+  },
+  {
+   "item": "5.24.2 law-C saturation steps",
+   "case": "PS7c_RR_R8",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "steps {'FL': 0, 'FR': 0, 'RL': 0, 'RR': 0}",
+   "kind": "report",
+   "source": "bundle_c"
+  },
+  {
+   "item": "146 consistency vs reduced (142 C)",
+   "case": "PS7c_RR_R8",
+   "value": null,
+   "limit": null,
+   "passed": null,
+   "note": "case not in the reference",
+   "kind": "consistency",
+   "source": "bundle_c"
+  }
+ ],
+ "metrics": [
+  {
+   "case": "PS7a_FL_R8",
+   "group": "PS",
+   "level": "top",
+   "floor": "flat",
+   "grade": "ideal",
+   "event": null,
+   "times_s": {
+    "t0": 122.82000000183014,
+    "touch": 23.700000000786744,
+    "ready": 44.50000000147723,
+    "liftoff": 24.40000000080998,
+    "end": 49.500000001643215
+   },
+   "phases": [
+    [
+     0.10000000000331966,
+     "check"
+    ],
+    [
+     4.8000000001593435,
+     "touch"
+    ],
+    [
+     23.700000000786744,
+     "level"
+    ],
+    [
+     32.500000001078874,
+     "done"
+    ],
+    [
+     32.60000000108219,
+     "probe"
+    ],
+    [
+     44.50000000147723,
+     "ready"
+    ]
+   ],
+   "final_phase": "ready",
+   "F_min_N": 9414.58911,
+   "ready_window_ok": true,
+   "att_err_last5_maxabs_deg": 0.010652821402759008,
+   "att_err_last5_mean_deg": [
+    -0.0009174168537634262,
+    -0.010572934325546835
+   ],
+   "t_within_0p2_after_level_s": 0.0,
+   "min_cyl_after_liftoff_kN": 54.45445953881313,
+   "min_cyl_leg": "RR",
+   "min_cyl_t_s": 39.999000001327815,
+   "pad_N_min_after_liftoff_kN": 59.746212994949154,
+   "min_cyl_excl_reanchor_kN": 54.45445953881313,
+   "max_moving_pressure_bar": 97.27533116163673,
+   "moving_eps_m_s": 1e-06,
+   "max_pressure_any_step_bar": 98.57390324581513,
+   "saturation_steps": 0,
+   "record_rate_hz": 9.999999999668034,
+   "rocking_window_samples": 10,
+   "rocking_amp_deg": 0.005756061771551985,
+   "final_cyl_kN": [
+    117.17741697275592,
+    116.98425082017113,
+    73.11813762265592,
+    69.30923929225101
+   ],
+   "final_corrective_kN": [
+    118.08169706371396,
+    116.07997072921307,
+    72.12503493109274,
+    70.30234198381417
+   ],
+   "final_twist_kN": -1.899460680768687,
+   "t_ready_minus_touch_s": 20.80000000069049,
+   "stroke": {
+    "max_m": [
+     0.4076671106928531,
+     0.4077038311777493,
+     0.39579634383532947,
+     0.39564123584346267
+    ],
+    "min_m": [
+     0.343849048192806,
+     -1.1102201838024958e-15,
+     -1.2232546035432731e-15,
+     -1.3916401139121956e-15
+    ],
+    "margin_to_end_m": [
+     0.29233288930714685,
+     0.2922961688222507,
+     0.3042036561646705,
+     0.3043587641565373
+    ]
+   },
+   "h4": {
+    "enabled": true,
+    "outcome": "skipped:theta_below_min",
+    "expected": {
+     "relative_pitch_deg": 0.0,
+     "triggers": false,
+     "nose_up": false,
+     "direction": "nose_down_only",
+     "expected": null,
+     "reanchor_applicable": false
+    },
+    "direction": "nose_down_only",
+    "n_reanchor_skipped_nose_up": 0,
+    "n_reanchor_started": 0
+   },
+   "target_code": "ACCEPTED",
+   "last_check": {
+    "requested_rad": [
+     0.0,
+     0.0
+    ],
+    "accepted_rad": [
+     0.0,
+     0.0
+    ],
+    "code": "ACCEPTED",
+    "crawler_attitude_rad": [
+     0.00019486003995778216,
+     0.0022399284957078268
+    ],
+    "floor_estimate_rad": [
+     0.00019291736212122146,
+     -0.0007718830220198737
+    ],
+    "floor_usage": 0.014645597099879651
+   },
+   "floor_true_deg": [
+    0.0,
+    0.0
+   ],
+   "shadow_floor_deg": [
+    -0.01477236119403583,
+    -0.004726415432991926
+   ],
+   "shadow_minus_true_deg": [
+    -0.01477236119403583,
+    -0.004726415432991926
+   ],
+   "shadow_residual_mm": 0.826832257600385,
+   "shadow_floor_usage": 0.004036288262887325,
+   "contact": "combined",
+   "condition": "base",
+   "condition_reasons": [],
+   "diagnostic_check": {
+    "counts": {
+     "WARN_LOAD_SUM_MISMATCH": 0,
+     "WARN_PRESSURE_DRIFT": 0
+    },
+    "injection": [],
+    "constant_offset": [],
+    "pre_load_reference_code": false,
+    "replay": null
+   },
+   "events": [
+    "C2Event(t_s=127.12000000197288, name='WARN_PRESSURE_ZERO_SKIPPED:FL:grounded')",
+    "C2Event(t_s=146.52000000261688, name='floor_estimate_touch')",
+    "C2Event(t_s=167.32000000330737, name='reanchor_skipped:theta_below_min')"
+   ],
+   "bundle_c": {
+    "config": "PS7-R8",
+    "beta_GPa": 1.0,
+    "tau_v_s": 0.1,
+    "amp_ramp": "none",
+    "L0r_m": null,
+    "command_offset_s": 0.0,
+    "increment": "sym0.25",
+    "twist_reference": "measured_Sii",
+    "c2_implementation": {
+     "P-R8-9_check_quiet_after_motion_s": 0.5,
+     "P-R8-10_fast_relevel_on": true,
+     "P-R8-10_horizon_periods": 4,
+     "P-R8-11_probe_abort_event_in_source": true,
+     "rerun32_ready": true,
+     "P-R8-12_settings_type": "LiftedReapproachSettings",
+     "P-R8-12_enable": true,
+     "P-R8-12_event_in_source": true,
+     "rerun33_keys_are_placeholders": true,
+     "rerun33_ready": true,
+     "P-R8-13_mode": "twist",
+     "P-R8-13_settings": {
+      "samples": 1,
+      "single_leg": true,
+      "exit_margin_N": 5000.0,
+      "exit_samples": 3,
+      "twist_speed_fraction": 0.25,
+      "protect_margin_N": 5000.0
+     },
+     "P-R8-13_missing_keys": [],
+     "P-R8-13_deviations_from_spec_defaults": {},
+     "P-R8-14_command_components_attr": true,
+     "rerun34_keys_are_spec_names": true,
+     "rerun34_ready": true,
+     "c2_revision_meta": "R8-D1 (C2)",
+     "P-R8-1_pre_probe_stiffness_scale": 1.2,
+     "P-R8-1_expected": 1.2,
+     "P-R8-3_measured_stiffness_scale_max": 1.5,
+     "P-R8-6_computed_output_attr": true,
+     "module_file": "C:\\workspace\\outrigger_control\\03_src\\outrigger_sim\\control\\c2.py"
+    },
+    "saturation_steps": {
+     "steps": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "starts": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "first_t_s": {
+      "FL": null,
+      "FR": null,
+      "RL": null,
+      "RR": null
+     },
+     "episodes": [],
+     "static_window_s": [
+      0.1,
+      0.5
+     ],
+     "mechanism_share_limit_N": 250.0,
+     "rule": "static end - limit <= 0.25 kN = law-C mechanism share (dyn 5.24.2); static window ASSUMPTION; t relative to the start state"
+    },
+    "snapshot_retag_check": {
+     "passed": true,
+     "conditions": {
+      "l1r_state_LIFT": {
+       "key": "rod_chamber.l1r_state",
+       "value": [
+        3.0,
+        5.0,
+        5.0,
+        5.0
+       ],
+       "passed": true
+      },
+      "F_lock_zero": {
+       "key": "rod_chamber.l1r_F_lock_N",
+       "value": [
+        20310.225220220087,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "passed": true
+      },
+      "no_pad_contact": {
+       "key": "ground_bushing.in_contact",
+       "value": [
+        true,
+        false,
+        false,
+        false
+       ],
+       "passed": true
+      },
+      "u_applied_zero": {
+       "key": "l1_actuator.u_applied_m_s",
+       "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "passed": true
+      }
+     },
+     "rule": "dyn rev. 37 5.24.3: four legs LIFT, F_lock 0, no pad contact, u_applied 0",
+     "preground_leg": "FL",
+     "preground_rule": "C-S8-72 (spec rev. 67 345.3): the named pre-grounded leg may be LOCK or LIFT, carry a lock force F_lock >= 0 and touch the floor; u_applied 0 and the other three legs as 5.24.3",
+     "snapshot": "S6_crawler_top_flat_FLpre",
+     "required": false
+    },
+    "beta_leak_fixed": true,
+    "crawler_kt_factor": 1.0,
+    "warnings": [],
+    "c11": null
+   },
+   "guard_oscillation": [],
+   "guard_periods": 0,
+   "c5a_command_reversals": {
+    "threshold_m_s": 0.000418486032,
+    "window_s": 4.0,
+    "first_guard_s": null,
+    "max_reversals": null,
+    "status": "no guard activation"
+   },
+   "c5b_guard_restarts": {
+    "starts_s": [],
+    "starts": 0,
+    "max_in_window": 0,
+    "window_s": 10.0
+   },
+   "c5c_ready_settling": {
+    "windows": [],
+    "per_window": [],
+    "worst": null,
+    "source": "Record 10 Hz (1 ms attitude not recorded)",
+    "floor_events_s": []
+   },
+   "check_attitude": {
+    "code": "ACCEPTED",
+    "window_abs_s": [
+     126.6200000019596,
+     127.62000000198948
+    ],
+    "window_source": "controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True)",
+    "check_window": {
+     "t_judged_s": 127.62000000198948,
+     "t_first_sample_s": 126.6300000019596,
+     "t_last_sample_s": 127.62000000198948,
+     "sample_count": 100,
+     "quiet_start_s": 126.62000000193969,
+     "last_nonzero_command_t_s": 126.12000000193969,
+     "is_quiet_window_full": true
+    },
+    "truth_source": "Record 10 Hz",
+    "t_decision_s": 4.8000000001593435,
+    "n_samples": 10,
+    "controller_deg": [
+     0.011164657885331499,
+     0.1283384492151458
+    ],
+    "truth_deg": [
+     0.011884697165837161,
+     0.12934177661169924
+    ],
+    "error_deg": [
+     -0.0007200392805056628,
+     -0.0010033273965534288
+    ],
+    "error_maxabs_deg": 0.0010033273965534288,
+    "usage_controller": 0.014645597099879651,
+    "usage_truth_crawler": 0.014495474967240704,
+    "usage_floor_nominal": 0.0,
+    "usage_tolerance": 0.01,
+    "usage_truth_identity": 0.039115647347780565,
+    "usage_truth": 0.014495474967240704,
+    "truth_map_basis": "run settle map",
+    "settle_map_is_identity": false,
+    "engine": null,
+    "settle_map": {
+     "theta0_deg": 0.17366,
+     "k_dn": 0.04298,
+     "k_up": 0.02478,
+     "k_phi": 0.01007
+    },
+    "note": "truth = mean of the Record 10 Hz instantaneous body attitude (rocking 1.6-2.4 Hz is sampled 4-6 times per cycle)"
+   },
+   "relevel_predicted": {
+    "probe_abort": [],
+    "other": [],
+    "probe_aborted_low_load": [],
+    "counts": {
+     "probe_abort": 0,
+     "other": 0
+    }
+   },
+   "reapproach": {
+    "starts": [],
+    "count": 0
+   },
+   "floor_event_t_s": null,
+   "diagnostic_replay": {
+    "baselines": [
+     {
+      "t_s": 47.000000001560224,
+      "sum_kN": 376.48219424005003
+     }
+    ],
+    "longest_run_over_4kN_s": 0.0,
+    "max_abs_dev_kN": 1.236007267549925,
+    "replay_passed": true,
+    "rule": "settle 0.5 s, mean 1.5 s, limit 4000.0 N, D5 hold 0.5 s, E-5 hold 30.0 s, 10 Hz record"
+   },
+   "ready_s": 44.50000000147723,
+   "rerun_group": null
+  },
+  {
+   "case": "PS7a_RR_R8",
+   "group": "PS",
+   "level": "top",
+   "floor": "flat",
+   "grade": "ideal",
+   "event": null,
+   "times_s": {
+    "t0": 120.04000000173785,
+    "touch": 24.80000000082326,
+    "ready": 48.20000000160006,
+    "liftoff": 25.700000000853137,
+    "end": 53.20000000176604
+   },
+   "phases": [
+    [
+     0.10000000000331966,
+     "check"
+    ],
+    [
+     4.8000000001593435,
+     "touch"
+    ],
+    [
+     24.80000000082326,
+     "level"
+    ],
+    [
+     36.2000000012017,
+     "done"
+    ],
+    [
+     36.30000000120502,
+     "probe"
+    ],
+    [
+     48.20000000160006,
+     "ready"
+    ]
+   ],
+   "final_phase": "ready",
+   "F_min_N": 9414.58911,
+   "ready_window_ok": true,
+   "att_err_last5_maxabs_deg": 0.017177917516080804,
+   "att_err_last5_mean_deg": [
+    0.0030552857770117614,
+    -0.017070143018428637
+   ],
+   "t_within_0p2_after_level_s": 3.1000000001029093,
+   "min_cyl_after_liftoff_kN": 54.82812252337994,
+   "min_cyl_leg": "RR",
+   "min_cyl_t_s": 43.72700000145157,
+   "pad_N_min_after_liftoff_kN": 57.724910936177245,
+   "min_cyl_excl_reanchor_kN": 54.82812252337994,
+   "max_moving_pressure_bar": 97.93799586303761,
+   "moving_eps_m_s": 1e-06,
+   "max_pressure_any_step_bar": 99.33580157584686,
+   "saturation_steps": 0,
+   "record_rate_hz": 9.999999999668034,
+   "rocking_window_samples": 10,
+   "rocking_amp_deg": 0.0055226922823077874,
+   "final_cyl_kN": [
+    117.9219953711197,
+    116.21036491395317,
+    72.26404418830546,
+    70.19164079489933
+   ],
+   "final_corrective_kN": [
+    118.04989861951849,
+    116.08246166555438,
+    72.12357768736774,
+    70.33210729583702
+   ],
+   "final_twist_kN": -0.26866365156695976,
+   "t_ready_minus_touch_s": 23.4000000007768,
+   "stroke": {
+    "max_m": [
+     0.40852308192601305,
+     0.4083235735532339,
+     0.40000427910932024,
+     0.40039008398826104
+    ],
+    "min_m": [
+     -1.219417328910752e-15,
+     -9.436822914668602e-16,
+     -1.1119337444093814e-15,
+     0.3487704439291263
+    ],
+    "margin_to_end_m": [
+     0.2914769180739869,
+     0.29167642644676606,
+     0.2999957208906797,
+     0.2996099160117389
+    ]
+   },
+   "h4": {
+    "enabled": true,
+    "outcome": "skipped:theta_below_min",
+    "expected": {
+     "relative_pitch_deg": 0.0,
+     "triggers": false,
+     "nose_up": false,
+     "direction": "nose_down_only",
+     "expected": null,
+     "reanchor_applicable": false
+    },
+    "direction": "nose_down_only",
+    "n_reanchor_skipped_nose_up": 0,
+    "n_reanchor_started": 0
+   },
+   "target_code": "ACCEPTED",
+   "last_check": {
+    "requested_rad": [
+     0.0,
+     0.0
+    ],
+    "accepted_rad": [
+     0.0,
+     0.0
+    ],
+    "code": "ACCEPTED",
+    "crawler_attitude_rad": [
+     -0.00011428117221426524,
+     0.003921613851842909
+    ],
+    "floor_estimate_rad": [
+     -0.00011314183394642474,
+     0.0008539713827969432
+    ],
+    "floor_usage": 0.015158347107840864
+   },
+   "floor_true_deg": [
+    0.0,
+    0.0
+   ],
+   "shadow_floor_deg": [
+    0.029436626449702737,
+    0.00029894969360092557
+   ],
+   "shadow_minus_true_deg": [
+    0.029436626449702737,
+    0.00029894969360092557
+   ],
+   "shadow_residual_mm": 0.020367508457130867,
+   "shadow_floor_usage": 0.005437528098117646,
+   "contact": "combined",
+   "condition": "base",
+   "condition_reasons": [],
+   "diagnostic_check": {
+    "counts": {
+     "WARN_LOAD_SUM_MISMATCH": 0,
+     "WARN_PRESSURE_DRIFT": 0
+    },
+    "injection": [],
+    "constant_offset": [],
+    "pre_load_reference_code": false,
+    "replay": null
+   },
+   "events": [
+    "C2Event(t_s=124.3400000018806, name='WARN_PRESSURE_ZERO_SKIPPED:RR:grounded')",
+    "C2Event(t_s=144.8400000025611, name='floor_estimate_touch')",
+    "C2Event(t_s=168.2400000033379, name='reanchor_skipped:theta_below_min')"
+   ],
+   "bundle_c": {
+    "config": "PS7-R8",
+    "beta_GPa": 1.0,
+    "tau_v_s": 0.1,
+    "amp_ramp": "none",
+    "L0r_m": null,
+    "command_offset_s": 0.0,
+    "increment": "sym0.25",
+    "twist_reference": "measured_Sii",
+    "c2_implementation": {
+     "P-R8-9_check_quiet_after_motion_s": 0.5,
+     "P-R8-10_fast_relevel_on": true,
+     "P-R8-10_horizon_periods": 4,
+     "P-R8-11_probe_abort_event_in_source": true,
+     "rerun32_ready": true,
+     "P-R8-12_settings_type": "LiftedReapproachSettings",
+     "P-R8-12_enable": true,
+     "P-R8-12_event_in_source": true,
+     "rerun33_keys_are_placeholders": true,
+     "rerun33_ready": true,
+     "P-R8-13_mode": "twist",
+     "P-R8-13_settings": {
+      "samples": 1,
+      "single_leg": true,
+      "exit_margin_N": 5000.0,
+      "exit_samples": 3,
+      "twist_speed_fraction": 0.25,
+      "protect_margin_N": 5000.0
+     },
+     "P-R8-13_missing_keys": [],
+     "P-R8-13_deviations_from_spec_defaults": {},
+     "P-R8-14_command_components_attr": true,
+     "rerun34_keys_are_spec_names": true,
+     "rerun34_ready": true,
+     "c2_revision_meta": "R8-D1 (C2)",
+     "P-R8-1_pre_probe_stiffness_scale": 1.2,
+     "P-R8-1_expected": 1.2,
+     "P-R8-3_measured_stiffness_scale_max": 1.5,
+     "P-R8-6_computed_output_attr": true,
+     "module_file": "C:\\workspace\\outrigger_control\\03_src\\outrigger_sim\\control\\c2.py"
+    },
+    "saturation_steps": {
+     "steps": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "starts": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "first_t_s": {
+      "FL": null,
+      "FR": null,
+      "RL": null,
+      "RR": null
+     },
+     "episodes": [],
+     "static_window_s": [
+      0.1,
+      0.5
+     ],
+     "mechanism_share_limit_N": 250.0,
+     "rule": "static end - limit <= 0.25 kN = law-C mechanism share (dyn 5.24.2); static window ASSUMPTION; t relative to the start state"
+    },
+    "snapshot_retag_check": {
+     "passed": true,
+     "conditions": {
+      "l1r_state_LIFT": {
+       "key": "rod_chamber.l1r_state",
+       "value": [
+        5.0,
+        5.0,
+        5.0,
+        3.0
+       ],
+       "passed": true
+      },
+      "F_lock_zero": {
+       "key": "rod_chamber.l1r_F_lock_N",
+       "value": [
+        0.0,
+        0.0,
+        0.0,
+        11922.660727622339
+       ],
+       "passed": true
+      },
+      "no_pad_contact": {
+       "key": "ground_bushing.in_contact",
+       "value": [
+        false,
+        false,
+        false,
+        true
+       ],
+       "passed": true
+      },
+      "u_applied_zero": {
+       "key": "l1_actuator.u_applied_m_s",
+       "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "passed": true
+      }
+     },
+     "rule": "dyn rev. 37 5.24.3: four legs LIFT, F_lock 0, no pad contact, u_applied 0",
+     "preground_leg": "RR",
+     "preground_rule": "C-S8-72 (spec rev. 67 345.3): the named pre-grounded leg may be LOCK or LIFT, carry a lock force F_lock >= 0 and touch the floor; u_applied 0 and the other three legs as 5.24.3",
+     "snapshot": "S6_crawler_top_flat_RRpre",
+     "required": false
+    },
+    "beta_leak_fixed": true,
+    "crawler_kt_factor": 1.0,
+    "warnings": [],
+    "c11": null
+   },
+   "guard_oscillation": [
+    {
+     "t_end_s": 145.2400000025744,
+     "amp0_kN": 19.310676683329554,
+     "amp2_kN": 2.705450897945484,
+     "ratio": 0.1401012995200233,
+     "passed": true
+    }
+   ],
+   "guard_periods": 3,
+   "c5a_command_reversals": {
+    "threshold_m_s": 0.000418486032,
+    "window_s": 4.0,
+    "first_guard_s": 144.94000000256443,
+    "max_reversals": 2,
+    "leg": "RR",
+    "window_start_s": 166.24000000327152,
+    "reversals_total_per_leg": {
+     "FL": 2,
+     "FR": 2,
+     "RL": 4,
+     "RR": 4
+    }
+   },
+   "c5b_guard_restarts": {
+    "starts_s": [
+     144.94000000256443
+    ],
+    "starts": 1,
+    "max_in_window": 1,
+    "window_s": 10.0
+   },
+   "c5c_ready_settling": {
+    "windows": [],
+    "per_window": [],
+    "worst": null,
+    "source": "Record 10 Hz (1 ms attitude not recorded)",
+    "floor_events_s": []
+   },
+   "check_attitude": {
+    "code": "ACCEPTED",
+    "window_abs_s": [
+     123.84000000186731,
+     124.8400000018972
+    ],
+    "window_source": "controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True)",
+    "check_window": {
+     "t_judged_s": 124.8400000018972,
+     "t_first_sample_s": 123.85000000186731,
+     "t_last_sample_s": 124.8400000018972,
+     "sample_count": 100,
+     "quiet_start_s": 123.8400000018474,
+     "last_nonzero_command_t_s": 123.3400000018474,
+     "is_quiet_window_full": true
+    },
+    "truth_source": "Record 10 Hz",
+    "t_decision_s": 4.8000000001593435,
+    "n_samples": 10,
+    "controller_deg": [
+     -0.006547828845685131,
+     0.22469192259064077
+    ],
+    "truth_deg": [
+     -0.006630781768846263,
+     0.2246943081861919
+    ],
+    "error_deg": [
+     8.295292316113247e-05,
+     -2.3855955511233823e-06
+    ],
+    "error_maxabs_deg": 8.295292316113247e-05,
+    "usage_controller": 0.015158347107840864,
+    "usage_truth_crawler": 0.015173932603255072,
+    "usage_floor_nominal": 0.0,
+    "usage_tolerance": 0.01,
+    "usage_truth_identity": 0.06540397045272818,
+    "usage_truth": 0.015173932603255072,
+    "truth_map_basis": "run settle map",
+    "settle_map_is_identity": false,
+    "engine": null,
+    "settle_map": {
+     "theta0_deg": 0.17366,
+     "k_dn": 0.04298,
+     "k_up": 0.02478,
+     "k_phi": 0.01007
+    },
+    "note": "truth = mean of the Record 10 Hz instantaneous body attitude (rocking 1.6-2.4 Hz is sampled 4-6 times per cycle)"
+   },
+   "relevel_predicted": {
+    "probe_abort": [],
+    "other": [],
+    "probe_aborted_low_load": [],
+    "counts": {
+     "probe_abort": 0,
+     "other": 0
+    }
+   },
+   "reapproach": {
+    "starts": [],
+    "count": 0
+   },
+   "floor_event_t_s": null,
+   "diagnostic_replay": {
+    "baselines": [
+     {
+      "t_s": 50.70000000168305,
+      "sum_kN": 376.50813855918
+     }
+    ],
+    "longest_run_over_4kN_s": 0.0,
+    "max_abs_dev_kN": 1.2380231297049904,
+    "replay_passed": true,
+    "rule": "settle 0.5 s, mean 1.5 s, limit 4000.0 N, D5 hold 0.5 s, E-5 hold 30.0 s, 10 Hz record"
+   },
+   "ready_s": 48.20000000160006,
+   "rerun_group": null
+  },
+  {
+   "case": "PS7b_RR_R8",
+   "group": "PS",
+   "level": "top",
+   "floor": "flat",
+   "grade": "ideal",
+   "event": null,
+   "times_s": {
+    "t0": 68.5000000000269,
+    "touch": 47.800000001586795,
+    "ready": 71.3000000023669,
+    "liftoff": 48.70000000161667,
+    "end": 76.30000000253288
+   },
+   "phases": [
+    [
+     0.10000000000331966,
+     "check"
+    ],
+    [
+     27.700000000919545,
+     "touch"
+    ],
+    [
+     47.800000001586795,
+     "level"
+    ],
+    [
+     59.300000001968556,
+     "done"
+    ],
+    [
+     59.400000001971875,
+     "probe"
+    ],
+    [
+     71.3000000023669,
+     "ready"
+    ]
+   ],
+   "final_phase": "ready",
+   "F_min_N": 9414.58911,
+   "ready_window_ok": true,
+   "att_err_last5_maxabs_deg": 0.01640284905652292,
+   "att_err_last5_mean_deg": [
+    0.0013247890360221744,
+    -0.01630742531837232
+   ],
+   "t_within_0p2_after_level_s": 3.200000000106229,
+   "min_cyl_after_liftoff_kN": 55.0547806879792,
+   "min_cyl_leg": "RR",
+   "min_cyl_t_s": 64.03200000212563,
+   "pad_N_min_after_liftoff_kN": 61.05054844847558,
+   "min_cyl_excl_reanchor_kN": 55.0547806879792,
+   "max_moving_pressure_bar": 97.80774711584013,
+   "moving_eps_m_s": 1e-06,
+   "max_pressure_any_step_bar": 99.13472708622174,
+   "saturation_steps": 0,
+   "record_rate_hz": 9.999999999668034,
+   "rocking_window_samples": 10,
+   "rocking_amp_deg": 0.005285499808969026,
+   "final_cyl_kN": [
+    117.94634125882845,
+    116.18946351328906,
+    72.25583527451992,
+    70.1967807398716
+   ],
+   "final_corrective_kN": [
+    118.06066683510412,
+    116.0751379370134,
+    72.13028010787507,
+    70.32233590651644
+   ],
+   "final_twist_kN": -0.2401434457235009,
+   "t_ready_minus_touch_s": 23.500000000780105,
+   "stroke": {
+    "max_m": [
+     0.4084211746096881,
+     0.40829806984607275,
+     0.40040856410063985,
+     0.4005858346502536
+    ],
+    "min_m": [
+     -4.530379694043368e-14,
+     -1.5357488941268657e-14,
+     -1.9143012812572636e-14,
+     -1.1240762388905598e-16
+    ],
+    "margin_to_end_m": [
+     0.2915788253903119,
+     0.2917019301539272,
+     0.2995914358993601,
+     0.29941416534974635
+    ]
+   },
+   "h4": {
+    "enabled": true,
+    "outcome": "skipped:theta_below_min",
+    "expected": {
+     "relative_pitch_deg": 0.0,
+     "triggers": false,
+     "nose_up": false,
+     "direction": "nose_down_only",
+     "expected": null,
+     "reanchor_applicable": false
+    },
+    "direction": "nose_down_only",
+    "n_reanchor_skipped_nose_up": 0,
+    "n_reanchor_started": 0
+   },
+   "target_code": "ACCEPTED",
+   "last_check": {
+    "requested_rad": [
+     0.0,
+     0.0
+    ],
+    "accepted_rad": [
+     0.0,
+     0.0
+    ],
+    "code": "ACCEPTED",
+    "crawler_attitude_rad": [
+     -1.0861508415679912e-05,
+     0.003289680271281816
+    ],
+    "floor_estimate_rad": [
+     -1.0753223455483196e-05,
+     0.0002480790545058038
+    ],
+    "floor_usage": 0.004173130159420391
+   },
+   "floor_true_deg": [
+    0.0,
+    0.0
+   ],
+   "shadow_floor_deg": [
+    0.05826969312023209,
+    -0.019118310479641406
+   ],
+   "shadow_minus_true_deg": [
+    0.05826969312023209,
+    -0.019118310479641406
+   ],
+   "shadow_residual_mm": 0.9865971170999188,
+   "shadow_floor_usage": 0.016056864080978703,
+   "contact": "combined",
+   "condition": "base",
+   "condition_reasons": [],
+   "diagnostic_check": {
+    "counts": {
+     "WARN_LOAD_SUM_MISMATCH": 0,
+     "WARN_PRESSURE_DRIFT": 0
+    },
+    "injection": [],
+    "constant_offset": [],
+    "pre_load_reference_code": false,
+    "replay": null
+   },
+   "events": [
+    "C2Event(t_s=90.50000000075723, name='WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady')",
+    "C2Event(t_s=96.20000000094645, name='WARN_GYRO_BIAS_SKIPPED')",
+    "C2Event(t_s=116.3000000016137, name='floor_estimate_touch')",
+    "C2Event(t_s=139.8000000023938, name='reanchor_skipped:theta_below_min')"
+   ],
+   "bundle_c": {
+    "config": "PS7-R8",
+    "beta_GPa": 1.0,
+    "tau_v_s": 0.1,
+    "amp_ramp": "none",
+    "L0r_m": null,
+    "command_offset_s": 0.0,
+    "increment": "sym0.25",
+    "twist_reference": "measured_Sii",
+    "c2_implementation": {
+     "P-R8-9_check_quiet_after_motion_s": 0.5,
+     "P-R8-10_fast_relevel_on": true,
+     "P-R8-10_horizon_periods": 4,
+     "P-R8-11_probe_abort_event_in_source": true,
+     "rerun32_ready": true,
+     "P-R8-12_settings_type": "LiftedReapproachSettings",
+     "P-R8-12_enable": true,
+     "P-R8-12_event_in_source": true,
+     "rerun33_keys_are_placeholders": true,
+     "rerun33_ready": true,
+     "P-R8-13_mode": "twist",
+     "P-R8-13_settings": {
+      "samples": 1,
+      "single_leg": true,
+      "exit_margin_N": 5000.0,
+      "exit_samples": 3,
+      "twist_speed_fraction": 0.25,
+      "protect_margin_N": 5000.0
+     },
+     "P-R8-13_missing_keys": [],
+     "P-R8-13_deviations_from_spec_defaults": {},
+     "P-R8-14_command_components_attr": true,
+     "rerun34_keys_are_spec_names": true,
+     "rerun34_ready": true,
+     "c2_revision_meta": "R8-D1 (C2)",
+     "P-R8-1_pre_probe_stiffness_scale": 1.2,
+     "P-R8-1_expected": 1.2,
+     "P-R8-3_measured_stiffness_scale_max": 1.5,
+     "P-R8-6_computed_output_attr": true,
+     "module_file": "C:\\workspace\\outrigger_control\\03_src\\outrigger_sim\\control\\c2.py"
+    },
+    "saturation_steps": {
+     "steps": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "starts": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "first_t_s": {
+      "FL": null,
+      "FR": null,
+      "RL": null,
+      "RR": null
+     },
+     "episodes": [],
+     "static_window_s": [
+      0.1,
+      0.5
+     ],
+     "mechanism_share_limit_N": 250.0,
+     "rule": "static end - limit <= 0.25 kN = law-C mechanism share (dyn 5.24.2); static window ASSUMPTION; t relative to the start state"
+    },
+    "snapshot_retag_check": {
+     "passed": true,
+     "conditions": {
+      "l1r_state_LIFT": {
+       "key": "rod_chamber.l1r_state",
+       "value": [
+        5.0,
+        5.0,
+        5.0,
+        5.0
+       ],
+       "passed": true
+      },
+      "F_lock_zero": {
+       "key": "rod_chamber.l1r_F_lock_N",
+       "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "passed": true
+      },
+      "no_pad_contact": {
+       "key": "ground_bushing.in_contact",
+       "value": [
+        false,
+        false,
+        false,
+        false
+       ],
+       "passed": true
+      },
+      "u_applied_zero": {
+       "key": "l1_actuator.u_applied_m_s",
+       "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "passed": true
+      }
+     },
+     "rule": "dyn rev. 37 5.24.3: four legs LIFT, F_lock 0, no pad contact, u_applied 0",
+     "snapshot": "S6_crawler_top_flat",
+     "required": false
+    },
+    "beta_leak_fixed": true,
+    "crawler_kt_factor": 1.0,
+    "warnings": [],
+    "c11": null
+   },
+   "guard_oscillation": [
+    {
+     "t_end_s": 116.60000000162366,
+     "amp0_kN": 21.30945187161934,
+     "amp2_kN": 1.3547520214401156,
+     "ratio": 0.06357516981675257,
+     "passed": true
+    }
+   ],
+   "guard_periods": 2,
+   "c5a_command_reversals": {
+    "threshold_m_s": 0.000418486032,
+    "window_s": 4.0,
+    "first_guard_s": 116.40000000161702,
+    "max_reversals": 2,
+    "leg": "RR",
+    "window_start_s": 137.8000000023274,
+    "reversals_total_per_leg": {
+     "FL": 2,
+     "FR": 2,
+     "RL": 4,
+     "RR": 4
+    }
+   },
+   "c5b_guard_restarts": {
+    "starts_s": [
+     116.40000000161702
+    ],
+    "starts": 1,
+    "max_in_window": 1,
+    "window_s": 10.0
+   },
+   "c5c_ready_settling": {
+    "windows": [],
+    "per_window": [],
+    "worst": null,
+    "source": "Record 10 Hz (1 ms attitude not recorded)",
+    "floor_events_s": []
+   },
+   "check_attitude": {
+    "code": "ACCEPTED",
+    "window_abs_s": [
+     95.20000000091656,
+     96.20000000094645
+    ],
+    "window_source": "controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True)",
+    "check_window": {
+     "t_judged_s": 96.20000000094645,
+     "t_first_sample_s": 95.21000000091657,
+     "t_last_sample_s": 96.20000000094645,
+     "sample_count": 100,
+     "quiet_start_s": 90.00000000072403,
+     "last_nonzero_command_t_s": 89.50000000072403,
+     "is_quiet_window_full": true
+    },
+    "truth_source": "Record 10 Hz",
+    "t_decision_s": 27.700000000919545,
+    "n_samples": 10,
+    "controller_deg": [
+     -0.0006223185913642843,
+     0.18848479549189978
+    ],
+    "truth_deg": [
+     -7.469360300074113e-05,
+     0.18138247539882285
+    ],
+    "error_deg": [
+     -0.0005476249883635433,
+     0.007102320093076927
+    ],
+    "error_maxabs_deg": 0.007102320093076927,
+    "usage_controller": 0.004173130159420391,
+    "usage_truth_crawler": 0.0021289427229300227,
+    "usage_floor_nominal": 0.0,
+    "usage_tolerance": 0.01,
+    "usage_truth_identity": 0.051837145054754716,
+    "usage_truth": 0.0021289427229300227,
+    "truth_map_basis": "run settle map",
+    "settle_map_is_identity": false,
+    "engine": null,
+    "settle_map": {
+     "theta0_deg": 0.17366,
+     "k_dn": 0.04298,
+     "k_up": 0.02478,
+     "k_phi": 0.01007
+    },
+    "note": "truth = mean of the Record 10 Hz instantaneous body attitude (rocking 1.6-2.4 Hz is sampled 4-6 times per cycle)"
+   },
+   "relevel_predicted": {
+    "probe_abort": [],
+    "other": [],
+    "probe_aborted_low_load": [],
+    "counts": {
+     "probe_abort": 0,
+     "other": 0
+    }
+   },
+   "reapproach": {
+    "starts": [],
+    "count": 0
+   },
+   "floor_event_t_s": null,
+   "diagnostic_replay": {
+    "baselines": [
+     {
+      "t_s": 73.80000000244989,
+      "sum_kN": 376.67315071396996
+     }
+    ],
+    "longest_run_over_4kN_s": 0.0,
+    "max_abs_dev_kN": 0.950449590944976,
+    "replay_passed": true,
+    "rule": "settle 0.5 s, mean 1.5 s, limit 4000.0 N, D5 hold 0.5 s, E-5 hold 30.0 s, 10 Hz record"
+   },
+   "ready_s": 71.3000000023669,
+   "rerun_group": null
+  },
+  {
+   "case": "PS7c_RR_R8",
+   "group": "PS",
+   "level": "top",
+   "floor": "flat",
+   "grade": "ideal",
+   "event": null,
+   "times_s": {
+    "t0": 68.5000000000269,
+    "touch": 47.700000001583476,
+    "ready": 71.20000000236358,
+    "liftoff": 48.60000000161335,
+    "end": 76.20000000252956
+   },
+   "phases": [
+    [
+     0.10000000000331966,
+     "check"
+    ],
+    [
+     27.600000000916225,
+     "touch"
+    ],
+    [
+     47.700000001583476,
+     "level"
+    ],
+    [
+     59.200000001965236,
+     "done"
+    ],
+    [
+     59.300000001968556,
+     "probe"
+    ],
+    [
+     71.20000000236358,
+     "ready"
+    ]
+   ],
+   "final_phase": "ready",
+   "F_min_N": 9414.58911,
+   "ready_window_ok": true,
+   "att_err_last5_maxabs_deg": 0.016420216813331195,
+   "att_err_last5_mean_deg": [
+    0.0025669467510366735,
+    -0.01631257936728396
+   ],
+   "t_within_0p2_after_level_s": 3.200000000106229,
+   "min_cyl_after_liftoff_kN": 54.3485262955839,
+   "min_cyl_leg": "RR",
+   "min_cyl_t_s": 63.56600000211016,
+   "pad_N_min_after_liftoff_kN": 59.01689732972891,
+   "min_cyl_excl_reanchor_kN": 54.3485262955839,
+   "max_moving_pressure_bar": 98.49517975028986,
+   "moving_eps_m_s": 1e-06,
+   "max_pressure_any_step_bar": 99.49180912913577,
+   "saturation_steps": 0,
+   "record_rate_hz": 9.999999999668034,
+   "rocking_window_samples": 10,
+   "rocking_amp_deg": 0.009097082925257946,
+   "final_cyl_kN": [
+    117.95710671956263,
+    116.17792649635668,
+    72.22091693107552,
+    70.23163571153889
+   ],
+   "final_corrective_kN": [
+    118.0490105177057,
+    116.08602269821361,
+    72.11998591400086,
+    70.33256672861353
+   ],
+   "final_twist_kN": -0.19304599618145585,
+   "t_ready_minus_touch_s": 23.500000000780105,
+   "stroke": {
+    "max_m": [
+     0.408486079174087,
+     0.4082988279408184,
+     0.40053582606839383,
+     0.40112108637232263
+    ],
+    "min_m": [
+     -4.237289918428187e-15,
+     -3.0005133891034423e-15,
+     -1.333648025448739e-15,
+     -1.1240762388905598e-16
+    ],
+    "margin_to_end_m": [
+     0.29151392082591293,
+     0.29170117205918156,
+     0.2994641739316061,
+     0.2988789136276773
+    ]
+   },
+   "h4": {
+    "enabled": true,
+    "outcome": "skipped:theta_below_min",
+    "expected": {
+     "relative_pitch_deg": 0.0,
+     "triggers": false,
+     "nose_up": false,
+     "direction": "nose_down_only",
+     "expected": null,
+     "reanchor_applicable": false
+    },
+    "direction": "nose_down_only",
+    "n_reanchor_skipped_nose_up": 0,
+    "n_reanchor_started": 0
+   },
+   "target_code": "ACCEPTED",
+   "last_check": {
+    "requested_rad": [
+     0.0,
+     0.0
+    ],
+    "accepted_rad": [
+     0.0,
+     0.0
+    ],
+    "code": "ACCEPTED",
+    "crawler_attitude_rad": [
+     7.314963481153945e-05,
+     0.0031862203419238204
+    ],
+    "floor_estimate_rad": [
+     7.242036176853035e-05,
+     0.00014888258922555325
+    ],
+    "floor_usage": 0.003191674068121474
+   },
+   "floor_true_deg": [
+    0.0,
+    0.0
+   ],
+   "shadow_floor_deg": [
+    0.041386632773842164,
+    0.004318518687842646
+   ],
+   "shadow_minus_true_deg": [
+    0.041386632773842164,
+    0.004318518687842646
+   ],
+   "shadow_residual_mm": 0.16291663934264733,
+   "shadow_floor_usage": 0.008758704804757513,
+   "contact": "combined",
+   "condition": "base",
+   "condition_reasons": [],
+   "diagnostic_check": {
+    "counts": {
+     "WARN_LOAD_SUM_MISMATCH": 0,
+     "WARN_PRESSURE_DRIFT": 0
+    },
+    "injection": [],
+    "constant_offset": [],
+    "pre_load_reference_code": false,
+    "replay": null
+   },
+   "events": [
+    "C2Event(t_s=90.70000000076386, name='WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady')",
+    "C2Event(t_s=96.10000000094313, name='WARN_GYRO_BIAS_SKIPPED')",
+    "C2Event(t_s=116.20000000161038, name='floor_estimate_touch')",
+    "C2Event(t_s=139.70000000239048, name='reanchor_skipped:theta_below_min')"
+   ],
+   "bundle_c": {
+    "config": "PS7-R8",
+    "beta_GPa": 1.0,
+    "tau_v_s": 0.1,
+    "amp_ramp": "none",
+    "L0r_m": null,
+    "command_offset_s": 0.0,
+    "increment": "sym0.25",
+    "twist_reference": "measured_Sii",
+    "c2_implementation": {
+     "P-R8-9_check_quiet_after_motion_s": 0.5,
+     "P-R8-10_fast_relevel_on": true,
+     "P-R8-10_horizon_periods": 4,
+     "P-R8-11_probe_abort_event_in_source": true,
+     "rerun32_ready": true,
+     "P-R8-12_settings_type": "LiftedReapproachSettings",
+     "P-R8-12_enable": true,
+     "P-R8-12_event_in_source": true,
+     "rerun33_keys_are_placeholders": true,
+     "rerun33_ready": true,
+     "P-R8-13_mode": "twist",
+     "P-R8-13_settings": {
+      "samples": 1,
+      "single_leg": true,
+      "exit_margin_N": 5000.0,
+      "exit_samples": 3,
+      "twist_speed_fraction": 0.25,
+      "protect_margin_N": 5000.0
+     },
+     "P-R8-13_missing_keys": [],
+     "P-R8-13_deviations_from_spec_defaults": {},
+     "P-R8-14_command_components_attr": true,
+     "rerun34_keys_are_spec_names": true,
+     "rerun34_ready": true,
+     "c2_revision_meta": "R8-D1 (C2)",
+     "P-R8-1_pre_probe_stiffness_scale": 1.2,
+     "P-R8-1_expected": 1.2,
+     "P-R8-3_measured_stiffness_scale_max": 1.5,
+     "P-R8-6_computed_output_attr": true,
+     "module_file": "C:\\workspace\\outrigger_control\\03_src\\outrigger_sim\\control\\c2.py"
+    },
+    "saturation_steps": {
+     "steps": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "starts": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "first_t_s": {
+      "FL": null,
+      "FR": null,
+      "RL": null,
+      "RR": null
+     },
+     "episodes": [],
+     "static_window_s": [
+      0.1,
+      0.5
+     ],
+     "mechanism_share_limit_N": 250.0,
+     "rule": "static end - limit <= 0.25 kN = law-C mechanism share (dyn 5.24.2); static window ASSUMPTION; t relative to the start state"
+    },
+    "snapshot_retag_check": {
+     "passed": true,
+     "conditions": {
+      "l1r_state_LIFT": {
+       "key": "rod_chamber.l1r_state",
+       "value": [
+        5.0,
+        5.0,
+        5.0,
+        5.0
+       ],
+       "passed": true
+      },
+      "F_lock_zero": {
+       "key": "rod_chamber.l1r_F_lock_N",
+       "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "passed": true
+      },
+      "no_pad_contact": {
+       "key": "ground_bushing.in_contact",
+       "value": [
+        false,
+        false,
+        false,
+        false
+       ],
+       "passed": true
+      },
+      "u_applied_zero": {
+       "key": "l1_actuator.u_applied_m_s",
+       "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+       ],
+       "passed": true
+      }
+     },
+     "rule": "dyn rev. 37 5.24.3: four legs LIFT, F_lock 0, no pad contact, u_applied 0",
+     "snapshot": "S6_crawler_top_flat",
+     "required": false
+    },
+    "beta_leak_fixed": true,
+    "crawler_kt_factor": 1.0,
+    "warnings": [],
+    "c11": null
+   },
+   "guard_oscillation": [],
+   "guard_periods": 0,
+   "c5a_command_reversals": {
+    "threshold_m_s": 0.000418486032,
+    "window_s": 4.0,
+    "first_guard_s": null,
+    "max_reversals": null,
+    "status": "no guard activation"
+   },
+   "c5b_guard_restarts": {
+    "starts_s": [],
+    "starts": 0,
+    "max_in_window": 0,
+    "window_s": 10.0
+   },
+   "c5c_ready_settling": {
+    "windows": [],
+    "per_window": [],
+    "worst": null,
+    "source": "Record 10 Hz (1 ms attitude not recorded)",
+    "floor_events_s": []
+   },
+   "check_attitude": {
+    "code": "ACCEPTED",
+    "window_abs_s": [
+     95.10000000091324,
+     96.10000000094313
+    ],
+    "window_source": "controller meta target.check_window (100 raw tilts at 10 ms, quiet window full True)",
+    "check_window": {
+     "t_judged_s": 96.10000000094313,
+     "t_first_sample_s": 95.11000000091325,
+     "t_last_sample_s": 96.10000000094313,
+     "sample_count": 100,
+     "quiet_start_s": 90.20000000073067,
+     "last_nonzero_command_t_s": 89.70000000073067,
+     "is_quiet_window_full": true
+    },
+    "truth_source": "Record 10 Hz",
+    "t_decision_s": 27.600000000916225,
+    "n_samples": 10,
+    "controller_deg": [
+     0.004191165347624455,
+     0.18255697819096497
+    ],
+    "truth_deg": [
+     0.0005674265895010913,
+     0.1789887125772678
+    ],
+    "error_deg": [
+     0.0036237387581233645,
+     0.0035682656136971722
+    ],
+    "error_maxabs_deg": 0.0036237387581233645,
+    "usage_controller": 0.003191674068121474,
+    "usage_truth_crawler": 0.0015618892053882224,
+    "usage_floor_nominal": 0.0,
+    "usage_tolerance": 0.01,
+    "usage_truth_identity": 0.05124280063575204,
+    "usage_truth": 0.0015618892053882224,
+    "truth_map_basis": "run settle map",
+    "settle_map_is_identity": false,
+    "engine": null,
+    "settle_map": {
+     "theta0_deg": 0.17366,
+     "k_dn": 0.04298,
+     "k_up": 0.02478,
+     "k_phi": 0.01007
+    },
+    "note": "truth = mean of the Record 10 Hz instantaneous body attitude (rocking 1.6-2.4 Hz is sampled 4-6 times per cycle)"
+   },
+   "relevel_predicted": {
+    "probe_abort": [],
+    "other": [],
+    "probe_aborted_low_load": [],
+    "counts": {
+     "probe_abort": 0,
+     "other": 0
+    }
+   },
+   "reapproach": {
+    "starts": [],
+    "count": 0
+   },
+   "floor_event_t_s": null,
+   "diagnostic_replay": {
+    "baselines": [
+     {
+      "t_s": 73.70000000244657,
+      "sum_kN": 376.6872093411349
+     }
+    ],
+    "longest_run_over_4kN_s": 0.0,
+    "max_abs_dev_kN": 0.909333996959962,
+    "replay_passed": true,
+    "rule": "settle 0.5 s, mean 1.5 s, limit 4000.0 N, D5 hold 0.5 s, E-5 hold 30.0 s, 10 Hz record"
+   },
+   "ready_s": 71.20000000236358,
+   "rerun_group": null
+  }
+ ]
+}

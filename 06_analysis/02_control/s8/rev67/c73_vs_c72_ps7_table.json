@@ -1,0 +1,512 @@
+{
+ "PS7a_FL_R8": {
+  "c72": {
+   "touch_span_s": [
+    4.8,
+    23.7
+   ],
+   "touch_len_s": 18.9,
+   "latch_pre_leg_s": 1.3,
+   "latch_all_s": {
+    "FL": 1.3,
+    "FR": 18.9,
+    "RL": 18.9,
+    "RR": 18.5
+   },
+   "extra_stroke_mm": 8.4,
+   "stroke_start_mm": 343.85,
+   "max_abs_roll_pitch_deg": [
+    0.049,
+    0.13
+   ],
+   "crawler_min_kN": 140.9,
+   "D8_min_kN": [
+    50.33,
+    "RR"
+   ],
+   "ready_s": 48.4,
+   "liftoff_s": 24.4,
+   "att_last5_deg": 0.0142,
+   "FLAG": false,
+   "cap_events": [],
+   "warn_events": [
+    [
+     4.3,
+     "WARN_PRESSURE_ZERO_SKIPPED:FL:grounded"
+    ]
+   ],
+   "all_event_names": [
+    "INFO_D1_IMU_MASS_SOURCE:ready",
+    "INFO_D1_IMU_MASS_SOURCE:yaml",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RR",
+    "WARN_PRESSURE_ZERO_SKIPPED:FL:grounded",
+    "crawler_liftoff_confirmed",
+    "floor_estimate_touch",
+    "ready_heave_tail",
+    "reanchor_skipped:theta_below_min"
+   ]
+  },
+  "c73": {
+   "touch_span_s": [
+    4.8,
+    23.7
+   ],
+   "touch_len_s": 18.9,
+   "latch_pre_leg_s": 1.0,
+   "latch_all_s": {
+    "FL": 1.0,
+    "FR": 18.8,
+    "RL": 18.9,
+    "RR": 18.8
+   },
+   "extra_stroke_mm": 5.2,
+   "stroke_start_mm": 343.85,
+   "max_abs_roll_pitch_deg": [
+    0.038,
+    0.13
+   ],
+   "crawler_min_kN": 161.9,
+   "D8_min_kN": [
+    54.45,
+    "RR"
+   ],
+   "ready_s": 44.5,
+   "liftoff_s": 24.4,
+   "att_last5_deg": 0.0107,
+   "FLAG": false,
+   "cap_events": [
+    [
+     5.3,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "warn_events": [
+    [
+     4.3,
+     "WARN_PRESSURE_ZERO_SKIPPED:FL:grounded"
+    ]
+   ],
+   "all_event_names": [
+    "INFO_D1_IMU_MASS_SOURCE:ready",
+    "INFO_D1_IMU_MASS_SOURCE:yaml",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RR",
+    "INFO_TOUCH_FREE_AIR_CAPPED:FL",
+    "WARN_PRESSURE_ZERO_SKIPPED:FL:grounded",
+    "crawler_liftoff_confirmed",
+    "floor_estimate_touch",
+    "ready_heave_tail",
+    "reanchor_skipped:theta_below_min"
+   ]
+  },
+  "harness_cap_top_Fs0": {
+   "touch_len_s": 18.8,
+   "latch_pre_leg_s": 2.0,
+   "extra_stroke_mm": 5.2,
+   "max_abs_roll_pitch_deg": [
+    0.032,
+    0.149
+   ],
+   "crawler_min_kN": 176.7,
+   "ready_s": 40.6,
+   "cap_used": [
+    "FL"
+   ]
+  }
+ },
+ "PS7a_RR_R8": {
+  "c72": {
+   "touch_span_s": [
+    4.8,
+    37.6
+   ],
+   "touch_len_s": 32.8,
+   "latch_pre_leg_s": 14.6,
+   "latch_all_s": {
+    "FL": 14.5,
+    "FR": 14.7,
+    "RL": 32.8,
+    "RR": 14.6
+   },
+   "extra_stroke_mm": 147.5,
+   "stroke_start_mm": 348.77,
+   "max_abs_roll_pitch_deg": [
+    0.13,
+    2.518
+   ],
+   "crawler_min_kN": 64.5,
+   "D8_min_kN": [
+    54.11,
+    "RL"
+   ],
+   "ready_s": 67.0,
+   "liftoff_s": 38.4,
+   "att_last5_deg": 0.0164,
+   "FLAG": true,
+   "cap_events": [],
+   "warn_events": [
+    [
+     4.3,
+     "WARN_PRESSURE_ZERO_SKIPPED:RR:grounded"
+    ]
+   ],
+   "all_event_names": [
+    "INFO_D1_IMU_MASS_SOURCE:ready",
+    "INFO_D1_IMU_MASS_SOURCE:yaml",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "WARN_PRESSURE_ZERO_SKIPPED:RR:grounded",
+    "crawler_liftoff_confirmed",
+    "floor_estimate_touch",
+    "ready_heave_tail",
+    "reanchor_skipped:theta_below_min"
+   ]
+  },
+  "c73": {
+   "touch_span_s": [
+    4.8,
+    27.6
+   ],
+   "touch_len_s": 22.8,
+   "latch_pre_leg_s": 16.9,
+   "latch_all_s": {
+    "FL": 17.1,
+    "FR": 17.1,
+    "RL": 22.8,
+    "RR": 16.9
+   },
+   "extra_stroke_mm": 38.7,
+   "stroke_start_mm": 348.77,
+   "max_abs_roll_pitch_deg": [
+    0.089,
+    0.871
+   ],
+   "crawler_min_kN": 205.1,
+   "D8_min_kN": [
+    54.98,
+    "RR"
+   ],
+   "ready_s": 53.3,
+   "liftoff_s": 28.6,
+   "att_last5_deg": 0.0154,
+   "FLAG": false,
+   "cap_events": [
+    [
+     5.3,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "warn_events": [
+    [
+     4.3,
+     "WARN_PRESSURE_ZERO_SKIPPED:RR:grounded"
+    ]
+   ],
+   "all_event_names": [
+    "INFO_D1_IMU_MASS_SOURCE:ready",
+    "INFO_D1_IMU_MASS_SOURCE:yaml",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "INFO_TOUCH_FREE_AIR_CAPPED:RR",
+    "WARN_PRESSURE_ZERO_SKIPPED:RR:grounded",
+    "crawler_liftoff_confirmed",
+    "floor_estimate_touch",
+    "ready_heave_tail",
+    "reanchor_skipped:theta_below_min"
+   ]
+  },
+  "harness_cap_top_Fs0": {
+   "touch_len_s": 21.7,
+   "latch_pre_leg_s": 15.5,
+   "extra_stroke_mm": 28.8,
+   "max_abs_roll_pitch_deg": [
+    0.1,
+    0.693
+   ],
+   "crawler_min_kN": 202.6,
+   "ready_s": 47.9,
+   "cap_used": [
+    "RR"
+   ]
+  }
+ },
+ "PS7b_RR_R8": {
+  "c72": {
+   "touch_span_s": [
+    27.7,
+    52.4
+   ],
+   "touch_len_s": 24.7,
+   "latch_pre_leg_s": 15.9,
+   "latch_all_s": {
+    "FL": 15.8,
+    "FR": 16.1,
+    "RL": 24.7,
+    "RR": 15.9
+   },
+   "extra_stroke_mm": 62.8,
+   "stroke_start_mm": 345.77,
+   "max_abs_roll_pitch_deg": [
+    0.077,
+    1.218
+   ],
+   "crawler_min_kN": 159.8,
+   "D8_min_kN": [
+    55.17,
+    "RL"
+   ],
+   "ready_s": 79.0,
+   "liftoff_s": 53.3,
+   "att_last5_deg": 0.0157,
+   "FLAG": true,
+   "cap_events": [],
+   "warn_events": [
+    [
+     22.0,
+     "WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady"
+    ],
+    [
+     27.7,
+     "WARN_GYRO_BIAS_SKIPPED"
+    ]
+   ],
+   "all_event_names": [
+    "INFO_D1_IMU_MASS_SOURCE:ready",
+    "INFO_D1_IMU_MASS_SOURCE:yaml",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "WARN_GYRO_BIAS_SKIPPED",
+    "WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady",
+    "crawler_liftoff_confirmed",
+    "floor_estimate_touch",
+    "ready_heave_tail",
+    "reanchor_skipped:theta_below_min"
+   ]
+  },
+  "c73": {
+   "touch_span_s": [
+    27.7,
+    50.3
+   ],
+   "touch_len_s": 22.6,
+   "latch_pre_leg_s": 16.9,
+   "latch_all_s": {
+    "FL": 16.7,
+    "FR": 16.8,
+    "RL": 22.6,
+    "RR": 16.9
+   },
+   "extra_stroke_mm": 39.8,
+   "stroke_start_mm": 345.77,
+   "max_abs_roll_pitch_deg": [
+    0.073,
+    0.83
+   ],
+   "crawler_min_kN": 193.5,
+   "D8_min_kN": [
+    55.42,
+    "RL"
+   ],
+   "ready_s": 75.9,
+   "liftoff_s": 51.3,
+   "att_last5_deg": 0.0155,
+   "FLAG": false,
+   "cap_events": [
+    [
+     28.7,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "warn_events": [
+    [
+     22.0,
+     "WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady"
+    ],
+    [
+     27.7,
+     "WARN_GYRO_BIAS_SKIPPED"
+    ]
+   ],
+   "all_event_names": [
+    "INFO_D1_IMU_MASS_SOURCE:ready",
+    "INFO_D1_IMU_MASS_SOURCE:yaml",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "INFO_TOUCH_FREE_AIR_CAPPED:RR",
+    "WARN_GYRO_BIAS_SKIPPED",
+    "WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady",
+    "crawler_liftoff_confirmed",
+    "floor_estimate_touch",
+    "ready_heave_tail",
+    "reanchor_skipped:theta_below_min"
+   ]
+  },
+  "harness_cap_top_Fs0": {
+   "touch_len_s": 21.7,
+   "latch_pre_leg_s": 17.1,
+   "extra_stroke_mm": 34.5,
+   "max_abs_roll_pitch_deg": [
+    0.114,
+    0.727
+   ],
+   "crawler_min_kN": 214.2,
+   "ready_s": 48.0,
+   "cap_used": [
+    "RR"
+   ]
+  }
+ },
+ "PS7c_RR_R8": {
+  "c72": {
+   "touch_span_s": [
+    27.6,
+    51.2
+   ],
+   "touch_len_s": 23.6,
+   "latch_pre_leg_s": 17.0,
+   "latch_all_s": {
+    "FL": 16.5,
+    "FR": 16.8,
+    "RL": 23.6,
+    "RR": 17.0
+   },
+   "extra_stroke_mm": 53.4,
+   "stroke_start_mm": 343.68,
+   "max_abs_roll_pitch_deg": [
+    0.109,
+    0.998
+   ],
+   "crawler_min_kN": 184.5,
+   "D8_min_kN": [
+    54.94,
+    "RR"
+   ],
+   "ready_s": 77.3,
+   "liftoff_s": 52.2,
+   "att_last5_deg": 0.0153,
+   "FLAG": true,
+   "cap_events": [],
+   "warn_events": [
+    [
+     22.2,
+     "WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady"
+    ],
+    [
+     27.6,
+     "WARN_GYRO_BIAS_SKIPPED"
+    ]
+   ],
+   "all_event_names": [
+    "INFO_D1_IMU_MASS_SOURCE:ready",
+    "INFO_D1_IMU_MASS_SOURCE:yaml",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "WARN_GYRO_BIAS_SKIPPED",
+    "WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady",
+    "crawler_liftoff_confirmed",
+    "floor_estimate_touch",
+    "ready_heave_tail",
+    "reanchor_skipped:theta_below_min"
+   ]
+  },
+  "c73": {
+   "touch_span_s": [
+    27.6,
+    50.2
+   ],
+   "touch_len_s": 22.6,
+   "latch_pre_leg_s": 16.7,
+   "latch_all_s": {
+    "FL": 16.9,
+    "FR": 16.9,
+    "RL": 22.6,
+    "RR": 16.7
+   },
+   "extra_stroke_mm": 42.9,
+   "stroke_start_mm": 343.68,
+   "max_abs_roll_pitch_deg": [
+    0.085,
+    0.863
+   ],
+   "crawler_min_kN": 185.3,
+   "D8_min_kN": [
+    55.83,
+    "RL"
+   ],
+   "ready_s": 75.8,
+   "liftoff_s": 51.2,
+   "att_last5_deg": 0.0148,
+   "FLAG": true,
+   "cap_events": [
+    [
+     28.7,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "warn_events": [
+    [
+     22.2,
+     "WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady"
+    ],
+    [
+     27.6,
+     "WARN_GYRO_BIAS_SKIPPED"
+    ]
+   ],
+   "all_event_names": [
+    "INFO_D1_IMU_MASS_SOURCE:ready",
+    "INFO_D1_IMU_MASS_SOURCE:yaml",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "INFO_TOUCH_FREE_AIR_CAPPED:RR",
+    "WARN_GYRO_BIAS_SKIPPED",
+    "WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady",
+    "crawler_liftoff_confirmed",
+    "floor_estimate_touch",
+    "ready_heave_tail",
+    "reanchor_skipped:theta_below_min"
+   ]
+  },
+  "harness_cap_top_Fs0": {
+   "touch_len_s": 21.9,
+   "latch_pre_leg_s": 17.7,
+   "extra_stroke_mm": 36.6,
+   "max_abs_roll_pitch_deg": [
+    0.09,
+    0.736
+   ],
+   "crawler_min_kN": 189.4,
+   "ready_s": 48.2,
+   "cap_used": [
+    "RR"
+   ]
+  }
+ },
+ "_rows": {
+  "c72": {
+   "failed": 0,
+   "rows": 20,
+   "touch_flags": [
+    "PS7a_RR_R8",
+    "PS7b_RR_R8",
+    "PS7c_RR_R8"
+   ]
+  },
+  "c73": {
+   "failed": 0,
+   "rows": 20,
+   "touch_flags": [
+    "PS7c_RR_R8"
+   ]
+  }
+ }
+}

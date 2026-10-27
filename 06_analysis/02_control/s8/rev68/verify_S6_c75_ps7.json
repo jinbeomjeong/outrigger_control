@@ -1,0 +1,823 @@
+{
+ "meta": {
+  "batch": "07_results\\S6\\bundleC_ps7r8_c75_L1R_20261027_174330",
+  "module": "outrigger_sim.verify.s6_control",
+  "rule": "C-S8-72 (spec rev. 67 345.2) PS-7 D8 (spec 92): after the crawler lift-off the true cylinder force of every leg >= F_min + 5 kN and no pad lift, last 5 s true attitude + mount share <= 0.2 deg, READY; 7a: WARN_PRESSURE_ZERO_SKIPPED:<leg>:grounded once, deduction latched (front 5.5 / rear 4.0 kN), no WARN_GYRO_BIAS_SKIPPED; 7b / 7c: c_leg - c_true >= -0.6 kN when calibrated. TOUCH record T-1..T-5 + FLAG (extra stroke > 40 mm or |att| > 1.0 deg, ASSUMPTION)",
+  "rows": 20,
+  "failed": 0,
+  "touch_flags": [],
+  "touch_ref": "C:\\workspace\\outrigger_control\\07_results\\S6\\bundleC_rerun34_L1R_20261024_141040\\C1_G1_top_flat",
+  "touch_ref_length_s": 18.900000000627415,
+  "touch_ref_note": "R8 bundle-C G1_top_flat (contact pressure, no CHECK, controller of 2026-10-24; later TOUCH changes such as P-S8-6 are not in it)"
+ },
+ "rows": [
+  {
+   "item": "C-S8-72 PS-7 D8: min true cylinder force after the crawler lift-off >= F_min + 5 kN",
+   "case": "PS7a_FL_R8",
+   "value": 54.454464959114574,
+   "limit": 14.414589110000001,
+   "passed": true,
+   "note": "RR at 39.999000001327815 s; lift-off 24.40000000080998 s",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 D8: no pad lift after the crawler lift-off",
+   "case": "PS7a_FL_R8",
+   "value": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 D8: READY, last 5 s true attitude + mount share <= 0.2 deg",
+   "case": "PS7a_FL_R8",
+   "value": {
+    "final_phase": "ready",
+    "att_deg": 0.010652821402759008
+   },
+   "limit": 0.2,
+   "passed": true,
+   "note": "end rule {'after_ready_s': 5.0, 'applied': True, 'stopped_early': True, 'end_t_s': 49.500000001643215, 'upper_s': 134.0, 'timeout': False, 'rule': 'C-S8-72 / spec 92: READY + 5 s, the case length only as the upper bound'}",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7a: WARN_PRESSURE_ZERO_SKIPPED:<leg>:grounded once, deduction latched (front 5.5 / rear 4.0 kN), no WARN_GYRO_BIAS_SKIPPED",
+   "case": "PS7a_FL_R8",
+   "value": {
+    "grounded_skips": 1,
+    "allowance_N": 5500.0,
+    "gyro_bias_skipped": 0
+   },
+   "limit": {
+    "grounded_skips": 1,
+    "allowance_N": 5500.0,
+    "gyro_bias_skipped": 0
+   },
+   "passed": true,
+   "note": "zero events ['WARN_PRESSURE_ZERO_SKIPPED:FL:grounded', 'INFO_PRESSURE_ZERO_CALIBRATED:FR', 'INFO_PRESSURE_ZERO_CALIBRATED:RL', 'INFO_PRESSURE_ZERO_CALIBRATED:RR']",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 TOUCH record T-1..T-5 + FLAG (extra stroke > 40 mm or |att| > 1.0 deg, ASSUMPTION)",
+   "case": "PS7a_FL_R8",
+   "value": {
+    "T1_length_s": 18.9000000006274,
+    "T1_minus_ref_s": -1.4210854715202004e-14,
+    "T2_latch_minus_start_s": 1.0000000000331823,
+    "T3_extra_stroke_mm": 5.231075400357776,
+    "T4_max_abs_att_deg": [
+     0.03751958574675958,
+     0.1296927654959664
+    ],
+    "T5_crawler_min_kN": 161.9192003402653,
+    "FLAG": false
+   },
+   "limit": {
+    "T3_mm": 40.0,
+    "T4_deg": 1.0
+   },
+   "passed": null,
+   "note": "ref TOUCH 18.900000000627415 s; latch per leg {'FL': 1.0000000000331823, 'FR': 18.80000000062408, 'RL': 18.9000000006274, 'RR': 18.80000000062408}",
+   "kind": "record",
+   "source": "s6_control.ps7",
+   "flag": false,
+   "touch": {
+    "span_s": [
+     4.8000000001593435,
+     23.700000000786744
+    ],
+    "length_s": 18.9000000006274,
+    "T1_minus_ref_s": -1.4210854715202004e-14,
+    "ref_length_s": 18.900000000627415,
+    "T2_latch_minus_start_s": 1.0000000000331823,
+    "latch_all_s": {
+     "FL": 1.0000000000331823,
+     "FR": 18.80000000062408,
+     "RL": 18.9000000006274,
+     "RR": 18.80000000062408
+    },
+    "T3_extra_stroke_mm": 5.231075400357776,
+    "T3_end_minus_start_mm": 5.23107540001444,
+    "stroke_start_mm": 343.84904819280723,
+    "T4_max_abs_att_deg": [
+     0.03751958574675958,
+     0.1296927654959664
+    ],
+    "T5_crawler_min_kN": 161.9192003402653,
+    "flag": false
+   }
+  },
+  {
+   "item": "C-S8-72 PS-7 D8: min true cylinder force after the crawler lift-off >= F_min + 5 kN",
+   "case": "PS7a_RR_R8",
+   "value": 54.828141030005106,
+   "limit": 14.414589110000001,
+   "passed": true,
+   "note": "RR at 43.72700000145157 s; lift-off 25.700000000853137 s",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 D8: no pad lift after the crawler lift-off",
+   "case": "PS7a_RR_R8",
+   "value": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 D8: READY, last 5 s true attitude + mount share <= 0.2 deg",
+   "case": "PS7a_RR_R8",
+   "value": {
+    "final_phase": "ready",
+    "att_deg": 0.017177917516080804
+   },
+   "limit": 0.2,
+   "passed": true,
+   "note": "end rule {'after_ready_s': 5.0, 'applied': True, 'stopped_early': True, 'end_t_s': 53.20000000176604, 'upper_s': 134.0, 'timeout': False, 'rule': 'C-S8-72 / spec 92: READY + 5 s, the case length only as the upper bound'}",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7a: WARN_PRESSURE_ZERO_SKIPPED:<leg>:grounded once, deduction latched (front 5.5 / rear 4.0 kN), no WARN_GYRO_BIAS_SKIPPED",
+   "case": "PS7a_RR_R8",
+   "value": {
+    "grounded_skips": 1,
+    "allowance_N": 4000.0,
+    "gyro_bias_skipped": 0
+   },
+   "limit": {
+    "grounded_skips": 1,
+    "allowance_N": 4000.0,
+    "gyro_bias_skipped": 0
+   },
+   "passed": true,
+   "note": "zero events ['INFO_PRESSURE_ZERO_CALIBRATED:FL', 'INFO_PRESSURE_ZERO_CALIBRATED:FR', 'INFO_PRESSURE_ZERO_CALIBRATED:RL', 'WARN_PRESSURE_ZERO_SKIPPED:RR:grounded']",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 TOUCH record T-1..T-5 + FLAG (extra stroke > 40 mm or |att| > 1.0 deg, ASSUMPTION)",
+   "case": "PS7a_RR_R8",
+   "value": {
+    "T1_length_s": 20.000000000663917,
+    "T1_minus_ref_s": 1.100000000036502,
+    "T2_latch_minus_start_s": 1.8000000000597538,
+    "T3_extra_stroke_mm": 8.89282818093795,
+    "T4_max_abs_att_deg": [
+     0.06192775803914243,
+     0.3780746198603032
+    ],
+    "T5_crawler_min_kN": 219.74824431131856,
+    "FLAG": false
+   },
+   "limit": {
+    "T3_mm": 40.0,
+    "T4_deg": 1.0
+   },
+   "passed": null,
+   "note": "ref TOUCH 18.900000000627415 s; latch per leg {'FL': 17.700000000587565, 'FR': 18.000000000597524, 'RL': 20.000000000663917, 'RR': 1.8000000000597538}",
+   "kind": "record",
+   "source": "s6_control.ps7",
+   "flag": false,
+   "touch": {
+    "span_s": [
+     4.8000000001593435,
+     24.80000000082326
+    ],
+    "length_s": 20.000000000663917,
+    "T1_minus_ref_s": 1.100000000036502,
+    "ref_length_s": 18.900000000627415,
+    "T2_latch_minus_start_s": 1.8000000000597538,
+    "latch_all_s": {
+     "FL": 17.700000000587565,
+     "FR": 18.000000000597524,
+     "RL": 20.000000000663917,
+     "RR": 1.8000000000597538
+    },
+    "T3_extra_stroke_mm": 8.89282818093795,
+    "T3_end_minus_start_mm": 8.89282817999698,
+    "stroke_start_mm": 348.7704439291279,
+    "T4_max_abs_att_deg": [
+     0.06192775803914243,
+     0.3780746198603032
+    ],
+    "T5_crawler_min_kN": 219.74824431131856,
+    "flag": false
+   }
+  },
+  {
+   "item": "C-S8-72 PS-7 D8: min true cylinder force after the crawler lift-off >= F_min + 5 kN",
+   "case": "PS7b_RR_R8",
+   "value": 55.05478160965736,
+   "limit": 14.414589110000001,
+   "passed": true,
+   "note": "RR at 64.03200000212563 s; lift-off 48.70000000161667 s",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 D8: no pad lift after the crawler lift-off",
+   "case": "PS7b_RR_R8",
+   "value": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 D8: READY, last 5 s true attitude + mount share <= 0.2 deg",
+   "case": "PS7b_RR_R8",
+   "value": {
+    "final_phase": "ready",
+    "att_deg": 0.01640284905652292
+   },
+   "limit": 0.2,
+   "passed": true,
+   "note": "end rule {'after_ready_s': 5.0, 'applied': True, 'stopped_early': True, 'end_t_s': 76.30000000253288, 'upper_s': 154.2051233033837, 'timeout': False, 'rule': 'C-S8-72 / spec 92: READY + 5 s, the case length only as the upper bound'}",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7b/c: c_leg - c_true >= -0.6 kN (calibrated leg; a skipped / implausible leg reads low = safe side)",
+   "case": "PS7b_RR_R8",
+   "value": {
+    "status": "skipped",
+    "bias_kN": null,
+    "allowance_N": 4000.0
+   },
+   "limit": -0.6,
+   "passed": true,
+   "note": "zero events ['INFO_PRESSURE_ZERO_CALIBRATED:FL', 'INFO_PRESSURE_ZERO_CALIBRATED:FR', 'INFO_PRESSURE_ZERO_CALIBRATED:RL', 'WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady']; gyro bias skipped 1",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 TOUCH record T-1..T-5 + FLAG (extra stroke > 40 mm or |att| > 1.0 deg, ASSUMPTION)",
+   "case": "PS7b_RR_R8",
+   "value": {
+    "T1_length_s": 20.10000000066725,
+    "T1_minus_ref_s": 1.2000000000398359,
+    "T2_latch_minus_start_s": 1.7000000000564341,
+    "T3_extra_stroke_mm": 12.554580960885186,
+    "T4_max_abs_att_deg": [
+     0.05574962409700885,
+     0.39214360688021094
+    ],
+    "T5_crawler_min_kN": 221.11039111613448,
+    "FLAG": false
+   },
+   "limit": {
+    "T3_mm": 40.0,
+    "T4_deg": 1.0
+   },
+   "passed": null,
+   "note": "ref TOUCH 18.900000000627415 s; latch per leg {'FL': 17.70000000058758, 'FR': 17.90000000059422, 'RL': 20.10000000066725, 'RR': 1.7000000000564341}",
+   "kind": "record",
+   "source": "s6_control.ps7",
+   "flag": false,
+   "touch": {
+    "span_s": [
+     27.700000000919545,
+     47.800000001586795
+    ],
+    "length_s": 20.10000000066725,
+    "T1_minus_ref_s": 1.2000000000398359,
+    "ref_length_s": 18.900000000627415,
+    "T2_latch_minus_start_s": 1.7000000000564341,
+    "latch_all_s": {
+     "FL": 17.70000000058758,
+     "FR": 17.90000000059422,
+     "RL": 20.10000000066725,
+     "RR": 1.7000000000564341
+    },
+    "T3_extra_stroke_mm": 12.554580960885186,
+    "T3_end_minus_start_mm": 12.554580960072837,
+    "stroke_start_mm": 345.7740839400259,
+    "T4_max_abs_att_deg": [
+     0.05574962409700885,
+     0.39214360688021094
+    ],
+    "T5_crawler_min_kN": 221.11039111613448,
+    "flag": false
+   }
+  },
+  {
+   "item": "C-S8-72 PS-7 D8: min true cylinder force after the crawler lift-off >= F_min + 5 kN",
+   "case": "PS7c_RR_R8",
+   "value": 54.34854571058072,
+   "limit": 14.414589110000001,
+   "passed": true,
+   "note": "RR at 63.56600000211016 s; lift-off 48.60000000161335 s",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 D8: no pad lift after the crawler lift-off",
+   "case": "PS7c_RR_R8",
+   "value": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 D8: READY, last 5 s true attitude + mount share <= 0.2 deg",
+   "case": "PS7c_RR_R8",
+   "value": {
+    "final_phase": "ready",
+    "att_deg": 0.016420216813331195
+   },
+   "limit": 0.2,
+   "passed": true,
+   "note": "end rule {'after_ready_s': 5.0, 'applied': True, 'stopped_early': True, 'end_t_s': 76.20000000252956, 'upper_s': 154.2051233033837, 'timeout': False, 'rule': 'C-S8-72 / spec 92: READY + 5 s, the case length only as the upper bound'}",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7b/c: c_leg - c_true >= -0.6 kN (calibrated leg; a skipped / implausible leg reads low = safe side)",
+   "case": "PS7c_RR_R8",
+   "value": {
+    "status": "skipped",
+    "bias_kN": null,
+    "allowance_N": 4000.0
+   },
+   "limit": -0.6,
+   "passed": true,
+   "note": "zero events ['INFO_PRESSURE_ZERO_CALIBRATED:FL', 'INFO_PRESSURE_ZERO_CALIBRATED:FR', 'INFO_PRESSURE_ZERO_CALIBRATED:RL', 'WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady']; gyro bias skipped 1",
+   "kind": "judged",
+   "source": "s6_control.ps7"
+  },
+  {
+   "item": "C-S8-72 PS-7 TOUCH record T-1..T-5 + FLAG (extra stroke > 40 mm or |att| > 1.0 deg, ASSUMPTION)",
+   "case": "PS7c_RR_R8",
+   "value": {
+    "T1_length_s": 20.10000000066725,
+    "T1_minus_ref_s": 1.2000000000398359,
+    "T2_latch_minus_start_s": 2.5000000000829914,
+    "T3_extra_stroke_mm": 15.693226200909683,
+    "T4_max_abs_att_deg": [
+     0.07243751132031875,
+     0.41016638876561584
+    ],
+    "T5_crawler_min_kN": 201.630512877926,
+    "FLAG": false
+   },
+   "limit": {
+    "T3_mm": 40.0,
+    "T4_deg": 1.0
+   },
+   "passed": null,
+   "note": "ref TOUCH 18.900000000627415 s; latch per leg {'FL': 17.70000000058758, 'FR': 18.000000000597538, 'RL': 20.10000000066725, 'RR': 2.5000000000829914}",
+   "kind": "record",
+   "source": "s6_control.ps7",
+   "flag": false,
+   "touch": {
+    "span_s": [
+     27.600000000916225,
+     47.700000001583476
+    ],
+    "length_s": 20.10000000066725,
+    "T1_minus_ref_s": 1.2000000000398359,
+    "ref_length_s": 18.900000000627415,
+    "T2_latch_minus_start_s": 2.5000000000829914,
+    "latch_all_s": {
+     "FL": 17.70000000058758,
+     "FR": 18.000000000597538,
+     "RL": 20.10000000066725,
+     "RR": 2.5000000000829914
+    },
+    "T3_extra_stroke_mm": 15.693226200909683,
+    "T3_end_minus_start_mm": 15.693226200026444,
+    "stroke_start_mm": 343.6816537800582,
+    "T4_max_abs_att_deg": [
+     0.07243751132031875,
+     0.41016638876561584
+    ],
+    "T5_crawler_min_kN": 201.630512877926,
+    "flag": false
+   }
+  }
+ ],
+ "metrics": {
+  "PS7a_FL_R8": {
+   "case": "PS7a_FL_R8",
+   "variant": "a",
+   "leg": "FL",
+   "times_s": {
+    "t0": 122.82000000183014,
+    "touch": 23.700000000786744,
+    "ready": 44.50000000147723,
+    "liftoff": 24.40000000080998,
+    "end": 49.500000001643215
+   },
+   "final_phase": "ready",
+   "end_rule": {
+    "after_ready_s": 5.0,
+    "applied": true,
+    "stopped_early": true,
+    "end_t_s": 49.500000001643215,
+    "upper_s": 134.0,
+    "timeout": false,
+    "rule": "C-S8-72 / spec 92: READY + 5 s, the case length only as the upper bound"
+   },
+   "pre_extend": null,
+   "F_min_kN": 9.414589110000001,
+   "rule": "C-S8-72 (spec rev. 67 345.2) PS-7 D8 (spec 92): after the crawler lift-off the true cylinder force of every leg >= F_min + 5 kN and no pad lift, last 5 s true attitude + mount share <= 0.2 deg, READY; 7a: WARN_PRESSURE_ZERO_SKIPPED:<leg>:grounded once, deduction latched (front 5.5 / rear 4.0 kN), no WARN_GYRO_BIAS_SKIPPED; 7b / 7c: c_leg - c_true >= -0.6 kN when calibrated. TOUCH record T-1..T-5 + FLAG (extra stroke > 40 mm or |att| > 1.0 deg, ASSUMPTION)",
+   "min_cyl_after_liftoff": {
+    "min_kN": 54.454464959114574,
+    "leg": "RR",
+    "t_s": 39.999000001327815,
+    "per_leg_kN": [
+     103.34846027086263,
+     103.42973537699717,
+     58.488933441424535,
+     54.454464959114574
+    ]
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_last5_maxabs_deg": 0.010652821402759008,
+   "events_zero": [
+    "WARN_PRESSURE_ZERO_SKIPPED:FL:grounded",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RR"
+   ],
+   "gyro_bias_skipped": 0,
+   "grounded_skips": 1,
+   "leg_calibration": {
+    "status": "skipped",
+    "offset_N": 0.0,
+    "measured_offset_N": null,
+    "air_seal_friction_N": null,
+    "allowance_N": 5500.0,
+    "reason": "grounded"
+   },
+   "allowance_N": 5500.0,
+   "bias_N": null,
+   "touch": {
+    "span_s": [
+     4.8000000001593435,
+     23.700000000786744
+    ],
+    "length_s": 18.9000000006274,
+    "T1_minus_ref_s": -1.4210854715202004e-14,
+    "ref_length_s": 18.900000000627415,
+    "T2_latch_minus_start_s": 1.0000000000331823,
+    "latch_all_s": {
+     "FL": 1.0000000000331823,
+     "FR": 18.80000000062408,
+     "RL": 18.9000000006274,
+     "RR": 18.80000000062408
+    },
+    "T3_extra_stroke_mm": 5.231075400357776,
+    "T3_end_minus_start_mm": 5.23107540001444,
+    "stroke_start_mm": 343.84904819280723,
+    "T4_max_abs_att_deg": [
+     0.03751958574675958,
+     0.1296927654959664
+    ],
+    "T5_crawler_min_kN": 161.9192003402653,
+    "flag": false
+   }
+  },
+  "PS7a_RR_R8": {
+   "case": "PS7a_RR_R8",
+   "variant": "a",
+   "leg": "RR",
+   "times_s": {
+    "t0": 120.04000000173785,
+    "touch": 24.80000000082326,
+    "ready": 48.20000000160006,
+    "liftoff": 25.700000000853137,
+    "end": 53.20000000176604
+   },
+   "final_phase": "ready",
+   "end_rule": {
+    "after_ready_s": 5.0,
+    "applied": true,
+    "stopped_early": true,
+    "end_t_s": 53.20000000176604,
+    "upper_s": 134.0,
+    "timeout": false,
+    "rule": "C-S8-72 / spec 92: READY + 5 s, the case length only as the upper bound"
+   },
+   "pre_extend": null,
+   "F_min_kN": 9.414589110000001,
+   "rule": "C-S8-72 (spec rev. 67 345.2) PS-7 D8 (spec 92): after the crawler lift-off the true cylinder force of every leg >= F_min + 5 kN and no pad lift, last 5 s true attitude + mount share <= 0.2 deg, READY; 7a: WARN_PRESSURE_ZERO_SKIPPED:<leg>:grounded once, deduction latched (front 5.5 / rear 4.0 kN), no WARN_GYRO_BIAS_SKIPPED; 7b / 7c: c_leg - c_true >= -0.6 kN when calibrated. TOUCH record T-1..T-5 + FLAG (extra stroke > 40 mm or |att| > 1.0 deg, ASSUMPTION)",
+   "min_cyl_after_liftoff": {
+    "min_kN": 54.828141030005106,
+    "leg": "RR",
+    "t_s": 43.72700000145157,
+    "per_leg_kN": [
+     103.49033242101841,
+     102.46267303804366,
+     57.41781809741767,
+     54.828141030005106
+    ]
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_last5_maxabs_deg": 0.017177917516080804,
+   "events_zero": [
+    "INFO_PRESSURE_ZERO_CALIBRATED:FL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "WARN_PRESSURE_ZERO_SKIPPED:RR:grounded"
+   ],
+   "gyro_bias_skipped": 0,
+   "grounded_skips": 1,
+   "leg_calibration": {
+    "status": "skipped",
+    "offset_N": 0.0,
+    "measured_offset_N": null,
+    "air_seal_friction_N": null,
+    "allowance_N": 4000.0,
+    "reason": "grounded"
+   },
+   "allowance_N": 4000.0,
+   "bias_N": null,
+   "touch": {
+    "span_s": [
+     4.8000000001593435,
+     24.80000000082326
+    ],
+    "length_s": 20.000000000663917,
+    "T1_minus_ref_s": 1.100000000036502,
+    "ref_length_s": 18.900000000627415,
+    "T2_latch_minus_start_s": 1.8000000000597538,
+    "latch_all_s": {
+     "FL": 17.700000000587565,
+     "FR": 18.000000000597524,
+     "RL": 20.000000000663917,
+     "RR": 1.8000000000597538
+    },
+    "T3_extra_stroke_mm": 8.89282818093795,
+    "T3_end_minus_start_mm": 8.89282817999698,
+    "stroke_start_mm": 348.7704439291279,
+    "T4_max_abs_att_deg": [
+     0.06192775803914243,
+     0.3780746198603032
+    ],
+    "T5_crawler_min_kN": 219.74824431131856,
+    "flag": false
+   }
+  },
+  "PS7b_RR_R8": {
+   "case": "PS7b_RR_R8",
+   "variant": "b",
+   "leg": "RR",
+   "times_s": {
+    "t0": 68.5000000000269,
+    "touch": 47.800000001586795,
+    "ready": 71.3000000023669,
+    "liftoff": 48.70000000161667,
+    "end": 76.30000000253288
+   },
+   "final_phase": "ready",
+   "end_rule": {
+    "after_ready_s": 5.0,
+    "applied": true,
+    "stopped_early": true,
+    "end_t_s": 76.30000000253288,
+    "upper_s": 154.2051233033837,
+    "timeout": false,
+    "rule": "C-S8-72 / spec 92: READY + 5 s, the case length only as the upper bound"
+   },
+   "pre_extend": {
+    "g0_m": [
+     0.340797224145528,
+     0.3407853151445271,
+     0.34573126109070135,
+     0.34572041722470453
+    ],
+    "leg": 3,
+    "offset_mm": -1.5,
+    "target_m": 0.34422041722470453,
+    "rule": "g0 = n . (c - p0) - r on the restored state (s6_stage2.PreExtend)",
+    "wrapper": "PreExtend",
+    "target0_m": 0.34422041722470453,
+    "extra_mm": 0.0,
+    "handover_t_s": 86.20000000061448,
+    "readings": [
+     {
+      "t_s": 86.20000000061448,
+      "stroke_m": 0.34735611978471054,
+      "net_reading_N": 4415.115777575,
+      "extra_mm": 0.0
+     }
+    ]
+   },
+   "F_min_kN": 9.414589110000001,
+   "rule": "C-S8-72 (spec rev. 67 345.2) PS-7 D8 (spec 92): after the crawler lift-off the true cylinder force of every leg >= F_min + 5 kN and no pad lift, last 5 s true attitude + mount share <= 0.2 deg, READY; 7a: WARN_PRESSURE_ZERO_SKIPPED:<leg>:grounded once, deduction latched (front 5.5 / rear 4.0 kN), no WARN_GYRO_BIAS_SKIPPED; 7b / 7c: c_leg - c_true >= -0.6 kN when calibrated. TOUCH record T-1..T-5 + FLAG (extra stroke > 40 mm or |att| > 1.0 deg, ASSUMPTION)",
+   "min_cyl_after_liftoff": {
+    "min_kN": 55.05478160965736,
+    "leg": "RR",
+    "t_s": 64.03200000212563,
+    "per_leg_kN": [
+     103.8956439803215,
+     102.69247263932681,
+     57.56438914539722,
+     55.05478160965736
+    ]
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_last5_maxabs_deg": 0.01640284905652292,
+   "events_zero": [
+    "INFO_PRESSURE_ZERO_CALIBRATED:FL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady"
+   ],
+   "gyro_bias_skipped": 1,
+   "grounded_skips": 0,
+   "leg_calibration": {
+    "status": "skipped",
+    "offset_N": 0.0,
+    "measured_offset_N": null,
+    "air_seal_friction_N": null,
+    "allowance_N": 4000.0,
+    "reason": "unsteady"
+   },
+   "allowance_N": 4000.0,
+   "bias_N": null,
+   "touch": {
+    "span_s": [
+     27.700000000919545,
+     47.800000001586795
+    ],
+    "length_s": 20.10000000066725,
+    "T1_minus_ref_s": 1.2000000000398359,
+    "ref_length_s": 18.900000000627415,
+    "T2_latch_minus_start_s": 1.7000000000564341,
+    "latch_all_s": {
+     "FL": 17.70000000058758,
+     "FR": 17.90000000059422,
+     "RL": 20.10000000066725,
+     "RR": 1.7000000000564341
+    },
+    "T3_extra_stroke_mm": 12.554580960885186,
+    "T3_end_minus_start_mm": 12.554580960072837,
+    "stroke_start_mm": 345.7740839400259,
+    "T4_max_abs_att_deg": [
+     0.05574962409700885,
+     0.39214360688021094
+    ],
+    "T5_crawler_min_kN": 221.11039111613448,
+    "flag": false
+   }
+  },
+  "PS7c_RR_R8": {
+   "case": "PS7c_RR_R8",
+   "variant": "c",
+   "leg": "RR",
+   "times_s": {
+    "t0": 68.5000000000269,
+    "touch": 47.700000001583476,
+    "ready": 71.20000000236358,
+    "liftoff": 48.60000000161335,
+    "end": 76.20000000252956
+   },
+   "final_phase": "ready",
+   "end_rule": {
+    "after_ready_s": 5.0,
+    "applied": true,
+    "stopped_early": true,
+    "end_t_s": 76.20000000252956,
+    "upper_s": 154.2051233033837,
+    "timeout": false,
+    "rule": "C-S8-72 / spec 92: READY + 5 s, the case length only as the upper bound"
+   },
+   "pre_extend": {
+    "g0_m": [
+     0.340797224145528,
+     0.3407853151445271,
+     0.34573126109070135,
+     0.34572041722470453
+    ],
+    "leg": 3,
+    "offset_mm": -2.7,
+    "target_m": 0.34302041722470455,
+    "rule": "g0 = n . (c - p0) - r on the restored state (s6_stage2.PreExtend)",
+    "wrapper": "PreExtend",
+    "target0_m": 0.34302041722470455,
+    "extra_mm": 0.0,
+    "handover_t_s": 86.10000000061116,
+    "readings": [
+     {
+      "t_s": 86.10000000061116,
+      "stroke_m": 0.3452273345922151,
+      "net_reading_N": -2940.5307236999997,
+      "extra_mm": 0.0
+     }
+    ]
+   },
+   "F_min_kN": 9.414589110000001,
+   "rule": "C-S8-72 (spec rev. 67 345.2) PS-7 D8 (spec 92): after the crawler lift-off the true cylinder force of every leg >= F_min + 5 kN and no pad lift, last 5 s true attitude + mount share <= 0.2 deg, READY; 7a: WARN_PRESSURE_ZERO_SKIPPED:<leg>:grounded once, deduction latched (front 5.5 / rear 4.0 kN), no WARN_GYRO_BIAS_SKIPPED; 7b / 7c: c_leg - c_true >= -0.6 kN when calibrated. TOUCH record T-1..T-5 + FLAG (extra stroke > 40 mm or |att| > 1.0 deg, ASSUMPTION)",
+   "min_cyl_after_liftoff": {
+    "min_kN": 54.34854571058072,
+    "leg": "RR",
+    "t_s": 63.56600000211016,
+    "per_leg_kN": [
+     103.26154977547058,
+     102.20596208865572,
+     57.3639056381293,
+     54.34854571058072
+    ]
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_last5_maxabs_deg": 0.016420216813331195,
+   "events_zero": [
+    "INFO_PRESSURE_ZERO_CALIBRATED:FL",
+    "INFO_PRESSURE_ZERO_CALIBRATED:FR",
+    "INFO_PRESSURE_ZERO_CALIBRATED:RL",
+    "WARN_PRESSURE_ZERO_SKIPPED:RR:unsteady"
+   ],
+   "gyro_bias_skipped": 1,
+   "grounded_skips": 0,
+   "leg_calibration": {
+    "status": "skipped",
+    "offset_N": 0.0,
+    "measured_offset_N": null,
+    "air_seal_friction_N": null,
+    "allowance_N": 4000.0,
+    "reason": "unsteady"
+   },
+   "allowance_N": 4000.0,
+   "bias_N": null,
+   "touch": {
+    "span_s": [
+     27.600000000916225,
+     47.700000001583476
+    ],
+    "length_s": 20.10000000066725,
+    "T1_minus_ref_s": 1.2000000000398359,
+    "ref_length_s": 18.900000000627415,
+    "T2_latch_minus_start_s": 2.5000000000829914,
+    "latch_all_s": {
+     "FL": 17.70000000058758,
+     "FR": 18.000000000597538,
+     "RL": 20.10000000066725,
+     "RR": 2.5000000000829914
+    },
+    "T3_extra_stroke_mm": 15.693226200909683,
+    "T3_end_minus_start_mm": 15.693226200026444,
+    "stroke_start_mm": 343.6816537800582,
+    "T4_max_abs_att_deg": [
+     0.07243751132031875,
+     0.41016638876561584
+    ],
+    "T5_crawler_min_kN": 201.630512877926,
+    "flag": false
+   }
+  }
+ }
+}

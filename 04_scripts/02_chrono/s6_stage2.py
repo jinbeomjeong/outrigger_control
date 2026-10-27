@@ -600,22 +600,46 @@ def gyro_check_for(arr, phases, t0, ctl_meta, events, params, start_s) -> dict[s
     return out
 
 
+PREGROUND_LEGS = ("FL", "FR", "RL", "RR")
+
+
+def preground_snapshot_name(leg: str) -> str:
+    """PS-7a start snapshot of a pre-grounded ``leg`` (C-S8-72, spec rev. 67 345.3):
+    ``S6_crawler_top_flat_<leg>pre``; RR = :data:`RRPRE_SNAPSHOT` (unchanged name)."""
+    if leg not in PREGROUND_LEGS:
+        raise ValueError(f"leg {leg!r} not in {PREGROUND_LEGS}")
+    return f"{snapshot_name('top', 'flat')}_{leg}pre"
+
+
 def job_snapshot_rrpre(case_dir: Path, states_dir: Path) -> dict[str, Any]:
-    """PS-7a start snapshot :data:`RRPRE_SNAPSHOT` (control spec rev. 23 92.1): restore the L1-R
-    S6_crawler_top_flat, extend RR at v_max to g0 + :data:`RRPRE_OFFSET_MM`, hold every leg, and
-    stop once >= :data:`RRPRE_SETTLE_MIN_S` after reaching the target and the B1' motion RMS
-    (true body rate, window T_b) is below the limit (at most :data:`RRPRE_SETTLE_MAX_S`)."""
+    """PS-7a start snapshot :data:`RRPRE_SNAPSHOT` (control spec rev. 23 92.1):
+    :func:`job_snapshot_preground` with RR."""
+    return job_snapshot_preground(case_dir, states_dir, leg="RR")
+
+
+def job_snapshot_preground(case_dir: Path, states_dir: Path, *, leg: str = "RR",
+                           overwrite: bool = True) -> dict[str, Any]:
+    """PS-7a start snapshot :func:`preground_snapshot_name` (control spec rev. 23 92.1; leg
+    general since C-S8-72, spec rev. 67 345.3): restore the L1-R S6_crawler_top_flat, extend
+    ``leg`` at v_max to g0 + :data:`RRPRE_OFFSET_MM`, hold every leg, and stop once >=
+    :data:`RRPRE_SETTLE_MIN_S` after reaching the target and the B1' motion RMS (true body rate,
+    window T_b) is below the limit (at most :data:`RRPRE_SETTLE_MAX_S`). RR is the former
+    procedure step for step (same names, numbers and stop rule)."""
     import numpy as np
 
     from outrigger_sim.params import load_params
     from outrigger_sim.record import load_snapshot, save_snapshot
 
+    j = PREGROUND_LEGS.index(leg)
+    name = preground_snapshot_name(leg)
+    if not overwrite and (states_dir / f"{name}.npz").exists():
+        raise FileExistsError(f"{name} exists in {states_dir} (overwrite=False)")
     params = load_params(level="top")
     model, _ = build_crawler_model(params, "flat", attach=False)
     base = snapshot_name("top", "flat")
     t0 = model.restore(load_snapshot(base, params_sha256=params.sha256, directory=states_dir))
     gaps = pad_gaps_m(model)
-    target = float(gaps[3]) + RRPRE_OFFSET_MM * 1e-3
+    target = float(gaps[j]) + RRPRE_OFFSET_MM * 1e-3
     lim = b1_motion_limit(params)
     window, limit = float(lim["window_s"]), float(lim["motion_limit_rad_s"])
     v = float(params.actuator.max_speed_m_s)
@@ -627,10 +651,10 @@ def job_snapshot_rrpre(case_dir: Path, states_dir: Path) -> dict[str, Any]:
     k = 0
     reason = "max time"
     while True:
-        s = float(model.motors[3].GetMotorPos())
+        s = float(model.motors[j].GetMotorPos())
         u = np.zeros(4)
         if t_reach is None and s < target:
-            u[3] = v
+            u[j] = v
         elif t_reach is None:
             t_reach = float(model.system.GetChTime())
         model.set_command(u)
@@ -655,17 +679,21 @@ def job_snapshot_rrpre(case_dir: Path, states_dir: Path) -> dict[str, Any]:
             break
     wall = time.perf_counter() - wall0
     model.set_command(np.zeros(4))
-    save_snapshot(model.snapshot(), RRPRE_SNAPSHOT, directory=states_dir, overwrite=True,
-                  note={"stage": "S6 PS-7a start (spec rev. 23 92.1)", "base": base,
-                        "RR_target_m": target, "g0_m": gaps.tolist(), "t_reach_s": t_reach,
-                        "stop": reason, "b1_window_s": window, "b1_limit_rad_s": limit})
+    note = {"stage": "S6 PS-7a start (spec rev. 23 92.1)", "base": base,
+            f"{leg}_target_m": target, "g0_m": gaps.tolist(), "t_reach_s": t_reach,
+            "stop": reason, "b1_window_s": window, "b1_limit_rad_s": limit}
+    if leg != "RR":  # C-S8-72 (spec rev. 67 345.3)
+        note.update(stage="S6 PS-7a start, leg general (spec rev. 67 345.3 C-S8-72)", leg=leg)
+    save_snapshot(model.snapshot(), name, directory=states_dir, overwrite=True, note=note)
     arr = {k2: np.asarray(v2) for k2, v2 in rows.items()}
     np.savez_compressed(case_dir / "series.npz", **arr)
-    return {"snapshot": RRPRE_SNAPSHOT, "base": base, "g0_m": gaps.tolist(), "RR_target_m": target,
+    contact = np.asarray(model.truth(model.probe()).F_contact_n_N)
+    return {"snapshot": name, "leg": leg, "base": base, "g0_m": gaps.tolist(),
+            f"{leg}_target_m": target,
             "t_reach_s": None if t_reach is None else t_reach - t0, "t_end_s": float(model.system.GetChTime()) - t0,
             "stop": reason, "b1": lim, "final_stroke_m": arr["s"][-1].tolist(),
-            "final_RR_contact_N": float(np.asarray(model.truth(model.probe()).F_contact_n_N)[3]),
-            "wall_s": wall}
+            f"final_{leg}_contact_N": float(contact[j]),
+            "final_contact_N": contact.tolist(), "wall_s": wall}
 
 
 def zero_calibration_report(arr, phases, t0, ctl_meta, events, params, *,

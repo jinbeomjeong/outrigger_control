@@ -25,6 +25,7 @@ import pytest
 from outrigger_sim.control.c2 import (
     COMMAND_COMPONENT_NAMES,
     R8_D1_SETTINGS,
+    R8_D1_TOUCH_FREE_AIR_CAP_EXCESS_N,
     R8_REVISION,
     C2Config,
     C2Controller,
@@ -296,6 +297,11 @@ def test_preset_values() -> None:
     # Rev. 43 213.8 P-S8-6 (U-S8-11): TOUCH free air from moving samples.
     assert r8.touch_free_air_min_travel_m == 0.5e-3
     assert (r8.touch_free_air_min_samples, r8.touch_seen_samples) == (3, 2)
+    # Rev. 67 344.3 P-S8-26 (U-S8-73): free-air reference cap m_rod g + F_s,cap.
+    assert r8.touch_free_air_cap_excess_N == (8000.0, 8000.0, 6666.4, 6666.4)
+    # Rev. 68 356.3 P-S8-27 (U-S8-76 (a)): two dips held; off outside the preset.
+    assert r8.touch_hold_dip_samples == 2
+    assert R8Settings().touch_hold_dip_samples == 0
     assert config.target.check_quiet_after_motion_s == 0.5
     assert config.reanchor.stop_predictor is StopPredictor.READING_RATE
     calibration = config.zero_calibration
@@ -381,6 +387,12 @@ def test_increment_limit_replaces_the_soft_ramp() -> None:
         lambda: R8Settings(touch_free_air_min_travel_m=0.0),
         lambda: R8Settings(touch_free_air_min_samples=0),
         lambda: R8Settings(touch_seen_samples=True),
+        lambda: R8Settings(touch_free_air_cap_excess_N=(8000.0, 8000.0, 6666.4)),
+        lambda: R8Settings(touch_free_air_cap_excess_N=(8000.0, 8000.0, 6666.4, 0.0)),
+        lambda: R8Settings(touch_free_air_cap_excess_N=(8000.0, 8000.0, 6666.4, math.nan)),
+        lambda: R8Settings(touch_hold_dip_samples=-1),
+        lambda: R8Settings(touch_hold_dip_samples=True),
+        lambda: R8Settings(touch_hold_dip_samples=1.0),
         lambda: LiftedReapproachSettings(samples=0),
         lambda: LiftedReapproachSettings(samples=True),
         lambda: LiftedReapproachSettings(speed_fraction=0.0),
@@ -465,6 +477,7 @@ def harness_replay_config() -> C2Config:
         fast_relevel=None,  # the revision-30 harness had no R-5
         probe_abort_on_low_load=False,
         lifted_reapproach=LiftedReapproachSettings(),  # nor P-R8-12 (its G case lifts RR)
+        touch_hold_dip_samples=0,  # nor the P-S8-27 dip hold (its TOUCH loads dip)
     )
     return replace(config, r8=r8)
 
@@ -651,7 +664,11 @@ def test_a_leg_that_has_seen_its_load_approaches_slowly(geometry) -> None:
     touch = geometry.operating_extension_m(0.0)
     strokes = touch - 0.05
     loads = np.array([0.0, 0.0, 0.0, 2.0 * geometry.F_min_N])
-    controller = C2Controller(geometry, bench_config(output_delay_periods=0, increment_limit=None))
+    # Without the P-S8-27 dip hold, the zero load below drops the RR candidate at once.
+    controller = C2Controller(
+        geometry,
+        bench_config(output_delay_periods=0, increment_limit=None, touch_hold_dip_samples=0),
+    )
     controller.update(measurements(0.1, geometry, loads, strokes))  # RR waits for its hold
     speeds = controller.update(measurements(0.2, geometry, np.zeros(4), strokes)).leg_speed_m_s
     v_max = geometry.max_speed_m_s
@@ -1924,3 +1941,212 @@ def test_touch_uses_the_rod_weight_of_each_leg(geometry) -> None:
     readings += [EXTENDING_READING_FS8_N + touch_level + 900.0] * 2
     seen = run_touch(geometry, readings)
     np.testing.assert_array_equal(seen[-1], [False, False, True, True])
+
+
+# --- TOUCH free-air reference cap (P-S8-26, rev. 67 344.3, U-S8-73) -------------------------
+
+PREGROUNDED_READING_N = 30e3
+"""A leg already carrying ground load in TOUCH (PS-7a): its free-air median is this reading."""
+PREGROUNDED_SAMPLES = 12
+CAP_EVENT_PREFIX = "INFO_TOUCH_FREE_AIR_CAPPED:"
+
+
+def cap_events(controller: C2Controller) -> list[str]:
+    return [event.name for event in controller.events if event.name.startswith(CAP_EVENT_PREFIX)]
+
+
+def touch_bench_run(
+    geometry: C2Geometry, readings_N: list[float], **r8_changes
+) -> tuple[TouchBench, list[np.ndarray]]:
+    """Like :func:`run_touch`, keeping the bench (events, reference) for the checks."""
+    bench = TouchBench(C2Controller(geometry, touch_config(**r8_changes)), geometry)
+    seen = [bench.step(np.full(4, reading)) for reading in readings_N]
+    return bench, seen
+
+
+def test_cap_latches_a_leg_grounded_before_touch(geometry) -> None:
+    """P-S8-26: a constant 30 kN reading is its own free-air median (touchdown load
+    ``-m_rod g``, never latched). The cap cuts the reference to ``m_rod g + F_s,cap``, so the
+    leg latches on the second sample after its reference holds three moving samples."""
+    readings = [PREGROUNDED_READING_N] * PREGROUNDED_SAMPLES
+    uncapped, uncapped_seen = touch_bench_run(
+        geometry, readings, touch_free_air_cap_excess_N=None
+    )
+    assert not np.array(uncapped_seen).any()
+    assert cap_events(uncapped.controller) == []
+
+    capped, capped_seen = touch_bench_run(geometry, readings)
+    # Samples 0, 1 still (d = 1); moving samples 2, 3, 4 fill the reference; 4, 5 latch.
+    np.testing.assert_array_equal(first_seen_sample(capped_seen), [5, 5, 5, 5])
+    rod_weight = np.asarray(geometry.rod_weight_N)
+    expected_reference = rod_weight + np.array(R8_D1_TOUCH_FREE_AIR_CAP_EXCESS_N)
+    np.testing.assert_array_equal(capped.controller._state.free_air_force_N, expected_reference)
+
+
+def test_cap_event_is_recorded_once_per_leg(geometry) -> None:
+    bench, _ = touch_bench_run(geometry, [PREGROUNDED_READING_N] * PREGROUNDED_SAMPLES)
+    assert sorted(cap_events(bench.controller)) == sorted(
+        f"{CAP_EVENT_PREFIX}{leg}" for leg in LEG_ORDER
+    )
+
+
+def test_cap_leaves_an_airborne_leg_with_friction_unchanged(geometry) -> None:
+    """F_s 8 kN in the air (7.02 kN, below the rear cap 7.38 kN): no cap, the P-S8-6 result
+    of the touchdown step (test 2) is kept bit for bit."""
+    readings = fs8_free_air_readings(FREE_AIR_SAMPLES_BEFORE_STEP)
+    readings += [EXTENDING_READING_FS8_N + TOUCHDOWN_STEP_N] * 3
+    capped, capped_seen = touch_bench_run(geometry, readings)
+    uncapped, uncapped_seen = touch_bench_run(
+        geometry, readings, touch_free_air_cap_excess_N=None
+    )
+    assert cap_events(capped.controller) == []
+    np.testing.assert_array_equal(np.array(capped_seen), np.array(uncapped_seen))
+    np.testing.assert_array_equal(
+        capped.controller._state.free_air_force_N, uncapped.controller._state.free_air_force_N
+    )
+
+
+# --- TOUCH latch candidate holds over dips (P-S8-27, rev. 68 356.3, U-S8-76 (a)) -------------
+
+DIP_EVENT_PREFIX = "INFO_TOUCH_DIP_HELD:"
+LOAD_SAMPLE = "L"
+DIP_SAMPLE = "d"
+STEP_SAMPLE = FREE_AIR_SAMPLES_BEFORE_STEP
+"""Index of the first sample after the free air (the first ``LOAD_SAMPLE``)."""
+LOADED_READING_FS0_N = HANGING_READING_FS0_N + TOUCHDOWN_STEP_N
+LATCH_OFFSET = TOUCH_HOLD_SAMPLES - 1
+"""A candidate started on step offset 0 latches on offset 5 (0.5 s at 10 Hz)."""
+
+
+@dataclass
+class DipRun:
+    """Per sample after the step: candidate start, latches, pre-delay output, dip counts."""
+
+    bench: TouchBench
+    candidate_since_s: list[list[float | None]] = field(default_factory=list)
+    touched: list[np.ndarray] = field(default_factory=list)
+    outputs_m_s: list[np.ndarray] = field(default_factory=list)
+    dip_counts: list[tuple[int, ...]] = field(default_factory=list)
+
+    @property
+    def step_t_s(self) -> float:
+        return round((STEP_SAMPLE + 1) * PERIOD_S, 10)
+
+    def latch_offset(self) -> np.ndarray:
+        """First step offset each leg is touched on (-1 = never)."""
+        return first_seen_sample(self.touched)
+
+    def dip_events(self) -> list[str]:
+        events = self.bench.controller.events
+        return [event.name for event in events if event.name.startswith(DIP_EVENT_PREFIX)]
+
+
+def leg_reading(sample: str) -> float:
+    return LOADED_READING_FS0_N if sample == LOAD_SAMPLE else HANGING_READING_FS0_N
+
+
+def run_dips(geometry: C2Geometry, patterns: str | list[str], **r8_changes) -> DipRun:
+    """F_s 0 free air, then per leg the samples of ``patterns`` (one string = every leg)."""
+    leg_patterns = [patterns] * 4 if isinstance(patterns, str) else patterns
+    bench = TouchBench(C2Controller(geometry, touch_config(**r8_changes)), geometry)
+    for _ in range(STEP_SAMPLE):
+        bench.step(np.full(4, HANGING_READING_FS0_N))
+    run = DipRun(bench)
+    state = bench.controller._state
+    for samples in zip(*leg_patterns, strict=True):
+        bench.step(np.array([leg_reading(sample) for sample in samples]))
+        run.candidate_since_s.append(list(state.touch_candidate_since_s))
+        run.touched.append(state.touched.copy())
+        run.outputs_m_s.append(state.output_queue[-1].copy())
+        run.dip_counts.append(state.touch_dip_counts)
+    return run
+
+
+def test_dip_hold_changes_nothing_without_a_dip(geometry) -> None:
+    """356.3 (1): no dip, the same commands with the hold off (0) and the preset (2)."""
+    pattern = LOAD_SAMPLE * (LATCH_OFFSET + 3)
+    held = run_dips(geometry, pattern)
+    plain = run_dips(geometry, pattern, touch_hold_dip_samples=0)
+    np.testing.assert_array_equal(np.array(held.outputs_m_s), np.array(plain.outputs_m_s))
+    np.testing.assert_array_equal(held.latch_offset(), [LATCH_OFFSET] * 4)
+    assert held.dip_events() == []
+
+
+def test_dip_hold_off_drops_the_candidate_on_one_dip(geometry) -> None:
+    """356.3 (1): ``touch_hold_dip_samples`` 0 is the P-S8-26 rule: one dip drops the
+    candidate, the leg extends again and latches 0.5 s after the next load sample."""
+    run = run_dips(geometry, "LLd" + "L" * 8, touch_hold_dip_samples=0)
+    assert run.candidate_since_s[2] == [None] * 4
+    np.testing.assert_array_equal(run.latch_offset(), [3 + LATCH_OFFSET] * 4)
+    assert run.dip_events() == []
+    meta = run.bench.controller.meta()
+    json.dumps(meta)
+    assert meta["touch"] == {"dip_held_samples": [0, 0, 0, 0]}
+
+
+@pytest.mark.parametrize("dip_count", [1, 2])
+def test_dip_hold_keeps_the_candidate_and_waits(geometry, dip_count) -> None:
+    """356.3 (2): one or two dips in a row keep the candidate (its start stays), the legs
+    wait (speed 0: the command is the one without the dips, ramped down by the increment
+    limit) and latch 0.5 s after the candidate start, on a load sample."""
+    pattern = "LL" + DIP_SAMPLE * dip_count + "L" * 6
+    run = run_dips(geometry, pattern)
+    undisturbed = run_dips(geometry, LOAD_SAMPLE * len(pattern))
+    np.testing.assert_array_equal(np.array(run.outputs_m_s), np.array(undisturbed.outputs_m_s))
+    for offset in range(2, 2 + dip_count):
+        assert run.candidate_since_s[offset] == [run.step_t_s] * 4
+        assert run.dip_counts[offset] == (offset - 1,) * 4
+    np.testing.assert_array_equal(run.latch_offset(), [LATCH_OFFSET] * 4)
+    assert sorted(run.dip_events()) == sorted(f"{DIP_EVENT_PREFIX}{leg}" for leg in LEG_ORDER)
+    meta = run.bench.controller.meta()
+    assert meta["touch"] == {"dip_held_samples": [dip_count] * 4}
+
+
+def test_dip_hold_records_one_event_over_separate_dips(geometry) -> None:
+    """Two dips apart: the count restarts on the load sample between them, the event stays
+    once per leg and the meta adds both."""
+    run = run_dips(geometry, "LLdLdL")
+    assert run.dip_counts[3] == (0, 0, 0, 0)
+    np.testing.assert_array_equal(run.latch_offset(), [LATCH_OFFSET] * 4)
+    assert len(run.dip_events()) == 4
+    assert run.bench.controller.meta()["touch"] == {"dip_held_samples": [2, 2, 2, 2]}
+
+
+def test_three_dips_drop_the_candidate_and_extend_again(geometry) -> None:
+    """356.3 (3): the third dip in a row drops the candidate as before (re-extension)."""
+    run = run_dips(geometry, "LLddd" + "L" * 7)
+    assert run.candidate_since_s[3] == [run.step_t_s] * 4
+    assert run.candidate_since_s[4] == [None] * 4
+    assert run.dip_counts[4] == (0, 0, 0, 0)
+    # The held legs had ramped down to 0 (offset 3); the drop sends them out again.
+    np.testing.assert_array_equal(run.outputs_m_s[3], np.zeros(4))
+    assert np.all(run.outputs_m_s[4] > 0.0)
+    np.testing.assert_array_equal(run.latch_offset(), [5 + LATCH_OFFSET] * 4)
+    assert run.bench.controller.meta()["touch"] == {"dip_held_samples": [2, 2, 2, 2]}
+
+
+def test_dip_hold_needs_touch_seen(geometry) -> None:
+    """356.3 (4): on the first approach (``touch_seen`` needs two load samples in a row) a
+    dip drops the candidate; no dip is held."""
+    run = run_dips(geometry, "Ld" + "L" * 7)
+    assert run.candidate_since_s[1] == [None] * 4
+    assert run.dip_counts[1] == (0, 0, 0, 0)
+    np.testing.assert_array_equal(run.latch_offset(), [2 + LATCH_OFFSET] * 4)
+    assert run.dip_events() == []
+
+
+def test_dip_hold_leaves_latched_legs_and_level(geometry) -> None:
+    """356.3 (5): a dip on latched legs (front) counts nothing, the rear candidates hold it;
+    after all legs latched (LEVEL) dips count nothing."""
+    front = "L" * (LATCH_OFFSET + 1) + "d" + "L" * 6
+    rear = "ddd" + "L" * 3 + "d" + "L" * 6
+    run = run_dips(geometry, [front, front, rear, rear])
+    dip_offset = LATCH_OFFSET + 1
+    assert run.dip_counts[dip_offset] == (0, 0, 1, 1)
+    assert sorted(run.dip_events()) == [f"{DIP_EVENT_PREFIX}RL", f"{DIP_EVENT_PREFIX}RR"]
+    np.testing.assert_array_equal(run.latch_offset(), [LATCH_OFFSET] * 2 + [3 + LATCH_OFFSET] * 2)
+    assert run.bench.controller.phase is not C2Phase.TOUCH
+    level_dips = run_dips(geometry, "L" * (LATCH_OFFSET + 1) + "dd")
+    assert level_dips.bench.controller.phase is not C2Phase.TOUCH
+    assert level_dips.dip_counts[-1] == (0, 0, 0, 0)
+    assert level_dips.dip_events() == []

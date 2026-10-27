@@ -25,6 +25,11 @@ Usage (Chrono-dev python, project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj_c29 --approved  # C-S8-29
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj_c67 --tag v5_c67
         --approved --workers p7   # C-S8-67 (spec rev. 62 317.1): G4RRF x F_s 0 / 8
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set g1 --tag c72
+        --approved --workers p8e3   # C-S8-72 (spec rev. 67 345): 11 floor events on any leg,
+        # LEVEL time (LOC + 3.0 s) or READY + 5 s, + phase; result.json ``event_state``
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set c74 --tag c74
+        --approved --workers p7e8   # C-S8-74 (spec rev. 68 355): g1 #1-#8 x F_s 2 / 4 kN (16)
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj_c68 --dry-run
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj_c68 --tag g4h_c68
         --approved --workers p7   # C-S8-68 (spec rev. 64 323.8): 6 head-fault cases, needs P-S8-24
@@ -251,6 +256,15 @@ def end_rule(case: "S8Case") -> dict[str, Any]:
         anchor, after = "ready", END_D8_AFTER_READY_S
     elif case.event == "HOLD":
         anchor, after = "ready", END_HOLD_AFTER_READY_S
+    elif (case.event_spec() or {}).get("end_anchor") == "ready_after_event":
+        # C-S8-72 LEVEL-time events: first READY after the event + 5 s, at most event + 50 s
+        ev = case.event_spec()
+        return {"anchor": "ready_after_event", "after_s": float(ev["end_after_ready_s"]),
+                "cap_after_event_s": float(ev["end_cap_s"]),
+                "upper_s": case.duration_s + END_CAP_EXTRA_S,
+                "rule": "C-S8-72 (spec rev. 67 345.1): LEVEL-time event: first READY after the "
+                        "event + 5 s, at most event + 50 s; upper bound duration + 60 s, else "
+                        "timeout"}
     else:
         anchor = "event"
         after = float((case.event_spec() or {}).get("end_after_s", END_EVENT_AFTER_S))
@@ -269,6 +283,8 @@ def expected_run_s(case: "S8Case") -> float:
         return case.duration_s
     if rule["anchor"] == "ready":
         t = ready + rule["after_s"]
+    elif rule["anchor"] == "ready_after_event":  # C-S8-72: cost bound = event + cap
+        t = G1_EXPECTED_LOC_S + G1_LOC_OFFSET_S + case.phase_offset_s + rule["cap_after_event_s"]
     elif case.event == "RE1bP":
         t = EXPECTED_FIRST_PROBE_FLAT_S + st.RE1BP_DELAY_S + rule["after_s"]
     else:
@@ -498,6 +514,104 @@ fault and the run end."""
 EVENTS.update(G4H_EVENTS)
 G4H_EVENT_NAMES = tuple(G4H_EVENTS)
 
+# --- C-S8-72 (spec rev. 67 345): floor events on any leg, during LEVEL or after READY ----------
+
+G1_GROUP = "G1"
+G1_LOC_ANCHOR = "loc+3.0"
+G1_READY_ANCHOR = "ready+5"
+G1_LOC_OFFSET_S = 3.0
+"""Spec rev. 67 345.1: LEVEL-time reference = controller event ``crawler_liftoff_confirmed`` +
+3.0 s (middle of the harness LOC -> DONE 6.2-6.8 s; ASSUMPTION 347.3)."""
+G1_LEVEL_END_AFTER_READY_S = 5.0
+G1_LEVEL_END_CAP_S = 50.0
+"""Spec rev. 67 345.1: a LEVEL-time run ends at the first READY after the event + 5 s, at most
+event + 50 s (READY-time runs: event + 45 s, :data:`END_EVENT_AFTER_S`)."""
+G1_EXPECTED_PHASE = {G1_LOC_ANCHOR: "level", G1_READY_ANCHOR: "ready"}
+"""Controller phase expected at the event start; another phase = ``phase_mismatch`` (not
+judgeable, spec rev. 67 345.1)."""
+LOC_EVENT = "crawler_liftoff_confirmed"
+"""``control.c2.SOIL_EVENT_LIFTOFF_CONFIRMED`` (the controller's crawler lift-off confirmation)."""
+G1_BASE_EVENTS = ("RE1bF", "FS24", "G4")
+G1_EXPECTED_LOC_S = 21.2
+"""Cost estimate only (ASSUMPTION): LOC of the flat top run [s after the start] = the harness
+value (spec rev. 67 342.2: top 21.2 s, bottom 21.3-21.4 s)."""
+
+
+def g1_event_name(base: str, leg: str, at: str) -> str:
+    """Event key of a C-S8-72 case: ``G1L_<base>_<leg>`` (LEVEL, ``loc+3.0``) or
+    ``G1R_<base>_<leg>`` (READY + 5 s)."""
+    return f"G1{'L' if at == G1_LOC_ANCHOR else 'R'}_{base}_{leg}"
+
+
+def g1_event_spec(base: str, leg: str, at: str) -> dict[str, Any]:
+    """C-S8-72 event = the ``base`` event (RE1bF 30 mm / 0.05 s, FS24 24 mm / 0.3 s, G4 11.5 mm /
+    2 s) on ``leg`` from ``at``. Fast events keep the fine-dt window (as before) and watch all four
+    pads (a front settlement lifts the diagonal rear pad, spec rev. 48 218.5; as FS24)."""
+    if base not in G1_BASE_EVENTS or leg not in ("FL", "FR", "RL", "RR") \
+            or at not in G1_EXPECTED_PHASE:
+        raise ValueError(f"C-S8-72 event {base!r} / {leg!r} / {at!r}")
+    ev = {k: v for k, v in EVENTS[base].items() if k not in ("fine_expected_s", "fine_watch")}
+    ev.update(leg=leg, at=at, stage2=None, g1_base=base,
+              expected_phase=G1_EXPECTED_PHASE[at])
+    if ev.get("fine"):
+        ev.update(fine_expected_s=FS24_FINE_EXPECTED_S, fine_watch="all")
+    if at == G1_LOC_ANCHOR:
+        ev.update(loc_offset_s=G1_LOC_OFFSET_S, end_anchor="ready_after_event",
+                  end_after_ready_s=G1_LEVEL_END_AFTER_READY_S, end_cap_s=G1_LEVEL_END_CAP_S)
+    return ev
+
+
+G1_CASES: tuple[tuple[str, str, str, str, float, float, str, str], ...] = (
+    # (case id, base event, leg, anchor, phase offset [s], F_s [kN], level, harness worst / gap)
+    ("G1L_RE1bF_FL_top_Fs0", "RE1bF", "FL", G1_LOC_ANCHOR, 0.050, 0.0, "top",
+     "pair 2.067 s, RL late lift 0.142 s (outside), after-W -0.72 kN; G1 G7"),
+    ("G1L_RE1bF_FR_top_Fs0", "RE1bF", "FR", G1_LOC_ANCHOR, 0.075, 0.0, "top",
+     "pair 2.143 s, adjacent gap 0.39 mm, RR outside 0.053 s; G1"),
+    ("G1L_FS24_FR_top_Fs0", "FS24", "FR", G1_LOC_ANCHOR, 0.025, 0.0, "top",
+     "recurrence clusters 2 (36.6 / 27.0 J), RR outside 0.06 s; G1"),
+    ("G1L_FS24_FL_top_Fs0", "FS24", "FL", G1_LOC_ANCHOR, 0.075, 0.0, "top",
+     "pair 1.571 s, RL outside 0.064 s; G1 G7"),
+    ("G1L_RE1bF_FL_top_Fs8", "RE1bF", "FL", G1_LOC_ANCHOR, 0.000, 8.0, "top",
+     "pair 1.953 s (only failure); G1 G5"),
+    ("G1R_RE1bF_FL_top_Fs0", "RE1bF", "FL", G1_READY_ANCHOR, 0.000, 0.0, "top",
+     "pair 2.039 s, after-W RL 8.97 kN; G7"),
+    ("G1R_FS24_FL_top_Fs0", "FS24", "FL", G1_READY_ANCHOR, 0.025, 0.0, "top",
+     "mirror of MLJ_FS24 (FR), RL outside 0.054 s; G7"),
+    ("G1R_RE1bF_FR_top_Fs0", "RE1bF", "FR", G1_READY_ANCHOR, 0.075, 0.0, "top",
+     "adjacent gap max 1.29 mm, RR outside 0.042 s; G1 control"),
+    ("G1L_RE1bF_RL_top_Fs0", "RE1bF", "RL", G1_LOC_ANCHOR, 0.000, 0.0, "top",
+     "pass (pair 1.367 s), RL only; G7"),
+    ("G1L_G4_RR_bottom_Fs8", "G4", "RR", G1_LOC_ANCHOR, 0.000, 8.0, "bottom",
+     "slow event, LEVEL min 11.59 kN; G1"),
+    ("G1L_RE1bF_FL_bottom_Fs0", "RE1bF", "FL", G1_LOC_ANCHOR, 0.000, 0.0, "bottom",
+     "pass (pair 1.608 s), auger control; G1"),
+)
+"""Spec rev. 67 345.1 #1-11 (case key, event, leg, time = reference + phase, F_s, auger level,
+harness worst = why chosen, gap)."""
+
+for _cid, _base, _leg, _at, _off, _fs, _lv, _why in G1_CASES:
+    EVENTS.setdefault(g1_event_name(_base, _leg, _at), g1_event_spec(_base, _leg, _at))
+G1_EVENT_NAMES = tuple(dict.fromkeys(g1_event_name(b, lg, a)
+                                     for _c, b, lg, a, *_r in G1_CASES))
+
+C74_SOURCE_N = 8
+"""C-S8-74 (spec rev. 68 355.1, U-S8-75 (다)): the front cases #1-#8 of :data:`G1_CASES`."""
+C74_FS_LEVELS_KN = (2.0, 4.0)
+
+
+def _c74_case_id(base: str, leg: str, at: str, off: float, level: str, fs: float) -> str:
+    """Spec rev. 68 355.1 name: ``<G1 event>_<level>_o<offset in ms, 3 digits>_Fs<kN>``
+    (the phase is in the name because #1 and #5 differ only by the phase)."""
+    return f"{g1_event_name(base, leg, at)}_{level}_o{round(off * 1000):03d}_Fs{fs:g}"
+
+
+C74_CASES: tuple[tuple[str, str, str, str, float, float, str, str], ...] = tuple(
+    (_c74_case_id(b, lg, a, off, lv, fs), b, lg, a, off, fs, lv, src)
+    for fs in C74_FS_LEVELS_KN
+    for src, b, lg, a, off, _fs0, lv, _why in G1_CASES[:C74_SOURCE_N])
+"""C-S8-74 (spec rev. 68 355.1): #1-#8 of C-S8-72 with F_s 2 / 4 kN (front value, rear x 0.833)
+= 16 cases; same event, leg, time and phase. Last field = the C-S8-72 source case id."""
+
 
 def step_us(fs_kN: float, lock_valve: str = "pilot_check") -> float:
     """Estimated P-core wall per L2b step [us] with the p7e8 pool full (C-S8-19 ⑥, p1r)."""
@@ -563,6 +677,14 @@ def _event_scenario(event: str, contact: str):
     if event == "G4H_quiet_FR":  # K0V flat top (D8 scenario), the fault alone
         return replace(_d8_scenario("top", "flat"), contact=contact)
     raise ValueError(event)
+
+
+def _g1_scenario(event: str, level: str, contact: str = "combined"):
+    """C-S8-72 scenario: flat floor at ``level``, no stage-2 event name (the stage-2 settlement
+    items assume RR; the event is judged by the 345.2 rows, :func:`verify.s8_control.g1_rows`),
+    the FS24 length (+ T_SETTLE_EXTRA) as the duration base of the end-rule upper bound."""
+    return s6c._sc(f"{event}_{level}_{contact}", "FS", level, "flat", contact=contact,
+                   extra=st.T_SETTLE_EXTRA, items=())
 
 
 def _bc(cid: str, sc, **kw):
@@ -703,6 +825,22 @@ def s8_cases() -> list[S8Case]:
     # smoke (F_s 0, short)
     add("smoke_E_G4_Fs0", "smoke", 0, _event_scenario("G4", "combined"), fs_kN=0.0, event="G4")
     add("smoke_K0_top_rpBop_Fs0", "smoke", 0, _d8_scenario("top", "rpBop"), fs_kN=0.0)
+    # C-S8-72 (spec rev. 67 345.1 #1-11): appended last, earlier order and definitions unchanged;
+    # set g1 (group G1, not in the main groups)
+    for cid, base, leg, at, off, fs, level, why in G1_CASES:
+        ev = g1_event_name(base, leg, at)
+        add(cid, G1_GROUP, 6, _g1_scenario(ev, level), fs_kN=fs, event=ev, phase_offset_s=off,
+            notes=(f"C-S8-72 / spec rev. 67 345.1: {base} on {leg}, "
+                   f"{'LOC + 3.0 s' if at == G1_LOC_ANCHOR else 'READY + 5 s'} + {off:g} s, "
+                   f"F_s {fs:g} kN, {level}; harness worst: {why}",))
+    # C-S8-74 (spec rev. 68 355.1, U-S8-75 (다)): appended after the C-S8-72 cases (earlier order
+    # and definitions unchanged); group G1 (same judge rows), set c74 (not in g1)
+    for cid, base, leg, at, off, fs, level, src in C74_CASES:
+        ev = g1_event_name(base, leg, at)
+        add(cid, G1_GROUP, 6, _g1_scenario(ev, level), fs_kN=fs, event=ev, phase_offset_s=off,
+            notes=(f"C-S8-74 / spec rev. 68 355.1: {base} on {leg}, "
+                   f"{'LOC + 3.0 s' if at == G1_LOC_ANCHOR else 'READY + 5 s'} + {off:g} s, "
+                   f"F_s {fs:g} kN, {level}; C-S8-72 source case {src}",))
     ids = [c.case_id for c in out]
     if len(ids) != len(set(ids)):
         dup = sorted({i for i in ids if ids.count(i) > 1})
@@ -738,6 +876,13 @@ def case_set(name: str) -> list[S8Case]:
         "mlj_c67": [c for c in cases if c.group == MLJ_GROUP and c.event == "G4RRF"],
         # C-S8-68 (spec rev. 64 323.8): the six G4 head-fault cases
         "mlj_c68": [c for c in cases if c.group == MLJ_GROUP and c.event in G4H_EVENT_NAMES],
+        # C-S8-72 (spec rev. 67 345.1): the 11 L2b cases of G1 / G7
+        "g1": [c for c in cases if c.group == G1_GROUP and c.case_id in G1_CASE_IDS],
+        # C-S8-74 (spec rev. 68 355.1): front #1-#8 of g1 x F_s 2 / 4 kN (16)
+        "c74": [c for c in cases if c.case_id in C74_CASE_IDS],
+        # C-S8-75 (spec rev. 68 358.6, U-S8-77 (나)): bundle B, six slope TOUCH cases of p1 / p2
+        # (existing definitions), run once per controller (P-S8-26 cb292e8 / P-S8-27 4790e2b)
+        "c75": [c for c in main if c.case_id in C75_CASE_IDS],
     }
     if name not in sets:
         raise KeyError(f"unknown set {name!r}; sets {tuple(sets)}")
@@ -745,7 +890,12 @@ def case_set(name: str) -> list[S8Case]:
 
 
 SET_NAMES = ("p1", "p1r", "p2", "p3", "rest", "all", "cb", "smoke", "mlj", "mlj_c29",
-             "mlj_c67", "mlj_c68")
+             "mlj_c67", "mlj_c68", "g1", "c74", "c75")
+G1_CASE_IDS = frozenset(c[0] for c in G1_CASES)
+C74_CASE_IDS = frozenset(c[0] for c in C74_CASES)
+C75_CASE_IDS = frozenset(("K0V_top_rpB_Fs0", "K0_top_fdown3.2_Fs0", "K0V_top_roll5.5_Fs0",
+                          "K0_top_roll4.4_Fs0", "K24_top_rpB_Fs4", "K24_top_rpBop_Fs4"))
+"""C-S8-75 bundle B (spec rev. 68 358.6): p1 x 4 (F_s 0) + p2 x 2 (F_s 4)."""
 MLJ_GROUP = "MLJ"
 """Judged cases of the main ML batch (6): U-S8-32 front fast settlement (FS24) x F_s 0 / 8,
 C-S8-24 R45-4 (SS9P) x F_s 0 / 8, C-S8-29 rod-sensor fault + G4 (G4RF) x F_s 0 / 8.
@@ -1209,6 +1359,36 @@ def with_lock_window_tau(config, tau_v_s: float):
     return replace(config, two_pressure=replace(tp, **{LOCK_WINDOW_TAU_KEY: float(tau_v_s)}))
 
 
+def g1_event_state(ev: dict[str, Any] | None, state: dict[str, Any], t0: float,
+                   phase_offset_s: float) -> dict[str, Any] | None:
+    """C-S8-72 (spec rev. 67 345.1) meta of a run: reference time (LOC + 3.0 s or READY + 5 s,
+    relative), phase offset, event start, controller phase at the event start, the expected
+    phase and ``phase_mismatch`` (another phase = not judgeable), first READY after the event.
+    None for a run without an event."""
+    if not ev:
+        return None
+    rel = (lambda t: None if t is None else float(t) - t0)
+    at = ev.get("at")
+    if at == G1_LOC_ANCHOR:
+        ref = None if state.get("loc_t") is None \
+            else state["loc_t"] + float(ev.get("loc_offset_s", G1_LOC_OFFSET_S))
+    elif at == "ready+5":
+        ref = None if state.get("ready_t") is None else state["ready_t"] + 5.0
+    else:
+        ref = None
+    expected = ev.get("expected_phase")
+    got = state.get("phase_at_event")
+    return {"anchor": at, "loc_t_s": rel(state.get("loc_t")), "reference_t_s": rel(ref),
+            "phase_offset_s": float(phase_offset_s), "event_t_s": rel(state.get("event_t")),
+            "phase_at_event": got, "expected_phase": expected,
+            "phase_mismatch": None if expected is None or got is None else got != expected,
+            "ready_after_event_t_s": rel(state.get("ready_after_event_t")),
+            "rule": "spec rev. 67 345.1: phase = event start - reference (a 10 Hz control "
+                    "sample); phase at the event = the controller phase in force at the event "
+                    "start; LEVEL-time cases in another phase are phase_mismatch (not "
+                    "judgeable)"}
+
+
 def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None):
     """Run one L2b S8 case (module docstring). Returns (summary, run_meta)."""
     import numpy as np
@@ -1270,7 +1450,10 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
     probe_intervals: list[dict[str, Any]] = []
     state: dict[str, Any] = {"ready_t": None, "probe_t": None, "event_t": None,
                              "fine_open_t": None, "contact_since": None, "fine_capped": False,
-                             "lifted_seen": False, "scheduled": False}
+                             "lifted_seen": False, "scheduled": False,
+                             # C-S8-72: LOC reference, phase at the event, READY after it
+                             "loc_t": None, "events_seen": 0, "prev_phase": None,
+                             "phase_at_event": None, "ready_after_event_t": None}
     leg_i = 3 if not ev or ev.get("leg") not in LEG_NAMES else LEG_NAMES.index(ev["leg"])
     watch_all = bool(ev and ev.get("fine_watch") == "all")
 
@@ -1319,8 +1502,23 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
             state["ready_t"] = meas.t_s
         if ph is C2Phase.PROBE and state["probe_t"] is None:
             state["probe_t"] = meas.t_s
+        if ev and ev["at"] == G1_LOC_ANCHOR and state["loc_t"] is None:
+            # C-S8-72: the controller event crawler_liftoff_confirmed (first one)
+            evs = c2.events
+            for e in evs[state["events_seen"]:]:
+                if e.name == LOC_EVENT:
+                    state["loc_t"] = float(e.t_s)
+                    break
+            state["events_seen"] = len(evs)
+        g1_phase_record(meas.t_s, ph)
         if ev and not state["scheduled"]:
-            if ev["at"] == "probe+0.1" and state["probe_t"] is not None:
+            if ev["at"] == G1_LOC_ANCHOR and state["loc_t"] is not None:
+                # spec rev. 67 345.1: LOC + 3.0 s (a 10 Hz control sample: the LOC event comes
+                # from a control update) + phase offset
+                t_ev = state["loc_t"] + float(ev["loc_offset_s"]) + case.phase_offset_s
+                if ev["kind"] == "settle":
+                    schedule_event(t_ev, dt_fine if ev.get("fine") else model.dt_s)
+            elif ev["at"] == "probe+0.1" and state["probe_t"] is not None:
                 schedule_event(state["probe_t"] + st.RE1BP_DELAY_S, dt_fine)
             elif ev["at"] == "ready+5" and state["ready_t"] is not None:
                 t_ev = state["ready_t"] + 5.0 + case.phase_offset_s
@@ -1345,6 +1543,17 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
         if probe_req is not None:
             request_probe_after_settlement(meas.t_s, ph)
         fine_window(meas.t_s)
+
+    def g1_phase_record(t: float, ph) -> None:
+        """C-S8-72: the controller phase in force at the event start (this update's phase when
+        the event starts at it, else the previous update's) and the first READY after it."""
+        evt = state["event_t"]
+        if evt is not None and state["phase_at_event"] is None and t >= evt - 1e-9:
+            state["phase_at_event"] = ph.value if abs(t - evt) <= 1e-9 else state["prev_phase"]
+        if evt is not None and state["ready_after_event_t"] is None and t > evt + 1e-9 \
+                and ph is C2Phase.READY:
+            state["ready_after_event_t"] = t
+        state["prev_phase"] = ph.value
 
     def request_probe_after_settlement(t: float, ph) -> None:
         """C-S8-24: ``C2Controller.request_probe()`` once the settlement ramp is over and the
@@ -1371,6 +1580,13 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
     state["last_t"] = None
 
     def end_target_abs() -> float | None:
+        if rule["anchor"] == "ready_after_event":  # C-S8-72 LEVEL-time event
+            evt = state["event_t"]
+            if evt is None:
+                return None
+            cap = evt + rule["cap_after_event_s"]
+            ra = state["ready_after_event_t"]
+            return cap if ra is None else min(ra + rule["after_s"], cap)
         anchor = state["ready_t"] if rule["anchor"] == "ready" else state["event_t"]
         return None if anchor is None else anchor + rule["after_s"]
 
@@ -1399,6 +1615,8 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
                       config.r8.lifted_reapproach.load_fraction_of_F_min,
                   **{k: getattr(config.r8, k, None) for k in (
                       "touch_free_air_min_travel_m", "touch_free_air_min_samples",
+                      "touch_free_air_cap_excess_N",  # P-S8-26 / U-S8-73 (C-S8-73)
+                      "touch_hold_dip_samples",  # P-S8-27
                       "touch_seen_samples")}},
               "controller_timing": c2.meta().get("timing"),
               "params_sha256": params.sha256, "params_sha256_controller": params_ctrl.sha256,
@@ -1435,7 +1653,11 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
     target = end_target_abs()
     stopped = bool(res.meta.get("stopped_early", False))
     s8_end = {**rule, "applied": use_rule, "upper_used_s": run_upper_s,
-              "anchor_t_s": None if target is None else target - rule["after_s"] - t0,
+              "anchor_t_s": None if target is None else (
+                  (None if state["ready_after_event_t"] is None
+                   else state["ready_after_event_t"] - t0)
+                  if rule["anchor"] == "ready_after_event"
+                  else target - rule["after_s"] - t0),
               "target_t_s": None if target is None else target - t0,
               "end_t_s": t_end_rel, "stopped_at_target": stopped,
               "timeout": bool(use_rule and not stopped),
@@ -1487,6 +1709,7 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
         "event_t_s": None if state["event_t"] is None else state["event_t"] - t0,
         "event": {"name": case.event, "spec": ev, "scheduled": state["scheduled"],
                   "forced_retract": None if forced is None else forced.meta()},
+        "event_state": g1_event_state(ev, state, t0, case.phase_offset_s),  # C-S8-72
         "probe_request": probe_req,
         "rod_fault": None if rod_fault is None else rod_fault.meta(),
         "rod_fault_t_s": None if rod_fault is None or rod_fault.t_start_s is None
@@ -2341,7 +2564,11 @@ def _tuples(d: dict[str, Any]) -> dict[str, Any]:
 # --- mixed P / E scheduler (U-S8-1) -------------------------------------------------------------
 
 
-WORKER_LAYOUTS = {"p7": {"pcore": P_WORKERS}, "p7e8": {"pcore": P_WORKERS, "ecore": E_WORKERS}}
+WORKER_LAYOUTS = {"p7": {"pcore": P_WORKERS}, "p7e8": {"pcore": P_WORKERS, "ecore": E_WORKERS},
+                  "p8e3": {"pcore": 8, "ecore": 3}, "e6": {"ecore": 6}}
+"""``p8e3`` (C-S8-72, spec rev. 67 345.4): 8 processes on the P-cores + 3 on the E-cores (11
+cases at once). ``e6`` (C-S8-75, spec rev. 68 358.6): 6 processes on the E-cores only (the
+P-cores are held by the concurrent S9 J1 bundle)."""
 
 
 def simulate_makespan(walls_p: list[float], layout: str) -> dict[str, Any]:
@@ -2451,6 +2678,7 @@ def plan(cases: list[S8Case], layout: str) -> dict[str, Any]:
             "by_group": {g: sum(1 for r in rows if r["group"] == g)
                          for g in dict.fromkeys(r["group"] for r in rows)},
             "p7": simulate_makespan(walls, "p7"), "p7e8": simulate_makespan(walls, "p7e8"),
+            **({} if layout in ("p7", "p7e8") else {layout: simulate_makespan(walls, layout)}),
             "layout": layout,
             "basis": f"C-S8-19 ⑥ (p1r, pool full): L2b P-core {P_FULL_US_PER_STEP_FS:g} us/step "
                      f"at 1e-4 s for F_s > 0, {P_FULL_US_PER_STEP_FS0:.0f} for F_s 0 (/ "

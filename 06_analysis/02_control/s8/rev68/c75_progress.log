@@ -1,0 +1,37 @@
+# 2026-10-27T17:43:13 C-S8-75 pre-launch: control SHA + tree comparison
+[main] C:\workspace\outrigger_control controller 4790e2b (P-S8-27, uncommitted in main)
+  __init__.py              raw 2450f231749d481590226a2c460cdb0726e676d7bd7deb13a8358692bef2d0bd  lf 2450f231749d481590226a2c460cdb0726e676d7bd7deb13a8358692bef2d0bd
+  c2.py                    raw 8e3d5a1e7d02f99a900d8385721cfd5841a438df3d057463d4453c9576f6b62e  lf 35fee87299b6f4aede4c8dfe4867a22d36eab851362603034804b4b9d428d221
+  c8.py                    raw 064d8137c935ca11a425ae9be5729ec60c858bec049ec64df72b41c4032f5409  lf 064d8137c935ca11a425ae9be5729ec60c858bec049ec64df72b41c4032f5409
+  contact_replay.py        raw f41f628dd42a1d0f6d3d73ed312440e17e5d899402d4085453a5ea947458c1a9  lf 50b0b97cfec9d38f7fb057bb11acc6c349753fc1a942c6c1c83e00cb939dc833
+  fault_reground.py        raw b4f166a3d6e2e8920142b472fed481588b43f0d0dbdfe2bade67c27a5e7490dc  lf b4f166a3d6e2e8920142b472fed481588b43f0d0dbdfe2bade67c27a5e7490dc
+  ground_contact.py        raw 83339ea8808cb2735c32acdcb878c4b2e0211e34d4a1af6508af81823324d0cb  lf 83339ea8808cb2735c32acdcb878c4b2e0211e34d4a1af6508af81823324d0cb
+  hold.py                  raw 2b5428441b73b3856d09a4736220592fc24a86f7f436cf36ec3614203d6337c6  lf 2b5428441b73b3856d09a4736220592fc24a86f7f436cf36ec3614203d6337c6
+  protocol.py              raw 896a7966c598cff28c21040f7d1614c3009c837c88dea5751dd2f7bbd7eafa05  lf 896a7966c598cff28c21040f7d1614c3009c837c88dea5751dd2f7bbd7eafa05
+  r5_fallback_replay.py    raw bbde9db7c4a0d023f7f68e70cfa2f8c57fb326e0fce4db2640445e5e7bb324ae  lf f335da4a2f87dd09296af13a2ba26d10ef93c19b7d2b3f9fdd7c569e027d3c5d
+  standstill.py            raw c9e2722f5844052ca8e6a1ec8e7dfb7e3a8cb1f80c50dee32e15a35113afd8ab  lf c9e2722f5844052ca8e6a1ec8e7dfb7e3a8cb1f80c50dee32e15a35113afd8ab
+  target.py                raw fbffeee78e73676093a20f1e9de2b07c1adeeff2c1ca6fde5423d8533a0a5949  lf fbffeee78e73676093a20f1e9de2b07c1adeeff2c1ca6fde5423d8533a0a5949
+  two_pressure.py          raw a321435ba874b9a5631c6ff35cd367e9482aea3993074102ccd59f3ec77e8964  lf c5a9fd96aa42a924357ed6a4112de2bd9e965370ce2530981d641a70d481ee3f
+  zero_calibration.py      raw 62289c896b05560cdcb97ce351a589d8f3ec0c09a8e56dbdfd42bd7ef1eabb3e  lf 195fdf612411d07d39cfe1ded522e106af5765875eb285d9f04bfe80e35051e8
+[worktree] C:\workspace\outrigger_control\.claude\worktrees\agent-acc9eadf7f3760ab1 controller cb292e8 (P-S8-26, detached)
+  __init__.py              raw f205eb1d33b008090b8455d3ff05269f892aba3f2c35893671acf4035f024088  lf 2450f231749d481590226a2c460cdb0726e676d7bd7deb13a8358692bef2d0bd
+  c2.py                    raw 951ee91b2a42273d8ddd596b5c645ba689ed885d1f8cf3ff1329f8101038c5d4  lf cee21699fd9e2f91cfae2b12de44b711b945ea8941c51745b3f429eacac5cb99
+  c8.py                    raw d08b49870e0d22db9474b6392d343e8e7028e754e3d746a9d2889e7208357eed  lf 064d8137c935ca11a425ae9be5729ec60c858bec049ec64df72b41c4032f5409
+  contact_replay.py        raw f41f628dd42a1d0f6d3d73ed312440e17e5d899402d4085453a5ea947458c1a9  lf 50b0b97cfec9d38f7fb057bb11acc6c349753fc1a942c6c1c83e00cb939dc833
+  fault_reground.py        raw b7b44dcef8d98a38370ea08f551a53f7efc38da170f9dc1c51dce92414b71a08  lf b4f166a3d6e2e8920142b472fed481588b43f0d0dbdfe2bade67c27a5e7490dc
+  ground_contact.py        raw ea185c1b3f6368775eac4c7d0d6c39cbd797d8602f69f9fe8c48b071d857c2fb  lf 83339ea8808cb2735c32acdcb878c4b2e0211e34d4a1af6508af81823324d0cb
+  hold.py                  raw 1f54a5485022d2046329029adeb12c03e42772358aa20146bdd4cb1dcc8a28df  lf 2b5428441b73b3856d09a4736220592fc24a86f7f436cf36ec3614203d6337c6
+  protocol.py              raw 5da0b6319e4fe64272b3584aad91728a8ae8469c1fca490e64d69a257a62af34  lf 896a7966c598cff28c21040f7d1614c3009c837c88dea5751dd2f7bbd7eafa05
+  r5_fallback_replay.py    raw bbde9db7c4a0d023f7f68e70cfa2f8c57fb326e0fce4db2640445e5e7bb324ae  lf f335da4a2f87dd09296af13a2ba26d10ef93c19b7d2b3f9fdd7c569e027d3c5d
+  standstill.py            raw 8ba4736e9d0e2077abd59e167ba9ed819a27a3075ccbf47d8716dbd5cad7d426  lf c9e2722f5844052ca8e6a1ec8e7dfb7e3a8cb1f80c50dee32e15a35113afd8ab
+  target.py                raw f519f6e6ffd86f523a5a2e25ccdb36610e1dd7a4bb8f51ce381b037c8c89f6fa  lf fbffeee78e73676093a20f1e9de2b07c1adeeff2c1ca6fde5423d8533a0a5949
+  two_pressure.py          raw a321435ba874b9a5631c6ff35cd367e9482aea3993074102ccd59f3ec77e8964  lf c5a9fd96aa42a924357ed6a4112de2bd9e965370ce2530981d641a70d481ee3f
+  zero_calibration.py      raw 62289c896b05560cdcb97ce351a589d8f3ec0c09a8e56dbdfd42bd7ef1eabb3e  lf 195fdf612411d07d39cfe1ded522e106af5765875eb285d9f04bfe80e35051e8
+tree compare (EOL-normalised, 02_params 03_src 04_scripts 01_cad/09_sim_shapes 07_results/states* S6 snapshots pyproject): files 967/967, differ ['03_src/outrigger_sim/control/c2.py'], only_main [], only_wt [], non-control differ []
+# 2026-10-27T17:43:30 launched: C s9_batch PID 13216 (Normal); B 4790e2b run_S8C PID 8684 (BelowNormal, main); B cb292e8 run_S8C PID 103724 (BelowNormal, worktree); A run_S6C ps7r8 PID 111116 (BelowNormal); logs C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\f556fe97-a1cd-4d18-9af9-03853d1dd52a\scratchpad\c75
+# 2026-10-27T17:44:09 A fix: run_S6C 'run' ignores --placement (only snaps-pre) and pins cases to P (run_cases placement='pcore', OUTRIGGER_RUN_PLACEMENT unset); A case processes 66324 75716 48252 94816 re-pinned live to E mask 0xFFF0000 (~1.5 min after start). Placement does not change numerics.
+# 2026-10-27T17:56:46 A done: 07_results/S6/bundleC_ps7r8_c75_L1R_20261027_174330 (4 ok, wall 790 s)
+# 2026-10-27T17:57:53 A judged: verify_S6_c75_ps7.json (20 rows, failed 0, touch_flags []), bundle-C general 68 rows failed 0 (copy verify_S6C_c75_ps7_bundleC.json), c75_ps7_cmd_compare.json (PS7a_FL command identical to c73)
+# 2026-10-27T17:57:59 B done: 07_results/S8/c75_4790e2b_20261027_174330 (6 ok, wall 831 s), worktree 07_results/S8/c75_cb292e8_20261027_174330 (6 ok, wall 837 s) moved to main 07_results/S8/ (check runs c75chk_* too)
+# 2026-10-27T18:01:26 B judged: verify_S8C_c75_4790e2b.json (313 rows, failed 0), verify_S8C_c75_cb292e8.json (313 rows, failed 0); c75_pair_table.json (04_scripts/03_control/s8/r68_c75_pair_table.py): newly failed vs pair 0, FLAG 0, DIP_HELD RL+RR in K0V_top_rpB_Fs0 / K0_top_fdown3.2_Fs0 / K24_top_rpBop_Fs4 (last ~0.7 s of TOUCH), TOUCH length diff 0 s all, READY diff 0 except fdown3.2 +0.2 s, min force diff -0.37..0 kN, other 3 cases command bit-identical whole run. WARN/FAULT events 0 in both.
+# 2026-10-27T18:01:26 C running: 07_results/S9/batch_P3b_20261027_174330, s9_batch PID 13216, cases PID 26988 (J1_B_top_Fs4) / 48044 (J1_B_top_Fs0), P mask 0xFFFF, est 11500 s each (~20:55)

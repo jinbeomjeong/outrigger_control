@@ -1,0 +1,421 @@
+{
+ "meta": {
+  "spec": "s6_control_spec.md rev. 68 358.6 C-S8-75 bundle B",
+  "new": {
+   "controller": "4790e2b (P-S8-27)",
+   "batch": "07_results\\S8\\c75_4790e2b_20261027_174330",
+   "judge": "06_analysis\\02_control\\s8\\rev68\\verify_S8C_c75_4790e2b.json"
+  },
+  "pair": {
+   "controller": "cb292e8 (P-S8-26)",
+   "batch": "07_results\\S8\\c75_cb292e8_20261027_174330",
+   "judge": "06_analysis\\02_control\\s8\\rev68\\verify_S8C_c75_cb292e8.json"
+  },
+  "flag_rule": "min true cylinder force after crawler lift-off drop > 10 kN",
+  "touch_span": "judge phases: 'touch' start .. 'level' start (10 Hz record, clock relative to the start state); command / event times are on the r8 series (engine) clock = judge clock + t0",
+  "units": "s, kN, deg"
+ },
+ "summary": {
+  "new_judge_failed": 0,
+  "pair_judge_failed": 0,
+  "rows_new": 313,
+  "rows_pair": 313,
+  "newly_failed_total": 0,
+  "flags": [],
+  "dip_held_cases": [
+   "K0V_top_rpB_Fs0",
+   "K0_top_fdown3.2_Fs0",
+   "K24_top_rpBop_Fs4"
+  ],
+  "no_dip_but_command_differs_before_touch_end": [],
+  "touch_length_diff_s": {
+   "K0V_top_roll5.5_Fs0": 0.0,
+   "K0V_top_rpB_Fs0": 0.0,
+   "K0_top_fdown3.2_Fs0": 0.0,
+   "K0_top_roll4.4_Fs0": 0.0,
+   "K24_top_rpB_Fs4": 0.0,
+   "K24_top_rpBop_Fs4": 0.0
+  },
+  "ready_diff_s": {
+   "K0V_top_roll5.5_Fs0": 0.0,
+   "K0V_top_rpB_Fs0": 0.0,
+   "K0_top_fdown3.2_Fs0": 0.2000000000066393,
+   "K0_top_roll4.4_Fs0": 0.0,
+   "K24_top_rpB_Fs4": 0.0,
+   "K24_top_rpBop_Fs4": 0.0
+  },
+  "min_force_diff_kN": {
+   "K0V_top_roll5.5_Fs0": 0.0,
+   "K0V_top_rpB_Fs0": -0.3747571642292158,
+   "K0_top_fdown3.2_Fs0": -0.04055947221137757,
+   "K0_top_roll4.4_Fs0": 0.0,
+   "K24_top_rpB_Fs4": 0.0,
+   "K24_top_rpBop_Fs4": -0.04783513381605076
+  }
+ },
+ "cases": {
+  "K0V_top_roll5.5_Fs0": {
+   "judge_rows": {
+    "new_failed": [],
+    "newly_failed_vs_pair": [],
+    "rows_missing_in_new": [],
+    "n_rows": 47
+   },
+   "final_phase": {
+    "new": "ready",
+    "pair": "ready"
+   },
+   "touch": {
+    "new": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "pair": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "length_diff_s": 0.0
+   },
+   "ready_s": {
+    "new": 59.20000000093939,
+    "pair": 59.20000000093939,
+    "diff_s": 0.0
+   },
+   "min_cyl_after_liftoff_kN": {
+    "new": 37.51142884175803,
+    "pair": 37.51142884175803,
+    "diff": 0.0,
+    "leg_new": "RL",
+    "leg_pair": "RL"
+   },
+   "min_cyl_slow_after_liftoff_kN": {
+    "new": 51.09783847779638,
+    "pair": 51.09783847779638
+   },
+   "att_err_last5_maxabs_deg": {
+    "new": 0.015359112007061904,
+    "pair": 0.015359112007061904
+   },
+   "info_touch_dip_held": [],
+   "dip_held": false,
+   "command": {
+    "sha_new": "dfd25e2b03740373",
+    "sha_pair": "dfd25e2b03740373",
+    "identical_whole_run": true,
+    "identical_to_touch_end": true,
+    "touch_end_pair_r8_clock_s": 26.899999999950648,
+    "first_diff_r8_clock": null,
+    "r8_clock_minus_judge_clock_s": 3.0000000000019065
+   },
+   "flag_min_force_drop_gt_10kN": false
+  },
+  "K0V_top_rpB_Fs0": {
+   "judge_rows": {
+    "new_failed": [],
+    "newly_failed_vs_pair": [],
+    "rows_missing_in_new": [],
+    "n_rows": 45
+   },
+   "final_phase": {
+    "new": "ready",
+    "pair": "ready"
+   },
+   "touch": {
+    "new": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "pair": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "length_diff_s": 0.0
+   },
+   "ready_s": {
+    "new": 57.800000000892915,
+    "pair": 57.800000000892915,
+    "diff_s": 0.0
+   },
+   "min_cyl_after_liftoff_kN": {
+    "new": 35.29300520856811,
+    "pair": 35.66776237279733,
+    "diff": -0.3747571642292158,
+    "leg_new": "RL",
+    "leg_pair": "RL"
+   },
+   "min_cyl_slow_after_liftoff_kN": {
+    "new": 45.83589264393986,
+    "pair": 45.7875339518484
+   },
+   "att_err_last5_maxabs_deg": {
+    "new": 0.01577587486928341,
+    "pair": 0.015749260813132476
+   },
+   "info_touch_dip_held": [
+    "C2Event(t_s=26.19999999995228, name='INFO_TOUCH_DIP_HELD:RL')",
+    "C2Event(t_s=26.19999999995228, name='INFO_TOUCH_DIP_HELD:RR')"
+   ],
+   "dip_held": true,
+   "command": {
+    "sha_new": "50da4981ba90c285",
+    "sha_pair": "8290af57486d2b0e",
+    "identical_whole_run": false,
+    "identical_to_touch_end": false,
+    "touch_end_pair_r8_clock_s": 26.899999999950648,
+    "first_diff_r8_clock": {
+     "k": 232,
+     "t_s": 26.299999999952046,
+     "phase": "touch"
+    },
+    "r8_clock_minus_judge_clock_s": 3.0000000000019065
+   },
+   "flag_min_force_drop_gt_10kN": false
+  },
+  "K0_top_fdown3.2_Fs0": {
+   "judge_rows": {
+    "new_failed": [],
+    "newly_failed_vs_pair": [],
+    "rows_missing_in_new": [],
+    "n_rows": 61
+   },
+   "final_phase": {
+    "new": "ready",
+    "pair": "ready"
+   },
+   "touch": {
+    "new": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "pair": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "length_diff_s": 0.0
+   },
+   "ready_s": {
+    "new": 77.70000000155352,
+    "pair": 77.50000000154688,
+    "diff_s": 0.2000000000066393
+   },
+   "min_cyl_after_liftoff_kN": {
+    "new": 20.928087490015198,
+    "pair": 20.968646962226575,
+    "diff": -0.04055947221137757,
+    "leg_new": "RR",
+    "leg_pair": "RR"
+   },
+   "min_cyl_slow_after_liftoff_kN": {
+    "new": 21.407402103469327,
+    "pair": 21.40536772616498
+   },
+   "att_err_last5_maxabs_deg": {
+    "new": 0.014693558030259289,
+    "pair": 0.014677579946953444
+   },
+   "info_touch_dip_held": [
+    "C2Event(t_s=26.19999999995228, name='INFO_TOUCH_DIP_HELD:RL')",
+    "C2Event(t_s=26.19999999995228, name='INFO_TOUCH_DIP_HELD:RR')"
+   ],
+   "dip_held": true,
+   "command": {
+    "sha_new": "9e8006f61a260a64",
+    "sha_pair": "cb8b0cc8abc19698",
+    "identical_whole_run": false,
+    "identical_to_touch_end": false,
+    "touch_end_pair_r8_clock_s": 26.899999999950648,
+    "first_diff_r8_clock": {
+     "k": 232,
+     "t_s": 26.299999999952046,
+     "phase": "touch"
+    },
+    "r8_clock_minus_judge_clock_s": 3.0000000000019065
+   },
+   "flag_min_force_drop_gt_10kN": false
+  },
+  "K0_top_roll4.4_Fs0": {
+   "judge_rows": {
+    "new_failed": [],
+    "newly_failed_vs_pair": [],
+    "rows_missing_in_new": [],
+    "n_rows": 55
+   },
+   "final_phase": {
+    "new": "ready",
+    "pair": "ready"
+   },
+   "touch": {
+    "new": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "pair": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "length_diff_s": 0.0
+   },
+   "ready_s": {
+    "new": 56.7000000008564,
+    "pair": 56.7000000008564,
+    "diff_s": 0.0
+   },
+   "min_cyl_after_liftoff_kN": {
+    "new": 42.21931877254157,
+    "pair": 42.21931877254157,
+    "diff": 0.0,
+    "leg_new": "RL",
+    "leg_pair": "RL"
+   },
+   "min_cyl_slow_after_liftoff_kN": {
+    "new": 54.70440444056131,
+    "pair": 54.70440444056131
+   },
+   "att_err_last5_maxabs_deg": {
+    "new": 0.016338143318932453,
+    "pair": 0.016338143318932453
+   },
+   "info_touch_dip_held": [],
+   "dip_held": false,
+   "command": {
+    "sha_new": "bd8d01649444a23d",
+    "sha_pair": "bd8d01649444a23d",
+    "identical_whole_run": true,
+    "identical_to_touch_end": true,
+    "touch_end_pair_r8_clock_s": 26.899999999950648,
+    "first_diff_r8_clock": null,
+    "r8_clock_minus_judge_clock_s": 3.0000000000019065
+   },
+   "flag_min_force_drop_gt_10kN": false
+  },
+  "K24_top_rpB_Fs4": {
+   "judge_rows": {
+    "new_failed": [],
+    "newly_failed_vs_pair": [],
+    "rows_missing_in_new": [],
+    "n_rows": 50
+   },
+   "final_phase": {
+    "new": "ready",
+    "pair": "ready"
+   },
+   "touch": {
+    "new": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "pair": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "length_diff_s": 0.0
+   },
+   "ready_s": {
+    "new": 57.800000000892915,
+    "pair": 57.800000000892915,
+    "diff_s": 0.0
+   },
+   "min_cyl_after_liftoff_kN": {
+    "new": 41.13319112637042,
+    "pair": 41.13319112637042,
+    "diff": 0.0,
+    "leg_new": "RL",
+    "leg_pair": "RL"
+   },
+   "min_cyl_slow_after_liftoff_kN": {
+    "new": 47.91026641349594,
+    "pair": 47.91026641349594
+   },
+   "att_err_last5_maxabs_deg": {
+    "new": 0.016183137092584433,
+    "pair": 0.016183137092584433
+   },
+   "info_touch_dip_held": [],
+   "dip_held": false,
+   "command": {
+    "sha_new": "3ce65547e9dddae0",
+    "sha_pair": "3ce65547e9dddae0",
+    "identical_whole_run": true,
+    "identical_to_touch_end": true,
+    "touch_end_pair_r8_clock_s": 26.899999999950648,
+    "first_diff_r8_clock": null,
+    "r8_clock_minus_judge_clock_s": 3.0000000000019065
+   },
+   "flag_min_force_drop_gt_10kN": false
+  },
+  "K24_top_rpBop_Fs4": {
+   "judge_rows": {
+    "new_failed": [],
+    "newly_failed_vs_pair": [],
+    "rows_missing_in_new": [],
+    "n_rows": 48
+   },
+   "final_phase": {
+    "new": "ready",
+    "pair": "ready"
+   },
+   "touch": {
+    "new": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "pair": {
+     "start_s": 4.699999999993487,
+     "end_s": 23.89999999994874,
+     "length_s": 19.199999999955253
+    },
+    "length_diff_s": 0.0
+   },
+   "ready_s": {
+    "new": 56.10000000083648,
+    "pair": 56.10000000083648,
+    "diff_s": 0.0
+   },
+   "min_cyl_after_liftoff_kN": {
+    "new": 40.061078578174566,
+    "pair": 40.10891371199062,
+    "diff": -0.04783513381605076,
+    "leg_new": "RL",
+    "leg_pair": "RL"
+   },
+   "min_cyl_slow_after_liftoff_kN": {
+    "new": 49.59370795076569,
+    "pair": 49.34606043258828
+   },
+   "att_err_last5_maxabs_deg": {
+    "new": 0.01614843855144575,
+    "pair": 0.016121619969155357
+   },
+   "info_touch_dip_held": [
+    "C2Event(t_s=26.299999999952046, name='INFO_TOUCH_DIP_HELD:RL')",
+    "C2Event(t_s=26.299999999952046, name='INFO_TOUCH_DIP_HELD:RR')"
+   ],
+   "dip_held": true,
+   "command": {
+    "sha_new": "c5e66d81621e6a57",
+    "sha_pair": "c817e3c5e02f65a5",
+    "identical_whole_run": false,
+    "identical_to_touch_end": false,
+    "touch_end_pair_r8_clock_s": 26.899999999950648,
+    "first_diff_r8_clock": {
+     "k": 233,
+     "t_s": 26.399999999951813,
+     "phase": "touch"
+    },
+    "r8_clock_minus_judge_clock_s": 3.0000000000019065
+   },
+   "flag_min_force_drop_gt_10kN": false
+  }
+ }
+}

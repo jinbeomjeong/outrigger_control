@@ -2,9 +2,27 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-10-27 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **"착지 충격·대각 로킹 = 정상 물리" 전파: control 개정 64~66, D1″ LOC 조건·임시 질량, FAULT_REGROUND(G4) 구현·Chrono 확인, dynamics 개정 55**). 그 전: 255981c(무결성 정리), 3eb1220(P-S8-22 V-5 ③′ 통과·V-1~V-5 종결, 개정 63, 재생 도구 D-1~D-4, C-S8-67), 7b4de6f(S9 완료·V-3~V-5 개정 62), 0941c0c(P-S8-22 merge), 3368317(cad C-1/C-2, worktree 브랜치), e9a6ea4(S9 P3b 판정), 6791c36(사용자: paper-reviewer 추가), 27c785e(개정 61 보충 3)
+- 갱신: 2026-10-27 20:05 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 67·68: 커버리지 G1·G2·G7 스크린, C-S8-72~75 판정, P-S8-26·27(TOUCH 자유공기 상한·래치 골 허용), 판정기 U-S8-74·75, S9 J1 인수 합격**). 그 전: e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 V-5 ③′ 통과·V-1~V-5 종결, 개정 63), 7b4de6f(S9 완료·V-3~V-5 개정 62), 0941c0c(P-S8-22 merge), e9a6ea4(S9 P3b 판정), 6791c36(사용자: paper-reviewer 추가)
 - 세션 기록: 일반 Windows 터미널에서 `claude`를 직접 실행한다(2026-10-26 결정).
+
+## 남은 정리 (이 커밋 뒤, 사용자 확인 필요)
+
+- 작업 트리 정리: `.claude/worktrees/agent-acc9eadf7f3760ab1`(cb292e8 detached, 메인 파일 사본·states 미커밋 복사본 있음)와 브랜치 `worktree-agent-acc9eadf7f3760ab1`(cb292e8 P-S8-26, 4790e2b P-S8-27 — 둘 다 이 커밋에 반영됨) → 사용자 확인 받고 `git worktree remove --force` + `git branch -D`.
+- 점검용 결과 폴더(`07_results`, git 제외) `c72smoke_*`·`c75chk_*`·`bundleC_ps7r8_check_*` 정리 여부 확인.
+- control 확인 항목(python-expert 린트 지적, 결과 영향 없음): `04_scripts/03_control/s8/r68_p27_screen.py` `oscillation()`이 진폭 `half_pp_per_2s_kN`을 추세 제거 신호가 아니라 원 신호로 잰다(쓰지 않던 추세 제거 변수는 지움). 의도 확인. `r68_c75c_j1_judge.py` 빈 창 경계 조건 3곳(이번 데이터 무관).
+
+## 이번 커밋에서 바뀐 것 (e8ef7df 이후)
+
+1. **C-S8-75 C(S9 J1) 합격**(명세 358.8): `07_results/S9/batch_P3b_20261027_174330`(`P3b_J1_B_top_Fs0`·`Fs4`, rc 0 ×2, 19:39·19:41 끝, 벽시계 6,983 / 7,061 s). P3 판정 행 전부 통과(P3-4 0.0558° / 0.0423°, P3-3 68.06 / 68.17 kN), FLAG 0, CAPPED·DIP_HELD 0회, 10 Hz 지령이 10-26 배치와 비트 동일. A·B·C 합격 → P-S8-27 인수 완료. 판정 `04_scripts/03_control/s8/r68_c75c_j1_judge.py`, 결과 `06_analysis/02_control/s8/rev68/c75c_j1_judgement.json`·`c75c_j1_baseline_20261026.json`. CLAUDE.md 제어기 행 갱신(개정 30~68). 2차 무결성 점검 Medium 2·Low 5 모두 고침, python-expert 린트(쓰지 않는 import·변수 제거, 판정 출력 비트 동일).
+2. **이전 미커밋 작업**: 명세 개정 67(341~347, G1·G2·G7 스크린, U-S8-73)·68(348~358: C-S8-72·73·74·75 판정, U-S8-74~77). 제어기 `c2.py` P-S8-26(`touch_free_air_cap_excess_N` (8000,8000,6666.4,6666.4), `INFO_TOUCH_FREE_AIR_CAPPED`)·P-S8-27(`touch_hold_dip_samples` 2, `INFO_TOUCH_DIP_HELD`, R8 프리셋만). 판정기 `verify/s8_control.py` G1 행·U-S8-74(0.5 s 평균 + 부상 없음)·U-S8-75 (나) 예외(F_s < 2 kN·상단·전방 빠른 사건, ≤ 0.1 s·≤ 0.5 mm), `s6_control.py` PS-7 판정, `s6_bundle_c.py` 사전 접지 스냅숏 허용. 실행기 `run_S8C.py`(집합 g1·c74·c75, `e6` 레이아웃, 메타 키), `run_S6C.py`(ps7r8, `--tag`, 메타 키), `s6_stage2.py`(사전 접지 스냅숏). 시험 `test_c_s8_72.py`·`test_s8_u74.py`·`test_s8_u75.py`·`test_c2_r8d1.py`·`test_s8_c_s8_68.py`(unit 약 2640 통과). 분석 `04_scripts/03_control/s8/r67_*`·`r68_*`, 결과 `06_analysis/02_control/s8/rev67/`·`rev68/`, 새 스냅숏 `07_results/states_L1R/S6_crawler_top_flat_FLpre.npz`. Chrono 결과 폴더: S8 `c72_20261027_155426`·`c74_20261027_164128`·`c75_4790e2b_…174330`·`c75_cb292e8_…174330`, S6 `bundleC_ps7r8_L1R_20261027_160512`·`bundleC_ps7r8_c73_L1R_20261027_161914`·`bundleC_ps7r8_c75_L1R_20261027_174330`, 점검용 `c72smoke_*`·`c75chk_*`·`bundleC_ps7r8_check_*`(커밋 전 정리 여부 확인). 1차 무결성 점검(18:10) Medium 3·Low 4는 색인 재생성 외 모두 고침.
+3. **다음 단계 5번 묶음 정리**:
+   - `00_docs/01_dynamics/dynamics_model.md` 5.38.4: 재레벨 계기를 "0.03° 데드밴드" → READY 재레벨 문턱 **0.07°**(`relevel_attitude_rad`, `c2.py:557`, control 311절)로 정정(정정 주석 포함).
+   - `00_docs/05_sensors/imu_cabin_and_accuracy_review.md`: 머리말 보충 + **10.6절**(연약 지면 IMU 선정 ≤ 0.119°; 바뀐 센서는 ACS-080 △→× 하나, 최소 여유 TMM88D 0.047°).
+   - `04_scripts/02_chrono/run_S9.py` `P3B_US_PER_STEP_UPPER` G1·S1 4500 → **5500 µs**(4병렬 실측 5.10·4.98, 사례 최대 5.3 ms), J1·J2 9000 유지(사용자 결정 2026-10-27 (가): B·상단 평균 기준, 사례 최대 11.2 ms는 덮지 않음), docstring 출처 갱신, `P3B_EST_S` G1·S1 5800 → 7000 s. `05_tests/unit/test_s9_p3b_records.py` 기대값 2줄(22 통과, python).
+   - 로드맵 6절 1번에 위 셋 완료 표시(U-S8-57·DONE 꼬리 감시는 그대로 남김), decision_log에 J1·J2 9000 유지 결정 한 줄.
+   - 전역 `~/.claude/settings.json`에 permissions allow(기본 도구·로컬 MCP 9개)·deny(force push·reset --hard·clean -f·루트 삭제·settings 자기 수정) 추가(사용자 2026-10-27, 저장소 밖). 클라우드 커넥터는 allow에 넣지 않음.
+4. **주요 판정 결과(개정 68)**: C-S8-72 실패 9 → U-S8-74 판정 4 → U-S8-75 (나) 예외 0(FLAG 2). C-S8-74(F_s 2·4) 1,008행 실패 0. C-S8-73 TOUCH FLAG 3 → 1. C-S8-75 A(PS-7) 합격(RR 추가 행정 8.9~15.7 mm, FLAG 0), B(경사 짝) 합격(313행 × 2 실패 0, 최소 힘 차 ≤ 0.37 kN).
 
 ## 현재 위치
 
@@ -14,7 +32,7 @@
 
 - **다리 부상·대각 커버리지 감사**(2026-10-27, control): R8 C2에서 네 다리 모두 Chrono 판정을 거친 것은 "READY 뒤 침하·낙하"뿐. 공백 G1(레벨링 중 사건)·G2(R8 PS-7a)·G3(앞 다리 사건 + 로드 고장)·G5~G8은 미착수(아래 다음 단계). G4(헤드 고장 + 뜬 다리)는 이번 커밋에서 닫음.
 
-## 이번 커밋에서 바뀐 것
+## e8ef7df에서 바뀐 것
 
 - **전제 전파 감사**("착지 충격·대각 로킹은 정상 물리", control): 관측된 경로(D1″·로드 계단·RT·판정기)는 반영돼 있었고, 구조적 공백 4건을 찾음. 사용자 결정 U-S8-68~72(decision_log 5절):
   - U-S8-68 G4 = (가) 헤드 고장 때 뜬 다리만 재접지 → 잠금 → FAULT(**FAULT_REGROUND**). U-S8-69 첫 READY 전 D1″ 임시 질량 = YAML 명목. U-S8-70 D1″ 적용 조건 = LOC 확정 + 크롤러 재접촉 의심 보류. U-S8-71 범위(감사 (b) 1~4·6·7 지금, 5 밸브 불감대·8 착지 피크·9 유연 마스트는 U-R8-9·D2 때). U-S8-72 G4-4 = 0.5 s 이동 평균 최소 ≥ F_min + 순간 최소 > 0.
@@ -50,13 +68,13 @@
 
 ## 다음 단계
 
-A. ✅ (이번 커밋) G4 FAULT_REGROUND 닫음(명세 개정 64~66, U-S8-68~72). 남은 감사 후속(U-S8-71 범위): **S9 재접촉 합성 사례**(명세 322.2 확인, control), 커버리지 공백 G1(레벨링 중 사건, 네 다리)·G2(R8 PS-7a·FL 미러·PS-7b·c)·G3(앞 다리 사건 + 그 다리 로드 고장)·G5(앞 다리 빠른 침하 × 높은 F_s)·G6(SCM 한 패드 연약부)·G7(RL·FL 전용 사례)·G8(비평면 시작) — control 감사 권고는 축소 스크린 약 200건 → Chrono 보강 배치(L2b 11 + L1-R 4~6, 약 45~60분). 뒤로 미룬 것: 밸브 불감대 잠김 판정(U-R8-9 ③④ 뒤), 착지 피크 물리 판정(hydraulics), 유연 마스트(D2 때).
+A. ✅ (e8ef7df) G4 FAULT_REGROUND 닫음(명세 개정 64~66, U-S8-68~72). ✅ (이번 커밋) G1·G2·G7 스크린·Chrono 보강(개정 67·68, C-S8-72~75, P-S8-26·27). 남은 감사 후속(U-S8-71 범위): G3·G5(중간 $F_s$)·G6·G8(조기 접지 포함), 크롤러 재접촉 합성 사례(322.2, 나중 — 자세 제어 우선). 아래는 e8ef7df 당시 목록: **S9 재접촉 합성 사례**(명세 322.2 확인, control), 커버리지 공백 G1(레벨링 중 사건, 네 다리)·G2(R8 PS-7a·FL 미러·PS-7b·c)·G3(앞 다리 사건 + 그 다리 로드 고장)·G5(앞 다리 빠른 침하 × 높은 F_s)·G6(SCM 한 패드 연약부)·G7(RL·FL 전용 사례)·G8(비평면 시작) — control 감사 권고는 축소 스크린 약 200건 → Chrono 보강 배치(L2b 11 + L1-R 4~6, 약 45~60분). 뒤로 미룬 것: 밸브 불감대 잠김 판정(U-R8-9 ③④ 뒤), 착지 피크 물리 판정(hydraulics), 유연 마스트(D2 때).
 0. ✅ (3eb1220) 아래 1·2 끝: C-S8-67 실행(`07_results/S8/v5_c67_20261027_032104`, rc 0 ×2) → control V-5 ③′ 통과(명세 개정 63 318~319절, `06_analysis/02_control/s9/v5/v5_c67_judgement.json`, 판정 스크립트 `04_scripts/03_control/s8/v5_c67_judge.py`): RR R-5 t_G4+0.7/+0.6 s(짝 +0.9/+0.7), INFO:RR 14/8, 낙관 −4.00/−3.05 kN, 놓친 발동 0 → **P-S8-22 V-1~V-5 종결**. 재생 도구 D-1~D-4 해결(python, 시험 함수 14개 추가, unit 2483 통과). 3(worktree·브랜치 정리)도 끝났다.
 1. ✅ **C-S8-67(cad, 명세 317.1)**: `run_S8C.py`에 `G4RRF` 사건(로드 고장 다리 RR, 나머지 G4RF와 같음)·집합 `mlj_c67` 정의 → `run_S8C.py run --only MLJ_K0V_fdown3.5_G4RRF_Fs0 MLJ_K0V_fdown3.5_G4RRF_Fs8 --tag v5_c67 --approved --workers p7`(사용자 결정 U-S8-67 (나)로 승인, P코어, 동시 2 이하, 건당 약 6~7분). 기존 mlj·mlj_c29 해시 불변 확인. → control V-5 ③′ 판정(317.1 기준 4개).
 2. ✅ **python D-1~D-4**(`03_src/outrigger_sim/control/r5_fallback_replay.py`, `contact_replay.py`): C-1 meta 키 TypeError, C-2 `pads_seal_fields` 미사용, S8 엔진 None, `nominal_gap` 기록 관문. 고친 뒤 V-4 기록 4건이 우회 없이 `judgement_passed` True.
 3. ✅ worktree·브랜치 정리(2026-10-27). 이어진 무결성 점검 정리 커밋: 로드맵 6절·README S9 실행기·`chrono_build_plan.md` 머리말·`soil_restore_check.py` 경로(main 기준)·S9 스크립트 docstring "project root"·19_S9 요약 JSON 6개 `folder_note`.
 4. hydraulics H-61-1 후속, 실기 κ_hi 상태식 P-S8-22b는 U-R8-9 ④ 확인 뒤.
-5. R8 C2 PS-7a 판정(S9 뒤), U-S8-57·DONE 꼬리 감시, IMU 선정에 0.119° 반영, `run_S9.py` `P3B_US_PER_STEP_UPPER` 갱신 검토(경합 상한 G1·S1 4500 µs가 P3b 4병렬 실측 128 s 평균 G1 5.10·S1 4.98 ms/스텝보다 작다; J1·J2 9000 µs는 실측 8.69·8.48 이상), 재레벨 문턱 문서 불일치(control 311절 0.07° vs dynamics 5.38.4 0.03°) 정리.
+5. U-S8-57·DONE 꼬리 감시(남음). ✅ (이번 커밋) R8 C2 PS-7a 판정(C-S8-72·73·75 A), IMU 선정에 0.119° 반영(10.6절), `P3B_US_PER_STEP_UPPER` G1·S1 5500 µs(J1·J2 9000 유지), 재레벨 문턱 문서 정리(dynamics 5.38.4 → 0.07°).
 
 ## 논문·포스터 (커밋 안 함)
 

@@ -1,0 +1,1839 @@
+{
+ "rule": "spec rev. 68 358.6 bundle C: all P3 judgement rows of spec 284 (rev. 60 corrected) pass; records/FLAGs do not fail; reference batch is comparison only",
+ "generator": "04_scripts/03_control/s8/r68_c75c_j1_judge.py",
+ "batch_status": {
+  "batch": "07_results/S9/batch_P3b_20261026_122444",
+  "progress_log": true,
+  "finished_marker": false,
+  "end": {
+   "P3b_J1_B_top_Fs0": true,
+   "P3b_J1_B_top_Fs4": true
+  },
+  "end_lines": [
+   "END P3b_J1_B_top_Fs0 2026-10-26T15:27:16 rc=0 wall_s=10952",
+   "END P3b_J1_B_top_Fs4 2026-10-26T15:30:06 rc=0 wall_s=11122",
+   "END P3b_J1_B_middle_Fs4 2026-10-26T15:30:26 rc=0 wall_s=11142",
+   "END P3b_J1_B_bottom_Fs4 2026-10-26T15:30:36 rc=0 wall_s=11152",
+   "END P3b_J1_A_middle_Fs4 2026-10-26T16:21:19 rc=0 wall_s=14195",
+   "END P3b_J1_A_top_Fs4 2026-10-26T16:21:23 rc=0 wall_s=14199",
+   "END P3b_J1_A_bottom_Fs4 2026-10-26T16:22:39 rc=0 wall_s=14275",
+   "END P3b_G1_B_middle_Fs4 2026-10-26T17:19:19 rc=0 wall_s=6523",
+   "END P3b_G1_B_top_Fs4 2026-10-26T17:19:23 rc=0 wall_s=6537",
+   "END P3b_J1_B_top_Fs8 2026-10-26T18:27:48 rc=0 wall_s=10832",
+   "END P3b_J2_B_top_Fs4 2026-10-26T18:31:06 rc=0 wall_s=10860",
+   "END P3b_G1_B_top_Fs0 2026-10-26T19:05:49 rc=0 wall_s=6385",
+   "END P3b_G1_B_bottom_Fs4 2026-10-26T19:08:15 rc=0 wall_s=6535",
+   "END N_RE1c_Fs8_combined 2026-10-26T19:19:35 rc=0 wall_s=680 s8c_check=ok C:\\workspace\\outrigger_control\\07_results\\S8\\p3b_N_RE1c_Fs8_combined_20261026_190815",
+   "END N_RE1c_Fs0_combined 2026-10-26T19:29:09 rc=0 wall_s=574 s8c_check=ok C:\\workspace\\outrigger_control\\07_results\\S8\\p3b_N_RE1c_Fs0_combined_20261026_191935",
+   "END P3b_J1_A_top_Fs0 2026-10-26T20:10:37 rc=0 wall_s=13758",
+   "END P3b_J1_A_top_Fs8 2026-10-26T20:12:57 rc=0 wall_s=13895",
+   "END P3b_G1_B_top_Fs8 2026-10-26T20:15:45 rc=0 wall_s=6477",
+   "END P3b_J2_A_top_Fs4 2026-10-26T20:16:53 rc=0 wall_s=14055"
+  ],
+  "files": {
+   "P3b_J1_B_top_Fs0": {
+    "result.json": true,
+    "step_series.npz": true,
+    "record/record.npz": true,
+    "controller_commands.npz": true
+   },
+   "P3b_J1_B_top_Fs4": {
+    "result.json": true,
+    "step_series.npz": true,
+    "record/record.npz": true,
+    "controller_commands.npz": true
+   }
+  },
+  "complete": false
+ },
+ "reference_status": {
+  "batch": "C:/workspace/outrigger_control/07_results/S9/batch_P3b_20261026_122444",
+  "progress_log": true,
+  "finished_marker": false,
+  "end": {
+   "P3b_J1_B_top_Fs0": true,
+   "P3b_J1_B_top_Fs4": true
+  },
+  "end_lines": [
+   "END P3b_J1_B_top_Fs0 2026-10-26T15:27:16 rc=0 wall_s=10952",
+   "END P3b_J1_B_top_Fs4 2026-10-26T15:30:06 rc=0 wall_s=11122",
+   "END P3b_J1_B_middle_Fs4 2026-10-26T15:30:26 rc=0 wall_s=11142",
+   "END P3b_J1_B_bottom_Fs4 2026-10-26T15:30:36 rc=0 wall_s=11152",
+   "END P3b_J1_A_middle_Fs4 2026-10-26T16:21:19 rc=0 wall_s=14195",
+   "END P3b_J1_A_top_Fs4 2026-10-26T16:21:23 rc=0 wall_s=14199",
+   "END P3b_J1_A_bottom_Fs4 2026-10-26T16:22:39 rc=0 wall_s=14275",
+   "END P3b_G1_B_middle_Fs4 2026-10-26T17:19:19 rc=0 wall_s=6523",
+   "END P3b_G1_B_top_Fs4 2026-10-26T17:19:23 rc=0 wall_s=6537",
+   "END P3b_J1_B_top_Fs8 2026-10-26T18:27:48 rc=0 wall_s=10832",
+   "END P3b_J2_B_top_Fs4 2026-10-26T18:31:06 rc=0 wall_s=10860",
+   "END P3b_G1_B_top_Fs0 2026-10-26T19:05:49 rc=0 wall_s=6385",
+   "END P3b_G1_B_bottom_Fs4 2026-10-26T19:08:15 rc=0 wall_s=6535",
+   "END N_RE1c_Fs8_combined 2026-10-26T19:19:35 rc=0 wall_s=680 s8c_check=ok C:\\workspace\\outrigger_control\\07_results\\S8\\p3b_N_RE1c_Fs8_combined_20261026_190815",
+   "END N_RE1c_Fs0_combined 2026-10-26T19:29:09 rc=0 wall_s=574 s8c_check=ok C:\\workspace\\outrigger_control\\07_results\\S8\\p3b_N_RE1c_Fs0_combined_20261026_191935",
+   "END P3b_J1_A_top_Fs0 2026-10-26T20:10:37 rc=0 wall_s=13758",
+   "END P3b_J1_A_top_Fs8 2026-10-26T20:12:57 rc=0 wall_s=13895",
+   "END P3b_G1_B_top_Fs8 2026-10-26T20:15:45 rc=0 wall_s=6477",
+   "END P3b_J2_A_top_Fs4 2026-10-26T20:16:53 rc=0 wall_s=14055"
+  ],
+  "files": {
+   "P3b_J1_B_top_Fs0": {
+    "result.json": true,
+    "step_series.npz": true,
+    "record/record.npz": true,
+    "controller_commands.npz": true
+   },
+   "P3b_J1_B_top_Fs4": {
+    "result.json": true,
+    "step_series.npz": true,
+    "record/record.npz": true,
+    "controller_commands.npz": true
+   }
+  },
+  "complete": false
+ },
+ "params_file_sha256": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce",
+ "v_max_m_s": 0.0209243016,
+ "cases": {
+  "P3b_J1_B_top_Fs0": {
+   "new": {
+    "case": "P3b_J1_B_top_Fs0",
+    "verdict": "pass",
+    "rows": {
+     "P3-1": {
+      "criterion": "SCM crawler normal = 0 N over READY .. READY + 10 s; no recontact (>= 0.01 W) after the first departure",
+      "kind": "judged",
+      "value": {
+       "crawler_max_N": 0.0,
+       "recontact_t_s": null,
+       "window_complete": true
+      },
+      "pass": true
+     },
+     "P3-2": {
+      "criterion": "LOC before the first DONE; crawler < 0.01 W at the LOC; 0 <= t_LOC - t_D <= T_lim = 10 mm / (0.25 v_max) + 1.0 s = 2.91165 s (rev. 60, U-S9P-13)",
+      "kind": "judged",
+      "value": {
+       "loc_minus_departure_s": 2.473000000082095,
+       "T_lim_s": 2.91165281234524,
+       "within_2s_record": false
+      },
+      "pass": true
+     },
+     "P3-3": {
+      "criterion": "true F_cyl min after the departure >= F_min 9.415 kN (all legs)",
+      "kind": "judged",
+      "value": {
+       "min_N": 68060.69561165044
+      },
+      "pass": true
+     },
+     "P3-4": {
+      "criterion": "max |roll|, |pitch| (true, absolute) <= 0.2 deg on [max(two-sided creep stop, last READY entry), end], window >= 5 s (main judgement)",
+      "kind": "judged",
+      "value": {
+       "absmax_deg": 0.05576780920228304,
+       "window_s": [
+        79.23800000150689,
+        128.00000000312562
+       ],
+       "flags": []
+      },
+      "pass": true
+     },
+     "P3-5": {
+      "criterion": "rut clearance min from the first READY to the end >= 25 mm (ASSUMPTION U-S9-C3), s_motor <= 0.6848 m (rev. 60, U-S9P-14)",
+      "kind": "judged",
+      "value": {
+       "rut_min_m": 0.03715803401434803,
+       "s_motor_max_m": 0.47334012319522883
+      },
+      "pass": true
+     },
+     "P3-8": {
+      "criterion": "0 re-approach starts / relevel_predicted (P5) / probe_aborted_low_load before the LOC",
+      "kind": "judged",
+      "value": {
+       "leg_reapproach_start": 0,
+       "relevel_predicted": 0,
+       "probe_aborted_low_load": 0
+      },
+      "pass": true
+     },
+     "P3-6": {
+      "criterion": "READY <= 90 s after the loop start (ASSUMPTION, record)",
+      "kind": "record",
+      "value": 69.40000000145118,
+      "within": true
+     },
+     "P3-7": {
+      "criterion": "S-1 rise >= 4 kN on windows with end crawler > 0.01 W_ref (record, rev. 60)",
+      "kind": "record",
+      "value": 7310.996529634114,
+      "within": true,
+      "reconstruct_ok": true
+     },
+     "P3-9": {
+      "criterion": "RT deferral windows, FLAG when the deferred leg < F_min (record)",
+      "kind": "record",
+      "value": 0,
+      "flags": 0
+     },
+     "J1-③ pre-lift-off dip": {
+      "criterion": "min F_cyl after first > 1.4 F_min up to the departure; < F_min = FLAG",
+      "kind": "record",
+      "value": {
+       "FL": 13867.601369774166,
+       "FR": 13376.982349418933,
+       "RL": 15003.329979251226,
+       "RR": 14824.065014451735
+      },
+      "flag": false
+     },
+     "reapproach 10 s limit": {
+      "criterion": "firing = FLAG (record)",
+      "kind": "record",
+      "value": 0
+     },
+     "W-61": {
+      "criterion": "warnings (record)",
+      "kind": "record",
+      "value": 0
+     }
+    },
+    "flags_records": [],
+    "path1": {
+     "source": "result_rejudge_rev60.json",
+     "params_file_match": true,
+     "unchanged_blocks_equal_vs_result_json": true,
+     "unchanged_block_diffs": [],
+     "path1_recompute_equal": true,
+     "path1_recompute_diff_blocks": []
+    },
+    "path_compare": {
+     "values": {
+      "t_departure_s": {
+       "p1": 37.527000000122236,
+       "p2": 37.527000000122236,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-1_crawler_max_N": {
+       "p1": 0.0,
+       "p2": 0.0,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-2_loc_minus_departure_s": {
+       "p1": 2.473000000082095,
+       "p2": 2.473000000082095,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-2_T_lim_s": {
+       "p1": 2.91165281234524,
+       "p2": 2.91165281234524,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-3_min_N": {
+       "p1": 68060.69561165044,
+       "p2": 68060.69561165044,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-4_absmax_deg": {
+       "p1": 0.05576780920228304,
+       "p2": 0.05576780920228304,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-4_creep_two_sided_s": {
+       "p1": 79.23800000150689,
+       "p2": 79.23800000150689,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-5_rut_min_after_first_ready_m": {
+       "p1": 0.03715803401434803,
+       "p2": 0.03715803401434803,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-7_rise_min_loaded_N": {
+       "p1": 7310.996529634114,
+       "p2": 7310.99651810689,
+       "abs_diff": 1.1527224160090555e-05,
+       "ok": true
+      }
+     },
+     "values_all_ok": true,
+     "verdict_p1": {
+      "P3-1": true,
+      "P3-2": true,
+      "P3-3": true,
+      "P3-4": true,
+      "P3-5": true,
+      "P3-8": true
+     },
+     "verdict_p2": {
+      "P3-1": true,
+      "P3-2": true,
+      "P3-3": true,
+      "P3-4": true,
+      "P3-5": true,
+      "P3-8": true
+     },
+     "verdicts_equal": true
+    },
+    "path2": {
+     "t_departure_s": 37.527000000122236,
+     "P3-1": {
+      "window_complete": true,
+      "crawler_max_N": 0.0,
+      "recontact_t_s": null,
+      "pass": true
+     },
+     "P3-2": {
+      "t_loc_s": 40.00000000020433,
+      "T_lim_s": 2.91165281234524,
+      "loc_minus_departure_s": 2.473000000082095,
+      "crawler_at_loc_N": 0.0,
+      "loc_before_first_done": true,
+      "pass": true
+     },
+     "P3-3": {
+      "F_min_after_N": [
+       114837.25819082058,
+       112201.76819551116,
+       69273.68268558853,
+       68060.69561165044
+      ],
+      "min_N": 68060.69561165044,
+      "min_leg": "RR",
+      "min_over_F_min": 7.229279453030791,
+      "pass": true
+     },
+     "P3-4": {
+      "t_creep_two_sided_s": 79.23800000150689,
+      "window_s": [
+       79.23800000150689,
+       128.00000000312562
+      ],
+      "window_length_s": 48.76200000161873,
+      "absmax_deg": 0.05576780920228304,
+      "absmax_roll_pitch_deg": [
+       0.05576780920228304,
+       0.032350904412443315
+      ],
+      "end_1s_mean_roll_pitch_deg": [
+       0.055477109390151304,
+       -0.03214959569759019
+      ],
+      "pass": true
+     },
+     "P3-5": {
+      "rut_min_after_first_ready_m": 0.03715803401434803,
+      "t_at_min_s": 77.60000000145251,
+      "s_motor_max_m": 0.47334012319522883,
+      "s_motor_limit_m": 0.6848,
+      "pass": true
+     },
+     "P3-8": {
+      "events_before_loc": [],
+      "pass": true
+     },
+     "P3-6": {
+      "ready_after_loop_start_s": 69.40000000145118,
+      "within_90s_record": true
+     },
+     "P3-7": {
+      "reconstruct_ok": true,
+      "t_P_rec_s": 38.400000000151216,
+      "t_loc_rec_s": 40.00000000020433,
+      "n_windows": 76,
+      "n_loaded_windows": 51,
+      "rise_min_loaded_N": 7310.99651810689,
+      "within_record": true
+     }
+    },
+    "observations": {
+     "controller_identity": {
+      "touch_free_air_cap_excess_N": null,
+      "touch_hold_dip_samples": null,
+      "is_P_S8_26": false,
+      "is_P_S8_27": false,
+      "touch_hold_s": 0.5
+     },
+     "INFO_TOUCH_FREE_AIR_CAPPED": [],
+     "INFO_TOUCH_DIP_HELD": [],
+     "touch_span_s": [
+      12.799999999983507,
+      31.599999999939694
+     ],
+     "touch_length_s": 18.799999999956185,
+     "touch_final_zero_command_start_rel_s": {
+      "FL": 18.399999999957117,
+      "FR": 18.499999999956884,
+      "RL": 18.499999999956884,
+      "RR": 18.499999999956884
+     },
+     "touch_stroke_gain_mm": {
+      "FL": 345.86749251886573,
+      "FR": 346.45650800559514,
+      "RL": 341.4765616328146,
+      "RR": 341.502268786401
+     },
+     "touch_absmax_roll_pitch_deg": [
+      0.007916364723862847,
+      0.06456394571016022
+     ],
+     "pad_first_contact_t_s": {
+      "FL": 30.917999999941284,
+      "FR": 30.91899999994128,
+      "RL": 30.959999999941186,
+      "RR": 30.959999999941186
+     },
+     "ready_entries_s": [
+      77.40000000144587
+     ],
+     "ready_first_after_loop_start_s": 69.40000000145118,
+     "n_done": 2,
+     "n_probe": 2,
+     "end_phase": "ready",
+     "ready_at_end": true,
+     "phases": [
+      [
+       8.099999999994461,
+       "check"
+      ],
+      [
+       12.799999999983507,
+       "touch"
+      ],
+      [
+       31.599999999939694,
+       "level"
+      ],
+      [
+       51.70000000059273,
+       "done"
+      ],
+      [
+       51.80000000059605,
+       "probe"
+      ],
+      [
+       55.70000000072552,
+       "level"
+      ],
+      [
+       65.40000000104752,
+       "done"
+      ],
+      [
+       65.50000000105084,
+       "probe"
+      ],
+      [
+       77.40000000144587,
+       "ready"
+      ]
+     ],
+     "end_attitude": {
+      "p34_absmax_deg": 0.05576780920228304,
+      "end_mean_roll_pitch_deg": [
+       0.055477109390151304,
+       -0.03214959569759019
+      ],
+      "within_deadband_0p03_record": false,
+      "budget_residual_le_0p04_record": false,
+      "sensor_allowance_left_deg": 0.12423219079771698,
+      "post_liftoff_absmax_deg": [
+       0.30992397677006156,
+       0.20556749334107735
+      ]
+     },
+     "F_min_after_departure_N": [
+      114837.25819082058,
+      112201.76819551116,
+      69273.68268558853,
+      68060.69561165044
+     ],
+     "F_min_after_departure_min_N": 68060.69561165044,
+     "F_min_transient_min_N": 69614.72166853864,
+     "F_min_late_min_N": 68060.69561165044,
+     "pre_liftoff_min_N": {
+      "FL": 13867.601369774166,
+      "FR": 13376.982349418933,
+      "RL": 15003.329979251226,
+      "RR": 14824.065014451735
+     },
+     "pre_liftoff_flag": false,
+     "t_departure_s": 37.527000000122236,
+     "t_loc_s": 40.00000000020433,
+     "loc_minus_departure_s": 2.473000000082095,
+     "soil_mode_start_s": 33.299999999981914,
+     "bias_corner_mm": [
+      61.853103214108756,
+      62.73400927103601,
+      39.987107130131456,
+      40.868013187058935
+     ],
+     "P3-7_rise_min_loaded_N": 7310.996529634114,
+     "rut_min_after_first_ready_m": 0.03715803401434803,
+     "s_motor_max_m": 0.47334012319522883,
+     "probe_sinkage_mm": [
+      [
+       0.114,
+       4.547,
+       0.38,
+       2.899
+      ],
+      [
+       0.208,
+       1.928,
+       4.787,
+       6.393
+      ]
+     ],
+     "warn_fault_events": [],
+     "event_kinds": [
+      "INFO_CLEARANCE_BIAS",
+      "INFO_PRESSURE_ZERO_CALIBRATED",
+      "crawler_liftoff_confirmed",
+      "floor_estimate_touch",
+      "ready_heave_tail",
+      "reanchor_skipped",
+      "soil_mode_start"
+     ],
+     "W61_warnings": 0,
+     "reapproach_limit_fired": 0,
+     "P3-9_windows": 0,
+     "wall_s": 10949.6126468,
+     "us_per_step": 8554.3848803125
+    },
+    "inputs_sha256": {
+     "result.json": "19efe8cb1984ab1ed7f2f739f69862fd19eedf783604fb08dd4f50e676d64404",
+     "step_series.npz": "d0dead978df190562d8552c5a9e0c03822bafa1c759ad9403e4fb57651bfecc0",
+     "record/record.npz": "68d7e87bada7adfa45edd6c25ea9ecf868e3f31c55bf9934ee1b3b995685fd4c",
+     "controller_commands.npz": "51db7a3ba407e71c733903791bc35094e7508c36b8c0d7ce42e4a4f4bc24a54f"
+    }
+   },
+   "reference": {
+    "case": "P3b_J1_B_top_Fs0",
+    "verdict": "pass",
+    "rows": {
+     "P3-1": {
+      "criterion": "SCM crawler normal = 0 N over READY .. READY + 10 s; no recontact (>= 0.01 W) after the first departure",
+      "kind": "judged",
+      "value": {
+       "crawler_max_N": 0.0,
+       "recontact_t_s": null,
+       "window_complete": true
+      },
+      "pass": true
+     },
+     "P3-2": {
+      "criterion": "LOC before the first DONE; crawler < 0.01 W at the LOC; 0 <= t_LOC - t_D <= T_lim = 10 mm / (0.25 v_max) + 1.0 s = 2.91165 s (rev. 60, U-S9P-13)",
+      "kind": "judged",
+      "value": {
+       "loc_minus_departure_s": 2.473000000082095,
+       "T_lim_s": 2.91165281234524,
+       "within_2s_record": false
+      },
+      "pass": true
+     },
+     "P3-3": {
+      "criterion": "true F_cyl min after the departure >= F_min 9.415 kN (all legs)",
+      "kind": "judged",
+      "value": {
+       "min_N": 68060.69561165044
+      },
+      "pass": true
+     },
+     "P3-4": {
+      "criterion": "max |roll|, |pitch| (true, absolute) <= 0.2 deg on [max(two-sided creep stop, last READY entry), end], window >= 5 s (main judgement)",
+      "kind": "judged",
+      "value": {
+       "absmax_deg": 0.05576780920228304,
+       "window_s": [
+        79.23800000150689,
+        128.00000000312562
+       ],
+       "flags": []
+      },
+      "pass": true
+     },
+     "P3-5": {
+      "criterion": "rut clearance min from the first READY to the end >= 25 mm (ASSUMPTION U-S9-C3), s_motor <= 0.6848 m (rev. 60, U-S9P-14)",
+      "kind": "judged",
+      "value": {
+       "rut_min_m": 0.03715803401434803,
+       "s_motor_max_m": 0.47334012319522883
+      },
+      "pass": true
+     },
+     "P3-8": {
+      "criterion": "0 re-approach starts / relevel_predicted (P5) / probe_aborted_low_load before the LOC",
+      "kind": "judged",
+      "value": {
+       "leg_reapproach_start": 0,
+       "relevel_predicted": 0,
+       "probe_aborted_low_load": 0
+      },
+      "pass": true
+     },
+     "P3-6": {
+      "criterion": "READY <= 90 s after the loop start (ASSUMPTION, record)",
+      "kind": "record",
+      "value": 69.40000000145118,
+      "within": true
+     },
+     "P3-7": {
+      "criterion": "S-1 rise >= 4 kN on windows with end crawler > 0.01 W_ref (record, rev. 60)",
+      "kind": "record",
+      "value": 7310.996529634114,
+      "within": true,
+      "reconstruct_ok": true
+     },
+     "P3-9": {
+      "criterion": "RT deferral windows, FLAG when the deferred leg < F_min (record)",
+      "kind": "record",
+      "value": 0,
+      "flags": 0
+     },
+     "J1-③ pre-lift-off dip": {
+      "criterion": "min F_cyl after first > 1.4 F_min up to the departure; < F_min = FLAG",
+      "kind": "record",
+      "value": {
+       "FL": 13867.601369774166,
+       "FR": 13376.982349418933,
+       "RL": 15003.329979251226,
+       "RR": 14824.065014451735
+      },
+      "flag": false
+     },
+     "reapproach 10 s limit": {
+      "criterion": "firing = FLAG (record)",
+      "kind": "record",
+      "value": 0
+     },
+     "W-61": {
+      "criterion": "warnings (record)",
+      "kind": "record",
+      "value": 0
+     }
+    },
+    "flags_records": [],
+    "path1": {
+     "source": "result_rejudge_rev60.json",
+     "params_file_match": true,
+     "unchanged_blocks_equal_vs_result_json": true,
+     "unchanged_block_diffs": [],
+     "path1_recompute_equal": true,
+     "path1_recompute_diff_blocks": []
+    },
+    "path_compare": {
+     "values": {
+      "t_departure_s": {
+       "p1": 37.527000000122236,
+       "p2": 37.527000000122236,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-1_crawler_max_N": {
+       "p1": 0.0,
+       "p2": 0.0,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-2_loc_minus_departure_s": {
+       "p1": 2.473000000082095,
+       "p2": 2.473000000082095,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-2_T_lim_s": {
+       "p1": 2.91165281234524,
+       "p2": 2.91165281234524,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-3_min_N": {
+       "p1": 68060.69561165044,
+       "p2": 68060.69561165044,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-4_absmax_deg": {
+       "p1": 0.05576780920228304,
+       "p2": 0.05576780920228304,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-4_creep_two_sided_s": {
+       "p1": 79.23800000150689,
+       "p2": 79.23800000150689,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-5_rut_min_after_first_ready_m": {
+       "p1": 0.03715803401434803,
+       "p2": 0.03715803401434803,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-7_rise_min_loaded_N": {
+       "p1": 7310.996529634114,
+       "p2": 7310.99651810689,
+       "abs_diff": 1.1527224160090555e-05,
+       "ok": true
+      }
+     },
+     "values_all_ok": true,
+     "verdict_p1": {
+      "P3-1": true,
+      "P3-2": true,
+      "P3-3": true,
+      "P3-4": true,
+      "P3-5": true,
+      "P3-8": true
+     },
+     "verdict_p2": {
+      "P3-1": true,
+      "P3-2": true,
+      "P3-3": true,
+      "P3-4": true,
+      "P3-5": true,
+      "P3-8": true
+     },
+     "verdicts_equal": true
+    },
+    "path2": {
+     "t_departure_s": 37.527000000122236,
+     "P3-1": {
+      "window_complete": true,
+      "crawler_max_N": 0.0,
+      "recontact_t_s": null,
+      "pass": true
+     },
+     "P3-2": {
+      "t_loc_s": 40.00000000020433,
+      "T_lim_s": 2.91165281234524,
+      "loc_minus_departure_s": 2.473000000082095,
+      "crawler_at_loc_N": 0.0,
+      "loc_before_first_done": true,
+      "pass": true
+     },
+     "P3-3": {
+      "F_min_after_N": [
+       114837.25819082058,
+       112201.76819551116,
+       69273.68268558853,
+       68060.69561165044
+      ],
+      "min_N": 68060.69561165044,
+      "min_leg": "RR",
+      "min_over_F_min": 7.229279453030791,
+      "pass": true
+     },
+     "P3-4": {
+      "t_creep_two_sided_s": 79.23800000150689,
+      "window_s": [
+       79.23800000150689,
+       128.00000000312562
+      ],
+      "window_length_s": 48.76200000161873,
+      "absmax_deg": 0.05576780920228304,
+      "absmax_roll_pitch_deg": [
+       0.05576780920228304,
+       0.032350904412443315
+      ],
+      "end_1s_mean_roll_pitch_deg": [
+       0.055477109390151304,
+       -0.03214959569759019
+      ],
+      "pass": true
+     },
+     "P3-5": {
+      "rut_min_after_first_ready_m": 0.03715803401434803,
+      "t_at_min_s": 77.60000000145251,
+      "s_motor_max_m": 0.47334012319522883,
+      "s_motor_limit_m": 0.6848,
+      "pass": true
+     },
+     "P3-8": {
+      "events_before_loc": [],
+      "pass": true
+     },
+     "P3-6": {
+      "ready_after_loop_start_s": 69.40000000145118,
+      "within_90s_record": true
+     },
+     "P3-7": {
+      "reconstruct_ok": true,
+      "t_P_rec_s": 38.400000000151216,
+      "t_loc_rec_s": 40.00000000020433,
+      "n_windows": 76,
+      "n_loaded_windows": 51,
+      "rise_min_loaded_N": 7310.99651810689,
+      "within_record": true
+     }
+    },
+    "observations": {
+     "controller_identity": {
+      "touch_free_air_cap_excess_N": null,
+      "touch_hold_dip_samples": null,
+      "is_P_S8_26": false,
+      "is_P_S8_27": false,
+      "touch_hold_s": 0.5
+     },
+     "INFO_TOUCH_FREE_AIR_CAPPED": [],
+     "INFO_TOUCH_DIP_HELD": [],
+     "touch_span_s": [
+      12.799999999983507,
+      31.599999999939694
+     ],
+     "touch_length_s": 18.799999999956185,
+     "touch_final_zero_command_start_rel_s": {
+      "FL": 18.399999999957117,
+      "FR": 18.499999999956884,
+      "RL": 18.499999999956884,
+      "RR": 18.499999999956884
+     },
+     "touch_stroke_gain_mm": {
+      "FL": 345.86749251886573,
+      "FR": 346.45650800559514,
+      "RL": 341.4765616328146,
+      "RR": 341.502268786401
+     },
+     "touch_absmax_roll_pitch_deg": [
+      0.007916364723862847,
+      0.06456394571016022
+     ],
+     "pad_first_contact_t_s": {
+      "FL": 30.917999999941284,
+      "FR": 30.91899999994128,
+      "RL": 30.959999999941186,
+      "RR": 30.959999999941186
+     },
+     "ready_entries_s": [
+      77.40000000144587
+     ],
+     "ready_first_after_loop_start_s": 69.40000000145118,
+     "n_done": 2,
+     "n_probe": 2,
+     "end_phase": "ready",
+     "ready_at_end": true,
+     "phases": [
+      [
+       8.099999999994461,
+       "check"
+      ],
+      [
+       12.799999999983507,
+       "touch"
+      ],
+      [
+       31.599999999939694,
+       "level"
+      ],
+      [
+       51.70000000059273,
+       "done"
+      ],
+      [
+       51.80000000059605,
+       "probe"
+      ],
+      [
+       55.70000000072552,
+       "level"
+      ],
+      [
+       65.40000000104752,
+       "done"
+      ],
+      [
+       65.50000000105084,
+       "probe"
+      ],
+      [
+       77.40000000144587,
+       "ready"
+      ]
+     ],
+     "end_attitude": {
+      "p34_absmax_deg": 0.05576780920228304,
+      "end_mean_roll_pitch_deg": [
+       0.055477109390151304,
+       -0.03214959569759019
+      ],
+      "within_deadband_0p03_record": false,
+      "budget_residual_le_0p04_record": false,
+      "sensor_allowance_left_deg": 0.12423219079771698,
+      "post_liftoff_absmax_deg": [
+       0.30992397677006156,
+       0.20556749334107735
+      ]
+     },
+     "F_min_after_departure_N": [
+      114837.25819082058,
+      112201.76819551116,
+      69273.68268558853,
+      68060.69561165044
+     ],
+     "F_min_after_departure_min_N": 68060.69561165044,
+     "F_min_transient_min_N": 69614.72166853864,
+     "F_min_late_min_N": 68060.69561165044,
+     "pre_liftoff_min_N": {
+      "FL": 13867.601369774166,
+      "FR": 13376.982349418933,
+      "RL": 15003.329979251226,
+      "RR": 14824.065014451735
+     },
+     "pre_liftoff_flag": false,
+     "t_departure_s": 37.527000000122236,
+     "t_loc_s": 40.00000000020433,
+     "loc_minus_departure_s": 2.473000000082095,
+     "soil_mode_start_s": 33.299999999981914,
+     "bias_corner_mm": [
+      61.853103214108756,
+      62.73400927103601,
+      39.987107130131456,
+      40.868013187058935
+     ],
+     "P3-7_rise_min_loaded_N": 7310.996529634114,
+     "rut_min_after_first_ready_m": 0.03715803401434803,
+     "s_motor_max_m": 0.47334012319522883,
+     "probe_sinkage_mm": [
+      [
+       0.114,
+       4.547,
+       0.38,
+       2.899
+      ],
+      [
+       0.208,
+       1.928,
+       4.787,
+       6.393
+      ]
+     ],
+     "warn_fault_events": [],
+     "event_kinds": [
+      "INFO_CLEARANCE_BIAS",
+      "INFO_PRESSURE_ZERO_CALIBRATED",
+      "crawler_liftoff_confirmed",
+      "floor_estimate_touch",
+      "ready_heave_tail",
+      "reanchor_skipped",
+      "soil_mode_start"
+     ],
+     "W61_warnings": 0,
+     "reapproach_limit_fired": 0,
+     "P3-9_windows": 0,
+     "wall_s": 10949.6126468,
+     "us_per_step": 8554.3848803125
+    },
+    "inputs_sha256": {
+     "result.json": "19efe8cb1984ab1ed7f2f739f69862fd19eedf783604fb08dd4f50e676d64404",
+     "step_series.npz": "d0dead978df190562d8552c5a9e0c03822bafa1c759ad9403e4fb57651bfecc0",
+     "record/record.npz": "68d7e87bada7adfa45edd6c25ea9ecf868e3f31c55bf9934ee1b3b995685fd4c",
+     "controller_commands.npz": "51db7a3ba407e71c733903791bc35094e7508c36b8c0d7ce42e4a4f4bc24a54f"
+    }
+   },
+   "delta_new_minus_ref": {
+    "series_arrays_differing_nan_aware": {
+     "step_series.npz": [],
+     "record/record.npz": []
+    },
+    "events_new_only": [],
+    "events_ref_only": [],
+    "touch_length_s": 0.0,
+    "ready_first_after_loop_start_s": 0.0,
+    "p34_absmax_deg": 0.0,
+    "F_min_after_departure_min_kN": 0.0,
+    "loc_minus_departure_s": 0.0,
+    "n_probe": 0,
+    "end_phase": [
+     "ready",
+     "ready"
+    ],
+    "first_issued_command_diff_t_s": null,
+    "issued_commands_identical": true
+   }
+  },
+  "P3b_J1_B_top_Fs4": {
+   "new": {
+    "case": "P3b_J1_B_top_Fs4",
+    "verdict": "pass",
+    "rows": {
+     "P3-1": {
+      "criterion": "SCM crawler normal = 0 N over READY .. READY + 10 s; no recontact (>= 0.01 W) after the first departure",
+      "kind": "judged",
+      "value": {
+       "crawler_max_N": 0.0,
+       "recontact_t_s": null,
+       "window_complete": true
+      },
+      "pass": true
+     },
+     "P3-2": {
+      "criterion": "LOC before the first DONE; crawler < 0.01 W at the LOC; 0 <= t_LOC - t_D <= T_lim = 10 mm / (0.25 v_max) + 1.0 s = 2.91165 s (rev. 60, U-S9P-13)",
+      "kind": "judged",
+      "value": {
+       "loc_minus_departure_s": 2.4290000000806344,
+       "T_lim_s": 2.91165281234524,
+       "within_2s_record": false
+      },
+      "pass": true
+     },
+     "P3-3": {
+      "criterion": "true F_cyl min after the departure >= F_min 9.415 kN (all legs)",
+      "kind": "judged",
+      "value": {
+       "min_N": 68174.42350308738
+      },
+      "pass": true
+     },
+     "P3-4": {
+      "criterion": "max |roll|, |pitch| (true, absolute) <= 0.2 deg on [max(two-sided creep stop, last READY entry), end], window >= 5 s (main judgement)",
+      "kind": "judged",
+      "value": {
+       "absmax_deg": 0.042258172645339966,
+       "window_s": [
+        80.8320000015598,
+        128.00000000312562
+       ],
+       "flags": []
+      },
+      "pass": true
+     },
+     "P3-5": {
+      "criterion": "rut clearance min from the first READY to the end >= 25 mm (ASSUMPTION U-S9-C3), s_motor <= 0.6848 m (rev. 60, U-S9P-14)",
+      "kind": "judged",
+      "value": {
+       "rut_min_m": 0.03736483057238704,
+       "s_motor_max_m": 0.4729624714822525
+      },
+      "pass": true
+     },
+     "P3-8": {
+      "criterion": "0 re-approach starts / relevel_predicted (P5) / probe_aborted_low_load before the LOC",
+      "kind": "judged",
+      "value": {
+       "leg_reapproach_start": 0,
+       "relevel_predicted": 0,
+       "probe_aborted_low_load": 0
+      },
+      "pass": true
+     },
+     "P3-6": {
+      "criterion": "READY <= 90 s after the loop start (ASSUMPTION, record)",
+      "kind": "record",
+      "value": 69.30000000144786,
+      "within": true
+     },
+     "P3-7": {
+      "criterion": "S-1 rise >= 4 kN on windows with end crawler > 0.01 W_ref (record, rev. 60)",
+      "kind": "record",
+      "value": 7346.675388826101,
+      "within": true,
+      "reconstruct_ok": true
+     },
+     "P3-9": {
+      "criterion": "RT deferral windows, FLAG when the deferred leg < F_min (record)",
+      "kind": "record",
+      "value": 0,
+      "flags": 0
+     },
+     "J1-③ pre-lift-off dip": {
+      "criterion": "min F_cyl after first > 1.4 F_min up to the departure; < F_min = FLAG",
+      "kind": "record",
+      "value": {
+       "FL": 13196.54062298136,
+       "FR": 12725.240981229728,
+       "RL": 13251.518523683537,
+       "RR": 13228.38993432237
+      },
+      "flag": false
+     },
+     "reapproach 10 s limit": {
+      "criterion": "firing = FLAG (record)",
+      "kind": "record",
+      "value": 0
+     },
+     "W-61": {
+      "criterion": "warnings (record)",
+      "kind": "record",
+      "value": 0
+     }
+    },
+    "flags_records": [],
+    "path1": {
+     "source": "result_rejudge_rev60.json",
+     "params_file_match": true,
+     "unchanged_blocks_equal_vs_result_json": true,
+     "unchanged_block_diffs": [],
+     "path1_recompute_equal": true,
+     "path1_recompute_diff_blocks": []
+    },
+    "path_compare": {
+     "values": {
+      "t_departure_s": {
+       "p1": 37.571000000123696,
+       "p2": 37.571000000123696,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-1_crawler_max_N": {
+       "p1": 0.0,
+       "p2": 0.0,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-2_loc_minus_departure_s": {
+       "p1": 2.4290000000806344,
+       "p2": 2.4290000000806344,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-2_T_lim_s": {
+       "p1": 2.91165281234524,
+       "p2": 2.91165281234524,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-3_min_N": {
+       "p1": 68174.42350308738,
+       "p2": 68174.42350308738,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-4_absmax_deg": {
+       "p1": 0.042258172645339966,
+       "p2": 0.042258172645339966,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-4_creep_two_sided_s": {
+       "p1": 80.8320000015598,
+       "p2": 80.8320000015598,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-5_rut_min_after_first_ready_m": {
+       "p1": 0.03736483057238704,
+       "p2": 0.03736483057238704,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-7_rise_min_loaded_N": {
+       "p1": 7346.675388826101,
+       "p2": 7346.675377340027,
+       "abs_diff": 1.1486074072308838e-05,
+       "ok": true
+      }
+     },
+     "values_all_ok": true,
+     "verdict_p1": {
+      "P3-1": true,
+      "P3-2": true,
+      "P3-3": true,
+      "P3-4": true,
+      "P3-5": true,
+      "P3-8": true
+     },
+     "verdict_p2": {
+      "P3-1": true,
+      "P3-2": true,
+      "P3-3": true,
+      "P3-4": true,
+      "P3-5": true,
+      "P3-8": true
+     },
+     "verdicts_equal": true
+    },
+    "path2": {
+     "t_departure_s": 37.571000000123696,
+     "P3-1": {
+      "window_complete": true,
+      "crawler_max_N": 0.0,
+      "recontact_t_s": null,
+      "pass": true
+     },
+     "P3-2": {
+      "t_loc_s": 40.00000000020433,
+      "T_lim_s": 2.91165281234524,
+      "loc_minus_departure_s": 2.4290000000806344,
+      "crawler_at_loc_N": 0.0,
+      "loc_before_first_done": true,
+      "pass": true
+     },
+     "P3-3": {
+      "F_min_after_N": [
+       115421.10991397145,
+       112376.49216465559,
+       69276.09886939502,
+       68174.42350308738
+      ],
+      "min_N": 68174.42350308738,
+      "min_leg": "RR",
+      "min_over_F_min": 7.241359416384277,
+      "pass": true
+     },
+     "P3-4": {
+      "t_creep_two_sided_s": 80.8320000015598,
+      "window_s": [
+       80.8320000015598,
+       128.00000000312562
+      ],
+      "window_length_s": 47.168000001565815,
+      "absmax_deg": 0.042258172645339966,
+      "absmax_roll_pitch_deg": [
+       0.042258172645339966,
+       0.018660857973421686
+      ],
+      "end_1s_mean_roll_pitch_deg": [
+       0.04200403332874378,
+       -0.01855344577661114
+      ],
+      "pass": true
+     },
+     "P3-5": {
+      "rut_min_after_first_ready_m": 0.03736483057238704,
+      "t_at_min_s": 77.5000000014492,
+      "s_motor_max_m": 0.4729624714822525,
+      "s_motor_limit_m": 0.6848,
+      "pass": true
+     },
+     "P3-8": {
+      "events_before_loc": [],
+      "pass": true
+     },
+     "P3-6": {
+      "ready_after_loop_start_s": 69.30000000144786,
+      "within_90s_record": true
+     },
+     "P3-7": {
+      "reconstruct_ok": true,
+      "t_P_rec_s": 38.400000000151216,
+      "t_loc_rec_s": 40.00000000020433,
+      "n_windows": 76,
+      "n_loaded_windows": 51,
+      "rise_min_loaded_N": 7346.675377340027,
+      "within_record": true
+     }
+    },
+    "observations": {
+     "controller_identity": {
+      "touch_free_air_cap_excess_N": null,
+      "touch_hold_dip_samples": null,
+      "is_P_S8_26": false,
+      "is_P_S8_27": false,
+      "touch_hold_s": 0.5
+     },
+     "INFO_TOUCH_FREE_AIR_CAPPED": [],
+     "INFO_TOUCH_DIP_HELD": [],
+     "touch_span_s": [
+      12.799999999983507,
+      31.599999999939694
+     ],
+     "touch_length_s": 18.799999999956185,
+     "touch_final_zero_command_start_rel_s": {
+      "FL": 18.499999999956884,
+      "FR": 18.499999999956884,
+      "RL": 18.499999999956884,
+      "RR": 18.499999999956884
+     },
+     "touch_stroke_gain_mm": {
+      "FL": 346.51006283242765,
+      "FR": 346.52709758330366,
+      "RL": 341.3316548025092,
+      "RR": 341.33354329252677
+     },
+     "touch_absmax_roll_pitch_deg": [
+      0.0008022538061806587,
+      0.06456997406824347
+     ],
+     "pad_first_contact_t_s": {
+      "FL": 30.928999999941258,
+      "FR": 30.928999999941258,
+      "RL": 30.97099999994116,
+      "RR": 30.971999999941158
+     },
+     "ready_entries_s": [
+      77.30000000144256
+     ],
+     "ready_first_after_loop_start_s": 69.30000000144786,
+     "n_done": 2,
+     "n_probe": 2,
+     "end_phase": "ready",
+     "ready_at_end": true,
+     "phases": [
+      [
+       8.099999999994461,
+       "check"
+      ],
+      [
+       12.799999999983507,
+       "touch"
+      ],
+      [
+       31.599999999939694,
+       "level"
+      ],
+      [
+       51.50000000058609,
+       "done"
+      ],
+      [
+       51.60000000058941,
+       "probe"
+      ],
+      [
+       55.30000000071224,
+       "level"
+      ],
+      [
+       65.3000000010442,
+       "done"
+      ],
+      [
+       65.40000000104752,
+       "probe"
+      ],
+      [
+       77.30000000144256,
+       "ready"
+      ]
+     ],
+     "end_attitude": {
+      "p34_absmax_deg": 0.042258172645339966,
+      "end_mean_roll_pitch_deg": [
+       0.04200403332874378,
+       -0.01855344577661114
+      ],
+      "within_deadband_0p03_record": false,
+      "budget_residual_le_0p04_record": false,
+      "sensor_allowance_left_deg": 0.13774182735466006,
+      "post_liftoff_absmax_deg": [
+       0.28852309765216827,
+       0.21638618608121807
+      ]
+     },
+     "F_min_after_departure_N": [
+      115421.10991397145,
+      112376.49216465559,
+      69276.09886939502,
+      68174.42350308738
+     ],
+     "F_min_after_departure_min_N": 68174.42350308738,
+     "F_min_transient_min_N": 69626.42138945303,
+     "F_min_late_min_N": 68174.42350308738,
+     "pre_liftoff_min_N": {
+      "FL": 13196.54062298136,
+      "FR": 12725.240981229728,
+      "RL": 13251.518523683537,
+      "RR": 13228.38993432237
+     },
+     "pre_liftoff_flag": false,
+     "t_departure_s": 37.571000000123696,
+     "t_loc_s": 40.00000000020433,
+     "loc_minus_departure_s": 2.4290000000806344,
+     "soil_mode_start_s": 33.299999999981914,
+     "bias_corner_mm": [
+      61.56132974691631,
+      62.654394016739225,
+      39.45971196978737,
+      40.55277623961029
+     ],
+     "P3-7_rise_min_loaded_N": 7346.675388826101,
+     "rut_min_after_first_ready_m": 0.03736483057238704,
+     "s_motor_max_m": 0.4729624714822525,
+     "probe_sinkage_mm": [
+      [
+       0.15,
+       3.867,
+       0.143,
+       2.584
+      ],
+      [
+       0.516,
+       1.684,
+       4.072,
+       5.157
+      ]
+     ],
+     "warn_fault_events": [],
+     "event_kinds": [
+      "INFO_CLEARANCE_BIAS",
+      "INFO_PRESSURE_ZERO_CALIBRATED",
+      "crawler_liftoff_confirmed",
+      "floor_estimate_touch",
+      "ready_heave_tail",
+      "reanchor_skipped",
+      "soil_mode_start"
+     ],
+     "W61_warnings": 0,
+     "reapproach_limit_fired": 0,
+     "P3-9_windows": 0,
+     "wall_s": 11118.338060499984,
+     "us_per_step": 8686.201609765612
+    },
+    "inputs_sha256": {
+     "result.json": "955dfddbeb9620e09e6339ac060231205bec3122c86fc220c42b3141facad190",
+     "step_series.npz": "25d267efe03f0ee7cd219444e70be610ce3c213f5f74e8a9e3001b1a5b0937a5",
+     "record/record.npz": "292e800b4fab799321cdd24c8e6f3c1e2c25eae32de5d2672edb424bc818015d",
+     "controller_commands.npz": "0658c31c0f354a32d3c508181f87b8cc3006f73f0b81f9d295da99a5d7fc54b4"
+    }
+   },
+   "reference": {
+    "case": "P3b_J1_B_top_Fs4",
+    "verdict": "pass",
+    "rows": {
+     "P3-1": {
+      "criterion": "SCM crawler normal = 0 N over READY .. READY + 10 s; no recontact (>= 0.01 W) after the first departure",
+      "kind": "judged",
+      "value": {
+       "crawler_max_N": 0.0,
+       "recontact_t_s": null,
+       "window_complete": true
+      },
+      "pass": true
+     },
+     "P3-2": {
+      "criterion": "LOC before the first DONE; crawler < 0.01 W at the LOC; 0 <= t_LOC - t_D <= T_lim = 10 mm / (0.25 v_max) + 1.0 s = 2.91165 s (rev. 60, U-S9P-13)",
+      "kind": "judged",
+      "value": {
+       "loc_minus_departure_s": 2.4290000000806344,
+       "T_lim_s": 2.91165281234524,
+       "within_2s_record": false
+      },
+      "pass": true
+     },
+     "P3-3": {
+      "criterion": "true F_cyl min after the departure >= F_min 9.415 kN (all legs)",
+      "kind": "judged",
+      "value": {
+       "min_N": 68174.42350308738
+      },
+      "pass": true
+     },
+     "P3-4": {
+      "criterion": "max |roll|, |pitch| (true, absolute) <= 0.2 deg on [max(two-sided creep stop, last READY entry), end], window >= 5 s (main judgement)",
+      "kind": "judged",
+      "value": {
+       "absmax_deg": 0.042258172645339966,
+       "window_s": [
+        80.8320000015598,
+        128.00000000312562
+       ],
+       "flags": []
+      },
+      "pass": true
+     },
+     "P3-5": {
+      "criterion": "rut clearance min from the first READY to the end >= 25 mm (ASSUMPTION U-S9-C3), s_motor <= 0.6848 m (rev. 60, U-S9P-14)",
+      "kind": "judged",
+      "value": {
+       "rut_min_m": 0.03736483057238704,
+       "s_motor_max_m": 0.4729624714822525
+      },
+      "pass": true
+     },
+     "P3-8": {
+      "criterion": "0 re-approach starts / relevel_predicted (P5) / probe_aborted_low_load before the LOC",
+      "kind": "judged",
+      "value": {
+       "leg_reapproach_start": 0,
+       "relevel_predicted": 0,
+       "probe_aborted_low_load": 0
+      },
+      "pass": true
+     },
+     "P3-6": {
+      "criterion": "READY <= 90 s after the loop start (ASSUMPTION, record)",
+      "kind": "record",
+      "value": 69.30000000144786,
+      "within": true
+     },
+     "P3-7": {
+      "criterion": "S-1 rise >= 4 kN on windows with end crawler > 0.01 W_ref (record, rev. 60)",
+      "kind": "record",
+      "value": 7346.675388826101,
+      "within": true,
+      "reconstruct_ok": true
+     },
+     "P3-9": {
+      "criterion": "RT deferral windows, FLAG when the deferred leg < F_min (record)",
+      "kind": "record",
+      "value": 0,
+      "flags": 0
+     },
+     "J1-③ pre-lift-off dip": {
+      "criterion": "min F_cyl after first > 1.4 F_min up to the departure; < F_min = FLAG",
+      "kind": "record",
+      "value": {
+       "FL": 13196.54062298136,
+       "FR": 12725.240981229728,
+       "RL": 13251.518523683537,
+       "RR": 13228.38993432237
+      },
+      "flag": false
+     },
+     "reapproach 10 s limit": {
+      "criterion": "firing = FLAG (record)",
+      "kind": "record",
+      "value": 0
+     },
+     "W-61": {
+      "criterion": "warnings (record)",
+      "kind": "record",
+      "value": 0
+     }
+    },
+    "flags_records": [],
+    "path1": {
+     "source": "result_rejudge_rev60.json",
+     "params_file_match": true,
+     "unchanged_blocks_equal_vs_result_json": true,
+     "unchanged_block_diffs": [],
+     "path1_recompute_equal": true,
+     "path1_recompute_diff_blocks": []
+    },
+    "path_compare": {
+     "values": {
+      "t_departure_s": {
+       "p1": 37.571000000123696,
+       "p2": 37.571000000123696,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-1_crawler_max_N": {
+       "p1": 0.0,
+       "p2": 0.0,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-2_loc_minus_departure_s": {
+       "p1": 2.4290000000806344,
+       "p2": 2.4290000000806344,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-2_T_lim_s": {
+       "p1": 2.91165281234524,
+       "p2": 2.91165281234524,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-3_min_N": {
+       "p1": 68174.42350308738,
+       "p2": 68174.42350308738,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-4_absmax_deg": {
+       "p1": 0.042258172645339966,
+       "p2": 0.042258172645339966,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-4_creep_two_sided_s": {
+       "p1": 80.8320000015598,
+       "p2": 80.8320000015598,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-5_rut_min_after_first_ready_m": {
+       "p1": 0.03736483057238704,
+       "p2": 0.03736483057238704,
+       "abs_diff": 0.0,
+       "ok": true
+      },
+      "P3-7_rise_min_loaded_N": {
+       "p1": 7346.675388826101,
+       "p2": 7346.675377340027,
+       "abs_diff": 1.1486074072308838e-05,
+       "ok": true
+      }
+     },
+     "values_all_ok": true,
+     "verdict_p1": {
+      "P3-1": true,
+      "P3-2": true,
+      "P3-3": true,
+      "P3-4": true,
+      "P3-5": true,
+      "P3-8": true
+     },
+     "verdict_p2": {
+      "P3-1": true,
+      "P3-2": true,
+      "P3-3": true,
+      "P3-4": true,
+      "P3-5": true,
+      "P3-8": true
+     },
+     "verdicts_equal": true
+    },
+    "path2": {
+     "t_departure_s": 37.571000000123696,
+     "P3-1": {
+      "window_complete": true,
+      "crawler_max_N": 0.0,
+      "recontact_t_s": null,
+      "pass": true
+     },
+     "P3-2": {
+      "t_loc_s": 40.00000000020433,
+      "T_lim_s": 2.91165281234524,
+      "loc_minus_departure_s": 2.4290000000806344,
+      "crawler_at_loc_N": 0.0,
+      "loc_before_first_done": true,
+      "pass": true
+     },
+     "P3-3": {
+      "F_min_after_N": [
+       115421.10991397145,
+       112376.49216465559,
+       69276.09886939502,
+       68174.42350308738
+      ],
+      "min_N": 68174.42350308738,
+      "min_leg": "RR",
+      "min_over_F_min": 7.241359416384277,
+      "pass": true
+     },
+     "P3-4": {
+      "t_creep_two_sided_s": 80.8320000015598,
+      "window_s": [
+       80.8320000015598,
+       128.00000000312562
+      ],
+      "window_length_s": 47.168000001565815,
+      "absmax_deg": 0.042258172645339966,
+      "absmax_roll_pitch_deg": [
+       0.042258172645339966,
+       0.018660857973421686
+      ],
+      "end_1s_mean_roll_pitch_deg": [
+       0.04200403332874378,
+       -0.01855344577661114
+      ],
+      "pass": true
+     },
+     "P3-5": {
+      "rut_min_after_first_ready_m": 0.03736483057238704,
+      "t_at_min_s": 77.5000000014492,
+      "s_motor_max_m": 0.4729624714822525,
+      "s_motor_limit_m": 0.6848,
+      "pass": true
+     },
+     "P3-8": {
+      "events_before_loc": [],
+      "pass": true
+     },
+     "P3-6": {
+      "ready_after_loop_start_s": 69.30000000144786,
+      "within_90s_record": true
+     },
+     "P3-7": {
+      "reconstruct_ok": true,
+      "t_P_rec_s": 38.400000000151216,
+      "t_loc_rec_s": 40.00000000020433,
+      "n_windows": 76,
+      "n_loaded_windows": 51,
+      "rise_min_loaded_N": 7346.675377340027,
+      "within_record": true
+     }
+    },
+    "observations": {
+     "controller_identity": {
+      "touch_free_air_cap_excess_N": null,
+      "touch_hold_dip_samples": null,
+      "is_P_S8_26": false,
+      "is_P_S8_27": false,
+      "touch_hold_s": 0.5
+     },
+     "INFO_TOUCH_FREE_AIR_CAPPED": [],
+     "INFO_TOUCH_DIP_HELD": [],
+     "touch_span_s": [
+      12.799999999983507,
+      31.599999999939694
+     ],
+     "touch_length_s": 18.799999999956185,
+     "touch_final_zero_command_start_rel_s": {
+      "FL": 18.499999999956884,
+      "FR": 18.499999999956884,
+      "RL": 18.499999999956884,
+      "RR": 18.499999999956884
+     },
+     "touch_stroke_gain_mm": {
+      "FL": 346.51006283242765,
+      "FR": 346.52709758330366,
+      "RL": 341.3316548025092,
+      "RR": 341.33354329252677
+     },
+     "touch_absmax_roll_pitch_deg": [
+      0.0008022538061806587,
+      0.06456997406824347
+     ],
+     "pad_first_contact_t_s": {
+      "FL": 30.928999999941258,
+      "FR": 30.928999999941258,
+      "RL": 30.97099999994116,
+      "RR": 30.971999999941158
+     },
+     "ready_entries_s": [
+      77.30000000144256
+     ],
+     "ready_first_after_loop_start_s": 69.30000000144786,
+     "n_done": 2,
+     "n_probe": 2,
+     "end_phase": "ready",
+     "ready_at_end": true,
+     "phases": [
+      [
+       8.099999999994461,
+       "check"
+      ],
+      [
+       12.799999999983507,
+       "touch"
+      ],
+      [
+       31.599999999939694,
+       "level"
+      ],
+      [
+       51.50000000058609,
+       "done"
+      ],
+      [
+       51.60000000058941,
+       "probe"
+      ],
+      [
+       55.30000000071224,
+       "level"
+      ],
+      [
+       65.3000000010442,
+       "done"
+      ],
+      [
+       65.40000000104752,
+       "probe"
+      ],
+      [
+       77.30000000144256,
+       "ready"
+      ]
+     ],
+     "end_attitude": {
+      "p34_absmax_deg": 0.042258172645339966,
+      "end_mean_roll_pitch_deg": [
+       0.04200403332874378,
+       -0.01855344577661114
+      ],
+      "within_deadband_0p03_record": false,
+      "budget_residual_le_0p04_record": false,
+      "sensor_allowance_left_deg": 0.13774182735466006,
+      "post_liftoff_absmax_deg": [
+       0.28852309765216827,
+       0.21638618608121807
+      ]
+     },
+     "F_min_after_departure_N": [
+      115421.10991397145,
+      112376.49216465559,
+      69276.09886939502,
+      68174.42350308738
+     ],
+     "F_min_after_departure_min_N": 68174.42350308738,
+     "F_min_transient_min_N": 69626.42138945303,
+     "F_min_late_min_N": 68174.42350308738,
+     "pre_liftoff_min_N": {
+      "FL": 13196.54062298136,
+      "FR": 12725.240981229728,
+      "RL": 13251.518523683537,
+      "RR": 13228.38993432237
+     },
+     "pre_liftoff_flag": false,
+     "t_departure_s": 37.571000000123696,
+     "t_loc_s": 40.00000000020433,
+     "loc_minus_departure_s": 2.4290000000806344,
+     "soil_mode_start_s": 33.299999999981914,
+     "bias_corner_mm": [
+      61.56132974691631,
+      62.654394016739225,
+      39.45971196978737,
+      40.55277623961029
+     ],
+     "P3-7_rise_min_loaded_N": 7346.675388826101,
+     "rut_min_after_first_ready_m": 0.03736483057238704,
+     "s_motor_max_m": 0.4729624714822525,
+     "probe_sinkage_mm": [
+      [
+       0.15,
+       3.867,
+       0.143,
+       2.584
+      ],
+      [
+       0.516,
+       1.684,
+       4.072,
+       5.157
+      ]
+     ],
+     "warn_fault_events": [],
+     "event_kinds": [
+      "INFO_CLEARANCE_BIAS",
+      "INFO_PRESSURE_ZERO_CALIBRATED",
+      "crawler_liftoff_confirmed",
+      "floor_estimate_touch",
+      "ready_heave_tail",
+      "reanchor_skipped",
+      "soil_mode_start"
+     ],
+     "W61_warnings": 0,
+     "reapproach_limit_fired": 0,
+     "P3-9_windows": 0,
+     "wall_s": 11118.338060499984,
+     "us_per_step": 8686.201609765612
+    },
+    "inputs_sha256": {
+     "result.json": "955dfddbeb9620e09e6339ac060231205bec3122c86fc220c42b3141facad190",
+     "step_series.npz": "25d267efe03f0ee7cd219444e70be610ce3c213f5f74e8a9e3001b1a5b0937a5",
+     "record/record.npz": "292e800b4fab799321cdd24c8e6f3c1e2c25eae32de5d2672edb424bc818015d",
+     "controller_commands.npz": "0658c31c0f354a32d3c508181f87b8cc3006f73f0b81f9d295da99a5d7fc54b4"
+    }
+   },
+   "delta_new_minus_ref": {
+    "series_arrays_differing_nan_aware": {
+     "step_series.npz": [],
+     "record/record.npz": []
+    },
+    "events_new_only": [],
+    "events_ref_only": [],
+    "touch_length_s": 0.0,
+    "ready_first_after_loop_start_s": 0.0,
+    "p34_absmax_deg": 0.0,
+    "F_min_after_departure_min_kN": 0.0,
+    "loc_minus_departure_s": 0.0,
+    "n_probe": 0,
+    "end_phase": [
+     "ready",
+     "ready"
+    ],
+    "first_issued_command_diff_t_s": null,
+    "issued_commands_identical": true
+   }
+  }
+ },
+ "bundle_C_verdict": "pass"
+}

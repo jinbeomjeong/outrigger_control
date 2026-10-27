@@ -1,0 +1,5249 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s8/r68_p27_screen.py",
+  "spec": "rev. 68 356 (P-S8-27 candidates)",
+  "workers": 6,
+  "affinity": "0FFF0000",
+  "wall_s": 972.6,
+  "n_jobs": 60
+ },
+ "results": [
+  {
+   "key": "ps7|ref|top|0.0|proj",
+   "case": "ref",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.4000000000061,
+   "t_lift": 20.59999999999734,
+   "cmd_sha256": "80fd69830ac3f25c",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     348.4,
+     348.4,
+     345.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.001,
+     0.179
+    ],
+    "min_crawler_kN": 175.2
+   },
+   "min_F_after_liftoff_kN": 55.37,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0002,
+    -0.0119
+   ],
+   "events": [],
+   "wall_s": 19.4
+  },
+  {
+   "key": "ps7|ref|top|0.0|c1",
+   "case": "ref",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.4000000000061,
+   "t_lift": 20.59999999999734,
+   "cmd_sha256": "80fd69830ac3f25c",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     348.4,
+     348.4,
+     345.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.001,
+     0.179
+    ],
+    "min_crawler_kN": 175.2
+   },
+   "min_F_after_liftoff_kN": 55.37,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0002,
+    -0.0119
+   ],
+   "events": [],
+   "wall_s": 16.6
+  },
+  {
+   "key": "ps7|ref|top|0.0|c2",
+   "case": "ref",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.10000000000467,
+   "t_lift": 20.399999999997807,
+   "cmd_sha256": "0db7d5e6c78bfbe1",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 18.6,
+    "latch_rel_s": {
+     "FL": 18.4,
+     "FR": 18.4,
+     "RL": 18.7,
+     "RR": 18.7
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     348.3,
+     348.3,
+     344.5,
+     344.5
+    ],
+    "max_abs_att_deg": [
+     0.0,
+     0.179
+    ],
+    "min_crawler_kN": 190.7
+   },
+   "min_F_after_liftoff_kN": 55.33,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0002,
+    -0.0122
+   ],
+   "events": [],
+   "wall_s": 16.3
+  },
+  {
+   "key": "ps7|ref|top|8.0|proj",
+   "case": "ref",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.4000000000061,
+   "t_lift": 20.59999999999734,
+   "cmd_sha256": "bd0030b35aa4c8f8",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     348.4,
+     348.4,
+     345.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.0,
+     0.179
+    ],
+    "min_crawler_kN": 180.5
+   },
+   "min_F_after_liftoff_kN": 53.27,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0005,
+    -0.0114
+   ],
+   "events": [],
+   "wall_s": 19.5
+  },
+  {
+   "key": "ps7|ref|top|8.0|c1",
+   "case": "ref",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.4000000000061,
+   "t_lift": 20.59999999999734,
+   "cmd_sha256": "bd0030b35aa4c8f8",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     348.4,
+     348.4,
+     345.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.0,
+     0.179
+    ],
+    "min_crawler_kN": 180.5
+   },
+   "min_F_after_liftoff_kN": 53.27,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0005,
+    -0.0114
+   ],
+   "events": [],
+   "wall_s": 17.5
+  },
+  {
+   "key": "ps7|ref|top|8.0|c2",
+   "case": "ref",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 38.900000000003715,
+   "t_lift": 20.29999999999804,
+   "cmd_sha256": "cbbe54a4b9e6d870",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 18.5,
+    "latch_rel_s": {
+     "FL": 18.4,
+     "FR": 18.4,
+     "RL": 18.6,
+     "RR": 18.6
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     348.1,
+     348.1,
+     343.7,
+     343.7
+    ],
+    "max_abs_att_deg": [
+     0.0,
+     0.179
+    ],
+    "min_crawler_kN": 219.7
+   },
+   "min_F_after_liftoff_kN": 53.28,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0005,
+    -0.0118
+   ],
+   "events": [],
+   "wall_s": 18.1
+  },
+  {
+   "key": "ps7|ref|bottom|0.0|proj",
+   "case": "ref",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.80000000000801,
+   "t_lift": 20.699999999997107,
+   "cmd_sha256": "401e682ac2b9af59",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.6,
+     "FR": 18.6,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     347.3,
+     347.3,
+     345.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.0,
+     0.177
+    ],
+    "min_crawler_kN": 204.6
+   },
+   "min_F_after_liftoff_kN": 55.64,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0003,
+    -0.0141
+   ],
+   "events": [],
+   "wall_s": 32.2
+  },
+  {
+   "key": "ps7|ref|bottom|0.0|c1",
+   "case": "ref",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.80000000000801,
+   "t_lift": 20.699999999997107,
+   "cmd_sha256": "401e682ac2b9af59",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.6,
+     "FR": 18.6,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     347.3,
+     347.3,
+     345.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.0,
+     0.177
+    ],
+    "min_crawler_kN": 204.6
+   },
+   "min_F_after_liftoff_kN": 55.64,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0003,
+    -0.0141
+   ],
+   "events": [],
+   "wall_s": 24.6
+  },
+  {
+   "key": "ps7|ref|bottom|0.0|c2",
+   "case": "ref",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.50000000000658,
+   "t_lift": 20.499999999997573,
+   "cmd_sha256": "a068c3b1cbf62c21",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 18.6,
+    "latch_rel_s": {
+     "FL": 18.3,
+     "FR": 18.3,
+     "RL": 18.7,
+     "RR": 18.7
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     347.3,
+     347.3,
+     344.5,
+     344.5
+    ],
+    "max_abs_att_deg": [
+     0.0,
+     0.177
+    ],
+    "min_crawler_kN": 218.8
+   },
+   "min_F_after_liftoff_kN": 55.61,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0003,
+    -0.0141
+   ],
+   "events": [],
+   "wall_s": 31.3
+  },
+  {
+   "key": "ps7|ref|bottom|8.0|proj",
+   "case": "ref",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 40.20000000000992,
+   "t_lift": 20.799999999996874,
+   "cmd_sha256": "eae6ffface624ed8",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.9,
+    "latch_rel_s": {
+     "FL": 18.6,
+     "FR": 18.6,
+     "RL": 19.0,
+     "RR": 19.0
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     347.3,
+     347.3,
+     346.2,
+     346.2
+    ],
+    "max_abs_att_deg": [
+     0.0,
+     0.177
+    ],
+    "min_crawler_kN": 181.3
+   },
+   "min_F_after_liftoff_kN": 53.47,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0002,
+    -0.0158
+   ],
+   "events": [],
+   "wall_s": 31.4
+  },
+  {
+   "key": "ps7|ref|bottom|8.0|c1",
+   "case": "ref",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 40.20000000000992,
+   "t_lift": 20.799999999996874,
+   "cmd_sha256": "eae6ffface624ed8",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.9,
+    "latch_rel_s": {
+     "FL": 18.6,
+     "FR": 18.6,
+     "RL": 19.0,
+     "RR": 19.0
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     347.3,
+     347.3,
+     346.2,
+     346.2
+    ],
+    "max_abs_att_deg": [
+     0.0,
+     0.177
+    ],
+    "min_crawler_kN": 181.3
+   },
+   "min_F_after_liftoff_kN": 53.47,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0002,
+    -0.0158
+   ],
+   "events": [],
+   "wall_s": 31.3
+  },
+  {
+   "key": "ps7|ref|bottom|8.0|c2",
+   "case": "ref",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.90000000000849,
+   "t_lift": 20.499999999997573,
+   "cmd_sha256": "19154fb8abc5766b",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 18.6,
+    "latch_rel_s": {
+     "FL": 18.4,
+     "FR": 18.4,
+     "RL": 18.7,
+     "RR": 18.7
+    },
+    "extra_stroke_mm": null,
+    "stroke_delta_mm": [
+     347.3,
+     347.3,
+     344.7,
+     344.7
+    ],
+    "max_abs_att_deg": [
+     0.0,
+     0.177
+    ],
+    "min_crawler_kN": 218.2
+   },
+   "min_F_after_liftoff_kN": 53.33,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0002,
+    -0.0164
+   ],
+   "events": [],
+   "wall_s": 30.5
+  },
+  {
+   "key": "ps7|PS7a_RR|top|0.0|proj",
+   "case": "PS7a_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.685,
+    "pre_contact_N": 7092.9,
+    "pre_gap_mm": [
+     339.638,
+     339.679,
+     347.284,
+     -0.035
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 47.90000000004669,
+   "t_lift": 23.799999999989883,
+   "cmd_sha256": "0dfba506df5a6ae3",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 21.7,
+    "latch_rel_s": {
+     "FL": 16.9,
+     "FR": 17.6,
+     "RL": 21.8,
+     "RR": 14.5
+    },
+    "extra_stroke_mm": 28.8,
+    "stroke_delta_mm": [
+     329.6,
+     333.2,
+     375.5,
+     28.8
+    ],
+    "max_abs_att_deg": [
+     0.1,
+     0.693
+    ],
+    "min_crawler_kN": 202.6,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      15.4,
+      17.5,
+      21.2,
+      21.7,
+      22.3,
+      23.1,
+      22.2,
+      20.4,
+      29.2,
+      10.6,
+      23.7
+     ],
+     "N_min_kN": 7.84,
+     "N_max_kN": 83.0
+    }
+   },
+   "min_F_after_liftoff_kN": 53.95,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0009,
+    -0.0154
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 42.6
+  },
+  {
+   "key": "ps7|PS7a_RR|top|0.0|c1",
+   "case": "PS7a_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.685,
+    "pre_contact_N": 7092.9,
+    "pre_gap_mm": [
+     339.638,
+     339.679,
+     347.284,
+     -0.035
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.800000000031886,
+   "t_lift": 22.19999999999361,
+   "cmd_sha256": "506cb261c95054fd",
+   "p27_used_legs": [
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 20.1,
+    "latch_rel_s": {
+     "FL": 17.6,
+     "FR": 17.9,
+     "RL": 20.2,
+     "RR": 2.1
+    },
+    "extra_stroke_mm": 12.0,
+    "stroke_delta_mm": [
+     336.9,
+     340.0,
+     358.8,
+     12.0
+    ],
+    "max_abs_att_deg": [
+     0.065,
+     0.414
+    ],
+    "min_crawler_kN": 218.4,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      14.5,
+      8.8,
+      6.7,
+      5.1,
+      3.9,
+      2.6,
+      2.1,
+      1.7,
+      17.6,
+      16.9
+     ],
+     "N_min_kN": 7.84,
+     "N_max_kN": 62.5
+    }
+   },
+   "min_F_after_liftoff_kN": 54.04,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.002,
+    -0.016
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 42.2
+  },
+  {
+   "key": "ps7|PS7a_RR|top|0.0|c2",
+   "case": "PS7a_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.685,
+    "pre_contact_N": 7092.9,
+    "pre_gap_mm": [
+     339.638,
+     339.679,
+     347.284,
+     -0.035
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.400000000029976,
+   "t_lift": 21.799999999994544,
+   "cmd_sha256": "41cb556de22cda4b",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 17.5,
+     "FR": 17.7,
+     "RL": 19.9,
+     "RR": 1.3
+    },
+    "extra_stroke_mm": 11.5,
+    "stroke_delta_mm": [
+     337.9,
+     341.1,
+     357.1,
+     11.5
+    ],
+    "max_abs_att_deg": [
+     0.071,
+     0.406
+    ],
+    "min_crawler_kN": 206.1,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      13.4,
+      6.9,
+      5.3,
+      3.9,
+      2.8,
+      2.1,
+      1.8,
+      1.5,
+      20.7,
+      12.8
+     ],
+     "N_min_kN": 7.84,
+     "N_max_kN": 68.2
+    }
+   },
+   "min_F_after_liftoff_kN": 54.08,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0025,
+    -0.0163
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 35.4
+  },
+  {
+   "key": "ps7|PS7a_RR|top|8.0|proj",
+   "case": "PS7a_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.718,
+    "pre_contact_N": 8210.0,
+    "pre_gap_mm": [
+     339.624,
+     339.898,
+     347.145,
+     -0.04
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.400000000029976,
+   "t_lift": 21.799999999994544,
+   "cmd_sha256": "5b9c996dac980d0a",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 17.8,
+     "FR": 18.0,
+     "RL": 19.9,
+     "RR": 1.3
+    },
+    "extra_stroke_mm": 8.4,
+    "stroke_delta_mm": [
+     339.0,
+     341.1,
+     355.6,
+     8.4
+    ],
+    "max_abs_att_deg": [
+     0.052,
+     0.349
+    ],
+    "min_crawler_kN": 226.6,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      11.8,
+      3.1,
+      2.1,
+      1.4,
+      1.1,
+      0.9,
+      0.7,
+      0.6,
+      17.9,
+      15.7
+     ],
+     "N_min_kN": 7.38,
+     "N_max_kN": 59.6
+    }
+   },
+   "min_F_after_liftoff_kN": 52.52,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0015,
+    -0.0238
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 36.1
+  },
+  {
+   "key": "ps7|PS7a_RR|top|8.0|c1",
+   "case": "PS7a_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.718,
+    "pre_contact_N": 8210.0,
+    "pre_gap_mm": [
+     339.624,
+     339.898,
+     347.145,
+     -0.04
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.400000000029976,
+   "t_lift": 21.799999999994544,
+   "cmd_sha256": "5b9c996dac980d0a",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 17.8,
+     "FR": 18.0,
+     "RL": 19.9,
+     "RR": 1.3
+    },
+    "extra_stroke_mm": 8.4,
+    "stroke_delta_mm": [
+     339.0,
+     341.1,
+     355.6,
+     8.4
+    ],
+    "max_abs_att_deg": [
+     0.052,
+     0.349
+    ],
+    "min_crawler_kN": 226.6,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      11.8,
+      3.1,
+      2.1,
+      1.4,
+      1.1,
+      0.9,
+      0.7,
+      0.6,
+      17.9,
+      15.7
+     ],
+     "N_min_kN": 7.38,
+     "N_max_kN": 59.6
+    }
+   },
+   "min_F_after_liftoff_kN": 52.52,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0015,
+    -0.0238
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 39.1
+  },
+  {
+   "key": "ps7|PS7a_RR|top|8.0|c2",
+   "case": "PS7a_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.718,
+    "pre_contact_N": 8210.0,
+    "pre_gap_mm": [
+     339.624,
+     339.898,
+     347.145,
+     -0.04
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.20000000002902,
+   "t_lift": 21.499999999995243,
+   "cmd_sha256": "e7a8e3d1262be5ba",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.5,
+    "latch_rel_s": {
+     "FL": 17.6,
+     "FR": 17.8,
+     "RL": 19.6,
+     "RR": 1.0
+    },
+    "extra_stroke_mm": 8.4,
+    "stroke_delta_mm": [
+     339.0,
+     341.1,
+     354.1,
+     8.4
+    ],
+    "max_abs_att_deg": [
+     0.052,
+     0.349
+    ],
+    "min_crawler_kN": 237.7,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      11.8,
+      3.1,
+      2.1,
+      1.4,
+      1.1,
+      0.9,
+      0.7,
+      0.6,
+      17.9,
+      11.2
+     ],
+     "N_min_kN": 7.38,
+     "N_max_kN": 59.6
+    }
+   },
+   "min_F_after_liftoff_kN": 52.54,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0014,
+    -0.0235
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 40.8
+  },
+  {
+   "key": "ps7|PS7a_RR|bottom|0.0|proj",
+   "case": "PS7a_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.601,
+    "pre_contact_N": 8134.5,
+    "pre_gap_mm": [
+     339.715,
+     339.954,
+     346.967,
+     -0.04
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.100000000028544,
+   "t_lift": 21.799999999994544,
+   "cmd_sha256": "76817066e200e3ae",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 19.9,
+     "RR": 1.4
+    },
+    "extra_stroke_mm": 9.4,
+    "stroke_delta_mm": [
+     339.0,
+     342.1,
+     355.6,
+     9.4
+    ],
+    "max_abs_att_deg": [
+     0.063,
+     0.359
+    ],
+    "min_crawler_kN": 203.1,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      9.8,
+      0.4,
+      0.2,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      19.0,
+      14.3
+     ],
+     "N_min_kN": 7.95,
+     "N_max_kN": 65.3
+    }
+   },
+   "min_F_after_liftoff_kN": 54.3,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0029,
+    -0.0172
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 145.4
+  },
+  {
+   "key": "ps7|PS7a_RR|bottom|0.0|c1",
+   "case": "PS7a_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.601,
+    "pre_contact_N": 8134.5,
+    "pre_gap_mm": [
+     339.715,
+     339.954,
+     346.967,
+     -0.04
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.100000000028544,
+   "t_lift": 21.799999999994544,
+   "cmd_sha256": "76817066e200e3ae",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 19.9,
+     "RR": 1.4
+    },
+    "extra_stroke_mm": 9.4,
+    "stroke_delta_mm": [
+     339.0,
+     342.1,
+     355.6,
+     9.4
+    ],
+    "max_abs_att_deg": [
+     0.063,
+     0.359
+    ],
+    "min_crawler_kN": 203.1,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      9.8,
+      0.4,
+      0.2,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      19.0,
+      14.3
+     ],
+     "N_min_kN": 7.95,
+     "N_max_kN": 65.3
+    }
+   },
+   "min_F_after_liftoff_kN": 54.3,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0029,
+    -0.0172
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 149.5
+  },
+  {
+   "key": "ps7|PS7a_RR|bottom|0.0|c2",
+   "case": "PS7a_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.601,
+    "pre_contact_N": 8134.5,
+    "pre_gap_mm": [
+     339.715,
+     339.954,
+     346.967,
+     -0.04
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.000000000028066,
+   "t_lift": 21.59999999999501,
+   "cmd_sha256": "c770ea86bf516f1b",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 17.6,
+     "FR": 17.8,
+     "RL": 19.7,
+     "RR": 1.2
+    },
+    "extra_stroke_mm": 9.4,
+    "stroke_delta_mm": [
+     339.0,
+     342.1,
+     355.0,
+     9.4
+    ],
+    "max_abs_att_deg": [
+     0.063,
+     0.359
+    ],
+    "min_crawler_kN": 207.8,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      9.8,
+      0.4,
+      0.2,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      19.0,
+      11.8
+     ],
+     "N_min_kN": 7.95,
+     "N_max_kN": 65.3
+    }
+   },
+   "min_F_after_liftoff_kN": 54.32,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.003,
+    -0.0177
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 151.8
+  },
+  {
+   "key": "ps7|PS7a_RR|bottom|8.0|proj",
+   "case": "PS7a_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.635,
+    "pre_contact_N": 8262.0,
+    "pre_gap_mm": [
+     339.696,
+     339.93,
+     347.088,
+     -0.04
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.80000000002711,
+   "t_lift": 21.59999999999501,
+   "cmd_sha256": "db456d067e825d7c",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.1
+    },
+    "extra_stroke_mm": 6.3,
+    "stroke_delta_mm": [
+     341.1,
+     343.2,
+     353.5,
+     6.3
+    ],
+    "max_abs_att_deg": [
+     0.048,
+     0.305
+    ],
+    "min_crawler_kN": 203.9,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      8.1,
+      1.3,
+      0.7,
+      0.5,
+      0.3,
+      0.2,
+      0.1,
+      0.1,
+      20.4,
+      16.5
+     ],
+     "N_min_kN": 8.26,
+     "N_max_kN": 64.2
+    }
+   },
+   "min_F_after_liftoff_kN": 52.75,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0021,
+    -0.0247
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     43.8,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.347"
+    ]
+   ],
+   "wall_s": 149.6
+  },
+  {
+   "key": "ps7|PS7a_RR|bottom|8.0|c1",
+   "case": "PS7a_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.635,
+    "pre_contact_N": 8262.0,
+    "pre_gap_mm": [
+     339.696,
+     339.93,
+     347.088,
+     -0.04
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.80000000002711,
+   "t_lift": 21.59999999999501,
+   "cmd_sha256": "db456d067e825d7c",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.1
+    },
+    "extra_stroke_mm": 6.3,
+    "stroke_delta_mm": [
+     341.1,
+     343.2,
+     353.5,
+     6.3
+    ],
+    "max_abs_att_deg": [
+     0.048,
+     0.305
+    ],
+    "min_crawler_kN": 203.9,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      8.1,
+      1.3,
+      0.7,
+      0.5,
+      0.3,
+      0.2,
+      0.1,
+      0.1,
+      20.4,
+      16.5
+     ],
+     "N_min_kN": 8.26,
+     "N_max_kN": 64.2
+    }
+   },
+   "min_F_after_liftoff_kN": 52.75,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0021,
+    -0.0247
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     43.8,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.347"
+    ]
+   ],
+   "wall_s": 140.0
+  },
+  {
+   "key": "ps7|PS7a_RR|bottom|8.0|c2",
+   "case": "PS7a_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 347.635,
+    "pre_contact_N": 8262.0,
+    "pre_gap_mm": [
+     339.696,
+     339.93,
+     347.088,
+     -0.04
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.50000000002568,
+   "t_lift": 21.29999999999571,
+   "cmd_sha256": "ebbcbe64314d5b63",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.3,
+    "latch_rel_s": {
+     "FL": 17.7,
+     "FR": 17.9,
+     "RL": 19.4,
+     "RR": 0.9
+    },
+    "extra_stroke_mm": 6.3,
+    "stroke_delta_mm": [
+     341.1,
+     343.2,
+     352.1,
+     6.3
+    ],
+    "max_abs_att_deg": [
+     0.048,
+     0.305
+    ],
+    "min_crawler_kN": 214.2,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      8.1,
+      1.3,
+      0.7,
+      0.5,
+      0.3,
+      0.2,
+      0.1,
+      0.1,
+      20.4,
+      12.2
+     ],
+     "N_min_kN": 8.26,
+     "N_max_kN": 64.2
+    }
+   },
+   "min_F_after_liftoff_kN": 52.75,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0021,
+    -0.0247
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     43.5,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.347"
+    ]
+   ],
+   "wall_s": 142.4
+  },
+  {
+   "key": "ps7|PS7a_FL|top|0.0|proj",
+   "case": "PS7a_FL",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.766,
+    "pre_contact_N": 13405.8,
+    "pre_gap_mm": [
+     -0.062,
+     341.814,
+     344.547,
+     344.151
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 40.60000000001183,
+   "t_lift": 20.59999999999734,
+   "cmd_sha256": "66432f7dab17ea58",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.8
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     349.4,
+     345.2,
+     344.2
+    ],
+    "max_abs_att_deg": [
+     0.032,
+     0.149
+    ],
+    "min_crawler_kN": 176.7,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      19.3,
+      3.2,
+      2.5,
+      2.0,
+      1.4,
+      1.1,
+      0.9,
+      0.7,
+      0.6,
+      7.3
+     ],
+     "N_min_kN": 12.13,
+     "N_max_kN": 56.1
+    }
+   },
+   "min_F_after_liftoff_kN": 54.22,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0012,
+    -0.0113
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 72.0
+  },
+  {
+   "key": "ps7|PS7a_FL|top|0.0|c1",
+   "case": "PS7a_FL",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.766,
+    "pre_contact_N": 13405.8,
+    "pre_gap_mm": [
+     -0.062,
+     341.814,
+     344.547,
+     344.151
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 40.60000000001183,
+   "t_lift": 20.59999999999734,
+   "cmd_sha256": "66432f7dab17ea58",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.8
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     349.4,
+     345.2,
+     344.2
+    ],
+    "max_abs_att_deg": [
+     0.032,
+     0.149
+    ],
+    "min_crawler_kN": 176.7,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      19.3,
+      3.2,
+      2.5,
+      2.0,
+      1.4,
+      1.1,
+      0.9,
+      0.7,
+      0.6,
+      7.3
+     ],
+     "N_min_kN": 12.13,
+     "N_max_kN": 56.1
+    }
+   },
+   "min_F_after_liftoff_kN": 54.22,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0012,
+    -0.0113
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 58.0
+  },
+  {
+   "key": "ps7|PS7a_FL|top|0.0|c2",
+   "case": "PS7a_FL",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.766,
+    "pre_contact_N": 13405.8,
+    "pre_gap_mm": [
+     -0.062,
+     341.814,
+     344.547,
+     344.151
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 40.20000000000992,
+   "t_lift": 20.399999999997807,
+   "cmd_sha256": "71761b7e6ba8fc86",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 18.6,
+    "latch_rel_s": {
+     "FL": 0.9,
+     "FR": 18.6,
+     "RL": 18.7,
+     "RR": 18.6
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     349.2,
+     344.5,
+     343.9
+    ],
+    "max_abs_att_deg": [
+     0.032,
+     0.149
+    ],
+    "min_crawler_kN": 189.8,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      19.3,
+      3.2,
+      2.5,
+      2.0,
+      1.4,
+      1.1,
+      0.9,
+      0.7,
+      0.6,
+      7.3
+     ],
+     "N_min_kN": 12.13,
+     "N_max_kN": 56.1
+    }
+   },
+   "min_F_after_liftoff_kN": 54.43,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0015,
+    -0.0103
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 60.4
+  },
+  {
+   "key": "ps7|PS7a_FL|top|8.0|proj",
+   "case": "PS7a_FL",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.802,
+    "pre_contact_N": 14025.6,
+    "pre_gap_mm": [
+     -0.065,
+     341.912,
+     344.508,
+     344.091
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.90000000000849,
+   "t_lift": 20.699999999997107,
+   "cmd_sha256": "19981c138f495f4b",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     349.4,
+     345.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.037,
+     0.145
+    ],
+    "min_crawler_kN": 171.1,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      19.3,
+      4.3,
+      3.1,
+      2.4,
+      1.9,
+      1.5,
+      1.3,
+      1.0,
+      0.8,
+      11.3
+     ],
+     "N_min_kN": 12.59,
+     "N_max_kN": 61.3
+    }
+   },
+   "min_F_after_liftoff_kN": 52.37,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0014,
+    -0.008
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 63.2
+  },
+  {
+   "key": "ps7|PS7a_FL|top|8.0|c1",
+   "case": "PS7a_FL",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.802,
+    "pre_contact_N": 14025.6,
+    "pre_gap_mm": [
+     -0.065,
+     341.912,
+     344.508,
+     344.091
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.90000000000849,
+   "t_lift": 20.699999999997107,
+   "cmd_sha256": "19981c138f495f4b",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     349.4,
+     345.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.037,
+     0.145
+    ],
+    "min_crawler_kN": 171.1,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      19.3,
+      4.3,
+      3.1,
+      2.4,
+      1.9,
+      1.5,
+      1.3,
+      1.0,
+      0.8,
+      11.3
+     ],
+     "N_min_kN": 12.59,
+     "N_max_kN": 61.3
+    }
+   },
+   "min_F_after_liftoff_kN": 52.37,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0014,
+    -0.008
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 45.5
+  },
+  {
+   "key": "ps7|PS7a_FL|top|8.0|c2",
+   "case": "PS7a_FL",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.802,
+    "pre_contact_N": 14025.6,
+    "pre_gap_mm": [
+     -0.065,
+     341.912,
+     344.508,
+     344.091
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.700000000007535,
+   "t_lift": 20.399999999997807,
+   "cmd_sha256": "a32567e5d1ce40bb",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 18.5,
+    "latch_rel_s": {
+     "FL": 0.9,
+     "FR": 18.5,
+     "RL": 18.6,
+     "RR": 18.6
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     348.7,
+     343.7,
+     343.7
+    ],
+    "max_abs_att_deg": [
+     0.037,
+     0.145
+    ],
+    "min_crawler_kN": 217.3,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      19.3,
+      4.3,
+      3.1,
+      2.4,
+      1.9,
+      1.5,
+      1.3,
+      1.0,
+      0.8,
+      9.3
+     ],
+     "N_min_kN": 12.59,
+     "N_max_kN": 57.2
+    }
+   },
+   "min_F_after_liftoff_kN": 52.4,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0018,
+    -0.0081
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 53.8
+  },
+  {
+   "key": "ps7|PS7a_FL|bottom|0.0|proj",
+   "case": "PS7a_FL",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.833,
+    "pre_contact_N": 12995.6,
+    "pre_gap_mm": [
+     -0.06,
+     341.956,
+     344.371,
+     344.03
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.90000000000849,
+   "t_lift": 20.59999999999734,
+   "cmd_sha256": "87684a074adc420e",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     349.4,
+     345.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.03,
+     0.145
+    ],
+    "min_crawler_kN": 164.5,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      18.0,
+      1.1,
+      0.7,
+      0.4,
+      0.3,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      7.8
+     ],
+     "N_min_kN": 12.8,
+     "N_max_kN": 59.4
+    }
+   },
+   "min_F_after_liftoff_kN": 54.3,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0011,
+    -0.0084
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 69.6
+  },
+  {
+   "key": "ps7|PS7a_FL|bottom|0.0|c1",
+   "case": "PS7a_FL",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.833,
+    "pre_contact_N": 12995.6,
+    "pre_gap_mm": [
+     -0.06,
+     341.956,
+     344.371,
+     344.03
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.90000000000849,
+   "t_lift": 20.59999999999734,
+   "cmd_sha256": "87684a074adc420e",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     349.4,
+     345.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.03,
+     0.145
+    ],
+    "min_crawler_kN": 164.5,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      18.0,
+      1.1,
+      0.7,
+      0.4,
+      0.3,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      7.8
+     ],
+     "N_min_kN": 12.8,
+     "N_max_kN": 59.4
+    }
+   },
+   "min_F_after_liftoff_kN": 54.3,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0011,
+    -0.0084
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 64.8
+  },
+  {
+   "key": "ps7|PS7a_FL|bottom|0.0|c2",
+   "case": "PS7a_FL",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.833,
+    "pre_contact_N": 12995.6,
+    "pre_gap_mm": [
+     -0.06,
+     341.956,
+     344.371,
+     344.03
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 39.80000000000801,
+   "t_lift": 20.399999999997807,
+   "cmd_sha256": "e01f626edc600790",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 18.6,
+    "latch_rel_s": {
+     "FL": 0.9,
+     "FR": 18.6,
+     "RL": 18.7,
+     "RR": 18.6
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     349.2,
+     344.5,
+     344.5
+    ],
+    "max_abs_att_deg": [
+     0.03,
+     0.145
+    ],
+    "min_crawler_kN": 181.1,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      18.0,
+      1.1,
+      0.7,
+      0.4,
+      0.3,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      6.2
+     ],
+     "N_min_kN": 12.8,
+     "N_max_kN": 56.2
+    }
+   },
+   "min_F_after_liftoff_kN": 54.28,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0014,
+    -0.0086
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 62.8
+  },
+  {
+   "key": "ps7|PS7a_FL|bottom|8.0|proj",
+   "case": "PS7a_FL",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.869,
+    "pre_contact_N": 13578.5,
+    "pre_gap_mm": [
+     -0.063,
+     342.069,
+     344.317,
+     343.966
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 40.40000000001088,
+   "t_lift": 20.699999999997107,
+   "cmd_sha256": "515b4d14dffa3fa3",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.9,
+    "latch_rel_s": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 19.0,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     349.4,
+     346.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.028,
+     0.143
+    ],
+    "min_crawler_kN": 152.9,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      17.8,
+      1.1,
+      0.4,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      0.0,
+      9.0
+     ],
+     "N_min_kN": 13.58,
+     "N_max_kN": 59.5
+    }
+   },
+   "min_F_after_liftoff_kN": 52.32,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0011,
+    -0.0108
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 67.3
+  },
+  {
+   "key": "ps7|PS7a_FL|bottom|8.0|c1",
+   "case": "PS7a_FL",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.869,
+    "pre_contact_N": 13578.5,
+    "pre_gap_mm": [
+     -0.063,
+     342.069,
+     344.317,
+     343.966
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 40.40000000001088,
+   "t_lift": 20.699999999997107,
+   "cmd_sha256": "515b4d14dffa3fa3",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 18.9,
+    "latch_rel_s": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 19.0,
+     "RR": 18.9
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     349.4,
+     346.2,
+     345.2
+    ],
+    "max_abs_att_deg": [
+     0.028,
+     0.143
+    ],
+    "min_crawler_kN": 152.9,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      17.8,
+      1.1,
+      0.4,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      0.0,
+      9.0
+     ],
+     "N_min_kN": 13.58,
+     "N_max_kN": 59.5
+    }
+   },
+   "min_F_after_liftoff_kN": 52.32,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0011,
+    -0.0108
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 56.7
+  },
+  {
+   "key": "ps7|PS7a_FL|bottom|8.0|c2",
+   "case": "PS7a_FL",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "FL",
+    "pre_delta_mm": 2.0,
+    "pre_target_mm": 342.869,
+    "pre_contact_N": 13578.5,
+    "pre_gap_mm": [
+     -0.063,
+     342.069,
+     344.317,
+     343.966
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 40.100000000009445,
+   "t_lift": 20.399999999997807,
+   "cmd_sha256": "4850981179181b6c",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 18.6,
+    "latch_rel_s": {
+     "FL": 0.9,
+     "FR": 18.5,
+     "RL": 18.7,
+     "RR": 18.6
+    },
+    "extra_stroke_mm": 5.2,
+    "stroke_delta_mm": [
+     5.2,
+     349.2,
+     344.7,
+     344.5
+    ],
+    "max_abs_att_deg": [
+     0.028,
+     0.143
+    ],
+    "min_crawler_kN": 183.3,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      17.8,
+      1.1,
+      0.4,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      0.0,
+      7.8
+     ],
+     "N_min_kN": 13.58,
+     "N_max_kN": 57.1
+    }
+   },
+   "min_F_after_liftoff_kN": 52.41,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    -0.0017,
+    -0.0104
+   ],
+   "events": [
+    [
+     1.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ]
+   ],
+   "wall_s": 56.6
+  },
+  {
+   "key": "ps7|PS7b_RR|top|0.0|proj",
+   "case": "PS7b_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.185,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.76,
+     340.748,
+     345.704,
+     1.508
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 48.000000000047166,
+   "t_lift": 23.799999999989883,
+   "cmd_sha256": "0fcb25c103057005",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 21.7,
+    "latch_rel_s": {
+     "FL": 16.8,
+     "FR": 18.4,
+     "RL": 21.8,
+     "RR": 16.1
+    },
+    "extra_stroke_mm": 34.5,
+    "stroke_delta_mm": [
+     328.5,
+     332.7,
+     375.5,
+     34.5
+    ],
+    "max_abs_att_deg": [
+     0.114,
+     0.727
+    ],
+    "min_crawler_kN": 214.2,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      19.6,
+      19.3,
+      23.2,
+      27.5,
+      27.0,
+      25.0,
+      23.7,
+      23.1,
+      31.0,
+      13.9,
+      24.6
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 85.8
+    }
+   },
+   "min_F_after_liftoff_kN": 53.99,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0019,
+    -0.0155
+   ],
+   "events": [
+    [
+     1.9,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 481.9
+  },
+  {
+   "key": "ps7|PS7b_RR|top|0.0|c1",
+   "case": "PS7b_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.185,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.76,
+     340.748,
+     345.704,
+     1.508
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.500000000030454,
+   "t_lift": 21.999999999994078,
+   "cmd_sha256": "a9d2145f3c25a24e",
+   "p27_used_legs": [
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 20.0,
+    "latch_rel_s": {
+     "FL": 17.7,
+     "FR": 18.0,
+     "RL": 20.1,
+     "RR": 2.3
+    },
+    "extra_stroke_mm": 14.1,
+    "stroke_delta_mm": [
+     337.9,
+     341.1,
+     357.7,
+     14.1
+    ],
+    "max_abs_att_deg": [
+     0.068,
+     0.394
+    ],
+    "min_crawler_kN": 208.9,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      18.6,
+      10.7,
+      8.2,
+      6.1,
+      4.8,
+      3.7,
+      2.8,
+      2.3,
+      19.1,
+      17.4
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 64.4
+    }
+   },
+   "min_F_after_liftoff_kN": 53.54,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0021,
+    -0.0165
+   ],
+   "events": [
+    [
+     1.9,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 461.2
+  },
+  {
+   "key": "ps7|PS7b_RR|top|0.0|c2",
+   "case": "PS7b_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.185,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.76,
+     340.748,
+     345.704,
+     1.508
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.3000000000295,
+   "t_lift": 21.699999999994777,
+   "cmd_sha256": "02ea2f2e0ef6fac0",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.7,
+    "latch_rel_s": {
+     "FL": 17.5,
+     "FR": 17.7,
+     "RL": 19.8,
+     "RR": 1.5
+    },
+    "extra_stroke_mm": 13.6,
+    "stroke_delta_mm": [
+     337.9,
+     341.1,
+     356.0,
+     13.6
+    ],
+    "max_abs_att_deg": [
+     0.063,
+     0.387
+    ],
+    "min_crawler_kN": 222.0,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      17.4,
+      9.2,
+      7.2,
+      5.5,
+      4.2,
+      3.5,
+      2.8,
+      2.3,
+      18.1,
+      11.6
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 61.7
+    }
+   },
+   "min_F_after_liftoff_kN": 54.15,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0026,
+    -0.0173
+   ],
+   "events": [
+    [
+     1.9,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 473.6
+  },
+  {
+   "key": "ps7|PS7b_RR|top|8.0|proj",
+   "case": "PS7b_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.218,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.796,
+     340.784,
+     345.737,
+     1.781
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.500000000030454,
+   "t_lift": 21.89999999999431,
+   "cmd_sha256": "20309306002c9648",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.9,
+    "latch_rel_s": {
+     "FL": 17.8,
+     "FR": 18.0,
+     "RL": 20.0,
+     "RR": 2.4
+    },
+    "extra_stroke_mm": 12.6,
+    "stroke_delta_mm": [
+     339.0,
+     341.1,
+     356.7,
+     12.6
+    ],
+    "max_abs_att_deg": [
+     0.052,
+     0.355
+    ],
+    "min_crawler_kN": 215.5,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      16.5,
+      2.3,
+      1.5,
+      1.1,
+      0.9,
+      0.7,
+      0.6,
+      0.5,
+      19.0,
+      17.3
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 62.0
+    }
+   },
+   "min_F_after_liftoff_kN": 52.46,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0009,
+    -0.0227
+   ],
+   "events": [
+    [
+     1.6,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 471.6
+  },
+  {
+   "key": "ps7|PS7b_RR|top|8.0|c1",
+   "case": "PS7b_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.218,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.796,
+     340.784,
+     345.737,
+     1.781
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.100000000028544,
+   "t_lift": 21.699999999994777,
+   "cmd_sha256": "b3451dfad1b9c2c1",
+   "p27_used_legs": [
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.7,
+    "latch_rel_s": {
+     "FL": 17.9,
+     "FR": 18.1,
+     "RL": 19.8,
+     "RR": 1.9
+    },
+    "extra_stroke_mm": 11.0,
+    "stroke_delta_mm": [
+     340.0,
+     342.1,
+     354.6,
+     11.0
+    ],
+    "max_abs_att_deg": [
+     0.048,
+     0.333
+    ],
+    "min_crawler_kN": 213.4,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      14.6,
+      4.3,
+      2.3,
+      1.5,
+      1.0,
+      0.8,
+      0.6,
+      0.5,
+      20.6,
+      15.2
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 61.4
+    }
+   },
+   "min_F_after_liftoff_kN": 52.53,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0019,
+    -0.0238
+   ],
+   "events": [
+    [
+     1.6,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 472.9
+  },
+  {
+   "key": "ps7|PS7b_RR|top|8.0|c2",
+   "case": "PS7b_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.218,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.796,
+     340.784,
+     345.737,
+     1.781
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.80000000002711,
+   "t_lift": 21.399999999995476,
+   "cmd_sha256": "c6c1fc33dbe73a4d",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.4,
+    "latch_rel_s": {
+     "FL": 17.6,
+     "FR": 17.9,
+     "RL": 19.5,
+     "RR": 1.2
+    },
+    "extra_stroke_mm": 10.5,
+    "stroke_delta_mm": [
+     340.0,
+     342.1,
+     353.1,
+     10.5
+    ],
+    "max_abs_att_deg": [
+     0.047,
+     0.325
+    ],
+    "min_crawler_kN": 228.8,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      14.1,
+      3.8,
+      2.4,
+      1.7,
+      1.2,
+      1.0,
+      0.8,
+      0.7,
+      19.8,
+      11.7
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 59.4
+    }
+   },
+   "min_F_after_liftoff_kN": 52.52,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0013,
+    -0.0236
+   ],
+   "events": [
+    [
+     1.6,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 471.2
+  },
+  {
+   "key": "ps7|PS7b_RR|bottom|0.0|proj",
+   "case": "PS7b_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.101,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.833,
+     340.821,
+     345.612,
+     1.5
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.400000000029976,
+   "t_lift": 21.89999999999431,
+   "cmd_sha256": "275a4624c1675ff5",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.9,
+    "latch_rel_s": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 20.0,
+     "RR": 1.8
+    },
+    "extra_stroke_mm": 13.6,
+    "stroke_delta_mm": [
+     339.0,
+     342.1,
+     356.7,
+     13.6
+    ],
+    "max_abs_att_deg": [
+     0.065,
+     0.374
+    ],
+    "min_crawler_kN": 191.9,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      15.2,
+      2.2,
+      1.3,
+      0.8,
+      0.5,
+      0.4,
+      0.3,
+      0.2,
+      20.0,
+      15.8
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 68.3
+    }
+   },
+   "min_F_after_liftoff_kN": 54.31,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0025,
+    -0.0169
+   ],
+   "events": [
+    [
+     1.9,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 75.4
+  },
+  {
+   "key": "ps7|PS7b_RR|bottom|0.0|c1",
+   "case": "PS7b_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.101,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.833,
+     340.821,
+     345.612,
+     1.5
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.400000000029976,
+   "t_lift": 21.89999999999431,
+   "cmd_sha256": "275a4624c1675ff5",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.9,
+    "latch_rel_s": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 20.0,
+     "RR": 1.8
+    },
+    "extra_stroke_mm": 13.6,
+    "stroke_delta_mm": [
+     339.0,
+     342.1,
+     356.7,
+     13.6
+    ],
+    "max_abs_att_deg": [
+     0.065,
+     0.374
+    ],
+    "min_crawler_kN": 191.9,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      15.2,
+      2.2,
+      1.3,
+      0.8,
+      0.5,
+      0.4,
+      0.3,
+      0.2,
+      20.0,
+      15.8
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 68.3
+    }
+   },
+   "min_F_after_liftoff_kN": 54.31,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0025,
+    -0.0169
+   ],
+   "events": [
+    [
+     1.9,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 73.7
+  },
+  {
+   "key": "ps7|PS7b_RR|bottom|0.0|c2",
+   "case": "PS7b_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.101,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.833,
+     340.821,
+     345.612,
+     1.5
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.100000000028544,
+   "t_lift": 21.59999999999501,
+   "cmd_sha256": "216d09aff30a7e38",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 17.6,
+     "FR": 17.8,
+     "RL": 19.7,
+     "RR": 1.5
+    },
+    "extra_stroke_mm": 13.6,
+    "stroke_delta_mm": [
+     339.0,
+     342.1,
+     355.2,
+     13.6
+    ],
+    "max_abs_att_deg": [
+     0.065,
+     0.374
+    ],
+    "min_crawler_kN": 201.4,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      15.2,
+      2.2,
+      1.3,
+      0.8,
+      0.5,
+      0.4,
+      0.3,
+      0.2,
+      20.0,
+      11.9
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 68.3
+    }
+   },
+   "min_F_after_liftoff_kN": 54.31,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0025,
+    -0.017
+   ],
+   "events": [
+    [
+     1.9,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 74.3
+  },
+  {
+   "key": "ps7|PS7b_RR|bottom|8.0|proj",
+   "case": "PS7b_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.135,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.869,
+     340.857,
+     345.645,
+     1.774
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.80000000002711,
+   "t_lift": 21.59999999999501,
+   "cmd_sha256": "195394b90a8b37a8",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.5
+    },
+    "extra_stroke_mm": 10.5,
+    "stroke_delta_mm": [
+     341.1,
+     343.2,
+     353.5,
+     10.5
+    ],
+    "max_abs_att_deg": [
+     0.051,
+     0.315
+    ],
+    "min_crawler_kN": 199.5,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      12.3,
+      0.7,
+      0.3,
+      0.1,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      21.3,
+      15.1
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 67.6
+    }
+   },
+   "min_F_after_liftoff_kN": 52.77,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0029,
+    -0.025
+   ],
+   "events": [
+    [
+     1.6,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     43.8,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.347"
+    ]
+   ],
+   "wall_s": 70.5
+  },
+  {
+   "key": "ps7|PS7b_RR|bottom|8.0|c1",
+   "case": "PS7b_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.135,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.869,
+     340.857,
+     345.645,
+     1.774
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.80000000002711,
+   "t_lift": 21.59999999999501,
+   "cmd_sha256": "195394b90a8b37a8",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.5
+    },
+    "extra_stroke_mm": 10.5,
+    "stroke_delta_mm": [
+     341.1,
+     343.2,
+     353.5,
+     10.5
+    ],
+    "max_abs_att_deg": [
+     0.051,
+     0.315
+    ],
+    "min_crawler_kN": 199.5,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      12.3,
+      0.7,
+      0.3,
+      0.1,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      21.3,
+      15.1
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 67.6
+    }
+   },
+   "min_F_after_liftoff_kN": 52.77,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0029,
+    -0.025
+   ],
+   "events": [
+    [
+     1.6,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     43.8,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.347"
+    ]
+   ],
+   "wall_s": 68.7
+  },
+  {
+   "key": "ps7|PS7b_RR|bottom|8.0|c2",
+   "case": "PS7b_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -1.5,
+    "pre_target_mm": 344.135,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.869,
+     340.857,
+     345.645,
+     1.774
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.50000000002568,
+   "t_lift": 21.29999999999571,
+   "cmd_sha256": "1d2fefc0d4a1d887",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.3,
+    "latch_rel_s": {
+     "FL": 17.7,
+     "FR": 17.9,
+     "RL": 19.4,
+     "RR": 1.2
+    },
+    "extra_stroke_mm": 10.5,
+    "stroke_delta_mm": [
+     341.1,
+     343.2,
+     352.1,
+     10.5
+    ],
+    "max_abs_att_deg": [
+     0.051,
+     0.315
+    ],
+    "min_crawler_kN": 209.1,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      12.3,
+      0.7,
+      0.3,
+      0.1,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      21.3,
+      11.1
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 67.6
+    }
+   },
+   "min_F_after_liftoff_kN": 52.77,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0028,
+    -0.025
+   ],
+   "events": [
+    [
+     1.6,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     43.5,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.348"
+    ]
+   ],
+   "wall_s": 69.2
+  },
+  {
+   "key": "ps7|PS7c_RR|top|0.0|proj",
+   "case": "PS7c_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 342.985,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.76,
+     340.748,
+     345.704,
+     2.709
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 48.20000000004812,
+   "t_lift": 23.999999999989416,
+   "cmd_sha256": "a59ddf2e6a37223b",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 21.9,
+    "latch_rel_s": {
+     "FL": 16.9,
+     "FR": 17.5,
+     "RL": 22.0,
+     "RR": 16.7
+    },
+    "extra_stroke_mm": 36.6,
+    "stroke_delta_mm": [
+     329.6,
+     332.2,
+     377.6,
+     36.6
+    ],
+    "max_abs_att_deg": [
+     0.09,
+     0.736
+    ],
+    "min_crawler_kN": 189.4,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      20.2,
+      21.0,
+      24.3,
+      25.3,
+      26.1,
+      25.2,
+      23.5,
+      22.7,
+      35.4,
+      11.8,
+      23.4
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 90.6
+    }
+   },
+   "min_F_after_liftoff_kN": 53.99,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0007,
+    -0.0149
+   ],
+   "events": [
+    [
+     2.2,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 39.9
+  },
+  {
+   "key": "ps7|PS7c_RR|top|0.0|c1",
+   "case": "PS7c_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 342.985,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.76,
+     340.748,
+     345.704,
+     2.709
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.800000000031886,
+   "t_lift": 22.099999999993845,
+   "cmd_sha256": "a4eb22a1d78e58b9",
+   "p27_used_legs": [
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 20.1,
+    "latch_rel_s": {
+     "FL": 17.7,
+     "FR": 17.9,
+     "RL": 20.2,
+     "RR": 2.4
+    },
+    "extra_stroke_mm": 15.7,
+    "stroke_delta_mm": [
+     337.9,
+     340.0,
+     358.8,
+     15.7
+    ],
+    "max_abs_att_deg": [
+     0.055,
+     0.399
+    ],
+    "min_crawler_kN": 212.5,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      19.3,
+      12.1,
+      9.6,
+      7.2,
+      5.5,
+      4.2,
+      2.9,
+      2.3,
+      17.8,
+      18.3
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 62.8
+    }
+   },
+   "min_F_after_liftoff_kN": 54.07,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0006,
+    -0.0163
+   ],
+   "events": [
+    [
+     2.2,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 35.1
+  },
+  {
+   "key": "ps7|PS7c_RR|top|0.0|c2",
+   "case": "PS7c_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.766,
+     340.755,
+     345.696,
+     345.685
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 342.985,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.76,
+     340.748,
+     345.704,
+     2.709
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.400000000029976,
+   "t_lift": 21.799999999994544,
+   "cmd_sha256": "c1ef489405d0869b",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 17.5,
+     "FR": 17.7,
+     "RL": 19.9,
+     "RR": 1.7
+    },
+    "extra_stroke_mm": 15.2,
+    "stroke_delta_mm": [
+     337.9,
+     340.0,
+     357.1,
+     15.2
+    ],
+    "max_abs_att_deg": [
+     0.055,
+     0.393
+    ],
+    "min_crawler_kN": 226.0,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      18.0,
+      10.1,
+      7.3,
+      5.2,
+      4.3,
+      3.3,
+      2.5,
+      1.9,
+      18.0,
+      13.2
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 62.5
+    }
+   },
+   "min_F_after_liftoff_kN": 54.07,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.001,
+    -0.0163
+   ],
+   "events": [
+    [
+     2.2,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 33.1
+  },
+  {
+   "key": "ps7|PS7c_RR|top|8.0|proj",
+   "case": "PS7c_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 343.018,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.795,
+     340.783,
+     345.738,
+     2.975
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.400000000029976,
+   "t_lift": 21.799999999994544,
+   "cmd_sha256": "549731a7c4d73720",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 17.8,
+     "FR": 18.0,
+     "RL": 19.9,
+     "RR": 2.5
+    },
+    "extra_stroke_mm": 13.6,
+    "stroke_delta_mm": [
+     339.0,
+     341.1,
+     355.6,
+     13.6
+    ],
+    "max_abs_att_deg": [
+     0.05,
+     0.353
+    ],
+    "min_crawler_kN": 224.4,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      16.2,
+      2.1,
+      1.4,
+      1.1,
+      0.9,
+      0.8,
+      0.7,
+      0.6,
+      18.7,
+      14.0
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 61.1
+    }
+   },
+   "min_F_after_liftoff_kN": 52.53,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0019,
+    -0.023
+   ],
+   "events": [
+    [
+     1.8,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 33.9
+  },
+  {
+   "key": "ps7|PS7c_RR|top|8.0|c1",
+   "case": "PS7c_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 343.018,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.795,
+     340.783,
+     345.738,
+     2.975
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.90000000002759,
+   "t_lift": 21.59999999999501,
+   "cmd_sha256": "55f0ab2120da94d8",
+   "p27_used_legs": [
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 17.9,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 2.0
+    },
+    "extra_stroke_mm": 12.0,
+    "stroke_delta_mm": [
+     340.0,
+     343.2,
+     353.5,
+     12.0
+    ],
+    "max_abs_att_deg": [
+     0.064,
+     0.33
+    ],
+    "min_crawler_kN": 210.4,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      14.7,
+      3.9,
+      2.1,
+      1.4,
+      1.0,
+      0.8,
+      0.6,
+      0.5,
+      21.7,
+      14.7
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 63.9
+    }
+   },
+   "min_F_after_liftoff_kN": 52.51,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0044,
+    -0.0239
+   ],
+   "events": [
+    [
+     1.8,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 35.1
+  },
+  {
+   "key": "ps7|PS7c_RR|top|8.0|c2",
+   "case": "PS7c_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 343.018,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.795,
+     340.783,
+     345.738,
+     2.975
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.60000000002616,
+   "t_lift": 21.29999999999571,
+   "cmd_sha256": "b31f8d7124588644",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.3,
+    "latch_rel_s": {
+     "FL": 17.6,
+     "FR": 17.9,
+     "RL": 19.4,
+     "RR": 1.4
+    },
+    "extra_stroke_mm": 12.0,
+    "stroke_delta_mm": [
+     340.0,
+     343.2,
+     352.1,
+     12.0
+    ],
+    "max_abs_att_deg": [
+     0.064,
+     0.332
+    ],
+    "min_crawler_kN": 221.8,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      14.6,
+      5.0,
+      2.5,
+      1.6,
+      1.0,
+      0.7,
+      0.6,
+      0.5,
+      21.3,
+      9.5
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 63.7
+    }
+   },
+   "min_F_after_liftoff_kN": 52.51,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0044,
+    -0.0239
+   ],
+   "events": [
+    [
+     1.8,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 35.0
+  },
+  {
+   "key": "ps7|PS7c_RR|bottom|0.0|proj",
+   "case": "PS7c_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 342.901,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.833,
+     340.821,
+     345.612,
+     2.7
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.400000000029976,
+   "t_lift": 21.89999999999431,
+   "cmd_sha256": "24367279e25b828c",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.9,
+    "latch_rel_s": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 20.0,
+     "RR": 1.9
+    },
+    "extra_stroke_mm": 14.6,
+    "stroke_delta_mm": [
+     339.0,
+     342.1,
+     356.7,
+     14.6
+    ],
+    "max_abs_att_deg": [
+     0.065,
+     0.371
+    ],
+    "min_crawler_kN": 193.0,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      15.2,
+      2.6,
+      1.5,
+      1.0,
+      0.6,
+      0.4,
+      0.3,
+      0.2,
+      19.8,
+      16.0
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 67.6
+    }
+   },
+   "min_F_after_liftoff_kN": 54.3,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0024,
+    -0.0169
+   ],
+   "events": [
+    [
+     2.1,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 29.2
+  },
+  {
+   "key": "ps7|PS7c_RR|bottom|0.0|c1",
+   "case": "PS7c_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 342.901,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.833,
+     340.821,
+     345.612,
+     2.7
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.400000000029976,
+   "t_lift": 21.89999999999431,
+   "cmd_sha256": "24367279e25b828c",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.9,
+    "latch_rel_s": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 20.0,
+     "RR": 1.9
+    },
+    "extra_stroke_mm": 14.6,
+    "stroke_delta_mm": [
+     339.0,
+     342.1,
+     356.7,
+     14.6
+    ],
+    "max_abs_att_deg": [
+     0.065,
+     0.371
+    ],
+    "min_crawler_kN": 193.0,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      15.2,
+      2.6,
+      1.5,
+      1.0,
+      0.6,
+      0.4,
+      0.3,
+      0.2,
+      19.8,
+      16.0
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 67.6
+    }
+   },
+   "min_F_after_liftoff_kN": 54.3,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0024,
+    -0.0169
+   ],
+   "events": [
+    [
+     2.1,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 29.7
+  },
+  {
+   "key": "ps7|PS7c_RR|bottom|0.0|c2",
+   "case": "PS7c_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.833,
+     340.821,
+     345.612,
+     345.601
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 342.901,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.833,
+     340.821,
+     345.612,
+     2.7
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 44.100000000028544,
+   "t_lift": 21.59999999999501,
+   "cmd_sha256": "3cf6c903e898e156",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 17.6,
+     "FR": 17.8,
+     "RL": 19.7,
+     "RR": 1.6
+    },
+    "extra_stroke_mm": 14.6,
+    "stroke_delta_mm": [
+     339.0,
+     342.1,
+     355.2,
+     14.6
+    ],
+    "max_abs_att_deg": [
+     0.065,
+     0.371
+    ],
+    "min_crawler_kN": 202.4,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      15.2,
+      2.6,
+      1.5,
+      1.0,
+      0.6,
+      0.4,
+      0.3,
+      0.2,
+      19.8,
+      12.1
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 67.6
+    }
+   },
+   "min_F_after_liftoff_kN": 54.3,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0024,
+    -0.0169
+   ],
+   "events": [
+    [
+     2.1,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ]
+   ],
+   "wall_s": 29.3
+  },
+  {
+   "key": "ps7|PS7c_RR|bottom|8.0|proj",
+   "case": "PS7c_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "proj",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 342.935,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.869,
+     340.857,
+     345.645,
+     2.966
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.80000000002711,
+   "t_lift": 21.59999999999501,
+   "cmd_sha256": "eada46c735a9b7ad",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.6
+    },
+    "extra_stroke_mm": 11.5,
+    "stroke_delta_mm": [
+     341.1,
+     343.2,
+     353.5,
+     11.5
+    ],
+    "max_abs_att_deg": [
+     0.05,
+     0.312
+    ],
+    "min_crawler_kN": 200.4,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      12.4,
+      0.9,
+      0.3,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      21.0,
+      15.4
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 66.9
+    }
+   },
+   "min_F_after_liftoff_kN": 52.77,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0027,
+    -0.0249
+   ],
+   "events": [
+    [
+     1.8,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     43.8,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.349"
+    ]
+   ],
+   "wall_s": 27.5
+  },
+  {
+   "key": "ps7|PS7c_RR|bottom|8.0|c1",
+   "case": "PS7c_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "c1",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 342.935,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.869,
+     340.857,
+     345.645,
+     2.966
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.80000000002711,
+   "t_lift": 21.59999999999501,
+   "cmd_sha256": "eada46c735a9b7ad",
+   "p27_used_legs": [],
+   "touch": {
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.6
+    },
+    "extra_stroke_mm": 11.5,
+    "stroke_delta_mm": [
+     341.1,
+     343.2,
+     353.5,
+     11.5
+    ],
+    "max_abs_att_deg": [
+     0.05,
+     0.312
+    ],
+    "min_crawler_kN": 200.4,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      12.4,
+      0.9,
+      0.3,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      21.0,
+      15.4
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 66.9
+    }
+   },
+   "min_F_after_liftoff_kN": 52.77,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0027,
+    -0.0249
+   ],
+   "events": [
+    [
+     1.8,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     43.8,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.349"
+    ]
+   ],
+   "wall_s": 28.5
+  },
+  {
+   "key": "ps7|PS7c_RR|bottom|8.0|c2",
+   "case": "PS7c_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "variant": "c2",
+   "info": {
+    "g0_mm": [
+     340.869,
+     340.857,
+     345.645,
+     345.635
+    ],
+    "pre_leg": "RR",
+    "pre_delta_mm": -2.7,
+    "pre_target_mm": 342.935,
+    "pre_contact_N": 0.0,
+    "pre_gap_mm": [
+     340.869,
+     340.857,
+     345.645,
+     2.966
+    ]
+   },
+   "cap_config_N": [
+    8000.0,
+    8000.0,
+    6666.4,
+    6666.4
+   ],
+   "t_ready": 43.50000000002568,
+   "t_lift": 21.29999999999571,
+   "cmd_sha256": "1ab8e3c8fcc7eb26",
+   "p27_used_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "touch": {
+    "duration_s": 19.3,
+    "latch_rel_s": {
+     "FL": 17.7,
+     "FR": 17.9,
+     "RL": 19.4,
+     "RR": 1.3
+    },
+    "extra_stroke_mm": 11.5,
+    "stroke_delta_mm": [
+     341.1,
+     343.2,
+     352.1,
+     11.5
+    ],
+    "max_abs_att_deg": [
+     0.05,
+     0.312
+    ],
+    "min_crawler_kN": 210.1,
+    "pre_leg_oscillation": {
+     "half_pp_per_2s_kN": [
+      12.4,
+      0.9,
+      0.3,
+      0.2,
+      0.1,
+      0.1,
+      0.0,
+      0.0,
+      21.0,
+      11.5
+     ],
+     "N_min_kN": 0.0,
+     "N_max_kN": 66.9
+    }
+   },
+   "min_F_after_liftoff_kN": 52.77,
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true
+   },
+   "pass": true,
+   "att_end_deg": [
+    0.0027,
+    -0.0249
+   ],
+   "events": [
+    [
+     1.8,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     43.5,
+     "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.350"
+    ]
+   ],
+   "wall_s": 27.1
+  }
+ ]
+}

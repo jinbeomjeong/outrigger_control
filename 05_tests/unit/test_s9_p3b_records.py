@@ -248,8 +248,8 @@ def test_p3b_set_24_cases_and_batch_26() -> None:
         assert a[5].endswith("run_S8C.py") and "--approved" in a
         assert a[6:12] == ["run", "--set", "rest", "--only", c["case"], "--tag"]  # control D-5 command form
     assert r9.P3B_DURATION_S == 120.0 and r9.P3B_SIM_S == 128.0
-    assert r9.P3B_EST_S == {"G1": 5800.0, "S1": 5800.0, "J1": 11500.0, "J2": 11500.0}
-    assert sum(c["est_s"] for c in batch) == pytest.approx(12 * 5800 + 12 * 11500 + 433 + 528)
+    assert r9.P3B_EST_S == {"G1": 7000.0, "S1": 7000.0, "J1": 11500.0, "J2": 11500.0}
+    assert sum(c["est_s"] for c in batch) == pytest.approx(12 * 7000 + 12 * 11500 + 433 + 528)
     assert [c["case"] for c in batch if not c.get("s8c")] == [c["case"] for c in cases]
     plan = r9.plan_summary()["groups"]
     assert plan["P3b-1"]["cases"] == 10 and plan["P3b-RE1c"]["cases"] == 2

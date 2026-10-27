@@ -1,0 +1,50 @@
+{
+ "PS7a_FL_R8": {
+  "cmd_sha_c75": "39ee8c60453c73c8",
+  "cmd_sha_c73": "39ee8c60453c73c8",
+  "n_c75": 495,
+  "n_c73": 495,
+  "identical": true,
+  "first_diff": null,
+  "end_att_deg_c75": 0.010652821402759008
+ },
+ "PS7a_RR_R8": {
+  "cmd_sha_c75": "c3cf55768b6343e3",
+  "cmd_sha_c73": "856db36a739db262",
+  "n_c75": 532,
+  "n_c73": 583,
+  "identical": false,
+  "first_diff": {
+   "k": 58,
+   "t_s": 125.94000000193371,
+   "phase": "touch"
+  },
+  "end_att_deg_c75": 0.017177917516080804
+ },
+ "PS7b_RR_R8": {
+  "cmd_sha_c75": "ae67a5fbcac26e95",
+  "cmd_sha_c73": "e07cc2dc73a5bce1",
+  "n_c75": 763,
+  "n_c73": 809,
+  "identical": false,
+  "first_diff": {
+   "k": 292,
+   "t_s": 97.80000000099956,
+   "phase": "touch"
+  },
+  "end_att_deg_c75": 0.01640284905652292
+ },
+ "PS7c_RR_R8": {
+  "cmd_sha_c75": "cae45d13eadec3d2",
+  "cmd_sha_c73": "791d94f68b19fa19",
+  "n_c75": 762,
+  "n_c73": 808,
+  "identical": false,
+  "first_diff": {
+   "k": 293,
+   "t_s": 97.90000000100288,
+   "phase": "touch"
+  },
+  "end_att_deg_c75": 0.016420216813331195
+ }
+}

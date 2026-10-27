@@ -168,13 +168,17 @@ P3B_DURATION_S = 120.0
 """Closed-loop time after the 8 s settle, fixed (user decision 2026-10-26, control D-2: 90 -> 120 s, no end
 rule; READY <= 90 s ASSUMPTION P3-6 from the closed-loop start leaves >= 30 s after READY)."""
 P3B_SIM_S = CRAWLER_SETTLE_S + P3B_DURATION_S
-P3B_US_PER_STEP_UPPER = {"G1": 4500.0, "S1": 4500.0, "J1": 9000.0, "J2": 9000.0}
-"""Upper per-step cost [us] at dt 1e-4 s (dynamics 5.37.6: G1 / S1 3-4.5, J1 / J2 5-9 ms/step, contended P3a
-values incl. the pad node cost of a ~70 % loaded run). The extra 30 s of the 120 s loop are loaded (pads on the
-soil, the costly phase), so the upper per-step value is used for the whole run."""
+P3B_US_PER_STEP_UPPER = {"G1": 5500.0, "S1": 5500.0, "J1": 9000.0, "J2": 9000.0}
+"""Upper per-step cost [us] at dt 1e-4 s for the P3b 4-parallel (contended) runs. G1 / S1 raised 4500 -> 5500
+(2026-10-27): the measured 128 s means of ``batch_P3b_20261026_122444`` (pad B, top, F_s 4 kN) are G1 5.10,
+S1 4.98, J1 8.69, J2 8.48 ms/step (dynamics 5.37.10 check 4 table; ``contended_P3b_reference`` in
+``06_analysis/01_chrono/01_cost/S9_P3b_solo_step_cost.json``; case range G1 4.0-5.3, S1 5.0-5.3, J1 / J2
+8.5-11.2), above the old 5.37.6 estimate (G1 / S1 3-4.5, J1 / J2 5-9 ms/step, contended P3a). Solo cost is
+about half (full load G1 2.64, S1 2.66, J1 4.55, J2 4.62 ms/step). J1 / J2 stay at 9000 (above the B-top
+means). The loaded phase dominates the 120 s loop, so the upper per-step value is used for the whole run."""
 P3B_EST_S = {soil: round(P3B_SIM_S / 1.0e-4 * us * 1e-6, -2) for soil, us in P3B_US_PER_STEP_UPPER.items()}
-"""Wall estimate per case [s] = P3B_SIM_S (128 s) / 1e-4 x upper us/step: G1 / S1 5800, J1 / J2 11500 (before
-D-2, 98 s: 4300 / 8600)."""
+"""Wall estimate per case [s] = P3B_SIM_S (128 s) / 1e-4 x upper us/step: G1 / S1 7000, J1 / J2 11500 (G1 / S1
+at 4500 us: 5800; before D-2, 98 s: 4300 / 8600)."""
 P3B_S8C_CASES = {"N_RE1c_Fs0_combined": 433.0, "N_RE1c_Fs8_combined": 528.0}
 """Re-approach 10 s limit positive tests added to the P3b set (user decision 2026-10-26): run_S8C
 L2b-NSC (rigid floor) cases with the R8 preset; P-core wall estimates of ``run_S8C.py list``."""

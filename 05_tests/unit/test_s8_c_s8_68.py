@@ -65,7 +65,8 @@ def test_existing_101_case_hashes_and_sets_unchanged(run_s8c) -> None:
     for name, ids in doc["sets"].items():
         assert [c.case_id for c in run_s8c.case_set(name)] == ids, name
     # the new cases come after the existing ones (old order kept), before the smoke pair
-    order = [c.case_id for c in run_s8c.s8_cases()]
+    # C-S8-72 (spec rev. 67 345) appends group G1 after these (test_c_s8_72.py checks it)
+    order = [c.case_id for c in run_s8c.s8_cases() if c.group != "G1"]
     assert [c for c in order if c not in C68] == \
         [c for c in order if c in doc["cases"]]
     assert set(order) == set(doc["cases"]) | set(C68)
@@ -484,7 +485,7 @@ def test_g4_7_t_f_sample_output_and_end_reason() -> None:
 
 def test_g4_4_records_mean05_and_tail() -> None:
     """② teeter on RL after FAULT + 1 s: the rev. 64 strict rule fails (record), the C-S8-71
-    rule (0.5 s mean >= F_min and instantaneous min > 0) passes."""
+    rule (0.5 s mean >= F_min and, since U-S8-74 (a), no pad lift-off) passes."""
     d = _synthetic(reground=True, lifted_leg="RL", rl_after_kN=40.0)
     f = d["judged_force_N"].copy()
     tp = d["tp"]
@@ -599,18 +600,25 @@ def test_branch_restore_path_applies_the_soil_rule(run_s8c) -> None:
 
 
 def test_g4_4_instant_floor_zero_fails_even_with_mean_ok() -> None:
-    """① a short dip to 0 N (pad lift-off) fails G4-4 although the 0.5 s mean stays >= F_min."""
+    """① a short pad lift-off (20 ms at 0 N, airborne) fails G4-4 although the 0.5 s mean stays
+    >= F_min (U-S8-74 (a): (b) = no pad lift-off, ``test_s8_u74.py``)."""
     d = _synthetic(reground=True, lifted_leg="RL", rl_after_kN=60.0)
     f = d["judged_force_N"].copy()
     tp = d["tp"]
-    f[(tp >= 16.0 - 1e-9) & (tp < 16.02 - 1e-9), 2] = 0.0  # 20 ms at 0 N
+    dip = (tp >= 16.0 - 1e-9) & (tp < 16.02 - 1e-9)
+    f[dip, 2] = 0.0  # 20 ms at 0 N
     d["judged_force_N"] = f
+    d["airborne"] = d["airborne"].copy()
+    d["airborne"][dip, 2] = True
     g = s8.g4_metrics(expect="reground", **d)["g4_4"]
     assert g["mean05_min_kN"]["RL"] > F_MIN / 1e3
-    assert g["instant_min_positive"] is False and g["passed"] is False
+    assert g["instant_min_positive"] is False and g["no_lift"] is False
+    assert g["passed"] is False
     assert g["rule"] == s8.G4_4_RULE
-    # 1 kN instead of 0 N: > 0, mean ok -> passes; the strict rule is recorded as failed
-    f[(tp >= 16.0 - 1e-9) & (tp < 16.02 - 1e-9), 2] = 1e3
+    # 1 kN instead of 0 N, pad on the ground: mean ok, no lift -> passes; the strict rule is
+    # recorded as failed
+    f[dip, 2] = 1e3
+    d["airborne"][dip, 2] = False
     g2 = s8.g4_metrics(expect="reground", **d)["g4_4"]
     assert g2["passed"] is True and g2["instant_min_ge_F_min"] is False
     assert g2["last_below_F_min_t_s"]["RL"] == pytest.approx(16.019, abs=1.5e-3)

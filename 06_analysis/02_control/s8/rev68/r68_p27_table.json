@@ -1,0 +1,2003 @@
+{
+ "rows": [
+  {
+   "case": "PS7a_FL",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 54.3,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.03,
+     0.145
+    ],
+    "crawler_min_kN": 164.5,
+    "t_ready": 39.90000000000849,
+    "osc_first_last_max": [
+     18.0,
+     7.8,
+     18.0
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 54.3,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.03,
+     0.145
+    ],
+    "crawler_min_kN": 164.5,
+    "t_ready": 39.90000000000849,
+    "osc_first_last_max": [
+     18.0,
+     7.8,
+     18.0
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 54.28,
+    "touch_s": 18.6,
+    "latch": {
+     "FL": 0.9,
+     "FR": 18.6,
+     "RL": 18.7,
+     "RR": 18.6
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.03,
+     0.145
+    ],
+    "crawler_min_kN": 181.1,
+    "t_ready": 39.80000000000801,
+    "osc_first_last_max": [
+     18.0,
+     6.2,
+     18.0
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7a_FL",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 52.32,
+    "touch_s": 18.9,
+    "latch": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 19.0,
+     "RR": 18.9
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.028,
+     0.143
+    ],
+    "crawler_min_kN": 152.9,
+    "t_ready": 40.40000000001088,
+    "osc_first_last_max": [
+     17.8,
+     9.0,
+     17.8
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 52.32,
+    "touch_s": 18.9,
+    "latch": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 19.0,
+     "RR": 18.9
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.028,
+     0.143
+    ],
+    "crawler_min_kN": 152.9,
+    "t_ready": 40.40000000001088,
+    "osc_first_last_max": [
+     17.8,
+     9.0,
+     17.8
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 52.41,
+    "touch_s": 18.6,
+    "latch": {
+     "FL": 0.9,
+     "FR": 18.5,
+     "RL": 18.7,
+     "RR": 18.6
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.028,
+     0.143
+    ],
+    "crawler_min_kN": 183.3,
+    "t_ready": 40.100000000009445,
+    "osc_first_last_max": [
+     17.8,
+     7.8,
+     17.8
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7a_FL",
+   "level": "top",
+   "fs_kN": 0.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 54.22,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.8
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.032,
+     0.149
+    ],
+    "crawler_min_kN": 176.7,
+    "t_ready": 40.60000000001183,
+    "osc_first_last_max": [
+     19.3,
+     7.3,
+     19.3
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 54.22,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.8
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.032,
+     0.149
+    ],
+    "crawler_min_kN": 176.7,
+    "t_ready": 40.60000000001183,
+    "osc_first_last_max": [
+     19.3,
+     7.3,
+     19.3
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 54.43,
+    "touch_s": 18.6,
+    "latch": {
+     "FL": 0.9,
+     "FR": 18.6,
+     "RL": 18.7,
+     "RR": 18.6
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.032,
+     0.149
+    ],
+    "crawler_min_kN": 189.8,
+    "t_ready": 40.20000000000992,
+    "osc_first_last_max": [
+     19.3,
+     7.3,
+     19.3
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7a_FL",
+   "level": "top",
+   "fs_kN": 8.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 52.37,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.037,
+     0.145
+    ],
+    "crawler_min_kN": 171.1,
+    "t_ready": 39.90000000000849,
+    "osc_first_last_max": [
+     19.3,
+     11.3,
+     19.3
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 52.37,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 1.0,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.037,
+     0.145
+    ],
+    "crawler_min_kN": 171.1,
+    "t_ready": 39.90000000000849,
+    "osc_first_last_max": [
+     19.3,
+     11.3,
+     19.3
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 52.4,
+    "touch_s": 18.5,
+    "latch": {
+     "FL": 0.9,
+     "FR": 18.5,
+     "RL": 18.6,
+     "RR": 18.6
+    },
+    "extra_mm": 5.2,
+    "max_att": [
+     0.037,
+     0.145
+    ],
+    "crawler_min_kN": 217.3,
+    "t_ready": 39.700000000007535,
+    "osc_first_last_max": [
+     19.3,
+     9.3,
+     19.3
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7a_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 54.3,
+    "touch_s": 19.8,
+    "latch": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 19.9,
+     "RR": 1.4
+    },
+    "extra_mm": 9.4,
+    "max_att": [
+     0.063,
+     0.359
+    ],
+    "crawler_min_kN": 203.1,
+    "t_ready": 44.100000000028544,
+    "osc_first_last_max": [
+     9.8,
+     14.3,
+     19.0
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 54.3,
+    "touch_s": 19.8,
+    "latch": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 19.9,
+     "RR": 1.4
+    },
+    "extra_mm": 9.4,
+    "max_att": [
+     0.063,
+     0.359
+    ],
+    "crawler_min_kN": 203.1,
+    "t_ready": 44.100000000028544,
+    "osc_first_last_max": [
+     9.8,
+     14.3,
+     19.0
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 54.32,
+    "touch_s": 19.6,
+    "latch": {
+     "FL": 17.6,
+     "FR": 17.8,
+     "RL": 19.7,
+     "RR": 1.2
+    },
+    "extra_mm": 9.4,
+    "max_att": [
+     0.063,
+     0.359
+    ],
+    "crawler_min_kN": 207.8,
+    "t_ready": 44.000000000028066,
+    "osc_first_last_max": [
+     9.8,
+     11.8,
+     19.0
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7a_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 52.75,
+    "touch_s": 19.6,
+    "latch": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.1
+    },
+    "extra_mm": 6.3,
+    "max_att": [
+     0.048,
+     0.305
+    ],
+    "crawler_min_kN": 203.9,
+    "t_ready": 43.80000000002711,
+    "osc_first_last_max": [
+     8.1,
+     16.5,
+     20.4
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ],
+     [
+      43.8,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.347"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 52.75,
+    "touch_s": 19.6,
+    "latch": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.1
+    },
+    "extra_mm": 6.3,
+    "max_att": [
+     0.048,
+     0.305
+    ],
+    "crawler_min_kN": 203.9,
+    "t_ready": 43.80000000002711,
+    "osc_first_last_max": [
+     8.1,
+     16.5,
+     20.4
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ],
+     [
+      43.8,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.347"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 52.75,
+    "touch_s": 19.3,
+    "latch": {
+     "FL": 17.7,
+     "FR": 17.9,
+     "RL": 19.4,
+     "RR": 0.9
+    },
+    "extra_mm": 6.3,
+    "max_att": [
+     0.048,
+     0.305
+    ],
+    "crawler_min_kN": 214.2,
+    "t_ready": 43.50000000002568,
+    "osc_first_last_max": [
+     8.1,
+     12.2,
+     20.4
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ],
+     [
+      43.5,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.347"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7a_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 53.95,
+    "touch_s": 21.7,
+    "latch": {
+     "FL": 16.9,
+     "FR": 17.6,
+     "RL": 21.8,
+     "RR": 14.5
+    },
+    "extra_mm": 28.8,
+    "max_att": [
+     0.1,
+     0.693
+    ],
+    "crawler_min_kN": 202.6,
+    "t_ready": 47.90000000004669,
+    "osc_first_last_max": [
+     15.4,
+     23.7,
+     29.2
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 54.04,
+    "touch_s": 20.1,
+    "latch": {
+     "FL": 17.6,
+     "FR": 17.9,
+     "RL": 20.2,
+     "RR": 2.1
+    },
+    "extra_mm": 12.0,
+    "max_att": [
+     0.065,
+     0.414
+    ],
+    "crawler_min_kN": 218.4,
+    "t_ready": 44.800000000031886,
+    "osc_first_last_max": [
+     14.5,
+     16.9,
+     17.6
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "RR"
+    ],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 54.08,
+    "touch_s": 19.8,
+    "latch": {
+     "FL": 17.5,
+     "FR": 17.7,
+     "RL": 19.9,
+     "RR": 1.3
+    },
+    "extra_mm": 11.5,
+    "max_att": [
+     0.071,
+     0.406
+    ],
+    "crawler_min_kN": 206.1,
+    "t_ready": 44.400000000029976,
+    "osc_first_last_max": [
+     13.4,
+     12.8,
+     20.7
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7a_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 52.52,
+    "touch_s": 19.8,
+    "latch": {
+     "FL": 17.8,
+     "FR": 18.0,
+     "RL": 19.9,
+     "RR": 1.3
+    },
+    "extra_mm": 8.4,
+    "max_att": [
+     0.052,
+     0.349
+    ],
+    "crawler_min_kN": 226.6,
+    "t_ready": 44.400000000029976,
+    "osc_first_last_max": [
+     11.8,
+     15.7,
+     17.9
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 52.52,
+    "touch_s": 19.8,
+    "latch": {
+     "FL": 17.8,
+     "FR": 18.0,
+     "RL": 19.9,
+     "RR": 1.3
+    },
+    "extra_mm": 8.4,
+    "max_att": [
+     0.052,
+     0.349
+    ],
+    "crawler_min_kN": 226.6,
+    "t_ready": 44.400000000029976,
+    "osc_first_last_max": [
+     11.8,
+     15.7,
+     17.9
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 52.54,
+    "touch_s": 19.5,
+    "latch": {
+     "FL": 17.6,
+     "FR": 17.8,
+     "RL": 19.6,
+     "RR": 1.0
+    },
+    "extra_mm": 8.4,
+    "max_att": [
+     0.052,
+     0.349
+    ],
+    "crawler_min_kN": 237.7,
+    "t_ready": 44.20000000002902,
+    "osc_first_last_max": [
+     11.8,
+     11.2,
+     17.9
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.5,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7b_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 54.31,
+    "touch_s": 19.9,
+    "latch": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 20.0,
+     "RR": 1.8
+    },
+    "extra_mm": 13.6,
+    "max_att": [
+     0.065,
+     0.374
+    ],
+    "crawler_min_kN": 191.9,
+    "t_ready": 44.400000000029976,
+    "osc_first_last_max": [
+     15.2,
+     15.8,
+     20.0
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.9,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 54.31,
+    "touch_s": 19.9,
+    "latch": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 20.0,
+     "RR": 1.8
+    },
+    "extra_mm": 13.6,
+    "max_att": [
+     0.065,
+     0.374
+    ],
+    "crawler_min_kN": 191.9,
+    "t_ready": 44.400000000029976,
+    "osc_first_last_max": [
+     15.2,
+     15.8,
+     20.0
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.9,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 54.31,
+    "touch_s": 19.6,
+    "latch": {
+     "FL": 17.6,
+     "FR": 17.8,
+     "RL": 19.7,
+     "RR": 1.5
+    },
+    "extra_mm": 13.6,
+    "max_att": [
+     0.065,
+     0.374
+    ],
+    "crawler_min_kN": 201.4,
+    "t_ready": 44.100000000028544,
+    "osc_first_last_max": [
+     15.2,
+     11.9,
+     20.0
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.9,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7b_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 52.77,
+    "touch_s": 19.6,
+    "latch": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.5
+    },
+    "extra_mm": 10.5,
+    "max_att": [
+     0.051,
+     0.315
+    ],
+    "crawler_min_kN": 199.5,
+    "t_ready": 43.80000000002711,
+    "osc_first_last_max": [
+     12.3,
+     15.1,
+     21.3
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.6,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ],
+     [
+      43.8,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.347"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 52.77,
+    "touch_s": 19.6,
+    "latch": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.5
+    },
+    "extra_mm": 10.5,
+    "max_att": [
+     0.051,
+     0.315
+    ],
+    "crawler_min_kN": 199.5,
+    "t_ready": 43.80000000002711,
+    "osc_first_last_max": [
+     12.3,
+     15.1,
+     21.3
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.6,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ],
+     [
+      43.8,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.347"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 52.77,
+    "touch_s": 19.3,
+    "latch": {
+     "FL": 17.7,
+     "FR": 17.9,
+     "RL": 19.4,
+     "RR": 1.2
+    },
+    "extra_mm": 10.5,
+    "max_att": [
+     0.051,
+     0.315
+    ],
+    "crawler_min_kN": 209.1,
+    "t_ready": 43.50000000002568,
+    "osc_first_last_max": [
+     12.3,
+     11.1,
+     21.3
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.6,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ],
+     [
+      43.5,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.348"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7b_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 53.99,
+    "touch_s": 21.7,
+    "latch": {
+     "FL": 16.8,
+     "FR": 18.4,
+     "RL": 21.8,
+     "RR": 16.1
+    },
+    "extra_mm": 34.5,
+    "max_att": [
+     0.114,
+     0.727
+    ],
+    "crawler_min_kN": 214.2,
+    "t_ready": 48.000000000047166,
+    "osc_first_last_max": [
+     19.6,
+     24.6,
+     31.0
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.9,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 53.54,
+    "touch_s": 20.0,
+    "latch": {
+     "FL": 17.7,
+     "FR": 18.0,
+     "RL": 20.1,
+     "RR": 2.3
+    },
+    "extra_mm": 14.1,
+    "max_att": [
+     0.068,
+     0.394
+    ],
+    "crawler_min_kN": 208.9,
+    "t_ready": 44.500000000030454,
+    "osc_first_last_max": [
+     18.6,
+     17.4,
+     19.1
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "RR"
+    ],
+    "events": [
+     [
+      1.9,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 54.15,
+    "touch_s": 19.7,
+    "latch": {
+     "FL": 17.5,
+     "FR": 17.7,
+     "RL": 19.8,
+     "RR": 1.5
+    },
+    "extra_mm": 13.6,
+    "max_att": [
+     0.063,
+     0.387
+    ],
+    "crawler_min_kN": 222.0,
+    "t_ready": 44.3000000000295,
+    "osc_first_last_max": [
+     17.4,
+     11.6,
+     18.1
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.9,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7b_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 52.46,
+    "touch_s": 19.9,
+    "latch": {
+     "FL": 17.8,
+     "FR": 18.0,
+     "RL": 20.0,
+     "RR": 2.4
+    },
+    "extra_mm": 12.6,
+    "max_att": [
+     0.052,
+     0.355
+    ],
+    "crawler_min_kN": 215.5,
+    "t_ready": 44.500000000030454,
+    "osc_first_last_max": [
+     16.5,
+     17.3,
+     19.0
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.6,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 52.53,
+    "touch_s": 19.7,
+    "latch": {
+     "FL": 17.9,
+     "FR": 18.1,
+     "RL": 19.8,
+     "RR": 1.9
+    },
+    "extra_mm": 11.0,
+    "max_att": [
+     0.048,
+     0.333
+    ],
+    "crawler_min_kN": 213.4,
+    "t_ready": 44.100000000028544,
+    "osc_first_last_max": [
+     14.6,
+     15.2,
+     20.6
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "RR"
+    ],
+    "events": [
+     [
+      1.6,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 52.52,
+    "touch_s": 19.4,
+    "latch": {
+     "FL": 17.6,
+     "FR": 17.9,
+     "RL": 19.5,
+     "RR": 1.2
+    },
+    "extra_mm": 10.5,
+    "max_att": [
+     0.047,
+     0.325
+    ],
+    "crawler_min_kN": 228.8,
+    "t_ready": 43.80000000002711,
+    "osc_first_last_max": [
+     14.1,
+     11.7,
+     19.8
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.6,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7c_RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 54.3,
+    "touch_s": 19.9,
+    "latch": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 20.0,
+     "RR": 1.9
+    },
+    "extra_mm": 14.6,
+    "max_att": [
+     0.065,
+     0.371
+    ],
+    "crawler_min_kN": 193.0,
+    "t_ready": 44.400000000029976,
+    "osc_first_last_max": [
+     15.2,
+     16.0,
+     19.8
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      2.1,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 54.3,
+    "touch_s": 19.9,
+    "latch": {
+     "FL": 17.8,
+     "FR": 18.1,
+     "RL": 20.0,
+     "RR": 1.9
+    },
+    "extra_mm": 14.6,
+    "max_att": [
+     0.065,
+     0.371
+    ],
+    "crawler_min_kN": 193.0,
+    "t_ready": 44.400000000029976,
+    "osc_first_last_max": [
+     15.2,
+     16.0,
+     19.8
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      2.1,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 54.3,
+    "touch_s": 19.6,
+    "latch": {
+     "FL": 17.6,
+     "FR": 17.8,
+     "RL": 19.7,
+     "RR": 1.6
+    },
+    "extra_mm": 14.6,
+    "max_att": [
+     0.065,
+     0.371
+    ],
+    "crawler_min_kN": 202.4,
+    "t_ready": 44.100000000028544,
+    "osc_first_last_max": [
+     15.2,
+     12.1,
+     19.8
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      2.1,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7c_RR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 52.77,
+    "touch_s": 19.6,
+    "latch": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.6
+    },
+    "extra_mm": 11.5,
+    "max_att": [
+     0.05,
+     0.312
+    ],
+    "crawler_min_kN": 200.4,
+    "t_ready": 43.80000000002711,
+    "osc_first_last_max": [
+     12.4,
+     15.4,
+     21.0
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.8,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ],
+     [
+      43.8,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.349"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 52.77,
+    "touch_s": 19.6,
+    "latch": {
+     "FL": 18.0,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 1.6
+    },
+    "extra_mm": 11.5,
+    "max_att": [
+     0.05,
+     0.312
+    ],
+    "crawler_min_kN": 200.4,
+    "t_ready": 43.80000000002711,
+    "osc_first_last_max": [
+     12.4,
+     15.4,
+     21.0
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.8,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ],
+     [
+      43.8,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.349"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 52.77,
+    "touch_s": 19.3,
+    "latch": {
+     "FL": 17.7,
+     "FR": 17.9,
+     "RL": 19.4,
+     "RR": 1.3
+    },
+    "extra_mm": 11.5,
+    "max_att": [
+     0.05,
+     0.312
+    ],
+    "crawler_min_kN": 210.1,
+    "t_ready": 43.50000000002568,
+    "osc_first_last_max": [
+     12.4,
+     11.5,
+     21.0
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.8,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ],
+     [
+      43.5,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.350"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7c_RR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 53.99,
+    "touch_s": 21.9,
+    "latch": {
+     "FL": 16.9,
+     "FR": 17.5,
+     "RL": 22.0,
+     "RR": 16.7
+    },
+    "extra_mm": 36.6,
+    "max_att": [
+     0.09,
+     0.736
+    ],
+    "crawler_min_kN": 189.4,
+    "t_ready": 48.20000000004812,
+    "osc_first_last_max": [
+     20.2,
+     23.4,
+     35.4
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      2.2,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 54.07,
+    "touch_s": 20.1,
+    "latch": {
+     "FL": 17.7,
+     "FR": 17.9,
+     "RL": 20.2,
+     "RR": 2.4
+    },
+    "extra_mm": 15.7,
+    "max_att": [
+     0.055,
+     0.399
+    ],
+    "crawler_min_kN": 212.5,
+    "t_ready": 44.800000000031886,
+    "osc_first_last_max": [
+     19.3,
+     18.3,
+     19.3
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "RR"
+    ],
+    "events": [
+     [
+      2.2,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 54.07,
+    "touch_s": 19.8,
+    "latch": {
+     "FL": 17.5,
+     "FR": 17.7,
+     "RL": 19.9,
+     "RR": 1.7
+    },
+    "extra_mm": 15.2,
+    "max_att": [
+     0.055,
+     0.393
+    ],
+    "crawler_min_kN": 226.0,
+    "t_ready": 44.400000000029976,
+    "osc_first_last_max": [
+     18.0,
+     13.2,
+     18.0
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      2.2,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "PS7c_RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 52.53,
+    "touch_s": 19.8,
+    "latch": {
+     "FL": 17.8,
+     "FR": 18.0,
+     "RL": 19.9,
+     "RR": 2.5
+    },
+    "extra_mm": 13.6,
+    "max_att": [
+     0.05,
+     0.353
+    ],
+    "crawler_min_kN": 224.4,
+    "t_ready": 44.400000000029976,
+    "osc_first_last_max": [
+     16.2,
+     14.0,
+     18.7
+    ],
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": [
+     [
+      1.8,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 52.51,
+    "touch_s": 19.6,
+    "latch": {
+     "FL": 17.9,
+     "FR": 18.2,
+     "RL": 19.7,
+     "RR": 2.0
+    },
+    "extra_mm": 12.0,
+    "max_att": [
+     0.064,
+     0.33
+    ],
+    "crawler_min_kN": 210.4,
+    "t_ready": 43.90000000002759,
+    "osc_first_last_max": [
+     14.7,
+     14.7,
+     21.7
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "RR"
+    ],
+    "events": [
+     [
+      1.8,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 52.51,
+    "touch_s": 19.3,
+    "latch": {
+     "FL": 17.6,
+     "FR": 17.9,
+     "RL": 19.4,
+     "RR": 1.4
+    },
+    "extra_mm": 12.0,
+    "max_att": [
+     0.064,
+     0.332
+    ],
+    "crawler_min_kN": 221.8,
+    "t_ready": 43.60000000002616,
+    "osc_first_last_max": [
+     14.6,
+     9.5,
+     21.3
+    ],
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": [
+     [
+      1.8,
+      "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+     ]
+    ]
+   }
+  },
+  {
+   "case": "ref",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 55.64,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 18.6,
+     "FR": 18.6,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.0,
+     0.177
+    ],
+    "crawler_min_kN": 204.6,
+    "t_ready": 39.80000000000801,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": []
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 55.64,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 18.6,
+     "FR": 18.6,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.0,
+     0.177
+    ],
+    "crawler_min_kN": 204.6,
+    "t_ready": 39.80000000000801,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": []
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 55.61,
+    "touch_s": 18.6,
+    "latch": {
+     "FL": 18.3,
+     "FR": 18.3,
+     "RL": 18.7,
+     "RR": 18.7
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.0,
+     0.177
+    ],
+    "crawler_min_kN": 218.8,
+    "t_ready": 39.50000000000658,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": []
+   }
+  },
+  {
+   "case": "ref",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 53.47,
+    "touch_s": 18.9,
+    "latch": {
+     "FL": 18.6,
+     "FR": 18.6,
+     "RL": 19.0,
+     "RR": 19.0
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.0,
+     0.177
+    ],
+    "crawler_min_kN": 181.3,
+    "t_ready": 40.20000000000992,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": []
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 53.47,
+    "touch_s": 18.9,
+    "latch": {
+     "FL": 18.6,
+     "FR": 18.6,
+     "RL": 19.0,
+     "RR": 19.0
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.0,
+     0.177
+    ],
+    "crawler_min_kN": 181.3,
+    "t_ready": 40.20000000000992,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": []
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 53.33,
+    "touch_s": 18.6,
+    "latch": {
+     "FL": 18.4,
+     "FR": 18.4,
+     "RL": 18.7,
+     "RR": 18.7
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.0,
+     0.177
+    ],
+    "crawler_min_kN": 218.2,
+    "t_ready": 39.90000000000849,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": []
+   }
+  },
+  {
+   "case": "ref",
+   "level": "top",
+   "fs_kN": 0.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 55.37,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.001,
+     0.179
+    ],
+    "crawler_min_kN": 175.2,
+    "t_ready": 39.4000000000061,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": []
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 55.37,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.001,
+     0.179
+    ],
+    "crawler_min_kN": 175.2,
+    "t_ready": 39.4000000000061,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": []
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 55.33,
+    "touch_s": 18.6,
+    "latch": {
+     "FL": 18.4,
+     "FR": 18.4,
+     "RL": 18.7,
+     "RR": 18.7
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.0,
+     0.179
+    ],
+    "crawler_min_kN": 190.7,
+    "t_ready": 39.10000000000467,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": []
+   }
+  },
+  {
+   "case": "ref",
+   "level": "top",
+   "fs_kN": 8.0,
+   "proj": {
+    "pass": true,
+    "min_F_kN": 53.27,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.0,
+     0.179
+    ],
+    "crawler_min_kN": 180.5,
+    "t_ready": 39.4000000000061,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": []
+   },
+   "c1": {
+    "pass": true,
+    "min_F_kN": 53.27,
+    "touch_s": 18.8,
+    "latch": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.0,
+     0.179
+    ],
+    "crawler_min_kN": 180.5,
+    "t_ready": 39.4000000000061,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": true,
+    "used": [],
+    "events": []
+   },
+   "c2": {
+    "pass": true,
+    "min_F_kN": 53.28,
+    "touch_s": 18.5,
+    "latch": {
+     "FL": 18.4,
+     "FR": 18.4,
+     "RL": 18.6,
+     "RR": 18.6
+    },
+    "extra_mm": null,
+    "max_att": [
+     0.0,
+     0.179
+    ],
+    "crawler_min_kN": 219.7,
+    "t_ready": 38.900000000003715,
+    "osc_first_last_max": null,
+    "same_cmd_as_proj": false,
+    "used": [
+     "FL",
+     "FR",
+     "RL",
+     "RR"
+    ],
+    "events": []
+   }
+  }
+ ],
+ "errors": []
+}

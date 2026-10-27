@@ -2582,6 +2582,278 @@ def settle_checks(case: Mapping[str, Any], metrics: Mapping[str, Any]) -> dict[s
     }
 
 
+# --- C-S8-72 (spec rev. 67 345.2): R8 PS-7 D8 and TOUCH rows (L1-R, run_S6C set ps7r8) ------
+
+PS7_R8_CONFIG = "PS7-R8"
+"""``settings.bundle_c.config`` of the C-S8-72 PS-7 cases (``run_S6C.ps7r8_cases``)."""
+PS7_ALLOWANCE_N = {"FL": 5500.0, "FR": 5500.0, "RL": 4000.0, "RR": 4000.0}
+"""92 / 345.2 7a: the latched zero-calibration deduction of the grounded leg (front 5.5 / rear
+4.0 kN)."""
+PS7_BIAS_LIMIT_N = -600.0
+"""92 7b / 7c: ``c_leg - c_true >= -0.6 kN`` when the leg is calibrated (safe side otherwise)."""
+PS7_TOUCH_STROKE_FLAG_M = 0.040
+PS7_TOUCH_ATT_FLAG_DEG = 1.0
+"""345.2 TOUCH FLAG (ASSUMPTION 347.3): the pre-grounded leg's extra stroke during TOUCH > 40 mm
+or the TOUCH max true |roll| / |pitch| > 1.0 deg."""
+PS7_TOUCH_REF_DEFAULT = Path("07_results/S6/bundleC_rerun34_L1R_20261024_141040/C1_G1_top_flat")
+"""345.2 T-1 reference: R8 bundle-C ``G1_top_flat`` (the latest run; its first TOUCH)."""
+PS7_RULE = ("C-S8-72 (spec rev. 67 345.2) PS-7 D8 (spec 92): after the crawler lift-off the true "
+            "cylinder force of every leg >= F_min + 5 kN and no pad lift, last 5 s true attitude "
+            "+ mount share <= 0.2 deg, READY; 7a: WARN_PRESSURE_ZERO_SKIPPED:<leg>:grounded once, "
+            "deduction latched (front 5.5 / rear 4.0 kN), no WARN_GYRO_BIAS_SKIPPED; 7b / 7c: "
+            "c_leg - c_true >= -0.6 kN when calibrated. TOUCH record T-1..T-5 + FLAG (extra "
+            "stroke > 40 mm or |att| > 1.0 deg, ASSUMPTION)")
+
+
+def _first_phase_span(phases: list[tuple[float, str]], name: str, end_s: float
+                      ) -> tuple[float, float] | None:
+    for (t1, p), nxt in zip(phases, [*phases[1:], (end_s, "end")], strict=True):
+        if p == name:
+            return t1, nxt[0]
+    return None
+
+
+def ps7_leg_of(case: Mapping[str, Any]) -> tuple[str | None, str | None]:
+    """(PS-7 variant ``a`` / ``b`` / ``c``, leg) of a C-S8-72 PS-7 case from its settings."""
+    s = case["result"]["settings"]
+    bc = s.get("bundle_c") or {}
+    cid = str(case["result"].get("case", ""))
+    variant = cid[3] if cid.startswith("PS7") and len(cid) > 3 else None
+    leg = bc.get("preground_leg")
+    if leg is None and s.get("pre_extend_leg") is not None:
+        leg = LEGS[int(s["pre_extend_leg"])]
+    return variant, leg
+
+
+def ps7_touch_length_s(case: Mapping[str, Any]) -> float | None:
+    """Length of the first TOUCH phase [s]."""
+    tm = _times(case)
+    span = _first_phase_span([(float(t), p) for t, p in case["result"]["phases"]], "touch",
+                             tm["end"])
+    return None if span is None else span[1] - span[0]
+
+
+def ps7_metrics(case: Mapping[str, Any], params, *, touch_ref_s: float | None = None
+                ) -> dict[str, Any]:
+    """C-S8-72 PS-7 values of one L1-R case (times relative to the run start [s], forces kN,
+    stroke mm, angles deg)."""
+    res = case["result"]
+    tm = _times(case)
+    variant, leg = ps7_leg_of(case)
+    j = None if leg is None else LEGS.index(leg)
+    f_min = _f_min_from_params(params)
+    out: dict[str, Any] = {"case": res.get("case"), "variant": variant, "leg": leg,
+                           "times_s": tm, "final_phase": res["phases"][-1][1],
+                           "end_rule": res.get("end_rule"),
+                           "pre_extend": res.get("pre_extend"),
+                           "F_min_kN": f_min / 1e3, "rule": PS7_RULE}
+    pads = case["pads"]
+    rec = case["rec"]
+    t = np.asarray(rec["t"], float) - tm["t0"]
+    # D8: after the crawler lift-off
+    if pads is not None and tm["liftoff"] is not None:
+        tp = np.asarray(pads["t"], float) - tm["t0"]
+        after = tp >= tm["liftoff"]
+        f = np.asarray(pads["F_cyl"], float)[after]
+        n = np.asarray(pads["N"], float)[after]
+        k, jj = np.unravel_index(int(np.argmin(f)), f.shape)
+        out["min_cyl_after_liftoff"] = {"min_kN": float(f[k, jj]) / 1e3, "leg": LEGS[jj],
+                                        "t_s": float(tp[after][k]),
+                                        "per_leg_kN": [float(v) / 1e3 for v in f.min(axis=0)]}
+        lift = n <= 0.0
+        dtp = float(np.median(np.diff(tp))) if tp.size > 1 else 0.0
+        out["lift_after_liftoff_s"] = {LEGS[i]: float(lift[:, i].sum() * dtp) for i in range(4)}
+    rp = _deg(np.array([roll_pitch_from_quat(q) for q in rec["body_quat_wxyz"]]))
+    last5 = t >= tm["end"] - 5.0
+    out["att_last5_maxabs_deg"] = float(np.max(np.abs(rp[last5]))) if last5.any() else None
+    # zero calibration (7a grounded skip / 7b, 7c bias)
+    events = [n for _t, n in _events(case)]
+    out["events_zero"] = [e for e in events if "PRESSURE_ZERO" in e]
+    out["gyro_bias_skipped"] = sum(1 for e in events if "WARN_GYRO_BIAS_SKIPPED" in e)
+    zc = res.get("zero_calibration_report") or {}
+    zmeta = ((zc.get("controller_meta") or {}).get("zero_calibration") or {})
+    legs_res = ((zmeta.get("result") or {}).get("legs") or {})
+    final_zc = ((res.get("controller_meta") or {}).get("zero_calibration") or {})
+    if leg is not None:
+        out["grounded_skips"] = sum(1 for e in events
+                                    if e == f"WARN_PRESSURE_ZERO_SKIPPED:{leg}:grounded")
+        lr = legs_res.get(leg) or {}
+        out["leg_calibration"] = lr
+        allow = final_zc.get("pressure_offset_allowance_N") or zmeta.get(
+            "pressure_offset_allowance_N")
+        out["allowance_N"] = None if allow is None else float(allow[j])
+        c_true = zc.get("c_true_N")
+        if lr.get("status") == "calibrated" and c_true is not None:
+            out["bias_N"] = float(lr.get("offset_N") or 0.0) - float(c_true[j])
+        else:
+            out["bias_N"] = None
+    # TOUCH T-1 .. T-5
+    phases = [(float(a), p) for a, p in res["phases"]]
+    span = _first_phase_span(phases, "touch", tm["end"])
+    tr: dict[str, Any] = {"span_s": None if span is None else list(span)}
+    if span is not None:
+        ts, te = span
+        tr["length_s"] = te - ts
+        tr["T1_minus_ref_s"] = None if touch_ref_s is None else te - ts - touch_ref_s
+        tr["ref_length_s"] = touch_ref_s
+        r8 = _load_r8_touched(case)
+        if r8 is not None and j is not None:
+            tt, touched = r8
+            m_after = (tt >= ts - 1e-9) & (touched[:, j] > 0.5)
+            tr["T2_latch_minus_start_s"] = None if not m_after.any() \
+                else float(tt[m_after][0] - ts)
+            tr["latch_all_s"] = {LEGS[i]: (None if not ((tt >= ts - 1e-9)
+                                                        & (touched[:, i] > 0.5)).any()
+                                           else float(tt[(tt >= ts - 1e-9)
+                                                         & (touched[:, i] > 0.5)][0] - ts))
+                                 for i in range(4)}
+        src = pads if pads is not None and "s_motor" in pads else rec
+        ts_arr = np.asarray(src["t"], float) - tm["t0"]
+        inside = (ts_arr >= ts - 1e-9) & (ts_arr <= te + 1e-9)
+        if j is not None and inside.any():
+            s_leg = np.asarray(src["s_motor"], float)[inside, j]
+            tr["T3_extra_stroke_mm"] = float(s_leg.max() - s_leg[0]) * 1e3
+            tr["T3_end_minus_start_mm"] = float(s_leg[-1] - s_leg[0]) * 1e3
+            tr["stroke_start_mm"] = float(s_leg[0]) * 1e3
+        ins_r = (t >= ts - 1e-9) & (t <= te + 1e-9)
+        if ins_r.any():
+            tr["T4_max_abs_att_deg"] = np.max(np.abs(rp[ins_r]), axis=0).tolist()
+            fz = np.asarray(rec["F_crawler"], float)[ins_r, 2]
+            tr["T5_crawler_min_kN"] = float(fz.min()) / 1e3
+        t3 = tr.get("T3_extra_stroke_mm")
+        t4 = tr.get("T4_max_abs_att_deg")
+        tr["flag"] = bool((t3 is not None and t3 > PS7_TOUCH_STROKE_FLAG_M * 1e3)
+                          or (t4 is not None and max(t4) > PS7_TOUCH_ATT_FLAG_DEG))
+    out["touch"] = tr
+    return out
+
+
+def _load_r8_touched(case: Mapping[str, Any]) -> tuple[NDArray, NDArray] | None:
+    """``(t rel, touched)`` of the run's ``r8_series.npz`` (C-S8-72 field), None without it."""
+    p = Path(case["dir"]) / "r8_series.npz"
+    if not p.exists():
+        return None
+    with np.load(p) as z:
+        if "touched" not in z.files:
+            return None
+        t0 = float(case["result"]["settings"]["start_t_s"])
+        return np.asarray(z["t"], float) - t0, np.asarray(z["touched"], float)
+
+
+def ps7_rows(mets: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """345.2 PS-7 rows (D8, zero calibration, TOUCH record + FLAG) per case."""
+    rows: list[dict[str, Any]] = []
+
+    def row(item, cid, value, limit, passed, note="", kind="judged", **extra):
+        return {"item": item, "case": cid, "value": value, "limit": limit, "passed": passed,
+                "note": note, "kind": kind, "source": "s6_control.ps7", **extra}
+
+    for cid, m in sorted(mets.items()):
+        mc = m.get("min_cyl_after_liftoff") or {}
+        lim = m["F_min_kN"] + D8_MARGIN_N / 1e3
+        rows.append(row("C-S8-72 PS-7 D8: min true cylinder force after the crawler lift-off "
+                        ">= F_min + 5 kN", cid, mc.get("min_kN"), lim,
+                        None if not mc else bool(mc["min_kN"] >= lim),
+                        f"{mc.get('leg')} at {mc.get('t_s')} s; lift-off {m['times_s']['liftoff']}"
+                        " s"))
+        lifts = m.get("lift_after_liftoff_s") or {}
+        rows.append(row("C-S8-72 PS-7 D8: no pad lift after the crawler lift-off", cid, lifts,
+                        0.0, None if not lifts else all(v == 0.0 for v in lifts.values())))
+        att = m.get("att_last5_maxabs_deg")
+        rows.append(row("C-S8-72 PS-7 D8: READY, last 5 s true attitude + mount share <= 0.2 "
+                        "deg", cid, {"final_phase": m["final_phase"], "att_deg": att},
+                        ATT_TOL_DEG, None if att is None else bool(
+                            m["final_phase"] == "ready"
+                            and att + MOUNT_SHARE_DEG <= ATT_TOL_DEG),
+                        f"end rule {m.get('end_rule')}"))
+        leg = m.get("leg")
+        if m.get("variant") == "a":
+            want = PS7_ALLOWANCE_N.get(leg)
+            ok = (m.get("grounded_skips") == 1 and m.get("allowance_N") is not None
+                  and abs(m["allowance_N"] - want) < 1e-6 and m.get("gyro_bias_skipped") == 0)
+            rows.append(row("C-S8-72 PS-7a: WARN_PRESSURE_ZERO_SKIPPED:<leg>:grounded once, "
+                            "deduction latched (front 5.5 / rear 4.0 kN), no "
+                            "WARN_GYRO_BIAS_SKIPPED", cid,
+                            {"grounded_skips": m.get("grounded_skips"),
+                             "allowance_N": m.get("allowance_N"),
+                             "gyro_bias_skipped": m.get("gyro_bias_skipped")},
+                            {"grounded_skips": 1, "allowance_N": want, "gyro_bias_skipped": 0},
+                            bool(ok), f"zero events {m.get('events_zero')}"))
+        else:
+            b = m.get("bias_N")
+            status = (m.get("leg_calibration") or {}).get("status")
+            rows.append(row("C-S8-72 PS-7b/c: c_leg - c_true >= -0.6 kN (calibrated leg; a "
+                            "skipped / implausible leg reads low = safe side)", cid,
+                            {"status": status, "bias_kN": None if b is None else b / 1e3,
+                             "allowance_N": m.get("allowance_N")},
+                            PS7_BIAS_LIMIT_N / 1e3,
+                            True if b is None else bool(b >= PS7_BIAS_LIMIT_N),
+                            f"zero events {m.get('events_zero')}; gyro bias skipped "
+                            f"{m.get('gyro_bias_skipped')}"))
+        tr = m.get("touch") or {}
+        rows.append(row("C-S8-72 PS-7 TOUCH record T-1..T-5 + FLAG (extra stroke > 40 mm or "
+                        "|att| > 1.0 deg, ASSUMPTION)", cid,
+                        {"T1_length_s": tr.get("length_s"),
+                         "T1_minus_ref_s": tr.get("T1_minus_ref_s"),
+                         "T2_latch_minus_start_s": tr.get("T2_latch_minus_start_s"),
+                         "T3_extra_stroke_mm": tr.get("T3_extra_stroke_mm"),
+                         "T4_max_abs_att_deg": tr.get("T4_max_abs_att_deg"),
+                         "T5_crawler_min_kN": tr.get("T5_crawler_min_kN"),
+                         "FLAG": tr.get("flag")},
+                        {"T3_mm": PS7_TOUCH_STROKE_FLAG_M * 1e3,
+                         "T4_deg": PS7_TOUCH_ATT_FLAG_DEG}, None,
+                        f"ref TOUCH {tr.get('ref_length_s')} s; latch per leg "
+                        f"{tr.get('latch_all_s')}", kind="record", flag=tr.get("flag"),
+                        touch=tr))
+    return rows
+
+
+def judge_ps7_batch(batch_dir: Path, out_path: Path | None = None, *,
+                    touch_ref: Path | None = None) -> Path:
+    """C-S8-72 PS-7 judge of a ``run_S6C.py --set ps7r8`` batch: :func:`ps7_rows` of the cases
+    with ``settings.bundle_c.config`` = :data:`PS7_R8_CONFIG`; writes ``verify_S6_c72_ps7.json``
+    (or ``out_path``). ``touch_ref``: T-1 reference case folder (default
+    :data:`PS7_TOUCH_REF_DEFAULT` under the project root)."""
+    import json
+
+    from outrigger_sim.params import load_params
+
+    ref_dir = Path(touch_ref) if touch_ref is not None else PROJECT_ROOT / PS7_TOUCH_REF_DEFAULT
+    ref_s = None
+    if (ref_dir / "result.json").exists():
+        ref_s = ps7_touch_length_s(load_case(ref_dir))
+    mets: dict[str, Any] = {}
+    for d in sorted(p for p in Path(batch_dir).iterdir() if (p / "result.json").exists()):
+        case = load_case(d)
+        s = case["result"]["settings"]
+        if (s.get("bundle_c") or {}).get("config") != PS7_R8_CONFIG:
+            continue
+        params = load_params(level=s["level"])
+        mets[case["result"]["case"]] = ps7_metrics(case, params, touch_ref_s=ref_s)
+    rows = ps7_rows(mets)
+    n_fail = sum(1 for r in rows if r["passed"] is False)
+    flags = sorted(r["case"] for r in rows if r.get("flag"))
+    doc = {"meta": {"batch": str(batch_dir), "module": __name__, "rule": PS7_RULE,
+                    "rows": len(rows), "failed": n_fail, "touch_flags": flags,
+                    "touch_ref": str(ref_dir), "touch_ref_length_s": ref_s,
+                    "touch_ref_note": "R8 bundle-C G1_top_flat (contact pressure, no CHECK, "
+                                      "controller of 2026-10-24; later TOUCH changes such as "
+                                      "P-S8-6 are not in it)"},
+           "rows": rows, "metrics": mets}
+    out = out_path or Path(batch_dir) / "verify_S6_c72_ps7.json"
+    out.write_text(json.dumps(doc, indent=1, default=_json_default_ps7, ensure_ascii=False),
+                   encoding="utf-8")
+    return out
+
+
+def _json_default_ps7(o):
+    if isinstance(o, np.generic):
+        return o.item()
+    if isinstance(o, np.ndarray):
+        return o.tolist()
+    return str(o)
+
+
 __all__ = [
     "CaseCondition",
     "case_condition",

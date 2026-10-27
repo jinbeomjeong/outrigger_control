@@ -238,11 +238,25 @@ def classify_warning(message: str, category: str, beta_GPa: float | None) -> dic
     return out
 
 
-def snapshot_retag_check(payload: Mapping[str, Any]) -> dict[str, Any]:
+L1R_STATE_LOCK = 3
+"""``hydraulics.rod_chamber.RodChamberMode.LOCK`` (literal, as :data:`L1R_STATE_LIFT`)."""
+PREGROUND_RULE = ("C-S8-72 (spec rev. 67 345.3): the named pre-grounded leg may be LOCK or LIFT, "
+                  "carry a lock force F_lock >= 0 and touch the floor; u_applied 0 and the other "
+                  "three legs as 5.24.3")
+
+
+def snapshot_retag_check(payload: Mapping[str, Any], *,
+                         preground_leg: str | None = None) -> dict[str, Any]:
     """5.24.3 conditions on a snapshot payload (arrays by name, without the ``payload.``
     prefix): four legs ``l1r_state`` = 5 (LIFT), ``l1r_F_lock_N`` = 0,
     ``ground_bushing.in_contact`` all False, ``l1_actuator.u_applied_m_s`` = 0.
-    A missing key fails its condition."""
+    A missing key fails its condition.
+
+    ``preground_leg`` (C-S8-72, spec rev. 67 345.3; ``None`` = the rule above unchanged): that
+    one leg may be LOCK (or LIFT), carry ``l1r_F_lock_N`` >= 0 and be in pad contact
+    (:data:`PREGROUND_RULE`); the other three legs keep the 5.24.3 tests."""
+    if preground_leg is not None and preground_leg not in LEGS:
+        raise ValueError(f"preground_leg {preground_leg!r} not in {LEGS}")
     conds: dict[str, Any] = {}
     tests = {
         "l1r_state_LIFT": lambda a: bool(np.all(a.astype(float) == float(L1R_STATE_LIFT))),
@@ -250,35 +264,62 @@ def snapshot_retag_check(payload: Mapping[str, Any]) -> dict[str, Any]:
         "no_pad_contact": lambda a: not bool(np.any(a.astype(bool))),
         "u_applied_zero": lambda a: bool(np.all(a.astype(float) == 0.0)),
     }
+    pre_tests = {  # the pre-grounded leg (C-S8-72)
+        "l1r_state_LIFT": lambda a: bool(np.all(np.isin(a.astype(float),
+                                                        (float(L1R_STATE_LIFT),
+                                                         float(L1R_STATE_LOCK))))),
+        "F_lock_zero": lambda a: bool(np.all(a.astype(float) >= 0.0)),
+        "no_pad_contact": lambda a: True,
+        "u_applied_zero": tests["u_applied_zero"],
+    }
+    j_pre = None if preground_leg is None else LEGS.index(preground_leg)
     for name, key in RETAG_KEYS.items():
         value = payload.get(key)
         if value is None:
             conds[name] = {"key": key, "value": None, "passed": False, "note": "missing"}
             continue
         arr = np.asarray(value).reshape(-1)
-        ok = arr.size == len(LEGS) and tests[name](arr)
+        if j_pre is None:
+            ok = arr.size == len(LEGS) and tests[name](arr)
+            leg_ok = None
+        else:
+            leg_ok = [(pre_tests if j == j_pre else tests)[name](np.asarray([v]))
+                      for j, v in enumerate(arr.tolist())]
+            ok = arr.size == len(LEGS) and all(leg_ok)
         conds[name] = {"key": key, "value": arr.tolist(), "passed": ok}
         if not ok:
             conds[name]["legs_failing"] = [
                 leg for leg, v in zip(LEGS, arr.tolist(), strict=False)
-                if not tests[name](np.asarray([v]))]
-    return {"passed": all(c["passed"] for c in conds.values()), "conditions": conds,
-            "rule": "dyn rev. 37 5.24.3: four legs LIFT, F_lock 0, no pad contact, u_applied 0"}
+                if not tests[name](np.asarray([v]))] if leg_ok is None else [
+                leg for leg, good in zip(LEGS, leg_ok, strict=False) if not good]
+    out = {"passed": all(c["passed"] for c in conds.values()), "conditions": conds,
+           "rule": "dyn rev. 37 5.24.3: four legs LIFT, F_lock 0, no pad contact, u_applied 0"}
+    if preground_leg is not None:
+        out.update(preground_leg=preground_leg, preground_rule=PREGROUND_RULE)
+    return out
 
 
 class SnapshotRetagRefused(RuntimeError):
     """A snapshot that does not meet 5.24.3 would be re-tagged to new parameters."""
 
 
-def retag_snapshot(snapshot, params_sha256: str, *, name: str = "") -> tuple[Any, dict[str, Any]]:
+def retag_snapshot(snapshot, params_sha256: str, *, name: str = "",
+                   preground_leg: str | None = None) -> tuple[Any, dict[str, Any]]:
     """Re-tag ``snapshot`` (``engine.Snapshot``) to ``params_sha256`` after the 5.24.3 check.
 
     Returns ``(snapshot, check)``; ``check["required"]`` is False (and the snapshot unchanged)
     when the fingerprint is already ``params_sha256``. Raises :class:`SnapshotRetagRefused` when
-    a re-tag is needed and a condition fails."""
-    check = snapshot_retag_check(snapshot.payload)
+    a re-tag is needed and a condition fails. ``preground_leg`` (C-S8-72): the variant check of
+    :func:`snapshot_retag_check` for a start state with that one leg on the floor; with it the
+    check must pass even when no re-tag is needed (the start state is the case definition)."""
+    check = snapshot_retag_check(snapshot.payload, preground_leg=preground_leg)
     check["snapshot"] = name
     check["required"] = snapshot.params_sha256 != params_sha256
+    if preground_leg is not None and not check["passed"]:
+        bad = {k: v for k, v in check["conditions"].items() if not v["passed"]}
+        raise SnapshotRetagRefused(
+            f"snapshot {name or '?'} is not a start state with only {preground_leg} on the floor "
+            f"(C-S8-72 variant of 5.24.3): {json.dumps(bad, default=str)}")
     if not check["required"]:
         return snapshot, check
     if not check["passed"]:

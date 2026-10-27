@@ -1084,6 +1084,21 @@ def _is_positive_int(value: object) -> bool:
     return isinstance(value, int) and not isinstance(value, bool) and value >= 1
 
 
+def _normalized_free_air_cap(
+    excess_N: Sequence[float] | None,
+) -> tuple[float, float, float, float] | None:
+    """``touch_free_air_cap_excess_N`` as four finite positive floats (``None`` kept)."""
+    if excess_N is None:
+        return None
+    values = tuple(float(value) for value in excess_N)
+    if len(values) != LEG_COUNT or not all(math.isfinite(v) and v > 0.0 for v in values):
+        raise ValueError(
+            "touch_free_air_cap_excess_N must be four finite values > 0 (FL, FR, RL, RR) "
+            f"or None, got {excess_N!r}"
+        )
+    return (values[0], values[1], values[2], values[3])
+
+
 REAPPROACH_WINDOW_TOLERANCE_S = 1e-9
 """Sample times are sums of 0.1 s steps; a start exactly one window after the end is outside
 (the rule RT harness ``r51_reapp_closed_loop.py`` compares the same way)."""
@@ -1274,9 +1289,20 @@ class R8Settings:
     touch_free_air_min_samples: int = 1
     """P-S8-6: a leg is judged for touchdown only once its free-air reference holds this many
     samples (before that its touchdown load is ``-inf``)."""
+    touch_free_air_cap_excess_N: tuple[float, float, float, float] | None = None
+    """P-S8-26 (spec rev. 67 344.3, U-S8-73), with ``touch_free_air_min_travel_m`` only: per
+    leg (FL, FR, RL, RR) the largest excess over ``m_rod g`` a moving airborne leg can read
+    (the seal friction ``F_s,cap``). A free-air median above ``m_rod g + F_s,cap`` holds
+    ground load (a leg grounded before TOUCH, PS-7), so the reference is cut to that value
+    and ``INFO_TOUCH_FREE_AIR_CAPPED:<leg>`` is recorded once. ``None`` = no cap (P-S8-6)."""
     touch_seen_samples: int = 1
     """P-S8-6, combined judge only: ``touch_seen`` (the slow approach) latches after this many
     touchdown-load samples in a row; 1 = the R7 latch on one sample."""
+    touch_hold_dip_samples: int = 0
+    """P-S8-27 (spec rev. 68 356.3, U-S8-76 (a)): a ``touch_seen`` leg that is a TOUCH latch
+    candidate keeps its candidate and waits (speed 0) over up to this many samples below the
+    touchdown level in a row; one more drops it as before. The hold time runs on through the
+    dips, the latch is judged on samples at the level only. 0 = no dip held (P-S8-26)."""
     confirmation: SampleConfirmation = field(default_factory=SampleConfirmation)
     end_slowdown_window_m: float | None = None
     """Spec 99.3: within this distance below ``soft end - 10 mm`` the leg speeds are scaled so
@@ -1329,10 +1355,18 @@ class R8Settings:
         min_travel = self.touch_free_air_min_travel_m
         if min_travel is not None and not min_travel > 0.0:
             raise ValueError("touch_free_air_min_travel_m must be > 0 or None")
+        object.__setattr__(
+            self,
+            "touch_free_air_cap_excess_N",
+            _normalized_free_air_cap(self.touch_free_air_cap_excess_N),
+        )
         for name in ("touch_free_air_min_samples", "touch_seen_samples"):
             value = getattr(self, name)
             if not _is_positive_int(value):
                 raise ValueError(f"{name} must be an int >= 1, got {value!r}")
+        dip_samples = self.touch_hold_dip_samples
+        if isinstance(dip_samples, bool) or not isinstance(dip_samples, int) or dip_samples < 0:
+            raise ValueError(f"touch_hold_dip_samples must be an int >= 0, got {dip_samples!r}")
         if not 0.0 < self.end_slowdown_speed_fraction <= 1.0:
             raise ValueError("end_slowdown_speed_fraction must be in (0, 1]")
         if not self.pre_probe_stiffness_scale > 0.0:
@@ -1410,6 +1444,12 @@ R8_D1_TOUCH_FREE_AIR_MIN_SAMPLES = 3
 """P-S8-6 (ASSUMPTION, spec 213.9): a stable median."""
 R8_D1_TOUCH_SEEN_SAMPLES = 2
 """P-S8-6 (ASSUMPTION, spec 213.9): the R8 sample-confirmation rule."""
+R8_D1_TOUCH_FREE_AIR_CAP_EXCESS_N = (8000.0, 8000.0, 6666.4, 6666.4)
+"""P-S8-26 (ASSUMPTION, spec rev. 67 344.3 / 347.3, U-S8-73 (a)): ``F_s,cap`` per leg = the
+seal-friction sensitivity upper value 8 kN, rear 0.833 x."""
+R8_D1_TOUCH_HOLD_DIP_SAMPLES = 2
+"""P-S8-27 (spec rev. 68 356.1 / 356.2, U-S8-76 (a), candidate c1b): two dips in a row held,
+the third drops the candidate; latched within 2.5 s on the C-S8-73 records at +-4 kN offset."""
 R8_D1_REAPPROACH_LOAD_FRACTION_OF_F_MIN = 1.4
 """P-S8-5 (U-S8-9, spec rev. 42 212.4 / rev. 43 213.3.2): re-approach start level."""
 R8_D1_REAPPROACH_RETRIGGER_WINDOW_S = 2.0
@@ -1436,7 +1476,9 @@ R8_D1_SETTINGS = R8Settings(
     touch_window_speed_fraction=0.5,
     touch_free_air_min_travel_m=R8_D1_TOUCH_FREE_AIR_MIN_TRAVEL_M,
     touch_free_air_min_samples=R8_D1_TOUCH_FREE_AIR_MIN_SAMPLES,
+    touch_free_air_cap_excess_N=R8_D1_TOUCH_FREE_AIR_CAP_EXCESS_N,
     touch_seen_samples=R8_D1_TOUCH_SEEN_SAMPLES,
+    touch_hold_dip_samples=R8_D1_TOUCH_HOLD_DIP_SAMPLES,
     confirmation=SampleConfirmation(above_samples=3, below_samples=2, relevel_samples=2),
     end_slowdown_window_m=0.015,
     end_slowdown_speed_fraction=0.25,
@@ -1770,7 +1812,11 @@ class C2Config:
         crawler re-contact (P-S8-23), and a head-sensor fault re-grounds the lifted legs
         before FAULT (P-S8-24) with the spec rev. 65 332.5 corrections (P-S8-25): no
         raw-attitude abort, contact on all four legs with a 1.0 s hold, cue (d), the scaled
-        plane gap and the D1 step rule suspended after a head fault. The start-IMU form only:
+        plane gap and the D1 step rule suspended after a head fault. Spec rev. 67 344.3
+        (U-S8-73 (a), 2026-10-27): the TOUCH free-air reference is capped at
+        ``m_rod g + F_s,cap`` (P-S8-26, a leg grounded before TOUCH). Spec rev. 68 356.3
+        (U-S8-76 (a), 2026-10-27): a ``touch_seen`` latch candidate waits over up to two
+        samples below the touchdown level (P-S8-27). The start-IMU form only:
         the late IMU read (C1) is not implemented (U-R8-6 = C2).
         """
         config = self.with_r8_diagnostics()
@@ -3077,6 +3123,14 @@ class _RunState:
     leg_lock_pressures_Pa: list[tuple[float, float] | None] | None = None
     """Per leg (head, rod) reading of the first command-free sample of its current lock,
     ``None`` while it moves (FAULT_REGROUND cue (b))."""
+    # P-S8-26 (immutable default: a class attribute for run states pickled before it)
+    free_air_capped_legs: frozenset[int] = frozenset()
+    """Legs whose TOUCH free-air reference was capped (their event is recorded once)."""
+    # P-S8-27 (immutable defaults: class attributes for run states pickled before them)
+    touch_dip_counts: tuple[int, ...] = (0, 0, 0, 0)
+    """Samples below the touchdown level in a row each TOUCH latch candidate waited over."""
+    touch_dip_held_samples: tuple[int, ...] = (0, 0, 0, 0)
+    """All dip samples held per leg (meta ``touch.dip_held_samples``)."""
 
 
 @dataclass(frozen=True)
@@ -3325,6 +3379,7 @@ class C2Controller:
                 if self._state.floor_estimate_touch is None
                 else self._state.floor_estimate_touch.to_meta()
             ),
+            "touch": {"dip_held_samples": list(self._state.touch_dip_held_samples)},
             "support_geometry": self._support_geometry_meta(),
             "is_geometry_valid": self._state.is_geometry_valid,
             "stationary_gate": self._standstill_gate.to_meta(),
@@ -4171,16 +4226,27 @@ class C2Controller:
     def _update_touch_latches(
         self, bears_touch_load: NDArray[np.bool_], t_s: float
     ) -> NDArray[np.bool_]:
-        """Latch legs whose touchdown load held ``touch_hold_s``; return the waiting candidates."""
+        """Latch legs whose touchdown load held ``touch_hold_s``; return the waiting candidates.
+
+        A sample below the level drops the candidate, unless the leg is a ``touch_seen``
+        candidate within ``touch_hold_dip_samples`` dips in a row (P-S8-27): then it keeps the
+        candidate and waits. ``touch_seen`` is the one of the previous sample.
+        """
         state = self._state
         hold_s = self.config.thresholds.touch_hold_s
         is_waiting = np.zeros(LEG_COUNT, dtype=bool)
+        dip_counts = list(state.touch_dip_counts)
         for leg in range(LEG_COUNT):
             if state.touched[leg]:
                 continue
             if not bears_touch_load[leg]:
+                if self._holds_touch_dip(leg, dip_counts, t_s):
+                    is_waiting[leg] = True
+                    continue
                 state.touch_candidate_since_s[leg] = None
+                dip_counts[leg] = 0
                 continue
+            dip_counts[leg] = 0
             since_s = state.touch_candidate_since_s[leg]
             if since_s is None:
                 since_s = state.touch_candidate_since_s[leg] = t_s
@@ -4188,7 +4254,30 @@ class C2Controller:
                 state.touched[leg] = True
             else:
                 is_waiting[leg] = True
+        state.touch_dip_counts = tuple(dip_counts)
         return is_waiting
+
+    def _holds_touch_dip(self, leg: int, dip_counts: list[int], t_s: float) -> bool:
+        """P-S8-27: count a dip of a ``touch_seen`` candidate and say whether it is held.
+
+        ``dip_counts`` is updated in place; the first held dip of a leg records
+        ``INFO_TOUCH_DIP_HELD:<leg>``.
+        """
+        state = self._state
+        is_seen_candidate = (
+            state.touch_seen[leg] and state.touch_candidate_since_s[leg] is not None
+        )
+        if not is_seen_candidate:
+            return False
+        if dip_counts[leg] >= self.config.r8.touch_hold_dip_samples:
+            return False
+        dip_counts[leg] += 1
+        held_samples = list(state.touch_dip_held_samples)
+        if held_samples[leg] == 0:
+            self._add_event(t_s, f"INFO_TOUCH_DIP_HELD:{LEG_ORDER[leg]}")
+        held_samples[leg] += 1
+        state.touch_dip_held_samples = tuple(held_samples)
+        return True
 
     def _update_touch_seen(self, bears_touch_load: NDArray[np.bool_]) -> None:
         """Latch ``touch_seen`` after ``touch_seen_samples`` touchdown-load samples in a row
@@ -4242,8 +4331,42 @@ class C2Controller:
                 continue
             free_air[leg] = np.median(readings)
             touchdown_load[leg] = reading.cylinder_force_N[leg] - free_air[leg] - rod_weight[leg]
+        cap_excess_N = r8.touch_free_air_cap_excess_N
+        if cap_excess_N is not None:
+            touchdown_load = self._cap_free_air_reference(
+                reading, cap_excess_N, free_air, touchdown_load
+            )
         state.free_air_force_N = free_air
         return touchdown_load
+
+    def _cap_free_air_reference(
+        self,
+        reading: _Reading,
+        cap_excess_N: Sequence[float],
+        free_air_N: NDArray[np.float64],
+        touchdown_load_N: NDArray[np.float64],
+    ) -> NDArray[np.float64]:
+        """P-S8-26 (spec rev. 67 344.3): cut the free-air reference at ``m_rod g + F_s,cap``.
+
+        A moving airborne leg reads at most ``m_rod g + F_s``; a larger median means the
+        leg carried ground load inside the window (grounded before TOUCH), which would keep
+        its touchdown load below the threshold while it lifts the machine. ``free_air_N`` is
+        updated in place to the reference used.
+        """
+        state = self._state
+        rod_weight = self._touch_rod_weight_N()
+        cap_N = rod_weight + np.asarray(cap_excess_N, dtype=float)
+        capped_load = touchdown_load_N.copy()
+        for leg in range(LEG_COUNT):
+            # NaN (a leg not judged yet) compares False and stays uncapped.
+            if not free_air_N[leg] > cap_N[leg]:
+                continue
+            free_air_N[leg] = cap_N[leg]
+            capped_load[leg] = reading.cylinder_force_N[leg] - cap_N[leg] - rod_weight[leg]
+            if leg not in state.free_air_capped_legs:
+                state.free_air_capped_legs = state.free_air_capped_legs | {leg}
+                self._add_event(reading.t_s, f"INFO_TOUCH_FREE_AIR_CAPPED:{LEG_ORDER[leg]}")
+        return capped_load
 
     def _touch_rod_weight_N(self) -> NDArray[np.float64]:
         """Per-leg ``m_rod g`` from the YAML (front 1047 N, rear 718 N); the scalar threshold
@@ -5306,6 +5429,7 @@ class C2Controller:
         state.active_target = state.reference = check.accepted  # R2: no ramp the first time
         state.phase = C2Phase.TOUCH
         state.touch_start_sample = state.sample_count
+        state.touch_dip_counts = (0, 0, 0, 0)
         state.soil = _SoilState()  # P-S9-6: a new lifting cycle
         return True
 

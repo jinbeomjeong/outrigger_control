@@ -218,6 +218,20 @@ vs F_min a record; ② G4-7 output check from t_f + d T_s (C-S8-70, unchanged); 
 and the G4-E record row gives the end attitude change after FAULT; ④ the delivered head
 reading's row alignment with ``record.npz`` (:func:`head_delivered_alignment`).
 
+U-S8-74 (a) (spec rev. 68 354, 2026-10-27): the C-S8-72 fast-event F_min row judges per leg the
+0.5 s moving-mean minimum (windows ending at >= W end + 0.5 s) >= F_min and no pad lift after the
+window end (:func:`g1_fmin_after_window`, :data:`G1_FMIN_RULE`); the 1 ms instantaneous minimum
+is a record row, FLAG when < F_min (:func:`g1_fmin_fast_rows`); the slow-event row is unchanged.
+G4-4 (b) "instantaneous minimum > 0" becomes "no pad lift-off (airborne 0)"; old records without
+``airborne`` fall back to judged force > 0 (``airborne_source`` ``force_sign_fallback``).
+
+U-S8-75 = (b) (spec rev. 68 357.3, 2026-10-27): for a fast event on a front leg at the top auger
+level with case F_s < 2 kN, the U57 "0 outside the window" part and the U-S8-74 F_min (b) "no pad
+lift after the window end" pass when the adjacent-leg lift after the window sums to <= 0.1 s with
+a gap <= 0.5 mm; both rows then carry the FLAG ``U-S8-75 (b) exception``
+(:func:`g1_u75_scope`, :func:`g1_u75_u57_exception`, :func:`g1_u75_fmin_exception`). Outside
+that scope the definitions are unchanged.
+
 Sensitivity cases (``s8.condition`` = sensitivity, groups B / ML) report C1 / C2 (C-R19).
 
 Units SI internally; kN / s / deg in the rows.
@@ -3997,6 +4011,638 @@ def mlj_rows(sms: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
     return rows
 
 
+# --- C-S8-72 (spec rev. 67 345.2): floor events on any leg, LEVEL time or READY + 5 s --------
+
+G1_GROUP = "G1"
+G1_END_ATT_WINDOW_S = 1.0
+G1_ATT_TOL_DEG = 0.2
+"""345.2 end attitude: READY and the last-1 s mean true deck |roll|, |pitch| <= 0.2 deg (342.3;
+target 0 on the flat floor)."""
+G1_U58_WINDOW_BAR = 350.0
+G1_U58_OUTSIDE_BAR = 180.0
+"""345.2 U58 (existing definition, spec 62.2): head ``F_cyl / A_p`` in any state inside the
+physical window <= 350 bar; extension samples (``u_applied`` > 1e-6 m/s) outside it <= 180 bar.
+A slow event (no window) judges every extension sample and the whole-run any-state peak."""
+G1_TWIST_SIGN = {"FL": 1, "FR": -1, "RL": -1, "RR": 1}
+"""Twist sign of a re-approach leg (``RT_TWIST_N``) for the sign-change record."""
+G1_HARNESS_FILES = ("r67_screen_P.json", "r67_screen_E.json", "r67_screen_top_phase4.json")
+G1_HARNESS_DIR = Path("06_analysis/02_control/s8/rev67")
+G1_FMIN_MEAN_S = 0.5
+"""U-S8-74 (a) (spec rev. 68 354.1): length of the trailing moving mean of the fast-event F_min
+row; only full windows ending at >= W + 0.5 s count (the same computation as G4-4, 340.2)."""
+G1_FMIN_TOL_KN = 1e-6
+"""354.2: the fast-event mean passes at mean05 minimum >= F_min - 1e-6 kN."""
+U75_FLAG = "U-S8-75 (b) exception"
+U75_LIFT_MAX_S = 0.1
+U75_GAP_MAX_M = 0.0005
+"""U-S8-75 = (b) (spec rev. 68 357.3, ASSUMPTION 353.3): inside the scope the adjacent-leg lift
+after the window end passes when its sum <= 0.1 s and its gap <= 0.5 mm."""
+U75_FS_BELOW_KN = 2.0
+U75_EVENT_LEGS = ("FL", "FR")
+U75_LEVEL = "top"
+"""357.3 scope: fast event (settle speed > v_max) on a front leg, top level, case F_s < 2 kN."""
+U75_RULE = ("U-S8-75 = (b) (spec rev. 68 357.3): fast event (settle speed > v_max) on a front "
+            "leg (FL / FR), top level, case F_s < 2 kN: the U57 adjacent lift outside the "
+            "window and the U-S8-74 F_min (b) lift after the window end pass when the "
+            "adjacent-leg lift after the window sums to <= 0.1 s with a gap <= 0.5 mm (FLAG "
+            "'U-S8-75 (b) exception'); event legs must not lift after the window end; the "
+            "0.5 s mean (a) is unchanged; outside the scope unchanged")
+G1_FMIN_RULE = ("U-S8-74 (a) (spec rev. 68 354.1, replaces the 345.2 fast-event F_min row): "
+                "over [W end, run end] every leg (a) the minimum of the trailing 0.5 s moving "
+                "mean of the S8-A2 judged force (full windows ending at >= W end + 0.5 s) >= "
+                "F_min AND (b) no pad lift (airborne = 20 ms pad normal <= 0: 0 samples; old "
+                "records without airborne: judged force > 0, airborne_source "
+                "force_sign_fallback; " + U75_RULE + "); not judgeable when the run ends "
+                "before W end + 0.5 s; the "
+                "1 ms instantaneous minimum is a record row (FLAG when < F_min) with the time "
+                "below F_min, the longest run below F_min, the time below 0 and the lift time; "
+                "slow event (G4, #10): 1 ms minimum after the event >= F_min (unchanged)")
+G1_RULE = ("C-S8-72 (spec rev. 67 345.2): U-S8-32 event legs (settled + diagonal) cumulative "
+           "lift <= 1.8 s, last re-contact <= event + 3.0 s, FAULT 0 and U57 adjacent (#1-9, 11; "
+           "outside-window part with the U-S8-75 (b) exception); "
+           "U58 window <= 350 / outside extension <= 180 bar (#1-11); F_min per "
+           + G1_FMIN_RULE + "; end READY + last "
+           "1 s mean |att| <= 0.2 deg; recurrence ban 248.3 (twist work clusters <= 1); "
+           "phase_mismatch (controller phase at the event start other than the expected one) = "
+           "not judgeable")
+G1_FMIN_ITEM = ("C-S8-72 F_min U-S8-74: 0.5 s moving mean >= F_min and no pad lift after the "
+                "window end (fast); 1 ms min >= F_min (slow)")
+G1_FMIN_RECORD_ITEM = "C-S8-72 F_min 1 ms instantaneous (record, U-S8-74)"
+
+
+def _g1_harness_runs(root: Path, harness_dir: Path | None) -> list[dict[str, Any]]:
+    """Every run of the rev. 67 screen JSONs (``results[].runs[]`` + the parent's level / F_s /
+    timing / leg); empty when the files are absent."""
+    d = Path(harness_dir) if harness_dir is not None else Path(root) / G1_HARNESS_DIR
+    out: list[dict[str, Any]] = []
+    for name in G1_HARNESS_FILES:
+        p = d / name
+        if not p.exists():
+            continue
+        doc = json.loads(p.read_text(encoding="utf-8"))
+        for res in doc.get("results") or []:
+            for r in res.get("runs") or []:
+                out.append({**r, "level": res.get("level"), "fs_kN": res.get("fs_kN"),
+                            "timing": res.get("timing"), "leg": res.get("leg"),
+                            "file": name})
+    return out
+
+
+def g1_harness_match(runs: Sequence[Mapping[str, Any]], *, base: str, leg: str, level: str,
+                     fs_kN: float, timing: str, offset_s: float) -> dict[str, Any] | None:
+    """The harness run of the same event / leg / level / F_s / timing / phase offset (first file
+    holding it), with the values of the 228.5-style comparison."""
+    for r in runs:
+        if (r.get("event") == base and r.get("leg") == leg and r.get("level") == level
+                and abs(float(r.get("fs_kN") or 0.0) - fs_kN) < 1e-9
+                and r.get("timing") == timing
+                and abs(float(r.get("offset_s") or 0.0) - offset_s) < 1e-9):
+            keys = ("pair_union_s", "pair_last_touch_s", "W_end_s", "adj_lift_sum_W_s",
+                    "adj_max_gap_W_mm", "adj_lift_outside_W_s", "min_F_after_W_kN",
+                    "min_F_after_event_kN", "max_att_change_deg", "n_late_starts",
+                    "sign_changes", "t_ready_back_s", "pass", "gates")
+            return {"file": r["file"], **{k: r.get(k) for k in keys},
+                    "reapproach_starts": (r.get("reapproach_starts") or [])[:30],
+                    "n_bundles": (r.get("twist") or {}).get("n_bundles")}
+    return None
+
+
+def _longest_true_run_s(mask: np.ndarray, dt_s: float) -> float:
+    """Length [s] of the longest run of consecutive True samples of a 1-D mask."""
+    edges = np.diff(np.concatenate(([0], np.asarray(mask, np.int8), [0])))
+    starts, ends = np.flatnonzero(edges == 1), np.flatnonzero(edges == -1)
+    return float((ends - starts).max() * dt_s) if starts.size else 0.0
+
+
+def g1_u75_scope(*, is_fast: bool, settle_speed_mm_s: float | None, v_max_m_s: float,
+                 event_leg: str | None, level: str | None, fs_kN: float) -> bool:
+    """Whether a C-S8-72 case lies inside the U-S8-75 (b) exception scope (:data:`U75_RULE`).
+
+    Args:
+        is_fast: the case is a fast event (``event_spec.fine``).
+        settle_speed_mm_s: settlement depth / ramp time [mm/s]; None for a step settlement.
+        v_max_m_s: actuator maximum speed v_max [m/s].
+        event_leg: settled leg.
+        level: auger level of the case.
+        fs_kN: case seal friction F_s (front value) [kN].
+
+    Returns:
+        True when every scope condition of spec 357.3 holds.
+    """
+    settles_faster_than_v_max = (settle_speed_mm_s is None
+                                 or settle_speed_mm_s > v_max_m_s * 1e3)
+    return bool(is_fast and settles_faster_than_v_max and event_leg in U75_EVENT_LEGS
+                and level == U75_LEVEL and fs_kN < U75_FS_BELOW_KN)
+
+
+def adjacent_lifts_after_window(tp: np.ndarray, airborne: np.ndarray, ball_z_m: np.ndarray,
+                                w_end_s: float,
+                                adjacent_legs: Sequence[str]) -> list[dict[str, Any]]:
+    """Pad lifts of the adjacent legs that reach the window end W or start after it.
+
+    Args:
+        tp: 1 ms pad record times [s] (same clock as ``w_end_s``).
+        airborne: pad lift flags per leg, shape (n, 4).
+        ball_z_m: pad ball-centre world z per leg, shape (n, 4) [m].
+        w_end_s: end of the U-S8-32 window W [s].
+        adjacent_legs: the two adjacent legs of the settlement.
+
+    Returns:
+        One dict per lift: ``leg``, ``start_s``, ``duration_s`` (whole lift, as
+        :func:`settle_lift_split`), ``after_window_s`` (samples at >= W),
+        ``starts_after_window`` (a U57 "outside" lift) and ``gap_m`` (pad ball rise since the
+        lift start; adjacent legs stand on the fixed floor).
+    """
+    t = np.asarray(tp, float)
+    dt = float(np.median(np.diff(t))) if t.size > 1 else 0.0
+    lifted = np.asarray(airborne, bool)
+    ball_z = np.asarray(ball_z_m, float)
+    lifts: list[dict[str, Any]] = []
+    for leg in adjacent_legs:
+        j = LEGS.index(leg)
+        for first, last in _runs(lifted[:, j]):
+            if t[last] < w_end_s - 1e-9:
+                continue
+            span = slice(first, last + 1)
+            lifts.append({
+                "leg": leg, "start_s": float(t[first]),
+                "duration_s": float(t[last] - t[first] + dt),
+                "after_window_s": float((t[span] >= w_end_s - 1e-9).sum() * dt),
+                "starts_after_window": bool(t[first] > w_end_s + 1e-12),
+                "gap_m": float((ball_z[span, j] - ball_z[first, j]).max())})
+    return lifts
+
+
+def _u75_within_limits(lift_s: float, gap_m: float) -> bool:
+    return bool(lift_s <= U75_LIFT_MAX_S + 1e-9 and gap_m <= U75_GAP_MAX_M + 1e-12)
+
+
+def g1_u75_u57_exception(split: Mapping[str, Any], lifts: Sequence[Mapping[str, Any]],
+                         in_scope: bool) -> dict[str, Any]:
+    """U-S8-75 (b) for the U57 row: the adjacent lift outside the window passes inside the scope
+    when it sums to <= 0.1 s with a gap <= 0.5 mm and the in-window part passes.
+
+    Args:
+        split: :func:`settle_lift_split` result of the case.
+        lifts: :func:`adjacent_lifts_after_window` result of the case.
+        in_scope: :func:`g1_u75_scope` result of the case.
+
+    Returns:
+        Record dict; ``applied`` True when the exception turns the U57 row into a pass.
+    """
+    outside = [lift for lift in lifts if lift["starts_after_window"]]
+    outside_s = float(split["adjacent_outside_window_s"])
+    gap_m = max((lift["gap_m"] for lift in outside), default=0.0)
+    inside_ok = bool(split["adjacent_sum_s"] <= U57_LIFT_SUM_S + 1e-9
+                     and split["adjacent_gap_max_m"] <= U57_GAP_M + 1e-12)
+    within = _u75_within_limits(outside_s, gap_m)
+    return {"in_scope": bool(in_scope), "outside_s": outside_s, "outside_gap_max_m": gap_m,
+            "within_limits": within, "inside_window_ok": inside_ok,
+            "applied": bool(in_scope and inside_ok and within and outside_s > 0.0),
+            "lifts": outside, "rule": U75_RULE}
+
+
+def g1_u75_fmin_exception(fmin: Mapping[str, Any], lifts: Sequence[Mapping[str, Any]],
+                          event_legs: Sequence[str], in_scope: bool) -> dict[str, Any]:
+    """U-S8-75 (b) for the U-S8-74 F_min (b) part: the pad lift after the window end passes
+    inside the scope when only adjacent legs lift, for <= 0.1 s in sum with a gap <= 0.5 mm,
+    and the 0.5 s mean part (a) passes.
+
+    Args:
+        fmin: :func:`g1_fmin_after_window` result (status ``judged``).
+        lifts: :func:`adjacent_lifts_after_window` result of the case.
+        event_legs: settled leg and its diagonal.
+        in_scope: :func:`g1_u75_scope` result of the case.
+
+    Returns:
+        Record dict; ``applied`` True when the exception turns the F_min row into a pass.
+    """
+    lift_per_leg = fmin["airborne_s"]
+    event_lift_s = float(sum(lift_per_leg[leg] for leg in event_legs))
+    adjacent_lift_s = float(fmin["airborne_total_s"]) - event_lift_s
+    gap_m = max((lift["gap_m"] for lift in lifts if lift["after_window_s"] > 0.0),
+                default=0.0)
+    mean_ok = bool(fmin["mean05_min_all_kN"] >= fmin["F_min_kN"] - G1_FMIN_TOL_KN)
+    within = bool(event_lift_s == 0.0 and _u75_within_limits(adjacent_lift_s, gap_m))
+    return {"in_scope": bool(in_scope), "event_leg_lift_s": event_lift_s,
+            "adjacent_lift_s": adjacent_lift_s, "gap_max_m": gap_m, "mean_ok": mean_ok,
+            "within_limits": within,
+            "applied": bool(in_scope and mean_ok and within and adjacent_lift_s > 0.0),
+            "rule": U75_RULE}
+
+
+def _g1_apply_u75(split: dict[str, Any], fmin: dict[str, Any],
+                  lifts: Sequence[Mapping[str, Any]], in_scope: bool) -> None:
+    """Attach the U-S8-75 (b) records to a fast case with an adjacent lift outside / after the
+    window and flip the U57 / F_min verdicts where the exception applies. Cases without such a
+    lift are left untouched."""
+    if split["adjacent_outside_window_s"] > 0.0:
+        exception = g1_u75_u57_exception(split, lifts, in_scope)
+        split["u75_exception"] = exception
+        if exception["applied"]:
+            split["u57_pass_without_u75"] = split["u57_pass"]
+            split["u57_pass"] = True
+    if fmin.get("status") == "judged" and not fmin["no_lift"]:
+        exception = g1_u75_fmin_exception(fmin, lifts, split["event_legs"], in_scope)
+        fmin["u75_exception"] = exception
+        if exception["applied"]:
+            fmin["passed_without_u75"] = fmin["passed"]
+            fmin["passed"] = True
+
+
+def g1_fmin_after_window(tp: np.ndarray, judged_force_N: np.ndarray,
+                         airborne: np.ndarray | None, w_end_s: float,
+                         f_min_N: float) -> dict[str, Any]:
+    """U-S8-74 (a) fast-event F_min values over [``w_end_s``, run end] (:data:`G1_FMIN_RULE`).
+
+    Args:
+        tp: 1 ms pad record times relative to the run start [s].
+        judged_force_N: S8-A2 judged force per leg, shape (n, 4) [N].
+        airborne: pad lift flags per leg, shape (n, 4); None for old records without the
+            field (lift is then taken as judged force <= 0, ``force_sign_fallback``).
+        w_end_s: end of the U-S8-32 window W [s].
+        f_min_N: F_min [N].
+
+    Returns:
+        Per-leg 0.5 s moving-mean minimum, lift time, the 1 ms instantaneous record columns,
+        ``status`` (judged / not_judgeable) and ``passed`` (None when not judgeable). kN out.
+    """
+    tp = np.asarray(tp, float)
+    force = np.asarray(judged_force_N, float)
+    if airborne is None:
+        lifted, source = force <= 0.0, "force_sign_fallback"
+    else:
+        lifted, source = np.asarray(airborne, bool), "pads.airborne"
+    after = tp >= w_end_s - 1e-9
+    f_min_kN = f_min_N / 1e3
+    out: dict[str, Any] = {"from_s": w_end_s, "mean05_from_s": w_end_s + G1_FMIN_MEAN_S,
+                           "F_min_kN": f_min_kN, "airborne_source": source,
+                           "rule": G1_FMIN_RULE, "status": "not_judgeable", "passed": None}
+    if not after.any():
+        out["reason"] = "no 1 ms sample after the window end"
+        return out
+    dt = _period(tp)
+    sel = force[after]
+    k, j = np.unravel_index(int(np.argmin(sel)), sel.shape)
+    below = sel < f_min_N
+    out.update(
+        instant_min_kN=float(sel[k, j]) / 1e3, instant_leg=LEGS[j],
+        instant_t_s=float(tp[after][k]),
+        instant_per_leg_kN={LEGS[i]: float(sel[:, i].min()) / 1e3 for i in range(4)},
+        instant_below_F_min=bool(sel[k, j] < f_min_N),
+        below_F_min_s={LEGS[i]: float(below[:, i].sum() * dt) for i in range(4)},
+        longest_below_s={LEGS[i]: _longest_true_run_s(below[:, i], dt) for i in range(4)},
+        below_zero_s={LEGS[i]: float((sel[:, i] < 0.0).sum() * dt) for i in range(4)},
+        airborne_s={LEGS[i]: float(lifted[after, i].sum() * dt) for i in range(4)})
+    out["airborne_total_s"] = float(sum(out["airborne_s"].values()))
+    decidable = bool(tp[-1] >= w_end_s + G1_FMIN_MEAN_S - 1e-9)
+    rec = g4_4_records(tp, force, w_end_s + G1_FMIN_MEAN_S, f_min_N, decidable)
+    out["mean05_min_kN"] = rec["mean05_min_kN"]
+    if not decidable or rec["mean05_min_kN"] is None:
+        out["reason"] = f"run ends before the window end + {G1_FMIN_MEAN_S:g} s"
+        return out
+    mean_min_kN = min(rec["mean05_min_kN"].values())
+    no_lift = not lifted[after].any()
+    out.update(mean05_min_all_kN=mean_min_kN, no_lift=bool(no_lift), status="judged",
+               passed=bool(mean_min_kN >= f_min_kN - G1_FMIN_TOL_KN and no_lift))
+    return out
+
+
+def g1_case_metrics(case: Mapping[str, Any], sm: Mapping[str, Any], m: Mapping[str, Any],
+                    params, harness_runs: Sequence[Mapping[str, Any]] = ()) -> dict[str, Any]:
+    """Values of one C-S8-72 case (group :data:`G1_GROUP`, :data:`G1_RULE`). Times relative to
+    the run start [s], forces kN, pressures bar, angles deg."""
+    from outrigger_sim.verify import s6_control as s6
+
+    res = case["result"]
+    s = res["settings"]
+    s8 = s.get("s8") or {}
+    ev = s8.get("event_spec") or {}
+    t0 = float(s.get("start_t_s") or 0.0)
+    pads = case.get("pads")
+    phases = [(float(t), p) for t, p in res.get("phases") or []]
+    es = res.get("event_state") or {}
+    t_ev = res.get("event_t_s")
+    fault_t = fault_entry_s(res.get("phases") or [])
+    fast = bool(ev.get("fine"))
+    out: dict[str, Any] = {
+        "event": s8.get("event"), "base": ev.get("g1_base"), "leg": ev.get("leg"),
+        "anchor": ev.get("at"), "fast": fast, "level": s.get("level"),
+        "fs_kN": s8.get("fs_kN"), "phase_offset_s": s8.get("phase_offset_s"),
+        "event_state": es, "phase_at_event": es.get("phase_at_event"),
+        "expected_phase": es.get("expected_phase"),
+        "phase_mismatch": es.get("phase_mismatch"), "event_t_s": t_ev,
+        "fault_t_s": fault_t, "final_phase": phases[-1][1] if phases else None,
+        "s8_end": res.get("s8_end"), "rule": G1_RULE}
+    if t_ev is None or pads is None or "airborne" not in pads:
+        out["status"] = "no event time or no 1 ms pad record"
+        return out
+    t_ev = float(t_ev)
+    tp = np.asarray(pads["t"], float) - t0
+    t3, t3_top = _t3_of_level(s.get("level"))
+    ball_z = np.asarray(pads["ball_centre_world"], float)[:, :, 2]
+    sp = settle_lift_split(tp, pads["airborne"], ball_z, t_ev,
+                           ev["leg"], float(ev["depth_m"]), float(ev["ramp_s"]), t3_s=t3,
+                           fault_t_s=fault_t)
+    sp["T3_from_top_level"] = t3_top
+    out["u_s8_32"] = sp
+    # record: union lift of the event pair after the event (the harness "pair" quantity)
+    air = np.asarray(pads["airborne"], bool)
+    ja, jb = (LEGS.index(x) for x in sp["event_legs"])
+    dtp = float(np.median(np.diff(tp))) if tp.size > 1 else 0.0
+    out["event_pair_union_s"] = float(((air[:, ja] | air[:, jb])
+                                       & (tp >= t_ev - 1e-9)).sum() * dtp)
+    w_end = t_ev + float(sp["window_end_rel_s"])
+    out["window_s"] = [t_ev, w_end] if fast else None
+    # F_min: fast event = U-S8-74 (a) (0.5 s mean + no pad lift after the window end), slow
+    # event = S8-A2 judged 1 ms minimum after the event (unchanged)
+    fj = judged_force_min(pads)
+    f_min = float(sm.get("F_min_N") or params.control.F_min_cylinder_N)
+    after = tp >= t_ev - 1e-9
+    if fast:
+        out["F_min_after"] = g1_fmin_after_window(tp, fj, air, w_end, f_min)
+        in_scope = g1_u75_scope(
+            is_fast=fast, settle_speed_mm_s=sp["settle_speed_mm_s"],
+            v_max_m_s=float(params.actuator.max_speed_m_s), event_leg=ev.get("leg"),
+            level=s.get("level"), fs_kN=float(s8.get("fs_kN") or 0.0))
+        lifts = adjacent_lifts_after_window(tp, air, ball_z, w_end, sp["adjacent_legs"])
+        _g1_apply_u75(sp, out["F_min_after"], lifts, in_scope)
+    elif after.any():
+        sel = fj[after]
+        k, j = np.unravel_index(int(np.argmin(sel)), sel.shape)
+        out["F_min_after"] = {"from_s": t_ev, "min_kN": float(sel[k, j]) / 1e3,
+                              "leg": LEGS[j], "t_s": float(tp[after][k]),
+                              "per_leg_kN": {LEGS[i]: float(sel[:, i].min()) / 1e3
+                                             for i in range(4)},
+                              "F_min_kN": f_min / 1e3}
+    # U58 (existing definition): window any-state peak, outside extension samples
+    area = np.asarray(s6._head_areas_m2(params), float)
+    p_pad = np.asarray(pads["F_cyl"], float) / area / 1e5
+    rec = case.get("rec") or {}
+    u58: dict[str, Any] = {"area_m2": area.tolist()}
+    if fast:
+        inside = (tp >= t_ev - 1e-9) & (tp <= w_end + 1e-9)
+        u58["window_peak_bar"] = float(p_pad[inside].max()) if inside.any() else None
+    else:
+        u58["window_peak_bar"] = None
+        u58["run_peak_any_state_bar"] = float(p_pad.max())
+    if "u_applied" in rec and "F_cyl" in rec:
+        tr = np.asarray(rec["t"], float) - t0
+        ext = np.asarray(rec["u_applied"], float) > s6.MOVING_EPS_M_S
+        out_w = ~((tr >= t_ev - 1e-9) & (tr <= w_end + 1e-9)) if fast else np.ones(tr.size, bool)
+        judged = ext & out_w[:, None]
+        p_rec = np.asarray(rec["F_cyl"], float) / area / 1e5
+        u58["outside_extension_max_bar"] = float(p_rec[judged].max()) if judged.any() else None
+        u58["outside_extension_samples"] = int(judged.sum())
+    u58["s6_metrics"] = {k: m.get(k) for k in ("max_pressure_transient_bar",
+                                               "max_moving_pressure_excl_transient_bar",
+                                               "max_moving_pressure_bar",
+                                               "max_pressure_any_step_bar")}
+    win_ok = u58.get("window_peak_bar") is None or u58["window_peak_bar"] <= G1_U58_WINDOW_BAR
+    run_ok = u58.get("run_peak_any_state_bar") is None \
+        or u58["run_peak_any_state_bar"] <= G1_U58_WINDOW_BAR
+    ext_ok = u58.get("outside_extension_max_bar") is None \
+        or u58["outside_extension_max_bar"] <= G1_U58_OUTSIDE_BAR
+    u58["passed"] = bool(win_ok and run_ok and ext_ok)
+    out["u58"] = u58
+    # end attitude: last 1 s mean of the true deck attitude (1 ms pad record body quaternion)
+    if "body_quat_wxyz" in pads:
+        q = np.asarray(pads["body_quat_wxyz"], float)
+        last = tp >= tp[-1] - G1_END_ATT_WINDOW_S
+        rp = np.degrees(np.array([s6.roll_pitch_from_quat(x) for x in q[last]]))
+        out["end_att_deg"] = rp.mean(axis=0).tolist()
+    out["att_err_last5_maxabs_deg"] = m.get("att_err_last5_maxabs_deg")
+    # records: re-approach starts, sign changes, READY return, crawler re-contact
+    rt = sm.get("rt") or {}
+    runs = rt.get("runs") or []
+    signs = [G1_TWIST_SIGN.get(r.get("leg"), 0) for r in runs]
+    out["reapproach"] = {"starts": [[r["start_s"], r["leg"]] for r in runs],
+                         "n_starts": len(runs),
+                         "starts_after_1.5_s": rt.get("starts_after_1.5_s"),
+                         "sign_changes": int(sum(1 for a, b in zip(signs, signs[1:], strict=False)
+                                                 if a and b and a != b)),
+                         "retriggers": rt.get("retriggers"), "deferred": rt.get("deferred")}
+    out["work"] = rt.get("work")
+    ready_back = next((t for t, p in phases if t > t_ev + 1e-9 and p == "ready"), None)
+    out["ready_back_rel_s"] = None if ready_back is None else ready_back - t_ev
+    if "F_crawler" in rec:
+        tr = np.asarray(rec["t"], float) - t0
+        fz = np.asarray(rec["F_crawler"], float)[:, 2]
+        a = tr >= t_ev - 1e-9
+        dt = float(np.median(np.diff(tr))) if tr.size > 1 else 0.0
+        out["crawler_contact_after_event_s"] = float((fz[a] > 0.0).sum() * dt)
+        out["crawler_record_dt_s"] = dt
+    # harness comparison (228.5 form): harness / Chrono pair cumulative lift, re-contact diff
+    timing = "level" if ev.get("at") == "loc+3.0" else "ready"
+    hm = g1_harness_match(harness_runs, base=str(ev.get("g1_base")), leg=str(ev.get("leg")),
+                          level=str(s.get("level")), fs_kN=float(s8.get("fs_kN") or 0.0),
+                          timing=timing, offset_s=float(s8.get("phase_offset_s") or 0.0))
+    if hm is not None:
+        cum = sp["event_cum_max_s"]
+        uni = out["event_pair_union_s"]
+        rc = sp["event_recontact_max_rel_s"]
+        hp = hm.get("pair_union_s")
+        hm["harness_over_chrono_pair"] = None if not uni or hp is None else float(hp) / uni
+        hm["harness_over_chrono_cum_max"] = None if not cum or hp is None else float(hp) / cum
+        hm["harness_minus_chrono_recontact_s"] = None if rc is None or \
+            hm.get("pair_last_touch_s") is None else float(hm["pair_last_touch_s"]) - rc
+        hm["note"] = ("harness pair = union lift of the event pair (r67 screen); "
+                      "harness_over_chrono_pair uses the Chrono union (same quantity), "
+                      "harness_over_chrono_cum_max the U-S8-32 row value (largest per-leg "
+                      "cumulative lift)")
+    out["harness"] = hm
+    return out
+
+
+def _round_legs(values: Mapping[str, float] | None, ndigits: int = 3) -> dict[str, float] | None:
+    return None if values is None else {k: round(v, ndigits) for k, v in values.items()}
+
+
+def _u75_note(exception: Mapping[str, Any], *, lift_s: float, gap_m: float) -> str:
+    """Note suffix of a row that carries a U-S8-75 (b) exception record."""
+    values = f"adjacent lift {lift_s:.3f} s, gap {gap_m * 1e3:.2f} mm"
+    if exception["applied"]:
+        return (f"; FLAG {U75_FLAG}: {values} <= {U75_LIFT_MAX_S:g} s / "
+                f"{U75_GAP_MAX_M * 1e3:g} mm")
+    reason = "out of scope" if not exception["in_scope"] else "limits or other parts not met"
+    return f"; {U75_FLAG} not applied ({reason}): {values}"
+
+
+def g1_u_s8_32_fast_rows(cid: str, sp: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """U-S8-32 rows of a fast C-S8-72 case; the U57 row carries the U-S8-75 (b) exception note
+    (and FLAG when it applies) when ``sp`` holds an exception record."""
+    rows = u_s8_32_rows(cid, sp, label="C-S8-72")
+    exception = sp.get("u75_exception")
+    if not rows or exception is None:
+        return rows
+    u57_row = rows[0]
+    u57_row["note"] += _u75_note(exception, lift_s=exception["outside_s"],
+                                 gap_m=exception["outside_gap_max_m"])
+    if exception["applied"]:
+        u57_row["flag"] = True
+    return rows
+
+
+def g1_fmin_fast_rows(cid: str, fm: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """U-S8-74 (a) rows of a fast-event case (``fm`` from :func:`g1_fmin_after_window`): the
+    judged row (0.5 s mean + no pad lift) and the 1 ms instantaneous record row (FLAG when the
+    instantaneous minimum is below F_min)."""
+    if not fm:
+        return [_row(G1_FMIN_ITEM, cid, None, None, None, "no F_min values",
+                     kind="not_judgeable")]
+    mean05 = fm.get("mean05_min_kN")
+    judged = fm.get("status") == "judged"
+    exception = fm.get("u75_exception")
+    exception_note = "" if exception is None else _u75_note(
+        exception, lift_s=exception["adjacent_lift_s"], gap_m=exception["gap_max_m"])
+    exception_flag = {} if not (exception and exception["applied"]) else {"flag": True}
+    rows = [_row(G1_FMIN_ITEM, cid,
+                 [fm.get("mean05_min_all_kN"), fm.get("airborne_total_s")],
+                 [fm["F_min_kN"], 0.0], fm.get("passed"),
+                 f"from {fm['from_s']} s (mean windows ending >= {fm['mean05_from_s']} s); "
+                 f"0.5 s mean min per leg {_round_legs(mean05, 2)} kN; lift per leg "
+                 f"{_round_legs(fm.get('airborne_s'))} s ({fm.get('airborne_source')})"
+                 + ("" if judged else f"; not judgeable: {fm.get('reason')}")
+                 + exception_note,
+                 kind="judged" if judged else "not_judgeable", F_min_after=dict(fm),
+                 **exception_flag)]
+    if fm.get("instant_min_kN") is None:
+        return rows
+    flag = bool(fm.get("instant_below_F_min"))
+    rows.append(_row(
+        G1_FMIN_RECORD_ITEM, cid,
+        {"instant_min_kN": fm["instant_min_kN"], "leg": fm["instant_leg"],
+         "t_s": fm["instant_t_s"], "below_F_min_s": fm["below_F_min_s"],
+         "longest_below_s": fm["longest_below_s"], "below_zero_s": fm["below_zero_s"],
+         "airborne_s": fm["airborne_s"]},
+        fm["F_min_kN"], None,
+        ("FLAG: " if flag else "")
+        + f"1 ms min {fm['instant_min_kN']:.2f} kN ({fm['instant_leg']} at "
+        f"{fm['instant_t_s']:.3f} s) vs F_min {fm['F_min_kN']:.3f} kN; per leg "
+        f"{_round_legs(fm.get('instant_per_leg_kN'), 2)} kN",
+        kind="record", flag=flag))
+    return rows
+
+
+def g1_rows(sms: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """345.2 rows of the C-S8-72 cases (``sm['g1']`` from :func:`g1_case_metrics`)."""
+    rows: list[dict[str, Any]] = []
+    for cid, sm in sorted(sms.items()):
+        g = sm.get("g1")
+        if not g:
+            continue
+        mismatch = bool(g.get("phase_mismatch"))
+        na = "phase_mismatch: not judgeable (spec rev. 67 345.1)"
+
+        def add(r: dict[str, Any]) -> None:
+            if mismatch and r.get("kind") == "judged":
+                r.update(passed=None, kind="not_judgeable", note=f"{na}; {r.get('note', '')}")
+            rows.append(r)
+
+        es = g.get("event_state") or {}
+        add(_row("C-S8-72 event state: controller phase at the event start vs expected "
+                 "(LEVEL for LOC + 3.0 s, READY for READY + 5 s)", cid,
+                 {"phase_at_event": g.get("phase_at_event"),
+                  "expected": g.get("expected_phase"), "event_t_s": g.get("event_t_s"),
+                  "reference_t_s": es.get("reference_t_s"), "loc_t_s": es.get("loc_t_s"),
+                  "phase_offset_s": g.get("phase_offset_s")},
+                 g.get("expected_phase"), None if g.get("phase_mismatch") is None
+                 else not mismatch, "phase_mismatch = not judgeable (345.1)",
+                 kind="record" if not mismatch else "record_flag"))
+        if g.get("status"):
+            rows.append(_row("C-S8-72 case not judgeable", cid, g["status"], None, None,
+                             kind="not_judgeable"))
+            continue
+        sp = g["u_s8_32"]
+        if g["fast"]:
+            for r in g1_u_s8_32_fast_rows(cid, sp):
+                add(r)
+        else:
+            for r in u_s8_32_rows(cid, sp, label="C-S8-72 (slow event, record)"):
+                rows.append(r | {"kind": "record", "passed": None})
+            lifted = sp["any_lift"]
+            add(_row("C-S8-72 slow event (G4): no lift on any leg, FAULT 0 (342.3)", cid,
+                     {"cum_lift_s": sp["cum_lift_s"], "fault_t_s": g.get("fault_t_s")},
+                     "0 / None", (not lifted) and g.get("fault_t_s") is None,
+                     "record next to the 345.2 rows (U-S8-32 row is for 1-9, 11)",
+                     kind="record"))
+        u = g["u58"]
+        add(_row("C-S8-72 U58: head F/A_p in the window <= 350 bar, outside extension samples "
+                 "<= 180 bar (slow event: whole-run any-state peak <= 350)", cid,
+                 [u.get("window_peak_bar"), u.get("outside_extension_max_bar"),
+                  u.get("run_peak_any_state_bar")],
+                 [G1_U58_WINDOW_BAR, G1_U58_OUTSIDE_BAR, G1_U58_WINDOW_BAR], u["passed"],
+                 f"window {g.get('window_s')}; s6 metrics {u['s6_metrics']}", u58=u))
+        fm = g.get("F_min_after") or {}
+        if g["fast"]:
+            for r in g1_fmin_fast_rows(cid, fm):
+                add(r)
+        else:
+            add(_row(G1_FMIN_ITEM, cid, fm.get("min_kN"), fm.get("F_min_kN"),
+                     None if not fm else bool(fm["min_kN"] >= fm["F_min_kN"] - 1e-9),
+                     f"from {fm.get('from_s')} s; min {fm.get('leg')} at {fm.get('t_s')} s; "
+                     f"per leg "
+                     f"{ {k: round(v, 2) for k, v in (fm.get('per_leg_kN') or {}).items()} } kN",
+                     F_min_after=fm))
+        att = g.get("end_att_deg")
+        ok_att = None if att is None else bool(
+            g.get("final_phase") == "ready"
+            and max(abs(a) for a in att) <= G1_ATT_TOL_DEG + 1e-12)
+        add(_row("C-S8-72 end: READY and last 1 s mean true |roll|, |pitch| <= 0.2 deg", cid,
+                 {"final_phase": g.get("final_phase"),
+                  "end_att_deg": None if att is None else [round(a, 4) for a in att],
+                  "last5_maxabs_deg": g.get("att_err_last5_maxabs_deg")},
+                 G1_ATT_TOL_DEG, ok_att,
+                 f"run end {((g.get('s8_end') or {}).get('end_t_s'))} s, timeout "
+                 f"{(g.get('s8_end') or {}).get('timeout')}"))
+        w = g.get("work") or {}
+        add(_row("C-S8-72 recurrence ban (248.3): twist-work clusters of 0.5 s bins > +20 J "
+                 "after event + 1.5 s <= 1", cid,
+                 {"n_clusters": w.get("n_clusters"), "clusters": w.get("clusters"),
+                  "max_bin_after_J": w.get("max_bin_after_J")},
+                 RT_WORK_MAX_CLUSTERS, w.get("passed"), str(w.get("status"))))
+        rp = g.get("reapproach") or {}
+        hm = g.get("harness") or {}
+        rows.append(_row("C-S8-72 record: re-approach starts / after 1.5 s / sign changes, "
+                         "READY return, crawler re-contact, harness / Chrono (228.5 form)", cid,
+                         {"n_starts": rp.get("n_starts"),
+                          "starts_after_1.5_s": rp.get("starts_after_1.5_s"),
+                          "sign_changes": rp.get("sign_changes"),
+                          "ready_back_rel_s": g.get("ready_back_rel_s"),
+                          "event_pair_union_s": g.get("event_pair_union_s"),
+                          "crawler_contact_after_event_s": g.get(
+                              "crawler_contact_after_event_s"),
+                          "harness_over_chrono_pair": hm.get("harness_over_chrono_pair"),
+                          "harness_minus_chrono_recontact_s": hm.get(
+                              "harness_minus_chrono_recontact_s")},
+                         None, None,
+                         f"starts {rp.get('starts')}; harness {hm.get('file')} pair "
+                         f"{hm.get('pair_union_s')} s, last touch {hm.get('pair_last_touch_s')} "
+                         f"s, pass {hm.get('pass')}", kind="record", reapproach=rp,
+                         harness=hm))
+    return rows
+
+
+def g1_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Per case: judged rows passed / failed / not judgeable (C-S8-72 rows only)."""
+    out: dict[str, Any] = {}
+    for r in rows:
+        if not str(r.get("item", "")).startswith("C-S8-72"):
+            continue
+        c = out.setdefault(r["case"], {"passed": 0, "failed": [], "not_judgeable": 0,
+                                       "records": 0})
+        if r.get("kind") == "judged":
+            if r.get("passed") is True:
+                c["passed"] += 1
+            elif r.get("passed") is False:
+                c["failed"].append(r["item"])
+        elif r.get("kind") == "not_judgeable":
+            c["not_judgeable"] += 1
+        else:
+            c["records"] += 1
+    return out
+
+
 # --- C-S8-68 (spec rev. 64 323, U-S8-68): G4 head fault + lifted leg = FAULT_REGROUND --------
 
 FAULT_REGROUND_PHASE = "fault_reground"
@@ -4051,14 +4697,26 @@ G4_TAIL_S = 2.0
 the last 2 s of the run (control ``r64_g4_closed_loop.py`` ``G4_4_mean05_min_kN``,
 ``last2s_mean_kN``, ``last2s_ptp_kN``)."""
 G4_INSTANT_FLOOR_N = 0.0
-G4_4_RULE = ("C-S8-71 / U-S8-72 (a) (spec rev. 66 337 / 338): over [FAULT + 1 s, run end] every "
+G4_4_RULE = ("C-S8-71 / U-S8-72 (a) (spec rev. 66 337 / 338), (b) per U-S8-74 (a) (spec rev. 68 "
+             "354.1): over [FAULT + 1 s, run end] every "
              "leg's trailing 0.5 s moving mean of the judged true force (S8-A2; windows ending "
              "at >= FAULT + 1 s, full windows only, as control r64_g4_closed_loop.py) >= F_min "
-             "AND its instantaneous minimum > 0 (no pad lift-off); undecidable when the window "
-             "< 3 s; the instantaneous minimum vs F_min (rev. 64 strict rule) is a record "
-             "(instant_min_ge_F_min, below_F_min_s)")
-"""C-S8-71 ① (U-S8-72 (a), 2026-10-27): G4-4 judged quantity. :data:`G4_INSTANT_FLOOR_N` is
-the instantaneous floor (strictly above, N)."""
+             "AND no pad lift-off (airborne samples 0; old records without airborne: judged "
+             "force > 0, airborne_source force_sign_fallback); undecidable when the window "
+             "< 3 s; records: instantaneous minimum > 0 (instant_min_positive) and vs F_min "
+             "(rev. 64 strict rule: instant_min_ge_F_min, below_F_min_s)")
+"""C-S8-71 ① (U-S8-72 (a), 2026-10-27) with (b) = no pad lift-off (U-S8-74 (a), 2026-10-27):
+G4-4 judged quantity. :data:`G4_INSTANT_FLOOR_N` is the instantaneous floor of the
+``instant_min_positive`` record (strictly above, N)."""
+JUDGE_REVISION_U75 = (
+    "U-S8-75 = (b) (spec rev. 68 357.3: fast event on a front leg, top level, case F_s < 2 kN: "
+    "U57 outside-window lift and U-S8-74 F_min (b) lift after the window end pass at <= 0.1 s "
+    "and gap <= 0.5 mm with the FLAG 'U-S8-75 (b) exception'; outside the scope unchanged)")
+JUDGE_REVISION_U74 = (
+    "U-S8-74 (a) (spec rev. 68 354: C-S8-72 fast-event F_min = 0.5 s moving mean minimum >= "
+    "F_min and no pad lift after the window end, the 1 ms instantaneous minimum a record row "
+    "(FLAG when < F_min), slow event unchanged; G4-4 (b) = no pad lift-off (airborne 0), the "
+    "instantaneous minimum > 0 a record)")
 G4_END_MEAN_S = 0.5
 """C-S8-71 ③ record: the end attitude change after FAULT = mean true roll / pitch over the last
 0.5 s of the run minus the mean over [FAULT - 0.5 s, FAULT] (ASSUMPTION: 0.5 s means as G4-6)."""
@@ -4092,9 +4750,9 @@ G4_RULE = (
     "G4-3 FAULT (phase 'fault') <= t_f + 15 s and issued_u = 0 from FAULT + d T_s on (d = 1, "
     "C-S8-70 ① / rev. 65 333; the FAULT-sample issued_u is recorded); G4-4 (main, C-S8-71 / "
     "U-S8-72 (a), rev. 66 337) from FAULT + 1 s to the run end every leg's trailing 0.5 s moving "
-    "mean of the judged true force (S8-A2; window end >= FAULT + 1 s) >= F_min and its "
-    "instantaneous minimum > 0 (no pad lift-off), undecidable when that window < 3 s "
-    "(323.9 ②); records: instantaneous minimum vs F_min (rev. 64 strict rule), time below "
+    "mean of the judged true force (S8-A2; window end >= FAULT + 1 s) >= F_min and no pad "
+    "lift-off (airborne samples 0, U-S8-74 (a) / rev. 68 354), undecidable when that window < 3 s "
+    "(323.9 ②); records: instantaneous minimum > 0 and vs F_min (rev. 64 strict rule), time below "
     "F_min, airborne ms, mean and peak-to-peak over the last 2 s (C-S8-70 ②); "
     "G4-5 (323.9 ③) window [entry, FAULT + 1 s): healthy legs "
     "(neither the fault leg nor a target) never below F_min for more than 0.5 s in a row "
@@ -4193,7 +4851,7 @@ def g4_4_records(tp: np.ndarray, f_N: np.ndarray, t_from_s: float, f_min_N: floa
 def g4_metrics(*, t_f: float | None, fault_leg: str, expect: str | None,
                phases: Sequence[Sequence[Any]], names: Sequence[tuple[float, str]],
                tc: np.ndarray, phase_series: np.ndarray, issued_u: np.ndarray,
-               tp: np.ndarray, airborne: np.ndarray, judged_force_N: np.ndarray,
+               tp: np.ndarray, airborne: np.ndarray | None, judged_force_N: np.ndarray,
                f_cyl_N: np.ndarray, head_true_Pa: np.ndarray, roll_pitch_rad: np.ndarray | None,
                s_motor_m: np.ndarray, f_min_N: float,
                reground_meta: Mapping[str, Any] | None = None,
@@ -4203,12 +4861,15 @@ def g4_metrics(*, t_f: float | None, fault_leg: str, expect: str | None,
     ``tc`` / ``phase_series`` / ``issued_u`` = 10 Hz ``s8_series``, ``tp`` ... = 1 ms pads
     (``roll_pitch_rad`` (n, 2) from ``body_quat_wxyz``). ``extend_limit_N``: per-leg extend
     force limit (YAML); ``t_event_s``: the case event time (pre-event median record column).
+    ``airborne`` None = old record without the field: G4-4 (b) falls back to judged force > 0
+    (``airborne_source`` ``force_sign_fallback``, spec rev. 68 354.1) and G4-2 sees no lift.
     SI inputs; kN / bar / mm / deg out."""
     j = LEGS.index(fault_leg)
     tc, tp = np.asarray(tc, float), np.asarray(tp, float)
     ph = np.asarray(phase_series).astype(str)
     u = np.asarray(issued_u, float)
-    air = np.asarray(airborne, bool)
+    has_airborne = airborne is not None
+    air = np.asarray(airborne, bool) if has_airborne else np.zeros((tp.size, 4), bool)
     out: dict[str, Any] = {"fault_leg": fault_leg, "expect": expect, "t_f_s": t_f,
                            "rule": G4_RULE}
     if t_f is None:
@@ -4278,8 +4939,9 @@ def g4_metrics(*, t_f: float | None, fault_leg: str, expect: str | None,
                    "passed": bool(t_fault is not None and t_fault - t_f
                                   <= G4_FAULT_WITHIN_S + G4_TIME_TOL_S
                                   and u_after is not None and u_after <= G4_ZERO_U_M_S)}
-    # G4-4 (main; C-S8-71 / U-S8-72 (a)): 0.5 s moving-mean minimum >= F_min and instantaneous
-    # minimum > 0 over [FAULT + 1 s, end]; the instantaneous minimum vs F_min is a record
+    # G4-4 (main; C-S8-71 / U-S8-72 (a), (b) per U-S8-74 (a)): 0.5 s moving-mean minimum >=
+    # F_min and no pad lift-off over [FAULT + 1 s, end]; the instantaneous minimum (> 0, vs
+    # F_min) is a record
     f = np.asarray(judged_force_N, float)
     if t_fault is not None:
         sel = tp >= t_fault + G4_SETTLED_AFTER_S - 1e-9
@@ -4292,6 +4954,12 @@ def g4_metrics(*, t_f: float | None, fault_leg: str, expect: str | None,
         rec4 = g4_4_records(tp, f, t_fault + G4_SETTLED_AFTER_S, f_min_N, decidable)
         inst_ge_fmin = None if mins is None else bool(min(mins.values()) >= f_min_N / 1e3 - 1e-9)
         inst_pos = None if mins is None else bool(min(mins.values()) > G4_INSTANT_FLOOR_N / 1e3)
+        if not sel.any():
+            no_lift = None
+        elif has_airborne:
+            no_lift = not bool(air[sel].any())
+        else:
+            no_lift = inst_pos
         mean_ok = rec4["mean05_min_kN"] is not None and bool(
             min(rec4["mean05_min_kN"].values()) >= f_min_N / 1e3 - 1e-9)
         below = {LEGS[i]: float(np.sum(sel & (f[:, i] < f_min_N)) * dtp) for i in range(4)}
@@ -4307,7 +4975,11 @@ def g4_metrics(*, t_f: float | None, fault_leg: str, expect: str | None,
                        "status": "judged" if decidable else "undecidable",
                        "rule": G4_4_RULE,
                        "passed": None if not decidable else bool(
-                           mean_ok and inst_pos is True),
+                           mean_ok and no_lift is True),
+                       "no_lift": no_lift,
+                       "airborne_source": ("pads.airborne" if has_airborne
+                                           else "force_sign_fallback"),
+                       # U-S8-74 (a) record column (the C-S8-71 (b) quantity)
                        "instant_min_positive": inst_pos,
                        # C-S8-71 record columns: the rev. 64 strict rule and its extent
                        "instant_min_ge_F_min": inst_ge_fmin,
@@ -4520,8 +5192,8 @@ def g4_of_case(case: Mapping[str, Any], f_min_N: float, params=None) -> dict[str
         rp = np.column_stack([r, p])
     cm = res.get("controller_meta") or {}
     meta = cm.get("fault_reground") if isinstance(cm.get("fault_reground"), Mapping) else None
-    air = (np.asarray(pads["airborne"], bool) if "airborne" in pads
-           else np.zeros((tp.size, 4), bool))
+    # U-S8-74 (a): None tells g4_metrics to fall back to the force sign for G4-4 (b)
+    air = np.asarray(pads["airborne"], bool) if "airborne" in pads else None
     out = g4_metrics(t_f=t_first, fault_leg=str(spec["leg"]), expect=spec.get("expect"),
                      phases=res.get("phases") or [], names=_event_names(case),
                      tc=np.asarray(series["t"], float) - t0, phase_series=series["phase"],
@@ -4612,9 +5284,10 @@ G4_ROWS = (("g4_1", "G4-1 FAULT_REGROUND entry at the fault sample + head fault 
             "judged"),
            ("g4_3", "G4-3 FAULT within fault + 15 s, output 0 from FAULT + d T_s (d = 1; "
                     "FAULT-sample output recorded)", "judged"),
-           ("g4_4", "G4-4 (main, U-S8-72 (a)) from FAULT + 1 s to the run end every leg's 0.5 s "
-                    "moving mean of the judged true force >= F_min and instantaneous minimum > 0 "
-                    "(instantaneous minimum vs F_min recorded; undecidable when < 3 s)",
+           ("g4_4", "G4-4 (main, U-S8-72 (a) / U-S8-74 (a)) from FAULT + 1 s to the run end every "
+                    "leg's 0.5 s moving mean of the judged true force >= F_min and no pad "
+                    "lift-off (airborne samples 0) (instantaneous minimum > 0 and vs F_min "
+                    "recorded; undecidable when < 3 s)",
             "judged"),
            ("g4_5", "G4-5 re-ground [entry, FAULT + 1 s): healthy legs below F_min <= 0.5 s in "
                     "a row, faulty-leg F_cyl <= extend limit, true head <= 345 bar", "judged"),
@@ -4651,7 +5324,8 @@ def g4_rows(cid: str, g: Mapping[str, Any]) -> list[dict[str, Any]]:
         elif key == "g4_4" and v.get("mean05_min_kN") is not None:
             mn = v.get("min_from_fault_plus_1s_kN") or {}
             note = (f"fault leg {g.get('fault_leg')}, FAULT {g.get('fault_s')} s; 0.5 s mean "
-                    f"min {min(v['mean05_min_kN'].values()):.2f} kN, instantaneous min "
+                    f"min {min(v['mean05_min_kN'].values()):.2f} kN, no pad lift-off "
+                    f"{v.get('no_lift')} ({v.get('airborne_source')}); instantaneous min "
                     f"{min(mn.values()):.2f} kN (> 0: {v.get('instant_min_positive')}; >= F_min "
                     f"{v.get('F_min_kN'):.3f} kN: {v.get('instant_min_ge_F_min')}, record)"
                     if mn else f"fault leg {g.get('fault_leg')}, FAULT {g.get('fault_s')} s")
@@ -4696,7 +5370,8 @@ def apply_head_fault_na_rows(rows: list[dict[str, Any]],
 def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
                 root: Path | None = None, ref_batch: Path | None = None,
                 lookup_batches: Sequence[Path] = (),
-                deferred_ref: Path | None = None) -> Path:
+                deferred_ref: Path | None = None,
+                harness_dir: Path | None = None) -> Path:
     """Judge a ``run_S8C.py`` batch; writes ``verify_S8C.json``. ``ref_batch``: an earlier batch
     whose ``verify_S8C.json`` metrics give the 213.6 TOUCH regression row (C-S8-19 ⑦);
     ``ref_batch`` and ``lookup_batches`` (their ``verify_S8C.json``) also give the C11 L1 twins
@@ -4709,6 +5384,7 @@ def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
     root = root or bc.PROJECT_ROOT
     ref_docs = _load_ref_docs([ref_batch, *lookup_batches])
     metrics, probes, sms, dirs = [], {}, {}, {}
+    harness_runs: list[dict[str, Any]] | None = None  # C-S8-72, read on the first G1 case
     for d in sorted(p for p in Path(batch_dir).iterdir() if (p / "result.json").exists()):
         case, m, pr, params = _load(d)
         metrics.append(m)
@@ -4720,6 +5396,11 @@ def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
         sms[m["case"]].update(_rt_of_case(  # C-S8-37, C-S8-40 forced window masked
             case, d, forced=sms[m["case"]].get("forced_window"),
             f_min_N=float(params.control.F_min_cylinder_N)))  # C-S8-41
+        if sms[m["case"]]["s8"].get("group") == G1_GROUP:  # C-S8-72 (spec rev. 67 345.2)
+            if harness_runs is None:
+                harness_runs = _g1_harness_runs(Path(root), harness_dir)
+            sms[m["case"]]["g1"] = g1_case_metrics(case, sms[m["case"]], m, params,
+                                                   harness_runs)
         dirs[m["case"]] = d
     d8_item = "D8 min true cylinder force >= F_min + 5 kN"
     rows = [r for r in bc.judge(metrics, probes, None) if r["item"] != d8_item]
@@ -4776,6 +5457,8 @@ def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
                               None if ref_batch is None else str(ref_batch)))
     rows.extend(cb_rerun_rows(sms, by_id, rows, ref_docs))  # U-S8-23, spec rev. 46 216.8
     rows.extend(mlj_rows(sms))  # C-S8-27 / 30: judged cases of the main ML batch
+    g1 = g1_rows(sms)  # C-S8-72 (spec rev. 67 345.2); empty without G1 cases
+    rows.extend(g1)
     dref = None
     if deferred_ref is not None:  # C-S8-42: deferred legs vs the reference run of the case
         dref = Path(deferred_ref)
@@ -4800,7 +5483,14 @@ def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
                     "liftoff_window_s": LIFTOFF_WINDOW_S,
                     "sensor_share_N": SENSOR_SHARE_N,
                     "summary": judge_summary(rows),  # C-S8-41
-                    "judge_revision": "C-S8-71 (spec rev. 66 338, U-S8-72 (a): G4-4 = 0.5 s "
+                    **({"c_s8_72": {"rule": G1_RULE, "f_min_rule": G1_FMIN_RULE,
+                                    "u75_rule": U75_RULE,
+                                    "per_case": g1_summary(g1),
+                                    "harness_runs": len(harness_runs or [])}}
+                       if g1 else {}),
+                    "judge_revision": JUDGE_REVISION_U75 + " on "
+                                      + JUDGE_REVISION_U74 + " on "
+                                      "C-S8-71 (spec rev. 66 338, U-S8-72 (a): G4-4 = 0.5 s "
                                       "mean min >= F_min and instantaneous min > 0, the "
                                       "instantaneous min vs F_min a record; general run / "
                                       "attitude / re-READY rows of head-fault runs not "
