@@ -507,14 +507,18 @@ def all_cases() -> list[Stage2Case]:
 
 def pad_gaps_m(model):
     """Pad-to-floor gap of each leg along the floor normal (L1 contact sphere):
-    ``n . (c - p0) - r``; the PS-7 g0 at stroke 0."""
+    ``n . (c - p0) - r``; the PS-7 g0 at stroke 0. C-S8-76: a leg on a block
+    (``L1Model(pad_blocks=...)``) is measured against the block top (``- h``)."""
     import numpy as np
 
     probe = model.probe()
     n = np.asarray(probe.floor_normal_world, float)
     c = np.asarray(probe.pad_sphere_centre_world_m, float)
     r = np.asarray(probe.pad_sphere_radius_m, float)
-    return (c - np.asarray(model.floor_point_world_m, float)) @ n - r
+    gaps = (c - np.asarray(model.floor_point_world_m, float)) @ n - r
+    if getattr(model, "pad_blocks", None) is not None:
+        gaps = gaps - model.pad_block_offsets_m()
+    return gaps
 
 
 def _find_key(tree, key):

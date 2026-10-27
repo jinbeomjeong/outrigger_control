@@ -2846,6 +2846,249 @@ def judge_ps7_batch(batch_dir: Path, out_path: Path | None = None, *,
     return out
 
 
+# --- C-S8-76 (spec rev. 69 360.2 / 363): non-planar start G8 (L1-R, run_S6C set g8c76) -------
+
+G8_CONFIG_PREFIX = "G8-"
+"""``settings.bundle_c.config`` of the C-S8-76 cases (``run_S6C.g8c76_cases``: G8-C1 ... C4)."""
+G8_STROKE_END_OK_M = 0.6848
+"""360.2: stroke end-margin reference (CLAUDE.md: sensor end 0.6948 - 10 mm)."""
+G8_END_ATT_WINDOW_S = 1.0
+"""360.2 / harness ``r69_g8_screen``: final attitude = mean true roll / pitch of the last 1 s."""
+G8_CONTACT_HOLD_S = 0.1
+G8_FLAG = {"T3_mm": 40.0, "T4_deg": 1.0, "T2_s": 3.0}
+G8_ESCALATE = {"T3_mm": 20.0, "T4_deg": 0.6, "D8_margin_kN": 15.0, "clearance_err_mm": 20.0}
+"""360.2 FLAG / Chrono escalation marks of the harness (ASSUMPTION there, 365)."""
+G8_FAULT_PHASES = ("fault", "fault_reground")
+G8_P28_EVENTS = ("INFO_LOC_CLEARANCE_ANCHOR", "WARN_LIFT_STROKE_LIMITED", "FAULT_STROKE_END",
+                 "FAULT_LIFT_STROKE_LIMIT", "fault_reground_start", "fault_reground_contact",
+                 "fault_reground_end", "WARN_FAULT_REGROUND_ABORT")
+"""Spec rev. 70 366 (P-S8-28 / U-S8-79): controller events counted per case (record only; a
+name matches with or without the ``:<leg>`` / ``:<reason>`` suffix)."""
+G8_RULE = ("C-S8-76 (spec rev. 69 360.2, rev. 70 366) gates: D8 = min true cylinder force (1 ms "
+           "interval minimum) after the crawler lift-off >= F_min + 5 kN, no pad lift after the "
+           "lift-off, mean true |roll|, |pitch| of the last 1 s <= 0.2 deg, READY reached; FAULT "
+           "0 (state-based: any controller phase fault / fault_reground, named or not); maximum "
+           "motor stroke over the run <= 684.8 mm on every leg (user decision 2026-10-27; the "
+           "run-end value is recorded); crawler clear at the end (min gap of all crawler spheres "
+           "> 0 and crawler load 0). Records: TOUCH T-2' / T-3' / T-4 FLAGs of the blocked leg, "
+           "true vs controller crawler clearance, P-S8-28 event counts")
+
+
+def _g8_block(case: Mapping[str, Any]) -> dict[str, Any]:
+    return case["result"].get("g8") or {}
+
+
+def g8_metrics(case: Mapping[str, Any], params) -> dict[str, Any]:
+    """C-S8-76 values of one case (times relative to the run start [s], kN, mm, deg)."""
+    res = case["result"]
+    tm = _times(case)
+    g8 = _g8_block(case)
+    leg = g8.get("leg")
+    j = None if leg is None else LEGS.index(leg)
+    f_min = _f_min_from_params(params)
+    phases = [(float(a), p) for a, p in res["phases"]]
+    out: dict[str, Any] = {"case": res.get("case"), "leg": leg, "times_s": tm,
+                           "final_phase": phases[-1][1] if phases else None,
+                           "F_min_kN": f_min / 1e3, "rule": G8_RULE,
+                           "block": {k: g8.get(k) for k in ("g_start_target_m", "g_start_measured_m",
+                                                            "g0_m", "h_m")},
+                           "fs_kN_plant": g8.get("fs_kN_plant"), "end_rule": res.get("end_rule")}
+    fault_t = next((t for t, p in phases if p in G8_FAULT_PHASES), None)
+    out["fault"] = {"state_detected": fault_t is not None, "first_t_s": fault_t,
+                    "phases": sorted({p for _t, p in phases if p in G8_FAULT_PHASES}),
+                    "event_names": g8.get("fault_event_names"),
+                    "unnamed": bool(fault_t is not None and not g8.get("fault_event_names"))}
+    names = [nm for _t, nm in _events(case)]
+    out["p28_events"] = {k: sum(1 for nm in names if nm == k or nm.startswith(k + ":"))
+                         for k in G8_P28_EVENTS}
+    out["fault_reground"] = g8.get("fault_reground")
+    pads = case["pads"]
+    rec = case["rec"]
+    t = np.asarray(rec["t"], float) - tm["t0"]
+    rp = _deg(np.array([roll_pitch_from_quat(q) for q in rec["body_quat_wxyz"]]))
+    if pads is not None:
+        tp = np.asarray(pads["t"], float) - tm["t0"]
+        fkey = "F_cyl_min_interval" if "F_cyl_min_interval" in pads else "F_cyl"
+        s_m = np.asarray(pads["s_motor"], float)
+        out["stroke_end_mm"] = (s_m[-1] * 1e3).tolist()
+        out["stroke_max_mm"] = (s_m.max(axis=0) * 1e3).tolist()
+        if tm["liftoff"] is not None:
+            after = tp >= tm["liftoff"]
+            f = np.asarray(pads[fkey], float)[after]
+            n = np.asarray(pads["N"], float)[after]
+            if f.size:
+                k, jj = np.unravel_index(int(np.argmin(f)), f.shape)
+                out["min_cyl_after_liftoff"] = {
+                    "min_kN": float(f[k, jj]) / 1e3, "leg": LEGS[jj], "t_s": float(tp[after][k]),
+                    "per_leg_kN": [float(v) / 1e3 for v in f.min(axis=0)], "source": fkey}
+                dtp = float(np.median(np.diff(tp))) if tp.size > 1 else 0.0
+                out["lift_after_liftoff_s"] = {LEGS[i]: float((n[:, i] <= 0.0).sum() * dtp)
+                                               for i in range(4)}
+    last = t >= tm["end"] - G8_END_ATT_WINDOW_S
+    out["att_end_mean_deg"] = rp[last].mean(axis=0).tolist() if last.any() else None
+    last5 = t >= tm["end"] - 5.0
+    out["att_last5_maxabs_deg"] = float(np.max(np.abs(rp[last5]))) if last5.any() else None
+    fz = np.asarray(rec["F_crawler"], float)[:, 2]
+    out["crawler_load_end_N"] = float(fz[-1])
+    gap_end = g8.get("crawler_gap_end_m") or {}
+    est = g8.get("controller_clearance_estimate_end_m") or {}
+    out["crawler_clearance_end_mm"] = {
+        "true_min": None if gap_end.get("min") is None else gap_end["min"] * 1e3,
+        "controller_estimate_min": None if est.get("min") is None else est["min"] * 1e3,
+        "target": None if g8.get("clearance_target_m") is None else g8["clearance_target_m"] * 1e3}
+    cc = out["crawler_clearance_end_mm"]
+    if cc["true_min"] is not None and cc["controller_estimate_min"] is not None:
+        cc["true_minus_estimate"] = cc["true_min"] - cc["controller_estimate_min"]
+    gp = Path(case["dir"]) / "crawler_gap.npz"
+    if gp.exists() and tm["liftoff"] is not None:
+        with np.load(gp) as z:
+            tg = np.asarray(z["t"], float) - tm["t0"]
+            mg = np.asarray(z["min_gap_m"], float)
+        w = tg >= tm["liftoff"]
+        out["crawler_min_gap_after_liftoff_mm"] = float(mg[w].min()) * 1e3 if w.any() else None
+    # TOUCH records of the blocked leg (360.2 FLAGs generalised, as the harness)
+    span = _first_phase_span(phases, "touch", tm["end"])
+    tr: dict[str, Any] = {"span_s": None if span is None else list(span), "flags": [],
+                          "escalate": []}
+    if span is not None and j is not None and pads is not None:
+        ts, te = span
+        tp = np.asarray(pads["t"], float) - tm["t0"]
+        on = np.asarray(pads["N"], float)[:, j] > 0.0
+        dtp = float(np.median(np.diff(tp))) if tp.size > 1 else 1e-3
+        n_hold = max(1, int(round(G8_CONTACT_HOLD_S / dtp)))
+        run = np.convolve(on.astype(int), np.ones(n_hold, int), "valid")
+        idx = np.flatnonzero(run == n_hold)
+        t_c = float(tp[idx[0]]) if idx.size else None
+        tr["first_contact_s"] = t_c
+        tr["first_contact_phase"] = None if t_c is None else next(
+            (p for (a, p), nxt in zip(phases, [*phases[1:], (np.inf, "end")], strict=True)
+             if a <= t_c < nxt[0]), None)
+        r8 = _load_r8_touched(case)
+        lat = None
+        if r8 is not None:
+            tt, touched = r8
+            m_after = (tt >= ts - 1e-9) & (touched[:, j] > 0.5)
+            lat = None if not m_after.any() else float(tt[m_after][0])
+        tr["latch_s"] = lat
+        s_leg = np.asarray(pads["s_motor"], float)[:, j]
+        if t_c is not None and lat is not None:
+            t3 = (float(np.interp(lat, tp, s_leg)) - float(np.interp(max(t_c, ts), tp, s_leg))) * 1e3
+            tr["T3_post_contact_stroke_mm"] = t3
+            tr["T2_latch_after_contact_s"] = lat - t_c
+            if t3 > G8_FLAG["T3_mm"]:
+                tr["flags"].append("T3")
+            if t3 > G8_ESCALATE["T3_mm"]:
+                tr["escalate"].append("T3")
+            if lat - t_c > G8_FLAG["T2_s"]:
+                tr["flags"].append("T2")
+        ins = (t >= ts - 1e-9) & (t <= te + 1e-9)
+        if ins.any():
+            datt = np.abs(rp[ins] - rp[ins][0]).max(axis=0)
+            tr["T4_max_att_change_deg"] = datt.tolist()
+            if datt.max() > G8_FLAG["T4_deg"]:
+                tr["flags"].append("T4")
+            if datt.max() > G8_ESCALATE["T4_deg"]:
+                tr["escalate"].append("T4")
+            tr["crawler_min_kN"] = float(fz[ins].min()) / 1e3
+        tr["pumping"] = "not computed on L1-R (no valve-speed record; harness only)"
+    out["touch"] = tr
+    return out
+
+
+def g8_rows(mets: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """360.2 rows per C-S8-76 case."""
+    rows: list[dict[str, Any]] = []
+
+    def row(item, cid, value, limit, passed, note="", kind="judged", **extra):
+        return {"item": item, "case": cid, "value": value, "limit": limit, "passed": passed,
+                "note": note, "kind": kind, "source": "s6_control.g8", **extra}
+
+    for cid, m in sorted(mets.items()):
+        mc = m.get("min_cyl_after_liftoff") or {}
+        lim = m["F_min_kN"] + D8_MARGIN_N / 1e3
+        rows.append(row("C-S8-76 D8: min true cylinder force after the crawler lift-off >= "
+                        "F_min + 5 kN", cid, mc.get("min_kN"), lim,
+                        None if not mc else bool(mc["min_kN"] >= lim),
+                        f"{mc.get('leg')} at {mc.get('t_s')} s; lift-off "
+                        f"{m['times_s']['liftoff']} s; escalation mark < F_min + "
+                        f"{G8_ESCALATE['D8_margin_kN']:g} kN: "
+                        f"{None if not mc else mc['min_kN'] < m['F_min_kN'] + G8_ESCALATE['D8_margin_kN']}"))
+        lifts = m.get("lift_after_liftoff_s")
+        rows.append(row("C-S8-76 D8: no pad lift after the crawler lift-off", cid, lifts, 0.0,
+                        None if lifts is None else all(v == 0.0 for v in lifts.values())))
+        att = m.get("att_end_mean_deg")
+        rows.append(row("C-S8-76 D8: mean true |roll|, |pitch| of the last 1 s <= 0.2 deg", cid,
+                        att, ATT_TOL_DEG,
+                        None if att is None else bool(max(abs(a) for a in att) <= ATT_TOL_DEG),
+                        f"last 5 s max |att| {m.get('att_last5_maxabs_deg')} deg (record)"))
+        rows.append(row("C-S8-76 D8: READY reached", cid,
+                        {"t_ready_s": m["times_s"]["ready"], "final_phase": m["final_phase"]},
+                        "ready", m["times_s"]["ready"] is not None))
+        fl = m["fault"]
+        rows.append(row("C-S8-76: FAULT 0 (state-based, named or unnamed)", cid, fl, False,
+                        not fl["state_detected"]))
+        sm = m.get("stroke_max_mm")
+        rows.append(row("C-S8-76: maximum motor stroke over the run <= 684.8 mm, every leg "
+                        "(spec rev. 70 366)", cid, sm, G8_STROKE_END_OK_M * 1e3,
+                        None if sm is None else bool(max(sm) <= G8_STROKE_END_OK_M * 1e3 + 1e-9),
+                        f"run-end (READY + 5 s) value per leg {m.get('stroke_end_mm')} mm "
+                        "(record)"))
+        cc = m["crawler_clearance_end_mm"]
+        ok = (None if cc["true_min"] is None else
+              bool(cc["true_min"] > 0.0 and m["crawler_load_end_N"] == 0.0))
+        rows.append(row("C-S8-76: crawler clear at the end (min gap of all crawler spheres > 0, "
+                        "crawler load 0)", cid,
+                        {"true_min_mm": cc["true_min"], "crawler_load_end_N": m["crawler_load_end_N"],
+                         "min_gap_after_liftoff_mm": m.get("crawler_min_gap_after_liftoff_mm")},
+                        0.0, ok))
+        under = (cc.get("true_minus_estimate") is not None
+                 and cc["true_minus_estimate"] < -G8_ESCALATE["clearance_err_mm"])
+        rows.append(row("C-S8-76 record: true vs controller crawler clearance (over-lift = the "
+                        "known plane-fit bias, 360.4; escalate under-lift < -20 mm)", cid, cc,
+                        None, None, kind="record", escalate=["clearance_underlift"] if under else []))
+        tr = m.get("touch") or {}
+        rows.append(row("C-S8-76 record: TOUCH of the blocked leg, FLAG T-3' > 40 mm, T-4 > 1.0 "
+                        "deg, T-2' > 3.0 s (ASSUMPTION 360.2)", cid,
+                        {k: tr.get(k) for k in ("first_contact_s", "first_contact_phase", "latch_s",
+                                                "T3_post_contact_stroke_mm",
+                                                "T2_latch_after_contact_s",
+                                                "T4_max_att_change_deg", "crawler_min_kN")},
+                        dict(G8_FLAG), None, kind="record", flag=bool(tr.get("flags")),
+                        flags=tr.get("flags"), escalate=tr.get("escalate")))
+        rows.append(row("C-S8-76 record: P-S8-28 / U-S8-79 controller event counts (spec rev. "
+                        "70 366)", cid, m.get("p28_events"), None, None, kind="record",
+                        reground=m.get("fault_reground")))
+    return rows
+
+
+def judge_g8_batch(batch_dir: Path, out_path: Path | None = None) -> Path:
+    """C-S8-76 judge of a ``run_S6C.py --set g8c76`` batch: :func:`g8_rows` of the cases with
+    ``settings.bundle_c.config`` starting with :data:`G8_CONFIG_PREFIX`; writes
+    ``verify_S6_c76_g8.json`` (or ``out_path``)."""
+    from outrigger_sim.params import load_params
+
+    mets: dict[str, Any] = {}
+    for d in sorted(p for p in Path(batch_dir).iterdir() if (p / "result.json").exists()):
+        case = load_case(d)
+        s = case["result"]["settings"]
+        if not str((s.get("bundle_c") or {}).get("config", "")).startswith(G8_CONFIG_PREFIX):
+            continue
+        params = load_params(level=s["level"])
+        mets[case["result"]["case"]] = g8_metrics(case, params)
+    rows = g8_rows(mets)
+    doc = {"meta": {"batch": str(batch_dir), "module": __name__, "rule": G8_RULE,
+                    "rows": len(rows), "failed": sum(1 for r in rows if r["passed"] is False),
+                    "not_measured": sum(1 for r in rows if r["kind"] == "judged"
+                                        and r["passed"] is None),
+                    "flags": sorted(r["case"] for r in rows if r.get("flag")),
+                    "escalate": sorted({r["case"] for r in rows if r.get("escalate")})},
+           "rows": rows, "metrics": mets}
+    out = out_path or Path(batch_dir) / "verify_S6_c76_g8.json"
+    out.write_text(json.dumps(doc, indent=1, default=_json_default_ps7, ensure_ascii=False),
+                   encoding="utf-8")
+    return out
+
+
 def _json_default_ps7(o):
     if isinstance(o, np.generic):
         return o.item()
@@ -2862,7 +3105,10 @@ __all__ = [
     "fast_event_force_metrics",
     "fast_settle_event",
     "fast_settle_window",
+    "g8_metrics",
+    "g8_rows",
     "judge",
+    "judge_g8_batch",
     "load_case",
     "probe_metrics",
     "reduced_reference",

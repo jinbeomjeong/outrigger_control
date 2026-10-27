@@ -1,0 +1,3611 @@
+{
+ "script": "04_scripts/03_control/s8/r70_judge.py",
+ "inputs": {
+  "--runs": [
+   "06_analysis\\02_control\\s8\\rev70\\r70_slope_AG_A0G.json",
+   "06_analysis\\02_control\\s8\\rev70\\r70_slope_GR_R.json"
+  ],
+  "--base": [
+   "06_analysis\\02_control\\s8\\rev69\\r69_g8_slope.json"
+  ]
+ },
+ "variants": {
+  "AG": {
+   "counts": {
+    "n": 58,
+    "accept": 58,
+    "fault": 0,
+    "lift": 0,
+    "stroke_margin": 0,
+    "flagged": 5
+   },
+   "worst": {
+    "D8_min_kN": [
+     28.71,
+     "slope|rpB|top|4.0|RL|raised|290.0"
+    ],
+    "stroke_max_mm": [
+     676.82,
+     "slope|rpB|top|4.0|RR|raised|170.0"
+    ],
+    "att_end_deg": [
+     0.0166,
+     "slope|edge|top|4.0|RR|raised|20.0"
+    ],
+    "clear_min_mm": [
+     65.3,
+     "slope|edge|top|4.0|FR|raised|20.0"
+    ],
+    "clear_max_mm": [
+     108.6,
+     "slope|rpB|top|4.0|RR|raised|170.0"
+    ]
+   },
+   "anchor_applied": 56,
+   "guard": [],
+   "reground": [],
+   "fails": [],
+   "flags": [
+    {
+     "key": "slope|edge|top|4.0|RL|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|20.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 7.49
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|20.0",
+     "flags": [
+      "T2",
+      "pump"
+     ],
+     "latch_after_contact_s": 8.09
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|170.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|230.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 4.34
+    }
+   ],
+   "hash_changed_vs_base": {
+    "n": 56,
+    "n_compared": 58,
+    "keys": [
+     "slope|edge|top|4.0|FL|raised|20.0",
+     "slope|edge|top|4.0|FL|raised|55.0",
+     "slope|edge|top|4.0|FL|raised|140.0",
+     "slope|edge|top|4.0|FL|raised|170.0",
+     "slope|edge|top|4.0|FL|raised|200.0",
+     "slope|edge|top|4.0|FL|raised|230.0",
+     "slope|edge|top|4.0|FL|raised|290.0",
+     "slope|edge|top|4.0|FR|raised|20.0",
+     "slope|edge|top|4.0|FR|raised|55.0",
+     "slope|edge|top|4.0|FR|raised|140.0",
+     "slope|edge|top|4.0|FR|raised|170.0",
+     "slope|edge|top|4.0|FR|raised|200.0",
+     "slope|edge|top|4.0|FR|raised|230.0",
+     "slope|edge|top|4.0|FR|raised|290.0",
+     "slope|edge|top|4.0|RL|raised|20.0",
+     "slope|edge|top|4.0|RL|raised|55.0",
+     "slope|edge|top|4.0|RL|raised|140.0",
+     "slope|edge|top|4.0|RL|raised|170.0",
+     "slope|edge|top|4.0|RL|raised|200.0",
+     "slope|edge|top|4.0|RL|raised|230.0",
+     "slope|edge|top|4.0|RL|raised|290.0",
+     "slope|edge|top|4.0|RR|raised|20.0",
+     "slope|edge|top|4.0|RR|raised|55.0",
+     "slope|edge|top|4.0|RR|raised|140.0",
+     "slope|edge|top|4.0|RR|raised|170.0",
+     "slope|edge|top|4.0|RR|raised|200.0",
+     "slope|edge|top|4.0|RR|raised|230.0",
+     "slope|edge|top|4.0|RR|raised|290.0",
+     "slope|rpB|top|4.0|FL|raised|20.0",
+     "slope|rpB|top|4.0|FL|raised|55.0",
+     "slope|rpB|top|4.0|FL|raised|140.0",
+     "slope|rpB|top|4.0|FL|raised|170.0",
+     "slope|rpB|top|4.0|FL|raised|200.0",
+     "slope|rpB|top|4.0|FL|raised|230.0",
+     "slope|rpB|top|4.0|FL|raised|290.0",
+     "slope|rpB|top|4.0|FR|raised|20.0",
+     "slope|rpB|top|4.0|FR|raised|55.0",
+     "slope|rpB|top|4.0|FR|raised|140.0",
+     "slope|rpB|top|4.0|FR|raised|170.0",
+     "slope|rpB|top|4.0|FR|raised|200.0",
+     "slope|rpB|top|4.0|FR|raised|230.0",
+     "slope|rpB|top|4.0|FR|raised|290.0",
+     "slope|rpB|top|4.0|RL|raised|20.0",
+     "slope|rpB|top|4.0|RL|raised|55.0",
+     "slope|rpB|top|4.0|RL|raised|140.0",
+     "slope|rpB|top|4.0|RL|raised|170.0",
+     "slope|rpB|top|4.0|RL|raised|200.0",
+     "slope|rpB|top|4.0|RL|raised|230.0",
+     "slope|rpB|top|4.0|RL|raised|290.0",
+     "slope|rpB|top|4.0|RR|raised|20.0",
+     "slope|rpB|top|4.0|RR|raised|55.0",
+     "slope|rpB|top|4.0|RR|raised|140.0",
+     "slope|rpB|top|4.0|RR|raised|170.0",
+     "slope|rpB|top|4.0|RR|raised|200.0",
+     "slope|rpB|top|4.0|RR|raised|230.0",
+     "slope|rpB|top|4.0|RR|raised|290.0"
+    ]
+   }
+  },
+  "A0G": {
+   "counts": {
+    "n": 58,
+    "accept": 58,
+    "fault": 0,
+    "lift": 0,
+    "stroke_margin": 0,
+    "flagged": 5
+   },
+   "worst": {
+    "D8_min_kN": [
+     28.71,
+     "slope|rpB|top|4.0|RL|raised|290.0"
+    ],
+    "stroke_max_mm": [
+     676.82,
+     "slope|rpB|top|4.0|RR|raised|170.0"
+    ],
+    "att_end_deg": [
+     0.0166,
+     "slope|edge|top|4.0|RR|raised|20.0"
+    ],
+    "clear_min_mm": [
+     65.3,
+     "slope|edge|top|4.0|FR|raised|20.0"
+    ],
+    "clear_max_mm": [
+     108.6,
+     "slope|rpB|top|4.0|RR|raised|170.0"
+    ]
+   },
+   "anchor_applied": 58,
+   "guard": [],
+   "reground": [],
+   "fails": [],
+   "flags": [
+    {
+     "key": "slope|edge|top|4.0|RL|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|20.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 7.49
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|20.0",
+     "flags": [
+      "T2",
+      "pump"
+     ],
+     "latch_after_contact_s": 8.09
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|170.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|230.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 4.34
+    }
+   ],
+   "hash_changed_vs_base": {
+    "n": 58,
+    "n_compared": 58,
+    "keys": [
+     "slope|edge|top|4.0|ref|none|0",
+     "slope|edge|top|4.0|FL|raised|20.0",
+     "slope|edge|top|4.0|FL|raised|55.0",
+     "slope|edge|top|4.0|FL|raised|140.0",
+     "slope|edge|top|4.0|FL|raised|170.0",
+     "slope|edge|top|4.0|FL|raised|200.0",
+     "slope|edge|top|4.0|FL|raised|230.0",
+     "slope|edge|top|4.0|FL|raised|290.0",
+     "slope|edge|top|4.0|FR|raised|20.0",
+     "slope|edge|top|4.0|FR|raised|55.0",
+     "slope|edge|top|4.0|FR|raised|140.0",
+     "slope|edge|top|4.0|FR|raised|170.0",
+     "slope|edge|top|4.0|FR|raised|200.0",
+     "slope|edge|top|4.0|FR|raised|230.0",
+     "slope|edge|top|4.0|FR|raised|290.0",
+     "slope|edge|top|4.0|RL|raised|20.0",
+     "slope|edge|top|4.0|RL|raised|55.0",
+     "slope|edge|top|4.0|RL|raised|140.0",
+     "slope|edge|top|4.0|RL|raised|170.0",
+     "slope|edge|top|4.0|RL|raised|200.0",
+     "slope|edge|top|4.0|RL|raised|230.0",
+     "slope|edge|top|4.0|RL|raised|290.0",
+     "slope|edge|top|4.0|RR|raised|20.0",
+     "slope|edge|top|4.0|RR|raised|55.0",
+     "slope|edge|top|4.0|RR|raised|140.0",
+     "slope|edge|top|4.0|RR|raised|170.0",
+     "slope|edge|top|4.0|RR|raised|200.0",
+     "slope|edge|top|4.0|RR|raised|230.0",
+     "slope|edge|top|4.0|RR|raised|290.0",
+     "slope|rpB|top|4.0|ref|none|0",
+     "slope|rpB|top|4.0|FL|raised|20.0",
+     "slope|rpB|top|4.0|FL|raised|55.0",
+     "slope|rpB|top|4.0|FL|raised|140.0",
+     "slope|rpB|top|4.0|FL|raised|170.0",
+     "slope|rpB|top|4.0|FL|raised|200.0",
+     "slope|rpB|top|4.0|FL|raised|230.0",
+     "slope|rpB|top|4.0|FL|raised|290.0",
+     "slope|rpB|top|4.0|FR|raised|20.0",
+     "slope|rpB|top|4.0|FR|raised|55.0",
+     "slope|rpB|top|4.0|FR|raised|140.0",
+     "slope|rpB|top|4.0|FR|raised|170.0",
+     "slope|rpB|top|4.0|FR|raised|200.0",
+     "slope|rpB|top|4.0|FR|raised|230.0",
+     "slope|rpB|top|4.0|FR|raised|290.0",
+     "slope|rpB|top|4.0|RL|raised|20.0",
+     "slope|rpB|top|4.0|RL|raised|55.0",
+     "slope|rpB|top|4.0|RL|raised|140.0",
+     "slope|rpB|top|4.0|RL|raised|170.0",
+     "slope|rpB|top|4.0|RL|raised|200.0",
+     "slope|rpB|top|4.0|RL|raised|230.0",
+     "slope|rpB|top|4.0|RL|raised|290.0",
+     "slope|rpB|top|4.0|RR|raised|20.0",
+     "slope|rpB|top|4.0|RR|raised|55.0",
+     "slope|rpB|top|4.0|RR|raised|140.0",
+     "slope|rpB|top|4.0|RR|raised|170.0",
+     "slope|rpB|top|4.0|RR|raised|200.0",
+     "slope|rpB|top|4.0|RR|raised|230.0",
+     "slope|rpB|top|4.0|RR|raised|290.0"
+    ]
+   }
+  },
+  "GR": {
+   "counts": {
+    "n": 58,
+    "accept": 30,
+    "fault": 0,
+    "lift": 17,
+    "stroke_margin": 11,
+    "flagged": 5
+   },
+   "worst": {
+    "D8_min_kN": [
+     -0.72,
+     "slope|edge|top|4.0|FL|raised|20.0"
+    ],
+    "stroke_max_mm": [
+     685.17,
+     "slope|rpB|top|4.0|FL|raised|20.0"
+    ],
+    "att_end_deg": [
+     9.7707,
+     "slope|rpB|top|4.0|FL|raised|20.0"
+    ],
+    "clear_min_mm": [
+     52.9,
+     "slope|rpB|top|4.0|FR|raised|140.0"
+    ],
+    "clear_max_mm": [
+     398.7,
+     "slope|rpB|top|4.0|RR|raised|20.0"
+    ]
+   },
+   "anchor_applied": 0,
+   "guard": [
+    {
+     "key": "slope|edge|top|4.0|FL|raised|20.0",
+     "periods": 1334,
+     "mode": {
+      "stop_leg": 1033,
+      "shift_down": 301
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|FL|raised|55.0",
+     "periods": 1334,
+     "mode": {
+      "stop_leg": 334,
+      "shift_down": 1000
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|FL|raised|140.0",
+     "periods": 51,
+     "mode": {
+      "shift_down": 51
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|FL|raised|170.0",
+     "periods": 11,
+     "mode": {
+      "shift_down": 11
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|20.0",
+     "periods": 1317,
+     "mode": {
+      "stop_leg": 1317
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|55.0",
+     "periods": 1317,
+     "mode": {
+      "stop_leg": 1295,
+      "shift_down": 22
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|140.0",
+     "periods": 1315,
+     "mode": {
+      "stop_leg": 566,
+      "shift_down": 749
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|170.0",
+     "periods": 1309,
+     "mode": {
+      "stop_leg": 412,
+      "shift_down": 897
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|200.0",
+     "periods": 1316,
+     "mode": {
+      "stop_leg": 243,
+      "shift_down": 1073
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|230.0",
+     "periods": 65,
+     "mode": {
+      "shift_down": 65
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RR|raised|20.0",
+     "periods": 1316,
+     "mode": {
+      "stop_leg": 585,
+      "shift_down": 731
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RR|raised|55.0",
+     "periods": 1313,
+     "mode": {
+      "shift_down": 1166,
+      "stop_leg": 147
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|20.0",
+     "periods": 1334,
+     "mode": {
+      "stop_leg": 1192,
+      "shift_down": 142
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|55.0",
+     "periods": 1331,
+     "mode": {
+      "stop_leg": 1065,
+      "shift_down": 266
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|140.0",
+     "periods": 1331,
+     "mode": {
+      "stop_leg": 283,
+      "shift_down": 1048
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|170.0",
+     "periods": 1328,
+     "mode": {
+      "shift_down": 1144,
+      "stop_leg": 184
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|200.0",
+     "periods": 80,
+     "mode": {
+      "shift_down": 80
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|230.0",
+     "periods": 65,
+     "mode": {
+      "shift_down": 65
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|20.0",
+     "periods": 1306,
+     "mode": {
+      "stop_leg": 1306
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|55.0",
+     "periods": 1317,
+     "mode": {
+      "stop_leg": 1317
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|140.0",
+     "periods": 1316,
+     "mode": {
+      "stop_leg": 1247,
+      "shift_down": 69
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|170.0",
+     "periods": 1316,
+     "mode": {
+      "stop_leg": 1149,
+      "shift_down": 167
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|200.0",
+     "periods": 1317,
+     "mode": {
+      "stop_leg": 522,
+      "shift_down": 795
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|230.0",
+     "periods": 1319,
+     "mode": {
+      "stop_leg": 348,
+      "shift_down": 971
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|290.0",
+     "periods": 65,
+     "mode": {
+      "shift_down": 65
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|20.0",
+     "periods": 1305,
+     "mode": {
+      "stop_leg": 1055,
+      "shift_down": 250
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|55.0",
+     "periods": 1313,
+     "mode": {
+      "stop_leg": 331,
+      "shift_down": 982
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|140.0",
+     "periods": 50,
+     "mode": {
+      "shift_down": 50
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|170.0",
+     "periods": 34,
+     "mode": {
+      "shift_down": 34
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|200.0",
+     "periods": 6,
+     "mode": {
+      "shift_down": 6
+     }
+    }
+   ],
+   "reground": [],
+   "fails": [
+    {
+     "key": "slope|edge|top|4.0|FL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 683.19,
+     "att_end_deg": [
+      8.9119,
+      1.5954
+     ],
+     "clearance": {
+      "true": 356.3,
+      "controller_estimate": 15.0,
+      "target": 50.0,
+      "true_minus_estimate": 341.3,
+      "controller_biased": 15.0
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1334,
+      "guard_mode": {
+       "stop_leg": 1033,
+       "shift_down": 301
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|FL|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 682.13,
+     "att_end_deg": [
+      0.2769,
+      0.1369
+     ],
+     "clearance": {
+      "true": 170.5,
+      "controller_estimate": 20.1,
+      "target": 50.0,
+      "true_minus_estimate": 150.4,
+      "controller_biased": 20.1
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1334,
+      "guard_mode": {
+       "stop_leg": 334,
+       "shift_down": 1000
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|FL|raised|140.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 684.87,
+     "att_end_deg": [
+      -0.0198,
+      -0.0119
+     ],
+     "clearance": {
+      "true": 147.8,
+      "controller_estimate": 36.7,
+      "target": 50.0,
+      "true_minus_estimate": 111.1,
+      "controller_biased": 36.7
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 51,
+      "guard_mode": {
+       "shift_down": 51
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|FL|raised|170.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 684.94,
+     "att_end_deg": [
+      -0.0168,
+      -0.0096
+     ],
+     "clearance": {
+      "true": 148.1,
+      "controller_estimate": 48.0,
+      "target": 50.0,
+      "true_minus_estimate": 100.1,
+      "controller_biased": 48.0
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 11,
+      "guard_mode": {
+       "shift_down": 11
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "stroke_end"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 684.84,
+     "att_end_deg": [
+      2.1638,
+      1.7034
+     ],
+     "clearance": {
+      "true": 329.2,
+      "controller_estimate": 13.3,
+      "target": 50.0,
+      "true_minus_estimate": 315.9,
+      "controller_biased": 13.3
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1317,
+      "guard_mode": {
+       "stop_leg": 1317
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 684.48,
+     "att_end_deg": [
+      2.1695,
+      1.7005
+     ],
+     "clearance": {
+      "true": 329.3,
+      "controller_estimate": 12.9,
+      "target": 50.0,
+      "true_minus_estimate": 316.4,
+      "controller_biased": 12.9
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1317,
+      "guard_mode": {
+       "stop_leg": 1295,
+       "shift_down": 22
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|140.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 682.13,
+     "att_end_deg": [
+      0.6333,
+      0.3148
+     ],
+     "clearance": {
+      "true": 188.4,
+      "controller_estimate": 13.7,
+      "target": 50.0,
+      "true_minus_estimate": 174.7,
+      "controller_biased": 13.7
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1315,
+      "guard_mode": {
+       "stop_leg": 566,
+       "shift_down": 749
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|170.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 682.13,
+     "att_end_deg": [
+      0.3665,
+      0.1816
+     ],
+     "clearance": {
+      "true": 169.9,
+      "controller_estimate": 12.4,
+      "target": 50.0,
+      "true_minus_estimate": 157.5,
+      "controller_biased": 12.4
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1309,
+      "guard_mode": {
+       "stop_leg": 412,
+       "shift_down": 897
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|200.0",
+     "fails": [
+      "Fmin_plus5",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 682.66,
+     "att_end_deg": [
+      0.1618,
+      0.0559
+     ],
+     "clearance": {
+      "true": 160.0,
+      "controller_estimate": 20.9,
+      "target": 50.0,
+      "true_minus_estimate": 139.1,
+      "controller_biased": 20.9
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1316,
+      "guard_mode": {
+       "stop_leg": 243,
+       "shift_down": 1073
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RR|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 682.13,
+     "att_end_deg": [
+      0.6299,
+      0.316
+     ],
+     "clearance": {
+      "true": 189.5,
+      "controller_estimate": 13.8,
+      "target": 50.0,
+      "true_minus_estimate": 175.7,
+      "controller_biased": 13.8
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1316,
+      "guard_mode": {
+       "stop_leg": 585,
+       "shift_down": 731
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RR|raised|55.0",
+     "fails": [
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 682.66,
+     "att_end_deg": [
+      0.0929,
+      0.0196
+     ],
+     "clearance": {
+      "true": 150.5,
+      "controller_estimate": 15.6,
+      "target": 50.0,
+      "true_minus_estimate": 134.9,
+      "controller_biased": 15.6
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1313,
+      "guard_mode": {
+       "shift_down": 1166,
+       "stop_leg": 147
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "stroke_end"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 685.17,
+     "att_end_deg": [
+      9.7707,
+      1.7588
+     ],
+     "clearance": {
+      "true": 357.2,
+      "controller_estimate": 15.0,
+      "target": 50.0,
+      "true_minus_estimate": 342.2,
+      "controller_biased": 15.0
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1334,
+      "guard_mode": {
+       "stop_leg": 1192,
+       "shift_down": 142
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "stroke_end"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 685.05,
+     "att_end_deg": [
+      8.9936,
+      1.7698
+     ],
+     "clearance": {
+      "true": 354.5,
+      "controller_estimate": 18.7,
+      "target": 50.0,
+      "true_minus_estimate": 335.8,
+      "controller_biased": 18.7
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1331,
+      "guard_mode": {
+       "stop_leg": 1065,
+       "shift_down": 266
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|140.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 682.13,
+     "att_end_deg": [
+      0.2023,
+      0.1036
+     ],
+     "clearance": {
+      "true": 134.7,
+      "controller_estimate": 21.7,
+      "target": 50.0,
+      "true_minus_estimate": 113.0,
+      "controller_biased": 21.7
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1331,
+      "guard_mode": {
+       "stop_leg": 283,
+       "shift_down": 1048
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|170.0",
+     "fails": [
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 683.2,
+     "att_end_deg": [
+      0.1158,
+      0.0299
+     ],
+     "clearance": {
+      "true": 121.9,
+      "controller_estimate": 17.2,
+      "target": 50.0,
+      "true_minus_estimate": 104.7,
+      "controller_biased": 17.2
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1328,
+      "guard_mode": {
+       "shift_down": 1144,
+       "stop_leg": 184
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|230.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 685.0,
+     "att_end_deg": [
+      -0.0222,
+      -0.0119
+     ],
+     "clearance": {
+      "true": 116.5,
+      "controller_estimate": 32.5,
+      "target": 50.0,
+      "true_minus_estimate": 84.0,
+      "controller_biased": 32.5
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 65,
+      "guard_mode": {
+       "shift_down": 65
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 684.36,
+     "att_end_deg": [
+      2.7112,
+      1.8602
+     ],
+     "clearance": {
+      "true": 329.4,
+      "controller_estimate": -9.7,
+      "target": 50.0,
+      "true_minus_estimate": 339.1,
+      "controller_biased": -9.7
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1306,
+      "guard_mode": {
+       "stop_leg": 1306
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "stroke_end"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 685.08,
+     "att_end_deg": [
+      2.7153,
+      1.8692
+     ],
+     "clearance": {
+      "true": 329.8,
+      "controller_estimate": 14.3,
+      "target": 50.0,
+      "true_minus_estimate": 315.5,
+      "controller_biased": 14.3
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1317,
+      "guard_mode": {
+       "stop_leg": 1317
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|140.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 684.47,
+     "att_end_deg": [
+      2.7056,
+      1.8615
+     ],
+     "clearance": {
+      "true": 329.2,
+      "controller_estimate": 13.1,
+      "target": 50.0,
+      "true_minus_estimate": 316.1,
+      "controller_biased": 13.1
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1316,
+      "guard_mode": {
+       "stop_leg": 1247,
+       "shift_down": 69
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|170.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 684.44,
+     "att_end_deg": [
+      2.7142,
+      1.8612
+     ],
+     "clearance": {
+      "true": 329.6,
+      "controller_estimate": 12.0,
+      "target": 50.0,
+      "true_minus_estimate": 317.6,
+      "controller_biased": 12.0
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1316,
+      "guard_mode": {
+       "stop_leg": 1149,
+       "shift_down": 167
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|200.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 682.13,
+     "att_end_deg": [
+      0.5798,
+      0.2927
+     ],
+     "clearance": {
+      "true": 155.3,
+      "controller_estimate": 16.1,
+      "target": 50.0,
+      "true_minus_estimate": 139.2,
+      "controller_biased": 16.1
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1317,
+      "guard_mode": {
+       "stop_leg": 522,
+       "shift_down": 795
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|230.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 682.13,
+     "att_end_deg": [
+      0.3355,
+      0.1701
+     ],
+     "clearance": {
+      "true": 136.8,
+      "controller_estimate": 15.0,
+      "target": 50.0,
+      "true_minus_estimate": 121.8,
+      "controller_biased": 15.0
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1319,
+      "guard_mode": {
+       "stop_leg": 348,
+       "shift_down": 971
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|290.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 684.82,
+     "att_end_deg": [
+      -0.0215,
+      -0.013
+     ],
+     "clearance": {
+      "true": 116.4,
+      "controller_estimate": 31.7,
+      "target": 50.0,
+      "true_minus_estimate": 84.7,
+      "controller_biased": 31.7
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 65,
+      "guard_mode": {
+       "shift_down": 65
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 682.71,
+     "att_end_deg": [
+      2.7001,
+      5.092
+     ],
+     "clearance": {
+      "true": 398.7,
+      "controller_estimate": 6.1,
+      "target": 50.0,
+      "true_minus_estimate": 392.6,
+      "controller_biased": 6.1
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1305,
+      "guard_mode": {
+       "stop_leg": 1055,
+       "shift_down": 250
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready"
+     ],
+     "final_phase": "level",
+     "stroke_max_mm": 682.13,
+     "att_end_deg": [
+      0.3234,
+      0.1632
+     ],
+     "clearance": {
+      "true": 136.3,
+      "controller_estimate": 15.1,
+      "target": 50.0,
+      "true_minus_estimate": 121.2,
+      "controller_biased": 15.1
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 1313,
+      "guard_mode": {
+       "stop_leg": 331,
+       "shift_down": 982
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|140.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 685.02,
+     "att_end_deg": [
+      -0.02,
+      -0.0119
+     ],
+     "clearance": {
+      "true": 116.8,
+      "controller_estimate": 38.8,
+      "target": 50.0,
+      "true_minus_estimate": 78.0,
+      "controller_biased": 38.8
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 50,
+      "guard_mode": {
+       "shift_down": 50
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|170.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 684.85,
+     "att_end_deg": [
+      -0.0174,
+      -0.0104
+     ],
+     "clearance": {
+      "true": 116.8,
+      "controller_estimate": 43.7,
+      "target": 50.0,
+      "true_minus_estimate": 73.1,
+      "controller_biased": 43.7
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 34,
+      "guard_mode": {
+       "shift_down": 34
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|200.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 684.89,
+     "att_end_deg": [
+      -0.0173,
+      -0.0099
+     ],
+     "clearance": {
+      "true": 116.9,
+      "controller_estimate": 48.7,
+      "target": 50.0,
+      "true_minus_estimate": 68.2,
+      "controller_biased": 48.7
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 6,
+      "guard_mode": {
+       "shift_down": 6
+      },
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    }
+   ],
+   "flags": [
+    {
+     "key": "slope|edge|top|4.0|RL|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|20.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 7.49
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|20.0",
+     "flags": [
+      "T2",
+      "pump"
+     ],
+     "latch_after_contact_s": 8.09
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|170.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|230.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 4.34
+    }
+   ],
+   "hash_changed_vs_base": {
+    "n": 30,
+    "n_compared": 58,
+    "keys": [
+     "slope|edge|top|4.0|FL|raised|20.0",
+     "slope|edge|top|4.0|FL|raised|55.0",
+     "slope|edge|top|4.0|FL|raised|140.0",
+     "slope|edge|top|4.0|FL|raised|170.0",
+     "slope|edge|top|4.0|RL|raised|20.0",
+     "slope|edge|top|4.0|RL|raised|55.0",
+     "slope|edge|top|4.0|RL|raised|140.0",
+     "slope|edge|top|4.0|RL|raised|170.0",
+     "slope|edge|top|4.0|RL|raised|200.0",
+     "slope|edge|top|4.0|RL|raised|230.0",
+     "slope|edge|top|4.0|RR|raised|20.0",
+     "slope|edge|top|4.0|RR|raised|55.0",
+     "slope|rpB|top|4.0|FL|raised|20.0",
+     "slope|rpB|top|4.0|FL|raised|55.0",
+     "slope|rpB|top|4.0|FL|raised|140.0",
+     "slope|rpB|top|4.0|FL|raised|170.0",
+     "slope|rpB|top|4.0|FL|raised|200.0",
+     "slope|rpB|top|4.0|FL|raised|230.0",
+     "slope|rpB|top|4.0|RL|raised|20.0",
+     "slope|rpB|top|4.0|RL|raised|55.0",
+     "slope|rpB|top|4.0|RL|raised|140.0",
+     "slope|rpB|top|4.0|RL|raised|170.0",
+     "slope|rpB|top|4.0|RL|raised|200.0",
+     "slope|rpB|top|4.0|RL|raised|230.0",
+     "slope|rpB|top|4.0|RL|raised|290.0",
+     "slope|rpB|top|4.0|RR|raised|20.0",
+     "slope|rpB|top|4.0|RR|raised|55.0",
+     "slope|rpB|top|4.0|RR|raised|140.0",
+     "slope|rpB|top|4.0|RR|raised|170.0",
+     "slope|rpB|top|4.0|RR|raised|200.0"
+    ]
+   }
+  },
+  "R": {
+   "counts": {
+    "n": 58,
+    "accept": 28,
+    "fault": 26,
+    "lift": 13,
+    "stroke_margin": 30,
+    "flagged": 5
+   },
+   "worst": {
+    "D8_min_kN": [
+     -0.72,
+     "slope|edge|top|4.0|FL|raised|20.0"
+    ],
+    "stroke_max_mm": [
+     696.26,
+     "slope|edge|top|4.0|FL|raised|20.0"
+    ],
+    "att_end_deg": [
+     0.7737,
+     "slope|rpB|top|4.0|RL|raised|20.0"
+    ],
+    "clear_min_mm": [
+     52.9,
+     "slope|rpB|top|4.0|FR|raised|140.0"
+    ],
+    "clear_max_mm": [
+     212.3,
+     "slope|edge|top|4.0|RL|raised|55.0"
+    ]
+   },
+   "anchor_applied": 0,
+   "guard": [],
+   "reground": [
+    {
+     "key": "slope|edge|top|4.0|FL|raised|20.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 0,
+     "outcomes": [
+      "travel"
+     ],
+     "travel_mm": [
+      17.0
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 3.506,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.6626,
+      0.3557
+     ]
+    },
+    {
+     "key": "slope|edge|top|4.0|FL|raised|55.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.3815,
+      0.2027
+     ]
+    },
+    {
+     "key": "slope|edge|top|4.0|FL|raised|140.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.0086,
+      -0.0007
+     ]
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|20.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 0,
+     "outcomes": [
+      "travel"
+     ],
+     "travel_mm": [
+      15.8
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 127.966,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.6867,
+      0.3719
+     ]
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|55.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 0,
+     "outcomes": [
+      "travel"
+     ],
+     "travel_mm": [
+      15.8
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 127.966,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.6881,
+      0.3723
+     ]
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|140.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 0,
+     "outcomes": [
+      "travel"
+     ],
+     "travel_mm": [
+      14.8
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 3.208,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.6518,
+      0.3571
+     ]
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|170.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.4494,
+      0.2499
+     ]
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|200.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.2752,
+      0.1538
+     ]
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|230.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.0887,
+      0.0452
+     ]
+    },
+    {
+     "key": "slope|edge|top|4.0|RR|raised|20.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 1,
+     "outcomes": [
+      "contact"
+     ],
+     "travel_mm": [
+      7.4
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 1.301,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.551,
+      0.2974
+     ]
+    },
+    {
+     "key": "slope|edge|top|4.0|RR|raised|55.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.2635,
+      0.1459
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|20.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 0,
+     "outcomes": [
+      "travel"
+     ],
+     "travel_mm": [
+      17.9
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 4.567,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.7451,
+      0.4026
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|55.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 0,
+     "outcomes": [
+      "travel"
+     ],
+     "travel_mm": [
+      14.2
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 3.023,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.7023,
+      0.3822
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|140.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.3472,
+      0.1908
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|170.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.2491,
+      0.1356
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|200.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.1409,
+      0.0736
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|230.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.0457,
+      0.021
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|20.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 0,
+     "outcomes": [
+      "travel"
+     ],
+     "travel_mm": [
+      15.7
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 126.869,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.7737,
+      0.4407
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|55.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 0,
+     "outcomes": [
+      "travel"
+     ],
+     "travel_mm": [
+      15.8
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 127.971,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.7652,
+      0.4237
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|140.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 0,
+     "outcomes": [
+      "travel"
+     ],
+     "travel_mm": [
+      16.3
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 127.87,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.7655,
+      0.4251
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|170.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 0,
+     "outcomes": [
+      "travel"
+     ],
+     "travel_mm": [
+      16.9
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 4.358,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.7545,
+      0.4188
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|200.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 1,
+     "outcomes": [
+      "contact"
+     ],
+     "travel_mm": [
+      7.1
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 1.303,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.6196,
+      0.3466
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|230.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.4253,
+      0.2423
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|290.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.0494,
+      0.0231
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|20.0",
+     "targets": [
+      "RL"
+     ],
+     "protected": [
+      "FL",
+      "FR",
+      "RR"
+     ],
+     "end_reason": "done",
+     "contact_count": 1,
+     "outcomes": [
+      "contact"
+     ],
+     "travel_mm": [
+      10.0
+     ],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 1.911,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.6749,
+      0.3859
+     ]
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|55.0",
+     "targets": [],
+     "protected": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "end_reason": "no_target",
+     "contact_count": 0,
+     "outcomes": [],
+     "travel_mm": [],
+     "lift_after_liftoff_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "att_end_deg": [
+      0.415,
+      0.2354
+     ]
+    }
+   ],
+   "fails": [
+    {
+     "key": "slope|edge|top|4.0|FL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.6626,
+      0.3557
+     ],
+     "clearance": {
+      "true": 209.1,
+      "controller_estimate": 25.4,
+      "target": 50.0,
+      "true_minus_estimate": 183.7,
+      "controller_biased": 25.4
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 41.3,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 0,
+       "outcomes": [
+        "travel"
+       ],
+       "travel_mm": [
+        17.0
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|FL|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.3815,
+      0.2027
+     ],
+     "clearance": {
+      "true": 188.8,
+      "controller_estimate": 36.6,
+      "target": 50.0,
+      "true_minus_estimate": 152.2,
+      "controller_biased": 36.6
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 41.3,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|FL|raised|140.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 695.16,
+     "att_end_deg": [
+      0.0086,
+      -0.0007
+     ],
+     "clearance": {
+      "true": 159.9,
+      "controller_estimate": 49.2,
+      "target": 50.0,
+      "true_minus_estimate": 110.7,
+      "controller_biased": 49.2
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.6,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|FL|raised|170.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 686.09,
+     "att_end_deg": [
+      -0.0168,
+      -0.0097
+     ],
+     "clearance": {
+      "true": 149.3,
+      "controller_estimate": 49.2,
+      "target": 50.0,
+      "true_minus_estimate": 100.1,
+      "controller_biased": 49.2
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.6867,
+      0.3719
+     ],
+     "clearance": {
+      "true": 212.2,
+      "controller_estimate": -44.5,
+      "target": 50.0,
+      "true_minus_estimate": 256.7,
+      "controller_biased": -44.5
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.0,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 0,
+       "outcomes": [
+        "travel"
+       ],
+       "travel_mm": [
+        15.8
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.6881,
+      0.3723
+     ],
+     "clearance": {
+      "true": 212.3,
+      "controller_estimate": -20.3,
+      "target": 50.0,
+      "true_minus_estimate": 232.6,
+      "controller_biased": -20.3
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.0,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 0,
+       "outcomes": [
+        "travel"
+       ],
+       "travel_mm": [
+        15.8
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|140.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.6518,
+      0.3571
+     ],
+     "clearance": {
+      "true": 209.1,
+      "controller_estimate": 36.0,
+      "target": 50.0,
+      "true_minus_estimate": 173.1,
+      "controller_biased": 36.0
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.2,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 0,
+       "outcomes": [
+        "travel"
+       ],
+       "travel_mm": [
+        14.8
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|170.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.4494,
+      0.2499
+     ],
+     "clearance": {
+      "true": 194.8,
+      "controller_estimate": 39.5,
+      "target": 50.0,
+      "true_minus_estimate": 155.3,
+      "controller_biased": 39.5
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.8,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|200.0",
+     "fails": [
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.2752,
+      0.1538
+     ],
+     "clearance": {
+      "true": 181.6,
+      "controller_estimate": 44.3,
+      "target": 50.0,
+      "true_minus_estimate": 137.3,
+      "controller_biased": 44.3
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.0,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RL|raised|230.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.02,
+     "att_end_deg": [
+      0.0887,
+      0.0452
+     ],
+     "clearance": {
+      "true": 167.4,
+      "controller_estimate": 48.0,
+      "target": 50.0,
+      "true_minus_estimate": 119.4,
+      "controller_biased": 48.0
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.6,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RR|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.551,
+      0.2974
+     ],
+     "clearance": {
+      "true": 201.4,
+      "controller_estimate": 27.4,
+      "target": 50.0,
+      "true_minus_estimate": 174.0,
+      "controller_biased": 27.4
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.1,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 1,
+       "outcomes": [
+        "contact"
+       ],
+       "travel_mm": [
+        7.4
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|edge|top|4.0|RR|raised|55.0",
+     "fails": [
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.2635,
+      0.1459
+     ],
+     "clearance": {
+      "true": 180.6,
+      "controller_estimate": 39.9,
+      "target": 50.0,
+      "true_minus_estimate": 140.7,
+      "controller_biased": 39.9
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.3,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.7451,
+      0.4026
+     ],
+     "clearance": {
+      "true": 185.0,
+      "controller_estimate": 3.8,
+      "target": 50.0,
+      "true_minus_estimate": 181.2,
+      "controller_biased": 3.8
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 41.3,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 0,
+       "outcomes": [
+        "travel"
+       ],
+       "travel_mm": [
+        17.9
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.7023,
+      0.3822
+     ],
+     "clearance": {
+      "true": 181.2,
+      "controller_estimate": 26.5,
+      "target": 50.0,
+      "true_minus_estimate": 154.7,
+      "controller_biased": 26.5
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 41.6,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 0,
+       "outcomes": [
+        "travel"
+       ],
+       "travel_mm": [
+        14.2
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|140.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.3472,
+      0.1908
+     ],
+     "clearance": {
+      "true": 155.3,
+      "controller_estimate": 43.8,
+      "target": 50.0,
+      "true_minus_estimate": 111.5,
+      "controller_biased": 43.8
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 41.6,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|170.0",
+     "fails": [
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 695.76,
+     "att_end_deg": [
+      0.2491,
+      0.1356
+     ],
+     "clearance": {
+      "true": 147.9,
+      "controller_estimate": 45.9,
+      "target": 50.0,
+      "true_minus_estimate": 102.0,
+      "controller_biased": 45.9
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 41.7,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|200.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.06,
+     "att_end_deg": [
+      0.1409,
+      0.0736
+     ],
+     "clearance": {
+      "true": 140.0,
+      "controller_estimate": 47.4,
+      "target": 50.0,
+      "true_minus_estimate": 92.6,
+      "controller_biased": 47.4
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 41.8,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|FL|raised|230.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 695.33,
+     "att_end_deg": [
+      0.0457,
+      0.021
+     ],
+     "clearance": {
+      "true": 131.8,
+      "controller_estimate": 48.7,
+      "target": 50.0,
+      "true_minus_estimate": 83.1,
+      "controller_biased": 48.7
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.0,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.7737,
+      0.4407
+     ],
+     "clearance": {
+      "true": 188.5,
+      "controller_estimate": -72.2,
+      "target": 50.0,
+      "true_minus_estimate": 260.7,
+      "controller_biased": -72.2
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 44.1,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 0,
+       "outcomes": [
+        "travel"
+       ],
+       "travel_mm": [
+        15.7
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.7652,
+      0.4237
+     ],
+     "clearance": {
+      "true": 187.2,
+      "controller_estimate": -49.6,
+      "target": 50.0,
+      "true_minus_estimate": 236.8,
+      "controller_biased": -49.6
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.0,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 0,
+       "outcomes": [
+        "travel"
+       ],
+       "travel_mm": [
+        15.8
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|140.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.7655,
+      0.4251
+     ],
+     "clearance": {
+      "true": 187.3,
+      "controller_estimate": 9.5,
+      "target": 50.0,
+      "true_minus_estimate": 177.8,
+      "controller_biased": 9.5
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.1,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 0,
+       "outcomes": [
+        "travel"
+       ],
+       "travel_mm": [
+        16.3
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|170.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.7545,
+      0.4188
+     ],
+     "clearance": {
+      "true": 186.5,
+      "controller_estimate": 30.2,
+      "target": 50.0,
+      "true_minus_estimate": 156.3,
+      "controller_biased": 30.2
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.1,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 0,
+       "outcomes": [
+        "travel"
+       ],
+       "travel_mm": [
+        16.9
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|200.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.6196,
+      0.3466
+     ],
+     "clearance": {
+      "true": 175.9,
+      "controller_estimate": 38.4,
+      "target": 50.0,
+      "true_minus_estimate": 137.5,
+      "controller_biased": 38.4
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.0,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 1,
+       "outcomes": [
+        "contact"
+       ],
+       "travel_mm": [
+        7.1
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|230.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.4253,
+      0.2423
+     ],
+     "clearance": {
+      "true": 161.8,
+      "controller_estimate": 42.2,
+      "target": 50.0,
+      "true_minus_estimate": 119.6,
+      "controller_biased": 42.2
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 42.8,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|290.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 695.51,
+     "att_end_deg": [
+      0.0494,
+      0.0231
+     ],
+     "clearance": {
+      "true": 132.4,
+      "controller_estimate": 48.6,
+      "target": 50.0,
+      "true_minus_estimate": 83.8,
+      "controller_biased": 48.6
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 44.9,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.6749,
+      0.3859
+     ],
+     "clearance": {
+      "true": 180.4,
+      "controller_estimate": 23.1,
+      "target": 50.0,
+      "true_minus_estimate": 157.3,
+      "controller_biased": 23.1
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 44.2,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [
+        "RL"
+       ],
+       "protected": [
+        "FL",
+        "FR",
+        "RR"
+       ],
+       "end_reason": "done",
+       "contact_count": 1,
+       "outcomes": [
+        "contact"
+       ],
+       "travel_mm": [
+        10.0
+       ]
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.415,
+      0.2354
+     ],
+     "clearance": {
+      "true": 161.3,
+      "controller_estimate": 36.1,
+      "target": 50.0,
+      "true_minus_estimate": 125.2,
+      "controller_biased": 36.1
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": {
+       "t_s": 43.4,
+       "legs": "FR"
+      },
+      "reground": {
+       "targets": [],
+       "protected": [
+        "FL",
+        "FR",
+        "RL",
+        "RR"
+       ],
+       "end_reason": "no_target",
+       "contact_count": 0,
+       "outcomes": [],
+       "travel_mm": []
+      }
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|140.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 694.98,
+     "att_end_deg": [
+      -0.0145,
+      -0.0088
+     ],
+     "clearance": {
+      "true": 127.2,
+      "controller_estimate": 49.2,
+      "target": 50.0,
+      "true_minus_estimate": 78.0,
+      "controller_biased": 49.2
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|170.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 690.27,
+     "att_end_deg": [
+      -0.0166,
+      -0.0098
+     ],
+     "clearance": {
+      "true": 122.3,
+      "controller_estimate": 49.2,
+      "target": 50.0,
+      "true_minus_estimate": 73.1,
+      "controller_biased": 49.2
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|200.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 685.42,
+     "att_end_deg": [
+      -0.0172,
+      -0.0099
+     ],
+     "clearance": {
+      "true": 117.4,
+      "controller_estimate": 49.2,
+      "target": 50.0,
+      "true_minus_estimate": 68.2,
+      "controller_biased": 49.2
+     },
+     "p28": {
+      "anchor": null,
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    }
+   ],
+   "flags": [
+    {
+     "key": "slope|edge|top|4.0|RL|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|20.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 7.49
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|20.0",
+     "flags": [
+      "T2",
+      "pump"
+     ],
+     "latch_after_contact_s": 8.09
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|170.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|230.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 4.34
+    }
+   ],
+   "hash_changed_vs_base": {
+    "n": 13,
+    "n_compared": 58,
+    "keys": [
+     "slope|edge|top|4.0|FL|raised|20.0",
+     "slope|edge|top|4.0|RL|raised|20.0",
+     "slope|edge|top|4.0|RL|raised|55.0",
+     "slope|edge|top|4.0|RL|raised|140.0",
+     "slope|edge|top|4.0|RR|raised|20.0",
+     "slope|rpB|top|4.0|FL|raised|20.0",
+     "slope|rpB|top|4.0|FL|raised|55.0",
+     "slope|rpB|top|4.0|RL|raised|20.0",
+     "slope|rpB|top|4.0|RL|raised|55.0",
+     "slope|rpB|top|4.0|RL|raised|140.0",
+     "slope|rpB|top|4.0|RL|raised|170.0",
+     "slope|rpB|top|4.0|RL|raised|200.0",
+     "slope|rpB|top|4.0|RR|raised|20.0"
+    ]
+   }
+  }
+ }
+}

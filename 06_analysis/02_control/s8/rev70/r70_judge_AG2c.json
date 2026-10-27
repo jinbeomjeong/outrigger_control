@@ -1,0 +1,336 @@
+{
+ "script": "04_scripts/03_control/s8/r70_judge.py",
+ "inputs": {
+  "--runs": [
+   "06_analysis\\02_control\\s8\\rev70\\r70_slope_AG2c.json",
+   "06_analysis\\02_control\\s8\\rev70\\r70_wide_AG2c5.json"
+  ],
+  "--base": [
+   "06_analysis\\02_control\\s8\\rev69\\r69_g8_slope.json"
+  ]
+ },
+ "variants": {
+  "AG2c5": {
+   "counts": {
+    "n": 174,
+    "accept": 174,
+    "fault": 0,
+    "lift": 0,
+    "stroke_margin": 0,
+    "flagged": 8
+   },
+   "worst": {
+    "D8_min_kN": [
+     28.71,
+     "slope|rpB|top|4.0|RL|raised|290.0"
+    ],
+    "stroke_max_mm": [
+     681.87,
+     "slope|rpB|top|4.0|RR|raised|170.0"
+    ],
+    "att_end_deg": [
+     0.0166,
+     "slope|rpB|top|4.0|RR|raised|55.0"
+    ],
+    "clear_min_mm": [
+     47.5,
+     "slope|r050|top|4.0|FR|raised|20.0"
+    ],
+    "clear_max_mm": [
+     113.6,
+     "slope|rpB|top|4.0|RR|raised|170.0"
+    ]
+   },
+   "anchor_applied": 166,
+   "guard": [],
+   "reground": [],
+   "fails": [],
+   "flags": [
+    {
+     "key": "slope|edge|top|4.0|RL|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|20.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 7.49
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|20.0",
+     "flags": [
+      "T2",
+      "pump"
+     ],
+     "latch_after_contact_s": 8.09
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|170.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|230.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 4.34
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RL|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.58
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RL|raised|230.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.56
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RR|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    }
+   ],
+   "hash_changed_vs_base": {
+    "n": 56,
+    "n_compared": 58,
+    "keys": [
+     "slope|edge|top|4.0|FL|raised|20.0",
+     "slope|edge|top|4.0|FL|raised|55.0",
+     "slope|edge|top|4.0|FL|raised|140.0",
+     "slope|edge|top|4.0|FL|raised|170.0",
+     "slope|edge|top|4.0|FL|raised|200.0",
+     "slope|edge|top|4.0|FL|raised|230.0",
+     "slope|edge|top|4.0|FL|raised|290.0",
+     "slope|edge|top|4.0|FR|raised|20.0",
+     "slope|edge|top|4.0|FR|raised|55.0",
+     "slope|edge|top|4.0|FR|raised|140.0",
+     "slope|edge|top|4.0|FR|raised|170.0",
+     "slope|edge|top|4.0|FR|raised|200.0",
+     "slope|edge|top|4.0|FR|raised|230.0",
+     "slope|edge|top|4.0|FR|raised|290.0",
+     "slope|edge|top|4.0|RL|raised|20.0",
+     "slope|edge|top|4.0|RL|raised|55.0",
+     "slope|edge|top|4.0|RL|raised|140.0",
+     "slope|edge|top|4.0|RL|raised|170.0",
+     "slope|edge|top|4.0|RL|raised|200.0",
+     "slope|edge|top|4.0|RL|raised|230.0",
+     "slope|edge|top|4.0|RL|raised|290.0",
+     "slope|edge|top|4.0|RR|raised|20.0",
+     "slope|edge|top|4.0|RR|raised|55.0",
+     "slope|edge|top|4.0|RR|raised|140.0",
+     "slope|edge|top|4.0|RR|raised|170.0",
+     "slope|edge|top|4.0|RR|raised|200.0",
+     "slope|edge|top|4.0|RR|raised|230.0",
+     "slope|edge|top|4.0|RR|raised|290.0",
+     "slope|rpB|top|4.0|FL|raised|20.0",
+     "slope|rpB|top|4.0|FL|raised|55.0",
+     "slope|rpB|top|4.0|FL|raised|140.0",
+     "slope|rpB|top|4.0|FL|raised|170.0",
+     "slope|rpB|top|4.0|FL|raised|200.0",
+     "slope|rpB|top|4.0|FL|raised|230.0",
+     "slope|rpB|top|4.0|FL|raised|290.0",
+     "slope|rpB|top|4.0|FR|raised|20.0",
+     "slope|rpB|top|4.0|FR|raised|55.0",
+     "slope|rpB|top|4.0|FR|raised|140.0",
+     "slope|rpB|top|4.0|FR|raised|170.0",
+     "slope|rpB|top|4.0|FR|raised|200.0",
+     "slope|rpB|top|4.0|FR|raised|230.0",
+     "slope|rpB|top|4.0|FR|raised|290.0",
+     "slope|rpB|top|4.0|RL|raised|20.0",
+     "slope|rpB|top|4.0|RL|raised|55.0",
+     "slope|rpB|top|4.0|RL|raised|140.0",
+     "slope|rpB|top|4.0|RL|raised|170.0",
+     "slope|rpB|top|4.0|RL|raised|200.0",
+     "slope|rpB|top|4.0|RL|raised|230.0",
+     "slope|rpB|top|4.0|RL|raised|290.0",
+     "slope|rpB|top|4.0|RR|raised|20.0",
+     "slope|rpB|top|4.0|RR|raised|55.0",
+     "slope|rpB|top|4.0|RR|raised|140.0",
+     "slope|rpB|top|4.0|RR|raised|170.0",
+     "slope|rpB|top|4.0|RR|raised|200.0",
+     "slope|rpB|top|4.0|RR|raised|230.0",
+     "slope|rpB|top|4.0|RR|raised|290.0"
+    ]
+   }
+  },
+  "AG2c10": {
+   "counts": {
+    "n": 58,
+    "accept": 58,
+    "fault": 0,
+    "lift": 0,
+    "stroke_margin": 0,
+    "flagged": 5
+   },
+   "worst": {
+    "D8_min_kN": [
+     28.71,
+     "slope|rpB|top|4.0|RL|raised|290.0"
+    ],
+    "stroke_max_mm": [
+     684.48,
+     "slope|rpB|top|4.0|RR|raised|170.0"
+    ],
+    "att_end_deg": [
+     0.0167,
+     "slope|rpB|top|4.0|RR|raised|20.0"
+    ],
+    "clear_min_mm": [
+     75.2,
+     "slope|edge|top|4.0|FR|raised|20.0"
+    ],
+    "clear_max_mm": [
+     116.3,
+     "slope|rpB|top|4.0|RR|raised|170.0"
+    ]
+   },
+   "anchor_applied": 56,
+   "guard": [
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|55.0",
+     "periods": 17,
+     "mode": {
+      "shift_down": 17
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|170.0",
+     "periods": 20,
+     "mode": {
+      "shift_down": 20
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|230.0",
+     "periods": 15,
+     "mode": {
+      "shift_down": 15
+     }
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|290.0",
+     "periods": 11,
+     "mode": {
+      "shift_down": 11
+     }
+    }
+   ],
+   "reground": [],
+   "fails": [],
+   "flags": [
+    {
+     "key": "slope|edge|top|4.0|RL|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|20.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 7.49
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|20.0",
+     "flags": [
+      "T2",
+      "pump"
+     ],
+     "latch_after_contact_s": 8.09
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|170.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|230.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 4.34
+    }
+   ],
+   "hash_changed_vs_base": {
+    "n": 56,
+    "n_compared": 58,
+    "keys": [
+     "slope|edge|top|4.0|FL|raised|20.0",
+     "slope|edge|top|4.0|FL|raised|55.0",
+     "slope|edge|top|4.0|FL|raised|140.0",
+     "slope|edge|top|4.0|FL|raised|170.0",
+     "slope|edge|top|4.0|FL|raised|200.0",
+     "slope|edge|top|4.0|FL|raised|230.0",
+     "slope|edge|top|4.0|FL|raised|290.0",
+     "slope|edge|top|4.0|FR|raised|20.0",
+     "slope|edge|top|4.0|FR|raised|55.0",
+     "slope|edge|top|4.0|FR|raised|140.0",
+     "slope|edge|top|4.0|FR|raised|170.0",
+     "slope|edge|top|4.0|FR|raised|200.0",
+     "slope|edge|top|4.0|FR|raised|230.0",
+     "slope|edge|top|4.0|FR|raised|290.0",
+     "slope|edge|top|4.0|RL|raised|20.0",
+     "slope|edge|top|4.0|RL|raised|55.0",
+     "slope|edge|top|4.0|RL|raised|140.0",
+     "slope|edge|top|4.0|RL|raised|170.0",
+     "slope|edge|top|4.0|RL|raised|200.0",
+     "slope|edge|top|4.0|RL|raised|230.0",
+     "slope|edge|top|4.0|RL|raised|290.0",
+     "slope|edge|top|4.0|RR|raised|20.0",
+     "slope|edge|top|4.0|RR|raised|55.0",
+     "slope|edge|top|4.0|RR|raised|140.0",
+     "slope|edge|top|4.0|RR|raised|170.0",
+     "slope|edge|top|4.0|RR|raised|200.0",
+     "slope|edge|top|4.0|RR|raised|230.0",
+     "slope|edge|top|4.0|RR|raised|290.0",
+     "slope|rpB|top|4.0|FL|raised|20.0",
+     "slope|rpB|top|4.0|FL|raised|55.0",
+     "slope|rpB|top|4.0|FL|raised|140.0",
+     "slope|rpB|top|4.0|FL|raised|170.0",
+     "slope|rpB|top|4.0|FL|raised|200.0",
+     "slope|rpB|top|4.0|FL|raised|230.0",
+     "slope|rpB|top|4.0|FL|raised|290.0",
+     "slope|rpB|top|4.0|FR|raised|20.0",
+     "slope|rpB|top|4.0|FR|raised|55.0",
+     "slope|rpB|top|4.0|FR|raised|140.0",
+     "slope|rpB|top|4.0|FR|raised|170.0",
+     "slope|rpB|top|4.0|FR|raised|200.0",
+     "slope|rpB|top|4.0|FR|raised|230.0",
+     "slope|rpB|top|4.0|FR|raised|290.0",
+     "slope|rpB|top|4.0|RL|raised|20.0",
+     "slope|rpB|top|4.0|RL|raised|55.0",
+     "slope|rpB|top|4.0|RL|raised|140.0",
+     "slope|rpB|top|4.0|RL|raised|170.0",
+     "slope|rpB|top|4.0|RL|raised|200.0",
+     "slope|rpB|top|4.0|RL|raised|230.0",
+     "slope|rpB|top|4.0|RL|raised|290.0",
+     "slope|rpB|top|4.0|RR|raised|20.0",
+     "slope|rpB|top|4.0|RR|raised|55.0",
+     "slope|rpB|top|4.0|RR|raised|140.0",
+     "slope|rpB|top|4.0|RR|raised|170.0",
+     "slope|rpB|top|4.0|RR|raised|200.0",
+     "slope|rpB|top|4.0|RR|raised|230.0",
+     "slope|rpB|top|4.0|RR|raised|290.0"
+    ]
+   }
+  }
+ }
+}

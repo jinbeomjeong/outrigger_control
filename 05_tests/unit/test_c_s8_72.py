@@ -59,7 +59,10 @@ def test_earlier_definitions_unchanged(s8c) -> None:
     s6c, st = s8c.s6c, s8c.s6c.st
     # C-S8-74 (spec rev. 68 355.1): its 16 cases / set ``c74`` came later; excluded as g1.
     # C-S8-75 (358.6): set ``c75`` (existing case ids only) came later; excluded the same way
-    new_s8, new_s6 = set(G1_IDS) | set(s8c.C74_CASE_IDS), set(PS7_IDS)
+    # C-S8-76 (spec rev. 69 363): sets ``g8c76`` / ``g8c76_p28`` came later; excluded the same way
+    g8_sets = ("g8c76", "g8c76_p28", "g8c76_p28acc")
+    new_s8 = set(G1_IDS) | set(s8c.C74_CASE_IDS)
+    new_s6 = set(PS7_IDS) | {c.case_id for n in g8_sets for c in s8c.s6c.CASE_SETS[n]()}
     doc = {"s8": {c.case_id: _h(c.to_meta()) for c in s8c.s8_cases()
                   if c.case_id not in new_s8},
            "s8_sets": {n: [c.case_id for c in s8c.case_set(n)] for n in s8c.SET_NAMES
@@ -69,7 +72,7 @@ def test_earlier_definitions_unchanged(s8c) -> None:
            "s6": {}, "s6_sets": {},
            "stage2": {c.case_id: _h(asdict(c)) for c in st.all_cases()}}
     for name, fn in s6c.CASE_SETS.items():
-        if name == "ps7r8":
+        if name == "ps7r8" or name in g8_sets:
             continue
         cases = fn()
         doc["s6_sets"][name] = [c.case_id for c in cases]

@@ -1,0 +1,1069 @@
+{
+ "script": "04_scripts/03_control/s8/r70_judge.py",
+ "inputs": {
+  "--runs": [
+   "06_analysis\\02_control\\s8\\rev70\\r70_slope_AG2.json",
+   "06_analysis\\02_control\\s8\\rev70\\r70_flatref_AG2.json",
+   "06_analysis\\02_control\\s8\\rev70\\r70_wide_proj_AG2.json"
+  ],
+  "--base": [
+   "06_analysis\\02_control\\s8\\rev69\\r69_g8_slope.json",
+   "06_analysis\\02_control\\s8\\rev69\\r69_g8_top_Fs0.0.json",
+   "06_analysis\\02_control\\s8\\rev69\\r69_g8_top_Fs4.0.json",
+   "06_analysis\\02_control\\s8\\rev69\\r69_g8_top_Fs8.0.json",
+   "06_analysis\\02_control\\s8\\rev69\\r69_g8_bottom_Fs0.0.json",
+   "06_analysis\\02_control\\s8\\rev69\\r69_g8_bottom_Fs4.0.json",
+   "06_analysis\\02_control\\s8\\rev69\\r69_g8_bottom_Fs8.0.json"
+  ]
+ },
+ "variants": {
+  "AG2": {
+   "counts": {
+    "n": 180,
+    "accept": 178,
+    "fault": 0,
+    "lift": 0,
+    "stroke_margin": 0,
+    "flagged": 8
+   },
+   "worst": {
+    "D8_min_kN": [
+     28.71,
+     "slope|rpB|top|4.0|RL|raised|290.0"
+    ],
+    "stroke_max_mm": [
+     676.82,
+     "slope|rpB|top|4.0|RR|raised|170.0"
+    ],
+    "att_end_deg": [
+     0.0166,
+     "slope|edge|top|4.0|RR|raised|20.0"
+    ],
+    "clear_min_mm": [
+     42.5,
+     "slope|r050|top|4.0|FR|raised|20.0"
+    ],
+    "clear_max_mm": [
+     108.6,
+     "slope|rpB|top|4.0|RR|raised|170.0"
+    ]
+   },
+   "anchor_applied": 166,
+   "guard": [],
+   "reground": [],
+   "fails": [
+    {
+     "key": "slope|r050|top|4.0|FR|raised|20.0",
+     "fails": [
+      "clearance_45"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 437.96,
+     "att_end_deg": [
+      -0.0151,
+      -0.0119
+     ],
+     "clearance": {
+      "true": 42.5,
+      "controller_estimate": -106.4,
+      "target": 50.0,
+      "true_minus_estimate": 148.9,
+      "controller_biased": 50.5
+     },
+     "p28": {
+      "anchor": {
+       "t_s": 21.5,
+       "c_min_tP_mm": -233.3,
+       "raw_bias_mm": [
+        -116.1,
+        41.3,
+        -233.3,
+        -75.8
+       ],
+       "applied": true
+      },
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    },
+    {
+     "key": "slope|r075|top|4.0|FL|raised|140.0",
+     "fails": [
+      "clearance_45"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 536.8,
+     "att_end_deg": [
+      -0.0156,
+      -0.0121
+     ],
+     "clearance": {
+      "true": 44.9,
+      "controller_estimate": -56.8,
+      "target": 50.0,
+      "true_minus_estimate": 101.7,
+      "controller_biased": 50.5
+     },
+     "p28": {
+      "anchor": {
+       "t_s": 21.9,
+       "c_min_tP_mm": -146.9,
+       "raw_bias_mm": [
+        28.1,
+        -107.3,
+        -32.0,
+        -167.5
+       ],
+       "applied": true
+      },
+      "guard_periods": 0,
+      "guard_mode": {},
+      "stroke_end_fault": null,
+      "reground": null
+     }
+    }
+   ],
+   "flags": [
+    {
+     "key": "slope|edge|top|4.0|RL|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RL|raised|20.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 7.49
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|20.0",
+     "flags": [
+      "T2",
+      "pump"
+     ],
+     "latch_after_contact_s": 8.09
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|170.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    },
+    {
+     "key": "slope|rpB|top|4.0|RR|raised|230.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 4.34
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RL|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.58
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RL|raised|230.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.56
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RR|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    }
+   ],
+   "hash_changed_vs_base": {
+    "n": 56,
+    "n_compared": 64,
+    "keys": [
+     "slope|edge|top|4.0|FL|raised|20.0",
+     "slope|edge|top|4.0|FL|raised|55.0",
+     "slope|edge|top|4.0|FL|raised|140.0",
+     "slope|edge|top|4.0|FL|raised|170.0",
+     "slope|edge|top|4.0|FL|raised|200.0",
+     "slope|edge|top|4.0|FL|raised|230.0",
+     "slope|edge|top|4.0|FL|raised|290.0",
+     "slope|edge|top|4.0|FR|raised|20.0",
+     "slope|edge|top|4.0|FR|raised|55.0",
+     "slope|edge|top|4.0|FR|raised|140.0",
+     "slope|edge|top|4.0|FR|raised|170.0",
+     "slope|edge|top|4.0|FR|raised|200.0",
+     "slope|edge|top|4.0|FR|raised|230.0",
+     "slope|edge|top|4.0|FR|raised|290.0",
+     "slope|edge|top|4.0|RL|raised|20.0",
+     "slope|edge|top|4.0|RL|raised|55.0",
+     "slope|edge|top|4.0|RL|raised|140.0",
+     "slope|edge|top|4.0|RL|raised|170.0",
+     "slope|edge|top|4.0|RL|raised|200.0",
+     "slope|edge|top|4.0|RL|raised|230.0",
+     "slope|edge|top|4.0|RL|raised|290.0",
+     "slope|edge|top|4.0|RR|raised|20.0",
+     "slope|edge|top|4.0|RR|raised|55.0",
+     "slope|edge|top|4.0|RR|raised|140.0",
+     "slope|edge|top|4.0|RR|raised|170.0",
+     "slope|edge|top|4.0|RR|raised|200.0",
+     "slope|edge|top|4.0|RR|raised|230.0",
+     "slope|edge|top|4.0|RR|raised|290.0",
+     "slope|rpB|top|4.0|FL|raised|20.0",
+     "slope|rpB|top|4.0|FL|raised|55.0",
+     "slope|rpB|top|4.0|FL|raised|140.0",
+     "slope|rpB|top|4.0|FL|raised|170.0",
+     "slope|rpB|top|4.0|FL|raised|200.0",
+     "slope|rpB|top|4.0|FL|raised|230.0",
+     "slope|rpB|top|4.0|FL|raised|290.0",
+     "slope|rpB|top|4.0|FR|raised|20.0",
+     "slope|rpB|top|4.0|FR|raised|55.0",
+     "slope|rpB|top|4.0|FR|raised|140.0",
+     "slope|rpB|top|4.0|FR|raised|170.0",
+     "slope|rpB|top|4.0|FR|raised|200.0",
+     "slope|rpB|top|4.0|FR|raised|230.0",
+     "slope|rpB|top|4.0|FR|raised|290.0",
+     "slope|rpB|top|4.0|RL|raised|20.0",
+     "slope|rpB|top|4.0|RL|raised|55.0",
+     "slope|rpB|top|4.0|RL|raised|140.0",
+     "slope|rpB|top|4.0|RL|raised|170.0",
+     "slope|rpB|top|4.0|RL|raised|200.0",
+     "slope|rpB|top|4.0|RL|raised|230.0",
+     "slope|rpB|top|4.0|RL|raised|290.0",
+     "slope|rpB|top|4.0|RR|raised|20.0",
+     "slope|rpB|top|4.0|RR|raised|55.0",
+     "slope|rpB|top|4.0|RR|raised|140.0",
+     "slope|rpB|top|4.0|RR|raised|170.0",
+     "slope|rpB|top|4.0|RR|raised|200.0",
+     "slope|rpB|top|4.0|RR|raised|230.0",
+     "slope|rpB|top|4.0|RR|raised|290.0"
+    ]
+   }
+  },
+  "proj": {
+   "counts": {
+    "n": 116,
+    "accept": 84,
+    "fault": 29,
+    "lift": 14,
+    "stroke_margin": 32,
+    "flagged": 3
+   },
+   "worst": {
+    "D8_min_kN": [
+     -0.72,
+     "slope|r050|top|4.0|RL|raised|20.0"
+    ],
+    "stroke_max_mm": [
+     696.26,
+     "slope|r050|top|4.0|RL|raised|20.0"
+    ],
+    "att_end_deg": [
+     0.6928,
+     "slope|edgeMr|top|4.0|RR|raised|20.0"
+    ],
+    "clear_min_mm": [
+     46.2,
+     "slope|edgeMp|top|4.0|RR|raised|140.0"
+    ],
+    "clear_max_mm": [
+     278.1,
+     "slope|r050|top|4.0|RL|raised|20.0"
+    ]
+   },
+   "anchor_applied": 0,
+   "guard": [],
+   "reground": [],
+   "fails": [
+    {
+     "key": "slope|r050|top|4.0|FL|raised|20.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 695.39,
+     "att_end_deg": [
+      0.0277,
+      0.0056
+     ],
+     "clearance": {
+      "true": 251.7,
+      "controller_estimate": 48.2,
+      "target": 50.0,
+      "true_minus_estimate": 203.5,
+      "controller_biased": 48.2
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|r050|top|4.0|RL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.3773,
+      0.1788
+     ],
+     "clearance": {
+      "true": 278.1,
+      "controller_estimate": 38.8,
+      "target": 50.0,
+      "true_minus_estimate": 239.3,
+      "controller_biased": 38.8
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|r050|top|4.0|RL|raised|55.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.1742,
+      0.0768
+     ],
+     "clearance": {
+      "true": 263.2,
+      "controller_estimate": 45.2,
+      "target": 50.0,
+      "true_minus_estimate": 218.0,
+      "controller_biased": 45.2
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|r075|top|4.0|FL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.3299,
+      0.1656
+     ],
+     "clearance": {
+      "true": 229.5,
+      "controller_estimate": 36.5,
+      "target": 50.0,
+      "true_minus_estimate": 193.0,
+      "controller_biased": 36.5
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|r075|top|4.0|FL|raised|55.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 695.9,
+     "att_end_deg": [
+      0.0596,
+      0.0245
+     ],
+     "clearance": {
+      "true": 209.7,
+      "controller_estimate": 47.6,
+      "target": 50.0,
+      "true_minus_estimate": 162.1,
+      "controller_biased": 47.6
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|r075|top|4.0|RL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.6319,
+      0.3248
+     ],
+     "clearance": {
+      "true": 252.3,
+      "controller_estimate": -5.1,
+      "target": 50.0,
+      "true_minus_estimate": 257.4,
+      "controller_biased": -5.1
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|r075|top|4.0|RL|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.6322,
+      0.3246
+     ],
+     "clearance": {
+      "true": 252.3,
+      "controller_estimate": 19.0,
+      "target": 50.0,
+      "true_minus_estimate": 233.3,
+      "controller_biased": 19.0
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|r075|top|4.0|RL|raised|140.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.21,
+     "att_end_deg": [
+      0.1412,
+      0.0653
+     ],
+     "clearance": {
+      "true": 216.6,
+      "controller_estimate": 46.3,
+      "target": 50.0,
+      "true_minus_estimate": 170.3,
+      "controller_biased": 46.3
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|r075|top|4.0|RL|raised|170.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 693.18,
+     "att_end_deg": [
+      -0.0216,
+      -0.0163
+     ],
+     "clearance": {
+      "true": 201.0,
+      "controller_estimate": 49.1,
+      "target": 50.0,
+      "true_minus_estimate": 151.9,
+      "controller_biased": 49.1
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|r075|top|4.0|RR|raised|20.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.18,
+      0.0865
+     ],
+     "clearance": {
+      "true": 219.1,
+      "controller_estimate": 41.4,
+      "target": 50.0,
+      "true_minus_estimate": 177.7,
+      "controller_biased": 41.4
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|r075|top|4.0|RR|raised|55.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 688.77,
+     "att_end_deg": [
+      -0.017,
+      -0.013
+     ],
+     "clearance": {
+      "true": 196.9,
+      "controller_estimate": 49.4,
+      "target": 50.0,
+      "true_minus_estimate": 147.5,
+      "controller_biased": 49.4
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|FR|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      -0.6144,
+      0.3183
+     ],
+     "clearance": {
+      "true": 206.0,
+      "controller_estimate": 20.8,
+      "target": 50.0,
+      "true_minus_estimate": 185.2,
+      "controller_biased": 20.8
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|FR|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      -0.3798,
+      0.1965
+     ],
+     "clearance": {
+      "true": 188.3,
+      "controller_estimate": 36.7,
+      "target": 50.0,
+      "true_minus_estimate": 151.6,
+      "controller_biased": 36.7
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|FR|raised|140.0",
+     "fails": [
+      "stroke_end"
+     ],
+     "final_phase": "ready",
+     "stroke_max_mm": 694.47,
+     "att_end_deg": [
+      0.0131,
+      -0.0101
+     ],
+     "clearance": {
+      "true": 157.6,
+      "controller_estimate": 49.2,
+      "target": 50.0,
+      "true_minus_estimate": 108.4,
+      "controller_biased": 49.2
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      -0.5383,
+      0.2805
+     ],
+     "clearance": {
+      "true": 200.9,
+      "controller_estimate": 22.8,
+      "target": 50.0,
+      "true_minus_estimate": 178.1,
+      "controller_biased": 22.8
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RL|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      -0.3055,
+      0.1648
+     ],
+     "clearance": {
+      "true": 183.5,
+      "controller_estimate": 37.8,
+      "target": 50.0,
+      "true_minus_estimate": 145.7,
+      "controller_biased": 37.8
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RR|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      -0.6928,
+      0.3653
+     ],
+     "clearance": {
+      "true": 211.9,
+      "controller_estimate": -51.4,
+      "target": 50.0,
+      "true_minus_estimate": 263.3,
+      "controller_biased": -51.4
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RR|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      -0.692,
+      0.3657
+     ],
+     "clearance": {
+      "true": 211.9,
+      "controller_estimate": -27.7,
+      "target": 50.0,
+      "true_minus_estimate": 239.6,
+      "controller_biased": -27.7
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RR|raised|140.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      -0.6099,
+      0.3225
+     ],
+     "clearance": {
+      "true": 206.1,
+      "controller_estimate": 28.2,
+      "target": 50.0,
+      "true_minus_estimate": 177.9,
+      "controller_biased": 28.2
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RR|raised|170.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      -0.437,
+      0.238
+     ],
+     "clearance": {
+      "true": 193.4,
+      "controller_estimate": 39.9,
+      "target": 50.0,
+      "true_minus_estimate": 153.5,
+      "controller_biased": 39.9
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RR|raised|200.0",
+     "fails": [
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      -0.2621,
+      0.1436
+     ],
+     "clearance": {
+      "true": 180.3,
+      "controller_estimate": 44.5,
+      "target": 50.0,
+      "true_minus_estimate": 135.8,
+      "controller_biased": 44.5
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RR|raised|230.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 695.63,
+     "att_end_deg": [
+      -0.0809,
+      0.0392
+     ],
+     "clearance": {
+      "true": 166.2,
+      "controller_estimate": 48.1,
+      "target": 50.0,
+      "true_minus_estimate": 118.1,
+      "controller_biased": 48.1
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMp|top|4.0|FL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.2047,
+      -0.1306
+     ],
+     "clearance": {
+      "true": 205.8,
+      "controller_estimate": -62.7,
+      "target": 50.0,
+      "true_minus_estimate": 268.5,
+      "controller_biased": -62.7
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMp|top|4.0|FL|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.205,
+      -0.1309
+     ],
+     "clearance": {
+      "true": 205.9,
+      "controller_estimate": -36.8,
+      "target": 50.0,
+      "true_minus_estimate": 242.7,
+      "controller_biased": -36.8
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMp|top|4.0|FL|raised|140.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.2557,
+      -0.157
+     ],
+     "clearance": {
+      "true": 204.9,
+      "controller_estimate": 24.6,
+      "target": 50.0,
+      "true_minus_estimate": 180.3,
+      "controller_biased": 24.6
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMp|top|4.0|FL|raised|170.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.3735,
+      -0.2187
+     ],
+     "clearance": {
+      "true": 198.7,
+      "controller_estimate": 39.1,
+      "target": 50.0,
+      "true_minus_estimate": 159.6,
+      "controller_biased": 39.1
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMp|top|4.0|FL|raised|200.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.224,
+      -0.129
+     ],
+     "clearance": {
+      "true": 185.0,
+      "controller_estimate": 45.2,
+      "target": 50.0,
+      "true_minus_estimate": 139.8,
+      "controller_biased": 45.2
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMp|top|4.0|FL|raised|230.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 695.45,
+     "att_end_deg": [
+      0.0296,
+      -0.0178
+     ],
+     "clearance": {
+      "true": 169.2,
+      "controller_estimate": 48.6,
+      "target": 50.0,
+      "true_minus_estimate": 120.6,
+      "controller_biased": 48.6
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMp|top|4.0|FR|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.3102,
+      -0.185
+     ],
+     "clearance": {
+      "true": 203.7,
+      "controller_estimate": 21.3,
+      "target": 50.0,
+      "true_minus_estimate": 182.4,
+      "controller_biased": 21.3
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMp|top|4.0|FR|raised|55.0",
+     "fails": [
+      "Fmin_plus5",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.2802,
+      -0.1614
+     ],
+     "clearance": {
+      "true": 189.9,
+      "controller_estimate": 36.9,
+      "target": 50.0,
+      "true_minus_estimate": 153.0,
+      "controller_biased": 36.9
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMp|top|4.0|RL|raised|20.0",
+     "fails": [
+      "Fmin_plus5",
+      "no_lift",
+      "end_att",
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.3735,
+      -0.2185
+     ],
+     "clearance": {
+      "true": 199.4,
+      "controller_estimate": 32.2,
+      "target": 50.0,
+      "true_minus_estimate": 167.2,
+      "controller_biased": 32.2
+     },
+     "p28": null
+    },
+    {
+     "key": "slope|edgeMp|top|4.0|RL|raised|55.0",
+     "fails": [
+      "ready",
+      "fault0",
+      "stroke_end"
+     ],
+     "final_phase": "fault",
+     "stroke_max_mm": 696.26,
+     "att_end_deg": [
+      0.1756,
+      -0.1015
+     ],
+     "clearance": {
+      "true": 181.8,
+      "controller_estimate": 43.3,
+      "target": 50.0,
+      "true_minus_estimate": 138.5,
+      "controller_biased": 43.3
+     },
+     "p28": null
+    }
+   ],
+   "flags": [
+    {
+     "key": "slope|edgeMr|top|4.0|RL|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.58
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RL|raised|230.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.56
+    },
+    {
+     "key": "slope|edgeMr|top|4.0|RR|raised|140.0",
+     "flags": [
+      "T2"
+     ],
+     "latch_after_contact_s": 3.68
+    }
+   ],
+   "hash_changed_vs_base": {
+    "n": 0,
+    "n_compared": 0,
+    "keys": []
+   }
+  }
+ }
+}

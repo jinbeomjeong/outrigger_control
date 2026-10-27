@@ -1,0 +1,9440 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s8/r69_g8_screen.py",
+  "spec": "rev. 69 draft (G8 non-planar start + G5 remainder)",
+  "wall_s": 732.7,
+  "workers": 2,
+  "affinity": "C0000",
+  "filter": "main|flat|top|8.0|",
+  "slice": null,
+  "n_jobs": 57
+ },
+ "results": [
+  {
+   "key": "main|flat|top|8.0|ref|none|0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "ref",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     27.4,
+     "done"
+    ],
+    [
+     27.5,
+     "probe"
+    ],
+    [
+     39.4,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.199999999995942,
+   "t_ready": 39.4000000000061,
+   "cmd_sha256": "bd0030b35aa4c8f8",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.0,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.001,
+     0.115
+    ],
+    "min_crawler_kN": 180.5
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 101.65,
+    "FR": 101.02,
+    "RL": 55.66,
+    "RR": 53.27
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0005,
+    -0.0114
+   ],
+   "stroke_end_mm": [
+    407.19,
+    407.12,
+    395.15,
+    395.09
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 57.0,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 6.2
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     39.4,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     39.4,
+     "ready_heave_tail"
+    ],
+    [
+     39.7,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ]
+   ],
+   "wall_s": 26.3
+  },
+  {
+   "key": "main|flat|top|8.0|FL|raised|5.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "raised",
+    "value_mm": 5.0,
+    "g_start_mm": 5.0,
+    "goff_mm": [
+     -335.8,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     38.9,
+     "done"
+    ],
+    [
+     39.0,
+     "probe"
+    ],
+    [
+     50.9,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 50.90000000006101,
+   "cmd_sha256": "c4be8bec750c2507",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 1.2,
+     "FR": 18.9,
+     "RL": 18.9,
+     "RR": 18.7
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.058,
+     0.17
+    ],
+    "min_crawler_kN": 150.0,
+    "first_contact_s": 1.595,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.1,
+    "latch_after_contact_s": 0.61,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.1,
+      9.1,
+      6.5,
+      4.8,
+      3.9,
+      3.2,
+      2.6,
+      2.1,
+      10.0
+     ],
+     "work_on_detrended_load_J": 6.9
+    },
+    "stroke_at_latch_mm": 14.3
+   },
+   "capped_legs": [
+    "FL"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.8,
+    "FR": 102.11,
+    "RL": 57.19,
+    "RR": 51.9
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0039,
+    -0.0102
+   ],
+   "stroke_end_mm": [
+    317.63,
+    653.59,
+    641.59,
+    641.54
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 303.3,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 252.6
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     1.9,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ],
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     50.9,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     50.9,
+     "ready_heave_tail"
+    ],
+    [
+     51.2,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     52.9,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 32.2
+  },
+  {
+   "key": "main|flat|top|8.0|FL|raised|20.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "raised",
+    "value_mm": 20.0,
+    "g_start_mm": 20.0,
+    "goff_mm": [
+     -320.801,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     38.4,
+     "done"
+    ],
+    [
+     38.5,
+     "probe"
+    ],
+    [
+     50.4,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 50.400000000058625,
+   "cmd_sha256": "501ead995efb0a1e",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 1.9,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.7
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.164
+    ],
+    "min_crawler_kN": 164.8,
+    "first_contact_s": 2.317,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.8,
+    "latch_after_contact_s": 0.58,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.6,
+      9.0,
+      6.8,
+      5.1,
+      4.1,
+      3.4,
+      2.8,
+      2.2,
+      9.2
+     ],
+     "work_on_detrended_load_J": 5.6
+    },
+    "stroke_at_latch_mm": 29.0
+   },
+   "capped_legs": [
+    "FL"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.78,
+    "FR": 102.1,
+    "RL": 57.21,
+    "RR": 51.92
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.006,
+    -0.0118
+   ],
+   "stroke_end_mm": [
+    321.58,
+    642.65,
+    630.42,
+    630.46
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 292.2,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 241.5
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     3.4,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ],
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     50.4,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     50.4,
+     "ready_heave_tail"
+    ],
+    [
+     50.7,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     52.4,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 30.7
+  },
+  {
+   "key": "main|flat|top|8.0|FL|raised|35.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "raised",
+    "value_mm": 35.0,
+    "g_start_mm": 35.0,
+    "goff_mm": [
+     -305.801,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     37.9,
+     "done"
+    ],
+    [
+     38.0,
+     "probe"
+    ],
+    [
+     49.9,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 49.90000000005624,
+   "cmd_sha256": "9372dd9d725616b1",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 2.6,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.7
+    },
+    "max_abs_att_deg": [
+     0.058,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.058,
+     0.16
+    ],
+    "min_crawler_kN": 169.8,
+    "first_contact_s": 3.034,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.4,
+    "latch_after_contact_s": 0.57,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.6,
+      8.8,
+      6.9,
+      5.2,
+      4.3,
+      3.5,
+      2.9,
+      4.3,
+      9.1
+     ],
+     "work_on_detrended_load_J": 4.6
+    },
+    "stroke_at_latch_mm": 43.6
+   },
+   "capped_legs": [
+    "FL"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.75,
+    "FR": 102.1,
+    "RL": 57.21,
+    "RR": 51.94
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0049,
+    -0.0124
+   ],
+   "stroke_end_mm": [
+    325.56,
+    631.57,
+    619.34,
+    619.33
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 281.2,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 230.5
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     4.8,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FL"
+    ],
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     49.9,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     49.9,
+     "ready_heave_tail"
+    ],
+    [
+     50.2,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     51.9,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 28.1
+  },
+  {
+   "key": "main|flat|top|8.0|FL|raised|50.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "raised",
+    "value_mm": 50.0,
+    "g_start_mm": 50.0,
+    "goff_mm": [
+     -290.801,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     37.3,
+     "done"
+    ],
+    [
+     37.4,
+     "probe"
+    ],
+    [
+     49.3,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 49.30000000005337,
+   "cmd_sha256": "75d08a5b23cf7de6",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 3.3,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.8
+    },
+    "max_abs_att_deg": [
+     0.055,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.055,
+     0.156
+    ],
+    "min_crawler_kN": 163.6,
+    "first_contact_s": 3.751,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.0,
+    "latch_after_contact_s": 0.55,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.3,
+      8.7,
+      6.9,
+      5.3,
+      4.3,
+      3.5,
+      2.9,
+      8.0
+     ],
+     "work_on_detrended_load_J": 3.8
+    },
+    "stroke_at_latch_mm": 58.3
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.72,
+    "FR": 102.11,
+    "RL": 57.2,
+    "RR": 51.98
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0017,
+    -0.0143
+   ],
+   "stroke_end_mm": [
+    329.49,
+    620.36,
+    608.1,
+    607.97
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 270.0,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 219.3
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     49.3,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     49.3,
+     "ready_heave_tail"
+    ],
+    [
+     49.6,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     51.3,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 29.2
+  },
+  {
+   "key": "main|flat|top|8.0|FL|raised|55.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "raised",
+    "value_mm": 55.0,
+    "g_start_mm": 55.0,
+    "goff_mm": [
+     -285.801,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     37.1,
+     "done"
+    ],
+    [
+     37.2,
+     "probe"
+    ],
+    [
+     49.1,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 49.10000000005242,
+   "cmd_sha256": "b880b809201d6632",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 3.6,
+     "FR": 18.9,
+     "RL": 18.9,
+     "RR": 18.7
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.174
+    ],
+    "min_crawler_kN": 148.9,
+    "first_contact_s": 3.99,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.3,
+    "latch_after_contact_s": 0.61,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.6,
+      9.4,
+      6.5,
+      4.9,
+      4.0,
+      3.2,
+      2.6,
+      10.1
+     ],
+     "work_on_detrended_load_J": 7.5
+    },
+    "stroke_at_latch_mm": 64.6
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.74,
+    "FR": 102.1,
+    "RL": 57.22,
+    "RR": 51.96
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0046,
+    -0.0108
+   ],
+   "stroke_end_mm": [
+    330.81,
+    616.81,
+    604.72,
+    604.7
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 266.4,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 215.7
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     49.1,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     49.1,
+     "ready_heave_tail"
+    ],
+    [
+     49.4,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     51.1,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 27.8
+  },
+  {
+   "key": "main|flat|top|8.0|FL|raised|80.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "raised",
+    "value_mm": 80.0,
+    "g_start_mm": 80.0,
+    "goff_mm": [
+     -260.801,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.0,
+     "level"
+    ],
+    [
+     36.3,
+     "done"
+    ],
+    [
+     36.4,
+     "probe"
+    ],
+    [
+     48.3,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.699999999997107,
+   "t_loc": 21.199999999995942,
+   "t_ready": 48.3000000000486,
+   "cmd_sha256": "b84fce127963a9dd",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.9,
+    "latch_rel_s": {
+     "FL": 4.8,
+     "FR": 18.9,
+     "RL": 19.0,
+     "RR": 18.7
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.176
+    ],
+    "min_crawler_kN": 133.3,
+    "first_contact_s": 5.185,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.4,
+    "latch_after_contact_s": 0.61,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.5,
+      9.4,
+      6.5,
+      4.9,
+      3.9,
+      3.1,
+      7.3,
+      3.7
+     ],
+     "work_on_detrended_load_J": 7.9
+    },
+    "stroke_at_latch_mm": 89.7
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 99.69,
+    "FR": 102.08,
+    "RL": 57.24,
+    "RR": 51.97
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0075,
+    -0.0122
+   ],
+   "stroke_end_mm": [
+    337.39,
+    598.52,
+    586.2,
+    586.3
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 248.0,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 197.3
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     20.0,
+     "floor_estimate_touch"
+    ],
+    [
+     21.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     48.3,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     48.3,
+     "ready_heave_tail"
+    ],
+    [
+     48.6,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     50.3,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 30.2
+  },
+  {
+   "key": "main|flat|top|8.0|FL|raised|100.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "raised",
+    "value_mm": 100.0,
+    "g_start_mm": 100.0,
+    "goff_mm": [
+     -240.801,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     35.5,
+     "done"
+    ],
+    [
+     35.6,
+     "probe"
+    ],
+    [
+     47.5,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 47.50000000004478,
+   "cmd_sha256": "325785ae0f628c80",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 5.7,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.8
+    },
+    "max_abs_att_deg": [
+     0.057,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.057,
+     0.159
+    ],
+    "min_crawler_kN": 159.7,
+    "first_contact_s": 6.14,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.3,
+    "latch_after_contact_s": 0.56,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.4,
+      8.8,
+      6.9,
+      5.2,
+      4.3,
+      3.5,
+      8.9
+     ],
+     "work_on_detrended_load_J": 4.3
+    },
+    "stroke_at_latch_mm": 108.5
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.68,
+    "FR": 102.09,
+    "RL": 57.24,
+    "RR": 52.02
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0021,
+    -0.015
+   ],
+   "stroke_end_mm": [
+    342.68,
+    583.57,
+    571.24,
+    571.11
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 233.2,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 182.5
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     47.5,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     47.5,
+     "ready_heave_tail"
+    ],
+    [
+     47.8,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     49.5,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 28.8
+  },
+  {
+   "key": "main|flat|top|8.0|FL|raised|110.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "raised",
+    "value_mm": 110.0,
+    "g_start_mm": 110.0,
+    "goff_mm": [
+     -230.801,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     35.2,
+     "done"
+    ],
+    [
+     35.3,
+     "probe"
+    ],
+    [
+     47.2,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 47.200000000043346,
+   "cmd_sha256": "5957888d2d939798",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 6.2,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.7
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.164
+    ],
+    "min_crawler_kN": 165.7,
+    "first_contact_s": 6.619,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.7,
+    "latch_after_contact_s": 0.58,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.7,
+      9.1,
+      6.9,
+      5.1,
+      4.2,
+      3.4,
+      9.1
+     ],
+     "work_on_detrended_load_J": 5.5
+    },
+    "stroke_at_latch_mm": 119.0
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.69,
+    "FR": 102.07,
+    "RL": 57.26,
+    "RR": 52.0
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0059,
+    -0.0134
+   ],
+   "stroke_end_mm": [
+    345.33,
+    576.39,
+    564.04,
+    564.08
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 225.9,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 175.2
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     47.2,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     47.2,
+     "ready_heave_tail"
+    ],
+    [
+     47.5,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     49.2,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 26.6
+  },
+  {
+   "key": "main|flat|top|8.0|FL|raised|200.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "raised",
+    "value_mm": 200.0,
+    "g_start_mm": 200.0,
+    "goff_mm": [
+     -140.801,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     32.1,
+     "done"
+    ],
+    [
+     32.2,
+     "probe"
+    ],
+    [
+     44.1,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 44.100000000028544,
+   "cmd_sha256": "5fc89d66af74aa35",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 10.5,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.7
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.164
+    ],
+    "min_crawler_kN": 167.8,
+    "first_contact_s": 10.92,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.7,
+    "latch_after_contact_s": 0.58,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.6,
+      9.1,
+      6.9,
+      6.1,
+      8.7
+     ],
+     "work_on_detrended_load_J": 5.4
+    },
+    "stroke_at_latch_mm": 208.9
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.61,
+    "FR": 102.08,
+    "RL": 57.32,
+    "RR": 52.04
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0053,
+    -0.0131
+   ],
+   "stroke_end_mm": [
+    369.16,
+    510.2,
+    497.9,
+    497.91
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 159.8,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 109.0
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     44.1,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     44.1,
+     "ready_heave_tail"
+    ],
+    [
+     44.4,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     46.1,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 25.3
+  },
+  {
+   "key": "main|flat|top|8.0|FL|raised|290.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "raised",
+    "value_mm": 290.0,
+    "g_start_mm": 290.0,
+    "goff_mm": [
+     -50.802,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     28.7,
+     "done"
+    ],
+    [
+     28.8,
+     "probe"
+    ],
+    [
+     40.7,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 40.70000000001231,
+   "cmd_sha256": "599930517c9fb917",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 14.8,
+     "FR": 18.8,
+     "RL": 18.9,
+     "RR": 18.7
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.164
+    ],
+    "min_crawler_kN": 170.3,
+    "first_contact_s": 15.221,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.7,
+    "latch_after_contact_s": 0.58,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.7,
+      9.9
+     ],
+     "work_on_detrended_load_J": 5.4
+    },
+    "stroke_at_latch_mm": 298.9
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.48,
+    "FR": 102.22,
+    "RL": 57.12,
+    "RR": 51.94
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0031,
+    -0.0079
+   ],
+   "stroke_end_mm": [
+    392.89,
+    443.84,
+    432.07,
+    431.97
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 93.6,
+    "controller_estimate": 50.9,
+    "target": 50.0,
+    "true_minus_estimate": 42.7
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     40.7,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     40.7,
+     "ready_heave_tail"
+    ],
+    [
+     41.0,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     42.7,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 25.0
+  },
+  {
+   "key": "main|flat|top|8.0|FL|raised|320.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "raised",
+    "value_mm": 320.0,
+    "g_start_mm": 320.0,
+    "goff_mm": [
+     -20.802,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.1,
+     "level"
+    ],
+    [
+     28.7,
+     "done"
+    ],
+    [
+     28.8,
+     "probe"
+    ],
+    [
+     40.7,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.999999999996408,
+   "t_loc": 21.499999999995243,
+   "t_ready": 40.70000000001231,
+   "cmd_sha256": "c4aaa108b6546ee2",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.0,
+    "latch_rel_s": {
+     "FL": 16.4,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 19.1
+    },
+    "max_abs_att_deg": [
+     0.033,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.033,
+     0.101
+    ],
+    "min_crawler_kN": 204.5,
+    "first_contact_s": 16.764,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.1,
+    "latch_after_contact_s": 0.64,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      9.7,
+      15.7
+     ],
+     "work_on_detrended_load_J": 0.6
+    },
+    "stroke_at_latch_mm": 324.3
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.79,
+    "FR": 102.26,
+    "RL": 56.92,
+    "RR": 52.22
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0035,
+    -0.0164
+   ],
+   "stroke_end_mm": [
+    401.92,
+    422.55,
+    410.36,
+    409.99
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 72.3,
+    "controller_estimate": 51.9,
+    "target": 50.0,
+    "true_minus_estimate": 20.4
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     17.1,
+     "INFO_TOUCH_DIP_HELD:FL"
+    ],
+    [
+     20.1,
+     "floor_estimate_touch"
+    ],
+    [
+     21.5,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.6,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     40.7,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     40.7,
+     "ready_heave_tail"
+    ],
+    [
+     41.0,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     42.7,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 23.4
+  },
+  {
+   "key": "main|flat|top|8.0|FL|lowered|20.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "lowered",
+    "value_mm": 20.0,
+    "g_start_mm": 360.802,
+    "goff_mm": [
+     20.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     21.3,
+     "level"
+    ],
+    [
+     30.2,
+     "done"
+    ],
+    [
+     30.3,
+     "probe"
+    ],
+    [
+     42.2,
+     "ready"
+    ]
+   ],
+   "t_lift": 22.099999999993845,
+   "t_loc": 22.699999999992446,
+   "t_ready": 42.20000000001947,
+   "cmd_sha256": "13c038b25d760d1d",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 20.2,
+    "latch_rel_s": {
+     "FL": 20.3,
+     "FR": 18.4,
+     "RL": 19.1,
+     "RR": 19.3
+    },
+    "max_abs_att_deg": [
+     0.056,
+     0.184
+    ],
+    "max_abs_att_change_deg": [
+     0.056,
+     0.079
+    ],
+    "min_crawler_kN": 210.9,
+    "first_contact_s": 20.639,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.3,
+    "latch_after_contact_s": 0.66,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 365.1
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.62,
+    "FR": 99.99,
+    "RL": 54.88,
+    "RR": 54.43
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0027,
+    -0.0263
+   ],
+   "stroke_end_mm": [
+    432.11,
+    411.81,
+    398.71,
+    398.62
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 61.4,
+    "controller_estimate": 50.5,
+    "target": 50.0,
+    "true_minus_estimate": 10.9
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.1,
+     "INFO_TOUCH_DIP_HELD:FR"
+    ],
+    [
+     20.0,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     21.3,
+     "floor_estimate_touch"
+    ],
+    [
+     22.7,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.8,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     42.2,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     42.2,
+     "ready_heave_tail"
+    ],
+    [
+     42.5,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     44.2,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 25.0
+  },
+  {
+   "key": "main|flat|top|8.0|FL|lowered|60.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "lowered",
+    "value_mm": 60.0,
+    "g_start_mm": 400.802,
+    "goff_mm": [
+     60.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     25.1,
+     "level"
+    ],
+    [
+     34.1,
+     "done"
+    ],
+    [
+     34.2,
+     "probe"
+    ],
+    [
+     46.1,
+     "ready"
+    ]
+   ],
+   "t_lift": 25.89999999998499,
+   "t_loc": 26.49999999998359,
+   "t_ready": 46.100000000038094,
+   "cmd_sha256": "1708788432e4423e",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 24.0,
+    "latch_rel_s": {
+     "FL": 24.1,
+     "FR": 18.4,
+     "RL": 19.1,
+     "RR": 19.3
+    },
+    "max_abs_att_deg": [
+     0.056,
+     0.184
+    ],
+    "max_abs_att_change_deg": [
+     0.056,
+     0.079
+    ],
+    "min_crawler_kN": 213.9,
+    "first_contact_s": 24.466,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.0,
+    "latch_after_contact_s": 0.63,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 404.8
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.57,
+    "FR": 99.99,
+    "RL": 54.91,
+    "RR": 54.4
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.004,
+    -0.0279
+   ],
+   "stroke_end_mm": [
+    480.31,
+    419.96,
+    406.78,
+    406.63
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 69.5,
+    "controller_estimate": 50.4,
+    "target": 50.0,
+    "true_minus_estimate": 19.1
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.1,
+     "INFO_TOUCH_DIP_HELD:FR"
+    ],
+    [
+     20.0,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     25.1,
+     "floor_estimate_touch"
+    ],
+    [
+     26.5,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     26.6,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     46.1,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     46.1,
+     "ready_heave_tail"
+    ],
+    [
+     46.4,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     48.1,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 28.6
+  },
+  {
+   "key": "main|flat|top|8.0|FL|lowered|150.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FL",
+    "kind": "lowered",
+    "value_mm": 150.0,
+    "g_start_mm": 490.802,
+    "goff_mm": [
+     149.999,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     33.7,
+     "level"
+    ],
+    [
+     43.3,
+     "done"
+    ],
+    [
+     43.4,
+     "probe"
+    ],
+    [
+     55.3,
+     "ready"
+    ]
+   ],
+   "t_lift": 34.499999999982705,
+   "t_loc": 35.09999999998557,
+   "t_ready": 55.30000000008202,
+   "cmd_sha256": "1dcbd3a06e3ef088",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 32.6,
+    "latch_rel_s": {
+     "FL": 32.7,
+     "FR": 18.4,
+     "RL": 19.1,
+     "RR": 19.3
+    },
+    "max_abs_att_deg": [
+     0.056,
+     0.184
+    ],
+    "max_abs_att_change_deg": [
+     0.056,
+     0.079
+    ],
+    "min_crawler_kN": 214.3,
+    "first_contact_s": 33.068,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.0,
+    "latch_after_contact_s": 0.63,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 494.8
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.56,
+    "FR": 100.0,
+    "RL": 55.0,
+    "RR": 54.34
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0046,
+    -0.0309
+   ],
+   "stroke_end_mm": [
+    588.75,
+    438.37,
+    424.95,
+    424.78
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 87.8,
+    "controller_estimate": 50.5,
+    "target": 50.0,
+    "true_minus_estimate": 37.3
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.1,
+     "INFO_TOUCH_DIP_HELD:FR"
+    ],
+    [
+     20.0,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     33.7,
+     "floor_estimate_touch"
+    ],
+    [
+     35.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     35.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     55.3,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     55.3,
+     "ready_heave_tail"
+    ],
+    [
+     55.6,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     57.3,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 30.4
+  },
+  {
+   "key": "main|flat|top|8.0|FR|raised|5.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "raised",
+    "value_mm": 5.0,
+    "g_start_mm": 5.0,
+    "goff_mm": [
+     0.0,
+     -335.789,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     38.9,
+     "done"
+    ],
+    [
+     39.0,
+     "probe"
+    ],
+    [
+     50.9,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 50.90000000006101,
+   "cmd_sha256": "c57bed87c94ad6ea",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.8,
+     "FR": 1.2,
+     "RL": 18.7,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.058,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.058,
+     0.17
+    ],
+    "min_crawler_kN": 163.0,
+    "first_contact_s": 1.595,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.1,
+    "latch_after_contact_s": 0.61,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.1,
+      9.1,
+      6.5,
+      4.8,
+      3.9,
+      3.2,
+      2.6,
+      2.1,
+      9.6
+     ],
+     "work_on_detrended_load_J": 6.9
+    },
+    "stroke_at_latch_mm": 14.3
+   },
+   "capped_legs": [
+    "FR"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.53,
+    "FR": 100.38,
+    "RL": 54.95,
+    "RR": 54.17
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0075,
+    -0.0111
+   ],
+   "stroke_end_mm": [
+    653.36,
+    317.07,
+    641.23,
+    640.93
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 302.8,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 252.1
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     1.9,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FR"
+    ],
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     50.9,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     50.9,
+     "ready_heave_tail"
+    ],
+    [
+     51.2,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     52.9,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 28.5
+  },
+  {
+   "key": "main|flat|top|8.0|FR|raised|20.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "raised",
+    "value_mm": 20.0,
+    "g_start_mm": 20.0,
+    "goff_mm": [
+     0.0,
+     -320.789,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     38.4,
+     "done"
+    ],
+    [
+     38.5,
+     "probe"
+    ],
+    [
+     50.4,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 50.400000000058625,
+   "cmd_sha256": "37d1694625e7aa56",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.8,
+     "FR": 1.9,
+     "RL": 18.7,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.164
+    ],
+    "min_crawler_kN": 165.2,
+    "first_contact_s": 2.317,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.8,
+    "latch_after_contact_s": 0.58,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.6,
+      9.1,
+      6.8,
+      5.0,
+      4.1,
+      3.4,
+      2.8,
+      2.2,
+      9.2
+     ],
+     "work_on_detrended_load_J": 5.6
+    },
+    "stroke_at_latch_mm": 29.0
+   },
+   "capped_legs": [
+    "FR"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.53,
+    "FR": 100.35,
+    "RL": 54.97,
+    "RR": 54.17
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0066,
+    -0.0117
+   ],
+   "stroke_end_mm": [
+    642.31,
+    321.07,
+    630.13,
+    629.87
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 291.8,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 241.1
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     3.4,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FR"
+    ],
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     50.4,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     50.4,
+     "ready_heave_tail"
+    ],
+    [
+     50.7,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     52.4,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 31.5
+  },
+  {
+   "key": "main|flat|top|8.0|FR|raised|35.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "raised",
+    "value_mm": 35.0,
+    "g_start_mm": 35.0,
+    "goff_mm": [
+     0.0,
+     -305.789,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     37.9,
+     "done"
+    ],
+    [
+     38.0,
+     "probe"
+    ],
+    [
+     49.9,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 49.90000000005624,
+   "cmd_sha256": "fa441a3a41b6acd8",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.8,
+     "FR": 2.6,
+     "RL": 18.8,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.058,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.058,
+     0.16
+    ],
+    "min_crawler_kN": 157.9,
+    "first_contact_s": 3.034,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.4,
+    "latch_after_contact_s": 0.57,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.6,
+      8.9,
+      6.9,
+      5.2,
+      4.3,
+      3.5,
+      2.9,
+      4.3,
+      8.7
+     ],
+     "work_on_detrended_load_J": 4.6
+    },
+    "stroke_at_latch_mm": 43.6
+   },
+   "capped_legs": [
+    "FR"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.54,
+    "FR": 100.32,
+    "RL": 55.01,
+    "RR": 54.16
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0028,
+    -0.0135
+   ],
+   "stroke_end_mm": [
+    631.14,
+    325.07,
+    618.82,
+    618.72
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 280.7,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 230.0
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     4.8,
+     "INFO_TOUCH_FREE_AIR_CAPPED:FR"
+    ],
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     49.9,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     49.9,
+     "ready_heave_tail"
+    ],
+    [
+     50.2,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     51.9,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 30.9
+  },
+  {
+   "key": "main|flat|top|8.0|FR|raised|50.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "raised",
+    "value_mm": 50.0,
+    "g_start_mm": 50.0,
+    "goff_mm": [
+     0.0,
+     -290.789,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     37.3,
+     "done"
+    ],
+    [
+     37.4,
+     "probe"
+    ],
+    [
+     49.3,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 49.30000000005337,
+   "cmd_sha256": "92fdf8988e875b26",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.8,
+     "FR": 3.3,
+     "RL": 18.8,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.055,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.055,
+     0.156
+    ],
+    "min_crawler_kN": 163.8,
+    "first_contact_s": 3.751,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.0,
+    "latch_after_contact_s": 0.55,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.3,
+      8.8,
+      6.9,
+      5.3,
+      4.4,
+      3.5,
+      2.9,
+      7.9
+     ],
+     "work_on_detrended_load_J": 3.8
+    },
+    "stroke_at_latch_mm": 58.3
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.54,
+    "FR": 100.29,
+    "RL": 55.03,
+    "RR": 54.16
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0017,
+    -0.0143
+   ],
+   "stroke_end_mm": [
+    620.04,
+    329.02,
+    607.66,
+    607.6
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 269.6,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 218.9
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     49.3,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     49.3,
+     "ready_heave_tail"
+    ],
+    [
+     49.6,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     51.3,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 26.9
+  },
+  {
+   "key": "main|flat|top|8.0|FR|raised|55.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "raised",
+    "value_mm": 55.0,
+    "g_start_mm": 55.0,
+    "goff_mm": [
+     0.0,
+     -285.789,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     37.1,
+     "done"
+    ],
+    [
+     37.2,
+     "probe"
+    ],
+    [
+     49.1,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 49.10000000005242,
+   "cmd_sha256": "7783b47ba307c569",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.9,
+     "FR": 3.6,
+     "RL": 18.7,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.174
+    ],
+    "min_crawler_kN": 149.0,
+    "first_contact_s": 3.99,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.3,
+    "latch_after_contact_s": 0.61,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.6,
+      9.4,
+      6.5,
+      4.9,
+      4.0,
+      3.2,
+      2.6,
+      10.1
+     ],
+     "work_on_detrended_load_J": 7.5
+    },
+    "stroke_at_latch_mm": 64.6
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.53,
+    "FR": 100.31,
+    "RL": 55.01,
+    "RR": 54.17
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0051,
+    -0.0108
+   ],
+   "stroke_end_mm": [
+    616.52,
+    330.34,
+    604.43,
+    604.22
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 266.1,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 215.4
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     49.1,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     49.1,
+     "ready_heave_tail"
+    ],
+    [
+     49.4,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     51.1,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 29.0
+  },
+  {
+   "key": "main|flat|top|8.0|FR|raised|80.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "raised",
+    "value_mm": 80.0,
+    "g_start_mm": 80.0,
+    "goff_mm": [
+     0.0,
+     -260.789,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.0,
+     "level"
+    ],
+    [
+     36.3,
+     "done"
+    ],
+    [
+     36.4,
+     "probe"
+    ],
+    [
+     48.3,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.699999999997107,
+   "t_loc": 21.199999999995942,
+   "t_ready": 48.3000000000486,
+   "cmd_sha256": "bc2fd31e3498dc6c",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.9,
+    "latch_rel_s": {
+     "FL": 18.9,
+     "FR": 4.8,
+     "RL": 18.7,
+     "RR": 19.0
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.176
+    ],
+    "min_crawler_kN": 134.7,
+    "first_contact_s": 5.185,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.4,
+    "latch_after_contact_s": 0.61,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.5,
+      9.4,
+      6.5,
+      4.9,
+      3.9,
+      3.1,
+      7.3,
+      4.3
+     ],
+     "work_on_detrended_load_J": 7.9
+    },
+    "stroke_at_latch_mm": 89.7
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.51,
+    "FR": 97.19,
+    "RL": 53.67,
+    "RR": 54.2
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.008,
+    -0.0121
+   ],
+   "stroke_end_mm": [
+    598.27,
+    336.96,
+    586.06,
+    585.74
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 247.7,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 197.0
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     20.0,
+     "floor_estimate_touch"
+    ],
+    [
+     21.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     48.3,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     48.3,
+     "ready_heave_tail"
+    ],
+    [
+     48.6,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     50.3,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 29.3
+  },
+  {
+   "key": "main|flat|top|8.0|FR|raised|100.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "raised",
+    "value_mm": 100.0,
+    "g_start_mm": 100.0,
+    "goff_mm": [
+     0.0,
+     -240.789,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     35.5,
+     "done"
+    ],
+    [
+     35.6,
+     "probe"
+    ],
+    [
+     47.5,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 47.50000000004478,
+   "cmd_sha256": "45c9b30961ab644a",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.8,
+     "FR": 5.7,
+     "RL": 18.8,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.057,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.057,
+     0.159
+    ],
+    "min_crawler_kN": 159.9,
+    "first_contact_s": 6.14,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.3,
+    "latch_after_contact_s": 0.56,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.4,
+      8.9,
+      6.9,
+      5.2,
+      4.3,
+      3.5,
+      8.8
+     ],
+     "work_on_detrended_load_J": 4.3
+    },
+    "stroke_at_latch_mm": 108.5
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.51,
+    "FR": 100.25,
+    "RL": 55.08,
+    "RR": 54.19
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0024,
+    -0.015
+   ],
+   "stroke_end_mm": [
+    583.34,
+    342.28,
+    570.9,
+    570.81
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 232.9,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 182.2
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     47.5,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     47.5,
+     "ready_heave_tail"
+    ],
+    [
+     47.8,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     49.5,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 26.8
+  },
+  {
+   "key": "main|flat|top|8.0|FR|raised|110.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "raised",
+    "value_mm": 110.0,
+    "g_start_mm": 110.0,
+    "goff_mm": [
+     0.0,
+     -230.789,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     35.2,
+     "done"
+    ],
+    [
+     35.3,
+     "probe"
+    ],
+    [
+     47.2,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 47.200000000043346,
+   "cmd_sha256": "8605eb103a356ec9",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.8,
+     "FR": 6.2,
+     "RL": 18.7,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.164
+    ],
+    "min_crawler_kN": 166.2,
+    "first_contact_s": 6.619,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.7,
+    "latch_after_contact_s": 0.58,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.7,
+      9.2,
+      6.9,
+      5.1,
+      4.2,
+      3.4,
+      9.0
+     ],
+     "work_on_detrended_load_J": 5.4
+    },
+    "stroke_at_latch_mm": 119.0
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.49,
+    "FR": 100.27,
+    "RL": 55.06,
+    "RR": 54.21
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0064,
+    -0.0133
+   ],
+   "stroke_end_mm": [
+    576.18,
+    344.94,
+    563.88,
+    563.62
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 225.6,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 174.9
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     47.2,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     47.2,
+     "ready_heave_tail"
+    ],
+    [
+     47.5,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     49.2,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 27.7
+  },
+  {
+   "key": "main|flat|top|8.0|FR|raised|200.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "raised",
+    "value_mm": 200.0,
+    "g_start_mm": 200.0,
+    "goff_mm": [
+     0.0,
+     -140.79,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     32.1,
+     "done"
+    ],
+    [
+     32.2,
+     "probe"
+    ],
+    [
+     44.1,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 44.100000000028544,
+   "cmd_sha256": "cdc4d37f938ae1d7",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.8,
+     "FR": 10.5,
+     "RL": 18.7,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.164
+    ],
+    "min_crawler_kN": 168.4,
+    "first_contact_s": 10.92,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.7,
+    "latch_after_contact_s": 0.58,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.6,
+      9.2,
+      6.9,
+      5.9,
+      8.6
+     ],
+     "work_on_detrended_load_J": 5.4
+    },
+    "stroke_at_latch_mm": 208.9
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.48,
+    "FR": 100.19,
+    "RL": 54.95,
+    "RR": 54.24
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0057,
+    -0.013
+   ],
+   "stroke_end_mm": [
+    510.1,
+    368.89,
+    497.82,
+    497.6
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 159.6,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 108.8
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     44.1,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     44.1,
+     "ready_heave_tail"
+    ],
+    [
+     44.4,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     46.1,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 24.9
+  },
+  {
+   "key": "main|flat|top|8.0|FR|raised|290.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "raised",
+    "value_mm": 290.0,
+    "g_start_mm": 290.0,
+    "goff_mm": [
+     0.0,
+     -50.79,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     28.7,
+     "done"
+    ],
+    [
+     28.8,
+     "probe"
+    ],
+    [
+     40.7,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.59999999999734,
+   "t_loc": 21.099999999996175,
+   "t_ready": 40.70000000001231,
+   "cmd_sha256": "6f1a44a440fd11fd",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 18.8,
+    "latch_rel_s": {
+     "FL": 18.8,
+     "FR": 14.8,
+     "RL": 18.7,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.059,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.059,
+     0.164
+    ],
+    "min_crawler_kN": 170.9,
+    "first_contact_s": 15.221,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.7,
+    "latch_after_contact_s": 0.58,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      16.7,
+      9.8
+     ],
+     "work_on_detrended_load_J": 5.3
+    },
+    "stroke_at_latch_mm": 298.9
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.63,
+    "FR": 100.08,
+    "RL": 54.9,
+    "RR": 54.38
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0029,
+    -0.0079
+   ],
+   "stroke_end_mm": [
+    443.83,
+    392.74,
+    431.98,
+    431.88
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 93.5,
+    "controller_estimate": 50.9,
+    "target": 50.0,
+    "true_minus_estimate": 42.6
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.9,
+     "floor_estimate_touch"
+    ],
+    [
+     21.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     40.7,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     40.7,
+     "ready_heave_tail"
+    ],
+    [
+     41.0,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     42.7,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 26.0
+  },
+  {
+   "key": "main|flat|top|8.0|FR|raised|320.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "raised",
+    "value_mm": 320.0,
+    "g_start_mm": 320.0,
+    "goff_mm": [
+     0.0,
+     -20.79,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.1,
+     "level"
+    ],
+    [
+     28.7,
+     "done"
+    ],
+    [
+     28.8,
+     "probe"
+    ],
+    [
+     40.7,
+     "ready"
+    ]
+   ],
+   "t_lift": 20.89999999999664,
+   "t_loc": 21.499999999995243,
+   "t_ready": 40.70000000001231,
+   "cmd_sha256": "e18def18aeefbaab",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.0,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 16.4,
+     "RL": 19.1,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.032,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.032,
+     0.101
+    ],
+    "min_crawler_kN": 203.5,
+    "first_contact_s": 16.764,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.1,
+    "latch_after_contact_s": 0.64,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      9.6,
+      15.6
+     ],
+     "work_on_detrended_load_J": 0.6
+    },
+    "stroke_at_latch_mm": 324.3
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 103.27,
+    "FR": 99.99,
+    "RL": 54.41,
+    "RR": 54.85
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0039,
+    -0.0165
+   ],
+   "stroke_end_mm": [
+    422.58,
+    401.81,
+    410.04,
+    410.22
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 72.2,
+    "controller_estimate": 51.9,
+    "target": 50.0,
+    "true_minus_estimate": 20.3
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     17.1,
+     "INFO_TOUCH_DIP_HELD:FR"
+    ],
+    [
+     20.1,
+     "floor_estimate_touch"
+    ],
+    [
+     21.5,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     21.6,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     40.7,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     40.7,
+     "ready_heave_tail"
+    ],
+    [
+     41.0,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     42.7,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 25.0
+  },
+  {
+   "key": "main|flat|top|8.0|FR|lowered|20.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "lowered",
+    "value_mm": 20.0,
+    "g_start_mm": 360.79,
+    "goff_mm": [
+     0.0,
+     20.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     21.3,
+     "level"
+    ],
+    [
+     30.2,
+     "done"
+    ],
+    [
+     30.3,
+     "probe"
+    ],
+    [
+     42.2,
+     "ready"
+    ]
+   ],
+   "t_lift": 22.099999999993845,
+   "t_loc": 22.699999999992446,
+   "t_ready": 42.20000000001947,
+   "cmd_sha256": "29c56f912b682121",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 20.2,
+    "latch_rel_s": {
+     "FL": 18.4,
+     "FR": 20.3,
+     "RL": 19.3,
+     "RR": 19.1
+    },
+    "max_abs_att_deg": [
+     0.056,
+     0.185
+    ],
+    "max_abs_att_change_deg": [
+     0.056,
+     0.079
+    ],
+    "min_crawler_kN": 210.5,
+    "first_contact_s": 20.638,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.3,
+    "latch_after_contact_s": 0.66,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 365.1
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.41,
+    "FR": 102.21,
+    "RL": 57.42,
+    "RR": 51.96
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0027,
+    -0.0263
+   ],
+   "stroke_end_mm": [
+    412.16,
+    432.29,
+    398.99,
+    398.87
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 61.6,
+    "controller_estimate": 50.5,
+    "target": 50.0,
+    "true_minus_estimate": 11.1
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.1,
+     "INFO_TOUCH_DIP_HELD:FL"
+    ],
+    [
+     20.0,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     21.3,
+     "floor_estimate_touch"
+    ],
+    [
+     22.7,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.8,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     42.2,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     42.2,
+     "ready_heave_tail"
+    ],
+    [
+     42.5,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     44.2,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 20.0
+  },
+  {
+   "key": "main|flat|top|8.0|FR|lowered|60.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "lowered",
+    "value_mm": 60.0,
+    "g_start_mm": 400.79,
+    "goff_mm": [
+     0.0,
+     60.0,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     25.1,
+     "level"
+    ],
+    [
+     34.1,
+     "done"
+    ],
+    [
+     34.2,
+     "probe"
+    ],
+    [
+     46.1,
+     "ready"
+    ]
+   ],
+   "t_lift": 25.89999999998499,
+   "t_loc": 26.49999999998359,
+   "t_ready": 46.100000000038094,
+   "cmd_sha256": "7f245016f3254b81",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 24.0,
+    "latch_rel_s": {
+     "FL": 18.4,
+     "FR": 24.1,
+     "RL": 19.3,
+     "RR": 19.1
+    },
+    "max_abs_att_deg": [
+     0.056,
+     0.185
+    ],
+    "max_abs_att_change_deg": [
+     0.056,
+     0.079
+    ],
+    "min_crawler_kN": 213.4,
+    "first_contact_s": 24.465,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.0,
+    "latch_after_contact_s": 0.63,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 404.8
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.43,
+    "FR": 102.17,
+    "RL": 57.48,
+    "RR": 51.99
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.004,
+    -0.0279
+   ],
+   "stroke_end_mm": [
+    420.83,
+    481.01,
+    407.52,
+    407.46
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 70.3,
+    "controller_estimate": 50.4,
+    "target": 50.0,
+    "true_minus_estimate": 19.9
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.1,
+     "INFO_TOUCH_DIP_HELD:FL"
+    ],
+    [
+     20.0,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     25.1,
+     "floor_estimate_touch"
+    ],
+    [
+     26.5,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     26.6,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     46.1,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     46.1,
+     "ready_heave_tail"
+    ],
+    [
+     46.4,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     48.1,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 20.3
+  },
+  {
+   "key": "main|flat|top|8.0|FR|lowered|150.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "FR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "FR",
+    "kind": "lowered",
+    "value_mm": 150.0,
+    "g_start_mm": 490.79,
+    "goff_mm": [
+     0.0,
+     149.999,
+     0.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     33.7,
+     "level"
+    ],
+    [
+     43.4,
+     "done"
+    ],
+    [
+     43.5,
+     "probe"
+    ],
+    [
+     55.4,
+     "ready"
+    ]
+   ],
+   "t_lift": 34.499999999982705,
+   "t_loc": 35.09999999998557,
+   "t_ready": 55.4000000000825,
+   "cmd_sha256": "903a5de178005bf6",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 32.6,
+    "latch_rel_s": {
+     "FL": 18.4,
+     "FR": 32.7,
+     "RL": 19.3,
+     "RR": 19.1
+    },
+    "max_abs_att_deg": [
+     0.056,
+     0.185
+    ],
+    "max_abs_att_change_deg": [
+     0.056,
+     0.079
+    ],
+    "min_crawler_kN": 213.8,
+    "first_contact_s": 33.067,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.0,
+    "latch_after_contact_s": 0.63,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 494.8
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.44,
+    "FR": 102.14,
+    "RL": 57.4,
+    "RR": 52.04
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0045,
+    -0.0315
+   ],
+   "stroke_end_mm": [
+    440.49,
+    590.69,
+    426.87,
+    426.84
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 89.8,
+    "controller_estimate": 50.5,
+    "target": 50.0,
+    "true_minus_estimate": 39.3
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     19.1,
+     "INFO_TOUCH_DIP_HELD:FL"
+    ],
+    [
+     20.0,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     33.7,
+     "floor_estimate_touch"
+    ],
+    [
+     35.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     35.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     55.4,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     55.4,
+     "ready_heave_tail"
+    ],
+    [
+     55.7,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     57.4,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 21.9
+  },
+  {
+   "key": "main|flat|top|8.0|RL|raised|5.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "raised",
+    "value_mm": 5.0,
+    "g_start_mm": 5.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     -340.727,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.7,
+     "level"
+    ],
+    [
+     39.7,
+     "done"
+    ],
+    [
+     39.8,
+     "probe"
+    ],
+    [
+     51.7,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.59999999999501,
+   "t_loc": 22.19999999999361,
+   "t_ready": 51.70000000006483,
+   "cmd_sha256": "f7e98c5662e9d8e4",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 18.2,
+     "FR": 17.9,
+     "RL": 1.2,
+     "RR": 19.7
+    },
+    "max_abs_att_deg": [
+     0.067,
+     0.341
+    ],
+    "max_abs_att_change_deg": [
+     0.067,
+     0.162
+    ],
+    "min_crawler_kN": 207.0,
+    "first_contact_s": 1.597,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.1,
+    "latch_after_contact_s": 0.6,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.5,
+      5.1,
+      4.3,
+      3.4,
+      2.9,
+      2.5,
+      2.1,
+      1.8,
+      11.6,
+      4.9
+     ],
+     "work_on_detrended_load_J": 2.2
+    },
+    "stroke_at_latch_mm": 14.3
+   },
+   "capped_legs": [
+    "RL"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.54,
+    "FR": 100.25,
+    "RL": 55.0,
+    "RR": 54.13
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0057,
+    -0.025
+   ],
+   "stroke_end_mm": [
+    642.96,
+    643.07,
+    288.96,
+    629.94
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 292.4,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 241.6
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     1.9,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     2.0,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RL"
+    ],
+    [
+     20.7,
+     "floor_estimate_touch"
+    ],
+    [
+     22.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     51.7,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     51.7,
+     "ready_heave_tail"
+    ],
+    [
+     52.0,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     53.7,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 21.2
+  },
+  {
+   "key": "main|flat|top|8.0|RL|raised|20.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "raised",
+    "value_mm": 20.0,
+    "g_start_mm": 20.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     -325.727,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.8,
+     "level"
+    ],
+    [
+     39.3,
+     "done"
+    ],
+    [
+     39.4,
+     "probe"
+    ],
+    [
+     51.3,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.699999999994777,
+   "t_loc": 22.19999999999361,
+   "t_ready": 51.30000000006292,
+   "cmd_sha256": "1f1b926a102ce700",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.7,
+    "latch_rel_s": {
+     "FL": 18.2,
+     "FR": 17.9,
+     "RL": 2.4,
+     "RR": 19.8
+    },
+    "max_abs_att_deg": [
+     0.068,
+     0.346
+    ],
+    "max_abs_att_change_deg": [
+     0.067,
+     0.167
+    ],
+    "min_crawler_kN": 198.0,
+    "first_contact_s": 2.32,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.5,
+    "latch_after_contact_s": 1.08,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      9.0,
+      5.7,
+      4.8,
+      3.9,
+      3.3,
+      2.8,
+      2.4,
+      8.8,
+      10.9
+     ],
+     "work_on_detrended_load_J": 4.1
+    },
+    "stroke_at_latch_mm": 29.8
+   },
+   "capped_legs": [
+    "RL"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.54,
+    "FR": 100.26,
+    "RL": 54.99,
+    "RR": 54.13
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0041,
+    -0.0258
+   ],
+   "stroke_end_mm": [
+    632.67,
+    632.7,
+    293.6,
+    619.51
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 282.1,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 231.3
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     2.6,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     3.6,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RL"
+    ],
+    [
+     20.8,
+     "floor_estimate_touch"
+    ],
+    [
+     22.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     51.3,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     51.3,
+     "ready_heave_tail"
+    ],
+    [
+     51.6,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     53.3,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 20.3
+  },
+  {
+   "key": "main|flat|top|8.0|RL|raised|35.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "raised",
+    "value_mm": 35.0,
+    "g_start_mm": 35.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     -310.727,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.7,
+     "level"
+    ],
+    [
+     38.7,
+     "done"
+    ],
+    [
+     38.8,
+     "probe"
+    ],
+    [
+     50.7,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.59999999999501,
+   "t_loc": 22.19999999999361,
+   "t_ready": 50.70000000006006,
+   "cmd_sha256": "bdb1727a048f6ebf",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 18.2,
+     "FR": 17.9,
+     "RL": 3.1,
+     "RR": 19.7
+    },
+    "max_abs_att_deg": [
+     0.067,
+     0.339
+    ],
+    "max_abs_att_change_deg": [
+     0.067,
+     0.161
+    ],
+    "min_crawler_kN": 207.7,
+    "first_contact_s": 3.037,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.2,
+    "latch_after_contact_s": 1.06,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.4,
+      5.1,
+      4.4,
+      3.5,
+      3.0,
+      2.6,
+      2.2,
+      11.7,
+      6.1
+     ],
+     "work_on_detrended_load_J": 3.9
+    },
+    "stroke_at_latch_mm": 44.5
+   },
+   "capped_legs": [
+    "RL"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.54,
+    "FR": 100.25,
+    "RL": 55.02,
+    "RR": 54.13
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0054,
+    -0.0259
+   ],
+   "stroke_end_mm": [
+    622.33,
+    622.42,
+    298.25,
+    609.22
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 271.7,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 220.9
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     3.3,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     5.0,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RL"
+    ],
+    [
+     20.7,
+     "floor_estimate_touch"
+    ],
+    [
+     22.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     50.7,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     50.7,
+     "ready_heave_tail"
+    ],
+    [
+     51.0,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     52.7,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 20.5
+  },
+  {
+   "key": "main|flat|top|8.0|RL|raised|50.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "raised",
+    "value_mm": 50.0,
+    "g_start_mm": 50.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     -295.728,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.9,
+     "level"
+    ],
+    [
+     38.5,
+     "done"
+    ],
+    [
+     38.6,
+     "probe"
+    ],
+    [
+     50.5,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.799999999994544,
+   "t_loc": 22.399999999993145,
+   "t_ready": 50.5000000000591,
+   "cmd_sha256": "86fe1ff221aaff1c",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 18.1,
+     "FR": 17.8,
+     "RL": 3.4,
+     "RR": 19.9
+    },
+    "max_abs_att_deg": [
+     0.064,
+     0.357
+    ],
+    "max_abs_att_change_deg": [
+     0.063,
+     0.179
+    ],
+    "min_crawler_kN": 211.5,
+    "first_contact_s": 3.753,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 10.1,
+    "latch_after_contact_s": 0.65,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.9,
+      5.3,
+      4.1,
+      3.4,
+      2.7,
+      2.4,
+      2.0,
+      11.3,
+      5.2
+     ],
+     "work_on_detrended_load_J": 3.2
+    },
+    "stroke_at_latch_mm": 60.4
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.5,
+    "FR": 100.17,
+    "RL": 55.09,
+    "RR": 54.18
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0032,
+    -0.0259
+   ],
+   "stroke_end_mm": [
+    611.99,
+    611.98,
+    302.92,
+    598.79
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 261.4,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 210.6
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     4.1,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     20.9,
+     "floor_estimate_touch"
+    ],
+    [
+     22.4,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.5,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     50.5,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     50.5,
+     "ready_heave_tail"
+    ],
+    [
+     50.8,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     52.5,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 22.0
+  },
+  {
+   "key": "main|flat|top|8.0|RL|raised|55.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "raised",
+    "value_mm": 55.0,
+    "g_start_mm": 55.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     -290.728,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.9,
+     "level"
+    ],
+    [
+     38.2,
+     "done"
+    ],
+    [
+     38.3,
+     "probe"
+    ],
+    [
+     50.2,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.799999999994544,
+   "t_loc": 22.399999999993145,
+   "t_ready": 50.20000000005767,
+   "cmd_sha256": "a8e764a9ebc62f97",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 18.0,
+     "FR": 17.9,
+     "RL": 3.6,
+     "RR": 19.9
+    },
+    "max_abs_att_deg": [
+     0.044,
+     0.345
+    ],
+    "max_abs_att_change_deg": [
+     0.043,
+     0.166
+    ],
+    "min_crawler_kN": 214.2,
+    "first_contact_s": 3.993,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.3,
+    "latch_after_contact_s": 0.61,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.6,
+      5.3,
+      4.5,
+      3.6,
+      3.1,
+      2.7,
+      3.0,
+      11.1,
+      3.9
+     ],
+     "work_on_detrended_load_J": 2.5
+    },
+    "stroke_at_latch_mm": 64.6
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.51,
+    "FR": 100.21,
+    "RL": 55.06,
+    "RR": 54.17
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0002,
+    -0.0261
+   ],
+   "stroke_end_mm": [
+    608.52,
+    608.37,
+    304.42,
+    595.16
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 257.9,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 207.1
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     4.3,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     18.7,
+     "INFO_TOUCH_DIP_HELD:FL"
+    ],
+    [
+     20.9,
+     "floor_estimate_touch"
+    ],
+    [
+     22.4,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.5,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     50.2,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     50.2,
+     "ready_heave_tail"
+    ],
+    [
+     50.5,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     52.2,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 22.7
+  },
+  {
+   "key": "main|flat|top|8.0|RL|raised|80.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "raised",
+    "value_mm": 80.0,
+    "g_start_mm": 80.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     -265.728,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.8,
+     "level"
+    ],
+    [
+     37.4,
+     "done"
+    ],
+    [
+     37.5,
+     "probe"
+    ],
+    [
+     49.4,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.699999999994777,
+   "t_loc": 22.19999999999361,
+   "t_ready": 49.40000000005385,
+   "cmd_sha256": "e8a093f890470b83",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.7,
+    "latch_rel_s": {
+     "FL": 18.2,
+     "FR": 17.9,
+     "RL": 4.8,
+     "RR": 19.8
+    },
+    "max_abs_att_deg": [
+     0.069,
+     0.347
+    ],
+    "max_abs_att_change_deg": [
+     0.069,
+     0.168
+    ],
+    "min_crawler_kN": 196.8,
+    "first_contact_s": 5.188,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.4,
+    "latch_after_contact_s": 0.61,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.7,
+      5.5,
+      4.6,
+      3.6,
+      3.1,
+      2.7,
+      11.8,
+      7.0
+     ],
+     "work_on_detrended_load_J": 2.6
+    },
+    "stroke_at_latch_mm": 89.7
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.49,
+    "FR": 100.18,
+    "RL": 55.08,
+    "RR": 54.19
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0041,
+    -0.0264
+   ],
+   "stroke_end_mm": [
+    591.35,
+    591.38,
+    312.23,
+    578.14
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 240.7,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 189.9
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     5.5,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     20.8,
+     "floor_estimate_touch"
+    ],
+    [
+     22.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     49.4,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     49.4,
+     "ready_heave_tail"
+    ],
+    [
+     49.7,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     51.4,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 25.3
+  },
+  {
+   "key": "main|flat|top|8.0|RL|raised|100.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "raised",
+    "value_mm": 100.0,
+    "g_start_mm": 100.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     -245.728,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.9,
+     "level"
+    ],
+    [
+     36.8,
+     "done"
+    ],
+    [
+     36.9,
+     "probe"
+    ],
+    [
+     48.8,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.799999999994544,
+   "t_loc": 22.399999999993145,
+   "t_ready": 48.800000000050986,
+   "cmd_sha256": "0fec8566ce2ef0d8",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 18.0,
+     "FR": 17.9,
+     "RL": 6.2,
+     "RR": 19.9
+    },
+    "max_abs_att_deg": [
+     0.046,
+     0.337
+    ],
+    "max_abs_att_change_deg": [
+     0.045,
+     0.158
+    ],
+    "min_crawler_kN": 218.8,
+    "first_contact_s": 6.143,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.0,
+    "latch_after_contact_s": 1.06,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.2,
+      5.0,
+      4.2,
+      3.5,
+      2.9,
+      4.5,
+      10.9,
+      4.6
+     ],
+     "work_on_detrended_load_J": 3.9
+    },
+    "stroke_at_latch_mm": 109.3
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.5,
+    "FR": 100.2,
+    "RL": 55.08,
+    "RR": 54.2
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0003,
+    -0.0263
+   ],
+   "stroke_end_mm": [
+    577.51,
+    577.36,
+    318.4,
+    564.14
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 226.9,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 176.2
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     6.4,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     18.8,
+     "INFO_TOUCH_DIP_HELD:FL"
+    ],
+    [
+     20.9,
+     "floor_estimate_touch"
+    ],
+    [
+     22.4,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.5,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     48.8,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     48.8,
+     "ready_heave_tail"
+    ],
+    [
+     49.1,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     50.8,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 24.5
+  },
+  {
+   "key": "main|flat|top|8.0|RL|raised|110.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "raised",
+    "value_mm": 110.0,
+    "g_start_mm": 110.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     -235.728,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.7,
+     "level"
+    ],
+    [
+     36.3,
+     "done"
+    ],
+    [
+     36.4,
+     "probe"
+    ],
+    [
+     48.3,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.59999999999501,
+   "t_loc": 22.19999999999361,
+   "t_ready": 48.3000000000486,
+   "cmd_sha256": "1b1b1c289f98059c",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 18.2,
+     "FR": 17.9,
+     "RL": 6.7,
+     "RR": 19.7
+    },
+    "max_abs_att_deg": [
+     0.069,
+     0.345
+    ],
+    "max_abs_att_change_deg": [
+     0.069,
+     0.166
+    ],
+    "min_crawler_kN": 205.7,
+    "first_contact_s": 6.621,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.5,
+    "latch_after_contact_s": 1.08,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.9,
+      5.6,
+      4.8,
+      3.9,
+      3.2,
+      11.4,
+      6.0
+     ],
+     "work_on_detrended_load_J": 4.1
+    },
+    "stroke_at_latch_mm": 119.8
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.5,
+    "FR": 100.16,
+    "RL": 55.12,
+    "RR": 54.19
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0058,
+    -0.0272
+   ],
+   "stroke_end_mm": [
+    570.68,
+    570.78,
+    321.5,
+    557.48
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 220.1,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 169.4
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     6.9,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     20.7,
+     "floor_estimate_touch"
+    ],
+    [
+     22.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     48.3,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     48.3,
+     "ready_heave_tail"
+    ],
+    [
+     48.6,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     50.3,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 23.1
+  },
+  {
+   "key": "main|flat|top|8.0|RL|raised|200.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "raised",
+    "value_mm": 200.0,
+    "g_start_mm": 200.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     -145.728,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.7,
+     "level"
+    ],
+    [
+     33.6,
+     "done"
+    ],
+    [
+     33.7,
+     "probe"
+    ],
+    [
+     45.6,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.59999999999501,
+   "t_loc": 22.19999999999361,
+   "t_ready": 45.600000000035706,
+   "cmd_sha256": "9942ee9f79e031db",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 18.3,
+     "FR": 17.9,
+     "RL": 11.0,
+     "RR": 19.7
+    },
+    "max_abs_att_deg": [
+     0.077,
+     0.345
+    ],
+    "max_abs_att_change_deg": [
+     0.076,
+     0.166
+    ],
+    "min_crawler_kN": 199.7,
+    "first_contact_s": 10.922,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.5,
+    "latch_after_contact_s": 1.08,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.9,
+      5.7,
+      4.8,
+      10.9,
+      7.1
+     ],
+     "work_on_detrended_load_J": 4.0
+    },
+    "stroke_at_latch_mm": 209.8
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.52,
+    "FR": 100.1,
+    "RL": 55.17,
+    "RR": 54.24
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0058,
+    -0.024
+   ],
+   "stroke_end_mm": [
+    508.31,
+    508.42,
+    349.41,
+    495.39
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 157.8,
+    "controller_estimate": 50.6,
+    "target": 50.0,
+    "true_minus_estimate": 107.2
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     11.2,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     20.7,
+     "floor_estimate_touch"
+    ],
+    [
+     22.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     45.6,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     45.6,
+     "ready_heave_tail"
+    ],
+    [
+     45.9,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     47.6,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 22.1
+  },
+  {
+   "key": "main|flat|top|8.0|RL|raised|290.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "raised",
+    "value_mm": 290.0,
+    "g_start_mm": 290.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     -55.729,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.9,
+     "level"
+    ],
+    [
+     32.2,
+     "done"
+    ],
+    [
+     32.3,
+     "probe"
+    ],
+    [
+     44.2,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.799999999994544,
+   "t_loc": 22.399999999993145,
+   "t_ready": 44.20000000002902,
+   "cmd_sha256": "18ff46463e05885a",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 18.0,
+     "FR": 17.9,
+     "RL": 15.3,
+     "RR": 19.9
+    },
+    "max_abs_att_deg": [
+     0.05,
+     0.344
+    ],
+    "max_abs_att_change_deg": [
+     0.05,
+     0.166
+    ],
+    "min_crawler_kN": 215.6,
+    "first_contact_s": 15.223,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.4,
+    "latch_after_contact_s": 1.08,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.8,
+      9.6,
+      6.0
+     ],
+     "work_on_detrended_load_J": 4.0
+    },
+    "stroke_at_latch_mm": 299.7
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.49,
+    "FR": 100.13,
+    "RL": 54.81,
+    "RR": 54.23
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0005,
+    -0.0171
+   ],
+   "stroke_end_mm": [
+    445.94,
+    445.81,
+    377.61,
+    433.38
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 95.5,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 44.7
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     15.5,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     18.7,
+     "INFO_TOUCH_DIP_HELD:FL"
+    ],
+    [
+     20.9,
+     "floor_estimate_touch"
+    ],
+    [
+     22.4,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.5,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     44.2,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     44.2,
+     "ready_heave_tail"
+    ],
+    [
+     44.5,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     46.2,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 21.2
+  },
+  {
+   "key": "main|flat|top|8.0|RL|raised|320.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "raised",
+    "value_mm": 320.0,
+    "g_start_mm": 320.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     -25.729,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.6,
+     "level"
+    ],
+    [
+     31.2,
+     "done"
+    ],
+    [
+     31.3,
+     "probe"
+    ],
+    [
+     43.2,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.499999999995243,
+   "t_loc": 21.999999999994078,
+   "t_ready": 43.20000000002425,
+   "cmd_sha256": "8a1f44d8fc5ffc50",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.5,
+    "latch_rel_s": {
+     "FL": 18.3,
+     "FR": 18.0,
+     "RL": 17.3,
+     "RR": 19.6
+    },
+    "max_abs_att_deg": [
+     0.066,
+     0.308
+    ],
+    "max_abs_att_change_deg": [
+     0.066,
+     0.13
+    ],
+    "min_crawler_kN": 200.9,
+    "first_contact_s": 17.264,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 7.7,
+    "latch_after_contact_s": 1.04,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      14.7,
+      6.3
+     ],
+     "work_on_detrended_load_J": 10.1
+    },
+    "stroke_at_latch_mm": 328.0
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.56,
+    "FR": 100.08,
+    "RL": 54.92,
+    "RR": 54.28
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0039,
+    -0.0187
+   ],
+   "stroke_end_mm": [
+    425.32,
+    425.33,
+    386.86,
+    412.77
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 74.9,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 24.2
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     18.1,
+     "INFO_TOUCH_DIP_HELD:RL"
+    ],
+    [
+     20.6,
+     "floor_estimate_touch"
+    ],
+    [
+     22.0,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.1,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     43.2,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     43.2,
+     "ready_heave_tail"
+    ],
+    [
+     43.5,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     45.2,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 20.9
+  },
+  {
+   "key": "main|flat|top|8.0|RL|lowered|20.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "lowered",
+    "value_mm": 20.0,
+    "g_start_mm": 365.729,
+    "goff_mm": [
+     0.0,
+     0.0,
+     20.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     21.9,
+     "level"
+    ],
+    [
+     30.1,
+     "done"
+    ],
+    [
+     30.2,
+     "probe"
+    ],
+    [
+     42.1,
+     "ready"
+    ]
+   ],
+   "t_lift": 22.59999999999268,
+   "t_loc": 23.19999999999128,
+   "t_ready": 42.100000000018994,
+   "cmd_sha256": "c3c2cc0d00efb8ad",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 20.8,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 20.9,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.017,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.018,
+     0.12
+    ],
+    "min_crawler_kN": 172.9,
+    "first_contact_s": 21.24,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.3,
+    "latch_after_contact_s": 0.66,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 366.1
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 101.04,
+    "FR": 102.17,
+    "RL": 56.4,
+    "RR": 52.46
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0017,
+    -0.0106
+   ],
+   "stroke_end_mm": [
+    411.36,
+    411.27,
+    419.49,
+    399.2
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 61.1,
+    "controller_estimate": 51.7,
+    "target": 50.0,
+    "true_minus_estimate": 9.4
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     21.9,
+     "floor_estimate_touch"
+    ],
+    [
+     23.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     23.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     42.1,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     42.1,
+     "ready_heave_tail"
+    ],
+    [
+     42.4,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     44.1,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 21.3
+  },
+  {
+   "key": "main|flat|top|8.0|RL|lowered|60.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "lowered",
+    "value_mm": 60.0,
+    "g_start_mm": 405.729,
+    "goff_mm": [
+     0.0,
+     0.0,
+     60.0,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     25.7,
+     "level"
+    ],
+    [
+     33.8,
+     "done"
+    ],
+    [
+     33.9,
+     "probe"
+    ],
+    [
+     45.8,
+     "ready"
+    ]
+   ],
+   "t_lift": 26.399999999983823,
+   "t_loc": 26.999999999982425,
+   "t_ready": 45.80000000003666,
+   "cmd_sha256": "fcb7374ba0ec83c6",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 24.6,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 24.7,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.017,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.018,
+     0.12
+    ],
+    "min_crawler_kN": 175.7,
+    "first_contact_s": 25.065,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.0,
+    "latch_after_contact_s": 0.63,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 405.9
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.72,
+    "FR": 102.23,
+    "RL": 56.64,
+    "RR": 52.14
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0017,
+    -0.0093
+   ],
+   "stroke_end_mm": [
+    419.56,
+    419.47,
+    467.8,
+    407.51
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 69.4,
+    "controller_estimate": 51.5,
+    "target": 50.0,
+    "true_minus_estimate": 17.9
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     25.7,
+     "floor_estimate_touch"
+    ],
+    [
+     27.0,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     27.1,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     45.8,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     45.8,
+     "ready_heave_tail"
+    ],
+    [
+     46.1,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     47.8,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 22.0
+  },
+  {
+   "key": "main|flat|top|8.0|RL|lowered|150.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RL",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RL",
+    "kind": "lowered",
+    "value_mm": 150.0,
+    "g_start_mm": 495.729,
+    "goff_mm": [
+     0.0,
+     0.0,
+     149.999,
+     0.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     34.3,
+     "level"
+    ],
+    [
+     42.5,
+     "done"
+    ],
+    [
+     42.6,
+     "probe"
+    ],
+    [
+     54.5,
+     "ready"
+    ]
+   ],
+   "t_lift": 34.99999999998509,
+   "t_loc": 35.59999999998796,
+   "t_ready": 54.5000000000782,
+   "cmd_sha256": "a2988b4d40e776ce",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 33.2,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 33.3,
+     "RR": 18.9
+    },
+    "max_abs_att_deg": [
+     0.017,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.018,
+     0.12
+    ],
+    "min_crawler_kN": 175.9,
+    "first_contact_s": 33.668,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.0,
+    "latch_after_contact_s": 0.63,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 495.9
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.49,
+    "FR": 102.16,
+    "RL": 56.85,
+    "RR": 52.02
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0016,
+    -0.0097
+   ],
+   "stroke_end_mm": [
+    437.97,
+    437.89,
+    576.17,
+    425.89
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 87.8,
+    "controller_estimate": 51.0,
+    "target": 50.0,
+    "true_minus_estimate": 36.8
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     34.3,
+     "floor_estimate_touch"
+    ],
+    [
+     35.6,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     35.7,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     54.5,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     54.5,
+     "ready_heave_tail"
+    ],
+    [
+     54.8,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     56.5,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 24.1
+  },
+  {
+   "key": "main|flat|top|8.0|RR|raised|5.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "raised",
+    "value_mm": 5.0,
+    "g_start_mm": 5.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     -340.717
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.7,
+     "level"
+    ],
+    [
+     39.5,
+     "done"
+    ],
+    [
+     39.6,
+     "probe"
+    ],
+    [
+     51.5,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.59999999999501,
+   "t_loc": 22.19999999999361,
+   "t_ready": 51.50000000006388,
+   "cmd_sha256": "600392abe3436704",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 17.9,
+     "FR": 18.3,
+     "RL": 19.7,
+     "RR": 1.2
+    },
+    "max_abs_att_deg": [
+     0.076,
+     0.341
+    ],
+    "max_abs_att_change_deg": [
+     0.076,
+     0.162
+    ],
+    "min_crawler_kN": 201.1,
+    "first_contact_s": 1.597,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.1,
+    "latch_after_contact_s": 0.6,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.5,
+      5.3,
+      4.3,
+      3.6,
+      3.1,
+      2.6,
+      2.2,
+      1.9,
+      11.5,
+      5.0
+     ],
+     "work_on_detrended_load_J": 2.1
+    },
+    "stroke_at_latch_mm": 14.3
+   },
+   "capped_legs": [
+    "RR"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.7,
+    "FR": 102.09,
+    "RL": 57.17,
+    "RR": 51.98
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.007,
+    -0.0256
+   ],
+   "stroke_end_mm": [
+    639.17,
+    638.83,
+    625.99,
+    284.77
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 288.3,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 237.5
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     1.9,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     2.0,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     20.7,
+     "floor_estimate_touch"
+    ],
+    [
+     22.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     51.5,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     51.5,
+     "ready_heave_tail"
+    ],
+    [
+     51.8,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     53.5,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 22.1
+  },
+  {
+   "key": "main|flat|top|8.0|RR|raised|20.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "raised",
+    "value_mm": 20.0,
+    "g_start_mm": 20.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     -325.717
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.7,
+     "level"
+    ],
+    [
+     39.0,
+     "done"
+    ],
+    [
+     39.1,
+     "probe"
+    ],
+    [
+     51.0,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.59999999999501,
+   "t_loc": 22.19999999999361,
+   "t_ready": 51.00000000006149,
+   "cmd_sha256": "92245e75c30dbb59",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 17.9,
+     "FR": 18.3,
+     "RL": 19.7,
+     "RR": 2.4
+    },
+    "max_abs_att_deg": [
+     0.076,
+     0.346
+    ],
+    "max_abs_att_change_deg": [
+     0.076,
+     0.167
+    ],
+    "min_crawler_kN": 199.6,
+    "first_contact_s": 2.32,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.5,
+    "latch_after_contact_s": 1.08,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      9.3,
+      6.0,
+      5.1,
+      3.9,
+      3.4,
+      3.0,
+      2.5,
+      8.1,
+      8.6
+     ],
+     "work_on_detrended_load_J": 3.6
+    },
+    "stroke_at_latch_mm": 29.8
+   },
+   "capped_legs": [
+    "RR"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.7,
+    "FR": 102.09,
+    "RL": 57.17,
+    "RR": 51.98
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0072,
+    -0.0262
+   ],
+   "stroke_end_mm": [
+    629.05,
+    628.7,
+    615.82,
+    289.59
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 278.2,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 227.4
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     2.6,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     3.5,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     20.7,
+     "floor_estimate_touch"
+    ],
+    [
+     22.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     51.0,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     51.0,
+     "ready_heave_tail"
+    ],
+    [
+     51.3,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     53.0,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 23.6
+  },
+  {
+   "key": "main|flat|top|8.0|RR|raised|35.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "raised",
+    "value_mm": 35.0,
+    "g_start_mm": 35.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     -310.717
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.9,
+     "level"
+    ],
+    [
+     38.7,
+     "done"
+    ],
+    [
+     38.8,
+     "probe"
+    ],
+    [
+     50.7,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.799999999994544,
+   "t_loc": 22.399999999993145,
+   "t_ready": 50.70000000006006,
+   "cmd_sha256": "80c80beff14ed013",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 17.9,
+     "FR": 18.0,
+     "RL": 19.9,
+     "RR": 3.1
+    },
+    "max_abs_att_deg": [
+     0.042,
+     0.339
+    ],
+    "max_abs_att_change_deg": [
+     0.043,
+     0.161
+    ],
+    "min_crawler_kN": 217.4,
+    "first_contact_s": 3.037,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.2,
+    "latch_after_contact_s": 1.06,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.7,
+      5.2,
+      4.5,
+      3.7,
+      3.2,
+      2.7,
+      2.3,
+      11.7,
+      5.6
+     ],
+     "work_on_detrended_load_J": 3.5
+    },
+    "stroke_at_latch_mm": 44.5
+   },
+   "capped_legs": [
+    "RR"
+   ],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.71,
+    "FR": 102.07,
+    "RL": 57.19,
+    "RR": 51.96
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0002,
+    -0.0256
+   ],
+   "stroke_end_mm": [
+    618.49,
+    618.48,
+    605.33,
+    294.41
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 267.9,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 217.1
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     3.3,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     5.0,
+     "INFO_TOUCH_FREE_AIR_CAPPED:RR"
+    ],
+    [
+     18.7,
+     "INFO_TOUCH_DIP_HELD:FR"
+    ],
+    [
+     20.9,
+     "floor_estimate_touch"
+    ],
+    [
+     22.4,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.5,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     50.7,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     50.7,
+     "ready_heave_tail"
+    ],
+    [
+     51.0,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     52.7,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 24.4
+  },
+  {
+   "key": "main|flat|top|8.0|RR|raised|50.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "raised",
+    "value_mm": 50.0,
+    "g_start_mm": 50.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     -295.717
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.8,
+     "level"
+    ],
+    [
+     38.2,
+     "done"
+    ],
+    [
+     38.3,
+     "probe"
+    ],
+    [
+     50.2,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.699999999994777,
+   "t_loc": 22.29999999999338,
+   "t_ready": 50.20000000005767,
+   "cmd_sha256": "0470db18fefc301d",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.7,
+    "latch_rel_s": {
+     "FL": 17.8,
+     "FR": 18.2,
+     "RL": 19.8,
+     "RR": 3.4
+    },
+    "max_abs_att_deg": [
+     0.075,
+     0.357
+    ],
+    "max_abs_att_change_deg": [
+     0.075,
+     0.178
+    ],
+    "min_crawler_kN": 213.1,
+    "first_contact_s": 3.753,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 10.1,
+    "latch_after_contact_s": 0.65,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      9.4,
+      5.6,
+      4.0,
+      3.4,
+      2.9,
+      2.5,
+      2.1,
+      11.1,
+      5.6
+     ],
+     "work_on_detrended_load_J": 2.9
+    },
+    "stroke_at_latch_mm": 60.4
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.62,
+    "FR": 102.05,
+    "RL": 57.23,
+    "RR": 52.05
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0058,
+    -0.0259
+   ],
+   "stroke_end_mm": [
+    608.62,
+    608.33,
+    595.43,
+    299.26
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 257.8,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 207.0
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     4.1,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     20.8,
+     "floor_estimate_touch"
+    ],
+    [
+     22.3,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.4,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     50.2,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     50.2,
+     "ready_heave_tail"
+    ],
+    [
+     50.5,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     52.2,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 25.2
+  },
+  {
+   "key": "main|flat|top|8.0|RR|raised|55.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "raised",
+    "value_mm": 55.0,
+    "g_start_mm": 55.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     -290.717
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.9,
+     "level"
+    ],
+    [
+     38.1,
+     "done"
+    ],
+    [
+     38.2,
+     "probe"
+    ],
+    [
+     50.1,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.799999999994544,
+   "t_loc": 22.399999999993145,
+   "t_ready": 50.10000000005719,
+   "cmd_sha256": "ed98d0542ac26ac1",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 17.9,
+     "FR": 18.0,
+     "RL": 19.9,
+     "RR": 3.6
+    },
+    "max_abs_att_deg": [
+     0.046,
+     0.344
+    ],
+    "max_abs_att_change_deg": [
+     0.046,
+     0.166
+    ],
+    "min_crawler_kN": 214.8,
+    "first_contact_s": 3.993,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.3,
+    "latch_after_contact_s": 0.61,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.8,
+      5.7,
+      4.6,
+      3.8,
+      3.2,
+      2.8,
+      3.4,
+      11.1,
+      3.7
+     ],
+     "work_on_detrended_load_J": 2.3
+    },
+    "stroke_at_latch_mm": 64.6
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.66,
+    "FR": 102.05,
+    "RL": 57.23,
+    "RR": 52.02
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0002,
+    -0.0262
+   ],
+   "stroke_end_mm": [
+    604.99,
+    604.98,
+    591.79,
+    300.87
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 254.4,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 203.6
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     4.3,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     18.8,
+     "INFO_TOUCH_DIP_HELD:FR"
+    ],
+    [
+     20.9,
+     "floor_estimate_touch"
+    ],
+    [
+     22.4,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.5,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     50.1,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     50.1,
+     "ready_heave_tail"
+    ],
+    [
+     50.4,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     52.1,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 25.2
+  },
+  {
+   "key": "main|flat|top|8.0|RR|raised|80.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "raised",
+    "value_mm": 80.0,
+    "g_start_mm": 80.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     -265.717
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.7,
+     "level"
+    ],
+    [
+     37.1,
+     "done"
+    ],
+    [
+     37.2,
+     "probe"
+    ],
+    [
+     49.1,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.59999999999501,
+   "t_loc": 22.19999999999361,
+   "t_ready": 49.10000000005242,
+   "cmd_sha256": "462fd6aea46e443b",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 17.9,
+     "FR": 18.3,
+     "RL": 19.7,
+     "RR": 4.8
+    },
+    "max_abs_att_deg": [
+     0.077,
+     0.346
+    ],
+    "max_abs_att_change_deg": [
+     0.077,
+     0.167
+    ],
+    "min_crawler_kN": 199.0,
+    "first_contact_s": 5.188,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.4,
+    "latch_after_contact_s": 0.61,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.9,
+      5.8,
+      4.6,
+      3.8,
+      3.3,
+      2.8,
+      11.4,
+      6.4
+     ],
+     "work_on_detrended_load_J": 2.4
+    },
+    "stroke_at_latch_mm": 89.7
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.6,
+    "FR": 102.07,
+    "RL": 57.22,
+    "RR": 52.08
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0071,
+    -0.0268
+   ],
+   "stroke_end_mm": [
+    588.41,
+    588.07,
+    575.14,
+    308.92
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 237.6,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 186.8
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     5.5,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     20.7,
+     "floor_estimate_touch"
+    ],
+    [
+     22.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     49.1,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     49.1,
+     "ready_heave_tail"
+    ],
+    [
+     49.4,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     51.1,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 26.8
+  },
+  {
+   "key": "main|flat|top|8.0|RR|raised|100.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "raised",
+    "value_mm": 100.0,
+    "g_start_mm": 100.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     -245.717
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.8,
+     "level"
+    ],
+    [
+     36.6,
+     "done"
+    ],
+    [
+     36.7,
+     "probe"
+    ],
+    [
+     48.6,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.699999999994777,
+   "t_loc": 22.29999999999338,
+   "t_ready": 48.60000000005003,
+   "cmd_sha256": "536173a351f6598d",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.7,
+    "latch_rel_s": {
+     "FL": 17.9,
+     "FR": 18.1,
+     "RL": 19.8,
+     "RR": 6.2
+    },
+    "max_abs_att_deg": [
+     0.055,
+     0.337
+    ],
+    "max_abs_att_change_deg": [
+     0.056,
+     0.158
+    ],
+    "min_crawler_kN": 214.3,
+    "first_contact_s": 6.143,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.0,
+    "latch_after_contact_s": 1.06,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      8.7,
+      5.2,
+      4.4,
+      3.7,
+      3.2,
+      5.1,
+      11.4
+     ],
+     "work_on_detrended_load_J": 3.5
+    },
+    "stroke_at_latch_mm": 109.3
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.63,
+    "FR": 102.06,
+    "RL": 57.24,
+    "RR": 52.05
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0019,
+    -0.0266
+   ],
+   "stroke_end_mm": [
+    574.62,
+    574.52,
+    561.38,
+    315.37
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 224.0,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 173.2
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     6.4,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     20.8,
+     "floor_estimate_touch"
+    ],
+    [
+     22.3,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.4,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     48.6,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     48.6,
+     "ready_heave_tail"
+    ],
+    [
+     48.9,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     50.6,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 26.1
+  },
+  {
+   "key": "main|flat|top|8.0|RR|raised|110.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "raised",
+    "value_mm": 110.0,
+    "g_start_mm": 110.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     -235.717
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.7,
+     "level"
+    ],
+    [
+     36.2,
+     "done"
+    ],
+    [
+     36.3,
+     "probe"
+    ],
+    [
+     48.2,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.59999999999501,
+   "t_loc": 22.19999999999361,
+   "t_ready": 48.20000000004812,
+   "cmd_sha256": "009c734ef0e4d263",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.6,
+    "latch_rel_s": {
+     "FL": 17.9,
+     "FR": 18.3,
+     "RL": 19.7,
+     "RR": 6.7
+    },
+    "max_abs_att_deg": [
+     0.077,
+     0.345
+    ],
+    "max_abs_att_change_deg": [
+     0.078,
+     0.167
+    ],
+    "min_crawler_kN": 200.7,
+    "first_contact_s": 6.621,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.5,
+    "latch_after_contact_s": 1.08,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      9.3,
+      6.0,
+      5.1,
+      3.9,
+      3.4,
+      10.7,
+      6.9
+     ],
+     "work_on_detrended_load_J": 3.7
+    },
+    "stroke_at_latch_mm": 119.8
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.59,
+    "FR": 102.07,
+    "RL": 57.24,
+    "RR": 52.09
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.007,
+    -0.0276
+   ],
+   "stroke_end_mm": [
+    568.14,
+    567.81,
+    554.8,
+    318.58
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 217.3,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 166.6
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     6.9,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     20.7,
+     "floor_estimate_touch"
+    ],
+    [
+     22.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     48.2,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     48.2,
+     "ready_heave_tail"
+    ],
+    [
+     48.5,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     50.2,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 25.8
+  },
+  {
+   "key": "main|flat|top|8.0|RR|raised|200.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "raised",
+    "value_mm": 200.0,
+    "g_start_mm": 200.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     -145.717
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.9,
+     "level"
+    ],
+    [
+     33.7,
+     "done"
+    ],
+    [
+     33.8,
+     "probe"
+    ],
+    [
+     45.7,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.799999999994544,
+   "t_loc": 22.399999999993145,
+   "t_ready": 45.700000000036184,
+   "cmd_sha256": "895f88acd520841a",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 17.9,
+     "FR": 18.0,
+     "RL": 19.9,
+     "RR": 11.0
+    },
+    "max_abs_att_deg": [
+     0.046,
+     0.345
+    ],
+    "max_abs_att_change_deg": [
+     0.046,
+     0.166
+    ],
+    "min_crawler_kN": 215.1,
+    "first_contact_s": 10.922,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.5,
+    "latch_after_contact_s": 1.08,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      9.3,
+      6.0,
+      5.1,
+      10.8,
+      5.7
+     ],
+     "work_on_detrended_load_J": 3.6
+    },
+    "stroke_at_latch_mm": 209.8
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.55,
+    "FR": 102.06,
+    "RL": 57.27,
+    "RR": 52.1
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0,
+    -0.0226
+   ],
+   "stroke_end_mm": [
+    506.4,
+    506.39,
+    493.51,
+    347.58
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 155.9,
+    "controller_estimate": 50.6,
+    "target": 50.0,
+    "true_minus_estimate": 105.3
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     11.2,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     18.7,
+     "INFO_TOUCH_DIP_HELD:FR"
+    ],
+    [
+     20.9,
+     "floor_estimate_touch"
+    ],
+    [
+     22.4,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.5,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     45.7,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     45.7,
+     "ready_heave_tail"
+    ],
+    [
+     46.0,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     47.7,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 24.9
+  },
+  {
+   "key": "main|flat|top|8.0|RR|raised|290.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "raised",
+    "value_mm": 290.0,
+    "g_start_mm": 290.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     -55.718
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.9,
+     "level"
+    ],
+    [
+     32.2,
+     "done"
+    ],
+    [
+     32.3,
+     "probe"
+    ],
+    [
+     44.2,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.799999999994544,
+   "t_loc": 22.399999999993145,
+   "t_ready": 44.20000000002902,
+   "cmd_sha256": "4d94876808be60a6",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.8,
+    "latch_rel_s": {
+     "FL": 17.9,
+     "FR": 18.0,
+     "RL": 19.9,
+     "RR": 15.3
+    },
+    "max_abs_att_deg": [
+     0.053,
+     0.345
+    ],
+    "max_abs_att_change_deg": [
+     0.053,
+     0.166
+    ],
+    "min_crawler_kN": 216.6,
+    "first_contact_s": 15.223,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 9.4,
+    "latch_after_contact_s": 1.08,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      9.2,
+      9.3,
+      6.2
+     ],
+     "work_on_detrended_load_J": 3.6
+    },
+    "stroke_at_latch_mm": 299.7
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.52,
+    "FR": 102.1,
+    "RL": 57.06,
+    "RR": 52.07
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0001,
+    -0.0171
+   ],
+   "stroke_end_mm": [
+    445.21,
+    445.2,
+    432.79,
+    376.86
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 94.9,
+    "controller_estimate": 50.8,
+    "target": 50.0,
+    "true_minus_estimate": 44.1
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     15.5,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     18.7,
+     "INFO_TOUCH_DIP_HELD:FR"
+    ],
+    [
+     20.9,
+     "floor_estimate_touch"
+    ],
+    [
+     22.4,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.5,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     44.2,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     44.2,
+     "ready_heave_tail"
+    ],
+    [
+     44.5,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     46.2,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 23.5
+  },
+  {
+   "key": "main|flat|top|8.0|RR|raised|320.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "raised",
+    "value_mm": 320.0,
+    "g_start_mm": 320.0,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     -25.718
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.6,
+     "level"
+    ],
+    [
+     31.3,
+     "done"
+    ],
+    [
+     31.4,
+     "probe"
+    ],
+    [
+     43.3,
+     "ready"
+    ]
+   ],
+   "t_lift": 21.499999999995243,
+   "t_loc": 21.999999999994078,
+   "t_ready": 43.300000000024724,
+   "cmd_sha256": "73f1f0b60dfd76ae",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 19.5,
+    "latch_rel_s": {
+     "FL": 18.0,
+     "FR": 18.3,
+     "RL": 19.6,
+     "RR": 17.8
+    },
+    "max_abs_att_deg": [
+     0.068,
+     0.309
+    ],
+    "max_abs_att_change_deg": [
+     0.069,
+     0.13
+    ],
+    "min_crawler_kN": 198.6,
+    "first_contact_s": 17.264,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 8.2,
+    "latch_after_contact_s": 1.54,
+    "leg_oscillation": {
+     "half_pp_detrended_per_2s_kN": [
+      13.8,
+      6.8
+     ],
+     "work_on_detrended_load_J": 4.6
+    },
+    "stroke_at_latch_mm": 328.5
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 100.48,
+    "FR": 102.13,
+    "RL": 57.01,
+    "RR": 52.07
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    0.0042,
+    -0.0185
+   ],
+   "stroke_end_mm": [
+    425.12,
+    424.92,
+    412.58,
+    386.48
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 74.6,
+    "controller_estimate": 50.7,
+    "target": 50.0,
+    "true_minus_estimate": 23.9
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     18.0,
+     "INFO_TOUCH_DIP_HELD:RR"
+    ],
+    [
+     20.6,
+     "floor_estimate_touch"
+    ],
+    [
+     22.0,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     22.1,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     43.3,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     43.3,
+     "ready_heave_tail"
+    ],
+    [
+     43.6,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     45.3,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 24.1
+  },
+  {
+   "key": "main|flat|top|8.0|RR|lowered|20.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "lowered",
+    "value_mm": 20.0,
+    "g_start_mm": 365.718,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     20.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     21.9,
+     "level"
+    ],
+    [
+     30.1,
+     "done"
+    ],
+    [
+     30.2,
+     "probe"
+    ],
+    [
+     42.1,
+     "ready"
+    ]
+   ],
+   "t_lift": 22.59999999999268,
+   "t_loc": 23.19999999999128,
+   "t_ready": 42.100000000018994,
+   "cmd_sha256": "5ba4b7d37c8e2647",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 20.8,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 20.9
+    },
+    "max_abs_att_deg": [
+     0.017,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.016,
+     0.119
+    ],
+    "min_crawler_kN": 173.3,
+    "first_contact_s": 21.241,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.2,
+    "latch_after_contact_s": 0.66,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 366.1
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 103.12,
+    "FR": 100.08,
+    "RL": 54.3,
+    "RR": 54.71
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0021,
+    -0.0106
+   ],
+   "stroke_end_mm": [
+    411.39,
+    411.32,
+    399.33,
+    419.44
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 61.2,
+    "controller_estimate": 51.7,
+    "target": 50.0,
+    "true_minus_estimate": 9.5
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     21.9,
+     "floor_estimate_touch"
+    ],
+    [
+     23.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     23.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     42.1,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     42.1,
+     "ready_heave_tail"
+    ],
+    [
+     42.4,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     44.1,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 21.0
+  },
+  {
+   "key": "main|flat|top|8.0|RR|lowered|60.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "lowered",
+    "value_mm": 60.0,
+    "g_start_mm": 405.718,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     60.0
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     25.7,
+     "level"
+    ],
+    [
+     33.8,
+     "done"
+    ],
+    [
+     33.9,
+     "probe"
+    ],
+    [
+     45.8,
+     "ready"
+    ]
+   ],
+   "t_lift": 26.399999999983823,
+   "t_loc": 26.999999999982425,
+   "t_ready": 45.80000000003666,
+   "cmd_sha256": "38ee15fee15fca27",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 24.6,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 24.7
+    },
+    "max_abs_att_deg": [
+     0.017,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.016,
+     0.119
+    ],
+    "min_crawler_kN": 176.1,
+    "first_contact_s": 25.066,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.0,
+    "latch_after_contact_s": 0.63,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 405.9
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.82,
+    "FR": 100.19,
+    "RL": 54.27,
+    "RR": 54.41
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0025,
+    -0.0093
+   ],
+   "stroke_end_mm": [
+    419.63,
+    419.59,
+    407.69,
+    467.81
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 69.4,
+    "controller_estimate": 51.5,
+    "target": 50.0,
+    "true_minus_estimate": 17.9
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     25.7,
+     "floor_estimate_touch"
+    ],
+    [
+     27.0,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     27.1,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     45.8,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     45.8,
+     "ready_heave_tail"
+    ],
+    [
+     46.1,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     47.8,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 23.7
+  },
+  {
+   "key": "main|flat|top|8.0|RR|lowered|150.0",
+   "floor": "flat",
+   "level": "top",
+   "fs_kN": 8.0,
+   "leg": "RR",
+   "info": {
+    "g0_mm": [
+     340.802,
+     340.79,
+     345.729,
+     345.718
+    ],
+    "leg": "RR",
+    "kind": "lowered",
+    "value_mm": 150.0,
+    "g_start_mm": 495.718,
+    "goff_mm": [
+     0.0,
+     0.0,
+     0.0,
+     149.999
+    ]
+   },
+   "timeline": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     34.3,
+     "level"
+    ],
+    [
+     42.5,
+     "done"
+    ],
+    [
+     42.6,
+     "probe"
+    ],
+    [
+     54.5,
+     "ready"
+    ]
+   ],
+   "t_lift": 34.99999999998509,
+   "t_loc": 35.59999999998796,
+   "t_ready": 54.5000000000782,
+   "cmd_sha256": "08caece385b2487a",
+   "touch": {
+    "start_s": 1.0,
+    "duration_s": 33.2,
+    "latch_rel_s": {
+     "FL": 18.7,
+     "FR": 18.7,
+     "RL": 18.9,
+     "RR": 33.3
+    },
+    "max_abs_att_deg": [
+     0.017,
+     0.179
+    ],
+    "max_abs_att_change_deg": [
+     0.016,
+     0.119
+    ],
+    "min_crawler_kN": 176.2,
+    "first_contact_s": 33.669,
+    "first_contact_phase": "touch",
+    "post_contact_stroke_mm": 4.0,
+    "latch_after_contact_s": 0.63,
+    "leg_oscillation": null,
+    "stroke_at_latch_mm": 495.9
+   },
+   "capped_legs": [],
+   "min_F_after_liftoff_kN": {
+    "FL": 102.55,
+    "FR": 100.11,
+    "RL": 54.68,
+    "RR": 54.24
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_deg": [
+    -0.0024,
+    -0.0097
+   ],
+   "stroke_end_mm": [
+    438.16,
+    438.11,
+    426.18,
+    576.3
+   ],
+   "crawler_clearance_end_mm": {
+    "true": 87.9,
+    "controller_estimate": 51.0,
+    "target": 50.0,
+    "true_minus_estimate": 36.9
+   },
+   "gates": {
+    "Fmin_plus5": true,
+    "no_lift": true,
+    "end_att": true,
+    "ready": true,
+    "fault0": true,
+    "stroke_end": true,
+    "crawler_clear": true
+   },
+   "flags": [],
+   "escalate": [],
+   "pass": true,
+   "final_phase": "ready",
+   "events": [
+    [
+     34.3,
+     "floor_estimate_touch"
+    ],
+    [
+     35.6,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     35.7,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     54.5,
+     "reanchor_skipped:disabled"
+    ],
+    [
+     54.5,
+     "ready_heave_tail"
+    ],
+    [
+     54.8,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     56.5,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "wall_s": 21.9
+  }
+ ]
+}

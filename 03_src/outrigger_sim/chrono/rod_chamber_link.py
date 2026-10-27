@@ -402,11 +402,15 @@ def _contact_damping_N_s_m(model: Any, ground_bodies: Sequence[ch.ChBody]) -> ND
 
 
 def _patch_bodies_by_leg(model: Any) -> tuple[ch.ChBody | None, ...]:
-    """The settlement patch body under each leg's pad (LEG_ORDER), None on the fixed floor."""
+    """The settlement patch body (or C-S8-76 block body, ``chrono/pad_block``) under each leg's
+    pad (LEG_ORDER), None on the fixed floor."""
     settlement = getattr(model, "settlement", None)
     by_name: dict[str, ch.ChBody] = {}
     if settlement is not None:
         by_name = dict(zip(settlement.leg_names, settlement.bodies, strict=True))
+    blocks = getattr(model, "pad_blocks", None)
+    if blocks is not None:
+        by_name.update(blocks.bodies)
     return tuple(by_name.get(name) for name in LEG_ORDER[: len(model.legs)])
 
 

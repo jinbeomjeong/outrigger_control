@@ -2,17 +2,29 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-10-27 20:05 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 67·68: 커버리지 G1·G2·G7 스크린, C-S8-72~75 판정, P-S8-26·27(TOUCH 자유공기 상한·래치 골 허용), 판정기 U-S8-74·75, S9 J1 인수 합격**). 그 전: e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 V-5 ③′ 통과·V-1~V-5 종결, 개정 63), 7b4de6f(S9 완료·V-3~V-5 개정 62), 0941c0c(P-S8-22 merge), e9a6ea4(S9 P3b 판정), 6791c36(사용자: paper-reviewer 추가)
+- 갱신: 2026-10-27 22:50 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 69~71: G8(비평면 시작)·G5 잔여 스크린, C-S8-76 Chrono(패드 아래 블록), P-S8-28(LOC 기준 틈·행정 예산 가드·`FAULT_STROKE_END`·행정 끝 재접지) 구현·인수**). 그 전: 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
 - 세션 기록: 일반 Windows 터미널에서 `claude`를 직접 실행한다(2026-10-26 결정).
 
-## 남은 정리 (이 커밋 뒤, 사용자 확인 필요)
+## 이번 커밋에서 바뀐 것 (7862ef6 이후)
 
-- 작업 트리 정리: `.claude/worktrees/agent-acc9eadf7f3760ab1`(cb292e8 detached, 메인 파일 사본·states 미커밋 복사본 있음)와 브랜치 `worktree-agent-acc9eadf7f3760ab1`(cb292e8 P-S8-26, 4790e2b P-S8-27 — 둘 다 이 커밋에 반영됨) → 사용자 확인 받고 `git worktree remove --force` + `git branch -D`.
-- 점검용 결과 폴더(`07_results`, git 제외) `c72smoke_*`·`c75chk_*`·`bundleC_ps7r8_check_*` 정리 여부 확인.
-- control 확인 항목(python-expert 린트 지적, 결과 영향 없음): `04_scripts/03_control/s8/r68_p27_screen.py` `oscillation()`이 진폭 `half_pp_per_2s_kN`을 추세 제거 신호가 아니라 원 신호로 잰다(쓰지 않던 추세 제거 변수는 지움). 의도 확인. `r68_c75c_j1_judge.py` 빈 창 경계 조건 3곳(이번 데이터 무관).
+1. **정리(7862ef6 직후, 사용자 확인)**: worktree `agent-acc9eadf7f3760ab1`·브랜치 삭제(미커밋 파일 20개는 메인과 같거나 메인이 최신), 점검 폴더 `c72smoke_*`·`c75chk_*`·`bundleC_ps7r8_check_*` 삭제. 저장소 브랜치는 master 하나.
+2. **진동 진폭 정의 정정(명세 359절)**: `r68_p27_screen.py`·`r68_c73_rocking.py`에 추세 제거 진폭 열 `half_pp_detrended_per_2s_kN` 추가(기존 키 불변, python). 개정 68 351.1·356.1 인용 정정, 결론 불변.
+3. **개정 69(359~365)**: G8(비평면 시작) 400 + G5 잔여($F_s$ 2·4) 384 축소 스크린(9단위 P 8 + E 12, 20:20~20:33). 평지 336/336 합격, 경사 + 한 패드 둔덕에서 크롤러 틈 추정(네 패드 평면 맞춤, 오차 3h/4)이 뜬 크롤러를 모자라게 읽어 아래 다리 행정 끝 FAULT 26·대각 부상 13. G5 B형 0 → 닫음. U-S8-78 = (가)+(나), U-S8-79 = 재접지 뒤 FAULT(사용자 결정).
+4. **개정 70(366~370)**: C-S8-76(cad) — `03_src/outrigger_sim/chrono/pad_block.py`(새), `chrono/model.py` `pad_blocks`, `rod_chamber_link.py`, `run_S6C.py`(경사 `edge`·스냅숏 `S6_crawler_top_edge.npz`·집합 `g8c76`·`g8c76_p28`·`g8c76_p28acc`·`judge-g8`·크롤러 구 틈 기록·FAULT 뒤 끝 규칙), `s6_stage2.py`, `verify/s6_control.py`(g8 행, 행정 관문 = 실행 중 최대값, P-S8-28 사건 열). Chrono C1·C2(L1-R $F_s$ 0, `07_results/S6/bundleC_g8c76_c76_L1R_20261027_211309`) 하네스와 ≤ 0.2 mm 일치 → 하네스 타당. P-S8-28 후보 9개 비교 → AG2c5 채택(평지 342 확인 뒤 사용자 결정).
+5. **개정 71(371~374)**: P-S8-28 구현(python, `c2.py`·`fault_reground.py`, R8 프리셋만, 시험 `test_c2_p28.py` 24 + unit 2692 통과). 하네스 해시 경사 174/174·평지 342/342, Chrono 인수(`07_results/S6/bundleC_g8c76_p28acc_p28_L1R_20261027_222426`) 40행 실패 0. V-3·r8d1 기준(`07_results/S9/v3/`, git 제외) 갱신: 차이 39 + 4 = P-S8-27 수용분(`INFO_TOUCH_DIP_HELD` 실행과 완전 일치), 옛 기준 `history/*_pre_p27.json`. `run_S8C.py` 토양 복원 앵커 거부를 `SoilStateRestoreError`로 통일(cad, 시험 6건, unit 2698 통과).
+6. 문서: 명세 개정 69~71, decision_log 4줄, 로드맵 6절 1·6번, CLAUDE.md 제어기 행(P-S8-28, 개정 30~71)·미정 사항 커버리지 공백(G3·G6만 남음), 색인. 커밋 전 무결성 점검 Medium 2·Low 6 모두 고침.
+7. 분석: `04_scripts/03_control/s8/r69_*`(g8_screen·g5_screen·table·judge·g8_xcheck)·`r70_*`(p28_screen·judge·c76_harness), 결과 `06_analysis/02_control/s8/rev69/`·`rev70/`. 시험 `test_s6_c_s8_76.py`·`05_tests/chrono/test_pad_block.py`·`test_c2_p28.py`·`test_s8_soil_restore.py`.
 
-## 이번 커밋에서 바뀐 것 (e8ef7df 이후)
+## 다음 할 일 (권장 순서)
+
+1. **G6(SCM 한 패드 연약부) 스크린**: s9 하네스 `SoilPads`를 다리별 토양 세트로 확장(control 설계: 한 패드 J1·J2·S1 / 나머지 G1·rigid × 다리 4 × 상·하단 × $F_s$ 0·4, 약 96실행). P-S8-28 앵커가 패드별 침하로 작동할 수 있으니 앵커·참 틈·끝 자세·$t_P$ 표본을 함께 본다(명세 374).
+2. **G3(앞 다리 사건 + 그 다리 로드 고장)**: 축소 하네스에 로드 판독 고장 주입 추가, 사건 FL·FR × G4·RE1bF·FS24 × 고장 시각 3 × $F_s$ 0·8, 약 72실행.
+3. control: `r70_judge.py` 하네스 집계 행정 관문을 실행 중 최대값으로(366 정정 반영).
+4. 선택: C-S8-76 C5(L2b G5 A형 후보 0.5 s 평균 확인, 약 13분).
+5. 나중: 크롤러 재접촉 합성 사례(322.2), U-S8-57·DONE 꼬리 감시(계속).
+
+## 7862ef6에서 바뀐 것
 
 1. **C-S8-75 C(S9 J1) 합격**(명세 358.8): `07_results/S9/batch_P3b_20261027_174330`(`P3b_J1_B_top_Fs0`·`Fs4`, rc 0 ×2, 19:39·19:41 끝, 벽시계 6,983 / 7,061 s). P3 판정 행 전부 통과(P3-4 0.0558° / 0.0423°, P3-3 68.06 / 68.17 kN), FLAG 0, CAPPED·DIP_HELD 0회, 10 Hz 지령이 10-26 배치와 비트 동일. A·B·C 합격 → P-S8-27 인수 완료. 판정 `04_scripts/03_control/s8/r68_c75c_j1_judge.py`, 결과 `06_analysis/02_control/s8/rev68/c75c_j1_judgement.json`·`c75c_j1_baseline_20261026.json`. CLAUDE.md 제어기 행 갱신(개정 30~68). 2차 무결성 점검 Medium 2·Low 5 모두 고침, python-expert 린트(쓰지 않는 import·변수 제거, 판정 출력 비트 동일).
 2. **이전 미커밋 작업**: 명세 개정 67(341~347, G1·G2·G7 스크린, U-S8-73)·68(348~358: C-S8-72·73·74·75 판정, U-S8-74~77). 제어기 `c2.py` P-S8-26(`touch_free_air_cap_excess_N` (8000,8000,6666.4,6666.4), `INFO_TOUCH_FREE_AIR_CAPPED`)·P-S8-27(`touch_hold_dip_samples` 2, `INFO_TOUCH_DIP_HELD`, R8 프리셋만). 판정기 `verify/s8_control.py` G1 행·U-S8-74(0.5 s 평균 + 부상 없음)·U-S8-75 (나) 예외(F_s < 2 kN·상단·전방 빠른 사건, ≤ 0.1 s·≤ 0.5 mm), `s6_control.py` PS-7 판정, `s6_bundle_c.py` 사전 접지 스냅숏 허용. 실행기 `run_S8C.py`(집합 g1·c74·c75, `e6` 레이아웃, 메타 키), `run_S6C.py`(ps7r8, `--tag`, 메타 키), `s6_stage2.py`(사전 접지 스냅숏). 시험 `test_c_s8_72.py`·`test_s8_u74.py`·`test_s8_u75.py`·`test_c2_r8d1.py`·`test_s8_c_s8_68.py`(unit 약 2640 통과). 분석 `04_scripts/03_control/s8/r67_*`·`r68_*`, 결과 `06_analysis/02_control/s8/rev67/`·`rev68/`, 새 스냅숏 `07_results/states_L1R/S6_crawler_top_flat_FLpre.npz`. Chrono 결과 폴더: S8 `c72_20261027_155426`·`c74_20261027_164128`·`c75_4790e2b_…174330`·`c75_cb292e8_…174330`, S6 `bundleC_ps7r8_L1R_20261027_160512`·`bundleC_ps7r8_c73_L1R_20261027_161914`·`bundleC_ps7r8_c75_L1R_20261027_174330`, 점검용 `c72smoke_*`·`c75chk_*`·`bundleC_ps7r8_check_*`(커밋 전 정리 여부 확인). 1차 무결성 점검(18:10) Medium 3·Low 4는 색인 재생성 외 모두 고침.
@@ -30,7 +42,7 @@
 - **P-S8-22(R-5 대체 다리 기울기) V-1~V-5 종결**: master merge 0941c0c, V-3 통과, V-4 실행, V-5 ①②④ 통과·③ 판정 불가 → U-S8-67 = (나) 양성 시험 ③′(C-S8-67) **통과**. 명세 `s6_control_spec.md` 개정 62(316~317.1절)·**개정 63(318~319절)**.
 - worktree `.claude/worktrees/agent-a42ab63c487597861`과 병합된 브랜치 3개(`worktree-agent-a42ab63c487597861`·`-a21e7da9d589ffc9b`·`-ac4ca09081d79438a`)는 **정리 완료**(2026-10-27, 사용자 확인; 브랜치는 `git branch -d`). 저장소 브랜치는 master 하나.
 
-- **다리 부상·대각 커버리지 감사**(2026-10-27, control): R8 C2에서 네 다리 모두 Chrono 판정을 거친 것은 "READY 뒤 침하·낙하"뿐. 공백 G1(레벨링 중 사건)·G2(R8 PS-7a)·G3(앞 다리 사건 + 로드 고장)·G5~G8은 미착수(아래 다음 단계). G4(헤드 고장 + 뜬 다리)는 이번 커밋에서 닫음.
+- **다리 부상·대각 커버리지 감사**(2026-10-27, control): R8 C2에서 네 다리 모두 Chrono 판정을 거친 것은 "READY 뒤 침하·낙하"뿐. 닫힘: G4(e8ef7df), G1·G2·G7(7862ef6, 개정 67·68), G5·G8(이번 커밋, 개정 69~71). 남음: G3(앞 다리 사건 + 로드 고장)·G6(SCM 한 패드 연약부) — 위 "다음 할 일".
 
 ## e8ef7df에서 바뀐 것
 
@@ -66,7 +78,7 @@
 - **V-5(control, 명세 개정 62 316절)**: ①②④ 통과, ③ 판정 불가, 사양 미달 0. 재생 도구 결함 D-1~D-4(316.6, 우회로 판정). 303 V-2에 "S7 L2b는 F_s = 0이라 `F_cyl_no_friction`으로 재생" 명시, 304.1을 구현 기록으로. 결과 `06_analysis/02_control/s9/v5/`.
 - 문서: 명세 개정 62, decision_log(S9 단독 비용, P-S8-22 merge·V-5·U-S8-67), 로드맵, CLAUDE.md(미정 사항 "S9 뒤 계속 감시"; 정확도 행 0.119°는 앞 커밋), 색인 재생성.
 
-## 다음 단계
+## 다음 단계 (7862ef6까지의 기록, 현행은 위 "다음 할 일")
 
 A. ✅ (e8ef7df) G4 FAULT_REGROUND 닫음(명세 개정 64~66, U-S8-68~72). ✅ (이번 커밋) G1·G2·G7 스크린·Chrono 보강(개정 67·68, C-S8-72~75, P-S8-26·27). 남은 감사 후속(U-S8-71 범위): G3·G5(중간 $F_s$)·G6·G8(조기 접지 포함), 크롤러 재접촉 합성 사례(322.2, 나중 — 자세 제어 우선). 아래는 e8ef7df 당시 목록: **S9 재접촉 합성 사례**(명세 322.2 확인, control), 커버리지 공백 G1(레벨링 중 사건, 네 다리)·G2(R8 PS-7a·FL 미러·PS-7b·c)·G3(앞 다리 사건 + 그 다리 로드 고장)·G5(앞 다리 빠른 침하 × 높은 F_s)·G6(SCM 한 패드 연약부)·G7(RL·FL 전용 사례)·G8(비평면 시작) — control 감사 권고는 축소 스크린 약 200건 → Chrono 보강 배치(L2b 11 + L1-R 4~6, 약 45~60분). 뒤로 미룬 것: 밸브 불감대 잠김 판정(U-R8-9 ③④ 뒤), 착지 피크 물리 판정(hydraulics), 유연 마스트(D2 때).
 0. ✅ (3eb1220) 아래 1·2 끝: C-S8-67 실행(`07_results/S8/v5_c67_20261027_032104`, rc 0 ×2) → control V-5 ③′ 통과(명세 개정 63 318~319절, `06_analysis/02_control/s9/v5/v5_c67_judgement.json`, 판정 스크립트 `04_scripts/03_control/s8/v5_c67_judge.py`): RR R-5 t_G4+0.7/+0.6 s(짝 +0.9/+0.7), INFO:RR 14/8, 낙관 −4.00/−3.05 kN, 놓친 발동 0 → **P-S8-22 V-1~V-5 종결**. 재생 도구 D-1~D-4 해결(python, 시험 함수 14개 추가, unit 2483 통과). 3(worktree·브랜치 정리)도 끝났다.

@@ -1,0 +1,461 @@
+{
+ "script": "04_scripts/03_control/s8/r69_g8_xcheck.py",
+ "results": [
+  {
+   "key": "main|flat|top|0.0|RR|raised|55.0",
+   "cmd_sha256_A": "57f642075054f28b",
+   "t_lift_A": 21.699999999994777,
+   "t_lift_B": 21.685,
+   "D8_min_kN": [
+    48.74,
+    48.74
+   ],
+   "lift_s": [
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    },
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    }
+   ],
+   "att_end_deg": [
+    [
+     0.006,
+     -0.0273
+    ],
+    [
+     0.006,
+     -0.0273
+    ]
+   ],
+   "stroke_max_mm": [
+    604.99,
+    604.99
+   ],
+   "first_contact_s": [
+    3.98,
+    3.98
+   ],
+   "clearance_mm": [
+    {
+     "true": 247.6,
+     "controller_estimate": 50.7,
+     "target": 50.0,
+     "true_minus_estimate": 196.9
+    },
+    247.6
+   ],
+   "gates_A_vs_B": {
+    "Fmin_plus5": [
+     true,
+     true
+    ],
+    "no_lift": [
+     true,
+     true
+    ],
+    "end_att": [
+     true,
+     true
+    ],
+    "fault0": [
+     true,
+     true
+    ],
+    "stroke_end": [
+     true,
+     true
+    ]
+   },
+   "gate_verdicts_equal": true,
+   "cmd_sha256_batch": "57f642075054f28b",
+   "hash_equal_batch": true
+  },
+  {
+   "key": "main|flat|bottom|8.0|FL|raised|5.0",
+   "cmd_sha256_A": "57eccb0042a07928",
+   "t_lift_A": 20.59999999999734,
+   "t_lift_B": 20.551,
+   "D8_min_kN": [
+    51.91,
+    51.91
+   ],
+   "lift_s": [
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    },
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    }
+   ],
+   "att_end_deg": [
+    [
+     -0.0039,
+     -0.0106
+    ],
+    [
+     -0.0039,
+     -0.0106
+    ]
+   ],
+   "stroke_max_mm": [
+    653.65,
+    653.65
+   ],
+   "first_contact_s": [
+    1.595,
+    1.595
+   ],
+   "clearance_mm": [
+    {
+     "true": 297.0,
+     "controller_estimate": 50.7,
+     "target": 50.0,
+     "true_minus_estimate": 246.3
+    },
+    297.0
+   ],
+   "gates_A_vs_B": {
+    "Fmin_plus5": [
+     true,
+     true
+    ],
+    "no_lift": [
+     true,
+     true
+    ],
+    "end_att": [
+     true,
+     true
+    ],
+    "fault0": [
+     true,
+     true
+    ],
+    "stroke_end": [
+     true,
+     true
+    ]
+   },
+   "gate_verdicts_equal": true,
+   "cmd_sha256_batch": "57eccb0042a07928",
+   "hash_equal_batch": true
+  },
+  {
+   "key": "main|flat|top|4.0|FL|lowered|150.0",
+   "cmd_sha256_A": "c286a71a5c0cdef8",
+   "t_lift_A": 34.499999999982705,
+   "t_lift_B": 34.43,
+   "D8_min_kN": [
+    51.32,
+    51.32
+   ],
+   "lift_s": [
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    },
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    }
+   ],
+   "att_end_deg": [
+    [
+     0.01,
+     -0.0338
+    ],
+    [
+     0.01,
+     -0.0338
+    ]
+   ],
+   "stroke_max_mm": [
+    589.02,
+    589.02
+   ],
+   "first_contact_s": [
+    32.929,
+    32.929
+   ],
+   "clearance_mm": [
+    {
+     "true": 80.9,
+     "controller_estimate": 50.4,
+     "target": 50.0,
+     "true_minus_estimate": 30.5
+    },
+    80.9
+   ],
+   "gates_A_vs_B": {
+    "Fmin_plus5": [
+     true,
+     true
+    ],
+    "no_lift": [
+     true,
+     true
+    ],
+    "end_att": [
+     true,
+     true
+    ],
+    "fault0": [
+     true,
+     true
+    ],
+    "stroke_end": [
+     true,
+     true
+    ]
+   },
+   "gate_verdicts_equal": true,
+   "cmd_sha256_batch": "c286a71a5c0cdef8",
+   "hash_equal_batch": true
+  },
+  {
+   "key": "slope|edge|top|4.0|FL|raised|170.0",
+   "cmd_sha256_A": "46d633a0dd1af664",
+   "t_lift_A": 20.89999999999664,
+   "t_lift_B": 20.806,
+   "D8_min_kN": [
+    54.45,
+    53.66
+   ],
+   "lift_s": [
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    },
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 0.0,
+     "RR": 0.0
+    }
+   ],
+   "att_end_deg": [
+    [
+     -0.0168,
+     -0.0097
+    ],
+    [
+     -0.0168,
+     -0.0097
+    ]
+   ],
+   "stroke_max_mm": [
+    686.09,
+    686.09
+   ],
+   "first_contact_s": [
+    9.497,
+    9.497
+   ],
+   "clearance_mm": [
+    {
+     "true": 149.3,
+     "controller_estimate": 49.2,
+     "target": 50.0,
+     "true_minus_estimate": 100.1
+    },
+    149.3
+   ],
+   "gates_A_vs_B": {
+    "Fmin_plus5": [
+     true,
+     true
+    ],
+    "no_lift": [
+     true,
+     true
+    ],
+    "end_att": [
+     true,
+     true
+    ],
+    "fault0": [
+     true,
+     true
+    ],
+    "stroke_end": [
+     false,
+     false
+    ]
+   },
+   "gate_verdicts_equal": true,
+   "cmd_sha256_batch": "46d633a0dd1af664",
+   "hash_equal_batch": true
+  },
+  {
+   "key": "slope|edge|top|4.0|FL|raised|20.0",
+   "cmd_sha256_A": "18d66451118924bd",
+   "t_lift_A": 20.89999999999664,
+   "t_lift_B": 20.853,
+   "D8_min_kN": [
+    -0.72,
+    -0.72
+   ],
+   "lift_s": [
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 129.685,
+     "RR": 0.0
+    },
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 129.71,
+     "RR": 0.0
+    }
+   ],
+   "att_end_deg": [
+    [
+     0.623,
+     0.332
+    ],
+    [
+     0.623,
+     0.332
+    ]
+   ],
+   "stroke_max_mm": [
+    696.26,
+    696.26
+   ],
+   "first_contact_s": [
+    2.318,
+    2.318
+   ],
+   "clearance_mm": [
+    {
+     "true": 207.2,
+     "controller_estimate": 20.7,
+     "target": 50.0,
+     "true_minus_estimate": 186.5
+    },
+    207.2
+   ],
+   "gates_A_vs_B": {
+    "Fmin_plus5": [
+     false,
+     false
+    ],
+    "no_lift": [
+     false,
+     false
+    ],
+    "end_att": [
+     false,
+     false
+    ],
+    "fault0": [
+     false,
+     false
+    ],
+    "stroke_end": [
+     false,
+     false
+    ]
+   },
+   "gate_verdicts_equal": true,
+   "cmd_sha256_batch": "18d66451118924bd",
+   "hash_equal_batch": true
+  },
+  {
+   "key": "slope|rpB|top|4.0|RR|raised|20.0",
+   "cmd_sha256_A": "4eb96851af48e11c",
+   "t_lift_A": 23.399999999990815,
+   "t_lift_B": 23.377,
+   "D8_min_kN": [
+    -0.72,
+    -0.72
+   ],
+   "lift_s": [
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 126.789,
+     "RR": 0.0
+    },
+    {
+     "FL": 0.0,
+     "FR": 0.0,
+     "RL": 126.813,
+     "RR": 0.0
+    }
+   ],
+   "att_end_deg": [
+    [
+     0.6319,
+     0.3596
+    ],
+    [
+     0.6319,
+     0.3596
+    ]
+   ],
+   "stroke_max_mm": [
+    696.26,
+    696.26
+   ],
+   "first_contact_s": [
+    2.309,
+    2.309
+   ],
+   "clearance_mm": [
+    {
+     "true": 178.3,
+     "controller_estimate": 21.7,
+     "target": 50.0,
+     "true_minus_estimate": 156.6
+    },
+    178.3
+   ],
+   "gates_A_vs_B": {
+    "Fmin_plus5": [
+     false,
+     false
+    ],
+    "no_lift": [
+     false,
+     false
+    ],
+    "end_att": [
+     false,
+     false
+    ],
+    "fault0": [
+     false,
+     false
+    ],
+    "stroke_end": [
+     false,
+     false
+    ]
+   },
+   "gate_verdicts_equal": true,
+   "cmd_sha256_batch": "4eb96851af48e11c",
+   "hash_equal_batch": true
+  }
+ ]
+}

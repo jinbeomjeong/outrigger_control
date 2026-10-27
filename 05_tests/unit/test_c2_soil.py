@@ -686,10 +686,13 @@ def test_presets() -> None:
     assert soil.soil.enable
     assert replace(soil, soil=r8.soil) == r8
     # U-S9-C1 / U-S9-C4 (2026-10-26): the R8 preset carries both
-    assert r8.soil == SoilResponseSettings(enable=True)
+    # spec rev. 70 369.1 (P-S8-28): the R8 preset also turns the LOC anchor on
+    assert r8.soil == SoilResponseSettings(enable=True, loc_anchor_enable=True)
     assert r8.r8.lifted_reapproach.max_duration_s == MAX_DURATION_S
     custom = C2Config(soil=SoilResponseSettings(plateau_rise_max_N=3000.0)).with_10hz_d1()
-    assert custom.soil == SoilResponseSettings(enable=True, plateau_rise_max_N=3000.0)
+    assert custom.soil == SoilResponseSettings(
+        enable=True, plateau_rise_max_N=3000.0, loc_anchor_enable=True
+    )
 
 
 def aged(controller: C2Controller) -> C2Controller:

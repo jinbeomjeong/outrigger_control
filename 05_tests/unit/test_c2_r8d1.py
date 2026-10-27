@@ -292,8 +292,9 @@ def test_preset_values() -> None:
         retrigger_window_s=2.0, retrigger_speed_factor=0.6, opposite_window_s=0.8,
         opposite_strong_level_N=0.0, opposite_strong_samples=2, max_duration_s=10.0,
     )
-    # Rev. 57 285 (U-S9-C1): the soil response with its defaults.
-    assert config.soil == SoilResponseSettings(enable=True)
+    # Rev. 57 285 (U-S9-C1): the soil response with its defaults; rev. 70 369.1 (P-S8-28):
+    # with the LOC anchor on.
+    assert config.soil == SoilResponseSettings(enable=True, loc_anchor_enable=True)
     # Rev. 43 213.8 P-S8-6 (U-S8-11): TOUCH free air from moving samples.
     assert r8.touch_free_air_min_travel_m == 0.5e-3
     assert (r8.touch_free_air_min_samples, r8.touch_seen_samples) == (3, 2)
@@ -316,7 +317,8 @@ def test_preset_values() -> None:
         crawler_recontact_watch=True,
         suspend_steps_after_head_fault=True,
     )
-    # Rev. 64 323 (U-S8-68): FAULT_REGROUND; rev. 65 332.5 (P-S8-25): its corrected keys.
+    # Rev. 64 323 (U-S8-68): FAULT_REGROUND; rev. 65 332.5 (P-S8-25): its corrected keys;
+    # rev. 70 369.4 (P-S8-28, U-S8-79): the stroke-end entry.
     assert config.fault_reground == FaultRegroundSettings(
         enable=True,
         attitude_abort=False,
@@ -324,6 +326,8 @@ def test_preset_values() -> None:
         hold_confirm_samples=10,
         own_pre_fault_cue=True,
         plane_gap_scaled=True,
+        stroke_end_entry=True,
+        stroke_end_travel_m=0.030,
     )
 
 

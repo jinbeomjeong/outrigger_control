@@ -195,6 +195,13 @@ lifted legs one at a time, then FAULT; ``control/fault_reground.py``) instead of
 Revision 65 332 (P-S8-25) corrects FAULT_REGROUND: no raw-attitude abort, contact on all four
 legs with a 1.0 s hold, faulty-leg cue (d), the scaled plane gap, and the D1 step rule
 suspended after a head fault; the preset turns these on, the class defaults keep revision 64.
+Revision 70 369 (P-S8-28, U-S8-78 / U-S8-79 of 2026-10-27), on a non-planar pad floor: the LOC
+anchors a negative corner clearance (``SoilResponseSettings.loc_anchor_*``, event
+``INFO_LOC_CLEARANCE_ANCHOR``), a LEVEL stroke-budget guard keeps a lifting leg below the end
+margin (:class:`LiftStrokeGuardSettings`, ``WARN_LIFT_STROKE_LIMITED``,
+``FAULT_LIFT_STROKE_LIMIT``), the stroke-end FAULT is named (``FAULT_STROKE_END``) and a
+stroke-end FAULT re-grounds the lifted legs first (``FaultRegroundSettings.stroke_end_entry``).
+:meth:`C2Config.with_10hz_d1` turns all of them on; ``C2Config()`` keeps them off.
 Only the start-IMU form exists
 (the late IMU read C1 is not implemented). ``C2Config()`` keeps every R8 setting off, so the
 R7 commands stay bit for bit.
@@ -244,6 +251,7 @@ from outrigger_sim.control.fault_reground import (
     RegroundEnd,
     RegroundSample,
     RegroundTarget,
+    RegroundTrigger,
     TargetOutcome,
 )
 from outrigger_sim.control.ground_contact import (
@@ -1468,6 +1476,14 @@ R8_D1_REAPPROACH_OPPOSITE_STRONG_SAMPLES = 2
 R8_D1_REAPPROACH_MAX_DURATION_S = 10.0
 """P-S9-10 (spec rev. 57 283.3 / 285, U-S9-C4 2026-10-26): the longest re-approach of the S8
 records (1,068 runs of ``07_results/S8``, c37 bundle E and ML 768 included) lasted 1.8 s."""
+# P-S8-28 (spec rev. 70 369, adopted candidate AG2c5; values ASSUMPTION of 370)
+R8_LOC_ANCHOR_DEADZONE_M = 0.020
+R8_LOC_ANCHOR_OFFSET_M = 0.005
+R8_LIFT_GUARD_EXTRA_MARGIN_M = 0.002
+R8_LIFT_GUARD_LOOKAHEAD_PERIODS = 2
+R8_LIFT_GUARD_HOLD_LIMIT_S = 3.0
+R8_LIFT_GUARD_SHIFT_CLEARANCE_MARGIN_M = 0.005
+R8_STROKE_END_REGROUND_TRAVEL_M = 0.030
 R8_D1_SETTINGS = R8Settings(
     output_delay_periods=1,
     imu_sample_period_s=R8_IMU_SAMPLE_PERIOD_S,
@@ -1548,6 +1564,15 @@ SOIL_EVENT_LIFTOFF_UNCONFIRMED = "WARN_CRAWLER_LIFTOFF_UNCONFIRMED"
 SOIL_EVENT_WEIGHT_MISMATCH = "WARN_WEIGHT_MISMATCH"
 SOIL_EVENT_STATE_RESTORED = "INFO_SOIL_STATE_RESTORED"
 """:meth:`C2Controller.restore_liftoff_confirmation` (merge compatibility rule, 2026-10-26)."""
+SOIL_EVENT_LOC_ANCHOR = "INFO_LOC_CLEARANCE_ANCHOR"
+"""``INFO_LOC_CLEARANCE_ANCHOR:<b_FL>,<b_FR>,<b_RL>,<b_RR>`` (applied bias, mm; spec rev. 70
+369.1)."""
+LIFT_GUARD_WARNING_EVENT = "WARN_LIFT_STROKE_LIMITED"
+"""``WARN_LIFT_STROKE_LIMITED:<legs>``: first guard period of a LEVEL entry (369.2)."""
+LIFT_GUARD_FAULT_EVENT = "FAULT_LIFT_STROKE_LIMIT"
+"""``FAULT_LIFT_STROKE_LIMIT:<legs>``: the guard held every leg for ``hold_limit_s`` (369.2)."""
+STROKE_END_FAULT_EVENT = "FAULT_STROKE_END"
+"""``FAULT_STROKE_END:<legs>``: the legs pushing at the stroke end (369.3)."""
 
 
 @dataclass(frozen=True)
@@ -1576,6 +1601,11 @@ class SoilResponseSettings:
       ``WARN_CRAWLER_LIFTOFF_UNCONFIRMED`` and FAULT.
     * S-5 record: ``W_hat / W_ref`` outside ``weight_record_range`` -> ``WARN_WEIGHT_MISMATCH``
       (no command effect).
+    * S-3 LOC anchor (spec rev. 70 369.1, P-S8-28 (a)): with ``loc_anchor_enable`` and
+      ``c_min(t_P) < -loc_anchor_deadzone_m`` every corner takes ``b_k = b_k^raw +
+      loc_anchor_offset_m`` with its sign. On a pad floor that is not planar the stroke-plane
+      fit reads too little clearance; ``c_k(t) - b_k`` then follows the stroke change since
+      ``t_P`` and the last corner to rise reads ``-loc_anchor_offset_m`` at ``t_P``.
 
     Every key has a class-level default (``enable`` False), so configs unpickled from older
     code read "off" and run revision 56 bit for bit.
@@ -1600,11 +1630,22 @@ class SoilResponseSettings:
     """S-5 ``W_hat / W_ref`` range without a warning (ASSUMPTION, U-S9-C6: record only)."""
     settle_tilt_samples: int = 10
     """S-3 without CHECK: periods of raw tilt at the TOUCH start that give the settle attitude."""
+    loc_anchor_enable: bool = False
+    """S-3 LOC anchor (spec rev. 70 369.1): apply the signed raw bias below the dead zone."""
+    loc_anchor_deadzone_m: float = 0.020
+    """The anchor applies while ``c_min(t_P) < -loc_anchor_deadzone_m`` (the
+    ``corner_bias_deadzone_m`` reason mirrored: IMU filter lag 0.4 deg x 2.7 m = 19 mm)."""
+    loc_anchor_offset_m: float = 0.005
+    """``-c_hat_0``: the last corner to rise reads this much below zero at ``t_P`` (the crawler
+    contact indentation the harness saw, -6 .. -7 mm; ASSUMPTION of spec rev. 70 370)."""
 
     def __post_init__(self) -> None:
         for name in ("plateau_window_m", "max_push_m"):
             if not getattr(self, name) > 0.0:
                 raise ValueError(f"{name} must be > 0, got {getattr(self, name)!r}")
+        for name in ("loc_anchor_deadzone_m", "loc_anchor_offset_m"):
+            if not getattr(self, name) >= 0.0:
+                raise ValueError(f"{name} must be >= 0, got {getattr(self, name)!r}")
         for name in ("plateau_mean_speed_fraction", "push_speed_fraction"):
             if not 0.0 < getattr(self, name) <= 1.0:
                 raise ValueError(f"{name} must be in (0, 1], got {getattr(self, name)!r}")
@@ -1625,6 +1666,56 @@ class SoilResponseSettings:
         meta = asdict(self)
         meta["weight_record_range"] = list(self.weight_record_range)
         return meta
+
+
+class LiftGuardMode(StrEnum):
+    """What the stroke-budget guard did in one LEVEL period (spec rev. 70 369.2)."""
+
+    SHIFT_DOWN = "shift_down"
+    """(i) every leg lowered by the fastest guarded leg's speed (attitude and twist kept)."""
+    HOLD_ALL = "hold_all"
+    """(ii) every leg at zero and the attitude integrators not updated."""
+
+
+@dataclass(frozen=True)
+class LiftStrokeGuardSettings:
+    """Stroke-budget guard of LEVEL after the LOC (spec rev. 70 369.2, P-S8-28 (b)).
+
+    On a pad floor that is not planar the lift can ask a leg for more stroke than is left. A
+    leg extending at ``u_i`` with ``s_i + u_i lookahead_periods T_s >= s_g``, ``s_g = s_soft -
+    STROKE_END_MARGIN_M - extra_margin_m``, is guarded: outside the crawler zone and with the
+    clearance estimate above ``lifted_clearance_m + shift_clearance_margin_m`` every leg is
+    lowered by ``max u_g`` (:attr:`LiftGuardMode.SHIFT_DOWN`); otherwise every leg stops and
+    the attitude integrators hold (:attr:`LiftGuardMode.HOLD_ALL`; a single stopped leg let the
+    attitude loop wind up to 9.8 deg in the rev. 70 screen). Once guarded, DONE needs only the
+    clearance at ``lifted_clearance_m``; a hold of ``hold_limit_s`` without DONE is a FAULT.
+
+    ``enable`` and ``name_stroke_end_fault`` default to off; plain class-level defaults, so
+    configs unpickled from older code read "off".
+    """
+
+    enable: bool = False
+    extra_margin_m: float = 0.002
+    """Below the 684.8 mm end margin: the output increment limit and the valve lag overshot
+    it by 0.07 .. 0.37 mm in the rev. 70 G2R screen."""
+    lookahead_periods: int = 2
+    """``1 + d`` periods (d = 1)."""
+    hold_limit_s: float = 3.0
+    shift_clearance_margin_m: float = 0.005
+    name_stroke_end_fault: bool = False
+    """Spec 369.3: the stroke-end FAULT raises ``FAULT_STROKE_END:<legs>`` (no command
+    effect)."""
+
+    def __post_init__(self) -> None:
+        for name in ("extra_margin_m", "shift_clearance_margin_m"):
+            if not getattr(self, name) >= 0.0:
+                raise ValueError(f"{name} must be >= 0, got {getattr(self, name)!r}")
+        if not self.hold_limit_s > 0.0:
+            raise ValueError(f"hold_limit_s must be > 0, got {self.hold_limit_s!r}")
+        if not _is_positive_int(self.lookahead_periods):
+            raise ValueError(
+                f"lookahead_periods must be an int >= 1, got {self.lookahead_periods!r}"
+            )
 
 
 @dataclass(frozen=True)
@@ -1697,6 +1788,9 @@ class C2Config:
     fault_reground: FaultRegroundSettings = FaultRegroundSettings()
     """FAULT_REGROUND after a head-sensor fault (P-S8-24, spec rev. 64 323); off by default, a
     plain class-level default as ``soil``."""
+    lift_stroke_guard: LiftStrokeGuardSettings = LiftStrokeGuardSettings()
+    """Stroke-budget guard of LEVEL (P-S8-28, spec rev. 70 369.2); off by default, a plain
+    class-level default as ``soil``."""
 
     def __post_init__(self) -> None:
         if not self.period_s > 0.0:
@@ -1816,7 +1910,10 @@ class C2Config:
         (U-S8-73 (a), 2026-10-27): the TOUCH free-air reference is capped at
         ``m_rod g + F_s,cap`` (P-S8-26, a leg grounded before TOUCH). Spec rev. 68 356.3
         (U-S8-76 (a), 2026-10-27): a ``touch_seen`` latch candidate waits over up to two
-        samples below the touchdown level (P-S8-27). The start-IMU form only:
+        samples below the touchdown level (P-S8-27). Spec rev. 70 369 (P-S8-28, U-S8-78 /
+        U-S8-79, 2026-10-27): the LOC anchor (20 mm dead zone, 5 mm offset), the stroke-budget
+        guard (2 mm, 2 periods, 3 s hold, 5 mm) with the named stroke-end FAULT, and the
+        stroke-end FAULT re-ground (30 mm travel). The start-IMU form only:
         the late IMU read (C1) is not implemented (U-R8-6 = C2).
         """
         config = self.with_r8_diagnostics()
@@ -1834,12 +1931,31 @@ class C2Config:
             hold_confirm_samples=fault_reground.HOLD_CONFIRM_SAMPLES,
             own_pre_fault_cue=True,
             plane_gap_scaled=True,
+            stroke_end_entry=True,
+            stroke_end_travel_m=R8_STROKE_END_REGROUND_TRAVEL_M,
+        )
+        soil = replace(
+            config.soil,
+            enable=True,
+            loc_anchor_enable=True,
+            loc_anchor_deadzone_m=R8_LOC_ANCHOR_DEADZONE_M,
+            loc_anchor_offset_m=R8_LOC_ANCHOR_OFFSET_M,
+        )
+        lift_stroke_guard = replace(
+            config.lift_stroke_guard,
+            enable=True,
+            extra_margin_m=R8_LIFT_GUARD_EXTRA_MARGIN_M,
+            lookahead_periods=R8_LIFT_GUARD_LOOKAHEAD_PERIODS,
+            hold_limit_s=R8_LIFT_GUARD_HOLD_LIMIT_S,
+            shift_clearance_margin_m=R8_LIFT_GUARD_SHIFT_CLEARANCE_MARGIN_M,
+            name_stroke_end_fault=True,
         )
         return replace(
             config,
             two_pressure=two_pressure,
             fault_reground=reground_settings,
-            soil=replace(config.soil, enable=True),
+            soil=soil,
+            lift_stroke_guard=lift_stroke_guard,
             period_s=R8_PERIOD_S,
             output_ramp_time_s=None,
             gains=replace(config.gains, **R8_D1_C2_GAINS),
@@ -2741,6 +2857,17 @@ def _no_output_limits() -> dict[str, NDArray[np.bool_]]:
     return {limit.value: np.zeros(LEG_COUNT, dtype=bool) for limit in OutputLimit}
 
 
+def _leg_names(legs: Sequence[int]) -> str:
+    """``FL,RR``-style event text of leg indices, in the given order."""
+    return ",".join(LEG_ORDER[leg] for leg in legs)
+
+
+def _corner_values_in_leg_order_mm(values_m: NDArray[np.float64]) -> list[float]:
+    """Per-crawler-corner values (order ``CRAWLER_CORNER_NAMES``) in mm, FL, FR, RL, RR."""
+    by_name = dict(zip(CRAWLER_CORNER_NAMES, values_m, strict=True))
+    return [float(by_name[name]) * 1e3 for name in LEG_ORDER]
+
+
 def _corner_values_mm(values_m: NDArray[np.float64]) -> str:
     """``FL=..,FR=..,RL=..,RR=..`` in mm of a per-crawler-corner array (event text)."""
     by_name = dict(zip(CRAWLER_CORNER_NAMES, values_m, strict=True))
@@ -2914,6 +3041,9 @@ class _SoilState:
     restored_from: str | None = None
     """Source of a LOC set by :meth:`C2Controller.restore_liftoff_confirmation`; ``None`` when
     the controller confirmed the lift-off itself (or not yet)."""
+    is_loc_anchor_applied: bool = False
+    """The LOC took the signed raw bias plus the anchor offset (spec rev. 70 369.1); a
+    class-level default for soil states pickled before it."""
 
     @property
     def has_corner_bias(self) -> bool:
@@ -3131,6 +3261,22 @@ class _RunState:
     """Samples below the touchdown level in a row each TOUCH latch candidate waited over."""
     touch_dip_held_samples: tuple[int, ...] = (0, 0, 0, 0)
     """All dip samples held per leg (meta ``touch.dip_held_samples``)."""
+    # P-S8-28 (immutable defaults: class attributes for run states pickled before them)
+    lift_stroke_limited: bool = False
+    """The stroke-budget guard acted since the last LEVEL entry (DONE on the lifted level)."""
+    is_lift_guard_warned: bool = False
+    """``WARN_LIFT_STROKE_LIMITED`` raised since the last LEVEL entry."""
+    lift_guard_mode: LiftGuardMode | None = None
+    """What the guard did this period (``None``: nothing)."""
+    lift_guard_legs: tuple[int, ...] = ()
+    """Legs the guard held back on its last period."""
+    lift_guard_hold_since_s: float | None = None
+    """Start of the current run of :attr:`LiftGuardMode.HOLD_ALL` periods."""
+    lift_guard_shift_periods: int = 0
+    lift_guard_hold_periods: int = 0
+    """Guard periods per mode over the run (meta ``lift_stroke_guard.mode_counts``)."""
+    lift_guard_longest_hold_s: float = 0.0
+    """Longest run of hold periods so far (meta ``lift_stroke_guard.hold_s``)."""
 
 
 @dataclass(frozen=True)
@@ -3355,6 +3501,7 @@ class C2Controller:
             "lifted_reapproach": [run.to_meta() for run in self._state.reapproach_history],
             "soil": self._soil_meta(),
             "fault_reground": self._fault_reground_meta(),
+            "lift_stroke_guard": self._lift_stroke_guard_meta(),
             "locked_pressure_warning_note": (
                 QUASI_STATIC_PRESSURE_NOTE if r8.is_instant_sampling else None
             ),
@@ -3807,7 +3954,8 @@ class C2Controller:
         Raises:
             ValueError: The soil response is off, the soil state has already confirmed the
                 lift-off or entered the soil mode, or ``c_min(t_P)`` is outside the S-3 dead
-                zone (that run would carry a corner bias).
+                zone or (anchor on) below the LOC anchor dead zone (that run would carry a
+                corner bias).
         """
         settings = self.config.soil
         if not settings.enable:
@@ -3822,6 +3970,12 @@ class C2Controller:
             raise ValueError(
                 f"c_min(t_P) {restored.clearance_at_plateau_start_m:.4f} m is above the S-3 dead "
                 f"zone {settings.corner_bias_deadzone_m:.4f} m: the corner bias is not restored"
+            )
+        c_min_m = restored.clearance_at_plateau_start_m
+        if settings.loc_anchor_enable and c_min_m < -settings.loc_anchor_deadzone_m:
+            raise ValueError(
+                f"c_min(t_P) {c_min_m:.4f} m is below the LOC anchor dead zone "
+                f"-{settings.loc_anchor_deadzone_m:.4f} m: the anchor bias is not restored"
             )
         soil.is_liftoff_confirmed = True
         soil.plateau_start_s = float(restored.plateau_start_s)
@@ -4082,6 +4236,7 @@ class C2Controller:
         leg_speeds = np.where(state.touched | is_waiting, 0.0, approach_speed)
         if state.touched.all():
             state.phase = C2Phase.LEVEL
+            self._clear_lift_guard_latch()
             state.theta_crawler_rad = state.pitch_rad
             state.reanchor_anchor_pitch_rad = state.pitch_rad
             state.roll_integral = 0.0
@@ -4553,6 +4708,7 @@ class C2Controller:
         state.reground = None
         state.skips_probe_after_reanchor = False
         state.relevel_low_count = 0
+        self._clear_lift_guard_latch()
 
     # --- lifted-leg re-approach (P-R8-12 leg mode, P-R8-13 twist mode) ---
 
@@ -5626,6 +5782,24 @@ class C2Controller:
     # --- LEVEL ---
 
     def _level(self, reading: _Reading) -> NDArray[np.float64]:
+        """One LEVEL period (:meth:`_level_step`), then the hold bookkeeping of the
+        stroke-budget guard (spec rev. 70 369.2): while it holds every leg the attitude
+        integrators keep their value of the period start, and a hold of ``hold_limit_s``
+        without DONE is a FAULT."""
+        state = self._state
+        integrals_at_start = (state.roll_integral, state.pitch_integral)
+        state.lift_guard_mode = None
+        leg_speeds = self._level_step(reading)
+        if state.lift_guard_mode is not LiftGuardMode.HOLD_ALL:
+            state.lift_guard_hold_since_s = None
+            return leg_speeds
+        # A single stopped leg let the attitude loop wind up to 9.8 deg (spec rev. 70 367 GR).
+        state.roll_integral, state.pitch_integral = integrals_at_start
+        if self._has_lift_guard_hold_expired(reading.t_s):
+            return self._fault_on_lift_guard_hold(reading.t_s)
+        return leg_speeds
+
+    def _level_step(self, reading: _Reading) -> NDArray[np.float64]:
         """One LEVEL period in the fixed order of design 14.5."""
         if self.config.soil.enable and self._state.phase is C2Phase.LEVEL:
             # S-1 first: a confirmation this period already corrects the clearance below.
@@ -5660,11 +5834,15 @@ class C2Controller:
             self._note_output_limit(OutputLimit.CRAWLER_RULE, leg_speeds, lifted_speeds)
             leg_speeds = lifted_speeds
         leg_speeds = self._apply_reapproach_speeds(leg_speeds, reapproaching)
+        leg_speeds = self._apply_lift_stroke_guard(reading, leg_speeds)
         self._record_command_components(
             (heave_rate, roll_rate, pitch_rate, twist_rate), unscaled_speeds, reapproaching
         )
         if self._update_stroke_end_fault(reading, leg_speeds):
+            self._report_stroke_end_fault(reading, leg_speeds)
             self._state.phase = C2Phase.FAULT
+            if self._starts_stroke_end_reground(reading.t_s):
+                self._state.phase = C2Phase.FAULT_REGROUND
             stopped_speeds = self._zero_speeds()
             self._note_output_limit(OutputLimit.STROKE_END, leg_speeds, stopped_speeds)
             return stopped_speeds
@@ -5889,13 +6067,19 @@ class C2Controller:
     def _update_stroke_end_fault(self, reading: _Reading, leg_speeds: NDArray[np.float64]) -> bool:
         """True once a leg at its stroke end has been asked to extend for the fault time."""
         thresholds = self.config.thresholds
-        at_end = reading.motor_stroke_m >= self.geometry.stroke_soft_max_m - (
-            thresholds.stroke_end_fault_margin_m
-        )
-        pushing_at_end = at_end & (leg_speeds > thresholds.stroke_end_fault_speed_m_s)
+        pushing_at_end = self._legs_pushing_at_stroke_end(reading, leg_speeds)
         state = self._state
         state.stroke_end_steps = state.stroke_end_steps + 1 if pushing_at_end.any() else 0
         return state.stroke_end_steps * self.config.period_s > thresholds.stroke_end_fault_time_s
+
+    def _legs_pushing_at_stroke_end(
+        self, reading: _Reading, leg_speeds: NDArray[np.float64]
+    ) -> NDArray[np.bool_]:
+        thresholds = self.config.thresholds
+        at_end = reading.motor_stroke_m >= self.geometry.stroke_soft_max_m - (
+            thresholds.stroke_end_fault_margin_m
+        )
+        return at_end & (leg_speeds > thresholds.stroke_end_fault_speed_m_s)
 
     def _clip_at_stroke_ends(
         self, reading: _Reading, leg_speeds: NDArray[np.float64]
@@ -5923,8 +6107,7 @@ class C2Controller:
         )
         is_complete_now = (
             is_on_target
-            and abs(filtered_clearance_m - thresholds.clearance_target_m)
-            < thresholds.done_clearance_tolerance_m
+            and self._is_clearance_done(filtered_clearance_m)
             and abs(twist_load) < thresholds.done_twist_N
         )
         if not is_complete_now:
@@ -5934,6 +6117,164 @@ class C2Controller:
             state.complete_since_s = reading.t_s
             return False
         return reading.t_s - state.complete_since_s >= thresholds.done_hold_s
+
+    def _is_clearance_done(self, filtered_clearance_m: float) -> bool:
+        """Completion clearance: the target within the tolerance, or (spec rev. 70 369.2)
+        after the stroke-budget guard acted the lifted level is enough."""
+        thresholds = self.config.thresholds
+        is_guard_limited = (
+            self.config.lift_stroke_guard.enable and self._state.lift_stroke_limited
+        )
+        if is_guard_limited and filtered_clearance_m >= thresholds.lifted_clearance_m:
+            return True
+        clearance_error_m = abs(filtered_clearance_m - thresholds.clearance_target_m)
+        return clearance_error_m < thresholds.done_clearance_tolerance_m
+
+    # --- stroke-budget guard and stroke-end FAULT (P-S8-28, spec rev. 70 369.2 .. 369.4) ---
+
+    def _apply_lift_stroke_guard(
+        self, reading: _Reading, leg_speeds: NDArray[np.float64]
+    ) -> NDArray[np.float64]:
+        """Keep an extending leg below ``s_g`` once the lift-off is confirmed (369.2).
+
+        Shift every leg down by the fastest guarded leg's speed when the crawler is clear
+        enough (the attitude and twist parts stay), otherwise stop every leg; the hold of the
+        attitude integrators and its time limit are in :meth:`_level`.
+        """
+        settings = self.config.lift_stroke_guard
+        if not settings.enable or self._state.phase is not C2Phase.LEVEL:
+            return leg_speeds
+        if not self._is_liftoff_confirmed():
+            return leg_speeds
+        guarded = self._lift_guarded_legs(reading, leg_speeds)
+        if not guarded.any():
+            return leg_speeds
+        mode = self._lift_guard_mode(reading)
+        if mode is LiftGuardMode.SHIFT_DOWN:
+            guarded_speeds = leg_speeds - float(leg_speeds[guarded].max())
+        else:
+            guarded_speeds = self._zero_speeds()
+        self._record_lift_guard_period(reading.t_s, guarded, mode)
+        return guarded_speeds
+
+    def _lift_guarded_legs(
+        self, reading: _Reading, leg_speeds: NDArray[np.float64]
+    ) -> NDArray[np.bool_]:
+        """Legs extending that would reach ``s_g`` within ``lookahead_periods``."""
+        settings = self.config.lift_stroke_guard
+        guard_stroke_m = (
+            self.geometry.stroke_soft_max_m - STROKE_END_MARGIN_M - settings.extra_margin_m
+        )
+        lookahead_s = settings.lookahead_periods * self.config.period_s
+        predicted_stroke_m = reading.motor_stroke_m + np.maximum(leg_speeds, 0.0) * lookahead_s
+        return (leg_speeds > 0.0) & (predicted_stroke_m >= guard_stroke_m)
+
+    def _lift_guard_mode(self, reading: _Reading) -> LiftGuardMode:
+        """Shift down only outside the crawler zone with the clearance estimate above the
+        lifted level plus the margin; a lower crawler must not be set down again."""
+        lifted_m = self.config.thresholds.lifted_clearance_m
+        margin_m = self.config.lift_stroke_guard.shift_clearance_margin_m
+        if self._state.in_crawler_zone:
+            return LiftGuardMode.HOLD_ALL
+        if self._clearance_estimate_m(reading.rod_stroke_m) <= lifted_m + margin_m:
+            return LiftGuardMode.HOLD_ALL
+        return LiftGuardMode.SHIFT_DOWN
+
+    def _record_lift_guard_period(
+        self, t_s: float, guarded: NDArray[np.bool_], mode: LiftGuardMode
+    ) -> None:
+        """Latch, legs, counts and the first warning of this LEVEL entry."""
+        state = self._state
+        state.lift_stroke_limited = True
+        state.lift_guard_mode = mode
+        state.lift_guard_legs = tuple(int(leg) for leg in np.flatnonzero(guarded))
+        if mode is LiftGuardMode.SHIFT_DOWN:
+            state.lift_guard_shift_periods += 1
+        else:
+            state.lift_guard_hold_periods += 1
+        if not state.is_lift_guard_warned:
+            state.is_lift_guard_warned = True
+            legs = _leg_names(state.lift_guard_legs)
+            self._add_event(t_s, f"{LIFT_GUARD_WARNING_EVENT}:{legs}", is_warning=True)
+
+    def _clear_lift_guard_latch(self) -> None:
+        """LEVEL entry: the guard latch and its warning start again."""
+        state = self._state
+        state.lift_stroke_limited = False
+        state.is_lift_guard_warned = False
+
+    def _has_lift_guard_hold_expired(self, t_s: float) -> bool:
+        """A hold period: track the run of holds and say whether it reached the limit while
+        the phase is still LEVEL (a DONE in this period wins)."""
+        state = self._state
+        if state.lift_guard_hold_since_s is None:
+            state.lift_guard_hold_since_s = float(t_s)
+        held_s = t_s - state.lift_guard_hold_since_s
+        state.lift_guard_longest_hold_s = max(state.lift_guard_longest_hold_s, held_s)
+        if state.phase is not C2Phase.LEVEL:
+            return False
+        hold_limit_s = self.config.lift_stroke_guard.hold_limit_s
+        return held_s >= hold_limit_s - REAPPROACH_WINDOW_TOLERANCE_S
+
+    def _fault_on_lift_guard_hold(self, t_s: float) -> NDArray[np.float64]:
+        """``FAULT_LIFT_STROKE_LIMIT:<legs>`` -> FAULT, or first the stroke-end re-ground."""
+        state = self._state
+        legs = _leg_names(state.lift_guard_legs)
+        self._add_event(t_s, f"{LIFT_GUARD_FAULT_EVENT}:{legs}", is_warning=True)
+        state.phase = C2Phase.FAULT
+        if self._starts_stroke_end_reground(t_s):
+            state.phase = C2Phase.FAULT_REGROUND
+        return self._zero_speeds()
+
+    def _report_stroke_end_fault(
+        self, reading: _Reading, leg_speeds: NDArray[np.float64]
+    ) -> None:
+        """369.3: ``FAULT_STROKE_END:<legs>`` with the legs pushing at the end (when named)."""
+        if not self.config.lift_stroke_guard.name_stroke_end_fault:
+            return
+        pushing = self._legs_pushing_at_stroke_end(reading, leg_speeds)
+        legs = _leg_names(tuple(int(leg) for leg in np.flatnonzero(pushing)))
+        self._add_event(reading.t_s, f"{STROKE_END_FAULT_EVENT}:{legs}", is_warning=True)
+
+    def _starts_stroke_end_reground(self, t_s: float) -> bool:
+        """369.4 (U-S8-79): a stroke-end FAULT in LEVEL re-grounds the healthy legs whose lower
+        estimate read below 0 N on the last two samples, each over ``stroke_end_travel_m``.
+
+        A run without a target is still recorded (``no_target``) and the FAULT stays. There is
+        no faulty sensor, so no head reading is held.
+        """
+        settings = self.config.fault_reground
+        state = self._state
+        if not (settings.enable and settings.stroke_end_entry):
+            return False
+        if not state.fault_reground_history:
+            return False
+        run = self._new_fault_reground_run(t_s, ())
+        run.trigger = RegroundTrigger.STROKE_END
+        for target in run.targets:
+            # The plane-gap estimate reads a non-planar floor as too small a gap (rev. 70 R).
+            target.max_travel_m = settings.stroke_end_travel_m
+        state.fault_reground = run
+        if not run.targets:
+            run.end_s, run.end_reason = t_s, RegroundEnd.NO_TARGET
+            return False
+        legs = _leg_names(tuple(target.leg for target in run.targets))
+        self._add_event(t_s, f"{fault_reground.START_EVENT}:{legs}", is_warning=True)
+        return True
+
+    def _lift_stroke_guard_meta(self) -> dict[str, Any]:
+        state = self._state
+        shift_periods = state.lift_guard_shift_periods
+        hold_periods = state.lift_guard_hold_periods
+        return {
+            "settings": asdict(self.config.lift_stroke_guard),
+            "periods": shift_periods + hold_periods,
+            "mode_counts": {
+                str(LiftGuardMode.SHIFT_DOWN): shift_periods,
+                str(LiftGuardMode.HOLD_ALL): hold_periods,
+            },
+            "hold_s": state.lift_guard_longest_hold_s,
+        }
 
     # --- soil response S-1 .. S-5 (spec rev. 57 282.4 / 285) ---
 
@@ -6100,15 +6441,38 @@ class C2Controller:
         # the lowest-rise corner), so this only drops biases the old rule would have applied.
         if soil.clearance_at_plateau_start_m <= settings.corner_bias_deadzone_m:
             bias_m = np.zeros(LEG_COUNT)
+        anchor_bias_m = self._loc_anchor_bias_m(raw_bias_m, soil.clearance_at_plateau_start_m)
+        soil.is_loc_anchor_applied = anchor_bias_m is not None
+        if anchor_bias_m is not None:
+            bias_m = anchor_bias_m
         soil.corner_bias_m = bias_m
         self._add_event(t_s, SOIL_EVENT_LIFTOFF_CONFIRMED)
-        if soil.has_corner_bias:
+        if soil.is_loc_anchor_applied:
+            values_mm = ",".join(f"{value:.1f}" for value in _corner_values_in_leg_order_mm(bias_m))
+            self._add_event(t_s, f"{SOIL_EVENT_LOC_ANCHOR}:{values_mm}")
+        elif soil.has_corner_bias:
             self._add_event(t_s, f"{SOIL_EVENT_CLEARANCE_BIAS}:{_corner_values_mm(bias_m)}")
         low, high = settings.weight_record_range
         if not low <= soil.weight_ratio <= high:
             self._add_event(
                 t_s, f"{SOIL_EVENT_WEIGHT_MISMATCH}:{soil.weight_ratio:.3f}", is_warning=True
             )
+
+    def _loc_anchor_bias_m(
+        self, raw_bias_m: NDArray[np.float64], c_min_m: float
+    ) -> NDArray[np.float64] | None:
+        """Spec rev. 70 369.1 ②: ``b_k = b_k^raw + loc_anchor_offset_m`` (signed, every corner)
+        when the anchor is on and ``c_min(t_P) < -loc_anchor_deadzone_m``; else ``None``.
+
+        The opposite case of the S-3 bias: there the stroke estimate overstates the
+        clearance (ruts), here a non-planar pad floor makes it understate it.
+        """
+        settings = self.config.soil
+        if not settings.loc_anchor_enable:
+            return None
+        if not c_min_m < -settings.loc_anchor_deadzone_m:
+            return None
+        return np.asarray(raw_bias_m, dtype=float) + settings.loc_anchor_offset_m
 
     def _hold_crawler_zone_until_liftoff(self, reading: _Reading) -> None:
         """S-2 / S-4: before the LOC a released crawler-zone latch is held on (soil mode);
@@ -6160,6 +6524,13 @@ class C2Controller:
                 "soil_mode_t_s": soil.soil_mode_start_s,
                 "push_m": soil.push_m,
                 "restored_from": soil.restored_from,
+                "loc_anchor_applied": soil.is_loc_anchor_applied,
+                "loc_anchor_bias_mm": (
+                    dict(zip(LEG_ORDER, _corner_values_in_leg_order_mm(soil.corner_bias_m),
+                             strict=True))
+                    if soil.is_loc_anchor_applied
+                    else None
+                ),
             }
         )
         return meta

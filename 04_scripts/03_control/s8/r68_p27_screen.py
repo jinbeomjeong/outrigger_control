@@ -13,8 +13,10 @@ optional pre-extension of one leg, armed, project C2 R8 preset). The project con
 
 Cases: ref (no pre-grounding), PS7a_RR, PS7a_FL, PS7b_RR, PS7c_RR x top / bottom x F_s 0 / 8 kN x 3 variants = 60.
 Per run: D8 gates (as rev. 67), TOUCH record (duration, latch, extra stroke of the pre-grounded leg, max |pitch|,
-crawler minimum), the pre-grounded leg's pad-load oscillation in TOUCH (half peak-to-peak per 2 s, motor work on
-the oscillating load) and the SHA-256 (16 hex) of the 10 Hz leg command sequence.
+crawler minimum), the pre-grounded leg's pad-load oscillation in TOUCH (half peak-to-peak per
+2 s of the raw load and of the load with its 1001-sample centred moving mean removed; the motor
+work on the oscillating load is computed only in the sibling script ``r68_c73_rocking.py``) and
+the SHA-256 (16 hex) of the 10 Hz leg command sequence.
 
 Usage (repo root): python -I r68_p27_screen.py <project_root> <out_json> [workers]
 Env: R68_AFFINITY = hex mask (default 0FFF0000, E-cores), priority BelowNormal set in the parent (inherited).
@@ -48,6 +50,8 @@ VARIANTS = tuple(os.environ.get("R68_VARIANTS", "proj,c1,c2").split(","))
 added after the V-3 acceptance showed c1b also acting in TOUCH without pre-grounding (spec rev. 68 358)."""
 C1_DIPS_TOLERATED = 1
 C2_WINDOW_SAMPLES = 5
+TREND_WINDOW_SAMPLES = 1001  # 1 s centred moving mean at the 1 ms record step
+TREND_EDGE_SAMPLES = 500  # half window: np.convolve(mode="same") is zero-padded there
 
 
 def set_parent_placement() -> None:
@@ -144,19 +148,46 @@ def make_variant_class(c2, variant):
     return P27Controller
 
 
+def detrend_with_masked_edges(signal: np.ndarray) -> np.ndarray:
+    """Return ``signal`` minus its centred moving mean, NaN where the window runs off the ends."""
+    trend = np.convolve(signal, np.ones(TREND_WINDOW_SAMPLES) / TREND_WINDOW_SAMPLES, mode="same")
+    detrended = signal - trend
+    detrended[:TREND_EDGE_SAMPLES] = np.nan
+    detrended[-TREND_EDGE_SAMPLES:] = np.nan
+    return detrended
+
+
+def half_pp_ignoring_nan(values: np.ndarray) -> float | None:
+    """Half peak-to-peak of the finite entries of ``values``, None if there are none."""
+    finite = values[np.isfinite(values)]
+    if finite.size == 0:
+        return None
+    return round(float((finite.max() - finite.min()) / 2), 1)
+
+
 def oscillation(rec, t0, t1, leg):
+    """Pad-load oscillation of ``leg`` in [t0, t1]: half peak-to-peak per 2 s bin, kN.
+
+    ``half_pp_per_2s_kN`` uses the raw load (so a slow trend inside a bin adds to it);
+    ``half_pp_detrended_per_2s_kN`` uses the load with its 1 s centred moving mean removed and
+    the first / last 500 samples masked, over the same bins (None for a bin with no valid sample).
+    """
     t = rec[:, 0]
     m = (t >= t0) & (t <= t1)
     if m.sum() < 1200:
         return None
     N = rec[m, 1 + leg] / 1e3
+    N_detrended = detrend_with_masked_edges(N)
     tt = t[m] - t0
     amps = []
+    amps_detrended = []
     for a in np.arange(0.0, tt[-1], 2.0):
         w = (tt >= a) & (tt < a + 2.0)
         if w.sum() > 100:
             amps.append(round(float((N[w].max() - N[w].min()) / 2), 1))
-    return {"half_pp_per_2s_kN": amps, "N_min_kN": round(float(N.min()), 2), "N_max_kN": round(float(N.max()), 1)}
+            amps_detrended.append(half_pp_ignoring_nan(N_detrended[w]))
+    return {"half_pp_per_2s_kN": amps, "half_pp_detrended_per_2s_kN": amps_detrended,
+            "N_min_kN": round(float(N.min()), 2), "N_max_kN": round(float(N.max()), 1)}
 
 
 def job(key):

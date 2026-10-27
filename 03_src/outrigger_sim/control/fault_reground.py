@@ -27,6 +27,11 @@ whose class default keeps the revision-64 behaviour and the R8 preset turns on:
 * ``plane_gap_scaled``: cue (c) and the gap estimate use ``g_i = Delta r_i / (I - P)_ii`` above
   5 mm instead of the raw residual above 1.4 mm (332.3, 329 ④).
 
+Spec revision 70 section 369.4 (P-S8-28, U-S8-79) adds a second entry: a stroke-end FAULT in
+LEVEL (``FAULT_STROKE_END`` or ``FAULT_LIFT_STROKE_LIMIT``) re-grounds the healthy legs that
+read lifted, with no faulty sensor, each with ``stroke_end_travel_m`` of travel
+(``stroke_end_entry``, off by default). The run record keeps its ``trigger``.
+
 This module holds the settings, the run record and the pure judgements; the controller
 (``control/c2.py``) feeds them. Units SI (m, s, N, Pa); legs follow ``LEG_ORDER``.
 """
@@ -138,6 +143,15 @@ class TargetOutcome(StrEnum):
     """The run ended (abort or total time) while this leg moved."""
 
 
+class RegroundTrigger(StrEnum):
+    """What started the FAULT_REGROUND (meta ``trigger``)."""
+
+    HEAD_FAULT = "head_fault"
+    """A head-sensor fault (spec rev. 64 323.2)."""
+    STROKE_END = "stroke_end"
+    """A stroke-end FAULT in LEVEL (spec rev. 70 369.4, U-S8-79)."""
+
+
 class RegroundEnd(StrEnum):
     """Why FAULT_REGROUND ended (meta ``end_reason``)."""
 
@@ -205,6 +219,12 @@ class FaultRegroundSettings:
     """Cue (c) and the gap estimate on ``Delta r_i / (I - P)_ii`` above
     ``plane_gap_threshold_m`` (332.3)."""
     plane_gap_threshold_m: float = PLANE_GAP_THRESHOLD_M
+    # spec rev. 70 369.4 (P-S8-28, U-S8-79)
+    stroke_end_entry: bool = False
+    """A stroke-end FAULT in LEVEL re-grounds the lifted healthy legs first."""
+    stroke_end_travel_m: float = MAX_TRAVEL_M
+    """Travel limit of every target of a stroke-end run (the plane-gap estimate reads a
+    non-planar floor as too small a gap, spec rev. 70 367 R / R30)."""
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "contact_rule", ContactRule(self.contact_rule))
@@ -213,7 +233,7 @@ class FaultRegroundSettings:
                 raise ValueError(f"{name} must be in (0, 1], got {getattr(self, name)!r}")
         for name in ("max_travel_m", "max_leg_duration_s", "max_total_duration_s",
                      "target_window_s", "faulty_contact_window_s", "attitude_abort_rad",
-                     "attitude_window_s"):
+                     "attitude_window_s", "stroke_end_travel_m"):
             if not getattr(self, name) > 0.0:
                 raise ValueError(f"{name} must be > 0, got {getattr(self, name)!r}")
         for name in ("travel_gap_margin_m", "plane_residual_threshold_m", "contact_margin_N",
@@ -375,6 +395,8 @@ class FaultRegroundRun:
     protect_low_counts: dict[int, int] = field(default_factory=dict)
     end_s: float | None = None
     end_reason: RegroundEnd | None = None
+    trigger: RegroundTrigger = RegroundTrigger.HEAD_FAULT
+    """A class-level default, so runs pickled before spec rev. 70 read ``head_fault``."""
 
     @property
     def active_target(self) -> RegroundTarget | None:
@@ -399,4 +421,5 @@ class FaultRegroundRun:
             "end_s": self.end_s,
             "end_reason": None if self.end_reason is None else str(self.end_reason),
             "contact_count": self.contact_count,
+            "trigger": str(self.trigger),
         }

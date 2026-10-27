@@ -333,6 +333,48 @@ def test_restore_api_refusals(geometry) -> None:
         controller.restore_liftoff_confirmation(liftoff)
 
 
+@pytest.mark.parametrize(("anchor", "c_p", "refused"), [
+    (None, -0.030, False), ((False, 0.020), -0.030, False), ((True, 0.020), -0.010, False),
+    ((True, 0.020), -0.020, False), ((True, 0.020), -0.0201, True)])
+def test_restore_conditions_loc_anchor(anchor, c_p, refused) -> None:
+    """C-S8-76 follow-up (가): a LOC-anchor case (P-S8-28 (a)) is a rule (다) problem."""
+    judge = {**JUDGE_OK, "loc": {**JUDGE_OK["loc"], "clearance_at_P_m": c_p}}
+    problems = run_S8C.soil_restore_problems(judge, 50.0, (), loc_anchor=anchor)
+    assert any("LOC anchor" in p for p in problems) is refused, problems
+
+
+def _anchor_controller(geometry):
+    cfg = soil_config()
+    if not hasattr(cfg.soil, "loc_anchor_enable"):
+        pytest.skip("controller without the P-S8-28 LOC anchor")
+    return C2Controller(geometry, replace(cfg, soil=replace(cfg.soil, loc_anchor_enable=True)))
+
+
+def _fake_offline(monkeypatch, c_p: float) -> None:
+    from s9_merge import m4_offline
+
+    loc = {"t_loc_s": 30.0, "t_P_s": 29.0, "W_hat_N": 3.7e5, "clearance_at_P_m": c_p,
+           "clearance_at_loc_m": 0.01}
+    monkeypatch.setattr(m4_offline, "analyse",
+                        lambda *a, **k: {**JUDGE_OK, "loc": loc})
+    monkeypatch.setattr(run_S8C, "_phases_after", lambda *a, **k: [])
+
+
+def test_loc_anchor_case_fails_as_soil_state_restore_error(geometry, monkeypatch,
+                                                            tmp_path) -> None:
+    """The ValueError of ``restore_liftoff_confirmation`` (c_min(t_P) below the LOC anchor dead
+    zone) no longer escapes unnamed: rule (다) refuses it first with SoilStateRestoreError."""
+    restored = _anchor_controller(geometry)
+    _fake_offline(monkeypatch, -0.030)
+    with pytest.raises(run_S8C.SoilStateRestoreError, match="LOC anchor"):
+        run_S8C.restore_soil_state(restored, restored, tmp_path, 50.0)
+    assert not restored._soil_state().is_liftoff_confirmed  # noqa: SLF001
+    # backstop: a controller refusal the check did not foresee keeps the same error type
+    monkeypatch.setattr(run_S8C, "loc_anchor_rule", lambda _c: None)
+    with pytest.raises(run_S8C.SoilStateRestoreError, match="controller refused"):
+        run_S8C.restore_soil_state(restored, restored, tmp_path, 50.0)
+
+
 # --- option (가) and plumbing ---------------------------------------------------------------
 
 

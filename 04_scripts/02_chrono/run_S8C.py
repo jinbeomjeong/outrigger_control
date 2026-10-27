@@ -2267,11 +2267,25 @@ def _phases_after(base_dir: Path, t_s: float) -> list[str]:
             if t > t_s + SOIL_RESTORE_TOLERANCE_S]
 
 
+def loc_anchor_rule(controller) -> tuple[bool, float] | None:
+    """``(loc_anchor_enable, loc_anchor_deadzone_m)`` of the controller's soil settings (P-S8-28
+    (a), spec rev. 70 369.1); None when the settings have no LOC anchor (code before P-S8-28)."""
+    soil = getattr(getattr(controller, "config", None), "soil", None)
+    if soil is None or not hasattr(soil, "loc_anchor_enable"):
+        return None
+    return bool(soil.loc_anchor_enable), float(soil.loc_anchor_deadzone_m)
+
+
 def soil_restore_problems(judge: dict[str, Any], branch_t_s: float,
-                          phases_after_loc: Sequence[str]) -> list[str]:
+                          phases_after_loc: Sequence[str], *,
+                          loc_anchor: tuple[bool, float] | None = None) -> list[str]:
     """Reasons the offline LOC judge ``judge`` (``m4_offline.analyse``) does not allow rule (다):
     no LOC, a LOC after the crawler-zone release or the first DONE, an S-3 bias, a LOC after the
-    branch instant, or a new lifting cycle between the LOC and the branch."""
+    branch instant, or a new lifting cycle between the LOC and the branch. ``loc_anchor``
+    (:func:`loc_anchor_rule`; None = not checked): with the anchor on, ``c_min(t_P)`` below
+    ``-deadzone`` is a LOC-anchor case whose anchor bias ``restore_liftoff_confirmation`` does
+    not restore (it raises ValueError there; reported here so the episode fails with
+    :class:`SoilStateRestoreError`, C-S8-76 follow-up)."""
     if judge.get("status") != "ok":
         return [f"offline judge status {judge.get('status')!r}"]
     loc = judge.get("loc")
@@ -2286,6 +2300,10 @@ def soil_restore_problems(judge: dict[str, Any], branch_t_s: float,
                         f"{judge['first_done_t_s']} s")
     if judge["bias_applied"]:
         problems.append(f"S-3 bias: c_min(t_P) {loc['clearance_at_P_m']} m above the dead zone")
+    if loc_anchor is not None and loc_anchor[0] and \
+            float(loc["clearance_at_P_m"]) < -float(loc_anchor[1]):
+        problems.append(f"LOC anchor: c_min(t_P) {loc['clearance_at_P_m']} m below the LOC "
+                        f"anchor dead zone -{loc_anchor[1]} m (anchor bias not restorable)")
     if branch_t_s < loc["t_loc_s"] - SOIL_RESTORE_TOLERANCE_S:
         problems.append(f"branch at {branch_t_s} s before the LOC at {loc['t_loc_s']} s")
     new_cycle = sorted(set(phases_after_loc) & set(NEW_CYCLE_PHASES))
@@ -2316,15 +2334,20 @@ def restore_soil_state(restored, fresh, base_dir: Path, branch_t_s: float) -> di
     except (OSError, KeyError, ValueError) as exc:
         raise SoilStateRestoreError(f"{base_dir}: base record not usable for the offline LOC "
                                     f"({type(exc).__name__}: {exc})") from exc
-    problems = soil_restore_problems(judge, branch_t_s, phases)
+    problems = soil_restore_problems(judge, branch_t_s, phases,
+                                     loc_anchor=loc_anchor_rule(restored))
     if problems:
         raise SoilStateRestoreError(f"{base_dir}: soil state not restorable (rule (다)): "
                                     + "; ".join(problems))
     source = f"{SOIL_RESTORE_SOURCE}:{base_dir.name}"
-    restored.restore_liftoff_confirmation(RestoredLiftoff(
-        plateau_start_s=loc["t_P_s"], liftoff_s=loc["t_loc_s"], weight_estimate_N=loc["W_hat_N"],
-        clearance_at_plateau_start_m=loc["clearance_at_P_m"],
-        clearance_at_liftoff_m=loc["clearance_at_loc_m"], source=source))
+    try:
+        restored.restore_liftoff_confirmation(RestoredLiftoff(
+            plateau_start_s=loc["t_P_s"], liftoff_s=loc["t_loc_s"],
+            weight_estimate_N=loc["W_hat_N"], clearance_at_plateau_start_m=loc["clearance_at_P_m"],
+            clearance_at_liftoff_m=loc["clearance_at_loc_m"], source=source))
+    except ValueError as exc:  # a controller refusal not foreseen above: same failure type
+        raise SoilStateRestoreError(f"{base_dir}: soil state not restorable (rule (다)): "
+                                    f"controller refused ({exc})") from exc
     return {"rule": "(다) compatibility: offline LOC of the base record (user decision "
                     "2026-10-26)",
             "restored": True, "restored_from": source, "base_dir": str(base_dir),

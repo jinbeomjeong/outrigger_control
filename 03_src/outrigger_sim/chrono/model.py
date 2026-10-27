@@ -36,7 +36,7 @@ from __future__ import annotations
 
 import dataclasses
 import time
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -81,6 +81,7 @@ from outrigger_sim.chrono.ground_bushing import (
 )
 from outrigger_sim.chrono.ground_settlement import PART_PREFIX as SETTLEMENT_PART
 from outrigger_sim.chrono.ground_settlement import GroundSettlement
+from outrigger_sim.chrono.pad_block import PadBlocks, make_block_body
 from outrigger_sim.chrono.probes import ProbeState, chvec, read_probe, truth_state
 from outrigger_sim.chrono.rod_chamber_link import PART_PREFIX as ROD_CHAMBER_PART
 from outrigger_sim.chrono.rod_chamber_link import (
@@ -198,6 +199,10 @@ class L1Model:
             ``Params.sha256``; snapshots carry the flag and refuse a mismatch.
         head_only_dashpot: Pad dashpot ``gn_per_pad_head_only_1_s`` (regression of the
             pre-L1-R head-only model) instead of ``gn_per_pad_1_s`` (LOCK basis, default).
+        pad_blocks: Block height [m] per leg name: that pad's patch sits on a fixed block body
+            raised by the height along the floor normal (C-S8-76 non-planar start,
+            ``chrono/pad_block``; default none = the model unchanged). Not with a settlement
+            leg of the same name.
     """
 
     def __init__(
@@ -223,6 +228,7 @@ class L1Model:
         attach_crawler_bushings: bool | Sequence[int] = True,
         rod_side_mechanics: str | None = None,
         head_only_dashpot: bool = False,
+        pad_blocks: Mapping[str, float] | None = None,
     ) -> None:
         self.params = params
         self.head_only_dashpot = bool(head_only_dashpot)
@@ -274,7 +280,11 @@ class L1Model:
         unknown = [n for n in settle if n not in LEG_ORDER]
         if unknown or len(set(settle)) != len(settle):
             raise ValueError(f"settlement_legs must be distinct LEG_ORDER names, got {settle}")
-        moving_names = {f"pad_{n}" for n in settle}
+        blocks = {str(k): float(v) for k, v in (pad_blocks or {}).items()}
+        bad_blocks = [n for n in blocks if n not in LEG_ORDER or n in settle]
+        if bad_blocks:
+            raise ValueError(f"pad_blocks must name LEG_ORDER legs that do not settle: {bad_blocks}")
+        moving_names = {f"pad_{n}" for n in settle} | {f"pad_{n}" for n in blocks}
         self.floor_body_patches = tuple(p for p in self.patches if p.name not in moving_names)
         """Patches on the fixed floor body (all of them without settlement legs)."""
         add_floor_patches(self.floor, self.floor_body_patches, self.floor_z_m)
@@ -298,6 +308,19 @@ class L1Model:
             self.settlement = GroundSettlement(
                 self.system, self.floor, settle, [patch_bodies[n] for n in settle]
             )
+        self.pad_blocks: PadBlocks | None = None
+        if blocks:  # C-S8-76: fixed block bodies (chrono/pad_block)
+            block_bodies: dict[str, ch.ChBody] = {}
+            mass = float(params.get("contact.rigid_floor.ground_body_mass_kg"))
+            for name, height in blocks.items():
+                body = make_block_body(self.floor, name, height, mass)
+                add_floor_patches(
+                    body, [p for p in self.patches if p.name == f"pad_{name}"], self.floor_z_m
+                )
+                self.system.Add(body)
+                block_bodies[name] = body
+                patch_bodies[name] = body
+            self.pad_blocks = PadBlocks(self.floor, blocks, block_bodies)
 
         # superstructure (+ crawler spheres)
         sup = make_superstructure(params, self.pose)
@@ -383,7 +406,7 @@ class L1Model:
             dt_s=self.dt_s,
             force_point=bushing_force_point,
             leg_floors=None
-            if not settle
+            if not patch_bodies
             else [patch_bodies.get(name, self.floor) for name in LEG_ORDER],
             normal_force_source=self._bushing_normal_source if l1r_on else None,
         )
@@ -778,7 +801,15 @@ class L1Model:
             rod_chamber=None if self.rod_chamber is None else self.rod_chamber.meta(),
             input_lag_steps=1,
         )
+        if self.pad_blocks is not None:  # C-S8-76 only (earlier meta unchanged)
+            meta["pad_blocks"] = self.pad_blocks.meta()
         return meta
+
+    def pad_block_offsets_m(self) -> NDArray[np.float64]:
+        """Block height under each pad (LEG_ORDER; 0 without a block) [m]."""
+        if self.pad_blocks is None:
+            return np.zeros(len(LEG_ORDER))
+        return self.pad_blocks.offsets_m(LEG_ORDER)
 
     def v0_inventory(self) -> dict[str, Any]:
         """Values as Chrono holds them, for the V0 comparison with the YAML.

@@ -1,8 +1,10 @@
 """C-S8-72 / C-S8-73 PS-7: pad-load oscillation of the pre-grounded leg in TOUCH (spec rev. 68 351.1).
 
 Per case: dominant frequency of the 1 ms pad normal force (1 s moving mean removed, Hann FFT,
-> 0.5 Hz), half peak-to-peak per 2 s bin, work of that leg's motor on the oscillating load
-(integral of x * ds_motor/dt, positive = pumping), motor travel in TOUCH. kN, Hz, J, mm.
+> 0.5 Hz), half peak-to-peak per 2 s bin of the raw force and of the detrended force x (first /
+last 500 samples masked, None for a bin with no valid sample), work of that leg's motor on the
+oscillating load (integral of x * ds_motor/dt, positive = pumping), motor travel in TOUCH.
+kN, Hz, J, mm.
 
 Usage: python -I r68_c73_rocking.py <batch dir> [<batch dir> ...]
 """
@@ -12,6 +14,17 @@ from pathlib import Path
 import numpy as np
 
 CASES = ("PS7a_RR_R8", "PS7b_RR_R8", "PS7c_RR_R8", "PS7a_FL_R8")
+# Half of the 1001-sample mean window: np.convolve(mode="same") is zero-padded there.
+TREND_EDGE_SAMPLES = 500
+
+
+def half_pp_ignoring_nan(values):
+    """Half peak-to-peak of the finite entries of ``values``, None if there are none."""
+    finite = values[np.isfinite(values)]
+    if finite.size == 0:
+        return None
+    return round(float((finite.max() - finite.min()) / 2), 1)
+
 
 for root in sys.argv[1:]:
     for case in CASES:
@@ -34,12 +47,19 @@ for root in sys.argv[1:]:
         X = np.abs(np.fft.rfft(x * np.hanning(x.size)))
         sel = f > 0.5
         f0 = f[sel][np.argmax(X[sel])]
+        # The FFT and the work keep the unmasked x; only the amplitude column uses the masked copy.
+        x_masked = x.copy()
+        x_masked[:TREND_EDGE_SAMPLES] = np.nan
+        x_masked[-TREND_EDGE_SAMPLES:] = np.nan
         amps = []
+        amps_detrended = []
         for a in np.arange(0, tt[-1], 2.0):
             w = (tt >= a) & (tt < a + 2.0)
             if w.sum() > 100:
                 amps.append(round(float((N[w].max() - N[w].min()) / 2), 1))
+                amps_detrended.append(half_pp_ignoring_nan(x_masked[w]))
         sm = z["s_motor"][m, j]
         work = float((x * 1e3 * np.gradient(sm, dt)).sum() * dt)
         print(f"{Path(root).name} {case}: TOUCH {tb - ta:.1f} s, f0 {f0:.2f} Hz, half p-p per 2 s {amps}, "
+              f"detrended half p-p per 2 s {amps_detrended}, "
               f"work {work:.1f} J, motor travel {1e3 * (sm[-1] - sm[0]):.1f} mm, N min/max {N.min():.1f}/{N.max():.1f}")

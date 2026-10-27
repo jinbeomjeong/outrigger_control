@@ -58,6 +58,17 @@ compares them with the 1st batch only. K = ``C1_D8_top_rpB_b1.6_crkt3`` (crawler
 the beta 1.0 crawler value, U-R8-28 record), compared with the rerun34 x1 run. Same controller
 requirement as rerun34.
 
+C-S8-76 (spec rev. 69 360 / 363, non-planar start G8): a rigid block under one pad
+(``chrono/pad_block``, height h = g0 - g_start on the restored settled snapshot), set
+``g8c76`` = C1 (edge FL g_start 200 / 170 mm) + C2 (flat FL 55 / RR 200 mm), set ``g8c76_p28``
+= C3 / C4 (P-S8-28 acceptance, needs ``--allow-p28-cases``), set ``g8c76_p28acc`` = C3 / C4 +
+the C1 FL g170 re-run (spec rev. 70 366; FAULT end rule max(FAULT + 10 s, fault_reground_end +
+5 s), cap FAULT + 25 s); the edge floor snapshot first::
+
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py snaps --jobs 1      # S6_crawler_top_edge
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py run --set g8c76 --approved --jobs 4 --tag c76
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py judge-g8 --batch 07_results/S6/bundleC_g8c76_c76_L1R_<stamp>
+
 ``run`` refuses to start without ``--approved`` (the user approves the bundle separately).
 C-9 cases (R-5 on) are conditional: ``run`` leaves them out unless ``--with-c9`` (spec 150:
 only when the C-1 G4 cases miss F_min).
@@ -158,6 +169,12 @@ st.FLOORS.update(NEW_FLOORS)
 NEW_SNAPSHOTS = (("top", "rp05"), ("middle", "rp05"), ("bottom", "rp05"),
                  ("top", "fdown3.2"), ("top", "roll4.4"),
                  ("top", "rpB"), ("middle", "rpB"), ("bottom", "rpB"))
+G8_FLOORS: dict[str, tuple[float, float]] = {"edge": (2.2, 1.6)}
+"""C-S8-76 (spec rev. 69 360.1): the operating start-rule edge floor of the G8 harness
+(``r69_g8_screen.FLOORS["edge"]``: |roll|/4.4 + |pitch|/3.2 = 1.0, same signs as rpB)."""
+st.FLOORS.update(G8_FLOORS)
+G8_SNAPSHOTS = (("top", "edge"),)
+"""Settled crawler start of the edge floor (built by ``snaps`` like :data:`NEW_SNAPSHOTS`)."""
 
 R8_EXTRA_S = 8.0
 """Run length added to the stage-2 length (spec rev. 26: levelling +5-6 s at 10 Hz, ASSUMPTION
@@ -217,7 +234,12 @@ class BundleCCase:
     """C-S8-72: stop the run at the first READY + this (PS-7: READY + 5 s, spec 92); the
     scenario length is then only the upper bound. None = fixed length (as before)."""
 
-    OPTIONAL_META = ("preground_leg", "end_after_ready_s")
+    pad_block: tuple[str, float] | None = field(default=None, repr=False)
+    """C-S8-76 (spec rev. 69 360.1 / 363): ``(leg, g_start_m)``: after the crawler settle a rigid
+    block under that pad makes its zero-stroke gap ``g_start`` (block height h = g0 - g_start,
+    g0 measured on the restored start snapshot; ``chrono/pad_block``). None = no block."""
+
+    OPTIONAL_META = ("preground_leg", "end_after_ready_s", "pad_block")
     """Fields left out of :meth:`to_meta` while None and out of ``repr`` (``repr=False``), so
     the earlier cases' definitions (meta and repr hashes) stay as they were."""
 
@@ -600,8 +622,120 @@ def ps7r8_cases() -> list[BundleCCase]:
     return out
 
 
+G8_EXTRA_S = 60.0
+"""C-S8-76 upper bound added to the stage-2 D8 length (ASSUMPTION, as PS-7: harness READY of the
+edge cases 53-57 s; the run stops at READY + 5 s or FAULT + :data:`G8_END_AFTER_FAULT_S`)."""
+G8_END_AFTER_READY_S = 5.0
+"""Spec 360.1 harness: controller from CHECK to READY + 5 s."""
+G8_END_AFTER_FAULT_S = 10.0
+"""C-S8-76: stop 10 s after the controller has entered FAULT (ASSUMPTION; enough to see which
+legs stay lifted, the harness ran its FAULT cases to about 128 s)."""
+G8_END_AFTER_REGROUND_S = 5.0
+G8_FAULT_CAP_S = 25.0
+"""Spec rev. 70 366 end rule after a FAULT: stop at max(first FAULT-phase entry + 10 s,
+``fault_reground_end`` + 5 s), at most first FAULT-phase entry + 25 s (the P-S8-28 / U-S8-79
+re-ground takes at most 15 s). A started re-ground without its end runs to the cap."""
+G8_REGROUND_EVENT_PREFIXES = ("fault_reground_", "WARN_FAULT_REGROUND_ABORT")
+
+
+def g8_fault_stop(state: dict) -> bool:
+    """End rule of :data:`G8_FAULT_CAP_S` on the runner state (``fault_t`` = first entry into
+    a FAULT phase, ``rg_start_t`` / ``rg_end_t`` = re-ground start / end or abort event, ``last_t``
+    = the latest control instant; absolute s)."""
+    tf, t = state.get("fault_t"), state.get("last_t")
+    if tf is None or t is None:
+        return False
+    eps = 1e-9
+    if t >= tf + G8_FAULT_CAP_S - eps:
+        return True
+    if t < tf + G8_END_AFTER_FAULT_S - eps:
+        return False
+    started, ended = state.get("rg_start_t"), state.get("rg_end_t")
+    if started is None:
+        return True
+    return ended is not None and t >= ended + G8_END_AFTER_REGROUND_S - eps
+
+
+def _phase_spans(phases: list[tuple[float, str]], name: str) -> list[tuple[float, float | None]]:
+    """(start, end) of every interval in phase ``name`` (relative s; end None = until the run
+    end)."""
+    out = []
+    for (t1, p), nxt in zip(phases, [*phases[1:], (None, "end")], strict=True):
+        if p == name:
+            out.append((t1, nxt[0]))
+    return out
+
+
+G8_RUN_STEP_EVERY = 50
+"""Crawler-gap record every 50 steps (10 ms at the L1 dt 2e-4 s)."""
+G8C76_CASES = (
+    # (case id, spec 363 row, floor, leg, g_start mm, harness h mm, run now)
+    ("G8C1_top_edge_FL_g200", "C1", "edge", "FL", 200.0, 139.258, True),
+    ("G8C1_top_edge_FL_g170", "C1", "edge", "FL", 170.0, 169.258, True),
+    ("G8C2_top_flat_FL_g55", "C2", "flat", "FL", 55.0, 285.802, True),
+    ("G8C2_top_flat_RR_g200", "C2", "flat", "RR", 200.0, 145.718, True),
+    ("G8C3_top_edge_RL_g230", "C3", "edge", "RL", 230.0, 119.158, False),
+    ("G8C3_top_edge_FL_g20", "C3", "edge", "FL", 20.0, 319.258, False),
+    ("G8C4_top_edge_RR_g230", "C4", "edge", "RR", 230.0, 118.101, False),
+)
+"""Spec rev. 69 363 C1-C4 (C-S8-76). ``g_start`` is the case definition (360.1: zero-stroke gap
+of the leg after the block); ``harness h`` = harness g0 - g_start (``r69_g8_slope.json`` /
+``r69_g8_top_Fs4.0.json`` ``info.g0_mm``), recorded for comparison only. C3 / C4 are P-S8-28
+acceptance cases: defined, refused by ``run`` unless ``--allow-p28-cases``.
+Seal friction: the L1-R plant has none (CLAUDE.md: F_s only in L2b); the harness rows are F_s 4
+kN (spec 363), the Chrono runs are F_s 0 by construction (recorded ``fs_kN_plant`` 0)."""
+G8C76_HARNESS_FS_KN = 4.0
+
+
+def g8c76_cases(*, run_only: bool | None = None) -> list[BundleCCase]:
+    """C-S8-76 cases (spec rev. 69 363): the D8 scenario of the floor (top, ideal leg sensors,
+    the R8 preset), a block under one pad (:attr:`BundleCCase.pad_block`), end READY + 5 s.
+    ``run_only`` True = C1 / C2, False = C3 / C4, None = all."""
+    out = []
+    for cid, row, floor, leg, g_mm, h_harness_mm, now in G8C76_CASES:
+        if run_only is not None and now is not run_only:
+            continue
+        note = (f"C-S8-76 / spec rev. 69 363 {row}: {floor} top, block under {leg}, zero-stroke "
+                f"gap g_start {g_mm:g} mm (harness h {h_harness_mm:.1f} mm, harness F_s "
+                f"{G8C76_HARNESS_FS_KN:g} kN; L1-R plant F_s 0)"
+                + ("" if now else "; P-S8-28 acceptance case, not run now"))
+        sc = _d8("top", floor)
+        sc = replace(sc, case_id=cid, group="G8", items=("G8",),
+                     duration_s=sc.duration_s + G8_EXTRA_S, notes=(note,))
+        out.append(BundleCCase(cid, f"G8-{row}", sc, conditional=not now, notes=(note,),
+                               end_after_ready_s=G8_END_AFTER_READY_S,
+                               pad_block=(leg, g_mm * 1e-3)))
+    return out
+
+
+def g8c76_run_cases() -> list[BundleCCase]:
+    return g8c76_cases(run_only=True)
+
+
+def g8c76_def_cases() -> list[BundleCCase]:
+    return g8c76_cases(run_only=False)
+
+
+G8C76_P28_RERUN_IDS = ("G8C1_top_edge_FL_g170",)
+"""Spec rev. 70 366: the C1 case that failed the stroke-margin gate on the current controller
+(run max 687.98 mm), re-run in the P-S8-28 acceptance (same definition as in ``g8c76``)."""
+
+
+def g8c76_p28_acceptance_cases() -> list[BundleCCase]:
+    """P-S8-28 acceptance set (spec rev. 70 366): C3 / C4 + the C1 FL g170 re-run. The C1 case
+    is the very ``g8c76`` definition (one definition per id, :func:`case_table`); the sets
+    ``g8c76`` / ``g8c76_p28`` stay as they were."""
+    rerun = [c for c in g8c76_run_cases() if c.case_id in G8C76_P28_RERUN_IDS]
+    return [*g8c76_def_cases(), *rerun]
+
+
+G8_P28_SETS = ("g8c76_p28", "g8c76_p28acc")
+"""Sets run with every case (no conditional filter); C3 / C4 still need --allow-p28-cases."""
+
 CASE_SETS = {"bundleC": bundle_c_cases, "rerun32": rerun32_cases, "rerun33": rerun33_cases,
-             "rerun34": rerun34_cases, "rerun35": rerun35_cases, "ps7r8": ps7r8_cases}
+             "rerun34": rerun34_cases, "rerun35": rerun35_cases, "ps7r8": ps7r8_cases,
+             "g8c76": g8c76_run_cases, "g8c76_p28": g8c76_def_cases,
+             "g8c76_p28acc": g8c76_p28_acceptance_cases}
 GROUP_SETS = {"rerun32": rerun32_groups, "rerun33": rerun33_groups, "rerun34": rerun34_groups,
               "rerun35": rerun35_groups}
 ROLE_SETS = {"rerun34": RERUN34_ROLES, "rerun35": RERUN35_ROLES}
@@ -1359,6 +1493,94 @@ def check_settle_offset(case: BundleCCase, dt_s: float) -> None:
                          f"integer multiple of dt {dt_s} s")
 
 
+G8_GAP_NAME = "crawler_gap.npz"
+
+
+class CrawlerGapRecorder:
+    """C-S8-76 (spec rev. 69 360.2): true crawler clearance = gap of EVERY crawler contact sphere
+    above the base floor plane, ``n . (c_k - p0) - r`` (all 24 spheres of
+    ``L1Model.crawler_layout``, the Chrono crawler collision shapes), every
+    :data:`G8_RUN_STEP_EVERY` steps in the runner step hook (final state of the step).
+    Arrays: ``t`` (absolute s), ``min_gap_m``, ``argmin`` (sphere index), ``gaps_m`` (n, 24)."""
+
+    def __init__(self, model: Any, every_steps: int = G8_RUN_STEP_EVERY):
+        import numpy as np
+
+        from outrigger_sim.chrono.probes import chvec
+
+        self.model = model
+        self.every = int(every_steps)
+        self.sup = model.superstructure
+        self.locals = tuple(chvec(c) for c in model.crawler_centres_local_m)
+        self.radius = float(model.crawler_layout.sphere_radius_m)
+        n = np.asarray(model.bushing.normal_world(), float)
+        self.n = n
+        self.d0 = float(n @ np.asarray(model.floor_point_world_m, float))
+        self._k = 0
+        self.rows: dict[str, list] = {"t": [], "gaps_m": []}
+
+    def gaps_m(self):
+        import numpy as np
+
+        nx, ny, nz = (float(c) for c in self.n)
+        out = np.empty(len(self.locals))
+        for i, c in enumerate(self.locals):
+            p = self.sup.TransformPointLocalToParent(c)
+            out[i] = p.x * nx + p.y * ny + p.z * nz - self.d0 - self.radius
+        return out
+
+    def __call__(self, engine: Any) -> None:
+        del engine
+        self._k += 1
+        if self._k % self.every:
+            return
+        self.rows["t"].append(float(self.model.system.GetChTime()))
+        self.rows["gaps_m"].append(self.gaps_m())
+
+    def arrays(self) -> dict[str, Any]:
+        import numpy as np
+
+        g = np.asarray(self.rows["gaps_m"], float).reshape(-1, len(self.locals))
+        return {"t": np.asarray(self.rows["t"], float), "gaps_m": g,
+                "min_gap_m": g.min(axis=1) if g.size else np.zeros(0),
+                "argmin": g.argmin(axis=1) if g.size else np.zeros(0, int)}
+
+    def save(self, path: Path) -> dict[str, Any]:
+        import numpy as np
+
+        arr = self.arrays()
+        np.savez_compressed(path, **arr)
+        return {"file": path.name, "samples": int(arr["t"].size), "every_steps": self.every,
+                "spheres": len(self.locals), "sphere_radius_m": self.radius,
+                "rule": "n . (c_k - p0) - r over every crawler sphere, base floor plane"}
+
+
+def g8_block_height(case: BundleCCase, params, base_params, states: Path, model_kw: dict
+                    ) -> dict[str, Any]:
+    """C-S8-76: block height ``h = g0 - g_start`` of ``case.pad_block``; g0 = the zero-stroke
+    pad gap (``s6_stage2.pad_gaps_m``) on the restored start snapshot of a model without the
+    block (same build arguments). Raises when g_start is not inside (0, g0)."""
+    from outrigger_sim.record import load_snapshot
+    from outrigger_sim.verify.s6_bundle_c import retag_snapshot
+
+    leg, g_start = case.pad_block
+    j = LEGS.index(leg)
+    probe_model, _ = st.build_crawler_model(params, case.scenario.floor, attach=False, **model_kw)
+    snap = load_snapshot(case.snapshot, params_sha256=base_params.sha256, directory=states)
+    snap, _ = retag_snapshot(snap, params.sha256, name=case.snapshot)
+    probe_model.restore(snap)
+    g0 = st.pad_gaps_m(probe_model)
+    s0 = [float(m.GetMotorPos()) for m in probe_model.motors]
+    del probe_model
+    h = float(g0[j]) - float(g_start)
+    if not (0.0 < g_start < float(g0[j])):
+        raise ValueError(f"{case.case_id}: g_start {g_start} m not inside (0, g0 {g0[j]} m)")
+    return {"leg": leg, "g_start_target_m": float(g_start), "g0_m": [float(v) for v in g0],
+            "h_m": h, "stroke_at_start_m": s0,
+            "rule": "spec rev. 69 360.1: block height h = g0 - g_start, g0 = n . (c - p0) - r at "
+                    "zero stroke on the restored settled crawler snapshot (s6_stage2.pad_gaps_m)"}
+
+
 def _snapshot_dir(name: str, batch_states: Path | None) -> Path:
     if batch_states is not None and (batch_states / f"{name}.npz").exists():
         return batch_states
@@ -1415,6 +1637,12 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
                 and case.crawler_kt_factor == 1.0
                 else {"crawler_bushing_kt_scale": kt_scales["total"]})
     settles = sc.event in ("settle_RR", "settle_RR_30", "drop_RR_30", "drop_RR_30_probe")
+    g8 = None
+    if case.pad_block is not None:  # C-S8-76: block under one pad (spec rev. 69 360.1)
+        if settles:
+            raise ValueError(f"{case.case_id}: pad_block with a settlement event")
+        g8 = g8_block_height(case, params, base_params, states, dict(model_kw))
+        model_kw = {**model_kw, "pad_blocks": {g8["leg"]: g8["h_m"]}}
     model, _pose = st.build_crawler_model(params, sc.floor, attach=False,
                                           settlement_legs=("RR",) if settles else (),
                                           **model_kw)
@@ -1427,6 +1655,18 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
     model.actuator.configure_valve(tau_s=case.tau_v_s, amp_ramp=case.amp_ramp,
                                    amp_ramp_s=AMP_RAMP_S)
     t0 = model.restore(snap)
+    gap_rec = None
+    if g8 is not None:
+        jb = LEGS.index(g8["leg"])
+        gaps_blk = st.pad_gaps_m(model)
+        g8["g_start_measured_m"] = float(gaps_blk[jb])
+        g8["gaps_with_block_m"] = [float(v) for v in gaps_blk]
+        g8["block"] = model.pad_blocks.meta()
+        if abs(g8["g_start_measured_m"] - g8["g_start_target_m"]) > 1e-9 or not all(
+                abs(gaps_blk[i] - g8["g0_m"][i]) < 1e-12 for i in range(4) if i != jb):
+            raise RuntimeError(f"{case.case_id}: block geometry check failed {g8}")
+        gap_rec = CrawlerGapRecorder(model)
+        g8["crawler_gap_at_start_m"] = [float(v) for v in gap_rec.gaps_m()]
     sat_rec = SaturationRecorder(model, t0)
     engine = L1Engine(model, imu_method="chrono_point")
     if case.sensor_model:
@@ -1525,6 +1765,23 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
             phases.append((meas.t_s - t0, ph.value))
         if ph is C2Phase.READY and state["ready_t"] is None:
             state["ready_t"] = meas.t_s
+        if g8 is not None:  # C-S8-76: state-based FAULT (also the unnamed stroke-end FAULT)
+            if ph.value in ("fault", "fault_reground") and state.get("fault_t") is None:
+                state["fault_t"] = meas.t_s  # first entry into a FAULT phase
+            if ph.value == "fault" and state.get("fault_hold_t") is None:
+                state["fault_hold_t"] = meas.t_s
+            # U-S8-79 re-ground record (spec rev. 70 366): events since the last instant
+            evs = c2.events
+            k0 = state.get("ev_seen", 0)
+            for e in list(evs)[k0:]:
+                name = str(e.name)
+                if name.startswith(G8_REGROUND_EVENT_PREFIXES):
+                    state.setdefault("reground", []).append((float(e.t_s), name))
+                    if name.startswith("fault_reground_start") and state.get("rg_start_t") is None:
+                        state["rg_start_t"] = float(e.t_s)
+                    if name.startswith(("fault_reground_end", "WARN_FAULT_REGROUND_ABORT")):
+                        state["rg_end_t"] = float(e.t_s)
+            state["ev_seen"] = len(evs)
         if ph is C2Phase.PROBE and state["probe_t"] is None:
             state["probe_t"] = meas.t_s
         if sc.event == "drop_RR_30_probe" and not state["scheduled"] \
@@ -1613,6 +1870,8 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
     use_end_rule = case.end_after_ready_s is not None and duration_s is None
 
     def stop_now() -> bool:
+        if g8 is not None and g8_fault_stop(state):  # C-S8-76 FAULT end (spec rev. 70 366)
+            return True
         return (state["ready_t"] is not None and state.get("last_t") is not None
                 and state["last_t"] >= state["ready_t"] + case.end_after_ready_s - 1e-9)
 
@@ -1622,7 +1881,7 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
         res = run_closed_loop(engine, controller, suite, duration_s or case.duration_s,
                               run_meta=run_meta, on_control=observe, command_delay_periods=0,
                               command_offset_s=case.command_offset_s,
-                              step_hook=st._chain_hooks(pads, settle_vel, sat_rec),
+                              step_hook=st._chain_hooks(pads, settle_vel, sat_rec, gap_rec),
                               capture_every_steps=5 if pads and schedule is None else None,
                               dt_schedule=schedule,
                               capture_every_s=1.0e-3 if pads and schedule is not None else None,
@@ -1654,6 +1913,40 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
     (case_dir / "controller_events.json").write_text(json.dumps(events, indent=1), "utf-8")
     arr = res.record.arrays
     s_motor = np.asarray(arr["s_motor"])
+    if g8 is not None:  # C-S8-76 end-state record (spec rev. 69 360.2)
+        g8["crawler_gap"] = gap_rec.save(case_dir / G8_GAP_NAME)
+        gaps_end = gap_rec.gaps_m()
+        stroke_rod = np.asarray(engine.truth().stroke_true_m, float)
+        est = np.asarray(c2.geometry.clearance_corners_m(stroke_rod), float)
+        g8.update(
+            crawler_gap_end_m={"min": float(gaps_end.min()), "argmin": int(gaps_end.argmin()),
+                               "all": [float(v) for v in gaps_end]},
+            controller_clearance_estimate_end_m={"corners": est.tolist(), "min": float(est.min()),
+                                                 "from": "C2Geometry.clearance_corners_m("
+                                                         "truth stroke_true_m) at the run end"},
+            clearance_target_m=float(c2.config.thresholds.clearance_target_m),
+            fault_first_t_s=None if state.get("fault_t") is None else state["fault_t"] - t0,
+            fault_hold_t_s=None if state.get("fault_hold_t") is None
+            else state["fault_hold_t"] - t0,
+            fault_end_rule_s=G8_END_AFTER_FAULT_S,
+            fault_end_rule={"after_fault_s": G8_END_AFTER_FAULT_S,
+                            "after_reground_end_s": G8_END_AFTER_REGROUND_S,
+                            "cap_after_fault_s": G8_FAULT_CAP_S,
+                            "stopped_by_fault_rule": bool(g8_fault_stop(state)),
+                            "rule": "spec rev. 70 366: max(FAULT + 10 s, fault_reground_end + "
+                                    "5 s), cap FAULT + 25 s; FAULT = first fault / "
+                                    "fault_reground phase"},
+            fault_reground={
+                "events": [[t - t0, n] for t, n in state.get("reground", [])],
+                "start_t_s": None if state.get("rg_start_t") is None
+                else state["rg_start_t"] - t0,
+                "end_t_s": None if state.get("rg_end_t") is None else state["rg_end_t"] - t0,
+                "phase_span_s": [[a, b] for a, b in _phase_spans(phases, "fault_reground")]},
+            fault_event_names=[e for e in events if "FAULT" in e],
+            s_ref_end_m=[float(v) for v in model.s_ref_m],
+            fs_kN_plant=0.0, fs_kN_harness=G8C76_HARNESS_FS_KN,
+            fs_note="L1-R has no seal friction (CLAUDE.md: F_s only in L2b); the spec 363 / "
+                    "harness rows are F_s 4 kN")
     reanchor = c2.reanchor_outcome
     ctl_meta = c2.meta()
     # B(i) / B(iii): runner-added keys of r8.fast_relevel (ratio provenance, override)
@@ -1706,6 +1999,7 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
             "timeout": bool(use_end_rule and not res.meta.get("stopped_early", False)),
             "rule": "C-S8-72 / spec 92: READY + 5 s, the case length only as the upper "
                     "bound"}}),
+        **({} if g8 is None else {"g8": g8}),
         "ready_t_s": None if state["ready_t"] is None else state["ready_t"] - t0,
         "probe_intervals": probe_intervals,
         "first_probe_t_s": None if state["probe_t"] is None else state["probe_t"] - t0,
@@ -1797,7 +2091,7 @@ def plan(ids=None, case_set: str = "bundleC") -> dict[str, Any]:
 def build_snapshots(jobs: int):
     from outrigger_sim.batch import Case, run_cases
 
-    todo = [(lv, f) for lv, f in NEW_SNAPSHOTS
+    todo = [(lv, f) for lv, f in (*NEW_SNAPSHOTS, *G8_SNAPSHOTS)
             if not (STATES / f"{st.snapshot_name(lv, f)}.npz").exists()]
     if not todo:
         print("all bundle-C snapshots exist")
@@ -1888,7 +2182,7 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("action", choices=("list", "plan", "snaps", "snaps-pre", "check", "run",
-                                       "judge", "judge-ps7"))
+                                       "judge", "judge-ps7", "judge-g8"))
     ap.add_argument("--leg", choices=st.PREGROUND_LEGS, default="FL",
                     help="snaps-pre (C-S8-72): leg of the pre-grounded PS-7a start snapshot")
     ap.add_argument("--overwrite", action="store_true",
@@ -1916,6 +2210,9 @@ def main(argv):
     ap.add_argument("--allow-incomplete-c2", action="store_true",
                     help="run --set rerun32 / rerun33: start even when the installed c2.py "
                          "lacks P-R8-9 ... 11 (RERUN32_KEYS) / P-R8-12 (RERUN33_KEYS)")
+    ap.add_argument("--allow-p28-cases", action="store_true",
+                    help="run: allow the C-S8-76 C3 / C4 cases (set g8c76_p28, P-S8-28 "
+                         "acceptance; spec rev. 69 363)")
     ap.add_argument("--allow-env-override", action="store_true",
                     help="run / check: start even with OUTRIGGER_L1_FALLBACK_RATIO_SOURCE set "
                          "(B(iii) comparison batch; every L1 case takes the override)")
@@ -1927,7 +2224,7 @@ def main(argv):
         refuse_env_override(args.allow_env_override, f"run_S6C {args.action}")
     if args.action == "list":
         groups = (GROUP_SETS[args.case_set]() if args.case_set in GROUP_SETS
-                  else {"": bundle_c_cases()})
+                  else {"": CASE_SETS[args.case_set]()})
         for g, cases in groups.items():
             for c in cases:
                 print(f"{g:1s} {c.case_id:48s} {c.config:5s} {c.snapshot:28s} "
@@ -1956,6 +2253,12 @@ def main(argv):
                               touch_ref=None if not args.touch_ref else Path(args.touch_ref))
         print(f"-> {out}")
         return
+    if args.action == "judge-g8":  # C-S8-76: spec rev. 69 360.2 rows
+        from outrigger_sim.verify.s6_control import judge_g8_batch
+
+        out = judge_g8_batch(Path(args.batch), None if not args.out else Path(args.out))
+        print(f"-> {out}")
+        return
     if args.action == "judge":
         from outrigger_sim.verify.s6_bundle_c import judge_batch
 
@@ -1973,6 +2276,15 @@ def main(argv):
     if not args.approved:
         raise SystemExit("bundle C needs the user's approval: add --approved (spec 150; "
                          "rerun32: user decision U-R8-16)")
+    p28 = {c.case_id for c in g8c76_def_cases()}
+    asked = set(args.only or set_ids)
+    if asked & p28 and not args.allow_p28_cases:
+        raise SystemExit(f"C-S8-76 C3 / C4 {sorted(asked & p28)} are P-S8-28 acceptance cases "
+                         "(spec rev. 69 363): add --allow-p28-cases")
+    if args.case_set in G8_P28_SETS:
+        ids = args.only or set_ids
+        run_batch(ids, jobs, check=False, case_set=args.case_set, run_tag=args.tag)
+        return
     if args.case_set in ("rerun32", "rerun33", "rerun34", "rerun35"):
         ready = rerun34_readiness()
         # rerun35 needs the same controller as rerun34 (spec rev. 35 185: no c2 change required)
