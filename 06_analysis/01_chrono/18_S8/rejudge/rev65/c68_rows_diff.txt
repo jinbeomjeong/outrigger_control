@@ -1,0 +1,58 @@
+rows 375 381 failed 28 20
+only in A: 18
+  - ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 after it', 'MLJ_G4H_FS24_FR_Fs0', 0) passed True judged
+  - ('C-S8-68 G4-7 negative case: no lifted leg -> FAULT at the fault sample, output 0 (as the direct FAULT)', 'MLJ_G4H_FS24_FR_Fs0', 0) passed None record
+  - ('C-S8-68 G4-8 re-ground travel / time within the limits (record)', 'MLJ_G4H_FS24_FR_Fs0', 0) passed None record
+  - ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 after it', 'MLJ_G4H_FS24_FR_Fs8', 0) passed True judged
+  - ('C-S8-68 G4-7 negative case: no lifted leg -> FAULT at the fault sample, output 0 (as the direct FAULT)', 'MLJ_G4H_FS24_FR_Fs8', 0) passed None record
+  - ('C-S8-68 G4-8 re-ground travel / time within the limits (record)', 'MLJ_G4H_FS24_FR_Fs8', 0) passed None record
+  - ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 after it', 'MLJ_G4H_FS24_RL_Fs0', 0) passed True judged
+  - ('C-S8-68 G4-7 negative case: no lifted leg -> FAULT at the fault sample, output 0 (as the direct FAULT)', 'MLJ_G4H_FS24_RL_Fs0', 0) passed None record
+  - ('C-S8-68 G4-8 re-ground travel / time within the limits (record)', 'MLJ_G4H_FS24_RL_Fs0', 0) passed None record
+  - ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 after it', 'MLJ_G4H_FS24_RL_Fs8', 0) passed False judged
+  - ('C-S8-68 G4-7 negative case: no lifted leg -> FAULT at the fault sample, output 0 (as the direct FAULT)', 'MLJ_G4H_FS24_RL_Fs8', 0) passed None record
+  - ('C-S8-68 G4-8 re-ground travel / time within the limits (record)', 'MLJ_G4H_FS24_RL_Fs8', 0) passed None record
+  - ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 after it', 'MLJ_G4H_G4_RR_Fs4', 0) passed False judged
+  - ('C-S8-68 G4-7 negative case: no lifted leg -> FAULT at the fault sample, output 0 (as the direct FAULT)', 'MLJ_G4H_G4_RR_Fs4', 0) passed None record
+  - ('C-S8-68 G4-8 re-ground travel / time within the limits (record)', 'MLJ_G4H_G4_RR_Fs4', 0) passed None record
+  - ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 after it', 'MLJ_G4H_quiet_FR_Fs0', 0) passed True judged
+  - ('C-S8-68 G4-7 negative case: no lifted leg -> FAULT at the fault sample, output 0 (as the direct FAULT)', 'MLJ_G4H_quiet_FR_Fs0', 0) passed True judged
+  - ('C-S8-68 G4-8 re-ground travel / time within the limits (record)', 'MLJ_G4H_quiet_FR_Fs0', 0) passed None record
+only in B: 24
+  + ('F2 head-fault leg after the injection arm time (record, C-S8-70 ④, F2_faulty_leg_after_injection)', 'MLJ_G4H_FS24_FR_Fs0', 0) passed None record
+  + ('F2 head-fault leg after the injection arm time (record, C-S8-70 ④, F2_faulty_leg_after_injection)', 'MLJ_G4H_FS24_FR_Fs8', 0) passed None record
+  + ('F2 head-fault leg after the injection arm time (record, C-S8-70 ④, F2_faulty_leg_after_injection)', 'MLJ_G4H_FS24_RL_Fs0', 0) passed None record
+  + ('F2 head-fault leg after the injection arm time (record, C-S8-70 ④, F2_faulty_leg_after_injection)', 'MLJ_G4H_FS24_RL_Fs8', 0) passed None record
+  + ('F2 head-fault leg after the injection arm time (record, C-S8-70 ④, F2_faulty_leg_after_injection)', 'MLJ_G4H_G4_RR_Fs4', 0) passed None record
+  + ('F2 head-fault leg after the injection arm time (record, C-S8-70 ④, F2_faulty_leg_after_injection)', 'MLJ_G4H_quiet_FR_Fs0', 0) passed None record
+  + ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 from FAULT + d T_s (d = 1; FAULT-sample output recorded)', 'MLJ_G4H_FS24_FR_Fs0', 0) passed True judged
+  + ('C-S8-68 G4-7 no-target run (end_reason no_target): FAULT at the fault sample, output 0 from t_f + d T_s (as the direct FAULT; a record when targeted)', 'MLJ_G4H_FS24_FR_Fs0', 0) passed None record
+  + ('C-S8-68 G4-8 re-ground travel / time within the limits, hold counts, abort / D1 step-suspend events (record)', 'MLJ_G4H_FS24_FR_Fs0', 0) passed None record
+  + ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 from FAULT + d T_s (d = 1; FAULT-sample output recorded)', 'MLJ_G4H_FS24_FR_Fs8', 0) passed True judged
+  + ('C-S8-68 G4-7 no-target run (end_reason no_target): FAULT at the fault sample, output 0 from t_f + d T_s (as the direct FAULT; a record when targeted)', 'MLJ_G4H_FS24_FR_Fs8', 0) passed None record
+  + ('C-S8-68 G4-8 re-ground travel / time within the limits, hold counts, abort / D1 step-suspend events (record)', 'MLJ_G4H_FS24_FR_Fs8', 0) passed None record
+  + ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 from FAULT + d T_s (d = 1; FAULT-sample output recorded)', 'MLJ_G4H_FS24_RL_Fs0', 0) passed True judged
+  + ('C-S8-68 G4-7 no-target run (end_reason no_target): FAULT at the fault sample, output 0 from t_f + d T_s (as the direct FAULT; a record when targeted)', 'MLJ_G4H_FS24_RL_Fs0', 0) passed None record
+  + ('C-S8-68 G4-8 re-ground travel / time within the limits, hold counts, abort / D1 step-suspend events (record)', 'MLJ_G4H_FS24_RL_Fs0', 0) passed None record
+  + ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 from FAULT + d T_s (d = 1; FAULT-sample output recorded)', 'MLJ_G4H_FS24_RL_Fs8', 0) passed True judged
+  + ('C-S8-68 G4-7 no-target run (end_reason no_target): FAULT at the fault sample, output 0 from t_f + d T_s (as the direct FAULT; a record when targeted)', 'MLJ_G4H_FS24_RL_Fs8', 0) passed True judged
+  + ('C-S8-68 G4-8 re-ground travel / time within the limits, hold counts, abort / D1 step-suspend events (record)', 'MLJ_G4H_FS24_RL_Fs8', 0) passed None record
+  + ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 from FAULT + d T_s (d = 1; FAULT-sample output recorded)', 'MLJ_G4H_G4_RR_Fs4', 0) passed True judged
+  + ('C-S8-68 G4-7 no-target run (end_reason no_target): FAULT at the fault sample, output 0 from t_f + d T_s (as the direct FAULT; a record when targeted)', 'MLJ_G4H_G4_RR_Fs4', 0) passed True judged
+  + ('C-S8-68 G4-8 re-ground travel / time within the limits, hold counts, abort / D1 step-suspend events (record)', 'MLJ_G4H_G4_RR_Fs4', 0) passed None record
+  + ('C-S8-68 G4-3 FAULT within fault + 15 s, output 0 from FAULT + d T_s (d = 1; FAULT-sample output recorded)', 'MLJ_G4H_quiet_FR_Fs0', 0) passed True judged
+  + ('C-S8-68 G4-7 no-target run (end_reason no_target): FAULT at the fault sample, output 0 from t_f + d T_s (as the direct FAULT; a record when targeted)', 'MLJ_G4H_quiet_FR_Fs0', 0) passed True judged
+  + ('C-S8-68 G4-8 re-ground travel / time within the limits, hold counts, abort / D1 step-suspend events (record)', 'MLJ_G4H_quiet_FR_Fs0', 0) passed None record
+changed: 12
+  * ('F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)', 'MLJ_G4H_FS24_FR_Fs0', 0) passed False -> True kind judged -> judged fields ['max_kN', 'note', 'passed', 'value']
+  * ('F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)', 'MLJ_G4H_FS24_FR_Fs8', 0) passed False -> True kind judged -> judged fields ['max_kN', 'note', 'passed', 'value']
+  * ('F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)', 'MLJ_G4H_FS24_RL_Fs0', 0) passed False -> True kind judged -> judged fields ['max_kN', 'note', 'passed', 'value']
+  * ('F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)', 'MLJ_G4H_FS24_RL_Fs8', 0) passed False -> True kind judged -> judged fields ['max_kN', 'note', 'passed', 'value']
+  * ('F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)', 'MLJ_G4H_G4_RR_Fs4', 0) passed False -> True kind judged -> judged fields ['max_kN', 'note', 'passed', 'value']
+  * ('F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)', 'MLJ_G4H_quiet_FR_Fs0', 0) passed False -> True kind judged -> judged fields ['max_kN', 'note', 'passed', 'value']
+  * ("C-S8-68 G4-4 (main) all four legs' judged true force >= F_min from FAULT + 1 s to the run end (undecidable when < 3 s)", 'MLJ_G4H_FS24_FR_Fs0', 0) passed False -> False kind judged -> judged fields ['value']
+  * ("C-S8-68 G4-4 (main) all four legs' judged true force >= F_min from FAULT + 1 s to the run end (undecidable when < 3 s)", 'MLJ_G4H_FS24_FR_Fs8', 0) passed False -> False kind judged -> judged fields ['value']
+  * ("C-S8-68 G4-4 (main) all four legs' judged true force >= F_min from FAULT + 1 s to the run end (undecidable when < 3 s)", 'MLJ_G4H_FS24_RL_Fs0', 0) passed False -> False kind judged -> judged fields ['value']
+  * ("C-S8-68 G4-4 (main) all four legs' judged true force >= F_min from FAULT + 1 s to the run end (undecidable when < 3 s)", 'MLJ_G4H_FS24_RL_Fs8', 0) passed False -> False kind judged -> judged fields ['value']
+  * ("C-S8-68 G4-4 (main) all four legs' judged true force >= F_min from FAULT + 1 s to the run end (undecidable when < 3 s)", 'MLJ_G4H_G4_RR_Fs4', 0) passed True -> True kind judged -> judged fields ['value']
+  * ("C-S8-68 G4-4 (main) all four legs' judged true force >= F_min from FAULT + 1 s to the run end (undecidable when < 3 s)", 'MLJ_G4H_quiet_FR_Fs0', 0) passed True -> True kind judged -> judged fields ['value']

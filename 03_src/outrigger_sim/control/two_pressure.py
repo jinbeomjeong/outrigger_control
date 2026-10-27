@@ -78,6 +78,25 @@ commands and its phase.
   depth below the anchor, ``R_lvl``, ``R_hi``, ``R_rate``); ``plant_meta`` (L1 runs) also
   raises the level ratio to ``max(R_ub, kappa R_plant)`` (302.6), and ``online`` keeps the
   last two-sensor locked ratio of every leg. Without a choice nothing changes, bit for bit.
+* D1'' before the first READY mass (P-S8-23 ①, U-S8-69, spec rev. 64 321.3):
+  ``imu_mass_before_ready = "yaml"`` gives D1'' the YAML superstructure mass while the crawler
+  is off and no READY median exists yet; the source in use is reported once per change as
+  ``INFO_D1_IMU_MASS_SOURCE:<yaml|ready>``. ``None`` (class default) is the rule before it.
+* Crawler re-contact watch (P-S8-23 ③, U-S8-70, spec rev. 64 322.2): in READY with the load
+  watch open, the 1 s mean IMU residual ``sum F - M_eff f_z`` against the reference of the
+  READY stay that set ``M_eff``; below ``-max(30 kN, 2 sum F_s + 10 kN)`` for 1 s ->
+  ``WARN_CRAWLER_RECONTACT_SUSPECTED``, above -15 kN for 1 s -> ``INFO_CRAWLER_RECONTACT_CLEARED``
+  (:attr:`TwoPressureMonitor.is_crawler_recontact_suspected`; the controller holds D1'' with it).
+  Off by default.
+* Held head readings (P-S8-24 ④, spec rev. 64 323.6 (3)): :meth:`TwoPressureMonitor.
+  hold_head_readings` replaces the head reading of a faulty leg by its value before the fault
+  in every later read (sums, residuals, forces).
+* D1 step rule suspended after a head fault (P-S8-25 ④, spec rev. 65 332.4): with
+  ``suspend_steps_after_head_fault`` the read after a confirmed head fault and every later
+  one judge no one-period step on any leg (head and rod side, D1' and D1''), because with one
+  leg's load unknown the step explanation (sum, IMU residual) is undetermined;
+  ``INFO_D1_STEP_SUSPENDED:<leg>`` once. Range, current, finite-value and stuck checks stay.
+  :meth:`TwoPressureMonitor.suspend_step_rule` does the same on request. Off by default.
 
 Every threshold here depends on the cylinder dimensions; the defaults are the values of spec 53
 for the YAML cylinder and are settings only, to be replaced after the REXOME35 recalculation
@@ -171,6 +190,38 @@ this RMS of the one-period ``f_z`` change before it is used."""
 IMU_GYRO_SAMPLE_PERIOD_S = 0.01
 """IMU partial-mean interval of the gyro samples (100 Hz IMU path, spec 139 P-3): the angular
 acceleration of the lever term is their difference over this time."""
+IMU_MASS_SOURCE_EVENT = "INFO_D1_IMU_MASS_SOURCE"
+"""P-S8-23 ①: ``INFO_D1_IMU_MASS_SOURCE:<yaml|ready>``, once per change of the D1'' mass."""
+
+# P-S8-23 ③ crawler re-contact watch (spec rev. 64 322.2, ASSUMPTION values of 327.3)
+RECONTACT_WINDOW_S = 1.0
+"""Length of the moving mean of the IMU residual (and of its stay reference)."""
+RECONTACT_MIN_THRESHOLD_N = 30e3
+RECONTACT_SEAL_FACTOR = 2.0
+RECONTACT_SEAL_MARGIN_N = 10e3
+"""Suspicion below ``-max(30 kN, 2 sum F_s + 10 kN)``: above the seal preload band (5.28.5)."""
+RECONTACT_CLEAR_N = 15e3
+"""Cleared above -15 kN."""
+RECONTACT_HOLD_S = 1.0
+"""Both conditions must hold this long."""
+RECONTACT_SUSPECTED_EVENT = "WARN_CRAWLER_RECONTACT_SUSPECTED"
+RECONTACT_CLEARED_EVENT = "INFO_CRAWLER_RECONTACT_CLEARED"
+RECONTACT_META_KEYS = (
+    "recontact_window_s",
+    "recontact_min_threshold_N",
+    "recontact_seal_factor",
+    "recontact_seal_margin_N",
+    "recontact_clear_N",
+    "recontact_hold_s",
+    "crawler_recontact_watch",
+)
+"""Settings of the watch, in the meta only when ``crawler_recontact_watch`` is on (so the
+meta of a monitor without it stays the one before P-S8-23)."""
+STEP_SUSPENDED_EVENT = "INFO_D1_STEP_SUSPENDED"
+"""P-S8-25 ④: ``INFO_D1_STEP_SUSPENDED:<leg>`` once, when the D1 step rule stops."""
+HOLD_TIME_SLACK_S = 1e-9
+"""Sample times are sums of 0.1 s steps; a hold of exactly ``hold_s`` counts as held."""
+
 IMU_RULE_META_KEYS = (
     "imu_residual_step_ratio",
     "imu_mass_min_samples",
@@ -282,6 +333,15 @@ class ImuMassCalibration(StrEnum):
     MEDIAN = "median"
     """Median ``sum F / f_z`` of the last READY stay (218.4; biased up to +5.9 % by the
     stuck-seal preload)."""
+
+
+class ImuMassSource(StrEnum):
+    """Where the D1'' mass comes from (last field of ``INFO_D1_IMU_MASS_SOURCE``)."""
+
+    YAML = "yaml"
+    """P-S8-23 ①: the YAML superstructure mass, before a READY stay has given one."""
+    READY = "ready"
+    """The ``imu_mass_calibration`` estimate (the READY median by default)."""
 
 
 class StepReason(StrEnum):
@@ -458,6 +518,22 @@ class TwoPressureSettings:
     -90 % .. +580 % on the ML / p1r records."""
     imu_mass_nominal_kg: float | None = None
     """``nominal``: ``None`` = the YAML superstructure mass given to the monitor."""
+    imu_mass_before_ready: str | None = None
+    """P-S8-23 ① (U-S8-69 (가)): ``"yaml"`` = while ``imu_mass_calibration`` has no mass yet,
+    D1'' uses the YAML superstructure mass given to the monitor (the R8 preset); ``None`` =
+    D1' until then (the rule before it, class default for old pickles)."""
+    # P-S8-23 ③ crawler re-contact watch (class defaults: off for old pickles)
+    crawler_recontact_watch: bool = False
+    """Spec rev. 64 322.2: on in the R8 preset; the controller holds D1'' while it suspects."""
+    recontact_window_s: float = RECONTACT_WINDOW_S
+    recontact_min_threshold_N: float = RECONTACT_MIN_THRESHOLD_N
+    recontact_seal_factor: float = RECONTACT_SEAL_FACTOR
+    recontact_seal_margin_N: float = RECONTACT_SEAL_MARGIN_N
+    recontact_clear_N: float = RECONTACT_CLEAR_N
+    recontact_hold_s: float = RECONTACT_HOLD_S
+    suspend_steps_after_head_fault: bool = False
+    """P-S8-25 ④ (spec rev. 65 332.4): no D1 step judgement from the read after a confirmed
+    head fault on (the R8 preset); class default off for old pickles and the rule before."""
     imu_mass_slope_min_samples: int = IMU_MASS_SLOPE_MIN_SAMPLES
     imu_mass_slope_min_rms_m_s2: float = IMU_MASS_SLOPE_MIN_RMS_M_S2
     imu_lever_correction: bool = True
@@ -635,6 +711,15 @@ class TwoPressureSettings:
         if ratio is not None and not (math.isfinite(ratio) and ratio >= 0.0):
             raise ValueError(f"rod_drain_hold_ratio: expected a finite ratio >= 0 or None, "
                              f"got {ratio!r}")
+        if self.imu_mass_before_ready is not None:
+            object.__setattr__(self, "imu_mass_before_ready",
+                               str(ImuMassSource(self.imu_mass_before_ready)))
+            if self.imu_mass_before_ready != ImuMassSource.YAML:
+                raise ValueError("imu_mass_before_ready: expected 'yaml' or None, "
+                                 f"got {self.imu_mass_before_ready!r}")
+        for name in ("recontact_window_s", "recontact_hold_s"):
+            if not getattr(self, name) > 0.0:
+                raise ValueError(f"{name}: expected a time > 0, got {getattr(self, name)!r}")
         if self.imu_seal_band_factor != 0.0:
             raise ValueError("imu_seal_band_factor: the seal ambiguity band is not implemented "
                              "(U-S8-36, control rev. 49 219); only 0 is accepted")
@@ -701,7 +786,7 @@ class TwoPressureSettings:
         """Settings for the run meta. The P-S8-11 keys appear only when in use (counterbalance,
         stroke check on; the stroke check is on by default since U-S8-28), the P-S8-13 column
         bound keys only with ``locked_ratio_rule = "column_bound"``, the D1'' keys only with
-        ``step_rule = "explained_imu"``."""
+        ``step_rule = "explained_imu"``, the P-S8-23 and P-S8-25 keys only when on."""
         meta = {key: list(value) if isinstance(value, tuple) else value
                 for key, value in asdict(self).items()}
         meta["step_rule"] = str(self.step_rule)
@@ -723,6 +808,13 @@ class TwoPressureSettings:
         if not self.moving_stroke_check:
             for key in STROKE_CHECK_META_KEYS:
                 del meta[key]
+        if not self.crawler_recontact_watch:
+            for key in RECONTACT_META_KEYS:
+                del meta[key]
+        if self.imu_mass_before_ready is None or self.step_rule is not StepRule.EXPLAINED_IMU:
+            del meta["imu_mass_before_ready"]
+        if not self.suspend_steps_after_head_fault:
+            del meta["suspend_steps_after_head_fault"]
         return meta
 
 
@@ -927,6 +1019,24 @@ class _ReadyBaseline:
     """Fallback legs at the start of that run (a new fallback is an event: the run restarts)."""
 
 
+@dataclass
+class _RecontactWatch:
+    """P-S8-23 ③ state of the crawler re-contact watch (spec rev. 64 322.2)."""
+
+    residuals_N: deque[float]
+    """IMU residuals of the current judging window (newest last, at most the mean length)."""
+    is_suspected: bool = False
+    condition_since_s: float | None = None
+    """Start of the unbroken run of samples meeting the suspicion (or, while suspected, the
+    clearing) condition."""
+    last_change_N: float | None = None
+    """Last ``r_bar - r_bar_0`` (meta)."""
+    last_threshold_N: float | None = None
+    suspected_count: int = 0
+    log: list[dict[str, Any]] = field(default_factory=list)
+    """Suspicion and clearing times (meta)."""
+
+
 class TwoPressureMonitor:
     """Net force, diagnosis, fallback and rod-side watch of the four legs (module docstring).
 
@@ -996,6 +1106,20 @@ class TwoPressureMonitor:
     _online_ratios: list[tuple[float, float] | None] | None = None
     """④ per leg the last two-sensor locked ``-dp_r / dp_h`` and its reference stroke ``s_ref``
     (kept once the leg falls back)."""
+    # P-S8-23 / P-S8-24: class defaults for monitors pickled before them.
+    _imu_mass_source: ImuMassSource | None = None
+    """Last reported ``INFO_D1_IMU_MASS_SOURCE`` (``None`` = none reported yet)."""
+    _imu_mass_pairs: list[tuple[float, float]] | None = None
+    """(``sum F``, ``f_z``) of the first ``recontact_window_s`` of the current READY stay
+    (re-contact watch only)."""
+    _imu_mass_reference_pairs: tuple[tuple[float, float], ...] | None = None
+    """The pairs of the READY stay that set ``M_eff`` (the reference ``r_bar_0``)."""
+    _recontact: _RecontactWatch | None = None
+    _held_head_Pa: dict[int, float] | None = None
+    """P-S8-24 ④: leg -> head reading used instead of the measured one."""
+    # P-S8-25: class default for monitors pickled before it.
+    _step_rule_suspended_by: int | None = None
+    """Leg whose head fault suspended the D1 step rule (``None`` = the rule runs)."""
     _BUFFER_SIZING_FIELDS = (
         "stuck_window_s",
         "rising_window_s",
@@ -1114,6 +1238,12 @@ class TwoPressureMonitor:
         self._r5_ratio_choice = None
         self._r5_inputs = [None] * LEG_COUNT
         self._online_ratios = [None] * LEG_COUNT
+        self._imu_mass_source = None
+        self._imu_mass_pairs = None
+        self._imu_mass_reference_pairs = None
+        self._recontact = None
+        self._held_head_Pa = None
+        self._step_rule_suspended_by = None
 
     def refresh_settings(self, settings: TwoPressureSettings) -> None:
         """Use ``settings`` from the next read on, keeping the run's state.
@@ -1152,6 +1282,59 @@ class TwoPressureMonitor:
     def head_fault_legs(self) -> list[int]:
         return [leg for leg, state in enumerate(self.head_state) if state is HeadSensorState.FAULT]
 
+    @property
+    def is_crawler_recontact_suspected(self) -> bool:
+        """P-S8-23 ③: the re-contact watch suspects the crawler carries load again."""
+        watch = self._recontact
+        return watch is not None and watch.is_suspected
+
+    @property
+    def imu_specific_force_z_m_s2(self) -> float | None:
+        """D1'' ``f_z`` of the last read (lever term removed when on); ``None`` = not given."""
+        return self._previous_imu_f_z_m_s2
+
+    def d1_imu_mass_kg(self) -> float | None:
+        """``M_eff`` D1'' would use now (P-S8-23 ①: the YAML mass before a READY one)."""
+        if self.settings.step_rule is not StepRule.EXPLAINED_IMU:
+            return None
+        return self._d1_mass_kg()
+
+    def hold_head_readings(self, legs: list[int]) -> None:
+        """P-S8-24 ④: from the next read on, ``legs`` read their head pressure of the read before
+        the last one (the value before the fault sample) instead of the measured one.
+
+        A faulty head sensor is frozen this way in every sum, residual and force of the
+        monitor; the leg is locked, so a real load change shows on the other legs.
+        """
+        if not legs:
+            return
+        history = self._history
+        if not history:
+            return
+        before_fault = history[-2] if len(history) >= 2 else history[-1]
+        held = dict(self._held_head_Pa or {})
+        for leg in legs:
+            held.setdefault(int(leg), float(before_fault[2][leg]))
+        self._held_head_Pa = held
+
+    @property
+    def is_step_rule_suspended(self) -> bool:
+        return self._step_rule_suspended_by is not None
+
+    def suspend_step_rule(self, faulty_leg: int) -> None:
+        """P-S8-25 ④ (spec rev. 65 332.4): from the next read on, judge no one-period step on
+        any leg (head and rod side, D1' and D1''); range, current, finite-value and stuck
+        checks stay. ``INFO_D1_STEP_SUSPENDED:<faulty_leg>`` once; a second call changes
+        nothing.
+
+        Args:
+            faulty_leg: The leg whose head fault makes the step explanation undetermined.
+        """
+        if self.is_step_rule_suspended:
+            return
+        self._step_rule_suspended_by = int(faulty_leg)
+        self._event_once(f"{STEP_SUSPENDED_EVENT}:{LEG_ORDER[faulty_leg]}", False)
+
     def set_zero_offsets_N(self, offsets_N: ArrayLike) -> None:
         """E-3: net-force zero offsets ``c_i`` removed from now on (0 = not calibrated)."""
         self.zero_offsets_N = _four(offsets_N, "offsets_N")
@@ -1181,6 +1364,7 @@ class TwoPressureMonitor:
         is_crawler_lifted: bool = False,
         imu_gyro_rad_s: ArrayLike | None = None,
         r5_fallback_ratios: FallbackRatioChoice | None = None,
+        seal_friction_sum_N: float = 0.0,
     ) -> PressureForces:
         """One period: the force readings; diagnosis and watch events go to :meth:`pop_events`.
 
@@ -1194,10 +1378,16 @@ class TwoPressureMonitor:
         ``imu_gyro_rad_s`` = the last two gyro partial means of the period (10 ms each,
         oldest first, body axes, shape (2, 2) x-y or (2, 3); D1'' lever term; ``None`` = no
         gyro samples); ``r5_fallback_ratios`` = the R-5 fallback slope choice (P-S8-22,
-        :meth:`r5_fallback_inputs`; ``None`` = off, bit for bit the reading before it).
+        :meth:`r5_fallback_inputs`; ``None`` = off, bit for bit the reading before it);
+        ``seal_friction_sum_N`` = ``sum F_s,i`` of the last probe round (the re-contact
+        threshold, P-S8-23 ③; 0 before a probe).
         """
         self._r5_ratio_choice = r5_fallback_ratios
         self._r5_inputs = [None] * LEG_COUNT
+        if self._held_head_Pa:
+            head_pressure_Pa = np.array(head_pressure_Pa, dtype=float)
+            for leg, held_Pa in self._held_head_Pa.items():
+                head_pressure_Pa[leg] = held_Pa
         self._update_stroke_rate(stroke_m)
         self._count_command_free(commanded_m_s)
         head_only = head_pressure_Pa * self.head_area_m2
@@ -1220,6 +1410,10 @@ class TwoPressureMonitor:
                                    imu_input)
             if self.settings.step_rule is StepRule.EXPLAINED_IMU:
                 self._track_imu_mass(head_pressure_Pa, rod, imu_input, is_locked_phase)
+                self._report_imu_mass_source(imu_input)
+                if self.settings.crawler_recontact_watch:
+                    self._watch_crawler_recontact(t_s, head_pressure_Pa, rod, imu_input,
+                                                  is_locked_phase, seal_friction_sum_N)
         self._update_rod_estimates(t_s, head_pressure_Pa, rod, commanded_m_s, stroke_m)
         forces = self._forces(head_pressure_Pa, rod, head_only)
         self._collect_load_sample(forces.nominal)
@@ -1354,6 +1548,17 @@ class TwoPressureMonitor:
             optional["d1_imu_median_mass_kg"] = self._imu_mass_kg
             optional["d1_imu_slope_mass_kg"] = self._imu_slope_mass_kg()
             optional["d1_imu_slope_samples"] = self._imu_slope_sums[2]
+            if self.settings.imu_mass_before_ready is not None:
+                source = self._imu_mass_source
+                optional["d1_imu_mass_source"] = None if source is None else str(source)
+            if self.settings.crawler_recontact_watch:
+                optional["crawler_recontact"] = self._recontact_meta()
+        if self._held_head_Pa:
+            optional["held_head_Pa"] = {LEG_ORDER[leg]: value
+                                        for leg, value in sorted(self._held_head_Pa.items())}
+        suspended_by = self._step_rule_suspended_by
+        if suspended_by is not None:
+            optional["d1_step_suspended_by"] = LEG_ORDER[suspended_by]
         if self._uses_cb_lag_bound:
             optional["counterbalance_lag_tau_s_used"] = self._cb_lag_tau_s
         if self._is_tracking_online_ratio:
@@ -1380,6 +1585,20 @@ class TwoPressureMonitor:
             "settings": self.settings.to_meta(),
         }
 
+    def _recontact_meta(self) -> dict[str, Any]:
+        watch = self._recontact
+        mass_kg = self._d1_mass_kg()
+        return {
+            "is_suspected": self.is_crawler_recontact_suspected,
+            "suspected_count": 0 if watch is None else watch.suspected_count,
+            "reference_residual_N": (
+                None if mass_kg is None else self._recontact_reference_residual_N(mass_kg)
+            ),
+            "last_residual_change_N": None if watch is None else watch.last_change_N,
+            "last_threshold_N": None if watch is None else watch.last_threshold_N,
+            "log": [] if watch is None else list(watch.log),
+        }
+
     # --- events ---
 
     def _event_once(self, name: str, is_warning: bool = True) -> None:
@@ -1402,6 +1621,8 @@ class TwoPressureMonitor:
         self.head_state[leg] = HeadSensorState.FAULT
         self._event_once(f"FAULT_HEAD_PRESSURE:{LEG_ORDER[leg]}")
         self._event_once(f"INFO_HEAD_PRESSURE_FAULT_REASON:{LEG_ORDER[leg]}:{reason}", False)
+        if self.settings.suspend_steps_after_head_fault:
+            self.suspend_step_rule(leg)
 
     # --- D1, D2, D3 ---
 
@@ -1462,8 +1683,9 @@ class TwoPressureMonitor:
         self, head, rod, head_faults: list[int], rod_faults: list[int]
     ) -> tuple[list[int], list[int]]:
         """D1 step: legs whose reading changed by more than ``max_step_Pa`` since the last
-        period, without the legs already faulty by range or current (head, rod)."""
-        if self._previous is None:
+        period, without the legs already faulty by range or current (head, rod); none while
+        the step rule is suspended (P-S8-25 ④)."""
+        if self._previous is None or self.is_step_rule_suspended:
             return [], []
         head_previous, rod_previous = self._previous
         limit = self.settings.max_step_Pa
@@ -1539,7 +1761,30 @@ class TwoPressureMonitor:
             self._event_once("WARN_D1_IMU_GYRO_MISSING")
         if self._previous_imu_f_z_m_s2 is None:
             return None
-        return self._imu_mass_estimate_kg()
+        return self._d1_mass_kg()
+
+    def _d1_mass_kg(self) -> float | None:
+        """The calibration's ``M_eff``, or (P-S8-23 ①, ``imu_mass_before_ready = "yaml"``) the
+        YAML superstructure mass while the calibration has none."""
+        estimate_kg = self._imu_mass_estimate_kg()
+        if estimate_kg is not None or self.settings.imu_mass_before_ready is None:
+            return estimate_kg
+        return self._body_mass_kg
+
+    def _report_imu_mass_source(self, imu_input: _ImuInput) -> None:
+        """P-S8-23 ①: ``INFO_D1_IMU_MASS_SOURCE:<source>`` when the mass D1'' would use next
+        comes from another source than the last reported one (crawler off only; nothing with
+        ``imu_mass_before_ready = None``, so the events stay those before it)."""
+        if self.settings.imu_mass_before_ready is None or not imu_input.is_crawler_lifted:
+            return
+        if self._imu_mass_estimate_kg() is not None:
+            source = ImuMassSource.READY
+        else:
+            source = ImuMassSource.YAML
+        if source is self._imu_mass_source:
+            return
+        self._imu_mass_source = source
+        self._events.append((f"{IMU_MASS_SOURCE_EVENT}:{source}", False))
 
     def _imu_mass_estimate_kg(self) -> float | None:
         """``M_eff`` of ``imu_mass_calibration`` (dynamics R41-1); ``None`` = not available."""
@@ -1599,17 +1844,105 @@ class TwoPressureMonitor:
         after the diagnosis, so a step is judged on the mass before its own sample."""
         is_new_stay = is_locked_phase and not self._was_locked_phase
         self._was_locked_phase = is_locked_phase
+        window = max(1, round(IMU_MASS_WINDOW_S / self.period_s))
         if self._imu_mass_ratios_kg is None or is_new_stay:
-            window = max(1, round(IMU_MASS_WINDOW_S / self.period_s))
             self._imu_mass_ratios_kg = deque(maxlen=window)
+            self._imu_mass_pairs = None
         if not is_locked_phase or not imu_input.has_f_z or imu_input.f_z_m_s2 <= 0.0:
             return
-        ratio_kg = self._net_sum_N(head, rod) / imu_input.f_z_m_s2
+        sum_N = self._net_sum_N(head, rod)
+        ratio_kg = sum_N / imu_input.f_z_m_s2
         if not math.isfinite(ratio_kg):
             return
         self._imu_mass_ratios_kg.append(ratio_kg)
+        if self.settings.crawler_recontact_watch:
+            self._keep_stay_start_pair(sum_N, float(imu_input.f_z_m_s2))
         if len(self._imu_mass_ratios_kg) >= self.settings.imu_mass_min_samples:
             self._imu_mass_kg = float(np.median(self._imu_mass_ratios_kg))
+            if self._imu_mass_pairs is not None:
+                self._imu_mass_reference_pairs = tuple(self._imu_mass_pairs)
+
+    def _keep_stay_start_pair(self, sum_N: float, f_z_m_s2: float) -> None:
+        """P-S8-23 ③: the first ``recontact_window_s`` of the stay give ``r_bar_0``; later
+        samples are left out, so a re-contact the median takes in later does not drag the
+        reference along."""
+        if self._imu_mass_pairs is None:
+            self._imu_mass_pairs = []
+        length = max(1, round(self.settings.recontact_window_s / self.period_s))
+        if len(self._imu_mass_pairs) < length:
+            self._imu_mass_pairs.append((sum_N, f_z_m_s2))
+
+    def _recontact_reference_residual_N(self, mass_kg: float) -> float:
+        """``r_bar_0`` (322.2): mean ``sum F - M_eff f_z`` over the start of the READY stay
+        that set ``M_eff``, with today's ``M_eff`` (about 0 by the median's definition); 0
+        without such a stay (YAML mass)."""
+        pairs = self._imu_mass_reference_pairs
+        if not pairs or self._imu_mass_estimate_kg() is None:
+            return 0.0
+        sums_N, f_z = np.array(pairs).T
+        return float(np.mean(sums_N - mass_kg * f_z))
+
+    # --- crawler re-contact watch (P-S8-23 ③, spec rev. 64 322.2) ---
+
+    def _recontact_watch(self) -> _RecontactWatch:
+        if self._recontact is None:
+            length = max(1, round(self.settings.recontact_window_s / self.period_s))
+            self._recontact = _RecontactWatch(residuals_N=deque(maxlen=length))
+        return self._recontact
+
+    def _recontact_threshold_N(self, seal_friction_sum_N: float) -> float:
+        settings = self.settings
+        seal_share_N = (settings.recontact_seal_factor * max(seal_friction_sum_N, 0.0)
+                        + settings.recontact_seal_margin_N)
+        return max(settings.recontact_min_threshold_N, seal_share_N)
+
+    def _watch_crawler_recontact(self, t_s, head, rod, imu_input, is_locked_phase,
+                                 seal_friction_sum_N) -> None:
+        """322.2: judged in READY with the load watch open (commands zero for the settle
+        time); the 1 s mean residual against ``r_bar_0`` below ``-threshold`` for
+        ``recontact_hold_s`` -> suspected, above ``-recontact_clear_N`` as long -> cleared.
+        Outside the window the mean restarts (a suspicion stays until cleared)."""
+        watch = self._recontact_watch()
+        mass_kg = self._d1_mass_kg()
+        is_judged = (is_locked_phase and self.is_load_watch_open and imu_input.has_f_z
+                     and mass_kg is not None)
+        residual_N = (self._net_sum_N(head, rod) - mass_kg * imu_input.f_z_m_s2
+                      if is_judged else math.nan)
+        if not math.isfinite(residual_N):
+            watch.residuals_N.clear()
+            watch.condition_since_s = None
+            return
+        watch.residuals_N.append(residual_N)
+        if len(watch.residuals_N) < (watch.residuals_N.maxlen or 1):
+            return
+        reference_N = self._recontact_reference_residual_N(mass_kg)
+        change_N = float(np.mean(watch.residuals_N)) - reference_N
+        threshold_N = self._recontact_threshold_N(seal_friction_sum_N)
+        watch.last_change_N, watch.last_threshold_N = change_N, threshold_N
+        if watch.is_suspected:
+            is_condition = change_N > -self.settings.recontact_clear_N
+        else:
+            is_condition = change_N < -threshold_N
+        if not is_condition:
+            watch.condition_since_s = None
+            return
+        if watch.condition_since_s is None:
+            watch.condition_since_s = float(t_s)
+        if t_s - watch.condition_since_s < self.settings.recontact_hold_s - HOLD_TIME_SLACK_S:
+            return
+        self._switch_recontact_suspicion(watch, float(t_s), change_N, threshold_N)
+
+    def _switch_recontact_suspicion(self, watch: _RecontactWatch, t_s: float, change_N: float,
+                                    threshold_N: float) -> None:
+        watch.is_suspected = not watch.is_suspected
+        watch.condition_since_s = None
+        if watch.is_suspected:
+            watch.suspected_count += 1
+            self._events.append((RECONTACT_SUSPECTED_EVENT, True))
+        else:
+            self._events.append((RECONTACT_CLEARED_EVENT, False))
+        watch.log.append({"t_s": t_s, "suspected": watch.is_suspected,
+                          "residual_change_N": change_N, "threshold_N": threshold_N})
 
     def _unexplained_rod_steps(self, legs: list[int], head, rod, commanded) -> list[int]:
         """D1' rod side (217.5); see :meth:`_rod_step_reason`. A fall that only

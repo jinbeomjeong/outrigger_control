@@ -1,0 +1,3827 @@
+{
+ "meta": {
+  "script": "04_scripts/01_dynamics/r65_lock_rocking_damping.py",
+  "zeta_ref": 0.03,
+  "f_ref_Hz": 8.87993688,
+  "beta_Pa": 1000000000.0,
+  "L0h_m": 0.05,
+  "L0r_m": 0.05,
+  "k_frame": 1000000000.0,
+  "k_concrete": 323661912.0,
+  "note": "c_lat = 2 x Chrono input (bushing damping acts at 2x); c_lock = YAML LOCK basis"
+ },
+ "cases": {
+  "MLJ_G4H_FS24_RL_Fs0": {
+   "record": {
+    "case": "MLJ_G4H_FS24_RL_Fs0",
+    "anchor": "fault",
+    "t0_s": 57.4,
+    "window_s": [
+     58.4,
+     70.7
+    ],
+    "F_mean_kN": [
+     153.25,
+     81.82,
+     30.51,
+     110.99
+    ],
+    "sumF_mean_kN": 376.57,
+    "s_mean_m": [
+     0.3988,
+     0.40398,
+     0.40457,
+     0.38742
+    ],
+    "rod_p_bar_min_max": [
+     [
+      -0.91,
+      51.52
+     ],
+     [
+      -0.91,
+      47.0
+     ],
+     [
+      -0.91,
+      -0.91
+     ],
+     [
+      23.39,
+      66.9
+     ]
+    ],
+    "head_p_bar_min_max": [
+     [
+      102.0,
+      145.8
+     ],
+     [
+      42.6,
+      93.3
+     ],
+     [
+      4.2,
+      60.3
+     ],
+     [
+      114.5,
+      149.9
+     ]
+    ],
+    "seal_stuck_share": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "pad_sliding_share": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "airborne_share": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "f_seal_abs_max_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "esprit_3s": [
+     {
+      "t_rel_s": 1.0,
+      "F_FL": [
+       1.9824,
+       0.00866,
+       40.5247
+      ],
+      "F_FR": [
+       1.9834,
+       0.0088,
+       43.4911
+      ],
+      "F_RL": [
+       1.9835,
+       0.00922,
+       27.0799
+      ],
+      "F_RR": [
+       1.9822,
+       0.00915,
+       23.7592
+      ],
+      "roll": [
+       1.9866,
+       0.00978,
+       0.0572
+      ],
+      "pitch": [
+       1.9834,
+       0.01087,
+       0.0046
+      ]
+     },
+     {
+      "t_rel_s": 4.0,
+      "F_FL": [
+       1.9908,
+       0.00846,
+       29.4136
+      ],
+      "F_FR": [
+       1.9916,
+       0.00859,
+       31.3365
+      ],
+      "F_RL": [
+       1.9918,
+       0.00893,
+       19.1968
+      ],
+      "F_RR": [
+       1.9905,
+       0.00883,
+       16.9301
+      ],
+      "roll": [
+       1.9978,
+       0.0075,
+       0.0355
+      ],
+      "pitch": [
+       1.9918,
+       0.01092,
+       0.0031
+      ]
+     },
+     {
+      "t_rel_s": 7.0,
+      "F_FL": [
+       1.9948,
+       0.00869,
+       21.4202
+      ],
+      "F_FR": [
+       1.9949,
+       0.00869,
+       22.6998
+      ],
+      "F_RL": [
+       1.9949,
+       0.00869,
+       13.7345
+      ],
+      "F_RR": [
+       1.9949,
+       0.00869,
+       12.1891
+      ],
+      "roll": [
+       1.9948,
+       0.00869,
+       0.0282
+      ],
+      "pitch": [
+       1.9948,
+       0.00869,
+       0.002
+      ]
+     },
+     {
+      "t_rel_s": 10.0,
+      "F_FL": [
+       1.9949,
+       0.00869,
+       15.4464
+      ],
+      "F_FR": [
+       1.9949,
+       0.00869,
+       16.3701
+      ],
+      "F_RL": [
+       1.9949,
+       0.0087,
+       9.9058
+      ],
+      "F_RR": [
+       1.9949,
+       0.00869,
+       8.789
+      ],
+      "roll": [
+       1.9949,
+       0.00869,
+       0.0204
+      ],
+      "pitch": [
+       1.9949,
+       0.00871,
+       0.0015
+      ]
+     }
+    ],
+    "f0_Hz": 1.9829,
+    "zeta0": 0.00898,
+    "amplitudes_first3s": {
+     "F_FL": [
+      40782.86924788389,
+      -179.1
+     ],
+     "s_FL": [
+      0.0012071581698709657,
+      0.2
+     ],
+     "latx_FL": [
+      2625.5563369247566,
+      0.2
+     ],
+     "laty_FL": [
+      11074.655088028292,
+      0.6
+     ],
+     "F_FR": [
+      43627.242961669144,
+      0.6
+     ],
+     "s_FR": [
+      0.0013464893387020705,
+      179.8
+     ],
+     "latx_FR": [
+      1176.8358859817668,
+      -176.7
+     ],
+     "laty_FR": [
+      10995.591092008635,
+      0.8
+     ],
+     "F_RL": [
+      26974.94170274965,
+      -179.2
+     ],
+     "s_RL": [
+      0.0014262374750009283,
+      -0.3
+     ],
+     "latx_RL": [
+      1242.9796953729065,
+      1.4
+     ],
+     "laty_RL": [
+      2073.1067403721013,
+      0.8
+     ],
+     "F_RR": [
+      23718.143934230593,
+      1.2
+     ],
+     "s_RR": [
+      0.0008999421235286608,
+      -179.6
+     ],
+     "latx_RR": [
+      558.2024805554161,
+      -175.7
+     ],
+     "laty_RR": [
+      2122.562100382565,
+      0.5
+     ],
+     "roll": [
+      0.0009645387850819052,
+      0.0
+     ],
+     "pitch": [
+      7.757538539815306e-05,
+      -1.7
+     ]
+    },
+    "k_secant_N_m": {
+     "FL": {
+      "all": 33779000.0,
+      "loading": 33525000.0,
+      "unloading": 33804000.0
+     },
+     "FR": {
+      "all": 32403000.0,
+      "loading": 29457000.0,
+      "unloading": 33763000.0
+     },
+     "RL": {
+      "all": 18914000.0,
+      "loading": 18877000.0,
+      "unloading": 18871000.0
+     },
+     "RR": {
+      "all": 26357000.0,
+      "loading": 26340000.0,
+      "unloading": 26314000.0
+     }
+    },
+    "record_energy_first3s": {
+     "P_axial_raw_W": [
+      2.87,
+      3.56,
+      3.51,
+      1.44
+     ],
+     "P_lateral_raw_W": [
+      2.34,
+      2.21,
+      0.34,
+      0.28
+     ],
+     "P_axial_W": [
+      2.83,
+      3.53,
+      3.49,
+      1.39
+     ],
+     "P_lateral_W": [
+      2.26,
+      2.13,
+      0.27,
+      0.23
+     ],
+     "E_axial_J": [
+      17.94,
+      21.4,
+      14.01,
+      7.78
+     ],
+     "E_lateral_J": [
+      6.6,
+      6.23,
+      0.57,
+      0.47
+     ]
+    },
+    "record_zeta_energy": {
+     "E_elastic_J": 75.0,
+     "E_geometric_J": -0.42,
+     "E_mode_J": 74.58,
+     "P_total_W": 16.138,
+     "P_axial_share": 0.697,
+     "zeta_record_energy_no_geo": 0.00864,
+     "zeta_record_energy": 0.00868
+    }
+   },
+   "model": {
+    "k_h_oil": [
+     29575000.0,
+     29238000.0,
+     20906000.0,
+     21726000.0
+    ],
+    "k_r_oil": [
+     10734000.0,
+     10895000.0,
+     9095000.0,
+     8665000.0
+    ],
+    "k_ax": {
+     "rec": [
+      33779000.0,
+      32403000.0,
+      18914000.0,
+      26357000.0
+     ],
+     "h": [
+      26023000.0,
+      25761000.0,
+      18972000.0,
+      19645000.0
+     ],
+     "b": [
+      33986000.0,
+      33860000.0,
+      26173000.0,
+      26468000.0
+     ]
+    },
+    "c_lock": [
+     34403.519,
+     34403.519,
+     30348.4527,
+     30348.4527
+    ],
+    "k_lat": [
+     7152770.33,
+     7152770.33,
+     3707388.61,
+     3707388.61
+    ],
+    "c_lat_actual": [
+     15796.26346,
+     15796.26346,
+     11372.37792,
+     11372.37792
+    ],
+    "c_over_k_axial_s": {
+     "rec": [
+      0.001019,
+      0.001062,
+      0.001605,
+      0.001151
+     ],
+     "h": [
+      0.001322,
+      0.001335,
+      0.0016,
+      0.001545
+     ],
+     "b": [
+      0.001012,
+      0.001016,
+      0.00116,
+      0.001147
+     ]
+    },
+    "c_over_k_lateral_s": [
+     0.002208,
+     0.002208,
+     0.003067,
+     0.003067
+    ],
+    "variants": {
+     "rec": [
+      {
+       "f_Hz": 1.9876,
+       "f_damped_model_Hz": 1.9877,
+       "zeta": 0.00868,
+       "zeta_axial": 0.00609,
+       "zeta_lateral": 0.0026,
+       "zeta_sum": 0.00868,
+       "zeta_per_element": {
+        "axial FL": 0.00154,
+        "lateral FL": 0.0012,
+        "axial FR": 0.00191,
+        "lateral FR": 0.00114,
+        "axial RL": 0.00189,
+        "lateral RL": 0.00014,
+        "axial RR": 0.00075,
+        "lateral RR": 0.00011
+       },
+       "strain_share_axial": 0.8225,
+       "strain_share_lateral": 0.1832,
+       "strain_share_geometric": -0.0057,
+       "strain_per_element": {
+        "axial FL": 0.2415,
+        "lateral FL": 0.0871,
+        "axial FR": 0.2879,
+        "lateral FR": 0.0829,
+        "axial RL": 0.1884,
+        "lateral RL": 0.0072,
+        "axial RR": 0.1047,
+        "lateral RR": 0.0059,
+        "geometric": -0.0057
+       },
+       "shape": {
+        "sway y": 0.55,
+        "roll": 0.409,
+        "yaw": 0.035
+       },
+       "phi_roll_pitch_yaw": [
+        0.000843,
+        6.6e-05,
+        -0.000177
+       ],
+       "phi_xyz": [
+        0.000304,
+        -0.003784,
+        6e-05
+       ],
+       "discrete_dt1e-4": [
+        1.9877,
+        0.00868
+       ],
+       "zeta_lateral_c_off": 0.00609,
+       "zeta_axial_c_off": 0.00259
+      },
+      {
+       "f_Hz": 2.9914,
+       "f_damped_model_Hz": 2.9917,
+       "zeta": 0.0175,
+       "zeta_axial": 0.00561,
+       "zeta_lateral": 0.01189,
+       "zeta_sum": 0.0175,
+       "zeta_per_element": {
+        "axial FL": 0.00111,
+        "lateral FL": 0.00342,
+        "axial FR": 0.00089,
+        "lateral FR": 0.00351,
+        "axial RL": 0.00168,
+        "lateral RL": 0.00244,
+        "axial RR": 0.00193,
+        "lateral RR": 0.00252
+       },
+       "strain_share_axial": 0.4949,
+       "strain_share_lateral": 0.506,
+       "strain_share_geometric": -0.001,
+       "strain_per_element": {
+        "axial FL": 0.1158,
+        "lateral FL": 0.1647,
+        "axial FR": 0.0895,
+        "lateral FR": 0.1691,
+        "axial RL": 0.1115,
+        "lateral RL": 0.0847,
+        "axial RR": 0.1782,
+        "lateral RR": 0.0874,
+        "geometric": -0.001
+       },
+       "shape": {
+        "surge x": 0.805,
+        "pitch": 0.188
+       },
+       "phi_roll_pitch_yaw": [
+        -4.3e-05,
+        0.000523,
+        1.5e-05
+       ],
+       "phi_xyz": [
+        0.004578,
+        0.000366,
+        -8.5e-05
+       ],
+       "discrete_dt1e-4": [
+        2.9918,
+        0.0175
+       ],
+       "zeta_lateral_c_off": 0.00561,
+       "zeta_axial_c_off": 0.01189
+      },
+      {
+       "f_Hz": 4.062,
+       "f_damped_model_Hz": 4.062,
+       "zeta": 0.03758,
+       "zeta_axial": 0.0002,
+       "zeta_lateral": 0.03738,
+       "zeta_sum": 0.03758,
+       "zeta_per_element": {
+        "axial FL": 7e-05,
+        "lateral FL": 0.00145,
+        "axial FR": 5e-05,
+        "lateral FR": 0.00169,
+        "axial RL": 5e-05,
+        "lateral RL": 0.01699,
+        "axial RR": 4e-05,
+        "lateral RR": 0.01724
+       },
+       "strain_share_axial": 0.0139,
+       "strain_share_lateral": 0.9862,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.0053,
+        "lateral FL": 0.0516,
+        "axial FR": 0.0036,
+        "lateral FR": 0.0601,
+        "axial RL": 0.0023,
+        "lateral RL": 0.4341,
+        "axial RR": 0.0027,
+        "lateral RR": 0.4404,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.572,
+        "sway y": 0.331,
+        "roll": 0.096
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000223,
+        1e-06,
+        0.001617
+       ],
+       "phi_xyz": [
+        9.6e-05,
+        -0.002935,
+        -2.3e-05
+       ],
+       "discrete_dt1e-4": [
+        4.0622,
+        0.03759
+       ],
+       "zeta_lateral_c_off": 0.0002,
+       "zeta_axial_c_off": 0.03738
+      }
+     ],
+     "h": [
+      {
+       "f_Hz": 1.8286,
+       "f_damped_model_Hz": 1.8286,
+       "zeta": 0.00896,
+       "zeta_axial": 0.007,
+       "zeta_lateral": 0.00196,
+       "zeta_sum": 0.00896,
+       "zeta_per_element": {
+        "axial FL": 0.00196,
+        "lateral FL": 0.0009,
+        "axial FR": 0.00207,
+        "lateral FR": 0.00088,
+        "axial RL": 0.00157,
+        "lateral RL": 9e-05,
+        "axial RR": 0.00138,
+        "lateral RR": 9e-05
+       },
+       "strain_share_axial": 0.8563,
+       "strain_share_lateral": 0.1509,
+       "strain_share_geometric": -0.0072,
+       "strain_per_element": {
+        "axial FL": 0.2587,
+        "lateral FL": 0.0711,
+        "axial FR": 0.2705,
+        "lateral FR": 0.0697,
+        "axial RL": 0.1711,
+        "lateral RL": 0.005,
+        "axial RR": 0.156,
+        "lateral RR": 0.0051,
+        "geometric": -0.0072
+       },
+       "shape": {
+        "sway y": 0.533,
+        "roll": 0.436,
+        "yaw": 0.03
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000877,
+        -1.7e-05,
+        0.000152
+       ],
+       "phi_xyz": [
+        -7.5e-05,
+        0.003726,
+        -1.4e-05
+       ],
+       "discrete_dt1e-4": [
+        1.8286,
+        0.00896
+       ],
+       "zeta_lateral_c_off": 0.007,
+       "zeta_axial_c_off": 0.00196
+      },
+      {
+       "f_Hz": 2.8352,
+       "f_damped_model_Hz": 2.8354,
+       "zeta": 0.01698,
+       "zeta_axial": 0.00752,
+       "zeta_lateral": 0.00946,
+       "zeta_sum": 0.01698,
+       "zeta_per_element": {
+        "axial FL": 0.00155,
+        "lateral FL": 0.00276,
+        "axial FR": 0.00147,
+        "lateral FR": 0.00275,
+        "axial RL": 0.00221,
+        "lateral RL": 0.00197,
+        "axial RR": 0.00229,
+        "lateral RR": 0.00198
+       },
+       "strain_share_axial": 0.5767,
+       "strain_share_lateral": 0.4246,
+       "strain_share_geometric": -0.0014,
+       "strain_per_element": {
+        "axial FL": 0.1316,
+        "lateral FL": 0.1403,
+        "axial FR": 0.1236,
+        "lateral FR": 0.1396,
+        "axial RL": 0.155,
+        "lateral RL": 0.0722,
+        "axial RR": 0.1665,
+        "lateral RR": 0.0726,
+        "geometric": -0.0014
+       },
+       "shape": {
+        "surge x": 0.757,
+        "pitch": 0.242
+       },
+       "phi_roll_pitch_yaw": [
+        -1.2e-05,
+        0.000593,
+        -1e-06
+       ],
+       "phi_xyz": [
+        0.004439,
+        9.3e-05,
+        -0.000163
+       ],
+       "discrete_dt1e-4": [
+        2.8354,
+        0.01698
+       ],
+       "zeta_lateral_c_off": 0.00752,
+       "zeta_axial_c_off": 0.00945
+      },
+      {
+       "f_Hz": 4.0566,
+       "f_damped_model_Hz": 4.0566,
+       "zeta": 0.03763,
+       "zeta_axial": 0.0002,
+       "zeta_lateral": 0.03743,
+       "zeta_sum": 0.03763,
+       "zeta_per_element": {
+        "axial FL": 6e-05,
+        "lateral FL": 0.00157,
+        "axial FR": 5e-05,
+        "lateral FR": 0.00159,
+        "axial RL": 4e-05,
+        "lateral RL": 0.01708,
+        "axial RR": 5e-05,
+        "lateral RR": 0.01718
+       },
+       "strain_share_axial": 0.0112,
+       "strain_share_lateral": 0.9889,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.0039,
+        "lateral FL": 0.0559,
+        "axial FR": 0.0031,
+        "lateral FR": 0.0566,
+        "axial RL": 0.0019,
+        "lateral RL": 0.4369,
+        "axial RR": 0.0024,
+        "lateral RR": 0.4395,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.56,
+        "sway y": 0.345,
+        "roll": 0.095
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000222,
+        4e-06,
+        0.001598
+       ],
+       "phi_xyz": [
+        2.4e-05,
+        -0.002997,
+        -8e-06
+       ],
+       "discrete_dt1e-4": [
+        4.0568,
+        0.03763
+       ],
+       "zeta_lateral_c_off": 0.0002,
+       "zeta_axial_c_off": 0.03743
+      }
+     ],
+     "b": [
+      {
+       "f_Hz": 2.0593,
+       "f_damped_model_Hz": 2.0594,
+       "zeta": 0.0085,
+       "zeta_axial": 0.00557,
+       "zeta_lateral": 0.00293,
+       "zeta_sum": 0.0085,
+       "zeta_per_element": {
+        "axial FL": 0.00158,
+        "lateral FL": 0.00133,
+        "axial FR": 0.00163,
+        "lateral FR": 0.00131,
+        "axial RL": 0.00121,
+        "lateral RL": 0.00014,
+        "axial RR": 0.00114,
+        "lateral RR": 0.00015
+       },
+       "strain_share_axial": 0.8056,
+       "strain_share_lateral": 0.1995,
+       "strain_share_geometric": -0.0051,
+       "strain_per_element": {
+        "axial FL": 0.2417,
+        "lateral FL": 0.0931,
+        "axial FR": 0.2485,
+        "lateral FR": 0.0918,
+        "axial RL": 0.1617,
+        "lateral RL": 0.0072,
+        "axial RR": 0.1537,
+        "lateral RR": 0.0073,
+        "geometric": -0.0051
+       },
+       "shape": {
+        "sway y": 0.563,
+        "roll": 0.399,
+        "yaw": 0.037
+       },
+       "phi_roll_pitch_yaw": [
+        0.000831,
+        1.1e-05,
+        -0.00019
+       ],
+       "phi_xyz": [
+        5.6e-05,
+        -0.00383,
+        1.1e-05
+       ],
+       "discrete_dt1e-4": [
+        2.0594,
+        0.0085
+       ],
+       "zeta_lateral_c_off": 0.00557,
+       "zeta_axial_c_off": 0.00293
+      },
+      {
+       "f_Hz": 3.0576,
+       "f_damped_model_Hz": 3.058,
+       "zeta": 0.01784,
+       "zeta_axial": 0.00479,
+       "zeta_lateral": 0.01305,
+       "zeta_sum": 0.01784,
+       "zeta_per_element": {
+        "axial FL": 0.00103,
+        "lateral FL": 0.00382,
+        "axial FR": 0.00099,
+        "lateral FR": 0.00377,
+        "axial RL": 0.00137,
+        "lateral RL": 0.00273,
+        "axial RR": 0.00141,
+        "lateral RR": 0.00272
+       },
+       "strain_share_axial": 0.4577,
+       "strain_share_lateral": 0.5431,
+       "strain_share_geometric": -0.0008,
+       "strain_per_element": {
+        "axial FL": 0.1057,
+        "lateral FL": 0.18,
+        "axial FR": 0.1014,
+        "lateral FR": 0.1779,
+        "axial RL": 0.1228,
+        "lateral RL": 0.0928,
+        "axial RR": 0.1277,
+        "lateral RR": 0.0925,
+        "geometric": -0.0008
+       },
+       "shape": {
+        "surge x": 0.832,
+        "pitch": 0.167
+       },
+       "phi_roll_pitch_yaw": [
+        -8e-06,
+        0.000492,
+        -6e-06
+       ],
+       "phi_xyz": [
+        0.004655,
+        7.5e-05,
+        -0.000159
+       ],
+       "discrete_dt1e-4": [
+        3.0581,
+        0.01784
+       ],
+       "zeta_lateral_c_off": 0.00479,
+       "zeta_axial_c_off": 0.01305
+      },
+      {
+       "f_Hz": 4.0641,
+       "f_damped_model_Hz": 4.0641,
+       "zeta": 0.03757,
+       "zeta_axial": 0.0002,
+       "zeta_lateral": 0.03736,
+       "zeta_sum": 0.03757,
+       "zeta_per_element": {
+        "axial FL": 6e-05,
+        "lateral FL": 0.00155,
+        "axial FR": 5e-05,
+        "lateral FR": 0.00159,
+        "axial RL": 4e-05,
+        "lateral RL": 0.01705,
+        "axial RR": 5e-05,
+        "lateral RR": 0.01717
+       },
+       "strain_share_axial": 0.015,
+       "strain_share_lateral": 0.9851,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.005,
+        "lateral FL": 0.0548,
+        "axial FR": 0.0041,
+        "lateral FR": 0.0563,
+        "axial RL": 0.0026,
+        "lateral RL": 0.4354,
+        "axial RR": 0.0033,
+        "lateral RR": 0.4385,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.578,
+        "sway y": 0.325,
+        "roll": 0.097
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000223,
+        4e-06,
+        0.001625
+       ],
+       "phi_xyz": [
+        3.2e-05,
+        -0.00291,
+        -6e-06
+       ],
+       "discrete_dt1e-4": [
+        4.0643,
+        0.03757
+       ],
+       "zeta_lateral_c_off": 0.0002,
+       "zeta_axial_c_off": 0.03736
+      }
+     ]
+    },
+    "model10_rec_f_zeta": [
+     [
+      1.9876,
+      0.00868
+     ],
+     [
+      2.9917,
+      0.0175
+     ],
+     [
+      4.062,
+      0.03758
+     ]
+    ]
+   }
+  },
+  "MLJ_G4H_FS24_FR_Fs0": {
+   "record": {
+    "case": "MLJ_G4H_FS24_FR_Fs0",
+    "anchor": "fault",
+    "t0_s": 57.0,
+    "window_s": [
+     58.0,
+     70.7
+    ],
+    "F_mean_kN": [
+     122.84,
+     112.34,
+     63.12,
+     78.26
+    ],
+    "sumF_mean_kN": 376.57,
+    "s_mean_m": [
+     0.39965,
+     0.40298,
+     0.40752,
+     0.38869
+    ],
+    "rod_p_bar_min_max": [
+     [
+      15.75,
+      82.08
+     ],
+     [
+      -0.91,
+      25.19
+     ],
+     [
+      -0.91,
+      -0.91
+     ],
+     [
+      47.75,
+      100.62
+     ]
+    ],
+    "head_p_bar_min_max": [
+     [
+      82.6,
+      133.0
+     ],
+     [
+      53.9,
+      119.1
+     ],
+     [
+      31.9,
+      100.2
+     ],
+     [
+      85.8,
+      128.2
+     ]
+    ],
+    "seal_stuck_share": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "pad_sliding_share": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "airborne_share": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "f_seal_abs_max_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "esprit_3s": [
+     {
+      "t_rel_s": 1.0,
+      "F_FL": [
+       1.9328,
+       0.00948,
+       46.1825
+      ],
+      "F_FR": [
+       1.9327,
+       0.00898,
+       50.9534
+      ],
+      "F_RL": [
+       1.9338,
+       0.00873,
+       33.8599
+      ],
+      "F_RR": [
+       1.9321,
+       0.00957,
+       29.2322
+      ],
+      "roll": [
+       1.9332,
+       0.00887,
+       0.0691
+      ],
+      "pitch": [
+       1.9331,
+       0.0081,
+       0.0077
+      ]
+     },
+     {
+      "t_rel_s": 4.0,
+      "F_FL": [
+       1.9267,
+       0.00941,
+       32.7473
+      ],
+      "F_FR": [
+       1.9269,
+       0.00919,
+       36.4957
+      ],
+      "F_RL": [
+       1.9272,
+       0.00881,
+       24.5092
+      ],
+      "F_RR": [
+       1.9263,
+       0.00906,
+       20.8179
+      ],
+      "roll": [
+       1.9136,
+       0.00576,
+       0.0322
+      ],
+      "pitch": [
+       1.9269,
+       0.00784,
+       0.0057
+      ]
+     },
+     {
+      "t_rel_s": 7.0,
+      "F_FL": [
+       1.919,
+       0.00948,
+       23.2053
+      ],
+      "F_FR": [
+       1.9185,
+       0.00937,
+       26.1234
+      ],
+      "F_RL": [
+       1.9191,
+       0.00893,
+       17.7651
+      ],
+      "F_RR": [
+       1.918,
+       0.00911,
+       15.0284
+      ],
+      "roll": [
+       1.9138,
+       0.00472,
+       0.0286
+      ],
+      "pitch": [
+       1.919,
+       0.00796,
+       0.0043
+      ]
+     },
+     {
+      "t_rel_s": 10.0,
+      "F_FL": [
+       1.9109,
+       0.00919,
+       16.451
+      ],
+      "F_FR": [
+       1.911,
+       0.00912,
+       18.6135
+      ],
+      "F_RL": [
+       1.911,
+       0.00887,
+       12.8881
+      ],
+      "F_RR": [
+       1.9111,
+       0.00888,
+       10.7955
+      ],
+      "roll": [
+       1.9091,
+       0.00901,
+       0.0262
+      ],
+      "pitch": [
+       1.9111,
+       0.00814,
+       0.0032
+      ]
+     }
+    ],
+    "f0_Hz": 1.9327,
+    "zeta0": 0.00923,
+    "amplitudes_first3s": {
+     "F_FL": [
+      46033.96524355712,
+      -179.2
+     ],
+     "s_FL": [
+      0.0013602013704000768,
+      0.2
+     ],
+     "latx_FL": [
+      3420.5713325165407,
+      0.7
+     ],
+     "laty_FL": [
+      13040.464033382163,
+      0.7
+     ],
+     "F_FR": [
+      51209.86227882643,
+      0.7
+     ],
+     "s_FR": [
+      0.001850873665140888,
+      179.9
+     ],
+     "latx_FR": [
+      1082.0967771185176,
+      -177.2
+     ],
+     "laty_FR": [
+      13012.090287669585,
+      0.7
+     ],
+     "F_RL": [
+      34184.405080541525,
+      -179.1
+     ],
+     "s_RL": [
+      0.0018242241712320727,
+      -0.2
+     ],
+     "latx_RL": [
+      1627.4256214340037,
+      1.3
+     ],
+     "laty_RL": [
+      2402.0860294887475,
+      0.5
+     ],
+     "F_RR": [
+      29034.56139343088,
+      1.1
+     ],
+     "s_RR": [
+      0.0011016753125739263,
+      -179.7
+     ],
+     "latx_RR": [
+      488.7933963780313,
+      -176.4
+     ],
+     "laty_RR": [
+      2485.3545000201043,
+      0.5
+     ],
+     "roll": [
+      0.0012134803483560518,
+      0.0
+     ],
+     "pitch": [
+      0.0001363737564982002,
+      -1.0
+     ]
+    },
+    "k_secant_N_m": {
+     "FL": {
+      "all": 33835000.0,
+      "loading": 33830000.0,
+      "unloading": 33803000.0
+     },
+     "FR": {
+      "all": 27614000.0,
+      "loading": 25549000.0,
+      "unloading": 31949000.0
+     },
+     "RL": {
+      "all": 18730000.0,
+      "loading": 18709000.0,
+      "unloading": 18691000.0
+     },
+     "RR": {
+      "all": 26347000.0,
+      "loading": 26320000.0,
+      "unloading": 26341000.0
+     }
+    },
+    "record_energy_first3s": {
+     "P_axial_raw_W": [
+      3.54,
+      6.54,
+      5.57,
+      2.05
+     ],
+     "P_lateral_raw_W": [
+      3.19,
+      2.98,
+      0.46,
+      0.36
+     ],
+     "P_axial_W": [
+      3.42,
+      6.33,
+      5.42,
+      1.98
+     ],
+     "P_lateral_W": [
+      3.01,
+      2.83,
+      0.37,
+      0.28
+     ],
+     "E_axial_J": [
+      22.8,
+      34.57,
+      22.71,
+      11.65
+     ],
+     "E_lateral_J": [
+      9.25,
+      8.68,
+      0.83,
+      0.63
+     ]
+    },
+    "record_zeta_energy": {
+     "E_elastic_J": 111.11,
+     "E_geometric_J": -0.67,
+     "E_mode_J": 110.44,
+     "P_total_W": 23.641,
+     "P_axial_share": 0.725,
+     "zeta_record_energy_no_geo": 0.00876,
+     "zeta_record_energy": 0.00881
+    }
+   },
+   "model": {
+    "k_h_oil": [
+     29519000.0,
+     29302000.0,
+     20771000.0,
+     21663000.0
+    ],
+    "k_r_oil": [
+     10760000.0,
+     10864000.0,
+     9173000.0,
+     8695000.0
+    ],
+    "k_ax": {
+     "rec": [
+      33835000.0,
+      27614000.0,
+      18730000.0,
+      26347000.0
+     ],
+     "h": [
+      25979000.0,
+      25811000.0,
+      18861000.0,
+      19594000.0
+     ],
+     "b": [
+      33965000.0,
+      33884000.0,
+      26130000.0,
+      26444000.0
+     ]
+    },
+    "c_lock": [
+     34403.519,
+     34403.519,
+     30348.4527,
+     30348.4527
+    ],
+    "k_lat": [
+     7152770.33,
+     7152770.33,
+     3707388.61,
+     3707388.61
+    ],
+    "c_lat_actual": [
+     15796.26346,
+     15796.26346,
+     11372.37792,
+     11372.37792
+    ],
+    "c_over_k_axial_s": {
+     "rec": [
+      0.001017,
+      0.001246,
+      0.00162,
+      0.001152
+     ],
+     "h": [
+      0.001324,
+      0.001333,
+      0.001609,
+      0.001549
+     ],
+     "b": [
+      0.001013,
+      0.001015,
+      0.001161,
+      0.001148
+     ]
+    },
+    "c_over_k_lateral_s": [
+     0.002208,
+     0.002208,
+     0.003067,
+     0.003067
+    ],
+    "variants": {
+     "rec": [
+      {
+       "f_Hz": 1.9387,
+       "f_damped_model_Hz": 1.9387,
+       "zeta": 0.00883,
+       "zeta_axial": 0.00645,
+       "zeta_lateral": 0.00239,
+       "zeta_sum": 0.00883,
+       "zeta_per_element": {
+        "axial FL": 0.00128,
+        "lateral FL": 0.00111,
+        "axial FR": 0.00238,
+        "lateral FR": 0.00104,
+        "axial RL": 0.00204,
+        "lateral RL": 0.00013,
+        "axial RR": 0.00074,
+        "lateral RR": 0.0001
+       },
+       "strain_share_axial": 0.8335,
+       "strain_share_lateral": 0.1726,
+       "strain_share_geometric": -0.0061,
+       "strain_per_element": {
+        "axial FL": 0.2071,
+        "lateral FL": 0.0827,
+        "axial FR": 0.3142,
+        "lateral FR": 0.0775,
+        "axial RL": 0.2066,
+        "lateral RL": 0.0071,
+        "axial RR": 0.1057,
+        "lateral RR": 0.0053,
+        "geometric": -0.0061
+       },
+       "shape": {
+        "sway y": 0.54,
+        "roll": 0.414,
+        "yaw": 0.033
+       },
+       "phi_roll_pitch_yaw": [
+        0.000851,
+        9.5e-05,
+        -0.000168
+       ],
+       "phi_xyz": [
+        0.000424,
+        -0.00375,
+        -1e-06
+       ],
+       "discrete_dt1e-4": [
+        1.9387,
+        0.00883
+       ],
+       "zeta_lateral_c_off": 0.00645,
+       "zeta_axial_c_off": 0.00238
+      },
+      {
+       "f_Hz": 2.9692,
+       "f_damped_model_Hz": 2.9695,
+       "zeta": 0.01732,
+       "zeta_axial": 0.00581,
+       "zeta_lateral": 0.01151,
+       "zeta_sum": 0.01732,
+       "zeta_per_element": {
+        "axial FL": 0.00131,
+        "lateral FL": 0.00328,
+        "axial FR": 0.00098,
+        "lateral FR": 0.00344,
+        "axial RL": 0.00159,
+        "lateral RL": 0.00233,
+        "axial RR": 0.00194,
+        "lateral RR": 0.00245
+       },
+       "strain_share_axial": 0.5073,
+       "strain_share_lateral": 0.4937,
+       "strain_share_geometric": -0.001,
+       "strain_per_element": {
+        "axial FL": 0.1377,
+        "lateral FL": 0.1594,
+        "axial FR": 0.0839,
+        "lateral FR": 0.167,
+        "axial RL": 0.1051,
+        "lateral RL": 0.0815,
+        "axial RR": 0.1806,
+        "lateral RR": 0.0858,
+        "geometric": -0.001
+       },
+       "shape": {
+        "surge x": 0.792,
+        "pitch": 0.195
+       },
+       "phi_roll_pitch_yaw": [
+        -6.1e-05,
+        0.000532,
+        2.6e-05
+       ],
+       "phi_xyz": [
+        0.004541,
+        0.00051,
+        -0.000134
+       ],
+       "discrete_dt1e-4": [
+        2.9695,
+        0.01732
+       ],
+       "zeta_lateral_c_off": 0.00581,
+       "zeta_axial_c_off": 0.01151
+      },
+      {
+       "f_Hz": 4.061,
+       "f_damped_model_Hz": 4.061,
+       "zeta": 0.0376,
+       "zeta_axial": 0.0002,
+       "zeta_lateral": 0.03739,
+       "zeta_sum": 0.0376,
+       "zeta_per_element": {
+        "axial FL": 6e-05,
+        "lateral FL": 0.00141,
+        "axial FR": 6e-05,
+        "lateral FR": 0.00175,
+        "axial RL": 4e-05,
+        "lateral RL": 0.01696,
+        "axial RR": 4e-05,
+        "lateral RR": 0.01727
+       },
+       "strain_share_axial": 0.0132,
+       "strain_share_lateral": 0.9868,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.0047,
+        "lateral FL": 0.05,
+        "axial FR": 0.0035,
+        "lateral FR": 0.062,
+        "axial RL": 0.0021,
+        "lateral RL": 0.4335,
+        "axial RR": 0.0029,
+        "lateral RR": 0.4414,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.57,
+        "sway y": 0.334,
+        "roll": 0.096
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000223,
+        -0.0,
+        0.001613
+       ],
+       "phi_xyz": [
+        0.000129,
+        -0.002948,
+        -7e-06
+       ],
+       "discrete_dt1e-4": [
+        4.0612,
+        0.0376
+       ],
+       "zeta_lateral_c_off": 0.0002,
+       "zeta_axial_c_off": 0.03739
+      }
+     ],
+     "h": [
+      {
+       "f_Hz": 1.8273,
+       "f_damped_model_Hz": 1.8273,
+       "zeta": 0.00896,
+       "zeta_axial": 0.007,
+       "zeta_lateral": 0.00196,
+       "zeta_sum": 0.00896,
+       "zeta_per_element": {
+        "axial FL": 0.00197,
+        "lateral FL": 0.0009,
+        "axial FR": 0.00207,
+        "lateral FR": 0.00088,
+        "axial RL": 0.00158,
+        "lateral RL": 9e-05,
+        "axial RR": 0.00138,
+        "lateral RR": 9e-05
+       },
+       "strain_share_axial": 0.8566,
+       "strain_share_lateral": 0.1507,
+       "strain_share_geometric": -0.0072,
+       "strain_per_element": {
+        "axial FL": 0.2598,
+        "lateral FL": 0.0709,
+        "axial FR": 0.2704,
+        "lateral FR": 0.0697,
+        "axial RL": 0.171,
+        "lateral RL": 0.005,
+        "axial RR": 0.1554,
+        "lateral RR": 0.0051,
+        "geometric": -0.0072
+       },
+       "shape": {
+        "sway y": 0.533,
+        "roll": 0.436,
+        "yaw": 0.03
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000878,
+        -1.7e-05,
+        0.000151
+       ],
+       "phi_xyz": [
+        -7.5e-05,
+        0.003726,
+        -1.6e-05
+       ],
+       "discrete_dt1e-4": [
+        1.8273,
+        0.00896
+       ],
+       "zeta_lateral_c_off": 0.007,
+       "zeta_axial_c_off": 0.00196
+      },
+      {
+       "f_Hz": 2.8332,
+       "f_damped_model_Hz": 2.8333,
+       "zeta": 0.01698,
+       "zeta_axial": 0.00755,
+       "zeta_lateral": 0.00943,
+       "zeta_sum": 0.01698,
+       "zeta_per_element": {
+        "axial FL": 0.00155,
+        "lateral FL": 0.00275,
+        "axial FR": 0.00147,
+        "lateral FR": 0.00274,
+        "axial RL": 0.00223,
+        "lateral RL": 0.00196,
+        "axial RR": 0.00231,
+        "lateral RR": 0.00198
+       },
+       "strain_share_axial": 0.5777,
+       "strain_share_lateral": 0.4237,
+       "strain_share_geometric": -0.0014,
+       "strain_per_element": {
+        "axial FL": 0.1312,
+        "lateral FL": 0.14,
+        "axial FR": 0.1237,
+        "lateral FR": 0.1393,
+        "axial RL": 0.1554,
+        "lateral RL": 0.0719,
+        "axial RR": 0.1674,
+        "lateral RR": 0.0724,
+        "geometric": -0.0014
+       },
+       "shape": {
+        "surge x": 0.756,
+        "pitch": 0.243
+       },
+       "phi_roll_pitch_yaw": [
+        -1.2e-05,
+        0.000594,
+        -2e-06
+       ],
+       "phi_xyz": [
+        0.004437,
+        9.2e-05,
+        -0.00016
+       ],
+       "discrete_dt1e-4": [
+        2.8334,
+        0.01698
+       ],
+       "zeta_lateral_c_off": 0.00755,
+       "zeta_axial_c_off": 0.00943
+      },
+      {
+       "f_Hz": 4.0567,
+       "f_damped_model_Hz": 4.0567,
+       "zeta": 0.03763,
+       "zeta_axial": 0.0002,
+       "zeta_lateral": 0.03743,
+       "zeta_sum": 0.03763,
+       "zeta_per_element": {
+        "axial FL": 7e-05,
+        "lateral FL": 0.00157,
+        "axial FR": 5e-05,
+        "lateral FR": 0.00159,
+        "axial RL": 4e-05,
+        "lateral RL": 0.01708,
+        "axial RR": 5e-05,
+        "lateral RR": 0.01718
+       },
+       "strain_share_axial": 0.0112,
+       "strain_share_lateral": 0.9889,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.0039,
+        "lateral FL": 0.0559,
+        "axial FR": 0.0031,
+        "lateral FR": 0.0566,
+        "axial RL": 0.0019,
+        "lateral RL": 0.4369,
+        "axial RR": 0.0024,
+        "lateral RR": 0.4395,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.56,
+        "sway y": 0.345,
+        "roll": 0.095
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000222,
+        4e-06,
+        0.001598
+       ],
+       "phi_xyz": [
+        2.4e-05,
+        -0.002996,
+        -8e-06
+       ],
+       "discrete_dt1e-4": [
+        4.0569,
+        0.03763
+       ],
+       "zeta_lateral_c_off": 0.0002,
+       "zeta_axial_c_off": 0.03743
+      }
+     ],
+     "b": [
+      {
+       "f_Hz": 2.0589,
+       "f_damped_model_Hz": 2.0589,
+       "zeta": 0.0085,
+       "zeta_axial": 0.00557,
+       "zeta_lateral": 0.00293,
+       "zeta_sum": 0.0085,
+       "zeta_per_element": {
+        "axial FL": 0.00159,
+        "lateral FL": 0.00133,
+        "axial FR": 0.00163,
+        "lateral FR": 0.00131,
+        "axial RL": 0.00121,
+        "lateral RL": 0.00014,
+        "axial RR": 0.00114,
+        "lateral RR": 0.00015
+       },
+       "strain_share_axial": 0.8057,
+       "strain_share_lateral": 0.1994,
+       "strain_share_geometric": -0.0051,
+       "strain_per_element": {
+        "axial FL": 0.2421,
+        "lateral FL": 0.093,
+        "axial FR": 0.2485,
+        "lateral FR": 0.0918,
+        "axial RL": 0.1616,
+        "lateral RL": 0.0072,
+        "axial RR": 0.1535,
+        "lateral RR": 0.0073,
+        "geometric": -0.0051
+       },
+       "shape": {
+        "sway y": 0.564,
+        "roll": 0.399,
+        "yaw": 0.037
+       },
+       "phi_roll_pitch_yaw": [
+        0.000831,
+        1.1e-05,
+        -0.000189
+       ],
+       "phi_xyz": [
+        5.6e-05,
+        -0.003831,
+        1.2e-05
+       ],
+       "discrete_dt1e-4": [
+        2.0589,
+        0.0085
+       ],
+       "zeta_lateral_c_off": 0.00557,
+       "zeta_axial_c_off": 0.00293
+      },
+      {
+       "f_Hz": 3.057,
+       "f_damped_model_Hz": 3.0574,
+       "zeta": 0.01784,
+       "zeta_axial": 0.0048,
+       "zeta_lateral": 0.01304,
+       "zeta_sum": 0.01784,
+       "zeta_per_element": {
+        "axial FL": 0.00103,
+        "lateral FL": 0.00381,
+        "axial FR": 0.00099,
+        "lateral FR": 0.00377,
+        "axial RL": 0.00137,
+        "lateral RL": 0.00273,
+        "axial RR": 0.00141,
+        "lateral RR": 0.00272
+       },
+       "strain_share_axial": 0.4581,
+       "strain_share_lateral": 0.5427,
+       "strain_share_geometric": -0.0008,
+       "strain_per_element": {
+        "axial FL": 0.1057,
+        "lateral FL": 0.1799,
+        "axial FR": 0.1015,
+        "lateral FR": 0.1778,
+        "axial RL": 0.123,
+        "lateral RL": 0.0927,
+        "axial RR": 0.1279,
+        "lateral RR": 0.0924,
+        "geometric": -0.0008
+       },
+       "shape": {
+        "surge x": 0.832,
+        "pitch": 0.167
+       },
+       "phi_roll_pitch_yaw": [
+        -8e-06,
+        0.000492,
+        -6e-06
+       ],
+       "phi_xyz": [
+        0.004654,
+        7.4e-05,
+        -0.000158
+       ],
+       "discrete_dt1e-4": [
+        3.0574,
+        0.01784
+       ],
+       "zeta_lateral_c_off": 0.0048,
+       "zeta_axial_c_off": 0.01303
+      },
+      {
+       "f_Hz": 4.0643,
+       "f_damped_model_Hz": 4.0643,
+       "zeta": 0.03757,
+       "zeta_axial": 0.0002,
+       "zeta_lateral": 0.03736,
+       "zeta_sum": 0.03757,
+       "zeta_per_element": {
+        "axial FL": 6e-05,
+        "lateral FL": 0.00155,
+        "axial FR": 5e-05,
+        "lateral FR": 0.00159,
+        "axial RL": 4e-05,
+        "lateral RL": 0.01706,
+        "axial RR": 5e-05,
+        "lateral RR": 0.01717
+       },
+       "strain_share_axial": 0.015,
+       "strain_share_lateral": 0.9851,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.005,
+        "lateral FL": 0.0548,
+        "axial FR": 0.0041,
+        "lateral FR": 0.0563,
+        "axial RL": 0.0026,
+        "lateral RL": 0.4355,
+        "axial RR": 0.0033,
+        "lateral RR": 0.4385,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.578,
+        "sway y": 0.325,
+        "roll": 0.097
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000223,
+        4e-06,
+        0.001625
+       ],
+       "phi_xyz": [
+        3.2e-05,
+        -0.002909,
+        -6e-06
+       ],
+       "discrete_dt1e-4": [
+        4.0645,
+        0.03757
+       ],
+       "zeta_lateral_c_off": 0.0002,
+       "zeta_axial_c_off": 0.03736
+      }
+     ]
+    },
+    "model10_rec_f_zeta": [
+     [
+      1.9387,
+      0.00883
+     ],
+     [
+      2.9694,
+      0.01732
+     ],
+     [
+      4.061,
+      0.0376
+     ]
+    ]
+   }
+  },
+  "MLJ_FS24_Fs0": {
+   "record": {
+    "case": "MLJ_FS24_Fs0",
+    "anchor": "last_ready",
+    "t0_s": 74.7,
+    "window_s": [
+     75.7,
+     95.7
+    ],
+    "F_mean_kN": [
+     118.69,
+     115.46,
+     71.53,
+     70.9
+    ],
+    "sumF_mean_kN": 376.58,
+    "s_mean_m": [
+     0.40779,
+     0.43305,
+     0.39651,
+     0.39766
+    ],
+    "rod_p_bar_min_max": [
+     [
+      0.79,
+      5.0
+     ],
+     [
+      1.78,
+      5.0
+     ],
+     [
+      1.07,
+      5.0
+     ],
+     [
+      1.99,
+      5.0
+     ]
+    ],
+    "head_p_bar_min_max": [
+     [
+      89.4,
+      91.6
+     ],
+     [
+      87.2,
+      88.9
+     ],
+     [
+      75.3,
+      77.7
+     ],
+     [
+      75.0,
+      77.1
+     ]
+    ],
+    "seal_stuck_share": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "pad_sliding_share": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "airborne_share": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "f_seal_abs_max_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "esprit_3s": [
+     {
+      "t_rel_s": 1.0,
+      "F_FL": [
+       2.0417,
+       0.00869,
+       0.8156
+      ],
+      "F_FR": [
+       2.04,
+       0.00859,
+       0.8205
+      ],
+      "F_RL": [
+       2.0415,
+       0.00775,
+       0.5739
+      ],
+      "F_RR": [
+       2.0404,
+       0.00827,
+       0.5757
+      ],
+      "roll": [
+       1.5478,
+       0.7538,
+       0.0012
+      ],
+      "pitch": [
+       3.0381,
+       0.0215,
+       0.0001
+      ]
+     },
+     {
+      "t_rel_s": 4.0,
+      "F_FL": [
+       2.0419,
+       0.00839,
+       0.5813
+      ],
+      "F_FR": [
+       2.0414,
+       0.00852,
+       0.5903
+      ],
+      "F_RL": [
+       2.0412,
+       0.00843,
+       0.4226
+      ],
+      "F_RR": [
+       2.0418,
+       0.00833,
+       0.4164
+      ],
+      "roll": [
+       2.0412,
+       0.00852,
+       0.0008
+      ],
+      "pitch": [
+       3.0437,
+       0.01779,
+       0.0
+      ]
+     },
+     {
+      "t_rel_s": 7.0,
+      "F_FL": [
+       2.0412,
+       0.00854,
+       0.4196
+      ],
+      "F_FR": [
+       2.0412,
+       0.00865,
+       0.427
+      ],
+      "F_RL": [
+       2.0412,
+       0.00851,
+       0.3052
+      ],
+      "F_RR": [
+       2.0412,
+       0.00847,
+       0.3013
+      ],
+      "roll": [
+       2.0412,
+       0.00852,
+       0.0005
+      ],
+      "pitch": [
+       3.0437,
+       0.01779,
+       0.0
+      ]
+     },
+     {
+      "t_rel_s": 10.0,
+      "F_FL": [
+       2.0414,
+       0.00879,
+       0.3045
+      ],
+      "F_FR": [
+       2.0412,
+       0.00722,
+       0.2995
+      ],
+      "F_RL": [
+       2.0407,
+       0.00795,
+       0.2174
+      ],
+      "F_RR": [
+       2.0415,
+       0.00899,
+       0.2198
+      ],
+      "roll": [
+       2.041,
+       0.00852,
+       0.0004
+      ],
+      "pitch": [
+       3.0437,
+       0.01782,
+       0.0
+      ]
+     },
+     {
+      "t_rel_s": 13.0,
+      "F_FL": [
+       2.0411,
+       0.00873,
+       0.2194
+      ],
+      "F_FR": [
+       2.0412,
+       0.00862,
+       0.2205
+      ],
+      "F_RL": [
+       2.0408,
+       0.0082,
+       0.1575
+      ],
+      "F_RR": [
+       2.0411,
+       0.00872,
+       0.158
+      ],
+      "roll": [
+       2.041,
+       0.00852,
+       0.0003
+      ],
+      "pitch": [
+       2.041,
+       0.0086,
+       0.0
+      ]
+     },
+     {
+      "t_rel_s": 16.0,
+      "F_FL": [
+       2.0417,
+       0.00854,
+       0.1576
+      ],
+      "F_FR": [
+       2.0417,
+       0.0088,
+       0.157
+      ],
+      "F_RL": [
+       2.041,
+       0.00837,
+       0.1138
+      ],
+      "F_RR": [
+       2.0417,
+       0.00845,
+       0.1138
+      ],
+      "roll": [
+       2.041,
+       0.00852,
+       0.0002
+      ],
+      "pitch": [
+       2.041,
+       0.00853,
+       0.0
+      ]
+     }
+    ],
+    "f0_Hz": 2.041,
+    "zeta0": 0.00843,
+    "amplitudes_first3s": {
+     "F_FL": [
+      818.2954071938458,
+      -178.2
+     ],
+     "s_FL": [
+      2.5960953977407302e-05,
+      -0.3
+     ],
+     "latx_FL": [
+      35.71201223969645,
+      1.8
+     ],
+     "laty_FL": [
+      227.97906298386226,
+      1.6
+     ],
+     "F_FR": [
+      804.432723770837,
+      1.6
+     ],
+     "s_FR": [
+      2.5501132782579086e-05,
+      -179.6
+     ],
+     "latx_FR": [
+      42.81589799627857,
+      -177.5
+     ],
+     "laty_FR": [
+      224.46411007815556,
+      1.6
+     ],
+     "F_RL": [
+      571.9812060299272,
+      -178.1
+     ],
+     "s_RL": [
+      2.3216304541596086e-05,
+      0.8
+     ],
+     "latx_RL": [
+      16.111137472378864,
+      2.2
+     ],
+     "laty_RL": [
+      43.59514799181447,
+      1.3
+     ],
+     "F_RR": [
+      585.5161878173369,
+      1.9
+     ],
+     "s_RR": [
+      2.3697199083405574e-05,
+      179.2
+     ],
+     "latx_RR": [
+      20.992391057992698,
+      -176.8
+     ],
+     "laty_RR": [
+      43.512028449174935,
+      1.3
+     ],
+     "roll": [
+      1.9469788435430068e-05,
+      -0.0
+     ],
+     "pitch": [
+      1.0501973884002614e-07,
+      67.4
+     ]
+    },
+    "k_secant_N_m": {
+     "FL": {
+      "all": 29825000.0,
+      "loading": 20266000.0,
+      "unloading": 31321000.0
+     },
+     "FR": {
+      "all": 30833000.0,
+      "loading": 31097000.0,
+      "unloading": 23677000.0
+     },
+     "RL": {
+      "all": 23814000.0,
+      "loading": 17052000.0,
+      "unloading": 24443000.0
+     },
+     "RR": {
+      "all": 23521000.0,
+      "loading": 24092000.0,
+      "unloading": 16554000.0
+     }
+    },
+    "record_energy_first3s": {
+     "P_axial_raw_W": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "P_lateral_raw_W": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "P_axial_W": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "P_lateral_W": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "E_axial_J": [
+      0.01,
+      0.01,
+      0.01,
+      0.01
+     ],
+     "E_lateral_J": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "record_zeta_energy": {
+     "E_elastic_J": 0.03,
+     "E_geometric_J": -0.0,
+     "E_mode_J": 0.03,
+     "P_total_W": 0.007,
+     "P_axial_share": 0.685,
+     "zeta_record_energy_no_geo": 0.00842,
+     "zeta_record_energy": 0.00847
+    }
+   },
+   "model": {
+    "k_h_oil": [
+     28994000.0,
+     27478000.0,
+     21284000.0,
+     21229000.0
+    ],
+    "k_r_oil": [
+     11016000.0,
+     11894000.0,
+     8887000.0,
+     8916000.0
+    ],
+    "k_ax": {
+     "rec": [
+      29825000.0,
+      30833000.0,
+      23814000.0,
+      23521000.0
+     ],
+     "h": [
+      25572000.0,
+      24385000.0,
+      19283000.0,
+      19238000.0
+     ],
+     "b": [
+      33773000.0,
+      33317000.0,
+      26302000.0,
+      26282000.0
+     ]
+    },
+    "c_lock": [
+     34403.519,
+     34403.519,
+     30348.4527,
+     30348.4527
+    ],
+    "k_lat": [
+     7152770.33,
+     7152770.33,
+     3707388.61,
+     3707388.61
+    ],
+    "c_lat_actual": [
+     15796.26346,
+     15796.26346,
+     11372.37792,
+     11372.37792
+    ],
+    "c_over_k_axial_s": {
+     "rec": [
+      0.001154,
+      0.001116,
+      0.001274,
+      0.00129
+     ],
+     "h": [
+      0.001345,
+      0.001411,
+      0.001574,
+      0.001578
+     ],
+     "b": [
+      0.001019,
+      0.001033,
+      0.001154,
+      0.001155
+     ]
+    },
+    "c_over_k_lateral_s": [
+     0.002208,
+     0.002208,
+     0.003067,
+     0.003067
+    ],
+    "variants": {
+     "rec": [
+      {
+       "f_Hz": 1.9651,
+       "f_damped_model_Hz": 1.9652,
+       "zeta": 0.0086,
+       "zeta_axial": 0.00609,
+       "zeta_lateral": 0.00251,
+       "zeta_sum": 0.0086,
+       "zeta_per_element": {
+        "axial FL": 0.00182,
+        "lateral FL": 0.00115,
+        "axial FR": 0.0017,
+        "lateral FR": 0.00111,
+        "axial RL": 0.00128,
+        "lateral RL": 0.00012,
+        "axial RR": 0.0013,
+        "lateral RR": 0.00012
+       },
+       "strain_share_axial": 0.827,
+       "strain_share_lateral": 0.1788,
+       "strain_share_geometric": -0.0059,
+       "strain_per_element": {
+        "axial FL": 0.2554,
+        "lateral FL": 0.0845,
+        "axial FR": 0.2467,
+        "lateral FR": 0.0816,
+        "axial RL": 0.1621,
+        "lateral RL": 0.0064,
+        "axial RR": 0.1628,
+        "lateral RR": 0.0064,
+        "geometric": -0.0059
+       },
+       "shape": {
+        "sway y": 0.552,
+        "roll": 0.413,
+        "yaw": 0.035
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000849,
+        -2e-06,
+        0.000176
+       ],
+       "phi_xyz": [
+        -1.1e-05,
+        0.00379,
+        -2.1e-05
+       ],
+       "discrete_dt1e-4": [
+        1.9652,
+        0.0086
+       ],
+       "zeta_lateral_c_off": 0.00609,
+       "zeta_axial_c_off": 0.0025
+      },
+      {
+       "f_Hz": 2.9751,
+       "f_damped_model_Hz": 2.9754,
+       "zeta": 0.01735,
+       "zeta_axial": 0.00572,
+       "zeta_lateral": 0.01163,
+       "zeta_sum": 0.01735,
+       "zeta_per_element": {
+        "axial FL": 0.00122,
+        "lateral FL": 0.00341,
+        "axial FR": 0.00121,
+        "lateral FR": 0.00334,
+        "axial RL": 0.00164,
+        "lateral RL": 0.00246,
+        "axial RR": 0.00165,
+        "lateral RR": 0.00243
+       },
+       "strain_share_axial": 0.5036,
+       "strain_share_lateral": 0.4974,
+       "strain_share_geometric": -0.001,
+       "strain_per_element": {
+        "axial FL": 0.1132,
+        "lateral FL": 0.1653,
+        "axial FR": 0.1162,
+        "lateral FR": 0.1617,
+        "axial RL": 0.1376,
+        "lateral RL": 0.0857,
+        "axial RR": 0.1367,
+        "lateral RR": 0.0847,
+        "geometric": -0.001
+       },
+       "shape": {
+        "surge x": 0.805,
+        "pitch": 0.194
+       },
+       "phi_roll_pitch_yaw": [
+        -2e-06,
+        0.00053,
+        -7e-06
+       ],
+       "phi_xyz": [
+        0.004579,
+        1.7e-05,
+        -0.000177
+       ],
+       "discrete_dt1e-4": [
+        2.9754,
+        0.01735
+       ],
+       "zeta_lateral_c_off": 0.00572,
+       "zeta_axial_c_off": 0.01163
+      },
+      {
+       "f_Hz": 4.0612,
+       "f_damped_model_Hz": 4.0612,
+       "zeta": 0.0376,
+       "zeta_axial": 0.0002,
+       "zeta_lateral": 0.0374,
+       "zeta_sum": 0.0376,
+       "zeta_per_element": {
+        "axial FL": 7e-05,
+        "lateral FL": 0.00159,
+        "axial FR": 5e-05,
+        "lateral FR": 0.00156,
+        "axial RL": 4e-05,
+        "lateral RL": 0.01708,
+        "axial RR": 5e-05,
+        "lateral RR": 0.01717
+       },
+       "strain_share_axial": 0.0133,
+       "strain_share_lateral": 0.9868,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.0045,
+        "lateral FL": 0.0563,
+        "axial FR": 0.0036,
+        "lateral FR": 0.0554,
+        "axial RL": 0.0023,
+        "lateral RL": 0.4364,
+        "axial RR": 0.0029,
+        "lateral RR": 0.4387,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.571,
+        "sway y": 0.333,
+        "roll": 0.096
+       },
+       "phi_roll_pitch_yaw": [
+        0.000222,
+        -5e-06,
+        -0.001615
+       ],
+       "phi_xyz": [
+        -9e-06,
+        0.002945,
+        9e-06
+       ],
+       "discrete_dt1e-4": [
+        4.0614,
+        0.0376
+       ],
+       "zeta_lateral_c_off": 0.0002,
+       "zeta_axial_c_off": 0.0374
+      }
+     ],
+     "h": [
+      {
+       "f_Hz": 1.8067,
+       "f_damped_model_Hz": 1.8067,
+       "zeta": 0.009,
+       "zeta_axial": 0.00711,
+       "zeta_lateral": 0.00189,
+       "zeta_sum": 0.009,
+       "zeta_per_element": {
+        "axial FL": 0.00192,
+        "lateral FL": 0.00088,
+        "axial FR": 0.00219,
+        "lateral FR": 0.00084,
+        "axial RL": 0.00154,
+        "lateral RL": 9e-05,
+        "axial RR": 0.00146,
+        "lateral RR": 8e-05
+       },
+       "strain_share_axial": 0.8604,
+       "strain_share_lateral": 0.1471,
+       "strain_share_geometric": -0.0075,
+       "strain_per_element": {
+        "axial FL": 0.2509,
+        "lateral FL": 0.0703,
+        "axial FR": 0.2738,
+        "lateral FR": 0.0668,
+        "axial RL": 0.1721,
+        "lateral RL": 0.0051,
+        "axial RR": 0.1636,
+        "lateral RR": 0.0048,
+        "geometric": -0.0075
+       },
+       "shape": {
+        "sway y": 0.532,
+        "roll": 0.438,
+        "yaw": 0.03
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000879,
+        -1.8e-05,
+        0.000151
+       ],
+       "phi_xyz": [
+        -7.7e-05,
+        0.003721,
+        8e-06
+       ],
+       "discrete_dt1e-4": [
+        1.8067,
+        0.009
+       ],
+       "zeta_lateral_c_off": 0.00711,
+       "zeta_axial_c_off": 0.00189
+      },
+      {
+       "f_Hz": 2.8172,
+       "f_damped_model_Hz": 2.8174,
+       "zeta": 0.01692,
+       "zeta_axial": 0.00769,
+       "zeta_lateral": 0.00923,
+       "zeta_sum": 0.01692,
+       "zeta_per_element": {
+        "axial FL": 0.00166,
+        "lateral FL": 0.00269,
+        "axial FR": 0.00157,
+        "lateral FR": 0.00266,
+        "axial RL": 0.00219,
+        "lateral RL": 0.00194,
+        "axial RR": 0.00227,
+        "lateral RR": 0.00194
+       },
+       "strain_share_axial": 0.5848,
+       "strain_share_lateral": 0.4166,
+       "strain_share_geometric": -0.0014,
+       "strain_per_element": {
+        "axial FL": 0.1392,
+        "lateral FL": 0.1376,
+        "axial FR": 0.126,
+        "lateral FR": 0.1362,
+        "axial RL": 0.157,
+        "lateral RL": 0.0714,
+        "axial RR": 0.1627,
+        "lateral RR": 0.0714,
+        "geometric": -0.0014
+       },
+       "shape": {
+        "surge x": 0.752,
+        "pitch": 0.246
+       },
+       "phi_roll_pitch_yaw": [
+        -1.3e-05,
+        0.000598,
+        1e-06
+       ],
+       "phi_xyz": [
+        0.004424,
+        9.4e-05,
+        -0.000192
+       ],
+       "discrete_dt1e-4": [
+        2.8174,
+        0.01692
+       ],
+       "zeta_lateral_c_off": 0.00769,
+       "zeta_axial_c_off": 0.00922
+      },
+      {
+       "f_Hz": 4.0564,
+       "f_damped_model_Hz": 4.0564,
+       "zeta": 0.03764,
+       "zeta_axial": 0.0002,
+       "zeta_lateral": 0.03744,
+       "zeta_sum": 0.03764,
+       "zeta_per_element": {
+        "axial FL": 6e-05,
+        "lateral FL": 0.00158,
+        "axial FR": 5e-05,
+        "lateral FR": 0.00159,
+        "axial RL": 4e-05,
+        "lateral RL": 0.01708,
+        "axial RR": 5e-05,
+        "lateral RR": 0.01719
+       },
+       "strain_share_axial": 0.0109,
+       "strain_share_lateral": 0.9892,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.0036,
+        "lateral FL": 0.0562,
+        "axial FR": 0.003,
+        "lateral FR": 0.0564,
+        "axial RL": 0.0018,
+        "lateral RL": 0.4369,
+        "axial RR": 0.0025,
+        "lateral RR": 0.4396,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.56,
+        "sway y": 0.346,
+        "roll": 0.095
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000221,
+        5e-06,
+        0.001598
+       ],
+       "phi_xyz": [
+        1.9e-05,
+        -0.003,
+        -1e-06
+       ],
+       "discrete_dt1e-4": [
+        4.0566,
+        0.03764
+       ],
+       "zeta_lateral_c_off": 0.0002,
+       "zeta_axial_c_off": 0.03744
+      }
+     ],
+     "b": [
+      {
+       "f_Hz": 2.0493,
+       "f_damped_model_Hz": 2.0493,
+       "zeta": 0.00848,
+       "zeta_axial": 0.0056,
+       "zeta_lateral": 0.00289,
+       "zeta_sum": 0.00849,
+       "zeta_per_element": {
+        "axial FL": 0.00157,
+        "lateral FL": 0.00132,
+        "axial FR": 0.00166,
+        "lateral FR": 0.00128,
+        "axial RL": 0.0012,
+        "lateral RL": 0.00015,
+        "axial RR": 0.00116,
+        "lateral RR": 0.00014
+       },
+       "strain_share_axial": 0.8077,
+       "strain_share_lateral": 0.1975,
+       "strain_share_geometric": -0.0052,
+       "strain_per_element": {
+        "axial FL": 0.2401,
+        "lateral FL": 0.0932,
+        "axial FR": 0.2494,
+        "lateral FR": 0.0898,
+        "axial RL": 0.1619,
+        "lateral RL": 0.0074,
+        "axial RR": 0.1562,
+        "lateral RR": 0.0071,
+        "geometric": -0.0052
+       },
+       "shape": {
+        "sway y": 0.563,
+        "roll": 0.399,
+        "yaw": 0.038
+       },
+       "phi_roll_pitch_yaw": [
+        0.000831,
+        1.1e-05,
+        -0.00019
+       ],
+       "phi_xyz": [
+        5.5e-05,
+        -0.00383,
+        5e-06
+       ],
+       "discrete_dt1e-4": [
+        2.0493,
+        0.00848
+       ],
+       "zeta_lateral_c_off": 0.0056,
+       "zeta_axial_c_off": 0.00289
+      },
+      {
+       "f_Hz": 3.0502,
+       "f_damped_model_Hz": 3.0506,
+       "zeta": 0.01778,
+       "zeta_axial": 0.00484,
+       "zeta_lateral": 0.01294,
+       "zeta_sum": 0.01778,
+       "zeta_per_element": {
+        "axial FL": 0.00105,
+        "lateral FL": 0.00378,
+        "axial FR": 0.00101,
+        "lateral FR": 0.00372,
+        "axial RL": 0.00137,
+        "lateral RL": 0.00272,
+        "axial RR": 0.00141,
+        "lateral RR": 0.00271
+       },
+       "strain_share_axial": 0.4614,
+       "strain_share_lateral": 0.5394,
+       "strain_share_geometric": -0.0008,
+       "strain_per_element": {
+        "axial FL": 0.1078,
+        "lateral FL": 0.1787,
+        "axial FR": 0.1025,
+        "lateral FR": 0.176,
+        "axial RL": 0.1239,
+        "lateral RL": 0.0927,
+        "axial RR": 0.1272,
+        "lateral RR": 0.092,
+        "geometric": -0.0008
+       },
+       "shape": {
+        "surge x": 0.83,
+        "pitch": 0.168
+       },
+       "phi_roll_pitch_yaw": [
+        -7e-06,
+        0.000494,
+        -4e-06
+       ],
+       "phi_xyz": [
+        0.00465,
+        7.1e-05,
+        -0.000167
+       ],
+       "discrete_dt1e-4": [
+        3.0506,
+        0.01778
+       ],
+       "zeta_lateral_c_off": 0.00484,
+       "zeta_axial_c_off": 0.01293
+      },
+      {
+       "f_Hz": 4.0642,
+       "f_damped_model_Hz": 4.0642,
+       "zeta": 0.03757,
+       "zeta_axial": 0.0002,
+       "zeta_lateral": 0.03737,
+       "zeta_sum": 0.03757,
+       "zeta_per_element": {
+        "axial FL": 6e-05,
+        "lateral FL": 0.00155,
+        "axial FR": 5e-05,
+        "lateral FR": 0.00158,
+        "axial RL": 4e-05,
+        "lateral RL": 0.01705,
+        "axial RR": 5e-05,
+        "lateral RR": 0.01718
+       },
+       "strain_share_axial": 0.0148,
+       "strain_share_lateral": 0.9853,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.0049,
+        "lateral FL": 0.0551,
+        "axial FR": 0.0041,
+        "lateral FR": 0.0561,
+        "axial RL": 0.0025,
+        "lateral RL": 0.4354,
+        "axial RR": 0.0033,
+        "lateral RR": 0.4386,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.578,
+        "sway y": 0.325,
+        "roll": 0.097
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000223,
+        4e-06,
+        0.001625
+       ],
+       "phi_xyz": [
+        2.6e-05,
+        -0.002911,
+        -4e-06
+       ],
+       "discrete_dt1e-4": [
+        4.0644,
+        0.03757
+       ],
+       "zeta_lateral_c_off": 0.0002,
+       "zeta_axial_c_off": 0.03737
+      }
+     ]
+    },
+    "model10_rec_f_zeta": [
+     [
+      1.9651,
+      0.0086
+     ],
+     [
+      2.9754,
+      0.01735
+     ],
+     [
+      4.0612,
+      0.0376
+     ]
+    ]
+   }
+  },
+  "MLJ_G4H_FS24_RL_Fs8": {
+   "record": {
+    "case": "MLJ_G4H_FS24_RL_Fs8",
+    "anchor": "fault",
+    "t0_s": 54.8,
+    "window_s": [
+     55.8,
+     70.6
+    ],
+    "F_mean_kN": [
+     157.61,
+     77.4,
+     25.46,
+     116.1
+    ],
+    "sumF_mean_kN": 376.58,
+    "s_mean_m": [
+     0.39813,
+     0.40511,
+     0.40246,
+     0.38696
+    ],
+    "rod_p_bar_min_max": [
+     [
+      56.31,
+      56.31
+     ],
+     [
+      -0.91,
+      -0.91
+     ],
+     [
+      2.0,
+      2.0
+     ],
+     [
+      46.37,
+      46.37
+     ]
+    ],
+    "head_p_bar_min_max": [
+     [
+      133.5,
+      133.6
+     ],
+     [
+      58.3,
+      58.4
+     ],
+     [
+      27.6,
+      27.7
+     ],
+     [
+      138.2,
+      138.3
+     ]
+    ],
+    "seal_stuck_share": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "pad_sliding_share": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "airborne_share": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "f_seal_abs_max_N": [
+     3693.4,
+     2083.3,
+     1905.5,
+     2480.0
+    ],
+    "esprit_3s": [
+     {
+      "t_rel_s": 1.0,
+      "F_FL": [
+       3.4418,
+       0.0248,
+       2.1745
+      ],
+      "F_FR": [
+       3.4161,
+       0.01557,
+       1.55
+      ],
+      "F_RL": [
+       3.4146,
+       0.01445,
+       1.2857
+      ],
+      "F_RR": [
+       3.443,
+       0.02543,
+       1.9176
+      ],
+      "roll": [
+       3.4306,
+       0.02085,
+       0.0004
+      ],
+      "pitch": [
+       3.7279,
+       0.01366,
+       0.0
+      ]
+     },
+     {
+      "t_rel_s": 4.0,
+      "F_FL": [
+       3.4394,
+       0.02029,
+       0.4839
+      ],
+      "F_FR": [
+       3.4252,
+       0.02397,
+       0.5282
+      ],
+      "F_RL": [
+       3.4116,
+       0.02433,
+       0.4579
+      ],
+      "F_RR": [
+       3.4397,
+       0.01968,
+       0.417
+      ],
+      "roll": [
+       3.4307,
+       0.02086,
+       0.0001
+      ],
+      "pitch": [
+       3.6799,
+       0.03378,
+       0.0
+      ]
+     },
+     {
+      "t_rel_s": 7.0,
+      "F_FL": [
+       3.4264,
+       0.01893,
+       0.116
+      ],
+      "F_FR": [
+       3.4343,
+       0.02212,
+       0.133
+      ],
+      "F_RL": [
+       3.4348,
+       0.02233,
+       0.116
+      ],
+      "F_RR": [
+       3.4259,
+       0.0193,
+       0.1025
+      ],
+      "roll": [
+       3.4304,
+       0.02085,
+       0.0
+      ],
+      "pitch": [
+       3.6936,
+       0.02522,
+       0.0
+      ]
+     },
+     {
+      "t_rel_s": 10.0,
+      "F_FL": [
+       3.4279,
+       0.02151,
+       0.033
+      ],
+      "F_FR": [
+       3.4341,
+       0.02045,
+       0.0329
+      ],
+      "F_RL": [
+       3.4345,
+       0.01994,
+       0.028
+      ],
+      "F_RR": [
+       3.4273,
+       0.02153,
+       0.0284
+      ],
+      "roll": [
+       3.4306,
+       0.02084,
+       0.0
+      ],
+      "pitch": [
+       3.6856,
+       0.02735,
+       0.0
+      ]
+     }
+    ],
+    "f0_Hz": 3.429,
+    "zeta0": 0.02019,
+    "amplitudes_first3s": {
+     "F_FL": [
+      1922.702012580159,
+      179.1
+     ],
+     "s_FL": [
+      8.8747891665068e-06,
+      -1.0
+     ],
+     "latx_FL": [
+      86.24470869489967,
+      165.0
+     ],
+     "laty_FL": [
+      711.4495809035932,
+      0.0
+     ],
+     "F_FR": [
+      1701.1483507435637,
+      1.1
+     ],
+     "s_FR": [
+      7.851677437612862e-06,
+      -178.9
+     ],
+     "latx_FR": [
+      127.0445045778108,
+      162.7
+     ],
+     "laty_FR": [
+      711.1318423993482,
+      0.0
+     ],
+     "F_RL": [
+      1452.7687851445155,
+      -178.7
+     ],
+     "s_RL": [
+      7.085093288709878e-06,
+      1.2
+     ],
+     "latx_RL": [
+      46.051548627256956,
+      166.1
+     ],
+     "laty_RL": [
+      332.86524810511906,
+      3.6
+     ],
+     "F_RR": [
+      1672.4235138115248,
+      -1.1
+     ],
+     "s_RR": [
+      8.155289956790189e-06,
+      178.9
+     ],
+     "latx_RR": [
+      65.35744721630967,
+      163.9
+     ],
+     "laty_RR": [
+      333.22457894740916,
+      3.6
+     ],
+     "roll": [
+      6.314440120573935e-06,
+      0.0
+     ],
+     "pitch": [
+      1.6267314884592018e-07,
+      159.7
+     ]
+    },
+    "k_secant_N_m": {
+     "FL": {
+      "all": 216583000.0,
+      "loading": 215917000.0,
+      "unloading": 216178000.0
+     },
+     "FR": {
+      "all": 216618000.0,
+      "loading": 215910000.0,
+      "unloading": 215836000.0
+     },
+     "RL": {
+      "all": 204961000.0,
+      "loading": 204092000.0,
+      "unloading": 204211000.0
+     },
+     "RR": {
+      "all": 205025000.0,
+      "loading": 204350000.0,
+      "unloading": 204630000.0
+     }
+    },
+    "record_energy_first3s": {
+     "P_axial_raw_W": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "P_lateral_raw_W": [
+      0.01,
+      0.01,
+      0.01,
+      0.01
+     ],
+     "P_axial_W": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "P_lateral_W": [
+      0.01,
+      0.01,
+      0.01,
+      0.01
+     ],
+     "E_axial_J": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "E_lateral_J": [
+      0.01,
+      0.01,
+      0.01,
+      0.01
+     ]
+    },
+    "record_zeta_energy": {
+     "E_elastic_J": 0.05,
+     "E_geometric_J": -0.0,
+     "E_mode_J": 0.05,
+     "P_total_W": 0.043,
+     "P_axial_share": 0.016,
+     "zeta_record_energy_no_geo": 0.02136,
+     "zeta_record_energy": 0.02136
+    }
+   },
+   "model": {
+    "k_h_oil": [
+     29619000.0,
+     29165000.0,
+     21004000.0,
+     21749000.0
+    ],
+    "k_r_oil": [
+     10714000.0,
+     10931000.0,
+     9039000.0,
+     8654000.0
+    ],
+    "k_ax": {
+     "rec": [
+      216583000.0,
+      216618000.0,
+      204961000.0,
+      205025000.0
+     ],
+     "h": [
+      26057000.0,
+      25704000.0,
+      19053000.0,
+      19664000.0
+     ],
+     "b": [
+      34003000.0,
+      33834000.0,
+      26205000.0,
+      26478000.0
+     ]
+    },
+    "c_lock": [
+     34403.519,
+     34403.519,
+     30348.4527,
+     30348.4527
+    ],
+    "k_lat": [
+     7152770.33,
+     7152770.33,
+     3707388.61,
+     3707388.61
+    ],
+    "c_lat_actual": [
+     15796.26346,
+     15796.26346,
+     11372.37792,
+     11372.37792
+    ],
+    "c_over_k_axial_s": {
+     "rec": [
+      0.000159,
+      0.000159,
+      0.000148,
+      0.000148
+     ],
+     "h": [
+      0.00132,
+      0.001338,
+      0.001593,
+      0.001543
+     ],
+     "b": [
+      0.001012,
+      0.001017,
+      0.001158,
+      0.001146
+     ]
+    },
+    "c_over_k_lateral_s": [
+     0.002208,
+     0.002208,
+     0.003067,
+     0.003067
+    ],
+    "variants": {
+     "rec": [
+      {
+       "f_Hz": 3.4333,
+       "f_damped_model_Hz": 3.4346,
+       "zeta": 0.02086,
+       "zeta_axial": 0.00037,
+       "zeta_lateral": 0.0205,
+       "zeta_sum": 0.02087,
+       "zeta_per_element": {
+        "axial FL": 0.0001,
+        "lateral FL": 0.00684,
+        "axial FR": 0.00011,
+        "lateral FR": 0.00682,
+        "axial RL": 8e-05,
+        "lateral RL": 0.00342,
+        "axial RR": 8e-05,
+        "lateral RR": 0.00342
+       },
+       "strain_share_axial": 0.22,
+       "strain_share_lateral": 0.7802,
+       "strain_share_geometric": -0.0002,
+       "strain_per_element": {
+        "axial FL": 0.0609,
+        "lateral FL": 0.2873,
+        "axial FR": 0.0624,
+        "lateral FR": 0.2863,
+        "axial RL": 0.0491,
+        "lateral RL": 0.1034,
+        "axial RR": 0.0476,
+        "lateral RR": 0.1033,
+        "geometric": -0.0002
+       },
+       "shape": {
+        "sway y": 0.94,
+        "roll": 0.048
+       },
+       "phi_roll_pitch_yaw": [
+        0.000275,
+        3e-06,
+        -0.000148
+       ],
+       "phi_xyz": [
+        6.7e-05,
+        -0.004946,
+        3e-06
+       ],
+       "discrete_dt1e-4": [
+        3.4347,
+        0.02086
+       ],
+       "zeta_lateral_c_off": 0.00037,
+       "zeta_axial_c_off": 0.02049
+      },
+      {
+       "f_Hz": 3.6916,
+       "f_damped_model_Hz": 3.6919,
+       "zeta": 0.02759,
+       "zeta_axial": 9e-05,
+       "zeta_lateral": 0.02749,
+       "zeta_sum": 0.02758,
+       "zeta_per_element": {
+        "axial FL": 2e-05,
+        "lateral FL": 0.00814,
+        "axial FR": 2e-05,
+        "lateral FR": 0.00784,
+        "axial RL": 2e-05,
+        "lateral RL": 0.00585,
+        "axial RR": 2e-05,
+        "lateral RR": 0.00566
+       },
+       "strain_share_axial": 0.0525,
+       "strain_share_lateral": 0.9475,
+       "strain_share_geometric": -0.0,
+       "strain_per_element": {
+        "axial FL": 0.0128,
+        "lateral FL": 0.3177,
+        "axial FR": 0.013,
+        "lateral FR": 0.3062,
+        "axial RL": 0.0134,
+        "lateral RL": 0.1645,
+        "axial RR": 0.0133,
+        "lateral RR": 0.1592,
+        "geometric": -0.0
+       },
+       "shape": {
+        "surge x": 0.996
+       },
+       "phi_roll_pitch_yaw": [
+        -1e-06,
+        -7.6e-05,
+        3.3e-05
+       ],
+       "phi_xyz": [
+        -0.005092,
+        -8.5e-05,
+        4.1e-05
+       ],
+       "discrete_dt1e-4": [
+        3.692,
+        0.02759
+       ],
+       "zeta_lateral_c_off": 9e-05,
+       "zeta_axial_c_off": 0.02749
+      },
+      {
+       "f_Hz": 4.226,
+       "f_damped_model_Hz": 4.2255,
+       "zeta": 0.03545,
+       "zeta_axial": 0.00014,
+       "zeta_lateral": 0.03531,
+       "zeta_sum": 0.03545,
+       "zeta_per_element": {
+        "axial FL": 4e-05,
+        "lateral FL": 0.00326,
+        "axial FR": 4e-05,
+        "lateral FR": 0.00354,
+        "axial RL": 3e-05,
+        "lateral RL": 0.01408,
+        "axial RR": 3e-05,
+        "lateral RR": 0.01442
+       },
+       "strain_share_axial": 0.0681,
+       "strain_share_lateral": 0.9319,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.0197,
+        "lateral FL": 0.1113,
+        "axial FR": 0.0185,
+        "lateral FR": 0.1208,
+        "axial RL": 0.0145,
+        "lateral RL": 0.3458,
+        "axial RR": 0.0155,
+        "lateral RR": 0.354,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.865,
+        "roll": 0.093,
+        "sway y": 0.042
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000188,
+        0.0,
+        0.002028
+       ],
+       "phi_xyz": [
+        9.2e-05,
+        -0.001045,
+        -3e-06
+       ],
+       "discrete_dt1e-4": [
+        4.2257,
+        0.03546
+       ],
+       "zeta_lateral_c_off": 0.00014,
+       "zeta_axial_c_off": 0.03532
+      }
+     ],
+     "h": [
+      {
+       "f_Hz": 1.8291,
+       "f_damped_model_Hz": 1.8291,
+       "zeta": 0.00896,
+       "zeta_axial": 0.00699,
+       "zeta_lateral": 0.00197,
+       "zeta_sum": 0.00896,
+       "zeta_per_element": {
+        "axial FL": 0.00196,
+        "lateral FL": 0.0009,
+        "axial FR": 0.00208,
+        "lateral FR": 0.00088,
+        "axial RL": 0.00157,
+        "lateral RL": 9e-05,
+        "axial RR": 0.00139,
+        "lateral RR": 9e-05
+       },
+       "strain_share_axial": 0.8562,
+       "strain_share_lateral": 0.151,
+       "strain_share_geometric": -0.0072,
+       "strain_per_element": {
+        "axial FL": 0.2578,
+        "lateral FL": 0.0712,
+        "axial FR": 0.2706,
+        "lateral FR": 0.0696,
+        "axial RL": 0.1711,
+        "lateral RL": 0.0051,
+        "axial RR": 0.1566,
+        "lateral RR": 0.0051,
+        "geometric": -0.0072
+       },
+       "shape": {
+        "sway y": 0.533,
+        "roll": 0.436,
+        "yaw": 0.03
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000877,
+        -1.7e-05,
+        0.000152
+       ],
+       "phi_xyz": [
+        -7.5e-05,
+        0.003725,
+        -1.2e-05
+       ],
+       "discrete_dt1e-4": [
+        1.8291,
+        0.00896
+       ],
+       "zeta_lateral_c_off": 0.00699,
+       "zeta_axial_c_off": 0.00197
+      },
+      {
+       "f_Hz": 2.8363,
+       "f_damped_model_Hz": 2.8365,
+       "zeta": 0.01698,
+       "zeta_axial": 0.0075,
+       "zeta_lateral": 0.00948,
+       "zeta_sum": 0.01698,
+       "zeta_per_element": {
+        "axial FL": 0.00155,
+        "lateral FL": 0.00276,
+        "axial FR": 0.00147,
+        "lateral FR": 0.00275,
+        "axial RL": 0.0022,
+        "lateral RL": 0.00198,
+        "axial RR": 0.00228,
+        "lateral RR": 0.00199
+       },
+       "strain_share_axial": 0.5762,
+       "strain_share_lateral": 0.4251,
+       "strain_share_geometric": -0.0014,
+       "strain_per_element": {
+        "axial FL": 0.132,
+        "lateral FL": 0.1405,
+        "axial FR": 0.1236,
+        "lateral FR": 0.1397,
+        "axial RL": 0.1549,
+        "lateral RL": 0.0723,
+        "axial RR": 0.1658,
+        "lateral RR": 0.0727,
+        "geometric": -0.0014
+       },
+       "shape": {
+        "surge x": 0.757,
+        "pitch": 0.242
+       },
+       "phi_roll_pitch_yaw": [
+        -1.2e-05,
+        0.000592,
+        -1e-06
+       ],
+       "phi_xyz": [
+        0.004439,
+        9.3e-05,
+        -0.000166
+       ],
+       "discrete_dt1e-4": [
+        2.8365,
+        0.01698
+       ],
+       "zeta_lateral_c_off": 0.0075,
+       "zeta_axial_c_off": 0.00947
+      },
+      {
+       "f_Hz": 4.0565,
+       "f_damped_model_Hz": 4.0565,
+       "zeta": 0.03763,
+       "zeta_axial": 0.0002,
+       "zeta_lateral": 0.03743,
+       "zeta_sum": 0.03763,
+       "zeta_per_element": {
+        "axial FL": 6e-05,
+        "lateral FL": 0.00157,
+        "axial FR": 5e-05,
+        "lateral FR": 0.00159,
+        "axial RL": 4e-05,
+        "lateral RL": 0.01708,
+        "axial RR": 5e-05,
+        "lateral RR": 0.01718
+       },
+       "strain_share_axial": 0.0112,
+       "strain_share_lateral": 0.9889,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.0038,
+        "lateral FL": 0.0559,
+        "axial FR": 0.0031,
+        "lateral FR": 0.0566,
+        "axial RL": 0.0019,
+        "lateral RL": 0.4369,
+        "axial RR": 0.0024,
+        "lateral RR": 0.4395,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.56,
+        "sway y": 0.345,
+        "roll": 0.095
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000222,
+        5e-06,
+        0.001598
+       ],
+       "phi_xyz": [
+        2.4e-05,
+        -0.002997,
+        -7e-06
+       ],
+       "discrete_dt1e-4": [
+        4.0567,
+        0.03763
+       ],
+       "zeta_lateral_c_off": 0.0002,
+       "zeta_axial_c_off": 0.03743
+      }
+     ],
+     "b": [
+      {
+       "f_Hz": 2.0595,
+       "f_damped_model_Hz": 2.0596,
+       "zeta": 0.0085,
+       "zeta_axial": 0.00557,
+       "zeta_lateral": 0.00293,
+       "zeta_sum": 0.0085,
+       "zeta_per_element": {
+        "axial FL": 0.00158,
+        "lateral FL": 0.00133,
+        "axial FR": 0.00164,
+        "lateral FR": 0.00131,
+        "axial RL": 0.00121,
+        "lateral RL": 0.00014,
+        "axial RR": 0.00114,
+        "lateral RR": 0.00014
+       },
+       "strain_share_axial": 0.8056,
+       "strain_share_lateral": 0.1995,
+       "strain_share_geometric": -0.0051,
+       "strain_per_element": {
+        "axial FL": 0.2414,
+        "lateral FL": 0.0932,
+        "axial FR": 0.2486,
+        "lateral FR": 0.0917,
+        "axial RL": 0.1617,
+        "lateral RL": 0.0072,
+        "axial RR": 0.1538,
+        "lateral RR": 0.0073,
+        "geometric": -0.0051
+       },
+       "shape": {
+        "sway y": 0.563,
+        "roll": 0.399,
+        "yaw": 0.038
+       },
+       "phi_roll_pitch_yaw": [
+        0.000831,
+        1.1e-05,
+        -0.00019
+       ],
+       "phi_xyz": [
+        5.7e-05,
+        -0.00383,
+        1e-05
+       ],
+       "discrete_dt1e-4": [
+        2.0596,
+        0.0085
+       ],
+       "zeta_lateral_c_off": 0.00557,
+       "zeta_axial_c_off": 0.00293
+      },
+      {
+       "f_Hz": 3.058,
+       "f_damped_model_Hz": 3.0584,
+       "zeta": 0.01784,
+       "zeta_axial": 0.00479,
+       "zeta_lateral": 0.01306,
+       "zeta_sum": 0.01784,
+       "zeta_per_element": {
+        "axial FL": 0.00103,
+        "lateral FL": 0.00382,
+        "axial FR": 0.00099,
+        "lateral FR": 0.00377,
+        "axial RL": 0.00137,
+        "lateral RL": 0.00274,
+        "axial RR": 0.0014,
+        "lateral RR": 0.00273
+       },
+       "strain_share_axial": 0.4576,
+       "strain_share_lateral": 0.5432,
+       "strain_share_geometric": -0.0008,
+       "strain_per_element": {
+        "axial FL": 0.1059,
+        "lateral FL": 0.18,
+        "axial FR": 0.1014,
+        "lateral FR": 0.1779,
+        "axial RL": 0.1228,
+        "lateral RL": 0.0928,
+        "axial RR": 0.1275,
+        "lateral RR": 0.0925,
+        "geometric": -0.0008
+       },
+       "shape": {
+        "surge x": 0.832,
+        "pitch": 0.167
+       },
+       "phi_roll_pitch_yaw": [
+        -8e-06,
+        0.000492,
+        -5e-06
+       ],
+       "phi_xyz": [
+        0.004655,
+        7.5e-05,
+        -0.00016
+       ],
+       "discrete_dt1e-4": [
+        3.0584,
+        0.01784
+       ],
+       "zeta_lateral_c_off": 0.00479,
+       "zeta_axial_c_off": 0.01305
+      },
+      {
+       "f_Hz": 4.064,
+       "f_damped_model_Hz": 4.064,
+       "zeta": 0.03757,
+       "zeta_axial": 0.0002,
+       "zeta_lateral": 0.03736,
+       "zeta_sum": 0.03757,
+       "zeta_per_element": {
+        "axial FL": 6e-05,
+        "lateral FL": 0.00155,
+        "axial FR": 5e-05,
+        "lateral FR": 0.00159,
+        "axial RL": 4e-05,
+        "lateral RL": 0.01705,
+        "axial RR": 5e-05,
+        "lateral RR": 0.01717
+       },
+       "strain_share_axial": 0.015,
+       "strain_share_lateral": 0.9851,
+       "strain_share_geometric": -0.0001,
+       "strain_per_element": {
+        "axial FL": 0.005,
+        "lateral FL": 0.0549,
+        "axial FR": 0.0041,
+        "lateral FR": 0.0563,
+        "axial RL": 0.0026,
+        "lateral RL": 0.4354,
+        "axial RR": 0.0033,
+        "lateral RR": 0.4385,
+        "geometric": -0.0001
+       },
+       "shape": {
+        "yaw": 0.578,
+        "sway y": 0.325,
+        "roll": 0.097
+       },
+       "phi_roll_pitch_yaw": [
+        -0.000223,
+        4e-06,
+        0.001624
+       ],
+       "phi_xyz": [
+        3.1e-05,
+        -0.002911,
+        -6e-06
+       ],
+       "discrete_dt1e-4": [
+        4.0642,
+        0.03757
+       ],
+       "zeta_lateral_c_off": 0.0002,
+       "zeta_axial_c_off": 0.03736
+      }
+     ]
+    },
+    "model10_rec_f_zeta": [
+     [
+      3.4345,
+      0.02086
+     ],
+     [
+      3.6919,
+      0.02759
+     ],
+     [
+      4.2255,
+      0.03545
+     ]
+    ]
+   }
+  }
+ }
+}

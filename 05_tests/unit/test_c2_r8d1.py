@@ -47,6 +47,7 @@ from outrigger_sim.control.c2 import (
     TwistGainReference,
     twist_rates,
 )
+from outrigger_sim.control.fault_reground import FaultRegroundSettings
 from outrigger_sim.control.ground_contact import (
     LoadBand,
     ProbeProfile,
@@ -238,6 +239,9 @@ def test_default_config_keeps_every_r8_setting_off() -> None:
     assert config.filters.twist_load_time_constant_s is None
     assert config.reanchor.stop_predictor is StopPredictor.OFF
     assert config.zero_calibration.max_hold_std_per_leg_N is None
+    assert not config.fault_reground.enable  # P-S8-24 off by default
+    assert config.two_pressure.imu_mass_before_ready is None  # P-S8-23 off by default
+    assert not config.two_pressure.crawler_recontact_watch
     meta = C2Controller.from_params(load_params()).meta()
     assert meta["revision"] == "R7"
     assert meta["timing"] == {"d": 0, "late_imu": False, "delta_s": None,
@@ -298,7 +302,23 @@ def test_preset_values() -> None:
     assert calibration.hold_s == 1.0
     assert calibration.max_hold_std_per_leg_N == (730.0, 730.0, 530.0, 530.0)
     assert calibration.hold_std_ddof == 1
-    assert config.two_pressure == TwoPressureSettings().with_r8_period()
+    # Rev. 64 321.3 / 322.2 (U-S8-69, U-S8-70): YAML mass before READY, re-contact watch;
+    # rev. 65 332.4 (P-S8-25): D1 step rule suspended after a head fault.
+    assert config.two_pressure == replace(
+        TwoPressureSettings().with_r8_period(),
+        imu_mass_before_ready="yaml",
+        crawler_recontact_watch=True,
+        suspend_steps_after_head_fault=True,
+    )
+    # Rev. 64 323 (U-S8-68): FAULT_REGROUND; rev. 65 332.5 (P-S8-25): its corrected keys.
+    assert config.fault_reground == FaultRegroundSettings(
+        enable=True,
+        attitude_abort=False,
+        contact_rule="all_legs_hold",
+        hold_confirm_samples=10,
+        own_pre_fault_cue=True,
+        plane_gap_scaled=True,
+    )
 
 
 def test_preset_leaves_the_other_settings() -> None:

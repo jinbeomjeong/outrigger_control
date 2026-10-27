@@ -195,6 +195,29 @@ original MLJ; ML judge: ``ref_batch`` or ``rerun_from``, :func:`judge_batch`: ``
 FLAG text > 0.5 kN or > 0.1 s (:func:`attach_deferred_reference`); ③ record rows PROBE -> LEVEL
 returns and re-READY vs the reference (:func:`availability_rows`, = control ``c55_avail.py``).
 
+C-S8-68 (spec rev. 64 323, U-S8-68): ① the FAULT entry is the first of the P-S8-24 phase
+``fault_reground`` (:data:`FAULT_REGROUND_PHASE`) and ``fault`` (:func:`fault_entry_s`; records
+without the new phase are unchanged); :func:`classify_fault` gives ``head_sensor_reground`` when
+a ``fault_reground_start`` event names target legs; the G4 rows G4-1 ... G4-8 of 323.7 for the
+runs with a ``head_fault`` injection (``run_S8C`` ``mlj_c68``; :func:`g4_metrics`,
+:func:`g4_rows`), and the "MLJ FAULT 0" row skips those runs.
+
+C-S8-70 (spec rev. 65 333): ① G4-3 zero output from FAULT + d T_s (d = 1), the FAULT-sample
+output recorded; ② G4-4 records (:func:`g4_4_records`: 0.5 s moving-mean minimum, last 2 s mean /
+peak-to-peak); ③ G4-7 judged only on runs with the controller ``end_reason`` ``no_target``; ④ F2
+of a head-fault run without the fault leg from the arm time (record row
+``F2_faulty_leg_after_injection``); ⑥ the delivered head reading (``head_fault_delivered.npz``,
+:func:`head_delivered_summary`); ⑦ ``WARN_FAULT_REGROUND_ABORT`` / ``INFO_D1_STEP_SUSPENDED``
+counts, ``hold_count`` and ``max_filtered_attitude_change_rad`` in the G4-8 record row. Runs
+without a head-fault injection give the same rows as before.
+
+C-S8-71 (spec rev. 66 338, U-S8-72 (a)): ① G4-4 judged = 0.5 s moving-mean minimum >= F_min and
+instantaneous minimum > 0 over [FAULT + 1 s, end] (:data:`G4_4_RULE`), the instantaneous minimum
+vs F_min a record; ② G4-7 output check from t_f + d T_s (C-S8-70, unchanged); ③ the general rows
+:data:`G4_NA_ITEMS` of a head-fault run are "not applicable" (:func:`apply_head_fault_na_rows`)
+and the G4-E record row gives the end attitude change after FAULT; ④ the delivered head
+reading's row alignment with ``record.npz`` (:func:`head_delivered_alignment`).
+
 Sensitivity cases (``s8.condition`` = sensitivity, groups B / ML) report C1 / C2 (C-R19).
 
 Units SI internally; kN / s / deg in the rows.
@@ -1855,8 +1878,11 @@ def s8_case_metrics(case, m, params, pr: Mapping[str, Any] | None = None) -> dic
     # F2 (combined only): F_hat_cal - F_band,i - F <= sensor share after lift-off, outside the
     # forced window (C-S8-22 ③)
     if contact != "pressure":
+        # C-S8-70 ④ (spec rev. 65 333): a head-fault run leaves out the fault leg from the
+        # injection arm time (its reading carries the injected jump); recorded apart
+        hf_cut, hf_spec, hf_arm = head_fault_leg_cut(case["result"], tc)
         if fw is not None:
-            fsel = after & in_forced
+            fsel = (after & in_forced)[:, None] & ~hf_cut
             fex = (lower - f_true)[fsel]
             okf = np.isfinite(fex)
             out["F2_forced"] = {
@@ -1864,13 +1890,23 @@ def s8_case_metrics(case, m, params, pr: Mapping[str, Any] | None = None) -> dic
                 "samples": int(okf.sum()),
                 "violations": int((fex[okf] > share + NUMERIC_TOL_N).sum()),
                 "max_kN": None if not okf.any() else float(fex[okf].max()) / 1e3}
-        gate = after & ~in_forced
+        gate_1d = after & ~in_forced
+        gate = gate_1d[:, None] & ~hf_cut
         excess = (lower - f_true)[gate]
         ok = np.isfinite(excess)
         cross = (f_hat - band_s - f_true)[gate]
         okc = np.isfinite(cross)
         reading = (np.asarray(series["F_lower_N"], float) - f_true)[gate]
         okr = np.isfinite(reading)
+        if hf_cut.any():
+            cut_sel = gate_1d[:, None] & hf_cut
+            cex = (lower - f_true)[cut_sel]
+            okx = np.isfinite(cex)
+            out["F2_faulty_leg_after_injection"] = {
+                "leg": hf_spec["leg"], "from_s": hf_arm, "samples": int(okx.sum()),
+                "violations": int((cex[okx] > share + NUMERIC_TOL_N).sum()),
+                "max_kN": None if not okx.any() else float(cex[okx].max()) / 1e3,
+                "rule": "C-S8-70 ④: fault leg from the head-fault arm time, record only"}
         out["F2"] = {"violations": int((excess[ok] > share + NUMERIC_TOL_N).sum()),
                      "forced_window_excluded": fw is not None,
                      "max_kN": None if not ok.any() else float(excess[ok].max()) / 1e3,
@@ -2475,16 +2511,25 @@ def case_rows(sm: Mapping[str, Any], m: Mapping[str, Any]) -> list[dict[str, Any
                          "(record, U-S8-24)", cid, len(inside), None, None,
                          "; ".join(f"{e['leg']} {e['t_s']:.2f} s {e['reason']}" for e in inside),
                          kind="record", events=inside))
+    f2x = sm.get("F2_faulty_leg_after_injection")
     if f2 is not None:
         rows.append(_row("F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share "
                          "(after lift-off)", cid, f2["violations"], 0, f2["violations"] == 0,
                          ("forced window excluded (C-S8-22 ③); " if f2.get(
                              "forced_window_excluded") else "")
+                         + ("" if f2x is None else f"head-fault leg {f2x['leg']} excluded from "
+                            f"{f2x['from_s']:.3f} s (C-S8-70 ④); ")
                          + f"max {f2['max_kN']} kN; source {f2['lower_source']}; cross-check "
                          f"F_hat - F_band - F max {f2['max_raw_minus_band_kN']} kN; rev. 42 "
                          f"reading lower (no band) max {f2['max_reading_lower_kN']} kN",
                          max_kN=f2["max_kN"],
                          max_raw_minus_band_kN=f2["max_raw_minus_band_kN"]))
+    if f2x is not None:
+        rows.append(_row("F2 head-fault leg after the injection arm time (record, C-S8-70 ④, "
+                         "F2_faulty_leg_after_injection)", cid, f2x["violations"], None, None,
+                         f"leg {f2x['leg']} from {f2x['from_s']:.3f} s: {f2x['samples']} "
+                         f"samples, max F_lower - F {f2x['max_kN']} kN (injected +jump in the "
+                         "reading)", kind="record", max_kN=f2x["max_kN"]))
     f3 = sm.get("F3")
     if f3 is not None:
         rows.append(_row("F3 F_band >= F_s after the first probe", cid, f3["F_band_kN"],
@@ -3765,7 +3810,7 @@ def mlj_case_metrics(case: Mapping[str, Any], sm: Mapping[str, Any], params) -> 
     pads = case.get("pads")
     out: dict[str, Any] = {"event": s8.get("event"), "event_spec": ev}
     phases = res.get("phases") or []
-    fault_t = next((float(t) for t, p in phases if p == "fault"), None)
+    fault_t = fault_entry_s(phases)  # C-S8-68 ①: FAULT_REGROUND or FAULT, the first
     out["fault_t_s"] = fault_t
     t_ev = res.get("event_t_s")
     if pads is not None and t_ev is not None and ev.get("kind") == "settle" \
@@ -3855,6 +3900,8 @@ def mlj_case_metrics(case: Mapping[str, Any], sm: Mapping[str, Any], params) -> 
     if case.get("dir") is not None:  # C-S8-32: D1'' ratios (FS24_Fs0 = the D1'' worst side)
         out["fs_mean_kN"] = run_fs_mean_kN(pads, s)
         out["d1pp"] = d1pp_step_ratios(Path(case["dir"]), params, settings=s, pads=pads)
+    if ev.get(HEAD_FAULT_KEY):  # C-S8-68: G4 head fault + lifted leg (323.7)
+        out["g4h"] = g4_of_case(case, float(sm["F_min_N"]), params)
     return out
 
 
@@ -3887,9 +3934,12 @@ def mlj_rows(sms: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
         elif mj.get("u_s8_32") is not None:
             rows.extend(r | {"kind": "record", "passed": None}
                         for r in u_s8_32_rows(cid, mj["u_s8_32"], label="MLJ (record)"))
-        rows.append(_row("MLJ FAULT 0 (a rod-sensor fault falls back, it does not FAULT)", cid,
-                         mj.get("fault_t_s"), None, mj.get("fault_t_s") is None,
-                         "FAULT entry time [s] or None"))
+        if mj.get("g4h") is not None:  # C-S8-68: a head fault must FAULT; G4 rows instead
+            rows.extend(g4_rows(cid, mj["g4h"]))
+        else:
+            rows.append(_row("MLJ FAULT 0 (a rod-sensor fault falls back, it does not FAULT)",
+                             cid, mj.get("fault_t_s"), None, mj.get("fault_t_s") is None,
+                             "FAULT entry time [s] or None"))
         if "probe_request" in mj:
             pr = mj.get("probe_request") or {}
             rq = mj.get("requested_probe_rounds") or {}
@@ -3945,6 +3995,702 @@ def mlj_rows(sms: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
     if d1:
         rows.extend(d1pp_ratio_rows(d1, label="MLJ"))
     return rows
+
+
+# --- C-S8-68 (spec rev. 64 323, U-S8-68): G4 head fault + lifted leg = FAULT_REGROUND --------
+
+FAULT_REGROUND_PHASE = "fault_reground"
+"""P-S8-24 phase ``C2Phase.FAULT_REGROUND`` as recorded in ``phases`` / ``s8_series.phase``
+(ASSUMPTION: the enum value is the lower-case name like the other phases)."""
+FAULT_ENTRY_PHASES = (FAULT_REGROUND_PHASE, "fault")
+"""C-S8-68 ①: the FAULT entry is the first of these phases."""
+REGROUND_START_EVENT = "fault_reground_start"
+REGROUND_CONTACT_EVENT = "fault_reground_contact"
+REGROUND_LIMIT_WARNING = "WARN_FAULT_REGROUND_LIMIT"
+REGROUND_END_EVENT = "fault_reground_end"
+"""Spec 323.2 events: ``fault_reground_start:<legs>``, ``fault_reground_contact:<leg>``,
+``WARN_FAULT_REGROUND_LIMIT:<leg>:<travel|time>``, ``fault_reground_end:<n_contact>/<n>``."""
+HEAD_FAULT_KEY = "head_fault"
+"""``run_S8C`` event-spec key of the head-sensor fault injection (C-S8-68 ②)."""
+G4_TRUTH_HALF_WINDOW_S = 0.2
+"""Record window of ``airborne_ms_in_window`` (t_f +- 0.2 s)."""
+G4_TRUTH_SAMPLE_OFFSETS_S = (-0.2, -0.1, 0.0)
+G4_TRUTH_MIN_SAMPLES = 2
+"""323.9 ①: true target = airborne at >= 2 of the controller sample times t_f - 0.2, - 0.1, t_f."""
+G4_LATE_WINDOW_S = 0.5
+G4_LATE_MIN_S = 0.020
+"""323.9 ① record ``late_airborne``: non-target legs airborne > 20 ms in (t_f, t_f + 0.5] s."""
+G4_FAULT_WITHIN_S = 15.0
+G4_SETTLED_AFTER_S = 1.0
+G4_MIN_JUDGE_WINDOW_S = 3.0
+"""323.9 ② (ASSUMPTION): G4-4 is undecidable when run end - (FAULT + 1 s) < 3 s."""
+G4_HEALTHY_DIP_MAX_S = 0.5
+"""323.9 ③ (ASSUMPTION, U57 adjacent lift limit): a healthy leg may stay below F_min <= 0.5 s."""
+G4_HEAD_LIMIT_PA = 345e5
+G4_FAULTY_RISE_LIMIT_N = 120e3
+"""Rev. 64 323.7 value, kept as a record column only (323.9 ③: judged on the extend limit)."""
+G4_PRE_EVENT_MEDIAN_S = 2.0
+"""Record column: faulty-leg F_cyl rise against the median over [event - 2 s, event) (ASSUMPTION:
+323.9 ③ 'pre-event median' without a window length)."""
+G4_ATT_LIMIT_DEG = 0.5
+G4_ATT_MEAN_S = 0.5
+"""323.9 ④ (ASSUMPTION): trailing 0.5 s mean attitude vs the mean over [t_f - 0.5, t_f]."""
+G4_TRAVEL_CAP_M = 0.030
+G4_LEG_TIME_LIMIT_S = 8.0
+G4_TOTAL_TIME_LIMIT_S = 15.0
+G4_ZERO_U_M_S = 1e-12
+G4_TIME_TOL_S = 1e-6
+G4_OUTPUT_DELAY_PERIODS = 1
+"""C-S8-70 ① (spec rev. 65 333, 331.1 #4): controller output delay d = 1. The output issued on
+the FAULT sample is the previous period's command, so the G4-3 (and G4-7) zero-output check
+starts at FAULT + d T_s; the FAULT-sample value is a record column."""
+G4_MEAN05_S = 0.5
+G4_TAIL_S = 2.0
+"""C-S8-70 ② (spec rev. 65 333, 330.1): G4-4 record columns = per-leg minimum of the trailing
+0.5 s moving mean (window end >= FAULT + 1 s, full windows only) and the mean / peak-to-peak over
+the last 2 s of the run (control ``r64_g4_closed_loop.py`` ``G4_4_mean05_min_kN``,
+``last2s_mean_kN``, ``last2s_ptp_kN``)."""
+G4_INSTANT_FLOOR_N = 0.0
+G4_4_RULE = ("C-S8-71 / U-S8-72 (a) (spec rev. 66 337 / 338): over [FAULT + 1 s, run end] every "
+             "leg's trailing 0.5 s moving mean of the judged true force (S8-A2; windows ending "
+             "at >= FAULT + 1 s, full windows only, as control r64_g4_closed_loop.py) >= F_min "
+             "AND its instantaneous minimum > 0 (no pad lift-off); undecidable when the window "
+             "< 3 s; the instantaneous minimum vs F_min (rev. 64 strict rule) is a record "
+             "(instant_min_ge_F_min, below_F_min_s)")
+"""C-S8-71 ① (U-S8-72 (a), 2026-10-27): G4-4 judged quantity. :data:`G4_INSTANT_FLOOR_N` is
+the instantaneous floor (strictly above, N)."""
+G4_END_MEAN_S = 0.5
+"""C-S8-71 ③ record: the end attitude change after FAULT = mean true roll / pitch over the last
+0.5 s of the run minus the mean over [FAULT - 0.5 s, FAULT] (ASSUMPTION: 0.5 s means as G4-6)."""
+G4_NA_ITEMS = (RUN_ITEM, "2 attitude +-0.2 (+mount)", "RE1b re-READY <= 60 s",
+               "6 re-READY <= 40 s")
+G4_NA_EXPECTS = ("reground", "negative", "record")
+G4_NA_KIND = "not_applicable"
+"""C-S8-71 ③ (spec rev. 66 338): the general rows that ask a READY return / end attitude are not
+applicable to a head-fault injection run (expected FAULT): ``passed`` None, ``passed_raw`` kept,
+``kind`` :data:`G4_NA_KIND` (as the "comparison" / "superseded" rows of C-S8-22)."""
+G4_NO_TARGET_REASON = "no_target"
+"""C-S8-70 ③: G4-7 is judged only on runs whose controller meta ``fault_reground.run.end_reason``
+is this value (spec rev. 65 333, python assumption ⑦)."""
+REGROUND_ABORT_WARNING = "WARN_FAULT_REGROUND_ABORT"
+D1_STEP_SUSPENDED_INFO = "INFO_D1_STEP_SUSPENDED"
+"""C-S8-70 ⑦ (spec rev. 65 329 ⑧, 332.4): ``WARN_FAULT_REGROUND_ABORT:<end_reason>`` (aborts 1 /
+3 / 4 / 5 and the total time limit) and ``INFO_D1_STEP_SUSPENDED:<fault leg>``; counted in the
+G4-8 record row."""
+HEAD_DELIVERED_FILE = "head_fault_delivered.npz"
+HEAD_DELIVERED_KEY = "meas.head_pressure_delivered"
+"""C-S8-70 ⑥ (spec rev. 65 333 last row): ``run_S8C`` head-fault runs store the head reading
+the controller really received (after the injection) next to the record, because
+``record/meas.head_pressure`` holds the reading before the injection."""
+G4_RULE = (
+    "C-S8-68 / spec rev. 64 323.7 (times relative to the run start; t_f = first controller sample "
+    "with the injected head fault): G4-1 the first FAULT_REGROUND-or-FAULT entry is at t_f and "
+    "FAULT_HEAD_PRESSURE:<fault leg> is recorded there; G4-2 (rev. 64 323.9 ①) every leg "
+    "airborne (1 ms pads) at >= 2 of the controller sample times t_f - 0.2, t_f - 0.1, t_f is a "
+    "re-ground target (fault_reground_start legs); records: false targets, airborne ms in "
+    "t_f +- 0.2 s, airborne at t_f, late_airborne (non-target > 20 ms in (t_f, t_f + 0.5] s); "
+    "G4-3 FAULT (phase 'fault') <= t_f + 15 s and issued_u = 0 from FAULT + d T_s on (d = 1, "
+    "C-S8-70 ① / rev. 65 333; the FAULT-sample issued_u is recorded); G4-4 (main, C-S8-71 / "
+    "U-S8-72 (a), rev. 66 337) from FAULT + 1 s to the run end every leg's trailing 0.5 s moving "
+    "mean of the judged true force (S8-A2; window end >= FAULT + 1 s) >= F_min and its "
+    "instantaneous minimum > 0 (no pad lift-off), undecidable when that window < 3 s "
+    "(323.9 ②); records: instantaneous minimum vs F_min (rev. 64 strict rule), time below "
+    "F_min, airborne ms, mean and peak-to-peak over the last 2 s (C-S8-70 ②); "
+    "G4-5 (323.9 ③) window [entry, FAULT + 1 s): healthy legs "
+    "(neither the fault leg nor a target) never below F_min for more than 0.5 s in a row "
+    "(shorter dips recorded), faulty-leg F_cyl max <= its extend force limit (YAML "
+    "legs.<leg>.cylinder.max_force_extend_N; rises vs the entry sample and the pre-event median "
+    "recorded), every leg's true head <= 345 bar; G4-6 (323.9 ④) trailing 0.5 s mean true roll / "
+    "pitch minus the [t_f - 0.5, t_f] mean <= 0.5 deg over [t_f, FAULT + 1 s] (instant change "
+    "recorded); G4-7 judged only when the controller meta end_reason is 'no_target' (C-S8-70 ③; "
+    "without a meta: no fault_reground_start target leg), a record otherwise: no "
+    "FAULT_REGROUND, FAULT at t_f, issued_u = 0 from t_f + d T_s (the t_f-sample issued_u "
+    "recorded; ASSUMPTION: the d = 1 shift of G4-3 applies alike); G4-8 (record) per-leg travel "
+    "<= max_travel (controller meta, else 30 mm), moving time <= 8 s, window <= 15 s, "
+    "hold_count of the meta targets, max_filtered_attitude_change_rad, counts of "
+    "WARN_FAULT_REGROUND_ABORT:<reason> and INFO_D1_STEP_SUSPENDED:<leg> (C-S8-70 ⑦); G4-E "
+    "(record, C-S8-71 ③) end attitude change after FAULT (last 0.5 s mean true roll / pitch "
+    "minus the [FAULT - 0.5 s, FAULT] mean); the general rows run / 2 attitude / RE1b re-READY "
+    "/ 6 re-READY of a head-fault run (expect reground / negative / record) are not applicable "
+    "(expected FAULT). F2 of a "
+    "head-fault run leaves out the fault leg from the injection arm time (C-S8-70 ④, violations "
+    "of that leg recorded as F2_faulty_leg_after_injection)")
+
+
+def fault_entry_s(phases: Sequence[Sequence[Any]], after_s: float | None = None
+                  ) -> float | None:
+    """C-S8-68 ①: time of the first ``fault_reground`` or ``fault`` phase entry (optionally at
+    or after ``after_s``); None without one."""
+    lo = -math.inf if after_s is None else float(after_s) - G4_TIME_TOL_S
+    return next((float(t) for t, p in phases if p in FAULT_ENTRY_PHASES and float(t) >= lo),
+                None)
+
+
+def legs_in(text: str | None) -> list[str]:
+    """Leg names in an event field (``"RL"``, ``"RL,FR"``, ``"FR+RL"`` ...), leg order."""
+    found = set(re.findall(r"FL|FR|RL|RR", text or ""))
+    return [leg for leg in LEGS if leg in found]
+
+
+def head_fault_of(res: Mapping[str, Any]) -> tuple[dict[str, Any] | None, float | None,
+                                                   float | None]:
+    """C-S8-68 ②: ``(spec, arm time, first faulted sample)`` of a run's head-fault injection
+    (``settings.s8.event_spec.head_fault`` or ``result.event.spec.head_fault``; times relative)."""
+    s8 = (res.get("settings") or {}).get("s8") or {}
+    spec = None
+    for ev in (s8.get("event_spec"), (res.get("event") or {}).get("spec")):
+        if isinstance(ev, Mapping) and ev.get(HEAD_FAULT_KEY):
+            spec = dict(ev[HEAD_FAULT_KEY])
+            break
+    t_arm, t_first = res.get("head_fault_t_s"), res.get("head_fault_first_applied_t_s")
+    return (spec, None if t_arm is None else float(t_arm),
+            None if t_first is None else float(t_first))
+
+
+def head_fault_leg_cut(res: Mapping[str, Any], tc: np.ndarray
+                       ) -> tuple[np.ndarray, dict[str, Any] | None, float | None]:
+    """C-S8-70 ④: ``(mask (n, 4), spec, arm time)``; the mask is True on the head-fault leg from
+    the injection arm time on (``tc`` relative times as ``head_fault_t_s``); all False without
+    a head-fault injection."""
+    tc = np.asarray(tc, float)
+    spec, t_arm, _t_first = head_fault_of(res)
+    cut = np.zeros(tc.shape + (4,), bool)
+    if spec and t_arm is not None and spec.get("leg") in LEGS:
+        cut[tc >= t_arm - 1e-9, LEGS.index(spec["leg"])] = True
+    return cut, spec, t_arm
+
+
+def g4_4_records(tp: np.ndarray, f_N: np.ndarray, t_from_s: float, f_min_N: float,
+                 decidable: bool) -> dict[str, Any]:
+    """C-S8-70 ② record columns of G4-4 (:data:`G4_MEAN05_S`, :data:`G4_TAIL_S`): per-leg minimum
+    of the trailing 0.5 s moving mean of ``f_N`` over the windows (full ones only) ending at or
+    after ``t_from_s``, its pass flag against ``f_min_N`` (record, None when G4-4 is
+    undecidable), and the mean / peak-to-peak over the last 2 s of the record. kN out."""
+    tp = np.asarray(tp, float)
+    f = np.asarray(f_N, float)
+    out: dict[str, Any] = {"mean05_min_kN": None, "mean05_passed": None,
+                           "last2s_mean_kN": None, "last2s_ptp_kN": None,
+                           "mean05_rule": f"trailing {G4_MEAN05_S:g} s moving mean, window end "
+                                          ">= FAULT + 1 s (record, C-S8-70 ②)"}
+    if tp.size < 2:
+        return out
+    n = max(int(round(G4_MEAN05_S / _period(tp))), 1)
+    if tp.size >= n:
+        cs = np.vstack([np.zeros((1, 4)), np.cumsum(f, axis=0)])
+        mov = (cs[n:] - cs[:-n]) / n  # row k = mean of samples k .. k + n - 1
+        t_end = tp[n - 1:]
+        w = t_end >= t_from_s - 1e-9
+        if w.any():
+            mm = mov[w].min(axis=0)
+            out["mean05_min_kN"] = {LEGS[i]: float(mm[i]) / 1e3 for i in range(4)}
+            out["mean05_passed"] = None if not decidable else bool(mm.min() >= f_min_N - 1e-6)
+    tail = tp >= tp[-1] - G4_TAIL_S - 1e-9
+    out["last2s_mean_kN"] = {LEGS[i]: float(f[tail, i].mean()) / 1e3 for i in range(4)}
+    out["last2s_ptp_kN"] = {LEGS[i]: float(np.ptp(f[tail, i])) / 1e3 for i in range(4)}
+    return out
+
+
+def g4_metrics(*, t_f: float | None, fault_leg: str, expect: str | None,
+               phases: Sequence[Sequence[Any]], names: Sequence[tuple[float, str]],
+               tc: np.ndarray, phase_series: np.ndarray, issued_u: np.ndarray,
+               tp: np.ndarray, airborne: np.ndarray, judged_force_N: np.ndarray,
+               f_cyl_N: np.ndarray, head_true_Pa: np.ndarray, roll_pitch_rad: np.ndarray | None,
+               s_motor_m: np.ndarray, f_min_N: float,
+               reground_meta: Mapping[str, Any] | None = None,
+               extend_limit_N: Sequence[float] | None = None,
+               t_event_s: float | None = None) -> dict[str, Any]:
+    """C-S8-68 values of one head-fault run (:data:`G4_RULE`). Times relative to the run start:
+    ``tc`` / ``phase_series`` / ``issued_u`` = 10 Hz ``s8_series``, ``tp`` ... = 1 ms pads
+    (``roll_pitch_rad`` (n, 2) from ``body_quat_wxyz``). ``extend_limit_N``: per-leg extend
+    force limit (YAML); ``t_event_s``: the case event time (pre-event median record column).
+    SI inputs; kN / bar / mm / deg out."""
+    j = LEGS.index(fault_leg)
+    tc, tp = np.asarray(tc, float), np.asarray(tp, float)
+    ph = np.asarray(phase_series).astype(str)
+    u = np.asarray(issued_u, float)
+    air = np.asarray(airborne, bool)
+    out: dict[str, Any] = {"fault_leg": fault_leg, "expect": expect, "t_f_s": t_f,
+                           "rule": G4_RULE}
+    if t_f is None:
+        out["error"] = "no faulted controller sample (head_fault_first_applied_t_s None)"
+        return out
+    period = _period(tc)
+    pre = fault_entry_s(phases)
+    entry = fault_entry_s(phases, t_f)
+    t_fault = None if entry is None else next(
+        (float(t) for t, p in phases if p == "fault" and float(t) >= entry - G4_TIME_TOL_S), None)
+    rg_seen = any(p == FAULT_REGROUND_PHASE for _t, p in phases)
+    end_s = float(max(tc[-1] if tc.size else t_f, tp[-1] if tp.size else t_f))
+    out.update(entry_s=entry, fault_s=t_fault, run_end_s=end_s, reground_phase_seen=rg_seen,
+               entry_before_fault=None if pre is None or pre >= t_f - G4_TIME_TOL_S else pre)
+    # G4-1
+    hf = [e for e in named_events(names, HEAD_FAULT_EVENT)
+          if abs(e["t_s"] - t_f) <= G4_TIME_TOL_S]
+    reasons = [e for e in named_events(names, HEAD_FAULT_REASON_INFO)
+               if abs(e["t_s"] - t_f) <= G4_TIME_TOL_S]
+    out["g4_1"] = {"entry_delay_s": None if entry is None else entry - t_f,
+                   "head_fault_events": [[e["t_s"], e["leg"]] for e in hf],
+                   "reason_events": [[e["t_s"], e["leg"], e["detail"]] for e in reasons],
+                   "passed": bool(entry is not None and abs(entry - t_f) <= G4_TIME_TOL_S
+                                  and out["entry_before_fault"] is None
+                                  and any(e["leg"] == fault_leg for e in hf))}
+    # G4-2
+    starts = [e for e in named_events(names, REGROUND_START_EVENT)
+              if entry is not None and e["t_s"] >= entry - G4_TIME_TOL_S]
+    targets = legs_in(starts[0]["leg"]) if starts else []
+    win = (tp >= t_f - G4_TRUTH_HALF_WINDOW_S - 1e-9) & (tp <= t_f + G4_TRUTH_HALF_WINDOW_S + 1e-9)
+    dtp = _period(tp)
+    air_ms = {LEGS[i]: float(air[win, i].sum() * dtp * 1e3) for i in range(4)}
+
+    def k_at(t: float) -> int:  # 1 ms pad row at a controller sample time
+        return int(np.clip(np.searchsorted(tp, t - 1e-9), 0, max(tp.size - 1, 0)))
+
+    k_f = k_at(t_f)
+    sample_t = [t_f + o for o in G4_TRUTH_SAMPLE_OFFSETS_S]
+    at_samples = {LEGS[i]: [bool(tp.size and air[k_at(t), i]) for t in sample_t]
+                  for i in range(4)}
+    truth = [leg for leg in LEGS if sum(at_samples[leg]) >= G4_TRUTH_MIN_SAMPLES]
+    missed = [leg for leg in truth if leg not in targets]
+    late_w = (tp > t_f + 1e-9) & (tp <= t_f + G4_LATE_WINDOW_S + 1e-9)
+    late_ms = {LEGS[i]: float(air[late_w, i].sum() * dtp * 1e3) for i in range(4)}
+    late = [g for g in LEGS if g not in truth and late_ms[g] > G4_LATE_MIN_S * 1e3 + 1e-9]
+    out["g4_2"] = {"targets": targets, "truth_airborne": truth,
+                   "airborne_at_samples": at_samples, "sample_t_s": sample_t,
+                   "airborne_ms_in_window": air_ms,
+                   "airborne_at_t_f": [LEGS[i] for i in range(4) if tp.size and air[k_f, i]],
+                   "late_airborne": late, "late_airborne_ms": late_ms,
+                   "missed": missed, "false_targets": [g for g in targets if g not in truth],
+                   "start_events": [[e["t_s"], e["leg"]] for e in starts],
+                   "passed": not missed}
+    # G4-3 (C-S8-70 ①: zero output from FAULT + d T_s; the FAULT-sample output recorded)
+    delay_s = G4_OUTPUT_DELAY_PERIODS * period
+    t_zero = (t_fault if t_fault is not None else math.inf) + delay_s
+    after = tc >= t_zero - G4_TIME_TOL_S
+    u_after = float(np.abs(u[after]).max()) if after.any() else None
+    at_fault = ((tc >= (t_fault if t_fault is not None else math.inf) - G4_TIME_TOL_S)
+                & (tc < t_zero - G4_TIME_TOL_S))
+    out["g4_3"] = {"fault_minus_t_f_s": None if t_fault is None else t_fault - t_f,
+                   "zero_check_from_s": None if t_fault is None else t_zero,
+                   "output_delay_periods": G4_OUTPUT_DELAY_PERIODS,
+                   "max_abs_u_after_fault_mm_s": None if u_after is None else u_after * 1e3,
+                   "issued_u_at_fault_sample_mm_s": None if not at_fault.any()
+                   else {LEGS[i]: float(np.abs(u[at_fault, i]).max()) * 1e3 for i in range(4)},
+                   "passed": bool(t_fault is not None and t_fault - t_f
+                                  <= G4_FAULT_WITHIN_S + G4_TIME_TOL_S
+                                  and u_after is not None and u_after <= G4_ZERO_U_M_S)}
+    # G4-4 (main; C-S8-71 / U-S8-72 (a)): 0.5 s moving-mean minimum >= F_min and instantaneous
+    # minimum > 0 over [FAULT + 1 s, end]; the instantaneous minimum vs F_min is a record
+    f = np.asarray(judged_force_N, float)
+    if t_fault is not None:
+        sel = tp >= t_fault + G4_SETTLED_AFTER_S - 1e-9
+        k1 = int(np.clip(np.searchsorted(tp, t_fault + G4_SETTLED_AFTER_S - 1e-9), 0,
+                         max(tp.size - 1, 0)))
+        mins = None if not sel.any() else {LEGS[i]: float(f[sel, i].min()) / 1e3
+                                           for i in range(4)}
+        span = end_s - (t_fault + G4_SETTLED_AFTER_S)
+        decidable = span >= G4_MIN_JUDGE_WINDOW_S - 1e-9
+        rec4 = g4_4_records(tp, f, t_fault + G4_SETTLED_AFTER_S, f_min_N, decidable)
+        inst_ge_fmin = None if mins is None else bool(min(mins.values()) >= f_min_N / 1e3 - 1e-9)
+        inst_pos = None if mins is None else bool(min(mins.values()) > G4_INSTANT_FLOOR_N / 1e3)
+        mean_ok = rec4["mean05_min_kN"] is not None and bool(
+            min(rec4["mean05_min_kN"].values()) >= f_min_N / 1e3 - 1e-9)
+        below = {LEGS[i]: float(np.sum(sel & (f[:, i] < f_min_N)) * dtp) for i in range(4)}
+        last_below = {LEGS[i]: (float(tp[sel & (f[:, i] < f_min_N)][-1])
+                                if np.any(sel & (f[:, i] < f_min_N)) else None)
+                      for i in range(4)}
+        out["g4_4"] = {"min_from_fault_plus_1s_kN": mins,
+                       "at_fault_plus_1s_kN": None if not sel.any()
+                       else {LEGS[i]: float(f[k1, i]) / 1e3 for i in range(4)},
+                       "window_s": None if not sel.any() else [float(tp[sel][0]),
+                                                               float(tp[sel][-1])],
+                       "window_length_s": span, "F_min_kN": f_min_N / 1e3,
+                       "status": "judged" if decidable else "undecidable",
+                       "rule": G4_4_RULE,
+                       "passed": None if not decidable else bool(
+                           mean_ok and inst_pos is True),
+                       "instant_min_positive": inst_pos,
+                       # C-S8-71 record columns: the rev. 64 strict rule and its extent
+                       "instant_min_ge_F_min": inst_ge_fmin,
+                       "below_F_min_s": below, "last_below_F_min_t_s": last_below,
+                       "airborne_ms_in_window": {LEGS[i]: float(air[sel, i].sum() * dtp * 1e3)
+                                                 for i in range(4)},
+                       **rec4}
+    else:
+        out["g4_4"] = {"min_from_fault_plus_1s_kN": None, "F_min_kN": f_min_N / 1e3,
+                       "passed": False, "note": "no FAULT"}
+    # G4-5 (323.9 ③): re-ground window [entry, FAULT + 1 s)
+    if entry is not None and t_fault is not None and t_fault > entry + G4_TIME_TOL_S:
+        t_hi5 = t_fault + G4_SETTLED_AFTER_S
+        w = (tp >= entry - 1e-9) & (tp < t_hi5 - 1e-9)
+        k0 = int(np.clip(np.searchsorted(tp, entry - 1e-9), 0, max(tp.size - 1, 0)))
+        healthy = [i for i in range(4) if i != j and LEGS[i] not in targets]
+        dips: dict[str, dict[str, Any]] = {}
+        for i in healthy:
+            runs = _runs(w & (f[:, i] < f_min_N))
+            lens = [(b - a + 1) * dtp for a, b in runs]  # inclusive (first, last)
+            dips[LEGS[i]] = {"count": len(runs),
+                             "longest_s": max(lens, default=0.0),
+                             "min_kN": float(f[w, i].min()) / 1e3 if w.any() else None,
+                             "dips_s": [[float(tp[a]), float(lng)]
+                                        for (a, _b), lng in zip(runs, lens)][:20]}
+        dip_ok = all(d["longest_s"] <= G4_HEALTHY_DIP_MAX_S + 1e-9 for d in dips.values())
+        head_max = (float(np.asarray(head_true_Pa, float)[w].max()) / 1e5 if w.any() else None)
+        fc = np.asarray(f_cyl_N, float)
+        fmax = float(fc[w, j].max()) if w.any() else None
+        lim = None if extend_limit_N is None else float(extend_limit_N[j])
+        rise = None if fmax is None else (fmax - fc[k0, j]) / 1e3
+        rise_pre = None
+        if fmax is not None and t_event_s is not None:
+            pw = (tp >= t_event_s - G4_PRE_EVENT_MEDIAN_S - 1e-9) & (tp < t_event_s - 1e-9)
+            if pw.any():
+                rise_pre = (fmax - float(np.median(fc[pw, j]))) / 1e3
+        ok = (dip_ok and head_max is not None and head_max <= G4_HEAD_LIMIT_PA / 1e5 + 1e-9
+              and fmax is not None and lim is not None and fmax <= lim + 1e-6)
+        out["g4_5"] = {"window_s": [entry, t_hi5],
+                       "healthy_legs": [LEGS[i] for i in healthy], "healthy_dips": dips,
+                       "dip_limit_s": G4_HEALTHY_DIP_MAX_S, "head_true_max_bar": head_max,
+                       "faulty_F_cyl_max_kN": None if fmax is None else fmax / 1e3,
+                       "faulty_extend_limit_kN": None if lim is None else lim / 1e3,
+                       "faulty_rise_vs_entry_kN": rise,
+                       "faulty_rise_vs_pre_event_median_kN": rise_pre,
+                       "passed": bool(ok)}
+        if lim is None:
+            out["g4_5"]["note"] = "no extend force limit given: faulty-leg criterion fails"
+    else:
+        out["g4_5"] = {"window_s": None, "passed": None,
+                       "note": "no FAULT_REGROUND window (direct FAULT or no FAULT)"}
+    # G4-6 (323.9 ④): trailing 0.5 s mean attitude vs the [t_f - 0.5, t_f] mean
+    if roll_pitch_rad is not None and tp.size:
+        rp = np.asarray(roll_pitch_rad, float)
+        t_hi = (t_fault + G4_SETTLED_AFTER_S) if t_fault is not None else end_s
+        w6 = (tp >= t_f - 1e-9) & (tp <= t_hi + 1e-9)
+        n = max(int(round(G4_ATT_MEAN_S / dtp)), 1)
+        cs = np.vstack([np.zeros((1, 2)), np.cumsum(rp, axis=0)])
+        idx = np.flatnonzero(w6)
+        lo = np.maximum(idx + 1 - n, 0)
+        mov = (cs[idx + 1] - cs[lo]) / (idx + 1 - lo)[:, None]
+        bw = (tp >= t_f - G4_ATT_MEAN_S - 1e-9) & (tp <= t_f + 1e-9)
+        base = rp[bw].mean(axis=0) if bw.any() else rp[k_f]
+        d = np.degrees(np.abs(mov - base)) if idx.size else np.zeros((0, 2))
+        di = np.degrees(np.abs(rp[w6] - rp[k_f])) if idx.size else np.zeros((0, 2))
+        mx = None if not d.size else [float(x) for x in d.max(axis=0)]
+        out["g4_6"] = {"max_change_deg": mx, "window_s": [t_f, t_hi],
+                       "mean_window_s": G4_ATT_MEAN_S,
+                       "instant_max_change_deg": None if not di.size
+                       else [float(x) for x in di.max(axis=0)],
+                       "passed": bool(mx is not None and max(mx) <= G4_ATT_LIMIT_DEG + 1e-12)}
+    else:
+        out["g4_6"] = {"max_change_deg": None, "passed": None, "note": "no body_quat_wxyz"}
+    # C-S8-71 ③ (record): end attitude change after FAULT (replaces the general attitude row)
+    if roll_pitch_rad is not None and tp.size and t_fault is not None:
+        rp = np.asarray(roll_pitch_rad, float)
+        bw = (tp >= t_fault - G4_END_MEAN_S - 1e-9) & (tp <= t_fault + 1e-9)
+        ew = tp >= tp[-1] - G4_END_MEAN_S - 1e-9
+        aw = tp >= t_fault - 1e-9
+        a_f = rp[bw].mean(axis=0) if bw.any() else rp[k_at(t_fault)]
+        a_e = rp[ew].mean(axis=0)
+        out["g4_end"] = {"attitude_at_fault_deg": [float(x) for x in np.degrees(a_f)],
+                         "attitude_end_deg": [float(x) for x in np.degrees(a_e)],
+                         "change_deg": [float(x) for x in np.degrees(a_e - a_f)],
+                         "instant_max_abs_change_deg": None if not aw.any() else
+                         [float(x) for x in np.degrees(np.abs(rp[aw] - a_f).max(axis=0))],
+                         "fault_mean_window_s": [t_fault - G4_END_MEAN_S, t_fault],
+                         "end_mean_window_s": [float(tp[-1]) - G4_END_MEAN_S, float(tp[-1])],
+                         "axes": ["roll", "pitch"], "passed": None}
+    else:
+        out["g4_end"] = {"passed": None,
+                         "note": "no body_quat_wxyz" if roll_pitch_rad is None else "no FAULT"}
+    meta = dict(reground_meta or {})
+    settings = meta.get("settings") if isinstance(meta.get("settings"), Mapping) else {}
+    run = meta.get("run") if isinstance(meta.get("run"), Mapping) else {}
+    tgt_meta = {t.get("leg"): t for t in (run.get("targets") or []) if isinstance(t, Mapping)}
+    # G4-7 (C-S8-70 ③): judged only on a no-target run; zero output from t_f + d T_s
+    k_tc = tc >= t_f - G4_TIME_TOL_S
+    k_u = tc >= t_f + delay_s - G4_TIME_TOL_S
+    k_tf = k_tc & ~k_u
+    first_phase = str(ph[k_tc][0]) if k_tc.any() else None
+    u_from = float(np.abs(u[k_u]).max()) if k_u.any() else None
+    neg_ok = bool(not np.any(ph[k_tc] == FAULT_REGROUND_PHASE) and first_phase == "fault"
+                  and u_from is not None and u_from <= G4_ZERO_U_M_S)
+    end_reason = run.get("end_reason")
+    if end_reason is not None:
+        no_target, nt_src = str(end_reason) == G4_NO_TARGET_REASON, "controller meta end_reason"
+    else:
+        no_target, nt_src = not targets, "no meta: fault_reground_start target legs"
+    out["g4_7"] = {"phase_at_t_f": first_phase,
+                   "reground_rows_after_t_f": int(np.sum(ph[k_tc] == FAULT_REGROUND_PHASE)),
+                   "zero_check_from_s": t_f + delay_s,
+                   "max_abs_u_from_t_f_mm_s": None if u_from is None else u_from * 1e3,
+                   "issued_u_at_t_f_sample_mm_s": None if not k_tf.any()
+                   else {LEGS[i]: float(np.abs(u[k_tf, i]).max()) * 1e3 for i in range(4)},
+                   "same_as_direct_fault": neg_ok, "end_reason": end_reason,
+                   "no_target": no_target, "no_target_source": nt_src, "expect": expect,
+                   "passed": neg_ok if no_target else None}
+    # G4-8 (record)
+    if entry is not None and t_fault is not None and t_fault > entry + G4_TIME_TOL_S:
+        w = (tp >= entry - 1e-9) & (tp <= t_fault + 1e-9)
+        k0 = int(np.clip(np.searchsorted(tp, entry - 1e-9), 0, max(tp.size - 1, 0)))
+        s = np.asarray(s_motor_m, float)
+        travel = {LEGS[i]: float(s[w, i].max() - s[k0, i]) * 1e3 for i in range(4)}
+        wc = (tc >= entry - G4_TIME_TOL_S) & (tc < t_fault - G4_TIME_TOL_S)
+        moving = {LEGS[i]: float(np.sum(wc & (u[:, i] > G4_ZERO_U_M_S)) * period)
+                  for i in range(4)}
+        # per-leg limit: the target's max_travel_m (P-S8-24 meta run.targets), else the
+        # settings value, else 30 mm (323.5)
+        cap_set = settings.get("max_travel_m")
+        caps, srcs = {}, {}
+        for g in LEGS:
+            v = (tgt_meta.get(g) or {}).get("max_travel_m")
+            if isinstance(v, int | float):
+                caps[g], srcs[g] = float(v), "run.targets"
+            elif isinstance(cap_set, int | float):
+                caps[g], srcs[g] = float(cap_set), "settings"
+            else:
+                caps[g], srcs[g] = G4_TRAVEL_CAP_M, "323.5 cap 30 mm"
+        leg_lim = settings.get("max_leg_duration_s")
+        leg_lim = float(leg_lim) if isinstance(leg_lim, int | float) else G4_LEG_TIME_LIMIT_S
+        tot_lim = settings.get("max_total_duration_s")
+        tot_lim = float(tot_lim) if isinstance(tot_lim, int | float) else G4_TOTAL_TIME_LIMIT_S
+        within = (all(travel[g] <= caps[g] * 1e3 + 1e-6 for g in LEGS)
+                  and all(v <= leg_lim + 1e-9 for v in moving.values())
+                  and t_fault - entry <= tot_lim + 1e-9)
+        out["g4_8"] = {"travel_mm": travel, "moving_s": moving, "window_s": t_fault - entry,
+                       "max_travel_mm": {g: caps[g] * 1e3 for g in LEGS},
+                       "max_travel_source": srcs, "leg_time_limit_s": leg_lim,
+                       "total_time_limit_s": tot_lim,
+                       "controller_targets": {g: {k: t.get(k) for k in (
+                           "sensor", "cues", "gap_m", "travel_m", "duration_s", "outcome",
+                           "hold_count")}
+                           for g, t in tgt_meta.items()},
+                       "within_limits": bool(within), "passed": None}
+    else:
+        out["g4_8"] = {"passed": None, "within_limits": None,
+                       "note": "no FAULT_REGROUND window"}
+    # C-S8-70 ⑦: abort / D1 step-suspend events and the rev. 65 meta records
+    aborts = named_events(names, REGROUND_ABORT_WARNING)
+    susp = named_events(names, D1_STEP_SUSPENDED_INFO)
+    out["g4_8"].update(
+        abort_count=len(aborts),
+        abort_events=[[e["t_s"], e["leg"], e["detail"]] for e in aborts],  # [t, reason, rest]
+        step_suspended_count=len(susp),
+        step_suspended_events=[[e["t_s"], e["leg"]] for e in susp],
+        hold_count={g: t.get("hold_count") for g, t in tgt_meta.items()},
+        max_filtered_attitude_change_rad=run.get("max_filtered_attitude_change_rad"),
+        end_reason=end_reason)
+    out["contacts"] = [[e["t_s"], e["leg"]] for e in named_events(names, REGROUND_CONTACT_EVENT)]
+    out["limit_warnings"] = [[e["t_s"], e["leg"], e["detail"]]
+                             for e in named_events(names, REGROUND_LIMIT_WARNING)]
+    out["end_events"] = [[e["t_s"], e["leg"]] for e in named_events(names, REGROUND_END_EVENT)]
+    out["controller_end_reason"] = run.get("end_reason")
+    out["controller_meta"] = meta or None
+    return out
+
+
+def extend_force_limits_N(params) -> np.ndarray | None:
+    """Per-leg extend force limit [N] (YAML ``legs.<leg>.cylinder.max_force_extend_N``, 210 bar
+    relief; front 278.7 / rear 199.6 kN); None when the keys are absent."""
+    try:
+        legs = params.raw["legs"]
+        return np.array([float(legs[n]["cylinder"]["max_force_extend_N"]) for n in LEGS])
+    except (AttributeError, KeyError, TypeError):
+        return None
+
+
+def g4_of_case(case: Mapping[str, Any], f_min_N: float, params=None) -> dict[str, Any] | None:
+    """:func:`g4_metrics` of a loaded ``run_S8C`` case (``s8_series.npz``, ``pads.npz``,
+    controller events and meta; ``params`` for the extend force limits). None without a
+    head-fault injection."""
+    from outrigger_sim.frames import roll_pitch_from_quat
+
+    extend_limit_N = None if params is None else extend_force_limits_N(params)
+
+    res = case["result"]
+    spec, _t_arm, t_first = head_fault_of(res)
+    if not spec:
+        return None
+    t0 = float(res["settings"]["start_t_s"])
+    series = load_series(Path(case["dir"])) if case.get("dir") else None
+    pads = case.get("pads")
+    if series is None or pads is None:
+        return {"fault_leg": spec.get("leg"), "error": "missing s8_series.npz / pads.npz"}
+    tp = np.asarray(pads["t"], float) - t0
+    rp = None
+    if "body_quat_wxyz" in pads:
+        r, p = roll_pitch_from_quat(np.asarray(pads["body_quat_wxyz"], float))
+        rp = np.column_stack([r, p])
+    cm = res.get("controller_meta") or {}
+    meta = cm.get("fault_reground") if isinstance(cm.get("fault_reground"), Mapping) else None
+    air = (np.asarray(pads["airborne"], bool) if "airborne" in pads
+           else np.zeros((tp.size, 4), bool))
+    out = g4_metrics(t_f=t_first, fault_leg=str(spec["leg"]), expect=spec.get("expect"),
+                     phases=res.get("phases") or [], names=_event_names(case),
+                     tc=np.asarray(series["t"], float) - t0, phase_series=series["phase"],
+                     issued_u=series["issued_u"], tp=tp, airborne=air,
+                     judged_force_N=judged_force_min(pads), f_cyl_N=pads["F_cyl"],
+                     head_true_Pa=pads["head_pressure"], roll_pitch_rad=rp,
+                     s_motor_m=pads["s_motor"], f_min_N=f_min_N, reground_meta=meta,
+                     extend_limit_N=extend_limit_N, t_event_s=res.get("event_t_s"))
+    out["injection"] = {"spec": spec, "arm_t_s": _t_arm, "first_applied_t_s": t_first,
+                        "wrapper": res.get("head_fault"),
+                        "delivered": head_delivered_summary(
+                            None if not case.get("dir") else Path(case["dir"]),
+                            str(spec["leg"]), t0)}
+    return out
+
+
+def load_head_delivered(case_dir: Path | None) -> dict[str, np.ndarray] | None:
+    """C-S8-70 ⑥: arrays of ``<case>/head_fault_delivered.npz`` (``t`` absolute engine time,
+    ``meas.head_pressure`` = reading before the injection, ``meas.head_pressure_delivered`` =
+    reading the controller received, ``applied``); None without the file (runs before C-S8-70)."""
+    if case_dir is None or not (Path(case_dir) / HEAD_DELIVERED_FILE).exists():
+        return None
+    with np.load(Path(case_dir) / HEAD_DELIVERED_FILE, allow_pickle=False) as z:
+        return {k: np.asarray(z[k]) for k in z.files}
+
+
+def head_delivered_alignment(case_dir: Path | None, z: Mapping[str, np.ndarray]
+                             ) -> dict[str, Any]:
+    """C-S8-71 ④: is ``head_fault_delivered.npz`` row-aligned with ``record/record.npz``
+    (same row count, same ``t``, its ``meas.head_pressure`` bit-equal to the record's)? The record
+    keeps the reading before the injection (its field schema is fixed, ``outrigger_sim.record``);
+    the delivered reading lives only in the side file under :data:`HEAD_DELIVERED_KEY`."""
+    p = None if case_dir is None else Path(case_dir) / "record" / "record.npz"
+    if p is None or not p.exists():
+        return {"record_npz": False}
+    with np.load(p, allow_pickle=False) as rec:
+        if "t" not in rec.files or "meas.head_pressure" not in rec.files:
+            return {"record_npz": True, "aligned": False, "note": "record lacks t / head"}
+        tr = np.asarray(rec["t"], float)
+        hr = np.asarray(rec["meas.head_pressure"], float)
+        has_key = HEAD_DELIVERED_KEY in rec.files
+    td = np.asarray(z["t"], float)
+    same_n = tr.size == td.size
+    same_t = bool(same_n and np.array_equal(tr, td))
+    same_h = bool(same_n and np.array_equal(hr, np.asarray(z["meas.head_pressure"], float),
+                                            equal_nan=True))
+    return {"record_npz": True, "record_rows": int(tr.size), "file_rows": int(td.size),
+            "same_t": same_t, "record_head_equals_before": same_h,
+            "aligned": bool(same_t and same_h),
+            "record_has_delivered_key": bool(has_key),
+            "note": "record/meas.head_pressure = reading before the injection; the delivered "
+                    f"reading is {HEAD_DELIVERED_FILE}:{HEAD_DELIVERED_KEY} (row k = record "
+                    "row k when aligned)"}
+
+
+def head_delivered_summary(case_dir: Path | None, fault_leg: str, t0: float
+                           ) -> dict[str, Any]:
+    """Record of the delivered head reading (C-S8-70 ⑥): samples, applied samples, first applied
+    time (relative), and the delivered - recorded difference on the fault leg (bar) / on the
+    other legs (max |.|, bar; 0 expected)."""
+    z = load_head_delivered(case_dir)
+    if z is None:
+        return {"available": False,
+                "note": f"no {HEAD_DELIVERED_FILE}: record/meas.head_pressure is the reading "
+                        "before the injection (spec rev. 65 333); re-insert from the wrapper meta"}
+    j = LEGS.index(fault_leg)
+    d = (np.asarray(z[HEAD_DELIVERED_KEY], float) - np.asarray(z["meas.head_pressure"], float))
+    app = np.asarray(z["applied"], bool)
+    t = np.asarray(z["t"], float) - t0
+    others = [i for i in range(4) if i != j]
+    fin = np.isfinite(d[:, j])
+    return {"available": True, "file": HEAD_DELIVERED_FILE, "samples": int(t.size),
+            "record_alignment": head_delivered_alignment(case_dir, z),  # C-S8-71 ④
+            "applied_samples": int(app.sum()),
+            "first_applied_t_s": float(t[app][0]) if app.any() else None,
+            "fault_leg_delta_bar": None if not (app & fin).any()
+            else [float(d[app & fin, j].min()) / 1e5, float(d[app & fin, j].max()) / 1e5],
+            "fault_leg_nan_samples": int((app & ~fin).sum()),
+            "other_legs_max_abs_delta_bar": float(np.nanmax(np.abs(d[:, others]))) / 1e5
+            if t.size else None,
+            "before_arm_max_abs_delta_bar": float(np.nanmax(np.abs(d[~app]))) / 1e5
+            if (~app).any() else None}
+
+
+G4_ROWS = (("g4_1", "G4-1 FAULT_REGROUND entry at the fault sample + head fault event", "judged"),
+           ("g4_2", "G4-2 legs airborne at >= 2 of the samples t_f - 0.2 / - 0.1 / t_f are "
+                    "re-ground targets (missed 0; false targets, late_airborne recorded)",
+            "judged"),
+           ("g4_3", "G4-3 FAULT within fault + 15 s, output 0 from FAULT + d T_s (d = 1; "
+                    "FAULT-sample output recorded)", "judged"),
+           ("g4_4", "G4-4 (main, U-S8-72 (a)) from FAULT + 1 s to the run end every leg's 0.5 s "
+                    "moving mean of the judged true force >= F_min and instantaneous minimum > 0 "
+                    "(instantaneous minimum vs F_min recorded; undecidable when < 3 s)",
+            "judged"),
+           ("g4_5", "G4-5 re-ground [entry, FAULT + 1 s): healthy legs below F_min <= 0.5 s in "
+                    "a row, faulty-leg F_cyl <= extend limit, true head <= 345 bar", "judged"),
+           ("g4_6", "G4-6 0.5 s mean true roll / pitch vs the [t_f - 0.5, t_f] mean <= 0.5 deg",
+            "judged"),
+           ("g4_7", "G4-7 no-target run (end_reason no_target): FAULT at the fault sample, "
+                    "output 0 from t_f + d T_s (as the direct FAULT; a record when targeted)",
+            "judged"),
+           ("g4_8", "G4-8 re-ground travel / time within the limits, hold counts, abort / D1 "
+                    "step-suspend events (record)", "record"),
+           ("g4_end", "G4-E end attitude change after FAULT: true roll / pitch mean over the "
+                      "last 0.5 s minus the mean over [FAULT - 0.5 s, FAULT] (record; the general "
+                      "READY / attitude rows are not applicable, C-S8-71)", "record"))
+"""C-S8-68 row items (``C-S8-68 `` + text; G4-3 / G4-7 / G4-8 texts C-S8-70, G4-4 / G4-E
+C-S8-71)."""
+
+
+def g4_rows(cid: str, g: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Rows G4-1 ... G4-8 of one head-fault run (:func:`g4_metrics`). A row whose ``passed`` is
+    None (G4-5 without a re-ground window, G4-7 outside the negative case, G4-8) is a record."""
+    if g.get("error"):
+        return [_row("C-S8-68 G4 head-fault run", cid, None, None, False, g["error"])]
+    rows = []
+    for key, text, kind in G4_ROWS:
+        v = dict(g.get(key) or {})
+        passed = v.pop("passed", None)
+        k = kind if passed is not None else "record"
+        if v.get("status") == "undecidable":  # 323.9 ②: G4-4 window < 3 s
+            k = "hold"
+        if key == "g4_2" and passed is not None:
+            note = (f"targets {v.get('targets')}, airborne {v.get('truth_airborne')} "
+                    f"(ms {v.get('airborne_ms_in_window')}), false targets "
+                    f"{v.get('false_targets')} (record)")
+        elif key == "g4_4" and v.get("mean05_min_kN") is not None:
+            mn = v.get("min_from_fault_plus_1s_kN") or {}
+            note = (f"fault leg {g.get('fault_leg')}, FAULT {g.get('fault_s')} s; 0.5 s mean "
+                    f"min {min(v['mean05_min_kN'].values()):.2f} kN, instantaneous min "
+                    f"{min(mn.values()):.2f} kN (> 0: {v.get('instant_min_positive')}; >= F_min "
+                    f"{v.get('F_min_kN'):.3f} kN: {v.get('instant_min_ge_F_min')}, record)"
+                    if mn else f"fault leg {g.get('fault_leg')}, FAULT {g.get('fault_s')} s")
+        else:
+            note = f"fault leg {g.get('fault_leg')}, t_f {g.get('t_f_s')} s, entry " \
+                   f"{g.get('entry_s')} s, FAULT {g.get('fault_s')} s"
+        rows.append(_row(f"C-S8-68 {text}", cid, v, None, passed, note, kind=k,
+                         expect=g.get("expect")))
+    return rows
+
+
+def head_fault_expect(sm: Mapping[str, Any] | None) -> str | None:
+    """``expect`` of the case's head-fault injection (``s8.event_spec.head_fault``), None
+    without one."""
+    hf = (((sm or {}).get("s8") or {}).get("event_spec") or {}).get(HEAD_FAULT_KEY)
+    return None if not isinstance(hf, Mapping) else str(hf.get("expect"))
+
+
+def apply_head_fault_na_rows(rows: list[dict[str, Any]],
+                             sms: Mapping[str, Mapping[str, Any]]) -> int:
+    """C-S8-71 ③ (spec rev. 66 338): the general rows :data:`G4_NA_ITEMS` of a head-fault
+    injection run whose ``expect`` is in :data:`G4_NA_EXPECTS` become "not applicable (expected
+    FAULT)" in place (``passed`` None, ``passed_raw`` kept, ``kind`` :data:`G4_NA_KIND`); the
+    G4 rows (incl. the G4-E end attitude record) judge such a run. Returns the row count."""
+    n = 0
+    for r in rows:
+        if r.get("item") not in G4_NA_ITEMS:
+            continue
+        exp = head_fault_expect(sms.get(r.get("case")))
+        if exp is None or exp not in G4_NA_EXPECTS:
+            continue
+        if "passed_raw" not in r:
+            r["passed_raw"] = r["passed"]
+        r["passed"] = None
+        r["kind_raw"], r["kind"] = r.get("kind"), G4_NA_KIND
+        r["note"] = (f"C-S8-71: not applicable (expected FAULT, head-fault injection expect "
+                     f"'{exp}'; see the C-S8-68 G4 rows and G4-E); " + str(r.get("note") or ""))
+        n += 1
+    return n
 
 
 def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
@@ -4044,14 +4790,29 @@ def judge_batch(batch_dir: Path, out_path: Path | None = None, *,
                      "*", sorted(set(labels.values())), None, None,
                      "; ".join(f"{c}: {v}" for c, v in labels.items())[:2000], kind="record",
                      labels=labels))
+    n_na = apply_head_fault_na_rows(rows, sms)  # C-S8-71 ③
     n_fail = sum(1 for r in rows if r["passed"] is False)
     n_hold = sum(1 for r in rows if r.get("kind") == "hold")
     out = out_path or Path(batch_dir) / "verify_S8C.json"
     doc = {"meta": {"batch": str(batch_dir), "module": __name__, "rows": len(rows),
-                    "failed": n_fail, "hold": n_hold, "liftoff_window_s": LIFTOFF_WINDOW_S,
+                    "failed": n_fail, "hold": n_hold,
+                    **({"not_applicable": n_na} if n_na else {}),  # C-S8-71 ③
+                    "liftoff_window_s": LIFTOFF_WINDOW_S,
                     "sensor_share_N": SENSOR_SHARE_N,
                     "summary": judge_summary(rows),  # C-S8-41
-                    "judge_revision": JUDGE_REVISION_REV56 + " on "
+                    "judge_revision": "C-S8-71 (spec rev. 66 338, U-S8-72 (a): G4-4 = 0.5 s "
+                                      "mean min >= F_min and instantaneous min > 0, the "
+                                      "instantaneous min vs F_min a record; general run / "
+                                      "attitude / re-READY rows of head-fault runs not "
+                                      "applicable, G4-E end attitude record) on "
+                                      "C-S8-70 (spec rev. 65 333: G4-3 zero output from "
+                                      "FAULT + d T_s, G4-4 0.5 s mean / last 2 s records, "
+                                      "G4-7 on no-target runs only, F2 head-fault leg out "
+                                      "from the arm time, G4-8 abort / step-suspend events, "
+                                      "delivered head reading record) on "
+                                      "C-S8-68 (spec rev. 64 323.7: FAULT entry = "
+                                      "FAULT_REGROUND or FAULT, G4-1..8 rows of head-fault "
+                                      "runs) on " + JUDGE_REVISION_REV56 + " on "
                                       + JUDGE_REVISION_REV55 + " on " + JUDGE_REVISION_REV54
                                       + " on " + JUDGE_REVISION_REV52
                                       + " on " + JUDGE_REVISION_REV50
@@ -4665,12 +5426,12 @@ def d1pp_step_ratios(case_dir: Path, params, *, settings: Mapping[str, Any],
         has_gyro = bool(np.isfinite(lever).any())
         lever = np.where(np.isfinite(lever), lever, 0.0)
     m_nom = float(params.superstructure.mass_properties.mass_kg)
-    lifted = ~np.isin(phase, ("idle", "check", "touch", "fault"))
+    lifted = ~np.isin(phase, ("idle", "check", "touch", *FAULT_ENTRY_PHASES))
     ready = phase == "ready"
     injected = sensor_fault_injected(settings)
     steps: list[dict[str, Any]] = []
     for k in range(1, t.size):
-        if injected or not lifted[k - 1] or phase[k] == "fault":
+        if injected or not lifted[k - 1] or phase[k] in FAULT_ENTRY_PHASES:
             continue
         dp = head[k] - head[k - 1]
         legs = np.flatnonzero(np.isfinite(dp) & (np.abs(dp) > D1PP_STEP_BAR * 1e5))
@@ -4793,7 +5554,7 @@ def ml_case_metrics(d: Path, params, machine) -> dict[str, Any]:
     pads = case["pads"]
     if series is not None:
         ph = np.asarray(series["phase"]).astype(str)
-        k = np.flatnonzero(ph == "fault")
+        k = np.flatnonzero(np.isin(ph, FAULT_ENTRY_PHASES))  # C-S8-68 ①
         out["fault_entry_s"] = None if k.size == 0 else float(np.asarray(series["t"], float)[k[0]]
                                                             - t0)
     # C-S8-34 ① FAULT cause (P-S8-17 event, else the record) and U-S8-44 values
@@ -5028,7 +5789,9 @@ def classify_fault(fault_entry_s: float | None, names: Sequence[tuple[float, str
                    soft_max_m: float, margin_m: float,
                    lookback_s: float = STROKE_END_LOOKBACK_S) -> dict[str, Any] | None:
     """C-S8-34 ①: cause of the first FAULT entry (relative times). ``stroke_end`` from the
-    P-S8-17 event ``FAULT_STROKE_END:<leg>`` at or before the entry, else ``sensor`` when a
+    P-S8-17 event ``FAULT_STROKE_END:<leg>`` at or before the entry, else
+    ``head_sensor_reground`` (C-S8-68 ①) when such a sensor event and a ``fault_reground_start``
+    event with target legs are recorded, else ``sensor`` when a
     head-pressure fault event / reason or a rod fault reason is recorded, else ``stroke_end``
     from the record (every ``meas.stroke`` sample of a leg in ``[entry - lookback, entry)`` >=
     ``soft_max - margin``), else ``unknown``. None without a FAULT."""
@@ -5045,6 +5808,14 @@ def classify_fault(fault_entry_s: float | None, names: Sequence[tuple[float, str
         return out
     sensor = [e for p in (HEAD_FAULT_EVENT, HEAD_FAULT_REASON_INFO, ROD_FAULT_REASON_INFO)
               for e in named_events(names, p) if e["t_s"] <= tf + 1e-6]
+    # C-S8-68 ①: a head fault that started a re-ground (target legs named) is told apart
+    rg = [e for e in named_events(names, REGROUND_START_EVENT) if e["t_s"] <= tf + 1e-6
+          and legs_in(e["leg"])]
+    if sensor and rg:
+        out.update(cause="head_sensor_reground", source="event",
+                   legs=sorted({e["leg"] for e in sensor if e["leg"]}),
+                   reground_targets=legs_in(rg[0]["leg"]))
+        return out
     if sensor:
         out.update(cause="sensor", source="event",
                    legs=sorted({e["leg"] for e in sensor if e["leg"]}))
@@ -6547,4 +7318,7 @@ __all__ = ["LIFTOFF_WINDOW_S", "c1_metrics", "c1_row", "classify_windows",
            "reapproach_rt_record", "rt_rows", "deferred_leg_minimum", "deferred_min_rows",
            "rod_fallback_gate", "judge_summary", "deferred_t_o_s", "leg_window_stats",
            "deferred_reference_stats", "deferred_ref_flags", "attach_deferred_reference",
-           "availability_record", "availability_compare", "availability_rows"]
+           "availability_record", "availability_compare", "availability_rows",
+           "fault_entry_s", "legs_in", "head_fault_of", "g4_metrics", "g4_of_case", "g4_rows",
+           "extend_force_limits_N", "g4_4_records", "load_head_delivered",
+           "head_delivered_summary", "head_fault_leg_cut"]

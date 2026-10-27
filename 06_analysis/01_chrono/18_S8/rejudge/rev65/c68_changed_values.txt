@@ -1,0 +1,80 @@
+== MLJ_G4H_FS24_FR_Fs0
+  F2 before 177 False max 197.0042460507355
+  F2 after  0 True max -2.0941889492644696
+  F2 fault leg record 177 leg FR from 48.165 s: 196 samples, max F_lower - F 197.0042460507355 kN (injected +jump in the reading)
+  G4-3 True zero from 48.40000000131983 max after 0.0 at FAULT sample {'FL': 0.0, 'FR': 0.0, 'RL': 0.0, 'RR': 0.0}
+  G4-4 min {'FL': 42.06, 'FR': -2.3, 'RL': -2.65, 'RR': 71.44}
+       mean05 {'FL': 135.56, 'FR': 13.91, 'RL': -0.73, 'RR': 115.93} False
+       last2s mean {'FL': 180.48, 'FR': 53.95, 'RL': -0.72, 'RR': 141.98} ptp {'FL': 67.78, 'FR': 77.99, 'RL': 0.04, 'RR': 16.46}
+  G4-7 None end_reason attitude same False u from t_f+dT 0.0 u at t_f {'FL': 4.201954691288716, 'FR': 4.534256373952488, 'RL': 6.021749153051123, 'RR': 5.159935918913081} phase fault_reground
+  G4-8 aborts 0 susp 0 hold {'RL': None} maxatt None
+== MLJ_G4H_FS24_FR_Fs8
+  F2 before 190 False max 182.0444856651744
+  F2 after  0 True max -5.0391490477078476
+  F2 fault leg record 190 leg FR from 48.065 s: 196 samples, max F_lower - F 182.0444856651744 kN (injected +jump in the reading)
+  G4-3 True zero from 48.30000000131651 max after 0.0 at FAULT sample {'FL': 0.0, 'FR': 0.0, 'RL': 0.0, 'RR': 0.0}
+  G4-4 min {'FL': 94.73, 'FR': -1.83, 'RL': -1.59, 'RR': 111.03}
+       mean05 {'FL': 143.51, 'FR': 30.62, 'RL': -0.72, 'RR': 123.55} False
+       last2s mean {'FL': 181.52, 'FR': 52.97, 'RL': -0.72, 'RR': 142.2} ptp {'FL': 0.02, 'FR': 0.04, 'RL': 0.0, 'RR': 0.02}
+  G4-7 None end_reason attitude same False u from t_f+dT 0.0 u at t_f {'FL': 4.400396383216583, 'FR': 4.3941794286083855, 'RL': 5.73999757113739, 'RR': 5.388542867549831} phase fault_reground
+  G4-8 aborts 0 susp 0 hold {'RL': None} maxatt None
+== MLJ_G4H_FS24_RL_Fs0
+  F2 before 1 False max 140.4548081112806
+  F2 after  0 True max -2.0941889492644403
+  F2 fault leg record 1 leg RL from 48.165 s: 196 samples, max F_lower - F 140.4548081112806 kN (injected +jump in the reading)
+  G4-3 True zero from 48.40000000131983 max after 0.0 at FAULT sample {'FL': 0.0, 'FR': 0.0, 'RL': 0.0, 'RR': 0.0}
+  G4-4 min {'FL': 42.06, 'FR': -2.3, 'RL': -2.65, 'RR': 71.44}
+       mean05 {'FL': 135.56, 'FR': 13.91, 'RL': -0.73, 'RR': 115.93} False
+       last2s mean {'FL': 180.48, 'FR': 53.95, 'RL': -0.72, 'RR': 141.98} ptp {'FL': 67.78, 'FR': 77.99, 'RL': 0.04, 'RR': 16.46}
+  G4-7 None end_reason attitude same False u from t_f+dT 0.0 u at t_f {'FL': 4.201954691288716, 'FR': 4.534256373952488, 'RL': 6.021749153051123, 'RR': 5.159935918913081} phase fault_reground
+  G4-8 aborts 0 susp 0 hold {'RL': None} maxatt None
+== MLJ_G4H_FS24_RL_Fs8
+  F2 before 196 False max 136.0662799646159
+  F2 after  0 True max -5.0391490477078476
+  F2 fault leg record 196 leg RL from 48.065 s: 196 samples, max F_lower - F 136.0662799646159 kN (injected +jump in the reading)
+  G4-3 True zero from 48.20000000128477 max after 0.0 at FAULT sample {'FL': 4.400396383216583, 'FR': 4.3941794286083855, 'RL': 5.73999757113739, 'RR': 5.388542867549831}
+  G4-4 min {'FL': 94.73, 'FR': -1.83, 'RL': -1.59, 'RR': 95.82}
+       mean05 {'FL': 141.6, 'FR': 30.62, 'RL': -0.72, 'RR': 123.55} False
+       last2s mean {'FL': 181.52, 'FR': 52.97, 'RL': -0.72, 'RR': 142.2} ptp {'FL': 0.02, 'FR': 0.04, 'RL': 0.0, 'RR': 0.02}
+  G4-7 True end_reason no_target same True u from t_f+dT 0.0 u at t_f {'FL': 4.400396383216583, 'FR': 4.3941794286083855, 'RL': 5.73999757113739, 'RR': 5.388542867549831} phase fault
+  G4-8 aborts 0 susp 0 hold {} maxatt None
+== MLJ_G4H_G4_RR_Fs4
+  F2 before 180 False max 137.0884098818475
+  F2 after  0 True max -3.8190934267057455
+  F2 fault leg record 180 leg RR from 49.750 s: 180 samples, max F_lower - F 137.0884098818475 kN (injected +jump in the reading)
+  G4-3 True zero from 49.90000000063066 max after 0.0 at FAULT sample {'FL': 0.21265200150515073, 'FR': 0.5907531135342794, 'RL': 0.6596266906168937, 'RR': 0.4439996821909252}
+  G4-4 min {'FL': 111.44, 'FR': 122.1, 'RL': 77.98, 'RR': 64.31}
+       mean05 {'FL': 111.58, 'FR': 122.2, 'RL': 78.06, 'RR': 64.47} True
+       last2s mean {'FL': 111.62, 'FR': 122.21, 'RL': 78.08, 'RR': 64.52} ptp {'FL': 0.01, 'FR': 0.01, 'RL': 0.01, 'RR': 0.05}
+  G4-7 True end_reason no_target same True u from t_f+dT 0.0 u at t_f {'FL': 0.21265200150515073, 'FR': 0.5907531135342794, 'RL': 0.6596266906168937, 'RR': 0.4439996821909252} phase fault
+  G4-8 aborts 0 susp 0 hold {} maxatt None
+== MLJ_G4H_quiet_FR_Fs0
+  F2 before 200 False max 196.96495070482348
+  F2 after  0 True max -2.1334842951765602
+  F2 fault leg record 200 leg FR from 47.850 s: 200 samples, max F_lower - F 196.96495070482348 kN (injected +jump in the reading)
+  G4-3 True zero from 48.00000000056759 max after 0.0 at FAULT sample {'FL': 0.0, 'FR': 0.0, 'RL': 0.0, 'RR': 0.0}
+  G4-4 min {'FL': 118.0, 'FR': 115.77, 'RL': 71.8, 'RR': 70.25}
+       mean05 {'FL': 118.19, 'FR': 115.96, 'RL': 71.94, 'RR': 70.39} True
+       last2s mean {'FL': 118.2, 'FR': 115.96, 'RL': 71.95, 'RR': 70.39} ptp {'FL': 0.06, 'FR': 0.06, 'RL': 0.04, 'RR': 0.04}
+  G4-7 True end_reason no_target same True u from t_f+dT 0.0 u at t_f {'FL': 0.0, 'FR': 0.0, 'RL': 0.0, 'RR': 0.0} phase fault
+  G4-8 aborts 0 susp 0 hold {} maxatt None
+FAIL MLJ_G4H_FS24_FR_Fs0 | run
+FAIL MLJ_G4H_FS24_FR_Fs0 | 2 attitude +-0.2 (+mount)
+FAIL MLJ_G4H_FS24_FR_Fs0 | RE1b re-READY <= 60 s
+FAIL MLJ_G4H_FS24_FR_Fs8 | run
+FAIL MLJ_G4H_FS24_FR_Fs8 | 2 attitude +-0.2 (+mount)
+FAIL MLJ_G4H_FS24_FR_Fs8 | RE1b re-READY <= 60 s
+FAIL MLJ_G4H_FS24_RL_Fs0 | run
+FAIL MLJ_G4H_FS24_RL_Fs0 | 2 attitude +-0.2 (+mount)
+FAIL MLJ_G4H_FS24_RL_Fs0 | RE1b re-READY <= 60 s
+FAIL MLJ_G4H_FS24_RL_Fs8 | run
+FAIL MLJ_G4H_FS24_RL_Fs8 | 2 attitude +-0.2 (+mount)
+FAIL MLJ_G4H_FS24_RL_Fs8 | RE1b re-READY <= 60 s
+FAIL MLJ_G4H_G4_RR_Fs4 | run
+FAIL MLJ_G4H_G4_RR_Fs4 | 6 re-READY <= 40 s
+FAIL MLJ_G4H_quiet_FR_Fs0 | run
+FAIL MLJ_G4H_FS24_FR_Fs0 | C-S8-68 G4-4 (main) all four legs' judged true force >= F_min from FAULT + 1 s to the run 
+FAIL MLJ_G4H_FS24_FR_Fs8 | C-S8-68 G4-4 (main) all four legs' judged true force >= F_min from FAULT + 1 s to the run 
+FAIL MLJ_G4H_FS24_RL_Fs0 | C-S8-68 G4-4 (main) all four legs' judged true force >= F_min from FAULT + 1 s to the run 
+FAIL MLJ_G4H_FS24_RL_Fs8 | C-S8-68 G4-2 legs airborne at >= 2 of the samples t_f - 0.2 / - 0.1 / t_f are re-ground ta
+FAIL MLJ_G4H_FS24_RL_Fs8 | C-S8-68 G4-4 (main) all four legs' judged true force >= F_min from FAULT + 1 s to the run 

@@ -112,7 +112,7 @@ STEP 원본·B-rep·메시 캐시처럼 더 큰 생성물은 `01_cad/cache_manif
 - [00_docs/01_dynamics/dynamics_model.md](00_docs/01_dynamics/dynamics_model.md): 모델 구조 권고, 기준해(하중 분배·민감도·고유진동수·전도 여유), 접촉·적분기 권고, Chrono 모델 검증 기준 V0~V17, 제어 구조 후보.
 - [00_docs/02_hydraulic/hydraulic_fluid_survey.md](00_docs/02_hydraulic/hydraulic_fluid_survey.md): 유압유 체적 탄성계수 등 유압 특성 조사.
 - [00_docs/02_hydraulic/s8_seal_friction_counterbalance.md](00_docs/02_hydraulic/s8_seal_friction_counterbalance.md): S8 실 마찰·카운터 밸런스·로드측 배수(H-S8-5).
-- [00_docs/04_control/s6_control_spec.md](00_docs/04_control/s6_control_spec.md): 제어기 명세·판정 원본(현행 R8 C2, 개정 63까지).
+- [00_docs/04_control/s6_control_spec.md](00_docs/04_control/s6_control_spec.md): 제어기 명세·판정 원본(현행 R8 C2, 개정 66까지).
 - 기준해 스크립트는 `04_scripts/01_dynamics/`(conda `dynamics-dev`, 프로젝트 루트에서 실행), 결과는 `06_analysis/00_dynamics/`.
 
 ## CAD 자료

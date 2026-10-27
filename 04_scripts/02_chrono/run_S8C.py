@@ -25,6 +25,9 @@ Usage (Chrono-dev python, project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj_c29 --approved  # C-S8-29
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj_c67 --tag v5_c67
         --approved --workers p7   # C-S8-67 (spec rev. 62 317.1): G4RRF x F_s 0 / 8
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj_c68 --dry-run
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj_c68 --tag g4h_c68
+        --approved --workers p7   # C-S8-68 (spec rev. 64 323.8): 6 head-fault cases, needs P-S8-24
     # U-S8-40 (spec rev. 49 219.9): C-S8-28 -> MLJ 6 alone -> main 768 reusing the MLJ batch
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set mlj --approved   # MLJ 6
     python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py ml --stage main
@@ -195,6 +198,29 @@ SS9P_END_AFTER_S = 60.0
 G4RF_FAULT_AFTER_S = 2.0
 """C-S8-29 (spec rev. 48 218.10): rod-sensor dropout (NaN reading, D1) on FR from first READY
 + 2 s, before the G4 at READY + 5 s (ASSUMPTION: fault kind and time not given by the spec)."""
+G4H_HEAD_JUMP_PA = 150e5
+"""C-S8-68 (spec rev. 64 323.8, U-S8-68): head-sensor fault = a lasting +150 bar jump of one
+leg's head reading (``offset`` from the arm time on); the controller's D1 step check (> 100 bar)
+must take it as a head fault."""
+G4H_FS24_FAULT_AFTER_EVENT_S = 0.465
+"""C-S8-68 ③: middle of the first RL lift interval after the FS24 event in the original MLJ
+records (``07_results/S8/mlj_20261025_080212``, 1 ms pads ``airborne``): Fs0 0.205-0.729 s
+(middle 0.467), Fs8 0.204-0.721 s (0.4625); one value for both (0.465 s). The controller takes
+the fault at its first 10 Hz sample at or after it (event + 0.5 s; RL lifted until 0.72 s).
+The bundle-D re-runs (c36 / c37 D_fs24) have the same first RL interval."""
+G4H_G4_FAULT_AFTER_EVENT_S = 2.05
+"""C-S8-68 ③: RR head fault 'right after the G4 end' (ramp 2.0 s): event + 2.05 s, i.e. the
+sample at event + 2.1 s (ASSUMPTION; E_G4_Fs4 of p1 / p1r: RR loaded 14.6 / 58.3 kN there, not
+airborne)."""
+G4H_QUIET_FAULT_AFTER_EVENT_S = 0.05
+"""C-S8-68 ③: quiet case: the fault 'event' is READY + 5 s; the jump is armed 0.05 s later
+(sample READY + 5.1 s) so that it never falls on the sample boundary."""
+HEAD_DELIVERED_FILE = "head_fault_delivered.npz"
+"""C-S8-70 ⑥ (spec rev. 65 333): per-update head readings before / after the injection of a
+head-fault run (``verify.s8_control.HEAD_DELIVERED_FILE``)."""
+G4H_END_AFTER_S = 20.0
+"""C-S8-68 (ASSUMPTION): run end = event + 20 s (fault at most event + 2.1 s, FAULT within
+fault + 15 s (G4-3), G4-4 at FAULT + 1 s: >= 1.9 s left)."""
 ML_FORCED_OTHERS = "controller"
 """U-S8-27 / C-S8-25 ①: ML retract episodes override only the forced leg until the retraction is
 done, then hand every leg back to the controller (RE1c keeps ``"zero"``)."""
@@ -441,6 +467,38 @@ V-5 ③′ positive test): ``G4RF`` with the rod-sensor dropout on RR instead of
 the ``mlj`` set."""
 
 
+def _head_fault(leg: str, after_event_s: float, expect: str) -> dict[str, Any]:
+    """C-S8-68 ②: head-sensor fault injection, the key layout of ``rod_fault`` (leg, fault kind
+    ``stuck`` / ``offset`` / ``dropout``, value) armed at the event time + ``after_event_s``;
+    ``expect`` = the 323.8 expectation the judge uses (``reground`` / ``negative`` /
+    ``record``)."""
+    return {"leg": leg, "fault": "offset", "value_Pa": G4H_HEAD_JUMP_PA,
+            "after_event_s": after_event_s, "expect": expect}
+
+
+G4H_EVENTS: dict[str, dict[str, Any]] = {
+    # FS24 floor event (FR 24 mm / 0.3 s, top, flat) + FR head jump while RL (healthy) is lifted
+    "G4H_FS24_FR": {**EVENTS["FS24"], "end_after_s": G4H_END_AFTER_S,
+                    "head_fault": _head_fault("FR", G4H_FS24_FAULT_AFTER_EVENT_S, "reground")},
+    # the same with the jump on RL, the lifted leg itself
+    "G4H_FS24_RL": {**EVENTS["FS24"], "end_after_s": G4H_END_AFTER_S,
+                    "head_fault": _head_fault("RL", G4H_FS24_FAULT_AFTER_EVENT_S, "reground")},
+    # quiet READY (flat top, no floor event): no lifted leg -> FAULT as before (G4-7)
+    "G4H_quiet_FR": {"kind": "fault", "at": "ready+5", "stage2": None, "fine": False,
+                     "end_after_s": G4H_END_AFTER_S,
+                     "head_fault": _head_fault("FR", G4H_QUIET_FAULT_AFTER_EVENT_S,
+                                               "negative")},
+    # G4 (RR 11.5 mm / 2 s) + RR head fault right after the ramp (RR low but grounded)
+    "G4H_G4_RR": {**EVENTS["G4"], "end_after_s": G4H_END_AFTER_S,
+                  "head_fault": _head_fault("RR", G4H_G4_FAULT_AFTER_EVENT_S, "record")},
+}
+"""C-S8-68 (spec rev. 64 323.8, U-S8-68): the six head-fault cases' events (group MLJ, set
+``mlj_c68``, outside ``mlj``). Kind ``fault`` = no floor event, the event time only anchors the
+fault and the run end."""
+EVENTS.update(G4H_EVENTS)
+G4H_EVENT_NAMES = tuple(G4H_EVENTS)
+
+
 def step_us(fs_kN: float, lock_valve: str = "pilot_check") -> float:
     """Estimated P-core wall per L2b step [us] with the p7e8 pool full (C-S8-19 ⑥, p1r)."""
     if lock_valve == "counterbalance":
@@ -497,6 +555,13 @@ def _event_scenario(event: str, contact: str):
     if event == "G4RRF":  # C-S8-67: as G4RF, only the name differs
         return s6c._sc(f"H4V_G4RRF_{contact}", "G4", "top", "fdown3.5", contact=contact,
                        event="settle_RR", extra=st.T_SETTLE_EXTRA, items=("R", "6"))
+    # C-S8-68: the floor event cases reuse their base scenario (the case id replaces the name)
+    if event in ("G4H_FS24_FR", "G4H_FS24_RL"):
+        return _event_scenario("FS24", contact)
+    if event == "G4H_G4_RR":
+        return _event_scenario("G4", contact)
+    if event == "G4H_quiet_FR":  # K0V flat top (D8 scenario), the fault alone
+        return replace(_d8_scenario("top", "flat"), contact=contact)
     raise ValueError(event)
 
 
@@ -619,6 +684,22 @@ def s8_cases() -> list[S8Case]:
             _event_scenario("G4RRF", "combined"), fs_kN=fs, event="G4RRF",
             notes=("C-S8-67 / U-S8-67 (나): RR rod-sensor dropout at READY + 2 s + G4 RR at "
                    "READY + 5 s, nose down 3.5 deg top (G4RF with the fault leg FR -> RR)",))
+    # C-S8-68 (spec rev. 64 323.8, U-S8-68): G4 head-sensor fault cases, appended after the
+    # C-S8-67 cases (earlier order and definitions unchanged); set mlj_c68 (not in mlj)
+    for ev_name, fs_levels, note in (
+            ("G4H_FS24_FR", (0.0, 8.0), "FS24 FR 24 mm / 0.3 s + FR head +150 bar at event + "
+                                        "0.465 s (healthy RL lifted) -> RL re-ground, FAULT"),
+            ("G4H_FS24_RL", (0.0, 8.0), "FS24 FR 24 mm / 0.3 s + RL head +150 bar at event + "
+                                        "0.465 s (RL itself lifted) -> RL re-ground at 0.15 "
+                                        "v_max, FAULT"),
+            ("G4H_quiet_FR", (0.0,), "flat top READY + 5.05 s FR head +150 bar, no lifted leg "
+                                     "-> FAULT as before (G4-7)"),
+            ("G4H_G4_RR", (4.0,), "G4 RR 11.5 mm / 2 s + RR head +150 bar at event + 2.05 s "
+                                  "(RR low, grounded): false target recorded")):
+        for fs in fs_levels:
+            add(f"MLJ_{ev_name}_{_fs_tag(fs)}", MLJ_GROUP, 5,
+                _event_scenario(ev_name, "combined"), fs_kN=fs, event=ev_name,
+                notes=(f"C-S8-68 / U-S8-68: {note}",))
     # smoke (F_s 0, short)
     add("smoke_E_G4_Fs0", "smoke", 0, _event_scenario("G4", "combined"), fs_kN=0.0, event="G4")
     add("smoke_K0_top_rpBop_Fs0", "smoke", 0, _d8_scenario("top", "rpBop"), fs_kN=0.0)
@@ -655,6 +736,8 @@ def case_set(name: str) -> list[S8Case]:
         "mlj": [c for c in cases if c.group == MLJ_GROUP and c.event not in MLJ_EXTRA_EVENTS],
         "mlj_c29": [c for c in cases if c.group == MLJ_GROUP and c.event == "G4RF"],
         "mlj_c67": [c for c in cases if c.group == MLJ_GROUP and c.event == "G4RRF"],
+        # C-S8-68 (spec rev. 64 323.8): the six G4 head-fault cases
+        "mlj_c68": [c for c in cases if c.group == MLJ_GROUP and c.event in G4H_EVENT_NAMES],
     }
     if name not in sets:
         raise KeyError(f"unknown set {name!r}; sets {tuple(sets)}")
@@ -662,14 +745,15 @@ def case_set(name: str) -> list[S8Case]:
 
 
 SET_NAMES = ("p1", "p1r", "p2", "p3", "rest", "all", "cb", "smoke", "mlj", "mlj_c29",
-             "mlj_c67")
+             "mlj_c67", "mlj_c68")
 MLJ_GROUP = "MLJ"
 """Judged cases of the main ML batch (6): U-S8-32 front fast settlement (FS24) x F_s 0 / 8,
 C-S8-24 R45-4 (SS9P) x F_s 0 / 8, C-S8-29 rod-sensor fault + G4 (G4RF) x F_s 0 / 8.
 ``mlj_c29`` = the two C-S8-29 cases alone (they need P-S8-13). ``mlj_c67`` = C-S8-67 (spec rev.
 62 317.1): G4RF with the rod fault on RR (G4RRF) x F_s 0 / 8; group MLJ (same judge rows) but
-not in ``mlj`` (:data:`MLJ_EXTRA_EVENTS`)."""
-MLJ_EXTRA_EVENTS = ("G4RRF",)
+not in ``mlj`` (:data:`MLJ_EXTRA_EVENTS`). ``mlj_c68`` = C-S8-68 (spec rev. 64 323.8): the six
+G4 head-fault cases (:data:`G4H_EVENTS`), also outside ``mlj``."""
+MLJ_EXTRA_EVENTS = ("G4RRF", *G4H_EVENT_NAMES)
 """MLJ-group events outside the ``mlj`` set (the main ML batch judged pool stays the six)."""
 P1R_EXTRA = ("N_D8_top_rpB_Fs8_pressure",)
 """Spec rev. 43 213.6 step 3: the 1st-priority re-run = 36 + N_D8 rpB pressure-only = 37."""
@@ -916,6 +1000,120 @@ class RodFaultInjection:
                 "source": "sensors.hydraulic.FaultyRodSensor on the controller input"}
 
 
+class HeadFaultInjection:
+    """C-S8-68 ② (spec rev. 64 323.8) controller wrapper: from ``t_start_s`` on (set by
+    :meth:`arm`) one leg's head-side reading delivered to the controller is stuck at
+    ``value_Pa`` / offset by ``value_Pa`` / NaN (the kinds of ``RodSensorFault``); the run
+    records (``observe``) keep the unfaulted delivery, as :class:`RodFaultInjection`. C-S8-70 ⑥:
+    the wrapper keeps every update's reading before / after the injection
+    (:meth:`save_delivered`, ``head_fault_delivered.npz`` next to the record)."""
+
+    def __init__(self, inner, *, leg: int, fault: str, value_Pa: float = 0.0) -> None:
+        from outrigger_sim.sensors.hydraulic import RodSensorFault
+
+        self.inner = inner
+        self.leg = int(leg)
+        self.fault = RodSensorFault(fault)  # same three kinds for the head side
+        self.value_Pa = float(value_Pa)
+        self.t_start_s: float | None = None
+        self.first_applied_t_s: float | None = None
+        self.applied = 0
+        # C-S8-70 ⑥: every update's head reading before / after the injection (the record's
+        # meas.head_pressure is the one before), saved by :meth:`save_delivered`
+        self._rows_t: list[float] = []
+        self._rows_in: list[list[float]] = []
+        self._rows_out: list[list[float]] = []
+        self._rows_applied: list[bool] = []
+
+    @property
+    def period_s(self) -> float:
+        return self.inner.period_s
+
+    def arm(self, t_start_s: float) -> None:
+        self.t_start_s = float(t_start_s)
+
+    def reset(self) -> None:
+        self.inner.reset()
+
+    def apply(self, measurements):
+        """The faulted delivery (unchanged before ``t_start_s``)."""
+        import numpy as np
+
+        from outrigger_sim.sensors.hydraulic import RodSensorFault
+
+        if self.t_start_s is None or measurements.t_s < self.t_start_s:
+            return measurements
+        head = np.array(measurements.head_pressure_Pa, dtype=float)
+        if self.fault is RodSensorFault.STUCK:
+            head[self.leg] = self.value_Pa
+        elif self.fault is RodSensorFault.OFFSET:
+            head[self.leg] += self.value_Pa
+        else:
+            head[self.leg] = math.nan
+        return replace(measurements, head_pressure_Pa=head)
+
+    def update(self, measurements):
+        head_in = [float(x) for x in measurements.head_pressure_Pa]
+        applied = self.t_start_s is not None and measurements.t_s >= self.t_start_s
+        if applied:
+            if self.first_applied_t_s is None:
+                self.first_applied_t_s = float(measurements.t_s)
+            self.applied += 1
+            measurements = self.apply(measurements)
+        self._rows_t.append(float(measurements.t_s))
+        self._rows_in.append(head_in)
+        self._rows_out.append([float(x) for x in measurements.head_pressure_Pa])
+        self._rows_applied.append(bool(applied))
+        return self.inner.update(measurements)
+
+    def delivered_arrays(self) -> dict[str, Any]:
+        """C-S8-70 ⑥ arrays (``t`` absolute engine time [s], heads [Pa], ``applied``)."""
+        import numpy as np
+
+        n = len(self._rows_t)
+        return {"t": np.asarray(self._rows_t, float),
+                "meas.head_pressure": np.asarray(self._rows_in, float).reshape(n, 4),
+                "meas.head_pressure_delivered": np.asarray(self._rows_out, float).reshape(n, 4),
+                "applied": np.asarray(self._rows_applied, bool)}
+
+    def save_delivered(self, path: Path) -> dict[str, Any]:
+        """Write :meth:`delivered_arrays` to ``path`` (npz); returns the meta entry."""
+        import numpy as np
+
+        arrays = self.delivered_arrays()
+        np.savez(path, **arrays)
+        return {"file": path.name, "samples": int(arrays["t"].size),
+                "applied_samples": int(arrays["applied"].sum()),
+                "keys": sorted(arrays),
+                "rule": "per controller update: meas.head_pressure = reading before the "
+                        "injection (= record/meas.head_pressure), meas.head_pressure_delivered "
+                        "= reading the controller received; t = absolute engine time "
+                        "(C-S8-70 ⑥, spec rev. 65 333)"}
+
+    def meta(self) -> dict[str, Any]:
+        return {"wrapper": "HeadFaultInjection", "leg": LEG_NAMES[self.leg],
+                "fault": str(self.fault), "value_Pa": self.value_Pa,
+                "t_start_s": self.t_start_s, "first_applied_t_s": self.first_applied_t_s,
+                "applied_periods": self.applied,
+                "source": "run_S8C.HeadFaultInjection on the controller input (head_pressure_Pa "
+                          "of the delivered Measurements)"}
+
+
+def fault_reground_available() -> bool:
+    """C-S8-68 ④ precondition: the controller has the P-S8-24 phase ``FAULT_REGROUND``."""
+    from outrigger_sim.control.c2 import C2Phase
+
+    return hasattr(C2Phase, "FAULT_REGROUND")
+
+
+def require_fault_reground(cases: Sequence["S8Case"]) -> None:
+    """Refuse a head-fault batch (C-S8-68) before P-S8-24 is in the code."""
+    hf = [c.case_id for c in cases if (c.event_spec() or {}).get("head_fault")]
+    if hf and not fault_reground_available():
+        raise SystemExit(f"C-S8-68 head-fault cases {hf} need P-S8-24 (C2Phase.FAULT_REGROUND) "
+                         "in the controller; not found")
+
+
 REAPPROACH_VARIANTS = ("rt", "f1only")
 """C-S8-36 (spec rev. 52 230, U-S8-50): ``rt`` = the code's R8 preset (P-S8-16 rule RT on) +
 the F1 plant reading fix; ``f1only`` = the same with the RT keys of
@@ -1053,7 +1251,13 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
         rod_fault = RodFaultInjection(controller, leg=LEG_NAMES.index(rf["leg"]),
                                       fault=rf["fault"], value_Pa=float(rf.get("value_Pa", 0.0)))
         controller = rod_fault
-    probe_req = {"attempts": 0, "rejected": [], "accepted_t_s": None, "rule": None} \
+    head_fault = None
+    if ev and ev.get("head_fault"):  # C-S8-68: armed at event (or first READY) + offset
+        hf = ev["head_fault"]
+        head_fault = HeadFaultInjection(controller, leg=LEG_NAMES.index(hf["leg"]),
+                                        fault=hf["fault"], value_Pa=float(hf.get("value_Pa", 0.0)))
+        controller = head_fault
+    probe_req ={"attempts": 0, "rejected": [], "accepted_t_s": None, "rule": None} \
         if ev and ev.get("probe_after") else None
     dt_fine = float(params.get("simulation.dt_transition_s"))
     schedule = DtSchedule(model.dt_s, config.period_s) if ev and ev.get("fine") else None
@@ -1126,9 +1330,18 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
                     forced.t_start = t_ev
                     state["scheduled"] = True
                     state["event_t"] = t_ev
+                elif ev["kind"] == "fault":  # C-S8-68: no floor event, the time anchors only
+                    state["scheduled"] = True
+                    state["event_t"] = t_ev
         if rod_fault is not None and rod_fault.t_start_s is None \
                 and state["ready_t"] is not None:
             rod_fault.arm(state["ready_t"] + float(ev["rod_fault"]["after_ready_s"]))
+        if head_fault is not None and head_fault.t_start_s is None:
+            hf = ev["head_fault"]
+            if "after_event_s" in hf and state["event_t"] is not None:
+                head_fault.arm(state["event_t"] + float(hf["after_event_s"]))
+            elif "after_ready_s" in hf and state["ready_t"] is not None:
+                head_fault.arm(state["ready_t"] + float(hf["after_ready_s"]))
         if probe_req is not None:
             request_probe_after_settlement(meas.t_s, ph)
         fine_window(meas.t_s)
@@ -1239,6 +1452,8 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
     save_record(res.record, case_dir / "record")
     pads.save(case_dir / "pads.npz")
     series_info = series.save(case_dir / S8_SERIES_NAME)
+    head_delivered = None if head_fault is None \
+        else head_fault.save_delivered(case_dir / HEAD_DELIVERED_FILE)  # C-S8-70 ⑥
     events = [str(e) for e in c2.events]
     probes = [[asdict(r) if hasattr(r, "__dataclass_fields__") else str(r) for r in rnd]
               for rnd in c2.probe_history]
@@ -1276,7 +1491,14 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
         "rod_fault": None if rod_fault is None else rod_fault.meta(),
         "rod_fault_t_s": None if rod_fault is None or rod_fault.t_start_s is None
         else rod_fault.t_start_s - t0,
-        "fine_dt": None if schedule is None else {
+        # C-S8-68: head fault arm time and first faulted controller sample (relative)
+        "head_fault": None if head_fault is None else head_fault.meta(),
+        "head_fault_t_s": None if head_fault is None or head_fault.t_start_s is None
+        else head_fault.t_start_s - t0,
+        "head_fault_first_applied_t_s": None if head_fault is None
+        or head_fault.first_applied_t_s is None else head_fault.first_applied_t_s - t0,
+        "head_fault_delivered": head_delivered,  # C-S8-70 ⑥: reading after the injection
+        "fine_dt":None if schedule is None else {
             "dt_transition_s": dt_fine, "opened_t_s": None if state["fine_open_t"] is None
             else state["fine_open_t"] - t0, "capped": state["fine_capped"],
             "lifted_seen_in_window": state["lifted_seen"],
@@ -1953,6 +2175,9 @@ def job_ml_episode(base: MLBase, ep: dict[str, Any], base_dir: Path, case_dir: P
     refresh["reapproach_variant"] = variant  # C-S8-36 (None = preset)
     refresh["reapproach_max_duration_s"] = reapproach_limit_meta(pickled_lr, c2, fresh_c2)
     t_b = engine.time_s
+    # C-S8-70 ⑤ (spec rev. 65 334.3): the only branch-restore path of this runner; a branch
+    # pickled before the soil response (rev. 56) gets the LOC restored here (rule (다)) or the
+    # episode fails (SoilStateRestoreError), never silently without LOC (D1' false head FAULTs)
     refresh["soil_state"] = apply_soil_rule(c2, fresh_c2, base_dir, t_b,
                                             ran_without_soil=ran_without_soil,
                                             soil_off_replay=soil_off_replay)
@@ -3478,11 +3703,19 @@ def main(argv):
         doc = plan(cases, args.workers)
         print(json.dumps(s6c._plain({k: v for k, v in doc.items() if k != "cases"}), indent=1))
         if args.dry_run:
-            print(json.dumps({"dry_run": args.action, "set": args.case_set,
-                              "cases": [c.case_id for c in cases],
-                              "out": f"07_results/S8/{args.tag or args.case_set}_<stamp>"}, indent=1))
+            dry = {"dry_run": args.action, "set": args.case_set,
+                   "cases": [c.case_id for c in cases],
+                   "out": f"07_results/S8/{args.tag or args.case_set}_<stamp>"}
+            hf = {c.case_id: (c.event_spec() or {}).get("head_fault") for c in cases
+                  if (c.event_spec() or {}).get("head_fault")}
+            if hf:  # C-S8-68: injection plan + the P-S8-24 precondition of run / check
+                dry["head_fault"] = hf
+                dry["end_rule"] = {c.case_id: end_rule(c) for c in cases if c.case_id in hf}
+                dry["fault_reground_available"] = fault_reground_available()
+            print(json.dumps(dry, indent=1))
         return
     tag = args.tag or args.case_set
+    require_fault_reground(cases)  # C-S8-68: head-fault cases only after P-S8-24
     if args.action == "check":
         run_batch(cases, tag=tag, layout=args.workers, check=True,
                   duration_s=args.duration)

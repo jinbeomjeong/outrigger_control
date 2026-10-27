@@ -185,6 +185,16 @@ soil=SoilResponseSettings())`` turns the soil response off again (revision-56 co
 re-approach lasts 10 s). :meth:`C2Controller.restore_liftoff_confirmation` sets an offline-judged
 LOC in a run state unpickled from revision-56 code (merge rule of 2026-10-26, event
 ``INFO_SOIL_STATE_RESTORED``, meta ``soil.restored_from``).
+Revision 64 322 / 323 (P-S8-23, P-S8-24; user decisions U-S8-68 .. U-S8-70 of 2026-10-27): with
+the soil response on, D1'' applies once the lift-off is confirmed (LOC) and no crawler
+re-contact is suspected (the monitor's 322.2 watch), with the YAML mass until a READY stay gives
+one (``TwoPressureSettings.imu_mass_before_ready``); without it the phase rule stays. A
+head-sensor fault while a leg is lifted goes to ``C2Phase.FAULT_REGROUND`` (re-ground the
+lifted legs one at a time, then FAULT; ``control/fault_reground.py``) instead of FAULT at once.
+:meth:`C2Config.with_10hz_d1` turns all three on; ``C2Config()`` keeps them off.
+Revision 65 332 (P-S8-25) corrects FAULT_REGROUND: no raw-attitude abort, contact on all four
+legs with a 1.0 s hold, faulty-leg cue (d), the scaled plane gap, and the D1 step rule
+suspended after a head fault; the preset turns these on, the class defaults keep revision 64.
 Only the start-IMU form exists
 (the late IMU read C1 is not implemented). ``C2Config()`` keeps every R8 setting off, so the
 R7 commands stay bit for bit.
@@ -225,6 +235,17 @@ from typing import Any
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
+from outrigger_sim.control import fault_reground
+from outrigger_sim.control.fault_reground import (
+    ContactRule,
+    FaultRegroundRun,
+    FaultRegroundSettings,
+    RegroundCue,
+    RegroundEnd,
+    RegroundSample,
+    RegroundTarget,
+    TargetOutcome,
+)
 from outrigger_sim.control.ground_contact import (
     LoadBand,
     ProbeReading,
@@ -268,6 +289,7 @@ from outrigger_sim.control.two_pressure import (
     FallbackRatioChoice,
     FallbackRatioSource,
     FallbackSlopeInputs,
+    ImuMassSource,
     LoadEstimate,
     PressureForces,
     TwoPressureMonitor,
@@ -382,17 +404,34 @@ class C2Phase(StrEnum):
     PROBE = "probe"
     READY = "ready"
     FAULT = "fault"
+    FAULT_REGROUND = "fault_reground"
+    """P-S8-24 (spec rev. 64 323): after a head-sensor fault, the lifted legs are re-grounded
+    one at a time, then FAULT."""
 
 
+FAULT_REGROUND_ENTRY_PHASES = frozenset(
+    {C2Phase.LEVEL, C2Phase.DONE, C2Phase.REANCHOR, C2Phase.PROBE, C2Phase.READY}
+)
+"""Spec 323.2: phases from which a head-sensor fault goes to FAULT_REGROUND (the machine is on
+its legs); a fault in CHECK / TOUCH stops at once."""
 GEOMETRY_GATE_PHASES = frozenset({C2Phase.DONE, C2Phase.PROBE, C2Phase.READY})
 """GE1'-c (spec 32.1): phases in which the standstill gate may open (the probe moves are kept
 out by the command-free time)."""
 CRAWLER_LIFTED_PHASES = frozenset(
-    {C2Phase.LEVEL, C2Phase.DONE, C2Phase.REANCHOR, C2Phase.PROBE, C2Phase.READY}
+    {
+        C2Phase.LEVEL,
+        C2Phase.DONE,
+        C2Phase.REANCHOR,
+        C2Phase.PROBE,
+        C2Phase.READY,
+        C2Phase.FAULT_REGROUND,
+    }
 )
 """D1'' (spec rev. 48 218.4, P-S8-14): phases after the crawler left the ground, in which a
 head step is judged by the IMU residual (the crawler load of CHECK / TOUCH is not in the leg
-sum). FAULT keeps the D1' sum rule."""
+sum). FAULT keeps the D1' sum rule. FAULT_REGROUND is entered from lifted phases only (spec
+rev. 65 332.4). With the soil response on, the LOC replaces this phase rule (P-S8-23 ②, spec
+rev. 64 322.1: LEVEL and the soil mode carry crawler load)."""
 REFERENCE_UPDATE_PHASES = frozenset({C2Phase.DONE, C2Phase.READY})
 """GE1'-b: phases whose entry arms a refresh of the shadow reference."""
 REAPPROACH_PHASES = frozenset({C2Phase.LEVEL, C2Phase.DONE, C2Phase.PROBE, C2Phase.READY})
@@ -1613,6 +1652,9 @@ class C2Config:
     soil: SoilResponseSettings = SoilResponseSettings()
     """Soil response S-1 .. S-5 (spec rev. 57 285); off by default. A plain class-level default,
     so configs unpickled from older code read "off"."""
+    fault_reground: FaultRegroundSettings = FaultRegroundSettings()
+    """FAULT_REGROUND after a head-sensor fault (P-S8-24, spec rev. 64 323); off by default, a
+    plain class-level default as ``soil``."""
 
     def __post_init__(self) -> None:
         if not self.period_s > 0.0:
@@ -1723,12 +1765,34 @@ class C2Config:
         latches the slow approach on 2 samples in a row (P-S8-6, U-S8-11). Spec rev. 57 285
         (U-S9-C1 / U-S9-C4, 2026-10-26, after the P-S9-9 regression): the soil response
         S-1 .. S-5 is on (:class:`SoilResponseSettings`, the other soil keys of this config
-        stay) and a re-approach ends after 10 s (P-S9-10). The start-IMU form only: the late
-        IMU read (C1) is not implemented (U-R8-6 = C2).
+        stay) and a re-approach ends after 10 s (P-S9-10). Spec rev. 64 (U-S8-68 .. U-S8-70,
+        2026-10-27): D1'' takes the YAML mass before the first READY mass and watches for a
+        crawler re-contact (P-S8-23), and a head-sensor fault re-grounds the lifted legs
+        before FAULT (P-S8-24) with the spec rev. 65 332.5 corrections (P-S8-25): no
+        raw-attitude abort, contact on all four legs with a 1.0 s hold, cue (d), the scaled
+        plane gap and the D1 step rule suspended after a head fault. The start-IMU form only:
+        the late IMU read (C1) is not implemented (U-R8-6 = C2).
         """
         config = self.with_r8_diagnostics()
+        two_pressure = replace(
+            config.two_pressure,
+            imu_mass_before_ready=str(ImuMassSource.YAML),
+            crawler_recontact_watch=True,
+            suspend_steps_after_head_fault=True,
+        )
+        reground_settings = replace(
+            config.fault_reground,
+            enable=True,
+            attitude_abort=False,
+            contact_rule=ContactRule.ALL_LEGS_HOLD,
+            hold_confirm_samples=fault_reground.HOLD_CONFIRM_SAMPLES,
+            own_pre_fault_cue=True,
+            plane_gap_scaled=True,
+        )
         return replace(
             config,
+            two_pressure=two_pressure,
+            fault_reground=reground_settings,
             soil=replace(config.soil, enable=True),
             period_s=R8_PERIOD_S,
             output_ramp_time_s=None,
@@ -2354,6 +2418,40 @@ class SupportGeometryShadow:
         """``r = [(I - P) h]_RR`` (linear in ``h``, sign fixed by the RR row)."""
         return float(self._residual_row @ heights_m)
 
+    def leg_residual_changes_m(self) -> NDArray[np.float64] | None:
+        """Plane residual change of every pad in the latest sample (``+`` = above the plane of
+        the four pads, against the reference); ``None`` before a sample.
+
+        Four points against a three-parameter plane leave a rank-one ``I - P = v v^T / |v|^2``,
+        so pad ``i`` carries ``Delta r v_i / v_RR`` with ``Delta r`` the RR value (P-S8-24
+        cue (c); a pad and its diagonal partner read the same sign).
+        """
+        latest = self.latest
+        if latest is None:
+            return None
+        row = self._residual_row
+        return latest.nonplanarity_delta_m * row / row[RESIDUAL_SIGN_LEG]
+
+    def leg_gap_estimates_m(self) -> NDArray[np.float64] | None:
+        """Gap of every pad if it alone were off the plane: ``g_i = Delta r_i / (I - P)_ii``
+        (spec rev. 65 332.3, P-S8-25 ③); ``None`` before a sample.
+
+        One pad lifted by ``g`` changes its own residual by only ``(I - P)_ii g`` (0.227 front,
+        0.273 rear for the YAML pads), so :meth:`leg_residual_changes_m` reads the gap 3.7 to
+        4.4 times too small. A pad and its diagonal partner still read the same sign.
+        """
+        residual_changes_m = self.leg_residual_changes_m()
+        if residual_changes_m is None:
+            return None
+        return residual_changes_m / self.residual_diagonal()
+
+    def residual_diagonal(self) -> NDArray[np.float64]:
+        """``diag(I - P)`` of the four-pad plane fit (computed from the geometry, so shadows
+        unpickled from older code need no stored value)."""
+        plane_basis = np.column_stack([np.ones(LEG_COUNT), self._geometry.pad_xy_m])
+        plane_projection = plane_basis @ np.linalg.pinv(plane_basis)
+        return np.diag(np.eye(LEG_COUNT) - plane_projection).copy()
+
     def pad_plane_normal(
         self,
         attitude_rad: tuple[float, float],
@@ -2969,6 +3067,16 @@ class _RunState:
     soil: _SoilState | None = None
     """Soil response state (spec rev. 57 285); ``None`` in run states unpickled from older
     code, which only run with the soil response off."""
+    # P-S8-24 (immutable defaults: class attributes for run states pickled before it)
+    fault_reground: FaultRegroundRun | None = None
+    """The FAULT_REGROUND of the run (``None`` before one)."""
+    fault_reground_history: deque[RegroundSample] | None = None
+    """Readings of the last periods (FAULT_REGROUND on only; created on the first read)."""
+    reground_tilt_history: deque[tuple[float, float]] | None = None
+    """Mean raw tilt of the last periods (FAULT_REGROUND abort 2, 323.9 ④)."""
+    leg_lock_pressures_Pa: list[tuple[float, float] | None] | None = None
+    """Per leg (head, rod) reading of the first command-free sample of its current lock,
+    ``None`` while it moves (FAULT_REGROUND cue (b))."""
 
 
 @dataclass(frozen=True)
@@ -3136,6 +3244,8 @@ class C2Controller:
         state = self._state
         reading = self._read(measurements)
         self._update_attitude_filters(measurements)
+        if self.config.fault_reground.enable:
+            self._record_reground_tilt()
         self._watch_oil_temperature(measurements)
         state.last_reading = reading
         state.guard_m_s = None
@@ -3190,6 +3300,7 @@ class C2Controller:
             "twist_gain_stiffness": self._twist_gain_stiffness_meta(),
             "lifted_reapproach": [run.to_meta() for run in self._state.reapproach_history],
             "soil": self._soil_meta(),
+            "fault_reground": self._fault_reground_meta(),
             "locked_pressure_warning_note": (
                 QUASI_STATIC_PRESSURE_NOTE if r8.is_instant_sampling else None
             ),
@@ -3681,10 +3792,13 @@ class C2Controller:
             self._leg_seal_bands_N(),
             stroke_m=measurements.stroke_m,  # P-S8-11 ③ stroke check only (off by default)
             imu_specific_force_z_m_s2=_last_imu_specific_force_z_m_s2(measurements),
-            is_crawler_lifted=state.phase in CRAWLER_LIFTED_PHASES,
+            is_crawler_lifted=self._is_crawler_lifted_for_d1(),
             imu_gyro_rad_s=measurements.imu_angular_rate_samples_rad_s,  # lever term
             r5_fallback_ratios=self._r5_fallback_ratio_choice(),
+            seal_friction_sum_N=self._seal_friction_sum_N(),
         )
+        if self.config.fault_reground.enable:
+            self._record_fault_reground_sample(measurements, forces)
         self._take_pressure_events(measurements.t_s)
         force = forces.nominal
         motor_stroke = np.array(measurements.stroke_m)
@@ -3711,11 +3825,35 @@ class C2Controller:
         )
 
     def _take_pressure_events(self, t_s: float) -> None:
-        """R6-P monitor events; a head-side fault stops the run (FAULT, U45)."""
+        """R6-P monitor events; a head-side fault stops the run (FAULT, U45), or first
+        re-grounds the lifted legs (FAULT_REGROUND, P-S8-24) when that is on."""
         for name, is_warning in self._pressures.pop_events():
             self._add_event(t_s, name, is_warning=is_warning)
-        if self._pressures.head_fault_legs and self._state.phase is not C2Phase.FAULT:
-            self._state.phase = C2Phase.FAULT
+        state = self._state
+        fault_legs = self._pressures.head_fault_legs
+        if not fault_legs or state.phase in (C2Phase.FAULT, C2Phase.FAULT_REGROUND):
+            return
+        if self._starts_fault_reground(t_s, fault_legs):
+            state.phase = C2Phase.FAULT_REGROUND
+            return
+        state.phase = C2Phase.FAULT
+
+    def _is_crawler_lifted_for_d1(self) -> bool:
+        """Whether D1'' may judge this period (P-S8-23 ②, spec rev. 64 322.1): with the soil
+        response on, the LOC and no suspected crawler re-contact; otherwise the phase rule
+        (:data:`CRAWLER_LIFTED_PHASES`)."""
+        if not self.config.soil.enable:
+            return self._state.phase in CRAWLER_LIFTED_PHASES
+        if not self._is_liftoff_confirmed():
+            return False
+        return not self._pressures.is_crawler_recontact_suspected
+
+    def _seal_friction_sum_N(self) -> float:
+        """``sum F_s,i`` of the last probe round (re-contact threshold, 322.2); 0 before one."""
+        history = self._state.probe_history
+        if not history:
+            return 0.0
+        return float(sum(max(result.seal_friction_estimate_N, 0.0) for result in history[-1]))
 
     def _leg_seal_bands_N(self) -> NDArray[np.float64]:
         """``F_band`` per leg (U65: at least 13 kN on a rod-side fallback leg)."""
@@ -3833,6 +3971,8 @@ class C2Controller:
             return self._touch(reading)
         if phase in (C2Phase.FAULT, C2Phase.IDLE):
             return self._zero_speeds()
+        if phase is C2Phase.FAULT_REGROUND:
+            return self._fault_reground_step(reading)
         tail_speeds = self._lock_tail_step(reading.t_s)
         if tail_speeds is not None:
             return tail_speeds  # U62: the phase waits for the tail and its settle
@@ -4498,6 +4638,503 @@ class C2Controller:
         )
         # P-S8-16 RT 2: after the protection test; 1.0 (exact) on a first run.
         return twist_rate * self._reapproach_speed_factor(lifted_leg)
+
+    # --- FAULT_REGROUND (P-S8-24, spec rev. 64 323) ---
+
+    def _record_fault_reground_sample(
+        self, measurements: Measurements, forces: PressureForces
+    ) -> None:
+        """Keep the readings FAULT_REGROUND looks back on and the lock pressures of cue (b)."""
+        state = self._state
+        settings = self.config.fault_reground
+        if state.fault_reground_history is None:
+            longest_s = max(settings.target_window_s, settings.faulty_contact_window_s)
+            length = max(1, round(longest_s / self.config.period_s))
+            state.fault_reground_history = deque(maxlen=length)
+        rod = measurements.rod_pressure_Pa
+        rod_Pa = None if rod is None else np.array(rod, dtype=float)
+        state.fault_reground_history.append(
+            RegroundSample(
+                t_s=float(measurements.t_s),
+                load_reading_N=np.array(forces.nominal, dtype=float),
+                load_estimate_N=np.array(self._load_estimate_N(forces.lower), dtype=float),
+                rod_pressure_Pa=rod_Pa,
+                motor_stroke_m=np.array(measurements.stroke_m, dtype=float),
+                imu_f_z_m_s2=self._pressures.imu_specific_force_z_m_s2,
+            )
+        )
+        self._update_leg_lock_pressures(np.asarray(measurements.head_pressure_Pa), rod_Pa)
+
+    def _update_leg_lock_pressures(
+        self, head_Pa: NDArray[np.float64], rod_Pa: NDArray[np.float64] | None
+    ) -> None:
+        """(head, rod) of the first sample with the leg's acting command zero; a move clears
+        it. ASSUMPTION: the one sample at the lock stands for ``p_h,lock`` of 323.3 (b)."""
+        state = self._state
+        if state.leg_lock_pressures_Pa is None:
+            state.leg_lock_pressures_Pa = [None] * LEG_COUNT
+        locks = state.leg_lock_pressures_Pa
+        for leg in range(LEG_COUNT):
+            if state.applied_output_m_s[leg] != 0.0:
+                locks[leg] = None
+            elif locks[leg] is None and rod_Pa is not None:
+                locks[leg] = (float(head_Pa[leg]), float(rod_Pa[leg]))
+
+    def _starts_fault_reground(self, t_s: float, fault_legs: list[int]) -> bool:
+        """Spec 323.2 entry: on, from a lifted phase, one faulty leg and at least one target.
+        A run without a target is still recorded (meta) and stops as FAULT does."""
+        settings = self.config.fault_reground
+        state = self._state
+        if not settings.enable or state.phase not in FAULT_REGROUND_ENTRY_PHASES:
+            return False
+        if len(fault_legs) != 1 or not state.fault_reground_history:
+            return False  # two sensors at once: no frozen reading to trust, stop at once
+        run = self._new_fault_reground_run(t_s, tuple(fault_legs))
+        state.fault_reground = run
+        if not run.targets:
+            run.end_s, run.end_reason = t_s, RegroundEnd.NO_TARGET
+            return False
+        self._pressures.hold_head_readings(list(fault_legs))
+        legs = ",".join(LEG_ORDER[target.leg] for target in run.targets)
+        self._add_event(t_s, f"{fault_reground.START_EVENT}:{legs}", is_warning=True)
+        return True
+
+    def _new_fault_reground_run(
+        self, t_s: float, fault_legs: tuple[int, ...]
+    ) -> FaultRegroundRun:
+        """323.3: healthy legs lifted on the last samples (lowest load first), then the faulty
+        leg when one of its cues holds; protected = the other healthy legs (323.9 ④)."""
+        settings = self.config.fault_reground
+        history = self._state.fault_reground_history
+        assert history is not None
+        window = fault_reground.window_samples(
+            history, settings.target_window_s, self.config.period_s
+        )
+        residuals_m = self._plane_cue_values_m()
+        latest_loads_N = window[-1].load_estimate_N
+        healthy_legs = [leg for leg in range(LEG_COUNT) if leg not in fault_legs]
+        targets = [
+            self._reground_target(leg, (RegroundCue.LOWER_BOUND,), residuals_m)
+            for leg in sorted(healthy_legs, key=lambda leg: latest_loads_N[leg])
+            if self._is_healthy_leg_lifted(leg)
+        ]
+        cue_values = {}
+        for leg in fault_legs:
+            cues, cue_values[LEG_ORDER[leg]] = self._faulty_leg_cues(window, leg, residuals_m)
+            if cues:
+                targets.append(self._reground_target(leg, cues, residuals_m, is_faulty=True))
+        target_legs = {target.leg for target in targets}
+        protected = tuple(leg for leg in healthy_legs if leg not in target_legs)
+        return FaultRegroundRun(
+            fault_s=float(t_s),
+            fault_legs=fault_legs,
+            targets=targets,
+            protected_legs=protected,
+            faulty_cue_values=cue_values,
+        )
+
+    def _is_healthy_leg_lifted(self, leg: int) -> bool:
+        """323.3: lower load estimate below the level on the last ``healthy_lifted_samples``."""
+        settings = self.config.fault_reground
+        history = list(self._state.fault_reground_history or [])
+        recent = history[-settings.healthy_lifted_samples:]
+        if len(recent) < settings.healthy_lifted_samples:
+            return False
+        return all(
+            sample.load_estimate_N[leg] < settings.healthy_lifted_level_N for sample in recent
+        )
+
+    def _faulty_leg_cues(
+        self,
+        window: list[RegroundSample],
+        leg: int,
+        residuals_m: NDArray[np.float64] | None,
+    ) -> tuple[tuple[str, ...], dict[str, Any]]:
+        """323.3 cues (a) Newton, (b) rod-side rise, (c) plane residual or scaled gap
+        (:meth:`_plane_cue_values_m`), (d) own readings before the fault (rev. 65 332.3, when
+        on), and their values."""
+        settings = self.config.fault_reground
+        newton_N = None
+        mass_kg = self._pressures.d1_imu_mass_kg()
+        if mass_kg is not None and self._is_crawler_lifted_for_d1():
+            newton_N = fault_reground.newton_leg_load_N(window, leg, mass_kg)
+        rise_Pa, rise_limit_Pa = self._lock_rod_rise_Pa(window, leg)
+        plane_m = None if residuals_m is None else float(residuals_m[leg])
+        cues = []
+        if newton_N is not None and newton_N < self.geometry.F_min_N:
+            cues.append(RegroundCue.NEWTON)
+        if rise_Pa is not None and rise_limit_Pa is not None and rise_Pa >= rise_limit_Pa:
+            cues.append(RegroundCue.ROD_RISE)
+        if plane_m is not None and plane_m > settings.plane_cue_threshold_m:
+            cues.append(RegroundCue.PLANE)
+        plane_key = "plane_gap_m" if settings.plane_gap_scaled else "plane_residual_m"
+        values = {
+            "newton_load_N": newton_N,
+            "mass_kg": mass_kg,
+            "rod_rise_Pa": rise_Pa,
+            "rod_rise_limit_Pa": rise_limit_Pa,
+            plane_key: plane_m,
+        }
+        if settings.own_pre_fault_cue:
+            history = self._state.fault_reground_history or deque()
+            pre_fault_N = fault_reground.pre_fault_load_estimates_N(
+                history, leg, settings.healthy_lifted_samples
+            )
+            values["own_pre_fault_N"] = pre_fault_N
+            if self._is_lifted_before_fault(pre_fault_N):
+                cues.append(RegroundCue.OWN_PRE_FAULT)
+        return tuple(str(cue) for cue in cues), values
+
+    def _is_lifted_before_fault(self, pre_fault_N: list[float]) -> bool:
+        """Cue (d): every one of the ``healthy_lifted_samples`` readings before the fault sample
+        below the healthy lifted level (the healthy-leg rule on the valid readings)."""
+        settings = self.config.fault_reground
+        if len(pre_fault_N) < settings.healthy_lifted_samples:
+            return False
+        return all(load_N < settings.healthy_lifted_level_N for load_N in pre_fault_N)
+
+    def _plane_cue_values_m(self) -> NDArray[np.float64] | None:
+        """Per-leg value of cue (c) and of the gap estimate: the scaled gap
+        ``Delta r_i / (I - P)_ii`` (``plane_gap_scaled``, rev. 65 332.3) or the plane residual
+        change (rev. 64)."""
+        if self.config.fault_reground.plane_gap_scaled:
+            return self._support_shadow.leg_gap_estimates_m()
+        return self._support_shadow.leg_residual_changes_m()
+
+    def _lock_rod_rise_Pa(
+        self, window: list[RegroundSample], leg: int
+    ) -> tuple[float | None, float | None]:
+        """323.3 (b): (mean rod reading over the window minus its lock value,
+        ``0.5 R_lb(s) p_h,lock``); ``(None, None)`` without a valid rod sensor or lock."""
+        locks = self._state.leg_lock_pressures_Pa
+        lock = None if locks is None else locks[leg]
+        rods = [sample.rod_pressure_Pa for sample in window]
+        if lock is None or leg in self._pressures.fallback_legs or any(r is None for r in rods):
+            return None, None
+        head_lock_Pa, rod_lock_Pa = lock
+        stroke_m = float(window[-1].motor_stroke_m[leg])
+        ratio = fault_reground.ratio_lower_bound(stroke_m, self.geometry.stroke_max_m)
+        rise_Pa = float(np.mean([rod[leg] for rod in rods])) - rod_lock_Pa
+        limit_Pa = self.config.fault_reground.faulty_rod_rise_fraction * ratio * head_lock_Pa
+        return rise_Pa, limit_Pa
+
+    def _reground_target(
+        self,
+        leg: int,
+        cues: tuple[str, ...],
+        residuals_m: NDArray[np.float64] | None,
+        *,
+        is_faulty: bool = False,
+    ) -> RegroundTarget:
+        """A target with its travel limit; the gap is the plane cue value when it sees the leg
+        up by more than the cue threshold (ASSUMPTION: a smaller value is no estimate)."""
+        settings = self.config.fault_reground
+        gap_m = None
+        if residuals_m is not None and residuals_m[leg] > settings.plane_cue_threshold_m:
+            gap_m = float(residuals_m[leg])
+        return RegroundTarget(
+            leg=leg,
+            is_faulty=is_faulty,
+            cues=tuple(str(cue) for cue in cues),
+            gap_m=gap_m,
+            max_travel_m=settings.travel_limit_m(gap_m),
+        )
+
+    def _fault_reground_step(self, reading: _Reading) -> NDArray[np.float64]:
+        """One FAULT_REGROUND period (323.2): zero on the fault sample, then the abort and
+        total-time checks, then the active target (or the next one, or the end)."""
+        state = self._state
+        run = state.fault_reground
+        assert run is not None
+        if run.fault_attitude_rad is None:
+            run.fault_attitude_rad = self._mean_reground_tilt_rad()
+        self._record_filtered_attitude_change(run)
+        if reading.t_s == run.fault_s:
+            return self._zero_speeds()
+        end_reason = self._fault_reground_abort_reason(reading, run)
+        if end_reason is None and self._has_reground_run_too_long(reading.t_s, run):
+            end_reason = RegroundEnd.TOTAL_TIME
+        if end_reason is not None:
+            return self._finish_fault_reground(reading, end_reason)
+        target = run.active_target
+        if target is None:
+            if run.next_index >= len(run.targets):
+                return self._finish_fault_reground(reading, RegroundEnd.DONE)
+            target = self._start_reground_target(reading, run)
+        return self._drive_reground_target(reading, target)
+
+    def _record_filtered_attitude_change(self, run: FaultRegroundRun) -> None:
+        """Spec rev. 65 332.1 record: the levelling (filtered) attitude against its value on
+        the fault sample; the largest change goes to the meta."""
+        state = self._state
+        attitude_rad = (float(state.roll_rad), float(state.pitch_rad))
+        if run.fault_filtered_attitude_rad is None:
+            run.fault_filtered_attitude_rad = attitude_rad
+        fault_roll_rad, fault_pitch_rad = run.fault_filtered_attitude_rad
+        change_rad = max(
+            abs(attitude_rad[0] - fault_roll_rad), abs(attitude_rad[1] - fault_pitch_rad)
+        )
+        run.max_filtered_attitude_change_rad = max(
+            run.max_filtered_attitude_change_rad, change_rad
+        )
+
+    def _has_reground_run_too_long(self, t_s: float, run: FaultRegroundRun) -> bool:
+        limit_s = self.config.fault_reground.max_total_duration_s
+        return t_s - run.fault_s >= limit_s - REAPPROACH_WINDOW_TOLERANCE_S
+
+    def _start_reground_target(
+        self, reading: _Reading, run: FaultRegroundRun
+    ) -> RegroundTarget:
+        target = run.targets[run.next_index]
+        run.active_index = run.next_index
+        run.next_index += 1
+        target.start_s = float(reading.t_s)
+        target.start_motor_stroke_m = float(reading.motor_stroke_m[target.leg])
+        if target.is_faulty:
+            target.start_other_sum_N = fault_reground.other_legs_mean_sum_N(
+                self._faulty_contact_window(), target.leg
+            )
+        return target
+
+    def _faulty_contact_window(self) -> list[RegroundSample]:
+        history = self._state.fault_reground_history
+        assert history is not None
+        window_s = self.config.fault_reground.faulty_contact_window_s
+        return fault_reground.window_samples(history, window_s, self.config.period_s)
+
+    def _drive_reground_target(
+        self, reading: _Reading, target: RegroundTarget
+    ) -> NDArray[np.float64]:
+        """323.4 / 332.2 order: contact first, then the 323.5 travel and time limits; then,
+        with ``all_legs_hold``, the leg stands while its contact condition is being confirmed;
+        otherwise the leg extends alone at its speed (the others locked at zero)."""
+        settings = self.config.fault_reground
+        leg_speeds = self._zero_speeds()
+        leg_name = LEG_ORDER[target.leg]
+        if self._has_reground_contact(reading, target):
+            self._end_reground_target(reading, target, TargetOutcome.CONTACT)
+            self._add_event(reading.t_s, f"{fault_reground.CONTACT_EVENT}:{leg_name}")
+            return leg_speeds
+        limit = self._reground_limit(reading, target)
+        if limit is not None:
+            self._end_reground_target(reading, target, limit)
+            self._add_event(
+                reading.t_s,
+                f"{fault_reground.LIMIT_EVENT}:{leg_name}:{limit}",
+                is_warning=True,
+            )
+            return leg_speeds
+        is_holding = settings.contact_rule is ContactRule.ALL_LEGS_HOLD
+        if is_holding and target.contact_samples_seen >= 1:
+            return leg_speeds
+        speed_fraction = settings.speed_fraction(target.is_faulty)
+        leg_speeds[target.leg] = speed_fraction * self.geometry.max_speed_m_s
+        return leg_speeds
+
+    def _has_reground_contact(self, reading: _Reading, target: RegroundTarget) -> bool:
+        """Counts the samples in a row with the contact condition and says whether they confirm
+        the contact (323.4 three healthy / two faulty samples; ``all_legs_hold`` 332.2: the
+        four-leg condition on ``hold_confirm_samples``)."""
+        settings = self.config.fault_reground
+        is_in_contact = self._is_target_at_contact_level(reading, target)
+        if settings.contact_rule is ContactRule.ALL_LEGS_HOLD:
+            is_in_contact = is_in_contact and self._do_other_legs_carry_load(reading, target)
+        if is_in_contact:
+            target.contact_samples_seen += 1
+            if target.contact_samples_seen == 1:
+                target.hold_count += 1
+        else:
+            target.contact_samples_seen = 0
+        return target.contact_samples_seen >= settings.contact_samples(target.is_faulty)
+
+    def _is_target_at_contact_level(self, reading: _Reading, target: RegroundTarget) -> bool:
+        """323.4 level of the target itself: healthy sensor - lower load estimate at
+        ``F_min`` + 5 kN; faulty sensor - relative Newton load
+        ``-(sum_(i != j) F_i(t) - sum_(i != j) F_i(t_0))`` (0.2 s means, no mass) at the same
+        level."""
+        contact_level_N = self.geometry.F_min_N + self.config.fault_reground.contact_margin_N
+        if target.is_faulty:
+            assert target.start_other_sum_N is not None
+            other_sum_N = fault_reground.other_legs_mean_sum_N(
+                self._faulty_contact_window(), target.leg
+            )
+            return target.start_other_sum_N - other_sum_N >= contact_level_N
+        load_N = self._load_estimate_N(reading.cylinder_force_lower_N)[target.leg]
+        return bool(load_N >= contact_level_N)
+
+    def _do_other_legs_carry_load(self, reading: _Reading, target: RegroundTarget) -> bool:
+        """332.2 other legs: every healthy leg that is neither the target nor faulty reads its
+        lower estimate at ``F_min``, and every faulty leg that is not the target has its Newton
+        estimate (0.2 s means) at ``F_min`` (skipped without a mass or ``f_z``). A passive
+        touch-down of a teetering diagonal lifts the partner, so it fails here."""
+        run = self._state.fault_reground
+        assert run is not None
+        F_min_N = self.geometry.F_min_N
+        loads_N = self._load_estimate_N(reading.cylinder_force_lower_N)
+        for leg in range(LEG_COUNT):
+            if leg == target.leg or leg in run.fault_legs:
+                continue
+            if loads_N[leg] < F_min_N:
+                return False
+        mass_kg = self._pressures.d1_imu_mass_kg()
+        if mass_kg is None:
+            return True
+        window = self._faulty_contact_window()
+        for leg in run.fault_legs:
+            if leg == target.leg:
+                continue
+            newton_N = fault_reground.newton_leg_load_N(window, leg, mass_kg)
+            if newton_N is not None and newton_N < F_min_N:
+                return False
+        return True
+
+    def _reground_limit(self, reading: _Reading, target: RegroundTarget) -> TargetOutcome | None:
+        assert target.start_s is not None and target.start_motor_stroke_m is not None
+        travel_m = float(reading.motor_stroke_m[target.leg]) - target.start_motor_stroke_m
+        if travel_m >= target.max_travel_m:
+            return TargetOutcome.TRAVEL
+        duration_limit_s = self.config.fault_reground.max_leg_duration_s
+        if reading.t_s - target.start_s >= duration_limit_s - REAPPROACH_WINDOW_TOLERANCE_S:
+            return TargetOutcome.TIME
+        return None
+
+    def _end_reground_target(
+        self, reading: _Reading, target: RegroundTarget, outcome: TargetOutcome
+    ) -> None:
+        run = self._state.fault_reground
+        assert run is not None and target.start_motor_stroke_m is not None
+        target.end_s = float(reading.t_s)
+        target.travel_m = float(reading.motor_stroke_m[target.leg]) - target.start_motor_stroke_m
+        target.outcome = outcome
+        run.active_index = None
+
+    def _fault_reground_abort_reason(
+        self, reading: _Reading, run: FaultRegroundRun
+    ) -> RegroundEnd | None:
+        """323.6 conditions 1-5, the first that holds (the protection counts run every
+        period). Condition 2 only with ``attitude_abort`` (rev. 65 332.1 turns it off);
+        condition 3 sees only non-step faults once the monitor suspends the step rule."""
+        is_protected_leg_low = self._is_protected_leg_low(reading, run)
+        if is_protected_leg_low:
+            return RegroundEnd.PROTECTED_LEG_LOW
+        if self.config.fault_reground.attitude_abort and self._has_reground_attitude_moved(run):
+            return RegroundEnd.ATTITUDE
+        if set(self._pressures.head_fault_legs) - set(run.fault_legs):
+            return RegroundEnd.NEW_HEAD_FAULT
+        if self._exceeds_reground_pressure_warning(reading, run):
+            return RegroundEnd.PRESSURE_WARNING
+        if self._is_reground_leg_near_stroke_end(reading, run):
+            return RegroundEnd.STROKE_END
+        return None
+
+    def _record_reground_tilt(self) -> None:
+        """This period's mean raw tilt, kept for the 0.5 s means of abort 2 (323.9 ④); the
+        period means of 10 ms samples average to the 0.5 s sample mean."""
+        state = self._state
+        if state.reground_tilt_history is None:
+            window_s = self.config.fault_reground.attitude_window_s
+            length = max(1, round(window_s / self.config.period_s))
+            state.reground_tilt_history = deque(maxlen=length)
+        state.reground_tilt_history.append(self._period_raw_attitude_rad())
+
+    def _mean_reground_tilt_rad(self) -> tuple[float, float]:
+        """Mean raw (roll, pitch) over the last ``attitude_window_s`` (this period included)."""
+        history = self._state.reground_tilt_history
+        if not history:
+            return self._period_raw_attitude_rad()
+        roll_rad, pitch_rad = np.mean(np.array(history), axis=0)
+        return float(roll_rad), float(pitch_rad)
+
+    def _is_protected_leg_low(self, reading: _Reading, run: FaultRegroundRun) -> bool:
+        """Abort 1 (323.9 ④): a protected leg below ``F_min`` on ``protect_samples`` (0.5 s)
+        samples in a row; a shorter rocking dip goes on."""
+        loads_N = self._load_estimate_N(reading.cylinder_force_lower_N)
+        required = self.config.fault_reground.protect_samples
+        is_low = False
+        for leg in run.protected_legs:
+            count = run.protect_low_counts.get(leg, 0)
+            count = count + 1 if loads_N[leg] < self.geometry.F_min_N else 0
+            run.protect_low_counts[leg] = count
+            is_low |= count >= required
+        return is_low
+
+    def _has_reground_attitude_moved(self, run: FaultRegroundRun) -> bool:
+        """Abort 2 (323.9 ④): the 0.5 s mean raw (unfiltered) roll or pitch more than the limit
+        from its mean over the 0.5 s up to the fault sample."""
+        assert run.fault_attitude_rad is not None
+        roll_rad, pitch_rad = self._mean_reground_tilt_rad()
+        fault_roll_rad, fault_pitch_rad = run.fault_attitude_rad
+        largest_change_rad = max(abs(roll_rad - fault_roll_rad), abs(pitch_rad - fault_pitch_rad))
+        return largest_change_rad > self.config.fault_reground.attitude_abort_rad
+
+    def _exceeds_reground_pressure_warning(
+        self, reading: _Reading, run: FaultRegroundRun
+    ) -> bool:
+        """Abort 4: a valid rod-side reading or a healthy head reading above the 345 bar
+        warnings (E-4 rod side, the READY locked-pressure warning on the head)."""
+        two_pressure = self.config.two_pressure
+        rod_warning_Pa = two_pressure.rod_limit_Pa - two_pressure.rod_warning_margin_Pa
+        history = self._state.fault_reground_history
+        rod_Pa = None if not history else history[-1].rod_pressure_Pa
+        fallback_legs = set(self._pressures.fallback_legs)
+        head_area = self.geometry.head_area_m2
+        head_limit_N = self.geometry.locked_force_limit_N - (
+            self.config.thresholds.locked_pressure_warning_margin_Pa * head_area
+        )
+        for leg in range(LEG_COUNT):
+            if rod_Pa is not None and leg not in fallback_legs and rod_Pa[leg] > rod_warning_Pa:
+                return True
+            if leg not in run.fault_legs and reading.head_only_force_N[leg] > head_limit_N[leg]:
+                return True
+        return False
+
+    def _is_reground_leg_near_stroke_end(self, reading: _Reading, run: FaultRegroundRun) -> bool:
+        """Abort 5: the moving leg at ``s_soft - end margin - stroke_end_abort_margin_m``."""
+        target = run.active_target
+        if target is None:
+            return False
+        abort_stroke_m = (
+            self.geometry.stroke_soft_max_m
+            - STROKE_END_MARGIN_M
+            - self.config.fault_reground.stroke_end_abort_margin_m
+        )
+        return float(reading.motor_stroke_m[target.leg]) >= abort_stroke_m
+
+    def _finish_fault_reground(
+        self, reading: _Reading, reason: RegroundEnd
+    ) -> NDArray[np.float64]:
+        """End: the moving leg (if any) stops with the reason, FAULT holds from now on."""
+        state = self._state
+        run = state.fault_reground
+        assert run is not None
+        target = run.active_target
+        if target is not None:
+            is_time_limit = reason is RegroundEnd.TOTAL_TIME
+            outcome = TargetOutcome.TIME if is_time_limit else TargetOutcome.ABORTED
+            self._end_reground_target(reading, target, outcome)
+            if is_time_limit:
+                self._add_event(
+                    reading.t_s,
+                    f"{fault_reground.LIMIT_EVENT}:{LEG_ORDER[target.leg]}:{outcome}",
+                    is_warning=True,
+                )
+        run.end_s, run.end_reason = float(reading.t_s), reason
+        state.phase = C2Phase.FAULT
+        if reason.is_abort:
+            self._add_event(
+                reading.t_s, f"{fault_reground.ABORT_EVENT}:{reason}", is_warning=True
+            )
+        self._add_event(
+            reading.t_s, f"{fault_reground.END_EVENT}:{run.contact_count}/{len(run.targets)}"
+        )
+        return self._zero_speeds()
+
+    def _fault_reground_meta(self) -> dict[str, Any]:
+        run = self._state.fault_reground
+        return {
+            "settings": self.config.fault_reground.to_meta(),
+            "run": None if run is None else run.to_meta(),
+        }
 
     # --- zero calibration (E-3, E-5, E-6) ---
 
@@ -6091,7 +6728,7 @@ class C2Controller:
         state = self._state
         ramp_time_s = self.config.output_ramp_time_s
         requested_change = leg_speeds - state.previous_output_m_s
-        if self.config.r8.increment_limit is not None and state.phase is C2Phase.FAULT:
+        if self.config.r8.increment_limit is not None and self._is_fault_stop_period():
             # Rev. 31 P-R8-5: a FAULT (head-side fault or stroke-end fault) stops in one
             # period instead of 4 increments (0.4 s); the amplifier ramp and the valve lag
             # smooth the step. The output delay d still applies.
@@ -6109,6 +6746,17 @@ class C2Controller:
             output = state.previous_output_m_s + step
         state.previous_output_m_s = output
         return output
+
+    def _is_fault_stop_period(self) -> bool:
+        """FAULT, or the fault sample of FAULT_REGROUND (spec 323.2: every leg 0 in one period;
+        the re-ground moves after it take the increment limit)."""
+        state = self._state
+        if state.phase is C2Phase.FAULT:
+            return True
+        run = state.fault_reground
+        if state.phase is not C2Phase.FAULT_REGROUND or run is None:
+            return False
+        return state.last_reading is not None and state.last_reading.t_s == run.fault_s
 
     def _limited_increment(self, leg_speeds: NDArray[np.float64]) -> NDArray[np.float64]:
         """R8 (spec 99.3 / 99.4): ``|du| <= f v_max`` per leg and period; a leg whose change has

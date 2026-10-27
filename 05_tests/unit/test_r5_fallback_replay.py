@@ -57,6 +57,21 @@ CASE = (Path(__file__).resolve().parents[2] / "07_results" / "R3_PS2_fdown_diag_
         / "current_dur125")
 
 
+def _preset_before_rev64() -> C2Config:
+    """The R8 preset as the recorded runs had it: their two-pressure settings predate spec
+    rev. 64 (P-S8-23 YAML mass before READY and re-contact watch off) and rev. 65 (P-S8-25 D1
+    step rule kept after a head fault); FAULT_REGROUND is no monitor setting and the records
+    have no head fault."""
+    config = C2Config().with_10hz_d1()
+    two_pressure = replace(
+        config.two_pressure,
+        imu_mass_before_ready=None,
+        crawler_recontact_watch=False,
+        suspend_steps_after_head_fault=False,
+    )
+    return replace(config, two_pressure=two_pressure)
+
+
 def _times(count: int) -> np.ndarray:
     return np.round((np.arange(count) + 1) * PERIOD_S, 10)
 
@@ -156,7 +171,7 @@ def test_engine_allowances() -> None:
 def record_replay():
     if not CASE.is_dir():
         pytest.skip(f"{CASE} not present")
-    return replay_case(CASE, C2Geometry.from_params(load_params()), C2Config().with_10hz_d1())
+    return replay_case(CASE, C2Geometry.from_params(load_params()), _preset_before_rev64())
 
 
 def _row_of(replay, t_s: float) -> dict:
@@ -487,7 +502,7 @@ def _run_config(case: Path) -> C2Config:
     """The run's preset with its recorded ratio source (L1: ``plant_meta`` + plant ratio)."""
     result = json.loads((case / "result.json").read_text(encoding="utf-8"))
     fast = result["controller_meta"]["r8"]["fast_relevel"]
-    config = C2Config().with_10hz_d1()
+    config = _preset_before_rev64()
     if fast["fallback_ratio_source"] == "column_nominal":
         return config
     ratio = fast.get("fallback_plant_ratio")

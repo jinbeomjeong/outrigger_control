@@ -1,0 +1,377 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s8/r64_d1_replay.py",
+  "spec": "rev. 64 P-S8-23 (d)",
+  "roots": [
+   "07_results\\S8\\g4h_c68b_20261027_135040"
+  ],
+  "wall_s": 2.4
+ },
+ "runs": [
+  {
+   "case": "07_results\\S8\\g4h_c68b_20261027_135040\\MLJ_G4H_FS24_FR_Fs0",
+   "has_loc": true,
+   "n_rows": 677,
+   "A": {
+    "first_fault": [
+     51.200000001286675,
+     "FR"
+    ],
+    "counts": {
+     "INFO_PRESSURE_STEP:head:imu_residual": 5,
+     "FAULT_HEAD_PRESSURE": 1,
+     "INFO_PRESSURE_STEP:rod:lock_load_loss": 1
+    }
+   },
+   "B": {
+    "first_fault": [
+     51.200000001286675,
+     "FR"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "INFO_PRESSURE_STEP:head:imu_residual": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "recorded": {
+    "first_fault": [
+     51.200000001286675,
+     "FR"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "INFO_PRESSURE_STEP:head:imu_residual": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "until_recorded_fault": {
+    "A": {
+     "INFO_PRESSURE_STEP:head:imu_residual": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "B": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "INFO_PRESSURE_STEP:head:imu_residual": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "recorded": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "INFO_PRESSURE_STEP:head:imu_residual": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "A_only": [
+    [
+     51.4,
+     "INFO_PRESSURE_STEP:FL:head:imu_residual"
+    ],
+    [
+     51.4,
+     "INFO_PRESSURE_STEP:FR:head:imu_residual"
+    ],
+    [
+     51.9,
+     "INFO_PRESSURE_STEP:FL:head:imu_residual"
+    ],
+    [
+     53.2,
+     "INFO_PRESSURE_STEP:FL:head:imu_residual"
+    ],
+    [
+     53.2,
+     "INFO_PRESSURE_STEP:FL:rod:lock_load_loss"
+    ]
+   ],
+   "B_only": []
+  },
+  {
+   "case": "07_results\\S8\\g4h_c68b_20261027_135040\\MLJ_G4H_FS24_FR_Fs8",
+   "has_loc": true,
+   "n_rows": 676,
+   "A": {
+    "first_fault": [
+     51.100000001283355,
+     "FR"
+    ],
+    "counts": {
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "B": {
+    "first_fault": [
+     51.100000001283355,
+     "FR"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "recorded": {
+    "first_fault": [
+     51.100000001283355,
+     "FR"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "until_recorded_fault": {
+    "A": {
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "B": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "recorded": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "A_only": [],
+   "B_only": []
+  },
+  {
+   "case": "07_results\\S8\\g4h_c68b_20261027_135040\\MLJ_G4H_FS24_RL_Fs0",
+   "has_loc": true,
+   "n_rows": 677,
+   "A": {
+    "first_fault": [
+     51.200000001286675,
+     "RL"
+    ],
+    "counts": {
+     "INFO_PRESSURE_STEP:head:imu_residual": 4,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "B": {
+    "first_fault": [
+     51.200000001286675,
+     "RL"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "INFO_PRESSURE_STEP:head:imu_residual": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "recorded": {
+    "first_fault": [
+     51.200000001286675,
+     "RL"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "INFO_PRESSURE_STEP:head:imu_residual": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "until_recorded_fault": {
+    "A": {
+     "INFO_PRESSURE_STEP:head:imu_residual": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "B": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "INFO_PRESSURE_STEP:head:imu_residual": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "recorded": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "INFO_PRESSURE_STEP:head:imu_residual": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "A_only": [
+    [
+     51.4,
+     "INFO_PRESSURE_STEP:FL:head:imu_residual"
+    ],
+    [
+     51.4,
+     "INFO_PRESSURE_STEP:FR:head:imu_residual"
+    ],
+    [
+     51.9,
+     "INFO_PRESSURE_STEP:FL:head:imu_residual"
+    ]
+   ],
+   "B_only": []
+  },
+  {
+   "case": "07_results\\S8\\g4h_c68b_20261027_135040\\MLJ_G4H_FS24_RL_Fs8",
+   "has_loc": true,
+   "n_rows": 676,
+   "A": {
+    "first_fault": [
+     51.100000001283355,
+     "RL"
+    ],
+    "counts": {
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "B": {
+    "first_fault": [
+     51.100000001283355,
+     "RL"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "recorded": {
+    "first_fault": [
+     51.100000001283355,
+     "RL"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "until_recorded_fault": {
+    "A": {
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "B": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "recorded": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "A_only": [],
+   "B_only": []
+  },
+  {
+   "case": "07_results\\S8\\g4h_c68b_20261027_135040\\MLJ_G4H_G4_RR_Fs4",
+   "has_loc": true,
+   "n_rows": 677,
+   "A": {
+    "first_fault": [
+     52.80000000062925,
+     "RR"
+    ],
+    "counts": {
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "B": {
+    "first_fault": [
+     52.80000000062925,
+     "RR"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "recorded": {
+    "first_fault": [
+     52.80000000062925,
+     "RR"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "until_recorded_fault": {
+    "A": {
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "B": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "recorded": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "A_only": [],
+   "B_only": []
+  },
+  {
+   "case": "07_results\\S8\\g4h_c68b_20261027_135040\\MLJ_G4H_quiet_FR_Fs0",
+   "has_loc": true,
+   "n_rows": 678,
+   "A": {
+    "first_fault": [
+     50.90000000056617,
+     "FR"
+    ],
+    "counts": {
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "B": {
+    "first_fault": [
+     50.90000000056617,
+     "FR"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "recorded": {
+    "first_fault": [
+     50.90000000056617,
+     "FR"
+    ],
+    "counts": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "until_recorded_fault": {
+    "A": {
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "B": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    },
+    "recorded": {
+     "INFO_D1_IMU_MASS_SOURCE:yaml": 1,
+     "INFO_D1_IMU_MASS_SOURCE:ready": 1,
+     "FAULT_HEAD_PRESSURE": 1
+    }
+   },
+   "A_only": [],
+   "B_only": []
+  }
+ ]
+}
