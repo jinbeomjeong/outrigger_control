@@ -1,8 +1,8 @@
 # 색인: s6_control_spec.md
 
 - 원본: `00_docs/04_control/s6_control_spec.md`
-- 원본 SHA-256(앞 12자): `5835c18f12ec`
-- 생성: 2026-10-27 03:43:53 (`04_scripts/00_docs/build_doc_index.py`, depth 4, split-lines 400)
+- 원본 SHA-256(앞 12자): `eace1427662f`
+- 생성: 2026-10-27 09:36:41 (`04_scripts/00_docs/build_doc_index.py`, depth 4, split-lines 400)
 - 총 줄 수: 12,260 (1,417.0 KB)
 - 사용법: Read에 offset=시작 줄, limit=줄 수. 끝 줄은 하위 절을 포함한다. `+단락`·`+표`는 긴 절 안의 위치 안내다. 원본 SHA가 다르면 색인을 다시 만든다.
 

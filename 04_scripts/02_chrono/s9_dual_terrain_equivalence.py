@@ -21,7 +21,7 @@ Revised by dynamics 5.35.2 (user decision U-S9P-3, 2026-10-26):
      crawler: basis = maximum node pressure x h^2 (``--crawler-sigma-max-Pa``), spike width
      <= 2 steps (steps over the mean-pressure node force) and z0 diff <= 1 um at the spikes
 
-Usage (Chrono-dev, worktree root)::
+Usage (Chrono-dev, project root)::
 
     python -I -X utf8 -u 04_scripts/02_chrono/s9_dual_terrain_equivalence.py run --layout single --rep 1 --out <dir>
     python -I -X utf8 -u 04_scripts/02_chrono/s9_dual_terrain_equivalence.py judge --out <dir> [--json <file>]

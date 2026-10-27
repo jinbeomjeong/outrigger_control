@@ -7,7 +7,7 @@ Values and criterion comparisons only; pass / fail decisions are dynamics-expert
 control's, with dynamics for the physics). Reads a batch
 folder of ``s9_batch.py`` and writes one JSON to ``06_analysis/01_chrono/19_S9/``.
 
-Usage (Chrono-dev, worktree root)::
+Usage (Chrono-dev, project root)::
 
     python -I -X utf8 04_scripts/02_chrono/s9_batch_summary.py <V0p|V16|L|P2|P2prime|P3a|P3b|P3-10> <batch folder> [<out.json>]
     python -I -X utf8 04_scripts/02_chrono/s9_batch_summary.py P3b <batch folder> [<out.json>] --rejudge

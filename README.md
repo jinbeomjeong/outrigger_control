@@ -53,7 +53,7 @@ outrigger_control/
 ├── 04_scripts/     실행·분석 스크립트
 │   ├── 00_cad/         CAD 추출·파라미터 생성·그림 (Chrono-dev)
 │   ├── 01_dynamics/    동역학 기준해·판정 (dynamics-dev)
-│   ├── 02_chrono/      Chrono 시험·단계 실행기 `run_S1.py`~`run_S8C.py`, `run_S8V15.py` (Chrono-dev)
+│   ├── 02_chrono/      Chrono 시험·단계 실행기 `run_S1.py`~`run_S8C.py`, `run_S8V15.py`, `run_S9.py`·`s9_batch.py`·`s9_batch_summary.py` (Chrono-dev)
 │   ├── 03_control/     제어 해석·판정 보조 (dynamics-dev)
 │   ├── 04_hydraulic/   유압 해석 (hydraulics-dev, Hopsan)
 │   └── 05_ml/          ML 데이터셋·학습·보고 (`pytorch_214_cuda_python_313`)
@@ -68,7 +68,7 @@ outrigger_control/
 └── environment*.yml  conda 환경 정의(Chrono-dev, ML, dynamics-dev)
 ```
 
-대량 배치 실행기(`run_S6C.py`, `run_S7.py`, `run_S7C.py`, `run_S8C.py`, `run_S8V15.py`)는 `--approved`가 있어야 실제로 돈다(없으면 계획·dry-run). 사용법은 각 스크립트 docstring을 본다.
+대량 배치 실행기(`run_S6C.py`, `run_S7.py`, `run_S7C.py`, `run_S8C.py`, `run_S8V15.py`, `run_S9.py level`)는 `--approved`가 있어야 실제로 돈다(없으면 계획·dry-run). 사용법은 각 스크립트 docstring을 본다.
 
 전체 작업 순서·지금 위치·결정 마감은 [00_docs/00_roadmap.md](00_docs/00_roadmap.md), 패키지 구조와 단계별 구축 계획은 [00_docs/03_chrono/chrono_build_plan.md](00_docs/03_chrono/chrono_build_plan.md)를 본다.
 
@@ -112,7 +112,7 @@ STEP 원본·B-rep·메시 캐시처럼 더 큰 생성물은 `01_cad/cache_manif
 - [00_docs/01_dynamics/dynamics_model.md](00_docs/01_dynamics/dynamics_model.md): 모델 구조 권고, 기준해(하중 분배·민감도·고유진동수·전도 여유), 접촉·적분기 권고, Chrono 모델 검증 기준 V0~V17, 제어 구조 후보.
 - [00_docs/02_hydraulic/hydraulic_fluid_survey.md](00_docs/02_hydraulic/hydraulic_fluid_survey.md): 유압유 체적 탄성계수 등 유압 특성 조사.
 - [00_docs/02_hydraulic/s8_seal_friction_counterbalance.md](00_docs/02_hydraulic/s8_seal_friction_counterbalance.md): S8 실 마찰·카운터 밸런스·로드측 배수(H-S8-5).
-- [00_docs/04_control/s6_control_spec.md](00_docs/04_control/s6_control_spec.md): 제어기 명세·판정 원본(현행 R8 C2, 개정 56까지).
+- [00_docs/04_control/s6_control_spec.md](00_docs/04_control/s6_control_spec.md): 제어기 명세·판정 원본(현행 R8 C2, 개정 63까지).
 - 기준해 스크립트는 `04_scripts/01_dynamics/`(conda `dynamics-dev`, 프로젝트 루트에서 실행), 결과는 `06_analysis/00_dynamics/`.
 
 ## CAD 자료

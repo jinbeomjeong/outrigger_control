@@ -44,7 +44,7 @@
 - 계산 비용 측정·장시간 실행은 **P코어 고정 + EcoQoS 해제**로 한다(i7-14700, P 8 + E 12; Windows가 창 없는 하위 프로세스를 E코어로 보내 느려진다). 구현 `04_scripts/02_chrono/solver_benchmark/step_cost_S0.py`의 `place_process`. 비용 측정은 다른 계산과 겹치지 않게 혼자 돌린다. 그 밖의 계산은 컴퓨터 자원을 최대한 쓴다.
 - PARDISO_MKL은 env 미활성 실행에서 `Library\bin\libomp.dll`을 미리 로드해야 한다(`chrono/system.py`가 처리).
 
-## 현재 기준값 (2026-10-26)
+## 현재 기준값 (2026-10-27)
 
 | 항목 | 값 | 원본·비고 |
 |---|---|---|

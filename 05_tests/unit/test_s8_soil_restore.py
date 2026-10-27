@@ -12,6 +12,7 @@ reference). The restored controller must hold the native soil state and command 
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import pickle
 import sys
@@ -375,6 +376,19 @@ def test_job_case_passes_the_soil_off_replay_flag(monkeypatch, tmp_path) -> None
     settings[run_S8C.SOIL_OFF_REPLAY_KEY] = True
     run_S8C.job_case(Case(episode["episode_id"], settings), tmp_path)
     assert seen["soil_off_replay"] is True
+
+
+def test_soil_restore_check_reads_the_plan_of_this_tree() -> None:
+    """The (나) check script imports from the main tree and points at its own 768 plan
+    (it was written in a worktree and once resolved the plan above the worktree)."""
+    script = ROOT / "04_scripts" / "02_chrono" / "s9_merge" / "soil_restore_check.py"
+    spec = importlib.util.spec_from_file_location("soil_restore_check_under_test", script)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert module.PLAN.is_relative_to(ROOT)
+    if not module.PLAN.is_file():
+        pytest.skip(f"S8 ML plan not present (07_results is not tracked): {module.PLAN}")
+    assert module._plan()["bases"]
 
 
 @pytest.mark.parametrize("argv", [["list", "--soil-off-replay"],

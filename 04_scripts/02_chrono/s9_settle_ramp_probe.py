@@ -5,7 +5,7 @@ ramps the gravity magnitude from 0 to g with a Poly345 (or linear) shape over ``
 Purpose: show that the ~1 Hz pitch-surge ringing of the sudden-gravity smoke run is the crawler rocking
 mode excited by the step load (dynamics 5.34.1) and that a smooth ramp removes it (P2 settle rule).
 
-Usage (Chrono-dev python, worktree root):
+Usage (Chrono-dev python, project root):
     python -I -X utf8 -u 04_scripts/02_chrono/s9_settle_ramp_probe.py --soil G1 --grid 0.04 --ramp 3 --t-end 5
 Output 07_results/S9/settle_ramp_<soil>_<grid>_<ramp>_<stamp>/ (result.json + series.npz). SI, world z up,
 x forward, pitch > 0 nose down, gravity (0, 0, -g ramp(t)), g = 9.80665.

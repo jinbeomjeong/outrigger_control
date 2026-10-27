@@ -35,8 +35,8 @@ ROOT = CHRONO.parents[1]
 sys.path.insert(0, str(ROOT / "03_src"))
 sys.path.insert(0, str(CHRONO))
 
-PLAN = ROOT.parents[2] / "07_results" / "S8" / "ml_main_20261025_090131" / "ml_plan.json"
-"""The 768 plan of the main tree (read only); worktree path ``<main>/.claude/worktrees/<name>``."""
+PLAN = ROOT / "07_results" / "S8" / "ml_main_20261025_090131" / "ml_plan.json"
+"""The 768 plan of the S8 ML main run (read only)."""
 CONCURRENT_RUNS = 2
 SOIL_EVENTS = ("INFO_SOIL_STATE_RESTORED", "crawler_liftoff_confirmed", "soil_mode_start",
                "INFO_CLEARANCE_BIAS", "WARN_CRAWLER_LIFTOFF_UNCONFIRMED", "WARN_WEIGHT_MISMATCH")

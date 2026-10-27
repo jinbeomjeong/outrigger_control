@@ -11,7 +11,7 @@ that hits a collision shape below its true face is a sinkage error. This script 
   (ii) reports the SCM force of that first step (exact geometry -> 0).
 Pass criteria (P1-V0): bottom faces |dev| <= 0.05 mm, |F| <= 100 N.
 
-Usage (Chrono-dev python, worktree root):
+Usage (Chrono-dev python, project root):
     python -I -X utf8 -u 04_scripts/02_chrono/s9_ray_accuracy_check.py [--grid 0.04] [--ray-shape mesh|convex]
         [--step 0.02] [--pad-step 0.005] [--margin M] [--json out.json]
 Units SI, world z up; deviations printed in mm.

@@ -7,7 +7,7 @@ P-cores). Writes ``07_results/S9/<batch>_<stamp>/``: one folder per case (``resu
 END line per case, read by the periodic monitor) and ``batch.json`` (argv, return code, wall time).
 A failed case (return code != 0) stops new launches; running ones finish.
 
-Usage (worktree root)::
+Usage (project root)::
 
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py list
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run P1_V0p [--parallel 2]
