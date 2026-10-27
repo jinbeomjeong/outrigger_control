@@ -10,6 +10,7 @@ Usage: python -I r74_judge.py <out_dir> --g6 <r74 json> [...] --g8 <r74 json> [.
 from __future__ import annotations
 
 import json
+import os
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -58,7 +59,8 @@ def main():
             sys.argv = argv
         tmp.unlink()
         judg[var] = json.loads(jp.read_text(encoding="utf-8"))
-    p, a = by_var.get("proj", {}), by_var.get("Af3B4", {})
+    cand = os.environ.get("R74_CAND", "Af3B4")
+    p, a = by_var.get("proj", {}), by_var.get(cand, {})
     changed = sorted(k for k in a if k in p and a[k]["commands_sha256"] != p[k]["commands_sha256"])
     tab = {v: {t["key"]: t for t in j["table"]} for v, j in judg.items()}
     c_keys = sorted(k for k in a if k.startswith("g6r|rigid+S1@F"))
@@ -68,14 +70,14 @@ def main():
                         "p38_demoted": j["n_p38_demoted"], "p38_preloc_loss": j["n_p38_preloc_loss"]}
                     for v, j in judg.items()},
         "n_changed": len(changed),
-        "changed": [{"key": k, "proj_pass": not tab["proj"][k]["fails"], "af_pass": not tab["Af3B4"][k]["fails"],
-                     "ready": [tab["proj"][k]["t_ready_s"], tab["Af3B4"][k]["t_ready_s"]],
-                     "min_F_kN": [tab["proj"][k]["min_F_kN"], tab["Af3B4"][k]["min_F_kN"]],
-                     "flags": tab["Af3B4"][k]["flags_p38"], "fails": tab["Af3B4"][k]["fails"],
+        "changed": [{"key": k, "proj_pass": not tab["proj"][k]["fails"], "af_pass": not tab[cand][k]["fails"],
+                     "ready": [tab["proj"][k]["t_ready_s"], tab[cand][k]["t_ready_s"]],
+                     "min_F_kN": [tab["proj"][k]["min_F_kN"], tab[cand][k]["min_F_kN"]],
+                     "flags": tab[cand][k]["flags_p38"], "fails": tab[cand][k]["fails"],
                      "pauses": (a[k].get("p30") or {}).get("pauses")} for k in changed],
-        "C_rows": [{"key": k, "fails": tab["Af3B4"][k]["fails"], "flags": tab["Af3B4"][k]["flags_p38"],
-                    "min_F_after_off_kN": tab["Af3B4"][k]["min_F_kN"], "t_ready_s": tab["Af3B4"][k]["t_ready_s"],
-                    "preloc": tab["Af3B4"][k]["preloc_starts"]} for k in c_keys],
+        "C_rows": [{"key": k, "fails": tab[cand][k]["fails"], "flags": tab[cand][k]["flags_p38"],
+                    "min_F_after_off_kN": tab[cand][k]["min_F_kN"], "t_ready_s": tab[cand][k]["t_ready_s"],
+                    "preloc": tab[cand][k]["preloc_starts"]} for k in c_keys],
     }
     # ---------------------------------------------------------------- G8
     base = {}
@@ -95,11 +97,11 @@ def main():
                  "n_pass": sum(1 for r in g8 if r["pass"])}
     # ---------------------------------------------------------------- expected hashes for python
     exp = {"note": "P-S8-30 acceptance: implemented controller (variant proj) command SHA-256 per harness key; "
-                   "G6 = r74 Af3B4 rows (P-S8-29 tree); G8 = r74 Af3B4 rows",
+                   "G6 / G8 = the r74 candidate rows (P-S8-29 tree)", "candidate": cand,
            "g6": {k: r["commands_sha256"] for k, r in sorted(a.items())},
            "g8": {r["inner_key"]: r["cmd_sha256"] for r in sorted(g8, key=lambda x: x["inner_key"])}}
-    (out_dir / "r74_p30_expected_hashes.json").write_text(json.dumps(exp, indent=1), encoding="utf-8")
-    (out_dir / "r74_p30_judgement.json").write_text(json.dumps(res, indent=1, default=float), encoding="utf-8")
+    (out_dir / f"r74_p30_expected_hashes_{cand}.json").write_text(json.dumps(exp, indent=1), encoding="utf-8")
+    (out_dir / ("r74_p30_judgement.json" if cand == "Af3B4" else f"r74_p30_judgement_{cand}.json")).write_text(json.dumps(res, indent=1, default=float), encoding="utf-8")
     print("G6", json.dumps(res["g6"]["summary"]), "changed", res["g6"]["n_changed"], "errors", errors)
     for c in res["g6"]["changed"]:
         print("  chg", c["key"], "pass", c["proj_pass"], "->", c["af_pass"], "ready", c["ready"], "minF",

@@ -1,0 +1,140 @@
+{
+ "script": "04_scripts/03_control/s8/r74_compare.py",
+ "inputs": [
+  "06_analysis\\02_control\\s8\\rev74\\r74_p30rev_E.json",
+  "06_analysis\\02_control\\s8\\rev74\\r74_p30rev_P.json"
+ ],
+ "variants": {
+  "P30f": {
+   "C8_pass": "8/8",
+   "reg20_pass": "20/20",
+   "ref_pass": "20/20",
+   "ref_hash_eq_proj": 16,
+   "gate_fail": {},
+   "C_fails": {},
+   "reg_fails": {},
+   "loc_delay_max_s": 2.5,
+   "C_min_F_off_kN": 11.664719116456189,
+   "all_min_F_off_kN": 10.510863647725229,
+   "ready_max_s": 97.2,
+   "flags": {
+    "demoted": 1,
+    "preloc_loss": 8
+   }
+  },
+  "P30fn": {
+   "C8_pass": "6/8",
+   "reg20_pass": "20/20",
+   "ref_pass": "20/20",
+   "ref_hash_eq_proj": 18,
+   "gate_fail": {
+    "G6-3_Fmin": 2,
+    "G6-7_preloc": 2
+   },
+   "C_fails": {
+    "g6r|rigid+S1@FR|top|Fs0": [
+     "G6-3_Fmin",
+     "G6-7_preloc"
+    ],
+    "g6r|rigid+S1@FL|top|Fs4": [
+     "G6-3_Fmin",
+     "G6-7_preloc"
+    ]
+   },
+   "reg_fails": {},
+   "loc_delay_max_s": 1.5,
+   "C_min_F_off_kN": 7.980815583933493,
+   "all_min_F_off_kN": 7.980815583933493,
+   "ready_max_s": 97.2,
+   "flags": {
+    "demoted": 3,
+    "preloc_loss": 6
+   }
+  },
+  "P30n": {
+   "C8_pass": "8/8",
+   "reg20_pass": "16/20",
+   "ref_pass": "20/20",
+   "ref_hash_eq_proj": 18,
+   "gate_fail": {
+    "G6-2_loc": 4
+   },
+   "C_fails": {},
+   "reg_fails": {
+    "g6r|rigid+J2@FL|bottom|Fs4": [
+     "G6-2_loc"
+    ],
+    "g6r|rigid+J2@FR|bottom|Fs0": [
+     "G6-2_loc"
+    ],
+    "g6r|rigid+S1@RR|bottom|Fs0": [
+     "G6-2_loc"
+    ],
+    "g6r|rigid+S1@RL|bottom|Fs0": [
+     "G6-2_loc"
+    ]
+   },
+   "loc_delay_max_s": 3.8,
+   "C_min_F_off_kN": 15.191931527580989,
+   "all_min_F_off_kN": 10.69171748127993,
+   "ready_max_s": 91.6,
+   "flags": {
+    "demoted": 8,
+    "preloc_loss": 8
+   }
+  },
+  "proj": {
+   "C8_pass": "0/8",
+   "reg20_pass": "20/20",
+   "ref_pass": "20/20",
+   "ref_hash_eq_proj": 20,
+   "gate_fail": {
+    "G6-3_Fmin": 8,
+    "G6-7_preloc": 8
+   },
+   "C_fails": {
+    "g6r|rigid+S1@FL|bottom|Fs0": [
+     "G6-3_Fmin",
+     "G6-7_preloc"
+    ],
+    "g6r|rigid+S1@FR|top|Fs4": [
+     "G6-3_Fmin",
+     "G6-7_preloc"
+    ],
+    "g6r|rigid+S1@FL|top|Fs0": [
+     "G6-3_Fmin",
+     "G6-7_preloc"
+    ],
+    "g6r|rigid+S1@FR|bottom|Fs4": [
+     "G6-3_Fmin",
+     "G6-7_preloc"
+    ],
+    "g6r|rigid+S1@FR|top|Fs0": [
+     "G6-3_Fmin",
+     "G6-7_preloc"
+    ],
+    "g6r|rigid+S1@FL|bottom|Fs4": [
+     "G6-3_Fmin",
+     "G6-7_preloc"
+    ],
+    "g6r|rigid+S1@FR|bottom|Fs0": [
+     "G6-3_Fmin",
+     "G6-7_preloc"
+    ],
+    "g6r|rigid+S1@FL|top|Fs4": [
+     "G6-3_Fmin",
+     "G6-7_preloc"
+    ]
+   },
+   "reg_fails": {},
+   "loc_delay_max_s": 1.3,
+   "C_min_F_off_kN": -0.7174838721681049,
+   "all_min_F_off_kN": -0.7174838721681049,
+   "ready_max_s": 97.2,
+   "flags": {
+    "demoted": 1,
+    "preloc_loss": 0
+   }
+  }
+ }
+}

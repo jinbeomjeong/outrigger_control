@@ -1503,6 +1503,15 @@ R8_TWIST_RELAX_WINDOW_S = 5.0
 R8_TWIST_RELAX_DROP_N = 0.0
 R8_TWIST_RELAX_RISE_TOL_N = 300.0
 R8_TWIST_RELAX_MAX_TWIST_N = 15000.0
+# P-S8-30 pre-LOC lift slowdown (user decision 2026-10-28: variant P30fz of the r74 screen)
+R8_PRE_LOC_PAUSE_ON_FRACTION_OF_F_MIN = 3.0
+R8_PRE_LOC_PAUSE_OFF_FRACTION_OF_F_MIN = 3.5
+R8_PRE_LOC_PAUSE_FALLING_N = 2000.0
+R8_PRE_LOC_PAUSE_MAX_PAUSE_S = 3.0
+R8_PRE_LOC_PAUSE_SLOW_LIFT_MEAN_FRACTION = 0.16
+"""The LOC plateau mean-speed floor 0.15 ``v_max`` plus 1/15 for the output ramp, so the
+plateau window keeps filling during the slowdown."""
+R8_PRE_LOC_PAUSE_REAPPROACH_SPEED_FACTOR = 4.0
 R8_D1_SETTINGS = R8Settings(
     output_delay_periods=1,
     imu_sample_period_s=R8_IMU_SAMPLE_PERIOD_S,
@@ -1779,6 +1788,63 @@ class TwistCompletionRelaxSettings:
                 raise ValueError(f"{name} must be >= 0, got {getattr(self, name)!r}")
 
 
+LIFT_PAUSED_EVENT = "INFO_LIFT_PAUSED"
+"""``INFO_LIFT_PAUSED:<leg>``: a pre-LOC lift slowdown started on that leg (P-S8-30)."""
+PRE_LOC_PAUSE_TIME_TOLERANCE_S = 1e-9
+"""Sample times are sums of 0.1 s steps; the time limit must not miss its period."""
+
+
+@dataclass(frozen=True)
+class PreLocLiftPauseSettings:
+    """Slow lift and fast re-approach before the lift-off confirmation (P-S8-30, P30fz).
+
+    On a weak pad a diagonal leg can lose its load while the lift goes on before the LOC.
+    Inside the window (soil response on, LEVEL, no LOC yet) a slowdown starts when a leg whose
+    lower load estimate fell by at least ``falling_N`` since the last window period reads below
+    ``on_fraction_of_F_min F_min`` (the lowest such leg is watched; with
+    ``only_before_soil_mode`` not after the soil mode has started). While it runs, a leg
+    command with a mean above ``slow_lift_mean_fraction v_max`` loses its common positive heave
+    (``u - max(0, min u)``) and is raised back to that mean, so the LOC plateau window keeps
+    filling. It ends when the watched leg reads ``off_fraction_of_F_min F_min`` or after
+    ``max_pause_s``. Inside the window every re-approach also runs ``reapproach_speed_factor``
+    times faster. Each start raises :data:`LIFT_PAUSED_EVENT`.
+
+    Off by default; plain class-level defaults, so configs unpickled from older code read
+    "off".
+    """
+
+    enable: bool = False
+    on_fraction_of_F_min: float = R8_PRE_LOC_PAUSE_ON_FRACTION_OF_F_MIN
+    off_fraction_of_F_min: float = R8_PRE_LOC_PAUSE_OFF_FRACTION_OF_F_MIN
+    falling_N: float = R8_PRE_LOC_PAUSE_FALLING_N
+    max_pause_s: float = R8_PRE_LOC_PAUSE_MAX_PAUSE_S
+    slow_lift_mean_fraction: float = R8_PRE_LOC_PAUSE_SLOW_LIFT_MEAN_FRACTION
+    reapproach_speed_factor: float = R8_PRE_LOC_PAUSE_REAPPROACH_SPEED_FACTOR
+    only_before_soil_mode: bool = True
+    """No new slowdown once the soil mode has started (the crawler is about to leave)."""
+
+    def __post_init__(self) -> None:
+        if not self.on_fraction_of_F_min > 0.0:
+            raise ValueError(f"on_fraction_of_F_min must be > 0, got {self.on_fraction_of_F_min!r}")
+        if not self.off_fraction_of_F_min >= self.on_fraction_of_F_min:
+            raise ValueError(
+                f"off_fraction_of_F_min must be >= on_fraction_of_F_min "
+                f"({self.on_fraction_of_F_min!r}), got {self.off_fraction_of_F_min!r}"
+            )
+        if not self.falling_N >= 0.0:
+            raise ValueError(f"falling_N must be >= 0, got {self.falling_N!r}")
+        if not self.max_pause_s > 0.0:
+            raise ValueError(f"max_pause_s must be > 0, got {self.max_pause_s!r}")
+        if not 0.0 < self.slow_lift_mean_fraction <= 1.0:
+            raise ValueError(
+                f"slow_lift_mean_fraction must be in (0, 1], got {self.slow_lift_mean_fraction!r}"
+            )
+        if not self.reapproach_speed_factor >= 1.0:
+            raise ValueError(
+                f"reapproach_speed_factor must be >= 1, got {self.reapproach_speed_factor!r}"
+            )
+
+
 @dataclass(frozen=True)
 class RestoredLiftoff:
     """S-1 lift-off confirmation handed to :meth:`C2Controller.restore_liftoff_confirmation`.
@@ -1854,6 +1920,9 @@ class C2Config:
     class-level default as ``soil``."""
     twist_completion_relax: TwistCompletionRelaxSettings = TwistCompletionRelaxSettings()
     """Relaxed twist condition of DONE on a creeping pad (P-S8-29); off by default, a plain
+    class-level default as ``soil``."""
+    pre_loc_lift_pause: PreLocLiftPauseSettings = PreLocLiftPauseSettings()
+    """Pre-LOC lift slowdown and fast re-approach (P-S8-30); off by default, a plain
     class-level default as ``soil``."""
 
     def __post_init__(self) -> None:
@@ -1982,7 +2051,11 @@ class C2Config:
         (``LockTailSettings.end_overshoot_margin_m``). User decision 2026-10-28 (P-S8-29,
         variant V2b): after 10 s of attitude and clearance on target and a twist load that has
         not risen over 5 s, DONE accepts ``|D|`` up to 15 kN
-        (:class:`TwistCompletionRelaxSettings`). The start-IMU form only:
+        (:class:`TwistCompletionRelaxSettings`). User decision 2026-10-28 (P-S8-30, variant
+        P30fz): before the LOC a falling leg below 3.0 ``F_min`` slows the lift to a mean of
+        0.16 ``v_max`` until it reads 3.5 ``F_min`` or for 3 s at most (not started after the
+        soil-mode start), and re-approaches run 4 times faster
+        (:class:`PreLocLiftPauseSettings`). The start-IMU form only:
         the late IMU read (C1) is not implemented (U-R8-6 = C2).
         """
         config = self.with_r8_diagnostics()
@@ -2032,6 +2105,17 @@ class C2Config:
             max_twist_N=R8_TWIST_RELAX_MAX_TWIST_N,
             require_loads_ge_F_min=True,
         )
+        pre_loc_lift_pause = replace(
+            config.pre_loc_lift_pause,
+            enable=True,
+            on_fraction_of_F_min=R8_PRE_LOC_PAUSE_ON_FRACTION_OF_F_MIN,
+            off_fraction_of_F_min=R8_PRE_LOC_PAUSE_OFF_FRACTION_OF_F_MIN,
+            falling_N=R8_PRE_LOC_PAUSE_FALLING_N,
+            max_pause_s=R8_PRE_LOC_PAUSE_MAX_PAUSE_S,
+            slow_lift_mean_fraction=R8_PRE_LOC_PAUSE_SLOW_LIFT_MEAN_FRACTION,
+            reapproach_speed_factor=R8_PRE_LOC_PAUSE_REAPPROACH_SPEED_FACTOR,
+            only_before_soil_mode=True,
+        )
         return replace(
             config,
             two_pressure=two_pressure,
@@ -2040,6 +2124,7 @@ class C2Config:
             lift_stroke_guard=lift_stroke_guard,
             lock_tail=lock_tail,
             twist_completion_relax=twist_completion_relax,
+            pre_loc_lift_pause=pre_loc_lift_pause,
             period_s=R8_PERIOD_S,
             output_ramp_time_s=None,
             gains=replace(config.gains, **R8_D1_C2_GAINS),
@@ -3373,6 +3458,16 @@ class _RunState:
     twist_relax_done_count: int = 0
     twist_relax_last_D_N: float | None = None
     """Twist load of the last relaxed DONE (meta ``twist_relax``)."""
+    # P-S8-30 (immutable defaults: class attributes for run states pickled before them)
+    pre_loc_pause_leg: int | None = None
+    """Leg watched by the running pre-LOC slowdown; ``None``: no slowdown."""
+    pre_loc_pause_since_s: float | None = None
+    """Start time of the running slowdown."""
+    pre_loc_prev_loads_N: NDArray[np.float64] | None = None
+    """Lower load estimates of the last pre-LOC window period (kept outside the window)."""
+    pre_loc_pause_count: int = 0
+    pre_loc_pause_periods: int = 0
+    """Slowdowns started and periods spent in one (meta ``pre_loc_lift_pause``)."""
 
 
 @dataclass(frozen=True)
@@ -3599,6 +3694,7 @@ class C2Controller:
             "fault_reground": self._fault_reground_meta(),
             "lift_stroke_guard": self._lift_stroke_guard_meta(),
             "twist_relax": self._twist_relax_meta(),
+            "pre_loc_lift_pause": self._pre_loc_lift_pause_meta(),
             "locked_pressure_warning_note": (
                 QUASI_STATIC_PRESSURE_NOTE if r8.is_instant_sampling else None
             ),
@@ -4945,10 +5041,16 @@ class C2Controller:
         state.reapproach_last_sign = float(np.sign(self.geometry.twist_vector[leg]))
 
     def _reapproach_speed_factor(self, leg: int) -> float:
-        """P-S8-16 RT 2: ``retrigger_speed_factor`` for a re-trigger run, else 1."""
+        """P-S8-16 RT 2: ``retrigger_speed_factor`` for a re-trigger run, else 1; times the
+        P-S8-30 ``reapproach_speed_factor`` inside the pre-LOC window."""
         if not self._state.active_reapproaches[leg].is_retrigger:
-            return 1.0
-        return self.config.r8.lifted_reapproach.retrigger_speed_factor
+            factor = 1.0
+        else:
+            factor = self.config.r8.lifted_reapproach.retrigger_speed_factor
+        pause_settings = self.config.pre_loc_lift_pause
+        if pause_settings.enable and self._is_in_pre_loc_window():
+            return factor * pause_settings.reapproach_speed_factor
+        return factor
 
     def _reapproaching_legs(self) -> NDArray[np.bool_]:
         legs = np.zeros(LEG_COUNT, dtype=bool)
@@ -5936,6 +6038,7 @@ class C2Controller:
             self._note_output_limit(OutputLimit.CRAWLER_RULE, leg_speeds, lifted_speeds)
             leg_speeds = lifted_speeds
         leg_speeds = self._apply_reapproach_speeds(leg_speeds, reapproaching)
+        leg_speeds = self._apply_pre_loc_lift_pause(reading, leg_speeds)
         leg_speeds = self._apply_lift_stroke_guard(reading, leg_speeds)
         self._record_command_components(
             (heave_rate, roll_rate, pitch_rate, twist_rate), unscaled_speeds, reapproaching
@@ -6346,6 +6449,102 @@ class C2Controller:
             "settings": asdict(self.config.twist_completion_relax),
             "n_relaxed_done": state.twist_relax_done_count,
             "last_D_N": state.twist_relax_last_D_N,
+        }
+
+    # --- pre-LOC lift slowdown (P-S8-30, spec rev. 73 383) ---
+
+    def _is_in_pre_loc_window(self) -> bool:
+        """Soil response on, LEVEL and the lift-off not yet confirmed."""
+        return (
+            self.config.soil.enable
+            and self._state.phase is C2Phase.LEVEL
+            and not self._is_liftoff_confirmed()
+        )
+
+    def _has_soil_mode_started(self) -> bool:
+        soil = self._soil_state()
+        return soil.is_soil_mode or soil.soil_mode_start_s is not None
+
+    def _falling_leg_below_on_level(
+        self, loads_N: NDArray[np.float64], previous_loads_N: NDArray[np.float64]
+    ) -> int | None:
+        """Lowest leg among those that fell by ``falling_N`` since the last window period, if it
+        reads below the start level; else ``None``."""
+        settings = self.config.pre_loc_lift_pause
+        drop_N = previous_loads_N - loads_N
+        candidate_loads_N = np.where(drop_N >= settings.falling_N, loads_N, np.inf)
+        lowest_load_N = float(np.min(candidate_loads_N))
+        if not lowest_load_N < settings.on_fraction_of_F_min * self.geometry.F_min_N:
+            return None
+        return int(np.argmin(candidate_loads_N))
+
+    def _update_pre_loc_pause(self, reading: _Reading) -> None:
+        """Start or end the slowdown on this window period's lower load estimates."""
+        settings = self.config.pre_loc_lift_pause
+        state = self._state
+        loads_N = self._load_estimate_N(reading.cylinder_force_lower_N)
+        previous_loads_N = state.pre_loc_prev_loads_N
+        state.pre_loc_prev_loads_N = loads_N.copy()
+        t_s = float(reading.t_s)
+        if state.pre_loc_pause_leg is None:
+            if previous_loads_N is None:
+                return  # first window period: nothing to compare the fall with
+            if settings.only_before_soil_mode and self._has_soil_mode_started():
+                return
+            leg = self._falling_leg_below_on_level(loads_N, previous_loads_N)
+            if leg is None:
+                return
+            state.pre_loc_pause_leg = leg
+            state.pre_loc_pause_since_s = t_s
+            state.pre_loc_pause_count += 1
+            self._add_event(reading.t_s, f"{LIFT_PAUSED_EVENT}:{LEG_ORDER[leg]}")
+            return
+        watched_load_N = loads_N[state.pre_loc_pause_leg]
+        is_recovered = watched_load_N >= settings.off_fraction_of_F_min * self.geometry.F_min_N
+        pause_since_s = state.pre_loc_pause_since_s
+        has_timed_out = pause_since_s is not None and (
+            t_s - pause_since_s >= settings.max_pause_s - PRE_LOC_PAUSE_TIME_TOLERANCE_S
+        )
+        if is_recovered or has_timed_out:
+            state.pre_loc_pause_leg = None
+            state.pre_loc_pause_since_s = None
+
+    def _slow_lift(self, leg_speeds: NDArray[np.float64]) -> NDArray[np.float64]:
+        """Cut the common positive heave, then raise the mean back to the slow-lift speed; a
+        command whose mean is already at or below that speed stays."""
+        settings = self.config.pre_loc_lift_pause
+        slow_mean_speed = settings.slow_lift_mean_fraction * self.geometry.max_speed_m_s
+        if float(np.mean(leg_speeds)) <= slow_mean_speed:
+            return leg_speeds
+        without_heave = leg_speeds - max(0.0, float(np.min(leg_speeds)))
+        return without_heave + max(0.0, slow_mean_speed - float(np.mean(without_heave)))
+
+    def _apply_pre_loc_lift_pause(
+        self, reading: _Reading, leg_speeds: NDArray[np.float64]
+    ) -> NDArray[np.float64]:
+        """P-S8-30: slow the lift while a leg that is being unloaded before the LOC reads low.
+
+        Leaving the window ends a running slowdown; the soil-mode start does not.
+        """
+        state = self._state
+        if not self.config.pre_loc_lift_pause.enable:
+            return leg_speeds
+        if not self._is_in_pre_loc_window():
+            state.pre_loc_pause_leg = None
+            state.pre_loc_pause_since_s = None
+            return leg_speeds
+        self._update_pre_loc_pause(reading)
+        if state.pre_loc_pause_leg is None:
+            return leg_speeds
+        state.pre_loc_pause_periods += 1
+        return self._slow_lift(leg_speeds)
+
+    def _pre_loc_lift_pause_meta(self) -> dict[str, Any]:
+        state = self._state
+        return {
+            "settings": asdict(self.config.pre_loc_lift_pause),
+            "pauses": state.pre_loc_pause_count,
+            "pause_periods": state.pre_loc_pause_periods,
         }
 
     # --- stroke-budget guard and stroke-end FAULT (P-S8-28, spec rev. 70 369.2 .. 369.4) ---

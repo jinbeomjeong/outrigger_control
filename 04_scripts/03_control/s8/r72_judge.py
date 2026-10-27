@@ -1,6 +1,6 @@
 """Spec rev. 72: judgement table of the G6 screen (r72_g6_screen.py JSON).
 
-Per gate G6-1..7 counts, failed runs, Chrono escalation marks (spec rev. 72 376.4 / report 2.6: min F after the
+Per gate G6-1..7 counts, failed runs, Chrono escalation marks (spec rev. 72 376.3 / report 2.6: min F after the
 crawler lift-off - F_min < 10 kN, final attitude > 0.1 deg, rut clearance < 35 mm, stroke > 674.8 mm, READY > 120 s,
 LOC anchor fired), LEVEL duration (first LEVEL -> first DONE) by weak soil / leg / level / F_s, pre-LOC events.
 

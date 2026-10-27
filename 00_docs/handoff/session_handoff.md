@@ -2,18 +2,31 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-10-28 01:40 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 72·73: G6(SCM 한 패드 연약부) 하네스 판정, P-S8-29(V2b 비틀림 완료 완화) 구현·인수, 꼬리 생략 검사 여유 0.5 mm, G6 Chrono 연약 패드 별도 SCMTerrain 기능(실행 전), P-S8-30 Af3B4 인수 미달**). 그 전: 34c806d(개정 69~71, G8·P-S8-28), 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
+- 갱신: 2026-10-28 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 74: P-S8-30 = P30fz(LOC 전 느린 들어 올림 + 재접근 ×4) 구현·인수, 재현 시험 분리, V-3·r8d1 기준 갱신**). 그 전: 3131552(개정 72·73, G6 하네스·P-S8-29·꼬리 여유·G6 Chrono 기능), 34c806d(개정 69~71, G8·P-S8-28), 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
 - 세션 기록: 일반 Windows 터미널에서 `claude`를 직접 실행한다(2026-10-26 결정).
 
-## 이번 커밋에서 바뀐 것 (34c806d 이후)
+## 이번 커밋에서 바뀐 것 (3131552 이후)
+
+1. **개정 74(384~388)**: P-S8-30 후보 비교(control `r74_p30_screen.py` 변형 P30f·n·fn·f25·fz, `r74_compare.py`, `r74_judge.py`) → **P30fz 채택**(사용자 결정 2026-10-28). python 구현 `c2.py` `PreLocLiftPauseSettings`(R8 프리셋만), 사건 `INFO_LIFT_PAUSED`, 시험 `test_c2_p30.py` 38. 하네스 해시 G6 116·G8 516 = `rev74/r74_p30_expected_hashes_P30fz.json`. G6 116/116 합격, G8 판정 변화 0.
+2. V-3 rigid 8·soil 4·r8d1 imu 변화(모두 늦춤 1회, 판정 불변, control `r75_v3_diff.py` → `rev75/r75_v3_diff.json`) → `07_results/S9/v3/` 기준 갱신(옛 기준 `history/*_pre_p30.json`, git 제외 폴더). P-R8-13 재현 시험은 P-S8-30 끔 프리셋(`04_scripts/03_control/r8d1/v34_drop.py preset_p30off`)으로 분리, 전체 프리셋은 새 시험 `test_full_preset_drop_stays_within_u57`. S9 P3b Chrono 재실행 불필요(사용자 승인).
+3. 문서: 명세 개정 74(383 제목 갱신), decision_log, 로드맵 6절 1번, CLAUDE.md 제어기 행(P-S8-30, 개정 30~74)·커버리지 공백 줄, 색인.
+
+## 다음 할 일 (권장 순서)
+
+1. **G6 Chrono**(사용자 확인 뒤): `python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run G6 --parallel 4`(약 4.1 h; G6-0a 열린 루프 대조가 약 30분에 끝나면 `04_scripts/02_chrono/s9_g6_patch_compare.py <G6-0a 폴더>`부터 — 실패하면 나머지 해석 중단), long-running-task-monitor 15분 점검, cpu-scheduler 배치. 판정 기록에 `INFO_LIFT_PAUSED` 시각·LOC − 이탈 추가(cad, 실행 전), G6 판정 행을 S9 판정기에 넣을지(cad 제안)·C-4 허용값(dynamics) 확정.
+2. dynamics_model.md 5.40(G6 첫 접촉 판단) 반영(dynamics 초안은 이번 세션 리포트에만 있음 — 다시 맡겨 문서화).
+3. **G3(앞 다리 사건 + 그 다리 로드 고장)**: 축소 하네스에 로드 판독 고장 주입, 약 72실행.
+4. 선택: C-S8-76 C5(L2b G5 A형 0.5 s 평균). 나중: 크롤러 재접촉 합성(322.2), U-S8-57·DONE 꼬리 감시.
+
+## 3131552에서 바뀐 것
 
 1. **개정 72(375~379)**: 하네스 행정 관문 = 실행 중 최대(재판정 불변). **꼬리 생략 검사 여유**(python, `LockTailSettings.end_overshoot_margin_m` R8 0.0005; 인수 해시 불변). **G6 하네스**(control `r72_g6_screen.py`: 패드별 토양 `SoilPadsPerLeg`, 강체 기반 `MixedRigidPads` — 사용자 결정으로 강체 기반 추가) G1 기반 64 + 강체 기반 52: 자세 116/116 ≤ 0.042°, 후방 연약 J1·J2 32건 READY 미도달(비틀림 완료 조건; dynamics 가설대로 비틀림 강성 약 1/60 저하 × 루프 이득), S1 LOC 전 재접근 → P3-8 FLAG 강등(사용자 결정). **P-S8-29 = V2b**(사용자 결정 2026-10-28) python 구현(`TwistCompletionRelaxSettings`, `INFO_TWIST_UNSETTLED`, 시험 `test_c2_p29.py` 22 + unit 2747) → 해시 G6 116 = 후보, G8 516·V-3·r8d1 불변. 결과 `06_analysis/02_control/s8/rev72/`·`rev73/`.
 2. **개정 73(380~383)**: (C) 강체 + S1 전방 대각 부상 판정 정의 U-S9-G6c (가)(이탈 뒤 엄격, LOC 전 하중 소실 FLAG). P-S8-30 후보 탐색 12 → Af3B4 (C) 8/8이지만 나머지 108 중 20 회귀(LOC 지연) → 인수 미달, python 구현 되돌림(`c2.py` = P-S8-29 상태 확인). 결과 `rev74/`(기대 해시 파일은 `_provisional`, 인수에 쓰지 않음).
 3. **G6 Chrono 기능(cad, 실행 전)**: `scm_model.py` `soil_patch`(연약 패드만 세 번째 SCMTerrain, 앵커 부싱 연약 세트·패드별 마찰 `ground_bushing.PadBushingSpec.friction`), `run_S9.py` `--soil-patch`·`--soil-patch-grid`·G6 사례(G6-0a 열린 루프 대조 G1@RR, G6-0b 선택, J1@RR 160 s, J1@FL 200 s, G1@RR 120 s, `duration_s`)·`p3b_ext`(완료 막힘 사유·D 시계열 `completion_series.npz`, 사건 수, t_P·c_min, 처녀 가지 구간 `virgin_branch`), `s9_batch.py` G6·G6_opt, 비교기 `s9_g6_patch_compare.py`. soil_patch 없으면 비트 동일, 기존 정의 불변. 시험 `test_s9_g6_soil_patch.py`·`test_s9_g6_patch_compare.py`·`05_tests/chrono/test_scm_soil_patch.py`. dynamics 판단: 연약 세트 J1 유지(첫 접촉 튐은 TOUCH 첫 약 0.2 s만, `dynamics_model.md` 5.40 개정 초안은 아직 문서에 안 넣음).
 4. 문서: 명세 개정 72·73, decision_log, 로드맵 6절 1번, CLAUDE.md 제어기 행(P-S8-29·꼬리 여유, 개정 30~73)·커버리지 공백 줄, 색인.
 
-## 다음 할 일 (권장 순서)
+### 3131552 당시 다음 할 일 (기록)
 
 1. **P-S8-30 수정 후보 비교**(control): P30-f(정지 대신 0.15 $v_{max}$ 느린 들어 올림)·P30-n(문턱 2.0/2.5 $F_{min}$)·P30-fn을 `r74_p30_screen.py`에 넣고 (C) 8 + 회귀 20 + ref 20 비교(약 7분) → 통과 후보로 G6 116·G8 516 전체 회귀(약 30분, 메인 세션 배치) → python 구현(383절 갱신 명세, Af3B4 참조 구현 특성은 python 리포트 기록) → 인수.
 2. **G6 Chrono**(사용자 확인 뒤): `s9_batch.py run G6 --parallel 4`(약 4.1 h, G6-0a 끝나면 `s9_g6_patch_compare.py`부터), long-running-task-monitor 15분 점검. P-S8-30 확정 뒤 최종 제어기로. G6 판정 행을 S9 판정기에 넣을지(cad 제안)·C-4 허용값(dynamics) 확정.

@@ -48,7 +48,20 @@ VARIANTS = {
     "Af3N": {"pause": (3.0, 3.5), "falling_N": 2000.0, "max_pause_s": 3.0, "speed": 2.0, "lower_frac": 0.05},
     "Af4B": {"pause": (4.0, 4.5), "falling_N": 2000.0, "max_pause_s": 3.0, "speed": 2.0},
     "Af3B4": {"pause": (3.0, 3.5), "falling_N": 2000.0, "max_pause_s": 3.0, "speed": 4.0},
+    # rev. 73 383 candidates after the Af3B4 regression (LOC plateau window starved by the pause)
+    "P30f": {"pause": (3.0, 3.5), "falling_N": 2000.0, "max_pause_s": 3.0, "speed": 4.0, "floor_frac": 0.16},
+    "P30n": {"pause": (2.0, 2.5), "falling_N": 2000.0, "max_pause_s": 3.0, "speed": 4.0},
+    "P30fn": {"pause": (2.0, 2.5), "falling_N": 2000.0, "max_pause_s": 3.0, "speed": 4.0, "floor_frac": 0.16},
+    # after the P30f full run (one crawler re-contact, G1 + S1@FL top Fs0: a pause after the first crawler lift-off)
+    "P30f25": {"pause": (3.0, 3.5), "falling_N": 2000.0, "max_pause_s": 3.0, "speed": 4.0, "floor_frac": 0.25},
+    "P30fz": {"pause": (3.0, 3.5), "falling_N": 2000.0, "max_pause_s": 3.0, "speed": 4.0, "floor_frac": 0.16,
+              "before_soil_mode": True},
 }
+"""P30f25: the slow-lift floor at the soil-mode push speed 0.25 v_max. P30fz: no new pause once the soil mode has
+started (the crawler-zone latch was released once = the crawler is about to leave)."""
+"""P30f / P30fn: during the 'pause' the common positive heave is cut only down to a mean leg speed of
+floor_frac v_max (0.16 = the LOC plateau mean-speed floor 0.15 plus 1/15 margin for the output ramp), so the plateau
+window keeps filling; when the command mean is already below that, the command is left as it is."""
 """Af*: the pause starts only on a leg whose lower estimate is below k_on F_min AND fell by >= falling_N since the last
 sample (a leg being unloaded, not the weak pad itself, which reads low but rises); it ends at k_off F_min or after
 max_pause_s (so the LOC plateau window is not held off for long)."""
@@ -95,7 +108,9 @@ def make_p30_class(c2, params):
                 cand = np.where(drop >= falling_N, loads, np.inf)
             low = float(np.min(cand))
             t = float(reading.t_s)
-            if not self._p30_paused and low < k_on * f_min:
+            soil_started = bool(self._soil_state().is_soil_mode or self._soil_state().soil_mode_start_s is not None)
+            may_start = not (self.p30.get("before_soil_mode") and soil_started)
+            if not self._p30_paused and low < k_on * f_min and may_start:
                 self._p30_paused = True
                 self._p30_pause_leg = int(np.argmin(cand))
                 self._p30_pause_t = t
@@ -110,6 +125,13 @@ def make_p30_class(c2, params):
             if not self._p30_paused:
                 return speeds
             self._p30_rec["pause_periods"] += 1
+            floor_frac = self.p30.get("floor_frac")
+            if floor_frac is not None:
+                target = float(floor_frac) * self.geometry.max_speed_m_s
+                if float(np.mean(speeds)) <= target:
+                    return speeds
+                out = speeds - max(0.0, float(np.min(speeds)))
+                return out + max(0.0, target - float(np.mean(out)))
             out = speeds - max(0.0, float(np.min(speeds)))
             if self.p30.get("lower_frac"):
                 # give load back to the crawler: lower the deck uniformly (pre-LOC only, the crawler still bears)

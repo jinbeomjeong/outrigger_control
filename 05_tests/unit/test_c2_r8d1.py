@@ -38,6 +38,7 @@ from outrigger_sim.control.c2 import (
     IntegratorBandMode,
     LiftedReapproachSettings,
     OutputLimit,
+    PreLocLiftPauseSettings,
     R8Settings,
     ReanchorSettings,
     ReapproachMode,
@@ -345,6 +346,18 @@ def test_preset_values() -> None:
         require_loads_ge_F_min=True,
     )
     assert not base.twist_completion_relax.enable
+    # User decision 2026-10-28 (P-S8-30, P30fz): pre-LOC slow lift and fast re-approach on.
+    assert config.pre_loc_lift_pause == PreLocLiftPauseSettings(
+        enable=True,
+        on_fraction_of_F_min=3.0,
+        off_fraction_of_F_min=3.5,
+        falling_N=2000.0,
+        max_pause_s=3.0,
+        slow_lift_mean_fraction=0.16,
+        reapproach_speed_factor=4.0,
+        only_before_soil_mode=True,
+    )
+    assert not base.pre_loc_lift_pause.enable
 
 
 def test_preset_leaves_the_other_settings() -> None:

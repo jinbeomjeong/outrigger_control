@@ -1,0 +1,51 @@
+{
+ "script": "04_scripts/03_control/s8/r74_compare.py",
+ "inputs": [
+  "06_analysis\\02_control\\s8\\rev74\\r74_p30_f25.json",
+  "06_analysis\\02_control\\s8\\rev74\\r74_p30_fz.json"
+ ],
+ "variants": {
+  "P30f25": {
+   "C8_pass": "7/8",
+   "reg20_pass": "15/15",
+   "ref_pass": "2/2",
+   "ref_hash_eq_proj": 0,
+   "gate_fail": {
+    "G6-3_Fmin": 1,
+    "G6-7_preloc": 1
+   },
+   "C_fails": {
+    "g6r|rigid+S1@FL|top|Fs4": [
+     "G6-3_Fmin",
+     "G6-7_preloc"
+    ]
+   },
+   "reg_fails": {},
+   "loc_delay_max_s": 1.7,
+   "C_min_F_off_kN": 9.270577264405212,
+   "all_min_F_off_kN": 9.270577264405212,
+   "ready_max_s": 81.8,
+   "flags": {
+    "demoted": 10,
+    "preloc_loss": 7
+   }
+  },
+  "P30fz": {
+   "C8_pass": "8/8",
+   "reg20_pass": "15/15",
+   "ref_pass": "2/2",
+   "ref_hash_eq_proj": 0,
+   "gate_fail": {},
+   "C_fails": {},
+   "reg_fails": {},
+   "loc_delay_max_s": 2.5,
+   "C_min_F_off_kN": 11.664719116456189,
+   "all_min_F_off_kN": 10.510863647725229,
+   "ready_max_s": 81.5,
+   "flags": {
+    "demoted": 10,
+    "preloc_loss": 8
+   }
+  }
+ }
+}

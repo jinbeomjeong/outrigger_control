@@ -7,6 +7,7 @@ The harness variants (``cur``, ``tw0.25_s1``, ...) subclass the controller on to
 leg mode (:meth:`LiftedReapproachSettings.leg_mode`), as they ran before P-R8-13 was in c2.py.
 ``preset`` is the c2.py P-R8-13 twist mode of ``with_10hz_d1()`` without any override (it should
 reproduce ``tw0.25_s1``), ``preset_leg`` the c2.py leg mode alone (it should reproduce ``cur``).
+preset_p30off = preset without P-S8-30 (the P-R8-13 reproduction of spec 179.1).
 
 Usage (project root, dynamics-dev for numba, MKL_THREADING_LAYER=TBB):
   python -I 04_scripts/03_control/r8d1/v34_drop.py <out.json> [variant ...]
@@ -109,6 +110,7 @@ class Variant(C2Controller):
 
 VARIANTS = {
     "preset": dict(project=True),
+    "preset_p30off": dict(project=True, p30_off=True),
     "preset_leg": dict(project=True, settings=LiftedReapproachSettings.leg_mode()),
     "off": dict(enable=False),
     "cur": dict(),
@@ -138,6 +140,8 @@ def make_controller(name: str) -> C2Controller:
     if v.get("project"):
         if "settings" in v:
             config = replace(config, r8=replace(config.r8, lifted_reapproach=v["settings"]))
+        if v.get("p30_off"):
+            config = replace(config, pre_loc_lift_pause=replace(config.pre_loc_lift_pause, enable=False))
         ctl = C2Controller.from_params(cl.PARAMS, config)
         ctl.reset()
         return ctl

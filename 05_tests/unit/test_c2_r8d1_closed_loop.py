@@ -162,13 +162,14 @@ def test_reapproach_leaves_the_runs_without_a_lifted_leg_unchanged(closed_loop, 
 
 
 @pytest.fixture(scope="module")
-def drop_runs(tmp_path_factory) -> dict[str, dict]:
-    """``v34_drop.py preset`` (top, events F and P): the c2.py P-R8-13 preset alone."""
+def drop_runs(tmp_path_factory) -> dict[tuple[str, str], dict]:
+    """``v34_drop.py preset preset_p30off`` (top, events F and P) by ``(variant, mode)``: the
+    full preset, and the preset without P-S8-30 (the P-R8-13 mechanism alone)."""
     out_path = tmp_path_factory.mktemp("v34") / "drop.json"
     environment = dict(os.environ, MKL_THREADING_LAYER="TBB", PYTHONDONTWRITEBYTECODE="1",
                        V34_MODES="F,P", V34_LEVEL="top")
     completed = subprocess.run(
-        [sys.executable, "-I", str(DROP_SCRIPT), str(out_path), "preset"],
+        [sys.executable, "-I", str(DROP_SCRIPT), str(out_path), "preset", "preset_p30off"],
         cwd=PROJECT_ROOT,
         env=environment,
         capture_output=True,
@@ -178,7 +179,7 @@ def drop_runs(tmp_path_factory) -> dict[str, dict]:
     )
     assert completed.returncode == 0, completed.stderr[-3000:]
     runs = json.loads(out_path.read_text(encoding="utf-8"))
-    return {run["mode"]: run for run in runs}
+    return {(run["variant"], run["mode"]): run for run in runs}
 
 
 def fl_lift_summary(run: dict) -> tuple[float, float]:
@@ -187,14 +188,21 @@ def fl_lift_summary(run: dict) -> tuple[float, float]:
     return fl["sum_s"], max(episode[2] for episode in fl["episodes"])
 
 
+def harness_variant_reference(mode: str) -> dict:
+    """The control harness variant ``tw0.25_s1`` (spec 174.2) of event mode ``mode``."""
+    reference_runs = json.loads(DROP_REFERENCE.read_text(encoding="utf-8"))
+    return next(
+        run for run in reference_runs if run["mode"] == mode and run["variant"] == "tw0.25_s1"
+    )
+
+
 @pytest.mark.parametrize("mode", ["F", "P"])
 def test_twist_reapproach_reproduces_the_harness_variant(drop_runs, mode) -> None:
     """Spec 179.1: the c2.py preset gives the control harness variant ``tw0.25_s1`` (spec 174.2,
-    ``v34_drop_top_final.json``), within U57 (FL sum <= 0.5 s, lift <= 2 mm)."""
-    reference_runs = json.loads(DROP_REFERENCE.read_text(encoding="utf-8"))
-    reference = next(run for run in reference_runs
-                     if run["mode"] == mode and run["variant"] == "tw0.25_s1")
-    run = drop_runs[mode]
+    ``v34_drop_top_final.json``), within U57 (FL sum <= 0.5 s, lift <= 2 mm). P-S8-30 off: the
+    mechanism alone."""
+    reference = harness_variant_reference(mode)
+    run = drop_runs[("preset_p30off", mode)]
     fl_sum_s, fl_lift_mm = fl_lift_summary(run)
     reference_sum_s, reference_lift_mm = fl_lift_summary(reference)
     assert fl_sum_s == pytest.approx(reference_sum_s, abs=DROP_SUM_TOLERANCE_S)
@@ -207,6 +215,25 @@ def test_twist_reapproach_reproduces_the_harness_variant(drop_runs, mode) -> Non
     )
     assert set(run["lifts"]) == {"FL", "RR"}  # no other leg lifts
     assert fl_sum_s <= U57_LIFT_SUM_S and fl_lift_mm <= U57_LIFT_MM
+
+
+@pytest.mark.parametrize("mode", ["F", "P"])
+def test_full_preset_drop_stays_within_u57(drop_runs, mode) -> None:
+    """The full preset (P-S8-30 on): its pre-LOC slowdown changes the state at the drop (P:
+    FL lift 1.51 -> 1.58 mm), so it is judged on U57 and the RR contact times of
+    ``tw0.25_s1``, not on the reproduction bands."""
+    reference = harness_variant_reference(mode)
+    run = drop_runs[("preset", mode)]
+    fl_sum_s, fl_lift_mm = fl_lift_summary(run)
+    assert fl_sum_s <= U57_LIFT_SUM_S
+    assert fl_lift_mm <= U57_LIFT_MM
+    assert set(run["lifts"]) == {"FL", "RR"}  # no other leg lifts
+    assert run["RR_first_contact_s"] == pytest.approx(
+        reference["RR_first_contact_s"], abs=DROP_CONTACT_TOLERANCE_S
+    )
+    assert run["RR_firm_contact_s"] == pytest.approx(
+        reference["RR_firm_contact_s"], abs=DROP_CONTACT_TOLERANCE_S
+    )
 
 
 def test_full_preset_with_the_100hz_attitude_filter_levels(closed_loop) -> None:
