@@ -1109,6 +1109,57 @@ def crawler_departure(t: np.ndarray, crawler_n: np.ndarray, weight_N: float, *, 
     return out
 
 
+P31_TRANSIENT_MAX_S = 0.5
+P31_TRANSIENT_MAX_W = 0.15
+P31_TRANSIENT_FLAG = "P3-1_transient_recontact"
+"""User decision U-S9-G6d = (가) (2026-10-28, spec rev. 75 393): a recontact after the crawler departure
+confirmation that lasts <= 0.5 s, ends before the LOC and peaks <= 0.15 W is a FLAG; any other recontact
+(after the LOC, longer, larger, or not ended before the LOC / no LOC) fails P3-1. W = the P3-1 / P3a-2 W."""
+
+
+def recontact_events(t: np.ndarray, crawler_n: np.ndarray, weight_N: float, departure: dict[str, Any],
+                     t_loc_s: float | None, *, fraction: float = P3A_OFF_FRACTION) -> dict[str, Any]:
+    """Every recontact after the departure confirmation (crawler SCM normal >= ``fraction`` W, the P3-1 /
+    P3a-2 limit): start, end (first row back below the limit; None = still loaded at the run end),
+    duration, maximum normal [N] and / W, ended before the LOC, class ``transient_flag`` /
+    ``strict_fail`` (:data:`P31_TRANSIENT_FLAG` rule). ``pass`` = no strict-fail event; ``flags`` =
+    [P31_TRANSIENT_FLAG] when a transient event exists. Absolute times [s]."""
+    out: dict[str, Any] = {"rule": f"U-S9-G6d (가): duration <= {P31_TRANSIENT_MAX_S:g} s, ended before the LOC, "
+                                   f"max <= {P31_TRANSIENT_MAX_W:g} W -> FLAG; else fail",
+                           "limit_N": fraction * weight_N, "weight_N": weight_N, "t_loc_s": t_loc_s,
+                           "events": [], "pass": True, "flags": []}
+    t_c = departure.get("t_confirmed_s")
+    if not departure.get("departed") or t_c is None:
+        return out
+    t = np.asarray(t, float)
+    cn = np.asarray(crawler_n, float)
+    on = (t >= t_c - 1e-12) & (cn >= fraction * weight_N)
+    k = 0
+    n = len(t)
+    while k < n:
+        if not on[k]:
+            k += 1
+            continue
+        k1 = k
+        while k1 < n and on[k1]:
+            k1 += 1
+        t_start = float(t[k])
+        t_end = float(t[k1]) if k1 < n else None
+        dur = (t_end if t_end is not None else float(t[-1])) - t_start
+        peak = float(cn[k:k1].max())
+        before_loc = bool(t_loc_s is not None and t_end is not None and t_end <= t_loc_s + 1e-12)
+        transient = bool(t_end is not None and dur <= P31_TRANSIENT_MAX_S + 1e-12 and before_loc
+                         and peak <= P31_TRANSIENT_MAX_W * weight_N)
+        out["events"].append({"t_start_s": t_start, "t_end_s": t_end, "duration_s": dur, "max_normal_N": peak,
+                              "max_over_W": peak / weight_N, "ended_before_loc": before_loc,
+                              "class": "transient_flag" if transient else "strict_fail"})
+        k = k1
+    out["pass"] = all(e["class"] == "transient_flag" for e in out["events"])
+    if any(e["class"] == "transient_flag" for e in out["events"]):
+        out["flags"] = [P31_TRANSIENT_FLAG]
+    return out
+
+
 def sinkage_rate(t: np.ndarray, sinkage_m: np.ndarray, window_s: float = CREEP_RATE_WINDOW_S) -> np.ndarray:
     """Backward-difference sinkage rate over ``window_s`` [m/s] (+ = deeper), (n, legs); NaN for
     the first ``window_s`` of the series."""
@@ -1611,9 +1662,12 @@ class StepSeries:
 
 COMPLETION_SERIES_NAME = "completion_series.npz"
 P3B_EXT_EVENTS = ("INFO_LOC_CLEARANCE_ANCHOR", "INFO_TWIST_UNSETTLED", "WARN_LIFT_STROKE_LIMITED",
-                  "FAULT_STROKE_END", "FAULT_LIFT_STROKE_LIMIT", "fault_reground_start", "fault_reground_end")
+                  "FAULT_STROKE_END", "FAULT_LIFT_STROKE_LIMIT", "fault_reground_start", "fault_reground_end",
+                  "INFO_LIFT_PAUSED")
 """Controller events counted by :func:`p3b_ext_records` (name or ``name:<suffix>``). ``INFO_TWIST_UNSETTLED``
-is the P-S8-29 V2b event (name confirmed 2026-10-28)."""
+is the P-S8-29 V2b event, ``INFO_LIFT_PAUSED:<leg>`` the P-S8-30 pre-LOC lift slowdown (bee0693)."""
+P3B_EXT_EVENT_TIMES = ("INFO_LIFT_PAUSED",)
+"""Events whose times (relative to the loop start) and names are listed too."""
 COMPLETION_REASONS = ("attitude", "clearance", "twist", "loc")
 
 
@@ -1622,9 +1676,11 @@ class CompletionProbe:
     ``D = n^T F`` of the controller's last reading (raw, and the twist-loop low-pass output when the
     preset has one), the completion-filtered attitude deviation, the filtered clearance and the
     controller's own clearance verdict, the LOC flag, and the completion conditions of
-    ``C2Controller._update_completion`` (spec rev. 70; mirrored, not changed): attitude (reference on
-    target and deviation < ``done_attitude_rad``), clearance (``_is_clearance_done``), twist
-    (``|D| < done_twist_N``), LOC (soil response on and lift-off not confirmed). A value the
+    ``C2Controller._update_completion`` (spec rev. 70 / P-S8-29 V2b; mirrored, not changed): attitude
+    (reference on target and deviation < ``done_attitude_rad``), clearance (``_is_clearance_done``, pure),
+    twist (``|D| < done_twist_N`` = ``ok_twist_strict``, or the V2b relaxation accepted this period =
+    ``twist_relaxed``, read from ``_state.twist_relaxed_load_N``; the stateful check is never called), LOC
+    (soil response on and lift-off not confirmed). A value the
     controller does not expose reads NaN (private members; the record stays usable when P-S8-29
     renames them). Arrays: ``t_s`` absolute, ``phase``, ``D_raw_N``, ``D_loop_N``, ``deviation_rad``,
     ``on_target``, ``clearance_filtered_m``, ``ok_<reason>`` (1 / 0 / -1 unknown),
@@ -1662,18 +1718,24 @@ class CompletionProbe:
             return -1 if v is None else int(bool(v))
 
         att_ok = None if (on_t is None or not math.isfinite(dev)) else (on_t and dev < th.done_attitude_rad)
-        tw_ok = None if not math.isfinite(d_raw) else abs(d_raw) < th.done_twist_N
+        tw_strict = None if not math.isfinite(d_raw) else abs(d_raw) < th.done_twist_N
+        # P-S8-29 V2b (3131552): the relaxed twist path is stateful (_is_twist_condition_met); the probe only
+        # reads what this period's update left: twist_relaxed_load_N is set when the relaxation accepted |D|
+        relaxed = getattr(st, "twist_relaxed_load_N", None) is not None
+        tw_ok = None if tw_strict is None else (tw_strict or relaxed)
         self.rows.append({"t_s": float(meas.t_s), "phase": str(getattr(c2, "phase", "")),
                           "D_raw_N": d_raw, "D_loop_N": d_loop, "deviation_rad": dev,
                           "on_target": flag(on_t), "clearance_filtered_m": clr,
                           "ok_attitude": flag(att_ok), "ok_clearance": flag(clr_ok), "ok_twist": flag(tw_ok),
-                          "ok_loc": flag(loc),
+                          "ok_loc": flag(loc), "ok_twist_strict": flag(tw_strict), "twist_relaxed": int(relaxed),
+                          "twist_relax_settled_since_s": self._try(lambda: float(st.twist_relax_settled_since_s)),
                           "complete_since_s": self._try(lambda: float(st.complete_since_s))})
 
     def arrays(self) -> dict[str, np.ndarray]:
         keys = ("t_s", "D_raw_N", "D_loop_N", "deviation_rad", "on_target", "clearance_filtered_m",
-                "ok_attitude", "ok_clearance", "ok_twist", "ok_loc", "complete_since_s")
-        out = {k: np.asarray([r[k] for r in self.rows], float) for k in keys}
+                "ok_attitude", "ok_clearance", "ok_twist", "ok_loc", "ok_twist_strict", "twist_relaxed",
+                "twist_relax_settled_since_s", "complete_since_s")
+        out = {k: np.asarray([r.get(k, math.nan) for r in self.rows], float) for k in keys}
         out["phase"] = np.asarray([r["phase"] for r in self.rows], dtype="U32")
         return out
 
@@ -1767,7 +1829,7 @@ def virgin_branch_record(series: dict[str, np.ndarray], soil_rows: list[dict[str
 
 def p3b_ext_records(series: dict[str, np.ndarray], events: list[tuple[float, str]], soil_meta: dict | None,
                     completion: dict[str, np.ndarray], *, done_twist_N: float, soil_patch_leg: str | None,
-                    t_loop_start_s: float) -> dict[str, Any]:
+                    t_loop_start_s: float, t_departure_s: float | None = None) -> dict[str, Any]:
     """G6 / P-S8-29 record block (user decision 2026-10-27): controller event counts
     (:data:`P3B_EXT_EVENTS`), t_P / t_L / c_min(t_P) of the C2 soil meta (``t_P_s``, ``t_loc_s``,
     ``clearance_at_P_m``; relative to the loop start), the completion block summary and the pad sinkage
@@ -1790,7 +1852,14 @@ def p3b_ext_records(series: dict[str, np.ndarray], events: list[tuple[float, str
             others = [i for i in range(4) if i != j]
             sink_sum["soft_leg"] = soil_patch_leg
             sink_sum["soft_minus_others_mean_end_mm"] = float((sink[-1, j] - np.mean(sink[-1, others])) * 1e3)
-    return {"event_counts": counts,
+    times = {k: [[rel(t), n] for t, n in events if n == k or n.startswith(k + ":")] for k in P3B_EXT_EVENT_TIMES}
+    t_loc = sm.get("t_loc_s")
+    return {"event_counts": counts, "event_times_rel_s": times,
+            "t_crawler_departure_rel_s": rel(t_departure_s),
+            "loc_minus_crawler_departure_s": None if t_loc is None or t_departure_s is None
+            else float(t_loc) - float(t_departure_s),
+            "loc_minus_crawler_departure_rule": "t_loc (C2 soil meta t_loc_s) - first crawler departure (P3a-2 rule "
+                                                "of p3b.departure, t_departure_s); > 0 = LOC after the departure",
             "soil_times_rel_s": {"t_P_s": rel(sm.get("t_P_s")), "t_L_s": rel(sm.get("t_loc_s"))},
             "c_min_at_P_m": sm.get("clearance_at_P_m"), "loc": sm.get("loc"),
             "loc_anchor_applied": sm.get("loc_anchor_applied"),
@@ -2220,8 +2289,11 @@ def p3b_checks(out: dict[str, Any]) -> dict[str, Any]:
     p31, p32, p33, p34 = out["P3-1_crawler"], out["P3-2_loc"], out["P3-3_leg_force"], out["P3-4_attitude"]
     p35, p37 = out["P3-5_clearance_stroke"], out["P3-7_plateau"]
     windows = out["P3-9_deferred"]["windows"]
+    rc = p31.get("recontact_events") or {}
     return {"P3-1_crawler_zero_after_ready": p31.get("crawler_zero"),
             "P3-1_recontact": out["departure"].get("recontact_t_s"),
+            "P3-1_recontact_pass": rc.get("pass"), "P3-1_flags": rc.get("flags"),
+            "P3-1_recontact_classes": [e["class"] for e in rc.get("events", [])],
             "P3-2_within": p32.get("within"), "P3-2_within_2s_record": p32.get("within_2s_record"),
             "P3-2_loc_minus_departure_s": p32.get("loc_minus_departure_s"), "P3-2_limit_s": p32.get("limit_s"),
             "P3-3_within": p33.get("within"),
@@ -2303,6 +2375,8 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
                    crawler_patches_max=float(s["scm_crawler_patches"][w].max()) if w.any() else None)
         p31["crawler_zero"] = bool(w.any() and cn[w].max() <= 0.0)
     p31.update(recontact_t_s=dep.get("recontact_t_s"), recontact_count=dep.get("recontact_count"))
+    # U-S9-G6d (가): recontact events with their class (transient FLAG / strict fail)
+    p31["recontact_events"] = recontact_events(t, cn, w_n, dep, t_loc)
     out["P3-1_crawler"] = p31
     # P3-2 LOC (spec rev. 60 T_lim)
     p32 = p32_loc_block(t, cn, w_n, t_loc=t_loc, t_dep=t_dep, t_done=t_done,
@@ -2431,6 +2505,16 @@ SOIL_LOC_EVENT = "crawler_liftoff_confirmed"
 SOIL_MODE_EVENT = "soil_mode_start"
 REJUDGED_BLOCKS = ("P3-2_loc", "P3-5_clearance_stroke", "P3-7_plateau", "checks")
 """p3b blocks whose definition changed in spec rev. 60 (C-S9-60); every other block must come out equal."""
+REJUDGE_ADDED_KEYS = {"P3-1_crawler": ("recontact_events",)}
+"""Keys added to a block after a run (U-S9-G6d, 2026-10-28): left out of the "unchanged block" comparison when the
+stored block lacks them (the other keys of the block must still be equal)."""
+
+
+def _without_added(name: str, new: Any, old: Any) -> Any:
+    keys = REJUDGE_ADDED_KEYS.get(name, ())
+    if not keys or not isinstance(new, dict) or not isinstance(old, dict):
+        return new
+    return {k: v for k, v in new.items() if not (k in keys and k not in old)}
 
 
 def _file_sha256(path: Path) -> str:
@@ -2479,7 +2563,8 @@ def rejudge_case(case_dir: Path, write: bool = True) -> dict[str, Any]:
            "reapproach_settings": lr, "soil_meta": r.get("c2_soil"), "record": rec, **p37_plant_inputs(params)}
     new = _plain(p3b_records(series, r["s9_rows"], events, phases, ctx))
     diffs = sorted(k for k in set(old) | set(new)
-                   if k not in REJUDGED_BLOCKS and _canonical(old.get(k)) != _canonical(new.get(k)))
+                   if k not in REJUDGED_BLOCKS
+                   and _canonical(old.get(k)) != _canonical(_without_added(k, new.get(k), old.get(k))))
     out = {"rule": "spec rev. 60 C-S9-60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 S-1 "
                    "window > 0.01 W; re-judged from the stored records, no Chrono re-run",
            "generator": "04_scripts/02_chrono/run_S9.py rejudge", "case": case_dir.name,
@@ -2632,7 +2717,8 @@ def run_level(args) -> Path:
     completion_info = completion.save(d / COMPLETION_SERIES_NAME)
     p3b_ext = p3b_ext_records(series, events, ctl_meta.get("soil"), completion.arrays(),
                               done_twist_N=float(c2.config.thresholds.done_twist_N),
-                              soil_patch_leg=model.soil_patch_leg, t_loop_start_s=t_loop0)
+                              soil_patch_leg=model.soil_patch_leg, t_loop_start_s=t_loop0,
+                              t_departure_s=p3b["departure"].get("t_departure_s"))
     p3b_ext["completion_series"] = completion_info
     if model.soil_patch_leg is not None:  # G6: virgin-branch window of the soft leg (dynamics 2026-10-28)
         p3b_ext["virgin_branch"] = virgin_branch_record(

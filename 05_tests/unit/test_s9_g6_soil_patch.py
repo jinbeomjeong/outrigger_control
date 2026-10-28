@@ -151,6 +151,20 @@ def test_p3b_ext_records() -> None:
     none = run_S9.p3b_ext_records(series, [], None, comp, done_twist_N=3000.0, soil_patch_leg=None,
                                   t_loop_start_s=0.0)
     assert "soft_leg" not in none["pad_sinkage"] and none["soil_times_rel_s"] == {"t_P_s": None, "t_L_s": None}
+    assert none["loc_minus_crawler_departure_s"] is None and none["event_times_rel_s"] == {"INFO_LIFT_PAUSED": []}
+
+
+def test_p3b_ext_lift_paused_and_loc_minus_departure() -> None:
+    """P-S8-30 (bee0693): INFO_LIFT_PAUSED:<leg> counted with its times; t_loc - first crawler departure."""
+    comp = _completion([_row(1.0, "level", 0.0, (1, 1, 1, 1))])
+    series = {"t_s": np.arange(3.0), "pad_sinkage_geometric_m": np.zeros((3, 4))}
+    events = [(103.0, "INFO_LIFT_PAUSED:RR"), (104.5, "INFO_LIFT_PAUSED:FL"), (105.0, "INFO_LIFT_PAUSED_X")]
+    out = run_S9.p3b_ext_records(series, events, {"t_loc_s": 112.5}, comp, done_twist_N=3000.0,
+                                 soil_patch_leg=None, t_loop_start_s=100.0, t_departure_s=111.0)
+    assert out["event_counts"]["INFO_LIFT_PAUSED"] == 2
+    assert out["event_times_rel_s"]["INFO_LIFT_PAUSED"] == [[3.0, "INFO_LIFT_PAUSED:RR"],
+                                                            [4.5, "INFO_LIFT_PAUSED:FL"]]
+    assert out["t_crawler_departure_rel_s"] == 11.0 and out["loc_minus_crawler_departure_s"] == 1.5
 
 
 class _Filt:
@@ -173,7 +187,13 @@ def test_completion_probe_mirrors_the_conditions() -> None:
     r = probe.rows[-1]
     assert r["D_raw_N"] == pytest.approx(5000.0) and r["D_loop_N"] == pytest.approx(4000.0)
     assert (r["ok_attitude"], r["ok_clearance"], r["ok_twist"], r["ok_loc"]) == (1, 1, 0, 1)
-    assert math.isnan(r["complete_since_s"])
+    assert math.isnan(r["complete_since_s"]) and r["twist_relaxed"] == 0 and r["ok_twist_strict"] == 0
+    # P-S8-29 V2b: the controller accepted |D| through the relaxation this period (state read only)
+    c2._state.twist_relaxed_load_N = 5000.0
+    probe(SimpleNamespace(t_s=5.05))
+    r = probe.rows[-1]
+    assert (r["ok_twist"], r["ok_twist_strict"], r["twist_relaxed"]) == (1, 0, 1)
+    c2._state.twist_relaxed_load_N = None
     del c2._is_clearance_done  # a member the controller no longer has reads unknown, not an error
     c2._state.last_reading = None
     probe(SimpleNamespace(t_s=5.1))

@@ -341,7 +341,7 @@ def test_preset_values() -> None:
         settle_s=10.0,
         window_s=5.0,
         drop_N=0.0,
-        rise_tol_N=300.0,
+        rise_tol_N=600.0,  # U-S8-80 (b), 2026-10-28
         max_twist_N=15000.0,
         require_loads_ge_F_min=True,
     )

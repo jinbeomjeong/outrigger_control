@@ -1,0 +1,209 @@
+{
+ "script": "04_scripts/03_control/s8/r76_g6_chrono_judge.py",
+ "cases": [
+  {
+   "case": "G6_G1_B_top_Fs4_spG1RR",
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true,
+    "READY_le_120s": true
+   },
+   "pass": true,
+   "flags": [],
+   "recontact_events": null,
+   "t_ready_rel_s": 43.30000000058476,
+   "loc_minus_departure_s": 0.7790000000258601,
+   "loc_limit_s": 2.91165281234524,
+   "F_min_after_departure_kN": [
+    111.07,
+    107.65,
+    63.56,
+    62.79
+   ],
+   "attitude_p34_absmax_deg": 0.013552488710127349,
+   "end_mean_roll_pitch_deg": [
+    -0.0019160971237991214,
+    -0.013488136336555464
+   ],
+   "rut_min_after_ready_mm": 44.15,
+   "s_motor_max_mm": [
+    402.59,
+    402.45,
+    391.87,
+    391.73
+   ],
+   "P3-6": true,
+   "P3-7": true,
+   "P3-9_flag": false,
+   "pre_liftoff_flag": false,
+   "p38_counts": {
+    "leg_reapproach_start": 0,
+    "relevel_predicted": 0,
+    "probe_aborted_low_load": 0
+   },
+   "event_counts": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 0,
+    "INFO_TWIST_UNSETTLED": 0,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_end": 0,
+    "INFO_LIFT_PAUSED": 0
+   },
+   "pause_times_rel_s": [],
+   "c_min_at_P_mm": 3.38,
+   "loc_anchor_applied": false,
+   "completion": {
+    "level_samples": 76,
+    "done_twist_N": 3000.0,
+    "blocked_share": {
+     "attitude": 0.868421052631579,
+     "clearance": 0.7763157894736842,
+     "twist": 0.0,
+     "loc": 0.19736842105263158
+    },
+    "unknown_share": {
+     "attitude": 0.0,
+     "clearance": 0.013157894736842105,
+     "twist": 0.0,
+     "loc": 0.0
+    },
+    "last_level_t_s": 39.20000000017777,
+    "last_level_blocking": [],
+    "D_level_N": {
+     "min": -428.7139385209066,
+     "max": 1491.612316498482,
+     "abs_last": 425.0910909667218
+    }
+   },
+   "pad_sinkage": {
+    "end_mm": {
+     "FL": 7.793097953142425,
+     "FR": 7.525478271102504,
+     "RL": 8.56200775309146,
+     "RR": 8.270504570593529
+    },
+    "max_mm": {
+     "FL": 8.018327675523684,
+     "FR": 7.725527724718351,
+     "RL": 8.947574047531548,
+     "RR": 8.658446384977925
+    },
+    "soft_leg": "RR",
+    "soft_minus_others_mean_end_mm": 0.31030991148139897
+   },
+   "virgin_branch_any": false,
+   "settle_reference": {
+    "roll_pitch_deg": [
+     0.00013414311262379536,
+     0.15121611322280729
+    ],
+    "z_origin_m": -0.0012648208861556858
+   },
+   "phases_rel_s": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     4.8,
+     "touch"
+    ],
+    [
+     23.7,
+     "level"
+    ],
+    [
+     31.3,
+     "done"
+    ],
+    [
+     31.4,
+     "probe"
+    ],
+    [
+     43.3,
+     "ready"
+    ]
+   ],
+   "events": [
+    [
+     23.7,
+     "floor_estimate_touch"
+    ],
+    [
+     25.2,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     25.3,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     43.3,
+     "reanchor_skipped:theta_below_min"
+    ],
+    [
+     43.3,
+     "ready_heave_tail"
+    ],
+    [
+     43.6,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ]
+   ],
+   "vs_reference": {
+    "ref": "P3b_G1_B_top_Fs4",
+    "n_periods": 1200,
+    "commands_max_abs_diff_m_s": 3.2212310584547876e-08,
+    "commands_first_diff_t_s": 35.30000000004831,
+    "truth_max_abs_diff": {
+     "F_cyl_N": 568.2442250163876,
+     "roll_pitch_deg": 7.680700789762518e-06,
+     "z_origin_m": 2.261873044417939e-07,
+     "scm_crawler_normal_N": 2.1653249859809875e-08,
+     "s_motor_m": 1.8133425980781936e-06
+    },
+    "ref_settle_reference": {
+     "roll_pitch_deg": [
+      0.00013414311262379536,
+      0.15121611322280729
+     ],
+     "z_origin_m": -0.0012648208861556858
+    },
+    "ref_phases": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      4.8,
+      "touch"
+     ],
+     [
+      23.7,
+      "level"
+     ],
+     [
+      31.3,
+      "done"
+     ],
+     [
+      31.4,
+      "probe"
+     ],
+     [
+      43.3,
+      "ready"
+     ]
+    ]
+   }
+  }
+ ]
+}

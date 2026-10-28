@@ -1,0 +1,202 @@
+{
+ "script": "04_scripts/03_control/s8/r76_g6_chrono_judge.py",
+ "cases": [
+  {
+   "case": "G6_G1_B_top_Fs4_spJ1FL",
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true,
+    "READY_le_120s": true
+   },
+   "pass": true,
+   "flags": [
+    "P3-1_transient_recontact"
+   ],
+   "recontact_events": {
+    "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+    "limit_N": 3801.1291206408396,
+    "weight_N": 380112.91206408397,
+    "t_loc_s": 33.79999999999851,
+    "events": [
+     {
+      "t_start_s": 32.6609999999607,
+      "t_end_s": 32.786999999964884,
+      "duration_s": 0.12600000000418277,
+      "max_normal_N": 6152.683653025263,
+      "max_over_W": 0.016186463173837068,
+      "ended_before_loc": true,
+      "class": "transient_flag"
+     }
+    ],
+    "pass": true,
+    "flags": [
+     "P3-1_transient_recontact"
+    ]
+   },
+   "t_ready_rel_s": 74.50000000162048,
+   "loc_minus_departure_s": 1.3270000000440518,
+   "loc_limit_s": 2.91165281234524,
+   "F_min_after_departure_kN": [
+    83.9,
+    119.89,
+    72.92,
+    27.77
+   ],
+   "attitude_p34_absmax_deg": 0.016328947917931724,
+   "end_mean_roll_pitch_deg": [
+    -0.01594962273096319,
+    0.001462974643549591
+   ],
+   "rut_min_after_ready_mm": 50.56,
+   "s_motor_max_mm": [
+    441.45,
+    409.96,
+    401.19,
+    397.69
+   ],
+   "P3-6": true,
+   "P3-7": true,
+   "P3-9_flag": false,
+   "pre_liftoff_flag": false,
+   "p38_counts": {
+    "leg_reapproach_start": 0,
+    "relevel_predicted": 0,
+    "probe_aborted_low_load": 0
+   },
+   "event_counts": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 0,
+    "INFO_TWIST_UNSETTLED": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_end": 0,
+    "INFO_LIFT_PAUSED": 1
+   },
+   "pause_times_rel_s": [
+    [
+     24.799999999970623,
+     "INFO_LIFT_PAUSED:RR"
+    ]
+   ],
+   "c_min_at_P_mm": 8.61,
+   "loc_anchor_applied": false,
+   "completion": {
+    "level_samples": 389,
+    "done_twist_N": 3000.0,
+    "blocked_share": {
+     "attitude": 0.31876606683804626,
+     "clearance": 0.2879177377892031,
+     "twist": 0.8406169665809768,
+     "loc": 0.056555269922879174
+    },
+    "unknown_share": {
+     "attitude": 0.0,
+     "clearance": 0.002570694087403599,
+     "twist": 0.0,
+     "loc": 0.0
+    },
+    "last_level_t_s": 70.4000000012135,
+    "last_level_blocking": [],
+    "D_level_N": {
+     "min": -58305.89124309976,
+     "max": 1706.3218872419602,
+     "abs_last": 11989.205688332826
+    }
+   },
+   "pad_sinkage": {
+    "end_mm": {
+     "FL": 41.19609207843622,
+     "FR": 8.863964190625628,
+     "RL": 10.971785104820997,
+     "RR": 6.819732978273763
+    },
+    "max_mm": {
+     "FL": 41.53997089609596,
+     "FR": 9.491776717164502,
+     "RL": 12.029499656657672,
+     "RR": 7.226085301709428
+    },
+    "soft_leg": "FL",
+    "soft_minus_others_mean_end_mm": 32.31093132052942
+   },
+   "virgin_branch_any": false,
+   "settle_reference": {
+    "roll_pitch_deg": [
+     0.00013414311262379536,
+     0.15121611322280729
+    ],
+    "z_origin_m": -0.0012648208861556858
+   },
+   "phases_rel_s": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     4.8,
+     "touch"
+    ],
+    [
+     23.6,
+     "level"
+    ],
+    [
+     62.5,
+     "done"
+    ],
+    [
+     62.6,
+     "probe"
+    ],
+    [
+     74.5,
+     "ready"
+    ]
+   ],
+   "events": [
+    [
+     23.6,
+     "floor_estimate_touch"
+    ],
+    [
+     24.8,
+     "INFO_LIFT_PAUSED:RR"
+    ],
+    [
+     25.8,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     25.9,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     62.5,
+     "INFO_TWIST_UNSETTLED:-11.8"
+    ],
+    [
+     74.5,
+     "reanchor_skipped:theta_below_min"
+    ],
+    [
+     74.5,
+     "ready_heave_tail"
+    ],
+    [
+     74.8,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     76.5,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ]
+  }
+ ]
+}

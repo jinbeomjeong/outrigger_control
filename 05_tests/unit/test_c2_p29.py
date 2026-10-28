@@ -138,7 +138,7 @@ def test_t9_preset_values() -> None:
         settle_s=SETTLE_S,
         window_s=WINDOW_S,
         drop_N=0.0,
-        rise_tol_N=300.0,
+        rise_tol_N=600.0,  # U-S8-80 (b), 2026-10-28
         max_twist_N=15000.0,
         require_loads_ge_F_min=True,
     )
@@ -261,11 +261,11 @@ def period_times(end_s: float) -> np.ndarray:
     return np.round(np.arange(1, round(end_s / PERIOD_S) + 1) * PERIOD_S, 10)
 
 
-@pytest.mark.parametrize(("bump_N", "is_relaxed"), [(400.0, False), (200.0, True)])
+@pytest.mark.parametrize(("bump_N", "is_relaxed"), [(700.0, False), (500.0, True)])
 def test_t4a_rise_inside_the_window(geometry, bump_N, is_relaxed) -> None:
     """One sample ``bump_N`` above the standing ``|D|`` at 8 s: at 10.1 s (settled, window
-    5.1 .. 10.1 s) a rise above 0.3 kN blocks the relaxation; once the bump has left the window
-    it is allowed again."""
+    5.1 .. 10.1 s) a rise above the preset 0.6 kN (U-S8-80 (b)) blocks the relaxation; once the
+    bump has left the window it is allowed again."""
     controller = level_controller_after_loc(geometry)
 
     def twist_with_bump(t_s: float) -> float:

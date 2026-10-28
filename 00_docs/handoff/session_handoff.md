@@ -3,16 +3,30 @@
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
 - 갱신: 2026-10-28 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 74: P-S8-30 = P30fz(LOC 전 느린 들어 올림 + 재접근 ×4) 구현·인수, 재현 시험 분리, V-3·r8d1 기준 갱신**). 그 전: 3131552(개정 72·73, G6 하네스·P-S8-29·꼬리 여유·G6 Chrono 기능), 34c806d(개정 69~71, G8·P-S8-28), 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
+- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 75: G6 Chrono(S9 SCM 한 패드 연약 패치) 판정, U-S9-G6d 과도 재접촉 FLAG, U-S8-80 P-S8-29 재상승 허용 0.6 kN, dynamics 5.40**). 그 전: bee0693(개정 74, P-S8-30 P30fz), 3131552(개정 72·73, G6 하네스·P-S8-29·꼬리 여유·G6 Chrono 기능), 34c806d(개정 69~71, G8·P-S8-28), 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
 - 세션 기록: 일반 Windows 터미널에서 `claude`를 직접 실행한다(2026-10-26 결정).
 
-## 이번 커밋에서 바뀐 것 (3131552 이후)
+## 이번 커밋에서 바뀐 것 (bee0693 이후)
+
+1. **G6 Chrono 배치**(`07_results/S9/batch_G6_20261028_075108`, git 제외; 제어기 bee0693, 3지형 배치, 4병렬 P코어 07:51~10:13, 4건 rc 0 — G6-0a 1274 s, G1@RR 4949 s, J1@RR 6953 s, J1@FL 8538 s; cpu-scheduler 기록 완료). 실행 전 cad 보강: `run_S9.py` `p3b_ext`에 `INFO_LIFT_PAUSED` 시각·`loc_minus_crawler_departure_s`, `CompletionProbe` V2b 대응.
+2. **개정 75(389~394)**: G6-0a 3지형 동치(dynamics 5.40.8, 비교기 `s9_g6_patch_compare.py` C-3 기준 수정 → `g6_0a_compare_5408.json` pass_all), G1@RR·J1@RR 통과, J1@FL 이탈 직후 크롤러 과도 재접촉 → **U-S9-G6d (가) FLAG**(cad `run_S9.py` `recontact_events`, 시험 `test_s9_p31_recontact.py`, 재판정 `result_rejudge_U-S9-G6d.json`), 하네스는 J1 연약 패치에서 낙관 쪽, P-S8-29 완화 조건 깜박임 → **U-S8-80 (나) 재상승 허용 0.6 kN**(python `R8_TWIST_RELAX_RISE_TOL_N`, 하네스 G6 116·G8 516·V-3·r8d1 해시 불변, unit 2797). control 판정 `04_scripts/03_control/s8/r76_*.py`, 결과 `06_analysis/02_control/s8/rev76/`.
+3. **`dynamics_model.md` 개정 56(5.40)**: G6 첫 접촉 판단(연약 세트 J1 유지, 튀어오름 없음, 처녀 가지 구간 $F_x$), C-4 허용값, 5.40.8 G6-0a 판정.
+4. 문서: 명세 개정 75, decision_log 2줄, 로드맵 6절 1번, CLAUDE.md 제어기 행(재상승 허용 0.6 kN, 개정 30~75)·커버리지 공백 줄, 색인.
+
+## 다음 할 일 (권장 순서)
+
+1. **센서 오차 모델 G6 하네스 확인**(control): J1·J2 후방 연약, 압력 센서 3등급, P-S8-29 완화 동작(실기 압력 잡음은 재상승 허용보다 훨씬 큼) → 실기 허용 재결정(명세 394).
+2. **G3(앞 다리 사건 + 그 다리 로드 고장)**: 축소 하네스에 로드 판독 고장 주입, 약 72실행.
+3. J1 연약 패치 Chrono 재확인 범위 결정(하네스가 낙관 쪽, 명세 391), G6 판정 행을 S9 판정기에 정식 편입(cad 제안, control 정의 `r76_g6_chrono_judge.py`).
+4. 선택: C-S8-76 C5(L2b G5 A형). 나중: 크롤러 재접촉 합성(322.2), U-S8-57·DONE 꼬리 감시. 참고: 이 세션 중 다른 출처의 벤치마크 프로세스(`05_benchmarks\...omp_wait_policy_driver.py`, 이 저장소 밖)가 관찰됨 — 사용자 확인 대상.
+
+## bee0693에서 바뀐 것
 
 1. **개정 74(384~388)**: P-S8-30 후보 비교(control `r74_p30_screen.py` 변형 P30f·n·fn·f25·fz, `r74_compare.py`, `r74_judge.py`) → **P30fz 채택**(사용자 결정 2026-10-28). python 구현 `c2.py` `PreLocLiftPauseSettings`(R8 프리셋만), 사건 `INFO_LIFT_PAUSED`, 시험 `test_c2_p30.py` 38. 하네스 해시 G6 116·G8 516 = `rev74/r74_p30_expected_hashes_P30fz.json`. G6 116/116 합격, G8 판정 변화 0.
 2. V-3 rigid 8·soil 4·r8d1 imu 변화(모두 늦춤 1회, 판정 불변, control `r75_v3_diff.py` → `rev75/r75_v3_diff.json`) → `07_results/S9/v3/` 기준 갱신(옛 기준 `history/*_pre_p30.json`, git 제외 폴더). P-R8-13 재현 시험은 P-S8-30 끔 프리셋(`04_scripts/03_control/r8d1/v34_drop.py preset_p30off`)으로 분리, 전체 프리셋은 새 시험 `test_full_preset_drop_stays_within_u57`. S9 P3b Chrono 재실행 불필요(사용자 승인).
 3. 문서: 명세 개정 74(383 제목 갱신), decision_log, 로드맵 6절 1번, CLAUDE.md 제어기 행(P-S8-30, 개정 30~74)·커버리지 공백 줄, 색인.
 
-## 다음 할 일 (권장 순서)
+### bee0693 당시 다음 할 일 (기록)
 
 1. **G6 Chrono**(사용자 확인 뒤): `python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run G6 --parallel 4`(약 4.1 h; G6-0a 열린 루프 대조가 약 30분에 끝나면 `04_scripts/02_chrono/s9_g6_patch_compare.py <G6-0a 폴더>`부터 — 실패하면 나머지 해석 중단), long-running-task-monitor 15분 점검, cpu-scheduler 배치. 판정 기록에 `INFO_LIFT_PAUSED` 시각·LOC − 이탈 추가(cad, 실행 전), G6 판정 행을 S9 판정기에 넣을지(cad 제안)·C-4 허용값(dynamics) 확정.
 2. dynamics_model.md 5.40(G6 첫 접촉 판단) 반영(dynamics 초안은 이번 세션 리포트에만 있음 — 다시 맡겨 문서화).

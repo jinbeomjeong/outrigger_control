@@ -11,11 +11,17 @@ the dual-terrain equivalence E2-E4, ``dynamics_model.md`` 5.34.12 / 5.35.2):
       (sigma_bar h^2 = end pad normal / pad area x h^2, h = 0.02 m), normal sum rel <= 1e-6, crawler normal
       |diff| <= 0.01 x crawler node force (0.7 MPa x crawler grid^2, 5.35.2), body z |diff| <= 1 um, pitch
       |diff| <= 1e-5 deg
-  C-3 instant (E4 type): per pad max |diff| <= sigma_bar h^2 and end / max <= 1/100 when the pad had a node
-      event (max >= 0.01 sigma_bar h^2); small-force pads (max < 0.1 sigma_bar h^2): end diff <= 0.01 sigma_bar h^2
-  C-4 P3a-1 ... P3a-7: the P3a checks equal, lift-off within one 1 ms row, force peaks within sigma_bar h^2,
-      stroke maxima within 0.1 mm, sinkage at lift-off / end within 0.1 mm, attitude ranges within 1e-3 deg
-      (tolerances ASSUMPTION, values recorded for dynamics)
+  C-3 instant (E4 type, dynamics_model.md 5.40.8): per pad max |diff| <= maximum node pressure x h^2; the
+      machine series has no node-pressure record, so max <= 1.05 sigma_bar h^2 with the event width <= 2 rows
+      (rows with |diff| > 0.5 sigma_bar h^2) and the pad position (geometric sinkage) difference <= 1 um on
+      those rows; an event pad (max >= 0.01 sigma_bar h^2) ends with the 0.1 s mean end diff <= 0.01 sigma_bar
+      h^2 or end / max <= 1/100 (the last instantaneous row is not used); small-force pads (max < 0.1
+      sigma_bar h^2): 0.1 s mean end diff <= 0.01 sigma_bar h^2
+  C-4 P3a-1 ... P3a-7: the P3a checks equal, lift-off within 2 ms, force peaks within sigma_bar h^2, stroke
+      maxima within 0.1 mm, sinkage at lift-off / end within 0.1 mm, attitude ranges (d roll / d pitch
+      min-max) within 2e-3 deg, end attitude (end roll / pitch) within 1e-3 deg
+
+C-1 ... C-4 values: dynamics_model.md 5.40.5 (confirmed 2026-10-28).
 
 Usage (Chrono-dev, project root)::
 
@@ -46,7 +52,24 @@ PAD_GRID_M = 0.02
 CRAWLER_GRID_M = 0.04
 CRAWLER_SIGMA_MAX_PA = 0.7e6
 END_WINDOW_S = 0.1
-TOL = {"stroke_m": 1.0e-4, "sinkage_m": 1.0e-4, "attitude_deg": 1.0e-3}
+MAX_FALLBACK_FACTOR = 1.05
+SPIKE_WIDTH_MAX = 2
+POSITION_DIFF_MAX_M = 1.0e-6
+"""C-3 without a node-pressure record (dynamics_model.md 5.40.8)."""
+SPIKE_FRACTION = 0.5
+"""Rows counted in the event width: |diff| > 0.5 sigma_bar h^2 (counting threshold of this script; a one-node
+flip is about one sigma_bar h^2)."""
+
+
+def _max_run(flag: np.ndarray) -> int:
+    best = run = 0
+    for on in flag:
+        run = run + 1 if on else 0
+        best = max(best, run)
+    return int(best)
+TOL = {"liftoff_s": 2.0e-3, "stroke_m": 1.0e-4, "sinkage_m": 1.0e-4, "attitude_range_deg": 2.0e-3,
+       "attitude_end_deg": 1.0e-3}
+"""C-4 tolerances, dynamics_model.md 5.40.5 (2026-10-28); force peaks within sigma_bar h^2."""
 LEGS = ("FL", "FR", "RL", "RR")
 
 
@@ -112,12 +135,29 @@ def end_and_instant(a, b, area_m2) -> dict[str, Any]:
         p = {"leg": leg, "end_rel": rel(e_a, e_b), "end_diff_N": abs(e_a - e_b), "node_force_N": nf[i],
              "max_diff_N": mx, "t_max_s": float(t[int(np.argmax(df))]), "last_diff_N": end}
         p["pass_end"] = bool(p["end_rel"] <= END_REL or p["end_diff_N"] <= NODE_FRACTION * nf[i])
+        # C-3 (dynamics_model.md 5.40.8): max <= max node pressure x h^2; without a node-pressure record
+        # max <= 1.05 sigma_bar h^2 with event width <= 2 rows and the pad position difference <= 1 um on those
+        # rows; the end of an event pad is the 0.1 s mean end difference (not the last instantaneous row)
         p["small_force"] = bool(mx < SMALL_FRACTION * nf[i])
+        p["event"] = bool(mx >= NODE_FRACTION * nf[i])
+        spike = df > SPIKE_FRACTION * nf[i]
+        p["spike_rows"] = int(spike.sum())
+        p["spike_width_rows_max"] = _max_run(spike)
+        za_p = np.asarray(a.get("pad_sinkage_geometric_m", np.zeros((len(a["t_s"]), 4))), float)[:n_rows, i]
+        zb_p = np.asarray(b.get("pad_sinkage_geometric_m", np.zeros((len(b["t_s"]), 4))), float)[:n_rows, i]
+        p["position_diff_at_spikes_m"] = float(np.abs(za_p[spike] - zb_p[spike]).max()) if spike.any() else 0.0
+        p["max_basis"] = f"{MAX_FALLBACK_FACTOR:g} sigma_bar h^2 (no node-pressure record), width <= {SPIKE_WIDTH_MAX} rows"
+        p["max_limit_N"] = MAX_FALLBACK_FACTOR * nf[i]
+        p["pass_max"] = bool(mx <= p["max_limit_N"] and p["spike_width_rows_max"] <= SPIKE_WIDTH_MAX
+                             and p["position_diff_at_spikes_m"] <= POSITION_DIFF_MAX_M)
+        end_mean = p["end_diff_N"]
         if p["small_force"]:
-            p["pass_instant"] = bool(end <= NODE_FRACTION * nf[i])
+            p["pass_end_c3"] = bool(end_mean <= NODE_FRACTION * nf[i])
         else:
-            event = mx >= NODE_FRACTION * nf[i]
-            p["pass_instant"] = bool(mx <= nf[i] and (not event or end <= 1e-2 * mx))
+            p["pass_end_c3"] = bool(not p["event"] or end_mean <= NODE_FRACTION * nf[i]
+                                    or (mx > 0 and end_mean / mx <= 1e-2))
+        p["end_over_max"] = end_mean / mx if mx > 0 else 0.0
+        p["pass_instant"] = bool(p["pass_max"] and p["pass_end_c3"])
         pads.append(p)
     ca, cb = np.asarray(a["scm_crawler_normal_N"], float)[:n_rows], np.asarray(b["scm_crawler_normal_N"], float)[:n_rows]
     crawler_nf = CRAWLER_SIGMA_MAX_PA * CRAWLER_GRID_M ** 2
@@ -131,8 +171,13 @@ def end_and_instant(a, b, area_m2) -> dict[str, Any]:
     c2["pass"] = bool(all(p["pass_end"] for p in pads) and c2["normal_sum_rel"] <= END_REL
                       and c2["crawler_end_diff_N"] <= NODE_FRACTION * crawler_nf and c2["z_end_diff_m"] <= 1e-6
                       and c2["pitch_end_diff_deg"] <= 1e-5)
-    c3 = {"pads": [{k: p[k] for k in ("leg", "max_diff_N", "t_max_s", "last_diff_N", "node_force_N",
-                                      "small_force", "pass_instant")} for p in pads],
+    c3 = {"pads": [{k: p[k] for k in ("leg", "max_diff_N", "t_max_s", "last_diff_N", "end_diff_N", "end_over_max",
+                                      "node_force_N", "max_limit_N", "max_basis", "event", "small_force",
+                                      "spike_rows", "spike_width_rows_max", "position_diff_at_spikes_m",
+                                      "pass_max", "pass_end_c3", "pass_instant")} for p in pads],
+          "criterion": "dynamics_model.md 5.40.8: max <= max node pressure h^2 (fallback 1.05 sigma_bar h^2, event "
+                       "width <= 2 rows, pad position diff <= 1 um on those rows); event pad end: 0.1 s mean end "
+                       "diff <= 0.01 sigma_bar h^2 or end / max <= 1/100",
           "pass": bool(all(p["pass_instant"] for p in pads))}
     return {"C-2": c2, "C-3": c3, "rows_compared": int(n_rows)}
 
@@ -163,14 +208,21 @@ def p3a_agreement(pa: dict[str, Any], pb: dict[str, Any], node_force_N: list[flo
         xb = np.asarray((pb.get("P3a-7_attitude") or {}).get(key, [math.nan] * 2), float)
         att[key] = np.abs(xa - xb).tolist()
     out["attitude_diff_deg"] = att
-    ok = (all(out["checks_equal"].values()) and out["liftoff_diff_s"] is not None and out["liftoff_diff_s"] <= 1.0e-3 + 1e-9
+    ea = np.asarray((pa.get("P3a-7_attitude") or {}).get("end_roll_pitch_deg", [math.nan] * 2), float)
+    eb = np.asarray((pb.get("P3a-7_attitude") or {}).get("end_roll_pitch_deg", [math.nan] * 2), float)
+    out["end_attitude_diff_deg"] = np.abs(ea - eb).tolist()
+    ok = (all(out["checks_equal"].values()) and out["liftoff_diff_s"] is not None
+          and out["liftoff_diff_s"] <= TOL["liftoff_s"] + 1e-9
           and all(d <= f for d, f in zip(out["force_peak_diff_N"], node_force_N, strict=True))
           and max(out["stroke_max_diff_m"]) <= TOL["stroke_m"]
           and all(max(v) <= TOL["sinkage_m"] for v in sink.values())
-          and all(max(v) <= TOL["attitude_deg"] for v in att.values()))
+          and all(max(v) <= TOL["attitude_range_deg"] for v in att.values())
+          and max(out["end_attitude_diff_deg"]) <= TOL["attitude_end_deg"])
     out["pass"] = bool(ok)
-    out["criterion"] = ("P3a checks equal, lift-off within 1 ms, force peaks within sigma_bar h^2, stroke max / "
-                        "sinkage within 0.1 mm, attitude ranges within 1e-3 deg (tolerances ASSUMPTION)")
+    out["tolerances"] = dict(TOL)
+    out["criterion"] = ("P3a checks equal, lift-off within 2 ms, force peaks within sigma_bar h^2, stroke max / "
+                        "sinkage within 0.1 mm, attitude ranges within 2e-3 deg, end attitude within 1e-3 deg "
+                        "(dynamics_model.md 5.40.5)")
     return out
 
 

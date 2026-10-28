@@ -1501,7 +1501,9 @@ maximum after a tail at the end value + 0.50 mm (lock settle-back after the tail
 R8_TWIST_RELAX_SETTLE_S = 10.0
 R8_TWIST_RELAX_WINDOW_S = 5.0
 R8_TWIST_RELAX_DROP_N = 0.0
-R8_TWIST_RELAX_RISE_TOL_N = 300.0
+R8_TWIST_RELAX_RISE_TOL_N = 600.0
+"""User decision U-S8-80 (b), 2026-10-28: the G6 Chrono J1 SCM residual oscillation rose by up
+to 0.59 kN inside the 5 s window (spec rev. 75 392); the class default stays 300 N."""
 R8_TWIST_RELAX_MAX_TWIST_N = 15000.0
 # P-S8-30 pre-LOC lift slowdown (user decision 2026-10-28: variant P30fz of the r74 screen)
 R8_PRE_LOC_PAUSE_ON_FRACTION_OF_F_MIN = 3.0

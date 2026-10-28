@@ -1,0 +1,93 @@
+{
+ "script": "04_scripts/03_control/s8/r76_relax_flicker.py",
+ "cases": [
+  {
+   "case": "G6_G1_B_top_Fs4_spJ1RR",
+   "t_first_relaxed_s": 51.90000000087025,
+   "t_done_s": 62.500000001222126,
+   "share_in_relaxed_span": {
+    "ok_attitude": 1.0,
+    "ok_clearance": 1.0,
+    "ok_loc": 1.0,
+    "twist_relaxed": 0.396
+   },
+   "delay_first_relaxed_to_done_s": 10.6,
+   "window_rise_kN": {
+    "median": 0.082,
+    "p90": 0.276,
+    "max": 0.586
+   },
+   "net_drop_5s_kN_median": 1.358,
+   "period_dD_std_kN": 0.149,
+   "replay": {
+    "V2b_replay": {
+     "first_hold_s": 60.100000001142455,
+     "share_after_first": 0.747
+    },
+    "a_mean1s": {
+     "first_hold_s": 55.10000000097648,
+     "share_after_first": 1.0
+    },
+    "b_rise0.6": {
+     "first_hold_s": 55.50000000098976,
+     "share_after_first": 0.899
+    }
+   }
+  },
+  {
+   "case": "G6_G1_B_top_Fs4_spJ1FL",
+   "t_first_relaxed_s": 51.20000000084701,
+   "t_done_s": 62.500000001222126,
+   "share_in_relaxed_span": {
+    "ok_attitude": 1.0,
+    "ok_clearance": 1.0,
+    "ok_loc": 1.0,
+    "twist_relaxed": 0.496
+   },
+   "delay_first_relaxed_to_done_s": 11.3,
+   "window_rise_kN": {
+    "median": 0.021,
+    "p90": 0.233,
+    "max": 0.531
+   },
+   "net_drop_5s_kN_median": 2.085,
+   "period_dD_std_kN": 0.15,
+   "replay": {
+    "V2b_replay": {
+     "first_hold_s": 54.50000000095656,
+     "share_after_first": 0.858
+    },
+    "a_mean1s": {
+     "first_hold_s": 53.700000000930004,
+     "share_after_first": 1.0
+    },
+    "b_rise0.6": {
+     "first_hold_s": 54.2000000009466,
+     "share_after_first": 0.953
+    }
+   }
+  },
+  {
+   "case": "G6_G1_B_top_Fs4_spG1RR",
+   "t_first_relaxed_s": null,
+   "t_done_s": 31.3000000001864,
+   "window_rise_kN": null,
+   "net_drop_5s_kN_median": null,
+   "period_dD_std_kN": null,
+   "replay": {
+    "V2b_replay": {
+     "first_hold_s": null,
+     "share_after_first": null
+    },
+    "a_mean1s": {
+     "first_hold_s": null,
+     "share_after_first": null
+    },
+    "b_rise0.6": {
+     "first_hold_s": null,
+     "share_after_first": null
+    }
+   }
+  }
+ ]
+}

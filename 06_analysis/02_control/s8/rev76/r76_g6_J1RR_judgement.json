@@ -1,0 +1,171 @@
+{
+ "script": "04_scripts/03_control/s8/r76_g6_chrono_judge.py",
+ "cases": [
+  {
+   "case": "G6_G1_B_top_Fs4_spJ1RR",
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true,
+    "READY_le_120s": true
+   },
+   "pass": true,
+   "flags": [],
+   "recontact_events": null,
+   "t_ready_rel_s": 74.50000000162048,
+   "loc_minus_departure_s": 0.6170000000204823,
+   "loc_limit_s": 2.91165281234524,
+   "F_min_after_departure_kN": [
+    94.42,
+    119.21,
+    77.83,
+    49.86
+   ],
+   "attitude_p34_absmax_deg": 0.015439076250805716,
+   "end_mean_roll_pitch_deg": [
+    0.00964674039937737,
+    -0.015396290005928544
+   ],
+   "rut_min_after_ready_mm": 48.86,
+   "s_motor_max_mm": [
+    407.09,
+    408.02,
+    398.25,
+    421.84
+   ],
+   "P3-6": true,
+   "P3-7": true,
+   "P3-9_flag": false,
+   "pre_liftoff_flag": false,
+   "p38_counts": {
+    "leg_reapproach_start": 0,
+    "relevel_predicted": 0,
+    "probe_aborted_low_load": 0
+   },
+   "event_counts": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 0,
+    "INFO_TWIST_UNSETTLED": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_end": 0,
+    "INFO_LIFT_PAUSED": 0
+   },
+   "pause_times_rel_s": [],
+   "c_min_at_P_mm": 1.04,
+   "loc_anchor_applied": false,
+   "completion": {
+    "level_samples": 388,
+    "done_twist_N": 3000.0,
+    "blocked_share": {
+     "attitude": 0.3479381443298969,
+     "clearance": 0.17525773195876287,
+     "twist": 0.8891752577319587,
+     "loc": 0.03608247422680412
+    },
+    "unknown_share": {
+     "attitude": 0.0,
+     "clearance": 0.002577319587628866,
+     "twist": 0.0,
+     "loc": 0.0
+    },
+    "last_level_t_s": 70.4000000012135,
+    "last_level_blocking": [],
+    "D_level_N": {
+     "min": -36464.02522224134,
+     "max": 4809.529232909055,
+     "abs_last": 13340.437558745958
+    }
+   },
+   "pad_sinkage": {
+    "end_mm": {
+     "FL": 7.083675459840899,
+     "FR": 8.556231023546967,
+     "RL": 10.008202904178809,
+     "RR": 33.946933163333085
+    },
+    "max_mm": {
+     "FL": 7.356457601366717,
+     "FR": 8.95498859898014,
+     "RL": 10.357156546371593,
+     "RR": 34.51108287907512
+    },
+    "soft_leg": "RR",
+    "soft_minus_others_mean_end_mm": 25.397563367477524
+   },
+   "virgin_branch_any": false,
+   "settle_reference": {
+    "roll_pitch_deg": [
+     0.00013414311262379536,
+     0.15121611322280729
+    ],
+    "z_origin_m": -0.0012648208861556858
+   },
+   "phases_rel_s": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     4.8,
+     "touch"
+    ],
+    [
+     23.7,
+     "level"
+    ],
+    [
+     62.5,
+     "done"
+    ],
+    [
+     62.6,
+     "probe"
+    ],
+    [
+     74.5,
+     "ready"
+    ]
+   ],
+   "events": [
+    [
+     23.7,
+     "floor_estimate_touch"
+    ],
+    [
+     25.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     25.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     62.5,
+     "INFO_TWIST_UNSETTLED:-13.2"
+    ],
+    [
+     74.5,
+     "reanchor_skipped:theta_below_min"
+    ],
+    [
+     74.5,
+     "ready_heave_tail"
+    ],
+    [
+     74.8,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     76.5,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ]
+  }
+ ]
+}
