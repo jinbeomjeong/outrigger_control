@@ -1,0 +1,89 @@
+C2 t=4.20 s: WARN_PRESSURE_ZERO_SKIPPED:FR:grounded
+C2 t=4.20 s: WARN_PRESSURE_ZERO_SKIPPED:RR:grounded
+C2 t=4.90 s: WARN_PRESSURE_ZERO_SKIPPED:FR:grounded
+C2 t=31.20 s: leg_reapproach_start:RR
+C2 t=31.60 s: leg_reapproach_start:RR
+C2 t=33.00 s: leg_reapproach_start:RR
+C2 t=31.20 s: leg_reapproach_start:RR
+C2 t=32.00 s: leg_reapproach_start:RL
+C2 t=33.40 s: leg_reapproach_start:RR
+C2 t=34.10 s: leg_reapproach_start:RR
+C2 t=31.30 s: leg_reapproach_start:RL
+C2 t=33.90 s: leg_reapproach_start:RL
+C2 t=34.70 s: leg_reapproach_start:RL
+C2 t=33.10 s: leg_reapproach_start:RR
+C2 t=35.60 s: leg_reapproach_start:RL
+C2 t=33.40 s: leg_reapproach_start:RL
+C2 t=36.40 s: leg_reapproach_start:RL
+C2 t=31.20 s: leg_reapproach_start:RR
+C2 t=34.50 s: leg_reapproach_start:RL
+C2 t=32.20 s: leg_reapproach_start:RR
+C2 t=33.10 s: leg_reapproach_start:RR
+C2 t=36.80 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=31.30 s: leg_reapproach_start:RL
+C2 t=33.10 s: leg_reapproach_start:RL
+C2 t=33.90 s: leg_reapproach_start:RL
+C2 t=34.80 s: leg_reapproach_start:RL
+C2 t=35.70 s: leg_reapproach_start:RL
+C2 t=31.10 s: leg_reapproach_start:RR
+C2 t=32.90 s: leg_reapproach_start:RR
+C2 t=33.70 s: leg_reapproach_start:RR
+C2 t=34.50 s: leg_reapproach_start:RR
+C2 t=35.30 s: leg_reapproach_start:RR
+C2 t=77.50 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.779
+C2 t=74.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.581
+C2 t=4.80 s: WARN_PRESSURE_ZERO_SKIPPED:FL:grounded
+C2 t=4.30 s: WARN_PRESSURE_ZERO_SKIPPED:FL:grounded
+C2 t=31.40 s: leg_reapproach_start:RL
+C2 t=32.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=33.50 s: leg_reapproach_start:RL
+C2 t=34.50 s: leg_reapproach_start:RL
+C2 t=37.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=39.60 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=31.60 s: leg_reapproach_start:RR
+C2 t=33.40 s: leg_reapproach_start:RR
+C2 t=34.10 s: leg_reapproach_start:RR
+C2 t=35.00 s: leg_reapproach_start:RR
+C2 t=30.80 s: leg_reapproach_start:RR
+C2 t=35.80 s: leg_reapproach_start:RR
+C2 t=32.60 s: leg_reapproach_start:RR
+C2 t=33.40 s: leg_reapproach_start:RR
+C2 t=31.10 s: leg_reapproach_start:RR
+C2 t=31.70 s: leg_reapproach_start:RR
+C2 t=33.00 s: leg_reapproach_start:RR
+C2 t=32.70 s: leg_reapproach_start:RR
+C2 t=33.60 s: leg_reapproach_start:RR
+C2 t=31.30 s: leg_reapproach_start:RR
+C2 t=33.10 s: leg_reapproach_start:RR
+C2 t=33.90 s: leg_reapproach_start:RL
+C2 t=36.30 s: leg_reapproach_start:RL
+C2 t=37.10 s: leg_reapproach_start:RL
+C2 t=37.90 s: leg_reapproach_start:RL
+C2 t=30.90 s: leg_reapproach_start:RL
+C2 t=32.60 s: leg_reapproach_start:RL
+C2 t=74.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.665
+C2 t=33.50 s: leg_reapproach_start:RL
+C2 t=34.40 s: leg_reapproach_start:RL
+C2 t=34.60 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=35.30 s: leg_reapproach_start:RL
+done 97.0 s -> 06_analysis\02_control\s8\rev79\r79_L3_g6_recontact_final.json
+L3|s0|g6|37|g6|G1+S1@FR|top|Fs4 pass False zero_cal True ready 74.40000000017322 wall 47.2
+L3|s0|g6|56|ref|J2|top|Fs0 pass False zero_cal False ready 93.70000000026538 wall 56.4
+L3|s0|g6|57|ref|J2|top|Fs4 pass False zero_cal True ready 96.20000000027731 wall 54.3
+L3|s0|g6|80|g6r|rigid+J2@FL|top|Fs0 pass False zero_cal True ready 70.30000000015364 wall 44.9
+L3|s0|g6|96|g6r|rigid+S1@FL|top|Fs0 pass False zero_cal False ready 74.20000000017227 wall 46.9
+L3|s0|g6|97|g6r|rigid+S1@FL|top|Fs4 pass False zero_cal True ready 71.20000000015794 wall 58.3
+L3|s0|g6|98|g6r|rigid+S1@FL|bottom|Fs0 pass False zero_cal True ready 75.20000000017704 wall 51.5
+L3|s0|g6|99|g6r|rigid+S1@FL|bottom|Fs4 pass False zero_cal True ready 77.50000000018802 wall 45.2
+L3|s0|g6|100|g6r|rigid+S1@FR|top|Fs0 pass False zero_cal True ready 61.600000000112104 wall 44.3
+L3|s0|g6|101|g6r|rigid+S1@FR|top|Fs4 pass False zero_cal True ready 74.5000000001737 wall 48.8
+L3|s1|g6|37|g6|G1+S1@FR|top|Fs4 pass False zero_cal False ready 74.00000000017131 wall 40.0
+L3|s1|g6|56|ref|J2|top|Fs0 pass False zero_cal True ready 107.8000000003327 wall 50.6
+L3|s1|g6|57|ref|J2|top|Fs4 pass False zero_cal True ready 87.30000000023482 wall 45.3
+L3|s1|g6|80|g6r|rigid+J2@FL|top|Fs0 pass False zero_cal True ready 70.80000000015603 wall 42.7
+L3|s1|g6|96|g6r|rigid+S1@FL|top|Fs0 pass False zero_cal True ready 75.70000000017943 wall 41.4
+L3|s1|g6|97|g6r|rigid+S1@FL|top|Fs4 pass False zero_cal True ready 73.6000000001694 wall 40.4
+L3|s1|g6|98|g6r|rigid+S1@FL|bottom|Fs0 pass False zero_cal True ready 74.70000000017465 wall 40.5
+L3|s1|g6|99|g6r|rigid+S1@FL|bottom|Fs4 pass False zero_cal False ready 75.60000000017895 wall 40.5
+L3|s1|g6|100|g6r|rigid+S1@FR|top|Fs0 pass False zero_cal True ready 64.7000000001269 wall 35.7
+L3|s1|g6|101|g6r|rigid+S1@FR|top|Fs4 pass False zero_cal True ready 61.80000000011306 wall 37.8

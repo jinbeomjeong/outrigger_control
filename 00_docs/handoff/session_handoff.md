@@ -2,11 +2,26 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-10-29 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 76~80(395~420절): 추가 연구 ①②③·G6P 정리, P-S8-31 E3c10·P-S8-32 LWa·영점 교정 D안 구현·인수, 늦은 LOC·과도 재접촉 FLAG, dynamics 개정 57(5.41)**). 그 전: f062051(개정 75), bee0693(개정 74, P-S8-30 P30fz), 3131552(개정 72·73, G6 하네스·P-S8-29·꼬리 여유·G6 Chrono 기능), 34c806d(개정 69~71, G8·P-S8-28), 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
+- 갱신: 2026-10-29 저녁 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **최종 Chrono S9SL·G6P·연구 ③ 판정, r79 센서 판정 확정, 판정 규칙 Q-A~Q-G(READY 100 s, chatter FLAG, W_plant), 운용 중량 감도 H6·MS1 준비, dynamics 개정 58(5.42)**). 그 전: d99a7e4(개정 76~80, 제어기 수정 3건 인수), f062051(개정 75), bee0693(개정 74, P-S8-30 P30fz), 3131552(개정 72·73, G6 하네스·P-S8-29·꼬리 여유·G6 Chrono 기능), 34c806d(개정 69~71, G8·P-S8-28), 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
 - 세션 기록: 일반 Windows 터미널에서 `claude`를 직접 실행한다(2026-10-26 결정).
 
-## 이번 커밋에서 바뀐 것 (f062051 이후)
+## 이번 커밋에서 바뀐 것 (d99a7e4 이후, 2026-10-29 오후~저녁)
+
+1. **최종 Chrono(최종 코드 d99a7e4)**: S9SL 4건(`07_results/S9/batch_S9SL_20261029_144406`) — C-1 통과, C-2 P3-7만 실패, **C-3(운용 시작 조건 안) 행정 제한 통과**(옛 코드 실패 → 개선), C-4 FAULT(조건 밖, 옛 코드와 같음); G6P S1@FL(`batch_G6P_20261029_144418`) G6-1~6 통과; 평지 p3b_aug·G6P 8건 중 7건 E420 동치(동치 기록 `06_analysis/01_chrono/19_S9/s9_E420_*.json`). 명세 400.1~400.5·409.1·411.1.
+2. **연구 ③(오거 3단계)** 8건 P3 합격(명세 411.1, `rev82/r82_p3b_aug_judgement.json`), J2 B READY 지연 기구 = 탐침 소성 침하 재레벨 회차(dynamics 개정 58 5.42).
+3. **r79 센서 판정 확정**: 종합표 v3 `06_analysis/02_control/s8/rev79/r79_final_judgement_v3.json`(재실행 341 병합). Q-E L2 S1 전방 제외 12/855 = 1.40 %, CP 2.26 % ≤ 3 % 합격(L3·L4 기록). 영점 교정 move skip 0.
+4. **판정 규칙 결정(decision_log 5절, 명세 413·421~423)**: Q-A P3-6 READY 한계 연약·패드 B 100 s(Chrono 판정기 반영 포함), Q-F 압력 센서 오차 conservative 등급 이하(CLAUDE.md 센서 행), Q-G `P3-1_threshold_chatter` FLAG, 판정 중량 W_plant(422.6).
+5. **운용 중량 감도**: H6 32건(`rev82/r82_mass_scale.json`, Q-G 재판정 `r82_mass_scale_rejudged_qg.json`) — J1 B +10 % 상단 불합격·중단 경계·하단 통과, +20 % FAULT. Chrono 확인 MS1(`run_S9.py --mass-scale`, `batch_MS1_20261029_183324`, J1 B 상단 ×1.1) 실행 중(22:00쯤). 
+6. 코드: `run_S9.py`(mass_scale, MS1 묶음, W_plant, chatter, P3-6 한계 표), `late_loc_rule.py`(chatter 상수·재분류), 하네스 판정기(r72·r79·`s9_soil_slope.py`·래퍼), `r79_sensor_judge.py`(judge-merged, S-4 chatter). 시험 추가.
+
+## 다음 할 일 (2026-10-29 저녁 커밋 뒤)
+
+1. MS1 끝나면 `run_S9.py rejudge 07_results/S9/batch_MS1_20261029_183324` → control 판정(하네스 상단 ×1.1 불합격과 대조) → **사용자 결정 Q-D**(J1 패드 B 운용 중량 대응: (가) 패드 B 범위 제한 / (나) 새 LOC 규칙 / (다) 패드 A 표준)와 **Q-C**(r79 G6-3 대각 하중 7건)를 함께 메시지 박스로.
+2. 결정 반영·무결성 점검·커밋 → 논문 v4(사용자 사전 승인: 초안·리뷰·반영, 원고 커밋 안 함).
+3. 작업 끝나면 사용자에게 Microsoft Store 자동 업데이트 다시 켜기 알림(11-01 13:06 Windows Update 일시 중지 만료 전).
+
+## d99a7e4에서 바뀐 것 (f062051 이후)
 
 1. **이전 세션 미기록분 정리**(10-28 오후~29 새벽 추가 연구, 이전 세션 20:46 종료): 명세 개정 76(정착 훅 p0 유지)·77(연구 ① 연약 지면 × 경사 177)·78(수정 후보)·79(연구 ② 센서 오차 r79 L0~L2)·80(G6P·p3b_aug·논문 최대 압력 표). dynamics 개정 57 5.41(경사 크롤러 정착 표, 정착 판정 v2 근거, S1 전방 S-5 = 지지력 파괴 계열). cad `chrono_build_plan.md` S9 실행기 확장·**재시작·분리 실행(WMI)** 절, README.
 2. **제어기 수정 3건(R8 프리셋 `with_10hz_d1()`에서만, 클래스 기본 옛 동작)**: P-S8-31 **E3c10**(`SlopeClearanceMarginSettings`, 결정 11), 영점 교정 **D안**(`zero_calibration.py` `return_timeout_tolerance_m` 0.5 mm, 결정 9 — `_move` 복귀 판정이 행정 잡음 + 하드 스톱 때문에 다리당 약 10 % `skipped: move`이던 결함), P-S8-32 **LWa**(`LiftoffWindowReapproachSettings` restart, 결정 12). 시험 `test_c2_p31.py`·`test_c2_p32.py`·`test_zero_calibration.py`.
@@ -15,7 +30,7 @@
 5. **평지 Chrono 8건**(`07_results/S9/batch_G6P_20261029_103815`·`batch_p3b_aug_20261029_103815`·`_120112`, git 제외): G6P J1@RR·J2 A 2·S1 B 2 = 최종 결과(E420 동치), G6P S1@FL = 비동치(LW 전 참조, 재실행), S1 A 2건 실행 중(최종 코드). 새벽 중단 폴더 `_005120`·`_021432`는 결과 없음 → 삭제(사용자 결정).
 6. **중단 원인**: 10-28 20:46 Microsoft Store PowerShell 자동 업데이트(`TerminateApplications`)가 Store판 pwsh를 종료 → 그 안의 Claude 세션 전부 host_exit, 10-29 02:46 Windows Update 재부팅. 지금은 Windows Update 일시 중지(11-01 13:06까지)·Store 자동 업데이트 끔(사용자가 작업 끝나면 다시 켬).
 
-## 다음 할 일 (2026-10-29 커밋 뒤)
+### d99a7e4 당시 다음 할 일 (기록)
 
 1. **최종 Chrono 5건**(사용자 사전 승인, 인수 통과 조건): S9SL C4·C2 → P 2병렬, C3·C1·G6P S1@FL → E(cpu-scheduler 배치표, 명세 420.5). 약 4~5 h. WMI 분리 + 창 제목. long-running-task-monitor 15분 점검.
 2. r79 L3·L4·선택 수준(L3 seed 0·1은 14:35 E코어 실행 중, `rev79/r79_L3_all_s01_final.json`; L1·L2 재실행 `r79_L1L2_all_final.json` P코어 실행 중) → control 제안 문턱으로 S-1~S-6 **잠정** 판정(사용자 결정, 확정은 사용자).

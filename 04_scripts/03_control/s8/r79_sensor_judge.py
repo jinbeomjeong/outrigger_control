@@ -21,7 +21,11 @@ judge     every run of a sensor level (L2, L3, ...) against the L1 run of the sa
       (CHECK-end relative) whose started leg has a true sample drop < 1 kN AND true force
       >= 3.5 F_min; the absolute condition with an L1 counterpart = baseline record; miss
       (design) = L1 paused, the level did not, and after the departure the true minimum
-      < F_min or > 5 kN below L1; gate LOC - departure <= 2.9 s and no re-contact (new vs L1).
+      < F_min or > 5 kN below L1; gate LOC - departure <= 2.9 s and no re-contact (new vs L1);
+      spec 407.2 (3): with the U-S9-G6d classes (``r79.recontact_events``) only a ``strict_fail``
+      recontact counts, a ``transient_flag`` one is the FLAG ``S4_transient_recontact``.
+  S-1 uses the harness gates as written by r72 (G6-1 U-S9-G6d ``crawler_gate``, G6-2 with the
+      419.8 FLAG; the final L1 / L2 records carry the 419.8 record ``late_loc_reapproach``).
   S-5 LOC (new against L1): fail = L1 < 0.01 W but the level >= 0.01 W crawler true load (period
       maximum) at the LOC, or more than 0.01 W above L1; L1 >= 0.01 W = S5_baseline record.
   S-6 FAULT names that L1 has not: 0; new WARN names recorded.
@@ -31,6 +35,14 @@ Rates: failures / runs with the one-sided Clopper-Pearson 95 % upper bound
 Usage (any env with numpy + scipy):
   python -I r79_sensor_judge.py identity <run_json> [<run_json> ...]
   python -I r79_sensor_judge.py judge <out_json> <run_json> [<run_json> ...]
+  python -I r79_sensor_judge.py judge-merged <out_json> <rerun_json>[,<rerun_json>...]
+                                             <run_json> [<run_json> ...]
+    spec 407.2 (5): the runs of the re-run files (comma list, no key twice) replace the same
+    keys of the stored runs (their command hashes must be the stored ones: reported in
+    ``merge``), then judge as above.
+Spec 423.3 / 423.4 (decision Q-G): the recorded recontacts are re-classified with the
+threshold-chatter class (``late_loc_rule``); S-1 re-judges G6-1 with it and S-4 counts a chatter
+recontact as the FLAG ``S4_threshold_chatter`` only (re-judgement, command hashes unchanged).
 """
 
 from __future__ import annotations
@@ -43,6 +55,11 @@ from pathlib import Path
 from scipy.stats import beta
 
 ROOT = Path(__file__).resolve().parents[3]
+S9_DIR = ROOT / "04_scripts" / "03_control" / "s9"
+if str(S9_DIR) not in sys.path:
+    sys.path.insert(0, str(S9_DIR))
+
+import late_loc_rule  # noqa: E402  (spec 423.3 chatter class, shared with run_S9.py)
 BASELINE_DIR = ROOT / "06_analysis" / "02_control" / "s8" / "rev76"
 BASELINE_FILES = ("r76_g6_Pb.json", "r76_g8_ft_Pb.json", "r76_g8_sw_Pb.json")
 BASELINE_VARIANT = "Pb"
@@ -65,6 +82,14 @@ GUARD_WARNINGS = ("WARN_LIFT_STROKE_LIMITED", "FAULT_LIFT_STROKE_LIMIT")
 CONFIDENCE = 0.95
 REFERENCE_LEVEL = "L1"
 NOT_JUDGED_LEVELS = ("L0", "L1")
+STRICT_RECONTACT = late_loc_rule.CLASS_STRICT
+TRANSIENT_RECONTACT = late_loc_rule.CLASS_TRANSIENT
+CHATTER_RECONTACT = late_loc_rule.CLASS_CHATTER
+S4_TRANSIENT_FLAG = "S4_transient_recontact"
+"""Spec 407.2 (3): a U-S9-G6d transient recontact is not an S-4 failure, only this FLAG."""
+S4_CHATTER_FLAG = "S4_threshold_chatter"
+"""Spec 423.4: a threshold-chatter recontact (423.3) is not an S-4 failure, only this FLAG."""
+G61_GATE = "G6-1_crawler"
 
 
 def clopper_pearson_upper(failures: int, runs: int) -> float | None:
@@ -118,14 +143,77 @@ def identity_rows(results: list[dict], baseline: dict[str, tuple[str, bool]]) ->
 
 
 # --------------------------------------------------------------------------------------- judge rows
-def harness_verdict(base: dict) -> bool:
+def _stored_recontact_events(run: dict) -> dict | None:
+    """The recorded U-S9-G6d events (run_S9 form) of a run: ``r79.recontact_events`` or the r72
+    ``crawler_recontact``; None for records made before the 1 ms record existed."""
+    summary = run.get("r79", {}).get("recontact_events")
+    if summary is not None:
+        return {"events": summary["events"], "pass": summary["pass"], "flags": summary["flags"]}
+    record = run.get("base", {}).get("crawler_recontact")
+    return None if record is None else record["recontact_events"]
+
+
+def recontact_events_of(run: dict) -> dict | None:
+    """Recorded recontacts with the spec 423.3 threshold-chatter class (re-judgement only:
+    t_LOC and W of the run, departure threshold 0.01 W, READY time)."""
+    events = _stored_recontact_events(run)
+    if events is None:
+        return None
+    summary = run["r79"]
+    threshold_N = late_loc_rule.DEPARTURE_FRACTION_OF_W * float(summary["W_N"])
+    return late_loc_rule.reclassify_recontacts(events, summary.get("t_loc_s"), threshold_N,
+                                               _ready_time(run))
+
+
+def g61_gate(run: dict) -> tuple[bool | None, dict]:
+    """G6-1 of a stored G6 / ref run re-judged with the 423.3 classes (None: no G6-1 gate).
+
+    The stored gate is ``crawler 0 after READY and no strict recontact``. The READY part is
+    read from ``base.crawler_N_max_after_ready`` when recorded; otherwise it follows from the
+    stored gate when the stored events passed, or from ``r79.n_recontact_after_off == 0`` (no
+    crawler load after the first crawler-free period, which precedes READY); failing both it
+    is assumed true (reported as ``ready_part_assumed``)."""
+    gates = run["base"].get("gates") or {}
+    if G61_GATE not in gates:
+        return None, {}
+    stored_gate = bool(gates[G61_GATE])
+    events_stored = _stored_recontact_events(run)
+    events = recontact_events_of(run)
+    if events is None:
+        return stored_gate, {"rule": "stored (no recontact record)"}
+    ready_load = run["base"].get("crawler_N_max_after_ready")
+    is_assumed = False
+    if ready_load is not None:
+        is_ready_clear = ready_load == 0.0
+    elif events_stored["pass"]:
+        is_ready_clear = stored_gate
+    elif run["r79"].get("n_recontact_after_off") == 0:
+        # the r79 truth log saw no crawler load after the first crawler-free period, which
+        # comes before READY: the READY window was clear
+        is_ready_clear = True
+    else:
+        is_ready_clear, is_assumed = True, True
+    gate = bool(is_ready_clear and events["pass"])
+    classes = [event["class"] for event in events["events"]]
+    return gate, {"stored": stored_gate, "gate": gate, "classes": classes,
+                  "flags": events["flags"] if gate else [],
+                  "switched_to_flag": (not stored_gate) and gate,
+                  "ready_part_assumed": is_assumed}
+
+
+def harness_verdict(base: dict, run: dict | None = None) -> bool:
     """Harness pass with the G6 pre-LOC FLAG rules of r72_judge.py (decision 2 / U-S9-G6c):
     G6-7 counts as passed when every pre-LOC started leg kept its true minimum >= F_min, or when
-    it did not but G6-3 holds and the run has no FAULT. G8 records keep their own ``pass``."""
+    it did not but G6-3 holds and the run has no FAULT. G8 records keep their own ``pass``.
+    With ``run`` the G6-1 gate is re-judged with the spec 423.3 classes (:func:`g61_gate`)."""
     gates = base.get("gates")
     if not gates or "G6-7_preloc" not in gates:
         return bool(base.get("pass"))
     gates = dict(gates)
+    if run is not None:
+        gate, _ = g61_gate(run)
+        if gate is not None:
+            gates[G61_GATE] = gate
     no_fault = base.get("final_phase") not in ("fault", "fault_reground")
     if not gates["G6-7_preloc"]:
         flag_ok = base.get("preloc_flag_ok")
@@ -223,6 +311,28 @@ def judge_s3(run: dict, ref: dict) -> dict:
                                               "window_rise_kN")} for e in s["twist_relax"][:6]]}
 
 
+def _recontact_classes(run: dict) -> list[str] | None:
+    """U-S9-G6d + 423.3 classes of the run's recontacts after the departure confirmation (spec
+    407.2), from the recorded events; None for older records."""
+    events = recontact_events_of(run)
+    return None if events is None else [event["class"] for event in events["events"]]
+
+
+def _new_recontact(run: dict, ref: dict) -> tuple[bool, list[str]]:
+    """S-4 gate "no re-contact after the departure (new against L1)": with the U-S9-G6d classes
+    only a ``strict_fail`` recontact counts (L1 without one); a ``transient_flag`` one is the
+    FLAG ``S4_transient_recontact``, a ``threshold_chatter`` one (423.3) the FLAG
+    ``S4_threshold_chatter``. Records without the classes keep the harness count."""
+    classes, classes_ref = _recontact_classes(run), _recontact_classes(ref)
+    if classes is None or classes_ref is None:
+        return (run["r79"]["n_recontact_after_off"] > 0
+                and ref["r79"]["n_recontact_after_off"] == 0), []
+    is_new = STRICT_RECONTACT in classes and STRICT_RECONTACT not in classes_ref
+    flags = [flag for flag, name in ((S4_TRANSIENT_FLAG, TRANSIENT_RECONTACT),
+                                     (S4_CHATTER_FLAG, CHATTER_RECONTACT)) if name in classes]
+    return is_new, flags
+
+
 def judge_s4(run: dict, ref: dict) -> dict:
     """control-expert rule (failure new against L1); the design's absolute misfire recorded."""
     s, s_ref = run["r79"], ref["r79"]
@@ -245,11 +355,12 @@ def judge_s4(run: dict, ref: dict) -> dict:
     loc_ok = s["loc_minus_off_s"] is not None and s["loc_minus_off_s"] <= LOC_DELAY_MAX_S
     loc_ok_ref = (s_ref["loc_minus_off_s"] is not None
                   and s_ref["loc_minus_off_s"] <= LOC_DELAY_MAX_S)
-    recontact_new = s["n_recontact_after_off"] > 0 and s_ref["n_recontact_after_off"] == 0
+    recontact_new, recontact_flags = _new_recontact(run, ref)
     gate_fail = (loc_ok_ref and not loc_ok) or recontact_new
+    flags = (["S4_baseline"] if baseline else []) + recontact_flags
     return {"ok": not (new_bad or miss or gate_fail), "fail_misfire_new": bool(new_bad),
-            "miss": miss, "gate_fail": gate_fail,
-            "flags": ["S4_baseline"] if baseline else [],
+            "miss": miss, "gate_fail": gate_fail, "recontact_new": recontact_new,
+            "flags": flags,
             "absolute_misfire": bool(bad), "absolute_misfire_L1": bool(bad_pauses(s_ref)),
             "n_pauses": len(s["lift_pauses"]), "loc_minus_off_s": s["loc_minus_off_s"],
             "n_recontact_after_off": s["n_recontact_after_off"],
@@ -285,9 +396,10 @@ def judge_s6(run: dict, ref: dict) -> dict:
 
 
 def judge_run(run: dict, ref: dict) -> dict:
-    verdict, verdict_ref = harness_verdict(run["base"]), harness_verdict(ref["base"])
+    verdict, verdict_ref = harness_verdict(run["base"], run), harness_verdict(ref["base"], ref)
+    _, g61 = g61_gate(run)
     rows = {"S-1": {"ok": not (verdict_ref and not verdict), "L1_pass": verdict_ref,
-                    "pass": verdict},
+                    "pass": verdict, "g6_1": g61},
             "S-2": judge_s2(run, ref), "S-3": judge_s3(run, ref), "S-4": judge_s4(run, ref),
             "S-5": judge_s5(run, ref), "S-6": judge_s6(run, ref)}
     ready, ready_ref = _ready_time(run), _ready_time(ref)
@@ -332,7 +444,13 @@ def aggregate(judged: list[dict]) -> list[dict]:
         entry["flags"] = {
             flag: sum(1 for r in rows if flag in r["rows"][name].get("flags", []))
             for name, flag in (("S-3", "S3_true_over_band"), ("S-4", "S4_baseline"),
+                               ("S-4", S4_TRANSIENT_FLAG), ("S-4", S4_CHATTER_FLAG),
                                ("S-5", "S5_baseline"))}
+        # spec 423.4 acceptance: G6-1 strict failures switched to the chatter FLAG
+        entry["g6_1_switched_to_chatter_flag"] = sum(
+            1 for r in rows if r["rows"]["S-1"]["g6_1"].get("switched_to_flag"))
+        entry["g6_1_ready_part_assumed"] = sum(
+            1 for r in rows if r["rows"]["S-1"]["g6_1"].get("ready_part_assumed"))
         table.append(entry)
     return table
 
@@ -346,7 +464,9 @@ def reference_table(results: list[dict]) -> list[dict]:
             buckets[case_group(r["harness"], r["inner"])].append(r)
             buckets["all"].append(r)
     return [{"group": group, "runs": len(rows),
-             "harness_pass": sum(harness_verdict(r["base"]) for r in rows),
+             "harness_pass": sum(harness_verdict(r["base"], r) for r in rows),
+             "g6_1_switched_to_chatter_flag": sum(
+                 1 for r in rows if g61_gate(r)[1].get("switched_to_flag")),
              "false_loc": sum(is_false_loc(r) for r in rows),
              "zero_cal_failed": sum(1 for r in rows
                                     if not r["zero_calibration"]["all_calibrated"]),
@@ -402,8 +522,32 @@ def summary_lines(report: dict) -> list[str]:
     return lines
 
 
+def merge_reruns(stored: list[dict], reruns: list[dict]) -> tuple[list[dict], dict]:
+    """Spec 407.2 (5): replace the stored runs by the re-runs of the same key.
+
+    Returns the merged results and a ``merge`` record: replaced keys, re-run keys without a
+    stored run, and the keys whose command hash differs from the stored run (must be none: the
+    controller is the same, only the record grew)."""
+    by_key = {r["key"]: r for r in reruns}
+    merged, replaced, hash_differs = [], [], []
+    for run in stored:
+        rerun = by_key.get(run["key"])
+        if rerun is None:
+            merged.append(run)
+            continue
+        replaced.append(run["key"])
+        if ("error" in run or "error" in rerun
+                or _command_hash(run["base"]) != _command_hash(rerun["base"])):
+            hash_differs.append(run["key"])
+        merged.append(rerun)
+    stored_keys = {r["key"] for r in stored}
+    return merged, {"replaced": len(replaced), "rerun_runs": len(reruns),
+                    "rerun_without_stored": sorted(set(by_key) - stored_keys),
+                    "hash_differs": hash_differs, "replaced_keys": replaced}
+
+
 def main() -> None:
-    if len(sys.argv) < 3 or sys.argv[1] not in ("identity", "judge"):
+    if len(sys.argv) < 3 or sys.argv[1] not in ("identity", "judge", "judge-merged"):
         raise SystemExit(__doc__)
     if sys.argv[1] == "identity":
         rows = identity_rows(_load_results(sys.argv[2:]), load_baseline_hashes())
@@ -414,7 +558,22 @@ def main() -> None:
         print(sum(r["identical"] for r in rows), "/", len(rows), "identical")
         return
     out_path = Path(sys.argv[2])
-    report = judge_results(_load_results(sys.argv[3:]))
+    if sys.argv[1] == "judge-merged":
+        if len(sys.argv) < 5:
+            raise SystemExit(__doc__)
+        rerun_files = [path for path in sys.argv[3].split(",") if path]
+        reruns = _load_results(rerun_files)
+        keys = [r["key"] for r in reruns]
+        duplicated = sorted({key for key in keys if keys.count(key) > 1})
+        if duplicated:
+            raise SystemExit(f"re-run key in more than one re-run file: {duplicated[:5]}")
+        results, merge = merge_reruns(_load_results(sys.argv[4:]), reruns)
+        report = {"merge": {**merge, "rerun_files": rerun_files, "stored_files": sys.argv[4:]},
+                  **judge_results(results)}
+        print("merge: replaced", merge["replaced"], "of", merge["rerun_runs"], "re-runs, hash differs",
+              len(merge["hash_differs"]), "without stored run", len(merge["rerun_without_stored"]))
+    else:
+        report = judge_results(_load_results(sys.argv[3:]))
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(report, indent=1, default=float), encoding="utf-8")
     print("\n".join(summary_lines(report)))

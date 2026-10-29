@@ -1,0 +1,200 @@
+{
+ "rule": "spec 420.4 (2026-10-29): (a) INFO_LOC_CLEARANCE_MARGIN 0, (b) WARN_PRESSURE_ZERO_SKIPPED:*:move (pre-implementation code -> re-run) / INFO_PRESSURE_ZERO_RETURN_TOL (final), (c) leg_reapproach_start before the LOC 0 (419.7) when the run had no LWa; code_state from result.code_state or controller_meta",
+ "rows": {
+  "G6_G1_B_top_Fs4_spJ1RR": {
+   "case": "G6_G1_B_top_Fs4_spJ1RR",
+   "code_state": {
+    "state": "pre_impl",
+    "rules_present": {
+     "slope_clearance_margin": false,
+     "liftoff_window_reapproach": false,
+     "zero_calibration_return_tol": false
+    },
+    "rules_on": {
+     "slope_clearance_margin": false,
+     "liftoff_window_reapproach": false,
+     "zero_calibration_return_tol": false
+    },
+    "missing": [
+     "slope_clearance_margin",
+     "liftoff_window_reapproach",
+     "zero_calibration_return_tol"
+    ],
+    "slope_clearance_margin": null,
+    "liftoff_window_reapproach": null,
+    "zero_calibration_return_timeout_tolerance_m": null,
+    "basis": "C2 meta keys (spec 420.4 (1)); committed vs uncommitted only by files_at_start SHA-256",
+    "files_at_start": null,
+    "source": "controller_meta"
+   },
+   "started_local": "2026-10-29T10:38:15",
+   "a_loc_clearance_margin": {
+    "events": [],
+    "count": 0,
+    "rule_in_code": false,
+    "status": "not_applicable",
+    "settle_tilt_deg": [
+     0.00013420827359147115,
+     0.15118441304083682
+    ],
+    "settle_tilt_source": "settle_reference.end_roll_pitch_deg (true body attitude, last settle second)",
+    "settle_tilt_max_deg": 0.15118441304083682,
+    "tilt_le_1deg": true
+   },
+   "b_zero_calibration": {
+    "move_skip_events": [],
+    "move_skipped_legs": [],
+    "return_tol_events": [],
+    "all_calibrated": true,
+    "is_active": true,
+    "legs": {
+     "FL": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "FR": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "RL": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "RR": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     }
+    },
+    "return_timeout_tolerance_m": null,
+    "rule_in_code": false,
+    "status": "ok"
+   },
+   "c_pre_loc_reapproach": {
+    "t_loc_s": 33.099999999975275,
+    "reapproach_starts_before_loc": [],
+    "count": 0,
+    "window_restarts": [],
+    "rule_in_code": false,
+    "status": "ok"
+   },
+   "equivalent": true,
+   "reasons": []
+  },
+  "G6_G1_B_top_Fs4_spS1FL": {
+   "case": "G6_G1_B_top_Fs4_spS1FL",
+   "code_state": {
+    "state": "pre_impl",
+    "rules_present": {
+     "slope_clearance_margin": false,
+     "liftoff_window_reapproach": false,
+     "zero_calibration_return_tol": false
+    },
+    "rules_on": {
+     "slope_clearance_margin": false,
+     "liftoff_window_reapproach": false,
+     "zero_calibration_return_tol": false
+    },
+    "missing": [
+     "slope_clearance_margin",
+     "liftoff_window_reapproach",
+     "zero_calibration_return_tol"
+    ],
+    "slope_clearance_margin": null,
+    "liftoff_window_reapproach": null,
+    "zero_calibration_return_timeout_tolerance_m": null,
+    "basis": "C2 meta keys (spec 420.4 (1)); committed vs uncommitted only by files_at_start SHA-256",
+    "files_at_start": null,
+    "source": "controller_meta"
+   },
+   "started_local": "2026-10-29T10:38:15",
+   "a_loc_clearance_margin": {
+    "events": [],
+    "count": 0,
+    "rule_in_code": false,
+    "status": "not_applicable",
+    "settle_tilt_deg": [
+     0.00013420827359147115,
+     0.15118441304083682
+    ],
+    "settle_tilt_source": "settle_reference.end_roll_pitch_deg (true body attitude, last settle second)",
+    "settle_tilt_max_deg": 0.15118441304083682,
+    "tilt_le_1deg": true
+   },
+   "b_zero_calibration": {
+    "move_skip_events": [],
+    "move_skipped_legs": [],
+    "return_tol_events": [],
+    "all_calibrated": true,
+    "is_active": true,
+    "legs": {
+     "FL": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "FR": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "RL": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "RR": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     }
+    },
+    "return_timeout_tolerance_m": null,
+    "rule_in_code": false,
+    "status": "ok"
+   },
+   "c_pre_loc_reapproach": {
+    "t_loc_s": 38.10000000014126,
+    "reapproach_starts_before_loc": [
+     [
+      34.00000000000515,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      35.40000000005163,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      36.200000000078184,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      36.90000000010142,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      37.8000000001313,
+      "leg_reapproach_start:RR"
+     ]
+    ],
+    "count": 5,
+    "window_restarts": [],
+    "rule_in_code": false,
+    "status": "not_equivalent"
+   },
+   "equivalent": false,
+   "reasons": [
+    "(c) re-approach start before the LOC on code without LWa"
+   ]
+  }
+ },
+ "not_level": [],
+ "missing": [],
+ "all_equivalent": false,
+ "values_only": "equivalence evidence; the verdict on using the runs is control's",
+ "source_batch": "07_results/S9/batch_G6P_20261029_103815",
+ "generator": "04_scripts/02_chrono/s9_batch_summary.py"
+}

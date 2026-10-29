@@ -36,7 +36,8 @@ Usage (repo root, dynamics-dev, MKL_THREADING_LAYER=TBB, OMP_NUM_THREADS=1):
 Env: R79_LEVELS (comma, default L1), R79_SET (default identity), R79_SEEDS (comma list of seed
   indices; default per level 0..n-1), R79_FILTER (substrings, any match keeps a job),
   R79_AFFINITY (hex mask on the parent, inherited by the workers), R79_TRACE=1 (keep the 10 Hz
-  truth log in the record), R79_ROD_MODEL = dyn_map (default) | harness | extend_vent
+  truth log in the record; the G6 recontact intervals ``r79.recontact_events`` of spec 407.2 are
+  kept without it), R79_ROD_MODEL = dyn_map (default) | harness | extend_vent
   (``ROD_MODELS``; the last two for comparison).
 """
 
@@ -810,8 +811,27 @@ def run_job(key: str) -> dict:
         out["error"] = base.get("error", "no controller / plant captured")
         return out
     out.update(_run_summary(run, plant))
+    out["r79"]["recontact_events"] = recontact_summary(base)
     out["wall_s"] = round(time.perf_counter() - t_wall, 1)
     return out
+
+
+RECONTACT_EVENT_KEYS = ("t_start_s", "t_end_s", "duration_s", "max_normal_N", "max_over_W",
+                        "ended_before_loc", "class")
+
+
+def recontact_summary(base: dict) -> dict | None:
+    """Spec 407.2 (2): U-S9-G6d recontact intervals of a G6 run (r72 ``crawler_recontact``, the
+    run_S9 ``recontact_events`` on the 1 ms crawler force), kept without ``R79_TRACE``; None for
+    a harness record without them (G8)."""
+    record = base.get("crawler_recontact")
+    if record is None:
+        return None
+    events = record["recontact_events"]
+    return {"t_departure_confirmed_s": record["departure"].get("t_confirmed_s"),
+            "pass": events["pass"], "flags": events["flags"],
+            "events": [{key: event[key] for key in RECONTACT_EVENT_KEYS}
+                       for event in events["events"]]}
 
 
 def _run_summary(run: ActiveRun, plant) -> dict:

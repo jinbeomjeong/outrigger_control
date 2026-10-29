@@ -310,7 +310,9 @@ def job(key):
     min_off = out.get("min_true_Fcyl_after_off_kN")
     # spec 420.2b (U-S9-G6d (가)): recontacts after the departure confirmation by the run_S9 classes
     weight_N = None if plant is None else float(plant.m * plant.g)
-    recontact = late_loc_rule.crawler_recontact_record(_CAP.get("crawler_series"), weight_N, t_loc)
+    # spec 423.3 (Q-G): + threshold chatter just after the LOC (FLAG P3-1_threshold_chatter)
+    recontact = late_loc_rule.crawler_recontact_record(_CAP.get("crawler_series"), weight_N, t_loc,
+                                                       out.get("t_ready_s"))
     is_crawler_ok, crawler_flags = late_loc_rule.crawler_gate(
         out.get("crawler_N_max_after_ready") == 0.0, recontact, out.get("n_crawler_recontact", 1))
     g = {
@@ -355,6 +357,7 @@ def job(key):
         "key": key, "soil": soil, "base": base, "weak_leg": weak_leg, "level": level, "fs_kN": case["fs_kN"],
         "gates": g, "pass": all(g.values()), "flags": flags, "late_loc_reapproach": late_loc,
         "crawler_recontact": recontact,
+        "crawler_N_max_after_ready": out.get("crawler_N_max_after_ready"),
         "t_loc_s": t_loc, "t_off_s": t_off, "t_ready_s": out.get("t_ready_s"), "t_done_s": t_done,
         "loc_delay_s": None if t_loc is None or t_off is None else round(t_loc - t_off, 2),
         "t_P_s": getattr(soil_state, "plateau_start_s", None),

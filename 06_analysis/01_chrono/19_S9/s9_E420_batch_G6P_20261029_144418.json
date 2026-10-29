@@ -1,0 +1,161 @@
+{
+ "rule": "spec 420.4 (2026-10-29): (a) INFO_LOC_CLEARANCE_MARGIN 0, (b) WARN_PRESSURE_ZERO_SKIPPED:*:move (pre-implementation code -> re-run) / INFO_PRESSURE_ZERO_RETURN_TOL (final), (c) leg_reapproach_start before the LOC 0 (419.7) when the run had no LWa; code_state from result.code_state or controller_meta",
+ "rows": {
+  "G6_G1_B_top_Fs4_spS1FL": {
+   "case": "G6_G1_B_top_Fs4_spS1FL",
+   "code_state": {
+    "state": "impl_final_rules",
+    "rules_present": {
+     "slope_clearance_margin": true,
+     "liftoff_window_reapproach": true,
+     "zero_calibration_return_tol": true
+    },
+    "rules_on": {
+     "slope_clearance_margin": true,
+     "liftoff_window_reapproach": true,
+     "zero_calibration_return_tol": true
+    },
+    "missing": [],
+    "slope_clearance_margin": {
+     "settings": {
+      "enable": true,
+      "tilt_min_rad": 0.017453292519943295,
+      "margin_m": 0.03,
+      "require_soil_use": false,
+      "min_clearance_at_P_m": 0.01
+     },
+     "is_applied": false,
+     "t_applied_s": null,
+     "clearance_target_m": 0.05,
+     "settle_attitude_deg": null
+    },
+    "liftoff_window_reapproach": {
+     "mode": "restart",
+     "restarts": 5
+    },
+    "zero_calibration_return_timeout_tolerance_m": 0.0005,
+    "basis": "C2 meta keys (spec 420.4 (1)); committed vs uncommitted only by files_at_start SHA-256",
+    "files_at_start": {
+     "outrigger_sim.control.c2": {
+      "path": "03_src/outrigger_sim/control/c2.py",
+      "sha256": "25c95edf00114decb4a10cff993249221bc3a13d5f004c0e83eb4f0017e98605",
+      "size": 408652,
+      "mtime_utc": "2026-10-29T03:06:53+00:00"
+     },
+     "outrigger_sim.control.zero_calibration": {
+      "path": "03_src/outrigger_sim/control/zero_calibration.py",
+      "sha256": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+      "size": 19300,
+      "mtime_utc": "2026-10-29T01:40:26+00:00"
+     },
+     "taken_utc": "2026-10-29T05:44:20+00:00"
+    },
+    "source": "result.code_state"
+   },
+   "started_local": "2026-10-29T14:44:18",
+   "a_loc_clearance_margin": {
+    "events": [],
+    "count": 0,
+    "rule_in_code": true,
+    "status": "ok",
+    "settle_tilt_deg": [
+     0.00013420827359147115,
+     0.15118441304083682
+    ],
+    "settle_tilt_source": "settle_reference.end_roll_pitch_deg (true body attitude, last settle second)",
+    "settle_tilt_max_deg": 0.15118441304083682,
+    "tilt_le_1deg": true
+   },
+   "b_zero_calibration": {
+    "move_skip_events": [],
+    "move_skipped_legs": [],
+    "return_tol_events": [],
+    "all_calibrated": true,
+    "is_active": true,
+    "legs": {
+     "FL": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "FR": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "RL": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "RR": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     }
+    },
+    "return_timeout_tolerance_m": 0.0005,
+    "rule_in_code": true,
+    "status": "ok"
+   },
+   "c_pre_loc_reapproach": {
+    "t_loc_s": 39.100000000174454,
+    "reapproach_starts_before_loc": [
+     [
+      34.00000000000515,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      35.40000000005163,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      36.200000000078184,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      36.90000000010142,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      37.8000000001313,
+      "leg_reapproach_start:RR"
+     ]
+    ],
+    "count": 5,
+    "window_restarts": [
+     [
+      34.00000000000515,
+      "INFO_LOC_WINDOW_RESTART:RR"
+     ],
+     [
+      35.40000000005163,
+      "INFO_LOC_WINDOW_RESTART:RR"
+     ],
+     [
+      36.200000000078184,
+      "INFO_LOC_WINDOW_RESTART:RR"
+     ],
+     [
+      36.90000000010142,
+      "INFO_LOC_WINDOW_RESTART:RR"
+     ],
+     [
+      37.8000000001313,
+      "INFO_LOC_WINDOW_RESTART:RR"
+     ]
+    ],
+    "rule_in_code": true,
+    "status": "final_code"
+   },
+   "equivalent": true,
+   "reasons": []
+  }
+ },
+ "not_level": [],
+ "missing": [],
+ "all_equivalent": true,
+ "values_only": "equivalence evidence; the verdict on using the runs is control's",
+ "source_batch": "07_results/S9/batch_G6P_20261029_144418",
+ "generator": "04_scripts/02_chrono/s9_batch_summary.py"
+}

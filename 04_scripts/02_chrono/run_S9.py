@@ -298,6 +298,9 @@ def p3b_level_argv(c: dict[str, Any]) -> list[str]:
         out[-1:-1] = ["--floor-roll", f"{roll:g}", "--floor-pitch", f"{pitch:g}"]
     if c.get("start_limit", START_LIMIT_PRESET) != START_LIMIT_PRESET:
         out[-1:-1] = ["--start-limit", c["start_limit"]]
+    # MS1 rows only (Q-D, 2026-10-29): plant superstructure mass scale
+    if float(c.get("mass_scale", 1.0)) != 1.0:
+        out[-1:-1] = ["--mass-scale", f"{float(c['mass_scale']):g}"]
     return out
 
 
@@ -531,6 +534,91 @@ def s9sl_cases(include_draft: bool = False) -> list[dict[str, Any]]:
             s9sl_case("C-2", "J1", "A", 4.4, 0.0, purpose="crawler roll settle asymmetry, slope LOC / S-3"),
             s9sl_case("C-3", "J1", "B", 3.3, 0.0, purpose="roll inside the operating diamond: false LOC -> re-contact"),
             s9sl_case("C-4", "J1", "A", 0.0, 3.2, duration_s=200.0, purpose="J1 REANCHOR (preset on), 200 s")]
+
+
+MASS_SCALE_NOTE = ("spec 422 / decision Q-D (2026-10-29): Chrono plant superstructure body (rigid, crawler included) "
+                   "mass and inertia about its COG x mass_scale, COG kept (= s9_soil_closed_loop.scale_plant_mass); leg "
+                   "rods / pads unchanged; controller unchanged (YAML nominal mass, W_ref, D1'' mass); the 8 s settle "
+                   "runs on the scaled body in Chrono (no A1-m settle approximation); judgement weight p3b.weight_N "
+                   "= plant weight (scaled), P3-7 loaded window 0.01 W_plant = 0.01 mass_scale W_ref (spec 422.6)")
+MS1_EST_S = 12500.0
+"""MS1 wall estimate [s], one E-pool case (ASSUMPTION): J1 B / G1 B cost ratio on the P cores 8.69 / 5.10 ms/step
+(P3B_US_PER_STEP_UPPER note) x E-pool G1 B 5.08 ms/step (S9SL C-1, batch_S9SL_20261029_144406, E 2 slots) = 8.7
+ms/step x 128 s / 1e-4 = 11,100 s, + about 12 % for the deeper rear-pad sinkage at x1.1 (harness 422.5: about 200
+against 90 mm). P-core reference: P3b_J1_B_top_Fs4 7,058 s (5.51 ms/step, batch_P3b_20261027_174330, P 2 slots)."""
+
+
+def ms1_cases() -> list[dict[str, Any]]:
+    """MS1 (decision Q-D, 2026-10-29, spec 422.5): ``P3b_J1_B_top_Fs4`` (P3b settings: J1, pad B, top, F_s 4 kN,
+    120 s, pressure normal / IMU ideal / seed 20261026) with the plant superstructure mass x 1.1
+    (``level --mass-scale 1.1``, :func:`apply_mass_scale`). ``pair_case`` = the x1.0 P3b run."""
+    c = p3b_case("MS1", "J1", "B", "top", 4.0)
+    c.update(case=c["case"] + "_m1p1", mass_scale=1.1, pair_case="P3b_J1_B_top_Fs4", est_s=MS1_EST_S,
+             note="pair P3b_J1_B_top_Fs4; plant superstructure mass x1.1 (Q-D, harness H6 422.5 J1 B top x1.1 fail)")
+    return [c]
+
+
+def apply_mass_scale(model: Any, params: Any, mass_scale: float) -> dict[str, Any]:
+    """``level --mass-scale``: superstructure body mass / inertia (about the COG, body axes) x ``mass_scale`` on the
+    built Chrono model, COG position unchanged (:data:`MASS_SCALE_NOTE`). 1.0 leaves the body untouched (bit for
+    bit). Returns the record block (values read back from the body)."""
+    s = float(mass_scale)
+    if not (s > 0.0 and math.isfinite(s)):
+        raise ValueError(f"mass_scale must be a finite value > 0, got {mass_scale!r}")
+    props = params.superstructure.mass_properties
+    body = model.superstructure
+    if s != 1.0:
+        import pychrono as ch  # noqa: PLC0415
+
+        i = np.asarray(props.inertia_kg_m2, dtype=float) * s
+        body.SetMass(float(props.mass_kg) * s)
+        body.SetInertiaXX(ch.ChVector3d(i[0, 0], i[1, 1], i[2, 2]))
+        body.SetInertiaXY(ch.ChVector3d(i[0, 1], i[0, 2], i[1, 2]))
+    xx, xy = body.GetInertiaXX(), body.GetInertiaXY()
+    return {"mass_scale": s, "note": MASS_SCALE_NOTE,
+            "yaml_superstructure_mass_kg": float(props.mass_kg),
+            "plant_superstructure_mass_kg": float(body.GetMass()),
+            "plant_superstructure_inertia_cog_body_kg_m2": [[float(xx.x), float(xy.x), float(xy.y)],
+                                                             [float(xy.x), float(xx.y), float(xy.z)],
+                                                             [float(xy.y), float(xy.z), float(xx.z)]],
+            "plant_weight_N": model_weight_N(params, s),
+            "plant_superstructure_weight_N": float(body.GetMass()) * G,
+            "yaml_weight_N": model_weight_N(params)}
+
+
+def mass_scale_record(mass_block: dict[str, Any], c2: Any, ctl_meta: dict[str, Any] | None) -> dict[str, Any]:
+    """Result block ``mass_scale``: :func:`apply_mass_scale` values + the controller reference weight W_ref (C2,
+    unchanged by the scale), the plant / W_ref ratio of the superstructure and the WARN_WEIGHT_MISMATCH events."""
+    soil = (ctl_meta or {}).get("soil") or {}
+    w_ref = soil.get("W_ref_N")
+    if w_ref is None and hasattr(c2, "_reference_weight_N"):
+        w_ref = float(c2._reference_weight_N())
+    out = dict(mass_block)
+    out["controller_weight_ref_N"] = None if w_ref is None else float(w_ref)
+    out["plant_over_W_ref"] = (None if not w_ref else out["plant_superstructure_weight_N"] / float(w_ref))
+    out["weight_mismatch_events"] = [[float(e.t_s), str(e.name)] for e in getattr(c2, "events", ())
+                                     if str(e.name).startswith("WARN_WEIGHT_MISMATCH")]
+    return out
+
+
+def judgement_weights(mass_scale: float, weight_N: float | None, w_ref_N: float | None,
+                      f_min_N: float | None) -> dict[str, Any]:
+    """Which weight each P3 rule uses (spec 422.6, control 2026-10-29); result and rejudge meta (record only)."""
+    s = float(mass_scale)
+    w_plant = None if w_ref_N is None else s * float(w_ref_N)
+    return {"mass_scale": s,
+            "weight_N": weight_N,
+            "W_ref_N": w_ref_N,
+            "W_plant_N": w_plant,
+            "P3-7_loaded_threshold_N": None if w_plant is None else P37_LOADED_FRACTION * w_plant,
+            "F_min_N": f_min_N,
+            "F_min_x_mass_scale_record_N": None if f_min_N is None else s * float(f_min_N),
+            "basis": {"weight_N": "p3b.weight_N = plant weight (superstructure x mass_scale + leg moving parts) x g: "
+                                  "departure / re-contact 0.01 W rules, settle normal checks",
+                      "W_plant_N": "mass_scale x W_ref (plant superstructure): P3-7 loaded-window threshold (422.6)",
+                      "W_ref_N": "C2 meta soil.W_ref_N (YAML nominal, controller): W ratio, WARN_WEIGHT_MISMATCH, S-1 "
+                                 "plausibility / reconstruction, P3-7 0.05 W record bucket",
+                      "F_min_N": "P3-3 uses the YAML F_min; F_min x mass_scale is a record only"}}
 
 
 CRAWLER_GAP_STEP_M = 0.1
@@ -1671,16 +1759,64 @@ confirmation that lasts <= 0.5 s, ends before the LOC and peaks <= 0.15 W is a F
 (after the LOC, longer, larger, or not ended before the LOC / no LOC) fails P3-1. W = the P3-1 / P3a-2 W."""
 
 
+P31_CHATTER_FLAG = "P3-1_threshold_chatter"
+"""User decision Q-G (2026-10-29, spec 423.3): a recontact after the LOC that starts within
+``CHATTER_AFTER_LOC_S`` of it, lasts <= ``CHATTER_MAX_DURATION_S`` and peaks <= ``CHATTER_MAX_OVER_THRESHOLD`` x the
+departure limit (0.01 W, the same W) is class ``threshold_chatter`` = FLAG; anything else after the LOC stays
+``strict_fail``. The READY-window crawler-zero clause is unchanged (strict)."""
+_CHATTER_DEFAULTS = {"CHATTER_AFTER_LOC_S": 1.0, "CHATTER_MAX_DURATION_S": 0.1, "CHATTER_MAX_OVER_THRESHOLD": 1.2,
+                     "TIME_TOLERANCE_S": 1e-9}
+"""Spec 423.4 values; the shared module ``04_scripts/03_control/s9/late_loc_rule.py`` (python) is the source once it
+defines them (:func:`chatter_constants`); these defaults carry the same names until then."""
+_LATE_LOC_RULE = ROOT / "04_scripts" / "03_control" / "s9" / "late_loc_rule.py"
+
+
+def chatter_constants() -> dict[str, Any]:
+    """Q-G constants from ``late_loc_rule`` (loaded by file path, no sys.path change) when it defines all three,
+    else :data:`_CHATTER_DEFAULTS`; ``source`` names which (recorded in the rule block)."""
+    cached = getattr(chatter_constants, "_cache", None)
+    if cached is not None:
+        return cached
+    vals, source = dict(_CHATTER_DEFAULTS), "run_S9 defaults (late_loc_rule.py has no CHATTER_* constants)"
+    try:
+        import importlib.util  # noqa: PLC0415
+
+        mod = sys.modules.get("late_loc_rule")
+        if mod is None or not all(hasattr(mod, k) for k in vals):
+            spec = importlib.util.spec_from_file_location("_late_loc_rule_constants", _LATE_LOC_RULE)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)  # light module: numpy / sys / pathlib at import (run_S9 lazily)
+        if all(hasattr(mod, k) for k in vals):
+            vals = {k: float(getattr(mod, k)) for k in vals}
+            source = "04_scripts/03_control/s9/late_loc_rule.py"
+    except Exception as e:  # noqa: BLE001 - fall back to the spec values
+        source = f"run_S9 defaults (late_loc_rule import failed: {type(e).__name__})"
+    out = {**vals, "source": source}
+    chatter_constants._cache = out
+    return out
+
+
 def recontact_events(t: np.ndarray, crawler_n: np.ndarray, weight_N: float, departure: dict[str, Any],
-                     t_loc_s: float | None, *, fraction: float = P3A_OFF_FRACTION) -> dict[str, Any]:
+                     t_loc_s: float | None, *, fraction: float = P3A_OFF_FRACTION,
+                     t_ready_s: float | None = None) -> dict[str, Any]:
     """Every recontact after the departure confirmation (crawler SCM normal >= ``fraction`` W, the P3-1 /
     P3a-2 limit): start, end (first row back below the limit; None = still loaded at the run end),
     duration, maximum normal [N] and / W, ended before the LOC, class ``transient_flag`` /
-    ``strict_fail`` (:data:`P31_TRANSIENT_FLAG` rule). ``pass`` = no strict-fail event; ``flags`` =
-    [P31_TRANSIENT_FLAG] when a transient event exists. Absolute times [s]."""
-    out: dict[str, Any] = {"rule": f"U-S9-G6d (가): duration <= {P31_TRANSIENT_MAX_S:g} s, ended before the LOC, "
-                                   f"max <= {P31_TRANSIENT_MAX_W:g} W -> FLAG; else fail",
-                           "limit_N": fraction * weight_N, "weight_N": weight_N, "t_loc_s": t_loc_s,
+    ``threshold_chatter`` / ``strict_fail`` (:data:`P31_TRANSIENT_FLAG`, :data:`P31_CHATTER_FLAG` rules). ``pass``
+    = no strict-fail event; ``flags`` = the FLAG of each class present. Absolute times [s]."""
+    cc = chatter_constants()
+    after_s, dur_max, over = cc["CHATTER_AFTER_LOC_S"], cc["CHATTER_MAX_DURATION_S"], cc["CHATTER_MAX_OVER_THRESHOLD"]
+    tol = cc["TIME_TOLERANCE_S"]
+    limit = fraction * weight_N
+    out: dict[str, Any] = {"rule": f"U-S9-G6d + Q-G chatter: before the LOC, duration <= {P31_TRANSIENT_MAX_S:g} s, "
+                                   f"ended before the LOC, max <= {P31_TRANSIENT_MAX_W:g} W -> transient FLAG; after "
+                                   f"the LOC, start <= t_LOC + {after_s:g} s, duration <= {dur_max:g} s, max <= "
+                                   f"{over:g} x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = "
+                                   "late_loc_rule.is_threshold_chatter); else strict fail",
+                           "limit_N": limit, "weight_N": weight_N, "t_loc_s": t_loc_s, "t_ready_s": t_ready_s,
+                           "chatter": {"after_loc_s": after_s, "max_duration_s": dur_max, "max_over_limit": over,
+                                       "max_normal_N": over * limit, "time_tolerance_s": tol,
+                                       "constants_source": cc["source"]},
                            "events": [], "pass": True, "flags": []}
     t_c = departure.get("t_confirmed_s")
     if not departure.get("departed") or t_c is None:
@@ -1704,13 +1840,22 @@ def recontact_events(t: np.ndarray, crawler_n: np.ndarray, weight_N: float, depa
         before_loc = bool(t_loc_s is not None and t_end is not None and t_end <= t_loc_s + 1e-12)
         transient = bool(t_end is not None and dur <= P31_TRANSIENT_MAX_S + 1e-12 and before_loc
                          and peak <= P31_TRANSIENT_MAX_W * weight_N)
+        # Q-G (spec 423.3): after the LOC, early, short and small
+        chatter = bool(not transient and t_loc_s is not None and t_end is not None
+                       and t_loc_s + tol < t_start <= t_loc_s + after_s + tol
+                       and dur <= dur_max + tol and peak <= over * limit
+                       and (t_ready_s is None or t_start < t_ready_s))
         out["events"].append({"t_start_s": t_start, "t_end_s": t_end, "duration_s": dur, "max_normal_N": peak,
-                              "max_over_W": peak / weight_N, "ended_before_loc": before_loc,
-                              "class": "transient_flag" if transient else "strict_fail"})
+                              "max_over_W": peak / weight_N, "max_over_limit": peak / limit,
+                              "ended_before_loc": before_loc,
+                              "start_after_loc_s": None if t_loc_s is None else t_start - t_loc_s,
+                              "class": "transient_flag" if transient else ("threshold_chatter" if chatter
+                                                                           else "strict_fail")})
         k = k1
-    out["pass"] = all(e["class"] == "transient_flag" for e in out["events"])
-    if any(e["class"] == "transient_flag" for e in out["events"]):
-        out["flags"] = [P31_TRANSIENT_FLAG]
+    classes = [e["class"] for e in out["events"]]
+    out["pass"] = "strict_fail" not in classes
+    out["flags"] = ([P31_TRANSIENT_FLAG] if "transient_flag" in classes else []) + (
+        [P31_CHATTER_FLAG] if "threshold_chatter" in classes else [])
     return out
 
 
@@ -1970,8 +2115,10 @@ def p3a_lift_records(rows: list[dict[str, Any]], node_rows: list[dict[str, Any]]
 # --- P3 record keys (dynamics 5.34.6) -------------------------------------------------------------------
 
 
-def model_weight_N(params) -> float:
-    return (params.superstructure.mass_properties.mass_kg + sum(leg.moving_part.mass_kg for leg in params.legs)) * G
+def model_weight_N(params, mass_scale: float = 1.0) -> float:
+    """Superstructure (x ``mass_scale``, :func:`apply_mass_scale`) + leg moving parts, times g [N]."""
+    return (params.superstructure.mass_properties.mass_kg * float(mass_scale)
+            + sum(leg.moving_part.mass_kg for leg in params.legs)) * G
 
 
 P3_HOLD_WINDOW_S = 10.0
@@ -2066,6 +2213,34 @@ P3B_BUDGET_RESIDUAL_DEG = 0.04
 P3B_END_WINDOW_S = 1.0
 P3B_DONE_SHIFT_S = 5.0
 P3B_READY_LIMIT_S = 90.0
+"""P3-6 READY limit of a flat case outside the soft-soil pad-B row (spec 421.1; former single limit)."""
+P3B_READY_SLOPE_LIMIT_S = 120.0
+P3B_READY_SOFT_PAD_B_LIMIT_S = 100.0
+P3B_READY_SOFT_SOILS = ("J1", "J2", "S1")
+P3B_READY_PAD_B_VARIANT = "dwg_rear250"
+
+
+def p36_ready_limit(case: dict[str, Any] | None) -> dict[str, Any]:
+    """P3-6 READY limit of spec 421.1 (decision Q-A; first matching row, = the harness ``s9_soil_slope.ready_limit_s``):
+    floor slope (roll or pitch != 0) 120 s; flat with pad B (``dwg_rear250``) and both rear pads (RL, RR) on J1 / J2 /
+    S1 100 s; any other flat case 90 s. ``case``: the level args (``soil``, ``pad_variant``, ``floor_roll`` /
+    ``floor_pitch`` [deg], ``soil_patch`` ``LEG:SET``); None or missing keys = flat G1-type (90 s)."""
+    c = case or {}
+    roll, pitch = float(c.get("floor_roll") or 0.0), float(c.get("floor_pitch") or 0.0)
+    patch = parse_soil_patch(c.get("soil_patch"))
+    base = c.get("soil")
+    rear = [patch[1] if patch is not None and patch[0] == leg else base for leg in ("RL", "RR")]
+    if roll != 0.0 or pitch != 0.0:
+        limit, row = P3B_READY_SLOPE_LIMIT_S, "slope"
+    elif c.get("pad_variant") == P3B_READY_PAD_B_VARIANT and all(s in P3B_READY_SOFT_SOILS for s in rear):
+        limit, row = P3B_READY_SOFT_PAD_B_LIMIT_S, "flat, pad B, both rear pads on J1 / J2 / S1"
+    else:
+        limit, row = P3B_READY_LIMIT_S, "flat, other"
+    return {"limit_s": limit, "row": row, "rear_pad_soils": rear, "floor_deg": [roll, pitch],
+            "pad_variant": c.get("pad_variant"),
+            "rule": "spec 421.1 (Q-A): slope 120 s / flat pad B both rear pads J1-J2-S1 100 s / other flat 90 s"}
+
+
 P3B_RUT_CLEARANCE_MIN_M = 0.025
 P3B_LOC_AFTER_DEPARTURE_S = 2.0
 P3B_LIFTOFF_TRANSIENT_S = 8.0
@@ -2732,8 +2907,9 @@ set to 1.0 s (slightly below the observed max, not rounded up)."""
 P37_RISE_MIN_N = 4000.0
 """P3-7: minimum S-1 window rise per plateau_window_m on the crawler-loaded windows (spec 284 / 310)."""
 P37_LOADED_FRACTION = 0.01
-"""P3-7 loaded window: crawler true normal at the window end > this x W_ref (spec rev. 60 310, U-S9P-15
-(가): "0.01 W = 3.77 kN", W_ref = C2 meta ``soil.W_ref_N`` = YAML superstructure mass x g, 376.58 kN).
+"""P3-7 loaded window: crawler true normal at the window end > this x W_plant (spec rev. 60 310, U-S9P-15
+(가): "0.01 W = 3.77 kN"; spec 422.6: W_plant = mass_scale x W_ref, W_ref = C2 meta ``soil.W_ref_N`` = YAML
+superstructure mass x g, 376.58 kN, so W_plant = W_ref at mass_scale 1).
 The departure rule's 0.01 W uses ``p3b.weight_N`` (+ leg moving parts, 380.1 kN, 3.80 kN); the spec
 number and control's p3b_loc_detail.json window counts follow W_ref."""
 P37_RECORD_GT_N = 1000.0
@@ -3036,25 +3212,37 @@ def _rise_bucket(windows: list[dict[str, Any]], t: np.ndarray, cn: np.ndarray, t
 
 def p37_plateau_block(t: np.ndarray, cn: np.ndarray, phases: list[tuple[float, str]],
                       rec: dict[str, np.ndarray] | None, areas: dict[str, list[float]] | None,
-                      soil_meta: dict[str, Any] | None, v_max_m_s: float | None) -> dict[str, Any]:
+                      soil_meta: dict[str, Any] | None, v_max_m_s: float | None,
+                      mass_scale: float = 1.0) -> dict[str, Any]:
     """P3-7 plateau margin (spec 284, rev. 60 U-S9P-15 (가), C-S9-60-3): reconstruct the S-1 windows
     (:func:`s1_window_reconstruct`) from the 10 Hz readings of ``record.npz`` (load = sum of
     ``p_h A_p - p_r A_ann``, mean ``meas.stroke``, same-sample ``u_applied``; zero offsets drop
     out of the slope), gate: reconstructed t_P / t_loc = C2 meta ``soil`` within 1e-6 s. Judgement:
-    the windows ending with the crawler true normal (1 ms) > 0.01 W_ref rise >= 4 kN; none = pass
+    the windows ending with the crawler true normal (1 ms) > 0.01 W_plant rise >= 4 kN; none = pass
     (``no_loaded_window``). Records: > 1 kN and > 0.05 W_ref minima, and the same on the truth
     (``F_cyl`` sum, mean ``s_motor``, own LOC). ``t`` / ``cn`` = 1 ms series [s] / [N]; W_ref =
-    C2 meta ``soil.W_ref_N`` (:data:`P37_LOADED_FRACTION`)."""
+    C2 meta ``soil.W_ref_N`` (:data:`P37_LOADED_FRACTION`).
+
+    Spec 422.6 (control, 2026-10-29): the loaded-window threshold is ``0.01 W_plant``, ``W_plant = mass_scale x W_ref``
+    (plant superstructure weight, the W_ref basis; = W_ref at scale 1, bit for bit). W_ref stays the controller value
+    for the S-1 reconstruction (plausibility) and the 0.05 W record bucket."""
     soil_meta = soil_meta or {}
     w_ref = soil_meta.get("W_ref_N")
-    thr = None if w_ref is None else P37_LOADED_FRACTION * float(w_ref)
+    s = float(mass_scale)
+    w_plant = None if w_ref is None else s * float(w_ref)
+    thr = None if w_plant is None else P37_LOADED_FRACTION * w_plant
     out: dict[str, Any] = {
         "criterion": "spec rev. 60, U-S9P-15 (가): S-1 window rise per plateau_window_m >= "
                      f"{P37_RISE_MIN_N / 1e3:g} kN on the windows whose end crawler true normal > {P37_LOADED_FRACTION:g}"
-                     f" W_ref; none = pass; > {P37_RECORD_GT_N / 1e3:g} kN (former definition) and > "
+                     f" W_plant (422.6: mass_scale x W_ref); none = pass; > {P37_RECORD_GT_N / 1e3:g} kN (former "
+                     "definition) and > "
                      f"{P37_RECORD_FRACTION_HI:g} W_ref are records; gate: reconstructed t_P / t_loc = C2 meta within "
                      f"{P37_GATE_TOL_S:g} s",
-        "loaded_threshold_N": thr, "W_ref_N": w_ref, "reconstruct_ok": False, "within": None}
+        "loaded_threshold_N": thr, "W_ref_N": w_ref, "reconstruct_ok": False, "within": None,
+        "mass_scale": s, "W_plant_N": w_plant,
+        "loaded_threshold_basis": ("spec 422.6: 0.01 W_plant, W_plant = mass_scale x W_ref (plant superstructure "
+                                   "weight; = W_ref at mass_scale 1); W_ref (C2) for the S-1 reconstruction and the "
+                                   "0.05 W record bucket")}
     settings = soil_meta.get("settings") or {}
     if rec is None or areas is None or v_max_m_s is None or not settings or w_ref is None:
         out["reason"] = "inputs missing (record arrays, cylinder areas, v_max, C2 soil settings or W_ref)"
@@ -3200,7 +3388,7 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
         p31["crawler_zero"] = bool(w.any() and cn[w].max() <= 0.0)
     p31.update(recontact_t_s=dep.get("recontact_t_s"), recontact_count=dep.get("recontact_count"))
     # U-S9-G6d (가): recontact events with their class (transient FLAG / strict fail)
-    p31["recontact_events"] = recontact_events(t, cn, w_n, dep, t_loc)
+    p31["recontact_events"] = recontact_events(t, cn, w_n, dep, t_loc, t_ready_s=t_ready)
     out["P3-1_crawler"] = p31
     # P3-2 LOC (spec rev. 60 T_lim)
     p32 = p32_loc_block(t, cn, w_n, t_loc=t_loc, t_dep=t_dep, t_done=t_done,
@@ -3274,12 +3462,14 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
                                                        s_motor_max_m=sm.max(axis=0).tolist(),
                                                        s_motor_limit_m=ctx["s_motor_limit_m"], probe_sinkage=probe_iv)
     # P3-6 READY time
+    p36 = p36_ready_limit(ctx.get("case_args"))
     out["P3-6_ready"] = {"t_ready_after_loop_start_s": None if t_ready is None else t_ready - t0,
-                         "limit_s": P3B_READY_LIMIT_S, "ASSUMPTION": "90 s (reduced max 68.1 s x 1.3)",
-                         "within": bool(t_ready is not None and t_ready - t0 <= P3B_READY_LIMIT_S + 1e-9)}
+                         "limit_s": p36["limit_s"], "limit_rule": p36,
+                         "within": bool(t_ready is not None and t_ready - t0 <= p36["limit_s"] + 1e-9)}
     # P3-7 plateau margin (spec rev. 60: S-1 window reconstruction, loaded window > 0.01 W)
     out["P3-7_plateau"] = p37_plateau_block(t, cn, phases, ctx.get("record"), ctx.get("cyl_areas"),
-                                            ctx.get("soil_meta"), ctx.get("v_max_m_s"))
+                                            ctx.get("soil_meta"), ctx.get("v_max_m_s"),
+                                            mass_scale=float(ctx.get("mass_scale", 1.0)))
     # P3-8 false triggers before the LOC, first-touch annotation (J1 note 4)
     t_lim = np.inf if t_loc is None else t_loc
     kinds = ("leg_reapproach_start", "relevel_predicted", "probe_aborted_low_load")
@@ -3330,8 +3520,9 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
 
 SOIL_LOC_EVENT = "crawler_liftoff_confirmed"
 SOIL_MODE_EVENT = "soil_mode_start"
-REJUDGED_BLOCKS = ("P3-2_loc", "P3-5_clearance_stroke", "P3-7_plateau", "checks")
-"""p3b blocks whose definition changed in spec rev. 60 (C-S9-60); every other block must come out equal."""
+REJUDGED_BLOCKS = ("P3-1_crawler", "P3-2_loc", "P3-5_clearance_stroke", "P3-6_ready", "P3-7_plateau", "checks")
+"""p3b blocks whose definition changed (spec rev. 60 C-S9-60; P3-1_crawler: Q-G threshold chatter class, spec 423.3;
+P3-6_ready: spec 421.1 limit rows); every other block must come out equal."""
 REJUDGE_ADDED_KEYS = {"P3-1_crawler": ("recontact_events",)}
 """Keys added to a block after a run (U-S9-G6d, 2026-10-28): left out of the "unchanged block" comparison when the
 stored block lacks them (the other keys of the block must still be equal)."""
@@ -3389,13 +3580,15 @@ def rejudge_case(case_dir: Path, write: bool = True) -> dict[str, Any]:
            "fallback_meta": w61.get("fallback_meta"), "reapproach_history": r.get("c2_lifted_reapproach_history"),
            "reapproach_settings": lr, "soil_meta": r.get("c2_soil"), "record": rec, **p37_plant_inputs(params),
            "control_period_s": (r.get("controller_meta") or {}).get("period_s"),
-           "lwa_on": lwa_on_from_meta(r.get("controller_meta"))}
+           "lwa_on": lwa_on_from_meta(r.get("controller_meta")),
+           "mass_scale": rejudge_mass_scale(r), "case_args": r.get("args")}
     new = _plain(p3b_records(series, r["s9_rows"], events, phases, ctx))
     diffs = sorted(k for k in set(old) | set(new)
                    if k not in REJUDGED_BLOCKS
                    and _canonical(old.get(k)) != _canonical(_without_added(k, new.get(k), old.get(k))))
     out = {"rule": "spec rev. 60 C-S9-60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 S-1 "
-                   "window > 0.01 W; re-judged from the stored records, no Chrono re-run",
+                   "window > 0.01 W_plant (422.6); P3-1 recontact classes U-S9-G6d + Q-G chatter (423.3); re-judged "
+                   "from the stored records, no Chrono re-run",
            "generator": "04_scripts/02_chrono/run_S9.py rejudge", "case": case_dir.name,
            "created_utc": _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds"),
            "inputs_sha256": {n: _file_sha256(case_dir / n) for n in ("result.json", "step_series.npz",
@@ -3403,10 +3596,23 @@ def rejudge_case(case_dir: Path, write: bool = True) -> dict[str, Any]:
            "params_file_sha256": params.file_sha256, "params_file_sha256_run": run_sha,
            "params_file_match": bool(run_sha == params.file_sha256),
            "rejudged_blocks": list(REJUDGED_BLOCKS), "unchanged_blocks_equal": not diffs, "unchanged_block_diffs": diffs,
-           "checks_before": old.get("checks"), "p3b": new}
+           "checks_before": old.get("checks"),
+           "judgement_weights": judgement_weights(ctx["mass_scale"], old["weight_N"],
+                                                  (r.get("c2_soil") or {}).get("W_ref_N"), old["F_min_N"]),
+           "p3b": new}
     if write:
         (case_dir / REJUDGE_FILE).write_text(json.dumps(_plain(out), indent=1, ensure_ascii=False), "utf-8")
     return out
+
+
+def rejudge_mass_scale(r: dict[str, Any]) -> float:
+    """Plant mass scale of a stored ``level`` result: ``mass_scale.mass_scale``, else ``args.mass_scale``, else 1.0
+    (results before the Q-D option)."""
+    blk = r.get("mass_scale")
+    if isinstance(blk, dict) and blk.get("mass_scale") is not None:
+        return float(blk["mass_scale"])
+    v = (r.get("args") or {}).get("mass_scale")
+    return 1.0 if v is None else float(v)
 
 
 def rejudge_targets(paths: list[str]) -> list[Path]:
@@ -3426,7 +3632,9 @@ def run_rejudge(args) -> None:
     for d in rejudge_targets(args.paths):
         res = rejudge_case(d, write=not args.dry_run)
         c, p = res["p3b"]["checks"], res["p3b"]
-        rows[d.name] = {"P3-2": [c["P3-2_within"], c["P3-2_within_2s_record"], c["P3-2_loc_minus_departure_s"]],
+        rows[d.name] = {"P3-1": [c["P3-1_crawler_zero_after_ready"], c["P3-1_recontact_pass"], c["P3-1_flags"],
+                                 c["P3-1_recontact_classes"]],
+                        "P3-2": [c["P3-2_within"], c["P3-2_within_2s_record"], c["P3-2_loc_minus_departure_s"]],
                         "P3-2_verdict": c.get("P3-2_verdict"),
                         "P3-5": [c["P3-5_within"], c["P3-5_rut_clearance_min_after_first_ready_m"]],
                         "P3-7": [c["P3-7_within"], c["P3-7_reconstruct_ok"], c["P3-7_rise_min_loaded_N"],
@@ -3475,6 +3683,9 @@ def run_level(args) -> Path:
     if model.actuator.friction_path != (args.fs_kN > 0.0):
         raise RuntimeError(f"--fs-kN {args.fs_kN:g}: the plant friction path is {model.actuator.friction_path} "
                            "(seal friction override not applied)")
+    # Q-D (2026-10-29): plant superstructure mass / inertia x --mass-scale before the settle (1.0 = untouched)
+    mass_scale = float(getattr(args, "mass_scale", 1.0))
+    mass_block = apply_mass_scale(model, params, mass_scale)
     dashpot = add_settle_dashpot(args, model)
     build_s = time.perf_counter() - tb
     n_settle = round(settle_time_s(args) / model.dt_s)
@@ -3494,7 +3705,7 @@ def run_level(args) -> Path:
     from outrigger_sim.scenarios.slope import floor_normal as _floor_normal
 
     settle_slope = _record_or_error(lambda: settle_slope_record(
-        settle_rec.arrays(), model_weight_N(params), np.asarray(model.normal_world, float),
+        settle_rec.arrays(), model_weight_N(params, mass_scale), np.asarray(model.normal_world, float),
         None if (args.floor_roll == 0.0 and args.floor_pitch == 0.0) else _floor_normal(args.floor_roll,
                                                                                       args.floor_pitch),
         model.system_gravity(), rut))
@@ -3560,7 +3771,7 @@ def run_level(args) -> Path:
     events = [(float(e.t_s), str(e.name)) for e in c2.events]
     limits = p3a_limits(params)
     tp_meta = ctl_meta.get("two_pressure") or {}
-    ctx = {"weight_N": model_weight_N(params), "F_min_N": limits["F_min_cylinder_N"],
+    ctx = {"weight_N": model_weight_N(params, mass_scale), "F_min_N": limits["F_min_cylinder_N"],
            "P5_N": float(c2.geometry.F_min_N + c2.config.thresholds.relevel_load_margin_N),
            "s_motor_limit_m": limits["s_motor_limit_m"], "t_loop_start_s": t_loop0, "settle": settle,
            "T_o_s": (c2_setup["lifted_reapproach"] or {}).get("opposite_window_s"),
@@ -3568,7 +3779,8 @@ def run_level(args) -> Path:
            "reapproach_history": ctl_meta.get("lifted_reapproach"),
            "reapproach_settings": c2_setup["lifted_reapproach"],
            "soil_meta": ctl_meta.get("soil"), "record": p37_record_arrays(d / "record"), **p37_plant_inputs(params),
-           "control_period_s": float(c2.config.period_s), "lwa_on": lwa_on_from_meta(ctl_meta)}
+           "control_period_s": float(c2.config.period_s), "lwa_on": lwa_on_from_meta(ctl_meta),
+           "mass_scale": mass_scale, "case_args": vars(args)}
     p3b = p3b_records(series, soil_rows, events, phases, ctx)
     completion_info = completion.save(d / COMPLETION_SERIES_NAME)
     p3b_ext = p3b_ext_records(series, events, ctl_meta.get("soil"), completion.arrays(),
@@ -3621,6 +3833,10 @@ def run_level(args) -> Path:
                "gravity_schedule": gravity_schedule_meta(args, dashpot),
                "p3_records": p3_records(soil_rows, ctx["weight_N"], p3b["departure"].get("t_departure_s")),
                "p3b": p3b, "p3b_ext": p3b_ext,
+               "mass_scale": _record_or_error(lambda: {
+                   **mass_scale_record(mass_block, c2, ctl_meta),
+                   "judgement_weights": judgement_weights(mass_scale, ctx["weight_N"],
+                                                          (ctl_meta.get("soil") or {}).get("W_ref_N"), ctx["F_min_N"])}),
                "step_series": {"file": "step_series.npz", "rate_s": STEP_SERIES_S,
                                            "keys": sorted(series), "rows": int(len(series["t_s"]))}}
     (d / "result.json").write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), "utf-8")
@@ -3781,6 +3997,9 @@ def build_parser() -> argparse.ArgumentParser:
                          "crawler settle map of --level, record_only = target acceptance off (the harness path; start "
                          "rule only recorded, study ① S9SL rows). Recorded in c2_setup.start_limit")
     lp.add_argument("--note", default=None, help="free case note, kept in result.json args (G6P batch rows)")
+    lp.add_argument("--mass-scale", type=float, default=1.0,
+                    help="plant superstructure mass / inertia factor, COG kept, controller unchanged (Q-D, spec 422; "
+                         "1.0 = unchanged, bit for bit)")
     lp.add_argument("--allow-other-threads", action="store_true",
                     help=f"allow --threads != {SCM_THREADS_FIXED} (comparison only)")
     rj = sub.add_parser("rejudge", help="re-judge finished level cases with the spec rev. 60 P3-2 / 5 / 7 definitions "

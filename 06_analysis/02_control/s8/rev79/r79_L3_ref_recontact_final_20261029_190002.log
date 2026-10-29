@@ -1,0 +1,72 @@
+C2 t=4.30 s: WARN_PRESSURE_ZERO_SKIPPED:FR:grounded
+C2 t=4.30 s: WARN_PRESSURE_ZERO_SKIPPED:FR:grounded
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=40.40 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=4.90 s: WARN_PRESSURE_ZERO_SKIPPED:FL:grounded
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=4.70 s: WARN_PRESSURE_ZERO_SKIPPED:FR:grounded
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=4.50 s: WARN_PRESSURE_ZERO_SKIPPED:RR:grounded
+C2 t=41.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=32.80 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=48.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.788
+C2 t=51.60 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.660
+C2 t=4.60 s: WARN_PRESSURE_ZERO_SKIPPED:FL:grounded
+C2 t=4.50 s: WARN_PRESSURE_ZERO_SKIPPED:FL:grounded
+C2 t=4.50 s: WARN_PRESSURE_ZERO_SKIPPED:FL:grounded
+C2 t=32.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=33.70 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=4.60 s: WARN_PRESSURE_ZERO_SKIPPED:FL:grounded
+C2 t=4.90 s: WARN_PRESSURE_ZERO_SKIPPED:FR:grounded
+C2 t=32.50 s: WARN_ROD_PRESSURE_FALLBACK:RR
+C2 t=4.90 s: WARN_PRESSURE_ZERO_SKIPPED:RL:grounded
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=4.30 s: WARN_PRESSURE_ZERO_IMPLAUSIBLE:RL
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=4.30 s: WARN_PRESSURE_ZERO_SKIPPED:FL:grounded
+C2 t=4.30 s: WARN_PRESSURE_ZERO_SKIPPED:FR:grounded
+C2 t=48.80 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.749
+C2 t=48.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.774
+C2 t=32.60 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=31.60 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=35.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+done 206.6 s -> 06_analysis\02_control\s8\rev79\r79_L3_ref_recontact_final.json
+L3|s0|ref|0|rigid|B|0,0 pass True zero_cal True ready 48.50000000004955 wall 23.8
+L3|s0|ref|1|rigid|B|4.4,0 pass True zero_cal False ready 62.5000000001164 wall 27.3
+L3|s0|ref|2|rigid|B|-4.4,0 pass True zero_cal True ready 62.20000000011497 wall 27.2
+L3|s0|ref|3|rigid|B|0,3.2 pass True zero_cal True ready 62.800000000117834 wall 27.1
+L3|s0|ref|4|rigid|B|0,-3.2 pass True zero_cal False ready 63.30000000012022 wall 27.7
+L3|s0|ref|5|rigid|B|2.2,1.6 pass True zero_cal True ready 61.600000000112104 wall 22.2
+L3|s0|ref|6|rigid|B|-2.2,1.6 pass True zero_cal True ready 61.100000000109716 wall 22.0
+L3|s0|ref|7|rigid|B|2.2,-1.6 pass True zero_cal True ready 61.70000000011258 wall 22.5
+L3|s0|ref|8|rigid|B|-2.2,-1.6 pass True zero_cal False ready 61.200000000110194 wall 22.3
+L3|s0|ref|9|rigid|B|2.7355,1.7592 pass True zero_cal True ready 63.500000000121176 wall 22.6
+L3|s0|ref|10|rigid|B|5.5,0 pass True zero_cal True ready 65.2000000001293 wall 23.6
+L3|s0|ref|11|rigid|B|0,3.5 pass True zero_cal False ready 64.10000000012404 wall 22.9
+L3|s0|ref|12|rigid|B|0,-3.5 pass True zero_cal True ready 64.300000000125 wall 23.4
+L3|s0|ref|13|G1|A|0,0 pass True zero_cal True ready 48.70000000005051 wall 24.7
+L3|s0|ref|14|G1|B|0,0 pass True zero_cal False ready 51.600000000064355 wall 25.8
+L3|s0|ref|15|J1|A|0,0 pass True zero_cal False ready 57.30000000009157 wall 28.1
+L3|s0|ref|16|J1|B|0,0 pass True zero_cal True ready 83.30000000021572 wall 37.6
+L3|s0|ref|17|J2|A|0,0 pass True zero_cal False ready 59.50000000010208 wall 29.0
+L3|s0|ref|18|J2|B|0,0 pass False zero_cal True ready 114.20000000036326 wall 48.5
+L3|s0|ref|19|S1|A|0,0 pass True zero_cal False ready 62.000000000114014 wall 30.0
+L3|s0|ref|20|S1|B|0,0 pass True zero_cal False ready 68.00000000014266 wall 32.4
+L3|s1|ref|0|rigid|B|0,0 pass True zero_cal False ready 48.50000000004955 wall 19.2
+L3|s1|ref|1|rigid|B|4.4,0 pass True zero_cal True ready 62.300000000115446 wall 22.7
+L3|s1|ref|2|rigid|B|-4.4,0 pass True zero_cal False ready 62.10000000011449 wall 22.6
+L3|s1|ref|3|rigid|B|0,3.2 pass True zero_cal True ready 62.800000000117834 wall 21.6
+L3|s1|ref|4|rigid|B|0,-3.2 pass True zero_cal False ready 63.30000000012022 wall 21.8
+L3|s1|ref|10|rigid|B|5.5,0 pass True zero_cal True ready 65.40000000013025 wall 21.8
+L3|s1|ref|11|rigid|B|0,3.5 pass True zero_cal True ready 64.10000000012404 wall 20.8
+L3|s1|ref|12|rigid|B|0,-3.5 pass True zero_cal True ready 64.300000000125 wall 21.2
+L3|s1|ref|13|G1|A|0,0 pass True zero_cal True ready 48.800000000050986 wall 22.9
+L3|s1|ref|14|G1|B|0,0 pass True zero_cal False ready 48.70000000005051 wall 22.6
+L3|s1|ref|15|J1|A|0,0 pass True zero_cal True ready 57.30000000009157 wall 26.1
+L3|s1|ref|16|J1|B|0,0 pass True zero_cal True ready 81.30000000020617 wall 33.7
+L3|s1|ref|17|J2|A|0,0 pass True zero_cal True ready 70.30000000015364 wall 30.2
+L3|s1|ref|18|J2|B|0,0 pass False zero_cal True ready 97.70000000028448 wall 39.3
+L3|s1|ref|19|S1|A|0,0 pass True zero_cal True ready 62.000000000114014 wall 27.2
+L3|s1|ref|20|S1|B|0,0 pass True zero_cal True ready 67.90000000014219 wall 29.3

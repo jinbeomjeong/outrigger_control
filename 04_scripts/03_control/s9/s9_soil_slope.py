@@ -16,6 +16,14 @@ Case sets (177):
                     x k {0.5, 0.75, 0.875} (slope = k x the direction at k = 1)             = 54
   H4 REANCHOR on    soil 4 x pad {B, A} x {(0, 3.2), (0, 2.8)} top + rigid 2 + J1 B (0, -3.2) = 19
   H5 rigid ref      rigid x 8 slopes x top (project controller)                              = 8
+  H6 (spec 422, decision Q-B, only with --groups H6) J1 B operating-weight sensitivity, flat:
+                    J1 B x {top, middle, bottom} x F_s {0, 4} x mass {1.0, 1.1, 1.2} = 18,
+                    J1 A x {top, bottom} x 4 kN x {1.0, 1.1, 1.2} = 6, J2 B x {top, bottom} x
+                    4 kN x {1.0, 1.1} = 4, G1 B x {top, bottom} x 4 kN x 1.2 = 2, rigid B top x
+                    F_s {0, 4} x 1.2 = 2                                                     = 32
+                    Plant mass / inertia x scale only (controller YAML mass, W_ref unchanged;
+                    crawler settle at the nominal weight); records probe rounds (probe and
+                    re-level time per round), weight ratios, WARN_WEIGHT_MISMATCH, rear sink.
 Judgement rows per run (spec 284 P3 rows with rev. 60 and the 377 demotion, plus SL / RA):
   P3-1 crawler 0 from READY to the run end, no re-contact after the first lift-off
   P3-2 LOC before the first DONE, t_LOC - t_off <= 2.9 s
@@ -25,7 +33,8 @@ Judgement rows per run (spec 284 P3 rows with rev. 60 and the 377 demotion, plus
        lowest height of ALL crawler nodes above the harness floor plane (``RUT_DEFINITION``, as
        the G8 screen after r69; the first form, the rise of the settle-contact nodes, missed the
        uphill end shoes on slopes and is kept as ``rut_settle_nodes_mm``)
-  P3-6 READY <= 90 s flat / <= 120 s slope (ASSUMPTION, record)
+  P3-6 READY <= 120 s slope / 100 s flat pad B on J1, J2, S1 (spec 421.1) / 90 s other flat
+       (ASSUMPTION, record)
   P3-7 not computed by this harness (needs the soil-rule rise log, record None)
   P3-8 no re-approach start / probe abort before the LOC; a re-approach start is demoted to a
        FLAG when the started leg keeps true F_cyl >= F_min up to LOC + 1 s and no FAULT (377)
@@ -68,7 +77,8 @@ Usage (project root, dynamics-dev, MKL_THREADING_LAYER=TBB, OMP_NUM_THREADS=1):
   python -I s9_soil_slope.py [--out JSON] [--workers N] [--affinity ecore|pcore|0xMASK]
                              [--groups H1,H2] [--filter SUBSTR,...] [--settle-corrections JSON]
                              [--settle-table JSON [--settle-key hook_harness]]
-                             [--plateau-rise-max-n N] [--list] [--from-json JSON]
+                             [--plateau-rise-max-n N] [--mass-scale X] [--list]
+                             [--from-json JSON]
   --from-json: re-judge the stored rows with the current verdict rules and rewrite the summary
                (no runs; the stored rut clearance keeps its definition).
   --plateau-rise-max-n: LOC plateau rise threshold for every case (U-S9-C2 sensitivity).
@@ -108,6 +118,7 @@ SOILS = ("G1", "J1", "J2", "S1")
 BOUNDARY_SOILS = ("J1", "J2", "S1")
 PADS = ("B", "A")
 LEVEL_TOP = "top"
+LEVEL_MIDDLE = "middle"
 LEVEL_BOTTOM = "bottom"
 FS_KN = 4.0
 RIGID = "rigid"
@@ -130,6 +141,8 @@ REANCHOR_SLOPES_DEG: dict[str, tuple[float, float]] = {
 }
 REANCHOR_EXTRA = (("J1", "B", "nose_up"),)
 GROUP_SIZES = {"H1": 64, "H2": 32, "H3": 54, "H4": 19, "H5": 8}
+"""Default groups (study 1, 177); H6 (spec 422, 32) runs only when named in ``--groups``."""
+H6_SIZE = 32
 
 PRIOR_K_PREDICTION = {
     ("J1", "B"): {"nose_down": 0.84, "roll_pos": 0.94, "edge_nd": 0.90},
@@ -146,6 +159,13 @@ ATTITUDE_TOL_DEG = 0.2
 D8_MARGIN_KN = 5.0
 READY_FLAT_MAX_S = 90.0
 READY_SLOPE_MAX_S = 120.0
+READY_SOFT_PAD_B_MAX_S = 100.0
+"""Spec 421.1 (decision Q-A): flat, pad B, J1 / J2 / S1 under both rear pads (study 1 is uniform)."""
+SOFT_SOILS = ("J1", "J2", "S1")
+PERIOD_LOG_S = 0.1
+"""Control period of the per-period log (a run of n log rows lasts n x 0.1 s)."""
+MASS_SCALE_NOTE = ("spec 422.2: plant mass / inertia scaled, controller YAML mass and W_ref "
+                   "unchanged; crawler settle (pad gaps, settle tilt) at the nominal weight")
 START_ROLL_LIMIT_DEG = 4.4
 START_PITCH_LIMIT_DEG = 3.2
 UNDER_LIFT_MM = 20.0
@@ -274,10 +294,21 @@ class SlopeCase:
     """None (no table given), "applied", "no_table_row" (run uncorrected) or "rigid_reference"."""
     plateau_rise_max_N: float | None = None
     """LOC plateau rise threshold of the soil response (U-S9-C2 sensitivity); None = preset."""
+    fs_kN: float = FS_KN
+    """Front seal friction F_s [kN] (rear 0.833 x); the study-1 groups use 4 kN."""
+    mass_scale: float = 1.0
+    """Spec 422 (decision Q-B): plant superstructure mass / inertia factor (controller unchanged)."""
 
     @property
     def case_id(self) -> str:
-        return f"{self.group}|{self.soil}|{self.pad}|{self.level}|{self.slope_name}"
+        """``group|soil|pad|level|slope``; ``|Fs<f>`` when F_s is not 4 kN and ``|m<scale>`` when
+        the mass is scaled (the ids of the H1 .. H5 cases are unchanged)."""
+        case_id = f"{self.group}|{self.soil}|{self.pad}|{self.level}|{self.slope_name}"
+        if self.fs_kN != FS_KN:
+            case_id += f"|Fs{self.fs_kN:g}"
+        if self.mass_scale != 1.0:
+            case_id += f"|m{self.mass_scale:g}"
+        return case_id
 
     @property
     def settle_key(self) -> str:
@@ -340,14 +371,38 @@ def _reanchor_cases() -> list[SlopeCase]:
     return cases
 
 
+H6_BLOCKS = (
+    # (soil, pad, levels, F_s [kN], mass scales): spec 422.3, flat floor
+    ("J1", "B", (LEVEL_TOP, LEVEL_MIDDLE, LEVEL_BOTTOM), (0.0, 4.0), (1.0, 1.1, 1.2)),
+    ("J1", "A", (LEVEL_TOP, LEVEL_BOTTOM), (4.0,), (1.0, 1.1, 1.2)),
+    ("J2", "B", (LEVEL_TOP, LEVEL_BOTTOM), (4.0,), (1.0, 1.1)),
+    ("G1", "B", (LEVEL_TOP, LEVEL_BOTTOM), (4.0,), (1.2,)),
+    (RIGID, "B", (LEVEL_TOP,), (0.0, 4.0), (1.2,)),
+)
+"""Spec 422.3 (decision Q-B): J1 B operating-weight sensitivity, 18 + 6 + 4 + 2 + 2 = 32 runs."""
+
+
+def _mass_scale_cases() -> list[SlopeCase]:
+    cases = []
+    for soil, pad, levels, fs_values, scales in H6_BLOCKS:
+        for level in levels:
+            for fs_kN in fs_values:
+                for scale in scales:
+                    cases.append(SlopeCase("H6", soil, pad, level, "flat", 0.0, 0.0,
+                                           fs_kN=fs_kN, mass_scale=scale))
+    return cases
+
+
 def build_cases(groups=tuple(GROUP_SIZES)) -> list[SlopeCase]:
-    """All cases of the named groups (default H1..H5 = 177), in group order."""
+    """All cases of the named groups (default H1..H5 = 177; H6 = spec 422 only on request), in
+    group order."""
     builders = {
         "H1": lambda: _grid_cases("H1", SOILS, PADS, LEVEL_TOP),
         "H2": lambda: _grid_cases("H2", SOILS, ("B",), LEVEL_BOTTOM),
         "H3": _boundary_cases,
         "H4": _reanchor_cases,
         "H5": lambda: _grid_cases("H5", (RIGID,), ("B",), LEVEL_TOP),
+        "H6": _mass_scale_cases,
     }
     unknown = [g for g in groups if g not in builders]
     if unknown:
@@ -411,11 +466,14 @@ def attach_settle_table(cases: list[SlopeCase], rows: dict) -> list[SlopeCase]:
 
 def run_case_input(case: dict) -> dict:
     """The ``s9_soil_closed_loop.run_case`` dict of one case."""
-    return {
+    run_input = {
         "id": case["id"], "soil": case["soil"], "pad": case["pad"], "level": case["level"],
-        "fs_kN": FS_KN, "slope": (case["roll_deg"], case["pitch_deg"]),
+        "fs_kN": case.get("fs_kN", FS_KN), "slope": (case["roll_deg"], case["pitch_deg"]),
         "variant": {"reanchor": bool(case["reanchor"])}, "trace": False,
     }
+    if case.get("mass_scale", 1.0) != 1.0:  # spec 422: only scaled cases carry the key
+        run_input["mass_scale"] = float(case["mass_scale"])
+    return run_input
 
 
 # ------------------------------------------------------------------------------- judgement
@@ -445,6 +503,16 @@ def _is_flat(case: dict) -> bool:
     return case["roll_deg"] == 0.0 and case["pitch_deg"] == 0.0
 
 
+def ready_limit_s(case: dict) -> float:
+    """P3-6 READY limit (spec 421.1, first matching row): slope 120 s; flat with pad B on a
+    J1 / J2 / S1 soil (uniform: both rear pads soft) 100 s; any other flat case 90 s."""
+    if not _is_flat(case):
+        return READY_SLOPE_MAX_S
+    if case["pad"] == "B" and case["soil"] in SOFT_SOILS:
+        return READY_SOFT_PAD_B_MAX_S
+    return READY_FLAT_MAX_S
+
+
 def _preloc_rows(rec: dict, t_loc: float | None, has_fault: bool) -> dict:
     """P3-8 with the spec 377 demotion of pre-LOC re-approach starts."""
     events, log, f_min = rec["events"], rec["log"], rec["F_min_kN"]
@@ -463,6 +531,29 @@ def _preloc_rows(rec: dict, t_loc: float | None, has_fault: bool) -> dict:
                           for s in starts))
     return {"pass": not pre_loc or is_demoted, "flag": is_demoted, "events": pre_loc[:6],
             "starts": starts}
+
+
+def _crawler_row(rec: dict, t_loc: float | None, t_ready: float | None) -> dict:
+    """P3-1 (spec 420.2b, U-S9-G6d (가) + 423.3 Q-G): crawler load 0 after READY, READY reached,
+    and no ``strict_fail`` recontact after the departure confirmation (run_S9
+    ``recontact_events`` on the 1 ms crawler force); ``transient_flag`` / ``threshold_chatter``
+    recontacts pass with the FLAGs ``P3-1_transient_recontact`` / ``P3-1_threshold_chatter``.
+    Records without the 1 ms series keep the old rule (no recontact after the first
+    crawler-free period)."""
+    run = rec["run"]
+    recontact = late_loc_rule.crawler_recontact_record(rec.get("crawler_series"),
+                                                       rec.get("weight_N"), t_loc, t_ready)
+    is_crawler_ok, flags = late_loc_rule.crawler_gate(
+        run.get("crawler_N_max_after_ready") == 0.0, recontact, run.get("n_crawler_recontact", 1))
+    is_pass = bool(is_crawler_ok and t_ready is not None)
+    events = None if recontact is None else recontact["recontact_events"]
+    return {"pass": is_pass, "flag": bool(is_pass and flags),
+            "flag_name": flags[0] if is_pass and flags else None,
+            "flag_names": flags if is_pass else [],
+            "crawler_N_max_after_ready": run.get("crawler_N_max_after_ready"),
+            "n_recontact": run.get("n_crawler_recontact"),
+            "recontact_events": events,
+            "departure": None if recontact is None else recontact["departure"]}
 
 
 def _loc_row(rec: dict, t_loc: float | None, t_done: float | None, t_off: float | None,
@@ -500,12 +591,9 @@ def p3_rows(rec: dict) -> dict:
     # records without "rut_ready_mm" (synthetic / older) fall back to the harness READY value
     rut_ready = rec.get("rut_ready_mm", run.get("clear_true_ready_mm"))
     rut_end = rec.get("rut_end_mm")
-    ready_limit = READY_FLAT_MAX_S if _is_flat(case) else READY_SLOPE_MAX_S
+    ready_limit = ready_limit_s(case)
     return {
-        "P3-1": {"pass": bool(run.get("crawler_N_max_after_ready") == 0.0
-                              and run.get("n_crawler_recontact", 1) == 0 and t_ready is not None),
-                 "crawler_N_max_after_ready": run.get("crawler_N_max_after_ready"),
-                 "n_recontact": run.get("n_crawler_recontact")},
+        "P3-1": _crawler_row(rec, t_loc, t_ready),
         "P3-2": _loc_row(rec, t_loc, t_done, t_off, min_off, has_fault),
         "P3-3": {"pass": bool(min_off is not None and min_off >= f_min),
                  "min_true_Fcyl_after_off_kN": min_off,
@@ -762,12 +850,18 @@ def judge_case(rec: dict) -> dict:
     if reanchor is not None:
         rows.update(reanchor)
     verdict = classify(p3, stroke, reanchor)
-    return {"rows": rows, "verdict": _final_verdict(verdict, rec["settle"].get("check")),
+    mass_scale = rec["case"].get("mass_scale", 1.0)
+    return {"rows": rows,
+            "verdict": _final_verdict(verdict, rec["settle"].get("check"), mass_scale),
             "verdict_rows": verdict,
             "failed_rows": sorted(k for k, v in rows.items() if v.get("pass") is False)}
 
 
-def _final_verdict(verdict_rows: str, settle_check: dict | None) -> str:
+def _final_verdict(verdict_rows: str, settle_check: dict | None, mass_scale: float = 1.0) -> str:
+    if mass_scale != 1.0:
+        # spec 422.2: the table settle is the nominal-weight one; a scaled plant sinks the crawler
+        # springs further (about 1.6 mm, 0.03 deg at 1.2), so the check is a record only
+        return verdict_rows
     if settle_check is not None and not settle_check["ok"]:
         # the start state is not the tabled settle: the run is not judged (rows kept)
         return VERDICT_SETTLE_CHECK_FAIL
@@ -788,7 +882,9 @@ def rejudge_stored(result: dict) -> dict:
     verdict = classify(p3, stroke, reanchor)
     check = (result.get("settle") or {}).get("check")
     return {**result, "rows": {**rows, "SL-1": stroke}, "verdict_stored": result["verdict"],
-            "verdict_rows": verdict, "verdict": _final_verdict(verdict, check),
+            "verdict_rows": verdict,
+            "verdict": _final_verdict(verdict, check,
+                                      (result.get("case") or {}).get("mass_scale", 1.0)),
             "rut_definition": result.get("rut_definition", RUT_DEFINITION_OLD)}
 
 
@@ -1126,6 +1222,7 @@ def _soil_state_record(ctrl) -> dict:
             "c_min_tP_mm": None if c_min is None else c_min * 1e3,
             "corner_bias_mm": (np.asarray(soil.corner_bias_m) * 1e3).tolist(),
             "anchor_applied": bool(soil.is_loc_anchor_applied),
+            "weight_ratio": soil.weight_ratio,
             "settle_attitude_deg": None if soil.settle_attitude_rad is None
             else np.degrees(soil.settle_attitude_rad).tolist()}
 
@@ -1176,6 +1273,7 @@ def collect_record(case: dict, out: dict, sl, cl) -> dict:
         "case": case,
         "F_min_kN": ctrl.geometry.F_min_N / 1e3,
         "weight_N": float(plant.m * plant.g) if hasattr(plant, "m") else None,
+        "controller_weight_ref_N": float(ctrl._reference_weight_N()),
         "crawler_series": _CAP.get("crawler_series") or [],
         "rod_weight_kN": (np.asarray(plant.Wr, float) / 1e3).tolist(),
         "run": {key: out.get(key) for key in RUN_KEYS},
@@ -1195,6 +1293,52 @@ def collect_record(case: dict, out: dict, sl, cl) -> dict:
     }
 
 
+def phase_segments(log: dict) -> list[tuple[str, float, float]]:
+    """(phase, start, end) of the unbroken runs of the 10 Hz phase log [s]."""
+    segments: list[list] = []
+    for t_s, phase in zip(log["t_s"], log["phase"], strict=True):
+        if segments and segments[-1][0] == phase:
+            segments[-1][2] = t_s
+        else:
+            segments.append([phase, t_s, t_s])
+    return [(phase, start, end) for phase, start, end in segments]
+
+
+def probe_round_record(log: dict) -> dict:
+    """Spec 422.3: probe rounds (PROBE entries) with each probe's duration and the re-level
+    (LEVEL run) that follows it [s]."""
+    segments = phase_segments(log)
+    rounds = []
+    for index, (phase, start, end) in enumerate(segments):
+        if phase != "probe":
+            continue
+        following = segments[index + 1] if index + 1 < len(segments) else None
+        relevel_s = None
+        if following is not None and following[0] == "level":
+            relevel_s = round(following[2] - following[1] + PERIOD_LOG_S, 2)
+        rounds.append({"probe_start_s": round(start, 2),
+                       "probe_s": round(end - start + PERIOD_LOG_S, 2), "relevel_s": relevel_s})
+    return {"n_probe_rounds": len(rounds), "n_probe_rounds_ge_3": len(rounds) >= 3,
+            "rounds": rounds}
+
+
+def _weight_record(record: dict) -> dict:
+    """Spec 422.3: plant weight against the controller W_ref and the LOC W_hat / W_ref."""
+    run = record["run"]
+    return {"mass_scale": record["case"].get("mass_scale", 1.0),
+            "plant_weight_N": record.get("weight_N"),
+            "controller_weight_ref_N": record.get("controller_weight_ref_N"),
+            "plant_over_controller_W": (None if not record.get("controller_weight_ref_N")
+                                        or record.get("weight_N") is None
+                                        else record["weight_N"] / record["controller_weight_ref_N"]),
+            "loc_weight_ratio": record["soil_state"].get("weight_ratio"),
+            "warn_weight_mismatch": [n for _, n in record["events"]
+                                     if n.startswith("WARN_WEIGHT_MISMATCH")],
+            "rear_sink_final_mm": (None if run.get("sink_final_mm") is None
+                                   else run["sink_final_mm"][2:]),
+            "note": MASS_SCALE_NOTE if record["case"].get("mass_scale", 1.0) != 1.0 else None}
+
+
 def _compact(record: dict, verdict: dict) -> dict:
     """Stored result: the record without the per-period log, events filtered."""
     events = [(round(t, 2), n) for t, n in record["events"]
@@ -1205,6 +1349,8 @@ def _compact(record: dict, verdict: dict) -> dict:
             "soil_state": record["soil_state"], "rut_definition": record["rut_definition"],
             "rut_ready_mm": record["rut_ready_mm"], "rut_end_mm": record["rut_end_mm"],
             "rut_settle_nodes_mm": record["rut_settle_nodes_mm"],
+            # spec 422.3 records (every run; H6 reads them)
+            "probe_rounds": probe_round_record(record["log"]), "weight": _weight_record(record),
             "warnings": sorted({n for _, n in record["events"]
                                 if n.startswith(("WARN", "FAULT"))}),
             "events": events[:200], "wall_s": record["run"].get("wall_s")}
@@ -1289,6 +1435,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--plateau-rise-max-n", type=float, default=None,
                         help="LOC plateau rise threshold [N] for every case (U-S9-C2 sensitivity; "
                              "default: preset 2000)")
+    parser.add_argument("--mass-scale", type=float, default=None,
+                        help="spec 422: plant mass / inertia factor for every selected case "
+                             "(controller unchanged; id suffix |m<scale>); H6 sets its own")
     parser.add_argument("--list", action="store_true", help="print the case ids and stop")
     parser.add_argument("--from-json", type=Path, default=None,
                         help="rebuild the summary of an existing result file (no runs)")
@@ -1314,6 +1463,8 @@ def select_cases(args) -> list[SlopeCase]:
         cases = [c for c in cases if any(n in c.case_id for n in needles)]
     if args.plateau_rise_max_n is not None:
         cases = [replace(c, plateau_rise_max_N=args.plateau_rise_max_n) for c in cases]
+    if args.mass_scale is not None:  # spec 422: every selected case (H6 carries its own scales)
+        cases = [replace(c, mass_scale=args.mass_scale) for c in cases]
     return cases
 
 
@@ -1372,6 +1523,10 @@ def main() -> None:
                 "sha256": _file_sha256(args.settle_table),
                 "status_counts": dict(Counter(c.settle_table_status for c in cases))},
             "fs_kN": FS_KN, "plateau_rise_max_N": args.plateau_rise_max_n,
+            "fs_kN_note": "H6 cases carry their own F_s (case fs_kN, id suffix |Fs<f>)",
+            "mass_scale": args.mass_scale,
+            "mass_scale_note": MASS_SCALE_NOTE if args.mass_scale is not None or any(
+                c.mass_scale != 1.0 for c in cases) else None,
             "approximations": APPROXIMATION_NOTES, "wall_s": round(time.perf_counter() - t0, 1)}
     summary = write_outputs(args.out, results, meta)
     for result in results:

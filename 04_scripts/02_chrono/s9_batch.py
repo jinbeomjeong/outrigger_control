@@ -17,6 +17,8 @@ Usage (project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run P3-10 --parallel 2   # rigid L1 soil on / off
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run p3b_aug --parallel 4 --order lpt   # study ③, 8 cases
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run S9SL --parallel 2   # study ① C-1 / C-2 (slope)
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run MS1 --parallel 0 --parallel-e 1 \
+        --e-cases P3b_J1_B_top_Fs4_m1p1                 # Q-D: J1 B top, plant mass x1.1 (E pool)
 
 Pools (2026-10-26): ``--parallel`` (= ``--parallel-p``) P-pool slots, ``--parallel-e`` E-pool slots;
 each case process gets ``OUTRIGGER_PLACEMENT`` = ``pcore`` / ``ecore`` (``run_S9.place``). Cases go to
@@ -154,6 +156,7 @@ def batches() -> dict[str, list[dict]]:
     out["G6P"] = g6p_batch()
     out["p3b_aug"] = level_rows("p3b_aug_cases")
     out["S9SL"] = level_rows("s9sl_cases")
+    out["MS1"] = level_rows("ms1_cases")  # Q-D (2026-10-29): P3b J1 B top F_s 4 with plant mass x1.1
     return out
 
 

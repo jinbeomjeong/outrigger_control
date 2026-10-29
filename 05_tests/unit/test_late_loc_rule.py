@@ -142,6 +142,71 @@ def test_crawler_gate_needs_the_ready_crawler_zero_and_falls_back_without_a_reco
     assert rule.crawler_gate(True, None, 1) == (False, [])
 
 
+# --- spec 423.3 / 423.4: threshold chatter after the LOC (decision Q-G) -----------------------
+
+THRESHOLD_N = 0.01 * WEIGHT_N
+T_LOC_CHATTER_S = 41.4
+
+
+def _event(start_after_loc_s: float, duration_s: float, peak_over_threshold: float,
+           klass: str = "strict_fail") -> dict:
+    t_start = T_LOC_CHATTER_S + start_after_loc_s
+    return {"t_start_s": t_start, "t_end_s": t_start + duration_s, "duration_s": duration_s,
+            "max_normal_N": peak_over_threshold * THRESHOLD_N,
+            "max_over_W": peak_over_threshold * 0.01, "ended_before_loc": False, "class": klass}
+
+
+def _classify(*events, t_ready_s=90.0) -> dict:
+    stored = {"events": list(events), "pass": False, "flags": [], "limit_N": THRESHOLD_N}
+    return rule.reclassify_recontacts(stored, T_LOC_CHATTER_S, THRESHOLD_N, t_ready_s)
+
+
+def test_423_1_short_small_event_after_the_loc_is_chatter() -> None:
+    result = _classify(_event(0.1, 0.07, 1.06))
+    assert [e["class"] for e in result["events"]] == ["threshold_chatter"]
+    assert result["pass"] and result["flags"] == ["P3-1_threshold_chatter"]
+    assert rule.crawler_gate(True, {"recontact_events": result}, 1) == (
+        True, ["P3-1_threshold_chatter"])
+
+
+@pytest.mark.parametrize(("start_s", "duration_s", "peak"), [
+    (0.1, 0.11, 1.06),  # 423.4 test 2: longer than 0.1 s
+    (0.1, 0.07, 1.21),  # test 3: above 1.2 x the threshold
+    (1.05, 0.07, 1.06),  # test 4: starts later than LOC + 1.0 s
+])
+def test_423_2_to_4_outside_any_limit_stays_strict(start_s, duration_s, peak) -> None:
+    result = _classify(_event(start_s, duration_s, peak))
+    assert [e["class"] for e in result["events"]] == ["strict_fail"] and not result["pass"]
+
+
+def test_423_5_events_before_the_loc_keep_the_transient_rule() -> None:
+    before = _event(-0.5, 0.07, 1.06, klass="transient_flag")
+    strict_before = _event(-0.5, 0.7, 1.06)
+    result = _classify(before, strict_before)
+    assert [e["class"] for e in result["events"]] == ["transient_flag", "strict_fail"]
+    assert rule.reclassify_recontacts(_classify(before), T_LOC_CHATTER_S, THRESHOLD_N) == (
+        _classify(before))  # idempotent
+
+
+def test_423_6_ready_window_load_still_fails() -> None:
+    chatter = {"recontact_events": _classify(_event(0.1, 0.07, 1.06))}
+    assert rule.crawler_gate(False, chatter, 0) == (False, [])
+    after_ready = _classify(_event(0.1, 0.07, 1.06), t_ready_s=T_LOC_CHATTER_S + 0.05)
+    assert [e["class"] for e in after_ready["events"]] == ["strict_fail"]
+
+
+def test_423_7_one_chatter_and_one_strict_event_fail() -> None:
+    result = _classify(_event(0.1, 0.07, 1.06), _event(0.5, 0.3, 1.06))
+    assert [e["class"] for e in result["events"]] == ["threshold_chatter", "strict_fail"]
+    assert not result["pass"]
+    assert rule.crawler_gate(True, {"recontact_events": result}, 0) == (False, [])
+
+
+def test_chatter_constants_of_spec_423() -> None:
+    assert (rule.CHATTER_AFTER_LOC_S, rule.CHATTER_MAX_DURATION_S,
+            rule.CHATTER_MAX_OVER_THRESHOLD) == (1.0, 0.1, 1.2)
+
+
 def test_recorder_wraps_once_and_keeps_other_hook_markers() -> None:
     calls = []
 

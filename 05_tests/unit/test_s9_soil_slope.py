@@ -45,6 +45,85 @@ def test_group_contents() -> None:
     assert ("J1", "B", 0.0, -3.2) in h4 and ("rigid", "A", 0.0, 3.2) not in h4
 
 
+def test_h6_mass_scale_cases_of_spec_422() -> None:
+    cases = ss.build_cases(("H6",))
+    assert len(cases) == ss.H6_SIZE == 32
+    ids = [c.case_id for c in cases]
+    assert len(set(ids)) == 32
+    counts = Counter((c.soil, c.pad) for c in cases)
+    assert counts == {("J1", "B"): 18, ("J1", "A"): 6, ("J2", "B"): 4, ("G1", "B"): 2,
+                      ("rigid", "B"): 2}
+    assert all(c.slope_name == "flat" and not c.reanchor for c in cases)
+    assert "H6|J1|B|middle|flat|Fs0|m1.1" in ids and "H6|J1|B|top|flat" in ids
+    assert {c.mass_scale for c in cases if c.soil == "G1"} == {1.2}
+    run_input = ss.run_case_input(next(c for c in cases if c.mass_scale == 1.1).to_dict())
+    assert run_input["mass_scale"] == 1.1
+    plain = ss.run_case_input(next(c for c in cases if c.mass_scale == 1.0).to_dict())
+    assert "mass_scale" not in plain
+    # the study-1 ids are unchanged by the new case fields
+    assert ss.build_cases(("H1",))[0].case_id == "H1|G1|B|top|flat"
+    assert ss.run_case_input(ss.build_cases(("H1",))[0].to_dict())["fs_kN"] == ss.FS_KN
+
+
+def test_settle_check_is_a_record_for_a_scaled_mass() -> None:
+    """Spec 422.2: the settle table is the nominal-weight settle; a scaled run is still judged."""
+    failed_check = {"ok": False}
+    assert ss._final_verdict("pass", failed_check) == ss.VERDICT_SETTLE_CHECK_FAIL
+    assert ss._final_verdict("pass", failed_check, mass_scale=1.2) == "pass"
+    assert ss._final_verdict("fail", None, mass_scale=1.1) == "fail"
+
+
+def test_stored_p3_1_rejudge_with_threshold_chatter() -> None:
+    """Spec 423.4 (Q-G) re-judgement of a stored result (``slope_rejudge_qg.py``): a strict
+    recontact 0.2 s after the LOC, 0.07 s, 1.06 x 0.01 W becomes chatter and the run passes;
+    a 0.2 s one stays strict."""
+    import slope_rejudge_qg as qg
+
+    threshold = 0.01 * 376.6e3
+
+    def stored(duration_s: float) -> dict:
+        rec = _record()
+        result = {"id": "H6|x", "verdict": ss.VERDICT_FAIL, "settle": {"check": None},
+                  **ss.judge_case(rec)}
+        event = {"t_start_s": 21.2, "t_end_s": 21.2 + duration_s, "duration_s": duration_s,
+                 "max_normal_N": 1.06 * threshold, "max_over_W": 0.0106,
+                 "ended_before_loc": False, "class": "strict_fail"}
+        result["rows"]["P3-1"] = {**result["rows"]["P3-1"], "pass": False,
+                                  "recontact_events": {"events": [event], "pass": False,
+                                                       "flags": [], "limit_N": threshold}}
+        result["verdict"] = ss.VERDICT_FAIL
+        result["failed_rows"] = ["P3-1"]
+        return result
+
+    rejudged, record = qg.rejudge_result(stored(0.07))
+    assert record["p3_1_classes_after"] == ["threshold_chatter"]
+    assert record["verdict_after"] == ss.VERDICT_PASS and record["failed_rows_after"] == []
+    assert rejudged["rows"]["P3-1"]["flag_names"] == ["P3-1_threshold_chatter"]
+    _, strict = qg.rejudge_result(stored(0.2))
+    assert strict["p3_1_classes_after"] == ["strict_fail"]
+    assert strict["verdict_after"] == ss.VERDICT_FAIL and strict["failed_rows_after"] == ["P3-1"]
+
+
+def test_ready_limit_of_spec_421() -> None:
+    def case(soil, pad, roll=0.0):
+        return {"soil": soil, "pad": pad, "roll_deg": roll, "pitch_deg": 0.0}
+
+    assert ss.ready_limit_s(case("J1", "B")) == 100.0
+    assert ss.ready_limit_s(case("J1", "A")) == 90.0
+    assert ss.ready_limit_s(case("G1", "B")) == 90.0
+    assert ss.ready_limit_s(case("J2", "B", roll=4.4)) == 120.0
+
+
+def test_probe_round_record() -> None:
+    phases = (["level"] * 20 + ["probe"] * 12 + ["level"] * 15 + ["probe"] * 10 + ["done"] * 3
+              + ["ready"] * 5)
+    log = {"t_s": [round(0.1 * (i + 1), 1) for i in range(len(phases))], "phase": phases}
+    record = ss.probe_round_record(log)
+    assert record["n_probe_rounds"] == 2 and not record["n_probe_rounds_ge_3"]
+    assert record["rounds"][0] == {"probe_start_s": 2.1, "probe_s": 1.2, "relevel_s": 1.5}
+    assert record["rounds"][1]["probe_s"] == 1.0 and record["rounds"][1]["relevel_s"] is None
+
+
 def test_boundary_slopes_are_scaled() -> None:
     cases = {c.case_id: c for c in ss.build_cases(("H3",))}
     edge = cases["H3|S1|A|top|edge_nd@k0.875"]
@@ -201,6 +280,45 @@ def test_passing_record() -> None:
     assert rows["SL-1"]["k_minus_prediction"] == pytest.approx(1.0 - 0.84)
     assert rows["SL-2"]["R_c"] == pytest.approx(3.0 / 3.2) and rows["SL-2"]["flag"] is False
     assert "RA-1" not in rows
+
+
+WEIGHT_N = 376.6e3
+
+
+def _crawler_series(recontact_s: float, recontact_N: float) -> list[tuple[float, float]]:
+    """1 ms crawler force: loaded until 19.5 s, free after, one recontact at 20.5 s."""
+    times = np.round(np.arange(18.0, 25.0, 1e-3), 6)
+    forces = np.where(times <= 19.5, 50e3, 0.0)
+    forces[(times >= 20.5) & (times < 20.5 + recontact_s - 1e-9)] = recontact_N
+    return list(zip(times.tolist(), forces.tolist(), strict=True))
+
+
+@pytest.mark.parametrize(
+    ("recontact_s", "recontact_N", "passes", "flag"),
+    [
+        (0.0, 0.0, True, False),
+        (0.3, 0.02 * WEIGHT_N, True, True),  # transient: FLAG
+        (0.6, 0.02 * WEIGHT_N, False, False),  # longer than 0.5 s: strict fail
+        (0.3, 0.2 * WEIGHT_N, False, False),  # above 0.15 W: strict fail
+    ],
+)
+def test_p3_1_uses_the_u_s9_g6d_classes(recontact_s, recontact_N, passes, flag) -> None:
+    """Spec 420.2b: with the 1 ms crawler series the harness count no longer decides."""
+    rec = _record(crawler_series=_crawler_series(recontact_s, recontact_N), weight_N=WEIGHT_N)
+    rec["run"] = {**rec["run"], "n_crawler_recontact": 1}
+    row = ss.judge_case(rec)["rows"]["P3-1"]
+    assert row["pass"] is passes and row["flag"] is flag
+    assert row["flag_name"] == ("P3-1_transient_recontact" if flag else None)
+
+
+def test_p3_1_still_needs_ready_and_a_free_crawler_after_ready() -> None:
+    series = _crawler_series(0.0, 0.0)
+    rec = _record(crawler_series=series, weight_N=WEIGHT_N)
+    rec["run"] = {**rec["run"], "t_ready_s": None}
+    assert ss.judge_case(rec)["rows"]["P3-1"]["pass"] is False
+    rec = _record(crawler_series=series, weight_N=WEIGHT_N)
+    rec["run"] = {**rec["run"], "crawler_N_max_after_ready": 10.0}
+    assert ss.judge_case(rec)["rows"]["P3-1"]["pass"] is False
 
 
 def test_start_condition_flag_and_plant_fallback() -> None:

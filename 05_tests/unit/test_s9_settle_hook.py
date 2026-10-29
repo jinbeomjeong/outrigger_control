@@ -52,6 +52,46 @@ def _settled_plant(cl, soil: str, level: str, hook: str):
     return plant
 
 
+# ------------------------------------------------------------------------------ mass scale (422)
+def _plant_mass_state(plant) -> list[np.ndarray]:
+    return [np.asarray(value, float).copy() for value in
+            (plant.m, plant.Ib, plant.Ibinv, plant.mr, plant.Ir, plant.r, plant.q, plant.x)]
+
+
+def test_mass_scale_one_leaves_the_plant_bit_for_bit(harness) -> None:
+    """Spec 422.2: scale 1.0 is the old plant (make_plant argument and run_case helper)."""
+    cl = harness
+    cl.rmf.CONFIG.clear()
+    cl.rpt.RCFG.clear()
+    plain = sl.make_plant(cl, "top", "J1", "B", 4.0, slope=FLAT, settle_hook="harness")
+    cl.rmf.CONFIG.clear()
+    cl.rpt.RCFG.clear()
+    scaled_one = sl.make_plant(cl, "top", "J1", "B", 4.0, slope=FLAT, settle_hook="harness",
+                               mass_scale=1.0)
+    for before, after in zip(_plant_mass_state(plain), _plant_mass_state(scaled_one), strict=True):
+        np.testing.assert_array_equal(before, after)
+    assert sl.scale_plant_mass(plain, 1.0) is plain and not hasattr(plain, "mass_scale")
+
+
+def test_mass_scale_multiplies_mass_and_inertia_only(harness) -> None:
+    cl = harness
+    cl.rmf.CONFIG.clear()
+    cl.rpt.RCFG.clear()
+    plant = sl.make_plant(cl, "top", "J1", "B", 4.0, slope=FLAT, settle_hook="harness")
+    mass, inertia, com_pose = plant.m, plant.Ib.copy(), plant.r.copy()
+    sl.scale_plant_mass(plant, 1.2)
+    assert plant.m == pytest.approx(1.2 * mass) and plant.mr == plant.m
+    np.testing.assert_allclose(plant.Ib, 1.2 * inertia, rtol=1e-15)
+    np.testing.assert_allclose(plant.Ibinv @ plant.Ib, np.eye(3), atol=1e-12)
+    np.testing.assert_array_equal(plant.Ir, plant.Ib)
+    np.testing.assert_array_equal(plant.r, com_pose)  # centre of mass kept
+    with pytest.raises(ValueError, match="mass_scale"):
+        sl.scale_plant_mass(plant, 0.0)
+    plant.flex = 1
+    with pytest.raises(ValueError, match="rigid mast"):
+        sl.scale_plant_mass(plant, 1.1)
+
+
 # ------------------------------------------------------------------------------ hook selection
 def test_hook_resolution(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(sl.SETTLE_HOOK_ENV, raising=False)

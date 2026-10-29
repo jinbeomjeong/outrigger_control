@@ -693,8 +693,10 @@ def _slope_record(payload: dict) -> dict:
         "final_phase": run.get("final_phase"), "rut_ready_mm": run.get("clear_true_ready_mm"),
         "crawler_N_max_after_ready": run.get("crawler_N_max_after_ready"),
         "warnings": result.get("warnings", []),
-        # spec 419.8: P3-2_late_loc_reapproach and its five conditions (s9_soil_slope judge)
-        "flags": [rows["P3-2"]["flag_name"]] if rows["P3-2"].get("flag") else [],
+        # spec 420.2b P3-1_transient_recontact, spec 419.8 P3-2_late_loc_reapproach and its five
+        # conditions (s9_soil_slope judge)
+        "flags": (list(rows["P3-1"].get("flag_names") or [])
+                  + ([rows["P3-2"]["flag_name"]] if rows["P3-2"].get("flag") else [])),
         "late_loc_reapproach": rows["P3-2"].get("late_loc_reapproach")}
 
 

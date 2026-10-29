@@ -229,15 +229,47 @@ def settle_snapshot(cl, plant) -> dict:
     return snap
 
 
+MASS_SCALE_NOTE = ("spec 422.2: plant superstructure mass and inertia x mass_scale (centre of mass kept); "
+                   "controller YAML mass, W_ref and D1'' mass unchanged; crawler settle (pad gaps h_i, settle tilt) "
+                   "and crawler damping keep the nominal-weight values (approximation)")
+
+
+def scale_plant_mass(plant, mass_scale: float):
+    """Spec 422.2 (decision Q-B): multiply the plant superstructure mass and inertia by ``mass_scale``.
+
+    The centre of mass stays; only the plant changes (the controller keeps the YAML mass). 1.0 leaves the plant
+    untouched (bit for bit). Rigid mast only (``flex`` 0: the rest-body mass / inertia are the body's).
+
+    Raises:
+        ValueError: ``mass_scale`` <= 0, or a flexible-mast plant with a scale other than 1.
+    """
+    mass_scale = float(mass_scale)
+    if not mass_scale > 0.0:
+        raise ValueError(f"mass_scale must be > 0, got {mass_scale!r}")
+    if mass_scale == 1.0:
+        return plant
+    if getattr(plant, "flex", 0):
+        raise ValueError("mass_scale is implemented for the rigid mast only")
+    plant.m = plant.m * mass_scale
+    plant.Ib = plant.Ib * mass_scale
+    plant.Ibinv = np.linalg.inv(plant.Ib)
+    plant.mr = plant.m
+    plant.Ir = plant.Ib.copy()
+    plant.mass_scale = mass_scale
+    return plant
+
+
 def make_plant(cl, level: str, soil: str, pad_type: str, fs_kN: float, beta: float = 1.0e9, soil_kscale: float = 1.0,
                slope=(0.0, 0.0), settle_hook: str | None = None, settle_table: str | Path | None = None,
-               settle_row: dict | None = None):
+               settle_row: dict | None = None, mass_scale: float = 1.0):
     """Reduced plant of one case on a soil set (or "rigid") and a floor slope (roll, pitch) [deg].
 
     Args:
         settle_hook: "p0" | "harness" (None: ``$S9_SETTLE_HOOK``, default "p0"); see the module docstring.
         settle_table: settle table of the "harness" hook (None: ``$S9_SETTLE_TABLE`` or the default table).
         settle_row: a hook_harness row given directly (callers that already hold it); needs settle_hook "harness".
+        mass_scale: spec 422.2 plant mass / inertia factor (:func:`scale_plant_mass`; 1.0 = unchanged).
+            ``run_case`` applies a case's ``mass_scale`` itself after its (possibly wrapped) ``make_plant``.
     """
     import dyn_model as dm
     import s8_g4_rodside_check as rsc
@@ -273,7 +305,7 @@ def make_plant(cl, level: str, soil: str, pad_type: str, fs_kN: float, beta: flo
         pad_xy = dm.geometry_from_params(dm.load_params()).pad_xy
         plant.soil = SoilPads(soil, pad_type, pad_xy, ks, soil_kscale, settle_row=row)
         plant.goff[:] = -plant.soil.h
-    return plant
+    return scale_plant_mass(plant, mass_scale)
 
 
 def soil_floor(cl, plant):
@@ -414,6 +446,9 @@ def run_case(case: dict) -> dict:
     settle_options = {k: case[k] for k in ("settle_hook", "settle_table") if case.get(k) is not None}
     plant = make_plant(cl, case["level"], case["soil"], case["pad"], case["fs_kN"], case.get("beta", 1.0e9),
                        case.get("soil_kscale", 1.0), case.get("slope", (0.0, 0.0)), **settle_options)
+    # spec 422.2: applied here, not through make_plant, so wrapped factories of the older signature keep working
+    mass_scale = float(case.get("mass_scale", 1.0))
+    scale_plant_mass(plant, mass_scale)
     plant.step(np.zeros(4), int(round(cl.rcc.SETTLE_ON_CRAWLER_S / plant.dt)))
     plant.t = 0.0
     plant.arm()
@@ -534,6 +569,10 @@ def run_case(case: dict) -> dict:
         "events": events[:200],
         "wall_s": round(time.perf_counter() - t0, 1),
     }
+    if mass_scale != 1.0:  # spec 422.2 (results of scale 1 keep their keys)
+        out.update(mass_scale=mass_scale, mass_scale_note=MASS_SCALE_NOTE,
+                   plant_weight_N=float(plant.m * plant.g),
+                   controller_weight_ref_N=float(ctrl._reference_weight_N()))
     if hasattr(ctrl, "soil_meta"):
         out["soil_rule_meta"] = ctrl.soil_meta()
         # pinned-window margin: the smallest load-sum rise of a valid window that ended with the crawler loaded

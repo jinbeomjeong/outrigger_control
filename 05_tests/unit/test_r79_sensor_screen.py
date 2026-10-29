@@ -353,6 +353,80 @@ def test_s4_fails_on_new_pauses_meeting_both_conditions():
     assert judge.judge_s4(_run(loc_minus_off_s=3.5), ref)["gate_fail"]
 
 
+def _recontacts(*classes):
+    return {"t_departure_confirmed_s": 30.1, "pass": "strict_fail" not in classes,
+            "flags": ["P3-1_transient_recontact"] if "transient_flag" in classes else [],
+            "events": [{"t_start_s": 30.5, "t_end_s": 30.7, "duration_s": 0.2,
+                        "max_normal_N": 5e3, "max_over_W": 0.013, "ended_before_loc": True,
+                        "class": name} for name in classes]}
+
+
+def test_s4_counts_only_strict_recontacts_and_flags_transients():
+    """Spec 407.2 (3): U-S9-G6d classes decide; a transient recontact is a FLAG only."""
+    ref = _run("L1", recontact_events=_recontacts())
+    transient = judge.judge_s4(_run(n_recontact_after_off=1,
+                                    recontact_events=_recontacts("transient_flag")), ref)
+    assert transient["ok"] and transient["flags"] == ["S4_transient_recontact"]
+    strict = judge.judge_s4(_run(n_recontact_after_off=1,
+                                 recontact_events=_recontacts("strict_fail")), ref)
+    assert not strict["ok"] and strict["gate_fail"] and strict["recontact_new"]
+    ref_strict = _run("L1", recontact_events=_recontacts("strict_fail"))
+    assert judge.judge_s4(_run(recontact_events=_recontacts("strict_fail")), ref_strict)["ok"]
+    # records without the classes keep the harness count
+    assert not judge.judge_s4(_run(n_recontact_after_off=1), _run("L1"))["ok"]
+
+
+def _chatter_events(start_s=31.2, duration_s=0.07, peak_over_threshold=1.06):
+    threshold = 0.01 * WEIGHT_N
+    return {"t_departure_confirmed_s": 30.1, "pass": False, "flags": [],
+            "events": [{"t_start_s": start_s, "t_end_s": start_s + duration_s,
+                        "duration_s": duration_s, "max_normal_N": peak_over_threshold * threshold,
+                        "max_over_W": 0.01 * peak_over_threshold, "ended_before_loc": False,
+                        "class": "strict_fail"}]}
+
+
+def test_threshold_chatter_is_a_flag_in_s4_and_g6_1():
+    """Spec 423.4 (Q-G): a stored strict recontact 0.2 s after the LOC (t_LOC 31.0 s), 0.07 s,
+    1.06 x 0.01 W is re-judged as chatter: S-4 FLAG, G6-1 passes (stored gate False)."""
+    ref = _run("L1", recontact_events=_recontacts())
+    run = _run(recontact_events=_chatter_events())
+    run["base"]["gates"] = {"G6-1_crawler": False, "G6-7_preloc": True}
+    s4 = judge.judge_s4(run, ref)
+    assert s4["ok"] and s4["flags"] == ["S4_threshold_chatter"]
+    gate, record = judge.g61_gate(run)
+    assert gate and record["switched_to_flag"] and record["ready_part_assumed"]
+    assert record["flags"] == ["P3-1_threshold_chatter"]
+    assert judge.harness_verdict(run["base"], run) and not judge.harness_verdict(run["base"])
+    strict = _run(recontact_events=_chatter_events(duration_s=0.2))
+    strict["base"]["gates"] = {"G6-1_crawler": False, "G6-7_preloc": True}
+    assert not judge.g61_gate(strict)[0] and not judge.judge_s4(strict, ref)["ok"]
+    loaded = _run(recontact_events=_chatter_events())
+    loaded["base"]["gates"] = {"G6-1_crawler": False, "G6-7_preloc": True}
+    loaded["base"]["crawler_N_max_after_ready"] = 50.0  # READY window load stays a failure
+    assert judge.g61_gate(loaded)[0] is False
+
+
+def test_recontact_summary_and_merge_of_reruns():
+    base = {"crawler_recontact": {
+        "departure": {"t_confirmed_s": 30.1},
+        "recontact_events": {"pass": True, "flags": ["P3-1_transient_recontact"],
+                             "events": [{**_recontacts("transient_flag")["events"][0],
+                                         "extra": 1}]}}}
+    summary = screen.recontact_summary(base)
+    assert summary["t_departure_confirmed_s"] == 30.1 and "extra" not in summary["events"][0]
+    assert screen.recontact_summary({}) is None
+    stored = [{**_run(), "key": "a", "base": {"commands_sha256": "h1"}},
+              {**_run(), "key": "b", "base": {"commands_sha256": "h2"}}]
+    reruns = [{**_run(), "key": "b", "base": {"commands_sha256": "h2", "new": True}},
+              {**_run(), "key": "c", "base": {"commands_sha256": "h3"}}]
+    merged, merge = judge.merge_reruns(stored, reruns)
+    assert [r["key"] for r in merged] == ["a", "b"] and merged[1]["base"]["new"]
+    assert merge["replaced"] == 1 and merge["hash_differs"] == []
+    assert merge["rerun_without_stored"] == ["c"]
+    reruns[0]["base"]["commands_sha256"] = "other"
+    assert judge.merge_reruns(stored, reruns)[1]["hash_differs"] == ["b"]
+
+
 def test_s5_fails_only_against_a_clean_l1_or_a_rise():
     clean = _run("L1")
     assert not judge.judge_s5(_run(crawler_at_loc_over_W=0.02), clean)["ok"]

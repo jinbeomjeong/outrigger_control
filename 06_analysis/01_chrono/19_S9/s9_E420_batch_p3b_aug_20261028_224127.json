@@ -1,0 +1,94 @@
+{
+ "rule": "spec 420.4 (2026-10-29): (a) INFO_LOC_CLEARANCE_MARGIN 0, (b) WARN_PRESSURE_ZERO_SKIPPED:*:move (pre-implementation code -> re-run) / INFO_PRESSURE_ZERO_RETURN_TOL (final), (c) leg_reapproach_start before the LOC 0 (419.7) when the run had no LWa; code_state from result.code_state or controller_meta",
+ "rows": {
+  "P3b_J2_B_middle_Fs4": {
+   "case": "P3b_J2_B_middle_Fs4",
+   "code_state": {
+    "state": "pre_impl",
+    "rules_present": {
+     "slope_clearance_margin": false,
+     "liftoff_window_reapproach": false,
+     "zero_calibration_return_tol": false
+    },
+    "rules_on": {
+     "slope_clearance_margin": false,
+     "liftoff_window_reapproach": false,
+     "zero_calibration_return_tol": false
+    },
+    "missing": [
+     "slope_clearance_margin",
+     "liftoff_window_reapproach",
+     "zero_calibration_return_tol"
+    ],
+    "slope_clearance_margin": null,
+    "liftoff_window_reapproach": null,
+    "zero_calibration_return_timeout_tolerance_m": null,
+    "basis": "C2 meta keys (spec 420.4 (1)); committed vs uncommitted only by files_at_start SHA-256",
+    "files_at_start": null,
+    "source": "controller_meta"
+   },
+   "started_local": "2026-10-28T22:41:27",
+   "a_loc_clearance_margin": {
+    "events": [],
+    "count": 0,
+    "rule_in_code": false,
+    "status": "not_applicable",
+    "settle_tilt_deg": [
+     9.733018071769133e-05,
+     0.08007642295663374
+    ],
+    "settle_tilt_source": "settle_reference.end_roll_pitch_deg (true body attitude, last settle second)",
+    "settle_tilt_max_deg": 0.08007642295663374,
+    "tilt_le_1deg": true
+   },
+   "b_zero_calibration": {
+    "move_skip_events": [],
+    "move_skipped_legs": [],
+    "return_tol_events": [],
+    "all_calibrated": true,
+    "is_active": true,
+    "legs": {
+     "FL": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "FR": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "RL": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     },
+     "RR": {
+      "status": "calibrated",
+      "reason": null,
+      "success": true
+     }
+    },
+    "return_timeout_tolerance_m": null,
+    "rule_in_code": false,
+    "status": "ok"
+   },
+   "c_pre_loc_reapproach": {
+    "t_loc_s": 45.10000000037363,
+    "reapproach_starts_before_loc": [],
+    "count": 0,
+    "window_restarts": [],
+    "rule_in_code": false,
+    "status": "ok"
+   },
+   "equivalent": true,
+   "reasons": []
+  }
+ },
+ "not_level": [],
+ "missing": [],
+ "all_equivalent": true,
+ "values_only": "equivalence evidence; the verdict on using the runs is control's",
+ "source_batch": "07_results/S9/batch_p3b_aug_20261028_224127",
+ "generator": "04_scripts/02_chrono/s9_batch_summary.py"
+}
