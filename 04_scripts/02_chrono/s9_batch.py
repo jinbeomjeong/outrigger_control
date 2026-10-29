@@ -15,6 +15,8 @@ Usage (project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run P3b --parallel-p 3 --parallel-e 2 \
         --e-cases P3b_G1_A_top_Fs4 ... --order lpt      # or --schedule plan.json
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run P3-10 --parallel 2   # rigid L1 soil on / off
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run p3b_aug --parallel 4 --order lpt   # study ③, 8 cases
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run S9SL --parallel 2   # study ① C-1 / C-2 (slope)
 
 Pools (2026-10-26): ``--parallel`` (= ``--parallel-p``) P-pool slots, ``--parallel-e`` E-pool slots;
 each case process gets ``OUTRIGGER_PLACEMENT`` = ``pcore`` / ``ecore`` (``run_S9.place``). Cases go to
@@ -149,7 +151,48 @@ def batches() -> dict[str, list[dict]]:
     out["P3-10"] = p3_10_batch()
     out["G6"] = g6_batch()
     out["G6_opt"] = g6_batch(optional=True)
+    out["G6P"] = g6p_batch()
+    out["p3b_aug"] = level_rows("p3b_aug_cases")
+    out["S9SL"] = level_rows("s9sl_cases")
     return out
+
+
+def level_rows(fn_name: str) -> list[dict]:
+    """``run_S9.py level`` rows of ``run_S9.<fn_name>()`` (study ③ ``p3b_aug_cases``: J2 / S1 x A / B x auger
+    middle / bottom, P3b settings; study ① ``s9sl_cases``: the confirmed slope rows C-1 / C-2, drafts excluded).
+    ``est_s`` from the case; ``note`` (``pair_case`` / ``purpose``) copied into batch.json."""
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S9 as r9  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    rows = []
+    for c in getattr(r9, fn_name)():
+        note = c.get("note") or (f"pair {c['pair_case']}" if c.get("pair_case") else c.get("purpose"))
+        row = {"case": c["case"], "est_s": c["est_s"], "argv": RUN + r9.p3b_level_argv(c)}
+        if note:
+            row["note"] = note
+        rows.append(row)
+    return rows
+
+
+def g6p_batch() -> list[dict]:
+    """G6P paper evidence set (user decision 2026-10-28): the ``run_S9.g6p_cases`` closed-loop rows (G1 base,
+    pad B, top, F_s 4 kN): J1@RR P-S8-29 off 240 s (``_noTR``), J1@RR 160 s, J1@FL 200 s, J2@RR 200 s, J2@FL
+    200 s, S1@FL 160 s (model-limit stress case, outside the Bekker validity range). ``est_s`` = run_S9.G6P_EST_S
+    (``--order lpt`` sorts on it); a row ``note`` is copied into batch.json."""
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S9 as r9  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    rows = []
+    for c in r9.g6p_cases():
+        row = {"case": c["case"], "est_s": c["est_s"], "argv": RUN + r9.p3b_level_argv(c)}
+        if c.get("note"):
+            row["note"] = c["note"]
+        rows.append(row)
+    return rows
 
 
 def g6_batch(optional: bool = False) -> list[dict]:
@@ -330,6 +373,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
             wall = time.perf_counter() - t0
             running.remove(item)
             entry = {"case": c["case"], "argv": c["argv"], "rc": rc, "wall_s": wall, "est_s": c["est_s"], "pool": pool}
+            if c.get("note"):  # G6P rows (2026-10-28)
+                entry["note"] = c["note"]
             note = ""
             if c.get("s8c") and rc == 0:  # run_S8C returns 0 even when its case failed: read the outcome
                 chk = s8c_case_check((folder / f"{c['case']}.log").read_text("utf-8", errors="replace"), c["case"])
@@ -350,7 +395,7 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                 for c in queues[pool]:
                     _log(progress, f"SKIP {c['case']} (earlier failure)")
                     done.append({"case": c["case"], "argv": c["argv"], "rc": None, "wall_s": 0.0, "est_s": c["est_s"],
-                                 "pool": pool})
+                                 "pool": pool, **({"note": c["note"]} if c.get("note") else {})})
                 queues[pool] = []
     status = {"batch": name, "folder": folder.as_posix(), "parallel": parallel, "parallel_e": parallel_e,
               "order": order, "order_cases": order_cases, "e_cases": sorted(e_cases or ()),

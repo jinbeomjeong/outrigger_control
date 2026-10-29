@@ -11,7 +11,9 @@ mean readings of the two holds,
 and the controller uses ``F_hat - c_i`` from then on. Failure handling (76.2): an implausible
 offset (``|c_i|`` above 7 kN front / 6 kN rear), a leg already grounded at the start, a leg
 that cannot make the +-3 mm or an unsteady hold (std above 0.5 kN) keeps ``c_i = 0`` and gets
-the E-6 lower-bound allowance (5.5 / 4.0 kN) for the rest of the run.
+the E-6 lower-bound allowance (5.5 / 4.0 kN) for the rest of the run. The retract counts as
+returned at or below the start stroke; with ``return_timeout_tolerance_m`` set (spec 416.3,
+R8 preset 0.5 mm) a leg that came within it is accepted at the time-out instead of skipped.
 
 Engine independent: it sees the motor strokes and the force readings of the controller.
 """
@@ -86,6 +88,12 @@ class ZeroCalibrationSettings:
     """``F_s,air`` above this is recorded (info event), not acted on."""
     move_timeout_factor: float = 3.0
     """A move fails when it takes longer than this times its nominal duration."""
+    return_timeout_tolerance_m: float | None = None
+    """Spec 416.3 (variant D, user decision 2026-10-29): at the retract time-out a leg whose
+    smallest displacement of the retract stage is at most this counts as returned
+    (``INFO_PRESSURE_ZERO_RETURN_TOL:<leg>:<mm>``) instead of ``skipped: move``. The single
+    noisy start sample and the full-retraction hard stop otherwise leave about 10 % of the
+    legs unable to read ``<= 0``. ``None`` = the old rule (class default, bit identical)."""
     failure_allowance_N: tuple[float, ...] = _per_leg(5500.0, 4000.0)
     """E-6 allowance of a leg whose calibration failed (normal-grade maximum, 75.2)."""
     recalibration_temperature_change_K: float = 15.0
@@ -109,6 +117,9 @@ class ZeroCalibrationSettings:
             object.__setattr__(self, "max_hold_std_per_leg_N", limits)
         if self.hold_std_ddof not in (0, 1):
             raise ValueError(f"hold_std_ddof must be 0 or 1, got {self.hold_std_ddof!r}")
+        tolerance_m = self.return_timeout_tolerance_m
+        if tolerance_m is not None and not tolerance_m >= 0.0:
+            raise ValueError(f"return_timeout_tolerance_m must be >= 0, got {tolerance_m!r}")
 
     @property
     def is_enabled(self) -> bool:
@@ -121,8 +132,11 @@ class ZeroCalibrationSettings:
         return self.max_hold_std_per_leg_N[leg]
 
     def to_meta(self) -> dict[str, Any]:
+        """Settings for the run meta; the spec 416.3 key appears only when in use."""
         meta = asdict(self)
         meta["mode"] = str(self.mode)
+        if self.return_timeout_tolerance_m is None:
+            del meta["return_timeout_tolerance_m"]
         return {key: list(value) if isinstance(value, tuple) else value
                 for key, value in meta.items()}
 
@@ -202,7 +216,10 @@ class ZeroCalibration:
         self._start_stroke_m = np.zeros(LEG_COUNT)
         self._active = np.zeros(LEG_COUNT, dtype=bool)
         self._reached = np.zeros(LEG_COUNT, dtype=bool)
+        self._min_displacement_m = np.full(LEG_COUNT, np.inf)
         self._skipped: dict[int, SkipReason] = {}
+        self._returned_within_tolerance_m: dict[int, float] = {}
+        """Spec 416.3: legs whose retract was accepted at the time-out -> smallest displacement."""
         self._holds: dict[_Stage, list[NDArray[np.float64]]] = {
             _Stage.HOLD_EXTENDED: [],
             _Stage.HOLD_RETRACTED: [],
@@ -275,6 +292,7 @@ class ZeroCalibration:
         self._stage = stage
         self._stage_start_s = float(t_s)
         self._reached = np.zeros(LEG_COUNT, dtype=bool)
+        self._min_displacement_m = np.full(LEG_COUNT, np.inf)
 
     def _move(self, t_s: float, strokes: NDArray[np.float64], sign: float) -> NDArray:
         """Move the active legs to +move_m (extend) or back to the start (retract)."""
@@ -283,7 +301,10 @@ class ZeroCalibration:
             self._reached |= displacement >= self.settings.move_m
         else:
             self._reached |= displacement <= 0.0
+            self._min_displacement_m = np.minimum(self._min_displacement_m, displacement)
         if t_s - self._stage_start_s > self._move_timeout_s + TIME_SLACK_S:
+            if sign < 0.0:
+                self._accept_returns_within_tolerance()
             for leg in np.flatnonzero(self._active & ~self._reached):
                 self._skipped[int(leg)] = SkipReason.MOVE
                 self._active[leg] = False
@@ -292,6 +313,19 @@ class ZeroCalibration:
             self._enter(_NEXT_STAGE[self._stage], t_s)
             return np.zeros(LEG_COUNT)
         return np.where(moving, sign * self.speed_m_s, 0.0)
+
+    def _accept_returns_within_tolerance(self) -> None:
+        """Spec 416.3 (3): at the retract time-out a leg that came within the tolerance of its
+        start stroke counts as returned (stroke noise against the full-retraction stop)."""
+        tolerance_m = self.settings.return_timeout_tolerance_m
+        if tolerance_m is None:
+            return
+        for leg in np.flatnonzero(self._active & ~self._reached):
+            if self._min_displacement_m[leg] <= tolerance_m:
+                self._reached[leg] = True
+                self._returned_within_tolerance_m[int(leg)] = float(
+                    self._min_displacement_m[leg]
+                )
 
     def _finish(self, t_s: float) -> None:
         self.t_end_s = float(t_s)
@@ -356,6 +390,11 @@ class ZeroCalibration:
             if leg in self._reused:
                 continue
             name = LEG_ORDER[leg]
+            if leg in self._returned_within_tolerance_m:
+                min_displacement_mm = 1e3 * self._returned_within_tolerance_m[leg]
+                events.append(
+                    (f"INFO_PRESSURE_ZERO_RETURN_TOL:{name}:{min_displacement_mm:.3f}", False)
+                )
             if result.status is LegCalibrationStatus.IMPLAUSIBLE:
                 events.append((f"WARN_PRESSURE_ZERO_IMPLAUSIBLE:{name}", True))
             elif result.status is LegCalibrationStatus.SKIPPED:
@@ -370,7 +409,8 @@ class ZeroCalibration:
         return events
 
     def to_meta(self) -> dict[str, Any]:
-        return {
+        """Run meta; the spec 416.3 key appears only with the tolerance setting on."""
+        meta: dict[str, Any] = {
             "t_start_s": self.t_start_s,
             "t_end_s": self.t_end_s,
             "reused_legs": [LEG_ORDER[leg] for leg in sorted(self._reused)],
@@ -380,3 +420,9 @@ class ZeroCalibration:
                 else {LEG_ORDER[leg]: result.to_meta() for leg, result in enumerate(self.results)}
             ),
         }
+        if self.settings.return_timeout_tolerance_m is not None:
+            meta["return_within_tolerance_m"] = {
+                LEG_ORDER[leg]: value
+                for leg, value in sorted(self._returned_within_tolerance_m.items())
+            }
+        return meta

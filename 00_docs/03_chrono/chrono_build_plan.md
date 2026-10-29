@@ -601,6 +601,83 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
   - [x] V16 — ✅ 2026-10-26 P1 V16a~d 통과·기록(개정 50, 5.35.2)
   - [x] **제어 ④·접지 판정**(py): 연약 지면 재판정(크롤러 토양 ζ 0.2) (2026-10-20 로드맵 동기화) — ✅ 2026-10-26: P3a 통과(개정 52), P3b 26건(SCM 24 + RE1c 2) 판정 끝. control `s6_control_spec.md` 개정 60(주 판정 24/24, U-S9P-13~16 확정, 실행기 재판정 C-S9-60 24/24), dynamics `dynamics_model.md` 개정 53 5.38
   - 착수 전 점검 1~6(위 첫 항목)은 ✅ 2026-10-27 모두 닫힘: 2·3은 P1·P2로 처리, 1·5·6은 dynamics 개정 53 5.37.10에서 닫힘(2026-10-26), 4(비용)는 단독 실측으로 닫힘(2026-10-27, 개정 53 보완 5.37.10, `06_analysis/01_chrono/01_cost/S9_P3b_solo_step_cost.json`): P코어 고정·4 스레드·패드 B·상단·$F_s$ 4 kN, 전 하중 G1 2.64·S1 2.66·J1 4.55·J2 4.62 ms/스텝, 128 s 외삽 2.52·2.57·4.14·4.20 ms/스텝. 설계 추정 약 4 ms/스텝 대비 2 cm 33~34 % 낮음, 1 cm 14~16 % 높음. P3b 4병렬 경합 실행의 128 s 평균(G1 5.10·S1 4.98·J1 8.69·J2 8.48 ms/스텝)은 단독 외삽의 1.94~2.10배
+  - [x] **실행기 확장(2026-10-28, f062051 뒤)**: `run_S9.py`·`s9_batch.py`에 아래 기능·묶음을 더했다. 시험 `05_tests/unit/test_s9_g6p_batch.py`(G6P 행·`--twist-relax`·`--note`), `05_tests/unit/test_s9_extra_studies.py`(p3b_aug·S9SL 행, `--start-limit`, REANCHOR·SL-2·`crawler_gap`·`settle_slope` 기록). 판정 기준은 control `s6_control_spec.md`(G6 개정 75, 연구 ①·③ 2026-10-28 설계)와 dynamics `dynamics_model.md` 5.35.4(P2-c·P2-d)가 원본이다. 이 절은 실행 방법만 적는다.
+
+**S9 `level` 추가 인자 (2026-10-28)**
+
+| 인자 | 값 | 뜻·기록 위치 |
+|---|---|---|
+| `--twist-relax` | `preset`(기본) / `off` | P-S8-29 비틀림 완료 완화. `off`는 `twist_completion_relax.enable = False`만 바꾼다(반사실 비교, READY가 늦거나 없을 수 있음). 사례 이름 꼬리 `_noTR`. `result.json` `c2_setup.twist_relax` |
+| `--start-limit` | `preset`(기본) / `verification` / `verification_map` / `record_only` | 시작·목표 경사 한계. `preset` = 운용 D8(크롤러 IMU 자세 4.4 / 3.2°, 거부). `verification` = run_S8C·run_S7C L2b와 같은 검증 모드(5.5 / 3.5°, 정착 맵 항등). `verification_map` = 검증 + 오거 단계 크롤러 정착 맵(명세 13.1 X5, 계수는 L1-R 적합이라 SCM에는 **가정**). `record_only` = `target.acceptance = off`만(하네스 경로, 시작 규칙은 SL-2 `R_c`로 기록만). `c2_setup.start_limit` |
+| `--floor-roll`, `--floor-pitch` | deg(기본 0) | 바닥 경사(바닥이 기울고 중력은 연직, run_S7C와 같음). 인자 자체는 전부터 있었고, 이번에 S9SL 행이 `p3b_level_argv`로 넘긴다 |
+| `--note` | 문자열 | 사례 메모. `result.json` `args`와 `batch.json` 행에 남는다(G6P 행) |
+
+`level` 실행마다 새 기록 블록이 붙는다(모두 기록, 판정은 판정기 몫): `p3b_ext.reanchor`(RA-1~RA-6: REANCHOR 사건, 계단별 참 최소 F_cyl, 패드 부싱 이용률, 침하 변화), `p3b_ext.start_condition`(SL-2 `R_c = |φ_c|/4.4 + |θ_c|/3.2`, > 1이면 FLAG), `p3b_ext.crawler_gap`(크롤러 접촉 형상 전 점 — 바닥 격자 0.1 m + 포락선 상자 모서리 48개 — 과 SCM 표면의 평면 법선 방향 최소 틈, 10 Hz; 판정값은 첫 READY 뒤 격자 최소, 모서리 FLAG 여유 = 근처 침하 + 5 mm **가정**), `settle_slope`(정착 마지막 1 s의 P2-c pitch p-p ≤ 0.02°, P2-d 법선 합 / (W cos 경사) = 1 ± 0.002, 평면·중력·바퀴자국 기준). 10 Hz `s9_rows`에 `reanchor_stage`·`reanchor_step`·`crawler_gap_min_m`·`crawler_gap_point`·`crawler_gap_grid_min_m`·`crawler_gap_point_near_sinkage_m` 키가 더해졌다(`rut_clearance_m`는 그대로). 기록 블록 계산이 실패하면 `{"error": ...}`를 쓰고 실행 결과는 지킨다.
+
+**S9 배치 묶음 추가 (`s9_batch.py`, 2026-10-28)**
+
+| 묶음 | 사례 수 | 행 정의(`run_S9.py`) | 내용 | 벽시간 추정 `est_s` |
+|---|---|---|---|---|
+| `G6P` | 6 | `g6p_cases()` | 논문 근거 세트(사용자 결정 2026-10-28). G1 바탕, 패드 B, 상단, F_s 4 kN, G6 설정. J1@RR P-S8-29 끔 240 s(`_noTR`), J1@RR 160 s, J1@FL 200 s, J2@RR 200 s, J2@FL 200 s, S1@FL 160 s(Bekker 유효 범위 밖 모델 한계 스트레스 사례, 메모 붙음) | `G6P_EST_S`: 10800 / 6950 / 8540 / 9500 / 9500 / 6600 s(P코어 4병렬 경합; G6 실측 기반, J2·noTR은 **가정**) |
+| `p3b_aug` | 8 | `p3b_aug_cases()` | 연구 ③. J2·S1 × 패드 A·B × 오거 중단·하단, P3b 설정 그대로(F_s 4 kN, 시드 20261026, 120 s). 짝 사례 `pair_case` = 같은 토양·패드의 P3b 상단 | `P3B_EST_S`: J2 11500, S1 7000 s |
+| `S9SL` | 4 | `s9sl_cases()` | 연구 ①(경사 × 연약 지면), `--start-limit record_only`. C-1 G1 B (0, +3.2°) 연약 지면 REANCHOR 160 s, C-2 J1 A (+4.4°, 0) 크롤러 roll 정착 비대칭 160 s, C-3 J1 B (+3.3°, 0) 운용 마름모 안 거짓 LOC → 재접촉 160 s, C-4 J1 A (0, +3.2°) REANCHOR 200 s | (8 s + 루프) × `S9SL_WALL_S_PER_SIM_S`(G1·S1 51, J1·J2 87 s/모의 s, **가정**): 8600 / 14600 / 14600 / 18100 s |
+
+실행 명령(Chrono-dev, 프로젝트 루트, `PY` = `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe`; 본 실행 전 사용자 확인):
+
+```
+PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py list
+PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run G6P --parallel 4 --order lpt
+PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run p3b_aug --parallel 4 --order lpt
+PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run S9SL --parallel 2
+PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run p3b_aug --schedule plan.json   # cpu-scheduler-expert 배치표
+PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run S9SL --only S9SL_C1_G1_B_top_Fs4_r0_p3p2
+```
+
+**디스패처 동작(`s9_batch.run_batch`)**
+
+- 사례마다 별도 Chrono-dev 프로세스를 띄운다. 풀은 P(`--parallel` = `--parallel-p`, 기본 2)와 E(`--parallel-e`, 기본 0) 두 개다. 각 프로세스는 환경 변수 `OUTRIGGER_PLACEMENT=pcore|ecore`를 받아 `run_S9.place`로 스스로 코어를 고정하고 EcoQoS를 끈다. E 풀에는 `--e-cases`나 `--schedule`에 이름을 적은 사례만 간다(`s8c`·P 고정 행은 E 풀 불가).
+- 순서: `--order given`(정의 순) 또는 `lpt`(`est_s` 긴 것 먼저, 안정 정렬). `--order-cases`에 적은 사례가 맨 앞이다.
+- `--schedule plan.json`: 키 `e_cases`, `order`, `order_cases`, `parallel_p`, `parallel_e`(+ `note`, `source`). 명령줄에 직접 쓴 옵션이 파일보다 우선한다. 모르는 키는 거부한다.
+- `--only <사례 ...>`: 묶음에서 이 이름만 돈다. **틀린 이름은 경고 없이 빠진다**(`progress.log` 첫 줄의 사례 수로 확인).
+- 출력 `07_results/S9/batch_<묶음>_<시각>/`: `<사례>/`(run_S9 출력), `<사례>.log`(stdout+stderr), `progress.log`(START·END·SKIP 한 줄씩, 즉시 기록), `batch.json`(argv·rc·벽시간·풀·`note`; **배치가 정상으로 끝날 때만** 쓴다).
+- 한 사례라도 rc ≠ 0이면 새 사례를 띄우지 않고(남은 사례는 `SKIP ... (earlier failure)`), 돌던 사례는 끝까지 기다린다. 2초마다 상태를 본다.
+- `run_S9.py level`은 루프가 끝난 뒤에야 사례 폴더를 만들고 `result.json`을 마지막에 쓴다. 그래서 중간에 죽은 사례는 `<사례>.log`만 남고 폴더가 없다.
+
+**재시작·분리 실행 (2026-10-29)**
+
+배치가 중간에 죽은 사례: 2026-10-28 20:46 터미널 종료(세션 콘솔의 Ctrl+C·닫기 신호가 자식 사례 프로세스까지 가서 `KeyboardInterrupt`, `batch_G6P_20261028_154030`의 J1RR·S1FL), 2026-10-29 02:46 Windows 재부팅(`batch_p3b_aug_20261029_005120`·`_021432`의 J2 A 중단·하단; 결과 없는 두 폴더는 2026-10-29 사용자 결정으로 삭제, 재실행은 `batch_p3b_aug_20261029_103815`). 두 경우 모두 `batch.json`이 없다.
+
+1. **이어 돌리기 기능은 없다.** `s9_batch.py run`은 매번 새 배치 폴더를 만들고, 끝난 사례(`result.json`)를 건너뛰지 않는다. 남은 사례만 `--only`로 다시 띄운다. 새 폴더에 쓰므로 앞 폴더를 덮어쓰지 않는다.
+2. **끝난 사례 판정**: 앞 배치 폴더(들)의 `progress.log`에 `END <사례> ... rc=0` 줄이 있고 `<사례>/result.json`이 있으면 끝난 것이다. `result.json`만으로 판정하지 않는다(`machine --abort-on-limit`은 `result.json`을 쓴 뒤 rc 3으로 끝난다). `batch.json`은 배치가 죽으면 없으므로 쓰지 않는다. PowerShell(프로젝트 루트):
+
+   ```powershell
+   $b = 'p3b_aug'   # 묶음 이름
+   $done = Get-ChildItem 07_results\S9 -Directory -Filter "batch_${b}_*" | ForEach-Object {
+       $f = $_.FullName
+       Select-String -Path (Join-Path $f progress.log) -Pattern '^END (\S+) .* rc=0 ' |
+         ForEach-Object { $_.Matches[0].Groups[1].Value } |
+         Where-Object { Test-Path (Join-Path $f "$_\result.json") } } | Sort-Object -Unique
+   $done
+   ```
+
+   전체 사례 이름은 `s9_batch.py list`의 해당 줄에서 보고, 빠진 것만 `--only`에 넣는다.
+3. **분리 실행**: 몇 시간 걸리는 배치는 세션 콘솔과 묶이지 않게 띄운다. `Start-Process ... -NoNewWindow`나 셸 도구 포그라운드·백그라운드 실행은 콘솔을 공유해서 터미널을 닫으면 사례까지 죽는다(20:46 사례). WMI로 띄우면 부모가 `WmiPrvSE`가 되어 세션 콘솔·작업 개체(job) 밖에서 돈다(2026-10-29 확인: 세션 셸은 job 안, WMI로 띄운 프로세스는 job 밖). 배치 표준 출력은 `cmd /c`로 파일에 돌린다(사례 로그·`progress.log`는 드라이버가 따로 쓴다).
+
+   ```powershell
+   $py  = 'C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe'
+   $log = 'C:\workspace\outrigger_control\07_results\S9\driver_p3b_aug_' + (Get-Date -Format yyyyMMdd_HHmmss) + '.log'
+   $arg = '04_scripts/02_chrono/s9_batch.py run p3b_aug --parallel 4 --order lpt --only P3b_J2_A_middle_Fs4 P3b_J2_A_bottom_Fs4'
+   $cmd = "cmd.exe /c `"`"$py`" -I -X utf8 -u $arg > `"$log`" 2>&1`""
+   $r = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{
+          CommandLine = $cmd; CurrentDirectory = 'C:\workspace\outrigger_control' }
+   "rc=$($r.ReturnValue) pid=$($r.ProcessId)"   # rc 0 = 시작됨; 진행은 배치 폴더 progress.log
+   ```
+
+   - WMI 프로세스는 호출 셸의 환경 변수를 물려받지 않고 사용자 기본 환경으로 시작한다(세션에서 잠깐 건 `OUTRIGGER_*` 변수가 새지 않는다. 필요한 변수는 `cmd /c "set X=...&& ..."`로 넣는다). 코어 고정은 각 사례가 `OUTRIGGER_PLACEMENT`로 스스로 한다.
+   - 멈추려면 드라이버와 사례 PID를 `progress.log`의 `pid=`로 찾아 종료한다(사용자 승인 뒤).
+   - `Start-Process -WindowStyle Hidden`(‑NoNewWindow 없이)도 새 콘솔을 받아 터미널 종료에는 살아남는다. 다만 호출 셸이 부모로 남으므로 WMI를 기본으로 한다.
+4. **재부팅**: 어떤 분리 실행도 재부팅에서 살아남지 못한다. 긴 배치 동안은 사용자가 Windows Update 사용 시간·재시작 일정을 미리 조정한다(에이전트는 시스템 설정을 바꾸지 않는다). 죽으면 2번 방법으로 남은 사례만 다시 띄운다.
+5. **요약·판정 도구는 배치 폴더 하나만 읽는다**(`s9_batch_summary.py <종류> <배치 폴더>`의 `cases()`). 재시작으로 한 묶음이 여러 폴더로 나뉘면 scratch 폴더에 끝난 사례 폴더의 디렉터리 정션(`New-Item -ItemType Junction`)을 모아 그 폴더를 넘긴다(원본 폴더는 건드리지 않음). `r76_g6_chrono_judge.py`는 사례 폴더 목록을 받으므로 그대로 쓴다.
 
 ## 3. 코드 구조
 

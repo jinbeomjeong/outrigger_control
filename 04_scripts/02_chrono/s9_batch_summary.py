@@ -11,6 +11,12 @@ Usage (Chrono-dev, project root)::
 
     python -I -X utf8 04_scripts/02_chrono/s9_batch_summary.py <V0p|V16|L|P2|P2prime|P3a|P3b|P3-10> <batch folder> [<out.json>]
     python -I -X utf8 04_scripts/02_chrono/s9_batch_summary.py P3b <batch folder> [<out.json>] --rejudge
+    python -I -X utf8 04_scripts/02_chrono/s9_batch_summary.py E420 <batch or case folder> [<out.json>]
+
+``E420`` = spec 420.4 equivalence of finished ``level`` runs to the final controller (2026-10-29: P-S8-31
+E3c10, P-S8-32 LWa, zero calibration variant D): code state, (a) ``INFO_LOC_CLEARANCE_MARGIN`` 0, (b)
+``WARN_PRESSURE_ZERO_SKIPPED:*:move`` / ``INFO_PRESSURE_ZERO_RETURN_TOL``, (c) ``leg_reapproach_start``
+before the LOC 0 (default output ``06_analysis/01_chrono/19_S9/s9_E420_<folder>.json``).
 
 ``P3b --rejudge`` first re-judges every case with the spec rev. 60 P3-2 / P3-5 / P3-7 definitions
 (C-S9-60, ``run_S9.rejudge_case``; no Chrono run, ``result.json`` untouched, writes
@@ -904,6 +910,125 @@ def summary_p3b(folder: Path, rejudge: bool = False) -> dict[str, Any]:
             "rows": rows, "s8c_reapproach_limit_cases": s8c, "cost": batch_cost(folder)}
 
 
+E420_FLAT_TILT_DEG = 1.0
+"""P-S8-31 tilt condition (spec 414.3: fires only when the settle max(|roll|, |pitch|) > 1 deg)."""
+E420_MOVE_SKIP_PREFIX = "WARN_PRESSURE_ZERO_SKIPPED:"
+
+
+def equivalence_420_4(case_dir: Path, r: dict[str, Any]) -> dict[str, Any]:
+    """Spec 420.4 equivalence of one finished ``run_S9.py level`` case to the final controller
+    (spec 420.1 rules: P-S8-31 E3c10, P-S8-32 LWa, zero calibration variant D), from ``result.json``
+    alone. ``code_state``: the run's own record (``code_state``, runs after 2026-10-29 13:00) or
+    ``run_S9.code_state_from_meta`` on its ``controller_meta``. Checks:
+
+    (a) ``INFO_LOC_CLEARANCE_MARGIN`` events = 0 (420.4 (2); a pre-implementation controller has
+        no such rule: ``not_applicable``);
+    (b) zero calibration: ``WARN_PRESSURE_ZERO_SKIPPED:<leg>:move`` events / move-skipped legs (420.4
+        (3): on pre-implementation code they mean "re-run with the new code"; on code with variant D
+        they are its final outcome), ``INFO_PRESSURE_ZERO_RETURN_TOL`` events (final behaviour);
+    (c) ``leg_reapproach_start`` before the LOC = 0 (419.7: LWa cannot act then; needed when the
+        run's controller had no LWa) and the ``INFO_LOC_WINDOW_RESTART`` count.
+
+    Record: settle tilt (C2 meta ``slope_clearance_margin.settle_attitude_deg`` when present, else
+    ``settle_reference.end_roll_pitch_deg``) against the 1 deg E3c10 condition. ``equivalent`` = every
+    applicable check holds; ``reasons`` lists the failed ones. Times absolute [s]."""
+    rs9 = _run_s9()
+    cm = r.get("controller_meta") or {}
+    cs = r.get("code_state")
+    if not isinstance(cs, dict) or "state" not in cs:
+        cs = {**rs9.code_state_from_meta(cm), "files_at_start": None, "source": "controller_meta"}
+    else:
+        cs = {**cs, "source": "result.code_state"}
+    state = cs["state"]
+    on = cs.get("rules_on") or {}
+    ev = sorted((float(e["t_s"]), str(e["name"])) for e in (r.get("events") or []))
+    soil = r.get("c2_soil") or {}
+    t_loc = soil.get("t_loc_s")
+    if t_loc is None:
+        t_loc = next((t for t, n in ev if n == rs9.SOIL_LOC_EVENT), None)
+    reasons = []
+    # (a)
+    margin = [(t, n) for t, n in ev if n.startswith("INFO_LOC_CLEARANCE_MARGIN")]
+    a = {"events": margin, "count": len(margin), "rule_in_code": bool(on.get("slope_clearance_margin"))}
+    if not (cs.get("rules_present") or {}).get("slope_clearance_margin"):
+        a["status"] = "not_applicable"
+    else:
+        a["status"] = "ok" if not margin else "not_equivalent"
+        if margin:
+            reasons.append("(a) INFO_LOC_CLEARANCE_MARGIN fired")
+    # (b)
+    zc = rs9.zero_calibration_outcome(cm)
+    skips = [(t, n) for t, n in ev if n.startswith(E420_MOVE_SKIP_PREFIX) and n.endswith(":move")]
+    tol_ev = [(t, n) for t, n in ev if n.startswith("INFO_PRESSURE_ZERO_RETURN_TOL")]
+    b = {"move_skip_events": skips, "move_skipped_legs": zc["move_skipped_legs"], "return_tol_events": tol_ev,
+         "all_calibrated": zc["all_calibrated"], "is_active": zc["is_active"], "legs": zc["legs"],
+         "return_timeout_tolerance_m": zc["return_timeout_tolerance_m"], "rule_in_code": bool(on.get(
+             "zero_calibration_return_tol"))}
+    if skips and not b["rule_in_code"]:
+        b["status"] = "rerun_with_new_code"
+        reasons.append("(b) zero calibration skipped: move on code without variant D")
+    else:
+        b["status"] = "ok" if not skips else "final_outcome_with_variant_D"
+    # (c)
+    pre = [(t, n) for t, n in ev if n.startswith("leg_reapproach_start") and (t_loc is None or t < float(t_loc) - 1e-9)]
+    restarts = [(t, n) for t, n in ev if n.startswith("INFO_LOC_WINDOW_RESTART")]
+    c = {"t_loc_s": t_loc, "reapproach_starts_before_loc": pre, "count": len(pre), "window_restarts": restarts,
+         "rule_in_code": bool(on.get("liftoff_window_reapproach"))}
+    if c["rule_in_code"]:
+        c["status"] = "final_code" if pre else "ok"
+    else:
+        c["status"] = "ok" if not pre else "not_equivalent"
+        if pre:
+            reasons.append("(c) re-approach start before the LOC on code without LWa")
+    # flat-floor record (E3c10 cannot fire at <= 1 deg)
+    scm = cm.get("slope_clearance_margin") or {}
+    tilt = scm.get("settle_attitude_deg")
+    tilt_src = "controller_meta.slope_clearance_margin.settle_attitude_deg"
+    if tilt is None:
+        tilt = (r.get("settle_reference") or {}).get("end_roll_pitch_deg")
+        tilt_src = "settle_reference.end_roll_pitch_deg (true body attitude, last settle second)"
+    tilt_max = None if tilt is None else max(abs(float(x)) for x in tilt)
+    a.update(settle_tilt_deg=tilt, settle_tilt_source=tilt_src, settle_tilt_max_deg=tilt_max,
+             tilt_le_1deg=None if tilt_max is None else bool(tilt_max <= E420_FLAT_TILT_DEG))
+    started = None
+    log = case_dir.parent / "progress.log"
+    if log.exists():
+        for line in log.read_text("utf-8", errors="replace").splitlines():
+            parts = line.split()
+            if len(parts) >= 3 and parts[0] == "START" and parts[1] == case_dir.name:
+                started = parts[2]
+    return {"case": case_dir.name, "code_state": cs, "started_local": started,
+            "a_loc_clearance_margin": a, "b_zero_calibration": b, "c_pre_loc_reapproach": c,
+            "equivalent": not reasons, "reasons": reasons}
+
+
+def summary_e420(folder: Path) -> dict[str, Any]:
+    """Spec 420.4 equivalence table of a batch folder (every ``<case>/result.json`` of action
+    ``level``); cases still running have no ``result.json`` and are listed under ``missing``.
+    Also takes a single case folder."""
+    if (folder / "result.json").exists():
+        dirs = [folder]
+    else:
+        dirs = sorted(d for d in folder.iterdir() if d.is_dir() and (d / "result.json").exists())
+    rows, skipped = {}, []
+    for d in dirs:
+        r = load(d)
+        if r.get("action") != "level":
+            skipped.append(d.name)
+            continue
+        rows[d.name] = equivalence_420_4(d, r)
+    logged = []
+    if (folder / "progress.log").exists():
+        logged = sorted({ln.split()[1] for ln in (folder / "progress.log").read_text("utf-8", errors="replace").splitlines()
+                         if ln.startswith("START ") and len(ln.split()) > 1})
+    return {"rule": "spec 420.4 (2026-10-29): (a) INFO_LOC_CLEARANCE_MARGIN 0, (b) WARN_PRESSURE_ZERO_SKIPPED:*:move "
+                    "(pre-implementation code -> re-run) / INFO_PRESSURE_ZERO_RETURN_TOL (final), (c) leg_reapproach_start "
+                    "before the LOC 0 (419.7) when the run had no LWa; code_state from result.code_state or controller_meta",
+            "rows": rows, "not_level": skipped, "missing": [k for k in logged if k not in rows],
+            "all_equivalent": bool(rows) and all(v["equivalent"] for v in rows.values()),
+            "values_only": "equivalence evidence; the verdict on using the runs is control's"}
+
+
 P3_10_CLEARANCE_M = 0.020
 """Rigid bit-identity conditions (spec 285 note, rev. 59): clearance_at_loc_m < 20 mm, clearance_at_P_m <= 20 mm."""
 
@@ -964,12 +1089,15 @@ def main(argv) -> None:
     if rejudge and kind != "P3b":
         raise SystemExit("--rejudge is for P3b only (spec rev. 60 C-S9-60)")
     fn = {"V0p": summary_v0p, "V16": summary_v16, "L": summary_l, "P2": summary_p2, "P2prime": summary_p2prime,
-          "P3a": summary_p3a, "P3b": summary_p3b, "P3-10": summary_p3_10}[kind]
+          "P3a": summary_p3a, "P3b": summary_p3b, "P3-10": summary_p3_10, "E420": summary_e420}[kind]
     res = fn(folder, rejudge=True) if rejudge else fn(folder)
     res["source_batch"] = folder.as_posix()
     res["generator"] = "04_scripts/02_chrono/s9_batch_summary.py"
-    out = Path(argv[2]) if len(argv) > 2 else OUT / (f"s9_{kind}_summary.json" if kind.startswith(("P2", "P3"))
-                                                     else f"s9_P1_{kind}_summary.json")
+    if kind == "E420":
+        default = OUT / f"s9_E420_{folder.name}.json"
+    else:
+        default = OUT / (f"s9_{kind}_summary.json" if kind.startswith(("P2", "P3")) else f"s9_P1_{kind}_summary.json")
+    out = Path(argv[2]) if len(argv) > 2 else default
     out.write_text(json.dumps(res, indent=1, ensure_ascii=False, default=float), "utf-8")
     print(out)
 

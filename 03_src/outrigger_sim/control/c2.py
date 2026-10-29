@@ -1440,6 +1440,9 @@ R8_ZERO_HOLD_S = 1.0
 """R-3: 10 samples at 10 Hz."""
 R8_ZERO_HOLD_STD_N = (730.0, 730.0, 530.0, 530.0)
 """R-3: ``1.76 sigma_0`` front / rear (spec 99.3)."""
+R8_ZERO_RETURN_TIMEOUT_TOLERANCE_M = 0.5e-3
+"""Spec 416.3 (variant D, user decision 2026-10-29): about 3.5 sigma of the start-to-sample
+stroke difference (sqrt(2) x 0.1 mm), 1/6 of the 3 mm move."""
 R8_D1_PRE_PROBE_STIFFNESS_SCALE = 1.2
 """Spec 143 / 149 P-R8-1: the twist and guard gains before the first probe are 1 / 1.2."""
 R8_D1_MEASURED_STIFFNESS_SCALE_MAX = 1.5
@@ -1514,6 +1517,12 @@ R8_PRE_LOC_PAUSE_SLOW_LIFT_MEAN_FRACTION = 0.16
 """The LOC plateau mean-speed floor 0.15 ``v_max`` plus 1/15 for the output ramp, so the
 plateau window keeps filling during the slowdown."""
 R8_PRE_LOC_PAUSE_REAPPROACH_SPEED_FACTOR = 4.0
+# P-S8-31 slope clearance margin (user decision 2026-10-29, decision 11: variant E3c10)
+SLOPE_MARGIN_TILT_MIN_RAD = math.radians(1.0)
+SLOPE_MARGIN_M = 0.030
+R8_SLOPE_MARGIN_MIN_CLEARANCE_AT_P_M = 0.010
+"""Soil sign c_min(t_P) of E3c10: above the rigid / G1 study-1 maximum 6.5 mm and the 7.5 mm a
+rigid slope reads with sensor noise (r79 L2 ref), spec 417.3."""
 R8_D1_SETTINGS = R8Settings(
     output_delay_periods=1,
     imu_sample_period_s=R8_IMU_SAMPLE_PERIOD_S,
@@ -1847,6 +1856,69 @@ class PreLocLiftPauseSettings:
             )
 
 
+SLOPE_MARGIN_EVENT = "INFO_LOC_CLEARANCE_MARGIN"
+"""``INFO_LOC_CLEARANCE_MARGIN:<effective target mm, integer>``: P-S8-31 raised the clearance
+target at the LOC."""
+
+
+@dataclass(frozen=True)
+class SlopeClearanceMarginSettings:
+    """P-S8-31 (E3c10, spec 414 / 417): raise the clearance target at the LOC on a tilted
+    crawler settle when the plateau-start crawler clearance estimate shows a soil sign.
+
+    Right after the LOC (same period, once per run) the run's clearance target becomes
+    ``thresholds.clearance_target_m + margin_m`` when the settle attitude is known,
+    ``max(|roll|, |pitch|) > tilt_min_rad``, (with ``require_soil_use``) the soil mode ran or the
+    S-3 corner bias applies, and (with ``min_clearance_at_P_m``) ``c_min(t_P) >`` that value.
+    The config is not changed; :meth:`C2Controller.reset` restores the configured target.
+
+    Off by default; plain class-level defaults, so configs unpickled from older code read
+    "off".
+    """
+
+    enable: bool = False
+    tilt_min_rad: float = SLOPE_MARGIN_TILT_MIN_RAD
+    """Strict: fires when ``max(|roll|, |pitch|) > tilt_min_rad`` (gravity-referenced settle)."""
+    margin_m: float = SLOPE_MARGIN_M
+    """Added to ``thresholds.clearance_target_m`` for the rest of the run."""
+    require_soil_use: bool = False
+    """True = the original E3 (soil mode or a corner bias needed)."""
+    min_clearance_at_P_m: float | None = None
+    """``None`` = no soil-sign condition; strict: needs ``c_min(t_P) >`` this value."""
+
+    def __post_init__(self) -> None:
+        for name in ("tilt_min_rad", "margin_m"):
+            if not getattr(self, name) >= 0.0:
+                raise ValueError(f"{name} must be >= 0, got {getattr(self, name)!r}")
+
+
+LOC_WINDOW_RESTART_EVENT = "INFO_LOC_WINDOW_RESTART"
+"""``INFO_LOC_WINDOW_RESTART:<legs>``: P-S8-32 cleared a non-empty S-1 window because of the
+re-approaching legs (leg names in LEG_ORDER, comma separated)."""
+
+
+class LiftoffWindowReapproach(StrEnum):
+    """S-1 plateau window against a lifted re-approach (P-S8-32, spec 419)."""
+
+    OFF = "off"
+    """The window as P-S9-2 (class default)."""
+    RESTART = "restart"
+    """LWa (user decision 2026-10-29): while any re-approach is active the window takes no
+    sample and is cleared; a new window starts the period after the last one ended. The LWb
+    alternative ("exclude") was not adopted and is not implemented."""
+
+
+@dataclass(frozen=True)
+class LiftoffWindowReapproachSettings:
+    """P-S8-32 (spec 419.2 / 420.1 (3)). Off by default; a plain class-level default, so
+    configs unpickled from older code read "off"."""
+
+    mode: LiftoffWindowReapproach = LiftoffWindowReapproach.OFF
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "mode", LiftoffWindowReapproach(self.mode))
+
+
 @dataclass(frozen=True)
 class RestoredLiftoff:
     """S-1 lift-off confirmation handed to :meth:`C2Controller.restore_liftoff_confirmation`.
@@ -1925,6 +1997,12 @@ class C2Config:
     class-level default as ``soil``."""
     pre_loc_lift_pause: PreLocLiftPauseSettings = PreLocLiftPauseSettings()
     """Pre-LOC lift slowdown and fast re-approach (P-S8-30); off by default, a plain
+    class-level default as ``soil``."""
+    slope_clearance_margin: SlopeClearanceMarginSettings = SlopeClearanceMarginSettings()
+    """Clearance target margin at the LOC on a tilted settle (P-S8-31); off by default, a plain
+    class-level default as ``soil``."""
+    liftoff_window_reapproach: LiftoffWindowReapproachSettings = LiftoffWindowReapproachSettings()
+    """S-1 window against a lifted re-approach (P-S8-32, LWa); off by default, a plain
     class-level default as ``soil``."""
 
     def __post_init__(self) -> None:
@@ -2057,7 +2135,14 @@ class C2Config:
         P30fz): before the LOC a falling leg below 3.0 ``F_min`` slows the lift to a mean of
         0.16 ``v_max`` until it reads 3.5 ``F_min`` or for 3 s at most (not started after the
         soil-mode start), and re-approaches run 4 times faster
-        (:class:`PreLocLiftPauseSettings`). The start-IMU form only:
+        (:class:`PreLocLiftPauseSettings`). User decision 2026-10-29 (spec 416.3, variant D):
+        at the CHECK retract time-out a leg within 0.5 mm of its start stroke counts as
+        returned. User decision 2026-10-29 (P-S8-31, decision 11 E3c10, spec 414.3): after the
+        LOC on a settle tilted more than 1 deg with ``c_min(t_P)`` above 10 mm the clearance
+        target of the run is 30 mm higher (:class:`SlopeClearanceMarginSettings`). User
+        decision 2026-10-29 (P-S8-32, LWa, spec 419): the S-1 window is cleared while a
+        re-approach is active (:class:`LiftoffWindowReapproachSettings`). The start-IMU form
+        only:
         the late IMU read (C1) is not implemented (U-R8-6 = C2).
         """
         config = self.with_r8_diagnostics()
@@ -2118,8 +2203,17 @@ class C2Config:
             reapproach_speed_factor=R8_PRE_LOC_PAUSE_REAPPROACH_SPEED_FACTOR,
             only_before_soil_mode=True,
         )
+        slope_clearance_margin = replace(
+            config.slope_clearance_margin,
+            enable=True,
+            min_clearance_at_P_m=R8_SLOPE_MARGIN_MIN_CLEARANCE_AT_P_M,
+        )
         return replace(
             config,
+            slope_clearance_margin=slope_clearance_margin,
+            liftoff_window_reapproach=LiftoffWindowReapproachSettings(
+                mode=LiftoffWindowReapproach.RESTART
+            ),
             two_pressure=two_pressure,
             fault_reground=reground_settings,
             soil=soil,
@@ -2141,6 +2235,7 @@ class C2Config:
                 hold_s=R8_ZERO_HOLD_S,
                 max_hold_std_per_leg_N=R8_ZERO_HOLD_STD_N,
                 hold_std_ddof=1,
+                return_timeout_tolerance_m=R8_ZERO_RETURN_TIMEOUT_TOLERANCE_M,
             ),
             r8=R8_D1_SETTINGS,
         )
@@ -3470,6 +3565,17 @@ class _RunState:
     pre_loc_pause_count: int = 0
     pre_loc_pause_periods: int = 0
     """Slowdowns started and periods spent in one (meta ``pre_loc_lift_pause``)."""
+    # P-S8-31 (immutable defaults: class attributes for run states pickled before them)
+    clearance_target_m: float | None = None
+    """Effective clearance target of the run once the slope margin applied; ``None`` = the
+    configured ``thresholds.clearance_target_m`` (:meth:`C2Controller._clearance_target_m`)."""
+    slope_margin_applied_s: float | None = None
+    """LOC time at which the slope margin applied (once per run)."""
+    slope_margin_settle_rad: tuple[float, float] | None = None
+    """Settle attitude (roll, pitch) the margin was judged on."""
+    # P-S8-32 (immutable default: class attribute for run states pickled before it)
+    loc_window_restart_count: int = 0
+    """Non-empty S-1 windows cleared because of a re-approach (meta)."""
 
 
 @dataclass(frozen=True)
@@ -3560,8 +3666,17 @@ class C2Controller:
         self._state = self._new_run_state()
 
     def _check_clearance_target(self) -> None:
-        """Z1 (spec 2.6): the worst accepted target must keep 10 mm of stroke."""
-        clearance_target = self.config.thresholds.clearance_target_m
+        """Z1 (spec 2.6): the worst accepted target must keep 10 mm of stroke; with the
+        P-S8-31 slope margin on, the raised target as well (spec 414.3)."""
+        self._check_clearance_target_value(self.config.thresholds.clearance_target_m)
+        margin = self.config.slope_clearance_margin
+        if margin.enable:
+            self._check_clearance_target_value(
+                self.config.thresholds.clearance_target_m + margin.margin_m
+            )
+
+    @staticmethod
+    def _check_clearance_target_value(clearance_target: float) -> None:
         worst_stroke = WORST_ACCEPTED_STROKE_M + WORST_STROKE_PER_CLEARANCE * (
             clearance_target - REFERENCE_CLEARANCE_M
         )
@@ -3697,6 +3812,8 @@ class C2Controller:
             "lift_stroke_guard": self._lift_stroke_guard_meta(),
             "twist_relax": self._twist_relax_meta(),
             "pre_loc_lift_pause": self._pre_loc_lift_pause_meta(),
+            "slope_clearance_margin": self._slope_clearance_margin_meta(),
+            "liftoff_window_reapproach": self._liftoff_window_reapproach_meta(),
             "locked_pressure_warning_note": (
                 QUASI_STATIC_PRESSURE_NOTE if r8.is_instant_sampling else None
             ),
@@ -4282,7 +4399,7 @@ class C2Controller:
         if fallback is RodStrokeFallback.STROKE_OIL_COLUMN:
             oil_stiffness = geometry.oil_stiffness_N_m(motor_stroke_m)
         else:
-            clearance_m = self.config.thresholds.clearance_target_m
+            clearance_m = self._clearance_target_m()
             oil_stiffness = geometry.oil_stiffness_N_m(geometry.operating_extension_m(clearance_m))
         return motor_stroke_m - cylinder_force_N / oil_stiffness
 
@@ -5957,7 +6074,7 @@ class C2Controller:
             reading.motor_stroke_m,
             reading.rod_stroke_m,
             attitude_change,
-            self.config.thresholds.clearance_target_m,
+            self._clearance_target_m(),
             corner_bias_m=self._active_corner_bias_m(),
         )
         upper = self.geometry.stroke_soft_max_m - TARGET_STROKE_MARGIN_M
@@ -6014,7 +6131,7 @@ class C2Controller:
             self._state.is_lifted = True
         roll_rate, pitch_rate = self._attitude_rates()
         filtered_clearance = float(self._clearance_filter.update(clearance))
-        heave_error = thresholds.clearance_target_m - filtered_clearance
+        heave_error = self._clearance_target_m() - filtered_clearance
         heave_rate = float(
             np.clip(
                 self.config.gains.heave_kz_1_s * heave_error,
@@ -6342,7 +6459,7 @@ class C2Controller:
         )
         if is_guard_limited and filtered_clearance_m >= thresholds.lifted_clearance_m:
             return True
-        clearance_error_m = abs(filtered_clearance_m - thresholds.clearance_target_m)
+        clearance_error_m = abs(filtered_clearance_m - self._clearance_target_m())
         return clearance_error_m < thresholds.done_clearance_tolerance_m
 
     # --- relaxed twist completion (P-S8-29) ---
@@ -6800,6 +6917,8 @@ class C2Controller:
         soil = self._soil_state()
         if soil.is_liftoff_confirmed:
             return
+        if self._is_window_held_by_reapproach(reading.t_s):
+            return
         if not self._is_plateau_period():
             soil.window.clear()
             return
@@ -6821,6 +6940,28 @@ class C2Controller:
         is_flat = rise_N <= settings.plateau_rise_max_N
         if is_flat and mean_load_N >= settings.plausibility_fraction * self._reference_weight_N():
             self._confirm_liftoff(reading.t_s, tail, mean_load_N)
+
+    def _is_window_held_by_reapproach(self, t_s: float) -> bool:
+        """P-S8-32 LWa (spec 419.2): with a re-approach active this period the window takes
+        no sample and is cleared (one event per non-empty window cleared)."""
+        if self.config.liftoff_window_reapproach.mode is not LiftoffWindowReapproach.RESTART:
+            return False
+        active_legs = sorted(self._state.active_reapproaches)
+        if not active_legs:
+            return False
+        window = self._soil_state().window
+        if window:
+            self._state.loc_window_restart_count += 1
+            names = ",".join(LEG_ORDER[leg] for leg in active_legs)
+            self._add_event(t_s, f"{LOC_WINDOW_RESTART_EVENT}:{names}")
+        window.clear()
+        return True
+
+    def _liftoff_window_reapproach_meta(self) -> dict[str, Any]:
+        return {
+            "mode": str(self.config.liftoff_window_reapproach.mode),
+            "restarts": self._state.loc_window_restart_count,
+        }
 
     def _corner_bias_m(self, sample: _PlateauSample) -> NDArray[np.float64]:
         """S-3 raw ``b_k = c_k(t_P) - (rho_k - min rho)``: at ``t_P`` the last corner has just
@@ -6876,6 +7017,64 @@ class C2Controller:
             self._add_event(
                 t_s, f"{SOIL_EVENT_WEIGHT_MISMATCH}:{soil.weight_ratio:.3f}", is_warning=True
             )
+        self._apply_slope_clearance_margin(t_s)
+
+    # --- slope clearance margin (P-S8-31, spec 414.2 / 417.5) ---
+
+    def _clearance_target_m(self) -> float:
+        """Clearance target of this run: the configured one, raised by P-S8-31 after it fired."""
+        effective_m = self._state.clearance_target_m
+        if effective_m is None:
+            return self.config.thresholds.clearance_target_m
+        return effective_m
+
+    def _is_slope_margin_due(self, settle_rad: tuple[float, float] | None) -> bool:
+        """Spec 414.2 (2) and 417.5: every condition of the margin, right after the LOC."""
+        settings = self.config.slope_clearance_margin
+        if not settings.enable or self._state.slope_margin_applied_s is not None:
+            return False
+        if settle_rad is None:
+            return False
+        if max(abs(settle_rad[0]), abs(settle_rad[1])) <= settings.tilt_min_rad:
+            return False
+        soil = self._soil_state()
+        if settings.require_soil_use and not (
+            soil.soil_mode_start_s is not None or soil.has_corner_bias
+        ):
+            return False
+        if settings.min_clearance_at_P_m is not None:
+            c_min_at_P_m = soil.clearance_at_plateau_start_m
+            if c_min_at_P_m is None or c_min_at_P_m <= settings.min_clearance_at_P_m:
+                return False
+        return True
+
+    def _apply_slope_clearance_margin(self, t_s: float) -> None:
+        """Spec 414.2 (3): raise this run's clearance target by ``margin_m`` (one event)."""
+        settle_rad = self._settle_attitude_rad()
+        if not self._is_slope_margin_due(settle_rad):
+            return
+        state = self._state
+        target_m = (
+            self.config.thresholds.clearance_target_m
+            + self.config.slope_clearance_margin.margin_m
+        )
+        state.clearance_target_m = target_m
+        state.slope_margin_applied_s = float(t_s)
+        state.slope_margin_settle_rad = settle_rad
+        self._add_event(t_s, f"{SLOPE_MARGIN_EVENT}:{target_m * 1e3:.0f}")
+
+    def _slope_clearance_margin_meta(self) -> dict[str, Any]:
+        state = self._state
+        settle_rad = state.slope_margin_settle_rad
+        return {
+            "settings": asdict(self.config.slope_clearance_margin),
+            "is_applied": state.slope_margin_applied_s is not None,
+            "t_applied_s": state.slope_margin_applied_s,
+            "clearance_target_m": self._clearance_target_m(),
+            "settle_attitude_deg": (
+                None if settle_rad is None else [math.degrees(value) for value in settle_rad]
+            ),
+        }
 
     def _loc_anchor_bias_m(
         self, raw_bias_m: NDArray[np.float64], c_min_m: float

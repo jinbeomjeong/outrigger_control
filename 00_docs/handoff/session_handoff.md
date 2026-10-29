@@ -2,18 +2,34 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-10-28 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 75: G6 Chrono(S9 SCM 한 패드 연약 패치) 판정, U-S9-G6d 과도 재접촉 FLAG, U-S8-80 P-S8-29 재상승 허용 0.6 kN, dynamics 5.40**). 그 전: bee0693(개정 74, P-S8-30 P30fz), 3131552(개정 72·73, G6 하네스·P-S8-29·꼬리 여유·G6 Chrono 기능), 34c806d(개정 69~71, G8·P-S8-28), 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
+- 갱신: 2026-10-29 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 76~80(395~420절): 추가 연구 ①②③·G6P 정리, P-S8-31 E3c10·P-S8-32 LWa·영점 교정 D안 구현·인수, 늦은 LOC·과도 재접촉 FLAG, dynamics 개정 57(5.41)**). 그 전: f062051(개정 75), bee0693(개정 74, P-S8-30 P30fz), 3131552(개정 72·73, G6 하네스·P-S8-29·꼬리 여유·G6 Chrono 기능), 34c806d(개정 69~71, G8·P-S8-28), 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
 - 세션 기록: 일반 Windows 터미널에서 `claude`를 직접 실행한다(2026-10-26 결정).
 
-## 이번 커밋에서 바뀐 것 (bee0693 이후)
+## 이번 커밋에서 바뀐 것 (f062051 이후)
+
+1. **이전 세션 미기록분 정리**(10-28 오후~29 새벽 추가 연구, 이전 세션 20:46 종료): 명세 개정 76(정착 훅 p0 유지)·77(연구 ① 연약 지면 × 경사 177)·78(수정 후보)·79(연구 ② 센서 오차 r79 L0~L2)·80(G6P·p3b_aug·논문 최대 압력 표). dynamics 개정 57 5.41(경사 크롤러 정착 표, 정착 판정 v2 근거, S1 전방 S-5 = 지지력 파괴 계열). cad `chrono_build_plan.md` S9 실행기 확장·**재시작·분리 실행(WMI)** 절, README.
+2. **제어기 수정 3건(R8 프리셋 `with_10hz_d1()`에서만, 클래스 기본 옛 동작)**: P-S8-31 **E3c10**(`SlopeClearanceMarginSettings`, 결정 11), 영점 교정 **D안**(`zero_calibration.py` `return_timeout_tolerance_m` 0.5 mm, 결정 9 — `_move` 복귀 판정이 행정 잡음 + 하드 스톱 때문에 다리당 약 10 % `skipped: move`이던 결함), P-S8-32 **LWa**(`LiftoffWindowReapproachSettings` restart, 결정 12). 시험 `test_c2_p31.py`·`test_c2_p32.py`·`test_zero_calibration.py`.
+3. **판정기**: 늦은 LOC FLAG(419.8·419.8.1, cad `run_S9.py` `p32_late_loc_block`, 하네스 `04_scripts/03_control/s9/late_loc_rule.py`), G6-1 = U-S9-G6d 분류(`crawler_gate`), 결과 기록 `code_state`, 동치 점검 `s9_batch_summary.py E420`(420.4).
+4. **인수 I-1~I-8 통과**(420.2b): 연구 ① 177·G6 116(21건 LWa 변화 예측대로)·G8 516·p3b 207·V-3 rigid 270/soil 144/sensor 72/beta 16·r79 L0 20(3건 예측대로 변화), unit 2,979 통과. 결과 `06_analysis/02_control/s9/rev81/`(`impl_*`, `R1_*`, `fix_*`).
+5. **평지 Chrono 8건**(`07_results/S9/batch_G6P_20261029_103815`·`batch_p3b_aug_20261029_103815`·`_120112`, git 제외): G6P J1@RR·J2 A 2·S1 B 2 = 최종 결과(E420 동치), G6P S1@FL = 비동치(LW 전 참조, 재실행), S1 A 2건 실행 중(최종 코드). 새벽 중단 폴더 `_005120`·`_021432`는 결과 없음 → 삭제(사용자 결정).
+6. **중단 원인**: 10-28 20:46 Microsoft Store PowerShell 자동 업데이트(`TerminateApplications`)가 Store판 pwsh를 종료 → 그 안의 Claude 세션 전부 host_exit, 10-29 02:46 Windows Update 재부팅. 지금은 Windows Update 일시 중지(11-01 13:06까지)·Store 자동 업데이트 끔(사용자가 작업 끝나면 다시 켬).
+
+## 다음 할 일 (2026-10-29 커밋 뒤)
+
+1. **최종 Chrono 5건**(사용자 사전 승인, 인수 통과 조건): S9SL C4·C2 → P 2병렬, C3·C1·G6P S1@FL → E(cpu-scheduler 배치표, 명세 420.5). 약 4~5 h. WMI 분리 + 창 제목. long-running-task-monitor 15분 점검.
+2. r79 L3·L4·선택 수준(L3 seed 0·1은 14:35 E코어 실행 중, `rev79/r79_L3_all_s01_final.json`; L1·L2 재실행 `r79_L1L2_all_final.json` P코어 실행 중) → control 제안 문턱으로 S-1~S-6 **잠정** 판정(사용자 결정, 확정은 사용자).
+3. 연구 ① `s9_soil_slope.py` P3-1을 U-S9-G6d `crawler_gate`로 맞춤(기존 결정 적용, python) → 177 재판정.
+4. 논문 v4 개편(사용자 사전 승인: 초안·paper-reviewer opus/high 리뷰·반영까지, 원고 커밋 안 함). 부재 중 승인 범위는 메모리 `absence-authorization-20261029`.
+
+## f062051에서 바뀐 것 (bee0693 이후)
 
 1. **G6 Chrono 배치**(`07_results/S9/batch_G6_20261028_075108`, git 제외; 제어기 bee0693, 3지형 배치, 4병렬 P코어 07:51~10:13, 4건 rc 0 — G6-0a 1274 s, G1@RR 4949 s, J1@RR 6953 s, J1@FL 8538 s; cpu-scheduler 기록 완료). 실행 전 cad 보강: `run_S9.py` `p3b_ext`에 `INFO_LIFT_PAUSED` 시각·`loc_minus_crawler_departure_s`, `CompletionProbe` V2b 대응.
 2. **개정 75(389~394)**: G6-0a 3지형 동치(dynamics 5.40.8, 비교기 `s9_g6_patch_compare.py` C-3 기준 수정 → `g6_0a_compare_5408.json` pass_all), G1@RR·J1@RR 통과, J1@FL 이탈 직후 크롤러 과도 재접촉 → **U-S9-G6d (가) FLAG**(cad `run_S9.py` `recontact_events`, 시험 `test_s9_p31_recontact.py`, 재판정 `result_rejudge_U-S9-G6d.json`), 하네스는 J1 연약 패치에서 낙관 쪽, P-S8-29 완화 조건 깜박임 → **U-S8-80 (나) 재상승 허용 0.6 kN**(python `R8_TWIST_RELAX_RISE_TOL_N`, 하네스 G6 116·G8 516·V-3·r8d1 해시 불변, unit 2797). control 판정 `04_scripts/03_control/s8/r76_*.py`, 결과 `06_analysis/02_control/s8/rev76/`.
 3. **`dynamics_model.md` 개정 56(5.40)**: G6 첫 접촉 판단(연약 세트 J1 유지, 튀어오름 없음, 처녀 가지 구간 $F_x$), C-4 허용값, 5.40.8 G6-0a 판정.
 4. 문서: 명세 개정 75, decision_log 2줄, 로드맵 6절 1번, CLAUDE.md 제어기 행(재상승 허용 0.6 kN, 개정 30~75)·커버리지 공백 줄, 색인.
 
-## 다음 할 일 (권장 순서)
+### f062051 당시 다음 할 일 (기록)
 
 1. **센서 오차 모델 G6 하네스 확인**(control): J1·J2 후방 연약, 압력 센서 3등급, P-S8-29 완화 동작(실기 압력 잡음은 재상승 허용보다 훨씬 큼) → 실기 허용 재결정(명세 394).
 2. **G3(앞 다리 사건 + 그 다리 로드 고장)**: 축소 하네스에 로드 판독 고장 주입, 약 72실행.
@@ -144,4 +160,5 @@ A. ✅ (e8ef7df) G4 FAULT_REGROUND 닫음(명세 개정 64~66, U-S8-68~72). ✅ 
 - 예상 15분 이상 작업은 **long-running-task-monitor**에 15분 주기 점검을 맡긴다(Suspended 검사 포함).
 - **Suspended·응답 없는 프로세스는 추천 방법으로 자동 조치 뒤 사후 보고**(사용자 2026-10-26): Suspended는 ResumeThread, 일회성 고아만 단일 PID 종료, 시뮬레이션·실행기는 자동 종료 금지. Bash·Grep 도구 자식(git·grep·bash·ripgrep)이 Suspended로 멈추는 일이 반복돼 Python·검색·긴 명령은 PowerShell 도구로 한다(검색은 `Select-String`).
 - 에이전트 지시문에 매번: 셸 heredoc·`python -`·`sed -i` 금지, Write로 쓴 파일을 `python -I`로 실행, 커밋 메시지는 `git commit -F <파일>`.
+- 장시간 배치는 WMI(`Invoke-CimMethod Win32_Process Create`)로 세션과 분리하고, 창마다 제목·안내 문구(무엇·코어·예상 종료·진행 파일·닫지 말 것)를 붙인다(사용자 2026-10-29). 밤샘 전 Windows Update 일시 중지·Store 자동 업데이트 끔 확인.
 - S단계 본 판정 실행 전에는 사용자에게 알리고 확인받는다.

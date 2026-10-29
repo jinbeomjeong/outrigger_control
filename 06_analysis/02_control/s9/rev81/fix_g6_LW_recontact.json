@@ -1,0 +1,3976 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s9/s9_slope_fix_candidates.py",
+  "suites": "g6",
+  "candidates": [
+   "current",
+   "LWa"
+  ],
+  "params": {},
+  "defaults": {
+   "e1": false,
+   "e1_max_mismatch_m": 0.004,
+   "e2": false,
+   "e2_drop_fraction": 0.08,
+   "e2_confirm_samples": 2,
+   "e2_max_relifts": 2,
+   "e3": false,
+   "e3_tilt_min_rad": 0.017453292519943295,
+   "e3_margin_m": 0.03,
+   "e3_require_soil_use": true,
+   "e3_min_clearance_at_P_m": -1.0,
+   "e4": false,
+   "e4_min_rise_ratio": 0.5,
+   "e4_gravity_samples": 100,
+   "reanchor_soil_skip": false,
+   "s4_stroke_limit": false,
+   "s4_stroke_basis": "max",
+   "lw_restart": false,
+   "lw_exclude": false
+  },
+  "filter": "g6r|rigid+J2@FL|top|Fs0,g6r|rigid+J2@FR|top|Fs0,g6r|rigid+S1@FL|bottom|Fs0,g6r|rigid+S1@FL|bottom|Fs4,g6r|rigid+S1@FL|top|Fs0,g6r|rigid+S1@FL|top|Fs4,g6r|rigid+S1@FR|bottom|Fs0,g6r|rigid+S1@FR|bottom|Fs4,g6r|rigid+S1@FR|top|Fs0,g6r|rigid+S1@FR|top|Fs4,g6|G1+S1@FL|bottom|Fs4,g6|G1+S1@FL|top|Fs0,g6|G1+S1@FL|top|Fs4,g6|G1+S1@FR|bottom|Fs0,g6|G1+S1@FR|bottom|Fs4,g6|G1+S1@FR|top|Fs0,g6|G1+S1@FR|top|Fs4,g6|G1+S1@RL|top|Fs0,g6|G1+S1@RL|top|Fs4,g6|G1+S1@RR|top|Fs0,g6|G1+S1@RR|top|Fs4,g6|G1+S1@FL|bottom|Fs0",
+  "settle_hook": "p0",
+  "workers": 2,
+  "placement": {
+   "requested_mask": "0x30000",
+   "set_ok": true,
+   "process_mask": "0x30000",
+   "system_mask": "0xfffffff"
+  },
+  "wall_s": 669.0,
+  "n_records": 44
+ },
+ "summary": {
+  "g6|LWa": {
+   "n": 22,
+   "errors": 0,
+   "no_baseline": 0,
+   "verdict_changed": 0,
+   "pass_to_fail": 0,
+   "fail_to_pass": 0,
+   "hash_same": 1,
+   "e_cases": 13,
+   "e_resolved": 13,
+   "false_loc_after": 0,
+   "ready_recontacts_after": 0
+  }
+ },
+ "comparison": [
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|top|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -0.2,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": -0.001,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|top|Fs4",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -8.4,
+   "d_min_force_kN": 0.275,
+   "d_att_end_deg": 0.007,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|bottom|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": true,
+   "d_ready_s": 0.0,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": 0.0,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|bottom|Fs4",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -1.5,
+   "d_min_force_kN": 7.486,
+   "d_att_end_deg": 0.001,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|top|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": 0.0,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": 0.0,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|top|Fs4",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -5.5,
+   "d_min_force_kN": 1.638,
+   "d_att_end_deg": 0.006,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|bottom|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -0.3,
+   "d_min_force_kN": 6.48,
+   "d_att_end_deg": -0.0,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|bottom|Fs4",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -2.2,
+   "d_min_force_kN": 1.686,
+   "d_att_end_deg": -0.001,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RL|top|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -2.0,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": 0.0,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RL;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RL|top|Fs4",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -1.2,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": -0.0,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RL;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RR|top|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -2.1,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": -0.0,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RR;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RR|top|Fs4",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -1.4,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": 0.0,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RR;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+J2@FL|top|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -6.3,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": 0.002,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+J2@FR|top|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -8.0,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": 0.003,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|top|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -13.6,
+   "d_min_force_kN": 3.251,
+   "d_att_end_deg": 0.01,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|top|Fs4",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -3.9,
+   "d_min_force_kN": -4.012,
+   "d_att_end_deg": 0.001,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|bottom|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -1.6,
+   "d_min_force_kN": 8.421,
+   "d_att_end_deg": -0.001,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|bottom|Fs4",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -1.4,
+   "d_min_force_kN": 8.774,
+   "d_att_end_deg": -0.001,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RR;FIX_LW_RESTART:RR;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|top|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -13.1,
+   "d_min_force_kN": -0.045,
+   "d_att_end_deg": 0.011,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|top|Fs4",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -3.4,
+   "d_min_force_kN": -1.445,
+   "d_att_end_deg": 0.003,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|bottom|Fs0",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -1.2,
+   "d_min_force_kN": 5.882,
+   "d_att_end_deg": -0.0,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;reanchor_skipped:disabled"
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|bottom|Fs4",
+   "candidate": "LWa",
+   "verdict_before": "fail",
+   "verdict_after": "fail",
+   "verdict_changed": false,
+   "hash_same": false,
+   "d_ready_s": -2.8,
+   "d_min_force_kN": 3.217,
+   "d_att_end_deg": -0.001,
+   "false_loc_before": 1,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_LW_RESTART:RL;FIX_LW_RESTART:RL;reanchor_skipped:disabled"
+  }
+ ],
+ "records": [
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|top|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "8f99933fc2bfd39f9f5374ebafced2e1a452647c9bb2e166042ac51a6eb5a5f2",
+   "t_ready_s": 63.20000000011974,
+   "min_force_kN": 21.618131076633052,
+   "att_end_deg": [
+    -0.011705955206976338,
+    -0.0017889421518357841
+   ],
+   "max_stroke_mm": 534.8109630773783,
+   "final_phase": "ready",
+   "rut_ready_mm": 63.29138593992853,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9988,
+    "window_checks": [
+     {
+      "t_s": 26.5,
+      "e1_spread_mm": 2.94,
+      "e4_rise_ratio": 1.212,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      63.2,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.404999999986142,
+      "t_confirmed_s": 25.50499999998591,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 26.49999999998359,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 34.4
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|top|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "1eb46f4fb844d0acf4fb5767bae35580c2396d735e834f0034d6538014d78002",
+   "t_ready_s": 63.00000000011879,
+   "min_force_kN": 21.618131076633052,
+   "att_end_deg": [
+    -0.011122750951329646,
+    -0.0019334673558281262
+   ],
+   "max_stroke_mm": 547.1958969464035,
+   "final_phase": "ready",
+   "rut_ready_mm": 75.23978322035856,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9975,
+    "window_checks": [
+     {
+      "t_s": 27.8,
+      "e1_spread_mm": 25.85,
+      "e4_rise_ratio": 1.576,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.2,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      24.2,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      25.2,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      26.1,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      63.0,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 4,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.404999999986142,
+      "t_confirmed_s": 25.50499999998591,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.79999999998056,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 36.0
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|top|Fs4",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "6fb1fbd14af40619f7a81454b02c62a007a5d4906e69b0a395e30221d971d5ce",
+   "t_ready_s": 71.60000000015985,
+   "min_force_kN": 21.156116508372374,
+   "att_end_deg": [
+    -0.00503921293670003,
+    -0.0036315691040004526
+   ],
+   "max_stroke_mm": 533.6540259735668,
+   "final_phase": "ready",
+   "rut_ready_mm": 63.505746141011194,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "WARN_WEIGHT_MISMATCH"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     71.48
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.1191,
+    "window_checks": [
+     {
+      "t_s": 23.2,
+      "e1_spread_mm": 37.74,
+      "e4_rise_ratio": 0.428,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      71.6,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.008999999987065,
+      "t_confirmed_s": 25.108999999986832,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 2959.5877816089524
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.19999999999128,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 31.8
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|top|Fs4",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "49bd2c3c9896fc3f1a017707352aeb6cabf0ba2665523b11bcd1e279d2d263c0",
+   "t_ready_s": 63.20000000011974,
+   "min_force_kN": 21.431095481916238,
+   "att_end_deg": [
+    -0.012291654942650544,
+    -0.0016342272412740047
+   ],
+   "max_stroke_mm": 551.3171373019234,
+   "final_phase": "ready",
+   "rut_ready_mm": 80.1502459379648,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9461,
+    "window_checks": [
+     {
+      "t_s": 27.9,
+      "e1_spread_mm": 24.49,
+      "e4_rise_ratio": 1.794,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.2,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      24.3,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      25.3,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      26.3,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      63.2,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 4,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.411999999986126,
+      "t_confirmed_s": 25.511999999985893,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.899999999980327,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 28.0
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|bottom|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "26efb2d8fda4e8e108eb1866664e4b267d8b4c89075f6e15f3b7e89458d38ecb",
+   "t_ready_s": 71.50000000015937,
+   "min_force_kN": 29.862989051690697,
+   "att_end_deg": [
+    -0.00397364962642272,
+    -0.003865491725513468
+   ],
+   "max_stroke_mm": 533.6059690376998,
+   "final_phase": "ready",
+   "rut_ready_mm": 63.384973606383205,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9973,
+    "window_checks": [
+     {
+      "t_s": 27.4,
+      "e1_spread_mm": 0.55,
+      "e4_rise_ratio": 2.047,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      71.5,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.579999999985734,
+      "t_confirmed_s": 25.6799999999855,
+      "recontact_t_s": 25.798999999985224,
+      "recontact_count": 1,
+      "crawler_normal_max_after_confirm_N": 6257.501760190469
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.399999999981492,
+      "events": [
+       {
+        "t_start_s": 25.798999999985224,
+        "t_end_s": 26.277999999984107,
+        "duration_s": 0.47899999999888365,
+        "max_normal_N": 6257.501760190469,
+        "max_over_W": 0.016462218360884046,
+        "ended_before_loc": true,
+        "class": "transient_flag"
+       }
+      ],
+      "pass": true,
+      "flags": [
+       "P3-1_transient_recontact"
+      ]
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 29.3
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|bottom|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "26efb2d8fda4e8e108eb1866664e4b267d8b4c89075f6e15f3b7e89458d38ecb",
+   "t_ready_s": 71.50000000015937,
+   "min_force_kN": 29.862989051690697,
+   "att_end_deg": [
+    -0.00397364962642272,
+    -0.003865491725513468
+   ],
+   "max_stroke_mm": 533.6059690376998,
+   "final_phase": "ready",
+   "rut_ready_mm": 63.384973606383205,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9973,
+    "window_checks": [
+     {
+      "t_s": 27.4,
+      "e1_spread_mm": 0.55,
+      "e4_rise_ratio": 2.047,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.2,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      25.3,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      71.5,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 2,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.579999999985734,
+      "t_confirmed_s": 25.6799999999855,
+      "recontact_t_s": 25.798999999985224,
+      "recontact_count": 1,
+      "crawler_normal_max_after_confirm_N": 6257.501760190469
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.399999999981492,
+      "events": [
+       {
+        "t_start_s": 25.798999999985224,
+        "t_end_s": 26.277999999984107,
+        "duration_s": 0.47899999999888365,
+        "max_normal_N": 6257.501760190469,
+        "max_over_W": 0.016462218360884046,
+        "ended_before_loc": true,
+        "class": "transient_flag"
+       }
+      ],
+      "pass": true,
+      "flags": [
+       "P3-1_transient_recontact"
+      ]
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 29.6
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|bottom|Fs4",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "fc55d32cb38173a8761df3b182477e7d9ae55e8db928109ceb7bc9c5bdf8d1be",
+   "t_ready_s": 73.80000000017036,
+   "min_force_kN": 20.800777352039685,
+   "att_end_deg": [
+    -0.0027380989386902644,
+    -0.0039153272985186695
+   ],
+   "max_stroke_mm": 533.7992596167148,
+   "final_phase": "ready",
+   "rut_ready_mm": 63.592962139141214,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "WARN_WEIGHT_MISMATCH"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     60.34
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.1106,
+    "window_checks": [
+     {
+      "t_s": 23.4,
+      "e1_spread_mm": 15.55,
+      "e4_rise_ratio": 0.32,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      73.8,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.883999999987356,
+      "t_confirmed_s": 24.983999999987123,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 2260.4999482575126
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.399999999990815,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 34.7
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|bottom|Fs4",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "e85d738ec040c55a5f2d41e6604c2a57ed446074fb7b41a7a26eb85f570de327",
+   "t_ready_s": 72.3000000001632,
+   "min_force_kN": 28.287111504790587,
+   "att_end_deg": [
+    -0.004842374470871105,
+    -0.0032058310002168688
+   ],
+   "max_stroke_mm": 533.6553625874833,
+   "final_phase": "ready",
+   "rut_ready_mm": 63.49372169099863,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9458,
+    "window_checks": [
+     {
+      "t_s": 27.6,
+      "e1_spread_mm": 8.54,
+      "e4_rise_ratio": 1.625,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.3,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      25.4,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      72.3,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 2,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.591999999985706,
+      "t_confirmed_s": 25.691999999985473,
+      "recontact_t_s": 26.11399999998449,
+      "recontact_count": 1,
+      "crawler_normal_max_after_confirm_N": 3870.012163886416
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.599999999981026,
+      "events": [
+       {
+        "t_start_s": 26.11399999998449,
+        "t_end_s": 26.19099999998431,
+        "duration_s": 0.07699999999982055,
+        "max_normal_N": 3870.012163886416,
+        "max_over_W": 0.010181217320062944,
+        "ended_before_loc": true,
+        "class": "transient_flag"
+       }
+      ],
+      "pass": true,
+      "flags": [
+       "P3-1_transient_recontact"
+      ]
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 31.4
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|top|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "6c4bc9373525d83f1348e981d6a7d2399108db3c7f064722add772414d319761",
+   "t_ready_s": 63.00000000011879,
+   "min_force_kN": 25.07632605836904,
+   "att_end_deg": [
+    0.009770091098716498,
+    -0.0025002510799573725
+   ],
+   "max_stroke_mm": 533.208511298435,
+   "final_phase": "ready",
+   "rut_ready_mm": 64.20559270854955,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9987,
+    "window_checks": [
+     {
+      "t_s": 26.6,
+      "e1_spread_mm": 3.29,
+      "e4_rise_ratio": 2.673,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      63.0,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.35499999998626,
+      "t_confirmed_s": 25.454999999986025,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 26.599999999983357,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 26.6
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|top|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "65a87f015725963adcf7065e2efafc395d46a48fca64fe2bb09f4a8c78c5dae6",
+   "t_ready_s": 63.00000000011879,
+   "min_force_kN": 25.07632605836904,
+   "att_end_deg": [
+    0.009821012914060527,
+    -0.002448602062090308
+   ],
+   "max_stroke_mm": 549.4061325671508,
+   "final_phase": "ready",
+   "rut_ready_mm": 80.39868602153597,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9973,
+    "window_checks": [
+     {
+      "t_s": 27.8,
+      "e1_spread_mm": 25.41,
+      "e4_rise_ratio": 3.025,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.2,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      24.2,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      25.2,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      26.2,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      63.0,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 4,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.35499999998626,
+      "t_confirmed_s": 25.454999999986025,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.79999999998056,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 26.6
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|top|Fs4",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "b31c640a18e0dd2900445e78b77ca3341905200c2611cd54d937a3afc1d1335d",
+   "t_ready_s": 71.4000000001589,
+   "min_force_kN": 21.165443816041975,
+   "att_end_deg": [
+    0.004475613456904085,
+    -0.0036338156414067583
+   ],
+   "max_stroke_mm": 531.7546620599716,
+   "final_phase": "ready",
+   "rut_ready_mm": 64.33657292439324,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "WARN_WEIGHT_MISMATCH"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     68.29
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.1095,
+    "window_checks": [
+     {
+      "t_s": 23.2,
+      "e1_spread_mm": 41.4,
+      "e4_rise_ratio": 1.466,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      71.4,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.84799999998744,
+      "t_confirmed_s": 24.947999999987207,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 953.4359355384958
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.19999999999128,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 28.5
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|top|Fs4",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "186713e3ca36cf4dc33ff3813cb57a01a9309948a93302cf98a24aaca6292008",
+   "t_ready_s": 65.90000000013264,
+   "min_force_kN": 22.80350191704742,
+   "att_end_deg": [
+    0.010337522901941471,
+    -0.0015705683572326131
+   ],
+   "max_stroke_mm": 535.358871899931,
+   "final_phase": "ready",
+   "rut_ready_mm": 68.03464210233349,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9478,
+    "window_checks": [
+     {
+      "t_s": 26.9,
+      "e1_spread_mm": 21.71,
+      "e4_rise_ratio": 2.798,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.2,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      24.3,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      25.2,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      65.9,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 3,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.638999999987927,
+      "t_confirmed_s": 24.738999999987694,
+      "recontact_t_s": 25.012999999987056,
+      "recontact_count": 1,
+      "crawler_normal_max_after_confirm_N": 5991.418623227275
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 26.899999999982658,
+      "events": [
+       {
+        "t_start_s": 25.012999999987056,
+        "t_end_s": 25.27299999998645,
+        "duration_s": 0.25999999999939405,
+        "max_normal_N": 5991.418623227275,
+        "max_over_W": 0.01576220757851332,
+        "ended_before_loc": true,
+        "class": "transient_flag"
+       }
+      ],
+      "pass": true,
+      "flags": [
+       "P3-1_transient_recontact"
+      ]
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 27.6
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|bottom|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "0d475a797f0d4e44cf41ff4a22c9c2947ba9cc1b718e32b377a631705dedeb8d",
+   "t_ready_s": 73.00000000016654,
+   "min_force_kN": 22.61895988924228,
+   "att_end_deg": [
+    0.0003921249484897548,
+    -0.005038858584553186
+   ],
+   "max_stroke_mm": 531.8154522262724,
+   "final_phase": "ready",
+   "rut_ready_mm": 64.20938540488876,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE",
+    "WARN_WEIGHT_MISMATCH"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     50.07
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.1655,
+    "window_checks": [
+     {
+      "t_s": 23.7,
+      "e1_spread_mm": 13.29,
+      "e4_rise_ratio": 1.481,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      73.0,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.827999999987487,
+      "t_confirmed_s": 24.927999999987254,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 2583.7758808873846
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.699999999990116,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 33.1
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|bottom|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "987c5709f17c0823a77cf74eb14f1d84847a4c4186c431015eb60a3faff98ea1",
+   "t_ready_s": 72.7000000001651,
+   "min_force_kN": 29.099443422214417,
+   "att_end_deg": [
+    0.0012147985673216088,
+    -0.004767931384320915
+   ],
+   "max_stroke_mm": 531.8349915319285,
+   "final_phase": "ready",
+   "rut_ready_mm": 64.22187120541548,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9968,
+    "window_checks": [
+     {
+      "t_s": 27.3,
+      "e1_spread_mm": 3.32,
+      "e4_rise_ratio": 2.25,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.2,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      25.2,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      72.7,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 2,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.45299999998603,
+      "t_confirmed_s": 25.552999999985797,
+      "recontact_t_s": 25.74899999998534,
+      "recontact_count": 1,
+      "crawler_normal_max_after_confirm_N": 5160.729471672312
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.299999999981726,
+      "events": [
+       {
+        "t_start_s": 25.74899999998534,
+        "t_end_s": 26.017999999984713,
+        "duration_s": 0.2689999999993731,
+        "max_normal_N": 5160.729471672312,
+        "max_over_W": 0.013576832851187786,
+        "ended_before_loc": true,
+        "class": "transient_flag"
+       }
+      ],
+      "pass": true,
+      "flags": [
+       "P3-1_transient_recontact"
+      ]
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 30.4
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|bottom|Fs4",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "533694784171aa08a531c021ca91bd96381dfb0485215f6f157af000b1a399ca",
+   "t_ready_s": 74.5000000001737,
+   "min_force_kN": 19.64435191539788,
+   "att_end_deg": [
+    0.0011628505050828733,
+    -0.0044628560514441565
+   ],
+   "max_stroke_mm": 531.9696022109534,
+   "final_phase": "ready",
+   "rut_ready_mm": 64.42162470314372,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     47.84
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.0867,
+    "window_checks": [
+     {
+      "t_s": 23.9,
+      "e1_spread_mm": 15.23,
+      "e4_rise_ratio": 1.978,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      74.5,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.893999999987333,
+      "t_confirmed_s": 24.9939999999871,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 790.2864045071652
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.89999999998965,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 32.1
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FR|bottom|Fs4",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "c1591c73d9359007a57e8392fb708c0525f58835cab5ab9a0079b37273da3ac6",
+   "t_ready_s": 72.3000000001632,
+   "min_force_kN": 21.33040250294611,
+   "att_end_deg": [
+    0.003774745399277658,
+    -0.0036061994630440346
+   ],
+   "max_stroke_mm": 535.4929208763289,
+   "final_phase": "ready",
+   "rut_ready_mm": 68.02651992175582,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9469,
+    "window_checks": [
+     {
+      "t_s": 27.3,
+      "e1_spread_mm": 15.6,
+      "e4_rise_ratio": 2.948,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.5,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      25.5,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      72.3,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 2,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.518999999985876,
+      "t_confirmed_s": 25.618999999985643,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 427.57030350043794
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.299999999981726,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 28.5
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RL|top|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "909fd1f33735edba3938c761bc98976eb83ca0dfe3455a7d92d5b301c51c9817",
+   "t_ready_s": 94.9000000002711,
+   "min_force_kN": 22.551862482362793,
+   "att_end_deg": [
+    0.0023979420531513086,
+    -0.0001967827509769843
+   ],
+   "max_stroke_mm": 521.3944884259105,
+   "final_phase": "ready",
+   "rut_ready_mm": 63.73584465841932,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9975,
+    "window_checks": [
+     {
+      "t_s": 23.5,
+      "e1_spread_mm": 12.03,
+      "e4_rise_ratio": 1.001,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      94.9,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 22.81799999999217,
+      "t_confirmed_s": 22.917999999991938,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.49999999999058,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 36.1
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RL|top|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "3025ba7b33a20c0725347acbb171d57e5fecf4b6664ebd616a40eecc86de3e35",
+   "t_ready_s": 92.90000000026156,
+   "min_force_kN": 22.551862482362793,
+   "att_end_deg": [
+    0.002408502449115135,
+    -2.8484439258326307e-05
+   ],
+   "max_stroke_mm": 525.430367375181,
+   "final_phase": "ready",
+   "rut_ready_mm": 67.76972143845666,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9978,
+    "window_checks": [
+     {
+      "t_s": 25.1,
+      "e1_spread_mm": 15.84,
+      "e4_rise_ratio": 0.932,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      23.3,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      92.9,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 1,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 22.81799999999217,
+      "t_confirmed_s": 22.917999999991938,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 25.099999999986853,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 35.4
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RL|top|Fs4",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "bbd38542d8fdbae3c4f35f46dd2fa3b3b409e349eb5ae01f9f09a09b62769dca",
+   "t_ready_s": 96.60000000027922,
+   "min_force_kN": 22.49831812469222,
+   "att_end_deg": [
+    0.003412908244233983,
+    0.0002986639344205724
+   ],
+   "max_stroke_mm": 521.5247759592345,
+   "final_phase": "ready",
+   "rut_ready_mm": 64.01782296279552,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9484,
+    "window_checks": [
+     {
+      "t_s": 23.5,
+      "e1_spread_mm": 13.49,
+      "e4_rise_ratio": 1.064,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      96.6,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 22.82699999999215,
+      "t_confirmed_s": 22.926999999991917,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.49999999999058,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 37.0
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RL|top|Fs4",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "a46fb7a722e6dbf7367c91ed5748e4d98fb2f580dfa0ac312d2b02179650c4c2",
+   "t_ready_s": 95.4000000002735,
+   "min_force_kN": 22.49831812469222,
+   "att_end_deg": [
+    0.0034099190792877257,
+    0.0003134760277446523
+   ],
+   "max_stroke_mm": 527.46133458694,
+   "final_phase": "ready",
+   "rut_ready_mm": 69.94871047957977,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9495,
+    "window_checks": [
+     {
+      "t_s": 24.8,
+      "e1_spread_mm": 5.13,
+      "e4_rise_ratio": 1.013,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      23.4,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      95.4,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 1,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 22.82699999999215,
+      "t_confirmed_s": 22.926999999991917,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 24.799999999987552,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 35.0
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RR|top|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "7ce007f1ed77677f64807974fb4b94d15de5265d12b09403ceb713b88dc89186",
+   "t_ready_s": 93.20000000026299,
+   "min_force_kN": 22.42281099085545,
+   "att_end_deg": [
+    -0.003036790854029037,
+    0.00018855271693484388
+   ],
+   "max_stroke_mm": 516.6526207754556,
+   "final_phase": "ready",
+   "rut_ready_mm": 62.935011913210175,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9975,
+    "window_checks": [
+     {
+      "t_s": 23.5,
+      "e1_spread_mm": 14.79,
+      "e4_rise_ratio": 0.917,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      93.2,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 22.78799999999224,
+      "t_confirmed_s": 22.887999999992008,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.49999999999058,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 34.0
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RR|top|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "ba03babc8eb87041c8becb8081e36dccf09a3cccf7390a38eb6c4e955e1cb97e",
+   "t_ready_s": 91.10000000025296,
+   "min_force_kN": 22.42281099085545,
+   "att_end_deg": [
+    -0.0030115233922127066,
+    0.00047495732887967455
+   ],
+   "max_stroke_mm": 522.3837171391885,
+   "final_phase": "ready",
+   "rut_ready_mm": 68.66362994483508,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9979,
+    "window_checks": [
+     {
+      "t_s": 25.1,
+      "e1_spread_mm": 14.95,
+      "e4_rise_ratio": 0.835,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      23.3,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      91.1,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 1,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 22.78799999999224,
+      "t_confirmed_s": 22.887999999992008,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 25.099999999986853,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 35.4
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RR|top|Fs4",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "36e93a3225ce0cdb2cca210ad2b650fa856999d49ce3717014d8c058b663b506",
+   "t_ready_s": 95.00000000027158,
+   "min_force_kN": 22.3708016918369,
+   "att_end_deg": [
+    -0.0035149541668766555,
+    0.00023516338373288863
+   ],
+   "max_stroke_mm": 516.7878074422574,
+   "final_phase": "ready",
+   "rut_ready_mm": 63.16779841948636,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9476,
+    "window_checks": [
+     {
+      "t_s": 23.5,
+      "e1_spread_mm": 14.47,
+      "e4_rise_ratio": 0.876,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      95.0,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 22.79699999999222,
+      "t_confirmed_s": 22.896999999991987,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.49999999999058,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 36.3
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@RR|top|Fs4",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "06e037f9ac2b5568b97e91532f3a74037ffcca019fa87ed1ef1f7319f002349f",
+   "t_ready_s": 93.6000000002649,
+   "min_force_kN": 22.3708016918369,
+   "att_end_deg": [
+    -0.003518727278109785,
+    0.0002909752882456843
+   ],
+   "max_stroke_mm": 526.3994072868337,
+   "final_phase": "ready",
+   "rut_ready_mm": 72.77060712530292,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9489,
+    "window_checks": [
+     {
+      "t_s": 24.8,
+      "e1_spread_mm": 4.27,
+      "e4_rise_ratio": 0.762,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      23.4,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      93.6,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 1,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 22.79699999999222,
+      "t_confirmed_s": 22.896999999991987,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 24.799999999987552,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 35.3
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+J2@FL|top|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "f5c2333b81568d365cbd13113725e8b597cce9b1d41ec9df052e774500151138",
+   "t_ready_s": 70.30000000015364,
+   "min_force_kN": 11.731954605370557,
+   "att_end_deg": [
+    -0.011298190201000622,
+    0.0001234543964342432
+   ],
+   "max_stroke_mm": 482.88039318364633,
+   "final_phase": "ready",
+   "rut_ready_mm": 62.138368562486335,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.0017,
+    "window_checks": [
+     {
+      "t_s": 23.1,
+      "e1_spread_mm": 5.69,
+      "e4_rise_ratio": 0.147,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      70.3,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 21.720999999994728,
+      "t_confirmed_s": 21.820999999994495,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.099999999991514,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 29.6
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+J2@FL|top|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-2_loc",
+    "G6-7_preloc"
+   ],
+   "hash": "62130a17e083cebed2057a6b659411382bbbda9aee57620adb00c49b3cf139ca",
+   "t_ready_s": 64.00000000012356,
+   "min_force_kN": 11.731954605370557,
+   "att_end_deg": [
+    -0.013423043745338235,
+    -0.0009352078913194767
+   ],
+   "max_stroke_mm": 502.5587021196789,
+   "final_phase": "ready",
+   "rut_ready_mm": 81.72880988418373,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9985,
+    "window_checks": [
+     {
+      "t_s": 25.2,
+      "e1_spread_mm": 51.47,
+      "e4_rise_ratio": 0.139,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.5,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      23.5,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      64.0,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 2,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 21.720999999994728,
+      "t_confirmed_s": 21.820999999994495,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 25.19999999998662,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 27.7
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+J2@FR|top|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "c0e34079b907c3b6231a68f171c4795ff2480235661736aa5e573feeb7b050e3",
+   "t_ready_s": 68.40000000014457,
+   "min_force_kN": 15.463816223941455,
+   "att_end_deg": [
+    0.007647264037426964,
+    -0.0019437148460640207
+   ],
+   "max_stroke_mm": 477.2549843504851,
+   "final_phase": "ready",
+   "rut_ready_mm": 61.96211421687714,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.0001,
+    "window_checks": [
+     {
+      "t_s": 23.0,
+      "e1_spread_mm": 7.25,
+      "e4_rise_ratio": 0.466,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      68.4,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 21.699999999994777,
+      "t_confirmed_s": 21.799999999994544,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 22.999999999991747,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 31.1
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+J2@FR|top|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-2_loc",
+    "G6-7_preloc"
+   ],
+   "hash": "07ea546de0c824e8dbe1eee12403e26504cc158ddf09e469cdc47e9830f97651",
+   "t_ready_s": 60.400000000106374,
+   "min_force_kN": 15.463816223941455,
+   "att_end_deg": [
+    0.01058201392947832,
+    -0.00436467088493389
+   ],
+   "max_stroke_mm": 500.84291284762594,
+   "final_phase": "ready",
+   "rut_ready_mm": 81.82248470607067,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9974,
+    "window_checks": [
+     {
+      "t_s": 26.1,
+      "e1_spread_mm": 28.03,
+      "e4_rise_ratio": 0.003,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.5,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      23.4,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      24.3,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      60.4,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 3,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 21.699999999994777,
+      "t_confirmed_s": 21.799999999994544,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 26.099999999984522,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 28.2
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|top|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "0103720685eedf2c7a55f07514a193ac4b13fcf92e21f3aa8f91ac4e3415879d",
+   "t_ready_s": 65.90000000013264,
+   "min_force_kN": 13.565602758564522,
+   "att_end_deg": [
+    -0.0034621168522368196,
+    -0.006331670701235382
+   ],
+   "max_stroke_mm": 543.2446880362917,
+   "final_phase": "ready",
+   "rut_ready_mm": 72.48426895002646,
+   "warnings": [
+    "WARN_WEIGHT_MISMATCH"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     70.89
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.1382,
+    "window_checks": [
+     {
+      "t_s": 23.4,
+      "e1_spread_mm": 28.65,
+      "e4_rise_ratio": 0.229,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      65.9,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.48299999998829,
+      "t_confirmed_s": 24.582999999988058,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.399999999990815,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 28.3
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|top|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-1_crawler",
+    "G6-2_loc",
+    "G6-7_preloc"
+   ],
+   "hash": "00997059ca5a4cb3a81970aef5979d06e1557f516216094ddbaf54251f2837c4",
+   "t_ready_s": 52.3000000000677,
+   "min_force_kN": 16.81709026366574,
+   "att_end_deg": [
+    -0.00041002007670789577,
+    -0.016090436941213416
+   ],
+   "max_stroke_mm": 554.3648376560377,
+   "final_phase": "ready",
+   "rut_ready_mm": 75.58386545990726,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9974,
+    "window_checks": [
+     {
+      "t_s": 28.3,
+      "e1_spread_mm": 49.97,
+      "e4_rise_ratio": 1.171,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.5,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      24.3,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      25.1,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      25.9,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      26.8,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      52.3,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 5,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.57399999998808,
+      "t_confirmed_s": 24.673999999987846,
+      "recontact_t_s": 24.923999999987263,
+      "recontact_count": 1,
+      "crawler_normal_max_after_confirm_N": 10154.89695287769
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 28.299999999979395,
+      "events": [
+       {
+        "t_start_s": 24.923999999987263,
+        "t_end_s": 25.28599999998642,
+        "duration_s": 0.36199999999915633,
+        "max_normal_N": 10154.89695287769,
+        "max_over_W": 0.02671547487754284,
+        "ended_before_loc": true,
+        "class": "transient_flag"
+       }
+      ],
+      "pass": true,
+      "flags": [
+       "P3-1_transient_recontact"
+      ]
+     },
+     "series_step_s": 0.0010000000000012221
+    }
+   },
+   "wall_s": 27.9
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|top|Fs4",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "819534a072914a94b30ddc6726eed46519cf092b0a63254b08575bf0ea5cfd92",
+   "t_ready_s": 65.90000000013264,
+   "min_force_kN": 14.679170872785294,
+   "att_end_deg": [
+    -0.003765737753780549,
+    -0.005145867313107568
+   ],
+   "max_stroke_mm": 543.3579239967129,
+   "final_phase": "ready",
+   "rut_ready_mm": 72.70772391453085,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     67.21
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.0691,
+    "window_checks": [
+     {
+      "t_s": 22.9,
+      "e1_spread_mm": 21.17,
+      "e4_rise_ratio": -0.093,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      65.9,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 23.982999999989456,
+      "t_confirmed_s": 24.082999999989223,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 22.89999999999198,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 27.5
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|top|Fs4",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-1_crawler",
+    "G6-2_loc",
+    "G6-7_preloc"
+   ],
+   "hash": "1145e904d04f0d8ff2e93c884ccca18735a9a350bdd99400780cfe58d80b5368",
+   "t_ready_s": 62.000000000114014,
+   "min_force_kN": 10.667367458323138,
+   "att_end_deg": [
+    -0.006259110817051606,
+    -0.0053791472504478455
+   ],
+   "max_stroke_mm": 567.8716442302865,
+   "final_phase": "ready",
+   "rut_ready_mm": 90.8695106498425,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9478,
+    "window_checks": [
+     {
+      "t_s": 27.8,
+      "e1_spread_mm": 61.89,
+      "e4_rise_ratio": 0.634,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.0,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      23.8,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      24.6,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      25.5,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      26.3,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      62.0,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 5,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 23.982999999989456,
+      "t_confirmed_s": 24.082999999989223,
+      "recontact_t_s": 24.579999999988065,
+      "recontact_count": 1,
+      "crawler_normal_max_after_confirm_N": 5482.502175865362
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.79999999998056,
+      "events": [
+       {
+        "t_start_s": 24.579999999988065,
+        "t_end_s": 24.734999999987703,
+        "duration_s": 0.15499999999963876,
+        "max_normal_N": 5482.502175865362,
+        "max_over_W": 0.01442335159333144,
+        "ended_before_loc": true,
+        "class": "transient_flag"
+       }
+      ],
+      "pass": true,
+      "flags": [
+       "P3-1_transient_recontact"
+      ]
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 29.7
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|bottom|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "e2fc88557835f2e0a27a6c02d8567248099908e699fc358bf474db684042fe9c",
+   "t_ready_s": 67.60000000014075,
+   "min_force_kN": 14.79936681709499,
+   "att_end_deg": [
+    -6.296166596860682e-05,
+    -0.006970124720845135
+   ],
+   "max_stroke_mm": 543.5199715390634,
+   "final_phase": "ready",
+   "rut_ready_mm": 72.70103329336797,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     45.74
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.0998,
+    "window_checks": [
+     {
+      "t_s": 23.0,
+      "e1_spread_mm": 15.66,
+      "e4_rise_ratio": 2.175,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      67.6,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 23.918999999989605,
+      "t_confirmed_s": 24.018999999989372,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 22.999999999991747,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 29.0
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|bottom|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "312e579c7ae1dcddc340ee8f4d348b8be8bf8c1dcadf817cd03832f53b3bbe7e",
+   "t_ready_s": 66.00000000013311,
+   "min_force_kN": 23.22086627825854,
+   "att_end_deg": [
+    -0.002507706076583854,
+    -0.006431382302674717
+   ],
+   "max_stroke_mm": 543.3727029343275,
+   "final_phase": "ready",
+   "rut_ready_mm": 72.59070244372934,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9989,
+    "window_checks": [
+     {
+      "t_s": 25.7,
+      "e1_spread_mm": 10.43,
+      "e4_rise_ratio": 3.918,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.2,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      24.1,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      66.0,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 2,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.214999999988915,
+      "t_confirmed_s": 24.314999999988682,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 25.699999999985454,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 28.5
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|bottom|Fs4",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "d13faff4c434dc468f18dc49fa537088a6b8c657ee2c83d63fb44a1fe91b5b77",
+   "t_ready_s": 68.90000000014696,
+   "min_force_kN": 13.492816188946241,
+   "att_end_deg": [
+    0.0010191968302465048,
+    -0.007318138978835741
+   ],
+   "max_stroke_mm": 543.7461625760905,
+   "final_phase": "ready",
+   "rut_ready_mm": 72.99097950124379,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     46.81
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.0412,
+    "window_checks": [
+     {
+      "t_s": 23.0,
+      "e1_spread_mm": 18.03,
+      "e4_rise_ratio": 2.268,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      68.9,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 23.897999999989654,
+      "t_confirmed_s": 23.99799999998942,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 22.999999999991747,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 28.1
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FL|bottom|Fs4",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "f7013cfab56da022631112c1d7290c871c9ce7b7b23d6418e3de482d009be0c6",
+   "t_ready_s": 67.50000000014028,
+   "min_force_kN": 22.26663158128523,
+   "att_end_deg": [
+    -0.0007206743955067194,
+    -0.006592121334262176
+   ],
+   "max_stroke_mm": 543.6115397169192,
+   "final_phase": "ready",
+   "rut_ready_mm": 72.89328410425088,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9477,
+    "window_checks": [
+     {
+      "t_s": 25.6,
+      "e1_spread_mm": 5.66,
+      "e4_rise_ratio": 4.052,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.2,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      24.0,
+      "FIX_LW_RESTART:RR"
+     ],
+     [
+      67.5,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 2,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.140999999989088,
+      "t_confirmed_s": 24.240999999988855,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 25.599999999985688,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 28.5
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|top|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "ca0a57b23b0fb17e8728f0cbd286a15be0efe2022ecf559d8c2df04d8ee875c4",
+   "t_ready_s": 65.40000000013025,
+   "min_force_kN": 11.664719116456189,
+   "att_end_deg": [
+    0.0017992796307254172,
+    -0.007189868620582161
+   ],
+   "max_stroke_mm": 541.8661972078054,
+   "final_phase": "ready",
+   "rut_ready_mm": 73.54221866827038,
+   "warnings": [
+    "WARN_WEIGHT_MISMATCH"
+   ],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     65.67
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.1203,
+    "window_checks": [
+     {
+      "t_s": 23.5,
+      "e1_spread_mm": 32.11,
+      "e4_rise_ratio": 1.229,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      65.4,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.545999999988144,
+      "t_confirmed_s": 24.64599999998791,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.49999999999058,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 27.0
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|top|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-1_crawler",
+    "G6-2_loc",
+    "G6-7_preloc"
+   ],
+   "hash": "f40831d1aea210b01f15c5d85be6f67aa0b4078fdf087cb58ce5f79a3bf669f0",
+   "t_ready_s": 52.3000000000677,
+   "min_force_kN": 11.61946486119942,
+   "att_end_deg": [
+    -0.004203885650065709,
+    -0.018267597537844685
+   ],
+   "max_stroke_mm": 553.2758088209547,
+   "final_phase": "ready",
+   "rut_ready_mm": 75.381310903345,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9969,
+    "window_checks": [
+     {
+      "t_s": 28.5,
+      "e1_spread_mm": 50.24,
+      "e4_rise_ratio": 2.039,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.6,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      24.5,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      25.3,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      26.1,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      27.0,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      52.3,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 5,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.682999999987825,
+      "t_confirmed_s": 24.78299999998759,
+      "recontact_t_s": 25.307999999986368,
+      "recontact_count": 1,
+      "crawler_normal_max_after_confirm_N": 3874.14988968312
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 28.49999999997893,
+      "events": [
+       {
+        "t_start_s": 25.307999999986368,
+        "t_end_s": 25.335999999986303,
+        "duration_s": 0.027999999999934744,
+        "max_normal_N": 3874.14988968312,
+        "max_over_W": 0.010192102837669371,
+        "ended_before_loc": true,
+        "class": "transient_flag"
+       }
+      ],
+      "pass": true,
+      "flags": [
+       "P3-1_transient_recontact"
+      ]
+     },
+     "series_step_s": 0.0010000000000012221
+    }
+   },
+   "wall_s": 23.8
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|top|Fs4",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "ff763a7b58b4932e28a9b6fca2b980ce65fe8ff6a3f217b57ecc049398a86291",
+   "t_ready_s": 65.2000000001293,
+   "min_force_kN": 12.66024209339588,
+   "att_end_deg": [
+    0.004401809151151321,
+    -0.004686767688790214
+   ],
+   "max_stroke_mm": 542.0046371772357,
+   "final_phase": "ready",
+   "rut_ready_mm": 73.72515287556914,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     65.46
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.0454,
+    "window_checks": [
+     {
+      "t_s": 22.6,
+      "e1_spread_mm": 34.88,
+      "e4_rise_ratio": 1.278,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      65.2,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 23.464999999990663,
+      "t_confirmed_s": 23.56499999999043,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 22.59999999999268,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 26.8
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|top|Fs4",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-1_crawler",
+    "G6-2_loc",
+    "G6-7_preloc"
+   ],
+   "hash": "54afb3b163375fbfbf79d5168614c6e1287c674eaecc59b56b7080069b91e31b",
+   "t_ready_s": 61.80000000011306,
+   "min_force_kN": 11.215103052538518,
+   "att_end_deg": [
+    0.007254015210065382,
+    -0.004545768767888473
+   ],
+   "max_stroke_mm": 566.8787248492807,
+   "final_phase": "ready",
+   "rut_ready_mm": 92.81937303032484,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9483,
+    "window_checks": [
+     {
+      "t_s": 27.5,
+      "e1_spread_mm": 65.07,
+      "e4_rise_ratio": 2.322,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      21.7,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      23.5,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      24.3,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      25.2,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      26.0,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      61.8,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 5,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 23.698999999990118,
+      "t_confirmed_s": 23.798999999989885,
+      "recontact_t_s": 24.352999999988594,
+      "recontact_count": 1,
+      "crawler_normal_max_after_confirm_N": 4114.524116691297
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.49999999998126,
+      "events": [
+       {
+        "t_start_s": 24.352999999988594,
+        "t_end_s": 24.419999999988438,
+        "duration_s": 0.06699999999984385,
+        "max_normal_N": 4114.524116691297,
+        "max_over_W": 0.010824478690683415,
+        "ended_before_loc": true,
+        "class": "transient_flag"
+       }
+      ],
+      "pass": true,
+      "flags": [
+       "P3-1_transient_recontact"
+      ]
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 27.0
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|bottom|Fs0",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "29cee09bedf71426d89952952c12167794dbe9ff3475bbf1159532c0fe6788e9",
+   "t_ready_s": 67.90000000014219,
+   "min_force_kN": 17.964562008154576,
+   "att_end_deg": [
+    -0.002523679033566616,
+    -0.00796936983498171
+   ],
+   "max_stroke_mm": 541.9197125211218,
+   "final_phase": "ready",
+   "rut_ready_mm": 73.66863595288442,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     43.61
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.0863,
+    "window_checks": [
+     {
+      "t_s": 23.0,
+      "e1_spread_mm": 16.62,
+      "e4_rise_ratio": 1.376,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      67.9,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 23.854999999989754,
+      "t_confirmed_s": 23.95499999998952,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 22.999999999991747,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 28.3
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|bottom|Fs0",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "7887387e72904ba0f659457fd0b231dec0c969073e059e92e48a1f6d86065a7c",
+   "t_ready_s": 66.70000000013646,
+   "min_force_kN": 23.846476714499673,
+   "att_end_deg": [
+    -0.0007523445164032517,
+    -0.0075138800294501755
+   ],
+   "max_stroke_mm": 541.8230176242314,
+   "final_phase": "ready",
+   "rut_ready_mm": 73.64554398717083,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.999,
+    "window_checks": [
+     {
+      "t_s": 25.6,
+      "e1_spread_mm": 10.68,
+      "e4_rise_ratio": 1.811,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.2,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      24.0,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      66.7,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 2,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.095999999989193,
+      "t_confirmed_s": 24.19599999998896,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 25.599999999985688,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 27.8
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|bottom|Fs4",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "05ab5491a4240ac0d47d2246a007d03e863ca5c7fdd0dabb893ea1d62da478c6",
+   "t_ready_s": 69.30000000014887,
+   "min_force_kN": 15.805384775551891,
+   "att_end_deg": [
+    -0.0015747819692927536,
+    -0.007905794801121035
+   ],
+   "max_stroke_mm": 542.154618093912,
+   "final_phase": "ready",
+   "rut_ready_mm": 73.91684533502118,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     44.46
+    ],
+    "false_loc": 1,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 1.0304,
+    "window_checks": [
+     {
+      "t_s": 23.0,
+      "e1_spread_mm": 19.57,
+      "e4_rise_ratio": 1.503,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      69.3,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 23.859999999989743,
+      "t_confirmed_s": 23.95999999998951,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 22.999999999991747,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 28.9
+  },
+  {
+   "suite": "g6",
+   "id": "g6r|rigid+S1@FR|bottom|Fs4",
+   "candidate": "LWa",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "c8f2792224ef40272acd1223edc7bb2ef9a5e7783b33e5a5ddb51d3d925b7dae",
+   "t_ready_s": 66.5000000001355,
+   "min_force_kN": 19.022120635732815,
+   "att_end_deg": [
+    0.001364151356817668,
+    -0.006572706790184404
+   ],
+   "max_stroke_mm": 541.8810471671742,
+   "final_phase": "ready",
+   "rut_ready_mm": 73.84868321510285,
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.949,
+    "window_checks": [
+     {
+      "t_s": 25.7,
+      "e1_spread_mm": 21.35,
+      "e4_rise_ratio": 1.987,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      22.2,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      24.1,
+      "FIX_LW_RESTART:RL"
+     ],
+     [
+      66.5,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 2,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.10199999998918,
+      "t_confirmed_s": 24.201999999988946,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 25.699999999985454,
+      "events": [],
+      "pass": true,
+      "flags": []
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 28.0
+  }
+ ]
+}

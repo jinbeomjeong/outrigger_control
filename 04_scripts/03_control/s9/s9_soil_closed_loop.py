@@ -18,6 +18,14 @@ Soil (new here): every pad sits on one Chrono-type SCM element (dynamics_model.m
   pitch of P0 (pad_bekker_p0_soilsets.json, 'settle'), the pad surfaces offset so that body-to-surface heights at the
   pads match the P0 soil settle (h_i = (uz_rigid - uz_soil) + x_i tan(dtheta)). Crawler soil plasticity during the
   lift is not modelled (the crawler only unloads; its elastic rebound is the harness concrete spring).
+Settle hook (make_plant ``settle_hook``, else environment S9_SETTLE_HOOK, default "p0"):
+  "p0"      the flat P0 soil-minus-rigid settle above (every result up to rev. 79). Biased: the harness rigid crawler
+            settles at pitch 0.179 deg, P0 rigid at 0.289 deg, so a soil case sits 0.11 deg less nose down and the
+            front pad gaps are 8..9 mm off the P0 soil settle.
+  "harness" dynamics row hook_harness["{soil}|{level}|{roll:g}|{pitch:g}"] of S9_SETTLE_TABLE (default
+            06_analysis/00_dynamics/slope_crawler_settle.json), calibrated on the harness's own rigid crawler: the floor
+            tilt add (floor_roll_add_deg, floor_pitch_add_deg) replaces the P0 pitch add, SoilPads.h = pad_h_m. A soil
+            case without a row raises KeyError. Rigid floors are the table reference (no change).
 Pads: 02_params/pad_variants.json type A (cad330) / B (dwg_rear250): area and Bekker b per leg; masses unchanged
   (U-PAD-3).
 Units SI. Frames: body x fwd, y left, z up; pitch > 0 nose down.
@@ -59,6 +67,15 @@ PAD_VARIANTS = json.loads((ROOT / "02_params" / "pad_variants.json").read_text(e
 P0_SETTLE = {k.split("|")[0]: v["settle"] for k, v in json.loads(
     (ROOT / "06_analysis" / "00_dynamics" / "pad_bekker_p0_soilsets.json").read_text(encoding="utf-8"))["paths"].items()
     if k.endswith("|B|closed")}
+SETTLE_HOOK_ENV = "S9_SETTLE_HOOK"
+SETTLE_TABLE_ENV = "S9_SETTLE_TABLE"
+SETTLE_HOOK_P0 = "p0"
+SETTLE_HOOK_HARNESS = "harness"
+SETTLE_HOOKS = (SETTLE_HOOK_P0, SETTLE_HOOK_HARNESS)
+DEFAULT_SETTLE_TABLE = ROOT / "06_analysis" / "00_dynamics" / "slope_crawler_settle.json"
+SETTLE_TABLE_BLOCK = "hook_harness"
+_SETTLE_TABLES: dict[Path, dict] = {}
+"""hook_harness blocks read so far, per table path (one read per worker)."""
 RUN_LIMIT_S = float(os.environ.get("S9_RUN_LIMIT_S", "240"))
 HOLD_AFTER_READY_S = float(os.environ.get("S9_HOLD_S", "10"))
 C_LOCK = np.array([34403.519, 34403.519, 30348.4527, 30348.4527])
@@ -112,9 +129,12 @@ def soil_chunk(pen, z, sp, sy, area, coef, n, K, R, ks, h, force):
 
 
 class SoilPads:
-    """Four SCM-type pad elements and the pad-surface offsets of one soil set."""
+    """Four SCM-type pad elements and the pad-surface offsets of one soil set.
 
-    def __init__(self, key: str, pad_type: str, pad_xy: np.ndarray, ks: np.ndarray, k_scale: float = 1.0):
+    ``settle_row`` None: offsets from the flat P0 settle (settle hook "p0"); a hook_harness row: ``h = pad_h_m``."""
+
+    def __init__(self, key: str, pad_type: str, pad_xy: np.ndarray, ks: np.ndarray, k_scale: float = 1.0,
+                 settle_row: dict | None = None):
         s = SOIL_SETS[key]["chrono"]
         legs = next(v for v in PAD_VARIANTS.values() if v["label"] == pad_type)["legs"]
         self.area = np.array([legs[n]["bottom_area_m2"] for n in LEGS], float)
@@ -124,22 +144,122 @@ class SoilPads:
         self.K = float(max(s["elastic_K"], s["Kphi"] * k_scale))
         self.R = float(s["damping_R"])
         self.ks = np.asarray(ks, float)
-        st, rg = P0_SETTLE[key], P0_SETTLE["rigid"]
-        self.dtheta = st["q"][2] - rg["q"][2]
-        self.h = (rg["q"][0] - st["q"][0]) + pad_xy[:, 0] * math.tan(self.dtheta)
+        self.settle_row = settle_row
+        if settle_row is None:
+            st, rg = P0_SETTLE[key], P0_SETTLE["rigid"]
+            self.dtheta = st["q"][2] - rg["q"][2]
+            self.h = (rg["q"][0] - st["q"][0]) + pad_xy[:, 0] * math.tan(self.dtheta)
+        else:
+            self.dtheta = math.radians(float(settle_row["floor_pitch_add_deg"]))
+            self.h = np.asarray(settle_row["pad_h_m"], float).copy()
         self.z = np.zeros(4); self.sp = np.zeros(4); self.sy = np.zeros(4); self.force = np.zeros(4)
         self.z_max_rate = np.zeros(4)
 
 
+# ----------------------------------------------------------------------------------------------- settle hook
+def resolve_settle_hook(settle_hook: str | None = None) -> str:
+    """Settle hook of a run: the argument, else ``$S9_SETTLE_HOOK``, else "p0".
+
+    Raises:
+        ValueError: not one of ``SETTLE_HOOKS``.
+    """
+    hook = settle_hook or os.environ.get(SETTLE_HOOK_ENV) or SETTLE_HOOK_P0
+    if hook not in SETTLE_HOOKS:
+        raise ValueError(f"settle hook must be one of {SETTLE_HOOKS}, got {hook!r}")
+    return hook
+
+
+def settle_table_key(soil: str, level: str, slope) -> str:
+    """hook_harness key of a soil, auger level and floor slope (roll, pitch) [deg]."""
+    return f"{soil}|{level}|{float(slope[0]):g}|{float(slope[1]):g}"
+
+
+def load_settle_row(soil: str, level: str, slope, table_path: str | Path | None = None) -> dict:
+    """hook_harness row of the dynamics slope settle table.
+
+    Args:
+        soil, level, slope: soil set, auger level ("top", "middle", "bottom"), floor (roll, pitch) [deg].
+        table_path: settle table; None = ``$S9_SETTLE_TABLE``, else ``DEFAULT_SETTLE_TABLE``.
+
+    Raises:
+        KeyError: the table has no row for this soil / level / slope (e.g. a level not tabled yet).
+    """
+    path = Path(table_path or os.environ.get(SETTLE_TABLE_ENV) or DEFAULT_SETTLE_TABLE)
+    if path not in _SETTLE_TABLES:
+        _SETTLE_TABLES[path] = json.loads(path.read_text(encoding="utf-8"))[SETTLE_TABLE_BLOCK]
+    key = settle_table_key(soil, level, slope)
+    rows = _SETTLE_TABLES[path]
+    if key not in rows:
+        raise KeyError(f"settle table {path} has no {SETTLE_TABLE_BLOCK} row {key!r}")
+    return rows[key]
+
+
+def _floor_rotation(roll_deg: float, pitch_deg: float) -> np.ndarray:
+    """Floor R_f = Ry(pitch) Rx(roll) (the harness Plant convention)."""
+    ph, th = math.radians(roll_deg), math.radians(pitch_deg)
+    rot_x = np.array([[1.0, 0.0, 0.0], [0.0, math.cos(ph), -math.sin(ph)], [0.0, math.sin(ph), math.cos(ph)]])
+    rot_y = np.array([[math.cos(th), 0.0, math.sin(th)], [0.0, 1.0, 0.0], [-math.sin(th), 0.0, math.cos(th)]])
+    return rot_y @ rot_x
+
+
+def settle_snapshot(cl, plant) -> dict:
+    """Settle state of a plant (read only): body attitude in the axes of the ORIGINAL floor (the case slope, without
+    the hook's tilt add; ZYX of R_f^T R, deg) and the gap pad bottom to the original soil surface (soil_floor
+    geometry, mm, None on a rigid floor); with a hook_harness row also the errors to its targets
+    (target_q_floor phi / theta, gap_target_mm)."""
+    info = getattr(plant, "settle_info", {})
+    roll_deg, pitch_deg = info.get("floor_slope_deg", (0.0, 0.0))
+    rotation = cl.rcc._R(plant.q)
+    relative = _floor_rotation(roll_deg, pitch_deg).T @ rotation
+    att_deg = [math.degrees(math.atan2(relative[2, 1], relative[2, 2])), math.degrees(-math.asin(relative[2, 0]))]
+    snap = {"hook": info.get("hook"), "row_key": info.get("row_key"), "att_floor_deg": att_deg, "gap_mm": None}
+    so = plant.soil
+    if so is not None:
+        a_n = float(plant.nrm @ rotation[:, 2])
+        gaps = []
+        for i in range(4):
+            g0 = float(plant.nrm @ (plant.r + rotation @ plant.pad_rel[i])) / a_n
+            gaps.append(-((plant.x[i] - g0) * a_n + so.h[i]) * 1e3)
+        snap["gap_mm"] = gaps
+    row = None if so is None else so.settle_row
+    if row is not None:
+        targets_deg = [math.degrees(t) for t in row["target_q_floor"][1:3]]
+        snap["att_error_deg"] = [a - t for a, t in zip(att_deg, targets_deg, strict=True)]
+        snap["gap_error_mm"] = [g - t for g, t in zip(snap["gap_mm"], row["gap_target_mm"], strict=True)]
+    return snap
+
+
 def make_plant(cl, level: str, soil: str, pad_type: str, fs_kN: float, beta: float = 1.0e9, soil_kscale: float = 1.0,
-               slope=(0.0, 0.0)):
+               slope=(0.0, 0.0), settle_hook: str | None = None, settle_table: str | Path | None = None,
+               settle_row: dict | None = None):
+    """Reduced plant of one case on a soil set (or "rigid") and a floor slope (roll, pitch) [deg].
+
+    Args:
+        settle_hook: "p0" | "harness" (None: ``$S9_SETTLE_HOOK``, default "p0"); see the module docstring.
+        settle_table: settle table of the "harness" hook (None: ``$S9_SETTLE_TABLE`` or the default table).
+        settle_row: a hook_harness row given directly (callers that already hold it); needs settle_hook "harness".
+    """
     import dyn_model as dm
     import s8_g4_rodside_check as rsc
     Plant = rsc.make_plant_class(cl)
     roll, pitch = float(slope[0]), float(slope[1])
+    hook = resolve_settle_hook(settle_hook)
+    if settle_row is not None and hook != SETTLE_HOOK_HARNESS:
+        raise ValueError(f"settle_row needs settle_hook {SETTLE_HOOK_HARNESS!r}, got {hook!r}")
+    row = None
     if soil != "rigid":
-        pitch += math.degrees(P0_SETTLE[soil]["q"][2] - P0_SETTLE["rigid"]["q"][2])
+        if hook == SETTLE_HOOK_HARNESS:
+            row = settle_row if settle_row is not None else load_settle_row(soil, level, slope, settle_table)
+        p0_pitch_deg = math.degrees(P0_SETTLE[soil]["q"][2] - P0_SETTLE["rigid"]["q"][2])
+        if row is not None:
+            # the table add replaces the P0 add; written as (add - P0) before the common P0 add because the rows were
+            # calibrated through this float path (run_slope_crawler_settle._hjob): bit for bit the tabled settle
+            roll += float(row["floor_roll_add_deg"])
+            pitch = pitch + float(row["floor_pitch_add_deg"]) - p0_pitch_deg
+        pitch += p0_pitch_deg
     plant = Plant(level, roll, pitch, Fs=0.0)
+    plant.settle_info = {"hook": hook, "row_key": None if row is None else settle_table_key(soil, level, slope),
+                         "floor_slope_deg": (float(slope[0]), float(slope[1]))}
     k = beta / YAML_BETA
     plant.ko = np.asarray(plant.ko, float) * k
     plant.kh = plant.ko.copy()
@@ -151,7 +271,7 @@ def make_plant(cl, level: str, soil: str, pad_type: str, fs_kN: float, beta: flo
                              (4,)).copy()
         plant.ks = ks
         pad_xy = dm.geometry_from_params(dm.load_params()).pad_xy
-        plant.soil = SoilPads(soil, pad_type, pad_xy, ks, soil_kscale)
+        plant.soil = SoilPads(soil, pad_type, pad_xy, ks, soil_kscale, settle_row=row)
         plant.goff[:] = -plant.soil.h
     return plant
 
@@ -290,11 +410,14 @@ def run_case(case: dict) -> dict:
     t0 = time.perf_counter()
     cl.rmf.CONFIG.clear()
     cl.rpt.RCFG.clear()
+    # passed only when the case names them: wrappers replace make_plant with factories of the older signature
+    settle_options = {k: case[k] for k in ("settle_hook", "settle_table") if case.get(k) is not None}
     plant = make_plant(cl, case["level"], case["soil"], case["pad"], case["fs_kN"], case.get("beta", 1.0e9),
-                       case.get("soil_kscale", 1.0), case.get("slope", (0.0, 0.0)))
+                       case.get("soil_kscale", 1.0), case.get("slope", (0.0, 0.0)), **settle_options)
     plant.step(np.zeros(4), int(round(cl.rcc.SETTLE_ON_CRAWLER_S / plant.dt)))
     plant.t = 0.0
     plant.arm()
+    settle = settle_snapshot(cl, plant)
     node_d0 = crawler_node_heights(cl, plant)
     node_in = node_d0 < 0.0
     hasher = hashlib.sha256()
@@ -386,6 +509,7 @@ def run_case(case: dict) -> dict:
         "t_level_s": t_level, "t_done_s": t_done, "t_ready_s": t_ready, "final_phase": str(ctrl.phase),
         "t_crawler_off_first_s": t_off_first, "t_crawler_last_contact_s": t_off_last_contact,
         "n_crawler_recontact": n_recontact, "commands_sha256": hasher.hexdigest(),
+        "settle_hook": settle["hook"], "settle": settle,
         "crawler_N_at_done": cr_at_done, "crawler_N_at_ready": cr_at_ready, "crawler_N_max_after_ready": after_ready_cr,
         "crawler_burden_at_ready": None if cr_at_ready is None else cr_at_ready / (W_cyl + float(np.sum(plant.Wr))),
         "sumF_over_Wcyl_at_ready": sum_ratio_ready, "W_cyl_N": W_cyl,
@@ -441,7 +565,9 @@ def run_batch(cases, out_path: Path, workers: int, meta: dict | None = None):
                     # LF line ends: a CRLF checkout (Windows worktree) gives the same digest
                     "script_sha256": hashlib.sha256(
                         Path(__file__).read_bytes().replace(b"\r\n", b"\n")).hexdigest(),
-                    "wall_s": round(time.perf_counter() - t0, 1), "workers": workers, **(meta or {})},
+                    "wall_s": round(time.perf_counter() - t0, 1), "workers": workers,
+                    "settle_hook_env": resolve_settle_hook(),
+                    "settle_table_env": os.environ.get(SETTLE_TABLE_ENV) or str(DEFAULT_SETTLE_TABLE), **(meta or {})},
            "runs": res}
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(out, indent=1, default=float), encoding="utf-8")

@@ -15,6 +15,11 @@ Usage (Chrono-dev python, project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/run_S9.py rejudge <batch or case folder> [--dry-run]
         # spec rev. 60 P3-2 / 5 / 7 re-judgement of finished level cases (no Chrono run)
 
+2026-10-29 (spec 414 / 416 / 419.8 / 420): ``p3b.P3-2_loc.late_loc_reapproach`` (:func:`p32_late_loc_block`,
+FLAG ``P3-2_late_loc_reapproach`` and ``checks.P3-2_verdict``), ``code_state`` (C2 meta rules + controller
+file SHA-256 at the start), zero calibration variant D keys in ``sensors.zero_calibration``, and the rule
+events counted in ``p3b_ext.event_counts`` / listed in ``p3b_ext.rule_event_times_rel_s``.
+
 Options common to the SCM runs: ``--soil {J1,J2,G1,S1}`` (``02_params/scm_soil_sets.json``),
 ``--pad-variant {cad330,dwg_rear250}``, ``--scm-shear {bprime,native}`` (U-S9L-1: bprime =
 judgement, native = comparison only), ``--stiffness-mode {series,l1_kt,janosi}`` (U-S9L-2),
@@ -58,6 +63,13 @@ Sensors (control D-1): ``--pressure-grade`` (default WIKA A-10 ``normal``, CHECK
 and ``--imu-grade`` (default ``ideal``); ``record/`` keeps the 10 Hz readings and the applied output,
 ``controller_commands.npz`` the issued commands. P3b loop length 120 s fixed (D-2). ``plan`` lists the approved P3b set (U-S9P-6 (가): 24 cases) and the two
 S8 re-approach limit cases run with it (``s9_batch.py run P3b``).
+
+Study ③ / ① (control design 2026-10-28): :func:`p3b_aug_cases` = J2 / S1 x A / B x auger middle / bottom with the
+P3b settings (``s9_batch.py run p3b_aug``); ``level --start-limit verification`` = the run_S8C verification slope
+limits (5.5 / 3.5 deg) for the slope rows :func:`s9sl_cases` (``s9_batch.py run S9SL``, C-1 / C-2 confirmed, C-3 /
+C-4 drafts). Every ``level`` run also writes ``p3b_ext.reanchor`` (RA-1 .. RA-6: events, per stair step true
+minimum F_cyl, pad bushing utilisation, sinkage change), ``p3b_ext.start_condition`` (SL-2 R_c) and
+``settle_slope`` (P2-c / P2-d on the slope, plane / gravity / rut basis).
 
 Outputs ``07_results/S9/<action>_<tag>_<stamp>/`` (``result.json`` + ``series.npz``). Units SI;
 world = body axes at the start, x forward, y left, z up; gravity (0, 0, -9.80665).
@@ -162,6 +174,24 @@ def case_plan() -> list[dict[str, Any]]:
             f"G6 soil patch: {c['soil']} base, {sp['set']} under {sp['leg']} (grid {sp['grid_m']:g} m), "
             f"{c['pad']} {c['level']} F_s {c['fs_kN']:g} kN; triple terrain; wall = G6_US_PER_STEP_UPPER (ASSUMPTION)")
         rows[-1]["wall_est_s"] = rows[-1]["wall_est_4cm_grid_s"] = c["est_s"]
+    for c in g6p_cases():
+        sp = c["soil_patch"]
+        add(c["group"], c["case"], c["sim_s"], "machine",
+            f"G6P paper set: {c['soil']} base, {sp['set']} under {sp['leg']} (grid {sp['grid_m']:g} m), "
+            f"{c['pad']} {c['level']} F_s {c['fs_kN']:g} kN, P-S8-29 {c.get('twist_relax', TWIST_RELAX_PRESET)}; "
+            "wall = G6P_EST_S" + (f"; {c['note']}" if c.get("note") else ""))
+        rows[-1]["wall_est_s"] = rows[-1]["wall_est_4cm_grid_s"] = c["est_s"]
+    for c in p3b_aug_cases():
+        add(c["group"], c["case"], P3B_SIM_S, "machine",
+            f"study ③: {c['soil']} {c['pad']} {c['level']} F_s {c['fs_kN']:g} kN, P3b settings; paired with "
+            f"{c['pair_case']}; wall = P3B_EST_S")
+        rows[-1]["wall_est_s"] = rows[-1]["wall_est_4cm_grid_s"] = c["est_s"]
+    for c in s9sl_cases(include_draft=True):
+        add(c["group"], c["case"], c["sim_s"], "machine",
+            f"study ① {c['cid']}{'' if c['confirmed'] else ' (draft, not in the batch)'}: {c['soil']} {c['pad']} "
+            f"floor (roll, pitch) {c['floor_deg']} deg, start-limit {c['start_limit']}, {c['purpose']}; "
+            "wall = S9SL_WALL_S_PER_SIM_S (ASSUMPTION)")
+        rows[-1]["wall_est_s"] = rows[-1]["wall_est_4cm_grid_s"] = c["est_s"]
     for cid, est in P3B_S8C_CASES.items():
         rows.append({"group": "P3b-RE1c", "case": cid, "sim_s": 104.0, "kind": "s8c_L2b_rigid",
                      "wall_est_s": est, "wall_est_4cm_grid_s": est,
@@ -196,15 +226,20 @@ P3B_S8C_CASES = {"N_RE1c_Fs0_combined": 433.0, "N_RE1c_Fs8_combined": 528.0}
 L2b-NSC (rigid floor) cases with the R8 preset; P-core wall estimates of ``run_S8C.py list``."""
 
 
+def p3b_case(group: str, soil: str, pad: str, level: str, fs: float) -> dict[str, Any]:
+    """One P3b-type ``level`` row (the P3b settings, :func:`p3b_level_argv`)."""
+    return {"group": group, "case": f"P3b_{soil}_{pad}_{level}_Fs{fs:g}", "soil": soil, "pad": pad,
+            "pad_variant": P3B_PAD[pad], "level": level, "fs_kN": fs, "grid_m": P3B_PAD_GRID_M[soil],
+            "crawler_grid_m": P3B_CRAWLER_GRID_M, "est_s": P3B_EST_S[soil]}
+
+
 def p3b_cases() -> list[dict[str, Any]]:
     """The 24 approved P3b cases in run order (U-S9P-6 (가)): P3b-1 G1 10 (A / B x auger 3 x F_s
     4 kN + top F_s 0 / 8 kN x A / B), P3b-2 J1 10 (same), P3b-3 J2 / S1 x A / B, top, 4 kN."""
     out = []
 
     def add(group, soil, pad, level, fs):
-        out.append({"group": group, "case": f"P3b_{soil}_{pad}_{level}_Fs{fs:g}", "soil": soil, "pad": pad,
-                    "pad_variant": P3B_PAD[pad], "level": level, "fs_kN": fs, "grid_m": P3B_PAD_GRID_M[soil],
-                    "crawler_grid_m": P3B_CRAWLER_GRID_M, "est_s": P3B_EST_S[soil]})
+        out.append(p3b_case(group, soil, pad, level, fs))
 
     for group, soil in (("P3b-1", "G1"), ("P3b-2", "J1")):
         for pad in ("A", "B"):
@@ -219,9 +254,29 @@ def p3b_cases() -> list[dict[str, Any]]:
     return out
 
 
+P3B_AUG_ROWS = (("J2", "B"), ("J2", "A"), ("S1", "A"), ("S1", "B"))
+P3B_AUG_LEVELS = ("middle", "bottom")
+
+
+def p3b_aug_cases() -> list[dict[str, Any]]:
+    """Study ③ (control 2026-10-28, user decision: 8 cases): J2 B, J2 A, S1 A, S1 B x auger middle / bottom,
+    the P3b settings unchanged (:func:`p3b_level_argv`: F_s 4 kN, pad grid J2 0.01 / S1 0.02 m, crawler 0.04 m,
+    zrp, threads 4, loop 120 s, pressure normal, IMU ideal, seed 20261026). ``pair_case`` = the P3b top case of the
+    same soil / pad / seed (P3b-3) the record checks of the design compare with. ``est_s`` = :data:`P3B_EST_S`
+    (J2 11500, S1 7000 s)."""
+    out = []
+    for soil, pad in P3B_AUG_ROWS:
+        for level in P3B_AUG_LEVELS:
+            c = p3b_case("P3b-aug", soil, pad, level, 4.0)
+            c["pair_case"] = f"P3b_{soil}_{pad}_top_Fs4"
+            out.append(c)
+    return out
+
+
 def p3b_level_argv(c: dict[str, Any]) -> list[str]:
     """``run_S9.py level`` arguments of a :func:`p3b_cases` / :func:`g6_cases` row (without the
-    interpreter). A row with ``soil_patch`` adds ``--soil-patch LEG:SET --soil-patch-grid``."""
+    interpreter). A row with ``soil_patch`` adds ``--soil-patch LEG:SET --soil-patch-grid``; an S9SL
+    row (:func:`s9sl_cases`) adds ``--floor-roll`` / ``--floor-pitch`` and ``--start-limit``."""
     out = ["level", "--soil", c["soil"], "--pad-variant", c["pad_variant"], "--level", c["level"],
            "--fs-kN", f"{c['fs_kN']:g}", "--grid", f"{c['grid_m']:g}", "--crawler-grid", f"{c['crawler_grid_m']:g}",
            "--settle-dashpot", "zrp", "--threads", str(SCM_THREADS_FIXED), "--duration", f"{P3B_DURATION_S:g}",
@@ -232,6 +287,17 @@ def p3b_level_argv(c: dict[str, Any]) -> list[str]:
     sp = c.get("soil_patch")
     if sp is not None:
         out[-1:-1] = ["--soil-patch", f"{sp['leg']}:{sp['set']}", "--soil-patch-grid", f"{sp['grid_m']:g}"]
+    # G6P rows only (2026-10-28): the P-S8-29 counterfactual and a case note recorded in result.json args
+    if c.get("twist_relax", TWIST_RELAX_PRESET) != TWIST_RELAX_PRESET:
+        out[-1:-1] = ["--twist-relax", c["twist_relax"]]
+    if c.get("note"):
+        out[-1:-1] = ["--note", c["note"]]
+    # S9SL rows only (study ①, 2026-10-28): floor slope and the start-limit mode
+    if "floor_deg" in c:
+        roll, pitch = c["floor_deg"]
+        out[-1:-1] = ["--floor-roll", f"{roll:g}", "--floor-pitch", f"{pitch:g}"]
+    if c.get("start_limit", START_LIMIT_PRESET) != START_LIMIT_PRESET:
+        out[-1:-1] = ["--start-limit", c["start_limit"]]
     return out
 
 
@@ -245,17 +311,32 @@ first run's ``us_per_step``."""
 
 
 def g6_case(base: str, patch_set: str, leg: str, *, pad: str = "B", level: str = "top", fs: float = 4.0,
-            group: str = "G6", duration_s: float = P3B_DURATION_S) -> dict[str, Any]:
+            group: str = "G6", duration_s: float = P3B_DURATION_S, twist_relax: str | None = None,
+            note: str | None = None, est_s: float | None = None) -> dict[str, Any]:
     """One G6 closed-loop case: the P3b case of ``base`` with the pad ``leg`` on a ``patch_set`` soil patch
     (``soil_patch`` = {leg, set, grid_m}; patch grid = the P3b pad grid of that set); ``duration_s`` = the
-    closed-loop time after the 8 s settle (``level --duration``)."""
+    closed-loop time after the 8 s settle (``level --duration``). G6P only: ``twist_relax`` (``off`` = P-S8-29
+    counterfactual, case name suffix :data:`TWIST_RELAX_OFF_SUFFIX`), ``note`` (``level --note``, kept in
+    result.json args and batch.json) and a measured ``est_s`` instead of the per-step upper bound."""
     sp = {"leg": leg, "set": patch_set, "grid_m": P3B_PAD_GRID_M[patch_set]}
     us = max(G6_US_PER_STEP_UPPER[patch_set], P3B_US_PER_STEP_UPPER[base])
     sim_s = CRAWLER_SETTLE_S + float(duration_s)
-    return {"group": group, "case": f"G6_{base}_{pad}_{level}_Fs{fs:g}_sp{patch_set}{leg}", "soil": base,
-            "pad": pad, "pad_variant": P3B_PAD[pad], "level": level, "fs_kN": fs, "grid_m": P3B_PAD_GRID_M[base],
-            "crawler_grid_m": P3B_CRAWLER_GRID_M, "est_s": round(sim_s / 1.0e-4 * us * 1e-6, -2),
-            "soil_patch": sp, "duration_s": float(duration_s), "sim_s": sim_s}
+    name = f"G6_{base}_{pad}_{level}_Fs{fs:g}_sp{patch_set}{leg}"
+    out = {"group": group, "case": name, "soil": base,
+           "pad": pad, "pad_variant": P3B_PAD[pad], "level": level, "fs_kN": fs, "grid_m": P3B_PAD_GRID_M[base],
+           "crawler_grid_m": P3B_CRAWLER_GRID_M, "est_s": round(sim_s / 1.0e-4 * us * 1e-6, -2),
+           "soil_patch": sp, "duration_s": float(duration_s), "sim_s": sim_s}
+    if twist_relax is not None:
+        if twist_relax not in TWIST_RELAX_MODES:
+            raise ValueError(f"twist_relax must be one of {TWIST_RELAX_MODES}, got {twist_relax!r}")
+        out["twist_relax"] = twist_relax
+        if twist_relax == TWIST_RELAX_OFF:
+            out["case"] = name + TWIST_RELAX_OFF_SUFFIX
+    if note:
+        out["note"] = note
+    if est_s is not None:
+        out["est_s"] = float(est_s)
+    return out
 
 
 G6_DURATION_S = {"J1RR": 160.0, "J1FL": 200.0, "G1RR": 120.0}
@@ -270,6 +351,479 @@ def g6_cases() -> list[dict[str, Any]]:
     return [g6_case("G1", "J1", "RR", duration_s=G6_DURATION_S["J1RR"]),
             g6_case("G1", "J1", "FL", duration_s=G6_DURATION_S["J1FL"]),
             g6_case("G1", "G1", "RR", group="G6-ref", duration_s=G6_DURATION_S["G1RR"])]
+
+
+# --- G6P: paper evidence set (user decision 2026-10-28) ------------------------------------------------
+
+TWIST_RELAX_PRESET = "preset"
+TWIST_RELAX_OFF = "off"
+TWIST_RELAX_MODES = (TWIST_RELAX_PRESET, TWIST_RELAX_OFF)
+"""``level --twist-relax``: ``preset`` = the R8 preset P-S8-29 relaxed twist completion as it is
+(``C2Config().with_10hz_d1()``), ``off`` = ``twist_completion_relax.enable`` False only (counterfactual
+comparison: DONE needs ``|D| < done_twist_N`` again; READY expected late or none)."""
+TWIST_RELAX_OFF_SUFFIX = "_noTR"
+S1_MODEL_LIMIT_NOTE = ("model-limit stress case: S1 patch under a front pad, p/q_ult about 9.5 = outside the "
+                       "Bekker validity range (dynamics_model.md rev. 44); SCM keeps sinking without a bearing "
+                       "failure, so a pass or a fail is not a physical prediction")
+G6P_EST_S = {"J1RR_noTR": 10800.0, "J1RR": 6950.0, "J1FL": 8540.0, "J2RR": 9500.0, "J2FL": 9500.0, "S1FL": 6600.0}
+"""Wall estimates [s] of the G6P rows, P-core 4-parallel contended: the G6 batch of 2026-10-28
+(batch_G6_20261028_075108: settle about 280 s, J1 loop 41.3-41.7 s per simulated s, G1 39.0) measured;
+J2 +10 % (deeper sinkage) and J1RR_noTR (240 s, deeper sinkage) are ASSUMPTIONS; S1FL = the G1 rate."""
+
+
+def g6p_cases() -> list[dict[str, Any]]:
+    """G6P closed-loop set (paper evidence, user decision 2026-10-28): G1 base, pad B, top, F_s 4 kN, the G6
+    settings; current preset (P-S8-29 rise tolerance 0.6 kN, U-S8-80) unless noted. J1@RR with the P-S8-29
+    relaxation off 240 s (counterfactual), J1@RR 160 s, J1@FL 200 s, J2@RR 200 s, J2@FL 200 s, S1@FL 160 s
+    (patch grid 0.02 m, model-limit stress case :data:`S1_MODEL_LIMIT_NOTE`)."""
+    return [g6_case("G1", "J1", "RR", group="G6P", duration_s=240.0, twist_relax=TWIST_RELAX_OFF,
+                    note="P-S8-29 counterfactual: twist_completion_relax.enable False (preset otherwise)",
+                    est_s=G6P_EST_S["J1RR_noTR"]),
+            g6_case("G1", "J1", "RR", group="G6P", duration_s=160.0, est_s=G6P_EST_S["J1RR"]),
+            g6_case("G1", "J1", "FL", group="G6P", duration_s=200.0, est_s=G6P_EST_S["J1FL"]),
+            g6_case("G1", "J2", "RR", group="G6P", duration_s=200.0, est_s=G6P_EST_S["J2RR"]),
+            g6_case("G1", "J2", "FL", group="G6P", duration_s=200.0, est_s=G6P_EST_S["J2FL"]),
+            g6_case("G1", "S1", "FL", group="G6P", duration_s=160.0, note=S1_MODEL_LIMIT_NOTE,
+                    est_s=G6P_EST_S["S1FL"])]
+
+
+def apply_twist_relax(config: Any, mode: str) -> tuple[Any, dict[str, Any]]:
+    """``level --twist-relax``: the C2 config with the P-S8-29 relaxation as given by ``mode`` and its record
+    (mode, overrides, the resulting ``twist_completion_relax`` settings)."""
+    from dataclasses import asdict, replace
+
+    if mode not in TWIST_RELAX_MODES:
+        raise ValueError(f"--twist-relax must be one of {TWIST_RELAX_MODES}, got {mode!r}")
+    overrides: dict[str, Any] = {}
+    if mode == TWIST_RELAX_OFF:
+        config = replace(config, twist_completion_relax=replace(config.twist_completion_relax, enable=False))
+        overrides["twist_completion_relax.enable"] = False
+    return config, {"mode": mode, "overrides": overrides,
+                    "settings": asdict(config.twist_completion_relax)}
+
+
+# --- study ①: soft soil x floor slope (control design 2026-10-28) ---------------------------------------
+
+START_LIMIT_PRESET = "preset"
+START_LIMIT_VERIFICATION = "verification"
+START_LIMIT_VERIFICATION_MAP = "verification_map"
+START_LIMIT_RECORD_ONLY = "record_only"
+START_LIMIT_MODES = (START_LIMIT_PRESET, START_LIMIT_VERIFICATION, START_LIMIT_VERIFICATION_MAP,
+                     START_LIMIT_RECORD_ONLY)
+"""``level --start-limit``: ``preset`` = the R8 preset start / target acceptance as it is (operating mode: D8 and
+relative diamonds 4.4 / 3.2 deg on the crawler IMU attitude, reject); ``verification`` = the run_S8C / run_S7C L2b
+meaning (``target.slope_limit_mode = verification``: D8 / relative diamonds 5.5 / 3.5 deg, usage tolerance 0.01,
+the simulation check range of control spec 2.3), nothing else changed (acceptance reject, identity crawler settle
+map = the measured crawler attitude, as the L2b rigid-crawler runs of run_S8C). ``verification_map`` = verification
+plus the spec 13.1 X5 crawler settle map of the auger level (``CrawlerSettleMap.for_level``, the verification-mode
+floor estimate run_S6C L1-R uses): on SCM the crawler settles steeper than the floor (smoke 2026-10-28: G1 B floor
+3.2 deg -> crawler 3.54 deg, ``verification`` rejects with REJ_SLOPE_D8), the map takes theta_0 and the extra tilt
+off before A1 / A4. The map coefficients are the L1-R Chrono fit (ASSUMPTION for SCM). ``record_only`` (control-expert
+decision 2026-10-28, the S9SL rows) = ``target.acceptance = off`` only, as the harness
+(``c2py_r8d1_closed_loop.preset_config``: ``TargetAcceptance.OFF``, operating mode, identity settle map): CHECK accepts
+the level target whatever the crawler attitude (``target.check_target`` returns ACCEPTED with ``off``) and the A5
+stroke check of a READY target change is skipped; the start rule is only recorded (SL-2 ``R_c``, FLAG > 1). The other
+target fields (operating mode, identity map, CHECK time / zero calibration) and every LEVEL-path setting (soil response
+clearance estimate S-3 / P-S8-28, REANCHOR with its anchor pitch = theta_crawler) stay the preset: none of them reads
+``config.target`` (c2.py: the target settings are read only by CHECK, the A1 .. A5 checks, the reference ramp, the
+gyro-bias window and the X9 shadow floor estimate)."""
+
+
+def apply_start_limit(config: Any, mode: str, level: str = "top") -> tuple[Any, dict[str, Any]]:
+    """``level --start-limit``: the C2 config with the start / target slope limits of ``mode`` and its record
+    (mode, overrides, the resulting mode, diamond half-spans [deg], settle map). ``level`` = auger level of the
+    settle map (``verification_map`` only)."""
+    from dataclasses import replace
+
+    from outrigger_sim.control.target import CrawlerSettleMap, SlopeLimitMode, TargetAcceptance
+
+    if mode not in START_LIMIT_MODES:
+        raise ValueError(f"--start-limit must be one of {START_LIMIT_MODES}, got {mode!r}")
+    overrides: dict[str, Any] = {}
+    if mode == START_LIMIT_RECORD_ONLY:
+        config = replace(config, target=replace(config.target, acceptance=TargetAcceptance.OFF))
+        overrides["target.acceptance"] = str(TargetAcceptance.OFF)
+    if mode in (START_LIMIT_VERIFICATION, START_LIMIT_VERIFICATION_MAP):
+        smap = CrawlerSettleMap.for_level(level) if mode == START_LIMIT_VERIFICATION_MAP else None
+        config = replace(config, target=replace(config.target, slope_limit_mode=SlopeLimitMode.VERIFICATION,
+                                                crawler_settle_map=smap))
+        overrides["target.slope_limit_mode"] = str(SlopeLimitMode.VERIFICATION)
+        if smap is not None:
+            overrides["target.crawler_settle_map"] = f"CrawlerSettleMap.for_level({level!r})"
+    lim = config.target.limits
+    return config, {"mode": mode, "overrides": overrides,
+                    "slope_limit_mode": str(config.target.slope_limit_mode),
+                    "acceptance": str(config.target.acceptance),
+                    "relative_span_deg": [math.degrees(lim.relative_roll_span_rad),
+                                          math.degrees(lim.relative_pitch_span_rad)],
+                    "absolute_span_deg": [math.degrees(lim.absolute_roll_span_rad),
+                                          math.degrees(lim.absolute_pitch_span_rad)],
+                    "usage_tolerance": lim.usage_tolerance,
+                    "crawler_settle_map": config.target.settle_map.to_meta(),
+                    "rule": "verification = run_S8C / run_S7C L2b slope_limit_mode (spec 2.3), settle map identity; "
+                            "verification_map = verification + CrawlerSettleMap.for_level (spec 13.1 X5); "
+                            "record_only = target.acceptance off only (harness preset_config), start rule recorded"}
+
+
+OPERATING_START_SPAN_DEG = (4.4, 3.2)
+"""SL-2 (study ①): operating start rule |phi_c| / 4.4 + |theta_c| / 3.2 <= 1 on the crawler IMU attitude (CHECK end)."""
+
+
+def start_condition_record(target_meta: dict[str, Any] | None, events: list[tuple[float, str]],
+                           t_loop_start_s: float) -> dict[str, Any]:
+    """SL-2 record: the CHECK-end crawler attitude ``(phi_c, theta_c)`` of the C2 target meta [deg], the operating
+    usage ``R_c = |phi_c| / 4.4 + |theta_c| / 3.2`` (FLAG ``operating_rule_rejects`` when > 1), the slope limit mode
+    of the run and the target rejection events (``REJ_*``). Record only."""
+    tm = target_meta or {}
+    ca = tm.get("crawler_attitude_rad")
+    rej = [[float(t) - t_loop_start_s, n] for t, n in events if str(n).startswith("REJ_")]
+    out: dict[str, Any] = {"slope_limit_mode": tm.get("slope_limit_mode"), "rejections_rel_s": rej,
+                           "crawler_attitude_deg": None, "R_c_operating": None, "operating_rule_rejects": None,
+                           "floor_estimate_deg": None if tm.get("floor_estimate_rad") is None
+                           else [math.degrees(float(a)) for a in tm["floor_estimate_rad"]],
+                           "rule": "SL-2 (study ①): R_c = |phi_c| / 4.4 + |theta_c| / 3.2 on the CHECK-end crawler "
+                                   "IMU attitude; > 1 = FLAG 'operating rule rejects'; record only"}
+    if ca is not None:
+        r, p = (math.degrees(float(a)) for a in ca)
+        rc = abs(r) / OPERATING_START_SPAN_DEG[0] + abs(p) / OPERATING_START_SPAN_DEG[1]
+        out.update(crawler_attitude_deg=[r, p], R_c_operating=rc, operating_rule_rejects=bool(rc > 1.0))
+    return out
+
+
+S9SL_DURATION_S = 160.0
+"""Closed-loop time of the study ① Chrono rows (design: 160 s)."""
+S9SL_WALL_S_PER_SIM_S = {"G1": 51.0, "S1": 51.0, "J1": 87.0, "J2": 87.0}
+"""Wall per simulated second, P-core 4-parallel contended (ASSUMPTION: the P3b contended means, G1 5.1 / J1 8.7
+ms/step at dt 1e-4 s, :data:`P3B_US_PER_STEP_UPPER` note; the design's 4-parallel 4.1 h)."""
+
+
+def _deg_tag(v: float) -> str:
+    return f"{v:g}".replace("-", "m").replace(".", "p")
+
+
+S9SL_START_LIMIT = START_LIMIT_RECORD_ONLY
+"""Start-limit mode of the S9SL rows (control-expert decision 2026-10-28): ``record_only`` = target acceptance off
+with the identity settle map, the harness control path; C-1 (Chrono settle smoke R_c 1.107, plain ``verification``
+rejected it with REJ_SLOPE_D8 at crawler 3.54 deg) and C-4 must not stop at CHECK; R_c is the SL-2 record only.
+``verification_map`` stays available but is not used here."""
+
+
+def s9sl_case(cid: str, soil: str, pad: str, roll_deg: float, pitch_deg: float, *, purpose: str,
+              duration_s: float = S9SL_DURATION_S, confirmed: bool = True) -> dict[str, Any]:
+    """One study ① Chrono row: the P3b settings (top, F_s 4 kN, zrp, threads 4, pressure normal, IMU ideal, seed
+    20261026, R8 preset incl. REANCHOR on) on a floor of (roll, pitch) [deg] (floor tilted, gravity vertical, as L2b
+    run_S7C), closed loop ``duration_s``, ``--start-limit`` :data:`S9SL_START_LIMIT`."""
+    c = p3b_case("S9SL", soil, pad, "top", 4.0)
+    sim_s = CRAWLER_SETTLE_S + float(duration_s)
+    c.update(case=f"S9SL_{cid.replace('-', '')}_{soil}_{pad}_top_Fs4_r{_deg_tag(roll_deg)}_p{_deg_tag(pitch_deg)}",
+             cid=cid, floor_deg=(float(roll_deg), float(pitch_deg)), start_limit=S9SL_START_LIMIT,
+             duration_s=float(duration_s), sim_s=sim_s, est_s=round(sim_s * S9SL_WALL_S_PER_SIM_S[soil], -2),
+             purpose=purpose, confirmed=bool(confirmed))
+    return c
+
+
+def s9sl_cases(include_draft: bool = False) -> list[dict[str, Any]]:
+    """Study ① Chrono rows (design 2026-10-28, control-expert confirmation of C-3 / C-4 the same day): C-1 G1 B
+    (0, +3.2) soft-soil REANCHOR (RA-1 .. RA-6), 160 s; C-2 J1 A (+4.4, 0) crawler roll settle asymmetry, slope LOC /
+    S-3, 160 s; C-3 J1 B (+3.3, 0) inside the operating diamond, false LOC -> re-contact check, 160 s; C-4 J1 A
+    (0, +3.2) REANCHOR on (Chrono preset default), 200 s. ``include_draft`` is kept for callers (no drafts left)."""
+    return [s9sl_case("C-1", "G1", "B", 0.0, 3.2, purpose="soft-soil REANCHOR (RA-1 .. RA-6)"),
+            s9sl_case("C-2", "J1", "A", 4.4, 0.0, purpose="crawler roll settle asymmetry, slope LOC / S-3"),
+            s9sl_case("C-3", "J1", "B", 3.3, 0.0, purpose="roll inside the operating diamond: false LOC -> re-contact"),
+            s9sl_case("C-4", "J1", "A", 0.0, 3.2, duration_s=200.0, purpose="J1 REANCHOR (preset on), 200 s")]
+
+
+CRAWLER_GAP_STEP_M = 0.1
+"""Grid of the crawler bottom sample points (the rut-reference grid of ``S9Model.mark_rut_reference``)."""
+
+
+def crawler_gap_points_body_m(params: Any, step_m: float = CRAWLER_GAP_STEP_M) -> tuple[np.ndarray, list[str]]:
+    """Every crawler contact-shape sample point in body coordinates (m) and its label: the block-bottom grid of
+    both tracks over the flat part and both ramps (``mark_rut_reference`` points, NOT filtered by settle contact)
+    plus the 8 corners of each of the 6 envelope boxes (``crawler_box_specs`` / ``box_triangles``)."""
+    from outrigger_sim.chrono import scm_model as sm
+
+    z_block = float(params.ground.crawler_bottom_z_m) + sm.BLOCK_BOTTOM_ABOVE_CRAWLER_BOTTOM_M
+    ys = np.arange(sm.TRACK_Y_RANGE_M[0] + 0.02, sm.TRACK_Y_RANGE_M[1] - 0.02 + 1e-9, step_m)
+    xs = np.arange(sm.REAR_RAMP_X_M[0] + 0.02, sm.FRONT_RAMP_X_M[1] - 0.02 + 1e-9, step_m)
+    pts, labels = [], []
+    for sy, side in ((1.0, "L"), (-1.0, "R")):
+        for x in xs:
+            if x > sm.FRONT_RAMP_X_M[0]:
+                zb = z_block + sm.FRONT_RAMP_SLOPE * (x - sm.FRONT_RAMP_X_M[0])
+            elif x < sm.REAR_RAMP_X_M[1]:
+                zb = z_block + sm.REAR_RAMP_SLOPE * (sm.REAR_RAMP_X_M[1] - x)
+            else:
+                zb = z_block
+            for y in ys:
+                pts.append([x, sy * y, zb])
+                labels.append(f"grid_{side}")
+    for spec in sm.crawler_box_specs(params):
+        verts, _faces = sm.box_triangles(spec["centre"], spec["angle_y_rad"], spec["size"])
+        for k, v in enumerate(verts):
+            pts.append(list(v))
+            labels.append(f"{spec['name']}:v{k}")
+    return np.asarray(pts, float), labels
+
+
+class CrawlerGapProbe:
+    """Minimum gap between every crawler contact-shape point (:func:`crawler_gap_points_body_m`) and the crawler
+    SCM surface, along the SCM plane normal (control-expert 2026-10-28, the rev. 70 G8 rule 'all crawler nodes vs the
+    floor'; the settle-contact rut clearance ``rut_clearance_m`` misses the uphill end shoe on a slope). Surface
+    under a point = plane level - node sinkage of the nearest SCM node (``GetNodeInfo(p).sinkage``, the node of the
+    point projected along the plane normal; untouched nodes read 0 = the plane). Read-only queries."""
+
+    def __init__(self, model: Any) -> None:
+        self.model = model
+        pts, self.labels = crawler_gap_points_body_m(model.params)
+        self.points_local_m = pts - np.asarray(model.sup_com_body_m, float)  # COG frame (as the rut points)
+
+    def __call__(self) -> tuple[float, str, float, float]:
+        """(minimum gap over all points [m], its point label, minimum over the bottom-grid points only [m], nearby
+        sinkage of the all-point minimum [m]). The box corners lie exactly on the track edges, where the nearest SCM
+        node may be outside the rut (undisturbed, sinkage 0): a settled corner then reads about minus the crawler
+        sinkage (flat G1 settle: -3.9 mm). The grid points are 20 mm inside the edges (crawler grid 40 mm), so their
+        nearest node is under the track. Nearby sinkage = the largest node sinkage at the minimum point and at
+        +-1 crawler grid step along the plane x / y axes (5 nodes), for the judge's corner-bias FLAG."""
+        from outrigger_sim.chrono.scm_model import chvec
+
+        m = self.model
+        n = np.asarray(m.normal_world, float)
+        plane = float(np.asarray(m.plane_point_world_m, float) @ n)
+        sup, ter = m.superstructure, m.crawler_terrain
+        best, arg, best_grid, w_best = math.inf, "", math.inf, None
+        for p, lab in zip(self.points_local_m, self.labels, strict=True):
+            w = sup.TransformPointLocalToParent(chvec(p))
+            gap = (w.x * n[0] + w.y * n[1] + w.z * n[2]) - (plane - float(ter.GetNodeInfo(w).sinkage))
+            if gap < best:
+                best, arg, w_best = gap, lab, np.array([w.x, w.y, w.z])
+            if lab.startswith("grid_") and gap < best_grid:
+                best_grid = gap
+        near = math.nan
+        if w_best is not None:
+            rot = np.asarray(getattr(m, "plane_rot", np.eye(3)), float)
+            h = float(getattr(m, "crawler_grid_m", 0.04))
+            offs = [np.zeros(3)] + [s * h * rot[:, k] for k in (0, 1) for s in (1.0, -1.0)]
+            near = max(float(ter.GetNodeInfo(chvec(w_best + o)).sinkage) for o in offs)
+        return float(best), arg, float(best_grid), float(near)
+
+
+CRAWLER_GAP_CORNER_FLAG_EXTRA_M = 0.005
+"""ASSUMPTION (control-expert 2026-10-28): the all-point gap may sit below the grid gap by the nearby crawler sinkage
+(corner nearest-node bias) plus this before the corner FLAG."""
+
+
+def first_ready_time(phases: list[tuple[float, str]]) -> float | None:
+    """Time of the first READY phase entry (absolute [s]) or None."""
+    return next((float(t) for t, ph in phases if "ready" in str(ph).lower()), None)
+
+
+def crawler_gap_summary(soil_rows: list[dict[str, Any]], t_loc_s: float | None, t_loop_start_s: float,
+                        t_first_ready_s: float | None = None) -> dict:
+    """Record of the 10 Hz ``crawler_gap_min_m`` (:class:`CrawlerGapProbe`): value at the loop start, at / after the
+    C2 LOC and at the end, the minimum after the LOC and its point label [m, s relative to the loop start]."""
+    rows = [r for r in soil_rows if r.get("crawler_gap_min_m") is not None]
+    out: dict[str, Any] = {"rule": "min over all crawler contact-shape points (bottom grid 0.1 m incl. ramps + the 48 "
+                                   "envelope-box corners) of (point - SCM surface) . plane normal; 10 Hz; record",
+                           "n_rows": len(rows)}
+    if not rows:
+        return out
+    g = np.array([r["crawler_gap_min_m"] for r in rows], float)
+    gg = np.array([np.nan if r.get("crawler_gap_grid_min_m") is None else r["crawler_gap_grid_min_m"] for r in rows],
+                  float)
+    t = np.array([r["t_s"] for r in rows], float)
+    out.update(start_m=float(g[0]), end_m=float(g[-1]), end_point=rows[-1].get("crawler_gap_point"),
+               grid_start_m=float(gg[0]), grid_end_m=float(gg[-1]),
+               note="all-point min includes the 48 box corners on the track edges (nearest-node bias about minus "
+                    "the crawler sinkage while settled); grid_* = bottom-grid points only (20 mm inside the edges)")
+    if t_loc_s is not None:
+        m = t >= float(t_loc_s) - 1e-9
+        if m.any():
+            idx = np.flatnonzero(m)
+            k = int(idx[np.argmin(g[m])])
+            out.update(at_loc_m=float(g[idx[0]]), min_after_loc_m=float(g[k]),
+                       min_after_loc_t_rel_s=float(t[k]) - t_loop_start_s,
+                       min_after_loc_point=rows[k].get("crawler_gap_point"),
+                       grid_at_loc_m=float(gg[idx[0]]), grid_min_after_loc_m=float(np.nanmin(gg[m]))
+                       if np.isfinite(gg[m]).any() else None)
+    # P3-5 / SL-3 (control-expert 2026-10-28): judged gap = grid minimum after the first READY, the all-point minimum
+    # alongside; FLAG when all < grid - (nearby sinkage + CRAWLER_GAP_CORNER_FLAG_EXTRA_M) (judged by the judge)
+    out["after_first_ready"] = None
+    if t_first_ready_s is not None:
+        m = t >= float(t_first_ready_s) - 1e-9
+        if m.any() and np.isfinite(gg[m]).any():
+            idx = np.flatnonzero(m)
+            kg = int(idx[np.nanargmin(gg[m])])
+            ka = int(idx[np.argmin(g[m])])
+            near = rows[ka].get("crawler_gap_point_near_sinkage_m")
+            near_v = 0.0 if near is None or not math.isfinite(float(near)) else float(near)
+            margin = near_v + CRAWLER_GAP_CORNER_FLAG_EXTRA_M
+            out["after_first_ready"] = {
+                "t_first_ready_rel_s": float(t_first_ready_s) - t_loop_start_s,
+                "grid_min_m": float(gg[kg]), "grid_min_t_rel_s": float(t[kg]) - t_loop_start_s,
+                "all_min_m": float(g[ka]), "all_min_t_rel_s": float(t[ka]) - t_loop_start_s,
+                "all_min_point": rows[ka].get("crawler_gap_point"), "all_min_near_sinkage_m": near,
+                "corner_flag_margin_m": margin,
+                "corner_flag": bool(float(g[ka]) < float(gg[kg]) - margin),
+                "rule": "judged gap (P3-5 / SL-3) = grid_min_m; all_min_m alongside; corner_flag = all_min < grid_min - "
+                        "(nearby sinkage of the all-min point + 5 mm, ASSUMPTION); record, judged by the judge"}
+    return out
+
+
+def _record_or_error(fn) -> Any:
+    """``fn()`` or ``{"error": "<type>: <message>"}`` (record blocks added after a long run must not lose it)."""
+    try:
+        return fn()
+    except Exception as e:  # noqa: BLE001 - record only
+        return {"error": f"{type(e).__name__}: {e}"}
+
+
+REANCHOR_EVENT_PREFIX = "reanchor_"
+REANCHOR_RA2_MARGIN_N = 5000.0
+"""RA-2 (study ①): true minimum F_cyl of all four legs during REANCHOR >= F_min + 5 kN."""
+REANCHOR_RA3_ATTITUDE_DEG = 0.2
+"""RA-3: end attitude after a REANCHOR <= 0.2 deg (each axis, last 1 s mean of the run)."""
+REANCHOR_RA1_THETA_MIN_DEG = 2.5
+
+
+def reanchor_probe(c2: Any) -> tuple[str | None, int | None]:
+    """(REANCHOR sub-stage, stair step index) of the controller now, (None, None) outside REANCHOR or when the
+    private members are not there (read-only; ``C2Controller._state.reanchor``)."""
+    try:
+        if "reanchor" not in str(getattr(c2, "phase", "")).lower():
+            return None, None
+        run = c2._state.reanchor
+        if run is None:
+            return None, None
+        st = run.stage
+        return str(getattr(st, "value", st)), int(run.step)
+    except Exception:  # noqa: BLE001 - record only
+        return None, None
+
+
+def _pad_utilisation(row: dict[str, Any], normal: np.ndarray, limit_fn) -> list[float]:
+    """|T_plane| / limit per pad of one 10 Hz ``s9_rows`` row (NaN without a limit or a bushing)."""
+    ft = row.get("pad_tangential_N")
+    if ft is None or limit_fn is None:
+        return [math.nan] * 4
+    ft = np.asarray(ft, float).reshape(4, 3)
+    ft = ft - np.outer(ft @ normal, normal)
+    lim = np.asarray(limit_fn(np.asarray(row["scm_pad_normal_N"], float)), float)
+    return [float(np.linalg.norm(ft[k]) / lim[k]) if lim[k] > 0.0 else math.nan for k in range(4)]
+
+
+def reanchor_records(series: dict[str, np.ndarray], soil_rows: list[dict[str, Any]],
+                     events: list[tuple[float, str]], phases: list[tuple[float, str]],
+                     reanchor_meta: dict[str, Any] | None, target_rad: list[float] | None, *,
+                     F_min_N: float, normal_world: np.ndarray, limit_fn, t_loop_start_s: float) -> dict[str, Any]:
+    """REANCHOR record of a ``level`` run (study ① RA-1 .. RA-6; records, RA-2 / RA-3 flags for the judgement).
+
+    Events ``reanchor_*`` (relative to the loop start), outcomes, the relative pitch ``theta_anchor - theta_t``
+    [deg] (> 0 = relative nose-down, RA-1 applies at >= 2.5 deg), and per stair step (and sub-stage) of the 10 Hz
+    ``reanchor_stage`` / ``reanchor_step`` keys of ``s9_rows``: true minimum F_cyl per leg (1 ms ``F_cyl_N``),
+    the pad bushing tangential utilisation ``|T| / (mu N + c A min(1, N / N_c))`` (10 Hz, in-plane part of the
+    bushing force, ``GroundBushingCoulomb.tangential_limit_N`` on the SCM pad normal), the sinkage change per pad
+    during the step (1 ms geometric sinkage, end - start) and the target leg."""
+    names = [(float(t), str(n)) for t, n in events if str(n).startswith(REANCHOR_EVENT_PREFIX)]
+    rm = reanchor_meta or {}
+    tc, anchor = rm.get("theta_crawler_rad"), rm.get("anchor_pitch_rad")
+    tp = None if not target_rad else float(target_rad[1])
+    rel_deg = None if (tc is None or tp is None) else math.degrees(float(tc) - tp)
+    settings = rm.get("settings") or {}
+    targets = list(settings.get("targets") or ("RR", "RL"))
+    out: dict[str, Any] = {
+        "events_rel_s": [[t - t_loop_start_s, n] for t, n in names],
+        "outcome": rm.get("outcome"), "outcomes": rm.get("outcomes"),
+        "theta_crawler_deg": None if tc is None else math.degrees(float(tc)),
+        "anchor_pitch_deg": None if anchor is None else math.degrees(float(anchor)),
+        "target_pitch_deg": None if tp is None else math.degrees(tp),
+        "relative_pitch_nose_down_deg": rel_deg,
+        "started": any(n == "reanchor_started" for _t, n in names),
+        "skip_reasons": [n.split(":", 1)[1] for _t, n in names if n.startswith("reanchor_skipped:")],
+        "stop_readings_N": rm.get("stop_readings_N"), "stop_force_N": rm.get("stop_force_N"),
+        "F_min_N": F_min_N,
+        "rule": "study ① RA-1 .. RA-6 (control design 2026-10-28): RA-1 started only at relative nose-down >= 2.5 deg "
+                "(skip reason recorded), RA-2 true min F_cyl (4 legs) during REANCHOR >= F_min + 5 kN, RA-3 end "
+                "attitude <= 0.2 deg, RA-4 non-target sinkage increase, RA-5 pad utilisation, RA-6 stroke-cap aborts; "
+                "times relative to the loop start"}
+    out["RA-1_ok"] = (not out["started"]) or (rel_deg is not None and rel_deg >= REANCHOR_RA1_THETA_MIN_DEG - 1e-9)
+    out["RA-6_stroke_cap_aborts"] = sum(1 for _t, n in names if n == "reanchor_aborted:stroke_cap")
+    out["attitude_aborts"] = sum(1 for _t, n in names if n.startswith("reanchor_aborted:attitude"))
+    if not out["started"]:
+        return out
+    t = np.asarray(series["t_s"], float)
+    f = np.asarray(series["F_cyl_N"], float)
+    sink = np.asarray(series["pad_sinkage_geometric_m"], float)
+    t_all = [float(r["t_s"]) for r in soil_rows]
+    segments: list[dict[str, Any]] = []
+    for i, r in enumerate(soil_rows):
+        if r.get("reanchor_stage") is None:
+            continue
+        key = (int(r["reanchor_step"]), str(r["reanchor_stage"]))
+        if segments and segments[-1]["key"] == key and segments[-1]["i_last"] == i - 1:
+            segments[-1]["i_last"] = i
+            segments[-1]["rows"].append(r)
+        else:
+            segments.append({"key": key, "i_last": i, "rows": [r]})
+    if not segments:  # started, but no 10 Hz row carries the stage (private members renamed)
+        out["stages"] = None
+        return out
+    rows = [r for s in segments for r in s["rows"]]
+
+    def window(t0: float, t1: float) -> np.ndarray:
+        return (t >= t0) & (t < t1)
+
+    def seg_values(t0: float, t1: float, seg_rows: list[dict[str, Any]], target: str | None) -> dict[str, Any]:
+        m = window(t0, t1)
+        util = np.array([_pad_utilisation(r, normal_world, limit_fn) for r in seg_rows], float).reshape(-1, 4)
+        v: dict[str, Any] = {"t_rel_s": [t0 - t_loop_start_s, t1 - t_loop_start_s], "target_leg": target}
+        if m.any():
+            fmin = f[m].min(axis=0)
+            v.update(min_F_cyl_N=dict(zip(LEGS, fmin.tolist())), min_F_cyl_all_N=float(fmin.min()),
+                     min_F_cyl_margin_over_F_min_N=float(fmin.min() - F_min_N),
+                     sinkage_change_mm=dict(zip(LEGS, ((sink[m][-1] - sink[m][0]) * 1e3).tolist())))
+        v["pad_utilisation_max"] = dict(zip(LEGS, [float(np.nanmax(util[:, k])) if np.isfinite(util[:, k]).any()
+                                                   else None for k in range(4)]))
+        return v
+
+    def seg_end(i_last: int) -> float:
+        return t_all[i_last + 1] if i_last + 1 < len(t_all) else float(t[-1]) + 1e-9
+
+    stages = []
+    for s in segments:
+        step, stage = s["key"]
+        tgt = targets[step % len(targets)] if stage not in ("wait",) else None
+        t0, t1 = float(s["rows"][0]["t_s"]), seg_end(s["i_last"])
+        stages.append({"step": step, "stage": stage, **seg_values(t0, t1, s["rows"], tgt)})
+    steps = []
+    for step in sorted({s["key"][0] for s in segments}):
+        segs = [s for s in segments if s["key"][0] == step and s["key"][1] != "wait"]
+        if not segs:
+            continue
+        t0, t1 = float(segs[0]["rows"][0]["t_s"]), seg_end(segs[-1]["i_last"])
+        steps.append({"step": step, "stages": [s["key"][1] for s in segs],
+                      **seg_values(t0, t1, [r for s in segs for r in s["rows"]], targets[step % len(targets)])})
+    t0 = float(rows[0]["t_s"])
+    t1 = seg_end(segments[-1]["i_last"])
+    whole = seg_values(t0, t1, rows, None)
+    tgt_legs = {targets[s % len(targets)] for s in {x["key"][0] for x in segments}}
+    others = [k for k in LEGS if k not in tgt_legs]
+    sc = whole.get("sinkage_change_mm") or {}
+    out.update(stages=stages, steps=steps, window=whole,
+               **{"RA-2_min_F_cyl_all_N": whole.get("min_F_cyl_all_N"),
+                  "RA-2_ok": None if whole.get("min_F_cyl_all_N") is None
+                  else bool(whole["min_F_cyl_all_N"] >= F_min_N + REANCHOR_RA2_MARGIN_N),
+                  "RA-4_non_target_sinkage_increase_mm": {k: sc.get(k) for k in others},
+                  "RA-5_pad_utilisation_max": whole.get("pad_utilisation_max")})
+    # RA-3: LEVEL entries after the REANCHOR window and the run's end attitude (last 1 s mean, each axis)
+    out["relevels_after"] = sum(1 for tt, ph in phases if tt >= t1 and "level" in str(ph).lower()
+                                and "ready" not in str(ph).lower())
+    if t.size:
+        m = t >= t[-1] - P3B_END_WINDOW_S - 1e-12
+        rp = np.asarray(series["roll_pitch_deg"], float)[m].mean(axis=0)
+        out["end_roll_pitch_deg"] = rp.tolist()
+        out["RA-3_ok"] = bool(np.all(np.abs(rp) <= REANCHOR_RA3_ATTITUDE_DEG))
+    return out
 
 
 G6_OPEN_LOOP_LIFT_S = 28.0
@@ -1581,14 +2135,85 @@ def level_sensor_setup(pressure_grade: str, imu_grade: str, config: Any) -> tupl
 
 def zero_calibration_outcome(controller_meta: dict[str, Any]) -> dict[str, Any]:
     """Per-leg CHECK zero calibration result of a run (C2 meta ``zero_calibration``): status,
-    success (``calibrated``), offsets in use; ``all_calibrated`` over the four legs."""
+    success (``calibrated``), offsets in use; ``all_calibrated`` over the four legs. Spec 416.3 variant D
+    (2026-10-29): ``return_timeout_tolerance_m`` (C2 meta ``zero_calibration.settings``; None = key absent =
+    the old rule or a pre-416 run), ``return_within_tolerance_m`` (legs accepted at the retract time-out
+    -> smallest displacement [m]; None = not recorded by the code of the run) and ``move_skipped_legs``."""
     zc = controller_meta.get("zero_calibration") or {}
-    legs = ((zc.get("result") or {}).get("legs")) or {}
+    res = zc.get("result") or {}
+    legs = res.get("legs") or {}
     rows = {leg: {"status": (legs.get(leg) or {}).get("status"), "reason": (legs.get(leg) or {}).get("reason"),
                   "success": (legs.get(leg) or {}).get("status") == "calibrated"} for leg in LEGS}
     return {"is_active": zc.get("is_active"), "legs": rows, "all_calibrated": all(r["success"] for r in rows.values()),
-            "offsets_N": zc.get("offsets_N"), "t_start_s": (zc.get("result") or {}).get("t_start_s"),
-            "t_end_s": (zc.get("result") or {}).get("t_end_s")}
+            "offsets_N": zc.get("offsets_N"), "t_start_s": res.get("t_start_s"),
+            "t_end_s": res.get("t_end_s"),
+            "return_timeout_tolerance_m": (zc.get("settings") or {}).get("return_timeout_tolerance_m"),
+            "return_within_tolerance_m": res.get("return_within_tolerance_m"),
+            "move_skipped_legs": [leg for leg in LEGS if rows[leg]["status"] == "skipped"
+                                  and rows[leg]["reason"] == "move"]}
+
+
+CODE_STATE_MODULES = ("outrigger_sim.control.c2", "outrigger_sim.control.zero_calibration")
+"""Controller modules whose file SHA-256 a ``level`` run records at its start (spec 420.4 code state)."""
+CODE_STATE_RULES = ("slope_clearance_margin", "liftoff_window_reapproach", "zero_calibration_return_tol")
+"""Spec 420.1 rules 1-3 (2026-10-29): P-S8-31 E3c10, P-S8-32 LWa, zero calibration variant D."""
+
+
+def code_state_files(modules: tuple[str, ...] = CODE_STATE_MODULES) -> dict[str, Any]:
+    """SHA-256, size and modification time (UTC ISO) of the imported controller module files
+    (``module.__file__``), taken right after the import at the run start (spec 420.4 (1): runs of
+    uncommitted code are told apart by these hashes)."""
+    import importlib  # noqa: PLC0415
+
+    out: dict[str, Any] = {}
+    for name in modules:
+        p = Path(importlib.import_module(name).__file__)
+        st = p.stat()
+        parts = p.parts
+        rel = "/".join(parts[parts.index("03_src"):]) if "03_src" in parts else str(p)
+        out[name] = {"path": rel, "sha256": _file_sha256(p), "size": st.st_size,
+                     "mtime_utc": _dt.datetime.fromtimestamp(st.st_mtime, _dt.timezone.utc).isoformat(timespec="seconds")}
+    out["taken_utc"] = _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds")
+    return out
+
+
+def lwa_on_from_meta(controller_meta: dict[str, Any] | None) -> bool | None:
+    """P-S8-32 LWa on in the run's C2 meta (``liftoff_window_reapproach.mode == "restart"``); None when
+    the meta has no such key (code before P-S8-32)."""
+    lw = (controller_meta or {}).get("liftoff_window_reapproach")
+    return None if lw is None else lw.get("mode") == "restart"
+
+
+def code_state_from_meta(controller_meta: dict[str, Any] | None) -> dict[str, Any]:
+    """Which of the spec 420.1 rules the run's controller had, from its C2 meta alone (works on
+    results written before this record existed): ``slope_clearance_margin`` key (P-S8-31) and its
+    ``settings.enable``, ``liftoff_window_reapproach`` key (P-S8-32) and its ``mode``, the zero
+    calibration ``settings.return_timeout_tolerance_m`` (416.3, present only when set). ``state``:
+    ``pre_impl`` (none of the three present, f062051 controller), ``impl_final_rules`` (all three on:
+    E3c10 enabled, LWa ``restart``, tolerance set), else ``impl_partial`` (``missing`` lists the rules
+    that are absent or off). The meta cannot tell committed from uncommitted code; the file hashes
+    of :func:`code_state_files` (``files_at_start``) do."""
+    cm = controller_meta or {}
+    scm = cm.get("slope_clearance_margin")
+    lw = cm.get("liftoff_window_reapproach")
+    zc_set = (cm.get("zero_calibration") or {}).get("settings") or {}
+    tol = zc_set.get("return_timeout_tolerance_m")
+    present = {"slope_clearance_margin": scm is not None, "liftoff_window_reapproach": lw is not None,
+               "zero_calibration_return_tol": "return_timeout_tolerance_m" in zc_set}
+    on = {"slope_clearance_margin": bool(scm and (scm.get("settings") or {}).get("enable")),
+          "liftoff_window_reapproach": bool(lw and lw.get("mode") == "restart"),
+          "zero_calibration_return_tol": tol is not None}
+    if not any(present.values()):
+        state = "pre_impl"
+    elif all(on.values()):
+        state = "impl_final_rules"
+    else:
+        state = "impl_partial"
+    return {"state": state, "rules_present": present, "rules_on": on,
+            "missing": [k for k in CODE_STATE_RULES if not on[k]],
+            "slope_clearance_margin": scm, "liftoff_window_reapproach": lw,
+            "zero_calibration_return_timeout_tolerance_m": tol,
+            "basis": "C2 meta keys (spec 420.4 (1)); committed vs uncommitted only by files_at_start SHA-256"}
 
 
 def lifted_reapproach_meta(config: Any) -> dict[str, Any] | None:
@@ -1663,11 +2288,20 @@ class StepSeries:
 COMPLETION_SERIES_NAME = "completion_series.npz"
 P3B_EXT_EVENTS = ("INFO_LOC_CLEARANCE_ANCHOR", "INFO_TWIST_UNSETTLED", "WARN_LIFT_STROKE_LIMITED",
                   "FAULT_STROKE_END", "FAULT_LIFT_STROKE_LIMIT", "fault_reground_start", "fault_reground_end",
-                  "INFO_LIFT_PAUSED")
+                  "INFO_LIFT_PAUSED", "INFO_LOC_CLEARANCE_MARGIN", "INFO_LOC_WINDOW_RESTART",
+                  "INFO_PRESSURE_ZERO_RETURN_TOL", "WARN_PRESSURE_ZERO_SKIPPED", "leg_reapproach_start")
 """Controller events counted by :func:`p3b_ext_records` (name or ``name:<suffix>``). ``INFO_TWIST_UNSETTLED``
-is the P-S8-29 V2b event, ``INFO_LIFT_PAUSED:<leg>`` the P-S8-30 pre-LOC lift slowdown (bee0693)."""
+is the P-S8-29 V2b event, ``INFO_LIFT_PAUSED:<leg>`` the P-S8-30 pre-LOC lift slowdown (bee0693).
+2026-10-29 (spec 414 / 416 / 419 / 420): ``INFO_LOC_CLEARANCE_MARGIN:<mm>`` (P-S8-31 E3c10),
+``INFO_LOC_WINDOW_RESTART:<legs>`` (P-S8-32 LWa), ``INFO_PRESSURE_ZERO_RETURN_TOL:<leg>:<mm>`` (zero
+calibration variant D), ``WARN_PRESSURE_ZERO_SKIPPED:<leg>:<reason>`` and ``leg_reapproach_start:<leg>``
+(420.4 equivalence checks)."""
 P3B_EXT_EVENT_TIMES = ("INFO_LIFT_PAUSED",)
 """Events whose times (relative to the loop start) and names are listed too."""
+P3B_EXT_RULE_EVENT_TIMES = ("INFO_LOC_CLEARANCE_MARGIN", "INFO_LOC_WINDOW_RESTART", "INFO_PRESSURE_ZERO_RETURN_TOL",
+                            "WARN_PRESSURE_ZERO_SKIPPED")
+"""Spec 420 rule events listed with their times in ``p3b_ext.rule_event_times_rel_s`` (kept apart from
+``event_times_rel_s`` so the former block keeps its keys)."""
 COMPLETION_REASONS = ("attitude", "clearance", "twist", "loc")
 
 
@@ -1853,8 +2487,10 @@ def p3b_ext_records(series: dict[str, np.ndarray], events: list[tuple[float, str
             sink_sum["soft_leg"] = soil_patch_leg
             sink_sum["soft_minus_others_mean_end_mm"] = float((sink[-1, j] - np.mean(sink[-1, others])) * 1e3)
     times = {k: [[rel(t), n] for t, n in events if n == k or n.startswith(k + ":")] for k in P3B_EXT_EVENT_TIMES}
+    rule_times = {k: [[rel(t), n] for t, n in events if n == k or n.startswith(k + ":")]
+                  for k in P3B_EXT_RULE_EVENT_TIMES}
     t_loc = sm.get("t_loc_s")
-    return {"event_counts": counts, "event_times_rel_s": times,
+    return {"event_counts": counts, "event_times_rel_s": times, "rule_event_times_rel_s": rule_times,
             "t_crawler_departure_rel_s": rel(t_departure_s),
             "loc_minus_crawler_departure_s": None if t_loc is None or t_departure_s is None
             else float(t_loc) - float(t_departure_s),
@@ -1866,6 +2502,54 @@ def p3b_ext_records(series: dict[str, np.ndarray], events: list[tuple[float, str
             "completion": completion_block_summary(completion, done_twist_N),
             "pad_sinkage": sink_sum,
             "rule": "G6 / P-S8-29 record (2026-10-27): records only, no judgement"}
+
+
+P2C_PITCH_PP_LIMIT_DEG = 0.02
+"""P2-c (dynamics 5.35.4 table): last 1 s pitch p-p <= 0.02 deg."""
+P2D_NORMAL_TOL = 0.002
+"""P2-d: SCM normal sum / (weight cos(tilt)) = 1 +- 0.002 (on a slope the normal sum is W cos(tilt), P1-L5 note)."""
+
+
+def settle_slope_record(s: dict[str, np.ndarray], weight_N: float, plane_normal_world: np.ndarray,
+                        requested_floor_normal: np.ndarray | None, gravity_world: tuple[float, float, float],
+                        rut: dict[str, Any] | None) -> dict[str, Any]:
+    """Settle checks of a ``level`` run on a (sloped) floor, last 1 s of the settle (:class:`StepSeries`): P2-c
+    pitch / roll p-p [deg], P2-d SCM normal sum (crawler + 4 pads, along the plane normal) over ``W cos(tilt)``, the
+    plane tilt [deg], the SCM plane normal against the requested floor normal (``--floor-roll`` / ``--floor-pitch``,
+    ``scenarios.slope.floor_normal``), the gravity direction (world -z) and the rut reference basis (heights along the
+    plane normal, ``S9Model.mark_rut_reference`` / ``rut_clearance_m``). Record; P2-c / P2-d flags."""
+    n = np.asarray(plane_normal_world, float)
+    tilt = math.degrees(math.acos(max(-1.0, min(1.0, float(n[2]) / float(np.linalg.norm(n))))))
+    g = np.asarray(gravity_world, float)
+    req = np.array([0.0, 0.0, 1.0]) if requested_floor_normal is None else np.asarray(requested_floor_normal, float)
+
+    def angle_deg(a: np.ndarray, b: np.ndarray) -> float | None:
+        na, nb = float(np.linalg.norm(a)), float(np.linalg.norm(b))
+        if na == 0.0 or nb == 0.0:
+            return None
+        return math.degrees(math.acos(max(-1.0, min(1.0, float(a @ b) / (na * nb)))))
+
+    out: dict[str, Any] = {
+        "plane_normal_world": n.tolist(), "plane_tilt_deg": tilt, "requested_floor_normal": req.tolist(),
+        "plane_vs_requested_angle_deg": angle_deg(n, req),
+        "gravity_world_m_s2": g.tolist(), "gravity_vs_minus_z_angle_deg": angle_deg(g, np.array([0.0, 0.0, -1.0])),
+        "rut_basis": "rut reference heights and clearance = point . plane normal (S9Model.mark_rut_reference / "
+                     "rut_clearance_m): clearance measured along the slope normal",
+        "rut_reference": rut,
+        "rule": "P2-c last 1 s pitch p-p <= 0.02 deg; P2-d normal sum / (W cos tilt) = 1 +- 0.002 (dynamics 5.35.4); "
+                "settle window = the last 1 s of the settle"}
+    if not len(s.get("t_s", ())):
+        return out
+    rp = np.asarray(s["roll_pitch_deg"], float)
+    nsum = np.asarray(s["scm_crawler_normal_N"], float) + np.asarray(s["scm_pad_normal_N"], float).sum(axis=1)
+    ratio = float(nsum.mean() / (weight_N * math.cos(math.radians(tilt))))
+    out.update(window_s=[float(s["t_s"][0]), float(s["t_s"][-1])],
+               pitch_pp_deg=float(np.ptp(rp[:, 1])), roll_pp_deg=float(np.ptp(rp[:, 0])),
+               roll_pitch_mean_deg=rp.mean(axis=0).tolist(),
+               normal_over_weight=float(nsum.mean() / weight_N), normal_over_weight_cos_tilt=ratio)
+    out["P2-c_ok"] = bool(out["pitch_pp_deg"] <= P2C_PITCH_PP_LIMIT_DEG)
+    out["P2-d_ok"] = bool(abs(ratio - 1.0) <= P2D_NORMAL_TOL)
+    return out
 
 
 def settle_reference(s: dict[str, np.ndarray]) -> dict[str, Any]:
@@ -2107,6 +2791,143 @@ def p32_loc_block(t: np.ndarray, cn: np.ndarray, w_n: float, *, t_loc: float | N
     return p32
 
 
+P32_LATE_LOC_FLAG = "P3-2_late_loc_reapproach"
+"""FLAG name of the spec 419.8 rule (decision 13, 2026-10-29)."""
+LOC_WINDOW_RESTART_EVENTS = ("INFO_LOC_WINDOW_RESTART", "FIX_LW_RESTART")
+"""S-1 window clear by an active re-approach: project P-S8-32 event, s9_slope_fix_candidates wrapper event."""
+REAPPROACH_END_EVENTS = ("leg_reapproach_contact", "WARN_LEG_REAPPROACH_NO_CONTACT")
+"""C2 lifted re-approach end events (``<name>:<leg>``; c2.py ``_update_lifted_reapproach``)."""
+REAPPROACH_START_EVENT = "leg_reapproach_start"
+"""C2 lifted re-approach start event (``leg_reapproach_start:<leg>``)."""
+FAULT_PHASES = ("fault", "fault_reground")
+"""C2 phases that count as FAULT for spec 419.8 condition 4 (419.8.1)."""
+CONTROL_PERIOD_DEFAULT_S = 0.1
+"""C2 R8 control period [s] (10 Hz) when the C2 meta ``period_s`` is not at hand."""
+
+
+def _event_kind_legs(name: str, kinds: tuple[str, ...]) -> tuple[str, list[str]] | None:
+    """``(kind, legs)`` of ``<kind>`` / ``<kind>:<leg>[,<leg>...]`` for a kind in ``kinds``, else None."""
+    for kind in kinds:
+        if name == kind:
+            return kind, []
+        if name.startswith(kind + ":"):
+            return kind, [g for g in name[len(kind) + 1:].split(":")[0].split(",") if g]
+    return None
+
+
+def p32_late_loc_block(t: np.ndarray, cn: np.ndarray, w_n: float, events: list[tuple[float, str]],
+                       phases: list[tuple[float, str]], p32: dict[str, Any], p33: dict[str, Any], *,
+                       period_s: float | None = None, lwa_on: bool | None = None) -> dict[str, Any]:
+    """Spec 419.8 (decision 13, 2026-10-29): a P3-2 time-clause violation (LOC - departure > T_lim)
+    is the FLAG ``P3-2_late_loc_reapproach`` instead of a failure when all five conditions hold:
+
+    Re-approach interval (spec 419.8.1): ``leg_reapproach_start:<leg>`` to that leg's next
+    :data:`REAPPROACH_END_EVENTS` event (open without one); legs come from these events, not from
+    the window-restart event string (a re-approach started while the window was empty is not named
+    there).
+
+    1. ``restart``: at least one re-approach interval overlaps [t_off, t_LOC] (both ends included;
+       t_off = crawler departure ``p32.t_departure_s``) and has an S-1 window restart event
+       (:data:`LOC_WINDOW_RESTART_EVENTS`) during it (before the departure allowed: LWa writes the
+       event only when it clears a non-empty window).
+    2. ``delay_by_reapproach``: t_LOC - max(t_off, t_re_end) <= T_lim, t_re_end = latest end of the
+       intervals overlapping [t_off, t_LOC]; an open overlapping interval or t_re_end > t_LOC makes
+       it false. With LWa on (``lwa_on``; None = restart events present) such a record is reported
+       in ``judgement_error`` (no re-approach can be active at an LWa LOC).
+    3. ``not_false_loc``: SCM crawler true normal < 0.01 W (strict) over the LOC control period =
+       the 1 ms samples in (t_LOC - period, t_LOC] and the sample at t_LOC (period max; ASSUMPTION:
+       the period that ends with the reading confirming the LOC; the at-LOC sample and the next
+       period max are records).
+    4. ``load_strict``: P3-3 ``within`` True (true F_cyl after the departure >= F_min) and no FAULT
+       over the whole run (no ``FAULT*`` event, no :data:`FAULT_PHASES` phase; ``WARN_*`` is not a FAULT).
+    5. ``loc_before_first_done``: P3-2 order clause.
+
+    ``late_loc_reapproach_s`` = t_LOC - t_off. ``verdict``: ``pass`` (P3-2 ``within`` True),
+    ``flag`` (time clause violated and 1-5 true), ``fail`` (otherwise), None (``within`` None).
+    Times absolute [s], forces [N]."""
+    period = CONTROL_PERIOD_DEFAULT_S if period_s is None else float(period_s)
+    t_loc, t_off, t_lim = p32.get("t_loc_s"), p32.get("t_departure_s"), p32.get("limit_s")
+    d = p32.get("loc_minus_departure_s")
+    out: dict[str, Any] = {
+        "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG "
+                f"{P32_LATE_LOC_FLAG} when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window "
+                "restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping "
+                "intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC "
+                "before the first DONE; else a failure",
+        "t_off_s": t_off, "t_loc_s": t_loc, "limit_s": t_lim, "control_period_s": period,
+        "late_loc_reapproach_s": None if (t_loc is None or t_off is None) else float(t_loc) - float(t_off),
+        "t_reapproach_end_s": None, "loc_minus_reapproach_end_s": None}
+    eps = 1e-9
+    ev = sorted((float(te), str(n)) for te, n in events)
+    rs = [te for te, n in ev if _event_kind_legs(n, LOC_WINDOW_RESTART_EVENTS)]
+    out.update(restart_events_before_loc=0 if t_loc is None else sum(1 for x in rs if x <= float(t_loc) + eps),
+               restart_events_off_to_loc=0 if (t_loc is None or t_off is None)
+               else sum(1 for x in rs if float(t_off) - eps <= x <= float(t_loc) + eps))
+    # spec 419.8.1: re-approach intervals = leg_reapproach_start:<leg> .. that leg's next end event
+    intervals = []
+    for ts, n in ev:
+        k = _event_kind_legs(n, (REAPPROACH_START_EVENT,))
+        if not k:
+            continue
+        for g in k[1]:
+            te = next((x for x, m in ev if x >= ts - eps and (e := _event_kind_legs(m, REAPPROACH_END_EVENTS))
+                       and g in e[1]), None)
+            hi = np.inf if te is None else te
+            overlaps = bool(t_loc is not None and t_off is not None and ts <= float(t_loc) + eps
+                            and hi >= float(t_off) - eps)
+            intervals.append({"leg": g, "start_s": ts, "end_s": te, "overlaps_off_to_loc": overlaps,
+                              "window_restarts_s": [x for x in rs if ts - eps <= x <= hi + eps]})
+    ov = [iv for iv in intervals if iv["overlaps_off_to_loc"]]
+    out["reapproach_intervals"] = intervals
+    out["overlapping_reapproach_legs"] = sorted({iv["leg"] for iv in ov})
+    t_re_end = None
+    if ov and all(iv["end_s"] is not None for iv in ov):
+        t_re_end = max(iv["end_s"] for iv in ov)
+    out["t_reapproach_end_s"] = t_re_end
+    out["open_overlapping_interval"] = any(iv["end_s"] is None for iv in ov)
+    if t_loc is not None and t_off is not None and t_re_end is not None:
+        out["loc_minus_reapproach_end_s"] = float(t_loc) - max(float(t_off), t_re_end)
+    # LWa on: no re-approach can be active at the LOC -> an interval ending after it (or open) is a judgement error
+    lwa = bool(rs) if lwa_on is None else bool(lwa_on)
+    err = None
+    if lwa and t_loc is not None:
+        if out["open_overlapping_interval"]:
+            err = "LWa on: an overlapping re-approach interval has no end event"
+        elif t_re_end is not None and t_re_end > float(t_loc) + eps:
+            err = f"LWa on: t_re_end {t_re_end:.4f} s after t_LOC {float(t_loc):.4f} s"
+    out.update(lwa_on=lwa, lwa_on_source="controller meta" if lwa_on is not None else "restart events present",
+               judgement_error=err)
+    # condition 3: crawler normal over the LOC period
+    c3 = False
+    if t_loc is not None and len(t):
+        k = _at(t, float(t_loc))
+        sel = (t > float(t_loc) - period + 1e-9) & (t <= float(t_loc) + 1e-9)
+        vals = cn[sel]
+        vmax = float(max(vals.max() if vals.size else -np.inf, cn[min(k, len(cn) - 1)]))
+        nxt = (t >= float(t_loc) - 1e-9) & (t < float(t_loc) + period - 1e-9)
+        out.update(crawler_normal_loc_period_max_N=vmax, crawler_normal_at_loc_N=float(cn[min(k, len(cn) - 1)]),
+                   crawler_normal_next_period_max_N=float(cn[nxt].max()) if nxt.any() else None,
+                   crawler_threshold_N=P3A_OFF_FRACTION * float(w_n))
+        c3 = bool(vmax < P3A_OFF_FRACTION * float(w_n))
+    faults = [(float(te), n) for te, n in events if n.startswith("FAULT")]
+    fault_phase = any(ph in FAULT_PHASES for _tp, ph in phases)
+    out.update(fault_events=faults, fault_phase=fault_phase)
+    cond = {"1_restart": any(iv["window_restarts_s"] for iv in ov),
+            "2_delay_by_reapproach": bool(out["loc_minus_reapproach_end_s"] is not None and t_lim is not None
+                                          and t_re_end <= float(t_loc) + eps
+                                          and out["loc_minus_reapproach_end_s"] <= float(t_lim) + eps),
+            "3_not_false_loc": c3,
+            "4_load_strict": bool(p33.get("within") is True and not faults and not fault_phase),
+            "5_loc_before_first_done": bool(p32.get("loc_before_first_done") is True)}
+    out["conditions"] = cond
+    viol = bool(d is not None and t_lim is not None and float(d) > float(t_lim) + 1e-9)
+    out["time_clause_violated"] = viol
+    out["flag"] = bool(p32.get("within") is False and viol and all(cond.values()))
+    within = p32.get("within")
+    out["verdict"] = None if within is None else ("pass" if within else ("flag" if out["flag"] else "fail"))
+    return out
+
+
 def p35_clearance_block(rows: list[dict[str, Any]], phases: list[tuple[float, str]], *, t_dep: float | None,
                         t_loc: float | None, s_motor_max_m: list[float], s_motor_limit_m: float,
                         probe_sinkage: list[dict[str, Any]]) -> dict[str, Any]:
@@ -2296,6 +3117,9 @@ def p3b_checks(out: dict[str, Any]) -> dict[str, Any]:
             "P3-1_recontact_classes": [e["class"] for e in rc.get("events", [])],
             "P3-2_within": p32.get("within"), "P3-2_within_2s_record": p32.get("within_2s_record"),
             "P3-2_loc_minus_departure_s": p32.get("loc_minus_departure_s"), "P3-2_limit_s": p32.get("limit_s"),
+            # spec 419.8 (decision 13, 2026-10-29); None on a stored block without the rule
+            P32_LATE_LOC_FLAG: (p32.get("late_loc_reapproach") or {}).get("flag"),
+            "P3-2_verdict": (p32.get("late_loc_reapproach") or {}).get("verdict"),
             "P3-3_within": p33.get("within"),
             "P3-4_within_0p2": p34["within_0p2"], "P3-4_absmax_deg": p34.get("p34_absmax_overall_deg"),
             "P3-4_window_s": p34.get("p34_window_s"), "P3-4_flags": p34.get("flags"),
@@ -2400,6 +3224,9 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
                    below_F_min_plus_guard=(mins < f_min + P3B_GUARD_MARGIN_N).tolist(),
                    within=bool(np.all(mins >= f_min)))
     out["P3-3_leg_force"] = p33
+    # spec 419.8 (decision 13): late LOC because of a window restart by a re-approach -> FLAG, inside P3-2
+    p32["late_loc_reapproach"] = _record_or_error(lambda: p32_late_loc_block(
+        t, cn, w_n, events, phases, p32, p33, period_s=ctx.get("control_period_s"), lwa_on=ctx.get("lwa_on")))
     out["pre_liftoff_min_F_cyl"] = pre_liftoff_min_force(t, f, f_min, t_dep)
     # P3-4 attitude (main judgement), creep stop
     cs = creep_stop(t, sink, t_dep)
@@ -2560,7 +3387,9 @@ def rejudge_case(case_dir: Path, write: bool = True) -> dict[str, Any]:
            "s_motor_limit_m": old["P3-5_clearance_stroke"]["s_motor_limit_m"], "t_loop_start_s": old["t_loop_start_s"],
            "settle": r.get("settle_reference"), "T_o_s": (lr or {}).get("opposite_window_s"),
            "fallback_meta": w61.get("fallback_meta"), "reapproach_history": r.get("c2_lifted_reapproach_history"),
-           "reapproach_settings": lr, "soil_meta": r.get("c2_soil"), "record": rec, **p37_plant_inputs(params)}
+           "reapproach_settings": lr, "soil_meta": r.get("c2_soil"), "record": rec, **p37_plant_inputs(params),
+           "control_period_s": (r.get("controller_meta") or {}).get("period_s"),
+           "lwa_on": lwa_on_from_meta(r.get("controller_meta"))}
     new = _plain(p3b_records(series, r["s9_rows"], events, phases, ctx))
     diffs = sorted(k for k in set(old) | set(new)
                    if k not in REJUDGED_BLOCKS
@@ -2598,6 +3427,7 @@ def run_rejudge(args) -> None:
         res = rejudge_case(d, write=not args.dry_run)
         c, p = res["p3b"]["checks"], res["p3b"]
         rows[d.name] = {"P3-2": [c["P3-2_within"], c["P3-2_within_2s_record"], c["P3-2_loc_minus_departure_s"]],
+                        "P3-2_verdict": c.get("P3-2_verdict"),
                         "P3-5": [c["P3-5_within"], c["P3-5_rut_clearance_min_after_first_ready_m"]],
                         "P3-7": [c["P3-7_within"], c["P3-7_reconstruct_ok"], c["P3-7_rise_min_loaded_N"],
                                  p["P3-7_plateau"].get("rise_min_gt1kN_N")],
@@ -2615,7 +3445,14 @@ def run_level(args) -> Path:
                          "thread count for every P3b case); --allow-other-threads for a comparison run")
     from outrigger_sim.control.c2 import C2Controller
 
+    # spec 420.4 (1): hashes of the controller files as imported by this process (record only)
+    code_files = _record_or_error(code_state_files)
     config, c2_meta = level_c2_config(args.allow_current_c2)
+    # G6P (2026-10-28): P-S8-29 relaxation preset / off, recorded in c2_setup
+    config, c2_meta["twist_relax"] = apply_twist_relax(config, getattr(args, "twist_relax", TWIST_RELAX_PRESET))
+    # study ① (2026-10-28): start / target slope limits preset or verification, recorded in c2_setup
+    config, c2_meta["start_limit"] = apply_start_limit(config, getattr(args, "start_limit", START_LIMIT_PRESET),
+                                                       getattr(args, "level", "top"))
     # U-S8-61 (spec 304 1): SCM keeps the preset R-5 fallback ratio (column_nominal); the L1 rigid
     # cases of S9 (P3-10, s9_merge/m3_run.py) take plant_meta in run_S6C.job_bundle_c
     from outrigger_sim.chrono.fallback_ratio import with_engine_fallback_ratio
@@ -2653,6 +3490,14 @@ def run_level(args) -> Path:
     model.set_gravity_factor(1.0)
     rut = model.mark_rut_reference()
     settle = settle_reference(settle_rec.arrays())
+    # study ① (2026-10-28): settle checks on the (sloped) floor, P2-c / P2-d, plane / gravity / rut basis
+    from outrigger_sim.scenarios.slope import floor_normal as _floor_normal
+
+    settle_slope = _record_or_error(lambda: settle_slope_record(
+        settle_rec.arrays(), model_weight_N(params), np.asarray(model.normal_world, float),
+        None if (args.floor_roll == 0.0 and args.floor_pitch == 0.0) else _floor_normal(args.floor_roll,
+                                                                                      args.floor_pitch),
+        model.system_gravity(), rut))
     engine = S9Engine(model, imu_method="chrono_point")
     c2 = C2Controller.from_params(params_ctrl, config)
     # control D-1: IMU --imu-grade (10 ms samples), pressure / stroke --pressure-grade (WIKA A-10 normal default)
@@ -2665,6 +3510,7 @@ def run_level(args) -> Path:
     from outrigger_sim.chrono.run_rows import MinimalR8Series, R8_SERIES_NAME, probed_leg
 
     r8_rows = MinimalR8Series(c2)  # (가): r8_series.npz probed_leg, same key / meaning as run_S6C
+    gap_probe = CrawlerGapProbe(model)
     completion = CompletionProbe(c2)  # G6 / P-S8-29 record (read-only)
 
     def observe(meas, command):  # 10 Hz S9 keys (287: crawler patch force sum, pad node sinkage, rut clearance)
@@ -2676,6 +3522,15 @@ def run_level(args) -> Path:
         ph = str(getattr(c2, "phase", None))
         row["c2_phase"] = ph
         row["probed_leg"] = probed_leg(c2)  # (가) control 2026-10-26: record only (None = not PROBE)
+        row["reanchor_stage"], row["reanchor_step"] = reanchor_probe(c2)  # study ① RA record (read-only)
+        # control-expert 2026-10-28: all-crawler-point gap to the SCM surface along the plane normal (new keys;
+        # rut_clearance_m unchanged)
+        try:
+            (row["crawler_gap_min_m"], row["crawler_gap_point"], row["crawler_gap_grid_min_m"],
+             row["crawler_gap_point_near_sinkage_m"]) = gap_probe()
+        except Exception as e:  # noqa: BLE001 - record only
+            row["crawler_gap_min_m"] = row["crawler_gap_grid_min_m"] = row["crawler_gap_point_near_sinkage_m"] = None
+            row["crawler_gap_point"] = f"error: {type(e).__name__}: {e}"
         if not phases or phases[-1][1] != ph:
             phases.append((float(meas.t_s), ph))
         q = model.superstructure.GetRot()
@@ -2712,7 +3567,8 @@ def run_level(args) -> Path:
            "fallback_meta": {k: tp_meta.get(k) for k in ("fallback_lock_current", "fallback_lock_log")},
            "reapproach_history": ctl_meta.get("lifted_reapproach"),
            "reapproach_settings": c2_setup["lifted_reapproach"],
-           "soil_meta": ctl_meta.get("soil"), "record": p37_record_arrays(d / "record"), **p37_plant_inputs(params)}
+           "soil_meta": ctl_meta.get("soil"), "record": p37_record_arrays(d / "record"), **p37_plant_inputs(params),
+           "control_period_s": float(c2.config.period_s), "lwa_on": lwa_on_from_meta(ctl_meta)}
     p3b = p3b_records(series, soil_rows, events, phases, ctx)
     completion_info = completion.save(d / COMPLETION_SERIES_NAME)
     p3b_ext = p3b_ext_records(series, events, ctl_meta.get("soil"), completion.arrays(),
@@ -2720,6 +3576,17 @@ def run_level(args) -> Path:
                               soil_patch_leg=model.soil_patch_leg, t_loop_start_s=t_loop0,
                               t_departure_s=p3b["departure"].get("t_departure_s"))
     p3b_ext["completion_series"] = completion_info
+    # study ① (2026-10-28): REANCHOR record (RA-1 .. RA-6) and the SL-2 start-condition record; records only, a
+    # failure here is written into the block instead of losing the run
+    p3b_ext["reanchor"] = _record_or_error(lambda: reanchor_records(
+        series, soil_rows, events, phases, ctl_meta.get("reanchor"), (ctl_meta.get("target") or {}).get("target_rad"),
+        F_min_N=ctx["F_min_N"], normal_world=np.asarray(model.normal_world, float),
+        limit_fn=None if model.pad_bushing is None else model.pad_bushing.tangential_limit_N, t_loop_start_s=t_loop0))
+    p3b_ext["start_condition"] = _record_or_error(
+        lambda: start_condition_record(ctl_meta.get("target"), events, t_loop0))
+    p3b_ext["crawler_gap"] = _record_or_error(
+        lambda: crawler_gap_summary(soil_rows, (ctl_meta.get("soil") or {}).get("t_loc_s"), t_loop0,
+                                    first_ready_time(phases)))
     if model.soil_patch_leg is not None:  # G6: virgin-branch window of the soft leg (dynamics 2026-10-28)
         p3b_ext["virgin_branch"] = virgin_branch_record(
             series, soil_rows, ctl_meta.get("soil"), phases, leg=model.soil_patch_leg,
@@ -2741,11 +3608,15 @@ def run_level(args) -> Path:
                "c2_setup": c2_setup, "sensors": sensors_end, "c2_soil": ctl_meta.get("soil"),
                "c2_lifted_reapproach_history": ctl_meta.get("lifted_reapproach"),
                "c2_lifted_reapproach": c2_setup["lifted_reapproach"], "c2_timing": ctl_meta.get("timing"),
-               "settle_reference": settle, "rut_reference": rut, "t_loop_start_s": t_loop0,
+               "settle_reference": settle, "settle_slope": settle_slope, "rut_reference": rut,
+               "t_loop_start_s": t_loop0,
                "phases": [{"t_s": t, "phase": p} for t, p in phases],
                "events": [{"t_s": t, "name": n} for t, n in events],
                "s9_rows": soil_rows, "r8_series": r8_series_info,
                "controller_meta": ctl_meta,  # same key as the run_S6C / S7C / S8C result.json (replay tools)
+               # spec 420.4 (1): controller rules in the meta + file hashes at the start (record only)
+               "code_state": _record_or_error(lambda: {**code_state_from_meta(ctl_meta),
+                                                        "files_at_start": code_files}),
                "monitor": engine.step_monitor(),
                "gravity_schedule": gravity_schedule_meta(args, dashpot),
                "p3_records": p3_records(soil_rows, ctx["weight_N"], p3b["departure"].get("t_departure_s")),
@@ -2899,6 +3770,17 @@ def build_parser() -> argparse.ArgumentParser:
                     help="run a C2 config whose soil response is off (soil.enable False). The R8 preset "
                          "C2Config().with_10hz_d1() has it on (U-S9-C1, P-S9-8), so the guard only stops a preset "
                          "that lost it; soil-off comparison only (expected to fail on J1 B, J2 B, S1, spec 281)")
+    lp.add_argument("--twist-relax", choices=TWIST_RELAX_MODES, default=TWIST_RELAX_PRESET,
+                    help="P-S8-29 relaxed twist completion: preset = the R8 preset as it is (default), off = "
+                         "twist_completion_relax.enable False only (counterfactual comparison; READY expected late "
+                         "or none). Recorded in result.json c2_setup.twist_relax")
+    lp.add_argument("--start-limit", choices=START_LIMIT_MODES, default=START_LIMIT_PRESET,
+                    help="start / target slope limits: preset = the R8 preset as it is (operating D8 4.4 / 3.2 deg on "
+                         "the crawler IMU attitude, default), verification = target.slope_limit_mode verification "
+                         "(5.5 / 3.5 deg, the run_S8C meaning), verification_map = verification + the spec 13.1 "
+                         "crawler settle map of --level, record_only = target acceptance off (the harness path; start "
+                         "rule only recorded, study ① S9SL rows). Recorded in c2_setup.start_limit")
+    lp.add_argument("--note", default=None, help="free case note, kept in result.json args (G6P batch rows)")
     lp.add_argument("--allow-other-threads", action="store_true",
                     help=f"allow --threads != {SCM_THREADS_FIXED} (comparison only)")
     rj = sub.add_parser("rejudge", help="re-judge finished level cases with the spec rev. 60 P3-2 / 5 / 7 definitions "

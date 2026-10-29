@@ -14430,3 +14430,836 @@ Chrono $D$의 SCM 잔진동(주기 차 σ 0.15 kN, 5 s 창 재상승 p90 0.23~0.
 ## 394. 남은 일
 
 센서 오차 모델 G6 하네스 확인(J1·J2 후방, 3등급, P-S8-29 완화 동작), J1 연약 패치 Chrono 재확인 범위(391), G3 설계.
+
+# 개정 76~80 머리말 (2026-10-29 기록): 2026-10-28 오후~29 새벽 추가 연구 정리
+
+control-expert가 2026-10-29에 저장된 결과만 읽어 기록했다(새 하네스·Chrono 실행 없음; 후처리 `r79_sensor_judge.py identity`·`judge`와 G6P 판정 재현만 실행). 이 기간 연구는 세션이 끊겨 명세·decision_log·인계 문서에 들어가지 않았다. **완료된 결과만 판정으로 적고, 끝나지 않은 단계는 "진행 중(미완)"으로 표시한다.**
+
+- **(기록 시작 시점 2026-10-29 오전 기준) 기준값·제어기 동작은 바뀌지 않았다.** `03_src`는 f062051 이후 변경 0(`git status 03_src` 빈 출력, 2026-10-29 확인). **이후** 같은 날 P-S8-31(E3c10)·P-S8-32(LWa)·영점 교정 D안이 구현되어(413·414~420, 인수 420.2b) R8 프리셋 `with_10hz_d1()`의 동작이 바뀌었다. 아래 "그대로"는 개정 76~80 본문(395~412)에만 해당한다. 395~412 기록 시점에는 CLAUDE.md 기준값 표, YAML, R8 프리셋(`C2Config.with_10hz_d1()`)이 그대로였다(YAML은 지금도 불변, CLAUDE.md 제어기 행과 R8 프리셋은 413~420 구현으로 갱신). 아래 수정 후보 E1~E4·RA·S4는 하네스 스크립트 안의 래퍼로만 시험했다(사용자 방침: 후보 채택 전 03_src 불변, `s9_slope_fix_candidates.py` docstring).
+- 규약: 음되먹임, 제어 주기 $T_s$ = 0.1 s, 출력 지연 d = 1, IMU 10 ms. 힘 kN, 길이 mm, 각도 °, 시간 s(축소 하네스는 루프 시작 기준, Chrono는 절대 시각과 루프 시작 기준을 명시).
+- 스크립트 docstring에 "user decision"으로 적힌 결정(연구 ③ 8건, G6P 6건, stroke-limited 판정 분류, 후보 채택 전 03_src 불변)은 기록 시작 때 decision_log에 없었다. 그 뒤 사용자가 확인했고(413 결정 5) decision_log 171행에 기록됐다.
+
+## 개정 번호 ↔ 결과 폴더 대응표
+
+폴더 번호(`rev77`~`rev80`)와 스크립트 접두(`r77`~`r80`)는 명세 개정 번호와 1:1이 아니다(개정 75의 결과가 이미 `rev76/`). 명세는 개정 75에 이어 붙이고 아래 표로 대응시킨다.
+
+| 명세 개정 | 절 | 내용 | 스크립트 | 결과 폴더 |
+|---|---|---|---|---|
+| 76 | 395~397 | S9 축소 하네스 정착 훅(settle hook) 보정과 동치 확인 | `s9/s9_soil_closed_loop.py`(수정), `s8/r72_g6_screen.py`(수정), `s9/s9_settle_hook_compare.py` | `s9/rev80/base_*`, `s9_uniform_compare.json`, `soil/sensor/beta_harness.json`; `s8/rev80/r80_g6_*` |
+| 77 | 398~401 | 연구 ① 연약 지면 × 바닥 경사 축소 스크린(177), 정착 판정 정정, 고원 문턱 민감도, Chrono S9SL 3건 | `s9/s9_soil_slope.py`, `s9/s9_settle_rejudge.py`; dynamics `01_dynamics/run_slope_crawler_settle.py`; cad `02_chrono/run_S9.py`·`s9_batch.py` | `s9/rev78/`, `s9/rev80/s9_soil_slope_settle*`, `s9_plateau_*`; `00_dynamics/slope_crawler_settle.json`; `07_results/S9/batch_S9SL_*` |
+| 78 | 402~404 | 연구 ① 결함 수정 후보 E1~E4·RA·S4 비교 | `s9/s9_slope_fix_candidates.py` | `s9/rev80/fix_slope*` |
+| 79 | 405~408 | 연구 ② 센서 오차 모델 + P-S8-28·29·30(축소 G6·G8·ref) | `s8/r79_sensor_screen.py`, `s8/r79_sensor_judge.py` | `s8/rev79/` |
+| (80 뒤 이어 씀) | 413~420 | 사용자 결정 1~14, E3wide → E3c10 구현 명세(414·417), 영점 교정 결함·D안(416), r79와 E3(415), LOC 창 재접근 다리 LWa·늦은 LOC FLAG(418·419), 통합 구현·인수(420) | `s9/s9_slope_fix_candidates.py`(E3w·E3c7·E3c10·LWa·LWb 토큰), `s9/s9_settle_rejudge.py`; python `03_src/outrigger_sim/control/c2.py`·`zero_calibration.py` | `s9/rev81/`(fix_slope_E3c·E3c10_LW·fix_g6_LW(_recontact)·R1_*·impl_*) |
+| 80 | 409~412 | G6P Chrono(논문 근거), G6 Chrono 판정기 확장, 연구 ③ 오거 3단계 Chrono, 논문 최대 이동 압력 표 | `s8/r76_g6_chrono_judge.py`(확장), `s8/paper_max_pressure_table.py`; cad `run_S9.py` `g6p_cases`·`p3b_aug_cases` | `s8/rev77/`, `s8/paper/`; `07_results/S9/batch_G6P_*`, `batch_p3b_aug_*` |
+
+(폴더는 `06_analysis/02_control/` 기준.)
+
+# 개정 76 (2026-10-28): S9 축소 하네스 정착 훅 보정과 동치 확인
+
+## 395. 결함과 보정
+
+- 축소 S9 하네스(`s9_soil_closed_loop.py`)의 토양 정착은 평지 P0 정착(토양 − 강체)을 쓰는데, 하네스 자체 강체 크롤러의 정착 pitch는 0.179°, P0 강체는 0.289°라 토양 사례가 0.11° 덜 앞내림으로 앉고 전방 패드 틈이 P0 토양 정착보다 8~9 mm 어긋난다(스크립트 docstring).
+- 보정: dynamics 표 `06_analysis/00_dynamics/slope_crawler_settle.json` 블록 `hook_harness`(키 `soil|level|roll|pitch`, 172행; 하네스 자체 강체 크롤러로 보정)의 바닥 기울기 추가값과 패드 높이 $h_i$를 쓰는 훅 `"harness"`를 더했다. **기본값은 `"p0"`(rev79까지의 모든 결과와 같음)** — 환경 변수 `S9_SETTLE_HOOK` 또는 인자로만 켠다. 표 메타: 평지 상단 행이 `pad_bekker_p0_soilsets.json`을 비트 재현(최대 차 0), 병합 회귀 90행 동일.
+
+## 396. 동치·영향 확인(완료)
+
+| 비교 | 사례 | 판정 뒤집힘 | 판정 행 변화 | 명령 해시 같음 | 주요 차(최대 절대) | 파일 |
+|---|---|---|---|---|---|---|
+| G6 p0(재실행) ↔ 개정 75 `rev76/r76_g6_Pb.json` | 64(토양 기반) | 0 | 0 | 64/64 | 0 | `s8/rev80/r80_g6_p0_vs_rev76.json` |
+| G6 harness ↔ p0 | 64 | 0 | 0 | 0 | READY 8.6 s, 이탈 뒤 최소 3.9 kN, 끝 자세 0.049°, $c_{min}(t_P)$ 29.2 mm | `s8/rev80/r80_g6_compare.json` |
+| V-3 균일 토양·센서·β(harness) ↔ `07_results/S9/v3/` 기준 | 160 | 0 | 0 | 0 | READY 9.2 s, 최소 힘 1.48 kN, 끝 자세 0.064°, 행정 14.3 mm, LOC − 이탈 0.5 s | `s9/rev80/s9_uniform_compare.json` |
+| 기준 제어기(ref) 토양 72 harness ↔ p0 | 72 | 0 | 0 | 0 | READY 3.5 s, 최소 힘 0.15 kN, 끝 자세 0.026° | `s9/rev80/base_compare.json` |
+
+- 정착 점검(harness): 자세 오차 ≤ 3.4e-4°, 틈 오차 ≤ 0.040 mm(160·72건).
+- G6 harness에서 S-3 모서리 보정 적용 여부가 바뀐 사례 5건(`G1+J2@FL top Fs0·Fs4`, `G1+J2@FR top Fs0`, `G1+S1@FR top Fs0`, `G1+S1@FR bottom Fs4`, 모두 $c_{min}(t_P)$가 20 mm 문턱을 넘나듦). 판정은 불변.
+- **결론: 훅 보정은 기존 판정(G6 116 중 토양 64, V-3 160)을 바꾸지 않는다.** 연구 ①·수정 후보 비교는 harness 훅으로 돌렸다. 기존 기준 해시(G6·V-3)는 p0 훅 기준이므로 그대로 쓴다.
+
+## 397. 남은 일
+
+- 훅 기본값을 `"harness"`로 바꿀지(바꾸면 G6·V-3 기준 해시를 다시 만들어야 함) — 사용자 결정(413).
+- dynamics 문서화: `slope_crawler_settle.json`(A1 경사 크롤러 정착 표, `run_slope_crawler_settle.py`)과 정착 판정 정정(398.3)이 `dynamics_model.md`에 없다 → 위임.
+
+# 개정 77 (2026-10-28~29): 연구 ① 연약 지면 × 바닥 경사 — 축소 스크린, 정착 판정 정정, Chrono S9SL
+
+## 398. 축소 스크린(`s9_soil_slope.py`, 177건, 완료)
+
+### 398.1 격자
+
+H1 주격자 토양 {G1, J1, J2, S1} × 패드 {B, A} × 경사 8 × 상단 = 64, H2 오거 하단 32(패드 B), H3 경계 탐색 {J1, J2, S1} × {B, A} × 방향 {nose_down (0, 3.2), roll_pos (4.4, 0), edge_nd (2.2, 1.6)} × k {0.5, 0.75, 0.875} = 54, H4 REANCHOR 켬 19, H5 강체 기준 8. 경사 8 = flat, nose_down (0, 3.2), nose_up (0, −3.2), roll_pos (4.4, 0), roll_neg (−4.4, 0), edge_nd (2.2, 1.6), edge_nu (2.2, −1.6), rpB (2.7355, 1.7592) [(roll, pitch) °]. $F_s$ 4 kN, 실행 한계 240 s. 판정 행 P3-1~P3-8(개정 60, 377 강등 포함) + SL-1~SL-4 + RA-1~RA-6. SL-1의 `WARN_LIFT_STROKE_LIMITED`는 "stroke-limited" 분류(FAULT 0·부상 0·P3-1·P3-3·P3-4 통과면 P3-5만 완화한 통과 = `stroke_limited_pass`, 아니면 `stroke_limited_fail`). 근사: A1(정착), A2(패드 접선 = 강체 부싱, REANCHOR 결과는 정성), A3(크롤러 하중 꼬리가 Chrono보다 빠름 → J1 낙관, 391).
+
+### 398.2 결과
+
+| 실행 | 훅 | 통과 | stroke-limited 통과 | 실패 | stroke-limited 실패 | 파일 |
+|---|---|---|---|---|---|---|
+| 1차 | p0 | 98 | 18 | 57 | 4 | `s9/rev78/s9_soil_slope_rejudged.json`(재판정: stroke-limited 통과에 P3-1·P3-3·P3-4 요구) |
+| 2차 | harness | **96** | **26** | **52** | **3** | `s9/rev80/s9_soil_slope_settle_rejudged.json`(정착 판정 v2, `settle_check_fail` 0) |
+
+2차(harness, 현행 기준) 세부:
+
+- 평지: 토양 12건(H1 8 + H2 4) 모두 통과. G1 28건·강체 18건 모두 통과.
+- 실패 행(2차, 사례 수): P3-5 70, SL-1 45, P3-1 45, `fault_ready` 34, P3-4 24, P3-8 15, P3-2 14, P3-3 14. 비통과 사례의 사건: `WARN_LIFT_STROKE_LIMITED` 61, `FAULT_LIFT_STROKE_LIMIT` 32, `FAULT_STROKE_END` 2.
+- 운용 시작 조건 안($|\phi|/4.4 + |\theta|/3.2 \le 1$, 토양만): J1 통과 25·sl 통과 7·실패 12, J2 19·7·15(+ sl 실패 2), S1 13·11·18(+ sl 실패 1), G1 25/25.
+- $k^\*$(경계 방향별, 0부터 끊김 없는 실행 가능 최대 비율): J1 B nose_down 1.0·roll_pos 0·edge_nd 0, J1 A 0.875·1.0·1.0, J2 B 1.0·0·0, J2 A 0.75·0.875·0.875, S1 B 0.75·0·0.75, S1 A 0.5·0.75·0.5. 패드 B의 roll·edge 방향은 k = 0.5에서 이미 실패해 사전 가산 예측(J1 B 0.94/0.90, J2 B 0.81/0.77)보다 훨씬 나쁘다. 행정 682.8 mm 선형 보간 $k$는 0.74~0.99.
+- 결함 분류(`s9_slope_fix_candidates.py` docstring, 402절 근거): **E 거짓 LOC**(내리막 패드가 J1·J2에 관입, Bekker $n \ll 1$이라 10 mm 창 상승 1.0/1.7 kN으로 S-1 문턱 2 kN 아래 → 크롤러가 아직 하중을 진 채 LOC, READY 참 틈 1.5~2.2 mm; 현행 22건), **RA** 연약 지면 REANCHOR 중단·전방 처녀 침하 → FAULT, **S4** S-4 토양 모드 밀기 150 mm가 경사에서 남은 행정보다 길어 `FAULT_STROKE_END`.
+
+### 398.3 정착 판정 정정(`s9_settle_rejudge.py`, 재실행 없음, 완료)
+
+1차 정착 점검은 정착 **순간**의 패드 관입을 표의 5 s **평균** 목표와 비교해, 정착 뒤 로킹(3.2° 앞내림에서 최대 0.08° p-p) 위상만큼 어긋났다(dynamics 지적 2026-10-28). v2: 순간 관입을 창 평균 자세로 강체 회전 보정 $pen_{mean,i} = pen_{inst,i} + (y_i\,\Delta\phi - x_i\,\Delta\theta)$, $|pen_{mean} + gap_{target}| \le$ 1 mm, 자세 허용 = max(0.005°, 표 잔차 + 0.002°). 2차 177건 모두 v2 통과(`settle_check_fail` 0).
+
+## 399. LOC 고원 상승 문턱 민감도(U-S9-C2, 완료)
+
+J2 B 상단 8경사(H1), `--plateau-rise-max-n` 2000 / 3000 / 5000 N(`s9/rev80/s9_plateau_{2000,3000,5000}.json`, 1차 정착 판정 v1): 2 kN·3 kN은 통과 1·실패 5·sl 실패 1·정착 실패 1로 같고, 5 kN은 평지까지 P3-1 실패(통과 0, sl 통과 1). **문턱을 올려도 E 결함은 줄지 않고 평지가 깨진다 → 현행 2 kN 유지 근거.** (정착 판정 v1 `settle_check_fail` 1건은 v2 재판정 안 함; 결론에 영향 없음.)
+
+## 400. Chrono S9SL(연구 ① Chrono 대조, 3/4 완료)
+
+cad `run_S9.py level --floor-roll/--floor-pitch --start-limit`, 제어기 = f062051 프리셋(03_src 불변), J1, $F_s$ 4 kN, 상단, 압력 normal·IMU ideal, seed 20261026, P코어 단독 1건씩. 판정 값은 `run_S9.py` P3b 기록(`result.json` `p3b.checks`)이고 control 정식 판정 파일은 아직 없다.
+
+| 사례 | 경사 (roll, pitch) [°] | 결과 폴더(`07_results/S9/`) | 벽시계 [s] | READY [s, 루프] | P3 행 | 같은 조건 하네스(398, harness) |
+|---|---|---|---|---|---|---|
+| C-1 G1 B REANCHOR | (0, 3.2) | **미실행** | — | — | — | H4 G1 B nose_down 통과 |
+| C-2 J1 A | (4.4, 0) | `batch_S9SL_20261028_194403` | 10,157 | 71.3 | P3-1~6·8 통과(끝 자세 0.043°, 바퀴자국 틈 55.4 mm, LOC − 이탈 1.23 s), **P3-7 실패**(크롤러 하중 > 0.01 W 창의 S-1 창 상승 최소 3.61 kN < 4 kN) | H1 J1 A roll_pos 통과(P3-7은 하네스가 계산 못 함) |
+| C-3 J1 B | (3.3, 0)(운용 마름모 안) | `batch_S9SL_20261028_223348` | 8,238 | 66.4 | **P3-1 실패**(LOC 뒤 재접촉 6회, 엄격 실패; 마지막 64.87 s부터 9.9 s, 최대 0.033 W; READY 창 크롤러 12.2 kN), **P3-5 실패**(틈 3.9 mm < 25 mm). P3-2·3·4·6·7·8 통과 | H3 J1 B roll_pos@k0.75 실패(P3-1, P3-5) — **일치** |
+| C-4 J1 A REANCHOR 켬 | (0, 3.2) | `batch_S9SL_20261028_191152` | 12,552 | 없음 | `WARN_LIFT_STROKE_LIMITED:FR` 55.5 s → REANCHOR 시작 76.4 s → `reanchor_aborted:attitude` 82.3 s → **`FAULT_LIFT_STROKE_LIMIT:FR` 91.4 s**(절대 시각), READY 없음 → P3-4·5·6 판정 불가/실패 | H4 J1 A nose_down 실패(`FAULT_LIFT_STROKE_LIMIT:FL,FR`) — **일치** |
+
+**판정(정성)**: 하네스와 Chrono가 세 사례 모두 같은 결론이다(C-2 통과/통과, C-3 크롤러 재접촉 + 틈 부족, C-4 행정 한계 FAULT). C-3은 운용 시작 조건 안의 경사(R_c = 0.75)에서 현행 제어기가 J1 패드 B로 크롤러를 들지 못함을 Chrono에서 확인한 것이다. C-2 P3-7 실패는 E 결함의 전조(하중 실린 창의 상승이 작음)이며 LOC 자체는 이탈 1.23 s 뒤라 정상이었다.
+
+## 401. 남은 일(진행 중)
+
+C-1 미실행(약 8,600 s 추정). S9SL 3건의 control 정식 판정·하네스 정량 대조 파일 없음. 수정 후보 결정(404).
+
+# 개정 78 (2026-10-28): 연구 ① 결함 수정 후보 비교(진행 중 — 채택 없음)
+
+## 402. 후보(`s9_slope_fix_candidates.py`, harness 훅, 래퍼 구현)
+
+| 기호 | 내용 |
+|---|---|
+| E1 | S-1 창 거부: 확정 꼬리에서 IMU 원시 기울기의 모서리 상승 $\rho_k = y_k\Delta\phi - x_k\Delta\theta$가 행정 평면 모서리 틈 변화 $\Delta c_k$를 공통 heave 빼고 따라가야 함, ptp($\Delta c_k - \rho_k$) > 4 mm면 창 비움 |
+| E2 | DONE/PROBE/READY 재접촉: $\sum F/\hat W$ < 1 − 0.08이 2주기면 LOC 취소·재레벨(최대 2회) |
+| E3 | LOC에서 토양 모드·모서리 보정을 쓴 실행이 크롤러 정착 기울기 > 1°면 틈 목표 + 30 mm(`E3wide` = 토양 사용 조건 없앰) |
+| E4 | S-1 창 거부(IMU): $|f| - g_{ref}$ 이중 적분 상승이 평균 행정 전진의 0.5 미만이면 창 비움(dynamics 제안) |
+| RA | 토양 모드 사용 또는 LOC 보정 ≠ 0이면 REANCHOR 건너뜀 |
+| S4 | LOC 전 행정이 들어 올림 가드 행정에 닿으면 S-4 발동 → `WARN_CRAWLER_LIFTOFF_UNCONFIRMED:stroke` + FAULT |
+
+## 403. 결과(177건 × 후보 9, 1,593 기록, 오류 0, 벽시계 3,807 s; 정착 v2 반영 `s9/rev80/fix_slope_rejudged.json`)
+
+| 후보 | 통과 | sl 통과 | 실패 | sl 실패 | 통과→실패 | 실패→통과 | 해시 같음(평지 13 중) | E 22건 해소(LOC·재접촉) | READY 부담 남음 |
+|---|---|---|---|---|---|---|---|---|---|
+| current | 96 | 26 | 52 | 3 | — | — | 177 (13) | 0 | 11 |
+| E1 | 79 | 21 | 77 | 0 | 28 | 6 | 78 (3) | 16 | 2 |
+| E2 | 98 | 27 | 51 | 1 | 0 | 3 | 169 (13) | 8 | 3 |
+| E3 | 94 | 32 | 48 | 3 | 1 | 5 | 102 (13) | 0 | 7 |
+| E4 | 76 | 16 | 84 | 1 | 33 | 3 | 108 (7) | 14 | 2 |
+| RA | 97 | 26 | 51 | 3 | 0 | 1 | 172 (13) | 0 | 11 |
+| S4 | 96 | 25 | 53 | 3 | 1 | 0 | 171 (13) | 0 | 11 |
+| E2+RA+S4 | 99 | 26 | 51 | 1 | 1 | 4 | 158 (13) | 8 | 3 |
+| E4+E2 | 76 | 16 | 84 | 1 | 33 | 3 | 108 (7) | 15 | 1 |
+| E3wide(별도 실행 `fix_slope_E3wide_rejudged.json`) | 88 | 46 | 41 | 2 | — | — | — | — | — |
+
+- E1·E4는 거짓 LOC를 가장 많이 없애지만(16·14/22) 평지·강체·G1 사례를 P3-2(LOC 지연 > 2.9 s)로 대량 회귀시킨다(E1 통과→실패 28 중 P3-2 단독 다수, 강체 5·G1 7 포함). 인수 불가.
+- E2(+RA+S4)는 회귀 0~1로 안전하지만 E 해소는 8/22에 그치고 실패 51은 거의 그대로다(대부분 행정 한계 FAULT·P3-5).
+- E3wide는 실패를 52 → 41로 줄이고 sl 통과를 26 → 46으로 늘린다(틈 목표를 올려 P3-5를 만족하는 대신 행정 한계 경고가 늘어난 것).
+- 재판정 규칙: 기록 1,395건 직접, 162건 기준 판정 행 재사용(해시 같음), 36건 실패 행·경고로 재구성. **이 재판정은 scratchpad 스크립트(`analyze_fix.py`·`write_rejudged.py`, 보존 안 됨)로 만들었다**(메타 `settle_rejudge.by`). 저장소의 `s9_settle_rejudge.py records` 모드로 같은 결과가 나오는지 재현 확인이 남았다.
+
+## 404. 판단과 남은 일
+
+- **어느 후보도 단독으로 인수 기준(평지·강체·G1 회귀 0, E 해소)을 만족하지 않는다.** 경사 연약 지면 실패의 대부분은 행정 예산(682.8 mm) 부족이며 제어 규칙으로 없앨 수 없는 부분(물리 한계: J1·J2 패드 B 횡경사)이 크다. 후보 채택 여부·운용 시작 조건 축소(패드 B 연약 지면 경사 한계) 여부는 사용자 결정이다(413).
+- 채택 후보가 정해지면: g6(116)·g8(516)·p3b(207) 스위트 회귀(스크립트 지원, 미실행) → python 구현 → 인수.
+
+### 404.1 E3wide 채택(사용자 결정 2026-10-29, 구현 전)
+
+- **연구 ① 수정 후보 = E3wide**: LOC 확정 때 크롤러 정착 기울기 max(|φ|, |θ|) > 1°이면 이번 실행의 틈 목표를 50 → 80 mm로 올린다(토양 모드·모서리 보정 사용 조건 없음). 구현 명세 414절, r79 영향 415절.
+- 패드 B 연약 지면 경사의 운용 시작 조건은 **축소하지 않고 기록만 한다**(축소 보류).
+- 저장 결과로 본 E3wide의 특성(`fix_slope_E3wide.json`·`_rejudged.json` 대 `fix_slope_rejudged.json` current, 2026-10-29 control 재집계):
+  - 경사 사례(기울기 > 1°)에서는 G1·강체를 포함해 토양과 무관하게 작동한다. 작동 162건 중 명령 해시가 바뀐 것 159건(같은 것 3건: J2 1, S1 2). 경사인데 작동하지 않은 것은 S1 2건, 평지 13건은 모두 작동하지 않고 해시 같음.
+  - 판정이 좋아진 것 15건: 실패 → 통과 8(H3 J1 B roll_pos k 0.5·0.75, edge_nd k 0.5·0.75·0.875, H2 J1 B roll_pos·edge_nd 하단, H4 J2 B nose_down_2p8), 실패 → stroke-limited 통과 4, stroke-limited 실패 → 통과 1, stroke-limited 통과 → 통과 2.
+  - 나빠진 것 19건: 통과 → stroke-limited 통과 18(강체 rpB 1건·G1 rpB 3건 포함, 틈 목표가 올라 행정 가드 `WARN_LIFT_STROKE_LIMITED`가 걸림, FAULT 0), stroke-limited 통과 → 실패 1(`H3|S1|A|top|roll_pos@k0.875`, `FAULT_LIFT_STROKE_LIMIT:FR`).
+  - 판정 합계: 통과 88 / sl 통과 46 / 실패 41 / sl 실패 2(current 96 / 26 / 52 / 3).
+- 주의: 강체·G1 경사에서는 관입 여유가 필요 없는데도 틈 목표가 올라 stroke-limited 판정으로 바뀐다. 사용자 확인 대상(413 질문 6).
+
+# 개정 79 (2026-10-28~29): 연구 ② 센서 오차 모델 + P-S8-28·29·30(축소 하네스) — L0~L2 완료, L3·L4·선택 수준 미실행
+
+## 405. 설계(`r79_sensor_screen.py`)
+
+H-1 매 제어 주기 하네스 이상 측정을 `SensorSuite`(WIKA A-10 등급 압력 헤드·로드, 행정 잡음 0.1 mm, IMU 매 10 ms 표본·자이로 포함)로 통과, G6 로드 채널은 `r64.with_two_pressures`. H-2 CHECK(2 s, B1′ 연장 ≤ 10 s) + 공중 왕복 영점 교정 켬, 목표 수락·REANCHOR 끔. H-4 seed = 20261028 + 100000 g + 1000 s + k(같은 s는 등급 간 같은 잡음 → 짝 비교). 수준: L0 하네스 경로(이상 센서, CHECK 끔), L1 이상 + 두 채널 + CHECK(경로 기준), L2 normal + 영점 교정 + IMU normal_zeroed(seed 5), L3·L4 conservative·old_worst(seed 3), 선택 L2imuideal(g6rear × 5 = 160)·L2nocal(g6core × 3 = 144). 집합 all = g6 116 + g8 50 + ref 21 = 187.
+
+## 406. 실행 상태
+
+| 수준 | 실행 | 오류 | 벽시계 [s] | 파일 |
+|---|---|---|---|---|
+| L0 identity 20 | 20 | 0 | 408 | `s8/rev79/r79_L0_identity20.json` |
+| L1 all | 187 | 0 | 749 | `r79_L1_all.json` |
+| L2 all × 5 seed | 935 | 0 | 3,725 | `r79_L2_all.json` |
+| 로드 모델 smoke(dyn_map·harness·extend_vent) | 각 1 묶음 | — | — | `r79_smoke_*` |
+| L3·L4·L2imuideal·L2nocal | **미실행** | — | — | — |
+
+## 407. 판정(`r79_sensor_judge.py`, 2026-10-29 실행, 후처리 4 s)
+
+- **H-5 identity: 20/20 명령 해시 = 개정 75 기준(`rev76/r76_g6_Pb.json`·`r76_g8_*_Pb.json`), 판정 같음.** 센서 어댑터를 끈 경로는 기존 하네스와 비트 동일하다.
+- L1(경로 기준): 하네스 통과 G6 116/116·G8 48/50·ref 21/21, 영점 교정 실패 0, 거짓 LOC 13(G6, S-5 기준선).
+- L2 대 L1(`s8/rev79/r79_L2_judgement.json`; 괄호는 단측 Clopper–Pearson 95 % 상계):
+
+| 그룹 | 실행 | S-1 판정 | S-2 P-S8-28 | S-3 P-S8-29 | S-4 P-S8-30 | S-5 LOC | S-6 새 FAULT | 하나라도 | 영점 교정 일부 건너뜀 |
+|---|---|---|---|---|---|---|---|---|---|
+| G6 | 580 | 6 (2.0 %) | 0 (0.5 %) | 0 (0.5 %) | 4 (1.6 %) | 31 (7.1 %) | 0 | 36 (8.1 %) | 206 |
+| G8 | 250 | 5 (4.2 %) | 0 | 0 | 4 (3.6 %) | 0 | 0 | 9 (6.2 %) | 85 |
+| ref | 105 | 0 (2.8 %) | 0 | 0 | 0 | 0 | 0 | 0 (2.8 %) | 41 |
+| 전체 | 935 | 11 (1.9 %) | 0 (0.3 %) | 0 (0.3 %) | 8 (1.5 %) | 31 (4.4 %) | 0 | 45 (6.1 %) | 332 |
+
+- S-5 31건은 모두 S1 전방 연약 패드(`G1+S1@FL/FR`, `rigid+S1@FL/FR`)다. 그중 25건은 L1(이상 센서)에서도 이미 0.01 W 이상인 기준선 사례(L2가 L1보다 0.01 W 넘게 큼)다. 크롤러 하중 at LOC 최대는 **L2 0.217 W**(`L2|s3|g6|33|g6|G1+S1@FL|top|Fs4`), **L1 0.188 W**(`g6|G1+S1@FL|top|Fs4`). (정정 2026-10-29: 1차 기록의 "최대 0.17 W"는 다른 실행 하나의 값이었다. dynamics 5.41.6·5.41.7 지적, 판정 파일 `crawler_at_loc_over_W` 최대값으로 다시 확인.) 물리: U-S9-G6c와 같은 S1 패드 지지력 파괴 계열(p/q_ult ≈ 9.5, dynamics 5.41.6)이라 센서 오차가 아니라 기존 한계다.
+- S1 전방을 따로 세면(dynamics 제안, 집계 방식은 S-1~S-6 확정 때 정함): S1 전방 80실행 중 실패 35, **나머지 855실행 중 실패 10(1.2 %, CP 95 % 상계 2.0 %)**.
+- S-1 11건: G8 경사 `RR raised 140/170/200` 5, G6 `rigid+S1@FR/FL`·`G1+S1@FR/FL`·`rigid+J2@FL` 6.
+- S-4 8건: 4건은 `S4_baseline`(L1에도 같은 절대 오발동) + 게이트(LOC 뒤 재접촉) 실패, 4건은 G8 경사의 새 오발동(참 하강 0.18 kN, 참 힘 4.1 $F_{min}$에서 늦춤).
+- **영점 교정: L2 935건 중 332건에서 다리 1개 이상이 교정되지 않았다(L1 0건). 사유는 `skipped: move`(공중 왕복 복귀 판정) 326건, `grounded`만 6건이다(python 재집계 2026-10-29).** 남은 오프셋은 다리당 최대 약 3 kN. 실패 45건 중 교정 미완 실행은 S-5 8·S-1 3·S-4 3건뿐이라 주원인은 아니지만, 실기 영점 교정 의무(CLAUDE.md 센서 행)와 맞지 않으므로 원인 확인이 필요하다.
+- S-2(P-S8-28 오발동·누락)·S-3(P-S8-29 완화 중 $F_{min}$ 위반·밴드 밖 오발동) 0/935: normal 등급 압력 잡음에서 P-S8-28·29는 새 실패를 만들지 않는다. **단 S-1~S-6 문턱은 control 제안값이고 사용자 확정 전이다.** 개정 75 394의 "실기 허용 재결정"은 L3·L4 결과까지 보고 한다.
+
+## 408. 남은 일(진행 중)
+
+L3·L4(187 × 3 seed × 2 = 1,122실행, L2 실측 3.98 s/실행·10병렬 기준 약 75분), 선택 L2imuideal 160·L2nocal 144(약 20분), S-1~S-6 문턱 확정, 영점 교정 건너뜀 원인 확인(`skipped: move` 판정 조건 vs 잡음 등급), S-5 S1 전방 사례의 물리(S1은 Bekker 유효 범위 밖, U-S9-G6c와 같은 지지력 파괴 계열) 정리.
+
+# 개정 80 (2026-10-28~29): G6P Chrono(논문 근거), G6 판정기 확장, 연구 ③ 오거 3단계 Chrono, 논문 최대 이동 압력 표
+
+## 409. G6P Chrono(`07_results/S9/batch_G6P_20261028_154030`, 4/6 완료)
+
+G1 기반·패드 B·상단·$F_s$ 4 kN·현행 프리셋(P-S8-29 재상승 허용 0.6 kN, U-S8-80), 4병렬 P코어, 15:40 시작. 판정 `r76_g6_chrono_judge.py`(확장판), 결과 `06_analysis/02_control/s8/rev77/r77_g6p_part1.json`·`r77_g6p_part1_derived.json`. **2026-10-29 같은 스크립트로 4건을 다시 판정해 같은 결과를 확인했다**(통과 3/3, noTR 예상 실패 일치; 원 파일은 READY 없는 실행을 scratchpad 래퍼로 보충했으나 지금 스크립트에 그 규칙이 들어 있음).
+
+| 사례 | 벽시계 [s] | G6-1~7 | READY [s, 루프] | LOC − 이탈 [s] | 이탈 뒤 최소 [kN] | 연약 패드 끝 침하 [mm] | 완화 DONE $D$ [kN] | 하네스(`rev76/r76_g6_Pb.json`) |
+|---|---|---|---|---|---|---|---|---|
+| J2@RR 200 s | 11,885 | 통과 | 96.1 | 0.68 | 40.4(RR) | 59.1 | −14.7 | READY 구간 70.5 s(C 72.4), 최소 45.6, 침하 57.7 |
+| J2@FL 200 s | 12,679 | 통과 | 85.6 | 2.38(한계 2.91) | 30.0(RR) | 67.4 | −14.5 | 59.3(C 61.9), 29.4, 64.5 |
+| J1@FL 200 s | 12,661 | 통과(FLAG `P3-1_transient_recontact`) | 66.8 | 1.33 | 27.8(RR) | 38.4 | −14.0 | 38.7(C 43.2), 41.5, 34.9 |
+| J1@RR noTR 240 s(P-S8-29 끔, 반사실) | 14,608 | 예상 실패(READY 없음, G6-4·5·6·READY ≤ 120 s 판정 불가) | — | 0.62 | 49.9 | 57.7 | — | — |
+| J1@RR 160 s | **중단**(20:46 KeyboardInterrupt, 세션 종료) | — | — | — | — | — | — | — |
+| S1@FL 160 s(모델 한계 스트레스) | **중단**(같은 시각) | — | — | — | — | — | — | — |
+
+- J2 패치: Chrono/하네스 비 READY 구간 1.03~1.04, 침하 1.02~1.05, 최소 힘 0.89~1.02 → J2는 하네스가 대표적이다(J1과 대비, 391).
+- J1@FL 0.6 kN(현행) vs 0.3 kN(개정 75 배치): 명령 첫 차 55.0 s, DONE 54.8 vs 62.5 s, READY 66.8 vs 74.5 s, 재접촉 FLAG 같음 → U-S8-80 효과를 Chrono에서 확인(완화 첫 충족 → DONE 3.8 s, 이전 11.5 s).
+- noTR: P-S8-29를 끄면 LEVEL에 216 s 머물고 $|D|$가 21.3 → 3.3 kN으로 느리게 감쇠(λ ≈ 0.0084 s⁻¹), 3 kN 도달 외삽 약 261 s. 끝 다리 최소 68.6 kN. P-S8-29가 없으면 J1 후방 연약 패치에서 READY ≤ 120 s를 만족하지 못함을 Chrono로 보였다(논문 근거).
+
+## 410. G6 Chrono 판정기 확장(`r76_g6_chrono_judge.py`, +352줄)
+
+READY 없는 실행: G6-4·5·6·READY ≤ 120 s를 "판정 불가 = 실패"로 세고 `--expect`로 예상 실패를 분류, G6-1은 이탈 확정부터 끝까지 크롤러 수직력 최대(= 0 N)로 대체. 기록 행(관문 아님): `relax_settings`, `after_ready`(DONE·READY 때 $D$, READY 뒤 다리별 참 $F_{cyl}$ 최소), `end_of_run`(마지막 단계, LEVEL $|D|$ 로그 감쇠율, 연약 패드 끝 침하·속도, 마지막 10 s 다리 최소). 시험 `05_tests/unit/test_r76_g6_chrono_judge.py`. 판정 관문 정의는 개정 75와 같다. S9 판정기 정식 편입(cad 제안)은 아직이다.
+
+## 411. 연구 ③ J2·S1 오거 중단·하단 Chrono(`run_S9.py` `p3b_aug_cases`, 2/8 완료)
+
+P3b 설정 그대로(패드 격자 J2 0.01 / S1 0.02 m, 크롤러 0.04 m, zrp, 4스레드, 120 s, 압력 normal, IMU ideal, seed 20261026), 짝 = 같은 토양·패드의 P3b 상단 사례. P코어 단독 1건씩.
+
+| 사례 | 폴더(`07_results/S9/`) | 벽시계 [s] | P3 행(cad 기록) | READY [s, 루프] | 끝 자세 [°] | 바퀴자국 틈 [mm] | LOC − 이탈 [s] | 사건 |
+|---|---|---|---|---|---|---|---|---|
+| J2 B 중단 | `batch_p3b_aug_20261028_224127` | 6,432 | P3-1~8 모두 통과 | 77.5 | 0.040 | 38.2 | 1.96 | 토양 모드, `INFO_CLEARANCE_BIAS` FL 72.1·RL 89.5 mm |
+| J2 B 하단 | `batch_p3b_aug_20261029_002839` | 6,342 | P3-1~8 모두 통과 | 85.9 | 0.016 | 39.7 | 1.99 | 같음 |
+| J2 A 중단 | `batch_p3b_aug_20261029_005120`(결과 없음, 2026-10-29 삭제; 재실행 `_103815`) | **중단**(로그 0 B, 00:51 시작 뒤 결과 없음) | — | — | — | — | — | — |
+| J2 A 하단 | `batch_p3b_aug_20261029_021432`(결과 없음, 2026-10-29 삭제; 재실행 `_103815`) | **중단**(02:14 시작 직후) | — | — | — | — | — | — |
+| S1 A·B × 중단·하단 4건 | — | **미실행** | — | — | — | — | — | — |
+
+완료 2건은 P3 행 기록상 통과다. P3b-3 짝 비교(상단 사례 대비) 판정 파일은 아직 없다.
+
+## 412. 논문 최대 이동 압력 표(`paper_max_pressure_table.py`, 완료, 읽기 전용)
+
+정의: 항목 4 = $|u_{applied}|$ > 1e-6 m/s 표본에서 다리별 $F_{cyl}/A_p$의 최대(10 Hz Record, 개정 50 220.6 (2)); 바닥 사건 사례는 사건 창 밖 신장 표본 + 창 안 과도 헤드 피크를 따로 보고. 결과 `06_analysis/02_control/s8/paper/max_pressure_by_variable.json`.
+
+| 묶음 | 사례 | 최대 [bar] | 사례·다리 | 기준 대비 |
+|---|---|---|---|---|
+| S8 강체(Chrono, 현행 마스크) | 86 | 144.3 | `N_G4_Fs8_pressure` RL | ≤ 180 bar 판정 통과 |
+| S8 비사건 L2b | 55 | 127.4 | `K0V_top_fdown3.5_Fs0` RR | — |
+| S8 사건 창 안 과도(헤드) | drop_RR_30 4 / probe 2 | 183.9 / 185.5 | `N_RE1bF_Fs0_pressure` / `E_RE1bP_Fs0` | 창 안 판정은 ≤ 350 bar(U58·J-5) → 통과; 180 bar 대비 1.02~1.03은 창 밖 기준이라 적용 안 함 |
+| S9 P3b 연약(SCM) | 24 | 94.8 | `P3b_G1_A_top_Fs0` FL | 릴리프 210 bar의 0.45 |
+
+- 저장된 S8 판정 행(판정기 rev. 46, 마스크 $u_{applied} \ne 0$)은 잠긴 밸브의 감쇠 잔여 $u$(~1e-37 m/s)까지 넣어 32/86건이 현행 정의와 다르다(옛 최대 152.1 bar, `N_RE1c_Fs0_combined`). 옛 마스크 재계산으로 86/86 재현. **논문에는 현행 마스크 값을 쓴다.** 판정 결론(≤ 180 bar)은 두 정의 모두 바뀌지 않는다.
+- G6 Chrono·G8 인수 보조 사례는 Record 기준 값이 같은 파일 `supplementary_chrono`에 있고, 축소 모델 판정(rev70·rev74)에는 압력 키가 없다.
+
+# 413. 개정 76~80 공통: 사용자 결정(2026-10-29)과 다음 단계
+
+사용자 결정(2026-10-29, decision_log는 사용자가 기록):
+1. **정착 훅 기본값 = `p0` 유지**(397). 기존 G6·V-3 기준 해시를 그대로 쓴다. 연구 ① 스크린만 `harness` 훅으로 돌린다.
+   - 근거: `dynamics_model.md` 5.41.4. `hook_harness` 172행의 보정 잔차는 roll ≤ 9.2×10⁻⁵°, pitch ≤ 0.0130°(S1 상단 급경사, 나머지 ≤ 0.0033°)로 경사 사례에 필요한 보정이다. 평지·균일 사례에서는 훅을 바꿔도 판정이 바뀌지 않는다(396: G6 64, V-3 160, ref 72에서 뒤집힘 0). 그래서 평지 기준 해시를 다시 만들 이득이 없다.
+2. **연구 ① 수정 후보 = E3wide 채택**(404.1, 구현 명세 414). 패드 B 연약 경사 시작 조건은 기록만 하고 축소는 보류.
+3. **r79 L3·L4·선택 수준을 실행한다.** 영점 교정 `skipped: move` 원인 점검(python-expert 별도) 뒤 S-1~S-6을 확정한다. E3wide 영향은 415절.
+4. **중단된 Chrono 9건은 E3wide 구현 뒤 최종 제어기로 모두 다시 돌린다**(G6P J1@RR·S1@FL, 연구 ③ 6건, S9SL C-1).
+5. 스크립트 docstring의 결정 4건(연구 ③ 8건, G6P 6건, stroke-limited 분류, 후보 채택 전 03_src 불변)은 모두 사용자 결정이 맞다.
+
+중단 원인(사용자 확인): 2026-10-28 20:46 터미널 host_exit(G6P J1@RR·S1@FL의 KeyboardInterrupt), 2026-10-29 02:46 Windows Update 재부팅(p3b_aug J2 A 중단·하단).
+
+control 추가 판단:
+- S9SL C-2·C-3·C-4는 경사 사례(기울기 3.2~4.4° > 1°)라 E3wide가 작동한다. 그래서 최종 제어기로 **같이 다시 돌려야 한다**(C-3은 E3wide가 고치려는 바로 그 사례로, 하네스 예측은 실패 → 통과). Chrono 재실행은 9 + 3 = 12건이다.
+- 평지 사례(G6P 전부, p3b_aug 전부, 이미 끝난 G6P 4건·p3b_aug 2건)에서는 E3wide가 작동하지 않는다(정착 기울기 ≤ 0.3°). 414.5 인수에서 평지 기준 해시 불변이 확인되면 이 결과는 최종 제어기 결과로 유효하다.
+
+질문 6(2026-10-29 제기): E3wide가 강체·G1 경사에서도 틈 목표를 80 mm로 올린다. 그 결과 통과 18건이 stroke-limited 통과로 바뀐다(이 18건 중 강체·G1은 4건이고 나머지 14건은 연약 지면).
+
+사용자 결정(2026-10-29, 2차):
+6. **토양 징후 조건을 더한 E3 변형을 비교한 뒤 구현한다**(417). 414의 구현 명세는 채택 변형의 조건 하나를 더해 그대로 쓴다.
+7. **평지 Chrono 8건(G6P J1@RR·S1@FL, p3b_aug 6)은 구현 전에 지금 실행한다.** control 판단(416.5): 이 8건도 CHECK 영점 교정 경로를 탄다(압력 normal, 행정 잡음 0.1 mm). 그래도 영점 교정 수정을 D안(416.3)으로 하면, 모든 다리가 교정된 실행은 수정 뒤와 비트 동일하다. 끝난 뒤 `WARN_PRESSURE_ZERO_SKIPPED:*:move`가 있는 실행만 다시 돌린다. E3 변형은 평지에서 작동하지 않는다.
+8. **r79 G6 L3·L4는 영점 교정 점검 결론 뒤에 돌린다.** 결론 = 제어기 결함(416). 수정 뒤 실행한다.
+9. **영점 교정 = D안, 허용치 0.5 mm, 프리셋에서만 켬**(416.3; 클래스 기본 None = 옛 동작). python-expert 구현 중(2026-10-29).
+10. **418 LOC 평탄 창의 재접근 다리 약점을 지금 설계·비교한다**(419). 구현은 E3 변형과 함께 한 번에 한다(420).
+11. **E3 변형 = E3c10 채택**(사용자 2026-10-29). 근거는 417.6의 비교 결과다. 414의 구현 매개변수를 E3c10으로 확정한다(414.3).
+12. **418 = LWa(창 재시작) 채택**(사용자 2026-10-29, 근거 419.6). 구현: python(420.1 3번, mode `restart`).
+13. **재접근으로 늦어진 LOC의 P3-2·G6-2 위반은 FLAG**(사용자 2026-10-29). 정의는 419.8.
+14. **G6 22건 재접촉 구간 기록 재실행**(python-expert, U-S9-G6d로 G6-1 4건 재분류), 이어서 LWa 구현. S1_B 2건은 12:01 E 풀에서 시작(`07_results/S9/batch_p3b_aug_20261029_120112`).
+
+실행 상태(2026-10-29 10:38 시작, 메인 세션):
+- P코어: 평지 Chrono 6건. G6P 2(`07_results/S9/batch_G6P_20261029_103815`), p3b_aug J2_A·S1_A 4(`batch_p3b_aug_20261029_103815`). S1_B 2건은 E3 비교가 끝난 뒤 E 풀로 돌린다.
+- E코어 10 worker: E3 변형 비교 708실행(`06_analysis/02_control/s9/rev81/fix_slope_E3c.json`).
+
+# 414. E3wide 구현 명세(python-expert, `03_src/outrigger_sim/control/c2.py`)
+
+## 414.1 참조 구현
+
+- 참조: `04_scripts/03_control/s9/s9_slope_fix_candidates.py`
+  - 토큰 `E3`, 래퍼 `CandidateC2._apply_e3_margin`(360~376행), 호출 위치 `_confirm_liftoff`(345~358행)
+  - 매개변수: `e3_tilt_min_rad = math.radians(1.0)`, `e3_margin_m = 0.030`, **`e3_require_soil_use = False`**(E3wide, 실행 메타 `params`)
+- 후보 명령 해시(인수 기준 A): `06_analysis/02_control/s9/rev80/fix_slope_E3wide.json` `records`의 `candidate == "E3"` 177건(`settle_hook` harness, 실행 한계 240 s)
+
+## 414.2 작동 조건과 동작(래퍼와 비트 동일해야 함)
+
+1. 시점: `_confirm_liftoff(t_s, tail, mean_load_N)`가 LOC를 확정한 **직후**, 같은 주기. 원래 처리가 끝난 뒤, 같은 $t_s$에 적용한다.
+2. 조건(모두 참이어야 함):
+   - 설정 `enable`이 켜져 있다.
+   - 이번 실행에서 아직 적용하지 않았다(한 실행 한 번).
+   - `self._settle_attitude_rad()`가 None이 아니다. CHECK가 있으면 `_state.crawler_attitude_rad`, 없으면 `_soil_state().settle_attitude_rad`이고, 둘 다 중력 기준 절대 자세 [rad]다.
+   - `max(|roll|, |pitch|) > tilt_min_rad`(**엄격 부등호**).
+   - `require_soil_use`가 참일 때만 추가로 `soil.soil_mode_start_s is not None or soil.has_corner_bias`(E3 원형). E3wide는 거짓이다.
+3. 동작: 이번 실행의 **유효 틈 목표** $c^\*_{eff} = c^\* + \Delta c$, $c^\*$ = `thresholds.clearance_target_m`(0.05 m), $\Delta c$ = `margin_m`(0.03 m). 사건 하나를 기록한다.
+4. 실행 상태: `reset()`과 새 실행에서 $c^\*_{eff} = c^\*$로 돌린다. 래퍼는 `self.config`를 실행마다 바꿨지만, 구현은 **config를 바꾸지 말고** 실행 상태 필드(예: `RunState.clearance_target_m`)와 접근자(예: `_clearance_target_m()`)를 둔다.
+5. **유효 목표를 쓰는 곳**: 래퍼가 config 전체를 바꿨으므로, 런타임에 `self.config.thresholds.clearance_target_m`을 읽는 모든 곳이 유효 목표를 읽어야 비트 동일하다(f062051 기준 c2.py).
+   - 4285행: 로드 행정 대체 경로의 오일 강성 작동점 `operating_extension_m(clearance)`
+   - 5960행: 목표 수락 예측 행정 `predicted_strokes_m(..., clearance_target)`
+   - 6017행: heave 오차
+   - 6345행: 완료 판정 틈 오차
+   - 그 밖에 런타임 사용처가 있으면 모두(grep 결과를 python 리포트에 표로 남긴다)
+   - 생성자의 Z1 검사 `_check_clearance_target`(3564행)은 설정값 기준으로 두고, 아래 414.3 검증을 더한다.
+   - c8.py의 같은 이름 필드는 대상이 아니다.
+
+## 414.3 설정(제안)
+
+**확정(결정 11, 2026-10-29): 구현 대상은 E3c10이다.**
+- R8 프리셋 값: `enable=True`, `tilt_min_rad=radians(1.0)`, `margin_m=0.030`, `require_soil_use=False`, `min_clearance_at_P_m=0.010`.
+- 작동 조건(LOC 확정 직후, 모두 참): 정착 기울기 max(|φ|, |θ|) > 1°, 그리고 $c_{min}(t_P)$ = `soil.clearance_at_plateau_start_m` > 10 mm(둘 다 엄격 부등호). 한 실행에 한 번.
+- 참조 구현: `s9_slope_fix_candidates.py` 토큰 `E3c10`. 후보 해시(414.5 A)는 `06_analysis/02_control/s9/rev81/fix_slope_E3c.json`의 `candidate == "E3c10"` 177건이다(414.1의 E3wide 파일을 대신한다).
+
+```python
+@dataclass(frozen=True)
+class SlopeClearanceMarginSettings:
+    """P-S8-31 (E3c10, spec 414 / 417): raise the clearance target at the LOC on a tilted crawler
+    settle when the plateau-start crawler clearance estimate shows a soil sign."""
+    enable: bool = False                       # class default = old behaviour; R8 preset True
+    tilt_min_rad: float = math.radians(1.0)    # strict: fires when max(|roll|, |pitch|) > tilt_min_rad
+    margin_m: float = 0.030                    # added to thresholds.clearance_target_m for this run
+    require_soil_use: bool = False             # True = original E3 (soil mode or corner bias needed)
+    min_clearance_at_P_m: float | None = None  # None = no soil-sign condition; R8 preset 0.010
+                                               # strict: needs soil.clearance_at_plateau_start_m > value
+```
+
+- `C2Config.slope_clearance_margin: SlopeClearanceMarginSettings = SlopeClearanceMarginSettings()`. **R8 프리셋 `with_10hz_d1()`에서만** `enable=True`(나머지 기본값 그대로). 클래스 기본과 다른 프리셋은 옛 동작이다.
+- 검증(생성 시 ValueError):
+  - `margin_m ≥ 0`, `tilt_min_rad ≥ 0`
+  - `clearance_target_m + margin_m`이 Z1 상한 92.39 mm(3564행 식) 이하. 0.08 m는 통과하며, Z1 최악 행정 642.2 + 1.005 × 30 = 672.4 mm ≤ 684.8 mm.
+- 사건: `INFO_LOC_CLEARANCE_MARGIN:<유효 목표 mm, 정수>`(예 `INFO_LOC_CLEARANCE_MARGIN:80`). 래퍼 사건 `FIX_E3_TARGET:80mm`와 이름만 다르고 명령에는 영향이 없다.
+- 제어기 메타(`controller_meta`): `slope_clearance_margin`에 설정·적용 여부·적용 시각·정착 기울기[°]를 기록한다(cad `run_S9.py` 기록에 넘김).
+- 규칙 이름은 P-S8-31을 제안한다(P-S8-30 다음).
+
+## 414.4 단위 시험(`05_tests/unit/test_c2_p31.py` 제안)
+
+1. 클래스 기본 `C2Config()`: enable False. 고정 측정 열에서 명령이 f062051과 같다(기존 시험 회귀).
+2. R8 프리셋: enable True, 1°, 0.03 m, require_soil_use False.
+3. LOC에서 정착 roll 1.2°(또 pitch −1.2°)일 때 유효 목표가 0.08 m가 되고 사건이 1회 나온다.
+4. 경계: 정확히 1.0°, 0.9°, 정착 자세 None에서는 작동하지 않는다.
+5. 한 번만: LOC 확정이 다시 와도 0.11 m가 되지 않는다.
+6. `reset()` 뒤 0.05 m로 돌아간다(같은 객체로 두 실행).
+7. 사용처 4곳(414.2-5)이 적용 뒤 유효 목표를 쓴다: heave 오차, 완료 틈 오차, 목표 수락 예측 행정, 로드 행정 대체 오일 강성(대체 모드가 `STROKE_OIL_COLUMN`이 아닐 때).
+8. require_soil_use True: 토양 모드·모서리 보정이 없으면 작동하지 않는다(E3 원형).
+9. CHECK 켬: `crawler_attitude_rad`를 쓴다.
+10. 검증: margin < 0, 또는 목표 + margin > 92.39 mm이면 ValueError.
+11. 래퍼 대조: 연구 ① 하네스 1건(`H3|J1|B|top|roll_pos@k0.75`, harness 훅)의 구현 명령 해시가 `rev81/fix_slope_E3c.json`의 `E3c10` 기록과 같다(결정 11; 느린 시험이면 표식 slow).
+12. 토양 징후 경계: $c_{min}(t_P)$ 9.9 / 10.0 mm에서는 작동하지 않고 10.1 mm에서 작동한다(417.5).
+
+## 414.5 인수 기준
+
+| # | 대상 | 기대 | 기준 파일 |
+|---|---|---|---|
+| A | 연구 ① 177(harness 훅, `s9_soil_slope.py --settle-table ...`) | 명령 해시 177/177 = 후보(결정 11: E3c10) | `s9/rev81/fix_slope_E3c.json` `E3c10`(채택 전 E3wide 기준 `s9/rev80/fix_slope_E3wide.json`은 폐기) |
+| B | g6 116·g8 516·p3b 207(균일 토양 72 + 강체 135) | 구현 해시 = R1 래퍼 해시(아래) 100 % | ~~R1 출력(`s9/rev81/fix_{g6,g8,p3b}_E3wide.json`, 구현 전 생성)~~ **420.2a로 대체됨**(이 파일들은 만들지 않았다. 실제 기준은 `rev81/fix_g6_LW.json` LWa, `R1_g8_E3c10_LWa.json`, `R1_p3b_E3c10_LWa.json`) |
+| C1 | 불변이어야 함 | G6 116(`rev74/r74_g6_P30fz.json`, `rev76/r76_g6_Pb.json`), G8 평지 342, V-3 토양 72·센서 72·β 16, s9 균일 72, r8d1 중 평지 사례: 해시 불변 | 각 기준 |
+| C2 | 바뀌어도 됨(R1이 예측한 사례만) | G8 경사 174, V-3 강체 135 중 경사 사례, r8d1 중 경사 사례 | R1 |
+| D | 판정 | G8 516·V-3 강체에서 FAULT·실패 신규 0. 통과 → stroke-limited 통과는 건수·사례를 보고(질문 6) | `r70_judge.py` 등 |
+| E | unit 전체 통과 | — | — |
+
+R1(래퍼 회귀)의 g6·p3b는 **`--settle-hook p0`**으로 돌린다(기준 해시가 p0 훅이고, 결정 1로 기본 p0 유지). 스크립트 기본은 harness다. g8은 강체 경로라 훅과 무관하다.
+
+## 414.6 회귀 실행 목록과 예상 시간
+
+예상 시간은 L2·fix_slope 실측 약 24~40 s/실행·worker 기준이다.
+
+| 단계 | 명령(프로젝트 루트, dynamics-dev, `MKL_THREADING_LAYER=TBB`, `OMP_NUM_THREADS=1`) | 실행 수 | 예상(E 10 worker) |
+|---|---|---|---|
+| R1-g6 | `python -I 04_scripts/03_control/s9/s9_slope_fix_candidates.py run --suite g6 --candidates current,E3 --param e3_require_soil_use=false --settle-hook p0 --workers 10 --affinity 0x0FFC0000 --out 06_analysis/02_control/s9/rev81/fix_g6_E3wide.json` | 232 | 약 20분 |
+| R1-g8 | 같은 명령 `--suite g8`(`--settle-hook` 무관) `--out .../fix_g8_E3wide.json` | 1,032 | 약 40분 |
+| — | **R1-g6·g8·p3b(E3wide) 세 줄은 420.2a로 대체됨**(결정 11·12로 E3c10 + LWa 조합이 되어 실행하지 않음) | — | — |
+| ~~R1-p3b~~ | ~~같은 명령 `--suite p3b --settle-hook p0` `--out .../fix_p3b_E3wide.json`~~ (실행 안 함, 420.2a로 대체) | 414 | 약 20분 |
+| R1 비교 | `... s9_slope_fix_candidates.py compare --out .../fix_E3wide_regress_compare.json <위 3 파일>` | — | 1분 |
+| 구현 | python-expert(c2.py, 시험) | — | 2~3 h |
+| R2 | 구현 제어기로 A(연구 ① 177, 약 10분)·G6 116(약 10분)·G8 516(약 15분)·V-3 soil·sensor·beta·rigid·r8d1(약 15분)·unit 전체(약 15분) | 약 1,000 | 약 1 h |
+| Chrono | 413 판단대로 12건(G6P 2, p3b_aug 6, S9SL C-1~C-4), P코어 4병렬 | 12 | LPT 묶음 약 7~10 h |
+
+P코어까지 쓰면(18 worker, P 속도 약 1.7배) R1은 약 45분이다. cpu-scheduler-expert 배치표를 받는다.
+
+# 415. r79 L3·L4와 E3wide의 관계(저장 결과 판단, 2026-10-29)
+
+- 근거: `r79_L1_all.json` 187건의 사례 키, 저장된 정착 자세(`base.settle.att_floor_deg`), LOC 시각(`r79.t_loc_s`). 187건 모두 LOC가 확정된다.
+  - **G6 116**: 평지(G1·강체 기반 + 연약 패드 하나). 정착 기울기 ≤ 0.3° < 1° → **작동 안 함, 영향 없음.**
+  - **ref 21**: 균일 토양 평지 8 + 강체 평지 1은 영향 없음. 강체 경사 12건(`rigid|B|4.4,0` 등, s9 경사 13 중 평지 제외)은 기울기 > 1° → **작동, 명령이 바뀜.**
+  - **G8 50**: 평지 16(한 패드 높임, 크롤러는 평지 위)은 영향 없음. 경사 `edge` 17·`rpB` 17은 **작동, 명령이 바뀜.**
+- 결론:
+  - **G6 집합(L3·L4 116 × 3 seed × 2 = 696실행)과 선택 수준(L2imuideal g6rear 160, L2nocal g6core 144, 모두 G6)은 E3wide와 무관하다.** E3wide 쪽으로는 지금 E코어로 돌려도 된다(예상 약 50분 + 20분, 10 worker).
+  - G8·ref(L3·L4 71 × 6 = 426실행)는 E3wide 구현 뒤로 미룬다. 그때 G8·ref의 L0 identity 기준(경사 사례), L1·L2 경사 사례 46 × (1 + 5)도 최종 제어기로 다시 돌린다(약 30분).
+- 단서: 영점 교정 `skipped: move` 원인 점검(python-expert)이 센서 어댑터나 03_src의 영점 교정 경로를 고치면 G6 L2를 포함해 다시 돌려야 한다. 점검 결과가 "판정 조건만의 문제, 코드 불변"이면 지금 실행이 유효하다. 메인 세션은 점검 결론을 먼저 보거나, 위험을 감수하고 병행한다.
+- 실행 명령(G6만, 지금):
+  - `R79_LEVELS=L3,L4`, `R79_SET=g6`, `R79_AFFINITY=0x0FFC0000`로 두고 `python -I 04_scripts/03_control/s8/r79_sensor_screen.py C:\workspace\outrigger_control 06_analysis/02_control/s8/rev79/r79_L3L4_g6.json 10`
+  - 선택 수준: `R79_LEVELS=L2imuideal R79_SET=g6rear` → `r79_L2imuideal_g6rear.json`, `R79_LEVELS=L2nocal R79_SET=g6core R79_SEEDS=0,1,2` → `r79_L2nocal_g6core.json`
+- **갱신(2026-10-29, 결정 6~8 뒤)**:
+  - 실행 시점은 영점 교정 수정(416) 뒤다(결정 8).
+  - 채택 변형이 E3c10(417)이면 G8·ref도 E3 영향이 없다. 저장된 r79 $c_{min}(t_P)$: G8 경사 ≤ −1.0 mm, ref 강체 경사 L1 ≤ 0.2 mm·L2 ≤ 7.5 mm, 모두 10 mm 이하. 그러면 L3·L4 187 전체를 E3 구현과 무관하게 영점 교정 수정 뒤 한 번에 돌릴 수 있다.
+  - 단서: L3·L4는 잡음 등급이 커서 강체 경사 $c_{min}(t_P)$가 10 mm를 넘을 수 있다. 그래서 L3·L4 결과에 E3 조건 충족 여부(경사 > 1° 그리고 $c_{min}(t_P)$ > 문턱)를 기록하고, 충족 사례만 E3 구현 뒤 다시 돌린다.
+  - E3c7이면 ref 강체 경사 L2 1건(7.5 mm)이 걸리므로 415 원안(G8·ref 구현 뒤)을 유지한다.
+
+# 416. CHECK 공중 왕복 영점 교정의 복귀 판정 결함(2026-10-29, python-expert 점검)과 수정 명세
+
+## 416.1 결함
+
+- 위치: `03_src/outrigger_sim/control/zero_calibration.py`, `ZeroCalibration._move` 279~294행(명세 72.1 (1)~(2), 76.1 E-3, 76.2).
+- 내용: 수축 단계의 복귀 판정이 `displacement <= 0.0`(`displacement = strokes - _start_stroke_m`)이다. 다음 세 가지가 겹치면 복귀가 영영 판정되지 않을 수 있다.
+  - 시작값이 행정 센서 잡음(σ 0.1 mm)을 실은 한 표본이다.
+  - 다리는 완전 수축 하드 스톱(참 행정 0)에서 출발해 그 아래로 내려가지 못한다.
+  - 그래서 시작 표본이 잡음으로 참값(0)보다 낮게 읽혔으면, 이후 표본이 그보다 더 낮게 읽혀야만 복귀로 판정된다(정정 2026-10-29: 방향을 명확히 함).
+- 결과: 다리당 약 10 %(python 집계 389/3,740, 이론 1/(K+1))가 `move_timeout_factor` × 명목 시간(3 × 3 mm / (0.25 × 20.924 mm/s) = 1.72 s, 단계 경과 4.8~4.9 s) 뒤 `skipped: move`가 된다. 그 다리는 $c_i = 0$으로 남고 E-6 허용(전방 5.5 / 후방 4.0 kN)을 받는다.
+- 범위: 지면·다리·하네스와 무관하고 L1(이상 센서)에서는 0건이다. **제어기 로직 결함이며 실기에도 해당한다**(행정 센서에 잡음이 있고 완전 수축에서 시작하면).
+- Chrono 저장 결과 검색(`07_results/S6~S9/**/result.json` 2,297개, `WARN_PRESSURE_ZERO_SKIPPED:*:move`): S6 bundleC D8 사례(2026-10-24, RL, 큰 경사) 18건뿐이다. S7·S8·S9 0건이고, 최근 S9 9건(G6P 4, p3b_aug 2, S9SL 3)은 네 다리 모두 `calibrated`.
+
+## 416.2 수정안 비교
+
+| 안 | 내용 | 효과 | 기준 해시 영향 |
+|---|---|---|---|
+| A | 복귀 허용치 `displacement <= tol`을 늘 적용 | 결함 제거 | **CHECK 영점 교정이 켜진 잡음 있는 모든 실행이 바뀐다**(수축 종료가 한 주기 앞당겨짐 → hold 표본·오프셋 변화). r79 L2 전체, Chrono normal 등급 S6~S9 전체 |
+| B | 완전 수축 끝(하드 스톱) 도달을 복귀로 인정 | 결함 제거(시작점이 끝일 때만) | 끝에서 출발한 실행 대부분이 바뀜 |
+| C | 시작값을 여러 표본 평균(+A) | 결함 크기를 줄임 | 모든 CHECK 실행이 바뀜 |
+| **D(권고)** | 판정은 그대로 두고, **시간 초과 때만** 이 단계의 최소 변위가 `tol` 이하인 다리를 "복귀함"으로 인정(skip 대신) | 결함 제거 | **원래 시간 안에 복귀한 실행은 비트 동일.** 바뀌는 것은 원래 `skipped: move`가 난 실행뿐 |
+
+## 416.3 D안 명세(python-expert)
+
+- 설정(`ZeroCalibrationSettings`): `return_timeout_tolerance_m: float | None = None`. None은 옛 동작(클래스 기본, 기존 프리셋 비트 동일). **R8 프리셋(`with_10hz_d1()`)과 U71 기본 경로를 쓰는 프로젝트 프리셋에서 0.0005 m**.
+- 값 근거:
+  - 시작 표본과 현재 표본 차의 σ = √2 × 0.1 = 0.141 mm. 0.5 mm는 약 3.5σ다.
+  - 단계 최소값을 쓰므로 놓칠 확률은 시작 표본이 −0.4 mm 아래인 경우(약 4σ, ~3×10⁻⁵)뿐이다.
+  - `move_m` 3 mm의 1/6이라 "복귀 안 됨"(다리가 실제로 끼임)은 여전히 잡는다.
+- 동작:
+  1. 수축 단계(`sign < 0`)에서 다리별 최소 변위 `_min_displacement`를 갱신한다(단계 진입 때 +inf).
+  2. 기존 판정 `displacement <= 0.0`은 그대로 둔다.
+  3. 시간 초과 분기에서, 아직 도달하지 못한 활성 다리 중 `tol`이 None이 아니고 `_min_displacement[leg] <= tol`인 다리는 `_reached[leg] = True`로 하고, 사건 `INFO_PRESSURE_ZERO_RETURN_TOL:<leg>:<min mm>`를 남긴다.
+  4. 나머지만 `SkipReason.MOVE`.
+  5. 신장 단계는 바꾸지 않는다.
+- 부수 효과: 해당 다리의 수축 단계가 시간 초과(1.72 s)까지 늘어 CHECK가 최대 약 1.2 s 길어진다. 그동안 수축 지령이 하드 스톱을 누른다(기존 skip 경로와 같은 시간).
+- 명세 문구(76.2 실패 처리에 덧붙임): "수축 복귀는 시작 행정 이하에서 판정한다. 시간 초과 때 그 단계의 최소 변위가 0.5 mm 이하인 다리는 복귀한 것으로 보고 hold로 넘어간다(행정 센서 잡음 + 완전 수축 하드 스톱 대응, 2026-10-29)."
+- 단위 시험(`05_tests/unit/test_zero_calibration.py`에 추가):
+  1. tol None이면 옛 동작 비트 동일(잡음 열 고정 seed).
+  2. 하드 스톱 + 시작 표본 **−0.15 mm** + 이후 표본 −0.05~+0.12 mm(변위 +0.10~+0.27 mm > 0): 옛 동작은 `skipped: move`, D안은 `calibrated`와 사건 1건. (정정 2026-10-29 python 지적: 처음 적은 +0.15 mm로는 옛 규칙도 복귀로 판정한다. 구현 시험은 −0.15 mm다.)
+  3. 시간 안에 `displacement <= 0`이면 D안과 옛 동작의 지령·결과가 같다.
+  4. 최소 변위 0.8 mm(실제로 덜 돌아옴)면 D안도 `skipped: move`.
+  5. 신장 단계는 영향 없음.
+  6. 1,000 seed 몬테카를로(행정 σ 0.1 mm): 옛 동작 skip 약 10 %, D안 skip ≤ 0.1 %.
+
+## 416.4 인수 기준
+
+| 대상 | 기대 |
+|---|---|
+| 이상 센서 실행(G6 116·G8 516·V-3 rigid/soil/β·r8d1·r79 L0·L1, 연구 ① 177) | 명령 해시 불변 |
+| r79 L2 935 | 원래 `skipped: move`가 없던 609건(935 − 326)은 해시 불변. `skipped: move`가 있던 326건만 바뀌고, 그 실행에서 move 사유 다리가 모두 `calibrated`가 된다(예외는 사유와 함께 보고). (정정 2026-10-29 python 재집계: 교정 미완 332건 = move 326 + grounded만 6. grounded 6건은 D안과 무관해 불변) |
+| V-3 sensor 72(센서 등급 켬) | 기준 기록에 `skipped: move`가 없는 실행은 불변, 있는 실행만 변경 허용 |
+| Chrono 기존 결과 | 다시 돌리지 않는다. S6 bundleC 18건은 역사 기록으로 둔다(재판정 필요 여부는 control이 따로 판단, 지금 판정 결론은 E-6 허용으로 이미 보수 쪽) |
+| unit 전체 | 통과 |
+
+## 416.5 결정 7(평지 Chrono 8건 지금 실행)과의 관계
+
+- 8건 모두 `run_S9.py level --pressure-grade normal --imu-grade ideal`이다. `level_sensor_setup`은 `wika_a10_leg_sensor_config("normal")`(행정 잡음 0.1 mm)이고 CHECK 영점 교정은 프리셋 그대로 켜진다. → **영점 교정 경로를 탄다.**
+- D안이면 영향은 "어떤 다리가 `skipped: move`가 된 실행"에만 있다.
+  - S9 Chrono 최근 9건은 36다리 모두 교정됐다(하네스 확률 10 %라면 36다리 모두 교정될 확률은 2 %이므로, Chrono는 하드 스톱 출발이 아니거나 확률이 훨씬 낮다).
+  - **그러니 지금 돌려도 된다.** 끝나면 `result.json`에서 `WARN_PRESSURE_ZERO_SKIPPED:*:move`를 찾아 있는 실행만 D안 구현 뒤 다시 돌린다.
+- A·B·C안을 택하면 8건 모두 수정 뒤 다시 돌려야 하므로 그때는 수정 뒤 실행을 권고한다.
+
+# 417. E3 토양 징후 변형(결정 6, 2026-10-29) — 정의·예측·비교 실행
+
+## 417.1 토양 징후 신호
+
+- 신호: $c_{min}(t_P)$ = `soil.clearance_at_plateau_start_m`.
+  - 제어기가 LOC 때 이미 계산하는 고원 시작 시각 크롤러 틈 추정(행정 평면, 첫 꼬리 표본의 모서리 틈 최소; c2.py `_confirm_liftoff` 6851행).
+  - U-S9-C7 모서리 보정 문턱(20 mm)이 쓰는 값과 같다. 센서만 쓰고, 연구 ① 하네스에서 E3 전 값이라 E3와 무관하다.
+- 저장값(연구 ① harness 훅 경사 사례, `s9_soil_slope_settle_rejudged.json` `soil_state.c_min_tP_mm`):
+
+| 분류 | $c_{min}(t_P)$ [mm] |
+|---|---|
+| 강체 경사 9 | −3.8 ~ 0.1 |
+| G1 경사 25 | −4.0 ~ 6.5 |
+| E3wide가 좋아지게 한 15건 | 7.7 ~ 63.0(J1 7.7~26.0, J2 12.1~44.5, S1 13.3·63.0) |
+| E3wide가 나빠지게 한 19건 중 강체·G1 4건 | −0.9 ~ 3.8 |
+| r79 L1·L2 G8 경사 | ≤ −1.0 |
+| r79 ref 강체 경사 | L1 ≤ 0.2, L2 ≤ 7.5(센서 잡음) |
+
+## 417.2 후보(`s9_slope_fix_candidates.py` 토큰, 2026-10-29 추가, 시험 `test_s9_slope_fix_candidates.py` 통과)
+
+| 토큰 | 조건(LOC 때, 모두 참이면 틈 목표 + 30 mm) | 매개변수 |
+|---|---|---|
+| `E3w` | E3wide 그대로(정착 기울기 > 1°) — `fix_slope_E3wide.json` E3 해시 재현 확인용 | `e3_require_soil_use=False` |
+| `E3c7` | E3w + $c_{min}(t_P)$ > 7 mm | `e3_min_clearance_at_P_m=0.007` |
+| `E3c10` | E3w + $c_{min}(t_P)$ > 10 mm | `e3_min_clearance_at_P_m=0.010` |
+
+(원형 E3 = 토양 모드 또는 모서리 보정 필요는 이미 있다: 강체·G1 해시 불변이지만 개선은 실패 → 통과 4·sl 통과 1뿐이다. `fix_slope_rejudged.json`.)
+
+## 417.3 저장 결과로 한 예측(정확)
+
+$c_{min}(t_P)$는 E3가 작동하기 전에 정해진다. 그래서 변형의 각 사례는 "문턱 이하 → current 기록, 초과 → E3wide 기록"과 같다(같은 하네스·같은 명령 열).
+
+| 후보 | 통과 | sl 통과 | 실패 | sl 실패 | 나빠짐 | 좋아짐 | 작동(토양별) |
+|---|---|---|---|---|---|---|---|
+| current | 96 | 26 | 52 | 3 | — | — | — |
+| E3wide | 88 | 46 | 41 | 2 | 19(강체 1·G1 3·J1 7·J2 5·S1 3) | 15 | G1 25·강체 9·J1 44·J2 43·S1 41 |
+| **E3c7** | **96** | **38** | **41** | **2** | **11**(J1 3·J2 5·S1 3; 강체·G1 0) | **15** | J1 31·J2 43·S1 41 |
+| E3c10 | 96 | 37 | 42 | 2 | 11(같음) | 14(`H1|J1|B|top|edge_nd`, 7.7 mm가 빠짐) | J1 27·J2 38·S1 41 |
+
+- 두 변형 모두 강체·G1의 나빠짐 4건과 J1 A 경사 4건을 없앤다. 남는 나빠짐 11건은 연약 지면에서 여유 30 mm의 대가다(통과 → sl 통과 10, `H3|S1|A|top|roll_pos@k0.875` sl 통과 → 실패 1).
+- **control 권고: E3c10.**
+  - 7 mm는 강체·G1 최대 6.5 mm와 0.5 mm밖에 떨어지지 않는다.
+  - r79 L2 ref 강체 경사가 센서 잡음으로 7.5 mm까지 올라가므로, 7 mm에서는 강체 경사에서 작동할 수 있다.
+  - 10 mm는 개선 1건만 잃는다.
+  - Chrono S9SL 저장값 $c_{min}(t_P)$(`c2_soil.clearance_at_P_m`): C-2 12.3, C-3 13.4, C-4 10.8 mm. 세 사례 모두 10 mm를 넘어 작동한다(C-3이 고치려는 사례). C-4는 10.8 mm로 문턱에 가깝다.
+
+## 417.4 비교 실행(메인 세션 배치)
+
+- 명령(프로젝트 루트, dynamics-dev, `MKL_THREADING_LAYER=TBB`, `OMP_NUM_THREADS=1`): `python -I 04_scripts/03_control/s9/s9_slope_fix_candidates.py run --suite slope --candidates current,E3w,E3c7,E3c10 --workers 10 --affinity 0x0FFC0000 --out 06_analysis/02_control/s9/rev81/fix_slope_E3c.json`. 훅은 기본 harness로, 연구 ① 기준과 같다.
+- 규모: 177 × 4 = 708실행. fix_slope 실측(1,593실행 3,807 s, 10 worker)으로 **약 28분**, E코어 10 worker.
+- 판정:
+  - `s9_settle_rejudge.py <out> --baseline 06_analysis/02_control/s9/rev80/s9_soil_slope_settle_rejudged.json`(records 모드)
+  - `compare`
+- 확인:
+  - (a) E3w 해시 177/177 = `fix_slope_E3wide.json` E3
+  - (b) E3c7·E3c10 판정 합계가 417.3 예측과 같음
+  - (c) 문턱 이하 사례의 해시 = current
+- 이어서 채택 변형으로 414.6 R1(g6·g8·p3b)을 돌린다. E3c10이면 g8은 저장 $c_{min}(t_P)$로 보아 해시 불변이 예상된다.
+
+## 417.6 비교 결과와 채택(결정 11, 2026-10-29)
+
+- 실행: `06_analysis/02_control/s9/rev81/fix_slope_E3c.json`(current·E3w·E3c7·E3c10 × 177 = 708실행, 1,771 s, E코어 10 worker). 재판정 `fix_slope_E3c_rejudged.json`(정착 v2).
+- 결과는 417.3 예측과 같다:
+
+| 후보 | 통과 / sl 통과 / 실패 / sl 실패 | 나빠짐(강체·G1) | 좋아짐 |
+|---|---|---|---|
+| current | 96 / 26 / 52 / 3 | — | — |
+| E3w | 88 / 46 / 41 / 2 | 19 (4) | 15 |
+| E3c7 | 96 / 38 / 41 / 2 | 11 (0) | 15 |
+| **E3c10** | **96 / 37 / 42 / 2** | **11 (0)** | **14** |
+
+- E3w 해시·판정 177/177이 저장된 E3wide(`rev80/fix_slope_E3wide.json`)와 같다. 실행 도중 스크립트 수정(LW 토큰 추가)의 영향은 없었다.
+- **채택: E3c10**(사용자 2026-10-29). 7 mm 문턱은 강체·G1 최대 6.5 mm와 r79 L2 ref 강체 경사 7.5 mm(센서 잡음)에 너무 가깝다. 414.3을 E3c10으로 확정했다.
+- 남는 나빠짐 11건(연약 지면 통과 → stroke-limited 통과 10, sl 통과 → 실패 1 `H3|S1|A|top|roll_pos@k0.875`)은 30 mm 여유의 대가로 받아들인다.
+
+## 417.5 414 구현 명세에 더할 것
+
+`SlopeClearanceMarginSettings`에 `min_clearance_at_P_m: float | None = None`(None = 조건 없음)을 더하고, R8 프리셋 값은 0.010으로 둔다(결정 11 E3c10, 414.3 반영 완료). 조건은 `soil.clearance_at_plateau_start_m is not None and > min_clearance_at_P_m`(엄격 부등호)이다. 단위 시험에 경계 9.9·10.0·10.1 mm를 더한다.
+
+# 418. 기록만: LOC 창의 재접근 다리(dynamics 5.41, 2026-10-29 제기, 채택은 사용자 결정)
+
+- 관찰(dynamics 5.41): S-1 LOC 평탄 창(10 mm, 상승 ≤ 2 kN)을 재접근 중인 다리의 하중 변화가 채울 수 있다. 재접근 다리가 하중을 잃었다가 다시 얻는 동안 합 하중이 평탄하게 보여 창이 확정된다.
+- 토양과 무관한 S-1의 약점이고, E3 변형(LOC 뒤 틈 목표)과는 별개다.
+- 검토안(미설계): (가) 창 꼬리 동안 재접근 중인 다리가 있으면 창을 비우고 다시 시작, (나) 그 다리를 합에서 빼고 평탄 판정.
+- 지금은 명세에 남기기만 한다. 설계·하네스 비교는 사용자 결정 뒤.
+- → 결정 10(2026-10-29)으로 설계·비교 착수: 419.
+
+# 419. 418 설계: S-1 평탄 창과 재접근 다리(결정 10, 2026-10-29)
+
+## 419.1 현행 규칙(c2.py `_update_liftoff_window` 6798~6823행, P-S9-2)
+
+- 매 LEVEL 주기, LOC 전에 다음을 한다.
+  - "평탄 주기"(직전 주기 출력에서 수축하는 다리 없음, 네 다리 평균 속도 ≥ 0.15 $v_{max}$)가 아니면 창을 비운다.
+  - 맞으면 표본(네 다리 평균 모터 행정, 네 다리 하중 합)을 창에 넣는다.
+- 평균 행정이 10 mm 지나간 꼬리에서 하중 합 1차 맞춤 상승이 ≤ 2 kN이고, 꼬리 평균 하중 ≥ 0.85 $W_{ref}$이면 LOC다.
+- 약점(dynamics 5.41): 재접근 중인 다리(`_state.active_reapproaches`, LOC 전 ×4 속도)는 틈을 닫느라 행정만 크게 늘고 힘은 거의 늘지 않는다.
+  - 다리 하나가 ×4로 움직이면 네 다리 평균 행정 속도가 (3 + 4)/4 = 1.75배가 되어 10 mm를 그만큼 빨리 채운다.
+  - 그래서 창이 실제 들어 올림 행정의 절반쯤에서 확정될 수 있다.
+  - 토양과 무관한 논리 성질이다.
+
+## 419.2 후보(`s9_slope_fix_candidates.py` 토큰, 2026-10-29 추가, 시험 31 통과)
+
+| 토큰 | 규칙(LOC 전, LEVEL 주기마다) | 사건 |
+|---|---|---|
+| `LWa` 창 재시작 | 재접근이 하나라도 활성이면 표본을 넣지 않고 창을 비운다. 재접근이 끝난 다음 주기부터 새 창 | `FIX_LW_RESTART:<legs>`(비어 있지 않은 창을 비울 때) |
+| `LWb` 재접근 다리 제외 | 활성 재접근 다리를 뺀 다리들로 창을 만든다. 평탄 주기 조건(수축 없음, 평균 속도 ≥ 0.15 $v_{max}$)과 평균 모터 행정은 남은 다리들로 계산하고, 하중 합은 네 다리 그대로($W$ 검사용)다. 활성 재접근 집합이 바뀌면 창을 비운다. 네 다리 모두 재접근이면 표본 없음 | `FIX_LW_SET:<legs>` |
+
+- 둘은 대안이라 함께 켤 수 없고(ValueError), E3 변형과는 조합할 수 있다(예 `E3c10+LWb`). 재접근이 없는 실행에서는 현행과 비트 동일하다(시험 `test_lw_off_keeps_the_project_window`, 코드 경로 동일).
+- 판단:
+  - `LWa`는 단순하지만, 재접근이 길면 LOC가 늦어져 P3-2(LOC − 이탈 ≤ 2.9 s)를 잃을 위험이 있다.
+  - `LWb`는 실제 들어 올리는 다리의 행정으로 10 mm를 재므로 의미가 맞지만, 다리 셋으로 평균한 행정이 몸체 들림과 덜 일치할 수 있다(평면 회전).
+
+## 419.3 영향받는 저장 사례(예측)
+
+근거: 저장 사건으로 "LOC 전에 재접근 시작이 있는 실행"과 "LOC 직전 3 s 안에 재접근이 활성인 실행"을 셌다. G6는 `events_head` 처음 40개 기준이다.
+
+| 집합 | 실행 | LOC 전 재접근 있음 | LOC 직전 3 s 활성 | 예측 |
+|---|---|---|---|---|
+| G6 116(`rev76/r76_g6_Pb.json`) | 116 | 22 | 22: `G1+S1@FL/FR` 8, `rigid+S1@FL/FR` 8, `G1+S1@RL/RR top` 4, `rigid+J2@FL/FR top Fs0` 2 | 이 22건만 명령이 바뀔 수 있다. S1 전방 16건 중 13건이 L1 거짓 LOC(r79). 개선 기대는 여기에 있다(판정 밖 토양 감도, dynamics 5.41.6) |
+| 연구 ① 177(`rev80/s9_soil_slope_settle_rejudged.json`) | 177 | 25 | 1(`H1|S1|A|top|roll_neg`) | 최대 25건 변화. 연구 ① E 결함 22건(398.2)은 다른 경로(Bekker $n\ll1$ 관입)라 LW로 고쳐지지 않는다 |
+| G8 516(`rev76/r76_g8_{ft,sw,fb}_Pb.json`) | 516 | 0 | 0 | **해시 불변 예상** |
+| V-3 rigid 135·soil 72·sensor 72·β 16(`07_results/S9/v3/`) | 295 | 0 | 0 | **해시 불변 예상** |
+| r79 L1 187 | 187 | 22(G6와 같은 사례) | 22 | 채택 뒤 G6 22건에 해당하는 r79 실행(L0 identity 중 `G1+S1@FR top Fs0` 포함)은 기준 해시를 다시 만든다 |
+| r8d1 8 | — | 저장 형식에 사건 없음 | — | 실행으로 확인 |
+
+## 419.4 비교 실행(E3 비교 708실행이 끝난 뒤, E코어 10 worker)
+
+| # | 명령(프로젝트 루트, dynamics-dev, `MKL_THREADING_LAYER=TBB`, `OMP_NUM_THREADS=1`) | 실행 | 예상 |
+|---|---|---|---|
+| LW-1 | `python -I 04_scripts/03_control/s9/s9_slope_fix_candidates.py run --suite g6 --candidates current,LWa,LWb --settle-hook p0 --workers 10 --affinity 0x0FFC0000 --out 06_analysis/02_control/s9/rev81/fix_g6_LW.json` | 348 | 약 25분(G6 약 40 s/실행) |
+| LW-2 | `... run --suite slope --candidates current,E3c10,E3c10+LWa,E3c10+LWb --workers 10 --affinity 0x0FFC0000 --out 06_analysis/02_control/s9/rev81/fix_slope_E3c10_LW.json`(E3 변형 결과에 따라 E3c10 자리를 채택 변형으로 바꿈) | 708 | 약 28분 |
+| LW-3(선택, 해시 불변 확인) | `... run --suite g8 --candidates current,LWa,LWb ... --out .../fix_g8_LW.json` | 1,548 | 약 60분. 해시 불변이 예측되므로 채택 후보만 414.6 R1에서 확인해도 된다 |
+| 판정 | `s9_settle_rejudge.py <LW-2 out> --baseline 06_analysis/02_control/s9/rev80/s9_soil_slope_settle_rejudged.json`; `... compare --out .../fix_LW_compare.json <LW-1> <LW-2>` | — | 2분 |
+
+인수 기준:
+- 재접근 없는 실행의 해시가 current와 같다(G6 94 + 연구 ① 152).
+- G6 22건에서 거짓 LOC(LOC 때 크롤러 ≥ 0.01 W)가 줄고, P3-2·G6 판정 실패가 늘지 않는다.
+- 연구 ①에서 E3 변형 대비 회귀가 0이다.
+
+## 419.5 사용자 결정 대기
+
+LWa / LWb / 채택 없음 — LW-1·LW-2 결과를 본 뒤.
+
+## 419.6 LW-1·LW-2 결과(2026-10-29, control 판정)
+
+코드 상태 확인(420.4 2-2):
+- LW-2 `current` 177 해시는 `rev81/fix_slope_E3c.json`의 `E3c10`과 177/177 같다. 즉 새 코드(프로젝트 E3c10 포함)로 돌았다.
+- LW-2 `E3c10` 래퍼 해시도 `current`와 177/177 같다(겹침 없음) → **LW-2 E3c10 계열 유효**.
+- LW-1 `current` 116 해시는 `rev76/r76_g6_Pb.json`과 116/116 같다.
+
+| 실행 | 후보 | 판정 | 해시 = current | 거짓 LOC 실행 | 창 비움 발생 실행 | 파일 |
+|---|---|---|---|---|---|---|
+| LW-2 연구 ① 177(정착 v2 재판정) | current(=E3c10) / E3c10 / +LWa / +LWb | 모두 96 / 37 / 42 / 2 | 177 / 177 / 177 | 21 → 21 | 0 / 26 / 26 | `rev81/fix_slope_E3c10_LW.json`, `_rejudged.json` |
+| LW-1 G6 116 | current / LWa / LWb | 통과 94·실패 22 모두 같음 | 95 / 95 | **13 → 0 / 0** | 22 / 22 | `rev81/fix_g6_LW.json` |
+
+- **LWa와 LWb는 293실행(G6 116 + 연구 ① 177) 모두 명령 해시가 같다.** 이 집합에서는 재접근 중에 남은 다리만으로 10 mm 창이 채워진 적이 없어 두 규칙이 같은 결과를 냈다.
+- 연구 ①: 26실행에서 창을 비웠지만 명령은 하나도 바뀌지 않았다(그 창은 어차피 평탄 확정 전에 끊김). E 결함 22건은 그대로다(419.3 예측대로 다른 경로).
+- G6에서 바뀐 21실행(예측 22 중 `G1+S1@FL bottom Fs0` 1건만 불변). G6 실패 22건은 모두 `G6-7_preloc`(LOC 전 재접근, 377의 FLAG급)이라 실행 판정은 바뀌지 않는다. 행 단위로는 다음과 같다.
+  - 좋아진 것:
+    - 거짓 LOC(LOC 때 크롤러 ≥ 0.01 W) 13 → 0.
+    - LOC 때 크롤러 하중 43.6~71.5 kN → 0.
+    - 이탈 뒤 최소 힘 증가: S1 하단 7건에서 +1.7~+8.8 kN(예 `G1+S1@FL bottom Fs4` 20.8 → 28.3 kN, `rigid+S1@FL bottom Fs4` 13.5 → 22.3 kN). 상단은 −4.0~+3.3 kN(`rigid+S1@FL top Fs4` 14.7 → 10.7 kN이 가장 낮아짐, 여전히 $F_{min}$ 9.4 kN 이상).
+    - READY 0.2~13.6 s 앞당김.
+  - 새로 실패한 행:
+    - `G6-2_loc`(LOC − 이탈 > 2.9 s) 6건: `rigid+J2@FL/FR top Fs0` 2건, `rigid+S1@FL/FR top Fs0·Fs4` 4건. LOC를 재접근 끝까지 미루므로 늦은 쪽(크롤러는 이미 떨어짐)의 위반이다.
+    - `G6-1_crawler` 4건: `rigid+S1@FL/FR top`. READY 창 크롤러 하중은 0이므로, LOC를 미루는 사이 이탈 뒤 크롤러가 다시 닿은 것으로 보인다. U-S9-G6d(지속 ≤ 0.5 s, LOC 전 종료, ≤ 0.15 W → FLAG) 분류를 하려면 지속시간·최대값이 필요한데, 래퍼 기록에는 그 정보가 없다.
+  - S1은 판정 밖 토양(p/q_ult ≈ 9.5, dynamics 5.41.6)이다. 판정 범위 안 경계 토양 사례는 `rigid+J2@FL/FR top Fs0` 2건(G6-2 위반)이다.
+- **control 권고: LWa 채택(LWb는 이 집합에서 동치이고 더 복잡함) + `G6-2`·P3-2의 "LOC 전 재접근 때문에 늦은 LOC"를 FLAG로 분류(LOC가 늦은 쪽은 거짓 LOC 위험이 없음), G6-1 4건은 U-S9-G6d 기준으로 재분류 확인 뒤 판단.**
+  - 근거: 거짓 LOC 13 → 0, 연구 ①·G8·V-3 무영향.
+  - 채택하지 않을 이유는 경계 토양 J2 2건의 LOC 지연뿐이다.
+  - 재분류 확인 방법: G6 하네스(`r72_g6_screen.py`)를 LWa 래퍼로 22건 다시 돌려 사건 시각을 저장한다. 약 3분이 걸리는 하네스 재실행이라 명령만 둔다: `run --suite g6 --candidates LWa --settle-hook p0 --filter S1@F,J2@F --workers 10 ...`. 이 래퍼 기록에는 재접촉 지속시간이 없으므로, 필요하면 r72 job의 재접촉 구간 기록을 python에 맡긴다.
+
+## 419.8 판정 규칙: 재접근으로 늦어진 LOC(결정 13, 2026-10-29)
+
+적용 행: Chrono P3-2(`run_S9.py` `p3b_checks`의 `P3-2_within`), 축소 하네스 G6-2(`r72_g6_screen.py` 관문 `G6-2_loc`), 연구 ① P3-2(`s9_soil_slope.py`).
+
+**"LOC − 이탈 ≤ $T_{lim}$"(2.9 s) 위반은 아래 다섯 조건이 모두 참이면 FLAG `P3-2_late_loc_reapproach`(G6는 `G6-2_late_loc_reapproach`), 하나라도 거짓이면 기존대로 실패다.**
+
+1. **창 재시작이 있었다.** 크롤러 이탈 확정 $t_{off}$부터 LOC까지 사이에 LWa 창 비움 사건이 1회 이상 있다. 프로젝트 구현은 `INFO_LOC_WINDOW_RESTART:<legs>`, 래퍼는 `FIX_LW_RESTART:<legs>`다.
+2. **지연이 재접근 때문이다.** 마지막 창 비움을 일으킨 재접근이 끝난 시각 $t_{re,end}$(그 다리의 `leg_reapproach_contact` 또는 `WARN_LEG_REAPPROACH_NO_CONTACT`)부터 LOC까지가 $T_{lim}$ 이하다. $t_{LOC} - \max(t_{off},\, t_{re,end}) \le T_{lim}$.
+3. **거짓 LOC가 아니다.** LOC 주기의 크롤러 참 수직력(주기 최대) < 0.01 W(P3-2의 하중 조항 그대로, 엄격).
+4. **하중 조건은 엄격하다.** 이탈 뒤 참 $F_{cyl}$ 최소 ≥ $F_{min}$(P3-3/G6-3 통과), 그리고 FAULT 0.
+5. **LOC가 첫 DONE보다 먼저다**(P3-2의 순서 조항, 엄격).
+
+- 이유: LWa는 LOC를 재접근이 끝날 때까지 미룬다. 늦어진 쪽에서는 크롤러가 이미 떨어져 있어 거짓 LOC(이 행이 막으려는 위험)가 생기지 않는다. 대신 그 사이의 S-3 보정·토양 모드 종료가 늦어지는데, 이는 조건 4로 하중 결과를 엄격히 본다.
+- 기록 필드: `t_off_s`, `t_reapproach_end_s`, `late_loc_reapproach_s` = $t_{LOC} - t_{off}$, 조건 1~5 각각의 참/거짓.
+- 구현:
+  - 판정기 cad: `run_S9.py` `p3b_checks`·`P3-2_loc` 블록.
+  - 하네스 판정 control·python: `r72_g6_screen.py` 관문, `s9_soil_slope.py` P3-2.
+  - 사건 이름은 프로젝트 구현(420.1 3번)의 사건으로 맞춘다.
+- G6-1(이탈 뒤 크롤러 재접촉)은 이 규칙과 별개이고 U-S9-G6d로 판정한다(결정 14 재실행으로 지속시간·최대값을 얻은 뒤).
+
+### 419.8.1 해석 확정(2026-10-29, cad `run_S9.py` `p32_late_loc_block`과 하네스 r72·`s9_soil_slope` 공통)
+
+- **$t_{off}$**: 그 실행의 기존 "LOC − 이탈" 행이 쓰는 이탈 시각을 그대로 쓴다.
+  - Chrono: `p3b.departure.t_departure_s`(크롤러 SCM 수직력 < 0.01 W가 0.1 s 이어진 구간의 시작).
+  - 하네스: `loc_delay_s`를 만든 $t_{off}$.
+  - 두 경로의 이탈 정의가 다르더라도 각 행 안에서는 일관된다.
+- **조건 1(수정)**: 이탈~LOC 구간 [$t_{off}$, $t_{LOC}$](양끝 포함)과 겹치는 재접근 구간이 1개 이상 있고, 그 재접근 중 어느 시점에(이탈 전이어도 됨) LWa 창 비움 사건이 1회 이상 있다.
+  - 재접근 구간은 사건 `leg_reapproach_start:<leg>`부터, 그 다리의 그 뒤 첫 `leg_reapproach_contact:<leg>` 또는 `WARN_LEG_REAPPROACH_NO_CONTACT:<leg>`까지다.
+  - 수정 이유: LWa는 비어 있지 않은 창을 비울 때만 사건을 남긴다. 그래서 이탈 전에 재접근이 시작돼 창을 한 번 비운 뒤에는, 재접근이 이탈 뒤까지 이어져도 사건이 더 나오지 않는다. "사건이 [$t_{off}$, $t_{LOC}$] 안에 있어야 함"으로 읽으면 바로 이 경우를 놓친다.
+  - 다리 목록도 사건 문자열이 아니라 재접근 시작·끝 사건에서 얻는다. 창이 빈 동안 새로 시작한 재접근은 사건 문자열에 적히지 않기 때문이다.
+- **$t_{re,end}$**: [$t_{off}$, $t_{LOC}$]와 겹치는 재접근 구간들의 끝 시각 중 가장 늦은 값.
+  - 끝 사건이 없는 구간이 하나라도 있으면 조건 2는 거짓이다(cad 해석과 같음).
+  - LWa가 켜져 있으면 LOC 때 재접근이 활성일 수 없으므로 $t_{re,end} \le t_{LOC}$다. 그렇지 않은 기록은 판정 오류로 보고한다.
+- **조건 3의 "LOC 주기"**: cad 해석 (1)을 확정한다. 판정 값은 ($t_{LOC}$ − 0.1 s, $t_{LOC}$]의 1 ms 표본과 $t_{LOC}$ 표본 중 최대 크롤러 참 수직력이다. 다음 주기 최대와 $t_{LOC}$ 순간값은 기록만 한다. 하네스(래퍼 `false_loc`)도 같은 주기(그 제어 주기의 1 ms 덩어리 최대)를 쓴다.
+- **조건 4의 FAULT**: cad 해석 (2)를 확정한다. 실행 전체(LOC 전후 모두)에서 `FAULT*` 사건이 하나라도 있거나 fault 상태(`fault`, `fault_reground`)에 들어가면 FAULT다. `WARN_*`(예 `WARN_LIFT_STROKE_LIMITED`)는 FAULT가 아니다.
+
+## 419.7 평지 Chrono와 LW
+
+- 저장된 Chrono S9 결과 41건 전부(P3b 24·재실행 4, G6·G6P 8, p3b_aug 2, S9SL 3)에서 LOC 전 `leg_reapproach_start`가 0건이다. 그러니 LW는 거기서 작동하지 않는다.
+- **p3b_aug S1_A·S1_B(균일 S1, 중단·하단)**: 같은 토양 P3b S1 A·B 상단 Chrono와 하네스 균일 토양(V-3 soil 72)에서 LOC 전 재접근이 0이다 → **지금 코드로 돌려도 된다.** 결과의 동치 확인은 420.4 조건에 "LOC 전 `leg_reapproach_start` 0"을 더해서 한다.
+- **G6P S1@FL(10:38 시작, 옛 코드)**: 같은 조건의 하네스 `G1+S1@FL top Fs4`가 LW로 바뀐 사례다(LOC 때 크롤러 71.5 kN → 0). LW를 채택하면 이 Chrono 결과는 최종 제어기 결과가 아니다 → LW 구현 뒤 다시 돌린다(약 1.9~2.5 h 단독). 이번 결과는 "LW 전 참조"로 쓴다.
+- G6P J1@RR: 하네스 `G1+J1@RR`은 LW 영향이 없다 → 420.4 동치 조건이 맞으면 유효하다.
+
+# 420. 통합 구현 순서와 인수 기준(414·416·417·419)
+
+## 420.1 구현(python-expert, `03_src`, R8 프리셋에서만 켬, 클래스 기본 = 옛 동작)
+
+| 순서 | 규칙 | 파일 | 설정 | 사건 | 시험 |
+|---|---|---|---|---|---|
+| 1 | 416 영점 교정 D안(결정 9, 진행 중) | `zero_calibration.py` | `return_timeout_tolerance_m` 0.0005 | `INFO_PRESSURE_ZERO_RETURN_TOL` | 416.3 6항목 |
+| 2 | P-S8-31 경사 틈 여유(414 + 417.5, 채택 E3 변형) | `c2.py` | `SlopeClearanceMarginSettings`(tilt 1°, margin 0.03 m, require_soil_use False, `min_clearance_at_P_m` 채택값) | `INFO_LOC_CLEARANCE_MARGIN` | 414.4 11항목 + 문턱 경계 |
+| 3 | P-S8-32 S-1 창 재접근 다리(419, 채택 시) | `c2.py` `_update_liftoff_window` | `LiftoffWindowReapproachSettings(mode: off / restart / exclude)` 제안 | `INFO_LOC_WINDOW_RESTART` / `INFO_LOC_WINDOW_SET` | 래퍼 시험 3개 이식 + 래퍼 해시 대조 1건 |
+
+- 2와 3은 같은 c2.py라 한 번에 구현한다.
+- 3번 행의 `exclude` 모드, `INFO_LOC_WINDOW_SET` 사건, "LWb는 래퍼 `_update_liftoff_window_on`과 같은 식" 조건은 **미채택·미구현**이다(결정 12: LWa = `restart`만 채택).
+- 3의 비트 동일 조건:
+  - `LWb`는 래퍼 `_update_liftoff_window_on`과 같은 식이어야 한다(평균 행정과 속도 조건은 남은 다리, 하중 합은 네 다리, 집합이 바뀌면 비움).
+  - 활성 재접근 집합은 c2 `_state.active_reapproaches`의 그 주기 값이다(창 갱신과 재접근 갱신의 호출 순서를 바꾸지 않는다).
+
+## 420.2 인수(구현 뒤 한 번에, E코어 10 + P코어 여유)
+
+인수 전 준비: 래퍼 기준을 만든다. 채택 조합(예 `E3c10+LWb`)으로 414.6 R1을 돌린다(g6 `--settle-hook p0`, g8, p3b, 약 80분; 419.4 LW-1·LW-2 결과를 재사용할 수 있으면 g8·p3b만).
+
+| # | 대상 | 기대 |
+|---|---|---|
+| I-1 | 연구 ① 177(harness 훅) | 구현 해시 = 래퍼 채택 조합 177/177 |
+| I-2 | G6 116(p0) | 구현 = 래퍼 채택 조합. 재접근·E3 미작동 실행(약 94)은 현 기준 `rev74/r74_g6_P30fz.json`과 같다 |
+| I-3 | G8 516 | 현 기준 해시 불변(E3c10 미작동·LOC 전 재접근 0) |
+| I-4 | V-3 rigid 135·soil 72·β 16·r8d1 | 해시 불변(이상 센서·재접근 0·E3 미작동). 예외가 있으면 래퍼가 예측한 사례만 |
+| I-5 | V-3 sensor 72 | 기준 기록에 영점 교정 `skipped: move`가 있는 실행만 변경 허용(416.4) |
+| I-6 | r79 L0 identity 20 | G6 재접근 사례(예 `G1+S1@FR top Fs0`)만 바뀌어도 된다. 나머지는 불변 |
+| I-7 | unit 전체 | 통과 |
+| I-8 | 판정 | G6·G8·V-3·연구 ①에서 새 FAULT·실패 0(연구 ①은 채택 조합의 래퍼 판정과 같음) |
+
+## 420.3 인수 뒤 실행
+
+1. r79 L1·L2 다시 돌림(영점 교정 + 규칙 반영, L1 187 + L2 935 = 1,122실행, 약 1.4 h).
+2. L3·L4 1,122실행(약 75분) + 선택 304실행(약 20분) → S-1~S-6 확정(S-5는 S1 전방 따로).
+3. 경사 Chrono S9SL C-1~C-4(최종 제어기, P코어 4병렬 약 4~5 h).
+4. 평지 Chrono 8건 중 영점 교정 `skipped: move`가 나온 실행만 다시 돌림.
+5. 이 단계들이 끝나면 판정·명세 기록 → 무결성 점검 → 커밋.
+
+## 420.2a 래퍼 기준 해시(R1) 갱신(결정 11·12 뒤, 2026-10-29)
+
+채택 조합 = 프로젝트 E3c10(작업 트리 c2.py, `current`) + 래퍼 `LWa`.
+
+| 집합 | 기준 해시 출처 | 비고 |
+|---|---|---|
+| 연구 ① 177 | **재사용**: `rev81/fix_slope_E3c10_LW.json`의 `E3c10+LWa`. `current`가 이미 E3c10이었고(419.6), `E3c10+LWa` = `current` 177/177 | 다시 돌릴 필요 없음 |
+| G6 116 | **재사용**: `rev81/fix_g6_LW.json`의 `LWa`. G6는 평지라 E3c10 비작동, CHECK 끔이라 D안 무관 → 코드 시점과 무관 | 다시 돌릴 필요 없음 |
+| G8 516 | **R1 실행 필요**: `current,LWa` | 예측: 둘 다 rev76 기준(`r76_g8_{ft,sw,fb}_Pb.json`)과 같음(E3c10 비작동 $c_{min}(t_P)$ ≤ −1 mm, LOC 전 재접근 0) |
+| p3b 207(균일 토양 72 + 강체 135) | **R1 실행 필요**: `current,LWa`, `--settle-hook p0` | 예측: V-3 기준(`07_results/S9/v3/soil.json`·`rigid.json`)과 같음 |
+
+R1 명령은 P코어 8 worker, 마스크 0x5555, 12:30~13:50 창에 돌린다. 프로젝트 루트에서 dynamics-dev, `MKL_THREADING_LAYER=TBB`, `OMP_NUM_THREADS=1`.
+- `python -I 04_scripts/03_control/s9/s9_slope_fix_candidates.py run --suite g8 --candidates current,LWa --settle-hook p0 --workers 8 --affinity 0x5555 --out 06_analysis/02_control/s9/rev81/R1_g8_E3c10_LWa.json`: 1,032실행, 약 28분(P코어 약 13 s/실행).
+- `python -I 04_scripts/03_control/s9/s9_slope_fix_candidates.py run --suite p3b --candidates current,LWa --settle-hook p0 --workers 8 --affinity 0x5555 --out 06_analysis/02_control/s9/rev81/R1_p3b_E3c10_LWa.json`: 414실행, 약 11분.
+- 합계 약 40분이다. 차례로 돌려도 13:50 전에 끝난다.
+
+코드 시점: Pool은 시작할 때 worker를 한 번 띄우고, 그때 작업 트리의 `03_src`를 import한 상태로 고정된다(maxtasksperchild 없음). G8·p3b에서는 E3c10과 LW가 둘 다 작동하지 않는다고 예측하므로, 결과는 c2.py에 python의 LWa가 이미 들어갔는지와 무관해야 한다. 그러니 지금 띄워도 된다. 조건은 다음과 같다.
+1. 시작 직전에 `python -I -c "import sys; sys.path.insert(0,'03_src'); import outrigger_sim.control.c2"`가 통과해야 한다(편집 중간 상태 방지). 그리고 `Get-FileHash 03_src\outrigger_sim\control\c2.py, 03_src\outrigger_sim\control\zero_calibration.py`를 실행 로그에 남긴다.
+2. 끝나면 `current`·`LWa` 해시를 위 저장 기준과 비교한다(control). 같으면 R1 끝. 다르면 예측이 틀렸거나(그 사례를 보고) 시작 시점 c2.py에 non-LW 경로를 바꾼 결함이 있다는 뜻이다. 후자이면 python에 되돌려 보낸다. 어느 쪽이든 조기 회귀 경보로 쓴다.
+
+### 420.2b R1 G8 결과 = 인수 I-3 판정(2026-10-29, control)
+
+- 실행: `06_analysis/02_control/s9/rev81/R1_g8_E3c10_LWa.json`(13:19~13:52, P코어 8, 1,032실행, 오류 0).
+- 코드: `rev81/R1_code_hash_20261029_131920.txt`. c2.py SHA-256 `25C95EDF…8605`, zero_calibration.py `B63A7A47…FFB1`. 래퍼 `current`가 이미 최종 코드(D안 + E3c10 + LWa)였다.
+- **`current`·`LWa` 명령 해시 모두 rev76 기준(`rev76/r76_g8_{ft,sw,fb}_Pb.json`)과 516/516 같다**(키 대응: 기준 `g8|<inner>|Pb` ↔ 기록 `<inner>|proj`, 미대응 0).
+- `current` = `LWa` 516/516. 판정은 통과 508·실패 8로 rev76과 같다.
+- 결론: 예측(E3c10 비작동, LOC 전 재접근 0)대로이고 비-LW 경로 결함은 없다. **I-3 통과**, 차이 사례 0.
+
+**R1 p3b**(2026-10-29, control):
+- 실행: `rev81/R1_p3b_E3c10_LWa.json`(14:05:32 종료, 799 s, P코어 8, 414실행, 오류 0, 같은 코드 해시 파일).
+- **`current`·`LWa` 명령 해시가 V-3 기준과 모두 같다**: 균일 토양 72/72(`07_results/S9/v3/soil.json`), 강체 135/135(`rigid.json`). 키 대응은 기준 `loc|<inner>` ↔ 기록 `base|<inner>`, 미대응 0.
+- `current` = `LWa` 207/207, 판정 207/207 통과.
+- 결론: 예측대로 차이 사례 0. 이 결과로 V-3 rigid·soil 몫의 I-4 기준이 확인됐다. 최종 판정은 `impl_v3_*`와 함께 한다.
+
+**인수 I-1·I-2**(2026-10-29, control; 구현 코드 = R1과 같은 해시 파일의 최종 코드, 래퍼 `current`만 실행):
+
+| # | 실행 | 기준 | 명령 해시 | 판정 |
+|---|---|---|---|---|
+| I-1 | `rev81/impl_slope.json`(177, 475 s) → 정착 v2 재판정 `impl_slope_rejudged.json` | `rev81/fix_slope_E3c10_LW.json` `E3c10+LWa`(재판정 `_rejudged.json`) | **177/177 같음** | 96 / 37 / 42 / 2로 래퍼와 같음 → **통과** |
+| I-2 | `rev81/impl_g6.json`(116, 371 s, p0 훅) | `rev81/fix_g6_LW.json` `LWa`. 불변분은 `rev76/r76_g6_Pb.json` | **116/116 = LWa**. rev76과 같은 것 95, 다른 것 21(419.6에서 LWa로 바뀐 21건과 같음) | 통과 94 / 실패 22(모두 원래 있던 `G6-7_preloc`, 래퍼 current와 같음) → **통과** |
+
+- I-2의 늦은 LOC는 새 판정기 기준 **FLAG `G6-2_late_loc_reapproach` 6건**이다(`rigid+J2@FL/FR top Fs0`, `rigid+S1@FL/FR top Fs0·Fs4`). 다섯 조건 모두 참이다. 예 `rigid+J2@FL top Fs0`: LOC − 이탈 3.3 s > 2.9 s, LOC − 재접근 끝 1.3 s, LOC 주기 크롤러 0 N, 창 비움 2회. G6-2 실패 0.
+- **`G6-1_crawler` 4건 → U-S9-G6d FLAG로 확정**(결정 14, 2026-10-29).
+  - 자료: python `rev81/fix_g6_LW_recontact.json`(LWa 22건, `metrics.crawler_recontact`, `run_S9.py` `recontact_events`와 같은 정의). control이 기록을 다시 읽어 확인했다.
+
+    | 사례 | 재접촉 시작 [s] | 지속 [s] | 최대 [W] | LOC [s] | 분류 |
+    |---|---|---|---|---|---|
+    | `rigid+S1@FL top Fs0` | 24.924 | 0.362 | 0.0267(10.2 kN) | 28.3 | transient_flag |
+    | `rigid+S1@FL top Fs4` | 24.580 | 0.155 | 0.0144(5.5 kN) | 27.8 | transient_flag |
+    | `rigid+S1@FR top Fs0` | 25.308 | 0.028 | 0.0102(3.9 kN) | 28.5 | transient_flag |
+    | `rigid+S1@FR top Fs4` | 24.353 | 0.067 | 0.0108(4.1 kN) | 27.5 | transient_flag |
+
+  - 4건 모두 1회이고, 지속 ≤ 0.5 s, LOC 전에 끝나며, 최대 ≤ 0.15 W다. 그래서 U-S9-G6d (가) FLAG `P3-1_transient_recontact`이고 G6-1 실패가 아니다.
+  - 같은 파일의 LWa 22건 중 G1 기반 S1 4건(`G1+S1@FL bottom Fs0·Fs4`, `G1+S1@FR top Fs4`, `G1+S1@FR bottom Fs0`; 지속 0.077~0.479 s, 최대 0.0102~0.0165 W)도 같은 FLAG다. r72 관문은 이 4건을 이미 통과로 보고 있었다. LOC 뒤 재접촉은 0건이다.
+  - 원인: LWa가 LOC를 재접근 끝까지 미루는 동안, S1 전방 패드 관입으로 데크가 돌아 크롤러 앞모서리가 잠깐 닿았다. U-S9-G6c·G6d와 같은 크롤러 하중 전이 구간이다.
+  - **결과: I-2 실패 행 0**(G6-1 FLAG 4, G6-2 FLAG 6). 실행 판정 22건은 원래 있던 `G6-7_preloc`(377 FLAG 강등 규칙 적용 전 래퍼 판정)이다.
+  - 구현 범위(python에 넘김, 아래 참조): `r72_g6_screen.py`의 `G6-1_crawler` 관문을 "이탈 확정 뒤 재접촉 0"에서 `run_S9.py` `recontact_events`와 같은 U-S9-G6d 분류로 바꾼다. 분류는 `transient_flag`면 FLAG, `strict_fail`이면 실패다. `s9_slope_fix_candidates.py` g6 기록도 같은 분류를 쓴다. 이미 저장된 판정은 바뀌지 않는다(재판정만).
+- 연구 ① 재판정 기록에는 `late_loc_reapproach` FLAG가 0건이다(LWa 창 비움 26실행이 모두 LOC 시각을 바꾸지 않음).
+
+**인수 I-4~I-6·I-8과 최종 결론**(2026-10-29, control; E코어 14:05~14:43, 최종 코드):
+
+| # | 대상 | 결과 | 판정 |
+|---|---|---|---|
+| I-4 | V-3 rigid·soil·β(`s9_project_check.py compare`, 기준 `07_results/S9/v3/<set>.json`) | 명령 해시 rigid 270/270, soil 144/144, β 16/16 같음. 사건 차이 0, LOC 기록 차이 0(비교기 집계 그대로) | 통과 |
+| I-5 | V-3 sensor 72 | 72/72 같음. 기준 기록에 영점 교정 `skipped: move`가 없어서 D안도 바꾸지 않음(416.4 기대와 같음) | 통과 |
+| I-6 | r79 L0 identity 20(`s8/rev79/r79_L0_identity20_final.json`, `r79_sensor_judge.py identity`) | 17/20이 rev75 기준(`rev76/r76_g6_Pb.json`·`r76_g8_*_Pb.json`)과 같고 판정 같음 20/20. 다른 3건 `G1+S1@FR top Fs0`, `G1+S1@RR top Fs4`, `rigid+S1@FL bottom Fs4`는 모두 419.3의 G6 LOC 전 재접근 22건에 들어 있다. G6 13건 전부의 명령 해시가 래퍼 `fix_g6_LW.json` `LWa`와 같다 | 통과(바뀐 것은 LWa 예측 사례뿐) |
+| I-8 | I-1~I-6 출력 전체 | 새 FAULT 0, 새 실패 0. 판정은 모두 기준 또는 채택 래퍼와 같다. 늦은 LOC는 FLAG(G6-2 6건), G6-1 재접촉은 FLAG(4건). 연구 ①의 실패 42·sl 실패 2는 채택 래퍼 판정(417.6)과 같은 기존 한계(행정 예산·S1 지지력) | 통과 |
+| I-7 | unit 전체 | python 보고(2026-10-29): `05_tests/unit` 전체 2,979 통과·7 skip·실패 0(Chrono-dev, `-m "not slow"`, `test_s9_settle_hook.py`는 dynamics-dev에서 10/10). 실행 중 바뀐 판정 파일 관련 시험 6파일 115개 재실행 통과, 이후 G6-1 관문 변경분 4파일 93개 통과. slow 시험(p31·p32 래퍼 해시)은 앞 단계 통과 | **통과** |
+
+- G6-1 구현 반영(python, 2026-10-29): r72 `G6-1_crawler` = U-S9-G6d (가) 분류(`late_loc_rule.crawler_gate`, `run_S9.py` `recontact_events` 재사용). 래퍼 g6 기록도 같다. `rev81/impl_g6.json` 재판정에서 G6-1 실패 4 → 0(transient_flag 4, strict 0, 역전 0; 출처 `rev81/impl_g6_rejudged_g6d.json`, 생성 `04_scripts/03_control/s9/g6_rejudge_g6d.py`; transient_flag 기록 8건 — 실패였던 rigid+S1 4건 + 원래 통과 G1+S1 4건에 FLAG만 추가, 교차 확인 `fix_g6_LW_recontact.json` 22/22 일치). 단건 6건 해시 6/6 불변.
+- **연구 ① P3-1 일관화(control 판단, 2026-10-29)**: U-S9-G6d(393)는 P3-1 행 자체의 정의다("크롤러 이탈 판정 뒤 LOC 전에 끝나는 짧은 과도 재접촉은 FLAG, LOC 뒤는 엄격"). G6 전용이 아니다. 그러니 `s9_soil_slope.py`의 P3-1(옛 규칙: 이탈 뒤 재접촉 0)을 같은 `crawler_gate`로 맞추는 것은 **기존 결정의 적용이고 새 설계 결정이 아니다**.
+  - 조치: python에 넘긴다.
+  - 재판정: 저장 기록에 재접촉 구간(시작·지속·최대)이 있으면 저장 기록으로 재판정한다. 없으면 177건을 최종 코드로 다시 돌린다(E코어 10 worker 약 10분, 명령 해시는 I-1과 같아야 함).
+  - I-8 영향: 이 변경은 P3-1 실패를 FLAG로 완화하는 방향뿐이라 새 실패를 만들지 않는다. 그래서 I-8 결론은 바뀌지 않는다. 연구 ①의 P3-1 실패 수(현행 45)가 줄어든 결과는 재판정 뒤 417.6 표 아래에 덧붙인다.
+
+**최종 결론: 인수 I-1~I-8 통과**(I-7은 위 전체 unit 결과로 조건 닫음). 구현(416 D안 + P-S8-31 E3c10 + P-S8-32 LWa)을 최종 제어기로 인수한다. 판정 규칙 419.8(늦은 LOC FLAG)과 U-S9-G6d(G6-1)를 적용했다.
+
+## 420.5 최종 Chrono 5건(인수·커밋 뒤, 최종 코드)
+
+Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run …`. 배치는 cpu-scheduler-expert에게 받는다.
+
+| 사례 | 묶음·인자 | 추정 [s](4병렬 `est_s` / 단독 실측) | 판정 기준 원본 | 하네스 예측(최종 코드) |
+|---|---|---|---|---|
+| `S9SL_C1_G1_B_top_Fs4_r0_p3p2` | `run S9SL --only S9SL_C1_G1_B_top_Fs4_r0_p3p2` | 8,600 / — | P3-1~P3-8(284, 개정 60, 377 강등), P3-1 U-S9-G6d(393), P3-2 늦은 LOC FLAG(419.8), RA-1~RA-6(398.1), SL-2 기록 | H4 G1 B nose_down 통과(G1이라 E3c10 비작동) |
+| `S9SL_C2_J1_A_top_Fs4_r4p4_p0` | 같은 묶음 `--only S9SL_C2_…` | 14,600 / 10,157 | 위와 같음(RA 제외) + 400 표의 이전 결과(P3-7 실패)와 비교 | H1 J1 A roll_pos 통과($c_{min}(t_P)$ 6.4 mm라 E3c10 비작동). 이전 Chrono는 P3-7만 실패 |
+| `S9SL_C3_J1_B_top_Fs4_r3p3_p0` | 같은 묶음 | 14,600 / 8,238 | 위와 같음 | H3 J1 B roll_pos@k0.75 실패 → **통과**(E3c10 작동, $c_{min}(t_P)$ 12.8 mm, 417.3). Chrono 저장값 13.4 mm로 작동 예상. 이전 Chrono는 P3-1·P3-5 실패 |
+| `S9SL_C4_J1_A_top_Fs4_r0_p3p2` | 같은 묶음 | 18,100 / 12,552 | 위와 같음 + RA-1~RA-6 | H4 J1 A nose_down 이전 `FAULT_LIFT_STROKE_LIMIT`. E3c10 영향은 실행으로 확인(Chrono 저장 $c_{min}(t_P)$ 10.8 mm, 문턱 근처) |
+| `G6_G1_B_top_Fs4_spS1FL` | `run G6P --only G6_G1_B_top_Fs4_spS1FL` | 6,600 / (10-29 옛 코드 실행 기록 참조) | G6-1~G6-7(390, `r76_g6_chrono_judge.py`), G6-1 U-S9-G6d, G6-2 늦은 LOC FLAG(419.8). **S1은 Bekker 유효 범위 밖의 모델 한계 스트레스 사례(`S1_MODEL_LIMIT_NOTE`, dynamics 5.41.6)라 판정 수치는 모델 안 감도로 보고한다** | 하네스 `G1+S1@FL top Fs4` LWa: 거짓 LOC 해소(LOC 때 크롤러 71.5 kN → 0), READY 63.2 s, 이탈 뒤 최소 21.4 kN |
+
+- 묶음 명령 예(P코어 4병렬 + E 1):
+  - `s9_batch.py run S9SL --parallel 4 --order lpt`(4건, C-1~C-4 전부)
+  - `s9_batch.py run G6P --parallel 1 --only G6_G1_B_top_Fs4_spS1FL`(E 풀이면 `--parallel 0 --parallel-e 1 --e-cases G6_G1_B_top_Fs4_spS1FL`)
+- 판정:
+  - S9SL은 `run_S9.py` P3b 기록(`p3b.checks`, `P3-2_verdict`, `recontact_events`)을 control이 정식 판정 파일로 만든다(경로 제안 `06_analysis/02_control/s9/rev82/`).
+  - G6P S1@FL은 `r76_g6_chrono_judge.py`로 판정한다.
+- 판정 전 확인: 420.4 동치 조건과 함께 사건 `INFO_LOC_CLEARANCE_MARGIN`(C-2·C-3·C-4 예상, C-1 G1은 0 예상)과 `INFO_LOC_WINDOW_RESTART` 발생을 기록한다.
+
+## 420.4 코드가 섞인 실행의 처리(2026-10-29)
+
+배경: python 구현(416 D안 + P-S8-31 E3c10, 커밋 전)이 10:40 뒤 작업 트리의 `03_src`를 바꿨다. 그래서 그 뒤에 시작한 프로세스는 새 코드를 쓴다.
+- 래퍼 `s9_slope_fix_candidates.py`의 `current`는 이제 E3c10을 포함한다(프리셋 = 프로젝트 c2).
+- Chrono 배치는 사례마다 새 프로세스를 띄운다. 그래서 10:38에 시작한 4건은 옛 코드, 13:50쯤 시작할 S1_A 2건과 S1_B 2건은 새 코드다.
+
+**Chrono 평지 8건 판정 규칙**(동치 조건으로 판정하고, 다시 돌리지 않는다):
+1. 결과마다 코드 상태를 기록한다. 판정 파일에 `code_state`를 남긴다.
+   - `pre_impl`: 10:38 시작 4건. 작업 트리 `c2.py`·`zero_calibration.py`가 f062051 상태.
+   - `impl_uncommitted`: 이후. 가능하면 두 파일의 SHA-256을 기록한다(cad 실행기 메타에 없으면 시작 시각과 파일 수정 시각으로 표시).
+2. E3c10 동치: 평지라 정착 기울기 ≤ 0.3° < 1°이므로 E3c10은 작동하지 않는다.
+   - 새 코드 실행: `INFO_LOC_CLEARANCE_MARGIN` 사건이 0이어야 한다.
+   - 옛 코드 실행은 해당 없음.
+   - 사건이 있으면 그 실행은 동치가 아니므로 보고한다.
+3. D안 동치:
+   - 옛 코드 실행: 네 다리 모두 `calibrated`이면 새 코드와 비트 동일 경로다(416.2 D). `WARN_PRESSURE_ZERO_SKIPPED:*:move`가 있으면 그 실행만 새 코드로 다시 돌린다.
+   - 새 코드 실행: `INFO_PRESSURE_ZERO_RETURN_TOL`이 있으면 그것이 최종 동작이므로 그대로 쓴다.
+4. 2·3을 만족하면 8건 모두 "최종 제어기 결과"로 판정·논문에 쓴다. 판정 표에 `code_state`와 동치 근거를 붙인다.
+- 같은 이유로, 아직 돌지 않은 Chrono(S9SL C-1~C-4, 재실행분)는 **커밋된 최종 코드**로 돌린다. 시작 전에 python 구현을 인수(420.2)하고 커밋한다. 그렇지 않으면 작업 트리 상태를 실행 메타에 남긴다.
+
+**축소 하네스 LW-1·LW-2**: 저장된 `current` 명령 해시로 어느 코드였는지 판단한다.
+- LW-2(연구 ①): `current` 177 해시가 `rev81/fix_slope_E3c.json`의 `E3c10`과 같으면 새 코드, `current`와 같으면 옛 코드다.
+  - 새 코드면 `E3c10` 후보는 프로젝트 E3c10 위에 래퍼 E3c10을 한 번 더 켠 것이다. 래퍼는 config 틈 목표를 0.08 m로 바꾸고, 구현은 "config 목표 + 0.03 m"를 유효 목표로 쓴다면 둘이 겹쳐 0.11 m가 될 수 있다.
+  - 그러니 `E3c10`·`E3c10+LWx` 기록은 **해시로 확인하기 전에는 쓰지 않는다**:
+    - `E3c10` 해시 = `current` 해시이면 겹침이 없다(구현이 config를 바꾸지 않고 래퍼 쪽 조건이 이미 적용됨 등).
+    - 다르면 LW-2의 E3c10 계열은 무효다. 비교는 `current`(= E3c10) 대 `LWx` 단독 토큰으로 다시 한다.
+- LW-1(G6, 평지): E3c10 비작동이고 하네스는 CHECK를 끄므로 D안의 영향도 없다. 따라서 `current` 해시는 두 코드에서 같아야 하고, `rev74/r74_g6_P30fz.json`·`rev76/r76_g6_Pb.json` 기준과 같으면 확인 끝이다.
+- 판정 때 이 확인 결과를 먼저 적는다.

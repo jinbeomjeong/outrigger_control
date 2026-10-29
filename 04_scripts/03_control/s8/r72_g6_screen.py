@@ -14,8 +14,12 @@ Case soil string: "<base>" (uniform) or "<base>+<weak>@<leg>". Pad type B (dwg_r
 Grid: weak J1 / J2 / S1 under FL / FR / RL / RR, base G1, auger top / bottom, F_s 0 / 4 kN (front value, rear 0.833 x)
   = 48; refs: uniform G1, J1, J2, S1 x top / bottom x F_s 0 / 4 = 16. Total 64.
 Judgement rows per run (spec 284 P3 rows, rev. 60 corrections, harness form):
-  G6-1 (P3-1) crawler load 0 from READY to the run end (READY + 10 s), no crawler re-contact after the first lift-off
-  G6-2 (P3-2) LOC before the first DONE and t_LOC - t_off <= 2.9 s (t_off = first crawler-free control period)
+  G6-1 (P3-1) crawler load 0 from READY to the run end (READY + 10 s) and (spec 420.2b, U-S9-G6d (가)) no
+       ``strict_fail`` recontact after the departure confirmation (``run_S9.recontact_events`` on the 1 ms crawler
+       force); a ``transient_flag`` recontact is the FLAG ``P3-1_transient_recontact`` (record ``crawler_recontact``)
+  G6-2 (P3-2) LOC before the first DONE and t_LOC - t_off <= 2.9 s (t_off = first crawler-free control period);
+       spec 419.8: a delay from the LWa window restart is a FLAG (``G6-2_late_loc_reapproach``, five conditions of
+       ``s9/late_loc_rule.py``; record ``late_loc_reapproach``)
   G6-3 (P3-3) min true F_cyl after the crawler lift-off >= F_min (record: >= F_min + 5 kN)
   G6-4 (P3-4) final attitude |roll|, |pitch| <= 0.2 deg (run end = READY + 10 s; creep state recorded)
   G6-5 (P3-5) rut clearance (crawler nodes in the rut at the settle) at READY and at the end >= 25 mm; motor stroke
@@ -33,6 +37,9 @@ Env: R72_FILTER (substrings), R72_AFFINITY (hex mask on the parent),
   R72_SET = main | ref | all (default all; G1 base, 64) | rigid (48) | rigidref (4) | rigid_all (52),
   R72_PATH = per_leg (default) | s9 (original s9 path, uniform only) | per_leg_force (mixed kernel also for uniform
   rigid: identity check).
+  S9_SETTLE_HOOK = p0 (default, results up to rev. 79) | harness (dynamics hook_harness row of the BASE soil:
+  floor tilt and pad heights; S9_SETTLE_TABLE overrides the table path). Rigid-base (MixedRigidPads) cases are
+  unchanged by the hook (rigid floor, h = 0). The hook and the settle snapshot are recorded per result.
 Rigid base (user decision 2026-10-27, ``MixedRigidPads``): soil string "rigid+<weak>@<leg>"; the three rigid legs keep
   the harness rigid pad spring and floor offset 0 every chunk, the weak leg is one soil element on the flat floor
   (surface at the floor level), crawler on the rigid floor.
@@ -56,6 +63,7 @@ for _p in (ROOT / "04_scripts" / "03_control" / "s9", ROOT / "04_scripts" / "03_
 import numba as nb  # noqa: E402
 import numpy as np  # noqa: E402
 
+import late_loc_rule  # noqa: E402
 import s9_soil_closed_loop as sl  # noqa: E402
 
 LEGS = sl.LEGS
@@ -66,6 +74,9 @@ FS_KN = (0.0, 4.0)
 STROKE_OK_MM = 684.8
 LOC_DELAY_MAX_S = 2.9
 RUT_MIN_MM = 25.0
+COUNTED_INFO_EVENTS = ("INFO_TOUCH_DIP_HELD", "INFO_LIFT_PAUSED", "INFO_CLEARANCE_BIAS", "INFO_LOC_CLEARANCE_ANCHOR",
+                       "INFO_TWIST_UNSETTLED")
+"""Events counted per result (events_head keeps only the first 40)."""
 _CAP = {}
 
 
@@ -98,8 +109,8 @@ def soil_chunk_per_leg(pen, z, sp, sy, area, coef, n, K, R, ks, h, force):
 class SoilPadsPerLeg(sl.SoilPads):
     """Geometry (h_i, crawler tilt) of the base set; Bekker constants per pad."""
 
-    def __init__(self, base, leg_keys, pad_type, pad_xy, ks, k_scale=1.0):
-        super().__init__(base, pad_type, pad_xy, ks, k_scale)
+    def __init__(self, base, leg_keys, pad_type, pad_xy, ks, k_scale=1.0, settle_row=None):
+        super().__init__(base, pad_type, pad_xy, ks, k_scale, settle_row=settle_row)
         legs = next(v for v in sl.PAD_VARIANTS.values() if v["label"] == pad_type)["legs"]
         b = np.array([legs[nm]["bekker_b_m"] for nm in LEGS], float)
         self.leg_keys = tuple(leg_keys)
@@ -186,10 +197,13 @@ def parse_soil(soil):
     return base, keys
 
 
-def make_plant_per_leg(cl, level, soil, pad_type, fs_kN, beta=1.0e9, soil_kscale=1.0, slope=(0.0, 0.0)):
+def make_plant_per_leg(cl, level, soil, pad_type, fs_kN, beta=1.0e9, soil_kscale=1.0, slope=(0.0, 0.0),
+                       **settle_options):
+    """s9 ``make_plant`` of the base soil plus the per-pad soil; ``settle_options`` (settle_hook, settle_table,
+    settle_row) go to the s9 factory, the per-pad pads keep its settle row (the weak patch is under the pad only)."""
     import dyn_model as dm
     base, keys = parse_soil(soil)
-    plant = _ORIG_MAKE_PLANT(cl, level, base, pad_type, fs_kN, beta, soil_kscale, slope)
+    plant = _ORIG_MAKE_PLANT(cl, level, base, pad_type, fs_kN, beta, soil_kscale, slope, **settle_options)
     path = os.environ.get("R72_PATH", "per_leg")
     if base == "rigid" and (any(k != "rigid" for k in keys) or path == "per_leg_force"):
         # mixed kernel; "per_leg_force" builds it for uniform rigid too (identity check against the s9 rigid path)
@@ -202,7 +216,8 @@ def make_plant_per_leg(cl, level, soil, pad_type, fs_kN, beta=1.0e9, soil_kscale
         plant.goff[:] = 0.0
     elif base != "rigid" and path in ("per_leg", "per_leg_force"):
         pad_xy = dm.geometry_from_params(dm.load_params()).pad_xy
-        plant.soil = SoilPadsPerLeg(base, keys, pad_type, pad_xy, plant.ks.copy(), soil_kscale)
+        plant.soil = SoilPadsPerLeg(base, keys, pad_type, pad_xy, plant.ks.copy(), soil_kscale,
+                                    settle_row=plant.soil.settle_row)
         plant.goff[:] = -plant.soil.h
     _CAP["plant"] = plant
     return plant
@@ -238,13 +253,28 @@ def _install():
     sl.make_plant = make_plant_per_leg
     sl.make_controller = make_controller_preset
     sl.control_period = control_period_logged
+    late_loc_rule.install_crawler_recorder(sl._imports()[0], lambda: _CAP.get("crawler_series"))
 
 
 # --------------------------------------------------------------------------------------------- one case
+def _late_loc_record(ctrl, plant, t_off, t_loc, t_done, min_off_kN, f_min_kN, out) -> dict:
+    """Spec 419.8 / 419.8.1 record of the run (G6-2 FLAG ``G6-2_late_loc_reapproach``): the
+    cad ``run_S9.p32_late_loc_block`` on the 1 ms crawler force, t_off of ``loc_delay_s``."""
+    events = [(float(e.t_s), e.name) for e in ctrl.events]
+    phases = [tuple(entry) for entry in out.get("phase_path") or []]
+    if out.get("final_phase") is not None:  # the stored path is cut at 60 entries
+        phases.append((float(plant.t) if plant is not None else math.inf, out["final_phase"]))
+    weight_N = None if plant is None else float(plant.m * plant.g)
+    return late_loc_rule.late_loc_reapproach(
+        events, phases, _CAP.get("crawler_series") or [], weight_N, t_off_s=t_off, t_loc_s=t_loc,
+        t_done_s=t_done, min_force_after_off_kN=min_off_kN, f_min_kN=f_min_kN)
+
+
 def job(key):
     """key = '<set>|<soil string>|<level>|Fs<f>'."""
     _install()
     _CAP.clear()
+    _CAP["crawler_series"] = []  # 1 ms true crawler force (spec 419.8 condition 3, record only)
     tag, soil, level, fs = key.split("|")
     case = {"id": key, "soil": soil, "pad": "B", "level": level, "fs_kN": float(fs[2:]), "variant": {}}
     try:
@@ -278,8 +308,13 @@ def job(key):
         clear_est_end = float(ctrl._clearance_estimate_m(np.asarray(plant.x, float))) * 1e3
     att_end = out.get("att_end_deg") or [math.nan, math.nan]
     min_off = out.get("min_true_Fcyl_after_off_kN")
+    # spec 420.2b (U-S9-G6d (가)): recontacts after the departure confirmation by the run_S9 classes
+    weight_N = None if plant is None else float(plant.m * plant.g)
+    recontact = late_loc_rule.crawler_recontact_record(_CAP.get("crawler_series"), weight_N, t_loc)
+    is_crawler_ok, crawler_flags = late_loc_rule.crawler_gate(
+        out.get("crawler_N_max_after_ready") == 0.0, recontact, out.get("n_crawler_recontact", 1))
     g = {
-        "G6-1_crawler": bool(out.get("crawler_N_max_after_ready") == 0.0 and out.get("n_crawler_recontact", 1) == 0),
+        "G6-1_crawler": is_crawler_ok,
         "G6-2_loc": bool(t_loc is not None and (t_done is None or t_loc <= t_done + 1e-9) and t_off is not None
                          and t_loc - t_off <= LOC_DELAY_MAX_S + 1e-9),
         "G6-3_Fmin": bool(min_off is not None and min_off >= F_min),
@@ -292,6 +327,11 @@ def job(key):
                                  and out.get("t_ready_s") is not None),
         "G6-7_preloc": not pre_loc,
     }
+    late_loc = _late_loc_record(ctrl, plant, t_off, t_loc, t_done, min_off, F_min, out)
+    flags = list(crawler_flags)
+    if not g["G6-2_loc"] and late_loc["is_flag"]:
+        g["G6-2_loc"] = True  # spec 419.8: the LWa-delayed LOC is a FLAG, not a failure
+        flags.append(late_loc_rule.G62_FLAG)
     # decision 2 (2026-10-27): a pre-LOC re-approach is demoted to a FLAG when the started leg's true minimum from
     # the start to LOC + 1 s stays >= F_min (no lift) and the run has no FAULT
     flog = _CAP.get("fmin_log") or []
@@ -313,7 +353,8 @@ def job(key):
                        "relevel": sum(1 for n in names if "relevel" in n and n.endswith(weak_leg))}
     rec = {
         "key": key, "soil": soil, "base": base, "weak_leg": weak_leg, "level": level, "fs_kN": case["fs_kN"],
-        "gates": g, "pass": all(g.values()),
+        "gates": g, "pass": all(g.values()), "flags": flags, "late_loc_reapproach": late_loc,
+        "crawler_recontact": recontact,
         "t_loc_s": t_loc, "t_off_s": t_off, "t_ready_s": out.get("t_ready_s"), "t_done_s": t_done,
         "loc_delay_s": None if t_loc is None or t_off is None else round(t_loc - t_off, 2),
         "t_P_s": getattr(soil_state, "plateau_start_s", None),
@@ -337,6 +378,9 @@ def job(key):
         "events_head": [ev for ev in out.get("events", []) if not ev.split(" ", 1)[1].startswith(
             ("INFO_PRESSURE", "shadow", "INFO_D1"))][:40],
         "commands_sha256": out.get("commands_sha256"), "wall_s": out.get("wall_s"),
+        "settle_hook": out.get("settle_hook"), "settle": out.get("settle"),
+        "info_counts": {p: sum(1 for n in names if n.split(":")[0] == p) for p in COUNTED_INFO_EVENTS},
+        "twist_unsettled_D_kN": [float(n.split(":")[1]) for n in names if n.startswith("INFO_TWIST_UNSETTLED:")],
         "warnings": sorted({n.split(":")[0] for n in names if n.startswith(("WARN", "FAULT"))}),
     }
     return rec
@@ -397,6 +441,7 @@ def main():
     out.write_text(json.dumps({"meta": {"script": "04_scripts/03_control/s8/r72_g6_screen.py",
                                         "spec": "rev. 72 draft (G6 weak patch under one pad)",
                                         "path": os.environ.get("R72_PATH", "per_leg"), "filter": filt,
+                                        "settle_hook": sl.resolve_settle_hook(),
                                         "workers": workers, "affinity": os.environ.get("R72_AFFINITY"),
                                         "wall_s": round(time.perf_counter() - t0, 1), "n_jobs": len(jobs)},
                                "results": res}, indent=1, default=float), encoding="utf-8")
