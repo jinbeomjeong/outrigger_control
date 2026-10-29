@@ -20,6 +20,16 @@ FLAG ``P3-2_late_loc_reapproach`` and ``checks.P3-2_verdict``), ``code_state`` (
 file SHA-256 at the start), zero calibration variant D keys in ``sensors.zero_calibration``, and the rule
 events counted in ``p3b_ext.event_counts`` / listed in ``p3b_ext.rule_event_times_rel_s``.
 
+2026-10-29 (spec 424.8.1, user decision): with a LOC revocation (:data:`LOC_REVOKE_EVENTS`, else C2 meta
+``soil.loc_revokes``) P3-1 recontact classes, P3-2 and P3-7 use the last confirmed LOC t_LOC^fin
+(:func:`loc_timeline`); FLAG ``P3-2_late_loc_revoked`` (:func:`p32_late_loc_revoked_block`); record fields
+``t_loc_first_s`` / ``t_loc_final_s`` / ``loc_revokes`` / ``late_loc_revoked`` in ``P3-2_loc`` (and the first three
+plus the FLAG in ``checks``). A run without a revocation keeps every former value.
+Supplement (same day): the FLAG decision is ``late_loc_rule.late_loc_revoked`` with ``t_lim_s`` = the P3-2
+``limit_s``; P3-8 "before the LOC", the P3-5 record ``rut_clearance_at_loc_m`` and the W61 watch use t_LOC^fin, the
+first-LOC values are kept as ``*_first`` (``rut_clearance_at_first_loc_m``, P3-8 ``counts_first`` / ``within_first``,
+W61 ``rows_first``); P3-8 and W61 are re-judged blocks.
+
 Options common to the SCM runs: ``--soil {J1,J2,G1,S1}`` (``02_params/scm_soil_sets.json``),
 ``--pad-variant {cad330,dwg_rear250}``, ``--scm-shear {bprime,native}`` (U-S9L-1: bprime =
 judgement, native = comparison only), ``--stiffness-mode {series,l1_kt,janosi}`` (U-S9L-2),
@@ -556,6 +566,29 @@ def ms1_cases() -> list[dict[str, Any]]:
     c.update(case=c["case"] + "_m1p1", mass_scale=1.1, pair_case="P3b_J1_B_top_Fs4", est_s=MS1_EST_S,
              note="pair P3b_J1_B_top_Fs4; plant superstructure mass x1.1 (Q-D, harness H6 422.5 J1 B top x1.1 fail)")
     return [c]
+
+
+D424_EST_S = {"m1p1": 6200.0, "m1p2": 6800.0}
+"""D424 wall estimates [s], one P-pool case each: MS1 measured 6,195 s (batch_MS1_20261029_183324, P pool alone,
+4.84 ms/step); x1.2 + 10 % for the deeper rear-pad sinkage (ASSUMPTION; harness 422.5 x1.2 = FAULT, the closed loop
+still runs its fixed 120 s). On the E pool expect about 1.6-1.8 x (G1 B: E 5.08 against P 2.6-5.1 ms/step)."""
+D424_RERUN_NOTE = "pair P3b_J1_B_top_Fs4; plant superstructure mass x1.1 (Q-D, harness H6 422.5 J1 B top x1.1 fail)"
+
+
+def d424_cases(include_optional: bool = True) -> list[dict[str, Any]]:
+    """Spec 424.6 A-8 Chrono rows (control 2026-10-29; run after the final controller): the MS1 re-run (same case name
+    and argv as :func:`ms1_cases`, the batch folder is the tag) and, optional, J1 B top x1.2 (``_m1p2``). The diagonal
+    representative ``G6_rigid_B_top_Fs0_spJ2FL`` is not here: the S9 model has no rigid base (SCM only)."""
+    rerun = dict(ms1_cases()[0])
+    rerun.update(group="D424", est_s=D424_EST_S["m1p1"], note=D424_RERUN_NOTE)
+    out = [rerun]
+    if include_optional:
+        c = p3b_case("D424", "J1", "B", "top", 4.0)
+        c.update(case=c["case"] + "_m1p2", mass_scale=1.2, pair_case="P3b_J1_B_top_Fs4", est_s=D424_EST_S["m1p2"],
+                 optional=True,
+                 note="pair P3b_J1_B_top_Fs4; plant superstructure mass x1.2 (424.6 A-8 optional, harness H6 x1.2 FAULT)")
+        out.append(c)
+    return out
 
 
 def apply_mass_scale(model: Any, params: Any, mass_scale: float) -> dict[str, Any]:
@@ -2979,6 +3012,75 @@ FAULT_PHASES = ("fault", "fault_reground")
 """C2 phases that count as FAULT for spec 419.8 condition 4 (419.8.1)."""
 CONTROL_PERIOD_DEFAULT_S = 0.1
 """C2 R8 control period [s] (10 Hz) when the C2 meta ``period_s`` is not at hand."""
+P32_LATE_LOC_REVOKED_FLAG = "P3-2_late_loc_revoked"
+"""FLAG name of the spec 424.8.1 rule (user decision 2026-10-29, LOC revoked and confirmed again)."""
+_LOC_REVOKE_EVENTS_FALLBACK = ("FIX_LOC_REVOKE", "INFO_LOC_REVOKED")
+"""Same value as ``late_loc_rule.LOC_REVOKE_EVENTS`` (used only when that module cannot be loaded)."""
+
+
+def _shared_loc_revoke_events() -> tuple[tuple[str, ...], str]:
+    """``late_loc_rule.LOC_REVOKE_EVENTS`` (the imported module, else loaded by file path; no sys.path change)
+    and its source; :data:`_LOC_REVOKE_EVENTS_FALLBACK` when the load fails."""
+    try:
+        import importlib.util  # noqa: PLC0415
+
+        mod = sys.modules.get("late_loc_rule")
+        if mod is None or not hasattr(mod, "LOC_REVOKE_EVENTS"):
+            spec = importlib.util.spec_from_file_location("_late_loc_rule_revoke_events", _LATE_LOC_RULE)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)  # light module: numpy / sys / pathlib at import
+        return tuple(str(x) for x in mod.LOC_REVOKE_EVENTS), "04_scripts/03_control/s9/late_loc_rule.py"
+    except Exception as e:  # noqa: BLE001 - fall back to the same value
+        return _LOC_REVOKE_EVENTS_FALLBACK, f"run_S9 fallback (late_loc_rule import failed: {type(e).__name__})"
+
+
+LOC_REVOKE_EVENTS, LOC_REVOKE_EVENTS_SOURCE = _shared_loc_revoke_events()
+"""LOC revocation events (``<name>[:<rise kN>]``, prefix match in :func:`_event_kind_legs`), shared with
+``late_loc_rule.LOC_REVOKE_EVENTS``: the s9_slope_fix_candidates L1 wrapper event ``FIX_LOC_REVOKE`` and the project
+P-S8-33 event ``INFO_LOC_REVOKED:<dF kN>`` (``c2.LOC_REVOKE_EVENT``, spec 424.10). Without an event the C2 meta
+``soil.loc_revokes`` (times [s] or dicts with ``t_s``) is read."""
+
+
+def loc_timeline(events: list[tuple[float, str]], soil_meta: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Spec 424.8.1 (user decision 2026-10-29): the judged LOC is the last confirmed one, t_LOC^fin.
+
+    LOC events (:data:`SOIL_LOC_EVENT`) and revocations (:data:`LOC_REVOKE_EVENTS`, else the C2 meta
+    ``soil.loc_revokes``) in time order; a revocation cancels the latest LOC at / before it.
+    ``t_loc_final_s`` = the first LOC after the last revocation (no revocation: the first LOC event of
+    ``events``, the former definition bit for bit; a revocation with no LOC after it: None).
+    ``revoked_loc_s`` = the cancelled LOC times (records). Absolute times [s]."""
+    eps = 1e-9
+    locs_in_order = [float(te) for te, n in events if n == SOIL_LOC_EVENT]
+    revokes = [{"t_s": float(te), "event": str(n)} for te, n in events
+               if _event_kind_legs(str(n), LOC_REVOKE_EVENTS) is not None]
+    source = "events" if revokes else None
+    if not revokes:
+        for x in ((soil_meta or {}).get("loc_revokes") or []):
+            tx = x.get("t_s") if isinstance(x, dict) else x
+            if tx is not None:
+                revokes.append({"t_s": float(tx), "event": "c2_meta soil.loc_revokes"})
+        source = "c2_meta soil.loc_revokes" if revokes else None
+    revokes.sort(key=lambda r: r["t_s"])
+    t_first = locs_in_order[0] if locs_in_order else None
+    out: dict[str, Any] = {
+        "rule": "spec 424.8.1: judged LOC = the first LOC after the last revocation (last confirmed LOC); a "
+                "revocation cancels the latest LOC at / before it; revoked LOCs are records only",
+        "t_loc_first_s": t_first, "t_loc_final_s": t_first, "loc_events_s": locs_in_order,
+        "loc_revokes": revokes, "revoke_source": source, "revoked_loc_s": [], "t_revoke_last_s": None}
+    if not revokes:
+        return out
+    locs = sorted(locs_in_order)
+    revoked: list[float] = []
+    for r in revokes:
+        live = [x for x in locs if x <= r["t_s"] + eps and x not in revoked]
+        r["revoked_loc_s"] = live[-1] if live else None
+        if live:
+            revoked.append(live[-1])
+    t_last = revokes[-1]["t_s"]
+    after = [x for x in locs if x > t_last + eps]
+    out.update(revoked_loc_s=revoked, t_revoke_last_s=t_last, t_loc_final_s=after[0] if after else None,
+               t_loc_first_s=locs[0] if locs else None)
+    return out
 
 
 def _event_kind_legs(name: str, kinds: tuple[str, ...]) -> tuple[str, list[str]] | None:
@@ -2993,7 +3095,8 @@ def _event_kind_legs(name: str, kinds: tuple[str, ...]) -> tuple[str, list[str]]
 
 def p32_late_loc_block(t: np.ndarray, cn: np.ndarray, w_n: float, events: list[tuple[float, str]],
                        phases: list[tuple[float, str]], p32: dict[str, Any], p33: dict[str, Any], *,
-                       period_s: float | None = None, lwa_on: bool | None = None) -> dict[str, Any]:
+                       period_s: float | None = None, lwa_on: bool | None = None,
+                       t_revoke_last_s: float | None = None) -> dict[str, Any]:
     """Spec 419.8 (decision 13, 2026-10-29): a P3-2 time-clause violation (LOC - departure > T_lim)
     is the FLAG ``P3-2_late_loc_reapproach`` instead of a failure when all five conditions hold:
 
@@ -3017,6 +3120,11 @@ def p32_late_loc_block(t: np.ndarray, cn: np.ndarray, w_n: float, events: list[t
     4. ``load_strict``: P3-3 ``within`` True (true F_cyl after the departure >= F_min) and no FAULT
        over the whole run (no ``FAULT*`` event, no :data:`FAULT_PHASES` phase; ``WARN_*`` is not a FAULT).
     5. ``loc_before_first_done``: P3-2 order clause.
+
+    Spec 424.8.1 (with a LOC revocation, ``t_revoke_last_s`` = the last revocation at / before t_LOC^fin): when
+    condition 1 holds and a revocation lies in [t_off, t_LOC], condition 2 is taken from the later event,
+    t_LOC - max(t_off, t_re_end, t_revoke_last) <= T_lim (``condition_2_basis``). ``None`` (no revocation)
+    leaves the block as before, bit for bit.
 
     ``late_loc_reapproach_s`` = t_LOC - t_off. ``verdict``: ``pass`` (P3-2 ``within`` True),
     ``flag`` (time clause violated and 1-5 true), ``fail`` (otherwise), None (``within`` None).
@@ -3095,6 +3203,16 @@ def p32_late_loc_block(t: np.ndarray, cn: np.ndarray, w_n: float, events: list[t
             "3_not_false_loc": c3,
             "4_load_strict": bool(p33.get("within") is True and not faults and not fault_phase),
             "5_loc_before_first_done": bool(p32.get("loc_before_first_done") is True)}
+    # spec 424.8.1: with both a re-approach restart (condition 1) and a revocation in [t_off, t_LOC], condition 2
+    # counts from the later of the two events
+    if (t_revoke_last_s is not None and cond["1_restart"] and t_loc is not None and t_off is not None
+            and float(t_off) - eps <= float(t_revoke_last_s) <= float(t_loc) + eps):
+        late = max(float(t_off), float(t_revoke_last_s), -np.inf if t_re_end is None else float(t_re_end))
+        out.update(t_revoke_last_s=float(t_revoke_last_s), loc_minus_later_event_s=float(t_loc) - late,
+                   condition_2_basis="spec 424.8.1: t_LOC - max(t_off, t_re_end, t_revoke_last)")
+        cond["2_delay_by_reapproach"] = bool(t_re_end is not None and t_lim is not None
+                                             and t_re_end <= float(t_loc) + eps
+                                             and float(t_loc) - late <= float(t_lim) + eps)
     out["conditions"] = cond
     viol = bool(d is not None and t_lim is not None and float(d) > float(t_lim) + 1e-9)
     out["time_clause_violated"] = viol
@@ -3104,9 +3222,171 @@ def p32_late_loc_block(t: np.ndarray, cn: np.ndarray, w_n: float, events: list[t
     return out
 
 
+def p32_late_loc_revoked_block(timeline: dict[str, Any], p32: dict[str, Any],
+                               reapproach: dict[str, Any] | None) -> dict[str, Any]:
+    """Spec 424.8.1 (user decision 2026-10-29): a P3-2 time-clause violation is the FLAG
+    :data:`P32_LATE_LOC_REVOKED_FLAG` instead of a failure when all five conditions hold (t_LOC = t_LOC^fin of
+    :func:`loc_timeline`, t_off = ``p32.t_departure_s``):
+
+    1. ``revoke``: at least one LOC revocation in [t_off, t_LOC^fin] (both ends included).
+    2. ``delay_by_revoke``: t_LOC^fin - max(t_off, t_revoke_last) <= T_lim, t_revoke_last = the last revocation at /
+       before t_LOC^fin; with the spec 419.8 block's condition 1 also true, the later event counts,
+       max(t_off, t_revoke_last, t_re_end) (an open / late re-approach interval then makes it false).
+    3. ``not_false_loc``: crawler true normal < 0.01 W over the t_LOC^fin control period (the 419.8 block's
+       condition 3, same period definition).
+    4. ``load_strict``: P3-3 within and no FAULT (the 419.8 block's condition 4).
+    5. ``loc_before_first_done``: P3-2 order clause.
+    6. ``total_delay`` (spec 424.9 decision 1, control 2026-10-29): t_LOC^fin - t_off <= (1 + n_revoke) T_lim,
+       n_revoke = the revocations in [t_off, t_LOC^fin] (condition 1's set; ASSUMPTION of the count basis, same as
+       the shared rule's ``n_revokes`` once given); re-approach window restarts add nothing (419.8 condition 2).
+
+    ``reapproach`` = the 419.8 block (:func:`p32_late_loc_block`) at t_LOC^fin. ``verdict`` as there. Times [s]."""
+    eps = 1e-9
+    t_loc, t_off, t_lim = p32.get("t_loc_s"), p32.get("t_departure_s"), p32.get("limit_s")
+    d = p32.get("loc_minus_departure_s")
+    re = reapproach or {}
+    rc = re.get("conditions") or {}
+    revs = [r["t_s"] for r in timeline.get("loc_revokes") or []]
+    in_win = [x for x in revs if t_loc is not None and t_off is not None and float(t_off) - eps <= x <= float(t_loc) + eps]
+    before = [x for x in revs if t_loc is not None and x <= float(t_loc) + eps]
+    t_rev = max(before) if before else None
+    out: dict[str, Any] = {
+        "rule": f"spec 424.8.1 (user decision 2026-10-29): LOC - departure > T_lim is the FLAG {P32_LATE_LOC_REVOKED_FLAG} "
+                "when 1 a LOC revocation lies in [t_off, t_LOC^fin], 2 t_LOC^fin - max(t_off, t_revoke_last [, t_re_end "
+                "when the 419.8 condition 1 holds]) <= T_lim, 3 crawler true normal < 0.01 W over the t_LOC^fin period, "
+                "4 P3-3 within and no FAULT, 5 t_LOC^fin before the first DONE, 6 (424.9) t_LOC^fin - t_off <= "
+                "(1 + n_revoke) T_lim; else a failure",
+        "t_off_s": t_off, "t_loc_final_s": t_loc, "t_loc_first_s": timeline.get("t_loc_first_s"),
+        "limit_s": t_lim, "revokes_off_to_loc_s": in_win, "t_revoke_last_s": t_rev,
+        "late_loc_revoked_s": d, "loc_minus_later_event_s": None}
+    later = None
+    if t_loc is not None and t_off is not None and t_rev is not None:
+        later = max(float(t_off), float(t_rev))
+        if rc.get("1_restart"):
+            t_re_end = re.get("t_reapproach_end_s")
+            later = None if (t_re_end is None or float(t_re_end) > float(t_loc) + eps) else max(later, float(t_re_end))
+        out["loc_minus_later_event_s"] = None if later is None else float(t_loc) - later
+    out["condition_2_basis"] = ("max(t_off, t_revoke_last, t_re_end) (419.8 condition 1 true)" if rc.get("1_restart")
+                                else "max(t_off, t_revoke_last)")
+    cond = {"1_revoke": bool(in_win),
+            "2_delay_by_revoke": bool(later is not None and t_lim is not None
+                                      and float(t_loc) - later <= float(t_lim) + eps),
+            "3_not_false_loc": bool(rc.get("3_not_false_loc") is True),
+            "4_load_strict": bool(rc.get("4_load_strict") is True),
+            "5_loc_before_first_done": bool(p32.get("loc_before_first_done") is True)}
+    # spec 424.9 decision 1: total delay cap, one more S-1 window (<= T_lim) per revocation
+    n_rev = len(in_win)
+    cap = None if t_lim is None else (1 + n_rev) * float(t_lim)
+    cond["6_total_delay"] = bool(d is not None and cap is not None and float(d) <= cap + eps)
+    out.update(n_revokes=n_rev, total_delay_cap_s=cap)
+    out["conditions"] = cond
+    viol = bool(d is not None and t_lim is not None and float(d) > float(t_lim) + 1e-9)
+    out["time_clause_violated"] = viol
+    out["flag"] = bool(p32.get("within") is False and viol and all(cond.values()))
+    within = p32.get("within")
+    out["verdict"] = None if within is None else ("pass" if within else ("flag" if out["flag"] else "fail"))
+    return out
+
+
+def _last_revoke_before(timeline: dict[str, Any], t_loc_s: float | None) -> float | None:
+    """Last LOC revocation at / before ``t_loc_s`` [s] (None: no revocation or no LOC)."""
+    if t_loc_s is None:
+        return None
+    revs = [r["t_s"] for r in timeline.get("loc_revokes") or [] if r["t_s"] <= float(t_loc_s) + 1e-9]
+    return max(revs) if revs else None
+
+
+def _late_loc_rule_module() -> Any:
+    """``04_scripts/03_control/s9/late_loc_rule.py`` (python's shared harness / Chrono rule module): the imported
+    module when the process has it, else loaded by file path (no sys.path change; it imports run_S9 lazily only)."""
+    mod = sys.modules.get("late_loc_rule")
+    if mod is not None:
+        return mod
+    cached = getattr(_late_loc_rule_module, "_cache", None)
+    if cached is None:
+        import importlib.util  # noqa: PLC0415
+
+        spec = importlib.util.spec_from_file_location("_late_loc_rule_shared", _LATE_LOC_RULE)
+        cached = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cached)
+        _late_loc_rule_module._cache = cached
+    return cached
+
+
+def late_loc_revoked_record(timeline: dict[str, Any], p32: dict[str, Any], p33: dict[str, Any] | None = None,
+                            weight_N: float | None = None, f_min_N: float | None = None) -> dict[str, Any]:
+    """``P3-2_loc.late_loc_revoked`` at t_LOC^fin (needs the 419.8 block in ``p32["late_loc_reapproach"]``).
+
+    The FLAG decision is python's shared ``late_loc_rule.late_loc_revoked`` (spec 424.8.1: constants and conditions in
+    one place; ``is_late_loc_revoked`` = its ``is_flag``) on the Chrono inputs: t_off = P3-2 departure, t_LOC^fin,
+    first DONE, revocation times, crawler maximum over the t_LOC^fin period (419.8 block, Chrono period), W, the true
+    F_cyl minimum after the departure (P3-3) and F_min [kN], FAULT (419.8 block), and the 419.8 condition 1 /
+    t_re_end. The local :func:`p32_late_loc_revoked_block` (T_lim = the Chrono P3-2 ``limit_s``) is kept as the
+    record ``local`` and ``shared_local_agree``. Without the shared function the local block decides
+    (``decision_source``)."""
+    re = p32.get("late_loc_reapproach") or {}
+    local = p32_late_loc_revoked_block(timeline, p32, re)
+    out = dict(local)
+    try:
+        fn = getattr(_late_loc_rule_module(), "late_loc_revoked")
+    except Exception as e:  # noqa: BLE001 - record and fall back to the local block
+        out["decision_source"] = f"run_S9 local block (late_loc_rule.late_loc_revoked unavailable: {type(e).__name__})"
+        return out
+    mins = (p33 or {}).get("F_min_after_N")
+    fault = bool(re.get("fault_events") or re.get("fault_phase"))
+    # spec 424.8.1 supplement: condition 2 with the same T_lim as this judge's P3-2 time clause (limit_s, 2.9117 s)
+    t_lim = p32.get("limit_s")
+    lim_kw = {} if t_lim is None else {"t_lim_s": float(t_lim)}
+    # spec 424.9 decision 1 (condition 6): the shared rule takes n_revokes once python adds it; until then the local
+    # condition 6 (same T_lim) is ANDed into the shared decision
+    import inspect  # noqa: PLC0415
+
+    has_n = "n_revokes" in inspect.signature(fn).parameters
+    if has_n:
+        lim_kw["n_revokes"] = int(local["n_revokes"])
+    shared = fn(**lim_kw, t_off_s=p32.get("t_departure_s"), t_loc_final_s=p32.get("t_loc_s"),
+                t_done_s=p32.get("t_first_done_s"),
+                revoke_times_s=[r["t_s"] for r in timeline.get("loc_revokes") or []],
+                crawler_loc_period_max_N=re.get("crawler_normal_loc_period_max_N"), weight_N=weight_N,
+                min_force_after_off_kN=None if not mins else float(min(mins)) / 1e3,
+                f_min_kN=float("inf") if f_min_N is None else float(f_min_N) / 1e3, has_fault=fault,
+                reapproach_restart=bool((re.get("conditions") or {}).get("1_restart")),
+                t_reapproach_end_s=re.get("t_reapproach_end_s"))
+    conds = dict(shared["conditions"])
+    if "6_total_delay" not in conds:
+        conds["6_total_delay"] = local["conditions"]["6_total_delay"]
+    within = p32.get("within")
+    flag = bool(within is False and shared["is_flag"] and conds["6_total_delay"])
+    out.update(condition_6_source="late_loc_rule.late_loc_revoked (n_revokes)" if has_n and "6_total_delay" in
+               shared["conditions"] else "run_S9 local block (shared rule without condition 6 yet)")
+    out.update(conditions=conds, loc_minus_later_event_s=shared["loc_minus_later_event_s"],
+               condition_2_basis=shared["condition_2_basis"], flag=flag,
+               verdict=None if within is None else ("pass" if within else ("flag" if flag else "fail")),
+               decision_source="late_loc_rule.late_loc_revoked (shared, t_lim_s = P3-2 limit_s)" if "t_lim_s" in lim_kw
+               else "late_loc_rule.late_loc_revoked (shared, default T_lim: P3-2 limit_s unknown)",
+               t_lim_s=lim_kw.get("t_lim_s"),
+               shared=shared, local={k: local[k] for k in ("conditions", "flag", "verdict", "limit_s", "n_revokes",
+                                                           "total_delay_cap_s")},
+               shared_local_agree=bool(flag == local["flag"] and conds == local["conditions"]))
+    return out
+
+
+def p32_verdict(p32: dict[str, Any]) -> str | None:
+    """P3-2 verdict with both FLAG rules: ``pass`` (within), ``flag`` (spec 419.8 or 424.8.1 FLAG), ``fail``, None.
+    Without a revocation block it is the 419.8 block's verdict (former value)."""
+    re = p32.get("late_loc_reapproach") or {}
+    rv = p32.get("late_loc_revoked")
+    if not isinstance(rv, dict) or "verdict" not in rv:
+        return re.get("verdict")
+    v = re.get("verdict")
+    if v == "fail" and rv.get("flag"):
+        return "flag"
+    return v
+
+
 def p35_clearance_block(rows: list[dict[str, Any]], phases: list[tuple[float, str]], *, t_dep: float | None,
                         t_loc: float | None, s_motor_max_m: list[float], s_motor_limit_m: float,
-                        probe_sinkage: list[dict[str, Any]]) -> dict[str, Any]:
+                        probe_sinkage: list[dict[str, Any]], t_loc_first: float | None = None) -> dict[str, Any]:
     """P3-5 (spec 284, rev. 60 U-S9P-14 (가)): judgement value = minimum 10 Hz ``rut_clearance_m``
     from the first READY entry (``phases``) to the run end >= 25 mm (ASSUMPTION U-S9-C3), and
     s_motor <= the end-margin stroke. Without READY: ``within`` None (reason). The former value
@@ -3127,11 +3407,15 @@ def p35_clearance_block(rows: list[dict[str, Any]], phases: list[tuple[float, st
         "s_motor_max_m": list(s_motor_max_m), "s_motor_limit_m": s_motor_limit_m, "stroke_within": stroke_ok,
         "within_after_departure_record": bool(min_dep is not None and min_dep >= P3B_RUT_CLEARANCE_MIN_M and stroke_ok),
         "probe_sinkage": probe_sinkage}
-    if t_loc is not None and len(rt):
-        k = int(np.searchsorted(rt, t_loc - 1e-9))
-        out["rut_clearance_at_loc_m"] = float(rc[k]) if k < len(rt) and np.isfinite(rc[k]) else None
-    else:
-        out["rut_clearance_at_loc_m"] = None
+    def at(t_x: float | None) -> float | None:
+        if t_x is None or not len(rt):
+            return None
+        k = int(np.searchsorted(rt, t_x - 1e-9))
+        return float(rc[k]) if k < len(rt) and np.isfinite(rc[k]) else None
+
+    # spec 424.8.1 supplement: ``t_loc`` = t_LOC^fin; the first (maybe revoked) LOC value is a record
+    out["rut_clearance_at_loc_m"] = at(t_loc)
+    out["rut_clearance_at_first_loc_m"] = at(t_loc if t_loc_first is None else t_loc_first)
     if t_ready is None:
         out.update(within=None, reason="no READY entry: not judgeable")
         return out
@@ -3195,6 +3479,40 @@ def s1_window_reconstruct(t: np.ndarray, in_level: np.ndarray, u_applied: np.nda
     return {"t_P_s": t_p, "t_loc_s": t_l, "windows": windows}
 
 
+def s1_window_reconstruct_revoked(t: np.ndarray, in_level: np.ndarray, u_applied: np.ndarray, stroke_m: np.ndarray,
+                                  load_N: np.ndarray, settings: dict[str, Any], v_max_m_s: float, w_ref_N: float,
+                                  revoke_s: list[float]) -> dict[str, Any]:
+    """Spec 424.8.1: :func:`s1_window_reconstruct` in segments split by the LOC revocations. The C2 window stops at a
+    LOC and starts empty after a revocation (the samples after the revocation time; the revocation follows the update
+    of its period). Segment k < last ends at its LOC (the revoked LOC); the last segment gives t_LOC^fin.
+    ``windows`` = every evaluated window with ``segment``; ``revoked_windows`` = the windows that made a revoked LOC
+    (records only); ``revoked_loc_s`` = their LOC times."""
+    t = np.asarray(t, dtype=float)
+    bounds = [-np.inf] + sorted(float(x) for x in revoke_s)
+    windows: list[dict[str, Any]] = []
+    revoked_windows: list[dict[str, Any]] = []
+    revoked_loc: list[float | None] = []
+    t_p = t_l = None
+    for j, lo in enumerate(bounds):
+        seg = s1_window_reconstruct(t, np.asarray(in_level, bool) & (t > lo + 1e-9), u_applied, stroke_m, load_N,
+                                    settings, v_max_m_s, w_ref_N)
+        if j + 1 < len(bounds):  # LOCs after the next revocation do not belong to this segment
+            nxt = bounds[j + 1]
+            seg["windows"] = [w for w in seg["windows"] if w["t_end_s"] <= nxt + 1e-9]
+            if seg["t_loc_s"] is not None and seg["t_loc_s"] > nxt + 1e-9:
+                seg["t_P_s"] = seg["t_loc_s"] = None
+        for w in seg["windows"]:
+            windows.append({**w, "segment": j})
+        if j + 1 < len(bounds):
+            revoked_loc.append(seg["t_loc_s"])
+            if seg["t_loc_s"] is not None and windows and windows[-1]["segment"] == j:
+                revoked_windows.append(windows.pop())
+        else:
+            t_p, t_l = seg["t_P_s"], seg["t_loc_s"]
+    return {"t_P_s": t_p, "t_loc_s": t_l, "windows": windows, "revoked_windows": revoked_windows,
+            "revoked_loc_s": revoked_loc}
+
+
 def _rise_bucket(windows: list[dict[str, Any]], t: np.ndarray, cn: np.ndarray, threshold_N: float) -> dict[str, Any]:
     """Minimum rise of the windows whose crawler true normal at the window end (first 1 ms sample
     at / after it) exceeds ``threshold_N``; ``n`` = number of such windows."""
@@ -3213,7 +3531,7 @@ def _rise_bucket(windows: list[dict[str, Any]], t: np.ndarray, cn: np.ndarray, t
 def p37_plateau_block(t: np.ndarray, cn: np.ndarray, phases: list[tuple[float, str]],
                       rec: dict[str, np.ndarray] | None, areas: dict[str, list[float]] | None,
                       soil_meta: dict[str, Any] | None, v_max_m_s: float | None,
-                      mass_scale: float = 1.0) -> dict[str, Any]:
+                      mass_scale: float = 1.0, timeline: dict[str, Any] | None = None) -> dict[str, Any]:
     """P3-7 plateau margin (spec 284, rev. 60 U-S9P-15 (가), C-S9-60-3): reconstruct the S-1 windows
     (:func:`s1_window_reconstruct`) from the 10 Hz readings of ``record.npz`` (load = sum of
     ``p_h A_p - p_r A_ann``, mean ``meas.stroke``, same-sample ``u_applied``; zero offsets drop
@@ -3225,8 +3543,14 @@ def p37_plateau_block(t: np.ndarray, cn: np.ndarray, phases: list[tuple[float, s
 
     Spec 422.6 (control, 2026-10-29): the loaded-window threshold is ``0.01 W_plant``, ``W_plant = mass_scale x W_ref``
     (plant superstructure weight, the W_ref basis; = W_ref at scale 1, bit for bit). W_ref stays the controller value
-    for the S-1 reconstruction (plausibility) and the 0.05 W record bucket."""
+    for the S-1 reconstruction (plausibility) and the 0.05 W record bucket.
+
+    Spec 424.8.1 (``timeline`` of :func:`loc_timeline` with revocations): the windows are reconstructed per segment
+    (:func:`s1_window_reconstruct_revoked`); judged = the windows up to the one that made t_LOC^fin, without the
+    windows that made a revoked LOC (``revoked_loc_windows``, records); gate: every reconstructed revoked LOC = its
+    LOC event and the final one = C2 meta ``t_loc_s``. Without a revocation the former path runs (bit for bit)."""
     soil_meta = soil_meta or {}
+    revs = [r["t_s"] for r in ((timeline or {}).get("loc_revokes") or [])]
     w_ref = soil_meta.get("W_ref_N")
     s = float(mass_scale)
     w_plant = None if w_ref is None else s * float(w_ref)
@@ -3264,14 +3588,31 @@ def p37_plateau_block(t: np.ndarray, cn: np.ndarray, phases: list[tuple[float, s
     a_a = np.asarray(areas["annulus_area_m2"], dtype=float)
     load_read = np.asarray(rec["meas.head_pressure"], float) * a_p - np.asarray(rec["meas.rod_pressure"], float) * a_a
     u = np.asarray(rec["u_applied"], dtype=float)
-    read = s1_window_reconstruct(rt, lev, u, np.asarray(rec["meas.stroke"], float), load_read, settings, v_max_m_s,
-                                 w_ref)
-    true = s1_window_reconstruct(rt, lev, u, np.asarray(rec["s_motor"], float), np.asarray(rec["F_cyl"], float),
-                                 settings, v_max_m_s, w_ref)
+    if revs:
+        read = s1_window_reconstruct_revoked(rt, lev, u, np.asarray(rec["meas.stroke"], float), load_read, settings,
+                                             v_max_m_s, w_ref, revs)
+        true = s1_window_reconstruct_revoked(rt, lev, u, np.asarray(rec["s_motor"], float),
+                                             np.asarray(rec["F_cyl"], float), settings, v_max_m_s, w_ref, revs)
+    else:
+        read = s1_window_reconstruct(rt, lev, u, np.asarray(rec["meas.stroke"], float), load_read, settings,
+                                     v_max_m_s, w_ref)
+        true = s1_window_reconstruct(rt, lev, u, np.asarray(rec["s_motor"], float), np.asarray(rec["F_cyl"], float),
+                                     settings, v_max_m_s, w_ref)
     t_p_m, t_l_m = soil_meta.get("t_P_s"), soil_meta.get("t_loc_s")
     gate = (read["t_P_s"] is not None and t_p_m is not None and abs(read["t_P_s"] - float(t_p_m)) <= P37_GATE_TOL_S
             and read["t_loc_s"] is not None and t_l_m is not None
             and abs(read["t_loc_s"] - float(t_l_m)) <= P37_GATE_TOL_S)
+    if revs:
+        ev_rev = list((timeline or {}).get("revoked_loc_s") or [])
+        rec_rev = read["revoked_loc_s"]
+        gate_rev = bool(len(rec_rev) == len(ev_rev) and all(
+            a is not None and abs(a - b) <= P37_GATE_TOL_S for a, b in zip(rec_rev, ev_rev)))
+        gate = bool(gate and gate_rev)
+        out.update(loc_timeline_rule="spec 424.8.1: judged windows up to t_LOC^fin; windows that made a revoked LOC "
+                                     "are records", loc_revokes_s=revs, revoked_loc_rec_s=rec_rev,
+                   revoked_loc_event_s=ev_rev, revoked_loc_gate_ok=gate_rev,
+                   revoked_loc_windows=[{**w, "crawler_at_end_N": float(cn[_at(t, w["t_end_s"])])}
+                                        for w in read["revoked_windows"]])
     loaded = _rise_bucket(read["windows"], t, cn, thr)
     out.update(reconstruct_ok=bool(gate), t_P_rec_s=read["t_P_s"], t_loc_rec_s=read["t_loc_s"],
                t_P_meta_s=t_p_m, t_loc_meta_s=t_l_m, n_windows=len(read["windows"]),
@@ -3307,7 +3648,11 @@ def p3b_checks(out: dict[str, Any]) -> dict[str, Any]:
             "P3-2_loc_minus_departure_s": p32.get("loc_minus_departure_s"), "P3-2_limit_s": p32.get("limit_s"),
             # spec 419.8 (decision 13, 2026-10-29); None on a stored block without the rule
             P32_LATE_LOC_FLAG: (p32.get("late_loc_reapproach") or {}).get("flag"),
-            "P3-2_verdict": (p32.get("late_loc_reapproach") or {}).get("verdict"),
+            # spec 424.8.1 (user decision 2026-10-29); None on a stored block without the rule
+            P32_LATE_LOC_REVOKED_FLAG: (p32.get("late_loc_revoked") or {}).get("flag"),
+            "P3-2_verdict": p32_verdict(p32),
+            "t_loc_first_s": p32.get("t_loc_first_s"), "t_loc_final_s": p32.get("t_loc_final_s"),
+            "loc_revokes": None if p32.get("loc_revokes") is None else len(p32["loc_revokes"]),
             "P3-3_within": p33.get("within"),
             "P3-4_within_0p2": p34["within_0p2"], "P3-4_absmax_deg": p34.get("p34_absmax_overall_deg"),
             "P3-4_window_s": p34.get("p34_window_s"), "P3-4_flags": p34.get("flags"),
@@ -3324,6 +3669,7 @@ def p3b_checks(out: dict[str, Any]) -> dict[str, Any]:
             "P3-7_within": p37.get("within"), "P3-7_rise_min_loaded_N": p37.get("rise_min_loaded_N"),
             "P3-7_reconstruct_ok": p37.get("reconstruct_ok"),
             "P3-8_within": out["P3-8_false_triggers"]["within"],
+            "P3-8_within_first": out["P3-8_false_triggers"].get("within_first"),
             "P3-9_flags": sum(1 for w in windows if w.get("below_F_min")),
             "pre_liftoff_flag": out["pre_liftoff_min_F_cyl"]["any_flag"],
             "W61_warnings": len(out["W61_watch"]["warnings"]),
@@ -3377,6 +3723,10 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
     t_dep = dep.get("t_departure_s")
     t_ready, t_done = first_phase("ready"), first_phase("done")
     t_loc = first_event(SOIL_LOC_EVENT)
+    # spec 424.8.1: the judged LOC of P3-1 (recontact classes), P3-2 and P3-7 is the last confirmed LOC
+    timeline = loc_timeline(events, ctx.get("soil_meta"))
+    has_revoke = bool(timeline["loc_revokes"])
+    t_loc_fin = timeline["t_loc_final_s"] if has_revoke else t_loc
     # P3-1 crawler load after READY, recontact after the departure
     p31: dict[str, Any] = {"criterion": f"SCM crawler normal sum = 0 in READY .. READY + {P3B_READY_CRAWLER_WINDOW_S:g} s; "
                                         "no recontact after the first departure", "t_ready_s": t_ready}
@@ -3388,12 +3738,16 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
         p31["crawler_zero"] = bool(w.any() and cn[w].max() <= 0.0)
     p31.update(recontact_t_s=dep.get("recontact_t_s"), recontact_count=dep.get("recontact_count"))
     # U-S9-G6d (가): recontact events with their class (transient FLAG / strict fail)
-    p31["recontact_events"] = recontact_events(t, cn, w_n, dep, t_loc, t_ready_s=t_ready)
+    # (spec 424.8.1: departure confirmation .. t_LOC^fin -> the "before the LOC" transient rule, after -> Q-G / strict)
+    p31["recontact_events"] = recontact_events(t, cn, w_n, dep, t_loc_fin, t_ready_s=t_ready)
     out["P3-1_crawler"] = p31
-    # P3-2 LOC (spec rev. 60 T_lim)
-    p32 = p32_loc_block(t, cn, w_n, t_loc=t_loc, t_dep=t_dep, t_done=t_done,
+    # P3-2 LOC (spec rev. 60 T_lim) at t_LOC^fin
+    p32 = p32_loc_block(t, cn, w_n, t_loc=t_loc_fin, t_dep=t_dep, t_done=t_done,
                         t_soil_mode=first_event(SOIL_MODE_EVENT), soil_meta=ctx.get("soil_meta"),
                         v_max_m_s=ctx.get("v_max_m_s"))
+    # spec 424.8.1 record fields (the first / final LOC are the same without a revocation)
+    p32.update(t_loc_first_s=timeline["t_loc_first_s"], t_loc_final_s=t_loc_fin, loc_revokes=timeline["loc_revokes"],
+               loc_timeline=timeline)
     out["P3-2_loc"] = p32
     # P3-3 leg force after the departure
     p33: dict[str, Any] = {"criterion": f"true F_cyl min after the departure >= F_min ({f_min:.0f} N); guard + "
@@ -3414,7 +3768,10 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
     out["P3-3_leg_force"] = p33
     # spec 419.8 (decision 13): late LOC because of a window restart by a re-approach -> FLAG, inside P3-2
     p32["late_loc_reapproach"] = _record_or_error(lambda: p32_late_loc_block(
-        t, cn, w_n, events, phases, p32, p33, period_s=ctx.get("control_period_s"), lwa_on=ctx.get("lwa_on")))
+        t, cn, w_n, events, phases, p32, p33, period_s=ctx.get("control_period_s"), lwa_on=ctx.get("lwa_on"),
+        t_revoke_last_s=_last_revoke_before(timeline, t_loc_fin)))
+    # spec 424.8.1: late LOC because of a LOC revocation -> FLAG, inside P3-2
+    p32["late_loc_revoked"] = _record_or_error(lambda: late_loc_revoked_record(timeline, p32, p33, w_n, f_min))
     out["pre_liftoff_min_F_cyl"] = pre_liftoff_min_force(t, f, f_min, t_dep)
     # P3-4 attitude (main judgement), creep stop
     cs = creep_stop(t, sink, t_dep)
@@ -3458,9 +3815,11 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
         te = phases[k + 1][0] if k + 1 < len(phases) else t_end
         ka, kb = _at(t, tp), _at(t, te)
         probe_iv.append({"t_start_s": tp, "t_end_s": te, "d_sinkage_m": (sink[kb] - sink[ka]).tolist()})
-    out["P3-5_clearance_stroke"] = p35_clearance_block(rows, phases, t_dep=t_dep, t_loc=t_loc,
+    # (spec 424.8.1 supplement: the at-LOC record at t_LOC^fin, the first LOC value as rut_clearance_at_first_loc_m)
+    out["P3-5_clearance_stroke"] = p35_clearance_block(rows, phases, t_dep=t_dep, t_loc=t_loc_fin,
                                                        s_motor_max_m=sm.max(axis=0).tolist(),
-                                                       s_motor_limit_m=ctx["s_motor_limit_m"], probe_sinkage=probe_iv)
+                                                       s_motor_limit_m=ctx["s_motor_limit_m"], probe_sinkage=probe_iv,
+                                                       t_loc_first=timeline["t_loc_first_s"] if has_revoke else t_loc)
     # P3-6 READY time
     p36 = p36_ready_limit(ctx.get("case_args"))
     out["P3-6_ready"] = {"t_ready_after_loop_start_s": None if t_ready is None else t_ready - t0,
@@ -3469,26 +3828,42 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
     # P3-7 plateau margin (spec rev. 60: S-1 window reconstruction, loaded window > 0.01 W)
     out["P3-7_plateau"] = p37_plateau_block(t, cn, phases, ctx.get("record"), ctx.get("cyl_areas"),
                                             ctx.get("soil_meta"), ctx.get("v_max_m_s"),
-                                            mass_scale=float(ctx.get("mass_scale", 1.0)))
-    # P3-8 false triggers before the LOC, first-touch annotation (J1 note 4)
-    t_lim = np.inf if t_loc is None else t_loc
+                                            mass_scale=float(ctx.get("mass_scale", 1.0)),
+                                            timeline=timeline if has_revoke else None)
+    # P3-8 false triggers before the LOC, first-touch annotation (J1 note 4); spec 424.8.1 supplement: "before the
+    # LOC" = before t_LOC^fin (after a revocation the controller is pre-LOC again), first-LOC counts as *_first
+    t_loc_first = timeline["t_loc_first_s"] if has_revoke else t_loc
     kinds = ("leg_reapproach_start", "relevel_predicted", "probe_aborted_low_load")
     touch = {}
     for i, lg in enumerate(LEGS):
         k = np.nonzero((t >= t0 - 1e-9) & (pn[:, i] > 0.0))[0]
         touch[lg] = float(t[k[0]]) if k.size else None
-    early = []
-    for te, n in events:
-        kind, lg = _event_leg(n)
-        if kind in kinds and te < t_lim:
-            ann = [g for g, tt in touch.items() if tt is not None and tt - 1e-9 <= te <= tt + P3B_TOUCH_ANNOTATE_S]
-            early.append({"t_s": te, "event": n, "within_first_touch_0p2s_of": ann})
+
+    def early_before(t_end_s: float | None) -> list[dict[str, Any]]:
+        t_lim = np.inf if t_end_s is None else t_end_s
+        early_ = []
+        for te, n in events:
+            kind, lg = _event_leg(n)
+            if kind in kinds and te < t_lim:
+                ann = [g for g, tt in touch.items() if tt is not None and tt - 1e-9 <= te <= tt + P3B_TOUCH_ANNOTATE_S]
+                early_.append({"t_s": te, "event": n, "within_first_touch_0p2s_of": ann})
+        return early_
+
+    def counts_of(early_: list[dict[str, Any]]) -> dict[str, int]:
+        return {kd_: sum(1 for e in early_ if e["event"].startswith(kd_)) for kd_ in kinds}
+
+    early = early_before(t_loc_fin)
+    early_first = early if t_loc_first == t_loc_fin else early_before(t_loc_first)
     out["P3-8_false_triggers"] = {
         "criterion": "0 re-approach starts / P5 / probe_aborted_low_load before the LOC (soil mode included)",
-        "counts": {kd_: sum(1 for e in early if e["event"].startswith(kd_)) for kd_ in kinds},
+        "counts": counts_of(early),
         "events": early, "first_touch_t_s": touch,
         "first_touch_note": "J1: the SCM virgin branch stiffens the first 0.2 s (5.35.5 ①); events in that "
-                            "window carry the annotation", "within": not early}
+                            "window carry the annotation", "within": not early,
+        "t_loc_s": t_loc_fin, "t_loc_first_s": t_loc_first,
+        "loc_basis": "spec 424.8.1 supplement: before t_LOC^fin (last confirmed LOC); *_first = before the first LOC "
+                     "(records)",
+        "counts_first": counts_of(early_first), "within_first": not early_first}
     # P3-9 deferred re-approach (U-S8-57)
     # S8 judge rule (spec rev. 55 267, C-S8-42): window t_def .. min(t_next, t_def + T_o) + 0.3 s, merged per leg;
     # here on the raw 1 ms acting force (no S8-A2 interval minimum in the S9 series)
@@ -3512,7 +3887,12 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
                                 f"{TRACK_UTIL_MIN_NORMAL_FRACTION:g} x its settle value", "settle_track_normal_N":
                                 settle.get("track_normal_N"), "unmasked": _nan_stats(np.asarray(s["track_utilisation"],
                                                                                                 float), t)}
-    out["W61_watch"] = w61_watch(events, phases, s, ctx, t_loc)
+    # spec 424.8.1 supplement: W-61-4 / after_loc at t_LOC^fin; the first-LOC rows are the record rows_first
+    w61 = w61_watch(events, phases, s, ctx, t_loc_fin)
+    w61.update(t_loc_s=t_loc_fin, t_loc_first_s=t_loc_first,
+               rows_first=w61["rows"] if t_loc_first == t_loc_fin else w61_watch(events, phases, s, ctx,
+                                                                                 t_loc_first)["rows"])
+    out["W61_watch"] = w61
     out["reapproach_limit"] = reapproach_limit_records(ctx.get("reapproach_history"), ctx.get("reapproach_settings"))
     out["checks"] = p3b_checks(out)
     return out
@@ -3520,9 +3900,11 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
 
 SOIL_LOC_EVENT = "crawler_liftoff_confirmed"
 SOIL_MODE_EVENT = "soil_mode_start"
-REJUDGED_BLOCKS = ("P3-1_crawler", "P3-2_loc", "P3-5_clearance_stroke", "P3-6_ready", "P3-7_plateau", "checks")
+REJUDGED_BLOCKS = ("P3-1_crawler", "P3-2_loc", "P3-5_clearance_stroke", "P3-6_ready", "P3-7_plateau",
+                   "P3-8_false_triggers", "W61_watch", "checks")
 """p3b blocks whose definition changed (spec rev. 60 C-S9-60; P3-1_crawler: Q-G threshold chatter class, spec 423.3;
-P3-6_ready: spec 421.1 limit rows); every other block must come out equal."""
+P3-6_ready: spec 421.1 limit rows; P3-8_false_triggers / W61_watch: the LOC is t_LOC^fin, spec 424.8.1 supplement,
+with the *_first record keys); every other block must come out equal."""
 REJUDGE_ADDED_KEYS = {"P3-1_crawler": ("recontact_events",)}
 """Keys added to a block after a run (U-S9-G6d, 2026-10-28): left out of the "unchanged block" comparison when the
 stored block lacks them (the other keys of the block must still be equal)."""
@@ -3636,6 +4018,8 @@ def run_rejudge(args) -> None:
                                  c["P3-1_recontact_classes"]],
                         "P3-2": [c["P3-2_within"], c["P3-2_within_2s_record"], c["P3-2_loc_minus_departure_s"]],
                         "P3-2_verdict": c.get("P3-2_verdict"),
+                        "LOC_first_final_revokes": [c.get("t_loc_first_s"), c.get("t_loc_final_s"),
+                                                    c.get("loc_revokes"), c.get(P32_LATE_LOC_REVOKED_FLAG)],
                         "P3-5": [c["P3-5_within"], c["P3-5_rut_clearance_min_after_first_ready_m"]],
                         "P3-7": [c["P3-7_within"], c["P3-7_reconstruct_ok"], c["P3-7_rise_min_loaded_N"],
                                  p["P3-7_plateau"].get("rise_min_gt1kN_N")],

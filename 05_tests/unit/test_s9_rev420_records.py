@@ -390,8 +390,15 @@ def test_case_definitions_unchanged() -> None:
 STORED = ["batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4",
           "batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL",
           "batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0"]
-ADDED_P32 = {"late_loc_reapproach"}
-ADDED_CHECKS = {r9.P32_LATE_LOC_FLAG, "P3-2_verdict"}
+ADDED_P32 = {"late_loc_reapproach",
+             # spec 424.8.1 record fields (2026-10-29)
+             "t_loc_first_s", "t_loc_final_s", "loc_revokes", "loc_timeline", "late_loc_revoked"}
+ADDED_CHECKS = {r9.P32_LATE_LOC_FLAG, "P3-2_verdict",
+                r9.P32_LATE_LOC_REVOKED_FLAG, "t_loc_first_s", "t_loc_final_s", "loc_revokes", "P3-8_within_first"}
+# spec 424.8.1 supplement (2026-10-29): LOC-based records at t_LOC^fin, first-LOC values as *_first
+ADDED_OTHER = {"P3-5_clearance_stroke": {"rut_clearance_at_first_loc_m"},
+               "P3-8_false_triggers": {"t_loc_s", "t_loc_first_s", "loc_basis", "counts_first", "within_first"},
+               "W61_watch": {"t_loc_s", "t_loc_first_s", "rows_first"}}
 
 
 @pytest.mark.parametrize("rel", STORED)
@@ -403,12 +410,19 @@ def test_stored_case_rejudge_unchanged(rel) -> None:
     res = r9.rejudge_case(d, write=False)
     new = res["p3b"]
     assert res["unchanged_blocks_equal"], res["unchanged_block_diffs"]
-    for block, added in (("P3-2_loc", ADDED_P32), ("checks", ADDED_CHECKS)):
+    for block, added in (("P3-2_loc", ADDED_P32), ("checks", ADDED_CHECKS), *ADDED_OTHER.items()):
         old_b, new_b = stored[block], json.loads(json.dumps(r9._plain(new[block])))
         assert set(new_b) - set(old_b) == added, (rel, block)
         assert {k: new_b[k] for k in old_b} == old_b, (rel, block)
     late = new["P3-2_loc"]["late_loc_reapproach"]
     assert late["restart_events_before_loc"] == 0 and not late["flag"]
+    p32 = new["P3-2_loc"]  # spec 424.8.1: no revocation -> first = final = the judged LOC, no FLAG
+    assert p32["t_loc_first_s"] == p32["t_loc_final_s"] == p32["t_loc_s"] and p32["loc_revokes"] == []
+    assert p32["late_loc_revoked"]["flag"] is False and new["checks"][r9.P32_LATE_LOC_REVOKED_FLAG] is False
+    p35, p38, w61 = new["P3-5_clearance_stroke"], new["P3-8_false_triggers"], new["W61_watch"]
+    assert p35["rut_clearance_at_first_loc_m"] == p35["rut_clearance_at_loc_m"]
+    assert p38["counts_first"] == p38["counts"] and p38["within_first"] == p38["within"]
+    assert p38["t_loc_s"] == p38["t_loc_first_s"] == w61["t_loc_s"] == p32["t_loc_s"] and w61["rows_first"] == w61["rows"]
     verdict = new["checks"]["P3-2_verdict"]
     w = new["checks"]["P3-2_within"]
     assert verdict == (None if w is None else ("pass" if w else "fail"))

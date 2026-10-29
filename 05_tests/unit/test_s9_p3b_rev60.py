@@ -271,10 +271,10 @@ def test_rejudge_case_writes_overlay_and_keeps_result(tmp_path) -> None:
     assert on_disk["p3b"]["checks"] == json.loads(json.dumps(r9._plain(c)))
     # a block outside the re-judged set that does not reproduce is reported
     r = json.loads((d / "result.json").read_text("utf-8"))
-    # (P3-6_ready is re-judged since spec 421.1; P3-8 stays outside the re-judged set)
-    r["p3b"]["P3-8_false_triggers"]["within"] = not r["p3b"]["P3-8_false_triggers"]["within"]
+    # (P3-6_ready is re-judged since spec 421.1, P3-8 / W61 since spec 424.8.1; P3-9 stays outside the set)
+    r["p3b"]["P3-9_deferred"]["flag"] = not r["p3b"]["P3-9_deferred"]["flag"]
     (d / "result.json").write_text(json.dumps(r), "utf-8")
-    assert r9.rejudge_case(d, write=False)["unchanged_block_diffs"] == ["P3-8_false_triggers"]
+    assert r9.rejudge_case(d, write=False)["unchanged_block_diffs"] == ["P3-9_deferred"]
     assert r9.rejudge_targets([str(tmp_path / "batch")]) == [d] and r9.rejudge_targets([str(d)]) == [d]
 
 

@@ -394,7 +394,11 @@ def test_threshold_chatter_is_a_flag_in_s4_and_g6_1():
     s4 = judge.judge_s4(run, ref)
     assert s4["ok"] and s4["flags"] == ["S4_threshold_chatter"]
     gate, record = judge.g61_gate(run)
-    assert gate and record["switched_to_flag"] and record["ready_part_assumed"]
+    # READY part from the truth log (no crawler load after the first crawler-free period)
+    assert gate and record["switched_to_flag"] and not record["ready_part_assumed"]
+    counted = _run(n_recontact_after_off=1, recontact_events=_chatter_events())
+    counted["base"]["gates"] = {"G6-1_crawler": False, "G6-7_preloc": True}
+    assert judge.g61_gate(counted)[1]["ready_part_assumed"]
     assert record["flags"] == ["P3-1_threshold_chatter"]
     assert judge.harness_verdict(run["base"], run) and not judge.harness_verdict(run["base"])
     strict = _run(recontact_events=_chatter_events(duration_s=0.2))
@@ -454,6 +458,53 @@ def test_judge_results_pairs_with_l1_and_aggregates():
     assert table[("L2", "all")]["runs"] == 2
     assert table[("L2", "all")]["S-1"]["fail"] == 1
     assert report["unmatched"] == [] and report["errors"] == []
+
+
+def _candidate_run(candidate, inner, min_F_kN=30.0, sha="h0", faults=(), events=(),
+                   restrain_periods=0, passed=True, ready_s=80.0):
+    run = _run("L2", passed=passed, min_true_F_after_off_kN=min_F_kN, warn_fault=list(faults))
+    run.update(key=f"cand={candidate}#L2|s0|g6|0|{inner}", inner=inner, candidate=candidate,
+               events=list(events),
+               candidate_record=None if candidate == "current"
+               else {"restrain_periods": restrain_periods})
+    run["base"].update(commands_sha256=sha, t_ready_s=ready_s)
+    return run
+
+
+def test_patch_soil_of_g6_keys():
+    assert judge.patch_soil("g6r|rigid+J2@FL|top|Fs0") == "J2"
+    assert judge.patch_soil("g6|G1+S1@RR|top|Fs4") == "S1"
+    assert judge.patch_soil("ref|G1|top|Fs0") == "none"
+
+
+def test_candidates_report_pairs_with_current_and_judges_a4():
+    """Spec 424.6 A-4: J2 F_min violation 0 and no new FAULT; S1 recorded only."""
+    j2, s1, ref = "g6r|rigid+J2@FL|top|Fs0", "g6r|rigid+S1@FL|top|Fs0", "ref|rigid|top|Fs0"
+    results = [
+        _candidate_run("current", j2, min_F_kN=9.308, sha="a"),
+        _candidate_run("current", s1, min_F_kN=8.0, sha="b"),
+        _candidate_run("current", ref, sha="c"),
+        _candidate_run("D1p", j2, min_F_kN=15.3, sha="a2", restrain_periods=20, ready_s=97.6),
+        _candidate_run("D1p", s1, min_F_kN=8.5, sha="b2", restrain_periods=3),
+        _candidate_run("D1p", ref, sha="c", events=[(29.2, "FIX_FALL_HOLD:RR")]),
+        _candidate_run("D2", j2, min_F_kN=9.0, sha="a3", restrain_periods=5),
+        _candidate_run("D2", ref, sha="c4", faults=["FAULT_LIFT_STROKE_LIMIT"]),
+    ]
+    report = judge.candidates_report(results)
+    assert report["acceptance"]["D1p"] == {"j2_f_min_violations": 0, "new_fault_runs": 0,
+                                           "A-4": True}
+    assert report["acceptance"]["current"]["A-4"] is False  # the J2 case below F_min
+    assert report["acceptance"]["D2"] == {"j2_f_min_violations": 1, "new_fault_runs": 1,
+                                          "A-4": False}
+    table = {(e["candidate"], e["level"], e["patch"]): e for e in report["table"]}
+    d1p_all = table[("D1p", "all", "all")]
+    assert d1p_all["f_min_violations"] == 1 and d1p_all["f_min_violations_current"] == 2
+    assert d1p_all["acted"] == 2 and d1p_all["hash_same"] == 1  # a watch alone is no action
+    assert d1p_all["idle_hash_changed"] == 0 and d1p_all["ready_delay_max_s"] == 17.6
+    assert table[("D2", "all", "all")]["idle_hash_changed"] == 1  # changed hash, no action
+    assert report["unmatched"] == [] and report["errors"] == []
+    unpaired = judge.candidates_report([_candidate_run("D1p", j2)])
+    assert unpaired["unmatched"] == [f"cand=D1p#L2|s0|g6|0|{j2}"]
 
 
 def test_identity_rows_compare_command_hashes():

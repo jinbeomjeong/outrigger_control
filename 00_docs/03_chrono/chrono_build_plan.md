@@ -629,7 +629,7 @@ PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py list
 PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run G6P --parallel 4 --order lpt
 PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run p3b_aug --parallel 4 --order lpt
 PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run S9SL --parallel 2
-PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run p3b_aug --schedule plan.json   # cpu-scheduler-expert 배치표
+PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run p3b_aug --schedule plan.json   # compute-scheduler-expert 배치표
 PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run S9SL --only S9SL_C1_G1_B_top_Fs4_r0_p3p2
 ```
 

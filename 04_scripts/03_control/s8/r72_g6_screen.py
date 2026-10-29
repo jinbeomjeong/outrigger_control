@@ -19,7 +19,11 @@ Judgement rows per run (spec 284 P3 rows, rev. 60 corrections, harness form):
        force); a ``transient_flag`` recontact is the FLAG ``P3-1_transient_recontact`` (record ``crawler_recontact``)
   G6-2 (P3-2) LOC before the first DONE and t_LOC - t_off <= 2.9 s (t_off = first crawler-free control period);
        spec 419.8: a delay from the LWa window restart is a FLAG (``G6-2_late_loc_reapproach``, five conditions of
-       ``s9/late_loc_rule.py``; record ``late_loc_reapproach``)
+       ``s9/late_loc_rule.py``; record ``late_loc_reapproach``); spec 424.8.1 / 424.9: with a LOC revocation
+       (wrapper ``FIX_LOC_REVOKE``) the judged LOC is t_LOC^fin and a delay from the revocations is the FLAG
+       ``G6-2_late_loc_revoked`` (six conditions of ``late_loc_rule.late_loc_revoked``, T_lim 2.9 s; records
+       ``late_loc_revoked``, ``t_loc_first_s``, ``t_loc_final_s``, ``loc_revokes`` only then). G6-1, G6-7 and the
+       pre-LOC records use the same judged LOC
   G6-3 (P3-3) min true F_cyl after the crawler lift-off >= F_min (record: >= F_min + 5 kN)
   G6-4 (P3-4) final attitude |roll|, |pitch| <= 0.2 deg (run end = READY + 10 s; creep state recorded)
   G6-5 (P3-5) rut clearance (crawler nodes in the rut at the settle) at READY and at the end >= 25 mm; motor stroke
@@ -257,9 +261,12 @@ def _install():
 
 
 # --------------------------------------------------------------------------------------------- one case
-def _late_loc_record(ctrl, plant, t_off, t_loc, t_done, min_off_kN, f_min_kN, out) -> dict:
+def _late_loc_record(ctrl, plant, t_off, t_loc, t_done, min_off_kN, f_min_kN, out,
+                     t_revoke_last=None) -> dict:
     """Spec 419.8 / 419.8.1 record of the run (G6-2 FLAG ``G6-2_late_loc_reapproach``): the
-    cad ``run_S9.p32_late_loc_block`` on the 1 ms crawler force, t_off of ``loc_delay_s``."""
+    cad ``run_S9.p32_late_loc_block`` on the 1 ms crawler force, t_off of ``loc_delay_s``.
+    With a LOC revocation (spec 424.8.1) ``t_loc`` is t_LOC^fin and ``t_revoke_last`` the last
+    revocation; without one the call is the former one."""
     events = [(float(e.t_s), e.name) for e in ctrl.events]
     phases = [tuple(entry) for entry in out.get("phase_path") or []]
     if out.get("final_phase") is not None:  # the stored path is cut at 60 entries
@@ -267,7 +274,30 @@ def _late_loc_record(ctrl, plant, t_off, t_loc, t_done, min_off_kN, f_min_kN, ou
     weight_N = None if plant is None else float(plant.m * plant.g)
     return late_loc_rule.late_loc_reapproach(
         events, phases, _CAP.get("crawler_series") or [], weight_N, t_off_s=t_off, t_loc_s=t_loc,
-        t_done_s=t_done, min_force_after_off_kN=min_off_kN, f_min_kN=f_min_kN)
+        t_done_s=t_done, min_force_after_off_kN=min_off_kN, f_min_kN=f_min_kN,
+        t_revoke_last_s=t_revoke_last)
+
+
+def _has_fault(ctrl, out) -> bool:
+    return (out.get("final_phase") in ("fault", "fault_reground")
+            or any(e.name.startswith("FAULT") for e in ctrl.events))
+
+
+def _late_loc_revoked_record(ctrl, plant, timeline, late_loc, t_off, t_done, min_off_kN, f_min_kN,
+                             out) -> dict:
+    """Spec 424.8.1 / 424.9 record (G6-2 FLAG ``G6-2_late_loc_revoked``, six conditions of
+    ``late_loc_rule.late_loc_revoked``, T_lim 2.9 s) at t_LOC^fin; runs with a revocation only."""
+    t_loc = timeline["t_loc_final_s"]
+    conditions = late_loc.get("conditions") or {}
+    return late_loc_rule.late_loc_revoked(
+        t_off_s=t_off, t_loc_final_s=t_loc, t_done_s=t_done,
+        revoke_times_s=timeline["revoke_times_s"],
+        crawler_loc_period_max_N=late_loc_rule.loc_period_crawler_max_N(
+            _CAP.get("crawler_series") or [], t_loc),
+        weight_N=None if plant is None else float(plant.m * plant.g),
+        min_force_after_off_kN=min_off_kN, f_min_kN=f_min_kN, has_fault=_has_fault(ctrl, out),
+        reapproach_restart=bool(conditions.get("1_restart")),
+        t_reapproach_end_s=late_loc.get("t_reapproach_end_s"), t_lim_s=LOC_DELAY_MAX_S)
 
 
 def job(key):
@@ -291,7 +321,10 @@ def job(key):
     for e in ctrl.events:
         t_ev.setdefault(e.name.split(":")[0], e.t_s)
     soil_state = ctrl._soil_state()
-    t_loc = t_ev.get("crawler_liftoff_confirmed")
+    # spec 424.8.1: the judged LOC is t_LOC^fin (the first LOC event without a revocation)
+    timeline = late_loc_rule.loc_timeline([(float(e.t_s), e.name) for e in ctrl.events])
+    has_revoke = bool(timeline["revoke_times_s"])
+    t_loc = timeline["t_loc_final_s"] if has_revoke else t_ev.get("crawler_liftoff_confirmed")
     t_done = out.get("t_done_s")
     t_off = out.get("t_crawler_off_first_s")
     pre_loc = [n for e, n in ((e, e.name) for e in ctrl.events)
@@ -329,11 +362,20 @@ def job(key):
                                  and out.get("t_ready_s") is not None),
         "G6-7_preloc": not pre_loc,
     }
-    late_loc = _late_loc_record(ctrl, plant, t_off, t_loc, t_done, min_off, F_min, out)
+    late_loc = _late_loc_record(ctrl, plant, t_off, t_loc, t_done, min_off, F_min, out,
+                                timeline["t_revoke_last_s"])
     flags = list(crawler_flags)
-    if not g["G6-2_loc"] and late_loc["is_flag"]:
+    is_raw_g62 = g["G6-2_loc"]
+    if not is_raw_g62 and late_loc["is_flag"]:
         g["G6-2_loc"] = True  # spec 419.8: the LWa-delayed LOC is a FLAG, not a failure
         flags.append(late_loc_rule.G62_FLAG)
+    revoked = None
+    if has_revoke:  # spec 424.8.1 / 424.9: a LOC delayed by revocations is a FLAG (both recorded)
+        revoked = _late_loc_revoked_record(ctrl, plant, timeline, late_loc, t_off, t_done, min_off,
+                                           F_min, out)
+        if not is_raw_g62 and revoked["is_flag"]:
+            g["G6-2_loc"] = True
+            flags.append(late_loc_rule.G62_REVOKED_FLAG)
     # decision 2 (2026-10-27): a pre-LOC re-approach is demoted to a FLAG when the started leg's true minimum from
     # the start to LOC + 1 s stays >= F_min (no lift) and the run has no FAULT
     flog = _CAP.get("fmin_log") or []
@@ -386,6 +428,9 @@ def job(key):
         "twist_unsettled_D_kN": [float(n.split(":")[1]) for n in names if n.startswith("INFO_TWIST_UNSETTLED:")],
         "warnings": sorted({n.split(":")[0] for n in names if n.startswith(("WARN", "FAULT"))}),
     }
+    if revoked is not None:  # spec 424.8.1 records (only with a revocation: former records unchanged)
+        rec.update(late_loc_revoked=revoked, t_loc_first_s=timeline["t_loc_first_s"],
+                   t_loc_final_s=t_loc, loc_revokes=timeline["revoke_times_s"])
     return rec
 
 

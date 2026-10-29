@@ -77,7 +77,7 @@ PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py list
 PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run G6P --parallel 4 --order lpt       # G6 논문 근거 6건
 PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run p3b_aug --parallel 4 --order lpt   # 연구 ③ 8건(J2·S1 × A·B × 중단·하단)
 PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run S9SL --parallel 2                  # 연구 ① 경사 C-1~C-4
-PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run <묶음> --schedule plan.json        # P/E 배치표(cpu-scheduler-expert)
+PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run <묶음> --schedule plan.json        # P/E 배치표(compute-scheduler-expert)
 PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run <묶음> --only <사례> ...           # 남은 사례만
 ```
 

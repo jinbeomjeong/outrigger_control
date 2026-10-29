@@ -207,6 +207,102 @@ def test_chatter_constants_of_spec_423() -> None:
             rule.CHATTER_MAX_OVER_THRESHOLD) == (1.0, 0.1, 1.2)
 
 
+# --- spec 424.8.1: LOC revoked and confirmed again ----------------------------------------------
+
+
+def test_loc_timeline_takes_the_first_loc_after_the_last_revocation() -> None:
+    events = [(20.3, "crawler_liftoff_confirmed"), (21.5, "FIX_LOC_REVOKE:2.3"),
+              (22.0, "crawler_liftoff_confirmed"), (23.0, "FIX_LOC_REVOKE:2.0"),
+              (24.0, "crawler_liftoff_confirmed")]
+    timeline = rule.loc_timeline(events)
+    assert timeline["t_loc_first_s"] == 20.3 and timeline["t_loc_final_s"] == 24.0
+    assert timeline["revoked_loc_s"] == [20.3, 22.0] and timeline["t_revoke_last_s"] == 23.0
+    assert rule.judged_loc_times(events) == [24.0]
+    no_revoke = [(21.0, "crawler_liftoff_confirmed"), (25.0, "crawler_liftoff_confirmed")]
+    assert rule.loc_timeline(no_revoke)["t_loc_final_s"] == 21.0
+    assert rule.judged_loc_times(no_revoke) == [21.0, 25.0]
+    assert rule.loc_timeline([(21.0, "FIX_LOC_REVOKE:2.0")])["t_loc_final_s"] is None
+
+
+def _revoked(**changes) -> dict:
+    arguments = {"t_off_s": 20.0, "t_loc_final_s": 23.5, "t_done_s": 30.0,
+                 "revoke_times_s": [22.0], "crawler_loc_period_max_N": 0.0,
+                 "weight_N": WEIGHT_N, "min_force_after_off_kN": 20.0, "f_min_kN": F_MIN_KN,
+                 "has_fault": False}
+    arguments.update(changes)
+    return arguments
+
+
+def test_late_loc_revoked_flag_and_each_condition() -> None:
+    assert rule.is_late_loc_revoked(**_revoked())
+    record = rule.late_loc_revoked(**_revoked())
+    assert record["loc_minus_departure_s"] == pytest.approx(3.5)
+    assert record["loc_minus_later_event_s"] == pytest.approx(1.5)
+    falsifiers = {"1_revoke": {"revoke_times_s": [19.0]},
+                  "2_delay_by_revoke": {"revoke_times_s": [20.5]},
+                  "3_not_false_loc": {"crawler_loc_period_max_N": 0.012 * WEIGHT_N},
+                  "4_load_strict": {"has_fault": True},
+                  "5_loc_before_first_done": {"t_done_s": 23.0}}
+    for condition, change in falsifiers.items():
+        record = rule.late_loc_revoked(**_revoked(**change))
+        assert not record["is_flag"] and record["conditions"][condition] is False, condition
+    assert not rule.is_late_loc_revoked(**_revoked(t_loc_final_s=22.5))  # within 2.9 s
+
+
+def test_late_loc_revoked_takes_the_later_event_with_the_419_8_rule() -> None:
+    late_end = _revoked(revoke_times_s=[20.3], t_loc_final_s=23.5,
+                        reapproach_restart=True, t_reapproach_end_s=21.0)
+    assert rule.late_loc_revoked(**late_end)["loc_minus_later_event_s"] == pytest.approx(2.5)
+    assert rule.is_late_loc_revoked(**late_end)
+    assert not rule.is_late_loc_revoked(**{**late_end, "reapproach_restart": False})
+    assert not rule.is_late_loc_revoked(**{**late_end, "t_reapproach_end_s": None})  # open
+
+
+def test_t_lim_default_is_the_former_result() -> None:
+    """424.8.1 supplement: ``t_lim_s`` = 2.9 s (default) changes nothing."""
+    assert judge(t_lim_s=rule.LOC_DELAY_MAX_S) == judge()
+    assert judge(t_loc_s=24.0, t_lim_s=2.9) == judge(t_loc_s=24.0)
+    assert (rule.late_loc_revoked(**_revoked(t_lim_s=2.9))
+            == rule.late_loc_revoked(**_revoked()))
+
+
+def test_t_lim_boundary_at_2_91_s() -> None:
+    """Condition 2 at 2.91 s: a FLAG with T_lim 2.9117 s, none with 2.9 s."""
+    revoked = _revoked(revoke_times_s=[21.0], t_loc_final_s=23.91)
+    assert rule.is_late_loc_revoked(**revoked, t_lim_s=2.9117)
+    assert not rule.is_late_loc_revoked(**revoked, t_lim_s=2.9)
+    late = {"t_loc_s": 23.9 + 2.91}  # 2.91 s after the re-approach end
+    assert judge(**late, t_lim_s=2.9117)["is_flag"]
+    record = judge(**late, t_lim_s=2.9)
+    assert not record["is_flag"] and record["conditions"]["2_delay_by_reapproach"] is False
+
+
+def test_total_delay_cap_of_spec_424_9() -> None:
+    """Condition 6: t_LOC^fin - t_off <= (1 + n_revoke) T_lim (one more S-1 window per
+    revocation). The J1 A x1.2 shape (12.7 s after the lift-off, LOC 1.5 s after the last of two
+    revocations) is no FLAG; the same delay inside 3 T_lim is."""
+    long_delay = _revoked(revoke_times_s=[21.0, 31.2], t_loc_final_s=32.7, t_done_s=40.0)
+    record = rule.late_loc_revoked(**long_delay)
+    assert record["n_revokes"] == 2 and record["total_delay_limit_s"] == pytest.approx(8.7)
+    assert record["conditions"]["2_delay_by_revoke"] and not record["conditions"]["6_total_delay"]
+    assert not record["is_flag"]
+    within = _revoked(revoke_times_s=[21.0, 25.2], t_loc_final_s=26.7)  # 6.7 s <= 8.7 s
+    assert rule.is_late_loc_revoked(**within)
+    one_revoke = _revoked(revoke_times_s=[24.0], t_loc_final_s=25.9)  # 5.9 s > 5.8 s
+    assert not rule.is_late_loc_revoked(**one_revoke)
+    assert rule.is_late_loc_revoked(**one_revoke, n_revokes=2)  # explicit count wins
+    assert rule.late_loc_revoked(**_revoked(t_loc_final_s=25.8))["conditions"]["6_total_delay"]
+
+
+def test_total_delay_cap_keeps_the_former_flags() -> None:
+    """The former FLAG cases (delay <= 2 T_lim with one revocation) keep their result."""
+    record = rule.late_loc_revoked(**_revoked())
+    assert record["is_flag"] and record["conditions"]["6_total_delay"]
+    assert record["n_revokes"] == 1
+    explicit = rule.late_loc_revoked(**_revoked(), n_revokes=1)
+    assert explicit == record
+
+
 def test_recorder_wraps_once_and_keeps_other_hook_markers() -> None:
     calls = []
 

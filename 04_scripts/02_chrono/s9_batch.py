@@ -19,6 +19,7 @@ Usage (project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run S9SL --parallel 2   # study ① C-1 / C-2 (slope)
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run MS1 --parallel 0 --parallel-e 1 \
         --e-cases P3b_J1_B_top_Fs4_m1p1                 # Q-D: J1 B top, plant mass x1.1 (E pool)
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run D424 --parallel 2   # 424.6 A-8: MS1 re-run + x1.2
 
 Pools (2026-10-26): ``--parallel`` (= ``--parallel-p``) P-pool slots, ``--parallel-e`` E-pool slots;
 each case process gets ``OUTRIGGER_PLACEMENT`` = ``pcore`` / ``ecore`` (``run_S9.place``). Cases go to
@@ -157,6 +158,7 @@ def batches() -> dict[str, list[dict]]:
     out["p3b_aug"] = level_rows("p3b_aug_cases")
     out["S9SL"] = level_rows("s9sl_cases")
     out["MS1"] = level_rows("ms1_cases")  # Q-D (2026-10-29): P3b J1 B top F_s 4 with plant mass x1.1
+    out["D424"] = level_rows("d424_cases")  # spec 424.6 A-8: MS1 re-run + optional x1.2 (after the final controller)
     return out
 
 
@@ -425,7 +427,7 @@ def main(argv) -> None:
     r.add_argument("--order-cases", nargs="*", default=None, help="explicit order (listed cases first)")
     r.add_argument("--schedule", default=None,
                    help='JSON file {"e_cases": [...], "order": "given"|"lpt", "order_cases": [...], '
-                        '"parallel_p": N, "parallel_e": M} (e.g. the cpu-scheduler-expert LPT plan); '
+                        '"parallel_p": N, "parallel_e": M} (e.g. the compute-scheduler-expert LPT plan); '
                         "command-line values given explicitly win")
     r.add_argument("--only", nargs="*")
     r.add_argument("--allow-env-override", action="store_true",

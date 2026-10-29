@@ -32,6 +32,7 @@ BATCH_DEF_SHA256 = {
     "P3b": "6793b3bd29eda4861b244535f43a786a2bfb01ef2fff06d0c97f7544bbc7687b",
     "S9SL": "1e80cba9a0bd75abeb0307a949511afba093fe7b7b8a910096cbde88ec335837",
     "p3b_aug": "98f48ac2eccc2bbf3849d6d18f79e755433468271772f23d91d91c788be4cd79",
+    "MS1": "5dc833dd79c1564f20d175c4c648d1fdae2f3060b58bfd6c0f5e5835a496215d",  # run 2026-10-29 18:33
 }
 """Normalised batch definitions (interpreter / script paths dropped) before the Q-D change (2026-10-29)."""
 
@@ -52,7 +53,7 @@ def test_existing_batch_definitions_unchanged() -> None:
     import s9_batch
 
     b = s9_batch.batches()
-    assert set(b) == set(BATCH_DEF_SHA256) | {"MS1"}
+    assert set(b) == set(BATCH_DEF_SHA256) | {"D424"}
     for name, want in BATCH_DEF_SHA256.items():
         rows = [{**r, "argv": _norm(s9_batch, r["argv"])} for r in b[name]]
         assert hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest() == want, name
@@ -81,6 +82,24 @@ def test_ms1_row_is_p3b_j1_b_top_plus_mass_scale() -> None:
     assert q["pcore"] == [] and [c["case"] for c in q["ecore"]] == [MS1_NAME]
     # case_plan stays as it was (test_s9_rev420_records CASE_DIGEST): MS1 is listed by s9_batch only
     assert MS1_NAME not in {r["case"] for r in run_S9.case_plan()}
+
+
+def test_d424_rows() -> None:
+    """Spec 424.6 A-8: the MS1 re-run has the MS1 case name and argv (batch folder = tag); x1.2 differs only in the
+    case name, the note and the scale."""
+    import s9_batch
+
+    b = s9_batch.batches()
+    ms1, d424 = b["MS1"][0], b["D424"]
+    assert [r["case"] for r in d424] == [MS1_NAME, "P3b_J1_B_top_Fs4_m1p2"]
+    assert d424[0]["argv"] == ms1["argv"] and d424[0]["est_s"] == run_S9.D424_EST_S["m1p1"]
+    a12 = d424[1]["argv"]
+    i = a12.index("--note")
+    assert a12[:i] == ms1["argv"][:i] and a12[-1] == "--approved"
+    assert a12[i:-1] == ["--note", d424[1]["note"], "--mass-scale", "1.2"]
+    assert d424[1]["est_s"] == run_S9.D424_EST_S["m1p2"]
+    assert [c["case"] for c in run_S9.d424_cases(include_optional=False)] == [MS1_NAME]
+    assert run_S9.build_parser().parse_args(a12[len(s9_batch.RUN):]).mass_scale == 1.2
 
 
 def test_level_default_mass_scale_and_p3b_argv_without_it() -> None:

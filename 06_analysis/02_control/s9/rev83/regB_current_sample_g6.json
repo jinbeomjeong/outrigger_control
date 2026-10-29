@@ -1,0 +1,1029 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s9/s9_slope_fix_candidates.py",
+  "suites": "g6",
+  "candidates": [
+   "current"
+  ],
+  "params": {},
+  "defaults": {
+   "e1": false,
+   "e1_max_mismatch_m": 0.004,
+   "e2": false,
+   "e2_drop_fraction": 0.08,
+   "e2_confirm_samples": 2,
+   "e2_max_relifts": 2,
+   "e3": false,
+   "e3_tilt_min_rad": 0.017453292519943295,
+   "e3_margin_m": 0.03,
+   "e3_require_soil_use": true,
+   "e3_min_clearance_at_P_m": -1.0,
+   "e4": false,
+   "e4_min_rise_ratio": 0.5,
+   "e4_gravity_samples": 100,
+   "reanchor_soil_skip": false,
+   "s4_stroke_limit": false,
+   "s4_stroke_basis": "max",
+   "lw_restart": false,
+   "lw_exclude": false,
+   "l1_revoke": false,
+   "l1_watch_m": 0.02,
+   "l1_rise_N": 2000.0,
+   "l1_rise_fraction_W": 0.005,
+   "l1_mean_s": 1.0,
+   "l1_confirm_periods": 2,
+   "l1_max_revokes": 2,
+   "l2_confirm_window": false,
+   "l2_min_clearance_at_P_m": 0.01,
+   "l2_extra_m": 0.005,
+   "l2_rise_N": 1000.0,
+   "l1_soil_gate": false,
+   "l1_gate_min_clearance_at_P_m": 0.01,
+   "l1_gate_tilt_min_rad": 0.017453292519943295,
+   "l1_stroke_guard": false,
+   "l1_stroke_margin_m": 0.04,
+   "l2_soil_gate": false,
+   "l4_probe_reuse": false,
+   "d1_fall_hold": false,
+   "d2_fall_slow": false,
+   "d3_repeat_reapproach_slow": false,
+   "d1p_over_p30fz": false,
+   "d1p_level_fraction_F_min": 2.0,
+   "d1p_needs_running_p30fz": true,
+   "d1r_predicted_hold": false,
+   "d1r_trigger_margin_N": 5000.0,
+   "d1r_release_margin_N": 10000.0,
+   "d1q_hold": false,
+   "d1q_gate_a": true,
+   "d1q_gate_b": true,
+   "d1q_slow": false,
+   "d1q_horizon_periods": 4,
+   "d1q_trigger_margin_N": 5000.0,
+   "d1q_twist_m": 0.015,
+   "d1q_hold_max_s": 1.5,
+   "d1q_hold_total_s": 3.0,
+   "d_level_fraction_F_min": 3.0,
+   "d_release_fraction_F_min": 3.5,
+   "d_drop_N": 1000.0,
+   "d_max_s": 3.0,
+   "d2_slow_fraction": 0.16,
+   "d3_reapproach_factor": 2.0,
+   "s5_push_extend": false,
+   "s5_eval_m": 0.05,
+   "s5_progress_frac": 0.02,
+   "s5_step_m": 0.05,
+   "s5_stroke_margin_m": 0.03,
+   "s5_max_total_m": 0.3,
+   "s6_saturation_loc": false,
+   "s6_ratio": 0.3,
+   "s6_rise_max_N": 4000.0,
+   "s6_min_clearance_m": 0.01
+  },
+  "filter": "ref|rigid|top|Fs4,ref|G1|top|Fs4,g6|G1+J2@FL|top|Fs4,g6|G1+S1@FL|top|Fs4",
+  "settle_hook": "p0",
+  "workers": 4,
+  "placement": {
+   "requested_mask": "0xaaaa",
+   "set_ok": true,
+   "process_mask": "0xaaaa",
+   "system_mask": "0xfffffff"
+  },
+  "wall_s": 38.0,
+  "n_records": 4
+ },
+ "summary": {},
+ "comparison": [],
+ "records": [
+  {
+   "suite": "g6",
+   "id": "g6|G1+J2@FL|top|Fs4",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "c05c63d7a0db891e1eed9b87ebed2715f2e381b5b1e832e587223354deb94275",
+   "t_ready_s": 79.50000000019757,
+   "min_force_kN": 29.355600428038166,
+   "att_end_deg": [
+    -0.013290345586120718,
+    0.0015270426002724578
+   ],
+   "max_stroke_mm": 483.22853285896355,
+   "final_phase": "ready",
+   "rut_ready_mm": 62.896138046169796,
+   "warnings": [],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 21.89999999999431,
+    "t_loc_s": 23.999999999989416,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 2.099999999995106,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9461,
+    "window_checks": [
+     {
+      "t_s": 24.0,
+      "e1_spread_mm": 6.0,
+      "e4_rise_ratio": 1.364,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      79.5,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.2,
+      361.59,
+      168.897,
+      257.49,
+      null
+     ],
+     [
+      21.3,
+      363.64,
+      149.452,
+      285.46,
+      null
+     ],
+     [
+      21.4,
+      365.69,
+      112.395,
+      325.56,
+      null
+     ],
+     [
+      21.5,
+      367.73,
+      82.714,
+      345.34,
+      null
+     ],
+     [
+      21.6,
+      369.73,
+      55.283,
+      359.94,
+      null
+     ],
+     [
+      21.7,
+      371.65,
+      35.726,
+      370.41,
+      null
+     ],
+     [
+      21.8,
+      373.49,
+      33.473,
+      373.27,
+      null
+     ],
+     [
+      21.9,
+      375.08,
+      22.999,
+      379.59,
+      0.0
+     ],
+     [
+      22.0,
+      376.24,
+      18.318,
+      383.37,
+      1.6
+     ],
+     [
+      22.1,
+      376.98,
+      16.822,
+      384.2,
+      2.8
+     ],
+     [
+      22.2,
+      377.46,
+      16.062,
+      384.96,
+      3.5
+     ],
+     [
+      22.3,
+      377.85,
+      13.529,
+      387.11,
+      4.0
+     ],
+     [
+      22.4,
+      378.21,
+      13.085,
+      387.53,
+      4.4
+     ],
+     [
+      22.5,
+      378.55,
+      12.598,
+      387.86,
+      4.7
+     ],
+     [
+      22.6,
+      378.89,
+      12.012,
+      388.09,
+      5.1
+     ],
+     [
+      22.7,
+      379.22,
+      11.583,
+      388.32,
+      5.4
+     ],
+     [
+      22.8,
+      379.56,
+      11.178,
+      388.52,
+      5.7
+     ],
+     [
+      22.9,
+      379.89,
+      9.125,
+      389.52,
+      6.1
+     ],
+     [
+      23.0,
+      380.23,
+      8.751,
+      389.64,
+      6.4
+     ],
+     [
+      23.1,
+      380.56,
+      8.334,
+      389.73,
+      6.7
+     ],
+     [
+      23.2,
+      380.9,
+      7.915,
+      389.8,
+      7.1
+     ],
+     [
+      23.3,
+      381.23,
+      7.543,
+      389.88,
+      7.4
+     ],
+     [
+      23.4,
+      381.57,
+      7.192,
+      389.94,
+      7.7
+     ],
+     [
+      23.5,
+      381.9,
+      4.043,
+      390.53,
+      8.1
+     ],
+     [
+      23.6,
+      382.24,
+      3.777,
+      390.55,
+      8.4
+     ],
+     [
+      23.7,
+      382.57,
+      3.543,
+      390.57,
+      8.8
+     ],
+     [
+      23.8,
+      382.91,
+      3.356,
+      390.6,
+      9.1
+     ],
+     [
+      23.9,
+      383.24,
+      3.183,
+      390.63,
+      9.4
+     ]
+    ],
+    "soil_push_mm": 9.8,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 21.71099999999475,
+      "t_confirmed_s": 21.810999999994518,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 23.999999999989416,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 36.5
+  },
+  {
+   "suite": "g6",
+   "id": "g6|G1+S1@FL|top|Fs4",
+   "candidate": "current",
+   "verdict": "fail",
+   "passed": false,
+   "failed_rows": [
+    "G6-7_preloc"
+   ],
+   "hash": "49bd2c3c9896fc3f1a017707352aeb6cabf0ba2665523b11bcd1e279d2d263c0",
+   "t_ready_s": 63.20000000011974,
+   "min_force_kN": 21.431095481916238,
+   "att_end_deg": [
+    -0.012291654942650544,
+    -0.0016342272412740047
+   ],
+   "max_stroke_mm": 551.3171373019234,
+   "final_phase": "ready",
+   "rut_ready_mm": 80.1502459379648,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 25.599999999985688,
+    "t_loc_s": 27.899999999980327,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 2.2999999999946397,
+    "t_reapproach_end_s": 26.699999999983124,
+    "loc_minus_reapproach_end_s": 1.1999999999972033,
+    "restart_events_before_loc": 4,
+    "restart_events_off_to_loc": 1,
+    "reapproach_intervals": [
+     {
+      "leg": "RR",
+      "start_s": 22.19999999999361,
+      "end_s": 22.699999999992446,
+      "overlaps_off_to_loc": false,
+      "window_restarts_s": [
+       22.19999999999361
+      ]
+     },
+     {
+      "leg": "RR",
+      "start_s": 24.299999999988717,
+      "end_s": 24.89999999998732,
+      "overlaps_off_to_loc": false,
+      "window_restarts_s": [
+       24.299999999988717
+      ]
+     },
+     {
+      "leg": "RR",
+      "start_s": 25.299999999986387,
+      "end_s": 25.699999999985454,
+      "overlaps_off_to_loc": true,
+      "window_restarts_s": [
+       25.299999999986387
+      ]
+     },
+     {
+      "leg": "RR",
+      "start_s": 26.299999999984056,
+      "end_s": 26.699999999983124,
+      "overlaps_off_to_loc": true,
+      "window_restarts_s": [
+       26.299999999984056
+      ]
+     }
+    ],
+    "overlapping_reapproach_legs": [
+     "RR"
+    ],
+    "open_overlapping_interval": false,
+    "lwa_on": true,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": true,
+     "2_delay_by_reapproach": true,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9461,
+    "window_checks": [
+     {
+      "t_s": 27.9,
+      "e1_spread_mm": 24.49,
+      "e4_rise_ratio": 1.794,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      63.2,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.7,
+      363.54,
+      142.3,
+      209.66,
+      null
+     ],
+     [
+      21.8,
+      365.55,
+      129.692,
+      233.43,
+      null
+     ],
+     [
+      21.9,
+      367.55,
+      112.795,
+      255.9,
+      null
+     ],
+     [
+      22.0,
+      369.52,
+      93.662,
+      275.88,
+      null
+     ],
+     [
+      22.1,
+      371.42,
+      73.318,
+      292.31,
+      null
+     ],
+     [
+      24.2,
+      388.09,
+      42.907,
+      343.11,
+      14.2
+     ],
+     [
+      27.7,
+      423.79,
+      2.515,
+      390.48,
+      49.6
+     ],
+     [
+      27.8,
+      424.88,
+      2.373,
+      390.62,
+      50.7
+     ]
+    ],
+    "soil_push_mm": 51.8,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.411999999986126,
+      "t_confirmed_s": 25.511999999985893,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.899999999980327,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    }
+   },
+   "wall_s": 32.4
+  },
+  {
+   "suite": "g6",
+   "id": "ref|G1|top|Fs4",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "91490a108f7c379cd5a5dabd2fe736e0bf3aaca52acee5ae71b0487e8134b3ac",
+   "t_ready_s": 40.100000000009445,
+   "min_force_kN": 62.88570959713286,
+   "att_end_deg": [
+    -0.0018746952312397975,
+    -0.007373370349587224
+   ],
+   "max_stroke_mm": 407.36880062249986,
+   "final_phase": "ready",
+   "rut_ready_mm": 42.78307714644917,
+   "warnings": [
+    "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+   ],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 21.399999999995476,
+    "t_loc_s": 21.89999999999431,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 0.4999999999988347,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9471,
+    "window_checks": [
+     {
+      "t_s": 21.9,
+      "e1_spread_mm": 1.66,
+      "e4_rise_ratio": 1.022,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      40.1,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.2,
+      361.85,
+      211.088,
+      267.93,
+      null
+     ],
+     [
+      21.3,
+      363.9,
+      186.442,
+      301.5,
+      null
+     ],
+     [
+      21.4,
+      365.95,
+      125.834,
+      348.25,
+      null
+     ],
+     [
+      21.5,
+      367.99,
+      75.641,
+      369.27,
+      null
+     ],
+     [
+      21.6,
+      369.97,
+      33.205,
+      382.63,
+      null
+     ],
+     [
+      21.7,
+      371.88,
+      6.938,
+      389.51,
+      null
+     ],
+     [
+      21.8,
+      373.69,
+      5.227,
+      389.71,
+      null
+     ]
+    ],
+    "soil_push_mm": 0.0,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 21.235999999995858,
+      "t_confirmed_s": 21.335999999995625,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 21.89999999999431,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000012221
+    }
+   },
+   "wall_s": 25.9
+  },
+  {
+   "suite": "g6",
+   "id": "ref|rigid|top|Fs4",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+   "t_ready_s": 39.4000000000061,
+   "min_force_kN": 54.6903272019059,
+   "att_end_deg": [
+    -0.00031316306971866697,
+    -0.011865658263171645
+   ],
+   "max_stroke_mm": 407.55781085783156,
+   "final_phase": "ready",
+   "rut_ready_mm": 49.71144798777605,
+   "warnings": [],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 20.699999999997107,
+    "t_loc_s": 21.199999999995942,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 0.4999999999988347,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9463,
+    "window_checks": [
+     {
+      "t_s": 21.2,
+      "e1_spread_mm": 7.74,
+      "e4_rise_ratio": 0.986,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      39.4,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      20.9,
+      357.93,
+      121.771,
+      353.46,
+      null
+     ],
+     [
+      21.0,
+      359.92,
+      61.608,
+      373.6,
+      null
+     ],
+     [
+      21.1,
+      361.92,
+      18.106,
+      386.45,
+      null
+     ]
+    ],
+    "soil_push_mm": null,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 20.576999999997394,
+      "t_confirmed_s": 20.67699999999716,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 21.199999999995942,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000012221
+    }
+   },
+   "wall_s": 21.0
+  }
+ ]
+}

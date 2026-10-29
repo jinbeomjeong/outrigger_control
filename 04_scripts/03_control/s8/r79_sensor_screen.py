@@ -38,7 +38,9 @@ Env: R79_LEVELS (comma, default L1), R79_SET (default identity), R79_SEEDS (comm
   R79_AFFINITY (hex mask on the parent, inherited by the workers), R79_TRACE=1 (keep the 10 Hz
   truth log in the record; the G6 recontact intervals ``r79.recontact_events`` of spec 407.2 are
   kept without it), R79_ROD_MODEL = dyn_map (default) | harness | extend_vent
-  (``ROD_MODELS``; the last two for comparison).
+  (``ROD_MODELS``; the last two for comparison), R79_CANDIDATE (spec 424.5: comma list of
+  ``s9_slope_fix_candidates.py`` candidates, e.g. ``current,D1,D2+D3``; every job runs once per
+  candidate, key ``cand=<name>#<key>``, record ``candidate`` / ``candidate_record``).
 """
 
 from __future__ import annotations
@@ -665,7 +667,27 @@ def job_keys(set_name: str, level_names: list[str], seeds: list[int] | None) -> 
     return jobs
 
 
+CANDIDATE_ENV = "R79_CANDIDATE"
+"""Spec 424.5: comma list of ``s9_slope_fix_candidates.py`` candidates (tokens joined by "+",
+"current" = the project controller as it is) applied to every job of the run."""
+CANDIDATE_KEY_PREFIX = "cand="
+CANDIDATE_KEY_SEPARATOR = "#"
+
+
+def candidate_names() -> list[str]:
+    return [name for name in os.environ.get(CANDIDATE_ENV, "").split(",") if name]
+
+
+def split_candidate(key: str) -> tuple[str | None, str]:
+    """(candidate, key without it) of ``cand=<name>#<key>``; (None, key) for a plain key."""
+    if not key.startswith(CANDIDATE_KEY_PREFIX):
+        return None, key
+    candidate, _, plain = key[len(CANDIDATE_KEY_PREFIX):].partition(CANDIDATE_KEY_SEPARATOR)
+    return candidate, plain
+
+
 def parse_job_key(key: str) -> tuple[SensorLevel, int, CaseSpec]:
+    _, key = split_candidate(key)
     level_name, seed_tag, harness, index, inner = key.split("|", 4)
     return LEVELS[level_name], int(seed_tag[1:]), CaseSpec(harness, inner, int(index))
 
@@ -783,12 +805,13 @@ def _place_worker() -> None:
 def run_job(key: str) -> dict:
     """One study run; the harness record is kept under ``base``, the truth summary under ``r79``."""
     global _ACTIVE
+    candidate, _ = split_candidate(key)
     level, seed_index, case = parse_job_key(key)
     seed = case_seed(case.group, seed_index, case.index)
     rod_model = os.environ.get("R79_ROD_MODEL", DEFAULT_ROD_MODEL)
     out = {"key": key, "level": level.name, "seed_index": seed_index, "seed": seed,
            "harness": case.harness, "inner": case.inner, "case_index": case.index,
-           "rod_model": rod_model}
+           "rod_model": rod_model, "candidate": candidate or "current"}
     t_wall = time.perf_counter()
     _place_worker()
     adapter = SensorAdapter(level, seed, rod_split_function(rod_model),
@@ -796,7 +819,9 @@ def run_job(key: str) -> dict:
     run = ActiveRun(level, adapter)
     _ACTIVE = run
     patches = _Patches()
+    restore_candidate = lambda: None  # noqa: E731
     try:
+        restore_candidate = _install_r79_candidate(candidate)
         runner = _run_g8 if case.harness == "g8" else _run_g6_family
         base, plant = runner(case, run, patches)
     except Exception as exc:  # keep the batch going; the error is reported
@@ -805,6 +830,7 @@ def run_job(key: str) -> dict:
         return out
     finally:
         patches.restore()
+        restore_candidate()
         _ACTIVE = None
     out["base"] = base
     if "error" in base or run.ctrl is None or plant is None:
@@ -812,6 +838,10 @@ def run_job(key: str) -> dict:
         return out
     out.update(_run_summary(run, plant))
     out["r79"]["recontact_events"] = recontact_summary(base)
+    if candidate not in (None, "current"):  # spec 424.5: the candidate's own record
+        controller = run.ctrl
+        fix = getattr(controller, "fix", None)
+        out["candidate_record"] = None if fix is None else _candidate_record(fix)
     out["wall_s"] = round(time.perf_counter() - t_wall, 1)
     return out
 
@@ -875,7 +905,37 @@ def selected_jobs() -> list[str]:
     filt = os.environ.get("R79_FILTER")
     if filt:
         jobs = [j for j in jobs if any(f in j for f in filt.split(","))]
+    candidates = candidate_names()
+    if candidates:
+        jobs = [f"{CANDIDATE_KEY_PREFIX}{name}{CANDIDATE_KEY_SEPARATOR}{job}"
+                for name in candidates for job in jobs]
     return jobs
+
+
+def _candidate_record(fix) -> dict:
+    """Spec 424.5: the wrapper counters of one candidate run (424.4.1 D1 / D2 / D3 included)."""
+    import s9_slope_fix_candidates as fx
+
+    return {"l1_revokes": fix.l1_revokes, "l2_confirms": fix.l2_confirms,
+            "l2_rejects": fix.l2_rejects, "l4_reused": list(fix.l4_reused),
+            "lw_clears": fix.lw_clears, **fx.qc_record(fix)}
+
+
+def _install_r79_candidate(candidate: str | None):
+    """Spec 424.5: swap ``c2.C2Controller`` for the wrapper candidate class (every harness
+    builds through the module attribute); returns a function that puts the original back.
+    None / "current": nothing is installed (the stored r79 path, bit for bit)."""
+    if candidate is None or candidate == "current":
+        return lambda: None
+    import s9_slope_fix_candidates as fx
+
+    c2, _ = fx._install_candidate(candidate, {})
+    original = fx._RUNNING["original_class"]
+
+    def restore() -> None:
+        c2.C2Controller = original
+
+    return restore
 
 
 def main() -> None:
@@ -898,6 +958,7 @@ def main() -> None:
             "levels": os.environ.get("R79_LEVELS", "L1"), "set": os.environ.get("R79_SET",
                                                                                  "identity"),
             "seeds": os.environ.get("R79_SEEDS"), "filter": os.environ.get("R79_FILTER"),
+            "candidates": candidate_names() or None,
             "affinity": os.environ.get("R79_AFFINITY"), "workers": workers,
             "rod_model": os.environ.get("R79_ROD_MODEL", DEFAULT_ROD_MODEL),
             "wall_s": round(time.perf_counter() - t0, 1), "n_jobs": len(jobs)}

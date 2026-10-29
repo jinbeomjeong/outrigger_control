@@ -1919,6 +1919,66 @@ class LiftoffWindowReapproachSettings:
         object.__setattr__(self, "mode", LiftoffWindowReapproach(self.mode))
 
 
+LOC_REVOKE_EVENT = "INFO_LOC_REVOKED"
+"""``INFO_LOC_REVOKED:<rise kN, one decimal>``: P-S8-33 revoked the LOC; the value is the 1 s
+mean load sum above ``W_hat`` that revoked it."""
+LOC_REVOKE_SKIPPED_EVENT = "INFO_LOC_REVOKE_SKIPPED"
+"""``INFO_LOC_REVOKE_SKIPPED:stroke``: the P-S8-33 stroke guard withheld a revocation (record
+only; the LOC stays and its watch ends)."""
+LOC_REVOKE_TIME_MATCH_S = 1e-6
+"""Time tolerance of the P-S8-33 load-sum averaging window."""
+
+
+@dataclass(frozen=True)
+class LocRevokeSettings:
+    """P-S8-33 (L1, spec 424.10): revoke a LOC that the load sum contradicts afterwards.
+
+    After a LOC and until the mean motor stroke is ``watch_m`` past the LOC stroke, the phase
+    leaves LEVEL (first DONE) or the LOC is gone, the ``mean_s`` mean of the load sum is
+    compared with ``W_hat + max(rise_N, rise_fraction_W * W_ref)``; above it on
+    ``confirm_periods`` periods in a row revokes the LOC (at most ``max_revokes`` per run).
+
+    Spec 424.10.2 (L1gs): with ``soil_gate`` the watch starts only at a LOC with a soil sign
+    (the soil mode started, or ``c_min(t_P) > gate_min_clearance_at_P_m`` on a settle tilt
+    ``max(|roll|, |pitch|) > gate_tilt_min_rad``); with ``stroke_guard`` a due revocation is
+    withheld when the largest motor stroke is at or above the lift guard stroke minus
+    ``stroke_margin_m``; with ``keep_slope_margin_on_revoke`` a revocation keeps the P-S8-31
+    margin (no second application). Off by default; plain class-level defaults, so configs
+    unpickled from older code read "off".
+    """
+
+    enable: bool = False
+    watch_m: float = 0.020
+    """Mean motor stroke past the LOC stroke that ends the watch."""
+    rise_N: float = 2000.0
+    rise_fraction_W: float = 0.005
+    """Rise limit ``max(rise_N, rise_fraction_W * W_ref)`` above ``W_hat``."""
+    mean_s: float = 1.0
+    """Length of the load-sum moving mean."""
+    confirm_periods: int = 2
+    max_revokes: int = 2
+    soil_gate: bool = False
+    gate_min_clearance_at_P_m: float = 0.010
+    """Strict: the clearance part of the soil sign needs ``c_min(t_P) >`` this value."""
+    gate_tilt_min_rad: float = math.radians(1.0)
+    """Strict: and a settle tilt ``max(|roll|, |pitch|) >`` this value."""
+    stroke_guard: bool = False
+    stroke_margin_m: float = 0.040
+    """Below the lift guard stroke (682.8 - 40 = 642.8 mm): from there no revocation."""
+    keep_slope_margin_on_revoke: bool = False
+
+    def __post_init__(self) -> None:
+        for name in ("watch_m", "rise_N", "rise_fraction_W", "mean_s", "stroke_margin_m"):
+            if not getattr(self, name) > 0.0:
+                raise ValueError(f"{name} must be > 0, got {getattr(self, name)!r}")
+        if not self.gate_min_clearance_at_P_m > 0.0:
+            raise ValueError(
+                f"gate_min_clearance_at_P_m must be > 0, got {self.gate_min_clearance_at_P_m!r}"
+            )
+        if self.confirm_periods < 1 or self.max_revokes < 0:
+            raise ValueError("confirm_periods must be >= 1 and max_revokes >= 0")
+
+
 @dataclass(frozen=True)
 class RestoredLiftoff:
     """S-1 lift-off confirmation handed to :meth:`C2Controller.restore_liftoff_confirmation`.
@@ -2004,6 +2064,9 @@ class C2Config:
     liftoff_window_reapproach: LiftoffWindowReapproachSettings = LiftoffWindowReapproachSettings()
     """S-1 window against a lifted re-approach (P-S8-32, LWa); off by default, a plain
     class-level default as ``soil``."""
+    loc_revoke: LocRevokeSettings = LocRevokeSettings()
+    """LOC revocation after the LOC (P-S8-33, L1gs); off by default, a plain class-level default
+    as ``soil``."""
 
     def __post_init__(self) -> None:
         if not self.period_s > 0.0:
@@ -2141,8 +2204,9 @@ class C2Config:
         LOC on a settle tilted more than 1 deg with ``c_min(t_P)`` above 10 mm the clearance
         target of the run is 30 mm higher (:class:`SlopeClearanceMarginSettings`). User
         decision 2026-10-29 (P-S8-32, LWa, spec 419): the S-1 window is cleared while a
-        re-approach is active (:class:`LiftoffWindowReapproachSettings`). The start-IMU form
-        only:
+        re-approach is active (:class:`LiftoffWindowReapproachSettings`). User decision
+        2026-10-29 (P-S8-33 L1gs, spec 424.10.2): LOC revocation gated by a soil sign and the
+        stroke budget (:class:`LocRevokeSettings`); P-S8-34 removed. The start-IMU form only:
         the late IMU read (C1) is not implemented (U-R8-6 = C2).
         """
         config = self.with_r8_diagnostics()
@@ -2213,6 +2277,13 @@ class C2Config:
             slope_clearance_margin=slope_clearance_margin,
             liftoff_window_reapproach=LiftoffWindowReapproachSettings(
                 mode=LiftoffWindowReapproach.RESTART
+            ),
+            loc_revoke=replace(
+                config.loc_revoke,
+                enable=True,
+                soil_gate=True,
+                stroke_guard=True,
+                keep_slope_margin_on_revoke=True,
             ),
             two_pressure=two_pressure,
             fault_reground=reground_settings,
@@ -3272,6 +3343,20 @@ class _PlateauSample:
 
 
 @dataclass
+class _LocRevokeWatch:
+    """P-S8-33 watch of one LOC."""
+
+    stroke_loc_m: float
+    """Mean motor stroke at the LOC."""
+    weight_estimate_N: float
+    """``W_hat`` of the watched LOC."""
+    loads: list[tuple[float, float]] = field(default_factory=list)
+    """(t s, load sum N) of every watched period."""
+    periods_above: int = 0
+    """Consecutive periods with the mean load sum above the limit."""
+
+
+@dataclass
 class _SoilState:
     """Soil response S-1 .. S-5 of one lifting cycle (cleared at TOUCH entry, P-S9-6)."""
 
@@ -3576,6 +3661,13 @@ class _RunState:
     # P-S8-32 (immutable default: class attribute for run states pickled before it)
     loc_window_restart_count: int = 0
     """Non-empty S-1 windows cleared because of a re-approach (meta)."""
+    # P-S8-33 (immutable defaults: class attributes for run states pickled before them)
+    loc_revoke_watch: _LocRevokeWatch | None = None
+    """Running watch of the last LOC; ``None``: no watch."""
+    loc_revokes: tuple[tuple[float, float], ...] = ()
+    """(t s, rise N above ``W_hat``) of every revocation of the run."""
+    loc_revoke_skips: tuple[float, ...] = ()
+    """Times the stroke guard withheld a due revocation."""
 
 
 @dataclass(frozen=True)
@@ -3778,6 +3870,9 @@ class C2Controller:
         if np.any(applied != 0.0):
             state.last_nonzero_command_t_s = measurements.t_s
         state.applied_output_m_s = applied
+        if self.config.loc_revoke.enable:
+            # After the command (as the L1 wrapper): a revocation acts from the next period.
+            self._watch_loc_revoke()
         return Command(t_s=measurements.t_s, leg_speed_m_s=applied)
 
     def _delay_output(self, output: NDArray[np.float64]) -> NDArray[np.float64]:
@@ -3814,6 +3909,7 @@ class C2Controller:
             "pre_loc_lift_pause": self._pre_loc_lift_pause_meta(),
             "slope_clearance_margin": self._slope_clearance_margin_meta(),
             "liftoff_window_reapproach": self._liftoff_window_reapproach_meta(),
+            "loc_revoke": self._loc_revoke_meta(),
             "locked_pressure_warning_note": (
                 QUASI_STATIC_PRESSURE_NOTE if r8.is_instant_sampling else None
             ),
@@ -6979,7 +7075,8 @@ class C2Controller:
     def _confirm_liftoff(
         self, t_s: float, tail: list[_PlateauSample], mean_load_N: float
     ) -> None:
-        """LOC: store ``t_P``, ``W_hat`` and the S-3 bias, end soil mode, report (S-5)."""
+        """LOC: store ``t_P``, ``W_hat`` and the S-3 bias, end soil mode, report (S-5); then
+        the P-S8-33 watch starts."""
         soil = self._soil_state()
         settings = self.config.soil
         plateau_start = tail[0]
@@ -7018,6 +7115,124 @@ class C2Controller:
                 t_s, f"{SOIL_EVENT_WEIGHT_MISMATCH}:{soil.weight_ratio:.3f}", is_warning=True
             )
         self._apply_slope_clearance_margin(t_s)
+        if self.config.loc_revoke.enable:
+            self._start_loc_revoke_watch()
+
+    # --- LOC revocation (P-S8-33 L1gs, spec 424.10 / 424.10.2) ---
+
+    def _start_loc_revoke_watch(self) -> None:
+        state = self._state
+        soil = self._soil_state()
+        settings = self.config.loc_revoke
+        if not soil.is_liftoff_confirmed or len(state.loc_revokes) >= settings.max_revokes:
+            return
+        if settings.soil_gate and not self._has_loc_soil_sign():
+            return
+        if state.last_reading is None:
+            return  # a LOC forced before any update (benches): no LOC stroke to watch from
+        state.loc_revoke_watch = _LocRevokeWatch(
+            stroke_loc_m=float(np.mean(state.last_reading.motor_stroke_m)),
+            weight_estimate_N=float(soil.weight_estimate_N),
+        )
+
+    def _watch_loc_revoke(self) -> None:
+        """One period of the P-S8-33 watch, after the command of the period."""
+        state = self._state
+        watch = state.loc_revoke_watch
+        if watch is None:
+            return
+        settings = self.config.loc_revoke
+        reading = state.last_reading
+        mean_stroke_m = float(np.mean(reading.motor_stroke_m))
+        if (
+            not self._soil_state().is_liftoff_confirmed
+            or state.phase is not C2Phase.LEVEL
+            or mean_stroke_m - watch.stroke_loc_m >= settings.watch_m
+        ):
+            state.loc_revoke_watch = None  # first DONE, LOC gone or watch_m past the LOC
+            return
+        t_s = float(reading.t_s)
+        watch.loads.append((t_s, float(np.sum(reading.cylinder_force_N))))
+        window_start_s = t_s - settings.mean_s + LOC_REVOKE_TIME_MATCH_S
+        mean_load_N = float(np.mean([load for t, load in watch.loads if t > window_start_s]))
+        rise_limit_N = max(
+            settings.rise_N, settings.rise_fraction_W * self._reference_weight_N()
+        )
+        if mean_load_N > watch.weight_estimate_N + rise_limit_N:
+            watch.periods_above += 1
+        else:
+            watch.periods_above = 0
+        if watch.periods_above < settings.confirm_periods:
+            return
+        if settings.stroke_guard and self._is_revoke_stroke_guarded(reading):
+            state.loc_revoke_watch = None  # record only: the stroke budget keeps this LOC
+            state.loc_revoke_skips = (*state.loc_revoke_skips, t_s)
+            self._add_event(t_s, f"{LOC_REVOKE_SKIPPED_EVENT}:stroke")
+            return
+        self._revoke_loc(t_s, mean_load_N - watch.weight_estimate_N)
+
+    def _has_loc_soil_sign(self) -> bool:
+        """L1-g at the LOC: the soil mode started, or ``c_min(t_P)`` and the settle tilt above
+        their gate values (the P-S8-31 sign; a level rigid floor never has it)."""
+        soil = self._soil_state()
+        if soil.soil_mode_start_s is not None:
+            return True
+        settings = self.config.loc_revoke
+        c_min_at_P_m = soil.clearance_at_plateau_start_m
+        settle_rad = self._settle_attitude_rad()
+        if c_min_at_P_m is None or settle_rad is None:
+            return False
+        is_tilted = max(abs(settle_rad[0]), abs(settle_rad[1])) > settings.gate_tilt_min_rad
+        return c_min_at_P_m > settings.gate_min_clearance_at_P_m and is_tilted
+
+    def _is_revoke_stroke_guarded(self, reading: _Reading) -> bool:
+        """L1-s: the largest motor stroke is within ``stroke_margin_m`` of the lift guard
+        stroke (the P-S8-28 ``s_g``)."""
+        guard_stroke_m = (
+            self.geometry.stroke_soft_max_m
+            - STROKE_END_MARGIN_M
+            - self.config.lift_stroke_guard.extra_margin_m
+        )
+        limit_m = guard_stroke_m - self.config.loc_revoke.stroke_margin_m
+        return float(np.max(reading.motor_stroke_m)) >= limit_m
+
+    def _revoke_loc(self, t_s: float, rise_N: float) -> None:
+        """Back to "lift-off not confirmed": a new S-1 window; the S-3 bias, LOC anchor and
+        ``W_hat`` are found again at the next LOC (soil mode by S-2), and so is the P-S8-31
+        margin unless ``keep_slope_margin_on_revoke`` keeps the first one."""
+        soil = self._soil_state()
+        soil.is_liftoff_confirmed = False
+        soil.is_soil_mode = False
+        soil.soil_mode_start_stroke_m = None
+        soil.window.clear()
+        soil.corner_bias_m = np.zeros(LEG_COUNT)
+        soil.corner_bias_raw_m = None
+        soil.is_loc_anchor_applied = False
+        soil.liftoff_s = None
+        soil.plateau_start_s = None
+        soil.weight_estimate_N = None
+        soil.weight_ratio = None
+        soil.clearance_at_plateau_start_m = None
+        soil.clearance_at_liftoff_m = None
+        state = self._state
+        if not self.config.loc_revoke.keep_slope_margin_on_revoke:
+            # P-S8-31 once per confirmed LOC (spec 424.10), not once per run.
+            state.clearance_target_m = None
+            state.slope_margin_applied_s = None
+            state.slope_margin_settle_rad = None
+        state.loc_revokes = (*state.loc_revokes, (float(t_s), float(rise_N)))
+        state.loc_revoke_watch = None
+        self._add_event(t_s, f"{LOC_REVOKE_EVENT}:{rise_N / 1e3:.1f}", is_warning=True)
+
+    def _loc_revoke_meta(self) -> dict[str, Any]:
+        state = self._state
+        return {
+            "settings": asdict(self.config.loc_revoke),
+            "revokes": len(state.loc_revokes),
+            "t_revoke_s": [t_s for t_s, _ in state.loc_revokes],
+            "rise_N": [rise_N for _, rise_N in state.loc_revokes],
+            "t_skip_s": list(state.loc_revoke_skips),
+        }
 
     # --- slope clearance margin (P-S8-31, spec 414.2 / 417.5) ---
 

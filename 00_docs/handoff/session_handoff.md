@@ -2,11 +2,27 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-10-29 저녁 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **최종 Chrono S9SL·G6P·연구 ③ 판정, r79 센서 판정 확정, 판정 규칙 Q-A~Q-G(READY 100 s, chatter FLAG, W_plant), 운용 중량 감도 H6·MS1 준비, dynamics 개정 58(5.42)**). 그 전: d99a7e4(개정 76~80, 제어기 수정 3건 인수), f062051(개정 75), bee0693(개정 74, P-S8-30 P30fz), 3131552(개정 72·73, G6 하네스·P-S8-29·꼬리 여유·G6 Chrono 기능), 34c806d(개정 69~71, G8·P-S8-28), 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
+- 갱신: 2026-10-30 새벽 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 마지막 커밋: 이 파일을 담은 커밋(`git log -1`, **명세 개정 81~83(421~424절): Q-D = P-S8-33 L1gs 채택·P-S8-34 L2 폐기, Q-C 후보 없음, ×1.2 J1 B 범위 밖, 최종 LOC 판정·조건 6, R2 인수, dynamics 개정 59(5.43)**). 그 전: 1cd4618(최종 Chrono S9SL·G6P·연구 ③, r79 확정, Q-A~Q-G), d99a7e4(개정 76~80, 제어기 수정 3건 인수), f062051(개정 75), bee0693(개정 74, P-S8-30 P30fz), 3131552(개정 72·73, G6 하네스·P-S8-29·꼬리 여유·G6 Chrono 기능), 34c806d(개정 69~71, G8·P-S8-28), 7862ef6(개정 67·68, P-S8-26·27, S9 J1 인수), e8ef7df(FAULT_REGROUND G4, 개정 64~66), 255981c(무결성 정리), 3eb1220(P-S8-22 종결, 개정 63), 7b4de6f(S9 완료), 0941c0c(P-S8-22 merge)
 - 세션 기록: 일반 Windows 터미널에서 `claude`를 직접 실행한다(2026-10-26 결정).
 
-## 이번 커밋에서 바뀐 것 (d99a7e4 이후, 2026-10-29 오후~저녁)
+## 이번 커밋에서 바뀐 것 (1cd4618 이후, 2026-10-29 밤~30 새벽)
+
+1. **운용 중량 대응 Q-D(명세 424, 개정 83)**: 축소 하네스 H6·2단계 회귀(slope 177·G6 116·G8 516·p3b 207·V-3 88)로 후보 비교. L1+L2 원안은 회귀 미달(강체 가짜 취소, 행정 끝 취소, 센서 잡음 L2 작동) → 수정안 재비교 → **P-S8-33 L1gs 채택**(LOC 사후 취소 + 토양 징후 관문 + 행정 보호 642.8 mm, E3c10 첫 적용 유지), **P-S8-34(L2 확인창) 폐기**(사용자 결정 2026-10-29). H6 J1 B ×1.1 오거 세 단계 통과. 알려진 한계: 연구 ① `H1|S1|A|top|roll_neg` 행정 한계 FAULT(안전 종료). 결과 `06_analysis/02_control/s9/rev83/`(`q_d_h6*`, `reg_*`, `regB*`, `R2_*`).
+2. **×1.2(J1 패드 B)**: 범위 밖, 개정 A-2(행정 한계 FAULT·F_min 위반·거짓 LOC 0, LOC 미확정 안전 종료 허용). 근거 dynamics 개정 59 5.43(정적 Bekker: READY까지 +128~170 mm > 남은 134.6 mm, 임계 mass_scale 1.184, 패드 A면 예산 안). S5·S6 탈락.
+3. **Q-C(대각 하중 보호)**: D1·D2·D3·D1p·D1p0·D1r·D1q 계열 모두 기준 미달 → **후보 없음, 현행 유지·기록**(사용자 결정). 효과 시점 29.2 s(첫 P30fz)에 한 패드 연약과 균일 지면을 가를 신호 없음. 래퍼 토큰은 진단용으로만 남김.
+4. **판정기**: 최종 LOC 기준(취소된 LOC는 기록), FLAG `P3-2_late_loc_revoked`/`G6-2_late_loc_revoked`(조건 1~6, 조건 6 = 총 지연 ≤ (1+n)·T_lim), T_lim 인자(Chrono 2.9117 s, 하네스 2.9 s), P3-8·P3-5 기록·W61도 최종 LOC. `run_S9.py`(`loc_timeline`, `_shared_loc_revoke_events`), `late_loc_rule.py`, `s9_soil_slope.py`, 래퍼, `r72_g6_screen.py`, `r79_sensor_judge.py`(`candidates`, WATCH_ONLY SKIPPED).
+5. **03_src**: `c2.py` `LocRevokeSettings`(R8 프리셋만 켬), 사건 `INFO_LOC_REVOKED`·`INFO_LOC_REVOKE_SKIPPED:stroke`. 시험 `test_c2_p33_p34.py`, `test_s9_qd_gated.py`, `test_s9_loc_revoke.py`. unit 3,207 통과(Chrono-dev, sympy 없는 settle_hook 9건 제외 — dynamics-dev 12/12).
+6. **R2 인수(424.10.2)**: 하네스 6묶음 1,136 명령 해시 = 래퍼 L1gs 100 %, r8d1 8/8, r79 L0 identity 20/20, unit. r79 L1·L2 all 1,122 재확인(구현본 snapC, `s8/rev79/r79_L1L2_all_R2.json` → `r79_L2_judgement_R2.json`): S-1~S-6 표는 v2와 같고, Q-E L2 S1 전방 제외 11/855 = 1.29 %(CP 2.12 % ≤ 3 %) 합격(v3 12/855보다 1건 좋아짐: ref J2 B seed 3이 L1gs 재확정으로 통과). L1 해시 187/187 같음, L2 해시가 바뀐 26건은 모두 `INFO_LOC_REVOKED`가 작동한 연약 지면 사례이고 판정은 통과 그대로. G8 작동 0, `INFO_LOC_REVOKE_SKIPPED` 0건. → **R2 인수 통과**(명세 424.10.2).
+7. 실행 방식: 계산 중 코드 수정을 막으려고 저장소 코드 스냅숏(scratchpad `snapA/B/C`, 데이터는 정션)에서 회귀를 돌림. 에이전트 이름 cpu-scheduler-expert → **compute-scheduler-expert**(GPU 포함).
+
+## 다음 할 일 (2026-10-30 새벽 커밋 뒤)
+
+1. **Chrono D424**(구현본, `s9_batch.py run D424 --parallel 2`, **실행 전 사용자에게 알리고 승인받은 뒤 띄운다 — 사용자 지시 2026-10-30**): ① MS1 `P3b_J1_B_top_Fs4_m1p1`(판정 A-8: P3-1·P3-5·P3-6 100 s, P3-7 최종 LOC 창), ② `_m1p2`(범위 밖 기록, 개정 A-2). 밤사이 사전 결정(메모리 `overnight-authorization-20261030`): MS1 실패면 원인 분석·설계 변경·검증까지 자동, 탐침 3회차 READY > 100 s면 P3-6 실패로 기록.
+2. **논문 v4**(`09_paper/`, 커밋 안 함): 1~3절 초안·4절 뼈대 완료(백업 `09_paper/history/20261030_v3.2_pre_v4/`), 그림 3·4 다시 그리는 중. 4절 수치는 D424 판정 뒤 → paper-reviewer opus/high 리뷰 → 구조 변경 빼고 반영 → 빌드·`09_paper/v4/` 스냅숏.
+3. 작업 끝나면 사용자에게 Microsoft Store 자동 업데이트 다시 켜기 알림(Windows Update 일시 중지 11-01 13:06 만료).
+
+## 1cd4618에서 바뀐 것 (d99a7e4 이후, 2026-10-29 오후~저녁)
 
 1. **최종 Chrono(최종 코드 d99a7e4)**: S9SL 4건(`07_results/S9/batch_S9SL_20261029_144406`) — C-1 통과, C-2 P3-7만 실패, **C-3(운용 시작 조건 안) 행정 제한 통과**(옛 코드 실패 → 개선), C-4 FAULT(조건 밖, 옛 코드와 같음); G6P S1@FL(`batch_G6P_20261029_144418`) G6-1~6 통과; 평지 p3b_aug·G6P 8건 중 7건 E420 동치(동치 기록 `06_analysis/01_chrono/19_S9/s9_E420_*.json`). 명세 400.1~400.5·409.1·411.1.
 2. **연구 ③(오거 3단계)** 8건 P3 합격(명세 411.1, `rev82/r82_p3b_aug_judgement.json`), J2 B READY 지연 기구 = 탐침 소성 침하 재레벨 회차(dynamics 개정 58 5.42).
@@ -15,7 +31,7 @@
 5. **운용 중량 감도**: H6 32건(`rev82/r82_mass_scale.json`, Q-G 재판정 `r82_mass_scale_rejudged_qg.json`) — J1 B +10 % 상단 불합격·중단 경계·하단 통과, +20 % FAULT. Chrono 확인 MS1(`run_S9.py --mass-scale`, `batch_MS1_20261029_183324`, J1 B 상단 ×1.1) 실행 중(22:00쯤). 
 6. 코드: `run_S9.py`(mass_scale, MS1 묶음, W_plant, chatter, P3-6 한계 표), `late_loc_rule.py`(chatter 상수·재분류), 하네스 판정기(r72·r79·`s9_soil_slope.py`·래퍼), `r79_sensor_judge.py`(judge-merged, S-4 chatter). 시험 추가.
 
-## 다음 할 일 (2026-10-29 저녁 커밋 뒤)
+### 1cd4618 당시 다음 할 일 (기록)
 
 1. MS1 끝나면 `run_S9.py rejudge 07_results/S9/batch_MS1_20261029_183324` → control 판정(하네스 상단 ×1.1 불합격과 대조) → **사용자 결정 Q-D**(J1 패드 B 운용 중량 대응: (가) 패드 B 범위 제한 / (나) 새 LOC 규칙 / (다) 패드 A 표준)와 **Q-C**(r79 G6-3 대각 하중 7건)를 함께 메시지 박스로.
 2. 결정 반영·무결성 점검·커밋 → 논문 v4(사용자 사전 승인: 초안·리뷰·반영, 원고 커밋 안 함).
@@ -171,7 +187,7 @@ A. ✅ (e8ef7df) G4 FAULT_REGROUND 닫음(명세 개정 64~66, U-S8-68~72). ✅ 
 ## 작업 규칙 (이 프로젝트 메모리에 있음)
 
 - **모든 커밋 직전 integrity-checker → 이상 없을 때만 커밋·`origin/master` 푸시(상시 승인).** 커밋마다 이 인계 문서를 갱신해 같은 커밋에 넣는다. Medium·Low 지적도 커밋 전에 고친다.
-- **모든 계산 작업은 cpu-scheduler-expert 배치표로 P·E 코어를 최대한 쓴다**(사용자 2026-10-27, 단건 포함). 비용 측정만 단독.
+- **모든 계산 작업은 compute-scheduler-expert(옛 cpu-scheduler-expert, 2026-10-29 이름 변경·GPU 범위 추가) 배치표로 P·E 코어(GPU 작업은 GPU 순서)를 최대한 쓴다**(사용자 2026-10-27, 단건 포함). 비용 측정만 단독.
 - 예상 15분 이상 작업은 **long-running-task-monitor**에 15분 주기 점검을 맡긴다(Suspended 검사 포함).
 - **Suspended·응답 없는 프로세스는 추천 방법으로 자동 조치 뒤 사후 보고**(사용자 2026-10-26): Suspended는 ResumeThread, 일회성 고아만 단일 PID 종료, 시뮬레이션·실행기는 자동 종료 금지. Bash·Grep 도구 자식(git·grep·bash·ripgrep)이 Suspended로 멈추는 일이 반복돼 Python·검색·긴 명령은 PowerShell 도구로 한다(검색은 `Select-String`).
 - 에이전트 지시문에 매번: 셸 heredoc·`python -`·`sed -i` 금지, Write로 쓴 파일을 `python -I`로 실행, 커밋 메시지는 `git commit -F <파일>`.

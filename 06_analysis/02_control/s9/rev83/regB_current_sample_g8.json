@@ -1,0 +1,696 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s9/s9_slope_fix_candidates.py",
+  "suites": "g8",
+  "candidates": [
+   "current"
+  ],
+  "params": {},
+  "defaults": {
+   "e1": false,
+   "e1_max_mismatch_m": 0.004,
+   "e2": false,
+   "e2_drop_fraction": 0.08,
+   "e2_confirm_samples": 2,
+   "e2_max_relifts": 2,
+   "e3": false,
+   "e3_tilt_min_rad": 0.017453292519943295,
+   "e3_margin_m": 0.03,
+   "e3_require_soil_use": true,
+   "e3_min_clearance_at_P_m": -1.0,
+   "e4": false,
+   "e4_min_rise_ratio": 0.5,
+   "e4_gravity_samples": 100,
+   "reanchor_soil_skip": false,
+   "s4_stroke_limit": false,
+   "s4_stroke_basis": "max",
+   "lw_restart": false,
+   "lw_exclude": false,
+   "l1_revoke": false,
+   "l1_watch_m": 0.02,
+   "l1_rise_N": 2000.0,
+   "l1_rise_fraction_W": 0.005,
+   "l1_mean_s": 1.0,
+   "l1_confirm_periods": 2,
+   "l1_max_revokes": 2,
+   "l2_confirm_window": false,
+   "l2_min_clearance_at_P_m": 0.01,
+   "l2_extra_m": 0.005,
+   "l2_rise_N": 1000.0,
+   "l1_soil_gate": false,
+   "l1_gate_min_clearance_at_P_m": 0.01,
+   "l1_gate_tilt_min_rad": 0.017453292519943295,
+   "l1_stroke_guard": false,
+   "l1_stroke_margin_m": 0.04,
+   "l2_soil_gate": false,
+   "l4_probe_reuse": false,
+   "d1_fall_hold": false,
+   "d2_fall_slow": false,
+   "d3_repeat_reapproach_slow": false,
+   "d1p_over_p30fz": false,
+   "d1p_level_fraction_F_min": 2.0,
+   "d1p_needs_running_p30fz": true,
+   "d1r_predicted_hold": false,
+   "d1r_trigger_margin_N": 5000.0,
+   "d1r_release_margin_N": 10000.0,
+   "d1q_hold": false,
+   "d1q_gate_a": true,
+   "d1q_gate_b": true,
+   "d1q_slow": false,
+   "d1q_horizon_periods": 4,
+   "d1q_trigger_margin_N": 5000.0,
+   "d1q_twist_m": 0.015,
+   "d1q_hold_max_s": 1.5,
+   "d1q_hold_total_s": 3.0,
+   "d_level_fraction_F_min": 3.0,
+   "d_release_fraction_F_min": 3.5,
+   "d_drop_N": 1000.0,
+   "d_max_s": 3.0,
+   "d2_slow_fraction": 0.16,
+   "d3_reapproach_factor": 2.0,
+   "s5_push_extend": false,
+   "s5_eval_m": 0.05,
+   "s5_progress_frac": 0.02,
+   "s5_step_m": 0.05,
+   "s5_stroke_margin_m": 0.03,
+   "s5_max_total_m": 0.3,
+   "s6_saturation_loc": false,
+   "s6_ratio": 0.3,
+   "s6_rise_max_N": 4000.0,
+   "s6_min_clearance_m": 0.01
+  },
+  "filter": "slope|edge|top|4.0|ref|none|0|proj,slope|edgeMp|top|4.0|FR|raised|20.0|proj,slope|edgeMp|top|4.0|FR|raised|140.0|proj,slope|edge|top|4.0|FL|raised|55.0|proj",
+  "settle_hook": "p0",
+  "workers": 4,
+  "placement": {
+   "requested_mask": "0xaaaa",
+   "set_ok": true,
+   "process_mask": "0xaaaa",
+   "system_mask": "0xfffffff"
+  },
+  "wall_s": 26.5,
+  "n_records": 4
+ },
+ "summary": {},
+ "comparison": [],
+ "records": [
+  {
+   "suite": "g8",
+   "id": "slope|edge|top|4.0|ref|none|0|proj",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "004d914de65c0d69",
+   "t_ready_s": 52.50000000006865,
+   "min_force_kN": 45.48,
+   "att_end_deg": [
+    -0.015,
+    -0.0114
+   ],
+   "max_stroke_mm": 626.66,
+   "final_phase": "ready",
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9582,
+    "window_checks": [
+     {
+      "t_s": 22.1,
+      "e1_spread_mm": 11.94,
+      "e4_rise_ratio": 0.815,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      52.5,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.6,
+      357.12,
+      177.519,
+      334.41,
+      null
+     ],
+     [
+      21.7,
+      358.14,
+      134.606,
+      349.5,
+      null
+     ],
+     [
+      21.8,
+      359.16,
+      63.183,
+      372.81,
+      null
+     ],
+     [
+      21.9,
+      360.18,
+      26.939,
+      380.8,
+      null
+     ],
+     [
+      22.0,
+      361.2,
+      6.326,
+      385.02,
+      null
+     ]
+    ],
+    "soil_push_mm": null,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 21.047999999996296,
+      "t_confirmed_s": 21.147999999996063,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 22.099999999993845,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000012221
+    }
+   },
+   "wall_s": 25.7
+  },
+  {
+   "suite": "g8",
+   "id": "slope|edge|top|4.0|FL|raised|55.0|proj",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "0ea01bc71a864147",
+   "t_ready_s": 52.60000000006913,
+   "min_force_kN": 52.7,
+   "att_end_deg": [
+    -0.0154,
+    -0.0113
+   ],
+   "max_stroke_mm": 633.58,
+   "final_phase": "ready",
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9554,
+    "window_checks": [
+     {
+      "t_s": 21.8,
+      "e1_spread_mm": 14.9,
+      "e4_rise_ratio": 0.864,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      52.6,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.4,
+      286.18,
+      146.107,
+      346.14,
+      null
+     ],
+     [
+      21.5,
+      287.2,
+      78.886,
+      369.5,
+      null
+     ],
+     [
+      21.6,
+      288.23,
+      38.148,
+      378.95,
+      null
+     ],
+     [
+      21.7,
+      289.26,
+      10.446,
+      384.86,
+      null
+     ]
+    ],
+    "soil_push_mm": null,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 20.76299999999696,
+      "t_confirmed_s": 20.862999999996727,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 0.0
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 21.799999999994544,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000012221
+    }
+   },
+   "wall_s": 25.7
+  },
+  {
+   "suite": "g8",
+   "id": "slope|edgeMp|top|4.0|FR|raised|20.0|proj",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "d9f287e3920075f7",
+   "t_ready_s": 52.10000000006674,
+   "min_force_kN": 54.8,
+   "att_end_deg": [
+    -0.0154,
+    0.0108
+   ],
+   "max_stroke_mm": 621.91,
+   "final_phase": "ready",
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9625,
+    "window_checks": [
+     {
+      "t_s": 22.3,
+      "e1_spread_mm": 6.04,
+      "e4_rise_ratio": 0.601,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      52.1,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.3,
+      277.44,
+      101.114,
+      351.44,
+      null
+     ],
+     [
+      21.4,
+      278.5,
+      70.465,
+      361.93,
+      null
+     ],
+     [
+      21.5,
+      279.57,
+      46.087,
+      370.16,
+      null
+     ],
+     [
+      21.6,
+      280.64,
+      31.532,
+      375.59,
+      null
+     ],
+     [
+      21.7,
+      281.71,
+      22.772,
+      378.81,
+      null
+     ],
+     [
+      21.8,
+      282.78,
+      14.99,
+      381.03,
+      null
+     ],
+     [
+      21.9,
+      283.84,
+      8.291,
+      382.62,
+      null
+     ],
+     [
+      22.0,
+      284.91,
+      3.62,
+      383.9,
+      null
+     ],
+     [
+      22.1,
+      285.98,
+      2.139,
+      384.69,
+      null
+     ],
+     [
+      22.2,
+      287.05,
+      2.255,
+      384.69,
+      null
+     ]
+    ],
+    "soil_push_mm": null,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 21.040999999996313,
+      "t_confirmed_s": 21.14099999999608,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 175.5564814718734
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 22.29999999999338,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000012221
+    }
+   },
+   "wall_s": 25.8
+  },
+  {
+   "suite": "g8",
+   "id": "slope|edgeMp|top|4.0|FR|raised|140.0|proj",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "3a6160df12decbce",
+   "t_ready_s": 52.10000000006674,
+   "min_force_kN": 55.5,
+   "att_end_deg": [
+    -0.0155,
+    0.0107
+   ],
+   "max_stroke_mm": 621.78,
+   "final_phase": "ready",
+   "warnings": [],
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9646,
+    "window_checks": [
+     {
+      "t_s": 22.0,
+      "e1_spread_mm": 4.13,
+      "e4_rise_ratio": 0.595,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      52.1,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.3,
+      307.5,
+      98.727,
+      354.03,
+      null
+     ],
+     [
+      21.4,
+      308.57,
+      67.107,
+      364.32,
+      null
+     ],
+     [
+      21.5,
+      309.64,
+      41.799,
+      372.15,
+      null
+     ],
+     [
+      21.6,
+      310.7,
+      25.485,
+      377.13,
+      null
+     ],
+     [
+      21.7,
+      311.77,
+      17.319,
+      380.04,
+      null
+     ],
+     [
+      21.8,
+      312.84,
+      11.036,
+      381.98,
+      null
+     ],
+     [
+      21.9,
+      313.9,
+      4.955,
+      383.13,
+      null
+     ]
+    ],
+    "soil_push_mm": null,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 21.000999999996406,
+      "t_confirmed_s": 21.100999999996173,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 250.46041659652974
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 21.999999999994078,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000012221
+    }
+   },
+   "wall_s": 25.7
+  }
+ ]
+}

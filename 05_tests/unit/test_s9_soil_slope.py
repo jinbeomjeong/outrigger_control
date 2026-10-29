@@ -311,6 +311,78 @@ def test_p3_1_uses_the_u_s9_g6d_classes(recontact_s, recontact_N, passes, flag) 
     assert row["flag_name"] == ("P3-1_transient_recontact" if flag else None)
 
 
+# --------------------------------------------- spec 424.8.1: judged LOC = last confirmed LOC
+LOC = "crawler_liftoff_confirmed"
+REVOKE = "FIX_LOC_REVOKE:2.3"
+
+
+def _revoked_record(events, series) -> dict:
+    rec = _record(events=events, crawler_series=series, weight_N=WEIGHT_N)
+    rec["run"] = {**rec["run"], "n_crawler_recontact": 1}
+    return rec
+
+
+def _series_with(spike_s: float, duration_s: float, force_N: float) -> list:
+    """Crawler loaded until 19.5 s, free after, one load of ``duration_s`` from ``spike_s``."""
+    times = np.round(np.arange(18.0, 30.0, 1e-3), 6)
+    forces = np.where(times <= 19.5, 50e3, 0.0)
+    forces[(times >= spike_s) & (times < spike_s + duration_s - 1e-9)] = force_N
+    return list(zip(times.tolist(), forces.tolist(), strict=True))
+
+
+@pytest.mark.parametrize(("duration_s", "passes", "klass"),
+                         [(0.13, True, "transient_flag"),  # 424.8.1 test 1
+                          (0.6, False, "strict_fail")])  # test 2
+def test_424_8_1_recontact_before_the_final_loc(duration_s, passes, klass) -> None:
+    """Recontact 0.2 s after the first LOC (0.013 W); the LOC is revoked and confirmed again."""
+    events = [(20.3, LOC), (21.5, REVOKE), (22.0, LOC)]
+    rec = _revoked_record(events, _series_with(20.5, duration_s, 0.013 * WEIGHT_N))
+    rows = ss.judge_case(rec)["rows"]
+    assert rows["P3-1"]["pass"] is passes
+    assert [e["class"] for e in rows["P3-1"]["recontact_events"]["events"]] == [klass]
+    assert rows["P3-2"]["t_loc_s"] == 22.0 and rows["P3-2"]["t_loc_first_s"] == 20.3
+    assert rows["P3-2"]["pass"] and not rows["P3-2"]["flag"]  # 2.0 s after the lift-off
+
+
+@pytest.mark.parametrize(("crawler_over_W", "passes"),
+                         [(0.0, True),  # 424.8.1 test 3: FLAG
+                          (0.012, False)])  # test 4: 0.012 W at t_LOC^fin
+def test_424_8_1_late_final_loc_after_a_revocation(crawler_over_W, passes) -> None:
+    """LOC - lift-off 3.5 s, t_LOC^fin - t_revoke 1.5 s."""
+    events = [(20.3, LOC), (22.0, REVOKE), (23.5, LOC)]
+    rec = _revoked_record(events, _series_with(23.45, 0.05, crawler_over_W * WEIGHT_N))
+    row = ss.judge_case(rec)["rows"]["P3-2"]
+    assert row["loc_delay_s"] == pytest.approx(3.5)
+    assert row["pass"] is passes and row["flag"] is passes
+    assert row["flag_names"] == (["P3-2_late_loc_revoked"] if passes else [])
+    revoked = row["late_loc_revoked"]
+    assert revoked["loc_minus_later_event_s"] == pytest.approx(1.5)
+    assert revoked["conditions"]["3_not_false_loc"] is passes
+
+
+def test_424_8_1_without_a_revocation_the_row_is_the_former_one() -> None:
+    """424.8.1 test 5: two LOC events without a revocation (E2-like) judge the first one and
+    add no new field."""
+    rec = _revoked_record([(21.0, LOC), (25.0, LOC)], _series_with(30.0, 0.0, 0.0))
+    row = ss.judge_case(rec)["rows"]["P3-2"]
+    assert row["t_loc_s"] == 21.0 and row["pass"]
+    assert set(row) == {"pass", "flag", "flag_name", "t_loc_s", "t_off_s", "loc_delay_s",
+                        "late_loc_reapproach"}
+
+
+def test_424_8_1_with_the_419_8_rule_both_flags_and_the_later_event() -> None:
+    """424.8.1 test 6: a re-approach with an LWa restart and a revocation before t_LOC^fin;
+    condition 2 counts from the re-approach end (22.0 s), the later event."""
+    events = [(20.2, "leg_reapproach_start:RR"), (20.4, "INFO_LOC_WINDOW_RESTART:RR"),
+              (20.6, LOC), (21.0, REVOKE), (22.0, "leg_reapproach_contact:RR"), (24.2, LOC)]
+    rec = _revoked_record(events, _series_with(30.0, 0.0, 0.0))
+    row = ss.judge_case(rec)["rows"]["P3-2"]
+    assert row["pass"] and row["flag_names"] == ["P3-2_late_loc_reapproach",
+                                                 "P3-2_late_loc_revoked"]
+    assert row["late_loc_revoked"]["loc_minus_later_event_s"] == pytest.approx(2.2)
+    assert row["late_loc_reapproach"]["loc_minus_later_event_s"] == pytest.approx(2.2)
+
+
 def test_p3_1_still_needs_ready_and_a_free_crawler_after_ready() -> None:
     series = _crawler_series(0.0, 0.0)
     rec = _record(crawler_series=series, weight_N=WEIGHT_N)

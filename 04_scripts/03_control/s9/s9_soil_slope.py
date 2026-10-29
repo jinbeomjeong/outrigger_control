@@ -556,9 +556,29 @@ def _crawler_row(rec: dict, t_loc: float | None, t_ready: float | None) -> dict:
             "departure": None if recontact is None else recontact["departure"]}
 
 
-def _loc_row(rec: dict, t_loc: float | None, t_done: float | None, t_off: float | None,
+def _revoked_loc_block(rec: dict, timeline: dict, late_loc: dict, t_done: float | None,
+                       t_off: float | None, min_off_kN: float | None, has_fault: bool) -> dict:
+    """Spec 424.8.1 FLAG record ``late_loc_revoked`` at t_LOC^fin (runs with a revocation)."""
+    t_loc = timeline["t_loc_final_s"]
+    conditions = late_loc.get("conditions") or {}
+    return late_loc_rule.late_loc_revoked(
+        t_off_s=t_off, t_loc_final_s=t_loc, t_done_s=t_done,
+        revoke_times_s=timeline["revoke_times_s"],
+        crawler_loc_period_max_N=late_loc_rule.loc_period_crawler_max_N(
+            rec.get("crawler_series") or [], t_loc),
+        weight_N=rec.get("weight_N"), min_force_after_off_kN=min_off_kN,
+        f_min_kN=rec["F_min_kN"], has_fault=has_fault,
+        reapproach_restart=bool(conditions.get("1_restart")),
+        t_reapproach_end_s=late_loc.get("t_reapproach_end_s"))
+
+
+def _loc_row(rec: dict, timeline: dict, t_done: float | None, t_off: float | None,
              min_off_kN: float | None, has_fault: bool) -> dict:
-    """P3-2 with the spec 419.8 FLAG of a LOC delayed by the LWa window restart."""
+    """P3-2 on t_LOC^fin (spec 424.8.1) with the FLAGs of a late LOC: spec 419.8 (LWa window
+    restart) and spec 424.8.1 (LOC revoked); both are recorded when both hold. A run without a
+    revocation gives the former row bit for bit."""
+    t_loc = timeline["t_loc_final_s"]
+    t_revoke_last = timeline["t_revoke_last_s"]
     loc_delay = None if t_loc is None or t_off is None else t_loc - t_off
     is_raw_pass = bool(t_loc is not None and (t_done is None or t_loc <= t_done + 1e-9)
                        and loc_delay is not None and loc_delay <= LOC_DELAY_MAX_S + 1e-9)
@@ -570,18 +590,33 @@ def _loc_row(rec: dict, t_loc: float | None, t_done: float | None, t_off: float 
     late_loc = late_loc_rule.late_loc_reapproach(
         rec["events"], phases, rec.get("crawler_series") or [], rec.get("weight_N"),
         t_off_s=t_off, t_loc_s=t_loc, t_done_s=t_done, min_force_after_off_kN=min_off_kN,
-        f_min_kN=rec["F_min_kN"])
-    is_flag = not is_raw_pass and late_loc["is_flag"]
-    return {"pass": is_raw_pass or is_flag, "flag": is_flag,
-            "flag_name": late_loc_rule.P32_FLAG if is_flag else None,
-            "t_loc_s": t_loc, "t_off_s": t_off, "loc_delay_s": loc_delay,
-            "late_loc_reapproach": late_loc}
+        f_min_kN=rec["F_min_kN"], t_revoke_last_s=t_revoke_last)
+    flag_names = [late_loc_rule.P32_FLAG] if late_loc["is_flag"] else []
+    revoked = None
+    if timeline["revoke_times_s"]:
+        revoked = _revoked_loc_block(rec, timeline, late_loc, t_done, t_off, min_off_kN,
+                                     has_fault)
+        if revoked["is_flag"]:
+            flag_names.append(late_loc_rule.P32_REVOKED_FLAG)
+    is_flag = not is_raw_pass and bool(flag_names)
+    row = {"pass": is_raw_pass or is_flag, "flag": is_flag,
+           "flag_name": flag_names[0] if is_flag else None,
+           "t_loc_s": t_loc, "t_off_s": t_off, "loc_delay_s": loc_delay,
+           "late_loc_reapproach": late_loc}
+    if revoked is not None:  # spec 424.8.1 records (only with a revocation)
+        row.update(flag_names=flag_names if is_flag else [], late_loc_revoked=revoked,
+                   t_loc_first_s=timeline["t_loc_first_s"], t_loc_final_s=t_loc,
+                   loc_revokes=timeline["revoke_times_s"])
+    return row
 
 
 def p3_rows(rec: dict) -> dict:
-    """P3-1 .. P3-8 of one run (harness form, as the r72 G6 screen)."""
+    """P3-1 .. P3-8 of one run (harness form, as the r72 G6 screen). P3-1 and P3-2 use the
+    judged LOC t_LOC^fin (spec 424.8.1: the last confirmed one after a LOC revocation; without
+    one the first LOC event as before)."""
     run, events, case, f_min = rec["run"], rec["events"], rec["case"], rec["F_min_kN"]
-    t_loc = _first_time(events, LOC_EVENT)
+    timeline = late_loc_rule.loc_timeline(events)
+    t_loc = timeline["t_loc_final_s"]
     t_done = run.get("t_done_s")
     t_off = run.get("t_crawler_off_first_s")
     t_ready = run.get("t_ready_s")
@@ -594,7 +629,7 @@ def p3_rows(rec: dict) -> dict:
     ready_limit = ready_limit_s(case)
     return {
         "P3-1": _crawler_row(rec, t_loc, t_ready),
-        "P3-2": _loc_row(rec, t_loc, t_done, t_off, min_off, has_fault),
+        "P3-2": _loc_row(rec, timeline, t_done, t_off, min_off, has_fault),
         "P3-3": {"pass": bool(min_off is not None and min_off >= f_min),
                  "min_true_Fcyl_after_off_kN": min_off,
                  "D8_margin_kN": None if min_off is None else min_off - f_min - D8_MARGIN_KN},
@@ -607,7 +642,8 @@ def p3_rows(rec: dict) -> dict:
         "P3-6": {"kind": "record", "t_ready_s": t_ready, "limit_s": ready_limit,
                  "flag": t_ready is None or t_ready > ready_limit},
         "P3-7": {"kind": "record", "value": None, "note": "not computed by the reduced harness"},
-        "P3-8": _preloc_rows(rec, t_loc, has_fault),
+        # spec 424.8.1 names P3-1 / P3-2 / P3-7 only: P3-8 keeps the first LOC
+        "P3-8": _preloc_rows(rec, timeline["t_loc_first_s"], has_fault),
         "fault_ready": {"pass": not has_fault and t_ready is not None, "has_fault": has_fault,
                         "final_phase": run.get("final_phase")},
     }

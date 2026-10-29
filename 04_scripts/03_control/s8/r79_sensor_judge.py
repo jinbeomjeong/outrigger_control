@@ -40,6 +40,12 @@ Usage (any env with numpy + scipy):
     spec 407.2 (5): the runs of the re-run files (comma list, no key twice) replace the same
     keys of the stored runs (their command hashes must be the stored ones: reported in
     ``merge``), then judge as above.
+  python -I r79_sensor_judge.py candidates <out_json> <run_json> [<run_json> ...]
+    spec 424.6 A-4 / 424.9 decision 5 (``R79_CANDIDATE`` runs): every candidate run against the
+    ``current`` run of the same key, level, seed and rod model: F_min violations (G6-3, true
+    minimum after the departure) per patch soil (J2 must be 0, S1 recorded), FAULT names the
+    current run has not (must be 0), command hash = current, acted (a ``FIX_*`` event or D
+    counter), harness verdict changes and the READY delay.
 Spec 423.3 / 423.4 (decision Q-G): the recorded recontacts are re-classified with the
 threshold-chatter class (``late_loc_rule``); S-1 re-judges G6-1 with it and S-4 counts a chatter
 recontact as the FLAG ``S4_threshold_chatter`` only (re-judgement, command hashes unchanged).
@@ -475,8 +481,10 @@ def reference_table(results: list[dict]) -> list[dict]:
 
 
 def _pair_key(run: dict) -> tuple[str, str, str]:
-    """A level run pairs with the L1 run of the same case and the same rod reading model."""
-    return run["harness"], run["inner"], run.get("rod_model", "harness")
+    """A level run pairs with the L1 run of the same case, the same rod reading model and (spec
+    424.5 ``R79_CANDIDATE``) the same controller candidate."""
+    return (run["harness"], run["inner"], run.get("rod_model", "harness"),
+            run.get("candidate", "current"))
 
 
 def judge_results(results: list[dict]) -> dict:
@@ -546,9 +554,169 @@ def merge_reruns(stored: list[dict], reruns: list[dict]) -> tuple[list[dict], di
                     "hash_differs": hash_differs, "replaced_keys": replaced}
 
 
+# --------------------------------------------------------------- spec 424.6 A-4 / 424.9 candidates
+BASELINE_CANDIDATE = "current"
+A4_STRICT_PATCH = "J2"
+"""Spec 424.6 A-4: the patch soil whose F_min violations must be 0 (S1 is recorded only)."""
+FAULT_PHASES = ("fault", "fault_reground")
+WATCH_ONLY_EVENTS = ("FIX_FALL_HOLD", "FIX_FALL_SLOW", "FIX_LOC_REVOKE_SKIPPED",
+                     "INFO_LOC_REVOKE_SKIPPED")
+"""``s9_slope_fix_candidates`` D1 / D2 watch starts: the restraint itself is counted in
+``candidate_record.restrain_periods``. The L1-s skip records (wrapper ``FIX_`` and c2
+``INFO_``, spec 424.10.2) change no command."""
+
+
+def patch_soil(inner: str) -> str:
+    """Weak-patch soil of a G6 case (``g6r|rigid+J2@FL|top|Fs0`` -> ``J2``); ``none`` for a case
+    without a patch (``ref|G1|top|Fs0``)."""
+    parts = inner.split("|")
+    if len(parts) < 2 or "+" not in parts[1] or "@" not in parts[1]:
+        return "none"
+    return parts[1].split("+", 1)[1].split("@", 1)[0]
+
+
+def _candidate_pair_key(run: dict) -> tuple:
+    """Same case, level, seed and rod model; the candidate is what differs."""
+    return (run["harness"], run["inner"], run.get("level"), run.get("seed_index"),
+            run.get("rod_model", "harness"))
+
+
+def _fault_names(run: dict) -> set[str]:
+    names = {name for name in run["r79"].get("warn_fault", []) if name.startswith("FAULT")}
+    if run["base"].get("final_phase") in FAULT_PHASES:
+        names.add(f"phase:{run['base']['final_phase']}")
+    return names
+
+
+def _has_acted(run: dict) -> bool:
+    """A command change by the candidate: a D restraint period, or a ``FIX_*`` event other than
+    a D1 / D2 watch start (a watch alone changes no command)."""
+    record = run.get("candidate_record") or {}
+    if record.get("restrain_periods"):
+        return True
+    return any(str(name).startswith("FIX_") and str(name).split(":")[0] not in WATCH_ONLY_EVENTS
+               for _, name in run.get("events", []))
+
+
+def is_f_min_violated(run: dict) -> bool:
+    """G6-3: true F_cyl minimum after the departure below F_min (no minimum = violated)."""
+    summary = run["r79"]
+    minimum_kN = summary.get("min_true_F_after_off_kN")
+    return minimum_kN is None or minimum_kN < summary["F_min_kN"]
+
+
+def compare_candidate_run(run: dict, current: dict) -> dict:
+    """One candidate run against the ``current`` run of the same key, level and seed."""
+    verdict, verdict_current = harness_verdict(run["base"], run), harness_verdict(
+        current["base"], current)
+    ready, ready_current = _ready_time(run), _ready_time(current)
+    return {"key": run["key"], "candidate": run.get("candidate", BASELINE_CANDIDATE),
+            "level": run.get("level"), "seed_index": run.get("seed_index"),
+            "inner": run["inner"], "patch": patch_soil(run["inner"]),
+            "f_min_violated": is_f_min_violated(run),
+            "f_min_violated_current": is_f_min_violated(current),
+            "min_true_F_kN": run["r79"].get("min_true_F_after_off_kN"),
+            "min_true_F_current_kN": current["r79"].get("min_true_F_after_off_kN"),
+            "new_faults": sorted(_fault_names(run) - _fault_names(current)),
+            "hash_same": _command_hash(run["base"]) == _command_hash(current["base"]),
+            "acted": _has_acted(run), "pass": verdict, "pass_current": verdict_current,
+            "ready_delay_vs_current_s": None if ready is None or ready_current is None
+            else round(ready - ready_current, 1)}
+
+
+def _candidate_bucket(rows: list[dict]) -> dict:
+    delays = [r["ready_delay_vs_current_s"] for r in rows
+              if r["ready_delay_vs_current_s"] is not None]
+    minima = [r["min_true_F_kN"] for r in rows if r["min_true_F_kN"] is not None]
+    return {"runs": len(rows),
+            "f_min_violations": sum(r["f_min_violated"] for r in rows),
+            "f_min_violations_current": sum(r["f_min_violated_current"] for r in rows),
+            "new_fault_runs": sum(bool(r["new_faults"]) for r in rows),
+            "hash_same": sum(r["hash_same"] for r in rows),
+            "acted": sum(r["acted"] for r in rows),
+            "idle_hash_changed": sum(not r["acted"] and not r["hash_same"] for r in rows),
+            "pass": sum(r["pass"] for r in rows),
+            "pass_to_fail": sum(r["pass_current"] and not r["pass"] for r in rows),
+            "fail_to_pass": sum(r["pass"] and not r["pass_current"] for r in rows),
+            "ready_delay_max_s": max(delays) if delays else None,
+            "min_true_F_kN": min(minima) if minima else None}
+
+
+def candidates_report(results: list[dict]) -> dict:
+    """Spec 424.6 A-4 / 424.9 decision 5: every candidate against ``current``.
+
+    A-4 holds for a candidate when its J2-patch runs have no F_min violation and none of its
+    runs has a FAULT the paired ``current`` run has not. Buckets per (candidate, level, patch)
+    and per candidate (all levels); runs without a ``current`` pair are listed as unmatched."""
+    currents = {_candidate_pair_key(r): r for r in results
+                if r.get("candidate", BASELINE_CANDIDATE) == BASELINE_CANDIDATE
+                and "error" not in r}
+    compared, unmatched, errors = [], [], []
+    for run in results:
+        if "error" in run:
+            errors.append({"key": run["key"], "error": run["error"]})
+            continue
+        current = currents.get(_candidate_pair_key(run))
+        if current is None:
+            unmatched.append(run["key"])
+            continue
+        compared.append(compare_candidate_run(run, current))
+    buckets: dict[tuple, list[dict]] = defaultdict(list)
+    for row in compared:
+        buckets[(row["candidate"], row["level"], row["patch"])].append(row)
+        buckets[(row["candidate"], "all", "all")].append(row)
+    table = [{"candidate": c, "level": lv, "patch": p, **_candidate_bucket(rows)}
+             for (c, lv, p), rows in sorted(buckets.items())]
+    acceptance = {}
+    for candidate in sorted({row["candidate"] for row in compared}):
+        rows = [r for r in compared if r["candidate"] == candidate]
+        j2_violations = sum(r["f_min_violated"] for r in rows if r["patch"] == A4_STRICT_PATCH)
+        new_faults = sum(bool(r["new_faults"]) for r in rows)
+        acceptance[candidate] = {"j2_f_min_violations": j2_violations,
+                                 "new_fault_runs": new_faults,
+                                 "A-4": j2_violations == 0 and new_faults == 0}
+    return {"rule": "spec 424.6 A-4: J2 F_min violations 0, S1 recorded, new FAULT 0 "
+                    "(paired with current by key, level, seed, rod model)",
+            "acceptance": acceptance, "table": table, "runs": compared,
+            "unmatched": unmatched, "errors": errors}
+
+
+def candidates_lines(report: dict) -> list[str]:
+    """Markdown tables of :func:`candidates_report`."""
+    lines = ["| candidate | J2 F_min violations | new FAULT runs | A-4 |", "|---|---|---|---|"]
+    for candidate, entry in report["acceptance"].items():
+        lines.append(f"| {candidate} | {entry['j2_f_min_violations']} | "
+                     f"{entry['new_fault_runs']} | {'ok' if entry['A-4'] else 'NOT MET'} |")
+    head = ("| candidate | level | patch | runs | F_min viol. (current) | new FAULT | hash = "
+            "current | acted | idle hash changed | pass | pass->fail | fail->pass "
+            "| dREADY max [s] | min F [kN] |")
+    lines += ["", head, "|" + "---|" * 14]
+    for e in report["table"]:
+        minimum = "-" if e["min_true_F_kN"] is None else f"{e['min_true_F_kN']:.3f}"
+        lines.append(
+            f"| {e['candidate']} | {e['level']} | {e['patch']} | {e['runs']} | "
+            f"{e['f_min_violations']} ({e['f_min_violations_current']}) | "
+            f"{e['new_fault_runs']} | {e['hash_same']} | {e['acted']} | "
+            f"{e['idle_hash_changed']} | {e['pass']} | {e['pass_to_fail']} | "
+            f"{e['fail_to_pass']} | {e['ready_delay_max_s']} | {minimum} |")
+    return lines
+
+
 def main() -> None:
-    if len(sys.argv) < 3 or sys.argv[1] not in ("identity", "judge", "judge-merged"):
+    commands = ("identity", "judge", "judge-merged", "candidates")
+    if len(sys.argv) < 3 or sys.argv[1] not in commands:
         raise SystemExit(__doc__)
+    if sys.argv[1] == "candidates":
+        if len(sys.argv) < 4:
+            raise SystemExit(__doc__)
+        out_path = Path(sys.argv[2])
+        report = candidates_report(_load_results(sys.argv[3:]))
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps(report, indent=1, default=float), encoding="utf-8")
+        print("\n".join(candidates_lines(report)))
+        print("unmatched", len(report["unmatched"]), "errors", len(report["errors"]), "->",
+              out_path)
+        return
     if sys.argv[1] == "identity":
         rows = identity_rows(_load_results(sys.argv[2:]), load_baseline_hashes())
         for row in rows:

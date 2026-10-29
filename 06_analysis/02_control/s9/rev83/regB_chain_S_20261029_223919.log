@@ -1,0 +1,65 @@
+[22:39:20] START g8
+g8 slope|edge|top|4.0|ref|none|0|proj current pass hash 004d914de65c ready 52.50000000006865 minF 45.48 att [-0.015, -0.0114] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9582 windows [(22.1, 11.94, 0.815, None)] fix [(52.5, 'reanchor_skipped:disabled')] phase ready wall 25.7
+g8 slope|edge|top|4.0|FL|raised|55.0|proj current pass hash 0ea01bc71a86 ready 52.60000000006913 minF 52.7 att [-0.0154, -0.0113] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9554 windows [(21.8, 14.9, 0.864, None)] fix [(52.6, 'reanchor_skipped:disabled')] phase ready wall 25.7
+g8 slope|edgeMp|top|4.0|FR|raised|20.0|proj current pass hash d9f287e39200 ready 52.10000000006674 minF 54.8 att [-0.0154, 0.0108] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9625 windows [(22.3, 6.04, 0.601, None)] fix [(52.1, 'reanchor_skipped:disabled')] phase ready wall 25.8
+g8 slope|edgeMp|top|4.0|FR|raised|140.0|proj current pass hash 3a6160df12de ready 52.10000000006674 minF 55.5 att [-0.0155, 0.0107] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9646 windows [(22.0, 4.13, 0.595, None)] fix [(52.1, 'reanchor_skipped:disabled')] phase ready wall 25.7
+{}
+wall 26.5 s -> C:\workspace\outrigger_control\06_analysis\02_control\s9\rev83\regB_current_sample_g8.json
+[22:39:47] END g8 rc=0 wall=27s
+[22:39:47] START p3b
+C2 t=41.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.626
+p3b base|G1|A|top|Fs4 current pass hash 6e716d528a44 ready 41.40000000001565 minF 61.25831822783554 att [-0.0009511200134594253, -0.013645346752452084] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9477 windows [(21.7, 5.13, 1.007, None)] fix [(41.4, 'reanchor_skipped:disabled')] phase ready wall 25.9
+p3b base|G1|A|middle|Fs8 current pass hash 5009a7a48dc0 ready 41.10000000001422 minF 60.99515629975162 att [-0.0002799212808015748, -0.010494097877440904] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.8957 windows [(21.8, 6.81, 0.966, None)] fix [(41.1, 'reanchor_skipped:disabled')] phase ready wall 26.0
+p3b base|J1|A|top|Fs4 current pass hash 44f1cbc7dfcc ready 47.80000000004621 minF 65.33180575547013 att [-0.006785395035665908, 0.048405706369150925] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9501 windows [(24.6, 5.14, -0.19, None)] fix [(47.8, 'reanchor_skipped:disabled')] phase ready wall 27.7
+p3b base|J1|A|middle|Fs8 current pass hash c08a1c854f50 ready 47.80000000004621 minF 66.42161798898006 att [-0.006719812461995098, 0.03383243202708058] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.873 windows [(24.5, 4.84, 0.01, None)] fix [(47.8, 'reanchor_skipped:disabled')] phase ready wall 28.0
+{}
+wall 29.5 s -> C:\workspace\outrigger_control\06_analysis\02_control\s9\rev83\regB_current_sample_p3b.json
+[22:40:17] END p3b rc=0 wall=30s
+[22:40:17] START v3s
+C2 t=40.10 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.672
+v3s loc_sens0|G1|B|top|Fs4 current pass hash 91490a108f7c ready 40.100000000009445 minF 62.88570959713286 att [-0.0018746952312397975, -0.007373370349587224] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9459 windows [(21.9, 1.66, 1.022, None)] fix [(40.1, 'reanchor_skipped:disabled')] phase ready wall 25.0
+v3s loc_sens0|J1|B|top|Fs4 current pass hash fadb2904f6ea ready 63.00000000011879 minF 68.74565797663833 att [0.025611469939376977, -0.022404940567736772] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9372 windows [(27.9, 8.57, 1.25, None)] fix [(63.0, 'reanchor_skipped:disabled')] phase ready wall 31.5
+v3s loc_sens1|J1|B|middle|Fs4 current pass hash d93a1dac2eec ready 62.400000000115924 minF 69.38232420742503 att [0.011676443161685549, -0.023026026842838852] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9346 windows [(28.0, 9.55, -1.89, None)] fix [(62.4, 'reanchor_skipped:disabled')] phase ready wall 31.4
+v3s loc_sens2|G1|B|top|Fs4 current pass hash 91490a108f7c ready 40.100000000009445 minF 62.88570959713286 att [-0.0018746952312397975, -0.007373370349587224] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9447 windows [(21.9, 1.66, 1.022, None)] fix [(40.1, 'reanchor_skipped:disabled')] phase ready wall 25.0
+{}
+wall 32.9 s -> C:\workspace\outrigger_control\06_analysis\02_control\s9\rev83\regB_current_sample_v3s.json
+[22:40:50] END v3s rc=0 wall=34s
+[22:40:50] START g6
+C2 t=22.20 s: leg_reapproach_start:RR
+C2 t=24.30 s: leg_reapproach_start:RR
+C2 t=25.30 s: leg_reapproach_start:RR
+C2 t=26.30 s: leg_reapproach_start:RR
+C2 t=40.10 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.644
+C2 t=63.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.351
+g6 g6|G1+J2@FL|top|Fs4 current pass hash c05c63d7a0db ready 79.50000000019757 minF 29.355600428038166 att [-0.013290345586120718, 0.0015270426002724578] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9461 windows [(24.0, 6.0, 1.364, None)] fix [(79.5, 'reanchor_skipped:disabled')] phase ready wall 36.5
+g6 g6|G1+S1@FL|top|Fs4 current fail hash 49bd2c3c9896 ready 63.20000000011974 minF 21.431095481916238 att [-0.012291654942650544, -0.0016342272412740047] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9461 windows [(27.9, 24.49, 1.794, None)] fix [(63.2, 'reanchor_skipped:disabled')] phase ready wall 32.4
+g6 ref|G1|top|Fs4 current pass hash 91490a108f7c ready 40.100000000009445 minF 62.88570959713286 att [-0.0018746952312397975, -0.007373370349587224] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9471 windows [(21.9, 1.66, 1.022, None)] fix [(40.1, 'reanchor_skipped:disabled')] phase ready wall 25.9
+g6 ref|rigid|top|Fs4 current pass hash a91e95796d41 ready 39.4000000000061 minF 54.6903272019059 att [-0.00031316306971866697, -0.011865658263171645] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9463 windows [(21.2, 7.74, 0.986, None)] fix [(39.4, 'reanchor_skipped:disabled')] phase ready wall 21.0
+{}
+wall 38.0 s -> C:\workspace\outrigger_control\06_analysis\02_control\s9\rev83\regB_current_sample_g6.json
+[22:41:29] END g6 rc=0 wall=39s
+[22:41:29] START slope
+C2 t=33.50 s: leg_reapproach_start:RR
+C2 t=39.20 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=39.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.628
+C2 t=40.90 s: WARN_WEIGHT_MISMATCH:0.898
+C2 t=41.50 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=44.50 s: FAULT_LIFT_STROKE_LIMIT:FL
+C2 t=52.80 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.674
+slope H1|G1|B|top|flat current pass hash f805759d4705 ready 39.300000000005625 minF 62.78811404858183 att [-0.002019042339772438, -0.012307853713423786] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9463 windows [(21.4, 5.66, 1.042, None)] fix [(39.3, 'reanchor_skipped:disabled')] phase ready wall 25.1
+slope H1|G1|B|top|roll_pos current pass hash 8d2eaf28c2e6 ready 52.800000000070085 minF 60.41278151903126 att [-0.025380162942488, -0.0012602013268666798] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9503 windows [(24.4, 2.39, 0.699, None)] fix [(52.8, 'reanchor_skipped:disabled')] phase ready wall 28.7
+slope H1|J1|B|top|nose_down current stroke_limited_pass hash bdc387aee061 ready 78.30000000019184 minF 66.14113532296682 att [0.0065268656474706315, -0.05786465284828823] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.946 windows [(27.8, 5.03, -1.528, None)] fix [(78.3, 'reanchor_skipped:disabled')] phase ready wall 35.4
+slope H1|S1|B|top|roll_neg current fail hash 8d87a12693f8 ready None minF 13.58832647972454 att [-0.1261071337457777, 0.13580691620689622] falseLOC 1 LOCcrawler [54.41] READYrecontact 0 ratioREADY None windows [(40.9, 14.52, 1.047, None)] fix [] phase fault wall 24.3
+{}
+wall 36.1 s -> C:\workspace\outrigger_control\06_analysis\02_control\s9\rev83\regB_current_sample_slope.json
+[22:42:06] END slope rc=0 wall=37s
+[22:42:06] START h6
+C2 t=21.20 s: WARN_WEIGHT_MISMATCH:1.240
+C2 t=21.60 s: WARN_WEIGHT_MISMATCH:1.240
+h6 H6|J1|B|top|flat|m1.1 current fail hash 444b813ea06d ready 80.90000000020426 minF 74.37546804330398 att [0.01859154439574431, -0.03388530057726512] falseLOC 0 LOCcrawler [1.92] READYrecontact 0 ratioREADY 0.953 windows [(35.2, 10.65, -0.165, None)] fix [(80.9, 'reanchor_skipped:disabled')] phase ready wall 37.4
+h6 H6|J1|B|middle|flat|Fs0|m1.1 current pass hash 1ce495e5e93c ready 74.90000000017561 minF 76.11868622985281 att [-0.012216160392729457, -0.05588820482981443] falseLOC 0 LOCcrawler [1.7] READYrecontact 0 ratioREADY 1.0046 windows [(35.2, 10.64, -1.884, None)] fix [(74.9, 'reanchor_skipped:disabled')] phase ready wall 36.1
+h6 H6|G1|B|top|flat|m1.2 current pass hash 3b5ad386aa79 ready 39.60000000000706 minF 77.00411705424649 att [-0.0024180737072420177, -0.01562533047293426] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9546 windows [(21.6, 4.6, 1.087, None)] fix [(39.6, 'reanchor_skipped:disabled')] phase ready wall 25.6
+h6 H6|rigid|B|top|flat|m1.2 current pass hash ed21af51d9b2 ready 39.4000000000061 minF 68.79581722421341 att [-0.0005209883796039774, -0.01408519030561223] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9552 windows [(21.2, 3.06, 0.978, None)] fix [(39.4, 'reanchor_skipped:disabled')] phase ready wall 21.1
+{}
+wall 38.0 s -> C:\workspace\outrigger_control\06_analysis\02_control\s9\rev83\regB_current_sample_h6.json
+[22:42:44] END h6 rc=0 wall=39s
