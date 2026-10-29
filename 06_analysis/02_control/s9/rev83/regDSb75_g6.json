@@ -1,0 +1,6817 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s9/s9_slope_fix_candidates.py",
+  "suites": "g6",
+  "candidates": [
+   "current",
+   "DSb75"
+  ],
+  "params": {},
+  "defaults": {
+   "e1": false,
+   "e1_max_mismatch_m": 0.004,
+   "e2": false,
+   "e2_drop_fraction": 0.08,
+   "e2_confirm_samples": 2,
+   "e2_max_relifts": 2,
+   "e3": false,
+   "e3_tilt_min_rad": 0.017453292519943295,
+   "e3_margin_m": 0.03,
+   "e3_require_soil_use": true,
+   "e3_min_clearance_at_P_m": -1.0,
+   "e4": false,
+   "e4_min_rise_ratio": 0.5,
+   "e4_gravity_samples": 100,
+   "reanchor_soil_skip": false,
+   "s4_stroke_limit": false,
+   "s4_stroke_basis": "max",
+   "lw_restart": false,
+   "lw_exclude": false,
+   "l1_revoke": false,
+   "l1_watch_m": 0.02,
+   "l1_rise_N": 2000.0,
+   "l1_rise_fraction_W": 0.005,
+   "l1_mean_s": 1.0,
+   "l1_confirm_periods": 2,
+   "l1_max_revokes": 2,
+   "l2_confirm_window": false,
+   "l2_min_clearance_at_P_m": 0.01,
+   "l2_extra_m": 0.005,
+   "l2_rise_N": 1000.0,
+   "l1_soil_gate": false,
+   "l1_gate_min_clearance_at_P_m": 0.01,
+   "l1_gate_tilt_min_rad": 0.017453292519943295,
+   "l1_stroke_guard": false,
+   "l1_stroke_margin_m": 0.04,
+   "l2_soil_gate": false,
+   "ds_enable": false,
+   "ds_threshold_m_s": 0.003,
+   "ds_confirm_s": 1.0,
+   "ds_release_m_s": 0.001,
+   "ds_release_s": 0.5,
+   "ds_max_s": 10.0,
+   "ds_push_fraction": 0.25,
+   "ds_track_w_m": [
+    2.648,
+    2.411
+   ],
+   "ds_mode": "floor",
+   "ds_gain": 1.0,
+   "ds_add_cap_fraction": 0.25,
+   "ds_release_on_reverse": false,
+   "ds_gate_max_settle_tilt_rad": null,
+   "l4_probe_reuse": false,
+   "d1_fall_hold": false,
+   "d2_fall_slow": false,
+   "d3_repeat_reapproach_slow": false,
+   "d1p_over_p30fz": false,
+   "d1p_level_fraction_F_min": 2.0,
+   "d1p_needs_running_p30fz": true,
+   "d1r_predicted_hold": false,
+   "d1r_trigger_margin_N": 5000.0,
+   "d1r_release_margin_N": 10000.0,
+   "d1q_hold": false,
+   "d1q_gate_a": true,
+   "d1q_gate_b": true,
+   "d1q_slow": false,
+   "d1q_horizon_periods": 4,
+   "d1q_trigger_margin_N": 5000.0,
+   "d1q_twist_m": 0.015,
+   "d1q_hold_max_s": 1.5,
+   "d1q_hold_total_s": 3.0,
+   "d_level_fraction_F_min": 3.0,
+   "d_release_fraction_F_min": 3.5,
+   "d_drop_N": 1000.0,
+   "d_max_s": 3.0,
+   "d2_slow_fraction": 0.16,
+   "d3_reapproach_factor": 2.0,
+   "s5_push_extend": false,
+   "s5_eval_m": 0.05,
+   "s5_progress_frac": 0.02,
+   "s5_step_m": 0.05,
+   "s5_stroke_margin_m": 0.03,
+   "s5_max_total_m": 0.3,
+   "s6_saturation_loc": false,
+   "s6_ratio": 0.3,
+   "s6_rise_max_N": 4000.0,
+   "s6_min_clearance_m": 0.01
+  },
+  "filter": "",
+  "ids": "ref|J1|top|Fs0;ref|J1|top|Fs4;ref|J2|top|Fs0;ref|J2|top|Fs4",
+  "settle_hook": "p0",
+  "workers": 8,
+  "placement": {
+   "requested_mask": "0x5555",
+   "set_ok": true,
+   "process_mask": "0x5555",
+   "system_mask": "0xfffffff"
+  },
+  "wall_s": 19.6,
+  "n_records": 8
+ },
+ "summary": {
+  "g6|DSb75": {
+   "n": 4,
+   "errors": 0,
+   "no_baseline": 0,
+   "verdict_changed": 0,
+   "pass_to_fail": 0,
+   "fail_to_pass": 0,
+   "hash_same": 4,
+   "e_cases": 0,
+   "e_resolved": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_after": 0,
+   "acted": 4,
+   "idle_hash_differs": 0,
+   "a3_checked": 0,
+   "a3_fail": 0
+  }
+ },
+ "comparison": [
+  {
+   "suite": "g6",
+   "id": "ref|J1|top|Fs0",
+   "candidate": "DSb75",
+   "verdict_before": "pass",
+   "verdict_after": "pass",
+   "verdict_changed": false,
+   "hash_same": true,
+   "d_ready_s": 0.0,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": 0.0,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_DIFF_SINK_HOLD:FL,RL:4.5;FIX_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",
+   "acted": true,
+   "a3_pass": null,
+   "a3_reasons": ""
+  },
+  {
+   "suite": "g6",
+   "id": "ref|J1|top|Fs4",
+   "candidate": "DSb75",
+   "verdict_before": "pass",
+   "verdict_after": "pass",
+   "verdict_changed": false,
+   "hash_same": true,
+   "d_ready_s": 0.0,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": 0.0,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_DIFF_SINK_HOLD:FL,RL:3.7;FIX_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",
+   "acted": true,
+   "a3_pass": null,
+   "a3_reasons": ""
+  },
+  {
+   "suite": "g6",
+   "id": "ref|J2|top|Fs0",
+   "candidate": "DSb75",
+   "verdict_before": "pass",
+   "verdict_after": "pass",
+   "verdict_changed": false,
+   "hash_same": true,
+   "d_ready_s": 0.0,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": 0.0,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_DIFF_SINK_HOLD:FL,RL:3.5;FIX_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",
+   "acted": true,
+   "a3_pass": null,
+   "a3_reasons": ""
+  },
+  {
+   "suite": "g6",
+   "id": "ref|J2|top|Fs4",
+   "candidate": "DSb75",
+   "verdict_before": "pass",
+   "verdict_after": "pass",
+   "verdict_changed": false,
+   "hash_same": true,
+   "d_ready_s": 0.0,
+   "d_min_force_kN": 0.0,
+   "d_att_end_deg": 0.0,
+   "false_loc_before": 0,
+   "false_loc_after": 0,
+   "ready_recontacts_before": 0,
+   "ready_recontacts_after": 0,
+   "ready_crawler_max_kN_after": 0.0,
+   "final_phase_after": "ready",
+   "fix_events_after": "FIX_DIFF_SINK_HOLD:FL,RL:3.5;FIX_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",
+   "acted": true,
+   "a3_pass": null,
+   "a3_reasons": ""
+  }
+ ],
+ "records": [
+  {
+   "suite": "g6",
+   "id": "ref|J1|top|Fs0",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "8019116d763f84a49d5ffd8725665440fdbd5c0a7bf39c500b793a71ff03d0de",
+   "t_ready_s": 62.700000000117356,
+   "min_force_kN": 69.0641616234236,
+   "att_end_deg": [
+    0.06944612222849736,
+    -0.022602298469208828
+   ],
+   "max_stroke_mm": 488.34687073773915,
+   "final_phase": "ready",
+   "rut_ready_mm": 47.247754172311666,
+   "warnings": [],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 27.599999999981026,
+    "t_loc_s": 28.199999999979628,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 0.5999999999986017,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9998,
+    "window_checks": [
+     {
+      "t_s": 28.2,
+      "e1_spread_mm": 10.22,
+      "e4_rise_ratio": -3.031,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      29.2,
+      "INFO_DIFF_SINK_HOLD:FL,RL:4.5"
+     ],
+     [
+      30.8,
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      62.7,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.7,
+      362.67,
+      98.031,
+      256.69,
+      null
+     ],
+     [
+      21.8,
+      364.75,
+      77.383,
+      272.57,
+      null
+     ],
+     [
+      21.9,
+      366.82,
+      51.767,
+      294.01,
+      null
+     ],
+     [
+      22.0,
+      368.83,
+      41.842,
+      303.93,
+      null
+     ],
+     [
+      22.1,
+      370.77,
+      34.87,
+      311.96,
+      null
+     ],
+     [
+      22.2,
+      372.61,
+      32.524,
+      314.74,
+      null
+     ],
+     [
+      22.3,
+      374.36,
+      27.735,
+      320.88,
+      0.0
+     ],
+     [
+      22.4,
+      376.02,
+      24.0,
+      325.99,
+      1.7
+     ],
+     [
+      22.5,
+      377.58,
+      21.169,
+      330.26,
+      3.4
+     ],
+     [
+      22.6,
+      379.06,
+      18.979,
+      333.86,
+      5.0
+     ],
+     [
+      22.7,
+      380.45,
+      18.31,
+      335.17,
+      6.4
+     ],
+     [
+      22.8,
+      381.75,
+      16.718,
+      338.07,
+      7.8
+     ],
+     [
+      22.9,
+      382.98,
+      15.466,
+      340.56,
+      9.1
+     ],
+     [
+      23.0,
+      384.14,
+      15.04,
+      341.49,
+      10.4
+     ],
+     [
+      23.1,
+      385.23,
+      13.988,
+      343.57,
+      11.5
+     ],
+     [
+      23.2,
+      386.26,
+      13.113,
+      345.39,
+      12.6
+     ],
+     [
+      23.3,
+      387.23,
+      12.827,
+      346.07,
+      13.6
+     ],
+     [
+      23.4,
+      388.14,
+      12.105,
+      347.61,
+      14.6
+     ],
+     [
+      23.5,
+      388.99,
+      11.873,
+      348.18,
+      15.5
+     ],
+     [
+      23.6,
+      389.8,
+      11.272,
+      349.49,
+      16.4
+     ],
+     [
+      23.7,
+      390.56,
+      10.741,
+      350.66,
+      17.2
+     ],
+     [
+      23.8,
+      391.28,
+      10.569,
+      351.1,
+      17.9
+     ],
+     [
+      23.9,
+      391.95,
+      10.114,
+      352.11,
+      18.7
+     ],
+     [
+      24.0,
+      392.6,
+      9.978,
+      352.48,
+      19.3
+     ],
+     [
+      24.1,
+      393.22,
+      9.638,
+      353.37,
+      20.0
+     ],
+     [
+      24.2,
+      393.84,
+      9.611,
+      353.72,
+      20.6
+     ],
+     [
+      24.3,
+      394.46,
+      9.447,
+      354.54,
+      21.2
+     ],
+     [
+      24.4,
+      395.09,
+      9.507,
+      354.88,
+      21.9
+     ],
+     [
+      24.5,
+      395.73,
+      9.491,
+      355.65,
+      22.5
+     ],
+     [
+      24.6,
+      396.37,
+      9.563,
+      356.38,
+      23.1
+     ],
+     [
+      24.7,
+      397.01,
+      9.663,
+      356.72,
+      23.8
+     ],
+     [
+      24.8,
+      397.66,
+      9.796,
+      357.43,
+      24.4
+     ],
+     [
+      24.9,
+      398.32,
+      9.961,
+      358.11,
+      25.0
+     ],
+     [
+      25.0,
+      398.98,
+      10.023,
+      358.45,
+      25.7
+     ],
+     [
+      25.1,
+      399.64,
+      10.175,
+      359.12,
+      26.4
+     ],
+     [
+      25.2,
+      400.31,
+      10.313,
+      359.78,
+      27.0
+     ],
+     [
+      25.3,
+      400.98,
+      10.421,
+      360.44,
+      27.7
+     ],
+     [
+      25.4,
+      401.66,
+      10.487,
+      361.1,
+      28.4
+     ],
+     [
+      25.5,
+      402.34,
+      10.503,
+      361.77,
+      29.0
+     ],
+     [
+      25.6,
+      403.03,
+      10.46,
+      362.44,
+      29.7
+     ],
+     [
+      25.7,
+      403.72,
+      10.362,
+      363.12,
+      30.4
+     ],
+     [
+      25.8,
+      404.41,
+      10.237,
+      363.79,
+      31.1
+     ],
+     [
+      25.9,
+      405.1,
+      10.017,
+      364.81,
+      31.8
+     ],
+     [
+      26.0,
+      405.8,
+      9.811,
+      365.46,
+      32.5
+     ],
+     [
+      26.1,
+      406.5,
+      9.574,
+      366.1,
+      33.2
+     ],
+     [
+      26.2,
+      407.2,
+      9.324,
+      366.72,
+      33.9
+     ],
+     [
+      26.3,
+      407.91,
+      9.052,
+      367.34,
+      34.6
+     ],
+     [
+      26.4,
+      408.61,
+      8.761,
+      367.94,
+      35.3
+     ],
+     [
+      26.5,
+      409.32,
+      8.449,
+      368.52,
+      36.0
+     ],
+     [
+      26.6,
+      410.03,
+      8.115,
+      369.09,
+      36.7
+     ],
+     [
+      26.7,
+      410.74,
+      7.762,
+      369.64,
+      37.4
+     ],
+     [
+      26.8,
+      411.45,
+      7.397,
+      370.16,
+      38.1
+     ],
+     [
+      26.9,
+      412.17,
+      7.024,
+      370.67,
+      38.8
+     ],
+     [
+      27.0,
+      412.88,
+      6.652,
+      371.15,
+      39.6
+     ],
+     [
+      27.1,
+      413.59,
+      6.288,
+      371.62,
+      40.3
+     ],
+     [
+      27.2,
+      414.31,
+      5.94,
+      372.05,
+      41.0
+     ],
+     [
+      27.3,
+      415.02,
+      5.617,
+      372.47,
+      41.7
+     ],
+     [
+      27.4,
+      415.73,
+      5.327,
+      372.85,
+      42.4
+     ],
+     [
+      27.5,
+      416.45,
+      5.002,
+      373.21,
+      43.1
+     ],
+     [
+      27.6,
+      417.17,
+      4.581,
+      373.53,
+      43.8
+     ],
+     [
+      27.7,
+      417.88,
+      4.129,
+      373.83,
+      44.6
+     ],
+     [
+      27.8,
+      418.6,
+      3.667,
+      374.09,
+      45.3
+     ],
+     [
+      27.9,
+      419.32,
+      3.211,
+      374.33,
+      46.0
+     ],
+     [
+      28.0,
+      420.04,
+      2.547,
+      374.68,
+      46.7
+     ],
+     [
+      28.1,
+      420.76,
+      2.123,
+      374.86,
+      47.4
+     ]
+    ],
+    "soil_push_mm": 48.1,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 26.141999999984424,
+      "t_confirmed_s": 26.24199999998419,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 3334.906440738671
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 28.199999999979628,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    },
+    "roll_abs_max_after_loc_deg": 0.321,
+    "side_sink_after_loc_mm": [
+     6.16,
+     3.87
+    ],
+    "ds_events": [
+     {
+      "t_s": 29.2,
+      "axis": 0,
+      "legs": "FL,RL",
+      "r_mm_s": 4.47
+     },
+     {
+      "t_s": 30.8,
+      "release": "settled"
+     }
+    ],
+    "ds_active_s": 1.6,
+    "recontact_after_final_loc_N_max": 0.0
+   },
+   "wall_s": 18.4
+  },
+  {
+   "suite": "g6",
+   "id": "ref|J1|top|Fs0",
+   "candidate": "DSb75",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "8019116d763f84a49d5ffd8725665440fdbd5c0a7bf39c500b793a71ff03d0de",
+   "t_ready_s": 62.700000000117356,
+   "min_force_kN": 69.0641616234236,
+   "att_end_deg": [
+    0.06944612222849736,
+    -0.022602298469208828
+   ],
+   "max_stroke_mm": 488.34687073773915,
+   "final_phase": "ready",
+   "rut_ready_mm": 47.247754172311666,
+   "warnings": [],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 27.599999999981026,
+    "t_loc_s": 28.199999999979628,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 0.5999999999986017,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9998,
+    "window_checks": [
+     {
+      "t_s": 28.2,
+      "e1_spread_mm": 10.22,
+      "e4_rise_ratio": -3.031,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      29.2,
+      "FIX_DIFF_SINK_HOLD:FL,RL:4.5"
+     ],
+     [
+      30.8,
+      "FIX_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      62.7,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.7,
+      362.67,
+      98.031,
+      256.69,
+      null
+     ],
+     [
+      21.8,
+      364.75,
+      77.383,
+      272.57,
+      null
+     ],
+     [
+      21.9,
+      366.82,
+      51.767,
+      294.01,
+      null
+     ],
+     [
+      22.0,
+      368.83,
+      41.842,
+      303.93,
+      null
+     ],
+     [
+      22.1,
+      370.77,
+      34.87,
+      311.96,
+      null
+     ],
+     [
+      22.2,
+      372.61,
+      32.524,
+      314.74,
+      null
+     ],
+     [
+      22.3,
+      374.36,
+      27.735,
+      320.88,
+      0.0
+     ],
+     [
+      22.4,
+      376.02,
+      24.0,
+      325.99,
+      1.7
+     ],
+     [
+      22.5,
+      377.58,
+      21.169,
+      330.26,
+      3.4
+     ],
+     [
+      22.6,
+      379.06,
+      18.979,
+      333.86,
+      5.0
+     ],
+     [
+      22.7,
+      380.45,
+      18.31,
+      335.17,
+      6.4
+     ],
+     [
+      22.8,
+      381.75,
+      16.718,
+      338.07,
+      7.8
+     ],
+     [
+      22.9,
+      382.98,
+      15.466,
+      340.56,
+      9.1
+     ],
+     [
+      23.0,
+      384.14,
+      15.04,
+      341.49,
+      10.4
+     ],
+     [
+      23.1,
+      385.23,
+      13.988,
+      343.57,
+      11.5
+     ],
+     [
+      23.2,
+      386.26,
+      13.113,
+      345.39,
+      12.6
+     ],
+     [
+      23.3,
+      387.23,
+      12.827,
+      346.07,
+      13.6
+     ],
+     [
+      23.4,
+      388.14,
+      12.105,
+      347.61,
+      14.6
+     ],
+     [
+      23.5,
+      388.99,
+      11.873,
+      348.18,
+      15.5
+     ],
+     [
+      23.6,
+      389.8,
+      11.272,
+      349.49,
+      16.4
+     ],
+     [
+      23.7,
+      390.56,
+      10.741,
+      350.66,
+      17.2
+     ],
+     [
+      23.8,
+      391.28,
+      10.569,
+      351.1,
+      17.9
+     ],
+     [
+      23.9,
+      391.95,
+      10.114,
+      352.11,
+      18.7
+     ],
+     [
+      24.0,
+      392.6,
+      9.978,
+      352.48,
+      19.3
+     ],
+     [
+      24.1,
+      393.22,
+      9.638,
+      353.37,
+      20.0
+     ],
+     [
+      24.2,
+      393.84,
+      9.611,
+      353.72,
+      20.6
+     ],
+     [
+      24.3,
+      394.46,
+      9.447,
+      354.54,
+      21.2
+     ],
+     [
+      24.4,
+      395.09,
+      9.507,
+      354.88,
+      21.9
+     ],
+     [
+      24.5,
+      395.73,
+      9.491,
+      355.65,
+      22.5
+     ],
+     [
+      24.6,
+      396.37,
+      9.563,
+      356.38,
+      23.1
+     ],
+     [
+      24.7,
+      397.01,
+      9.663,
+      356.72,
+      23.8
+     ],
+     [
+      24.8,
+      397.66,
+      9.796,
+      357.43,
+      24.4
+     ],
+     [
+      24.9,
+      398.32,
+      9.961,
+      358.11,
+      25.0
+     ],
+     [
+      25.0,
+      398.98,
+      10.023,
+      358.45,
+      25.7
+     ],
+     [
+      25.1,
+      399.64,
+      10.175,
+      359.12,
+      26.4
+     ],
+     [
+      25.2,
+      400.31,
+      10.313,
+      359.78,
+      27.0
+     ],
+     [
+      25.3,
+      400.98,
+      10.421,
+      360.44,
+      27.7
+     ],
+     [
+      25.4,
+      401.66,
+      10.487,
+      361.1,
+      28.4
+     ],
+     [
+      25.5,
+      402.34,
+      10.503,
+      361.77,
+      29.0
+     ],
+     [
+      25.6,
+      403.03,
+      10.46,
+      362.44,
+      29.7
+     ],
+     [
+      25.7,
+      403.72,
+      10.362,
+      363.12,
+      30.4
+     ],
+     [
+      25.8,
+      404.41,
+      10.237,
+      363.79,
+      31.1
+     ],
+     [
+      25.9,
+      405.1,
+      10.017,
+      364.81,
+      31.8
+     ],
+     [
+      26.0,
+      405.8,
+      9.811,
+      365.46,
+      32.5
+     ],
+     [
+      26.1,
+      406.5,
+      9.574,
+      366.1,
+      33.2
+     ],
+     [
+      26.2,
+      407.2,
+      9.324,
+      366.72,
+      33.9
+     ],
+     [
+      26.3,
+      407.91,
+      9.052,
+      367.34,
+      34.6
+     ],
+     [
+      26.4,
+      408.61,
+      8.761,
+      367.94,
+      35.3
+     ],
+     [
+      26.5,
+      409.32,
+      8.449,
+      368.52,
+      36.0
+     ],
+     [
+      26.6,
+      410.03,
+      8.115,
+      369.09,
+      36.7
+     ],
+     [
+      26.7,
+      410.74,
+      7.762,
+      369.64,
+      37.4
+     ],
+     [
+      26.8,
+      411.45,
+      7.397,
+      370.16,
+      38.1
+     ],
+     [
+      26.9,
+      412.17,
+      7.024,
+      370.67,
+      38.8
+     ],
+     [
+      27.0,
+      412.88,
+      6.652,
+      371.15,
+      39.6
+     ],
+     [
+      27.1,
+      413.59,
+      6.288,
+      371.62,
+      40.3
+     ],
+     [
+      27.2,
+      414.31,
+      5.94,
+      372.05,
+      41.0
+     ],
+     [
+      27.3,
+      415.02,
+      5.617,
+      372.47,
+      41.7
+     ],
+     [
+      27.4,
+      415.73,
+      5.327,
+      372.85,
+      42.4
+     ],
+     [
+      27.5,
+      416.45,
+      5.002,
+      373.21,
+      43.1
+     ],
+     [
+      27.6,
+      417.17,
+      4.581,
+      373.53,
+      43.8
+     ],
+     [
+      27.7,
+      417.88,
+      4.129,
+      373.83,
+      44.6
+     ],
+     [
+      27.8,
+      418.6,
+      3.667,
+      374.09,
+      45.3
+     ],
+     [
+      27.9,
+      419.32,
+      3.211,
+      374.33,
+      46.0
+     ],
+     [
+      28.0,
+      420.04,
+      2.547,
+      374.68,
+      46.7
+     ],
+     [
+      28.1,
+      420.76,
+      2.123,
+      374.86,
+      47.4
+     ]
+    ],
+    "soil_push_mm": 48.1,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 26.141999999984424,
+      "t_confirmed_s": 26.24199999998419,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 3334.906440738671
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 28.199999999979628,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    },
+    "roll_abs_max_after_loc_deg": 0.321,
+    "side_sink_after_loc_mm": [
+     6.16,
+     3.87
+    ],
+    "ds_events": [
+     {
+      "t_s": 29.2,
+      "axis": 0,
+      "legs": "FL,RL",
+      "r_mm_s": 4.47
+     },
+     {
+      "t_s": 30.8,
+      "release": "settled"
+     }
+    ],
+    "ds_active_s": 1.6,
+    "recontact_after_final_loc_N_max": 0.0
+   },
+   "wall_s": 18.2
+  },
+  {
+   "suite": "g6",
+   "id": "ref|J1|top|Fs4",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "2dca05570fdb006fff0538bf5bb58b86344ae68fe583acb9d7d79e59994ca39f",
+   "t_ready_s": 63.900000000123086,
+   "min_force_kN": 68.8079199858465,
+   "att_end_deg": [
+    0.015800050378015313,
+    -0.019487011277054937
+   ],
+   "max_stroke_mm": 486.5506353750639,
+   "final_phase": "ready",
+   "rut_ready_mm": 47.43144580618503,
+   "warnings": [],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 27.09999999998219,
+    "t_loc_s": 27.999999999980094,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 0.8999999999979025,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.936,
+    "window_checks": [
+     {
+      "t_s": 28.0,
+      "e1_spread_mm": 7.5,
+      "e4_rise_ratio": -0.105,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      29.0,
+      "INFO_DIFF_SINK_HOLD:FL,RL:3.7"
+     ],
+     [
+      30.6,
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      63.9,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.4,
+      361.26,
+      124.64,
+      254.27,
+      null
+     ],
+     [
+      21.5,
+      363.34,
+      78.311,
+      286.98,
+      null
+     ],
+     [
+      21.6,
+      365.4,
+      58.794,
+      301.85,
+      null
+     ],
+     [
+      21.7,
+      367.4,
+      46.56,
+      313.15,
+      null
+     ],
+     [
+      21.8,
+      369.33,
+      38.178,
+      321.98,
+      null
+     ],
+     [
+      21.9,
+      371.17,
+      35.524,
+      324.99,
+      null
+     ],
+     [
+      22.0,
+      372.91,
+      29.956,
+      331.68,
+      0.0
+     ],
+     [
+      22.1,
+      374.56,
+      25.721,
+      337.19,
+      1.7
+     ],
+     [
+      22.2,
+      376.12,
+      22.507,
+      341.76,
+      3.4
+     ],
+     [
+      22.3,
+      377.59,
+      20.178,
+      345.57,
+      4.9
+     ],
+     [
+      22.4,
+      378.97,
+      19.458,
+      346.96,
+      6.4
+     ],
+     [
+      22.5,
+      380.28,
+      17.832,
+      350.01,
+      7.8
+     ],
+     [
+      22.6,
+      381.51,
+      16.363,
+      352.67,
+      9.1
+     ],
+     [
+      22.7,
+      382.67,
+      15.904,
+      353.65,
+      10.3
+     ],
+     [
+      22.8,
+      383.76,
+      14.79,
+      355.84,
+      11.5
+     ],
+     [
+      22.9,
+      384.79,
+      13.832,
+      357.77,
+      12.6
+     ],
+     [
+      23.0,
+      385.76,
+      13.522,
+      358.48,
+      13.6
+     ],
+     [
+      23.1,
+      386.67,
+      12.742,
+      360.1,
+      14.6
+     ],
+     [
+      23.2,
+      387.53,
+      12.492,
+      360.7,
+      15.5
+     ],
+     [
+      23.3,
+      388.34,
+      11.843,
+      362.08,
+      16.4
+     ],
+     [
+      23.4,
+      389.11,
+      11.274,
+      363.31,
+      17.2
+     ],
+     [
+      23.5,
+      389.83,
+      11.093,
+      363.77,
+      17.9
+     ],
+     [
+      23.6,
+      390.52,
+      10.609,
+      364.83,
+      18.7
+     ],
+     [
+      23.7,
+      391.16,
+      10.465,
+      365.23,
+      19.3
+     ],
+     [
+      23.8,
+      391.8,
+      10.102,
+      366.17,
+      20.0
+     ],
+     [
+      23.9,
+      392.43,
+      10.068,
+      366.54,
+      20.6
+     ],
+     [
+      24.0,
+      393.06,
+      9.884,
+      367.4,
+      21.3
+     ],
+     [
+      24.1,
+      393.7,
+      9.935,
+      367.76,
+      21.9
+     ],
+     [
+      24.2,
+      394.34,
+      9.898,
+      368.56,
+      22.5
+     ],
+     [
+      24.3,
+      394.99,
+      9.951,
+      369.33,
+      23.2
+     ],
+     [
+      24.4,
+      395.64,
+      10.052,
+      369.69,
+      23.8
+     ],
+     [
+      24.5,
+      396.3,
+      10.177,
+      370.43,
+      24.5
+     ],
+     [
+      24.6,
+      396.97,
+      10.341,
+      371.15,
+      25.1
+     ],
+     [
+      24.7,
+      397.64,
+      10.52,
+      371.86,
+      25.8
+     ],
+     [
+      24.8,
+      398.31,
+      10.566,
+      372.21,
+      26.5
+     ],
+     [
+      24.9,
+      398.99,
+      10.702,
+      372.91,
+      27.1
+     ],
+     [
+      25.0,
+      399.67,
+      10.798,
+      373.61,
+      27.8
+     ],
+     [
+      25.1,
+      400.36,
+      10.851,
+      374.3,
+      28.5
+     ],
+     [
+      25.2,
+      401.05,
+      10.846,
+      374.99,
+      29.2
+     ],
+     [
+      25.3,
+      401.74,
+      10.78,
+      375.69,
+      29.9
+     ],
+     [
+      25.4,
+      402.44,
+      10.586,
+      376.75,
+      30.6
+     ],
+     [
+      25.5,
+      403.14,
+      10.421,
+      377.45,
+      31.3
+     ],
+     [
+      25.6,
+      403.84,
+      10.256,
+      378.15,
+      32.0
+     ],
+     [
+      25.7,
+      404.55,
+      10.09,
+      378.84,
+      32.7
+     ],
+     [
+      25.8,
+      405.26,
+      9.909,
+      379.52,
+      33.4
+     ],
+     [
+      25.9,
+      405.97,
+      9.732,
+      380.2,
+      34.1
+     ],
+     [
+      26.0,
+      406.68,
+      9.521,
+      380.86,
+      34.8
+     ],
+     [
+      26.1,
+      407.39,
+      9.295,
+      381.5,
+      35.5
+     ],
+     [
+      26.2,
+      408.11,
+      9.071,
+      382.14,
+      36.2
+     ],
+     [
+      26.3,
+      408.83,
+      8.848,
+      382.76,
+      36.9
+     ],
+     [
+      26.4,
+      409.54,
+      8.62,
+      383.37,
+      37.7
+     ],
+     [
+      26.5,
+      410.26,
+      8.373,
+      383.96,
+      38.4
+     ],
+     [
+      26.6,
+      410.98,
+      8.102,
+      384.54,
+      39.1
+     ],
+     [
+      26.7,
+      411.7,
+      7.816,
+      385.1,
+      39.8
+     ],
+     [
+      26.8,
+      412.42,
+      7.515,
+      385.64,
+      40.5
+     ],
+     [
+      26.9,
+      413.14,
+      7.199,
+      386.16,
+      41.3
+     ],
+     [
+      27.0,
+      413.86,
+      6.692,
+      386.93,
+      42.0
+     ],
+     [
+      27.1,
+      414.58,
+      6.294,
+      387.38,
+      42.7
+     ],
+     [
+      27.2,
+      415.3,
+      5.858,
+      387.8,
+      43.4
+     ],
+     [
+      27.3,
+      416.02,
+      5.38,
+      388.19,
+      44.1
+     ],
+     [
+      27.4,
+      416.74,
+      4.884,
+      388.54,
+      44.9
+     ],
+     [
+      27.5,
+      417.45,
+      4.289,
+      388.85,
+      45.6
+     ],
+     [
+      27.6,
+      418.17,
+      3.671,
+      389.13,
+      46.3
+     ],
+     [
+      27.7,
+      418.89,
+      3.096,
+      389.37,
+      47.0
+     ],
+     [
+      27.8,
+      419.6,
+      2.557,
+      389.59,
+      47.7
+     ],
+     [
+      27.9,
+      420.32,
+      2.051,
+      389.77,
+      48.4
+     ]
+    ],
+    "soil_push_mm": 49.2,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.97599999998481,
+      "t_confirmed_s": 26.075999999984578,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 3281.4116024168497
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.999999999980094,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    },
+    "roll_abs_max_after_loc_deg": 0.2373,
+    "side_sink_after_loc_mm": [
+     5.01,
+     4.06
+    ],
+    "ds_events": [
+     {
+      "t_s": 29.0,
+      "axis": 0,
+      "legs": "FL,RL",
+      "r_mm_s": 3.69
+     },
+     {
+      "t_s": 30.6,
+      "release": "settled"
+     }
+    ],
+    "ds_active_s": 1.6,
+    "recontact_after_final_loc_N_max": 0.0
+   },
+   "wall_s": 18.9
+  },
+  {
+   "suite": "g6",
+   "id": "ref|J1|top|Fs4",
+   "candidate": "DSb75",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "2dca05570fdb006fff0538bf5bb58b86344ae68fe583acb9d7d79e59994ca39f",
+   "t_ready_s": 63.900000000123086,
+   "min_force_kN": 68.8079199858465,
+   "att_end_deg": [
+    0.015800050378015313,
+    -0.019487011277054937
+   ],
+   "max_stroke_mm": 486.5506353750639,
+   "final_phase": "ready",
+   "rut_ready_mm": 47.43144580618503,
+   "warnings": [],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 27.09999999998219,
+    "t_loc_s": 27.999999999980094,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 0.8999999999979025,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.936,
+    "window_checks": [
+     {
+      "t_s": 28.0,
+      "e1_spread_mm": 7.5,
+      "e4_rise_ratio": -0.105,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      29.0,
+      "FIX_DIFF_SINK_HOLD:FL,RL:3.7"
+     ],
+     [
+      30.6,
+      "FIX_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      63.9,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.4,
+      361.26,
+      124.64,
+      254.27,
+      null
+     ],
+     [
+      21.5,
+      363.34,
+      78.311,
+      286.98,
+      null
+     ],
+     [
+      21.6,
+      365.4,
+      58.794,
+      301.85,
+      null
+     ],
+     [
+      21.7,
+      367.4,
+      46.56,
+      313.15,
+      null
+     ],
+     [
+      21.8,
+      369.33,
+      38.178,
+      321.98,
+      null
+     ],
+     [
+      21.9,
+      371.17,
+      35.524,
+      324.99,
+      null
+     ],
+     [
+      22.0,
+      372.91,
+      29.956,
+      331.68,
+      0.0
+     ],
+     [
+      22.1,
+      374.56,
+      25.721,
+      337.19,
+      1.7
+     ],
+     [
+      22.2,
+      376.12,
+      22.507,
+      341.76,
+      3.4
+     ],
+     [
+      22.3,
+      377.59,
+      20.178,
+      345.57,
+      4.9
+     ],
+     [
+      22.4,
+      378.97,
+      19.458,
+      346.96,
+      6.4
+     ],
+     [
+      22.5,
+      380.28,
+      17.832,
+      350.01,
+      7.8
+     ],
+     [
+      22.6,
+      381.51,
+      16.363,
+      352.67,
+      9.1
+     ],
+     [
+      22.7,
+      382.67,
+      15.904,
+      353.65,
+      10.3
+     ],
+     [
+      22.8,
+      383.76,
+      14.79,
+      355.84,
+      11.5
+     ],
+     [
+      22.9,
+      384.79,
+      13.832,
+      357.77,
+      12.6
+     ],
+     [
+      23.0,
+      385.76,
+      13.522,
+      358.48,
+      13.6
+     ],
+     [
+      23.1,
+      386.67,
+      12.742,
+      360.1,
+      14.6
+     ],
+     [
+      23.2,
+      387.53,
+      12.492,
+      360.7,
+      15.5
+     ],
+     [
+      23.3,
+      388.34,
+      11.843,
+      362.08,
+      16.4
+     ],
+     [
+      23.4,
+      389.11,
+      11.274,
+      363.31,
+      17.2
+     ],
+     [
+      23.5,
+      389.83,
+      11.093,
+      363.77,
+      17.9
+     ],
+     [
+      23.6,
+      390.52,
+      10.609,
+      364.83,
+      18.7
+     ],
+     [
+      23.7,
+      391.16,
+      10.465,
+      365.23,
+      19.3
+     ],
+     [
+      23.8,
+      391.8,
+      10.102,
+      366.17,
+      20.0
+     ],
+     [
+      23.9,
+      392.43,
+      10.068,
+      366.54,
+      20.6
+     ],
+     [
+      24.0,
+      393.06,
+      9.884,
+      367.4,
+      21.3
+     ],
+     [
+      24.1,
+      393.7,
+      9.935,
+      367.76,
+      21.9
+     ],
+     [
+      24.2,
+      394.34,
+      9.898,
+      368.56,
+      22.5
+     ],
+     [
+      24.3,
+      394.99,
+      9.951,
+      369.33,
+      23.2
+     ],
+     [
+      24.4,
+      395.64,
+      10.052,
+      369.69,
+      23.8
+     ],
+     [
+      24.5,
+      396.3,
+      10.177,
+      370.43,
+      24.5
+     ],
+     [
+      24.6,
+      396.97,
+      10.341,
+      371.15,
+      25.1
+     ],
+     [
+      24.7,
+      397.64,
+      10.52,
+      371.86,
+      25.8
+     ],
+     [
+      24.8,
+      398.31,
+      10.566,
+      372.21,
+      26.5
+     ],
+     [
+      24.9,
+      398.99,
+      10.702,
+      372.91,
+      27.1
+     ],
+     [
+      25.0,
+      399.67,
+      10.798,
+      373.61,
+      27.8
+     ],
+     [
+      25.1,
+      400.36,
+      10.851,
+      374.3,
+      28.5
+     ],
+     [
+      25.2,
+      401.05,
+      10.846,
+      374.99,
+      29.2
+     ],
+     [
+      25.3,
+      401.74,
+      10.78,
+      375.69,
+      29.9
+     ],
+     [
+      25.4,
+      402.44,
+      10.586,
+      376.75,
+      30.6
+     ],
+     [
+      25.5,
+      403.14,
+      10.421,
+      377.45,
+      31.3
+     ],
+     [
+      25.6,
+      403.84,
+      10.256,
+      378.15,
+      32.0
+     ],
+     [
+      25.7,
+      404.55,
+      10.09,
+      378.84,
+      32.7
+     ],
+     [
+      25.8,
+      405.26,
+      9.909,
+      379.52,
+      33.4
+     ],
+     [
+      25.9,
+      405.97,
+      9.732,
+      380.2,
+      34.1
+     ],
+     [
+      26.0,
+      406.68,
+      9.521,
+      380.86,
+      34.8
+     ],
+     [
+      26.1,
+      407.39,
+      9.295,
+      381.5,
+      35.5
+     ],
+     [
+      26.2,
+      408.11,
+      9.071,
+      382.14,
+      36.2
+     ],
+     [
+      26.3,
+      408.83,
+      8.848,
+      382.76,
+      36.9
+     ],
+     [
+      26.4,
+      409.54,
+      8.62,
+      383.37,
+      37.7
+     ],
+     [
+      26.5,
+      410.26,
+      8.373,
+      383.96,
+      38.4
+     ],
+     [
+      26.6,
+      410.98,
+      8.102,
+      384.54,
+      39.1
+     ],
+     [
+      26.7,
+      411.7,
+      7.816,
+      385.1,
+      39.8
+     ],
+     [
+      26.8,
+      412.42,
+      7.515,
+      385.64,
+      40.5
+     ],
+     [
+      26.9,
+      413.14,
+      7.199,
+      386.16,
+      41.3
+     ],
+     [
+      27.0,
+      413.86,
+      6.692,
+      386.93,
+      42.0
+     ],
+     [
+      27.1,
+      414.58,
+      6.294,
+      387.38,
+      42.7
+     ],
+     [
+      27.2,
+      415.3,
+      5.858,
+      387.8,
+      43.4
+     ],
+     [
+      27.3,
+      416.02,
+      5.38,
+      388.19,
+      44.1
+     ],
+     [
+      27.4,
+      416.74,
+      4.884,
+      388.54,
+      44.9
+     ],
+     [
+      27.5,
+      417.45,
+      4.289,
+      388.85,
+      45.6
+     ],
+     [
+      27.6,
+      418.17,
+      3.671,
+      389.13,
+      46.3
+     ],
+     [
+      27.7,
+      418.89,
+      3.096,
+      389.37,
+      47.0
+     ],
+     [
+      27.8,
+      419.6,
+      2.557,
+      389.59,
+      47.7
+     ],
+     [
+      27.9,
+      420.32,
+      2.051,
+      389.77,
+      48.4
+     ]
+    ],
+    "soil_push_mm": 49.2,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 25.97599999998481,
+      "t_confirmed_s": 26.075999999984578,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 3281.4116024168497
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 27.999999999980094,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    },
+    "roll_abs_max_after_loc_deg": 0.2373,
+    "side_sink_after_loc_mm": [
+     5.01,
+     4.06
+    ],
+    "ds_events": [
+     {
+      "t_s": 29.0,
+      "axis": 0,
+      "legs": "FL,RL",
+      "r_mm_s": 3.69
+     },
+     {
+      "t_s": 30.6,
+      "release": "settled"
+     }
+    ],
+    "ds_active_s": 1.6,
+    "recontact_after_final_loc_N_max": 0.0
+   },
+   "wall_s": 18.9
+  },
+  {
+   "suite": "g6",
+   "id": "ref|J2|top|Fs0",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "5b0f466c6f29b2f52fd254c5a5594d9f654f8bd6f2ca4262c0663ef2b31e763e",
+   "t_ready_s": 64.80000000012738,
+   "min_force_kN": 68.92251436010048,
+   "att_end_deg": [
+    0.053143313966585976,
+    -0.034637670601441246
+   ],
+   "max_stroke_mm": 516.1473917803035,
+   "final_phase": "ready",
+   "rut_ready_mm": 47.58103501977848,
+   "warnings": [],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 32.499999999973156,
+    "t_loc_s": 33.39999999997745,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 0.9000000000042974,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9992,
+    "window_checks": [
+     {
+      "t_s": 33.4,
+      "e1_spread_mm": 10.52,
+      "e4_rise_ratio": -3.152,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      34.4,
+      "INFO_DIFF_SINK_HOLD:FL,RL:3.5"
+     ],
+     [
+      35.9,
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      64.8,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.2,
+      361.98,
+      87.156,
+      208.38,
+      null
+     ],
+     [
+      21.3,
+      364.07,
+      63.4,
+      231.57,
+      null
+     ],
+     [
+      21.4,
+      366.12,
+      52.558,
+      243.76,
+      null
+     ],
+     [
+      21.5,
+      368.1,
+      44.773,
+      253.96,
+      null
+     ],
+     [
+      21.6,
+      370.0,
+      38.808,
+      262.58,
+      null
+     ],
+     [
+      21.7,
+      371.8,
+      36.735,
+      265.77,
+      null
+     ],
+     [
+      21.8,
+      373.51,
+      32.391,
+      272.66,
+      0.0
+     ],
+     [
+      21.9,
+      375.13,
+      28.846,
+      278.56,
+      1.7
+     ],
+     [
+      22.0,
+      376.66,
+      26.048,
+      283.61,
+      3.3
+     ],
+     [
+      22.1,
+      378.1,
+      25.163,
+      285.48,
+      4.9
+     ],
+     [
+      22.2,
+      379.46,
+      23.086,
+      289.59,
+      6.3
+     ],
+     [
+      22.3,
+      380.73,
+      21.356,
+      293.16,
+      7.7
+     ],
+     [
+      22.4,
+      381.94,
+      19.911,
+      296.29,
+      8.9
+     ],
+     [
+      22.5,
+      383.07,
+      19.441,
+      297.47,
+      10.1
+     ],
+     [
+      22.6,
+      384.14,
+      18.294,
+      300.11,
+      11.3
+     ],
+     [
+      22.7,
+      385.14,
+      17.319,
+      302.45,
+      12.3
+     ],
+     [
+      22.8,
+      386.09,
+      17.015,
+      303.34,
+      13.3
+     ],
+     [
+      22.9,
+      386.98,
+      16.223,
+      305.34,
+      14.3
+     ],
+     [
+      23.0,
+      387.82,
+      15.975,
+      306.11,
+      15.2
+     ],
+     [
+      23.1,
+      388.61,
+      15.331,
+      307.83,
+      16.0
+     ],
+     [
+      23.2,
+      389.36,
+      15.128,
+      308.49,
+      16.8
+     ],
+     [
+      23.3,
+      390.06,
+      14.593,
+      309.99,
+      17.6
+     ],
+     [
+      23.4,
+      390.72,
+      14.426,
+      310.56,
+      18.3
+     ],
+     [
+      23.5,
+      391.35,
+      13.974,
+      311.88,
+      18.9
+     ],
+     [
+      23.6,
+      391.95,
+      13.597,
+      313.09,
+      19.5
+     ],
+     [
+      23.7,
+      392.55,
+      13.561,
+      313.58,
+      20.1
+     ],
+     [
+      23.8,
+      393.14,
+      13.374,
+      314.69,
+      20.7
+     ],
+     [
+      23.9,
+      393.74,
+      13.433,
+      315.16,
+      21.3
+     ],
+     [
+      24.0,
+      394.35,
+      13.404,
+      316.2,
+      21.9
+     ],
+     [
+      24.1,
+      394.95,
+      13.505,
+      316.66,
+      22.5
+     ],
+     [
+      24.2,
+      395.56,
+      13.59,
+      317.65,
+      23.1
+     ],
+     [
+      24.3,
+      396.18,
+      13.738,
+      318.61,
+      23.8
+     ],
+     [
+      24.4,
+      396.79,
+      13.832,
+      319.06,
+      24.4
+     ],
+     [
+      24.5,
+      397.41,
+      14.005,
+      319.98,
+      25.0
+     ],
+     [
+      24.6,
+      398.03,
+      14.183,
+      320.89,
+      25.6
+     ],
+     [
+      24.7,
+      398.66,
+      14.347,
+      321.78,
+      26.2
+     ],
+     [
+      24.8,
+      399.29,
+      14.354,
+      322.23,
+      26.9
+     ],
+     [
+      24.9,
+      399.92,
+      14.458,
+      323.11,
+      27.5
+     ],
+     [
+      25.0,
+      400.55,
+      14.518,
+      323.99,
+      28.1
+     ],
+     [
+      25.1,
+      401.19,
+      14.524,
+      324.86,
+      28.7
+     ],
+     [
+      25.2,
+      401.82,
+      14.472,
+      325.74,
+      29.4
+     ],
+     [
+      25.3,
+      402.46,
+      14.356,
+      326.62,
+      30.0
+     ],
+     [
+      25.4,
+      403.1,
+      14.206,
+      327.5,
+      30.7
+     ],
+     [
+      25.5,
+      403.74,
+      13.963,
+      328.83,
+      31.3
+     ],
+     [
+      25.6,
+      404.39,
+      13.802,
+      329.7,
+      31.9
+     ],
+     [
+      25.7,
+      405.03,
+      13.645,
+      330.56,
+      32.6
+     ],
+     [
+      25.8,
+      405.68,
+      13.493,
+      331.42,
+      33.2
+     ],
+     [
+      25.9,
+      406.33,
+      13.346,
+      332.27,
+      33.9
+     ],
+     [
+      26.0,
+      406.98,
+      13.201,
+      333.12,
+      34.5
+     ],
+     [
+      26.1,
+      407.63,
+      13.058,
+      333.95,
+      35.2
+     ],
+     [
+      26.2,
+      408.28,
+      12.912,
+      334.78,
+      35.8
+     ],
+     [
+      26.3,
+      408.93,
+      12.767,
+      335.61,
+      36.5
+     ],
+     [
+      26.4,
+      409.59,
+      12.624,
+      336.42,
+      37.1
+     ],
+     [
+      26.5,
+      410.24,
+      12.482,
+      337.23,
+      37.8
+     ],
+     [
+      26.6,
+      410.89,
+      12.343,
+      338.03,
+      38.4
+     ],
+     [
+      26.7,
+      411.55,
+      12.207,
+      338.83,
+      39.1
+     ],
+     [
+      26.8,
+      412.2,
+      12.075,
+      339.62,
+      39.7
+     ],
+     [
+      26.9,
+      412.86,
+      11.947,
+      340.4,
+      40.4
+     ],
+     [
+      27.0,
+      413.52,
+      11.819,
+      341.17,
+      41.1
+     ],
+     [
+      27.1,
+      414.17,
+      11.688,
+      341.94,
+      41.7
+     ],
+     [
+      27.2,
+      414.83,
+      11.564,
+      342.7,
+      42.4
+     ],
+     [
+      27.3,
+      415.49,
+      11.443,
+      343.45,
+      43.0
+     ],
+     [
+      27.4,
+      416.15,
+      11.326,
+      344.19,
+      43.7
+     ],
+     [
+      27.5,
+      416.81,
+      11.215,
+      344.93,
+      44.3
+     ],
+     [
+      27.6,
+      417.46,
+      11.109,
+      345.66,
+      45.0
+     ],
+     [
+      27.7,
+      418.12,
+      11.009,
+      346.39,
+      45.7
+     ],
+     [
+      27.8,
+      418.78,
+      10.915,
+      347.11,
+      46.3
+     ],
+     [
+      27.9,
+      419.44,
+      10.821,
+      347.83,
+      47.0
+     ],
+     [
+      28.0,
+      420.1,
+      10.73,
+      348.53,
+      47.6
+     ],
+     [
+      28.1,
+      420.76,
+      10.641,
+      349.24,
+      48.3
+     ],
+     [
+      28.2,
+      421.42,
+      10.555,
+      349.94,
+      49.0
+     ],
+     [
+      28.3,
+      422.08,
+      10.472,
+      350.63,
+      49.6
+     ],
+     [
+      28.4,
+      422.74,
+      10.393,
+      351.32,
+      50.3
+     ],
+     [
+      28.5,
+      423.39,
+      10.308,
+      352.0,
+      50.9
+     ],
+     [
+      28.6,
+      424.05,
+      10.219,
+      352.67,
+      51.6
+     ],
+     [
+      28.7,
+      424.71,
+      10.127,
+      353.34,
+      52.2
+     ],
+     [
+      28.8,
+      425.37,
+      10.028,
+      354.0,
+      52.9
+     ],
+     [
+      28.9,
+      426.02,
+      9.928,
+      354.65,
+      53.6
+     ],
+     [
+      29.0,
+      426.68,
+      9.827,
+      355.3,
+      54.2
+     ],
+     [
+      29.1,
+      427.33,
+      9.727,
+      355.95,
+      54.9
+     ],
+     [
+      29.2,
+      427.99,
+      9.63,
+      356.58,
+      55.5
+     ],
+     [
+      29.3,
+      428.64,
+      9.537,
+      357.22,
+      56.2
+     ],
+     [
+      29.4,
+      429.29,
+      9.45,
+      357.84,
+      56.8
+     ],
+     [
+      29.5,
+      429.94,
+      9.358,
+      358.46,
+      57.5
+     ],
+     [
+      29.6,
+      430.59,
+      9.257,
+      359.07,
+      58.1
+     ],
+     [
+      29.7,
+      431.24,
+      9.162,
+      359.68,
+      58.8
+     ],
+     [
+      29.8,
+      431.89,
+      9.074,
+      360.27,
+      59.4
+     ],
+     [
+      29.9,
+      432.54,
+      8.993,
+      360.87,
+      60.1
+     ],
+     [
+      30.0,
+      433.18,
+      8.921,
+      361.45,
+      60.7
+     ],
+     [
+      30.1,
+      433.83,
+      8.857,
+      362.03,
+      61.4
+     ],
+     [
+      30.2,
+      434.47,
+      8.792,
+      362.61,
+      62.0
+     ],
+     [
+      30.3,
+      435.12,
+      8.726,
+      363.18,
+      62.7
+     ],
+     [
+      30.4,
+      435.76,
+      8.665,
+      363.75,
+      63.3
+     ],
+     [
+      30.5,
+      436.4,
+      8.606,
+      364.31,
+      64.0
+     ],
+     [
+      30.6,
+      437.04,
+      8.548,
+      364.87,
+      64.6
+     ],
+     [
+      30.7,
+      437.68,
+      8.493,
+      365.42,
+      65.2
+     ],
+     [
+      30.8,
+      438.31,
+      8.441,
+      365.97,
+      65.9
+     ],
+     [
+      30.9,
+      438.95,
+      8.382,
+      366.51,
+      66.5
+     ],
+     [
+      31.0,
+      439.58,
+      8.294,
+      367.04,
+      67.1
+     ],
+     [
+      31.1,
+      440.21,
+      8.199,
+      367.56,
+      67.8
+     ],
+     [
+      31.2,
+      440.84,
+      8.089,
+      368.07,
+      68.4
+     ],
+     [
+      31.3,
+      441.47,
+      7.951,
+      368.58,
+      69.0
+     ],
+     [
+      31.4,
+      442.09,
+      7.798,
+      369.07,
+      69.7
+     ],
+     [
+      31.5,
+      442.71,
+      7.624,
+      369.56,
+      70.3
+     ],
+     [
+      31.6,
+      443.33,
+      7.43,
+      370.03,
+      70.9
+     ],
+     [
+      31.7,
+      443.95,
+      7.214,
+      370.49,
+      71.5
+     ],
+     [
+      31.8,
+      444.57,
+      6.979,
+      370.93,
+      72.1
+     ],
+     [
+      31.9,
+      445.18,
+      6.728,
+      371.36,
+      72.8
+     ],
+     [
+      32.0,
+      445.8,
+      6.464,
+      371.77,
+      73.4
+     ],
+     [
+      32.1,
+      446.4,
+      6.193,
+      372.17,
+      74.0
+     ],
+     [
+      32.2,
+      447.01,
+      6.059,
+      372.33,
+      74.6
+     ],
+     [
+      32.3,
+      447.62,
+      5.788,
+      372.7,
+      75.2
+     ],
+     [
+      32.4,
+      448.22,
+      5.512,
+      373.06,
+      75.8
+     ],
+     [
+      32.5,
+      448.82,
+      5.218,
+      373.38,
+      76.4
+     ],
+     [
+      32.6,
+      449.42,
+      4.89,
+      373.69,
+      77.0
+     ],
+     [
+      32.7,
+      450.02,
+      4.495,
+      373.95,
+      77.6
+     ],
+     [
+      32.8,
+      450.61,
+      4.067,
+      374.2,
+      78.2
+     ],
+     [
+      32.9,
+      451.21,
+      3.632,
+      374.43,
+      78.8
+     ],
+     [
+      33.0,
+      451.8,
+      3.205,
+      374.63,
+      79.4
+     ],
+     [
+      33.1,
+      452.39,
+      2.793,
+      374.81,
+      80.0
+     ],
+     [
+      33.2,
+      452.99,
+      2.404,
+      374.97,
+      80.6
+     ],
+     [
+      33.3,
+      453.58,
+      2.037,
+      375.12,
+      81.2
+     ]
+    ],
+    "soil_push_mm": 81.8,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 30.972999999973165,
+      "t_confirmed_s": 31.072999999972932,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 3378.1385527643006
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 33.39999999997745,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    },
+    "roll_abs_max_after_loc_deg": 0.2746,
+    "side_sink_after_loc_mm": [
+     4.39,
+     4.16
+    ],
+    "ds_events": [
+     {
+      "t_s": 34.4,
+      "axis": 0,
+      "legs": "FL,RL",
+      "r_mm_s": 3.52
+     },
+     {
+      "t_s": 35.9,
+      "release": "settled"
+     }
+    ],
+    "ds_active_s": 1.5,
+    "recontact_after_final_loc_N_max": 0.0
+   },
+   "wall_s": 18.7
+  },
+  {
+   "suite": "g6",
+   "id": "ref|J2|top|Fs0",
+   "candidate": "DSb75",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "5b0f466c6f29b2f52fd254c5a5594d9f654f8bd6f2ca4262c0663ef2b31e763e",
+   "t_ready_s": 64.80000000012738,
+   "min_force_kN": 68.92251436010048,
+   "att_end_deg": [
+    0.053143313966585976,
+    -0.034637670601441246
+   ],
+   "max_stroke_mm": 516.1473917803035,
+   "final_phase": "ready",
+   "rut_ready_mm": 47.58103501977848,
+   "warnings": [],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 32.499999999973156,
+    "t_loc_s": 33.39999999997745,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 0.9000000000042974,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.9992,
+    "window_checks": [
+     {
+      "t_s": 33.4,
+      "e1_spread_mm": 10.52,
+      "e4_rise_ratio": -3.152,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      34.4,
+      "FIX_DIFF_SINK_HOLD:FL,RL:3.5"
+     ],
+     [
+      35.9,
+      "FIX_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      64.8,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.2,
+      361.98,
+      87.156,
+      208.38,
+      null
+     ],
+     [
+      21.3,
+      364.07,
+      63.4,
+      231.57,
+      null
+     ],
+     [
+      21.4,
+      366.12,
+      52.558,
+      243.76,
+      null
+     ],
+     [
+      21.5,
+      368.1,
+      44.773,
+      253.96,
+      null
+     ],
+     [
+      21.6,
+      370.0,
+      38.808,
+      262.58,
+      null
+     ],
+     [
+      21.7,
+      371.8,
+      36.735,
+      265.77,
+      null
+     ],
+     [
+      21.8,
+      373.51,
+      32.391,
+      272.66,
+      0.0
+     ],
+     [
+      21.9,
+      375.13,
+      28.846,
+      278.56,
+      1.7
+     ],
+     [
+      22.0,
+      376.66,
+      26.048,
+      283.61,
+      3.3
+     ],
+     [
+      22.1,
+      378.1,
+      25.163,
+      285.48,
+      4.9
+     ],
+     [
+      22.2,
+      379.46,
+      23.086,
+      289.59,
+      6.3
+     ],
+     [
+      22.3,
+      380.73,
+      21.356,
+      293.16,
+      7.7
+     ],
+     [
+      22.4,
+      381.94,
+      19.911,
+      296.29,
+      8.9
+     ],
+     [
+      22.5,
+      383.07,
+      19.441,
+      297.47,
+      10.1
+     ],
+     [
+      22.6,
+      384.14,
+      18.294,
+      300.11,
+      11.3
+     ],
+     [
+      22.7,
+      385.14,
+      17.319,
+      302.45,
+      12.3
+     ],
+     [
+      22.8,
+      386.09,
+      17.015,
+      303.34,
+      13.3
+     ],
+     [
+      22.9,
+      386.98,
+      16.223,
+      305.34,
+      14.3
+     ],
+     [
+      23.0,
+      387.82,
+      15.975,
+      306.11,
+      15.2
+     ],
+     [
+      23.1,
+      388.61,
+      15.331,
+      307.83,
+      16.0
+     ],
+     [
+      23.2,
+      389.36,
+      15.128,
+      308.49,
+      16.8
+     ],
+     [
+      23.3,
+      390.06,
+      14.593,
+      309.99,
+      17.6
+     ],
+     [
+      23.4,
+      390.72,
+      14.426,
+      310.56,
+      18.3
+     ],
+     [
+      23.5,
+      391.35,
+      13.974,
+      311.88,
+      18.9
+     ],
+     [
+      23.6,
+      391.95,
+      13.597,
+      313.09,
+      19.5
+     ],
+     [
+      23.7,
+      392.55,
+      13.561,
+      313.58,
+      20.1
+     ],
+     [
+      23.8,
+      393.14,
+      13.374,
+      314.69,
+      20.7
+     ],
+     [
+      23.9,
+      393.74,
+      13.433,
+      315.16,
+      21.3
+     ],
+     [
+      24.0,
+      394.35,
+      13.404,
+      316.2,
+      21.9
+     ],
+     [
+      24.1,
+      394.95,
+      13.505,
+      316.66,
+      22.5
+     ],
+     [
+      24.2,
+      395.56,
+      13.59,
+      317.65,
+      23.1
+     ],
+     [
+      24.3,
+      396.18,
+      13.738,
+      318.61,
+      23.8
+     ],
+     [
+      24.4,
+      396.79,
+      13.832,
+      319.06,
+      24.4
+     ],
+     [
+      24.5,
+      397.41,
+      14.005,
+      319.98,
+      25.0
+     ],
+     [
+      24.6,
+      398.03,
+      14.183,
+      320.89,
+      25.6
+     ],
+     [
+      24.7,
+      398.66,
+      14.347,
+      321.78,
+      26.2
+     ],
+     [
+      24.8,
+      399.29,
+      14.354,
+      322.23,
+      26.9
+     ],
+     [
+      24.9,
+      399.92,
+      14.458,
+      323.11,
+      27.5
+     ],
+     [
+      25.0,
+      400.55,
+      14.518,
+      323.99,
+      28.1
+     ],
+     [
+      25.1,
+      401.19,
+      14.524,
+      324.86,
+      28.7
+     ],
+     [
+      25.2,
+      401.82,
+      14.472,
+      325.74,
+      29.4
+     ],
+     [
+      25.3,
+      402.46,
+      14.356,
+      326.62,
+      30.0
+     ],
+     [
+      25.4,
+      403.1,
+      14.206,
+      327.5,
+      30.7
+     ],
+     [
+      25.5,
+      403.74,
+      13.963,
+      328.83,
+      31.3
+     ],
+     [
+      25.6,
+      404.39,
+      13.802,
+      329.7,
+      31.9
+     ],
+     [
+      25.7,
+      405.03,
+      13.645,
+      330.56,
+      32.6
+     ],
+     [
+      25.8,
+      405.68,
+      13.493,
+      331.42,
+      33.2
+     ],
+     [
+      25.9,
+      406.33,
+      13.346,
+      332.27,
+      33.9
+     ],
+     [
+      26.0,
+      406.98,
+      13.201,
+      333.12,
+      34.5
+     ],
+     [
+      26.1,
+      407.63,
+      13.058,
+      333.95,
+      35.2
+     ],
+     [
+      26.2,
+      408.28,
+      12.912,
+      334.78,
+      35.8
+     ],
+     [
+      26.3,
+      408.93,
+      12.767,
+      335.61,
+      36.5
+     ],
+     [
+      26.4,
+      409.59,
+      12.624,
+      336.42,
+      37.1
+     ],
+     [
+      26.5,
+      410.24,
+      12.482,
+      337.23,
+      37.8
+     ],
+     [
+      26.6,
+      410.89,
+      12.343,
+      338.03,
+      38.4
+     ],
+     [
+      26.7,
+      411.55,
+      12.207,
+      338.83,
+      39.1
+     ],
+     [
+      26.8,
+      412.2,
+      12.075,
+      339.62,
+      39.7
+     ],
+     [
+      26.9,
+      412.86,
+      11.947,
+      340.4,
+      40.4
+     ],
+     [
+      27.0,
+      413.52,
+      11.819,
+      341.17,
+      41.1
+     ],
+     [
+      27.1,
+      414.17,
+      11.688,
+      341.94,
+      41.7
+     ],
+     [
+      27.2,
+      414.83,
+      11.564,
+      342.7,
+      42.4
+     ],
+     [
+      27.3,
+      415.49,
+      11.443,
+      343.45,
+      43.0
+     ],
+     [
+      27.4,
+      416.15,
+      11.326,
+      344.19,
+      43.7
+     ],
+     [
+      27.5,
+      416.81,
+      11.215,
+      344.93,
+      44.3
+     ],
+     [
+      27.6,
+      417.46,
+      11.109,
+      345.66,
+      45.0
+     ],
+     [
+      27.7,
+      418.12,
+      11.009,
+      346.39,
+      45.7
+     ],
+     [
+      27.8,
+      418.78,
+      10.915,
+      347.11,
+      46.3
+     ],
+     [
+      27.9,
+      419.44,
+      10.821,
+      347.83,
+      47.0
+     ],
+     [
+      28.0,
+      420.1,
+      10.73,
+      348.53,
+      47.6
+     ],
+     [
+      28.1,
+      420.76,
+      10.641,
+      349.24,
+      48.3
+     ],
+     [
+      28.2,
+      421.42,
+      10.555,
+      349.94,
+      49.0
+     ],
+     [
+      28.3,
+      422.08,
+      10.472,
+      350.63,
+      49.6
+     ],
+     [
+      28.4,
+      422.74,
+      10.393,
+      351.32,
+      50.3
+     ],
+     [
+      28.5,
+      423.39,
+      10.308,
+      352.0,
+      50.9
+     ],
+     [
+      28.6,
+      424.05,
+      10.219,
+      352.67,
+      51.6
+     ],
+     [
+      28.7,
+      424.71,
+      10.127,
+      353.34,
+      52.2
+     ],
+     [
+      28.8,
+      425.37,
+      10.028,
+      354.0,
+      52.9
+     ],
+     [
+      28.9,
+      426.02,
+      9.928,
+      354.65,
+      53.6
+     ],
+     [
+      29.0,
+      426.68,
+      9.827,
+      355.3,
+      54.2
+     ],
+     [
+      29.1,
+      427.33,
+      9.727,
+      355.95,
+      54.9
+     ],
+     [
+      29.2,
+      427.99,
+      9.63,
+      356.58,
+      55.5
+     ],
+     [
+      29.3,
+      428.64,
+      9.537,
+      357.22,
+      56.2
+     ],
+     [
+      29.4,
+      429.29,
+      9.45,
+      357.84,
+      56.8
+     ],
+     [
+      29.5,
+      429.94,
+      9.358,
+      358.46,
+      57.5
+     ],
+     [
+      29.6,
+      430.59,
+      9.257,
+      359.07,
+      58.1
+     ],
+     [
+      29.7,
+      431.24,
+      9.162,
+      359.68,
+      58.8
+     ],
+     [
+      29.8,
+      431.89,
+      9.074,
+      360.27,
+      59.4
+     ],
+     [
+      29.9,
+      432.54,
+      8.993,
+      360.87,
+      60.1
+     ],
+     [
+      30.0,
+      433.18,
+      8.921,
+      361.45,
+      60.7
+     ],
+     [
+      30.1,
+      433.83,
+      8.857,
+      362.03,
+      61.4
+     ],
+     [
+      30.2,
+      434.47,
+      8.792,
+      362.61,
+      62.0
+     ],
+     [
+      30.3,
+      435.12,
+      8.726,
+      363.18,
+      62.7
+     ],
+     [
+      30.4,
+      435.76,
+      8.665,
+      363.75,
+      63.3
+     ],
+     [
+      30.5,
+      436.4,
+      8.606,
+      364.31,
+      64.0
+     ],
+     [
+      30.6,
+      437.04,
+      8.548,
+      364.87,
+      64.6
+     ],
+     [
+      30.7,
+      437.68,
+      8.493,
+      365.42,
+      65.2
+     ],
+     [
+      30.8,
+      438.31,
+      8.441,
+      365.97,
+      65.9
+     ],
+     [
+      30.9,
+      438.95,
+      8.382,
+      366.51,
+      66.5
+     ],
+     [
+      31.0,
+      439.58,
+      8.294,
+      367.04,
+      67.1
+     ],
+     [
+      31.1,
+      440.21,
+      8.199,
+      367.56,
+      67.8
+     ],
+     [
+      31.2,
+      440.84,
+      8.089,
+      368.07,
+      68.4
+     ],
+     [
+      31.3,
+      441.47,
+      7.951,
+      368.58,
+      69.0
+     ],
+     [
+      31.4,
+      442.09,
+      7.798,
+      369.07,
+      69.7
+     ],
+     [
+      31.5,
+      442.71,
+      7.624,
+      369.56,
+      70.3
+     ],
+     [
+      31.6,
+      443.33,
+      7.43,
+      370.03,
+      70.9
+     ],
+     [
+      31.7,
+      443.95,
+      7.214,
+      370.49,
+      71.5
+     ],
+     [
+      31.8,
+      444.57,
+      6.979,
+      370.93,
+      72.1
+     ],
+     [
+      31.9,
+      445.18,
+      6.728,
+      371.36,
+      72.8
+     ],
+     [
+      32.0,
+      445.8,
+      6.464,
+      371.77,
+      73.4
+     ],
+     [
+      32.1,
+      446.4,
+      6.193,
+      372.17,
+      74.0
+     ],
+     [
+      32.2,
+      447.01,
+      6.059,
+      372.33,
+      74.6
+     ],
+     [
+      32.3,
+      447.62,
+      5.788,
+      372.7,
+      75.2
+     ],
+     [
+      32.4,
+      448.22,
+      5.512,
+      373.06,
+      75.8
+     ],
+     [
+      32.5,
+      448.82,
+      5.218,
+      373.38,
+      76.4
+     ],
+     [
+      32.6,
+      449.42,
+      4.89,
+      373.69,
+      77.0
+     ],
+     [
+      32.7,
+      450.02,
+      4.495,
+      373.95,
+      77.6
+     ],
+     [
+      32.8,
+      450.61,
+      4.067,
+      374.2,
+      78.2
+     ],
+     [
+      32.9,
+      451.21,
+      3.632,
+      374.43,
+      78.8
+     ],
+     [
+      33.0,
+      451.8,
+      3.205,
+      374.63,
+      79.4
+     ],
+     [
+      33.1,
+      452.39,
+      2.793,
+      374.81,
+      80.0
+     ],
+     [
+      33.2,
+      452.99,
+      2.404,
+      374.97,
+      80.6
+     ],
+     [
+      33.3,
+      453.58,
+      2.037,
+      375.12,
+      81.2
+     ]
+    ],
+    "soil_push_mm": 81.8,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 30.972999999973165,
+      "t_confirmed_s": 31.072999999972932,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 3378.1385527643006
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 33.39999999997745,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    },
+    "roll_abs_max_after_loc_deg": 0.2746,
+    "side_sink_after_loc_mm": [
+     4.39,
+     4.16
+    ],
+    "ds_events": [
+     {
+      "t_s": 34.4,
+      "axis": 0,
+      "legs": "FL,RL",
+      "r_mm_s": 3.52
+     },
+     {
+      "t_s": 35.9,
+      "release": "settled"
+     }
+    ],
+    "ds_active_s": 1.5,
+    "recontact_after_final_loc_N_max": 0.0
+   },
+   "wall_s": 19.0
+  },
+  {
+   "suite": "g6",
+   "id": "ref|J2|top|Fs4",
+   "candidate": "current",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "ae22eab471a0c96cebf2dfc551327a14eaf029d145f31ebef2a3c0d91e6f75d0",
+   "t_ready_s": 64.90000000012786,
+   "min_force_kN": 68.7336445321671,
+   "att_end_deg": [
+    0.030446287955433655,
+    -0.03204922032559668
+   ],
+   "max_stroke_mm": 516.2779276212083,
+   "final_phase": "ready",
+   "rut_ready_mm": 48.080417559452755,
+   "warnings": [],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 32.499999999973156,
+    "t_loc_s": 33.39999999997745,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 0.9000000000042974,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.937,
+    "window_checks": [
+     {
+      "t_s": 33.4,
+      "e1_spread_mm": 10.52,
+      "e4_rise_ratio": -3.042,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      34.4,
+      "INFO_DIFF_SINK_HOLD:FL,RL:3.5"
+     ],
+     [
+      35.9,
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      64.9,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.2,
+      361.98,
+      88.406,
+      221.74,
+      null
+     ],
+     [
+      21.3,
+      364.07,
+      64.306,
+      245.26,
+      null
+     ],
+     [
+      21.4,
+      366.12,
+      53.244,
+      257.62,
+      null
+     ],
+     [
+      21.5,
+      368.11,
+      45.295,
+      267.95,
+      null
+     ],
+     [
+      21.6,
+      370.01,
+      39.214,
+      276.68,
+      null
+     ],
+     [
+      21.7,
+      371.82,
+      37.1,
+      279.91,
+      null
+     ],
+     [
+      21.8,
+      373.54,
+      32.681,
+      286.88,
+      0.0
+     ],
+     [
+      21.9,
+      375.16,
+      29.078,
+      292.84,
+      1.7
+     ],
+     [
+      22.0,
+      376.7,
+      26.225,
+      297.95,
+      3.3
+     ],
+     [
+      22.1,
+      378.14,
+      23.964,
+      302.34,
+      4.9
+     ],
+     [
+      22.2,
+      379.5,
+      23.215,
+      303.99,
+      6.3
+     ],
+     [
+      22.3,
+      380.79,
+      21.463,
+      307.59,
+      7.7
+     ],
+     [
+      22.4,
+      382.0,
+      20.0,
+      310.74,
+      9.0
+     ],
+     [
+      22.5,
+      383.13,
+      19.523,
+      311.94,
+      10.2
+     ],
+     [
+      22.6,
+      384.21,
+      18.364,
+      314.59,
+      11.3
+     ],
+     [
+      22.7,
+      385.21,
+      17.379,
+      316.95,
+      12.4
+     ],
+     [
+      22.8,
+      386.16,
+      17.072,
+      317.86,
+      13.4
+     ],
+     [
+      22.9,
+      387.06,
+      16.271,
+      319.87,
+      14.3
+     ],
+     [
+      23.0,
+      387.9,
+      16.022,
+      320.64,
+      15.2
+     ],
+     [
+      23.1,
+      388.7,
+      15.37,
+      322.38,
+      16.1
+     ],
+     [
+      23.2,
+      389.44,
+      15.166,
+      323.04,
+      16.9
+     ],
+     [
+      23.3,
+      390.15,
+      14.629,
+      324.55,
+      17.6
+     ],
+     [
+      23.4,
+      390.82,
+      14.155,
+      325.92,
+      18.3
+     ],
+     [
+      23.5,
+      391.44,
+      14.004,
+      326.45,
+      19.0
+     ],
+     [
+      23.6,
+      392.05,
+      13.623,
+      327.67,
+      19.6
+     ],
+     [
+      23.7,
+      392.65,
+      13.582,
+      328.16,
+      20.2
+     ],
+     [
+      23.8,
+      393.24,
+      13.388,
+      329.28,
+      20.8
+     ],
+     [
+      23.9,
+      393.84,
+      13.442,
+      329.74,
+      21.4
+     ],
+     [
+      24.0,
+      394.45,
+      13.406,
+      330.79,
+      22.0
+     ],
+     [
+      24.1,
+      395.05,
+      13.506,
+      331.25,
+      22.6
+     ],
+     [
+      24.2,
+      395.66,
+      13.585,
+      332.25,
+      23.2
+     ],
+     [
+      24.3,
+      396.27,
+      13.731,
+      333.21,
+      23.8
+     ],
+     [
+      24.4,
+      396.89,
+      13.825,
+      333.66,
+      24.5
+     ],
+     [
+      24.5,
+      397.51,
+      13.996,
+      334.58,
+      25.1
+     ],
+     [
+      24.6,
+      398.13,
+      14.173,
+      335.49,
+      25.7
+     ],
+     [
+      24.7,
+      398.76,
+      14.339,
+      336.38,
+      26.3
+     ],
+     [
+      24.8,
+      399.39,
+      14.347,
+      336.83,
+      26.9
+     ],
+     [
+      24.9,
+      400.02,
+      14.453,
+      337.71,
+      27.6
+     ],
+     [
+      25.0,
+      400.65,
+      14.515,
+      338.59,
+      28.2
+     ],
+     [
+      25.1,
+      401.28,
+      14.525,
+      339.46,
+      28.8
+     ],
+     [
+      25.2,
+      401.92,
+      14.476,
+      340.34,
+      29.5
+     ],
+     [
+      25.3,
+      402.56,
+      14.364,
+      341.22,
+      30.1
+     ],
+     [
+      25.4,
+      403.2,
+      14.216,
+      342.11,
+      30.7
+     ],
+     [
+      25.5,
+      403.84,
+      14.056,
+      342.99,
+      31.4
+     ],
+     [
+      25.6,
+      404.49,
+      13.813,
+      344.3,
+      32.0
+     ],
+     [
+      25.7,
+      405.13,
+      13.655,
+      345.17,
+      32.7
+     ],
+     [
+      25.8,
+      405.78,
+      13.502,
+      346.03,
+      33.3
+     ],
+     [
+      25.9,
+      406.43,
+      13.354,
+      346.88,
+      34.0
+     ],
+     [
+      26.0,
+      407.08,
+      13.21,
+      347.72,
+      34.6
+     ],
+     [
+      26.1,
+      407.73,
+      13.067,
+      348.56,
+      35.3
+     ],
+     [
+      26.2,
+      408.38,
+      12.923,
+      349.39,
+      35.9
+     ],
+     [
+      26.3,
+      409.03,
+      12.777,
+      350.21,
+      36.6
+     ],
+     [
+      26.4,
+      409.68,
+      12.634,
+      351.03,
+      37.2
+     ],
+     [
+      26.5,
+      410.34,
+      12.492,
+      351.84,
+      37.9
+     ],
+     [
+      26.6,
+      410.99,
+      12.352,
+      352.64,
+      38.5
+     ],
+     [
+      26.7,
+      411.65,
+      12.216,
+      353.44,
+      39.2
+     ],
+     [
+      26.8,
+      412.3,
+      12.084,
+      354.23,
+      39.8
+     ],
+     [
+      26.9,
+      412.96,
+      11.956,
+      355.01,
+      40.5
+     ],
+     [
+      27.0,
+      413.61,
+      11.828,
+      355.78,
+      41.1
+     ],
+     [
+      27.1,
+      414.27,
+      11.697,
+      356.55,
+      41.8
+     ],
+     [
+      27.2,
+      414.93,
+      11.572,
+      357.31,
+      42.4
+     ],
+     [
+      27.3,
+      415.59,
+      11.451,
+      358.06,
+      43.1
+     ],
+     [
+      27.4,
+      416.25,
+      11.334,
+      358.81,
+      43.8
+     ],
+     [
+      27.5,
+      416.9,
+      11.222,
+      359.55,
+      44.4
+     ],
+     [
+      27.6,
+      417.56,
+      11.116,
+      360.28,
+      45.1
+     ],
+     [
+      27.7,
+      418.22,
+      11.015,
+      361.01,
+      45.7
+     ],
+     [
+      27.8,
+      418.88,
+      10.92,
+      361.73,
+      46.4
+     ],
+     [
+      27.9,
+      419.54,
+      10.828,
+      362.44,
+      47.1
+     ],
+     [
+      28.0,
+      420.2,
+      10.735,
+      363.15,
+      47.7
+     ],
+     [
+      28.1,
+      420.86,
+      10.646,
+      363.86,
+      48.4
+     ],
+     [
+      28.2,
+      421.52,
+      10.56,
+      364.56,
+      49.0
+     ],
+     [
+      28.3,
+      422.18,
+      10.477,
+      365.25,
+      49.7
+     ],
+     [
+      28.4,
+      422.83,
+      10.397,
+      365.94,
+      50.4
+     ],
+     [
+      28.5,
+      423.49,
+      10.313,
+      366.62,
+      51.0
+     ],
+     [
+      28.6,
+      424.15,
+      10.224,
+      367.29,
+      51.7
+     ],
+     [
+      28.7,
+      424.81,
+      10.134,
+      367.96,
+      52.3
+     ],
+     [
+      28.8,
+      425.47,
+      10.035,
+      368.62,
+      53.0
+     ],
+     [
+      28.9,
+      426.12,
+      9.935,
+      369.28,
+      53.6
+     ],
+     [
+      29.0,
+      426.78,
+      9.834,
+      369.93,
+      54.3
+     ],
+     [
+      29.1,
+      427.43,
+      9.734,
+      370.57,
+      55.0
+     ],
+     [
+      29.2,
+      428.09,
+      9.636,
+      371.21,
+      55.6
+     ],
+     [
+      29.3,
+      428.74,
+      9.543,
+      371.84,
+      56.3
+     ],
+     [
+      29.4,
+      429.39,
+      9.455,
+      372.47,
+      56.9
+     ],
+     [
+      29.5,
+      430.04,
+      9.365,
+      373.09,
+      57.6
+     ],
+     [
+      29.6,
+      430.69,
+      9.263,
+      373.7,
+      58.2
+     ],
+     [
+      29.7,
+      431.34,
+      9.168,
+      374.3,
+      58.9
+     ],
+     [
+      29.8,
+      431.99,
+      9.08,
+      374.9,
+      59.5
+     ],
+     [
+      29.9,
+      432.64,
+      8.998,
+      375.49,
+      60.2
+     ],
+     [
+      30.0,
+      433.29,
+      8.925,
+      376.08,
+      60.8
+     ],
+     [
+      30.1,
+      433.93,
+      8.86,
+      376.66,
+      61.5
+     ],
+     [
+      30.2,
+      434.58,
+      8.796,
+      377.24,
+      62.1
+     ],
+     [
+      30.3,
+      435.22,
+      8.729,
+      377.81,
+      62.8
+     ],
+     [
+      30.4,
+      435.86,
+      8.668,
+      378.38,
+      63.4
+     ],
+     [
+      30.5,
+      436.5,
+      8.609,
+      378.94,
+      64.0
+     ],
+     [
+      30.6,
+      437.14,
+      8.551,
+      379.5,
+      64.7
+     ],
+     [
+      30.7,
+      437.78,
+      8.496,
+      380.05,
+      65.3
+     ],
+     [
+      30.8,
+      438.42,
+      8.444,
+      380.6,
+      66.0
+     ],
+     [
+      30.9,
+      439.05,
+      8.386,
+      381.14,
+      66.6
+     ],
+     [
+      31.0,
+      439.68,
+      8.3,
+      381.67,
+      67.2
+     ],
+     [
+      31.1,
+      440.31,
+      8.204,
+      382.19,
+      67.9
+     ],
+     [
+      31.2,
+      440.94,
+      8.096,
+      382.71,
+      68.5
+     ],
+     [
+      31.3,
+      441.57,
+      7.96,
+      383.21,
+      69.1
+     ],
+     [
+      31.4,
+      442.2,
+      7.808,
+      383.71,
+      69.7
+     ],
+     [
+      31.5,
+      442.82,
+      7.636,
+      384.19,
+      70.4
+     ],
+     [
+      31.6,
+      443.44,
+      7.442,
+      384.67,
+      71.0
+     ],
+     [
+      31.7,
+      444.06,
+      7.228,
+      385.13,
+      71.6
+     ],
+     [
+      31.8,
+      444.68,
+      6.994,
+      385.57,
+      72.2
+     ],
+     [
+      31.9,
+      445.29,
+      6.744,
+      386.0,
+      72.9
+     ],
+     [
+      32.0,
+      445.9,
+      6.481,
+      386.41,
+      73.5
+     ],
+     [
+      32.1,
+      446.51,
+      6.21,
+      386.81,
+      74.1
+     ],
+     [
+      32.2,
+      447.12,
+      6.076,
+      386.98,
+      74.7
+     ],
+     [
+      32.3,
+      447.72,
+      5.805,
+      387.35,
+      75.3
+     ],
+     [
+      32.4,
+      448.33,
+      5.53,
+      387.7,
+      75.9
+     ],
+     [
+      32.5,
+      448.93,
+      5.237,
+      388.03,
+      76.5
+     ],
+     [
+      32.6,
+      449.53,
+      4.912,
+      388.33,
+      77.1
+     ],
+     [
+      32.7,
+      450.12,
+      4.521,
+      388.6,
+      77.7
+     ],
+     [
+      32.8,
+      450.72,
+      4.094,
+      388.85,
+      78.3
+     ],
+     [
+      32.9,
+      451.31,
+      3.66,
+      389.08,
+      78.9
+     ],
+     [
+      33.0,
+      451.91,
+      3.231,
+      389.28,
+      79.5
+     ],
+     [
+      33.1,
+      452.5,
+      2.819,
+      389.47,
+      80.1
+     ],
+     [
+      33.2,
+      453.09,
+      2.427,
+      389.63,
+      80.7
+     ],
+     [
+      33.3,
+      453.69,
+      2.059,
+      389.78,
+      81.3
+     ]
+    ],
+    "soil_push_mm": 81.9,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 30.97999999997315,
+      "t_confirmed_s": 31.079999999972916,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 3375.697271175779
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 33.39999999997745,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    },
+    "roll_abs_max_after_loc_deg": 0.2745,
+    "side_sink_after_loc_mm": [
+     4.48,
+     4.43
+    ],
+    "ds_events": [
+     {
+      "t_s": 34.4,
+      "axis": 0,
+      "legs": "FL,RL",
+      "r_mm_s": 3.54
+     },
+     {
+      "t_s": 35.9,
+      "release": "settled"
+     }
+    ],
+    "ds_active_s": 1.5,
+    "recontact_after_final_loc_N_max": 0.0
+   },
+   "wall_s": 18.7
+  },
+  {
+   "suite": "g6",
+   "id": "ref|J2|top|Fs4",
+   "candidate": "DSb75",
+   "verdict": "pass",
+   "passed": true,
+   "failed_rows": [],
+   "hash": "ae22eab471a0c96cebf2dfc551327a14eaf029d145f31ebef2a3c0d91e6f75d0",
+   "t_ready_s": 64.90000000012786,
+   "min_force_kN": 68.7336445321671,
+   "att_end_deg": [
+    0.030446287955433655,
+    -0.03204922032559668
+   ],
+   "max_stroke_mm": 516.2779276212083,
+   "final_phase": "ready",
+   "rut_ready_mm": 48.080417559452755,
+   "warnings": [],
+   "flags": [],
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 32.499999999973156,
+    "t_loc_s": 33.39999999997745,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 0.9000000000042974,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 3801.1291206408414,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "ready_load_ratio_min": 0.937,
+    "window_checks": [
+     {
+      "t_s": 33.4,
+      "e1_spread_mm": 10.52,
+      "e4_rise_ratio": -3.042,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      34.4,
+      "FIX_DIFF_SINK_HOLD:FL,RL:3.5"
+     ],
+     [
+      35.9,
+      "FIX_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      64.9,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 0,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.2,
+      361.98,
+      88.406,
+      221.74,
+      null
+     ],
+     [
+      21.3,
+      364.07,
+      64.306,
+      245.26,
+      null
+     ],
+     [
+      21.4,
+      366.12,
+      53.244,
+      257.62,
+      null
+     ],
+     [
+      21.5,
+      368.11,
+      45.295,
+      267.95,
+      null
+     ],
+     [
+      21.6,
+      370.01,
+      39.214,
+      276.68,
+      null
+     ],
+     [
+      21.7,
+      371.82,
+      37.1,
+      279.91,
+      null
+     ],
+     [
+      21.8,
+      373.54,
+      32.681,
+      286.88,
+      0.0
+     ],
+     [
+      21.9,
+      375.16,
+      29.078,
+      292.84,
+      1.7
+     ],
+     [
+      22.0,
+      376.7,
+      26.225,
+      297.95,
+      3.3
+     ],
+     [
+      22.1,
+      378.14,
+      23.964,
+      302.34,
+      4.9
+     ],
+     [
+      22.2,
+      379.5,
+      23.215,
+      303.99,
+      6.3
+     ],
+     [
+      22.3,
+      380.79,
+      21.463,
+      307.59,
+      7.7
+     ],
+     [
+      22.4,
+      382.0,
+      20.0,
+      310.74,
+      9.0
+     ],
+     [
+      22.5,
+      383.13,
+      19.523,
+      311.94,
+      10.2
+     ],
+     [
+      22.6,
+      384.21,
+      18.364,
+      314.59,
+      11.3
+     ],
+     [
+      22.7,
+      385.21,
+      17.379,
+      316.95,
+      12.4
+     ],
+     [
+      22.8,
+      386.16,
+      17.072,
+      317.86,
+      13.4
+     ],
+     [
+      22.9,
+      387.06,
+      16.271,
+      319.87,
+      14.3
+     ],
+     [
+      23.0,
+      387.9,
+      16.022,
+      320.64,
+      15.2
+     ],
+     [
+      23.1,
+      388.7,
+      15.37,
+      322.38,
+      16.1
+     ],
+     [
+      23.2,
+      389.44,
+      15.166,
+      323.04,
+      16.9
+     ],
+     [
+      23.3,
+      390.15,
+      14.629,
+      324.55,
+      17.6
+     ],
+     [
+      23.4,
+      390.82,
+      14.155,
+      325.92,
+      18.3
+     ],
+     [
+      23.5,
+      391.44,
+      14.004,
+      326.45,
+      19.0
+     ],
+     [
+      23.6,
+      392.05,
+      13.623,
+      327.67,
+      19.6
+     ],
+     [
+      23.7,
+      392.65,
+      13.582,
+      328.16,
+      20.2
+     ],
+     [
+      23.8,
+      393.24,
+      13.388,
+      329.28,
+      20.8
+     ],
+     [
+      23.9,
+      393.84,
+      13.442,
+      329.74,
+      21.4
+     ],
+     [
+      24.0,
+      394.45,
+      13.406,
+      330.79,
+      22.0
+     ],
+     [
+      24.1,
+      395.05,
+      13.506,
+      331.25,
+      22.6
+     ],
+     [
+      24.2,
+      395.66,
+      13.585,
+      332.25,
+      23.2
+     ],
+     [
+      24.3,
+      396.27,
+      13.731,
+      333.21,
+      23.8
+     ],
+     [
+      24.4,
+      396.89,
+      13.825,
+      333.66,
+      24.5
+     ],
+     [
+      24.5,
+      397.51,
+      13.996,
+      334.58,
+      25.1
+     ],
+     [
+      24.6,
+      398.13,
+      14.173,
+      335.49,
+      25.7
+     ],
+     [
+      24.7,
+      398.76,
+      14.339,
+      336.38,
+      26.3
+     ],
+     [
+      24.8,
+      399.39,
+      14.347,
+      336.83,
+      26.9
+     ],
+     [
+      24.9,
+      400.02,
+      14.453,
+      337.71,
+      27.6
+     ],
+     [
+      25.0,
+      400.65,
+      14.515,
+      338.59,
+      28.2
+     ],
+     [
+      25.1,
+      401.28,
+      14.525,
+      339.46,
+      28.8
+     ],
+     [
+      25.2,
+      401.92,
+      14.476,
+      340.34,
+      29.5
+     ],
+     [
+      25.3,
+      402.56,
+      14.364,
+      341.22,
+      30.1
+     ],
+     [
+      25.4,
+      403.2,
+      14.216,
+      342.11,
+      30.7
+     ],
+     [
+      25.5,
+      403.84,
+      14.056,
+      342.99,
+      31.4
+     ],
+     [
+      25.6,
+      404.49,
+      13.813,
+      344.3,
+      32.0
+     ],
+     [
+      25.7,
+      405.13,
+      13.655,
+      345.17,
+      32.7
+     ],
+     [
+      25.8,
+      405.78,
+      13.502,
+      346.03,
+      33.3
+     ],
+     [
+      25.9,
+      406.43,
+      13.354,
+      346.88,
+      34.0
+     ],
+     [
+      26.0,
+      407.08,
+      13.21,
+      347.72,
+      34.6
+     ],
+     [
+      26.1,
+      407.73,
+      13.067,
+      348.56,
+      35.3
+     ],
+     [
+      26.2,
+      408.38,
+      12.923,
+      349.39,
+      35.9
+     ],
+     [
+      26.3,
+      409.03,
+      12.777,
+      350.21,
+      36.6
+     ],
+     [
+      26.4,
+      409.68,
+      12.634,
+      351.03,
+      37.2
+     ],
+     [
+      26.5,
+      410.34,
+      12.492,
+      351.84,
+      37.9
+     ],
+     [
+      26.6,
+      410.99,
+      12.352,
+      352.64,
+      38.5
+     ],
+     [
+      26.7,
+      411.65,
+      12.216,
+      353.44,
+      39.2
+     ],
+     [
+      26.8,
+      412.3,
+      12.084,
+      354.23,
+      39.8
+     ],
+     [
+      26.9,
+      412.96,
+      11.956,
+      355.01,
+      40.5
+     ],
+     [
+      27.0,
+      413.61,
+      11.828,
+      355.78,
+      41.1
+     ],
+     [
+      27.1,
+      414.27,
+      11.697,
+      356.55,
+      41.8
+     ],
+     [
+      27.2,
+      414.93,
+      11.572,
+      357.31,
+      42.4
+     ],
+     [
+      27.3,
+      415.59,
+      11.451,
+      358.06,
+      43.1
+     ],
+     [
+      27.4,
+      416.25,
+      11.334,
+      358.81,
+      43.8
+     ],
+     [
+      27.5,
+      416.9,
+      11.222,
+      359.55,
+      44.4
+     ],
+     [
+      27.6,
+      417.56,
+      11.116,
+      360.28,
+      45.1
+     ],
+     [
+      27.7,
+      418.22,
+      11.015,
+      361.01,
+      45.7
+     ],
+     [
+      27.8,
+      418.88,
+      10.92,
+      361.73,
+      46.4
+     ],
+     [
+      27.9,
+      419.54,
+      10.828,
+      362.44,
+      47.1
+     ],
+     [
+      28.0,
+      420.2,
+      10.735,
+      363.15,
+      47.7
+     ],
+     [
+      28.1,
+      420.86,
+      10.646,
+      363.86,
+      48.4
+     ],
+     [
+      28.2,
+      421.52,
+      10.56,
+      364.56,
+      49.0
+     ],
+     [
+      28.3,
+      422.18,
+      10.477,
+      365.25,
+      49.7
+     ],
+     [
+      28.4,
+      422.83,
+      10.397,
+      365.94,
+      50.4
+     ],
+     [
+      28.5,
+      423.49,
+      10.313,
+      366.62,
+      51.0
+     ],
+     [
+      28.6,
+      424.15,
+      10.224,
+      367.29,
+      51.7
+     ],
+     [
+      28.7,
+      424.81,
+      10.134,
+      367.96,
+      52.3
+     ],
+     [
+      28.8,
+      425.47,
+      10.035,
+      368.62,
+      53.0
+     ],
+     [
+      28.9,
+      426.12,
+      9.935,
+      369.28,
+      53.6
+     ],
+     [
+      29.0,
+      426.78,
+      9.834,
+      369.93,
+      54.3
+     ],
+     [
+      29.1,
+      427.43,
+      9.734,
+      370.57,
+      55.0
+     ],
+     [
+      29.2,
+      428.09,
+      9.636,
+      371.21,
+      55.6
+     ],
+     [
+      29.3,
+      428.74,
+      9.543,
+      371.84,
+      56.3
+     ],
+     [
+      29.4,
+      429.39,
+      9.455,
+      372.47,
+      56.9
+     ],
+     [
+      29.5,
+      430.04,
+      9.365,
+      373.09,
+      57.6
+     ],
+     [
+      29.6,
+      430.69,
+      9.263,
+      373.7,
+      58.2
+     ],
+     [
+      29.7,
+      431.34,
+      9.168,
+      374.3,
+      58.9
+     ],
+     [
+      29.8,
+      431.99,
+      9.08,
+      374.9,
+      59.5
+     ],
+     [
+      29.9,
+      432.64,
+      8.998,
+      375.49,
+      60.2
+     ],
+     [
+      30.0,
+      433.29,
+      8.925,
+      376.08,
+      60.8
+     ],
+     [
+      30.1,
+      433.93,
+      8.86,
+      376.66,
+      61.5
+     ],
+     [
+      30.2,
+      434.58,
+      8.796,
+      377.24,
+      62.1
+     ],
+     [
+      30.3,
+      435.22,
+      8.729,
+      377.81,
+      62.8
+     ],
+     [
+      30.4,
+      435.86,
+      8.668,
+      378.38,
+      63.4
+     ],
+     [
+      30.5,
+      436.5,
+      8.609,
+      378.94,
+      64.0
+     ],
+     [
+      30.6,
+      437.14,
+      8.551,
+      379.5,
+      64.7
+     ],
+     [
+      30.7,
+      437.78,
+      8.496,
+      380.05,
+      65.3
+     ],
+     [
+      30.8,
+      438.42,
+      8.444,
+      380.6,
+      66.0
+     ],
+     [
+      30.9,
+      439.05,
+      8.386,
+      381.14,
+      66.6
+     ],
+     [
+      31.0,
+      439.68,
+      8.3,
+      381.67,
+      67.2
+     ],
+     [
+      31.1,
+      440.31,
+      8.204,
+      382.19,
+      67.9
+     ],
+     [
+      31.2,
+      440.94,
+      8.096,
+      382.71,
+      68.5
+     ],
+     [
+      31.3,
+      441.57,
+      7.96,
+      383.21,
+      69.1
+     ],
+     [
+      31.4,
+      442.2,
+      7.808,
+      383.71,
+      69.7
+     ],
+     [
+      31.5,
+      442.82,
+      7.636,
+      384.19,
+      70.4
+     ],
+     [
+      31.6,
+      443.44,
+      7.442,
+      384.67,
+      71.0
+     ],
+     [
+      31.7,
+      444.06,
+      7.228,
+      385.13,
+      71.6
+     ],
+     [
+      31.8,
+      444.68,
+      6.994,
+      385.57,
+      72.2
+     ],
+     [
+      31.9,
+      445.29,
+      6.744,
+      386.0,
+      72.9
+     ],
+     [
+      32.0,
+      445.9,
+      6.481,
+      386.41,
+      73.5
+     ],
+     [
+      32.1,
+      446.51,
+      6.21,
+      386.81,
+      74.1
+     ],
+     [
+      32.2,
+      447.12,
+      6.076,
+      386.98,
+      74.7
+     ],
+     [
+      32.3,
+      447.72,
+      5.805,
+      387.35,
+      75.3
+     ],
+     [
+      32.4,
+      448.33,
+      5.53,
+      387.7,
+      75.9
+     ],
+     [
+      32.5,
+      448.93,
+      5.237,
+      388.03,
+      76.5
+     ],
+     [
+      32.6,
+      449.53,
+      4.912,
+      388.33,
+      77.1
+     ],
+     [
+      32.7,
+      450.12,
+      4.521,
+      388.6,
+      77.7
+     ],
+     [
+      32.8,
+      450.72,
+      4.094,
+      388.85,
+      78.3
+     ],
+     [
+      32.9,
+      451.31,
+      3.66,
+      389.08,
+      78.9
+     ],
+     [
+      33.0,
+      451.91,
+      3.231,
+      389.28,
+      79.5
+     ],
+     [
+      33.1,
+      452.5,
+      2.819,
+      389.47,
+      80.1
+     ],
+     [
+      33.2,
+      453.09,
+      2.427,
+      389.63,
+      80.7
+     ],
+     [
+      33.3,
+      453.69,
+      2.059,
+      389.78,
+      81.3
+     ]
+    ],
+    "soil_push_mm": 81.9,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 30.97999999997315,
+      "t_confirmed_s": 31.079999999972916,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 3375.697271175779
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 33.39999999997745,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    },
+    "roll_abs_max_after_loc_deg": 0.2745,
+    "side_sink_after_loc_mm": [
+     4.48,
+     4.43
+    ],
+    "ds_events": [
+     {
+      "t_s": 34.4,
+      "axis": 0,
+      "legs": "FL,RL",
+      "r_mm_s": 3.54
+     },
+     {
+      "t_s": 35.9,
+      "release": "settled"
+     }
+    ],
+    "ds_active_s": 1.5,
+    "recontact_after_final_loc_N_max": 0.0
+   },
+   "wall_s": 19.0
+  }
+ ]
+}

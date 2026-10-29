@@ -1,0 +1,199 @@
+{
+ "harness": [
+  {
+   "id": "T|C2_tv0.1|roll+|rigid|12346|1.6e+09",
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 21.1,
+    "t_ready_s": 44.0,
+    "min_true_cyl_force_kN": 51.13,
+    "ss_true_att_deg_maxabs": 0.0295,
+    "max_pressure_bar": 115.7
+   },
+   "fails": [],
+   "meta_revision": "R8-D1 (C2)",
+   "reapproach_events": [],
+   "reapproach_intervals": [],
+   "commands_sha256": "6b028c6a4cf2aacc75665bc267e0c899b0a85351382ccc3d3e3e4c80efa4e7a8"
+  },
+  {
+   "id": "T|C2_tv0.1|pitch+|upper|12345|1e+09",
+   "metrics": {
+    "t_touch_s": 19.6,
+    "t_crawler_liftoff_s": 20.6,
+    "t_ready_s": 43.1,
+    "min_true_cyl_force_kN": 51.66,
+    "ss_true_att_deg_maxabs": 0.027,
+    "max_pressure_bar": 102.8
+   },
+   "fails": [],
+   "meta_revision": "R8-D1 (C2)",
+   "reapproach_events": [],
+   "reapproach_intervals": [],
+   "commands_sha256": "b5981abbf19b8d97ae42de82bbb1780673c4c114ce4405d4e1072d36dd2c4e57"
+  },
+  {
+   "id": "G|C2_tv0.1|flat|rigid|12345|1.6e+09",
+   "metrics": {
+    "t_touch_s": 18.9,
+    "t_crawler_liftoff_s": 19.6,
+    "t_ready_s": 25.9,
+    "min_true_cyl_force_kN": 65.9,
+    "ss_true_att_deg_maxabs": 0.0376,
+    "max_pressure_bar": 153.6,
+    "min_true_after_sink_kN": 12.98,
+    "final_true_kN": [
+     117.2,
+     117.11,
+     73.02,
+     69.25
+    ]
+   },
+   "fails": [],
+   "meta_revision": "R8-D1 (C2)",
+   "reapproach_events": [
+    "leg_reapproach_start:RR",
+    "leg_reapproach_contact:RR"
+   ],
+   "reapproach_intervals": [
+    {
+     "leg": "RR",
+     "mode": "twist",
+     "start_s": 29.50000000001307,
+     "end_s": 29.800000000013437,
+     "travel_m": 0.0006575275438434613,
+     "outcome": "contact",
+     "exit_samples_seen": 3,
+     "protected_periods": 0,
+     "is_retrigger": false
+    }
+   ],
+   "commands_sha256": "31e873d437f8f4930d13bb8b4bb500d9d07b22e19b6246c9b19538e5783959b4"
+  }
+ ],
+ "imu_100hz": {
+  "t_ready_s": 39.099999999999575,
+  "t_crawler_liftoff_s": 21.000000000002682,
+  "min_true_cyl_force_after_liftoff_N": 58290.209198951,
+  "min_pad_contact_after_liftoff_N": 59007.69307111911,
+  "max_abs_attitude_after_ready_deg": 0.010739500975085177,
+  "probe_rounds": 1,
+  "twist_gain_stiffness": {
+   "reference": "measured_Sii",
+   "measured_scale": 1.1185162815393324,
+   "raw_ratio": 1.1185162815393324,
+   "scale_in_use": 1.1185162815393324,
+   "grounded_leg_count": 4,
+   "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+   "denominator_N_m": [
+    5146005.703874331,
+    5146005.703874331,
+    6206584.071125668,
+    6206584.071125669
+   ],
+   "stiffness_N_m": 25396113.00194889
+  },
+  "timing": {
+   "d": 1,
+   "late_imu": false,
+   "delta_s": null,
+   "imu_sample_period_s": 0.01
+  },
+  "F_min_N": 9414.58911,
+  "phase": "ready",
+  "reapproach_events": [],
+  "reapproach_intervals": [],
+  "commands_sha256": "6f93c33494d2b6a390c7df93ad3db423f7667a0d88251e2ca30b516375fc4b3f"
+ },
+ "harness_without_reapproach": [
+  {
+   "id": "T|C2_tv0.1|roll+|rigid|12346|1.6e+09",
+   "metrics": {
+    "t_touch_s": 19.4,
+    "t_crawler_liftoff_s": 21.1,
+    "t_ready_s": 44.0,
+    "min_true_cyl_force_kN": 51.13,
+    "ss_true_att_deg_maxabs": 0.0295,
+    "max_pressure_bar": 115.7
+   },
+   "fails": [],
+   "meta_revision": "R8-D1 (C2)",
+   "reapproach_events": [],
+   "reapproach_intervals": [],
+   "commands_sha256": "6b028c6a4cf2aacc75665bc267e0c899b0a85351382ccc3d3e3e4c80efa4e7a8"
+  },
+  {
+   "id": "T|C2_tv0.1|pitch+|upper|12345|1e+09",
+   "metrics": {
+    "t_touch_s": 19.6,
+    "t_crawler_liftoff_s": 20.6,
+    "t_ready_s": 43.1,
+    "min_true_cyl_force_kN": 51.66,
+    "ss_true_att_deg_maxabs": 0.027,
+    "max_pressure_bar": 102.8
+   },
+   "fails": [],
+   "meta_revision": "R8-D1 (C2)",
+   "reapproach_events": [],
+   "reapproach_intervals": [],
+   "commands_sha256": "b5981abbf19b8d97ae42de82bbb1780673c4c114ce4405d4e1072d36dd2c4e57"
+  },
+  {
+   "id": "G|C2_tv0.1|flat|rigid|12345|1.6e+09",
+   "metrics": {
+    "t_touch_s": 18.9,
+    "t_crawler_liftoff_s": 19.6,
+    "t_ready_s": 25.9,
+    "min_true_cyl_force_kN": 65.9,
+    "ss_true_att_deg_maxabs": 0.0376,
+    "max_pressure_bar": 153.6,
+    "min_true_after_sink_kN": 3.04,
+    "final_true_kN": [
+     117.14,
+     117.19,
+     73.02,
+     69.24
+    ]
+   },
+   "fails": [],
+   "meta_revision": "R8-D1 (C2)",
+   "reapproach_events": [],
+   "reapproach_intervals": [],
+   "commands_sha256": "ad2d7f63789dc18564d1720fe6f161c96ba349db571da0d62fdbfd104c43b594"
+  }
+ ],
+ "imu_100hz_without_reapproach": {
+  "t_ready_s": 39.099999999999575,
+  "t_crawler_liftoff_s": 21.000000000002682,
+  "min_true_cyl_force_after_liftoff_N": 58290.209198951,
+  "min_pad_contact_after_liftoff_N": 59007.69307111911,
+  "max_abs_attitude_after_ready_deg": 0.010739500975085177,
+  "probe_rounds": 1,
+  "twist_gain_stiffness": {
+   "reference": "measured_Sii",
+   "measured_scale": 1.1185162815393324,
+   "raw_ratio": 1.1185162815393324,
+   "scale_in_use": 1.1185162815393324,
+   "grounded_leg_count": 4,
+   "denominator": "load_sensitivity_diag_N_m (head-only k_nom)",
+   "denominator_N_m": [
+    5146005.703874331,
+    5146005.703874331,
+    6206584.071125668,
+    6206584.071125669
+   ],
+   "stiffness_N_m": 25396113.00194889
+  },
+  "timing": {
+   "d": 1,
+   "late_imu": false,
+   "delta_s": null,
+   "imu_sample_period_s": 0.01
+  },
+  "F_min_N": 9414.58911,
+  "phase": "ready",
+  "reapproach_events": [],
+  "reapproach_intervals": [],
+  "commands_sha256": "6f93c33494d2b6a390c7df93ad3db423f7667a0d88251e2ca30b516375fc4b3f"
+ }
+}

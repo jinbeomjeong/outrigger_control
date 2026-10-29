@@ -158,7 +158,8 @@ SETTLE_HOOK_ENV = "S9_SETTLE_HOOK"
 BASELINE = "current"
 CANDIDATE_TOKENS = ("E1", "E2", "E3", "E4", "RA", "S4", "E3w", "E3c7", "E3c10", "LWa", "LWb",
                     "L1", "L2", "L4", "D1", "D1p", "D1p0", "D1r", "D2", "D3", "S5", "S6",
-                    "D1q", "D1qa", "D1qb", "D2q", "L1g", "L1gs", "L2g")
+                    "D1q", "D1qa", "D1qb", "D2q", "L1g", "L1gs", "L2g", "DS", "DS50",
+                    "DSb", "DSb10", "DSb75")
 QUICK_HOLD_TOKENS = ("D1q", "D1qa", "D1qb", "D2q")
 """Spec 424.9.3 variants: alternatives to each other (one per candidate)."""
 TWIST_SIGNS = np.array([1.0, -1.0, -1.0, 1.0])
@@ -170,10 +171,23 @@ LOC_REVOKE_SKIPPED_EVENT = "FIX_LOC_REVOKE_SKIPPED"
 """L1-s record (``:stroke``): a revocation the stroke guard withheld; commands unchanged."""
 RECORD_ONLY_FIX_EVENTS = (LOC_REVOKE_SKIPPED_EVENT,)
 """``FIX_*`` events that change no command (not "acted" for the hash rule A-5)."""
+DS_HOLD_EVENT = "FIX_DIFF_SINK_HOLD"
+"""``FIX_DIFF_SINK_HOLD:<sinking legs>:<|r| mm/s>`` (spec 424.11; c2 ``INFO_DIFF_SINK_HOLD``)."""
+DS_RELEASE_EVENT = "FIX_DIFF_SINK_RELEASE"
+"""``FIX_DIFF_SINK_RELEASE:<settled|time|stroke|reversed|done>``."""
+DS_SIGNAL_WINDOW_S = 1.0
+"""Moving window of the stroke slope and of the gyro roll-rate mean."""
+DS_SIGNAL_PERIODS = 10
+"""Control periods (10 Hz) of ``DS_SIGNAL_WINDOW_S``."""
+LEFT_LEGS = (0, 2)
+RIGHT_LEGS = (1, 3)
+"""FL, RL / FR, RR in LEG_ORDER; axis 0 = front (FL - FR), axis 1 = rear (RL - RR)."""
 L2_REJECT_EVENT = "FIX_L2_REJECT"
 L2_CONFIRM_EVENT = "FIX_L2_CONFIRM"
-PROJECT_L1_EVENTS = ("INFO_LOC_REVOKED", "INFO_LOC_REVOKE_SKIPPED")
-"""03_src P-S8-33 events (spec 424.10.2), kept in ``fix_events`` with the tokens' ones."""
+PROJECT_L1_EVENTS = ("INFO_LOC_REVOKED", "INFO_LOC_REVOKE_SKIPPED", "INFO_DIFF_SINK_HOLD",
+                     "INFO_DIFF_SINK_RELEASE")
+"""03_src P-S8-33 / P-S8-35 events (spec 424.10.2 / 424.11.2), kept in ``fix_events`` with the
+tokens' ones."""
 PROBE_REUSE_EVENT = "FIX_PROBE_REUSE"
 FALL_HOLD_EVENT = "FIX_FALL_HOLD"
 FALL_SLOW_EVENT = "FIX_FALL_SLOW"
@@ -293,6 +307,33 @@ class CandidateSettings:
     l2_soil_gate: bool = False
     """L2-g: the confirmation window holds a flat window only in a run whose soil mode ran
     (``c_min(t_P)`` alone is noise on hard ground, V-3 sensor G1)."""
+    # spec 424.11 P-S8-35 (2026-10-30): differential pad sinking after the LOC
+    ds_enable: bool = False
+    """DS: from the first LOC (with the L1-g soil sign at that LOC) to the first DONE, an axis
+    differential sinking rate ``r_a = (s'_L - s'_R) - w_a phi'`` above ``ds_threshold_m_s``
+    for ``ds_confirm_s`` holds the common lift of the other side (u <= 0) and pushes the
+    sinking side at ``ds_push_fraction`` v_max (no DONE while held)."""
+    ds_threshold_m_s: float = 0.003
+    ds_confirm_s: float = 1.0
+    ds_release_m_s: float = 0.001
+    ds_release_s: float = 0.5
+    ds_max_s: float = 10.0
+    ds_push_fraction: float = 0.25
+    ds_track_w_m: tuple = (2.648, 2.411)
+    """Pad track width front / rear [m] (the roll lever of each axis)."""
+    ds_mode: str = "floor"
+    """"floor" (DS, DS50: the other side u <= 0, the sinking side at least ds_push_fraction
+    v_max) or "add" (DSb, spec 424.11.1: only the sinking leg of each axis sinking the way of
+    the hold gets ``min(ds_gain |r_a|, ds_add_cap_fraction v_max)`` added)."""
+    ds_gain: float = 1.0
+    """DSb gain k [(m/s) per (m/s) of r_a]."""
+    ds_add_cap_fraction: float = 0.25
+    ds_release_on_reverse: bool = False
+    """DSb: release first when the holding axis's r passes the release level the other way."""
+    ds_gate_max_settle_tilt_rad: float | None = None
+    """Spec 424.11.2 (DSb75): the gate also needs the settle tilt ``max(|roll|, |pitch|)`` (the
+    P-S8-31 / E3c10 settle attitude) at the first LOC to be at most this value; an unknown
+    settle closes it. None = no tilt condition (DS, DS50, DSb, DSb10)."""
     l4_probe_reuse: bool = False
     """L4: a leg confirmed by an earlier probe round of the run (grounded, not skipped) keeps
     that result and is not probed again (``FIX_PROBE_REUSE``)."""
@@ -395,6 +436,14 @@ class CandidateSettings:
             raise ValueError("d_release_fraction_F_min must be >= d_level_fraction_F_min")
         if (self.l1_soil_gate or self.l1_stroke_guard) and not self.l1_revoke:
             raise ValueError("L1-g / L1-s gate L1: they need l1_revoke (tokens L1g / L1gs)")
+        if not 0.0 < self.ds_release_m_s < self.ds_threshold_m_s:
+            raise ValueError("DS needs 0 < ds_release_m_s < ds_threshold_m_s")
+        if self.ds_mode not in ("floor", "add"):
+            raise ValueError(f"ds_mode must be floor or add, got {self.ds_mode!r}")
+        if self.ds_gain <= 0.0 or self.ds_add_cap_fraction <= 0.0:
+            raise ValueError("DSb needs ds_gain > 0 and ds_add_cap_fraction > 0")
+        if min(self.ds_confirm_s, self.ds_release_s, self.ds_max_s, self.ds_push_fraction) <= 0:
+            raise ValueError("DS times and ds_push_fraction must be > 0")
         if self.l2_soil_gate and not self.l2_confirm_window:
             raise ValueError("L2-g gates L2: it needs l2_confirm_window (token L2g)")
         if self.s6_saturation_loc and not self.l1_revoke:
@@ -448,6 +497,14 @@ TOKEN_PRESETS = {
     "L1g": {"l1_revoke": True, "l1_soil_gate": True},
     "L1gs": {"l1_revoke": True, "l1_soil_gate": True, "l1_stroke_guard": True},
     "L2g": {"l2_confirm_window": True, "l2_soil_gate": True},
+    "DS": {"ds_enable": True},
+    "DS50": {"ds_enable": True, "ds_push_fraction": 0.5},
+    "DSb": {"ds_enable": True, "ds_mode": "add", "ds_gain": 1.5, "ds_add_cap_fraction": 0.5,
+            "ds_release_on_reverse": True},
+    "DSb75": {"ds_enable": True, "ds_mode": "add", "ds_gain": 1.5, "ds_add_cap_fraction": 0.75,
+              "ds_release_on_reverse": True, "ds_gate_max_settle_tilt_rad": math.radians(1.0)},
+    "DSb10": {"ds_enable": True, "ds_mode": "add", "ds_gain": 1.0, "ds_add_cap_fraction": 0.25,
+              "ds_release_on_reverse": True},
     "D1q": {"d1q_hold": True, "d1q_gate_a": True, "d1q_gate_b": True},
     "D1qa": {"d1q_hold": True, "d1q_gate_a": True, "d1q_gate_b": False},
     "D1qb": {"d1q_hold": True, "d1q_gate_a": False, "d1q_gate_b": True},
@@ -620,6 +677,79 @@ def stroke_twist_residual_m(pad_xy_m, stroke_change_m) -> float:
     return float(TWIST_SIGNS @ residual)
 
 
+def plant_truth_row(t_s: float, plant) -> tuple:
+    """HB-1 row: (t s, true deck roll deg, pad sinkage mm per leg) of the harness plant; roll /
+    sinkage ``None`` where the plant has no attitude / no soil (``h6_trace.py`` quantities)."""
+    if plant is None or not hasattr(plant, "attitude"):
+        return float(t_s), None, None
+    roll_deg = math.degrees(plant.attitude()[0])
+    soil = getattr(plant, "soil", None)
+    sink = getattr(soil, "z", None)
+    sink_mm = None if sink is None else [float(z) * 1e3 for z in np.asarray(sink, float)]
+    return float(t_s), roll_deg, sink_mm
+
+
+def first_done_after_s(phase_log, t_from_s: float) -> float | None:
+    """Time of the first DONE period at or after ``t_from_s`` (``_FixState.log`` rows)."""
+    for t_s, phase, *_ in phase_log:
+        if t_s >= t_from_s - TIME_MATCH_S and phase == "done":
+            return t_s
+    return None
+
+
+def hb1_metrics(fix, events, crawler_series, period_s: float) -> dict:
+    """HB-1 (spec 424.11, record only): roll / side sinkage from the final LOC to the first
+    DONE after it (run end without one), the DS record, and the crawler maximum after the
+    final LOC."""
+    t_loc_s = late_loc_rule.loc_timeline(events)["t_loc_final_s"]
+    out = {"roll_abs_max_after_loc_deg": None, "side_sink_after_loc_mm": None,
+           "ds_events": list(fix.ds_events), "ds_active_s": round(fix.ds_active_periods
+                                                                   * period_s, 2),
+           "recontact_after_final_loc_N_max": None}
+    if t_loc_s is None:
+        return out
+    t_end_s = first_done_after_s(fix.log, t_loc_s)
+    rows = [row for row in fix.truth_log if row[0] >= t_loc_s - TIME_MATCH_S
+            and (t_end_s is None or row[0] <= t_end_s + TIME_MATCH_S)]
+    rolls = [abs(roll) for _, roll, _ in rows if roll is not None]
+    if rolls:
+        out["roll_abs_max_after_loc_deg"] = round(max(rolls), 4)
+    sinks = [sink for _, _, sink in rows if sink is not None]
+    if len(sinks) >= 2:
+        change_mm = np.asarray(sinks[-1]) - np.asarray(sinks[0])
+        out["side_sink_after_loc_mm"] = [round(float(change_mm[list(LEFT_LEGS)].mean()), 2),
+                                         round(float(change_mm[list(RIGHT_LEGS)].mean()), 2)]
+    after = [force for t, force in crawler_series if t > t_loc_s]
+    if after:
+        out["recontact_after_final_loc_N_max"] = round(max(after), 1)
+    return out
+
+
+RUT_LOG_SUITES = ("slope", "h6")
+"""Suites run by ``s9_soil_slope``, whose per-period log carries ``rut_clear_mm``."""
+RUT_AFTER_READY_S = 10.0
+"""Spec 424.11.2 (1): the clearance window ends 10 s after READY."""
+
+
+def _slope_harness_log() -> dict | None:
+    """Per-period log of the last ``s9_soil_slope`` run in this worker (None if not loaded)."""
+    slope = sys.modules.get("s9_soil_slope")
+    return None if slope is None else slope._CAP.get("log")
+
+
+def rut_clear_min_after_final_loc_mm(log, events, t_ready_s: float | None) -> float | None:
+    """HB-1 (spec 424.11.2 (1), record only): least ``rut_clear_mm`` (crawler floor clearance,
+    ``crawler_floor_clearance_mm``) from the final LOC to READY + 10 s (run end without READY)."""
+    t_loc_s = late_loc_rule.loc_timeline(events)["t_loc_final_s"]
+    if log is None or t_loc_s is None:
+        return None
+    t_end_s = None if t_ready_s is None else t_ready_s + RUT_AFTER_READY_S
+    values = [clear_mm for t_s, clear_mm in zip(log["t_s"], log["rut_clear_mm"], strict=True)
+              if clear_mm is not None and t_s >= t_loc_s - TIME_MATCH_S
+              and (t_end_s is None or t_s <= t_end_s + TIME_MATCH_S)]
+    return round(min(values), 2) if values else None
+
+
 # ----------------------------------------------------------------------- controller classes
 @dataclass
 class _FixState:
@@ -693,6 +823,25 @@ class _FixState:
     s1_rise_trace: list = field(default_factory=list)
     """424.8.2 record (every candidate): (t_s, mean stroke mm, S-1 rise kN, mean load kN,
     soil push mm) at each S-1 window end before the LOC."""
+    # spec 424.11 P-S8-35 DS (differential sinking after the LOC)
+    ds_strokes: deque = field(default_factory=lambda: deque(maxlen=DS_SIGNAL_PERIODS))
+    """(t_s, motor strokes m) of the last 1 s of LEVEL periods."""
+    ds_gyro_roll: deque = field(default_factory=deque)
+    """Gyro roll rate samples [rad/s] of the last 1 s (maxlen set at the first update)."""
+    ds_first_loc_s: float | None = None
+    ds_gate_open: bool = False
+    """The L1-g soil sign at the first LOC (the DS gate)."""
+    ds_watch_over: bool = False
+    """The first DONE ended the DS watch."""
+    ds_above_periods: int = 0
+    ds_below_periods: int = 0
+    ds_active: dict | None = None
+    """{t_start_s, axis, sinking legs, periods} of the running hold."""
+    ds_active_periods: int = 0
+    ds_events: list = field(default_factory=list)
+    """Holds {t_s, axis, legs, r_mm_s} and releases {t_s, reason} (record)."""
+    truth_log: list = field(default_factory=list)
+    """HB-1 (every candidate, record): (t_s, true roll deg, pad sinkage mm per leg or None)."""
 
 
 def _install_probe_reuse(probe_round, confirmed: dict, controller) -> None:
@@ -737,6 +886,16 @@ def _without_project_l1(config, settings: CandidateSettings):
     return replace(config, loc_revoke=replace(config.loc_revoke, enable=False))
 
 
+def _without_project_ds(config, settings: CandidateSettings):
+    """``config`` with the 03_src P-S8-35 (``diff_sink``) off where a DS* token runs (the R8
+    preset carries DSb75 since its 03_src form, spec 424.11.2; a token on top would act twice)."""
+    if config is None or not settings.ds_enable:
+        return config
+    if getattr(config, "diff_sink", None) is None:
+        return config
+    return replace(config, diff_sink=replace(config.diff_sink, enable=False))
+
+
 
 def make_candidate_class(c2, base_class, settings: CandidateSettings):
     """Subclass of the project C2 (``base_class``, the module's original class) with the passive
@@ -746,7 +905,8 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
         candidate = settings
 
         def __init__(self, geometry, config=None) -> None:
-            super().__init__(geometry, _without_project_l1(config, settings))
+            super().__init__(geometry,
+                             _without_project_ds(_without_project_l1(config, settings), settings))
             self._base_config = self.config
             self._new_fix_state()
             _RUNNING["controller"] = self
@@ -765,10 +925,14 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
         # ------------------------------------------------------------ passive record
         def update(self, measurements):
             self._feed_vertical(measurements)
+            if settings.ds_enable:
+                self._ds_feed_gyro(measurements)
             command = super().update(measurements)
             self._record_period(measurements.t_s)
             if settings.l1_revoke:
                 self._l1_watch_step()
+            if settings.ds_enable:
+                self._ds_after_update(measurements.t_s)
             return command
 
         def _feed_vertical(self, measurements) -> None:
@@ -789,6 +953,7 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
             self.fix.log.append((float(t_s), str(self._state.phase), _TRUTH["crawler_max_N"],
                                  load_sum))
             _TRUTH["crawler_max_N"] = 0.0
+            self.fix.truth_log.append(plant_truth_row(t_s, _TRUTH.get("plant")))
 
         # ------------------------------------------------------------ E1 / E4 / E3
         def _window_signals(self, tail) -> tuple[float, float | None]:
@@ -826,6 +991,169 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
                 self._apply_e3_margin(t_s)
             if settings.l1_revoke:
                 self._start_l1_watch(t_s)
+            if settings.ds_enable:
+                self._ds_note_loc(t_s)
+
+        # ------------------------------------------------------------ 424.11 DS
+        def _ds_note_loc(self, t_s: float) -> None:
+            """The first LOC of the run opens the DS watch; its soil sign is the gate."""
+            if self.fix.ds_first_loc_s is not None or not self._soil_state().is_liftoff_confirmed:
+                return
+            self.fix.ds_first_loc_s = float(t_s)
+            self.fix.ds_gate_open = self._has_l1_soil_sign() and self._is_ds_settle_level()
+
+        def _is_ds_settle_level(self) -> bool:
+            """DSb75 gate part: settle tilt at most ``ds_gate_max_settle_tilt_rad`` (slopes are
+            left to P-S8-31; DSb acted falsely there, spec 424.11.2)."""
+            max_tilt_rad = settings.ds_gate_max_settle_tilt_rad
+            if max_tilt_rad is None:
+                return True
+            settle = self._settle_attitude_rad()
+            if settle is None:
+                return False
+            return max(abs(settle[0]), abs(settle[1])) <= max_tilt_rad
+
+        def _ds_feed_gyro(self, measurements) -> None:
+            samples = getattr(measurements, "imu_angular_rate_samples_rad_s", None)
+            if samples is not None and len(samples):
+                rolls = np.asarray(samples, float)[:, 0]
+                sample_s = self._imu_sample_s
+            else:
+                rolls = np.asarray(measurements.angular_rate_rad_s, float)[:1]
+                sample_s = self.config.period_s
+            gyro = self.fix.ds_gyro_roll
+            if gyro.maxlen is None:  # the first period fixes the 1 s length
+                gyro = self.fix.ds_gyro_roll = deque(
+                    maxlen=round(DS_SIGNAL_WINDOW_S / sample_s))
+            gyro.extend(float(roll) for roll in rolls)
+
+        def _ds_rates_m_s(self) -> np.ndarray | None:
+            """``r_a`` (front, rear) [m/s]: 1 s least-squares stroke slope difference minus
+            the roll the legs would cause, ``w_a`` times the 1 s mean gyro roll rate."""
+            history = self.fix.ds_strokes
+            if len(history) < DS_SIGNAL_PERIODS or not self.fix.ds_gyro_roll:
+                return None
+            times_s = np.array([t for t, _ in history])
+            strokes_m = np.array([strokes for _, strokes in history])
+            centred_t = times_s - times_s.mean()
+            slopes_m_s = centred_t @ (strokes_m - strokes_m.mean(axis=0)) / (centred_t @ centred_t)
+            roll_rate = float(np.mean(self.fix.ds_gyro_roll))
+            front_w_m, rear_w_m = settings.ds_track_w_m
+            return np.array([slopes_m_s[0] - slopes_m_s[1] - front_w_m * roll_rate,
+                             slopes_m_s[2] - slopes_m_s[3] - rear_w_m * roll_rate])
+
+        def _ds_stroke_limit_m(self) -> float:
+            return self._lift_guard_stroke_m() - settings.l1_stroke_margin_m
+
+        def _ds_update(self, reading) -> None:
+            """One LEVEL period of the DS watch (before the command of the period)."""
+            fix = self.fix
+            fix.ds_strokes.append((float(reading.t_s), np.array(reading.motor_stroke_m, float)))
+            if fix.ds_watch_over or fix.ds_first_loc_s is None or not fix.ds_gate_open:
+                return
+            rates = self._ds_rates_m_s()
+            if rates is None:
+                return
+            magnitudes = np.abs(rates)
+            is_stroke_limited = float(np.max(reading.motor_stroke_m)) >= self._ds_stroke_limit_m()
+            if fix.ds_active is not None:
+                self._ds_check_release(reading.t_s, rates, is_stroke_limited)
+                return
+            if is_stroke_limited:
+                fix.ds_above_periods = 0
+                return
+            is_above = float(magnitudes.max()) > settings.ds_threshold_m_s
+            fix.ds_above_periods = fix.ds_above_periods + 1 if is_above else 0
+            if fix.ds_above_periods >= round(settings.ds_confirm_s / self.config.period_s):
+                self._ds_hold(reading.t_s, rates)
+
+        def _ds_hold(self, t_s: float, rates: np.ndarray) -> None:
+            axis = int(np.argmax(np.abs(rates)))
+            legs = LEFT_LEGS if rates[axis] > 0.0 else RIGHT_LEGS  # r > 0: the left side sinks
+            r_mm_s = abs(float(rates[axis])) * 1e3
+            names = ",".join(LEG_NAMES[leg] for leg in legs)
+            self.fix.ds_active = {"t_start_s": float(t_s), "axis": axis, "legs": legs,
+                                  "periods": 0, "sign": 1.0 if rates[axis] > 0 else -1.0}
+            self.fix.ds_above_periods = 0
+            self.fix.ds_below_periods = 0
+            self.fix.ds_events.append({"t_s": round(float(t_s), 2), "axis": axis,
+                                       "legs": names, "r_mm_s": round(r_mm_s, 2)})
+            self._add_event(t_s, f"{DS_HOLD_EVENT}:{names}:{r_mm_s:.1f}")
+
+        def _ds_check_release(self, t_s: float, rates: np.ndarray,
+                              is_stroke_limited: bool) -> None:
+            fix = self.fix
+            active = fix.ds_active
+            if settings.ds_release_on_reverse and self._is_ds_reversed(rates, active):
+                self._ds_release(t_s, "reversed")  # DSb: checked before every other rule
+                return
+            magnitudes = np.abs(rates)
+            fix.ds_active["periods"] += 1
+            is_settled = bool(np.all(magnitudes < settings.ds_release_m_s))
+            fix.ds_below_periods = fix.ds_below_periods + 1 if is_settled else 0
+            period_s = self.config.period_s
+            if fix.ds_below_periods >= round(settings.ds_release_s / period_s):
+                self._ds_release(t_s, "settled")
+            elif fix.ds_active["periods"] >= round(settings.ds_max_s / period_s):
+                self._ds_release(t_s, "time")
+            elif is_stroke_limited:
+                self._ds_release(t_s, "stroke")
+
+        def _ds_release(self, t_s: float, reason: str) -> None:
+            self.fix.ds_active = None
+            self.fix.ds_below_periods = 0
+            self.fix.ds_events.append({"t_s": round(float(t_s), 2), "release": reason})
+            self._add_event(t_s, f"{DS_RELEASE_EVENT}:{reason}")
+
+        def _ds_after_update(self, t_s: float) -> None:
+            """A hold ends when the phase leaves LEVEL; the first DONE ends the watch."""
+            if self.fix.ds_active is not None:
+                self.fix.ds_active_periods += 1
+                if self._state.phase is not c2.C2Phase.LEVEL:
+                    self._ds_release(t_s, "done")
+            if self._state.phase is c2.C2Phase.DONE:
+                self.fix.ds_watch_over = True
+
+        def _is_ds_reversed(self, rates: np.ndarray, active: dict) -> bool:
+            """DSb: the holding axis now sinks the other way by more than the release level."""
+            return float(rates[active["axis"]]) * active["sign"] < -settings.ds_release_m_s
+
+        def _ds_added_speeds(self, leg_speeds, active: dict) -> np.ndarray:
+            """DSb: each axis sinking the way of the hold adds ``min(k |r_a|, c v_max)`` to its
+            sinking leg; every other leg and the controller command stay as they are."""
+            speeds = np.array(leg_speeds, float)
+            rates = self._ds_rates_m_s()
+            if rates is None:
+                return speeds
+            cap_m_s = settings.ds_add_cap_fraction * self.geometry.max_speed_m_s
+            for axis, (left, right) in enumerate(zip(LEFT_LEGS, RIGHT_LEGS, strict=True)):
+                rate = float(rates[axis])
+                if rate * active["sign"] <= 0.0:
+                    continue
+                leg = left if rate > 0 else right
+                speeds[leg] += min(settings.ds_gain * abs(rate), cap_m_s)
+            return speeds
+
+        def _apply_lift_stroke_guard(self, reading, leg_speeds):
+            """DS changes the LEVEL command before the P-S8-28 guard (which keeps priority)."""
+            active = self.fix.ds_active if settings.ds_enable else None
+            if active is not None and settings.ds_mode == "add":
+                leg_speeds = self._ds_added_speeds(leg_speeds, active)
+            elif active is not None:
+                leg_speeds = np.array(leg_speeds, float)
+                sinking = list(active["legs"])
+                other = [leg for leg in range(len(LEG_NAMES)) if leg not in sinking]
+                push_m_s = settings.ds_push_fraction * self.geometry.max_speed_m_s
+                leg_speeds[other] = np.minimum(leg_speeds[other], 0.0)
+                leg_speeds[sinking] = np.maximum(leg_speeds[sinking], push_m_s)
+            return super()._apply_lift_stroke_guard(reading, leg_speeds)
+
+        def _update_completion(self, reading, filtered_clearance_m):
+            is_complete = super()._update_completion(reading, filtered_clearance_m)
+            if settings.ds_enable and self.fix.ds_active is not None:
+                self._state.complete_since_s = None  # no DONE while DS holds
+                return False
+            return is_complete
 
         # ------------------------------------------------------------ 424.3 L1 / L2
         def _start_l1_watch(self, t_s: float) -> None:
@@ -1010,6 +1338,8 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
                     self._update_fall_watch(reading)
                 if settings.d1r_predicted_hold:
                     self._update_predicted_watch(reading)
+            if settings.ds_enable and self._state.phase is c2.C2Phase.LEVEL:
+                self._ds_update(reading)
             return super()._level_step(reading)
 
         # ------------------------------------------------------------ 424.9.2 D1r
@@ -1633,6 +1963,7 @@ def _install_truth_hook(cl) -> None:
         accumulated = original(plant, command, valve, steps)
         _TRUTH["crawler_max_N"] = max(_TRUTH["crawler_max_N"], float(accumulated[15]))
         _TRUTH["crawler_series"].append((float(plant.t), float(accumulated[15])))
+        _TRUTH["plant"] = plant  # HB-1 reads its attitude / soil at each control period
         if _TRUTH["weight_N"] is None and hasattr(plant, "m") and hasattr(plant, "g"):
             _TRUTH["weight_N"] = float(plant.m * plant.g)
         return accumulated
@@ -1652,7 +1983,7 @@ def _install_candidate(candidate: str, overrides: dict):
     import s9_soil_closed_loop as sl
 
     _install_truth_hook(sl._imports()[0])
-    _TRUTH.update(crawler_max_N=0.0, weight_N=None, crawler_series=[])
+    _TRUTH.update(crawler_max_N=0.0, weight_N=None, crawler_series=[], plant=None)
     _RUNNING.pop("controller", None)
     return c2, settings
 
@@ -1881,6 +2212,13 @@ def _controller_record(controller) -> dict:
     t_loc_s = late_loc_rule.loc_timeline(events)["t_loc_final_s"]  # spec 424.8.1
     metrics["crawler_recontact"] = crawler_recontact_record(
         _TRUTH["crawler_series"], _TRUTH["weight_N"], t_loc_s)
+    metrics.update(hb1_metrics(controller.fix, events, _TRUTH["crawler_series"],
+                               controller.config.period_s))
+    project_sink = getattr(controller._state, "diff_sink", None)  # 03_src P-S8-35 (one is idle)
+    if project_sink is not None:
+        metrics["ds_events"] += [dict(event) for event in project_sink.events]
+        metrics["ds_active_s"] = round(metrics["ds_active_s"] + project_sink.hold_periods
+                                       * controller.config.period_s, 2)
     return metrics
 
 
@@ -1894,6 +2232,12 @@ def run_job(job: dict) -> dict:
         controller = _RUNNING.get("controller")
         if controller is not None and "error" not in record:
             record["metrics"] = _controller_record(controller)
+            if job["suite"] in RUT_LOG_SUITES:
+                record["metrics"]["rut_clear_min_after_final_loc_mm"] = (
+                    rut_clear_min_after_final_loc_mm(
+                        _slope_harness_log(),
+                        [(float(e.t_s), e.name) for e in controller.events],
+                        record.get("t_ready_s")))
     except Exception as exc:  # keep the batch going, record the failure
         record.update(error=repr(exc), tb=traceback.format_exc()[-3000:])
     record["wall_s"] = round(time.perf_counter() - t0, 1)
@@ -2221,6 +2565,8 @@ def build_parser() -> argparse.ArgumentParser:
         command = sub.add_parser(name)
         command.add_argument("--suite", required=True, help=f"comma list of {SUITES}")
         command.add_argument("--filter", default="", help="comma list of case-id substrings")
+        command.add_argument("--ids", default="",
+                             help="semicolon list of exact case ids (with --filter: both apply)")
     run = sub.choices["run"]
     run.add_argument("--candidates", default=BASELINE)
     run.add_argument("--workers", type=int, default=2)
@@ -2237,9 +2583,30 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _filtered(cases, text: str):
+def _filtered(cases, text: str, exact_ids: str = ""):
+    """Cases whose id contains one of the comma-separated ``text`` substrings and, when
+    ``exact_ids`` is given, equals one of its semicolon-separated ids (some ids contain a comma,
+    and a substring also matches the longer ids that start with it)."""
     needles = [n for n in text.split(",") if n]
-    return [c for c in cases if not needles or any(n in c[0] for n in needles)]
+    wanted = _exact_ids(exact_ids)
+    return [c for c in cases if (not needles or any(n in c[0] for n in needles))
+            and (not wanted or c[0] in wanted)]
+
+
+def _exact_ids(exact_ids: str) -> set[str]:
+    return {i.strip() for i in exact_ids.split(";") if i.strip()}
+
+
+def _check_ids(suites: str, exact_ids: str) -> None:
+    """Raise when an id of ``--ids`` is in none of the suites (a typo would drop it silently).
+
+    Raises:
+        ValueError: unknown case ids.
+    """
+    known = {case_id for suite in suites.split(",") for case_id, _ in suite_cases(suite)}
+    unknown = sorted(_exact_ids(exact_ids) - known)
+    if unknown:
+        raise ValueError(f"unknown case ids {unknown}")
 
 
 def _run(args) -> None:
@@ -2250,17 +2617,18 @@ def _run(args) -> None:
     candidates = [c for c in args.candidates.split(",") if c]
     for candidate in candidates:
         parse_candidate(candidate, overrides)  # fail before any run
+    _check_ids(args.suite, args.ids)
     placement = slope.set_parent_affinity(slope.parse_affinity(args.affinity))
     records, t0 = [], time.perf_counter()
     for suite in args.suite.split(","):
-        cases = _filtered(suite_cases(suite), args.filter)
+        cases = _filtered(suite_cases(suite), args.filter, args.ids)
         jobs = [{"suite": suite, "id": case_id, "payload": payload, "candidate": candidate,
                  "params": overrides} for case_id, payload in cases for candidate in candidates]
         with Pool(max(1, min(args.workers, len(jobs)))) as pool:
             records += pool.map(run_job, jobs, chunksize=1)
     meta = {"script": "04_scripts/03_control/s9/s9_slope_fix_candidates.py",
             "suites": args.suite, "candidates": candidates, "params": overrides,
-            "defaults": asdict(CandidateSettings()), "filter": args.filter,
+            "defaults": asdict(CandidateSettings()), "filter": args.filter, "ids": args.ids,
             "settle_hook": args.settle_hook, "workers": args.workers, "placement": placement,
             "wall_s": round(time.perf_counter() - t0, 1), "n_records": len(records)}
     summary = write_outputs(args.out, records, meta)
@@ -2290,8 +2658,9 @@ def _print_records(records: list[dict]) -> None:
 def main() -> None:
     args = build_parser().parse_args()
     if args.command == "list":
+        _check_ids(args.suite, args.ids)
         for suite in args.suite.split(","):
-            cases = _filtered(suite_cases(suite), args.filter)
+            cases = _filtered(suite_cases(suite), args.filter, args.ids)
             for case_id, _ in cases:
                 print(suite, case_id)
             print(suite, len(cases), "cases")

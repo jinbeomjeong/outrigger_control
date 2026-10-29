@@ -33,6 +33,7 @@ BATCH_DEF_SHA256 = {
     "S9SL": "1e80cba9a0bd75abeb0307a949511afba093fe7b7b8a910096cbde88ec335837",
     "p3b_aug": "98f48ac2eccc2bbf3849d6d18f79e755433468271772f23d91d91c788be4cd79",
     "MS1": "5dc833dd79c1564f20d175c4c648d1fdae2f3060b58bfd6c0f5e5835a496215d",  # run 2026-10-29 18:33
+    "D424": "c8c74d0efa95790a74c623177098f7641f7cb5fd45c29da6d3ee166163a6a84f",  # run 2026-10-30 01:49
 }
 """Normalised batch definitions (interpreter / script paths dropped) before the Q-D change (2026-10-29)."""
 
@@ -53,7 +54,7 @@ def test_existing_batch_definitions_unchanged() -> None:
     import s9_batch
 
     b = s9_batch.batches()
-    assert set(b) == set(BATCH_DEF_SHA256) | {"D424"}
+    assert set(b) == set(BATCH_DEF_SHA256) | {"D424R"}
     for name, want in BATCH_DEF_SHA256.items():
         rows = [{**r, "argv": _norm(s9_batch, r["argv"])} for r in b[name]]
         assert hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest() == want, name
@@ -100,6 +101,60 @@ def test_d424_rows() -> None:
     assert d424[1]["est_s"] == run_S9.D424_EST_S["m1p2"]
     assert [c["case"] for c in run_S9.d424_cases(include_optional=False)] == [MS1_NAME]
     assert run_S9.build_parser().parse_args(a12[len(s9_batch.RUN):]).mass_scale == 1.2
+
+
+D424R_NAMES = [MS1_NAME, "P3b_J2_B_middle_Fs4", "P3b_J2_B_bottom_Fs4"]
+
+
+def test_d424r_rows_same_argv_as_former_runs() -> None:
+    """Spec 424.11.2 'Chrono 3건' (2026-10-30): ① = the D424 / MS1 row (argv bit for bit), ② / ③ = the study ③ J2 B
+    middle / bottom rows (argv bit for bit, no --note); notes and the planned pool are batch.json-only keys."""
+    import s9_batch
+
+    b = s9_batch.batches()
+    rows = b["D424R"]
+    assert [r["case"] for r in rows] == D424R_NAMES
+    assert rows[0]["argv"] == b["D424"][0]["argv"] == b["MS1"][0]["argv"]
+    aug = {r["case"]: r for r in b["p3b_aug"]}
+    for r in rows[1:]:
+        assert r["argv"] == aug[r["case"]]["argv"] and "--note" not in r["argv"]
+        assert r["note"].startswith("424.11.2 Chrono 3건")
+    assert [r["planned_pool"] for r in rows] == ["pcore", "ecore", "ecore"]
+    assert tuple(r["case"] for r in rows if r["planned_pool"] == "ecore") == run_S9.D424R_E_CASES
+    # est_s: measured former walls; E rows x 1.67 rounded to 100 s
+    assert [r["est_s"] for r in rows] == [5919.0, 10700.0, 10600.0]
+    assert all(r["est_s"] == run_S9.d424r_est_s(r["case"]) for r in rows)
+    for c in run_S9.d424r_cases():
+        assert c["group"] == "D424R"
+    # former run folders named in the table exist when results are on disk
+    for case, (folder, pool, wall) in run_S9.D424R_MEASURED_WALL_S.items():
+        bj = ROOT / "07_results" / "S9" / folder / "batch.json"
+        if bj.exists():
+            ent = {e["case"]: e for e in json.loads(bj.read_text("utf-8"))["cases"]}[case]
+            assert ent["pool"] == pool and ent["rc"] == 0 and round(ent["wall_s"], 1) == wall
+
+
+@pytest.mark.parametrize("e_tokens", [["P3b_J2_B_middle_Fs4,P3b_J2_B_bottom_Fs4"],
+                                      ["P3b_J2_B_middle_Fs4", "P3b_J2_B_bottom_Fs4"]])
+def test_d424r_schedule_command(e_tokens) -> None:
+    """The documented command splits the pools: ① alone on P, ② / ③ on E (comma or space separated names)."""
+    import s9_batch
+
+    argv = ["run", "D424R", "--parallel", "1", "--parallel-e", "2", "--e-cases", *e_tokens]
+    kw = s9_batch.schedule_args(s9_batch.build_parser().parse_args(argv), argv)
+    assert kw["e_cases"] == D424R_NAMES[1:] and (kw["parallel"], kw["parallel_e"]) == (1, 2)
+    q = s9_batch.schedule_cases(s9_batch.batches()["D424R"], e_cases=kw["e_cases"], parallel_e=kw["parallel_e"])
+    assert [c["case"] for c in q["pcore"]] == [MS1_NAME]
+    assert [c["case"] for c in q["ecore"]] == D424R_NAMES[1:]
+    assert s9_batch.split_names(None) is None and s9_batch.split_names(["a,,b", "c"]) == ["a", "b", "c"]
+
+
+def test_d424r_batch_folder_is_rejudge_target(tmp_path) -> None:
+    """``run_S9.py rejudge <batch folder>`` picks every D424R case folder (all names start with P3b_)."""
+    for n in D424R_NAMES:
+        (tmp_path / n).mkdir()
+        (tmp_path / n / "result.json").write_text("{}", "utf-8")
+    assert [p.name for p in run_S9.rejudge_targets([str(tmp_path)])] == sorted(D424R_NAMES)
 
 
 def test_level_default_mass_scale_and_p3b_argv_without_it() -> None:

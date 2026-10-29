@@ -1979,6 +1979,66 @@ class LocRevokeSettings:
             raise ValueError("confirm_periods must be >= 1 and max_revokes >= 0")
 
 
+DIFF_SINK_HOLD_EVENT = "INFO_DIFF_SINK_HOLD"
+"""``INFO_DIFF_SINK_HOLD:<FL,RL|FR,RR>:<|r_a| mm/s>``: P-S8-35 started adding speed to the
+sinking side."""
+DIFF_SINK_RELEASE_EVENT = "INFO_DIFF_SINK_RELEASE"
+"""``INFO_DIFF_SINK_RELEASE:<settled|time|stroke|reversed|done>``: P-S8-35 hold ended."""
+DIFF_SINK_SIGNAL_WINDOW_S = 1.0
+"""Moving window of the stroke slope and of the gyro roll-rate mean."""
+DIFF_SINK_SIGNAL_PERIODS = 10
+"""Control periods (10 Hz) of ``DIFF_SINK_SIGNAL_WINDOW_S``."""
+DIFF_SINK_AXIS_LEGS = ((0, 1), (2, 3))
+"""(left, right) leg index of the front and the rear axis (LEG_ORDER FL, FR, RL, RR)."""
+DIFF_SINK_LEFT_LEGS = (0, 2)
+DIFF_SINK_RIGHT_LEGS = (1, 3)
+
+
+@dataclass(frozen=True)
+class DiffSinkSettings:
+    """P-S8-35 (DSb75, spec 424.11 / 424.11.1 / 424.11.2): differential pad sinking after the LOC.
+
+    From the first LOC of the run (a gate decided once there: the P-S8-33 soil sign and a settle
+    tilt ``max(|roll|, |pitch|) <= gate_max_settle_tilt_rad``) to the first DONE, LOC
+    revocations included, each axis's rate ``r_a = (s'_L - s'_R) - w_a phi'`` is watched:
+    ``s'`` = 1 s least-squares slope of the motor strokes, ``phi'`` = 1 s mean gyro roll rate.
+    ``max |r_a| > threshold_m_s`` for ``confirm_s`` starts a hold on the axis of the largest
+    rate (side = its sign, ``r > 0``: the left side sinks). While held, every axis sinking the
+    same way adds ``min(gain |r_a|, add_cap_fraction v_max)`` to its sinking leg (before the
+    P-S8-28 guard; the other legs and the attitude loop stay) and DONE waits. The hold ends
+    when the holding axis reverses beyond ``release_m_s`` (first), both axes stay below
+    ``release_m_s`` for ``release_s``, after ``max_s``, at the stroke limit (lift guard stroke
+    minus ``stroke_margin_m``) or when the phase leaves LEVEL.
+
+    Off by default; a plain class-level default, so configs unpickled from older code read "off".
+    """
+
+    enable: bool = False
+    threshold_m_s: float = 0.003
+    confirm_s: float = 1.0
+    release_m_s: float = 0.001
+    release_s: float = 0.5
+    max_s: float = 10.0
+    gain: float = 1.5
+    """Added speed per differential sinking rate [(m/s) / (m/s)]."""
+    add_cap_fraction: float = 0.75
+    """Cap of the added speed as a fraction of ``v_max``."""
+    track_w_m: tuple[float, float] = (2.648, 2.411)
+    """Pad track width front / rear [m] (roll lever of each axis)."""
+    gate_max_settle_tilt_rad: float | None = math.radians(1.0)
+    """``None``: no settle tilt condition; an unknown settle attitude closes the gate."""
+    stroke_margin_m: float = 0.040
+    """Below the lift guard stroke (682.8 - 40 = 642.8 mm): no hold from there."""
+
+    def __post_init__(self) -> None:
+        if not 0.0 < self.release_m_s < self.threshold_m_s:
+            raise ValueError("diff sink needs 0 < release_m_s < threshold_m_s")
+        for name in ("confirm_s", "release_s", "max_s", "gain", "add_cap_fraction",
+                     "stroke_margin_m"):
+            if not getattr(self, name) > 0.0:
+                raise ValueError(f"{name} must be > 0, got {getattr(self, name)!r}")
+
+
 @dataclass(frozen=True)
 class RestoredLiftoff:
     """S-1 lift-off confirmation handed to :meth:`C2Controller.restore_liftoff_confirmation`.
@@ -2063,6 +2123,9 @@ class C2Config:
     class-level default as ``soil``."""
     liftoff_window_reapproach: LiftoffWindowReapproachSettings = LiftoffWindowReapproachSettings()
     """S-1 window against a lifted re-approach (P-S8-32, LWa); off by default, a plain
+    class-level default as ``soil``."""
+    diff_sink: DiffSinkSettings = DiffSinkSettings()
+    """Differential pad sinking after the LOC (P-S8-35, DSb75); off by default, a plain
     class-level default as ``soil``."""
     loc_revoke: LocRevokeSettings = LocRevokeSettings()
     """LOC revocation after the LOC (P-S8-33, L1gs); off by default, a plain class-level default
@@ -2206,7 +2269,10 @@ class C2Config:
         decision 2026-10-29 (P-S8-32, LWa, spec 419): the S-1 window is cleared while a
         re-approach is active (:class:`LiftoffWindowReapproachSettings`). User decision
         2026-10-29 (P-S8-33 L1gs, spec 424.10.2): LOC revocation gated by a soil sign and the
-        stroke budget (:class:`LocRevokeSettings`); P-S8-34 removed. The start-IMU form only:
+        stroke budget (:class:`LocRevokeSettings`); P-S8-34 removed. User decision 2026-10-30
+        (P-S8-35 DSb75, spec 424.11 / 424.11.2): after the LOC on a level settle with a soil
+        sign, a differential pad sinking adds speed to the sinking side
+        (:class:`DiffSinkSettings`). The start-IMU form only:
         the late IMU read (C1) is not implemented (U-R8-6 = C2).
         """
         config = self.with_r8_diagnostics()
@@ -2285,6 +2351,7 @@ class C2Config:
                 stroke_guard=True,
                 keep_slope_margin_on_revoke=True,
             ),
+            diff_sink=replace(config.diff_sink, enable=True),
             two_pressure=two_pressure,
             fault_reground=reground_settings,
             soil=soil,
@@ -3357,6 +3424,41 @@ class _LocRevokeWatch:
 
 
 @dataclass
+class _DiffSinkHold:
+    """P-S8-35: the running hold."""
+
+    t_start_s: float
+    axis: int
+    """0 = front (FL - FR), 1 = rear (RL - RR)."""
+    sign: float
+    """Sign of the holding axis's rate at the start (+1: the left side sinks)."""
+    legs: tuple[int, int]
+    """Sinking side (FL, RL) or (FR, RR)."""
+    periods: int = 0
+
+
+@dataclass
+class _DiffSinkState:
+    """P-S8-35 watch of one run: not touched by a LOC revocation, ended by the first DONE."""
+
+    strokes: deque[tuple[float, NDArray[np.float64]]] = field(
+        default_factory=lambda: deque(maxlen=DIFF_SINK_SIGNAL_PERIODS)
+    )
+    """(t s, motor strokes m) of the last 1 s of LEVEL periods."""
+    gyro_roll: deque[float] | None = None
+    """Gyro roll rate [rad/s] of the last 1 s (length fixed by the first period's samples)."""
+    first_loc_s: float | None = None
+    is_gate_open: bool = False
+    is_watch_over: bool = False
+    above_periods: int = 0
+    below_periods: int = 0
+    hold: _DiffSinkHold | None = None
+    hold_periods: int = 0
+    """Periods with a hold at the end of ``update`` (meta ``active_s``)."""
+    events: list[dict[str, Any]] = field(default_factory=list)
+
+
+@dataclass
 class _SoilState:
     """Soil response S-1 .. S-5 of one lifting cycle (cleared at TOUCH entry, P-S9-6)."""
 
@@ -3667,6 +3769,9 @@ class _RunState:
     loc_revokes: tuple[tuple[float, float], ...] = ()
     """(t s, rise N above ``W_hat``) of every revocation of the run."""
     loc_revoke_skips: tuple[float, ...] = ()
+    # P-S8-35 (immutable default: class attribute for run states pickled before it)
+    diff_sink: _DiffSinkState | None = None
+    """Created by the first update with the rule on."""
     """Times the stroke guard withheld a due revocation."""
 
 
@@ -3842,6 +3947,8 @@ class C2Controller:
     def update(self, measurements: Measurements) -> Command:
         """Leg speed command for the next period (design 14.3 order: read, filter, phase, ramp)."""
         state = self._state
+        if self.config.diff_sink.enable:
+            self._diff_sink_feed_gyro(measurements)
         reading = self._read(measurements)
         self._update_attitude_filters(measurements)
         if self.config.fault_reground.enable:
@@ -3873,6 +3980,8 @@ class C2Controller:
         if self.config.loc_revoke.enable:
             # After the command (as the L1 wrapper): a revocation acts from the next period.
             self._watch_loc_revoke()
+        if self.config.diff_sink.enable:
+            self._diff_sink_after_update(measurements.t_s)
         return Command(t_s=measurements.t_s, leg_speed_m_s=applied)
 
     def _delay_output(self, output: NDArray[np.float64]) -> NDArray[np.float64]:
@@ -3910,6 +4019,7 @@ class C2Controller:
             "slope_clearance_margin": self._slope_clearance_margin_meta(),
             "liftoff_window_reapproach": self._liftoff_window_reapproach_meta(),
             "loc_revoke": self._loc_revoke_meta(),
+            "diff_sink": self._diff_sink_meta(),
             "locked_pressure_warning_note": (
                 QUASI_STATIC_PRESSURE_NOTE if r8.is_instant_sampling else None
             ),
@@ -6217,6 +6327,8 @@ class C2Controller:
 
     def _level_step(self, reading: _Reading) -> NDArray[np.float64]:
         """One LEVEL period in the fixed order of design 14.5."""
+        if self.config.diff_sink.enable and self._state.phase is C2Phase.LEVEL:
+            self._diff_sink_update(reading)  # P-S8-35 decides before this period's command
         if self.config.soil.enable and self._state.phase is C2Phase.LEVEL:
             # S-1 first: a confirmation this period already corrects the clearance below.
             self._update_liftoff_window(reading)
@@ -6241,6 +6353,9 @@ class C2Controller:
         leg_speeds = scale_to_speed_limit(unscaled_speeds, geometry.max_speed_m_s)
         self._note_output_limit(OutputLimit.SPEED_SCALE, unscaled_speeds, leg_speeds)
         is_complete = self._update_completion(reading, filtered_clearance)
+        if self._is_diff_sink_holding():
+            self._state.complete_since_s = None  # P-S8-35: no DONE while the hold runs
+            is_complete = False
         if reapproaching.any():
             # P-R8-12 / P-R8-13: no DONE while a leg is still in the air.
             self._state.complete_since_s = None
@@ -6254,6 +6369,8 @@ class C2Controller:
             leg_speeds = lifted_speeds
         leg_speeds = self._apply_reapproach_speeds(leg_speeds, reapproaching)
         leg_speeds = self._apply_pre_loc_lift_pause(reading, leg_speeds)
+        if self._is_diff_sink_holding():
+            leg_speeds = self._diff_sink_added_speeds(leg_speeds)  # before the P-S8-28 guard
         leg_speeds = self._apply_lift_stroke_guard(reading, leg_speeds)
         self._record_command_components(
             (heave_rate, roll_rate, pitch_rate, twist_rate), unscaled_speeds, reapproaching
@@ -7117,6 +7234,8 @@ class C2Controller:
         self._apply_slope_clearance_margin(t_s)
         if self.config.loc_revoke.enable:
             self._start_loc_revoke_watch()
+        if self.config.diff_sink.enable:
+            self._diff_sink_note_loc(t_s)
 
     # --- LOC revocation (P-S8-33 L1gs, spec 424.10 / 424.10.2) ---
 
@@ -7233,6 +7352,182 @@ class C2Controller:
             "rise_N": [rise_N for _, rise_N in state.loc_revokes],
             "t_skip_s": list(state.loc_revoke_skips),
         }
+
+    # --- differential pad sinking (P-S8-35 DSb75, spec 424.11 / 424.11.1 / 424.11.2) ---
+
+    def _diff_sink_state(self) -> _DiffSinkState:
+        state = self._state
+        if state.diff_sink is None:
+            state.diff_sink = _DiffSinkState()
+        return state.diff_sink
+
+    def _is_diff_sink_holding(self) -> bool:
+        return self.config.diff_sink.enable and self._diff_sink_state().hold is not None
+
+    def _diff_sink_feed_gyro(self, measurements: Measurements) -> None:
+        """Gyro roll rates of the period into the 1 s window (IMU samples, else the mean)."""
+        samples = measurements.imu_angular_rate_samples_rad_s
+        if samples is not None and len(samples):
+            rolls = np.asarray(samples, dtype=float)[:, 0]
+            sample_s = self.config.r8.imu_sample_period_s or self.config.period_s
+        else:
+            rolls = np.asarray(measurements.angular_rate_rad_s, dtype=float)[:1]
+            sample_s = self.config.period_s
+        sink = self._diff_sink_state()
+        if sink.gyro_roll is None:  # the first period fixes the 1 s length
+            sink.gyro_roll = deque(maxlen=round(DIFF_SINK_SIGNAL_WINDOW_S / sample_s))
+        sink.gyro_roll.extend(float(roll) for roll in rolls)
+
+    def _diff_sink_note_loc(self, t_s: float) -> None:
+        """The first LOC of the run opens the watch; the gate is decided there once."""
+        sink = self._diff_sink_state()
+        if sink.first_loc_s is not None or not self._soil_state().is_liftoff_confirmed:
+            return
+        sink.first_loc_s = float(t_s)
+        sink.is_gate_open = self._has_loc_soil_sign() and self._is_diff_sink_settle_level()
+
+    def _is_diff_sink_settle_level(self) -> bool:
+        max_tilt_rad = self.config.diff_sink.gate_max_settle_tilt_rad
+        if max_tilt_rad is None:
+            return True
+        settle_rad = self._settle_attitude_rad()
+        if settle_rad is None:
+            return False
+        return max(abs(settle_rad[0]), abs(settle_rad[1])) <= max_tilt_rad
+
+    def _diff_sink_rates_m_s(self) -> NDArray[np.float64] | None:
+        """``r_a`` (front, rear) [m/s]: the 1 s least-squares slope difference of the axis's
+        motor strokes minus ``w_a`` times the 1 s mean gyro roll rate."""
+        sink = self._diff_sink_state()
+        if len(sink.strokes) < DIFF_SINK_SIGNAL_PERIODS or not sink.gyro_roll:
+            return None
+        times_s = np.array([t_s for t_s, _ in sink.strokes])
+        strokes_m = np.array([strokes for _, strokes in sink.strokes])
+        centred_t = times_s - times_s.mean()
+        slopes_m_s = centred_t @ (strokes_m - strokes_m.mean(axis=0)) / (centred_t @ centred_t)
+        roll_rate = float(np.mean(sink.gyro_roll))
+        front_w_m, rear_w_m = self.config.diff_sink.track_w_m
+        return np.array([slopes_m_s[0] - slopes_m_s[1] - front_w_m * roll_rate,
+                         slopes_m_s[2] - slopes_m_s[3] - rear_w_m * roll_rate])
+
+    def _diff_sink_stroke_limit_m(self) -> float:
+        guard_stroke_m = (
+            self.geometry.stroke_soft_max_m
+            - STROKE_END_MARGIN_M
+            - self.config.lift_stroke_guard.extra_margin_m
+        )
+        return guard_stroke_m - self.config.diff_sink.stroke_margin_m
+
+    def _diff_sink_update(self, reading: _Reading) -> None:
+        """One LEVEL period of the watch, before the period's command."""
+        settings = self.config.diff_sink
+        sink = self._diff_sink_state()
+        sink.strokes.append((float(reading.t_s), np.array(reading.motor_stroke_m, dtype=float)))
+        if sink.is_watch_over or sink.first_loc_s is None or not sink.is_gate_open:
+            return
+        rates = self._diff_sink_rates_m_s()
+        if rates is None:
+            return
+        is_stroke_limited = (
+            float(np.max(reading.motor_stroke_m)) >= self._diff_sink_stroke_limit_m()
+        )
+        if sink.hold is not None:
+            self._diff_sink_check_release(reading.t_s, rates, is_stroke_limited)
+            return
+        if is_stroke_limited:
+            sink.above_periods = 0
+            return
+        is_above = float(np.abs(rates).max()) > settings.threshold_m_s
+        sink.above_periods = sink.above_periods + 1 if is_above else 0
+        if sink.above_periods >= round(settings.confirm_s / self.config.period_s):
+            self._diff_sink_hold(reading.t_s, rates)
+
+    def _diff_sink_hold(self, t_s: float, rates: NDArray[np.float64]) -> None:
+        sink = self._diff_sink_state()
+        axis = int(np.argmax(np.abs(rates)))
+        is_left_sinking = rates[axis] > 0.0  # r > 0: the left side sinks
+        legs = DIFF_SINK_LEFT_LEGS if is_left_sinking else DIFF_SINK_RIGHT_LEGS
+        rate_mm_s = abs(float(rates[axis])) * 1e3
+        names = ",".join(LEG_ORDER[leg] for leg in legs)
+        sink.hold = _DiffSinkHold(
+            t_start_s=float(t_s), axis=axis, sign=1.0 if rates[axis] > 0 else -1.0, legs=legs
+        )
+        sink.above_periods = 0
+        sink.below_periods = 0
+        sink.events.append({"t_s": round(float(t_s), 2), "axis": axis, "legs": names,
+                            "r_mm_s": round(rate_mm_s, 2)})
+        self._add_event(t_s, f"{DIFF_SINK_HOLD_EVENT}:{names}:{rate_mm_s:.1f}")
+
+    def _diff_sink_check_release(
+        self, t_s: float, rates: NDArray[np.float64], is_stroke_limited: bool
+    ) -> None:
+        """Release order: reversed (first), settled, time, stroke."""
+        settings = self.config.diff_sink
+        sink = self._diff_sink_state()
+        hold = sink.hold
+        if float(rates[hold.axis]) * hold.sign < -settings.release_m_s:
+            self._diff_sink_release(t_s, "reversed")
+            return
+        hold.periods += 1
+        is_settled = bool(np.all(np.abs(rates) < settings.release_m_s))
+        sink.below_periods = sink.below_periods + 1 if is_settled else 0
+        period_s = self.config.period_s
+        if sink.below_periods >= round(settings.release_s / period_s):
+            self._diff_sink_release(t_s, "settled")
+        elif hold.periods >= round(settings.max_s / period_s):
+            self._diff_sink_release(t_s, "time")
+        elif is_stroke_limited:
+            self._diff_sink_release(t_s, "stroke")
+
+    def _diff_sink_release(self, t_s: float, reason: str) -> None:
+        sink = self._diff_sink_state()
+        sink.hold = None
+        sink.below_periods = 0
+        sink.events.append({"t_s": round(float(t_s), 2), "release": reason})
+        self._add_event(t_s, f"{DIFF_SINK_RELEASE_EVENT}:{reason}")
+
+    def _diff_sink_added_speeds(self, leg_speeds: NDArray[np.float64]) -> NDArray[np.float64]:
+        """Each axis sinking the way of the hold adds ``min(gain |r_a|, cap v_max)`` to its
+        sinking leg; every other leg keeps the controller command."""
+        settings = self.config.diff_sink
+        hold = self._diff_sink_state().hold
+        speeds = np.array(leg_speeds, dtype=float)
+        rates = self._diff_sink_rates_m_s()
+        if rates is None:
+            return speeds
+        cap_m_s = settings.add_cap_fraction * self.geometry.max_speed_m_s
+        for axis, (left, right) in enumerate(DIFF_SINK_AXIS_LEGS):
+            rate = float(rates[axis])
+            if rate * hold.sign <= 0.0:
+                continue
+            leg = left if rate > 0 else right
+            speeds[leg] += min(settings.gain * abs(rate), cap_m_s)
+        return speeds
+
+    def _diff_sink_after_update(self, t_s: float) -> None:
+        """A hold ends when the phase leaves LEVEL; the first DONE ends the watch."""
+        sink = self._diff_sink_state()
+        if sink.hold is not None:
+            sink.hold_periods += 1
+            if self._state.phase is not C2Phase.LEVEL:
+                self._diff_sink_release(t_s, "done")
+        if self._state.phase is C2Phase.DONE:
+            sink.is_watch_over = True
+
+    def _diff_sink_meta(self) -> dict[str, Any]:
+        sink = self._state.diff_sink
+        meta: dict[str, Any] = {"settings": asdict(self.config.diff_sink)}
+        if sink is None:
+            return meta
+        meta.update(
+            {
+                "first_loc_s": sink.first_loc_s,
+                "gate_open": sink.is_gate_open,
+                "events": [dict(event) for event in sink.events],
+                "active_s": round(sink.hold_periods * self.config.period_s, 2),
+            }
+        )
+        return meta
 
     # --- slope clearance margin (P-S8-31, spec 414.2 / 417.5) ---
 

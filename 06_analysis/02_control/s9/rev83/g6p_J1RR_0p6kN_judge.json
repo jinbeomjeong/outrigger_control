@@ -1,0 +1,279 @@
+{
+ "script": "04_scripts/03_control/s8/r76_g6_chrono_judge.py",
+ "cases": [
+  {
+   "case": "G6_G1_B_top_Fs4_spJ1RR",
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": true,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": true,
+    "READY_le_120s": true
+   },
+   "pass": true,
+   "flags": [],
+   "not_judgeable_gates": [],
+   "crawler_zero_rule": "P3-1_crawler.crawler_zero (READY .. READY + 10 s)",
+   "recontact_events": {
+    "rule": "U-S9-G6d (\uac00): duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> FLAG; else fail",
+    "limit_N": 3801.1291206408396,
+    "weight_N": 380112.91206408397,
+    "t_loc_s": 33.099999999975275,
+    "events": [],
+    "pass": true,
+    "flags": []
+   },
+   "t_ready_rel_s": 74.50000000162048,
+   "loc_minus_departure_s": 0.6170000000204823,
+   "loc_limit_s": 2.91165281234524,
+   "F_min_after_departure_kN": [
+    94.42,
+    119.21,
+    77.83,
+    49.86
+   ],
+   "attitude_p34_absmax_deg": 0.015439076250805716,
+   "end_mean_roll_pitch_deg": [
+    0.00964674039937737,
+    -0.015396290005928544
+   ],
+   "rut_min_after_ready_mm": 48.86,
+   "s_motor_max_mm": [
+    407.09,
+    408.02,
+    398.25,
+    421.84
+   ],
+   "P3-6": true,
+   "P3-7": true,
+   "P3-9_flag": false,
+   "pre_liftoff_flag": false,
+   "p38_counts": {
+    "leg_reapproach_start": 0,
+    "relevel_predicted": 0,
+    "probe_aborted_low_load": 0
+   },
+   "event_counts": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 0,
+    "INFO_TWIST_UNSETTLED": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_end": 0,
+    "INFO_LIFT_PAUSED": 0
+   },
+   "pause_times_rel_s": [],
+   "c_min_at_P_mm": 1.04,
+   "loc_anchor_applied": false,
+   "completion": {
+    "level_samples": 388,
+    "done_twist_N": 3000.0,
+    "blocked_share": {
+     "attitude": 0.3479381443298969,
+     "clearance": 0.17525773195876287,
+     "twist": 0.8195876288659794,
+     "loc": 0.03608247422680412
+    },
+    "unknown_share": {
+     "attitude": 0.0,
+     "clearance": 0.002577319587628866,
+     "twist": 0.0,
+     "loc": 0.0
+    },
+    "last_level_t_s": 70.4000000012135,
+    "last_level_blocking": [],
+    "D_level_N": {
+     "min": -36464.02522224134,
+     "max": 4809.529232909055,
+     "abs_last": 13340.437558745958
+    }
+   },
+   "pad_sinkage": {
+    "end_mm": {
+     "FL": 7.083675459840899,
+     "FR": 8.556231023546967,
+     "RL": 10.008202904178809,
+     "RR": 33.946933163333085
+    },
+    "max_mm": {
+     "FL": 7.356457601366717,
+     "FR": 8.95498859898014,
+     "RL": 10.357156546371593,
+     "RR": 34.51108287907512
+    },
+    "soft_leg": "RR",
+    "soft_minus_others_mean_end_mm": 25.397563367477524
+   },
+   "virgin_branch_any": false,
+   "settle_reference": {
+    "roll_pitch_deg": [
+     0.00013414311262379536,
+     0.15121611322280729
+    ],
+    "z_origin_m": -0.0012648208861556858
+   },
+   "phases_rel_s": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     4.8,
+     "touch"
+    ],
+    [
+     23.7,
+     "level"
+    ],
+    [
+     62.5,
+     "done"
+    ],
+    [
+     62.6,
+     "probe"
+    ],
+    [
+     74.5,
+     "ready"
+    ]
+   ],
+   "events": [
+    [
+     23.7,
+     "floor_estimate_touch"
+    ],
+    [
+     25.1,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     25.2,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     62.5,
+     "INFO_TWIST_UNSETTLED:-13.2"
+    ],
+    [
+     74.5,
+     "reanchor_skipped:theta_below_min"
+    ],
+    [
+     74.5,
+     "ready_heave_tail"
+    ],
+    [
+     74.8,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     76.5,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "relax_settings": {
+    "source": "c2_setup.twist_relax",
+    "mode": "preset",
+    "overrides": {},
+    "settings": {
+     "enable": true,
+     "settle_s": 10.0,
+     "window_s": 5.0,
+     "drop_N": 0.0,
+     "rise_tol_N": 600.0,
+     "max_twist_N": 15000.0,
+     "require_loads_ge_F_min": true
+    },
+    "n_relaxed_done": 1,
+    "n_info_twist_unsettled_events": 1,
+    "last_D_N": -13221.560391013532
+   },
+   "after_ready": {
+    "t_ready_abs_s": 82.50000000161518,
+    "t_done_rel_s": 62.5,
+    "D_at_done_kN": -13.222,
+    "D_at_ready_kN": -22.665,
+    "D_absmax_after_ready_kN": 26.282,
+    "D_end_kN": -25.701,
+    "n_D_samples_after_ready": 856,
+    "window_after_ready_s": 85.5,
+    "F_cyl_min_after_ready": {
+     "FL": {
+      "min_kN": 102.335,
+      "t_rel_s": 75.053,
+      "ratio_to_F_min": 10.87
+     },
+     "FR": {
+      "min_kN": 125.537,
+      "t_rel_s": 75.05,
+      "ratio_to_F_min": 13.334
+     },
+     "RL": {
+      "min_kN": 83.444,
+      "t_rel_s": 75.167,
+      "ratio_to_F_min": 8.863
+     },
+     "RR": {
+      "min_kN": 56.545,
+      "t_rel_s": 74.766,
+      "ratio_to_F_min": 6.006
+     }
+    },
+    "F_min_kN": 9.415
+   },
+   "end_of_run": {
+    "last_phase": "ready",
+    "last_phase_t_rel_s": 74.5,
+    "t_end_rel_s": 160.0,
+    "D_end_kN": -25.701,
+    "D_level_decay": {
+     "lambda_per_s": 0.01752431803283578,
+     "n_samples": 274,
+     "t_rel_range_s": [
+      35.1,
+      62.4
+     ],
+     "rule": "LEVEL, t >= t_LOC + 10 s, |D_raw| >= 1 kN, ln|D| least squares"
+    },
+    "soft_pad": {
+     "leg": "RR",
+     "sinkage_end_mm": 33.947,
+     "sinkage_rate_last_0p2s_mm_s": 0.00057
+    },
+    "F_cyl_min_last_10s": {
+     "FL": {
+      "min_kN": 106.187,
+      "t_rel_s": 154.134,
+      "ratio_to_F_min": 11.279
+     },
+     "FR": {
+      "min_kN": 127.938,
+      "t_rel_s": 157.137,
+      "ratio_to_F_min": 13.589
+     },
+     "RL": {
+      "min_kN": 85.08,
+      "t_rel_s": 150.292,
+      "ratio_to_F_min": 9.037
+     },
+     "RR": {
+      "min_kN": 57.357,
+      "t_rel_s": 159.243,
+      "ratio_to_F_min": 6.092
+     }
+    }
+   }
+  }
+ ],
+ "summary": {
+  "n_regular": 1,
+  "n_regular_pass": 1,
+  "regular_all_pass": true,
+  "expected_fail_cases": {}
+ }
+}

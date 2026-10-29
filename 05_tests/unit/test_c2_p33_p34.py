@@ -378,7 +378,8 @@ def test_wrapper_l1_token_steps_the_project_rule_aside() -> None:
 # --- 5: wrapper hash ---------------------------------------------------------------------------
 
 WRAPPER_CASES = (
-    ("h6", "H6|J1|B|top|flat|m1.1", "regBE_h6.json", f"{LOC_REVOKE_EVENT}:2.3"),
+    # H6 J1 B x1.1 left this set when the R8 preset took P-S8-35 (its DSb75 hold changes the
+    # commands, test_c2_p35 test 9); the cases below have no P-S8-35 hold.
     ("h6", "H6|J1|A|top|flat|m1.2", "regBE_h6.json", f"{LOC_REVOKE_EVENT}:2.8"),
     ("h6", "H6|G1|B|top|flat|m1.2", "regBE_h6.json", None),
     ("slope", "H1|S1|B|top|roll_pos", "regB_slope_rejudged.json",

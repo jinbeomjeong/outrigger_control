@@ -591,6 +591,48 @@ def d424_cases(include_optional: bool = True) -> list[dict[str, Any]]:
     return out
 
 
+D424R_E_FACTOR = 1.67
+"""E-pool / P-pool wall ratio applied to the P-pool measurements of the study ③ J2 B rows (ASSUMPTION; D424 x1.2 on
+the E pool 9,896 s against MS1-type P runs about 5,900-6,200 s, G1 B 5.08 against 2.6-5.1 ms/step)."""
+D424R_MEASURED_WALL_S = {"P3b_J1_B_top_Fs4_m1p1": ("batch_D424_20261030_014908", "pcore", 5919.1),
+                         "P3b_J2_B_middle_Fs4": ("batch_p3b_aug_20261028_224127", "pcore", 6431.6),
+                         "P3b_J2_B_bottom_Fs4": ("batch_p3b_aug_20261029_002839", "pcore", 6341.6)}
+"""Former run per D424R row: batch folder (``07_results/S9``), pool, measured wall [s] (batch.json ``wall_s``, one P
+slot each). These are also the comparison runs of the spec 424.11.2 'Chrono 3건' rows."""
+D424R_E_CASES = ("P3b_J2_B_middle_Fs4", "P3b_J2_B_bottom_Fs4")
+"""D424R rows planned on the E pool (``s9_batch.py run D424R --parallel 1 --parallel-e 2 --e-cases ...``); the J1 x1.1
+row runs alone on the P pool (its judgement time matters most)."""
+
+
+def d424r_est_s(case: str) -> float:
+    """D424R wall estimate [s]: the former measured wall, x :data:`D424R_E_FACTOR` (rounded to 100 s) on the E pool."""
+    wall = D424R_MEASURED_WALL_S[case][2]
+    return round(wall * D424R_E_FACTOR, -2) if case in D424R_E_CASES else float(round(wall))
+
+
+def d424r_cases() -> list[dict[str, Any]]:
+    """Spec 424.11.2 'Chrono 3건' (control 2026-10-30): the committed implementation (P-S8-33 L1gs + P-S8-35 DSb75)
+    re-checked on Chrono. ① the D424 / MS1 re-run ``P3b_J1_B_top_Fs4_m1p1`` (same argv as :func:`ms1_cases`, compared
+    with D424 / MS1: commands bit-identical up to the first ``INFO_DIFF_SINK_HOLD``); ② / ③ study ③
+    ``P3b_J2_B_middle_Fs4`` / ``P3b_J2_B_bottom_Fs4`` (same argv as :func:`p3b_aug_cases`, x1.0, judged by 411.1 against
+    the former runs of :data:`D424R_MEASURED_WALL_S`). ``batch_note`` goes to batch.json only (argv unchanged);
+    ``planned_pool`` records the intended pool (the pool itself is set by ``--e-cases``)."""
+    rerun = dict(d424_cases(include_optional=False)[0])
+    name = rerun["case"]
+    rerun.update(group="D424R", est_s=d424r_est_s(name), planned_pool="pcore",
+                 batch_note=f"424.11.2 Chrono 3건 ①: DSb75 re-run of {name}; compare "
+                            f"{D424R_MEASURED_WALL_S[name][0]} / batch_MS1_20261029_183324")
+    out = [rerun]
+    aug = {c["case"]: c for c in p3b_aug_cases()}
+    for name, tag in zip(D424R_E_CASES, ("②", "③")):
+        c = dict(aug[name])
+        c.update(group="D424R", est_s=d424r_est_s(name), planned_pool="ecore",
+                 batch_note=f"424.11.2 Chrono 3건 {tag} (spec row ②): DSb75 re-run of study ③ {name} (411.1); compare "
+                            f"{D424R_MEASURED_WALL_S[name][0]}")
+        out.append(c)
+    return out
+
+
 def apply_mass_scale(model: Any, params: Any, mass_scale: float) -> dict[str, Any]:
     """``level --mass-scale``: superstructure body mass / inertia (about the COG, body axes) x ``mass_scale`` on the
     built Chrono model, COG position unchanged (:data:`MASS_SCALE_NOTE`). 1.0 leaves the body untouched (bit for

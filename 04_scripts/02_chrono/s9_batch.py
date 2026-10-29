@@ -20,11 +20,14 @@ Usage (project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run MS1 --parallel 0 --parallel-e 1 \
         --e-cases P3b_J1_B_top_Fs4_m1p1                 # Q-D: J1 B top, plant mass x1.1 (E pool)
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run D424 --parallel 2   # 424.6 A-8: MS1 re-run + x1.2
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run D424R --parallel 1 --parallel-e 2 \
+        --e-cases P3b_J2_B_middle_Fs4,P3b_J2_B_bottom_Fs4   # 424.11.2: DSb75 re-check (J1 x1.1 P alone, J2 B on E)
 
 Pools (2026-10-26): ``--parallel`` (= ``--parallel-p``) P-pool slots, ``--parallel-e`` E-pool slots;
 each case process gets ``OUTRIGGER_PLACEMENT`` = ``pcore`` / ``ecore`` (``run_S9.place``). Cases go to
 the E pool only when named (``--e-cases`` or the ``--schedule`` JSON); ``--order given|lpt`` and
-``--order-cases`` set the queue order. ``s8c`` rows stay on the P pool.
+``--order-cases`` set the queue order. ``s8c`` rows stay on the P pool. ``--e-cases`` / ``--order-cases``
+take names separated by spaces or commas (2026-10-30).
 
 ``s8c`` rows run ``run_S8C.py run --only <case>`` unchanged (no ``--case`` / ``--out-root``): the
 S8 runner writes ``07_results/S8/<tag>_<stamp>/`` and prints it at the end of ``<case>.log``.
@@ -159,6 +162,9 @@ def batches() -> dict[str, list[dict]]:
     out["S9SL"] = level_rows("s9sl_cases")
     out["MS1"] = level_rows("ms1_cases")  # Q-D (2026-10-29): P3b J1 B top F_s 4 with plant mass x1.1
     out["D424"] = level_rows("d424_cases")  # spec 424.6 A-8: MS1 re-run + optional x1.2 (after the final controller)
+    # spec 424.11.2 'Chrono 3건' (2026-10-30): DSb75 re-check, J1 B top x1.1 (P pool alone) + study ③ J2 B middle /
+    # bottom (E pool): run D424R --parallel 1 --parallel-e 2 --e-cases P3b_J2_B_middle_Fs4 P3b_J2_B_bottom_Fs4
+    out["D424R"] = level_rows("d424r_cases")
     return out
 
 
@@ -173,10 +179,13 @@ def level_rows(fn_name: str) -> list[dict]:
         sys.path.remove(str(HERE))
     rows = []
     for c in getattr(r9, fn_name)():
-        note = c.get("note") or (f"pair {c['pair_case']}" if c.get("pair_case") else c.get("purpose"))
+        note = (c.get("batch_note") or c.get("note")
+                or (f"pair {c['pair_case']}" if c.get("pair_case") else c.get("purpose")))
         row = {"case": c["case"], "est_s": c["est_s"], "argv": RUN + r9.p3b_level_argv(c)}
         if note:
             row["note"] = note
+        if c.get("planned_pool"):  # D424R (2026-10-30): intended pool, informative (--e-cases sets the pool)
+            row["planned_pool"] = c["planned_pool"]
         rows.append(row)
     return rows
 
@@ -413,6 +422,16 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
 
 
 def main(argv) -> None:
+    a = build_parser().parse_args(argv)
+    if a.action == "list":
+        for k, v in batches().items():
+            print(k, len(v), [c["case"] for c in v])
+    else:
+        env_override_guard(a.allow_env_override, a.batch)
+        run_batch(a.batch, only=a.only or None, **schedule_args(a, argv))
+
+
+def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="action", required=True)
     sub.add_parser("list")
@@ -433,13 +452,7 @@ def main(argv) -> None:
     r.add_argument("--allow-env-override", action="store_true",
                    help="start even with OUTRIGGER_L1_FALLBACK_RATIO_SOURCE set (B(iii) comparison batch; "
                         "the L1 cases of the batch, e.g. P3-10 m3_run, take the override)")
-    a = ap.parse_args(argv)
-    if a.action == "list":
-        for k, v in batches().items():
-            print(k, len(v), [c["case"] for c in v])
-    else:
-        env_override_guard(a.allow_env_override, a.batch)
-        run_batch(a.batch, only=a.only or None, **schedule_args(a, argv))
+    return ap
 
 
 def env_override_guard(allow: bool, batch: str) -> str | None:
@@ -457,12 +470,20 @@ def env_override_guard(allow: bool, batch: str) -> str | None:
     return refuse_env_override(allow, f"s9_batch run {batch}")
 
 
+def split_names(tokens: list[str] | None) -> list[str] | None:
+    """Case names of ``--e-cases`` / ``--order-cases``: space- or comma-separated (empty parts dropped);
+    ``None`` stays ``None``."""
+    if tokens is None:
+        return None
+    return [n for t in tokens for n in str(t).split(",") if n]
+
+
 def schedule_args(a: argparse.Namespace, argv: list[str]) -> dict:
     """``run_batch`` keywords from the CLI and an optional ``--schedule`` JSON file; an option
     written on the command line wins over the file."""
     given = {tok.split("=", 1)[0] for tok in argv if tok.startswith("--")}
-    out = {"parallel": a.parallel, "parallel_e": a.parallel_e, "e_cases": a.e_cases, "order": a.order,
-           "order_cases": a.order_cases}
+    out = {"parallel": a.parallel, "parallel_e": a.parallel_e, "e_cases": split_names(a.e_cases), "order": a.order,
+           "order_cases": split_names(a.order_cases)}
     if a.schedule:
         doc = json.loads(Path(a.schedule).read_text("utf-8"))
         unknown = sorted(set(doc) - {"e_cases", "order", "order_cases", "parallel_p", "parallel_e", "note", "source"})

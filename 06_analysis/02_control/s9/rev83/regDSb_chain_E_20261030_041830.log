@@ -1,0 +1,773 @@
+[04:18:31] START slope
+C2 t=39.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.628
+C2 t=52.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.638
+C2 t=52.80 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.674
+C2 t=52.80 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.566
+C2 t=53.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.594
+C2 t=54.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.649
+C2 t=52.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.650
+C2 t=40.60 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.618
+C2 t=54.10 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.653
+C2 t=54.10 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.665
+C2 t=52.80 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.721
+C2 t=53.50 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.677
+C2 t=52.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.679
+C2 t=52.80 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.669
+C2 t=39.20 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=51.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.686
+C2 t=54.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.696
+C2 t=36.40 s: WARN_LIFT_STROKE_LIMITED:RL
+C2 t=36.20 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=40.20 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=36.20 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=39.20 s: FAULT_LIFT_STROKE_LIMIT:FL
+C2 t=57.60 s: WARN_LIFT_STROKE_LIMITED:RL
+C2 t=39.70 s: WARN_LIFT_STROKE_LIMITED:RR
+C2 t=36.40 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=40.60 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=37.40 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=23.30 s: WARN_WEIGHT_MISMATCH:0.864
+C2 t=37.50 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=38.00 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=36.50 s: WARN_LIFT_STROKE_LIMITED:RL
+C2 t=46.20 s: FAULT_LIFT_STROKE_LIMIT:RL
+C2 t=36.20 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=37.40 s: leg_reapproach_start:RL
+C2 t=40.50 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=36.20 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=39.20 s: FAULT_LIFT_STROKE_LIMIT:FL
+C2 t=74.00 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=31.60 s: INFO_LOC_REVOKED:2.4
+C2 t=36.70 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=38.20 s: WARN_LIFT_STROKE_LIMITED:RR
+C2 t=34.10 s: INFO_LOC_REVOKED:2.2
+C2 t=36.70 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=39.00 s: leg_reapproach_start:RL
+C2 t=43.50 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=43.50 s: fault_reground_start:RL
+C2 t=37.20 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=63.60 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.642
+C2 t=44.40 s: FAULT_LIFT_STROKE_LIMIT:FL,FR
+C2 t=36.50 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=36.60 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=38.10 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=36.80 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=41.40 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=54.00 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=74.20 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=71.70 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=27.70 s: leg_reapproach_start:RL
+C2 t=43.10 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=49.80 s: FAULT_LIFT_STROKE_LIMIT:FL
+C2 t=27.40 s: leg_reapproach_start:RL
+C2 t=40.90 s: WARN_LIFT_STROKE_LIMITED:RL
+C2 t=33.50 s: leg_reapproach_start:RR
+C2 t=41.10 s: WARN_WEIGHT_MISMATCH:0.874
+C2 t=41.60 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=44.60 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=40.90 s: WARN_WEIGHT_MISMATCH:0.898
+C2 t=41.50 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=42.10 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=27.80 s: leg_reapproach_start:RL
+C2 t=42.20 s: WARN_LIFT_STROKE_LIMITED:RR
+C2 t=44.50 s: FAULT_LIFT_STROKE_LIMIT:FL
+C2 t=45.20 s: FAULT_LIFT_STROKE_LIMIT:RR
+C2 t=46.50 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=42.30 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=45.30 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=32.50 s: leg_reapproach_start:RL
+C2 t=42.40 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=27.10 s: leg_reapproach_start:RL
+C2 t=31.60 s: leg_reapproach_start:RR
+C2 t=33.30 s: WARN_WEIGHT_MISMATCH:0.850
+C2 t=48.10 s: FAULT_LIFT_STROKE_LIMIT:FL
+C2 t=44.90 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=34.00 s: INFO_LOC_REVOKED:3.1
+C2 t=47.90 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=40.50 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=41.60 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=46.90 s: FAULT_LIFT_STROKE_LIMIT:FL
+C2 t=47.10 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=27.70 s: leg_reapproach_start:RL
+C2 t=39.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.573
+C2 t=42.20 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=46.10 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=53.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.590
+C2 t=53.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.590
+C2 t=52.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.665
+C2 t=52.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.625
+C2 t=52.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.615
+C2 t=52.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.594
+C2 t=54.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.636
+C2 t=37.60 s: WARN_LIFT_STROKE_LIMITED:RL
+C2 t=30.10 s: INFO_LOC_REVOKED:2.2
+C2 t=58.90 s: WARN_LIFT_STROKE_LIMITED:RL
+C2 t=37.70 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=44.60 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=37.70 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=36.50 s: WARN_LIFT_STROKE_LIMITED:RL
+C2 t=66.20 s: WARN_TAIL_SKIPPED:stroke_margin
+C2 t=49.90 s: WARN_LIFT_STROKE_LIMITED:RL
+C2 t=39.90 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=42.90 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=33.50 s: INFO_LOC_REVOKED:2.6
+C2 t=36.40 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=37.80 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=40.80 s: FAULT_LIFT_STROKE_LIMIT:FL
+C2 t=62.90 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=36.30 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=39.00 s: WARN_LIFT_STROKE_LIMITED:RR
+C2 t=39.30 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=26.50 s: leg_reapproach_start:RL
+C2 t=41.90 s: WARN_LIFT_STROKE_LIMITED:FL,FR
+C2 t=40.70 s: WARN_LIFT_STROKE_LIMITED:RL
+C2 t=49.70 s: FAULT_LIFT_STROKE_LIMIT:FL,FR
+C2 t=33.80 s: leg_reapproach_start:RR
+C2 t=46.90 s: FAULT_STROKE_END:FR
+C2 t=46.60 s: FAULT_STROKE_END:FL
+C2 t=27.10 s: leg_reapproach_start:RL
+C2 t=27.20 s: leg_reapproach_start:RL
+C2 t=41.50 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=41.60 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=41.90 s: WARN_LIFT_STROKE_LIMITED:RR
+C2 t=44.50 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=44.60 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=38.10 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=22.80 s: WARN_WEIGHT_MISMATCH:0.873
+C2 t=23.00 s: WARN_WEIGHT_MISMATCH:0.869
+C2 t=39.10 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=56.70 s: WARN_TAIL_SKIPPED:stroke_margin
+C2 t=28.50 s: INFO_LOC_REVOKED:2.5
+C2 t=29.90 s: INFO_LOC_REVOKED:2.6
+C2 t=37.90 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=28.40 s: INFO_LOC_REVOKED:2.5
+C2 t=30.00 s: INFO_LOC_REVOKED:2.3
+C2 t=31.00 s: INFO_LOC_REVOKED:2.2
+C2 t=64.10 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.684
+C2 t=39.10 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=26.90 s: INFO_LOC_REVOKED:3.3
+C2 t=37.70 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=41.80 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=55.50 s: WARN_TAIL_SKIPPED:stroke_margin
+C2 t=38.10 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=72.40 s: WARN_TAIL_SKIPPED:stroke_margin
+C2 t=72.70 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=38.40 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=26.20 s: leg_reapproach_start:RL
+C2 t=57.90 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=26.80 s: leg_reapproach_start:RL
+C2 t=80.20 s: WARN_TAIL_SKIPPED:stroke_margin
+C2 t=43.50 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=27.30 s: leg_reapproach_start:RL
+C2 t=42.70 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=31.30 s: WARN_WEIGHT_MISMATCH:0.857
+C2 t=31.60 s: INFO_LOC_REVOKED:3.9
+C2 t=72.10 s: WARN_LIFT_STROKE_LIMITED:FL,FR
+C2 t=69.20 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=26.60 s: leg_reapproach_start:RL
+C2 t=46.00 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=47.60 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=27.10 s: leg_reapproach_start:RL
+C2 t=43.30 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=73.20 s: probe_skipped:stroke_margin
+C2 t=79.20 s: WARN_TAIL_SKIPPED:stroke_margin
+C2 t=27.20 s: leg_reapproach_start:RL
+C2 t=66.40 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=25.50 s: leg_reapproach_start:RL
+C2 t=42.10 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=26.00 s: leg_reapproach_start:RL
+C2 t=26.50 s: leg_reapproach_start:RL
+C2 t=62.10 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=42.00 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=41.90 s: WARN_LIFT_STROKE_LIMITED:FL,FR
+C2 t=50.00 s: FAULT_LIFT_STROKE_LIMIT:FL,FR
+C2 t=42.90 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=26.80 s: leg_reapproach_start:RL
+C2 t=43.20 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=46.20 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=26.90 s: leg_reapproach_start:RL
+C2 t=41.80 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=41.40 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=51.00 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=63.50 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=54.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.649
+C2 t=52.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.644
+C2 t=54.10 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.665
+C2 t=39.20 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=52.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.662
+C2 t=60.20 s: reanchor_aborted:attitude_wait
+C2 t=82.80 s: reanchor_aborted:attitude
+C2 t=37.40 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=39.10 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=106.50 s: reanchor_band_exceeded
+C2 t=38.00 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=65.40 s: reanchor_aborted:attitude
+C2 t=62.50 s: reanchor_aborted:attitude
+C2 t=79.30 s: FAULT_LIFT_STROKE_LIMIT:FR
+C2 t=74.10 s: reanchor_aborted:attitude
+C2 t=37.20 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=63.60 s: reanchor_aborted:attitude
+C2 t=44.40 s: FAULT_LIFT_STROKE_LIMIT:FL,FR
+C2 t=104.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.546
+C2 t=104.30 s: reanchor_band_exceeded
+C2 t=37.70 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=27.70 s: leg_reapproach_start:RL
+C2 t=43.10 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=49.80 s: FAULT_LIFT_STROKE_LIMIT:FL
+C2 t=65.00 s: reanchor_aborted:stroke_cap
+C2 t=107.00 s: reanchor_band_exceeded
+C2 t=27.30 s: leg_reapproach_start:RL
+C2 t=26.50 s: leg_reapproach_start:RL
+C2 t=42.70 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=42.40 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=41.90 s: WARN_LIFT_STROKE_LIMITED:FL,FR
+C2 t=48.10 s: FAULT_LIFT_STROKE_LIMIT:FL
+C2 t=109.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.549
+C2 t=109.20 s: reanchor_band_exceeded
+C2 t=50.00 s: FAULT_LIFT_STROKE_LIMIT:FL,FR
+C2 t=69.20 s: WARN_LIFT_STROKE_LIMITED:FL
+C2 t=96.90 s: reanchor_aborted:stroke_cap
+C2 t=36.40 s: WARN_LIFT_STROKE_LIMITED:RL
+C2 t=134.80 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.416
+C2 t=134.80 s: reanchor_band_exceeded
+C2 t=57.60 s: WARN_LIFT_STROKE_LIMITED:RL
+slope H1|G1|B|top|flat DSb pass hash f805759d4705 ready 39.300000000005625 minF 62.78811404858183 att [-0.002019042339772438, -0.012307853713423786] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9463 windows [(21.4, 5.66, 1.042, None)] fix [(39.3, 'reanchor_skipped:disabled')] phase ready wall 25.1
+slope H1|G1|B|top|nose_down DSb settle_check_fail hash a83f273596b3 ready 54.000000000075815 minF 60.44985340602293 att [-0.0005744068003530874, -0.021348986054334225] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9729 windows [(22.7, 23.07, 1.202, None)] fix [(54.0, 'reanchor_skipped:disabled')] phase ready wall 29.2
+slope H1|G1|B|top|nose_up DSb pass hash f23478f673fe ready 53.70000000007438 minF 62.56458996770774 att [-0.0008348797783043823, 0.016538718899798344] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9877 windows [(23.0, 2.99, 0.807, None)] fix [(53.7, 'reanchor_skipped:disabled')] phase ready wall 29.2
+slope H1|G1|B|top|roll_pos DSb pass hash 8d2eaf28c2e6 ready 52.800000000070085 minF 60.41278151903126 att [-0.025380162942488, -0.0012602013268666798] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9503 windows [(24.4, 2.39, 0.699, None)] fix [(52.8, 'reanchor_skipped:disabled')] phase ready wall 28.8
+slope H1|G1|B|top|roll_neg DSb pass hash e51fe2515c46 ready 52.800000000070085 minF 58.857988834290026 att [0.02483887491807742, -0.0011758364483796307] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9501 windows [(24.4, 2.48, 2.017, None)] fix [(52.8, 'reanchor_skipped:disabled')] phase ready wall 28.9
+slope H1|G1|B|top|edge_nd DSb pass hash 4341754d8617 ready 52.20000000006722 minF 57.844491150518884 att [-0.023671646893255655, -0.013397151830339255] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9588 windows [(22.6, 22.8, 1.183, None)] fix [(52.2, 'reanchor_skipped:disabled')] phase ready wall 28.5
+slope H1|G1|B|top|edge_nu DSb pass hash c94866dc214d ready 52.000000000066265 minF 61.74561331404976 att [-0.023868048480155828, 0.009052555750599472] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9671 windows [(23.2, 7.74, 0.645, None)] fix [(52.0, 'reanchor_skipped:disabled')] phase ready wall 23.2
+slope H1|G1|B|top|rpB DSb pass hash 0935f0514bf5 ready 54.10000000007629 minF 55.96018031260817 att [-0.024424966845189328, -0.011764303719359276] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9589 windows [(22.6, 26.31, 1.16, None)] fix [(54.1, 'reanchor_skipped:disabled')] phase ready wall 23.5
+slope H1|G1|A|top|flat DSb pass hash ffe86cc4fa14 ready 40.60000000001183 minF 61.26696889248134 att [-0.0010626333997102958, -0.017087678515565665] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9457 windows [(21.4, 10.55, 1.078, None)] fix [(40.6, 'reanchor_skipped:disabled')] phase ready wall 19.5
+slope H1|G1|A|top|nose_down DSb settle_check_fail hash d6766c51447e ready 54.10000000007629 minF 59.89179604914818 att [-0.00043488422910042555, -0.018836979210661058] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9758 windows [(22.5, 11.52, 1.172, None)] fix [(54.1, 'reanchor_skipped:disabled')] phase ready wall 23.6
+slope H1|G1|A|top|nose_up DSb pass hash b3f753b1ae56 ready 53.50000000007343 minF 61.05496994935532 att [-0.00045932509467566136, 0.017058015926366736] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9864 windows [(22.8, 2.57, 0.849, None)] fix [(53.5, 'reanchor_skipped:disabled')] phase ready wall 23.6
+slope H1|G1|A|top|roll_pos DSb pass hash b5810fa89d7d ready 52.800000000070085 minF 59.369076277175566 att [-0.023565913824314215, -0.00014591789776775084] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9496 windows [(24.1, 1.72, 0.837, None)] fix [(52.8, 'reanchor_skipped:disabled')] phase ready wall 23.4
+slope H1|G1|A|top|roll_neg DSb pass hash fdb674b2e756 ready 52.800000000070085 minF 57.376183273237096 att [0.023513851811871888, -0.00010225921522161219] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9494 windows [(24.2, 2.83, 2.159, None)] fix [(52.8, 'reanchor_skipped:disabled')] phase ready wall 23.0
+slope H1|G1|A|top|edge_nd DSb pass hash 45c48761b6e5 ready 52.400000000068175 minF 59.58231648496813 att [-0.022538175063475958, -0.012693172692091692] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9545 windows [(22.7, 25.99, 1.286, None)] fix [(52.4, 'reanchor_skipped:disabled')] phase ready wall 22.9
+slope H1|G1|A|top|edge_nu DSb pass hash c5276f8c57bf ready 51.90000000006579 minF 59.04331383045899 att [-0.02080958161346933, 0.009217121892116568] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9481 windows [(24.2, 1.75, 0.994, None)] fix [(51.9, 'reanchor_skipped:disabled')] phase ready wall 23.0
+slope H1|G1|A|top|rpB DSb pass hash 5d55ec7eb1d7 ready 54.30000000007725 minF 56.89431831739915 att [-0.022392302871944617, -0.01050621274159725] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9551 windows [(22.7, 25.58, 1.274, None)] fix [(54.3, 'reanchor_skipped:disabled')] phase ready wall 23.3
+slope H1|J1|B|top|flat DSb pass hash 58f77b7b7420 ready 63.900000000123086 minF 68.53891357076832 att [-0.02863039422310027, -0.02495726135403438] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9382 windows [(26.8, 11.23, -0.806, None)] fix [(27.8, 'FIX_DIFF_SINK_HOLD:FL,RL:3.7'), (29.4, 'FIX_DIFF_SINK_RELEASE:settled'), (63.9, 'reanchor_skipped:disabled')] phase ready wall 26.8
+slope H1|J1|B|top|nose_down DSb stroke_limited_pass hash bdc387aee061 ready 78.30000000019184 minF 66.14113532296682 att [0.0065268656474706315, -0.05786465284828823] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.946 windows [(27.8, 5.03, -1.528, None)] fix [(78.3, 'reanchor_skipped:disabled')] phase ready wall 30.8
+slope H1|J1|B|top|nose_up DSb stroke_limited_pass hash a3a42d81ee0c ready 77.90000000018993 minF 67.62652724469197 att [0.03169529228603117, 0.007521655255475281] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9433 windows [(30.4, 6.12, -0.295, None)] fix [(31.4, 'FIX_DIFF_SINK_HOLD:FL,RL:5.0'), (33.2, 'FIX_DIFF_SINK_RELEASE:reversed'), (77.9, 'reanchor_skipped:disabled')] phase ready wall 31.4
+slope H1|J1|B|top|roll_pos DSb fail hash f2f55da51586 ready None minF 64.84544354889827 att [0.45729762916467354, -0.00537315315077774] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(33.7, 6.21, 0.035, None)] fix [] phase fault wall 16.9
+slope H1|J1|B|top|roll_neg DSb fail hash 05e4d6e483ef ready None minF 62.508012343558576 att [-1.253698857324395, -0.024029689763941157] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(34.0, 5.68, -0.131, None)] fix [] phase fault wall 16.6
+slope H1|J1|B|top|edge_nd DSb fail hash 858f1e3aa224 ready 61.100000000109716 minF 63.72645482211599 att [-0.005752960548739978, -0.05803654245326973] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9477 windows [(27.6, 13.51, 0.151, None)] fix [(61.1, 'reanchor_skipped:disabled')] phase ready wall 25.9
+slope H1|J1|B|top|edge_nu DSb stroke_limited_pass hash e3137b5a2fcd ready 79.20000000019614 minF 66.43780997048789 att [-0.02154245996877045, -0.0023550571407356603] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9514 windows [(29.4, 5.85, -0.023, None)] fix [(79.2, 'reanchor_skipped:disabled')] phase ready wall 32.4
+slope H1|J1|B|top|rpB DSb fail hash 644836d96c05 ready None minF 61.23261989706762 att [-0.008547118166680218, 0.14330891503749715] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(28.5, 14.8, 0.26, None)] fix [] phase fault wall 16.9
+slope H1|J1|A|top|flat DSb pass hash 71feae192f71 ready 47.10000000004287 minF 65.23478500422111 att [-0.007946951534314316, 0.04604105958029042] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9507 windows [(23.6, 3.94, 0.084, None)] fix [(47.1, 'reanchor_skipped:disabled')] phase ready wall 22.2
+slope H1|J1|A|top|nose_down DSb stroke_limited_pass hash f6bce0eb10c1 ready 59.600000000102554 minF 61.346460341106216 att [-0.01991043313097537, -0.01356249394081564] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9808 windows [(24.8, 6.87, -1.561, None)] fix [(59.6, 'reanchor_skipped:disabled')] phase ready wall 25.9
+slope H1|J1|A|top|nose_up DSb pass hash ef1f65e26d1b ready 67.30000000013932 minF 64.59773357014065 att [-0.015545058406615242, 0.05036737772714505] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9532 windows [(26.1, 2.5, 0.006, None)] fix [(67.3, 'reanchor_skipped:disabled')] phase ready wall 28.6
+slope H1|J1|A|top|roll_pos DSb pass hash 96724893a83e ready 64.00000000012356 minF 60.7718560195528 att [-0.03567410476832996, 0.05678521057528958] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9529 windows [(28.8, 4.71, -0.114, None)] fix [(64.0, 'reanchor_skipped:disabled')] phase ready wall 27.3
+slope H1|J1|A|top|roll_neg DSb pass hash 6be5a848d7ff ready 64.40000000012547 minF 57.52797036709763 att [0.0195506333737631, 0.06317920395755791] falseLOC 1 LOCcrawler [50.91] READYrecontact 0 ratioREADY 1.144 windows [(23.3, 1.0, 0.195, None)] fix [(64.4, 'reanchor_skipped:disabled')] phase ready wall 27.8
+slope H1|J1|A|top|edge_nd DSb pass hash 677064b21a04 ready 54.5000000000782 minF 56.91082437442031 att [-0.05816149880489714, 0.026990382125807327] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9709 windows [(25.4, 6.23, 0.2, None)] fix [(54.5, 'reanchor_skipped:disabled')] phase ready wall 24.4
+slope H1|J1|A|top|edge_nu DSb pass hash 2eaa258e6471 ready 56.50000000008775 minF 63.88770197438951 att [-0.0005877450554169188, -0.01643186392105479] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9514 windows [(26.8, 5.37, -0.077, None)] fix [(56.5, 'reanchor_skipped:disabled')] phase level wall 25.2
+slope H1|J1|A|top|rpB DSb stroke_limited_pass hash 7fd2cdb238c0 ready 57.90000000009444 minF 52.502762530101705 att [-0.058481028859832224, 0.022097342561855256] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9711 windows [(25.6, 6.35, 0.397, None)] fix [(57.9, 'reanchor_skipped:disabled')] phase ready wall 25.1
+slope H1|J2|B|top|flat DSb pass hash 093261479d5d ready 67.20000000013884 minF 68.41858663199449 att [-0.029607971909086393, -0.01735167683455986] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9378 windows [(32.3, 9.94, 0.064, None)] fix [(33.3, 'FIX_DIFF_SINK_HOLD:FL,RL:4.0'), (34.9, 'FIX_DIFF_SINK_RELEASE:settled'), (67.2, 'reanchor_skipped:disabled')] phase ready wall 28.5
+slope H1|J2|B|top|nose_down DSb settle_check_fail hash bbeebb471968 ready 71.90000000016128 minF 68.06807162946761 att [0.04727635658334264, -0.00856970156248846] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9439 windows [(31.5, 9.26, 2.187, None)] fix [(71.9, 'reanchor_skipped:disabled')] phase probe wall 29.5
+slope H1|J2|B|top|nose_up DSb fail hash f1ace105739b ready None minF 69.27073525535334 att [-0.0539922471275671, -0.00485865500893154] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(33.9, 8.0, 0.241, None)] fix [] phase fault wall 19.0
+slope H1|J2|B|top|roll_pos DSb fail hash f2acbc0b371c ready None minF 16.99946305136965 att [0.5151783243579419, 0.012085376976142233] falseLOC 1 LOCcrawler [12.58] READYrecontact 0 ratioREADY None windows [(35.9, 9.86, 0.427, None)] fix [] phase fault wall 17.2
+slope H1|J2|B|top|roll_neg DSb fail hash 5e214e154787 ready None minF 28.694716810995192 att [-0.9550553841457445, -0.005933205396323527] falseLOC 1 LOCcrawler [16.51] READYrecontact 0 ratioREADY None windows [(36.0, 11.5, 0.783, None)] fix [] phase fault wall 16.8
+slope H1|J2|B|top|edge_nd DSb stroke_limited_pass hash 9358d3bfb597 ready 63.900000000123086 minF 66.8637346500268 att [0.002913353638584023, -0.06720644809573612] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9453 windows [(30.6, 6.55, -1.538, None), (33.1, 11.38, -1.062, None)] fix [(31.6, 'INFO_LOC_REVOKED:2.4'), (32.2, 'FIX_DIFF_SINK_HOLD:FL,RL:7.0'), (34.5, 'FIX_DIFF_SINK_RELEASE:stroke'), (63.9, 'reanchor_skipped:disabled')] phase ready wall 27.3
+slope H1|J2|B|top|edge_nu DSb stroke_limited_fail hash 7610546f4fe3 ready 63.60000000012165 minF 69.70167161128369 att [0.028720168082574504, 0.0036980808040451563] falseLOC 1 LOCcrawler [13.22] READYrecontact 1 ratioREADY 0.8904 windows [(31.1, 7.41, 0.288, None)] fix [(63.6, 'reanchor_skipped:disabled')] phase ready wall 27.3
+slope H1|J2|B|top|rpB DSb fail hash 2ad9700f0772 ready None minF 64.87497997698713 att [0.8728292544210583, 0.4401660138205543] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(32.8, 3.81, -0.735, None), (34.8, 11.05, -0.385, None)] fix [(34.0, 'FIX_DIFF_SINK_HOLD:FL,RL:6.9'), (34.1, 'INFO_LOC_REVOKED:2.2'), (34.7, 'FIX_DIFF_SINK_RELEASE:stroke')] phase fault wall 19.3
+slope H1|J2|A|top|flat DSb pass hash b9c17bcc2fce ready 49.00000000005194 minF 66.64728190788892 att [-0.003568883849588687, 0.022250991686956552] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9466 windows [(25.4, 8.27, 0.464, None)] fix [(49.0, 'reanchor_skipped:disabled')] phase ready wall 22.8
+slope H1|J2|A|top|nose_down DSb settle_check_fail hash a799b78c50b1 ready None minF 61.38761834164122 att [-0.007548572450417782, 0.29248244832164216] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(27.5, 0.68, 1.098, None)] fix [] phase fault wall 18.0
+slope H1|J2|A|top|nose_up DSb pass hash 56cd3f5dc7ca ready 56.3000000000868 minF 66.44544656328779 att [-0.012090068849245171, 0.06084666275055326] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.947 windows [(29.4, 6.21, 0.394, None)] fix [(56.3, 'reanchor_skipped:disabled')] phase ready wall 25.1
+slope H1|J2|A|top|roll_pos DSb stroke_limited_pass hash 3245e6d616f0 ready 100.40000000029737 minF 61.19265898655219 att [-0.011757760394820354, 0.0203077273322805] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9513 windows [(31.8, 6.35, -0.197, None)] fix [(100.4, 'reanchor_skipped:disabled')] phase ready wall 38.5
+slope H1|J2|A|top|roll_neg DSb stroke_limited_pass hash b0182e4c8f7d ready 96.50000000027875 minF 63.77240718536853 att [-0.010169842673431875, 0.02212514901251963] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9512 windows [(31.8, 6.37, 0.694, None)] fix [(96.5, 'reanchor_skipped:disabled')] phase ready wall 37.5
+slope H1|J2|A|top|edge_nd DSb stroke_limited_pass hash ac00b99d4673 ready 76.90000000018516 minF 59.078644940313744 att [-0.028886087486727538, 0.005870406337108664] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9672 windows [(27.4, 6.24, -0.871, None)] fix [(76.9, 'reanchor_skipped:disabled')] phase ready wall 30.8
+slope H1|J2|A|top|edge_nu DSb pass hash 6441ec1b3e4b ready 67.20000000013884 minF 63.96838336583969 att [-0.042220789712121065, 0.053947464815407936] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9475 windows [(29.6, 7.55, 0.394, None)] fix [(67.2, 'reanchor_skipped:disabled')] phase ready wall 28.2
+slope H1|J2|A|top|rpB DSb fail hash 4e7296514682 ready None minF 54.06570646551253 att [0.1675765010127681, 0.24627195225261056] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(27.8, 5.45, 0.232, None)] fix [] phase fault wall 17.1
+slope H1|S1|B|top|flat DSb pass hash b458c81ab0ca ready 56.90000000008966 minF 68.16151186730347 att [0.030925310813879642, 0.0342157423923289] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9374 windows [(36.9, 4.93, 1.582, None)] fix [(56.9, 'reanchor_skipped:disabled')] phase ready wall 25.5
+slope H1|S1|B|top|nose_down DSb settle_check_fail hash d5540d929e0d ready None minF 64.9322915004973 att [-0.020390640476271284, 0.24454857747612577] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(37.3, 4.82, 1.339, None)] fix [] phase fault wall 19.9
+slope H1|S1|B|top|nose_up DSb stroke_limited_pass hash 8f37d83602ba ready 60.20000000010542 minF 68.53928949811873 att [0.03070621368179865, -0.04610126085368393] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9369 windows [(39.5, 4.22, 1.154, None)] fix [(60.2, 'reanchor_skipped:disabled')] phase ready wall 26.6
+slope H1|S1|B|top|roll_pos DSb fail hash edd4ca954bad ready None minF 12.806359539609046 att [-0.02478108205285356, 0.11070275160319372] falseLOC 1 LOCcrawler [65.58] READYrecontact 0 ratioREADY None windows [(41.1, 14.88, 0.645, None)] fix [(41.6, 'INFO_LOC_REVOKE_SKIPPED:stroke')] phase fault wall 18.6
+slope H1|S1|B|top|roll_neg DSb fail hash 8d87a12693f8 ready None minF 13.58832647972454 att [-0.1261071337457777, 0.13580691620689622] falseLOC 1 LOCcrawler [54.41] READYrecontact 0 ratioREADY None windows [(40.9, 14.52, 1.047, None)] fix [(41.7, 'INFO_LOC_REVOKE_SKIPPED:stroke')] phase fault wall 18.7
+slope H1|S1|B|top|edge_nd DSb fail hash 8950e0c0398b ready None minF 68.54609024487496 att [0.05121827132605601, 0.2199010973061383] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(40.1, 6.93, 0.975, None)] fix [] phase fault wall 19.1
+slope H1|S1|B|top|edge_nu DSb fail hash b49cbd4af1cc ready None minF 65.26847514726789 att [-0.6359302564057024, 0.013789318371999393] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(42.2, 4.5, 0.909, None)] fix [] phase fault wall 18.8
+slope H1|S1|B|top|rpB DSb fail hash 3c857e0f9030 ready None minF 66.52101523201976 att [0.46488387946223914, 0.565454632494338] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(40.4, 6.37, 1.036, None)] fix [] phase fault wall 18.6
+slope H1|S1|A|top|flat DSb pass hash cdd4e3e7ec21 ready 52.3000000000677 minF 67.2922313002844 att [0.016145766933590742, -0.027798427637953513] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9422 windows [(29.9, 7.38, 1.042, None)] fix [(52.3, 'reanchor_skipped:disabled')] phase ready wall 23.9
+slope H1|S1|A|top|nose_down DSb settle_check_fail hash 16d2b7e605e0 ready None minF 62.2254713343108 att [-0.016856023084485007, 0.5837089591273038] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(33.2, 4.19, 1.501, None)] fix [] phase fault wall 19.3
+slope H1|S1|A|top|nose_up DSb pass hash 6c2e344d5cce ready 56.50000000008775 minF 67.34869166368954 att [0.01698496423564755, -0.035509653349570174] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.94 windows [(36.2, 3.24, 1.415, None)] fix [(56.5, 'reanchor_skipped:disabled')] phase ready wall 25.3
+slope H1|S1|A|top|roll_pos DSb fail hash a80d8e40381e ready None minF 61.00796174717441 att [-0.37859963022777005, 0.09852290768019696] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(44.9, 10.85, 2.492, None)] fix [] phase fault wall 19.6
+slope H1|S1|A|top|roll_neg DSb fail hash c903392c0029 ready None minF 64.63131234739575 att [-0.2481165541349041, 0.10712524816113411] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(33.3, 9.43, 0.988, None), (37.2, 8.81, 0.67, None)] fix [(34.0, 'INFO_LOC_REVOKED:3.1'), (34.3, 'FIX_DIFF_SINK_HOLD:FR,RR:5.6'), (38.2, 'FIX_DIFF_SINK_RELEASE:settled')] phase fault wall 19.3
+slope H1|S1|A|top|edge_nd DSb fail hash c66233fdaa2d ready None minF 63.48020306819371 att [0.1534371069267552, 0.3497767025016962] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(34.8, 5.93, 0.776, None)] fix [] phase fault wall 19.0
+slope H1|S1|A|top|edge_nu DSb pass hash 051fc1691f26 ready 71.20000000015794 minF 60.817509095757885 att [0.00023570137860246486, 0.04480783525279996] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9477 windows [(37.8, 5.16, 1.46, None)] fix [(71.2, 'reanchor_skipped:disabled')] phase ready wall 30.0
+slope H1|S1|A|top|rpB DSb fail hash 722debb8b168 ready None minF 60.87870967343788 att [0.451205947002069, 0.6942718513945206] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(35.3, 4.09, 0.846, None)] fix [] phase fault wall 18.9
+slope H2|G1|B|bottom|flat DSb pass hash 5275411b3f89 ready 39.700000000007535 minF 62.99352668749334 att [-0.000983469844853701, -0.014423913877803875] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9462 windows [(21.4, 7.78, 1.045, None)] fix [(39.7, 'reanchor_skipped:disabled')] phase ready wall 19.4
+slope H2|G1|B|bottom|nose_down DSb pass hash f9f8dec41c0e ready 53.70000000007438 minF 62.866337362981255 att [-0.00042393365916709795, -0.01960711132861038] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9758 windows [(22.5, 36.98, 1.392, None)] fix [(53.7, 'reanchor_skipped:disabled')] phase ready wall 23.7
+slope H2|G1|B|bottom|nose_up DSb pass hash 1d566386ed23 ready 53.70000000007438 minF 62.80338187559998 att [3.212826842955459e-05, 0.014356869061570184] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9861 windows [(23.0, 2.23, 0.779, None)] fix [(53.7, 'reanchor_skipped:disabled')] phase ready wall 23.8
+slope H2|G1|B|bottom|roll_pos DSb pass hash 5a47e3377fc5 ready 52.90000000007056 minF 62.604675889853276 att [-0.02303907576557701, -0.002148933280521551] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9486 windows [(24.6, 2.66, 0.992, None)] fix [(52.9, 'reanchor_skipped:disabled')] phase ready wall 23.4
+slope H2|G1|B|bottom|roll_neg DSb pass hash dfc2bacaeb74 ready 52.90000000007056 minF 60.79642335393991 att [0.023090729963240863, -0.002168714962068492] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9492 windows [(24.5, 0.91, 1.731, None)] fix [(52.9, 'reanchor_skipped:disabled')] phase ready wall 23.8
+slope H2|G1|B|bottom|edge_nd DSb pass hash ee39ab1330a9 ready 52.20000000006722 minF 62.312676547396244 att [-0.021481705487933205, -0.01460936209519719] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9616 windows [(22.6, 2.65, 1.012, None)] fix [(52.2, 'reanchor_skipped:disabled')] phase ready wall 23.4
+slope H2|G1|B|bottom|edge_nu DSb pass hash eeb699e9f0d4 ready 52.000000000066265 minF 61.5398184354469 att [-0.019477103460168527, 0.008141063214418454] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9477 windows [(24.2, 0.47, 1.36, None)] fix [(52.0, 'reanchor_skipped:disabled')] phase ready wall 23.7
+slope H2|G1|B|bottom|rpB DSb pass hash 39269e435fce ready 54.000000000075815 minF 60.89324968947064 att [-0.02177770330008315, -0.01276912539721377] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9611 windows [(22.7, 29.72, 1.032, None)] fix [(54.0, 'reanchor_skipped:disabled')] phase ready wall 23.9
+slope H2|J1|B|bottom|flat DSb pass hash 822be482ee63 ready 66.90000000013741 minF 69.53694831971583 att [-0.015116585780271011, -0.012412883660539536] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9341 windows [(27.0, 9.89, -0.693, None)] fix [(66.9, 'reanchor_skipped:disabled')] phase ready wall 28.9
+slope H2|J1|B|bottom|nose_down DSb pass hash c07c5fe38b20 ready 65.90000000013264 minF 68.67422748722326 att [-0.0051719198219142585, -0.05604039635731168] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9385 windows [(28.1, 6.24, 0.403, None)] fix [(65.9, 'reanchor_skipped:disabled')] phase ready wall 28.2
+slope H2|J1|B|bottom|nose_up DSb stroke_limited_pass hash a88a59c3af8a ready 57.70000000009348 minF 69.47592466908866 att [0.034340910270950625, -0.00042136288744990056] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9369 windows [(30.1, 6.96, -0.154, None)] fix [(57.7, 'reanchor_skipped:disabled')] phase probe wall 26.0
+slope H2|J1|B|bottom|roll_pos DSb pass hash 375084ad1455 ready 60.20000000010542 minF 68.12665571780812 att [0.027816259292409978, -0.010528085034857382] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9411 windows [(32.4, 7.92, -0.421, None)] fix [(33.4, 'FIX_DIFF_SINK_HOLD:FL,RL:6.5'), (34.4, 'FIX_DIFF_SINK_RELEASE:stroke'), (60.2, 'reanchor_skipped:disabled')] phase probe wall 27.0
+slope H2|J1|B|bottom|roll_neg DSb stroke_limited_pass hash 369fe9e9423c ready 74.30000000017274 minF 67.04597683703753 att [0.038629234751857054, -0.03272214506305204] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9402 windows [(32.2, 8.25, 0.616, None)] fix [(33.2, 'FIX_DIFF_SINK_HOLD:FR,RR:4.3'), (34.4, 'FIX_DIFF_SINK_RELEASE:stroke'), (74.3, 'reanchor_skipped:disabled')] phase ready wall 31.7
+slope H2|J1|B|bottom|edge_nd DSb pass hash e04d214a91ae ready 60.300000000105896 minF 68.99481713281223 att [0.02026250400864154, -0.0009224352251087794] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.934 windows [(29.1, 6.54, -0.484, None), (30.8, 3.37, 0.12, None)] fix [(30.1, 'FIX_DIFF_SINK_HOLD:FL,RL:5.5'), (30.1, 'INFO_LOC_REVOKED:2.2'), (31.8, 'FIX_DIFF_SINK_RELEASE:settled'), (60.3, 'reanchor_skipped:disabled')] phase done wall 27.1
+slope H2|J1|B|bottom|edge_nu DSb pass hash 4a1273e8eed1 ready 77.6000000001885 minF 69.00376257712996 att [0.017351433707013943, -0.030257037462546023] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9431 windows [(30.9, 7.82, -0.435, None)] fix [(31.9, 'FIX_DIFF_SINK_HOLD:FL,RL:5.0'), (33.5, 'FIX_DIFF_SINK_RELEASE:settled'), (77.6, 'reanchor_skipped:disabled')] phase ready wall 32.4
+slope H2|J1|B|bottom|rpB DSb pass hash 1b17ef3386a7 ready 73.6000000001694 minF 68.02292836102414 att [-0.005972274920755368, -0.06770468794328043] falseLOC 1 LOCcrawler [6.11] READYrecontact 0 ratioREADY 0.9692 windows [(27.0, 3.27, -0.226, None)] fix [(73.6, 'reanchor_skipped:disabled')] phase ready wall 31.3
+slope H2|J2|B|bottom|flat DSb pass hash b28e430b9464 ready 69.40000000014935 minF 69.46150989796027 att [-0.01852886611977017, -0.009241923970461866] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9342 windows [(32.5, 9.31, 0.068, None)] fix [(69.4, 'reanchor_skipped:disabled')] phase ready wall 30.6
+slope H2|J2|B|bottom|nose_down DSb stroke_limited_pass hash f9ba4c5ecd9e ready 66.20000000013407 minF 69.56728808235181 att [0.030110944442970276, -0.035445688941722855] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.937 windows [(31.7, 8.89, -1.258, None)] fix [(66.2, 'reanchor_skipped:disabled')] phase ready wall 28.8
+slope H2|J2|B|bottom|nose_up DSb stroke_limited_pass hash 9f2b862e70d7 ready 71.00000000015699 minF 69.32255078907271 att [0.04424116293517919, -0.011789970566170316] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9373 windows [(33.7, 8.32, 0.009, None)] fix [(71.0, 'reanchor_skipped:disabled')] phase ready wall 30.7
+slope H2|J2|B|bottom|roll_pos DSb fail hash 93d7e842b09c ready None minF 70.61575717888594 att [-0.871925479016785, 0.009831551157419778] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(39.9, 12.27, -0.56, None)] fix [] phase fault wall 18.8
+slope H2|J2|B|bottom|roll_neg DSb fail hash 15d062277588 ready None minF 31.37503383111113 att [0.5387893891623137, -0.0007001476160900862] falseLOC 1 LOCcrawler [7.36] READYrecontact 0 ratioREADY None windows [(36.5, 13.5, 1.025, None)] fix [(37.5, 'INFO_LOC_REVOKE_SKIPPED:stroke')] phase fault wall 18.0
+slope H2|J2|B|bottom|edge_nd DSb stroke_limited_pass hash 3b7a652268aa ready 61.00000000010924 minF 68.81906846523766 att [0.06287374524407902, -0.012417799183279985] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9404 windows [(33.1, 7.94, -0.402, None), (34.4, 16.61, -0.192, None)] fix [(33.5, 'INFO_LOC_REVOKED:2.6'), (34.1, 'FIX_DIFF_SINK_HOLD:FL,RL:10.8'), (34.4, 'FIX_DIFF_SINK_RELEASE:stroke'), (61.0, 'reanchor_skipped:disabled')] phase probe wall 27.5
+slope H2|J2|B|bottom|edge_nu DSb stroke_limited_pass hash 0c1f249cfd2f ready 63.900000000123086 minF 68.55690142332693 att [0.008233355497320882, -0.04619070764409212] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9408 windows [(37.4, 10.93, -0.584, None)] fix [(63.9, 'reanchor_skipped:disabled')] phase ready wall 28.2
+slope H2|J2|B|bottom|rpB DSb fail hash 3bc32666b2bd ready None minF 69.337421716716 att [-0.2355462012984922, 0.09190944190179595] falseLOC 0 LOCcrawler [3.64] READYrecontact 0 ratioREADY None windows [(35.0, 8.45, -0.418, None)] fix [(35.4, 'INFO_LOC_REVOKE_SKIPPED:stroke')] phase fault wall 17.1
+slope H2|S1|B|bottom|flat DSb pass hash 25a20c6684ec ready 56.90000000008966 minF 68.65782816749861 att [0.014958919080489744, 0.021027473853042333] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9357 windows [(36.9, 4.85, 0.687, None)] fix [(56.9, 'reanchor_skipped:disabled')] phase ready wall 26.3
+slope H2|S1|B|bottom|nose_down DSb fail hash dcf90a7dab4d ready None minF 67.92988249065478 att [-0.01588296095557777, 0.1438336126717122] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(37.0, 4.96, 1.167, None)] fix [] phase fault wall 20.5
+slope H2|S1|B|bottom|nose_up DSb stroke_limited_pass hash 1996a7e17615 ready 59.80000000010351 minF 69.1407965294005 att [0.016180440200953307, -0.024057921289328068] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9351 windows [(39.4, 3.91, 0.741, None)] fix [(59.8, 'reanchor_skipped:disabled')] phase ready wall 27.0
+slope H2|S1|B|bottom|roll_pos DSb fail hash f7732cb402e3 ready None minF 14.518647310121507 att [-0.4967911307776461, -0.03856322635513706] falseLOC 0 LOCcrawler [] READYrecontact 0 ratioREADY None windows [] fix [] phase fault wall 19.6
+slope H2|S1|B|bottom|roll_neg DSb fail hash 15962c84b5c4 ready None minF 14.420335534539838 att [0.4066894533070138, -0.0092025423639277] falseLOC 0 LOCcrawler [] READYrecontact 0 ratioREADY None windows [] fix [] phase fault wall 19.5
+slope H2|S1|B|bottom|edge_nd DSb fail hash 777368a76cf8 ready None minF 69.71197963719413 att [-0.04429532987397929, 0.19474508179793848] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(40.4, 4.32, 0.893, None)] fix [] phase fault wall 18.8
+slope H2|S1|B|bottom|edge_nu DSb stroke_limited_pass hash 477351d0974c ready 66.30000000013455 minF 67.02330056462495 att [0.03144630803955656, 0.034885567848069426] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9402 windows [(41.3, 3.81, 0.991, None)] fix [(66.3, 'reanchor_skipped:disabled')] phase ready wall 28.7
+slope H2|S1|B|bottom|rpB DSb fail hash 75dd9c522cf0 ready None minF 69.51596046924118 att [0.2196385897235929, 0.4134475252253069] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(41.0, 5.33, 0.882, None)] fix [] phase fault wall 18.4
+slope H3|J1|B|top|nose_down@k0.5 DSb pass hash 36be51a4f725 ready 54.000000000075815 minF 69.1208273543036 att [0.009392367363678041, -0.04468618441153788] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9408 windows [(25.9, 10.18, 0.219, None)] fix [(54.0, 'reanchor_skipped:disabled')] phase ready wall 24.2
+slope H3|J1|B|top|nose_down@k0.75 DSb pass hash e227c1dc290d ready 56.90000000008966 minF 69.14723531393386 att [-0.021106116641419963, -0.06058283290636583] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9409 windows [(27.6, 8.31, 0.471, None)] fix [(56.9, 'reanchor_skipped:disabled')] phase ready wall 24.9
+slope H3|J1|B|top|nose_down@k0.875 DSb pass hash 43e62a663744 ready 59.00000000009969 minF 67.9577128553203 att [0.04498257570071449, -0.0022810971446027184] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9413 windows [(27.9, 5.31, 3.433, None)] fix [(59.0, 'reanchor_skipped:disabled')] phase probe wall 25.6
+slope H3|J1|B|top|roll_pos@k0.5 DSb pass hash 976e8b75569c ready 104.10000000031503 minF 64.29195905312659 att [-0.023470280664244256, -0.0014891127570478835] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9517 windows [(25.5, 6.51, 0.034, None)] fix [(27.6, 'FIX_DIFF_SINK_HOLD:FL,RL:5.2'), (29.8, 'FIX_DIFF_SINK_RELEASE:settled'), (31.8, 'FIX_DIFF_SINK_HOLD:FL,RL:5.6'), (41.8, 'FIX_DIFF_SINK_RELEASE:time'), (104.1, 'reanchor_skipped:disabled')] phase ready wall 39.3
+slope H3|J1|B|top|roll_pos@k0.75 DSb pass hash eda7937ceb59 ready 79.800000000199 minF 63.44584252197676 att [-0.050113449673528335, -0.00438263249001556] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9542 windows [(27.2, 9.24, -0.011, None)] fix [(29.5, 'FIX_DIFF_SINK_HOLD:FL,RL:4.7'), (31.7, 'FIX_DIFF_SINK_RELEASE:settled'), (33.6, 'FIX_DIFF_SINK_HOLD:FL,RL:5.8'), (34.8, 'FIX_DIFF_SINK_RELEASE:stroke'), (79.8, 'reanchor_skipped:disabled')] phase ready wall 31.8
+slope H3|J1|B|top|roll_pos@k0.875 DSb stroke_limited_pass hash c4128b1a2dde ready 80.3000000002014 minF 63.202026170989086 att [-0.04748464777944189, -0.003217740894962464] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9529 windows [(29.3, 3.84, -0.025, None)] fix [(80.3, 'reanchor_skipped:disabled')] phase ready wall 32.4
+slope H3|J1|B|top|edge_nd@k0.5 DSb pass hash 70ed4f1466f1 ready 67.50000000014028 minF 67.800225061076 att [-0.03780001852857475, -0.04917612883572912] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9433 windows [(25.4, 9.16, 0.073, None)] fix [(27.3, 'FIX_DIFF_SINK_HOLD:FL,RL:3.7'), (29.5, 'FIX_DIFF_SINK_RELEASE:settled'), (32.2, 'FIX_DIFF_SINK_HOLD:FL,RL:3.5'), (34.3, 'FIX_DIFF_SINK_RELEASE:settled'), (67.5, 'reanchor_skipped:disabled')] phase ready wall 27.9
+slope H3|J1|B|top|edge_nd@k0.75 DSb pass hash e94fe6296930 ready 70.90000000015651 minF 65.82067988460851 att [-0.039630726602163345, -0.04094169403744651] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9447 windows [(26.8, 9.74, -0.077, None)] fix [(29.9, 'FIX_DIFF_SINK_HOLD:FL,RL:4.2'), (32.1, 'FIX_DIFF_SINK_RELEASE:settled'), (34.0, 'FIX_DIFF_SINK_HOLD:FL,RL:4.5'), (36.2, 'FIX_DIFF_SINK_RELEASE:settled'), (70.9, 'reanchor_skipped:disabled')] phase ready wall 28.9
+slope H3|J1|B|top|edge_nd@k0.875 DSb pass hash 9bacbcdcbd8e ready 76.10000000018134 minF 64.8210030311058 att [-0.031006719716026844, -0.04411074992271812] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9466 windows [(27.2, 11.22, -0.128, None)] fix [(30.9, 'FIX_DIFF_SINK_HOLD:FL,RL:4.3'), (33.1, 'FIX_DIFF_SINK_RELEASE:settled'), (35.1, 'FIX_DIFF_SINK_HOLD:FL,RL:4.8'), (36.1, 'FIX_DIFF_SINK_RELEASE:stroke'), (76.1, 'reanchor_skipped:disabled')] phase ready wall 30.6
+slope H3|J1|A|top|nose_down@k0.5 DSb pass hash c1f0c729ecd2 ready 51.600000000064355 minF 64.65700122565495 att [-0.014016683521632765, 0.030490538242599157] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9527 windows [(23.9, 7.51, 0.792, None)] fix [(51.6, 'reanchor_skipped:disabled')] phase ready wall 23.0
+slope H3|J1|A|top|nose_down@k0.75 DSb pass hash 62818c70df57 ready 52.90000000007056 minF 63.29814964937698 att [-0.016977193167914226, 0.005356612452105749] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.982 windows [(24.2, 6.95, 0.679, None)] fix [(52.9, 'reanchor_skipped:disabled')] phase ready wall 23.5
+slope H3|J1|A|top|nose_down@k0.875 DSb stroke_limited_pass hash 13ffc94c2fd4 ready 56.70000000008871 minF 62.32521600205573 att [-0.02404537495836064, -0.006365545963230097] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9807 windows [(24.4, 7.11, 2.081, None)] fix [(56.7, 'reanchor_skipped:disabled')] phase ready wall 24.6
+slope H3|J1|A|top|roll_pos@k0.5 DSb pass hash 2ae62217afba ready 57.40000000009205 minF 63.817081776901674 att [-0.036632929548881074, 0.06193912000833957] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.952 windows [(25.0, 4.65, -0.021, None)] fix [(57.4, 'reanchor_skipped:disabled')] phase ready wall 25.4
+slope H3|J1|A|top|roll_pos@k0.75 DSb pass hash a20d2db8b297 ready 61.80000000011306 minF 62.76090387311863 att [-0.031341424633128966, 0.05844630162520654] falseLOC 1 LOCcrawler [53.78] READYrecontact 0 ratioREADY 1.1283 windows [(22.8, 7.43, -0.122, None)] fix [(61.8, 'reanchor_skipped:disabled')] phase ready wall 26.0
+slope H3|J1|A|top|roll_pos@k0.875 DSb pass hash 153f3d712ac5 ready 62.800000000117834 minF 61.411367273339486 att [-0.03348243625597638, 0.05821739272375274] falseLOC 1 LOCcrawler [52.84] READYrecontact 0 ratioREADY 1.1343 windows [(23.0, 1.58, -0.081, None)] fix [(62.8, 'reanchor_skipped:disabled')] phase ready wall 26.4
+slope H3|J1|A|top|edge_nd@k0.5 DSb pass hash 9b102ddca63c ready 50.70000000006006 minF 64.5545876373022 att [-0.03592890945243665, 0.05177338764288781] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9522 windows [(24.2, 7.54, 0.57, None)] fix [(50.7, 'reanchor_skipped:disabled')] phase ready wall 22.8
+slope H3|J1|A|top|edge_nd@k0.75 DSb pass hash 720cd6566d4f ready 53.40000000007295 minF 61.07341184123572 att [-0.04670938843356322, 0.04053956483239487] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9535 windows [(24.9, 7.51, 0.348, None)] fix [(53.4, 'reanchor_skipped:disabled')] phase ready wall 24.2
+slope H3|J1|A|top|edge_nd@k0.875 DSb pass hash 1277985cb78a ready 53.200000000071995 minF 59.590464288830354 att [-0.05085014486833549, 0.0359016446326873] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9528 windows [(25.6, 3.37, 0.483, None)] fix [(53.2, 'reanchor_skipped:disabled')] phase ready wall 24.2
+slope H3|J2|B|top|nose_down@k0.5 DSb pass hash 06b6c2abd88b ready 67.60000000014075 minF 68.59465915751693 att [-0.04745672448140267, -0.006238263645238326] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9368 windows [(32.3, 10.26, -0.589, None)] fix [(67.6, 'reanchor_skipped:disabled')] phase ready wall 28.9
+slope H3|J2|B|top|nose_down@k0.75 DSb settle_check_fail hash 541f42b746e1 ready 74.20000000017227 minF 68.47306715547177 att [-0.05176514190363741, -0.010739154357258661] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9384 windows [(33.3, 11.3, -0.384, None)] fix [(74.2, 'reanchor_skipped:disabled')] phase ready wall 30.9
+slope H3|J2|B|top|nose_down@k0.875 DSb settle_check_fail hash d4c8d1407f0c ready 58.5000000000973 minF 68.94975418146242 att [-0.03008890131023566, -0.02702134250513973] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9403 windows [(31.5, 9.26, 0.159, None)] fix [(58.5, 'reanchor_skipped:disabled')] phase ready wall 26.0
+slope H3|J2|B|top|roll_pos@k0.5 DSb fail hash 103fb13eee76 ready 99.50000000029307 minF 63.9816767958079 att [-0.034532012360571136, -0.000786472274507024] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9539 windows [(27.5, 6.27, 0.071, None), (29.4, 8.83, 0.205, None)] fix [(28.5, 'FIX_DIFF_SINK_HOLD:FL,RL:10.6'), (28.5, 'INFO_LOC_REVOKED:2.5'), (38.5, 'FIX_DIFF_SINK_RELEASE:time'), (99.5, 'reanchor_skipped:disabled')] phase ready wall 40.1
+slope H3|J2|B|top|roll_pos@k0.75 DSb fail hash e42dd171d759 ready 81.70000000020808 minF 65.16632485644817 att [-0.018056716740344664, -0.01052678957922527] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9543 windows [(28.7, 2.0, 0.328, None), (31.4, 15.29, 0.322, None)] fix [(29.9, 'INFO_LOC_REVOKED:2.6'), (30.0, 'FIX_DIFF_SINK_HOLD:FL,RL:6.9'), (34.5, 'FIX_DIFF_SINK_RELEASE:stroke'), (81.7, 'reanchor_skipped:disabled')] phase ready wall 34.6
+slope H3|J2|B|top|roll_pos@k0.875 DSb stroke_limited_fail hash 45b0dd935322 ready 64.10000000012404 minF 29.235819760461958 att [0.024404901159601103, -0.0009341348305782032] falseLOC 1 LOCcrawler [22.02] READYrecontact 1 ratioREADY 0.8806 windows [(29.7, 4.75, 0.31, None)] fix [(64.1, 'reanchor_skipped:disabled')] phase ready wall 29.2
+slope H3|J2|B|top|edge_nd@k0.5 DSb fail hash 848ee4b67d7c ready 94.9000000002711 minF 63.94505632019456 att [-0.0010525552880446653, -0.013490879920270345] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9526 windows [(27.7, 7.25, -0.023, None), (29.2, 13.25, -0.157, None)] fix [(28.4, 'INFO_LOC_REVOKED:2.5'), (28.9, 'FIX_DIFF_SINK_HOLD:FL,RL:10.1'), (38.9, 'FIX_DIFF_SINK_RELEASE:reversed'), (94.9, 'reanchor_skipped:disabled')] phase ready wall 39.2
+slope H3|J2|B|top|edge_nd@k0.75 DSb pass hash 5fb4bae460c0 ready 61.80000000011306 minF 68.78893300217902 att [-0.030031072846704907, -0.04317818211766725] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9449 windows [(29.3, 8.36, 0.423, None), (31.4, 11.15, 0.402, None)] fix [(30.0, 'INFO_LOC_REVOKED:2.3'), (30.6, 'FIX_DIFF_SINK_HOLD:FL,RL:8.2'), (35.4, 'FIX_DIFF_SINK_RELEASE:stroke'), (61.8, 'reanchor_skipped:disabled')] phase ready wall 28.0
+slope H3|J2|B|top|edge_nd@k0.875 DSb stroke_limited_pass hash 9bf35d603a61 ready 63.00000000011879 minF 68.01105180811021 att [0.0012065969253089717, -0.06237689100288317] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9451 windows [(30.1, 6.13, -0.162, None), (32.5, 12.39, -0.037, None)] fix [(31.0, 'INFO_LOC_REVOKED:2.2'), (31.6, 'FIX_DIFF_SINK_HOLD:FL,RL:7.9'), (34.7, 'FIX_DIFF_SINK_RELEASE:stroke'), (63.0, 'reanchor_skipped:disabled')] phase ready wall 28.4
+slope H3|J2|A|top|nose_down@k0.5 DSb pass hash e259a398dc7f ready 53.50000000007343 minF 64.8581128073393 att [-0.015724716262809833, 0.003558045293234608] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9492 windows [(25.1, 8.96, 0.825, None)] fix [(53.5, 'reanchor_skipped:disabled')] phase ready wall 24.9
+slope H3|J2|A|top|nose_down@k0.75 DSb settle_check_fail hash bb3a28238a1c ready 55.50000000008298 minF 63.60306269249187 att [-0.013698462218029327, -0.01760967942824374] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9464 windows [(26.1, 6.78, 0.577, None), (27.9, 1.88, 0.836, None)] fix [(26.9, 'INFO_LOC_REVOKED:3.3'), (55.5, 'reanchor_skipped:disabled')] phase ready wall 26.0
+slope H3|J2|A|top|nose_down@k0.875 DSb settle_check_fail hash df96ee5910e8 ready 59.10000000010017 minF 62.39297841288691 att [-0.012414600642186161, -0.03197490267831844] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9793 windows [(26.2, 5.19, 0.623, None)] fix [(59.1, 'reanchor_skipped:disabled')] phase ready wall 26.8
+slope H3|J2|A|top|roll_pos@k0.5 DSb pass hash ef5c8c45353b ready 62.20000000011497 minF 64.15174217281955 att [-0.05495498804645702, 0.03859642216029112] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9473 windows [(27.5, 7.83, 0.182, None)] fix [(62.2, 'reanchor_skipped:disabled')] phase ready wall 27.8
+slope H3|J2|A|top|roll_pos@k0.75 DSb pass hash 77fe699be4fe ready 73.90000000017083 minF 63.05740600993212 att [0.012355622658598856, -0.014111056070738141] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9472 windows [(29.6, 5.68, -0.02, None)] fix [(73.9, 'reanchor_skipped:disabled')] phase level wall 31.5
+slope H3|J2|A|top|roll_pos@k0.875 DSb stroke_limited_pass hash ad4f704655a6 ready 72.40000000016367 minF 62.30089883756107 att [0.016719199848024, -0.017542242202229056] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9482 windows [(30.6, 6.09, -0.172, None)] fix [(72.4, 'reanchor_skipped:disabled')] phase level wall 31.5
+slope H3|J2|A|top|edge_nd@k0.5 DSb pass hash 0d5205479a26 ready 71.20000000015794 minF 64.29422282276039 att [-0.008557668062260259, 0.018337245873438747] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9533 windows [(25.9, 7.55, 0.124, None)] fix [(71.2, 'reanchor_skipped:disabled')] phase ready wall 30.5
+slope H3|J2|A|top|edge_nd@k0.75 DSb pass hash 75cfe8c22003 ready 74.10000000017179 minF 63.607335478744666 att [-0.002706601581025283, 0.010585998248691738] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.952 windows [(27.0, 6.72, 0.743, None)] fix [(74.1, 'reanchor_skipped:disabled')] phase ready wall 31.8
+slope H3|J2|A|top|edge_nd@k0.875 DSb stroke_limited_pass hash 6024308a9438 ready 80.20000000020092 minF 61.096861307970876 att [-0.008003339122445635, 0.005279283270791856] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9505 windows [(27.8, 3.48, -0.179, None)] fix [(80.2, 'reanchor_skipped:disabled')] phase ready wall 33.3
+slope H3|S1|B|top|nose_down@k0.5 DSb pass hash dce1900281a6 ready 58.90000000009921 minF 67.81004839750763 att [0.04742974879043776, -0.014970702972002568] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9379 windows [(37.5, 6.57, 1.48, None)] fix [(58.9, 'reanchor_skipped:disabled')] phase ready wall 26.8
+slope H3|S1|B|top|nose_down@k0.75 DSb settle_check_fail hash 4c774d37bffe ready 67.50000000014028 minF 67.78986706120705 att [0.006777010189242797, -0.0218387307326265] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9412 windows [(36.8, 6.11, 1.589, None)] fix [(67.5, 'reanchor_skipped:disabled')] phase level wall 29.4
+slope H3|S1|B|top|nose_down@k0.875 DSb stroke_limited_pass hash 61bac2f052e2 ready 91.00000000025248 minF 66.1468731275262 att [-5.940980014717599e-05, -0.01868395294040385] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9481 windows [(37.1, 5.6, 1.48, None)] fix [(91.0, 'reanchor_skipped:disabled')] phase ready wall 37.1
+slope H3|S1|B|top|roll_pos@k0.5 DSb pass hash 426c57c76123 ready 65.50000000013073 minF 63.234203836194084 att [-0.055414047172959106, -0.0014395865931692642] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9473 windows [(31.3, 10.03, 0.234, None), (36.3, 3.59, 1.032, None)] fix [(31.6, 'INFO_LOC_REVOKED:3.9'), (32.3, 'FIX_DIFF_SINK_HOLD:FL,RL:8.3'), (40.6, 'FIX_DIFF_SINK_RELEASE:stroke'), (65.5, 'reanchor_skipped:disabled')] phase ready wall 29.0
+slope H3|S1|B|top|roll_pos@k0.75 DSb stroke_limited_pass hash 6722bce6df86 ready 81.20000000020569 minF 66.27412277507595 att [0.023412295973311313, -0.05227671665639574] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9463 windows [(45.5, 4.26, 2.001, None)] fix [(81.2, 'reanchor_skipped:disabled')] phase ready wall 34.5
+slope H3|S1|B|top|roll_pos@k0.875 DSb stroke_limited_pass hash c0cc752ceab8 ready 79.20000000019614 minF 64.54774266434048 att [0.017583832012552838, -0.038755955002148124] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.95 windows [(47.6, 7.68, 1.988, None)] fix [(79.2, 'reanchor_skipped:disabled')] phase ready wall 33.8
+slope H3|S1|B|top|edge_nd@k0.5 DSb pass hash 3f5af5ac4fd5 ready 62.90000000011831 minF 67.18788435511254 att [0.027152700201144967, -0.06801261356308075] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9468 windows [(40.2, 3.96, 1.569, None)] fix [(62.9, 'reanchor_skipped:disabled')] phase ready wall 28.2
+slope H3|S1|B|top|edge_nd@k0.75 DSb stroke_limited_pass hash 2fca2c46119d ready 63.900000000123086 minF 67.47139942611282 att [0.030248836606469924, 0.0019352440290419837] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9444 windows [(40.7, 4.05, 1.249, None)] fix [(63.9, 'reanchor_skipped:disabled')] phase level wall 28.4
+slope H3|S1|B|top|edge_nd@k0.875 DSb stroke_limited_pass hash 9598b5ff193c ready 82.90000000021381 minF 66.82750605843917 att [0.009314791906489938, -0.031166013993005958] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9473 windows [(40.4, 5.89, 1.209, None)] fix [(82.9, 'reanchor_skipped:disabled')] phase ready wall 34.1
+slope H3|S1|A|top|nose_down@k0.5 DSb pass hash 4c4c019f10c4 ready 58.5000000000973 minF 65.78226286676691 att [0.0034256448422841784, -0.04544382532879365] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9452 windows [(32.4, 2.96, 1.323, None)] fix [(58.5, 'reanchor_skipped:disabled')] phase ready wall 26.3
+slope H3|S1|A|top|nose_down@k0.75 DSb settle_check_fail hash 1ddcd572603a ready 63.900000000123086 minF 64.19916664983475 att [0.011983677532810391, -0.0644730738483305] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9489 windows [(32.6, 2.06, 1.362, None)] fix [(63.9, 'reanchor_skipped:disabled')] phase ready wall 28.0
+slope H3|S1|A|top|nose_down@k0.875 DSb fail hash 2f13ed1b5a87 ready None minF 62.78627573889903 att [-0.007769277373602458, 0.16285534424022152] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(32.9, 2.59, 1.495, None)] fix [] phase fault wall 20.2
+slope H3|S1|A|top|roll_pos@k0.5 DSb pass hash 40fd28caaa5b ready 59.4000000001016 minF 63.56027416951204 att [-0.049849859751292226, 0.006962891450188014] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9462 windows [(35.5, 6.16, 1.131, None)] fix [(59.4, 'reanchor_skipped:disabled')] phase ready wall 26.2
+slope H3|S1|A|top|roll_pos@k0.75 DSb stroke_limited_pass hash 397d6021ce81 ready 64.7000000001269 minF 62.48741476354396 att [-0.04665953965673355, 0.00820657174069833] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.946 windows [(40.1, 2.54, 1.908, None)] fix [(64.7, 'reanchor_skipped:disabled')] phase ready wall 27.8
+slope H3|S1|A|top|roll_pos@k0.875 DSb fail hash 6a9ee0dd8479 ready None minF 62.743948852121605 att [-0.4951945963015919, 0.04014123625823244] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(42.3, 5.76, 2.015, None)] fix [] phase fault wall 19.7
+slope H3|S1|A|top|edge_nd@k0.5 DSb pass hash 41fc2a41bc00 ready 57.50000000009253 minF 67.05548479790669 att [-0.026607611382117643, -0.0543390019916559] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9472 windows [(33.6, 6.58, 1.106, None)] fix [(57.5, 'reanchor_skipped:disabled')] phase ready wall 25.8
+slope H3|S1|A|top|edge_nd@k0.75 DSb stroke_limited_pass hash 26971462c77e ready 62.90000000011831 minF 66.30525856973038 att [0.029748512324121082, -0.02952169880146216] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9482 windows [(34.9, 5.66, 1.242, None)] fix [(62.9, 'reanchor_skipped:disabled')] phase probe wall 27.3
+slope H3|S1|A|top|edge_nd@k0.875 DSb fail hash 1d26481b1252 ready None minF 65.81209259983491 att [0.014126199164975903, 0.05172831526815195] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(34.9, 5.11, 1.092, None)] fix [] phase fault wall 21.3
+slope H4|G1|B|top|nose_down DSb settle_check_fail hash 9e107e4af240 ready 82.20000000021047 minF 29.53025597624489 att [-0.0023017980604206887, -0.016811993449592628] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9851 windows [(22.7, 23.07, 1.202, None)] fix [(54.0, 'reanchor_started'), (77.2, 'reanchor_completed')] phase ready wall 32.1
+slope H4|G1|B|top|nose_down_2p8 DSb settle_check_fail hash cf42ee8a9b1b ready 80.40000000020187 minF 29.60272077155242 att [-0.0023762822362740485, -0.017221262824694855] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9864 windows [(22.5, 1.36, 1.765, None)] fix [(52.4, 'reanchor_started'), (75.6, 'reanchor_completed')] phase ready wall 31.6
+slope H4|G1|A|top|nose_down DSb settle_check_fail hash cd4896aaaed4 ready 76.50000000018325 minF 30.26681566153871 att [-0.0007408886843987129, -0.019499514234683123] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 1.0292 windows [(22.5, 11.52, 1.172, None)] fix [(54.1, 'reanchor_started'), (75.3, 'reanchor_completed')] phase ready wall 29.9
+slope H4|G1|A|top|nose_down_2p8 DSb settle_check_fail hash 3cc3d746d5ea ready 74.80000000017513 minF 30.346227781665167 att [-0.0007838373473635957, -0.019874601422222964] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 1.0241 windows [(22.3, 21.37, 1.163, None)] fix [(52.4, 'reanchor_started'), (73.6, 'reanchor_completed')] phase ready wall 29.5
+slope H4|J1|B|top|nose_down DSb stroke_limited_pass hash bfcfe3a7ce59 ready 106.5000000003265 minF 66.14113532296682 att [0.012997186421852666, 0.02573595010273648] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.949 windows [(27.8, 5.03, -1.528, None)] fix [(78.3, 'reanchor_started'), (82.8, 'reanchor_aborted:attitude'), (106.5, 'reanchor_band_exceeded')] phase ready wall 40.0
+slope H4|J1|B|top|nose_down_2p8 DSb pass hash 5879777c60e7 ready 79.10000000019566 minF 67.9577128553203 att [0.0006207890376620585, -0.04505539976886149] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9438 windows [(27.9, 5.31, 3.433, None)] fix [(59.0, 'reanchor_started'), (60.2, 'reanchor_aborted:attitude_wait')] phase ready wall 31.4
+slope H4|J1|A|top|nose_down DSb fail hash 49853be22bf6 ready None minF 57.96337546651735 att [-0.01114948073210351, 0.0161934888379441] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(24.8, 6.87, -1.561, None)] fix [(59.6, 'reanchor_started'), (65.4, 'reanchor_aborted:attitude')] phase fault wall 28.6
+slope H4|J1|A|top|nose_down_2p8 DSb stroke_limited_pass hash cd7cabbf658f ready 104.30000000031599 minF 58.61149690646364 att [0.005137632716030529, -0.019404115989970605] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9813 windows [(24.4, 7.11, 2.081, None)] fix [(56.7, 'reanchor_started'), (62.5, 'reanchor_aborted:attitude'), (104.3, 'reanchor_band_exceeded')] phase ready wall 38.8
+slope H4|J2|B|top|nose_down DSb settle_check_fail hash c7f701e4762c ready 93.30000000026347 minF 68.06807162946761 att [0.009802233719152141, -0.046241602605422955] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9469 windows [(31.5, 9.26, 2.187, None)] fix [(71.9, 'reanchor_started'), (74.1, 'reanchor_aborted:attitude')] phase ready wall 35.9
+slope H4|J2|B|top|nose_down_2p8 DSb settle_check_fail hash 37f1f3cf04c1 ready 107.00000000032888 minF 66.82520504809615 att [0.048511329867450964, 0.002080991293544713] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9503 windows [(31.5, 9.26, 0.159, None)] fix [(58.5, 'reanchor_started'), (63.6, 'reanchor_aborted:attitude'), (107.0, 'reanchor_band_exceeded')] phase ready wall 39.8
+slope H4|J2|A|top|nose_down DSb settle_check_fail hash a799b78c50b1 ready None minF 61.38761834164122 att [-0.007548572450417782, 0.29248244832164216] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(27.5, 0.68, 1.098, None)] fix [] phase fault wall 17.7
+slope H4|J2|A|top|nose_down_2p8 DSb settle_check_fail hash a4f99f6ddef7 ready 109.20000000033939 minF 58.44530726286283 att [-0.0018442770277396642, -0.019347656779277283] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9797 windows [(26.2, 5.19, 0.623, None)] fix [(59.1, 'reanchor_started'), (65.0, 'reanchor_aborted:stroke_cap'), (109.2, 'reanchor_band_exceeded')] phase ready wall 40.1
+slope H4|S1|B|top|nose_down DSb settle_check_fail hash d5540d929e0d ready None minF 64.9322915004973 att [-0.020390640476271284, 0.24454857747612577] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(37.3, 4.82, 1.339, None)] fix [] phase fault wall 19.8
+slope H4|S1|B|top|nose_down_2p8 DSb stroke_limited_pass hash f6150ea022ba ready 134.80000000026834 minF 58.24347671355169 att [0.012545152419224008, 0.019738898242108373] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.949 windows [(37.1, 5.6, 1.48, None)] fix [(91.0, 'reanchor_started'), (96.9, 'reanchor_aborted:stroke_cap'), (134.8, 'reanchor_band_exceeded')] phase ready wall 46.6
+slope H4|S1|A|top|nose_down DSb settle_check_fail hash 16d2b7e605e0 ready None minF 62.2254713343108 att [-0.016856023084485007, 0.5837089591273038] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(33.2, 4.19, 1.501, None)] fix [] phase fault wall 19.1
+slope H4|S1|A|top|nose_down_2p8 DSb fail hash 2f13ed1b5a87 ready None minF 62.78627573889903 att [-0.007769277373602458, 0.16285534424022152] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY None windows [(32.9, 2.59, 1.495, None)] fix [] phase fault wall 19.6
+slope H4|rigid|B|top|nose_down DSb pass hash 6d772fdfcbb1 ready 73.90000000017083 minF 24.708122371126738 att [-0.0010185371123475136, -0.015398290080984048] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 1.0277 windows [(22.9, 20.46, 1.179, None)] fix [(54.7, 'reanchor_started'), (72.7, 'reanchor_completed')] phase ready wall 20.3
+slope H4|rigid|B|top|nose_down_2p8 DSb pass hash 893be8720202 ready 71.50000000015937 minF 24.752044797577295 att [-0.0010238861181635114, -0.015669424388341686] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 1.0205 windows [(22.0, 30.96, 1.112, None)] fix [(52.3, 'reanchor_started'), (70.3, 'reanchor_completed')] phase ready wall 18.7
+slope H4|J1|B|top|nose_up DSb stroke_limited_pass hash a3a42d81ee0c ready 77.90000000018993 minF 67.62652724469197 att [0.03169529228603117, 0.007521655255475281] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9433 windows [(30.4, 6.12, -0.295, None)] fix [(31.4, 'FIX_DIFF_SINK_HOLD:FL,RL:5.0'), (33.2, 'FIX_DIFF_SINK_RELEASE:reversed'), (77.9, 'reanchor_skipped:nose_up')] phase ready wall 29.9
+slope H5|rigid|B|top|flat DSb pass hash a91e95796d41 ready 39.4000000000061 minF 54.6903272019059 att [-0.00031316306971866697, -0.011865658263171645] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9463 windows [(21.2, 7.74, 0.986, None)] fix [(39.4, 'reanchor_skipped:disabled')] phase ready wall 12.7
+slope H5|rigid|B|top|nose_down DSb pass hash 9fc465de3366 ready 54.70000000007916 minF 54.66874946658594 att [-6.959230411930658e-05, -0.014872614720842982] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.974 windows [(22.9, 20.46, 1.179, None)] fix [(54.7, 'reanchor_skipped:disabled')] phase ready wall 15.4
+slope H5|rigid|B|top|nose_up DSb pass hash 14726d66b013 ready 53.80000000007486 minF 54.47576783025545 att [1.3770848908973223e-06, 0.014835698665631057] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9863 windows [(21.9, 15.05, 0.612, None)] fix [(53.8, 'reanchor_skipped:disabled')] phase ready wall 16.2
+slope H5|rigid|B|top|roll_pos DSb pass hash ba7f7882c22e ready 53.200000000071995 minF 54.249443824383164 att [-0.016182455766130446, -7.746082564928869e-05] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9497 windows [(22.8, 2.37, 1.045, None)] fix [(53.2, 'reanchor_skipped:disabled')] phase ready wall 16.9
+slope H5|rigid|B|top|roll_neg DSb pass hash c75bffab50ad ready 53.200000000071995 minF 51.85198115197688 att [0.016139796912161605, -8.472073491950214e-05] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9497 windows [(23.2, 5.09, 1.777, None)] fix [(53.2, 'reanchor_skipped:disabled')] phase ready wall 16.8
+slope H5|rigid|B|top|edge_nd DSb pass hash 5c2f918ba17d ready 52.50000000006865 minF 45.48460842943569 att [-0.0150140263179478, -0.011439069557851489] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9582 windows [(22.1, 11.94, 0.815, None)] fix [(52.5, 'reanchor_skipped:disabled')] phase ready wall 16.6
+slope H5|rigid|B|top|edge_nu DSb pass hash ae475342c8b6 ready 52.20000000006722 minF 53.21765799136517 att [-0.015558540595586678, 0.010419394840454505] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9669 windows [(22.1, 2.27, 0.526, None)] fix [(52.2, 'reanchor_skipped:disabled')] phase ready wall 16.5
+slope H5|rigid|B|top|rpB DSb pass hash 734f89fa5122 ready 54.400000000077725 minF 52.782273011876626 att [-0.015285463832194158, -0.010156540430143085] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9569 windows [(22.1, 16.56, 0.973, None)] fix [(54.4, 'reanchor_skipped:disabled')] phase ready wall 16.5
+{
+ "slope|DSb": {
+  "n": 177,
+  "errors": 0,
+  "no_baseline": 177,
+  "verdict_changed": 0,
+  "pass_to_fail": 0,
+  "fail_to_pass": 0,
+  "hash_same": 0,
+  "e_cases": 0,
+  "e_resolved": 0,
+  "false_loc_after": 0,
+  "ready_recontacts_after": 0,
+  "acted": 0,
+  "idle_hash_differs": 0,
+  "a3_checked": 0,
+  "a3_fail": 0
+ }
+}
+wall 770.1 s -> C:\workspace\outrigger_control\06_analysis\02_control\s9\rev83\regDSb_slope.json
+[04:31:22] END slope rc=0 wall=770s
+[04:31:22] START g6
+C2 t=55.60 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.609
+C2 t=56.60 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.548
+C2 t=60.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.597
+C2 t=60.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.573
+C2 t=60.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.540
+C2 t=57.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.577
+C2 t=57.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.655
+C2 t=72.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.525
+C2 t=71.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.527
+C2 t=72.50 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.513
+C2 t=73.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.587
+C2 t=64.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.471
+C2 t=64.60 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.400
+C2 t=64.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.362
+C2 t=80.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.547
+C2 t=80.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.573
+C2 t=80.60 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.595
+C2 t=77.10 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.551
+C2 t=76.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.614
+C2 t=77.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.576
+C2 t=77.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.675
+C2 t=99.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.621
+C2 t=101.80 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.622
+C2 t=100.50 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.559
+C2 t=101.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.605
+C2 t=90.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.563
+C2 t=93.10 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.613
+C2 t=22.20 s: leg_reapproach_start:RR
+C2 t=22.20 s: leg_reapproach_start:RR
+C2 t=24.20 s: leg_reapproach_start:RR
+C2 t=24.30 s: leg_reapproach_start:RR
+C2 t=25.20 s: leg_reapproach_start:RR
+C2 t=25.30 s: leg_reapproach_start:RR
+C2 t=26.10 s: leg_reapproach_start:RR
+C2 t=26.30 s: leg_reapproach_start:RR
+C2 t=22.20 s: leg_reapproach_start:RR
+C2 t=22.30 s: leg_reapproach_start:RR
+C2 t=25.30 s: leg_reapproach_start:RR
+C2 t=25.40 s: leg_reapproach_start:RR
+C2 t=63.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.558
+C2 t=63.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.351
+C2 t=91.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.525
+C2 t=91.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.508
+C2 t=71.50 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.575
+C2 t=72.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.605
+C2 t=22.20 s: leg_reapproach_start:RL
+C2 t=22.20 s: leg_reapproach_start:RL
+C2 t=24.20 s: leg_reapproach_start:RL
+C2 t=25.20 s: leg_reapproach_start:RL
+C2 t=24.30 s: leg_reapproach_start:RL
+C2 t=26.20 s: leg_reapproach_start:RL
+C2 t=25.20 s: leg_reapproach_start:RL
+C2 t=22.20 s: leg_reapproach_start:RL
+C2 t=22.50 s: leg_reapproach_start:RL
+C2 t=25.20 s: leg_reapproach_start:RL
+C2 t=25.50 s: leg_reapproach_start:RL
+C2 t=23.30 s: leg_reapproach_start:RL
+C2 t=23.40 s: leg_reapproach_start:RL
+C2 t=63.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.550
+C2 t=65.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.605
+C2 t=72.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.577
+C2 t=72.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.675
+C2 t=92.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.630
+C2 t=95.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.618
+C2 t=23.30 s: leg_reapproach_start:RR
+C2 t=23.40 s: leg_reapproach_start:RR
+C2 t=98.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.565
+C2 t=98.60 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.611
+C2 t=91.10 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.648
+C2 t=93.60 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.590
+C2 t=97.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.527
+C2 t=97.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.516
+C2 t=40.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.507
+C2 t=40.10 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.644
+C2 t=38.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.507
+C2 t=39.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.577
+C2 t=63.50 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.784
+C2 t=77.60 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.794
+C2 t=22.50 s: leg_reapproach_start:RR
+C2 t=23.50 s: leg_reapproach_start:RR
+C2 t=69.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.677
+C2 t=69.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.793
+C2 t=69.30 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.679
+C2 t=22.50 s: leg_reapproach_start:RL
+C2 t=23.40 s: leg_reapproach_start:RL
+C2 t=24.30 s: leg_reapproach_start:RL
+C2 t=103.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.790
+C2 t=95.00 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.670
+C2 t=22.50 s: leg_reapproach_start:RR
+C2 t=24.30 s: leg_reapproach_start:RR
+C2 t=25.10 s: leg_reapproach_start:RR
+C2 t=25.90 s: leg_reapproach_start:RR
+C2 t=26.80 s: leg_reapproach_start:RR
+C2 t=22.00 s: leg_reapproach_start:RR
+C2 t=23.80 s: leg_reapproach_start:RR
+C2 t=24.60 s: leg_reapproach_start:RR
+C2 t=25.50 s: leg_reapproach_start:RR
+C2 t=26.30 s: leg_reapproach_start:RR
+C2 t=22.20 s: leg_reapproach_start:RR
+C2 t=24.10 s: leg_reapproach_start:RR
+C2 t=22.20 s: leg_reapproach_start:RR
+C2 t=24.00 s: leg_reapproach_start:RR
+C2 t=95.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.790
+C2 t=95.20 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.667
+C2 t=22.60 s: leg_reapproach_start:RL
+C2 t=24.50 s: leg_reapproach_start:RL
+C2 t=25.30 s: leg_reapproach_start:RL
+C2 t=26.10 s: leg_reapproach_start:RL
+C2 t=27.00 s: leg_reapproach_start:RL
+C2 t=21.70 s: leg_reapproach_start:RL
+C2 t=23.50 s: leg_reapproach_start:RL
+C2 t=24.30 s: leg_reapproach_start:RL
+C2 t=25.20 s: leg_reapproach_start:RL
+C2 t=26.00 s: leg_reapproach_start:RL
+C2 t=22.20 s: leg_reapproach_start:RL
+C2 t=22.20 s: leg_reapproach_start:RL
+C2 t=24.00 s: leg_reapproach_start:RL
+C2 t=23.10 s: leg_reapproach_start:RL
+C2 t=24.10 s: leg_reapproach_start:RL
+C2 t=23.10 s: leg_reapproach_start:RL
+C2 t=23.40 s: leg_reapproach_start:RL
+C2 t=23.40 s: leg_reapproach_start:RL
+C2 t=23.10 s: leg_reapproach_start:RR
+C2 t=23.10 s: leg_reapproach_start:RR
+C2 t=23.40 s: leg_reapproach_start:RR
+C2 t=23.40 s: leg_reapproach_start:RR
+C2 t=93.40 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.685
+C2 t=93.80 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.791
+C2 t=95.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.714
+g6 g6|G1+J1@FL|top|Fs0 DSb pass hash 8ae94eb6196b ready 60.20000000010542 minF 41.267876824542775 att [-0.010804172631756214, -0.0028600919186251347] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9976 windows [(23.0, 8.18, 1.01, None)] fix [(60.2, 'reanchor_skipped:disabled')] phase ready wall 32.2
+g6 g6|G1+J1@FL|top|Fs4 DSb pass hash da22eba126d3 ready 58.90000000009921 minF 41.47476302559066 att [-0.010747413582685307, -0.0034751331537930283] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9469 windows [(22.1, 5.8, 0.961, None)] fix [(58.9, 'reanchor_skipped:disabled')] phase ready wall 31.5
+g6 g6|G1+J1@FL|bottom|Fs0 DSb pass hash 3f03566a54b2 ready 60.700000000107806 minF 46.49811542421735 att [-0.008532061036009321, -0.0019710084083120758] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9975 windows [(22.1, 8.99, 0.985, None)] fix [(60.7, 'reanchor_skipped:disabled')] phase ready wall 32.0
+g6 g6|G1+J1@FL|bottom|Fs4 DSb pass hash 7cd04d35a4a1 ready 60.700000000107806 minF 46.52719406549044 att [-0.00954011836211777, -0.0013208534352227629] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.947 windows [(22.1, 9.8, 0.948, None)] fix [(60.7, 'reanchor_skipped:disabled')] phase ready wall 32.1
+g6 g6|G1+J1@FR|top|Fs0 DSb pass hash ff088b7a5cb8 ready 56.60000000008823 minF 45.11546067631816 att [0.00951818982831496, -0.005294924203482936] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9983 windows [(22.9, 12.28, 0.848, None)] fix [(56.6, 'reanchor_skipped:disabled')] phase ready wall 30.8
+g6 g6|G1+J1@FR|top|Fs4 DSb pass hash 921cb23c4125 ready 55.600000000083455 minF 45.03928849945946 att [0.011037452452918716, -0.005210804827708607] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9481 windows [(22.1, 5.62, 0.824, None)] fix [(55.6, 'reanchor_skipped:disabled')] phase ready wall 30.4
+g6 g6|G1+J1@FR|bottom|Fs0 DSb pass hash a9efb150b5ea ready 57.00000000009014 minF 49.59568247859917 att [0.0077474099890165035, -0.0029068559382994874] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9969 windows [(22.1, 10.97, 0.879, None)] fix [(57.0, 'reanchor_skipped:disabled')] phase ready wall 24.5
+g6 g6|G1+J1@FR|bottom|Fs4 DSb pass hash 8af892e2e2d0 ready 57.00000000009014 minF 49.60282128888352 att [0.009841327270276081, -0.0021586164346783705] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9462 windows [(22.1, 9.79, 0.9, None)] fix [(57.0, 'reanchor_skipped:disabled')] phase ready wall 24.3
+g6 g6|G1+J1@RL|top|Fs0 DSb pass hash 05f47f16f664 ready 72.90000000016606 minF 51.36665537708857 att [-0.007419256907236255, -0.014548766924342704] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9968 windows [(22.9, 4.65, 0.9, None)] fix [(72.9, 'reanchor_skipped:disabled')] phase ready wall 29.0
+g6 g6|G1+J1@RL|top|Fs4 DSb pass hash d813ece0c96f ready 71.00000000015699 minF 51.39510309992786 att [-0.004125772003440546, -0.01407059284806039] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9486 windows [(21.9, 4.49, 0.848, None)] fix [(71.0, 'reanchor_skipped:disabled')] phase ready wall 28.8
+g6 g6|G1+J1@RL|bottom|Fs0 DSb pass hash b22519ce4d90 ready 72.50000000016415 minF 52.41660824099074 att [-0.004752077059796479, -0.013479310677895621] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9981 windows [(22.0, 7.41, 1.027, None)] fix [(72.5, 'reanchor_skipped:disabled')] phase ready wall 29.1
+g6 g6|G1+J1@RL|bottom|Fs4 DSb pass hash 075de28f8a13 ready 73.30000000016797 minF 52.00940669927708 att [-0.007292396313613992, -0.013590585448867848] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9463 windows [(22.0, 9.3, 1.147, None)] fix [(73.3, 'reanchor_skipped:disabled')] phase ready wall 29.2
+g6 g6|G1+J1@RR|top|Fs0 DSb pass hash 8e84677f1058 ready 64.20000000012452 minF 50.22257486214038 att [0.01439694756904605, -0.017982047031364568] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9966 windows [(22.9, 6.07, 1.035, None)] fix [(64.2, 'reanchor_skipped:disabled')] phase ready wall 26.6
+g6 g6|G1+J1@RR|top|Fs4 DSb pass hash 69288ee341a2 ready 62.300000000115446 minF 50.29527707265595 att [0.01085984630865145, -0.017785179245578115] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9479 windows [(21.9, 2.98, 1.036, None)] fix [(62.3, 'reanchor_skipped:disabled')] phase ready wall 26.3
+g6 g6|G1+J1@RR|bottom|Fs0 DSb pass hash 5b31ee3aab55 ready 64.60000000012643 minF 51.5018691533016 att [0.013414354721584316, -0.016694433573698413] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9966 windows [(22.0, 6.94, 0.927, None)] fix [(64.6, 'reanchor_skipped:disabled')] phase ready wall 26.6
+g6 g6|G1+J1@RR|bottom|Fs4 DSb pass hash a1a112c119d0 ready 64.7000000001269 minF 51.12220165121033 att [0.013467928480906374, -0.01694965881863195] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9466 windows [(22.0, 6.96, 1.065, None)] fix [(64.7, 'reanchor_skipped:disabled')] phase ready wall 26.8
+g6 g6|G1+J2@FL|top|Fs0 DSb pass hash a36d68c070c2 ready 80.90000000020426 minF 29.834587132953867 att [-0.012769763372473406, 0.0013451611574848605] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9971 windows [(25.6, 8.69, 0.922, None)] fix [(80.9, 'reanchor_skipped:disabled')] phase ready wall 31.9
+g6 g6|G1+J2@FL|top|Fs4 DSb pass hash c05c63d7a0db ready 79.50000000019757 minF 29.355600428038166 att [-0.013290345586120718, 0.0015270426002724578] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9461 windows [(24.0, 6.0, 1.364, None)] fix [(79.5, 'reanchor_skipped:disabled')] phase ready wall 31.5
+g6 g6|G1+J2@FL|bottom|Fs0 DSb pass hash b6b6006eb03e ready 80.7000000002033 minF 35.183231081510485 att [-0.011546432044125456, 0.00123130389658018] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9974 windows [(23.8, 4.76, 1.193, None)] fix [(80.7, 'reanchor_skipped:disabled')] phase ready wall 31.5
+g6 g6|G1+J2@FL|bottom|Fs4 DSb pass hash 6884aec22b6a ready 80.60000000020283 minF 35.425199463717504 att [-0.012528552989295392, 0.0016359867714673259] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9472 windows [(22.4, 4.19, 0.962, None)] fix [(80.6, 'reanchor_skipped:disabled')] phase ready wall 31.6
+g6 g6|G1+J2@FR|top|Fs0 DSb pass hash 94f9cc378cc7 ready 77.10000000018611 minF 31.614623154054406 att [0.009394838288342089, -0.0004894240334862728] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9971 windows [(25.1, 8.29, 0.811, None)] fix [(77.1, 'reanchor_skipped:disabled')] phase ready wall 30.7
+g6 g6|G1+J2@FR|top|Fs4 DSb pass hash ad21e4e04e77 ready 76.00000000018086 minF 32.06858562120297 att [0.011518151901661708, 0.0004885675167351676] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9484 windows [(22.4, 10.1, 0.86, None)] fix [(76.0, 'reanchor_skipped:disabled')] phase ready wall 30.4
+g6 g6|G1+J2@FR|bottom|Fs0 DSb pass hash 80d0f453d0f1 ready 77.00000000018564 minF 38.44475075052613 att [0.008806049343149946, -0.0005026155672882828] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.997 windows [(22.4, 3.95, 0.866, None)] fix [(77.0, 'reanchor_skipped:disabled')] phase ready wall 30.9
+g6 g6|G1+J2@FR|bottom|Fs4 DSb pass hash ec451ee46642 ready 77.00000000018564 minF 38.445572455038395 att [0.010888338032068897, 0.00036516945288474217] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9465 windows [(22.4, 4.04, 0.872, None)] fix [(77.0, 'reanchor_skipped:disabled')] phase ready wall 31.0
+g6 g6|G1+J2@RL|top|Fs0 DSb pass hash 00ec66e6ed2a ready 101.80000000030405 minF 45.87363814331188 att [-0.005030535349928504, -0.0038702682714993153] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9974 windows [(24.5, 8.51, 0.956, None)] fix [(101.8, 'reanchor_skipped:disabled')] phase ready wall 39.4
+g6 g6|G1+J2@RL|top|Fs4 DSb pass hash 488887c67813 ready 99.4000000002926 minF 45.15530569726607 att [-0.003627007025091368, -0.003455718567596379] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9486 windows [(22.0, 2.62, 0.934, None)] fix [(99.4, 'reanchor_skipped:disabled')] phase ready wall 38.8
+g6 g6|G1+J2@RL|bottom|Fs0 DSb pass hash 8ec29dc7a5e3 ready 100.50000000029785 minF 46.80864914853344 att [-0.0039248105156788685, -0.002863151079572797] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9972 windows [(22.0, 17.4, 0.899, None)] fix [(100.5, 'reanchor_skipped:disabled')] phase ready wall 39.0
+g6 g6|G1+J2@RL|bottom|Fs4 DSb pass hash 4981290b2d89 ready 101.20000000030119 minF 46.37151646213082 att [-0.0042656223528871095, -0.0035966082315633543] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9461 windows [(22.1, 15.54, 1.166, None)] fix [(101.2, 'reanchor_skipped:disabled')] phase ready wall 39.1
+g6 g6|G1+J2@RR|top|Fs0 DSb pass hash 73de63160284 ready 93.10000000026251 minF 46.19782871725728 att [0.005253225589326657, -0.005643710681279163] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9973 windows [(24.5, 5.72, 1.003, None)] fix [(93.1, 'reanchor_skipped:disabled')] phase ready wall 36.7
+g6 g6|G1+J2@RR|top|Fs4 DSb pass hash 61bd85e73340 ready 90.70000000025105 minF 45.54518471426265 att [0.004851904699434031, -0.005752639970827035] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9477 windows [(22.0, 2.67, 1.037, None)] fix [(90.7, 'reanchor_skipped:disabled')] phase ready wall 36.1
+g6 g6|G1+J2@RR|bottom|Fs0 DSb pass hash a6a0c3568a75 ready 91.70000000025583 minF 46.69159960741189 att [0.005145435257968467, -0.005392221276682501] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9983 windows [(21.9, 7.86, 1.033, None)] fix [(91.7, 'reanchor_skipped:disabled')] phase ready wall 35.4
+g6 g6|G1+J2@RR|bottom|Fs4 DSb pass hash 6aa7191bbd2f ready 91.70000000025583 minF 46.70366065920422 att [0.00542379918607332, -0.005644110116600378] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9478 windows [(21.9, 6.49, 1.032, None)] fix [(91.7, 'reanchor_skipped:disabled')] phase ready wall 35.4
+g6 g6|G1+S1@FL|top|Fs0 DSb fail hash 1eb46f4fb844 ready 63.00000000011879 minF 21.618131076633052 att [-0.011122750951329646, -0.0019334673558281262] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9975 windows [(27.8, 25.85, 1.576, None)] fix [(63.0, 'reanchor_skipped:disabled')] phase ready wall 26.5
+g6 g6|G1+S1@FL|top|Fs4 DSb fail hash 49bd2c3c9896 ready 63.20000000011974 minF 21.431095481916238 att [-0.012291654942650544, -0.0016342272412740047] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9461 windows [(27.9, 24.49, 1.794, None)] fix [(63.2, 'reanchor_skipped:disabled')] phase ready wall 26.7
+g6 g6|G1+S1@FL|bottom|Fs0 DSb fail hash 26efb2d8fda4 ready 71.50000000015937 minF 29.862989051690697 att [-0.00397364962642272, -0.003865491725513468] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9973 windows [(27.4, 0.55, 2.047, None)] fix [(71.5, 'reanchor_skipped:disabled')] phase ready wall 29.1
+g6 g6|G1+S1@FL|bottom|Fs4 DSb fail hash e85d738ec040 ready 72.3000000001632 minF 28.287111504790587 att [-0.004842374470871105, -0.0032058310002168688] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9458 windows [(27.6, 8.54, 1.625, None)] fix [(72.3, 'reanchor_skipped:disabled')] phase ready wall 29.2
+g6 g6|G1+S1@FR|top|Fs0 DSb fail hash 65a87f015725 ready 63.00000000011879 minF 25.07632605836904 att [0.009821012914060527, -0.002448602062090308] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9973 windows [(27.8, 25.41, 3.025, None)] fix [(63.0, 'reanchor_skipped:disabled')] phase ready wall 26.0
+g6 g6|G1+S1@FR|top|Fs4 DSb fail hash 186713e3ca36 ready 65.90000000013264 minF 22.80350191704742 att [0.010337522901941471, -0.0015705683572326131] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9478 windows [(26.9, 21.71, 2.798, None)] fix [(65.9, 'reanchor_skipped:disabled')] phase ready wall 26.9
+g6 g6|G1+S1@FR|bottom|Fs0 DSb fail hash 987c5709f17c ready 72.7000000001651 minF 29.099443422214417 att [0.0012147985673216088, -0.004767931384320915] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9968 windows [(27.3, 3.32, 2.25, None)] fix [(72.7, 'reanchor_skipped:disabled')] phase ready wall 28.6
+g6 g6|G1+S1@FR|bottom|Fs4 DSb fail hash c1591c73d935 ready 72.3000000001632 minF 21.33040250294611 att [0.003774745399277658, -0.0036061994630440346] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9469 windows [(27.3, 15.6, 2.948, None)] fix [(72.3, 'reanchor_skipped:disabled')] phase ready wall 28.6
+g6 g6|G1+S1@RL|top|Fs0 DSb fail hash 3025ba7b33a2 ready 92.90000000026156 minF 22.551862482362793 att [0.002408502449115135, -2.8484439258326307e-05] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9978 windows [(25.1, 15.84, 0.932, None)] fix [(92.9, 'reanchor_skipped:disabled')] phase ready wall 34.5
+g6 g6|G1+S1@RL|top|Fs4 DSb fail hash a46fb7a722e6 ready 95.4000000002735 minF 22.49831812469222 att [0.0034099190792877257, 0.0003134760277446523] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9495 windows [(24.8, 5.13, 1.013, None)] fix [(95.4, 'reanchor_skipped:disabled')] phase ready wall 35.2
+g6 g6|G1+S1@RL|bottom|Fs0 DSb pass hash d2099252579c ready 98.9000000002902 minF 26.854984913305415 att [0.003673905579693445, 0.001004410281100228] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9969 windows [(23.4, 3.49, 1.0, None)] fix [(98.9, 'reanchor_skipped:disabled')] phase ready wall 36.2
+g6 g6|G1+S1@RL|bottom|Fs4 DSb pass hash 38001589f5e5 ready 98.60000000028877 minF 27.344403453174014 att [0.003073722283314016, 0.0004933076197213491] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.946 windows [(23.4, 5.3, 1.015, None)] fix [(98.6, 'reanchor_skipped:disabled')] phase ready wall 36.2
+g6 g6|G1+S1@RR|top|Fs0 DSb fail hash ba03babc8eb8 ready 91.10000000025296 minF 22.42281099085545 att [-0.0030115233922127066, 0.00047495732887967455] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9979 windows [(25.1, 14.95, 0.835, None)] fix [(91.1, 'reanchor_skipped:disabled')] phase ready wall 33.9
+g6 g6|G1+S1@RR|top|Fs4 DSb fail hash 06e037f9ac2b ready 93.6000000002649 minF 22.3708016918369 att [-0.003518727278109785, 0.0002909752882456843] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9489 windows [(24.8, 4.27, 0.762, None)] fix [(93.6, 'reanchor_skipped:disabled')] phase ready wall 34.8
+g6 g6|G1+S1@RR|bottom|Fs0 DSb pass hash 49df003cdbe9 ready 97.30000000028257 minF 26.3090719710089 att [-0.0033595742954212267, 0.0006168559531285542] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9984 windows [(23.3, 3.56, 0.962, None)] fix [(97.3, 'reanchor_skipped:disabled')] phase ready wall 35.9
+g6 g6|G1+S1@RR|bottom|Fs4 DSb pass hash 227307c8d1b3 ready 97.00000000028113 minF 26.893494721011976 att [-0.002966199682850508, 0.00030592508113215457] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9476 windows [(23.3, 1.25, 0.952, None)] fix [(97.0, 'reanchor_skipped:disabled')] phase ready wall 35.8
+g6 ref|G1|top|Fs0 DSb pass hash 5227fcd40474 ready 40.20000000000992 minF 63.275961044413975 att [-0.001581527608511656, -0.006127858690537476] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9966 windows [(22.9, 2.95, 1.045, None)] fix [(40.2, 'reanchor_skipped:disabled')] phase ready wall 18.8
+g6 ref|G1|top|Fs4 DSb pass hash 91490a108f7c ready 40.100000000009445 minF 62.88570959713286 att [-0.0018746952312397975, -0.007373370349587224] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9471 windows [(21.9, 1.66, 1.022, None)] fix [(40.1, 'reanchor_skipped:disabled')] phase ready wall 18.7
+g6 ref|G1|bottom|Fs0 DSb pass hash cff9ecf96e38 ready 38.900000000003715 minF 63.529257313364596 att [-0.0013972091984016952, -0.0017483611910320829] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9984 windows [(21.8, 2.37, 0.982, None)] fix [(38.9, 'reanchor_skipped:disabled')] phase ready wall 18.3
+g6 ref|G1|bottom|Fs4 DSb pass hash e953b743b810 ready 39.4000000000061 minF 62.931248629641274 att [-0.0011611224129016483, -0.0036746143604726887] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9472 windows [(21.8, 3.71, 0.984, None)] fix [(39.4, 'reanchor_skipped:disabled')] phase ready wall 18.4
+g6 ref|J1|top|Fs0 DSb pass hash 8019116d763f ready 62.700000000117356 minF 69.0641616234236 att [0.06944612222849736, -0.022602298469208828] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9998 windows [(28.2, 10.22, -3.031, None)] fix [(29.2, 'FIX_DIFF_SINK_HOLD:FL,RL:4.5'), (30.8, 'FIX_DIFF_SINK_RELEASE:settled'), (62.7, 'reanchor_skipped:disabled')] phase ready wall 25.4
+g6 ref|J1|top|Fs4 DSb pass hash 2dca05570fdb ready 63.900000000123086 minF 68.8079199858465 att [0.015800050378015313, -0.019487011277054937] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.936 windows [(28.0, 7.5, -0.105, None)] fix [(29.0, 'FIX_DIFF_SINK_HOLD:FL,RL:3.7'), (30.6, 'FIX_DIFF_SINK_RELEASE:settled'), (63.9, 'reanchor_skipped:disabled')] phase ready wall 25.8
+g6 ref|J1|bottom|Fs0 DSb pass hash b5f072113946 ready 63.30000000012022 minF 69.68321505867628 att [0.007452302000967971, -0.02206645673472378] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9989 windows [(28.1, 9.04, 0.435, None)] fix [(63.3, 'reanchor_skipped:disabled')] phase ready wall 25.8
+g6 ref|J1|bottom|Fs4 DSb pass hash 601bcd8b8a86 ready 63.100000000119266 minF 69.62252137547355 att [0.0021002463366817012, -0.015714809894068312] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9329 windows [(28.2, 8.58, 0.16, None)] fix [(63.1, 'reanchor_skipped:disabled')] phase ready wall 26.0
+g6 ref|J2|top|Fs0 DSb pass hash 5b0f466c6f29 ready 64.80000000012738 minF 68.92251436010048 att [0.053143313966585976, -0.034637670601441246] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9992 windows [(33.4, 10.52, -3.152, None)] fix [(34.4, 'FIX_DIFF_SINK_HOLD:FL,RL:3.5'), (35.9, 'FIX_DIFF_SINK_RELEASE:settled'), (64.8, 'reanchor_skipped:disabled')] phase ready wall 26.3
+g6 ref|J2|top|Fs4 DSb pass hash ae22eab471a0 ready 64.90000000012786 minF 68.7336445321671 att [0.030446287955433655, -0.03204922032559668] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.937 windows [(33.4, 10.52, -3.042, None)] fix [(34.4, 'FIX_DIFF_SINK_HOLD:FL,RL:3.5'), (35.9, 'FIX_DIFF_SINK_RELEASE:settled'), (64.9, 'reanchor_skipped:disabled')] phase ready wall 26.5
+g6 ref|J2|bottom|Fs0 DSb pass hash 5002581977af ready 68.10000000014314 minF 69.55850280579546 att [0.01352342841610049, -0.026850691442453743] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9985 windows [(33.7, 8.82, 3.207, None)] fix [(68.1, 'reanchor_skipped:disabled')] phase ready wall 27.9
+g6 ref|J2|bottom|Fs4 DSb pass hash 5471fb376ab7 ready 67.60000000014075 minF 69.54602648195467 att [0.010991925022399382, -0.021407190735043758] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9331 windows [(33.7, 8.85, 3.212, None)] fix [(67.6, 'reanchor_skipped:disabled')] phase ready wall 27.6
+g6 ref|S1|top|Fs0 DSb pass hash 40dc5667de35 ready 57.30000000009157 minF 68.28592982397714 att [0.031081146873136622, 0.03267666360641743] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9967 windows [(37.3, 4.43, 1.352, None)] fix [(57.3, 'reanchor_skipped:disabled')] phase ready wall 24.6
+g6 ref|S1|top|Fs4 DSb pass hash 68546591221e ready 57.40000000009205 minF 68.19125631435001 att [0.03016624841501322, 0.032900471563014386] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9376 windows [(37.3, 4.44, 1.517, None)] fix [(57.4, 'reanchor_skipped:disabled')] phase ready wall 26.0
+g6 ref|S1|bottom|Fs0 DSb pass hash 62ef39386c82 ready 57.30000000009157 minF 68.73371055103003 att [0.014481219883311676, 0.019078602803495846] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9966 windows [(37.3, 4.86, 0.866, None)] fix [(57.3, 'reanchor_skipped:disabled')] phase ready wall 24.6
+g6 ref|S1|bottom|Fs4 DSb pass hash 341f88625b75 ready 57.40000000009205 minF 68.66889350343024 att [0.015044729493990414, 0.02158747498094788] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9358 windows [(37.3, 4.95, 0.675, None)] fix [(57.4, 'reanchor_skipped:disabled')] phase ready wall 24.6
+g6 g6r|rigid+J1@FL|top|Fs0 DSb pass hash 20d74847d8bb ready 63.900000000123086 minF 26.46790441867799 att [-0.009426250134886797, -0.0031872878711851865] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9984 windows [(22.7, 14.86, 0.322, None)] fix [(63.9, 'reanchor_skipped:disabled')] phase ready wall 26.9
+g6 g6r|rigid+J1@FL|top|Fs4 DSb pass hash f7081e5aa7b7 ready 63.500000000121176 minF 25.537435469557224 att [-0.009846708252033532, -0.0033659169410117837] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9468 windows [(22.2, 7.05, 0.838, None)] fix [(63.5, 'reanchor_skipped:disabled')] phase ready wall 26.7
+g6 g6r|rigid+J1@FL|bottom|Fs0 DSb pass hash d4d6c7089105 ready 63.900000000123086 minF 34.32946331837492 att [-0.008789679147531947, -0.004534171995922363] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9986 windows [(22.3, 10.33, 0.291, None)] fix [(63.9, 'reanchor_skipped:disabled')] phase ready wall 26.7
+g6 g6r|rigid+J1@FL|bottom|Fs4 DSb pass hash 496497d9dbd0 ready 63.500000000121176 minF 35.95831271421353 att [-0.007594761168270369, -0.005205034282445319] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9479 windows [(21.9, 8.81, 1.19, None)] fix [(63.5, 'reanchor_skipped:disabled')] phase ready wall 27.9
+g6 g6r|rigid+J1@FR|top|Fs0 DSb pass hash d418b00e94b4 ready 60.300000000105896 minF 30.672118756596113 att [0.008736150029599201, -0.005304615676621904] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 1.0001 windows [(21.8, 4.46, 0.858, None)] fix [(60.3, 'reanchor_skipped:disabled')] phase ready wall 25.7
+g6 g6r|rigid+J1@FR|top|Fs4 DSb pass hash c566b359eb8b ready 59.90000000010399 minF 29.805427454262325 att [0.010839939711124565, -0.004864320182269104] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9494 windows [(21.4, 2.39, 0.937, None)] fix [(59.9, 'reanchor_skipped:disabled')] phase ready wall 25.6
+g6 g6r|rigid+J1@FR|bottom|Fs0 DSb pass hash dfdc71031c7f ready 60.700000000107806 minF 37.19229338314447 att [0.00858558769782724, -0.006091040241954925] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9987 windows [(22.4, 5.54, 1.198, None)] fix [(60.7, 'reanchor_skipped:disabled')] phase ready wall 25.7
+g6 g6r|rigid+J1@FR|bottom|Fs4 DSb pass hash 548e544f6580 ready 60.300000000105896 minF 37.57725986965805 att [0.009820420472504103, -0.006118138227261576] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9475 windows [(21.5, 10.36, 0.985, None)] fix [(60.3, 'reanchor_skipped:disabled')] phase ready wall 25.5
+g6 g6r|rigid+J1@RL|top|Fs0 DSb pass hash 3e2b84caeaca ready 77.30000000018707 minF 45.29880856401816 att [-0.0010823967793914865, -0.008266698274366295] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9978 windows [(21.4, 8.73, 0.866, None)] fix [(77.3, 'reanchor_skipped:disabled')] phase ready wall 30.7
+g6 g6r|rigid+J1@RL|top|Fs4 DSb pass hash 4c1d038aff4d ready 77.20000000018659 minF 45.439546372003186 att [-0.0019714983845338214, -0.008829282460818036] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9468 windows [(21.3, 4.0, 0.981, None)] fix [(77.2, 'reanchor_skipped:disabled')] phase ready wall 30.9
+g6 g6r|rigid+J1@RL|bottom|Fs0 DSb pass hash 1d5eed2ff67f ready 77.6000000001885 minF 46.67476743218225 att [-0.00108142262245615, -0.008777242711300048] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9971 windows [(21.3, 4.76, 1.002, None)] fix [(77.6, 'reanchor_skipped:disabled')] phase ready wall 32.4
+g6 g6r|rigid+J1@RL|bottom|Fs4 DSb pass hash c7d7c074a8c2 ready 77.6000000001885 minF 45.9408473559795 att [-0.0018226876673745535, -0.009109761129598356] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9462 windows [(21.3, 7.27, 0.978, None)] fix [(77.6, 'reanchor_skipped:disabled')] phase ready wall 31.1
+g6 g6r|rigid+J1@RR|top|Fs0 DSb pass hash bc47251983a5 ready 69.20000000014839 minF 45.304038498448485 att [0.005278255177351319, -0.010536573394695055] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9971 windows [(21.4, 7.33, 0.967, None)] fix [(69.2, 'reanchor_skipped:disabled')] phase ready wall 28.6
+g6 g6r|rigid+J1@RR|top|Fs4 DSb pass hash 95c1cf8cfc02 ready 69.00000000014744 minF 45.39185611392163 att [0.004782587965693527, -0.01082743376492879] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9467 windows [(21.3, 8.25, 1.018, None)] fix [(69.0, 'reanchor_skipped:disabled')] phase ready wall 28.4
+g6 g6r|rigid+J1@RR|bottom|Fs0 DSb pass hash 00b6c4d9c397 ready 69.30000000014887 minF 45.93511811437781 att [0.005194571071437758, -0.01119585910298793] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9968 windows [(21.3, 4.85, 0.853, None)] fix [(69.3, 'reanchor_skipped:disabled')] phase ready wall 28.4
+g6 g6r|rigid+J1@RR|bottom|Fs4 DSb pass hash c58bdb273d26 ready 69.30000000014887 minF 45.16102852966247 att [0.005420532427332917, -0.011424660143885051] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9454 windows [(21.3, 9.04, 0.992, None)] fix [(69.3, 'reanchor_skipped:disabled')] phase ready wall 28.3
+g6 g6r|rigid+J2@FL|top|Fs0 DSb fail hash 62130a17e083 ready 64.00000000012356 minF 11.731954605370557 att [-0.013423043745338235, -0.0009352078913194767] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9985 windows [(25.2, 51.47, 0.139, None)] fix [(64.0, 'reanchor_skipped:disabled')] phase ready wall 26.6
+g6 g6r|rigid+J2@FL|top|Fs4 DSb pass hash 8737bd5bc589 ready 81.30000000020617 minF 10.510863647725229 att [-0.009608904600928315, -0.0008398460709041292] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9472 windows [(23.4, 10.15, 1.283, None)] fix [(81.3, 'reanchor_skipped:disabled')] phase ready wall 33.1
+g6 g6r|rigid+J2@FL|bottom|Fs0 DSb pass hash f579fdb9e7f0 ready 81.50000000020712 minF 21.851440011177992 att [-0.008417709038882532, -0.0017465148627801139] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9986 windows [(23.5, 11.43, 1.584, None)] fix [(81.5, 'reanchor_skipped:disabled')] phase ready wall 32.1
+g6 g6r|rigid+J2@FL|bottom|Fs4 DSb pass hash 187c751600a4 ready 81.50000000020712 minF 21.443762241546217 att [-0.008251956163614863, -0.0016926965356282178] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9473 windows [(23.0, 13.39, 1.676, None)] fix [(81.5, 'reanchor_skipped:disabled')] phase ready wall 32.1
+g6 g6r|rigid+J2@FR|top|Fs0 DSb fail hash 07ea546de0c8 ready 60.400000000106374 minF 15.463816223941455 att [0.01058201392947832, -0.00436467088493389] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9974 windows [(26.1, 28.03, 0.003, None)] fix [(60.4, 'reanchor_skipped:disabled')] phase ready wall 25.8
+g6 g6r|rigid+J2@FR|top|Fs4 DSb pass hash fdb8d6259c65 ready 77.6000000001885 minF 13.716799230433281 att [0.0078799007183703, -0.0021927878969178576] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9478 windows [(22.9, 14.03, 1.094, None)] fix [(77.6, 'reanchor_skipped:disabled')] phase ready wall 31.0
+g6 g6r|rigid+J2@FR|bottom|Fs0 DSb pass hash 12c1e8020412 ready 77.80000000018946 minF 24.72294072439967 att [0.005281595036834524, -0.003762023296945043] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9987 windows [(23.0, 14.97, 1.002, None)] fix [(77.8, 'reanchor_skipped:disabled')] phase ready wall 31.1
+g6 g6r|rigid+J2@FR|bottom|Fs4 DSb pass hash 6171879b3834 ready 77.80000000018946 minF 24.87235582779938 att [0.006615281187613804, -0.0031141295162011046] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9485 windows [(23.0, 15.89, 1.591, None)] fix [(77.8, 'reanchor_skipped:disabled')] phase ready wall 31.0
+g6 g6r|rigid+J2@RL|top|Fs0 DSb pass hash 6a7977652a6f ready 103.50000000031217 minF 35.27153215965052 att [-0.0029483160807717446, 0.0009305885537388346] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9998 windows [(21.4, 12.03, 0.816, None)] fix [(103.5, 'reanchor_skipped:disabled')] phase ready wall 31.9
+g6 g6r|rigid+J2@RL|top|Fs4 DSb pass hash 723ac9e92195 ready 103.40000000031169 minF 35.80053385591097 att [-0.003821271701710022, 0.00029951566933340455] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9469 windows [(21.3, 2.31, 0.973, None)] fix [(103.4, 'reanchor_skipped:disabled')] phase ready wall 31.8
+g6 g6r|rigid+J2@RL|bottom|Fs0 DSb pass hash 51330fcff005 ready 103.70000000031312 minF 38.02218916292168 att [-0.0028605632326146376, 0.00023503067728380912] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.998 windows [(21.3, 12.8, 1.007, None)] fix [(103.7, 'reanchor_skipped:disabled')] phase ready wall 31.8
+g6 g6r|rigid+J2@RL|bottom|Fs4 DSb pass hash 5b4b4d186d86 ready 103.8000000003136 minF 37.91311404274414 att [-0.0035630964634205987, -7.699928532942666e-05] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9471 windows [(21.3, 12.51, 0.947, None)] fix [(103.8, 'reanchor_skipped:disabled')] phase ready wall 29.7
+g6 g6r|rigid+J2@RR|top|Fs0 DSb pass hash c77d9c7bb669 ready 95.00000000027158 minF 35.5235835707952 att [0.003530937680962896, -0.0016814506495015414] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9989 windows [(21.4, 9.69, 0.977, None)] fix [(95.0, 'reanchor_skipped:disabled')] phase ready wall 27.6
+g6 g6r|rigid+J2@RR|top|Fs4 DSb pass hash 3a55aad72689 ready 94.9000000002711 minF 35.99072354792995 att [0.002949262651565898, -0.0019781049865135298] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9468 windows [(21.3, 6.48, 0.993, None)] fix [(94.9, 'reanchor_skipped:disabled')] phase ready wall 27.9
+g6 g6r|rigid+J2@RR|bottom|Fs0 DSb pass hash a160c788595b ready 95.20000000027254 minF 37.89013949623196 att [0.003307989343647011, -0.002460187449449719] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9975 windows [(21.3, 10.29, 0.849, None)] fix [(95.2, 'reanchor_skipped:disabled')] phase ready wall 27.0
+g6 g6r|rigid+J2@RR|bottom|Fs4 DSb pass hash 7e4064b14bd3 ready 95.20000000027254 minF 37.78229539976368 att [0.0035017212057577452, -0.0026738001424724566] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9462 windows [(21.3, 14.66, 0.982, None)] fix [(95.2, 'reanchor_skipped:disabled')] phase ready wall 27.2
+g6 g6r|rigid+S1@FL|top|Fs0 DSb fail hash 00997059ca5a ready 52.3000000000677 minF 16.81709026366574 att [-0.00041002007670789577, -0.016090436941213416] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9974 windows [(28.3, 49.97, 1.171, None)] fix [(52.3, 'reanchor_skipped:disabled')] phase ready wall 17.3
+g6 g6r|rigid+S1@FL|top|Fs4 DSb fail hash 1145e904d04f ready 62.000000000114014 minF 10.667367458323138 att [-0.006259110817051606, -0.0053791472504478455] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9478 windows [(27.8, 61.89, 0.634, None)] fix [(62.0, 'reanchor_skipped:disabled')] phase ready wall 19.4
+g6 g6r|rigid+S1@FL|bottom|Fs0 DSb fail hash 312e579c7ae1 ready 66.00000000013311 minF 23.22086627825854 att [-0.002507706076583854, -0.006431382302674717] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9989 windows [(25.7, 10.43, 3.918, None)] fix [(66.0, 'reanchor_skipped:disabled')] phase ready wall 20.2
+g6 g6r|rigid+S1@FL|bottom|Fs4 DSb fail hash f7013cfab56d ready 67.50000000014028 minF 22.26663158128523 att [-0.0007206743955067194, -0.006592121334262176] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9477 windows [(25.6, 5.66, 4.052, None)] fix [(67.5, 'reanchor_skipped:disabled')] phase ready wall 21.4
+g6 g6r|rigid+S1@FR|top|Fs0 DSb fail hash f40831d1aea2 ready 52.3000000000677 minF 11.61946486119942 att [-0.004203885650065709, -0.018267597537844685] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9969 windows [(28.5, 50.24, 2.039, None)] fix [(52.3, 'reanchor_skipped:disabled')] phase ready wall 16.9
+g6 g6r|rigid+S1@FR|top|Fs4 DSb fail hash 54afb3b16337 ready 61.80000000011306 minF 11.215103052538518 att [0.007254015210065382, -0.004545768767888473] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9483 windows [(27.5, 65.07, 2.322, None)] fix [(61.8, 'reanchor_skipped:disabled')] phase ready wall 19.6
+g6 g6r|rigid+S1@FR|bottom|Fs0 DSb fail hash 7887387e7290 ready 66.70000000013646 minF 23.846476714499673 att [-0.0007523445164032517, -0.0075138800294501755] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.999 windows [(25.6, 10.68, 1.811, None)] fix [(66.7, 'reanchor_skipped:disabled')] phase ready wall 20.5
+g6 g6r|rigid+S1@FR|bottom|Fs4 DSb fail hash c8f2792224ef ready 66.5000000001355 minF 19.022120635732815 att [0.001364151356817668, -0.006572706790184404] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.949 windows [(25.7, 21.35, 1.987, None)] fix [(66.5, 'reanchor_skipped:disabled')] phase ready wall 20.6
+g6 g6r|rigid+S1@RL|top|Fs0 DSb pass hash a54981b500c9 ready 95.10000000027206 minF 14.109523793522547 att [0.006149042865464374, 0.003538014639774711] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9992 windows [(22.9, 7.5, 1.014, None)] fix [(95.1, 'reanchor_skipped:disabled')] phase ready wall 27.2
+g6 g6r|rigid+S1@RL|top|Fs4 DSb pass hash 55a4ea601d21 ready 96.30000000027779 minF 14.728191625792903 att [0.005220951986049965, 0.0032756521110350093] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9485 windows [(22.9, 9.02, 0.959, None)] fix [(96.3, 'reanchor_skipped:disabled')] phase ready wall 29.0
+g6 g6r|rigid+S1@RL|bottom|Fs0 DSb pass hash 068ab6bf5451 ready 95.4000000002735 minF 18.054228241410783 att [0.00623976506028147, 0.003671023766423159] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9989 windows [(23.1, 17.67, 0.987, None)] fix [(95.4, 'reanchor_skipped:disabled')] phase ready wall 27.1
+g6 g6r|rigid+S1@RL|bottom|Fs4 DSb pass hash da1933023165 ready 97.20000000028209 minF 17.90744945689905 att [0.005435954618970883, 0.003434068229048445] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9478 windows [(23.1, 15.76, 0.992, None)] fix [(97.2, 'reanchor_skipped:disabled')] phase ready wall 27.9
+g6 g6r|rigid+S1@RR|top|Fs0 DSb pass hash fcc5fb3e93af ready 93.40000000026394 minF 14.429355801901776 att [-0.005379991033885805, 0.0031500064835935757] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9985 windows [(22.9, 11.86, 0.977, None)] fix [(93.4, 'reanchor_skipped:disabled')] phase ready wall 27.1
+g6 g6r|rigid+S1@RR|top|Fs4 DSb pass hash 9bba63c6b2b2 ready 94.70000000027015 minF 14.982666997239319 att [-0.005814747914453649, 0.0031442155881008767] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9481 windows [(22.9, 7.88, 0.996, None)] fix [(94.7, 'reanchor_skipped:disabled')] phase ready wall 27.6
+g6 g6r|rigid+S1@RR|bottom|Fs0 DSb pass hash 9d469b62bd0b ready 93.80000000026585 minF 17.99202190560934 att [-0.005575617127188535, 0.0031965529156810727] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9987 windows [(23.1, 15.66, 0.997, None)] fix [(93.8, 'reanchor_skipped:disabled')] phase ready wall 27.4
+g6 g6r|rigid+S1@RR|bottom|Fs4 DSb pass hash f771b1b84c12 ready 95.70000000027493 minF 17.80821385871535 att [-0.0052639060601893045, 0.0030555526032202333] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9471 windows [(23.1, 15.17, 1.006, None)] fix [(95.7, 'reanchor_skipped:disabled')] phase ready wall 28.6
+g6 ref|rigid|top|Fs0 DSb pass hash 269521d352da ready 39.20000000000515 minF 55.19776231924333 att [-0.00016411192595627939, -0.011193612616497364] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9983 windows [(21.5, 4.11, 0.905, None)] fix [(39.2, 'reanchor_skipped:disabled')] phase ready wall 11.2
+g6 ref|rigid|top|Fs4 DSb pass hash a91e95796d41 ready 39.4000000000061 minF 54.6903272019059 att [-0.00031316306971866697, -0.011865658263171645] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9463 windows [(21.2, 7.74, 0.986, None)] fix [(39.4, 'reanchor_skipped:disabled')] phase ready wall 10.6
+g6 ref|rigid|bottom|Fs0 DSb pass hash e25a4ef55dd4 ready 39.60000000000706 minF 55.48524062983806 att [-0.00032281201258721687, -0.013031914698906636] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9966 windows [(21.7, 4.47, 0.925, None)] fix [(39.6, 'reanchor_skipped:disabled')] phase ready wall 12.5
+g6 ref|rigid|bottom|Fs4 DSb pass hash 4f87a130807c ready 39.80000000000801 minF 54.69239262990627 att [-0.00030382359973054945, -0.014082377856394886] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9457 windows [(21.3, 6.87, 0.983, None)] fix [(39.8, 'reanchor_skipped:disabled')] phase ready wall 11.8
+{
+ "g6|DSb": {
+  "n": 116,
+  "errors": 0,
+  "no_baseline": 116,
+  "verdict_changed": 0,
+  "pass_to_fail": 0,
+  "fail_to_pass": 0,
+  "hash_same": 0,
+  "e_cases": 0,
+  "e_resolved": 0,
+  "false_loc_after": 0,
+  "ready_recontacts_after": 0,
+  "acted": 0,
+  "idle_hash_differs": 0,
+  "a3_checked": 0,
+  "a3_fail": 0
+ }
+}
+wall 550.4 s -> C:\workspace\outrigger_control\06_analysis\02_control\s9\rev83\regDSb_g6.json
+[04:40:33] END g6 rc=0 wall=551s
+[04:40:33] START h6
+C2 t=37.20 s: INFO_LOC_REVOKED:2.2
+C2 t=36.60 s: INFO_LOC_REVOKED:2.2
+C2 t=42.80 s: WARN_CRAWLER_LIFTOFF_UNCONFIRMED
+C2 t=43.40 s: WARN_CRAWLER_LIFTOFF_UNCONFIRMED
+C2 t=36.50 s: INFO_LOC_REVOKED:2.5
+C2 t=42.90 s: WARN_CRAWLER_LIFTOFF_UNCONFIRMED
+C2 t=36.60 s: INFO_LOC_REVOKED:2.4
+C2 t=42.90 s: WARN_CRAWLER_LIFTOFF_UNCONFIRMED
+C2 t=37.60 s: INFO_LOC_REVOKED:2.2
+C2 t=43.00 s: WARN_CRAWLER_LIFTOFF_UNCONFIRMED
+C2 t=37.00 s: INFO_LOC_REVOKED:2.2
+C2 t=42.70 s: WARN_CRAWLER_LIFTOFF_UNCONFIRMED
+C2 t=29.50 s: WARN_WEIGHT_MISMATCH:1.231
+C2 t=39.90 s: INFO_LOC_REVOKED:2.8
+C2 t=41.90 s: WARN_WEIGHT_MISMATCH:1.241
+C2 t=29.10 s: WARN_WEIGHT_MISMATCH:1.232
+C2 t=21.60 s: WARN_WEIGHT_MISMATCH:1.240
+C2 t=21.70 s: WARN_WEIGHT_MISMATCH:1.242
+C2 t=21.50 s: WARN_WEIGHT_MISMATCH:1.202
+C2 t=39.90 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.560
+C2 t=21.20 s: WARN_WEIGHT_MISMATCH:1.240
+h6 H6|J1|B|top|flat|Fs0 DSb pass hash 4adbddc5e61d ready 64.50000000012595 minF 69.16093723301019 att [-0.030348746448099016, -0.0322747605643546] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9996 windows [(27.4, 11.41, 0.354, None)] fix [(28.4, 'FIX_DIFF_SINK_HOLD:FL,RL:3.7'), (30.0, 'FIX_DIFF_SINK_RELEASE:settled'), (64.5, 'reanchor_skipped:disabled')] phase ready wall 36.5
+h6 H6|J1|B|top|flat|Fs0|m1.1 DSb pass hash 9fe8a00fdee2 ready 73.30000000016797 minF 75.41767973391045 att [-0.0641945740575634, -0.03796710047725209] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9988 windows [(35.8, 10.71, 2.622, None), (38.1, 7.63, 2.282, None)] fix [(36.8, 'FIX_DIFF_SINK_HOLD:FL,RL:7.0'), (37.2, 'INFO_LOC_REVOKED:2.2'), (39.3, 'FIX_DIFF_SINK_RELEASE:reversed'), (42.3, 'FIX_DIFF_SINK_HOLD:FR,RR:3.4'), (44.4, 'FIX_DIFF_SINK_RELEASE:settled'), (73.3, 'reanchor_skipped:disabled')] phase ready wall 37.7
+h6 H6|J1|B|top|flat|Fs0|m1.2 DSb fail hash 16591b2cac6b ready None minF 39.27723181005477 att [-0.004014909775928359, -0.1543866004656069] falseLOC 0 LOCcrawler [] READYrecontact 0 ratioREADY None windows [] fix [] phase fault wall 27.8
+h6 H6|J1|B|top|flat DSb pass hash 58f77b7b7420 ready 63.900000000123086 minF 68.53891357076832 att [-0.02863039422310027, -0.02495726135403438] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9382 windows [(26.8, 11.23, -0.806, None)] fix [(27.8, 'FIX_DIFF_SINK_HOLD:FL,RL:3.7'), (29.4, 'FIX_DIFF_SINK_RELEASE:settled'), (63.9, 'reanchor_skipped:disabled')] phase ready wall 34.6
+h6 H6|J1|B|top|flat|m1.1 DSb pass hash dbb778d1e375 ready 72.90000000016606 minF 75.39030225655672 att [-0.04721939108488988, -0.03968521558293156] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9432 windows [(35.2, 10.65, -0.165, None), (37.5, 7.58, 0.63, None)] fix [(36.2, 'FIX_DIFF_SINK_HOLD:FL,RL:7.1'), (36.6, 'INFO_LOC_REVOKED:2.2'), (38.7, 'FIX_DIFF_SINK_RELEASE:reversed'), (41.7, 'FIX_DIFF_SINK_HOLD:FR,RR:3.5'), (43.9, 'FIX_DIFF_SINK_RELEASE:settled'), (72.9, 'reanchor_skipped:disabled')] phase ready wall 38.1
+h6 H6|J1|B|top|flat|m1.2 DSb fail hash c2d978bf6d9b ready None minF 39.91795914292081 att [-0.004023095908044508, -0.1538839182131261] falseLOC 0 LOCcrawler [] READYrecontact 0 ratioREADY None windows [] fix [] phase fault wall 27.2
+h6 H6|J1|B|middle|flat|Fs0 DSb pass hash 35bba339dc0b ready 63.00000000011879 minF 69.3095997308131 att [-0.011154236496471633, -0.029867028326342148] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9993 windows [(27.7, 11.53, 2.779, None)] fix [(63.0, 'reanchor_skipped:disabled')] phase ready wall 21.2
+h6 H6|J1|B|middle|flat|Fs0|m1.1 DSb pass hash c45619a5ad3b ready 77.40000000018755 minF 76.03731094824639 att [0.02029313457602614, -0.0023351890129252578] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 1.0016 windows [(35.2, 10.64, -1.884, None), (37.4, 0.81, -0.218, None)] fix [(36.2, 'FIX_DIFF_SINK_HOLD:FL,RL:6.9'), (36.5, 'INFO_LOC_REVOKED:2.5'), (38.3, 'FIX_DIFF_SINK_RELEASE:reversed'), (77.4, 'reanchor_skipped:disabled')] phase probe wall 24.4
+h6 H6|J1|B|middle|flat|Fs0|m1.2 DSb fail hash a3affb10ff2a ready None minF 39.194508645769695 att [-0.004207358926330522, -0.15173954387546823] falseLOC 0 LOCcrawler [] READYrecontact 0 ratioREADY None windows [] fix [] phase fault wall 13.4
+h6 H6|J1|B|middle|flat DSb pass hash ff4e9e65aed4 ready 64.300000000125 minF 69.3919640236273 att [-0.014992291880123194, -0.01748299285912354] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9363 windows [(26.9, 11.15, -0.073, None)] fix [(64.3, 'reanchor_skipped:disabled')] phase ready wall 20.0
+h6 H6|J1|B|middle|flat|m1.1 DSb pass hash 58273ca8c57b ready 88.30000000023959 minF 75.98085691300689 att [-0.05120275913890797, -0.048897906638050694] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9411 windows [(35.3, 11.04, 0.204, None), (37.5, 0.69, 1.014, None)] fix [(36.3, 'FIX_DIFF_SINK_HOLD:FL,RL:7.0'), (36.6, 'INFO_LOC_REVOKED:2.4'), (38.4, 'FIX_DIFF_SINK_RELEASE:reversed'), (88.3, 'reanchor_skipped:disabled')] phase ready wall 24.8
+h6 H6|J1|B|middle|flat|m1.2 DSb fail hash c99bc579a417 ready None minF 39.539214001101485 att [-0.004201520434232855, -0.15178310977126488] falseLOC 0 LOCcrawler [] READYrecontact 0 ratioREADY None windows [] fix [] phase fault wall 13.0
+h6 H6|J1|B|bottom|flat|Fs0 DSb pass hash 06476b1e04c5 ready 67.30000000013932 minF 69.48695102479871 att [-0.018618523240588766, -0.01983431286722679] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9988 windows [(27.0, 9.84, -0.114, None)] fix [(67.3, 'reanchor_skipped:disabled')] phase ready wall 20.4
+h6 H6|J1|B|bottom|flat|Fs0|m1.1 DSb pass hash b233bc627dc7 ready 76.3000000001823 minF 76.49336991098916 att [-0.06012411653778631, -0.0405580030232669] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9969 windows [(36.3, 11.44, -1.403, None), (38.5, 3.07, 0.156, None)] fix [(37.3, 'FIX_DIFF_SINK_HOLD:FL,RL:6.3'), (37.6, 'INFO_LOC_REVOKED:2.2'), (39.3, 'FIX_DIFF_SINK_RELEASE:settled'), (76.3, 'reanchor_skipped:disabled')] phase ready wall 22.6
+h6 H6|J1|B|bottom|flat|Fs0|m1.2 DSb fail hash 4a96cf167040 ready None minF 34.96359791560869 att [-0.004596920272521731, -0.15008264485518116] falseLOC 0 LOCcrawler [] READYrecontact 0 ratioREADY None windows [] fix [] phase fault wall 13.3
+h6 H6|J1|B|bottom|flat DSb pass hash 822be482ee63 ready 66.90000000013741 minF 69.53694831971583 att [-0.015116585780271011, -0.012412883660539536] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9341 windows [(27.0, 9.89, -0.693, None)] fix [(66.9, 'reanchor_skipped:disabled')] phase ready wall 20.0
+h6 H6|J1|B|bottom|flat|m1.1 DSb pass hash 15fe69e178dc ready 76.3000000001823 minF 76.47764940000512 att [-0.03537783470413691, -0.03268781822481303] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9378 windows [(35.7, 11.26, -1.29, None), (37.9, 3.06, 0.223, None)] fix [(36.7, 'FIX_DIFF_SINK_HOLD:FL,RL:6.3'), (37.0, 'INFO_LOC_REVOKED:2.2'), (38.7, 'FIX_DIFF_SINK_RELEASE:settled'), (76.3, 'reanchor_skipped:disabled')] phase ready wall 22.3
+h6 H6|J1|B|bottom|flat|m1.2 DSb fail hash 8f3cee9428a7 ready None minF 38.18104960027415 att [-0.0043099252127246955, -0.1500485978260868] falseLOC 0 LOCcrawler [] READYrecontact 0 ratioREADY None windows [] fix [] phase fault wall 13.3
+h6 H6|J1|A|top|flat DSb pass hash 71feae192f71 ready 47.10000000004287 minF 65.23478500422111 att [-0.007946951534314316, 0.04604105958029042] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9507 windows [(23.6, 3.94, 0.084, None)] fix [(47.1, 'reanchor_skipped:disabled')] phase ready wall 15.7
+h6 H6|J1|A|top|flat|m1.1 DSb pass hash 1199cbcf2f76 ready 50.90000000006101 minF 72.80038544205186 att [-0.008782730632451592, 0.04630289672122033] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9565 windows [(26.1, 10.77, 0.161, None)] fix [(50.9, 'reanchor_skipped:disabled')] phase ready wall 16.4
+h6 H6|J1|A|top|flat|m1.2 DSb fail hash 0369017c24d7 ready 60.300000000105896 minF 78.74684217982858 att [-0.016226190327754315, 0.026933911046365125] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9554 windows [(29.5, 13.83, -0.64, None), (41.9, 0.17, -2.486, None)] fix [(39.9, 'INFO_LOC_REVOKED:2.8'), (60.3, 'reanchor_skipped:disabled')] phase ready wall 18.6
+h6 H6|J1|A|bottom|flat DSb pass hash d4b46ecb2cb0 ready 47.200000000043346 minF 66.6456187369839 att [-0.007320759188582311, 0.04124755900613183] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9421 windows [(23.4, 5.32, 0.418, None)] fix [(47.2, 'reanchor_skipped:disabled')] phase ready wall 15.5
+h6 H6|J1|A|bottom|flat|m1.1 DSb pass hash 121a9e9685fe ready 51.10000000006197 minF 73.96927637367271 att [-0.007578629177387282, 0.045536735263523975] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9482 windows [(25.9, 10.33, 0.246, None)] fix [(51.1, 'reanchor_skipped:disabled')] phase ready wall 16.5
+h6 H6|J1|A|bottom|flat|m1.2 DSb fail hash c0146aac6b72 ready 56.3000000000868 minF 81.05955760932083 att [-0.008655426643297992, 0.04697062225785204] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9543 windows [(29.1, 13.11, -0.027, None)] fix [(56.3, 'reanchor_skipped:disabled')] phase ready wall 17.5
+h6 H6|J2|B|top|flat DSb pass hash 093261479d5d ready 67.20000000013884 minF 68.41858663199449 att [-0.029607971909086393, -0.01735167683455986] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9378 windows [(32.3, 9.94, 0.064, None)] fix [(33.3, 'FIX_DIFF_SINK_HOLD:FL,RL:4.0'), (34.9, 'FIX_DIFF_SINK_RELEASE:settled'), (67.2, 'reanchor_skipped:disabled')] phase ready wall 20.0
+h6 H6|J2|B|top|flat|m1.1 DSb fail hash c694252f26b4 ready 81.40000000020665 minF 75.18186358813225 att [-0.04316783090584379, -0.013765354786653741] falseLOC 0 LOCcrawler [1.27] READYrecontact 0 ratioREADY 0.9473 windows [(40.8, 10.63, -1.444, None)] fix [(41.8, 'FIX_DIFF_SINK_HOLD:FL,RL:6.0'), (43.8, 'FIX_DIFF_SINK_RELEASE:reversed'), (81.4, 'reanchor_skipped:disabled')] phase level wall 23.3
+h6 H6|J2|B|bottom|flat DSb pass hash b28e430b9464 ready 69.40000000014935 minF 69.46150989796027 att [-0.01852886611977017, -0.009241923970461866] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9342 windows [(32.5, 9.31, 0.068, None)] fix [(69.4, 'reanchor_skipped:disabled')] phase ready wall 20.3
+h6 H6|J2|B|bottom|flat|m1.1 DSb pass hash f9cba05a74b2 ready 77.10000000018611 minF 76.44505894560587 att [-0.039050839151068766, -0.025859200264969052] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9405 windows [(41.5, 11.48, -0.629, None)] fix [(42.5, 'FIX_DIFF_SINK_HOLD:FL,RL:4.5'), (44.0, 'FIX_DIFF_SINK_RELEASE:settled'), (77.1, 'reanchor_skipped:disabled')] phase ready wall 23.9
+h6 H6|G1|B|top|flat|m1.2 DSb pass hash 3b5ad386aa79 ready 39.60000000000706 minF 77.00411705424649 att [-0.0024180737072420177, -0.01562533047293426] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9546 windows [(21.6, 4.6, 1.087, None)] fix [(39.6, 'reanchor_skipped:disabled')] phase ready wall 13.9
+h6 H6|G1|B|bottom|flat|m1.2 DSb pass hash 131cf5664c50 ready 39.90000000000849 minF 77.30174506810239 att [-0.001165221008062095, -0.017279939210437845] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9538 windows [(21.7, 1.51, 1.125, None)] fix [(39.9, 'reanchor_skipped:disabled')] phase ready wall 14.1
+h6 H6|rigid|B|top|flat|Fs0|m1.2 DSb pass hash 54c6be6bf54e ready 39.4000000000061 minF 69.6940572815586 att [-0.00039479135917464914, -0.014098503752508304] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9971 windows [(21.5, 12.47, 0.998, None)] fix [(39.4, 'reanchor_skipped:disabled')] phase ready wall 10.7
+h6 H6|rigid|B|top|flat|m1.2 DSb pass hash ed21af51d9b2 ready 39.4000000000061 minF 68.79581722421341 att [-0.0005209883796039774, -0.01408519030561223] falseLOC 0 LOCcrawler [0.0] READYrecontact 0 ratioREADY 0.9552 windows [(21.2, 3.06, 0.978, None)] fix [(39.4, 'reanchor_skipped:disabled')] phase ready wall 11.2
+{
+ "h6|DSb": {
+  "n": 32,
+  "errors": 0,
+  "no_baseline": 32,
+  "verdict_changed": 0,
+  "pass_to_fail": 0,
+  "fail_to_pass": 0,
+  "hash_same": 0,
+  "e_cases": 0,
+  "e_resolved": 0,
+  "false_loc_after": 0,
+  "ready_recontacts_after": 0,
+  "acted": 0,
+  "idle_hash_differs": 0,
+  "a3_checked": 0,
+  "a3_fail": 0
+ }
+}
+wall 118.2 s -> C:\workspace\outrigger_control\06_analysis\02_control\s9\rev83\regDSb_h6.json
+[04:42:31] END h6 rc=0 wall=119s

@@ -1,0 +1,32 @@
+[04:48:51] START slope
+C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe: can't open file 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\88c41358-354a-4920-a8e2-5dba519bb75b\\scratchpad\\main-qd\\snapE\\slope': [Errno 2] No such file or directory
+[04:48:51] END slope rc=2 wall=0s
+[04:48:51] START h6
+C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe: can't open file 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\88c41358-354a-4920-a8e2-5dba519bb75b\\scratchpad\\main-qd\\snapE\\h6': [Errno 2] No such file or directory
+[04:48:51] END h6 rc=2 wall=0s
+[04:48:51] START g6
+C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe: can't open file 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\88c41358-354a-4920-a8e2-5dba519bb75b\\scratchpad\\main-qd\\snapE\\g6': [Errno 2] No such file or directory
+[04:48:51] END g6 rc=2 wall=0s
+[04:48:51] START p3b
+C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe: can't open file 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\88c41358-354a-4920-a8e2-5dba519bb75b\\scratchpad\\main-qd\\snapE\\p3b': [Errno 2] No such file or directory
+[04:48:51] END p3b rc=2 wall=0s
+[04:48:51] START v3s
+C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe: can't open file 'C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\88c41358-354a-4920-a8e2-5dba519bb75b\\scratchpad\\main-qd\\snapE\\v3s': [Errno 2] No such file or directory
+[04:48:51] END v3s rc=2 wall=0s
+Traceback (most recent call last):
+  File "C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\88c41358-354a-4920-a8e2-5dba519bb75b\scratchpad\main-qd\snapE\04_scripts\03_control\s9\s9_settle_rejudge.py", line 324, in <module>
+    main()
+  File "C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\88c41358-354a-4920-a8e2-5dba519bb75b\scratchpad\main-qd\snapE\04_scripts\03_control\s9\s9_settle_rejudge.py", line 319, in main
+    _print_changes(rejudge_file(path, args.table, args.suffix,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\88c41358-354a-4920-a8e2-5dba519bb75b\scratchpad\main-qd\snapE\04_scripts\03_control\s9\s9_settle_rejudge.py", line 269, in rejudge_file
+    payload = json.loads(path.read_text(encoding="utf-8"))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\ProgramData\miniforge3\envs\dynamics-dev\Lib\pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\ProgramData\miniforge3\envs\dynamics-dev\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s9\\rev83\\regDSb75_slope.json'
+[04:48:51] END rejudge slope rc=1
