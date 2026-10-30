@@ -1664,7 +1664,8 @@ class SoilResponseSettings:
     corner_bias_deadzone_m: float = 0.020
     """S-3 no bias while the smallest unbiased corner clearance at ``t_P`` is at most this."""
     max_push_m: float = 0.15
-    """S-4 mean motor-stroke increase in soil mode without the LOC (observed <= 93.7 mm)."""
+    """S-4 mean motor-stroke increase in soil mode without the LOC (nominal study 1 up to
+    149.2 mm (H2 S1 B bottom rpB), x1.2 J1 flat reaches 150 (spec 426.9.B1))."""
     weight_record_range: tuple[float, float] = (0.9, 1.15)
     """S-5 ``W_hat / W_ref`` range without a warning (ASSUMPTION, U-S9-C6: record only)."""
     settle_tilt_samples: int = 10

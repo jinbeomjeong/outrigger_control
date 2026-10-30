@@ -77,6 +77,48 @@ def test_other_records_are_direct(verdict, is_settle_ok, in_baseline, expected) 
     assert rj.record_settle_v2_verdict(record, baseline) == (expected, rj.SOURCE_DIRECT)
 
 
+PAD_XY_M = [(2.0, 1.5), (2.0, -1.5), (-2.0, 1.5), (-2.0, -1.5)]
+SETTLE_KEY = "S1|top"
+
+
+def _settled_result(*, gap_offset_mm: float, mass_scale: float | None = None) -> dict:
+    """Stored ``results`` entry whose settle gap misses the target by ``gap_offset_mm``."""
+    gap_target_mm = [10.0, 10.0, 10.0, 10.0]
+    pen_mm = [-g + gap_offset_mm for g in gap_target_mm]
+    case = {"settle_table_status": "applied", "harness_settle_key": SETTLE_KEY,
+            "settle_table": {"gap_target_mm": gap_target_mm}}
+    if mass_scale is not None:
+        case["mass_scale"] = mass_scale
+    first_check = {"ok": True, "q_floor_mean_deg": [0.0, 0.0],
+                   "attitude_error_deg": [0.0, 0.0], "pen_plus_gap_mm": [0.0] * 4}
+    return {"id": "H1|S1|A|top|flat", "case": case, "verdict": "pass", "verdict_rows": "pass",
+            "settle": {"pen_mm": pen_mm, "q_floor_deg": [0.0, 0.0], "check": first_check}}
+
+
+def _rejudge(result: dict) -> dict:
+    rows = {SETTLE_KEY: {"residual_roll_deg": 0.0, "residual_pitch_deg": 0.0}}
+    return rj.rejudge_result(result, rows, PAD_XY_M)
+
+
+@pytest.mark.parametrize(("gap_offset_mm", "mass_scale", "expected"), [
+    (0.0, None, "pass"),
+    (5.0, None, "settle_check_fail"),
+    (5.0, 1.0, "settle_check_fail"),
+    (5.0, 1.1, "pass"),
+    (0.0, 1.1, "pass"),
+])
+def test_rejudge_result_verdict(gap_offset_mm, mass_scale, expected) -> None:
+    rejudged = _rejudge(_settled_result(gap_offset_mm=gap_offset_mm, mass_scale=mass_scale))
+    assert rejudged["verdict"] == expected
+    assert rejudged["verdict_before_settle_v2"] == "pass"
+
+
+def test_scaled_mass_keeps_the_failed_check_as_a_record() -> None:
+    rejudged = _rejudge(_settled_result(gap_offset_mm=5.0, mass_scale=1.1))
+    assert rejudged["settle"]["check"]["ok"] is False
+    assert rejudged["settle"]["check_v1"]["ok"] is True
+
+
 def _write_json(path: Path, payload: dict) -> Path:
     path.write_text(json.dumps(payload), encoding="utf-8")
     return path

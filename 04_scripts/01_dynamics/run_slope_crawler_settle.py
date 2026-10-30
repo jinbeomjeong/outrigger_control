@@ -53,6 +53,11 @@ _K_GRID = ((0.0, 1.6), (0.0, 2.4), (0.0, 2.8), (2.2, 0.0), (3.3, 0.0), (3.85, 0.
 EXTRA = [(s, "top", sl) for s in ("J1", "J2", "S1") for sl in _K_GRID] + [("G1", "top", (0.0, 2.8))]
 # auger middle level (coordinator 2026-10-28, S9 reduced runs at three auger levels): base slopes + k grid
 EXTRA += [(s, "middle", sl) for s in ("G1", "J1", "J2", "S1") for sl in SLOPES + _K_GRID]
+# B5 out-of-sample comparison (control-expert 2026-10-30): J1/J2 top, pad B. s9_soil_slope.SLOPES_DEG x k 0.625 and
+# 0.9375 (nose_down, roll_pos, edge_nd), then roll_neg / nose_up / edge_nu x 0.75. Appended last (job order kept).
+_B5_OOS = ((0.0, 2.0), (0.0, 3.0), (2.75, 0.0), (4.125, 0.0), (1.375, 1.0), (2.0625, 1.5),
+           (-3.3, 0.0), (0.0, -2.4), (1.65, -1.2))
+EXTRA += [(s, "top", sl) for s in ("J1", "J2") for sl in _B5_OOS]
 # --merge: existing hook_harness keys recomputed as the bit-identity regression sample
 REGRESSION_KEYS = ("G1|top|0|0", "J1|top|0|3.2", "S1|top|2.7355|1.7592", "J2|bottom|4.4|0", "G1|bottom|-4.4|0",
                    "S1|top|0|3.5")

@@ -28,6 +28,9 @@ Settle hook (make_plant ``settle_hook``, else environment S9_SETTLE_HOOK, defaul
             case without a row raises KeyError. Rigid floors are the table reference (no change).
 Pads: 02_params/pad_variants.json type A (cad330) / B (dwg_rear250): area and Bekker b per leg; masses unchanged
   (U-PAD-3).
+Non-planar start (spec 426.7 B, optional case key ``pad_start_gap``): after the crawler settle one
+  pad's floor is moved to a target zero-stroke gap (``apply_pad_start_gap``); without the key
+  ``run_case`` does nothing new (same commands bit for bit).
 Units SI. Frames: body x fwd, y left, z up; pitch > 0 nose down.
 Run (dynamics-dev, numba): python -I s9_soil_closed_loop.py <out_json> [workers] [case filter]
 Deterministic except the optional seeded sensor noise (seed per case, recorded).
@@ -259,6 +262,64 @@ def scale_plant_mass(plant, mass_scale: float):
     return plant
 
 
+PAD_START_GAP_PASSES = 3
+"""Rigid floor: the gap is linear in goff / a_n; a few passes absorb a_n (as r69_g8_screen)."""
+
+
+def pad_floor_gaps_m(cl, plant) -> np.ndarray:
+    """Pad bottom to floor gap per leg [m] at the current state (positive = in the air).
+
+    Soil: gap to the original soil surface (``soil_floor`` geometry, minus the penetration).
+    Rigid: the kernel floor gap of the r51 harness, (n.p + goff) / a_n - x."""
+    rotation = cl.rcc._R(plant.q)
+    a_n = float(plant.nrm @ rotation[:, 2])
+    gaps = np.empty(4)
+    for i in range(4):
+        pad_height = float(plant.nrm @ (plant.r + rotation @ plant.pad_rel[i]))
+        if plant.soil is None:
+            gaps[i] = (pad_height + plant.goff[i]) / a_n - plant.x[i]
+        else:
+            gaps[i] = -((plant.x[i] - pad_height / a_n) * a_n + plant.soil.h[i])
+    return gaps
+
+
+def apply_pad_start_gap(cl, plant, spec: dict) -> dict:
+    """Spec 426.7 B: move the floor under one pad so that its zero-stroke gap is a target.
+
+    Called after the crawler settle (all pads in the air, the settle is unchanged) and before
+    ``plant.t = 0``. Soil: the pad-surface height ``soil.h[i]`` (bump = the same soil heaped up,
+    dip = the reference surface lowered, ASSUMPTION) and ``goff[i] = -h[i]``; rigid: ``goff[i]``.
+
+    Args:
+        spec: ``{"leg": "FL", "gap_m": 0.055}`` (target gap) or ``{"leg": ..., "delta_m": 0.060}``
+            (settle gap + delta; > 0 = lowered floor).
+
+    Returns:
+        Record {leg, g0_mm, g_start_mm, delta_mm} (g0 = settle gap before the change).
+
+    Raises:
+        ValueError: unknown leg, or not exactly one of ``gap_m`` / ``delta_m``.
+    """
+    if spec.get("leg") not in LEGS or ("gap_m" in spec) == ("delta_m" in spec):
+        raise ValueError(
+            f"pad_start_gap needs a leg of {LEGS} and one of gap_m / delta_m: {spec!r}")
+    leg = LEGS.index(spec["leg"])
+    g0 = float(pad_floor_gaps_m(cl, plant)[leg])
+    target = float(spec["gap_m"]) if "gap_m" in spec else g0 + float(spec["delta_m"])
+    soil = plant.soil
+    if soil is not None:
+        soil.h[leg] += g0 - target  # the gap is minus (... + h): a higher surface, a smaller gap
+        plant.goff[leg] = -soil.h[leg]
+    else:
+        for _ in range(PAD_START_GAP_PASSES):
+            error = float(pad_floor_gaps_m(cl, plant)[leg]) - target
+            a_n = float(plant.nrm @ cl.rcc._R(plant.q)[:, 2])
+            plant.goff[leg] -= error * a_n
+    g_start = float(pad_floor_gaps_m(cl, plant)[leg])
+    return {"leg": spec["leg"], "g0_mm": g0 * 1e3, "g_start_mm": g_start * 1e3,
+            "delta_mm": (g_start - g0) * 1e3}
+
+
 def make_plant(cl, level: str, soil: str, pad_type: str, fs_kN: float, beta: float = 1.0e9, soil_kscale: float = 1.0,
                slope=(0.0, 0.0), settle_hook: str | None = None, settle_table: str | Path | None = None,
                settle_row: dict | None = None, mass_scale: float = 1.0):
@@ -450,6 +511,9 @@ def run_case(case: dict) -> dict:
     mass_scale = float(case.get("mass_scale", 1.0))
     scale_plant_mass(plant, mass_scale)
     plant.step(np.zeros(4), int(round(cl.rcc.SETTLE_ON_CRAWLER_S / plant.dt)))
+    # spec 426.7 B: only cases with the key change the floor (no operation otherwise)
+    start_gap = case.get("pad_start_gap")
+    start_gap_record = None if start_gap is None else apply_pad_start_gap(cl, plant, start_gap)
     plant.t = 0.0
     plant.arm()
     settle = settle_snapshot(cl, plant)
@@ -569,6 +633,8 @@ def run_case(case: dict) -> dict:
         "events": events[:200],
         "wall_s": round(time.perf_counter() - t0, 1),
     }
+    if start_gap_record is not None:  # spec 426.7 B (results without the key keep their keys)
+        out["pad_start_gap"] = start_gap_record
     if mass_scale != 1.0:  # spec 422.2 (results of scale 1 keep their keys)
         out.update(mass_scale=mass_scale, mass_scale_note=MASS_SCALE_NOTE,
                    plant_weight_N=float(plant.m * plant.g),

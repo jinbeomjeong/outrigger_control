@@ -633,6 +633,192 @@ def d424r_cases() -> list[dict[str, Any]]:
     return out
 
 
+# --- RV1: paper review S2 / S3 Chrono checks (user approval 2026-10-30) -----------------------------------------
+
+RV1_X4_K = 0.875
+"""Start slope ratio of the X4 rows: the operating recommendation 'J1, pad B: R_c <= 0.875' (paper conclusion)."""
+RV1_X4_DIRECTION_SLOPES_DEG = {"nose_down": (0.0, 3.2), "roll_pos": (4.4, 0.0), "edge_nd": (2.2, 1.6)}
+"""(floor roll, floor pitch) [deg] at k = 1 of the three H3 boundary directions, copied from the harness
+``s9_soil_slope.SLOPES_DEG`` (pitch > 0 = nose down, roll > 0 = left side up; test_s9_rv1 checks the copy)."""
+RV1_X4_CIDS = {"nose_down": "X4-nd", "roll_pos": "X4-rp", "edge_nd": "X4-ed"}
+
+
+def rv1_x4_slope_deg(direction: str, k: float = RV1_X4_K) -> tuple[float, float]:
+    """Floor (roll, pitch) [deg] of an X4 row: k x the direction, rounded to 4 decimals as the harness
+    ``s9_soil_slope._scaled_slope`` (k 0.875: nose_down (0, 2.8), roll_pos (3.85, 0), edge_nd (1.925, 1.4))."""
+    roll, pitch = RV1_X4_DIRECTION_SLOPES_DEG[direction]
+    return round(k * roll, 4), round(k * pitch, 4)
+
+
+RV1_HARNESS = {
+    "X4-nd": ("H3|J1|B|top|nose_down@k0.875", "H4|J1|B|top|nose_down_2p8"),
+    "X4-rp": ("H3|J1|B|top|roll_pos@k0.875", None),
+    "X4-ed": ("H3|J1|B|top|edge_nd@k0.875", None),
+    "X5": ("H6|J2|B|top|flat|m1.1", None),
+}
+"""Harness case of each RV1 row (study ① H3 / spec 422 H6) and, for X4-nd, the REANCHOR-on harness twin (H4, same
+floor (0, 2.8) deg). The harness H3 runs with REANCHOR off; the Chrono S9SL rows keep the R8 preset (REANCHOR on), so
+H4 nose_down_2p8 is the matching reference when the Chrono crawler settles >= 2.5 deg relative nose down."""
+
+RV1_EXPECTED = {
+    # Harness (final code DSb75, 06_analysis/02_control/s9/rev83/R2DS_slope_rejudged.json, R2DS_h6_rejudge_finloc.json)
+    # and the Chrono judgement rows. P3 rows: spec 284 P3-1 .. P3-8 (rev. 60, the 377 demotion, U-S9-G6d strict
+    # re-contact, Q-G chatter FLAG 422.5); P3-6 READY limit spec 421.1 (slope 120 s / flat pad B J1-J2-S1 100 s).
+    # SL-1 (398.1): WARN_LIFT_STROKE_LIMITED = class "stroke limited": FAULT 0, no leg lift, P3-1 / P3-3 / P3-4
+    # passed -> stroke_limited_pass (only P3-5 relaxed), else stroke_limited_fail. SL-2 R_c on the CHECK-end crawler
+    # IMU attitude is a record (FLAG > 1); on SCM the crawler settles steeper than the floor (C-1 G1 B 3.2 -> 3.54
+    # deg, C-3 J1 B 3.3 deg -> R_c 0.768), so the Chrono R_c can exceed the floor ratio 0.875.
+    "X4-nd": {"P3": "P3-1 .. P3-8, P3-6 READY <= 120 s (slope)", "SL-1": "no stroke guard expected",
+              "harness": "H3 pass (READY 59.0 s, rut 108.8 mm, max stroke 652.2 mm); H4 nose_down_2p8 (REANCHOR on) "
+                         "pass (READY 79.1 s, rut 103.6 mm)",
+              "RA": "REANCHOR may start (RA-1 >= 2.5 deg relative nose down); RA-1 .. RA-6 as S9SL C-1"},
+    "X4-rp": {"P3": "P3-1 .. P3-8, P3-6 READY <= 120 s (slope)",
+              "SL-1": "stroke limited expected: harness stroke_limited_pass (P3-5 rut 9.5 mm < 25 mm, "
+                      "WARN_LIFT_STROKE_LIMITED:FR, max stroke 683.1 mm); Chrono C-3 (3.3 deg) was already "
+                      "stroke_limited_pass at 21.9 mm (spec 400.4), so 3.85 deg is the case closest to the stroke "
+                      "budget (stroke_limited_fail / FAULT_LIFT_STROKE_LIMIT possible)",
+              "harness": "H3 stroke_limited_pass (READY 80.3 s, min F 63.2 kN)"},
+    "X4-ed": {"P3": "P3-1 .. P3-8, P3-6 READY <= 120 s (slope)", "SL-1": "no stroke guard expected",
+              "harness": "H3 pass (READY 60.4 s, rut 49.9 mm, max stroke 653.9 mm)"},
+    "X5": {"P3": "P3-1 .. P3-8 (422.3 / 422.6: judgement weight = plant weight x1.1, P3-7 0.01 W_plant), P3-6 READY "
+                 "<= 100 s (spec 421.1: flat, pad B, both rear pads on J2)",
+           "SL-1": "n/a (flat)",
+           "harness": "H6 fail P3-1 (re-contact after LOC; READY 77.4 s, rut 33.2 mm, max stroke 571.6 mm); x1.0 H6 "
+                      "J2 B top pass (READY 67.2 s); spec 422.5 table 'J2 B 상단 x1.1 실패(P3-1)'"},
+}
+"""Expected judgement of the RV1 rows (for the control verdict table; records, not asserted by the runner)."""
+
+RV1_SIM_S = {"X4": CRAWLER_SETTLE_S + S9SL_DURATION_S, "X5": P3B_SIM_S}
+RV1_EST_POOL_S = {
+    "X4": {"pcore": 11000.0, "ecore": 16500.0},
+    "X5": {"pcore": 8000.0, "ecore": 10600.0},
+}
+"""RV1 wall estimates [s] per pool (ASSUMPTION; one SCM run with 4 threads per slot).
+X4 (J1 B slope, 168 s): E = S9SL C-3 measured 16,510 s (J1 B (3.3, 0), E pool 2 slots beside 2 P slots,
+batch_S9SL_20261029_144406); P = E / 1.5, the same-case E / P ratio measured on study ③ J2 B (middle 9,609.6 / 6,431.6
+= 1.49, bottom 9,617.6 / 6,341.6 = 1.52; D424R E against p3b_aug P), cross-checked with the J1 B flat P wall of D424R ①
+(7,287 s / 128 s x 168 s = 9,560 s; the slope adds sinkage and stroke time). X5 (J2 B flat x1.1, 128 s): P = D424R ①
+J1 B x1.1 P 7,287 s x 1.1, E = D424R ② J2 B middle E 9,610 s x 1.1 (+10 % for the deeper rear-pad sinkage at x1.1,
+as D424_EST_S)."""
+RV1_PLANNED_POOL = {"X4-nd": "pcore", "X4-rp": "pcore", "X4-ed": "ecore", "X5": "ecore"}
+"""Suggested pools (informative; ``--e-cases`` sets the pool): P 2 / E 2 slots, the long E row X4-ed (16,500 s) bounds
+the makespan; the compute-scheduler-expert plan may change it (then est_pool_s gives the other pool's estimate)."""
+
+
+def rv1_cases() -> list[dict[str, Any]]:
+    """RV1 (paper review S2 / S3, user approval 2026-10-30), the committed implementation (R8 C2 + P-S8-33 L1gs +
+    P-S8-35 DSb75):
+
+    * X4 (3 rows): the study ① S9SL row definition (:func:`s9sl_case`: P3b settings, J1, pad B ``dwg_rear250``, top,
+      F_s 4 kN, closed loop 160 s, ``--start-limit record_only``, R8 preset incl. REANCHOR on) on the floor
+      k = 0.875 x {nose_down, roll_pos, edge_nd} (:func:`rv1_x4_slope_deg`), = harness ``H3|J1|B|top|<dir>@k0.875``;
+      checks the operating recommendation 'J1, pad B: R_c <= 0.875' on the multibody model.
+    * X5 (1 row): the MS1 / D424R ① definition (:func:`ms1_cases`: P3b settings, ``--mass-scale 1.1``) with J2 instead
+      of J1: ``P3b_J2_B_top_Fs4_m1p1``, = harness ``H6|J2|B|top|flat|m1.1`` (P3-1 fail after R7).
+
+    Each row carries ``harness_case``, ``expected`` (:data:`RV1_EXPECTED`), ``est_pool_s`` / ``planned_pool``
+    (:data:`RV1_EST_POOL_S`, :data:`RV1_PLANNED_POOL`; ``est_s`` = the planned pool) and a ``batch_note``
+    (batch.json only; X4 argv = S9SL argv form, no ``--note``)."""
+    out = []
+    for direction, cid in RV1_X4_CIDS.items():
+        roll, pitch = rv1_x4_slope_deg(direction)
+        c = s9sl_case(cid, "J1", "B", roll, pitch,
+                      purpose=f"paper review S2: J1 B R_c {RV1_X4_K:g} x {direction} (operating recommendation)")
+        pool = RV1_PLANNED_POOL[cid]
+        c.update(group="RV1", harness_case=RV1_HARNESS[cid][0], harness_twin=RV1_HARNESS[cid][1],
+                 direction=direction, k=RV1_X4_K, expected=RV1_EXPECTED[cid], est_pool_s=dict(RV1_EST_POOL_S["X4"]),
+                 planned_pool=pool, est_s=RV1_EST_POOL_S["X4"][pool],
+                 batch_note=f"RV1 {cid} (paper review S2): {c['case']} = harness {RV1_HARNESS[cid][0]}")
+        out.append(c)
+    c = p3b_case("RV1", "J2", "B", "top", 4.0)
+    pool = RV1_PLANNED_POOL["X5"]
+    c.update(case=c["case"] + "_m1p1", mass_scale=1.1, pair_case="P3b_J2_B_top_Fs4", cid="X5",
+             harness_case=RV1_HARNESS["X5"][0], harness_twin=None, expected=RV1_EXPECTED["X5"], sim_s=RV1_SIM_S["X5"],
+             est_pool_s=dict(RV1_EST_POOL_S["X5"]), planned_pool=pool, est_s=RV1_EST_POOL_S["X5"][pool],
+             note="pair P3b_J2_B_top_Fs4; plant superstructure mass x1.1 (paper review S3, harness H6 J2 B top x1.1 "
+                  "P3-1 fail)",
+             batch_note="RV1 X5 (paper review S3): P3b_J2_B_top_Fs4_m1p1 = harness H6|J2|B|top|flat|m1.1")
+    out.append(c)
+    return out
+
+
+# --- RV2: P3b rows where DSb75 fires, re-run on the final controller (user approval 2026-10-30) -------------------
+
+RV2_CASES = ("P3b_J1_B_top_Fs0", "P3b_J1_B_top_Fs4", "P3b_J1_B_top_Fs8", "P3b_J2_B_top_Fs4")
+"""P3b rows (:func:`p3b_cases`, P3b-2 / P3b-3) whose stored records are not equivalent to the final controller: the
+offline replay of ``batch_P3b_20261026_122444`` on the committed implementation (9917955, R8 C2 + P-S8-33 L1gs +
+P-S8-35 DSb75) fires DSb75 about 1 s after the LOC in all four. Same argv as the P3b rows (no ``--note``)."""
+RV2_SOURCE_BATCH = "batch_P3b_20261026_122444"
+"""Former runs (rev. 60 re-judged, ``06_analysis/01_chrono/19_S9/s9_P3b_summary.json``). J1 B top F_s 0 / 4 were also
+run on 4790e2b in ``batch_P3b_20261027_174330`` (same READY; spec 358.8)."""
+RV2_ORIGINAL = {
+    # Former Chrono runs (rev. 60 re-judge: P3-1 .. P3-6 / P3-8 within, P3-5 after the first READY), READY from the
+    # closed-loop start, LOC absolute [s], P3-4 max |attitude| [deg], former wall [s] (P 4 slots + E 3 slots).
+    "P3b_J1_B_top_Fs0": {"ready_s": 69.4, "t_loc_s": 40.0, "p34_absmax_deg": 0.056, "wall_s_4p": 10952.0},
+    "P3b_J1_B_top_Fs4": {"ready_s": 69.3, "t_loc_s": 40.0, "p34_absmax_deg": 0.042, "wall_s_4p": 11122.0},
+    "P3b_J1_B_top_Fs8": {"ready_s": 71.4, "t_loc_s": 40.0, "p34_absmax_deg": 0.032, "wall_s_4p": 10832.0},
+    "P3b_J2_B_top_Fs4": {"ready_s": 74.7, "t_loc_s": 45.1, "p34_absmax_deg": 0.048, "wall_s_4p": 10860.0},
+}
+"""Former values of each RV2 row (``<RV2_SOURCE_BATCH>/<case>/result.json`` + ``progress.log`` END lines)."""
+RV2_HARNESS = {
+    # Harness p3b suite (06_analysis/02_control/s9/rev83): R2 = L1gs, R2DS = final DSb75. READY from the loop start [s].
+    "P3b_J1_B_top_Fs0": {"id": "base|J1|B|top|Fs0", "ready_L1gs_s": 62.5, "ready_DSb75_s": 62.7,
+                         "ds_events": "INFO_DIFF_SINK_HOLD:FL,RL 29.2 s -> RELEASE:settled 30.8 s (LOC window 28.2 s)"},
+    "P3b_J1_B_top_Fs4": {"id": "base|J1|B|top|Fs4", "ready_L1gs_s": 63.6, "ready_DSb75_s": 63.9,
+                         "ds_events": "INFO_DIFF_SINK_HOLD:FL,RL 29.0 s -> RELEASE:settled 30.6 s (LOC window 28.0 s)"},
+    "P3b_J1_B_top_Fs8": {"id": "base|J1|B|top|Fs8", "ready_L1gs_s": 62.1, "ready_DSb75_s": 62.6,
+                         "ds_events": "INFO_DIFF_SINK_HOLD:FL,RL 29.0 s -> RELEASE:settled 30.6 s (LOC window 28.0 s)"},
+    "P3b_J2_B_top_Fs4": {"id": "base|J2|B|top|Fs4", "ready_L1gs_s": 66.4, "ready_DSb75_s": 64.9,
+                         "ds_events": "INFO_DIFF_SINK_HOLD:FL,RL 34.4 s -> RELEASE:settled 35.9 s (LOC window 33.4 s)"},
+}
+"""Harness twin of each RV2 row (``R2_p3b.json`` / ``R2DS_p3b.json`` records ``base|<soil>|B|top|Fs<F_s>``): both
+pass; DSb75 READY change +0.2 / +0.3 / +0.5 / -1.5 s (<= +2.2 s, the R2DS p3b acceptance), rut at READY 47-48 mm."""
+RV2_EXPECTED = (
+    "P3-1 .. P3-8 as the P3b rows (spec 284 rev. 60, the 377 demotion, U-S9-G6d strict re-contact, Q-G chatter FLAG "
+    "422.5); P3-6 READY <= 100 s (spec 421.1: flat, pad B, both rear pads on J1 / J2). Expected: pass, with one "
+    "INFO_DIFF_SINK_HOLD on the sinking side about 1 s after the LOC and its release before the first DONE (offline "
+    "replay of the former records; harness R2DS p3b: DSb75 fires, READY change <= +2.2 s, no new FAULT); READY near "
+    "the former run (J1 69.4 / 69.3 / 71.4 s, J2 74.7 s), far inside 100 s")
+"""Expected judgement of the RV2 rows (records for the control verdict table; not asserted by the runner)."""
+RV2_P2_MEASURED_S = {"P3b_J1_B_top_Fs0": 6983.3, "P3b_J1_B_top_Fs4": 7061.3}
+"""P-pool 2-slot wall [s] of the same rows on 4790e2b (``batch_P3b_20261027_174330``, 5.45 / 5.51 ms/step)."""
+RV2_E_FACTOR = 1.5
+"""E / P wall ratio (ASSUMPTION): study ③ J2 B middle / bottom E 9,609.6 / 9,617.6 s (D424R) against P 6,431.6 /
+6,341.6 s (p3b_aug), 1.49 / 1.52 (as RV1_EST_POOL_S)."""
+
+
+def rv2_est_pool_s(case: str) -> dict[str, float]:
+    """RV2 wall estimates [s] per pool (one SCM run, 4 threads per slot; rounded to 100 s). P (2 slots): the measured
+    :data:`RV2_P2_MEASURED_S`; F_s 8 / J2 (not measured on 2 slots): J1 B top F_s 4 P2 x the former 4-slot wall ratio
+    (:data:`RV2_ORIGINAL` ``wall_s_4p``, 10,832 / 11,122 and 10,860 / 11,122). E = P x :data:`RV2_E_FACTOR`. The DSb75
+    hold (about 1.5 s of 128 s) is neglected. With 4 P slots expect the former 4-slot walls (10,800-11,100 s)."""
+    ref = "P3b_J1_B_top_Fs4"
+    p = RV2_P2_MEASURED_S.get(case)
+    if p is None:
+        p = RV2_P2_MEASURED_S[ref] * RV2_ORIGINAL[case]["wall_s_4p"] / RV2_ORIGINAL[ref]["wall_s_4p"]
+    return {"pcore": round(p, -2), "ecore": round(p * RV2_E_FACTOR, -2)}
+
+
+def rv2_cases(pool: str = "pcore") -> list[dict[str, Any]]:
+    """RV2 (user approval 2026-10-30): the P3b rows :data:`RV2_CASES` re-run on the committed implementation, rows
+    copied from :func:`p3b_cases` (argv unchanged, no ``--note``; the batch folder ``batch_RV2_<stamp>`` and
+    ``batch_note`` (batch.json only) tag the run). ``est_s`` = :func:`rv2_est_pool_s` of ``pool`` (``planned_pool``,
+    informative: ``--e-cases`` sets the pool). Judge with ``run_S9.py rejudge <batch folder>`` (P3b_* folders)."""
+    rows = {c["case"]: c for c in p3b_cases()}
+    out = []
+    for name in RV2_CASES:
+        c = dict(rows[name])
+        est = rv2_est_pool_s(name)
+        o, h = RV2_ORIGINAL[name], RV2_HARNESS[name]
+        c.update(group="RV2", source_batch=RV2_SOURCE_BATCH, original=dict(o), harness_case=h["id"],
+                 harness=dict(h), expected=RV2_EXPECTED, est_pool_s=est, planned_pool=pool, est_s=est[pool],
+                 batch_note=f"RV2 (DSb75 fires ~1 s after LOC): final-controller re-run of {name}; compare "
+                            f"{RV2_SOURCE_BATCH}/{name} (READY {o['ready_s']:g} s) and harness {h['id']} "
+                            f"(DSb75 READY {h['ready_DSb75_s']:g} s)")
+        out.append(c)
+    return out
+
+
 def apply_mass_scale(model: Any, params: Any, mass_scale: float) -> dict[str, Any]:
     """``level --mass-scale``: superstructure body mass / inertia (about the COG, body axes) x ``mass_scale`` on the
     built Chrono model, COG position unchanged (:data:`MASS_SCALE_NOTE`). 1.0 leaves the body untouched (bit for

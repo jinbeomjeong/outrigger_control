@@ -3,7 +3,8 @@
 "p0" (default) keeps the flat P0 soil-minus-rigid settle of every result up to rev. 79; "harness"
 takes the dynamics row ``hook_harness`` of ``slope_crawler_settle.json``. The settle check runs the
 harness plant through the crawler settle (numba, about 10 s per case) and compares the settle state
-with the row targets on a flat floor. Run in dynamics-dev (numba)."""
+with the row targets on a flat floor. Needs numba: runs in dynamics-dev and in Chrono-dev
+(numba 0.68.0)."""
 
 from __future__ import annotations
 

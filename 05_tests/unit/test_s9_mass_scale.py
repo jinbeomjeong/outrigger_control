@@ -34,6 +34,7 @@ BATCH_DEF_SHA256 = {
     "p3b_aug": "98f48ac2eccc2bbf3849d6d18f79e755433468271772f23d91d91c788be4cd79",
     "MS1": "5dc833dd79c1564f20d175c4c648d1fdae2f3060b58bfd6c0f5e5835a496215d",  # run 2026-10-29 18:33
     "D424": "c8c74d0efa95790a74c623177098f7641f7cb5fd45c29da6d3ee166163a6a84f",  # run 2026-10-30 01:49
+    "D424R": "0bce854f7f764b80712ca06dc70923b6729c55350ca520610e99230e75c516b2",  # run 2026-10-30 07:36
 }
 """Normalised batch definitions (interpreter / script paths dropped) before the Q-D change (2026-10-29)."""
 
@@ -54,7 +55,7 @@ def test_existing_batch_definitions_unchanged() -> None:
     import s9_batch
 
     b = s9_batch.batches()
-    assert set(b) == set(BATCH_DEF_SHA256) | {"D424R"}
+    assert set(b) == set(BATCH_DEF_SHA256) | {"RV1", "RV2"}  # RV1 / RV2: test_s9_rv1.py / test_s9_rv2.py
     for name, want in BATCH_DEF_SHA256.items():
         rows = [{**r, "argv": _norm(s9_batch, r["argv"])} for r in b[name]]
         assert hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest() == want, name

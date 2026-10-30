@@ -1,0 +1,274 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s9/x426_identity.py",
+  "spec": "426.7 T-2 .. T-5",
+  "parts": [
+   "t2",
+   "t3",
+   "t4",
+   "c_ref",
+   "d_ref",
+   "t5"
+  ],
+  "settle_hook_env": "p0",
+  "workers": 2,
+  "wall_s": 374.3
+ },
+ "all_equal": true,
+ "rows": [
+  {
+   "part": "t2",
+   "id": "A|J2|B|top|Fs8|head",
+   "expected_source": "s9_soil_closed_loop.run_case (same case)",
+   "expected_hash": "dc37da05aff244b65938692d0f7bb27fe1be3febe2da0501d2d0ab5d95bc5efc",
+   "actual_hash": "dc37da05aff244b65938692d0f7bb27fe1be3febe2da0501d2d0ab5d95bc5efc",
+   "t_ready_s": [
+    67.60000000014075,
+    67.60000000014075
+   ],
+   "equal": true,
+   "wall_s": 70.9
+  },
+  {
+   "part": "t3",
+   "id": "H1|G1|B|top|flat",
+   "expected_source": "rev83/R2DS_slope_rejudged.json",
+   "expected_hash": "f805759d470564978e6311430f265394c734e84ebdeb7712f8de5f2386e2036f",
+   "spec_prefix": "f805759d",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "f805759d470564978e6311430f265394c734e84ebdeb7712f8de5f2386e2036f",
+   "equal": true,
+   "wall_s": 30.6
+  },
+  {
+   "part": "t3",
+   "id": "H3|J1|B|top|nose_down@k0.5",
+   "expected_source": "rev83/R2DS_slope_rejudged.json",
+   "expected_hash": "36be51a4f725f3d1f7cfb18a095c6e7e1749a2ba5ebc3aac7dc2ad4729024df8",
+   "spec_prefix": "36be51a4",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "36be51a4f725f3d1f7cfb18a095c6e7e1749a2ba5ebc3aac7dc2ad4729024df8",
+   "equal": true,
+   "wall_s": 34.0
+  },
+  {
+   "part": "t3",
+   "id": "H5|rigid|B|top|flat",
+   "expected_source": "rev83/R2DS_slope_rejudged.json",
+   "expected_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+   "spec_prefix": "a91e9579",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+   "equal": true,
+   "wall_s": 23.2
+  },
+  {
+   "part": "t3",
+   "id": "H6|J1|B|top|flat|Fs0|m1.1",
+   "expected_source": "rev83/R2DS_h6.json",
+   "expected_hash": "80ae99f64b32bfba98511ea431486cccc9115d425d2f13156e51f1b62e6ee258",
+   "spec_prefix": "80ae99f6",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "80ae99f64b32bfba98511ea431486cccc9115d425d2f13156e51f1b62e6ee258",
+   "equal": true,
+   "wall_s": 39.0
+  },
+  {
+   "part": "t4",
+   "id": "g6|G1+J1@RR|top|Fs4",
+   "expected_source": "rev83/R2DS_g6.json",
+   "expected_hash": "69288ee341a21bb170add6bdcd63e6106f2014316d3fa976b1a7362eb2cfd551",
+   "spec_prefix": "69288ee3",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "69288ee341a21bb170add6bdcd63e6106f2014316d3fa976b1a7362eb2cfd551",
+   "equal": true,
+   "wall_s": 37.3
+  },
+  {
+   "part": "t4",
+   "id": "g6|G1+J2@FL|bottom|Fs0",
+   "expected_source": "rev83/R2DS_g6.json",
+   "expected_hash": "b6b6006eb03e8f39289d14d03fa04e20bc05bff1dc85ae675a101e2bfee55ec4",
+   "spec_prefix": "b6b6006e",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "b6b6006eb03e8f39289d14d03fa04e20bc05bff1dc85ae675a101e2bfee55ec4",
+   "equal": true,
+   "wall_s": 49.6
+  },
+  {
+   "part": "t4",
+   "id": "ref|J2|top|Fs0",
+   "expected_source": "rev83/R2DS_g6.json",
+   "expected_hash": "5b0f466c6f29b2f52fd254c5a5594d9f654f8bd6f2ca4262c0663ef2b31e763e",
+   "spec_prefix": "5b0f466c",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "5b0f466c6f29b2f52fd254c5a5594d9f654f8bd6f2ca4262c0663ef2b31e763e",
+   "equal": true,
+   "wall_s": 44.0
+  },
+  {
+   "part": "t4",
+   "id": "g6r|rigid+S1@FL|top|Fs4",
+   "expected_source": "rev83/R2DS_g6.json",
+   "expected_hash": "1145e904d04f0d8ff2e93c884ccca18735a9a350bdd99400780cfe58d80b5368",
+   "spec_prefix": "1145e904",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "1145e904d04f0d8ff2e93c884ccca18735a9a350bdd99400780cfe58d80b5368",
+   "equal": true,
+   "wall_s": 36.2
+  },
+  {
+   "part": "t4",
+   "id": "ref|rigid|top|Fs0",
+   "expected_source": "rev83/R2DS_g6.json",
+   "expected_hash": "269521d352dab0dd7d74e692e1cfd771c054f9b7fda808f061d6e195ca4a7c8b",
+   "spec_prefix": "269521d3",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "269521d352dab0dd7d74e692e1cfd771c054f9b7fda808f061d6e195ca4a7c8b",
+   "equal": true,
+   "wall_s": 21.8
+  },
+  {
+   "part": "c_ref",
+   "id": "ref|G1|top|Fs4|PA",
+   "expected_id": "base|G1|A|top|Fs4",
+   "expected_source": "rev83/R2DS_p3b.json",
+   "expected_hash": "6e716d528a44193155be6918b58e31be41c5862d780d03301c5eefb177c1f84c",
+   "spec_prefix": "6e716d52",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "6e716d528a44193155be6918b58e31be41c5862d780d03301c5eefb177c1f84c",
+   "equal": true,
+   "wall_s": 28.4
+  },
+  {
+   "part": "c_ref",
+   "id": "ref|J2|top|Fs4|PA",
+   "expected_id": "base|J2|A|top|Fs4",
+   "expected_source": "rev83/R2DS_p3b.json",
+   "expected_hash": "40977d68d74206e7c4e82737f10eceb82efb8b6f970f5f72c14a9d3c33a839aa",
+   "spec_prefix": "40977d68",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "40977d68d74206e7c4e82737f10eceb82efb8b6f970f5f72c14a9d3c33a839aa",
+   "equal": true,
+   "wall_s": 33.2
+  },
+  {
+   "part": "c_ref",
+   "id": "ref|J1|top|Fs4|PA",
+   "expected_id": "base|J1|A|top|Fs4",
+   "expected_source": "rev83/R2DS_p3b.json",
+   "expected_hash": "44f1cbc7dfcc8be2f8b97601828cbafdc3dd199c458d7746c73be07ed87b411d",
+   "spec_prefix": "44f1cbc7",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "44f1cbc7dfcc8be2f8b97601828cbafdc3dd199c458d7746c73be07ed87b411d",
+   "equal": true,
+   "wall_s": 29.6
+  },
+  {
+   "part": "c_ref",
+   "id": "ref|S1|top|Fs4|PA",
+   "expected_id": "base|S1|A|top|Fs4",
+   "expected_source": "rev83/R2DS_p3b.json",
+   "expected_hash": "0cf67d7281479869bc684a889f7b4f78fe311c1d5052ff69f622c8f0a957e08e",
+   "spec_prefix": "0cf67d72",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "0cf67d7281479869bc684a889f7b4f78fe311c1d5052ff69f622c8f0a957e08e",
+   "equal": true,
+   "wall_s": 31.1
+  },
+  {
+   "part": "c_ref",
+   "id": "ref|G1|top|Fs8",
+   "expected_id": "base|G1|B|top|Fs8",
+   "expected_source": "rev83/R2DS_p3b.json",
+   "expected_hash": "db39f965c7dd0dfc31b6053fe78c7bfa4a2af8918f58448f64dafe1e82a5f64b",
+   "spec_prefix": "db39f965",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "db39f965c7dd0dfc31b6053fe78c7bfa4a2af8918f58448f64dafe1e82a5f64b",
+   "equal": true,
+   "wall_s": 29.8
+  },
+  {
+   "part": "c_ref",
+   "id": "ref|J2|middle|Fs4",
+   "expected_id": "base|J2|B|middle|Fs4",
+   "expected_source": "rev83/R2DS_p3b.json",
+   "expected_hash": "2c5cb149ea135bde53601ee8f2f0e59a741d90f5379e1154c0c836e100b46f6a",
+   "spec_prefix": "2c5cb149",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "2c5cb149ea135bde53601ee8f2f0e59a741d90f5379e1154c0c836e100b46f6a",
+   "equal": true,
+   "wall_s": 45.9
+  },
+  {
+   "part": "d_ref",
+   "id": "H8|G1|B|top|flat",
+   "expected_id": "H1|G1|B|top|flat",
+   "expected_source": "rev83/R2DS_slope_rejudged.json",
+   "expected_hash": "f805759d470564978e6311430f265394c734e84ebdeb7712f8de5f2386e2036f",
+   "spec_prefix": "f805759d",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "f805759d470564978e6311430f265394c734e84ebdeb7712f8de5f2386e2036f",
+   "equal": true,
+   "wall_s": 40.8
+  },
+  {
+   "part": "d_ref",
+   "id": "H8|J2|B|top|flat",
+   "expected_id": "H1|J2|B|top|flat",
+   "expected_source": "rev83/R2DS_slope_rejudged.json",
+   "expected_hash": "093261479d5debc8fc52b30d7043ef3806e062e85523efab704c96d76fca23ec",
+   "spec_prefix": "09326147",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "093261479d5debc8fc52b30d7043ef3806e062e85523efab704c96d76fca23ec",
+   "equal": true,
+   "wall_s": 50.2
+  },
+  {
+   "part": "d_ref",
+   "id": "H8|rigid|B|top|flat",
+   "expected_id": "H5|rigid|B|top|flat",
+   "expected_source": "rev83/R2DS_slope_rejudged.json",
+   "expected_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+   "spec_prefix": "a91e9579",
+   "stored_matches_spec_prefix": true,
+   "actual_hash": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f",
+   "equal": true,
+   "wall_s": 28.9
+  },
+  {
+   "part": "t5",
+   "id": "J2|FL",
+   "soil": "J2",
+   "spec": {
+    "leg": "FL",
+    "gap_m": 0.055
+   },
+   "leg": "FL",
+   "g0_mm": 344.4945797164145,
+   "g_start_mm": 54.99999999999999,
+   "delta_mm": -289.4945797164145,
+   "target_mm": 55.0,
+   "error_mm": -7.105427357601002e-15,
+   "equal": true,
+   "wall_s": 12.9
+  },
+  {
+   "part": "t5",
+   "id": "rigid|RR",
+   "soil": "rigid",
+   "spec": {
+    "leg": "RR",
+    "delta_m": 0.06
+   },
+   "leg": "RR",
+   "g0_mm": 345.718170209466,
+   "g_start_mm": 405.718170209466,
+   "delta_mm": 60.0,
+   "target_mm": 405.718170209466,
+   "error_mm": 0.0,
+   "equal": true,
+   "wall_s": 12.1
+  }
+ ]
+}

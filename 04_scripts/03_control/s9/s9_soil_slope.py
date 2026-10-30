@@ -24,6 +24,14 @@ Case sets (177):
                     Plant mass / inertia x scale only (controller YAML mass, W_ref unchanged;
                     crawler settle at the nominal weight); records probe rounds (probe and
                     re-level time per round), weight ratios, WARN_WEIGHT_MISMATCH, rear sink.
+  H8 (spec 426.6 study D, only with --groups H8) non-planar start on soil: {G1, J2, rigid} x
+                    pad B top F_s 4 flat x (reference + leg {FL, RR} x start gap {20, 55, 110 mm;
+                    settle gap + 60, + 150 mm}) = 33. After the crawler settle the floor under
+                    the leg is moved (``s9_soil_closed_loop`` key ``pad_start_gap``); the settle
+                    check takes the start gap as that pad's gap target; TOUCH record (``touch``:
+                    T-3' > 40 mm, T-4 > 1.0 deg, T-2' > 3.0 s FLAGs, per-leg contact / latch,
+                    phase segments, true vs controller clearance at the end) and ``sample``
+                    (reference "in", start-gap runs "out").
 Judgement rows per run (spec 284 P3 rows with rev. 60 and the 377 demotion, plus SL / RA):
   P3-1 crawler 0 from READY to the run end, no re-contact after the first lift-off
   P3-2 LOC before the first DONE, t_LOC - t_off <= 2.9 s
@@ -77,8 +85,10 @@ Usage (project root, dynamics-dev, MKL_THREADING_LAYER=TBB, OMP_NUM_THREADS=1):
   python -I s9_soil_slope.py [--out JSON] [--workers N] [--affinity ecore|pcore|0xMASK]
                              [--groups H1,H2] [--filter SUBSTR,...] [--settle-corrections JSON]
                              [--settle-table JSON [--settle-key hook_harness]]
-                             [--plateau-rise-max-n N] [--mass-scale X] [--list]
-                             [--from-json JSON]
+                             [--plateau-rise-max-n N] [--mass-scale X] [--fs-kn X]
+                             [--level top|middle|bottom] [--list] [--from-json JSON]
+  --fs-kn / --level (spec 426.4 study B): applied to every selected case after --filter (as
+               --mass-scale); --level attaches the settle-table rows of the new level.
   --from-json: re-judge the stored rows with the current verdict rules and rewrite the summary
                (no runs; the stored rut clearance keeps its definition).
   --plateau-rise-max-n: LOC plateau rise threshold for every case (U-S9-C2 sensitivity).
@@ -143,6 +153,21 @@ REANCHOR_EXTRA = (("J1", "B", "nose_up"),)
 GROUP_SIZES = {"H1": 64, "H2": 32, "H3": 54, "H4": 19, "H5": 8}
 """Default groups (study 1, 177); H6 (spec 422, 32) runs only when named in ``--groups``."""
 H6_SIZE = 32
+H8_SOILS = ("G1", "J2", "rigid")
+H8_LEGS = ("FL", "RR")
+START_GAP_GAP = "gap"
+START_GAP_DELTA = "delta"
+START_GAP_ID_LETTER = {START_GAP_GAP: "g", START_GAP_DELTA: "d"}
+H8_START_GAPS = ((START_GAP_GAP, 20.0), (START_GAP_GAP, 55.0), (START_GAP_GAP, 110.0),
+                 (START_GAP_DELTA, 60.0), (START_GAP_DELTA, 150.0))
+"""Spec 426.6: bump = target gap 20 / 55 / 110 mm, dip = settle gap + 60 / 150 mm (the TOUCH
+boundaries of the r69 G8 grid: free-air windows 52 / 105 mm, R-2 40 mm)."""
+H8_SIZE = 33
+"""3 soils x (1 reference without a start gap + 2 legs x 5 start gaps)."""
+H8_GROUP = "H8"
+TOUCH_FLAG_LIMITS = {"T3_mm": 40.0, "T4_deg": 1.0, "T2_s": 3.0}
+"""Spec 426.6 TOUCH records (FLAG, r69 thresholds): stroke of leg k from its first contact to its
+latch, attitude change in TOUCH, latch delay after the first contact."""
 
 PRIOR_K_PREDICTION = {
     ("J1", "B"): {"nose_down": 0.84, "roll_pos": 0.94, "edge_nd": 0.90},
@@ -298,16 +323,23 @@ class SlopeCase:
     """Front seal friction F_s [kN] (rear 0.833 x); the study-1 groups use 4 kN."""
     mass_scale: float = 1.0
     """Spec 422 (decision Q-B): plant superstructure mass / inertia factor (controller unchanged)."""
+    start_gap: tuple[str, str, float] | None = None
+    """Spec 426.6 (H8): (leg, "gap" | "delta", mm) = zero-stroke start gap of one pad after the
+    settle (``s9_soil_closed_loop`` key ``pad_start_gap``); None = the settle gap (no change)."""
 
     @property
     def case_id(self) -> str:
-        """``group|soil|pad|level|slope``; ``|Fs<f>`` when F_s is not 4 kN and ``|m<scale>`` when
-        the mass is scaled (the ids of the H1 .. H5 cases are unchanged)."""
+        """``group|soil|pad|level|slope``; ``|Fs<f>`` when F_s is not 4 kN, ``|m<scale>`` when
+        the mass is scaled and ``|<leg>:g<mm>`` / ``|<leg>:d<mm>`` with a start gap (the ids of
+        the H1 .. H6 cases are unchanged)."""
         case_id = f"{self.group}|{self.soil}|{self.pad}|{self.level}|{self.slope_name}"
         if self.fs_kN != FS_KN:
             case_id += f"|Fs{self.fs_kN:g}"
         if self.mass_scale != 1.0:
             case_id += f"|m{self.mass_scale:g}"
+        if self.start_gap is not None:
+            leg, kind, value_mm = self.start_gap
+            case_id += f"|{leg}:{START_GAP_ID_LETTER[kind]}{value_mm:g}"
         return case_id
 
     @property
@@ -323,6 +355,8 @@ class SlopeCase:
 
     def to_dict(self) -> dict:
         out = asdict(self)
+        if self.start_gap is None:  # the dicts of the cases before spec 426 keep their keys
+            del out["start_gap"]
         out["id"] = self.case_id
         out["settle_key"] = self.settle_key
         out["harness_settle_key"] = self.harness_settle_key
@@ -393,9 +427,29 @@ def _mass_scale_cases() -> list[SlopeCase]:
     return cases
 
 
+def _start_gap_cases() -> list[SlopeCase]:
+    """Spec 426.6 (study D): pad B, top, F_s 4, flat; per soil the reference (no start gap) and
+    leg FL / RR x the five start gaps."""
+    cases = []
+    for soil in H8_SOILS:
+        cases.append(SlopeCase(H8_GROUP, soil, "B", LEVEL_TOP, "flat", 0.0, 0.0))
+        for leg in H8_LEGS:
+            for kind, value_mm in H8_START_GAPS:
+                cases.append(SlopeCase(H8_GROUP, soil, "B", LEVEL_TOP, "flat", 0.0, 0.0,
+                                       start_gap=(leg, kind, value_mm)))
+    return cases
+
+
+def pad_start_gap_spec(start_gap) -> dict:
+    """``s9_soil_closed_loop`` key ``pad_start_gap`` of a case start gap (leg, kind, mm)."""
+    leg, kind, value_mm = start_gap
+    unit_key = {START_GAP_GAP: "gap_m", START_GAP_DELTA: "delta_m"}[kind]
+    return {"leg": leg, unit_key: float(value_mm) * 1e-3}
+
+
 def build_cases(groups=tuple(GROUP_SIZES)) -> list[SlopeCase]:
-    """All cases of the named groups (default H1..H5 = 177; H6 = spec 422 only on request), in
-    group order."""
+    """All cases of the named groups (default H1..H5 = 177; H6 = spec 422 and H8 = spec 426.6
+    only on request), in group order."""
     builders = {
         "H1": lambda: _grid_cases("H1", SOILS, PADS, LEVEL_TOP),
         "H2": lambda: _grid_cases("H2", SOILS, ("B",), LEVEL_BOTTOM),
@@ -403,6 +457,7 @@ def build_cases(groups=tuple(GROUP_SIZES)) -> list[SlopeCase]:
         "H4": _reanchor_cases,
         "H5": lambda: _grid_cases("H5", (RIGID,), ("B",), LEVEL_TOP),
         "H6": _mass_scale_cases,
+        H8_GROUP: _start_gap_cases,
     }
     unknown = [g for g in groups if g not in builders]
     if unknown:
@@ -473,6 +528,8 @@ def run_case_input(case: dict) -> dict:
     }
     if case.get("mass_scale", 1.0) != 1.0:  # spec 422: only scaled cases carry the key
         run_input["mass_scale"] = float(case["mass_scale"])
+    if case.get("start_gap") is not None:  # spec 426.6: only start-gap cases carry the key
+        run_input["pad_start_gap"] = pad_start_gap_spec(case["start_gap"])
     return run_input
 
 
@@ -924,6 +981,88 @@ def rejudge_stored(result: dict) -> dict:
             "rut_definition": result.get("rut_definition", RUT_DEFINITION_OLD)}
 
 
+def _leg_touch_record(log: dict, leg: int, contact_kN: np.ndarray, t_touch_start: float) -> dict:
+    """First contact, latch and the stroke between them of one leg (10 Hz log).
+
+    First contact = start of the first control period whose minimum pad contact force is > 0
+    (contact held over a whole 0.1 s period; the r69 1 ms definition lies at most one period
+    earlier). Latch = end of the first period with the leg latched (``touched``)."""
+    t = np.asarray(log["t_s"], float)
+    stroke = np.asarray(log["stroke_mm"], float)[:, leg]
+    latched = np.nonzero(np.asarray(log["touched"], bool)[:, leg])[0]
+    in_contact = np.nonzero(contact_kN[:, leg] > 0.0)[0]
+    record = {"first_contact_s": None, "latch_s": None, "latch_rel_touch_s": None,
+              "post_contact_stroke_mm": None, "latch_after_contact_s": None,
+              "stroke_at_latch_mm": None}
+    if latched.size:
+        k_latch = int(latched[0])
+        record.update(latch_s=round(float(t[k_latch]), 2),
+                      latch_rel_touch_s=round(float(t[k_latch]) - t_touch_start, 2),
+                      stroke_at_latch_mm=round(float(stroke[k_latch]), 1))
+    if in_contact.size:
+        k_contact = int(in_contact[0])
+        k_start = max(k_contact - 1, 0)  # the previous period end = this period's start
+        t_contact = float(t[k_contact]) - PERIOD_LOG_S
+        record["first_contact_s"] = round(t_contact, 2)
+        if latched.size:
+            record["post_contact_stroke_mm"] = round(float(stroke[latched[0]] - stroke[k_start]), 1)
+            record["latch_after_contact_s"] = round(float(t[latched[0]]) - t_contact, 2)
+    return record
+
+
+def _phase_segment_states(log: dict) -> list[dict]:
+    """Phase runs with their length and the motor stroke and attitude at their end."""
+    segments = []
+    for phase, start, end in phase_segments(log):
+        index = _row_at(log, end)
+        segments.append({"phase": phase, "start_s": round(start, 2),
+                         "duration_s": round(end - start + PERIOD_LOG_S, 2),
+                         "stroke_end_mm": [round(v, 1) for v in log["stroke_mm"][index]],
+                         "att_end_deg": [round(v, 4) for v in log["att_deg"][index]]})
+    return segments
+
+
+def touch_record(record: dict) -> dict | None:
+    """Spec 426.6 TOUCH record of an H8 run (None for the other groups).
+
+    FLAGs (r69 thresholds): T-3' stroke of the start-gap leg from its first contact to its latch
+    > 40 mm, T-4 largest |roll| / |pitch| change from the TOUCH start > 1.0 deg (every run),
+    T-2' latch later than 3.0 s after the first contact. Per leg values are kept for all four
+    legs (the reference runs are the comparison)."""
+    log = record["log"]
+    if "touched" not in log:
+        return None
+    phases = np.array(log["phase"])
+    is_touch = phases == "touch"
+    start_gap = record["case"].get("start_gap")
+    leg_k = None if start_gap is None else start_gap[0]
+    out = {"leg_k": leg_k, "has_touch": bool(is_touch.any()), "flags": []}
+    if not is_touch.any():
+        return out
+    t = np.asarray(log["t_s"], float)
+    k0, k1 = (int(i) for i in np.nonzero(is_touch)[0][[0, -1]])
+    contact = np.asarray(log["fmin_kN"], float) + np.asarray(record["rod_weight_kN"], float)
+    att = np.asarray(log["att_deg"], float)
+    att_change = np.abs(att[is_touch] - att[k0]).max(axis=0)
+    legs = {LEGS[i]: _leg_touch_record(log, i, contact, float(t[k0])) for i in range(4)}
+    out.update(start_s=round(float(t[k0]), 2), duration_s=round(float(t[k1] - t[k0]), 2),
+               max_abs_att_change_deg=att_change.round(4).tolist(), legs=legs,
+               segments=_phase_segment_states(log),
+               clearance_end_mm={"true": record["rut_end_mm"],
+                                 "controller_estimate": log["clear_est_mm"][-1],
+                                 "true_minus_estimate": record["rut_end_mm"]
+                                 - log["clear_est_mm"][-1]})
+    if att_change.max() > TOUCH_FLAG_LIMITS["T4_deg"]:
+        out["flags"].append("T-4")
+    if leg_k is not None:
+        leg = legs[leg_k]
+        if (leg["post_contact_stroke_mm"] or 0.0) > TOUCH_FLAG_LIMITS["T3_mm"]:
+            out["flags"].append("T-3'")
+        if (leg["latch_after_contact_s"] or 0.0) > TOUCH_FLAG_LIMITS["T2_s"]:
+            out["flags"].append("T-2'")
+    return out
+
+
 # --------------------------------------------------------------------------------- summary
 def _is_feasible(result: dict) -> bool:
     rows = result["rows"]
@@ -1185,10 +1324,26 @@ def _settle_table_check(settle: dict, log: dict) -> dict | None:
     if row is None:
         return None
     q_mean, t_end = settle_window_attitude_rad(log, settle["first_contact_s"])
-    check = settle_check(row.target_q_floor, row.gap_target_mm, q_mean, settle["pen_mm"])
+    start_gap = _CAP["case"].get("start_gap")
+    gap_target_mm = start_gap_targets_mm(row.gap_target_mm, start_gap)
+    check = settle_check(row.target_q_floor, gap_target_mm, q_mean, settle["pen_mm"])
     check.update(window_end_s=t_end, q_floor_mean_deg=np.degrees(q_mean).tolist(),
                  table_settle_pitch_pp_deg=row.settle_pitch_pp_deg)
+    if start_gap is not None:  # spec 426.6: the moved pad is checked against its start gap
+        check["gap_target_mm"] = gap_target_mm
     return check
+
+
+def start_gap_targets_mm(gap_target_mm, start_gap) -> list[float]:
+    """Settle-check gap targets: the table values, the start-gap pad replaced by its start gap
+    (target gap, or table gap + delta)."""
+    targets = [float(v) for v in gap_target_mm]
+    if start_gap is None:
+        return targets
+    leg, kind, value_mm = start_gap
+    i = LEGS.index(leg)
+    targets[i] = float(value_mm) if kind == START_GAP_GAP else targets[i] + float(value_mm)
+    return targets
 
 
 def _make_project_controller(cl, c2, variant: dict):
@@ -1212,6 +1367,8 @@ def _make_project_controller(cl, c2, variant: dict):
     _CAP["log"] = {"t_s": [], "phase": [], "fmin_kN": [], "rut_clear_mm": [],
                    "rut_settle_nodes_mm": [], "clear_est_mm": [], "q_floor_deg": [],
                    "sink_mm": [] if plant.soil is not None else None}
+    if _CAP["case"].get("group") == H8_GROUP:  # spec 426.6 TOUCH record (H8 only)
+        _CAP["log"].update(touched=[], stroke_mm=[], att_deg=[])
     return controller
 
 
@@ -1232,6 +1389,10 @@ def _control_period_logged(cl, Measurements, plant, cmd, valve, ha, period_s, re
     log["q_floor_deg"].append(np.degrees(_floor_attitude_of(cl, plant)).tolist())
     if log["sink_mm"] is not None:
         log["sink_mm"].append((np.asarray(plant.soil.z, float) * 1e3).tolist())
+    if "touched" in log:  # spec 426.6 (H8): latch state, motor stroke and true deck attitude
+        log["touched"].append([bool(v) for v in ctrl._state.touched])
+        log["stroke_mm"].append((np.asarray(plant.sref, float) * 1e3).tolist())
+        log["att_deg"].append(np.degrees(plant.attitude()).tolist())
     anchor = ctrl._state.reanchor_anchor_pitch_rad
     if "anchor_pitch_deg" not in _CAP and anchor is not None:
         _CAP["anchor_pitch_deg"] = math.degrees(anchor)
@@ -1408,6 +1569,9 @@ def run_one(case: dict) -> dict:
         out = sl.run_case(run_case_input(case))
         record = collect_record(case, out, sl, cl)
         result = _compact(record, judge_case(record))
+        if case.get("group") == H8_GROUP:  # spec 426.6 records (the other groups unchanged)
+            result.update(touch=touch_record(record), pad_start_gap=out.get("pad_start_gap"),
+                          sample="in" if case.get("start_gap") is None else "out")
     except Exception as exc:  # keep the batch going, record the failure
         return {"id": case["id"], "case": case, "error": repr(exc),
                 "tb": traceback.format_exc()[-3000:], "wall_s": time.perf_counter() - t0}
@@ -1474,6 +1638,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--mass-scale", type=float, default=None,
                         help="spec 422: plant mass / inertia factor for every selected case "
                              "(controller unchanged; id suffix |m<scale>); H6 sets its own")
+    parser.add_argument("--fs-kn", type=float, default=None,
+                        help="spec 426.4: front seal friction F_s [kN] for every selected case "
+                             "(applied after --filter; id suffix |Fs<f> unless 4)")
+    parser.add_argument("--level", choices=(LEVEL_TOP, LEVEL_MIDDLE, LEVEL_BOTTOM), default=None,
+                        help="spec 426.4: auger level for every selected case (applied after "
+                             "--filter; the settle-table rows are attached again for that level)")
     parser.add_argument("--list", action="store_true", help="print the case ids and stop")
     parser.add_argument("--from-json", type=Path, default=None,
                         help="rebuild the summary of an existing result file (no runs)")
@@ -1501,6 +1671,29 @@ def select_cases(args) -> list[SlopeCase]:
         cases = [replace(c, plateau_rise_max_N=args.plateau_rise_max_n) for c in cases]
     if args.mass_scale is not None:  # spec 422: every selected case (H6 carries its own scales)
         cases = [replace(c, mass_scale=args.mass_scale) for c in cases]
+    # spec 426.4 (study B); getattr: callers may pass a namespace without the newer options
+    fs_kn = getattr(args, "fs_kn", None)
+    if fs_kn is not None:
+        cases = [replace(c, fs_kN=fs_kn) for c in cases]
+    level = getattr(args, "level", None)
+    if level is not None:
+        cases = _with_level(cases, level, args)
+    return cases
+
+
+def _with_level(cases: list[SlopeCase], level: str, args) -> list[SlopeCase]:
+    """Cases moved to another auger level, the settle-table rows attached again for it.
+
+    Raises:
+        SystemExit: with ``--settle-corrections`` (those are keyed per level).
+    """
+    if args.settle_corrections is not None:
+        raise SystemExit("--level and --settle-corrections are exclusive (corrections are keyed "
+                         "per level)")
+    cases = [replace(c, level=level, settle_table=None, settle_table_status=None) for c in cases]
+    if args.settle_table is not None:
+        table = json.loads(args.settle_table.read_text(encoding="utf-8"))
+        cases = attach_settle_table(cases, table[args.settle_key])
     return cases
 
 
@@ -1564,6 +1757,11 @@ def main() -> None:
             "mass_scale_note": MASS_SCALE_NOTE if args.mass_scale is not None or any(
                 c.mass_scale != 1.0 for c in cases) else None,
             "approximations": APPROXIMATION_NOTES, "wall_s": round(time.perf_counter() - t0, 1)}
+    # spec 426.4 overrides: written only when given (the meta of former runs is unchanged)
+    if args.fs_kn is not None:
+        meta["fs_kN_override"] = args.fs_kn
+    if args.level is not None:
+        meta["level_override"] = args.level
     summary = write_outputs(args.out, results, meta)
     for result in results:
         _print_result(result)

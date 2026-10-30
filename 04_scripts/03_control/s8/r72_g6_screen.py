@@ -38,7 +38,10 @@ Usage (repo root, dynamics-dev, MKL_THREADING_LAYER=TBB, OMP_NUM_THREADS=1):
   python -I r72_g6_screen.py <project_root> <out_json> [workers]
   python -I r72_g6_screen.py <project_root> --list
 Env: R72_FILTER (substrings), R72_AFFINITY (hex mask on the parent),
-  R72_SET = main | ref | all (default all; G1 base, 64) | rigid (48) | rigidref (4) | rigid_all (52),
+  R72_SET = main | ref | all (default all; G1 base, 64) | rigid (48) | rigidref (4) | rigid_all (52)
+  | x426 (spec 426.5 study C, 51: G1 / rigid base x J1 / J2 / S1 x FL / RR x {pad A, F_s 8,
+  middle} + uniform refs; records ``pad`` and ``sample``). A fifth key field ``PA`` runs pad A,
+  keys without it pad B (all former keys),
   R72_PATH = per_leg (default) | s9 (original s9 path, uniform only) | per_leg_force (mixed kernel also for uniform
   rigid: identity check).
   S9_SETTLE_HOOK = p0 (default, results up to rev. 79) | harness (dynamics hook_harness row of the BASE soil:
@@ -81,6 +84,15 @@ RUT_MIN_MM = 25.0
 COUNTED_INFO_EVENTS = ("INFO_TOUCH_DIP_HELD", "INFO_LIFT_PAUSED", "INFO_CLEARANCE_BIAS", "INFO_LOC_CLEARANCE_ANCHOR",
                        "INFO_TWIST_UNSETTLED")
 """Events counted per result (events_head keeps only the first 40)."""
+X426_PAD_A_FIELD = "PA"
+"""Fifth key field of a pad-A job (spec 426.5); keys without it run pad B."""
+X426_VARIANTS = (("top", 4.0, "A"), ("top", 8.0, "B"), ("middle", 4.0, "B"))
+"""Spec 426.5 variants (level, F_s front [kN], pad): pad A, F_s 8 kN, auger middle."""
+X426_POINT_BASES = (("G1", "g6"), ("rigid", "g6r"))
+"""(base soil, key tag) of the weak-patch points."""
+X426_LEGS = ("FL", "RR")
+X426_REF_SOILS = ("G1", "J1", "J2", "S1", "rigid")
+_X426_CACHE: dict = {}
 _CAP = {}
 
 
@@ -300,13 +312,29 @@ def _late_loc_revoked_record(ctrl, plant, timeline, late_loc, t_off, t_done, min
         t_reapproach_end_s=late_loc.get("t_reapproach_end_s"), t_lim_s=LOC_DELAY_MAX_S)
 
 
+def pad_of_key(key: str) -> str:
+    """Pad type of a job key: fifth field ``PA`` = pad A (spec 426.5), no fifth field = pad B.
+
+    Raises:
+        ValueError: a fifth field other than ``PA``, or more than five fields.
+    """
+    parts = key.split("|")
+    if len(parts) == 4:
+        return "B"
+    if len(parts) == 5 and parts[4] == X426_PAD_A_FIELD:
+        return "A"
+    raise ValueError(f"r72 job key needs 4 fields or a fifth '{X426_PAD_A_FIELD}': {key!r}")
+
+
 def job(key):
-    """key = '<set>|<soil string>|<level>|Fs<f>'."""
+    """key = '<set>|<soil string>|<level>|Fs<f>' and optionally '|PA' (pad A, spec 426.5)."""
     _install()
     _CAP.clear()
     _CAP["crawler_series"] = []  # 1 ms true crawler force (spec 419.8 condition 3, record only)
-    tag, soil, level, fs = key.split("|")
-    case = {"id": key, "soil": soil, "pad": "B", "level": level, "fs_kN": float(fs[2:]), "variant": {}}
+    tag, soil, level, fs = key.split("|")[:4]
+    pad = pad_of_key(key)
+    case = {"id": key, "soil": soil, "pad": pad, "level": level, "fs_kN": float(fs[2:]),
+            "variant": {}}
     try:
         out = sl.run_case(case)
     except Exception as exc:  # keep the batch going
@@ -431,6 +459,8 @@ def job(key):
     if revoked is not None:  # spec 424.8.1 records (only with a revocation: former records unchanged)
         rec.update(late_loc_revoked=revoked, t_loc_first_s=timeline["t_loc_first_s"],
                    t_loc_final_s=t_loc, loc_revokes=timeline["revoke_times_s"])
+    if key in x426_keys():  # spec 426.1 / 426.5 records (the former sets keep their records)
+        rec.update(pad=pad, sample="in" if tag == "ref" else "out")
     return rec
 
 
@@ -457,7 +487,36 @@ def all_jobs(set_name):
         for lv in LEVELS:
             for fs in FS_KN:
                 jobs.append(f"ref|rigid|{lv}|Fs{fs:g}")
+    if set_name == "x426":
+        jobs += _x426_jobs()
     return jobs
+
+
+def _x426_key(tag: str, soil: str, level: str, fs_kN: float, pad: str) -> str:
+    key = f"{tag}|{soil}|{level}|Fs{fs_kN:g}"
+    return key + f"|{X426_PAD_A_FIELD}" if pad == "A" else key
+
+
+def _x426_jobs() -> list[str]:
+    """Spec 426.5 (study C, 51): base G1 / rigid x weak J1 / J2 / S1 x leg FL / RR (12) x the three
+    variants (36), then the uniform references G1, J1, J2, S1, rigid x the variants (15)."""
+    jobs = []
+    for level, fs_kN, pad in X426_VARIANTS:
+        for base, tag in X426_POINT_BASES:
+            for weak in WEAK:
+                for leg in X426_LEGS:
+                    jobs.append(_x426_key(tag, f"{base}+{weak}@{leg}", level, fs_kN, pad))
+    for level, fs_kN, pad in X426_VARIANTS:
+        for soil in X426_REF_SOILS:
+            jobs.append(_x426_key("ref", soil, level, fs_kN, pad))
+    return jobs
+
+
+def x426_keys() -> frozenset[str]:
+    """Job keys of the set ``x426`` (computed once per process)."""
+    if "x426_keys" not in _X426_CACHE:
+        _X426_CACHE["x426_keys"] = frozenset(_x426_jobs())
+    return _X426_CACHE["x426_keys"]
 
 
 def set_parent_placement():

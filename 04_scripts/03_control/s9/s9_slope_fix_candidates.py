@@ -86,6 +86,19 @@ Candidates (tokens, combined with "+", e.g. "E1+E2"; "current" = the project con
   S4  S-4 also fires when the stroke reaches the lift guard stroke s_g before the LOC
       (``s4_stroke_basis`` "max": longest leg, "mean": mean motor stroke) ->
       ``WARN_CRAWLER_LIFTOFF_UNCONFIRMED:stroke`` and FAULT.
+  P36c5 / P36c8 / P36u8  spec 427 (P-S8-36 candidate, 2026-10-30): a run whose lift stroke guard
+      acted (latch ``reload_armed`` from the first ``WARN_LIFT_STROKE_LIMITED`` to the run end)
+      watches the load-sum ratio in LEVEL after the LOC, DONE, PROBE and READY. The corrected
+      ratio rho_c = sum(F_i - sigma_i F_s,i) / (W_hat - sum F_s,i) (F_s,i: TOUCH free-air reading
+      minus the rod weight, cut at the P-S8-26 cap; sigma_i: sign of the output in force, the last
+      moving direction while a leg stands) or the plain rho_u = sum F_i / W_hat ("u"), 1 s mean
+      (PROBE motion periods and 0.5 s after them left out), below 1 - delta on 2 periods ->
+      ``WARN_CRAWLER_RELOAD:<mean>``; then with the largest motor stroke <= s_g - 40 mm and no
+      re-lift yet the LOC is undone and the body re-levelled (E2 path,
+      ``INFO_LOC_REVOKED_RELOAD:<mean>``), otherwise ``FAULT_LIFT_STROKE_LIMIT:reload`` (the
+      guard FAULT handling). c = corrected, u = plain; 5 / 8 = delta 0.05 / 0.08
+      (``p36_delta=`` overrides the token value). Every candidate records the arming time and
+      the per-phase ratio minima after it (``metrics["p36"]``, no command change).
 
 Every controller of a run (baseline included) records passively, without changing a command:
 the true crawler force per control period (max over the 1 ms chunks, wrapped ``cl._lagged_step``),
@@ -104,6 +117,10 @@ Suites (each harness path imported, not copied; the settle hook "harness" is the
   v3s    spec 424.10 R-e: V-3 sensor 72 + beta 16 = 88 cases (``s9_runs.sensor_cases`` /
          ``beta_cases``, the ids of ``07_results/S9/v3/sensor.json`` / ``beta.json``) with the
          project preset and the p3b record
+  x426b  spec 426.4 study B for spec 427: the 21 study-1 points x {F_s 0, F_s 8, auger middle,
+         mass x 1.1} = 84 cases, made from ``s9_soil_slope.build_cases(("H1", "H3"))`` by
+         replacing the SlopeCase fields ``fs_kN`` / ``level`` / ``mass_scale`` (settle table
+         attached after the replacement, so a middle case gets its middle row)
 Compared per case against "current": verdict, command SHA-256, dREADY, d min true F_cyl, d end
 attitude, false LOCs (crawler force >= 0.01 W in the LOC period), crawler re-contacts in READY;
 whether a fix acted (a ``FIX_*`` event), idle runs with a changed hash (spec 424.6 A-5) and, on
@@ -124,6 +141,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import csv
+import hashlib
 import json
 import math
 import os
@@ -159,7 +177,7 @@ BASELINE = "current"
 CANDIDATE_TOKENS = ("E1", "E2", "E3", "E4", "RA", "S4", "E3w", "E3c7", "E3c10", "LWa", "LWb",
                     "L1", "L2", "L4", "D1", "D1p", "D1p0", "D1r", "D2", "D3", "S5", "S6",
                     "D1q", "D1qa", "D1qb", "D2q", "L1g", "L1gs", "L2g", "DS", "DS50",
-                    "DSb", "DSb10", "DSb75")
+                    "DSb", "DSb10", "DSb75", "P36c5", "P36c8", "P36u8")
 QUICK_HOLD_TOKENS = ("D1q", "D1qa", "D1qb", "D2q")
 """Spec 424.9.3 variants: alternatives to each other (one per candidate)."""
 TWIST_SIGNS = np.array([1.0, -1.0, -1.0, 1.0])
@@ -203,7 +221,38 @@ PUSH_EXTEND_EVENT = "FIX_PUSH_EXTEND"
 S6_LOC_EVENT = "FIX_S6_LOC"
 S1_RISE_TRACE_MAX = 400
 """Rows kept of ``s1_rise_trace`` (10 Hz: 40 s of window ends)."""
-SUITES = ("slope", "g6", "g8", "p3b", "h6", "v3s")
+SUITES = ("slope", "g6", "g8", "p3b", "h6", "v3s", "x426b")
+
+# spec 427 P-S8-36 candidate (crawler re-load after the lift stroke guard acted)
+P36_RELOAD_WARNING_EVENT = "WARN_CRAWLER_RELOAD"
+"""``WARN_CRAWLER_RELOAD:<1 s mean ratio>``: the re-load suspicion (427.2)."""
+P36_RELIFT_EVENT = "INFO_LOC_REVOKED_RELOAD"
+"""``INFO_LOC_REVOKED_RELOAD:<1 s mean ratio>``: LOC undone, the body lifted again (427.3)."""
+P36_FAULT_EVENT = "FAULT_LIFT_STROKE_LIMIT:reload"
+P36_EVENTS = (P36_RELOAD_WARNING_EVENT, P36_RELIFT_EVENT, P36_FAULT_EVENT)
+P36_BRANCH_RELIFT = "relift"
+P36_BRANCH_FAULT = "fault"
+P36_COMPENSATED = "last_motion"
+P36_UNCOMPENSATED = "none"
+P36_MIN_VALID_PERIODS = 5
+"""Periods the 1 s mean needs after the left-out ones (427.2)."""
+P36_RELOAD_ACTIONS_MAX = 10
+X426B_POINTS = (
+    "H1|G1|B|top|nose_down", "H1|G1|B|top|roll_pos", "H1|G1|B|top|edge_nd",
+    *(f"H3|{soil}|B|top|{direction}@k{k}" for soil in ("J1", "J2", "S1")
+      for direction in ("nose_down", "roll_pos", "edge_nd") for k in ("0.5", "0.75")),
+)
+"""Spec 426.4: the 21 study-1 points (ids of ``rev85/x426_B_m1p1.json`` without ``|m1.1``)."""
+X426B_VARIANTS = (
+    # (fs_kN, level, mass_scale): F_s 0, F_s 8, auger middle, operating weight x 1.1
+    (0.0, "top", 1.0), (8.0, "top", 1.0), (4.0, "middle", 1.0), (4.0, "top", 1.1),
+)
+HARNESS_HASH_FILES = (
+    Path("04_scripts/03_control/s9/s9_soil_slope.py"),
+    Path("04_scripts/03_control/s8/r72_g6_screen.py"),
+    Path("04_scripts/03_control/s9/s9_soil_closed_loop.py"),
+)
+"""Spec 427.6: the harnesses another task extends; their SHA-256 (LF) go into the run meta."""
 
 LOC_EVENT = "crawler_liftoff_confirmed"
 FALSE_LOC_WEIGHT_FRACTION = 0.01
@@ -219,7 +268,7 @@ FAULT_PHASES = ("fault", "fault_reground")
 ATTITUDE_TOL_DEG = 0.2
 RUT_MIN_MM = 25.0
 LOC_DELAY_MAX_S = 2.9
-A3_SUITES = ("slope", "h6")
+A3_SUITES = ("slope", "h6", "x426b")
 A3_HARD_GROUNDS = ("rigid", "G1")
 """Spec 424.6 A-3: grounds where every candidate must keep the "current" command hash."""
 A3_SOFT_GROUNDS = ("J1", "J2", "S1")
@@ -420,6 +469,21 @@ class CandidateSettings:
     s6_ratio: float = 0.3
     s6_rise_max_N: float = 4000.0
     s6_min_clearance_m: float = 0.010
+    # spec 427 P-S8-36 candidate (crawler re-load after the lift stroke guard acted)
+    p36: bool = False
+    """P36: after the latch ``reload_armed`` a 1 s mean load-sum ratio below 1 - ``p36_delta``
+    on ``p36_confirm_periods`` periods re-lifts (LOC undone) or FAULTs (427.2, 427.3)."""
+    p36_delta: float = 0.05
+    p36_compensation: str = P36_COMPENSATED
+    """"last_motion": the corrected ratio rho_c (seal friction by the last moving direction);
+    "none": the plain ratio rho_u = sum F / W_hat."""
+    p36_mean_s: float = 1.0
+    p36_confirm_periods: int = 2
+    p36_probe_settle_s: float = 0.5
+    """Left out of the mean after a PROBE period with any output in force (427.2)."""
+    p36_relift_margin_m: float = 0.040
+    """Re-lift only with the largest motor stroke <= lift guard stroke - this (642.8 mm)."""
+    p36_max_relifts: int = 1
 
     def __post_init__(self) -> None:
         if self.s4_stroke_basis not in ("max", "mean"):
@@ -455,6 +519,18 @@ class CandidateSettings:
         if self.d1r_release_margin_N < self.d1r_trigger_margin_N:
             raise ValueError("d1r_release_margin_N must be >= d1r_trigger_margin_N")
         self._check_quick_hold()
+        self._check_p36()
+
+    def _check_p36(self) -> None:
+        if self.p36_compensation not in (P36_COMPENSATED, P36_UNCOMPENSATED):
+            raise ValueError(f"p36_compensation must be {P36_COMPENSATED} or "
+                             f"{P36_UNCOMPENSATED}, got {self.p36_compensation!r}")
+        if not 0.0 < self.p36_delta < 1.0:
+            raise ValueError(f"p36_delta must be in (0, 1), got {self.p36_delta}")
+        if self.p36_mean_s <= 0.0 or self.p36_probe_settle_s < 0.0:
+            raise ValueError("p36_mean_s must be > 0 and p36_probe_settle_s >= 0")
+        if self.p36_confirm_periods < 1 or self.p36_max_relifts < 0:
+            raise ValueError("p36_confirm_periods must be >= 1 and p36_max_relifts >= 0")
 
     def _check_quick_hold(self) -> None:
         if self.d1q_slow and not self.d1q_hold:
@@ -514,29 +590,47 @@ TOKEN_PRESETS = {
 E3c7 / E3c10 = E3wide only with the soil sign c_min(t_P) above 7 / 10 mm. D1p (spec 424.9):
 D1 that also stops over a P30fz slowdown. The preset values win over ``--param`` overrides of
 the same field."""
+TOKEN_DEFAULT_PRESETS = {
+    "P36c5": ({"p36": True}, {"p36_delta": 0.05, "p36_compensation": P36_COMPENSATED}),
+    "P36c8": ({"p36": True}, {"p36_delta": 0.08, "p36_compensation": P36_COMPENSATED}),
+    "P36u8": ({"p36": True}, {"p36_delta": 0.08, "p36_compensation": P36_UNCOMPENSATED}),
+}
+"""Spec 427.5 tokens: (fixed fields, token values). Unlike ``TOKEN_PRESETS`` the token values
+give way to overrides (``P36c5+p36_delta=0.06``, ``--param p36_delta=...``)."""
 
 
 def parse_candidate(name: str, overrides: dict | None = None) -> CandidateSettings:
     """Settings of a candidate name ("current" or tokens joined by "+") with parameter overrides.
 
     A ``name=value`` token is an override carried in the name (e.g. ``D1q+d1q_twist_m=0.010``);
-    it wins over ``overrides``, the token flags and presets win over both.
+    it wins over ``overrides``, the token flags and presets win over both. The token values of
+    ``TOKEN_DEFAULT_PRESETS`` (spec 427 ``p36_delta`` ...) give way to both kinds of override.
 
     Raises:
-        ValueError: unknown token or override name, or two spec 424.9.3 variants in one name.
+        ValueError: unknown token or override name, two spec 424.9.3 variants or two spec 427
+            tokens in one name.
     """
     flags: dict = {}
+    token_values: dict = {}
     overrides = dict(overrides or {})
     if name != BASELINE:
         quick_tokens = [token for token in name.split("+") if token in QUICK_HOLD_TOKENS]
         if len(quick_tokens) > 1:
             raise ValueError(f"{quick_tokens} are alternatives (424.9.3), not a combination")
+        p36_tokens = [token for token in name.split("+") if token in TOKEN_DEFAULT_PRESETS]
+        if len(p36_tokens) > 1:
+            raise ValueError(f"{p36_tokens} are alternatives (427.5), not a combination")
         for token in name.split("+"):
             if "=" in token:
                 overrides.update(parse_param_overrides([token]))
                 continue
             if token in TOKEN_PRESETS:
                 flags.update(TOKEN_PRESETS[token])
+                continue
+            if token in TOKEN_DEFAULT_PRESETS:
+                fixed, values = TOKEN_DEFAULT_PRESETS[token]
+                flags.update(fixed)
+                token_values.update(values)
                 continue
             if token not in TOKEN_FLAGS:
                 raise ValueError(f"unknown candidate token {token!r}, expected {CANDIDATE_TOKENS}")
@@ -545,7 +639,7 @@ def parse_candidate(name: str, overrides: dict | None = None) -> CandidateSettin
     unknown = sorted(set(overrides or {}) - known)
     if unknown:
         raise ValueError(f"unknown parameters {unknown}")
-    return CandidateSettings(**{**(overrides or {}), **flags})
+    return CandidateSettings(**{**token_values, **(overrides or {}), **flags})
 
 
 def parse_param_overrides(items: list[str]) -> dict:
@@ -677,6 +771,63 @@ def stroke_twist_residual_m(pad_xy_m, stroke_change_m) -> float:
     return float(TWIST_SIGNS @ residual)
 
 
+def seal_friction_estimates_N(free_air_N, rod_weight_N, cap_excess_N) -> np.ndarray:
+    """Spec 427.2 F_s,i: TOUCH free-air reading minus the rod weight, negative and unknown (NaN)
+    legs read 0, cut at the P-S8-26 cap ``cap_excess_N`` (8 / 6.67 kN)."""
+    free_air = np.asarray(free_air_N, float)
+    friction = np.nan_to_num(free_air - np.asarray(rod_weight_N, float), nan=0.0)
+    return np.clip(friction, 0.0, np.asarray(cap_excess_N, float))
+
+
+def friction_signs(output_in_force_m_s, remembered_signs) -> np.ndarray:
+    """Spec 427.2 sigma_i: sign of the output in force; a standing leg keeps the sign of its
+    last moving direction (``remembered_signs``, +1 at the run start)."""
+    output = np.asarray(output_in_force_m_s, float)
+    return np.where(output != 0.0, np.sign(output), np.asarray(remembered_signs, float))
+
+
+def load_sum_ratios(forces_N, signs, friction_N, weight_estimate_N: float
+                    ) -> tuple[float | None, float]:
+    """Spec 427.2 (rho_c, rho_u): ``sum(F - sigma F_s) / (W_hat - sum F_s)`` and
+    ``sum F / W_hat``; rho_c None when the friction leaves no weight."""
+    forces = np.asarray(forces_N, float)
+    friction = np.asarray(friction_N, float)
+    plain = float(np.sum(forces)) / weight_estimate_N
+    corrected_weight_N = weight_estimate_N - float(np.sum(friction))
+    if corrected_weight_N <= 0.0:
+        return None, plain
+    corrected = float(np.sum(forces - np.asarray(signs, float) * friction)) / corrected_weight_N
+    return corrected, plain
+
+
+class LoadRatioWindow:
+    """Moving mean of (rho_c, rho_u) over ``mean_s`` (spec 427.2: left-out periods are never
+    added; a mean needs ``min_periods`` samples)."""
+
+    def __init__(self, mean_s: float, min_periods: int = P36_MIN_VALID_PERIODS) -> None:
+        self.mean_s = mean_s
+        self.min_periods = min_periods
+        self._samples: deque = deque()
+
+    def clear(self) -> None:
+        self._samples.clear()
+
+    def add(self, t_s: float, corrected: float | None, plain: float) -> None:
+        self._samples.append((float(t_s), corrected, plain))
+        while self._samples and self._samples[0][0] <= t_s - self.mean_s + TIME_MATCH_S:
+            self._samples.popleft()
+
+    def means(self) -> tuple[float | None, float | None]:
+        """(mean rho_c, mean rho_u); None where fewer than ``min_periods`` samples."""
+        if len(self._samples) < self.min_periods:
+            return None, None
+        corrected = [c for _, c, _ in self._samples if c is not None]
+        plain_mean = float(np.mean([u for _, _, u in self._samples]))
+        if len(corrected) < self.min_periods:
+            return None, plain_mean
+        return float(np.mean(corrected)), plain_mean
+
+
 def plant_truth_row(t_s: float, plant) -> tuple:
     """HB-1 row: (t s, true deck roll deg, pad sinkage mm per leg) of the harness plant; roll /
     sinkage ``None`` where the plant has no attitude / no soil (``h6_trace.py`` quantities)."""
@@ -725,7 +876,7 @@ def hb1_metrics(fix, events, crawler_series, period_s: float) -> dict:
     return out
 
 
-RUT_LOG_SUITES = ("slope", "h6")
+RUT_LOG_SUITES = ("slope", "h6", "x426b")
 """Suites run by ``s9_soil_slope``, whose per-period log carries ``rut_clear_mm``."""
 RUT_AFTER_READY_S = 10.0
 """Spec 424.11.2 (1): the clearance window ends 10 s after READY."""
@@ -842,6 +993,24 @@ class _FixState:
     """Holds {t_s, axis, legs, r_mm_s} and releases {t_s, reason} (record)."""
     truth_log: list = field(default_factory=list)
     """HB-1 (every candidate, record): (t_s, true roll deg, pad sinkage mm per leg or None)."""
+    # spec 427 P-S8-36 (the signal and record run for every candidate, only P36 acts)
+    p36_armed_t_s: float | None = None
+    """Latch ``reload_armed``: the first lift-guard period of the run (kept to the run end)."""
+    p36_signs: np.ndarray = field(default_factory=lambda: np.ones(len(LEG_NAMES)))
+    """sigma_i memory: sign of each leg's last non-zero output in force (+1 at the start)."""
+    p36_window: LoadRatioWindow | None = None
+    p36_weight_N: float | None = None
+    """W_hat the window was filled with (a new LOC value clears it)."""
+    p36_probe_motion_t_s: float | None = None
+    """Last PROBE period with an output in force (427.2 left-out periods)."""
+    p36_low_count: int = 0
+    p36_relifts: int = 0
+    p36_pending: dict | None = None
+    """{t_s, ratio}: this period's confirmed suspicion, consumed by the phase step."""
+    p36_minima: dict = field(default_factory=dict)
+    """Phase -> {rho_c, rho_u, mean_c, mean_u} minima after the arming (record)."""
+    p36_actions: list = field(default_factory=list)
+    """{t_s, ratio, branch, max_stroke_mm} of every WARN_CRAWLER_RELOAD (P36 only)."""
 
 
 def _install_probe_reuse(probe_round, confirmed: dict, controller) -> None:
@@ -913,6 +1082,7 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
 
         def _new_fix_state(self) -> None:
             self.fix = _FixState()
+            self.fix.p36_window = LoadRatioWindow(settings.p36_mean_s)
             period_s = self.config.r8.imu_sample_period_s or self.config.period_s
             self._imu_sample_s = period_s
             self._vertical = VerticalIntegrator(settings.e4_gravity_samples)
@@ -1822,8 +1992,127 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
                     >= soil_settings.plausibility_fraction * self._reference_weight_N()):
                 self._confirm_liftoff(reading.t_s, tail, mean_load_N)
 
+        # ------------------------------------------------------------ 427 P-S8-36
+        # One period: ``_phase_command`` observes the ratio first (every candidate, record);
+        # a confirmed suspicion of P36 is acted on by ``_hold_probe_or_relevel`` (DONE /
+        # PROBE / READY) or ``_level`` (LEVEL) in the same period.
+        def _record_lift_guard_period(self, t_s, guarded, mode) -> None:
+            super()._record_lift_guard_period(t_s, guarded, mode)
+            if self.fix.p36_armed_t_s is None:
+                self.fix.p36_armed_t_s = float(t_s)
+
+        def _phase_command(self, reading):
+            self._p36_observe(reading)
+            try:
+                return super()._phase_command(reading)
+            finally:
+                self.fix.p36_pending = None  # e.g. DONE started a REANCHOR instead
+
+        def _level(self, reading):
+            if self.fix.p36_pending is not None:
+                fault_speeds = self._p36_act(reading)
+                if fault_speeds is not None:
+                    return fault_speeds
+            return super()._level(reading)
+
+        def _p36_watched_phase(self) -> str | None:
+            """427.1: LEVEL after the LOC, DONE, PROBE, READY; None elsewhere."""
+            phase = self._state.phase
+            if phase is c2.C2Phase.LEVEL:
+                return "level" if self._soil_state().is_liftoff_confirmed else None
+            if phase in (c2.C2Phase.DONE, c2.C2Phase.PROBE, c2.C2Phase.READY):
+                return str(phase.name).lower()
+            return None
+
+        def _p36_seal_friction_N(self) -> np.ndarray:
+            cap_N = (self.config.r8.touch_free_air_cap_excess_N
+                     or c2.R8_D1_TOUCH_FREE_AIR_CAP_EXCESS_N)
+            free_air_N = self._state.free_air_force_N
+            if free_air_N is None:
+                return np.zeros(len(LEG_NAMES))
+            return seal_friction_estimates_N(free_air_N, self._touch_rod_weight_N(), cap_N)
+
+        def _p36_is_left_out(self, t_s: float, output_in_force) -> bool:
+            """427.2: a PROBE period with any output in force and ``p36_probe_settle_s``
+            after it."""
+            fix = self.fix
+            if self._state.phase is c2.C2Phase.PROBE and np.any(output_in_force != 0.0):
+                fix.p36_probe_motion_t_s = float(t_s)
+            last_motion_s = fix.p36_probe_motion_t_s
+            return (last_motion_s is not None
+                    and t_s - last_motion_s <= settings.p36_probe_settle_s + TIME_MATCH_S)
+
+        def _p36_observe(self, reading) -> None:
+            """The 427.2 signal of this period (before its command); sets ``p36_pending``."""
+            fix = self.fix
+            output_in_force = np.asarray(self._state.applied_output_m_s, float)
+            signs = friction_signs(output_in_force, fix.p36_signs)
+            fix.p36_signs = signs
+            is_left_out = self._p36_is_left_out(reading.t_s, output_in_force)
+            phase = self._p36_watched_phase()
+            weight_N = self._soil_state().weight_estimate_N
+            if fix.p36_armed_t_s is None or phase is None or not weight_N or is_left_out:
+                fix.p36_low_count = 0
+                return
+            if weight_N != fix.p36_weight_N:
+                fix.p36_window.clear()
+                fix.p36_weight_N = weight_N
+            corrected, plain = load_sum_ratios(reading.cylinder_force_N, signs,
+                                               self._p36_seal_friction_N(), weight_N)
+            fix.p36_window.add(reading.t_s, corrected, plain)
+            mean_corrected, mean_plain = fix.p36_window.means()
+            self._p36_note_minima(phase, (corrected, plain, mean_corrected, mean_plain))
+            judged = mean_corrected if settings.p36_compensation == P36_COMPENSATED else mean_plain
+            if not settings.p36 or judged is None:
+                fix.p36_low_count = 0
+                return
+            fix.p36_low_count = fix.p36_low_count + 1 if judged < 1.0 - settings.p36_delta else 0
+            if fix.p36_low_count >= settings.p36_confirm_periods:
+                fix.p36_pending = {"t_s": float(reading.t_s), "ratio": judged}
+
+        def _p36_note_minima(self, phase: str, values: tuple) -> None:
+            minima = self.fix.p36_minima.setdefault(
+                phase, {"rho_c": None, "rho_u": None, "mean_c": None, "mean_u": None})
+            for key, value in zip(minima, values, strict=True):
+                if value is not None and (minima[key] is None or value < minima[key]):
+                    minima[key] = float(value)
+
+        def _p36_act(self, reading) -> np.ndarray | None:
+            """427.3: re-lift (LOC undone, back to LEVEL; returns None) or the FAULT (returns
+            the zero command)."""
+            fix = self.fix
+            pending, fix.p36_pending = fix.p36_pending, None
+            t_s, ratio = pending["t_s"], pending["ratio"]
+            max_stroke_m = float(np.max(reading.motor_stroke_m))
+            relift_limit_m = self._lift_guard_stroke_m() - settings.p36_relift_margin_m
+            can_relift = (max_stroke_m <= relift_limit_m
+                          and fix.p36_relifts < settings.p36_max_relifts)
+            branch = P36_BRANCH_RELIFT if can_relift else P36_BRANCH_FAULT
+            if len(fix.p36_actions) < P36_RELOAD_ACTIONS_MAX:
+                fix.p36_actions.append({"t_s": round(t_s, 2), "ratio": round(ratio, 4),
+                                        "branch": branch,
+                                        "max_stroke_mm": round(max_stroke_m * 1e3, 1)})
+            self._add_event(t_s, f"{P36_RELOAD_WARNING_EVENT}:{ratio:.3f}", is_warning=True)
+            fix.p36_low_count = 0
+            fix.p36_window.clear()
+            if can_relift:
+                fix.p36_relifts += 1
+                self._clear_liftoff_confirmation()
+                self._start_relevel()
+                self._add_event(t_s, f"{P36_RELIFT_EVENT}:{ratio:.3f}", is_warning=True)
+                return None
+            self._add_event(t_s, P36_FAULT_EVENT, is_warning=True)
+            state = self._state
+            state.phase = c2.C2Phase.FAULT
+            if self._starts_stroke_end_reground(t_s):  # as the guard FAULT (U-S8-79)
+                state.phase = c2.C2Phase.FAULT_REGROUND
+            return self._zero_speeds()
+
         # ------------------------------------------------------------ E2
         def _hold_probe_or_relevel(self, reading):
+            if self.fix.p36_pending is not None:
+                fault_speeds = self._p36_act(reading)
+                return fault_speeds  # None after a re-lift: the LEVEL step of this period
             if settings.e2 and self._is_recontact_suspected(reading):
                 self._undo_liftoff(reading.t_s)
                 self._start_relevel()
@@ -1845,6 +2134,12 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
             return True
 
         def _undo_liftoff(self, t_s: float) -> None:
+            """E2 re-lift: the LOC undone (:meth:`_clear_liftoff_confirmation`), E2 counted."""
+            self._clear_liftoff_confirmation()
+            self.fix.e2_low_count = 0
+            self.fix.e2_relifts += 1
+
+        def _clear_liftoff_confirmation(self) -> None:
             """Back to "lift-off not confirmed": soil mode starts again at the next LEVEL period
             and DONE waits for a new S-1 window (the bias stays until the new LOC)."""
             soil = self._soil_state()
@@ -1852,8 +2147,6 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
             soil.is_soil_mode = False
             soil.soil_mode_start_stroke_m = None
             soil.window.clear()
-            self.fix.e2_low_count = 0
-            self.fix.e2_relifts += 1
 
         # ------------------------------------------------------------ RA
         def _reanchor_skip_reason(self, reading):
@@ -2007,6 +2300,28 @@ def _h6_cases() -> list[dict]:
     return [case.to_dict() for case in cases]
 
 
+def _x426b_cases() -> list[dict]:
+    """Spec 426.4 study B (84): the 21 points of ``X426B_POINTS`` x ``X426B_VARIANTS``.
+
+    Only the existing SlopeCase fields ``fs_kN`` / ``level`` / ``mass_scale`` are replaced (no
+    dependence on the spec 426 extension of ``s9_soil_slope``); the settle table is attached
+    after the replacement because its rows are keyed per level.
+
+    Raises:
+        ValueError: a point of ``X426B_POINTS`` is not among the study-1 cases.
+    """
+    import s9_soil_slope as slope
+
+    points = [case for case in slope.build_cases(("H1", "H3")) if case.case_id in X426B_POINTS]
+    if len(points) != len(X426B_POINTS):
+        missing = sorted(set(X426B_POINTS) - {case.case_id for case in points})
+        raise ValueError(f"x426b points not in study 1: {missing}")
+    table = json.loads(SETTLE_TABLE_PATH.read_text(encoding="utf-8"))[SETTLE_TABLE_KEY]
+    variants = [replace(case, fs_kN=fs_kN, level=level, mass_scale=mass_scale)
+                for fs_kN, level, mass_scale in X426B_VARIANTS for case in points]
+    return [case.to_dict() for case in slope.attach_settle_table(variants, table)]
+
+
 def _g6_keys() -> list[str]:
     with _argv_as_root():
         import r72_g6_screen as g6
@@ -2049,6 +2364,8 @@ def suite_cases(suite: str) -> list[tuple[str, object]]:
         return [(case["id"], case) for case in _h6_cases()]
     if suite == "v3s":
         return [(case["id"], case) for case in _v3s_cases()]
+    if suite == "x426b":
+        return [(case["id"], case) for case in _x426b_cases()]
     raise ValueError(f"unknown suite {suite!r}, expected {SUITES}")
 
 
@@ -2162,7 +2479,7 @@ def _p3b_record(case: dict) -> dict:
 
 
 SUITE_RUNNERS = {"slope": _slope_record, "g6": _g6_record, "g8": _g8_record, "p3b": _p3b_record,
-                 "h6": _slope_record, "v3s": _p3b_record}
+                 "h6": _slope_record, "v3s": _p3b_record, "x426b": _slope_record}
 
 
 def qc_record(fix: _FixState) -> dict:
@@ -2179,6 +2496,16 @@ def qc_record(fix: _FixState) -> dict:
             "quick_gate_checks": list(fix.quick_gate_checks)}
 
 
+def p36_record(fix: _FixState) -> dict:
+    """Spec 427.6 record (every candidate): arming time, per-phase ratio minima after it and the
+    P36 actions (time, 1 s mean ratio, branch)."""
+    minima = {phase: {key: None if value is None else round(value, 4)
+                      for key, value in values.items()}
+              for phase, values in fix.p36_minima.items()}
+    return {"armed_t_s": None if fix.p36_armed_t_s is None else round(fix.p36_armed_t_s, 2),
+            "minima": minima, "relifts": fix.p36_relifts, "actions": list(fix.p36_actions)}
+
+
 def _controller_record(controller) -> dict:
     """Candidate record of the run's controller: metrics, window checks, fix events."""
     events = [(float(e.t_s), e.name) for e in controller.events]
@@ -2189,8 +2516,9 @@ def _controller_record(controller) -> dict:
     metrics["window_checks"] = controller.fix.window_checks[:20]
     metrics["fix_events"] = [(round(t, 2), n) for t, n in events
                              if n.startswith((FIX_EVENT_PREFIX, S4_STROKE_EVENT))
-                             or n.startswith(PROJECT_L1_EVENTS)
+                             or n.startswith(PROJECT_L1_EVENTS) or n.startswith(P36_EVENTS)
                              or n.startswith("reanchor_")][:30]
+    metrics["p36"] = p36_record(controller.fix)
     metrics["e3_applied"] = controller.fix.e3_applied
     metrics["lw_clears"] = controller.fix.lw_clears
     # spec 424.3 / 424.4 candidates
@@ -2264,13 +2592,14 @@ def case_ground(suite: str, case_id: str) -> str | None:
 
 
 def has_candidate_acted(record: dict) -> bool:
-    """A fix of the candidate fired in the run: a ``FIX_*`` / S4 stroke event or the E3 target.
+    """A fix of the candidate fired in the run: a ``FIX_*`` / S4 stroke event, the E3 target or
+    a spec 427 P36 action.
 
     RA (REANCHOR skip) raises no fix event; its runs count as idle, so they meet the stricter
     hash rule.
     """
     metrics = record.get("metrics") or {}
-    if metrics.get("e3_applied"):
+    if metrics.get("e3_applied") or (metrics.get("p36") or {}).get("actions"):
         return True
     return any(name.startswith((FIX_EVENT_PREFIX, S4_STROKE_EVENT))
                and name.split(":", 1)[0] not in RECORD_ONLY_FIX_EVENTS
@@ -2609,6 +2938,19 @@ def _check_ids(suites: str, exact_ids: str) -> None:
         raise ValueError(f"unknown case ids {unknown}")
 
 
+def harness_sha256() -> dict[str, str | None]:
+    """Spec 427.6 meta: SHA-256 of this script and of the harnesses in ``HARNESS_HASH_FILES``
+    (LF line ends, so a CRLF checkout gives the same digest; None for a missing file)."""
+    paths = (Path(__file__).resolve().relative_to(ROOT), *HARNESS_HASH_FILES)
+    digests = {}
+    for relative in paths:
+        path = ROOT / relative
+        digests[relative.as_posix()] = (
+            hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+            if path.is_file() else None)
+    return digests
+
+
 def _run(args) -> None:
     import s9_soil_slope as slope
 
@@ -2630,7 +2972,8 @@ def _run(args) -> None:
             "suites": args.suite, "candidates": candidates, "params": overrides,
             "defaults": asdict(CandidateSettings()), "filter": args.filter, "ids": args.ids,
             "settle_hook": args.settle_hook, "workers": args.workers, "placement": placement,
-            "wall_s": round(time.perf_counter() - t0, 1), "n_records": len(records)}
+            "wall_s": round(time.perf_counter() - t0, 1), "n_records": len(records),
+            "harness_sha256": harness_sha256()}
     summary = write_outputs(args.out, records, meta)
     _print_records(records)
     print(json.dumps(summary["by_suite_candidate"], indent=1))

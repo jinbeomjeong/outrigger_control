@@ -22,6 +22,9 @@ Usage (project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run D424 --parallel 2   # 424.6 A-8: MS1 re-run + x1.2
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run D424R --parallel 1 --parallel-e 2 \
         --e-cases P3b_J2_B_middle_Fs4,P3b_J2_B_bottom_Fs4   # 424.11.2: DSb75 re-check (J1 x1.1 P alone, J2 B on E)
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run RV1 --parallel 2 --parallel-e 2 \
+        --e-cases S9SL_X4ed_J1_B_top_Fs4_r1p925_p1p4,P3b_J2_B_top_Fs4_m1p1   # paper review S2 / S3: X4 x3 + X5
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run RV2 --parallel 4   # P3b J1 B top F_s 0/4/8 + J2 B (DSb75)
 
 Pools (2026-10-26): ``--parallel`` (= ``--parallel-p``) P-pool slots, ``--parallel-e`` E-pool slots;
 each case process gets ``OUTRIGGER_PLACEMENT`` = ``pcore`` / ``ecore`` (``run_S9.place``). Cases go to
@@ -165,6 +168,14 @@ def batches() -> dict[str, list[dict]]:
     # spec 424.11.2 'Chrono 3건' (2026-10-30): DSb75 re-check, J1 B top x1.1 (P pool alone) + study ③ J2 B middle /
     # bottom (E pool): run D424R --parallel 1 --parallel-e 2 --e-cases P3b_J2_B_middle_Fs4 P3b_J2_B_bottom_Fs4
     out["D424R"] = level_rows("d424r_cases")
+    # paper review S2 / S3 (user approval 2026-10-30): X4 J1 B slope k 0.875 x 3 directions (S9SL form) + X5 J2 B top
+    # x1.1 (MS1 form); pools from the compute-scheduler-expert plan, e.g. run RV1 --parallel 2 --parallel-e 2
+    # --e-cases S9SL_X4ed_J1_B_top_Fs4_r1p925_p1p4,P3b_J2_B_top_Fs4_m1p1
+    out["RV1"] = level_rows("rv1_cases")
+    # RV2 (user approval 2026-10-30): P3b J1 B top F_s 0 / 4 / 8 + J2 B top F_s 4 on the final controller (DSb75 fires
+    # ~1 s after LOC in the offline replay of batch_P3b_20261026_122444); argv = the P3b rows. P pool, e.g.
+    # run RV2 --parallel 4 (= run P3b --only <the 4 names>, but folder batch_RV2_*, batch_note, RV2 est_s)
+    out["RV2"] = level_rows("rv2_cases")
     return out
 
 
@@ -186,6 +197,8 @@ def level_rows(fn_name: str) -> list[dict]:
             row["note"] = note
         if c.get("planned_pool"):  # D424R (2026-10-30): intended pool, informative (--e-cases sets the pool)
             row["planned_pool"] = c["planned_pool"]
+        if c.get("est_pool_s"):  # RV1 (2026-10-30): estimate per pool, informative (est_s = the planned pool)
+            row["est_pool_s"] = dict(c["est_pool_s"])
         rows.append(row)
     return rows
 

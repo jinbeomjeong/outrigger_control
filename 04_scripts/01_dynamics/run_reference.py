@@ -14,7 +14,6 @@ import time
 from pathlib import Path
 
 import numpy as np
-import sympy as sp
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import dyn_model as dm  # noqa: E402
@@ -38,6 +37,9 @@ def r(x, n=6):
 
 def sympy_hessian_check(body, pad_pts, kv, kh, F0, g):
     """Independent path: exact potential with a full ZYX rotation matrix, Hessian at q=0 (sympy)."""
+    # Lazy import: importers of run_reference must also load in envs without sympy.
+    import sympy as sp
+
     ux, uy, uz, ph, th, ps = sp.symbols("ux uy uz phi theta psi", real=True)
     Rx = sp.Matrix([[1, 0, 0], [0, sp.cos(ph), -sp.sin(ph)], [0, sp.sin(ph), sp.cos(ph)]])
     Ry = sp.Matrix([[sp.cos(th), 0, sp.sin(th)], [0, 1, 0], [-sp.sin(th), 0, sp.cos(th)]])

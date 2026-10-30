@@ -10,7 +10,9 @@ heave; remainder <= 0.011 mm). Corrected check (no rerun, stored values only):
   attitude  window-mean attitude minus target_q_floor per axis within
             max(0.005 deg, |table residual of that axis| + 0.002 deg)
 Verdict: the stored row verdict (``verdict_rows``) unless the corrected check fails
-("settle_check_fail"). The first check is kept as ``settle.check_v1``.
+("settle_check_fail"); runs with ``case.mass_scale`` != 1.0 only record the check and keep
+``verdict_rows`` (spec 422.2, ``s9_soil_slope._final_verdict``). The first check is kept as
+``settle.check_v1``.
 
 Two input formats:
   ``results``  s9_soil_slope.py output; re-judged with the stored settle data as above.
@@ -126,7 +128,9 @@ def rejudge_result(result: dict, rows: dict, pad_xy_m) -> dict:
     settle = dict(result["settle"])
     settle["check_v1"] = settle.get("check_v1", settle["check"])
     settle["check"] = check
-    verdict = result["verdict_rows"] if check["ok"] else ss.VERDICT_SETTLE_CHECK_FAIL
+    # same rule as the run itself (spec 422.2): a scaled-mass run only records the check
+    mass_scale = result["case"].get("mass_scale", 1.0)
+    verdict = ss._final_verdict(result["verdict_rows"], check, mass_scale)  # noqa: SLF001
     return {**result, "settle": settle, "verdict_before_settle_v2": result["verdict"],
             "verdict": verdict}
 
