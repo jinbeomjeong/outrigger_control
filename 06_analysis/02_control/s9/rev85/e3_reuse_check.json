@@ -1,0 +1,2026 @@
+{
+ "meta": {
+  "spec": "s6_control_spec.md 432.4 E3 (final controller 429.11)",
+  "final_controller": "R8 C2 + L1gs + DSb75 + SGS(P36sa, any_loc) + R4c30",
+  "tool": "04_scripts/03_control/s9/final_ctrl_offline.py",
+  "generated": "2026-10-30T20:37:13",
+  "settings": {
+   "period_s": 0.1,
+   "max_speed_m_s": 0.0209243016,
+   "guard_stroke_m": 0.6828,
+   "guard_lookahead_s": 0.2,
+   "slope_tilt_min_rad": 0.017453292519943295,
+   "slope_min_clearance_at_P_m": 0.01,
+   "slope_require_soil_use": false,
+   "revoke_watch_m": 0.02,
+   "revoke_rise_N": 2000.0,
+   "revoke_rise_fraction_W": 0.005,
+   "revoke_mean_s": 1.0,
+   "revoke_confirm_periods": 2,
+   "revoke_gate_min_clearance_at_P_m": 0.01,
+   "revoke_gate_tilt_min_rad": 0.017453292519943295,
+   "revoke_stroke_limit_m": 0.6427999999999999,
+   "sink_threshold_m_s": 0.003,
+   "sink_confirm_periods": 10,
+   "sink_gate_max_tilt_rad": 0.017453292519943295,
+   "sink_stroke_limit_m": 0.6427999999999999,
+   "sink_track_w_m": [
+    2.648,
+    2.411
+   ],
+   "sink_signal_periods": 10,
+   "head_area_m2": [
+    0.013273229,
+    0.013273229,
+    0.00950331778,
+    0.00950331778
+   ],
+   "annulus_area_m2": [
+    0.00376991118,
+    0.00376991118,
+    0.00314159265,
+    0.00314159265
+   ]
+  },
+  "rule": "(a) = no feature fires; (b) = any fires; undecided = a check cannot tell",
+  "not_judged": "05708b2 rules P-S8-28 .. 32 (outside E3)"
+ },
+ "summary": {
+  "counts": {
+   "(a)": 27,
+   "(b)": 0,
+   "undecided": 0
+  },
+  "rerun_cases": [],
+  "undecided_cases": []
+ },
+ "cases": [
+  {
+   "label": "P3b G1 A bottom_Fs4",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_122444/P3b_G1_A_bottom_Fs4",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     33.0
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": -1.56,
+    "settle_tilt_deg": 0.1488
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.4082,
+      "reach_bound_m": 0.41238,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       33.0
+      ],
+      "settle_tilt_deg": 0.1488,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 680.833618,
+       "end_reason": "stroke +watch at 34.3 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000503,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 76
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3b G1 A middle_Fs4",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_122444/P3b_G1_A_middle_Fs4",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     33.0
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 0.21,
+    "settle_tilt_deg": 0.1501
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.4082,
+      "reach_bound_m": 0.41238,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       33.0
+      ],
+      "settle_tilt_deg": 0.1501,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": -298.487768,
+       "end_reason": "stroke +watch at 34.4 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000422,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 73
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3b G1 A top_Fs0",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_122444/P3b_G1_A_top_Fs0",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     32.9
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": -1.43,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.40823,
+      "reach_bound_m": 0.41241,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       32.9
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 451.718947,
+       "end_reason": "stroke +watch at 34.2 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000481,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 72
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3b G1 A top_Fs4",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_122444/P3b_G1_A_top_Fs4",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     32.9
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": -0.94,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.40809,
+      "reach_bound_m": 0.41228,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       32.9
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 93.038824,
+       "end_reason": "stroke +watch at 34.3 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000508,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 71
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3b G1 A top_Fs8",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_122444/P3b_G1_A_top_Fs8",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     32.9
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": -1.04,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.40822,
+      "reach_bound_m": 0.41241,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       32.9
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 299.043155,
+       "end_reason": "stroke +watch at 34.2 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000504,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 71
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3b G1 B bottom_Fs4",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_122444/P3b_G1_B_bottom_Fs4",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     33.1
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 0.33,
+    "settle_tilt_deg": 0.1488
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.40517,
+      "reach_bound_m": 0.40936,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       33.1
+      ],
+      "settle_tilt_deg": 0.1488,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": -334.641328,
+       "end_reason": "stroke +watch at 34.5 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000534,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 64
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3b G1 B middle_Fs4",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_122444/P3b_G1_B_middle_Fs4",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     33.1
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 0.32,
+    "settle_tilt_deg": 0.1501
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.40518,
+      "reach_bound_m": 0.40936,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       33.1
+      ],
+      "settle_tilt_deg": 0.1501,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": -438.128757,
+       "end_reason": "stroke +watch at 34.5 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000532,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 64
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3b G1 B top_Fs0",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_122444/P3b_G1_B_top_Fs0",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     33.1
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 0.68,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.40527,
+      "reach_bound_m": 0.40945,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       33.1
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": -775.33385,
+       "end_reason": "stroke +watch at 34.5 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000661,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 62
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3b G1 B top_Fs4",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_122444/P3b_G1_B_top_Fs4",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     33.2
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 3.38,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.40499,
+      "reach_bound_m": 0.40917,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       33.2
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 1181.062126,
+       "end_reason": "stroke +watch at 34.8 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000648,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 60
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3b G1 B top_Fs8",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_122444/P3b_G1_B_top_Fs8",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     33.2
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 3.27,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.40512,
+      "reach_bound_m": 0.40931,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       33.2
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 1396.718435,
+       "end_reason": "stroke +watch at 34.8 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000651,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 60
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3b G1 A top_Fs0 (rerun record)",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_193021/P3b_G1_A_top_Fs0",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     32.9
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": -1.43,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.40823,
+      "reach_bound_m": 0.41241,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       32.9
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 451.718947,
+       "end_reason": "stroke +watch at 34.2 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000481,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 72
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3b G1 A top_Fs8 (rerun record)",
+   "origin": "existing_a",
+   "case": "batch_P3b_20261026_201553/P3b_G1_A_top_Fs8",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     32.9
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": -1.04,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "stroke bound below s_g (record without the guard)",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.40822,
+      "reach_bound_m": 0.41241,
+      "guard_stroke_m": 0.6828
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       32.9
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 299.043155,
+       "end_reason": "stroke +watch at 34.2 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000504,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 71
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "G6 G1RR",
+   "origin": "existing_a",
+   "case": "batch_G6_20261028_075108/G6_G1_B_top_Fs4_spG1RR",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": true,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     33.2
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 3.38,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "recorded guard periods and events",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.40499,
+      "reach_bound_m": 0.40917,
+      "guard_stroke_m": 0.6828,
+      "recorded_guard_periods": 0
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       33.2
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 1181.062126,
+       "end_reason": "stroke +watch at 34.8 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000648,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 60
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "D424 2 (x1.2)",
+   "origin": "existing_a",
+   "case": "batch_D424_20261030_014908/P3b_J1_B_top_Fs4_m1p2",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": true,
+    "slope_clearance_margin": true,
+    "loc_revoke": true,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [],
+    "soil_mode_start_s": 33.39999999998523,
+    "clearance_at_P_mm": null,
+    "settle_tilt_deg": 0.0858
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no LOC: the guard runs only after a LOC",
+     "values": {}
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no LOC",
+     "values": {}
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no LOC",
+     "values": {}
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no LOC",
+     "values": {}
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3a G1_A",
+   "origin": "existing_a",
+   "case": "batch_P3a_20261026_092653/P3a_G1_A",
+   "action": "machine",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3a G1_B",
+   "origin": "existing_a",
+   "case": "batch_P3a_20261026_092653/P3a_G1_B",
+   "action": "machine",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3a J1_A",
+   "origin": "existing_a",
+   "case": "batch_P3a_20261026_092653/P3a_J1_A",
+   "action": "machine",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "P3a J1_B",
+   "origin": "existing_a",
+   "case": "batch_P3a_20261026_092653/P3a_J1_B",
+   "action": "machine",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "DT M14s dashpot",
+   "origin": "existing_a",
+   "case": "batch_DT_20261026_122444/DT_G1_B_top_M14s_dashpot8s_dt5e-5",
+   "action": "machine",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "DT P3a",
+   "origin": "existing_a",
+   "case": "batch_DT_20261026_122444/DT_P3a_G1_B_dt5e-5",
+   "action": "machine",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "G6-0a",
+   "origin": "existing_a",
+   "case": "batch_G6_20261028_075108/G6-0a_G1_B_lift_spG1RR",
+   "action": "machine",
+   "rules_in_record": {
+    "lift_stroke_guard": false,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "no controller in the loop (open-loop / model test record)",
+     "values": {}
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "S9SL C-1",
+   "origin": "432.3_changed",
+   "case": "batch_S9SL_20261029_144406/S9SL_C1_G1_B_top_Fs4_r0_p3p2",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": true,
+    "slope_clearance_margin": true,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     34.2
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 2.69,
+    "settle_tilt_deg": 3.5427
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "recorded guard periods and events",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.63945,
+      "reach_bound_m": 0.64364,
+      "guard_stroke_m": 0.6828,
+      "recorded_guard_periods": 0
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       34.2
+      ],
+      "settle_tilt_deg": 3.5427,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": -192.922348,
+       "end_reason": "stroke +watch at 36.1 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": false,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.000475,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 202
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "RV1 X4-nd",
+   "origin": "432.3_changed",
+   "case": "batch_RV1_20261030_111615/S9SL_X4nd_J1_B_top_Fs4_r0_p2p8",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": true,
+    "slope_clearance_margin": true,
+    "loc_revoke": true,
+    "diff_sink": true
+   },
+   "loc": {
+    "times_s": [
+     40.1
+    ],
+    "soil_mode_start_s": 38.800000000164495,
+    "clearance_at_P_mm": 22.66,
+    "settle_tilt_deg": 3.0339
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "recorded guard periods and events",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.65,
+      "reach_bound_m": 0.65418,
+      "guard_stroke_m": 0.6828,
+      "recorded_guard_periods": 0
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": 38.800000000164495,
+      "loc_times_s": [
+       40.1
+      ],
+      "settle_tilt_deg": 3.0339,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       true
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "rule in the recorded run",
+     "values": {
+      "soil_sign": "soil_mode",
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 647.453881,
+       "end_reason": "stroke +watch at 41.7 s"
+      },
+      "recorded_revokes": 0,
+      "recorded_skips": 0
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "rule in the recorded run",
+     "values": {
+      "soil_sign": "soil_mode",
+      "settle_level": false,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.001702,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 114
+      },
+      "recorded_gate_open": false,
+      "recorded_holds": 0
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "RV1 X4-ed",
+   "origin": "432.3_changed",
+   "case": "batch_RV1_20261030_111615/S9SL_X4ed_J1_B_top_Fs4_r1p925_p1p4",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": true,
+    "slope_clearance_margin": true,
+    "loc_revoke": true,
+    "diff_sink": true
+   },
+   "loc": {
+    "times_s": [
+     39.8
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 11.14,
+    "settle_tilt_deg": 1.9286
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "recorded guard periods and events",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.65967,
+      "reach_bound_m": 0.66386,
+      "guard_stroke_m": 0.6828,
+      "recorded_guard_periods": 0
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       39.8
+      ],
+      "settle_tilt_deg": 1.9286,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       true
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "rule in the recorded run",
+     "values": {
+      "soil_sign": "clearance_tilt",
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 1970.348006,
+       "end_reason": "stroke +watch at 41.4 s"
+      },
+      "recorded_revokes": 0,
+      "recorded_skips": 0
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "rule in the recorded run",
+     "values": {
+      "soil_sign": "clearance_tilt",
+      "settle_level": false,
+      "replay": {
+       "hold_t_s": 42.8,
+       "max_rate_m_s": 0.006309,
+       "rate_at_hold_m_s": 0.005437,
+       "evaluated_periods": 30
+      },
+      "recorded_gate_open": false,
+      "recorded_holds": 0
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "G6 J1@RR (0.6 kN)",
+   "origin": "432.3_changed",
+   "case": "batch_G6P_20261029_103815/G6_G1_B_top_Fs4_spJ1RR",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": true,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     33.1
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 1.04,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "recorded guard periods and events",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.42316,
+      "reach_bound_m": 0.42735,
+      "guard_stroke_m": 0.6828,
+      "recorded_guard_periods": 0
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       33.1
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 940.037449,
+       "end_reason": "stroke +watch at 34.5 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.003136,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 373
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "G6 J1@FL",
+   "origin": "432.3_changed",
+   "case": "batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": true,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     33.8
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 8.61,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "recorded guard periods and events",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.44068,
+      "reach_bound_m": 0.44486,
+      "guard_stroke_m": 0.6828,
+      "recorded_guard_periods": 0
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       33.8
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 467.429726,
+       "end_reason": "stroke +watch at 36.0 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.002851,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 289
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  },
+  {
+   "label": "G6 J2@RR",
+   "origin": "432.3_changed",
+   "case": "batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ2RR",
+   "action": "level",
+   "rules_in_record": {
+    "lift_stroke_guard": true,
+    "slope_clearance_margin": false,
+    "loc_revoke": false,
+    "diff_sink": false
+   },
+   "loc": {
+    "times_s": [
+     33.2
+    ],
+    "soil_mode_start_s": null,
+    "clearance_at_P_mm": 3.39,
+    "settle_tilt_deg": 0.1515
+   },
+   "checks": {
+    "SGS": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "recorded guard periods and events",
+     "values": {
+      "guard_warnings": 0,
+      "guard_faults": 0,
+      "max_stroke_level_after_loc_m": 0.4542,
+      "reach_bound_m": 0.45839,
+      "guard_stroke_m": 0.6828,
+      "recorded_guard_periods": 0
+     }
+    },
+    "R4": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil mode, P-S8-31 and settle tilt at each LOC from the record",
+     "values": {
+      "soil_mode_start_s": null,
+      "loc_times_s": [
+       33.2
+      ],
+      "settle_tilt_deg": 0.1515,
+      "recorded_flat_margin_events": 0,
+      "p31_applied_at_loc": [
+       false
+      ],
+      "due_at_loc_s": []
+     }
+    },
+    "L1gs": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "soil gate closed at the LOC",
+     "values": {
+      "soil_sign": null,
+      "replay": {
+       "fired_t_s": null,
+       "kind": null,
+       "peak_rise_N": 88.64621,
+       "end_reason": "stroke +watch at 34.8 s"
+      }
+     }
+    },
+    "DSb75": {
+     "fires": false,
+     "confidence": "high",
+     "basis": "gate closed at the first LOC",
+     "values": {
+      "soil_sign": null,
+      "settle_level": true,
+      "replay": {
+       "hold_t_s": null,
+       "max_rate_m_s": 0.004772,
+       "rate_at_hold_m_s": null,
+       "evaluated_periods": 588
+      }
+     }
+    }
+   },
+   "class": "(a)",
+   "confidence": "high"
+  }
+ ],
+ "replay_validation": [
+  {
+   "case": "batch_D424R_20261030_073635/P3b_J1_B_top_Fs4_m1p1",
+   "recorded_first_hold": [
+    51.0,
+    "INFO_DIFF_SINK_HOLD:FL,RL:8.5"
+   ],
+   "replay_hold_t_s": 51.0,
+   "replay_rate_at_hold_mm_s": 8.45,
+   "recorded_first_revoke": [
+    50.1,
+    "INFO_LOC_REVOKED:2.3"
+   ],
+   "replay_revoke": [
+    null,
+    null,
+    null
+   ]
+  },
+  {
+   "case": "batch_D424R_20261030_073635/P3b_J2_B_middle_Fs4",
+   "recorded_first_hold": [
+    46.1,
+    "INFO_DIFF_SINK_HOLD:FL,RL:4.6"
+   ],
+   "replay_hold_t_s": 46.1,
+   "replay_rate_at_hold_mm_s": 4.61,
+   "recorded_first_revoke": null,
+   "replay_revoke": [
+    null,
+    null,
+    "stroke +watch at 46.6 s"
+   ]
+  },
+  {
+   "case": "batch_D424R_20261030_073635/P3b_J2_B_bottom_Fs4",
+   "recorded_first_hold": [
+    46.1,
+    "INFO_DIFF_SINK_HOLD:FL,RL:3.5"
+   ],
+   "replay_hold_t_s": 46.1,
+   "replay_rate_at_hold_mm_s": 3.55,
+   "recorded_first_revoke": null,
+   "replay_revoke": [
+    null,
+    null,
+    "stroke +watch at 46.7 s"
+   ]
+  },
+  {
+   "case": "batch_RV1_20261030_111615/P3b_J2_B_top_Fs4_m1p1",
+   "recorded_first_hold": [
+    56.3,
+    "INFO_DIFF_SINK_HOLD:FL,RL:6.8"
+   ],
+   "replay_hold_t_s": 56.3,
+   "replay_rate_at_hold_mm_s": 6.82,
+   "recorded_first_revoke": [
+    56.8,
+    "INFO_LOC_REVOKED:2.0"
+   ],
+   "replay_revoke": [
+    null,
+    null,
+    null
+   ]
+  }
+ ]
+}

@@ -41,7 +41,11 @@ Usage (dynamics-dev, MKL_THREADING_LAYER=TBB, OMP_NUM_THREADS=1):
   python -I s9_soil_event_screen.py <project_root> --list
 Env: R426A_SET = main (12) | head (4) | j1 (4) | all (main + head, default, 16) | all_j1 (20);
   R426A_FILTER = comma list of job-key substrings; R426A_READINGS = two | head (overrides every
-  selected job); R426A_AFFINITY = hex mask set on the parent (inherited by the workers).
+  selected job); R426A_AFFINITY = hex mask set on the parent (inherited by the workers);
+  R426A_CANDIDATE = ``s9_slope_fix_candidates`` candidate name (spec 427.11 / 429.5, e.g.
+  ``P36s+P37t+R4c30+P38z``; unset = the project C2). Every branch stores
+  ``commands_sha256`` (branch) and ``prefix_commands_sha256`` (base run up to the branch);
+  with a candidate also ``candidate_record`` (acted parts, P36s / P37t / R4c / P38z records).
 Job key: ``A|<soil>|<leg>|Fs<f>|<readings>``. Units SI unless the key says otherwise.
 """
 
@@ -128,6 +132,8 @@ ROW_COLUMNS = ("t", "contact_FL", "contact_FR", "contact_RL", "contact_RR", "Fcy
 """1 ms row of ``control_period_rec`` (the r51 record layout plus the crawler force)."""
 CRAWLER_COLUMN = ROW_COLUMNS.index("crawler_N")
 RECORDED_INFO_PREFIXES = ("INFO_DIFF_SINK", "INFO_LOC", "soil_mode", "INFO_LIFT_PAUSED")
+CANDIDATE_ENV = "R426A_CANDIDATE"
+"""Spec 427.11 / 429.5: wrapper candidate name (``s9_slope_fix_candidates`` tokens)."""
 _S8_MODULES: dict = {}
 
 
@@ -591,8 +597,32 @@ def _branch_record(cl, Meas, plant, ctrl, base, event_id, job, t_ev, timing, pre
     judged = judge_soil_event(branch, job.fs_kN, ctrl.geometry.head_area_m2, prefix_mm)
     phase_at_event = next((p for t, p in branch.phases if t >= 0.0), None)
     judged.update(event=event_id, timing=timing, t_ev_s=round(t_ev, 3),
-                  phase_at_event=phase_at_event)
+                  phase_at_event=phase_at_event,
+                  prefix_commands_sha256=base["commands_sha256"])
+    candidate_record = _candidate_record(branch.controller)
+    if candidate_record is not None:  # spec 427.11: only with R426A_CANDIDATE
+        judged["candidate_record"] = candidate_record
     return judged
+
+
+def _candidate_record(controller) -> dict | None:
+    if os.environ.get(CANDIDATE_ENV, "") in ("", "current"):
+        return None
+    import s9_slope_fix_candidates as fx
+
+    return fx.screen_candidate_record(controller)
+
+
+def _install_candidate():
+    """Spec 427.11 / 429.5: the ``R426A_CANDIDATE`` wrapper candidate (``s9_slope_fix_candidates``
+    token names, e.g. ``P36s+P37t+R4c30+P38z``) in place of the project C2; returns the restore
+    function. Unset / "current": nothing installed, the stored study A path bit for bit."""
+    candidate = os.environ.get(CANDIDATE_ENV, "")
+    if candidate in ("", "current"):
+        return lambda: None
+    import s9_slope_fix_candidates as fx
+
+    return fx.install_screen_candidate(candidate)
 
 
 def _timing_branches(cl, Meas, plant, ctrl, job, base, timing) -> list[dict]:
@@ -603,7 +633,18 @@ def _timing_branches(cl, Meas, plant, ctrl, job, base, timing) -> list[dict]:
 
 
 def run_job(key: str) -> dict:
-    """Worker entry: base run, READY + 5 s branches and LEVEL branches of one job."""
+    """Worker entry (with the ``R426A_CANDIDATE`` class when set): :func:`_run_job`."""
+    restore = _install_candidate()
+    try:
+        result = _run_job(key)
+    finally:
+        restore()
+    result["candidate"] = os.environ.get(CANDIDATE_ENV) or "current"
+    return result
+
+
+def _run_job(key: str) -> dict:
+    """Base run, READY + 5 s branches and LEVEL branches of one job."""
     job = EventJob.from_key(key)
     _s8_modules()["r51"].place_worker()
     cl, c2, Meas = sl._imports()
@@ -615,7 +656,7 @@ def run_job(key: str) -> dict:
     base = run_base_soil(cl, Meas, ready_plant, ready_ctrl, job.readings,
                          hold_after_ready_s=READY_DELAY_S - PRE_S)
     result["base"] = {k: base[k] for k in ("timeline", "t_lift", "t_loc", "t_done", "t_ready",
-                                           "final_phase", "stroke_max_mm")}
+                                           "final_phase", "stroke_max_mm", "commands_sha256")}
     if base["t_ready"] is None:
         result["error"] = "base run without READY"
         return result
@@ -707,6 +748,7 @@ def main() -> None:
             "set": os.environ.get("R426A_SET", "all"), "filter": os.environ.get("R426A_FILTER"),
             "readings_override": os.environ.get("R426A_READINGS"),
             "affinity": os.environ.get("R426A_AFFINITY"), "workers": workers,
+            "candidate": os.environ.get(CANDIDATE_ENV) or "current",
             "n_jobs": len(jobs), "row_columns": ROW_COLUMNS,
             "wall_s": round(time.perf_counter() - t0, 1)}
     out.parent.mkdir(parents=True, exist_ok=True)

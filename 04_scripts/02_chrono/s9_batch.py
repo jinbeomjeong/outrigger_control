@@ -25,6 +25,20 @@ Usage (project root)::
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run RV1 --parallel 2 --parallel-e 2 \
         --e-cases S9SL_X4ed_J1_B_top_Fs4_r1p925_p1p4,P3b_J2_B_top_Fs4_m1p1   # paper review S2 / S3: X4 x3 + X5
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run RV2 --parallel 4   # P3b J1 B top F_s 0/4/8 + J2 B (DSb75)
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run RV3 --parallel 1 --parallel-e 1 \
+        --e-cases S9SL_RV3B_S1_B_top_Fs0_r3p3_p0     # spec 426: study B S1 slope F_s 0 + study C G1+S1@FL pad A
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run RV4 --parallel 1 --parallel-e 1 \
+        --e-cases P3b_J2_B_top_Fs4_sgFLg20           # study D (D2): J2 B top RR dip 150 mm + FL bump to gap 20 mm
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run RV5 --parallel 2   # study A (A1): 2 base -> event chains
+    # final controller (spec 430.5 / 431.3; after the 03_src acceptance, rows refuse another preset):
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py list FINAL1            # rows, P / E estimates, sources
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py check-sources FINAL2   # rows reproduce the former run args
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run RV6 --rv6-k 0.65 --rv6-dir roll_neg --parallel 2 \
+        --parallel-e 2 --only S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0 ...  # X6-rb = roll_neg k 0.65 (spec 430.3.1)
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run FINAL-R --parallel 5 --only-file final_r_acting.json
+    # minimum representative set (user decision 2026-10-30 ~18 h, spec 432): soil 7 rows first, then rigid 16 + 2
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py list FINAL-REP         # rep_variable / r4_x11 per row
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run FINAL-R-REP --parallel 5 --row-filter optional=None
 
 Pools (2026-10-26): ``--parallel`` (= ``--parallel-p``) P-pool slots, ``--parallel-e`` E-pool slots;
 each case process gets ``OUTRIGGER_PLACEMENT`` = ``pcore`` / ``ecore`` (``run_S9.place``). Cases go to
@@ -67,7 +81,9 @@ def _g(h: float) -> str:
     return f"{h * 100:g}cm".replace(".", "p")
 
 
-def batches() -> dict[str, list[dict]]:
+def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str, list[dict]]:
+    """All batch definitions; ``rv6_k`` / ``rv6_dir`` = the X6-rb roll ratio / direction of RV6 (None =
+    ``run_S9.RV6_K_DEFAULT`` 0.65 / ``RV6_DIR_DEFAULT`` roll_neg)."""
     out: dict[str, list[dict]] = {}
     # prep 1: dual-terrain equivalence E1-E4 (5.34.12)
     out["E_dual"] = [{"case": f"E_{lay}_rep{r}", "argv": EQ + ["run", "--layout", lay, "--rep", str(r)],
@@ -176,20 +192,60 @@ def batches() -> dict[str, list[dict]]:
     # ~1 s after LOC in the offline replay of batch_P3b_20261026_122444); argv = the P3b rows. P pool, e.g.
     # run RV2 --parallel 4 (= run P3b --only <the 4 names>, but folder batch_RV2_*, batch_note, RV2 est_s)
     out["RV2"] = level_rows("rv2_cases")
+    # RV3 (spec 426 gap studies, user decision 2026-10-30): B = S1 B roll_pos k0.75 F_s 0 (S9SL form), C = G1 + S1@FL
+    # pad A (G6P form); pools from the compute-scheduler-expert plan, e.g. run RV3 --parallel 1 --parallel-e 1
+    # --e-cases S9SL_RV3B_S1_B_top_Fs0_r3p3_p0 (or run RV3 --parallel 2)
+    out["RV3"] = level_rows("rv3_cases")
+    # RV4 (study D on Chrono, user decision 2026-10-30): P3b J2 B top F_s 4 + --pad-start-gap RR:d150 / FL:g20 (D2),
+    # e.g. run RV4 --parallel 1 --parallel-e 1 --e-cases P3b_J2_B_top_Fs4_sgFLg20 (or run RV4 --parallel 2)
+    out["RV4"] = level_rows("rv4_cases")
+    # RV5 (study A on Chrono, user decision 2026-10-30; run after P-S8-37): J2 B top, triple layout, base + event rows
+    # (FL RE1bF F_s 0, RR FS24 F_s 8 at mid(LOC, DONE) of the base); the event rows wait for their base (depends_on),
+    # e.g. run RV5 --parallel 2 (one base -> event chain per P slot)
+    out["RV5"] = level_rows("rv5_cases")
+    # Final-controller re-runs (spec 430.5 / 431.3, user decision 2026-10-30; run after the 03_src acceptance, 431.1
+    # step 6): every row runs the run-time preset C2Config().with_10hz_d1() and refuses to start unless it has the final
+    # rules (run_S9 --expect-controller final_SGS_R4, spec 429.11). RV6 = X6-rp-sa, J2 B SGS checks k 0.75 / 0.875 (optional),
+    # X6-rb at --rv6-dir / --rv6-k (default roll_neg k 0.65, spec 430.3.1) + the other direction (optional); FINAL1 .. FINAL5 = spec 431.3; FINAL6 = studies D / A (the
+    # stopped RV4 / RV5) on the final controller; FINAL-R = rigid S8 L2b / S6 L1-R candidates (run only the rows whose
+    # harness pair acts: --only / --only-file / --row-filter). Pools: compute-scheduler-expert plan (est_pool_s)
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S9 as _r9  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    out["RV6"] = level_rows("rv6_cases", _r9.RV6_K_DEFAULT if rv6_k is None else float(rv6_k),
+                            _r9.RV6_DIR_DEFAULT if rv6_dir is None else str(rv6_dir))
+    for name in ("FINAL1", "FINAL2", "FINAL3", "FINAL4", "FINAL5", "FINAL6"):
+        out[name] = level_rows("final_cases", name)
+    out["FINAL-R"] = final_r_rows()
+    # Minimum representative re-runs (user decision 2026-10-30 ~18 h, control spec 432): FINAL-REP = 7 soil rows
+    # (priority 1, rows of RV6 / FINAL2 / FINAL1 unchanged + rep_variable / r4_x11_check); FINAL-R-REP = 18 FINAL-R rows
+    # (16 required + 2 optional, priority 2). Drop rows whose harness pair does not act with --only / --only-file /
+    # --row-filter (e.g. --row-filter optional=None keeps the 16 required rows). FINAL1 .. FINAL6 / FINAL-R stay.
+    out["FINAL-REP"] = level_rows("final_rep_cases")
+    out["FINAL-R-REP"] = final_r_rep_rows(out["FINAL-R"])
     return out
 
 
-def level_rows(fn_name: str) -> list[dict]:
-    """``run_S9.py level`` rows of ``run_S9.<fn_name>()`` (study ③ ``p3b_aug_cases``: J2 / S1 x A / B x auger
+FINAL_ROW_KEYS = ("controller", "source_run", "priority", "pair_case", "pair_run", "optional", "requires",
+                  "harness_case", "cid", "group", "k", "direction", "h9_result",
+                  "rep_bundle", "rep_source", "rep_variable", "r4_x11_check", "expected_note", "rep_role")
+"""Row keys of the RV6 / FINAL rows (rows with ``controller``) copied into the batch row and batch.json."""
+
+
+def level_rows(fn_name: str, *fargs) -> list[dict]:
+    """``run_S9.py level`` rows of ``run_S9.<fn_name>(*fargs)`` (study ③ ``p3b_aug_cases``: J2 / S1 x A / B x auger
     middle / bottom, P3b settings; study ① ``s9sl_cases``: the confirmed slope rows C-1 / C-2, drafts excluded).
-    ``est_s`` from the case; ``note`` (``pair_case`` / ``purpose``) copied into batch.json."""
+    ``est_s`` from the case; ``note`` (``pair_case`` / ``purpose``) copied into batch.json; RV6 / FINAL rows (with
+    ``controller``) also carry :data:`FINAL_ROW_KEYS`."""
     sys.path.insert(0, str(HERE))
     try:
         import run_S9 as r9  # noqa: PLC0415
     finally:
         sys.path.remove(str(HERE))
     rows = []
-    for c in getattr(r9, fn_name)():
+    for c in getattr(r9, fn_name)(*fargs):
         note = (c.get("batch_note") or c.get("note")
                 or (f"pair {c['pair_case']}" if c.get("pair_case") else c.get("purpose")))
         row = {"case": c["case"], "est_s": c["est_s"], "argv": RUN + r9.p3b_level_argv(c)}
@@ -199,8 +255,132 @@ def level_rows(fn_name: str) -> list[dict]:
             row["planned_pool"] = c["planned_pool"]
         if c.get("est_pool_s"):  # RV1 (2026-10-30): estimate per pool, informative (est_s = the planned pool)
             row["est_pool_s"] = dict(c["est_pool_s"])
+        if c.get("depends_on"):  # RV5 (2026-10-30): start only after that row ended with rc 0
+            row["depends_on"] = c["depends_on"]
+        if c.get("controller"):  # RV6 / FINAL (2026-10-30)
+            row.update({k: c[k] for k in FINAL_ROW_KEYS if k in c})
         rows.append(row)
     return rows
+
+
+S6C = [PY, "-I", "-X", "utf8", "-u", str(HERE / "run_S6C.py")]
+FINAL_R_S8_SOURCES = {"p1r": "07_results/S8/p1r_20261024_222013", "rest": "07_results/S8/rest_20261024_233615",
+                      "g1": "07_results/S8/c72_20261027_155426", "c74": "07_results/S8/c74_20261027_164128"}
+"""FINAL-R S8 L2b sets (run_S8C ``--set``; p1r 37, rest 49, C-S8-72 ``g1`` 11, C-S8-74 ``c74`` 16) and their former
+batch folders (wall per case from ``batch.json``)."""
+FINAL_R_S6_SET = "g8c76_p28acc"
+FINAL_R_S6_SOURCE = "07_results/S6/bundleC_g8c76_p28acc_p28_L1R_20261027_222426"
+FINAL_R_S6_CASES = ("G8C1_top_edge_FL_g170", "G8C3_top_edge_FL_g20", "G8C3_top_edge_RL_g230", "G8C4_top_edge_RR_g230")
+"""Spec 431.5 (control 2026-10-30): the four table-14 rows ('반영') = run_S6C set ``g8c76_p28acc`` (C3 / C4 + the C1
+FL g170 re-run, P-S8-28 acceptance; needs ``--allow-p28-cases``), former run :data:`FINAL_R_S6_SOURCE`. The older
+``g8c76`` run (bundleC_g8c76_c76_L1R_20261027_211309) is not re-run."""
+FINAL_R_EST_S = 330.0
+"""Wall per S8 L2b case without a measured value [s] (spec 431.2: about 330 s, 07_results/S8/p1r_*)."""
+
+
+def _source_walls(folder: str) -> dict[str, float]:
+    """``case_id`` -> ``wall_s`` of a run_S8C / run_S6C ``batch.json`` (empty when absent)."""
+    p = ROOT / folder / "batch.json"
+    if not p.is_file():
+        return {}
+    doc = json.loads(p.read_text("utf-8"))
+    return {c.get("case_id") or c.get("case"): float(c["wall_s"]) for c in doc.get("cases", [])
+            if (c.get("case_id") or c.get("case")) and c.get("wall_s") is not None}
+
+
+def final_r_rows() -> list[dict]:
+    """FINAL-R candidates (spec 431.2 / 431.3: rigid S8 L2b paper cases + S6 bundle-C L1-R G8, on the final controller
+    only where the harness pair acts; that decision comes later, so this is the full list). One process per case:
+    ``run_S8C.py run --set <set> --only <id>`` (``s8c`` row, P pool, own folder ``07_results/S8/final_<id>_<stamp>``,
+    checked by :func:`s8c_case_check`) or ``run_S6C.py run --set g8c76_p28acc --only <id> --allow-p28-cases --jobs 1``
+    (``s6c`` row, :data:`FINAL_R_S6_CASES`, P pool, own folder ``07_results/S6/bundleC_g8c76_p28acc_final_<id>_*``,
+    return code only). An id in two S8 sets is kept once (first
+    set, ``also_in``). ``est_s`` = the former wall of the case (mixed P / E, 15 workers) or :data:`FINAL_R_EST_S`.
+    These runners take the run-time preset as they are (no ``--expect-controller``); s9_batch records the controller
+    file hashes and the commit at each launch (``code_at_launch``)."""
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S6C as s6  # noqa: PLC0415
+        import run_S8C as s8  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    rows: list[dict] = []
+    seen: dict[str, dict] = {}
+    for set_name, src in FINAL_R_S8_SOURCES.items():
+        walls = _source_walls(src)
+        for c in s8.case_set(set_name):
+            if c.case_id in seen:
+                seen[c.case_id].setdefault("also_in", []).append(set_name)
+                continue
+            row = {"case": c.case_id, "est_s": round(walls.get(c.case_id, FINAL_R_EST_S)), "s8c": True,
+                   "argv": S8C + ["run", "--set", set_name, "--only", c.case_id, "--tag", f"final_{c.case_id}",
+                                  "--approved", "--workers", "p7"],
+                   "family": set_name, "s8_group": c.group, "engine": c.engine, "source_run": f"{src}/{c.case_id}",
+                   "priority": 2, "group": "FINAL-R",
+                   "note": f"FINAL-R (spec 431.3): S8 {set_name} {c.case_id} on the run-time preset; source {src}"}
+            seen[c.case_id] = row
+            rows.append(row)
+    walls = _source_walls(FINAL_R_S6_SOURCE)
+    s6_cases = {c.case_id: c for c in s6.CASE_SETS[FINAL_R_S6_SET]()}
+    missing = sorted(set(FINAL_R_S6_CASES) - set(s6_cases))
+    if missing:
+        raise KeyError(f"run_S6C set {FINAL_R_S6_SET} lacks {missing}")
+    for cid in FINAL_R_S6_CASES:
+        c = s6_cases[cid]
+        rows.append({"case": c.case_id, "est_s": round(walls.get(c.case_id, FINAL_R_EST_S)), "s6c": True,
+                     "fixed_pcore": True, "family": FINAL_R_S6_SET, "engine": "L1R", "group": "FINAL-R",
+                     "argv": S6C + ["run", "--set", FINAL_R_S6_SET, "--only", c.case_id, "--approved",
+                                    "--allow-p28-cases", "--jobs", "1", "--tag", f"final_{c.case_id}"],
+                     "source_run": f"{FINAL_R_S6_SOURCE}/{c.case_id}", "priority": 2,
+                     "note": f"FINAL-R (spec 431.3): S6 bundle C {c.case_id} on the run-time preset; source "
+                             f"{FINAL_R_S6_SOURCE}"})
+    return rows
+
+
+FINAL_R_REP_ROWS: tuple[tuple[str, str, bool], ...] = (
+    ("A1", "K24_top_flat_Fs4", False),
+    ("A2", "K24_top_fdown3.5_Fs4", False),
+    ("A2", "K24_top_fup3.5_Fs4", False),
+    ("A2", "K24_top_roll5.5_Fs4", False),
+    ("A2", "K24_top_rpB_Fs4", False),
+    ("A3", "G8C1_top_edge_FL_g170", False),
+    ("A3", "G8C3_top_edge_RL_g230", False),
+    ("A3", "G8C3_top_edge_FL_g20", True),
+    ("A3", "G8C4_top_edge_RR_g230", True),
+    ("A4", "E_G4_Fs4", False),
+    ("A4", "E_SS_Fs4", False),
+    ("A4", "E_RE1bF_Fs8", False),
+    ("A4", "G1L_RE1bF_FL_top_Fs0", False),
+    ("A4", "G1L_RE1bF_FL_top_o050_Fs4", False),
+    ("B1", "K0V_top_rpB_Fs0", False),
+    ("B1", "A_middle_rpB_Fs0", False),
+    ("B1", "A_bottom_rpB_Fs0", False),
+    ("B2", "K8_top_rpB_Fs8", False),
+)
+"""(``rep_variable``, FINAL-R case, ``optional``) of FINAL-R-REP (user list 2026-10-30, spec 432): A1 flat, A2 slope /
+twist, A3 non-planar start (G8), A4 events, B1 auger level, B2 F_s. 18 rows = 16 required + 2 optional (A3 C3 FL g20,
+C4 RR g230)."""
+FINAL_R_REP_PRIORITY = 2
+
+
+def final_r_rep_rows(final_r: list[dict] | None = None) -> list[dict]:
+    """FINAL-R-REP: copies of the :data:`FINAL_R_REP_ROWS` rows of :func:`final_r_rows` (argv / est_s / source_run /
+    group unchanged, so ``code_at_launch`` is recorded as for FINAL-R) + ``rep_bundle`` / ``rep_variable`` /
+    ``optional`` / ``priority``. A name absent from FINAL-R raises KeyError (no invented names)."""
+    by = {c["case"]: c for c in (final_r if final_r is not None else final_r_rows())}
+    missing = [n for _, n, _ in FINAL_R_REP_ROWS if n not in by]
+    if missing:
+        raise KeyError(f"FINAL-R-REP: not FINAL-R rows: {missing}")
+    out = []
+    for var, name, optional in FINAL_R_REP_ROWS:
+        r = dict(by[name])
+        r["argv"] = list(r["argv"])
+        r.update(rep_bundle="FINAL-R-REP", rep_source="FINAL-R", rep_variable=var, priority=FINAL_R_REP_PRIORITY,
+                 note=f"FINAL-R-REP {var}{' (optional)' if optional else ''}: " + str(r.get("note") or name))
+        if optional:
+            r["optional"] = True
+        out.append(r)
+    return out
 
 
 def g6p_batch() -> list[dict]:
@@ -339,11 +519,24 @@ def schedule_cases(cases: list[dict], *, e_cases: list[str] | None = None, order
     bad = sorted(c["case"] for c in cases if c["case"] in e_set and (c.get("s8c") or c.get("fixed_pcore")))
     if bad:
         raise ValueError(f"s8c / fixed-P rows cannot go to the E pool (they pin their own process): {bad}")
+    missing = sorted(f"{c['case']} -> {c['depends_on']}" for c in cases
+                     if c.get("depends_on") and c["depends_on"] not in names)
+    if missing:
+        raise ValueError(f"rows depend on cases outside the run (add them to --only): {missing}")
     rest = list(cases) if order == "given" else sorted(cases, key=lambda c: -float(c["est_s"]))
     if order_cases:
         first = [next(c for c in cases if c["case"] == n) for n in order_cases]
         rest = first + [c for c in rest if c["case"] not in set(order_cases)]
     return {"pcore": [c for c in rest if c["case"] not in e_set], "ecore": [c for c in rest if c["case"] in e_set]}
+
+
+def next_runnable(queue: list[dict], finished_ok: set[str]) -> int | None:
+    """Index of the first queued row whose ``depends_on`` (RV5, 2026-10-30) has ended with rc 0; rows without it are
+    runnable at once, so a queue without dependencies keeps its order (index 0)."""
+    for k, c in enumerate(queue):
+        if not c.get("depends_on") or c["depends_on"] in finished_ok:
+            return k
+    return None
 
 
 def _case_env(pool: str) -> dict[str, str]:
@@ -352,12 +545,107 @@ def _case_env(pool: str) -> dict[str, str]:
     return env
 
 
+CODE_HASH_FILES = ("03_src/outrigger_sim/control/c2.py", "03_src/outrigger_sim/control/zero_calibration.py")
+"""Controller files hashed at every case launch (``code_at_launch``; FINAL 2026-10-30)."""
+ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", "pair_run", "optional", "requires",
+                   "harness_case", "family", "s8_group", "also_in", "planned_pool", "est_pool_s", "depends_on", "k",
+                   "direction", "h9_result", "rep_bundle", "rep_source", "rep_variable", "r4_x11_check", "expected_note", "rep_role")
+"""Row keys copied into the batch.json case entries (when present)."""
+
+
+def launch_code_state(root: Path = ROOT) -> dict:
+    """SHA-256 of :data:`CODE_HASH_FILES` and the commit / controller-tree status (``run_S9.git_state``) at a case
+    launch: the provenance of rows whose runner does not record it (run_S8C / run_S6C), and a cross-check of
+    run_S9 ``code_state`` (record only; errors are recorded, not raised)."""
+    import hashlib  # noqa: PLC0415
+
+    out: dict = {"files": {}}
+    for rel in CODE_HASH_FILES:
+        p = root / rel
+        out["files"][rel] = hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file() else None
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S9 as r9  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    try:
+        out["git"] = r9.git_state(root)
+    except Exception as e:  # noqa: BLE001 - record only
+        out["git"] = {"error": f"{type(e).__name__}: {e}"}
+    return out
+
+
+def strip_controller_check(argv: list[str]) -> list[str]:
+    """``argv`` without ``--expect-controller <name>`` (``run --no-controller-check``)."""
+    out, skip = [], False
+    for tok in argv:
+        if skip:
+            skip = False
+            continue
+        if tok == "--expect-controller":
+            skip = True
+            continue
+        out.append(tok)
+    return out
+
+
+def parse_row_filter(items: list[str] | None) -> dict[str, set[str]]:
+    """``--row-filter KEY=V1,V2`` (repeatable) -> {KEY: {V1, V2}}; a row passes when every KEY's value (``str``; a
+    list value passes when any element matches) is in the set."""
+    out: dict[str, set[str]] = {}
+    for it in items or ():
+        if "=" not in it:
+            raise SystemExit(f"--row-filter {it!r}: expected KEY=V1[,V2...]")
+        k, v = it.split("=", 1)
+        out.setdefault(k.strip(), set()).update(x for x in v.split(",") if x)
+    return out
+
+
+def row_passes(row: dict, flt: dict[str, set[str]]) -> bool:
+    for k, allowed in flt.items():
+        v = row.get(k)
+        vals = [str(x) for x in v] if isinstance(v, (list, tuple)) else [str(v)]
+        if not set(vals) & allowed:
+            return False
+    return True
+
+
+def read_only_file(path: str | None) -> list[str] | None:
+    """``--only-file``: JSON list, JSON {"cases": [...]} or text (one name per line, '#' comments)."""
+    if not path:
+        return None
+    text = Path(path).read_text("utf-8")
+    try:
+        doc = json.loads(text)
+    except json.JSONDecodeError:
+        return [ln.split("#", 1)[0].strip() for ln in text.splitlines() if ln.split("#", 1)[0].strip()]
+    names = doc.get("cases") if isinstance(doc, dict) else doc
+    if not isinstance(names, list) or not all(isinstance(n, str) for n in names):
+        raise SystemExit(f"--only-file {path}: expected a list of case names or {{'cases': [...]}}")
+    return names
+
+
+def select_rows(rows: list[dict], only: list[str] | None = None, row_filter: dict[str, set[str]] | None = None
+                ) -> list[dict]:
+    """Rows of a batch kept by ``--only`` / ``--only-file`` (names; unknown names raise) and ``--row-filter``."""
+    if only:
+        unknown = sorted(set(only) - {c["case"] for c in rows})
+        if unknown:
+            raise ValueError(f"unknown case names: {unknown}")
+    return [c for c in rows if (not only or c["case"] in only) and row_passes(c, row_filter or {})]
+
+
 def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, parallel_e: int = 0,
               e_cases: list[str] | None = None, order: str = "given",
-              order_cases: list[str] | None = None) -> Path:
+              order_cases: list[str] | None = None, rv6_k: float | None = None, rv6_dir: str | None = None,
+              row_filter: dict[str, set[str]] | None = None, controller_check: bool = True) -> Path:
     """Run the batch ``name`` with ``parallel`` P-pool slots and ``parallel_e`` E-pool slots
-    (:func:`schedule_cases`). Each case process gets ``OUTRIGGER_PLACEMENT`` of its pool."""
-    cases = [c for c in batches()[name] if not only or c["case"] in only]
+    (:func:`schedule_cases`). Each case process gets ``OUTRIGGER_PLACEMENT`` of its pool. ``rv6_k``: X6-rb ratio of
+    RV6; ``row_filter`` / ``only``: :func:`select_rows`; ``controller_check`` False drops ``--expect-controller``."""
+    rv6 = {k: v for k, v in (("rv6_k", rv6_k), ("rv6_dir", rv6_dir)) if v is not None}
+    cases = select_rows((batches(**rv6) if rv6 else batches())[name], only, row_filter)
+    if not cases:
+        raise SystemExit(f"batch {name}: no rows left after --only / --row-filter")
     queues = schedule_cases(cases, e_cases=e_cases, order=order, order_cases=order_cases, parallel_e=parallel_e)
     slots = {"pcore": int(parallel), "ecore": int(parallel_e)}
     stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -372,18 +660,27 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
             _log(progress, f"# queue {pool}: {' '.join(c['case'] for c in queues[pool])}")
     running: list[tuple[dict, subprocess.Popen, float, object, str]] = []
     done: list[dict] = []
+    code_at_launch: dict[str, dict | None] = {}
     failed = False
+    finished_ok: set[str] = set()
     while any(queues.values()) or running:
         for pool in POOLS:
             while queues[pool] and sum(1 for r in running if r[4] == pool) < slots[pool] and not failed:
-                c = queues[pool].pop(0)
-                if c.get("s8c"):  # run_S8C writes its own batch folder (named in the case log)
+                k = next_runnable(queues[pool], finished_ok)
+                if k is None:  # RV5: every queued row waits for its base row
+                    break
+                c = queues[pool].pop(k)
+                if c.get("s8c") or c.get("s6c"):  # run_S8C / run_S6C write their own batch folder (case log)
                     argv = list(c["argv"])
                 elif c.get("m3"):  # m3_run.py <key> <variant> <out_root> -> <out_root>/<key>__<variant>/
                     argv = list(c["argv"]) + [str(folder)]
                 else:
                     argv = list(c["argv"]) + (["--out", str(folder / "E")] if c.get("eq_out")
                                               else ["--case", c["case"], "--out-root", str(folder)])
+                if not controller_check:
+                    argv = strip_controller_check(argv)
+                code_at_launch[c["case"]] = launch_code_state() if c.get("controller") or c.get("group") == "FINAL-R" \
+                    else None
                 logf = (folder / f"{c['case']}.log").open("w", encoding="utf-8")
                 p = subprocess.Popen(argv, cwd=str(ROOT), stdout=logf, stderr=subprocess.STDOUT,
                                      stdin=subprocess.DEVNULL, env=_case_env(pool))
@@ -400,8 +697,10 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
             wall = time.perf_counter() - t0
             running.remove(item)
             entry = {"case": c["case"], "argv": c["argv"], "rc": rc, "wall_s": wall, "est_s": c["est_s"], "pool": pool}
-            if c.get("note"):  # G6P rows (2026-10-28)
-                entry["note"] = c["note"]
+            entry.update({k: c[k] for k in ENTRY_META_KEYS if c.get(k) is not None})  # note: G6P rows (2026-10-28)
+            if code_at_launch.get(c["case"]) is not None:  # RV6 / FINAL (2026-10-30)
+                entry["code_at_launch"] = code_at_launch[c["case"]]
+                entry["controller_check"] = bool(controller_check)
             note = ""
             if c.get("s8c") and rc == 0:  # run_S8C returns 0 even when its case failed: read the outcome
                 chk = s8c_case_check((folder / f"{c['case']}.log").read_text("utf-8", errors="replace"), c["case"])
@@ -413,6 +712,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                 else:
                     note = f" s8c_check=ok {chk['batch_dir']}"
             done.append(entry)
+            if rc == 0:
+                finished_ok.add(c["case"])
             _log(progress, f"END {c['case']} {_dt.datetime.now().isoformat(timespec='seconds')} rc={rc} "
                            f"wall_s={wall:.0f}{note}")
             if rc != 0:
@@ -422,10 +723,13 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                 for c in queues[pool]:
                     _log(progress, f"SKIP {c['case']} (earlier failure)")
                     done.append({"case": c["case"], "argv": c["argv"], "rc": None, "wall_s": 0.0, "est_s": c["est_s"],
-                                 "pool": pool, **({"note": c["note"]} if c.get("note") else {})})
+                                 "pool": pool, **{k: c[k] for k in ENTRY_META_KEYS if c.get(k) is not None}})
                 queues[pool] = []
     status = {"batch": name, "folder": folder.as_posix(), "parallel": parallel, "parallel_e": parallel_e,
               "order": order, "order_cases": order_cases, "e_cases": sorted(e_cases or ()),
+              **({"rv6_k": rv6_k, "rv6_dir": rv6_dir} if name == "RV6" else {}),
+              **({"row_filter": {k: sorted(v) for k, v in row_filter.items()}} if row_filter else {}),
+              **({} if controller_check else {"controller_check": False}),
               "cases": done, "failed": failed,
               "wall_serial_s": sum(d["wall_s"] for d in done), "est_serial_s": sum(d["est_s"] for d in done)}
     (folder / "batch.json").write_text(json.dumps(status, indent=1), "utf-8")
@@ -434,22 +738,131 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
     return folder
 
 
+def describe_rows(name: str, rows: list[dict]) -> list[str]:
+    """Lines of ``list <batch>``: one per row (case, est_s, est_pool_s P / E, priority, depends_on, source, controller)
+    and the serial sums."""
+    out = [f"{name} {len(rows)} rows"]
+    for c in rows:
+        ep = c.get("est_pool_s") or {}
+        extra = [f"prio={c['priority']}" if c.get("priority") is not None else "",
+                 f"after={c['depends_on']}" if c.get("depends_on") else "",
+                 "optional" if c.get("optional") else "",
+                 f"rep={c['rep_variable']}" if c.get("rep_variable") else "",
+                 "r4_x11" if c.get("r4_x11_check") else "",
+                 f"family={c['family']}" if c.get("family") else "",
+                 f"ctrl={c['controller']}" if c.get("controller") else "",
+                 f"src={c['source_run']}" if c.get("source_run") else ""]
+        pe = f" P={ep['pcore']:.0f} E={ep['ecore']:.0f}" if ep else ""
+        out.append(f"  {c['case']} est_s={float(c['est_s']):.0f}{pe} " + " ".join(x for x in extra if x))
+    p = sum(float((c.get("est_pool_s") or {}).get("pcore", c["est_s"])) for c in rows)
+    out.append(f"  serial sum P {p:.0f} s ({p / 3600:.1f} h)")
+    return out
+
+
+S6C_PLAN_KEYS = ("case_id", "config", "snapshot", "duration_s", "fine_dt", "conditional")
+
+
+def s6c_source_check(c: dict, root: Path = ROOT) -> dict:
+    """An ``s6c`` row against its former run_S6C batch (``<source batch>/batch_meta.json``): same ``--set`` as the
+    batch ``case_set``, the case in its ``cases``, and the ``run_S6C.plan`` row of the case (:data:`S6C_PLAN_KEYS`) =
+    the former plan row (run_S6C keeps no per-case CLI args). ``status`` ok / differs / no_source."""
+    src = root / c["source_run"]
+    meta_p = src.parent / "batch_meta.json"
+    if not meta_p.is_file():
+        return {"source": src.as_posix(), "status": "no_source", "diffs": []}
+    meta = json.loads(meta_p.read_text("utf-8"))
+    argv = c["argv"]
+    set_name = argv[argv.index("--set") + 1]
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S6C as s6  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    now = next(r for r in s6.plan([c["case"]], case_set=set_name)["cases"] if r["case_id"] == c["case"])
+    old = next((r for r in (meta.get("plan") or {}).get("cases", []) if r.get("case_id") == c["case"]), None)
+    diffs = []
+    if meta.get("case_set") != set_name:
+        diffs.append({"key": "case_set", "former": meta.get("case_set"), "row": set_name})
+    if c["case"] not in (meta.get("cases") or []):
+        diffs.append({"key": "cases", "former": meta.get("cases"), "row": c["case"]})
+    if old is None:
+        diffs.append({"key": "plan", "former": "<absent>", "row": c["case"]})
+    else:
+        diffs += [{"key": k, "former": old.get(k), "row": now.get(k)} for k in S6C_PLAN_KEYS if old.get(k) != now.get(k)]
+    if "--allow-p28-cases" not in argv and meta.get("case_set") in ("g8c76_p28", "g8c76_p28acc"):
+        diffs.append({"key": "--allow-p28-cases", "former": True, "row": False})
+    return {"source": src.as_posix(), "status": "differs" if diffs else "ok", "diffs": diffs}
+
+
+def check_sources(name: str, rows: list[dict]) -> dict:
+    """``check-sources <batch>``: run_S9 :func:`source_args_check` of every level row with a ``source_run``
+    (``07_results/S9/<source_run>``); rows without it are ``no_source_defined``. ``ok`` = no ``differs``."""
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S9 as r9  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    res = []
+    for c in rows:
+        if c.get("s6c") and c.get("source_run"):
+            res.append({"case": c["case"], **s6c_source_check(c)})
+            continue
+        if c.get("s8c") or not c.get("source_run"):
+            res.append({"case": c["case"], "status": "no_source_defined" if not c.get("source_run") else "not_level",
+                        "source": c.get("source_run")})
+            continue
+        chk = r9.source_args_check(c["argv"][len(RUN):], ROOT / "07_results" / "S9" / c["source_run"])
+        res.append({"case": c["case"], **chk})
+    return {"batch": name, "rows": res, "ok": not any(r["status"] == "differs" for r in res)}
+
+
 def main(argv) -> None:
     a = build_parser().parse_args(argv)
     if a.action == "list":
-        for k, v in batches().items():
-            print(k, len(v), [c["case"] for c in v])
+        b = batches(rv6_k=a.rv6_k, rv6_dir=a.rv6_dir)
+        if a.batch:
+            print("\n".join(describe_rows(a.batch, select_rows(b[a.batch], None, parse_row_filter(a.row_filter)))))
+        else:
+            for k, v in b.items():
+                print(k, len(v), [c["case"] for c in v])
+    elif a.action == "check-sources":
+        doc = check_sources(a.batch, batches(rv6_k=a.rv6_k, rv6_dir=a.rv6_dir)[a.batch])
+        for r in doc["rows"]:
+            print(r["case"], r["status"], r.get("source") or "", r.get("diffs") or "")
+        print("ok" if doc["ok"] else "DIFFERS")
+        if not doc["ok"]:
+            raise SystemExit(1)
     else:
         env_override_guard(a.allow_env_override, a.batch)
-        run_batch(a.batch, only=a.only or None, **schedule_args(a, argv))
+        only = (a.only or []) + (read_only_file(a.only_file) or [])
+        run_batch(a.batch, only=only or None, rv6_k=a.rv6_k, rv6_dir=a.rv6_dir,
+                  row_filter=parse_row_filter(a.row_filter), controller_check=not a.no_controller_check,
+                  **schedule_args(a, argv))
 
 
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="action", required=True)
-    sub.add_parser("list")
+    names = sorted(batches())
+    ls = sub.add_parser("list", help="all batches (names), or one batch's rows with estimates")
+    ls.add_argument("batch", nargs="?", choices=names)
+    cs = sub.add_parser("check-sources", help="RV6 / FINAL: do the level rows reproduce their former run args?")
+    cs.add_argument("batch", choices=names)
+    ls.add_argument("--row-filter", action="append", default=None, metavar="KEY=V1[,V2]")
     r = sub.add_parser("run")
-    r.add_argument("batch", choices=sorted(batches()))
+    r.add_argument("batch", choices=names)
+    for p in (ls, cs, r):
+        p.add_argument("--rv6-k", type=float, default=None,
+                       help="RV6: X6-rb floor roll = k_b x 4.4 deg, sign by --rv6-dir (default 0.65; spec 430.3.1)")
+        p.add_argument("--rv6-dir", choices=("roll_neg", "roll_pos"), default=None,
+                       help="RV6: X6-rb direction (default roll_neg; the other direction is the optional row)")
+    r.add_argument("--only-file", default=None, help="case names (JSON list / {'cases': [...]} / one per line), added "
+                                                     "to --only (FINAL-R: the rows whose harness pair acts)")
+    r.add_argument("--row-filter", action="append", default=None, metavar="KEY=V1[,V2]",
+                   help="keep rows whose KEY is one of the values, e.g. family=p1r,g1 (FINAL-R) or s8_group=K0,K8; a "
+                        "missing key reads 'None' (repeatable)")
+    r.add_argument("--no-controller-check", action="store_true",
+                   help="RV6 / FINAL: drop run_S9 --expect-controller (run whatever preset is installed; recorded)")
     r.add_argument("--parallel", "--parallel-p", dest="parallel", type=int, default=2,
                    help="P-pool slots (OUTRIGGER_PLACEMENT=pcore); --parallel keeps its former meaning")
     r.add_argument("--parallel-e", type=int, default=0, help="E-pool slots (OUTRIGGER_PLACEMENT=ecore)")

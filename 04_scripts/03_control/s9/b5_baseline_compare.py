@@ -12,7 +12,10 @@ Controllers (``--controllers``):
   ABL   C2 with the soil response (U-S9-C1, incl. the P-S8-28 LOC anchor) and P-S8-28..35 off:
         lift_stroke_guard, stroke-end re-ground entry, twist_completion_relax,
         pre_loc_lift_pause, slope_clearance_margin, liftoff_window_reapproach, loc_revoke,
-        diff_sink back to their (off) defaults. Config switches only.
+        diff_sink back to their (off) defaults. Config switches only. The final-controller
+        switches of spec 429.11 are set off explicitly (``lift_stroke_guard.soil_stop`` False =
+        no P-S8-36 SGS, ``slope_clearance_margin.flat_soil_margin_m`` 0 = no R4), so ABL stays
+        the soil-response-off baseline whatever the preset defaults are.
   ABL28 attribution run: ABL with the soil response back on (LOC anchor off).
   IND   industry-style baseline on ``control/c8.py`` (C8 skeleton, comparison doc 7.2 alt. 1):
         pressure-threshold touchdown (1.5 F_min), four legs extended together to the
@@ -21,9 +24,22 @@ Controllers (``--controllers``):
         no combined judge, no soil response. Harness parity with C2: 10 Hz, output one period
         late (d = 1), increment limit 0.25 v_max per period (ramp 0.4 s), attitude low-pass
         0.8 s x 2 on the 10 ms IMU samples (:class:`IndustryC8`, :class:`HarnessIndustry`).
+        SGS and R4 are C2 config switches; IND has neither (meta ``controller_settings``
+        None).
+The C2 / ABL / IND values of these switches go into every record and the result meta
+(``controller_settings``).
 
-Cases (``--cases``): ids of ``CASES`` below, ``all`` (= ``CASES``) or ``wide`` (every slope-suite
-id as ``S|<id>`` and every g6-suite key as ``G|<key>``, harness defaults), comma separated.
+Cases (``--cases``): ids of ``CASES`` below, ``all`` (= ``CASES``), ``wide`` (every slope-suite
+id as ``S|<id>`` and every g6-suite key as ``G|<key>``, harness defaults) or ``oos`` (the 100
+out-of-sample cases ``b5_oos_cases.OOS_CASES``: ``X|<soil>|<pad>|<level>|<roll>,<pitch>|Fs<f>``
+on the slope harness, ``G|g6x|...`` on the g6 harness), comma separated. An ``X|`` id is built
+as ``SlopeCase(group="X")`` with its settle-table row; a soil case without a row is rejected
+unless ``--allow-no-settle-row`` (run uncorrected) or ``--skip-no-settle-row`` (left out).
+Out-of-sample ids must not repeat a study-1 (177) or G6 (116) harness key (ValueError).
+``--official`` adds the official judgement of the same run (``b5_official.py``): the R2DS path
+(slope: judge_case + settle check v2; g6: r72 gates + the G6-7 demotion), the C2 event rows NA
+for IND; fields ``official_verdict``, ``official_verdict_strict`` (NA = failed),
+``official_failed_rows``, ``official_flags``, ``official_na_rows``.
 Harness paths:
   slope  s9_soil_slope cases (settle table hook_harness attached), as the slope suite
   g6     r72 per-pad soil (one weak pad), as the g6 suite
@@ -40,8 +56,10 @@ A_head, 1 ms, moving and locked), max motor stroke.
 Usage (dynamics-dev, numba; PowerShell):
   conda run -n dynamics-dev python -I b5_baseline_compare.py run --cases A1-rigid \
       --controllers C2 --workers 1 --affinity 0x00000002 --out smoke.json
+  python -I b5_baseline_compare.py run --cases oos --controllers C2,ABL,IND --official \
+      --workers 4 --affinity 0x0F000000 --out 06_analysis/02_control/s9/rev84/b5_oos.json
   python -I b5_baseline_compare.py list
-``--out`` defaults to ``06_analysis/02_control/s9/rev84/b5_<main|wide|cases>.json``. Table and
+``--out`` defaults to ``06_analysis/02_control/s9/rev84/b5_<main|wide|oos|cases>.json``. Table and
 figure: ``b5_baseline_table.py`` and ``b5_baseline_figure.py``. Units SI unless the key says
 otherwise (mm, kN, bar, deg, s).
 """
@@ -50,6 +68,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import hashlib
 import json
 import math
 import os
@@ -72,9 +91,13 @@ for _path in (ROOT / "03_src", S9_DIR, S8_DIR):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+import b5_oos_cases as oos  # noqa: E402
+
 from outrigger_sim.control import c8  # noqa: E402
-from outrigger_sim.control.c2 import C2Phase  # noqa: E402
+from outrigger_sim.control.c2 import C2Phase, _SoilState  # noqa: E402
+from outrigger_sim.control.two_pressure import BODY_MASS_WITHOUT_YAML_KG  # noqa: E402
 from outrigger_sim.sensors.attitude import AttitudeEstimator, CascadedLowPass  # noqa: E402
+from outrigger_sim.sensors.imu import STANDARD_GRAVITY_M_S2  # noqa: E402
 from outrigger_sim.signals import Command  # noqa: E402
 
 SETTLE_TABLE_PATH = ROOT / "06_analysis" / "00_dynamics" / "slope_crawler_settle.json"
@@ -155,6 +178,9 @@ SEAL_FRICTION_MATH = "$F_s$"
 WIDE_PREFIX = {"S|": "slope", "G|": "g6"}
 """Wide set (``--cases wide``): every slope-suite id as ``S|<id>`` (177) and every g6-suite key
 as ``G|<key>`` (116), harness defaults (no override, no event)."""
+OOS_FIELDS_BEFORE_PITCH = 4
+"""``|`` count of an ``X|`` id cut at the comma of its angles
+(``X|<soil>|<pad>|<level>|<roll>``)."""
 
 _RUN: dict = {}
 """Per-worker state of the running case (controller, hooks, logs); one job per process."""
@@ -196,18 +222,58 @@ def check_event_allowed(case_id: str, spec: dict) -> None:
 
 
 def case_spec(case_id: str) -> dict:
-    """Case spec of a table id or a wide-set id (``S|...`` / ``G|...``).
+    """Case spec of a table id, a wide-set id (``S|...`` / ``G|...``) or an out-of-sample
+    slope id (``X|...``, src = the id itself, parsed).
 
     Raises:
         KeyError: Unknown case id.
-        ValueError: The case has a floor-drop event on a soil floor.
+        ValueError: The case has a floor-drop event on a soil floor, or a malformed ``X|`` id.
     """
     if case_id in CASES:
         spec = CASES[case_id]
+    elif case_id.startswith(oos.OOS_SLOPE_PREFIX):
+        oos.parse_slope_case(case_id)
+        spec = {"harness": "slope", "src": case_id}
     else:
         spec = _wide_case_spec(case_id)
     check_event_allowed(case_id, spec)
     return spec
+
+
+def settle_row_problems(case_ids: list[str], settle_rows: dict, *,
+                        allow_no_settle_row: bool) -> dict[str, str]:
+    """``{case id: reason}`` of the ``X|`` soil ids without a settle-table row."""
+    problems = {}
+    for case_id in case_ids:
+        if not case_id.startswith(oos.OOS_SLOPE_PREFIX):
+            continue
+        try:
+            oos.slope_case_payload(case_id, settle_rows, allow_no_settle_row=allow_no_settle_row)
+        except oos.NoSettleRowError as exc:
+            problems[case_id] = str(exc)
+    return problems
+
+
+def check_oos_overlap(case_ids: list[str]) -> None:
+    """Out-of-sample ids against study 1 (177) and the G6 screen (116).
+
+    Raises:
+        ValueError: An out-of-sample id repeats an in-sample harness key or another id.
+    """
+    oos_ids = [case_id for case_id in case_ids if oos.is_oos_id(case_id)]
+    if not oos_ids:
+        return
+    import s9_soil_slope as slope
+
+    with _argv_as_root():
+        import r72_g6_screen as g6
+    g6_keys = g6.all_jobs("all") + g6.all_jobs("rigid_all")
+    oos.check_no_overlap(oos_ids, oos.in_sample_keys(slope.build_cases(), g6_keys))
+
+
+def load_settle_rows() -> dict:
+    """``hook_harness`` rows of the dynamics settle table."""
+    return json.loads(SETTLE_TABLE_PATH.read_text(encoding="utf-8"))["hook_harness"]
 
 
 def _wide_case_spec(case_id: str) -> dict:
@@ -241,15 +307,19 @@ def _argv_as_root():
 
 # ------------------------------------------------------------------------------- controllers
 def ablation_config(c2, config):
-    """C2 config with the soil response and P-S8-28 .. P-S8-35 off (switches only)."""
+    """C2 config with the soil response and P-S8-28 .. P-S8-35 off (switches only).
+
+    The final-controller switches (spec 429.11: SGS ``soil_stop``, R4 ``flat_soil_margin_m``)
+    are set off by value, not left to the settings defaults: the R8 preset turns them on.
+    """
     return replace(
         config,
         soil=c2.SoilResponseSettings(),
-        lift_stroke_guard=c2.LiftStrokeGuardSettings(),
+        lift_stroke_guard=c2.LiftStrokeGuardSettings(soil_stop=False),
         fault_reground=replace(config.fault_reground, stroke_end_entry=False),
         twist_completion_relax=c2.TwistCompletionRelaxSettings(),
         pre_loc_lift_pause=c2.PreLocLiftPauseSettings(),
-        slope_clearance_margin=c2.SlopeClearanceMarginSettings(),
+        slope_clearance_margin=c2.SlopeClearanceMarginSettings(flat_soil_margin_m=0.0),
         liftoff_window_reapproach=c2.LiftoffWindowReapproachSettings(),
         loc_revoke=c2.LocRevokeSettings(),
         diff_sink=c2.DiffSinkSettings(),
@@ -307,9 +377,20 @@ IND_PHASE_AS_C2 = {
 """C8 phase -> the C2 phase that ``run_case`` keys its READY / DONE bookkeeping on."""
 
 
+@dataclass
+class IndustryRunState:
+    """The part of the C2 run state the slope judge log reads (IND never re-anchors)."""
+
+    reanchor_anchor_pitch_rad: float | None = None
+
+
 class HarnessIndustry:
     """IND in the C2 surface that ``run_case`` reads (``phase`` as ``C2Phase``, ``events``,
-    ``probe_history``); every C8 phase change is an ``ind_phase:<phase>`` event."""
+    ``probe_history``); every C8 phase change is an ``ind_phase:<phase>`` event.
+
+    The official judges (``b5_official``) also read C2 internals; IND answers them neutrally:
+    a default (empty) soil state, ``W_ref`` as C2 computes it, no clearance estimate (nan) and
+    no REANCHOR anchor. The rows built on them are NA for IND."""
 
     name = "IND"
 
@@ -320,10 +401,26 @@ class HarnessIndustry:
         self.events: list[PhaseEvent] = []
         self.probe_history: list = []
         self._last_phase = str(inner.phase)
+        self._state = IndustryRunState()
+        self._neutral_soil_state = _SoilState()
 
     @property
     def phase(self) -> C2Phase:
         return IND_PHASE_AS_C2[str(self.inner.phase)]
+
+    def _soil_state(self) -> _SoilState:
+        return self._neutral_soil_state
+
+    def _reference_weight_N(self) -> float:
+        """``W_ref`` as ``C2Controller._reference_weight_N``: YAML superstructure mass x g."""
+        mass_kg = self.geometry.superstructure_mass_kg
+        if mass_kg is None:
+            mass_kg = BODY_MASS_WITHOUT_YAML_KG
+        return mass_kg * STANDARD_GRAVITY_M_S2
+
+    def _clearance_estimate_m(self, rod_stroke_m) -> float:
+        del rod_stroke_m  # IND keeps no crawler clearance estimate of its own
+        return math.nan
 
     def reset(self) -> None:
         self.inner.reset()
@@ -362,9 +459,46 @@ def make_factory(name: str):
             ctrl = c2.C2Controller.from_params(cl.PARAMS, _c2_config(cl, c2, name, variant))
         ctrl.reset()
         _RUN["ctrl"] = ctrl
+        on_created = _RUN.get("on_controller_created")
+        if on_created is not None:  # --official: the judge's capture of the settle state
+            on_created(cl, ctrl)
         return ctrl
 
     return factory
+
+
+IND_CONTROLLER_SETTINGS = {"soil_stop": None, "soil_stop_scope": None,
+                           "flat_soil_margin_m": None}
+"""IND (C8 skeleton) has no SGS and no R4: the C2 switches do not exist there."""
+
+
+def controller_settings(ctrl) -> dict:
+    """Final-controller switches (spec 429.11) of a built controller, for the result meta.
+
+    Returns:
+        ``soil_stop`` (P-S8-36 SGS), ``soil_stop_scope`` and ``flat_soil_margin_m`` (R4, m);
+        all None for IND.
+    """
+    if isinstance(ctrl, HarnessIndustry):
+        return dict(IND_CONTROLLER_SETTINGS)
+    guard = ctrl.config.lift_stroke_guard
+    return {"soil_stop": bool(guard.soil_stop), "soil_stop_scope": guard.soil_stop_scope,
+            "flat_soil_margin_m": float(ctrl.config.slope_clearance_margin.flat_soil_margin_m)}
+
+
+def settings_meta(records: list[dict]) -> dict:
+    """``{controller: settings}`` from the records; a controller whose records disagree gets
+    the list of its distinct settings (a mixed batch shows up in the meta)."""
+    distinct: dict[str, list[dict]] = {}
+    for record in records:
+        settings = record.get("controller_settings")
+        if settings is None:
+            continue
+        seen = distinct.setdefault(record["controller"], [])
+        if settings not in seen:
+            seen.append(settings)
+    return {name: values[0] if len(values) == 1 else values
+            for name, values in distinct.items()}
 
 
 # ------------------------------------------------------------------------------------- hooks
@@ -429,10 +563,13 @@ def _wrap_control_period(sl, base_period):
 
 
 # ----------------------------------------------------------------------------------- one job
-def _slope_case(src: str) -> dict:
+def _slope_case(src: str, *, allow_no_settle_row: bool = False) -> dict:
+    """Slope case payload with its settle-table row: a study-1 id or an ``X|`` id."""
     import s9_soil_slope as slope
 
-    table = json.loads(SETTLE_TABLE_PATH.read_text(encoding="utf-8"))["hook_harness"]
+    table = load_settle_rows()
+    if src.startswith(oos.OOS_SLOPE_PREFIX):
+        return oos.slope_case_payload(src, table, allow_no_settle_row=allow_no_settle_row)
     for case in slope.attach_settle_table(slope.build_cases(), table):
         payload = case.to_dict()
         if payload["id"] == src:
@@ -440,12 +577,14 @@ def _slope_case(src: str) -> dict:
     raise KeyError(src)
 
 
-def _prepare_slope_run(spec: dict):
-    """Install the slope-suite patches; return the patched harness module and its input."""
+def _prepare_slope_run(spec: dict, job: dict):
+    """Install the slope-suite patches; return the patched harness module, its input and the
+    case payload. ``--official`` logs through ``s9_soil_slope._control_period_logged`` and
+    captures the settle state as ``_make_project_controller`` does."""
     import s9_soil_slope as slope
 
     sl = slope._install_patches()
-    case = _slope_case(spec["src"])
+    case = _slope_case(spec["src"], allow_no_settle_row=job.get("allow_no_settle_row", False))
     if "fs_kN" in spec:
         case["fs_kN"] = spec["fs_kN"]
     slope._CAP.clear()
@@ -454,17 +593,31 @@ def _prepare_slope_run(spec: dict):
     row = case.get("settle_table")
     slope._CAP["settle_table"] = slope.SettleTableRow(**row) if row else None
     slope._CAP["case"] = case
-    sl.control_period = _wrap_control_period(sl, slope._ORIGINALS["control_period"])
+    if job.get("official"):
+        import b5_official
+
+        # spec 427.9 SL-1 soil-guard stop reads the moving pressure record (as run_one)
+        slope._CAP["moving_pressure"] = slope.soil_guard_stop_rule.MovingPressureRecord()
+        base_period = slope._control_period_logged
+        _RUN["on_controller_created"] = b5_official.capture_slope_start
+    else:
+        base_period = slope._ORIGINALS["control_period"]
+    sl.control_period = _wrap_control_period(sl, base_period)
     run_input = slope.run_case_input(case)
     if "fs_kN" in spec:
         run_input["fs_kN"] = spec["fs_kN"]
-    return sl, run_input
+    return sl, run_input, case
+
+
+def _import_g6():
+    with _argv_as_root():
+        import r72_g6_screen as g6
+    return g6
 
 
 def _prepare_g6_run(sl, spec: dict) -> dict:
     """Install the g6-suite patches on ``sl``; return the run input."""
-    with _argv_as_root():
-        import r72_g6_screen as g6
+    g6 = _import_g6()
     g6._install()
     g6._CAP.clear()
     g6._CAP["crawler_series"] = []
@@ -474,22 +627,60 @@ def _prepare_g6_run(sl, spec: dict) -> dict:
             "fs_kN": float(fs[2:]), "variant": {}}
 
 
+def _run_g6_job_official(sl, controller: str, src: str) -> tuple[dict, dict]:
+    """Run ``r72_g6_screen.job(src)`` with the b5 controller and hooks; return the r72 record
+    and the ``run_case`` output.
+
+    ``job`` re-installs its patches through the module names, so the b5 factory replaces
+    ``make_controller_preset`` (filling the r72 capture) and the b5 period wrapper sits on
+    ``control_period_logged`` (keeping the r72 F_cyl log)."""
+    g6 = _import_g6()
+    factory = make_factory(controller)
+
+    def factory_with_r72_capture(cl, c2, variant):
+        ctrl = factory(cl, c2, variant)
+        g6._CAP["ctrl"] = ctrl
+        if "plant" in g6._CAP:  # as make_controller_preset: right after the settle
+            g6._CAP["node_d0"] = sl.crawler_node_heights(cl, g6._CAP["plant"])
+        return ctrl
+
+    original_logged = g6.control_period_logged
+    original_run_case = sl.run_case
+
+    def run_case_recorded(case: dict) -> dict:
+        _RUN["out"] = original_run_case(case)
+        return _RUN["out"]
+
+    g6.make_controller_preset = factory_with_r72_capture
+    g6.control_period_logged = _wrap_control_period(sl, original_logged)
+    sl.run_case = run_case_recorded
+    rec = g6.job(src)
+    return rec, _RUN.get("out")
+
+
+def _new_run_state(spec: dict) -> None:
+    _RUN.clear()
+    _RUN.update(pmax_move_N=np.full(4, -np.inf), pmax_lock_N=np.full(4, -np.inf),
+                crawler=[], log=[], event=spec.get("event"))
+
+
 def run_job(job: dict) -> dict:
     """Run one (case, controller) job; errors go into the record (the batch keeps going)."""
     t0 = time.perf_counter()
     case_id, controller = job["case"], job["controller"]
+    is_official = bool(job.get("official"))
     record = {"case": case_id, "src": None, "controller": controller}
+    if oos.is_oos_id(case_id):
+        record["oos_batch"] = oos.oos_batch(case_id)
     try:
         spec = case_spec(case_id)
         record["src"] = spec["src"]
         import late_loc_rule
         import s9_soil_closed_loop as sl
 
-        _RUN.clear()
-        _RUN.update(pmax_move_N=np.full(4, -np.inf), pmax_lock_N=np.full(4, -np.inf),
-                    crawler=[], log=[], event=spec.get("event"))
+        _new_run_state(spec)
         if spec["harness"] == "slope":
-            sl, run_input = _prepare_slope_run(spec)
+            sl, run_input, slope_case = _prepare_slope_run(spec, job)
         else:
             run_input = _prepare_g6_run(sl, spec)
         cl = sl._imports()[0]
@@ -498,12 +689,37 @@ def run_job(job: dict) -> dict:
         sl.make_controller = make_factory(controller)
         if "hold_s" in spec:
             sl.HOLD_AFTER_READY_S = float(spec["hold_s"])
-        out = sl.run_case(run_input)
+        official = {}
+        if is_official and spec["harness"] == "g6":
+            rec, out = _run_g6_job_official(sl, controller, spec["src"])
+            official = _judge_g6_official(rec, controller)
+        elif is_official:
+            out = sl.run_case(run_input)
+            official = _judge_slope_official(slope_case, out, sl, cl, controller)
+        else:
+            out = sl.run_case(run_input)
         record.update(metrics(out, _RUN["ctrl"]))
+        record.update(official)
     except Exception as exc:  # noqa: BLE001  keep the batch going; the record carries it
         record.update(error=repr(exc), tb=traceback.format_exc()[-3000:])
+    if _RUN.get("ctrl") is not None:
+        record["controller_settings"] = controller_settings(_RUN["ctrl"])
     record["wall_s"] = round(time.perf_counter() - t0, 1)
     return record
+
+
+def _judge_slope_official(case: dict, out: dict, sl, cl, controller: str) -> dict:
+    import b5_official
+
+    settle_table = json.loads(SETTLE_TABLE_PATH.read_text(encoding="utf-8"))
+    return b5_official.judge_slope(case, out, sl, cl, settle_table,
+                                   is_industry=controller == "IND")
+
+
+def _judge_g6_official(rec: dict, controller: str) -> dict:
+    import b5_official
+
+    return b5_official.judge_g6(rec, is_industry=controller == "IND")
 
 
 # ----------------------------------------------------------------------------------- metrics
@@ -644,16 +860,32 @@ def set_affinity(mask_text: str | None) -> dict:
 
 
 def resolve_case_ids(cases_arg: str) -> list[str]:
-    """``all``, ``wide`` or a comma-separated id list."""
+    """``all``, ``wide``, ``oos`` or a comma-separated id list."""
     if cases_arg == "all":
         return list(CASES)
     if cases_arg == "wide":
         return wide_ids()
-    return cases_arg.split(",")
+    if cases_arg == "oos":
+        return list(oos.OOS_CASES)
+    return split_case_list(cases_arg)
+
+
+def split_case_list(cases_arg: str) -> list[str]:
+    """Comma-separated ids; the comma inside the ``<roll>,<pitch>`` field of an ``X|`` id
+    stays in the id (``X|J1|B|top|0,2|Fs4,A1-rigid`` -> two ids)."""
+    ids: list[str] = []
+    for token in cases_arg.split(","):
+        is_open_slope_id = (bool(ids) and ids[-1].startswith(oos.OOS_SLOPE_PREFIX)
+                            and ids[-1].count("|") == OOS_FIELDS_BEFORE_PITCH)
+        if is_open_slope_id:
+            ids[-1] += f",{token}"
+        else:
+            ids.append(token)
+    return ids
 
 
 def default_out_path(cases_arg: str) -> Path:
-    label = {"all": "main", "wide": "wide"}.get(cases_arg, "cases")
+    label = {"all": "main", "wide": "wide", "oos": "oos"}.get(cases_arg, "cases")
     return DEFAULT_OUT_DIR / f"b5_{label}.json"
 
 
@@ -678,20 +910,37 @@ def _print_records(records: list[dict]) -> None:
         print(record["case"], record["controller"], {key: record.get(key) for key in (
             "t_ready_s", "final_phase", "att_end_absmax_deg", "min_Fcyl_after_off_kN",
             "below_Fmin_after_off_s", "crawler_liftoff_fail", "false_loc", "rut_all_ready_mm",
-            "p_max_move_bar", "p_max_lock_bar", "wall_s")})
+            "p_max_move_bar", "p_max_lock_bar", "official_verdict", "official_failed_rows",
+            "wall_s") if key in record})
+
+
+@dataclass(frozen=True)
+class BatchOptions:
+    """Per-job switches of a batch run."""
+
+    is_official: bool = False
+    allow_no_settle_row: bool = False
 
 
 def run_batch(case_ids: list[str], controllers: list[str], workers: int,
-              affinity: str | None, out_path: Path) -> list[dict]:
+              affinity: str | None, out_path: Path,
+              options: BatchOptions | None = None) -> list[dict]:
     """Run every (case, controller) job and write ``{"meta", "records"}`` to ``out_path``."""
+    options = options or BatchOptions()
     placement = set_affinity(affinity)
-    jobs = [{"case": case_id, "controller": name} for case_id in case_ids for name in controllers]
+    jobs = [{"case": case_id, "controller": name, "official": options.is_official,
+             "allow_no_settle_row": options.allow_no_settle_row}
+            for case_id in case_ids for name in controllers]
     t0 = time.perf_counter()
     # one process per job: the harness patches (make_plant, control_period, hold time) and the
     # numba state never leak from one case into the next
     with Pool(max(1, workers), maxtasksperchild=1) as pool:
         records = pool.map(run_job, jobs, chunksize=1)
     meta = {"script": str(Path(__file__)), "jobs": len(jobs), "workers": workers,
+            "official": options.is_official,
+            "allow_no_settle_row": options.allow_no_settle_row,
+            "settle_table_sha256": hashlib.sha256(SETTLE_TABLE_PATH.read_bytes()).hexdigest(),
+            "controller_settings": settings_meta(records),
             "wall_s": round(time.perf_counter() - t0, 1), **placement}
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps({"meta": meta, "records": records}, indent=1, default=float),
@@ -703,29 +952,63 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="cmd", required=True)
     run = sub.add_parser("run", help="run the cases and write the result JSON")
-    run.add_argument("--cases", default="all", help="all, wide or comma-separated ids")
+    run.add_argument("--cases", default="all", help="all, wide, oos or comma-separated ids")
     run.add_argument("--controllers", default=",".join(CONTROLLERS))
     run.add_argument("--workers", type=int, default=1)
     run.add_argument("--affinity", default=None, help="hex mask, e.g. 0x00000002")
     run.add_argument("--out", type=Path, default=None,
-                     help="result JSON (default rev84/b5_<main|wide|cases>.json)")
-    sub.add_parser("list", help="print the table cases")
+                     help="result JSON (default rev84/b5_<main|wide|oos|cases>.json)")
+    run.add_argument("--official", action="store_true",
+                     help="add the official (R2DS) judgement of the same run")
+    no_row = run.add_mutually_exclusive_group()
+    no_row.add_argument("--allow-no-settle-row", action="store_true",
+                        help="run X| soil cases without a settle-table row uncorrected")
+    no_row.add_argument("--skip-no-settle-row", action="store_true",
+                        help="leave out X| soil cases without a settle-table row")
+    sub.add_parser("list", help="print the table cases and the out-of-sample cases")
     return parser.parse_args(argv)
+
+
+def _without_unsettled_cases(case_ids: list[str], args: argparse.Namespace) -> list[str]:
+    """Drop (``--skip-no-settle-row``) or reject the ``X|`` soil ids without a settle row.
+
+    Raises:
+        SystemExit: A soil id has no row and neither option was given.
+    """
+    problems = settle_row_problems(case_ids, load_settle_rows(),
+                                   allow_no_settle_row=args.allow_no_settle_row)
+    if not problems:
+        return case_ids
+    if not args.skip_no_settle_row:
+        raise SystemExit("no settle-table row: " + "; ".join(problems.values()))
+    print(f"skipped {len(problems)} case(s) without a settle-table row:", ", ".join(problems))
+    return [case_id for case_id in case_ids if case_id not in problems]
+
+
+def _print_case_list() -> None:
+    for key, spec in CASES.items():
+        print(key, spec)
+    for batch, ids in oos.OOS_BATCH_IDS.items():
+        for case_id in ids:
+            print(batch, case_id)
 
 
 def main(argv: list[str] | None = None) -> None:
     args = _parse_args(argv)
     if args.cmd == "list":
-        for key, spec in CASES.items():
-            print(key, spec)
+        _print_case_list()
         return
     case_ids = resolve_case_ids(args.cases)
     controllers = args.controllers.split(",")
     invalid = _invalid_arguments(case_ids, controllers)
     if invalid:
         raise SystemExit("invalid arguments: " + "; ".join(invalid))
+    check_oos_overlap(case_ids)
+    case_ids = _without_unsettled_cases(case_ids, args)
     out_path = args.out if args.out is not None else default_out_path(args.cases)
-    records = run_batch(case_ids, controllers, args.workers, args.affinity, out_path)
+    options = BatchOptions(is_official=args.official,
+                           allow_no_settle_row=args.allow_no_settle_row)
+    records = run_batch(case_ids, controllers, args.workers, args.affinity, out_path, options)
     _print_records(records)
 
 

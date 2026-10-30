@@ -203,6 +203,16 @@ margin (:class:`LiftStrokeGuardSettings`, ``WARN_LIFT_STROKE_LIMITED``,
 ``FAULT_LIFT_STROKE_LIMIT``), the stroke-end FAULT is named (``FAULT_STROKE_END``) and a
 stroke-end FAULT re-grounds the lifted legs first (``FaultRegroundSettings.stroke_end_entry``).
 :meth:`C2Config.with_10hz_d1` turns all of them on; ``C2Config()`` keeps them off.
+P-S8-36 SGS (spec 427.9 / 427.12, adopted 2026-10-30): after a LOC (preset scope ``"any_loc"``,
+user decision 2026-10-30; ``"soil_sign"`` arms only with a soil sign) the first guard period
+stops the run (``LiftStrokeGuardSettings.soil_stop``, event
+``FAULT_LIFT_STROKE_LIMIT:soil:<legs>``); off by default and in the preset until its
+acceptance, on with ``C2Config().with_10hz_d1(soil_stop=True)``.
+P-S8-37 R4 (R4c30, spec 429.9, adopted 2026-10-30): a LOC after the soil mode on a level settle
+(tilt at most 1 deg) where P-S8-31 did not raise the target raises the run's clearance target
+by ``SlopeClearanceMarginSettings.flat_soil_margin_m`` (event ``INFO_LOC_FLAT_SOIL_MARGIN``);
+off by default and in the preset until the final switch, on with
+``C2Config().with_10hz_d1(flat_soil_margin_m=0.03)``.
 P-S8-29 (user decision 2026-10-28, variant V2b): on a creeping pad DONE may accept a twist load
 up to 15 kN that has stopped rising once attitude and clearance have held for 10 s
 (:class:`TwistCompletionRelaxSettings`, event ``INFO_TWIST_UNSETTLED``); preset on, default off.
@@ -241,7 +251,7 @@ from collections import deque
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass, field, replace
 from enum import Enum, StrEnum
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -1612,6 +1622,20 @@ LIFT_GUARD_FAULT_EVENT = "FAULT_LIFT_STROKE_LIMIT"
 """``FAULT_LIFT_STROKE_LIMIT:<legs>``: the guard held every leg for ``hold_limit_s`` (369.2)."""
 STROKE_END_FAULT_EVENT = "FAULT_STROKE_END"
 """``FAULT_STROKE_END:<legs>``: the legs pushing at the stroke end (369.3)."""
+LIFT_GUARD_SOIL_STOP_EVENT = f"{LIFT_GUARD_FAULT_EVENT}:soil"
+"""``FAULT_LIFT_STROKE_LIMIT:soil:<legs>``: P-S8-36 SGS stopped the run in the first guard
+period after a LOC with the soil sign (spec 427.9)."""
+SOIL_SIGN_SOIL_MODE = "soil_mode"
+"""Soil sign of a LOC: the soil mode (S-2) ran in the lifting cycle."""
+SOIL_SIGN_CLEARANCE_TILT = "clearance_tilt"
+"""Soil sign of a LOC: ``c_min(t_P)`` and the settle tilt above the P-S8-33 gate values."""
+SOIL_STOP_SCOPE_SOIL_SIGN = "soil_sign"
+"""P-S8-36 arms only after a LOC with a soil sign (adopted form, spec 427.12)."""
+SOIL_STOP_SCOPE_ANY_LOC = "any_loc"
+"""P-S8-36 arms after every confirmed LOC of a soil-response run (spec 427.12.5, P36sa)."""
+SOIL_STOP_SCOPES = (SOIL_STOP_SCOPE_SOIL_SIGN, SOIL_STOP_SCOPE_ANY_LOC)
+SOIL_SIGN_HISTORY_META_LIMIT = 10
+"""Entries of the soil-sign history the meta keeps (the first ones of the run)."""
 
 
 @dataclass(frozen=True)
@@ -1745,8 +1769,20 @@ class LiftStrokeGuardSettings:
     name_stroke_end_fault: bool = False
     """Spec 369.3: the stroke-end FAULT raises ``FAULT_STROKE_END:<legs>`` (no command
     effect)."""
+    soil_stop: bool = False
+    """P-S8-36 SGS (spec 427.9 / 427.12.3): once armed after a LOC, the first guard period in
+    LEVEL (either mode) blocks DONE and ends in FAULT through the guard FAULT handling
+    (``FAULT_LIFT_STROKE_LIMIT:soil:<legs>``) instead of a stroke-limited completion."""
+    soil_stop_scope: Literal["soil_sign", "any_loc"] = SOIL_STOP_SCOPE_SOIL_SIGN
+    """``"soil_sign"``: armed only after a LOC with the soil sign (the P-S8-33 L1gs gate);
+    ``"any_loc"``: armed after every confirmed LOC of the run (spec 427.12.5, P36sa)."""
 
     def __post_init__(self) -> None:
+        if self.soil_stop_scope not in SOIL_STOP_SCOPES:
+            raise ValueError(
+                f"soil_stop_scope must be one of {SOIL_STOP_SCOPES}, "
+                f"got {self.soil_stop_scope!r}"
+            )
         for name in ("extra_margin_m", "shift_clearance_margin_m"):
             if not getattr(self, name) >= 0.0:
                 raise ValueError(f"{name} must be >= 0, got {getattr(self, name)!r}")
@@ -1860,6 +1896,9 @@ class PreLocLiftPauseSettings:
 SLOPE_MARGIN_EVENT = "INFO_LOC_CLEARANCE_MARGIN"
 """``INFO_LOC_CLEARANCE_MARGIN:<effective target mm, integer>``: P-S8-31 raised the clearance
 target at the LOC."""
+FLAT_SOIL_MARGIN_EVENT = "INFO_LOC_FLAT_SOIL_MARGIN"
+"""``INFO_LOC_FLAT_SOIL_MARGIN:<effective target mm, integer>``: P-S8-37 R4 raised the
+clearance target at a LOC on a level settle after the soil mode (spec 429.9)."""
 
 
 @dataclass(frozen=True)
@@ -1886,9 +1925,16 @@ class SlopeClearanceMarginSettings:
     """True = the original E3 (soil mode or a corner bias needed)."""
     min_clearance_at_P_m: float | None = None
     """``None`` = no soil-sign condition; strict: needs ``c_min(t_P) >`` this value."""
+    flat_soil_margin_m: float = 0.0
+    """P-S8-37 R4 (R4c30, spec 429.9): at a LOC where this margin did not fire, with the soil
+    mode used in the lifting cycle, a known settle with ``max(|roll|, |pitch|) <=
+    tilt_min_rad`` and no raised run target yet, the run's clearance target becomes
+    ``thresholds.clearance_target_m + flat_soil_margin_m`` (event
+    ``INFO_LOC_FLAT_SOIL_MARGIN``). ``0`` = off (class default and R8 preset default); a
+    positive value acts whether or not ``enable`` is set."""
 
     def __post_init__(self) -> None:
-        for name in ("tilt_min_rad", "margin_m"):
+        for name in ("tilt_min_rad", "margin_m", "flat_soil_margin_m"):
             if not getattr(self, name) >= 0.0:
                 raise ValueError(f"{name} must be >= 0, got {getattr(self, name)!r}")
 
@@ -2215,7 +2261,7 @@ class C2Config:
         )
         return replace(self, r8=replace(self.r8, fast_relevel=fast_relevel))
 
-    def with_10hz_d1(self) -> C2Config:
+    def with_10hz_d1(self, *, soil_stop: bool = False, flat_soil_margin_m: float = 0.0) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
 
         10 Hz pressures, strokes and valve output, output one period late (``d = 1``), the IMU
@@ -2275,6 +2321,16 @@ class C2Config:
         sign, a differential pad sinking adds speed to the sinking side
         (:class:`DiffSinkSettings`). The start-IMU form only:
         the late IMU read (C1) is not implemented (U-R8-6 = C2).
+
+        Args:
+            soil_stop: P-S8-36 SGS (spec 427.12 / 427.12.5): after a LOC the first
+                stroke-budget guard period stops the run (scope ``"any_loc"``, user decision
+                2026-10-30). Off by default until its acceptance and the user's decision to
+                carry it in the preset; the preset scope is ``"any_loc"`` either way.
+            flat_soil_margin_m: P-S8-37 R4 (R4c30, spec 429.9): clearance margin of a LOC on a
+                level settle after the soil mode
+                (``SlopeClearanceMarginSettings.flat_soil_margin_m``; the adopted value is
+                0.03 m). ``0`` (off) by default until the final switch is decided.
         """
         config = self.with_r8_diagnostics()
         two_pressure = replace(
@@ -2309,6 +2365,8 @@ class C2Config:
             hold_limit_s=R8_LIFT_GUARD_HOLD_LIMIT_S,
             shift_clearance_margin_m=R8_LIFT_GUARD_SHIFT_CLEARANCE_MARGIN_M,
             name_stroke_end_fault=True,
+            soil_stop=soil_stop,
+            soil_stop_scope=SOIL_STOP_SCOPE_ANY_LOC,  # user decision 2026-10-30, 427.12.5
         )
         lock_tail = replace(
             config.lock_tail, end_overshoot_margin_m=R8_TAIL_END_OVERSHOOT_MARGIN_M
@@ -2338,6 +2396,7 @@ class C2Config:
             config.slope_clearance_margin,
             enable=True,
             min_clearance_at_P_m=R8_SLOPE_MARGIN_MIN_CLEARANCE_AT_P_M,
+            flat_soil_margin_m=flat_soil_margin_m,
         )
         return replace(
             config,
@@ -3761,6 +3820,10 @@ class _RunState:
     """LOC time at which the slope margin applied (once per run)."""
     slope_margin_settle_rad: tuple[float, float] | None = None
     """Settle attitude (roll, pitch) the margin was judged on."""
+    # P-S8-37 R4 (immutable default: class attribute for run states pickled before it)
+    flat_soil_margin_applied_s: tuple[float, ...] = ()
+    """LOC times at which the R4 flat-soil margin raised the run target (a revocation without
+    ``keep_slope_margin_on_revoke`` lets the next LOC apply it again)."""
     # P-S8-32 (immutable default: class attribute for run states pickled before it)
     loc_window_restart_count: int = 0
     """Non-empty S-1 windows cleared because of a re-approach (meta)."""
@@ -3774,6 +3837,20 @@ class _RunState:
     diff_sink: _DiffSinkState | None = None
     """Created by the first update with the rule on."""
     """Times the stroke guard withheld a due revocation."""
+    # P-S8-36 (immutable defaults: class attributes for run states pickled before them)
+    guard_soil_sign: str | None = None
+    """Soil sign of the confirmed LOC (``SOIL_SIGN_*``); ``None`` without a sign or a LOC."""
+    guard_soil_sign_history: tuple[dict[str, Any], ...] = ()
+    """``{t_s, sign}`` at every LOC, ``{t_s, sign: None, cleared: True}`` when a LOC is gone."""
+    soil_guard_first_s: float | None = None
+    """First guard period with P-S8-36 armed (recorded with ``soil_stop`` off too)."""
+    soil_stop_due: tuple[float, tuple[int, ...], LiftGuardMode] | None = None
+    """``(t_s, legs, mode)`` of this period's armed guard period; consumed by ``_level``."""
+    soil_stop: dict[str, Any] | None = None
+    """``{t_s, legs, mode, soil_sign, done_blocked}`` of the stop."""
+    soil_stop_preempted: str | None = None
+    """Phase that a stroke-end FAULT or the hold limit set in the stop period (kept, no soil
+    stop event)."""
 
 
 @dataclass(frozen=True)
@@ -3865,12 +3942,17 @@ class C2Controller:
 
     def _check_clearance_target(self) -> None:
         """Z1 (spec 2.6): the worst accepted target must keep 10 mm of stroke; with the
-        P-S8-31 slope margin on, the raised target as well (spec 414.3)."""
+        P-S8-31 slope margin on, the raised target as well (spec 414.3), and so the R4
+        flat-soil target (spec 429.9)."""
         self._check_clearance_target_value(self.config.thresholds.clearance_target_m)
         margin = self.config.slope_clearance_margin
         if margin.enable:
             self._check_clearance_target_value(
                 self.config.thresholds.clearance_target_m + margin.margin_m
+            )
+        if margin.flat_soil_margin_m > 0.0:
+            self._check_clearance_target_value(
+                self.config.thresholds.clearance_target_m + margin.flat_soil_margin_m
             )
 
     @staticmethod
@@ -3983,6 +4065,7 @@ class C2Controller:
             self._watch_loc_revoke()
         if self.config.diff_sink.enable:
             self._diff_sink_after_update(measurements.t_s)
+        self._clear_guard_soil_sign_without_loc(measurements.t_s)
         return Command(t_s=measurements.t_s, leg_speed_m_s=applied)
 
     def _delay_output(self, output: NDArray[np.float64]) -> NDArray[np.float64]:
@@ -6312,18 +6395,32 @@ class C2Controller:
         """One LEVEL period (:meth:`_level_step`), then the hold bookkeeping of the
         stroke-budget guard (spec rev. 70 369.2): while it holds every leg the attitude
         integrators keep their value of the period start, and a hold of ``hold_limit_s``
-        without DONE is a FAULT."""
+        without DONE is a FAULT. Last, an armed guard period of P-S8-36 stops the run
+        (spec 427.12.3)."""
         state = self._state
         integrals_at_start = (state.roll_integral, state.pitch_integral)
         state.lift_guard_mode = None
         leg_speeds = self._level_step(reading)
+        leg_speeds = self._hold_lift_guard(reading.t_s, integrals_at_start, leg_speeds)
+        if state.soil_stop_due is not None:
+            leg_speeds = self._stop_on_soil_guard(integrals_at_start, leg_speeds)
+        return leg_speeds
+
+    def _hold_lift_guard(
+        self,
+        t_s: float,
+        integrals_at_start: tuple[float, float],
+        leg_speeds: NDArray[np.float64],
+    ) -> NDArray[np.float64]:
+        """HOLD_ALL period: integrators of the period start and the hold time limit."""
+        state = self._state
         if state.lift_guard_mode is not LiftGuardMode.HOLD_ALL:
             state.lift_guard_hold_since_s = None
             return leg_speeds
         # A single stopped leg let the attitude loop wind up to 9.8 deg (spec rev. 70 367 GR).
         state.roll_integral, state.pitch_integral = integrals_at_start
-        if self._has_lift_guard_hold_expired(reading.t_s):
-            return self._fault_on_lift_guard_hold(reading.t_s)
+        if self._has_lift_guard_hold_expired(t_s):
+            return self._fault_on_lift_guard_hold(t_s)
         return leg_speeds
 
     def _level_step(self, reading: _Reading) -> NDArray[np.float64]:
@@ -6946,6 +7043,7 @@ class C2Controller:
             state.is_lift_guard_warned = True
             legs = _leg_names(state.lift_guard_legs)
             self._add_event(t_s, f"{LIFT_GUARD_WARNING_EVENT}:{legs}", is_warning=True)
+        self._note_soil_guard_period(t_s, mode)
 
     def _clear_lift_guard_latch(self) -> None:
         """LEVEL entry: the guard latch and its warning start again."""
@@ -6968,13 +7066,84 @@ class C2Controller:
 
     def _fault_on_lift_guard_hold(self, t_s: float) -> NDArray[np.float64]:
         """``FAULT_LIFT_STROKE_LIMIT:<legs>`` -> FAULT, or first the stroke-end re-ground."""
+        legs = _leg_names(self._state.lift_guard_legs)
+        return self._enter_lift_guard_fault(t_s, f"{LIFT_GUARD_FAULT_EVENT}:{legs}")
+
+    def _enter_lift_guard_fault(self, t_s: float, event_name: str) -> NDArray[np.float64]:
+        """The guard FAULT handling: event, FAULT, the U-S8-79 re-ground of the lifted legs."""
         state = self._state
-        legs = _leg_names(state.lift_guard_legs)
-        self._add_event(t_s, f"{LIFT_GUARD_FAULT_EVENT}:{legs}", is_warning=True)
+        self._add_event(t_s, event_name, is_warning=True)
         state.phase = C2Phase.FAULT
         if self._starts_stroke_end_reground(t_s):
             state.phase = C2Phase.FAULT_REGROUND
         return self._zero_speeds()
+
+    # --- soil guard stop (P-S8-36 SGS, spec 427.9 / 427.12.3) ---
+
+    def _is_soil_stop_scope_met(self) -> bool:
+        """P-S8-36 is armed: ``"soil_sign"`` needs the latched soil sign of the LOC,
+        ``"any_loc"`` (spec 427.12.5) any confirmed LOC. A revoked or missing LOC disarms both
+        (the latch is cleared; the guard itself runs only after a confirmed LOC)."""
+        if self.config.lift_stroke_guard.soil_stop_scope == SOIL_STOP_SCOPE_ANY_LOC:
+            return self._is_liftoff_confirmed()
+        return self._state.guard_soil_sign is not None
+
+    def _note_soil_guard_period(self, t_s: float, mode: LiftGuardMode) -> None:
+        """An armed guard period: record its first time; with ``soil_stop`` the stop is due in
+        this period (:meth:`_level` acts after the LEVEL step)."""
+        state = self._state
+        if not self._is_soil_stop_scope_met() or state.soil_stop is not None:
+            return
+        if state.soil_guard_first_s is None:
+            state.soil_guard_first_s = float(t_s)
+        if self.config.lift_stroke_guard.soil_stop and state.soil_stop_due is None:
+            state.soil_stop_due = (float(t_s), state.lift_guard_legs, mode)
+
+    def _stop_on_soil_guard(
+        self, integrals_at_start: tuple[float, float], leg_speeds: NDArray[np.float64]
+    ) -> NDArray[np.float64]:
+        """Spec 427.12.3: the due stop through the guard FAULT handling, with the attitude
+        integrators of the period start and DONE blocked. A FAULT that the LEVEL step already
+        raised in this period (stroke end, hold limit) is kept without the soil event."""
+        state = self._state
+        due = state.soil_stop_due
+        state.soil_stop_due = None
+        if due is None:
+            return leg_speeds
+        if state.phase in (C2Phase.FAULT, C2Phase.FAULT_REGROUND):
+            state.soil_stop_preempted = state.phase.name.lower()
+            return leg_speeds
+        t_s, guarded_legs, mode = due
+        legs = _leg_names(guarded_legs)
+        state.soil_stop = {
+            "t_s": round(t_s, 2),
+            "legs": legs,
+            "mode": str(mode),
+            "soil_sign": state.guard_soil_sign,
+            "done_blocked": state.phase is C2Phase.DONE,
+        }
+        state.roll_integral, state.pitch_integral = integrals_at_start
+        state.complete_since_s = None
+        return self._enter_lift_guard_fault(t_s, f"{LIFT_GUARD_SOIL_STOP_EVENT}:{legs}")
+
+    def _latch_guard_soil_sign(self, t_s: float) -> None:
+        """Every confirmed LOC judges the soil sign again (spec 427.12.1 item 3)."""
+        state = self._state
+        if not self._is_liftoff_confirmed():
+            return
+        state.guard_soil_sign = self._loc_soil_sign_reason()
+        entry = {"t_s": round(float(t_s), 2), "sign": state.guard_soil_sign}
+        state.guard_soil_sign_history = (*state.guard_soil_sign_history, entry)
+
+    def _clear_guard_soil_sign_without_loc(self, t_s: float) -> None:
+        """After every update: a LOC that is gone (revoked) clears the latch; the next LOC
+        judges again."""
+        state = self._state
+        if state.guard_soil_sign is None or self._is_liftoff_confirmed():
+            return
+        state.guard_soil_sign = None
+        entry = {"t_s": round(float(t_s), 2), "sign": None, "cleared": True}
+        state.guard_soil_sign_history = (*state.guard_soil_sign_history, entry)
 
     def _report_stroke_end_fault(
         self, reading: _Reading, leg_speeds: NDArray[np.float64]
@@ -7024,6 +7193,18 @@ class C2Controller:
                 str(LiftGuardMode.HOLD_ALL): hold_periods,
             },
             "hold_s": state.lift_guard_longest_hold_s,
+            # P-S8-36 (spec 427.12.3); the switch itself is ``settings.soil_stop``.
+            "soil_stop_enabled": self.config.lift_stroke_guard.soil_stop,
+            "soil_sign": state.guard_soil_sign,
+            "soil_sign_history": [
+                dict(entry)
+                for entry in state.guard_soil_sign_history[:SOIL_SIGN_HISTORY_META_LIMIT]
+            ],
+            "soil_guard_first_s": (
+                None if state.soil_guard_first_s is None else round(state.soil_guard_first_s, 2)
+            ),
+            "soil_stop": None if state.soil_stop is None else dict(state.soil_stop),
+            "soil_stop_preempted": state.soil_stop_preempted,
         }
 
     # --- soil response S-1 .. S-5 (spec rev. 57 282.4 / 285) ---
@@ -7237,6 +7418,7 @@ class C2Controller:
             self._start_loc_revoke_watch()
         if self.config.diff_sink.enable:
             self._diff_sink_note_loc(t_s)
+        self._latch_guard_soil_sign(t_s)
 
     # --- LOC revocation (P-S8-33 L1gs, spec 424.10 / 424.10.2) ---
 
@@ -7294,16 +7476,23 @@ class C2Controller:
     def _has_loc_soil_sign(self) -> bool:
         """L1-g at the LOC: the soil mode started, or ``c_min(t_P)`` and the settle tilt above
         their gate values (the P-S8-31 sign; a level rigid floor never has it)."""
+        return self._loc_soil_sign_reason() is not None
+
+    def _loc_soil_sign_reason(self) -> str | None:
+        """Which part of the L1-g soil sign holds (:data:`SOIL_SIGN_SOIL_MODE` first,
+        then :data:`SOIL_SIGN_CLEARANCE_TILT`); ``None`` without a sign."""
         soil = self._soil_state()
         if soil.soil_mode_start_s is not None:
-            return True
+            return SOIL_SIGN_SOIL_MODE
         settings = self.config.loc_revoke
         c_min_at_P_m = soil.clearance_at_plateau_start_m
         settle_rad = self._settle_attitude_rad()
         if c_min_at_P_m is None or settle_rad is None:
-            return False
+            return None
         is_tilted = max(abs(settle_rad[0]), abs(settle_rad[1])) > settings.gate_tilt_min_rad
-        return c_min_at_P_m > settings.gate_min_clearance_at_P_m and is_tilted
+        if c_min_at_P_m > settings.gate_min_clearance_at_P_m and is_tilted:
+            return SOIL_SIGN_CLEARANCE_TILT
+        return None
 
     def _is_revoke_stroke_guarded(self, reading: _Reading) -> bool:
         """L1-s: the largest motor stroke is within ``stroke_margin_m`` of the lift guard
@@ -7559,11 +7748,39 @@ class C2Controller:
                 return False
         return True
 
+    def _is_flat_soil_margin_due(self, settle_rad: tuple[float, float] | None) -> bool:
+        """Spec 429.9 R4 conditions, judged after P-S8-31 (same rule as the wrapper's
+        ``p37_floor_twist.is_flat_soil_margin_due``)."""
+        settings = self.config.slope_clearance_margin
+        if settings.flat_soil_margin_m <= 0.0:
+            return False
+        has_used_soil_mode = self._soil_state().soil_mode_start_s is not None
+        has_run_target = self._state.clearance_target_m is not None
+        if not has_used_soil_mode or has_run_target or settle_rad is None:
+            return False
+        return max(abs(settle_rad[0]), abs(settle_rad[1])) <= settings.tilt_min_rad
+
     def _apply_slope_clearance_margin(self, t_s: float) -> None:
-        """Spec 414.2 (3): raise this run's clearance target by ``margin_m`` (one event)."""
+        """At every confirmed LOC: P-S8-31 (spec 414.2 (3)) raises this run's clearance target
+        by ``margin_m``; where it does not, R4 (spec 429.9) may raise it by
+        ``flat_soil_margin_m``. One event each."""
         settle_rad = self._settle_attitude_rad()
-        if not self._is_slope_margin_due(settle_rad):
-            return
+        if self._is_slope_margin_due(settle_rad):
+            self._raise_target_for_slope(t_s, settle_rad)
+        elif self._is_flat_soil_margin_due(settle_rad):
+            self._raise_target_for_flat_soil(t_s)
+
+    def _raise_target_for_flat_soil(self, t_s: float) -> None:
+        state = self._state
+        target_m = (
+            self.config.thresholds.clearance_target_m
+            + self.config.slope_clearance_margin.flat_soil_margin_m
+        )
+        state.clearance_target_m = target_m
+        state.flat_soil_margin_applied_s = (*state.flat_soil_margin_applied_s, float(t_s))
+        self._add_event(t_s, f"{FLAT_SOIL_MARGIN_EVENT}:{target_m * 1e3:.0f}")
+
+    def _raise_target_for_slope(self, t_s: float, settle_rad: tuple[float, float] | None) -> None:
         state = self._state
         target_m = (
             self.config.thresholds.clearance_target_m
@@ -7585,6 +7802,8 @@ class C2Controller:
             "settle_attitude_deg": (
                 None if settle_rad is None else [math.degrees(value) for value in settle_rad]
             ),
+            "flat_soil_margin_applied": bool(state.flat_soil_margin_applied_s),
+            "flat_soil_margin_t_s": list(state.flat_soil_margin_applied_s),
         }
 
     def _loc_anchor_bias_m(

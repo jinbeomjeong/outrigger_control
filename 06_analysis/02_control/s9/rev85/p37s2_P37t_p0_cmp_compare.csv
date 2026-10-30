@@ -1,0 +1,9 @@
+suite,id,candidate,verdict_before,verdict_after,verdict_changed,hash_same,d_ready_s,d_min_force_kN,d_att_end_deg,false_loc_before,false_loc_after,ready_recontacts_before,ready_recontacts_after,ready_crawler_max_kN_after,final_phase_after,fix_events_after,acted,acted_parts,safe_stop_after,a3_pass,a3_reasons
+g6,g6r|rigid+S1@RL|top|Fs0,P37t,pass,pass,False,False,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P37t,False,,
+g6,g6r|rigid+S1@RL|top|Fs4,P37t,pass,pass,False,False,0.2,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P37t,False,,
+g6,g6r|rigid+S1@RL|bottom|Fs0,P37t,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P37t,False,,
+g6,g6r|rigid+S1@RL|bottom|Fs4,P37t,pass,pass,False,False,0.2,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P37t,False,,
+g6,g6r|rigid+S1@RR|top|Fs0,P37t,pass,pass,False,False,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P37t,False,,
+g6,g6r|rigid+S1@RR|top|Fs4,P37t,pass,pass,False,False,0.2,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P37t,False,,
+g6,g6r|rigid+S1@RR|bottom|Fs0,P37t,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P37t,False,,
+g6,g6r|rigid+S1@RR|bottom|Fs4,P37t,pass,pass,False,False,0.2,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P37t,False,,

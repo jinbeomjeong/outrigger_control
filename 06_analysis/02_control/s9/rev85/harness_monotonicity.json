@@ -1,0 +1,2678 @@
+{
+ "meta": {
+  "spec": "432.4 E5 (control 2026-10-30)",
+  "script": "04_scripts/03_control/s9/rep_evidence.py",
+  "script_sha256": "e106a40f0707a0aa363e15a9257b361d0fee5962877026e0107c3178da6c7b0c",
+  "rank": {
+   "pass": 0,
+   "stroke_limited_pass": 1,
+   "stroke_limited_stop": 2,
+   "fail": 3,
+   "stroke_limited_fail": 4
+  },
+  "tolerance": "flat if |delta| <= 0.5 s / 0.5 mm / 0.2 kN; monotone = non-strict with that tolerance",
+  "harness": "R2DS / x426 (05708b2 line)"
+ },
+ "studies": [
+  {
+   "variable": "B2 F_s (p3b flat)",
+   "levels": [
+    "Fs0",
+    "Fs4",
+    "Fs8"
+   ],
+   "n_groups": 24,
+   "metrics": {
+    "rank": {
+     "up": 0,
+     "down": 0,
+     "flat": 24,
+     "monotone": 24,
+     "n": 24
+    },
+    "ready_s": {
+     "up": 3,
+     "down": 3,
+     "flat": 18,
+     "monotone": 23,
+     "n": 24
+    },
+    "min_force_kN": {
+     "up": 4,
+     "down": 9,
+     "flat": 11,
+     "monotone": 23,
+     "n": 24
+    },
+    "max_stroke_mm": {
+     "up": 4,
+     "down": 2,
+     "flat": 18,
+     "monotone": 23,
+     "n": 24
+    },
+    "gap_ready_mm": {
+     "up": 17,
+     "down": 0,
+     "flat": 7,
+     "monotone": 23,
+     "n": 24
+    }
+   },
+   "verdict_changes": [],
+   "non_monotone": [
+    {
+     "group": "J1|A|top",
+     "metric": "min_force_kN",
+     "seq": [
+      65.84,
+      65.33,
+      65.68
+     ]
+    },
+    {
+     "group": "J1|A|top",
+     "metric": "gap_ready_mm",
+     "seq": [
+      37.4,
+      36.51,
+      37.17
+     ]
+    },
+    {
+     "group": "J1|B|top",
+     "metric": "ready_s",
+     "seq": [
+      62.7,
+      63.9,
+      62.6
+     ]
+    },
+    {
+     "group": "J1|B|top",
+     "metric": "max_stroke_mm",
+     "seq": [
+      488.35,
+      486.55,
+      487.56
+     ]
+    }
+   ]
+  },
+  {
+   "variable": "B1 auger (p3b flat)",
+   "levels": [
+    "top",
+    "middle",
+    "bottom"
+   ],
+   "n_groups": 24,
+   "metrics": {
+    "rank": {
+     "up": 0,
+     "down": 0,
+     "flat": 24,
+     "monotone": 24,
+     "n": 24
+    },
+    "ready_s": {
+     "up": 4,
+     "down": 6,
+     "flat": 14,
+     "monotone": 22,
+     "n": 24
+    },
+    "min_force_kN": {
+     "up": 21,
+     "down": 0,
+     "flat": 3,
+     "monotone": 24,
+     "n": 24
+    },
+    "max_stroke_mm": {
+     "up": 0,
+     "down": 12,
+     "flat": 12,
+     "monotone": 22,
+     "n": 24
+    },
+    "gap_ready_mm": {
+     "up": 12,
+     "down": 1,
+     "flat": 11,
+     "monotone": 23,
+     "n": 24
+    }
+   },
+   "verdict_changes": [],
+   "non_monotone": [
+    {
+     "group": "J1|B|Fs4",
+     "metric": "ready_s",
+     "seq": [
+      63.9,
+      62.2,
+      63.1
+     ]
+    },
+    {
+     "group": "J1|B|Fs8",
+     "metric": "ready_s",
+     "seq": [
+      62.6,
+      62.0,
+      62.9
+     ]
+    },
+    {
+     "group": "J2|A|Fs0",
+     "metric": "max_stroke_mm",
+     "seq": [
+      483.04,
+      481.98,
+      482.62
+     ]
+    },
+    {
+     "group": "J2|A|Fs4",
+     "metric": "max_stroke_mm",
+     "seq": [
+      483.13,
+      482.07,
+      482.78
+     ]
+    },
+    {
+     "group": "J2|A|Fs4",
+     "metric": "gap_ready_mm",
+     "seq": [
+      36.65,
+      36.08,
+      37.13
+     ]
+    }
+   ]
+  },
+  {
+   "variable": "B3 pad A -> B (p3b flat)",
+   "levels": [
+    "A",
+    "B"
+   ],
+   "n_groups": 36,
+   "metrics": {
+    "rank": {
+     "up": 0,
+     "down": 0,
+     "flat": 36,
+     "monotone": 36,
+     "n": 36
+    },
+    "ready_s": {
+     "up": 27,
+     "down": 9,
+     "flat": 0,
+     "monotone": 36,
+     "n": 36
+    },
+    "min_force_kN": {
+     "up": 36,
+     "down": 0,
+     "flat": 0,
+     "monotone": 36,
+     "n": 36
+    },
+    "max_stroke_mm": {
+     "up": 18,
+     "down": 18,
+     "flat": 0,
+     "monotone": 36,
+     "n": 36
+    },
+    "gap_ready_mm": {
+     "up": 18,
+     "down": 18,
+     "flat": 0,
+     "monotone": 36,
+     "n": 36
+    }
+   },
+   "verdict_changes": [],
+   "non_monotone": []
+  },
+  {
+   "variable": "A1 soil G1 -> J1 -> J2 -> S1 (p3b flat)",
+   "levels": [
+    "G1",
+    "J1",
+    "J2",
+    "S1"
+   ],
+   "n_groups": 18,
+   "metrics": {
+    "rank": {
+     "up": 0,
+     "down": 0,
+     "flat": 18,
+     "monotone": 18,
+     "n": 18
+    },
+    "ready_s": {
+     "up": 18,
+     "down": 0,
+     "flat": 0,
+     "monotone": 9,
+     "n": 18
+    },
+    "min_force_kN": {
+     "up": 18,
+     "down": 0,
+     "flat": 0,
+     "monotone": 9,
+     "n": 18
+    },
+    "max_stroke_mm": {
+     "up": 18,
+     "down": 0,
+     "flat": 0,
+     "monotone": 18,
+     "n": 18
+    },
+    "gap_ready_mm": {
+     "up": 10,
+     "down": 0,
+     "flat": 8,
+     "monotone": 0,
+     "n": 18
+    }
+   },
+   "verdict_changes": [],
+   "non_monotone": [
+    {
+     "group": "A|bottom|Fs0",
+     "metric": "gap_ready_mm",
+     "seq": [
+      44.98,
+      36.56,
+      36.64,
+      57.49
+     ]
+    },
+    {
+     "group": "A|bottom|Fs4",
+     "metric": "gap_ready_mm",
+     "seq": [
+      45.06,
+      36.68,
+      37.13,
+      57.74
+     ]
+    },
+    {
+     "group": "A|bottom|Fs8",
+     "metric": "gap_ready_mm",
+     "seq": [
+      45.34,
+      37.42,
+      37.87,
+      58.09
+     ]
+    },
+    {
+     "group": "A|middle|Fs0",
+     "metric": "gap_ready_mm",
+     "seq": [
+      44.97,
+      36.29,
+      35.66,
+      57.21
+     ]
+    },
+    {
+     "group": "A|middle|Fs4",
+     "metric": "gap_ready_mm",
+     "seq": [
+      45.06,
+      36.67,
+      36.08,
+      57.4
+     ]
+    },
+    {
+     "group": "A|middle|Fs8",
+     "metric": "gap_ready_mm",
+     "seq": [
+      45.44,
+      37.46,
+      37.5,
+      57.87
+     ]
+    },
+    {
+     "group": "A|top|Fs0",
+     "metric": "gap_ready_mm",
+     "seq": [
+      45.01,
+      37.4,
+      36.14,
+      57.05
+     ]
+    },
+    {
+     "group": "A|top|Fs4",
+     "metric": "gap_ready_mm",
+     "seq": [
+      45.2,
+      36.51,
+      36.65,
+      57.16
+     ]
+    },
+    {
+     "group": "A|top|Fs8",
+     "metric": "gap_ready_mm",
+     "seq": [
+      45.47,
+      37.17,
+      37.46,
+      57.5
+     ]
+    },
+    {
+     "group": "B|bottom|Fs0",
+     "metric": "ready_s",
+     "seq": [
+      38.9,
+      63.3,
+      68.1,
+      57.3
+     ]
+    },
+    {
+     "group": "B|bottom|Fs0",
+     "metric": "min_force_kN",
+     "seq": [
+      63.53,
+      69.68,
+      69.56,
+      68.73
+     ]
+    },
+    {
+     "group": "B|bottom|Fs0",
+     "metric": "gap_ready_mm",
+     "seq": [
+      42.29,
+      50.8,
+      49.68,
+      42.76
+     ]
+    },
+    {
+     "group": "B|bottom|Fs4",
+     "metric": "ready_s",
+     "seq": [
+      39.4,
+      63.1,
+      67.6,
+      57.4
+     ]
+    },
+    {
+     "group": "B|bottom|Fs4",
+     "metric": "min_force_kN",
+     "seq": [
+      62.93,
+      69.62,
+      69.55,
+      68.67
+     ]
+    },
+    {
+     "group": "B|bottom|Fs4",
+     "metric": "gap_ready_mm",
+     "seq": [
+      42.72,
+      51.08,
+      49.94,
+      43.08
+     ]
+    },
+    {
+     "group": "B|bottom|Fs8",
+     "metric": "ready_s",
+     "seq": [
+      39.4,
+      62.9,
+      67.8,
+      57.4
+     ]
+    },
+    {
+     "group": "B|bottom|Fs8",
+     "metric": "min_force_kN",
+     "seq": [
+      62.91,
+      69.62,
+      69.52,
+      68.93
+     ]
+    },
+    {
+     "group": "B|bottom|Fs8",
+     "metric": "gap_ready_mm",
+     "seq": [
+      43.02,
+      51.33,
+      50.28,
+      43.52
+     ]
+    },
+    {
+     "group": "B|middle|Fs0",
+     "metric": "ready_s",
+     "seq": [
+      40.1,
+      62.6,
+      66.1,
+      57.3
+     ]
+    },
+    {
+     "group": "B|middle|Fs0",
+     "metric": "min_force_kN",
+     "seq": [
+      63.54,
+      69.58,
+      69.49,
+      68.55
+     ]
+    },
+    {
+     "group": "B|middle|Fs0",
+     "metric": "gap_ready_mm",
+     "seq": [
+      42.64,
+      49.81,
+      48.99,
+      42.33
+     ]
+    },
+    {
+     "group": "B|middle|Fs4",
+     "metric": "ready_s",
+     "seq": [
+      39.4,
+      62.2,
+      66.3,
+      57.3
+     ]
+    },
+    {
+     "group": "B|middle|Fs4",
+     "metric": "min_force_kN",
+     "seq": [
+      62.92,
+      69.37,
+      69.33,
+      68.72
+     ]
+    },
+    {
+     "group": "B|middle|Fs4",
+     "metric": "gap_ready_mm",
+     "seq": [
+      42.71,
+      49.64,
+      49.18,
+      42.66
+     ]
+    },
+    {
+     "group": "B|middle|Fs8",
+     "metric": "ready_s",
+     "seq": [
+      39.4,
+      62.0,
+      66.6,
+      57.4
+     ]
+    },
+    {
+     "group": "B|middle|Fs8",
+     "metric": "min_force_kN",
+     "seq": [
+      62.93,
+      69.29,
+      69.23,
+      68.62
+     ]
+    },
+    {
+     "group": "B|middle|Fs8",
+     "metric": "gap_ready_mm",
+     "seq": [
+      43.03,
+      50.13,
+      49.5,
+      43.25
+     ]
+    },
+    {
+     "group": "B|top|Fs0",
+     "metric": "ready_s",
+     "seq": [
+      40.2,
+      62.7,
+      64.8,
+      57.3
+     ]
+    },
+    {
+     "group": "B|top|Fs0",
+     "metric": "min_force_kN",
+     "seq": [
+      63.28,
+      69.06,
+      68.92,
+      68.29
+     ]
+    },
+    {
+     "group": "B|top|Fs0",
+     "metric": "gap_ready_mm",
+     "seq": [
+      42.22,
+      47.25,
+      47.58,
+      41.99
+     ]
+    },
+    {
+     "group": "B|top|Fs4",
+     "metric": "ready_s",
+     "seq": [
+      40.1,
+      63.9,
+      64.9,
+      57.4
+     ]
+    },
+    {
+     "group": "B|top|Fs4",
+     "metric": "min_force_kN",
+     "seq": [
+      62.89,
+      68.81,
+      68.73,
+      68.19
+     ]
+    },
+    {
+     "group": "B|top|Fs4",
+     "metric": "gap_ready_mm",
+     "seq": [
+      42.78,
+      47.43,
+      48.08,
+      42.32
+     ]
+    },
+    {
+     "group": "B|top|Fs8",
+     "metric": "ready_s",
+     "seq": [
+      40.1,
+      62.6,
+      65.3,
+      57.4
+     ]
+    },
+    {
+     "group": "B|top|Fs8",
+     "metric": "min_force_kN",
+     "seq": [
+      62.7,
+      68.81,
+      68.81,
+      68.36
+     ]
+    },
+    {
+     "group": "B|top|Fs8",
+     "metric": "gap_ready_mm",
+     "seq": [
+      43.08,
+      47.85,
+      48.39,
+      42.81
+     ]
+    }
+   ]
+  },
+  {
+   "variable": "A2 slope ratio k (slope 177)",
+   "levels": [
+    "k0",
+    "k0.5",
+    "k0.75",
+    "k0.875",
+    "k1.0"
+   ],
+   "n_groups": 18,
+   "metrics": {
+    "rank": {
+     "up": 16,
+     "down": 0,
+     "flat": 2,
+     "monotone": 17,
+     "n": 18
+    },
+    "ready_s": {
+     "up": 7,
+     "down": 2,
+     "flat": 0,
+     "monotone": 3,
+     "n": 9
+    },
+    "min_force_kN": {
+     "up": 1,
+     "down": 17,
+     "flat": 0,
+     "monotone": 12,
+     "n": 18
+    },
+    "max_stroke_mm": {
+     "up": 18,
+     "down": 0,
+     "flat": 0,
+     "monotone": 5,
+     "n": 18
+    },
+    "gap_ready_mm": {
+     "up": 6,
+     "down": 3,
+     "flat": 0,
+     "monotone": 2,
+     "n": 9
+    }
+   },
+   "verdict_changes": [
+    {
+     "group": "J1|A|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J1|B|top|edge_nd",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J1|B|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J1|B|top|roll_pos",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J2|A|top|edge_nd",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J2|A|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J2|A|top|roll_pos",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J2|B|top|edge_nd",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J2|B|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J2|B|top|roll_pos",
+     "verdicts": [
+      "pass",
+      "fail",
+      "stroke_limited_pass",
+      "stroke_limited_fail",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|A|top|edge_nd",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "fail",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|A|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "fail",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|A|top|roll_pos",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "fail",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|B|top|edge_nd",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|B|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|B|top|roll_pos",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    }
+   ],
+   "non_monotone": [
+    {
+     "group": "J1|A|top|edge_nd",
+     "metric": "max_stroke_mm",
+     "seq": [
+      451.51,
+      592.26,
+      650.82,
+      649.39,
+      679.13
+     ]
+    },
+    {
+     "group": "J1|A|top|edge_nd",
+     "metric": "gap_ready_mm",
+     "seq": [
+      41.49,
+      96.17,
+      108.62,
+      84.67,
+      90.8
+     ]
+    },
+    {
+     "group": "J1|A|top|nose_down",
+     "metric": "max_stroke_mm",
+     "seq": [
+      451.51,
+      600.93,
+      633.01,
+      684.98,
+      683.47
+     ]
+    },
+    {
+     "group": "J1|A|top|nose_down",
+     "metric": "gap_ready_mm",
+     "seq": [
+      41.49,
+      108.61,
+      96.69,
+      142.59,
+      120.38
+     ]
+    },
+    {
+     "group": "J1|A|top|roll_pos",
+     "metric": "gap_ready_mm",
+     "seq": [
+      41.49,
+      84.16,
+      60.89,
+      64.21,
+      67.58
+     ]
+    },
+    {
+     "group": "J1|B|top|edge_nd",
+     "metric": "ready_s",
+     "seq": [
+      63.9,
+      55.8,
+      58.7,
+      60.4,
+      61.1
+     ]
+    },
+    {
+     "group": "J1|B|top|edge_nd",
+     "metric": "gap_ready_mm",
+     "seq": [
+      37.59,
+      52.67,
+      41.67,
+      49.93,
+      27.87
+     ]
+    },
+    {
+     "group": "J1|B|top|nose_down",
+     "metric": "ready_s",
+     "seq": [
+      63.9,
+      54.0,
+      56.9,
+      59.0,
+      78.3
+     ]
+    },
+    {
+     "group": "J1|B|top|nose_down",
+     "metric": "min_force_kN",
+     "seq": [
+      68.54,
+      69.12,
+      69.15,
+      67.96,
+      66.14
+     ]
+    },
+    {
+     "group": "J1|B|top|roll_pos",
+     "metric": "min_force_kN",
+     "seq": [
+      68.54,
+      66.41,
+      63.45,
+      63.2,
+      64.85
+     ]
+    },
+    {
+     "group": "J1|B|top|roll_pos",
+     "metric": "max_stroke_mm",
+     "seq": [
+      473.53,
+      595.92,
+      669.04,
+      683.06,
+      680.04
+     ]
+    },
+    {
+     "group": "J2|A|top|edge_nd",
+     "metric": "ready_s",
+     "seq": [
+      49.0,
+      71.2,
+      74.1,
+      80.2,
+      76.9
+     ]
+    },
+    {
+     "group": "J2|A|top|edge_nd",
+     "metric": "gap_ready_mm",
+     "seq": [
+      42.44,
+      97.28,
+      96.23,
+      84.49,
+      58.87
+     ]
+    },
+    {
+     "group": "J2|A|top|nose_down",
+     "metric": "max_stroke_mm",
+     "seq": [
+      484.51,
+      644.58,
+      684.84,
+      683.82,
+      680.04
+     ]
+    },
+    {
+     "group": "J2|A|top|roll_pos",
+     "metric": "ready_s",
+     "seq": [
+      49.0,
+      62.2,
+      73.9,
+      72.4,
+      100.4
+     ]
+    },
+    {
+     "group": "J2|A|top|roll_pos",
+     "metric": "max_stroke_mm",
+     "seq": [
+      484.51,
+      614.14,
+      671.01,
+      684.94,
+      682.75
+     ]
+    },
+    {
+     "group": "J2|A|top|roll_pos",
+     "metric": "gap_ready_mm",
+     "seq": [
+      42.44,
+      74.07,
+      79.65,
+      66.99,
+      39.1
+     ]
+    },
+    {
+     "group": "J2|B|top|edge_nd",
+     "metric": "ready_s",
+     "seq": [
+      67.2,
+      57.3,
+      59.9,
+      61.8,
+      63.1
+     ]
+    },
+    {
+     "group": "J2|B|top|edge_nd",
+     "metric": "min_force_kN",
+     "seq": [
+      68.42,
+      68.72,
+      68.09,
+      67.48,
+      66.82
+     ]
+    },
+    {
+     "group": "J2|B|top|edge_nd",
+     "metric": "max_stroke_mm",
+     "seq": [
+      504.01,
+      603.57,
+      662.56,
+      682.84,
+      682.04
+     ]
+    },
+    {
+     "group": "J2|B|top|edge_nd",
+     "metric": "gap_ready_mm",
+     "seq": [
+      36.37,
+      41.54,
+      48.54,
+      49.35,
+      26.77
+     ]
+    },
+    {
+     "group": "J2|B|top|nose_down",
+     "metric": "ready_s",
+     "seq": [
+      67.2,
+      67.6,
+      74.2,
+      58.5,
+      71.9
+     ]
+    },
+    {
+     "group": "J2|B|top|nose_down",
+     "metric": "min_force_kN",
+     "seq": [
+      68.42,
+      68.59,
+      68.47,
+      68.95,
+      68.07
+     ]
+    },
+    {
+     "group": "J2|B|top|roll_pos",
+     "metric": "rank",
+     "seq": [
+      0,
+      3,
+      1,
+      4,
+      3
+     ]
+    },
+    {
+     "group": "J2|B|top|roll_pos",
+     "metric": "max_stroke_mm",
+     "seq": [
+      504.01,
+      628.19,
+      682.91,
+      683.0,
+      680.04
+     ]
+    },
+    {
+     "group": "S1|A|top|edge_nd",
+     "metric": "max_stroke_mm",
+     "seq": [
+      535.76,
+      661.73,
+      683.44,
+      680.04,
+      680.04
+     ]
+    },
+    {
+     "group": "S1|A|top|nose_down",
+     "metric": "max_stroke_mm",
+     "seq": [
+      535.76,
+      666.35,
+      683.34,
+      680.23,
+      680.02
+     ]
+    },
+    {
+     "group": "S1|A|top|roll_pos",
+     "metric": "min_force_kN",
+     "seq": [
+      67.29,
+      63.56,
+      62.49,
+      62.74,
+      61.01
+     ]
+    },
+    {
+     "group": "S1|A|top|roll_pos",
+     "metric": "max_stroke_mm",
+     "seq": [
+      535.76,
+      651.13,
+      684.32,
+      680.71,
+      696.25
+     ]
+    },
+    {
+     "group": "S1|B|top|edge_nd",
+     "metric": "min_force_kN",
+     "seq": [
+      68.16,
+      67.19,
+      67.47,
+      66.83,
+      68.55
+     ]
+    },
+    {
+     "group": "S1|B|top|edge_nd",
+     "metric": "max_stroke_mm",
+     "seq": [
+      518.41,
+      653.61,
+      682.67,
+      682.28,
+      679.99
+     ]
+    },
+    {
+     "group": "S1|B|top|nose_down",
+     "metric": "max_stroke_mm",
+     "seq": [
+      518.41,
+      645.89,
+      684.75,
+      682.22,
+      679.79
+     ]
+    },
+    {
+     "group": "S1|B|top|roll_pos",
+     "metric": "max_stroke_mm",
+     "seq": [
+      518.41,
+      658.34,
+      682.93,
+      695.93,
+      679.74
+     ]
+    }
+   ]
+  },
+  {
+   "variable": "A2 slope ratio k (no k0.875 rows)",
+   "levels": [
+    "k0",
+    "k0.5",
+    "k0.75",
+    "k1.0"
+   ],
+   "n_groups": 18,
+   "metrics": {
+    "rank": {
+     "up": 16,
+     "down": 0,
+     "flat": 2,
+     "monotone": 17,
+     "n": 18
+    },
+    "ready_s": {
+     "up": 7,
+     "down": 2,
+     "flat": 0,
+     "monotone": 5,
+     "n": 9
+    },
+    "min_force_kN": {
+     "up": 1,
+     "down": 17,
+     "flat": 0,
+     "monotone": 14,
+     "n": 18
+    },
+    "max_stroke_mm": {
+     "up": 18,
+     "down": 0,
+     "flat": 0,
+     "monotone": 11,
+     "n": 18
+    },
+    "gap_ready_mm": {
+     "up": 6,
+     "down": 3,
+     "flat": 0,
+     "monotone": 2,
+     "n": 9
+    }
+   },
+   "verdict_changes": [
+    {
+     "group": "J1|A|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J1|B|top|edge_nd",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J1|B|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J1|B|top|roll_pos",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J2|A|top|edge_nd",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J2|A|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J2|A|top|roll_pos",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J2|B|top|edge_nd",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J2|B|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "J2|B|top|roll_pos",
+     "verdicts": [
+      "pass",
+      "fail",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|A|top|edge_nd",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|A|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|A|top|roll_pos",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|B|top|edge_nd",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|B|top|nose_down",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "S1|B|top|roll_pos",
+     "verdicts": [
+      "pass",
+      "pass",
+      "stroke_limited_pass",
+      "fail"
+     ]
+    }
+   ],
+   "non_monotone": [
+    {
+     "group": "J1|A|top|edge_nd",
+     "metric": "gap_ready_mm",
+     "seq": [
+      41.49,
+      96.17,
+      108.62,
+      90.8
+     ]
+    },
+    {
+     "group": "J1|A|top|nose_down",
+     "metric": "gap_ready_mm",
+     "seq": [
+      41.49,
+      108.61,
+      96.69,
+      120.38
+     ]
+    },
+    {
+     "group": "J1|A|top|roll_pos",
+     "metric": "gap_ready_mm",
+     "seq": [
+      41.49,
+      84.16,
+      60.89,
+      67.58
+     ]
+    },
+    {
+     "group": "J1|B|top|edge_nd",
+     "metric": "ready_s",
+     "seq": [
+      63.9,
+      55.8,
+      58.7,
+      61.1
+     ]
+    },
+    {
+     "group": "J1|B|top|edge_nd",
+     "metric": "gap_ready_mm",
+     "seq": [
+      37.59,
+      52.67,
+      41.67,
+      27.87
+     ]
+    },
+    {
+     "group": "J1|B|top|nose_down",
+     "metric": "ready_s",
+     "seq": [
+      63.9,
+      54.0,
+      56.9,
+      78.3
+     ]
+    },
+    {
+     "group": "J1|B|top|nose_down",
+     "metric": "min_force_kN",
+     "seq": [
+      68.54,
+      69.12,
+      69.15,
+      66.14
+     ]
+    },
+    {
+     "group": "J1|B|top|roll_pos",
+     "metric": "min_force_kN",
+     "seq": [
+      68.54,
+      66.41,
+      63.45,
+      64.85
+     ]
+    },
+    {
+     "group": "J2|A|top|edge_nd",
+     "metric": "gap_ready_mm",
+     "seq": [
+      42.44,
+      97.28,
+      96.23,
+      58.87
+     ]
+    },
+    {
+     "group": "J2|A|top|nose_down",
+     "metric": "max_stroke_mm",
+     "seq": [
+      484.51,
+      644.58,
+      684.84,
+      680.04
+     ]
+    },
+    {
+     "group": "J2|A|top|roll_pos",
+     "metric": "gap_ready_mm",
+     "seq": [
+      42.44,
+      74.07,
+      79.65,
+      39.1
+     ]
+    },
+    {
+     "group": "J2|B|top|edge_nd",
+     "metric": "ready_s",
+     "seq": [
+      67.2,
+      57.3,
+      59.9,
+      63.1
+     ]
+    },
+    {
+     "group": "J2|B|top|edge_nd",
+     "metric": "min_force_kN",
+     "seq": [
+      68.42,
+      68.72,
+      68.09,
+      66.82
+     ]
+    },
+    {
+     "group": "J2|B|top|edge_nd",
+     "metric": "gap_ready_mm",
+     "seq": [
+      36.37,
+      41.54,
+      48.54,
+      26.77
+     ]
+    },
+    {
+     "group": "J2|B|top|nose_down",
+     "metric": "ready_s",
+     "seq": [
+      67.2,
+      67.6,
+      74.2,
+      71.9
+     ]
+    },
+    {
+     "group": "J2|B|top|roll_pos",
+     "metric": "rank",
+     "seq": [
+      0,
+      3,
+      1,
+      3
+     ]
+    },
+    {
+     "group": "J2|B|top|roll_pos",
+     "metric": "max_stroke_mm",
+     "seq": [
+      504.01,
+      628.19,
+      682.91,
+      680.04
+     ]
+    },
+    {
+     "group": "S1|A|top|edge_nd",
+     "metric": "max_stroke_mm",
+     "seq": [
+      535.76,
+      661.73,
+      683.44,
+      680.04
+     ]
+    },
+    {
+     "group": "S1|A|top|nose_down",
+     "metric": "max_stroke_mm",
+     "seq": [
+      535.76,
+      666.35,
+      683.34,
+      680.02
+     ]
+    },
+    {
+     "group": "S1|B|top|edge_nd",
+     "metric": "min_force_kN",
+     "seq": [
+      68.16,
+      67.19,
+      67.47,
+      68.55
+     ]
+    },
+    {
+     "group": "S1|B|top|edge_nd",
+     "metric": "max_stroke_mm",
+     "seq": [
+      518.41,
+      653.61,
+      682.67,
+      679.99
+     ]
+    },
+    {
+     "group": "S1|B|top|nose_down",
+     "metric": "max_stroke_mm",
+     "seq": [
+      518.41,
+      645.89,
+      684.75,
+      679.79
+     ]
+    },
+    {
+     "group": "S1|B|top|roll_pos",
+     "metric": "max_stroke_mm",
+     "seq": [
+      518.41,
+      658.34,
+      682.93,
+      679.74
+     ]
+    }
+   ]
+  },
+  {
+   "variable": "B3 pad A -> B (slope 177)",
+   "levels": [
+    "A",
+    "B"
+   ],
+   "n_groups": 67,
+   "metrics": {
+    "rank": {
+     "up": 16,
+     "down": 12,
+     "flat": 39,
+     "monotone": 67,
+     "n": 67
+    },
+    "ready_s": {
+     "up": 25,
+     "down": 13,
+     "flat": 8,
+     "monotone": 46,
+     "n": 46
+    },
+    "min_force_kN": {
+     "up": 56,
+     "down": 10,
+     "flat": 1,
+     "monotone": 67,
+     "n": 67
+    },
+    "max_stroke_mm": {
+     "up": 27,
+     "down": 34,
+     "flat": 6,
+     "monotone": 67,
+     "n": 67
+    },
+    "gap_ready_mm": {
+     "up": 2,
+     "down": 42,
+     "flat": 2,
+     "monotone": 46,
+     "n": 46
+    }
+   },
+   "verdict_changes": [
+    {
+     "group": "H1|J1|top|edge_nd",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H1|J1|top|edge_nu",
+     "verdicts": [
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "H1|J1|top|nose_up",
+     "verdicts": [
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "H1|J1|top|roll_neg",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H1|J1|top|roll_pos",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H1|J1|top|rpB",
+     "verdicts": [
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H1|J2|top|edge_nu",
+     "verdicts": [
+      "pass",
+      "stroke_limited_fail"
+     ]
+    },
+    {
+     "group": "H1|J2|top|nose_down",
+     "verdicts": [
+      "fail",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "H1|J2|top|nose_up",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H1|J2|top|roll_neg",
+     "verdicts": [
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H1|J2|top|roll_pos",
+     "verdicts": [
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H1|S1|top|edge_nu",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H1|S1|top|nose_up",
+     "verdicts": [
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "H3|J1|top|nose_down@k0.875",
+     "verdicts": [
+      "stroke_limited_pass",
+      "pass"
+     ]
+    },
+    {
+     "group": "H3|J1|top|roll_pos@k0.875",
+     "verdicts": [
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "H3|J2|top|nose_down@k0.75",
+     "verdicts": [
+      "stroke_limited_pass",
+      "pass"
+     ]
+    },
+    {
+     "group": "H3|J2|top|nose_down@k0.875",
+     "verdicts": [
+      "stroke_limited_pass",
+      "pass"
+     ]
+    },
+    {
+     "group": "H3|J2|top|roll_pos@k0.5",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H3|J2|top|roll_pos@k0.75",
+     "verdicts": [
+      "pass",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "H3|J2|top|roll_pos@k0.875",
+     "verdicts": [
+      "stroke_limited_pass",
+      "stroke_limited_fail"
+     ]
+    },
+    {
+     "group": "H3|S1|top|edge_nd@k0.875",
+     "verdicts": [
+      "fail",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "H3|S1|top|nose_down@k0.875",
+     "verdicts": [
+      "fail",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "H3|S1|top|roll_pos@k0.875",
+     "verdicts": [
+      "fail",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "H4|J1|top|nose_down",
+     "verdicts": [
+      "fail",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "H4|J1|top|nose_down_2p8",
+     "verdicts": [
+      "stroke_limited_pass",
+      "pass"
+     ]
+    },
+    {
+     "group": "H4|J2|top|nose_down",
+     "verdicts": [
+      "fail",
+      "stroke_limited_pass"
+     ]
+    },
+    {
+     "group": "H4|J2|top|nose_down_2p8",
+     "verdicts": [
+      "stroke_limited_pass",
+      "pass"
+     ]
+    },
+    {
+     "group": "H4|S1|top|nose_down_2p8",
+     "verdicts": [
+      "fail",
+      "stroke_limited_pass"
+     ]
+    }
+   ],
+   "non_monotone": []
+  },
+  {
+   "variable": "B2 F_s 4 -> 0 on slope (x426 B2)",
+   "levels": [
+    "Fs4",
+    "Fs0"
+   ],
+   "n_groups": 21,
+   "metrics": {
+    "rank": {
+     "up": 1,
+     "down": 0,
+     "flat": 20,
+     "monotone": 21,
+     "n": 21
+    },
+    "ready_s": {
+     "up": 1,
+     "down": 3,
+     "flat": 16,
+     "monotone": 20,
+     "n": 20
+    },
+    "min_force_kN": {
+     "up": 6,
+     "down": 6,
+     "flat": 9,
+     "monotone": 21,
+     "n": 21
+    },
+    "max_stroke_mm": {
+     "up": 4,
+     "down": 3,
+     "flat": 14,
+     "monotone": 21,
+     "n": 21
+    },
+    "gap_ready_mm": {
+     "up": 0,
+     "down": 20,
+     "flat": 0,
+     "monotone": 20,
+     "n": 20
+    }
+   },
+   "verdict_changes": [
+    {
+     "group": "H3|S1|B|top|roll_pos@k0.75",
+     "verdicts": [
+      "stroke_limited_pass",
+      "fail"
+     ]
+    }
+   ],
+   "non_monotone": []
+  },
+  {
+   "variable": "B2 F_s 4 -> 8 on slope (x426 B3)",
+   "levels": [
+    "Fs4",
+    "Fs8"
+   ],
+   "n_groups": 21,
+   "metrics": {
+    "rank": {
+     "up": 0,
+     "down": 0,
+     "flat": 21,
+     "monotone": 21,
+     "n": 21
+    },
+    "ready_s": {
+     "up": 3,
+     "down": 3,
+     "flat": 15,
+     "monotone": 21,
+     "n": 21
+    },
+    "min_force_kN": {
+     "up": 5,
+     "down": 2,
+     "flat": 14,
+     "monotone": 21,
+     "n": 21
+    },
+    "max_stroke_mm": {
+     "up": 2,
+     "down": 3,
+     "flat": 16,
+     "monotone": 21,
+     "n": 21
+    },
+    "gap_ready_mm": {
+     "up": 0,
+     "down": 21,
+     "flat": 0,
+     "monotone": 21,
+     "n": 21
+    }
+   },
+   "verdict_changes": [],
+   "non_monotone": []
+  },
+  {
+   "variable": "B1 auger top -> middle on slope (x426 B4)",
+   "levels": [
+    "top",
+    "middle"
+   ],
+   "n_groups": 21,
+   "metrics": {
+    "rank": {
+     "up": 0,
+     "down": 0,
+     "flat": 21,
+     "monotone": 21,
+     "n": 21
+    },
+    "ready_s": {
+     "up": 0,
+     "down": 13,
+     "flat": 8,
+     "monotone": 21,
+     "n": 21
+    },
+    "min_force_kN": {
+     "up": 20,
+     "down": 0,
+     "flat": 1,
+     "monotone": 21,
+     "n": 21
+    },
+    "max_stroke_mm": {
+     "up": 5,
+     "down": 6,
+     "flat": 10,
+     "monotone": 21,
+     "n": 21
+    },
+    "gap_ready_mm": {
+     "up": 7,
+     "down": 13,
+     "flat": 1,
+     "monotone": 21,
+     "n": 21
+    }
+   },
+   "verdict_changes": [],
+   "non_monotone": []
+  },
+  {
+   "variable": "B4 weight 1.0 -> 1.1 on slope (x426 B1)",
+   "levels": [
+    "m1.0",
+    "m1.1"
+   ],
+   "n_groups": 21,
+   "metrics": {
+    "rank": {
+     "up": 13,
+     "down": 0,
+     "flat": 8,
+     "monotone": 21,
+     "n": 21
+    },
+    "ready_s": {
+     "up": 12,
+     "down": 1,
+     "flat": 2,
+     "monotone": 15,
+     "n": 15
+    },
+    "min_force_kN": {
+     "up": 17,
+     "down": 0,
+     "flat": 0,
+     "monotone": 17,
+     "n": 17
+    },
+    "max_stroke_mm": {
+     "up": 15,
+     "down": 4,
+     "flat": 2,
+     "monotone": 21,
+     "n": 21
+    },
+    "gap_ready_mm": {
+     "up": 0,
+     "down": 15,
+     "flat": 0,
+     "monotone": 15,
+     "n": 15
+    }
+   },
+   "verdict_changes": [
+    {
+     "group": "H3|J1|B|top|edge_nd@k0.5",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H3|J1|B|top|edge_nd@k0.75",
+     "verdicts": [
+      "pass",
+      "stroke_limited_fail"
+     ]
+    },
+    {
+     "group": "H3|J1|B|top|nose_down@k0.5",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H3|J1|B|top|nose_down@k0.75",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H3|J1|B|top|roll_pos@k0.5",
+     "verdicts": [
+      "pass",
+      "stroke_limited_fail"
+     ]
+    },
+    {
+     "group": "H3|J1|B|top|roll_pos@k0.75",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H3|J2|B|top|edge_nd@k0.5",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H3|J2|B|top|edge_nd@k0.75",
+     "verdicts": [
+      "pass",
+      "stroke_limited_fail"
+     ]
+    },
+    {
+     "group": "H3|J2|B|top|nose_down@k0.75",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H3|J2|B|top|roll_pos@k0.75",
+     "verdicts": [
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H3|S1|B|top|edge_nd@k0.5",
+     "verdicts": [
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H3|S1|B|top|edge_nd@k0.75",
+     "verdicts": [
+      "stroke_limited_pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "H3|S1|B|top|roll_pos@k0.75",
+     "verdicts": [
+      "stroke_limited_pass",
+      "fail"
+     ]
+    }
+   ],
+   "non_monotone": []
+  },
+  {
+   "variable": "B4 weight m1.0 -> m1.1 -> m1.2 (h6 flat)",
+   "levels": [
+    "m1.0",
+    "m1.1",
+    "m1.2"
+   ],
+   "n_groups": 8,
+   "metrics": {
+    "rank": {
+     "up": 8,
+     "down": 0,
+     "flat": 0,
+     "monotone": 8,
+     "n": 8
+    },
+    "ready_s": {
+     "up": 2,
+     "down": 0,
+     "flat": 0,
+     "monotone": 2,
+     "n": 2
+    },
+    "min_force_kN": {
+     "up": 2,
+     "down": 6,
+     "flat": 0,
+     "monotone": 2,
+     "n": 8
+    },
+    "max_stroke_mm": {
+     "up": 8,
+     "down": 0,
+     "flat": 0,
+     "monotone": 2,
+     "n": 8
+    },
+    "gap_ready_mm": {
+     "up": 1,
+     "down": 1,
+     "flat": 0,
+     "monotone": 1,
+     "n": 2
+    }
+   },
+   "verdict_changes": [
+    {
+     "group": "J1|A|bottom|flat",
+     "verdicts": [
+      "pass",
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J1|A|top|flat",
+     "verdicts": [
+      "pass",
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J1|B|bottom|flat",
+     "verdicts": [
+      "pass",
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J1|B|bottom|flat|Fs0",
+     "verdicts": [
+      "pass",
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J1|B|middle|flat",
+     "verdicts": [
+      "pass",
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J1|B|middle|flat|Fs0",
+     "verdicts": [
+      "pass",
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J1|B|top|flat",
+     "verdicts": [
+      "pass",
+      "pass",
+      "fail"
+     ]
+    },
+    {
+     "group": "J1|B|top|flat|Fs0",
+     "verdicts": [
+      "pass",
+      "pass",
+      "fail"
+     ]
+    }
+   ],
+   "non_monotone": [
+    {
+     "group": "J1|A|top|flat",
+     "metric": "gap_ready_mm",
+     "seq": [
+      41.49,
+      36.7,
+      76.07
+     ]
+    },
+    {
+     "group": "J1|B|bottom|flat",
+     "metric": "min_force_kN",
+     "seq": [
+      69.54,
+      76.48,
+      38.18
+     ]
+    },
+    {
+     "group": "J1|B|bottom|flat",
+     "metric": "max_stroke_mm",
+     "seq": [
+      472.05,
+      567.32,
+      545.93
+     ]
+    },
+    {
+     "group": "J1|B|bottom|flat|Fs0",
+     "metric": "min_force_kN",
+     "seq": [
+      69.49,
+      76.49,
+      34.96
+     ]
+    },
+    {
+     "group": "J1|B|bottom|flat|Fs0",
+     "metric": "max_stroke_mm",
+     "seq": [
+      471.93,
+      567.1,
+      548.61
+     ]
+    },
+    {
+     "group": "J1|B|middle|flat",
+     "metric": "min_force_kN",
+     "seq": [
+      69.39,
+      75.98,
+      39.54
+     ]
+    },
+    {
+     "group": "J1|B|middle|flat",
+     "metric": "max_stroke_mm",
+     "seq": [
+      472.4,
+      561.97,
+      547.65
+     ]
+    },
+    {
+     "group": "J1|B|middle|flat|Fs0",
+     "metric": "min_force_kN",
+     "seq": [
+      69.31,
+      76.04,
+      39.19
+     ]
+    },
+    {
+     "group": "J1|B|middle|flat|Fs0",
+     "metric": "max_stroke_mm",
+     "seq": [
+      472.74,
+      563.24,
+      547.6
+     ]
+    },
+    {
+     "group": "J1|B|top|flat",
+     "metric": "min_force_kN",
+     "seq": [
+      68.54,
+      75.37,
+      39.92
+     ]
+    },
+    {
+     "group": "J1|B|top|flat",
+     "metric": "max_stroke_mm",
+     "seq": [
+      473.53,
+      567.16,
+      547.24
+     ]
+    },
+    {
+     "group": "J1|B|top|flat|Fs0",
+     "metric": "min_force_kN",
+     "seq": [
+      69.16,
+      75.4,
+      39.28
+     ]
+    },
+    {
+     "group": "J1|B|top|flat|Fs0",
+     "metric": "max_stroke_mm",
+     "seq": [
+      473.35,
+      566.79,
+      548.23
+     ]
+    }
+   ]
+  },
+  {
+   "variable": "A3 bump (start gap 110 -> 20 mm, x426 D)",
+   "levels": [
+    "0",
+    "g110",
+    "g55",
+    "g20"
+   ],
+   "n_groups": 6,
+   "metrics": {
+    "rank": {
+     "up": 0,
+     "down": 0,
+     "flat": 6,
+     "monotone": 6,
+     "n": 6
+    },
+    "ready_s": {
+     "up": 4,
+     "down": 2,
+     "flat": 0,
+     "monotone": 5,
+     "n": 6
+    },
+    "min_force_kN": {
+     "up": 1,
+     "down": 3,
+     "flat": 2,
+     "monotone": 4,
+     "n": 6
+    },
+    "max_stroke_mm": {
+     "up": 4,
+     "down": 2,
+     "flat": 0,
+     "monotone": 4,
+     "n": 6
+    },
+    "gap_ready_mm": {
+     "up": 4,
+     "down": 2,
+     "flat": 0,
+     "monotone": 3,
+     "n": 6
+    }
+   },
+   "verdict_changes": [],
+   "non_monotone": [
+    {
+     "group": "G1|FL|g",
+     "metric": "min_force_kN",
+     "seq": [
+      62.79,
+      62.52,
+      62.92,
+      62.47
+     ]
+    },
+    {
+     "group": "G1|RR|g",
+     "metric": "min_force_kN",
+     "seq": [
+      62.79,
+      62.81,
+      61.98,
+      62.8
+     ]
+    },
+    {
+     "group": "G1|RR|g",
+     "metric": "max_stroke_mm",
+     "seq": [
+      407.2,
+      426.99,
+      426.03,
+      427.04
+     ]
+    },
+    {
+     "group": "G1|RR|g",
+     "metric": "gap_ready_mm",
+     "seq": [
+      43.4,
+      62.62,
+      61.81,
+      62.67
+     ]
+    },
+    {
+     "group": "J2|FL|g",
+     "metric": "ready_s",
+     "seq": [
+      67.2,
+      64.5,
+      65.0,
+      65.4
+     ]
+    },
+    {
+     "group": "J2|FL|g",
+     "metric": "gap_ready_mm",
+     "seq": [
+      32.92,
+      29.63,
+      29.79,
+      30.84
+     ]
+    },
+    {
+     "group": "rigid|FL|g",
+     "metric": "max_stroke_mm",
+     "seq": [
+      407.56,
+      416.54,
+      417.16,
+      416.19
+     ]
+    },
+    {
+     "group": "rigid|FL|g",
+     "metric": "gap_ready_mm",
+     "seq": [
+      49.32,
+      58.55,
+      59.18,
+      58.23
+     ]
+    }
+   ]
+  },
+  {
+   "variable": "A3 dip (60 -> 150 mm, x426 D)",
+   "levels": [
+    "0",
+    "d60",
+    "d150"
+   ],
+   "n_groups": 6,
+   "metrics": {
+    "rank": {
+     "up": 0,
+     "down": 0,
+     "flat": 6,
+     "monotone": 6,
+     "n": 6
+    },
+    "ready_s": {
+     "up": 6,
+     "down": 0,
+     "flat": 0,
+     "monotone": 6,
+     "n": 6
+    },
+    "min_force_kN": {
+     "up": 1,
+     "down": 2,
+     "flat": 3,
+     "monotone": 5,
+     "n": 6
+    },
+    "max_stroke_mm": {
+     "up": 6,
+     "down": 0,
+     "flat": 0,
+     "monotone": 6,
+     "n": 6
+    },
+    "gap_ready_mm": {
+     "up": 5,
+     "down": 1,
+     "flat": 0,
+     "monotone": 4,
+     "n": 6
+    }
+   },
+   "verdict_changes": [],
+   "non_monotone": [
+    {
+     "group": "J2|FL|d",
+     "metric": "gap_ready_mm",
+     "seq": [
+      32.92,
+      34.29,
+      33.72
+     ]
+    },
+    {
+     "group": "rigid|FL|d",
+     "metric": "min_force_kN",
+     "seq": [
+      54.69,
+      55.3,
+      51.32
+     ]
+    },
+    {
+     "group": "rigid|RR|d",
+     "metric": "gap_ready_mm",
+     "seq": [
+      49.32,
+      61.85,
+      55.55
+     ]
+    }
+   ]
+  },
+  {
+   "variable": "B3 pad B -> A on soft patch (x426 C vs g6)",
+   "levels": [
+    "B",
+    "A"
+   ],
+   "n_groups": 17,
+   "metrics": {
+    "rank": {
+     "up": 0,
+     "down": 1,
+     "flat": 16,
+     "monotone": 17,
+     "n": 17
+    },
+    "ready_s": {
+     "up": 4,
+     "down": 9,
+     "flat": 4,
+     "monotone": 17,
+     "n": 17
+    },
+    "min_force_kN": {
+     "up": 6,
+     "down": 7,
+     "flat": 4,
+     "monotone": 17,
+     "n": 17
+    },
+    "max_stroke_mm": {
+     "up": 3,
+     "down": 10,
+     "flat": 4,
+     "monotone": 17,
+     "n": 17
+    },
+    "gap_ready_mm": {
+     "up": 4,
+     "down": 9,
+     "flat": 4,
+     "monotone": 17,
+     "n": 17
+    }
+   },
+   "verdict_changes": [
+    {
+     "group": "g6|G1+S1@RR|top|Fs4",
+     "verdicts": [
+      "fail",
+      "pass"
+     ]
+    }
+   ],
+   "non_monotone": []
+  }
+ ]
+}

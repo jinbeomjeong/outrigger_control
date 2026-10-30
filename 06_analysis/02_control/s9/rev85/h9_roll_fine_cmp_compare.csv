@@ -1,0 +1,37 @@
+suite,id,candidate,verdict_before,verdict_after,verdict_changed,hash_same,d_ready_s,d_min_force_kN,d_att_end_deg,false_loc_before,false_loc_after,ready_recontacts_before,ready_recontacts_after,ready_crawler_max_kN_after,final_phase_after,fix_events_after,acted,acted_parts,safe_stop_after,a3_pass,a3_reasons
+h9,H9|J1|B|top|roll_pos@k0.6,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|B|top|roll_pos@k0.65,P36sa,fail,fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|B|top|roll_pos@k0.7,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|B|top|roll_pos@k0.75,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|B|top|roll_pos@k0.8,P36sa,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.187,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+h9,H9|J1|B|top|roll_pos@k0.875,P36sa,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.196,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+h9,H9|J1|B|top|roll_neg@k0.6,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.1;reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|B|top|roll_neg@k0.65,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|B|top|roll_neg@k0.7,P36sa,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,-0.01,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.1;FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;new P3-2 violation;no READY
+h9,H9|J1|B|top|roll_neg@k0.75,P36sa,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,-0.023,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.1;FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;new P3-2 violation;no READY
+h9,H9|J1|B|top|roll_neg@k0.8,P36sa,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.404,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+h9,H9|J1|B|top|roll_neg@k0.875,P36sa,fail,stroke_limited_stop,True,False,,0.0,0.425,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,True,
+h9,H9|J1|A|top|roll_pos@k0.6,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|A|top|roll_pos@k0.65,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|A|top|roll_pos@k0.7,P36sa,pass,pass,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|A|top|roll_pos@k0.75,P36sa,pass,pass,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|A|top|roll_pos@k0.8,P36sa,pass,pass,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|A|top|roll_pos@k0.875,P36sa,pass,pass,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|A|top|roll_neg@k0.6,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|A|top|roll_neg@k0.65,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|A|top|roll_neg@k0.7,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|A|top|roll_neg@k0.75,P36sa,pass,pass,False,True,0.0,0.0,0.0,1,1,0,0,0.0,probe,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|A|top|roll_neg@k0.8,P36sa,pass,pass,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J1|A|top|roll_neg@k0.875,P36sa,pass,pass,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h9,H9|J2|B|top|roll_pos@k0.6,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.5;INFO_LOC_REVOKED:2.4;reanchor_skipped:disabled,False,,False,True,
+h9,H9|J2|B|top|roll_pos@k0.65,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.2;INFO_LOC_REVOKED:2.4;reanchor_skipped:disabled,False,,False,True,
+h9,H9|J2|B|top|roll_pos@k0.7,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.7;reanchor_skipped:disabled,False,,False,True,
+h9,H9|J2|B|top|roll_pos@k0.75,P36sa,stroke_limited_pass,stroke_limited_stop,True,False,,4.246,0.701,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.6;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+h9,H9|J2|B|top|roll_pos@k0.8,P36sa,stroke_limited_pass,stroke_limited_stop,True,False,,5.284,0.559,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.5;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+h9,H9|J2|B|top|roll_pos@k0.875,P36sa,stroke_limited_fail,fail,True,False,,0.0,0.253,1,1,1,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,False,False,no READY
+h9,H9|J2|B|top|roll_neg@k0.6,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,INFO_LOC_REVOKED:2.5;reanchor_skipped:disabled,False,,False,True,
+h9,H9|J2|B|top|roll_neg@k0.65,P36sa,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.6;reanchor_skipped:disabled,False,,False,True,
+h9,H9|J2|B|top|roll_neg@k0.7,P36sa,stroke_limited_pass,stroke_limited_stop,True,False,,3.06,0.367,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.5;FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+h9,H9|J2|B|top|roll_neg@k0.75,P36sa,stroke_limited_pass,stroke_limited_stop,True,False,,3.538,0.262,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.8;FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+h9,H9|J2|B|top|roll_neg@k0.8,P36sa,stroke_limited_pass,stroke_limited_stop,True,False,,3.753,0.084,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.7;FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+h9,H9|J2|B|top|roll_neg@k0.875,P36sa,fail,fail,False,False,,30.09,-0.167,1,1,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,True,

@@ -49,13 +49,16 @@ Run (dynamics-dev, MKL_THREADING_LAYER=TBB):
   python -I r67_g1_screen.py <project_root> <out_json> [workers]
 Env: R67_MODE = screen | ps7 | all (default all); R67_SLICE = "a:b" (fractions of the sorted job list, for a P / E
 split into two processes); R67_AFFINITY = hex mask set on the parent before the pool (inherited by the workers);
-R67_OFFSETS = comma list (default 0,0.05); R67_FILTER = substring list of job keys. Deterministic.
+R67_OFFSETS = comma list (default 0,0.05); R67_FILTER = substring list of job keys; R67_CANDIDATE = wrapper candidate
+(s9_slope_fix_candidates tokens, e.g. P36s+P37t+R4c30+P38z; spec 427.11 / 429.5). Every screen run stores commands_sha256
+(prefix + branch commands). Deterministic.
 """
 from __future__ import annotations
 
 import copy
 import ctypes
 import dataclasses
+import hashlib
 import json
 import os
 import sys
@@ -94,6 +97,8 @@ TIMINGS = ("ready", "level")
 PS7 = {"ref": (None, 0.0), "PS7a_RR": (3, 2.0), "PS7a_FL": (0, 2.0), "PS7b_RR": (3, -1.5), "PS7c_RR": (3, -2.7)}
 PS7_SETTLE_S = 20.0
 F_MIN_N = 9414.6
+CANDIDATE_ENV = "R67_CANDIDATE"
+"""Spec 427.11 / 429.5: s9_slope_fix_candidates candidate name (unset = the project C2)."""
 
 
 def set_affinity_from_env() -> None:
@@ -184,8 +189,10 @@ def step_period(cl, Meas, plant, ctrl, cmd, valve, ha, floor_fn=None, rec=None):
     return np.array(ctrl.update(m).leg_speed_m_s)
 
 
-def run_base(cl, c2, Meas, plant, ctrl, stop_t=None, rec=None, crawler=None, log=None):
-    """Run from the start; returns the timeline and the state at ``stop_t`` (or READY + 5 s)."""
+def run_base(cl, c2, Meas, plant, ctrl, stop_t=None, rec=None, crawler=None, log=None, hasher=None):
+    """Run from the start; returns the timeline and the state at ``stop_t`` (or READY + 5 s).
+
+    ``hasher`` (hashlib object, optional): updated with every command (spec 427.11 hash record)."""
     ha = ctrl.geometry.head_area_m2
     cmd, valve = np.zeros(4), np.zeros(4)
     tl, last = [], None
@@ -199,6 +206,8 @@ def run_base(cl, c2, Meas, plant, ctrl, stop_t=None, rec=None, crawler=None, log
         if stop_t is not None and plant.t >= stop_t - 1e-9:
             break
         cmd = step_period(cl, Meas, plant, ctrl, cmd, valve, ha, hook if crawler is not None else None, rec)
+        if hasher is not None:
+            hasher.update(cmd.tobytes())
         ph = str(ctrl.phase)
         if log is not None:
             log.append((float(plant.t), ph, np.asarray(plant.sref, float).copy(), cmd.copy(),
@@ -222,7 +231,8 @@ def run_base(cl, c2, Meas, plant, ctrl, stop_t=None, rec=None, crawler=None, log
 
 # --- branch --------------------------------------------------------------------------------------------------------
 
-def branch(cl, Meas, plant, ctrl, cmd, valve, ev, leg, t_ev):
+def branch(cl, Meas, plant, ctrl, cmd, valve, ev, leg, t_ev, hasher=None):
+    """One event branch; ``hasher`` (optional) is updated with every command."""
     ha = ctrl.geometry.head_area_m2
     rec, phases, crawler = [], [], []
     n0 = len(ctrl.events)
@@ -239,6 +249,8 @@ def branch(cl, Meas, plant, ctrl, cmd, valve, ev, leg, t_ev):
     left_ready = False
     while plant.t < t_ev + MAX_AFTER_S - 1e-9:
         cmd = step_period(cl, Meas, plant, ctrl, cmd, valve, ha, floor_fn, rec)
+        if hasher is not None:
+            hasher.update(cmd.tobytes())
         ph = str(ctrl.phase)
         phases.append((round(plant.t - t_ev, 3), ph))
         if plant.t > t_ev:
@@ -378,7 +390,9 @@ def screen_job(key):
         res["error"] = "base without LOC / DONE / READY"
         return res
     t_target = (tl["t_ready"] + 5.0) if timing == "ready" else tl["t_loc"] + 0.5 * (tl["t_done"] - tl["t_loc"])
-    st = run_base(cl, c2, Meas, plant, ctrl, stop_t=t_target - PRE_S)
+    prefix_hasher = hashlib.sha256()
+    st = run_base(cl, c2, Meas, plant, ctrl, stop_t=t_target - PRE_S, hasher=prefix_hasher)
+    res["prefix_commands_sha256"] = prefix_hasher.hexdigest()
     t_b = plant.t
     res["branch_t_s"] = round(t_b, 3)
     res["branch_phase"] = str(ctrl.phase)
@@ -388,12 +402,16 @@ def screen_job(key):
             pl, ct = copy.deepcopy(plant), copy.deepcopy(ctrl)
             t_ev = t_b + PRE_S + off
             att0 = np.degrees(pl.attitude())
+            run_hasher = prefix_hasher.copy()  # prefix + branch commands
             rec, phases, events, crawler, t_rb, ct = branch(cl, Meas, pl, ct, st["cmd"].copy(), st["valve"].copy(),
-                                                            ev, leg, t_ev)
+                                                            ev, leg, t_ev, hasher=run_hasher)
             ph_at_ev = next((p for tt, p in phases if tt >= 0.0), None)
             j = judge_event(rec, phases, events, crawler, t_ev, t_rb, ev, leg, ct, att0)
             j.update({"event": ev_id, "offset_s": off, "phase_at_event": ph_at_ev, "t_ev_s": round(t_ev, 3),
-                      "fast": is_fast(ev)})
+                      "fast": is_fast(ev), "commands_sha256": run_hasher.hexdigest()})
+            candidate_record = _candidate_record(ct)
+            if candidate_record is not None:  # spec 427.11: only with R67_CANDIDATE
+                j["candidate_record"] = candidate_record
             res["runs"].append(j)
     res["wall_s"] = round(time.perf_counter() - t0, 1)
     return res
@@ -460,9 +478,40 @@ def ps7_job(key):
     return res
 
 
+def _candidate_name():
+    name = os.environ.get(CANDIDATE_ENV, "")
+    return None if name in ("", "current") else name
+
+
+def _candidate_record(ctrl):
+    if _candidate_name() is None:
+        return None
+    import s9_slope_fix_candidates as fx
+    return fx.screen_candidate_record(ctrl)
+
+
+def _install_candidate():
+    """Spec 427.11 / 429.5: the ``R67_CANDIDATE`` wrapper candidate in place of the project C2 (every
+    controller is built through ``c2.C2Controller``); returns the restore function. Unset / "current": nothing."""
+    name = _candidate_name()
+    if name is None:
+        return lambda: None
+    s9_dir = ROOT / "04_scripts" / "03_control" / "s9"
+    if str(s9_dir) not in sys.path:
+        sys.path.insert(0, str(s9_dir))
+    import s9_slope_fix_candidates as fx
+    return fx.install_screen_candidate(name)
+
+
 def run_job(key):
     try:
-        return screen_job(key) if key.startswith("screen|") else ps7_job(key)
+        restore = _install_candidate()
+        try:
+            out = screen_job(key) if key.startswith("screen|") else ps7_job(key)
+        finally:
+            restore()
+        out["candidate"] = _candidate_name() or "current"
+        return out
     except Exception as exc:  # keep the batch going; the error is reported
         import traceback
         return {"key": key, "error": f"{type(exc).__name__}: {exc}", "trace": traceback.format_exc()[-2000:]}
@@ -500,7 +549,8 @@ def main():
                                         "spec": "rev. 67 (G1 / G2 / G7 reduced screen)",
                                         "wall_s": round(time.perf_counter() - t0, 1), "workers": workers,
                                         "affinity": os.environ.get("R67_AFFINITY"), "slice": sl,
-                                        "offsets_s": os.environ.get("R67_OFFSETS", "0,0.05"), "n_jobs": len(jobs)},
+                                        "offsets_s": os.environ.get("R67_OFFSETS", "0,0.05"), "n_jobs": len(jobs),
+                                        "candidate": _candidate_name() or "current"},
                                "results": res}, indent=1, default=float), encoding="utf-8")
     print("done", round(time.perf_counter() - t0, 1), "s ->", out)
 

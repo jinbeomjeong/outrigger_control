@@ -22,9 +22,12 @@ Two input formats:
                  baseline settle v2 fails      -> settle_check_fail                  (direct)
                  record not settle_check_fail  -> stored verdict                     (direct)
                  command hash == baseline hash -> baseline ``verdict_rows``          (baseline_rows)
-                 otherwise rebuilt from ``failed_rows`` / ``warnings``                (rebuilt):
-                   FAULT -> fail, no failed row -> pass, guard warning with only P3-5 / SL-1
-                   failed -> stroke_limited_pass, other guard cases -> stroke_limited_fail
+                 otherwise rebuilt from ``soil_stop`` / ``failed_rows`` / ``warnings`` (rebuilt),
+                   in the ``s9_soil_slope.classify`` order:
+                   soil-guard stop -> stroke_limited_stop (or fail), stroke FAULT -> fail,
+                   guard warning -> stroke_limited_pass when no FAULT and P3-1 / P3-3 / P3-4
+                   pass (also with no failed row, spec 398.1 SL-1; lifted legs are not
+                   recorded) else stroke_limited_fail, then no failed row -> pass, else fail
                Records whose id is not in the baseline keep their verdict (direct). Each output
                record carries ``verdict``, ``verdict_before_settle_v2``, ``passed`` and
                ``settle_v2_source``; the input ``summary`` / ``comparison`` blocks (pre-v2
@@ -67,16 +70,15 @@ SOURCE_DIRECT = "direct"
 SOURCE_BASELINE_ROWS = "baseline_rows"
 SOURCE_REBUILT = "rebuilt"
 PASSED_VERDICTS = (ss.VERDICT_PASS, ss.VERDICT_STROKE_LIMITED_PASS)
-FAULT_READY_ROW = "fault_ready"
-FAULT_WARNING_PREFIX = "FAULT_"
-GUARD_WARNING_PREFIX = "WARN_LIFT_STROKE_LIMITED"
-STROKE_LIMITED_RELAXED_ROWS = frozenset({"P3-5", "SL-1"})
+FAULT_WARNING_PREFIX = "FAULT"  # s9_soil_slope._has_fault: any event named FAULT*
 RECORDS_RULE = (
     "settle v2 from the baseline (re-judged results file) per case id. Baseline settle v2 fail -> "
     "settle_check_fail (direct); record not settle_check_fail -> stored verdict (direct); hash == "
-    "baseline hash -> baseline verdict_rows (baseline_rows); else rebuilt from failed_rows + "
-    "warnings (FAULT -> fail, no failed rows -> pass, guard warning with only P3-5/SL-1 -> "
-    "stroke_limited_pass, other guard cases -> stroke_limited_fail)")
+    "baseline hash -> baseline verdict_rows (baseline_rows); else rebuilt from soil_stop + "
+    "failed_rows + warnings in s9_soil_slope.classify order (soil stop -> stroke_limited_stop / "
+    "fail, stroke FAULT -> fail, guard warning -> stroke_limited_pass when no FAULT and "
+    "P3-1/P3-3/P3-4 pass (lifted legs not recorded) else stroke_limited_fail, then no failed "
+    "rows -> pass, else fail)")
 
 
 def window_mean_penetration_mm(pen_inst_mm, q_inst_deg, q_mean_deg, pad_xy_m) -> list[float]:
@@ -139,25 +141,50 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def rebuild_row_verdict(record: dict) -> str:
-    """Row verdict of a ``records`` entry from its failed rows and warnings.
+def _has_warning(warnings: list[str], prefixes: str | tuple[str, ...]) -> bool:
+    return any(warning.startswith(prefixes) for warning in warnings)
 
-    Same order as ``s9_soil_slope.classify``: a FAULT fails, no failed row passes, and with the
-    stroke guard warning only P3-5 / SL-1 may fail for a stroke limited pass."""
-    failed_rows = set(record["failed_rows"])
+
+def _record_has_fault(record: dict) -> bool:
+    """``s9_soil_slope._has_fault`` on a record: FAULT final phase or any FAULT event.
+
+    The ``fault_ready`` row is not used here: it also fails on a run without READY."""
+    return (record.get("final_phase") in ss.FAULT_PHASES
+            or _has_warning(record["warnings"], FAULT_WARNING_PREFIX))
+
+
+def _is_record_stroke_limited_pass(record: dict) -> bool:
+    """``s9_soil_slope.is_stroke_limited_pass`` on a record.
+
+    The lifted-leg test reads the record's SL-1 ``lifted_legs`` (written by
+    ``s9_slope_fix_candidates`` since 2026-10-30). An older record without the key skips that
+    test, as before: there a guarded run with a lifted leg and P3-1 / P3-3 / P3-4 passing is a
+    stroke limited pass here and a stroke limited fail in ``classify``."""
+    failed_required_rows = set(record["failed_rows"]) & set(ss.STROKE_LIMITED_REQUIRED_ROWS)
+    has_lifted_leg = bool(record.get("lifted_legs"))
+    return not _record_has_fault(record) and not failed_required_rows and not has_lifted_leg
+
+
+def rebuild_row_verdict(record: dict) -> str:
+    """Row verdict of a ``records`` entry from its failed rows, warnings and soil stop.
+
+    Same order as ``s9_soil_slope.classify``: the soil-guard stop (spec 427.9) first, then a
+    stroke FAULT fails, then the stroke guard warning gives the stroke limited class (spec 398.1
+    SL-1: also with no failed row), and only then no failed row passes."""
+    soil_stop = record.get("soil_stop")
+    if soil_stop is not None:
+        return ss.VERDICT_STROKE_LIMITED_STOP if soil_stop["pass"] else ss.VERDICT_FAIL
     warnings = record["warnings"]
-    has_fault = FAULT_READY_ROW in failed_rows or any(
-        warning.startswith(FAULT_WARNING_PREFIX) for warning in warnings)
-    if has_fault:
+    if _has_warning(warnings, ss.STROKE_FAULT_EVENTS):
         return ss.VERDICT_FAIL
-    if not failed_rows:
-        return ss.VERDICT_PASS
-    has_guard_warning = any(warning.startswith(GUARD_WARNING_PREFIX) for warning in warnings)
-    if not has_guard_warning:
+    if _has_warning(warnings, ss.STROKE_GUARD_WARNING):
+        if _is_record_stroke_limited_pass(record):
+            return ss.VERDICT_STROKE_LIMITED_PASS
+        return ss.VERDICT_STROKE_LIMITED_FAIL
+    # without the guard every judged row counts; a FAULT already fails the fault_ready row
+    if record["failed_rows"] or _record_has_fault(record):
         return ss.VERDICT_FAIL
-    if failed_rows <= STROKE_LIMITED_RELAXED_ROWS:
-        return ss.VERDICT_STROKE_LIMITED_PASS
-    return ss.VERDICT_STROKE_LIMITED_FAIL
+    return ss.VERDICT_PASS
 
 
 def _is_baseline_settle_ok(baseline_result: dict) -> bool:

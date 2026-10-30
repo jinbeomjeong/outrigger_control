@@ -202,6 +202,7 @@ def test_t13_preset_values() -> None:
         hold_limit_s=3.0,
         shift_clearance_margin_m=0.005,
         name_stroke_end_fault=True,
+        soil_stop_scope="any_loc",  # P-S8-36 SGS stays off in the preset (test_c2_p36.py)
     )
     assert preset.fault_reground.stroke_end_entry
     assert preset.fault_reground.stroke_end_travel_m == 0.030

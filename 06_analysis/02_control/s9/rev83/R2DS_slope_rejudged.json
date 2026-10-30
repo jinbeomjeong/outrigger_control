@@ -114,7 +114,7 @@
    "baseline": "06_analysis\\02_control\\s9\\rev80\\s9_soil_slope_settle_rejudged.json",
    "baseline_sha256": "a4ce3f3de4fa9d73f80800526201e353983caba4ef0dfe6626a1eea182f94692",
    "check": "v2: window-mean pen (rotation-corrected), residual-aware attitude tolerance",
-   "rule": "settle v2 from the baseline (re-judged results file) per case id. Baseline settle v2 fail -> settle_check_fail (direct); record not settle_check_fail -> stored verdict (direct); hash == baseline hash -> baseline verdict_rows (baseline_rows); else rebuilt from failed_rows + warnings (FAULT -> fail, no failed rows -> pass, guard warning with only P3-5/SL-1 -> stroke_limited_pass, other guard cases -> stroke_limited_fail)"
+   "rule": "settle v2 from the baseline (re-judged results file) per case id. Baseline settle v2 fail -> settle_check_fail (direct); record not settle_check_fail -> stored verdict (direct); hash == baseline hash -> baseline verdict_rows (baseline_rows); else rebuilt from soil_stop + failed_rows + warnings in s9_soil_slope.classify order (soil stop -> stroke_limited_stop / fail, stroke FAULT -> fail, guard warning -> stroke_limited_pass when no FAULT and P3-1/P3-3/P3-4 pass (lifted legs not recorded) else stroke_limited_fail, then no failed rows -> pass, else fail)"
   }
  },
  "counts": {
@@ -126,8 +126,8 @@
    "stroke_limited_fail": 2
   },
   "after": {
-   "pass": 98,
-   "stroke_limited_pass": 39,
+   "pass": 94,
+   "stroke_limited_pass": 43,
    "fail": 38,
    "stroke_limited_fail": 2
   },
@@ -88466,7 +88466,7 @@
    "suite": "slope",
    "id": "H3|J2|A|top|nose_down@k0.875",
    "candidate": "current",
-   "verdict": "pass",
+   "verdict": "stroke_limited_pass",
    "passed": true,
    "failed_rows": [],
    "hash": "df96ee5910e85f26d331ae5cd795ef3555ac9c55bb102a63206a9b617b773ac0",
@@ -93627,7 +93627,7 @@
    "suite": "slope",
    "id": "H3|S1|B|top|nose_down@k0.75",
    "candidate": "current",
-   "verdict": "pass",
+   "verdict": "stroke_limited_pass",
    "passed": true,
    "failed_rows": [],
    "hash": "4c774d37bffe6d8af01eafb0e4fe6f92a4784b1124dea3533295b3e71d8ed256",
@@ -103794,7 +103794,7 @@
    "suite": "slope",
    "id": "H3|S1|A|top|nose_down@k0.75",
    "candidate": "current",
-   "verdict": "pass",
+   "verdict": "stroke_limited_pass",
    "passed": true,
    "failed_rows": [],
    "hash": "1ddcd572603a3b67bf75f1947502a39d24ad7d060b3630b4a17ed206c337f71e",
@@ -113832,7 +113832,7 @@
    "suite": "slope",
    "id": "H4|J2|B|top|nose_down",
    "candidate": "current",
-   "verdict": "pass",
+   "verdict": "stroke_limited_pass",
    "passed": true,
    "failed_rows": [],
    "hash": "c7f701e4762c7c3fbf20c022f37b347cd39102ab49c818f7d1986a23c77ce6d4",

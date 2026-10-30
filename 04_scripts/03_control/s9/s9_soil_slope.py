@@ -32,6 +32,9 @@ Case sets (177):
                     T-3' > 40 mm, T-4 > 1.0 deg, T-2' > 3.0 s FLAGs, per-leg contact / latch,
                     phase segments, true vs controller clearance at the end) and ``sample``
                     (reference "in", start-gap runs "out").
+  H9 (spec 430.2, only with --groups H9) roll boundary refinement: {J1 B, J1 A, J2 B} x
+                    {roll_pos, roll_neg} x k {0.6, 0.65, 0.7, 0.75, 0.8, 0.875}, top, F_s 4 = 36
+                    (H3 slope-ratio scheme, id ``H9|J1|B|top|roll_pos@k0.65``; not in k*).
 Judgement rows per run (spec 284 P3 rows with rev. 60 and the 377 demotion, plus SL / RA):
   P3-1 crawler 0 from READY to the run end, no re-contact after the first lift-off
   P3-2 LOC before the first DONE, t_LOC - t_off <= 2.9 s
@@ -48,7 +51,10 @@ Judgement rows per run (spec 284 P3 rows with rev. 60 and the 377 demotion, plus
        FLAG when the started leg keeps true F_cyl >= F_min up to LOC + 1 s and no FAULT (377)
   SL-1 stroke gate: FAULT_STROKE_END / FAULT_LIFT_STROKE_LIMIT 0, motor stroke <= 684.8 mm;
        WARN_LIFT_STROKE_LIMITED = class "stroke limited" (user decision, corrected: passes with
-       FAULT 0, no leg lift and P3-1, P3-3, P3-4 passed; only P3-5 is relaxed)
+       FAULT 0, no leg lift and P3-1, P3-3, P3-4 passed; only P3-5 is relaxed); a run stopped by
+       the soil guard (``FAULT_LIFT_STROKE_LIMIT:soil``, spec 427.9) is the class
+       ``stroke_limited_stop`` when the safe-stop conditions of ``soil_guard_stop_rule`` hold
+       (SL-1 ``soil_stop``), otherwise a fail
   SL-2 start condition R_c = |phi|/4.4 + |theta|/3.2 of the crawler settle attitude, FLAG > 1
   SL-3 clearance bias: c_min(t_P), b_k, anchor, true minus estimate after the LOC, under-lift
        FLAG (true < estimate - 20 mm)
@@ -121,6 +127,7 @@ if str(HERE) not in sys.path:  # -I drops the script folder; the shared judge ru
     sys.path.insert(0, str(HERE))
 
 import late_loc_rule  # noqa: E402
+import soil_guard_stop_rule  # noqa: E402
 
 DEFAULT_OUT = ROOT / "06_analysis" / "02_control" / "s9" / "rev78" / "s9_soil_slope.json"
 
@@ -165,6 +172,13 @@ boundaries of the r69 G8 grid: free-air windows 52 / 105 mm, R-2 40 mm)."""
 H8_SIZE = 33
 """3 soils x (1 reference without a start gap + 2 legs x 5 start gaps)."""
 H8_GROUP = "H8"
+H9_GROUP = "H9"
+H9_SOIL_PADS = (("J1", "B"), ("J1", "A"), ("J2", "B"))
+H9_DIRECTIONS = ("roll_pos", "roll_neg")
+H9_K = (0.6, 0.65, 0.7, 0.75, 0.8, 0.875)
+H9_SIZE = 36
+"""Spec 430.2 roll boundary refinement: 3 soil / pad x 2 roll directions x 6 k, top, F_s 4.
+k 0.75 / 0.875 roll_pos are the H3 slopes (command-hash check R9-1)."""
 TOUCH_FLAG_LIMITS = {"T3_mm": 40.0, "T4_deg": 1.0, "T2_s": 3.0}
 """Spec 426.6 TOUCH records (FLAG, r69 thresholds): stroke of leg k from its first contact to its
 latch, attitude change in TOUCH, latch delay after the first contact."""
@@ -228,6 +242,9 @@ VERDICT_STROKE_LIMITED_PASS = "stroke_limited_pass"
 VERDICT_STROKE_LIMITED_FAIL = "stroke_limited_fail"
 VERDICT_ERROR = "error"
 VERDICT_SETTLE_CHECK_FAIL = "settle_check_fail"
+VERDICT_STROKE_LIMITED_STOP = soil_guard_stop_rule.VERDICT_STROKE_LIMITED_STOP
+"""Spec 427.9: a soil-guard stop (``FAULT_LIFT_STROKE_LIMIT:soil``) that met the safe-stop
+conditions; neither pass nor fail (safe stop, target not reached)."""
 STROKE_LIMITED_REQUIRED_ROWS = ("P3-1", "P3-3", "P3-4")
 """Rows a "stroke limited" run must still pass (P3-5 is the relaxed one)."""
 RUT_DEFINITION = "all_nodes_floor_gap"
@@ -440,6 +457,20 @@ def _start_gap_cases() -> list[SlopeCase]:
     return cases
 
 
+def _roll_boundary_cases() -> list[SlopeCase]:
+    """Spec 430.2 (H9): the H3 slope-ratio scheme (``_scaled_slope``, id ``<direction>@k<k>``)
+    on the roll directions only, with a finer k grid."""
+    cases = []
+    for soil, pad in H9_SOIL_PADS:
+        for direction in H9_DIRECTIONS:
+            for k in H9_K:
+                roll, pitch = _scaled_slope(direction, k)
+                name = f"{direction}@k{k:g}"
+                cases.append(SlopeCase(H9_GROUP, soil, pad, LEVEL_TOP, name, roll, pitch,
+                                       direction=direction, k=k))
+    return cases
+
+
 def pad_start_gap_spec(start_gap) -> dict:
     """``s9_soil_closed_loop`` key ``pad_start_gap`` of a case start gap (leg, kind, mm)."""
     leg, kind, value_mm = start_gap
@@ -458,6 +489,7 @@ def build_cases(groups=tuple(GROUP_SIZES)) -> list[SlopeCase]:
         "H5": lambda: _grid_cases("H5", (RIGID,), ("B",), LEVEL_TOP),
         "H6": _mass_scale_cases,
         H8_GROUP: _start_gap_cases,
+        H9_GROUP: _roll_boundary_cases,
     }
     unknown = [g for g in groups if g not in builders]
     if unknown:
@@ -727,6 +759,17 @@ def _min_true_force_kN(rec: dict) -> float | None:
     return float(np.asarray(rec["log"]["fmin_kN"], float)[level].min())
 
 
+def _soil_stop_state(rec: dict) -> dict | None:
+    """Spec 427.12.1 records at the soil-guard stop (None without the stop)."""
+    stop_s = soil_guard_stop_rule.soil_stop_time_s(rec["events"])
+    if stop_s is None:
+        return None
+    log = rec.get("log") or {}
+    leg_force_rows_kN = list(zip(log.get("t_s") or [], log.get("fmin_kN") or [], strict=True))
+    return soil_guard_stop_rule.stop_state_record(
+        stop_s, rec.get("crawler_series"), rec.get("weight_N"), leg_force_rows_kN)
+
+
 def stroke_row(rec: dict) -> dict:
     """SL-1 stroke gate and the "stroke limited" class (user decision 2026-10-28)."""
     run, events, case = rec["run"], rec["events"], rec["case"]
@@ -742,6 +785,11 @@ def stroke_row(rec: dict) -> dict:
     prediction = _k_prediction_difference(case)
     if prediction is not None:
         row["k_minus_prediction"] = prediction
+    soil_stop = soil_guard_stop_rule.stroke_limited_stop_row(
+        [name for _, name in events], lifted, run.get("min_true_Fcyl_after_off_kN"),
+        rec["F_min_kN"], rec.get("moving_pressure"), _soil_stop_state(rec))
+    if soil_stop is not None:  # spec 427.9 (runs without the stop keep their row)
+        row["soil_stop"] = soil_stop
     return row
 
 
@@ -919,7 +967,11 @@ def is_stroke_limited_pass(p3: dict, stroke: dict) -> bool:
 
 
 def classify(p3: dict, stroke: dict, reanchor: dict | None) -> str:
-    """Run verdict: stroke-limited class first (user decision), then every judged row."""
+    """Run verdict: the spec 427.9 soil-guard stop first, then the stroke-limited class (user
+    decision), then every judged row."""
+    soil_stop = stroke.get("soil_stop")
+    if soil_stop is not None:
+        return VERDICT_STROKE_LIMITED_STOP if soil_stop["pass"] else VERDICT_FAIL
     if stroke["stroke_faults"]:
         return VERDICT_FAIL
     if stroke["guard_warning"]:
@@ -1409,6 +1461,8 @@ def _install_patches():
     sl.make_controller = _make_project_controller
     sl.control_period = _control_period_logged
     late_loc_rule.install_crawler_recorder(sl._imports()[0], lambda: _CAP.get("crawler_series"))
+    soil_guard_stop_rule.install_moving_pressure_recorder(sl._imports()[0],
+                                                          lambda: _CAP.get("moving_pressure"))
     return sl
 
 
@@ -1472,6 +1526,8 @@ def collect_record(case: dict, out: dict, sl, cl) -> dict:
         "weight_N": float(plant.m * plant.g) if hasattr(plant, "m") else None,
         "controller_weight_ref_N": float(ctrl._reference_weight_N()),
         "crawler_series": _CAP.get("crawler_series") or [],
+        "moving_pressure": (None if _CAP.get("moving_pressure") is None
+                            else _CAP["moving_pressure"].to_dict()),  # spec 427.9
         "rod_weight_kN": (np.asarray(plant.Wr, float) / 1e3).tolist(),
         "run": {key: out.get(key) for key in RUN_KEYS},
         "events": [(float(e.t_s), e.name) for e in ctrl.events],
@@ -1561,6 +1617,7 @@ def run_one(case: dict) -> dict:
         cl = sl._imports()[0]
         _CAP.clear()
         _CAP["crawler_series"] = []  # 1 ms true crawler force (spec 419.8 condition 3)
+        _CAP["moving_pressure"] = soil_guard_stop_rule.MovingPressureRecord()  # spec 427.9
         settle = case.get("settle")
         _CAP["settle"] = SettleCorrection(**settle) if settle else None
         table_row = case.get("settle_table")

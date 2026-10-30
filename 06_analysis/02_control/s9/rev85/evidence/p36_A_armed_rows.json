@@ -1,0 +1,2996 @@
+[
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J1|B|top|nose_down",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9735,
+  "mean_u_min": 0.9505,
+  "minima": {
+   "level": {
+    "rho_c": 0.9664,
+    "rho_u": 0.9475,
+    "mean_c": 0.9735,
+    "mean_u": 0.9505
+   },
+   "done": {
+    "rho_c": 0.9825,
+    "rho_u": 0.9529,
+    "mean_c": 0.9825,
+    "mean_u": 0.9569
+   },
+   "ready": {
+    "rho_c": 0.9899,
+    "rho_u": 0.9901,
+    "mean_c": 1.0008,
+    "mean_u": 1.0007
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J1|B|top|nose_up",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9743,
+  "mean_u_min": 0.9454,
+  "minima": {
+   "level": {
+    "rho_c": 0.9721,
+    "rho_u": 0.9433,
+    "mean_c": 0.9743,
+    "mean_u": 0.9454
+   },
+   "done": {
+    "rho_c": 0.976,
+    "rho_u": 0.9471,
+    "mean_c": 0.976,
+    "mean_u": 0.9471
+   },
+   "ready": {
+    "rho_c": 0.9924,
+    "rho_u": 0.9925,
+    "mean_c": null,
+    "mean_u": null
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J1|B|top|roll_pos",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": true,
+  "actions": [
+   {
+    "t_s": 37.9,
+    "ratio": 0.9419,
+    "branch": "fault",
+    "max_stroke_mm": 680.0
+   }
+  ],
+  "mean_c_min": 0.9419,
+  "mean_u_min": 0.9137,
+  "minima": {
+   "level": {
+    "rho_c": 0.9069,
+    "rho_u": 0.8794,
+    "mean_c": 0.9419,
+    "mean_u": 0.9137
+   }
+  },
+  "hash_same": false
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J1|B|top|roll_neg",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9968,
+  "mean_u_min": 0.9969,
+  "minima": {
+   "level": {
+    "rho_c": 0.9968,
+    "rho_u": 0.9969,
+    "mean_c": 0.9968,
+    "mean_u": 0.9969
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J1|B|top|edge_nu",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9685,
+  "mean_u_min": 0.93,
+  "minima": {
+   "level": {
+    "rho_c": 0.9684,
+    "rho_u": 0.9299,
+    "mean_c": 0.9685,
+    "mean_u": 0.93
+   },
+   "done": {
+    "rho_c": 0.9685,
+    "rho_u": 0.93,
+    "mean_c": 0.9685,
+    "mean_u": 0.93
+   },
+   "ready": {
+    "rho_c": 0.9885,
+    "rho_u": 0.9887,
+    "mean_c": 1.002,
+    "mean_u": 1.0019
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J1|B|top|rpB",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9956,
+  "mean_u_min": 0.9658,
+  "minima": {
+   "level": {
+    "rho_c": 0.9953,
+    "rho_u": 0.9655,
+    "mean_c": 0.9956,
+    "mean_u": 0.9658
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J1|A|top|nose_down",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 1.0182,
+  "mean_u_min": 0.9876,
+  "minima": {
+   "level": {
+    "rho_c": 1.0179,
+    "rho_u": 0.9873,
+    "mean_c": 1.0183,
+    "mean_u": 0.9877
+   },
+   "done": {
+    "rho_c": 1.0178,
+    "rho_u": 0.9872,
+    "mean_c": 1.0182,
+    "mean_u": 0.9876
+   },
+   "ready": {
+    "rho_c": 1.0179,
+    "rho_u": 1.0176,
+    "mean_c": 1.0332,
+    "mean_u": 1.0325
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J1|A|top|rpB",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.993,
+  "mean_u_min": 0.9634,
+  "minima": {
+   "level": {
+    "rho_c": 0.9914,
+    "rho_u": 0.9618,
+    "mean_c": 0.993,
+    "mean_u": 0.9634
+   },
+   "done": {
+    "rho_c": 0.9953,
+    "rho_u": 0.9656,
+    "mean_c": 0.9951,
+    "mean_u": 0.9655
+   },
+   "probe": {
+    "rho_c": 0.9953,
+    "rho_u": 0.9656,
+    "mean_c": 0.9952,
+    "mean_u": 0.9655
+   },
+   "ready": {
+    "rho_c": 1.0064,
+    "rho_u": 1.0062,
+    "mean_c": 1.0164,
+    "mean_u": 1.0161
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|B|top|nose_down",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9715,
+  "mean_u_min": 0.9505,
+  "minima": {
+   "level": {
+    "rho_c": 0.9678,
+    "rho_u": 0.9493,
+    "mean_c": 0.9715,
+    "mean_u": 0.9505
+   },
+   "done": {
+    "rho_c": 0.9865,
+    "rho_u": 0.9864,
+    "mean_c": 0.9865,
+    "mean_u": 0.9864
+   },
+   "ready": {
+    "rho_c": 0.9921,
+    "rho_u": 0.9923,
+    "mean_c": 1.0041,
+    "mean_u": 1.004
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|B|top|nose_up",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9744,
+  "mean_u_min": 0.9456,
+  "minima": {
+   "level": {
+    "rho_c": 0.9731,
+    "rho_u": 0.9443,
+    "mean_c": 0.9744,
+    "mean_u": 0.9456
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|B|top|roll_pos",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": true,
+  "actions": [
+   {
+    "t_s": 37.1,
+    "ratio": 0.9198,
+    "branch": "fault",
+    "max_stroke_mm": 680.0
+   }
+  ],
+  "mean_c_min": 0.9198,
+  "mean_u_min": 0.8945,
+  "minima": {
+   "level": {
+    "rho_c": 0.792,
+    "rho_u": 0.766,
+    "mean_c": 0.9198,
+    "mean_u": 0.8945
+   }
+  },
+  "hash_same": false
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|B|top|roll_neg",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9747,
+  "mean_u_min": 0.9752,
+  "minima": {
+   "level": {
+    "rho_c": 0.9741,
+    "rho_u": 0.9746,
+    "mean_c": 0.9747,
+    "mean_u": 0.9752
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|B|top|edge_nd",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.975,
+  "mean_u_min": 0.9511,
+  "minima": {
+   "level": {
+    "rho_c": 0.9671,
+    "rho_u": 0.9473,
+    "mean_c": 0.975,
+    "mean_u": 0.9511
+   },
+   "done": {
+    "rho_c": 0.9783,
+    "rho_u": 0.9787,
+    "mean_c": 0.9873,
+    "mean_u": 0.9787
+   },
+   "ready": {
+    "rho_c": 0.9903,
+    "rho_u": 0.9905,
+    "mean_c": 1.0018,
+    "mean_u": 1.0018
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|B|top|edge_nu",
+  "good_before": false,
+  "verdict_before": "stroke_limited_fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 34.7,
+  "crawler_after_kN": 0.0,
+  "acted": true,
+  "actions": [
+   {
+    "t_s": 49.7,
+    "ratio": 0.9475,
+    "branch": "fault",
+    "max_stroke_mm": 666.3
+   }
+  ],
+  "mean_c_min": 0.9475,
+  "mean_u_min": 0.9081,
+  "minima": {
+   "level": {
+    "rho_c": 0.9408,
+    "rho_u": 0.9015,
+    "mean_c": 0.9475,
+    "mean_u": 0.9081
+   }
+  },
+  "hash_same": false
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|B|top|rpB",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": true,
+  "actions": [
+   {
+    "t_s": 37.5,
+    "ratio": 0.9373,
+    "branch": "fault",
+    "max_stroke_mm": 680.0
+   }
+  ],
+  "mean_c_min": 0.9373,
+  "mean_u_min": 0.9128,
+  "minima": {
+   "level": {
+    "rho_c": 0.8701,
+    "rho_u": 0.8433,
+    "mean_c": 0.9373,
+    "mean_u": 0.9128
+   }
+  },
+  "hash_same": false
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|A|top|nose_down",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.976,
+  "mean_u_min": 0.9472,
+  "minima": {
+   "level": {
+    "rho_c": 0.973,
+    "rho_u": 0.9443,
+    "mean_c": 0.976,
+    "mean_u": 0.9472
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|A|top|roll_pos",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9701,
+  "mean_u_min": 0.9483,
+  "minima": {
+   "level": {
+    "rho_c": 0.9686,
+    "rho_u": 0.9455,
+    "mean_c": 0.9701,
+    "mean_u": 0.9483
+   },
+   "done": {
+    "rho_c": 1.0045,
+    "rho_u": 0.9947,
+    "mean_c": 1.0045,
+    "mean_u": 0.9934
+   },
+   "ready": {
+    "rho_c": 0.9845,
+    "rho_u": 0.9848,
+    "mean_c": 1.0,
+    "mean_u": 1.0
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|A|top|roll_neg",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9701,
+  "mean_u_min": 0.9482,
+  "minima": {
+   "level": {
+    "rho_c": 0.9688,
+    "rho_u": 0.9446,
+    "mean_c": 0.9701,
+    "mean_u": 0.9482
+   },
+   "done": {
+    "rho_c": 0.9955,
+    "rho_u": 0.9858,
+    "mean_c": 0.9945,
+    "mean_u": 0.9849
+   },
+   "ready": {
+    "rho_c": 0.9861,
+    "rho_u": 0.9863,
+    "mean_c": 1.0004,
+    "mean_u": 1.0004
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|A|top|edge_nd",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9849,
+  "mean_u_min": 0.9635,
+  "minima": {
+   "level": {
+    "rho_c": 0.9845,
+    "rho_u": 0.9625,
+    "mean_c": 0.9849,
+    "mean_u": 0.9635
+   },
+   "done": {
+    "rho_c": 0.9881,
+    "rho_u": 0.9686,
+    "mean_c": 0.987,
+    "mean_u": 0.9674
+   },
+   "ready": {
+    "rho_c": 1.0004,
+    "rho_u": 1.0004,
+    "mean_c": 1.0171,
+    "mean_u": 1.0167
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|J2|A|top|rpB",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9915,
+  "mean_u_min": 0.9619,
+  "minima": {
+   "level": {
+    "rho_c": 0.9885,
+    "rho_u": 0.9589,
+    "mean_c": 0.9915,
+    "mean_u": 0.9619
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|B|top|nose_down",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9762,
+  "mean_u_min": 0.9474,
+  "minima": {
+   "level": {
+    "rho_c": 0.9756,
+    "rho_u": 0.9468,
+    "mean_c": 0.9762,
+    "mean_u": 0.9474
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|B|top|nose_up",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9924,
+  "mean_u_min": 0.9828,
+  "minima": {
+   "level": {
+    "rho_c": 0.9923,
+    "rho_u": 0.9828,
+    "mean_c": 0.9924,
+    "mean_u": 0.9828
+   },
+   "done": {
+    "rho_c": 0.9923,
+    "rho_u": 0.9828,
+    "mean_c": 0.9924,
+    "mean_u": 0.9828
+   },
+   "ready": {
+    "rho_c": 0.9814,
+    "rho_u": 0.9817,
+    "mean_c": 0.9969,
+    "mean_u": 0.997
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|B|top|roll_pos",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9746,
+  "mean_u_min": 0.9752,
+  "minima": {
+   "level": {
+    "rho_c": 0.9746,
+    "rho_u": 0.9752,
+    "mean_c": 0.9746,
+    "mean_u": 0.9752
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|B|top|roll_neg",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9704,
+  "mean_u_min": 0.971,
+  "minima": {
+   "level": {
+    "rho_c": 0.9704,
+    "rho_u": 0.971,
+    "mean_c": 0.9704,
+    "mean_u": 0.971
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|B|top|edge_nd",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9753,
+  "mean_u_min": 0.9466,
+  "minima": {
+   "level": {
+    "rho_c": 0.9747,
+    "rho_u": 0.946,
+    "mean_c": 0.9753,
+    "mean_u": 0.9466
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|B|top|edge_nu",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9814,
+  "mean_u_min": 0.9818,
+  "minima": {
+   "level": {
+    "rho_c": 0.9813,
+    "rho_u": 0.9817,
+    "mean_c": 0.9814,
+    "mean_u": 0.9818
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|B|top|rpB",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 1.0001,
+  "mean_u_min": 1.0001,
+  "minima": {
+   "level": {
+    "rho_c": 0.9992,
+    "rho_u": 0.9992,
+    "mean_c": 1.0001,
+    "mean_u": 1.0001
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|A|top|nose_down",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9769,
+  "mean_u_min": 0.9481,
+  "minima": {
+   "level": {
+    "rho_c": 0.9741,
+    "rho_u": 0.9453,
+    "mean_c": 0.9769,
+    "mean_u": 0.9481
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|A|top|roll_pos",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9807,
+  "mean_u_min": 0.9811,
+  "minima": {
+   "level": {
+    "rho_c": 0.9807,
+    "rho_u": 0.9811,
+    "mean_c": 0.9807,
+    "mean_u": 0.9811
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|A|top|roll_neg",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 1.0008,
+  "mean_u_min": 1.0008,
+  "minima": {
+   "level": {
+    "rho_c": 0.9984,
+    "rho_u": 0.9984,
+    "mean_c": 1.0008,
+    "mean_u": 1.0008
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|A|top|edge_nd",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9739,
+  "mean_u_min": 0.9452,
+  "minima": {
+   "level": {
+    "rho_c": 0.9724,
+    "rho_u": 0.9437,
+    "mean_c": 0.9739,
+    "mean_u": 0.9452
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H1|S1|A|top|rpB",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9724,
+  "mean_u_min": 0.9437,
+  "minima": {
+   "level": {
+    "rho_c": 0.9688,
+    "rho_u": 0.9402,
+    "mean_c": 0.9724,
+    "mean_u": 0.9437
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|J1|B|bottom|nose_up",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9743,
+  "mean_u_min": 0.9455,
+  "minima": {
+   "level": {
+    "rho_c": 0.9737,
+    "rho_u": 0.9449,
+    "mean_c": 0.9743,
+    "mean_u": 0.9455
+   },
+   "done": {
+    "rho_c": 0.9755,
+    "rho_u": 0.9467,
+    "mean_c": 0.9755,
+    "mean_u": 0.9467
+   },
+   "ready": {
+    "rho_c": 0.9839,
+    "rho_u": 0.9842,
+    "mean_c": 1.0008,
+    "mean_u": 1.0007
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|J1|B|bottom|roll_neg",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9768,
+  "mean_u_min": 0.94,
+  "minima": {
+   "level": {
+    "rho_c": 0.9709,
+    "rho_u": 0.9674,
+    "mean_c": 0.9768,
+    "mean_u": 0.9676
+   },
+   "done": {
+    "rho_c": 1.0039,
+    "rho_u": 1.0038,
+    "mean_c": 0.9989,
+    "mean_u": 0.9989
+   },
+   "ready": {
+    "rho_c": 0.9786,
+    "rho_u": 0.94,
+    "mean_c": 0.9787,
+    "mean_u": 0.94
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|J1|B|bottom|edge_nd",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9651,
+  "mean_u_min": 0.9268,
+  "minima": {
+   "level": {
+    "rho_c": 0.9651,
+    "rho_u": 0.9268,
+    "mean_c": 0.9651,
+    "mean_u": 0.9268
+   },
+   "done": {
+    "rho_c": 0.9651,
+    "rho_u": 0.9268,
+    "mean_c": 0.9651,
+    "mean_u": 0.9268
+   },
+   "ready": {
+    "rho_c": 0.9822,
+    "rho_u": 0.9825,
+    "mean_c": 0.9981,
+    "mean_u": 0.9981
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|J2|B|bottom|nose_down",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.974,
+  "mean_u_min": 0.9371,
+  "minima": {
+   "level": {
+    "rho_c": 0.9701,
+    "rho_u": 0.9499,
+    "mean_c": 0.974,
+    "mean_u": 0.9508
+   },
+   "done": {
+    "rho_c": 0.9945,
+    "rho_u": 0.9946,
+    "mean_c": 0.9932,
+    "mean_u": 0.9934
+   },
+   "ready": {
+    "rho_c": 0.9757,
+    "rho_u": 0.9371,
+    "mean_c": 0.9758,
+    "mean_u": 0.9371
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|J2|B|bottom|nose_up",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9728,
+  "mean_u_min": 0.9458,
+  "minima": {
+   "level": {
+    "rho_c": 0.9696,
+    "rho_u": 0.945,
+    "mean_c": 0.9737,
+    "mean_u": 0.9458
+   },
+   "done": {
+    "rho_c": 0.9702,
+    "rho_u": 0.9469,
+    "mean_c": 0.9728,
+    "mean_u": 0.9469
+   },
+   "ready": {
+    "rho_c": 0.9843,
+    "rho_u": 0.9846,
+    "mean_c": 1.001,
+    "mean_u": 1.001
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|J2|B|bottom|roll_pos",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9959,
+  "mean_u_min": 0.996,
+  "minima": {
+   "level": {
+    "rho_c": 0.9953,
+    "rho_u": 0.9954,
+    "mean_c": 0.9959,
+    "mean_u": 0.996
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|J2|B|bottom|roll_neg",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 1.0028,
+  "mean_u_min": 1.0027,
+  "minima": {
+   "level": {
+    "rho_c": 1.0025,
+    "rho_u": 1.0024,
+    "mean_c": 1.0028,
+    "mean_u": 1.0027
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|J2|B|bottom|edge_nd",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9927,
+  "mean_u_min": 0.9732,
+  "minima": {
+   "level": {
+    "rho_c": 0.9848,
+    "rho_u": 0.9655,
+    "mean_c": 0.9929,
+    "mean_u": 0.9757
+   },
+   "done": {
+    "rho_c": 0.985,
+    "rho_u": 0.9657,
+    "mean_c": 0.9927,
+    "mean_u": 0.9732
+   },
+   "ready": {
+    "rho_c": 0.9886,
+    "rho_u": 0.9888,
+    "mean_c": 1.0033,
+    "mean_u": 1.0032
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|J2|B|bottom|edge_nu",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9917,
+  "mean_u_min": 0.9821,
+  "minima": {
+   "level": {
+    "rho_c": 0.9914,
+    "rho_u": 0.9818,
+    "mean_c": 0.9917,
+    "mean_u": 0.9821
+   },
+   "done": {
+    "rho_c": 0.9917,
+    "rho_u": 0.9821,
+    "mean_c": 0.9917,
+    "mean_u": 0.9821
+   },
+   "ready": {
+    "rho_c": 0.985,
+    "rho_u": 0.9853,
+    "mean_c": 0.9995,
+    "mean_u": 0.9995
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|J2|B|bottom|rpB",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9969,
+  "mean_u_min": 0.997,
+  "minima": {
+   "level": {
+    "rho_c": 0.9964,
+    "rho_u": 0.9965,
+    "mean_c": 0.9969,
+    "mean_u": 0.997
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|S1|B|bottom|nose_down",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9762,
+  "mean_u_min": 0.9474,
+  "minima": {
+   "level": {
+    "rho_c": 0.9757,
+    "rho_u": 0.947,
+    "mean_c": 0.9762,
+    "mean_u": 0.9474
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|S1|B|bottom|nose_up",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9931,
+  "mean_u_min": 0.9835,
+  "minima": {
+   "level": {
+    "rho_c": 0.9931,
+    "rho_u": 0.9835,
+    "mean_c": 0.9931,
+    "mean_u": 0.9835
+   },
+   "done": {
+    "rho_c": 0.9931,
+    "rho_u": 0.9835,
+    "mean_c": 0.9931,
+    "mean_u": 0.9835
+   },
+   "ready": {
+    "rho_c": 0.9803,
+    "rho_u": 0.9806,
+    "mean_c": 0.9967,
+    "mean_u": 0.9967
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|S1|B|bottom|edge_nd",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 1.0009,
+  "mean_u_min": 1.0009,
+  "minima": {
+   "level": {
+    "rho_c": 0.9979,
+    "rho_u": 0.998,
+    "mean_c": 1.0009,
+    "mean_u": 1.0009
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|S1|B|bottom|edge_nu",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9913,
+  "mean_u_min": 0.9914,
+  "minima": {
+   "level": {
+    "rho_c": 0.9912,
+    "rho_u": 0.9914,
+    "mean_c": 0.9913,
+    "mean_u": 0.9914
+   },
+   "done": {
+    "rho_c": 0.9912,
+    "rho_u": 0.9914,
+    "mean_c": 0.9913,
+    "mean_u": 0.9914
+   },
+   "ready": {
+    "rho_c": 0.9787,
+    "rho_u": 0.9791,
+    "mean_c": 0.996,
+    "mean_u": 0.996
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H2|S1|B|bottom|rpB",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 1.0014,
+  "mean_u_min": 1.0014,
+  "minima": {
+   "level": {
+    "rho_c": 0.9988,
+    "rho_u": 0.9988,
+    "mean_c": 1.0014,
+    "mean_u": 1.0014
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|J1|B|top|roll_pos@k0.875",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.969,
+  "mean_u_min": 0.9305,
+  "minima": {
+   "level": {
+    "rho_c": 0.9688,
+    "rho_u": 0.9303,
+    "mean_c": 0.969,
+    "mean_u": 0.9305
+   },
+   "done": {
+    "rho_c": 0.969,
+    "rho_u": 0.9305,
+    "mean_c": 0.9691,
+    "mean_u": 0.9305
+   },
+   "ready": {
+    "rho_c": 0.9898,
+    "rho_u": 0.99,
+    "mean_c": 1.0027,
+    "mean_u": 1.0027
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|J1|A|top|nose_down@k0.875",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 1.0227,
+  "mean_u_min": 0.9819,
+  "minima": {
+   "level": {
+    "rho_c": 1.0265,
+    "rho_u": 0.9957,
+    "mean_c": 1.0276,
+    "mean_u": 0.9968
+   },
+   "done": {
+    "rho_c": 1.0274,
+    "rho_u": 0.9966,
+    "mean_c": 1.0275,
+    "mean_u": 0.9968
+   },
+   "ready": {
+    "rho_c": 1.0224,
+    "rho_u": 0.9816,
+    "mean_c": 1.0227,
+    "mean_u": 0.9819
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|J2|B|top|roll_pos@k0.75",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9717,
+  "mean_u_min": 0.933,
+  "minima": {
+   "level": {
+    "rho_c": 0.9716,
+    "rho_u": 0.9329,
+    "mean_c": 0.9717,
+    "mean_u": 0.933
+   },
+   "done": {
+    "rho_c": 0.9717,
+    "rho_u": 0.933,
+    "mean_c": 0.9717,
+    "mean_u": 0.933
+   },
+   "ready": {
+    "rho_c": 0.9886,
+    "rho_u": 0.9889,
+    "mean_c": 1.0047,
+    "mean_u": 1.0046
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|J2|B|top|roll_pos@k0.875",
+  "good_before": false,
+  "verdict_before": "stroke_limited_fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 47.0,
+  "crawler_after_kN": 0.0,
+  "acted": true,
+  "actions": [
+   {
+    "t_s": 50.3,
+    "ratio": 0.9464,
+    "branch": "fault",
+    "max_stroke_mm": 668.3
+   }
+  ],
+  "mean_c_min": 0.9464,
+  "mean_u_min": 0.9061,
+  "minima": {
+   "level": {
+    "rho_c": 0.9381,
+    "rho_u": 0.898,
+    "mean_c": 0.9464,
+    "mean_u": 0.9061
+   }
+  },
+  "hash_same": false
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|J2|B|top|edge_nd@k0.875",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9704,
+  "mean_u_min": 0.9318,
+  "minima": {
+   "level": {
+    "rho_c": 0.9683,
+    "rho_u": 0.9317,
+    "mean_c": 0.9704,
+    "mean_u": 0.9318
+   },
+   "done": {
+    "rho_c": 0.9704,
+    "rho_u": 0.9318,
+    "mean_c": 0.9704,
+    "mean_u": 0.9318
+   },
+   "ready": {
+    "rho_c": 0.9931,
+    "rho_u": 0.9933,
+    "mean_c": 1.0044,
+    "mean_u": 1.0043
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|J2|A|top|nose_down@k0.75",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9853,
+  "mean_u_min": 0.9466,
+  "minima": {
+   "level": {
+    "rho_c": 0.9956,
+    "rho_u": 0.9665,
+    "mean_c": 0.9959,
+    "mean_u": 0.9668
+   },
+   "done": {
+    "rho_c": 0.9956,
+    "rho_u": 0.9665,
+    "mean_c": 0.9959,
+    "mean_u": 0.9668
+   },
+   "ready": {
+    "rho_c": 0.9853,
+    "rho_u": 0.9466,
+    "mean_c": 0.9853,
+    "mean_u": 0.9466
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|J2|A|top|nose_down@k0.875",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 1.0095,
+  "mean_u_min": 0.9791,
+  "minima": {
+   "level": {
+    "rho_c": 1.0095,
+    "rho_u": 0.9791,
+    "mean_c": 1.0095,
+    "mean_u": 0.9791
+   },
+   "done": {
+    "rho_c": 1.0095,
+    "rho_u": 0.9792,
+    "mean_c": 1.0095,
+    "mean_u": 0.9792
+   },
+   "ready": {
+    "rho_c": 1.0133,
+    "rho_u": 1.013,
+    "mean_c": 1.0314,
+    "mean_u": 1.0308
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|J2|A|top|roll_pos@k0.875",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9696,
+  "mean_u_min": 0.948,
+  "minima": {
+   "level": {
+    "rho_c": 0.965,
+    "rho_u": 0.9462,
+    "mean_c": 0.9696,
+    "mean_u": 0.948
+   },
+   "done": {
+    "rho_c": 1.0041,
+    "rho_u": 1.004,
+    "mean_c": 1.0041,
+    "mean_u": 1.004
+   },
+   "ready": {
+    "rho_c": 0.9875,
+    "rho_u": 0.9487,
+    "mean_c": null,
+    "mean_u": null
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|J2|A|top|edge_nd@k0.875",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9671,
+  "mean_u_min": 0.9465,
+  "minima": {
+   "level": {
+    "rho_c": 0.9667,
+    "rho_u": 0.9457,
+    "mean_c": 0.9671,
+    "mean_u": 0.9465
+   },
+   "done": {
+    "rho_c": 0.9726,
+    "rho_u": 0.9536,
+    "mean_c": 0.9712,
+    "mean_u": 0.9523
+   },
+   "ready": {
+    "rho_c": 0.99,
+    "rho_u": 0.9512,
+    "mean_c": 0.99,
+    "mean_u": 0.9512
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|B|top|nose_down@k0.75",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9617,
+  "mean_u_min": 0.9481,
+  "minima": {
+   "level": {
+    "rho_c": 0.9596,
+    "rho_u": 0.9479,
+    "mean_c": 0.9617,
+    "mean_u": 0.9481
+   },
+   "done": {
+    "rho_c": 0.9689,
+    "rho_u": 0.9597,
+    "mean_c": 0.9654,
+    "mean_u": 0.9563
+   },
+   "ready": {
+    "rho_c": 0.985,
+    "rho_u": 0.9853,
+    "mean_c": 0.9989,
+    "mean_u": 0.9989
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|B|top|nose_down@k0.875",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9601,
+  "mean_u_min": 0.9468,
+  "minima": {
+   "level": {
+    "rho_c": 0.9586,
+    "rho_u": 0.9451,
+    "mean_c": 0.9601,
+    "mean_u": 0.9468
+   },
+   "done": {
+    "rho_c": 0.9626,
+    "rho_u": 0.9536,
+    "mean_c": 0.9605,
+    "mean_u": 0.9515
+   },
+   "ready": {
+    "rho_c": 0.9846,
+    "rho_u": 0.9849,
+    "mean_c": 0.9995,
+    "mean_u": 0.9995
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|B|top|roll_pos@k0.75",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9795,
+  "mean_u_min": 0.9725,
+  "minima": {
+   "level": {
+    "rho_c": 0.9795,
+    "rho_u": 0.9718,
+    "mean_c": 0.9795,
+    "mean_u": 0.9727
+   },
+   "done": {
+    "rho_c": 0.981,
+    "rho_u": 0.9716,
+    "mean_c": 0.9819,
+    "mean_u": 0.9725
+   },
+   "ready": {
+    "rho_c": 0.9832,
+    "rho_u": 0.9835,
+    "mean_c": 0.9964,
+    "mean_u": 0.9965
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|B|top|roll_pos@k0.875",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9668,
+  "mean_u_min": 0.9519,
+  "minima": {
+   "level": {
+    "rho_c": 0.9666,
+    "rho_u": 0.9657,
+    "mean_c": 0.9668,
+    "mean_u": 0.9672
+   },
+   "done": {
+    "rho_c": 0.9746,
+    "rho_u": 0.9653,
+    "mean_c": 0.9763,
+    "mean_u": 0.967
+   },
+   "probe": {
+    "rho_c": 0.9709,
+    "rho_u": 0.9617,
+    "mean_c": null,
+    "mean_u": null
+   },
+   "ready": {
+    "rho_c": 0.9806,
+    "rho_u": 0.9517,
+    "mean_c": 0.9808,
+    "mean_u": 0.9519
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|B|top|edge_nd@k0.75",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9817,
+  "mean_u_min": 0.9818,
+  "minima": {
+   "level": {
+    "rho_c": 0.9812,
+    "rho_u": 0.9816,
+    "mean_c": 0.9817,
+    "mean_u": 0.9818
+   },
+   "done": {
+    "rho_c": 0.996,
+    "rho_u": 0.9961,
+    "mean_c": 0.996,
+    "mean_u": 0.9961
+   },
+   "ready": {
+    "rho_c": 0.9856,
+    "rho_u": 0.9859,
+    "mean_c": 0.9965,
+    "mean_u": 0.9965
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|B|top|edge_nd@k0.875",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9754,
+  "mean_u_min": 0.9658,
+  "minima": {
+   "level": {
+    "rho_c": 0.975,
+    "rho_u": 0.9658,
+    "mean_c": 0.9754,
+    "mean_u": 0.9658
+   },
+   "done": {
+    "rho_c": 0.979,
+    "rho_u": 0.9697,
+    "mean_c": 0.9775,
+    "mean_u": 0.9682
+   },
+   "ready": {
+    "rho_c": 0.983,
+    "rho_u": 0.9833,
+    "mean_c": 0.9984,
+    "mean_u": 0.9984
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|A|top|nose_down@k0.75",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.977,
+  "mean_u_min": 0.9482,
+  "minima": {
+   "level": {
+    "rho_c": 0.9769,
+    "rho_u": 0.9481,
+    "mean_c": 0.977,
+    "mean_u": 0.9482
+   },
+   "done": {
+    "rho_c": 0.9771,
+    "rho_u": 0.9483,
+    "mean_c": 0.9771,
+    "mean_u": 0.9483
+   },
+   "ready": {
+    "rho_c": 0.9846,
+    "rho_u": 0.9849,
+    "mean_c": 0.9995,
+    "mean_u": 0.9995
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|A|top|nose_down@k0.875",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9768,
+  "mean_u_min": 0.948,
+  "minima": {
+   "level": {
+    "rho_c": 0.9762,
+    "rho_u": 0.9474,
+    "mean_c": 0.9768,
+    "mean_u": 0.948
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|A|top|roll_pos@k0.75",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9909,
+  "mean_u_min": 0.9814,
+  "minima": {
+   "level": {
+    "rho_c": 0.9902,
+    "rho_u": 0.9807,
+    "mean_c": 0.9909,
+    "mean_u": 0.9814
+   },
+   "done": {
+    "rho_c": 0.9933,
+    "rho_u": 0.9934,
+    "mean_c": 0.9999,
+    "mean_u": 0.9931
+   },
+   "ready": {
+    "rho_c": 0.9801,
+    "rho_u": 0.9805,
+    "mean_c": 0.9942,
+    "mean_u": 0.9943
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|A|top|roll_pos@k0.875",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9914,
+  "mean_u_min": 0.9916,
+  "minima": {
+   "level": {
+    "rho_c": 0.9914,
+    "rho_u": 0.9916,
+    "mean_c": 0.9914,
+    "mean_u": 0.9916
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|A|top|edge_nd@k0.75",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9744,
+  "mean_u_min": 0.9457,
+  "minima": {
+   "level": {
+    "rho_c": 0.9741,
+    "rho_u": 0.9454,
+    "mean_c": 0.9744,
+    "mean_u": 0.9457
+   },
+   "done": {
+    "rho_c": 0.9762,
+    "rho_u": 0.9475,
+    "mean_c": 0.9762,
+    "mean_u": 0.9475
+   },
+   "ready": {
+    "rho_c": 0.9847,
+    "rho_u": 0.985,
+    "mean_c": null,
+    "mean_u": null
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H3|S1|A|top|edge_nd@k0.875",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9756,
+  "mean_u_min": 0.9468,
+  "minima": {
+   "level": {
+    "rho_c": 0.9739,
+    "rho_u": 0.9452,
+    "mean_c": 0.9756,
+    "mean_u": 0.9468
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H4|J1|B|top|nose_down",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9674,
+  "mean_u_min": 0.929,
+  "minima": {
+   "level": {
+    "rho_c": 0.9664,
+    "rho_u": 0.9289,
+    "mean_c": 0.9674,
+    "mean_u": 0.929
+   },
+   "done": {
+    "rho_c": 0.9674,
+    "rho_u": 0.929,
+    "mean_c": 0.9674,
+    "mean_u": 0.929
+   },
+   "ready": {
+    "rho_c": 0.9855,
+    "rho_u": 0.9858,
+    "mean_c": 1.0005,
+    "mean_u": 1.0005
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H4|J1|A|top|nose_down",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9926,
+  "mean_u_min": 0.9604,
+  "minima": {
+   "level": {
+    "rho_c": 0.9915,
+    "rho_u": 0.9595,
+    "mean_c": 0.9926,
+    "mean_u": 0.9604
+   },
+   "done": {
+    "rho_c": 1.0178,
+    "rho_u": 0.9872,
+    "mean_c": 1.0182,
+    "mean_u": 0.9876
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H4|J1|A|top|nose_down_2p8",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9816,
+  "mean_u_min": 0.96,
+  "minima": {
+   "level": {
+    "rho_c": 0.9794,
+    "rho_u": 0.9587,
+    "mean_c": 0.9816,
+    "mean_u": 0.96
+   },
+   "done": {
+    "rho_c": 1.0235,
+    "rho_u": 0.9966,
+    "mean_c": 1.0236,
+    "mean_u": 0.9968
+   },
+   "ready": {
+    "rho_c": 1.0244,
+    "rho_u": 1.0239,
+    "mean_c": 1.0351,
+    "mean_u": 1.0344
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H4|J2|B|top|nose_down",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9715,
+  "mean_u_min": 0.9505,
+  "minima": {
+   "level": {
+    "rho_c": 0.9678,
+    "rho_u": 0.9493,
+    "mean_c": 0.9715,
+    "mean_u": 0.9505
+   },
+   "done": {
+    "rho_c": 0.9865,
+    "rho_u": 0.9824,
+    "mean_c": 0.9865,
+    "mean_u": 0.9824
+   },
+   "ready": {
+    "rho_c": 0.991,
+    "rho_u": 0.9912,
+    "mean_c": 1.0037,
+    "mean_u": 1.0036
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H4|J2|A|top|nose_down",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.976,
+  "mean_u_min": 0.9472,
+  "minima": {
+   "level": {
+    "rho_c": 0.973,
+    "rho_u": 0.9443,
+    "mean_c": 0.976,
+    "mean_u": 0.9472
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H4|J2|A|top|nose_down_2p8",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.99,
+  "mean_u_min": 0.9582,
+  "minima": {
+   "level": {
+    "rho_c": 0.9871,
+    "rho_u": 0.9575,
+    "mean_c": 0.99,
+    "mean_u": 0.9582
+   },
+   "done": {
+    "rho_c": 1.0095,
+    "rho_u": 0.9792,
+    "mean_c": 1.0095,
+    "mean_u": 0.9792
+   },
+   "ready": {
+    "rho_c": 1.0226,
+    "rho_u": 1.0222,
+    "mean_c": 1.0334,
+    "mean_u": 1.0327
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H4|S1|B|top|nose_down",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9762,
+  "mean_u_min": 0.9474,
+  "minima": {
+   "level": {
+    "rho_c": 0.9756,
+    "rho_u": 0.9468,
+    "mean_c": 0.9762,
+    "mean_u": 0.9474
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H4|S1|B|top|nose_down_2p8",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9601,
+  "mean_u_min": 0.9468,
+  "minima": {
+   "level": {
+    "rho_c": 0.9586,
+    "rho_u": 0.9451,
+    "mean_c": 0.9601,
+    "mean_u": 0.9468
+   },
+   "done": {
+    "rho_c": 0.9626,
+    "rho_u": 0.9533,
+    "mean_c": 0.9605,
+    "mean_u": 0.9515
+   },
+   "ready": {
+    "rho_c": 0.9899,
+    "rho_u": 0.99,
+    "mean_c": 0.9976,
+    "mean_u": 0.9977
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H4|S1|A|top|nose_down",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9769,
+  "mean_u_min": 0.9481,
+  "minima": {
+   "level": {
+    "rho_c": 0.9741,
+    "rho_u": 0.9453,
+    "mean_c": 0.9769,
+    "mean_u": 0.9481
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H4|S1|A|top|nose_down_2p8",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9768,
+  "mean_u_min": 0.948,
+  "minima": {
+   "level": {
+    "rho_c": 0.9762,
+    "rho_u": 0.9474,
+    "mean_c": 0.9768,
+    "mean_u": 0.948
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_harness_cmp.json",
+  "suite": "slope",
+  "id": "H4|J1|B|top|nose_up",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9743,
+  "mean_u_min": 0.9454,
+  "minima": {
+   "level": {
+    "rho_c": 0.9721,
+    "rho_u": 0.9433,
+    "mean_c": 0.9743,
+    "mean_u": 0.9454
+   },
+   "done": {
+    "rho_c": 0.976,
+    "rho_u": 0.9471,
+    "mean_c": 0.976,
+    "mean_u": 0.9471
+   },
+   "ready": {
+    "rho_c": 0.9924,
+    "rho_u": 0.9925,
+    "mean_c": null,
+    "mean_u": null
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|J2|B|top|roll_pos@k0.75|Fs0",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 1.0069,
+  "mean_u_min": 1.0069,
+  "minima": {
+   "level": {
+    "rho_c": 1.0038,
+    "rho_u": 1.0038,
+    "mean_c": 1.0069,
+    "mean_u": 1.0069
+   },
+   "done": {
+    "rho_c": 1.0094,
+    "rho_u": 1.0094,
+    "mean_c": 1.0094,
+    "mean_u": 1.0094
+   },
+   "ready": {
+    "rho_c": 1.005,
+    "rho_u": 1.005,
+    "mean_c": 1.0089,
+    "mean_u": 1.0089
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|S1|B|top|nose_down@k0.75|Fs0",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 1.0022,
+  "mean_u_min": 1.0022,
+  "minima": {
+   "level": {
+    "rho_c": 0.9985,
+    "rho_u": 0.9985,
+    "mean_c": 1.0022,
+    "mean_u": 1.0022
+   },
+   "done": {
+    "rho_c": 1.0036,
+    "rho_u": 1.0036,
+    "mean_c": 1.0036,
+    "mean_u": 1.0036
+   },
+   "ready": {
+    "rho_c": 0.999,
+    "rho_u": 0.999,
+    "mean_c": 1.0031,
+    "mean_u": 1.0031
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|S1|B|top|roll_pos@k0.75|Fs0",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9992,
+  "mean_u_min": 0.9992,
+  "minima": {
+   "level": {
+    "rho_c": 0.9962,
+    "rho_u": 0.9962,
+    "mean_c": 0.9992,
+    "mean_u": 0.9992
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|S1|B|top|edge_nd@k0.75|Fs0",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 1.0005,
+  "mean_u_min": 1.0005,
+  "minima": {
+   "level": {
+    "rho_c": 0.9972,
+    "rho_u": 0.9972,
+    "mean_c": 1.0005,
+    "mean_u": 1.0005
+   },
+   "done": {
+    "rho_c": 1.0013,
+    "rho_u": 1.0013,
+    "mean_c": 1.0013,
+    "mean_u": 1.0013
+   },
+   "ready": {
+    "rho_c": 0.9968,
+    "rho_u": 0.9968,
+    "mean_c": 1.0009,
+    "mean_u": 1.0009
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|J2|B|top|roll_pos@k0.75|Fs8",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.972,
+  "mean_u_min": 0.8628,
+  "minima": {
+   "level": {
+    "rho_c": 0.9719,
+    "rho_u": 0.8627,
+    "mean_c": 0.972,
+    "mean_u": 0.8628
+   },
+   "done": {
+    "rho_c": 0.972,
+    "rho_u": 0.8628,
+    "mean_c": 0.972,
+    "mean_u": 0.8628
+   },
+   "ready": {
+    "rho_c": 0.9178,
+    "rho_u": 0.9223,
+    "mean_c": 0.9901,
+    "mean_u": 0.9906
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|S1|B|top|nose_down@k0.75|Fs8",
+  "good_before": false,
+  "verdict_before": "settle_check_fail",
+  "verdict_after": "settle_check_fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": true,
+  "actions": [
+   {
+    "t_s": 55.1,
+    "ratio": 0.9479,
+    "branch": "fault",
+    "max_stroke_mm": 682.6
+   }
+  ],
+  "mean_c_min": 0.9479,
+  "mean_u_min": 0.8971,
+  "minima": {
+   "level": {
+    "rho_c": 0.9345,
+    "rho_u": 0.8966,
+    "mean_c": 0.9479,
+    "mean_u": 0.8971
+   }
+  },
+  "hash_same": false
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|S1|B|top|roll_pos@k0.75|Fs8",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9745,
+  "mean_u_min": 0.9686,
+  "minima": {
+   "level": {
+    "rho_c": 0.9744,
+    "rho_u": 0.968,
+    "mean_c": 0.9745,
+    "mean_u": 0.9688
+   },
+   "done": {
+    "rho_c": 0.9967,
+    "rho_u": 0.9678,
+    "mean_c": 0.9976,
+    "mean_u": 0.9686
+   },
+   "ready": {
+    "rho_c": 0.9138,
+    "rho_u": 0.9185,
+    "mean_c": 0.9822,
+    "mean_u": 0.9832
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|S1|B|top|edge_nd@k0.75|Fs8",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9832,
+  "mean_u_min": 0.9841,
+  "minima": {
+   "level": {
+    "rho_c": 0.9861,
+    "rho_u": 0.9868,
+    "mean_c": 0.9868,
+    "mean_u": 0.9871
+   },
+   "done": {
+    "rho_c": 0.9958,
+    "rho_u": 0.996,
+    "mean_c": 0.9959,
+    "mean_u": 0.9961
+   },
+   "ready": {
+    "rho_c": 0.9139,
+    "rho_u": 0.9186,
+    "mean_c": 0.9832,
+    "mean_u": 0.9841
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|J2|B|middle|roll_pos@k0.75",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9673,
+  "mean_u_min": 0.9289,
+  "minima": {
+   "level": {
+    "rho_c": 0.9673,
+    "rho_u": 0.9289,
+    "mean_c": 0.9673,
+    "mean_u": 0.9289
+   },
+   "done": {
+    "rho_c": 0.9673,
+    "rho_u": 0.9289,
+    "mean_c": 0.9673,
+    "mean_u": 0.9289
+   },
+   "ready": {
+    "rho_c": 0.9885,
+    "rho_u": 0.9888,
+    "mean_c": 1.001,
+    "mean_u": 1.001
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|S1|B|middle|nose_down@k0.75",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9632,
+  "mean_u_min": 0.9478,
+  "minima": {
+   "level": {
+    "rho_c": 0.959,
+    "rho_u": 0.9474,
+    "mean_c": 0.9639,
+    "mean_u": 0.9478
+   },
+   "done": {
+    "rho_c": 0.9609,
+    "rho_u": 0.9519,
+    "mean_c": 0.9632,
+    "mean_u": 0.9503
+   },
+   "ready": {
+    "rho_c": 0.9836,
+    "rho_u": 0.9839,
+    "mean_c": 0.9991,
+    "mean_u": 0.9991
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|S1|B|middle|roll_pos@k0.75",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9879,
+  "mean_u_min": 0.9882,
+  "minima": {
+   "level": {
+    "rho_c": 0.9877,
+    "rho_u": 0.9879,
+    "mean_c": 0.9879,
+    "mean_u": 0.9882
+   },
+   "done": {
+    "rho_c": 1.0008,
+    "rho_u": 0.991,
+    "mean_c": 1.0019,
+    "mean_u": 0.9921
+   },
+   "ready": {
+    "rho_c": 0.9831,
+    "rho_u": 0.9834,
+    "mean_c": 0.9968,
+    "mean_u": 0.9969
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|S1|B|middle|edge_nd@k0.75",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9978,
+  "mean_u_min": 0.9978,
+  "minima": {
+   "level": {
+    "rho_c": 0.9973,
+    "rho_u": 0.9973,
+    "mean_c": 0.998,
+    "mean_u": 0.998
+   },
+   "done": {
+    "rho_c": 1.0005,
+    "rho_u": 1.0005,
+    "mean_c": 1.0004,
+    "mean_u": 1.0004
+   },
+   "ready": {
+    "rho_c": 0.9849,
+    "rho_u": 0.9852,
+    "mean_c": 0.9978,
+    "mean_u": 0.9978
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|J1|B|top|roll_pos@k0.5|m1.1",
+  "good_before": false,
+  "verdict_before": "stroke_limited_fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 142.5,
+  "crawler_after_kN": 0.0,
+  "acted": true,
+  "actions": [
+   {
+    "t_s": 45.0,
+    "ratio": 0.9468,
+    "branch": "fault",
+    "max_stroke_mm": 658.8
+   }
+  ],
+  "mean_c_min": 0.9468,
+  "mean_u_min": 0.9121,
+  "minima": {
+   "level": {
+    "rho_c": 0.933,
+    "rho_u": 0.8986,
+    "mean_c": 0.9468,
+    "mean_u": 0.9121
+   }
+  },
+  "hash_same": false
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|J1|B|top|roll_pos@k0.75|m1.1",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9684,
+  "mean_u_min": 0.969,
+  "minima": {
+   "level": {
+    "rho_c": 0.9684,
+    "rho_u": 0.969,
+    "mean_c": 0.9684,
+    "mean_u": 0.969
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|J1|B|top|edge_nd@k0.75|m1.1",
+  "good_before": false,
+  "verdict_before": "stroke_limited_fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 45.1,
+  "crawler_after_kN": 0.0,
+  "acted": true,
+  "actions": [
+   {
+    "t_s": 45.3,
+    "ratio": 0.944,
+    "branch": "fault",
+    "max_stroke_mm": 653.5
+   }
+  ],
+  "mean_c_min": 0.944,
+  "mean_u_min": 0.9092,
+  "minima": {
+   "level": {
+    "rho_c": 0.9286,
+    "rho_u": 0.8941,
+    "mean_c": 0.944,
+    "mean_u": 0.9092
+   }
+  },
+  "hash_same": false
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|J2|B|top|roll_pos@k0.75|m1.1",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9848,
+  "mean_u_min": 0.9851,
+  "minima": {
+   "level": {
+    "rho_c": 0.9848,
+    "rho_u": 0.9851,
+    "mean_c": 0.9848,
+    "mean_u": 0.9851
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|J2|B|top|edge_nd@k0.75|m1.1",
+  "good_before": false,
+  "verdict_before": "stroke_limited_fail",
+  "verdict_after": "stroke_limited_fail",
+  "crawler_before_kN": 19.4,
+  "crawler_after_kN": 19.4,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.97,
+  "mean_u_min": 0.9614,
+  "minima": {
+   "level": {
+    "rho_c": 0.9662,
+    "rho_u": 0.9577,
+    "mean_c": 0.97,
+    "mean_u": 0.9614
+   },
+   "done": {
+    "rho_c": 0.9976,
+    "rho_u": 0.9611,
+    "mean_c": 1.0021,
+    "mean_u": 0.9656
+   },
+   "probe": {
+    "rho_c": 1.0155,
+    "rho_u": 0.9787,
+    "mean_c": 1.0155,
+    "mean_u": 0.9787
+   },
+   "ready": {
+    "rho_c": 0.9698,
+    "rho_u": 0.9703,
+    "mean_c": 0.9966,
+    "mean_u": 0.9967
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|S1|B|top|nose_down@k0.75|m1.1",
+  "good_before": true,
+  "verdict_before": "stroke_limited_pass",
+  "verdict_after": "stroke_limited_pass",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9685,
+  "mean_u_min": 0.9509,
+  "minima": {
+   "level": {
+    "rho_c": 0.9627,
+    "rho_u": 0.949,
+    "mean_c": 0.9692,
+    "mean_u": 0.9509
+   },
+   "done": {
+    "rho_c": 0.9633,
+    "rho_u": 0.955,
+    "mean_c": 0.9685,
+    "mean_u": 0.9539
+   },
+   "ready": {
+    "rho_c": 0.9867,
+    "rho_u": 0.9869,
+    "mean_c": 0.9986,
+    "mean_u": 0.9986
+   }
+  },
+  "hash_same": true
+ },
+ {
+  "file": "p36_A_x426b_cmp.json",
+  "suite": "x426b",
+  "id": "H3|S1|B|top|roll_pos@k0.75|m1.1",
+  "good_before": false,
+  "verdict_before": "fail",
+  "verdict_after": "fail",
+  "crawler_before_kN": 0.0,
+  "crawler_after_kN": 0.0,
+  "acted": false,
+  "actions": [],
+  "mean_c_min": 0.9729,
+  "mean_u_min": 0.9734,
+  "minima": {
+   "level": {
+    "rho_c": 0.9729,
+    "rho_u": 0.9734,
+    "mean_c": 0.9729,
+    "mean_u": 0.9734
+   }
+  },
+  "hash_same": true
+ }
+]

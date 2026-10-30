@@ -1,0 +1,69 @@
+[
+ {
+  "case": "P3b_J2_B_top_Fs4_m1p1",
+  "cpar": 0.5,
+  "ready_rec_rel": 104.1,
+  "n_clamp": 2,
+  "segments": [
+   {
+    "rec_done_rel": 76.3,
+    "sim_done_rel": 61.6,
+    "valid": true
+   },
+   {
+    "rec_done_rel": 92.1,
+    "sim_done_rel": 92.1,
+    "valid": false
+   }
+  ]
+ },
+ {
+  "case": "P3b_J1_B_top_Fs4_m1p1",
+  "cpar": 0.5,
+  "ready_rec_rel": 103.3,
+  "n_clamp": 2,
+  "segments": [
+   {
+    "rec_done_rel": 74.0,
+    "sim_done_rel": 57.5,
+    "valid": true
+   },
+   {
+    "rec_done_rel": 91.3,
+    "sim_done_rel": null,
+    "valid": false
+   }
+  ]
+ },
+ {
+  "case": "P3b_J2_B_middle_Fs4",
+  "cpar": 0.5,
+  "ready_rec_rel": 79.0,
+  "n_clamp": 2,
+  "segments": [
+   {
+    "rec_done_rel": 45.2,
+    "sim_done_rel": 45.2,
+    "valid": true
+   },
+   {
+    "rec_done_rel": 67.0,
+    "sim_done_rel": 61.5,
+    "valid": true
+   }
+  ]
+ },
+ {
+  "case": "P3b_J2_B_bottom_Fs4",
+  "cpar": 0.5,
+  "ready_rec_rel": 57.8,
+  "n_clamp": 2,
+  "segments": [
+   {
+    "rec_done_rel": 45.8,
+    "sim_done_rel": 45.8,
+    "valid": true
+   }
+  ]
+ }
+]

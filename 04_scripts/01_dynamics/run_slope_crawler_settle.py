@@ -58,6 +58,11 @@ EXTRA += [(s, "middle", sl) for s in ("G1", "J1", "J2", "S1") for sl in SLOPES +
 _B5_OOS = ((0.0, 2.0), (0.0, 3.0), (2.75, 0.0), (4.125, 0.0), (1.375, 1.0), (2.0625, 1.5),
            (-3.3, 0.0), (0.0, -2.4), (1.65, -1.2))
 EXTRA += [(s, "top", sl) for s in ("J1", "J2") for sl in _B5_OOS]
+# H9 roll boundary refinement (spec 430.2, 2026-10-30): J1/J2 top, roll_pos / roll_neg (+-4.4, 0) x k
+# {0.6, 0.65, 0.7, 0.75, 0.8, 0.875}, rounded as s9_soil_slope._scaled_slope; rows already in the grid are skipped
+# by all_cases(). Appended last (job order kept).
+_H9 = tuple((round(k * r, 4), 0.0) for r in (4.4, -4.4) for k in (0.6, 0.65, 0.7, 0.75, 0.8, 0.875))
+EXTRA += [(s, "top", sl) for s in ("J1", "J2") for sl in _H9 if (s, "top", sl) not in EXTRA]
 # --merge: existing hook_harness keys recomputed as the bit-identity regression sample
 REGRESSION_KEYS = ("G1|top|0|0", "J1|top|0|3.2", "S1|top|2.7355|1.7592", "J2|bottom|4.4|0", "G1|bottom|-4.4|0",
                    "S1|top|0|3.5")

@@ -28,7 +28,10 @@ Judgement rows per run (spec 284 P3 rows, rev. 60 corrections, harness form):
   G6-4 (P3-4) final attitude |roll|, |pitch| <= 0.2 deg (run end = READY + 10 s; creep state recorded)
   G6-5 (P3-5) rut clearance (crawler nodes in the rut at the settle) at READY and at the end >= 25 mm; motor stroke
        run maximum (10 Hz) <= 684.8 mm
-  G6-6 FAULT 0 and READY reached
+  G6-6 FAULT 0 and READY reached; spec 427.9: a run stopped by the soil guard
+       (``FAULT_LIFT_STROKE_LIMIT:soil``) keeps G6-6 failed and gets ``verdict``
+       ``stroke_limited_stop`` (safe-stop conditions of ``s9/soil_guard_stop_rule.py`` met) or
+       ``fail``, with the record ``soil_stop``; the other runs carry no ``verdict`` key
   G6-7 (P3-8) no re-approach start, probe abort before the LOC
 Records: LOC time, t_P, c_min(t_P), anchor applied (INFO_LOC_CLEARANCE_ANCHOR) and bias, guard events, weak-pad
   re-approaches / re-levels, sink per pad (final, max rate), READY time (P3-6 <= 90 s), D8 margin, controller
@@ -72,6 +75,7 @@ import numpy as np  # noqa: E402
 
 import late_loc_rule  # noqa: E402
 import s9_soil_closed_loop as sl  # noqa: E402
+import soil_guard_stop_rule  # noqa: E402
 
 LEGS = sl.LEGS
 BASE = "G1"
@@ -270,6 +274,39 @@ def _install():
     sl.make_controller = make_controller_preset
     sl.control_period = control_period_logged
     late_loc_rule.install_crawler_recorder(sl._imports()[0], lambda: _CAP.get("crawler_series"))
+    soil_guard_stop_rule.install_moving_pressure_recorder(sl._imports()[0],
+                                                          lambda: _CAP.get("moving_pressure"))
+
+
+def _lifted_legs(plant, t_level_s: float | None) -> list[str]:
+    """Legs whose pad contact force (true F_cyl minimum + rod weight) reached 0 after the LEVEL
+    start (the ``s9_soil_slope`` SL-1 rule on the 10 Hz ``fmin_log``)."""
+    if plant is None or t_level_s is None:
+        return []
+    rows = [force for t_s, force in _CAP.get("fmin_log") or [] if t_s >= t_level_s - 1e-9]
+    if not rows:
+        return []
+    contact = np.asarray(rows, float) + np.asarray(plant.Wr, float)
+    return [LEGS[i] for i in range(4) if contact[:, i].min() <= 0.0]
+
+
+def _soil_stop_record(ctrl, plant, out, min_off_kN, f_min_kN) -> dict | None:
+    """Spec 427.9 safe-stop row of a run the soil guard stopped (None for the other runs)."""
+    names = [e.name for e in ctrl.events]
+    if not soil_guard_stop_rule.is_soil_stop(names):
+        return None
+    pressure = _CAP.get("moving_pressure")
+    leg_force_rows_kN = [(t_s, np.asarray(force_N, float) / 1e3)
+                         for t_s, force_N in _CAP.get("fmin_log") or []]
+    timed_events = [(e.t_s, e.name) for e in ctrl.events if getattr(e, "t_s", None) is not None]
+    has_weight = plant is not None and hasattr(plant, "m") and hasattr(plant, "g")
+    stop_state = soil_guard_stop_rule.stop_state_record(
+        soil_guard_stop_rule.soil_stop_time_s(timed_events), _CAP.get("crawler_series"),
+        float(plant.m * plant.g) if has_weight else None,
+        leg_force_rows_kN)  # spec 427.12.1 (record only)
+    return soil_guard_stop_rule.stroke_limited_stop_row(
+        names, _lifted_legs(plant, out.get("t_level_s")), min_off_kN, f_min_kN,
+        None if pressure is None else pressure.to_dict(), stop_state)
 
 
 # --------------------------------------------------------------------------------------------- one case
@@ -331,6 +368,7 @@ def job(key):
     _install()
     _CAP.clear()
     _CAP["crawler_series"] = []  # 1 ms true crawler force (spec 419.8 condition 3, record only)
+    _CAP["moving_pressure"] = soil_guard_stop_rule.MovingPressureRecord()  # spec 427.9
     tag, soil, level, fs = key.split("|")[:4]
     pad = pad_of_key(key)
     case = {"id": key, "soil": soil, "pad": pad, "level": level, "fs_kN": float(fs[2:]),
@@ -461,6 +499,10 @@ def job(key):
                    t_loc_final_s=t_loc, loc_revokes=timeline["revoke_times_s"])
     if key in x426_keys():  # spec 426.1 / 426.5 records (the former sets keep their records)
         rec.update(pad=pad, sample="in" if tag == "ref" else "out")
+    soil_stop = _soil_stop_record(ctrl, plant, out, min_off, F_min)
+    if soil_stop is not None:  # spec 427.9: the gates keep G6-6 failed; the class is separate
+        rec.update(soil_stop=soil_stop, verdict=soil_guard_stop_rule.VERDICT_STROKE_LIMITED_STOP
+                   if soil_stop["pass"] else "fail")
     return rec
 
 

@@ -136,7 +136,24 @@ def test_boundary_slopes_are_scaled() -> None:
 
 def test_unknown_group_raises() -> None:
     with pytest.raises(ValueError, match="unknown case groups"):
-        ss.build_cases(("H9",))
+        ss.build_cases(("H99",))
+
+
+def test_h9_roll_boundary_cases() -> None:
+    """Spec 430.2: 36 cases, H3 id scheme and slope ratios; k 0.75 / 0.875 roll_pos = H3."""
+    cases = ss.build_cases((ss.H9_GROUP,))
+    assert len(cases) == ss.H9_SIZE == 36
+    by_id = {case.case_id: case for case in cases}
+    sample = by_id["H9|J1|B|top|roll_pos@k0.65"]
+    assert (sample.roll_deg, sample.pitch_deg) == (2.86, 0.0)
+    assert (by_id["H9|J2|B|top|roll_neg@k0.875"].roll_deg) == -3.85
+    h3 = {case.case_id: case for case in ss.build_cases(("H3",))}
+    for k in ("0.75", "0.875"):
+        h9_case = by_id[f"H9|J1|B|top|roll_pos@k{k}"]
+        h3_case = h3[f"H3|J1|B|top|roll_pos@k{k}"]
+        assert (h9_case.roll_deg, h9_case.pitch_deg, h9_case.harness_settle_key) == (
+            h3_case.roll_deg, h3_case.pitch_deg, h3_case.harness_settle_key)
+    assert ss.H9_GROUP not in ss.GROUP_SIZES  # not in the default study-1 set
 
 
 def test_run_case_input() -> None:

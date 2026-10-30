@@ -99,6 +99,36 @@ Candidates (tokens, combined with "+", e.g. "E1+E2"; "current" = the project con
       guard FAULT handling). c = corrected, u = plain; 5 / 8 = delta 0.05 / 0.08
       (``p36_delta=`` overrides the token value). Every candidate records the arming time and
       the per-phase ratio minima after it (``metrics["p36"]``, no command change).
+  P36s  spec 427.9 / 427.10 (P-S8-36 SGS, soil guard stop; user decision 2026-10-30: stop in the
+      first guard period): the soil sign is latched at every LOC (the L1gs gate of 424.10.2:
+      the soil mode ran in the lifting cycle -> "soil_mode", or c_min(t_P) > 10 mm on a settle
+      tilt > 1 deg -> "clearance_tilt"; a LOC revocation clears it, the next LOC judges again).
+      With the sign on, the first lift stroke guard period in LEVEL (SHIFT_DOWN or HOLD_ALL)
+      blocks DONE and ends in FAULT through the guard FAULT handling (attitude integrators of
+      the period start, U-S8-79 re-ground of the lifted legs): ``WARN_LIFT_STROKE_LIMITED:<legs>``
+      (c2, same period) then ``FAULT_LIFT_STROKE_LIMIT:soil:<legs>``. Every candidate records the
+      sign, its history and the first guard period with the sign on (``metrics["p36s"]``); the
+      judges class such a run ``stroke_limited_stop`` or fail (``soil_guard_stop_rule.py``).
+  P36sa  spec 427.12.2 (나) (user decision 2026-10-30): P36s armed at every LOC of a
+      soil-response run (sign ``any_loc`` where neither L1gs reason holds); clearing and stop as
+      P36s. Alternative to P36s; its stop counts as the part "P36s" in ``acted_parts``.
+  P37t  spec 428.5.2 (P-S8-37 R1' twist ledger, ``p37_floor_twist.py``): a re-approach after the
+      LOC keeps the rod-stroke twist tau at its start; after its contact, with the attitude
+      settled (``p37_settle_att_rad``, negative = ``done_attitude_rad``), ``|delta tau| >=
+      p37_min_twist_m`` books ``d_leg += sign_leg delta tau`` (cut at ``p37_max_offset_m``,
+      ``INFO_FLOOR_DROP_OFFSET:<leg>:<mm>``) and the clearance paths read ``c_k(x - d)``.
+  R4c20 / R4c30  spec 428.5.2 R4: a LOC after the soil mode on a flat settle (tilt <= 1 deg, no
+      P-S8-31 margin) raises the clearance target by ``r4_margin_m`` 0.02 / 0.03 m
+      (``INFO_LOC_FLAT_SOIL_MARGIN:<mm>``). Alternatives.
+  P38z / P38z25  spec 429.3 / 429.5 (P-S8-38 ZIC, ``p38_integral_clamp.py``): from the first LOC
+      to the first READY, in LEVEL, an attitude integral pushing past the target is cut to
+      ``p38_cap_fraction`` (0.5 / 0.25) x done_attitude_rad K_p / K_i
+      (``INFO_ATT_INT_CLAMP:<axis>:<I>``). Alternatives.
+  P38z1  spec 429.7 redesign: P38z (c 0.5) with ``p38_window`` "first_done": the window ends at
+      the first DONE after the first LOC (the re-level after a probe excluded). Alternative to
+      P38z / P38z25; its cut counts as the part "P38z" in ``acted_parts``.
+  Combinations: any tokens joined by "+", e.g. ``P36s+P37t+R4c30+P38z``; the alternatives above
+  (and P36c5 / P36c8 / P36u8, the 424.9.3 variants) raise ValueError when combined.
 
 Every controller of a run (baseline included) records passively, without changing a command:
 the true crawler force per control period (max over the 1 ms chunks, wrapped ``cl._lagged_step``),
@@ -121,6 +151,9 @@ Suites (each harness path imported, not copied; the settle hook "harness" is the
          mass x 1.1} = 84 cases, made from ``s9_soil_slope.build_cases(("H1", "H3"))`` by
          replacing the SlopeCase fields ``fs_kN`` / ``level`` / ``mass_scale`` (settle table
          attached after the replacement, so a middle case gets its middle row)
+  h9     spec 430.2 roll boundary refinement, 36 cases (``s9_soil_slope.py`` group H9, settle
+         table attached as for slope; a slope without a table row runs uncorrected and is
+         marked ``no_table_row``)
 Compared per case against "current": verdict, command SHA-256, dREADY, d min true F_cyl, d end
 attitude, false LOCs (crawler force >= 0.01 W in the LOC period), crawler re-contacts in READY;
 whether a fix acted (a ``FIX_*`` event), idle runs with a changed hash (spec 424.6 A-5) and, on
@@ -166,6 +199,9 @@ for _path in (ROOT / "03_src", HERE, S8_DIR):
         sys.path.insert(0, str(_path))
 
 import late_loc_rule  # noqa: E402  (shared harness judge rules)
+import p37_floor_twist  # noqa: E402  (spec 428.5.2 P-S8-37 layer)
+import p38_integral_clamp  # noqa: E402  (spec 429.3 P-S8-38 layer)
+import soil_guard_stop_rule  # noqa: E402  (spec 427.9 safe-stop class)
 from late_loc_rule import crawler_recontact_record  # noqa: E402
 
 DEFAULT_OUT_DIR = ROOT / "06_analysis" / "02_control" / "s9" / "rev80"
@@ -177,7 +213,8 @@ BASELINE = "current"
 CANDIDATE_TOKENS = ("E1", "E2", "E3", "E4", "RA", "S4", "E3w", "E3c7", "E3c10", "LWa", "LWb",
                     "L1", "L2", "L4", "D1", "D1p", "D1p0", "D1r", "D2", "D3", "S5", "S6",
                     "D1q", "D1qa", "D1qb", "D2q", "L1g", "L1gs", "L2g", "DS", "DS50",
-                    "DSb", "DSb10", "DSb75", "P36c5", "P36c8", "P36u8")
+                    "DSb", "DSb10", "DSb75", "P36c5", "P36c8", "P36u8", "P36s",
+                    "P36sa", "P37t", "R4c20", "R4c30", "P38z", "P38z25", "P38z1")
 QUICK_HOLD_TOKENS = ("D1q", "D1qa", "D1qb", "D2q")
 """Spec 424.9.3 variants: alternatives to each other (one per candidate)."""
 TWIST_SIGNS = np.array([1.0, -1.0, -1.0, 1.0])
@@ -221,7 +258,7 @@ PUSH_EXTEND_EVENT = "FIX_PUSH_EXTEND"
 S6_LOC_EVENT = "FIX_S6_LOC"
 S1_RISE_TRACE_MAX = 400
 """Rows kept of ``s1_rise_trace`` (10 Hz: 40 s of window ends)."""
-SUITES = ("slope", "g6", "g8", "p3b", "h6", "v3s", "x426b")
+SUITES = ("slope", "g6", "g8", "p3b", "h6", "v3s", "x426b", "h9")
 
 # spec 427 P-S8-36 candidate (crawler re-load after the lift stroke guard acted)
 P36_RELOAD_WARNING_EVENT = "WARN_CRAWLER_RELOAD"
@@ -237,6 +274,14 @@ P36_UNCOMPENSATED = "none"
 P36_MIN_VALID_PERIODS = 5
 """Periods the 1 s mean needs after the left-out ones (427.2)."""
 P36_RELOAD_ACTIONS_MAX = 10
+# spec 427.9 P-S8-36 SGS (soil guard stop)
+P36S_STOP_EVENT = soil_guard_stop_rule.SOIL_STOP_EVENT
+"""``FAULT_LIFT_STROKE_LIMIT:soil:<legs>``: the guard period the soil sign turns into a stop."""
+P36S_SIGN_SOIL_MODE = "soil_mode"
+P36S_SIGN_CLEARANCE_TILT = "clearance_tilt"
+"""Soil-sign reasons: the soil mode ran / c_min(t_P) and the settle tilt above the gate."""
+P36S_SIGN_ANY_LOC = "any_loc"
+"""P36sa (spec 427.12.2 (나)): a LOC of a soil-response run without either reason above."""
 X426B_POINTS = (
     "H1|G1|B|top|nose_down", "H1|G1|B|top|roll_pos", "H1|G1|B|top|edge_nd",
     *(f"H3|{soil}|B|top|{direction}@k{k}" for soil in ("J1", "J2", "S1")
@@ -251,8 +296,11 @@ HARNESS_HASH_FILES = (
     Path("04_scripts/03_control/s9/s9_soil_slope.py"),
     Path("04_scripts/03_control/s8/r72_g6_screen.py"),
     Path("04_scripts/03_control/s9/s9_soil_closed_loop.py"),
+    Path("04_scripts/03_control/s9/soil_guard_stop_rule.py"),  # spec 427.9 judge rule
 )
 """Spec 427.6: the harnesses another task extends; their SHA-256 (LF) go into the run meta."""
+
+VERDICT_STROKE_LIMITED_STOP = soil_guard_stop_rule.VERDICT_STROKE_LIMITED_STOP
 
 LOC_EVENT = "crawler_liftoff_confirmed"
 FALSE_LOC_WEIGHT_FRACTION = 0.01
@@ -268,7 +316,7 @@ FAULT_PHASES = ("fault", "fault_reground")
 ATTITUDE_TOL_DEG = 0.2
 RUT_MIN_MM = 25.0
 LOC_DELAY_MAX_S = 2.9
-A3_SUITES = ("slope", "h6", "x426b")
+A3_SUITES = ("slope", "h6", "x426b", "h9")
 A3_HARD_GROUNDS = ("rigid", "G1")
 """Spec 424.6 A-3: grounds where every candidate must keep the "current" command hash."""
 A3_SOFT_GROUNDS = ("J1", "J2", "S1")
@@ -484,6 +532,28 @@ class CandidateSettings:
     p36_relift_margin_m: float = 0.040
     """Re-lift only with the largest motor stroke <= lift guard stroke - this (642.8 mm)."""
     p36_max_relifts: int = 1
+    # spec 427.9 P-S8-36 SGS
+    p36s: bool = False
+    """P36s: with the soil sign of the LOC, the first lift stroke guard period in LEVEL is a stop
+    (``FAULT_LIFT_STROKE_LIMIT:soil:<legs>``) instead of a stroke-limited completion."""
+    p36s_all_loc: bool = False
+    """P36sa (spec 427.12.2 (나), user decision 2026-10-30): with the soil response on, every
+    confirmed LOC latches the sign (reason ``any_loc`` where neither L1gs sign holds); the
+    clearing (revocation, no LOC) and the stop are those of P36s."""
+    # spec 428.5.2 P-S8-37 (``p37_floor_twist.py``)
+    p37: bool = False
+    """P37t: R1' twist ledger."""
+    p37_min_twist_m: float = 0.005
+    p37_max_offset_m: float = 0.06
+    p37_settle_att_rad: float = -1.0
+    """Settled attitude of the ledger; negative = the config ``done_attitude_rad``."""
+    r4_margin_m: float = 0.0
+    """R4c20 / R4c30: flat-soil LOC clearance margin; 0 = off."""
+    # spec 429.3 P-S8-38 ZIC (``p38_integral_clamp.py``)
+    p38: bool = False
+    p38_cap_fraction: float = 0.5
+    p38_window: str = p38_integral_clamp.WINDOW_FIRST_READY
+    """ZIC window end: "first_ready" (P38z, P38z25) or "first_done" (P38z1, spec 429.7)."""
 
     def __post_init__(self) -> None:
         if self.s4_stroke_basis not in ("max", "mean"):
@@ -520,6 +590,22 @@ class CandidateSettings:
             raise ValueError("d1r_release_margin_N must be >= d1r_trigger_margin_N")
         self._check_quick_hold()
         self._check_p36()
+        self.floor_twist_settings()  # P37t / R4c value checks
+        self.integral_clamp_settings()
+
+    def floor_twist_settings(self) -> p37_floor_twist.FloorTwistSettings:
+        """The P-S8-37 layer settings of these fields."""
+        settle_rad = None if self.p37_settle_att_rad < 0.0 else self.p37_settle_att_rad
+        return p37_floor_twist.FloorTwistSettings(
+            enable=self.p37, min_twist_m=self.p37_min_twist_m,
+            max_offset_m=self.p37_max_offset_m, settle_attitude_rad=settle_rad,
+            flat_soil_margin_m=self.r4_margin_m)
+
+    def integral_clamp_settings(self) -> p38_integral_clamp.IntegralClampSettings:
+        """The P-S8-38 layer settings of these fields."""
+        return p38_integral_clamp.IntegralClampSettings(enable=self.p38,
+                                                        cap_fraction=self.p38_cap_fraction,
+                                                        window=self.p38_window)
 
     def _check_p36(self) -> None:
         if self.p36_compensation not in (P36_COMPENSATED, P36_UNCOMPENSATED):
@@ -563,8 +649,10 @@ TOKEN_FLAGS = {"E1": "e1", "E2": "e2", "E3": "e3", "E4": "e4", "RA": "reanchor_s
                "S4": "s4_stroke_limit", "LWa": "lw_restart", "LWb": "lw_exclude",
                "L1": "l1_revoke", "L2": "l2_confirm_window", "L4": "l4_probe_reuse",
                "D1": "d1_fall_hold", "D2": "d2_fall_slow", "D3": "d3_repeat_reapproach_slow",
-               "S5": "s5_push_extend", "S6": "s6_saturation_loc", "D1r": "d1r_predicted_hold"}
+               "S5": "s5_push_extend", "S6": "s6_saturation_loc", "D1r": "d1r_predicted_hold",
+               "P36s": "p36s", "P37t": "p37"}
 TOKEN_PRESETS = {
+    "P36sa": {"p36s": True, "p36s_all_loc": True},
     "E3w": {"e3": True, "e3_require_soil_use": False},
     "E3c7": {"e3": True, "e3_require_soil_use": False, "e3_min_clearance_at_P_m": 0.007},
     "E3c10": {"e3": True, "e3_require_soil_use": False, "e3_min_clearance_at_P_m": 0.010},
@@ -594,9 +682,23 @@ TOKEN_DEFAULT_PRESETS = {
     "P36c5": ({"p36": True}, {"p36_delta": 0.05, "p36_compensation": P36_COMPENSATED}),
     "P36c8": ({"p36": True}, {"p36_delta": 0.08, "p36_compensation": P36_COMPENSATED}),
     "P36u8": ({"p36": True}, {"p36_delta": 0.08, "p36_compensation": P36_UNCOMPENSATED}),
+    "R4c20": ({}, {"r4_margin_m": 0.020}),
+    "R4c30": ({}, {"r4_margin_m": 0.030}),
+    "P38z": ({"p38": True}, {"p38_cap_fraction": 0.5}),
+    "P38z25": ({"p38": True}, {"p38_cap_fraction": 0.25}),
+    "P38z1": ({"p38": True, "p38_window": p38_integral_clamp.WINDOW_FIRST_DONE},
+              {"p38_cap_fraction": 0.5}),
 }
-"""Spec 427.5 tokens: (fixed fields, token values). Unlike ``TOKEN_PRESETS`` the token values
-give way to overrides (``P36c5+p36_delta=0.06``, ``--param p36_delta=...``)."""
+"""Spec 427.5 / 428.5.2 / 429.5 tokens: (fixed fields, token values). Unlike ``TOKEN_PRESETS``
+the token values give way to overrides (``P36c5+p36_delta=0.06``, ``P38z+p38_cap_fraction=0.4``,
+``--param ...``)."""
+ALTERNATIVE_TOKEN_GROUPS = (
+    (("P36c5", "P36c8", "P36u8"), "427.5"),
+    (("P36s", "P36sa"), "427.12.2"),
+    (("R4c20", "R4c30"), "428.5.2"),
+    (("P38z", "P38z25", "P38z1"), "429.5 / 429.7"),
+)
+"""Tokens of one group set the same fields: at most one per candidate (spec section)."""
 
 
 def parse_candidate(name: str, overrides: dict | None = None) -> CandidateSettings:
@@ -617,9 +719,10 @@ def parse_candidate(name: str, overrides: dict | None = None) -> CandidateSettin
         quick_tokens = [token for token in name.split("+") if token in QUICK_HOLD_TOKENS]
         if len(quick_tokens) > 1:
             raise ValueError(f"{quick_tokens} are alternatives (424.9.3), not a combination")
-        p36_tokens = [token for token in name.split("+") if token in TOKEN_DEFAULT_PRESETS]
-        if len(p36_tokens) > 1:
-            raise ValueError(f"{p36_tokens} are alternatives (427.5), not a combination")
+        for group, section in ALTERNATIVE_TOKEN_GROUPS:
+            chosen = [token for token in name.split("+") if token in group]
+            if len(chosen) > 1:
+                raise ValueError(f"{chosen} are alternatives ({section}), not a combination")
         for token in name.split("+"):
             if "=" in token:
                 overrides.update(parse_param_overrides([token]))
@@ -876,7 +979,7 @@ def hb1_metrics(fix, events, crawler_series, period_s: float) -> dict:
     return out
 
 
-RUT_LOG_SUITES = ("slope", "h6", "x426b")
+RUT_LOG_SUITES = ("slope", "h6", "x426b", "h9")
 """Suites run by ``s9_soil_slope``, whose per-period log carries ``rut_clear_mm``."""
 RUT_AFTER_READY_S = 10.0
 """Spec 424.11.2 (1): the clearance window ends 10 s after READY."""
@@ -1011,6 +1114,21 @@ class _FixState:
     """Phase -> {rho_c, rho_u, mean_c, mean_u} minima after the arming (record)."""
     p36_actions: list = field(default_factory=list)
     """{t_s, ratio, branch, max_stroke_mm} of every WARN_CRAWLER_RELOAD (P36 only)."""
+    # spec 427.9 P-S8-36 SGS (the latch and record run for every candidate, only P36s acts)
+    p36s_soil_sign: str | None = None
+    """Soil-sign latch of the confirmed LOC (``P36S_SIGN_*``); None without a sign or a LOC."""
+    p36s_sign_history: list = field(default_factory=list)
+    """{t_s, sign} at every LOC and {t_s, sign: None, cleared: True} at every revocation."""
+    p36s_guard_t_s: float | None = None
+    """First lift stroke guard period with the soil sign on (the stop time P36s would use)."""
+    p36s_due: dict | None = None
+    """{t_s, legs, mode}: this period's guard period with the sign on (P36s, consumed by
+    ``_level`` in the same period)."""
+    p36s_stop: dict | None = None
+    """{t_s, legs, mode, soil_sign, done_blocked} of the stop (P36s only)."""
+    p36s_preempted: str | None = None
+    """Phase that a stroke-end FAULT or the guard hold limit set in the stop period (that FAULT
+    is kept, no soil stop event)."""
 
 
 def _install_probe_reuse(probe_round, confirmed: dict, controller) -> None:
@@ -1099,6 +1217,7 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
                 self._ds_feed_gyro(measurements)
             command = super().update(measurements)
             self._record_period(measurements.t_s)
+            self._p36s_clear_soil_sign_without_loc(measurements.t_s)
             if settings.l1_revoke:
                 self._l1_watch_step()
             if settings.ds_enable:
@@ -1157,6 +1276,7 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
                 self._add_event(t_s, f"{WINDOW_VETO_EVENT}:{reason}")
                 return
             super()._confirm_liftoff(t_s, tail, mean_load_N)
+            self._p36s_latch_soil_sign(t_s)
             if settings.e3:
                 self._apply_e3_margin(t_s)
             if settings.l1_revoke:
@@ -2000,6 +2120,7 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
             super()._record_lift_guard_period(t_s, guarded, mode)
             if self.fix.p36_armed_t_s is None:
                 self.fix.p36_armed_t_s = float(t_s)
+            self._p36s_note_guard_period(t_s, guarded, mode)
 
         def _phase_command(self, reading):
             self._p36_observe(reading)
@@ -2007,13 +2128,100 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
                 return super()._phase_command(reading)
             finally:
                 self.fix.p36_pending = None  # e.g. DONE started a REANCHOR instead
+                self.fix.p36s_due = None
 
         def _level(self, reading):
             if self.fix.p36_pending is not None:
                 fault_speeds = self._p36_act(reading)
                 if fault_speeds is not None:
                     return fault_speeds
-            return super()._level(reading)
+            state = self._state
+            integrals_at_start = (state.roll_integral, state.pitch_integral)
+            leg_speeds = super()._level(reading)
+            if self.fix.p36s_due is None:
+                return leg_speeds
+            return self._p36s_stop(integrals_at_start, leg_speeds)
+
+        # ------------------------------------------------------------ 427.9 P36s (SGS)
+        def _p36s_soil_sign(self) -> str | None:
+            """The soil sign at the LOC and its reason: the L1gs sign; under P36sa every LOC
+            of a soil-response run (``any_loc`` where the L1gs sign does not hold)."""
+            reason = self._p36s_l1gs_sign()
+            if reason is None and settings.p36s_all_loc and self.config.soil.enable:
+                return P36S_SIGN_ANY_LOC
+            return reason
+
+        def _p36s_l1gs_sign(self) -> str | None:
+            """The L1gs soil sign at the LOC (424.10.2, the 03_src gate constants) and its
+            reason; agrees with ``_has_loc_soil_sign``."""
+            soil = self._soil_state()
+            if soil.soil_mode_start_s is not None:
+                return P36S_SIGN_SOIL_MODE
+            c_min_at_P_m = soil.clearance_at_plateau_start_m
+            settle_rad = self._settle_attitude_rad()
+            if c_min_at_P_m is None or settle_rad is None:
+                return None
+            gate = getattr(self.config, "loc_revoke", None)
+            min_clearance_m = (settings.l1_gate_min_clearance_at_P_m if gate is None
+                               else gate.gate_min_clearance_at_P_m)
+            min_tilt_rad = settings.l1_gate_tilt_min_rad if gate is None else gate.gate_tilt_min_rad
+            is_tilted = max(abs(settle_rad[0]), abs(settle_rad[1])) > min_tilt_rad
+            if c_min_at_P_m > min_clearance_m and is_tilted:
+                return P36S_SIGN_CLEARANCE_TILT
+            return None
+
+        def _p36s_latch_soil_sign(self, t_s: float) -> None:
+            """427.9: judged again at every confirmed LOC (a vetoed window leaves it alone)."""
+            if not self._soil_state().is_liftoff_confirmed:
+                return
+            fix = self.fix
+            fix.p36s_soil_sign = self._p36s_soil_sign()
+            fix.p36s_sign_history.append({"t_s": round(float(t_s), 2),
+                                          "sign": fix.p36s_soil_sign})
+
+        def _p36s_clear_soil_sign_without_loc(self, t_s: float) -> None:
+            """427.9: a LOC revocation clears the latch (the next LOC judges again). Checked
+            after every update, so the 03_src P-S8-33 revocation, the L1* tokens and the E2 /
+            P36 re-lifts are all covered without overriding a project method."""
+            fix = self.fix
+            if fix.p36s_soil_sign is None or self._soil_state().is_liftoff_confirmed:
+                return
+            fix.p36s_soil_sign = None
+            fix.p36s_sign_history.append({"t_s": round(float(t_s), 2), "sign": None,
+                                          "cleared": True})
+
+        def _p36s_note_guard_period(self, t_s: float, guarded, mode) -> None:
+            """A guard period with the soil sign: record its first time; under P36s the stop is
+            due in this period (``_level`` acts after the period's LEVEL step)."""
+            fix = self.fix
+            if fix.p36s_soil_sign is None or fix.p36s_stop is not None:
+                return
+            if fix.p36s_guard_t_s is None:
+                fix.p36s_guard_t_s = float(t_s)
+            if settings.p36s and fix.p36s_due is None:
+                legs = tuple(int(leg) for leg in np.flatnonzero(guarded))
+                fix.p36s_due = {"t_s": float(t_s), "legs": legs, "mode": str(mode.name).lower()}
+
+        def _p36s_stop(self, integrals_at_start: tuple, leg_speeds: np.ndarray) -> np.ndarray:
+            """427.9: the guard FAULT handling in the first guard period; a stroke-end FAULT or
+            the hold limit that the LEVEL step already raised in this period is kept."""
+            fix, state = self.fix, self._state
+            due, fix.p36s_due = fix.p36s_due, None
+            if state.phase in (c2.C2Phase.FAULT, c2.C2Phase.FAULT_REGROUND):
+                fix.p36s_preempted = str(state.phase.name).lower()
+                return leg_speeds
+            t_s = due["t_s"]
+            legs = c2._leg_names(due["legs"])
+            fix.p36s_stop = {"t_s": round(t_s, 2), "legs": legs, "mode": due["mode"],
+                             "soil_sign": fix.p36s_soil_sign,
+                             "done_blocked": state.phase is c2.C2Phase.DONE}
+            state.roll_integral, state.pitch_integral = integrals_at_start
+            state.complete_since_s = None
+            self._add_event(t_s, f"{P36S_STOP_EVENT}:{legs}", is_warning=True)
+            state.phase = c2.C2Phase.FAULT
+            if self._starts_stroke_end_reground(t_s):  # as the guard FAULT (U-S8-79, R30)
+                state.phase = c2.C2Phase.FAULT_REGROUND
+            return self._zero_speeds()
 
         def _p36_watched_phase(self) -> str | None:
             """427.1: LEVEL after the LOC, DONE, PROBE, READY; None elsewhere."""
@@ -2180,7 +2388,11 @@ def make_candidate_class(c2, base_class, settings: CandidateSettings):
             return self.geometry.stroke_soft_max_m - c2.STROKE_END_MARGIN_M - extra_m
 
     CandidateC2.__name__ = CandidateC2.__qualname__ = "CandidateC2"
-    return CandidateC2
+    # spec 428.5.2 / 429.3 layers on top; each factory returns its base when its tokens are off
+    layered = p37_floor_twist.make_floor_twist_class(c2, CandidateC2,
+                                                     settings.floor_twist_settings())
+    return p38_integral_clamp.make_integral_clamp_class(c2, layered,
+                                                        settings.integral_clamp_settings())
 
 
 # --------------------------------------------------------------------------- run metrics
@@ -2281,6 +2493,39 @@ def _install_candidate(candidate: str, overrides: dict):
     return c2, settings
 
 
+def install_screen_candidate(candidate: str | None):
+    """Candidate class for a screen outside this wrapper (study A ``R426A_CANDIDATE``, r67
+    ``R67_CANDIDATE``, as r79 ``R79_CANDIDATE``): swaps ``c2.C2Controller`` and returns a
+    function that puts the original back. None / "" / "current": nothing is installed (the
+    screen's stored path, bit for bit).
+
+    Raises:
+        ValueError: unknown token or parameter in ``candidate``.
+    """
+    if not candidate or candidate == BASELINE:
+        return lambda: None
+    c2, _ = _install_candidate(candidate, {})
+    original = _RUNNING["original_class"]
+
+    def restore() -> None:
+        c2.C2Controller = original
+
+    return restore
+
+
+def screen_candidate_record(controller) -> dict | None:
+    """Candidate record a screen stores per run: the spec 427.11 / 429.5 parts (P36s stop,
+    P37t / R4c, P38z) of ``controller``; None for a project controller."""
+    fix = getattr(controller, "fix", None)
+    if fix is None:
+        return None
+    metrics = {"p36s": p36s_record(fix),
+               "p37": p37_floor_twist.floor_twist_record(controller),
+               "p38": p38_integral_clamp.integral_clamp_record(controller)}
+    record = {"metrics": metrics}
+    return {**metrics, "acted": has_candidate_acted(record), "acted_parts": acted_parts(record)}
+
+
 # --------------------------------------------------------------------------- suite adapters
 def _slope_cases() -> list[dict]:
     import s9_soil_slope as slope
@@ -2320,6 +2565,16 @@ def _x426b_cases() -> list[dict]:
     variants = [replace(case, fs_kN=fs_kN, level=level, mass_scale=mass_scale)
                 for fs_kN, level, mass_scale in X426B_VARIANTS for case in points]
     return [case.to_dict() for case in slope.attach_settle_table(variants, table)]
+
+
+def _h9_cases() -> list[dict]:
+    """Spec 430.2 H9 (36: J1 B / A, J2 B x roll_pos / roll_neg x 6 k), settle table hook_harness
+    attached as in study 1 (missing rows run uncorrected, ``no_table_row``)."""
+    import s9_soil_slope as slope
+
+    table = json.loads(SETTLE_TABLE_PATH.read_text(encoding="utf-8"))[SETTLE_TABLE_KEY]
+    cases = slope.attach_settle_table(slope.build_cases((slope.H9_GROUP,)), table)
+    return [case.to_dict() for case in cases]
 
 
 def _g6_keys() -> list[str]:
@@ -2366,6 +2621,8 @@ def suite_cases(suite: str) -> list[tuple[str, object]]:
         return [(case["id"], case) for case in _v3s_cases()]
     if suite == "x426b":
         return [(case["id"], case) for case in _x426b_cases()]
+    if suite == "h9":
+        return [(case["id"], case) for case in _h9_cases()]
     raise ValueError(f"unknown suite {suite!r}, expected {SUITES}")
 
 
@@ -2394,7 +2651,9 @@ def _slope_record(payload: dict) -> dict:
         # spec 420.2b P3-1_transient_recontact, spec 419.8 P3-2_late_loc_reapproach and its five
         # conditions (s9_soil_slope judge)
         "flags": list(rows["P3-1"].get("flag_names") or []) + _p32_flag_names(rows["P3-2"]),
-        "late_loc_reapproach": rows["P3-2"].get("late_loc_reapproach")}
+        "late_loc_reapproach": rows["P3-2"].get("late_loc_reapproach"),
+        "soil_stop": rows["SL-1"].get("soil_stop"),  # spec 427.9 (None without the stop)
+        "lifted_legs": list(rows["SL-1"]["lifted_legs"])}  # classify's SL-1 lift test (rejudge)
 
 
 def _g6_record(key: str) -> dict:
@@ -2403,7 +2662,9 @@ def _g6_record(key: str) -> dict:
     rec = g6.job(key)
     if "error" in rec:
         return {"error": rec["error"], "tb": rec.get("tb")}
-    record = {"verdict": "pass" if rec["pass"] else "fail", "passed": rec["pass"],
+    # spec 427.9: r72 gives a soil-guard stop its own verdict (stroke_limited_stop or fail)
+    verdict = rec.get("verdict") or ("pass" if rec["pass"] else "fail")
+    record = {"verdict": verdict, "passed": rec["pass"], "soil_stop": rec.get("soil_stop"),
               "failed_rows": [k for k, v in rec["gates"].items() if not v],
               "hash": rec.get("commands_sha256"), "t_ready_s": rec.get("t_ready_s"),
               "min_force_kN": rec.get("min_true_Fcyl_after_off_kN"),
@@ -2479,7 +2740,8 @@ def _p3b_record(case: dict) -> dict:
 
 
 SUITE_RUNNERS = {"slope": _slope_record, "g6": _g6_record, "g8": _g8_record, "p3b": _p3b_record,
-                 "h6": _slope_record, "v3s": _p3b_record, "x426b": _slope_record}
+                 "h6": _slope_record, "v3s": _p3b_record, "x426b": _slope_record,
+                 "h9": _slope_record}
 
 
 def qc_record(fix: _FixState) -> dict:
@@ -2506,6 +2768,15 @@ def p36_record(fix: _FixState) -> dict:
             "minima": minima, "relifts": fix.p36_relifts, "actions": list(fix.p36_actions)}
 
 
+def p36s_record(fix: _FixState) -> dict:
+    """Spec 427.10 record (every candidate): the soil-sign latch at the run end with its history,
+    the first guard period with the sign on and, under P36s, the stop (time, legs, guard mode)."""
+    return {"soil_sign": fix.p36s_soil_sign, "sign_history": list(fix.p36s_sign_history[:10]),
+            "guard_t_s": None if fix.p36s_guard_t_s is None else round(fix.p36s_guard_t_s, 2),
+            "stop": None if fix.p36s_stop is None else dict(fix.p36s_stop),
+            "preempted": fix.p36s_preempted}
+
+
 def _controller_record(controller) -> dict:
     """Candidate record of the run's controller: metrics, window checks, fix events."""
     events = [(float(e.t_s), e.name) for e in controller.events]
@@ -2517,8 +2788,12 @@ def _controller_record(controller) -> dict:
     metrics["fix_events"] = [(round(t, 2), n) for t, n in events
                              if n.startswith((FIX_EVENT_PREFIX, S4_STROKE_EVENT))
                              or n.startswith(PROJECT_L1_EVENTS) or n.startswith(P36_EVENTS)
-                             or n.startswith("reanchor_")][:30]
+                             or n.startswith(P36S_STOP_EVENT) or n.startswith("reanchor_")][:30]
     metrics["p36"] = p36_record(controller.fix)
+    metrics["p36s"] = p36s_record(controller.fix)
+    metrics["p37"] = p37_floor_twist.floor_twist_record(controller)  # None without P37t / R4c
+    metrics["p38"] = p38_integral_clamp.integral_clamp_record(controller)  # None without P38z
+    metrics["t_first_done_s"] = first_done_after_s(controller.fix.log, 0.0)  # spec 429.2 trend
     metrics["e3_applied"] = controller.fix.e3_applied
     metrics["lw_clears"] = controller.fix.lw_clears
     # spec 424.3 / 424.4 candidates
@@ -2592,8 +2867,9 @@ def case_ground(suite: str, case_id: str) -> str | None:
 
 
 def has_candidate_acted(record: dict) -> bool:
-    """A fix of the candidate fired in the run: a ``FIX_*`` / S4 stroke event, the E3 target or
-    a spec 427 P36 action.
+    """A fix of the candidate fired in the run: a ``FIX_*`` / S4 stroke event, the E3 target,
+    a spec 427 P36 action, the spec 427.9 P36s stop, a P37t ledger offset or R4 margin
+    (428.5.2) or a P38z integral cut (429.3).
 
     RA (REANCHOR skip) raises no fix event; its runs count as idle, so they meet the stricter
     hash rule.
@@ -2601,9 +2877,32 @@ def has_candidate_acted(record: dict) -> bool:
     metrics = record.get("metrics") or {}
     if metrics.get("e3_applied") or (metrics.get("p36") or {}).get("actions"):
         return True
+    if (metrics.get("p36s") or {}).get("stop"):
+        return True
+    if p37_floor_twist.has_floor_twist_acted(metrics.get("p37")):
+        return True
+    if p38_integral_clamp.has_integral_clamp_acted(metrics.get("p38")):
+        return True
     return any(name.startswith((FIX_EVENT_PREFIX, S4_STROKE_EVENT))
                and name.split(":", 1)[0] not in RECORD_ONLY_FIX_EVENTS
                for _, name in metrics.get("fix_events") or [])
+
+
+def acted_parts(record: dict) -> list[str]:
+    """Which of the spec 427.11 / 429.5 combination parts acted: "P36s" (stop), "P37t" (ledger
+    offset), "R4c" (flat margin), "P38z" (integral cut); the stage 2 split reads it."""
+    metrics = record.get("metrics") or {}
+    p37 = metrics.get("p37") or {}
+    parts = []
+    if (metrics.get("p36s") or {}).get("stop"):
+        parts.append("P36s")
+    if p37.get("applied"):
+        parts.append("P37t")
+    if p37.get("flat_margins"):
+        parts.append("R4c")
+    if p38_integral_clamp.has_integral_clamp_acted(metrics.get("p38")):
+        parts.append("P38z")
+    return parts
 
 
 def _failed_rows(record: dict) -> list[str]:
@@ -2611,11 +2910,18 @@ def _failed_rows(record: dict) -> list[str]:
     return rows.split(",") if isinstance(rows, str) else list(rows)
 
 
+def is_safe_stop(record: dict) -> bool:
+    """Spec 427.9 class ``stroke_limited_stop``: safe stop, target not reached (neither pass nor
+    fail)."""
+    return record.get("verdict") == VERDICT_STROKE_LIMITED_STOP
+
+
 def _soft_ground_regressions(before: dict, after: dict) -> list[str]:
     """A-3 relaxation on J1 / J2 / S1 for a run the candidate acted in."""
     reasons = []
     if before.get("passed") and not after.get("passed"):
-        reasons.append("pass -> fail")
+        reasons.append(f"pass -> {VERDICT_STROKE_LIMITED_STOP}" if is_safe_stop(after)
+                       else "pass -> fail")
     if A3_TIME_ROW in _failed_rows(after) and A3_TIME_ROW not in _failed_rows(before):
         reasons.append(f"new {A3_TIME_ROW} violation")
     ready_before_s, ready_after_s = before.get("t_ready_s"), after.get("t_ready_s")
@@ -2665,6 +2971,8 @@ def compare_records(before: dict, after: dict) -> dict:
         "final_phase_after": after.get("final_phase"),
         "fix_events_after": ";".join(n for _, n in m_after.get("fix_events", [])[:6]),
         "acted": has_candidate_acted(after),
+        "acted_parts": "+".join(acted_parts(after)),
+        "safe_stop_after": is_safe_stop(after),
         "a3_pass": None if a3 is None else a3["pass"],
         "a3_reasons": "" if a3 is None else ";".join(a3["reasons"]),
     }
@@ -2692,7 +3000,7 @@ def summarize(records: list[dict]) -> dict:
                                          "e_resolved": 0, "false_loc_after": 0,
                                          "ready_recontacts_after": 0, "acted": 0,
                                          "idle_hash_differs": 0, "a3_checked": 0,
-                                         "a3_fail": 0})
+                                         "a3_fail": 0, "safe_stop": 0, "pass_to_safe_stop": 0})
         entry["n"] += 1
         if "error" in record:
             entry["errors"] += 1
@@ -2708,12 +3016,18 @@ def summarize(records: list[dict]) -> dict:
 
 def _count_row(entry: dict, row: dict, before: dict, after: dict) -> None:
     entry["verdict_changed"] += row["verdict_changed"]
-    entry["pass_to_fail"] += bool(before.get("passed") and not after.get("passed"))
+    # spec 427.9: a safe stop is counted apart, neither pass nor fail
+    was_passed, is_stopped = bool(before.get("passed")), is_safe_stop(after)
+    entry["pass_to_fail"] += bool(was_passed and not after.get("passed") and not is_stopped)
+    entry["safe_stop"] += is_stopped
+    entry["pass_to_safe_stop"] += bool(was_passed and is_stopped)
     entry["fail_to_pass"] += bool(not before.get("passed") and after.get("passed"))
     entry["hash_same"] += row["hash_same"]
     entry["false_loc_after"] += bool(row["false_loc_after"])
     entry["ready_recontacts_after"] += bool(row["ready_recontacts_after"])
     entry["acted"] += row["acted"]
+    for part in filter(None, row["acted_parts"].split("+")):  # spec 427.11 stage 2 split
+        entry[f"acted_{part}"] = entry.get(f"acted_{part}", 0) + 1
     # spec 424.6 A-5: a run the candidate did not act in keeps the "current" hash
     entry["idle_hash_differs"] += not row["acted"] and not row["hash_same"]
     if row["a3_pass"] is not None:
